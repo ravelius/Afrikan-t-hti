@@ -1,23 +1,27 @@
-// Käyttöliittymä: SVG-kartan piirto, napit ja botin ohjaus.
+// Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
-import { MAP, AIR_ROUTES } from './board.js';
+import { AIR_ROUTES } from './board.js';
 import { pixelOf, posKey } from './rules.js';
 import { TOKEN_TYPES } from './tokens.js';
 import { chooseAction, chooseMove, chooseQuizAnswer } from './ai.js';
 import { TOKEN_PRICE, FLIGHT_PRICE } from './game.js';
+import {
+  el,
+  drawCompass,
+  drawDefs,
+  drawDoodles,
+  drawLand,
+  drawPaperOverlay,
+  drawParchment,
+  drawTerrain,
+  drawWaves,
+} from './mapart.js';
 
-const NS = 'http://www.w3.org/2000/svg';
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 850;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
 const LETTERS = ['A', 'B', 'C', 'D'];
-
-function el(tag, attrs = {}, parent = null) {
-  const node = document.createElementNS(NS, tag);
-  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
-  if (parent) parent.appendChild(node);
-  return node;
-}
+const COMPASS = { x: 168, y: 772, r: 62 };
 
 function html(tag, className, text) {
   const node = document.createElement(tag);
@@ -27,18 +31,22 @@ function html(tag, className, text) {
 }
 
 export class UI {
-  constructor(game, { onNewGame }) {
+  constructor(game, { onNewGame, onChange }) {
     this.game = game;
     this.onNewGame = onNewGame;
+    this.onChange = onChange;
     this.botTimer = null;
+
     this.svg = document.getElementById('board');
     this.hint = document.getElementById('board-hint');
     this.playersEl = document.getElementById('players');
-    this.turnTitle = document.getElementById('turn-title');
+    this.turnPill = document.getElementById('turn-pill');
+    this.turnStatus = document.getElementById('turn-status');
     this.dieEl = document.getElementById('die');
     this.actionsEl = document.getElementById('actions');
     this.errorEl = document.getElementById('error');
     this.logEl = document.getElementById('log');
+
     this.winnerDialog = document.getElementById('winner-dialog');
     this.quizDialog = document.getElementById('quiz-dialog');
     this.quizCity = document.getElementById('quiz-city');
@@ -47,16 +55,56 @@ export class UI {
     this.quizResult = document.getElementById('quiz-result');
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
+
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
   mount() {
     this.drawBoard();
+    this.fitViewBox();
+    this.observer = new ResizeObserver(() => this.fitViewBox());
+    this.observer.observe(this.svg.parentElement);
     this.render();
   }
 
   destroy() {
     clearTimeout(this.botTimer);
+    this.observer?.disconnect();
+  }
+
+  /**
+   * Venyttää näkymäikkunan ruudun muotoiseksi, jolloin pergamentti täyttää
+   * koko alueen ja pelialue pysyy silti kokonaan näkyvissä.
+   */
+  fitViewBox() {
+    const pane = this.svg.parentElement;
+    const w = pane.clientWidth;
+    const h = pane.clientHeight;
+    if (!w || !h) return;
+    const size = 1000;
+    const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
+    this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
+  }
+
+  /** Kohdat, joihin maastokuvioita ei saa piirtää: kaupungit, nimet ja reitit. */
+  mapObstacles() {
+    const { board } = this.game;
+    const spots = [];
+    for (const c of board.cities) {
+      spots.push({ x: c.x, y: c.y });
+      spots.push({ x: c.x + (c.lx ?? 0), y: c.y + (c.ly ?? -20) });
+      spots.push({ x: c.x + 21, y: c.y + 17 }); // laatan paikka
+    }
+    for (const e of board.edges) {
+      const a = board.cityById.get(e.a);
+      const b = board.cityById.get(e.b);
+      const steps = Math.max(e.steps * 2, 4);
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        spots.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
+      }
+    }
+    return spots;
   }
 
   // --- kartta -------------------------------------------------------------
@@ -65,102 +113,111 @@ export class UI {
     const { board } = this.game;
     this.svg.textContent = '';
 
-    el('rect', { x: 0, y: 0, width: MAP.width, height: MAP.height, class: 'ocean' }, this.svg);
-    el('path', { d: MAP.africa, class: 'land' }, this.svg);
-    el('path', { d: MAP.madagascar, class: 'land' }, this.svg);
+    drawDefs(this.svg);
+    drawParchment(this.svg);
+    drawLand(this.svg);
+    drawWaves(this.svg, [
+      { x: COMPASS.x, y: COMPASS.y, r: COMPASS.r + 45 },
+      { x: 232, y: 556, r: 95 },
+      { x: 858, y: 905, r: 110 },
+      { x: 880, y: 92, r: 135 },
+    ]);
+    drawTerrain(this.svg, this.mapObstacles());
+    drawCompass(this.svg, COMPASS.x, COMPASS.y, COMPASS.r);
+    drawDoodles(this.svg);
 
-    // Lentoreitit kaarina taustalle.
+    // Lentoreitit kaarina.
+    const air = el('g', { class: 'air-routes' }, this.svg);
     for (const route of AIR_ROUTES) {
       const a = board.cityById.get(route.a);
       const b = board.cityById.get(route.b);
       const mx = (a.x + b.x) / 2 + (b.y - a.y) * 0.12;
       const my = (a.y + b.y) / 2 - (b.x - a.x) * 0.12;
-      el('path', { d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, class: 'air-route' }, this.svg);
+      el('path', { d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, class: 'air-route' }, air);
     }
 
-    // Reitit ja niiden askelpisteet.
-    const routes = el('g', { class: 'routes' }, this.svg);
+    // Reitit ja askelpisteet.
+    const routes = el('g', { class: 'routes', filter: 'url(#rough-soft)' }, this.svg);
     for (const e of board.edges) {
       const a = board.cityById.get(e.a);
       const b = board.cityById.get(e.b);
-      el(
-        'line',
-        { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: `route route-${e.type}` },
-        routes,
-      );
+      el('line', {
+        x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: `route route-${e.type}`,
+      }, routes);
       for (let i = 1; i < e.steps; i++) {
         const t = i / e.steps;
-        el(
-          'circle',
-          {
-            cx: a.x + (b.x - a.x) * t,
-            cy: a.y + (b.y - a.y) * t,
-            r: 6,
-            class: `step step-${e.type}`,
-          },
-          routes,
-        );
-      }
-      if (e.type === 'sea') {
-        el(
-          'text',
-          {
-            x: (a.x + b.x) / 2,
-            y: (a.y + b.y) / 2 - 12,
-            class: 'fare',
-            'text-anchor': 'middle',
-          },
-          routes,
-        ).textContent = `${e.fee}`;
+        el('circle', {
+          cx: a.x + (b.x - a.x) * t,
+          cy: a.y + (b.y - a.y) * t,
+          r: 6,
+          class: `step step-${e.type}`,
+        }, routes);
       }
     }
 
-    // Kaupungit.
+    // Laivamatkojen hinnat erikseen, jotta teksti pysyy terävänä.
+    const fares = el('g', { class: 'fares' }, this.svg);
+    for (const e of board.edges) {
+      if (e.type !== 'sea') continue;
+      const a = board.cityById.get(e.a);
+      const b = board.cityById.get(e.b);
+      el('text', {
+        x: (a.x + b.x) / 2,
+        y: (a.y + b.y) / 2 - 12,
+        class: 'fare',
+        'text-anchor': 'middle',
+      }, fares).textContent = `⚓${e.fee}`;
+    }
+
+    // Kaupungit ja nimet.
     const cities = el('g', { class: 'cities' }, this.svg);
     for (const c of board.cities) {
-      el(
-        'circle',
-        { cx: c.x, cy: c.y, r: c.start ? 17 : 12, class: c.start ? 'city city-start' : 'city' },
-        cities,
-      );
-      if (c.airport) {
-        el('text', { x: c.x, y: c.y + 5, class: 'airport', 'text-anchor': 'middle' }, cities)
-          .textContent = '✈';
+      if (c.start) {
+        el('circle', { cx: c.x, cy: c.y, r: 20, class: 'city-start' }, cities);
+        el('circle', { cx: c.x, cy: c.y, r: 12, class: 'coast-soft' }, cities);
+      } else {
+        el('circle', { cx: c.x, cy: c.y, r: 12, class: 'city' }, cities);
       }
-      // la/lx/ly siirtävät nimilapun pois päällekkäisyyksistä.
+      if (c.airport) {
+        el('text', {
+          x: c.x, y: c.y + 5, class: 'airport', 'text-anchor': 'middle',
+        }, cities).textContent = '✈';
+      }
       const anchor = c.la ?? 'middle';
       const dx = c.lx ?? 0;
-      const dy = c.ly ?? -(c.start ? 24 : 19);
-      const label = el(
-        'text',
-        { x: c.x + dx, y: c.y + dy, class: 'city-label', 'text-anchor': anchor },
-        cities,
-      );
+      const dy = c.ly ?? -(c.start ? 28 : 19);
+      const label = el('text', {
+        x: c.x + dx,
+        y: c.y + dy,
+        class: c.start ? 'city-label start-label' : 'city-label',
+        'text-anchor': anchor,
+      }, cities);
       label.textContent = c.name;
     }
 
     this.tokenLayer = el('g', { class: 'tokens' }, this.svg);
     this.targetLayer = el('g', { class: 'targets' }, this.svg);
     this.pawnLayer = el('g', { class: 'pawns' }, this.svg);
+    drawPaperOverlay(this.svg);
   }
 
+  /** Kääntämätön laatta on punainen rasti, käännetty laatta värillinen kiekko. */
   drawTokens() {
     const { game } = this;
     this.tokenLayer.textContent = '';
-    for (const cityId of game.board.cities.map((c) => c.id)) {
-      const city = game.board.cityById.get(cityId);
-      const hidden = game.tokens.has(cityId);
-      const revealed = game.revealed.get(cityId);
+    for (const city of game.board.cities) {
+      const hidden = game.tokens.has(city.id);
+      const revealed = game.revealed.get(city.id);
       if (!hidden && !revealed) continue;
-      const g = el('g', { transform: `translate(${city.x + 20},${city.y + 18})` }, this.tokenLayer);
+      const g = el('g', { transform: `translate(${city.x + 21},${city.y + 17})` }, this.tokenLayer);
       if (hidden) {
-        el('circle', { r: 13, class: 'token token-hidden' }, g);
-        el('text', { y: 6, class: 'token-mark', 'text-anchor': 'middle' }, g).textContent = '?';
+        el('path', { d: 'M-9,-9 L9,9 M9,-9 L-9,9', class: 'token-x' }, g);
       } else {
         const t = TOKEN_TYPES[revealed];
-        el('circle', { r: 13, class: 'token token-open', fill: t.color }, g);
-        el('text', { y: 6, class: 'token-mark dark', 'text-anchor': 'middle' }, g).textContent =
-          t.symbol;
+        el('circle', { r: 13, class: 'token-open', fill: t.color }, g);
+        el('text', {
+          y: 6, class: 'token-mark', 'text-anchor': 'middle',
+        }, g).textContent = t.symbol;
       }
     }
   }
@@ -172,12 +229,12 @@ export class UI {
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
       const g = el('g', { class: 'target' }, this.targetLayer);
-      // Näkymätön, isompi osumisalue sormella osumista varten.
-      el('circle', { cx: x, cy: y, r: 28, class: 'target-hit' }, g);
-      el('circle', { cx: x, cy: y, r: opt.city ? 20 : 13, class: 'target-ring' }, g);
+      el('circle', { cx: x, cy: y, r: 30, class: 'target-hit' }, g);
+      el('circle', { cx: x, cy: y, r: opt.city ? 22 : 14, class: 'target-ring' }, g);
       if (opt.cost) {
-        el('text', { x, y: y - 26, class: 'target-cost', 'text-anchor': 'middle' }, g).textContent =
-          `-${opt.cost}`;
+        el('text', {
+          x, y: y - 28, class: 'target-cost', 'text-anchor': 'middle',
+        }, g).textContent = `−${opt.cost}`;
       }
       g.addEventListener('click', () => this.doMove(opt.key));
     }
@@ -196,24 +253,22 @@ export class UI {
       const base = pixelOf(game.board, players[0].pos);
       players.forEach((p, i) => {
         const angle = (i / Math.max(players.length, 1)) * Math.PI * 2 - Math.PI / 2;
-        const spread = players.length > 1 ? 15 : 0;
+        const spread = players.length > 1 ? 16 : 0;
         const x = base.x + Math.cos(angle) * spread;
         const y = base.y + Math.sin(angle) * spread;
         const g = el('g', { class: 'pawn' }, this.pawnLayer);
-        el(
-          'circle',
-          {
-            cx: x,
-            cy: y,
-            r: 11,
-            fill: p.color,
-            class: p.id === game.current ? 'pawn-dot active' : 'pawn-dot',
-          },
-          g,
-        );
+        el('ellipse', { cx: x + 2, cy: y + 8, rx: 10, ry: 4, class: 'pawn-shadow' }, g);
+        el('circle', {
+          cx: x,
+          cy: y,
+          r: 11,
+          fill: p.color,
+          class: p.id === game.current ? 'pawn-dot active' : 'pawn-dot',
+        }, g);
         if (p.hasStar) {
-          el('text', { x, y: y - 16, class: 'pawn-star', 'text-anchor': 'middle' }, g).textContent =
-            '★';
+          el('text', {
+            x, y: y - 16, class: 'pawn-star', 'text-anchor': 'middle',
+          }, g).textContent = '★';
         }
       });
     }
@@ -221,34 +276,48 @@ export class UI {
 
   // --- paneeli ------------------------------------------------------------
 
+  renderTurnPill() {
+    const { game } = this;
+    this.turnPill.textContent = '';
+    if (game.phase === 'over') {
+      this.turnPill.appendChild(html('span', '', `🏆 ${game.winner.name} voitti`));
+      return;
+    }
+    const p = game.player;
+    const dot = html('span', 'dot');
+    dot.style.background = p.color;
+    this.turnPill.appendChild(dot);
+    this.turnPill.appendChild(html('span', '', `Vuorossa: ${p.name}`));
+  }
+
   renderPlayers() {
     const { game } = this;
     this.playersEl.textContent = '';
     for (const p of game.players) {
-      const card = html('div', 'player-card' + (p.id === game.current ? ' current' : ''));
-      const head = html('div', 'player-head');
+      const chip = html('div', 'player-chip' + (p.id === game.current ? ' current' : ''));
+
+      const head = html('div', 'chip-head');
       const dot = html('span', 'dot');
       dot.style.background = p.color;
       head.appendChild(dot);
-      head.appendChild(html('span', 'player-name', p.name + (p.isBot ? ' (botti)' : '')));
-      card.appendChild(head);
+      head.appendChild(html('span', 'chip-name', p.name + (p.isBot ? ' 🤖' : '')));
+      chip.appendChild(head);
 
-      card.appendChild(html('div', 'money', `${p.money} puntaa`));
-
-      const marks = html('div', 'marks');
-      if (p.hasStar) marks.appendChild(html('span', 'mark star', '★ Afrikan tähti'));
-      for (let i = 0; i < p.horseshoes; i++) {
-        marks.appendChild(html('span', 'mark', 'Ω hevosenkenkä'));
-      }
-      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0);
-      if (gems.length) marks.appendChild(html('span', 'mark', `◆ ${gems.length} jalokiveä`));
-      card.appendChild(marks);
+      const row = html('div', 'chip-row');
+      row.appendChild(html('span', 'money', `${p.money} p`));
+      const marks = html('span', 'chip-marks');
+      if (p.hasStar) marks.appendChild(html('span', 'star', '★'));
+      if (p.horseshoes) marks.appendChild(html('span', '', 'Ω'.repeat(p.horseshoes)));
+      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0).length;
+      if (gems) marks.appendChild(html('span', '', ` ◆${gems}`));
+      row.appendChild(marks);
+      chip.appendChild(row);
 
       const city = game.cityOf(p);
-      card.appendChild(
-        html('div', 'where', city ? city.name : `matkalla (${game.routeName(p.pos.edge)})`),
+      chip.appendChild(
+        html('div', 'chip-row chip-where', city ? city.name : game.routeName(p.pos.edge)),
       );
-      this.playersEl.appendChild(card);
+      this.playersEl.appendChild(chip);
     }
   }
 
@@ -258,8 +327,9 @@ export class UI {
     this.errorEl.hidden = true;
 
     if (game.phase === 'over') {
-      this.turnTitle.textContent = `${game.winner.name} voitti!`;
+      this.turnStatus.textContent = 'Peli päättyi.';
       this.hint.textContent = '';
+      this.dieEl.hidden = true;
       const again = html('button', 'primary', 'Uusi peli');
       again.addEventListener('click', () => this.onNewGame());
       this.actionsEl.appendChild(again);
@@ -267,53 +337,52 @@ export class UI {
     }
 
     const p = game.player;
-    this.turnTitle.textContent = `Vuorossa: ${p.name}`;
-
-    const die = game.die;
-    this.dieEl.hidden = die === null || die === undefined;
-    if (!this.dieEl.hidden) this.dieEl.textContent = `${DIE_FACES[die]} ${die}`;
+    this.dieEl.hidden = game.die === null || game.die === undefined;
+    if (!this.dieEl.hidden) this.dieEl.textContent = `${DIE_FACES[game.die]} ${game.die}`;
 
     if (p.isBot) {
-      this.hint.textContent = 'Botti miettii…';
-      this.actionsEl.appendChild(html('div', 'muted', 'Botin vuoro.'));
+      this.turnStatus.textContent = `${p.name} miettii…`;
+      this.hint.textContent = '';
       return;
     }
 
     if (game.phase === 'move') {
-      this.hint.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
-      this.actionsEl.appendChild(
-        html('div', 'muted', 'Korostetut kohdat ovat mahdollisia pysähdyspaikkoja.'),
-      );
+      this.turnStatus.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
+      this.hint.textContent = 'Napauta punaista rengasta kartalla.';
       return;
     }
 
     if (game.phase === 'quiz') {
-      this.hint.textContent = 'Tietovisa käynnissä.';
+      this.turnStatus.textContent = 'Tietovisa käynnissä.';
+      this.hint.textContent = '';
       return;
     }
 
     this.hint.textContent = '';
     const actions = game.availableActions();
     const tokenCity = game.tokenHere();
+    this.turnStatus.textContent = tokenCity
+      ? `${tokenCity.name}: laatta odottaa kääntäjää.`
+      : 'Valitse toiminto.';
 
     if (tokenCity) {
-      const quizBtn = html('button', 'primary', `Vastaa kysymykseen — ${tokenCity.name}`);
+      const quizBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
       quizBtn.addEventListener('click', () => this.doAction(() => game.actionQuiz()));
       this.actionsEl.appendChild(quizBtn);
 
-      const buyBtn = html('button', '', `Osta laatta (${TOKEN_PRICE} p)`);
+      const buyBtn = html('button', '', `💰 Osta laatta ${TOKEN_PRICE} p`);
       buyBtn.disabled = !actions.buy;
       buyBtn.addEventListener('click', () => this.doAction(() => game.actionBuy()));
       this.actionsEl.appendChild(buyBtn);
     }
 
-    const rollBtn = html('button', tokenCity ? '' : 'primary', 'Heitä noppa ja liiku');
+    const rollBtn = html('button', tokenCity ? '' : 'primary', '🎲 Heitä noppa');
     rollBtn.addEventListener('click', () => this.doRoll());
     this.actionsEl.appendChild(rollBtn);
 
     for (const dest of actions.fly) {
       const city = game.board.cityById.get(dest);
-      const flyBtn = html('button', '', `✈ Lennä: ${city.name} (${FLIGHT_PRICE} p)`);
+      const flyBtn = html('button', '', `✈ ${city.name} (${FLIGHT_PRICE} p)`);
       flyBtn.addEventListener('click', () => this.doAction(() => game.actionFly(dest)));
       this.actionsEl.appendChild(flyBtn);
     }
@@ -333,9 +402,11 @@ export class UI {
   }
 
   render() {
+    this.onChange?.(this.game);
     this.drawTokens();
     this.drawTargets();
     this.drawPawns();
+    this.renderTurnPill();
     this.renderPlayers();
     this.renderActions();
     this.renderLog();
@@ -442,7 +513,7 @@ export class UI {
   animateDie(value) {
     if (!value || this.reducedMotion) return Promise.resolve();
     this.actionsEl.textContent = ''; // estä tuplaklikkaus heiton aikana
-    this.hint.textContent = 'Noppa pyörii…';
+    this.turnStatus.textContent = 'Noppa pyörii…';
     const dieEl = this.dieEl;
     dieEl.hidden = false;
     dieEl.classList.add('rolling');

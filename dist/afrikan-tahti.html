@@ -6,233 +6,179 @@
 <title>Afrikan tähti</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>★</text></svg>" />
 <style>
+/* Afrikan tähti — sovelluskehys (tumma pähkinäpuu) ja aarrekartta (pergamentti). */
+
 :root {
-  --bg: #1b1410;
-  --panel: #241b15;
-  --panel-2: #2e231b;
-  --ink: #f3e7d3;
-  --muted: #b9a68c;
-  --accent: #e6b422;
-  --line: #4a382a;
-  --ocean: #16303f;
-  --land: #c8a878;
-  --route: #6b4f35;
-  --sea-route: #4f9ec4;
+  /* Sovelluksen kehys */
+  --bg: #1d1610;
+  --panel: #2a1f16;
+  --panel-2: #35271a;
+  --line: #4b3826;
+  --ink-light: #f3e6d0;
+  --muted: #b39c7d;
+  --accent: #d9a13b;
+  --accent-dark: #8a6114;
+  --danger: #ff9b8a;
+
+  /* Kartta */
+  --paper: #efdcb4;
+  --paper-dark: #dcc08f;
+  --map-ink: #46331f;
+  --map-ink-soft: #8a6c46;
+  --sea-ink: #4f7385;
+  --mark: #b03a2b;
+
+  --radius: 12px;
+  --gap: 0.6rem;
 }
 
 * { box-sizing: border-box; }
 
-body {
+html, body {
+  height: 100%;
   margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   background: var(--bg);
-  color: var(--ink);
-  min-height: 100vh;
+  color: var(--ink-light);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, .brand, .turn-pill, .player-chip, .log-card h2 {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* --- sovelluskehys --- */
+
+.app {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
 
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.6rem 1rem;
-  background: linear-gradient(180deg, #2f2318, #241b15);
+  gap: 0.75rem;
+  padding: 0.45rem 0.8rem;
+  background: linear-gradient(180deg, #3a2a1c, #251b12);
   border-bottom: 1px solid var(--line);
 }
 
-.topbar h1 {
+.brand {
   margin: 0;
-  font-size: 1.35rem;
-  letter-spacing: 0.06em;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: clamp(1rem, 2.2vw, 1.3rem);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
 }
 
-.topbar .star { color: var(--accent); }
-
-.topbar-actions { display: flex; gap: 0.5rem; }
-
-button {
-  font: inherit;
-  padding: 0.5rem 0.85rem;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  background: var(--panel-2);
-  color: var(--ink);
-  cursor: pointer;
-}
-
-button:hover:not(:disabled) { background: #3a2c21; }
-button:disabled { opacity: 0.45; cursor: not-allowed; }
-
-button.primary {
-  background: var(--accent);
-  border-color: #a37c12;
-  color: #2a1e08;
-  font-weight: 600;
-}
-
-button.primary:hover { background: #f0c744; }
-button.ghost { background: transparent; }
-
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 1rem;
-  padding: 1rem;
-  align-items: start;
-}
-
-.board-wrap {
-  position: relative;
+.turn-pill {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.topbar-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(250px, 26vw, 340px);
+  gap: var(--gap);
+  padding: var(--gap);
+  min-height: 0;
+}
+
+.map-pane {
+  position: relative;
+  min-height: 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: #241a12;
+  overflow: hidden;
+  display: flex;
 }
 
 #board {
-  display: block;
   width: 100%;
-  max-width: 100%;
-  height: auto;
-  max-height: calc(100vh - 130px);
-  aspect-ratio: 1 / 1;
-  margin: 0 auto;
-  border-radius: 8px;
+  height: 100%;
+  display: block;
+  touch-action: manipulation;
 }
 
 .board-hint {
   position: absolute;
   left: 50%;
-  bottom: 1rem;
+  bottom: 0.6rem;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.65);
-  padding: 0.35rem 0.8rem;
+  background: rgba(28, 20, 12, 0.82);
+  border: 1px solid var(--line);
+  padding: 0.3rem 0.85rem;
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   pointer-events: none;
+  max-width: 90%;
+  text-align: center;
 }
 
 .board-hint:empty { display: none; }
 
-/* --- kartta --- */
-.ocean { fill: var(--ocean); }
-.land { fill: var(--land); stroke: #8a6b45; stroke-width: 3; }
-
-.air-route {
-  fill: none;
-  stroke: #d7c9a8;
-  stroke-width: 2.5;
-  stroke-dasharray: 2 14;
-  stroke-linecap: round;
-  opacity: 0.65;
+.rail {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: var(--gap);
+  min-height: 0;
 }
 
-.route { stroke: var(--route); stroke-width: 4; }
-.route-sea { stroke: var(--sea-route); stroke-dasharray: 10 8; }
-
-.step { fill: #f0e2c8; stroke: #6b4f35; stroke-width: 1.5; }
-.step-sea { fill: #cfeaf7; stroke: #2c6c8c; }
-
-.fare { fill: #cfeaf7; font-size: 15px; font-weight: 700; opacity: 0.8; }
-
-.city { fill: #fdf6e6; stroke: #5e4326; stroke-width: 3; }
-.city-start { fill: var(--accent); stroke: #7a5c10; stroke-width: 4; }
-.airport { font-size: 15px; fill: #4a3418; }
-
-.city-label {
-  fill: #fdf1dc;
-  font-size: 17px;
-  font-weight: 600;
-  paint-order: stroke;
-  stroke: #241b15;
-  stroke-width: 4px;
-  stroke-linejoin: round;
-}
-
-.token { stroke: #241b15; stroke-width: 2; }
-.token-hidden { fill: #7c6249; }
-.token-mark { font-size: 17px; font-weight: 700; fill: #fdf1dc; }
-.token-mark.dark { fill: #201a12; }
-
-.target { cursor: pointer; }
-.target-hit { fill: transparent; }
-.target-ring {
-  fill: rgba(230, 180, 34, 0.25);
-  stroke: var(--accent);
-  stroke-width: 4;
-  animation: pulse 1.2s ease-in-out infinite;
-}
-.target:hover .target-ring { fill: rgba(230, 180, 34, 0.55); }
-.target-cost { fill: #ffd9d0; font-size: 18px; font-weight: 700; }
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.75; }
-  50% { opacity: 1; }
-}
-
-.pawn-dot { stroke: #1b1410; stroke-width: 3; }
-.pawn-dot.active { stroke: #fff; stroke-width: 4; }
-.pawn-star { fill: var(--accent); font-size: 20px; }
-
-/* --- paneeli --- */
-.panel { display: flex; flex-direction: column; gap: 0.85rem; }
-
-.players { display: flex; flex-direction: column; gap: 0.5rem; }
-
-.player-card {
+.card {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.55rem 0.7rem;
+  border-radius: var(--radius);
+  padding: 0.6rem 0.7rem;
+  min-width: 0;
 }
 
-.player-card.current { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+/* --- vuorolaatikko --- */
 
-.player-head { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
-
-.dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  display: inline-block;
-  border: 2px solid #1b1410;
-  flex: 0 0 auto;
+.turn-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
-.dot.small { width: 10px; height: 10px; }
-
-.money { color: var(--accent); font-variant-numeric: tabular-nums; }
-
-.marks { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.25rem; }
-
-.mark {
-  font-size: 0.78rem;
-  background: var(--panel-2);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.1rem 0.5rem;
+.turn-status {
+  font-size: 0.9rem;
+  color: var(--muted);
+  min-width: 0;
 }
-
-.mark.star { background: #4a3a10; border-color: var(--accent); color: var(--accent); }
-
-.where { font-size: 0.82rem; color: var(--muted); margin-top: 0.25rem; }
-
-.turn-box {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.7rem;
-}
-
-.turn-title { font-weight: 700; margin-bottom: 0.5rem; }
 
 .die {
-  font-size: 1.6rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  line-height: 1;
   color: var(--accent);
   display: inline-block;
   font-variant-numeric: tabular-nums;
@@ -248,57 +194,264 @@ button.ghost { background: transparent; }
 }
 
 @keyframes die-land {
-  0% { transform: scale(1.5); }
-  60% { transform: scale(0.92); }
+  0% { transform: scale(1.45); }
+  60% { transform: scale(0.94); }
   100% { transform: scale(1); }
 }
 
-.actions { display: flex; flex-direction: column; gap: 0.4rem; }
+.actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+}
+
+button {
+  font: inherit;
+  padding: 0.5rem 0.8rem;
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--ink-light);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:hover:not(:disabled) { background: #43331f; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+button.primary {
+  background: linear-gradient(180deg, #eab84e, #d09024);
+  border-color: var(--accent-dark);
+  color: #2c1e07;
+  font-weight: 700;
+}
+
+button.primary:hover:not(:disabled) { background: linear-gradient(180deg, #f3c661, #d9a13b); }
+button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7rem; }
 
 .error {
   margin-top: 0.5rem;
-  color: #ff9b8a;
+  color: var(--danger);
   font-size: 0.85rem;
 }
 
 .muted { color: var(--muted); font-size: 0.88rem; }
 
-.log-box {
+/* --- pelaajat --- */
+
+.players {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.4rem;
+}
+
+.player-chip {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 0.7rem;
+  padding: 0.4rem 0.55rem;
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
 }
 
-.log-box h2 { margin: 0 0 0.5rem; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.player-chip.current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.chip-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 0;
+}
+
+.chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 2px solid #1b1410;
+  flex: 0 0 auto;
+}
+
+.dot.small { width: 9px; height: 9px; }
+
+.chip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  min-width: 0;
+}
+
+.money { color: var(--accent); font-variant-numeric: tabular-nums; }
+.chip-where { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip-marks { letter-spacing: 0.08em; }
+.chip-marks .star { color: var(--accent); }
+
+/* --- loki --- */
+
+.log-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.log-card h2 {
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
 
 .log {
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: 260px;
   overflow-y: auto;
+  min-height: 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  font-size: 0.86rem;
+  gap: 0.3rem;
+  font-size: 0.84rem;
+  -webkit-overflow-scrolling: touch;
 }
 
-.log-item { display: flex; gap: 0.45rem; align-items: baseline; }
+.log-item { display: flex; gap: 0.4rem; align-items: baseline; }
+
+/* --- kartta --- */
+
+.paper { fill: url(#paper-grad); }
+.grain { filter: url(#grain); opacity: 0.5; mix-blend-mode: multiply; pointer-events: none; }
+.vignette { fill: url(#vignette-grad); pointer-events: none; }
+
+.graticule { stroke: #9d8253; stroke-width: 1; opacity: 0.28; fill: none; }
+
+.sea-echo { fill: none; stroke: #b99a68; stroke-linejoin: round; }
+.sea-echo-1 { stroke-width: 46; opacity: 0.17; }
+.sea-echo-2 { stroke-width: 26; opacity: 0.2; }
+.sea-echo-3 { stroke-width: 10; opacity: 0.26; }
+
+.land { fill: url(#land-grad); }
+.coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
+.coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
+
+.wave { fill: none; stroke: var(--sea-ink); stroke-width: 2; opacity: 0.45; stroke-linecap: round; }
+
+.route { stroke: #6d5333; stroke-width: 2.4; opacity: 0.5; fill: none; }
+.route-sea { stroke: var(--sea-ink); stroke-width: 2.2; stroke-dasharray: 11 9; opacity: 0.75; }
+.air-route {
+  fill: none;
+  stroke: var(--map-ink-soft);
+  stroke-width: 2;
+  stroke-dasharray: 2 12;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.step { fill: #f7ecd4; stroke: #6d5333; stroke-width: 1.6; }
+.step-sea { fill: #e2eef3; stroke: #446979; }
+
+.fare { fill: var(--sea-ink); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+
+.city { fill: #fdf5e2; stroke: var(--map-ink); stroke-width: 3; }
+.city-start { fill: #f0c765; stroke: #6d4d12; stroke-width: 4; }
+.airport { font-size: 14px; fill: #55401f; }
+
+.city-label {
+  fill: var(--map-ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  paint-order: stroke;
+  stroke: rgba(239, 220, 180, 0.9);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.city-label.start-label { font-size: 21px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.token-x { stroke: var(--mark); stroke-width: 5; stroke-linecap: round; opacity: 0.9; }
+.token-open { stroke: #4a3520; stroke-width: 2; }
+.token-mark { font-size: 17px; font-weight: 700; fill: #2b2114; }
+
+.map-title {
+  fill: var(--map-ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  letter-spacing: 0.3em;
+  opacity: 0.55;
+}
+
+.compass { fill: none; stroke: var(--map-ink); stroke-width: 2; opacity: 0.65; }
+.compass-fill { fill: var(--map-ink); opacity: 0.6; }
+.compass-letter {
+  fill: var(--map-ink);
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: 22px;
+  opacity: 0.7;
+}
+
+.doodle { fill: none; stroke: var(--map-ink); stroke-width: 2.2; opacity: 0.45; stroke-linecap: round; }
+.terrain-mark { fill: none; stroke: var(--map-ink); stroke-width: 2; opacity: 0.3; stroke-linecap: round; }
+.terrain-fill { fill: var(--map-ink); opacity: 0.26; }
+.doodle-fill { fill: var(--map-ink); opacity: 0.45; }
+
+.target { cursor: pointer; }
+.target-hit { fill: transparent; }
+.target-ring {
+  fill: rgba(176, 58, 43, 0.18);
+  stroke: var(--mark);
+  stroke-width: 3.5;
+  stroke-dasharray: 6 5;
+  animation: target-spin 6s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.target:hover .target-ring { fill: rgba(176, 58, 43, 0.35); }
+.target-cost { fill: var(--mark); font-size: 17px; font-weight: 700; }
+
+@keyframes target-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pawn-shadow { fill: rgba(60, 40, 18, 0.35); }
+.pawn-dot { stroke: #2b1f12; stroke-width: 2.5; }
+.pawn-dot.active { stroke: #fff8e6; stroke-width: 3.5; }
+.pawn-star { fill: #b8860b; font-size: 20px; }
 
 /* --- dialogit --- */
+
 .dialog {
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--panel);
-  color: var(--ink);
-  padding: 1.2rem;
-  max-width: 540px;
+  color: var(--ink-light);
+  padding: 1.1rem;
+  max-width: 560px;
   width: calc(100% - 2rem);
+  max-height: 90dvh;
+  overflow-y: auto;
 }
 
-.dialog::backdrop { background: rgba(0, 0, 0, 0.65); }
-.dialog h2 { margin-top: 0; }
+.dialog::backdrop { background: rgba(10, 6, 3, 0.7); }
+.dialog h2 { margin-top: 0; font-family: "Iowan Old Style", Georgia, serif; }
 
 .dialog menu {
   display: flex;
@@ -308,68 +461,75 @@ button.ghost { background: transparent; }
   padding: 0;
 }
 
+.setup-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0.9rem;
+  margin: -0.3rem 0 1rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #efdcb4, #d3b076);
+  color: #3a2a15;
+}
+
+.setup-hero h2 { margin: 0; font-size: 1.25rem; letter-spacing: 0.04em; }
+.setup-star { font-size: 2rem; color: #9a6a12; }
+.setup-tagline { margin: 0.15rem 0 0; font-size: 0.85rem; opacity: 0.8; }
+
 .row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
-
 .player-setup { display: flex; flex-direction: column; gap: 0.5rem; }
-
 .setup-row { display: flex; align-items: center; gap: 0.5rem; }
 
 .setup-row input[type="text"] {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.4rem 0.5rem;
+  padding: 0.45rem 0.55rem;
   border-radius: 8px;
   border: 1px solid var(--line);
   background: var(--panel-2);
-  color: var(--ink);
+  color: var(--ink-light);
   font: inherit;
 }
 
 select {
-  padding: 0.4rem 0.5rem;
+  padding: 0.45rem 0.55rem;
   border-radius: 8px;
   border: 1px solid var(--line);
   background: var(--panel-2);
-  color: var(--ink);
+  color: var(--ink-light);
   font: inherit;
 }
 
-.bot-label { display: flex; align-items: center; gap: 0.25rem; font-size: 0.85rem; color: var(--muted); }
-
+.bot-label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; color: var(--muted); }
 .rules-text p { margin: 0 0 0.7rem; line-height: 1.45; }
 
-
 /* --- tietovisa --- */
+
 .dialog.quiz {
-  max-width: 720px;
+  max-width: 760px;
   background: linear-gradient(180deg, #0d2038, #07142a);
   border: 2px solid var(--accent);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
 }
 
-.quiz-head {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.8rem;
-}
+.quiz-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.7rem; }
 
 .quiz-badge {
   background: var(--accent);
-  color: #16232f;
+  color: #1a2530;
   font-weight: 700;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
 }
 
-.quiz-city { color: #bcd7ee; font-size: 0.92rem; }
+.quiz-city { color: #bcd7ee; font-size: 0.9rem; }
 
 .quiz-question {
-  margin: 0 0 1rem;
-  font-size: 1.25rem;
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
   line-height: 1.35;
   font-weight: 600;
   text-wrap: balance;
@@ -379,7 +539,7 @@ select {
 .quiz-options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 
 .quiz-option {
@@ -387,43 +547,26 @@ select {
   align-items: center;
   gap: 0.7rem;
   text-align: left;
-  padding: 0.7rem 0.9rem;
-  min-height: 58px;
+  padding: 0.65rem 0.9rem;
+  min-height: 56px;
   border: 2px solid #2b5a86;
   border-radius: 999px;
   background: linear-gradient(180deg, #163c5e, #0b2138);
   color: #eaf4ff;
-  font-size: 1rem;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .quiz-option:hover:not(:disabled) { background: #1b3d5f; border-color: var(--accent); }
 .quiz-option:disabled { opacity: 1; cursor: default; }
-
-.quiz-option .letter {
-  color: var(--accent);
-  font-weight: 700;
-  flex: 0 0 auto;
-  width: 1.2em;
-}
-
+.quiz-option .letter { color: var(--accent); font-weight: 700; flex: 0 0 auto; width: 1.2em; }
 .quiz-option .text { flex: 1 1 auto; }
 
-.quiz-option.correct {
-  background: #1d6b3f;
-  border-color: #46d17f;
-  color: #f2fff7;
-}
-
-.quiz-option.wrong {
-  background: #7a2320;
-  border-color: #e0655f;
-  color: #fff0ee;
-}
+.quiz-option.correct { background: #1d6b3f; border-color: #46d17f; color: #f2fff7; }
+.quiz-option.wrong { background: #7a2320; border-color: #e0655f; color: #fff0ee; }
 
 .quiz-result {
-  margin: 1rem 0 0;
-  padding: 0.7rem 0.9rem;
+  margin: 0.9rem 0 0;
+  padding: 0.65rem 0.85rem;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.06);
   font-size: 0.95rem;
@@ -432,91 +575,97 @@ select {
 
 .quiz-result.right { border-left: 4px solid #46d17f; }
 .quiz-result.wrong { border-left: 4px solid #e0655f; }
+.quiz-result .muted { color: #b9cfe2; }
 
-/* --- kosketuslaitteet ja iPad --- */
+/* --- kapea / pystyasento: kartta ylös, ohjaus alle --- */
+
+@media (max-width: 900px), (orientation: portrait) {
+  .stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .rail {
+    grid-template-rows: auto;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .turn-card { grid-row: 1 / span 2; }
+  .actions { grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); }
+  .actions button { font-size: 0.92rem; padding: 0.5rem 0.55rem; }
+  .log-card { max-height: 118px; }
+  .log { font-size: 0.8rem; }
+}
+
+@media (max-width: 560px) {
+  .rail { grid-template-columns: minmax(0, 1fr); }
+  .turn-card { grid-row: auto; }
+  .log-card { max-height: 96px; }
+  .topbar { padding: 0.35rem 0.55rem; gap: 0.5rem; }
+  .turn-pill { font-size: 0.8rem; }
+  .quiz-options { grid-template-columns: minmax(0, 1fr); }
+}
+
 @media (pointer: coarse) {
   button { min-height: 46px; }
-  .quiz-option { min-height: 64px; font-size: 1.05rem; }
-  .topbar-actions button { padding: 0.5rem 1rem; }
-}
-
-/* iPad vaakatasossa: kartta mahtuu ruudulle ilman vieritystä */
-@media (min-width: 901px) and (max-height: 900px) {
-  #board { max-height: calc(100dvh - 120px); }
-  .log { max-height: 200px; }
-}
-
-/* iPad pystyssä */
-@media (min-width: 700px) and (max-width: 900px) {
-  .panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
-  .turn-box { grid-column: 1 / -1; }
-  .log-box { grid-column: 1 / -1; }
-  .quiz-question { font-size: 1.35rem; }
-}
-
-body { -webkit-text-size-adjust: 100%; }
-button { touch-action: manipulation; }
-
-@media (max-width: 900px) {
-  .layout { grid-template-columns: minmax(0, 1fr); padding: 0.6rem; gap: 0.6rem; }
-  /* Puhelimella toimintanapit heti kartan alle. */
-  .turn-box { order: -1; }
-  .log { max-height: 150px; }
-  .players { flex-direction: row; flex-wrap: wrap; }
-  .player-card { flex: 1 1 45%; }
-  .topbar h1 { font-size: 1.05rem; }
-  /* Vihjeteksti kartan alle, jottei se peitä Kapkaupunkia. */
-  .board-hint {
-    position: static;
-    transform: none;
-    margin-top: 0.4rem;
-    font-size: 0.85rem;
-    text-align: center;
-  }
+  .quiz-option { min-height: 62px; font-size: 1.02rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .target-ring { animation: none; }
+  .target-ring, .die.rolling, .die.landed { animation: none; }
 }
 
 </style>
 </head>
 <body>
-<header class="topbar">
-    <h1>Afrikan&nbsp;tähti <span class="star">★</span></h1>
-    <div class="topbar-actions">
-      <button id="rules-btn" class="ghost">Säännöt</button>
-      <button id="newgame-btn" class="ghost">Uusi peli</button>
-    </div>
-  </header>
-
-  <main class="layout">
-    <section class="board-wrap">
-      <svg id="board" viewBox="0 0 1000 1000" role="img" aria-label="Afrikan kartta"></svg>
-      <div id="board-hint" class="board-hint"></div>
-    </section>
-
-    <aside class="panel">
-      <div id="players" class="players"></div>
-
-      <div class="turn-box">
-        <div id="turn-title" class="turn-title"></div>
-        <div id="die" class="die" hidden></div>
-        <div id="actions" class="actions"></div>
-        <div id="error" class="error" hidden></div>
+<div class="app">
+    <header class="topbar">
+      <h1 class="brand">Afrikan&nbsp;tähti</h1>
+      <div id="turn-pill" class="turn-pill"></div>
+      <div class="topbar-actions">
+        <button id="rules-btn" class="ghost" type="button">Säännöt</button>
+        <button id="newgame-btn" class="ghost" type="button">Uusi peli</button>
       </div>
+    </header>
 
-      <div class="log-box">
-        <h2>Tapahtumat</h2>
-        <ul id="log" class="log"></ul>
-      </div>
-    </aside>
-  </main>
+    <main class="stage">
+      <section class="map-pane">
+        <svg id="board" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"
+             role="img" aria-label="Afrikan aarrekartta"></svg>
+        <div id="board-hint" class="board-hint"></div>
+      </section>
+
+      <aside class="rail">
+        <section class="card turn-card">
+          <div class="turn-row">
+            <div id="die" class="die" hidden></div>
+            <div id="turn-status" class="turn-status"></div>
+          </div>
+          <div id="actions" class="actions"></div>
+          <div id="error" class="error" hidden></div>
+        </section>
+
+        <section id="players" class="players" aria-label="Pelaajat"></section>
+
+        <section class="card log-card">
+          <h2>Tapahtumat</h2>
+          <ul id="log" class="log"></ul>
+        </section>
+      </aside>
+    </main>
+  </div>
 
   <!-- Aloitusruutu -->
   <dialog id="setup" class="dialog">
     <form method="dialog" id="setup-form">
-      <h2>Uusi peli</h2>
+      <div class="setup-hero">
+        <span class="setup-star">★</span>
+        <div>
+          <h2>Afrikan tähti</h2>
+          <p class="setup-tagline">Etsi tähti, vastaa kysymyksiin, palaa kotiin.</p>
+        </div>
+      </div>
       <label class="row">
         Pelaajia
         <select id="player-count">
@@ -546,12 +695,12 @@ button { touch-action: manipulation; }
         tasalukua ei tarvita, vaan kaupunkiin saa pysähtyä jo matkan varrella. Reitin voi
         vaihtaa kaupungissa, mutta kesken reitin ei saa kääntyä takaisin. Jos silmäluku
         loppuu kesken reittiä, pysähdyt reitin varrelle.</p>
-      <p><b>Laivareitit.</b> Sininen reitti maksaa 100 puntaa kun sille astutaan.
+      <p><b>Laivareitit.</b> Sininen katkoviiva maksaa 100 puntaa kun sille astutaan.
         Ilman rahaa laivaan ei pääse.</p>
-      <p><b>Laatat ja tietovisa.</b> Kaupungissa seisova pelaaja voi vuorollaan vastata
-        paikkaan liittyvään monivalintakysymykseen (a–d). Oikea vastaus kääntää laatan
-        ilmaiseksi, väärä päättää vuoron. Vaihtoehtoisesti laatan voi ostaa 100 punnalla
-        ilman kysymystä.</p>
+      <p><b>Laatat ja tietovisa.</b> Punainen ✗ kartalla tarkoittaa kääntämätöntä laattaa.
+        Kaupungissa seisova pelaaja voi vastata paikkaan liittyvään monivalintakysymykseen
+        (A–D). Oikea vastaus kääntää laatan ilmaiseksi, väärä päättää vuoron.
+        Vaihtoehtoisesti laatan voi ostaa 100 punnalla ilman kysymystä.</p>
       <p><b>Laatat pelissä (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
@@ -560,7 +709,7 @@ button { touch-action: manipulation; }
         laivalipun hintaa), hän saa vuoronsa alussa 100 puntaa pankilta.</p>
     </div>
     <menu>
-      <button id="rules-close" class="primary">Sulje</button>
+      <button id="rules-close" class="primary" type="button">Sulje</button>
     </menu>
   </dialog>
 
@@ -574,7 +723,7 @@ button { touch-action: manipulation; }
     <div id="quiz-options" class="quiz-options"></div>
     <p id="quiz-result" class="quiz-result" hidden></p>
     <menu>
-      <button id="quiz-continue" class="primary" hidden>Jatka</button>
+      <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
     </menu>
   </dialog>
 
@@ -583,7 +732,7 @@ button { touch-action: manipulation; }
     <h2 id="winner-title">Voitto!</h2>
     <p id="winner-text"></p>
     <menu>
-      <button id="winner-close" class="primary">Uusi peli</button>
+      <button id="winner-close" class="primary" type="button">Uusi peli</button>
     </menu>
   </dialog>
 
@@ -598,13 +747,30 @@ button { touch-action: manipulation; }
 const MAP = {
   width: 1000,
   height: 1000,
-  // Karkea Afrikan rannikkoviiva samassa koordinaatistossa.
-  africa:
-    'M186,50 L267,37 L400,37 L533,87 L667,112 L707,112 L733,150 L773,225 ' +
-    'L840,350 L947,362 L947,475 L813,525 L800,625 L733,750 L693,825 L640,912 ' +
-    'L533,937 L467,837 L427,725 L387,512 L387,450 L307,425 L213,437 L160,450 ' +
-    'L93,387 L40,325 L53,237 L93,162 L133,125 Z',
-  madagascar: 'M853,650 L933,700 L907,812 L853,750 Z',
+  // Rannikkoviiva oikeista koordinaateista projisoituna; mapart.js pyöristää
+  // pisteet pehmeäksi käyräksi ja lisää käsin piirretyn vapinan.
+  africaPoints: [
+    [188.0, 51.3], [240.0, 60.0], [280.0, 43.8], [333.3, 40.0], [373.3, 35.0],
+    [400.0, 33.8], [413.3, 77.5], [466.7, 95.0], [520.0, 120.0], [546.7, 97.5],
+    [586.7, 97.5], [626.7, 108.7], [666.7, 107.5], [693.3, 110.0], [713.3, 150.0],
+    [733.3, 200.0], [760.0, 237.5], [780.0, 275.0], [793.3, 312.5], [820.0, 331.2],
+    [846.7, 356.2], [866.7, 368.8], [906.7, 356.2], [946.7, 352.5], [952.0, 375.0],
+    [933.3, 400.0], [906.7, 437.5], [866.7, 475.0], [826.7, 512.5], [800.0, 550.0],
+    [793.3, 587.5], [806.7, 637.5], [808.0, 675.0], [773.3, 712.5], [733.3, 750.0],
+    [706.7, 800.0], [693.3, 825.0], [666.7, 862.5], [640.0, 900.0], [600.0, 925.0],
+    [560.0, 931.2], [520.0, 935.0], [500.0, 900.0], [466.7, 837.5], [440.0, 787.5],
+    [426.7, 725.0], [426.7, 675.0], [446.7, 637.5], [426.7, 575.0], [393.3, 525.0],
+    [393.3, 475.0], [373.3, 450.0], [320.0, 425.0], [280.0, 431.2], [226.7, 437.5],
+    [166.7, 445.0], [120.0, 425.0], [93.3, 393.8], [66.7, 362.5], [46.7, 337.5],
+    [33.3, 316.2], [53.3, 300.0], [53.3, 262.5], [66.7, 237.5], [93.3, 212.5],
+    [120.0, 175.0], [140.0, 137.5], [160.0, 112.5], [186.7, 87.5],
+  ],
+  madagascarPoints: [
+    [925.3, 653.8], [936.0, 677.5], [932.0, 693.8], [940.0, 702.5], [926.7, 718.8],
+    [917.3, 737.5], [902.7, 775.0], [894.7, 800.0], [869.3, 820.0], [849.3, 803.8],
+    [844.0, 775.0], [860.0, 748.8], [856.0, 727.5], [884.0, 696.2], [902.7, 681.2],
+    [918.7, 666.2],
+  ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
@@ -1732,6 +1898,297 @@ function pixelOf(board, pos) {
   return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
 }
 
+// ===== js/mapart.js =====
+// Aarrekartan grafiikka: pergamentti, käsin piirretty rannikko, aallot, maasto,
+// kompassiruusu ja reunuskoristeet. Kaikki piirretään SVG:nä ilman kuvatiedostoja.
+
+const NS = 'http://www.w3.org/2000/svg';
+
+// Paperi jatkuu reilusti pelialueen ulkopuolelle, jotta se täyttää ruudun
+// näkymäikkunan (viewBox) muodosta riippumatta.
+const PAPER = { x: -700, y: -700, w: 2400, h: 2400 };
+
+function el(tag, attrs = {}, parent = null) {
+  const node = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
+  if (parent) parent.appendChild(node);
+  return node;
+}
+
+/** Catmull–Rom-pehmennys: pisteistä sulava suljettu käyrä. */
+function smoothClosedPath(points) {
+  const n = points.length;
+  const p = (i) => points[((i % n) + n) % n];
+  let d = `M${p(0)[0]},${p(0)[1]}`;
+  for (let i = 0; i < n; i++) {
+    const [x0, y0] = p(i - 1);
+    const [x1, y1] = p(i);
+    const [x2, y2] = p(i + 1);
+    const [x3, y3] = p(i + 2);
+    const c1x = x1 + (x2 - x0) / 6;
+    const c1y = y1 + (y2 - y0) / 6;
+    const c2x = x2 - (x3 - x1) / 6;
+    const c2y = y2 - (y3 - y1) / 6;
+    d += ` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${x2},${y2}`;
+  }
+  return `${d} Z`;
+}
+
+const AFRICA_PATH = smoothClosedPath(MAP.africaPoints);
+const MADAGASCAR_PATH = smoothClosedPath(MAP.madagascarPoints);
+
+/** Suodattimet ja liukuvärit, joilla paperi ja mustejälki saavat elävän pinnan. */
+function drawDefs(svg) {
+  const defs = el('defs', {}, svg);
+
+  // Käsin piirretty vapina: kohina siirtää viivoja hieman.
+  const rough = el('filter', { id: 'rough', x: '-8%', y: '-8%', width: '116%', height: '116%' }, defs);
+  el('feTurbulence', {
+    type: 'turbulence', baseFrequency: '0.017', numOctaves: 3, seed: 7, result: 'noise',
+  }, rough);
+  el('feDisplacementMap', {
+    in: 'SourceGraphic', in2: 'noise', scale: 8,
+    xChannelSelector: 'R', yChannelSelector: 'G',
+  }, rough);
+
+  const roughSoft = el('filter', {
+    id: 'rough-soft', x: '-8%', y: '-8%', width: '116%', height: '116%',
+  }, defs);
+  el('feTurbulence', {
+    type: 'turbulence', baseFrequency: '0.03', numOctaves: 2, seed: 19, result: 'noise',
+  }, roughSoft);
+  el('feDisplacementMap', {
+    in: 'SourceGraphic', in2: 'noise', scale: 3.5,
+    xChannelSelector: 'R', yChannelSelector: 'G',
+  }, roughSoft);
+
+  // Paperin kuitupinta.
+  const grain = el('filter', { id: 'grain' }, defs);
+  el('feTurbulence', {
+    type: 'fractalNoise', baseFrequency: '0.8', numOctaves: 4, seed: 3, result: 'grain',
+  }, grain);
+  el('feColorMatrix', {
+    type: 'matrix',
+    values: '0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 0.3 0',
+  }, grain);
+
+  const paper = el('radialGradient', { id: 'paper-grad', cx: '50%', cy: '46%', r: '62%' }, defs);
+  el('stop', { offset: '0%', 'stop-color': '#f6e7c6' }, paper);
+  el('stop', { offset: '55%', 'stop-color': '#ecd8ae' }, paper);
+  el('stop', { offset: '100%', 'stop-color': '#cfae79' }, paper);
+
+  const land = el('linearGradient', { id: 'land-grad', x1: '0', y1: '0', x2: '0.4', y2: '1' }, defs);
+  el('stop', { offset: '0%', 'stop-color': '#e7d2a4' }, land);
+  el('stop', { offset: '100%', 'stop-color': '#d2b47e' }, land);
+
+  const vignette = el('radialGradient', { id: 'vignette-grad', cx: '50%', cy: '50%', r: '62%' }, defs);
+  el('stop', { offset: '52%', 'stop-color': 'rgba(90,60,25,0)' }, vignette);
+  el('stop', { offset: '84%', 'stop-color': 'rgba(88,58,24,0.16)' }, vignette);
+  el('stop', { offset: '100%', 'stop-color': 'rgba(66,41,15,0.42)' }, vignette);
+
+  return defs;
+}
+
+/** Paperipohja ja hennot pituus- ja leveyspiirit. */
+function drawParchment(svg) {
+  el('rect', { x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'paper' }, svg);
+
+  const grid = el('g', { class: 'graticule' }, svg);
+  for (let x = -500; x < 1500; x += 125) {
+    el('line', { x1: x, y1: PAPER.y, x2: x, y2: PAPER.y + PAPER.h }, grid);
+  }
+  for (let y = -500; y < 1500; y += 125) {
+    el('line', { x1: PAPER.x, y1: y, x2: PAPER.x + PAPER.w, y2: y }, grid);
+  }
+}
+
+/** Paperin rakeisuus ja tummuvat reunat piirretään päällimmäiseksi. */
+function drawPaperOverlay(svg) {
+  el('rect', { x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'grain' }, svg);
+  el('rect', {
+    x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'vignette',
+  }, svg);
+}
+
+/** Manner: rannikon kaikuviivat, täyttö ja mustepiirto. */
+function drawLand(svg) {
+  const g = el('g', { class: 'landmass', filter: 'url(#rough)' }, svg);
+  for (const d of [AFRICA_PATH, MADAGASCAR_PATH]) {
+    el('path', { d, class: 'sea-echo sea-echo-1' }, g);
+    el('path', { d, class: 'sea-echo sea-echo-2' }, g);
+    el('path', { d, class: 'sea-echo sea-echo-3' }, g);
+  }
+  for (const d of [AFRICA_PATH, MADAGASCAR_PATH]) {
+    el('path', { d, class: 'land' }, g);
+    el('path', { d, class: 'coast' }, g);
+  }
+}
+
+// --- geometria: missä on merta, missä tyhjää maata ------------------------
+
+function pointInPolygon([px, py], poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i];
+    const [xj, yj] = poly[j];
+    const hits = yi > py !== yj > py && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi;
+    if (hits) inside = !inside;
+  }
+  return inside;
+}
+
+function distanceToPolygon([px, py], poly) {
+  let best = Infinity;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [x1, y1] = poly[j];
+    const [x2, y2] = poly[i];
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len2 = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / len2));
+    best = Math.min(best, Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy)));
+  }
+  return best;
+}
+
+const AFRICA = MAP.africaPoints;
+const MADAGASCAR = MAP.madagascarPoints;
+
+function onLand(p) {
+  return pointInPolygon(p, AFRICA) || pointInPolygon(p, MADAGASCAR);
+}
+
+function coastDistance(p) {
+  return Math.min(distanceToPolygon(p, AFRICA), distanceToPolygon(p, MADAGASCAR));
+}
+
+/** Ruudukon pisteet merellä, riittävän kaukana rannikosta. */
+function seaPoints(spacing = 92, margin = 46) {
+  const points = [];
+  for (let x = 30; x < MAP.width; x += spacing) {
+    for (let y = 30; y < MAP.height; y += spacing) {
+      const p = [x, y];
+      if (onLand(p) || coastDistance(p) < margin) continue;
+      points.push(p);
+    }
+  }
+  return points;
+}
+
+/** Ruudukon pisteet maalla, riittävän kaukana rannikosta ja esteistä. */
+function landPoints(obstacles, spacing = 78, clearance = 34) {
+  const points = [];
+  for (let x = 40; x < MAP.width; x += spacing) {
+    for (let y = 40; y < MAP.height; y += spacing) {
+      const p = [x, y];
+      if (!onLand(p) || coastDistance(p) < 34) continue;
+      if (obstacles.some((o) => Math.hypot(p[0] - o.x, p[1] - o.y) < clearance)) continue;
+      points.push(p);
+    }
+  }
+  return points;
+}
+
+function blocked(p, zones) {
+  return zones.some((z) => Math.hypot(p[0] - z.x, p[1] - z.y) < (z.r ?? 90));
+}
+
+/** Merelle piirretyt kaksoiskaaret, jotka merkitsevät aaltoja. */
+function drawWaves(svg, skipZones = []) {
+  const g = el('g', { class: 'waves', filter: 'url(#rough-soft)' }, svg);
+  seaPoints().forEach((p, i) => {
+    if (i % 2 === 1 || blocked(p, skipZones)) return;
+    const [x, y] = p;
+    const w = 19 + (i % 3) * 4;
+    el('path', { d: `M${x - w},${y} q${w / 2},-7 ${w},0 q${w / 2},7 ${w},0`, class: 'wave' }, g);
+    el('path', {
+      d: `M${x - w + 7},${y + 13} q${w / 2},-7 ${w},0 q${w / 2},7 ${w},0`,
+      class: 'wave',
+    }, g);
+  });
+}
+
+/**
+ * Maaston merkit vanhan kartan tapaan: pohjoisessa dyynejä, keskellä puita ja
+ * etelässä vuoria. Piirretään vain kohtiin, joissa ei ole reittejä tai nimiä.
+ */
+function drawTerrain(svg, obstacles) {
+  const g = el('g', { class: 'terrain', filter: 'url(#rough-soft)' }, svg);
+  landPoints(obstacles).forEach((p, i) => {
+    if (i % 2 === 1) return;
+    const [x, y] = p;
+    if (y < 300) {
+      el('path', {
+        d: `M${x - 16},${y} q8,-9 16,0 M${x - 2},${y + 8} q8,-9 16,0`,
+        class: 'terrain-mark',
+      }, g);
+    } else if (y < 640) {
+      el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, g);
+      el('path', {
+        d: `M${x},${y - 4} q-11,-2 -13,-10 q9,1 13,7 q4,-6 13,-7 q-2,8 -13,10 z`,
+        class: 'terrain-fill',
+      }, g);
+    } else {
+      el('path', {
+        d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
+        class: 'terrain-mark',
+      }, g);
+    }
+  });
+}
+
+/** Kompassiruusu. */
+function drawCompass(svg, cx, cy, r = 62) {
+  const g = el('g', { class: 'compass-rose', transform: `translate(${cx},${cy})` }, svg);
+  el('circle', { r, class: 'compass' }, g);
+  el('circle', { r: r * 0.72, class: 'compass' }, g);
+
+  for (const angle of [0, 90, 180, 270]) {
+    el('path', {
+      d: `M0,${-r} L${r * 0.17},0 L0,${r * 0.17} L${-r * 0.17},0 Z`,
+      class: 'compass-fill',
+      transform: `rotate(${angle})`,
+    }, g);
+  }
+  for (const angle of [45, 135, 225, 315]) {
+    el('path', {
+      d: `M0,${-r * 0.72} L${r * 0.09},0 L0,${r * 0.09} L${-r * 0.09},0 Z`,
+      class: 'compass',
+      transform: `rotate(${angle})`,
+    }, g);
+  }
+  el('text', {
+    x: 0, y: -r - 12, class: 'compass-letter', 'text-anchor': 'middle',
+  }, g).textContent = 'N';
+}
+
+/** Purjelaiva, meripeto ja karttaotsikko täyttämässä tyhjää merta. */
+function drawDoodles(svg) {
+  const ship = el('g', { class: 'doodle-ship', transform: 'translate(214,548)' }, svg);
+  el('path', { d: 'M-40,10 L40,10 L28,30 L-28,30 Z', class: 'doodle-fill' }, ship);
+  el('path', { d: 'M-2,10 L-2,-48 M18,10 L18,-30', class: 'doodle' }, ship);
+  el('path', { d: 'M0,-46 q26,16 0,30 z', class: 'doodle-fill' }, ship);
+  el('path', { d: 'M20,-28 q18,12 0,22 z', class: 'doodle-fill' }, ship);
+  el('path', { d: 'M-52,38 q13,9 26,0 M18,38 q13,9 26,0', class: 'doodle' }, ship);
+
+  const serpent = el('g', { class: 'doodle-serpent', transform: 'translate(852,902)' }, svg);
+  el('path', {
+    d: 'M-78,14 q14,-30 30,-2 q10,18 22,0 q10,-16 22,-2',
+    class: 'doodle',
+  }, serpent);
+  el('path', {
+    d: 'M-4,10 q14,-22 34,-16 q-8,7 -6,16 q-12,6 -28,0 z',
+    class: 'doodle-fill',
+  }, serpent);
+  el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+
+  const title = el('g', { class: 'map-title-group', transform: 'translate(886,96)' }, svg);
+  el('text', {
+    x: 0, y: 0, class: 'map-title', 'text-anchor': 'middle', 'font-size': 34,
+  }, title).textContent = 'AFRIKA';
+  el('path', { d: 'M-80,14 L80,14 M-58,22 L58,22', class: 'doodle' }, title);
+}
+
 // ===== js/game.js =====
 // Pelin tila ja säännöt: vuorot, laattojen kääntäminen ja voittoehdot.
 
@@ -1754,11 +2211,19 @@ class Game {
   /**
    * @param {{players: Array<{name, color, isBot, start}>, rng?: () => number}} opts
    */
-  constructor({ players, rng = Math.random }) {
+  constructor({ players, seed = Math.floor(Math.random() * 2 ** 32), rng }) {
     if (players.length < 2 || players.length > 4) {
       throw new Error('Pelaajia pitää olla 2–4');
     }
-    this.rng = rng;
+    // Arvonnat tulevat siemenestä ja niiden määrä lasketaan, jotta tallennettu
+    // peli voidaan palauttaa täsmälleen samaan tilanteeseen.
+    this.seed = seed;
+    this.rngCalls = 0;
+    const source = rng ?? mulberry32(seed);
+    this.rng = () => {
+      this.rngCalls++;
+      return source();
+    };
     this.board = buildBoard(CITIES, EDGES);
     this.airRoutes = AIR_ROUTES;
 
@@ -2107,6 +2572,73 @@ class Game {
     return true;
   }
 
+  // --- tallennus ----------------------------------------------------------
+
+  /** Pelin tila tavallisena oliona (localStorage / JSON). */
+  toJSON() {
+    return {
+      version: 1,
+      seed: this.seed,
+      rngCalls: this.rngCalls,
+      players: this.players.map((p) => ({ ...p })),
+      tokens: [...this.tokens.entries()],
+      revealed: [...this.revealed.entries()],
+      usedQuestions: [...this.usedQuestions],
+      current: this.current,
+      phase: this.phase,
+      die: this.die,
+      quiz: this.quiz,
+      starFound: this.starFound,
+      starCity: this.starCity,
+      winnerId: this.winner ? this.winner.id : null,
+      turnCount: this.turnCount,
+      log: this.log,
+    };
+  }
+
+  /** Palauttaa tallennetun pelin. Palauttaa null, jos tallennus on kelvoton. */
+  static fromJSON(data) {
+    if (!data || data.version !== 1 || !Array.isArray(data.players)) return null;
+
+    const game = Object.create(Game.prototype);
+    game.seed = data.seed;
+    game.rngCalls = 0;
+    const source = mulberry32(data.seed);
+    // Kelataan arvonnat samaan kohtaan kuin tallennushetkellä.
+    for (let i = 0; i < data.rngCalls; i++) source();
+    game.rngCalls = data.rngCalls;
+    game.rng = () => {
+      game.rngCalls++;
+      return source();
+    };
+
+    game.board = buildBoard(CITIES, EDGES);
+    game.airRoutes = AIR_ROUTES;
+    game.players = data.players.map((p) => ({ ...p }));
+    game.tokens = new Map(data.tokens);
+    game.revealed = new Map(data.revealed);
+    game.usedQuestions = new Set(data.usedQuestions ?? []);
+    game.current = data.current;
+    game.phase = data.phase;
+    game.die = data.die ?? null;
+    game.quiz = data.quiz ?? null;
+    game.lastPath = null;
+    game.starFound = !!data.starFound;
+    game.starCity = data.starCity ?? null;
+    game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
+    game.turnCount = data.turnCount ?? 1;
+    game.log = data.log ?? [];
+    game.moves = null;
+
+    // Kesken jäänyt siirtovalinta lasketaan uudelleen nopan silmäluvusta.
+    if (game.phase === 'move' && game.die) {
+      const p = game.players[game.current];
+      game.moves = findMoves(game.board, p.pos, game.die, p.money);
+      if (game.moves.size === 0) game.phase = 'action';
+    }
+    return game;
+  }
+
   /** Siirtolista UI:lle: avain, sijainti, hinta ja kaupungin tiedot. */
   moveOptions() {
     if (this.phase !== 'move' || !this.moves) return [];
@@ -2226,20 +2758,13 @@ function chooseQuizAnswer(game, skill = BOT_SKILL) {
 }
 
 // ===== js/ui.js =====
-// Käyttöliittymä: SVG-kartan piirto, napit ja botin ohjaus.
+// Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
-const NS = 'http://www.w3.org/2000/svg';
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 850;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
 const LETTERS = ['A', 'B', 'C', 'D'];
-
-function el(tag, attrs = {}, parent = null) {
-  const node = document.createElementNS(NS, tag);
-  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
-  if (parent) parent.appendChild(node);
-  return node;
-}
+const COMPASS = { x: 168, y: 772, r: 62 };
 
 function html(tag, className, text) {
   const node = document.createElement(tag);
@@ -2249,18 +2774,22 @@ function html(tag, className, text) {
 }
 
 class UI {
-  constructor(game, { onNewGame }) {
+  constructor(game, { onNewGame, onChange }) {
     this.game = game;
     this.onNewGame = onNewGame;
+    this.onChange = onChange;
     this.botTimer = null;
+
     this.svg = document.getElementById('board');
     this.hint = document.getElementById('board-hint');
     this.playersEl = document.getElementById('players');
-    this.turnTitle = document.getElementById('turn-title');
+    this.turnPill = document.getElementById('turn-pill');
+    this.turnStatus = document.getElementById('turn-status');
     this.dieEl = document.getElementById('die');
     this.actionsEl = document.getElementById('actions');
     this.errorEl = document.getElementById('error');
     this.logEl = document.getElementById('log');
+
     this.winnerDialog = document.getElementById('winner-dialog');
     this.quizDialog = document.getElementById('quiz-dialog');
     this.quizCity = document.getElementById('quiz-city');
@@ -2269,16 +2798,56 @@ class UI {
     this.quizResult = document.getElementById('quiz-result');
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
+
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
   mount() {
     this.drawBoard();
+    this.fitViewBox();
+    this.observer = new ResizeObserver(() => this.fitViewBox());
+    this.observer.observe(this.svg.parentElement);
     this.render();
   }
 
   destroy() {
     clearTimeout(this.botTimer);
+    this.observer?.disconnect();
+  }
+
+  /**
+   * Venyttää näkymäikkunan ruudun muotoiseksi, jolloin pergamentti täyttää
+   * koko alueen ja pelialue pysyy silti kokonaan näkyvissä.
+   */
+  fitViewBox() {
+    const pane = this.svg.parentElement;
+    const w = pane.clientWidth;
+    const h = pane.clientHeight;
+    if (!w || !h) return;
+    const size = 1000;
+    const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
+    this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
+  }
+
+  /** Kohdat, joihin maastokuvioita ei saa piirtää: kaupungit, nimet ja reitit. */
+  mapObstacles() {
+    const { board } = this.game;
+    const spots = [];
+    for (const c of board.cities) {
+      spots.push({ x: c.x, y: c.y });
+      spots.push({ x: c.x + (c.lx ?? 0), y: c.y + (c.ly ?? -20) });
+      spots.push({ x: c.x + 21, y: c.y + 17 }); // laatan paikka
+    }
+    for (const e of board.edges) {
+      const a = board.cityById.get(e.a);
+      const b = board.cityById.get(e.b);
+      const steps = Math.max(e.steps * 2, 4);
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        spots.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
+      }
+    }
+    return spots;
   }
 
   // --- kartta -------------------------------------------------------------
@@ -2287,102 +2856,111 @@ class UI {
     const { board } = this.game;
     this.svg.textContent = '';
 
-    el('rect', { x: 0, y: 0, width: MAP.width, height: MAP.height, class: 'ocean' }, this.svg);
-    el('path', { d: MAP.africa, class: 'land' }, this.svg);
-    el('path', { d: MAP.madagascar, class: 'land' }, this.svg);
+    drawDefs(this.svg);
+    drawParchment(this.svg);
+    drawLand(this.svg);
+    drawWaves(this.svg, [
+      { x: COMPASS.x, y: COMPASS.y, r: COMPASS.r + 45 },
+      { x: 232, y: 556, r: 95 },
+      { x: 858, y: 905, r: 110 },
+      { x: 880, y: 92, r: 135 },
+    ]);
+    drawTerrain(this.svg, this.mapObstacles());
+    drawCompass(this.svg, COMPASS.x, COMPASS.y, COMPASS.r);
+    drawDoodles(this.svg);
 
-    // Lentoreitit kaarina taustalle.
+    // Lentoreitit kaarina.
+    const air = el('g', { class: 'air-routes' }, this.svg);
     for (const route of AIR_ROUTES) {
       const a = board.cityById.get(route.a);
       const b = board.cityById.get(route.b);
       const mx = (a.x + b.x) / 2 + (b.y - a.y) * 0.12;
       const my = (a.y + b.y) / 2 - (b.x - a.x) * 0.12;
-      el('path', { d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, class: 'air-route' }, this.svg);
+      el('path', { d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, class: 'air-route' }, air);
     }
 
-    // Reitit ja niiden askelpisteet.
-    const routes = el('g', { class: 'routes' }, this.svg);
+    // Reitit ja askelpisteet.
+    const routes = el('g', { class: 'routes', filter: 'url(#rough-soft)' }, this.svg);
     for (const e of board.edges) {
       const a = board.cityById.get(e.a);
       const b = board.cityById.get(e.b);
-      el(
-        'line',
-        { x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: `route route-${e.type}` },
-        routes,
-      );
+      el('line', {
+        x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: `route route-${e.type}`,
+      }, routes);
       for (let i = 1; i < e.steps; i++) {
         const t = i / e.steps;
-        el(
-          'circle',
-          {
-            cx: a.x + (b.x - a.x) * t,
-            cy: a.y + (b.y - a.y) * t,
-            r: 6,
-            class: `step step-${e.type}`,
-          },
-          routes,
-        );
-      }
-      if (e.type === 'sea') {
-        el(
-          'text',
-          {
-            x: (a.x + b.x) / 2,
-            y: (a.y + b.y) / 2 - 12,
-            class: 'fare',
-            'text-anchor': 'middle',
-          },
-          routes,
-        ).textContent = `${e.fee}`;
+        el('circle', {
+          cx: a.x + (b.x - a.x) * t,
+          cy: a.y + (b.y - a.y) * t,
+          r: 6,
+          class: `step step-${e.type}`,
+        }, routes);
       }
     }
 
-    // Kaupungit.
+    // Laivamatkojen hinnat erikseen, jotta teksti pysyy terävänä.
+    const fares = el('g', { class: 'fares' }, this.svg);
+    for (const e of board.edges) {
+      if (e.type !== 'sea') continue;
+      const a = board.cityById.get(e.a);
+      const b = board.cityById.get(e.b);
+      el('text', {
+        x: (a.x + b.x) / 2,
+        y: (a.y + b.y) / 2 - 12,
+        class: 'fare',
+        'text-anchor': 'middle',
+      }, fares).textContent = `⚓${e.fee}`;
+    }
+
+    // Kaupungit ja nimet.
     const cities = el('g', { class: 'cities' }, this.svg);
     for (const c of board.cities) {
-      el(
-        'circle',
-        { cx: c.x, cy: c.y, r: c.start ? 17 : 12, class: c.start ? 'city city-start' : 'city' },
-        cities,
-      );
-      if (c.airport) {
-        el('text', { x: c.x, y: c.y + 5, class: 'airport', 'text-anchor': 'middle' }, cities)
-          .textContent = '✈';
+      if (c.start) {
+        el('circle', { cx: c.x, cy: c.y, r: 20, class: 'city-start' }, cities);
+        el('circle', { cx: c.x, cy: c.y, r: 12, class: 'coast-soft' }, cities);
+      } else {
+        el('circle', { cx: c.x, cy: c.y, r: 12, class: 'city' }, cities);
       }
-      // la/lx/ly siirtävät nimilapun pois päällekkäisyyksistä.
+      if (c.airport) {
+        el('text', {
+          x: c.x, y: c.y + 5, class: 'airport', 'text-anchor': 'middle',
+        }, cities).textContent = '✈';
+      }
       const anchor = c.la ?? 'middle';
       const dx = c.lx ?? 0;
-      const dy = c.ly ?? -(c.start ? 24 : 19);
-      const label = el(
-        'text',
-        { x: c.x + dx, y: c.y + dy, class: 'city-label', 'text-anchor': anchor },
-        cities,
-      );
+      const dy = c.ly ?? -(c.start ? 28 : 19);
+      const label = el('text', {
+        x: c.x + dx,
+        y: c.y + dy,
+        class: c.start ? 'city-label start-label' : 'city-label',
+        'text-anchor': anchor,
+      }, cities);
       label.textContent = c.name;
     }
 
     this.tokenLayer = el('g', { class: 'tokens' }, this.svg);
     this.targetLayer = el('g', { class: 'targets' }, this.svg);
     this.pawnLayer = el('g', { class: 'pawns' }, this.svg);
+    drawPaperOverlay(this.svg);
   }
 
+  /** Kääntämätön laatta on punainen rasti, käännetty laatta värillinen kiekko. */
   drawTokens() {
     const { game } = this;
     this.tokenLayer.textContent = '';
-    for (const cityId of game.board.cities.map((c) => c.id)) {
-      const city = game.board.cityById.get(cityId);
-      const hidden = game.tokens.has(cityId);
-      const revealed = game.revealed.get(cityId);
+    for (const city of game.board.cities) {
+      const hidden = game.tokens.has(city.id);
+      const revealed = game.revealed.get(city.id);
       if (!hidden && !revealed) continue;
-      const g = el('g', { transform: `translate(${city.x + 20},${city.y + 18})` }, this.tokenLayer);
+      const g = el('g', { transform: `translate(${city.x + 21},${city.y + 17})` }, this.tokenLayer);
       if (hidden) {
-        el('circle', { r: 13, class: 'token token-hidden' }, g);
-        el('text', { y: 6, class: 'token-mark', 'text-anchor': 'middle' }, g).textContent = '?';
+        el('path', { d: 'M-9,-9 L9,9 M9,-9 L-9,9', class: 'token-x' }, g);
       } else {
         const t = TOKEN_TYPES[revealed];
-        el('circle', { r: 13, class: 'token token-open', fill: t.color }, g);
-        el('text', { y: 6, class: 'token-mark dark', 'text-anchor': 'middle' }, g).textContent =
-          t.symbol;
+        el('circle', { r: 13, class: 'token-open', fill: t.color }, g);
+        el('text', {
+          y: 6, class: 'token-mark', 'text-anchor': 'middle',
+        }, g).textContent = t.symbol;
       }
     }
   }
@@ -2394,12 +2972,12 @@ class UI {
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
       const g = el('g', { class: 'target' }, this.targetLayer);
-      // Näkymätön, isompi osumisalue sormella osumista varten.
-      el('circle', { cx: x, cy: y, r: 28, class: 'target-hit' }, g);
-      el('circle', { cx: x, cy: y, r: opt.city ? 20 : 13, class: 'target-ring' }, g);
+      el('circle', { cx: x, cy: y, r: 30, class: 'target-hit' }, g);
+      el('circle', { cx: x, cy: y, r: opt.city ? 22 : 14, class: 'target-ring' }, g);
       if (opt.cost) {
-        el('text', { x, y: y - 26, class: 'target-cost', 'text-anchor': 'middle' }, g).textContent =
-          `-${opt.cost}`;
+        el('text', {
+          x, y: y - 28, class: 'target-cost', 'text-anchor': 'middle',
+        }, g).textContent = `−${opt.cost}`;
       }
       g.addEventListener('click', () => this.doMove(opt.key));
     }
@@ -2418,24 +2996,22 @@ class UI {
       const base = pixelOf(game.board, players[0].pos);
       players.forEach((p, i) => {
         const angle = (i / Math.max(players.length, 1)) * Math.PI * 2 - Math.PI / 2;
-        const spread = players.length > 1 ? 15 : 0;
+        const spread = players.length > 1 ? 16 : 0;
         const x = base.x + Math.cos(angle) * spread;
         const y = base.y + Math.sin(angle) * spread;
         const g = el('g', { class: 'pawn' }, this.pawnLayer);
-        el(
-          'circle',
-          {
-            cx: x,
-            cy: y,
-            r: 11,
-            fill: p.color,
-            class: p.id === game.current ? 'pawn-dot active' : 'pawn-dot',
-          },
-          g,
-        );
+        el('ellipse', { cx: x + 2, cy: y + 8, rx: 10, ry: 4, class: 'pawn-shadow' }, g);
+        el('circle', {
+          cx: x,
+          cy: y,
+          r: 11,
+          fill: p.color,
+          class: p.id === game.current ? 'pawn-dot active' : 'pawn-dot',
+        }, g);
         if (p.hasStar) {
-          el('text', { x, y: y - 16, class: 'pawn-star', 'text-anchor': 'middle' }, g).textContent =
-            '★';
+          el('text', {
+            x, y: y - 16, class: 'pawn-star', 'text-anchor': 'middle',
+          }, g).textContent = '★';
         }
       });
     }
@@ -2443,34 +3019,48 @@ class UI {
 
   // --- paneeli ------------------------------------------------------------
 
+  renderTurnPill() {
+    const { game } = this;
+    this.turnPill.textContent = '';
+    if (game.phase === 'over') {
+      this.turnPill.appendChild(html('span', '', `🏆 ${game.winner.name} voitti`));
+      return;
+    }
+    const p = game.player;
+    const dot = html('span', 'dot');
+    dot.style.background = p.color;
+    this.turnPill.appendChild(dot);
+    this.turnPill.appendChild(html('span', '', `Vuorossa: ${p.name}`));
+  }
+
   renderPlayers() {
     const { game } = this;
     this.playersEl.textContent = '';
     for (const p of game.players) {
-      const card = html('div', 'player-card' + (p.id === game.current ? ' current' : ''));
-      const head = html('div', 'player-head');
+      const chip = html('div', 'player-chip' + (p.id === game.current ? ' current' : ''));
+
+      const head = html('div', 'chip-head');
       const dot = html('span', 'dot');
       dot.style.background = p.color;
       head.appendChild(dot);
-      head.appendChild(html('span', 'player-name', p.name + (p.isBot ? ' (botti)' : '')));
-      card.appendChild(head);
+      head.appendChild(html('span', 'chip-name', p.name + (p.isBot ? ' 🤖' : '')));
+      chip.appendChild(head);
 
-      card.appendChild(html('div', 'money', `${p.money} puntaa`));
-
-      const marks = html('div', 'marks');
-      if (p.hasStar) marks.appendChild(html('span', 'mark star', '★ Afrikan tähti'));
-      for (let i = 0; i < p.horseshoes; i++) {
-        marks.appendChild(html('span', 'mark', 'Ω hevosenkenkä'));
-      }
-      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0);
-      if (gems.length) marks.appendChild(html('span', 'mark', `◆ ${gems.length} jalokiveä`));
-      card.appendChild(marks);
+      const row = html('div', 'chip-row');
+      row.appendChild(html('span', 'money', `${p.money} p`));
+      const marks = html('span', 'chip-marks');
+      if (p.hasStar) marks.appendChild(html('span', 'star', '★'));
+      if (p.horseshoes) marks.appendChild(html('span', '', 'Ω'.repeat(p.horseshoes)));
+      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0).length;
+      if (gems) marks.appendChild(html('span', '', ` ◆${gems}`));
+      row.appendChild(marks);
+      chip.appendChild(row);
 
       const city = game.cityOf(p);
-      card.appendChild(
-        html('div', 'where', city ? city.name : `matkalla (${game.routeName(p.pos.edge)})`),
+      chip.appendChild(
+        html('div', 'chip-row chip-where', city ? city.name : game.routeName(p.pos.edge)),
       );
-      this.playersEl.appendChild(card);
+      this.playersEl.appendChild(chip);
     }
   }
 
@@ -2480,8 +3070,9 @@ class UI {
     this.errorEl.hidden = true;
 
     if (game.phase === 'over') {
-      this.turnTitle.textContent = `${game.winner.name} voitti!`;
+      this.turnStatus.textContent = 'Peli päättyi.';
       this.hint.textContent = '';
+      this.dieEl.hidden = true;
       const again = html('button', 'primary', 'Uusi peli');
       again.addEventListener('click', () => this.onNewGame());
       this.actionsEl.appendChild(again);
@@ -2489,53 +3080,52 @@ class UI {
     }
 
     const p = game.player;
-    this.turnTitle.textContent = `Vuorossa: ${p.name}`;
-
-    const die = game.die;
-    this.dieEl.hidden = die === null || die === undefined;
-    if (!this.dieEl.hidden) this.dieEl.textContent = `${DIE_FACES[die]} ${die}`;
+    this.dieEl.hidden = game.die === null || game.die === undefined;
+    if (!this.dieEl.hidden) this.dieEl.textContent = `${DIE_FACES[game.die]} ${game.die}`;
 
     if (p.isBot) {
-      this.hint.textContent = 'Botti miettii…';
-      this.actionsEl.appendChild(html('div', 'muted', 'Botin vuoro.'));
+      this.turnStatus.textContent = `${p.name} miettii…`;
+      this.hint.textContent = '';
       return;
     }
 
     if (game.phase === 'move') {
-      this.hint.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
-      this.actionsEl.appendChild(
-        html('div', 'muted', 'Korostetut kohdat ovat mahdollisia pysähdyspaikkoja.'),
-      );
+      this.turnStatus.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
+      this.hint.textContent = 'Napauta punaista rengasta kartalla.';
       return;
     }
 
     if (game.phase === 'quiz') {
-      this.hint.textContent = 'Tietovisa käynnissä.';
+      this.turnStatus.textContent = 'Tietovisa käynnissä.';
+      this.hint.textContent = '';
       return;
     }
 
     this.hint.textContent = '';
     const actions = game.availableActions();
     const tokenCity = game.tokenHere();
+    this.turnStatus.textContent = tokenCity
+      ? `${tokenCity.name}: laatta odottaa kääntäjää.`
+      : 'Valitse toiminto.';
 
     if (tokenCity) {
-      const quizBtn = html('button', 'primary', `Vastaa kysymykseen — ${tokenCity.name}`);
+      const quizBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
       quizBtn.addEventListener('click', () => this.doAction(() => game.actionQuiz()));
       this.actionsEl.appendChild(quizBtn);
 
-      const buyBtn = html('button', '', `Osta laatta (${TOKEN_PRICE} p)`);
+      const buyBtn = html('button', '', `💰 Osta laatta ${TOKEN_PRICE} p`);
       buyBtn.disabled = !actions.buy;
       buyBtn.addEventListener('click', () => this.doAction(() => game.actionBuy()));
       this.actionsEl.appendChild(buyBtn);
     }
 
-    const rollBtn = html('button', tokenCity ? '' : 'primary', 'Heitä noppa ja liiku');
+    const rollBtn = html('button', tokenCity ? '' : 'primary', '🎲 Heitä noppa');
     rollBtn.addEventListener('click', () => this.doRoll());
     this.actionsEl.appendChild(rollBtn);
 
     for (const dest of actions.fly) {
       const city = game.board.cityById.get(dest);
-      const flyBtn = html('button', '', `✈ Lennä: ${city.name} (${FLIGHT_PRICE} p)`);
+      const flyBtn = html('button', '', `✈ ${city.name} (${FLIGHT_PRICE} p)`);
       flyBtn.addEventListener('click', () => this.doAction(() => game.actionFly(dest)));
       this.actionsEl.appendChild(flyBtn);
     }
@@ -2555,9 +3145,11 @@ class UI {
   }
 
   render() {
+    this.onChange?.(this.game);
     this.drawTokens();
     this.drawTargets();
     this.drawPawns();
+    this.renderTurnPill();
     this.renderPlayers();
     this.renderActions();
     this.renderLog();
@@ -2664,7 +3256,7 @@ class UI {
   animateDie(value) {
     if (!value || this.reducedMotion) return Promise.resolve();
     this.actionsEl.textContent = ''; // estä tuplaklikkaus heiton aikana
-    this.hint.textContent = 'Noppa pyörii…';
+    this.turnStatus.textContent = 'Noppa pyörii…';
     const dieEl = this.dieEl;
     dieEl.hidden = false;
     dieEl.classList.add('rolling');
@@ -2732,13 +3324,14 @@ class UI {
 }
 
 // ===== js/main.js =====
-// Käynnistys: aloitusruutu, pelin luonti ja dialogit.
+// Käynnistys: aloitusruutu, pelin luonti, tallennus ja dialogit.
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const START_CITIES = [
   { id: 'tanger', name: 'Tanger' },
   { id: 'kairo', name: 'Kairo' },
 ];
+const SAVE_KEY = 'afrikan-tahti-save-v1';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -2748,6 +3341,38 @@ const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
 
 let ui = null;
+
+// --- tallennus -------------------------------------------------------------
+
+function saveGame(game) {
+  try {
+    if (game.phase === 'over') localStorage.removeItem(SAVE_KEY);
+    else localStorage.setItem(SAVE_KEY, JSON.stringify(game.toJSON()));
+  } catch {
+    /* yksityinen selaustila tai täysi levy — peli jatkuu ilman tallennusta */
+  }
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const game = Game.fromJSON(JSON.parse(raw));
+    return game && game.phase !== 'over' ? game : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearSave() {
+  try {
+    localStorage.removeItem(SAVE_KEY);
+  } catch {
+    /* ei mitään tehtävissä */
+  }
+}
+
+// --- aloitusruutu ----------------------------------------------------------
 
 function buildPlayerRows() {
   const count = Number(countSelect.value);
@@ -2802,16 +3427,21 @@ function readPlayers() {
   }));
 }
 
-function startGame() {
+function attach(game) {
   if (ui) ui.destroy();
-  const game = new Game({ players: readPlayers() });
-  ui = new UI(game, { onNewGame: openSetup });
+  ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
   ui.mount();
   window.afrikanTahti = { game, ui }; // kehityksen apuri konsolia varten
 }
 
+function startGame() {
+  clearSave();
+  attach(new Game({ players: readPlayers() }));
+}
+
 function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
+  clearSave();
   buildPlayerRows();
   setupDialog.showModal();
 }
@@ -2827,7 +3457,23 @@ document.getElementById('rules-btn').addEventListener('click', () => rulesDialog
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
 document.getElementById('winner-close').addEventListener('click', openSetup);
 
-openSetup();
+// Palvelutyöntekijä tekee pelistä asennettavan ja offline-toimivan.
+// Ohitetaan hiljaisesti, jos sivu on avattu file://-osoitteesta tai hiekkalaatikossa.
+// Yhden tiedoston versiossa ei ole manifestia eikä sw.js:ää, joten rekisteröinti
+// tehdään vain kun sivulla on manifest-linkki.
+const hasManifest = !!document.querySelector('link[rel="manifest"]');
+if (hasManifest && 'serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {
+      /* offline-tuki ei ole käytettävissä — peli toimii silti */
+    });
+  });
+}
+
+// Kesken jäänyt peli jatkuu automaattisesti, muuten kysytään pelaajat.
+const saved = loadGame();
+if (saved) attach(saved);
+else openSetup();
 </script>
 </body>
 </html>

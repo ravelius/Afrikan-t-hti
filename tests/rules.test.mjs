@@ -248,3 +248,41 @@ test('sama kysymys ei toistu ennen kuin pakka on käyty läpi', () => {
     nahdyt.add(kysymys.q);
   }
 });
+
+test('peli tallentuu ja palautuu samaan tilanteeseen', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo', isBot: true },
+    ],
+    seed: 1234,
+  });
+  game.players[0].pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+  game.actionQuiz();
+  game.answerQuiz(game.quiz.correct);
+  game.closeQuiz();
+  game.actionRoll();
+
+  const data = JSON.parse(JSON.stringify(game.toJSON()));
+  const restored = Game.fromJSON(data);
+
+  assert.ok(restored);
+  assert.equal(restored.phase, game.phase);
+  assert.equal(restored.die, game.die);
+  assert.equal(restored.current, game.current);
+  assert.equal(restored.tokens.size, game.tokens.size);
+  assert.equal(restored.revealed.get('timbuktu'), 'emerald');
+  assert.equal(restored.players[0].money, game.players[0].money);
+  assert.deepEqual(restored.players[1].pos, game.players[1].pos);
+  assert.equal(restored.usedQuestions.size, game.usedQuestions.size);
+  assert.deepEqual([...restored.moves.keys()].sort(), [...game.moves.keys()].sort());
+  // Arvonnat jatkuvat samasta kohdasta.
+  assert.equal(restored.rng(), game.rng());
+});
+
+test('kelvoton tallennus hylätään', () => {
+  assert.equal(Game.fromJSON(null), null);
+  assert.equal(Game.fromJSON({ version: 99 }), null);
+  assert.equal(Game.fromJSON({ version: 1 }), null);
+});

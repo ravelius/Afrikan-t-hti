@@ -25,11 +25,19 @@ export class Game {
   /**
    * @param {{players: Array<{name, color, isBot, start}>, rng?: () => number}} opts
    */
-  constructor({ players, rng = Math.random }) {
+  constructor({ players, seed = Math.floor(Math.random() * 2 ** 32), rng }) {
     if (players.length < 2 || players.length > 4) {
       throw new Error('Pelaajia pitää olla 2–4');
     }
-    this.rng = rng;
+    // Arvonnat tulevat siemenestä ja niiden määrä lasketaan, jotta tallennettu
+    // peli voidaan palauttaa täsmälleen samaan tilanteeseen.
+    this.seed = seed;
+    this.rngCalls = 0;
+    const source = rng ?? mulberry32(seed);
+    this.rng = () => {
+      this.rngCalls++;
+      return source();
+    };
     this.board = buildBoard(CITIES, EDGES);
     this.airRoutes = AIR_ROUTES;
 
@@ -376,6 +384,73 @@ export class Game {
       : 'ehti hevosenkengän kanssa kotiin ensimmäisenä';
     this.say(p.id, `🏆 ${p.name} ${reason} kaupungissa ${city.name} ja voitti pelin!`);
     return true;
+  }
+
+  // --- tallennus ----------------------------------------------------------
+
+  /** Pelin tila tavallisena oliona (localStorage / JSON). */
+  toJSON() {
+    return {
+      version: 1,
+      seed: this.seed,
+      rngCalls: this.rngCalls,
+      players: this.players.map((p) => ({ ...p })),
+      tokens: [...this.tokens.entries()],
+      revealed: [...this.revealed.entries()],
+      usedQuestions: [...this.usedQuestions],
+      current: this.current,
+      phase: this.phase,
+      die: this.die,
+      quiz: this.quiz,
+      starFound: this.starFound,
+      starCity: this.starCity,
+      winnerId: this.winner ? this.winner.id : null,
+      turnCount: this.turnCount,
+      log: this.log,
+    };
+  }
+
+  /** Palauttaa tallennetun pelin. Palauttaa null, jos tallennus on kelvoton. */
+  static fromJSON(data) {
+    if (!data || data.version !== 1 || !Array.isArray(data.players)) return null;
+
+    const game = Object.create(Game.prototype);
+    game.seed = data.seed;
+    game.rngCalls = 0;
+    const source = mulberry32(data.seed);
+    // Kelataan arvonnat samaan kohtaan kuin tallennushetkellä.
+    for (let i = 0; i < data.rngCalls; i++) source();
+    game.rngCalls = data.rngCalls;
+    game.rng = () => {
+      game.rngCalls++;
+      return source();
+    };
+
+    game.board = buildBoard(CITIES, EDGES);
+    game.airRoutes = AIR_ROUTES;
+    game.players = data.players.map((p) => ({ ...p }));
+    game.tokens = new Map(data.tokens);
+    game.revealed = new Map(data.revealed);
+    game.usedQuestions = new Set(data.usedQuestions ?? []);
+    game.current = data.current;
+    game.phase = data.phase;
+    game.die = data.die ?? null;
+    game.quiz = data.quiz ?? null;
+    game.lastPath = null;
+    game.starFound = !!data.starFound;
+    game.starCity = data.starCity ?? null;
+    game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
+    game.turnCount = data.turnCount ?? 1;
+    game.log = data.log ?? [];
+    game.moves = null;
+
+    // Kesken jäänyt siirtovalinta lasketaan uudelleen nopan silmäluvusta.
+    if (game.phase === 'move' && game.die) {
+      const p = game.players[game.current];
+      game.moves = findMoves(game.board, p.pos, game.die, p.money);
+      if (game.moves.size === 0) game.phase = 'action';
+    }
+    return game;
   }
 
   /** Siirtolista UI:lle: avain, sijainti, hinta ja kaupungin tiedot. */

@@ -1,4 +1,4 @@
-// Käynnistys: aloitusruutu, pelin luonti ja dialogit.
+// Käynnistys: aloitusruutu, pelin luonti, tallennus ja dialogit.
 
 import { Game } from './game.js';
 import { UI } from './ui.js';
@@ -8,6 +8,7 @@ const START_CITIES = [
   { id: 'tanger', name: 'Tanger' },
   { id: 'kairo', name: 'Kairo' },
 ];
+const SAVE_KEY = 'afrikan-tahti-save-v1';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -17,6 +18,38 @@ const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
 
 let ui = null;
+
+// --- tallennus -------------------------------------------------------------
+
+function saveGame(game) {
+  try {
+    if (game.phase === 'over') localStorage.removeItem(SAVE_KEY);
+    else localStorage.setItem(SAVE_KEY, JSON.stringify(game.toJSON()));
+  } catch {
+    /* yksityinen selaustila tai täysi levy — peli jatkuu ilman tallennusta */
+  }
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const game = Game.fromJSON(JSON.parse(raw));
+    return game && game.phase !== 'over' ? game : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearSave() {
+  try {
+    localStorage.removeItem(SAVE_KEY);
+  } catch {
+    /* ei mitään tehtävissä */
+  }
+}
+
+// --- aloitusruutu ----------------------------------------------------------
 
 function buildPlayerRows() {
   const count = Number(countSelect.value);
@@ -71,16 +104,21 @@ function readPlayers() {
   }));
 }
 
-function startGame() {
+function attach(game) {
   if (ui) ui.destroy();
-  const game = new Game({ players: readPlayers() });
-  ui = new UI(game, { onNewGame: openSetup });
+  ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
   ui.mount();
   window.afrikanTahti = { game, ui }; // kehityksen apuri konsolia varten
 }
 
+function startGame() {
+  clearSave();
+  attach(new Game({ players: readPlayers() }));
+}
+
 function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
+  clearSave();
   buildPlayerRows();
   setupDialog.showModal();
 }
@@ -96,4 +134,20 @@ document.getElementById('rules-btn').addEventListener('click', () => rulesDialog
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
 document.getElementById('winner-close').addEventListener('click', openSetup);
 
-openSetup();
+// Palvelutyöntekijä tekee pelistä asennettavan ja offline-toimivan.
+// Ohitetaan hiljaisesti, jos sivu on avattu file://-osoitteesta tai hiekkalaatikossa.
+// Yhden tiedoston versiossa ei ole manifestia eikä sw.js:ää, joten rekisteröinti
+// tehdään vain kun sivulla on manifest-linkki.
+const hasManifest = !!document.querySelector('link[rel="manifest"]');
+if (hasManifest && 'serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {
+      /* offline-tuki ei ole käytettävissä — peli toimii silti */
+    });
+  });
+}
+
+// Kesken jäänyt peli jatkuu automaattisesti, muuten kysytään pelaajat.
+const saved = loadGame();
+if (saved) attach(saved);
+else openSetup();

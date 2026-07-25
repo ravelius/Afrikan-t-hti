@@ -19,6 +19,7 @@ const MODULES = [
   'js/tokens.js',
   'js/questions.js',
   'js/rules.js',
+  'js/mapart.js',
   'js/game.js',
   'js/ai.js',
   'js/ui.js',
