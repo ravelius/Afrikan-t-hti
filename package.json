@@ -1,0 +1,12 @@
+{
+  "name": "afrikan-tahti",
+  "version": "1.0.0",
+  "description": "Selaimessa pelattava Afrikan tähti -lautapeli (ei riippuvuuksia)",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "node --test \"tests/*.test.mjs\""
+  },
+  "license": "MIT",
+  "private": true
+}

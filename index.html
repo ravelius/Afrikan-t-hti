@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Afrikan tähti</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>★</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Afrikan&nbsp;tähti <span class="star">★</span></h1>
+    <div class="topbar-actions">
+      <button id="rules-btn" class="ghost">Säännöt</button>
+      <button id="newgame-btn" class="ghost">Uusi peli</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="board-wrap">
+      <svg id="board" viewBox="0 0 1000 1000" role="img" aria-label="Afrikan kartta"></svg>
+      <div id="board-hint" class="board-hint"></div>
+    </section>
+
+    <aside class="panel">
+      <div id="players" class="players"></div>
+
+      <div class="turn-box">
+        <div id="turn-title" class="turn-title"></div>
+        <div id="die" class="die" hidden></div>
+        <div id="actions" class="actions"></div>
+        <div id="error" class="error" hidden></div>
+      </div>
+
+      <div class="log-box">
+        <h2>Tapahtumat</h2>
+        <ul id="log" class="log"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Aloitusruutu -->
+  <dialog id="setup" class="dialog">
+    <form method="dialog" id="setup-form">
+      <h2>Uusi peli</h2>
+      <label class="row">
+        Pelaajia
+        <select id="player-count">
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+      <div id="player-setup" class="player-setup"></div>
+      <menu>
+        <button value="start" class="primary">Aloita peli</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <!-- Säännöt -->
+  <dialog id="rules-dialog" class="dialog">
+    <h2>Säännöt</h2>
+    <div class="rules-text">
+      <p><b>Tavoite.</b> Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon.
+        Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä
+        aloituskaupunkiin ensimmäisenä.</p>
+      <p><b>Vuoro.</b> Voit joko heittää nopan ja liikkua, kääntää laatan omassa
+        kaupungissasi tai lentää lentokentältä toiselle (300 puntaa). Yksi teko per vuoro.</p>
+      <p><b>Liikkuminen.</b> Nopan silmäluku käytetään kokonaan. Reitin voi vaihtaa
+        kaupungissa, mutta kesken reitin ei saa kääntyä takaisin. Matkan voi pysäyttää
+        myös reitin varrelle.</p>
+      <p><b>Laivareitit.</b> Sininen reitti maksaa 100 puntaa kun sille astutaan.
+        Ilman rahaa laivaan ei pääse.</p>
+      <p><b>Laatat.</b> Kaupungissa seisova pelaaja voi vuorollaan joko maksaa 100 puntaa
+        ja kääntää laatan, tai kokeilla onneaan: nopalla 4–6 laatta kääntyy ilmaiseksi.</p>
+      <p><b>Laatat pelissä (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
+        rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
+        Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
+      <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
+      <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman
+        laivalipun hintaa), hän saa vuoronsa alussa 100 puntaa pankilta.</p>
+    </div>
+    <menu>
+      <button id="rules-close" class="primary">Sulje</button>
+    </menu>
+  </dialog>
+
+  <!-- Voittoruutu -->
+  <dialog id="winner-dialog" class="dialog">
+    <h2 id="winner-title">Voitto!</h2>
+    <p id="winner-text"></p>
+    <menu>
+      <button id="winner-close" class="primary">Uusi peli</button>
+    </menu>
+  </dialog>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
