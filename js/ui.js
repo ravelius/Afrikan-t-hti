@@ -162,6 +162,8 @@ export class UI {
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
       const g = el('g', { class: 'target' }, this.targetLayer);
+      // Näkymätön, isompi osumisalue sormella osumista varten.
+      el('circle', { cx: x, cy: y, r: 28, class: 'target-hit' }, g);
       el('circle', { cx: x, cy: y, r: opt.city ? 20 : 13, class: 'target-ring' }, g);
       if (opt.cost) {
         el('text', { x, y: y - 26, class: 'target-cost', 'text-anchor': 'middle' }, g).textContent =
@@ -268,10 +270,20 @@ export class UI {
     }
 
     if (game.phase === 'move') {
-      this.hint.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
+      this.hint.textContent = `Heitit ${game.die} — valitse kohde.`;
       this.actionsEl.appendChild(
-        html('div', 'muted', 'Klikkaa korostettua kohtaa kartalla.'),
+        html('div', 'muted', 'Valitse kohde kartalta tai listasta:'),
       );
+      const options = game.moveOptions().sort((a, b) => {
+        if (!!a.city !== !!b.city) return a.city ? -1 : 1;
+        return this.moveLabel(a).localeCompare(this.moveLabel(b), 'fi');
+      });
+      for (const opt of options) {
+        const btn = html('button', 'move-option', this.moveLabel(opt));
+        if (opt.hasToken) btn.classList.add('has-token');
+        btn.addEventListener('click', () => this.doMove(opt.key));
+        this.actionsEl.appendChild(btn);
+      }
       return;
     }
 
@@ -300,6 +312,17 @@ export class UI {
       flyBtn.addEventListener('click', () => this.doAction(() => game.actionFly(dest)));
       this.actionsEl.appendChild(flyBtn);
     }
+  }
+
+  /** Siirtovaihtoehdon teksti: kaupunki tai kohta reitin varrella. */
+  moveLabel(opt) {
+    const { game } = this;
+    const fare = opt.cost ? ` −${opt.cost} p` : '';
+    if (opt.city) {
+      return `${opt.city.name}${opt.hasToken ? ' ?' : ''}${fare}`;
+    }
+    const e = game.board.edgeById.get(opt.pos.edge);
+    return `${game.routeName(opt.pos.edge)} (${opt.pos.idx}/${e.steps})${fare}`;
   }
 
   renderLog() {

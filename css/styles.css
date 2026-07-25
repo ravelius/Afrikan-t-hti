@@ -151,6 +151,7 @@ button.ghost { background: transparent; }
 .token-mark.dark { fill: #201a12; }
 
 .target { cursor: pointer; }
+.target-hit { fill: transparent; }
 .target-ring {
   fill: rgba(230, 180, 34, 0.25);
   stroke: var(--accent);
@@ -228,6 +229,9 @@ button.ghost { background: transparent; }
 }
 
 .actions { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.move-option { text-align: left; font-size: 0.9rem; padding: 0.45rem 0.7rem; }
+.move-option.has-token { border-color: var(--accent); }
 
 .error {
   margin-top: 0.5rem;
@@ -312,7 +316,27 @@ select {
 
 .rules-text p { margin: 0 0 0.7rem; line-height: 1.45; }
 
+body { -webkit-text-size-adjust: 100%; }
+button { touch-action: manipulation; }
+
 @media (max-width: 900px) {
-  .layout { grid-template-columns: minmax(0, 1fr); }
-  .log { max-height: 180px; }
+  .layout { grid-template-columns: minmax(0, 1fr); padding: 0.6rem; gap: 0.6rem; }
+  /* Puhelimella toimintanapit heti kartan alle. */
+  .turn-box { order: -1; }
+  .log { max-height: 150px; }
+  .players { flex-direction: row; flex-wrap: wrap; }
+  .player-card { flex: 1 1 45%; }
+  .topbar h1 { font-size: 1.05rem; }
+  /* Vihjeteksti kartan alle, jottei se peitä Kapkaupunkia. */
+  .board-hint {
+    position: static;
+    transform: none;
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .target-ring { animation: none; }
 }
