@@ -223,15 +223,29 @@ button.ghost { background: transparent; }
 .turn-title { font-weight: 700; margin-bottom: 0.5rem; }
 
 .die {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   margin-bottom: 0.5rem;
   color: var(--accent);
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+.die.rolling { animation: die-shake 0.14s linear infinite; }
+.die.landed { animation: die-land 0.26s ease-out; }
+
+@keyframes die-shake {
+  0% { transform: rotate(-12deg) translateY(0); }
+  50% { transform: rotate(12deg) translateY(-4px); }
+  100% { transform: rotate(-12deg) translateY(0); }
+}
+
+@keyframes die-land {
+  0% { transform: scale(1.5); }
+  60% { transform: scale(0.92); }
+  100% { transform: scale(1); }
 }
 
 .actions { display: flex; flex-direction: column; gap: 0.4rem; }
-
-.move-option { text-align: left; font-size: 0.9rem; padding: 0.45rem 0.7rem; }
-.move-option.has-token { border-color: var(--accent); }
 
 .error {
   margin-top: 0.5rem;
@@ -315,6 +329,122 @@ select {
 .bot-label { display: flex; align-items: center; gap: 0.25rem; font-size: 0.85rem; color: var(--muted); }
 
 .rules-text p { margin: 0 0 0.7rem; line-height: 1.45; }
+
+
+/* --- tietovisa --- */
+.dialog.quiz {
+  max-width: 720px;
+  background: linear-gradient(180deg, #0d2038, #07142a);
+  border: 2px solid var(--accent);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+.quiz-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.quiz-badge {
+  background: var(--accent);
+  color: #16232f;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.quiz-city { color: #bcd7ee; font-size: 0.92rem; }
+
+.quiz-question {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  font-weight: 600;
+  text-wrap: balance;
+  color: #f6fbff;
+}
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  min-height: 58px;
+  border: 2px solid #2b5a86;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #163c5e, #0b2138);
+  color: #eaf4ff;
+  font-size: 1rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.quiz-option:hover:not(:disabled) { background: #1b3d5f; border-color: var(--accent); }
+.quiz-option:disabled { opacity: 1; cursor: default; }
+
+.quiz-option .letter {
+  color: var(--accent);
+  font-weight: 700;
+  flex: 0 0 auto;
+  width: 1.2em;
+}
+
+.quiz-option .text { flex: 1 1 auto; }
+
+.quiz-option.correct {
+  background: #1d6b3f;
+  border-color: #46d17f;
+  color: #f2fff7;
+}
+
+.quiz-option.wrong {
+  background: #7a2320;
+  border-color: #e0655f;
+  color: #fff0ee;
+}
+
+.quiz-result {
+  margin: 1rem 0 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.quiz-result.right { border-left: 4px solid #46d17f; }
+.quiz-result.wrong { border-left: 4px solid #e0655f; }
+
+/* --- kosketuslaitteet ja iPad --- */
+@media (pointer: coarse) {
+  button { min-height: 46px; }
+  .quiz-option { min-height: 64px; font-size: 1.05rem; }
+  .topbar-actions button { padding: 0.5rem 1rem; }
+}
+
+/* iPad vaakatasossa: kartta mahtuu ruudulle ilman vieritystä */
+@media (min-width: 901px) and (max-height: 900px) {
+  #board { max-height: calc(100dvh - 120px); }
+  .log { max-height: 200px; }
+}
+
+/* iPad pystyssä */
+@media (min-width: 700px) and (max-width: 900px) {
+  .panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .turn-box { grid-column: 1 / -1; }
+  .log-box { grid-column: 1 / -1; }
+  .quiz-question { font-size: 1.35rem; }
+}
 
 body { -webkit-text-size-adjust: 100%; }
 button { touch-action: manipulation; }

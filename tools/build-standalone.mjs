@@ -17,12 +17,26 @@ const read = (p) => readFileSync(join(root, p), 'utf8');
 const MODULES = [
   'js/board.js',
   'js/tokens.js',
+  'js/questions.js',
   'js/rules.js',
   'js/game.js',
   'js/ai.js',
   'js/ui.js',
   'js/main.js',
 ];
+
+/** Varmistaa, ettei yksikään moduuli jää pois niputuksesta. */
+function checkModuleList() {
+  const included = new Set(MODULES);
+  for (const file of MODULES) {
+    for (const match of read(file).matchAll(/from '\.\/([\w-]+\.js)'/g)) {
+      const dep = `js/${match[1]}`;
+      if (!included.has(dep)) {
+        throw new Error(`${file} tarvitsee moduulin ${dep}, joka puuttuu MODULES-listalta`);
+      }
+    }
+  }
+}
 
 function stripModuleSyntax(source) {
   return source
@@ -32,6 +46,8 @@ function stripModuleSyntax(source) {
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
+
+checkModuleList();
 
 const bundle = MODULES.map((file) => `// ===== ${file} =====\n${stripModuleSyntax(read(file))}`)
   .join('\n\n');

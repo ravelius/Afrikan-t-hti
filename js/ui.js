@@ -3,12 +3,14 @@
 import { MAP, AIR_ROUTES } from './board.js';
 import { pixelOf, posKey } from './rules.js';
 import { TOKEN_TYPES } from './tokens.js';
-import { chooseAction, chooseMove } from './ai.js';
+import { chooseAction, chooseMove, chooseQuizAnswer } from './ai.js';
 import { TOKEN_PRICE, FLIGHT_PRICE } from './game.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 850;
+const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
+const LETTERS = ['A', 'B', 'C', 'D'];
 
 function el(tag, attrs = {}, parent = null) {
   const node = document.createElementNS(NS, tag);
@@ -38,6 +40,14 @@ export class UI {
     this.errorEl = document.getElementById('error');
     this.logEl = document.getElementById('log');
     this.winnerDialog = document.getElementById('winner-dialog');
+    this.quizDialog = document.getElementById('quiz-dialog');
+    this.quizCity = document.getElementById('quiz-city');
+    this.quizQuestion = document.getElementById('quiz-question');
+    this.quizOptions = document.getElementById('quiz-options');
+    this.quizResult = document.getElementById('quiz-result');
+    this.quizContinue = document.getElementById('quiz-continue');
+    this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
+    this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
   mount() {
@@ -259,7 +269,7 @@ export class UI {
     const p = game.player;
     this.turnTitle.textContent = `Vuorossa: ${p.name}`;
 
-    const die = game.die ?? game.luckDie;
+    const die = game.die;
     this.dieEl.hidden = die === null || die === undefined;
     if (!this.dieEl.hidden) this.dieEl.textContent = `${DIE_FACES[die]} ${die}`;
 
@@ -270,20 +280,15 @@ export class UI {
     }
 
     if (game.phase === 'move') {
-      this.hint.textContent = `Heitit ${game.die} — valitse kohde.`;
+      this.hint.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
       this.actionsEl.appendChild(
-        html('div', 'muted', 'Valitse kohde kartalta tai listasta:'),
+        html('div', 'muted', 'Korostetut kohdat ovat mahdollisia pysähdyspaikkoja.'),
       );
-      const options = game.moveOptions().sort((a, b) => {
-        if (!!a.city !== !!b.city) return a.city ? -1 : 1;
-        return this.moveLabel(a).localeCompare(this.moveLabel(b), 'fi');
-      });
-      for (const opt of options) {
-        const btn = html('button', 'move-option', this.moveLabel(opt));
-        if (opt.hasToken) btn.classList.add('has-token');
-        btn.addEventListener('click', () => this.doMove(opt.key));
-        this.actionsEl.appendChild(btn);
-      }
+      return;
+    }
+
+    if (game.phase === 'quiz') {
+      this.hint.textContent = 'Tietovisa käynnissä.';
       return;
     }
 
@@ -291,20 +296,20 @@ export class UI {
     const actions = game.availableActions();
     const tokenCity = game.tokenHere();
 
-    const rollBtn = html('button', 'primary', 'Heitä noppa ja liiku');
-    rollBtn.addEventListener('click', () => this.doAction(() => game.actionRoll()));
-    this.actionsEl.appendChild(rollBtn);
-
     if (tokenCity) {
+      const quizBtn = html('button', 'primary', `Vastaa kysymykseen — ${tokenCity.name}`);
+      quizBtn.addEventListener('click', () => this.doAction(() => game.actionQuiz()));
+      this.actionsEl.appendChild(quizBtn);
+
       const buyBtn = html('button', '', `Osta laatta (${TOKEN_PRICE} p)`);
       buyBtn.disabled = !actions.buy;
       buyBtn.addEventListener('click', () => this.doAction(() => game.actionBuy()));
       this.actionsEl.appendChild(buyBtn);
-
-      const luckBtn = html('button', '', 'Kokeile onnea (4–6)');
-      luckBtn.addEventListener('click', () => this.doAction(() => game.actionLuck()));
-      this.actionsEl.appendChild(luckBtn);
     }
+
+    const rollBtn = html('button', tokenCity ? '' : 'primary', 'Heitä noppa ja liiku');
+    rollBtn.addEventListener('click', () => this.doRoll());
+    this.actionsEl.appendChild(rollBtn);
 
     for (const dest of actions.fly) {
       const city = game.board.cityById.get(dest);
@@ -312,17 +317,6 @@ export class UI {
       flyBtn.addEventListener('click', () => this.doAction(() => game.actionFly(dest)));
       this.actionsEl.appendChild(flyBtn);
     }
-  }
-
-  /** Siirtovaihtoehdon teksti: kaupunki tai kohta reitin varrella. */
-  moveLabel(opt) {
-    const { game } = this;
-    const fare = opt.cost ? ` −${opt.cost} p` : '';
-    if (opt.city) {
-      return `${opt.city.name}${opt.hasToken ? ' ?' : ''}${fare}`;
-    }
-    const e = game.board.edgeById.get(opt.pos.edge);
-    return `${game.routeName(opt.pos.edge)} (${opt.pos.idx}/${e.steps})${fare}`;
   }
 
   renderLog() {
@@ -345,6 +339,7 @@ export class UI {
     this.renderPlayers();
     this.renderActions();
     this.renderLog();
+    this.renderQuiz();
 
     if (this.game.phase === 'over') {
       this.showWinner();
@@ -363,6 +358,59 @@ export class UI {
     if (!this.winnerDialog.open) this.winnerDialog.showModal();
   }
 
+  // --- tietovisa ----------------------------------------------------------
+
+  renderQuiz() {
+    const { game } = this;
+    const quiz = game.quiz;
+    if (game.phase !== 'quiz' || !quiz) {
+      if (this.quizDialog.open) this.quizDialog.close();
+      return;
+    }
+
+    const city = game.board.cityById.get(quiz.cityId);
+    this.quizCity.textContent = `${city.name} — ${game.player.name}`;
+    this.quizQuestion.textContent = quiz.question;
+    this.quizOptions.textContent = '';
+
+    quiz.options.forEach((text, i) => {
+      const btn = html('button', 'quiz-option');
+      btn.appendChild(html('span', 'letter', LETTERS[i]));
+      btn.appendChild(html('span', 'text', text));
+      if (quiz.chosen !== null) {
+        btn.disabled = true;
+        if (i === quiz.correct) btn.classList.add('correct');
+        if (i === quiz.chosen && !quiz.right) btn.classList.add('wrong');
+      } else if (game.player.isBot) {
+        btn.disabled = true;
+      } else {
+        btn.addEventListener('click', () => this.doAction(() => game.answerQuiz(i)));
+      }
+      this.quizOptions.appendChild(btn);
+    });
+
+    const answered = quiz.chosen !== null;
+    this.quizResult.hidden = !answered;
+    if (answered) {
+      this.quizResult.className = `quiz-result ${quiz.right ? 'right' : 'wrong'}`;
+      this.quizResult.textContent = '';
+      const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
+      const heading = quiz.right
+        ? found
+          ? `Oikein! Laatan alta löytyi: ${found.symbol} ${found.name}`
+          : 'Oikein!'
+        : `Väärin — oikea vastaus oli "${quiz.options[quiz.correct]}".`;
+      this.quizResult.appendChild(html('strong', '', heading));
+      if (quiz.fact) {
+        this.quizResult.appendChild(document.createElement('br'));
+        this.quizResult.appendChild(html('span', 'muted', quiz.fact));
+      }
+    }
+    this.quizContinue.hidden = !answered || game.player.isBot;
+
+    if (!this.quizDialog.open) this.quizDialog.showModal();
+  }
+
   // --- toiminnot ----------------------------------------------------------
 
   doAction(fn) {
@@ -379,26 +427,83 @@ export class UI {
     this.doAction(() => this.game.actionMove(key));
   }
 
+  /** Heittää nopan kevyen animaation kanssa. */
+  doRoll() {
+    const { game } = this;
+    const result = game.actionRoll();
+    if (result.ok === false) {
+      this.errorEl.textContent = result.error;
+      this.errorEl.hidden = false;
+      return;
+    }
+    this.animateDie(result.die).then(() => this.render());
+  }
+
+  animateDie(value) {
+    if (!value || this.reducedMotion) return Promise.resolve();
+    this.actionsEl.textContent = ''; // estä tuplaklikkaus heiton aikana
+    this.hint.textContent = 'Noppa pyörii…';
+    const dieEl = this.dieEl;
+    dieEl.hidden = false;
+    dieEl.classList.add('rolling');
+
+    return new Promise((resolve) => {
+      let ticks = 0;
+      const timer = setInterval(() => {
+        const face = 1 + Math.floor(Math.random() * 6);
+        dieEl.textContent = DIE_FACES[face];
+        if (++ticks >= 8) {
+          clearInterval(timer);
+          dieEl.classList.remove('rolling');
+          dieEl.classList.add('landed');
+          dieEl.textContent = `${DIE_FACES[value]} ${value}`;
+          setTimeout(() => {
+            dieEl.classList.remove('landed');
+            resolve();
+          }, 260);
+        }
+      }, 70);
+    });
+  }
+
   scheduleBot() {
     clearTimeout(this.botTimer);
     const { game } = this;
     if (game.phase === 'over' || !game.player.isBot) return;
-    this.botTimer = setTimeout(() => this.botStep(), BOT_DELAY);
+    const delay = game.phase === 'quiz' ? BOT_QUIZ_DELAY : BOT_DELAY;
+    this.botTimer = setTimeout(() => this.botStep(), delay);
   }
 
   botStep() {
     const { game } = this;
     if (game.phase === 'over' || !game.player.isBot) return;
+
+    if (game.phase === 'quiz') {
+      if (game.quiz.chosen === null) game.answerQuiz(chooseQuizAnswer(game));
+      else game.closeQuiz();
+      this.render();
+      return;
+    }
+
     if (game.phase === 'move') {
       const key = chooseMove(game);
       if (key) game.actionMove(key);
       else game.endTurn();
+      this.render();
+      return;
+    }
+
+    const action = chooseAction(game);
+    if (action.type === 'buy') {
+      game.actionBuy();
+    } else if (action.type === 'quiz') {
+      game.actionQuiz();
+    } else if (action.type === 'fly') {
+      game.actionFly(action.destination);
     } else {
-      const action = chooseAction(game);
-      if (action.type === 'buy') game.actionBuy();
-      else if (action.type === 'luck') game.actionLuck();
-      else if (action.type === 'fly') game.actionFly(action.destination);
-      else game.actionRoll();
+      const result = game.actionRoll();
+      this.animateDie(result.die).then(() => this.render());
+      return;
     }
     this.render();
   }

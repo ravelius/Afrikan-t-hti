@@ -3,10 +3,10 @@
 import { CITIES, EDGES, AIR_ROUTES, TOKEN_CITIES, FLIGHT_PRICE } from './board.js';
 import { buildBoard, findMoves, posKey, hasAnyMove, reachableCities } from './rules.js';
 import { TOKEN_TYPES, createTokenPile } from './tokens.js';
+import { QUESTIONS } from './questions.js';
 
 export const START_MONEY = 300;
 export const TOKEN_PRICE = 100;
-export const LUCK_LIMIT = 4; // nopalla 4–6 laatta kääntyy ilmaiseksi
 export const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 export { FLIGHT_PRICE };
 
@@ -54,10 +54,11 @@ export class Game {
     this.revealed = new Map(); // kaupunki -> laattatyyppi
 
     this.current = 0;
-    this.phase = 'action'; // 'action' | 'move' | 'over'
+    this.phase = 'action'; // 'action' | 'move' | 'quiz' | 'over'
     this.die = null;
-    this.luckDie = null;
     this.moves = null;
+    this.quiz = null;
+    this.usedQuestions = new Set();
     this.lastPath = null;
     this.starFound = false;
     this.starCity = null;
@@ -110,14 +111,14 @@ export class Game {
   /** Mitä nykyinen pelaaja voi tehdä juuri nyt. */
   availableActions() {
     if (this.phase !== 'action') {
-      return { roll: false, buy: false, luck: false, fly: [] };
+      return { roll: false, buy: false, quiz: false, fly: [] };
     }
     const p = this.player;
     const tokenCity = this.tokenHere();
     return {
       roll: true,
       buy: !!tokenCity && p.money >= TOKEN_PRICE,
-      luck: !!tokenCity,
+      quiz: !!tokenCity,
       fly: this.airportDestinations(),
     };
   }
@@ -128,7 +129,6 @@ export class Game {
     if (this.phase === 'over') return;
     const p = this.player;
     this.die = null;
-    this.luckDie = null;
     this.moves = null;
     this.lastPath = null;
 
@@ -174,16 +174,17 @@ export class Game {
   actionRoll() {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
     const p = this.player;
-    this.die = this.rollDie();
-    this.moves = findMoves(this.board, p.pos, this.die, p.money);
-    this.say(p.id, `${p.name} heitti ${this.die}.`);
+    const die = this.rollDie();
+    this.die = die;
+    this.moves = findMoves(this.board, p.pos, die, p.money);
+    this.say(p.id, `${p.name} heitti ${die}.`);
     if (this.moves.size === 0) {
       this.say(p.id, `${p.name} ei pysty liikkumaan ja jää paikalleen.`);
       this.endTurn();
-      return { ok: true, moved: false };
+      return { ok: true, moved: false, die };
     }
     this.phase = 'move';
-    return { ok: true, moved: false, die: this.die };
+    return { ok: true, moved: false, die };
   }
 
   /** Siirtää pelaajan valittuun päätepisteeseen. */
@@ -225,21 +226,80 @@ export class Game {
     return { ok: true };
   }
 
-  /** Kokeilee onnea: 4–6 kääntää laatan ilmaiseksi. */
-  actionLuck() {
+  /** Avaa tietovisakysymyksen: oikea vastaus kääntää laatan ilmaiseksi. */
+  actionQuiz() {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
-    const p = this.player;
     const city = this.tokenHere();
     if (!city) return { ok: false, error: 'Täällä ei ole laattaa' };
-    this.luckDie = this.rollDie();
-    if (this.luckDie >= LUCK_LIMIT) {
-      this.say(p.id, `${p.name} kokeili onneaan ja heitti ${this.luckDie} — laatta kääntyy!`);
-      this.revealToken(city.id);
-    } else {
-      this.say(p.id, `${p.name} kokeili onneaan mutta heitti vain ${this.luckDie}.`);
+
+    const question = this.pickQuestion(city.id);
+    const order = this.shuffledOrder(question.options.length);
+    this.quiz = {
+      cityId: city.id,
+      question: question.q,
+      fact: question.fact,
+      options: order.map((i) => question.options[i]),
+      correct: order.indexOf(question.correct),
+      chosen: null,
+      right: null,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
+  }
+
+  /** Vastaa kysymykseen. Tulos jää näkyviin kunnes closeQuiz() kutsutaan. */
+  answerQuiz(index) {
+    if (this.phase !== 'quiz' || !this.quiz || this.quiz.chosen !== null) {
+      return { ok: false, error: 'Ei avointa kysymystä' };
     }
-    if (this.phase !== 'over') this.endTurn();
-    return { ok: true, die: this.luckDie };
+    const p = this.player;
+    const city = this.board.cityById.get(this.quiz.cityId);
+    this.quiz.chosen = index;
+    this.quiz.right = index === this.quiz.correct;
+
+    if (this.quiz.right) {
+      this.say(p.id, `${p.name} vastasi oikein kaupungissa ${city.name} ja saa kääntää laatan.`);
+      this.quiz.found = this.revealToken(this.quiz.cityId);
+    } else {
+      const oikea = this.quiz.options[this.quiz.correct];
+      this.say(p.id, `${p.name} vastasi väärin — oikea vastaus oli "${oikea}".`);
+    }
+    return { ok: true, right: this.quiz.right };
+  }
+
+  /** Sulkee kysymyksen ja päättää vuoron. */
+  closeQuiz() {
+    if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    this.quiz = null;
+    if (this.phase === 'over') return { ok: true };
+    this.phase = 'action';
+    this.endTurn();
+    return { ok: true };
+  }
+
+  /** Kysymys kaupungille: ensin omat, sitten varapakka, lopuksi kierrätys. */
+  pickQuestion(cityId) {
+    const pools = [QUESTIONS[cityId] ?? [], QUESTIONS.general];
+    for (const pool of pools) {
+      const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
+      if (fresh.length) {
+        const question = fresh[Math.floor(this.rng() * fresh.length)];
+        this.usedQuestions.add(question.q);
+        return question;
+      }
+    }
+    const all = [...(QUESTIONS[cityId] ?? []), ...QUESTIONS.general];
+    return all[Math.floor(this.rng() * all.length)];
+  }
+
+  /** Sekoitettu indeksijärjestys vastausvaihtoehdoille. */
+  shuffledOrder(count) {
+    const order = [...Array(count).keys()];
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(this.rng() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    return order;
   }
 
   /** Lentää toiseen lentokenttäkaupunkiin. Vie koko vuoron. */

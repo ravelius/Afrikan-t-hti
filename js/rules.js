@@ -69,8 +69,11 @@ export function stepsFrom(board, pos) {
 
 /**
  * Kaikki lailliset päätepisteet kun nopan silmäluku on `roll`.
- * Koko silmäluku on käytettävä, kesken reitin ei saa kääntyä takaisin
- * ja laivamatkat on pystyttävä maksamaan.
+ *
+ * Kaupunkiin saa pysähtyä jo ennen kuin koko silmäluku on käytetty — tasalukua
+ * ei siis tarvita. Reitin varrelle pysähdytään vain silloin, kun silmäluku
+ * loppuu kesken. Kesken reitin ei saa kääntyä takaisin ja laivamatkat on
+ * pystyttävä maksamaan.
  *
  * @returns {Map<string, {pos, cost, path}>}
  */
@@ -78,14 +81,19 @@ export function findMoves(board, start, roll, money = Infinity) {
   const results = new Map();
   const startKey = posKey(start);
 
+  const record = (pos, spent, path) => {
+    const key = posKey(pos);
+    if (key === startKey) return; // omalle ruudulle ei jäädä
+    const prev = results.get(key);
+    if (!prev || spent < prev.cost) results.set(key, { pos, cost: spent, path });
+  };
+
   const walk = (pos, remaining, spent, path, prevKey) => {
-    if (remaining === 0) {
-      const key = posKey(pos);
-      if (key === startKey) return; // omalle ruudulle ei jäädä
-      const prev = results.get(key);
-      if (!prev || spent < prev.cost) results.set(key, { pos, cost: spent, path });
-      return;
+    // Kaupungissa matkan voi lopettaa vaikka silmälukua olisi jäljellä.
+    if (path.length > 0 && (remaining === 0 || pos.type === 'city')) {
+      record(pos, spent, path);
     }
+    if (remaining === 0) return;
     for (const step of stepsFrom(board, pos)) {
       const key = posKey(step.pos);
       if (key === prevKey) continue; // ei peruutusta samaa reittiä

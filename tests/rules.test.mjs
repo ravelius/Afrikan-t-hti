@@ -5,7 +5,8 @@ import { CITIES, EDGES, TOKEN_CITIES } from '../js/board.js';
 import { buildBoard, findMoves, posKey, cityDistances } from '../js/rules.js';
 import { tokenPileTemplate, TOKEN_COUNTS } from '../js/tokens.js';
 import { Game, mulberry32, START_MONEY, STRANDED_AID } from '../js/game.js';
-import { chooseAction, chooseMove } from '../js/ai.js';
+import { chooseAction, chooseMove, chooseQuizAnswer } from '../js/ai.js';
+import { QUESTIONS, allQuestions } from '../js/questions.js';
 
 const board = buildBoard(CITIES, EDGES);
 
@@ -26,15 +27,24 @@ test('laattoja on yhtä monta kuin laattakaupunkeja', () => {
   assert.equal(TOKEN_COUNTS.horseshoe, 2);
 });
 
-test('nopan silmäluku käytetään kokonaan', () => {
+test('kaupunkiin pääsee ilman tasalukua, reitille vain täydellä heitolla', () => {
   const start = { type: 'city', city: 'tanger' };
   for (let die = 1; die <= 6; die++) {
     const moves = findMoves(board, start, die, Infinity);
     assert.ok(moves.size > 0);
     for (const [, move] of moves) {
-      assert.equal(move.path.length, die, `silmäluku ${die} ei täsmää polkuun`);
+      assert.ok(move.path.length <= die, `siirto käytti yli ${die} askelta`);
+      if (move.pos.type === 'edge') {
+        assert.equal(move.path.length, die, 'reitin varrelle pysähdytään vasta heiton loputtua');
+      }
     }
   }
+
+  // Tripoli on neljän askelen päässä: sinne pääsee myös viitosella ja kuutosella.
+  for (const die of [4, 5, 6]) {
+    assert.ok(findMoves(board, start, die, Infinity).has('c:tripoli'), `heitto ${die}`);
+  }
+  assert.ok(!findMoves(board, start, 3, Infinity).has('c:tripoli'));
 });
 
 test('laivareitin maksu peritään ja estää liikkeen ilman rahaa', () => {
@@ -53,7 +63,9 @@ test('kesken reitin ei saa kääntyä takaisin', () => {
   const moves = findMoves(board, pos, 2, Infinity);
   const keys = [...moves.keys()].sort();
   assert.deepEqual(keys, ['c:tanger', 'c:tripoli']);
-  assert.ok(!moves.has(posKey(pos)));
+  assert.ok(!moves.has(posKey(pos)), 'lähtöruutuun ei jäädä');
+  // Kahdella askeleella molempiin päihin: kumpikaan ei vaadi peruutusta.
+  assert.equal(moves.get('c:tripoli').path.length, 2);
 });
 
 test('saarelle pääsee vain laivalla', () => {
@@ -145,10 +157,13 @@ test('bottien peli päättyy voittoon', () => {
       const key = chooseMove(game);
       if (key) game.actionMove(key);
       else game.endTurn();
+    } else if (game.phase === 'quiz') {
+      if (game.quiz.chosen === null) game.answerQuiz(chooseQuizAnswer(game));
+      else game.closeQuiz();
     } else {
       const action = chooseAction(game);
       if (action.type === 'buy') game.actionBuy();
-      else if (action.type === 'luck') game.actionLuck();
+      else if (action.type === 'quiz') game.actionQuiz();
       else if (action.type === 'fly') game.actionFly(action.destination);
       else game.actionRoll();
     }
@@ -158,4 +173,78 @@ test('bottien peli päättyy voittoon', () => {
   assert.equal(game.phase, 'over');
   assert.ok(game.winner);
   assert.ok(game.starFound);
+});
+
+test('kysymyspankki on ehjä', () => {
+  const cityIds = CITIES.filter((c) => !c.start).map((c) => c.id);
+  for (const id of cityIds) {
+    assert.ok(QUESTIONS[id]?.length >= 2, `kaupungilta ${id} puuttuu kysymyksiä`);
+  }
+  assert.ok(QUESTIONS.general.length >= 10);
+
+  for (const q of allQuestions()) {
+    assert.ok(q.q.trim().length > 0, 'tyhjä kysymys');
+    assert.equal(q.options.length, 4, `kysymyksellä "${q.q}" ei ole neljää vaihtoehtoa`);
+    assert.equal(new Set(q.options).size, 4, `kysymyksessä "${q.q}" on kaksi samaa vaihtoehtoa`);
+    assert.ok(
+      Number.isInteger(q.correct) && q.correct >= 0 && q.correct < 4,
+      `kysymyksen "${q.q}" oikea vastaus on virheellinen`,
+    );
+    assert.ok(q.fact && q.fact.length > 0, `kysymykseltä "${q.q}" puuttuu selitys`);
+  }
+
+  const texts = allQuestions().map((q) => q.q);
+  assert.equal(new Set(texts).size, texts.length, 'sama kysymys esiintyy kahdesti');
+});
+
+test('oikea vastaus kääntää laatan, väärä ei', () => {
+  const makeGame = () => {
+    const game = new Game({
+      players: [
+        { name: 'A', color: '#f00', start: 'tanger' },
+        { name: 'B', color: '#00f', start: 'kairo' },
+      ],
+      rng: mulberry32(42),
+    });
+    game.player.pos = { type: 'city', city: 'timbuktu' };
+    game.tokens.set('timbuktu', 'ruby');
+    return game;
+  };
+
+  const win = makeGame();
+  assert.ok(win.actionQuiz().ok);
+  assert.equal(win.phase, 'quiz');
+  assert.equal(win.quiz.options.length, 4);
+  const rahaEnnen = win.player.money;
+  win.answerQuiz(win.quiz.correct);
+  assert.equal(win.revealed.get('timbuktu'), 'ruby');
+  assert.equal(win.players[0].money, rahaEnnen + 1000);
+  win.closeQuiz();
+  assert.equal(win.phase, 'action');
+  assert.equal(win.current, 1, 'vuoro siirtyy vastauksen jälkeen');
+
+  const lose = makeGame();
+  lose.actionQuiz();
+  const vaara = (lose.quiz.correct + 1) % 4;
+  lose.answerQuiz(vaara);
+  assert.equal(lose.quiz.right, false);
+  assert.ok(lose.tokens.has('timbuktu'), 'laatta jää kääntämättä');
+  lose.closeQuiz();
+  assert.equal(lose.current, 1);
+});
+
+test('sama kysymys ei toistu ennen kuin pakka on käyty läpi', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    rng: mulberry32(9),
+  });
+  const nahdyt = new Set();
+  for (let i = 0; i < QUESTIONS.timbuktu.length; i++) {
+    const kysymys = game.pickQuestion('timbuktu');
+    assert.ok(!nahdyt.has(kysymys.q), 'kysymys toistui liian aikaisin');
+    nahdyt.add(kysymys.q);
+  }
 });

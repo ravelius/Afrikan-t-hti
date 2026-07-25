@@ -4,9 +4,13 @@ Selaimessa pelattava versio klassisesta Afrikan tähti -lautapelistä. Ei riippu
 ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
 
 - 2–4 pelaajaa samalla koneella, kukin joko ihminen tai botti
+- Laatat avataan **tietovisalla**: monivalintakysymys (a–d) paikan maantiedosta,
+  kulttuurista ja yleistiedosta — oikea vastaus kääntää laatan ilmaiseksi
 - SVG-kartta, jossa 32 kaupunkia, maareitit, laivareitit ja kolme lentoyhteyttä
 - 30 laattaa: Afrikan tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät
-- Suomenkielinen käyttöliittymä ja tapahtumaloki
+- Yli 100 kysymystä: jokaisella kaupungilla omat kysymyksensä + yleinen varapakka
+- Suomenkielinen käyttöliittymä, tapahtumaloki ja nopan heittoanimaatio
+- Mitoitettu erityisesti iPadille (sekä vaaka- että pystytaso)
 
 ## Pelin käynnistys
 
@@ -30,14 +34,21 @@ löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupun
 
 | Teko | Selitys |
 | --- | --- |
-| Heitä noppa ja liiku | Silmäluku käytetään kokonaan |
-| Osta laatta (100 p) | Vain omassa kaupungissa, jos siinä on kääntämätön laatta |
-| Kokeile onnea | Nopalla 4–6 laatta kääntyy ilmaiseksi, muuten vuoro menee hukkaan |
+| Vastaa kysymykseen | Tietovisa omassa kaupungissa: oikea vastaus kääntää laatan ilmaiseksi |
+| Osta laatta (100 p) | Kääntää laatan ilman kysymystä |
+| Heitä noppa ja liiku | Noppa kertoo askelten enimmäismäärän |
 | Lennä (300 p) | Lentokentältä toiselle: Tanger, Kairo, Kapkaupunki |
 
-**Liikkuminen.** Reittiä voi vaihtaa kaupungissa, mutta kesken reitin ei saa kääntyä
-takaisin. Matkan voi pysäyttää myös reitin varrelle. Laivareitille (sininen katkoviiva)
-astuminen maksaa 100 puntaa, ja ilman rahaa laivaan ei pääse.
+**Tietovisa.** Kaupungissa, jossa on kääntämätön laatta, saat neljä vaihtoehtoa (A–D).
+Kysymykset liittyvät kaupungin maantietoon, kulttuuriin ja historiaan. Oikea vastaus
+kääntää laatan, väärä päättää vuoron. Vastauksen jälkeen näytetään lyhyt selitys.
+Sama kysymys ei toistu ennen kuin pakka on käyty läpi.
+
+**Liikkuminen.** Silmäluku on askelten *enimmäismäärä* — tasalukua ei tarvita, vaan
+kaupunkiin saa pysähtyä jo matkan varrella. Jos silmäluku loppuu kesken reittiä,
+pysähdyt reitin varrelle. Reittiä voi vaihtaa kaupungissa, mutta kesken reitin ei saa
+kääntyä takaisin. Laivareitille (sininen katkoviiva) astuminen maksaa 100 puntaa, ja
+ilman rahaa laivaan ei pääse.
 
 **Laatat (30 kpl).**
 
@@ -67,6 +78,7 @@ index.html          runko ja dialogit
 css/styles.css      ulkoasu
 js/board.js         kaupungit, reitit ja kartan piirtotiedot
 js/tokens.js        laattatyypit ja pinon sekoitus
+js/questions.js     tietovisakysymykset kaupungeittain
 js/rules.js         puhdas sääntölogiikka (siirrot, etäisyydet) — testattavissa Nodella
 js/game.js          pelitila, vuorot, laattojen kääntäminen, voittoehdot
 js/ai.js            bottien päätöksenteko
@@ -81,6 +93,15 @@ tests/              node --test -testit säännöille ja kokonaiselle pelille
 npm test
 ```
 
-Testit kattavat laudan yhtenäisyyden, siirtojen laskennan (koko silmäluku, ei paluuta
-kesken reitin, laivamaksut), laattojen vaikutukset, voittoehdot sekä kokonaisen
-bottien pelaaman pelin päättymisen.
+Testit kattavat laudan yhtenäisyyden, siirtojen laskennan (kaupunkiin ilman tasalukua,
+ei paluuta kesken reitin, laivamaksut), laattojen vaikutukset, tietovisan kulun ja
+kysymyspankin eheyden, voittoehdot sekä kokonaisen bottien pelaaman pelin päättymisen.
+
+## Yhden tiedoston versio
+
+```bash
+node tools/build-standalone.mjs
+```
+
+Kokoaa kaiken tiedostoon `dist/afrikan-tahti.html`, jonka voi avata selaimessa
+suoraan ilman palvelinta.

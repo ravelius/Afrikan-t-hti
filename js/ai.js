@@ -8,6 +8,9 @@
 import { cityDistances, distanceOf } from './rules.js';
 import { TOKEN_PRICE, FLIGHT_PRICE } from './game.js';
 
+// Kuinka usein botti osaa vastata tietovisaan oikein.
+export const BOT_SKILL = 0.55;
+
 function racingHome(game, p) {
   return p.hasStar || (game.starFound && p.horseshoes > 0);
 }
@@ -41,9 +44,10 @@ export function chooseAction(game) {
   const p = game.player;
   const actions = game.availableActions();
 
-  if (!racingHome(game, p) && (actions.buy || actions.luck)) {
-    if (actions.buy && p.money >= TOKEN_PRICE + 200) return { type: 'buy' };
-    return { type: 'luck' };
+  if (!racingHome(game, p) && actions.quiz) {
+    // Rikas botti ostaa varman käännön, muuten se luottaa tietoihinsa.
+    if (actions.buy && p.money >= TOKEN_PRICE + 500) return { type: 'buy' };
+    return { type: 'quiz' };
   }
 
   // Kotimatkalla lento kannattaa jos se lyhentää matkaa selvästi.
@@ -90,4 +94,13 @@ export function chooseMove(game) {
     }
   }
   return best.key;
+}
+
+/** Botin vastaus tietovisaan: oikein BOT_SKILL:n todennäköisyydellä. */
+export function chooseQuizAnswer(game, skill = BOT_SKILL) {
+  const quiz = game.quiz;
+  if (!quiz) return 0;
+  if (game.rng() < skill) return quiz.correct;
+  const wrong = quiz.options.map((_, i) => i).filter((i) => i !== quiz.correct);
+  return wrong[Math.floor(game.rng() * wrong.length)];
 }

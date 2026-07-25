@@ -65,15 +65,19 @@
       <p><b>Tavoite.</b> Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon.
         Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä
         aloituskaupunkiin ensimmäisenä.</p>
-      <p><b>Vuoro.</b> Voit joko heittää nopan ja liikkua, kääntää laatan omassa
-        kaupungissasi tai lentää lentokentältä toiselle (300 puntaa). Yksi teko per vuoro.</p>
-      <p><b>Liikkuminen.</b> Nopan silmäluku käytetään kokonaan. Reitin voi vaihtaa
-        kaupungissa, mutta kesken reitin ei saa kääntyä takaisin. Matkan voi pysäyttää
-        myös reitin varrelle.</p>
+      <p><b>Vuoro.</b> Voit joko heittää nopan ja liikkua, avata kaupunkisi laatan
+        (tietovisalla tai rahalla) tai lentää lentokentältä toiselle (300 puntaa).
+        Yksi teko per vuoro.</p>
+      <p><b>Liikkuminen.</b> Noppa kertoo, kuinka monta askelta voit enintään kulkea —
+        tasalukua ei tarvita, vaan kaupunkiin saa pysähtyä jo matkan varrella. Reitin voi
+        vaihtaa kaupungissa, mutta kesken reitin ei saa kääntyä takaisin. Jos silmäluku
+        loppuu kesken reittiä, pysähdyt reitin varrelle.</p>
       <p><b>Laivareitit.</b> Sininen reitti maksaa 100 puntaa kun sille astutaan.
         Ilman rahaa laivaan ei pääse.</p>
-      <p><b>Laatat.</b> Kaupungissa seisova pelaaja voi vuorollaan joko maksaa 100 puntaa
-        ja kääntää laatan, tai kokeilla onneaan: nopalla 4–6 laatta kääntyy ilmaiseksi.</p>
+      <p><b>Laatat ja tietovisa.</b> Kaupungissa seisova pelaaja voi vuorollaan vastata
+        paikkaan liittyvään monivalintakysymykseen (a–d). Oikea vastaus kääntää laatan
+        ilmaiseksi, väärä päättää vuoron. Vaihtoehtoisesti laatan voi ostaa 100 punnalla
+        ilman kysymystä.</p>
       <p><b>Laatat pelissä (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
@@ -83,6 +87,20 @@
     </div>
     <menu>
       <button id="rules-close" class="primary">Sulje</button>
+    </menu>
+  </dialog>
+
+  <!-- Tietovisa -->
+  <dialog id="quiz-dialog" class="dialog quiz">
+    <div class="quiz-head">
+      <span class="quiz-badge">Tietovisa</span>
+      <span id="quiz-city" class="quiz-city"></span>
+    </div>
+    <p id="quiz-question" class="quiz-question"></p>
+    <div id="quiz-options" class="quiz-options"></div>
+    <p id="quiz-result" class="quiz-result" hidden></p>
+    <menu>
+      <button id="quiz-continue" class="primary" hidden>Jatka</button>
     </menu>
   </dialog>
 
