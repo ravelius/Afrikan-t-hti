@@ -109,7 +109,11 @@ const AS_CITIES = [
   { id: 'singapore', name: 'Singapore', x: 563, y: 850, airport: true, la: 'middle', lx: 0, ly: 30 },
   { id: 'sumatra', name: 'Sumatra', x: 488, y: 812, la: 'start', lx: 16, ly: 5 },
   { id: 'borneo', name: 'Borneo', x: 644, y: 846, la: 'start', lx: 16, ly: 5 },
-  { id: 'jakarta', name: 'Jakarta', x: 605, y: 953, airport: true, la: 'end', lx: -16, ly: 5 },
+  {
+    id: 'jakarta', name: 'Jakarta', x: 605, y: 953, airport: true, la: 'end', lx: -16, ly: 5,
+    // Indonesian saariketju jatkuu idässä Oseanian laudalle.
+    links: [{ pack: 'oceania', city: 'bali', label: 'Oseanian lauta' }],
+  },
   { id: 'lhasa', name: 'Lhasa', x: 461, y: 514, la: 'start', lx: 16, ly: 5 },
   { id: 'kathmandu', name: 'Kathmandu', x: 395, y: 540, la: 'start', lx: 16, ly: 5 },
   { id: 'delhi', name: 'Delhi', x: 324, y: 504, airport: true, la: 'end', lx: -16, ly: 5 },

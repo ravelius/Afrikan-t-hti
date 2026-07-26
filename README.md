@@ -6,11 +6,10 @@ yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käänn�
 JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
 maantieteestä kiinnostavasti.
 
-- **Kahdeksan pelilautaa:** koko maapallon kattava Maailma (Maailman tähti),
-  Afrikka (Afrikan tähti), Eurooppa (Euroopan tähti), Aasia (Aasian tähti),
-  Pohjois-Amerikka (Pohjois-Amerikan tähti), Etelä-Amerikka (Etelä-Amerikan
-  tähti), Lähi-itä (Idän tähti) ja ensimmäisenä kaupunkilautana Istanbul
-  (Sulttaanin timantti). Maailma-laudalla valtameret
+- **Yhdeksän pelilautaa:** koko maapallon kattava Maailma (Maailman tähti),
+  kaikki kuusi asuttua mannerta — Afrikka, Eurooppa, Aasia, Oseania,
+  Pohjois-Amerikka ja Etelä-Amerikka — sekä Lähi-itä (Idän tähti) ja
+  ensimmäisenä kaupunkilautana Istanbul (Sulttaanin timantti). Maailma-laudalla valtameret
   ylitetään laivalla tai lentäen, ja Lontoosta, Kairosta ja Rio de Janeirosta
   laskeudutaan tarkemmille laudoille — sama portaikko jatkuu kaupunkitasolle
   asti. Istanbul on sekä Euroopan että Lähi-idän laudalla, joten mantereelta
@@ -39,6 +38,9 @@ maantieteestä kiinnostavasti.
 - Etelä-Amerikan laudalla 37 kaupunkia Panamasta Kap Hornille: Andien
   ylängöt, Amazonin jokireitit, Atacaman autiomaa ja Patagonian vuonot —
   Galápagos, Falkland ja Robinson Crusoen saari vain laivalla
+- Oseanian laudalla 32 kaupunkia Perthistä Fidžille: punainen keskusta,
+  Suuri valliriutta, Uusi-Guinea, Uusi-Seelanti ja Tyynenmeren saaret —
+  laudalla on enemmän laivamatkoja kuin millään muulla
 - Aasian laudalla 37 kaupunkia Teheranista Tokioon ja Jakutskista Jakartaan:
   Silkkitie, Himalaja, Siperian taiga ja trooppinen saaristo — Japani, Sahalin,
   Taiwan, Sri Lanka, Sumatra, Java, Borneo ja Luzon vain laivalla
@@ -48,11 +50,11 @@ maantieteestä kiinnostavasti.
   laudan Etelä-Amerikkaan ja Maailma-lautaan
 - Laatat: tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät — Lähi-idässä
   topaasin tilalla on turkoosi, joka on saanut nimensä Turkista
-- Yli 650 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
+- Yli 720 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
   kysymyksensä + laudan yleinen varapakka. Pelaajakohtainen tasovalinta
   (esim. lapsille helpot) ja vaikeasta kysymyksestä 100 punnan bonus
 - Suomenkielinen käyttöliittymä ja "Tiesitkö että…" -tietoruutu, joka kertoo
-  vuorossa olevan pelaajan sijainnista — yli 570 tietoa, vähintään kaksi
+  vuorossa olevan pelaajan sijainnista — yli 660 tietoa, vähintään kaksi
   jokaisesta kaupungista
 - Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
   kompassiruusu, aallot ja maaston merkit — myös kysymyslaatikot ovat samaa

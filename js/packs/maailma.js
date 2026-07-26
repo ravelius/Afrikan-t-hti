@@ -106,7 +106,10 @@ const WORLD_CITIES = [
     id: 'peking', name: 'Peking', x: 823, y: 416.2, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'asia', city: 'peking', label: 'Aasian lauta' }],
   },
-  { id: 'sydney', name: 'Sydney', x: 913, y: 620.0, airport: true, la: 'end', lx: -16, ly: -10 },
+  {
+    id: 'sydney', name: 'Sydney', x: 913, y: 620.0, airport: true, la: 'end', lx: -16, ly: -10,
+    links: [{ pack: 'oceania', city: 'sydney', label: 'Oseanian lauta' }],
+  },
   {
     id: 'moskova', name: 'Moskova', x: 604, y: 372.3, airport: true, la: 'start', lx: 16, ly: 5,
     links: [{ pack: 'europe', city: 'moskova', label: 'Euroopan lauta' }],

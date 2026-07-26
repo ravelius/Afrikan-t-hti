@@ -10,9 +10,11 @@ import { ISTANBUL } from './packs/istanbul.js';
 import { SOUTHAMERICA } from './packs/southamerica.js';
 import { NORTHAMERICA } from './packs/northamerica.js';
 import { ASIA } from './packs/asia.js';
+import { OCEANIA } from './packs/oceania.js';
 
 export const PACKS = [
-  MAAILMA, AFRICA, EUROPE, ASIA, NORTHAMERICA, SOUTHAMERICA, MIDDLE_EAST, ISTANBUL,
+  MAAILMA, AFRICA, EUROPE, ASIA, OCEANIA, NORTHAMERICA, SOUTHAMERICA, MIDDLE_EAST,
+  ISTANBUL,
 ];
 
 export function packById(id) {
