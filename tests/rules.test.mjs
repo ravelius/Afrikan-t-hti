@@ -6,9 +6,12 @@ import { buildBoard, findMoves, posKey, cityDistances, pointAlong } from '../js/
 import { isOnLand } from '../js/mapart.js';
 import { tokenPileTemplate, TOKEN_COUNTS } from '../js/tokens.js';
 import {
-  Game, mulberry32, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE, SEA_FARE,
+  Game, mulberry32, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE, HINT_PRICE,
+  QUIZ_SECONDS, SEA_FARE,
 } from '../js/game.js';
-import { chooseMove, chooseQuizAnswer, chooseTravel, wantsHint } from '../js/ai.js';
+import {
+  chooseMove, chooseQuizAnswer, chooseTravel, wantsFiftyFifty, wantsHint,
+} from '../js/ai.js';
 import { QUESTIONS, allQuestions } from '../js/questions.js';
 
 const board = buildBoard(CITIES, EDGES);
@@ -173,7 +176,8 @@ function playBotStep(game) {
     else game.endTurn();
   } else if (game.phase === 'quiz') {
     if (game.quiz.chosen !== null) game.closeQuiz();
-    else if (wantsHint(game)) game.actionFiftyFifty();
+    else if (wantsHint(game)) game.actionHint();
+    else if (wantsFiftyFifty(game)) game.actionFiftyFifty();
     else game.answerQuiz(chooseQuizAnswer(game));
   } else if (game.phase === 'offer') {
     game.actionQuiz();
@@ -223,6 +227,12 @@ test('kysymyspankki on ehjä', () => {
       `kysymyksen "${q.q}" oikea vastaus on virheellinen`,
     );
     assert.ok(q.fact && q.fact.length > 0, `kysymykseltä "${q.q}" puuttuu selitys`);
+    assert.ok(q.hint && q.hint.length > 0, `kysymykseltä "${q.q}" puuttuu vihje`);
+    const oikea = q.options[q.correct].toLowerCase();
+    assert.ok(
+      !q.hint.toLowerCase().includes(oikea),
+      `kysymyksen "${q.q}" vihje paljastaa vastauksen`,
+    );
   }
 
   const texts = allQuestions().map((q) => q.q);
@@ -352,7 +362,7 @@ test('aarretta ei voi ostaa rahalla', () => {
   assert.ok(actions.travel.includes('land'));
 });
 
-test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 50', () => {
+test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 80', () => {
   const game = new Game({
     players: [
       { name: 'A', color: '#f00', start: 'tanger' },
@@ -395,6 +405,78 @@ test('50:50 ei onnistu ilman rahaa', () => {
   const tulos = game.actionFiftyFifty();
   assert.equal(tulos.ok, false);
   assert.equal(game.quiz.hidden.length, 0);
+});
+
+test('vihje maksaa 40 puntaa ja näkyy vain kerran ostettuna', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    seed: 404,
+  });
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'topaz');
+  game.actionTravel('stay');
+
+  assert.equal(game.quiz.hintShown, false);
+  const rahaEnnen = game.player.money;
+  const tulos = game.actionHint();
+  assert.ok(tulos.ok);
+  assert.equal(game.player.money, rahaEnnen - HINT_PRICE);
+  assert.equal(game.quiz.hintShown, true);
+  assert.equal(typeof game.quiz.hint, 'string');
+
+  // Toista kertaa ei veloiteta.
+  assert.equal(game.actionHint().ok, false);
+  assert.equal(game.player.money, rahaEnnen - HINT_PRICE);
+
+  // Vihje ei kerro vastausta suoraan, ja 50:50 toimii yhä sen päälle.
+  assert.ok(game.actionFiftyFifty().ok);
+  assert.equal(game.quiz.hidden.length, 2);
+});
+
+test('vihjettä ei saa ilman rahaa', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    seed: 405,
+  });
+  game.player.pos = { type: 'city', city: 'gao' };
+  game.player.money = 10;
+  game.actionTravel('stay');
+  assert.equal(game.actionHint().ok, false);
+  assert.equal(game.quiz.hintShown, false);
+});
+
+test('aikarajan loppuminen lasketaan vääräksi vastaukseksi', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    seed: 406,
+  });
+  game.player.pos = { type: 'city', city: 'kano' };
+  game.tokens.set('kano', 'ruby');
+  game.actionTravel('stay');
+  assert.equal(game.quiz.seconds, QUIZ_SECONDS);
+
+  const tulos = game.timeoutQuiz();
+  assert.ok(tulos.ok);
+  assert.equal(game.quiz.right, false);
+  assert.equal(game.quiz.timedOut, true);
+  assert.equal(game.quiz.chosen, -1);
+  assert.ok(game.tokens.has('kano'), 'laatta pysyy kääntämättä');
+
+  // Umpeutuneeseen kysymykseen ei voi enää vastata.
+  assert.equal(game.answerQuiz(game.quiz.correct).ok, false);
+  assert.equal(game.timeoutQuiz().ok, false);
+
+  game.closeQuiz();
+  assert.equal(game.current, 1, 'vuoro vaihtuu');
 });
 
 test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysymyksen', () => {

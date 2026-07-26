@@ -6,7 +6,7 @@
 //   3. Muuten: liiku kohti lähintä kääntämätöntä laattaa.
 
 import { cityDistances, distanceOf } from './rules.js';
-import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE } from './game.js';
+import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HINT_PRICE } from './game.js';
 
 // Kuinka usein botti osaa vastata tietovisaan oikein.
 export const BOT_SKILL = 0.55;
@@ -108,8 +108,8 @@ export function chooseMove(game) {
   return best.key;
 }
 
-/** Ostaako botti 50:50-vihjeen? Vain jos rahaa riittää myös matkoihin. */
-export function wantsHint(game) {
+/** Ostaako botti 50:50:n? Vain jos rahaa riittää myös matkoihin. */
+export function wantsFiftyFifty(game) {
   const quiz = game.quiz;
   const p = game.player;
   if (!quiz || quiz.hidden.length || quiz.chosen !== null) return false;
@@ -117,15 +117,26 @@ export function wantsHint(game) {
   return game.rng() < 0.5;
 }
 
+/** Ostaako botti sanallisen vihjeen? Halvempana se kelpaa useammin. */
+export function wantsHint(game) {
+  const quiz = game.quiz;
+  const p = game.player;
+  if (!quiz || !quiz.hint || quiz.hintShown || quiz.chosen !== null) return false;
+  if (p.money < HINT_PRICE + 100) return false;
+  return game.rng() < 0.45;
+}
+
 /**
  * Botin vastaus tietovisaan: oikein BOT_SKILL:n todennäköisyydellä.
- * 50:50-vihje nostaa osumatarkkuutta, koska vaihtoehtoja on vain kaksi.
+ * Vihjeet nostavat osumatarkkuutta — 50:50 eniten, koska vaihtoehtoja jää kaksi.
  */
 export function chooseQuizAnswer(game, skill = BOT_SKILL) {
   const quiz = game.quiz;
   if (!quiz) return 0;
   const open = quiz.options.map((_, i) => i).filter((i) => !quiz.hidden.includes(i));
-  const chance = quiz.hidden.length ? Math.max(skill, 0.75) : skill;
+  let chance = skill;
+  if (quiz.hintShown) chance = Math.max(chance, 0.7);
+  if (quiz.hidden.length) chance = Math.max(chance, 0.85);
   if (game.rng() < chance) return quiz.correct;
   const wrong = open.filter((i) => i !== quiz.correct);
   return wrong.length ? wrong[Math.floor(game.rng() * wrong.length)] : quiz.correct;

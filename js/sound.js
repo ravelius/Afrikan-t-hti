@@ -145,6 +145,17 @@ const SOUNDS = {
     s.tone({ freq: 220, to: 140, dur: 0.36, type: 'square', gain: 0.06, delay: 0.02 });
   },
 
+  // Tiimalasi ja vihjeet
+  hint: (s) => {
+    s.hiss({ dur: 0.26, type: 'highpass', freq: 1100, sweepTo: 2600, gain: 0.06 });
+    s.tone({ freq: 660, dur: 0.22, type: 'sine', gain: 0.09, delay: 0.06 });
+  },
+  tick: (s) => s.hiss({ dur: 0.03, freq: 3200, gain: 0.045, q: 2.2 }),
+  timeout: (s) => {
+    s.tone({ freq: 300, to: 90, dur: 0.7, type: 'triangle', gain: 0.15 });
+    s.hiss({ dur: 0.5, type: 'lowpass', freq: 900, sweepTo: 200, gain: 0.07 });
+  },
+
   // Aarteen paljastus
   flip: (s) => s.hiss({ dur: 0.55, freq: 380, sweepTo: 2100, gain: 0.08, q: 0.9 }),
   clack: (s) => {

@@ -887,7 +887,120 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .quiz-result.wrong { border-color: var(--mark); }
 .quiz-result .muted { color: #6f5836; display: block; margin-top: 0.15rem; }
 
+.lifeline {
+  border: 2px dashed rgba(70, 51, 31, 0.6) !important;
+  border-radius: 60px 12px 66px 10px / 10px 66px 12px 60px !important;
+  background: rgba(255, 252, 243, 0.42) !important;
+  color: var(--map-ink) !important;
+  font-size: 0.85rem;
+}
+
+.lifeline:disabled { opacity: 0.4; }
 #quiz-hint { margin-right: auto; }
+
+/* --- tiimalasi: 45 sekunnin vastausaika --- */
+
+.quiz-head-text { display: flex; align-items: center; gap: 0.6rem; min-width: 0; flex: 1 1 auto; }
+
+.quiz-timer {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  animation: hg-arrive 0.5s ease-out both;
+}
+
+.quiz-timer[hidden] { display: none; }
+
+@keyframes hg-arrive {
+  from { opacity: 0; transform: translateY(-6px) rotate(-8deg); }
+}
+
+.hourglass {
+  width: 34px;
+  height: 52px;
+  overflow: visible;
+  transform: rotate(-1.5deg);
+  transform-origin: 50% 50%;
+}
+
+.hourglass.turning { animation: hg-turn 0.7s cubic-bezier(0.35, 0.05, 0.25, 1); }
+
+@keyframes hg-turn {
+  from { transform: rotate(178.5deg); }
+  to { transform: rotate(-1.5deg); }
+}
+
+.hg-wood { filter: url(#hg-rough); }
+
+.hg-wood rect {
+  fill: #8a6534;
+  stroke: var(--map-ink);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+.hg-glass {
+  fill: rgba(255, 255, 255, 0.16);
+  stroke: var(--map-ink);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  filter: url(#hg-rough);
+}
+
+.hg-sand { fill: #c08a3e; opacity: 0.92; }
+.hg-stream { fill: #b07f38; opacity: 0.75; animation: hg-pour 0.5s steps(2, end) infinite; }
+.hg-stream[hidden] { display: none; }
+
+@keyframes hg-pour {
+  0%, 100% { opacity: 0.72; transform: translateX(0); }
+  50% { opacity: 0.5; transform: translateX(0.25px); }
+}
+
+.hg-shine {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.quiz-seconds {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #7a6039;
+  min-width: 1.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.quiz-timer.urgent .hg-sand { fill: #a83c2c; }
+.quiz-timer.urgent .hg-stream { fill: #a83c2c; }
+.quiz-timer.urgent .quiz-seconds { color: var(--mark); }
+.quiz-timer.urgent .hourglass { animation: hg-shake 1s ease-in-out infinite; }
+
+@keyframes hg-shake {
+  0%, 100% { transform: rotate(-1.5deg); }
+  45% { transform: rotate(1.5deg); }
+}
+
+.quiz-hint-text {
+  display: flex;
+  gap: 0.5rem;
+  margin: -0.5rem 0 0.9rem;
+  padding: 0.55rem 0.8rem;
+  border: 2px dashed rgba(120, 90, 40, 0.55);
+  border-radius: 70px 12px 74px 10px / 10px 74px 12px 70px;
+  background: rgba(240, 220, 170, 0.35);
+  font-size: 0.92rem;
+  font-style: italic;
+  line-height: 1.35;
+  color: #6b5227;
+  animation: ink-in 0.45s ease-out both;
+}
+
+.quiz-hint-text[hidden] { display: none; }
+.quiz-hint-text::before { content: "✎"; font-style: normal; opacity: 0.7; }
 
 /* --- aarteen paljastus: iso laatta kääntyy 3D:nä --- */
 
@@ -1172,8 +1285,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
         ottamatta on kätketty aarre. Sen saa auki vain vastaamalla oikein arvottuun
         monivalintakysymykseen (A–D) — rahalla aarretta ei voi ostaa. Väärästä vastauksesta
         vuoro päättyy, ja seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.</p>
-      <p><b>Rahan käyttö.</b> 50 puntaa poistaa kysymyksestä kaksi väärää vaihtoehtoa
-        (50:50), 100 puntaa maksaa laivamatkan ja 300 puntaa lennon.</p>
+      <p><b>Aikaraja.</b> Vastausaikaa on 45 sekuntia. Tiimalasi valuu kysymyksen vieressä,
+        ja jos hiekka loppuu, vastaus lasketaan vääräksi ja vuoro päättyy.</p>
+      <p><b>Rahan käyttö.</b> 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa
+        kysymyksestä kaksi väärää vaihtoehtoa (50:50), 100 puntaa maksaa laivamatkan ja
+        300 puntaa lennon.</p>
       <p><b>Aarteet (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
@@ -1192,14 +1308,41 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   <dialog id="quiz-dialog" class="dialog quiz">
    <div class="dialog-card">
     <div class="quiz-head">
-      <span class="quiz-badge">Tietovisa</span>
-      <span id="quiz-city" class="quiz-city"></span>
+      <div class="quiz-head-text">
+        <span class="quiz-badge">Tietovisa</span>
+        <span id="quiz-city" class="quiz-city"></span>
+      </div>
+      <div id="quiz-timer" class="quiz-timer" hidden>
+        <svg class="hourglass" id="hourglass" viewBox="0 0 44 68" aria-hidden="true">
+          <defs>
+            <filter id="hg-rough" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="turbulence" baseFrequency="0.42" numOctaves="2" seed="11" result="n" />
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="0.5"
+                                 xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+          <g class="hg-wood">
+            <rect x="3" y="1.4" width="38" height="5.2" rx="1.8" />
+            <rect x="3" y="61.4" width="38" height="5.2" rx="1.8" />
+            <rect x="5.4" y="6" width="2.6" height="56" rx="1.2" />
+            <rect x="36" y="6" width="2.6" height="56" rx="1.2" />
+          </g>
+          <path class="hg-glass" d="M8 7 H36 L22.6 33.6 L22.6 34.4 L36 61 H8 L21.4 34.4 L21.4 33.6 Z" />
+          <path id="hg-top-sand" class="hg-sand" d="" />
+          <rect id="hg-stream" class="hg-stream" x="21.55" y="33.6" width="0.9" height="26" />
+          <path id="hg-bottom-sand" class="hg-sand" d="" />
+          <path class="hg-shine" d="M12.5 9.4 L18.5 9.4 L22 30" />
+        </svg>
+        <span id="quiz-seconds" class="quiz-seconds">45</span>
+      </div>
     </div>
     <p id="quiz-question" class="quiz-question"></p>
+    <p id="quiz-hint-text" class="quiz-hint-text" hidden></p>
     <div id="quiz-options" class="quiz-options"></div>
     <p id="quiz-result" class="quiz-result" hidden></p>
     <menu>
-      <button id="quiz-hint" type="button" hidden>50:50</button>
+      <button id="quiz-hint" class="lifeline" type="button" hidden>Vihje</button>
+      <button id="quiz-5050" class="lifeline" type="button" hidden>50:50</button>
       <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
     </menu>
    </div>
@@ -1428,18 +1571,21 @@ const QUESTIONS = {
       options: ['Libya', 'Tunisia', 'Algeria', 'Marokko'],
       correct: 0,
       fact: 'Tripoli on Libyan pääkaupunki ja suurin kaupunki.',
+      hint: 'Maan öljyvarat ovat Afrikan suurimmat.',
     },
     {
       q: 'Minkä meren rannalla Tripoli sijaitsee?',
       options: ['Punainenmeri', 'Välimeri', 'Mustameri', 'Arabianmeri'],
       correct: 1,
       fact: 'Tripoli on Välimeren etelärannikon satamakaupunki.',
+      hint: 'Sama meri huuhtoo Italian ja Kreikan rantoja.',
     },
     {
       q: 'Mikä on Libyan virallinen kieli?',
       options: ['ranska', 'italia', 'arabia', 'swahili'],
       correct: 2,
       fact: 'Libyan virallinen kieli on arabia, vaikka italian siirtomaakausi näkyy yhä kaupungeissa.',
+      hint: 'Samaa kieltä puhutaan myös Kairossa.',
     },
   ],
 
@@ -1449,18 +1595,21 @@ const QUESTIONS = {
       options: ['Kalahari', 'Namib', 'Gobi', 'Sahara'],
       correct: 3,
       fact: 'Sahara on pinta-alaltaan noin 9 miljoonaa neliökilometriä.',
+      hint: 'Se ulottuu Atlantilta Punaisellemerelle.',
     },
     {
       q: 'Murzukin ympäristö tunnetaan Fezzanina. Missä maassa se on?',
       options: ['Libya', 'Niger', 'Tšad', 'Egypti'],
       correct: 0,
       fact: 'Fezzan on Libyan lounainen aavikkoalue.',
+      hint: 'Sama maa kuin Tripoli.',
     },
     {
       q: 'Mikä eläin oli Saharan karavaanien tärkein kulkuväline?',
       options: ['hevonen', 'dromedaari', 'aasi', 'norsu'],
       correct: 1,
       fact: 'Yksikyttyräinen dromedaari tunnetaan aavikon laivana.',
+      hint: 'Sillä on vain yksi kyttyrä.',
     },
   ],
 
@@ -1470,18 +1619,21 @@ const QUESTIONS = {
       options: ['vuoristojoesta', 'sadevedestä', 'pohjavedestä', 'merestä'],
       correct: 2,
       fact: 'Keitaat syntyvät siellä, missä pohjavesi nousee lähelle maanpintaa.',
+      hint: 'Vesi on hiekan alla, ei sen päällä.',
     },
     {
       q: 'Al Kufra sijaitsee Libyan kaakkoisosassa. Mikä maa on Libyasta etelässä?',
       options: ['Tšad', 'Mali', 'Kenia', 'Somalia'],
       correct: 0,
       fact: 'Libyan eteläiset naapurit ovat Tšad ja Niger.',
+      hint: 'Maan suuri järvi on kutistunut murto-osaan entisestä.',
     },
     {
       q: 'Mitä kasvia on perinteisesti viljelty aavikkokeitailla?',
       options: ['riisiä', 'taatelipalmua', 'teetä', 'kaakaota'],
       correct: 1,
       fact: 'Taatelipalmu kestää kuivuutta ja antaa varjoa muille viljelykasveille.',
+      hint: 'Sen hedelmiä syödään usein kuivattuina.',
     },
   ],
 
@@ -1491,12 +1643,14 @@ const QUESTIONS = {
       options: ['Sahel', 'Savanni', 'Steppi', 'Tundra'],
       correct: 0,
       fact: 'Sahel on aavikon ja savannin välinen vyöhyke Atlantilta Punaisellemerelle.',
+      hint: 'Nimi tarkoittaa arabiaksi rantaa tai reunaa.',
     },
     {
       q: 'Mikä seuraavista EI rajoitu Saharaan?',
       options: ['Algeria', 'Niger', 'Sudan', 'Sambia'],
       correct: 3,
       fact: 'Sambia sijaitsee eteläisessä Afrikassa kaukana Saharasta.',
+      hint: 'Etsi maa, joka on selvästi päiväntasaajan eteläpuolella.',
     },
     {
       q: 'Miksi aavikolla on usein kylmää yöllä?',
@@ -1508,6 +1662,7 @@ const QUESTIONS = {
       ],
       correct: 1,
       fact: 'Kuivassa ilmassa on vähän vesihöyryä, joten lämpö karkaa nopeasti avaruuteen.',
+      hint: 'Kyse on ilman kosteudesta.',
     },
   ],
 
@@ -1517,18 +1672,21 @@ const QUESTIONS = {
       options: ['Marokko', 'Algeria', 'Egypti', 'Sudan'],
       correct: 1,
       fact: 'Ahaggar on eteläisen Algerian vulkaaninen ylänkö.',
+      hint: 'Sama maa on pinta-alaltaan Afrikan suurin.',
     },
     {
       q: 'Mikä paimentolaiskansa asuu perinteisesti Ahaggarin alueella?',
       options: ['tuaregit', 'zulut', 'masait', 'berberien sijaan somalit'],
       correct: 0,
       fact: 'Tuaregit ovat berberitaustainen Saharan paimentolaiskansa.',
+      hint: 'Heitä kutsutaan sinisiksi miehiksi.',
     },
     {
       q: 'Tuaregien miehet käyttävät perinteisesti kasvohuntua. Mikä väri on tunnusomainen?',
       options: ['valkoinen', 'punainen', 'indigonsininen', 'vihreä'],
       correct: 2,
       fact: 'Indigolla värjätty huntu antoi tuaregeille lisänimen "siniset miehet".',
+      hint: 'Sama väri kuin farkkukankaassa.',
     },
   ],
 
@@ -1538,12 +1696,14 @@ const QUESTIONS = {
       options: ['Mali', 'Niger', 'Senegal', 'Nigeria'],
       correct: 0,
       fact: 'Timbuktu on Malin pohjoisosassa Niger-joen mutkassa.',
+      hint: 'Maan halki virtaa Niger-joki.',
     },
     {
       q: 'Minkä joen läheisyydessä Timbuktu sijaitsee?',
       options: ['Niili', 'Kongo', 'Niger', 'Sambesi'],
       correct: 2,
       fact: 'Niger-joki teki Timbuktusta karavaani- ja jokikaupan solmukohdan.',
+      hint: 'Joki antaa nimensä kahdelle valtiolle.',
     },
     {
       q: 'Mistä Timbuktu tuli keskiajalla kuuluisaksi?',
@@ -1555,6 +1715,7 @@ const QUESTIONS = {
       ],
       correct: 1,
       fact: 'Timbuktun kirjastoissa säilytettiin kymmeniätuhansia käsikirjoituksia.',
+      hint: 'Kaupungissa säilytettiin tuhansia vanhoja kirjoja.',
     },
   ],
 
@@ -1564,18 +1725,21 @@ const QUESTIONS = {
       options: ['Mali', 'Ghana', 'Tšad', 'Kamerun'],
       correct: 0,
       fact: 'Songhai-valtakunta hallitsi Länsi-Afrikkaa 1400–1500-luvuilla.',
+      hint: 'Sama maa kuin Timbuktu.',
     },
     {
       q: 'Minkä joen varrella Gao sijaitsee?',
       options: ['Senegal', 'Volta', 'Niger', 'Benue'],
       correct: 2,
       fact: 'Niger on Länsi-Afrikan pisin joki, noin 4 200 kilometriä.',
+      hint: 'Sama joki kuin Timbuktussa.',
     },
     {
       q: 'Mitä Saharan halki kuljetettiin pohjoiseen keskiajan kauppareiteillä?',
       options: ['kultaa', 'kivihiiltä', 'kahvia', 'puuvillaa'],
       correct: 0,
       fact: 'Kultaa vietiin pohjoiseen ja suolaa tuotiin etelään.',
+      hint: 'Se punnittiin tarkasti ja kiilsi keltaisena.',
     },
   ],
 
@@ -1585,18 +1749,21 @@ const QUESTIONS = {
       options: ['Niger', 'Nigeria', 'Kamerun', 'Benin'],
       correct: 1,
       fact: 'Kano on Pohjois-Nigerian tärkein kauppakaupunki.',
+      hint: 'Maassa asuu yli 200 miljoonaa ihmistä.',
     },
     {
       q: 'Mikä on Afrikan väkirikkain maa?',
       options: ['Etiopia', 'Egypti', 'Nigeria', 'Kongon demokraattinen tasavalta'],
       correct: 2,
       fact: 'Nigeriassa asuu yli 200 miljoonaa ihmistä.',
+      hint: 'Maan suurin kaupunki on Lagos.',
     },
     {
       q: 'Kano tunnetaan vuosisatoja vanhoista värjäämökuopistaan. Mitä niissä värjätään?',
       options: ['kankaita', 'nahkaa', 'savea', 'puuta'],
       correct: 0,
       fact: 'Kofar Matan värjäämöt ovat toimineet 1400-luvulta asti indigolla.',
+      hint: 'Indigo tarttuu parhaiten kudottuun materiaaliin.',
     },
   ],
 
@@ -1606,18 +1773,21 @@ const QUESTIONS = {
       options: ['Gambia', 'Guinea', 'Senegal', 'Mauritania'],
       correct: 2,
       fact: 'Dakar sijaitsee Cap-Vertin niemellä, Afrikan mantereen läntisimmässä kärjessä.',
+      hint: 'Maa ympäröi Gambiaa lähes kokonaan.',
     },
     {
       q: 'Mikä saari Dakarin edustalla muistuttaa orjakaupan historiasta?',
       options: ['Gorée', 'Sansibar', 'Mauritius', 'Sokotra'],
       correct: 0,
       fact: 'Gorée on Unescon maailmanperintökohde.',
+      hint: 'Saaren nimi alkaa G-kirjaimella.',
     },
     {
       q: 'Mikä kuuluisa moottoriurheilukilpailu päättyi vuosikymmeniä Dakariin?',
       options: ['Le Mans', 'Dakar-ralli', 'Monte Carlon ralli', 'Safari-ralli'],
       correct: 1,
       fact: 'Pariisi–Dakar ajettiin Euroopasta Saharan halki vuoteen 2007 asti.',
+      hint: 'Kilpailu on nimetty juuri tämän kaupungin mukaan.',
     },
   ],
 
@@ -1627,18 +1797,21 @@ const QUESTIONS = {
       options: ['Monrovia', 'Conakry', 'Freetown', 'Banjul'],
       correct: 2,
       fact: 'Freetown perustettiin vapautettujen orjien asuinpaikaksi 1700-luvun lopulla.',
+      hint: 'Nimi tarkoittaa vapauden kaupunkia.',
     },
     {
       q: 'Mitä nimi Sierra Leone tarkoittaa portugaliksi?',
       options: ['Leijonavuoret', 'Kultaranta', 'Pitkä joki', 'Vihreä niemi'],
       correct: 0,
       fact: 'Portugalilainen merenkulkija nimesi rannikon vuoret 1400-luvulla.',
+      hint: 'Nimessä yhdistyvät eläin ja maastonmuoto.',
     },
     {
       q: 'Mistä luonnonvarasta Sierra Leone tunnetaan?',
       options: ['öljystä', 'timanteista', 'kivihiilestä', 'uraanista'],
       correct: 1,
       fact: 'Timanttikauppa rahoitti maan sisällissotaa 1990-luvulla.',
+      hint: 'Niistä käytettiin nimitystä veritimantit.',
     },
   ],
 
@@ -1648,18 +1821,21 @@ const QUESTIONS = {
       options: ['Liberia', 'Ghana', 'Senegal', 'Kamerun'],
       correct: 0,
       fact: 'Kap Palmas on Liberian kaakkoisin kärki.',
+      hint: 'Maa perustettiin vapautettujen orjien siirtokunnaksi.',
     },
     {
       q: 'Mikä on Liberian pääkaupunki?',
       options: ['Abidjan', 'Accra', 'Monrovia', 'Freetown'],
       correct: 2,
       fact: 'Monrovia nimettiin Yhdysvaltain presidentin James Monroen mukaan.',
+      hint: 'Nimi juontuu erään Yhdysvaltain presidentin sukunimestä.',
     },
     {
       q: 'Liberia perustettiin 1800-luvulla vapautettujen orjien siirtokunnaksi. Mistä maasta he tulivat?',
       options: ['Britannia', 'Yhdysvallat', 'Brasilia', 'Ranska'],
       correct: 1,
       fact: 'Liberia julistautui itsenäiseksi vuonna 1847.',
+      hint: 'Presidentti Monroe antoi nimen pääkaupungille.',
     },
   ],
 
@@ -1669,18 +1845,21 @@ const QUESTIONS = {
       options: ['ashantien', 'zulujen', 'masaiden', 'joruboiden'],
       correct: 0,
       fact: 'Ashanti-kuningaskunta hallitsi aluetta 1600-luvulta lähtien.',
+      hint: 'Kansan kultainen istuin on kuuluisa.',
     },
     {
       q: 'Missä maassa Kumasi sijaitsee?',
       options: ['Norsunluurannikko', 'Ghana', 'Togo', 'Benin'],
       correct: 1,
       fact: 'Kumasi on Ghanan toiseksi suurin kaupunki.',
+      hint: 'Maa itsenäistyi ensimmäisenä Saharan eteläpuolella vuonna 1957.',
     },
     {
       q: 'Millä nimellä Ghana tunnettiin siirtomaa-aikana?',
       options: ['Kultarannikko', 'Norsunluurannikko', 'Orjarannikko', 'Pippurirannikko'],
       correct: 0,
       fact: 'Ghana itsenäistyi ensimmäisenä Saharan eteläpuolisena siirtomaana 1957.',
+      hint: 'Nimi kertoo, mitä rannikolta vietiin.',
     },
   ],
 
@@ -1690,6 +1869,7 @@ const QUESTIONS = {
       options: ['kultakaupan', 'orjakaupan', 'mausteiden', 'norsunluun'],
       correct: 1,
       fact: 'Rannikolta kuljetettiin satojen vuosien ajan ihmisiä Atlantin yli.',
+      hint: 'Nimi kertoo suoraan, mitä rannikolta vietiin.',
     },
     {
       q: 'Mitkä nykyiset maat sijaitsevat entisellä Orjarannikolla?',
@@ -1701,12 +1881,14 @@ const QUESTIONS = {
       ],
       correct: 0,
       fact: 'Alue ulottui nykyisen Ghanan itärajalta Nigerin suistoon.',
+      hint: 'Alue ulottuu Ghanan itärajalta Nigerin suistoon.',
     },
     {
       q: 'Mikä lahti reunustaa Länsi-Afrikan etelärannikkoa?',
       options: ['Adeninlahti', 'Guineanlahti', 'Biskajanlahti', 'Persianlahti'],
       correct: 1,
       fact: 'Guineanlahti on Atlantin valtameren osa.',
+      hint: 'Lahti on nimetty alueen mukaan, joka alkaa G-kirjaimella.',
     },
   ],
 
@@ -1716,6 +1898,7 @@ const QUESTIONS = {
       options: ['Kilimandžaro', 'Kamerunvuori', 'Kenia-vuori', 'Toubkal'],
       correct: 1,
       fact: 'Kamerunvuori kohoaa noin 4 100 metriin ja purkautuu yhä ajoittain.',
+      hint: 'Vuori on nimetty maan mukaan.',
     },
     {
       q: 'Mitkä ovat Kamerunin kaksi virallista kieltä?',
@@ -1727,12 +1910,14 @@ const QUESTIONS = {
       ],
       correct: 0,
       fact: 'Maa jaettiin ensimmäisen maailmansodan jälkeen Ranskan ja Britannian kesken.',
+      hint: 'Maa jaettiin ensimmäisen maailmansodan jälkeen kahden siirtomaavallan kesken.',
     },
     {
       q: 'Mikä on Kamerunin pääkaupunki?',
       options: ['Douala', 'Yaoundé', 'Libreville', 'Bangui'],
       correct: 1,
       fact: 'Douala on suurin kaupunki, mutta pääkaupunki on Yaoundé.',
+      hint: 'Maan suurin kaupunki ei ole pääkaupunki.',
     },
   ],
 
@@ -1742,18 +1927,21 @@ const QUESTIONS = {
       options: ['Intian valtamereen', 'Atlanttiin', 'Välimereen', 'Punaiseenmereen'],
       correct: 1,
       fact: 'Kongojoen suisto on Afrikan länsirannikolla.',
+      hint: 'Sama valtameri huuhtoo Afrikan länsirannikkoa.',
     },
     {
       q: 'Kongojoki on virtaamaltaan maailman toiseksi suurin. Mikä on suurin?',
       options: ['Niili', 'Mississippi', 'Amazon', 'Jangtse'],
       correct: 2,
       fact: 'Amazonin virtaama on moninkertainen Kongojokeen verrattuna.',
+      hint: 'Se virtaa Etelä-Amerikassa.',
     },
     {
       q: 'Mikä on Kongon demokraattisen tasavallan pääkaupunki?',
       options: ['Brazzaville', 'Kinshasa', 'Luanda', 'Kigali'],
       correct: 1,
       fact: 'Kinshasa ja Brazzaville ovat vastakkain joen eri puolilla.',
+      hint: 'Kaupunki on joen vastarannalla Brazzavillea vastapäätä.',
     },
   ],
 
@@ -1763,18 +1951,21 @@ const QUESTIONS = {
       options: ['Luanda', 'Maputo', 'Windhoek', 'Lusaka'],
       correct: 0,
       fact: 'Luanda on Atlantin rannikon satamakaupunki ja maan suurin kaupunki.',
+      hint: 'Nimi alkaa L-kirjaimella.',
     },
     {
       q: 'Minkä maan siirtomaa Angola oli?',
       options: ['Belgia', 'Ranska', 'Portugali', 'Britannia'],
       correct: 2,
       fact: 'Angola itsenäistyi Portugalista vuonna 1975.',
+      hint: 'Sama valta hallitsi myös Mosambikia.',
     },
     {
       q: 'Mikä on Angolan tärkein vientituote?',
       options: ['kahvi', 'öljy', 'puuvilla', 'kaakao'],
       correct: 1,
       fact: 'Angola on yksi Afrikan suurimmista öljyntuottajista.',
+      hint: 'Sitä pumpataan myös meren pohjasta.',
     },
   ],
 
@@ -1784,18 +1975,21 @@ const QUESTIONS = {
       options: ['Golfvirta', 'Benguelan virta', 'Humboldtin virta', 'Kuroshio'],
       correct: 1,
       fact: 'Kylmä merivesi tiivistää ilman kosteuden sumuksi jo merellä.',
+      hint: 'Virta on nimetty Angolan rannikkoalueen mukaan.',
     },
     {
       q: 'Millä nimellä Namibin hylkyjen täyttämä rannikko tunnetaan?',
       options: ['Luurankorannikko', 'Kultarannikko', 'Myrskyranta', 'Valkoinen ranta'],
       correct: 0,
       fact: 'Sumu ja karikot ovat upottaneet rannikolle lukemattomia laivoja.',
+      hint: 'Nimi kertoo, mitä rannalta löytyi haaksirikkojen jäljiltä.',
     },
     {
       q: 'Mikä on Namibian pääkaupunki?',
       options: ['Gaborone', 'Windhoek', 'Harare', 'Pretoria'],
       correct: 1,
       fact: 'Windhoek sijaitsee maan keskiosan ylängöllä.',
+      hint: 'Nimessä on saksalainen kaiku.',
     },
   ],
 
@@ -1805,18 +1999,21 @@ const QUESTIONS = {
       options: ['Pöytävuori', 'Kilimandžaro', 'Draakonivuoret', 'Kenia-vuori'],
       correct: 0,
       fact: 'Pöytävuoren tasainen huippu peittyy usein "pöytäliinapilveen".',
+      hint: 'Huippu on tasainen kuin huonekalu.',
     },
     {
       q: 'Kuka istui vuosia vankina Robben Islandilla Kapkaupungin edustalla?',
       options: ['Kwame Nkrumah', 'Nelson Mandela', 'Jomo Kenyatta', 'Haile Selassie'],
       correct: 1,
       fact: 'Mandela vapautui 1990 ja valittiin presidentiksi 1994.',
+      hint: 'Hänestä tuli myöhemmin maan presidentti.',
     },
     {
       q: 'Etelä-Afrikalla on kolme pääkaupunkia. Mikä niistä on Kapkaupunki?',
       options: ['hallinnollinen', 'oikeudellinen', 'lainsäädännöllinen', 'taloudellinen'],
       correct: 2,
       fact: 'Parlamentti kokoontuu Kapkaupungissa, hallitus istuu Pretoriassa.',
+      hint: 'Kaupungissa kokoontuu parlamentti.',
     },
   ],
 
@@ -1826,18 +2023,21 @@ const QUESTIONS = {
       options: ['kullasta', 'timanteista', 'öljystä', 'kuparista'],
       correct: 1,
       fact: 'Löydöt tekivät Kimberleystä maailman timanttikaupan keskuksen.',
+      hint: 'Löydöistä kasvoi De Beers -yhtiö.',
     },
     {
       q: 'Millä nimellä Kimberleyn valtava käsin kaivettu kuoppa tunnetaan?',
       options: ['Iso reikä', 'Paholaisen kattila', 'Timanttikaivo', 'Suuri halkeama'],
       correct: 0,
       fact: 'Big Hole on yli 200 metriä syvä ja kaivettiin lapioilla.',
+      hint: 'Nimi on hyvin suoraviivainen kuvaus.',
     },
     {
       q: 'Mistä kivilajista timantteja louhitaan?',
       options: ['graniitista', 'kalkkikivestä', 'kimberliitistä', 'liuskeesta'],
       correct: 2,
       fact: 'Kimberliitti sai nimensä juuri Kimberleyn mukaan.',
+      hint: 'Kivilaji on nimetty juuri tämän kaupungin mukaan.',
     },
   ],
 
@@ -1847,18 +2047,21 @@ const QUESTIONS = {
       options: ['Harare', 'Maputo', 'Lilongwe', 'Dar es Salaam'],
       correct: 1,
       fact: 'Maputo sijaitsee maan eteläkärjessä Intian valtameren rannalla.',
+      hint: 'Kaupunki tunnettiin ennen nimellä Lourenço Marques.',
     },
     {
       q: 'Mikä salmi erottaa Mosambikin Madagaskarista?',
       options: ['Mosambikin salmi', 'Bab el-Mandeb', 'Gibraltarinsalmi', 'Malakan salmi'],
       correct: 0,
       fact: 'Salmi on kapeimmillaankin noin 400 kilometriä leveä.',
+      hint: 'Salmi on nimetty mantereen puoleisen maan mukaan.',
     },
     {
       q: 'Minkä maan siirtomaa Mosambik oli?',
       options: ['Britannia', 'Saksa', 'Portugali', 'Italia'],
       correct: 2,
       fact: 'Portugalin kieli on yhä Mosambikin virallinen kieli.',
+      hint: 'Sama valta kuin Angolassa.',
     },
   ],
 
@@ -1868,18 +2071,21 @@ const QUESTIONS = {
       options: ['lemurit', 'gorillat', 'paviaanit', 'simpanssit'],
       correct: 0,
       fact: 'Saaren eristyneisyys on synnyttänyt satoja ainutlaatuisia lajeja.',
+      hint: 'Tunnetuimmalla lajilla on rengastettu häntä.',
     },
     {
       q: 'Mikä on Madagaskarin pääkaupunki?',
       options: ['Antananarivo', 'Port Louis', 'Moroni', 'Victoria'],
       correct: 0,
       fact: 'Antananarivo sijaitsee saaren keskiylängöllä.',
+      hint: 'Nimi on pitkä ja alkaa A-kirjaimella.',
     },
     {
       q: 'Madagaskar on maailman neljänneksi suurin saari. Mikä on suurin?',
       options: ['Borneo', 'Uusi-Guinea', 'Grönlanti', 'Islanti'],
       correct: 2,
       fact: 'Järjestys on Grönlanti, Uusi-Guinea, Borneo ja Madagaskar.',
+      hint: 'Saari kuuluu Tanskaan.',
     },
   ],
 
@@ -1889,18 +2095,21 @@ const QUESTIONS = {
       options: ['neilikasta', 'sahramista', 'vaniljasta', 'kanelista'],
       correct: 0,
       fact: 'Sansibar oli pitkään maailman suurimpia neilikan tuottajia.',
+      hint: 'Maustetta on käytetty myös hammassäryn hoitoon.',
     },
     {
       q: 'Mihin maahan Sansibar kuuluu nykyään?',
       options: ['Kenia', 'Tansania', 'Mosambik', 'Komorit'],
       correct: 1,
       fact: 'Sansibar yhdistyi Tanganjikan kanssa Tansaniaksi vuonna 1964.',
+      hint: 'Maan nimi syntyi kahden alueen yhdistyessä.',
     },
     {
       q: 'Mikä on Sansibarin vanhankaupungin nimi?',
       options: ['Stone Town', 'Old Harbour', 'Casbah', 'Medina'],
       correct: 0,
       fact: 'Stone Town eli Kivikaupunki on Unescon maailmanperintökohde.',
+      hint: 'Nimi viittaa rakennusmateriaaliin.',
     },
   ],
 
@@ -1910,18 +2119,21 @@ const QUESTIONS = {
       options: ['4 810 m', '5 895 m', '6 962 m', '8 849 m'],
       correct: 1,
       fact: 'Kilimandžaro on Afrikan korkein vuori ja maailman korkein yksittäinen vuori.',
+      hint: 'Korkeus jää juuri alle kuuden kilometrin.',
     },
     {
       q: 'Missä maassa Kilimandžaro sijaitsee?',
       options: ['Kenia', 'Uganda', 'Tansania', 'Ruanda'],
       correct: 2,
       fact: 'Vuori on Tansanian puolella lähellä Kenian rajaa.',
+      hint: 'Sama maa kuin Sansibar.',
     },
     {
       q: 'Millainen vuori Kilimandžaro on?',
       options: ['tulivuori', 'poimuvuori', 'hiekkadyyni', 'meteoriittikraatteri'],
       correct: 0,
       fact: 'Kilimandžaro on kolmesta kartiosta koostuva kerrostulivuori.',
+      hint: 'Se syntyi purkauksista, ei laattojen puristuksesta.',
     },
   ],
 
@@ -1931,12 +2143,14 @@ const QUESTIONS = {
       options: ['kahden', 'kolmen', 'viiden', 'yhden'],
       correct: 1,
       fact: 'Järven rannat jakautuvat Tansanian, Ugandan ja Kenian kesken.',
+      hint: 'Yksi rantavaltioista on Uganda.',
     },
     {
       q: 'Mikä maailman pisimmistä joista saa alkunsa Viktoriajärvestä?',
       options: ['Kongo', 'Niili', 'Sambesi', 'Niger'],
       correct: 1,
       fact: 'Valkoinen Niili lähtee järvestä Ugandan Jinjan kohdalla.',
+      hint: 'Joki virtaa pohjoiseen Välimereen.',
     },
     {
       q: 'Kenen mukaan Viktoriajärvi nimettiin?',
@@ -1948,6 +2162,7 @@ const QUESTIONS = {
       ],
       correct: 0,
       fact: 'John Hanning Speke nimesi järven 1858 kuningatar Viktorian mukaan.',
+      hint: 'Nimeäjä oli brittiläinen tutkimusmatkailija.',
     },
   ],
 
@@ -1957,6 +2172,7 @@ const QUESTIONS = {
       options: ['Baikal', 'Superior', 'Titicaca', 'Malawi'],
       correct: 0,
       fact: 'Tanganjika on yli 1 400 metriä syvä, Baikal noin 1 640 metriä.',
+      hint: 'Syvin järvi on Siperiassa.',
     },
     {
       q: 'Millaisessa muodostumassa Tanganjikajärvi sijaitsee?',
@@ -1968,12 +2184,14 @@ const QUESTIONS = {
       ],
       correct: 1,
       fact: 'Hautavajoama syntyy mannerlaattojen erkanemisesta.',
+      hint: 'Sama muodostuma jatkuu Punaisellemerelle asti.',
     },
     {
       q: 'Kenet Henry Morton Stanley tapasi Tanganjikan rannalla Ujijissa?',
       options: ['David Livingstonen', 'Mungo Parkin', 'Richard Burtonin', 'Cecil Rhodesin'],
       correct: 0,
       fact: 'Tapaamiseen liitetään lause "Doctor Livingstone, I presume?".',
+      hint: 'Kuuluisa lause alkaa sanalla "Doctor".',
     },
   ],
 
@@ -1983,18 +2201,21 @@ const QUESTIONS = {
       options: ['Etelä-Sudan', 'Egypti', 'Etiopia', 'Kenia'],
       correct: 0,
       fact: 'Bahr el Ghazal on Etelä-Sudanin luoteinen jokialue.',
+      hint: 'Maa itsenäistyi vuonna 2011.',
     },
     {
       q: 'Mitä arabian sana "bahr" tarkoittaa?',
       options: ['vuorta', 'jokea tai merta', 'aavikkoa', 'kaupunkia'],
       correct: 1,
       fact: 'Nimi tarkoittaa suunnilleen "gasellien jokea".',
+      hint: 'Sana esiintyy monien vesistöjen nimissä.',
     },
     {
       q: 'Alueen laaja Sudd-kosteikko syntyy minkä joen tulvista?',
       options: ['Kongon', 'Niilin', 'Nigerin', 'Sambesin'],
       correct: 1,
       fact: 'Sudd on yksi maailman suurimmista makean veden kosteikoista.',
+      hint: 'Sama joki jatkaa matkaansa Egyptiin.',
     },
   ],
 
@@ -2004,18 +2225,21 @@ const QUESTIONS = {
       options: ['Tšad', 'Sudan', 'Egypti', 'Libya'],
       correct: 1,
       fact: 'Darfur on Sudanin läntinen alue Tšadin rajalla.',
+      hint: 'Maan pääkaupunki on Khartum.',
     },
     {
       q: 'Mitä nimi Darfur tarkoittaa?',
       options: ['furien maa', 'kultainen laakso', 'suuri aavikko', 'idän portti'],
       correct: 0,
       fact: 'Arabian "dar" tarkoittaa kotia tai maata, fur on alueen kansa.',
+      hint: '"Dar" tarkoittaa kotia tai maata.',
     },
     {
       q: 'Mikä on Sudanin pääkaupunki?',
       options: ['Asmara', 'Djibouti', 'Khartum', 'Juba'],
       correct: 2,
       fact: 'Khartum sijaitsee Sinisen ja Valkoisen Niilin yhtymäkohdassa.',
+      hint: 'Kaupunki on kahden Niilin yhtymäkohdassa.',
     },
   ],
 
@@ -2025,18 +2249,21 @@ const QUESTIONS = {
       options: ['Punainenmeri', 'Välimeri', 'Arabianmeri', 'Intian valtameri'],
       correct: 0,
       fact: 'Suakin oli vuosisatoja Sudanin tärkein Punaisenmeren satama.',
+      hint: 'Meri on nimetty värin mukaan.',
     },
     {
       q: 'Mistä materiaalista Suakinin vanhat rakennukset tehtiin?',
       options: ['korallikivestä', 'marmorista', 'tiilestä', 'puusta'],
       correct: 0,
       fact: 'Riutalta louhittu korallikivi antoi taloille vaalean sävyn.',
+      hint: 'Materiaali louhittiin riutalta.',
     },
     {
       q: 'Mikä kanava yhdistää Punaisenmeren Välimereen?',
       options: ['Panaman kanava', 'Suezin kanava', 'Kielin kanava', 'Korintin kanava'],
       correct: 1,
       fact: 'Suezin kanava avattiin liikenteelle vuonna 1869.',
+      hint: 'Kanava avattiin liikenteelle vuonna 1869.',
     },
   ],
 
@@ -2046,18 +2273,21 @@ const QUESTIONS = {
       options: ['Eritrea', 'Etiopia', 'Somalia', 'Djibouti'],
       correct: 1,
       fact: 'Addis Abeba sijaitsee yli 2 300 metrin korkeudella.',
+      hint: 'Maalla on oma aakkosto ja oma kalenteri.',
     },
     {
       q: 'Minkä järjestön päämaja on Addis Abebassa?',
       options: ['Afrikan unioni', 'OPEC', 'Nato', 'Punainen Risti'],
       correct: 0,
       fact: 'Kaupunkia kutsutaan siksi usein Afrikan poliittiseksi pääkaupungiksi.',
+      hint: 'Järjestössä on 55 jäsenvaltiota.',
     },
     {
       q: 'Minkä juoman alkuperämaana Etiopiaa pidetään?',
       options: ['teen', 'kahvin', 'kaakaon', 'rommin'],
       correct: 1,
       fact: 'Kahvipensas on kotoisin Etiopian Kaffan ylängöiltä.',
+      hint: 'Sen pavut paahdetaan ennen käyttöä.',
     },
   ],
 
@@ -2067,12 +2297,14 @@ const QUESTIONS = {
       options: ['Somalia', 'Kenia', 'Eritrea', 'Djibouti'],
       correct: 0,
       fact: 'Niemi työntyy Intian valtamereen Afrikan sarven kärjessä.',
+      hint: 'Maa muodostaa Afrikan sarven kärjen.',
     },
     {
       q: 'Mikä on Somalian pääkaupunki?',
       options: ['Hargeisa', 'Mogadishu', 'Djibouti', 'Addis Abeba'],
       correct: 1,
       fact: 'Mogadishu on ollut vuosisatoja Intian valtameren kauppasatama.',
+      hint: 'Nimi alkaa M-kirjaimella.',
     },
     {
       q: 'Mitkä maat muodostavat Afrikan sarven?',
@@ -2084,6 +2316,7 @@ const QUESTIONS = {
       ],
       correct: 0,
       fact: 'Alue sai nimensä sarvimaisesta muodostaan kartalla.',
+      hint: 'Yksi maista on Etiopia.',
     },
   ],
 
@@ -2094,90 +2327,105 @@ const QUESTIONS = {
       options: ['Kongo', 'Niili', 'Niger', 'Sambesi'],
       correct: 1,
       fact: 'Niili virtaa noin 6 650 kilometriä Välimereen.',
+      hint: 'Joki laskee Välimereen.',
     },
     {
       q: 'Kuinka monta itsenäistä valtiota Afrikassa on?',
       options: ['38', '46', '54', '61'],
       correct: 2,
       fact: 'YK:n jäsenvaltioita Afrikassa on 54.',
+      hint: 'Luku on yli 50 mutta alle 60.',
     },
     {
       q: 'Mikä on Afrikan suurin maa pinta-alaltaan?',
       options: ['Algeria', 'Sudan', 'Kongon demokraattinen tasavalta', 'Libya'],
       correct: 0,
       fact: 'Algeriasta suurin osa on Saharaa.',
+      hint: 'Suurin osa maasta on aavikkoa.',
     },
     {
       q: 'Mikä salmi erottaa Afrikan Euroopasta?',
       options: ['Bosporinsalmi', 'Gibraltarinsalmi', 'Öresund', 'Doverinsalmi'],
       correct: 1,
       fact: 'Gibraltarinsalmi on kapeimmillaan noin 14 kilometriä leveä.',
+      hint: 'Salmen eteläpuolella on Marokko.',
     },
     {
       q: 'Mikä on maailman nopein maaeläin?',
       options: ['gepardi', 'leijona', 'antilooppi', 'strutsi'],
       correct: 0,
       fact: 'Gepardi kiihtyy hetkellisesti yli 100 kilometriin tunnissa.',
+      hint: 'Sillä on pilkullinen turkki ja kyynelviiru silmien alla.',
     },
     {
       q: 'Mikä on maailman suurin kädellinen?',
       options: ['orangutan', 'gorilla', 'simpanssi', 'paviaani'],
       correct: 1,
       fact: 'Urosgorilla voi painaa yli 200 kiloa.',
+      hint: 'Se elää vuoristosademetsissä.',
     },
     {
       q: 'Mikä valtameri sijaitsee Afrikasta itään?',
       options: ['Atlantti', 'Tyynimeri', 'Intian valtameri', 'Pohjoinen jäämeri'],
       correct: 2,
       fact: 'Lännessä Afrikkaa reunustaa Atlantti.',
+      hint: 'Sama valtameri huuhtoo myös Intian rantoja.',
     },
     {
       q: 'Missä sijaitsevat Kheopsin pyramidi ja Sfinksi?',
       options: ['Gizassa', 'Luxorissa', 'Karthagossa', 'Meroessa'],
       correct: 0,
       fact: 'Giza on Kairon kupeessa Niilin länsirannalla.',
+      hint: 'Paikka on aivan Kairon kupeessa.',
     },
     {
       q: 'Mikä on Afrikan suurin saari?',
       options: ['Sansibar', 'Sokotra', 'Madagaskar', 'Mauritius'],
       correct: 2,
       fact: 'Madagaskar on yli 580 000 neliökilometriä.',
+      hint: 'Saarella elää lemureita.',
     },
     {
       q: 'Mikä Afrikan maa säilytti itsenäisyytensä siirtomaakaudella lyhyttä miehitystä lukuun ottamatta?',
       options: ['Ghana', 'Etiopia', 'Kenia', 'Senegal'],
       correct: 1,
       fact: 'Italia miehitti Etiopiaa vain vuosina 1936–1941.',
+      hint: 'Maan pääkaupunki on Addis Abeba.',
     },
     {
       q: 'Mistä kielestä sana "safari" on peräisin?',
       options: ['swahilista', 'zulusta', 'arabiasta suoraan', 'afrikaansista'],
       correct: 0,
       fact: 'Swahilin safari tarkoittaa matkaa; sana juontuu arabian sanasta safar.',
+      hint: 'Kieltä puhutaan Tansaniassa ja Keniassa.',
     },
     {
       q: 'Mikä on maailman suurin kuuma aavikko?',
       options: ['Gobi', 'Kalahari', 'Sahara', 'Atacama'],
       correct: 2,
       fact: 'Sahara on lähes Yhdysvaltain kokoinen.',
+      hint: 'Se ulottuu Atlantilta Punaisellemerelle.',
     },
     {
       q: 'Mikä vesiputous Sambesi-joella tunnetaan nimellä "Jyrisevä savu"?',
       options: ['Victorian putoukset', 'Niagara', 'Angelin putous', 'Tugelan putous'],
       correct: 0,
       fact: 'Paikallinen nimi Mosi-oa-Tunya tarkoittaa jyrisevää savua.',
+      hint: 'Putoukset ovat Sambian ja Zimbabwen rajalla.',
     },
     {
       q: 'Mikä on Afrikan yleisimmin puhuttuja kieliä Itä-Afrikassa?',
       options: ['swahili', 'zulu', 'joruba', 'amhara'],
       correct: 0,
       fact: 'Swahili on Tansanian ja Kenian yhteinen valtakieli.',
+      hint: 'Sana safari on peräisin tästä kielestä.',
     },
     {
       q: 'Millä eläimellä on maailman pisin kaula?',
       options: ['strutsilla', 'kirahvilla', 'flamingolla', 'kamelilla'],
       correct: 1,
       fact: 'Kirahvin kaulassa on silti vain seitsemän nikamaa, kuten ihmisellä.',
+      hint: 'Se syö mieluiten puiden latvoista.',
     },
   ],
 };
@@ -2335,6 +2583,17 @@ const SOUNDS = {
   wrong: (s) => {
     s.tone({ freq: 233, to: 150, dur: 0.34, type: 'sawtooth', gain: 0.12 });
     s.tone({ freq: 220, to: 140, dur: 0.36, type: 'square', gain: 0.06, delay: 0.02 });
+  },
+
+  // Tiimalasi ja vihjeet
+  hint: (s) => {
+    s.hiss({ dur: 0.26, type: 'highpass', freq: 1100, sweepTo: 2600, gain: 0.06 });
+    s.tone({ freq: 660, dur: 0.22, type: 'sine', gain: 0.09, delay: 0.06 });
+  },
+  tick: (s) => s.hiss({ dur: 0.03, freq: 3200, gain: 0.045, q: 2.2 }),
+  timeout: (s) => {
+    s.tone({ freq: 300, to: 90, dur: 0.7, type: 'triangle', gain: 0.15 });
+    s.hiss({ dur: 0.5, type: 'lowpass', freq: 900, sweepTo: 200, gain: 0.07 });
   },
 
   // Aarteen paljastus
@@ -3246,7 +3505,9 @@ function drawDoodles(svg) {
 
 const START_MONEY = 300;
 const SEA_FARE = 100; // laivamatkan hinta vuorolta
-const FIFTY_FIFTY_PRICE = 50; // kahden väärän vaihtoehdon piilotus
+const FIFTY_FIFTY_PRICE = 80; // kahden väärän vaihtoehdon piilotus
+const HINT_PRICE = 40; // sanallinen vihje kysymykseen
+const QUIZ_SECONDS = 45; // vastausaika tiimalasin verran
 const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 
 /** Siemenellinen satunnaisgeneraattori, jotta pelin voi toistaa testeissä. */
@@ -3558,9 +3819,13 @@ class Game {
       fact: question.fact,
       options: order.map((i) => question.options[i]),
       correct: order.indexOf(question.correct),
+      hint: question.hint ?? null,
+      hintShown: false,
       hidden: [],
       chosen: null,
       right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
     };
     this.phase = 'quiz';
     return { ok: true, quiz: this.quiz };
@@ -3589,12 +3854,45 @@ class Game {
     return { ok: true, right: this.quiz.right };
   }
 
-  /** Piilottaa 50 punnalla kaksi väärää vaihtoehtoa. */
+  /** Ostaa sanallisen vihjeen 40 punnalla. */
+  actionHint() {
+    if (this.phase !== 'quiz' || !this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    const quiz = this.quiz;
+    if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+    if (quiz.hintShown) return { ok: false, error: 'Vihje on jo ostettu' };
+    if (!quiz.hint) return { ok: false, error: 'Tähän kysymykseen ei ole vihjettä' };
+
+    const p = this.player;
+    if (p.money < HINT_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
+    p.money -= HINT_PRICE;
+    quiz.hintShown = true;
+    this.say(p.id, `${p.name} osti vihjeen ${HINT_PRICE} punnalla.`);
+    return { ok: true, hint: quiz.hint };
+  }
+
+  /** Aika loppui: vastaus katsotaan vääräksi ja vuoro päättyy. */
+  timeoutQuiz() {
+    if (this.phase !== 'quiz' || !this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    const quiz = this.quiz;
+    if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+
+    const p = this.player;
+    const city = this.board.cityById.get(quiz.cityId);
+    quiz.chosen = -1;
+    quiz.right = false;
+    quiz.timedOut = true;
+    quiz.seconds = 0;
+    const oikea = quiz.options[quiz.correct];
+    this.say(p.id, `${p.name} ei ehtinyt vastata kaupungissa ${city.name} — oikea vastaus oli "${oikea}".`);
+    return { ok: true, right: false, timedOut: true };
+  }
+
+  /** Piilottaa 80 punnalla kaksi väärää vaihtoehtoa. */
   actionFiftyFifty() {
     if (this.phase !== 'quiz' || !this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
     const quiz = this.quiz;
     if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
-    if (quiz.hidden.length) return { ok: false, error: 'Vihje on jo käytetty' };
+    if (quiz.hidden.length) return { ok: false, error: '50:50 on jo käytetty' };
 
     const p = this.player;
     if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
@@ -3929,8 +4227,8 @@ function chooseMove(game) {
   return best.key;
 }
 
-/** Ostaako botti 50:50-vihjeen? Vain jos rahaa riittää myös matkoihin. */
-function wantsHint(game) {
+/** Ostaako botti 50:50:n? Vain jos rahaa riittää myös matkoihin. */
+function wantsFiftyFifty(game) {
   const quiz = game.quiz;
   const p = game.player;
   if (!quiz || quiz.hidden.length || quiz.chosen !== null) return false;
@@ -3938,15 +4236,26 @@ function wantsHint(game) {
   return game.rng() < 0.5;
 }
 
+/** Ostaako botti sanallisen vihjeen? Halvempana se kelpaa useammin. */
+function wantsHint(game) {
+  const quiz = game.quiz;
+  const p = game.player;
+  if (!quiz || !quiz.hint || quiz.hintShown || quiz.chosen !== null) return false;
+  if (p.money < HINT_PRICE + 100) return false;
+  return game.rng() < 0.45;
+}
+
 /**
  * Botin vastaus tietovisaan: oikein BOT_SKILL:n todennäköisyydellä.
- * 50:50-vihje nostaa osumatarkkuutta, koska vaihtoehtoja on vain kaksi.
+ * Vihjeet nostavat osumatarkkuutta — 50:50 eniten, koska vaihtoehtoja jää kaksi.
  */
 function chooseQuizAnswer(game, skill = BOT_SKILL) {
   const quiz = game.quiz;
   if (!quiz) return 0;
   const open = quiz.options.map((_, i) => i).filter((i) => !quiz.hidden.includes(i));
-  const chance = quiz.hidden.length ? Math.max(skill, 0.75) : skill;
+  let chance = skill;
+  if (quiz.hintShown) chance = Math.max(chance, 0.7);
+  if (quiz.hidden.length) chance = Math.max(chance, 0.85);
   if (game.rng() < chance) return quiz.correct;
   const wrong = open.filter((i) => i !== quiz.correct);
   return wrong.length ? wrong[Math.floor(game.rng() * wrong.length)] : quiz.correct;
@@ -4015,11 +4324,27 @@ class UI {
     this.quizQuestion = document.getElementById('quiz-question');
     this.quizOptions = document.getElementById('quiz-options');
     this.quizResult = document.getElementById('quiz-result');
-    this.quizHint = document.getElementById('quiz-hint');
-    this.quizHint.addEventListener('click', () => {
+    this.quizHintText = document.getElementById('quiz-hint-text');
+    this.quizFifty = document.getElementById('quiz-5050');
+    this.quizFifty.addEventListener('click', () => {
       sfx.play('swipe');
       this.doAction(() => this.game.actionFiftyFifty());
     });
+    this.quizHint = document.getElementById('quiz-hint');
+    this.quizHint.addEventListener('click', () => {
+      sfx.play('hint');
+      this.doAction(() => this.game.actionHint());
+    });
+
+    // Tiimalasi
+    this.quizTimerEl = document.getElementById('quiz-timer');
+    this.quizSeconds = document.getElementById('quiz-seconds');
+    this.hourglass = document.getElementById('hourglass');
+    this.hgTopSand = document.getElementById('hg-top-sand');
+    this.hgBottomSand = document.getElementById('hg-bottom-sand');
+    this.hgStream = document.getElementById('hg-stream');
+    this.quizTimer = null;
+    this.timedQuiz = null;
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
 
@@ -4041,6 +4366,7 @@ class UI {
 
   destroy() {
     clearTimeout(this.botTimer);
+    this.stopQuizTimer();
     this.observer?.disconnect();
   }
 
@@ -4499,6 +4825,7 @@ class UI {
     const { game } = this;
     const quiz = game.quiz;
     if (game.phase !== 'quiz' || !quiz) {
+      this.stopQuizTimer();
       if (this.quizDialog.open) this.quizDialog.close();
       return;
     }
@@ -4533,14 +4860,21 @@ class UI {
     // paljastuksen jälkeen löytö ja selitys.
     const revealed = this.revealShownFor === quiz;
 
-    // Vihjenappi: 50 punnalla kaksi väärää vaihtoehtoa pois.
+    // Apukeinot: 40 punnalla sanallinen vihje, 80 punnalla kaksi väärää pois.
     const p = game.player;
     const used = quiz.hidden.length > 0;
-    this.quizHint.hidden = answered || p.isBot;
-    this.quizHint.disabled = used || p.money < FIFTY_FIFTY_PRICE;
-    this.quizHint.textContent = used
-      ? '50:50 käytetty'
-      : `50:50 — poista kaksi väärää (${FIFTY_FIFTY_PRICE} p)`;
+    this.quizFifty.hidden = answered || p.isBot;
+    this.quizFifty.disabled = used || p.money < FIFTY_FIFTY_PRICE;
+    this.quizFifty.textContent = used ? '50:50 käytetty' : `50:50 (${FIFTY_FIFTY_PRICE} p)`;
+
+    this.quizHint.hidden = answered || p.isBot || !quiz.hint;
+    this.quizHint.disabled = quiz.hintShown || p.money < HINT_PRICE;
+    this.quizHint.textContent = quiz.hintShown ? 'Vihje ostettu' : `Vihje (${HINT_PRICE} p)`;
+
+    this.quizHintText.hidden = !quiz.hintShown;
+    if (quiz.hintShown) this.quizHintText.textContent = quiz.hint;
+
+    this.renderTimer(quiz);
 
     this.quizResult.hidden = !answered;
     if (answered) {
@@ -4548,9 +4882,8 @@ class UI {
       this.quizResult.textContent = '';
 
       if (!revealed) {
-        this.quizResult.appendChild(
-          html('strong', 'quiz-verdict', quiz.right ? 'Oikein!' : 'Väärin.'),
-        );
+        const verdict = quiz.timedOut ? 'Aika loppui!' : quiz.right ? 'Oikein!' : 'Väärin.';
+        this.quizResult.appendChild(html('strong', 'quiz-verdict', verdict));
       } else {
         const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
         const body = html('div');
@@ -4560,8 +4893,9 @@ class UI {
         } else if (quiz.right) {
           body.appendChild(html('strong', '', 'Oikein!'));
         } else {
+          const lead = quiz.timedOut ? 'Aika loppui. ' : '';
           body.appendChild(
-            html('strong', '', `Oikea vastaus oli "${quiz.options[quiz.correct]}".`),
+            html('strong', '', `${lead}Oikea vastaus oli "${quiz.options[quiz.correct]}".`),
           );
           body.appendChild(
             html('span', 'muted', 'Vuoro vaihtuu — seuraavalla vuorolla saat uuden kysymyksen.'),
@@ -4576,12 +4910,133 @@ class UI {
     if (!this.quizDialog.open) this.quizDialog.showModal();
   }
 
+  // --- tiimalasi ------------------------------------------------------------
+
+  /** Käynnistää tai pysäyttää vastausajan sen mukaan, kuka on vuorossa. */
+  renderTimer(quiz) {
+    const show = !this.game.player.isBot && quiz.chosen === null;
+    this.quizTimerEl.hidden = !show;
+    if (!show) {
+      this.stopQuizTimer();
+      return;
+    }
+    if (this.timedQuiz !== quiz) this.startQuizTimer(quiz);
+  }
+
+  startQuizTimer(quiz) {
+    this.stopQuizTimer();
+    this.timedQuiz = quiz;
+    this.remaining = (quiz.seconds ?? QUIZ_SECONDS) * 1000;
+    this.lastTick = performance.now();
+    this.lastWhole = Math.ceil(this.remaining / 1000);
+    if (!this.reducedMotion) {
+      this.hourglass.classList.remove('turning');
+      void this.hourglass.getBoundingClientRect();
+      this.hourglass.classList.add('turning');
+    }
+    this.updateTimer();
+    this.quizTimer = setInterval(() => this.tickTimer(), 100);
+  }
+
+  stopQuizTimer() {
+    if (this.quizTimer) clearInterval(this.quizTimer);
+    this.quizTimer = null;
+    this.timedQuiz = null;
+  }
+
+  tickTimer() {
+    const now = performance.now();
+    const dt = now - this.lastTick;
+    this.lastTick = now;
+    // Animaatioiden ajaksi kello pysähtyy, jotta aikaa ei kulu odotellessa.
+    if (this.busy) return;
+
+    this.remaining = Math.max(0, this.remaining - dt);
+    const quiz = this.game.quiz;
+    if (quiz) quiz.seconds = Math.ceil(this.remaining / 1000);
+    this.updateTimer();
+
+    const whole = Math.ceil(this.remaining / 1000);
+    if (whole !== this.lastWhole) {
+      this.lastWhole = whole;
+      if (whole > 0 && whole <= 10) sfx.play('tick');
+    }
+    if (this.remaining <= 0) this.timeUp();
+  }
+
+  updateTimer() {
+    const secs = Math.ceil(this.remaining / 1000);
+    this.quizSeconds.textContent = String(secs);
+    this.quizTimerEl.classList.toggle('urgent', secs <= 10);
+    this.setSand(1 - this.remaining / (QUIZ_SECONDS * 1000));
+  }
+
+  /**
+   * Piirtää hiekan tiimalasiin: ylhäällä pinta valuu suppilon muotoisena
+   * kuoppana kohti kaulaa, alhaalla kasa nousee pyöreänä kekona.
+   */
+  setSand(progress) {
+    const t = Math.min(1, Math.max(0, progress));
+    const cx = 22;
+
+    // Yläkupu: leveä ylhäällä (y 8.4), kapea kaulassa (y 33.6).
+    const surface = 8.4 + t * 25.2;
+    const topHalf = Math.max(0, 12.8 - (surface - 8.4) * 0.4901);
+    const dip = 1.5 * (1 - t) + 0.25;
+    this.hgTopSand.setAttribute(
+      'd',
+      t >= 0.999
+        ? ''
+        : `M ${(cx - topHalf).toFixed(2)} ${surface.toFixed(2)} `
+          + `Q ${cx} ${(surface + dip * 2).toFixed(2)} ${(cx + topHalf).toFixed(2)} ${surface.toFixed(2)} `
+          + `L 22.45 33.6 L 21.55 33.6 Z`,
+    );
+
+    // Alakupu: hiekka kertyy pohjalle (y 60.2) ja nousee kohti kaulaa (y 34.4).
+    const level = 60.2 - t * 25.8;
+    const botHalf = Math.min(12.8, 0.45 + (level - 34.4) * 0.4787);
+    const height = 60.2 - level;
+    const mound = Math.min(2.6, height * 0.5, (level - 34.4) * 0.4);
+    this.hgBottomSand.setAttribute(
+      'd',
+      t <= 0.001
+        ? ''
+        : `M 9.2 60.2 L 34.8 60.2 L ${(cx + botHalf).toFixed(2)} ${level.toFixed(2)} `
+          + `Q ${cx} ${(level - mound * 2).toFixed(2)} ${(cx - botHalf).toFixed(2)} ${level.toFixed(2)} Z`,
+    );
+
+    // Virtaava hiekka näkyy vain niin kauan kuin sitä riittää.
+    const flowing = t > 0.004 && t < 0.999;
+    this.hgStream.style.display = flowing ? '' : 'none';
+    this.hgStream.setAttribute('height', Math.max(0, level - 33.6).toFixed(2));
+  }
+
+  /** Aika loppui: sama rytmi kuin väärässä vastauksessa, mutta ilman paljastusta. */
+  timeUp() {
+    this.stopQuizTimer();
+    const { game } = this;
+    if (game.phase !== 'quiz' || !game.quiz || game.quiz.chosen !== null) return;
+    this.run(() => game.timeoutQuiz(), {
+      after: async () => {
+        const quiz = game.quiz;
+        if (!quiz) return;
+        sfx.play('timeout');
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 200 : 900);
+        this.revealShownFor = quiz;
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 0 : 500);
+      },
+    });
+  }
+
   /**
    * Vastaus tietovisaan: ensin "Oikein!"/"Väärin.", pieni tauko ja sitten
    * aarteen paljastus, jossa iso laatta kääntyy ympäri.
    */
   answerQuiz(index) {
     const { game } = this;
+    this.stopQuizTimer();
     this.run(() => game.answerQuiz(index), {
       after: async () => {
         const quiz = game.quiz;
@@ -4799,7 +5254,8 @@ class UI {
 
     if (game.phase === 'quiz') {
       if (game.quiz.chosen !== null) this.run(() => game.closeQuiz());
-      else if (wantsHint(game)) this.run(() => game.actionFiftyFifty());
+      else if (wantsHint(game)) this.run(() => game.actionHint());
+      else if (wantsFiftyFifty(game)) this.run(() => game.actionFiftyFifty());
       else this.answerQuiz(chooseQuizAnswer(game));
       return;
     }

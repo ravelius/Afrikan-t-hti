@@ -5,7 +5,8 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
 
 - 2–4 pelaajaa samalla koneella, kukin joko ihminen tai botti
 - Aarteet avataan **vain tietovisalla**: arvottu monivalintakysymys (A–D) paikan
-  maantiedosta, kulttuurista ja yleistiedosta; 50 punnan 50:50-vihje auttaa pinteessä
+  maantiedosta, kulttuurista ja yleistiedosta; 40 punnan vihje ja 80 punnan 50:50
+  auttavat pinteessä, ja tiimalasi antaa vastausaikaa 45 sekuntia
 - SVG-kartta, jossa 32 kaupunkia, maareitit, laivareitit ja kolme lentoyhteyttä
 - 30 laattaa: Afrikan tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät
 - Yli 100 kysymystä: jokaisella kaupungilla omat kysymyksensä + yleinen varapakka
@@ -79,8 +80,12 @@ Sama kysymys ei toistu ennen kuin pakka on käyty läpi.
 **Lentoreitit** näkyvät kartalla haalean punaisina pistekatkoviivoina.
 
 **Rahan käyttö.** Rahalla ei voi ostaa aarteita, vaan sitä tarvitaan matkustamiseen ja
-vihjeisiin: 50 puntaa poistaa kysymyksestä kaksi väärää vaihtoehtoa (50:50), 100 puntaa
-maksaa laivamatkan ja 300 puntaa lennon.
+vihjeisiin: 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa kysymyksestä kaksi
+väärää vaihtoehtoa (50:50), 100 puntaa maksaa laivamatkan ja 300 puntaa lennon.
+
+**Aikaraja.** Vastausaikaa on 45 sekuntia. Kysymyksen vieressä valuu piirretty tiimalasi,
+jonka hiekka putoaa yläkuvusta alakupuun; viimeiset kymmenen sekuntia näkyvät punaisena.
+Jos hiekka loppuu, vastaus lasketaan vääräksi ja vuoro päättyy.
 
 **Liikkuminen.** Silmäluku on askelten *enimmäismäärä* — tasalukua ei tarvita, vaan
 kaupunkiin saa pysähtyä jo matkan varrella. Jos silmäluku loppuu kesken reittiä,

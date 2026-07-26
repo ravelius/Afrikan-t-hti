@@ -3,8 +3,14 @@
 import { AIR_ROUTES } from './board.js';
 import { pixelOf, pointAlong, posKey } from './rules.js';
 import { TOKEN_TYPES } from './tokens.js';
-import { chooseMove, chooseQuizAnswer, chooseTravel, wantsHint } from './ai.js';
-import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE, SEA_FARE } from './game.js';
+import {
+  chooseMove,
+  chooseQuizAnswer,
+  chooseTravel,
+  wantsFiftyFifty,
+  wantsHint,
+} from './ai.js';
+import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HINT_PRICE, QUIZ_SECONDS, SEA_FARE } from './game.js';
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -78,11 +84,27 @@ export class UI {
     this.quizQuestion = document.getElementById('quiz-question');
     this.quizOptions = document.getElementById('quiz-options');
     this.quizResult = document.getElementById('quiz-result');
-    this.quizHint = document.getElementById('quiz-hint');
-    this.quizHint.addEventListener('click', () => {
+    this.quizHintText = document.getElementById('quiz-hint-text');
+    this.quizFifty = document.getElementById('quiz-5050');
+    this.quizFifty.addEventListener('click', () => {
       sfx.play('swipe');
       this.doAction(() => this.game.actionFiftyFifty());
     });
+    this.quizHint = document.getElementById('quiz-hint');
+    this.quizHint.addEventListener('click', () => {
+      sfx.play('hint');
+      this.doAction(() => this.game.actionHint());
+    });
+
+    // Tiimalasi
+    this.quizTimerEl = document.getElementById('quiz-timer');
+    this.quizSeconds = document.getElementById('quiz-seconds');
+    this.hourglass = document.getElementById('hourglass');
+    this.hgTopSand = document.getElementById('hg-top-sand');
+    this.hgBottomSand = document.getElementById('hg-bottom-sand');
+    this.hgStream = document.getElementById('hg-stream');
+    this.quizTimer = null;
+    this.timedQuiz = null;
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
 
@@ -104,6 +126,7 @@ export class UI {
 
   destroy() {
     clearTimeout(this.botTimer);
+    this.stopQuizTimer();
     this.observer?.disconnect();
   }
 
@@ -562,6 +585,7 @@ export class UI {
     const { game } = this;
     const quiz = game.quiz;
     if (game.phase !== 'quiz' || !quiz) {
+      this.stopQuizTimer();
       if (this.quizDialog.open) this.quizDialog.close();
       return;
     }
@@ -596,14 +620,21 @@ export class UI {
     // paljastuksen jälkeen löytö ja selitys.
     const revealed = this.revealShownFor === quiz;
 
-    // Vihjenappi: 50 punnalla kaksi väärää vaihtoehtoa pois.
+    // Apukeinot: 40 punnalla sanallinen vihje, 80 punnalla kaksi väärää pois.
     const p = game.player;
     const used = quiz.hidden.length > 0;
-    this.quizHint.hidden = answered || p.isBot;
-    this.quizHint.disabled = used || p.money < FIFTY_FIFTY_PRICE;
-    this.quizHint.textContent = used
-      ? '50:50 käytetty'
-      : `50:50 — poista kaksi väärää (${FIFTY_FIFTY_PRICE} p)`;
+    this.quizFifty.hidden = answered || p.isBot;
+    this.quizFifty.disabled = used || p.money < FIFTY_FIFTY_PRICE;
+    this.quizFifty.textContent = used ? '50:50 käytetty' : `50:50 (${FIFTY_FIFTY_PRICE} p)`;
+
+    this.quizHint.hidden = answered || p.isBot || !quiz.hint;
+    this.quizHint.disabled = quiz.hintShown || p.money < HINT_PRICE;
+    this.quizHint.textContent = quiz.hintShown ? 'Vihje ostettu' : `Vihje (${HINT_PRICE} p)`;
+
+    this.quizHintText.hidden = !quiz.hintShown;
+    if (quiz.hintShown) this.quizHintText.textContent = quiz.hint;
+
+    this.renderTimer(quiz);
 
     this.quizResult.hidden = !answered;
     if (answered) {
@@ -611,9 +642,8 @@ export class UI {
       this.quizResult.textContent = '';
 
       if (!revealed) {
-        this.quizResult.appendChild(
-          html('strong', 'quiz-verdict', quiz.right ? 'Oikein!' : 'Väärin.'),
-        );
+        const verdict = quiz.timedOut ? 'Aika loppui!' : quiz.right ? 'Oikein!' : 'Väärin.';
+        this.quizResult.appendChild(html('strong', 'quiz-verdict', verdict));
       } else {
         const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
         const body = html('div');
@@ -623,8 +653,9 @@ export class UI {
         } else if (quiz.right) {
           body.appendChild(html('strong', '', 'Oikein!'));
         } else {
+          const lead = quiz.timedOut ? 'Aika loppui. ' : '';
           body.appendChild(
-            html('strong', '', `Oikea vastaus oli "${quiz.options[quiz.correct]}".`),
+            html('strong', '', `${lead}Oikea vastaus oli "${quiz.options[quiz.correct]}".`),
           );
           body.appendChild(
             html('span', 'muted', 'Vuoro vaihtuu — seuraavalla vuorolla saat uuden kysymyksen.'),
@@ -639,12 +670,133 @@ export class UI {
     if (!this.quizDialog.open) this.quizDialog.showModal();
   }
 
+  // --- tiimalasi ------------------------------------------------------------
+
+  /** Käynnistää tai pysäyttää vastausajan sen mukaan, kuka on vuorossa. */
+  renderTimer(quiz) {
+    const show = !this.game.player.isBot && quiz.chosen === null;
+    this.quizTimerEl.hidden = !show;
+    if (!show) {
+      this.stopQuizTimer();
+      return;
+    }
+    if (this.timedQuiz !== quiz) this.startQuizTimer(quiz);
+  }
+
+  startQuizTimer(quiz) {
+    this.stopQuizTimer();
+    this.timedQuiz = quiz;
+    this.remaining = (quiz.seconds ?? QUIZ_SECONDS) * 1000;
+    this.lastTick = performance.now();
+    this.lastWhole = Math.ceil(this.remaining / 1000);
+    if (!this.reducedMotion) {
+      this.hourglass.classList.remove('turning');
+      void this.hourglass.getBoundingClientRect();
+      this.hourglass.classList.add('turning');
+    }
+    this.updateTimer();
+    this.quizTimer = setInterval(() => this.tickTimer(), 100);
+  }
+
+  stopQuizTimer() {
+    if (this.quizTimer) clearInterval(this.quizTimer);
+    this.quizTimer = null;
+    this.timedQuiz = null;
+  }
+
+  tickTimer() {
+    const now = performance.now();
+    const dt = now - this.lastTick;
+    this.lastTick = now;
+    // Animaatioiden ajaksi kello pysähtyy, jotta aikaa ei kulu odotellessa.
+    if (this.busy) return;
+
+    this.remaining = Math.max(0, this.remaining - dt);
+    const quiz = this.game.quiz;
+    if (quiz) quiz.seconds = Math.ceil(this.remaining / 1000);
+    this.updateTimer();
+
+    const whole = Math.ceil(this.remaining / 1000);
+    if (whole !== this.lastWhole) {
+      this.lastWhole = whole;
+      if (whole > 0 && whole <= 10) sfx.play('tick');
+    }
+    if (this.remaining <= 0) this.timeUp();
+  }
+
+  updateTimer() {
+    const secs = Math.ceil(this.remaining / 1000);
+    this.quizSeconds.textContent = String(secs);
+    this.quizTimerEl.classList.toggle('urgent', secs <= 10);
+    this.setSand(1 - this.remaining / (QUIZ_SECONDS * 1000));
+  }
+
+  /**
+   * Piirtää hiekan tiimalasiin: ylhäällä pinta valuu suppilon muotoisena
+   * kuoppana kohti kaulaa, alhaalla kasa nousee pyöreänä kekona.
+   */
+  setSand(progress) {
+    const t = Math.min(1, Math.max(0, progress));
+    const cx = 22;
+
+    // Yläkupu: leveä ylhäällä (y 8.4), kapea kaulassa (y 33.6).
+    const surface = 8.4 + t * 25.2;
+    const topHalf = Math.max(0, 12.8 - (surface - 8.4) * 0.4901);
+    const dip = 1.5 * (1 - t) + 0.25;
+    this.hgTopSand.setAttribute(
+      'd',
+      t >= 0.999
+        ? ''
+        : `M ${(cx - topHalf).toFixed(2)} ${surface.toFixed(2)} `
+          + `Q ${cx} ${(surface + dip * 2).toFixed(2)} ${(cx + topHalf).toFixed(2)} ${surface.toFixed(2)} `
+          + `L 22.45 33.6 L 21.55 33.6 Z`,
+    );
+
+    // Alakupu: hiekka kertyy pohjalle (y 60.2) ja nousee kohti kaulaa (y 34.4).
+    const level = 60.2 - t * 25.8;
+    const botHalf = Math.min(12.8, 0.45 + (level - 34.4) * 0.4787);
+    const height = 60.2 - level;
+    const mound = Math.min(2.6, height * 0.5, (level - 34.4) * 0.4);
+    this.hgBottomSand.setAttribute(
+      'd',
+      t <= 0.001
+        ? ''
+        : `M 9.2 60.2 L 34.8 60.2 L ${(cx + botHalf).toFixed(2)} ${level.toFixed(2)} `
+          + `Q ${cx} ${(level - mound * 2).toFixed(2)} ${(cx - botHalf).toFixed(2)} ${level.toFixed(2)} Z`,
+    );
+
+    // Virtaava hiekka näkyy vain niin kauan kuin sitä riittää.
+    const flowing = t > 0.004 && t < 0.999;
+    this.hgStream.style.display = flowing ? '' : 'none';
+    this.hgStream.setAttribute('height', Math.max(0, level - 33.6).toFixed(2));
+  }
+
+  /** Aika loppui: sama rytmi kuin väärässä vastauksessa, mutta ilman paljastusta. */
+  timeUp() {
+    this.stopQuizTimer();
+    const { game } = this;
+    if (game.phase !== 'quiz' || !game.quiz || game.quiz.chosen !== null) return;
+    this.run(() => game.timeoutQuiz(), {
+      after: async () => {
+        const quiz = game.quiz;
+        if (!quiz) return;
+        sfx.play('timeout');
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 200 : 900);
+        this.revealShownFor = quiz;
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 0 : 500);
+      },
+    });
+  }
+
   /**
    * Vastaus tietovisaan: ensin "Oikein!"/"Väärin.", pieni tauko ja sitten
    * aarteen paljastus, jossa iso laatta kääntyy ympäri.
    */
   answerQuiz(index) {
     const { game } = this;
+    this.stopQuizTimer();
     this.run(() => game.answerQuiz(index), {
       after: async () => {
         const quiz = game.quiz;
@@ -862,7 +1014,8 @@ export class UI {
 
     if (game.phase === 'quiz') {
       if (game.quiz.chosen !== null) this.run(() => game.closeQuiz());
-      else if (wantsHint(game)) this.run(() => game.actionFiftyFifty());
+      else if (wantsHint(game)) this.run(() => game.actionHint());
+      else if (wantsFiftyFifty(game)) this.run(() => game.actionFiftyFifty());
       else this.answerQuiz(chooseQuizAnswer(game));
       return;
     }

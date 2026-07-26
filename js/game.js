@@ -7,7 +7,9 @@ import { QUESTIONS } from './questions.js';
 
 export const START_MONEY = 300;
 export const SEA_FARE = 100; // laivamatkan hinta vuorolta
-export const FIFTY_FIFTY_PRICE = 50; // kahden väärän vaihtoehdon piilotus
+export const FIFTY_FIFTY_PRICE = 80; // kahden väärän vaihtoehdon piilotus
+export const HINT_PRICE = 40; // sanallinen vihje kysymykseen
+export const QUIZ_SECONDS = 45; // vastausaika tiimalasin verran
 export const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 export { FLIGHT_PRICE };
 
@@ -320,9 +322,13 @@ export class Game {
       fact: question.fact,
       options: order.map((i) => question.options[i]),
       correct: order.indexOf(question.correct),
+      hint: question.hint ?? null,
+      hintShown: false,
       hidden: [],
       chosen: null,
       right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
     };
     this.phase = 'quiz';
     return { ok: true, quiz: this.quiz };
@@ -351,12 +357,45 @@ export class Game {
     return { ok: true, right: this.quiz.right };
   }
 
-  /** Piilottaa 50 punnalla kaksi väärää vaihtoehtoa. */
+  /** Ostaa sanallisen vihjeen 40 punnalla. */
+  actionHint() {
+    if (this.phase !== 'quiz' || !this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    const quiz = this.quiz;
+    if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+    if (quiz.hintShown) return { ok: false, error: 'Vihje on jo ostettu' };
+    if (!quiz.hint) return { ok: false, error: 'Tähän kysymykseen ei ole vihjettä' };
+
+    const p = this.player;
+    if (p.money < HINT_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
+    p.money -= HINT_PRICE;
+    quiz.hintShown = true;
+    this.say(p.id, `${p.name} osti vihjeen ${HINT_PRICE} punnalla.`);
+    return { ok: true, hint: quiz.hint };
+  }
+
+  /** Aika loppui: vastaus katsotaan vääräksi ja vuoro päättyy. */
+  timeoutQuiz() {
+    if (this.phase !== 'quiz' || !this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    const quiz = this.quiz;
+    if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+
+    const p = this.player;
+    const city = this.board.cityById.get(quiz.cityId);
+    quiz.chosen = -1;
+    quiz.right = false;
+    quiz.timedOut = true;
+    quiz.seconds = 0;
+    const oikea = quiz.options[quiz.correct];
+    this.say(p.id, `${p.name} ei ehtinyt vastata kaupungissa ${city.name} — oikea vastaus oli "${oikea}".`);
+    return { ok: true, right: false, timedOut: true };
+  }
+
+  /** Piilottaa 80 punnalla kaksi väärää vaihtoehtoa. */
   actionFiftyFifty() {
     if (this.phase !== 'quiz' || !this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
     const quiz = this.quiz;
     if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
-    if (quiz.hidden.length) return { ok: false, error: 'Vihje on jo käytetty' };
+    if (quiz.hidden.length) return { ok: false, error: '50:50 on jo käytetty' };
 
     const p = this.player;
     if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };

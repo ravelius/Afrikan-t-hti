@@ -103,8 +103,11 @@
         ottamatta on kätketty aarre. Sen saa auki vain vastaamalla oikein arvottuun
         monivalintakysymykseen (A–D) — rahalla aarretta ei voi ostaa. Väärästä vastauksesta
         vuoro päättyy, ja seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.</p>
-      <p><b>Rahan käyttö.</b> 50 puntaa poistaa kysymyksestä kaksi väärää vaihtoehtoa
-        (50:50), 100 puntaa maksaa laivamatkan ja 300 puntaa lennon.</p>
+      <p><b>Aikaraja.</b> Vastausaikaa on 45 sekuntia. Tiimalasi valuu kysymyksen vieressä,
+        ja jos hiekka loppuu, vastaus lasketaan vääräksi ja vuoro päättyy.</p>
+      <p><b>Rahan käyttö.</b> 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa
+        kysymyksestä kaksi väärää vaihtoehtoa (50:50), 100 puntaa maksaa laivamatkan ja
+        300 puntaa lennon.</p>
       <p><b>Aarteet (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
@@ -123,14 +126,41 @@
   <dialog id="quiz-dialog" class="dialog quiz">
    <div class="dialog-card">
     <div class="quiz-head">
-      <span class="quiz-badge">Tietovisa</span>
-      <span id="quiz-city" class="quiz-city"></span>
+      <div class="quiz-head-text">
+        <span class="quiz-badge">Tietovisa</span>
+        <span id="quiz-city" class="quiz-city"></span>
+      </div>
+      <div id="quiz-timer" class="quiz-timer" hidden>
+        <svg class="hourglass" id="hourglass" viewBox="0 0 44 68" aria-hidden="true">
+          <defs>
+            <filter id="hg-rough" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="turbulence" baseFrequency="0.42" numOctaves="2" seed="11" result="n" />
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="0.5"
+                                 xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+          <g class="hg-wood">
+            <rect x="3" y="1.4" width="38" height="5.2" rx="1.8" />
+            <rect x="3" y="61.4" width="38" height="5.2" rx="1.8" />
+            <rect x="5.4" y="6" width="2.6" height="56" rx="1.2" />
+            <rect x="36" y="6" width="2.6" height="56" rx="1.2" />
+          </g>
+          <path class="hg-glass" d="M8 7 H36 L22.6 33.6 L22.6 34.4 L36 61 H8 L21.4 34.4 L21.4 33.6 Z" />
+          <path id="hg-top-sand" class="hg-sand" d="" />
+          <rect id="hg-stream" class="hg-stream" x="21.55" y="33.6" width="0.9" height="26" />
+          <path id="hg-bottom-sand" class="hg-sand" d="" />
+          <path class="hg-shine" d="M12.5 9.4 L18.5 9.4 L22 30" />
+        </svg>
+        <span id="quiz-seconds" class="quiz-seconds">45</span>
+      </div>
     </div>
     <p id="quiz-question" class="quiz-question"></p>
+    <p id="quiz-hint-text" class="quiz-hint-text" hidden></p>
     <div id="quiz-options" class="quiz-options"></div>
     <p id="quiz-result" class="quiz-result" hidden></p>
     <menu>
-      <button id="quiz-hint" type="button" hidden>50:50</button>
+      <button id="quiz-hint" class="lifeline" type="button" hidden>Vihje</button>
+      <button id="quiz-5050" class="lifeline" type="button" hidden>50:50</button>
       <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
     </menu>
    </div>
