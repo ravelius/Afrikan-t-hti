@@ -17,13 +17,15 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Dublin on Irlannin pääkaupunki ja saaren suurin kaupunki.',
       hint: 'Maata kutsutaan smaragdisaareksi.',
+      source: 'https://fi.wikipedia.org/wiki/Dublin',
     },
     {
-      q: 'Mikä on Irlannin toinen virallinen kieli englannin rinnalla?',
-      options: ['iiri', 'kymri', 'bretoni', 'skotti'],
+      q: 'Mikä on Irlannin ensimmäinen virallinen kieli?',
+      options: ['iiri', 'englanti', 'kymri', 'bretoni'],
       correct: 0,
-      fact: 'Iiri on kelttiläinen kieli, jota opetetaan kaikissa Irlannin kouluissa. Sitä puhutaan päivittäin etenkin länsirannikon gaeltacht-alueilla.',
+      fact: 'Iiri on Irlannin kansalliskieli ja ensimmäinen virallinen kieli, englanti toinen. Iiriä puhutaan päivittäin etenkin länsirannikon gaeltacht-alueilla.',
       hint: 'Kielen nimi on sama kuin maan nimi lyhennettynä.',
+      source: 'https://fi.wikipedia.org/wiki/Irlanti',
     },
     {
       q: 'Mikä joki virtaa Dublinin halki?',
@@ -32,6 +34,7 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Liffey laskee Dublinin kohdalla Irlanninmereen. Shannon on Irlannin pisin joki, mutta se virtaa lännempänä.',
       hint: 'Joen nimi alkaa L-kirjaimella.',
+      source: 'https://fi.wikipedia.org/wiki/Dublin',
     },
   ],
 
@@ -50,6 +53,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Castle Rock on tulivuoren jäänne, jonka jäätikkö hioi jyrkäksi kallioksi.',
       hint: 'Kallio syntyi kauan sitten sulasta kivestä.',
+      source: 'https://en.wikipedia.org/wiki/Edinburgh_Castle',
     },
     {
       q: 'Mikä Edinburghissa elokuussa järjestettävä tapahtuma on maailman suurin esittävän taiteen festivaali?',
@@ -58,6 +62,7 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Edinburgh Festival Fringe kokoaa elokuussa tuhansia esityksiä eri puolilta maailmaa.',
       hint: 'Nimi tarkoittaa englanniksi reunaa.',
+      source: 'https://en.wikipedia.org/wiki/Edinburgh_Festival_Fringe',
     },
   ],
 
@@ -69,6 +74,7 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Seine halkoo Pariisin ja kiertää keskellä olevan Cité-saaren.',
       hint: 'Joen nimi alkaa S-kirjaimella.',
+      source: 'https://fi.wikipedia.org/wiki/Pariisi',
     },
     {
       q: 'Mitä varten Eiffel-torni alun perin rakennettiin?',
@@ -76,6 +82,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Torni valmistui vuoden 1889 maailmannäyttelyyn ja oli aikanaan maailman korkein rakennus.',
       hint: 'Tapahtuma esitteli maailmalle tekniikan uutuuksia.',
+      source: 'https://fi.wikipedia.org/wiki/Eiffel-torni',
     },
     {
       q: 'Mikä on Ranskan kansallispäivä?',
@@ -83,6 +90,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Päivä muistuttaa Bastiljin valtauksesta vuonna 1789, Ranskan suuren vallankumouksen alusta.',
       hint: 'Päivä on keskellä kesää.',
+      source: 'https://fi.wikipedia.org/wiki/Bastiljin_valtaus',
     },
   ],
 
@@ -94,6 +102,7 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Bordeaux’n ympärillä on tuhansia viinitiloja, ja alue on yksi maailman tunnetuimmista viinialueista.',
       hint: 'Tuote tehdään rypäleistä.',
+      source: 'https://fi.wikipedia.org/wiki/Bordeaux',
     },
     {
       q: 'Minkä valtameren rannikolla Bordeaux sijaitsee?',
@@ -109,6 +118,7 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Dune du Pilat kohoaa yli sadan metrin korkeuteen Atlantin rannalla ja siirtyy tuulen mukana hiukan joka vuosi.',
       hint: 'Dyynin nimi alkaa samalla kirjaimella kuin Pariisi.',
+      source: 'https://en.wikipedia.org/wiki/Dune_of_Pilat',
     },
   ],
 
@@ -127,6 +137,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Järistys ja sen aiheuttama hyökyaalto tuhosivat suuren osan kaupungista. Keskusta rakennettiin sen jälkeen uudelleen suoraan ruutukaavaan.',
       hint: 'Maa tärisi ja meri nousi perässä.',
+      source: 'https://fi.wikipedia.org/wiki/Lissabon',
     },
     {
       q: 'Mitä portugalilaista laulutyyliä Lissabonissa kuullaan?',
@@ -135,6 +146,7 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Fado on haikea laulutyyli, joka on Unescon aineettoman kulttuuriperinnön luettelossa.',
       hint: 'Nimi tarkoittaa portugaliksi kohtaloa.',
+      source: 'https://fi.wikipedia.org/wiki/Fado',
     },
   ],
 
@@ -153,6 +165,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Pradossa on laaja kokoelma espanjalaista maalaustaidetta, muun muassa Velázquezia ja Goyaa.',
       hint: 'Museon nimi tarkoittaa espanjaksi niittyä.',
+      source: 'https://fi.wikipedia.org/wiki/Madrid',
     },
     {
       q: 'Mikä tekee Madridista erityisen Euroopan suurten pääkaupunkien joukossa?',
@@ -164,8 +177,9 @@ export const EUROPE_QUESTIONS = {
       ],
       correct: 0,
       level: 3,
-      fact: 'Madrid on noin 650 metrin korkeudessa ylätasangolla — Euroopan suurista pääkaupungeista korkeimmalla.',
+      fact: 'Madrid on 655 metrin korkeudessa ylätasangolla. Euroopan pääkaupungeista vain pikkuruinen Andorra la Vella on korkeammalla.',
       hint: 'Vastaus liittyy siihen, kuinka ylhäällä kaupunki on.',
+      source: 'https://fi.wikipedia.org/wiki/Madrid',
     },
   ],
 
@@ -221,6 +235,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Anne Frank kirjoitti päiväkirjaansa perheen piilopaikassa toisen maailmansodan aikana. Talo on nykyään museo.',
       hint: 'Päiväkirjan kirjoitti nuori tyttö.',
+      source: 'https://fi.wikipedia.org/wiki/Anne_Frank',
     },
   ],
 
@@ -239,6 +254,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Berliinin muuri erotti kaupungin itä- ja länsiosat 28 vuodeksi. Se avattiin marraskuussa 1989.',
       hint: 'Rakennelma oli betonia ja piikkilankaa.',
+      source: 'https://fi.wikipedia.org/wiki/Berliinin_muuri',
     },
     {
       q: 'Mikä on Berliinin tunnetuin portti?',
@@ -246,6 +262,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Brandenburgin portti valmistui 1791 ja on Saksan yhdistymisen tunnetuin symboli.',
       hint: 'Portti on nimetty ympäröivän maakunnan mukaan.',
+      source: 'https://fi.wikipedia.org/wiki/Brandenburgin_portti',
     },
   ],
 
@@ -262,16 +279,18 @@ export const EUROPE_QUESTIONS = {
       q: 'Mikä on Prahan kuuluisin silta?',
       options: ['Kaarlensilta', 'Rialto', 'Ponte Vecchio', 'Tower Bridge'],
       correct: 0,
-      fact: 'Kaarlensilta valmistui 1300-luvulla, ja sen kaiteita reunustaa kolmisenkymmentä patsasta.',
+      fact: 'Sillan rakentaminen alkoi 1357 ja se valmistui vasta 1402. Kaiteita reunustaa kolmisenkymmentä patsasta.',
       hint: 'Silta on nimetty kuninkaan mukaan.',
+      source: 'https://en.wikipedia.org/wiki/Charles_Bridge',
     },
     {
       q: 'Mitä Prahan raatihuoneen kuuluisa kello näyttää tavallisen kellonajan lisäksi?',
       options: ['tähtitieteellisiä tietoja', 'säätilan', 'junien lähtöajat', 'vuoroveden'],
       correct: 0,
       level: 3,
-      fact: 'Vuonna 1410 valmistunut Orloj näyttää auringon ja kuun aseman sekä vanhan ajanlaskun. Se on maailman vanhin yhä toimiva laatuaan.',
+      fact: 'Orlojin vanhin osa, kellokoneisto ja tähtitieteellinen taulu, on vuodelta 1410.',
       hint: 'Kello kertoo taivaankappaleista.',
+      source: 'https://en.wikipedia.org/wiki/Prague_astronomical_clock',
     },
   ],
 
@@ -290,6 +309,7 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Tonava on Euroopan toiseksi pisin joki ja virtaa kymmenen maan halki.',
       hint: 'Joesta on tehty kuuluisa valssi.',
+      source: 'https://fi.wikipedia.org/wiki/Tonava',
     },
     {
       q: 'Minkä maan pääkaupunki Wien on?',
@@ -323,6 +343,7 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Unkari on suomen ja viron kaukainen sukukieli, vaikka sanastot ovat ehtineet erkaantua kauas toisistaan.',
       hint: 'Kieli on suomen kaukainen sukulainen.',
+      source: 'https://en.wikipedia.org/wiki/Hungarian_language',
     },
   ],
 
@@ -346,6 +367,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Sodassa tuhoutunut vanhakaupunki rakennettiin uudelleen maalausten ja valokuvien avulla. Se on Unescon maailmanperintökohde.',
       hint: 'Kaupunki palautettiin ennalleen vanhojen kuvien avulla.',
+      source: 'https://fi.wikipedia.org/wiki/Varsova',
     },
     {
       q: 'Kuka Varsovan seudulla varttunut säveltäjä tunnetaan pianomusiikistaan?',
@@ -353,6 +375,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Chopin vietti nuoruutensa Varsovassa ja sävelsi lähes kaiken musiikkinsa pianolle.',
       hint: 'Säveltäjän mukaan on nimetty Varsovan lentoasema.',
+      source: 'https://fi.wikipedia.org/wiki/Fryderyk_Chopin',
     },
   ],
 
@@ -363,6 +386,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Mont Blanc kohoaa noin 4 800 metriin Ranskan ja Italian rajalla.',
       hint: 'Nimi tarkoittaa ranskaksi valkoista vuorta.',
+      source: 'https://fi.wikipedia.org/wiki/Mont_Blanc',
     },
     {
       q: 'Mikä muovasi Alppien laaksot U-kirjaimen muotoisiksi?',
@@ -419,6 +443,7 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Vatikaanivaltio on pinta-alaltaan maailman pienin itsenäinen valtio.',
       hint: 'Valtiota johtaa paavi.',
+      source: 'https://fi.wikipedia.org/wiki/Vatikaanivaltio',
     },
     {
       q: 'Mihin Colosseumia käytettiin antiikin aikana?',
@@ -426,6 +451,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Colosseum valmistui vuonna 80 jaa., ja siihen mahtui kymmeniätuhansia katsojia.',
       hint: 'Yleisö tuli katsomaan esityksiä.',
+      source: 'https://fi.wikipedia.org/wiki/Colosseum',
     },
     {
       q: 'Mikä oli Rooman valtakunnan hallintokieli?',
@@ -438,11 +464,12 @@ export const EUROPE_QUESTIONS = {
 
   sisilia: [
     {
-      q: 'Mikä Euroopan korkein toimiva tulivuori sijaitsee Sisiliassa?',
+      q: 'Mikä Euroopan suurin toimiva tulivuori sijaitsee Sisiliassa?',
       options: ['Etna', 'Vesuvius', 'Stromboli', 'Hekla'],
       correct: 0,
-      fact: 'Etna kohoaa yli 3 300 metriin ja purkautuu useita kertoja vuosikymmenessä.',
+      fact: 'Etna on Euroopan suurin toimiva tulivuori ja yksi maailman aktiivisimmista. Se kohoaa yli 3 300 metriin.',
       hint: 'Nimi on lyhyt ja alkaa E-kirjaimella.',
+      source: 'https://fi.wikipedia.org/wiki/Etna',
     },
     {
       q: 'Minkä maan osa Sisilia on?',
@@ -451,6 +478,7 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Sisilia on Italian suurin saari ja yksi maan itsehallintoalueista.',
       hint: 'Maa on saappaan muotoinen.',
+      source: 'https://fi.wikipedia.org/wiki/Sisilia',
     },
     {
       q: 'Mitä Sisiliassa kasvatetaan runsaasti?',
@@ -502,6 +530,7 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Kreeta on Kreikan suurin saari ja Välimeren viidenneksi suurin.',
       hint: 'Maan pääkaupunki on Ateena.',
+      source: 'https://fi.wikipedia.org/wiki/Kreeta',
     },
     {
       q: 'Mikä on kreetalaisen ruokavalion perusta?',
@@ -671,6 +700,7 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Volga virtaa noin 3 500 kilometriä ja laskee Kaspianmereen. Kanavat yhdistävät Moskovan siihen.',
       hint: 'Joki laskee Kaspianmereen.',
+      source: 'https://fi.wikipedia.org/wiki/Volga',
     },
   ],
 
@@ -788,6 +818,7 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Kööpenhamina on Tanskan pääkaupunki ja sijaitsee Sjællandin saarella.',
       hint: 'Maa on Pohjoismaista eteläisin.',
+      source: 'https://fi.wikipedia.org/wiki/K%C3%B6%C3%B6penhamina',
     },
     {
       q: 'Kenen sadun mukaan Kööpenhaminan tunnetuin patsas on tehty?',
@@ -1001,7 +1032,7 @@ export const EUROPE_FACTS = {
     'Kaupunki tunnettiin ennen nimillä Bysantion ja Konstantinopoli, ja se oli kahden valtakunnan pääkaupunki lähes 1 600 vuoden ajan.',
   ],
   dublin: [
-    'Dublinin nimi tulee iirin sanoista dubh linn, musta lammikko, joka oli viikinkien satamapaikka Liffey-joen mutkassa.',
+    { text: 'Dublinin nimi tulee iirin sanoista dubh linn, musta lammikko, joka oli viikinkien satamapaikka Liffey-joen mutkassa.', source: 'https://fi.wikipedia.org/wiki/Dublin' },
     'Irlannin kansallissymboli on kolmiapila, ja maan lempinimi smaragdisaari kertoo runsaista sateista ja vihreistä laitumista.',
   ],
   edinburgh: [
@@ -1038,14 +1069,14 @@ export const EUROPE_FACTS = {
   ],
   praha: [
     'Prahan linna on pinta-alaltaan yksi maailman suurimmista linnoista ja toimii yhä Tšekin presidentin virka-asuntona.',
-    'Tšekissä juodaan asukasta kohden enemmän olutta kuin missään muualla maailmassa; ensimmäinen panimo perustettiin jo 993.',
+    { text: 'Tšekissä juodaan asukasta kohden enemmän olutta kuin missään muualla maailmassa; ensimmäinen panimo perustettiin jo 993.', source: 'https://fi.wikipedia.org/wiki/T%C5%A1ekki' },
   ],
   wien: [
-    'Wienin kahvilakulttuuri on Unescon aineettoman kulttuuriperinnön luettelossa: kahvilassa saa istua tuntikausia yhden kupillisen kanssa.',
+    { text: 'Wienin kahvilakulttuuri on ollut vuodesta 2011 Itävallan kansallisessa aineettoman kulttuuriperinnön luettelossa: kahvilassa saa istua tuntikausia yhden kupillisen kanssa.', source: 'https://en.wikipedia.org/wiki/Viennese_caf%C3%A9' },
     'Wienin juomavesi tulee putkia pitkin suoraan Alpeilta, ja vesijohto valmistui jo vuonna 1873.',
   ],
   budapest: [
-    'Budapestin maanalainen on Manner-Euroopan vanhin metro. Se avattiin vuonna 1896 ja on Unescon maailmanperintökohde.',
+    { text: 'Budapestin maanalainen on Manner-Euroopan vanhin metro. Se avattiin vuonna 1896 ja on Unescon maailmanperintökohde.', source: 'https://fi.wikipedia.org/wiki/Budapestin_metro' },
     'Tonava jakaa kaupungin: Buda on kukkulainen ja rauhallinen, Pest tasainen ja vilkas.',
   ],
   varsova: [
@@ -1053,16 +1084,16 @@ export const EUROPE_FACTS = {
     'Puolan kieli kirjoitetaan latinalaisin kirjaimin, mutta siinä on omia merkkejä kuten ł, ż ja ę.',
   ],
   alpit: [
-    'Alppien halki kulkee Gotthardin pohjatunneli, joka on yli 57 kilometriä pitkä — maailman pisin rautatietunneli.',
+    { text: 'Alppien halki kulkee Gotthardin pohjatunneli, joka on yli 57 kilometriä pitkä — maailman pisin rautatietunneli.', source: 'https://fi.wikipedia.org/wiki/Gotthardin_pohjatunneli' },
     'Alppien jäätiköt ovat sulaneet nopeasti, ja niiden reunoilta on paljastunut esineitä, jotka ovat olleet jään alla tuhansia vuosia.',
   ],
   milano: [
-    'Milanon tuomiokirkon rakentaminen kesti lähes kuusi vuosisataa, ja sen katolla on yli kolmetuhatta patsasta.',
+    { text: 'Milanon tuomiokirkon rakentaminen kesti lähes kuusi vuosisataa: se alkoi vuonna 1386 ja viimeiset yksityiskohdat valmistuivat 1965.', source: 'https://en.wikipedia.org/wiki/Milan_Cathedral' },
     'Milano on Italian talouden keskus: siellä sijaitsevat maan pörssi ja suuri osa muoti- ja muotoilualan yrityksistä.',
   ],
   rooma: [
     'Roomassa on yhä käytössä antiikin aikana rakennettuja vesijohtoja, ja kaupungin kaduilla on tuhansia ilmaisia juomavesihanoja.',
-    'Pantheonin betonikupoli on lähes kahden vuosituhannen jälkeen yhä maailman suurin ilman terästä rakennettu kupoli.',
+    { text: 'Pantheonin betonikupoli on lähes kahden vuosituhannen jälkeen yhä maailman suurin ilman terästä rakennettu kupoli.', source: 'https://en.wikipedia.org/wiki/Pantheon,_Rome' },
   ],
   sisilia: [
     'Sisilia on ollut vuorollaan kreikkalaisten, roomalaisten, arabien ja normannien hallussa, ja kaikki näkyvät yhä saaren ruoassa ja rakennuksissa.',
@@ -1125,7 +1156,7 @@ export const EUROPE_FACTS = {
     'Saamen kieliä on useita, ja niissä on kymmeniä sanoja lumelle sen mukaan, millaista hangella on kulkea.',
   ],
   tromssa: [
-    'Tromssassa on maailman pohjoisin yliopisto, ja kaupungissa toimii myös oma panimo ja katedraali.',
-    'Tromssan kaupunki sijaitsee saarella, ja mantereelle pääsee vuonon yli kaartuvaa siltaa pitkin.',
+    { text: 'Tromssassa on maailman pohjoisin yliopisto, ja kaupungissa toimii myös oma panimo ja katedraali.', source: 'https://en.wikipedia.org/wiki/University_of_Troms%C3%B8' },
+    { text: 'Tromssan kaupunki sijaitsee saarella, ja mantereelle pääsee vuonon yli kaartuvaa siltaa pitkin.', source: 'https://fi.wikipedia.org/wiki/Tromssa' },
   ],
 };
