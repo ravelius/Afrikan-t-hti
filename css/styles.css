@@ -812,6 +812,107 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .quiz-result .muted { color: #6f5836; display: block; margin-top: 0.15rem; }
 
 #quiz-hint { margin-right: auto; }
+
+/* --- aarteen paljastus: iso laatta kääntyy 3D:nä --- */
+
+.reveal-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  gap: 1rem;
+  background: radial-gradient(circle at 50% 45%, rgba(26, 16, 7, 0.72), rgba(12, 8, 3, 0.92));
+  z-index: 20;
+  animation: fade-in 0.25s ease-out;
+}
+
+.reveal-overlay.leaving { animation: fade-out 0.3s ease-in forwards; }
+
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+
+.reveal-scene {
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+  perspective: 1100px;
+}
+
+.reveal-disc {
+  position: relative;
+  width: min(52vmin, 280px);
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  transition: transform 0.85s cubic-bezier(0.3, 0.85, 0.25, 1);
+  animation: disc-drop 0.36s cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+
+.reveal-disc.flipped { transform: rotateY(180deg); }
+
+@keyframes disc-drop {
+  from { transform: rotateY(0deg) scale(0.6) translateY(-30px); opacity: 0; }
+}
+
+.reveal-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background-image: var(--paper-noise),
+    radial-gradient(circle at 40% 34%, #f6e7c6 0%, #e6d0a4 62%, #c9a86f 100%);
+  background-blend-mode: multiply, normal;
+  border: 7px double var(--map-ink);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(120, 85, 40, 0.25);
+}
+
+.reveal-back {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: clamp(4rem, 16vmin, 7rem);
+  color: rgba(70, 51, 31, 0.75);
+}
+
+.reveal-front { transform: rotateY(180deg); }
+.reveal-front svg { width: 58%; height: 58%; }
+
+.reveal-disc.star .reveal-front { box-shadow: 0 0 60px rgba(230, 180, 60, 0.75), 0 26px 60px rgba(0, 0, 0, 0.5); }
+.reveal-disc.robber .reveal-front { box-shadow: 0 0 55px rgba(176, 58, 43, 0.6), 0 26px 60px rgba(0, 0, 0, 0.5); }
+
+.reveal-caption {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+}
+
+.reveal-caption.shown { opacity: 1; transform: none; }
+
+.reveal-caption strong {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: clamp(1.4rem, 4.5vmin, 2rem);
+  letter-spacing: 0.05em;
+  color: #f6e2b8;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+}
+
+.reveal-caption span {
+  color: #d8c4a2;
+  font-size: 0.98rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.quiz-verdict {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: clamp(1.3rem, 3.4vw, 1.7rem);
+  letter-spacing: 0.04em;
+}
 .gem-count { font-size: 0.78rem; color: var(--muted); }
 
 /* --- kapea / pystyasento: kartta ylös, ohjaus alle --- */

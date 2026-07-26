@@ -28,7 +28,15 @@ const COMPASS = { x: 168, y: 772, r: 62 };
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
-const TOAST_MS = { treasure: 1700, robber: 1700, die: 950, default: 1200 };
+const TOAST_MS = { die: 950, default: 1200 };
+
+// Paljastusruudun alateksti laattatyypeittäin.
+const REVEAL_SUB = {
+  star: 'Vie tähti kotiin ja voitat pelin!',
+  horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
+  robber: 'Ryöstäjä vie kaikki rahat',
+  empty: 'Ei aarretta täällä',
+};
 
 function html(tag, className, text) {
   const node = document.createElement(tag);
@@ -68,6 +76,7 @@ export class UI {
     this.mapPane = this.svg.parentElement;
     this.busy = false;
     this.movingPlayerId = null;
+    this.revealShownFor = null;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
@@ -462,12 +471,15 @@ export class UI {
       } else if (game.player.isBot) {
         btn.disabled = true;
       } else {
-        btn.addEventListener('click', () => this.doAction(() => game.answerQuiz(i)));
+        btn.addEventListener('click', () => this.answerQuiz(i));
       }
       this.quizOptions.appendChild(btn);
     });
 
     const answered = quiz.chosen !== null;
+    // Vastauksen jälkeen näytetään ensin pelkkä tuomio, ja vasta aarteen
+    // paljastuksen jälkeen löytö ja selitys.
+    const revealed = this.revealShownFor === quiz;
 
     // Vihjenappi: 50 punnalla kaksi väärää vaihtoehtoa pois.
     const p = game.player;
@@ -482,24 +494,94 @@ export class UI {
     if (answered) {
       this.quizResult.className = `quiz-result ${quiz.right ? 'right' : 'wrong'}`;
       this.quizResult.textContent = '';
-      const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
-      if (quiz.right && found) {
-        this.quizResult.appendChild(tokenIconSvg(quiz.found, 22));
-        this.quizResult.appendChild(html('strong', '', ` Oikein! Löysit: ${found.name}`));
+
+      if (!revealed) {
+        this.quizResult.appendChild(
+          html('strong', 'quiz-verdict', quiz.right ? 'Oikein!' : 'Väärin.'),
+        );
       } else {
-        const heading = quiz.right
-          ? 'Oikein!'
-          : `Väärin — oikea vastaus oli "${quiz.options[quiz.correct]}". Vuoro vaihtuu, voit yrittää uudella kysymyksellä seuraavalla vuorolla.`;
-        this.quizResult.appendChild(html('strong', '', heading));
-      }
-      if (quiz.fact) {
-        this.quizResult.appendChild(document.createElement('br'));
-        this.quizResult.appendChild(html('span', 'muted', quiz.fact));
+        const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
+        const body = html('div');
+        if (quiz.right && found) {
+          this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));
+          body.appendChild(html('strong', '', `Löysit: ${found.name}`));
+        } else if (quiz.right) {
+          body.appendChild(html('strong', '', 'Oikein!'));
+        } else {
+          body.appendChild(
+            html('strong', '', `Oikea vastaus oli "${quiz.options[quiz.correct]}".`),
+          );
+          body.appendChild(
+            html('span', 'muted', 'Vuoro vaihtuu — seuraavalla vuorolla saat uuden kysymyksen.'),
+          );
+        }
+        if (quiz.fact) body.appendChild(html('span', 'muted', quiz.fact));
+        this.quizResult.appendChild(body);
       }
     }
-    this.quizContinue.hidden = !answered || game.player.isBot;
+    this.quizContinue.hidden = !answered || !revealed || game.player.isBot;
 
     if (!this.quizDialog.open) this.quizDialog.showModal();
+  }
+
+  /**
+   * Vastaus tietovisaan: ensin "Oikein!"/"Väärin.", pieni tauko ja sitten
+   * aarteen paljastus, jossa iso laatta kääntyy ympäri.
+   */
+  answerQuiz(index) {
+    const { game } = this;
+    this.run(() => game.answerQuiz(index), {
+      after: async () => {
+        const quiz = game.quiz;
+        if (!quiz) return;
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 200 : 850);
+        if (quiz.right && quiz.found) await this.playTokenReveal(quiz.found);
+        this.revealShownFor = quiz;
+        this.renderQuiz();
+        if (!quiz.right) await this.wait(this.reducedMotion ? 0 : 500);
+      },
+    });
+  }
+
+  /** Iso laatta kääntyy ruudun keskellä ja paljastaa sisällön. */
+  async playTokenReveal(type) {
+    const token = TOKEN_TYPES[type];
+    const overlay = html('div', 'reveal-overlay');
+    const scene = html('div', 'reveal-scene');
+    const disc = html('div', `reveal-disc ${type}`);
+
+    const back = html('div', 'reveal-face reveal-back');
+    back.appendChild(html('span', '', '?'));
+    const front = html('div', 'reveal-face reveal-front');
+    front.appendChild(tokenIconSvg(type, 160));
+    disc.appendChild(back);
+    disc.appendChild(front);
+
+    const caption = html('div', 'reveal-caption');
+    caption.appendChild(html('strong', '', token.name));
+    caption.appendChild(html('span', '', REVEAL_SUB[type] ?? `+${token.value} puntaa`));
+
+    scene.appendChild(disc);
+    scene.appendChild(caption);
+    overlay.appendChild(scene);
+    // Dialogi on top layerissa, joten paljastus lisätään sen sisään.
+    this.quizDialog.appendChild(overlay);
+
+    if (this.reducedMotion) {
+      disc.classList.add('flipped');
+      caption.classList.add('shown');
+      await this.wait(900);
+    } else {
+      await this.wait(420);
+      disc.classList.add('flipped');
+      await this.wait(760);
+      caption.classList.add('shown');
+      await this.wait(1250);
+      overlay.classList.add('leaving');
+      await this.wait(300);
+    }
+    overlay.remove();
   }
 
   // --- toiminnot ja animaatiot ---------------------------------------------
@@ -588,6 +670,7 @@ export class UI {
 
     g.remove();
     this.movingPlayerId = null;
+    this.revealShownFor = null;
     this.drawPawns();
   }
 
@@ -633,7 +716,8 @@ export class UI {
 
   /** Näyttää kertyneet tapahtumat yksi kerrallaan kartan päällä. */
   async playEvents() {
-    const events = this.game.takeEvents();
+    // Aarre ja ryöstäjä nähdään jo paljastusanimaatiossa, joten niitä ei toisteta.
+    const events = this.game.takeEvents().filter((e) => e.kind !== 'treasure' && e.kind !== 'robber');
     for (const event of events) {
       const box = this.buildToast(event);
       await this.wait(this.reducedMotion ? 0 : TOAST_MS[event.kind] ?? TOAST_MS.default);
@@ -656,7 +740,7 @@ export class UI {
     if (game.phase === 'quiz') {
       if (game.quiz.chosen !== null) this.run(() => game.closeQuiz());
       else if (wantsHint(game)) this.run(() => game.actionFiftyFifty());
-      else this.run(() => game.answerQuiz(chooseQuizAnswer(game)));
+      else this.answerQuiz(chooseQuizAnswer(game));
       return;
     }
 
