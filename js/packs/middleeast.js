@@ -77,20 +77,24 @@ const ME_CITIES = [
   { id: 'siinai', name: 'Siinai', x: 249, y: 454, la: 'end', lx: -16, ly: 22 },
   { id: 'luxor', name: 'Luxor', x: 216, y: 538, la: 'end', lx: -16, ly: 5 },
   { id: 'medina', name: 'Medina', x: 390, y: 574, la: 'start', lx: 16, ly: 5 },
-  { id: 'mekka', name: 'Mekka', x: 395, y: 664, la: 'start', lx: 16, ly: 5 },
-  { id: 'riad', name: 'Riad', x: 568, y: 570 },
+  { id: 'mekka', name: 'Mekka', x: 395, y: 664, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'riad', name: 'Riad', x: 568, y: 570, airport: true },
   { id: 'rubalkhali', name: 'Rub al-Khali', x: 675, y: 691, la: 'middle', lx: 0, ly: -22 },
   { id: 'sana', name: 'Sana', x: 505, y: 842, la: 'start', lx: 16, ly: 5 },
   { id: 'aden', name: 'Aden', x: 526, y: 917 },
   { id: 'salalah', name: 'Salalah', x: 752, y: 794 },
   { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'end', lx: -16, ly: 5 },
-  { id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26 },
+  {
+    id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26,
+    // Persianlahden vaihtoasema: täältä lähtee pitkä lento itään.
+    links: [{ pack: 'maailma', city: 'mumbai', label: 'Maailma-lauta' }],
+  },
   { id: 'doha', name: 'Doha', x: 688, y: 550, la: 'middle', lx: 0, ly: 26 },
   { id: 'kuwait', name: 'Kuwait', x: 600, y: 430, la: 'end', lx: -16, ly: 5 },
-  { id: 'bagdad', name: 'Bagdad', x: 509, y: 314 },
+  { id: 'bagdad', name: 'Bagdad', x: 509, y: 314, airport: true },
   { id: 'mosul', name: 'Mosul', x: 478, y: 225 },
   { id: 'tabriz', name: 'Tabriz', x: 558, y: 174 },
-  { id: 'teheran', name: 'Teheran', x: 685, y: 244, la: 'start', lx: 16, ly: 5 },
+  { id: 'teheran', name: 'Teheran', x: 685, y: 244, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'isfahan', name: 'Isfahan', x: 692, y: 334, la: 'start', lx: 16, ly: 5 },
   { id: 'persepolis', name: 'Persepolis', x: 722, y: 414, la: 'start', lx: 16, ly: 5 },
 ];
@@ -154,8 +158,13 @@ const ME_EDGES = [
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
 const ME_AIR_ROUTES = [
   { a: 'istanbul', b: 'kairo' },
-  { a: 'istanbul', b: 'dubai' },
-  { a: 'kairo', b: 'dubai' },
+  { a: 'istanbul', b: 'bagdad' },
+  { a: 'bagdad', b: 'teheran' },
+  { a: 'bagdad', b: 'riad' },
+  { a: 'kairo', b: 'mekka' },
+  { a: 'mekka', b: 'dubai' },
+  { a: 'riad', b: 'dubai' },
+  { a: 'dubai', b: 'teheran' },
 ];
 
 export const MIDDLE_EAST = {

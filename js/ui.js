@@ -134,9 +134,6 @@ export class UI {
     this.revealShownFor = null;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Kartan raahaus ja zoomaus.
-    this.zoom = 1;
-    this.viewCenter = null; // null = kartan keskipiste
     this.viewBoxSize = { vw: 1000, vh: 1000 };
   }
 
@@ -146,7 +143,6 @@ export class UI {
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
-    this.setupMapGestures();
     this.render();
   }
 
@@ -155,107 +151,12 @@ export class UI {
     this.drawnPackId = pack.id;
     this.svg.setAttribute('aria-label', pack.ariaLabel);
     document.body.dataset.pack = pack.id;
-    this.zoom = 1;
-    this.viewCenter = null;
     this.drawBoard();
     this.fitViewBox();
   }
 
-  // --- kartan raahaus ja zoomaus -------------------------------------------
-
-  /** Sormiraahaus, nipistyszoomaus ja hiiren rulla; kaksoisnapautus palauttaa. */
-  setupMapGestures() {
-    const svg = this.svg;
-    const pointers = new Map();
-    let pinchStart = null;
-    this.panned = false;
-
-    // Kartan yksiköt yhtä ruudun pikseliä kohden.
-    const unitsPerPixel = () => this.viewBoxSize.vw / (this.mapPane.clientWidth || 1);
-
-    svg.addEventListener('pointerdown', (event) => {
-      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-      // Eleen ajaksi mustesuodattimet pois: ne piirretään uudelleen joka
-      // ruudunpäivityksellä ja tekevät raahauksesta nykivän.
-      svg.classList.add('panning');
-      if (pointers.size === 1) this.panned = false;
-      if (pointers.size === 2) {
-        const [a, b] = [...pointers.values()];
-        pinchStart = { dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, zoom: this.zoom };
-      }
-      svg.setPointerCapture(event.pointerId);
-    });
-
-    svg.addEventListener('pointermove', (event) => {
-      const prev = pointers.get(event.pointerId);
-      if (!prev) return;
-      const cur = { x: event.clientX, y: event.clientY };
-      pointers.set(event.pointerId, cur);
-
-      if (pointers.size === 2 && pinchStart) {
-        const [a, b] = [...pointers.values()];
-        const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
-        this.setZoom(pinchStart.zoom * (dist / pinchStart.dist));
-        this.panned = true;
-        return;
-      }
-
-      const dx = cur.x - prev.x;
-      const dy = cur.y - prev.y;
-      if (dx === 0 && dy === 0) return;
-      if (Math.hypot(dx, dy) > 2) this.panned = true;
-      const k = unitsPerPixel();
-      const c = this.viewCenter ?? (this.viewCenter = { x: 500, y: 500 });
-      c.x -= dx * k;
-      c.y -= dy * k;
-      this.schedulePreview();
-    });
-
-    const release = (event) => {
-      pointers.delete(event.pointerId);
-      if (pointers.size < 2) pinchStart = null;
-      // Ote irtosi: kirjoitetaan lopullinen näkymä ja suodattimet takaisin.
-      if (pointers.size === 0) {
-        svg.classList.remove('panning');
-        this.fitViewBox();
-      }
-    };
-    svg.addEventListener('pointerup', release);
-    svg.addEventListener('pointercancel', release);
-
-    // Raahauksen päättävä klikkaus ei saa osua siirtokohteisiin.
-    svg.addEventListener('click', (event) => {
-      if (this.panned) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.panned = false;
-      }
-    }, true);
-
-    svg.addEventListener('wheel', (event) => {
-      event.preventDefault();
-      this.setZoom(this.zoom * Math.exp(-event.deltaY * 0.0015));
-      // Rullailun päätyttyä näkymä kiinnitetään viewBoxiin.
-      clearTimeout(this.wheelCommit);
-      this.wheelCommit = setTimeout(() => this.fitViewBox(), 180);
-    }, { passive: false });
-
-    svg.addEventListener('dblclick', () => {
-      this.zoom = 1;
-      this.viewCenter = null;
-      this.fitViewBox();
-    });
-  }
-
-  setZoom(zoom) {
-    this.zoom = Math.min(3, Math.max(1, zoom));
-    if (this.zoom === 1) this.viewCenter = null;
-    this.schedulePreview();
-  }
-
   destroy() {
     clearTimeout(this.botTimer);
-    clearTimeout(this.wheelCommit);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
     this.stopQuizTimer();
     this.observer?.disconnect();
@@ -265,71 +166,22 @@ export class UI {
    * Venyttää näkymäikkunan ruudun muotoiseksi, jolloin pergamentti täyttää
    * koko alueen ja pelialue pysyy silti kokonaan näkyvissä.
    */
-  /** Näkymän kulma ja koko nykyisestä zoomista ja keskipisteestä. */
-  computeView() {
-    const pane = this.svg.parentElement;
-    const w = pane.clientWidth || 600;
-    const h = pane.clientHeight || 600;
-    const size = 1000;
-    let [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
-    vw /= this.zoom;
-    vh /= this.zoom;
-    // Keskipiste pysyy pelialueella, jottei kartta karkaa raahatessa.
-    const c = this.viewCenter ?? { x: 500, y: 500 };
-    c.x = Math.min(1000, Math.max(0, c.x));
-    c.y = Math.min(1000, Math.max(0, c.y));
-    return { tlx: c.x - vw / 2, tly: c.y - vh / 2, vw, vh };
-  }
-
   /**
-   * Kirjoittaa näkymän viewBoxiin ja nollaa esikatselumuunnoksen. Tämä on
-   * raskas operaatio (pergamenttisuodattimet piirtyvät uudelleen), joten se
-   * tehdään vain eleen päättyessä — ei jokaisella sormenliikkeellä.
+   * Näkymäikkuna venytetään kartta-alueen muotoiseksi, jolloin pergamentti
+   * täyttää koko alueen ja pelialue pysyy kokonaan näkyvissä. Kartta on
+   * staattinen: sitä ei zoomata eikä raahata, joten kaikki on aina esillä.
    */
   fitViewBox() {
     const pane = this.svg.parentElement;
-    if (!pane.clientWidth || !pane.clientHeight) return;
-    const view = this.computeView();
-    this.viewBoxSize = { vw: view.vw, vh: view.vh };
-    this.svg.style.transform = '';
-    this.boardRoot?.removeAttribute('transform');
-    this.svg.setAttribute('viewBox', `${view.tlx} ${view.tly} ${view.vw} ${view.vh}`);
-    this.committedView = { ...view, paneW: pane.clientWidth };
+    const w = pane.clientWidth;
+    const h = pane.clientHeight;
+    if (!w || !h) return;
+    const size = 1000;
+    const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
+    this.viewBoxSize = { vw, vh };
+    this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
-  }
-
-  /**
-   * Kevyt esikatselu raahauksen ja zoomauksen aikana: karttaa siirretään
-   * CSS-muunnoksella, jonka näytönohjain piirtää sulavasti ilman SVG:n
-   * uudelleenpiirtoa. Lopullinen viewBox kirjoitetaan fitViewBoxissa.
-   */
-  previewView() {
-    const base = this.committedView;
-    if (!base) {
-      this.fitViewBox();
-      return;
-    }
-    const view = this.computeView();
-    // Sisältö siirretään niin, että lopputulos vastaa haluttua viewBoxia,
-    // vaikka itse viewBox-attribuutti kirjoitetaan vasta eleen päätyttyä.
-    const scale = base.vw / view.vw;
-    const tx = base.tlx - view.tlx * scale;
-    const ty = base.tly - view.tly * scale;
-    this.viewBoxSize = { vw: view.vw, vh: view.vh };
-    this.boardRoot?.setAttribute(
-      'transform',
-      `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${scale.toFixed(5)})`,
-    );
-  }
-
-  /** Esikatselu piirretään korkeintaan kerran ruudunpäivitystä kohden. */
-  schedulePreview() {
-    if (this.previewFrame) return;
-    this.previewFrame = requestAnimationFrame(() => {
-      this.previewFrame = null;
-      this.previewView();
-    });
   }
 
   /** Kartan koordinaatit kartta-alueen pikseleiksi. */
@@ -480,6 +332,19 @@ export class UI {
           transform: wobble,
           'stroke-width': (2.2 + hash01(`city:sw:${c.id}`) * 0.7).toFixed(2),
           class: 'city',
+        }, cities);
+      }
+      // Porttikaupungista lähtee pitkä lento toiselle laudalle: kaksoiskehä
+      // erottaa sen tavallisesta lentokentästä jo kartalta katsottaessa.
+      if (this.game.isGateway(c)) {
+        const gr = base + 9;
+        el('ellipse', {
+          cx: c.x,
+          cy: c.y,
+          rx: gr + vary(`gate:rx:${c.id}`, 1.1),
+          ry: gr + vary(`gate:ry:${c.id}`, 1.1),
+          transform: wobble,
+          class: 'city-gate',
         }, cities);
       }
       if (c.airport) {

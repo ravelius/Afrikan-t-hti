@@ -132,9 +132,8 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   width: 100%;
   height: 100%;
   display: block;
-  /* Kartta hoitaa raahauksen ja nipistyksen itse. */
-  touch-action: none;
-  cursor: grab;
+  /* Kartta on staattinen: koko lauta näkyy kerralla ilman zoomausta. */
+  touch-action: manipulation;
 }
 
 .board-hint {
@@ -153,18 +152,6 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 }
 
 .board-hint:empty { display: none; }
-
-/* Raahauksen ja zoomauksen aikana mustesuodattimet ja paperin kuitupinta
-   jätetään pois: selaimen ei tarvitse laskea niitä uudelleen joka
-   ruudunpäivityksellä, jolloin kartta liikkuu sulavasti myös puhelimessa. */
-#board.panning .landmass,
-#board.panning .waves,
-#board.panning .terrain { filter: none !important; }
-
-#board.panning .grain { display: none; }
-
-/* Oma piirtokerros vain eleen ajaksi — pysyvänä se veisi turhaan muistia. */
-#board.panning { will-change: transform; }
 
 /* --- laudalla lepäävä 3D-noppa --- */
 
@@ -572,6 +559,16 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .city { fill: #f3e5c4; stroke: #6b5230; stroke-width: 2.4; }
 .city-start { fill: #eec66b; stroke: #6d4d12; stroke-width: 3.4; }
 .airport { font-size: 14px; fill: #8d3a2c; }
+
+/* Porttikaupunki: katkoviivakehä kertoo, että täältä lähtee lento toiselle laudalle. */
+.city-gate {
+  fill: none;
+  stroke: #8d3a2c;
+  stroke-width: 2.2;
+  stroke-dasharray: 7 6;
+  stroke-linecap: round;
+  opacity: 0.72;
+}
 
 .city-label {
   fill: var(--map-ink);

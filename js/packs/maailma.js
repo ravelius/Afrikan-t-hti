@@ -79,18 +79,28 @@ const WORLD_CITIES = [
   { id: 'newyork', name: 'New York', x: 287, y: 415.1, start: true, airport: true, la: 'end', lx: -16, ly: 5 },
 
   {
-    id: 'kairo', name: 'Kairo', x: 585, y: 446.9, la: 'start', lx: 16, ly: 5,
+    id: 'kairo', name: 'Kairo', x: 585, y: 446.9, airport: true, la: 'start', lx: 16, ly: 5,
     // Kairosta laskeudutaan tarkemmille laudoille.
     links: [
       { pack: 'africa', city: 'kairo', label: 'Afrikan lauta' },
       { pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' },
     ],
   },
-  { id: 'rio', name: 'Rio de Janeiro', x: 380, y: 590.8, la: 'end', lx: -16, ly: 5 },
-  { id: 'mumbai', name: 'Mumbai', x: 706, y: 473.0, la: 'start', lx: 16, ly: 5 },
+  {
+    id: 'rio', name: 'Rio de Janeiro', x: 380, y: 590.8, airport: true, la: 'end', lx: -16, ly: 5,
+    // Etelä-Atlantin postilentoreitti Dakariin.
+    links: [{ pack: 'africa', city: 'dakar', label: 'Afrikan lauta' }],
+  },
+  {
+    id: 'mumbai', name: 'Mumbai', x: 706, y: 473.0, airport: true, la: 'start', lx: 16, ly: 5,
+    links: [{ pack: 'middleeast', city: 'dubai', label: 'Lähi-idän lauta' }],
+  },
   { id: 'peking', name: 'Peking', x: 823, y: 416.2, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sydney', name: 'Sydney', x: 913, y: 620.0, airport: true, la: 'end', lx: -16, ly: -10 },
-  { id: 'moskova', name: 'Moskova', x: 604, y: 372.3, la: 'start', lx: 16, ly: 5 },
+  {
+    id: 'moskova', name: 'Moskova', x: 604, y: 372.3, airport: true, la: 'start', lx: 16, ly: 5,
+    links: [{ pack: 'europe', city: 'moskova', label: 'Euroopan lauta' }],
+  },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -125,9 +135,14 @@ const WORLD_EDGES = [
 // Mannertenväliset lennot.
 const WORLD_AIR_ROUTES = [
   { a: 'lontoo', b: 'newyork' },
-  { a: 'lontoo', b: 'peking' },
-  { a: 'newyork', b: 'sydney' },
+  { a: 'lontoo', b: 'kairo' },
+  { a: 'kairo', b: 'mumbai' },
+  { a: 'mumbai', b: 'peking' },
   { a: 'peking', b: 'sydney' },
+  { a: 'newyork', b: 'sydney' },
+  { a: 'newyork', b: 'rio' },
+  { a: 'lontoo', b: 'moskova' },
+  { a: 'moskova', b: 'peking' },
 ];
 
 export const MAAILMA = {

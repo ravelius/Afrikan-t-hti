@@ -135,9 +135,8 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   width: 100%;
   height: 100%;
   display: block;
-  /* Kartta hoitaa raahauksen ja nipistyksen itse. */
-  touch-action: none;
-  cursor: grab;
+  /* Kartta on staattinen: koko lauta näkyy kerralla ilman zoomausta. */
+  touch-action: manipulation;
 }
 
 .board-hint {
@@ -156,18 +155,6 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 }
 
 .board-hint:empty { display: none; }
-
-/* Raahauksen ja zoomauksen aikana mustesuodattimet ja paperin kuitupinta
-   jätetään pois: selaimen ei tarvitse laskea niitä uudelleen joka
-   ruudunpäivityksellä, jolloin kartta liikkuu sulavasti myös puhelimessa. */
-#board.panning .landmass,
-#board.panning .waves,
-#board.panning .terrain { filter: none !important; }
-
-#board.panning .grain { display: none; }
-
-/* Oma piirtokerros vain eleen ajaksi — pysyvänä se veisi turhaan muistia. */
-#board.panning { will-change: transform; }
 
 /* --- laudalla lepäävä 3D-noppa --- */
 
@@ -575,6 +562,16 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .city { fill: #f3e5c4; stroke: #6b5230; stroke-width: 2.4; }
 .city-start { fill: #eec66b; stroke: #6d4d12; stroke-width: 3.4; }
 .airport { font-size: 14px; fill: #8d3a2c; }
+
+/* Porttikaupunki: katkoviivakehä kertoo, että täältä lähtee lento toiselle laudalle. */
+.city-gate {
+  fill: none;
+  stroke: #8d3a2c;
+  stroke-width: 2.2;
+  stroke-dasharray: 7 6;
+  stroke-linecap: round;
+  opacity: 0.72;
+}
 
 .city-label {
   fill: var(--map-ink);
@@ -1989,18 +1986,28 @@ const WORLD_CITIES = [
   { id: 'newyork', name: 'New York', x: 287, y: 415.1, start: true, airport: true, la: 'end', lx: -16, ly: 5 },
 
   {
-    id: 'kairo', name: 'Kairo', x: 585, y: 446.9, la: 'start', lx: 16, ly: 5,
+    id: 'kairo', name: 'Kairo', x: 585, y: 446.9, airport: true, la: 'start', lx: 16, ly: 5,
     // Kairosta laskeudutaan tarkemmille laudoille.
     links: [
       { pack: 'africa', city: 'kairo', label: 'Afrikan lauta' },
       { pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' },
     ],
   },
-  { id: 'rio', name: 'Rio de Janeiro', x: 380, y: 590.8, la: 'end', lx: -16, ly: 5 },
-  { id: 'mumbai', name: 'Mumbai', x: 706, y: 473.0, la: 'start', lx: 16, ly: 5 },
+  {
+    id: 'rio', name: 'Rio de Janeiro', x: 380, y: 590.8, airport: true, la: 'end', lx: -16, ly: 5,
+    // Etelä-Atlantin postilentoreitti Dakariin.
+    links: [{ pack: 'africa', city: 'dakar', label: 'Afrikan lauta' }],
+  },
+  {
+    id: 'mumbai', name: 'Mumbai', x: 706, y: 473.0, airport: true, la: 'start', lx: 16, ly: 5,
+    links: [{ pack: 'middleeast', city: 'dubai', label: 'Lähi-idän lauta' }],
+  },
   { id: 'peking', name: 'Peking', x: 823, y: 416.2, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sydney', name: 'Sydney', x: 913, y: 620.0, airport: true, la: 'end', lx: -16, ly: -10 },
-  { id: 'moskova', name: 'Moskova', x: 604, y: 372.3, la: 'start', lx: 16, ly: 5 },
+  {
+    id: 'moskova', name: 'Moskova', x: 604, y: 372.3, airport: true, la: 'start', lx: 16, ly: 5,
+    links: [{ pack: 'europe', city: 'moskova', label: 'Euroopan lauta' }],
+  },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -2035,9 +2042,14 @@ const WORLD_EDGES = [
 // Mannertenväliset lennot.
 const WORLD_AIR_ROUTES = [
   { a: 'lontoo', b: 'newyork' },
-  { a: 'lontoo', b: 'peking' },
-  { a: 'newyork', b: 'sydney' },
+  { a: 'lontoo', b: 'kairo' },
+  { a: 'kairo', b: 'mumbai' },
+  { a: 'mumbai', b: 'peking' },
   { a: 'peking', b: 'sydney' },
+  { a: 'newyork', b: 'sydney' },
+  { a: 'newyork', b: 'rio' },
+  { a: 'lontoo', b: 'moskova' },
+  { a: 'moskova', b: 'peking' },
 ];
 
 const MAAILMA = {
@@ -3222,7 +3234,11 @@ const AFRICA_MAP = {
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const AFRICA_CITIES = [
-  { id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true },
+  {
+    id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true,
+    // Gibraltarin salmen yli Espanjaan: lyhin hyppy Afrikasta Eurooppaan.
+    links: [{ pack: 'europe', city: 'madrid', label: 'Euroopan lauta' }],
+  },
   {
     id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true,
     // Sama kaupunki on myös Lähi-idän laudalla: vaelluksessa tästä jatketaan.
@@ -3232,35 +3248,39 @@ const AFRICA_CITIES = [
     ],
   },
 
-  { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
+  { id: 'tripoli', name: 'Tripoli', x: 443, y: 89, airport: true },
   { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },
   { id: 'alkufra', name: 'Al Kufra', x: 577, y: 197 },
   { id: 'sahara', name: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
   { id: 'ahaggar', name: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
   { id: 'timbuktu', name: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
   { id: 'gao', name: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
-  { id: 'dakar', name: 'Dakar', x: 45, y: 318, la: 'start', lx: 16, ly: 5 },
+  {
+    id: 'dakar', name: 'Dakar', x: 45, y: 318, airport: true, la: 'start', lx: 16, ly: 5,
+    // Etelä-Atlantin ylitys Dakarista Etelä-Amerikkaan on vanha postilentoreitti.
+    links: [{ pack: 'maailma', city: 'rio', label: 'Maailma-lauta' }],
+  },
   { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
   { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
   { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: 26 },
   { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
-  { id: 'kano', name: 'Kano', x: 394, y: 336 },
+  { id: 'kano', name: 'Kano', x: 394, y: 336, airport: true },
   { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
-  { id: 'kongo', name: 'Kongo', x: 440, y: 560, la: 'end', lx: -16, ly: 5 },
+  { id: 'kongo', name: 'Kongo', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'angola', name: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
   { id: 'namib', name: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
   { id: 'kapkaupunki', name: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6 },
   { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
   { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
   { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', x: 836, y: 616, la: 'start', lx: 16, ly: 5 },
+  { id: 'sansibar', name: 'Sansibar', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'kilimandzaro', name: 'Kilimandžaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
   { id: 'viktoria', name: 'Viktoria Nyanza', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
   { id: 'tanganjika', name: 'Tanganjika', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
   { id: 'bahrelghazal', name: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
   { id: 'darfur', name: 'Darfur', x: 575, y: 318 },
   { id: 'suakin', name: 'Suakin', x: 764, y: 261 },
-  { id: 'addisabeba', name: 'Addis Abeba', x: 783, y: 387, la: 'end', lx: -16, ly: 5 },
+  { id: 'addisabeba', name: 'Addis Abeba', x: 783, y: 387, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'rashafun', name: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
 ];
 
@@ -3335,9 +3355,16 @@ const AFRICA_EDGES = [
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
 const AFRICA_AIR_ROUTES = [
-  { a: 'tanger', b: 'kairo' },
-  { a: 'kairo', b: 'kapkaupunki' },
-  { a: 'tanger', b: 'kapkaupunki' },
+  { a: 'tanger', b: 'tripoli' },
+  { a: 'tripoli', b: 'kairo' },
+  { a: 'tanger', b: 'dakar' },
+  { a: 'dakar', b: 'kano' },
+  { a: 'kano', b: 'kongo' },
+  { a: 'kairo', b: 'addisabeba' },
+  { a: 'addisabeba', b: 'sansibar' },
+  { a: 'kongo', b: 'sansibar' },
+  { a: 'kongo', b: 'kapkaupunki' },
+  { a: 'sansibar', b: 'kapkaupunki' },
 ];
 
 // Karttapaketti: kaikki mitä pelimoottori tarvitsee yhdestä laudasta.
@@ -5607,29 +5634,37 @@ const EU_CITIES = [
   { id: 'pariisi', name: 'Pariisi', x: 256, y: 609 },
   { id: 'bordeaux', name: 'Bordeaux', x: 200, y: 714, la: 'end', lx: -16, ly: 5 },
   { id: 'lissabon', name: 'Lissabon', x: 36, y: 875, la: 'start', lx: 16, ly: 5 },
-  { id: 'madrid', name: 'Madrid', x: 140, y: 831 },
+  {
+    id: 'madrid', name: 'Madrid', x: 140, y: 831, airport: true,
+    // Gibraltarin salmen yli Afrikkaan.
+    links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
+  },
   { id: 'barcelona', name: 'Barcelona', x: 244, y: 800, la: 'start', lx: 16, ly: 5 },
   { id: 'amsterdam', name: 'Amsterdam', x: 305, y: 516, la: 'start', lx: 16, ly: 5 },
-  { id: 'berliini', name: 'Berliini', x: 468, y: 512 },
+  { id: 'berliini', name: 'Berliini', x: 468, y: 512, airport: true },
   { id: 'praha', name: 'Praha', x: 488, y: 576, la: 'end', lx: -16, ly: 5 },
   { id: 'wien', name: 'Wien', x: 526, y: 626, la: 'start', lx: 16, ly: -6 },
   { id: 'budapest', name: 'Budapest', x: 591, y: 658, la: 'start', lx: 16, ly: 10 },
   { id: 'varsova', name: 'Varsova', x: 615, y: 520 },
   { id: 'alpit', name: 'Alpit', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
   { id: 'milano', name: 'Milano', x: 388, y: 698, la: 'start', lx: 16, ly: 5 },
-  { id: 'rooma', name: 'Rooma', x: 451, y: 792, la: 'end', lx: -16, ly: 5 },
+  { id: 'rooma', name: 'Rooma', x: 451, y: 792, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sisilia', name: 'Sisilia', x: 468, y: 891, la: 'end', lx: -16, ly: 5 },
-  { id: 'ateena', name: 'Ateena', x: 667, y: 895, la: 'end', lx: -16, ly: 5 },
+  { id: 'ateena', name: 'Ateena', x: 667, y: 895, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'kreeta', name: 'Kreeta', x: 694, y: 964, la: 'middle', lx: 0, ly: 26 },
   { id: 'dubrovnik', name: 'Dubrovnik', x: 560, y: 770, la: 'middle', lx: 0, ly: -22 },
   { id: 'sofia', name: 'Sofia', x: 659, y: 771, la: 'start', lx: 16, ly: 5 },
   { id: 'bukarest', name: 'Bukarest', x: 712, y: 725, la: 'start', lx: 16, ly: 5 },
   { id: 'kiova', name: 'Kiova', x: 797, y: 567 },
   { id: 'odessa', name: 'Odessa', x: 800, y: 669, la: 'start', lx: 16, ly: 5 },
-  { id: 'moskova', name: 'Moskova', x: 934, y: 427, airport: true, la: 'end', lx: -16, ly: 5 },
+  {
+    id: 'moskova', name: 'Moskova', x: 934, y: 427, airport: true, la: 'end', lx: -16, ly: 5,
+    // Sama kaupunki on myös Maailma-laudalla, josta Siperian rata jatkuu itään.
+    links: [{ pack: 'maailma', city: 'moskova', label: 'Maailma-lauta' }],
+  },
   { id: 'pietari', name: 'Pietari', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
   { id: 'helsinki', name: 'Helsinki', x: 688, y: 310, la: 'end', lx: -16, ly: 5 },
-  { id: 'tukholma', name: 'Tukholma', x: 558, y: 333, la: 'end', lx: -16, ly: 5 },
+  { id: 'tukholma', name: 'Tukholma', x: 558, y: 333, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'oslo', name: 'Oslo', x: 418, y: 318, la: 'end', lx: -16, ly: 5 },
   { id: 'kobenhavn', name: 'Kööpenhamina', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
   { id: 'lappi', name: 'Lappi', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
@@ -5703,8 +5738,14 @@ const EU_EDGES = [
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
 const EU_AIR_ROUTES = [
-  { a: 'lontoo', b: 'istanbul' },
-  { a: 'lontoo', b: 'moskova' },
+  { a: 'lontoo', b: 'madrid' },
+  { a: 'lontoo', b: 'berliini' },
+  { a: 'lontoo', b: 'tukholma' },
+  { a: 'madrid', b: 'rooma' },
+  { a: 'berliini', b: 'rooma' },
+  { a: 'rooma', b: 'ateena' },
+  { a: 'rooma', b: 'istanbul' },
+  { a: 'tukholma', b: 'moskova' },
   { a: 'istanbul', b: 'moskova' },
 ];
 
@@ -5887,20 +5928,24 @@ const ME_CITIES = [
   { id: 'siinai', name: 'Siinai', x: 249, y: 454, la: 'end', lx: -16, ly: 22 },
   { id: 'luxor', name: 'Luxor', x: 216, y: 538, la: 'end', lx: -16, ly: 5 },
   { id: 'medina', name: 'Medina', x: 390, y: 574, la: 'start', lx: 16, ly: 5 },
-  { id: 'mekka', name: 'Mekka', x: 395, y: 664, la: 'start', lx: 16, ly: 5 },
-  { id: 'riad', name: 'Riad', x: 568, y: 570 },
+  { id: 'mekka', name: 'Mekka', x: 395, y: 664, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'riad', name: 'Riad', x: 568, y: 570, airport: true },
   { id: 'rubalkhali', name: 'Rub al-Khali', x: 675, y: 691, la: 'middle', lx: 0, ly: -22 },
   { id: 'sana', name: 'Sana', x: 505, y: 842, la: 'start', lx: 16, ly: 5 },
   { id: 'aden', name: 'Aden', x: 526, y: 917 },
   { id: 'salalah', name: 'Salalah', x: 752, y: 794 },
   { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'end', lx: -16, ly: 5 },
-  { id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26 },
+  {
+    id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26,
+    // Persianlahden vaihtoasema: täältä lähtee pitkä lento itään.
+    links: [{ pack: 'maailma', city: 'mumbai', label: 'Maailma-lauta' }],
+  },
   { id: 'doha', name: 'Doha', x: 688, y: 550, la: 'middle', lx: 0, ly: 26 },
   { id: 'kuwait', name: 'Kuwait', x: 600, y: 430, la: 'end', lx: -16, ly: 5 },
-  { id: 'bagdad', name: 'Bagdad', x: 509, y: 314 },
+  { id: 'bagdad', name: 'Bagdad', x: 509, y: 314, airport: true },
   { id: 'mosul', name: 'Mosul', x: 478, y: 225 },
   { id: 'tabriz', name: 'Tabriz', x: 558, y: 174 },
-  { id: 'teheran', name: 'Teheran', x: 685, y: 244, la: 'start', lx: 16, ly: 5 },
+  { id: 'teheran', name: 'Teheran', x: 685, y: 244, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'isfahan', name: 'Isfahan', x: 692, y: 334, la: 'start', lx: 16, ly: 5 },
   { id: 'persepolis', name: 'Persepolis', x: 722, y: 414, la: 'start', lx: 16, ly: 5 },
 ];
@@ -5964,8 +6009,13 @@ const ME_EDGES = [
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
 const ME_AIR_ROUTES = [
   { a: 'istanbul', b: 'kairo' },
-  { a: 'istanbul', b: 'dubai' },
-  { a: 'kairo', b: 'dubai' },
+  { a: 'istanbul', b: 'bagdad' },
+  { a: 'bagdad', b: 'teheran' },
+  { a: 'bagdad', b: 'riad' },
+  { a: 'kairo', b: 'mekka' },
+  { a: 'mekka', b: 'dubai' },
+  { a: 'riad', b: 'dubai' },
+  { a: 'dubai', b: 'teheran' },
 ];
 
 const MIDDLE_EAST = {
@@ -8468,28 +8518,37 @@ class Game {
   }
 
   /**
-   * Porttikaupungit: vaelluksessa laudalta toiselle siirrytään kaupungeista,
-   * joilla on linkki (esim. Kairo on sekä Afrikan että Lähi-idän laudalla).
+   * Porttikaupungit: muutamasta kaupungista lähtee pitkä lento toiselle
+   * laudalle (esim. Kairo on sekä Afrikan että Lähi-idän laudalla). Lento
+   * maksaa saman kuin muutkin lennot ja vie koko vuoron, ja karttanäkymä
+   * vaihtuu perille saavuttaessa.
    */
   gatewayOptions() {
-    if (!this.roaming || this.phase !== 'action') return [];
+    if (this.phase !== 'action') return [];
     const city = this.cityOf();
     if (!city || !city.links) return [];
+    if (this.player.money < FLIGHT_PRICE) return [];
     return city.links.map((link, index) => ({ ...link, index }));
   }
 
-  /** Siirtyy porttikaupungista toiselle laudalle. Vie koko vuoron. */
+  /** Onko kaupungista lentoja toiselle laudalle? Kartta merkitsee ne. */
+  isGateway(city) {
+    return !!(city && city.links && city.links.length);
+  }
+
+  /** Lentää porttikaupungista toiselle laudalle. Vie koko vuoron. */
   actionGateway(index) {
     const link = this.gatewayOptions()[index];
-    if (!link) return { ok: false, error: 'Täältä ei ole siirtymää toiselle laudalle' };
+    if (!link) return { ok: false, error: 'Täältä ei ole lentoa toiselle laudalle' };
     const p = this.player;
     const pack = packById(link.pack);
+    p.money -= FLIGHT_PRICE;
     this.enterWorld(pack);
     p.packId = pack.id;
     p.pos = { type: 'city', city: link.city };
     this.lastPath = null;
-    this.say(p.id, `${p.name} jatkoi matkaa: ${link.label}.`);
-    this.emit('flight', link.label, { icon: '🧭' });
+    this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
+    this.emit('flight', link.label, { icon: '🧭', sub: `−${FLIGHT_PRICE} puntaa` });
     this.endTurn();
     return { ok: true };
   }
@@ -8568,13 +8627,16 @@ class Game {
 
   /**
    * Kotisääntö: pelaaja saa pankilta rahaa, jos hän ei pysty liikkumaan lainkaan
-   * tai jos rahat ovat lopussa eikä yhteenkään tavoitteeseen pääse ilman laivalippua.
+   * tai jos yhteenkään tavoitteeseen ei pääse niillä rahoilla jotka hänellä on.
+   *
+   * Ratkaisevaa on riittävätkö rahat, ei se ovatko ne aivan lopussa: 20 punnan
+   * kanssa laivalipun takana oleva tavoite on yhtä lailla saavuttamattomissa
+   * kuin tyhjin taskuin.
    */
   needsAid(p) {
     // Ilman yhtään matkustustapaa pelaaja ei pääse mihinkään.
     const canTravel = this.travelModes(p).some((m) => m !== 'stay');
     if (!canTravel) return true;
-    if (p.money > 0) return false;
 
     const racingHome = p.hasStar || (this.starFound && p.horseshoes > 0);
     const goals = racingHome
@@ -9495,9 +9557,6 @@ class UI {
     this.revealShownFor = null;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Kartan raahaus ja zoomaus.
-    this.zoom = 1;
-    this.viewCenter = null; // null = kartan keskipiste
     this.viewBoxSize = { vw: 1000, vh: 1000 };
   }
 
@@ -9507,7 +9566,6 @@ class UI {
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
-    this.setupMapGestures();
     this.render();
   }
 
@@ -9516,107 +9574,12 @@ class UI {
     this.drawnPackId = pack.id;
     this.svg.setAttribute('aria-label', pack.ariaLabel);
     document.body.dataset.pack = pack.id;
-    this.zoom = 1;
-    this.viewCenter = null;
     this.drawBoard();
     this.fitViewBox();
   }
 
-  // --- kartan raahaus ja zoomaus -------------------------------------------
-
-  /** Sormiraahaus, nipistyszoomaus ja hiiren rulla; kaksoisnapautus palauttaa. */
-  setupMapGestures() {
-    const svg = this.svg;
-    const pointers = new Map();
-    let pinchStart = null;
-    this.panned = false;
-
-    // Kartan yksiköt yhtä ruudun pikseliä kohden.
-    const unitsPerPixel = () => this.viewBoxSize.vw / (this.mapPane.clientWidth || 1);
-
-    svg.addEventListener('pointerdown', (event) => {
-      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-      // Eleen ajaksi mustesuodattimet pois: ne piirretään uudelleen joka
-      // ruudunpäivityksellä ja tekevät raahauksesta nykivän.
-      svg.classList.add('panning');
-      if (pointers.size === 1) this.panned = false;
-      if (pointers.size === 2) {
-        const [a, b] = [...pointers.values()];
-        pinchStart = { dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, zoom: this.zoom };
-      }
-      svg.setPointerCapture(event.pointerId);
-    });
-
-    svg.addEventListener('pointermove', (event) => {
-      const prev = pointers.get(event.pointerId);
-      if (!prev) return;
-      const cur = { x: event.clientX, y: event.clientY };
-      pointers.set(event.pointerId, cur);
-
-      if (pointers.size === 2 && pinchStart) {
-        const [a, b] = [...pointers.values()];
-        const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
-        this.setZoom(pinchStart.zoom * (dist / pinchStart.dist));
-        this.panned = true;
-        return;
-      }
-
-      const dx = cur.x - prev.x;
-      const dy = cur.y - prev.y;
-      if (dx === 0 && dy === 0) return;
-      if (Math.hypot(dx, dy) > 2) this.panned = true;
-      const k = unitsPerPixel();
-      const c = this.viewCenter ?? (this.viewCenter = { x: 500, y: 500 });
-      c.x -= dx * k;
-      c.y -= dy * k;
-      this.schedulePreview();
-    });
-
-    const release = (event) => {
-      pointers.delete(event.pointerId);
-      if (pointers.size < 2) pinchStart = null;
-      // Ote irtosi: kirjoitetaan lopullinen näkymä ja suodattimet takaisin.
-      if (pointers.size === 0) {
-        svg.classList.remove('panning');
-        this.fitViewBox();
-      }
-    };
-    svg.addEventListener('pointerup', release);
-    svg.addEventListener('pointercancel', release);
-
-    // Raahauksen päättävä klikkaus ei saa osua siirtokohteisiin.
-    svg.addEventListener('click', (event) => {
-      if (this.panned) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.panned = false;
-      }
-    }, true);
-
-    svg.addEventListener('wheel', (event) => {
-      event.preventDefault();
-      this.setZoom(this.zoom * Math.exp(-event.deltaY * 0.0015));
-      // Rullailun päätyttyä näkymä kiinnitetään viewBoxiin.
-      clearTimeout(this.wheelCommit);
-      this.wheelCommit = setTimeout(() => this.fitViewBox(), 180);
-    }, { passive: false });
-
-    svg.addEventListener('dblclick', () => {
-      this.zoom = 1;
-      this.viewCenter = null;
-      this.fitViewBox();
-    });
-  }
-
-  setZoom(zoom) {
-    this.zoom = Math.min(3, Math.max(1, zoom));
-    if (this.zoom === 1) this.viewCenter = null;
-    this.schedulePreview();
-  }
-
   destroy() {
     clearTimeout(this.botTimer);
-    clearTimeout(this.wheelCommit);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
     this.stopQuizTimer();
     this.observer?.disconnect();
@@ -9626,71 +9589,22 @@ class UI {
    * Venyttää näkymäikkunan ruudun muotoiseksi, jolloin pergamentti täyttää
    * koko alueen ja pelialue pysyy silti kokonaan näkyvissä.
    */
-  /** Näkymän kulma ja koko nykyisestä zoomista ja keskipisteestä. */
-  computeView() {
-    const pane = this.svg.parentElement;
-    const w = pane.clientWidth || 600;
-    const h = pane.clientHeight || 600;
-    const size = 1000;
-    let [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
-    vw /= this.zoom;
-    vh /= this.zoom;
-    // Keskipiste pysyy pelialueella, jottei kartta karkaa raahatessa.
-    const c = this.viewCenter ?? { x: 500, y: 500 };
-    c.x = Math.min(1000, Math.max(0, c.x));
-    c.y = Math.min(1000, Math.max(0, c.y));
-    return { tlx: c.x - vw / 2, tly: c.y - vh / 2, vw, vh };
-  }
-
   /**
-   * Kirjoittaa näkymän viewBoxiin ja nollaa esikatselumuunnoksen. Tämä on
-   * raskas operaatio (pergamenttisuodattimet piirtyvät uudelleen), joten se
-   * tehdään vain eleen päättyessä — ei jokaisella sormenliikkeellä.
+   * Näkymäikkuna venytetään kartta-alueen muotoiseksi, jolloin pergamentti
+   * täyttää koko alueen ja pelialue pysyy kokonaan näkyvissä. Kartta on
+   * staattinen: sitä ei zoomata eikä raahata, joten kaikki on aina esillä.
    */
   fitViewBox() {
     const pane = this.svg.parentElement;
-    if (!pane.clientWidth || !pane.clientHeight) return;
-    const view = this.computeView();
-    this.viewBoxSize = { vw: view.vw, vh: view.vh };
-    this.svg.style.transform = '';
-    this.boardRoot?.removeAttribute('transform');
-    this.svg.setAttribute('viewBox', `${view.tlx} ${view.tly} ${view.vw} ${view.vh}`);
-    this.committedView = { ...view, paneW: pane.clientWidth };
+    const w = pane.clientWidth;
+    const h = pane.clientHeight;
+    if (!w || !h) return;
+    const size = 1000;
+    const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
+    this.viewBoxSize = { vw, vh };
+    this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
-  }
-
-  /**
-   * Kevyt esikatselu raahauksen ja zoomauksen aikana: karttaa siirretään
-   * CSS-muunnoksella, jonka näytönohjain piirtää sulavasti ilman SVG:n
-   * uudelleenpiirtoa. Lopullinen viewBox kirjoitetaan fitViewBoxissa.
-   */
-  previewView() {
-    const base = this.committedView;
-    if (!base) {
-      this.fitViewBox();
-      return;
-    }
-    const view = this.computeView();
-    // Sisältö siirretään niin, että lopputulos vastaa haluttua viewBoxia,
-    // vaikka itse viewBox-attribuutti kirjoitetaan vasta eleen päätyttyä.
-    const scale = base.vw / view.vw;
-    const tx = base.tlx - view.tlx * scale;
-    const ty = base.tly - view.tly * scale;
-    this.viewBoxSize = { vw: view.vw, vh: view.vh };
-    this.boardRoot?.setAttribute(
-      'transform',
-      `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${scale.toFixed(5)})`,
-    );
-  }
-
-  /** Esikatselu piirretään korkeintaan kerran ruudunpäivitystä kohden. */
-  schedulePreview() {
-    if (this.previewFrame) return;
-    this.previewFrame = requestAnimationFrame(() => {
-      this.previewFrame = null;
-      this.previewView();
-    });
   }
 
   /** Kartan koordinaatit kartta-alueen pikseleiksi. */
@@ -9841,6 +9755,19 @@ class UI {
           transform: wobble,
           'stroke-width': (2.2 + hash01(`city:sw:${c.id}`) * 0.7).toFixed(2),
           class: 'city',
+        }, cities);
+      }
+      // Porttikaupungista lähtee pitkä lento toiselle laudalle: kaksoiskehä
+      // erottaa sen tavallisesta lentokentästä jo kartalta katsottaessa.
+      if (this.game.isGateway(c)) {
+        const gr = base + 9;
+        el('ellipse', {
+          cx: c.x,
+          cy: c.y,
+          rx: gr + vary(`gate:rx:${c.id}`, 1.1),
+          ry: gr + vary(`gate:ry:${c.id}`, 1.1),
+          transform: wobble,
+          class: 'city-gate',
         }, cities);
       }
       if (c.airport) {
@@ -10893,7 +10820,7 @@ class UI {
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.12';
+const APP_VERSION = '2026-07-26.13';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');

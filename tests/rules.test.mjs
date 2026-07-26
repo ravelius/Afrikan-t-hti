@@ -23,7 +23,7 @@ import { buildBoard, findMoves, posKey, cityDistances, pointAlong } from '../js/
 import { isOnLand } from '../js/mapart.js';
 import { tokenPileTemplate } from '../js/tokens.js';
 import {
-  Game, mulberry32, questionLevel, START_MONEY, STAR_PRIZE, STRANDED_AID,
+  Game, mulberry32, questionLevel, FLIGHT_PRICE, START_MONEY, STAR_PRIZE, STRANDED_AID,
   DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, HARD_BONUS, HINT_PRICE,
   QUIZ_SECONDS, SEA_FARE,
 } from '../js/game.js';
@@ -661,8 +661,14 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   });
   const p = game.player;
 
-  // Tangerissa ei ole porttia.
+  // Tavallisesta kaupungista ei lähde pitkää lentoa.
+  p.pos = { type: 'city', city: 'tripoli' };
+  game.phase = 'action';
   assert.deepEqual(game.gatewayOptions(), []);
+
+  // Tanger on porttikaupunki: Gibraltarin yli Eurooppaan.
+  p.pos = { type: 'city', city: 'tanger' };
+  assert.deepEqual(game.gatewayOptions().map((l) => l.pack), ['europe']);
 
   // Kairosta pääsee Lähi-idän laudalle.
   p.pos = { type: 'city', city: 'kairo' };
@@ -672,11 +678,19 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   assert.equal(options[0].pack, 'middleeast');
 
   const afrikanLaatat = game.tokens.size;
+  const rahaEnnen = p.money;
   assert.ok(game.actionGateway(0).ok);
+  assert.equal(p.money, rahaEnnen - FLIGHT_PRICE, 'pitkä lento maksaa lennon hinnan');
   assert.equal(p.packId, 'middleeast');
   assert.equal(p.pos.city, 'kairo');
   assert.equal(game.pack.id, 'middleeast', 'aktiivinen lauta seuraa pelaajaa');
   assert.ok(game.tokens.size > 0, 'uudella laudalla on omat laatat');
+
+  // Ilman lipun hintaa portti ei aukea.
+  game.phase = 'action';
+  p.money = 10;
+  assert.deepEqual(game.gatewayOptions(), []);
+  p.money = 1000;
 
   // Lähi-idän Istanbulista laskeudutaan kaupunkilaudalle.
   game.phase = 'action';
@@ -693,6 +707,7 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   assert.equal(p.packId, 'middleeast');
   game.phase = 'action';
   p.pos = { type: 'city', city: 'kairo' };
+  p.money = 1000;
   game.actionGateway(0);
   assert.equal(p.packId, 'africa');
   assert.equal(game.tokens.size, afrikanLaatat, 'Afrikan laatat säilyivät');
@@ -704,6 +719,7 @@ test('vaellus: monen laudan peli tallentuu ja palautuu', () => {
     seed: 777,
   });
   game.phase = 'action';
+  game.player.money = 1000;
   game.actionGateway(0); // Lähi-itään
   const data = JSON.parse(JSON.stringify(game.toJSON()));
   const restored = Game.fromJSON(data);
@@ -810,7 +826,8 @@ test('aarretta ei voi ostaa rahalla', () => {
   const actions = game.availableActions();
   assert.deepEqual(Object.keys(actions).sort(), ['fly', 'gateways', 'quiz', 'roll', 'travel']);
   assert.ok(actions.travel.includes('land'));
-  assert.deepEqual(actions.gateways, [], 'kilpapelissä portit eivät ole käytössä');
+  // Portit ovat käytössä myös kilpapelissä: Tangerista lennetään Espanjaan.
+  assert.deepEqual(actions.gateways.map((l) => l.pack), ['europe']);
 });
 
 test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 80', () => {

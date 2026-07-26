@@ -248,28 +248,37 @@ export class Game {
   }
 
   /**
-   * Porttikaupungit: vaelluksessa laudalta toiselle siirrytään kaupungeista,
-   * joilla on linkki (esim. Kairo on sekä Afrikan että Lähi-idän laudalla).
+   * Porttikaupungit: muutamasta kaupungista lähtee pitkä lento toiselle
+   * laudalle (esim. Kairo on sekä Afrikan että Lähi-idän laudalla). Lento
+   * maksaa saman kuin muutkin lennot ja vie koko vuoron, ja karttanäkymä
+   * vaihtuu perille saavuttaessa.
    */
   gatewayOptions() {
-    if (!this.roaming || this.phase !== 'action') return [];
+    if (this.phase !== 'action') return [];
     const city = this.cityOf();
     if (!city || !city.links) return [];
+    if (this.player.money < FLIGHT_PRICE) return [];
     return city.links.map((link, index) => ({ ...link, index }));
   }
 
-  /** Siirtyy porttikaupungista toiselle laudalle. Vie koko vuoron. */
+  /** Onko kaupungista lentoja toiselle laudalle? Kartta merkitsee ne. */
+  isGateway(city) {
+    return !!(city && city.links && city.links.length);
+  }
+
+  /** Lentää porttikaupungista toiselle laudalle. Vie koko vuoron. */
   actionGateway(index) {
     const link = this.gatewayOptions()[index];
-    if (!link) return { ok: false, error: 'Täältä ei ole siirtymää toiselle laudalle' };
+    if (!link) return { ok: false, error: 'Täältä ei ole lentoa toiselle laudalle' };
     const p = this.player;
     const pack = packById(link.pack);
+    p.money -= FLIGHT_PRICE;
     this.enterWorld(pack);
     p.packId = pack.id;
     p.pos = { type: 'city', city: link.city };
     this.lastPath = null;
-    this.say(p.id, `${p.name} jatkoi matkaa: ${link.label}.`);
-    this.emit('flight', link.label, { icon: '🧭' });
+    this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
+    this.emit('flight', link.label, { icon: '🧭', sub: `−${FLIGHT_PRICE} puntaa` });
     this.endTurn();
     return { ok: true };
   }
@@ -348,13 +357,16 @@ export class Game {
 
   /**
    * Kotisääntö: pelaaja saa pankilta rahaa, jos hän ei pysty liikkumaan lainkaan
-   * tai jos rahat ovat lopussa eikä yhteenkään tavoitteeseen pääse ilman laivalippua.
+   * tai jos yhteenkään tavoitteeseen ei pääse niillä rahoilla jotka hänellä on.
+   *
+   * Ratkaisevaa on riittävätkö rahat, ei se ovatko ne aivan lopussa: 20 punnan
+   * kanssa laivalipun takana oleva tavoite on yhtä lailla saavuttamattomissa
+   * kuin tyhjin taskuin.
    */
   needsAid(p) {
     // Ilman yhtään matkustustapaa pelaaja ei pääse mihinkään.
     const canTravel = this.travelModes(p).some((m) => m !== 'stay');
     if (!canTravel) return true;
-    if (p.money > 0) return false;
 
     const racingHome = p.hasStar || (this.starFound && p.horseshoes > 0);
     const goals = racingHome
