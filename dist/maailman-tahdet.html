@@ -140,7 +140,9 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   width: 100%;
   height: 100%;
   display: block;
-  touch-action: manipulation;
+  /* Kartta hoitaa raahauksen ja nipistyksen itse. */
+  touch-action: none;
+  cursor: grab;
 }
 
 .board-hint {
@@ -585,7 +587,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .gem-ruby { fill: #d2402f; }
 .gem-emerald { fill: #2f9e63; }
 .gem-topaz { fill: #e0a020; }
-body[data-pack='middleeast'] .gem-topaz { fill: #3aaea6; }
+body[data-pack='middleeast'] .gem-topaz,
+body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 
 .token-icon { display: inline-block; vertical-align: -0.22em; }
 
@@ -1357,11 +1360,14 @@ body[data-pack='middleeast'] .gem-topaz { fill: #3aaea6; }
       <label class="row">
         Pelaajia
         <select id="player-count">
+          <option value="1">1 (vaellus)</option>
           <option value="2" selected>2</option>
           <option value="3">3</option>
           <option value="4">4</option>
         </select>
       </label>
+      <p id="roam-note" class="setup-tagline" hidden>Vaelluksessa peli ei pääty:
+        kerää löytöjä, ja porttikaupungeista pääset jatkamaan toisille laudoille.</p>
       <div id="player-setup" class="player-setup"></div>
       <menu>
         <button value="start" class="primary">Aloita peli</button>
@@ -1378,8 +1384,15 @@ body[data-pack='middleeast'] .gem-topaz { fill: #3aaea6; }
         Idän tähti — ja palaa sen kanssa johonkin aloituskaupungeista. Kun tähti on
         löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupunkiin
         ensimmäisenä.</p>
-      <p><b>Pelilauta.</b> Uuden pelin alussa valitaan lauta: Afrikka tai Lähi-itä.
-        Kummallakin laudalla on omat kaupunkinsa, reittinsä ja kysymyksensä.</p>
+      <p><b>Pelilauta.</b> Uuden pelin alussa valitaan lauta: Afrikka, Lähi-itä tai
+        Istanbulin kaupunkilauta. Jokaisella laudalla on omat paikkansa, reittinsä,
+        tähtiaarteensa ja kysymyksensä.</p>
+      <p><b>Vaellus.</b> Yksin pelattaessa peli ei pääty: tähti on arvokas löytö
+        (2000 p), ja porttikaupungeista (esim. Kairo tai Istanbul) pääsee jatkamaan
+        toiselle laudalle — myös kaupunkitasolle. Kilpapelin voittaja voi voittoruudusta
+        valita <i>Jatka vaeltamista</i>, jolloin sama peli jatkuu ilman voittoehtoa.</p>
+      <p><b>Kartta.</b> Karttaa voi raahata sormella tai hiirellä ja lähentää
+        nipistämällä tai rullalla. Kaksoisnapautus palauttaa koko laudan näkyviin.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
         lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä. Jos
         vaihtoehtoja ei ole — esimerkiksi sisämaassa tai kesken reittiä — vuoro alkaa
@@ -1475,6 +1488,7 @@ body[data-pack='middleeast'] .gem-topaz { fill: #3aaea6; }
     <h2 id="winner-title">Voitto!</h2>
     <p id="winner-text"></p>
     <menu>
+      <button id="winner-roam" type="button">🧭 Jatka vaeltamista</button>
       <button id="winner-close" class="primary" type="button">Uusi peli</button>
     </menu>
    </div>
@@ -2613,7 +2627,11 @@ const AFRICA_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const AFRICA_CITIES = [
   { id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true },
-  { id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true },
+  {
+    id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true,
+    // Sama kaupunki on myös Lähi-idän laudalla: vaelluksessa tästä jatketaan.
+    links: [{ pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' }],
+  },
 
   { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
   { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },
@@ -3740,8 +3758,16 @@ const ME_MAP = {
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const ME_CITIES = [
-  { id: 'istanbul', name: 'Istanbul', x: 125, y: 88, start: true, airport: true },
-  { id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true },
+  {
+    id: 'istanbul', name: 'Istanbul', x: 125, y: 88, start: true, airport: true,
+    // Vaelluksessa Istanbulista voi laskeutua kaupunkitason laudalle.
+    links: [{ pack: 'istanbul', city: 'lentoasema', label: 'Istanbulin kaupunkilauta' }],
+  },
+  {
+    id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true,
+    // Sama kaupunki on myös Afrikan laudalla.
+    links: [{ pack: 'africa', city: 'kairo', label: 'Afrikan lauta' }],
+  },
 
   { id: 'izmir', name: 'Izmir', x: 78, y: 164, la: 'start', lx: 16, ly: 5 },
   { id: 'ankara', name: 'Ankara', x: 221, y: 120 },
@@ -3894,12 +3920,751 @@ const MIDDLE_EAST = {
   },
 };
 
+// ===== js/packs/istanbul-questions.js =====
+// Istanbul-laudan tietovisakysymykset. Kaupunkilaudalla "kaupungit" ovat
+// kaupunginosia ja nähtävyyksiä, ja kysymykset kertovat suurkaupungin
+// historiasta, kulttuurista ja arjesta. `general` toimii varapakkana.
+//
+// Muoto: { q, options[4], correct, fact, hint, level? } — ks. CONTRIBUTING.md.
+
+const ISTANBUL_QUESTIONS = {
+  rumelinlinnoitus: [
+    {
+      q: 'Mitä varten Rumelin linnoitus rakennettiin vuonna 1452?',
+      options: ['Konstantinopolin piirityksen tueksi', 'kesäpalatsiksi sulttaanille', 'merirosvojen vankilaksi', 'viljavarastoksi'],
+      correct: 0,
+      level: 3,
+      fact: 'Mehmed II rakennutti linnoituksen salmen kapeimpaan kohtaan muutamassa kuukaudessa — vuotta myöhemmin Konstantinopoli valloitettiin.',
+      hint: 'Linnoitus sulki laivatien kaupunkiin pohjoisesta.',
+    },
+    {
+      q: 'Minkä salmen rannalla Rumelin linnoitus seisoo?',
+      options: ['Bosporinsalmen', 'Gibraltarinsalmen', 'Hormuzinsalmen', 'Juutinrauman'],
+      correct: 0,
+      level: 1,
+      fact: 'Linnoitus valvoi salmea, joka erottaa Euroopan ja Aasian.',
+      hint: 'Sama salmi jakaa koko kaupungin kahdelle mantereelle.',
+    },
+    {
+      q: 'Kuinka nopeasti Rumelin linnoitus valmistui?',
+      options: ['muutamassa kuukaudessa', 'kymmenessä vuodessa', 'sadassa vuodessa', 'yhdessä yössä'],
+      correct: 0,
+      fact: 'Tuhannet rakentajat pystyttivät muurit ja tornit ennätysajassa kesällä 1452.',
+      hint: 'Rakentajilla oli kova kiire ennen suurta piiritystä.',
+    },
+  ],
+
+  dolmabahce: [
+    {
+      q: 'Mikä Dolmabahçe on?',
+      options: ['sulttaanien palatsi', 'rautatieasema', 'jalkapallostadion', 'kylpylä'],
+      correct: 0,
+      fact: 'Sulttaanit muuttivat 1856 Topkapısta tähän eurooppalaistyyliseen palatsiin Bosporin rannalle.',
+      hint: 'Sen salien kattokruunut kimaltavat kristallista.',
+    },
+    {
+      q: 'Kenen kuolinhuone Dolmabahçessa on museona?',
+      options: ['Atatürkin', 'Kleopatran', 'Napoleonin', 'Aleksanteri Suuren'],
+      correct: 0,
+      level: 3,
+      fact: 'Turkin tasavallan perustaja Mustafa Kemal Atatürk kuoli palatsissa 1938 — sen kellot pysäytettiin hetkeen 9.05.',
+      hint: 'Hän oli Turkin tasavallan ensimmäinen presidentti.',
+    },
+    {
+      q: 'Missä Dolmabahçen palatsi sijaitsee?',
+      options: ['Bosporin rannalla', 'vuoren huipulla', 'saarella', 'maan alla'],
+      correct: 0,
+      level: 1,
+      fact: 'Palatsin portilta pääsi astumaan suoraan veneeseen.',
+      hint: 'Sulttaani saapui palatsiinsa usein veneellä.',
+    },
+  ],
+
+  taksim: [
+    {
+      q: 'Mikä Taksim on?',
+      options: ['kaupungin keskusaukio', 'moskeija', 'silta', 'satama'],
+      correct: 0,
+      level: 1,
+      fact: 'Taksimin aukio ja siitä lähtevä İstiklal-katu ovat nyky-Istanbulin sydän.',
+      hint: 'Sieltä lähtee kuuluisa İstiklal-kävelykatu.',
+    },
+    {
+      q: 'Mikä kulkuneuvo kulkee İstiklal-kadulla Taksimista?',
+      options: ['nostalginen raitiovaunu', 'metrojuna', 'kamelikaravaani', 'köysirata'],
+      correct: 0,
+      fact: 'Punainen 1900-luvun alun raitiovaunu kulkee kävelykadun päästä päähän.',
+      hint: 'Punainen vaunu kilistää kelloaan väkijoukon keskellä.',
+    },
+    {
+      q: 'Mitä sana taksim tarkoittaa?',
+      options: ['veden jakamista', 'toria', 'mäkeä', 'porttia'],
+      correct: 0,
+      level: 3,
+      fact: 'Aukion paikalla jaettiin kaupungin vesi eri kaupunginosiin — nimi tulee jakamisesta.',
+      hint: 'Nimi liittyy siihen, miten kaupungin juomavesi aikoinaan ohjattiin.',
+    },
+  ],
+
+  galata: [
+    {
+      q: 'Ketkä rakensivat Galata-tornin 1300-luvulla?',
+      options: ['genovalaiset', 'viikingit', 'roomalaiset', 'egyptiläiset'],
+      correct: 0,
+      level: 3,
+      fact: 'Genovan kauppiaiden siirtokunta rakensi tornin muuriensa kulmaksi.',
+      hint: 'Rakentajat tulivat italialaisesta merenkävijäkaupungista.',
+    },
+    {
+      q: 'Mitä Galata-tornin parvekkeelta näkee?',
+      options: ['koko kaupungin ja salmen', 'vain sisäpihan', 'Mustanmeren rannat', 'pyramidit'],
+      correct: 0,
+      level: 1,
+      fact: 'Torni seisoo kukkulalla, ja sen ympäri kiertävältä parvekkeelta näkyy koko vanhakaupunki.',
+      hint: 'Torni on kukkulan päällä, ja parveke kiertää sen ympäri.',
+    },
+    {
+      q: 'Millä tarun sankari Hezârfen liiti Galata-tornista 1600-luvulla?',
+      options: ['tekosiivillä', 'kuumailmapallolla', 'leijalla', 'raketilla'],
+      correct: 0,
+      fact: 'Tarinan mukaan Hezârfen Ahmed Çelebi liiti tornista Bosporin yli Üsküdariin asti.',
+      hint: 'Tarinan mukaan hän ylitti salmen linnun tavoin.',
+    },
+  ],
+
+  pierreloti: [
+    {
+      q: 'Kuka oli Pierre Loti, jonka mukaan kukkula on nimetty?',
+      options: ['ranskalainen kirjailija', 'saksalainen keisari', 'italialainen maalari', 'venäläinen säveltäjä'],
+      correct: 0,
+      fact: 'Kirjailija istui kukkulan kahvilassa katselemassa Kultaista sarvea ja kirjoitti Istanbulista romaaneja.',
+      hint: 'Hän kirjoitti romaaneja ja rakasti tätä kaupunkia.',
+    },
+    {
+      q: 'Miten Pierre Lotin kukkulalle pääsee kätevimmin?',
+      options: ['köysiradalla', 'hissillä pilvenpiirtäjässä', 'metrolla', 'laivalla'],
+      correct: 0,
+      fact: 'Pieni kaapelirata nousee rinnettä kahvilan terassille.',
+      hint: 'Vaunu nousee rinnettä vaijerin varassa.',
+    },
+    {
+      q: 'Mikä lahti kukkulalta avautuu?',
+      options: ['Kultainen sarvi', 'Suomenlahti', 'Persianlahti', 'Biskajanlahti'],
+      correct: 0,
+      level: 1,
+      fact: 'Kultainen sarvi on Bosporista erkaneva kapea lahti, kaupungin ikivanha satama.',
+      hint: 'Lahden nimessä on jalometalli.',
+    },
+  ],
+
+  balat: [
+    {
+      q: 'Mistä Balatin kaupunginosa tunnetaan?',
+      options: ['värikkäistä taloistaan', 'pilvenpiirtäjistä', 'hiekkarannoista', 'viinitarhoista'],
+      correct: 0,
+      level: 1,
+      fact: 'Balatin jyrkillä kujilla vanhat talot on maalattu keltaisiksi, punaisiksi ja sinisiksi.',
+      hint: 'Kadut ovat kuin sateenkaari — joka talo eri sävyä.',
+    },
+    {
+      q: 'Keiden vanha kotikaupunginosa Balat on?',
+      options: ['juutalaisten ja kreikkalaisten', 'viikinkien', 'mongolien', 'atsteekkien'],
+      correct: 0,
+      level: 3,
+      fact: 'Balat oli vuosisatoja juutalaisyhteisön koti, ja naapurikortteli Fener kreikkalaisten — synagogat ja kirkot ovat yhä vierekkäin.',
+      hint: 'Kaupunginosassa on vanhoja synagogia ja kirkkoja vierekkäin.',
+    },
+    {
+      q: 'Millainen Balatin katukuva on nykyään?',
+      options: ['kahviloita ja antiikkikauppoja', 'autotehtaita', 'riisipeltoja', 'laskettelurinteitä'],
+      correct: 0,
+      fact: 'Vanhat talot ovat täyttyneet kahviloista, kirpputoreista ja pikkuputiikeista.',
+      hint: 'Vanhoihin taloihin on avattu putiikkeja ja kuppiloita.',
+    },
+  ],
+
+  maustebasaari: [
+    {
+      q: 'Millä toisella nimellä Maustebasaari tunnetaan?',
+      options: ['Egyptin basaarina', 'Rooman torina', 'Silkkitorina', 'Kultabasaarina'],
+      correct: 0,
+      level: 3,
+      fact: 'Basaari rakennettiin 1660-luvulla Egyptistä saatujen tullimaksujen tuotolla.',
+      hint: 'Nimi viittaa Niilin maahan.',
+    },
+    {
+      q: 'Mitä Maustebasaarista ostetaan?',
+      options: ['mausteita ja makeisia', 'autonrenkaita', 'huonekaluja', 'tietokoneita'],
+      correct: 0,
+      level: 1,
+      fact: 'Kojujen säkeissä tuoksuvat sahrami, sumakki, kaneli ja chili — ja hyllyt notkuvat makeisia.',
+      hint: 'Säkeissä tuoksuvat sahrami, kaneli ja chili.',
+    },
+    {
+      q: 'Mikä on lokum?',
+      options: ['hyytelömäinen sokerimakeinen', 'suolainen keksi', 'jäätelölaji', 'kova karamelli'],
+      correct: 0,
+      fact: 'Lokumia eli "turkkilaista iloa" on tehty Istanbulissa 1700-luvulta asti, usein ruusuvedellä ja pistaasilla maustettuna.',
+      hint: 'Pehmeät palat pyöritellään tomusokerissa.',
+    },
+  ],
+
+  suuribasaari: [
+    {
+      q: 'Kuinka laaja Suuri basaari on?',
+      options: ['tuhansia myymälöitä kymmenillä kujilla', 'yksi pitkä käytävä', 'kolme kioskia', 'yhden korttelin halli'],
+      correct: 0,
+      fact: 'Katettuja kujia on yli 60 ja myymälöitä noin 4 000 — yksi maailman suurimmista ja vanhimmista kauppapaikoista.',
+      hint: 'Sokkeloon voi helposti eksyä koko päiväksi.',
+    },
+    {
+      q: 'Milloin Suuri basaari perustettiin?',
+      options: ['1400-luvulla', '1900-luvulla', 'antiikin aikana', '2000-luvulla'],
+      correct: 0,
+      level: 3,
+      fact: 'Mehmed Valloittaja perusti basaarin pian Konstantinopolin valtauksen jälkeen.',
+      hint: 'Se perustettiin pian Konstantinopolin valloituksen jälkeen.',
+    },
+    {
+      q: 'Mitä basaarissa kuuluu tehdä ennen ostosta?',
+      options: ['tinkiä hinnasta', 'jonottaa lippua', 'maksaa sisäänpääsy', 'varata aika'],
+      correct: 0,
+      level: 1,
+      fact: 'Tinkiminen on osa kaupankäynnin iloa — myyjä tarjoaa usein teetä kaupanpäälle.',
+      hint: 'Ensimmäinen hinta on vasta keskustelun avaus.',
+    },
+  ],
+
+  topkapi: [
+    {
+      q: 'Keiden kotina Topkapın palatsi toimi vuosisatoja?',
+      options: ['osmanisulttaanien', 'Rooman keisarien', 'faaraoiden', 'tsaarien'],
+      correct: 0,
+      fact: 'Topkapı oli osmanien valtakunnan hallintokeskus ja sulttaanien koti lähes 400 vuotta.',
+      hint: 'Heidän valtakuntansa ulottui kolmelle mantereelle.',
+    },
+    {
+      q: 'Mikä kuuluisa jalokivi on esillä Topkapıssa?',
+      options: ['Kauhantekijän timantti', 'Kohinoor', 'Toivon timantti', 'Musta helmi'],
+      correct: 0,
+      level: 3,
+      fact: '86-karaattinen Kaşıkçı eli Kauhantekijän timantti — tarun mukaan löytäjä vaihtoi sen kolmeen puulusikkaan.',
+      hint: 'Tarun mukaan löytäjä vaihtoi sen kolmeen puulusikkaan.',
+    },
+    {
+      q: 'Minkä kahden vesistön näkymät palatsin niemeltä avautuvat?',
+      options: ['Bosporin ja Kultaisen sarven', 'Niilin ja Punaisenmeren', 'Tonavan ja Mustanmeren', 'Seinen ja Atlantin'],
+      correct: 0,
+      fact: 'Palatsi rakennettiin Sarayburnun niemelle, jossa salmi ja lahti kohtaavat.',
+      hint: 'Palatsi seisoo niemen kärjessä kahden veden välissä.',
+    },
+  ],
+
+  hagiasofia: [
+    {
+      q: 'Minä rakennuksena Hagia Sofia aloitti 500-luvulla?',
+      options: ['kirkkona', 'moskeijana', 'palatsina', 'kirjastona'],
+      correct: 0,
+      fact: 'Keisari Justinianuksen suurkirkko oli lähes tuhat vuotta kristikunnan suurin.',
+      hint: 'Sen rakennutti Bysantin keisari Justinianus.',
+    },
+    {
+      q: 'Mikä Hagia Sofiassa hämmästytti aikalaisia eniten?',
+      options: ['valtava kupoli', 'lasihissi', 'kellotorni', 'liukuportaat'],
+      correct: 0,
+      level: 1,
+      fact: 'Kupoli näyttää leijuvan ikkunarivin päällä — aikalaiset uskoivat sen riippuvan taivaasta ketjulla.',
+      hint: 'Se näyttää leijuvan ilmassa ikkunarivin päällä.',
+    },
+    {
+      q: 'Mitä Hagia Sofian nimi tarkoittaa?',
+      options: ['pyhää viisautta', 'kultaista porttia', 'suurta valoa', 'ikuista kaupunkia'],
+      correct: 0,
+      level: 3,
+      fact: 'Nimi on kreikkaa: rakennus omistettiin Kristukselle Pyhänä Viisautena.',
+      hint: 'Nimi on kreikkaa ja liittyy tietämiseen.',
+    },
+  ],
+
+  sinimoskeija: [
+    {
+      q: 'Mistä Sininen moskeija on saanut lempinimensä?',
+      options: ['sinisistä kaakeleista', 'sinisestä katosta', 'meren väristä', 'sinisistä ovista'],
+      correct: 0,
+      level: 1,
+      fact: 'Sisäseiniä peittävät yli 20 000 sinivalkoista İznikin kaakelia.',
+      hint: 'Sisäseiniä peittävät tuhannet käsin maalatut laatat.',
+    },
+    {
+      q: 'Kuinka monta minareettia Sinisellä moskeijalla on?',
+      options: ['kuusi', 'yksi', 'kaksi', 'kymmenen'],
+      correct: 0,
+      level: 3,
+      fact: 'Määrä oli aikanaan kohu: yhtä monta kuin Mekan suurella moskeijalla, joten Mekkaan rakennettiin seitsemäs.',
+      hint: 'Määrä herätti kohua, koska se oli sama kuin Mekassa.',
+    },
+    {
+      q: 'Mitä kävijältä odotetaan moskeijaan astuttaessa?',
+      options: ['kenkien riisumista', 'päähineen ostamista', 'pääsylippua', 'valokuvan ottamista'],
+      correct: 0,
+      level: 1,
+      fact: 'Moskeijaan astutaan sukkasillaan, ja hartiat ja polvet peitetään.',
+      hint: 'Ne jätetään ovelle hyllyyn tai kannetaan pussissa.',
+    },
+  ],
+
+  uskudar: [
+    {
+      q: 'Millä mantereella Üsküdar sijaitsee?',
+      options: ['Aasiassa', 'Euroopassa', 'Afrikassa', 'Etelä-Amerikassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Lauttamatka Eminönüstä Üsküdariin ylittää mantereiden rajan parissakymmenessä minuutissa.',
+      hint: 'Lauttamatka vanhastakaupungista vie toiselle mantereelle.',
+    },
+    {
+      q: 'Mitä Üsküdarin rannalta katsotaan auringonlaskussa?',
+      options: ['vanhankaupungin tornit vastarannalla', 'aavikon dyynit', 'lumihuippuinen vuorijono', 'ei mitään — aina on sumua'],
+      correct: 0,
+      level: 1,
+      fact: 'Aurinko laskee Euroopan puolen taakse, ja minareetit ja kupolit piirtyvät siluetteina taivasta vasten.',
+      hint: 'Vastarannalla piirtyvät kupolit ja minareetit.',
+    },
+    {
+      q: 'Mikä Üsküdar oli osmanien aikana?',
+      options: ['karavaanien lähtöpaikka Aasiaan', 'kalastajakylä ilman satamaa', 'suljettu linnoitussaari', 'viinisatama'],
+      correct: 0,
+      level: 3,
+      fact: 'Aasian karavaanit ja pyhiinvaeltajat lähtivät Üsküdarista kohti Mekkaa ja idän kaupunkeja.',
+      hint: 'Sieltä alkoi maamatka kohti Mekkaa ja itää.',
+    },
+  ],
+
+  neitsyttorni: [
+    {
+      q: 'Missä Neitsyttorni seisoo?',
+      options: ['pikkusaarella salmen suulla', 'vuoren huipulla', 'sillan päällä', 'tekojärvessä'],
+      correct: 0,
+      level: 1,
+      fact: 'Torni on rakennettu pienelle luodolle Bosporin suulle, ja sinne pääsee vain veneellä.',
+      hint: 'Sinne pääsee vain veneellä.',
+    },
+    {
+      q: 'Mitä tarina kertoo tornin nimestä?',
+      options: ['prinsessa piilotettiin sinne ennustukselta', 'torni maalattiin valkoiseksi häitä varten', 'siellä asui merenneito', 'torni nousi merestä yhdessä yössä'],
+      correct: 0,
+      fact: 'Tarun mukaan sulttaani kätki tyttärensä torniin käärme-ennustukselta — mutta käärme saapui hedelmäkorissa.',
+      hint: 'Tarinassa on ennustus, käärme ja hedelmäkori.',
+    },
+    {
+      q: 'Mihin tornia on käytetty vuosisatojen aikana?',
+      options: ['majakkana ja vartiotornina', 'viljasiilona', 'uimahyppytornina', 'tuulimyllynä'],
+      correct: 0,
+      fact: 'Torni on ollut vartiopaikka, majakka ja karanteeniasema — nykyään se on museo.',
+      hint: 'Sen valo opasti laivoja salmen suulla.',
+    },
+  ],
+
+  kadikoy: [
+    {
+      q: 'Mikä Kadıköy nykyään on?',
+      options: ['vilkas tori- ja ravintolakaupunginosa', 'suljettu satama-alue', 'lentokenttäalue', 'teollisuusalue'],
+      correct: 0,
+      level: 1,
+      fact: 'Kadıköyn kalatori, kahvilat ja katutaide tekevät siitä Aasian puolen sykkivän sydämen.',
+      hint: 'Kalatorin kojut ja kahvilat täyttävät kadut.',
+    },
+    {
+      q: 'Millä nimellä Kadıköyn paikalla ollut antiikin kaupunki tunnettiin?',
+      options: ['Khalkedon', 'Troija', 'Sparta', 'Karthago'],
+      correct: 0,
+      level: 3,
+      fact: 'Khalkedonia kutsuttiin "sokeain maaksi": sen asukkaat eivät muka huomanneet vastarannan parempaa paikkaa.',
+      hint: 'Asukkaita sanottiin sokeiksi, koska he eivät valinneet vastarannan parempaa paikkaa.',
+    },
+    {
+      q: 'Mitä Kadıköyn kuuluisalla torilla myydään?',
+      options: ['kalaa ja vihanneksia', 'mattoja', 'autoja', 'jalokiviä'],
+      correct: 0,
+      level: 1,
+      fact: 'Tiskeillä kimaltavat aamun saalis, oliivit, juustot ja mausteet.',
+      hint: 'Tiskeillä kimaltaa aamun saalis suoraan veneistä.',
+    },
+  ],
+
+  prinssisaaret: [
+    {
+      q: 'Mikä kulkuneuvo Prinssisaarilla oli pitkään kielletty?',
+      options: ['autot', 'polkupyörät', 'veneet', 'junat'],
+      correct: 0,
+      fact: 'Saarilla liikuttiin hevoskärryillä ja polkupyörillä — nykyään hevoset on korvattu sähköbusseilla.',
+      hint: 'Saarilla liikuttiin hevoskärryillä ja kävellen.',
+    },
+    {
+      q: 'Mistä Prinssisaarten nimi tulee?',
+      options: ['sinne karkotettiin Bysantin prinssejä', 'prinssit rakensivat saaret', 'saaret muistuttavat kruunua', 'vanhasta sadusta'],
+      correct: 0,
+      level: 3,
+      fact: 'Bysantin hallitsijasuvun jäseniä karkotettiin saarten luostareihin pois vallan ääreltä.',
+      hint: 'Saarille ei muutettu vapaaehtoisesti — sinne lähetettiin.',
+    },
+    {
+      q: 'Miten Prinssisaarille pääsee?',
+      options: ['lautalla', 'siltaa pitkin', 'tunnelin kautta', 'köysiradalla'],
+      correct: 0,
+      level: 1,
+      fact: 'Lautat kulkevat saarille Kadıköystä ja Eminönüstä pitkin Marmaranmerta.',
+      hint: 'Matka taittuu vain vettä pitkin.',
+    },
+  ],
+
+  general: [
+    {
+      q: 'Kuinka monta ihmistä Istanbulissa asuu?',
+      options: ['yli 15 miljoonaa', 'noin miljoona', 'noin satatuhatta', 'yli 50 miljoonaa'],
+      correct: 0,
+      fact: 'Istanbul on Euroopan suurin kaupunki — asukkaita on enemmän kuin monessa valtiossa.',
+      hint: 'Enemmän kuin Suomessa ja Ruotsissa yhteensä.',
+    },
+    {
+      q: 'Millä kahdella mantereella Istanbul sijaitsee?',
+      options: ['Euroopassa ja Aasiassa', 'Aasiassa ja Afrikassa', 'Euroopassa ja Afrikassa', 'vain Euroopassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Bosporinsalmi jakaa kaupungin kahdelle mantereelle — ainoana suurkaupunkina maailmassa.',
+      hint: 'Salmi jakaa kaupungin kahtia.',
+    },
+    {
+      q: 'Mikä oli Istanbulin nimi Bysantin valtakunnan aikana?',
+      options: ['Konstantinopoli', 'Ankara', 'Aleksandria', 'Antiokia'],
+      correct: 0,
+      fact: 'Kaupunki oli yli tuhat vuotta Konstantinopoli, ja sitä ennen Byzantion.',
+      hint: 'Nimi tuli keisari Konstantinuksesta.',
+    },
+    {
+      q: 'Minkä juoman ääressä kahviloissa pelataan backgammonia?',
+      options: ['teen', 'kaakaon', 'limonadin', 'piimän'],
+      correct: 0,
+      level: 1,
+      fact: 'Tulppaanilasista juotava çay on Turkin seurustelujuoma aamusta iltaan.',
+      hint: 'Sitä tarjoillaan pienestä tulppaanin muotoisesta lasista.',
+    },
+    {
+      q: 'Mikä on simit?',
+      options: ['rinkilämäinen seesamileipä', 'kalakeitto', 'jäätelöannos', 'kudottu matto'],
+      correct: 0,
+      fact: 'Katukauppiaiden rapeita simit-rinkeleitä syödään aamiaiseksi ja välipalaksi.',
+      hint: 'Katukauppias kantaa niitä pinossa tarjottimella päänsä päällä.',
+    },
+    {
+      q: 'Mikä silta yhdisti ensimmäisenä Euroopan ja Aasian Istanbulissa?',
+      options: ['Bosporinsilta', 'Tower Bridge', 'Kultaportin silta', 'Öresundin silta'],
+      correct: 0,
+      level: 1,
+      fact: 'Ensimmäinen silta valmistui 1973 — nykyään salmen ylittää kolme siltaa ja kaksi tunnelia.',
+      hint: 'Silta on saanut nimensä salmesta, jonka se ylittää.',
+    },
+    {
+      q: 'Miten turkkilainen kahvi valmistetaan?',
+      options: ['keittämällä hienoksi jauhettu kahvi pannussa', 'suodattamalla', 'kapselikoneella', 'pikakahvina'],
+      correct: 0,
+      fact: 'Cezve-pannussa keitetty kahvi tarjoillaan sakkoineen — ja kupin pohjasta ennustetaan.',
+      hint: 'Pieni pitkävartinen pannu upotetaan joskus kuumaan hiekkaan.',
+    },
+    {
+      q: 'Mikä on hamam?',
+      options: ['turkkilainen kylpylä', 'perinteinen tanssi', 'soitin', 'jälkiruoka'],
+      correct: 0,
+      level: 1,
+      fact: 'Höyryävässä hamamissa peseydytään kuumalla marmoritasolla, ja pesijä hieroo saippuavaahdolla.',
+      hint: 'Siellä hikoillaan höyryssä marmoritasolla.',
+    },
+    {
+      q: 'Mitä balık ekmek tarkoittaa?',
+      options: ['kalaleipää', 'lihapullia', 'hedelmäsalaattia', 'juustotarjotinta'],
+      correct: 0,
+      fact: 'Eminönün rannassa paistettu kala käännetään sämpylän väliin suoraan veneestä.',
+      hint: 'Sämpylän väliin käännetään juuri paistettu saalis.',
+    },
+    {
+      q: 'Kuka valloitti Konstantinopolin vuonna 1453?',
+      options: ['Mehmed II', 'Aleksanteri Suuri', 'Tšingis-kaani', 'Julius Caesar'],
+      correct: 0,
+      level: 3,
+      fact: 'Nuori sulttaani sai lisänimen Valloittaja — hänen laivansa vedettiin maata pitkin Kultaiseen sarveen.',
+      hint: 'Nuori sulttaani sai lisänimen Valloittaja.',
+    },
+    {
+      q: 'Mikä asema Istanbulin kadunkissoilla on?',
+      options: ['ne ovat koko kaupungin hoivaamia', 'ne on kielletty', 'niitä ei ole', 'ne kuuluvat sulttaanille'],
+      correct: 0,
+      level: 1,
+      fact: 'Asukkaat ruokkivat kulmakuntansa kissoja, ja niistä on tehty kuuluisa elokuvakin.',
+      hint: 'Karvaisia kaupunkilaisia ruokitaan joka kulmalla.',
+    },
+    {
+      q: 'Mikä muinainen kilparata oli Sultanahmetin aukion paikalla?',
+      options: ['hippodromi', 'Colosseum', 'Circus Maximus', 'olympiastadion'],
+      correct: 0,
+      level: 3,
+      fact: 'Bysantin hippodromilla kilpailtiin hevosvaunuilla — aukiolla seisoo yhä sieltä tuotu egyptiläinen obeliski.',
+      hint: 'Siellä kilpailtiin hevosvaunuilla kymmenientuhansien katsojien edessä.',
+    },
+  ],
+};
+
+/**
+ * "Tiesitkö että…" -tiedot paikoista. Peli näyttää yhden pelaajan nykyisestä
+ * sijainnista, joten jokaisella paikalla on useampi vaihtoehto.
+ */
+const ISTANBUL_FACTS = {
+  lentoasema: [
+    'Istanbulin lentoasema on matkustajamääriltään Euroopan suurimpia — sen kautta lentää vuosittain kymmeniä miljoonia matkustajia.',
+    'Lentoasemalta on yli 40 kilometriä keskustaan, ja matka taittuu metrolla.',
+  ],
+  sabihagokcen: [
+    'Sabiha Gökçen on nimetty maailman ensimmäisen naishävittäjälentäjän mukaan — hän oli Atatürkin kasvattitytär.',
+    'Kenttä palvelee Istanbulin Aasian-puoleista osaa Marmaranmeren tuntumassa.',
+  ],
+  rumelinlinnoitus: [
+    'Rumelin linnoitus rakennettiin salmen kapeimpaan kohtaan vain neljässä kuukaudessa vuonna 1452.',
+    'Linnoitusta vastapäätä Aasian rannalla seisoo vanhempi sisar, Anadolun linnoitus.',
+  ],
+  dolmabahce: [
+    'Dolmabahçen juhlasalin kattokruunussa on 750 lamppua — se on maailman suurimpia.',
+    'Palatsin kellot on pysäytetty aikaan 9.05, Atatürkin kuolinhetkeen.',
+  ],
+  taksim: [
+    'İstiklal-kadulla kävelee viikonloppuisin jopa miljoonia ihmisiä päivässä.',
+    'Taksimin nimi tulee vedenjakelusta: aukiolla jaettiin kaupungin vesi eri kaupunginosiin.',
+  ],
+  galata: [
+    'Galata-tornia on käytetty vankilana, tähtitornina ja palovartiotornina.',
+    'Tarun mukaan Hezârfen Ahmed Çelebi liiti tekosiivillä tornista Bosporin yli 1600-luvulla.',
+  ],
+  pierreloti: [
+    'Pierre Lotin kahvilasta avautuu kuuluisin näköala Kultaiseen sarveen.',
+    'Kukkulalle nousee köysirata vanhan hautausmaan sypressien yli.',
+  ],
+  balat: [
+    'Balatin värikkäät talot ovat suosituimpia valokuvauspaikkoja koko kaupungissa.',
+    'Naapurikorttelissa Fenerissä toimii yhä ekumeeninen patriarkaatti, ortodoksisen kirkon vanha keskus.',
+  ],
+  maustebasaari: [
+    'Maustebasaari rakennettiin 1660-luvulla, ja sen tuotot ylläpitivät viereistä Uutta moskeijaa.',
+    'Basaarin kujilla myydään myös lokumia, kuivattuja hedelmiä ja sata lajia juustoa.',
+  ],
+  suuribasaari: [
+    'Suuressa basaarissa on yli 60 katettua kujaa ja noin 4 000 myymälää.',
+    'Basaarin kultakauppiaiden kujat ovat toimineet samoilla paikoilla vuosisatoja.',
+  ],
+  topkapi: [
+    'Topkapın keittiöissä valmistettiin parhaimmillaan ruokaa kymmenelle tuhannelle hengelle päivässä.',
+    'Palatsin aarrekammiossa säilytetään 86-karaattista Kauhantekijän timanttia.',
+  ],
+  hagiasofia: [
+    'Hagia Sofian kupoli oli lähes tuhat vuotta maailman suurin — sen halkaisija on yli 30 metriä.',
+    'Rakennus on ollut kirkko, moskeija, museo ja jälleen moskeija.',
+  ],
+  sinimoskeija: [
+    'Sinisen moskeijan sisäseiniä peittää yli 20 000 käsin maalattua İznikin kaakelia.',
+    'Moskeija rakennettiin suoraan Bysantin keisaripalatsin raunioiden päälle.',
+  ],
+  uskudar: [
+    'Üsküdarin rannalta katsotaan kuuluisinta auringonlaskua: vanhakaupunki piirtyy siluettina vastarannalle.',
+    'Üsküdar oli karavaanien ja pyhiinvaeltajien lähtöpaikka kohti Mekkaa.',
+  ],
+  neitsyttorni: [
+    'Neitsyttorni on rakennettu pienelle luodolle Bosporin suulle — se on ollut majakka, vartiotorni ja karanteeniasema.',
+    'Tornin tarussa prinsessaa suojeltiin käärme-ennustukselta, mutta käärme saapui hedelmäkorissa.',
+  ],
+  kadikoy: [
+    'Kadıköyn paikalla oli antiikin Khalkedon, jota kutsuttiin "sokeain maaksi".',
+    'Kadıköyn kalatorilla ja kahviloissa sykkii Aasian puolen arki — ja seinät ovat täynnä katutaidetta.',
+  ],
+  prinssisaaret: [
+    'Prinssisaarilla ei pitkään saanut ajaa autolla — liikenne hoidettiin hevoskärryillä.',
+    'Bysantin aikana saarten luostarit toimivat vallasta syrjäytettyjen prinssien karkotuspaikkoina.',
+  ],
+};
+
+// ===== js/packs/istanbul.js =====
+// Istanbul-lauta: ensimmäinen kaupunkitason lauta.
+//
+// Koordinaatisto on 1000 x 1000 yksikköä, vapaasti aseteltu kaupunkikartta:
+// Bosporinsalmi halkoo laudan pystysuunnassa (Mustameri ylhäällä, Marmaranmeri
+// alhaalla), Kultainen sarvi työntyy Euroopan puolelle ja Prinssisaaret ovat
+// Marmaranmeressä. "Kaupungit" ovat kaupunginosia ja nähtävyyksiä, laivareitit
+// ovat Bosporin lauttoja ja lentokentät toimivat aloituspaikkoina.
+//
+// Laudalle saavutaan vaelluksessa Lähi-idän laudan Istanbulista, ja
+// Lentoasemalta pääsee samaa reittiä takaisin.
+
+const IST_MAP = {
+  width: 1000,
+  height: 1000,
+  // Euroopan puoli: Bosporin länsiranta, Kultainen sarvi ja Marmaran rannikko.
+  europePoints: [
+    [0, 0], [430, 0],
+    [450, 80], [420, 160], [445, 240], [415, 320], [430, 400], [455, 470],
+    [380, 470], [300, 430], [230, 400],
+    [240, 430], [310, 465], [390, 510], [440, 555],
+    [450, 600], [435, 660],
+    [380, 700], [280, 730], [160, 750], [0, 770],
+  ],
+  // Aasian puoli: Bosporin itäranta ja Marmaran rannikko.
+  asiaPoints: [
+    [570, 0], [1000, 0], [1000, 780],
+    [880, 770], [760, 750], [650, 725], [585, 702], [560, 680],
+    [560, 640], [555, 570], [580, 490], [565, 410], [590, 330],
+    [560, 250], [585, 170], [555, 90],
+  ],
+  prinssisaaretPoints: [
+    [760, 880], [800, 868], [845, 888], [825, 918], [772, 912],
+  ],
+  neitsyttorniPoints: [
+    [512, 638], [528, 636], [532, 650], [516, 653],
+  ],
+};
+
+// start = aloituspaikka (ei laattaa), airport = lentokenttä.
+const IST_CITIES = [
+  {
+    id: 'lentoasema', name: 'Lentoasema', x: 80, y: 120, start: true, airport: true,
+    la: 'start', lx: 16, ly: 5,
+    // Takaisin Lähi-idän laudalle.
+    links: [{ pack: 'middleeast', city: 'istanbul', label: 'Lähi-idän lauta' }],
+  },
+  {
+    id: 'sabihagokcen', name: 'Sabiha Gökçen', x: 880, y: 620, start: true, airport: true,
+    la: 'middle', lx: 0, ly: -26,
+  },
+
+  // Euroopan puoli
+  { id: 'rumelinlinnoitus', name: 'Rumelin linnoitus', x: 400, y: 155, la: 'end', lx: -16, ly: 5 },
+  { id: 'dolmabahce', name: 'Dolmabahçe', x: 395, y: 285, la: 'end', lx: -16, ly: 5 },
+  { id: 'taksim', name: 'Taksim', x: 390, y: 380, la: 'end', lx: -16, ly: 5 },
+  { id: 'galata', name: 'Galata-torni', x: 410, y: 450, la: 'start', lx: 14, ly: -10 },
+  { id: 'pierreloti', name: 'Pierre Loti', x: 275, y: 405, la: 'end', lx: -16, ly: 5 },
+  { id: 'balat', name: 'Balat', x: 290, y: 480, la: 'end', lx: -16, ly: 5 },
+  { id: 'maustebasaari', name: 'Maustebasaari', x: 360, y: 525, la: 'start', lx: 16, ly: 5 },
+  { id: 'suuribasaari', name: 'Suuri basaari', x: 300, y: 585, la: 'end', lx: -16, ly: 5 },
+  { id: 'topkapi', name: 'Topkapın palatsi', x: 425, y: 565, la: 'start', lx: 16, ly: -8 },
+  { id: 'hagiasofia', name: 'Hagia Sofia', x: 390, y: 615, la: 'start', lx: 16, ly: 8 },
+  { id: 'sinimoskeija', name: 'Sininen moskeija', x: 330, y: 660, la: 'middle', lx: 0, ly: 26 },
+
+  // Aasian puoli ja saaret
+  { id: 'uskudar', name: 'Üsküdar', x: 605, y: 545, la: 'start', lx: 16, ly: 5 },
+  { id: 'neitsyttorni', name: 'Neitsyttorni', x: 520, y: 645, la: 'middle', lx: 0, ly: 24 },
+  { id: 'kadikoy', name: 'Kadıköy', x: 620, y: 690, la: 'start', lx: 16, ly: 5 },
+  { id: 'prinssisaaret', name: 'Prinssisaaret', x: 800, y: 895, la: 'middle', lx: 0, ly: -24 },
+];
+
+// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
+// type 'sea' = lauttareitti; kaupunkilaudalla laivamaksu on lautan lippu.
+const IST_EDGES = [
+  // Euroopan puoli; sillat ylittävät Kultaisen sarven.
+  { a: 'lentoasema', b: 'pierreloti', steps: 3 },
+  { a: 'lentoasema', b: 'rumelinlinnoitus', steps: 4 },
+  { a: 'lentoasema', b: 'taksim', steps: 4 },
+  { a: 'rumelinlinnoitus', b: 'dolmabahce', steps: 2 },
+  { a: 'dolmabahce', b: 'taksim', steps: 1 },
+  { a: 'taksim', b: 'galata', steps: 1 },
+  { a: 'taksim', b: 'pierreloti', steps: 3 },
+  { a: 'galata', b: 'maustebasaari', steps: 1 }, // Galatan silta
+  { a: 'pierreloti', b: 'balat', steps: 1 },
+  { a: 'balat', b: 'suuribasaari', steps: 2 },
+  { a: 'suuribasaari', b: 'sinimoskeija', steps: 1 },
+  { a: 'suuribasaari', b: 'maustebasaari', steps: 1 },
+  { a: 'maustebasaari', b: 'hagiasofia', steps: 1 },
+  { a: 'sinimoskeija', b: 'hagiasofia', steps: 1 },
+  { a: 'hagiasofia', b: 'topkapi', steps: 1 },
+
+  // Aasian puoli
+  { a: 'uskudar', b: 'kadikoy', steps: 2 },
+  { a: 'uskudar', b: 'sabihagokcen', steps: 4 },
+  { a: 'kadikoy', b: 'sabihagokcen', steps: 3 },
+
+  // Lautat
+  { a: 'maustebasaari', b: 'uskudar', steps: 2, type: 'sea', via: [[470, 520], [540, 530]] },
+  { a: 'maustebasaari', b: 'kadikoy', steps: 2, type: 'sea', via: [[450, 505], [495, 575], [540, 650], [558, 700], [592, 706]] },
+  { a: 'maustebasaari', b: 'neitsyttorni', steps: 2, type: 'sea', via: [[452, 510], [470, 590]] },
+  { a: 'galata', b: 'kadikoy', steps: 2, type: 'sea', via: [[460, 500], [510, 600], [545, 650], [558, 700], [592, 706]] },
+  { a: 'dolmabahce', b: 'uskudar', steps: 2, type: 'sea', via: [[480, 400], [540, 480]] },
+  { a: 'uskudar', b: 'neitsyttorni', steps: 1, type: 'sea', via: [[550, 550], [535, 600]] },
+  { a: 'kadikoy', b: 'prinssisaaret', steps: 3, type: 'sea', via: [[690, 800]] },
+];
+
+// Kaupunkilaudan "lento" on taksimatka lentoasemalta toiselle.
+const IST_AIR_ROUTES = [
+  { a: 'lentoasema', b: 'sabihagokcen' },
+];
+
+const ISTANBUL = {
+  id: 'istanbul',
+  name: 'Sulttaanin timantti',
+  boardLabel: 'Istanbul (kaupunki)',
+  tagline: 'Sukella suurkaupunkiin: basaarit, palatsit ja Bosporin lautat.',
+  ariaLabel: 'Istanbulin aarrekartta',
+
+  map: {
+    ...IST_MAP,
+    outlines: [
+      IST_MAP.europePoints, IST_MAP.asiaPoints,
+      IST_MAP.prinssisaaretPoints, IST_MAP.neitsyttorniPoints,
+    ],
+  },
+  cities: IST_CITIES,
+  edges: IST_EDGES,
+  airRoutes: IST_AIR_ROUTES,
+  islands: ['neitsyttorni', 'prinssisaaret'], // vain lautalla
+  minCityDistance: 55,
+
+  tokens: {
+    // Tähtiaarre on Topkapın kuuluisan timantin henkinen sukulainen.
+    types: themedTokenTypes({
+      star: { name: 'Sulttaanin timantti' },
+      topaz: { name: 'Turkoosi', color: '#3aaea6' },
+    }),
+    counts: { star: 1, horseshoe: 2, robber: 2, ruby: 2, emerald: 3, topaz: 3, empty: 2 },
+  },
+
+  questions: ISTANBUL_QUESTIONS,
+  placeFacts: ISTANBUL_FACTS,
+
+  texts: {
+    intro: 'Peli alkaa! Etsikää Sulttaanin timantti ja palatkaa lentoasemalle.',
+    starFound: (name, city) => `★ ${name} löysi SULTTAANIN TIMANTIN: ${city}!`,
+    starToast: 'SULTTAANIN TIMANTTI!',
+    starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
+    winStar: 'toi Sulttaanin timantin turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Sulttaanin timantin kotiin ${money} punnan kanssa.`,
+  },
+
+  decor: {
+    mapLabel: 'ISTANBUL',
+    mapLabelPos: { x: 700, y: 950 },
+    compass: { x: 140, y: 880, r: 58 },
+    waveSkip: [
+      { x: 250, y: 855, r: 90 },
+      { x: 700, y: 950, r: 130 },
+    ],
+    ship: { x: 250, y: 845 },
+    // Nopan lepopaikka: Marmaranmeri laudan alalaidassa keskellä.
+    dieSpot: { x: 0.5, y: 0.9 },
+    // Kaupunkilaudalla maastomerkit ovat puistojen puita.
+    terrainBands: [
+      { maxY: Infinity, kind: 'trees' },
+    ],
+  },
+};
+
 // ===== js/pack.js =====
 // Karttapakettien rekisteri. Jokainen paketti on yksi pelilauta: kartta,
 // kaupungit, reitit, laatat, kysymykset ja teema. Uusi lauta lisätään
 // tekemällä js/packs/-hakemistoon vastaava tiedosto ja listaamalla se tässä.
 
-const PACKS = [AFRICA, MIDDLE_EAST];
+const PACKS = [AFRICA, MIDDLE_EAST, ISTANBUL];
 
 function packById(id) {
   return PACKS.find((pack) => pack.id === id) ?? PACKS[0];
@@ -5233,6 +5998,7 @@ const HINT_PRICE = 40; // sanallinen vihje kysymykseen
 const QUIZ_SECONDS = 45; // vastausaika tiimalasin verran
 const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 const HARD_BONUS = 100; // palkkio vaikeasta kysymyksestä oikein vastattaessa
+const STAR_PRIZE = 2000; // tähden arvo vaellustilassa, jossa peli ei pääty
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 function questionLevel(question) {
@@ -5252,12 +6018,14 @@ function mulberry32(seed) {
 
 class Game {
   /**
-   * @param {{players: Array<{name, color, isBot, start}>, pack?: object, rng?: () => number}} opts
-   *   pack = karttapaketti (lauta, laatat, kysymykset); oletuksena Afrikka.
+   * @param {{players: Array<{name, color, isBot, start}>, pack?: object, roaming?: boolean, rng?: () => number}} opts
+   *   pack = aloituslauta; oletuksena Afrikka.
+   *   roaming = vaellustila: ei voittoehtoa, ja porttikaupungeista pääsee
+   *   toisille laudoille. Yksin pelattaessa vaellus on aina päällä.
    */
-  constructor({ players, pack = packById('africa'), seed = Math.floor(Math.random() * 2 ** 32), rng }) {
-    if (players.length < 2 || players.length > 4) {
-      throw new Error('Pelaajia pitää olla 2–4');
+  constructor({ players, pack = packById('africa'), roaming, seed = Math.floor(Math.random() * 2 ** 32), rng }) {
+    if (players.length < 1 || players.length > 4) {
+      throw new Error('Pelaajia pitää olla 1–4');
     }
     // Arvonnat tulevat siemenestä ja niiden määrä lasketaan, jotta tallennettu
     // peli voidaan palauttaa täsmälleen samaan tilanteeseen.
@@ -5268,10 +6036,12 @@ class Game {
       this.rngCalls++;
       return source();
     };
-    this.pack = pack;
-    this.tokenTypes = pack.tokens.types;
-    this.board = buildBoard(pack.cities, pack.edges);
-    this.airRoutes = pack.airRoutes;
+    this.roaming = roaming ?? players.length === 1;
+    this.rootPackId = pack.id;
+    // Jokainen lauta on oma maailmansa: laatat ja löydöt säilyvät, vaikka
+    // pelaaja käy välillä toisella laudalla.
+    this.worlds = new Map();
+    this.enterWorld(pack);
 
     this.players = players.map((p, i) => ({
       id: i,
@@ -5279,6 +6049,7 @@ class Game {
       color: p.color,
       isBot: !!p.isBot,
       start: p.start,
+      packId: pack.id,
       // 'easy' = helpot kysymykset (esim. lapsipelaajalle), 'normal' = tavalliset
       quizLevel: p.quizLevel === 'easy' ? 'easy' : 'normal',
       money: START_MONEY,
@@ -5287,14 +6058,6 @@ class Game {
       horseshoes: 0,
       finds: [], // löydetyt laatat tyyppeinä
     }));
-
-    const tokenCities = pack.cities.filter((c) => !c.start).map((c) => c.id);
-    const pile = createTokenPile(pack.tokens.counts, this.rng);
-    if (pile.length !== tokenCities.length) {
-      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${tokenCities.length}`);
-    }
-    this.tokens = new Map(tokenCities.map((city, i) => [city, pile[i]]));
-    this.revealed = new Map(); // kaupunki -> laattatyyppi
 
     this.current = 0;
     // 'action' = valitse matkustustapa, 'roll' = heitä noppa, 'move' = valitse
@@ -5308,20 +6071,84 @@ class Game {
     this.quiz = null;
     this.usedQuestions = new Set();
     this.lastPath = null;
-    this.starFound = false;
-    this.starCity = null;
     this.winner = null;
     this.turnCount = 1;
     this.log = [];
     this.events = []; // näytölle animoitavat tapahtumat
     this.say(null, pack.texts.intro);
+    if (this.roaming) {
+      this.say(null, 'Vaellus: peli ei pääty — kerää löytöjä ja jatka porttikaupungeista uusille laudoille.');
+    }
     this.beginTurn();
+  }
+
+  /** Luo laudan tilan, kun sille saavutaan ensimmäistä kertaa. */
+  enterWorld(pack) {
+    if (this.worlds.has(pack.id)) return this.worlds.get(pack.id);
+    const tokenCities = pack.cities.filter((c) => !c.start).map((c) => c.id);
+    const pile = createTokenPile(pack.tokens.counts, this.rng);
+    if (pile.length !== tokenCities.length) {
+      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${tokenCities.length}`);
+    }
+    const world = {
+      pack,
+      board: buildBoard(pack.cities, pack.edges),
+      tokens: new Map(tokenCities.map((city, i) => [city, pile[i]])),
+      revealed: new Map(), // kaupunki -> laattatyyppi
+      starFound: false,
+      starCity: null,
+    };
+    this.worlds.set(pack.id, world);
+    return world;
   }
 
   // --- apurit -------------------------------------------------------------
 
   get player() {
     return this.players[this.current];
+  }
+
+  /** Pelaajan lauta ja sen tila. */
+  worldOf(player = this.player) {
+    return this.worlds.get(player.packId);
+  }
+
+  // Vuorossa olevan pelaajan lauta: muu koodi (säännöt, piirto, botit) näkee
+  // pelin aina yhden laudan pelinä näiden läpi.
+  get world() {
+    return this.worldOf();
+  }
+
+  get pack() {
+    return this.world.pack;
+  }
+
+  get board() {
+    return this.world.board;
+  }
+
+  get tokens() {
+    return this.world.tokens;
+  }
+
+  get revealed() {
+    return this.world.revealed;
+  }
+
+  get tokenTypes() {
+    return this.pack.tokens.types;
+  }
+
+  get airRoutes() {
+    return this.pack.airRoutes;
+  }
+
+  get starFound() {
+    return this.world.starFound;
+  }
+
+  set starFound(value) {
+    this.world.starFound = value;
   }
 
   /** Lisää tapahtuman, jonka käyttöliittymä näyttää hetkeksi kartan päällä. */
@@ -5346,18 +6173,19 @@ class Game {
   }
 
   cityOf(player = this.player) {
-    return player.pos.type === 'city' ? this.board.cityById.get(player.pos.city) : null;
+    const board = this.worldOf(player).board;
+    return player.pos.type === 'city' ? board.cityById.get(player.pos.city) : null;
   }
 
   tokenHere(player = this.player) {
     const city = this.cityOf(player);
-    return city && this.tokens.has(city.id) ? city : null;
+    return city && this.worldOf(player).tokens.has(city.id) ? city : null;
   }
 
-  routeName(edgeIdValue) {
-    const e = this.board.edgeById.get(edgeIdValue);
-    const a = this.board.cityById.get(e.a).name;
-    const b = this.board.cityById.get(e.b).name;
+  routeName(edgeIdValue, board = this.board) {
+    const e = board.edgeById.get(edgeIdValue);
+    const a = board.cityById.get(e.a).name;
+    const b = board.cityById.get(e.b).name;
     return `${a}–${b}`;
   }
 
@@ -5397,7 +6225,46 @@ class Game {
       roll: this.phase === 'roll',
       quiz: this.phase === 'offer',
       fly: this.phase === 'action' ? this.airportDestinations() : [],
+      gateways: this.gatewayOptions(),
     };
+  }
+
+  /**
+   * Porttikaupungit: vaelluksessa laudalta toiselle siirrytään kaupungeista,
+   * joilla on linkki (esim. Kairo on sekä Afrikan että Lähi-idän laudalla).
+   */
+  gatewayOptions() {
+    if (!this.roaming || this.phase !== 'action') return [];
+    const city = this.cityOf();
+    if (!city || !city.links) return [];
+    return city.links.map((link, index) => ({ ...link, index }));
+  }
+
+  /** Siirtyy porttikaupungista toiselle laudalle. Vie koko vuoron. */
+  actionGateway(index) {
+    const link = this.gatewayOptions()[index];
+    if (!link) return { ok: false, error: 'Täältä ei ole siirtymää toiselle laudalle' };
+    const p = this.player;
+    const pack = packById(link.pack);
+    this.enterWorld(pack);
+    p.packId = pack.id;
+    p.pos = { type: 'city', city: link.city };
+    this.lastPath = null;
+    this.say(p.id, `${p.name} jatkoi matkaa: ${link.label}.`);
+    this.emit('flight', link.label, { icon: '🧭' });
+    this.endTurn();
+    return { ok: true };
+  }
+
+  /** Voittoruudusta voi jatkaa vaellusta: peli ei enää pääty. */
+  continueRoaming() {
+    if (this.phase !== 'over' || !this.winner) return { ok: false, error: 'Peli on kesken' };
+    this.roaming = true;
+    this.winner = null;
+    this.phase = 'action';
+    this.say(null, 'Retki jatkuu! Peli ei enää pääty — kerätkää löytöjä ja tutkikaa maailmaa porttikaupunkien kautta.');
+    this.endTurn();
+    return { ok: true };
   }
 
   // --- vuoron kulku -------------------------------------------------------
@@ -5762,14 +6629,20 @@ class Game {
     switch (type) {
       case 'star':
         p.hasStar = true;
-        this.starFound = true;
-        this.starCity = cityId;
-        this.say(p.id, this.pack.texts.starFound(p.name, city.name));
-        this.say(null, this.pack.texts.starChase);
-        this.emit('treasure', this.pack.texts.starToast, {
-          token: type,
-          sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
-        });
+        this.world.starFound = true;
+        this.world.starCity = cityId;
+        if (this.roaming) {
+          p.money += STAR_PRIZE;
+          this.say(p.id, `★ ${p.name} löysi aarteen ${token.name} kaupungista ${city.name} — arvo ${STAR_PRIZE} puntaa!`);
+          this.emit('treasure', this.pack.texts.starToast, { token: type, sub: `+${STAR_PRIZE} puntaa` });
+        } else {
+          this.say(p.id, this.pack.texts.starFound(p.name, city.name));
+          this.say(null, this.pack.texts.starChase);
+          this.emit('treasure', this.pack.texts.starToast, {
+            token: type,
+            sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
+          });
+        }
         break;
       case 'horseshoe':
         p.horseshoes++;
@@ -5803,6 +6676,7 @@ class Game {
 
   /** Voitto: tähden tai hevosenkengän kanssa aloituskaupunkiin sen jälkeen kun tähti on löytynyt. */
   checkWin() {
+    if (this.roaming) return false;
     if (this.winner) return true;
     if (!this.starFound) return false;
     const p = this.player;
@@ -5825,12 +6699,19 @@ class Game {
   toJSON() {
     return {
       version: 1,
-      packId: this.pack.id,
+      packId: this.rootPackId,
+      roaming: this.roaming,
       seed: this.seed,
       rngCalls: this.rngCalls,
       players: this.players.map((p) => ({ ...p })),
-      tokens: [...this.tokens.entries()],
-      revealed: [...this.revealed.entries()],
+      worlds: Object.fromEntries(
+        [...this.worlds].map(([id, w]) => [id, {
+          tokens: [...w.tokens.entries()],
+          revealed: [...w.revealed.entries()],
+          starFound: w.starFound,
+          starCity: w.starCity,
+        }]),
+      ),
       usedQuestions: [...this.usedQuestions],
       current: this.current,
       phase: this.phase,
@@ -5839,8 +6720,6 @@ class Game {
       pendingFare: this.pendingFare,
       die: this.die,
       quiz: this.quiz,
-      starFound: this.starFound,
-      starCity: this.starCity,
       winnerId: this.winner ? this.winner.id : null,
       turnCount: this.turnCount,
       log: this.log,
@@ -5863,15 +6742,32 @@ class Game {
       return source();
     };
 
-    // Vanhoissa tallennuksissa ei ole packId:tä — ne ovat Afrikka-pelejä.
-    const pack = packById(data.packId ?? 'africa');
-    game.pack = pack;
-    game.tokenTypes = pack.tokens.types;
-    game.board = buildBoard(pack.cities, pack.edges);
-    game.airRoutes = pack.airRoutes;
-    game.players = data.players.map((p) => ({ ...p }));
-    game.tokens = new Map(data.tokens);
-    game.revealed = new Map(data.revealed);
+    // Vanhoissa tallennuksissa ei ole packId:tä eikä maailmoja — ne ovat
+    // yhden laudan Afrikka-pelejä.
+    const rootPack = packById(data.packId ?? 'africa');
+    game.rootPackId = rootPack.id;
+    game.roaming = !!data.roaming;
+    game.worlds = new Map();
+    const worldsData = data.worlds ?? {
+      [rootPack.id]: {
+        tokens: data.tokens,
+        revealed: data.revealed,
+        starFound: !!data.starFound,
+        starCity: data.starCity ?? null,
+      },
+    };
+    for (const [id, w] of Object.entries(worldsData)) {
+      const pack = packById(id);
+      game.worlds.set(pack.id, {
+        pack,
+        board: buildBoard(pack.cities, pack.edges),
+        tokens: new Map(w.tokens ?? []),
+        revealed: new Map(w.revealed ?? []),
+        starFound: !!w.starFound,
+        starCity: w.starCity ?? null,
+      });
+    }
+    game.players = data.players.map((p) => ({ packId: rootPack.id, ...p }));
     game.usedQuestions = new Set(data.usedQuestions ?? []);
     game.current = data.current;
     game.phase = data.phase;
@@ -5881,8 +6777,6 @@ class Game {
     game.die = data.die ?? null;
     game.quiz = data.quiz ?? null;
     game.lastPath = null;
-    game.starFound = !!data.starFound;
-    game.starCity = data.starCity ?? null;
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;
     game.log = data.log ?? [];
@@ -5922,6 +6816,8 @@ class Game {
 const BOT_SKILL = 0.55;
 
 function racingHome(game, p) {
+  // Vaelluksessa ei kiirehditä kotiin, koska peli ei pääty.
+  if (game.roaming) return false;
   return p.hasStar || (game.starFound && p.horseshoes > 0);
 }
 
@@ -6145,17 +7041,112 @@ class UI {
     this.movingPlayerId = null;
     this.revealShownFor = null;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Kartan raahaus ja zoomaus.
+    this.zoom = 1;
+    this.viewCenter = null; // null = kartan keskipiste
+    this.viewBoxSize = { vw: 1000, vh: 1000 };
   }
 
   mount() {
-    this.svg.setAttribute('aria-label', this.game.pack.ariaLabel);
-    document.body.dataset.pack = this.game.pack.id;
-    this.drawBoard();
+    this.drawBoardFor(this.game.pack);
     this.boardDie = new BoardDie(this.mapPane);
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
+    this.setupMapGestures();
     this.render();
+  }
+
+  /** Piirtää annetun laudan; vaelluksessa lauta vaihtuu porttien kautta. */
+  drawBoardFor(pack) {
+    this.drawnPackId = pack.id;
+    this.svg.setAttribute('aria-label', pack.ariaLabel);
+    document.body.dataset.pack = pack.id;
+    this.zoom = 1;
+    this.viewCenter = null;
+    this.drawBoard();
+  }
+
+  // --- kartan raahaus ja zoomaus -------------------------------------------
+
+  /** Sormiraahaus, nipistyszoomaus ja hiiren rulla; kaksoisnapautus palauttaa. */
+  setupMapGestures() {
+    const svg = this.svg;
+    const pointers = new Map();
+    let pinchStart = null;
+    this.panned = false;
+
+    // Kartan yksiköt yhtä ruudun pikseliä kohden.
+    const unitsPerPixel = () => this.viewBoxSize.vw / (this.mapPane.clientWidth || 1);
+
+    svg.addEventListener('pointerdown', (event) => {
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (pointers.size === 1) this.panned = false;
+      if (pointers.size === 2) {
+        const [a, b] = [...pointers.values()];
+        pinchStart = { dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, zoom: this.zoom };
+      }
+      svg.setPointerCapture(event.pointerId);
+    });
+
+    svg.addEventListener('pointermove', (event) => {
+      const prev = pointers.get(event.pointerId);
+      if (!prev) return;
+      const cur = { x: event.clientX, y: event.clientY };
+      pointers.set(event.pointerId, cur);
+
+      if (pointers.size === 2 && pinchStart) {
+        const [a, b] = [...pointers.values()];
+        const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+        this.setZoom(pinchStart.zoom * (dist / pinchStart.dist));
+        this.panned = true;
+        return;
+      }
+
+      const dx = cur.x - prev.x;
+      const dy = cur.y - prev.y;
+      if (dx === 0 && dy === 0) return;
+      if (Math.hypot(dx, dy) > 2) this.panned = true;
+      const k = unitsPerPixel();
+      const c = this.viewCenter ?? (this.viewCenter = { x: 500, y: 500 });
+      c.x -= dx * k;
+      c.y -= dy * k;
+      this.fitViewBox();
+    });
+
+    const release = (event) => {
+      pointers.delete(event.pointerId);
+      if (pointers.size < 2) pinchStart = null;
+    };
+    svg.addEventListener('pointerup', release);
+    svg.addEventListener('pointercancel', release);
+
+    // Raahauksen päättävä klikkaus ei saa osua siirtokohteisiin.
+    svg.addEventListener('click', (event) => {
+      if (this.panned) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.panned = false;
+      }
+    }, true);
+
+    svg.addEventListener('wheel', (event) => {
+      event.preventDefault();
+      this.setZoom(this.zoom * Math.exp(-event.deltaY * 0.0015));
+    }, { passive: false });
+
+    svg.addEventListener('dblclick', () => {
+      this.zoom = 1;
+      this.viewCenter = null;
+      this.fitViewBox();
+    });
+  }
+
+  setZoom(zoom) {
+    this.zoom = Math.min(3, Math.max(1, zoom));
+    if (this.zoom === 1) this.viewCenter = null;
+    this.fitViewBox();
   }
 
   destroy() {
@@ -6174,8 +7165,15 @@ class UI {
     const h = pane.clientHeight;
     if (!w || !h) return;
     const size = 1000;
-    const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
-    this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
+    let [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
+    vw /= this.zoom;
+    vh /= this.zoom;
+    this.viewBoxSize = { vw, vh };
+    // Keskipiste pysyy pelialueella, jottei kartta karkaa raahatessa.
+    const c = this.viewCenter ?? { x: 500, y: 500 };
+    c.x = Math.min(1000, Math.max(0, c.x));
+    c.y = Math.min(1000, Math.max(0, c.y));
+    this.svg.setAttribute('viewBox', `${c.x - vw / 2} ${c.y - vh / 2} ${vw} ${vh}`);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
   }
@@ -6407,6 +7405,7 @@ class UI {
     const groups = new Map();
     for (const p of game.players) {
       if (p.id === this.movingPlayerId) continue; // liikkuva nappula piirretään erikseen
+      if (p.packId !== this.drawnPackId) continue; // toisella laudalla olevat eivät näy
       const key = posKey(p.pos);
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(p);
@@ -6467,9 +7466,9 @@ class UI {
       chip.appendChild(row);
 
       const city = game.cityOf(p);
-      chip.appendChild(
-        html('div', 'chip-row chip-where', city ? city.name : game.routeName(p.pos.edge)),
-      );
+      const where = city ? city.name : game.routeName(p.pos.edge, game.worldOf(p).board);
+      const elsewhere = p.packId !== this.drawnPackId ? ` · ${game.worldOf(p).pack.boardLabel}` : '';
+      chip.appendChild(html('div', 'chip-row chip-where', where + elsewhere));
       this.playersEl.appendChild(chip);
     }
   }
@@ -6579,6 +7578,16 @@ class UI {
       flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
+
+    // Vaelluksessa porttikaupungeista jatketaan toisille laudoille.
+    for (const link of game.gatewayOptions()) {
+      const gwBtn = html('button', '', `🧭 ${link.label}`);
+      gwBtn.addEventListener('click', () => {
+        sfx.play('flight');
+        this.doAction(() => game.actionGateway(link.index));
+      });
+      this.actionsEl.appendChild(gwBtn);
+    }
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
@@ -6634,6 +7643,8 @@ class UI {
 
   render() {
     this.onChange?.(this.game);
+    // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
+    if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
     this.drawTokens();
     this.drawTargets();
     this.drawPawns();
@@ -6658,6 +7669,11 @@ class UI {
     document.getElementById('winner-text').textContent = w.hasStar
       ? this.game.pack.texts.winnerStar(w.name, w.money)
       : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`;
+    const roamBtn = document.getElementById('winner-roam');
+    roamBtn.onclick = () => {
+      this.winnerDialog.close();
+      this.doAction(() => this.game.continueRoaming());
+    };
     if (!this.winnerDialog.open) this.winnerDialog.showModal();
   }
 
@@ -7139,7 +8155,7 @@ class UI {
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.5';
+const APP_VERSION = '2026-07-26.6';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -7205,6 +8221,7 @@ function updateBoardChoice() {
 function buildPlayerRows() {
   const count = Number(countSelect.value);
   const startCities = selectedPack().cities.filter((c) => c.start);
+  document.getElementById('roam-note').hidden = count !== 1;
   playerSetup.textContent = '';
   for (let i = 0; i < count; i++) {
     const row = document.createElement('div');

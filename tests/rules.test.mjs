@@ -6,8 +6,8 @@ import { buildBoard, findMoves, posKey, cityDistances, pointAlong } from '../js/
 import { isOnLand } from '../js/mapart.js';
 import { tokenPileTemplate } from '../js/tokens.js';
 import {
-  Game, mulberry32, questionLevel, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE,
-  HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
+  Game, mulberry32, questionLevel, START_MONEY, STAR_PRIZE, STRANDED_AID,
+  FIFTY_FIFTY_PRICE, HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from '../js/game.js';
 import {
   chooseMove, chooseQuizAnswer, chooseTravel, wantsFiftyFifty, wantsHint,
@@ -145,6 +145,20 @@ for (const pack of PACKS) {
     }
     for (const city of startCities) {
       assert.ok(city.airport, `aloituskaupungissa ${city.id} ei ole lentokenttää`);
+    }
+  });
+
+  test(`${pack.id}: porttikaupunkien linkit osoittavat oikeisiin paikkoihin`, () => {
+    for (const city of pack.cities) {
+      for (const link of city.links ?? []) {
+        const target = PACKS.find((p) => p.id === link.pack);
+        assert.ok(target, `${city.id}: tuntematon lauta ${link.pack}`);
+        assert.ok(
+          target.cities.some((c) => c.id === link.city),
+          `${city.id}: linkin kohdetta ${link.city} ei ole laudalla ${link.pack}`,
+        );
+        assert.ok(link.label, `${city.id}: linkiltä puuttuu nimi`);
+      }
     }
   });
 
@@ -453,6 +467,114 @@ test('tasovalinta laskeutuu pehmeästi, jos tason kysymyksiä ei ole', () => {
   assert.equal(game.actionQuiz({ hard: true }).ok, false);
 });
 
+test('vaellus: yksin pelattaessa peli ei pääty ja tähti on arvokas löytö', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
+    rng: mulberry32(41),
+  });
+  assert.ok(game.roaming, 'yksinpeli on vaellus');
+
+  const p = game.player;
+  p.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'star');
+  const rahaEnnen = p.money;
+  game.revealToken('timbuktu');
+  assert.ok(p.hasStar);
+  assert.equal(p.money, rahaEnnen + STAR_PRIZE, 'tähti on rahanarvoinen löytö');
+
+  // Kotiin palaaminen ei päätä peliä.
+  p.pos = { type: 'city', city: 'tanger' };
+  assert.equal(game.checkWin(), false);
+  assert.equal(game.winner, null);
+});
+
+test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
+    rng: mulberry32(43),
+  });
+  const p = game.player;
+
+  // Tangerissa ei ole porttia.
+  assert.deepEqual(game.gatewayOptions(), []);
+
+  // Kairosta pääsee Lähi-idän laudalle.
+  p.pos = { type: 'city', city: 'kairo' };
+  game.phase = 'action';
+  const options = game.gatewayOptions();
+  assert.equal(options.length, 1);
+  assert.equal(options[0].pack, 'middleeast');
+
+  const afrikanLaatat = game.tokens.size;
+  assert.ok(game.actionGateway(0).ok);
+  assert.equal(p.packId, 'middleeast');
+  assert.equal(p.pos.city, 'kairo');
+  assert.equal(game.pack.id, 'middleeast', 'aktiivinen lauta seuraa pelaajaa');
+  assert.ok(game.tokens.size > 0, 'uudella laudalla on omat laatat');
+
+  // Lähi-idän Istanbulista laskeudutaan kaupunkilaudalle.
+  game.phase = 'action';
+  p.pos = { type: 'city', city: 'istanbul' };
+  const cityLink = game.gatewayOptions().find((l) => l.pack === 'istanbul');
+  assert.ok(cityLink, 'Istanbulista pääsee kaupunkilaudalle');
+  game.actionGateway(cityLink.index);
+  assert.equal(p.packId, 'istanbul');
+  assert.equal(p.pos.city, 'lentoasema');
+
+  // Ja samaa reittiä takaisin; Afrikan laudan tila on tallessa.
+  game.phase = 'action';
+  game.actionGateway(0);
+  assert.equal(p.packId, 'middleeast');
+  game.phase = 'action';
+  p.pos = { type: 'city', city: 'kairo' };
+  game.actionGateway(0);
+  assert.equal(p.packId, 'africa');
+  assert.equal(game.tokens.size, afrikanLaatat, 'Afrikan laatat säilyivät');
+});
+
+test('vaellus: monen laudan peli tallentuu ja palautuu', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'kairo' }],
+    seed: 777,
+  });
+  game.phase = 'action';
+  game.actionGateway(0); // Lähi-itään
+  const data = JSON.parse(JSON.stringify(game.toJSON()));
+  const restored = Game.fromJSON(data);
+
+  assert.ok(restored);
+  assert.ok(restored.roaming);
+  assert.equal(restored.player.packId, 'middleeast');
+  assert.equal(restored.worlds.size, game.worlds.size);
+  assert.equal(restored.tokens.size, game.tokens.size);
+  assert.equal(restored.rng(), game.rng(), 'arvonnat jatkuvat samasta kohdasta');
+});
+
+test('kilpapelin voittaja voi jatkaa vaellusta', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    rng: mulberry32(47),
+  });
+  game.player.hasStar = true;
+  game.starFound = true;
+  game.player.pos = { type: 'city', city: 'tanger' };
+  assert.ok(game.checkWin());
+  assert.equal(game.phase, 'over');
+
+  assert.ok(game.continueRoaming().ok);
+  assert.ok(game.roaming);
+  assert.equal(game.winner, null);
+  assert.notEqual(game.phase, 'over');
+
+  // Portit aukeavat myös jatketussa pelissä.
+  game.current = 1;
+  game.phase = 'action';
+  assert.equal(game.gatewayOptions().length, 1, 'Kairossa oleva pääsee portista');
+});
+
 test('sama kysymys ei toistu ennen kuin pakka on käyty läpi', () => {
   const game = new Game({
     players: [
@@ -520,8 +642,9 @@ test('aarretta ei voi ostaa rahalla', () => {
   });
   assert.equal(typeof game.actionBuy, 'undefined');
   const actions = game.availableActions();
-  assert.deepEqual(Object.keys(actions).sort(), ['fly', 'quiz', 'roll', 'travel']);
+  assert.deepEqual(Object.keys(actions).sort(), ['fly', 'gateways', 'quiz', 'roll', 'travel']);
   assert.ok(actions.travel.includes('land'));
+  assert.deepEqual(actions.gateways, [], 'kilpapelissä portit eivät ole käytössä');
 });
 
 test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 80', () => {

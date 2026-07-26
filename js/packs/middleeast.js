@@ -49,8 +49,16 @@ const ME_MAP = {
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const ME_CITIES = [
-  { id: 'istanbul', name: 'Istanbul', x: 125, y: 88, start: true, airport: true },
-  { id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true },
+  {
+    id: 'istanbul', name: 'Istanbul', x: 125, y: 88, start: true, airport: true,
+    // Vaelluksessa Istanbulista voi laskeutua kaupunkitason laudalle.
+    links: [{ pack: 'istanbul', city: 'lentoasema', label: 'Istanbulin kaupunkilauta' }],
+  },
+  {
+    id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true,
+    // Sama kaupunki on myös Afrikan laudalla.
+    links: [{ pack: 'africa', city: 'kairo', label: 'Afrikan lauta' }],
+  },
 
   { id: 'izmir', name: 'Izmir', x: 78, y: 164, la: 'start', lx: 16, ly: 5 },
   { id: 'ankara', name: 'Ankara', x: 221, y: 120 },

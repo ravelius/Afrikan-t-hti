@@ -7,7 +7,7 @@ import { PACKS, packById } from './pack.js';
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.5';
+const APP_VERSION = '2026-07-26.6';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -73,6 +73,7 @@ function updateBoardChoice() {
 function buildPlayerRows() {
   const count = Number(countSelect.value);
   const startCities = selectedPack().cities.filter((c) => c.start);
+  document.getElementById('roam-note').hidden = count !== 1;
   playerSetup.textContent = '';
   for (let i = 0; i < count; i++) {
     const row = document.createElement('div');

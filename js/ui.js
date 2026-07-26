@@ -116,17 +116,112 @@ export class UI {
     this.movingPlayerId = null;
     this.revealShownFor = null;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Kartan raahaus ja zoomaus.
+    this.zoom = 1;
+    this.viewCenter = null; // null = kartan keskipiste
+    this.viewBoxSize = { vw: 1000, vh: 1000 };
   }
 
   mount() {
-    this.svg.setAttribute('aria-label', this.game.pack.ariaLabel);
-    document.body.dataset.pack = this.game.pack.id;
-    this.drawBoard();
+    this.drawBoardFor(this.game.pack);
     this.boardDie = new BoardDie(this.mapPane);
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
+    this.setupMapGestures();
     this.render();
+  }
+
+  /** Piirtää annetun laudan; vaelluksessa lauta vaihtuu porttien kautta. */
+  drawBoardFor(pack) {
+    this.drawnPackId = pack.id;
+    this.svg.setAttribute('aria-label', pack.ariaLabel);
+    document.body.dataset.pack = pack.id;
+    this.zoom = 1;
+    this.viewCenter = null;
+    this.drawBoard();
+  }
+
+  // --- kartan raahaus ja zoomaus -------------------------------------------
+
+  /** Sormiraahaus, nipistyszoomaus ja hiiren rulla; kaksoisnapautus palauttaa. */
+  setupMapGestures() {
+    const svg = this.svg;
+    const pointers = new Map();
+    let pinchStart = null;
+    this.panned = false;
+
+    // Kartan yksiköt yhtä ruudun pikseliä kohden.
+    const unitsPerPixel = () => this.viewBoxSize.vw / (this.mapPane.clientWidth || 1);
+
+    svg.addEventListener('pointerdown', (event) => {
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (pointers.size === 1) this.panned = false;
+      if (pointers.size === 2) {
+        const [a, b] = [...pointers.values()];
+        pinchStart = { dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, zoom: this.zoom };
+      }
+      svg.setPointerCapture(event.pointerId);
+    });
+
+    svg.addEventListener('pointermove', (event) => {
+      const prev = pointers.get(event.pointerId);
+      if (!prev) return;
+      const cur = { x: event.clientX, y: event.clientY };
+      pointers.set(event.pointerId, cur);
+
+      if (pointers.size === 2 && pinchStart) {
+        const [a, b] = [...pointers.values()];
+        const dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+        this.setZoom(pinchStart.zoom * (dist / pinchStart.dist));
+        this.panned = true;
+        return;
+      }
+
+      const dx = cur.x - prev.x;
+      const dy = cur.y - prev.y;
+      if (dx === 0 && dy === 0) return;
+      if (Math.hypot(dx, dy) > 2) this.panned = true;
+      const k = unitsPerPixel();
+      const c = this.viewCenter ?? (this.viewCenter = { x: 500, y: 500 });
+      c.x -= dx * k;
+      c.y -= dy * k;
+      this.fitViewBox();
+    });
+
+    const release = (event) => {
+      pointers.delete(event.pointerId);
+      if (pointers.size < 2) pinchStart = null;
+    };
+    svg.addEventListener('pointerup', release);
+    svg.addEventListener('pointercancel', release);
+
+    // Raahauksen päättävä klikkaus ei saa osua siirtokohteisiin.
+    svg.addEventListener('click', (event) => {
+      if (this.panned) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.panned = false;
+      }
+    }, true);
+
+    svg.addEventListener('wheel', (event) => {
+      event.preventDefault();
+      this.setZoom(this.zoom * Math.exp(-event.deltaY * 0.0015));
+    }, { passive: false });
+
+    svg.addEventListener('dblclick', () => {
+      this.zoom = 1;
+      this.viewCenter = null;
+      this.fitViewBox();
+    });
+  }
+
+  setZoom(zoom) {
+    this.zoom = Math.min(3, Math.max(1, zoom));
+    if (this.zoom === 1) this.viewCenter = null;
+    this.fitViewBox();
   }
 
   destroy() {
@@ -145,8 +240,15 @@ export class UI {
     const h = pane.clientHeight;
     if (!w || !h) return;
     const size = 1000;
-    const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
-    this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
+    let [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
+    vw /= this.zoom;
+    vh /= this.zoom;
+    this.viewBoxSize = { vw, vh };
+    // Keskipiste pysyy pelialueella, jottei kartta karkaa raahatessa.
+    const c = this.viewCenter ?? { x: 500, y: 500 };
+    c.x = Math.min(1000, Math.max(0, c.x));
+    c.y = Math.min(1000, Math.max(0, c.y));
+    this.svg.setAttribute('viewBox', `${c.x - vw / 2} ${c.y - vh / 2} ${vw} ${vh}`);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
   }
@@ -378,6 +480,7 @@ export class UI {
     const groups = new Map();
     for (const p of game.players) {
       if (p.id === this.movingPlayerId) continue; // liikkuva nappula piirretään erikseen
+      if (p.packId !== this.drawnPackId) continue; // toisella laudalla olevat eivät näy
       const key = posKey(p.pos);
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(p);
@@ -438,9 +541,9 @@ export class UI {
       chip.appendChild(row);
 
       const city = game.cityOf(p);
-      chip.appendChild(
-        html('div', 'chip-row chip-where', city ? city.name : game.routeName(p.pos.edge)),
-      );
+      const where = city ? city.name : game.routeName(p.pos.edge, game.worldOf(p).board);
+      const elsewhere = p.packId !== this.drawnPackId ? ` · ${game.worldOf(p).pack.boardLabel}` : '';
+      chip.appendChild(html('div', 'chip-row chip-where', where + elsewhere));
       this.playersEl.appendChild(chip);
     }
   }
@@ -550,6 +653,16 @@ export class UI {
       flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
+
+    // Vaelluksessa porttikaupungeista jatketaan toisille laudoille.
+    for (const link of game.gatewayOptions()) {
+      const gwBtn = html('button', '', `🧭 ${link.label}`);
+      gwBtn.addEventListener('click', () => {
+        sfx.play('flight');
+        this.doAction(() => game.actionGateway(link.index));
+      });
+      this.actionsEl.appendChild(gwBtn);
+    }
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
@@ -605,6 +718,8 @@ export class UI {
 
   render() {
     this.onChange?.(this.game);
+    // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
+    if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
     this.drawTokens();
     this.drawTargets();
     this.drawPawns();
@@ -629,6 +744,11 @@ export class UI {
     document.getElementById('winner-text').textContent = w.hasStar
       ? this.game.pack.texts.winnerStar(w.name, w.money)
       : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`;
+    const roamBtn = document.getElementById('winner-roam');
+    roamBtn.onclick = () => {
+      this.winnerDialog.close();
+      this.doAction(() => this.game.continueRoaming());
+    };
     if (!this.winnerDialog.open) this.winnerDialog.showModal();
   }
 

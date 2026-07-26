@@ -6,9 +6,14 @@ yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käänn�
 JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
 maantieteestä kiinnostavasti.
 
-- **Kaksi pelilautaa:** Afrikka (Afrikan tähti) ja Lähi-itä (Idän tähti) —
-  uuden pelin alussa valitaan, kummalla pelataan
-- 2–4 pelaajaa samalla koneella, kukin joko ihminen tai botti
+- **Kolme pelilautaa:** Afrikka (Afrikan tähti), Lähi-itä (Idän tähti) ja
+  ensimmäisenä kaupunkilautana Istanbul (Sulttaanin timantti)
+- **Vaellustila:** yksin pelattaessa peli ei pääty — kerää löytöjä ja siirry
+  porttikaupungeista laudalta toiselle, myös kaupunkitasolle. Kilpapelin
+  voittaja voi jatkaa vaeltamista voittoruudusta
+- **Raahattava kartta:** raahaa sormella tai hiirellä, lähennä nipistämällä
+  tai rullalla; kaksoisnapautus palauttaa koko laudan
+- 1–4 pelaajaa samalla koneella, kukin joko ihminen tai botti
 - Aarteet avataan **vain tietovisalla**: arvottu monivalintakysymys (A–D) paikan
   maantiedosta, kulttuurista ja yleistiedosta; 40 punnan vihje ja 80 punnan 50:50
   auttavat pinteessä, ja tiimalasi antaa vastausaikaa 45 sekuntia

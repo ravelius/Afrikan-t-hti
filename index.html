@@ -77,11 +77,14 @@
       <label class="row">
         Pelaajia
         <select id="player-count">
+          <option value="1">1 (vaellus)</option>
           <option value="2" selected>2</option>
           <option value="3">3</option>
           <option value="4">4</option>
         </select>
       </label>
+      <p id="roam-note" class="setup-tagline" hidden>Vaelluksessa peli ei pääty:
+        kerää löytöjä, ja porttikaupungeista pääset jatkamaan toisille laudoille.</p>
       <div id="player-setup" class="player-setup"></div>
       <menu>
         <button value="start" class="primary">Aloita peli</button>
@@ -98,8 +101,15 @@
         Idän tähti — ja palaa sen kanssa johonkin aloituskaupungeista. Kun tähti on
         löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupunkiin
         ensimmäisenä.</p>
-      <p><b>Pelilauta.</b> Uuden pelin alussa valitaan lauta: Afrikka tai Lähi-itä.
-        Kummallakin laudalla on omat kaupunkinsa, reittinsä ja kysymyksensä.</p>
+      <p><b>Pelilauta.</b> Uuden pelin alussa valitaan lauta: Afrikka, Lähi-itä tai
+        Istanbulin kaupunkilauta. Jokaisella laudalla on omat paikkansa, reittinsä,
+        tähtiaarteensa ja kysymyksensä.</p>
+      <p><b>Vaellus.</b> Yksin pelattaessa peli ei pääty: tähti on arvokas löytö
+        (2000 p), ja porttikaupungeista (esim. Kairo tai Istanbul) pääsee jatkamaan
+        toiselle laudalle — myös kaupunkitasolle. Kilpapelin voittaja voi voittoruudusta
+        valita <i>Jatka vaeltamista</i>, jolloin sama peli jatkuu ilman voittoehtoa.</p>
+      <p><b>Kartta.</b> Karttaa voi raahata sormella tai hiirellä ja lähentää
+        nipistämällä tai rullalla. Kaksoisnapautus palauttaa koko laudan näkyviin.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
         lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä. Jos
         vaihtoehtoja ei ole — esimerkiksi sisämaassa tai kesken reittiä — vuoro alkaa
@@ -195,6 +205,7 @@
     <h2 id="winner-title">Voitto!</h2>
     <p id="winner-text"></p>
     <menu>
+      <button id="winner-roam" type="button">🧭 Jatka vaeltamista</button>
       <button id="winner-close" class="primary" type="button">Uusi peli</button>
     </menu>
    </div>

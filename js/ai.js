@@ -12,6 +12,8 @@ import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HINT_PRICE } from './game.js';
 export const BOT_SKILL = 0.55;
 
 function racingHome(game, p) {
+  // Vaelluksessa ei kiirehditä kotiin, koska peli ei pääty.
+  if (game.roaming) return false;
   return p.hasStar || (game.starFound && p.horseshoes > 0);
 }
 

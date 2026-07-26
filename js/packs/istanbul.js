@@ -1,0 +1,172 @@
+// Istanbul-lauta: ensimmäinen kaupunkitason lauta.
+//
+// Koordinaatisto on 1000 x 1000 yksikköä, vapaasti aseteltu kaupunkikartta:
+// Bosporinsalmi halkoo laudan pystysuunnassa (Mustameri ylhäällä, Marmaranmeri
+// alhaalla), Kultainen sarvi työntyy Euroopan puolelle ja Prinssisaaret ovat
+// Marmaranmeressä. "Kaupungit" ovat kaupunginosia ja nähtävyyksiä, laivareitit
+// ovat Bosporin lauttoja ja lentokentät toimivat aloituspaikkoina.
+//
+// Laudalle saavutaan vaelluksessa Lähi-idän laudan Istanbulista, ja
+// Lentoasemalta pääsee samaa reittiä takaisin.
+
+import { ISTANBUL_QUESTIONS, ISTANBUL_FACTS } from './istanbul-questions.js';
+import { themedTokenTypes } from '../tokens.js';
+
+const IST_MAP = {
+  width: 1000,
+  height: 1000,
+  // Euroopan puoli: Bosporin länsiranta, Kultainen sarvi ja Marmaran rannikko.
+  europePoints: [
+    [0, 0], [430, 0],
+    [450, 80], [420, 160], [445, 240], [415, 320], [430, 400], [455, 470],
+    [380, 470], [300, 430], [230, 400],
+    [240, 430], [310, 465], [390, 510], [440, 555],
+    [450, 600], [435, 660],
+    [380, 700], [280, 730], [160, 750], [0, 770],
+  ],
+  // Aasian puoli: Bosporin itäranta ja Marmaran rannikko.
+  asiaPoints: [
+    [570, 0], [1000, 0], [1000, 780],
+    [880, 770], [760, 750], [650, 725], [585, 702], [560, 680],
+    [560, 640], [555, 570], [580, 490], [565, 410], [590, 330],
+    [560, 250], [585, 170], [555, 90],
+  ],
+  prinssisaaretPoints: [
+    [760, 880], [800, 868], [845, 888], [825, 918], [772, 912],
+  ],
+  neitsyttorniPoints: [
+    [512, 638], [528, 636], [532, 650], [516, 653],
+  ],
+};
+
+// start = aloituspaikka (ei laattaa), airport = lentokenttä.
+const IST_CITIES = [
+  {
+    id: 'lentoasema', name: 'Lentoasema', x: 80, y: 120, start: true, airport: true,
+    la: 'start', lx: 16, ly: 5,
+    // Takaisin Lähi-idän laudalle.
+    links: [{ pack: 'middleeast', city: 'istanbul', label: 'Lähi-idän lauta' }],
+  },
+  {
+    id: 'sabihagokcen', name: 'Sabiha Gökçen', x: 880, y: 620, start: true, airport: true,
+    la: 'middle', lx: 0, ly: -26,
+  },
+
+  // Euroopan puoli
+  { id: 'rumelinlinnoitus', name: 'Rumelin linnoitus', x: 400, y: 155, la: 'end', lx: -16, ly: 5 },
+  { id: 'dolmabahce', name: 'Dolmabahçe', x: 395, y: 285, la: 'end', lx: -16, ly: 5 },
+  { id: 'taksim', name: 'Taksim', x: 390, y: 380, la: 'end', lx: -16, ly: 5 },
+  { id: 'galata', name: 'Galata-torni', x: 410, y: 450, la: 'start', lx: 14, ly: -10 },
+  { id: 'pierreloti', name: 'Pierre Loti', x: 275, y: 405, la: 'end', lx: -16, ly: 5 },
+  { id: 'balat', name: 'Balat', x: 290, y: 480, la: 'end', lx: -16, ly: 5 },
+  { id: 'maustebasaari', name: 'Maustebasaari', x: 360, y: 525, la: 'start', lx: 16, ly: 5 },
+  { id: 'suuribasaari', name: 'Suuri basaari', x: 300, y: 585, la: 'end', lx: -16, ly: 5 },
+  { id: 'topkapi', name: 'Topkapın palatsi', x: 425, y: 565, la: 'start', lx: 16, ly: -8 },
+  { id: 'hagiasofia', name: 'Hagia Sofia', x: 390, y: 615, la: 'start', lx: 16, ly: 8 },
+  { id: 'sinimoskeija', name: 'Sininen moskeija', x: 330, y: 660, la: 'middle', lx: 0, ly: 26 },
+
+  // Aasian puoli ja saaret
+  { id: 'uskudar', name: 'Üsküdar', x: 605, y: 545, la: 'start', lx: 16, ly: 5 },
+  { id: 'neitsyttorni', name: 'Neitsyttorni', x: 520, y: 645, la: 'middle', lx: 0, ly: 24 },
+  { id: 'kadikoy', name: 'Kadıköy', x: 620, y: 690, la: 'start', lx: 16, ly: 5 },
+  { id: 'prinssisaaret', name: 'Prinssisaaret', x: 800, y: 895, la: 'middle', lx: 0, ly: -24 },
+];
+
+// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
+// type 'sea' = lauttareitti; kaupunkilaudalla laivamaksu on lautan lippu.
+const IST_EDGES = [
+  // Euroopan puoli; sillat ylittävät Kultaisen sarven.
+  { a: 'lentoasema', b: 'pierreloti', steps: 3 },
+  { a: 'lentoasema', b: 'rumelinlinnoitus', steps: 4 },
+  { a: 'lentoasema', b: 'taksim', steps: 4 },
+  { a: 'rumelinlinnoitus', b: 'dolmabahce', steps: 2 },
+  { a: 'dolmabahce', b: 'taksim', steps: 1 },
+  { a: 'taksim', b: 'galata', steps: 1 },
+  { a: 'taksim', b: 'pierreloti', steps: 3 },
+  { a: 'galata', b: 'maustebasaari', steps: 1 }, // Galatan silta
+  { a: 'pierreloti', b: 'balat', steps: 1 },
+  { a: 'balat', b: 'suuribasaari', steps: 2 },
+  { a: 'suuribasaari', b: 'sinimoskeija', steps: 1 },
+  { a: 'suuribasaari', b: 'maustebasaari', steps: 1 },
+  { a: 'maustebasaari', b: 'hagiasofia', steps: 1 },
+  { a: 'sinimoskeija', b: 'hagiasofia', steps: 1 },
+  { a: 'hagiasofia', b: 'topkapi', steps: 1 },
+
+  // Aasian puoli
+  { a: 'uskudar', b: 'kadikoy', steps: 2 },
+  { a: 'uskudar', b: 'sabihagokcen', steps: 4 },
+  { a: 'kadikoy', b: 'sabihagokcen', steps: 3 },
+
+  // Lautat
+  { a: 'maustebasaari', b: 'uskudar', steps: 2, type: 'sea', via: [[470, 520], [540, 530]] },
+  { a: 'maustebasaari', b: 'kadikoy', steps: 2, type: 'sea', via: [[450, 505], [495, 575], [540, 650], [558, 700], [592, 706]] },
+  { a: 'maustebasaari', b: 'neitsyttorni', steps: 2, type: 'sea', via: [[452, 510], [470, 590]] },
+  { a: 'galata', b: 'kadikoy', steps: 2, type: 'sea', via: [[460, 500], [510, 600], [545, 650], [558, 700], [592, 706]] },
+  { a: 'dolmabahce', b: 'uskudar', steps: 2, type: 'sea', via: [[480, 400], [540, 480]] },
+  { a: 'uskudar', b: 'neitsyttorni', steps: 1, type: 'sea', via: [[550, 550], [535, 600]] },
+  { a: 'kadikoy', b: 'prinssisaaret', steps: 3, type: 'sea', via: [[690, 800]] },
+];
+
+// Kaupunkilaudan "lento" on taksimatka lentoasemalta toiselle.
+const IST_AIR_ROUTES = [
+  { a: 'lentoasema', b: 'sabihagokcen' },
+];
+
+export const ISTANBUL = {
+  id: 'istanbul',
+  name: 'Sulttaanin timantti',
+  boardLabel: 'Istanbul (kaupunki)',
+  tagline: 'Sukella suurkaupunkiin: basaarit, palatsit ja Bosporin lautat.',
+  ariaLabel: 'Istanbulin aarrekartta',
+
+  map: {
+    ...IST_MAP,
+    outlines: [
+      IST_MAP.europePoints, IST_MAP.asiaPoints,
+      IST_MAP.prinssisaaretPoints, IST_MAP.neitsyttorniPoints,
+    ],
+  },
+  cities: IST_CITIES,
+  edges: IST_EDGES,
+  airRoutes: IST_AIR_ROUTES,
+  islands: ['neitsyttorni', 'prinssisaaret'], // vain lautalla
+  minCityDistance: 55,
+
+  tokens: {
+    // Tähtiaarre on Topkapın kuuluisan timantin henkinen sukulainen.
+    types: themedTokenTypes({
+      star: { name: 'Sulttaanin timantti' },
+      topaz: { name: 'Turkoosi', color: '#3aaea6' },
+    }),
+    counts: { star: 1, horseshoe: 2, robber: 2, ruby: 2, emerald: 3, topaz: 3, empty: 2 },
+  },
+
+  questions: ISTANBUL_QUESTIONS,
+  placeFacts: ISTANBUL_FACTS,
+
+  texts: {
+    intro: 'Peli alkaa! Etsikää Sulttaanin timantti ja palatkaa lentoasemalle.',
+    starFound: (name, city) => `★ ${name} löysi SULTTAANIN TIMANTIN: ${city}!`,
+    starToast: 'SULTTAANIN TIMANTTI!',
+    starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
+    winStar: 'toi Sulttaanin timantin turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Sulttaanin timantin kotiin ${money} punnan kanssa.`,
+  },
+
+  decor: {
+    mapLabel: 'ISTANBUL',
+    mapLabelPos: { x: 700, y: 950 },
+    compass: { x: 140, y: 880, r: 58 },
+    waveSkip: [
+      { x: 250, y: 855, r: 90 },
+      { x: 700, y: 950, r: 130 },
+    ],
+    ship: { x: 250, y: 845 },
+    // Nopan lepopaikka: Marmaranmeri laudan alalaidassa keskellä.
+    dieSpot: { x: 0.5, y: 0.9 },
+    // Kaupunkilaudalla maastomerkit ovat puistojen puita.
+    terrainBands: [
+      { maxY: Infinity, kind: 'trees' },
+    ],
+  },
+};
