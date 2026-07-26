@@ -67,6 +67,8 @@ const SA_CITIES = [
   {
     id: 'panama', name: 'Panama', x: 244, y: 74, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
+    // Sama kaupunki on myös Pohjois-Amerikan laudalla: kannas yhdistää mantereet.
+    links: [{ pack: 'northamerica', city: 'panama', label: 'Pohjois-Amerikan lauta' }],
   },
   {
     id: 'buenosaires', name: 'Buenos Aires', x: 528, y: 694, start: true, airport: true,

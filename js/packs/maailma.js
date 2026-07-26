@@ -76,7 +76,11 @@ const WORLD_MAP = {
 const WORLD_CITIES = [
   { id: 'lontoo', name: 'Lontoo', x: 500, y: 384.3, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'europe', city: 'lontoo', label: 'Euroopan lauta' }] },
-  { id: 'newyork', name: 'New York', x: 287, y: 415.1, start: true, airport: true, la: 'end', lx: -16, ly: 5 },
+  {
+    id: 'newyork', name: 'New York', x: 287, y: 415.1, start: true, airport: true,
+    la: 'end', lx: -16, ly: 5,
+    links: [{ pack: 'northamerica', city: 'newyork', label: 'Pohjois-Amerikan lauta' }],
+  },
 
   {
     id: 'kairo', name: 'Kairo', x: 585, y: 446.9, airport: true, la: 'start', lx: 16, ly: 5,

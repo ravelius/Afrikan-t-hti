@@ -8,8 +8,9 @@ import { MIDDLE_EAST } from './packs/middleeast.js';
 import { EUROPE } from './packs/europe.js';
 import { ISTANBUL } from './packs/istanbul.js';
 import { SOUTHAMERICA } from './packs/southamerica.js';
+import { NORTHAMERICA } from './packs/northamerica.js';
 
-export const PACKS = [MAAILMA, AFRICA, EUROPE, SOUTHAMERICA, MIDDLE_EAST, ISTANBUL];
+export const PACKS = [MAAILMA, AFRICA, EUROPE, NORTHAMERICA, SOUTHAMERICA, MIDDLE_EAST, ISTANBUL];
 
 export function packById(id) {
   return PACKS.find((pack) => pack.id === id) ?? PACKS[0];
