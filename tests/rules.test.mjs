@@ -619,7 +619,7 @@ test('vaellus: maailmankartalta voi lentää toiselle laudalle', () => {
   // Tanger on lentokenttä: maailmankartta listaa muut laudat.
   game.phase = 'action';
   const dests = game.worldDestinations();
-  assert.equal(dests.length, 3, 'kolme muuta lautaa');
+  assert.equal(dests.length, PACKS.length - 1, 'kaikki muut laudat paitsi oma');
 
   p.money = 300;
   assert.ok(game.actionWorldFlight('istanbul').ok);

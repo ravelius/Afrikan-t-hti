@@ -52,7 +52,10 @@ const ME_CITIES = [
   {
     id: 'istanbul', name: 'Istanbul', x: 125, y: 88, start: true, airport: true,
     // Vaelluksessa Istanbulista voi laskeutua kaupunkitason laudalle.
-    links: [{ pack: 'istanbul', city: 'lentoasema', label: 'Istanbulin kaupunkilauta' }],
+    links: [
+      { pack: 'istanbul', city: 'lentoasema', label: 'Istanbulin kaupunkilauta' },
+      { pack: 'europe', city: 'istanbul', label: 'Euroopan lauta' },
+    ],
   },
   {
     id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true,

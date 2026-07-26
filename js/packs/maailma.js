@@ -71,7 +71,8 @@ const WORLD_MAP = {
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const WORLD_CITIES = [
-  { id: 'lontoo', name: 'Lontoo', x: 500, y: 204, start: true, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'lontoo', name: 'Lontoo', x: 500, y: 204, start: true, airport: true, la: 'end', lx: -16, ly: 5,
+    links: [{ pack: 'europe', city: 'lontoo', label: 'Euroopan lauta' }] },
   { id: 'newyork', name: 'New York', x: 287, y: 283, start: true, airport: true, la: 'end', lx: -16, ly: 5 },
 
   {

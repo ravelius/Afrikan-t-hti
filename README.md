@@ -6,11 +6,13 @@ yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käänn�
 JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
 maantieteestä kiinnostavasti.
 
-- **Neljä pelilautaa:** koko maapallon kattava Maailma (Maailman tähti),
-  Afrikka (Afrikan tähti), Lähi-itä (Idän tähti) ja ensimmäisenä
-  kaupunkilautana Istanbul (Sulttaanin timantti). Maailma-laudalla valtameret
-  ylitetään laivalla tai lentäen, ja Kairosta laskeudutaan tarkemmille
-  laudoille — sama portaikko jatkuu kaupunkitasolle asti
+- **Viisi pelilautaa:** koko maapallon kattava Maailma (Maailman tähti),
+  Afrikka (Afrikan tähti), Eurooppa (Euroopan tähti), Lähi-itä (Idän tähti) ja
+  ensimmäisenä kaupunkilautana Istanbul (Sulttaanin timantti). Maailma-laudalla
+  valtameret ylitetään laivalla tai lentäen, ja Lontoosta ja Kairosta
+  laskeudutaan tarkemmille laudoille — sama portaikko jatkuu kaupunkitasolle
+  asti. Istanbul on sekä Euroopan että Lähi-idän laudalla, joten mantereelta
+  toiselle pääsee myös kävellen
 - **Vaellustila:** yksin pelattaessa peli ei pääty — kerää löytöjä ja siirry
   porttikaupungeista laudalta toiselle, myös kaupunkitasolle. Kilpapelin
   voittaja voi jatkaa vaeltamista voittoruudusta
@@ -27,9 +29,11 @@ maantieteestä kiinnostavasti.
   maantiedosta, kulttuurista ja yleistiedosta; 40 punnan vihje ja 80 punnan 50:50
   auttavat pinteessä, ja tiimalasi antaa vastausaikaa 45 sekuntia
 - SVG-kartta, jossa kymmeniä kaupunkeja, maareitit, laivareitit ja lentoyhteydet
+- Euroopan laudalla 34 kaupunkia Lissabonista Moskovaan ja Kreetalta Tromssaan:
+  Kanaalitunneli, Itämeren lautat, Välimeren saaret ja Mustanmeren satamat
 - Laatat: tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät — Lähi-idässä
   topaasin tilalla on turkoosi, joka on saanut nimensä Turkista
-- Lähes 200 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
+- Yli 300 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
   kysymyksensä + laudan yleinen varapakka. Pelaajakohtainen tasovalinta
   (esim. lapsille helpot) ja vaikeasta kysymyksestä 100 punnan bonus
 - Suomenkielinen käyttöliittymä ja "Tiesitkö että…" -tietoruutu, joka kertoo

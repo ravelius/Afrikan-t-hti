@@ -11,7 +11,10 @@ tarkistavat automaattisesti, että lisäys on ehjä.
 Kysymykset ja "Tiesitkö että…" -tiedot ovat tavallisissa JavaScript-tiedostoissa:
 
 - `js/packs/africa-questions.js` — Afrikan lauta
+- `js/packs/europe-questions.js` — Euroopan lauta
 - `js/packs/middleeast-questions.js` — Lähi-idän lauta
+- `js/packs/istanbul-questions.js` — Istanbulin kaupunkilauta
+- `js/packs/maailma-questions.js` — Maailma-lauta
 
 Kysymyksen muoto:
 
