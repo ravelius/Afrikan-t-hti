@@ -2,7 +2,7 @@
 
 import { FLIGHT_PRICE, buildBoard, findMoves, posKey, reachableCities } from './rules.js';
 import { createTokenPile } from './tokens.js';
-import { packById } from './pack.js';
+import { PACKS, packById } from './pack.js';
 
 export const START_MONEY = 300;
 export const SEA_FARE = 100; // laivamatkan hinta vuorolta
@@ -12,6 +12,8 @@ export const QUIZ_SECONDS = 45; // vastausaika tiimalasin verran
 export const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 export const HARD_BONUS = 100; // palkkio vaikeasta kysymyksestä oikein vastattaessa
 export const STAR_PRIZE = 2000; // tähden arvo vaellustilassa, jossa peli ei pääty
+export const DUEL_PRIZE = 200; // rosvon saalis, jos kaksintaistelun voittaa suoraan
+export const DUEL_BYPASS_SHOES = 3; // näin monella hevosenkengällä rosvon voi ohittaa
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 export function questionLevel(question) {
@@ -83,6 +85,8 @@ export class Game {
     this.die = null;
     this.moves = null;
     this.quiz = null;
+    this.duel = null;
+    this.duelArmed = false;
     this.usedQuestions = new Set();
     this.lastPath = null;
     this.winner = null;
@@ -266,6 +270,38 @@ export class Game {
     this.lastPath = null;
     this.say(p.id, `${p.name} jatkoi matkaa: ${link.label}.`);
     this.emit('flight', link.label, { icon: '🧭' });
+    this.endTurn();
+    return { ok: true };
+  }
+
+  /**
+   * Maailmankartan lennot: vaelluksessa miltä tahansa lentokentältä voi
+   * lentää toisen laudan aloituskentälle lennon hinnalla.
+   */
+  worldDestinations() {
+    if (!this.roaming || this.phase !== 'action') return [];
+    const city = this.cityOf();
+    if (!city || !city.airport || this.player.money < FLIGHT_PRICE) return [];
+    return PACKS.filter((p) => p.id !== this.pack.id).map((p) => ({
+      pack: p.id,
+      label: p.boardLabel,
+      city: p.cities.find((c) => c.start).id,
+    }));
+  }
+
+  /** Lentää maailmankartalla toiselle laudalle. Vie koko vuoron. */
+  actionWorldFlight(packId) {
+    const dest = this.worldDestinations().find((d) => d.pack === packId);
+    if (!dest) return { ok: false, error: 'Sinne ei ole lentoa täältä' };
+    const p = this.player;
+    const pack = packById(dest.pack);
+    p.money -= FLIGHT_PRICE;
+    this.enterWorld(pack);
+    p.packId = pack.id;
+    p.pos = { type: 'city', city: dest.city };
+    this.lastPath = null;
+    this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla laudalle ${pack.boardLabel}.`);
+    this.emit('flight', `Lento: ${pack.boardLabel}`, { icon: '🌍', sub: `−${FLIGHT_PRICE} puntaa` });
     this.endTurn();
     return { ok: true };
   }
@@ -549,10 +585,149 @@ export class Game {
     return { ok: true, hidden: quiz.hidden };
   }
 
-  /** Sulkee kysymyksen ja päättää vuoron. */
+  /** Sulkee kysymyksen ja päättää vuoron — tai aloittaa rosvon kaksintaistelun. */
   closeQuiz() {
     if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
     this.quiz = null;
+    if (this.phase === 'over') return { ok: true };
+    if (this.duelArmed) {
+      this.duelArmed = false;
+      this.beginDuel();
+      return { ok: true, duel: true };
+    }
+    this.phase = 'action';
+    this.endTurn();
+    return { ok: true };
+  }
+
+  // --- rosvon kaksintaistelu ----------------------------------------------
+
+  /**
+   * Rosvo esittää kiperän kysymyksen, jossa on kahdeksan vaihtoehtoa.
+   * Suora oikea vastaus tuo rosvon saaliin (DUEL_PRIZE). Helpotus poistaa
+   * puolet jäljellä olevista vääristä vaihtoehdoista, mutta rosvo vie siitä
+   * puolet rahoista. Väärä vastaus tai aikakatkaisu vie kaikki rahat.
+   * Kolmella hevosenkengällä rosvon voi ohittaa kokonaan.
+   */
+  beginDuel() {
+    const pool = this.pack.duels ?? [];
+    const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
+    const deck = fresh.length ? fresh : pool;
+    const question = deck[Math.floor(this.rng() * deck.length)];
+    this.usedQuestions.add(question.q);
+    const order = this.shuffledOrder(question.options.length);
+    this.duel = {
+      question: question.q,
+      fact: question.fact,
+      options: order.map((i) => question.options[i]),
+      correct: order.indexOf(question.correct),
+      hidden: [],
+      reliefs: 0,
+      taken: 0,
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'duel';
+    return { ok: true, duel: this.duel };
+  }
+
+  /** Helpotus: rosvo vie puolet rahoista ja puolet vääristä vaihtoehdoista poistuu. */
+  actionDuelRelief() {
+    const duel = this.duel;
+    if (this.phase !== 'duel' || !duel) return { ok: false, error: 'Ei kaksintaistelua' };
+    if (duel.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+    if (duel.reliefs >= 2) return { ok: false, error: 'Helpotukset on käytetty' };
+
+    const p = this.player;
+    const toll = Math.floor(p.money / 2);
+    p.money -= toll;
+    duel.taken += toll;
+    duel.reliefs++;
+
+    const wrong = duel.options
+      .map((_, i) => i)
+      .filter((i) => i !== duel.correct && !duel.hidden.includes(i));
+    for (let i = wrong.length - 1; i > 0; i--) {
+      const j = Math.floor(this.rng() * (i + 1));
+      [wrong[i], wrong[j]] = [wrong[j], wrong[i]];
+    }
+    const removeCount = duel.reliefs === 1 ? 4 : 2;
+    duel.hidden = [...duel.hidden, ...wrong.slice(0, removeCount)].sort((a, b) => a - b);
+    this.say(p.id, `${p.name} pyysi rosvolta helpotusta — rosvo vei ${toll} puntaa.`);
+    return { ok: true, toll, hidden: duel.hidden };
+  }
+
+  /** Kolme hevosenkenkää heitetään rosvolle, ja tämä päästää kulkijan ohi. */
+  actionDuelBypass() {
+    const duel = this.duel;
+    if (this.phase !== 'duel' || !duel) return { ok: false, error: 'Ei kaksintaistelua' };
+    if (duel.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+    const p = this.player;
+    if (p.horseshoes < DUEL_BYPASS_SHOES) {
+      return { ok: false, error: `Ohitus vaatii ${DUEL_BYPASS_SHOES} hevosenkenkää` };
+    }
+    p.horseshoes -= DUEL_BYPASS_SHOES;
+    this.say(p.id, `Ω ${p.name} heitti rosvolle ${DUEL_BYPASS_SHOES} hevosenkenkää ja pääsi ohi.`);
+    this.emit('aid', 'Rosvo päästi ohi', { icon: 'Ω', sub: `−${DUEL_BYPASS_SHOES} hevosenkenkää` });
+    this.duel = null;
+    this.phase = 'action';
+    this.endTurn();
+    return { ok: true, bypassed: true };
+  }
+
+  /** Vastaa rosvon kysymykseen. */
+  answerDuel(index) {
+    const duel = this.duel;
+    if (this.phase !== 'duel' || !duel || duel.chosen !== null) {
+      return { ok: false, error: 'Ei avointa kaksintaistelua' };
+    }
+    if (duel.hidden.includes(index)) return { ok: false, error: 'Tuo vaihtoehto on poistettu' };
+
+    const p = this.player;
+    duel.chosen = index;
+    duel.right = index === duel.correct;
+    if (duel.right) {
+      if (duel.reliefs === 0) {
+        p.money += DUEL_PRIZE;
+        duel.prize = DUEL_PRIZE;
+        this.say(p.id, `${p.name} voitti rosvon suoralla vastauksella ja vei saaliin: ${DUEL_PRIZE} puntaa!`);
+      } else {
+        this.say(p.id, `${p.name} voitti rosvon — loput rahat säilyvät.`);
+      }
+    } else {
+      const loss = p.money;
+      p.money = 0;
+      duel.taken += loss;
+      const oikea = duel.options[duel.correct];
+      this.say(p.id, `☠ ${p.name} hävisi rosvolle ${loss} puntaa — oikea vastaus oli "${oikea}".`);
+    }
+    return { ok: true, right: duel.right };
+  }
+
+  /** Aika loppui: rosvo vie kaikki rahat. */
+  timeoutDuel() {
+    const duel = this.duel;
+    if (this.phase !== 'duel' || !duel || duel.chosen !== null) {
+      return { ok: false, error: 'Ei avointa kaksintaistelua' };
+    }
+    const p = this.player;
+    duel.chosen = -1;
+    duel.right = false;
+    duel.timedOut = true;
+    duel.seconds = 0;
+    const loss = p.money;
+    p.money = 0;
+    duel.taken += loss;
+    this.say(p.id, `☠ ${p.name} ei ehtinyt vastata rosvolle ja menetti ${loss} puntaa.`);
+    return { ok: true, right: false, timedOut: true };
+  }
+
+  /** Sulkee kaksintaistelun ja päättää vuoron. */
+  closeDuel() {
+    if (!this.duel) return { ok: false, error: 'Ei kaksintaistelua' };
+    this.duel = null;
     if (this.phase === 'over') return { ok: true };
     this.phase = 'action';
     this.endTurn();
@@ -667,12 +842,12 @@ export class Game {
         });
         break;
       case 'robber':
-        this.say(p.id, `☠ Ryöstäjä yllätti pelaajan ${p.name} ja vei ${p.money} puntaa!`);
+        this.say(p.id, `☠ Ryöstäjä yllätti pelaajan ${p.name} — edessä on kaksintaistelu!`);
         this.emit('robber', 'Ryöstäjä!', {
           token: type,
-          sub: p.money ? `${p.name} menetti ${p.money} puntaa` : `${p.name} ei ollut menetettävää`,
+          sub: `${p.name} joutuu rosvon kaksintaisteluun`,
         });
-        p.money = 0;
+        this.duelArmed = true;
         break;
       case 'empty':
         this.say(p.id, `${p.name} käänsi tyhjän laatan kaupungissa ${city.name}.`);
@@ -734,6 +909,8 @@ export class Game {
       pendingFare: this.pendingFare,
       die: this.die,
       quiz: this.quiz,
+      duel: this.duel,
+      duelArmed: this.duelArmed,
       winnerId: this.winner ? this.winner.id : null,
       turnCount: this.turnCount,
       log: this.log,
@@ -790,6 +967,8 @@ export class Game {
     game.pendingFare = data.pendingFare ?? 0;
     game.die = data.die ?? null;
     game.quiz = data.quiz ?? null;
+    game.duel = data.duel ?? null;
+    game.duelArmed = !!data.duelArmed;
     game.lastPath = null;
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;

@@ -7,10 +7,12 @@ import { isOnLand } from '../js/mapart.js';
 import { tokenPileTemplate } from '../js/tokens.js';
 import {
   Game, mulberry32, questionLevel, START_MONEY, STAR_PRIZE, STRANDED_AID,
-  FIFTY_FIFTY_PRICE, HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
+  DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, HARD_BONUS, HINT_PRICE,
+  QUIZ_SECONDS, SEA_FARE,
 } from '../js/game.js';
 import {
-  chooseMove, chooseQuizAnswer, chooseTravel, wantsFiftyFifty, wantsHint,
+  chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
+  wantsDuelBypass, wantsDuelRelief, wantsFiftyFifty, wantsHint,
 } from '../js/ai.js';
 
 const AFRICA = packById('africa');
@@ -148,6 +150,20 @@ for (const pack of PACKS) {
     }
   });
 
+  test(`${pack.id}: rosvon kaksintaistelupakka on ehjä`, () => {
+    assert.ok(pack.duels.length >= 4, 'liian vähän kaksintaistelukysymyksiä');
+    for (const q of pack.duels) {
+      assert.equal(q.options.length, 8, `"${q.q}": tarvitaan 8 vaihtoehtoa`);
+      assert.equal(new Set(q.options).size, 8, `"${q.q}": kaksi samaa vaihtoehtoa`);
+      assert.ok(
+        Number.isInteger(q.correct) && q.correct >= 0 && q.correct < 8,
+        `"${q.q}": oikea vastaus on virheellinen`,
+      );
+      assert.ok(q.fact && q.fact.length > 0, `"${q.q}": selitys puuttuu`);
+    }
+    assert.ok(pack.worldPos, 'laudalta puuttuu paikka maailmankartalta');
+  });
+
   test(`${pack.id}: porttikaupunkien linkit osoittavat oikeisiin paikkoihin`, () => {
     for (const city of pack.cities) {
       for (const link of city.links ?? []) {
@@ -276,7 +292,9 @@ test('laattojen vaikutukset: jalokivi, ryöstäjä ja tähti', () => {
 
   game.tokens.set('timbuktu', 'robber');
   game.revealToken('timbuktu');
-  assert.equal(p.money, 0);
+  assert.equal(p.money, START_MONEY + 1000, 'rosvo ei vie rahoja ennen kaksintaistelua');
+  assert.ok(game.duelArmed, 'rosvo virittää kaksintaistelun');
+  game.duelArmed = false;
 
   game.tokens.set('timbuktu', 'star');
   game.revealToken('timbuktu');
@@ -313,6 +331,13 @@ test('tähti kotiin voittaa, hevosenkenkä voi ehtiä ensin', () => {
 
 /** Yksi botin askel nykyisessä vaiheessa. */
 function playBotStep(game) {
+  if (game.phase === 'duel') {
+    if (game.duel.chosen !== null) game.closeDuel();
+    else if (wantsDuelBypass(game)) game.actionDuelBypass();
+    else if (wantsDuelRelief(game)) game.actionDuelRelief();
+    else game.answerDuel(chooseDuelAnswer(game));
+    return;
+  }
   if (game.phase === 'move') {
     const key = chooseMove(game);
     if (key) game.actionMove(key);
@@ -465,6 +490,123 @@ test('tasovalinta laskeutuu pehmeästi, jos tason kysymyksiä ei ole', () => {
   assert.equal(game.hardAvailable('timbuktu'), false);
   game.phase = 'offer';
   assert.equal(game.actionQuiz({ hard: true }).ok, false);
+});
+
+test('rosvon kaksintaistelu: suora voitto tuo saaliin', () => {
+  const game = newGame(61);
+  const p = game.player;
+  p.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'robber');
+
+  // Rosvo paljastuu tietovisan kautta ja kaksintaistelu alkaa kysymyksen sulkeuduttua.
+  game.actionTravel('stay');
+  game.answerQuiz(game.quiz.correct);
+  const closed = game.closeQuiz();
+  assert.ok(closed.duel, 'kaksintaistelu alkaa');
+  assert.equal(game.phase, 'duel');
+  assert.equal(game.duel.options.length, 8);
+
+  const rahaEnnen = p.money;
+  game.answerDuel(game.duel.correct);
+  assert.ok(game.duel.right);
+  assert.equal(p.money, rahaEnnen + DUEL_PRIZE, 'suora voitto tuo rosvon saaliin');
+  game.closeDuel();
+  assert.equal(game.current, 1, 'vuoro vaihtuu');
+});
+
+test('rosvon kaksintaistelu: helpotus vie puolet ja piilottaa vaihtoehtoja', () => {
+  const game = newGame(62);
+  const p = game.player;
+  p.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'robber');
+  game.actionTravel('stay');
+  game.answerQuiz(game.quiz.correct);
+  game.closeQuiz();
+
+  p.money = 400;
+  game.actionDuelRelief();
+  assert.equal(p.money, 200, 'rosvo vei puolet');
+  assert.equal(game.duel.hidden.length, 4, 'puolet vaihtoehdoista poistui');
+  assert.ok(!game.duel.hidden.includes(game.duel.correct));
+
+  game.actionDuelRelief();
+  assert.equal(p.money, 100, 'toinen helpotus vie taas puolet');
+  assert.equal(game.duel.hidden.length, 6, 'jäljellä kaksi vaihtoehtoa');
+
+  assert.equal(game.actionDuelRelief().ok, false, 'kolmatta helpotusta ei ole');
+
+  // Voitto helpotusten jälkeen ei tuo saalista, mutta loput säilyvät.
+  game.answerDuel(game.duel.correct);
+  assert.equal(p.money, 100);
+});
+
+test('rosvon kaksintaistelu: väärä vastaus vie kaikki rahat', () => {
+  const game = newGame(63);
+  const p = game.player;
+  p.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'robber');
+  game.actionTravel('stay');
+  game.answerQuiz(game.quiz.correct);
+  game.closeQuiz();
+
+  const vaara = (game.duel.correct + 1) % 8;
+  game.answerDuel(vaara);
+  assert.equal(game.duel.right, false);
+  assert.equal(p.money, 0, 'rosvo vei kaikki');
+
+  game.closeDuel();
+  assert.equal(game.current, 1);
+});
+
+test('rosvon voi ohittaa kolmella hevosenkengällä', () => {
+  const game = newGame(64);
+  const p = game.player;
+  p.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'robber');
+  p.horseshoes = DUEL_BYPASS_SHOES;
+  game.actionTravel('stay');
+  game.answerQuiz(game.quiz.correct);
+  game.closeQuiz();
+
+  const rahaEnnen = p.money;
+  assert.ok(game.actionDuelBypass().ok);
+  assert.equal(p.horseshoes, 0, 'kengät kuluvat');
+  assert.equal(p.money, rahaEnnen, 'rahat säilyvät');
+  assert.equal(game.duel, null);
+  assert.equal(game.current, 1, 'vuoro vaihtuu');
+
+  // Ilman kenkiä ohitus ei onnistu.
+  const toinen = newGame(65);
+  toinen.player.pos = { type: 'city', city: 'timbuktu' };
+  toinen.tokens.set('timbuktu', 'robber');
+  toinen.actionTravel('stay');
+  toinen.answerQuiz(toinen.quiz.correct);
+  toinen.closeQuiz();
+  assert.equal(toinen.actionDuelBypass().ok, false);
+});
+
+test('vaellus: maailmankartalta voi lentää toiselle laudalle', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
+    rng: mulberry32(67),
+  });
+  const p = game.player;
+
+  // Tanger on lentokenttä: maailmankartta listaa muut laudat.
+  game.phase = 'action';
+  const dests = game.worldDestinations();
+  assert.equal(dests.length, 2, 'kaksi muuta lautaa');
+
+  p.money = 300;
+  assert.ok(game.actionWorldFlight('istanbul').ok);
+  assert.equal(p.packId, 'istanbul');
+  assert.equal(p.money, 0, 'lento maksoi 300');
+  assert.equal(p.pos.city, 'lentoasema', 'saavutaan aloituskentälle');
+
+  // Ilman rahaa maailmankartta ei aukea.
+  game.current = 0;
+  game.phase = 'action';
+  assert.deepEqual(game.worldDestinations(), []);
 });
 
 test('vaellus: yksin pelattaessa peli ei pääty ja tähti on arvokas löytö', () => {

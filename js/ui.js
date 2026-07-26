@@ -2,15 +2,20 @@
 
 import { pixelOf, pointAlong, posKey } from './rules.js';
 import {
+  chooseDuelAnswer,
   chooseMove,
   chooseQuizAnswer,
   chooseTravel,
+  wantsDuelBypass,
+  wantsDuelRelief,
   wantsFiftyFifty,
   wantsHint,
 } from './ai.js';
 import {
-  FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
+  DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HARD_BONUS,
+  HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
+import { PACKS } from './pack.js';
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -34,7 +39,7 @@ import {
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
-const LETTERS = ['A', 'B', 'C', 'D'];
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
@@ -51,7 +56,7 @@ const TRAVEL_LABEL = { land: 'Maitse', sea: 'Laivalla', fly: 'Lentäen', stay: '
 const REVEAL_SUB = {
   star: 'Vie tähti kotiin ja voitat pelin!',
   horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
-  robber: 'Ryöstäjä vie kaikki rahat',
+  robber: 'Rosvo haastaa kaksintaisteluun!',
   empty: 'Ei aarretta täällä',
 };
 
@@ -90,11 +95,21 @@ export class UI {
     this.quizHintText = document.getElementById('quiz-hint-text');
     this.quizFifty = document.getElementById('quiz-5050');
     this.quizFifty.addEventListener('click', () => {
+      if (this.game.phase === 'duel') {
+        sfx.play('robber');
+        this.doAction(() => this.game.actionDuelRelief());
+        return;
+      }
       sfx.play('swipe');
       this.doAction(() => this.game.actionFiftyFifty());
     });
     this.quizHint = document.getElementById('quiz-hint');
     this.quizHint.addEventListener('click', () => {
+      if (this.game.phase === 'duel') {
+        sfx.play('coin');
+        this.doAction(() => this.game.actionDuelBypass());
+        return;
+      }
       sfx.play('hint');
       this.doAction(() => this.game.actionHint());
     });
@@ -109,7 +124,9 @@ export class UI {
     this.quizTimer = null;
     this.timedQuiz = null;
     this.quizContinue = document.getElementById('quiz-continue');
-    this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
+    this.quizContinue.addEventListener('click', () => this.doAction(() => (
+      this.game.phase === 'duel' ? this.game.closeDuel() : this.game.closeQuiz()
+    )));
 
     this.mapPane = this.svg.parentElement;
     this.busy = false;
@@ -663,6 +680,65 @@ export class UI {
       });
       this.actionsEl.appendChild(gwBtn);
     }
+
+    // Lentokentältä avautuu maailmankartta.
+    if (game.worldDestinations().length) {
+      const worldBtn = html('button', '', `🌍 Maailmankartta (${FLIGHT_PRICE} p)`);
+      worldBtn.addEventListener('click', () => this.openWorldMap());
+      this.actionsEl.appendChild(worldBtn);
+    }
+  }
+
+  /** Maailmankartta: laudat tähtinä, joiden välillä lennetään. */
+  openWorldMap() {
+    const { game } = this;
+    const dialog = document.getElementById('world-dialog');
+    const holder = document.getElementById('world-map');
+    holder.textContent = '';
+
+    const svg = el('svg', { viewBox: '0 0 360 220', class: 'world-map-svg' });
+    el('rect', { x: 4, y: 4, width: 352, height: 212, rx: 10, class: 'world-paper' }, svg);
+
+    const current = game.pack;
+    const destinations = game.worldDestinations();
+
+    // Lentoreitit nykyiseltä laudalta muille.
+    for (const dest of destinations) {
+      const from = current.worldPos;
+      const to = this.packById(dest.pack).worldPos;
+      const mx = (from.x + to.x) / 2 + (to.y - from.y) * 0.2;
+      const my = (from.y + to.y) / 2 - (to.x - from.x) * 0.2;
+      el('path', {
+        d: `M${from.x},${from.y} Q${mx},${my} ${to.x},${to.y}`,
+        class: 'world-route',
+      }, svg);
+    }
+
+    // Laudat tähtinä; nykyinen kullanvärisenä.
+    for (const pack of [current, ...destinations.map((d) => this.packById(d.pack))]) {
+      const here = pack.id === current.id;
+      const node = el('g', {
+        transform: `translate(${pack.worldPos.x},${pack.worldPos.y})`,
+        class: here ? 'world-node here' : 'world-node',
+      }, svg);
+      el('circle', { r: 15, class: 'world-disc' }, node);
+      el('text', { y: 5, 'text-anchor': 'middle', class: 'world-star' }, node).textContent = here ? '📍' : '★';
+      el('text', { y: 30, 'text-anchor': 'middle', class: 'world-label' }, node).textContent = pack.boardLabel;
+      if (!here) {
+        node.addEventListener('click', () => {
+          dialog.close();
+          sfx.play('flight');
+          this.doAction(() => game.actionWorldFlight(pack.id));
+        });
+      }
+    }
+
+    holder.appendChild(svg);
+    dialog.showModal();
+  }
+
+  packById(id) {
+    return PACKS.find((p) => p.id === id);
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
@@ -756,6 +832,10 @@ export class UI {
 
   renderQuiz() {
     const { game } = this;
+    if (game.phase === 'duel' && game.duel) {
+      this.renderDuel();
+      return;
+    }
     const quiz = game.quiz;
     if (game.phase !== 'quiz' || !quiz) {
       this.stopQuizTimer();
@@ -844,10 +924,111 @@ export class UI {
     if (!this.quizDialog.open) this.quizDialog.showModal();
   }
 
+  /** Rosvon kaksintaistelu: 8 vaihtoehtoa, helpotukset ja hevosenkenkäohitus. */
+  renderDuel() {
+    const { game } = this;
+    const duel = game.duel;
+    const p = game.player;
+
+    this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
+    this.quizQuestion.textContent = duel.question;
+    this.quizOptions.textContent = '';
+
+    duel.options.forEach((text, i) => {
+      const btn = html('button', 'quiz-option');
+      btn.style.setProperty('--i', String(i));
+      btn.appendChild(html('span', 'letter', LETTERS[i]));
+      btn.appendChild(html('span', 'text', text));
+      if (duel.hidden.includes(i)) {
+        btn.classList.add('hidden-option');
+        btn.disabled = true;
+      } else if (duel.chosen !== null) {
+        btn.disabled = true;
+        if (i === duel.correct) btn.classList.add('correct');
+        if (i === duel.chosen && !duel.right) btn.classList.add('wrong');
+      } else if (p.isBot) {
+        btn.disabled = true;
+      } else {
+        btn.addEventListener('click', () => this.answerDuelUi(i));
+      }
+      this.quizOptions.appendChild(btn);
+    });
+
+    const answered = duel.chosen !== null;
+    const revealed = this.revealShownFor === duel;
+
+    // Helpotus rosvolta: puolet rahoista, puolet vääristä pois.
+    const toll = Math.floor(p.money / 2);
+    this.quizFifty.hidden = answered || p.isBot;
+    this.quizFifty.disabled = duel.reliefs >= 2 || toll <= 0;
+    this.quizFifty.textContent = duel.reliefs >= 2
+      ? 'Helpotukset käytetty'
+      : `☠ Helpotus (rosvo vie ${toll} p)`;
+
+    // Kolmella hevosenkengällä pääsee ohi.
+    this.quizHint.hidden = answered || p.isBot || p.horseshoes < DUEL_BYPASS_SHOES;
+    this.quizHint.disabled = false;
+    this.quizHint.textContent = `Ω Ohita rosvo (${DUEL_BYPASS_SHOES} kenkää)`;
+
+    this.quizHintText.hidden = duel.reliefs === 0;
+    if (duel.reliefs > 0) {
+      this.quizHintText.textContent = `Rosvo on vienyt ${duel.taken} puntaa.`;
+    }
+
+    this.renderTimer(duel);
+
+    this.quizResult.hidden = !answered;
+    if (answered) {
+      this.quizResult.className = `quiz-result ${duel.right ? 'right' : 'wrong'}`;
+      this.quizResult.textContent = '';
+      if (!revealed) {
+        const verdict = duel.timedOut ? 'Aika loppui!' : duel.right ? 'Oikein!' : 'Väärin.';
+        this.quizResult.appendChild(html('strong', 'quiz-verdict', verdict));
+      } else {
+        const body = html('div');
+        if (duel.right && duel.prize) {
+          body.appendChild(html('strong', '', `Voitit rosvon — saalis ${duel.prize} puntaa!`));
+        } else if (duel.right) {
+          body.appendChild(html('strong', '', 'Voitit rosvon — loput rahat säilyvät.'));
+        } else {
+          const lead = duel.timedOut ? 'Aika loppui. ' : '';
+          body.appendChild(
+            html('strong', '', `${lead}Rosvo vei rahat — oikea vastaus oli "${duel.options[duel.correct]}".`),
+          );
+        }
+        if (duel.fact) body.appendChild(html('span', 'muted', duel.fact));
+        this.quizResult.appendChild(body);
+      }
+    }
+    this.quizContinue.hidden = !answered || !revealed || p.isBot;
+
+    if (!this.quizDialog.open) this.quizDialog.showModal();
+  }
+
+  /** Vastaus rosvolle: tuomio, tauko ja selitys — kuten tietovisassa. */
+  answerDuelUi(index) {
+    const { game } = this;
+    this.stopQuizTimer();
+    this.run(() => game.answerDuel(index), {
+      after: async () => {
+        const duel = game.duel;
+        if (!duel) return;
+        sfx.play(duel.right ? 'correct' : 'robber');
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 200 : 900);
+        this.revealShownFor = duel;
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 0 : 500);
+      },
+    });
+  }
+
   // --- tiimalasi ------------------------------------------------------------
 
   /** Käynnistää tai pysäyttää vastausajan sen mukaan, kuka on vuorossa. */
   renderTimer(quiz) {
+    // Toimii sekä tietovisalle että kaksintaistelulle: molemmilla on
+    // chosen- ja seconds-kentät.
     const show = !this.game.player.isBot && quiz.chosen === null;
     this.quizTimerEl.hidden = !show;
     if (!show) {
@@ -949,6 +1130,21 @@ export class UI {
   timeUp() {
     this.stopQuizTimer();
     const { game } = this;
+    if (game.phase === 'duel' && game.duel && game.duel.chosen === null) {
+      this.run(() => game.timeoutDuel(), {
+        after: async () => {
+          const duel = game.duel;
+          if (!duel) return;
+          sfx.play('timeout');
+          this.renderQuiz();
+          await this.wait(this.reducedMotion ? 200 : 900);
+          this.revealShownFor = duel;
+          this.renderQuiz();
+          await this.wait(this.reducedMotion ? 0 : 500);
+        },
+      });
+      return;
+    }
     if (game.phase !== 'quiz' || !game.quiz || game.quiz.chosen !== null) return;
     this.run(() => game.timeoutQuiz(), {
       after: async () => {
@@ -1186,13 +1382,21 @@ export class UI {
     clearTimeout(this.botTimer);
     const { game } = this;
     if (this.busy || game.phase === 'over' || !game.player.isBot) return;
-    const delay = game.phase === 'quiz' ? BOT_QUIZ_DELAY : BOT_DELAY;
+    const delay = game.phase === 'quiz' || game.phase === 'duel' ? BOT_QUIZ_DELAY : BOT_DELAY;
     this.botTimer = setTimeout(() => this.botStep(), delay);
   }
 
   botStep() {
     const { game } = this;
     if (this.busy || game.phase === 'over' || !game.player.isBot) return;
+
+    if (game.phase === 'duel') {
+      if (game.duel.chosen !== null) this.run(() => game.closeDuel());
+      else if (wantsDuelBypass(game)) this.run(() => game.actionDuelBypass());
+      else if (wantsDuelRelief(game)) this.run(() => game.actionDuelRelief());
+      else this.answerDuelUi(chooseDuelAnswer(game));
+      return;
+    }
 
     if (game.phase === 'quiz') {
       if (game.quiz.chosen !== null) this.run(() => game.closeQuiz());

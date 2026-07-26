@@ -1296,6 +1296,18 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   .target-ring, .die.rolling, .die.landed { animation: none; }
 }
 
+/* Maailmankartta */
+#world-map { margin: 0.6rem 0; }
+.world-map-svg { width: 100%; display: block; }
+.world-paper { fill: #e9d7ae; stroke: #6d5335; stroke-width: 2; }
+.world-route { fill: none; stroke: #a5502f; stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
+.world-node .world-disc { fill: #f0e2bd; stroke: #6d5335; stroke-width: 2; }
+.world-node.here .world-disc { fill: #e8b23c; }
+.world-node:not(.here) { cursor: pointer; }
+.world-node:not(.here):hover .world-disc { fill: #f6ce7a; }
+.world-star { font-size: 14px; }
+.world-label { font-size: 12px; fill: #3d2c17; font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -1389,8 +1401,10 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
         tähtiaarteensa ja kysymyksensä.</p>
       <p><b>Vaellus.</b> Yksin pelattaessa peli ei pääty: tähti on arvokas löytö
         (2000 p), ja porttikaupungeista (esim. Kairo tai Istanbul) pääsee jatkamaan
-        toiselle laudalle — myös kaupunkitasolle. Kilpapelin voittaja voi voittoruudusta
-        valita <i>Jatka vaeltamista</i>, jolloin sama peli jatkuu ilman voittoehtoa.</p>
+        toiselle laudalle — myös kaupunkitasolle. Lentokentällä avautuu lisäksi
+        <b>maailmankartta</b>, josta voi lentää (300 p) suoraan toisen laudan
+        aloituskentälle. Kilpapelin voittaja voi voittoruudusta valita
+        <i>Jatka vaeltamista</i>, jolloin sama peli jatkuu ilman voittoehtoa.</p>
       <p><b>Kartta.</b> Karttaa voi raahata sormella tai hiirellä ja lähentää
         nipistämällä tai rullalla. Kaksoisnapautus palauttaa koko laudan näkyviin.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
@@ -1421,8 +1435,14 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
         kysymyksestä kaksi väärää vaihtoehtoa (50:50), 100 puntaa maksaa laivamatkan ja
         300 puntaa lennon.</p>
       <p><b>Aarteet.</b> Jokaisessa aarrekaupungissa on yksi laatta: tähti, hevosenkenkiä,
-        ryöstäjiä, jalokiviä (rubiini 1000 p, smaragdi 600 p, topaasi/turkoosi 300 p) ja
-        tyhjiä. Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
+        rosvoja, jalokiviä (rubiini 1000 p, smaragdi 600 p, topaasi/turkoosi 300 p) ja
+        tyhjiä. Jalokiven arvo lisätään heti rahoihin.</p>
+      <p><b>Rosvon kaksintaistelu.</b> Rosvolaatta ei vie rahoja suoraan, vaan rosvo
+        esittää kiperän kysymyksen, jossa on kahdeksan vaihtoehtoa. Suora oikea vastaus
+        voittaa rosvon saaliin (200 p). <b>Helpotus</b> poistaa puolet jäljellä olevista
+        vääristä vaihtoehdoista, mutta rosvo vie siitä puolet rahoistasi — ja toisesta
+        helpotuksesta taas puolet. Väärä vastaus tai ajan loppuminen vie kaikki rahat.
+        Kolmella hevosenkengällä rosvon voi ohittaa kokonaan.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
       <p><b>Tiesitkö että…</b> Ohjauspaneeli kertoo tietoa siitä paikasta, jossa vuorossa
         oleva pelaaja on. Tieto vaihtuu kierroksittain.</p>
@@ -1478,6 +1498,18 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
       <button id="quiz-hint" class="lifeline" type="button" hidden>Vihje</button>
       <button id="quiz-5050" class="lifeline" type="button" hidden>50:50</button>
       <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
+    </menu>
+   </div>
+  </dialog>
+
+  <!-- Maailmankartta -->
+  <dialog id="world-dialog" class="dialog">
+   <div class="dialog-card">
+    <h2>🌍 Maailmankartta</h2>
+    <p class="setup-tagline">Valitse lauta, jolle lennät (300 p).</p>
+    <div id="world-map"></div>
+    <menu>
+      <button id="world-close" class="primary" type="button">Sulje</button>
     </menu>
    </div>
   </dialog>
@@ -2765,6 +2797,47 @@ const AFRICA = {
   questions: AFRICA_QUESTIONS,
   placeFacts: AFRICA_FACTS,
 
+  // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
+  worldPos: { x: 150, y: 150 },
+  duels: [
+    {
+      q: 'Mikä näistä joista EI virtaa Afrikassa?',
+      options: ['Eufrat', 'Niili', 'Kongo', 'Niger', 'Sambesi', 'Oranje', 'Limpopo', 'Volta'],
+      correct: 0,
+      fact: 'Eufrat virtaa Turkista Syyrian kautta Irakiin — kaikki muut ovat Afrikan suuria jokia.',
+    },
+    {
+      q: 'Mikä on Afrikan korkein vuori?',
+      options: ['Kilimandžaro', 'Kenia-vuori', 'Ras Dašen', 'Atlas', 'Elgon', 'Kamerunvuori', 'Meru', 'Drakensberg'],
+      correct: 0,
+      fact: 'Kilimandžaron Uhuru-huippu on 5 895 metrissä — Afrikan katolla.',
+    },
+    {
+      q: 'Minkä kahden maan rajalla Victorian putoukset sijaitsevat?',
+      options: ['Sambian ja Zimbabwen', 'Kenian ja Tansanian', 'Egyptin ja Sudanin', 'Angolan ja Namibian', 'Ghanan ja Togon', 'Malin ja Nigerin', 'Etiopian ja Somalian', 'Marokon ja Algerian'],
+      correct: 0,
+      fact: 'Sambesi syöksyy putouksiin Sambian ja Zimbabwen rajalla — paikallinen nimi tarkoittaa jyrisevää savua.',
+    },
+    {
+      q: 'Mikä valtio hallitsi suurinta osaa Länsi-Afrikkaa siirtomaakaudella?',
+      options: ['Ranska', 'Britannia', 'Portugali', 'Espanja', 'Italia', 'Belgia', 'Saksa', 'Alankomaat'],
+      correct: 0,
+      fact: 'Ranskan Länsi-Afrikka ulottui Senegalista Nigeriin — siksi ranska on yhä monen maan yhteinen kieli.',
+    },
+    {
+      q: 'Kuinka pitkä Niili on?',
+      options: ['noin 6 600 km', 'noin 1 000 km', 'noin 2 500 km', 'noin 3 300 km', 'noin 4 800 km', 'noin 8 900 km', 'noin 10 200 km', 'noin 12 000 km'],
+      correct: 0,
+      fact: 'Niili virtaa yli 6 600 kilometriä Viktoriajärveltä Välimereen — maailman pisimpiä jokia.',
+    },
+    {
+      q: 'Mikä näistä kielistä EI ole afrikkalainen?',
+      options: ['urdu', 'swahili', 'hausa', 'joruba', 'amhara', 'zulu', 'wolof', 'somali'],
+      correct: 0,
+      fact: 'Urdua puhutaan Pakistanissa ja Intiassa — muut ovat Afrikan suuria kieliä.',
+    },
+  ],
+
   texts: {
     intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.',
     starFound: (name, city) => `★ ${name} löysi AFRIKAN TÄHDEN kaupungista ${city}!`,
@@ -3887,6 +3960,47 @@ const MIDDLE_EAST = {
   questions: MIDDLEEAST_QUESTIONS,
   placeFacts: MIDDLEEAST_FACTS,
 
+  // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
+  worldPos: { x: 250, y: 85 },
+  duels: [
+    {
+      q: 'Mikä näistä kaupungeista EI ole pääkaupunki?',
+      options: ['Jidda', 'Riad', 'Doha', 'Sana', 'Bagdad', 'Teheran', 'Ankara', 'Masqat'],
+      correct: 0,
+      fact: 'Jidda on Saudi-Arabian suuri satamakaupunki — maan pääkaupunki on Riad.',
+    },
+    {
+      q: 'Minä vuonna Suezin kanava avattiin?',
+      options: ['1869', '1799', '1825', '1848', '1888', '1901', '1914', '1936'],
+      correct: 0,
+      fact: 'Kanava avattiin marraskuussa 1869 kymmenen vuoden rakennustöiden jälkeen.',
+    },
+    {
+      q: 'Mikä antiikin seitsemästä ihmeestä sijaitsi Babylonissa?',
+      options: ['riippuvat puutarhat', 'Aleksandrian majakka', 'Rodoksen kolossi', 'Zeuksen patsas', 'Artemiin temppeli', 'Mausoleumi', 'sfinksi', 'Pergamonin alttari'],
+      correct: 0,
+      fact: 'Babylonin riippuvat puutarhat luettiin maailman ihmeisiin, vaikka niiden tarkkaa paikkaa ei ole löydetty.',
+    },
+    {
+      q: 'Mistä kielestä sanat basaari ja karavaani ovat peräisin?',
+      options: ['persiasta', 'arabiasta', 'turkista', 'hepreasta', 'kreikasta', 'latinasta', 'sanskritista', 'hindistä'],
+      correct: 0,
+      fact: 'Molemmat sanat kulkeutuivat persiasta kauppareittien mukana Euroopan kieliin.',
+    },
+    {
+      q: 'Mikä meri on maailman suolaisin avomeri?',
+      options: ['Punainenmeri', 'Välimeri', 'Mustameri', 'Kaspianmeri', 'Itämeri', 'Arabianmeri', 'Egeanmeri', 'Adrianmeri'],
+      correct: 0,
+      fact: 'Punaisenmeren suolapitoisuus on avomerten korkein, noin neljä prosenttia — kuuma ilmasto haihduttaa vettä nopeasti.',
+    },
+    {
+      q: 'Mikä valtakunta hallitsi suurta osaa Lähi-idästä 1500-luvulta ensimmäiseen maailmansotaan asti?',
+      options: ['Osmanien valtakunta', 'Rooman valtakunta', 'Bysantti', 'Mongolivaltakunta', 'Babylonia', 'Assyria', 'Aleksanterin valtakunta', 'Abbasidikalifaatti'],
+      correct: 0,
+      fact: 'Osmanit hallitsivat Istanbulista käsin suurta osaa Lähi-itää noin 400 vuoden ajan.',
+    },
+  ],
+
   texts: {
     intro: 'Peli alkaa! Etsikää Idän tähti ja palatkaa Istanbuliin tai Kairoon.',
     starFound: (name, city) => `★ ${name} löysi IDÄN TÄHDEN kaupungista ${city}!`,
@@ -4631,6 +4745,47 @@ const ISTANBUL = {
 
   questions: ISTANBUL_QUESTIONS,
   placeFacts: ISTANBUL_FACTS,
+
+  // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
+  worldPos: { x: 262, y: 42 },
+  duels: [
+    {
+      q: 'Minä vuonna Konstantinopoli valloitettiin ja siitä tuli osmanien pääkaupunki?',
+      options: ['1453', '1071', '1204', '1389', '1517', '1566', '1683', '1923'],
+      correct: 0,
+      fact: 'Mehmed II valtasi kaupungin 29. toukokuuta 1453 — Bysantin tuhatvuotinen valtakunta päättyi.',
+    },
+    {
+      q: 'Kuinka monelle kukkulalle vanha Konstantinopoli rakennettiin — Rooman tapaan?',
+      options: ['seitsemälle', 'kolmelle', 'viidelle', 'kuudelle', 'kahdeksalle', 'yhdeksälle', 'kymmenelle', 'kahdelletoista'],
+      correct: 0,
+      fact: 'Konstantinopoli rakennettiin Rooman esikuvan mukaan seitsemälle kukkulalle.',
+    },
+    {
+      q: 'Mikä kuuluisa juna toi matkustajia Pariisista Istanbuliin vuodesta 1883?',
+      options: ['Idän pikajuna', 'Siperian rata', 'Kultainen nuoli', 'Sininen juna', 'Höyrynuoli', 'Balkanin pikajuna', 'Keisarijuna', 'Hopeanuoli'],
+      correct: 0,
+      fact: 'Idän pikajuna eli Orient Express päättyi Sirkecin asemalle Kultaisen sarven rannalle.',
+    },
+    {
+      q: 'Miten osmanien laivat pääsivät Kultaiseen sarveen piirityksessä 1453, vaikka lahden suu oli suljettu ketjulla?',
+      options: ['ne vedettiin maata pitkin mäen yli', 'ketju katkaistiin sahalla', 'laivat purjehtivat ketjun yli tulvalla', 'ne kannettiin palasina', 'lahteen kaivettiin kanava', 'ketju ostettiin vartijoilta', 'laivat upotettiin ja nostettiin', 'ne lensivät leijilla'],
+      correct: 0,
+      fact: 'Mehmed II:n laivasto vedettiin yön aikana rasvattuja puita pitkin Galatan mäen yli lahteen.',
+    },
+    {
+      q: 'Kuinka syvä Bosporinsalmi on syvimmillään?',
+      options: ['yli sata metriä', 'alle kymmenen metriä', 'noin kaksikymmentä metriä', 'noin kolmekymmentä metriä', 'noin viisikymmentä metriä', 'noin seitsemänkymmentä metriä', 'yli viisisataa metriä', 'yli kilometrin'],
+      correct: 0,
+      fact: 'Salmi on syvimmillään noin 110 metriä, ja sen läpi kulkee kaksi vastakkaista virtausta.',
+    },
+    {
+      q: 'Kuinka monta myymälää Suuressa basaarissa suunnilleen on?',
+      options: ['noin 4 000', 'noin 40', 'noin 100', 'noin 250', 'noin 400', 'noin 1 000', 'noin 10 000', 'noin 40 000'],
+      correct: 0,
+      fact: 'Katettuja kujia on yli 60 ja myymälöitä noin 4 000 — moni suku on myynyt samassa kojussa polvesta toiseen.',
+    },
+  ],
 
   texts: {
     intro: 'Peli alkaa! Etsikää Sulttaanin timantti ja palatkaa lentoasemalle.',
@@ -5999,6 +6154,8 @@ const QUIZ_SECONDS = 45; // vastausaika tiimalasin verran
 const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 const HARD_BONUS = 100; // palkkio vaikeasta kysymyksestä oikein vastattaessa
 const STAR_PRIZE = 2000; // tähden arvo vaellustilassa, jossa peli ei pääty
+const DUEL_PRIZE = 200; // rosvon saalis, jos kaksintaistelun voittaa suoraan
+const DUEL_BYPASS_SHOES = 3; // näin monella hevosenkengällä rosvon voi ohittaa
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 function questionLevel(question) {
@@ -6069,6 +6226,8 @@ class Game {
     this.die = null;
     this.moves = null;
     this.quiz = null;
+    this.duel = null;
+    this.duelArmed = false;
     this.usedQuestions = new Set();
     this.lastPath = null;
     this.winner = null;
@@ -6252,6 +6411,38 @@ class Game {
     this.lastPath = null;
     this.say(p.id, `${p.name} jatkoi matkaa: ${link.label}.`);
     this.emit('flight', link.label, { icon: '🧭' });
+    this.endTurn();
+    return { ok: true };
+  }
+
+  /**
+   * Maailmankartan lennot: vaelluksessa miltä tahansa lentokentältä voi
+   * lentää toisen laudan aloituskentälle lennon hinnalla.
+   */
+  worldDestinations() {
+    if (!this.roaming || this.phase !== 'action') return [];
+    const city = this.cityOf();
+    if (!city || !city.airport || this.player.money < FLIGHT_PRICE) return [];
+    return PACKS.filter((p) => p.id !== this.pack.id).map((p) => ({
+      pack: p.id,
+      label: p.boardLabel,
+      city: p.cities.find((c) => c.start).id,
+    }));
+  }
+
+  /** Lentää maailmankartalla toiselle laudalle. Vie koko vuoron. */
+  actionWorldFlight(packId) {
+    const dest = this.worldDestinations().find((d) => d.pack === packId);
+    if (!dest) return { ok: false, error: 'Sinne ei ole lentoa täältä' };
+    const p = this.player;
+    const pack = packById(dest.pack);
+    p.money -= FLIGHT_PRICE;
+    this.enterWorld(pack);
+    p.packId = pack.id;
+    p.pos = { type: 'city', city: dest.city };
+    this.lastPath = null;
+    this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla laudalle ${pack.boardLabel}.`);
+    this.emit('flight', `Lento: ${pack.boardLabel}`, { icon: '🌍', sub: `−${FLIGHT_PRICE} puntaa` });
     this.endTurn();
     return { ok: true };
   }
@@ -6535,10 +6726,149 @@ class Game {
     return { ok: true, hidden: quiz.hidden };
   }
 
-  /** Sulkee kysymyksen ja päättää vuoron. */
+  /** Sulkee kysymyksen ja päättää vuoron — tai aloittaa rosvon kaksintaistelun. */
   closeQuiz() {
     if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
     this.quiz = null;
+    if (this.phase === 'over') return { ok: true };
+    if (this.duelArmed) {
+      this.duelArmed = false;
+      this.beginDuel();
+      return { ok: true, duel: true };
+    }
+    this.phase = 'action';
+    this.endTurn();
+    return { ok: true };
+  }
+
+  // --- rosvon kaksintaistelu ----------------------------------------------
+
+  /**
+   * Rosvo esittää kiperän kysymyksen, jossa on kahdeksan vaihtoehtoa.
+   * Suora oikea vastaus tuo rosvon saaliin (DUEL_PRIZE). Helpotus poistaa
+   * puolet jäljellä olevista vääristä vaihtoehdoista, mutta rosvo vie siitä
+   * puolet rahoista. Väärä vastaus tai aikakatkaisu vie kaikki rahat.
+   * Kolmella hevosenkengällä rosvon voi ohittaa kokonaan.
+   */
+  beginDuel() {
+    const pool = this.pack.duels ?? [];
+    const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
+    const deck = fresh.length ? fresh : pool;
+    const question = deck[Math.floor(this.rng() * deck.length)];
+    this.usedQuestions.add(question.q);
+    const order = this.shuffledOrder(question.options.length);
+    this.duel = {
+      question: question.q,
+      fact: question.fact,
+      options: order.map((i) => question.options[i]),
+      correct: order.indexOf(question.correct),
+      hidden: [],
+      reliefs: 0,
+      taken: 0,
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'duel';
+    return { ok: true, duel: this.duel };
+  }
+
+  /** Helpotus: rosvo vie puolet rahoista ja puolet vääristä vaihtoehdoista poistuu. */
+  actionDuelRelief() {
+    const duel = this.duel;
+    if (this.phase !== 'duel' || !duel) return { ok: false, error: 'Ei kaksintaistelua' };
+    if (duel.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+    if (duel.reliefs >= 2) return { ok: false, error: 'Helpotukset on käytetty' };
+
+    const p = this.player;
+    const toll = Math.floor(p.money / 2);
+    p.money -= toll;
+    duel.taken += toll;
+    duel.reliefs++;
+
+    const wrong = duel.options
+      .map((_, i) => i)
+      .filter((i) => i !== duel.correct && !duel.hidden.includes(i));
+    for (let i = wrong.length - 1; i > 0; i--) {
+      const j = Math.floor(this.rng() * (i + 1));
+      [wrong[i], wrong[j]] = [wrong[j], wrong[i]];
+    }
+    const removeCount = duel.reliefs === 1 ? 4 : 2;
+    duel.hidden = [...duel.hidden, ...wrong.slice(0, removeCount)].sort((a, b) => a - b);
+    this.say(p.id, `${p.name} pyysi rosvolta helpotusta — rosvo vei ${toll} puntaa.`);
+    return { ok: true, toll, hidden: duel.hidden };
+  }
+
+  /** Kolme hevosenkenkää heitetään rosvolle, ja tämä päästää kulkijan ohi. */
+  actionDuelBypass() {
+    const duel = this.duel;
+    if (this.phase !== 'duel' || !duel) return { ok: false, error: 'Ei kaksintaistelua' };
+    if (duel.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+    const p = this.player;
+    if (p.horseshoes < DUEL_BYPASS_SHOES) {
+      return { ok: false, error: `Ohitus vaatii ${DUEL_BYPASS_SHOES} hevosenkenkää` };
+    }
+    p.horseshoes -= DUEL_BYPASS_SHOES;
+    this.say(p.id, `Ω ${p.name} heitti rosvolle ${DUEL_BYPASS_SHOES} hevosenkenkää ja pääsi ohi.`);
+    this.emit('aid', 'Rosvo päästi ohi', { icon: 'Ω', sub: `−${DUEL_BYPASS_SHOES} hevosenkenkää` });
+    this.duel = null;
+    this.phase = 'action';
+    this.endTurn();
+    return { ok: true, bypassed: true };
+  }
+
+  /** Vastaa rosvon kysymykseen. */
+  answerDuel(index) {
+    const duel = this.duel;
+    if (this.phase !== 'duel' || !duel || duel.chosen !== null) {
+      return { ok: false, error: 'Ei avointa kaksintaistelua' };
+    }
+    if (duel.hidden.includes(index)) return { ok: false, error: 'Tuo vaihtoehto on poistettu' };
+
+    const p = this.player;
+    duel.chosen = index;
+    duel.right = index === duel.correct;
+    if (duel.right) {
+      if (duel.reliefs === 0) {
+        p.money += DUEL_PRIZE;
+        duel.prize = DUEL_PRIZE;
+        this.say(p.id, `${p.name} voitti rosvon suoralla vastauksella ja vei saaliin: ${DUEL_PRIZE} puntaa!`);
+      } else {
+        this.say(p.id, `${p.name} voitti rosvon — loput rahat säilyvät.`);
+      }
+    } else {
+      const loss = p.money;
+      p.money = 0;
+      duel.taken += loss;
+      const oikea = duel.options[duel.correct];
+      this.say(p.id, `☠ ${p.name} hävisi rosvolle ${loss} puntaa — oikea vastaus oli "${oikea}".`);
+    }
+    return { ok: true, right: duel.right };
+  }
+
+  /** Aika loppui: rosvo vie kaikki rahat. */
+  timeoutDuel() {
+    const duel = this.duel;
+    if (this.phase !== 'duel' || !duel || duel.chosen !== null) {
+      return { ok: false, error: 'Ei avointa kaksintaistelua' };
+    }
+    const p = this.player;
+    duel.chosen = -1;
+    duel.right = false;
+    duel.timedOut = true;
+    duel.seconds = 0;
+    const loss = p.money;
+    p.money = 0;
+    duel.taken += loss;
+    this.say(p.id, `☠ ${p.name} ei ehtinyt vastata rosvolle ja menetti ${loss} puntaa.`);
+    return { ok: true, right: false, timedOut: true };
+  }
+
+  /** Sulkee kaksintaistelun ja päättää vuoron. */
+  closeDuel() {
+    if (!this.duel) return { ok: false, error: 'Ei kaksintaistelua' };
+    this.duel = null;
     if (this.phase === 'over') return { ok: true };
     this.phase = 'action';
     this.endTurn();
@@ -6653,12 +6983,12 @@ class Game {
         });
         break;
       case 'robber':
-        this.say(p.id, `☠ Ryöstäjä yllätti pelaajan ${p.name} ja vei ${p.money} puntaa!`);
+        this.say(p.id, `☠ Ryöstäjä yllätti pelaajan ${p.name} — edessä on kaksintaistelu!`);
         this.emit('robber', 'Ryöstäjä!', {
           token: type,
-          sub: p.money ? `${p.name} menetti ${p.money} puntaa` : `${p.name} ei ollut menetettävää`,
+          sub: `${p.name} joutuu rosvon kaksintaisteluun`,
         });
-        p.money = 0;
+        this.duelArmed = true;
         break;
       case 'empty':
         this.say(p.id, `${p.name} käänsi tyhjän laatan kaupungissa ${city.name}.`);
@@ -6720,6 +7050,8 @@ class Game {
       pendingFare: this.pendingFare,
       die: this.die,
       quiz: this.quiz,
+      duel: this.duel,
+      duelArmed: this.duelArmed,
       winnerId: this.winner ? this.winner.id : null,
       turnCount: this.turnCount,
       log: this.log,
@@ -6776,6 +7108,8 @@ class Game {
     game.pendingFare = data.pendingFare ?? 0;
     game.die = data.die ?? null;
     game.quiz = data.quiz ?? null;
+    game.duel = data.duel ?? null;
+    game.duelArmed = !!data.duelArmed;
     game.lastPath = null;
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;
@@ -6953,13 +7287,39 @@ function wantsQuiz() {
   return true;
 }
 
+// --- rosvon kaksintaistelu -------------------------------------------------
+
+/** Ohittaako botti rosvon hevosenkengillä? Aina, jos kenkiä riittää. */
+function wantsDuelBypass(game) {
+  return game.player.horseshoes >= DUEL_BYPASS_SHOES;
+}
+
+/** Pyytääkö botti rosvolta helpotusta? Kerran, jos pelissä on paljon rahaa. */
+function wantsDuelRelief(game) {
+  const duel = game.duel;
+  if (!duel || duel.chosen !== null || duel.reliefs >= 1) return false;
+  if (game.player.money < 400) return false;
+  return game.rng() < 0.5;
+}
+
+/** Botin vastaus rosvolle: kahdeksasta vaihtoehdosta osuminen on vaikeampaa. */
+function chooseDuelAnswer(game) {
+  const duel = game.duel;
+  if (!duel) return 0;
+  const open = duel.options.map((_, i) => i).filter((i) => !duel.hidden.includes(i));
+  const chance = 0.3 + duel.reliefs * 0.25;
+  if (game.rng() < chance) return duel.correct;
+  const wrong = open.filter((i) => i !== duel.correct);
+  return wrong.length ? wrong[Math.floor(game.rng() * wrong.length)] : duel.correct;
+}
+
 // ===== js/ui.js =====
 // Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
-const LETTERS = ['A', 'B', 'C', 'D'];
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
@@ -6976,7 +7336,7 @@ const TRAVEL_LABEL = { land: 'Maitse', sea: 'Laivalla', fly: 'Lentäen', stay: '
 const REVEAL_SUB = {
   star: 'Vie tähti kotiin ja voitat pelin!',
   horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
-  robber: 'Ryöstäjä vie kaikki rahat',
+  robber: 'Rosvo haastaa kaksintaisteluun!',
   empty: 'Ei aarretta täällä',
 };
 
@@ -7015,11 +7375,21 @@ class UI {
     this.quizHintText = document.getElementById('quiz-hint-text');
     this.quizFifty = document.getElementById('quiz-5050');
     this.quizFifty.addEventListener('click', () => {
+      if (this.game.phase === 'duel') {
+        sfx.play('robber');
+        this.doAction(() => this.game.actionDuelRelief());
+        return;
+      }
       sfx.play('swipe');
       this.doAction(() => this.game.actionFiftyFifty());
     });
     this.quizHint = document.getElementById('quiz-hint');
     this.quizHint.addEventListener('click', () => {
+      if (this.game.phase === 'duel') {
+        sfx.play('coin');
+        this.doAction(() => this.game.actionDuelBypass());
+        return;
+      }
       sfx.play('hint');
       this.doAction(() => this.game.actionHint());
     });
@@ -7034,7 +7404,9 @@ class UI {
     this.quizTimer = null;
     this.timedQuiz = null;
     this.quizContinue = document.getElementById('quiz-continue');
-    this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
+    this.quizContinue.addEventListener('click', () => this.doAction(() => (
+      this.game.phase === 'duel' ? this.game.closeDuel() : this.game.closeQuiz()
+    )));
 
     this.mapPane = this.svg.parentElement;
     this.busy = false;
@@ -7588,6 +7960,65 @@ class UI {
       });
       this.actionsEl.appendChild(gwBtn);
     }
+
+    // Lentokentältä avautuu maailmankartta.
+    if (game.worldDestinations().length) {
+      const worldBtn = html('button', '', `🌍 Maailmankartta (${FLIGHT_PRICE} p)`);
+      worldBtn.addEventListener('click', () => this.openWorldMap());
+      this.actionsEl.appendChild(worldBtn);
+    }
+  }
+
+  /** Maailmankartta: laudat tähtinä, joiden välillä lennetään. */
+  openWorldMap() {
+    const { game } = this;
+    const dialog = document.getElementById('world-dialog');
+    const holder = document.getElementById('world-map');
+    holder.textContent = '';
+
+    const svg = el('svg', { viewBox: '0 0 360 220', class: 'world-map-svg' });
+    el('rect', { x: 4, y: 4, width: 352, height: 212, rx: 10, class: 'world-paper' }, svg);
+
+    const current = game.pack;
+    const destinations = game.worldDestinations();
+
+    // Lentoreitit nykyiseltä laudalta muille.
+    for (const dest of destinations) {
+      const from = current.worldPos;
+      const to = this.packById(dest.pack).worldPos;
+      const mx = (from.x + to.x) / 2 + (to.y - from.y) * 0.2;
+      const my = (from.y + to.y) / 2 - (to.x - from.x) * 0.2;
+      el('path', {
+        d: `M${from.x},${from.y} Q${mx},${my} ${to.x},${to.y}`,
+        class: 'world-route',
+      }, svg);
+    }
+
+    // Laudat tähtinä; nykyinen kullanvärisenä.
+    for (const pack of [current, ...destinations.map((d) => this.packById(d.pack))]) {
+      const here = pack.id === current.id;
+      const node = el('g', {
+        transform: `translate(${pack.worldPos.x},${pack.worldPos.y})`,
+        class: here ? 'world-node here' : 'world-node',
+      }, svg);
+      el('circle', { r: 15, class: 'world-disc' }, node);
+      el('text', { y: 5, 'text-anchor': 'middle', class: 'world-star' }, node).textContent = here ? '📍' : '★';
+      el('text', { y: 30, 'text-anchor': 'middle', class: 'world-label' }, node).textContent = pack.boardLabel;
+      if (!here) {
+        node.addEventListener('click', () => {
+          dialog.close();
+          sfx.play('flight');
+          this.doAction(() => game.actionWorldFlight(pack.id));
+        });
+      }
+    }
+
+    holder.appendChild(svg);
+    dialog.showModal();
+  }
+
+  packById(id) {
+    return PACKS.find((p) => p.id === id);
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
@@ -7681,6 +8112,10 @@ class UI {
 
   renderQuiz() {
     const { game } = this;
+    if (game.phase === 'duel' && game.duel) {
+      this.renderDuel();
+      return;
+    }
     const quiz = game.quiz;
     if (game.phase !== 'quiz' || !quiz) {
       this.stopQuizTimer();
@@ -7769,10 +8204,111 @@ class UI {
     if (!this.quizDialog.open) this.quizDialog.showModal();
   }
 
+  /** Rosvon kaksintaistelu: 8 vaihtoehtoa, helpotukset ja hevosenkenkäohitus. */
+  renderDuel() {
+    const { game } = this;
+    const duel = game.duel;
+    const p = game.player;
+
+    this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
+    this.quizQuestion.textContent = duel.question;
+    this.quizOptions.textContent = '';
+
+    duel.options.forEach((text, i) => {
+      const btn = html('button', 'quiz-option');
+      btn.style.setProperty('--i', String(i));
+      btn.appendChild(html('span', 'letter', LETTERS[i]));
+      btn.appendChild(html('span', 'text', text));
+      if (duel.hidden.includes(i)) {
+        btn.classList.add('hidden-option');
+        btn.disabled = true;
+      } else if (duel.chosen !== null) {
+        btn.disabled = true;
+        if (i === duel.correct) btn.classList.add('correct');
+        if (i === duel.chosen && !duel.right) btn.classList.add('wrong');
+      } else if (p.isBot) {
+        btn.disabled = true;
+      } else {
+        btn.addEventListener('click', () => this.answerDuelUi(i));
+      }
+      this.quizOptions.appendChild(btn);
+    });
+
+    const answered = duel.chosen !== null;
+    const revealed = this.revealShownFor === duel;
+
+    // Helpotus rosvolta: puolet rahoista, puolet vääristä pois.
+    const toll = Math.floor(p.money / 2);
+    this.quizFifty.hidden = answered || p.isBot;
+    this.quizFifty.disabled = duel.reliefs >= 2 || toll <= 0;
+    this.quizFifty.textContent = duel.reliefs >= 2
+      ? 'Helpotukset käytetty'
+      : `☠ Helpotus (rosvo vie ${toll} p)`;
+
+    // Kolmella hevosenkengällä pääsee ohi.
+    this.quizHint.hidden = answered || p.isBot || p.horseshoes < DUEL_BYPASS_SHOES;
+    this.quizHint.disabled = false;
+    this.quizHint.textContent = `Ω Ohita rosvo (${DUEL_BYPASS_SHOES} kenkää)`;
+
+    this.quizHintText.hidden = duel.reliefs === 0;
+    if (duel.reliefs > 0) {
+      this.quizHintText.textContent = `Rosvo on vienyt ${duel.taken} puntaa.`;
+    }
+
+    this.renderTimer(duel);
+
+    this.quizResult.hidden = !answered;
+    if (answered) {
+      this.quizResult.className = `quiz-result ${duel.right ? 'right' : 'wrong'}`;
+      this.quizResult.textContent = '';
+      if (!revealed) {
+        const verdict = duel.timedOut ? 'Aika loppui!' : duel.right ? 'Oikein!' : 'Väärin.';
+        this.quizResult.appendChild(html('strong', 'quiz-verdict', verdict));
+      } else {
+        const body = html('div');
+        if (duel.right && duel.prize) {
+          body.appendChild(html('strong', '', `Voitit rosvon — saalis ${duel.prize} puntaa!`));
+        } else if (duel.right) {
+          body.appendChild(html('strong', '', 'Voitit rosvon — loput rahat säilyvät.'));
+        } else {
+          const lead = duel.timedOut ? 'Aika loppui. ' : '';
+          body.appendChild(
+            html('strong', '', `${lead}Rosvo vei rahat — oikea vastaus oli "${duel.options[duel.correct]}".`),
+          );
+        }
+        if (duel.fact) body.appendChild(html('span', 'muted', duel.fact));
+        this.quizResult.appendChild(body);
+      }
+    }
+    this.quizContinue.hidden = !answered || !revealed || p.isBot;
+
+    if (!this.quizDialog.open) this.quizDialog.showModal();
+  }
+
+  /** Vastaus rosvolle: tuomio, tauko ja selitys — kuten tietovisassa. */
+  answerDuelUi(index) {
+    const { game } = this;
+    this.stopQuizTimer();
+    this.run(() => game.answerDuel(index), {
+      after: async () => {
+        const duel = game.duel;
+        if (!duel) return;
+        sfx.play(duel.right ? 'correct' : 'robber');
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 200 : 900);
+        this.revealShownFor = duel;
+        this.renderQuiz();
+        await this.wait(this.reducedMotion ? 0 : 500);
+      },
+    });
+  }
+
   // --- tiimalasi ------------------------------------------------------------
 
   /** Käynnistää tai pysäyttää vastausajan sen mukaan, kuka on vuorossa. */
   renderTimer(quiz) {
+    // Toimii sekä tietovisalle että kaksintaistelulle: molemmilla on
+    // chosen- ja seconds-kentät.
     const show = !this.game.player.isBot && quiz.chosen === null;
     this.quizTimerEl.hidden = !show;
     if (!show) {
@@ -7874,6 +8410,21 @@ class UI {
   timeUp() {
     this.stopQuizTimer();
     const { game } = this;
+    if (game.phase === 'duel' && game.duel && game.duel.chosen === null) {
+      this.run(() => game.timeoutDuel(), {
+        after: async () => {
+          const duel = game.duel;
+          if (!duel) return;
+          sfx.play('timeout');
+          this.renderQuiz();
+          await this.wait(this.reducedMotion ? 200 : 900);
+          this.revealShownFor = duel;
+          this.renderQuiz();
+          await this.wait(this.reducedMotion ? 0 : 500);
+        },
+      });
+      return;
+    }
     if (game.phase !== 'quiz' || !game.quiz || game.quiz.chosen !== null) return;
     this.run(() => game.timeoutQuiz(), {
       after: async () => {
@@ -8111,13 +8662,21 @@ class UI {
     clearTimeout(this.botTimer);
     const { game } = this;
     if (this.busy || game.phase === 'over' || !game.player.isBot) return;
-    const delay = game.phase === 'quiz' ? BOT_QUIZ_DELAY : BOT_DELAY;
+    const delay = game.phase === 'quiz' || game.phase === 'duel' ? BOT_QUIZ_DELAY : BOT_DELAY;
     this.botTimer = setTimeout(() => this.botStep(), delay);
   }
 
   botStep() {
     const { game } = this;
     if (this.busy || game.phase === 'over' || !game.player.isBot) return;
+
+    if (game.phase === 'duel') {
+      if (game.duel.chosen !== null) this.run(() => game.closeDuel());
+      else if (wantsDuelBypass(game)) this.run(() => game.actionDuelBypass());
+      else if (wantsDuelRelief(game)) this.run(() => game.actionDuelRelief());
+      else this.answerDuelUi(chooseDuelAnswer(game));
+      return;
+    }
 
     if (game.phase === 'quiz') {
       if (game.quiz.chosen !== null) this.run(() => game.closeQuiz());
@@ -8155,7 +8714,7 @@ class UI {
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.6';
+const APP_VERSION = '2026-07-26.7';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -8362,6 +8921,9 @@ document.getElementById('newgame-btn').addEventListener('click', openSetup);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
 document.getElementById('winner-close').addEventListener('click', openSetup);
+document.getElementById('world-close').addEventListener('click', () => {
+  document.getElementById('world-dialog').close();
+});
 
 // Palvelutyöntekijä tekee pelistä asennettavan ja offline-toimivan.
 // Ohitetaan hiljaisesti, jos sivu on avattu file://-osoitteesta tai hiekkalaatikossa.
