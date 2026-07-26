@@ -66,10 +66,14 @@
       <div class="setup-hero">
         <span class="setup-star">★</span>
         <div>
-          <h2>Afrikan tähti</h2>
-          <p class="setup-tagline">Etsi tähti, vastaa kysymyksiin, palaa kotiin.</p>
+          <h2 id="setup-title">Afrikan tähti</h2>
+          <p id="setup-tagline" class="setup-tagline">Etsi tähti, vastaa kysymyksiin, palaa kotiin.</p>
         </div>
       </div>
+      <label class="row">
+        Pelilauta
+        <select id="board-select"></select>
+      </label>
       <label class="row">
         Pelaajia
         <select id="player-count">
@@ -90,9 +94,12 @@
    <div class="dialog-card">
     <h2>Säännöt</h2>
     <div class="rules-text">
-      <p><b>Tavoite.</b> Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon.
-        Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä
-        aloituskaupunkiin ensimmäisenä.</p>
+      <p><b>Tavoite.</b> Löydä laudan tähtiaarre — Afrikassa Afrikan tähti, Lähi-idässä
+        Idän tähti — ja palaa sen kanssa johonkin aloituskaupungeista. Kun tähti on
+        löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupunkiin
+        ensimmäisenä.</p>
+      <p><b>Pelilauta.</b> Uuden pelin alussa valitaan lauta: Afrikka tai Lähi-itä.
+        Kummallakin laudalla on omat kaupunkinsa, reittinsä ja kysymyksensä.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
         lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä. Jos
         vaihtoehtoja ei ole — esimerkiksi sisämaassa tai kesken reittiä — vuoro alkaa
@@ -116,9 +123,9 @@
       <p><b>Rahan käyttö.</b> 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa
         kysymyksestä kaksi väärää vaihtoehtoa (50:50), 100 puntaa maksaa laivamatkan ja
         300 puntaa lennon.</p>
-      <p><b>Aarteet (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
-        rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
-        Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
+      <p><b>Aarteet.</b> Jokaisessa aarrekaupungissa on yksi laatta: tähti, hevosenkenkiä,
+        ryöstäjiä, jalokiviä (rubiini 1000 p, smaragdi 600 p, topaasi/turkoosi 300 p) ja
+        tyhjiä. Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
       <p><b>Tiesitkö että…</b> Ohjauspaneeli kertoo tietoa siitä paikasta, jossa vuorossa
         oleva pelaaja on. Tieto vaihtuu kierroksittain.</p>

@@ -1,10 +1,14 @@
-// Pelilauta: kaupungit, reitit ja kartan piirtotiedot.
+// Afrikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
 //
 // Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Afrikan karttaa:
 //   x = (pituusaste + 20) * 13.333   (lännestä -20° itään 55°)
 //   y = (40 - leveysaste) * 12.5     (pohjoisesta 40° etelään -40°)
 
-export const MAP = {
+
+import { AFRICA_QUESTIONS, AFRICA_FACTS } from './africa-questions.js';
+import { themedTokenTypes } from '../tokens.js';
+
+const AFRICA_MAP = {
   width: 1000,
   height: 1000,
   // Rannikkoviiva oikeista koordinaateista projisoituna; mapart.js pyöristää
@@ -34,7 +38,7 @@ export const MAP = {
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
-export const CITIES = [
+const AFRICA_CITIES = [
   { id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true },
   { id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true },
 
@@ -70,12 +74,10 @@ export const CITIES = [
   { id: 'rashafun', name: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
 ];
 
-export const SEA_FEE = 100;
-export const FLIGHT_PRICE = 300;
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
 // type 'sea' = laivareitti, jonne astuminen maksaa SEA_FEE.
-export const EDGES = [
+const AFRICA_EDGES = [
   // Pohjois-Afrikka
   { a: 'tanger', b: 'tripoli', steps: 4 },
   { a: 'tanger', b: 'sahara', steps: 5 },
@@ -143,10 +145,65 @@ export const EDGES = [
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
-export const AIR_ROUTES = [
+const AFRICA_AIR_ROUTES = [
   { a: 'tanger', b: 'kairo' },
   { a: 'kairo', b: 'kapkaupunki' },
   { a: 'tanger', b: 'kapkaupunki' },
 ];
 
-export const TOKEN_CITIES = CITIES.filter((c) => !c.start).map((c) => c.id);
+// Karttapaketti: kaikki mitä pelimoottori tarvitsee yhdestä laudasta.
+// Uusi manner lisätään tekemällä vastaava tiedosto ja lisäämällä se pack.js:ään.
+export const AFRICA = {
+  id: 'africa',
+  name: 'Afrikan tähti',
+  boardLabel: 'Afrikka',
+  tagline: 'Etsi tähti, vastaa kysymyksiin, palaa kotiin.',
+  ariaLabel: 'Afrikan aarrekartta',
+
+  map: { ...AFRICA_MAP, outlines: [AFRICA_MAP.africaPoints, AFRICA_MAP.madagascarPoints] },
+  cities: AFRICA_CITIES,
+  edges: AFRICA_EDGES,
+  airRoutes: AFRICA_AIR_ROUTES,
+  islands: ['sansibar'], // saarikaupungit: rannikon ulkopuolella, vain laivayhteys
+  minCityDistance: 75,
+
+  tokens: {
+    types: themedTokenTypes(),
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 6, empty: 9 },
+  },
+
+  questions: AFRICA_QUESTIONS,
+  placeFacts: AFRICA_FACTS,
+
+  texts: {
+    intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.',
+    starFound: (name, city) => `★ ${name} löysi AFRIKAN TÄHDEN kaupungista ${city}!`,
+    starToast: 'AFRIKAN TÄHTI!',
+    starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
+    winStar: 'toi Afrikan tähden turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Afrikan tähden kotiin ${money} punnan kanssa.`,
+  },
+
+  decor: {
+    mapLabel: 'AFRIKA',
+    mapLabelPos: { x: 886, y: 96 },
+    compass: { x: 168, y: 772, r: 62 },
+    // Aaltoja ei piirretä näihin kohtiin: laivadoodle, meripeto ja karttanimi.
+    waveSkip: [
+      { x: 232, y: 556, r: 95 },
+      { x: 858, y: 905, r: 110 },
+      { x: 880, y: 92, r: 135 },
+    ],
+    ship: { x: 214, y: 548 },
+    serpent: { x: 852, y: 902 },
+    // Nopan lepopaikka suhteellisina koordinaatteina: avomerta vasemmassa alakulmassa.
+    dieSpot: { x: 0.115, y: 0.865 },
+    // Maaston merkit leveysvyöhykkeittäin: pohjoisessa dyynejä, keskellä puita,
+    // etelässä vuoria.
+    terrainBands: [
+      { maxY: 300, kind: 'dunes' },
+      { maxY: 640, kind: 'trees' },
+      { maxY: Infinity, kind: 'mountains' },
+    ],
+  },
+};

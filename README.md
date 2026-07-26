@@ -1,15 +1,20 @@
 # Afrikan tähti ★
 
-Selaimessa pelattava versio klassisesta Afrikan tähti -lautapelistä. Ei riippuvuuksia,
-ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
+Selaimessa pelattava seikkailupeli, jonka innoittajana on klassinen Afrikan tähti
+-lautapeli. Ei riippuvuuksia, ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja
+JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
+maantieteestä kiinnostavasti.
 
+- **Kaksi pelilautaa:** Afrikka (Afrikan tähti) ja Lähi-itä (Idän tähti) —
+  uuden pelin alussa valitaan, kummalla pelataan
 - 2–4 pelaajaa samalla koneella, kukin joko ihminen tai botti
 - Aarteet avataan **vain tietovisalla**: arvottu monivalintakysymys (A–D) paikan
   maantiedosta, kulttuurista ja yleistiedosta; 40 punnan vihje ja 80 punnan 50:50
   auttavat pinteessä, ja tiimalasi antaa vastausaikaa 45 sekuntia
-- SVG-kartta, jossa 32 kaupunkia, maareitit, laivareitit ja kolme lentoyhteyttä
-- 30 laattaa: Afrikan tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät
-- Yli 100 kysymystä: jokaisella kaupungilla omat kysymyksensä + yleinen varapakka
+- SVG-kartta, jossa kymmeniä kaupunkeja, maareitit, laivareitit ja lentoyhteydet
+- Laatat: tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät — Lähi-idässä
+  topaasin tilalla on turkoosi, joka on saanut nimensä Turkista
+- Lähes 200 kysymystä: jokaisella kaupungilla omat kysymyksensä + laudan yleinen varapakka
 - Suomenkielinen käyttöliittymä ja "Tiesitkö että…" -tietoruutu, joka kertoo
   vuorossa olevan pelaajan sijainnista — 64 tietoa, kaksi jokaisesta kaupungista
 - Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
@@ -73,8 +78,10 @@ seuraavalla avauskerralla; *Uusi peli* aloittaa alusta.
 
 ## Säännöt
 
-**Tavoite.** Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon. Kun tähti on
-löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupunkiin ensimmäisenä.
+**Tavoite.** Löydä laudan tähtiaarre — Afrikassa Afrikan tähti, Lähi-idässä Idän tähti —
+ja palaa sen kanssa johonkin aloituskaupungeista (Afrikassa Tanger tai Kairo, Lähi-idässä
+Istanbul tai Kairo). Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa
+pääsemällä aloituskaupunkiin ensimmäisenä.
 
 **Vuoron kulku.**
 
@@ -84,7 +91,7 @@ löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupun
 | --- | --- |
 | 🥾 Maitse | Ilmainen, kulkee vain maareittejä |
 | ⛵ Laivalla (100 p) | Kulkee vain meriteitä; maksu peritään satamasta lähdettäessä |
-| ✈ Lennä (300 p) | Suoraan toiselle lentokentälle: Tanger, Kairo, Kapkaupunki |
+| ✈ Lennä (300 p) | Suoraan toiselle lentokenttäkaupungille |
 | ❓ Jää paikalleen | Aarrekaupungissa: kokeile kysymystä liikkumatta |
 
    Jos tarjolla on vain yksi tapa — esimerkiksi sisämaan kaupungissa tai kesken
@@ -121,17 +128,19 @@ pysähdyt reitin varrelle. Reittiä voi vaihtaa kaupungissa, mutta kesken reitin
 kääntyä takaisin. Laivareitille (sininen katkoviiva) astuminen maksaa 100 puntaa, ja
 ilman rahaa laivaan ei pääse.
 
-**Aarteet (30 kpl).** Kartalla näkyvät vain jo avatut aarteet omina kuvakkeinaan.
+**Aarteet.** Jokaisessa aarrekaupungissa on yksi laatta, ja kartalla näkyvät vain jo
+avatut aarteet omina kuvakkeinaan. Laattojen määrät vaihtelevat laudoittain (suluissa
+Afrikka / Lähi-itä):
 
 | Laatta | Määrä | Vaikutus |
 | --- | --- | --- |
-| ★ Afrikan tähti | 1 | Vie se kotiin ja voitat |
-| Ω Hevosenkenkä | 2 | Voittaa, jos ehtii kotiin ennen tähteä |
-| ☠ Ryöstäjä | 3 | Vie kaikki rahat |
-| ◆ Rubiini | 4 | 1000 puntaa |
-| ◆ Smaragdi | 5 | 600 puntaa |
-| ◆ Topaasi | 6 | 300 puntaa |
-| · Tyhjä | 9 | Ei mitään |
+| ★ Tähti | 1 / 1 | Vie se kotiin ja voitat |
+| Ω Hevosenkenkä | 2 / 2 | Voittaa, jos ehtii kotiin ennen tähteä |
+| ☠ Ryöstäjä | 3 / 3 | Vie kaikki rahat |
+| ◆ Rubiini | 4 / 3 | 1000 puntaa |
+| ◆ Smaragdi | 5 / 4 | 600 puntaa |
+| ◆ Topaasi / Turkoosi | 6 / 6 | 300 puntaa |
+| · Tyhjä | 9 / 8 | Ei mitään |
 
 Jokainen aloittaa 300 punnalla. Jalokiven arvo lisätään heti pelaajan rahoihin.
 
@@ -139,17 +148,18 @@ Jokainen aloittaa 300 punnalla. Jalokiven arvo lisätään heti pelaajan rahoihi
 laivalippua (esim. jumissa Sansibarissa), hän saa vuoronsa alussa 100 puntaa pankilta.
 Tämä estää pelin lukkiutumisen; alkuperäisessä pelissä vastaavaa sääntöä ei ole.
 
-Kartta ja reitit ovat oma tulkinta alkuperäisestä laudasta: kaupungit on sijoitettu
-todellisten koordinaattiensa mukaan ja reittien pituudet on tasapainotettu peliä varten.
+Kartat ja reitit ovat oma tulkintamme: kaupungit on sijoitettu todellisten
+koordinaattiensa mukaan ja reittien pituudet on tasapainotettu peliä varten.
 
 ## Projektin rakenne
 
 ```
 index.html          runko ja dialogit
 css/styles.css      ulkoasu
-js/board.js         kaupungit, reitit ja rannikkoviivan pisteet
+js/pack.js          karttapakettien rekisteri (laudat)
+js/packs/           yksi paketti per lauta: kartta, kaupungit, reitit,
+                    laatat, kysymykset ja teema (africa.js, middleeast.js)
 js/tokens.js        laattatyypit ja pinon sekoitus
-js/questions.js     tietovisakysymykset kaupungeittain
 js/rules.js         puhdas sääntölogiikka (siirrot, etäisyydet) — testattavissa Nodella
 js/game.js          pelitila, vuorot, laattojen kääntäminen, voittoehdot
 js/ai.js            bottien päätöksenteko
@@ -163,6 +173,12 @@ assets/             sovelluskuvakkeet
 tools/              yhden tiedoston koonti ja kuvakkeiden generointi
 tests/              node --test -testit säännöille ja kokonaiselle pelille
 ```
+
+## Uuden laudan lisääminen
+
+Peli on rakennettu niin, että uusi manner tai alue on oma *karttapakettinsa* —
+moottoriin ei tarvitse koskea. Ohjeet ovat tiedostossa
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Testit
 

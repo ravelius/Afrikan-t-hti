@@ -1,7 +1,8 @@
 // Aarrekartan grafiikka: pergamentti, käsin piirretty rannikko, aallot, maasto,
 // kompassiruusu ja reunuskoristeet. Kaikki piirretään SVG:nä ilman kuvatiedostoja.
-
-import { MAP } from './board.js';
+//
+// Piirto ei tiedä mitään yksittäisestä laudasta: rannikot tulevat paketin
+// map.outlines-listasta ja koristeet paketin decor-osiosta.
 
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -53,8 +54,17 @@ function smoothClosedPath(points) {
   return `${d} Z`;
 }
 
-export const AFRICA_PATH = smoothClosedPath(MAP.africaPoints);
-export const MADAGASCAR_PATH = smoothClosedPath(MAP.madagascarPoints);
+// Pehmeiksi käyriksi lasketut rannikot muistetaan karttakohtaisesti.
+const outlineCache = new WeakMap();
+
+function outlinePaths(map) {
+  let paths = outlineCache.get(map);
+  if (!paths) {
+    paths = map.outlines.map(smoothClosedPath);
+    outlineCache.set(map, paths);
+  }
+  return paths;
+}
 
 /** Suodattimet ja liukuvärit, joilla paperi ja mustejälki saavat elävän pinnan. */
 export function drawDefs(svg) {
@@ -138,14 +148,15 @@ export function drawPaperOverlay(svg) {
 }
 
 /** Manner: rannikon kaikuviivat, täyttö ja mustepiirto. */
-export function drawLand(svg) {
+export function drawLand(svg, map) {
+  const paths = outlinePaths(map);
   const g = el('g', { class: 'landmass', filter: 'url(#rough)' }, svg);
-  for (const d of [AFRICA_PATH, MADAGASCAR_PATH]) {
+  for (const d of paths) {
     el('path', { d, class: 'sea-echo sea-echo-1' }, g);
     el('path', { d, class: 'sea-echo sea-echo-2' }, g);
     el('path', { d, class: 'sea-echo sea-echo-3' }, g);
   }
-  for (const d of [AFRICA_PATH, MADAGASCAR_PATH]) {
+  for (const d of paths) {
     el('path', { d, class: 'land' }, g);
     el('path', { d, class: 'coast' }, g);
   }
@@ -178,24 +189,21 @@ function distanceToPolygon([px, py], poly) {
   return best;
 }
 
-const AFRICA = MAP.africaPoints;
-const MADAGASCAR = MAP.madagascarPoints;
-
-function onLand(p) {
-  return pointInPolygon(p, AFRICA) || pointInPolygon(p, MADAGASCAR);
+function onLand(p, map) {
+  return map.outlines.some((outline) => pointInPolygon(p, outline));
 }
 
-function coastDistance(p) {
-  return Math.min(distanceToPolygon(p, AFRICA), distanceToPolygon(p, MADAGASCAR));
+function coastDistance(p, map) {
+  return map.outlines.reduce((best, outline) => Math.min(best, distanceToPolygon(p, outline)), Infinity);
 }
 
 /** Ruudukon pisteet merellä, riittävän kaukana rannikosta. */
-export function seaPoints(spacing = 92, margin = 46) {
+export function seaPoints(map, spacing = 92, margin = 46) {
   const points = [];
-  for (let x = 30; x < MAP.width; x += spacing) {
-    for (let y = 30; y < MAP.height; y += spacing) {
+  for (let x = 30; x < map.width; x += spacing) {
+    for (let y = 30; y < map.height; y += spacing) {
       const p = [x, y];
-      if (onLand(p) || coastDistance(p) < margin) continue;
+      if (onLand(p, map) || coastDistance(p, map) < margin) continue;
       points.push(p);
     }
   }
@@ -203,12 +211,12 @@ export function seaPoints(spacing = 92, margin = 46) {
 }
 
 /** Ruudukon pisteet maalla, riittävän kaukana rannikosta ja esteistä. */
-export function landPoints(obstacles, spacing = 78, clearance = 34) {
+export function landPoints(map, obstacles, spacing = 78, clearance = 34) {
   const points = [];
-  for (let x = 40; x < MAP.width; x += spacing) {
-    for (let y = 40; y < MAP.height; y += spacing) {
+  for (let x = 40; x < map.width; x += spacing) {
+    for (let y = 40; y < map.height; y += spacing) {
       const p = [x, y];
-      if (!onLand(p) || coastDistance(p) < 34) continue;
+      if (!onLand(p, map) || coastDistance(p, map) < 34) continue;
       if (obstacles.some((o) => Math.hypot(p[0] - o.x, p[1] - o.y) < clearance)) continue;
       points.push(p);
     }
@@ -221,9 +229,9 @@ function blocked(p, zones) {
 }
 
 /** Merelle piirretyt kaksoiskaaret, jotka merkitsevät aaltoja. */
-export function drawWaves(svg, skipZones = []) {
+export function drawWaves(svg, map, skipZones = []) {
   const g = el('g', { class: 'waves', filter: 'url(#rough-soft)' }, svg);
-  seaPoints().forEach((p, i) => {
+  seaPoints(map).forEach((p, i) => {
     if (i % 2 === 1 || blocked(p, skipZones)) return;
     const key = `wave:${p[0]}:${p[1]}`;
     const x = p[0] + vary(`${key}:x`, 9);
@@ -246,13 +254,37 @@ export function drawWaves(svg, skipZones = []) {
   });
 }
 
+// Yksittäisten maastomerkkien piirto: dyynit, puu ja vuoret.
+const TERRAIN_MARKS = {
+  dunes(mark, x, y) {
+    el('path', {
+      d: `M${x - 16},${y} q8,-9 16,0 M${x - 2},${y + 8} q8,-9 16,0`,
+      class: 'terrain-mark',
+    }, mark);
+  },
+  trees(mark, x, y) {
+    el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, mark);
+    el('path', {
+      d: `M${x},${y - 4} q-11,-2 -13,-10 q9,1 13,7 q4,-6 13,-7 q-2,8 -13,10 z`,
+      class: 'terrain-fill',
+    }, mark);
+  },
+  mountains(mark, x, y) {
+    el('path', {
+      d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
+      class: 'terrain-mark',
+    }, mark);
+  },
+};
+
 /**
- * Maaston merkit vanhan kartan tapaan: pohjoisessa dyynejä, keskellä puita ja
- * etelässä vuoria. Piirretään vain kohtiin, joissa ei ole reittejä tai nimiä.
+ * Maaston merkit vanhan kartan tapaan. Merkin laji valitaan paketin
+ * leveysvyöhykkeistä (decor.terrainBands), ja merkit piirretään vain kohtiin,
+ * joissa ei ole reittejä tai nimiä.
  */
-export function drawTerrain(svg, obstacles) {
+export function drawTerrain(svg, map, obstacles, bands) {
   const g = el('g', { class: 'terrain', filter: 'url(#rough-soft)' }, svg);
-  landPoints(obstacles).forEach((p, i) => {
+  landPoints(map, obstacles).forEach((p, i) => {
     if (i % 2 === 1) return;
     const key = `terrain:${p[0]}:${p[1]}`;
     const x = p[0] + vary(`${key}:x`, 8);
@@ -263,23 +295,8 @@ export function drawTerrain(svg, obstacles) {
       opacity: (0.8 + hash01(`${key}:o`) * 0.4).toFixed(2),
       'transform-origin': `${x.toFixed(1)}px ${y.toFixed(1)}px`,
     }, g);
-    if (y < 300) {
-      el('path', {
-        d: `M${x - 16},${y} q8,-9 16,0 M${x - 2},${y + 8} q8,-9 16,0`,
-        class: 'terrain-mark',
-      }, mark);
-    } else if (y < 640) {
-      el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, mark);
-      el('path', {
-        d: `M${x},${y - 4} q-11,-2 -13,-10 q9,1 13,7 q4,-6 13,-7 q-2,8 -13,10 z`,
-        class: 'terrain-fill',
-      }, mark);
-    } else {
-      el('path', {
-        d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
-        class: 'terrain-mark',
-      }, mark);
-    }
+    const band = bands.find((b) => y < b.maxY) ?? bands[bands.length - 1];
+    (TERRAIN_MARKS[band.kind] ?? TERRAIN_MARKS.mountains)(mark, x, y);
   });
 }
 
@@ -309,8 +326,8 @@ export function drawCompass(svg, cx, cy, r = 62) {
 }
 
 /** Onko piste mantereella (myös testien käytössä). */
-export function isOnLand(point) {
-  return onLand(point);
+export function isOnLand(point, map) {
+  return onLand(point, map);
 }
 
 // --- laattojen kuvakkeet ---------------------------------------------------
@@ -491,28 +508,39 @@ export function tokenIconSvg(type, size = 18) {
 }
 
 /** Purjelaiva, meripeto ja karttaotsikko täyttämässä tyhjää merta. */
-export function drawDoodles(svg) {
-  const ship = el('g', { class: 'doodle-ship', transform: 'translate(214,548)' }, svg);
-  el('path', { d: 'M-40,10 L40,10 L28,30 L-28,30 Z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M-2,10 L-2,-48 M18,10 L18,-30', class: 'doodle' }, ship);
-  el('path', { d: 'M0,-46 q26,16 0,30 z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M20,-28 q18,12 0,22 z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M-52,38 q13,9 26,0 M18,38 q13,9 26,0', class: 'doodle' }, ship);
+export function drawDoodles(svg, decor) {
+  if (decor.ship) {
+    const ship = el('g', {
+      class: 'doodle-ship', transform: `translate(${decor.ship.x},${decor.ship.y})`,
+    }, svg);
+    el('path', { d: 'M-40,10 L40,10 L28,30 L-28,30 Z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M-2,10 L-2,-48 M18,10 L18,-30', class: 'doodle' }, ship);
+    el('path', { d: 'M0,-46 q26,16 0,30 z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M20,-28 q18,12 0,22 z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M-52,38 q13,9 26,0 M18,38 q13,9 26,0', class: 'doodle' }, ship);
+  }
 
-  const serpent = el('g', { class: 'doodle-serpent', transform: 'translate(852,902)' }, svg);
-  el('path', {
-    d: 'M-78,14 q14,-30 30,-2 q10,18 22,0 q10,-16 22,-2',
-    class: 'doodle',
-  }, serpent);
-  el('path', {
-    d: 'M-4,10 q14,-22 34,-16 q-8,7 -6,16 q-12,6 -28,0 z',
-    class: 'doodle-fill',
-  }, serpent);
-  el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+  if (decor.serpent) {
+    const serpent = el('g', {
+      class: 'doodle-serpent', transform: `translate(${decor.serpent.x},${decor.serpent.y})`,
+    }, svg);
+    el('path', {
+      d: 'M-78,14 q14,-30 30,-2 q10,18 22,0 q10,-16 22,-2',
+      class: 'doodle',
+    }, serpent);
+    el('path', {
+      d: 'M-4,10 q14,-22 34,-16 q-8,7 -6,16 q-12,6 -28,0 z',
+      class: 'doodle-fill',
+    }, serpent);
+    el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+  }
 
-  const title = el('g', { class: 'map-title-group', transform: 'translate(886,96)' }, svg);
+  const title = el('g', {
+    class: 'map-title-group',
+    transform: `translate(${decor.mapLabelPos.x},${decor.mapLabelPos.y})`,
+  }, svg);
   el('text', {
     x: 0, y: 0, class: 'map-title', 'text-anchor': 'middle', 'font-size': 34,
-  }, title).textContent = 'AFRIKA';
+  }, title).textContent = decor.mapLabel;
   el('path', { d: 'M-80,14 L80,14 M-58,22 L58,22', class: 'doodle' }, title);
 }

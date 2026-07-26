@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { CITIES, EDGES, TOKEN_CITIES } from '../js/board.js';
+import { PACKS, packById, allQuestions } from '../js/pack.js';
 import { buildBoard, findMoves, posKey, cityDistances, pointAlong } from '../js/rules.js';
 import { isOnLand } from '../js/mapart.js';
-import { tokenPileTemplate, TOKEN_COUNTS } from '../js/tokens.js';
+import { tokenPileTemplate } from '../js/tokens.js';
 import {
   Game, mulberry32, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE, HINT_PRICE,
   QUIZ_SECONDS, SEA_FARE,
@@ -12,11 +12,11 @@ import {
 import {
   chooseMove, chooseQuizAnswer, chooseTravel, wantsFiftyFifty, wantsHint,
 } from '../js/ai.js';
-import { QUESTIONS, PLACE_FACTS, allQuestions } from '../js/questions.js';
 
-const board = buildBoard(CITIES, EDGES);
+const AFRICA = packById('africa');
+const board = buildBoard(AFRICA.cities, AFRICA.edges);
 
-/** Kahden pelaajan peli testejä varten. */
+/** Kahden pelaajan peli testejä varten (Afrikan laudalla). */
 function newGame(seed = 5) {
   return new Game({
     players: [
@@ -27,22 +27,144 @@ function newGame(seed = 5) {
   });
 }
 
-test('lauta rakentuu ja on yhtenäinen', () => {
-  for (const city of CITIES) {
-    assert.ok(board.adj.get(city.id).length > 0, `${city.id} on irrallaan`);
-  }
-  const dist = cityDistances(board, 'tanger');
-  for (const city of CITIES) {
-    assert.ok(dist.has(city.id), `${city.id} ei ole saavutettavissa Tangerista`);
-  }
-});
+// --- jokaista pakettia koskevat eheystestit --------------------------------
 
-test('laattoja on yhtä monta kuin laattakaupunkeja', () => {
-  const pile = tokenPileTemplate();
-  assert.equal(pile.length, TOKEN_CITIES.length);
-  assert.equal(TOKEN_COUNTS.star, 1);
-  assert.equal(TOKEN_COUNTS.horseshoe, 2);
-});
+for (const pack of PACKS) {
+  const packBoard = buildBoard(pack.cities, pack.edges);
+  const startCities = pack.cities.filter((c) => c.start);
+  const home = startCities[0].id;
+
+  test(`${pack.id}: lauta rakentuu ja on yhtenäinen`, () => {
+    assert.ok(startCities.length >= 2, 'aloituskaupunkeja pitää olla ainakin kaksi');
+    for (const city of pack.cities) {
+      assert.ok(packBoard.adj.get(city.id).length > 0, `${city.id} on irrallaan`);
+    }
+    const dist = cityDistances(packBoard, home);
+    for (const city of pack.cities) {
+      assert.ok(dist.has(city.id), `${city.id} ei ole saavutettavissa kaupungista ${home}`);
+    }
+  });
+
+  test(`${pack.id}: laattoja on yhtä monta kuin laattakaupunkeja`, () => {
+    const pile = tokenPileTemplate(pack.tokens.counts);
+    const tokenCities = pack.cities.filter((c) => !c.start);
+    assert.equal(pile.length, tokenCities.length);
+    assert.equal(pack.tokens.counts.star, 1);
+    assert.ok(pack.tokens.counts.horseshoe >= 1);
+    for (const type of Object.keys(pack.tokens.counts)) {
+      assert.ok(pack.tokens.types[type], `laattatyyppiä ${type} ei ole määritelty`);
+    }
+  });
+
+  test(`${pack.id}: kysymyspankki on ehjä`, () => {
+    const cityIds = pack.cities.filter((c) => !c.start).map((c) => c.id);
+    for (const id of cityIds) {
+      assert.ok(pack.questions[id]?.length >= 2, `kaupungilta ${id} puuttuu kysymyksiä`);
+    }
+    assert.ok(pack.questions.general.length >= 10);
+
+    for (const q of allQuestions(pack)) {
+      assert.ok(q.q.trim().length > 0, 'tyhjä kysymys');
+      assert.equal(q.options.length, 4, `kysymyksellä "${q.q}" ei ole neljää vaihtoehtoa`);
+      assert.equal(new Set(q.options).size, 4, `kysymyksessä "${q.q}" on kaksi samaa vaihtoehtoa`);
+      assert.ok(
+        Number.isInteger(q.correct) && q.correct >= 0 && q.correct < 4,
+        `kysymyksen "${q.q}" oikea vastaus on virheellinen`,
+      );
+      assert.ok(q.fact && q.fact.length > 0, `kysymykseltä "${q.q}" puuttuu selitys`);
+      assert.ok(q.hint && q.hint.length > 0, `kysymykseltä "${q.q}" puuttuu vihje`);
+      const oikea = q.options[q.correct].toLowerCase();
+      assert.ok(
+        !q.hint.toLowerCase().includes(oikea),
+        `kysymyksen "${q.q}" vihje paljastaa vastauksen`,
+      );
+    }
+
+    const texts = allQuestions(pack).map((q) => q.q);
+    assert.equal(new Set(texts).size, texts.length, 'sama kysymys esiintyy kahdesti');
+  });
+
+  test(`${pack.id}: jokaisella kaupungilla on tiesitkö-tietoja`, () => {
+    for (const city of pack.cities) {
+      const facts = pack.placeFacts[city.id];
+      assert.ok(Array.isArray(facts) && facts.length >= 2, `${city.id}: liian vähän tietoja`);
+      for (const fact of facts) {
+        assert.ok(fact.trim().length > 20, `${city.id}: liian lyhyt tieto`);
+        assert.equal(new Set(facts).size, facts.length, `${city.id}: sama tieto kahdesti`);
+      }
+    }
+    const extra = Object.keys(pack.placeFacts).filter((id) => !pack.cities.some((c) => c.id === id));
+    assert.deepEqual(extra, [], 'tietoja kaupungeille joita ei ole laudalla');
+  });
+
+  test(`${pack.id}: merireitit kulkevat veden päällä`, () => {
+    const HARBOUR = 55; // satamaan johtava pätkä saa kulkea maalla
+    for (const edge of packBoard.edges) {
+      if (edge.type !== 'sea') continue;
+      const a = packBoard.cityById.get(edge.a);
+      const b = packBoard.cityById.get(edge.b);
+      for (let t = 0.02; t <= 0.98; t += 0.02) {
+        const { x, y } = pointAlong(edge.poly, t);
+        if (Math.hypot(x - a.x, y - a.y) < HARBOUR) continue;
+        if (Math.hypot(x - b.x, y - b.y) < HARBOUR) continue;
+        assert.ok(!isOnLand([x, y], pack.map), `${edge.id} kulkee maalla kohdassa t=${t.toFixed(2)}`);
+      }
+    }
+  });
+
+  test(`${pack.id}: kaupungit ovat mantereella ja riittävän erillään`, () => {
+    const islands = new Set(pack.islands ?? []);
+    for (const city of pack.cities) {
+      if (islands.has(city.id)) continue; // saaret ovat oma ääriviivansa tai rannikon tuntumassa
+      assert.ok(isOnLand([city.x, city.y], pack.map), `${city.name} on meressä`);
+    }
+
+    const min = pack.minCityDistance;
+    for (let i = 0; i < pack.cities.length; i++) {
+      for (let j = i + 1; j < pack.cities.length; j++) {
+        const a = pack.cities[i];
+        const b = pack.cities[j];
+        const d = Math.hypot(a.x - b.x, a.y - b.y);
+        assert.ok(d >= min, `${a.name} ja ${b.name} ovat liian lähekkäin (${Math.round(d)})`);
+      }
+    }
+  });
+
+  test(`${pack.id}: lentokentät ja aloituskaupungit ovat kunnossa`, () => {
+    const byId = packBoard.cityById;
+    for (const route of pack.airRoutes) {
+      assert.ok(byId.get(route.a)?.airport, `${route.a} ei ole lentokenttä`);
+      assert.ok(byId.get(route.b)?.airport, `${route.b} ei ole lentokenttä`);
+    }
+    for (const city of startCities) {
+      assert.ok(city.airport, `aloituskaupungissa ${city.id} ei ole lentokenttää`);
+    }
+  });
+
+  test(`${pack.id}: bottien peli päättyy voittoon`, () => {
+    const game = new Game({
+      players: [
+        { name: 'Botti 1', color: '#f00', start: startCities[0].id, isBot: true },
+        { name: 'Botti 2', color: '#00f', start: startCities[1].id, isBot: true },
+        { name: 'Botti 3', color: '#0f0', start: startCities[0].id, isBot: true },
+      ],
+      pack,
+      rng: mulberry32(2024),
+    });
+
+    let steps = 0;
+    while (game.phase !== 'over' && steps < 8000) {
+      playBotStep(game);
+      steps++;
+    }
+
+    assert.equal(game.phase, 'over');
+    assert.ok(game.winner);
+    assert.ok(game.starFound);
+  });
+}
+
+// --- pelimekaniikan testit (Afrikan laudalla) ------------------------------
 
 test('kaupunkiin pääsee ilman tasalukua, reitille vain täydellä heitolla', () => {
   const start = { type: 'city', city: 'tanger' };
@@ -190,55 +312,6 @@ function playBotStep(game) {
   }
 }
 
-test('bottien peli päättyy voittoon', () => {
-  const game = new Game({
-    players: [
-      { name: 'Botti 1', color: '#f00', start: 'tanger', isBot: true },
-      { name: 'Botti 2', color: '#00f', start: 'kairo', isBot: true },
-      { name: 'Botti 3', color: '#0f0', start: 'tanger', isBot: true },
-    ],
-    rng: mulberry32(2024),
-  });
-
-  let steps = 0;
-  while (game.phase !== 'over' && steps < 8000) {
-    playBotStep(game);
-    steps++;
-  }
-
-  assert.equal(game.phase, 'over');
-  assert.ok(game.winner);
-  assert.ok(game.starFound);
-});
-
-test('kysymyspankki on ehjä', () => {
-  const cityIds = CITIES.filter((c) => !c.start).map((c) => c.id);
-  for (const id of cityIds) {
-    assert.ok(QUESTIONS[id]?.length >= 2, `kaupungilta ${id} puuttuu kysymyksiä`);
-  }
-  assert.ok(QUESTIONS.general.length >= 10);
-
-  for (const q of allQuestions()) {
-    assert.ok(q.q.trim().length > 0, 'tyhjä kysymys');
-    assert.equal(q.options.length, 4, `kysymyksellä "${q.q}" ei ole neljää vaihtoehtoa`);
-    assert.equal(new Set(q.options).size, 4, `kysymyksessä "${q.q}" on kaksi samaa vaihtoehtoa`);
-    assert.ok(
-      Number.isInteger(q.correct) && q.correct >= 0 && q.correct < 4,
-      `kysymyksen "${q.q}" oikea vastaus on virheellinen`,
-    );
-    assert.ok(q.fact && q.fact.length > 0, `kysymykseltä "${q.q}" puuttuu selitys`);
-    assert.ok(q.hint && q.hint.length > 0, `kysymykseltä "${q.q}" puuttuu vihje`);
-    const oikea = q.options[q.correct].toLowerCase();
-    assert.ok(
-      !q.hint.toLowerCase().includes(oikea),
-      `kysymyksen "${q.q}" vihje paljastaa vastauksen`,
-    );
-  }
-
-  const texts = allQuestions().map((q) => q.q);
-  assert.equal(new Set(texts).size, texts.length, 'sama kysymys esiintyy kahdesti');
-});
-
 test('oikea vastaus kääntää laatan, väärä ei', () => {
   const makeGame = () => {
     const game = new Game({
@@ -286,7 +359,7 @@ test('sama kysymys ei toistu ennen kuin pakka on käyty läpi', () => {
     rng: mulberry32(9),
   });
   const nahdyt = new Set();
-  for (let i = 0; i < QUESTIONS.timbuktu.length; i++) {
+  for (let i = 0; i < AFRICA.questions.timbuktu.length; i++) {
     const kysymys = game.pickQuestion('timbuktu');
     assert.ok(!nahdyt.has(kysymys.q), 'kysymys toistui liian aikaisin');
     nahdyt.add(kysymys.q);
@@ -313,6 +386,7 @@ test('peli tallentuu ja palautuu samaan tilanteeseen', () => {
   const restored = Game.fromJSON(data);
 
   assert.ok(restored);
+  assert.equal(restored.pack.id, game.pack.id);
   assert.equal(restored.phase, game.phase);
   assert.equal(restored.travelMode, game.travelMode);
   assert.equal(restored.die, game.die);
@@ -331,21 +405,6 @@ test('kelvoton tallennus hylätään', () => {
   assert.equal(Game.fromJSON(null), null);
   assert.equal(Game.fromJSON({ version: 99 }), null);
   assert.equal(Game.fromJSON({ version: 1 }), null);
-});
-
-test('merireitit kulkevat veden päällä', () => {
-  const HARBOUR = 55; // satamaan johtava pätkä saa kulkea maalla
-  for (const edge of board.edges) {
-    if (edge.type !== 'sea') continue;
-    const a = board.cityById.get(edge.a);
-    const b = board.cityById.get(edge.b);
-    for (let t = 0.02; t <= 0.98; t += 0.02) {
-      const { x, y } = pointAlong(edge.poly, t);
-      if (Math.hypot(x - a.x, y - a.y) < HARBOUR) continue;
-      if (Math.hypot(x - b.x, y - b.y) < HARBOUR) continue;
-      assert.ok(!isOnLand([x, y]), `${edge.id} kulkee maalla kohdassa t=${t.toFixed(2)}`);
-    }
-  }
 });
 
 test('aarretta ei voi ostaa rahalla', () => {
@@ -506,24 +565,6 @@ test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysy
   assert.equal(game.revealed.get('kano'), 'ruby');
 });
 
-test('kaupungit ovat mantereella ja riittävän erillään', () => {
-  const ISLAND_CITIES = new Set(['sansibar']); // oma saarensa rannikon ulkopuolella
-  for (const city of CITIES) {
-    if (ISLAND_CITIES.has(city.id)) {
-      assert.ok(!isOnLand([city.x, city.y]), `${city.name} pitäisi olla saari`);
-      continue;
-    }
-    assert.ok(isOnLand([city.x, city.y]), `${city.name} on meressä`);
-  }
-
-  for (let i = 0; i < CITIES.length; i++) {
-    for (let j = i + 1; j < CITIES.length; j++) {
-      const d = Math.hypot(CITIES[i].x - CITIES[j].x, CITIES[i].y - CITIES[j].y);
-      assert.ok(d >= 75, `${CITIES[i].name} ja ${CITIES[j].name} ovat liian lähekkäin (${Math.round(d)})`);
-    }
-  }
-});
-
 test('vuoro etenee: matkustustapa, noppa, siirto ja vasta sitten tietovisa', () => {
   const game = newGame(31);
   // Pelaaja on askeleen päässä Tripolista, joten aarrekaupunki on varmasti tarjolla.
@@ -616,17 +657,4 @@ test('matkustustapa valitaan automaattisesti kun vaihtoehtoja ei ole', () => {
   const alku = newGame(52);
   assert.equal(alku.phase, 'action');
   assert.equal(alku.autoTravel, false);
-});
-
-test('jokaisella kaupungilla on tiesitkö-tietoja', () => {
-  for (const city of CITIES) {
-    const facts = PLACE_FACTS[city.id];
-    assert.ok(Array.isArray(facts) && facts.length >= 2, `${city.id}: liian vähän tietoja`);
-    for (const fact of facts) {
-      assert.ok(fact.trim().length > 20, `${city.id}: liian lyhyt tieto`);
-      assert.equal(new Set(facts).size, facts.length, `${city.id}: sama tieto kahdesti`);
-    }
-  }
-  const extra = Object.keys(PLACE_FACTS).filter((id) => !CITIES.some((c) => c.id === id));
-  assert.deepEqual(extra, [], 'tietoja kaupungeille joita ei ole laudalla');
 });

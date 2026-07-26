@@ -585,6 +585,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .gem-ruby { fill: #d2402f; }
 .gem-emerald { fill: #2f9e63; }
 .gem-topaz { fill: #e0a020; }
+body[data-pack='middleeast'] .gem-topaz { fill: #3aaea6; }
 
 .token-icon { display: inline-block; vertical-align: -0.22em; }
 
@@ -1345,10 +1346,14 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
       <div class="setup-hero">
         <span class="setup-star">★</span>
         <div>
-          <h2>Afrikan tähti</h2>
-          <p class="setup-tagline">Etsi tähti, vastaa kysymyksiin, palaa kotiin.</p>
+          <h2 id="setup-title">Afrikan tähti</h2>
+          <p id="setup-tagline" class="setup-tagline">Etsi tähti, vastaa kysymyksiin, palaa kotiin.</p>
         </div>
       </div>
+      <label class="row">
+        Pelilauta
+        <select id="board-select"></select>
+      </label>
       <label class="row">
         Pelaajia
         <select id="player-count">
@@ -1369,9 +1374,12 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
    <div class="dialog-card">
     <h2>Säännöt</h2>
     <div class="rules-text">
-      <p><b>Tavoite.</b> Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon.
-        Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä
-        aloituskaupunkiin ensimmäisenä.</p>
+      <p><b>Tavoite.</b> Löydä laudan tähtiaarre — Afrikassa Afrikan tähti, Lähi-idässä
+        Idän tähti — ja palaa sen kanssa johonkin aloituskaupungeista. Kun tähti on
+        löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupunkiin
+        ensimmäisenä.</p>
+      <p><b>Pelilauta.</b> Uuden pelin alussa valitaan lauta: Afrikka tai Lähi-itä.
+        Kummallakin laudalla on omat kaupunkinsa, reittinsä ja kysymyksensä.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
         lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä. Jos
         vaihtoehtoja ei ole — esimerkiksi sisämaassa tai kesken reittiä — vuoro alkaa
@@ -1395,9 +1403,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
       <p><b>Rahan käyttö.</b> 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa
         kysymyksestä kaksi väärää vaihtoehtoa (50:50), 100 puntaa maksaa laivamatkan ja
         300 puntaa lennon.</p>
-      <p><b>Aarteet (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
-        rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
-        Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
+      <p><b>Aarteet.</b> Jokaisessa aarrekaupungissa on yksi laatta: tähti, hevosenkenkiä,
+        ryöstäjiä, jalokiviä (rubiini 1000 p, smaragdi 600 p, topaasi/turkoosi 300 p) ja
+        tyhjiä. Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
       <p><b>Tiesitkö että…</b> Ohjauspaneeli kertoo tietoa siitä paikasta, jossa vuorossa
         oleva pelaaja on. Tieto vaihtuu kierroksittain.</p>
@@ -1469,162 +1477,14 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   </dialog>
 
 <script>
-// ===== js/board.js =====
-// Pelilauta: kaupungit, reitit ja kartan piirtotiedot.
-//
-// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Afrikan karttaa:
-//   x = (pituusaste + 20) * 13.333   (lännestä -20° itään 55°)
-//   y = (40 - leveysaste) * 12.5     (pohjoisesta 40° etelään -40°)
-
-const MAP = {
-  width: 1000,
-  height: 1000,
-  // Rannikkoviiva oikeista koordinaateista projisoituna; mapart.js pyöristää
-  // pisteet pehmeäksi käyräksi ja lisää käsin piirretyn vapinan.
-  africaPoints: [
-    [188.0, 51.3], [240.0, 60.0], [280.0, 43.8], [333.3, 40.0], [373.3, 35.0],
-    [400.0, 33.8], [413.3, 77.5], [466.7, 95.0], [520.0, 120.0], [546.7, 97.5],
-    [586.7, 97.5], [626.7, 108.7], [666.7, 107.5], [693.3, 110.0], [713.3, 150.0],
-    [733.3, 200.0], [760.0, 237.5], [780.0, 275.0], [793.3, 312.5], [820.0, 331.2],
-    [846.7, 356.2], [866.7, 368.8], [906.7, 356.2], [946.7, 352.5], [952.0, 375.0],
-    [933.3, 400.0], [906.7, 437.5], [866.7, 475.0], [826.7, 512.5], [800.0, 550.0],
-    [793.3, 587.5], [806.7, 637.5], [808.0, 675.0], [773.3, 712.5], [733.3, 750.0],
-    [706.7, 800.0], [693.3, 825.0], [666.7, 862.5], [640.0, 900.0], [600.0, 925.0],
-    [560.0, 931.2], [520.0, 935.0], [500.0, 900.0], [466.7, 837.5], [440.0, 787.5],
-    [426.7, 725.0], [426.7, 675.0], [446.7, 637.5], [426.7, 575.0], [393.3, 525.0],
-    [393.3, 475.0], [373.3, 450.0], [320.0, 425.0], [280.0, 431.2], [226.7, 437.5],
-    [166.7, 445.0], [120.0, 425.0], [93.3, 393.8], [66.7, 362.5], [46.7, 337.5],
-    [33.3, 316.2], [53.3, 300.0], [53.3, 262.5], [66.7, 237.5], [93.3, 212.5],
-    [120.0, 175.0], [140.0, 137.5], [160.0, 112.5], [186.7, 87.5],
-  ],
-  madagascarPoints: [
-    [925.3, 653.8], [936.0, 677.5], [932.0, 693.8], [940.0, 702.5], [926.7, 718.8],
-    [917.3, 737.5], [902.7, 775.0], [894.7, 800.0], [869.3, 820.0], [849.3, 803.8],
-    [844.0, 775.0], [860.0, 748.8], [856.0, 727.5], [884.0, 696.2], [902.7, 681.2],
-    [918.7, 666.2],
-  ],
-};
-
-// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
-const CITIES = [
-  { id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true },
-  { id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true },
-
-  { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
-  { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },
-  { id: 'alkufra', name: 'Al Kufra', x: 577, y: 197 },
-  { id: 'sahara', name: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
-  { id: 'ahaggar', name: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
-  { id: 'timbuktu', name: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
-  { id: 'gao', name: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
-  { id: 'dakar', name: 'Dakar', x: 45, y: 318, la: 'start', lx: 16, ly: 5 },
-  { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
-  { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
-  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: 26 },
-  { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
-  { id: 'kano', name: 'Kano', x: 394, y: 336 },
-  { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
-  { id: 'kongo', name: 'Kongo', x: 440, y: 560, la: 'end', lx: -16, ly: 5 },
-  { id: 'angola', name: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
-  { id: 'namib', name: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
-  { id: 'kapkaupunki', name: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6 },
-  { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
-  { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
-  { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', x: 836, y: 616, la: 'start', lx: 16, ly: 5 },
-  { id: 'kilimandzaro', name: 'Kilimandžaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
-  { id: 'viktoria', name: 'Viktoria Nyanza', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
-  { id: 'tanganjika', name: 'Tanganjika', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
-  { id: 'bahrelghazal', name: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
-  { id: 'darfur', name: 'Darfur', x: 575, y: 318 },
-  { id: 'suakin', name: 'Suakin', x: 764, y: 261 },
-  { id: 'addisabeba', name: 'Addis Abeba', x: 783, y: 387, la: 'end', lx: -16, ly: 5 },
-  { id: 'rashafun', name: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
-];
-
-const SEA_FEE = 100;
-const FLIGHT_PRICE = 300;
-
-// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
-// type 'sea' = laivareitti, jonne astuminen maksaa SEA_FEE.
-const EDGES = [
-  // Pohjois-Afrikka
-  { a: 'tanger', b: 'tripoli', steps: 4 },
-  { a: 'tanger', b: 'sahara', steps: 5 },
-  { a: 'tanger', b: 'ahaggar', steps: 4 },
-  { a: 'tripoli', b: 'kairo', steps: 4 },
-  { a: 'tripoli', b: 'murzuk', steps: 2 },
-  { a: 'tripoli', b: 'sahara', steps: 2 },
-  { a: 'murzuk', b: 'sahara', steps: 1 },
-  { a: 'murzuk', b: 'alkufra', steps: 2 },
-  { a: 'alkufra', b: 'kairo', steps: 3 },
-  { a: 'alkufra', b: 'darfur', steps: 3 },
-  { a: 'kairo', b: 'suakin', steps: 3 },
-  { a: 'sahara', b: 'ahaggar', steps: 2 },
-  { a: 'sahara', b: 'darfur', steps: 4 },
-
-  // Länsi-Afrikka
-  { a: 'ahaggar', b: 'timbuktu', steps: 3 },
-  { a: 'ahaggar', b: 'gao', steps: 2 },
-  { a: 'timbuktu', b: 'gao', steps: 1 },
-  { a: 'timbuktu', b: 'dakar', steps: 4 },
-  { a: 'timbuktu', b: 'kumasi', steps: 3 },
-  { a: 'dakar', b: 'sierraleone', steps: 2 },
-  { a: 'sierraleone', b: 'kappalmas', steps: 2 },
-  { a: 'kappalmas', b: 'kumasi', steps: 2 },
-  { a: 'kumasi', b: 'orjarannikko', steps: 1 },
-  { a: 'orjarannikko', b: 'kano', steps: 2 },
-  { a: 'orjarannikko', b: 'kamerun', steps: 2 },
-  { a: 'gao', b: 'kano', steps: 3 },
-  { a: 'kano', b: 'kamerun', steps: 2 },
-  { a: 'kano', b: 'bahrelghazal', steps: 5 },
-
-  // Keski- ja Etelä-Afrikka
-  { a: 'kamerun', b: 'kongo', steps: 3 },
-  { a: 'kongo', b: 'bahrelghazal', steps: 5 },
-  { a: 'kongo', b: 'angola', steps: 2 },
-  { a: 'kongo', b: 'tanganjika', steps: 4 },
-  { a: 'angola', b: 'namib', steps: 3 },
-  { a: 'namib', b: 'kapkaupunki', steps: 3 },
-  { a: 'kapkaupunki', b: 'kimberley', steps: 2 },
-  { a: 'kimberley', b: 'mosambik', steps: 4 },
-  { a: 'kimberley', b: 'tanganjika', steps: 5 },
-
-  // Itä-Afrikka
-  { a: 'kilimandzaro', b: 'viktoria', steps: 2 },
-  { a: 'viktoria', b: 'tanganjika', steps: 2 },
-  { a: 'viktoria', b: 'bahrelghazal', steps: 3 },
-  { a: 'bahrelghazal', b: 'darfur', steps: 2 },
-  { a: 'bahrelghazal', b: 'addisabeba', steps: 3 },
-  { a: 'addisabeba', b: 'suakin', steps: 3 },
-  { a: 'addisabeba', b: 'rashafun', steps: 3 },
-  { a: 'addisabeba', b: 'kilimandzaro', steps: 3 },
-
-  // Laivareitit
-  { a: 'tanger', b: 'dakar', steps: 3, type: 'sea', via: [[150, 110], [95, 178], [45, 252]] },
-  { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
-  { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
-  { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
-  { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea', via: [[600, 976], [782, 942], [902, 832]] },
-  { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea', via: [[812, 752]] },
-  { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea', via: [[862, 642]] },
-  { a: 'sansibar', b: 'mosambik', steps: 3, type: 'sea', via: [[822, 642], [792, 712]] },
-  { a: 'sansibar', b: 'kilimandzaro', steps: 2, type: 'sea' },
-  { a: 'sansibar', b: 'rashafun', steps: 5, type: 'sea', via: [[852, 540], [902, 458]] },
-  { a: 'rashafun', b: 'suakin', steps: 4, type: 'sea', via: [[880, 322], [800, 268]] },
-];
-
-// Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
-const AIR_ROUTES = [
-  { a: 'tanger', b: 'kairo' },
-  { a: 'kairo', b: 'kapkaupunki' },
-  { a: 'tanger', b: 'kapkaupunki' },
-];
-
-const TOKEN_CITIES = CITIES.filter((c) => !c.start).map((c) => c.id);
-
 // ===== js/tokens.js =====
-// Laatat: jalokivet, Afrikan tähti, hevosenkengät, ryöstäjät ja tyhjät.
+// Laatat: jalokivet, tähti, hevosenkengät, ryöstäjät ja tyhjät.
+//
+// Laattatyyppien tunnisteet (star, ruby, …) ovat samat kaikilla laudoilla,
+// jotta kuvakkeet ja tyylit toimivat sellaisenaan. Lauta voi antaa tyypeille
+// oman nimen ja värin themedTokenTypes-apurilla, ja laattojen määrät
+// määritellään laudan paketissa niin, että niitä on yksi jokaiseen
+// aarrekaupunkiin.
 
 const TOKEN_TYPES = {
   star: { id: 'star', name: 'Afrikan tähti', symbol: '★', value: 0, color: '#f6c445' },
@@ -1636,28 +1496,26 @@ const TOKEN_TYPES = {
   empty: { id: 'empty', name: 'Tyhjä', symbol: '·', value: 0, color: '#6f5b45' },
 };
 
-// Yhteensä 30 laattaa, yksi jokaiseen kaupunkiin aloituskaupunkeja lukuun ottamatta.
-const TOKEN_COUNTS = {
-  star: 1,
-  horseshoe: 2,
-  robber: 3,
-  ruby: 4,
-  emerald: 5,
-  topaz: 6,
-  empty: 9,
-};
+/** Laattatyypit laudan omilla nimillä ja väreillä. */
+function themedTokenTypes(overrides = {}) {
+  const out = {};
+  for (const [id, type] of Object.entries(TOKEN_TYPES)) {
+    out[id] = { ...type, ...(overrides[id] ?? {}) };
+  }
+  return out;
+}
 
-function tokenPileTemplate() {
+function tokenPileTemplate(counts) {
   const pile = [];
-  for (const [type, count] of Object.entries(TOKEN_COUNTS)) {
+  for (const [type, count] of Object.entries(counts)) {
     for (let i = 0; i < count; i++) pile.push(type);
   }
   return pile;
 }
 
 /** Sekoittaa laattapinon (Fisher–Yates). */
-function createTokenPile(rng = Math.random) {
-  const pile = tokenPileTemplate();
+function createTokenPile(counts, rng = Math.random) {
+  const pile = tokenPileTemplate(counts);
   for (let i = pile.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
     [pile[i], pile[j]] = [pile[j], pile[i]];
@@ -1665,15 +1523,15 @@ function createTokenPile(rng = Math.random) {
   return pile;
 }
 
-// ===== js/questions.js =====
-// Tietovisakysymykset. Jokaisella laattakaupungilla on omat kysymyksensä, jotka
+// ===== js/packs/africa-questions.js =====
+// Afrikka-laudan tietovisakysymykset. Jokaisella laattakaupungilla on omat kysymyksensä, jotka
 // liittyvät paikan maantietoon, kulttuuriin tai historiaan. `general` toimii
 // varapakkana, jos kaupungin omat kysymykset on jo käytetty.
 //
 // Muoto: { q: kysymys, options: [4 vaihtoehtoa], correct: oikean indeksi, fact: selitys }
 // Vaihtoehdot sekoitetaan vasta kysyttäessä, joten oikea vastaus voi olla tässä missä vain.
 
-const QUESTIONS = {
+const AFRICA_QUESTIONS = {
   tripoli: [
     {
       q: 'Minkä maan pääkaupunki Tripoli on?',
@@ -2539,18 +2397,11 @@ const QUESTIONS = {
   ],
 };
 
-/** Kaikki kysymykset yhtenä listana (testejä varten). */
-function allQuestions() {
-  return Object.entries(QUESTIONS).flatMap(([key, list]) =>
-    list.map((question) => ({ ...question, key })),
-  );
-}
-
 /**
  * "Tiesitkö että…" -tiedot paikoista. Peli näyttää yhden pelaajan nykyisestä
  * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
  */
-const PLACE_FACTS = {
+const AFRICA_FACTS = {
   tanger: [
     'Tanger on ollut satamakaupunki jo foinikialaisten ajoista. Gibraltarin salmi erottaa sen Espanjasta vain noin 14 kilometrin levyisenä.',
     'Tangeria hallittiin vuosina 1923–1956 kansainvälisenä vyöhykkeenä, jota useat maat valvoivat yhdessä.',
@@ -2680,6 +2531,1303 @@ const PLACE_FACTS = {
     'Niemi oli antiikin aikana kauppapaikka, jonne purjehdittiin monsuunituulten avulla.',
   ],
 };
+
+// ===== js/packs/africa.js =====
+// Afrikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
+//
+// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Afrikan karttaa:
+//   x = (pituusaste + 20) * 13.333   (lännestä -20° itään 55°)
+//   y = (40 - leveysaste) * 12.5     (pohjoisesta 40° etelään -40°)
+
+const AFRICA_MAP = {
+  width: 1000,
+  height: 1000,
+  // Rannikkoviiva oikeista koordinaateista projisoituna; mapart.js pyöristää
+  // pisteet pehmeäksi käyräksi ja lisää käsin piirretyn vapinan.
+  africaPoints: [
+    [188.0, 51.3], [240.0, 60.0], [280.0, 43.8], [333.3, 40.0], [373.3, 35.0],
+    [400.0, 33.8], [413.3, 77.5], [466.7, 95.0], [520.0, 120.0], [546.7, 97.5],
+    [586.7, 97.5], [626.7, 108.7], [666.7, 107.5], [693.3, 110.0], [713.3, 150.0],
+    [733.3, 200.0], [760.0, 237.5], [780.0, 275.0], [793.3, 312.5], [820.0, 331.2],
+    [846.7, 356.2], [866.7, 368.8], [906.7, 356.2], [946.7, 352.5], [952.0, 375.0],
+    [933.3, 400.0], [906.7, 437.5], [866.7, 475.0], [826.7, 512.5], [800.0, 550.0],
+    [793.3, 587.5], [806.7, 637.5], [808.0, 675.0], [773.3, 712.5], [733.3, 750.0],
+    [706.7, 800.0], [693.3, 825.0], [666.7, 862.5], [640.0, 900.0], [600.0, 925.0],
+    [560.0, 931.2], [520.0, 935.0], [500.0, 900.0], [466.7, 837.5], [440.0, 787.5],
+    [426.7, 725.0], [426.7, 675.0], [446.7, 637.5], [426.7, 575.0], [393.3, 525.0],
+    [393.3, 475.0], [373.3, 450.0], [320.0, 425.0], [280.0, 431.2], [226.7, 437.5],
+    [166.7, 445.0], [120.0, 425.0], [93.3, 393.8], [66.7, 362.5], [46.7, 337.5],
+    [33.3, 316.2], [53.3, 300.0], [53.3, 262.5], [66.7, 237.5], [93.3, 212.5],
+    [120.0, 175.0], [140.0, 137.5], [160.0, 112.5], [186.7, 87.5],
+  ],
+  madagascarPoints: [
+    [925.3, 653.8], [936.0, 677.5], [932.0, 693.8], [940.0, 702.5], [926.7, 718.8],
+    [917.3, 737.5], [902.7, 775.0], [894.7, 800.0], [869.3, 820.0], [849.3, 803.8],
+    [844.0, 775.0], [860.0, 748.8], [856.0, 727.5], [884.0, 696.2], [902.7, 681.2],
+    [918.7, 666.2],
+  ],
+};
+
+// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+const AFRICA_CITIES = [
+  { id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true },
+  { id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true },
+
+  { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
+  { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },
+  { id: 'alkufra', name: 'Al Kufra', x: 577, y: 197 },
+  { id: 'sahara', name: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
+  { id: 'ahaggar', name: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
+  { id: 'timbuktu', name: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
+  { id: 'gao', name: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
+  { id: 'dakar', name: 'Dakar', x: 45, y: 318, la: 'start', lx: 16, ly: 5 },
+  { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
+  { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
+  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: 26 },
+  { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
+  { id: 'kano', name: 'Kano', x: 394, y: 336 },
+  { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
+  { id: 'kongo', name: 'Kongo', x: 440, y: 560, la: 'end', lx: -16, ly: 5 },
+  { id: 'angola', name: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
+  { id: 'namib', name: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
+  { id: 'kapkaupunki', name: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6 },
+  { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
+  { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
+  { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sansibar', name: 'Sansibar', x: 836, y: 616, la: 'start', lx: 16, ly: 5 },
+  { id: 'kilimandzaro', name: 'Kilimandžaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
+  { id: 'viktoria', name: 'Viktoria Nyanza', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
+  { id: 'tanganjika', name: 'Tanganjika', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
+  { id: 'bahrelghazal', name: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
+  { id: 'darfur', name: 'Darfur', x: 575, y: 318 },
+  { id: 'suakin', name: 'Suakin', x: 764, y: 261 },
+  { id: 'addisabeba', name: 'Addis Abeba', x: 783, y: 387, la: 'end', lx: -16, ly: 5 },
+  { id: 'rashafun', name: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
+];
+
+// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
+// type 'sea' = laivareitti, jonne astuminen maksaa SEA_FEE.
+const AFRICA_EDGES = [
+  // Pohjois-Afrikka
+  { a: 'tanger', b: 'tripoli', steps: 4 },
+  { a: 'tanger', b: 'sahara', steps: 5 },
+  { a: 'tanger', b: 'ahaggar', steps: 4 },
+  { a: 'tripoli', b: 'kairo', steps: 4 },
+  { a: 'tripoli', b: 'murzuk', steps: 2 },
+  { a: 'tripoli', b: 'sahara', steps: 2 },
+  { a: 'murzuk', b: 'sahara', steps: 1 },
+  { a: 'murzuk', b: 'alkufra', steps: 2 },
+  { a: 'alkufra', b: 'kairo', steps: 3 },
+  { a: 'alkufra', b: 'darfur', steps: 3 },
+  { a: 'kairo', b: 'suakin', steps: 3 },
+  { a: 'sahara', b: 'ahaggar', steps: 2 },
+  { a: 'sahara', b: 'darfur', steps: 4 },
+
+  // Länsi-Afrikka
+  { a: 'ahaggar', b: 'timbuktu', steps: 3 },
+  { a: 'ahaggar', b: 'gao', steps: 2 },
+  { a: 'timbuktu', b: 'gao', steps: 1 },
+  { a: 'timbuktu', b: 'dakar', steps: 4 },
+  { a: 'timbuktu', b: 'kumasi', steps: 3 },
+  { a: 'dakar', b: 'sierraleone', steps: 2 },
+  { a: 'sierraleone', b: 'kappalmas', steps: 2 },
+  { a: 'kappalmas', b: 'kumasi', steps: 2 },
+  { a: 'kumasi', b: 'orjarannikko', steps: 1 },
+  { a: 'orjarannikko', b: 'kano', steps: 2 },
+  { a: 'orjarannikko', b: 'kamerun', steps: 2 },
+  { a: 'gao', b: 'kano', steps: 3 },
+  { a: 'kano', b: 'kamerun', steps: 2 },
+  { a: 'kano', b: 'bahrelghazal', steps: 5 },
+
+  // Keski- ja Etelä-Afrikka
+  { a: 'kamerun', b: 'kongo', steps: 3 },
+  { a: 'kongo', b: 'bahrelghazal', steps: 5 },
+  { a: 'kongo', b: 'angola', steps: 2 },
+  { a: 'kongo', b: 'tanganjika', steps: 4 },
+  { a: 'angola', b: 'namib', steps: 3 },
+  { a: 'namib', b: 'kapkaupunki', steps: 3 },
+  { a: 'kapkaupunki', b: 'kimberley', steps: 2 },
+  { a: 'kimberley', b: 'mosambik', steps: 4 },
+  { a: 'kimberley', b: 'tanganjika', steps: 5 },
+
+  // Itä-Afrikka
+  { a: 'kilimandzaro', b: 'viktoria', steps: 2 },
+  { a: 'viktoria', b: 'tanganjika', steps: 2 },
+  { a: 'viktoria', b: 'bahrelghazal', steps: 3 },
+  { a: 'bahrelghazal', b: 'darfur', steps: 2 },
+  { a: 'bahrelghazal', b: 'addisabeba', steps: 3 },
+  { a: 'addisabeba', b: 'suakin', steps: 3 },
+  { a: 'addisabeba', b: 'rashafun', steps: 3 },
+  { a: 'addisabeba', b: 'kilimandzaro', steps: 3 },
+
+  // Laivareitit
+  { a: 'tanger', b: 'dakar', steps: 3, type: 'sea', via: [[150, 110], [95, 178], [45, 252]] },
+  { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
+  { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
+  { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
+  { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea', via: [[600, 976], [782, 942], [902, 832]] },
+  { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea', via: [[812, 752]] },
+  { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea', via: [[862, 642]] },
+  { a: 'sansibar', b: 'mosambik', steps: 3, type: 'sea', via: [[822, 642], [792, 712]] },
+  { a: 'sansibar', b: 'kilimandzaro', steps: 2, type: 'sea' },
+  { a: 'sansibar', b: 'rashafun', steps: 5, type: 'sea', via: [[852, 540], [902, 458]] },
+  { a: 'rashafun', b: 'suakin', steps: 4, type: 'sea', via: [[880, 322], [800, 268]] },
+];
+
+// Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
+const AFRICA_AIR_ROUTES = [
+  { a: 'tanger', b: 'kairo' },
+  { a: 'kairo', b: 'kapkaupunki' },
+  { a: 'tanger', b: 'kapkaupunki' },
+];
+
+// Karttapaketti: kaikki mitä pelimoottori tarvitsee yhdestä laudasta.
+// Uusi manner lisätään tekemällä vastaava tiedosto ja lisäämällä se pack.js:ään.
+const AFRICA = {
+  id: 'africa',
+  name: 'Afrikan tähti',
+  boardLabel: 'Afrikka',
+  tagline: 'Etsi tähti, vastaa kysymyksiin, palaa kotiin.',
+  ariaLabel: 'Afrikan aarrekartta',
+
+  map: { ...AFRICA_MAP, outlines: [AFRICA_MAP.africaPoints, AFRICA_MAP.madagascarPoints] },
+  cities: AFRICA_CITIES,
+  edges: AFRICA_EDGES,
+  airRoutes: AFRICA_AIR_ROUTES,
+  islands: ['sansibar'], // saarikaupungit: rannikon ulkopuolella, vain laivayhteys
+  minCityDistance: 75,
+
+  tokens: {
+    types: themedTokenTypes(),
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 6, empty: 9 },
+  },
+
+  questions: AFRICA_QUESTIONS,
+  placeFacts: AFRICA_FACTS,
+
+  texts: {
+    intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.',
+    starFound: (name, city) => `★ ${name} löysi AFRIKAN TÄHDEN kaupungista ${city}!`,
+    starToast: 'AFRIKAN TÄHTI!',
+    starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
+    winStar: 'toi Afrikan tähden turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Afrikan tähden kotiin ${money} punnan kanssa.`,
+  },
+
+  decor: {
+    mapLabel: 'AFRIKA',
+    mapLabelPos: { x: 886, y: 96 },
+    compass: { x: 168, y: 772, r: 62 },
+    // Aaltoja ei piirretä näihin kohtiin: laivadoodle, meripeto ja karttanimi.
+    waveSkip: [
+      { x: 232, y: 556, r: 95 },
+      { x: 858, y: 905, r: 110 },
+      { x: 880, y: 92, r: 135 },
+    ],
+    ship: { x: 214, y: 548 },
+    serpent: { x: 852, y: 902 },
+    // Nopan lepopaikka suhteellisina koordinaatteina: avomerta vasemmassa alakulmassa.
+    dieSpot: { x: 0.115, y: 0.865 },
+    // Maaston merkit leveysvyöhykkeittäin: pohjoisessa dyynejä, keskellä puita,
+    // etelässä vuoria.
+    terrainBands: [
+      { maxY: 300, kind: 'dunes' },
+      { maxY: 640, kind: 'trees' },
+      { maxY: Infinity, kind: 'mountains' },
+    ],
+  },
+};
+
+// ===== js/packs/middleeast-questions.js =====
+// Lähi-itä-laudan tietovisakysymykset. Jokaisella laattakaupungilla on omat
+// kysymyksensä, jotka liittyvät paikan maantietoon, kulttuuriin, arkeen tai
+// historiaan. `general` toimii varapakkana, jos kaupungin omat kysymykset on
+// jo käytetty.
+//
+// Muoto: { q: kysymys, options: [4 vaihtoehtoa], correct: oikean indeksi,
+//          fact: selitys, hint: vihje joka ei paljasta vastausta }
+
+const MIDDLEEAST_QUESTIONS = {
+  izmir: [
+    {
+      q: 'Minkä meren rannalla Izmir sijaitsee?',
+      options: ['Egeanmeri', 'Mustameri', 'Kaspianmeri', 'Punainenmeri'],
+      correct: 0,
+      fact: 'Izmir on Turkin suurin satamakaupunki Egeanmeren rannalla.',
+      hint: 'Samassa meressä on tuhansia kreikkalaisia saaria.',
+    },
+    {
+      q: 'Millä nimellä Izmir tunnettiin antiikin aikana?',
+      options: ['Smyrna', 'Troija', 'Efesos', 'Ateena'],
+      correct: 0,
+      fact: 'Antiikin Smyrna oli kreikkalainen kauppakaupunki, jonka torin rauniot ovat yhä keskellä Izmiriä.',
+      hint: 'Vanha nimi muistuttaa hieman kaupungin nykyistä nimeä.',
+    },
+    {
+      q: 'Mitä hedelmiä Izmirin seudulta on viety maailmalle vuosisatojen ajan?',
+      options: ['viikunoita', 'banaaneja', 'ananaksia', 'mangoja'],
+      correct: 0,
+      fact: 'Izmirin viikunat ja rusinat ovat kuuluisia — suuri osa maailman kuivatuista viikunoista tulee yhä Turkista.',
+      hint: 'Niitä syödään usein kuivattuina jouluherkkuna.',
+    },
+  ],
+
+  ankara: [
+    {
+      q: 'Minkä maan pääkaupunki Ankara on?',
+      options: ['Turkki', 'Syyria', 'Kreikka', 'Irak'],
+      correct: 0,
+      fact: 'Ankarasta tuli Turkin pääkaupunki vuonna 1923, kun tasavalta perustettiin.',
+      hint: 'Maa levittäytyy kahdelle mantereelle.',
+    },
+    {
+      q: 'Moni luulee Turkin pääkaupungiksi maan suurinta kaupunkia. Mikä se on?',
+      options: ['Istanbul', 'Izmir', 'Antalya', 'Bursa'],
+      correct: 0,
+      fact: 'Istanbul on Turkin suurin kaupunki, mutta pääkaupunki on keskellä maata sijaitseva Ankara.',
+      hint: 'Suurkaupunki sijaitsee Bosporinsalmen rannoilla.',
+    },
+    {
+      q: 'Mistä ankaralaisesta eläimestä saadaan kuuluisan pehmeää villaa?',
+      options: ['vuohesta', 'lampaasta', 'kamelista', 'laamasta'],
+      correct: 0,
+      fact: 'Angoravuohen mohair-villa on saanut nimensä Ankaran vanhasta nimestä Angora.',
+      hint: 'Sama eläin kiipeilee mielellään kallioilla ja syö melkein mitä vain.',
+    },
+  ],
+
+  kapadokia: [
+    {
+      q: 'Mistä Kappadokian kivitornit eli "keijupiiput" ovat syntyneet?',
+      options: ['tulivuoren tuhkasta', 'jäätikön jäästä', 'meren simpukoista', 'muurahaiskeoista'],
+      correct: 0,
+      fact: 'Pehmeä tuffikivi syntyi tulivuortenpurkausten tuhkasta, ja tuuli ja vesi muovasivat siitä torneja.',
+      hint: 'Pehmeä kivi on peräisin ikivanhoista purkauksista.',
+    },
+    {
+      q: 'Mitä Kappadokian maan alta löytyy?',
+      options: ['kokonaisia kaupunkeja', 'kultakaivoksia', 'dinosauruksen luita', 'jäätiköitä'],
+      correct: 0,
+      fact: 'Derinkuyun maanalainen kaupunki ulottuu kymmenien metrien syvyyteen, ja sinne mahtui tuhansia ihmisiä.',
+      hint: 'Ihmiset kaivoivat ne suojautuakseen vihollisilta.',
+    },
+    {
+      q: 'Millä kulkuneuvolla Kappadokian maisemia ihaillaan auringonnousun aikaan?',
+      options: ['kuumailmapallolla', 'kamelilla', 'junalla', 'laivalla'],
+      correct: 0,
+      fact: 'Sadat kuumailmapallot nousevat Kappadokian ylle tyyninä aamuina.',
+      hint: 'Se nousee taivaalle polttimen liekin voimalla.',
+    },
+  ],
+
+  nikosia: [
+    {
+      q: 'Minkä saarivaltion pääkaupunki Nikosia on?',
+      options: ['Kypros', 'Malta', 'Kreeta', 'Rodos'],
+      correct: 0,
+      fact: 'Kyproksen kuparikaivokset olivat antiikissa niin kuuluisia, että kuparin latinankielinen nimi cuprum tulee saaresta.',
+      hint: 'Saari on antanut nimensä punertavalle metallille.',
+    },
+    {
+      q: 'Mikä tekee Nikosiasta poikkeuksellisen pääkaupungin?',
+      options: ['raja jakaa sen kahtia', 'se on rakennettu veden päälle', 'se sijaitsee vuoren huipulla', 'se on maailman pienin'],
+      correct: 0,
+      fact: 'Nikosian halki kulkee vartioitu rajavyöhyke, joka jakaa kaupungin kreikkalais- ja turkkilaisosaan.',
+      hint: 'Kaupungin keskustan poikki kulkee vihreäksi linjaksi kutsuttu vyöhyke.',
+    },
+    {
+      q: 'Mikä kyproslainen juusto tunnetaan siitä, että sitä voi paistaa pannulla?',
+      options: ['halloumi', 'feta', 'mozzarella', 'cheddar'],
+      correct: 0,
+      fact: 'Halloumi valmistetaan vuohen- ja lampaanmaidosta, eikä se sula kuumassakaan.',
+      hint: 'Juusto ei sula vaan saa pinnalleen rapean kuoren.',
+    },
+  ],
+
+  halab: [
+    {
+      q: 'Mistä tuotteesta Aleppo on ollut kuuluisa jo tuhansia vuosia?',
+      options: ['saippuasta', 'autoista', 'timanteista', 'juustosta'],
+      correct: 0,
+      fact: 'Aleppon saippua keitetään oliiviöljystä ja laakerimarjaöljystä, ja sitä kypsytetään kuukausia.',
+      hint: 'Sitä keitetään öljystä suurissa padoissa, ja sillä pestään käsiä.',
+    },
+    {
+      q: 'Mistä maailmanennätyksestä Aleppo ja Damaskos kilpailevat keskenään?',
+      options: ['vanhimman kaupungin tittelistä', 'korkeimmasta tornista', 'suurimmasta torista', 'pisimmästä sillasta'],
+      correct: 0,
+      fact: 'Molemmissa kaupungeissa on asuttu yhtäjaksoisesti tuhansia vuosia — kumpikin pitää itseään maailman vanhimpana.',
+      hint: 'Kummassakin on asuttu kauemmin kuin melkein missään muualla.',
+    },
+    {
+      q: 'Mitä pähkinöitä Aleppon seudulla viljellään erityisen paljon?',
+      options: ['pistaaseja', 'kookospähkinöitä', 'maapähkinöitä', 'saksanpähkinöitä'],
+      correct: 0,
+      fact: 'Syyria on kuuluisa pistaaseistaan, ja niitä käytetään myös makeisissa kuten baklavassa.',
+      hint: 'Vihreä pähkinä raottaa kuortaan itsestään kypsyessään.',
+    },
+  ],
+
+  damaskos: [
+    {
+      q: 'Minkä maan pääkaupunki Damaskos on?',
+      options: ['Syyria', 'Libanon', 'Jordania', 'Irak'],
+      correct: 0,
+      fact: 'Damaskos on Syyrian pääkaupunki ja yksi maailman vanhimmista yhä asutuista kaupungeista.',
+      hint: 'Naapurimaa Libanon jää sen ja Välimeren väliin.',
+    },
+    {
+      q: 'Mikä kangas on saanut nimensä Damaskoksesta?',
+      options: ['damasti', 'farkkukangas', 'satiini', 'flanelli'],
+      correct: 0,
+      fact: 'Kiiltäväkuvioista damastia kudottiin Damaskoksessa, ja nimi kulkeutui kankaan mukana Eurooppaan.',
+      hint: 'Kuviollista kangasta käytetään juhlapöytäliinoissa.',
+    },
+    {
+      q: 'Mistä keskiaikaiset sepät tunsivat Damaskoksen?',
+      options: ['teräksestä', 'kullasta', 'lasista', 'posliinista'],
+      correct: 0,
+      fact: 'Damaskosteräksestä taottiin kuuluisan kestäviä, aaltokuvioisia miekanteriä.',
+      hint: 'Siitä taottiin aaltokuvioisia miekanteriä.',
+    },
+  ],
+
+  jerusalem: [
+    {
+      q: 'Kuinka monelle uskonnolle Jerusalem on pyhä kaupunki?',
+      options: ['kolmelle', 'yhdelle', 'kahdelle', 'viidelle'],
+      correct: 0,
+      fact: 'Jerusalem on pyhä juutalaisille, kristityille ja muslimeille.',
+      hint: 'Sekä Raamattu että Koraani kertovat kaupungista.',
+    },
+    {
+      q: 'Mikä kuuluisa rukouspaikka on Jerusalemin vanhassakaupungissa?',
+      options: ['Itkumuuri', 'Kiinan muuri', 'Berliinin muuri', 'Hadrianuksen valli'],
+      correct: 0,
+      fact: 'Länsimuuri eli Itkumuuri on juutalaisten pyhin rukouspaikka.',
+      hint: 'Sen kivenrakoihin jätetään pieniä rukouslappuja.',
+    },
+    {
+      q: 'Jerusalemin lähellä on järvi, jonka pinnalla kelluu vaivatta. Mikä se on?',
+      options: ['Kuollutmeri', 'Kaspianmeri', 'Genesaretinjärvi', 'Araljärvi'],
+      correct: 0,
+      fact: 'Kuollutmeri on niin suolainen, ettei siinä elä kaloja — ja sen ranta on maanpinnan alin kohta.',
+      hint: 'Järven vesi on melkein kymmenen kertaa valtamerta suolaisempaa.',
+    },
+  ],
+
+  petra: [
+    {
+      q: 'Miten Petran rakennukset on tehty?',
+      options: ['hakkaamalla kallioon', 'muuraamalla tiilistä', 'veistämällä puusta', 'valamalla betonista'],
+      correct: 0,
+      fact: 'Nabatealaiset hakkasivat temppelit ja haudat suoraan pehmeään hiekkakiveen noin 2 000 vuotta sitten.',
+      hint: 'Rakennusten seinät hehkuvat punertavina, sillä ne ovat samaa kiveä kuin vuori.',
+    },
+    {
+      q: 'Mitä kautta Petran kaupunkiin saavutaan?',
+      options: ['kapean rotkon läpi', 'riippusillan yli', 'tunnelijunalla', 'köysiradalla'],
+      correct: 0,
+      fact: 'Siq-rotko on yli kilometrin pituinen, ja sen päässä avautuu kallioon hakattu Aarrekammio.',
+      hint: 'Korkeat kallioseinät kohoavat kulkijan molemmin puolin.',
+    },
+    {
+      q: 'Missä maassa Petra sijaitsee nykyään?',
+      options: ['Jordania', 'Egypti', 'Israel', 'Saudi-Arabia'],
+      correct: 0,
+      fact: 'Petra on Jordanian kuuluisin nähtävyys ja Unescon maailmanperintökohde.',
+      hint: 'Maan pääkaupunki on Amman.',
+    },
+  ],
+
+  siinai: [
+    {
+      q: 'Minkä kahden lahden väliin Siinain niemimaa jää?',
+      options: ['Suezin- ja Akabanlahden', 'Persian- ja Omaninlahden', 'Adenin- ja Bengalinlahden', 'Suomen- ja Pohjanlahden'],
+      correct: 0,
+      fact: 'Siinai on kolmion muotoinen niemimaa, jota Punaisenmeren kaksi kapeaa pohjukkaa reunustavat.',
+      hint: 'Molemmat lahdet ovat Punaisenmeren pohjukoita.',
+    },
+    {
+      q: 'Kuka nousi kertomusten mukaan Siinainvuorelle?',
+      options: ['Mooses', 'Nooa', 'Daavid', 'Joosef'],
+      correct: 0,
+      fact: 'Kertomuksen mukaan Mooses sai Siinainvuorella kymmenen käskyn taulut.',
+      hint: 'Hän sai vuorella kivitaulut, joissa oli kymmenen käskyä.',
+    },
+    {
+      q: 'Mikä hyvin vanha rakennus Siinain vuorten keskellä yhä toimii?',
+      options: ['luostari', 'rautatieasema', 'majakka', 'sirkus'],
+      correct: 0,
+      fact: 'Pyhän Katariinan luostari on toiminut yhtäjaksoisesti yli 1 400 vuotta, ja sen kirjasto on maailman vanhimpia.',
+      hint: 'Siellä munkit ovat rukoilleet ja kopioineet kirjoja yli tuhat vuotta.',
+    },
+  ],
+
+  luxor: [
+    {
+      q: 'Millä nimellä Luxor tunnettiin muinaisen Egyptin aikana?',
+      options: ['Theba', 'Memfis', 'Aleksandria', 'Giza'],
+      correct: 0,
+      fact: 'Theba oli faaraoiden Egyptin mahtava pääkaupunki, jota Homeros kutsui sadanporttiseksi.',
+      hint: 'Runoilija Homeros ylisti kaupungin sataa porttia.',
+    },
+    {
+      q: 'Mitä Kuninkaiden laaksosta Luxorin lähellä on löydetty?',
+      options: ['faaraoiden hautoja', 'dinosaurusten luita', 'kultakaivos', 'viikinkilaiva'],
+      correct: 0,
+      fact: 'Tutankhamonin lähes koskematon hauta löytyi Kuninkaiden laaksosta vuonna 1922 aarteineen.',
+      hint: 'Kuuluisin löytö tehtiin vuonna 1922, ja se kimalsi kullasta.',
+    },
+    {
+      q: 'Mikä joki virtaa Luxorin halki?',
+      options: ['Niili', 'Eufrat', 'Tigris', 'Jordan'],
+      correct: 0,
+      fact: 'Niili kastelee Luxorin pellot — sen itärannalla asuttiin ja länsirannalle haudattiin.',
+      hint: 'Sama joki virtaa myös Kairon halki.',
+    },
+  ],
+
+  medina: [
+    {
+      q: 'Mikä sija Medinalla on islamin pyhien kaupunkien joukossa?',
+      options: ['toiseksi pyhin', 'pyhin', 'kolmanneksi pyhin', 'neljänneksi pyhin'],
+      correct: 0,
+      fact: 'Vain Mekka on Medinaa pyhempi. Profeetta Muhammad muutti Medinaan vuonna 622, ja islamin ajanlasku alkaa siitä.',
+      hint: 'Yksi kaupunki on sitä pyhempi — se, jossa Kaaba sijaitsee.',
+    },
+    {
+      q: 'Mikä kuuluisa rakennus Medinassa on?',
+      options: ['Profeetan moskeija', 'Kaaba', 'Kalliomoskeija', 'Hagia Sofia'],
+      correct: 0,
+      fact: 'Profeetan moskeijan vihreän kupolin alla on Muhammadin hauta.',
+      hint: 'Sen vihreä kupoli näkyy kauas kaupungin ylle.',
+    },
+    {
+      q: 'Mitä hedelmää Medinan keitailla viljellään?',
+      options: ['taateleita', 'omenoita', 'appelsiineja', 'mansikoita'],
+      correct: 0,
+      fact: 'Medinan ajwa-taatelit ovat kuuluisimpia lajikkeita — taatelipalmu on keitaiden tärkein puu.',
+      hint: 'Makeat hedelmät kypsyvät korkeiden palmujen latvoissa.',
+    },
+  ],
+
+  mekka: [
+    {
+      q: 'Mihin suuntaan muslimit kääntyvät rukoillessaan?',
+      options: ['kohti Mekkaa', 'kohti aurinkoa', 'kohti pohjoista', 'kohti Jerusalemia'],
+      correct: 0,
+      fact: 'Rukoussuunta eli qibla osoittaa kaikkialta maailmasta kohti samaa kaupunkia ja sen Kaabaa.',
+      hint: 'Suunta on kaikkialla maailmassa sama — kohti yhtä ja samaa kaupunkia.',
+    },
+    {
+      q: 'Mikä musta kuutiomainen rakennus on Mekan suuren moskeijan keskellä?',
+      options: ['Kaaba', 'minareetti', 'obeliski', 'sfinksi'],
+      correct: 0,
+      fact: 'Kaaba on islamin pyhin paikka, ja pyhiinvaeltajat kiertävät sen seitsemän kertaa.',
+      hint: 'Pyhiinvaeltajat kiertävät sen seitsemän kertaa vastapäivään.',
+    },
+    {
+      q: 'Mikä on Mekkaan tehtävän suuren pyhiinvaelluksen nimi?',
+      options: ['hadž', 'ramadan', 'safari', 'basaari'],
+      correct: 0,
+      fact: 'Hadž kokoaa Mekkaan vuosittain miljoonia pyhiinvaeltajia kaikkialta maailmasta.',
+      hint: 'Jokaisen muslimin toivotaan tekevän matkan kerran elämässään.',
+    },
+  ],
+
+  riad: [
+    {
+      q: 'Minkä maan pääkaupunki Riad on?',
+      options: ['Saudi-Arabia', 'Arabiemiraatit', 'Qatar', 'Kuwait'],
+      correct: 0,
+      fact: 'Riad on Saudi-Arabian pääkaupunki keskellä Arabian niemimaata.',
+      hint: 'Maa on Arabian niemimaan suurin valtio.',
+    },
+    {
+      q: 'Millainen ilmasto Riadissa on?',
+      options: ['kuuma aavikkoilmasto', 'sateinen viidakkoilmasto', 'kylmä tundrailmasto', 'leuto saaristoilmasto'],
+      correct: 0,
+      fact: 'Riadissa kesäpäivän lämpötila nousee usein yli 45 asteeseen, ja sadetta saadaan vain talvella.',
+      hint: 'Kesällä lämpömittari näyttää usein yli 45 astetta.',
+    },
+    {
+      q: 'Mitä eläimiä myydään Riadin laitamilla suurilla markkinoilla?',
+      options: ['kameleita', 'poroja', 'norsuja', 'pingviinejä'],
+      correct: 0,
+      fact: 'Riadin kamelimarkkinat ovat maailman suurimpia — eläimiä on kaupan tuhansia päivässä.',
+      hint: 'Eläin jaksaa kulkea aavikolla päiväkausia lähes ilman vettä.',
+    },
+  ],
+
+  rubalkhali: [
+    {
+      q: 'Mitä nimi Rub al-Khali tarkoittaa suomeksi?',
+      options: ['tyhjä neljännes', 'kultainen kaupunki', 'punainen meri', 'korkea vuori'],
+      correct: 0,
+      fact: 'Nimi kuvaa hyvin seutua: hiekka-aavikko peittää neljänneksen niemimaasta, eikä siellä asu juuri ketään.',
+      hint: 'Nimi kertoo, ettei alueella asu juuri ketään.',
+    },
+    {
+      q: 'Mikä Rub al-Khali on?',
+      options: ['suurin yhtenäinen hiekka-aavikko', 'syvin kanjoni', 'laajin suoalue', 'korkein vuoristo'],
+      correct: 0,
+      fact: 'Rub al-Khali on maailman suurin yhtenäinen hiekka-aavikko, jonka dyynit kohoavat yli 200 metriin.',
+      hint: 'Sen dyynit kohoavat yli 200 metrin korkeuteen.',
+    },
+    {
+      q: 'Ketkä ovat perinteisesti eläneet Arabian aavikoilla paimentolaisina?',
+      options: ['beduiinit', 'saamelaiset', 'inuiitit', 'maasait'],
+      correct: 0,
+      fact: 'Beduiinit kiersivät keitaalta toiselle kamelien, vuohien ja telttojen kanssa.',
+      hint: 'He asuvat teltoissa ja siirtyvät keitaalta toiselle.',
+    },
+  ],
+
+  sana: [
+    {
+      q: 'Minkä maan pääkaupunki Sana on?',
+      options: ['Jemen', 'Oman', 'Qatar', 'Bahrain'],
+      correct: 0,
+      fact: 'Sana on Jemenin pääkaupunki yli 2 200 metrin korkeudessa vuoristossa.',
+      hint: 'Maa sijaitsee Arabian niemimaan lounaiskulmassa.',
+    },
+    {
+      q: 'Mistä Sanan vanhakaupunki tunnetaan?',
+      options: ['tornitaloistaan', 'pilvenpiirtäjistään', 'kanavistaan', 'iglurakennuksistaan'],
+      correct: 0,
+      fact: 'Sanan monikerroksiset savitalot on koristeltu valkoisin kuvioin kuin piparkakut — vanhakaupunki on maailmanperintökohde.',
+      hint: 'Monikerroksiset savitalot on koristeltu valkoisin kuvioin kuin leivonnaiset.',
+    },
+    {
+      q: 'Mikä juoma levisi maailmalle Jemenin vuorilta ja satamista?',
+      options: ['kahvi', 'tee', 'kaakao', 'limonadi'],
+      correct: 0,
+      fact: 'Jemenin vuorilla viljelty papu laivattiin maailmalle Mokhan satamasta — siitä tulee sana mokka.',
+      hint: 'Mokka-nimitys tulee jemeniläisestä satamakaupungista.',
+    },
+  ],
+
+  aden: [
+    {
+      q: 'Millaisessa paikassa Adenin satama sijaitsee?',
+      options: ['sammuneen tulivuoren kraatterissa', 'jäätikön reunalla', 'joen suistossa', 'korallilaguunissa'],
+      correct: 0,
+      fact: 'Adenin vanha kaupunginosa on rakennettu sammuneen tulivuoren kraatteriin, jota mustat laavakalliot reunustavat.',
+      hint: 'Satamaa reunustavat mustat laavakalliot.',
+    },
+    {
+      q: 'Minkä salmen meritietä Aden vartioi?',
+      options: ['Bab el-Mandebin', 'Gibraltarin', 'Bosporin', 'Hormuzin'],
+      correct: 0,
+      fact: 'Bab el-Mandeb yhdistää Punaisenmeren ja Adeninlahden — nimi tarkoittaa kyynelten porttia.',
+      hint: 'Salmen nimi tarkoittaa kyynelten porttia.',
+    },
+    {
+      q: 'Miksi Aden oli tärkeä pysähdyspaikka höyrylaivojen aikakaudella?',
+      options: ['laivat täydensivät siellä hiilivarastonsa', 'siellä korjattiin purjeita', 'siellä vaihdettiin miehistöt', 'se oli ainoa satama jossa oli majakka'],
+      correct: 0,
+      fact: 'Suezin kanavan avauduttua Aden oli maailman vilkkaimpia satamia: höyrylaivat lastasivat siellä hiiltä matkalla Intiaan.',
+      hint: 'Höyrykoneiden pannuihin tarvittiin polttoainetta pitkällä reitillä.',
+    },
+  ],
+
+  salalah: [
+    {
+      q: 'Mikä arvokas tuote teki Salalahin seudusta kuuluisan jo antiikin aikana?',
+      options: ['suitsuke', 'silkki', 'posliini', 'tee'],
+      correct: 0,
+      fact: 'Dhofarin vuorten suitsukepuista valutettua pihkaa vietiin faaraoille ja Rooman temppeleihin asti.',
+      hint: 'Tuoksuvaa pihkaa poltetaan temppeleissä ja kirkoissa.',
+    },
+    {
+      q: 'Mikä tekee Salalahin kesästä poikkeuksellisen Arabian niemimaalla?',
+      options: ['monsuunisade vihertää seudun', 'siellä sataa lunta', 'aurinko ei laske lainkaan', 'kaupunki suljetaan kuumuuden takia'],
+      correct: 0,
+      fact: 'Khareef-monsuuni tuo kesällä mereltä sumua ja sadetta, ja Salalahin ympäristö muuttuu vihreäksi.',
+      hint: 'Khareef-tuuli tuo mereltä sumua ja sadetta.',
+    },
+    {
+      q: 'Missä maassa Salalah sijaitsee?',
+      options: ['Oman', 'Jemen', 'Saudi-Arabia', 'Qatar'],
+      correct: 0,
+      fact: 'Salalah on Omanin eteläisen Dhofarin maakunnan pääkaupunki.',
+      hint: 'Maan pääkaupunki on Masqat.',
+    },
+  ],
+
+  masqat: [
+    {
+      q: 'Minkä maan pääkaupunki Masqat on?',
+      options: ['Oman', 'Jemen', 'Kuwait', 'Bahrain'],
+      correct: 0,
+      fact: 'Masqat on Omanin pääkaupunki, jonka vanhaa satamaa vartioivat kalliolinnoitukset.',
+      hint: 'Maa täyttää Arabian niemimaan itäkulman.',
+    },
+    {
+      q: 'Millä perinteisillä puulaivoilla omanilaiset ovat purjehtineet vuosisatoja?',
+      options: ['dhow-laivoilla', 'viikinkilaivoilla', 'kaljaaseilla', 'gondoleilla'],
+      correct: 0,
+      fact: 'Kolmiopurjeiset dhow-laivat kulkivat monsuunituulten mukana Intiaan ja Itä-Afrikkaan asti.',
+      hint: 'Kolmiopurjeiset puualukset kulkivat monsuunituulten mukana.',
+    },
+    {
+      q: 'Mitä Omanin rannikon kallioilla kohoavat vanhat rakennukset ovat?',
+      options: ['linnoituksia', 'tuulimyllyjä', 'observatorioita', 'pyramideja'],
+      correct: 0,
+      fact: 'Portugalilaiset ja omanilaiset rakensivat satamien turvaksi kymmeniä linnoituksia.',
+      hint: 'Ne rakennettiin suojaamaan satamia merirosvoilta ja valloittajilta.',
+    },
+  ],
+
+  dubai: [
+    {
+      q: 'Mikä maailman korkein rakennus on Dubaissa?',
+      options: ['Burj Khalifa', 'Eiffel-torni', 'Empire State Building', 'Taipei 101'],
+      correct: 0,
+      fact: 'Burj Khalifa on 828 metriä korkea — yli kaksi kertaa niin korkea kuin Empire State Building.',
+      hint: 'Sen huippu kohoaa yli 800 metriin.',
+    },
+    {
+      q: 'Mistä Dubain seudun asukkaat saivat elantonsa ennen öljyä?',
+      options: ['helmenkalastuksesta', 'viininviljelystä', 'turkiskaupasta', 'kullankaivuusta'],
+      correct: 0,
+      fact: 'Sukeltajat poimivat helmisimpukoita Persianlahden pohjasta ilman happilaitteita.',
+      hint: 'Sukeltajat etsivät aarteita simpukoista merenpohjasta.',
+    },
+    {
+      q: 'Minkä valtion suurin kaupunki Dubai on?',
+      options: ['Arabiemiraattien', 'Saudi-Arabian', 'Qatarin', 'Omanin'],
+      correct: 0,
+      fact: 'Yhdistyneet arabiemiirikunnat on seitsemän emiraatin liitto — pääkaupunki on Abu Dhabi, mutta Dubai on suurin.',
+      hint: 'Valtio on seitsemän pienen emiraatin liitto.',
+    },
+  ],
+
+  doha: [
+    {
+      q: 'Minkä maan pääkaupunki Doha on?',
+      options: ['Qatar', 'Bahrain', 'Kuwait', 'Oman'],
+      correct: 0,
+      fact: 'Doha on Qatarin pääkaupunki, jossa asuu suurin osa koko maan väestöstä.',
+      hint: 'Pieni maa työntyy niemenä Persianlahteen.',
+    },
+    {
+      q: 'Mikä suuri urheilutapahtuma järjestettiin Qatarissa vuonna 2022?',
+      options: ['jalkapallon MM-kisat', 'kesäolympialaiset', 'talviolympialaiset', 'jääkiekon MM-kisat'],
+      correct: 0,
+      fact: 'Qatar oli ensimmäinen arabimaa, joka isännöi jalkapallon MM-kisoja.',
+      hint: 'Kisat siirrettiin poikkeuksellisesti talveen kuumuuden takia.',
+    },
+    {
+      q: 'Millainen Doha oli sata vuotta sitten?',
+      options: ['pieni helmenkalastajakylä', 'suuri teollisuuskaupunki', 'roomalainen siirtokunta', 'viikinkien kauppapaikka'],
+      correct: 0,
+      fact: 'Ennen öljyä ja maakaasua elanto tuli merestä — nyt Qatar on yksi maailman rikkaimmista maista.',
+      hint: 'Ennen öljyä ja kaasua elanto nostettiin merestä.',
+    },
+  ],
+
+  kuwait: [
+    {
+      q: 'Minkä kahden suuren naapurin välissä Kuwait sijaitsee?',
+      options: ['Irakin ja Saudi-Arabian', 'Iranin ja Turkin', 'Egyptin ja Libyan', 'Syyrian ja Jordanian'],
+      correct: 0,
+      fact: 'Pieni Kuwait jää Persianlahden pohjukassa kahden ison naapurinsa väliin.',
+      hint: 'Pohjoisnaapurin halki virtaavat Eufrat ja Tigris.',
+    },
+    {
+      q: 'Mistä Kuwait saa suurimman osan juomavedestään?',
+      options: ['merivedestä suolaa poistamalla', 'jäätiköistä', 'suurista joista', 'sadevesisäiliöistä'],
+      correct: 0,
+      fact: 'Aavikkomaassa ei ole yhtään pysyvää jokea, joten juomavesi valmistetaan merivedestä suolanpoistolaitoksissa.',
+      hint: 'Aavikkomaassa ei virtaa yhtään pysyvää jokea.',
+    },
+    {
+      q: 'Kuwaitin tunnetuimmat maamerkit ovat kolme tornia. Mitä niiden palloissa säilytetään?',
+      options: ['vettä', 'öljyä', 'viljaa', 'kultaa'],
+      correct: 0,
+      fact: 'Kuwait-tornien suuret pallot ovat vesisäiliöitä, ja ylimmässä on myös näköalakerros.',
+      hint: 'Aavikkokaupungissa tätä nestettä on pakko varastoida.',
+    },
+  ],
+
+  bagdad: [
+    {
+      q: 'Minkä joen rannalla Bagdad sijaitsee?',
+      options: ['Tigris', 'Eufrat', 'Niili', 'Jordan'],
+      correct: 0,
+      fact: 'Bagdad perustettiin vuonna 762 Tigrisin rannalle pyöreäksi kaupungiksi.',
+      hint: 'Sama joki virtaa myös Mosulin ohi.',
+    },
+    {
+      q: 'Mikä kuuluisa oppineiden talo toimi Bagdadissa islamin kulta-aikana?',
+      options: ['Viisauden talo', 'Peilisali', 'Taideakatemia', 'Tähtitorni'],
+      correct: 0,
+      fact: 'Viisauden taloon koottiin ja käännettiin kreikkalaista, persialaista ja intialaista tiedettä 800-luvulla.',
+      hint: 'Sinne koottiin ja käännettiin koko maailman tiedettä.',
+    },
+    {
+      q: 'Missä satukokoelmassa Bagdadin kalifi Harun al-Rashid seikkailee?',
+      options: ['Tuhannen ja yhden yön tarinoissa', 'Grimmin saduissa', 'Kalevalassa', 'Aisopoksen faabeleissa'],
+      correct: 0,
+      fact: 'Tuhannen ja yhden yön tarinoihin kuuluvat myös Aladdin ja merenkulkija Sinbad.',
+      hint: 'Samaan kokoelmaan kuuluvat Aladdin ja merenkulkija Sinbad.',
+    },
+  ],
+
+  mosul: [
+    {
+      q: 'Minkä muinaisen suurkaupungin rauniot ovat Mosulin naapurissa?',
+      options: ['Ninive', 'Babylon', 'Troija', 'Karthago'],
+      correct: 0,
+      fact: 'Ninive oli Assyrian valtakunnan pääkaupunki ja aikansa suurimpia kaupunkeja.',
+      hint: 'Kaupunki oli Assyrian valtakunnan mahtava pääkaupunki.',
+    },
+    {
+      q: 'Mikä ohut kangas on saanut nimensä Mosulista?',
+      options: ['musliini', 'sametti', 'vakosametti', 'tweed'],
+      correct: 0,
+      fact: 'Ilmava musliinikangas kulkeutui Euroopan kauppapaikoille Mosulin kautta ja sai siitä nimensä.',
+      hint: 'Ilmavaa kangasta käytetään kesävaatteissa ja harsoissa.',
+    },
+    {
+      q: 'Missä maassa Mosul sijaitsee?',
+      options: ['Irak', 'Iran', 'Syyria', 'Turkki'],
+      correct: 0,
+      fact: 'Mosul on Irakin toiseksi suurin kaupunki — pääkaupunki on Bagdad.',
+      hint: 'Maan pääkaupunki on Bagdad.',
+    },
+  ],
+
+  tabriz: [
+    {
+      q: 'Mistä Tabrizin katettu basaari tunnetaan?',
+      options: ['se on yksi maailman suurimmista', 'se on kokonaan maan alla', 'se kelluu veden päällä', 'se on rakennettu lasista'],
+      correct: 0,
+      fact: 'Tabrizin basaarin holvikäytäviä on kilometrien verran, ja se on Unescon maailmanperintökohde.',
+      hint: 'Kilometrien pituiset holvikäytävät ovat maailmanperintöä.',
+    },
+    {
+      q: 'Mitä käsityötuotteita Tabriz on vienyt maailmalle vuosisatoja?',
+      options: ['mattoja', 'kelloja', 'viuluja', 'purjeita'],
+      correct: 0,
+      fact: 'Tabrizin matot solmitaan käsin lanka langalta — hienoimmissa on miljoonia solmuja.',
+      hint: 'Ne solmitaan käsin lanka langalta, ja niiden päällä kävellään.',
+    },
+    {
+      q: 'Minkä kuuluisan kauppareitin varrella Tabriz vaurastui?',
+      options: ['silkkitien', 'meritien Intiaan', 'suolatien', 'kuninkaantien'],
+      correct: 0,
+      fact: 'Tabriz oli silkkitien tärkeä etappi, jossa idän karavaanit kohtasivat lännen kauppiaat.',
+      hint: 'Reitti sai nimensä Kiinasta tuodusta arvokankaasta.',
+    },
+  ],
+
+  teheran: [
+    {
+      q: 'Minkä maan pääkaupunki Teheran on?',
+      options: ['Iran', 'Irak', 'Afganistan', 'Turkmenistan'],
+      correct: 0,
+      fact: 'Teheran on Iranin pääkaupunki Elburzvuoriston juurella.',
+      hint: 'Maassa puhutaan persiaa eli farsia.',
+    },
+    {
+      q: 'Mikä lumihuippuinen vuori näkyy Teheraniin kirkkaalla säällä?',
+      options: ['Damavand', 'Mont Blanc', 'Ararat', 'Elbrus'],
+      correct: 0,
+      fact: 'Damavand on sammunut tulivuori ja Lähi-idän korkein huippu, yli 5 600 metriä.',
+      hint: 'Se on Lähi-idän korkein huippu ja vanha tulivuori.',
+    },
+    {
+      q: 'Mikä sana on levinnyt persialaisesta puutarhasta maailman kieliin?',
+      options: ['paratiisi', 'basaari', 'viidakko', 'oaasi'],
+      correct: 0,
+      fact: 'Persian sana tarkoitti muurien ympäröimää puutarhaa, ja kreikan kautta siitä tuli monien kielten sana taivaan puutarhalle.',
+      hint: 'Muurien ympäröimä puutarha oli kuin taivas maan päällä.',
+    },
+  ],
+
+  isfahan: [
+    {
+      q: 'Miten persialainen sananlasku ylistää Isfahania?',
+      options: ['se on puoli maailmaa', 'se on tuhat tornia', 'se on kultainen häkki', 'se on aavikon helmi'],
+      correct: 0,
+      fact: 'Sananlaskun mukaan Isfahanin nähtyään on nähnyt puolet kaikesta, mitä maailmassa on.',
+      hint: 'Sananlaskun mukaan kaupungin nähtyään on nähnyt puolet kaikesta.',
+    },
+    {
+      q: 'Millä Isfahanin moskeijat on päällystetty?',
+      options: ['sinisillä kaakeleilla', 'kultalevyillä', 'marmorilla', 'peileillä'],
+      correct: 0,
+      fact: 'Isfahanin kupolit hohtavat taivaansinisinä — kaakeleiden kuviot ovat persialaisen taiteen huippua.',
+      hint: 'Kupolit hohtavat taivaan värisinä.',
+    },
+    {
+      q: 'Mikä Isfahanin Naqsh-e Jahanin aukio on?',
+      options: ['yksi maailman suurimmista aukioista', 'maailman vanhin lentokenttä', 'suurin uima-allas', 'syvin kaivos'],
+      correct: 0,
+      fact: 'Kuninkaiden aukiolla pelattiin aikoinaan poolo-otteluita, ja shaahi seurasi peliä palatsinsa parvekkeelta.',
+      hint: 'Sen laidalla shaahi seurasi poolo-otteluita palatsistaan.',
+    },
+  ],
+
+  persepolis: [
+    {
+      q: 'Minkä valtakunnan seremoniallinen pääkaupunki Persepolis oli?',
+      options: ['Persian', 'Rooman', 'Egyptin', 'Kreikan'],
+      correct: 0,
+      fact: 'Suurkuninkaat Dareios ja Kserkses rakensivat Persepolista valtakuntansa loistoksi.',
+      hint: 'Valtakunnan kuninkaita olivat Dareios ja Kserkses.',
+    },
+    {
+      q: 'Kuka poltti Persepoliin vuonna 330 eaa.?',
+      options: ['Aleksanteri Suuri', 'Julius Caesar', 'Tšingis-kaani', 'Napoleon'],
+      correct: 0,
+      fact: 'Makedonian nuori kuningas valloitti Persian ja poltti Persepoliin palatsit.',
+      hint: 'Makedonian nuori kuningas valloitti lähes koko tunnetun maailman.',
+    },
+    {
+      q: 'Mitä Persepoliin kivireliefeissä kuvataan?',
+      options: ['lahjoja tuovia kansoja', 'jalkapallo-otteluita', 'merirosvolaivoja', 'avaruuden tähtikuvioita'],
+      correct: 0,
+      fact: 'Portaikkojen seinillä marssii lähettiläitä valtakunnan joka kolkasta lahjat käsissään.',
+      hint: 'Portaikkojen seinillä marssii lähettiläitä kaikkialta valtakunnasta.',
+    },
+  ],
+
+  general: [
+    {
+      q: 'Mikä salmi erottaa Euroopan ja Aasian Istanbulin kohdalla?',
+      options: ['Bosporinsalmi', 'Gibraltarinsalmi', 'Hormuzinsalmi', 'Beringinsalmi'],
+      correct: 0,
+      fact: 'Istanbul on maailman ainoa suurkaupunki, joka levittäytyy kahdelle mantereelle.',
+      hint: 'Salmen molemmilla rannoilla on sama suurkaupunki.',
+    },
+    {
+      q: 'Mitkä meret Suezin kanava yhdistää?',
+      options: ['Välimeren ja Punaisenmeren', 'Mustanmeren ja Kaspianmeren', 'Persianlahden ja Adeninlahden', 'Atlantin ja Intian valtameren'],
+      correct: 0,
+      fact: 'Vuonna 1869 avattu kanava lyhensi laivamatkaa Euroopasta Aasiaan tuhansilla kilometreillä.',
+      hint: 'Kanavan ansiosta laivojen ei tarvitse kiertää koko Afrikkaa.',
+    },
+    {
+      q: 'Mihin suuntaan arabiaa kirjoitetaan?',
+      options: ['oikealta vasemmalle', 'vasemmalta oikealle', 'ylhäältä alas', 'alhaalta ylös'],
+      correct: 0,
+      fact: 'Arabiankielisen kirjan sivutkin käännetään meistä katsoen takaperin.',
+      hint: 'Kynä kulkee rivillä päinvastoin kuin suomessa.',
+    },
+    {
+      q: 'Mikä on basaari?',
+      options: ['katettu kauppapaikka', 'rukoushuone', 'aavikkotuuli', 'teelaji'],
+      correct: 0,
+      fact: 'Basaarin kujilla myydään mausteita, mattoja, kultaa ja kankaita — ja hinnoista tingitään.',
+      hint: 'Sen kujilla tingitään mausteista, matoista ja kullasta.',
+    },
+    {
+      q: 'Mikä kuukausi on muslimeille paaston aikaa?',
+      options: ['ramadan', 'safar', 'muharram', 'shawwal'],
+      correct: 0,
+      fact: 'Paastokuukauden aikana syödään vasta auringon laskettua, ja kuukauden päättää id al-fitr -juhla.',
+      hint: 'Paastokuukauden päättää iloinen id al-fitr -juhla.',
+    },
+    {
+      q: 'Missä taatelit kasvavat?',
+      options: ['palmussa', 'pensaassa', 'köynnöksessä', 'maan alla'],
+      correct: 0,
+      fact: 'Taatelipalmu on keitaiden tärkein puu: se antaa hedelmiä, varjoa ja rakennusainetta.',
+      hint: 'Sama korkea puu antaa varjoa keitaiden viljelmille.',
+    },
+    {
+      q: 'Mistä hummus tehdään?',
+      options: ['kikherneistä', 'perunoista', 'riisistä', 'linsseistä'],
+      correct: 0,
+      fact: 'Hummukseen survotaan myös seesamitahnaa, sitruunaa ja valkosipulia.',
+      hint: 'Pyöreät palkokasvin siemenet survotaan tahnaksi.',
+    },
+    {
+      q: 'Mikä eläin tunnetaan aavikon laivana?',
+      options: ['kameli', 'hevonen', 'aasi', 'norsu'],
+      correct: 0,
+      fact: 'Kyttyrän rasvavarasto ja säästeliäs elimistö vievät eläimen aavikon poikki päivienkin matkat.',
+      hint: 'Sen kyttyrässä on rasvavarasto pitkiä matkoja varten.',
+    },
+    {
+      q: 'Mikä on muezzinin tehtävä?',
+      options: ['kutsua rukoukseen', 'johtaa karavaania', 'paistaa leipää', 'kutoa mattoja'],
+      correct: 0,
+      fact: 'Rukouskutsu kaikuu minareetista viidesti päivässä.',
+      hint: 'Hänen äänensä kaikuu minareetista viidesti päivässä.',
+    },
+    {
+      q: 'Missä on maanpinnan alin kohta kuivalla maalla?',
+      options: ['Kuolleenmeren rannalla', 'Kuolemanlaaksossa', 'Kaspianmeren rannalla', 'Saharan keskellä'],
+      correct: 0,
+      fact: 'Ranta on yli 400 metriä merenpinnan alapuolella, ja se laskee yhä.',
+      hint: 'Siellä ollaan yli 400 metriä merenpinnan alapuolella.',
+    },
+    {
+      q: 'Minkä raaka-aineen ympärille Persianlahden maiden rikkaus on rakentunut?',
+      options: ['öljyn', 'hopean', 'silkin', 'norsunluun'],
+      correct: 0,
+      fact: 'Suuri osa maailman öljystä pumpataan Persianlahden ympäriltä ja kuljetetaan tankkereilla Hormuzinsalmen kautta.',
+      hint: 'Sitä pumpataan maan alta ja kuljetetaan tankkereissa.',
+    },
+    {
+      q: 'Mikä kirjoitusjärjestelmä syntyi Kaksoisvirranmaassa ensimmäisenä maailmassa?',
+      options: ['nuolenpääkirjoitus', 'aakkoset', 'hieroglyfit', 'kiinalaiset merkit'],
+      correct: 0,
+      fact: 'Sumerilaiset painoivat merkkejä ruokokynällä savitauluihin yli 5 000 vuotta sitten.',
+      hint: 'Merkit painettiin ruokokynällä pehmeisiin savitauluihin.',
+    },
+  ],
+};
+
+/**
+ * "Tiesitkö että…" -tiedot paikoista. Peli näyttää yhden pelaajan nykyisestä
+ * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
+ */
+const MIDDLEEAST_FACTS = {
+  istanbul: [
+    'Istanbul on maailman ainoa suurkaupunki, joka levittäytyy kahdelle mantereelle: Bosporinsalmen toinen ranta on Eurooppaa ja toinen Aasiaa.',
+    'Istanbulin suuri basaari on yksi maailman vanhimmista ja suurimmista katetuista kauppapaikoista — kujia on kymmeniä ja myymälöitä tuhansia.',
+    'Kaupunki on ollut kolmen valtakunnan pääkaupunki: Rooman, Bysantin ja osmanien.',
+  ],
+  kairo: [
+    'Kairo on arabimaailman suurin kaupunki, ja sen laidalla Gizassa seisovat yli 4 500 vuotta vanhat pyramidit.',
+    'Kairon al-Azharissa on opetettu yli tuhat vuotta — se on maailman vanhimpia yliopistoja.',
+  ],
+  izmir: [
+    'Izmir oli antiikin Smyrna, ja sen torin eli agoran rauniot ovat yhä keskellä nykykaupunkia.',
+    'Izmirin satamasta on laivattu viikunoita ja rusinoita maailmalle vuosisatojen ajan.',
+  ],
+  ankara: [
+    'Ankara valittiin Turkin pääkaupungiksi vuonna 1923, koska se sijaitsee suojassa keskellä Anatolian ylänköä.',
+    'Angoravuohen pehmeä mohair-villa on saanut nimensä Ankaran vanhasta nimestä — samoin pörröinen angorakani.',
+  ],
+  kapadokia: [
+    'Kappadokian pehmeään tuffikiveen on kaiverrettu koteja, kyyhkyslakkoja, kirkkoja ja kokonaisia maanalaisia kaupunkeja.',
+    'Derinkuyun maanalainen kaupunki ulottuu noin 60 metrin syvyyteen, ja sinne saattoi suojautua tuhansia ihmisiä karjoineen.',
+  ],
+  nikosia: [
+    'Nikosia on Euroopan viimeinen jaettu pääkaupunki: vartioitu vihreä linja erottaa sen kreikkalais- ja turkkilaisosan.',
+    'Kypros antoi nimensä kuparille — saaren kaivokset olivat antiikin maailman tärkeimmät.',
+  ],
+  halab: [
+    'Aleppon linnoitus kohoaa kukkulalla, jolla on asuttu jo yli 4 000 vuotta.',
+    'Aleppon saippuaa keitetään oliiviöljystä ja laakerimarjaöljystä ja kypsytetään kuukausia — palat leimataan käsin.',
+  ],
+  damaskos: [
+    'Damaskos on yksi maailman vanhimmista yhä asutuista kaupungeista — sen kaduilla on kävelty tuhansia vuosia.',
+    'Umaijadien suuri moskeija on islamin vanhimpia, ja sen paikalla on sitä ennen ollut temppeli ja kirkko.',
+  ],
+  jerusalem: [
+    'Jerusalemin muurien ympäröimä vanhakaupunki jakautuu neljään kortteliin: juutalaiseen, kristittyyn, muslimien ja armenialaisten.',
+    'Kalliomoskeijan kultainen kupoli on hallinnut Jerusalemin siluettia yli 1 300 vuoden ajan.',
+  ],
+  petra: [
+    'Petra oli nabatealaisten karavaanikaupunki, joka rikastui suitsuke- ja maustekaupan tulliporttina.',
+    'Petra unohtui ulkomaailmalta sadoiksi vuosiksi, kunnes tutkimusmatkailija Johann Burckhardt löysi sen uudelleen vuonna 1812.',
+  ],
+  siinai: [
+    'Siinain niemimaa on Aasian ja Afrikan välinen maasilta, jonka halki kauppiaat ja pyhiinvaeltajat ovat kulkeneet vuosituhansia.',
+    'Pyhän Katariinan luostarissa on toiminut munkkeja yhtäjaksoisesti yli 1 400 vuotta, ja sen kirjasto on maailman vanhimpia.',
+  ],
+  luxor: [
+    'Luxoria kutsutaan maailman suurimmaksi ulkoilmamuseoksi: temppeleitä ja hautoja on joka puolella.',
+    'Karnakin temppeliä rakennettiin ja laajennettiin yli tuhannen vuoden ajan — sen suursali on metsä jättiläispylväitä.',
+  ],
+  medina: [
+    'Islamin ajanlasku alkaa vuodesta 622, jolloin profeetta Muhammad muutti Mekasta Medinaan.',
+    'Medinan keitaat ovat kuuluisia taateleistaan — arvostetuin lajike on tumma ajwa.',
+  ],
+  mekka: [
+    'Hadž-pyhiinvaellus kokoaa Mekkaan vuosittain miljoonia ihmisiä kaikkialta maailmasta.',
+    'Mekan suuren moskeijan keskellä on Kaaba, jota kohti muslimit rukoilevat kaikkialla maailmassa.',
+  ],
+  riad: [
+    'Riadin nimi tulee arabian puutarhoja tarkoittavasta sanasta — kaupunki syntyi aavikon keitaalle.',
+    'Riad kasvoi muutamassa vuosikymmenessä savitiilikylästä miljoonakaupungiksi öljyn löytymisen jälkeen.',
+  ],
+  rubalkhali: [
+    'Rub al-Khali on maailman suurin yhtenäinen hiekka-aavikko — lähes Ranskan kokoinen hiekkameri.',
+    'Ensimmäiset tunnetut eurooppalaiset ylittivät Rub al-Khalin vasta 1930-luvulla kamelikaravaanilla.',
+  ],
+  sana: [
+    'Sana on yli 2 200 metrin korkeudessa — yksi maailman korkeimmalla sijaitsevista pääkaupungeista.',
+    'Sanan vanhankaupungin tornitalot on rakennettu savesta ja koristeltu valkoisin kipsikuvioin kuin piparkakut.',
+  ],
+  aden: [
+    'Adenin vanha kaupunginosa on rakennettu sammuneen tulivuoren kraatteriin.',
+    'Höyrylaivojen aikaan Aden oli maailman vilkkaimpia satamia: laivat lastasivat siellä hiiltä matkalla Intiaan.',
+  ],
+  salalah: [
+    'Salalahin seudun suitsukepuiden pihkaa vietiin jo faaraoiden Egyptiin ja Rooman temppeleihin.',
+    'Kesän khareef-monsuuni muuttaa Salalahin ympäristön vihreäksi keskellä Arabian kuuminta aikaa.',
+  ],
+  masqat: [
+    'Masqatin dhow-laivat kuljettivat taateleita, suitsuketta ja mausteita monsuunituulten mukana Intiaan ja Afrikkaan.',
+    'Omanilaiset merenkulkijat purjehtivat aikoinaan Sansibariin asti, ja saari kuului pitkään Omanin sulttaanille.',
+  ],
+  dubai: [
+    'Burj Khalifa on 828 metriä korkea — huipulta näkee kirkkaalla säällä yli sadan kilometrin päähän.',
+    'Vielä 1900-luvun puolivälissä Dubai oli pieni helmenkalastajien ja kauppiaiden satamakylä.',
+  ],
+  doha: [
+    'Qatarin niemimaalla ei ole yhtään jokea, joten juomavesi valmistetaan merivedestä.',
+    'Dohan islamilaisen taiteen museo seisoo omalla tekosaarellaan sataman edustalla.',
+  ],
+  kuwait: [
+    'Kuwait-tornien suuret pallot ovat vesisäiliöitä — ylimmässä on myös pyörivä näköalakerros.',
+    'Kuwaitin luonnonsatama teki pienestä kalastajakylästä helmenpyynnin ja kaupan keskuksen jo ennen öljyä.',
+  ],
+  bagdad: [
+    'Bagdad perustettiin vuonna 762 täysin pyöreäksi kaupungiksi, jonka keskellä oli kalifin palatsi.',
+    'Islamin kulta-aikana Bagdad oli maailman suurimpia kaupunkeja, jonka Viisauden taloon koottiin aikansa tiede.',
+  ],
+  mosul: [
+    'Mosulin naapurissa ovat muinaisen Niniven rauniot — Assyrian pääkaupungin, josta Raamattukin kertoo.',
+    'Ohut musliinikangas on saanut nimensä Mosulista, jonka kautta sitä tuotiin Eurooppaan.',
+  ],
+  tabriz: [
+    'Tabrizin katettu basaari on yksi maailman vanhimmista ja suurimmista — sen holvikäytäviä on kilometrien verran.',
+    'Tabriz oli silkkitien tärkeä etappi, jossa idän karavaanit kohtasivat lännen kauppiaat.',
+  ],
+  teheran: [
+    'Teheran nojaa Elburzvuoristoon: kaupungista pääsee talvella hiihtämään alle tunnissa.',
+    'Damavandin yli 5 600-metrinen lumihuippu näkyy Teheraniin kirkkaalla säällä.',
+  ],
+  isfahan: [
+    'Naqsh-e Jahanin aukio on yksi maailman suurimmista — sen laidalla pelattiin poolo-otteluita jo 1600-luvulla.',
+    'Isfahanin vanhojen siltojen holveissa istutaan iltaisin teellä, ja Si-o-se-polin sillassa on 33 kaarta.',
+  ],
+  persepolis: [
+    'Persepoliin palatsit seisovat suurella kiviterassilla, jonne noustaan leveitä seremoniaportaita pitkin.',
+    'Persepoliin reliefeissä marssii lahjoja tuovia lähettiläitä 23 kansasta — kulkue on kuin valtakunnan kuvakirja.',
+  ],
+};
+
+// ===== js/packs/middleeast.js =====
+// Lähi-itä-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
+//
+// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Lähi-idän karttaa:
+//   x = (pituusaste - 24) * 25      (lännestä 24° itään 64°)
+//   y = (44 - leveysaste) * 29.4    (pohjoisesta 44° etelään 10°)
+//
+// Meret ovat mantereen "sisäänvetoja": Punainenmeri ja Persianlahti työntyvät
+// rannikon väliin, Mustameri ja Kaspianmeri avautuvat kartan ylälaidasta.
+// Kaupungit ovat todellisilla paikoillaan; muutamaa on siirretty hiukan,
+// jotta nimet ja nappulat mahtuvat laudalle.
+
+const ME_MAP = {
+  width: 1000,
+  height: 1000,
+  mainlandPoints: [
+    [0, 999.6], [0, 364.6], [62.5, 370.4], [125, 385.1], [170.0, 379.3], [197.5, 367.5],
+    [222.5, 379.3], [255.0, 371.9], [272.5, 341.0], [278.7, 311.6], [290.0, 276.4],
+    [296.3, 244.0], [300.0, 211.7], [265.0, 223.4], [215.0, 232.3], [165.0, 226.4],
+    [130.0, 223.4], [90.0, 211.7], [75.0, 188.2], [62.5, 161.7], [55.0, 135.2], [53.7, 107.3],
+    [90.0, 102.9], [126.3, 86.7], [182.5, 73.5], [237.5, 58.8], [280.0, 57.3], [325.0, 85.3],
+    [385.0, 89.7], [432.5, 76.4], [440.0, 35.3], [450.0, 0.0], [580.0, 0.0], [607.5, 64.7],
+    [633.8, 105.8], [625.0, 141.1], [623.8, 176.4], [645.0, 197.0], [687.5, 213.1],
+    [732.5, 210.2], [750.0, 191.1], [742.5, 147.0], [725.0, 100.0], [720.0, 52.9],
+    [732.5, 0.0], [1000, 0.0], [1000, 552.7], [937.5, 555.7], [887.5, 546.8], [850.0, 538.0],
+    [832.5, 514.5], [815.0, 499.8], [775.0, 508.6], [725.0, 488.0], [687.5, 470.4],
+    [657.5, 435.1], [625.0, 411.6], [615.0, 407.2], [605.0, 426.3], [615.0, 458.6],
+    [637.5, 491.0], [660.0, 520.4], [667.5, 541.0], [677.5, 527.7], [688.7, 532.1],
+    [690.0, 558.6], [720.0, 583.6], [757.5, 577.7], [785.0, 561.5], [803.8, 532.1],
+    [810.0, 520.4], [815.0, 541.0], [842.5, 570.4], [867.5, 601.2], [895.0, 632.1],
+    [872.5, 688.0], [840.0, 726.2], [797.5, 767.3], [752.5, 796.7], [705.0, 826.1],
+    [655.0, 852.6], [605.0, 882.0], [560.0, 899.6], [527.5, 921.7], [500.0, 923.2],
+    [481.2, 905.5], [467.5, 852.6], [460.0, 805.6], [437.5, 758.5], [412.5, 711.5],
+    [385.0, 667.4], [372.5, 623.3], [357.5, 582.1], [327.5, 546.8], [295.0, 505.7],
+    [272.5, 473.3], [276.2, 452.8], [275.0, 429.2], [262.5, 458.6], [256.2, 474.8],
+    [240.0, 458.6], [220.0, 426.3], [213.7, 411.6], [215.0, 435.1], [235.0, 464.5],
+    [250.0, 493.9], [270.0, 535.1], [292.5, 579.2], [317.5, 629.2], [335.0, 676.2],
+    [355.0, 726.2], [375.0, 782.0], [400.0, 835.0], [432.5, 876.1], [462.5, 911.4],
+    [477.5, 927.6], [487.5, 946.7], [530.0, 970.2], [575.0, 979.0], [625.0, 987.8],
+    [665.0, 998.1], [665.0, 999.6],
+  ],
+  cyprusPoints: [
+    [207.5, 245.5], [240.0, 252.8], [263.7, 247.0], [247.5, 263.1], [225.0, 276.4],
+    [210.0, 273.4], [206.2, 261.7],
+  ],
+};
+
+// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+const ME_CITIES = [
+  { id: 'istanbul', name: 'Istanbul', x: 125, y: 88, start: true, airport: true },
+  { id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true },
+
+  { id: 'izmir', name: 'Izmir', x: 78, y: 164, la: 'start', lx: 16, ly: 5 },
+  { id: 'ankara', name: 'Ankara', x: 221, y: 120 },
+  { id: 'kapadokia', name: 'Kappadokia', x: 276, y: 166, la: 'start', lx: 16, ly: 5 },
+  { id: 'nikosia', name: 'Nikosia', x: 234, y: 260, la: 'middle', lx: 0, ly: -22 },
+  { id: 'halab', name: 'Aleppo', x: 329, y: 229, la: 'start', lx: 16, ly: 5 },
+  { id: 'damaskos', name: 'Damaskos', x: 308, y: 309, la: 'start', lx: 16, ly: 5 },
+  { id: 'jerusalem', name: 'Jerusalem', x: 268, y: 364, la: 'start', lx: 16, ly: 5 },
+  { id: 'petra', name: 'Petra', x: 302, y: 418, la: 'start', lx: 16, ly: 5 },
+  { id: 'siinai', name: 'Siinai', x: 249, y: 454, la: 'end', lx: -16, ly: 22 },
+  { id: 'luxor', name: 'Luxor', x: 216, y: 538, la: 'end', lx: -16, ly: 5 },
+  { id: 'medina', name: 'Medina', x: 390, y: 574, la: 'start', lx: 16, ly: 5 },
+  { id: 'mekka', name: 'Mekka', x: 395, y: 664, la: 'start', lx: 16, ly: 5 },
+  { id: 'riad', name: 'Riad', x: 568, y: 570 },
+  { id: 'rubalkhali', name: 'Rub al-Khali', x: 675, y: 691, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sana', name: 'Sana', x: 505, y: 842, la: 'start', lx: 16, ly: 5 },
+  { id: 'aden', name: 'Aden', x: 526, y: 917 },
+  { id: 'salalah', name: 'Salalah', x: 752, y: 794 },
+  { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'end', lx: -16, ly: 5 },
+  { id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26 },
+  { id: 'doha', name: 'Doha', x: 688, y: 550, la: 'middle', lx: 0, ly: 26 },
+  { id: 'kuwait', name: 'Kuwait', x: 600, y: 430, la: 'end', lx: -16, ly: 5 },
+  { id: 'bagdad', name: 'Bagdad', x: 509, y: 314 },
+  { id: 'mosul', name: 'Mosul', x: 478, y: 225 },
+  { id: 'tabriz', name: 'Tabriz', x: 558, y: 174 },
+  { id: 'teheran', name: 'Teheran', x: 685, y: 244, la: 'start', lx: 16, ly: 5 },
+  { id: 'isfahan', name: 'Isfahan', x: 692, y: 334, la: 'start', lx: 16, ly: 5 },
+  { id: 'persepolis', name: 'Persepolis', x: 722, y: 414, la: 'start', lx: 16, ly: 5 },
+];
+
+// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
+// type 'sea' = laivareitti; via = piirto- ja tarkistuspisteet veden päällä.
+const ME_EDGES = [
+  // Anatolia ja Levantti
+  { a: 'istanbul', b: 'izmir', steps: 2 },
+  { a: 'istanbul', b: 'ankara', steps: 3 },
+  { a: 'izmir', b: 'ankara', steps: 3 },
+  { a: 'ankara', b: 'kapadokia', steps: 2 },
+  { a: 'kapadokia', b: 'halab', steps: 3 },
+  { a: 'kapadokia', b: 'tabriz', steps: 5 },
+  { a: 'halab', b: 'damaskos', steps: 2 },
+  { a: 'halab', b: 'mosul', steps: 4 },
+  { a: 'damaskos', b: 'bagdad', steps: 5 },
+  { a: 'damaskos', b: 'jerusalem', steps: 2 },
+  { a: 'jerusalem', b: 'kairo', steps: 3 },
+  { a: 'jerusalem', b: 'petra', steps: 2 },
+  { a: 'petra', b: 'siinai', steps: 2 },
+  { a: 'petra', b: 'medina', steps: 4 },
+  { a: 'siinai', b: 'kairo', steps: 2 },
+  { a: 'kairo', b: 'luxor', steps: 3 },
+
+  // Arabian niemimaa
+  { a: 'medina', b: 'mekka', steps: 2 },
+  { a: 'medina', b: 'riad', steps: 4 },
+  { a: 'mekka', b: 'riad', steps: 4 },
+  { a: 'mekka', b: 'sana', steps: 4 },
+  { a: 'sana', b: 'aden', steps: 2 },
+  { a: 'riad', b: 'kuwait', steps: 3 },
+  { a: 'riad', b: 'doha', steps: 3 },
+  { a: 'riad', b: 'rubalkhali', steps: 3 },
+  { a: 'rubalkhali', b: 'salalah', steps: 3 },
+  { a: 'rubalkhali', b: 'sana', steps: 4 },
+  { a: 'doha', b: 'dubai', steps: 2 },
+  { a: 'salalah', b: 'masqat', steps: 4 },
+
+  // Kaksoisvirranmaa ja Iran
+  { a: 'kuwait', b: 'bagdad', steps: 4 },
+  { a: 'kuwait', b: 'persepolis', steps: 4, via: [[618, 398], [668, 392]] },
+  { a: 'bagdad', b: 'mosul', steps: 3 },
+  { a: 'bagdad', b: 'isfahan', steps: 4 },
+  { a: 'mosul', b: 'tabriz', steps: 3 },
+  { a: 'tabriz', b: 'teheran', steps: 3 },
+  { a: 'teheran', b: 'isfahan', steps: 2 },
+  { a: 'isfahan', b: 'persepolis', steps: 2 },
+
+  // Laivareitit
+  { a: 'izmir', b: 'nikosia', steps: 3, type: 'sea', via: [[85, 230], [150, 258]] },
+  { a: 'nikosia', b: 'halab', steps: 2, type: 'sea' },
+  { a: 'nikosia', b: 'kairo', steps: 3, type: 'sea', via: [[215, 330]] },
+  { a: 'siinai', b: 'mekka', steps: 4, type: 'sea', via: [[270, 500], [308, 540], [350, 610]] },
+  { a: 'mekka', b: 'aden', steps: 4, type: 'sea', via: [[395, 690], [420, 750], [445, 810], [470, 895]] },
+  { a: 'aden', b: 'salalah', steps: 3, type: 'sea', via: [[600, 905], [690, 860]] },
+  { a: 'masqat', b: 'dubai', steps: 2, type: 'sea', via: [[850, 544], [818, 503], [797, 516]] },
+  { a: 'doha', b: 'kuwait', steps: 3, type: 'sea', via: [[670, 490], [630, 455]] },
+];
+
+// Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
+const ME_AIR_ROUTES = [
+  { a: 'istanbul', b: 'kairo' },
+  { a: 'istanbul', b: 'dubai' },
+  { a: 'kairo', b: 'dubai' },
+];
+
+const MIDDLE_EAST = {
+  id: 'middleeast',
+  name: 'Idän tähti',
+  boardLabel: 'Lähi-itä',
+  tagline: 'Etsi Idän tähti basaarien ja aavikoiden kätköistä.',
+  ariaLabel: 'Lähi-idän aarrekartta',
+
+  map: { ...ME_MAP, outlines: [ME_MAP.mainlandPoints, ME_MAP.cyprusPoints] },
+  cities: ME_CITIES,
+  edges: ME_EDGES,
+  airRoutes: ME_AIR_ROUTES,
+  islands: ['nikosia'], // Kypros on oma saarensa, jonne pääsee vain laivalla
+  minCityDistance: 60,
+
+  tokens: {
+    // Turkoosi on saanut nimensä Turkista, jonka kautta kivi kulki Eurooppaan.
+    types: themedTokenTypes({
+      star: { name: 'Idän tähti' },
+      topaz: { name: 'Turkoosi', color: '#3aaea6' },
+    }),
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 3, emerald: 4, topaz: 6, empty: 8 },
+  },
+
+  questions: MIDDLEEAST_QUESTIONS,
+  placeFacts: MIDDLEEAST_FACTS,
+
+  texts: {
+    intro: 'Peli alkaa! Etsikää Idän tähti ja palatkaa Istanbuliin tai Kairoon.',
+    starFound: (name, city) => `★ ${name} löysi IDÄN TÄHDEN kaupungista ${city}!`,
+    starToast: 'IDÄN TÄHTI!',
+    starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
+    winStar: 'toi Idän tähden turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Idän tähden kotiin ${money} punnan kanssa.`,
+  },
+
+  decor: {
+    mapLabel: 'LÄHI-ITÄ',
+    mapLabelPos: { x: 900, y: 940 },
+    compass: { x: 78, y: 305, r: 62 },
+    // Aaltoja ei piirretä näihin kohtiin: laivadoodle, meripeto ja karttanimi.
+    waveSkip: [
+      { x: 675, y: 110, r: 95 },
+      { x: 780, y: 900, r: 110 },
+      { x: 900, y: 940, r: 135 },
+    ],
+    ship: { x: 675, y: 110 },
+    serpent: { x: 780, y: 900 },
+    // Nopan lepopaikka suhteellisina koordinaatteina: Arabianmeri oikeassa alakulmassa.
+    dieSpot: { x: 0.87, y: 0.87 },
+    // Pohjoisessa Anatolian ja Elburzin vuoret, keskellä aavikkoa,
+    // etelässä Jemenin ylängöt.
+    terrainBands: [
+      { maxY: 230, kind: 'mountains' },
+      { maxY: 820, kind: 'dunes' },
+      { maxY: Infinity, kind: 'mountains' },
+    ],
+  },
+};
+
+// ===== js/pack.js =====
+// Karttapakettien rekisteri. Jokainen paketti on yksi pelilauta: kartta,
+// kaupungit, reitit, laatat, kysymykset ja teema. Uusi lauta lisätään
+// tekemällä js/packs/-hakemistoon vastaava tiedosto ja listaamalla se tässä.
+
+const PACKS = [AFRICA, MIDDLE_EAST];
+
+function packById(id) {
+  return PACKS.find((pack) => pack.id === id) ?? PACKS[0];
+}
+
+/** Paketin kaikki kysymykset yhtenä listana (testejä ja tarkistuksia varten). */
+function allQuestions(pack) {
+  return Object.entries(pack.questions).flatMap(([key, list]) =>
+    list.map((question) => ({ ...question, key })),
+  );
+}
 
 // ===== js/sound.js =====
 // Peliäänet syntetisoituna Web Audio API:lla — ei äänitiedostoja, joten peli
@@ -3172,6 +4320,10 @@ class BoardDie {
 // Puhdas sääntölogiikka: laudan rakenne, siirtojen laskenta ja etäisyydet.
 // Tämä moduuli ei tiedä mitään DOM:ista, joten sen voi testata suoraan Nodella.
 
+// Matkustamisen hinnat ovat samat kaikilla laudoilla.
+const SEA_FEE = 100;
+const FLIGHT_PRICE = 300;
+
 /**
  * Sijainti on joko kaupungissa tai reitin varrella:
  *   { type: 'city', city: 'kairo' }
@@ -3443,6 +4595,9 @@ function pixelOf(board, pos) {
 // ===== js/mapart.js =====
 // Aarrekartan grafiikka: pergamentti, käsin piirretty rannikko, aallot, maasto,
 // kompassiruusu ja reunuskoristeet. Kaikki piirretään SVG:nä ilman kuvatiedostoja.
+//
+// Piirto ei tiedä mitään yksittäisestä laudasta: rannikot tulevat paketin
+// map.outlines-listasta ja koristeet paketin decor-osiosta.
 
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -3494,8 +4649,17 @@ function smoothClosedPath(points) {
   return `${d} Z`;
 }
 
-const AFRICA_PATH = smoothClosedPath(MAP.africaPoints);
-const MADAGASCAR_PATH = smoothClosedPath(MAP.madagascarPoints);
+// Pehmeiksi käyriksi lasketut rannikot muistetaan karttakohtaisesti.
+const outlineCache = new WeakMap();
+
+function outlinePaths(map) {
+  let paths = outlineCache.get(map);
+  if (!paths) {
+    paths = map.outlines.map(smoothClosedPath);
+    outlineCache.set(map, paths);
+  }
+  return paths;
+}
 
 /** Suodattimet ja liukuvärit, joilla paperi ja mustejälki saavat elävän pinnan. */
 function drawDefs(svg) {
@@ -3579,14 +4743,15 @@ function drawPaperOverlay(svg) {
 }
 
 /** Manner: rannikon kaikuviivat, täyttö ja mustepiirto. */
-function drawLand(svg) {
+function drawLand(svg, map) {
+  const paths = outlinePaths(map);
   const g = el('g', { class: 'landmass', filter: 'url(#rough)' }, svg);
-  for (const d of [AFRICA_PATH, MADAGASCAR_PATH]) {
+  for (const d of paths) {
     el('path', { d, class: 'sea-echo sea-echo-1' }, g);
     el('path', { d, class: 'sea-echo sea-echo-2' }, g);
     el('path', { d, class: 'sea-echo sea-echo-3' }, g);
   }
-  for (const d of [AFRICA_PATH, MADAGASCAR_PATH]) {
+  for (const d of paths) {
     el('path', { d, class: 'land' }, g);
     el('path', { d, class: 'coast' }, g);
   }
@@ -3619,24 +4784,21 @@ function distanceToPolygon([px, py], poly) {
   return best;
 }
 
-const AFRICA = MAP.africaPoints;
-const MADAGASCAR = MAP.madagascarPoints;
-
-function onLand(p) {
-  return pointInPolygon(p, AFRICA) || pointInPolygon(p, MADAGASCAR);
+function onLand(p, map) {
+  return map.outlines.some((outline) => pointInPolygon(p, outline));
 }
 
-function coastDistance(p) {
-  return Math.min(distanceToPolygon(p, AFRICA), distanceToPolygon(p, MADAGASCAR));
+function coastDistance(p, map) {
+  return map.outlines.reduce((best, outline) => Math.min(best, distanceToPolygon(p, outline)), Infinity);
 }
 
 /** Ruudukon pisteet merellä, riittävän kaukana rannikosta. */
-function seaPoints(spacing = 92, margin = 46) {
+function seaPoints(map, spacing = 92, margin = 46) {
   const points = [];
-  for (let x = 30; x < MAP.width; x += spacing) {
-    for (let y = 30; y < MAP.height; y += spacing) {
+  for (let x = 30; x < map.width; x += spacing) {
+    for (let y = 30; y < map.height; y += spacing) {
       const p = [x, y];
-      if (onLand(p) || coastDistance(p) < margin) continue;
+      if (onLand(p, map) || coastDistance(p, map) < margin) continue;
       points.push(p);
     }
   }
@@ -3644,12 +4806,12 @@ function seaPoints(spacing = 92, margin = 46) {
 }
 
 /** Ruudukon pisteet maalla, riittävän kaukana rannikosta ja esteistä. */
-function landPoints(obstacles, spacing = 78, clearance = 34) {
+function landPoints(map, obstacles, spacing = 78, clearance = 34) {
   const points = [];
-  for (let x = 40; x < MAP.width; x += spacing) {
-    for (let y = 40; y < MAP.height; y += spacing) {
+  for (let x = 40; x < map.width; x += spacing) {
+    for (let y = 40; y < map.height; y += spacing) {
       const p = [x, y];
-      if (!onLand(p) || coastDistance(p) < 34) continue;
+      if (!onLand(p, map) || coastDistance(p, map) < 34) continue;
       if (obstacles.some((o) => Math.hypot(p[0] - o.x, p[1] - o.y) < clearance)) continue;
       points.push(p);
     }
@@ -3662,9 +4824,9 @@ function blocked(p, zones) {
 }
 
 /** Merelle piirretyt kaksoiskaaret, jotka merkitsevät aaltoja. */
-function drawWaves(svg, skipZones = []) {
+function drawWaves(svg, map, skipZones = []) {
   const g = el('g', { class: 'waves', filter: 'url(#rough-soft)' }, svg);
-  seaPoints().forEach((p, i) => {
+  seaPoints(map).forEach((p, i) => {
     if (i % 2 === 1 || blocked(p, skipZones)) return;
     const key = `wave:${p[0]}:${p[1]}`;
     const x = p[0] + vary(`${key}:x`, 9);
@@ -3687,13 +4849,37 @@ function drawWaves(svg, skipZones = []) {
   });
 }
 
+// Yksittäisten maastomerkkien piirto: dyynit, puu ja vuoret.
+const TERRAIN_MARKS = {
+  dunes(mark, x, y) {
+    el('path', {
+      d: `M${x - 16},${y} q8,-9 16,0 M${x - 2},${y + 8} q8,-9 16,0`,
+      class: 'terrain-mark',
+    }, mark);
+  },
+  trees(mark, x, y) {
+    el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, mark);
+    el('path', {
+      d: `M${x},${y - 4} q-11,-2 -13,-10 q9,1 13,7 q4,-6 13,-7 q-2,8 -13,10 z`,
+      class: 'terrain-fill',
+    }, mark);
+  },
+  mountains(mark, x, y) {
+    el('path', {
+      d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
+      class: 'terrain-mark',
+    }, mark);
+  },
+};
+
 /**
- * Maaston merkit vanhan kartan tapaan: pohjoisessa dyynejä, keskellä puita ja
- * etelässä vuoria. Piirretään vain kohtiin, joissa ei ole reittejä tai nimiä.
+ * Maaston merkit vanhan kartan tapaan. Merkin laji valitaan paketin
+ * leveysvyöhykkeistä (decor.terrainBands), ja merkit piirretään vain kohtiin,
+ * joissa ei ole reittejä tai nimiä.
  */
-function drawTerrain(svg, obstacles) {
+function drawTerrain(svg, map, obstacles, bands) {
   const g = el('g', { class: 'terrain', filter: 'url(#rough-soft)' }, svg);
-  landPoints(obstacles).forEach((p, i) => {
+  landPoints(map, obstacles).forEach((p, i) => {
     if (i % 2 === 1) return;
     const key = `terrain:${p[0]}:${p[1]}`;
     const x = p[0] + vary(`${key}:x`, 8);
@@ -3704,23 +4890,8 @@ function drawTerrain(svg, obstacles) {
       opacity: (0.8 + hash01(`${key}:o`) * 0.4).toFixed(2),
       'transform-origin': `${x.toFixed(1)}px ${y.toFixed(1)}px`,
     }, g);
-    if (y < 300) {
-      el('path', {
-        d: `M${x - 16},${y} q8,-9 16,0 M${x - 2},${y + 8} q8,-9 16,0`,
-        class: 'terrain-mark',
-      }, mark);
-    } else if (y < 640) {
-      el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, mark);
-      el('path', {
-        d: `M${x},${y - 4} q-11,-2 -13,-10 q9,1 13,7 q4,-6 13,-7 q-2,8 -13,10 z`,
-        class: 'terrain-fill',
-      }, mark);
-    } else {
-      el('path', {
-        d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
-        class: 'terrain-mark',
-      }, mark);
-    }
+    const band = bands.find((b) => y < b.maxY) ?? bands[bands.length - 1];
+    (TERRAIN_MARKS[band.kind] ?? TERRAIN_MARKS.mountains)(mark, x, y);
   });
 }
 
@@ -3750,8 +4921,8 @@ function drawCompass(svg, cx, cy, r = 62) {
 }
 
 /** Onko piste mantereella (myös testien käytössä). */
-function isOnLand(point) {
-  return onLand(point);
+function isOnLand(point, map) {
+  return onLand(point, map);
 }
 
 // --- laattojen kuvakkeet ---------------------------------------------------
@@ -3932,29 +5103,40 @@ function tokenIconSvg(type, size = 18) {
 }
 
 /** Purjelaiva, meripeto ja karttaotsikko täyttämässä tyhjää merta. */
-function drawDoodles(svg) {
-  const ship = el('g', { class: 'doodle-ship', transform: 'translate(214,548)' }, svg);
-  el('path', { d: 'M-40,10 L40,10 L28,30 L-28,30 Z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M-2,10 L-2,-48 M18,10 L18,-30', class: 'doodle' }, ship);
-  el('path', { d: 'M0,-46 q26,16 0,30 z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M20,-28 q18,12 0,22 z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M-52,38 q13,9 26,0 M18,38 q13,9 26,0', class: 'doodle' }, ship);
+function drawDoodles(svg, decor) {
+  if (decor.ship) {
+    const ship = el('g', {
+      class: 'doodle-ship', transform: `translate(${decor.ship.x},${decor.ship.y})`,
+    }, svg);
+    el('path', { d: 'M-40,10 L40,10 L28,30 L-28,30 Z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M-2,10 L-2,-48 M18,10 L18,-30', class: 'doodle' }, ship);
+    el('path', { d: 'M0,-46 q26,16 0,30 z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M20,-28 q18,12 0,22 z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M-52,38 q13,9 26,0 M18,38 q13,9 26,0', class: 'doodle' }, ship);
+  }
 
-  const serpent = el('g', { class: 'doodle-serpent', transform: 'translate(852,902)' }, svg);
-  el('path', {
-    d: 'M-78,14 q14,-30 30,-2 q10,18 22,0 q10,-16 22,-2',
-    class: 'doodle',
-  }, serpent);
-  el('path', {
-    d: 'M-4,10 q14,-22 34,-16 q-8,7 -6,16 q-12,6 -28,0 z',
-    class: 'doodle-fill',
-  }, serpent);
-  el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+  if (decor.serpent) {
+    const serpent = el('g', {
+      class: 'doodle-serpent', transform: `translate(${decor.serpent.x},${decor.serpent.y})`,
+    }, svg);
+    el('path', {
+      d: 'M-78,14 q14,-30 30,-2 q10,18 22,0 q10,-16 22,-2',
+      class: 'doodle',
+    }, serpent);
+    el('path', {
+      d: 'M-4,10 q14,-22 34,-16 q-8,7 -6,16 q-12,6 -28,0 z',
+      class: 'doodle-fill',
+    }, serpent);
+    el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+  }
 
-  const title = el('g', { class: 'map-title-group', transform: 'translate(886,96)' }, svg);
+  const title = el('g', {
+    class: 'map-title-group',
+    transform: `translate(${decor.mapLabelPos.x},${decor.mapLabelPos.y})`,
+  }, svg);
   el('text', {
     x: 0, y: 0, class: 'map-title', 'text-anchor': 'middle', 'font-size': 34,
-  }, title).textContent = 'AFRIKA';
+  }, title).textContent = decor.mapLabel;
   el('path', { d: 'M-80,14 L80,14 M-58,22 L58,22', class: 'doodle' }, title);
 }
 
@@ -3981,9 +5163,10 @@ function mulberry32(seed) {
 
 class Game {
   /**
-   * @param {{players: Array<{name, color, isBot, start}>, rng?: () => number}} opts
+   * @param {{players: Array<{name, color, isBot, start}>, pack?: object, rng?: () => number}} opts
+   *   pack = karttapaketti (lauta, laatat, kysymykset); oletuksena Afrikka.
    */
-  constructor({ players, seed = Math.floor(Math.random() * 2 ** 32), rng }) {
+  constructor({ players, pack = packById('africa'), seed = Math.floor(Math.random() * 2 ** 32), rng }) {
     if (players.length < 2 || players.length > 4) {
       throw new Error('Pelaajia pitää olla 2–4');
     }
@@ -3996,8 +5179,10 @@ class Game {
       this.rngCalls++;
       return source();
     };
-    this.board = buildBoard(CITIES, EDGES);
-    this.airRoutes = AIR_ROUTES;
+    this.pack = pack;
+    this.tokenTypes = pack.tokens.types;
+    this.board = buildBoard(pack.cities, pack.edges);
+    this.airRoutes = pack.airRoutes;
 
     this.players = players.map((p, i) => ({
       id: i,
@@ -4012,11 +5197,12 @@ class Game {
       finds: [], // löydetyt laatat tyyppeinä
     }));
 
-    const pile = createTokenPile(this.rng);
-    if (pile.length !== TOKEN_CITIES.length) {
-      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${TOKEN_CITIES.length}`);
+    const tokenCities = pack.cities.filter((c) => !c.start).map((c) => c.id);
+    const pile = createTokenPile(pack.tokens.counts, this.rng);
+    if (pile.length !== tokenCities.length) {
+      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${tokenCities.length}`);
     }
-    this.tokens = new Map(TOKEN_CITIES.map((city, i) => [city, pile[i]]));
+    this.tokens = new Map(tokenCities.map((city, i) => [city, pile[i]]));
     this.revealed = new Map(); // kaupunki -> laattatyyppi
 
     this.current = 0;
@@ -4037,7 +5223,7 @@ class Game {
     this.turnCount = 1;
     this.log = [];
     this.events = []; // näytölle animoitavat tapahtumat
-    this.say(null, 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.');
+    this.say(null, pack.texts.intro);
     this.beginTurn();
   }
 
@@ -4392,7 +5578,7 @@ class Game {
    * kysymykset palaavat mukaan.
    */
   pickQuestion(cityId) {
-    const pool = [...(QUESTIONS[cityId] ?? []), ...QUESTIONS.general];
+    const pool = [...(this.pack.questions[cityId] ?? []), ...this.pack.questions.general];
     const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
     const deck = fresh.length ? fresh : pool;
     const question = deck[Math.floor(this.rng() * deck.length)];
@@ -4439,7 +5625,7 @@ class Game {
     this.revealed.set(cityId, type);
 
     const p = this.player;
-    const token = TOKEN_TYPES[type];
+    const token = this.tokenTypes[type];
     p.finds.push(type);
     const city = this.board.cityById.get(cityId);
 
@@ -4448,9 +5634,9 @@ class Game {
         p.hasStar = true;
         this.starFound = true;
         this.starCity = cityId;
-        this.say(p.id, `★ ${p.name} löysi AFRIKAN TÄHDEN kaupungista ${city.name}!`);
-        this.say(null, 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.');
-        this.emit('treasure', 'AFRIKAN TÄHTI!', {
+        this.say(p.id, this.pack.texts.starFound(p.name, city.name));
+        this.say(null, this.pack.texts.starChase);
+        this.emit('treasure', this.pack.texts.starToast, {
           token: type,
           sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
         });
@@ -4497,7 +5683,7 @@ class Game {
     this.winner = p;
     this.phase = 'over';
     const reason = p.hasStar
-      ? 'toi Afrikan tähden turvallisesti kotiin'
+      ? this.pack.texts.winStar
       : 'ehti hevosenkengän kanssa kotiin ensimmäisenä';
     this.say(p.id, `🏆 ${p.name} ${reason} kaupungissa ${city.name} ja voitti pelin!`);
     return true;
@@ -4509,6 +5695,7 @@ class Game {
   toJSON() {
     return {
       version: 1,
+      packId: this.pack.id,
       seed: this.seed,
       rngCalls: this.rngCalls,
       players: this.players.map((p) => ({ ...p })),
@@ -4546,8 +5733,12 @@ class Game {
       return source();
     };
 
-    game.board = buildBoard(CITIES, EDGES);
-    game.airRoutes = AIR_ROUTES;
+    // Vanhoissa tallennuksissa ei ole packId:tä — ne ovat Afrikka-pelejä.
+    const pack = packById(data.packId ?? 'africa');
+    game.pack = pack;
+    game.tokenTypes = pack.tokens.types;
+    game.board = buildBoard(pack.cities, pack.edges);
+    game.airRoutes = pack.airRoutes;
     game.players = data.players.map((p) => ({ ...p }));
     game.tokens = new Map(data.tokens);
     game.revealed = new Map(data.revealed);
@@ -4743,7 +5934,6 @@ const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
 const LETTERS = ['A', 'B', 'C', 'D'];
-const COMPASS = { x: 168, y: 772, r: 62 };
 
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
@@ -4828,6 +6018,8 @@ class UI {
   }
 
   mount() {
+    this.svg.setAttribute('aria-label', this.game.pack.ariaLabel);
+    document.body.dataset.pack = this.game.pack.id;
     this.drawBoard();
     this.boardDie = new BoardDie(this.mapPane);
     this.fitViewBox();
@@ -4877,10 +6069,11 @@ class UI {
     const pane = this.mapPane;
     const w = pane.clientWidth || 600;
     const h = pane.clientHeight || 600;
+    const spot = this.game.pack.decor.dieSpot;
     const jitter = this.dieJitter ?? { x: 0, y: 0 };
     return {
-      x: w * (0.115 + jitter.x),
-      y: h * (0.865 + jitter.y),
+      x: w * (spot.x + jitter.x),
+      y: h * (spot.y + jitter.y),
     };
   }
 
@@ -4908,25 +6101,24 @@ class UI {
   // --- kartta -------------------------------------------------------------
 
   drawBoard() {
-    const { board } = this.game;
+    const { board, pack } = this.game;
+    const { decor } = pack;
     this.svg.textContent = '';
 
     drawDefs(this.svg);
     drawParchment(this.svg);
-    drawLand(this.svg);
-    drawWaves(this.svg, [
-      { x: COMPASS.x, y: COMPASS.y, r: COMPASS.r + 45 },
-      { x: 232, y: 556, r: 95 },
-      { x: 858, y: 905, r: 110 },
-      { x: 880, y: 92, r: 135 },
+    drawLand(this.svg, pack.map);
+    drawWaves(this.svg, pack.map, [
+      { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
+      ...decor.waveSkip,
     ]);
-    drawTerrain(this.svg, this.mapObstacles());
-    drawCompass(this.svg, COMPASS.x, COMPASS.y, COMPASS.r);
-    drawDoodles(this.svg);
+    drawTerrain(this.svg, pack.map, this.mapObstacles(), decor.terrainBands);
+    drawCompass(this.svg, decor.compass.x, decor.compass.y, decor.compass.r);
+    drawDoodles(this.svg, decor);
 
     // Lentoreitit kaarina.
     const air = el('g', { class: 'air-routes' }, this.svg);
-    for (const route of AIR_ROUTES) {
+    for (const route of this.game.airRoutes) {
       const a = board.cityById.get(route.a);
       const b = board.cityById.get(route.b);
       const mx = (a.x + b.x) / 2 + (b.y - a.y) * 0.12;
@@ -5136,7 +6328,7 @@ class UI {
       const marks = html('span', 'chip-marks');
       if (p.hasStar) marks.appendChild(tokenIconSvg('star', 17));
       for (let i = 0; i < p.horseshoes; i++) marks.appendChild(tokenIconSvg('horseshoe', 17));
-      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0);
+      const gems = p.finds.filter((t) => game.tokenTypes[t].value > 0);
       if (gems.length) {
         marks.appendChild(tokenIconSvg(gems[gems.length - 1], 17));
         if (gems.length > 1) marks.appendChild(html('span', 'gem-count', `×${gems.length}`));
@@ -5277,7 +6469,7 @@ class UI {
     const { game } = this;
     const player = game.player;
     const city = this.factCity(player.pos);
-    const facts = PLACE_FACTS[city.id];
+    const facts = game.pack.placeFacts[city.id];
     if (!facts || facts.length === 0) return;
 
     const pick = Math.floor(hash01(`fact:${city.id}:${game.turnCount}:${player.id}`) * facts.length);
@@ -5320,7 +6512,7 @@ class UI {
     const w = this.game.winner;
     document.getElementById('winner-title').textContent = `🏆 ${w.name} voitti!`;
     document.getElementById('winner-text').textContent = w.hasStar
-      ? `${w.name} toi Afrikan tähden kotiin ${w.money} punnan kanssa.`
+      ? this.game.pack.texts.winnerStar(w.name, w.money)
       : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`;
     if (!this.winnerDialog.open) this.winnerDialog.showModal();
   }
@@ -5391,7 +6583,7 @@ class UI {
         const verdict = quiz.timedOut ? 'Aika loppui!' : quiz.right ? 'Oikein!' : 'Väärin.';
         this.quizResult.appendChild(html('strong', 'quiz-verdict', verdict));
       } else {
-        const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
+        const found = quiz.found ? game.tokenTypes[quiz.found] : null;
         const body = html('div');
         if (quiz.right && found) {
           this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));
@@ -5560,7 +6752,7 @@ class UI {
 
   /** Iso laatta kääntyy ruudun keskellä ja paljastaa sisällön. */
   async playTokenReveal(type) {
-    const token = TOKEN_TYPES[type];
+    const token = this.game.tokenTypes[type];
     const overlay = html('div', 'reveal-overlay');
     const scene = html('div', 'reveal-scene');
     const disc = html('div', `reveal-disc ${type}`);
@@ -5801,15 +6993,12 @@ class UI {
 // Käynnistys: aloitusruutu, pelin luonti, tallennus ja dialogit.
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
-const START_CITIES = [
-  { id: 'tanger', name: 'Tanger' },
-  { id: 'kairo', name: 'Kairo' },
-];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.3';
+const APP_VERSION = '2026-07-26.4';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
+const boardSelect = document.getElementById('board-select');
 const countSelect = document.getElementById('player-count');
 const playerSetup = document.getElementById('player-setup');
 const rulesDialog = document.getElementById('rules-dialog');
@@ -5849,8 +7038,28 @@ function clearSave() {
 
 // --- aloitusruutu ----------------------------------------------------------
 
+for (const pack of PACKS) {
+  const opt = document.createElement('option');
+  opt.value = pack.id;
+  opt.textContent = pack.boardLabel;
+  boardSelect.appendChild(opt);
+}
+
+function selectedPack() {
+  return packById(boardSelect.value);
+}
+
+/** Laudan vaihto päivittää otsikon, kuvaustekstin ja aloituskaupungit. */
+function updateBoardChoice() {
+  const pack = selectedPack();
+  document.getElementById('setup-title').textContent = pack.name;
+  document.getElementById('setup-tagline').textContent = pack.tagline;
+  buildPlayerRows();
+}
+
 function buildPlayerRows() {
   const count = Number(countSelect.value);
+  const startCities = selectedPack().cities.filter((c) => c.start);
   playerSetup.textContent = '';
   for (let i = 0; i < count; i++) {
     const row = document.createElement('div');
@@ -5870,13 +7079,13 @@ function buildPlayerRows() {
 
     const start = document.createElement('select');
     start.dataset.role = 'start';
-    for (const city of START_CITIES) {
+    for (const city of startCities) {
       const opt = document.createElement('option');
       opt.value = city.id;
       opt.textContent = city.name;
       start.appendChild(opt);
     }
-    start.value = i % 2 === 0 ? 'tanger' : 'kairo';
+    start.value = startCities[i % startCities.length].id;
     row.appendChild(start);
 
     const botLabel = document.createElement('label');
@@ -5904,6 +7113,7 @@ function readPlayers() {
 
 function attach(game) {
   if (ui) ui.destroy();
+  document.querySelector('.brand').textContent = game.pack.name;
   ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
   ui.mount();
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
@@ -5911,13 +7121,13 @@ function attach(game) {
 
 function startGame() {
   clearSave();
-  attach(new Game({ players: readPlayers() }));
+  attach(new Game({ players: readPlayers(), pack: selectedPack() }));
 }
 
 function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
-  buildPlayerRows();
+  updateBoardChoice();
   setupDialog.showModal();
 }
 
@@ -5942,6 +7152,7 @@ document.addEventListener('pointerdown', (event) => {
   if (button && !button.classList.contains('quiz-option')) sfx.play('click');
 });
 
+boardSelect.addEventListener('change', updateBoardChoice);
 countSelect.addEventListener('change', buildPlayerRows);
 setupForm.addEventListener('submit', () => {
   // Dialogin sulkeutuminen tapahtuu selaimen toimesta; peli luodaan sen jälkeen.

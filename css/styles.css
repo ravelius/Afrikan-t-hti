@@ -577,6 +577,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .gem-ruby { fill: #d2402f; }
 .gem-emerald { fill: #2f9e63; }
 .gem-topaz { fill: #e0a020; }
+body[data-pack='middleeast'] .gem-topaz { fill: #3aaea6; }
 
 .token-icon { display: inline-block; vertical-align: -0.22em; }
 

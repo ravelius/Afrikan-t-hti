@@ -15,9 +15,12 @@ const read = (p) => readFileSync(join(root, p), 'utf8');
 
 // Moduulit riippuvuusjärjestyksessä; import/export-rivit poistetaan.
 const MODULES = [
-  'js/board.js',
   'js/tokens.js',
-  'js/questions.js',
+  'js/packs/africa-questions.js',
+  'js/packs/africa.js',
+  'js/packs/middleeast-questions.js',
+  'js/packs/middleeast.js',
+  'js/pack.js',
   'js/sound.js',
   'js/die.js',
   'js/rules.js',
@@ -32,8 +35,9 @@ const MODULES = [
 function checkModuleList() {
   const included = new Set(MODULES);
   for (const file of MODULES) {
-    for (const match of read(file).matchAll(/from '\.\/([\w-]+\.js)'/g)) {
-      const dep = `js/${match[1]}`;
+    const dir = dirname(file);
+    for (const match of read(file).matchAll(/from '(\.\.?\/[\w\/-]+\.js)'/g)) {
+      const dep = join(dir, match[1]).replaceAll('\\', '/');
       if (!included.has(dep)) {
         throw new Error(`${file} tarvitsee moduulin ${dep}, joka puuttuu MODULES-listalta`);
       }

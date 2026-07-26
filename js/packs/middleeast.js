@@ -1,0 +1,204 @@
+// Lähi-itä-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
+//
+// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Lähi-idän karttaa:
+//   x = (pituusaste - 24) * 25      (lännestä 24° itään 64°)
+//   y = (44 - leveysaste) * 29.4    (pohjoisesta 44° etelään 10°)
+//
+// Meret ovat mantereen "sisäänvetoja": Punainenmeri ja Persianlahti työntyvät
+// rannikon väliin, Mustameri ja Kaspianmeri avautuvat kartan ylälaidasta.
+// Kaupungit ovat todellisilla paikoillaan; muutamaa on siirretty hiukan,
+// jotta nimet ja nappulat mahtuvat laudalle.
+
+import { MIDDLEEAST_QUESTIONS, MIDDLEEAST_FACTS } from './middleeast-questions.js';
+import { themedTokenTypes } from '../tokens.js';
+
+const ME_MAP = {
+  width: 1000,
+  height: 1000,
+  mainlandPoints: [
+    [0, 999.6], [0, 364.6], [62.5, 370.4], [125, 385.1], [170.0, 379.3], [197.5, 367.5],
+    [222.5, 379.3], [255.0, 371.9], [272.5, 341.0], [278.7, 311.6], [290.0, 276.4],
+    [296.3, 244.0], [300.0, 211.7], [265.0, 223.4], [215.0, 232.3], [165.0, 226.4],
+    [130.0, 223.4], [90.0, 211.7], [75.0, 188.2], [62.5, 161.7], [55.0, 135.2], [53.7, 107.3],
+    [90.0, 102.9], [126.3, 86.7], [182.5, 73.5], [237.5, 58.8], [280.0, 57.3], [325.0, 85.3],
+    [385.0, 89.7], [432.5, 76.4], [440.0, 35.3], [450.0, 0.0], [580.0, 0.0], [607.5, 64.7],
+    [633.8, 105.8], [625.0, 141.1], [623.8, 176.4], [645.0, 197.0], [687.5, 213.1],
+    [732.5, 210.2], [750.0, 191.1], [742.5, 147.0], [725.0, 100.0], [720.0, 52.9],
+    [732.5, 0.0], [1000, 0.0], [1000, 552.7], [937.5, 555.7], [887.5, 546.8], [850.0, 538.0],
+    [832.5, 514.5], [815.0, 499.8], [775.0, 508.6], [725.0, 488.0], [687.5, 470.4],
+    [657.5, 435.1], [625.0, 411.6], [615.0, 407.2], [605.0, 426.3], [615.0, 458.6],
+    [637.5, 491.0], [660.0, 520.4], [667.5, 541.0], [677.5, 527.7], [688.7, 532.1],
+    [690.0, 558.6], [720.0, 583.6], [757.5, 577.7], [785.0, 561.5], [803.8, 532.1],
+    [810.0, 520.4], [815.0, 541.0], [842.5, 570.4], [867.5, 601.2], [895.0, 632.1],
+    [872.5, 688.0], [840.0, 726.2], [797.5, 767.3], [752.5, 796.7], [705.0, 826.1],
+    [655.0, 852.6], [605.0, 882.0], [560.0, 899.6], [527.5, 921.7], [500.0, 923.2],
+    [481.2, 905.5], [467.5, 852.6], [460.0, 805.6], [437.5, 758.5], [412.5, 711.5],
+    [385.0, 667.4], [372.5, 623.3], [357.5, 582.1], [327.5, 546.8], [295.0, 505.7],
+    [272.5, 473.3], [276.2, 452.8], [275.0, 429.2], [262.5, 458.6], [256.2, 474.8],
+    [240.0, 458.6], [220.0, 426.3], [213.7, 411.6], [215.0, 435.1], [235.0, 464.5],
+    [250.0, 493.9], [270.0, 535.1], [292.5, 579.2], [317.5, 629.2], [335.0, 676.2],
+    [355.0, 726.2], [375.0, 782.0], [400.0, 835.0], [432.5, 876.1], [462.5, 911.4],
+    [477.5, 927.6], [487.5, 946.7], [530.0, 970.2], [575.0, 979.0], [625.0, 987.8],
+    [665.0, 998.1], [665.0, 999.6],
+  ],
+  cyprusPoints: [
+    [207.5, 245.5], [240.0, 252.8], [263.7, 247.0], [247.5, 263.1], [225.0, 276.4],
+    [210.0, 273.4], [206.2, 261.7],
+  ],
+};
+
+// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+const ME_CITIES = [
+  { id: 'istanbul', name: 'Istanbul', x: 125, y: 88, start: true, airport: true },
+  { id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true },
+
+  { id: 'izmir', name: 'Izmir', x: 78, y: 164, la: 'start', lx: 16, ly: 5 },
+  { id: 'ankara', name: 'Ankara', x: 221, y: 120 },
+  { id: 'kapadokia', name: 'Kappadokia', x: 276, y: 166, la: 'start', lx: 16, ly: 5 },
+  { id: 'nikosia', name: 'Nikosia', x: 234, y: 260, la: 'middle', lx: 0, ly: -22 },
+  { id: 'halab', name: 'Aleppo', x: 329, y: 229, la: 'start', lx: 16, ly: 5 },
+  { id: 'damaskos', name: 'Damaskos', x: 308, y: 309, la: 'start', lx: 16, ly: 5 },
+  { id: 'jerusalem', name: 'Jerusalem', x: 268, y: 364, la: 'start', lx: 16, ly: 5 },
+  { id: 'petra', name: 'Petra', x: 302, y: 418, la: 'start', lx: 16, ly: 5 },
+  { id: 'siinai', name: 'Siinai', x: 249, y: 454, la: 'end', lx: -16, ly: 22 },
+  { id: 'luxor', name: 'Luxor', x: 216, y: 538, la: 'end', lx: -16, ly: 5 },
+  { id: 'medina', name: 'Medina', x: 390, y: 574, la: 'start', lx: 16, ly: 5 },
+  { id: 'mekka', name: 'Mekka', x: 395, y: 664, la: 'start', lx: 16, ly: 5 },
+  { id: 'riad', name: 'Riad', x: 568, y: 570 },
+  { id: 'rubalkhali', name: 'Rub al-Khali', x: 675, y: 691, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sana', name: 'Sana', x: 505, y: 842, la: 'start', lx: 16, ly: 5 },
+  { id: 'aden', name: 'Aden', x: 526, y: 917 },
+  { id: 'salalah', name: 'Salalah', x: 752, y: 794 },
+  { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'end', lx: -16, ly: 5 },
+  { id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26 },
+  { id: 'doha', name: 'Doha', x: 688, y: 550, la: 'middle', lx: 0, ly: 26 },
+  { id: 'kuwait', name: 'Kuwait', x: 600, y: 430, la: 'end', lx: -16, ly: 5 },
+  { id: 'bagdad', name: 'Bagdad', x: 509, y: 314 },
+  { id: 'mosul', name: 'Mosul', x: 478, y: 225 },
+  { id: 'tabriz', name: 'Tabriz', x: 558, y: 174 },
+  { id: 'teheran', name: 'Teheran', x: 685, y: 244, la: 'start', lx: 16, ly: 5 },
+  { id: 'isfahan', name: 'Isfahan', x: 692, y: 334, la: 'start', lx: 16, ly: 5 },
+  { id: 'persepolis', name: 'Persepolis', x: 722, y: 414, la: 'start', lx: 16, ly: 5 },
+];
+
+// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
+// type 'sea' = laivareitti; via = piirto- ja tarkistuspisteet veden päällä.
+const ME_EDGES = [
+  // Anatolia ja Levantti
+  { a: 'istanbul', b: 'izmir', steps: 2 },
+  { a: 'istanbul', b: 'ankara', steps: 3 },
+  { a: 'izmir', b: 'ankara', steps: 3 },
+  { a: 'ankara', b: 'kapadokia', steps: 2 },
+  { a: 'kapadokia', b: 'halab', steps: 3 },
+  { a: 'kapadokia', b: 'tabriz', steps: 5 },
+  { a: 'halab', b: 'damaskos', steps: 2 },
+  { a: 'halab', b: 'mosul', steps: 4 },
+  { a: 'damaskos', b: 'bagdad', steps: 5 },
+  { a: 'damaskos', b: 'jerusalem', steps: 2 },
+  { a: 'jerusalem', b: 'kairo', steps: 3 },
+  { a: 'jerusalem', b: 'petra', steps: 2 },
+  { a: 'petra', b: 'siinai', steps: 2 },
+  { a: 'petra', b: 'medina', steps: 4 },
+  { a: 'siinai', b: 'kairo', steps: 2 },
+  { a: 'kairo', b: 'luxor', steps: 3 },
+
+  // Arabian niemimaa
+  { a: 'medina', b: 'mekka', steps: 2 },
+  { a: 'medina', b: 'riad', steps: 4 },
+  { a: 'mekka', b: 'riad', steps: 4 },
+  { a: 'mekka', b: 'sana', steps: 4 },
+  { a: 'sana', b: 'aden', steps: 2 },
+  { a: 'riad', b: 'kuwait', steps: 3 },
+  { a: 'riad', b: 'doha', steps: 3 },
+  { a: 'riad', b: 'rubalkhali', steps: 3 },
+  { a: 'rubalkhali', b: 'salalah', steps: 3 },
+  { a: 'rubalkhali', b: 'sana', steps: 4 },
+  { a: 'doha', b: 'dubai', steps: 2 },
+  { a: 'salalah', b: 'masqat', steps: 4 },
+
+  // Kaksoisvirranmaa ja Iran
+  { a: 'kuwait', b: 'bagdad', steps: 4 },
+  { a: 'kuwait', b: 'persepolis', steps: 4, via: [[618, 398], [668, 392]] },
+  { a: 'bagdad', b: 'mosul', steps: 3 },
+  { a: 'bagdad', b: 'isfahan', steps: 4 },
+  { a: 'mosul', b: 'tabriz', steps: 3 },
+  { a: 'tabriz', b: 'teheran', steps: 3 },
+  { a: 'teheran', b: 'isfahan', steps: 2 },
+  { a: 'isfahan', b: 'persepolis', steps: 2 },
+
+  // Laivareitit
+  { a: 'izmir', b: 'nikosia', steps: 3, type: 'sea', via: [[85, 230], [150, 258]] },
+  { a: 'nikosia', b: 'halab', steps: 2, type: 'sea' },
+  { a: 'nikosia', b: 'kairo', steps: 3, type: 'sea', via: [[215, 330]] },
+  { a: 'siinai', b: 'mekka', steps: 4, type: 'sea', via: [[270, 500], [308, 540], [350, 610]] },
+  { a: 'mekka', b: 'aden', steps: 4, type: 'sea', via: [[395, 690], [420, 750], [445, 810], [470, 895]] },
+  { a: 'aden', b: 'salalah', steps: 3, type: 'sea', via: [[600, 905], [690, 860]] },
+  { a: 'masqat', b: 'dubai', steps: 2, type: 'sea', via: [[850, 544], [818, 503], [797, 516]] },
+  { a: 'doha', b: 'kuwait', steps: 3, type: 'sea', via: [[670, 490], [630, 455]] },
+];
+
+// Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
+const ME_AIR_ROUTES = [
+  { a: 'istanbul', b: 'kairo' },
+  { a: 'istanbul', b: 'dubai' },
+  { a: 'kairo', b: 'dubai' },
+];
+
+export const MIDDLE_EAST = {
+  id: 'middleeast',
+  name: 'Idän tähti',
+  boardLabel: 'Lähi-itä',
+  tagline: 'Etsi Idän tähti basaarien ja aavikoiden kätköistä.',
+  ariaLabel: 'Lähi-idän aarrekartta',
+
+  map: { ...ME_MAP, outlines: [ME_MAP.mainlandPoints, ME_MAP.cyprusPoints] },
+  cities: ME_CITIES,
+  edges: ME_EDGES,
+  airRoutes: ME_AIR_ROUTES,
+  islands: ['nikosia'], // Kypros on oma saarensa, jonne pääsee vain laivalla
+  minCityDistance: 60,
+
+  tokens: {
+    // Turkoosi on saanut nimensä Turkista, jonka kautta kivi kulki Eurooppaan.
+    types: themedTokenTypes({
+      star: { name: 'Idän tähti' },
+      topaz: { name: 'Turkoosi', color: '#3aaea6' },
+    }),
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 3, emerald: 4, topaz: 6, empty: 8 },
+  },
+
+  questions: MIDDLEEAST_QUESTIONS,
+  placeFacts: MIDDLEEAST_FACTS,
+
+  texts: {
+    intro: 'Peli alkaa! Etsikää Idän tähti ja palatkaa Istanbuliin tai Kairoon.',
+    starFound: (name, city) => `★ ${name} löysi IDÄN TÄHDEN kaupungista ${city}!`,
+    starToast: 'IDÄN TÄHTI!',
+    starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
+    winStar: 'toi Idän tähden turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Idän tähden kotiin ${money} punnan kanssa.`,
+  },
+
+  decor: {
+    mapLabel: 'LÄHI-ITÄ',
+    mapLabelPos: { x: 900, y: 940 },
+    compass: { x: 78, y: 305, r: 62 },
+    // Aaltoja ei piirretä näihin kohtiin: laivadoodle, meripeto ja karttanimi.
+    waveSkip: [
+      { x: 675, y: 110, r: 95 },
+      { x: 780, y: 900, r: 110 },
+      { x: 900, y: 940, r: 135 },
+    ],
+    ship: { x: 675, y: 110 },
+    serpent: { x: 780, y: 900 },
+    // Nopan lepopaikka suhteellisina koordinaatteina: Arabianmeri oikeassa alakulmassa.
+    dieSpot: { x: 0.87, y: 0.87 },
+    // Pohjoisessa Anatolian ja Elburzin vuoret, keskellä aavikkoa,
+    // etelässä Jemenin ylängöt.
+    terrainBands: [
+      { maxY: 230, kind: 'mountains' },
+      { maxY: 820, kind: 'dunes' },
+      { maxY: Infinity, kind: 'mountains' },
+    ],
+  },
+};
