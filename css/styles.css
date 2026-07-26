@@ -379,9 +379,35 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .city-label.start-label { font-size: 21px; letter-spacing: 0.1em; text-transform: uppercase; }
 
-.token-x { stroke: var(--mark); stroke-width: 5; stroke-linecap: round; opacity: 0.9; }
-.token-open { stroke: #4a3520; stroke-width: 2; }
-.token-mark { font-size: 17px; font-weight: 700; fill: #2b2114; }
+/* --- laattojen kuvakkeet --- */
+
+.token-disc { fill: #f7ecd2; stroke: var(--map-ink); stroke-width: 2.5; }
+
+.icon-star { fill: #e8b23c; stroke: #6d4d12; stroke-width: 1.6; stroke-linejoin: round; }
+
+.icon-shoe {
+  fill: none;
+  stroke: #9aa3ad;
+  stroke-width: 5;
+  stroke-linecap: round;
+  paint-order: stroke;
+}
+.icon-shoe-hole { fill: #4c5560; }
+
+.icon-hat { fill: #34291d; }
+.icon-mask { fill: #6b5a45; }
+.icon-eye { fill: #f7ecd2; }
+
+.icon-empty { fill: none; stroke: #8a765a; stroke-width: 2; stroke-dasharray: 4 4; }
+.icon-empty-line { stroke: #8a765a; stroke-width: 2; stroke-linecap: round; }
+
+.icon-gem { stroke: #3b2a13; stroke-width: 1.5; stroke-linejoin: round; }
+.icon-gem-facets { fill: none; stroke: rgba(255, 255, 255, 0.55); stroke-width: 1.1; }
+.gem-ruby { fill: #d2402f; }
+.gem-emerald { fill: #2f9e63; }
+.gem-topaz { fill: #e0a020; }
+
+.token-icon { display: inline-block; vertical-align: -0.22em; }
 
 .map-title {
   fill: var(--map-ink);
@@ -553,6 +579,7 @@ select {
 .quiz-option .letter { color: var(--accent); font-weight: 700; flex: 0 0 auto; width: 1.2em; }
 .quiz-option .text { flex: 1 1 auto; }
 
+.quiz-option.hidden-option { opacity: 0.22; text-decoration: line-through; }
 .quiz-option.correct { background: #1d6b3f; border-color: #46d17f; color: #f2fff7; }
 .quiz-option.wrong { background: #7a2320; border-color: #e0655f; color: #fff0ee; }
 
@@ -564,6 +591,15 @@ select {
   font-size: 0.95rem;
   line-height: 1.4;
 }
+
+#quiz-hint {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #2b5a86;
+  color: #eaf4ff;
+  margin-right: auto;
+}
+
+.gem-count { font-size: 0.78rem; color: var(--muted); }
 
 .quiz-result.right { border-left: 4px solid #46d17f; }
 .quiz-result.wrong { border-left: 4px solid #e0655f; }

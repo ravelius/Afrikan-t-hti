@@ -1,10 +1,10 @@
 // Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
 import { AIR_ROUTES } from './board.js';
-import { pixelOf, posKey } from './rules.js';
+import { pixelOf, pointAlong, posKey } from './rules.js';
 import { TOKEN_TYPES } from './tokens.js';
-import { chooseAction, chooseMove, chooseQuizAnswer } from './ai.js';
-import { TOKEN_PRICE, FLIGHT_PRICE } from './game.js';
+import { chooseAction, chooseMove, chooseQuizAnswer, wantsHint } from './ai.js';
+import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE } from './game.js';
 import {
   el,
   drawCompass,
@@ -14,7 +14,9 @@ import {
   drawPaperOverlay,
   drawParchment,
   drawTerrain,
+  drawTokenIcon,
   drawWaves,
+  tokenIconSvg,
 } from './mapart.js';
 
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
@@ -53,6 +55,8 @@ export class UI {
     this.quizQuestion = document.getElementById('quiz-question');
     this.quizOptions = document.getElementById('quiz-options');
     this.quizResult = document.getElementById('quiz-result');
+    this.quizHint = document.getElementById('quiz-hint');
+    this.quizHint.addEventListener('click', () => this.doAction(() => this.game.actionFiftyFifty()));
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
 
@@ -136,22 +140,14 @@ export class UI {
       el('path', { d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, class: 'air-route' }, air);
     }
 
-    // Reitit ja askelpisteet.
+    // Reitit ja askelpisteet. Merireitit kaartavat rannikon ympäri.
     const routes = el('g', { class: 'routes', filter: 'url(#rough-soft)' }, this.svg);
     for (const e of board.edges) {
-      const a = board.cityById.get(e.a);
-      const b = board.cityById.get(e.b);
-      el('line', {
-        x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: `route route-${e.type}`,
-      }, routes);
+      const d = e.poly.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+      el('path', { d, class: `route route-${e.type}` }, routes);
       for (let i = 1; i < e.steps; i++) {
-        const t = i / e.steps;
-        el('circle', {
-          cx: a.x + (b.x - a.x) * t,
-          cy: a.y + (b.y - a.y) * t,
-          r: 6,
-          class: `step step-${e.type}`,
-        }, routes);
+        const { x, y } = pointAlong(e.poly, i / e.steps);
+        el('circle', { cx: x, cy: y, r: 6, class: `step step-${e.type}` }, routes);
       }
     }
 
@@ -159,11 +155,10 @@ export class UI {
     const fares = el('g', { class: 'fares' }, this.svg);
     for (const e of board.edges) {
       if (e.type !== 'sea') continue;
-      const a = board.cityById.get(e.a);
-      const b = board.cityById.get(e.b);
+      const mid = pointAlong(e.poly, 0.5);
       el('text', {
-        x: (a.x + b.x) / 2,
-        y: (a.y + b.y) / 2 - 12,
+        x: mid.x,
+        y: mid.y - 12,
         class: 'fare',
         'text-anchor': 'middle',
       }, fares).textContent = `⚓${e.fee}`;
@@ -201,24 +196,19 @@ export class UI {
     drawPaperOverlay(this.svg);
   }
 
-  /** Kääntämätön laatta on punainen rasti, käännetty laatta värillinen kiekko. */
+  /** Kartalla näkyvät vain käännetyt laatat omina kuvakkeinaan. */
   drawTokens() {
     const { game } = this;
     this.tokenLayer.textContent = '';
-    for (const city of game.board.cities) {
-      const hidden = game.tokens.has(city.id);
-      const revealed = game.revealed.get(city.id);
-      if (!hidden && !revealed) continue;
-      const g = el('g', { transform: `translate(${city.x + 21},${city.y + 17})` }, this.tokenLayer);
-      if (hidden) {
-        el('path', { d: 'M-9,-9 L9,9 M9,-9 L-9,9', class: 'token-x' }, g);
-      } else {
-        const t = TOKEN_TYPES[revealed];
-        el('circle', { r: 13, class: 'token-open', fill: t.color }, g);
-        el('text', {
-          y: 6, class: 'token-mark', 'text-anchor': 'middle',
-        }, g).textContent = t.symbol;
-      }
+    for (const [cityId, type] of game.revealed) {
+      const city = game.board.cityById.get(cityId);
+      const g = el('g', {
+        class: 'token-found',
+        transform: `translate(${city.x + 22},${city.y + 18})`,
+      }, this.tokenLayer);
+      el('circle', { r: 17, class: 'token-disc' }, g);
+      const icon = drawTokenIcon(g, type);
+      icon.setAttribute('transform', 'scale(0.88)');
     }
   }
 
@@ -306,10 +296,13 @@ export class UI {
       const row = html('div', 'chip-row');
       row.appendChild(html('span', 'money', `${p.money} p`));
       const marks = html('span', 'chip-marks');
-      if (p.hasStar) marks.appendChild(html('span', 'star', '★'));
-      if (p.horseshoes) marks.appendChild(html('span', '', 'Ω'.repeat(p.horseshoes)));
-      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0).length;
-      if (gems) marks.appendChild(html('span', '', ` ◆${gems}`));
+      if (p.hasStar) marks.appendChild(tokenIconSvg('star', 17));
+      for (let i = 0; i < p.horseshoes; i++) marks.appendChild(tokenIconSvg('horseshoe', 17));
+      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0);
+      if (gems.length) {
+        marks.appendChild(tokenIconSvg(gems[gems.length - 1], 17));
+        if (gems.length > 1) marks.appendChild(html('span', 'gem-count', `×${gems.length}`));
+      }
       row.appendChild(marks);
       chip.appendChild(row);
 
@@ -362,18 +355,13 @@ export class UI {
     const actions = game.availableActions();
     const tokenCity = game.tokenHere();
     this.turnStatus.textContent = tokenCity
-      ? `${tokenCity.name}: laatta odottaa kääntäjää.`
+      ? `${tokenCity.name}: aarre aukeaa oikealla vastauksella.`
       : 'Valitse toiminto.';
 
     if (tokenCity) {
-      const quizBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
+      const quizBtn = html('button', 'primary', '❓ Avaa laatta kysymyksellä');
       quizBtn.addEventListener('click', () => this.doAction(() => game.actionQuiz()));
       this.actionsEl.appendChild(quizBtn);
-
-      const buyBtn = html('button', '', `💰 Osta laatta ${TOKEN_PRICE} p`);
-      buyBtn.disabled = !actions.buy;
-      buyBtn.addEventListener('click', () => this.doAction(() => game.actionBuy()));
-      this.actionsEl.appendChild(buyBtn);
     }
 
     const rollBtn = html('button', tokenCity ? '' : 'primary', '🎲 Heitä noppa');
@@ -448,7 +436,10 @@ export class UI {
       const btn = html('button', 'quiz-option');
       btn.appendChild(html('span', 'letter', LETTERS[i]));
       btn.appendChild(html('span', 'text', text));
-      if (quiz.chosen !== null) {
+      if (quiz.hidden.includes(i)) {
+        btn.classList.add('hidden-option');
+        btn.disabled = true;
+      } else if (quiz.chosen !== null) {
         btn.disabled = true;
         if (i === quiz.correct) btn.classList.add('correct');
         if (i === quiz.chosen && !quiz.right) btn.classList.add('wrong');
@@ -461,17 +452,30 @@ export class UI {
     });
 
     const answered = quiz.chosen !== null;
+
+    // Vihjenappi: 50 punnalla kaksi väärää vaihtoehtoa pois.
+    const p = game.player;
+    const used = quiz.hidden.length > 0;
+    this.quizHint.hidden = answered || p.isBot;
+    this.quizHint.disabled = used || p.money < FIFTY_FIFTY_PRICE;
+    this.quizHint.textContent = used
+      ? '50:50 käytetty'
+      : `50:50 — poista kaksi väärää (${FIFTY_FIFTY_PRICE} p)`;
+
     this.quizResult.hidden = !answered;
     if (answered) {
       this.quizResult.className = `quiz-result ${quiz.right ? 'right' : 'wrong'}`;
       this.quizResult.textContent = '';
       const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
-      const heading = quiz.right
-        ? found
-          ? `Oikein! Laatan alta löytyi: ${found.symbol} ${found.name}`
-          : 'Oikein!'
-        : `Väärin — oikea vastaus oli "${quiz.options[quiz.correct]}".`;
-      this.quizResult.appendChild(html('strong', '', heading));
+      if (quiz.right && found) {
+        this.quizResult.appendChild(tokenIconSvg(quiz.found, 22));
+        this.quizResult.appendChild(html('strong', '', ` Oikein! Löysit: ${found.name}`));
+      } else {
+        const heading = quiz.right
+          ? 'Oikein!'
+          : `Väärin — oikea vastaus oli "${quiz.options[quiz.correct]}". Vuoro vaihtuu, voit yrittää uudella kysymyksellä seuraavalla vuorolla.`;
+        this.quizResult.appendChild(html('strong', '', heading));
+      }
       if (quiz.fact) {
         this.quizResult.appendChild(document.createElement('br'));
         this.quizResult.appendChild(html('span', 'muted', quiz.fact));
@@ -550,8 +554,9 @@ export class UI {
     if (game.phase === 'over' || !game.player.isBot) return;
 
     if (game.phase === 'quiz') {
-      if (game.quiz.chosen === null) game.answerQuiz(chooseQuizAnswer(game));
-      else game.closeQuiz();
+      if (game.quiz.chosen !== null) game.closeQuiz();
+      else if (wantsHint(game)) game.actionFiftyFifty();
+      else game.answerQuiz(chooseQuizAnswer(game));
       this.render();
       return;
     }
@@ -565,9 +570,7 @@ export class UI {
     }
 
     const action = chooseAction(game);
-    if (action.type === 'buy') {
-      game.actionBuy();
-    } else if (action.type === 'quiz') {
+    if (action.type === 'quiz') {
       game.actionQuiz();
     } else if (action.type === 'fly') {
       game.actionFly(action.destination);

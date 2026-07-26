@@ -6,7 +6,7 @@
 //   3. Muuten: liiku kohti lähintä kääntämätöntä laattaa.
 
 import { cityDistances, distanceOf } from './rules.js';
-import { TOKEN_PRICE, FLIGHT_PRICE } from './game.js';
+import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE } from './game.js';
 
 // Kuinka usein botti osaa vastata tietovisaan oikein.
 export const BOT_SKILL = 0.55;
@@ -44,11 +44,7 @@ export function chooseAction(game) {
   const p = game.player;
   const actions = game.availableActions();
 
-  if (!racingHome(game, p) && actions.quiz) {
-    // Rikas botti ostaa varman käännön, muuten se luottaa tietoihinsa.
-    if (actions.buy && p.money >= TOKEN_PRICE + 500) return { type: 'buy' };
-    return { type: 'quiz' };
-  }
+  if (!racingHome(game, p) && actions.quiz) return { type: 'quiz' };
 
   // Kotimatkalla lento kannattaa jos se lyhentää matkaa selvästi.
   if (racingHome(game, p) && actions.fly.length && p.money >= FLIGHT_PRICE) {
@@ -96,11 +92,25 @@ export function chooseMove(game) {
   return best.key;
 }
 
-/** Botin vastaus tietovisaan: oikein BOT_SKILL:n todennäköisyydellä. */
+/** Ostaako botti 50:50-vihjeen? Vain jos rahaa riittää myös matkoihin. */
+export function wantsHint(game) {
+  const quiz = game.quiz;
+  const p = game.player;
+  if (!quiz || quiz.hidden.length || quiz.chosen !== null) return false;
+  if (p.money < FIFTY_FIFTY_PRICE + 100) return false;
+  return game.rng() < 0.5;
+}
+
+/**
+ * Botin vastaus tietovisaan: oikein BOT_SKILL:n todennäköisyydellä.
+ * 50:50-vihje nostaa osumatarkkuutta, koska vaihtoehtoja on vain kaksi.
+ */
 export function chooseQuizAnswer(game, skill = BOT_SKILL) {
   const quiz = game.quiz;
   if (!quiz) return 0;
-  if (game.rng() < skill) return quiz.correct;
-  const wrong = quiz.options.map((_, i) => i).filter((i) => i !== quiz.correct);
-  return wrong[Math.floor(game.rng() * wrong.length)];
+  const open = quiz.options.map((_, i) => i).filter((i) => !quiz.hidden.includes(i));
+  const chance = quiz.hidden.length ? Math.max(skill, 0.75) : skill;
+  if (game.rng() < chance) return quiz.correct;
+  const wrong = open.filter((i) => i !== quiz.correct);
+  return wrong.length ? wrong[Math.floor(game.rng() * wrong.length)] : quiz.correct;
 }

@@ -85,8 +85,8 @@
       <p><b>Tavoite.</b> Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon.
         Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä
         aloituskaupunkiin ensimmäisenä.</p>
-      <p><b>Vuoro.</b> Voit joko heittää nopan ja liikkua, avata kaupunkisi laatan
-        (tietovisalla tai rahalla) tai lentää lentokentältä toiselle (300 puntaa).
+      <p><b>Vuoro.</b> Voit joko heittää nopan ja liikkua, avata kaupunkisi aarteen
+        vastaamalla kysymykseen tai lentää lentokentältä toiselle (300 puntaa).
         Yksi teko per vuoro.</p>
       <p><b>Liikkuminen.</b> Noppa kertoo, kuinka monta askelta voit enintään kulkea —
         tasalukua ei tarvita, vaan kaupunkiin saa pysähtyä jo matkan varrella. Reitin voi
@@ -94,11 +94,13 @@
         loppuu kesken reittiä, pysähdyt reitin varrelle.</p>
       <p><b>Laivareitit.</b> Sininen katkoviiva maksaa 100 puntaa kun sille astutaan.
         Ilman rahaa laivaan ei pääse.</p>
-      <p><b>Laatat ja tietovisa.</b> Punainen ✗ kartalla tarkoittaa kääntämätöntä laattaa.
-        Kaupungissa seisova pelaaja voi vastata paikkaan liittyvään monivalintakysymykseen
-        (A–D). Oikea vastaus kääntää laatan ilmaiseksi, väärä päättää vuoron.
-        Vaihtoehtoisesti laatan voi ostaa 100 punnalla ilman kysymystä.</p>
-      <p><b>Laatat pelissä (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
+      <p><b>Aarteet ja tietovisa.</b> Jokaisessa kaupungissa aloituskaupunkeja lukuun
+        ottamatta on kätketty aarre. Sen saa auki vain vastaamalla oikein arvottuun
+        monivalintakysymykseen (A–D) — rahalla aarretta ei voi ostaa. Väärästä vastauksesta
+        vuoro päättyy, ja seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.</p>
+      <p><b>Rahan käyttö.</b> 50 puntaa poistaa kysymyksestä kaksi väärää vaihtoehtoa
+        (50:50), 100 puntaa maksaa laivamatkan ja 300 puntaa lennon.</p>
+      <p><b>Aarteet (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
@@ -120,6 +122,7 @@
     <div id="quiz-options" class="quiz-options"></div>
     <p id="quiz-result" class="quiz-result" hidden></p>
     <menu>
+      <button id="quiz-hint" type="button" hidden>50:50</button>
       <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
     </menu>
   </dialog>

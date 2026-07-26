@@ -6,7 +6,7 @@ import { TOKEN_TYPES, createTokenPile } from './tokens.js';
 import { QUESTIONS } from './questions.js';
 
 export const START_MONEY = 300;
-export const TOKEN_PRICE = 100;
+export const FIFTY_FIFTY_PRICE = 50; // kahden väärän vaihtoehdon piilotus
 export const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 export { FLIGHT_PRICE };
 
@@ -119,14 +119,11 @@ export class Game {
   /** Mitä nykyinen pelaaja voi tehdä juuri nyt. */
   availableActions() {
     if (this.phase !== 'action') {
-      return { roll: false, buy: false, quiz: false, fly: [] };
+      return { roll: false, quiz: false, fly: [] };
     }
-    const p = this.player;
-    const tokenCity = this.tokenHere();
     return {
       roll: true,
-      buy: !!tokenCity && p.money >= TOKEN_PRICE,
-      quiz: !!tokenCity,
+      quiz: !!this.tokenHere(),
       fly: this.airportDestinations(),
     };
   }
@@ -220,20 +217,6 @@ export class Game {
     return { ok: true };
   }
 
-  /** Ostaa laatan 100 punnalla. */
-  actionBuy() {
-    if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
-    const p = this.player;
-    const city = this.tokenHere();
-    if (!city) return { ok: false, error: 'Täällä ei ole laattaa' };
-    if (p.money < TOKEN_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
-    p.money -= TOKEN_PRICE;
-    this.say(p.id, `${p.name} maksoi ${TOKEN_PRICE} puntaa ja käänsi laatan.`);
-    this.revealToken(city.id);
-    if (this.phase !== 'over') this.endTurn();
-    return { ok: true };
-  }
-
   /** Avaa tietovisakysymyksen: oikea vastaus kääntää laatan ilmaiseksi. */
   actionQuiz() {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
@@ -248,6 +231,7 @@ export class Game {
       fact: question.fact,
       options: order.map((i) => question.options[i]),
       correct: order.indexOf(question.correct),
+      hidden: [],
       chosen: null,
       right: null,
     };
@@ -259,6 +243,9 @@ export class Game {
   answerQuiz(index) {
     if (this.phase !== 'quiz' || !this.quiz || this.quiz.chosen !== null) {
       return { ok: false, error: 'Ei avointa kysymystä' };
+    }
+    if (this.quiz.hidden.includes(index)) {
+      return { ok: false, error: 'Tuo vaihtoehto on poistettu' };
     }
     const p = this.player;
     const city = this.board.cityById.get(this.quiz.cityId);
@@ -275,6 +262,27 @@ export class Game {
     return { ok: true, right: this.quiz.right };
   }
 
+  /** Piilottaa 50 punnalla kaksi väärää vaihtoehtoa. */
+  actionFiftyFifty() {
+    if (this.phase !== 'quiz' || !this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    const quiz = this.quiz;
+    if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+    if (quiz.hidden.length) return { ok: false, error: 'Vihje on jo käytetty' };
+
+    const p = this.player;
+    if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
+    p.money -= FIFTY_FIFTY_PRICE;
+
+    const wrong = quiz.options.map((_, i) => i).filter((i) => i !== quiz.correct);
+    for (let i = wrong.length - 1; i > 0; i--) {
+      const j = Math.floor(this.rng() * (i + 1));
+      [wrong[i], wrong[j]] = [wrong[j], wrong[i]];
+    }
+    quiz.hidden = wrong.slice(0, 2).sort((a, b) => a - b);
+    this.say(p.id, `${p.name} maksoi ${FIFTY_FIFTY_PRICE} puntaa ja poisti kaksi väärää vaihtoehtoa.`);
+    return { ok: true, hidden: quiz.hidden };
+  }
+
   /** Sulkee kysymyksen ja päättää vuoron. */
   closeQuiz() {
     if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
@@ -285,19 +293,18 @@ export class Game {
     return { ok: true };
   }
 
-  /** Kysymys kaupungille: ensin omat, sitten varapakka, lopuksi kierrätys. */
+  /**
+   * Arpoo kysymyksen: kaupungin omat ja yleiset kysymykset ovat samassa pakassa,
+   * ja arvonta osuu vain vielä kysymättömiin. Kun pakka on tyhjä, kaikki
+   * kysymykset palaavat mukaan.
+   */
   pickQuestion(cityId) {
-    const pools = [QUESTIONS[cityId] ?? [], QUESTIONS.general];
-    for (const pool of pools) {
-      const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
-      if (fresh.length) {
-        const question = fresh[Math.floor(this.rng() * fresh.length)];
-        this.usedQuestions.add(question.q);
-        return question;
-      }
-    }
-    const all = [...(QUESTIONS[cityId] ?? []), ...QUESTIONS.general];
-    return all[Math.floor(this.rng() * all.length)];
+    const pool = [...(QUESTIONS[cityId] ?? []), ...QUESTIONS.general];
+    const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
+    const deck = fresh.length ? fresh : pool;
+    const question = deck[Math.floor(this.rng() * deck.length)];
+    this.usedQuestions.add(question.q);
+    return question;
   }
 
   /** Sekoitettu indeksijärjestys vastausvaihtoehdoille. */

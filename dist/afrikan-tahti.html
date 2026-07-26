@@ -387,9 +387,35 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .city-label.start-label { font-size: 21px; letter-spacing: 0.1em; text-transform: uppercase; }
 
-.token-x { stroke: var(--mark); stroke-width: 5; stroke-linecap: round; opacity: 0.9; }
-.token-open { stroke: #4a3520; stroke-width: 2; }
-.token-mark { font-size: 17px; font-weight: 700; fill: #2b2114; }
+/* --- laattojen kuvakkeet --- */
+
+.token-disc { fill: #f7ecd2; stroke: var(--map-ink); stroke-width: 2.5; }
+
+.icon-star { fill: #e8b23c; stroke: #6d4d12; stroke-width: 1.6; stroke-linejoin: round; }
+
+.icon-shoe {
+  fill: none;
+  stroke: #9aa3ad;
+  stroke-width: 5;
+  stroke-linecap: round;
+  paint-order: stroke;
+}
+.icon-shoe-hole { fill: #4c5560; }
+
+.icon-hat { fill: #34291d; }
+.icon-mask { fill: #6b5a45; }
+.icon-eye { fill: #f7ecd2; }
+
+.icon-empty { fill: none; stroke: #8a765a; stroke-width: 2; stroke-dasharray: 4 4; }
+.icon-empty-line { stroke: #8a765a; stroke-width: 2; stroke-linecap: round; }
+
+.icon-gem { stroke: #3b2a13; stroke-width: 1.5; stroke-linejoin: round; }
+.icon-gem-facets { fill: none; stroke: rgba(255, 255, 255, 0.55); stroke-width: 1.1; }
+.gem-ruby { fill: #d2402f; }
+.gem-emerald { fill: #2f9e63; }
+.gem-topaz { fill: #e0a020; }
+
+.token-icon { display: inline-block; vertical-align: -0.22em; }
 
 .map-title {
   fill: var(--map-ink);
@@ -561,6 +587,7 @@ select {
 .quiz-option .letter { color: var(--accent); font-weight: 700; flex: 0 0 auto; width: 1.2em; }
 .quiz-option .text { flex: 1 1 auto; }
 
+.quiz-option.hidden-option { opacity: 0.22; text-decoration: line-through; }
 .quiz-option.correct { background: #1d6b3f; border-color: #46d17f; color: #f2fff7; }
 .quiz-option.wrong { background: #7a2320; border-color: #e0655f; color: #fff0ee; }
 
@@ -572,6 +599,15 @@ select {
   font-size: 0.95rem;
   line-height: 1.4;
 }
+
+#quiz-hint {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #2b5a86;
+  color: #eaf4ff;
+  margin-right: auto;
+}
+
+.gem-count { font-size: 0.78rem; color: var(--muted); }
 
 .quiz-result.right { border-left: 4px solid #46d17f; }
 .quiz-result.wrong { border-left: 4px solid #e0655f; }
@@ -688,8 +724,8 @@ select {
       <p><b>Tavoite.</b> Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon.
         Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä
         aloituskaupunkiin ensimmäisenä.</p>
-      <p><b>Vuoro.</b> Voit joko heittää nopan ja liikkua, avata kaupunkisi laatan
-        (tietovisalla tai rahalla) tai lentää lentokentältä toiselle (300 puntaa).
+      <p><b>Vuoro.</b> Voit joko heittää nopan ja liikkua, avata kaupunkisi aarteen
+        vastaamalla kysymykseen tai lentää lentokentältä toiselle (300 puntaa).
         Yksi teko per vuoro.</p>
       <p><b>Liikkuminen.</b> Noppa kertoo, kuinka monta askelta voit enintään kulkea —
         tasalukua ei tarvita, vaan kaupunkiin saa pysähtyä jo matkan varrella. Reitin voi
@@ -697,11 +733,13 @@ select {
         loppuu kesken reittiä, pysähdyt reitin varrelle.</p>
       <p><b>Laivareitit.</b> Sininen katkoviiva maksaa 100 puntaa kun sille astutaan.
         Ilman rahaa laivaan ei pääse.</p>
-      <p><b>Laatat ja tietovisa.</b> Punainen ✗ kartalla tarkoittaa kääntämätöntä laattaa.
-        Kaupungissa seisova pelaaja voi vastata paikkaan liittyvään monivalintakysymykseen
-        (A–D). Oikea vastaus kääntää laatan ilmaiseksi, väärä päättää vuoron.
-        Vaihtoehtoisesti laatan voi ostaa 100 punnalla ilman kysymystä.</p>
-      <p><b>Laatat pelissä (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
+      <p><b>Aarteet ja tietovisa.</b> Jokaisessa kaupungissa aloituskaupunkeja lukuun
+        ottamatta on kätketty aarre. Sen saa auki vain vastaamalla oikein arvottuun
+        monivalintakysymykseen (A–D) — rahalla aarretta ei voi ostaa. Väärästä vastauksesta
+        vuoro päättyy, ja seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.</p>
+      <p><b>Rahan käyttö.</b> 50 puntaa poistaa kysymyksestä kaksi väärää vaihtoehtoa
+        (50:50), 100 puntaa maksaa laivamatkan ja 300 puntaa lennon.</p>
+      <p><b>Aarteet (30 kpl):</b> Afrikan tähti 1, hevosenkenkä 2, ryöstäjä 3,
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
@@ -723,6 +761,7 @@ select {
     <div id="quiz-options" class="quiz-options"></div>
     <p id="quiz-result" class="quiz-result" hidden></p>
     <menu>
+      <button id="quiz-hint" type="button" hidden>50:50</button>
       <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
     </menu>
   </dialog>
@@ -799,7 +838,7 @@ const CITIES = [
   { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
   { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
   { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', x: 789, y: 578, la: 'start', lx: 16, ly: 5 },
+  { id: 'sansibar', name: 'Sansibar', x: 814, y: 588, la: 'start', lx: 16, ly: 5 },
   { id: 'kilimandzaro', name: 'Kilimandžaro', x: 765, y: 537, la: 'start', lx: 16, ly: -14 },
   { id: 'viktoria', name: 'Viktoria Nyanza', x: 707, y: 512, la: 'end', lx: -18, ly: -8 },
   { id: 'tanganjika', name: 'Tanganjika', x: 664, y: 575, la: 'end', lx: -16, ly: 5 },
@@ -869,17 +908,17 @@ const EDGES = [
   { a: 'addisabeba', b: 'kilimandzaro', steps: 3 },
 
   // Laivareitit
-  { a: 'tanger', b: 'dakar', steps: 3, type: 'sea' },
-  { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea' },
-  { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea' },
-  { a: 'kongo', b: 'namib', steps: 4, type: 'sea' },
-  { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea' },
-  { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea' },
-  { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea' },
-  { a: 'sansibar', b: 'mosambik', steps: 3, type: 'sea' },
+  { a: 'tanger', b: 'dakar', steps: 3, type: 'sea', via: [[150, 110], [95, 178], [45, 252]] },
+  { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
+  { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
+  { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
+  { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea', via: [[600, 976], [782, 942], [902, 832]] },
+  { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea', via: [[812, 752]] },
+  { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea', via: [[862, 642]] },
+  { a: 'sansibar', b: 'mosambik', steps: 3, type: 'sea', via: [[822, 642], [792, 712]] },
   { a: 'sansibar', b: 'kilimandzaro', steps: 2, type: 'sea' },
-  { a: 'sansibar', b: 'rashafun', steps: 5, type: 'sea' },
-  { a: 'rashafun', b: 'suakin', steps: 4, type: 'sea' },
+  { a: 'sansibar', b: 'rashafun', steps: 5, type: 'sea', via: [[852, 540], [902, 458]] },
+  { a: 'rashafun', b: 'suakin', steps: 4, type: 'sea', via: [[880, 322], [800, 268]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -1726,6 +1765,62 @@ function edgeId(a, b) {
   return `${a}|${b}`;
 }
 
+/** Catmull–Rom-pehmennys avoimelle polulle: tiheä pistejono piirtoa varten. */
+function densify(points, perSpan = 14) {
+  if (points.length < 3) return points;
+  const p = (i) => points[Math.max(0, Math.min(points.length - 1, i))];
+  const out = [points[0]];
+  for (let i = 0; i < points.length - 1; i++) {
+    const [x0, y0] = p(i - 1);
+    const [x1, y1] = p(i);
+    const [x2, y2] = p(i + 1);
+    const [x3, y3] = p(i + 2);
+    for (let s = 1; s <= perSpan; s++) {
+      const t = s / perSpan;
+      const t2 = t * t;
+      const t3 = t2 * t;
+      out.push([
+        0.5 * (2 * x1 + (x2 - x0) * t + (2 * x0 - 5 * x1 + 4 * x2 - x3) * t2 + (-x0 + 3 * x1 - 3 * x2 + x3) * t3),
+        0.5 * (2 * y1 + (y2 - y0) * t + (2 * y0 - 5 * y1 + 4 * y2 - y3) * t2 + (-y0 + 3 * y1 - 3 * y2 + y3) * t3),
+      ]);
+    }
+  }
+  return out;
+}
+
+/** Reitin kulkema polku pisteinä. Merireitit kaartavat via-pisteiden kautta. */
+function edgePolyline(edge, cityById) {
+  const a = cityById.get(edge.a);
+  const b = cityById.get(edge.b);
+  const base = [[a.x, a.y], ...(edge.via ?? []), [b.x, b.y]];
+  return densify(base);
+}
+
+/** Piste polulla suhteellisella etäisyydellä t (0–1), kaarenpituuden mukaan. */
+function pointAlong(poly, t) {
+  if (poly.length === 1) return { x: poly[0][0], y: poly[0][1] };
+  const lengths = [];
+  let total = 0;
+  for (let i = 1; i < poly.length; i++) {
+    const d = Math.hypot(poly[i][0] - poly[i - 1][0], poly[i][1] - poly[i - 1][1]);
+    lengths.push(d);
+    total += d;
+  }
+  let target = Math.max(0, Math.min(1, t)) * total;
+  for (let i = 0; i < lengths.length; i++) {
+    if (target <= lengths[i] || i === lengths.length - 1) {
+      const f = lengths[i] ? target / lengths[i] : 0;
+      return {
+        x: poly[i][0] + (poly[i + 1][0] - poly[i][0]) * f,
+        y: poly[i][1] + (poly[i + 1][1] - poly[i][1]) * f,
+      };
+    }
+    target -= lengths[i];
+  }
+  const last = poly[poly.length - 1];
+  return { x: last[0], y: last[1] };
+}
+
 function buildBoard(cities, edges) {
   const cityById = new Map(cities.map((c) => [c.id, c]));
   const edgeById = new Map();
@@ -1743,6 +1838,7 @@ function buildBoard(cities, edges) {
       type: raw.type ?? 'land',
       fee: raw.type === 'sea' ? (raw.fee ?? SEA_FEE) : 0,
     };
+    edge.poly = edgePolyline(edge, cityById);
     edgeById.set(id, edge);
     adj.get(raw.a).push(id);
     adj.get(raw.b).push(id);
@@ -1892,10 +1988,7 @@ function pixelOf(board, pos) {
     return { x: c.x, y: c.y };
   }
   const e = board.edgeById.get(pos.edge);
-  const a = board.cityById.get(e.a);
-  const b = board.cityById.get(e.b);
-  const t = pos.idx / e.steps;
-  return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+  return pointAlong(e.poly, pos.idx / e.steps);
 }
 
 // ===== js/mapart.js =====
@@ -2162,6 +2255,79 @@ function drawCompass(svg, cx, cy, r = 62) {
   }, g).textContent = 'N';
 }
 
+/** Onko piste mantereella (myös testien käytössä). */
+function isOnLand(point) {
+  return onLand(point);
+}
+
+// --- laattojen kuvakkeet ---------------------------------------------------
+
+/**
+ * Piirtää laatan kuvakkeen ryhmään. Kuvat on suunniteltu ruutuun -12…12,
+ * joten samaa kuvaketta voi käyttää kartalla ja paneelissa eri koossa.
+ */
+function drawTokenIcon(parent, type) {
+  const g = el('g', { class: `icon icon-${type}` }, parent);
+
+  switch (type) {
+    case 'star':
+      el('path', {
+        d: 'M0,-12 L3.5,-4 L12,-3.5 L5.6,2 L7.6,11 L0,6.4 L-7.6,11 L-5.6,2 L-12,-3.5 L-3.5,-4 Z',
+        class: 'icon-star',
+      }, g);
+      break;
+
+    case 'horseshoe':
+      el('path', {
+        d: 'M-8,10 L-8,-1 A8,9 0 0 1 8,-1 L8,10',
+        class: 'icon-shoe',
+      }, g);
+      el('circle', { cx: -8, cy: 8, r: 1.7, class: 'icon-shoe-hole' }, g);
+      el('circle', { cx: 8, cy: 8, r: 1.7, class: 'icon-shoe-hole' }, g);
+      break;
+
+    case 'robber':
+      // Leveälierinen hattu ja silmänaamio.
+      el('path', { d: 'M-12,-2 q12,-5 24,0 q-12,4 -24,0 z', class: 'icon-hat' }, g);
+      el('path', { d: 'M-7,-2 q1,-8 7,-8 q6,0 7,8 z', class: 'icon-hat' }, g);
+      el('path', { d: 'M-8,2 q8,-2 16,0 l0,4 q-8,2 -16,0 z', class: 'icon-mask' }, g);
+      el('circle', { cx: -3.5, cy: 4, r: 1.4, class: 'icon-eye' }, g);
+      el('circle', { cx: 3.5, cy: 4, r: 1.4, class: 'icon-eye' }, g);
+      break;
+
+    case 'empty':
+      el('circle', { r: 9, class: 'icon-empty' }, g);
+      el('path', { d: 'M-4,0 L4,0', class: 'icon-empty-line' }, g);
+      break;
+
+    default: {
+      // Jalokivi: hiottu kanta ja särmät.
+      el('path', {
+        d: 'M-11,-3 L-6,-9 L6,-9 L11,-3 L0,10 Z',
+        class: `icon-gem gem-${type}`,
+      }, g);
+      el('path', {
+        d: 'M-11,-3 L11,-3 M-6,-9 L-3.5,-3 L0,10 M6,-9 L3.5,-3',
+        class: 'icon-gem-facets',
+      }, g);
+    }
+  }
+  return g;
+}
+
+/** Sama kuvake itsenäisenä SVG:nä HTML-paneeleihin. */
+function tokenIconSvg(type, size = 18) {
+  const svg = el('svg', {
+    width: size,
+    height: size,
+    viewBox: '-13 -13 26 26',
+    class: 'token-icon',
+    role: 'img',
+  });
+  drawTokenIcon(svg, type);
+  return svg;
+}
+
 /** Purjelaiva, meripeto ja karttaotsikko täyttämässä tyhjää merta. */
 function drawDoodles(svg) {
   const ship = el('g', { class: 'doodle-ship', transform: 'translate(214,548)' }, svg);
@@ -2193,7 +2359,7 @@ function drawDoodles(svg) {
 // Pelin tila ja säännöt: vuorot, laattojen kääntäminen ja voittoehdot.
 
 const START_MONEY = 300;
-const TOKEN_PRICE = 100;
+const FIFTY_FIFTY_PRICE = 50; // kahden väärän vaihtoehdon piilotus
 const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 
 /** Siemenellinen satunnaisgeneraattori, jotta pelin voi toistaa testeissä. */
@@ -2305,14 +2471,11 @@ class Game {
   /** Mitä nykyinen pelaaja voi tehdä juuri nyt. */
   availableActions() {
     if (this.phase !== 'action') {
-      return { roll: false, buy: false, quiz: false, fly: [] };
+      return { roll: false, quiz: false, fly: [] };
     }
-    const p = this.player;
-    const tokenCity = this.tokenHere();
     return {
       roll: true,
-      buy: !!tokenCity && p.money >= TOKEN_PRICE,
-      quiz: !!tokenCity,
+      quiz: !!this.tokenHere(),
       fly: this.airportDestinations(),
     };
   }
@@ -2406,20 +2569,6 @@ class Game {
     return { ok: true };
   }
 
-  /** Ostaa laatan 100 punnalla. */
-  actionBuy() {
-    if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
-    const p = this.player;
-    const city = this.tokenHere();
-    if (!city) return { ok: false, error: 'Täällä ei ole laattaa' };
-    if (p.money < TOKEN_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
-    p.money -= TOKEN_PRICE;
-    this.say(p.id, `${p.name} maksoi ${TOKEN_PRICE} puntaa ja käänsi laatan.`);
-    this.revealToken(city.id);
-    if (this.phase !== 'over') this.endTurn();
-    return { ok: true };
-  }
-
   /** Avaa tietovisakysymyksen: oikea vastaus kääntää laatan ilmaiseksi. */
   actionQuiz() {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
@@ -2434,6 +2583,7 @@ class Game {
       fact: question.fact,
       options: order.map((i) => question.options[i]),
       correct: order.indexOf(question.correct),
+      hidden: [],
       chosen: null,
       right: null,
     };
@@ -2445,6 +2595,9 @@ class Game {
   answerQuiz(index) {
     if (this.phase !== 'quiz' || !this.quiz || this.quiz.chosen !== null) {
       return { ok: false, error: 'Ei avointa kysymystä' };
+    }
+    if (this.quiz.hidden.includes(index)) {
+      return { ok: false, error: 'Tuo vaihtoehto on poistettu' };
     }
     const p = this.player;
     const city = this.board.cityById.get(this.quiz.cityId);
@@ -2461,6 +2614,27 @@ class Game {
     return { ok: true, right: this.quiz.right };
   }
 
+  /** Piilottaa 50 punnalla kaksi väärää vaihtoehtoa. */
+  actionFiftyFifty() {
+    if (this.phase !== 'quiz' || !this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    const quiz = this.quiz;
+    if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
+    if (quiz.hidden.length) return { ok: false, error: 'Vihje on jo käytetty' };
+
+    const p = this.player;
+    if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
+    p.money -= FIFTY_FIFTY_PRICE;
+
+    const wrong = quiz.options.map((_, i) => i).filter((i) => i !== quiz.correct);
+    for (let i = wrong.length - 1; i > 0; i--) {
+      const j = Math.floor(this.rng() * (i + 1));
+      [wrong[i], wrong[j]] = [wrong[j], wrong[i]];
+    }
+    quiz.hidden = wrong.slice(0, 2).sort((a, b) => a - b);
+    this.say(p.id, `${p.name} maksoi ${FIFTY_FIFTY_PRICE} puntaa ja poisti kaksi väärää vaihtoehtoa.`);
+    return { ok: true, hidden: quiz.hidden };
+  }
+
   /** Sulkee kysymyksen ja päättää vuoron. */
   closeQuiz() {
     if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
@@ -2471,19 +2645,18 @@ class Game {
     return { ok: true };
   }
 
-  /** Kysymys kaupungille: ensin omat, sitten varapakka, lopuksi kierrätys. */
+  /**
+   * Arpoo kysymyksen: kaupungin omat ja yleiset kysymykset ovat samassa pakassa,
+   * ja arvonta osuu vain vielä kysymättömiin. Kun pakka on tyhjä, kaikki
+   * kysymykset palaavat mukaan.
+   */
   pickQuestion(cityId) {
-    const pools = [QUESTIONS[cityId] ?? [], QUESTIONS.general];
-    for (const pool of pools) {
-      const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
-      if (fresh.length) {
-        const question = fresh[Math.floor(this.rng() * fresh.length)];
-        this.usedQuestions.add(question.q);
-        return question;
-      }
-    }
-    const all = [...(QUESTIONS[cityId] ?? []), ...QUESTIONS.general];
-    return all[Math.floor(this.rng() * all.length)];
+    const pool = [...(QUESTIONS[cityId] ?? []), ...QUESTIONS.general];
+    const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
+    const deck = fresh.length ? fresh : pool;
+    const question = deck[Math.floor(this.rng() * deck.length)];
+    this.usedQuestions.add(question.q);
+    return question;
   }
 
   /** Sekoitettu indeksijärjestys vastausvaihtoehdoille. */
@@ -2696,11 +2869,7 @@ function chooseAction(game) {
   const p = game.player;
   const actions = game.availableActions();
 
-  if (!racingHome(game, p) && actions.quiz) {
-    // Rikas botti ostaa varman käännön, muuten se luottaa tietoihinsa.
-    if (actions.buy && p.money >= TOKEN_PRICE + 500) return { type: 'buy' };
-    return { type: 'quiz' };
-  }
+  if (!racingHome(game, p) && actions.quiz) return { type: 'quiz' };
 
   // Kotimatkalla lento kannattaa jos se lyhentää matkaa selvästi.
   if (racingHome(game, p) && actions.fly.length && p.money >= FLIGHT_PRICE) {
@@ -2748,13 +2917,27 @@ function chooseMove(game) {
   return best.key;
 }
 
-/** Botin vastaus tietovisaan: oikein BOT_SKILL:n todennäköisyydellä. */
+/** Ostaako botti 50:50-vihjeen? Vain jos rahaa riittää myös matkoihin. */
+function wantsHint(game) {
+  const quiz = game.quiz;
+  const p = game.player;
+  if (!quiz || quiz.hidden.length || quiz.chosen !== null) return false;
+  if (p.money < FIFTY_FIFTY_PRICE + 100) return false;
+  return game.rng() < 0.5;
+}
+
+/**
+ * Botin vastaus tietovisaan: oikein BOT_SKILL:n todennäköisyydellä.
+ * 50:50-vihje nostaa osumatarkkuutta, koska vaihtoehtoja on vain kaksi.
+ */
 function chooseQuizAnswer(game, skill = BOT_SKILL) {
   const quiz = game.quiz;
   if (!quiz) return 0;
-  if (game.rng() < skill) return quiz.correct;
-  const wrong = quiz.options.map((_, i) => i).filter((i) => i !== quiz.correct);
-  return wrong[Math.floor(game.rng() * wrong.length)];
+  const open = quiz.options.map((_, i) => i).filter((i) => !quiz.hidden.includes(i));
+  const chance = quiz.hidden.length ? Math.max(skill, 0.75) : skill;
+  if (game.rng() < chance) return quiz.correct;
+  const wrong = open.filter((i) => i !== quiz.correct);
+  return wrong.length ? wrong[Math.floor(game.rng() * wrong.length)] : quiz.correct;
 }
 
 // ===== js/ui.js =====
@@ -2796,6 +2979,8 @@ class UI {
     this.quizQuestion = document.getElementById('quiz-question');
     this.quizOptions = document.getElementById('quiz-options');
     this.quizResult = document.getElementById('quiz-result');
+    this.quizHint = document.getElementById('quiz-hint');
+    this.quizHint.addEventListener('click', () => this.doAction(() => this.game.actionFiftyFifty()));
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
 
@@ -2879,22 +3064,14 @@ class UI {
       el('path', { d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, class: 'air-route' }, air);
     }
 
-    // Reitit ja askelpisteet.
+    // Reitit ja askelpisteet. Merireitit kaartavat rannikon ympäri.
     const routes = el('g', { class: 'routes', filter: 'url(#rough-soft)' }, this.svg);
     for (const e of board.edges) {
-      const a = board.cityById.get(e.a);
-      const b = board.cityById.get(e.b);
-      el('line', {
-        x1: a.x, y1: a.y, x2: b.x, y2: b.y, class: `route route-${e.type}`,
-      }, routes);
+      const d = e.poly.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+      el('path', { d, class: `route route-${e.type}` }, routes);
       for (let i = 1; i < e.steps; i++) {
-        const t = i / e.steps;
-        el('circle', {
-          cx: a.x + (b.x - a.x) * t,
-          cy: a.y + (b.y - a.y) * t,
-          r: 6,
-          class: `step step-${e.type}`,
-        }, routes);
+        const { x, y } = pointAlong(e.poly, i / e.steps);
+        el('circle', { cx: x, cy: y, r: 6, class: `step step-${e.type}` }, routes);
       }
     }
 
@@ -2902,11 +3079,10 @@ class UI {
     const fares = el('g', { class: 'fares' }, this.svg);
     for (const e of board.edges) {
       if (e.type !== 'sea') continue;
-      const a = board.cityById.get(e.a);
-      const b = board.cityById.get(e.b);
+      const mid = pointAlong(e.poly, 0.5);
       el('text', {
-        x: (a.x + b.x) / 2,
-        y: (a.y + b.y) / 2 - 12,
+        x: mid.x,
+        y: mid.y - 12,
         class: 'fare',
         'text-anchor': 'middle',
       }, fares).textContent = `⚓${e.fee}`;
@@ -2944,24 +3120,19 @@ class UI {
     drawPaperOverlay(this.svg);
   }
 
-  /** Kääntämätön laatta on punainen rasti, käännetty laatta värillinen kiekko. */
+  /** Kartalla näkyvät vain käännetyt laatat omina kuvakkeinaan. */
   drawTokens() {
     const { game } = this;
     this.tokenLayer.textContent = '';
-    for (const city of game.board.cities) {
-      const hidden = game.tokens.has(city.id);
-      const revealed = game.revealed.get(city.id);
-      if (!hidden && !revealed) continue;
-      const g = el('g', { transform: `translate(${city.x + 21},${city.y + 17})` }, this.tokenLayer);
-      if (hidden) {
-        el('path', { d: 'M-9,-9 L9,9 M9,-9 L-9,9', class: 'token-x' }, g);
-      } else {
-        const t = TOKEN_TYPES[revealed];
-        el('circle', { r: 13, class: 'token-open', fill: t.color }, g);
-        el('text', {
-          y: 6, class: 'token-mark', 'text-anchor': 'middle',
-        }, g).textContent = t.symbol;
-      }
+    for (const [cityId, type] of game.revealed) {
+      const city = game.board.cityById.get(cityId);
+      const g = el('g', {
+        class: 'token-found',
+        transform: `translate(${city.x + 22},${city.y + 18})`,
+      }, this.tokenLayer);
+      el('circle', { r: 17, class: 'token-disc' }, g);
+      const icon = drawTokenIcon(g, type);
+      icon.setAttribute('transform', 'scale(0.88)');
     }
   }
 
@@ -3049,10 +3220,13 @@ class UI {
       const row = html('div', 'chip-row');
       row.appendChild(html('span', 'money', `${p.money} p`));
       const marks = html('span', 'chip-marks');
-      if (p.hasStar) marks.appendChild(html('span', 'star', '★'));
-      if (p.horseshoes) marks.appendChild(html('span', '', 'Ω'.repeat(p.horseshoes)));
-      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0).length;
-      if (gems) marks.appendChild(html('span', '', ` ◆${gems}`));
+      if (p.hasStar) marks.appendChild(tokenIconSvg('star', 17));
+      for (let i = 0; i < p.horseshoes; i++) marks.appendChild(tokenIconSvg('horseshoe', 17));
+      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0);
+      if (gems.length) {
+        marks.appendChild(tokenIconSvg(gems[gems.length - 1], 17));
+        if (gems.length > 1) marks.appendChild(html('span', 'gem-count', `×${gems.length}`));
+      }
       row.appendChild(marks);
       chip.appendChild(row);
 
@@ -3105,18 +3279,13 @@ class UI {
     const actions = game.availableActions();
     const tokenCity = game.tokenHere();
     this.turnStatus.textContent = tokenCity
-      ? `${tokenCity.name}: laatta odottaa kääntäjää.`
+      ? `${tokenCity.name}: aarre aukeaa oikealla vastauksella.`
       : 'Valitse toiminto.';
 
     if (tokenCity) {
-      const quizBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
+      const quizBtn = html('button', 'primary', '❓ Avaa laatta kysymyksellä');
       quizBtn.addEventListener('click', () => this.doAction(() => game.actionQuiz()));
       this.actionsEl.appendChild(quizBtn);
-
-      const buyBtn = html('button', '', `💰 Osta laatta ${TOKEN_PRICE} p`);
-      buyBtn.disabled = !actions.buy;
-      buyBtn.addEventListener('click', () => this.doAction(() => game.actionBuy()));
-      this.actionsEl.appendChild(buyBtn);
     }
 
     const rollBtn = html('button', tokenCity ? '' : 'primary', '🎲 Heitä noppa');
@@ -3191,7 +3360,10 @@ class UI {
       const btn = html('button', 'quiz-option');
       btn.appendChild(html('span', 'letter', LETTERS[i]));
       btn.appendChild(html('span', 'text', text));
-      if (quiz.chosen !== null) {
+      if (quiz.hidden.includes(i)) {
+        btn.classList.add('hidden-option');
+        btn.disabled = true;
+      } else if (quiz.chosen !== null) {
         btn.disabled = true;
         if (i === quiz.correct) btn.classList.add('correct');
         if (i === quiz.chosen && !quiz.right) btn.classList.add('wrong');
@@ -3204,17 +3376,30 @@ class UI {
     });
 
     const answered = quiz.chosen !== null;
+
+    // Vihjenappi: 50 punnalla kaksi väärää vaihtoehtoa pois.
+    const p = game.player;
+    const used = quiz.hidden.length > 0;
+    this.quizHint.hidden = answered || p.isBot;
+    this.quizHint.disabled = used || p.money < FIFTY_FIFTY_PRICE;
+    this.quizHint.textContent = used
+      ? '50:50 käytetty'
+      : `50:50 — poista kaksi väärää (${FIFTY_FIFTY_PRICE} p)`;
+
     this.quizResult.hidden = !answered;
     if (answered) {
       this.quizResult.className = `quiz-result ${quiz.right ? 'right' : 'wrong'}`;
       this.quizResult.textContent = '';
       const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
-      const heading = quiz.right
-        ? found
-          ? `Oikein! Laatan alta löytyi: ${found.symbol} ${found.name}`
-          : 'Oikein!'
-        : `Väärin — oikea vastaus oli "${quiz.options[quiz.correct]}".`;
-      this.quizResult.appendChild(html('strong', '', heading));
+      if (quiz.right && found) {
+        this.quizResult.appendChild(tokenIconSvg(quiz.found, 22));
+        this.quizResult.appendChild(html('strong', '', ` Oikein! Löysit: ${found.name}`));
+      } else {
+        const heading = quiz.right
+          ? 'Oikein!'
+          : `Väärin — oikea vastaus oli "${quiz.options[quiz.correct]}". Vuoro vaihtuu, voit yrittää uudella kysymyksellä seuraavalla vuorolla.`;
+        this.quizResult.appendChild(html('strong', '', heading));
+      }
       if (quiz.fact) {
         this.quizResult.appendChild(document.createElement('br'));
         this.quizResult.appendChild(html('span', 'muted', quiz.fact));
@@ -3293,8 +3478,9 @@ class UI {
     if (game.phase === 'over' || !game.player.isBot) return;
 
     if (game.phase === 'quiz') {
-      if (game.quiz.chosen === null) game.answerQuiz(chooseQuizAnswer(game));
-      else game.closeQuiz();
+      if (game.quiz.chosen !== null) game.closeQuiz();
+      else if (wantsHint(game)) game.actionFiftyFifty();
+      else game.answerQuiz(chooseQuizAnswer(game));
       this.render();
       return;
     }
@@ -3308,9 +3494,7 @@ class UI {
     }
 
     const action = chooseAction(game);
-    if (action.type === 'buy') {
-      game.actionBuy();
-    } else if (action.type === 'quiz') {
+    if (action.type === 'quiz') {
       game.actionQuiz();
     } else if (action.type === 'fly') {
       game.actionFly(action.destination);

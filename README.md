@@ -4,8 +4,8 @@ Selaimessa pelattava versio klassisesta Afrikan tähti -lautapelistä. Ei riippu
 ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
 
 - 2–4 pelaajaa samalla koneella, kukin joko ihminen tai botti
-- Laatat avataan **tietovisalla**: monivalintakysymys (a–d) paikan maantiedosta,
-  kulttuurista ja yleistiedosta — oikea vastaus kääntää laatan ilmaiseksi
+- Aarteet avataan **vain tietovisalla**: arvottu monivalintakysymys (A–D) paikan
+  maantiedosta, kulttuurista ja yleistiedosta; 50 punnan 50:50-vihje auttaa pinteessä
 - SVG-kartta, jossa 32 kaupunkia, maareitit, laivareitit ja kolme lentoyhteyttä
 - 30 laattaa: Afrikan tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät
 - Yli 100 kysymystä: jokaisella kaupungilla omat kysymyksensä + yleinen varapakka
@@ -44,15 +44,19 @@ löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupun
 
 | Teko | Selitys |
 | --- | --- |
-| Vastaa kysymykseen | Tietovisa omassa kaupungissa: oikea vastaus kääntää laatan ilmaiseksi |
-| Osta laatta (100 p) | Kääntää laatan ilman kysymystä |
+| Avaa laatta kysymyksellä | Ainoa tapa avata aarre: oikea vastaus kääntää laatan |
 | Heitä noppa ja liiku | Noppa kertoo askelten enimmäismäärän |
 | Lennä (300 p) | Lentokentältä toiselle: Tanger, Kairo, Kapkaupunki |
 
-**Tietovisa.** Kaupungissa, jossa on kääntämätön laatta, saat neljä vaihtoehtoa (A–D).
-Kysymykset liittyvät kaupungin maantietoon, kulttuuriin ja historiaan. Oikea vastaus
-kääntää laatan, väärä päättää vuoron. Vastauksen jälkeen näytetään lyhyt selitys.
+**Tietovisa.** Kaupungissa, jossa on avaamaton aarre, saat arvotun kysymyksen ja neljä
+vaihtoehtoa (A–D). Kysymykset liittyvät kaupungin maantietoon, kulttuuriin ja historiaan,
+ja pakassa on mukana myös yleisiä Afrikka-kysymyksiä. Oikea vastaus avaa aarteen, väärästä
+vastauksesta vuoro päättyy — seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.
 Sama kysymys ei toistu ennen kuin pakka on käyty läpi.
+
+**Rahan käyttö.** Rahalla ei voi ostaa aarteita, vaan sitä tarvitaan matkustamiseen ja
+vihjeisiin: 50 puntaa poistaa kysymyksestä kaksi väärää vaihtoehtoa (50:50), 100 puntaa
+maksaa laivamatkan ja 300 puntaa lennon.
 
 **Liikkuminen.** Silmäluku on askelten *enimmäismäärä* — tasalukua ei tarvita, vaan
 kaupunkiin saa pysähtyä jo matkan varrella. Jos silmäluku loppuu kesken reittiä,
@@ -60,7 +64,7 @@ pysähdyt reitin varrelle. Reittiä voi vaihtaa kaupungissa, mutta kesken reitin
 kääntyä takaisin. Laivareitille (sininen katkoviiva) astuminen maksaa 100 puntaa, ja
 ilman rahaa laivaan ei pääse.
 
-**Laatat (30 kpl).**
+**Aarteet (30 kpl).** Kartalla näkyvät vain jo avatut aarteet omina kuvakkeinaan.
 
 | Laatta | Määrä | Vaikutus |
 | --- | --- | --- |

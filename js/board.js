@@ -59,7 +59,7 @@ export const CITIES = [
   { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
   { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
   { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', x: 789, y: 578, la: 'start', lx: 16, ly: 5 },
+  { id: 'sansibar', name: 'Sansibar', x: 814, y: 588, la: 'start', lx: 16, ly: 5 },
   { id: 'kilimandzaro', name: 'Kilimandžaro', x: 765, y: 537, la: 'start', lx: 16, ly: -14 },
   { id: 'viktoria', name: 'Viktoria Nyanza', x: 707, y: 512, la: 'end', lx: -18, ly: -8 },
   { id: 'tanganjika', name: 'Tanganjika', x: 664, y: 575, la: 'end', lx: -16, ly: 5 },
@@ -129,17 +129,17 @@ export const EDGES = [
   { a: 'addisabeba', b: 'kilimandzaro', steps: 3 },
 
   // Laivareitit
-  { a: 'tanger', b: 'dakar', steps: 3, type: 'sea' },
-  { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea' },
-  { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea' },
-  { a: 'kongo', b: 'namib', steps: 4, type: 'sea' },
-  { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea' },
-  { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea' },
-  { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea' },
-  { a: 'sansibar', b: 'mosambik', steps: 3, type: 'sea' },
+  { a: 'tanger', b: 'dakar', steps: 3, type: 'sea', via: [[150, 110], [95, 178], [45, 252]] },
+  { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
+  { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
+  { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
+  { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea', via: [[600, 976], [782, 942], [902, 832]] },
+  { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea', via: [[812, 752]] },
+  { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea', via: [[862, 642]] },
+  { a: 'sansibar', b: 'mosambik', steps: 3, type: 'sea', via: [[822, 642], [792, 712]] },
   { a: 'sansibar', b: 'kilimandzaro', steps: 2, type: 'sea' },
-  { a: 'sansibar', b: 'rashafun', steps: 5, type: 'sea' },
-  { a: 'rashafun', b: 'suakin', steps: 4, type: 'sea' },
+  { a: 'sansibar', b: 'rashafun', steps: 5, type: 'sea', via: [[852, 540], [902, 458]] },
+  { a: 'rashafun', b: 'suakin', steps: 4, type: 'sea', via: [[880, 322], [800, 268]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.

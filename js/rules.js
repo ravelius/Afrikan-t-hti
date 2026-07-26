@@ -16,6 +16,62 @@ export function edgeId(a, b) {
   return `${a}|${b}`;
 }
 
+/** Catmull–Rom-pehmennys avoimelle polulle: tiheä pistejono piirtoa varten. */
+function densify(points, perSpan = 14) {
+  if (points.length < 3) return points;
+  const p = (i) => points[Math.max(0, Math.min(points.length - 1, i))];
+  const out = [points[0]];
+  for (let i = 0; i < points.length - 1; i++) {
+    const [x0, y0] = p(i - 1);
+    const [x1, y1] = p(i);
+    const [x2, y2] = p(i + 1);
+    const [x3, y3] = p(i + 2);
+    for (let s = 1; s <= perSpan; s++) {
+      const t = s / perSpan;
+      const t2 = t * t;
+      const t3 = t2 * t;
+      out.push([
+        0.5 * (2 * x1 + (x2 - x0) * t + (2 * x0 - 5 * x1 + 4 * x2 - x3) * t2 + (-x0 + 3 * x1 - 3 * x2 + x3) * t3),
+        0.5 * (2 * y1 + (y2 - y0) * t + (2 * y0 - 5 * y1 + 4 * y2 - y3) * t2 + (-y0 + 3 * y1 - 3 * y2 + y3) * t3),
+      ]);
+    }
+  }
+  return out;
+}
+
+/** Reitin kulkema polku pisteinä. Merireitit kaartavat via-pisteiden kautta. */
+export function edgePolyline(edge, cityById) {
+  const a = cityById.get(edge.a);
+  const b = cityById.get(edge.b);
+  const base = [[a.x, a.y], ...(edge.via ?? []), [b.x, b.y]];
+  return densify(base);
+}
+
+/** Piste polulla suhteellisella etäisyydellä t (0–1), kaarenpituuden mukaan. */
+export function pointAlong(poly, t) {
+  if (poly.length === 1) return { x: poly[0][0], y: poly[0][1] };
+  const lengths = [];
+  let total = 0;
+  for (let i = 1; i < poly.length; i++) {
+    const d = Math.hypot(poly[i][0] - poly[i - 1][0], poly[i][1] - poly[i - 1][1]);
+    lengths.push(d);
+    total += d;
+  }
+  let target = Math.max(0, Math.min(1, t)) * total;
+  for (let i = 0; i < lengths.length; i++) {
+    if (target <= lengths[i] || i === lengths.length - 1) {
+      const f = lengths[i] ? target / lengths[i] : 0;
+      return {
+        x: poly[i][0] + (poly[i + 1][0] - poly[i][0]) * f,
+        y: poly[i][1] + (poly[i + 1][1] - poly[i][1]) * f,
+      };
+    }
+    target -= lengths[i];
+  }
+  const last = poly[poly.length - 1];
+  return { x: last[0], y: last[1] };
+}
+
 export function buildBoard(cities, edges) {
   const cityById = new Map(cities.map((c) => [c.id, c]));
   const edgeById = new Map();
@@ -33,6 +89,7 @@ export function buildBoard(cities, edges) {
       type: raw.type ?? 'land',
       fee: raw.type === 'sea' ? (raw.fee ?? SEA_FEE) : 0,
     };
+    edge.poly = edgePolyline(edge, cityById);
     edgeById.set(id, edge);
     adj.get(raw.a).push(id);
     adj.get(raw.b).push(id);
@@ -182,8 +239,5 @@ export function pixelOf(board, pos) {
     return { x: c.x, y: c.y };
   }
   const e = board.edgeById.get(pos.edge);
-  const a = board.cityById.get(e.a);
-  const b = board.cityById.get(e.b);
-  const t = pos.idx / e.steps;
-  return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+  return pointAlong(e.poly, pos.idx / e.steps);
 }

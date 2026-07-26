@@ -263,6 +263,79 @@ export function drawCompass(svg, cx, cy, r = 62) {
   }, g).textContent = 'N';
 }
 
+/** Onko piste mantereella (myös testien käytössä). */
+export function isOnLand(point) {
+  return onLand(point);
+}
+
+// --- laattojen kuvakkeet ---------------------------------------------------
+
+/**
+ * Piirtää laatan kuvakkeen ryhmään. Kuvat on suunniteltu ruutuun -12…12,
+ * joten samaa kuvaketta voi käyttää kartalla ja paneelissa eri koossa.
+ */
+export function drawTokenIcon(parent, type) {
+  const g = el('g', { class: `icon icon-${type}` }, parent);
+
+  switch (type) {
+    case 'star':
+      el('path', {
+        d: 'M0,-12 L3.5,-4 L12,-3.5 L5.6,2 L7.6,11 L0,6.4 L-7.6,11 L-5.6,2 L-12,-3.5 L-3.5,-4 Z',
+        class: 'icon-star',
+      }, g);
+      break;
+
+    case 'horseshoe':
+      el('path', {
+        d: 'M-8,10 L-8,-1 A8,9 0 0 1 8,-1 L8,10',
+        class: 'icon-shoe',
+      }, g);
+      el('circle', { cx: -8, cy: 8, r: 1.7, class: 'icon-shoe-hole' }, g);
+      el('circle', { cx: 8, cy: 8, r: 1.7, class: 'icon-shoe-hole' }, g);
+      break;
+
+    case 'robber':
+      // Leveälierinen hattu ja silmänaamio.
+      el('path', { d: 'M-12,-2 q12,-5 24,0 q-12,4 -24,0 z', class: 'icon-hat' }, g);
+      el('path', { d: 'M-7,-2 q1,-8 7,-8 q6,0 7,8 z', class: 'icon-hat' }, g);
+      el('path', { d: 'M-8,2 q8,-2 16,0 l0,4 q-8,2 -16,0 z', class: 'icon-mask' }, g);
+      el('circle', { cx: -3.5, cy: 4, r: 1.4, class: 'icon-eye' }, g);
+      el('circle', { cx: 3.5, cy: 4, r: 1.4, class: 'icon-eye' }, g);
+      break;
+
+    case 'empty':
+      el('circle', { r: 9, class: 'icon-empty' }, g);
+      el('path', { d: 'M-4,0 L4,0', class: 'icon-empty-line' }, g);
+      break;
+
+    default: {
+      // Jalokivi: hiottu kanta ja särmät.
+      el('path', {
+        d: 'M-11,-3 L-6,-9 L6,-9 L11,-3 L0,10 Z',
+        class: `icon-gem gem-${type}`,
+      }, g);
+      el('path', {
+        d: 'M-11,-3 L11,-3 M-6,-9 L-3.5,-3 L0,10 M6,-9 L3.5,-3',
+        class: 'icon-gem-facets',
+      }, g);
+    }
+  }
+  return g;
+}
+
+/** Sama kuvake itsenäisenä SVG:nä HTML-paneeleihin. */
+export function tokenIconSvg(type, size = 18) {
+  const svg = el('svg', {
+    width: size,
+    height: size,
+    viewBox: '-13 -13 26 26',
+    class: 'token-icon',
+    role: 'img',
+  });
+  drawTokenIcon(svg, type);
+  return svg;
+}
+
 /** Purjelaiva, meripeto ja karttaotsikko täyttämässä tyhjää merta. */
 export function drawDoodles(svg) {
   const ship = el('g', { class: 'doodle-ship', transform: 'translate(214,548)' }, svg);

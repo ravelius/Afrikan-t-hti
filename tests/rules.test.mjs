@@ -2,10 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { CITIES, EDGES, TOKEN_CITIES } from '../js/board.js';
-import { buildBoard, findMoves, posKey, cityDistances } from '../js/rules.js';
+import { buildBoard, findMoves, posKey, cityDistances, pointAlong } from '../js/rules.js';
+import { isOnLand } from '../js/mapart.js';
 import { tokenPileTemplate, TOKEN_COUNTS } from '../js/tokens.js';
-import { Game, mulberry32, START_MONEY, STRANDED_AID } from '../js/game.js';
-import { chooseAction, chooseMove, chooseQuizAnswer } from '../js/ai.js';
+import { Game, mulberry32, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE } from '../js/game.js';
+import { chooseAction, chooseMove, chooseQuizAnswer, wantsHint } from '../js/ai.js';
 import { QUESTIONS, allQuestions } from '../js/questions.js';
 
 const board = buildBoard(CITIES, EDGES);
@@ -158,12 +159,12 @@ test('bottien peli päättyy voittoon', () => {
       if (key) game.actionMove(key);
       else game.endTurn();
     } else if (game.phase === 'quiz') {
-      if (game.quiz.chosen === null) game.answerQuiz(chooseQuizAnswer(game));
-      else game.closeQuiz();
+      if (game.quiz.chosen !== null) game.closeQuiz();
+      else if (wantsHint(game)) game.actionFiftyFifty();
+      else game.answerQuiz(chooseQuizAnswer(game));
     } else {
       const action = chooseAction(game);
-      if (action.type === 'buy') game.actionBuy();
-      else if (action.type === 'quiz') game.actionQuiz();
+      if (action.type === 'quiz') game.actionQuiz();
       else if (action.type === 'fly') game.actionFly(action.destination);
       else game.actionRoll();
     }
@@ -285,4 +286,104 @@ test('kelvoton tallennus hylätään', () => {
   assert.equal(Game.fromJSON(null), null);
   assert.equal(Game.fromJSON({ version: 99 }), null);
   assert.equal(Game.fromJSON({ version: 1 }), null);
+});
+
+test('merireitit kulkevat veden päällä', () => {
+  const HARBOUR = 55; // satamaan johtava pätkä saa kulkea maalla
+  for (const edge of board.edges) {
+    if (edge.type !== 'sea') continue;
+    const a = board.cityById.get(edge.a);
+    const b = board.cityById.get(edge.b);
+    for (let t = 0.02; t <= 0.98; t += 0.02) {
+      const { x, y } = pointAlong(edge.poly, t);
+      if (Math.hypot(x - a.x, y - a.y) < HARBOUR) continue;
+      if (Math.hypot(x - b.x, y - b.y) < HARBOUR) continue;
+      assert.ok(!isOnLand([x, y]), `${edge.id} kulkee maalla kohdassa t=${t.toFixed(2)}`);
+    }
+  }
+});
+
+test('aarretta ei voi ostaa rahalla', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    seed: 8,
+  });
+  assert.equal(typeof game.actionBuy, 'undefined');
+  const actions = game.availableActions();
+  assert.deepEqual(Object.keys(actions).sort(), ['fly', 'quiz', 'roll']);
+});
+
+test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 50', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    seed: 77,
+  });
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'topaz');
+  game.actionQuiz();
+
+  const rahaEnnen = game.player.money;
+  const tulos = game.actionFiftyFifty();
+  assert.ok(tulos.ok);
+  assert.equal(game.player.money, rahaEnnen - FIFTY_FIFTY_PRICE);
+  assert.equal(game.quiz.hidden.length, 2);
+  assert.ok(!game.quiz.hidden.includes(game.quiz.correct), 'oikea vastaus ei saa piiloutua');
+
+  // Toista vihjettä ei saa, eikä piilotettua voi valita.
+  assert.equal(game.actionFiftyFifty().ok, false);
+  assert.equal(game.answerQuiz(game.quiz.hidden[0]).ok, false);
+
+  // Oikea vastaus toimii yhä.
+  game.answerQuiz(game.quiz.correct);
+  assert.ok(game.quiz.right);
+  assert.equal(game.revealed.get('timbuktu'), 'topaz');
+});
+
+test('50:50 ei onnistu ilman rahaa', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    seed: 21,
+  });
+  game.player.pos = { type: 'city', city: 'gao' };
+  game.player.money = 20;
+  game.actionQuiz();
+  const tulos = game.actionFiftyFifty();
+  assert.equal(tulos.ok, false);
+  assert.equal(game.quiz.hidden.length, 0);
+});
+
+test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysymyksen', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    seed: 99,
+  });
+  game.player.pos = { type: 'city', city: 'kano' };
+  game.tokens.set('kano', 'ruby');
+
+  game.actionQuiz();
+  const eka = game.quiz.question;
+  game.answerQuiz((game.quiz.correct + 1) % 4);
+  game.closeQuiz();
+  assert.equal(game.current, 1, 'vuoro siirtyy väärästä vastauksesta');
+  assert.ok(game.tokens.has('kano'), 'aarre pysyy piilossa');
+
+  // Takaisin ensimmäiselle pelaajalle: uusi kysymys samasta kaupungista.
+  game.endTurn();
+  assert.equal(game.current, 0);
+  game.actionQuiz();
+  assert.notEqual(game.quiz.question, eka);
+  game.answerQuiz(game.quiz.correct);
+  assert.equal(game.revealed.get('kano'), 'ruby');
 });
