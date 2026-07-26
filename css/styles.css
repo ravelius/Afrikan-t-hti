@@ -52,6 +52,9 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   height: 100dvh;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
+  /* Kapealla ruudulla sisältö ei saa venyttää asettelua leveämmäksi. */
+  overflow: hidden;
+  min-width: 0;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
     env(safe-area-inset-left);
 }
@@ -60,6 +63,7 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
   padding: 0.45rem 0.8rem;
   background: linear-gradient(180deg, #3a2a1c, #251b12);
   border-bottom: 1px solid var(--line);
@@ -67,6 +71,9 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
 
 .brand {
   margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: clamp(1rem, 2.2vw, 1.3rem);
   letter-spacing: 0.08em;
@@ -76,6 +83,7 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
 }
 
 .turn-pill {
+  flex: 0 1 auto;
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -94,10 +102,12 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   margin-left: auto;
   display: flex;
   gap: 0.4rem;
+  flex: 0 0 auto;
 }
 
 .stage {
   display: grid;
+  min-width: 0;
   grid-template-columns: minmax(0, 1fr) clamp(250px, 26vw, 340px);
   gap: var(--gap);
   padding: var(--gap);
@@ -137,6 +147,68 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
 }
 
 .board-hint:empty { display: none; }
+
+/* --- laudalla lepäävä 3D-noppa --- */
+
+.board-die {
+  --die-size: clamp(30px, 5.2vmin, 54px);
+  --half: calc(var(--die-size) / 2);
+  position: absolute;
+  width: var(--die-size);
+  height: var(--die-size);
+  margin-left: calc(var(--die-size) / -2);
+  margin-top: calc(var(--die-size) / -2);
+  perspective: 620px;
+  pointer-events: none;
+  z-index: 3;
+  will-change: transform;
+}
+
+.die-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--die-size) * -0.22);
+  width: calc(var(--die-size) * 1.1);
+  height: calc(var(--die-size) * 0.34);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(48, 30, 12, 0.75), rgba(48, 30, 12, 0));
+  transform: translate(-50%, 0) scale(1);
+  opacity: 0.34;
+}
+
+.die-cube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.die-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 12%;
+  gap: 4%;
+  border-radius: 18%;
+  background:
+    radial-gradient(circle at 30% 24%, #fffaf0 0%, #f6e9cf 46%, #e3cfa6 100%);
+  border: 1px solid rgba(80, 58, 30, 0.55);
+  box-shadow: inset 0 0 8px rgba(120, 88, 44, 0.35);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.die-face .pip {
+  align-self: center;
+  justify-self: center;
+  width: 74%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #6c5230 0%, #3a2a14 70%);
+  box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.28);
+}
 
 /* --- tapahtumaikkuna kartan päällä --- */
 
@@ -183,6 +255,7 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   .event-toast, .event-toast.leaving { animation: none; }
   .pawn-pulse { animation: none; }
   .pawn-moving { transition: none; }
+  .board-die, .die-cube, .die-shadow { transition: none !important; }
 }
 
 .rail {
@@ -936,14 +1009,66 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   .log { font-size: 0.8rem; }
 }
 
+/* --- puhelin: kaikki mahtuu ruudulle ilman vieritystä --- */
+
 @media (max-width: 560px) {
-  .rail { grid-template-columns: minmax(0, 1fr); }
-  .turn-card { grid-row: auto; }
-  .log-card { max-height: 96px; }
-  .topbar { padding: 0.35rem 0.55rem; gap: 0.5rem; }
-  .turn-pill { font-size: 0.8rem; }
-  .quiz-options { grid-template-columns: minmax(0, 1fr); }
-  .dialog-card { padding: 0.9rem 1rem; }
+  :root { --gap: 0.45rem; }
+
+  .stage { grid-template-rows: minmax(150px, 1fr) auto; padding: 0.45rem; }
+  .rail { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .turn-card { grid-row: auto; padding: 0.5rem 0.55rem; }
+  .turn-row { margin-bottom: 0.35rem; }
+  .turn-status { font-size: 0.82rem; }
+
+  .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem; }
+  .actions button {
+    font-size: 0.82rem;
+    padding: 0.4rem 0.4rem;
+    min-height: 44px;
+    line-height: 1.15;
+  }
+
+  /* Pelaajakortit yhdelle riville, tarvittaessa vieritettävänä. */
+  .players {
+    display: flex;
+    gap: 0.35rem;
+    overflow-x: auto;
+    padding-bottom: 0.1rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .player-chip { flex: 0 0 auto; min-width: 108px; padding: 0.3rem 0.45rem; }
+  .chip-head { font-size: 0.8rem; }
+  .chip-row { font-size: 0.72rem; }
+  .chip-where { max-width: 96px; }
+
+  .log-card { max-height: 74px; padding: 0.4rem 0.55rem; }
+  .log-card h2 { display: none; }
+  .log { font-size: 0.74rem; gap: 0.2rem; }
+
+  .topbar { padding: 0.3rem 0.5rem; gap: 0.4rem; }
+  .brand { font-size: 0.92rem; letter-spacing: 0.04em; }
+  /* Vuorossa oleva näkyy pelaajakorteissa, joten palkkiin ei tarvita erillistä merkkiä. */
+  .turn-pill { display: none; }
+  .topbar-actions button { font-size: 0.78rem; padding: 0.3rem 0.5rem; min-height: 32px; }
+
+  .board-hint { font-size: 0.76rem; padding: 0.25rem 0.6rem; }
+  .event-toast { font-size: 0.92rem; padding: 0.55rem 0.8rem; top: 10%; }
+  .event-toast .toast-icon { font-size: 1.3rem; }
+
+  .quiz-options { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .quiz-option { min-height: 48px; padding: 0.5rem 0.7rem; font-size: 0.92rem; }
+  .quiz-question { font-size: 1rem; margin-bottom: 0.7rem; }
+  .dialog-card { padding: 0.8rem 0.85rem; }
+  .dialog { width: calc(100% - 1rem); }
+  .reveal-disc { width: min(56vmin, 200px); }
+  .reveal-caption strong { font-size: 1.25rem; }
+}
+
+/* Matala vaakanäyttö (esim. puhelin kyljellään) */
+@media (max-height: 480px) and (orientation: landscape) {
+  .log-card { display: none; }
+  .players { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+  .actions button { min-height: 38px; font-size: 0.82rem; }
 }
 
 @media (pointer: coarse) {

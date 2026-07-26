@@ -39,12 +39,40 @@ function densify(points, perSpan = 14) {
   return out;
 }
 
-/** Reitin kulkema polku pisteinä. Merireitit kaartavat via-pisteiden kautta. */
+/** Deterministinen 0–1 -arvo merkkijonosta (sama kuin kartan piirrossa). */
+function hash01(key) {
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) {
+    h ^= key.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((h >>> 0) % 100003) / 100003;
+}
+
+/**
+ * Reitin kulkema polku pisteinä. Merireitit kaartavat via-pisteiden kautta ja
+ * maareitit saavat hyvin pienen, aina samanlaisen mutkan, jotta kartta näyttää
+ * käsin piirretyltä.
+ */
 export function edgePolyline(edge, cityById) {
   const a = cityById.get(edge.a);
   const b = cityById.get(edge.b);
-  const base = [[a.x, a.y], ...(edge.via ?? []), [b.x, b.y]];
-  return densify(base);
+  let waypoints = edge.via ?? [];
+
+  if (!edge.via && edge.type !== 'sea') {
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const nx = -dy / len;
+    const ny = dx / len;
+    const bend = Math.min(len * 0.035, 7);
+    waypoints = [0.33, 0.68].map((t, i) => {
+      const swing = (hash01(`${edge.id}:bend:${i}`) - 0.5) * 2 * bend;
+      return [a.x + dx * t + nx * swing, a.y + dy * t + ny * swing];
+    });
+  }
+
+  return densify([[a.x, a.y], ...waypoints, [b.x, b.y]]);
 }
 
 /** Piste polulla suhteellisella etäisyydellä t (0–1), kaarenpituuden mukaan. */
@@ -98,27 +126,32 @@ export function buildBoard(cities, edges) {
   return { cities, cityById, edges: [...edgeById.values()], edgeById, adj };
 }
 
-/** Yhden askeleen naapurit. fee peritään vain kun laivareitille astutaan kaupungista. */
-export function stepsFrom(board, pos) {
+/**
+ * Yhden askeleen naapurit valitulla matkustustavalla.
+ * 'land' käyttää vain maareittejä ja 'sea' vain laivareittejä; kesken reittiä
+ * matka jatkuu aina samaa reittiä pitkin.
+ */
+export function stepsFrom(board, pos, mode = 'land') {
   const out = [];
   if (pos.type === 'city') {
     for (const eid of board.adj.get(pos.city)) {
       const e = board.edgeById.get(eid);
+      if (e.type !== mode) continue;
       const other = e.a === pos.city ? e.b : e.a;
       if (e.steps === 1) {
-        out.push({ pos: { type: 'city', city: other }, fee: e.fee });
+        out.push({ pos: { type: 'city', city: other } });
       } else {
         const idx = e.a === pos.city ? 1 : e.steps - 1;
-        out.push({ pos: { type: 'edge', edge: eid, idx }, fee: e.fee });
+        out.push({ pos: { type: 'edge', edge: eid, idx } });
       }
     }
   } else {
     const e = board.edgeById.get(pos.edge);
     for (const dir of [-1, 1]) {
       const idx = pos.idx + dir;
-      if (idx <= 0) out.push({ pos: { type: 'city', city: e.a }, fee: 0 });
-      else if (idx >= e.steps) out.push({ pos: { type: 'city', city: e.b }, fee: 0 });
-      else out.push({ pos: { type: 'edge', edge: e.id, idx }, fee: 0 });
+      if (idx <= 0) out.push({ pos: { type: 'city', city: e.a } });
+      else if (idx >= e.steps) out.push({ pos: { type: 'city', city: e.b } });
+      else out.push({ pos: { type: 'edge', edge: e.id, idx } });
     }
   }
   return out;
@@ -129,45 +162,41 @@ export function stepsFrom(board, pos) {
  *
  * Kaupunkiin saa pysähtyä jo ennen kuin koko silmäluku on käytetty — tasalukua
  * ei siis tarvita. Reitin varrelle pysähdytään vain silloin, kun silmäluku
- * loppuu kesken. Kesken reitin ei saa kääntyä takaisin ja laivamatkat on
- * pystyttävä maksamaan.
+ * loppuu kesken. Kesken reitin ei saa kääntyä takaisin, ja matka kulkee vain
+ * valitun matkustustavan reittejä pitkin.
  *
- * @returns {Map<string, {pos, cost, path}>}
+ * @returns {Map<string, {pos, path}>}
  */
-export function findMoves(board, start, roll, money = Infinity) {
+export function findMoves(board, start, roll, { mode = 'land' } = {}) {
   const results = new Map();
   const startKey = posKey(start);
 
-  const record = (pos, spent, path) => {
+  const record = (pos, path) => {
     const key = posKey(pos);
     if (key === startKey) return; // omalle ruudulle ei jäädä
     const prev = results.get(key);
-    if (!prev || spent < prev.cost) results.set(key, { pos, cost: spent, path });
+    if (!prev || path.length < prev.path.length) results.set(key, { pos, path });
   };
 
-  const walk = (pos, remaining, spent, path, prevKey) => {
+  const walk = (pos, remaining, path, prevKey) => {
     // Kaupungissa matkan voi lopettaa vaikka silmälukua olisi jäljellä.
-    if (path.length > 0 && (remaining === 0 || pos.type === 'city')) {
-      record(pos, spent, path);
-    }
+    if (path.length > 0 && (remaining === 0 || pos.type === 'city')) record(pos, path);
     if (remaining === 0) return;
-    for (const step of stepsFrom(board, pos)) {
+    for (const step of stepsFrom(board, pos, mode)) {
       const key = posKey(step.pos);
       if (key === prevKey) continue; // ei peruutusta samaa reittiä
-      const cost = spent + step.fee;
-      if (cost > money) continue;
-      walk(step.pos, remaining - 1, cost, [...path, step.pos], posKey(pos));
+      walk(step.pos, remaining - 1, [...path, step.pos], posKey(pos));
     }
   };
 
-  walk(start, roll, 0, [], null);
+  walk(start, roll, [], null);
   return results;
 }
 
-/** Onko pelaajalla ylipäätään laillisia siirtoja millään silmäluvulla. */
-export function hasAnyMove(board, pos, money) {
+/** Onko pelaajalla laillisia siirtoja annetulla matkustustavalla. */
+export function hasAnyMove(board, pos, mode = 'land') {
   for (let die = 1; die <= 6; die++) {
-    if (findMoves(board, pos, die, money).size > 0) return true;
+    if (findMoves(board, pos, die, { mode }).size > 0) return true;
   }
   return false;
 }

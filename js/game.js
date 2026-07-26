@@ -1,11 +1,12 @@
 // Pelin tila ja säännöt: vuorot, laattojen kääntäminen ja voittoehdot.
 
 import { CITIES, EDGES, AIR_ROUTES, TOKEN_CITIES, FLIGHT_PRICE } from './board.js';
-import { buildBoard, findMoves, posKey, hasAnyMove, reachableCities } from './rules.js';
+import { buildBoard, findMoves, posKey, reachableCities } from './rules.js';
 import { TOKEN_TYPES, createTokenPile } from './tokens.js';
 import { QUESTIONS } from './questions.js';
 
 export const START_MONEY = 300;
+export const SEA_FARE = 100; // laivamatkan hinta vuorolta
 export const FIFTY_FIFTY_PRICE = 50; // kahden väärän vaihtoehdon piilotus
 export const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 export { FLIGHT_PRICE };
@@ -62,7 +63,11 @@ export class Game {
     this.revealed = new Map(); // kaupunki -> laattatyyppi
 
     this.current = 0;
-    this.phase = 'action'; // 'action' | 'move' | 'quiz' | 'over'
+    // 'action' = valitse matkustustapa, 'roll' = heitä noppa, 'move' = valitse
+    // kohde, 'offer' = kokeile tietovisaa, 'quiz' = kysymys auki
+    this.phase = 'action';
+    this.travelMode = null;
+    this.pendingFare = 0;
     this.die = null;
     this.moves = null;
     this.quiz = null;
@@ -129,15 +134,34 @@ export class Game {
       .map((r) => (r.a === city.id ? r.b : r.a));
   }
 
+  /**
+   * Käytettävissä olevat matkustustavat vuoron alussa.
+   *   land = maitse, sea = laivalla (100 p), fly = lentäen (300 p),
+   *   stay = jää paikalleen ja kokeile kaupungin kysymystä
+   * Kesken reittiä matka jatkuu samalla tavalla kuin se alkoi.
+   */
+  travelModes(player = this.player) {
+    if (this.phase !== 'action') return [];
+    if (player.pos.type === 'edge') {
+      return [this.board.edgeById.get(player.pos.edge).type];
+    }
+    const city = this.cityOf(player);
+    const edges = this.board.adj.get(city.id).map((id) => this.board.edgeById.get(id));
+    const modes = [];
+    if (edges.some((e) => e.type === 'land')) modes.push('land');
+    if (edges.some((e) => e.type === 'sea') && player.money >= SEA_FARE) modes.push('sea');
+    if (this.airportDestinations(player).length) modes.push('fly');
+    if (this.tokens.has(city.id)) modes.push('stay');
+    return modes;
+  }
+
   /** Mitä nykyinen pelaaja voi tehdä juuri nyt. */
   availableActions() {
-    if (this.phase !== 'action') {
-      return { roll: false, quiz: false, fly: [] };
-    }
     return {
-      roll: true,
-      quiz: !!this.tokenHere(),
-      fly: this.airportDestinations(),
+      travel: this.travelModes(),
+      roll: this.phase === 'roll',
+      quiz: this.phase === 'offer',
+      fly: this.phase === 'action' ? this.airportDestinations() : [],
     };
   }
 
@@ -149,6 +173,8 @@ export class Game {
     this.die = null;
     this.moves = null;
     this.lastPath = null;
+    this.travelMode = null;
+    this.pendingFare = 0;
 
     // Hevosenkenkä tai tähti kotikaupungissa ratkaisee pelin heti vuoron alussa.
     if (this.checkWin()) return;
@@ -165,7 +191,9 @@ export class Game {
    * tai jos rahat ovat lopussa eikä yhteenkään tavoitteeseen pääse ilman laivalippua.
    */
   needsAid(p) {
-    if (!hasAnyMove(this.board, p.pos, p.money)) return true;
+    // Ilman yhtään matkustustapaa pelaaja ei pääse mihinkään.
+    const canTravel = this.travelModes(p).some((m) => m !== 'stay');
+    if (!canTravel) return true;
     if (p.money > 0) return false;
 
     const racingHome = p.hasStar || (this.starFound && p.horseshoes > 0);
@@ -189,13 +217,38 @@ export class Game {
     this.beginTurn();
   }
 
-  /** Heittää nopan ja laskee mahdolliset päätepisteet. */
-  actionRoll() {
+  /** Valitsee matkustustavan. Maksu peritään vasta kun siirto tehdään. */
+  actionTravel(mode) {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
+    if (!this.travelModes().includes(mode)) {
+      return { ok: false, error: 'Tuo matkustustapa ei ole nyt käytettävissä' };
+    }
+    if (mode === 'stay') return this.actionQuiz();
+
+    const p = this.player;
+    this.travelMode = mode;
+    // Laivalippu maksetaan kun matka lähtee satamasta; merellä jatketaan ilmaiseksi.
+    this.pendingFare = mode === 'sea' && p.pos.type === 'city' ? SEA_FARE : 0;
+    this.phase = 'roll';
+    return { ok: true, mode };
+  }
+
+  /** Palaa matkustustavan valintaan ennen nopanheittoa. */
+  actionCancelTravel() {
+    if (this.phase !== 'roll') return { ok: false, error: 'Väärä vaihe' };
+    this.travelMode = null;
+    this.pendingFare = 0;
+    this.phase = 'action';
+    return { ok: true };
+  }
+
+  /** Heittää nopan ja laskee mahdolliset päätepisteet valitulla tavalla. */
+  actionRoll() {
+    if (this.phase !== 'roll') return { ok: false, error: 'Valitse ensin matkustustapa' };
     const p = this.player;
     const die = this.rollDie();
     this.die = die;
-    this.moves = findMoves(this.board, p.pos, die, p.money);
+    this.moves = findMoves(this.board, p.pos, die, { mode: this.travelMode });
     this.say(p.id, `${p.name} heitti ${die}.`);
     if (this.moves.size === 0) {
       this.say(p.id, `${p.name} ei pysty liikkumaan ja jää paikalleen.`);
@@ -214,30 +267,48 @@ export class Game {
     if (!move) return { ok: false, error: 'Tuo ei ole laillinen siirto' };
 
     const p = this.player;
-    p.money -= move.cost;
+    const fare = this.pendingFare;
+    p.money -= fare;
     p.pos = move.pos;
     this.lastPath = move.path;
+    this.pendingFare = 0;
 
     const city = this.cityOf();
-    const fare = move.cost ? ` (laivamatka ${move.cost} puntaa)` : '';
+    const fareText = fare ? ` (laivamatka ${fare} puntaa)` : '';
     const where = city
       ? `kaupunkiin ${city.name}`
       : `reitille ${this.routeName(move.pos.edge)}`;
-    this.say(p.id, `${p.name} siirtyi ${where}${fare}.`);
-    if (move.cost) {
-      this.emit('fare', `Laivamatka −${move.cost} puntaa`, { icon: '⚓' });
-    }
+    this.say(p.id, `${p.name} siirtyi ${where}${fareText}.`);
+    if (fare) this.emit('fare', `Laivamatka −${fare} puntaa`, { icon: '⚓' });
 
     this.moves = null;
     this.die = null;
     if (this.checkWin()) return { ok: true, win: true };
+    if (this.offerQuiz()) return { ok: true, offer: true };
+    this.endTurn();
+    return { ok: true };
+  }
+
+  /** Aarrekaupunkiin saapunut saa kokeilla kysymystä ennen vuoron vaihtumista. */
+  offerQuiz() {
+    const city = this.cityOf();
+    if (!city || !this.tokens.has(city.id)) return false;
+    this.phase = 'offer';
+    return true;
+  }
+
+  /** Ohittaa tietovisan ja päättää vuoron. */
+  actionSkipQuiz() {
+    if (this.phase !== 'offer') return { ok: false, error: 'Väärä vaihe' };
     this.endTurn();
     return { ok: true };
   }
 
   /** Avaa tietovisakysymyksen: oikea vastaus kääntää laatan ilmaiseksi. */
   actionQuiz() {
-    if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
+    if (this.phase !== 'offer' && this.phase !== 'action') {
+      return { ok: false, error: 'Väärä vaihe' };
+    }
     const city = this.tokenHere();
     if (!city) return { ok: false, error: 'Täällä ei ole laattaa' };
 
@@ -338,6 +409,7 @@ export class Game {
   /** Lentää toiseen lentokenttäkaupunkiin. Vie koko vuoron. */
   actionFly(destination) {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
+    this.travelMode = 'fly';
     const p = this.player;
     if (!this.airportDestinations().includes(destination)) {
       return { ok: false, error: 'Sinne ei ole lentoa' };
@@ -349,6 +421,7 @@ export class Game {
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
     this.emit('flight', `Lento kaupunkiin ${city.name}`, { icon: '✈', sub: `−${FLIGHT_PRICE} puntaa` });
     if (this.checkWin()) return { ok: true, win: true };
+    if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();
     return { ok: true };
   }
@@ -440,6 +513,8 @@ export class Game {
       usedQuestions: [...this.usedQuestions],
       current: this.current,
       phase: this.phase,
+      travelMode: this.travelMode,
+      pendingFare: this.pendingFare,
       die: this.die,
       quiz: this.quiz,
       starFound: this.starFound,
@@ -474,6 +549,8 @@ export class Game {
     game.usedQuestions = new Set(data.usedQuestions ?? []);
     game.current = data.current;
     game.phase = data.phase;
+    game.travelMode = data.travelMode ?? null;
+    game.pendingFare = data.pendingFare ?? 0;
     game.die = data.die ?? null;
     game.quiz = data.quiz ?? null;
     game.lastPath = null;
@@ -488,7 +565,7 @@ export class Game {
     // Kesken jäänyt siirtovalinta lasketaan uudelleen nopan silmäluvusta.
     if (game.phase === 'move' && game.die) {
       const p = game.players[game.current];
-      game.moves = findMoves(game.board, p.pos, game.die, p.money);
+      game.moves = findMoves(game.board, p.pos, game.die, { mode: game.travelMode ?? 'land' });
       if (game.moves.size === 0) game.phase = 'action';
     }
     return game;
@@ -500,7 +577,6 @@ export class Game {
     return [...this.moves.entries()].map(([key, m]) => ({
       key,
       pos: m.pos,
-      cost: m.cost,
       city: m.pos.type === 'city' ? this.board.cityById.get(m.pos.city) : null,
       hasToken: m.pos.type === 'city' && this.tokens.has(m.pos.city),
     }));

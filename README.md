@@ -13,8 +13,13 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
 - Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
   kompassiruusu, aallot ja maaston merkit — myös kysymyslaatikot ovat samaa
   pergamenttia käsin piirrettyine katkoviivoineen
-- Animoitu rytmi: nappula hyppii reittiä piste kerrallaan, noppa pyörii kartan
-  päällä ja tapahtumat jäävät hetkeksi näkyviin
+- Animoitu rytmi: nappula hyppii reittiä piste kerrallaan ja tapahtumat jäävät
+  hetkeksi näkyviin
+- Kolmiulotteinen noppa heitetään nappulan vierestä, se pomppii laudalle ja jää
+  siihen lepäämään seuraavaan heittoon asti
+- Kartan yksityiskohdissa pieniä, aina samanlaisina toistuvia vaihteluita:
+  reittipisteet mutkittelevat ja vaihtelevat koossa ja tummuudessa, kaupungit
+  ovat aavistuksen soikeita ja nimet hitusen vinossa
 - Syntetisoidut äänet kaikille toiminnoille (Web Audio, ei äänitiedostoja):
   noppa, askeleet, laiva, lento, oikea ja väärä vastaus, aarteen paljastus,
   ryöstäjä ja voitto — yläpalkin 🔊-painike vaimentaa
@@ -22,7 +27,8 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
   aarteen paljastus: iso laatta kääntyy 3D:nä ympäri ja näyttää löydön
 - Koko ruudun sovelluskehys: kaikki oleellinen näkyy kerralla, vain tapahtumaloki vierii
 - Asennettava sovellus (PWA): toimii offline ja jatkaa keskeytynyttä peliä
-- Mitoitettu erityisesti iPadille (sekä vaaka- että pystytaso)
+- Mitoitettu iPadille ja iPhonelle: sama asettelu skaalautuu, eikä mikään vaadi
+  vierittämistä
 
 ## Pelin käynnistys
 
@@ -48,16 +54,24 @@ seuraavalla avauskerralla; *Uusi peli* aloittaa alusta.
 **Tavoite.** Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon. Kun tähti on
 löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupunkiin ensimmäisenä.
 
-**Vuoro.** Yksi teko vuorossa:
+**Vuoron kulku.**
 
-| Teko | Selitys |
+1. **Valitse matkustustapa**
+
+| Tapa | Selitys |
 | --- | --- |
-| Avaa laatta kysymyksellä | Ainoa tapa avata aarre: oikea vastaus kääntää laatan |
-| Heitä noppa ja liiku | Noppa kertoo askelten enimmäismäärän |
-| Lennä (300 p) | Lentokentältä toiselle: Tanger, Kairo, Kapkaupunki |
+| 🥾 Maitse | Ilmainen, kulkee vain maareittejä |
+| ⛵ Laivalla (100 p) | Kulkee vain meriteitä; maksu peritään satamasta lähdettäessä |
+| ✈ Lennä (300 p) | Suoraan toiselle lentokentälle: Tanger, Kairo, Kapkaupunki |
+| ❓ Jää paikalleen | Aarrekaupungissa: kokeile kysymystä liikkumatta |
 
-**Tietovisa.** Kaupungissa, jossa on avaamaton aarre, saat arvotun kysymyksen ja neljä
-vaihtoehtoa (A–D). Kysymykset liittyvät kaupungin maantietoon, kulttuuriin ja historiaan,
+2. **Heitä noppa** — noppa pyörii kartalla ja jää siihen lepäämään. Silmäluku on
+   askelten enimmäismäärä.
+3. **Valitse kohde** kartalta.
+4. **Kokeile tietovisaa**, jos päädyit kaupunkiin jossa on avaamaton aarre.
+   Vastauksen jälkeen vuoro vaihtuu.
+
+**Tietovisa.** Aarrekaupungissa saat arvotun kysymyksen ja neljä vaihtoehtoa (A–D). Kysymykset liittyvät kaupungin maantietoon, kulttuuriin ja historiaan,
 ja pakassa on mukana myös yleisiä Afrikka-kysymyksiä. Oikea vastaus avaa aarteen, väärästä
 vastauksesta vuoro päättyy — seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.
 Sama kysymys ei toistu ennen kuin pakka on käyty läpi.

@@ -27,37 +27,54 @@ function distancesToAny(game, targets, money) {
   return merged;
 }
 
-function goalDistances(game, p) {
+function goalDistances(game, p, money = p.money) {
   if (racingHome(game, p)) {
     const starts = game.players.map((pl) => pl.start);
-    return distancesToAny(game, [...new Set(starts)], p.money);
+    return distancesToAny(game, [...new Set(starts)], money);
   }
   const targets = [...game.tokens.keys()];
   if (targets.length === 0) {
-    return distancesToAny(game, [...new Set(game.players.map((pl) => pl.start))], p.money);
+    return distancesToAny(game, [...new Set(game.players.map((pl) => pl.start))], money);
   }
-  return distancesToAny(game, targets, p.money);
+  return distancesToAny(game, targets, money);
 }
 
-/** Valitsee vuoron aloitustoiminnon. */
-export function chooseAction(game) {
+/**
+ * Valitsee matkustustavan vuoron alussa: jää paikalleen kokeilemaan kysymystä,
+ * lennä, mene laivalla tai kulje maitse.
+ */
+export function chooseTravel(game) {
   const p = game.player;
-  const actions = game.availableActions();
+  const modes = game.travelModes();
+  if (modes.length === 0) return { type: 'land' };
 
-  if (!racingHome(game, p) && actions.quiz) return { type: 'quiz' };
+  // Aarrekaupungissa kannattaa usein yrittää kysymystä uudelleen.
+  if (modes.includes('stay') && !racingHome(game, p) && game.rng() < 0.55) {
+    return { type: 'stay' };
+  }
 
-  // Kotimatkalla lento kannattaa jos se lyhentää matkaa selvästi.
-  if (racingHome(game, p) && actions.fly.length && p.money >= FLIGHT_PRICE) {
-    const dist = goalDistances(game, p);
-    const here = distanceOf(game.board, p.pos, dist);
-    const best = actions.fly.reduce(
+  const dist = goalDistances(game, p);
+  const here = distanceOf(game.board, p.pos, dist);
+
+  if (modes.includes('fly')) {
+    const destinations = game.airportDestinations();
+    const best = destinations.reduce(
       (acc, city) => Math.min(acc, dist.get(city) ?? Infinity),
       Infinity,
     );
-    if (best + 4 < here) return { type: 'fly', destination: bestFlight(actions.fly, dist) };
+    if (best + 4 < here) return { type: 'fly', destination: bestFlight(destinations, dist) };
   }
 
-  return { type: 'roll' };
+  if (modes.includes('sea')) {
+    // Vertaa: kuinka paljon meritie lyhentää matkaa maateihin verrattuna.
+    // Lippuun on varaa jo siksi, että 'sea' on tarjolla.
+    const landOnly = goalDistances(game, p, 0);
+    const hereLand = distanceOf(game.board, p.pos, landOnly);
+    if (!Number.isFinite(hereLand) || hereLand - here >= 3) return { type: 'sea' };
+  }
+
+  if (modes.includes('land')) return { type: 'land' };
+  return { type: modes[0] };
 }
 
 function bestFlight(destinations, dist) {
@@ -80,8 +97,7 @@ export function chooseMove(game) {
     // Saavuttamaton kohde saa suuren mutta äärellisen etäisyyden, jotta
     // pisteytys pysyy vertailukelpoisena myös rahattomana.
     let score = -Math.min(distanceOf(game.board, opt.pos, dist), 999) * 10;
-    score -= opt.cost / 50; // laivaliput maksavat
-    if (!home && opt.hasToken) score += 60; // laatan päälle pysähtyminen on arvokasta
+    if (!home && opt.hasToken) score += 60; // aarteen päälle pysähtyminen on arvokasta
     if (home && opt.city?.start) score += 1000;
     score += game.rng() * 3; // pikkuisen vaihtelua
     if (score > bestScore) {
@@ -113,4 +129,9 @@ export function chooseQuizAnswer(game, skill = BOT_SKILL) {
   if (game.rng() < chance) return quiz.correct;
   const wrong = open.filter((i) => i !== quiz.correct);
   return wrong.length ? wrong[Math.floor(game.rng() * wrong.length)] : quiz.correct;
+}
+
+/** Tarttuuko botti siirron jälkeen tarjottuun kysymykseen? Kyllä — se on ilmainen. */
+export function wantsQuiz() {
+  return true;
 }

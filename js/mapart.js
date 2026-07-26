@@ -9,6 +9,24 @@ const NS = 'http://www.w3.org/2000/svg';
 // näkymäikkunan (viewBox) muodosta riippumatta.
 export const PAPER = { x: -700, y: -700, w: 2400, h: 2400 };
 
+/**
+ * Deterministinen 0–1 -arvo merkkijonosta (FNV-1a). Sama piirre saa aina saman
+ * pienen poikkeaman, joten kartta näyttää käsin piirretyltä mutta ei väreile.
+ */
+export function hash01(key) {
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) {
+    h ^= key.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((h >>> 0) % 100003) / 100003;
+}
+
+/** Symmetrinen poikkeama välillä ±amount. */
+export function vary(key, amount) {
+  return (hash01(key) - 0.5) * 2 * amount;
+}
+
 export function el(tag, attrs = {}, parent = null) {
   const node = document.createElementNS(NS, tag);
   for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
@@ -96,10 +114,18 @@ export function drawParchment(svg) {
 
   const grid = el('g', { class: 'graticule' }, svg);
   for (let x = -500; x < 1500; x += 125) {
-    el('line', { x1: x, y1: PAPER.y, x2: x, y2: PAPER.y + PAPER.h }, grid);
+    el('line', {
+      x1: x + vary(`grid:v:${x}`, 2), y1: PAPER.y,
+      x2: x + vary(`grid:v2:${x}`, 2), y2: PAPER.y + PAPER.h,
+      opacity: (0.7 + hash01(`grid:vo:${x}`) * 0.6).toFixed(2),
+    }, grid);
   }
   for (let y = -500; y < 1500; y += 125) {
-    el('line', { x1: PAPER.x, y1: y, x2: PAPER.x + PAPER.w, y2: y }, grid);
+    el('line', {
+      x1: PAPER.x, y1: y + vary(`grid:h:${y}`, 2),
+      x2: PAPER.x + PAPER.w, y2: y + vary(`grid:h2:${y}`, 2),
+      opacity: (0.7 + hash01(`grid:ho:${y}`) * 0.6).toFixed(2),
+    }, grid);
   }
 }
 
@@ -199,13 +225,24 @@ export function drawWaves(svg, skipZones = []) {
   const g = el('g', { class: 'waves', filter: 'url(#rough-soft)' }, svg);
   seaPoints().forEach((p, i) => {
     if (i % 2 === 1 || blocked(p, skipZones)) return;
-    const [x, y] = p;
-    const w = 19 + (i % 3) * 4;
-    el('path', { d: `M${x - w},${y} q${w / 2},-7 ${w},0 q${w / 2},7 ${w},0`, class: 'wave' }, g);
-    el('path', {
-      d: `M${x - w + 7},${y + 13} q${w / 2},-7 ${w},0 q${w / 2},7 ${w},0`,
-      class: 'wave',
+    const key = `wave:${p[0]}:${p[1]}`;
+    const x = p[0] + vary(`${key}:x`, 9);
+    const y = p[1] + vary(`${key}:y`, 7);
+    const w = 17 + hash01(`${key}:w`) * 9;
+    const lift = 5 + hash01(`${key}:l`) * 4;
+    const tilt = vary(`${key}:r`, 5);
+    const wave = el('g', {
+      transform: `rotate(${tilt.toFixed(2)} ${x.toFixed(1)} ${y.toFixed(1)})`,
+      opacity: (0.75 + hash01(`${key}:o`) * 0.45).toFixed(2),
     }, g);
+    el('path', {
+      d: `M${x - w},${y} q${w / 2},${-lift} ${w},0 q${w / 2},${lift} ${w},0`,
+      class: 'wave',
+    }, wave);
+    el('path', {
+      d: `M${x - w + 7},${y + 11 + lift} q${w / 2},${-lift} ${w},0 q${w / 2},${lift} ${w},0`,
+      class: 'wave',
+    }, wave);
   });
 }
 
@@ -217,23 +254,31 @@ export function drawTerrain(svg, obstacles) {
   const g = el('g', { class: 'terrain', filter: 'url(#rough-soft)' }, svg);
   landPoints(obstacles).forEach((p, i) => {
     if (i % 2 === 1) return;
-    const [x, y] = p;
+    const key = `terrain:${p[0]}:${p[1]}`;
+    const x = p[0] + vary(`${key}:x`, 8);
+    const y = p[1] + vary(`${key}:y`, 6);
+    const mark = el('g', {
+      transform: `rotate(${vary(`${key}:r`, 6).toFixed(2)} ${x.toFixed(1)} ${y.toFixed(1)}) `
+        + `scale(${(0.88 + hash01(`${key}:s`) * 0.3).toFixed(2)})`,
+      opacity: (0.8 + hash01(`${key}:o`) * 0.4).toFixed(2),
+      'transform-origin': `${x.toFixed(1)}px ${y.toFixed(1)}px`,
+    }, g);
     if (y < 300) {
       el('path', {
         d: `M${x - 16},${y} q8,-9 16,0 M${x - 2},${y + 8} q8,-9 16,0`,
         class: 'terrain-mark',
-      }, g);
+      }, mark);
     } else if (y < 640) {
-      el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, g);
+      el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, mark);
       el('path', {
         d: `M${x},${y - 4} q-11,-2 -13,-10 q9,1 13,7 q4,-6 13,-7 q-2,8 -13,10 z`,
         class: 'terrain-fill',
-      }, g);
+      }, mark);
     } else {
       el('path', {
         d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
         class: 'terrain-mark',
-      }, g);
+      }, mark);
     }
   });
 }

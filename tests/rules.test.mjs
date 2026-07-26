@@ -5,11 +5,24 @@ import { CITIES, EDGES, TOKEN_CITIES } from '../js/board.js';
 import { buildBoard, findMoves, posKey, cityDistances, pointAlong } from '../js/rules.js';
 import { isOnLand } from '../js/mapart.js';
 import { tokenPileTemplate, TOKEN_COUNTS } from '../js/tokens.js';
-import { Game, mulberry32, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE } from '../js/game.js';
-import { chooseAction, chooseMove, chooseQuizAnswer, wantsHint } from '../js/ai.js';
+import {
+  Game, mulberry32, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE, SEA_FARE,
+} from '../js/game.js';
+import { chooseMove, chooseQuizAnswer, chooseTravel, wantsHint } from '../js/ai.js';
 import { QUESTIONS, allQuestions } from '../js/questions.js';
 
 const board = buildBoard(CITIES, EDGES);
+
+/** Kahden pelaajan peli testejä varten. */
+function newGame(seed = 5) {
+  return new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    seed,
+  });
+}
 
 test('lauta rakentuu ja on yhtenäinen', () => {
   for (const city of CITIES) {
@@ -31,7 +44,7 @@ test('laattoja on yhtä monta kuin laattakaupunkeja', () => {
 test('kaupunkiin pääsee ilman tasalukua, reitille vain täydellä heitolla', () => {
   const start = { type: 'city', city: 'tanger' };
   for (let die = 1; die <= 6; die++) {
-    const moves = findMoves(board, start, die, Infinity);
+    const moves = findMoves(board, start, die, { mode: 'land' });
     assert.ok(moves.size > 0);
     for (const [, move] of moves) {
       assert.ok(move.path.length <= die, `siirto käytti yli ${die} askelta`);
@@ -43,25 +56,29 @@ test('kaupunkiin pääsee ilman tasalukua, reitille vain täydellä heitolla', (
 
   // Tripoli on neljän askelen päässä: sinne pääsee myös viitosella ja kuutosella.
   for (const die of [4, 5, 6]) {
-    assert.ok(findMoves(board, start, die, Infinity).has('c:tripoli'), `heitto ${die}`);
+    assert.ok(findMoves(board, start, die, { mode: 'land' }).has('c:tripoli'), `heitto ${die}`);
   }
-  assert.ok(!findMoves(board, start, 3, Infinity).has('c:tripoli'));
+  assert.ok(!findMoves(board, start, 3, { mode: 'land' }).has('c:tripoli'));
 });
 
-test('laivareitin maksu peritään ja estää liikkeen ilman rahaa', () => {
+test('matkustustapa rajaa käytettävät reitit', () => {
   const start = { type: 'city', city: 'tanger' };
-  const rich = findMoves(board, start, 1, 300);
-  const seaStep = [...rich.values()].find((m) => m.cost === 100);
-  assert.ok(seaStep, 'laivareitin ensiaskeleen pitäisi maksaa 100');
+  const land = findMoves(board, start, 3, { mode: 'land' });
+  const sea = findMoves(board, start, 3, { mode: 'sea' });
 
-  const broke = findMoves(board, start, 1, 0);
-  assert.ok([...broke.values()].every((m) => m.cost === 0));
-  assert.equal(broke.size, rich.size - 1);
+  // Maitse ei päädytä laivareitille eikä päinvastoin.
+  const onSeaRoute = (move) =>
+    move.pos.type === 'edge' && board.edgeById.get(move.pos.edge).type === 'sea';
+  assert.ok([...land.values()].every((m) => !onSeaRoute(m)));
+  assert.ok(sea.size > 0, 'Tangerista lähtee laivareitti');
+  assert.ok([...sea.values()].every((m) => m.pos.type === 'city' || onSeaRoute(m)));
+  assert.ok(sea.has('c:dakar'), 'kolmella askeleella pääsee Dakariin laivalla');
+  assert.ok(!land.has('c:dakar'));
 });
 
 test('kesken reitin ei saa kääntyä takaisin', () => {
   const pos = { type: 'edge', edge: 'tanger|tripoli', idx: 2 };
-  const moves = findMoves(board, pos, 2, Infinity);
+  const moves = findMoves(board, pos, 2, { mode: 'land' });
   const keys = [...moves.keys()].sort();
   assert.deepEqual(keys, ['c:tanger', 'c:tripoli']);
   assert.ok(!moves.has(posKey(pos)), 'lähtöruutuun ei jäädä');
@@ -69,10 +86,16 @@ test('kesken reitin ei saa kääntyä takaisin', () => {
   assert.equal(moves.get('c:tripoli').path.length, 2);
 });
 
-test('saarelle pääsee vain laivalla', () => {
-  const pos = { type: 'city', city: 'sansibar' };
-  assert.equal(findMoves(board, pos, 3, 0).size, 0);
-  assert.ok(findMoves(board, pos, 3, 100).size > 0);
+test('saarelta pääsee vain laivalla ja vain jos rahat riittävät', () => {
+  const game = newGame();
+  game.player.pos = { type: 'city', city: 'sansibar' };
+  game.player.money = SEA_FARE;
+  assert.ok(game.travelModes().includes('sea'));
+  assert.ok(!game.travelModes().includes('land'), 'Sansibarista ei lähde maareittiä');
+
+  game.player.money = 0;
+  assert.ok(!game.travelModes().includes('sea'), 'ilman rahaa laivaan ei pääse');
+  assert.equal(findMoves(board, game.player.pos, 3, { mode: 'land' }).size, 0);
 });
 
 test('jumiin jäänyt saa avustuksen vuoron alussa', () => {
@@ -142,6 +165,27 @@ test('tähti kotiin voittaa, hevosenkenkä voi ehtiä ensin', () => {
   assert.ok(g2.checkWin());
 });
 
+/** Yksi botin askel nykyisessä vaiheessa. */
+function playBotStep(game) {
+  if (game.phase === 'move') {
+    const key = chooseMove(game);
+    if (key) game.actionMove(key);
+    else game.endTurn();
+  } else if (game.phase === 'quiz') {
+    if (game.quiz.chosen !== null) game.closeQuiz();
+    else if (wantsHint(game)) game.actionFiftyFifty();
+    else game.answerQuiz(chooseQuizAnswer(game));
+  } else if (game.phase === 'offer') {
+    game.actionQuiz();
+  } else if (game.phase === 'roll') {
+    game.actionRoll();
+  } else {
+    const travel = chooseTravel(game);
+    if (travel.type === 'fly') game.actionFly(travel.destination);
+    else game.actionTravel(travel.type);
+  }
+}
+
 test('bottien peli päättyy voittoon', () => {
   const game = new Game({
     players: [
@@ -153,21 +197,8 @@ test('bottien peli päättyy voittoon', () => {
   });
 
   let steps = 0;
-  while (game.phase !== 'over' && steps < 5000) {
-    if (game.phase === 'move') {
-      const key = chooseMove(game);
-      if (key) game.actionMove(key);
-      else game.endTurn();
-    } else if (game.phase === 'quiz') {
-      if (game.quiz.chosen !== null) game.closeQuiz();
-      else if (wantsHint(game)) game.actionFiftyFifty();
-      else game.answerQuiz(chooseQuizAnswer(game));
-    } else {
-      const action = chooseAction(game);
-      if (action.type === 'quiz') game.actionQuiz();
-      else if (action.type === 'fly') game.actionFly(action.destination);
-      else game.actionRoll();
-    }
+  while (game.phase !== 'over' && steps < 8000) {
+    playBotStep(game);
     steps++;
   }
 
@@ -213,6 +244,7 @@ test('oikea vastaus kääntää laatan, väärä ei', () => {
   };
 
   const win = makeGame();
+  win.phase = 'offer';
   assert.ok(win.actionQuiz().ok);
   assert.equal(win.phase, 'quiz');
   assert.equal(win.quiz.options.length, 4);
@@ -225,6 +257,7 @@ test('oikea vastaus kääntää laatan, väärä ei', () => {
   assert.equal(win.current, 1, 'vuoro siirtyy vastauksen jälkeen');
 
   const lose = makeGame();
+  lose.phase = 'offer';
   lose.actionQuiz();
   const vaara = (lose.quiz.correct + 1) % 4;
   lose.answerQuiz(vaara);
@@ -260,9 +293,10 @@ test('peli tallentuu ja palautuu samaan tilanteeseen', () => {
   });
   game.players[0].pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'emerald');
-  game.actionQuiz();
+  game.actionTravel('stay');
   game.answerQuiz(game.quiz.correct);
   game.closeQuiz();
+  game.actionTravel('land');
   game.actionRoll();
 
   const data = JSON.parse(JSON.stringify(game.toJSON()));
@@ -270,6 +304,7 @@ test('peli tallentuu ja palautuu samaan tilanteeseen', () => {
 
   assert.ok(restored);
   assert.equal(restored.phase, game.phase);
+  assert.equal(restored.travelMode, game.travelMode);
   assert.equal(restored.die, game.die);
   assert.equal(restored.current, game.current);
   assert.equal(restored.tokens.size, game.tokens.size);
@@ -313,7 +348,8 @@ test('aarretta ei voi ostaa rahalla', () => {
   });
   assert.equal(typeof game.actionBuy, 'undefined');
   const actions = game.availableActions();
-  assert.deepEqual(Object.keys(actions).sort(), ['fly', 'quiz', 'roll']);
+  assert.deepEqual(Object.keys(actions).sort(), ['fly', 'quiz', 'roll', 'travel']);
+  assert.ok(actions.travel.includes('land'));
 });
 
 test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 50', () => {
@@ -326,7 +362,7 @@ test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 50', () => {
   });
   game.player.pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'topaz');
-  game.actionQuiz();
+  game.actionTravel('stay');
 
   const rahaEnnen = game.player.money;
   const tulos = game.actionFiftyFifty();
@@ -355,7 +391,7 @@ test('50:50 ei onnistu ilman rahaa', () => {
   });
   game.player.pos = { type: 'city', city: 'gao' };
   game.player.money = 20;
-  game.actionQuiz();
+  game.actionTravel('stay');
   const tulos = game.actionFiftyFifty();
   assert.equal(tulos.ok, false);
   assert.equal(game.quiz.hidden.length, 0);
@@ -372,7 +408,7 @@ test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysy
   game.player.pos = { type: 'city', city: 'kano' };
   game.tokens.set('kano', 'ruby');
 
-  game.actionQuiz();
+  game.actionTravel('stay');
   const eka = game.quiz.question;
   game.answerQuiz((game.quiz.correct + 1) % 4);
   game.closeQuiz();
@@ -382,7 +418,7 @@ test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysy
   // Takaisin ensimmäiselle pelaajalle: uusi kysymys samasta kaupungista.
   game.endTurn();
   assert.equal(game.current, 0);
-  game.actionQuiz();
+  game.actionTravel('stay');
   assert.notEqual(game.quiz.question, eka);
   game.answerQuiz(game.quiz.correct);
   assert.equal(game.revealed.get('kano'), 'ruby');
@@ -404,4 +440,63 @@ test('kaupungit ovat mantereella ja riittävän erillään', () => {
       assert.ok(d >= 75, `${CITIES[i].name} ja ${CITIES[j].name} ovat liian lähekkäin (${Math.round(d)})`);
     }
   }
+});
+
+test('vuoro etenee: matkustustapa, noppa, siirto ja vasta sitten tietovisa', () => {
+  const game = newGame(31);
+  // Pelaaja on askeleen päässä Tripolista, joten aarrekaupunki on varmasti tarjolla.
+  game.player.pos = { type: 'edge', edge: 'tanger|tripoli', idx: 3 };
+  assert.equal(game.phase, 'action');
+  assert.deepEqual(game.travelModes(), ['land'], 'reitillä matka jatkuu maitse');
+
+  // Ilman matkustustavan valintaa nopan heitto ei onnistu.
+  assert.equal(game.actionRoll().ok, false);
+
+  game.actionTravel('land');
+  assert.equal(game.phase, 'roll');
+  const roll = game.actionRoll();
+  assert.ok(roll.die >= 1 && roll.die <= 6);
+  assert.equal(game.phase, 'move');
+
+  // Valitaan aarrekaupunki, jolloin tietovisa tarjotaan ennen vuoron vaihtoa.
+  const target = game.moveOptions().find((o) => o.hasToken);
+  assert.ok(target, 'jonkin kohteen pitäisi olla aarrekaupunki');
+  game.actionMove(target.key);
+  assert.equal(game.phase, 'offer');
+  assert.equal(game.current, 0, 'vuoro ei ole vielä vaihtunut');
+
+  game.actionSkipQuiz();
+  assert.equal(game.current, 1, 'ohittaminen päättää vuoron');
+});
+
+test('laivalippu maksetaan kerran vuorossa ja vain satamasta lähdettäessä', () => {
+  const game = newGame(77);
+  const p = game.player;
+  p.money = 300;
+  game.actionTravel('sea');
+  assert.equal(game.pendingFare, SEA_FARE);
+
+  game.actionRoll();
+  const mid = game.moveOptions().find((o) => o.pos.type === 'edge');
+  const target = mid ?? game.moveOptions()[0];
+  game.actionMove(target.key);
+  assert.equal(p.money, 300 - SEA_FARE);
+
+  // Merellä jatkaminen on ilmaista.
+  if (p.pos.type === 'edge') {
+    game.current = 0;
+    game.phase = 'action';
+    assert.deepEqual(game.travelModes(), ['sea']);
+    game.actionTravel('sea');
+    assert.equal(game.pendingFare, 0);
+  }
+});
+
+test('matkustustavan valinnan voi perua ennen heittoa', () => {
+  const game = newGame(12);
+  game.actionTravel('land');
+  assert.equal(game.phase, 'roll');
+  game.actionCancelTravel();
+  assert.equal(game.phase, 'action');
+  assert.equal(game.travelMode, null);
 });

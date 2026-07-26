@@ -3,11 +3,14 @@
 import { AIR_ROUTES } from './board.js';
 import { pixelOf, pointAlong, posKey } from './rules.js';
 import { TOKEN_TYPES } from './tokens.js';
-import { chooseAction, chooseMove, chooseQuizAnswer, wantsHint } from './ai.js';
-import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE } from './game.js';
+import { chooseMove, chooseQuizAnswer, chooseTravel, wantsHint } from './ai.js';
+import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE, SEA_FARE } from './game.js';
 import { sfx, treasureSound } from './sound.js';
+import { BoardDie } from './die.js';
 import {
   el,
+  hash01,
+  vary,
   drawCompass,
   drawDefs,
   drawDoodles,
@@ -35,6 +38,9 @@ const TOAST_MS = { die: 950, default: 1200 };
 const EVENT_SOUND = { fare: 'ferry', flight: 'flight', aid: 'coin', stuck: 'stuck' };
 
 // Paljastusruudun alateksti laattatyypeittäin.
+// Matkustustapojen nimet paneelissa.
+const TRAVEL_LABEL = { land: 'Maitse', sea: 'Laivalla', fly: 'Lentäen', stay: 'Paikallaan' };
+
 const REVEAL_SUB = {
   star: 'Vie tähti kotiin ja voitat pelin!',
   horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
@@ -89,6 +95,7 @@ export class UI {
 
   mount() {
     this.drawBoard();
+    this.boardDie = new BoardDie(this.mapPane);
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
@@ -112,6 +119,29 @@ export class UI {
     const size = 1000;
     const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
     this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
+    // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
+    if (this.dieSpot && this.boardDie) this.boardDie.place(this.mapToPane(this.dieSpot));
+  }
+
+  /** Kartan koordinaatit kartta-alueen pikseleiksi. */
+  mapToPane({ x, y }) {
+    const point = this.svg.createSVGPoint();
+    point.x = x;
+    point.y = y;
+    const screen = point.matrixTransform(this.svg.getScreenCTM());
+    const rect = this.mapPane.getBoundingClientRect();
+    return { x: screen.x - rect.left, y: screen.y - rect.top };
+  }
+
+  /** Nopan lepopaikka pelaajan nappulan vierestä, kartan sisäpuolelta. */
+  dieRestingSpot(player) {
+    const { x, y } = pixelOf(this.game.board, player.pos);
+    const dirX = x > 700 ? -1 : 1;
+    const dirY = y > 760 ? -1 : 1;
+    return {
+      x: Math.max(40, Math.min(960, x + dirX * 52)),
+      y: Math.max(40, Math.min(960, y + dirY * 50)),
+    };
   }
 
   /** Kohdat, joihin maastokuvioita ei saa piirtää: kaupungit, nimet ja reitit. */
@@ -168,10 +198,27 @@ export class UI {
     const routes = el('g', { class: 'routes', filter: 'url(#rough-soft)' }, this.svg);
     for (const e of board.edges) {
       const d = e.poly.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-      el('path', { d, class: `route route-${e.type}` }, routes);
+      el('path', {
+        d,
+        class: `route route-${e.type}`,
+        opacity: (0.82 + hash01(`route:${e.id}`) * 0.36).toFixed(2),
+      }, routes);
+
       for (let i = 1; i < e.steps; i++) {
-        const { x, y } = pointAlong(e.poly, i / e.steps);
-        el('circle', { cx: x, cy: y, r: 6, class: `step step-${e.type}` }, routes);
+        const key = `${e.id}:${i}`;
+        // Askelmat eivät ole tasavälein eivätkä täysin samankokoisia.
+        const t = (i + vary(`${key}:t`, 0.09)) / e.steps;
+        const { x, y } = pointAlong(e.poly, Math.min(Math.max(t, 0.04), 0.96));
+        const r = 5.3 + hash01(`${key}:r`) * 1.5;
+        el('ellipse', {
+          cx: x + vary(`${key}:x`, 1.6),
+          cy: y + vary(`${key}:y`, 1.6),
+          rx: r,
+          ry: r * (0.86 + hash01(`${key}:ry`) * 0.24),
+          transform: `rotate(${vary(`${key}:rot`, 40).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})`,
+          opacity: (0.72 + hash01(`${key}:o`) * 0.5).toFixed(2),
+          class: `step step-${e.type}`,
+        }, routes);
       }
     }
 
@@ -185,17 +232,35 @@ export class UI {
         y: mid.y - 12,
         class: 'fare',
         'text-anchor': 'middle',
+        transform: `rotate(${vary(`fare:${e.id}`, 2.6).toFixed(2)} ${mid.x.toFixed(1)} ${mid.y.toFixed(1)})`,
+        opacity: (0.85 + hash01(`fare:o:${e.id}`) * 0.3).toFixed(2),
       }, fares).textContent = `⚓${e.fee}`;
     }
 
     // Kaupungit ja nimet.
     const cities = el('g', { class: 'cities' }, this.svg);
     for (const c of board.cities) {
+      const wobble = `rotate(${vary(`city:rot:${c.id}`, 12).toFixed(1)} ${c.x} ${c.y})`;
+      const base = c.start ? 20 : 11.6;
+      const rx = base + vary(`city:rx:${c.id}`, 0.7);
+      const ry = base + vary(`city:ry:${c.id}`, 0.7);
       if (c.start) {
-        el('circle', { cx: c.x, cy: c.y, r: 20, class: 'city-start' }, cities);
-        el('circle', { cx: c.x, cy: c.y, r: 12, class: 'coast-soft' }, cities);
+        el('ellipse', {
+          cx: c.x, cy: c.y, rx, ry, transform: wobble, class: 'city-start',
+        }, cities);
+        el('ellipse', {
+          cx: c.x, cy: c.y, rx: rx * 0.6, ry: ry * 0.6, transform: wobble, class: 'coast-soft',
+        }, cities);
       } else {
-        el('circle', { cx: c.x, cy: c.y, r: 12, class: 'city' }, cities);
+        el('ellipse', {
+          cx: c.x,
+          cy: c.y,
+          rx,
+          ry,
+          transform: wobble,
+          'stroke-width': (2.2 + hash01(`city:sw:${c.id}`) * 0.7).toFixed(2),
+          class: 'city',
+        }, cities);
       }
       if (c.airport) {
         el('text', {
@@ -205,11 +270,15 @@ export class UI {
       const anchor = c.la ?? 'middle';
       const dx = c.lx ?? 0;
       const dy = c.ly ?? -(c.start ? 28 : 19);
+      const lx = c.x + dx;
+      const ly = c.y + dy + vary(`label:y:${c.id}`, 1.2);
       const label = el('text', {
-        x: c.x + dx,
-        y: c.y + dy,
+        x: lx,
+        y: ly,
         class: c.start ? 'city-label start-label' : 'city-label',
         'text-anchor': anchor,
+        transform: `rotate(${vary(`label:rot:${c.id}`, 1.1).toFixed(2)} ${lx.toFixed(1)} ${ly.toFixed(1)})`,
+        opacity: (0.92 + hash01(`label:o:${c.id}`) * 0.08).toFixed(2),
       }, cities);
       label.textContent = c.name;
     }
@@ -228,9 +297,12 @@ export class UI {
       const city = game.board.cityById.get(cityId);
       const g = el('g', {
         class: 'token-found',
-        transform: `translate(${city.x + 22},${city.y + 18})`,
+        transform: `translate(${city.x + 22},${city.y + 18}) rotate(${vary(`token:${cityId}`, 8).toFixed(1)})`,
       }, this.tokenLayer);
-      el('circle', { r: 17, class: 'token-disc' }, g);
+      el('circle', {
+        r: 16.4 + hash01(`token:r:${cityId}`) * 1.4,
+        class: 'token-disc',
+      }, g);
       const icon = drawTokenIcon(g, type);
       icon.setAttribute('transform', 'scale(0.88)');
     }
@@ -245,11 +317,6 @@ export class UI {
       const g = el('g', { class: 'target' }, this.targetLayer);
       el('circle', { cx: x, cy: y, r: 30, class: 'target-hit' }, g);
       el('circle', { cx: x, cy: y, r: opt.city ? 22 : 14, class: 'target-ring' }, g);
-      if (opt.cost) {
-        el('text', {
-          x, y: y - 28, class: 'target-cost', 'text-anchor': 'middle',
-        }, g).textContent = `−${opt.cost}`;
-      }
       g.addEventListener('click', () => this.doMove(opt.key));
     }
   }
@@ -361,8 +428,7 @@ export class UI {
     }
 
     const p = game.player;
-    this.dieEl.hidden = game.die === null || game.die === undefined;
-    if (!this.dieEl.hidden) this.dieEl.textContent = `${DIE_FACES[game.die]} ${game.die}`;
+    this.dieEl.hidden = true; // silmäluku näkyy laudalla olevassa nopassa
 
     if (p.isBot) {
       this.turnStatus.textContent = `${p.name} miettii…`;
@@ -383,28 +449,66 @@ export class UI {
     }
 
     this.hint.textContent = '';
-    const actions = game.availableActions();
-    const tokenCity = game.tokenHere();
-    this.turnStatus.textContent = tokenCity
-      ? `${tokenCity.name}: aarre aukeaa oikealla vastauksella.`
-      : 'Valitse toiminto.';
+    const modes = game.travelModes();
 
-    if (tokenCity) {
-      const quizBtn = html('button', 'primary', '❓ Avaa laatta kysymyksellä');
+    if (game.phase === 'offer') {
+      const city = game.cityOf();
+      this.turnStatus.textContent = `${city.name}: kokeile kysymystä tai päätä vuoro.`;
+      const quizBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
       quizBtn.addEventListener('click', () => {
         sfx.play('paper');
         this.doAction(() => game.actionQuiz());
       });
       this.actionsEl.appendChild(quizBtn);
+
+      const skipBtn = html('button', '', '➡ Päätä vuoro');
+      skipBtn.addEventListener('click', () => this.doAction(() => game.actionSkipQuiz()));
+      this.actionsEl.appendChild(skipBtn);
+      return;
     }
 
-    const rollBtn = html('button', tokenCity ? '' : 'primary', '🎲 Heitä noppa');
-    rollBtn.addEventListener('click', () => this.doRoll());
-    this.actionsEl.appendChild(rollBtn);
+    if (game.phase === 'roll') {
+      this.turnStatus.textContent = `${TRAVEL_LABEL[game.travelMode]} — heitä noppa.`;
+      const rollBtn = html('button', 'primary', '🎲 Heitä noppa');
+      rollBtn.addEventListener('click', () => this.doRoll());
+      this.actionsEl.appendChild(rollBtn);
 
-    for (const dest of actions.fly) {
+      const backBtn = html('button', '', '↩ Vaihda matkustustapa');
+      backBtn.addEventListener('click', () => this.doAction(() => game.actionCancelTravel()));
+      this.actionsEl.appendChild(backBtn);
+      return;
+    }
+
+    // Vaihe 'action': matkustustavan valinta.
+    this.turnStatus.textContent = 'Valitse matkustustapa.';
+
+    if (modes.includes('stay')) {
+      const stayBtn = html('button', 'primary', '❓ Jää paikalleen ja vastaa');
+      stayBtn.addEventListener('click', () => {
+        sfx.play('paper');
+        this.doAction(() => game.actionTravel('stay'));
+      });
+      this.actionsEl.appendChild(stayBtn);
+    }
+
+    if (modes.includes('land')) {
+      const landBtn = html('button', modes.includes('stay') ? '' : 'primary', '🥾 Maitse');
+      landBtn.addEventListener('click', () => this.doAction(() => game.actionTravel('land')));
+      this.actionsEl.appendChild(landBtn);
+    }
+
+    if (modes.includes('sea')) {
+      const seaBtn = html('button', '', `⛵ Laivalla (${SEA_FARE} p)`);
+      seaBtn.addEventListener('click', () => {
+        sfx.play('ferry');
+        this.doAction(() => game.actionTravel('sea'));
+      });
+      this.actionsEl.appendChild(seaBtn);
+    }
+
+    for (const dest of game.airportDestinations()) {
       const city = game.board.cityById.get(dest);
-      const flyBtn = html('button', '', `✈ ${city.name} (${FLIGHT_PRICE} p)`);
+      const flyBtn = html('button', '', `✈ Lennä: ${city.name} (${FLIGHT_PRICE} p)`);
       flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
@@ -692,28 +796,26 @@ export class UI {
     this.drawPawns();
   }
 
-  /** Noppa pyörii kartan päällä ja pysähtyy silmälukuun. */
+  /** Nopanheitto: noppa lentää nappulan vierestä laudalle ja jää siihen. */
   async animateDie(value) {
     if (!value) return;
-    this.dieEl.hidden = false;
-    this.dieEl.textContent = `${DIE_FACES[value]} ${value}`;
-    if (this.reducedMotion) return;
+    this.dieEl.hidden = true;
+    this.turnStatus.textContent = 'Noppa pyörii…';
 
-    const toast = this.buildToast({ kind: 'die', text: 'Noppa pyörii…' });
-    const icon = toast.querySelector('.toast-icon');
-    const label = toast.querySelector('.toast-text');
+    const player = this.game.player;
+    const spot = this.dieRestingSpot(player);
+    const from = this.mapToPane(pixelOf(this.game.board, player.pos));
+    const to = this.mapToPane(spot);
+    this.dieSpot = spot;
 
-    for (let i = 0; i < 8; i++) {
-      icon.textContent = DIE_FACES[1 + Math.floor(Math.random() * 6)];
-      sfx.play('dieTick');
-      await this.wait(70);
-    }
-    sfx.play('dieLand');
-    icon.textContent = DIE_FACES[value];
-    label.textContent = `Heitit ${value}`;
-    toast.classList.add('landed');
-    await this.wait(TOAST_MS.die);
-    await this.removeToast(toast);
+    await this.boardDie.roll(value, from, to, {
+      reduced: this.reducedMotion,
+      onTick: () => sfx.play('dieTick'),
+      onLand: () => sfx.play('dieLand'),
+      onBounce: () => sfx.play('clack'),
+    });
+    this.turnStatus.textContent = `Heitit ${value} — valitse kohde kartalta.`;
+    await this.wait(this.reducedMotion ? 0 : 260);
   }
 
   buildToast({ kind, text, sub, icon, token }) {
@@ -765,6 +867,11 @@ export class UI {
       return;
     }
 
+    if (game.phase === 'offer') {
+      this.run(() => game.actionQuiz());
+      return;
+    }
+
     if (game.phase === 'move') {
       const key = chooseMove(game);
       if (key) this.doMove(key);
@@ -772,9 +879,13 @@ export class UI {
       return;
     }
 
-    const action = chooseAction(game);
-    if (action.type === 'quiz') this.run(() => game.actionQuiz());
-    else if (action.type === 'fly') this.doFly(action.destination);
-    else this.doRoll();
+    if (game.phase === 'roll') {
+      this.doRoll();
+      return;
+    }
+
+    const travel = chooseTravel(game);
+    if (travel.type === 'fly') this.doFly(travel.destination);
+    else this.run(() => game.actionTravel(travel.type));
   }
 }
