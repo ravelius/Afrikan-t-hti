@@ -399,11 +399,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .route-sea { stroke: var(--sea-ink); stroke-width: 2.2; stroke-dasharray: 11 9; opacity: 0.75; }
 .air-route {
   fill: none;
-  stroke: var(--map-ink-soft);
-  stroke-width: 2;
-  stroke-dasharray: 2 12;
+  stroke: var(--mark);
+  stroke-width: 2.4;
+  stroke-dasharray: 3 13;
   stroke-linecap: round;
-  opacity: 0.5;
+  opacity: 0.42;
 }
 
 .step { fill: #e8d7b0; stroke: #8a7048; stroke-width: 1.2; opacity: 0.7; }
@@ -413,7 +413,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .city { fill: #f3e5c4; stroke: #6b5230; stroke-width: 2.4; }
 .city-start { fill: #eec66b; stroke: #6d4d12; stroke-width: 3.4; }
-.airport { font-size: 14px; fill: #55401f; }
+.airport { font-size: 14px; fill: #8d3a2c; }
 
 .city-label {
   fill: var(--map-ink);

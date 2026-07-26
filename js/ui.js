@@ -5,6 +5,7 @@ import { pixelOf, pointAlong, posKey } from './rules.js';
 import { TOKEN_TYPES } from './tokens.js';
 import { chooseAction, chooseMove, chooseQuizAnswer, wantsHint } from './ai.js';
 import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE } from './game.js';
+import { sfx, treasureSound } from './sound.js';
 import {
   el,
   drawCompass,
@@ -29,6 +30,9 @@ const COMPASS = { x: 168, y: 772, r: 62 };
 const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
+
+// Tapahtumakuplien äänet.
+const EVENT_SOUND = { fare: 'ferry', flight: 'flight', aid: 'coin', stuck: 'stuck' };
 
 // Paljastusruudun alateksti laattatyypeittäin.
 const REVEAL_SUB = {
@@ -69,7 +73,10 @@ export class UI {
     this.quizOptions = document.getElementById('quiz-options');
     this.quizResult = document.getElementById('quiz-result');
     this.quizHint = document.getElementById('quiz-hint');
-    this.quizHint.addEventListener('click', () => this.doAction(() => this.game.actionFiftyFifty()));
+    this.quizHint.addEventListener('click', () => {
+      sfx.play('swipe');
+      this.doAction(() => this.game.actionFiftyFifty());
+    });
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
 
@@ -384,7 +391,10 @@ export class UI {
 
     if (tokenCity) {
       const quizBtn = html('button', 'primary', '❓ Avaa laatta kysymyksellä');
-      quizBtn.addEventListener('click', () => this.doAction(() => game.actionQuiz()));
+      quizBtn.addEventListener('click', () => {
+        sfx.play('paper');
+        this.doAction(() => game.actionQuiz());
+      });
       this.actionsEl.appendChild(quizBtn);
     }
 
@@ -433,6 +443,7 @@ export class UI {
 
   showWinner() {
     clearTimeout(this.botTimer);
+    if (!this.winnerDialog.open) sfx.play('win');
     const w = this.game.winner;
     document.getElementById('winner-title').textContent = `🏆 ${w.name} voitti!`;
     document.getElementById('winner-text').textContent = w.hasStar
@@ -534,6 +545,7 @@ export class UI {
       after: async () => {
         const quiz = game.quiz;
         if (!quiz) return;
+        sfx.play(quiz.right ? 'correct' : 'wrong');
         this.renderQuiz();
         await this.wait(this.reducedMotion ? 200 : 850);
         if (quiz.right && quiz.found) await this.playTokenReveal(quiz.found);
@@ -571,11 +583,15 @@ export class UI {
     if (this.reducedMotion) {
       disc.classList.add('flipped');
       caption.classList.add('shown');
+      sfx.play(treasureSound(type));
       await this.wait(900);
     } else {
       await this.wait(420);
       disc.classList.add('flipped');
+      sfx.play('flip');
       await this.wait(760);
+      sfx.play('clack');
+      sfx.play(treasureSound(type));
       caption.classList.add('shown');
       await this.wait(1250);
       overlay.classList.add('leaving');
@@ -642,6 +658,7 @@ export class UI {
     const { game } = this;
     const player = game.player;
     const from = player.pos;
+    sfx.play('flight');
     this.run(() => game.actionFly(destination), {
       after: () => this.animatePawn(player, from, [player.pos], FLIGHT_MS),
     });
@@ -662,9 +679,10 @@ export class UI {
     g.style.transform = `translate(${start.x}px, ${start.y}px)`;
     g.getBoundingClientRect(); // varmistaa, että ensimmäinenkin askel animoituu
 
-    for (const pos of path) {
+    for (const [i, pos] of path.entries()) {
       const { x, y } = pixelOf(board, pos);
       g.style.transform = `translate(${x}px, ${y}px)`;
+      sfx.play(i === path.length - 1 ? 'arrive' : 'step');
       await this.wait(this.reducedMotion ? 0 : stepMs);
     }
 
@@ -687,8 +705,10 @@ export class UI {
 
     for (let i = 0; i < 8; i++) {
       icon.textContent = DIE_FACES[1 + Math.floor(Math.random() * 6)];
+      sfx.play('dieTick');
       await this.wait(70);
     }
+    sfx.play('dieLand');
     icon.textContent = DIE_FACES[value];
     label.textContent = `Heitit ${value}`;
     toast.classList.add('landed');
@@ -719,6 +739,7 @@ export class UI {
     // Aarre ja ryöstäjä nähdään jo paljastusanimaatiossa, joten niitä ei toisteta.
     const events = this.game.takeEvents().filter((e) => e.kind !== 'treasure' && e.kind !== 'robber');
     for (const event of events) {
+      sfx.play(EVENT_SOUND[event.kind] ?? 'turn');
       const box = this.buildToast(event);
       await this.wait(this.reducedMotion ? 0 : TOAST_MS[event.kind] ?? TOAST_MS.default);
       await this.removeToast(box);

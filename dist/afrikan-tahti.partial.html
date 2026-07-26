@@ -402,11 +402,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .route-sea { stroke: var(--sea-ink); stroke-width: 2.2; stroke-dasharray: 11 9; opacity: 0.75; }
 .air-route {
   fill: none;
-  stroke: var(--map-ink-soft);
-  stroke-width: 2;
-  stroke-dasharray: 2 12;
+  stroke: var(--mark);
+  stroke-width: 2.4;
+  stroke-dasharray: 3 13;
   stroke-linecap: round;
-  opacity: 0.5;
+  opacity: 0.42;
 }
 
 .step { fill: #e8d7b0; stroke: #8a7048; stroke-width: 1.2; opacity: 0.7; }
@@ -416,7 +416,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .city { fill: #f3e5c4; stroke: #6b5230; stroke-width: 2.4; }
 .city-start { fill: #eec66b; stroke: #6d4d12; stroke-width: 3.4; }
-.airport { font-size: 14px; fill: #55401f; }
+.airport { font-size: 14px; fill: #8d3a2c; }
 
 .city-label {
   fill: var(--map-ink);
@@ -965,6 +965,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
       <h1 class="brand">Afrikan&nbsp;tähti</h1>
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
+        <button id="sound-btn" class="ghost" type="button" aria-label="Äänet päälle tai pois">🔊</button>
         <button id="rules-btn" class="ghost" type="button">Säännöt</button>
         <button id="newgame-btn" class="ghost" type="button">Uusi peli</button>
       </div>
@@ -1049,6 +1050,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
+      <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
       <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman
         laivalipun hintaa), hän saa vuoronsa alussa 100 puntaa pankilta.</p>
     </div>
@@ -2057,6 +2059,208 @@ function allQuestions() {
   return Object.entries(QUESTIONS).flatMap(([key, list]) =>
     list.map((question) => ({ ...question, key })),
   );
+}
+
+// ===== js/sound.js =====
+// Peliäänet syntetisoituna Web Audio API:lla — ei äänitiedostoja, joten peli
+// pysyy kevyenä ja toimii myös offline.
+//
+// Selaimet vaativat käyttäjän eleen ennen äänen toistoa, joten AudioContext
+// luodaan vasta ensimmäisen napautuksen yhteydessä.
+
+const STORAGE_KEY = 'afrikan-tahti-sound';
+
+class Sound {
+  constructor() {
+    this.ctx = null;
+    this.master = null;
+    this.noise = null;
+    this.enabled = this.loadSetting();
+  }
+
+  loadSetting() {
+    try {
+      return localStorage.getItem(STORAGE_KEY) !== 'off';
+    } catch {
+      return true;
+    }
+  }
+
+  setEnabled(enabled) {
+    this.enabled = enabled;
+    try {
+      localStorage.setItem(STORAGE_KEY, enabled ? 'on' : 'off');
+    } catch {
+      /* tallennus ei ole välttämätöntä */
+    }
+    if (enabled) this.play('click');
+  }
+
+  /** Luo äänikontekstin ensimmäisellä kerralla ja herättää sen tarvittaessa. */
+  ensureContext() {
+    if (!this.enabled) return null;
+    if (!this.ctx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      this.ctx = new Ctx();
+      this.master = this.ctx.createGain();
+      this.master.gain.value = 0.32;
+      this.master.connect(this.ctx.destination);
+
+      // Yhden sekunnin valkoinen kohina, jota käytetään uudelleen kaikissa äänissä.
+      const frames = this.ctx.sampleRate;
+      this.noise = this.ctx.createBuffer(1, frames, this.ctx.sampleRate);
+      const data = this.noise.getChannelData(0);
+      for (let i = 0; i < frames; i++) data[i] = Math.random() * 2 - 1;
+    }
+    if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
+    return this.ctx;
+  }
+
+  // --- perusäänet ---------------------------------------------------------
+
+  tone({ freq = 440, to = null, dur = 0.2, type = 'sine', gain = 0.2, attack = 0.006, delay = 0 }) {
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+    const t0 = ctx.currentTime + delay;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t0);
+    if (to) osc.frequency.exponentialRampToValueAtTime(Math.max(to, 20), t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(gain, t0 + attack);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g).connect(this.master);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.06);
+  }
+
+  hiss({
+    dur = 0.2, gain = 0.15, type = 'bandpass', freq = 1200, sweepTo = null, q = 1, delay = 0,
+  }) {
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+    const t0 = ctx.currentTime + delay;
+    const src = ctx.createBufferSource();
+    src.buffer = this.noise;
+    src.loop = true;
+    const filter = ctx.createBiquadFilter();
+    filter.type = type;
+    filter.Q.value = q;
+    filter.frequency.setValueAtTime(freq, t0);
+    if (sweepTo) filter.frequency.exponentialRampToValueAtTime(Math.max(sweepTo, 40), t0 + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(gain, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(filter).connect(g).connect(this.master);
+    src.start(t0);
+    src.stop(t0 + dur + 0.06);
+  }
+
+  // --- pelin äänet --------------------------------------------------------
+
+  play(name) {
+    if (!this.enabled) return;
+    const sound = SOUNDS[name];
+    if (sound) sound(this);
+  }
+}
+
+const SOUNDS = {
+  // Käyttöliittymä
+  click: (s) => {
+    s.tone({ freq: 540, to: 430, dur: 0.06, type: 'triangle', gain: 0.1 });
+    s.hiss({ dur: 0.04, freq: 2600, gain: 0.05 });
+  },
+  paper: (s) => s.hiss({ dur: 0.34, type: 'highpass', freq: 900, sweepTo: 2800, gain: 0.075 }),
+  swipe: (s) => s.hiss({ dur: 0.24, freq: 700, sweepTo: 2600, gain: 0.09, q: 0.8 }),
+
+  // Noppa
+  dieTick: (s) => s.hiss({ dur: 0.04, freq: 2400, gain: 0.07, q: 1.6 }),
+  dieLand: (s) => {
+    s.tone({ freq: 190, to: 110, dur: 0.18, type: 'triangle', gain: 0.2 });
+    s.hiss({ dur: 0.1, freq: 900, gain: 0.08 });
+  },
+
+  // Liikkuminen
+  step: (s) => s.tone({ freq: 330, to: 250, dur: 0.075, type: 'triangle', gain: 0.09 }),
+  arrive: (s) => {
+    s.tone({ freq: 440, to: 300, dur: 0.16, type: 'triangle', gain: 0.14 });
+    s.hiss({ dur: 0.06, freq: 1400, gain: 0.05 });
+  },
+  ferry: (s) => {
+    s.hiss({ dur: 0.75, type: 'lowpass', freq: 600, sweepTo: 220, gain: 0.09 });
+    s.tone({ freq: 150, to: 130, dur: 0.5, type: 'sine', gain: 0.14, delay: 0.05 });
+  },
+  flight: (s) => {
+    s.hiss({ dur: 0.95, freq: 320, sweepTo: 1900, gain: 0.085, q: 0.7 });
+    s.tone({ freq: 220, to: 520, dur: 0.85, type: 'sawtooth', gain: 0.05 });
+  },
+
+  // Tietovisa
+  correct: (s) => {
+    s.tone({ freq: 523, dur: 0.16, type: 'triangle', gain: 0.16 });
+    s.tone({ freq: 784, dur: 0.32, type: 'triangle', gain: 0.16, delay: 0.13 });
+  },
+  wrong: (s) => {
+    s.tone({ freq: 233, to: 150, dur: 0.34, type: 'sawtooth', gain: 0.12 });
+    s.tone({ freq: 220, to: 140, dur: 0.36, type: 'square', gain: 0.06, delay: 0.02 });
+  },
+
+  // Aarteen paljastus
+  flip: (s) => s.hiss({ dur: 0.55, freq: 380, sweepTo: 2100, gain: 0.08, q: 0.9 }),
+  clack: (s) => {
+    s.tone({ freq: 160, to: 90, dur: 0.13, type: 'square', gain: 0.13 });
+    s.hiss({ dur: 0.06, freq: 1100, gain: 0.07 });
+  },
+  star: (s) => {
+    [523, 659, 784, 1046].forEach((freq, i) => {
+      s.tone({ freq, dur: i === 3 ? 0.7 : 0.24, type: 'triangle', gain: 0.16, delay: i * 0.1 });
+    });
+    s.hiss({ dur: 0.9, type: 'highpass', freq: 3000, sweepTo: 6000, gain: 0.05, delay: 0.25 });
+  },
+  gem: (s) => {
+    s.tone({ freq: 880, dur: 0.45, type: 'sine', gain: 0.14 });
+    s.tone({ freq: 1320, dur: 0.55, type: 'sine', gain: 0.09, delay: 0.06 });
+  },
+  horseshoe: (s) => {
+    s.tone({ freq: 1180, dur: 0.6, type: 'sine', gain: 0.11 });
+    s.tone({ freq: 1187, dur: 0.62, type: 'sine', gain: 0.08, delay: 0.01 });
+    s.hiss({ dur: 0.08, freq: 4000, gain: 0.05 });
+  },
+  robber: (s) => {
+    s.tone({ freq: 130, to: 62, dur: 0.55, type: 'sawtooth', gain: 0.17 });
+    s.tone({ freq: 196, to: 185, dur: 0.5, type: 'square', gain: 0.06, delay: 0.04 });
+    s.hiss({ dur: 0.3, type: 'lowpass', freq: 700, sweepTo: 220, gain: 0.08 });
+  },
+  empty: (s) => s.tone({ freq: 210, to: 175, dur: 0.14, type: 'sine', gain: 0.1 }),
+
+  // Muut tapahtumat
+  coin: (s) => {
+    s.tone({ freq: 990, dur: 0.12, type: 'triangle', gain: 0.12 });
+    s.tone({ freq: 1320, dur: 0.2, type: 'triangle', gain: 0.1, delay: 0.07 });
+  },
+  stuck: (s) => s.tone({ freq: 175, to: 140, dur: 0.22, type: 'square', gain: 0.1 }),
+  turn: (s) => s.tone({ freq: 392, dur: 0.1, type: 'sine', gain: 0.07 }),
+  win: (s) => {
+    [523, 659, 784, 1046, 1318].forEach((freq, i) => {
+      s.tone({ freq, dur: i === 4 ? 1.1 : 0.26, type: 'triangle', gain: 0.17, delay: i * 0.14 });
+    });
+    s.tone({ freq: 261, dur: 1.2, type: 'sine', gain: 0.1, delay: 0.56 });
+  },
+};
+
+const sfx = new Sound();
+
+/** Aarteen paljastuksen ääni laattatyypin mukaan. */
+function treasureSound(type) {
+  if (type === 'star') return 'star';
+  if (type === 'robber') return 'robber';
+  if (type === 'horseshoe') return 'horseshoe';
+  if (type === 'empty') return 'empty';
+  return 'gem';
 }
 
 // ===== js/rules.js =====
@@ -3299,6 +3503,9 @@ const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
 
+// Tapahtumakuplien äänet.
+const EVENT_SOUND = { fare: 'ferry', flight: 'flight', aid: 'coin', stuck: 'stuck' };
+
 // Paljastusruudun alateksti laattatyypeittäin.
 const REVEAL_SUB = {
   star: 'Vie tähti kotiin ja voitat pelin!',
@@ -3338,7 +3545,10 @@ class UI {
     this.quizOptions = document.getElementById('quiz-options');
     this.quizResult = document.getElementById('quiz-result');
     this.quizHint = document.getElementById('quiz-hint');
-    this.quizHint.addEventListener('click', () => this.doAction(() => this.game.actionFiftyFifty()));
+    this.quizHint.addEventListener('click', () => {
+      sfx.play('swipe');
+      this.doAction(() => this.game.actionFiftyFifty());
+    });
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
 
@@ -3653,7 +3863,10 @@ class UI {
 
     if (tokenCity) {
       const quizBtn = html('button', 'primary', '❓ Avaa laatta kysymyksellä');
-      quizBtn.addEventListener('click', () => this.doAction(() => game.actionQuiz()));
+      quizBtn.addEventListener('click', () => {
+        sfx.play('paper');
+        this.doAction(() => game.actionQuiz());
+      });
       this.actionsEl.appendChild(quizBtn);
     }
 
@@ -3702,6 +3915,7 @@ class UI {
 
   showWinner() {
     clearTimeout(this.botTimer);
+    if (!this.winnerDialog.open) sfx.play('win');
     const w = this.game.winner;
     document.getElementById('winner-title').textContent = `🏆 ${w.name} voitti!`;
     document.getElementById('winner-text').textContent = w.hasStar
@@ -3803,6 +4017,7 @@ class UI {
       after: async () => {
         const quiz = game.quiz;
         if (!quiz) return;
+        sfx.play(quiz.right ? 'correct' : 'wrong');
         this.renderQuiz();
         await this.wait(this.reducedMotion ? 200 : 850);
         if (quiz.right && quiz.found) await this.playTokenReveal(quiz.found);
@@ -3840,11 +4055,15 @@ class UI {
     if (this.reducedMotion) {
       disc.classList.add('flipped');
       caption.classList.add('shown');
+      sfx.play(treasureSound(type));
       await this.wait(900);
     } else {
       await this.wait(420);
       disc.classList.add('flipped');
+      sfx.play('flip');
       await this.wait(760);
+      sfx.play('clack');
+      sfx.play(treasureSound(type));
       caption.classList.add('shown');
       await this.wait(1250);
       overlay.classList.add('leaving');
@@ -3911,6 +4130,7 @@ class UI {
     const { game } = this;
     const player = game.player;
     const from = player.pos;
+    sfx.play('flight');
     this.run(() => game.actionFly(destination), {
       after: () => this.animatePawn(player, from, [player.pos], FLIGHT_MS),
     });
@@ -3931,9 +4151,10 @@ class UI {
     g.style.transform = `translate(${start.x}px, ${start.y}px)`;
     g.getBoundingClientRect(); // varmistaa, että ensimmäinenkin askel animoituu
 
-    for (const pos of path) {
+    for (const [i, pos] of path.entries()) {
       const { x, y } = pixelOf(board, pos);
       g.style.transform = `translate(${x}px, ${y}px)`;
+      sfx.play(i === path.length - 1 ? 'arrive' : 'step');
       await this.wait(this.reducedMotion ? 0 : stepMs);
     }
 
@@ -3956,8 +4177,10 @@ class UI {
 
     for (let i = 0; i < 8; i++) {
       icon.textContent = DIE_FACES[1 + Math.floor(Math.random() * 6)];
+      sfx.play('dieTick');
       await this.wait(70);
     }
+    sfx.play('dieLand');
     icon.textContent = DIE_FACES[value];
     label.textContent = `Heitit ${value}`;
     toast.classList.add('landed');
@@ -3988,6 +4211,7 @@ class UI {
     // Aarre ja ryöstäjä nähdään jo paljastusanimaatiossa, joten niitä ei toisteta.
     const events = this.game.takeEvents().filter((e) => e.kind !== 'treasure' && e.kind !== 'robber');
     for (const event of events) {
+      sfx.play(EVENT_SOUND[event.kind] ?? 'turn');
       const box = this.buildToast(event);
       await this.wait(this.reducedMotion ? 0 : TOAST_MS[event.kind] ?? TOAST_MS.default);
       await this.removeToast(box);
@@ -4135,7 +4359,7 @@ function attach(game) {
   if (ui) ui.destroy();
   ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
   ui.mount();
-  window.afrikanTahti = { game, ui }; // kehityksen apuri konsolia varten
+  window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
 }
 
 function startGame() {
@@ -4149,6 +4373,27 @@ function openSetup() {
   buildPlayerRows();
   setupDialog.showModal();
 }
+
+// --- äänet ------------------------------------------------------------------
+
+const soundBtn = document.getElementById('sound-btn');
+
+function updateSoundButton() {
+  soundBtn.textContent = sfx.enabled ? '🔊' : '🔇';
+  soundBtn.title = sfx.enabled ? 'Äänet päällä' : 'Äänet pois';
+}
+
+soundBtn.addEventListener('click', () => {
+  sfx.setEnabled(!sfx.enabled);
+  updateSoundButton();
+});
+updateSoundButton();
+
+// Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
+document.addEventListener('pointerdown', (event) => {
+  const button = event.target.closest?.('button');
+  if (button && !button.classList.contains('quiz-option')) sfx.play('click');
+});
 
 countSelect.addEventListener('change', buildPlayerRows);
 setupForm.addEventListener('submit', () => {

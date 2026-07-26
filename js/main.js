@@ -2,6 +2,7 @@
 
 import { Game } from './game.js';
 import { UI } from './ui.js';
+import { sfx } from './sound.js';
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const START_CITIES = [
@@ -108,7 +109,7 @@ function attach(game) {
   if (ui) ui.destroy();
   ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
   ui.mount();
-  window.afrikanTahti = { game, ui }; // kehityksen apuri konsolia varten
+  window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
 }
 
 function startGame() {
@@ -122,6 +123,27 @@ function openSetup() {
   buildPlayerRows();
   setupDialog.showModal();
 }
+
+// --- äänet ------------------------------------------------------------------
+
+const soundBtn = document.getElementById('sound-btn');
+
+function updateSoundButton() {
+  soundBtn.textContent = sfx.enabled ? '🔊' : '🔇';
+  soundBtn.title = sfx.enabled ? 'Äänet päällä' : 'Äänet pois';
+}
+
+soundBtn.addEventListener('click', () => {
+  sfx.setEnabled(!sfx.enabled);
+  updateSoundButton();
+});
+updateSoundButton();
+
+// Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
+document.addEventListener('pointerdown', (event) => {
+  const button = event.target.closest?.('button');
+  if (button && !button.classList.contains('quiz-option')) sfx.play('click');
+});
 
 countSelect.addEventListener('change', buildPlayerRows);
 setupForm.addEventListener('submit', () => {

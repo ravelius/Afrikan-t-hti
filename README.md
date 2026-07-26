@@ -15,6 +15,9 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
   pergamenttia käsin piirrettyine katkoviivoineen
 - Animoitu rytmi: nappula hyppii reittiä piste kerrallaan, noppa pyörii kartan
   päällä ja tapahtumat jäävät hetkeksi näkyviin
+- Syntetisoidut äänet kaikille toiminnoille (Web Audio, ei äänitiedostoja):
+  noppa, askeleet, laiva, lento, oikea ja väärä vastaus, aarteen paljastus,
+  ryöstäjä ja voitto — yläpalkin 🔊-painike vaimentaa
 - Oikean vastauksen jälkeen ruudulle tulee ensin "Oikein!", tauko ja sitten
   aarteen paljastus: iso laatta kääntyy 3D:nä ympäri ja näyttää löydön
 - Koko ruudun sovelluskehys: kaikki oleellinen näkyy kerralla, vain tapahtumaloki vierii
@@ -59,6 +62,8 @@ ja pakassa on mukana myös yleisiä Afrikka-kysymyksiä. Oikea vastaus avaa aart
 vastauksesta vuoro päättyy — seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.
 Sama kysymys ei toistu ennen kuin pakka on käyty läpi.
 
+**Lentoreitit** näkyvät kartalla haalean punaisina pistekatkoviivoina.
+
 **Rahan käyttö.** Rahalla ei voi ostaa aarteita, vaan sitä tarvitaan matkustamiseen ja
 vihjeisiin: 50 puntaa poistaa kysymyksestä kaksi väärää vaihtoehtoa (50:50), 100 puntaa
 maksaa laivamatkan ja 300 puntaa lennon.
@@ -102,6 +107,7 @@ js/rules.js         puhdas sääntölogiikka (siirrot, etäisyydet) — testatta
 js/game.js          pelitila, vuorot, laattojen kääntäminen, voittoehdot
 js/ai.js            bottien päätöksenteko
 js/mapart.js        aarrekartan grafiikka (pergamentti, rannikko, kompassi, aallot)
+js/sound.js         syntetisoidut ääniefektit ja äänien päälle/pois-asetus
 js/ui.js            kartan ja paneelin piirto, tietovisa, bottien ohjaus
 js/main.js          käynnistys, aloitusruutu ja pelin tallennus
 sw.js               palvelutyöntekijä (offline-tuki)
