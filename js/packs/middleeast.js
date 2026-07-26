@@ -57,7 +57,10 @@ const ME_CITIES = [
   {
     id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true,
     // Sama kaupunki on myös Afrikan laudalla.
-    links: [{ pack: 'africa', city: 'kairo', label: 'Afrikan lauta' }],
+    links: [
+      { pack: 'africa', city: 'kairo', label: 'Afrikan lauta' },
+      { pack: 'maailma', city: 'kairo', label: 'Maailma-lauta' },
+    ],
   },
 
   { id: 'izmir', name: 'Izmir', x: 78, y: 164, la: 'start', lx: 16, ly: 5 },

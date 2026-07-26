@@ -158,6 +158,7 @@ export class UI {
     this.zoom = 1;
     this.viewCenter = null;
     this.drawBoard();
+    this.fitViewBox();
   }
 
   // --- kartan raahaus ja zoomaus -------------------------------------------
@@ -204,12 +205,14 @@ export class UI {
       const c = this.viewCenter ?? (this.viewCenter = { x: 500, y: 500 });
       c.x -= dx * k;
       c.y -= dy * k;
-      this.fitViewBox();
+      this.schedulePreview();
     });
 
     const release = (event) => {
       pointers.delete(event.pointerId);
       if (pointers.size < 2) pinchStart = null;
+      // Ote irtosi: kirjoitetaan lopullinen näkymä.
+      if (pointers.size === 0) this.fitViewBox();
     };
     svg.addEventListener('pointerup', release);
     svg.addEventListener('pointercancel', release);
@@ -226,6 +229,9 @@ export class UI {
     svg.addEventListener('wheel', (event) => {
       event.preventDefault();
       this.setZoom(this.zoom * Math.exp(-event.deltaY * 0.0015));
+      // Rullailun päätyttyä näkymä kiinnitetään viewBoxiin.
+      clearTimeout(this.wheelCommit);
+      this.wheelCommit = setTimeout(() => this.fitViewBox(), 180);
     }, { passive: false });
 
     svg.addEventListener('dblclick', () => {
@@ -238,11 +244,13 @@ export class UI {
   setZoom(zoom) {
     this.zoom = Math.min(3, Math.max(1, zoom));
     if (this.zoom === 1) this.viewCenter = null;
-    this.fitViewBox();
+    this.schedulePreview();
   }
 
   destroy() {
     clearTimeout(this.botTimer);
+    clearTimeout(this.wheelCommit);
+    if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
     this.stopQuizTimer();
     this.observer?.disconnect();
   }
@@ -251,23 +259,67 @@ export class UI {
    * Venyttää näkymäikkunan ruudun muotoiseksi, jolloin pergamentti täyttää
    * koko alueen ja pelialue pysyy silti kokonaan näkyvissä.
    */
-  fitViewBox() {
+  /** Näkymän kulma ja koko nykyisestä zoomista ja keskipisteestä. */
+  computeView() {
     const pane = this.svg.parentElement;
-    const w = pane.clientWidth;
-    const h = pane.clientHeight;
-    if (!w || !h) return;
+    const w = pane.clientWidth || 600;
+    const h = pane.clientHeight || 600;
     const size = 1000;
     let [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
     vw /= this.zoom;
     vh /= this.zoom;
-    this.viewBoxSize = { vw, vh };
     // Keskipiste pysyy pelialueella, jottei kartta karkaa raahatessa.
     const c = this.viewCenter ?? { x: 500, y: 500 };
     c.x = Math.min(1000, Math.max(0, c.x));
     c.y = Math.min(1000, Math.max(0, c.y));
-    this.svg.setAttribute('viewBox', `${c.x - vw / 2} ${c.y - vh / 2} ${vw} ${vh}`);
+    return { tlx: c.x - vw / 2, tly: c.y - vh / 2, vw, vh };
+  }
+
+  /**
+   * Kirjoittaa näkymän viewBoxiin ja nollaa esikatselumuunnoksen. Tämä on
+   * raskas operaatio (pergamenttisuodattimet piirtyvät uudelleen), joten se
+   * tehdään vain eleen päättyessä — ei jokaisella sormenliikkeellä.
+   */
+  fitViewBox() {
+    const pane = this.svg.parentElement;
+    if (!pane.clientWidth || !pane.clientHeight) return;
+    const view = this.computeView();
+    this.viewBoxSize = { vw: view.vw, vh: view.vh };
+    this.svg.style.transform = '';
+    this.svg.setAttribute('viewBox', `${view.tlx} ${view.tly} ${view.vw} ${view.vh}`);
+    this.committedView = { ...view, paneW: pane.clientWidth };
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
+  }
+
+  /**
+   * Kevyt esikatselu raahauksen ja zoomauksen aikana: karttaa siirretään
+   * CSS-muunnoksella, jonka näytönohjain piirtää sulavasti ilman SVG:n
+   * uudelleenpiirtoa. Lopullinen viewBox kirjoitetaan fitViewBoxissa.
+   */
+  previewView() {
+    const base = this.committedView;
+    if (!base) {
+      this.fitViewBox();
+      return;
+    }
+    const view = this.computeView();
+    const k0 = base.paneW / base.vw; // pikseliä per karttayksikkö
+    const scale = base.vw / view.vw;
+    const tx = scale * k0 * (base.tlx - view.tlx);
+    const ty = scale * k0 * (base.tly - view.tly);
+    this.viewBoxSize = { vw: view.vw, vh: view.vh };
+    this.svg.style.transformOrigin = '0 0';
+    this.svg.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+  }
+
+  /** Esikatselu piirretään korkeintaan kerran ruudunpäivitystä kohden. */
+  schedulePreview() {
+    if (this.previewFrame) return;
+    this.previewFrame = requestAnimationFrame(() => {
+      this.previewFrame = null;
+      this.previewView();
+    });
   }
 
   /** Kartan koordinaatit kartta-alueen pikseleiksi. */

@@ -16,6 +16,8 @@ const read = (p) => readFileSync(join(root, p), 'utf8');
 // Moduulit riippuvuusjärjestyksessä; import/export-rivit poistetaan.
 const MODULES = [
   'js/tokens.js',
+  'js/packs/maailma-questions.js',
+  'js/packs/maailma.js',
   'js/packs/africa-questions.js',
   'js/packs/africa.js',
   'js/packs/middleeast-questions.js',
