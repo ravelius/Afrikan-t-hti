@@ -3,7 +3,9 @@
 // tekemällä js/packs/-hakemistoon vastaava tiedosto ja listaamalla se tässä.
 
 import { AFRICA } from './packs/africa.js';
-export const PACKS = [AFRICA];  // TODO: MIDDLE_EAST lisätään kun paketti on valmis
+import { MIDDLE_EAST } from './packs/middleeast.js';
+
+export const PACKS = [AFRICA, MIDDLE_EAST];
 
 export function packById(id) {
   return PACKS.find((pack) => pack.id === id) ?? PACKS[0];

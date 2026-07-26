@@ -18,6 +18,8 @@ const MODULES = [
   'js/tokens.js',
   'js/packs/africa-questions.js',
   'js/packs/africa.js',
+  'js/packs/middleeast-questions.js',
+  'js/packs/middleeast.js',
   'js/pack.js',
   'js/sound.js',
   'js/die.js',
