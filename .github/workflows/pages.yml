@@ -1,0 +1,60 @@
+# Julkaisee pelin GitHub Pagesiin. Ennen julkaisua ajetaan testit, jotta
+# rikkinäinen versio ei päädy sivulle.
+#
+# Käyttöönotto kerran: Settings → Pages → Source: GitHub Actions.
+
+name: Julkaise peli
+
+on:
+  push:
+    branches:
+      - main
+      - claude/afrikan-tahti-game-cx5zyz
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Yksi julkaisu kerrallaan; kesken oleva ajo ei jää jumiin.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Aja testit
+        run: npm test
+
+      - name: Kokoa yhden tiedoston versio
+        run: node tools/build-standalone.mjs
+
+      - name: Kerää julkaistavat tiedostot
+        run: |
+          mkdir -p _site/dist
+          cp index.html manifest.webmanifest sw.js .nojekyll _site/
+          cp -r css js assets _site/
+          cp dist/afrikan-tahti.html _site/dist/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

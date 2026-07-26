@@ -39,6 +39,20 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
 - Mitoitettu iPadille ja iPhonelle: sama asettelu skaalautuu, eikä mikään vaadi
   vierittämistä
 
+## Julkaisu puhelimeen (GitHub Pages)
+
+Peli on staattinen sivusto, joten sen voi julkaista sellaisenaan GitHub Pagesiin.
+Silloin kotivalikkoon lisätty kuvake avaa pelin kokonaan ilman selaimen palkkeja.
+
+1. Tee reposta julkinen (ilmaisella tilillä Pages toimii vain julkisista repoista).
+2. *Settings → Pages → Source: **GitHub Actions***.
+3. Työnkulku `.github/workflows/pages.yml` ajaa testit, kokoaa yhden tiedoston
+   version ja julkaisee sivuston osoitteeseen `https://<käyttäjä>.github.io/Afrikan-t-hti/`.
+4. Avaa osoite puhelimessa ja valitse *Lisää Koti-valikkoon*.
+
+Vaihtoehtoisesti *Settings → Pages → Source: Deploy from a branch* julkaisee valitun
+haaran juuren ilman työnkulkua.
+
 ## Pelin käynnistys
 
 Peli käyttää ES-moduuleja, joten se tarvitsee pienen web-palvelimen (pelkkä
