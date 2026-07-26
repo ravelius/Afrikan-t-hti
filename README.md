@@ -31,8 +31,6 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
   löydön. Laatta, sen kehät, viivoitus ja taustan sädeviivat on piirretty samalla
   mustekynätyylillä kuin kartta
 - Koko ruudun sovelluskehys: kaikki oleellinen näkyy kerralla, vain tapahtumaloki vierii
-- Yläpalkin voi piilottaa (▲) ja tuoda takaisin kartan kulman ☰-painikkeella;
-  valinta muistetaan
 - **Päivitä**-painike hakee uusimman version: se tyhjentää palvelutyöntekijän
   välimuistin ja lataa pelin uudelleen kesken olevaa peliä menettämättä
 - Asennettava sovellus (PWA): toimii offline ja jatkaa keskeytynyttä peliä

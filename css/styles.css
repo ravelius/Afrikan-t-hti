@@ -106,35 +106,8 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   flex: 0 0 auto;
 }
 
-/* Yläpalkin voi piilottaa, jolloin kartalle jää enemmän tilaa. */
-.app.chrome-hidden .topbar { display: none; }
-.app.chrome-hidden { grid-template-rows: minmax(0, 1fr); }
+.narrow-label { display: none; }
 
-/* Nappi on kartan päällä, jotta se ei peitä ohjauspaneelia. */
-.chrome-show {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  z-index: 6;
-  width: 34px;
-  height: 34px;
-  display: none;
-  place-items: center;
-  padding: 0;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: rgba(37, 27, 18, 0.82);
-  color: var(--accent);
-  font-size: 1rem;
-  line-height: 1;
-  cursor: pointer;
-  backdrop-filter: blur(2px);
-}
-
-.app.chrome-hidden .chrome-show { display: grid; }
-.chrome-show:hover { background: rgba(58, 42, 28, 0.92); }
-
-.icon-btn { padding-inline: 0.55rem; }
 
 .stage {
   display: grid;
@@ -1262,6 +1235,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   /* Vuorossa oleva näkyy pelaajakorteissa, joten palkkiin ei tarvita erillistä merkkiä. */
   .turn-pill { display: none; }
   .topbar-actions button { font-size: 0.78rem; padding: 0.3rem 0.5rem; min-height: 32px; }
+  /* Kapealla ruudulla napit lyhenevät, jotta pelin nimi mahtuu kokonaan. */
+  .wide-label { display: none; }
+  .narrow-label { display: inline; }
 
   .board-hint { font-size: 0.76rem; padding: 0.25rem 0.6rem; }
   .event-toast { font-size: 0.92rem; padding: 0.55rem 0.8rem; top: 10%; }

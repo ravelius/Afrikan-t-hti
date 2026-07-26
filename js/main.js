@@ -10,7 +10,7 @@ const START_CITIES = [
   { id: 'kairo', name: 'Kairo' },
 ];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26';
+const APP_VERSION = '2026-07-26.2';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -152,36 +152,7 @@ setupForm.addEventListener('submit', () => {
   setTimeout(startGame, 0);
 });
 
-// --- yläpalkki ja päivitys --------------------------------------------------
-
-const CHROME_KEY = 'afrikan-tahti-chrome';
-const app = document.querySelector('.app');
-const chromeShow = document.getElementById('chrome-show');
-const chromeHide = document.getElementById('chrome-hide');
-
-function setChrome(visible) {
-  app.classList.toggle('chrome-hidden', !visible);
-  chromeShow.setAttribute('aria-expanded', visible ? 'true' : 'false');
-  try {
-    localStorage.setItem(CHROME_KEY, visible ? 'shown' : 'hidden');
-  } catch {
-    /* asetuksen tallennus ei ole välttämätöntä */
-  }
-  // Kartta täyttää eri kokoisen alueen, joten näkymäikkuna lasketaan uudelleen.
-  ui?.fitViewBox();
-}
-
-function loadChrome() {
-  try {
-    return localStorage.getItem(CHROME_KEY) === 'shown';
-  } catch {
-    return false;
-  }
-}
-
-chromeShow.addEventListener('click', () => setChrome(true));
-chromeHide.addEventListener('click', () => setChrome(false));
-setChrome(loadChrome());
+// --- päivitys ----------------------------------------------------------------
 
 /**
  * Hakee uusimman version: poistaa palvelutyöntekijän välimuistit ja lataa
