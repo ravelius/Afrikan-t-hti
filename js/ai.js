@@ -6,7 +6,7 @@
 //   3. Muuten: liiku kohti lähintä kääntämätöntä laattaa.
 
 import { cityDistances, distanceOf } from './rules.js';
-import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HINT_PRICE } from './game.js';
+import { DUEL_BYPASS_SHOES, FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HINT_PRICE } from './game.js';
 
 // Kuinka usein botti osaa vastata tietovisaan oikein.
 export const BOT_SKILL = 0.55;
@@ -147,4 +147,30 @@ export function chooseQuizAnswer(game, skill = BOT_SKILL) {
 /** Tarttuuko botti siirron jälkeen tarjottuun kysymykseen? Kyllä — se on ilmainen. */
 export function wantsQuiz() {
   return true;
+}
+
+// --- rosvon kaksintaistelu -------------------------------------------------
+
+/** Ohittaako botti rosvon hevosenkengillä? Aina, jos kenkiä riittää. */
+export function wantsDuelBypass(game) {
+  return game.player.horseshoes >= DUEL_BYPASS_SHOES;
+}
+
+/** Pyytääkö botti rosvolta helpotusta? Kerran, jos pelissä on paljon rahaa. */
+export function wantsDuelRelief(game) {
+  const duel = game.duel;
+  if (!duel || duel.chosen !== null || duel.reliefs >= 1) return false;
+  if (game.player.money < 400) return false;
+  return game.rng() < 0.5;
+}
+
+/** Botin vastaus rosvolle: kahdeksasta vaihtoehdosta osuminen on vaikeampaa. */
+export function chooseDuelAnswer(game) {
+  const duel = game.duel;
+  if (!duel) return 0;
+  const open = duel.options.map((_, i) => i).filter((i) => !duel.hidden.includes(i));
+  const chance = 0.3 + duel.reliefs * 0.25;
+  if (game.rng() < chance) return duel.correct;
+  const wrong = open.filter((i) => i !== duel.correct);
+  return wrong.length ? wrong[Math.floor(game.rng() * wrong.length)] : duel.correct;
 }

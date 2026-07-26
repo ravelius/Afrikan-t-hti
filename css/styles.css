@@ -1287,3 +1287,15 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 @media (prefers-reduced-motion: reduce) {
   .target-ring, .die.rolling, .die.landed { animation: none; }
 }
+
+/* Maailmankartta */
+#world-map { margin: 0.6rem 0; }
+.world-map-svg { width: 100%; display: block; }
+.world-paper { fill: #e9d7ae; stroke: #6d5335; stroke-width: 2; }
+.world-route { fill: none; stroke: #a5502f; stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
+.world-node .world-disc { fill: #f0e2bd; stroke: #6d5335; stroke-width: 2; }
+.world-node.here .world-disc { fill: #e8b23c; }
+.world-node:not(.here) { cursor: pointer; }
+.world-node:not(.here):hover .world-disc { fill: #f6ce7a; }
+.world-star { font-size: 14px; }
+.world-label { font-size: 12px; fill: #3d2c17; font-weight: 600; }

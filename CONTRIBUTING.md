@@ -30,6 +30,10 @@ Vaikeustasot: taso 1 on lapsellekin ratkaistavissa, taso 2 on tavallista
 yleistietoa ja taso 3 vaatii erikoistietoa — siitä saa pelissä bonuksen.
 Jos `level` puuttuu, kysymys on tasoa 2.
 
+Jokaisella laudalla on lisäksi pieni **rosvon kaksintaistelupakka**
+(`duels`-lista paketissa): erityisen kiperiä kysymyksiä, joissa on kahdeksan
+vaihtoehtoa ja `fact`, mutta ei vihjettä — helpotukset hoitaa rosvo.
+
 Pelisäännöt kysymyksille (testit valvovat näitä):
 
 - tasan neljä erilaista vaihtoehtoa

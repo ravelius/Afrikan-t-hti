@@ -13,6 +13,12 @@ maantieteestä kiinnostavasti.
   voittaja voi jatkaa vaeltamista voittoruudusta
 - **Raahattava kartta:** raahaa sormella tai hiirellä, lähennä nipistämällä
   tai rullalla; kaksoisnapautus palauttaa koko laudan
+- **Rosvon kaksintaistelu:** rosvolaatta ei vie rahoja suoraan, vaan rosvo
+  esittää kiperän kysymyksen kahdeksalla vaihtoehdolla — suora oikea vastaus
+  tuo 200 punnan saaliin, helpotus maksaa puolet rahoista, ja kolmella
+  hevosenkengällä rosvon voi ohittaa
+- **Maailmankartta:** vaelluksessa lentokentältä voi lentää (300 p) suoraan
+  toisen laudan aloituskentälle
 - 1–4 pelaajaa samalla koneella, kukin joko ihminen tai botti
 - Aarteet avataan **vain tietovisalla**: arvottu monivalintakysymys (A–D) paikan
   maantiedosta, kulttuurista ja yleistiedosta; 40 punnan vihje ja 80 punnan 50:50

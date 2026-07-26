@@ -179,6 +179,47 @@ export const AFRICA = {
   questions: AFRICA_QUESTIONS,
   placeFacts: AFRICA_FACTS,
 
+  // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
+  worldPos: { x: 150, y: 150 },
+  duels: [
+    {
+      q: 'Mikä näistä joista EI virtaa Afrikassa?',
+      options: ['Eufrat', 'Niili', 'Kongo', 'Niger', 'Sambesi', 'Oranje', 'Limpopo', 'Volta'],
+      correct: 0,
+      fact: 'Eufrat virtaa Turkista Syyrian kautta Irakiin — kaikki muut ovat Afrikan suuria jokia.',
+    },
+    {
+      q: 'Mikä on Afrikan korkein vuori?',
+      options: ['Kilimandžaro', 'Kenia-vuori', 'Ras Dašen', 'Atlas', 'Elgon', 'Kamerunvuori', 'Meru', 'Drakensberg'],
+      correct: 0,
+      fact: 'Kilimandžaron Uhuru-huippu on 5 895 metrissä — Afrikan katolla.',
+    },
+    {
+      q: 'Minkä kahden maan rajalla Victorian putoukset sijaitsevat?',
+      options: ['Sambian ja Zimbabwen', 'Kenian ja Tansanian', 'Egyptin ja Sudanin', 'Angolan ja Namibian', 'Ghanan ja Togon', 'Malin ja Nigerin', 'Etiopian ja Somalian', 'Marokon ja Algerian'],
+      correct: 0,
+      fact: 'Sambesi syöksyy putouksiin Sambian ja Zimbabwen rajalla — paikallinen nimi tarkoittaa jyrisevää savua.',
+    },
+    {
+      q: 'Mikä valtio hallitsi suurinta osaa Länsi-Afrikkaa siirtomaakaudella?',
+      options: ['Ranska', 'Britannia', 'Portugali', 'Espanja', 'Italia', 'Belgia', 'Saksa', 'Alankomaat'],
+      correct: 0,
+      fact: 'Ranskan Länsi-Afrikka ulottui Senegalista Nigeriin — siksi ranska on yhä monen maan yhteinen kieli.',
+    },
+    {
+      q: 'Kuinka pitkä Niili on?',
+      options: ['noin 6 600 km', 'noin 1 000 km', 'noin 2 500 km', 'noin 3 300 km', 'noin 4 800 km', 'noin 8 900 km', 'noin 10 200 km', 'noin 12 000 km'],
+      correct: 0,
+      fact: 'Niili virtaa yli 6 600 kilometriä Viktoriajärveltä Välimereen — maailman pisimpiä jokia.',
+    },
+    {
+      q: 'Mikä näistä kielistä EI ole afrikkalainen?',
+      options: ['urdu', 'swahili', 'hausa', 'joruba', 'amhara', 'zulu', 'wolof', 'somali'],
+      correct: 0,
+      fact: 'Urdua puhutaan Pakistanissa ja Intiassa — muut ovat Afrikan suuria kieliä.',
+    },
+  ],
+
   texts: {
     intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.',
     starFound: (name, city) => `★ ${name} löysi AFRIKAN TÄHDEN kaupungista ${city}!`,

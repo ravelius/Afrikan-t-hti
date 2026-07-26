@@ -178,6 +178,47 @@ export const MIDDLE_EAST = {
   questions: MIDDLEEAST_QUESTIONS,
   placeFacts: MIDDLEEAST_FACTS,
 
+  // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
+  worldPos: { x: 250, y: 85 },
+  duels: [
+    {
+      q: 'Mikä näistä kaupungeista EI ole pääkaupunki?',
+      options: ['Jidda', 'Riad', 'Doha', 'Sana', 'Bagdad', 'Teheran', 'Ankara', 'Masqat'],
+      correct: 0,
+      fact: 'Jidda on Saudi-Arabian suuri satamakaupunki — maan pääkaupunki on Riad.',
+    },
+    {
+      q: 'Minä vuonna Suezin kanava avattiin?',
+      options: ['1869', '1799', '1825', '1848', '1888', '1901', '1914', '1936'],
+      correct: 0,
+      fact: 'Kanava avattiin marraskuussa 1869 kymmenen vuoden rakennustöiden jälkeen.',
+    },
+    {
+      q: 'Mikä antiikin seitsemästä ihmeestä sijaitsi Babylonissa?',
+      options: ['riippuvat puutarhat', 'Aleksandrian majakka', 'Rodoksen kolossi', 'Zeuksen patsas', 'Artemiin temppeli', 'Mausoleumi', 'sfinksi', 'Pergamonin alttari'],
+      correct: 0,
+      fact: 'Babylonin riippuvat puutarhat luettiin maailman ihmeisiin, vaikka niiden tarkkaa paikkaa ei ole löydetty.',
+    },
+    {
+      q: 'Mistä kielestä sanat basaari ja karavaani ovat peräisin?',
+      options: ['persiasta', 'arabiasta', 'turkista', 'hepreasta', 'kreikasta', 'latinasta', 'sanskritista', 'hindistä'],
+      correct: 0,
+      fact: 'Molemmat sanat kulkeutuivat persiasta kauppareittien mukana Euroopan kieliin.',
+    },
+    {
+      q: 'Mikä meri on maailman suolaisin avomeri?',
+      options: ['Punainenmeri', 'Välimeri', 'Mustameri', 'Kaspianmeri', 'Itämeri', 'Arabianmeri', 'Egeanmeri', 'Adrianmeri'],
+      correct: 0,
+      fact: 'Punaisenmeren suolapitoisuus on avomerten korkein, noin neljä prosenttia — kuuma ilmasto haihduttaa vettä nopeasti.',
+    },
+    {
+      q: 'Mikä valtakunta hallitsi suurta osaa Lähi-idästä 1500-luvulta ensimmäiseen maailmansotaan asti?',
+      options: ['Osmanien valtakunta', 'Rooman valtakunta', 'Bysantti', 'Mongolivaltakunta', 'Babylonia', 'Assyria', 'Aleksanterin valtakunta', 'Abbasidikalifaatti'],
+      correct: 0,
+      fact: 'Osmanit hallitsivat Istanbulista käsin suurta osaa Lähi-itää noin 400 vuoden ajan.',
+    },
+  ],
+
   texts: {
     intro: 'Peli alkaa! Etsikää Idän tähti ja palatkaa Istanbuliin tai Kairoon.',
     starFound: (name, city) => `★ ${name} löysi IDÄN TÄHDEN kaupungista ${city}!`,

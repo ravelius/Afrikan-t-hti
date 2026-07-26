@@ -144,6 +144,47 @@ export const ISTANBUL = {
   questions: ISTANBUL_QUESTIONS,
   placeFacts: ISTANBUL_FACTS,
 
+  // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
+  worldPos: { x: 262, y: 42 },
+  duels: [
+    {
+      q: 'Minä vuonna Konstantinopoli valloitettiin ja siitä tuli osmanien pääkaupunki?',
+      options: ['1453', '1071', '1204', '1389', '1517', '1566', '1683', '1923'],
+      correct: 0,
+      fact: 'Mehmed II valtasi kaupungin 29. toukokuuta 1453 — Bysantin tuhatvuotinen valtakunta päättyi.',
+    },
+    {
+      q: 'Kuinka monelle kukkulalle vanha Konstantinopoli rakennettiin — Rooman tapaan?',
+      options: ['seitsemälle', 'kolmelle', 'viidelle', 'kuudelle', 'kahdeksalle', 'yhdeksälle', 'kymmenelle', 'kahdelletoista'],
+      correct: 0,
+      fact: 'Konstantinopoli rakennettiin Rooman esikuvan mukaan seitsemälle kukkulalle.',
+    },
+    {
+      q: 'Mikä kuuluisa juna toi matkustajia Pariisista Istanbuliin vuodesta 1883?',
+      options: ['Idän pikajuna', 'Siperian rata', 'Kultainen nuoli', 'Sininen juna', 'Höyrynuoli', 'Balkanin pikajuna', 'Keisarijuna', 'Hopeanuoli'],
+      correct: 0,
+      fact: 'Idän pikajuna eli Orient Express päättyi Sirkecin asemalle Kultaisen sarven rannalle.',
+    },
+    {
+      q: 'Miten osmanien laivat pääsivät Kultaiseen sarveen piirityksessä 1453, vaikka lahden suu oli suljettu ketjulla?',
+      options: ['ne vedettiin maata pitkin mäen yli', 'ketju katkaistiin sahalla', 'laivat purjehtivat ketjun yli tulvalla', 'ne kannettiin palasina', 'lahteen kaivettiin kanava', 'ketju ostettiin vartijoilta', 'laivat upotettiin ja nostettiin', 'ne lensivät leijilla'],
+      correct: 0,
+      fact: 'Mehmed II:n laivasto vedettiin yön aikana rasvattuja puita pitkin Galatan mäen yli lahteen.',
+    },
+    {
+      q: 'Kuinka syvä Bosporinsalmi on syvimmillään?',
+      options: ['yli sata metriä', 'alle kymmenen metriä', 'noin kaksikymmentä metriä', 'noin kolmekymmentä metriä', 'noin viisikymmentä metriä', 'noin seitsemänkymmentä metriä', 'yli viisisataa metriä', 'yli kilometrin'],
+      correct: 0,
+      fact: 'Salmi on syvimmillään noin 110 metriä, ja sen läpi kulkee kaksi vastakkaista virtausta.',
+    },
+    {
+      q: 'Kuinka monta myymälää Suuressa basaarissa suunnilleen on?',
+      options: ['noin 4 000', 'noin 40', 'noin 100', 'noin 250', 'noin 400', 'noin 1 000', 'noin 10 000', 'noin 40 000'],
+      correct: 0,
+      fact: 'Katettuja kujia on yli 60 ja myymälöitä noin 4 000 — moni suku on myynyt samassa kojussa polvesta toiseen.',
+    },
+  ],
+
   texts: {
     intro: 'Peli alkaa! Etsikää Sulttaanin timantti ja palatkaa lentoasemalle.',
     starFound: (name, city) => `★ ${name} löysi SULTTAANIN TIMANTIN: ${city}!`,
