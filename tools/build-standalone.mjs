@@ -24,6 +24,8 @@ const MODULES = [
   'js/packs/europe-questions.js',
   'js/packs/europe.js',
   'js/packs/middleeast.js',
+  'js/packs/asia-questions.js',
+  'js/packs/asia.js',
   'js/packs/northamerica-questions.js',
   'js/packs/northamerica.js',
   'js/packs/southamerica-questions.js',

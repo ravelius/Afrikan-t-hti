@@ -94,7 +94,11 @@ const ME_CITIES = [
   { id: 'bagdad', name: 'Bagdad', x: 509, y: 314, airport: true },
   { id: 'mosul', name: 'Mosul', x: 478, y: 225 },
   { id: 'tabriz', name: 'Tabriz', x: 558, y: 174 },
-  { id: 'teheran', name: 'Teheran', x: 685, y: 244, airport: true, la: 'start', lx: 16, ly: 5 },
+  {
+    id: 'teheran', name: 'Teheran', x: 685, y: 244, airport: true, la: 'start', lx: 16, ly: 5,
+    // Sama kaupunki on myös Aasian laudalla.
+    links: [{ pack: 'asia', city: 'teheran', label: 'Aasian lauta' }],
+  },
   { id: 'isfahan', name: 'Isfahan', x: 692, y: 334, la: 'start', lx: 16, ly: 5 },
   { id: 'persepolis', name: 'Persepolis', x: 722, y: 414, la: 'start', lx: 16, ly: 5 },
 ];

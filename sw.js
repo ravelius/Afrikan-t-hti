@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'maailman-tahdet-2026-07-26.15';
+const CACHE = 'maailman-tahdet-2026-07-26.16';
 const SHELL = [
   './',
   './index.html',
@@ -19,6 +19,8 @@ const SHELL = [
   './js/packs/europe-questions.js',
   './js/packs/middleeast.js',
   './js/packs/middleeast-questions.js',
+  './js/packs/asia.js',
+  './js/packs/asia-questions.js',
   './js/packs/northamerica.js',
   './js/packs/northamerica-questions.js',
   './js/packs/southamerica.js',

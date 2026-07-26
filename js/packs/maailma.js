@@ -97,9 +97,15 @@ const WORLD_CITIES = [
   },
   {
     id: 'mumbai', name: 'Mumbai', x: 706, y: 473.0, airport: true, la: 'start', lx: 16, ly: 5,
-    links: [{ pack: 'middleeast', city: 'dubai', label: 'Lähi-idän lauta' }],
+    links: [
+      { pack: 'asia', city: 'mumbai', label: 'Aasian lauta' },
+      { pack: 'middleeast', city: 'dubai', label: 'Lähi-idän lauta' },
+    ],
   },
-  { id: 'peking', name: 'Peking', x: 823, y: 416.2, airport: true, la: 'end', lx: -16, ly: 5 },
+  {
+    id: 'peking', name: 'Peking', x: 823, y: 416.2, airport: true, la: 'end', lx: -16, ly: 5,
+    links: [{ pack: 'asia', city: 'peking', label: 'Aasian lauta' }],
+  },
   { id: 'sydney', name: 'Sydney', x: 913, y: 620.0, airport: true, la: 'end', lx: -16, ly: -10 },
   {
     id: 'moskova', name: 'Moskova', x: 604, y: 372.3, airport: true, la: 'start', lx: 16, ly: 5,
