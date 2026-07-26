@@ -1,5 +1,10 @@
-// Laudalla pyörivä 3D-noppa. Noppa heitetään pelaajan nappulan vierestä,
-// pyörii ilmassa ja jää lepäämään kartalle seuraavaan heittoon asti.
+// Laudalla pomppiva 3D-noppa.
+//
+// Noppa heitetään pelaajan nappulan vierestä kartan alalaidan merelle. Lento
+// simuloidaan oikealla painovoimalla: kaari, kimpoilu pienenevin pompuin ja
+// hidastuva pyörintä. Korkeus näkyy varjon koossa ja tummuudessa sekä nopan
+// koossa, joten heitto tuntuu kolmiulotteiselta. Noppa jää laudalle lepäämään
+// seuraavaan heittoon asti.
 
 const PIPS = {
   1: [4],
@@ -30,17 +35,30 @@ const FACE_ROTATION = {
   6: [0, 180],
 };
 
+// Fysiikan vakiot (pikseliä ja sekuntia).
+const GRAVITY = 3400; // painovoima
+const BOUNCE = 0.45; // kimmoisuus: paljonko vauhtia jää pompun jälkeen
+const DRAG = 0.56; // vaakavauhdin hidastuminen pompussa
+const SPIN_DAMP = 0.5; // pyörinnän hidastuminen pompussa
+const STOP_SPEED = 60; // tätä hitaampi pomppu ei enää nosta noppaa
+const LIFT = 0.62; // korkeus näytöllä: 1 px korkeutta = 0.62 px ylöspäin
+const SETTLE_MS = 430; // viimeinen kallahdus oikealle silmäluvulle
+
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class BoardDie {
   constructor(container) {
-    this.root = document.createElement('div');
-    this.root.className = 'board-die';
-    this.root.hidden = true;
+    this.layer = document.createElement('div');
+    this.layer.className = 'die-layer';
+    this.layer.hidden = true;
 
+    // Varjo on erillään nopasta: se jää laudan pintaan, kun noppa nousee ilmaan.
     this.shadow = document.createElement('div');
     this.shadow.className = 'die-shadow';
-    this.root.appendChild(this.shadow);
+    this.layer.appendChild(this.shadow);
+
+    this.root = document.createElement('div');
+    this.root.className = 'board-die';
 
     this.cube = document.createElement('div');
     this.cube.className = 'die-cube';
@@ -56,31 +74,70 @@ export class BoardDie {
       this.cube.appendChild(el);
     }
     this.root.appendChild(this.cube);
-    container.appendChild(this.root);
 
-    this.rotation = { x: -22, y: 26 };
+    // Kiiltokerros ei pyöri mukana, joten valo tulee aina samasta suunnasta.
+    this.gloss = document.createElement('div');
+    this.gloss.className = 'die-gloss';
+    this.root.appendChild(this.gloss);
+
+    this.layer.appendChild(this.root);
+    container.appendChild(this.layer);
+
+    this.rotation = { x: -22, y: 26, z: 0 };
+    this.spot = { x: 0, y: 0 };
     this.applyRotation(0);
+    this.draw(0);
   }
 
   applyRotation(transition) {
-    this.cube.style.transition = transition ? `transform ${transition}ms cubic-bezier(0.18,0.72,0.22,1)` : 'none';
-    this.cube.style.transform = `rotateX(${this.rotation.x}deg) rotateY(${this.rotation.y}deg)`;
+    this.cube.style.transition = transition
+      ? `transform ${transition}ms cubic-bezier(0.26, 1.1, 0.4, 1)`
+      : 'none';
+    const { x, y, z } = this.rotation;
+    this.cube.style.transform =
+      `rotateZ(${z.toFixed(2)}deg) rotateX(${x.toFixed(2)}deg) rotateY(${y.toFixed(2)}deg)`;
+  }
+
+  /** Piirtää nopan ja varjon annetulle korkeudelle (z = pikseliä laudan yllä). */
+  draw(z) {
+    const { x, y } = this.spot;
+    const scale = 1 + z * 0.0016; // korkealla noppa on lähempänä katsojaa
+    this.root.style.transform =
+      `translate3d(${x.toFixed(1)}px, ${(y - z * LIFT).toFixed(1)}px, 0) `
+      + `translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+
+    // Varjo levenee, haalistuu ja sumenee, kun noppa nousee.
+    const t = Math.min(1, z / 240);
+    this.shadow.style.transform =
+      `translate3d(${(x + z * 0.07).toFixed(1)}px, ${(y + z * 0.03).toFixed(1)}px, 0) `
+      + `translate(-50%, -50%) scale(${(1 + t * 0.9).toFixed(3)})`;
+    this.shadow.style.opacity = (0.44 - t * 0.3).toFixed(3);
+    this.shadow.style.filter = `blur(${(1.5 + t * 6).toFixed(1)}px)`;
   }
 
   /** Siirtää nopan lepopaikalleen ilman animaatiota (esim. ikkunan koon muuttuessa). */
   place({ x, y }) {
-    this.root.style.left = `${x}px`;
-    this.root.style.top = `${y}px`;
-    this.root.style.transition = 'none';
-    this.root.style.transform = 'translate(0, 0) scale(1)';
+    this.spot = { x, y };
+    this.draw(0);
   }
 
   hide() {
-    this.root.hidden = true;
+    this.layer.hidden = true;
+  }
+
+  /** Pompyt: kunkin pompun alkunopeus ja kesto, kunnes vauhti loppuu. */
+  static hops(v0) {
+    const hops = [];
+    let v = v0;
+    while (v > STOP_SPEED && hops.length < 8) {
+      hops.push({ v, dur: (2 * v) / GRAVITY });
+      v *= BOUNCE;
+    }
+    return hops;
   }
 
   /**
-   * Heittää nopan: kaari ilmassa, pyörintä ja kaksi pomppua.
+   * Heittää nopan: kaari ilmassa, pyörintä ja pienenevät pomput laudalla.
    * @param {number} value silmäluku, joka jää päälle
    * @param {{x:number,y:number}} from mistä noppa lähtee (paneelin pikselit)
    * @param {{x:number,y:number}} to mihin se jää lepäämään
@@ -88,80 +145,128 @@ export class BoardDie {
    */
   async roll(value, from, to, hooks = {}) {
     const { onTick, onLand, onBounce, reduced } = hooks;
-    this.root.hidden = false;
-    this.root.style.left = `${to.x}px`;
-    this.root.style.top = `${to.y}px`;
+    this.layer.hidden = false;
 
     const [faceX, faceY] = FACE_ROTATION[value] ?? [0, 0];
-    // Riittävästi kierroksia, jotta heitto näyttää oikealta noppa­heitolta.
-    const spins = 3 + Math.floor(Math.random() * 3);
-    const tiltX = -18 + Math.round(Math.random() * 10);
-    const tiltY = 20 + Math.round(Math.random() * 14);
 
     if (reduced) {
-      this.rotation = { x: faceX + tiltX * 0, y: faceY };
-      this.place(to);
+      this.rotation = { x: faceX - 8, y: faceY + 12, z: 0 };
       this.applyRotation(0);
+      this.place(to);
       onLand?.();
       return;
     }
 
-    // Lähtöasento: nopan nykyinen asento, siirrettynä heittäjän kohdalle.
-    const dx = from.x - to.x;
-    const dy = from.y - to.y;
-    this.root.style.transition = 'none';
-    this.root.style.transform = `translate(${dx}px, ${dy}px) scale(0.62)`;
-    this.shadow.style.transition = 'none';
-    this.shadow.style.opacity = '0.15';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(0.5)';
-    this.applyRotation(0);
-    void this.root.offsetWidth; // pakota selain huomaamaan lähtöasento
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const distance = Math.hypot(dx, dy);
 
-    // Pyörintä kestää koko lennon ja pysähtyy juuri laskeutumisen jälkeen.
-    this.rotation = {
-      x: faceX + tiltX + 360 * spins,
-      y: faceY + tiltY + 360 * (spins + 1),
+    // Mitä pidempi heitto, sitä korkeampi kaari — mutta järkevissä rajoissa.
+    const apex = Math.max(130, Math.min(280, 90 + distance * 0.34));
+    const hops = BoardDie.hops(Math.sqrt(2 * GRAVITY * apex));
+    const total = hops.reduce((sum, h) => sum + h.dur, 0);
+
+    // Vaakamatka jaetaan pompuille: ensimmäinen hyppy on pisin, loput lyhenevät.
+    const weights = hops.map((h, i) => h.dur * DRAG ** i);
+    const weightSum = weights.reduce((a, b) => a + b, 0);
+    const legs = weights.map((w) => (w / weightSum) * distance);
+
+    // Pyörintä: satunnainen suunta ja vauhti, joka hidastuu joka pompussa.
+    const sign = () => (Math.random() < 0.5 ? -1 : 1);
+    const spin = {
+      x: sign() * (640 + Math.random() * 520),
+      y: sign() * (760 + Math.random() * 560),
+      z: sign() * (240 + Math.random() * 280),
     };
-    this.applyRotation(1000);
+    // Lopullinen asento: oikea tahko katsojaan päin ja satunnainen neljännes­kierros
+    // näytön tasossa — rotateZ ei vaikuta siihen, mikä tahko jää eteen. Pieni
+    // kallistus jättää sivutahkot näkyviin, jolloin noppa näyttää kappaleelta.
+    const quarter = 90 * Math.floor(Math.random() * 4);
+    const tilt = {
+      x: -11 + Math.random() * 7,
+      y: 9 + Math.random() * 8,
+    };
 
-    // 1) nousu kaaren huipulle
-    this.root.style.transition = 'transform 380ms cubic-bezier(0.2,0.9,0.35,1)';
-    this.root.style.transform = `translate(${dx * 0.4}px, ${dy * 0.4 - 92}px) scale(1.22)`;
-    this.shadow.style.transition = 'opacity 380ms ease-out, transform 380ms ease-out';
-    this.shadow.style.opacity = '0.1';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(1.5)';
-    onTick?.();
-    await wait(190);
-    onTick?.();
-    await wait(190);
-
-    // 2) putoaminen laudalle
-    this.root.style.transition = 'transform 300ms cubic-bezier(0.55,0.05,0.7,1)';
-    this.root.style.transform = 'translate(0, 0) scale(1)';
-    this.shadow.style.transition = 'opacity 300ms ease-in, transform 300ms ease-in';
-    this.shadow.style.opacity = '0.34';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(1)';
-    await wait(290);
-    onLand?.();
-
-    // 3) pomppu ja asettuminen
-    this.root.style.transition = 'transform 170ms cubic-bezier(0.25,0.9,0.4,1)';
-    this.root.style.transform = 'translate(-3px, -22px) scale(1.04)';
-    this.shadow.style.transition = 'opacity 170ms ease-out, transform 170ms ease-out';
-    this.shadow.style.opacity = '0.18';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(1.18)';
-    await wait(165);
-    onBounce?.();
-
-    this.root.style.transition = 'transform 220ms cubic-bezier(0.5,0.08,0.6,1)';
-    this.root.style.transform = 'translate(0, 0) scale(1)';
-    this.shadow.style.transition = 'opacity 220ms ease-in, transform 220ms ease-in';
-    this.shadow.style.opacity = '0.34';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(1)';
-    await wait(240);
-
-    // Nollataan kierrokset, jotta seuraava heitto lähtee samasta asennosta.
-    this.rotation = { x: faceX + tiltX, y: faceY + tiltY };
+    this.spot = { x: from.x, y: from.y };
     this.applyRotation(0);
+    this.draw(0);
+
+    let traveled = 0;
+    let hopIndex = 0;
+    let hopStart = 0;
+    let settled = false;
+    let lastTickSlot = -1;
+    const start = performance.now();
+    let last = start;
+    // Viimeiselle hetkelle jätetään aikaa kallahdukselle oikealle silmäluvulle.
+    const settleAt = Math.max(hops[0].dur * 0.55, total - SETTLE_MS / 1000);
+
+    await new Promise((resolve) => {
+      const frame = (now) => {
+        const t = Math.min(total, (now - start) / 1000);
+        const dt = Math.min(0.05, (now - last) / 1000);
+        last = now;
+
+        // Vaihdetaan pomppuun, jonka kohdalla ollaan.
+        while (hopIndex < hops.length - 1 && t > hopStart + hops[hopIndex].dur) {
+          hopStart += hops[hopIndex].dur;
+          traveled += legs[hopIndex];
+          hopIndex++;
+          spin.x *= SPIN_DAMP;
+          spin.y *= SPIN_DAMP;
+          spin.z *= SPIN_DAMP;
+          if (hopIndex === 1) onLand?.();
+          else onBounce?.();
+        }
+
+        const hop = hops[hopIndex];
+        const local = Math.min(hop.dur, Math.max(0, t - hopStart));
+        const z = Math.max(0, hop.v * local - 0.5 * GRAVITY * local * local);
+
+        // Vaakaliike: tasainen vauhti pompun sisällä, hidastuu pompusta toiseen.
+        const along = traveled + legs[hopIndex] * (hop.dur ? local / hop.dur : 1);
+        const p = distance ? Math.min(1, along / distance) : 1;
+        this.spot = { x: from.x + dx * p, y: from.y + dy * p };
+        this.draw(z);
+
+        // Ilmalennon aikana kuuluu kevyt kohina pyörinnän tahtiin.
+        const slot = Math.floor(t * 7);
+        if (hopIndex === 0 && slot !== lastTickSlot) {
+          lastTickSlot = slot;
+          onTick?.();
+        }
+
+        if (!settled && t >= settleAt) {
+          settled = true;
+          // Lähin vastaava asento, jotta kallahdus on lyhyt ja luonteva.
+          const restX = faceX + tilt.x;
+          const restY = faceY + tilt.y;
+          this.rotation = {
+            x: restX + 360 * Math.round((this.rotation.x - restX) / 360),
+            y: restY + 360 * Math.round((this.rotation.y - restY) / 360),
+            z: quarter + 360 * Math.round((this.rotation.z - quarter) / 360),
+          };
+          this.applyRotation(SETTLE_MS);
+        } else if (!settled) {
+          this.rotation = {
+            x: this.rotation.x + spin.x * dt,
+            y: this.rotation.y + spin.y * dt,
+            z: this.rotation.z + spin.z * dt,
+          };
+          this.applyRotation(0);
+        }
+
+        if (t >= total) {
+          resolve();
+          return;
+        }
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    });
+
+    this.spot = { x: to.x, y: to.y };
+    this.draw(0);
+    await wait(SETTLE_MS);
   }
 }

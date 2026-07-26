@@ -52,6 +52,7 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
 /* --- sovelluskehys --- */
 
 .app {
+  position: relative;
   height: 100dvh;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
@@ -108,6 +109,36 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   flex: 0 0 auto;
 }
 
+/* Yläpalkin voi piilottaa, jolloin kartalle jää enemmän tilaa. */
+.app.chrome-hidden .topbar { display: none; }
+.app.chrome-hidden { grid-template-rows: minmax(0, 1fr); }
+
+/* Nappi on kartan päällä, jotta se ei peitä ohjauspaneelia. */
+.chrome-show {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  display: none;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(37, 27, 18, 0.82);
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+
+.app.chrome-hidden .chrome-show { display: grid; }
+.chrome-show:hover { background: rgba(58, 42, 28, 0.92); }
+
+.icon-btn { padding-inline: 0.55rem; }
+
 .stage {
   display: grid;
   min-width: 0;
@@ -153,30 +184,38 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
 
 /* --- laudalla lepäävä 3D-noppa --- */
 
-.board-die {
-  --die-size: clamp(30px, 5.2vmin, 54px);
+.die-layer {
+  --die-size: clamp(32px, 5.4vmin, 56px);
   --half: calc(var(--die-size) / 2);
   position: absolute;
-  width: var(--die-size);
-  height: var(--die-size);
-  margin-left: calc(var(--die-size) / -2);
-  margin-top: calc(var(--die-size) / -2);
-  perspective: 620px;
+  inset: 0;
   pointer-events: none;
   z-index: 3;
+}
+
+.die-layer[hidden] { display: none; }
+
+.board-die {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--die-size);
+  height: var(--die-size);
+  perspective: 900px;
   will-change: transform;
 }
 
+/* Varjo jää laudan pintaan, kun noppa nousee ilmaan. */
 .die-shadow {
   position: absolute;
-  left: 50%;
-  bottom: calc(var(--die-size) * -0.22);
-  width: calc(var(--die-size) * 1.1);
-  height: calc(var(--die-size) * 0.34);
+  left: 0;
+  top: 0;
+  width: calc(var(--die-size) * 1.16);
+  height: calc(var(--die-size) * 0.72);
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(48, 30, 12, 0.75), rgba(48, 30, 12, 0));
-  transform: translate(-50%, 0) scale(1);
-  opacity: 0.34;
+  background: radial-gradient(ellipse at 42% 42%, rgba(44, 27, 10, 0.85), rgba(44, 27, 10, 0) 70%);
+  opacity: 0.44;
+  will-change: transform, opacity;
 }
 
 .die-cube {
@@ -196,12 +235,19 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   gap: 4%;
   border-radius: 18%;
   background:
-    radial-gradient(circle at 30% 24%, #fffaf0 0%, #f6e9cf 46%, #e3cfa6 100%);
-  border: 1px solid rgba(80, 58, 30, 0.55);
-  box-shadow: inset 0 0 8px rgba(120, 88, 44, 0.35);
+    linear-gradient(150deg, rgba(255, 255, 255, 0.55), rgba(120, 86, 40, 0.16) 62%),
+    radial-gradient(circle at 30% 24%, #fffaf0 0%, #f5e7cb 48%, #dcc39a 100%);
+  border: 1px solid rgba(80, 58, 30, 0.5);
+  box-shadow:
+    inset -3px -4px 7px rgba(108, 76, 34, 0.42),
+    inset 3px 4px 6px rgba(255, 255, 255, 0.55);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
+
+/* Sivutahkot ovat aavistuksen tummempia, jolloin kuutio saa syvyyttä. */
+.die-face.face-3, .die-face.face-4 { filter: brightness(0.9); }
+.die-face.face-5, .die-face.face-6 { filter: brightness(0.82); }
 
 .die-face .pip {
   align-self: center;
@@ -209,8 +255,22 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   width: 74%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #6c5230 0%, #3a2a14 70%);
-  box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.28);
+  background: radial-gradient(circle at 34% 28%, #7a5c35 0%, #46331a 55%, #2b1e0d 100%);
+  box-shadow:
+    inset 0 -1.5px 1.5px rgba(255, 255, 255, 0.3),
+    inset 0 1.5px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Valo tulee aina samasta suunnasta: kiilto ei pyöri nopan mukana. */
+.die-gloss {
+  position: absolute;
+  inset: -6%;
+  border-radius: 24%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 26% 20%, rgba(255, 252, 240, 0.5), rgba(255, 255, 255, 0) 46%),
+    radial-gradient(circle at 78% 84%, rgba(40, 24, 8, 0.24), rgba(0, 0, 0, 0) 52%);
+  mix-blend-mode: soft-light;
 }
 
 /* --- tapahtumaikkuna kartan päällä --- */
@@ -1027,21 +1087,51 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   perspective: 1100px;
 }
 
-.reveal-disc {
+/* Laatta ja sen taakse piirtyvät sädeviivat samassa ruudussa. */
+.reveal-stage {
   position: relative;
+  display: grid;
+  place-items: center;
   width: min(52vmin, 280px);
   aspect-ratio: 1;
   transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
-  transform: rotateY(0deg);
-  transition: transform 0.85s cubic-bezier(0.3, 0.85, 0.25, 1);
-  animation: disc-drop 0.36s cubic-bezier(0.2, 1.5, 0.4, 1);
 }
 
-.reveal-disc.flipped { transform: rotateY(180deg); }
+.reveal-rays {
+  position: absolute;
+  width: 168%;
+  height: 168%;
+  overflow: visible;
+  opacity: 0;
+  transform: scale(0.82) rotate(-6deg);
+  transition: opacity 0.5s ease-out, transform 0.7s cubic-bezier(0.2, 1.1, 0.4, 1);
+  pointer-events: none;
+}
+
+.reveal-rays path {
+  fill: none;
+  stroke: rgba(246, 226, 184, 0.5);
+  stroke-linecap: round;
+}
+
+.reveal-rays.shown { opacity: 1; transform: scale(1) rotate(0deg); }
+
+.reveal-disc {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform: rotateY(0deg) rotateZ(-2deg);
+  transition: transform 0.9s cubic-bezier(0.32, 0.86, 0.24, 1);
+  animation: disc-drop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+/* Kääntö ei ole täysin suora, jotta liike näyttää kädellä käännetyltä. */
+.reveal-disc.flipped { transform: rotateY(180deg) rotateZ(2.5deg); }
 
 @keyframes disc-drop {
-  from { transform: rotateY(0deg) scale(0.6) translateY(-30px); opacity: 0; }
+  from { transform: rotateY(0deg) rotateZ(-9deg) scale(0.62) translateY(-26px); opacity: 0; }
 }
 
 .reveal-face {
@@ -1049,27 +1139,36 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   inset: 0;
   display: grid;
   place-items: center;
-  border-radius: 50%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background-image: var(--paper-noise),
-    radial-gradient(circle at 40% 34%, #f6e7c6 0%, #e6d0a4 62%, #c9a86f 100%);
-  background-blend-mode: multiply, normal;
-  border: 7px double var(--map-ink);
-  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(120, 85, 40, 0.25);
+  /* Varjo kuuluu tahkolle: .reveal-disc ei saa suodatinta, koska se litistäisi 3D:n. */
+  filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.5));
 }
 
-.reveal-back {
-  font-family: "Iowan Old Style", Georgia, serif;
-  font-size: clamp(4rem, 16vmin, 7rem);
-  color: rgba(70, 51, 31, 0.75);
-}
+.reveal-face svg { width: 100%; height: 100%; overflow: visible; }
 
 .reveal-front { transform: rotateY(180deg); }
-.reveal-front svg { width: 58%; height: 58%; }
 
-.reveal-disc.star .reveal-front { box-shadow: 0 0 60px rgba(230, 180, 60, 0.75), 0 26px 60px rgba(0, 0, 0, 0.5); }
-.reveal-disc.robber .reveal-front { box-shadow: 0 0 55px rgba(176, 58, 43, 0.6), 0 26px 60px rgba(0, 0, 0, 0.5); }
+.reveal-disc-body { stroke: none; }
+
+.reveal-ring {
+  fill: none;
+  stroke: var(--map-ink);
+  stroke-width: 2.6;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+
+.reveal-ring.thin { stroke-width: 1.4; opacity: 0.5; stroke-dasharray: 9 6; }
+
+.reveal-ticks path { stroke: var(--map-ink); stroke-width: 1.5; opacity: 0.45; }
+.reveal-hatch path { stroke: rgba(70, 51, 31, 0.3); stroke-width: 1.1; fill: none; }
+
+.reveal-mark {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: 96px;
+  fill: rgba(70, 51, 31, 0.72);
+}
 
 .reveal-caption {
   display: grid;
@@ -1204,8 +1303,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
         <button id="sound-btn" class="ghost" type="button" aria-label="Äänet päälle tai pois">🔊</button>
+        <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">Päivitä</button>
         <button id="rules-btn" class="ghost" type="button">Säännöt</button>
         <button id="newgame-btn" class="ghost" type="button">Uusi peli</button>
+        <button id="chrome-hide" class="ghost icon-btn" type="button"
+                aria-label="Piilota yläpalkki" title="Piilota yläpalkki">▲</button>
       </div>
     </header>
 
@@ -1214,6 +1316,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
         <svg id="board" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"
              role="img" aria-label="Afrikan aarrekartta"></svg>
         <div id="board-hint" class="board-hint"></div>
+        <button id="chrome-show" class="chrome-show" type="button"
+                aria-label="Näytä yläpalkki" title="Näytä valikko">☰</button>
       </section>
 
       <aside class="rail">
@@ -1295,6 +1399,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
       <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
+      <p><b>Yläpalkki ja päivitys.</b> ▲ piilottaa yläpalkin, jolloin kartalle jää enemmän
+        tilaa; oikean yläkulman ☰ tuo sen takaisin. <b>Päivitä</b> hakee uusimman version
+        pelistä — kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
       <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman
         laivalipun hintaa), hän saa vuoronsa alussa 100 puntaa pankilta.</p>
     </div>
@@ -2651,8 +2758,13 @@ function treasureSound(type) {
 }
 
 // ===== js/die.js =====
-// Laudalla pyörivä 3D-noppa. Noppa heitetään pelaajan nappulan vierestä,
-// pyörii ilmassa ja jää lepäämään kartalle seuraavaan heittoon asti.
+// Laudalla pomppiva 3D-noppa.
+//
+// Noppa heitetään pelaajan nappulan vierestä kartan alalaidan merelle. Lento
+// simuloidaan oikealla painovoimalla: kaari, kimpoilu pienenevin pompuin ja
+// hidastuva pyörintä. Korkeus näkyy varjon koossa ja tummuudessa sekä nopan
+// koossa, joten heitto tuntuu kolmiulotteiselta. Noppa jää laudalle lepäämään
+// seuraavaan heittoon asti.
 
 const PIPS = {
   1: [4],
@@ -2683,17 +2795,30 @@ const FACE_ROTATION = {
   6: [0, 180],
 };
 
+// Fysiikan vakiot (pikseliä ja sekuntia).
+const GRAVITY = 3400; // painovoima
+const BOUNCE = 0.45; // kimmoisuus: paljonko vauhtia jää pompun jälkeen
+const DRAG = 0.56; // vaakavauhdin hidastuminen pompussa
+const SPIN_DAMP = 0.5; // pyörinnän hidastuminen pompussa
+const STOP_SPEED = 60; // tätä hitaampi pomppu ei enää nosta noppaa
+const LIFT = 0.62; // korkeus näytöllä: 1 px korkeutta = 0.62 px ylöspäin
+const SETTLE_MS = 430; // viimeinen kallahdus oikealle silmäluvulle
+
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 class BoardDie {
   constructor(container) {
-    this.root = document.createElement('div');
-    this.root.className = 'board-die';
-    this.root.hidden = true;
+    this.layer = document.createElement('div');
+    this.layer.className = 'die-layer';
+    this.layer.hidden = true;
 
+    // Varjo on erillään nopasta: se jää laudan pintaan, kun noppa nousee ilmaan.
     this.shadow = document.createElement('div');
     this.shadow.className = 'die-shadow';
-    this.root.appendChild(this.shadow);
+    this.layer.appendChild(this.shadow);
+
+    this.root = document.createElement('div');
+    this.root.className = 'board-die';
 
     this.cube = document.createElement('div');
     this.cube.className = 'die-cube';
@@ -2709,31 +2834,70 @@ class BoardDie {
       this.cube.appendChild(el);
     }
     this.root.appendChild(this.cube);
-    container.appendChild(this.root);
 
-    this.rotation = { x: -22, y: 26 };
+    // Kiiltokerros ei pyöri mukana, joten valo tulee aina samasta suunnasta.
+    this.gloss = document.createElement('div');
+    this.gloss.className = 'die-gloss';
+    this.root.appendChild(this.gloss);
+
+    this.layer.appendChild(this.root);
+    container.appendChild(this.layer);
+
+    this.rotation = { x: -22, y: 26, z: 0 };
+    this.spot = { x: 0, y: 0 };
     this.applyRotation(0);
+    this.draw(0);
   }
 
   applyRotation(transition) {
-    this.cube.style.transition = transition ? `transform ${transition}ms cubic-bezier(0.18,0.72,0.22,1)` : 'none';
-    this.cube.style.transform = `rotateX(${this.rotation.x}deg) rotateY(${this.rotation.y}deg)`;
+    this.cube.style.transition = transition
+      ? `transform ${transition}ms cubic-bezier(0.26, 1.1, 0.4, 1)`
+      : 'none';
+    const { x, y, z } = this.rotation;
+    this.cube.style.transform =
+      `rotateZ(${z.toFixed(2)}deg) rotateX(${x.toFixed(2)}deg) rotateY(${y.toFixed(2)}deg)`;
+  }
+
+  /** Piirtää nopan ja varjon annetulle korkeudelle (z = pikseliä laudan yllä). */
+  draw(z) {
+    const { x, y } = this.spot;
+    const scale = 1 + z * 0.0016; // korkealla noppa on lähempänä katsojaa
+    this.root.style.transform =
+      `translate3d(${x.toFixed(1)}px, ${(y - z * LIFT).toFixed(1)}px, 0) `
+      + `translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+
+    // Varjo levenee, haalistuu ja sumenee, kun noppa nousee.
+    const t = Math.min(1, z / 240);
+    this.shadow.style.transform =
+      `translate3d(${(x + z * 0.07).toFixed(1)}px, ${(y + z * 0.03).toFixed(1)}px, 0) `
+      + `translate(-50%, -50%) scale(${(1 + t * 0.9).toFixed(3)})`;
+    this.shadow.style.opacity = (0.44 - t * 0.3).toFixed(3);
+    this.shadow.style.filter = `blur(${(1.5 + t * 6).toFixed(1)}px)`;
   }
 
   /** Siirtää nopan lepopaikalleen ilman animaatiota (esim. ikkunan koon muuttuessa). */
   place({ x, y }) {
-    this.root.style.left = `${x}px`;
-    this.root.style.top = `${y}px`;
-    this.root.style.transition = 'none';
-    this.root.style.transform = 'translate(0, 0) scale(1)';
+    this.spot = { x, y };
+    this.draw(0);
   }
 
   hide() {
-    this.root.hidden = true;
+    this.layer.hidden = true;
+  }
+
+  /** Pompyt: kunkin pompun alkunopeus ja kesto, kunnes vauhti loppuu. */
+  static hops(v0) {
+    const hops = [];
+    let v = v0;
+    while (v > STOP_SPEED && hops.length < 8) {
+      hops.push({ v, dur: (2 * v) / GRAVITY });
+      v *= BOUNCE;
+    }
+    return hops;
   }
 
   /**
-   * Heittää nopan: kaari ilmassa, pyörintä ja kaksi pomppua.
+   * Heittää nopan: kaari ilmassa, pyörintä ja pienenevät pomput laudalla.
    * @param {number} value silmäluku, joka jää päälle
    * @param {{x:number,y:number}} from mistä noppa lähtee (paneelin pikselit)
    * @param {{x:number,y:number}} to mihin se jää lepäämään
@@ -2741,81 +2905,129 @@ class BoardDie {
    */
   async roll(value, from, to, hooks = {}) {
     const { onTick, onLand, onBounce, reduced } = hooks;
-    this.root.hidden = false;
-    this.root.style.left = `${to.x}px`;
-    this.root.style.top = `${to.y}px`;
+    this.layer.hidden = false;
 
     const [faceX, faceY] = FACE_ROTATION[value] ?? [0, 0];
-    // Riittävästi kierroksia, jotta heitto näyttää oikealta noppa­heitolta.
-    const spins = 3 + Math.floor(Math.random() * 3);
-    const tiltX = -18 + Math.round(Math.random() * 10);
-    const tiltY = 20 + Math.round(Math.random() * 14);
 
     if (reduced) {
-      this.rotation = { x: faceX + tiltX * 0, y: faceY };
-      this.place(to);
+      this.rotation = { x: faceX - 8, y: faceY + 12, z: 0 };
       this.applyRotation(0);
+      this.place(to);
       onLand?.();
       return;
     }
 
-    // Lähtöasento: nopan nykyinen asento, siirrettynä heittäjän kohdalle.
-    const dx = from.x - to.x;
-    const dy = from.y - to.y;
-    this.root.style.transition = 'none';
-    this.root.style.transform = `translate(${dx}px, ${dy}px) scale(0.62)`;
-    this.shadow.style.transition = 'none';
-    this.shadow.style.opacity = '0.15';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(0.5)';
-    this.applyRotation(0);
-    void this.root.offsetWidth; // pakota selain huomaamaan lähtöasento
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const distance = Math.hypot(dx, dy);
 
-    // Pyörintä kestää koko lennon ja pysähtyy juuri laskeutumisen jälkeen.
-    this.rotation = {
-      x: faceX + tiltX + 360 * spins,
-      y: faceY + tiltY + 360 * (spins + 1),
+    // Mitä pidempi heitto, sitä korkeampi kaari — mutta järkevissä rajoissa.
+    const apex = Math.max(130, Math.min(280, 90 + distance * 0.34));
+    const hops = BoardDie.hops(Math.sqrt(2 * GRAVITY * apex));
+    const total = hops.reduce((sum, h) => sum + h.dur, 0);
+
+    // Vaakamatka jaetaan pompuille: ensimmäinen hyppy on pisin, loput lyhenevät.
+    const weights = hops.map((h, i) => h.dur * DRAG ** i);
+    const weightSum = weights.reduce((a, b) => a + b, 0);
+    const legs = weights.map((w) => (w / weightSum) * distance);
+
+    // Pyörintä: satunnainen suunta ja vauhti, joka hidastuu joka pompussa.
+    const sign = () => (Math.random() < 0.5 ? -1 : 1);
+    const spin = {
+      x: sign() * (640 + Math.random() * 520),
+      y: sign() * (760 + Math.random() * 560),
+      z: sign() * (240 + Math.random() * 280),
     };
-    this.applyRotation(1000);
+    // Lopullinen asento: oikea tahko katsojaan päin ja satunnainen neljännes­kierros
+    // näytön tasossa — rotateZ ei vaikuta siihen, mikä tahko jää eteen. Pieni
+    // kallistus jättää sivutahkot näkyviin, jolloin noppa näyttää kappaleelta.
+    const quarter = 90 * Math.floor(Math.random() * 4);
+    const tilt = {
+      x: -11 + Math.random() * 7,
+      y: 9 + Math.random() * 8,
+    };
 
-    // 1) nousu kaaren huipulle
-    this.root.style.transition = 'transform 380ms cubic-bezier(0.2,0.9,0.35,1)';
-    this.root.style.transform = `translate(${dx * 0.4}px, ${dy * 0.4 - 92}px) scale(1.22)`;
-    this.shadow.style.transition = 'opacity 380ms ease-out, transform 380ms ease-out';
-    this.shadow.style.opacity = '0.1';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(1.5)';
-    onTick?.();
-    await wait(190);
-    onTick?.();
-    await wait(190);
-
-    // 2) putoaminen laudalle
-    this.root.style.transition = 'transform 300ms cubic-bezier(0.55,0.05,0.7,1)';
-    this.root.style.transform = 'translate(0, 0) scale(1)';
-    this.shadow.style.transition = 'opacity 300ms ease-in, transform 300ms ease-in';
-    this.shadow.style.opacity = '0.34';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(1)';
-    await wait(290);
-    onLand?.();
-
-    // 3) pomppu ja asettuminen
-    this.root.style.transition = 'transform 170ms cubic-bezier(0.25,0.9,0.4,1)';
-    this.root.style.transform = 'translate(-3px, -22px) scale(1.04)';
-    this.shadow.style.transition = 'opacity 170ms ease-out, transform 170ms ease-out';
-    this.shadow.style.opacity = '0.18';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(1.18)';
-    await wait(165);
-    onBounce?.();
-
-    this.root.style.transition = 'transform 220ms cubic-bezier(0.5,0.08,0.6,1)';
-    this.root.style.transform = 'translate(0, 0) scale(1)';
-    this.shadow.style.transition = 'opacity 220ms ease-in, transform 220ms ease-in';
-    this.shadow.style.opacity = '0.34';
-    this.shadow.style.transform = 'translate(-50%, 0) scale(1)';
-    await wait(240);
-
-    // Nollataan kierrokset, jotta seuraava heitto lähtee samasta asennosta.
-    this.rotation = { x: faceX + tiltX, y: faceY + tiltY };
+    this.spot = { x: from.x, y: from.y };
     this.applyRotation(0);
+    this.draw(0);
+
+    let traveled = 0;
+    let hopIndex = 0;
+    let hopStart = 0;
+    let settled = false;
+    let lastTickSlot = -1;
+    const start = performance.now();
+    let last = start;
+    // Viimeiselle hetkelle jätetään aikaa kallahdukselle oikealle silmäluvulle.
+    const settleAt = Math.max(hops[0].dur * 0.55, total - SETTLE_MS / 1000);
+
+    await new Promise((resolve) => {
+      const frame = (now) => {
+        const t = Math.min(total, (now - start) / 1000);
+        const dt = Math.min(0.05, (now - last) / 1000);
+        last = now;
+
+        // Vaihdetaan pomppuun, jonka kohdalla ollaan.
+        while (hopIndex < hops.length - 1 && t > hopStart + hops[hopIndex].dur) {
+          hopStart += hops[hopIndex].dur;
+          traveled += legs[hopIndex];
+          hopIndex++;
+          spin.x *= SPIN_DAMP;
+          spin.y *= SPIN_DAMP;
+          spin.z *= SPIN_DAMP;
+          if (hopIndex === 1) onLand?.();
+          else onBounce?.();
+        }
+
+        const hop = hops[hopIndex];
+        const local = Math.min(hop.dur, Math.max(0, t - hopStart));
+        const z = Math.max(0, hop.v * local - 0.5 * GRAVITY * local * local);
+
+        // Vaakaliike: tasainen vauhti pompun sisällä, hidastuu pompusta toiseen.
+        const along = traveled + legs[hopIndex] * (hop.dur ? local / hop.dur : 1);
+        const p = distance ? Math.min(1, along / distance) : 1;
+        this.spot = { x: from.x + dx * p, y: from.y + dy * p };
+        this.draw(z);
+
+        // Ilmalennon aikana kuuluu kevyt kohina pyörinnän tahtiin.
+        const slot = Math.floor(t * 7);
+        if (hopIndex === 0 && slot !== lastTickSlot) {
+          lastTickSlot = slot;
+          onTick?.();
+        }
+
+        if (!settled && t >= settleAt) {
+          settled = true;
+          // Lähin vastaava asento, jotta kallahdus on lyhyt ja luonteva.
+          const restX = faceX + tilt.x;
+          const restY = faceY + tilt.y;
+          this.rotation = {
+            x: restX + 360 * Math.round((this.rotation.x - restX) / 360),
+            y: restY + 360 * Math.round((this.rotation.y - restY) / 360),
+            z: quarter + 360 * Math.round((this.rotation.z - quarter) / 360),
+          };
+          this.applyRotation(SETTLE_MS);
+        } else if (!settled) {
+          this.rotation = {
+            x: this.rotation.x + spin.x * dt,
+            y: this.rotation.y + spin.y * dt,
+            z: this.rotation.z + spin.z * dt,
+          };
+          this.applyRotation(0);
+        }
+
+        if (t >= total) {
+          resolve();
+          return;
+        }
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    });
+
+    this.spot = { x: to.x, y: to.y };
+    this.draw(0);
+    await wait(SETTLE_MS);
   }
 }
 
@@ -3458,6 +3670,115 @@ function drawTokenIcon(parent, type) {
     }
   }
   return g;
+}
+
+// --- aarteen paljastus: käsin piirretty laatta ------------------------------
+
+/** Käsin piirretyn näköinen ympyrä: säde heittelee hieman kulman mukaan. */
+function wobblyCircle(radius, seed, amount = 2.4, steps = 46) {
+  const pts = [];
+  for (let i = 0; i < steps; i++) {
+    const a = (i / steps) * Math.PI * 2;
+    const r = radius + vary(`${seed}:${i}`, amount) + Math.sin(a * 3 + radius) * amount * 0.25;
+    pts.push([Math.cos(a) * r, Math.sin(a) * r]);
+  }
+  return `${pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(2)},${y.toFixed(2)}`).join(' ')} Z`;
+}
+
+/**
+ * Iso pelilaatta paljastusanimaatioon. Kaikki viivat on piirretty kevyesti
+ * heittelehtivinä, ja mustepinta saa saman rosoisuussuodattimen kuin kartta.
+ * @param {'back'|'front'} side kumpi puoli
+ * @param {string} [type] laattatyyppi etupuolelle
+ */
+function revealFaceSvg(side, type) {
+  const svg = el('svg', {
+    viewBox: '-100 -100 200 200',
+    class: `reveal-svg reveal-${side}-art`,
+    role: 'img',
+    'aria-hidden': 'true',
+  });
+
+  const defs = el('defs', {}, svg);
+  const rough = el('filter', {
+    id: `reveal-rough-${side}`, x: '-12%', y: '-12%', width: '124%', height: '124%',
+  }, defs);
+  el('feTurbulence', {
+    type: 'turbulence', baseFrequency: '0.021', numOctaves: 3, seed: side === 'back' ? 5 : 12,
+    result: 'noise',
+  }, rough);
+  el('feDisplacementMap', {
+    in: 'SourceGraphic', in2: 'noise', scale: 3.4, xChannelSelector: 'R', yChannelSelector: 'G',
+  }, rough);
+
+  const paper = el('radialGradient', { id: `reveal-paper-${side}`, cx: '38%', cy: '32%' }, defs);
+  el('stop', { offset: '0%', 'stop-color': '#f8ecd0' }, paper);
+  el('stop', { offset: '58%', 'stop-color': '#ecd8ab' }, paper);
+  el('stop', { offset: '100%', 'stop-color': '#cfae76' }, paper);
+
+  const g = el('g', { filter: `url(#reveal-rough-${side})` }, svg);
+
+  // Laatan pohja ja kaksi käsin vedettyä kehää.
+  el('path', {
+    d: wobblyCircle(92, `${side}-disc`, 2.6),
+    fill: `url(#reveal-paper-${side})`,
+    class: 'reveal-disc-body',
+  }, g);
+  el('path', { d: wobblyCircle(88, `${side}-ring1`, 1.8), class: 'reveal-ring' }, g);
+  el('path', { d: wobblyCircle(80, `${side}-ring2`, 2.2), class: 'reveal-ring thin' }, g);
+
+  // Reunan viivoitus antaa piirretyn syvyyden.
+  const ticks = el('g', { class: 'reveal-ticks' }, g);
+  for (let i = 0; i < 40; i++) {
+    const a = (i / 40) * Math.PI * 2 + vary(`${side}-tick-a${i}`, 0.03);
+    const inner = 80 + vary(`${side}-tick-i${i}`, 1.5);
+    const outer = inner + 4.5 + vary(`${side}-tick-o${i}`, 1.6);
+    el('path', {
+      d: `M${(Math.cos(a) * inner).toFixed(2)},${(Math.sin(a) * inner).toFixed(2)} `
+        + `L${(Math.cos(a) * outer).toFixed(2)},${(Math.sin(a) * outer).toFixed(2)}`,
+    }, ticks);
+  }
+
+  if (side === 'back') {
+    // Kääntöpuoli: ristiviivoitus ja käsin piirretty kysymysmerkki.
+    const hatch = el('g', { class: 'reveal-hatch' }, g);
+    for (let i = -7; i <= 7; i++) {
+      const off = i * 11 + vary(`hatch${i}`, 1.4);
+      const len = Math.sqrt(Math.max(0, 76 * 76 - off * off));
+      el('path', {
+        d: `M${(-len).toFixed(1)},${off.toFixed(1)} L${len.toFixed(1)},${(off + vary(`hatch-e${i}`, 1.6)).toFixed(1)}`,
+        transform: 'rotate(28)',
+      }, hatch);
+    }
+    el('text', {
+      x: 0, y: 30, class: 'reveal-mark', 'text-anchor': 'middle',
+      transform: `rotate(${vary('mark', 3).toFixed(2)})`,
+    }, g).textContent = '?';
+  } else {
+    // Etupuoli: aarteen kuvake samalla piirrostyylillä kuin kartalla.
+    const icon = el('g', { transform: 'scale(4.6)' }, g);
+    drawTokenIcon(icon, type);
+  }
+  return svg;
+}
+
+/** Käsin piirretyt sädeviivat paljastuksen taustalle. */
+function revealRaysSvg() {
+  const svg = el('svg', {
+    viewBox: '-100 -100 200 200', class: 'reveal-rays', 'aria-hidden': 'true',
+  });
+  const g = el('g', {}, svg);
+  for (let i = 0; i < 22; i++) {
+    const a = (i / 22) * Math.PI * 2 + vary(`ray${i}`, 0.05);
+    const inner = 52 + vary(`ray-i${i}`, 4);
+    const outer = 78 + vary(`ray-o${i}`, 16);
+    el('path', {
+      d: `M${(Math.cos(a) * inner).toFixed(1)},${(Math.sin(a) * inner).toFixed(1)} `
+        + `L${(Math.cos(a) * outer).toFixed(1)},${(Math.sin(a) * outer).toFixed(1)}`,
+      'stroke-width': (1 + hash01(`ray-w${i}`) * 1.6).toFixed(2),
+    }, g);
+  }
+  return svg;
 }
 
 /** Sama kuvake itsenäisenä SVG:nä HTML-paneeleihin. */
@@ -4383,7 +4704,7 @@ class UI {
     const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
     this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
-    if (this.dieSpot && this.boardDie) this.boardDie.place(this.mapToPane(this.dieSpot));
+    if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
   }
 
   /** Kartan koordinaatit kartta-alueen pikseleiksi. */
@@ -4396,14 +4717,19 @@ class UI {
     return { x: screen.x - rect.left, y: screen.y - rect.top };
   }
 
-  /** Nopan lepopaikka pelaajan nappulan vierestä, kartan sisäpuolelta. */
-  dieRestingSpot(player) {
-    const { x, y } = pixelOf(this.game.board, player.pos);
-    const dirX = x > 700 ? -1 : 1;
-    const dirY = y > 760 ? -1 : 1;
+  /**
+   * Nopan lepopaikka: kartan vasen alakulma on avomerta, joten noppa ei jää
+   * kenenkään nappulan tai kaupungin päälle. Paikka arpoutuu hieman joka
+   * heitolla, jotta noppa ei osu aina täsmälleen samaan kohtaan.
+   */
+  dieRestingSpot() {
+    const pane = this.mapPane;
+    const w = pane.clientWidth || 600;
+    const h = pane.clientHeight || 600;
+    const jitter = this.dieJitter ?? { x: 0, y: 0 };
     return {
-      x: Math.max(40, Math.min(960, x + dirX * 52)),
-      y: Math.max(40, Math.min(960, y + dirY * 50)),
+      x: w * (0.115 + jitter.x),
+      y: h * (0.865 + jitter.y),
     };
   }
 
@@ -5060,17 +5386,23 @@ class UI {
     const disc = html('div', `reveal-disc ${type}`);
 
     const back = html('div', 'reveal-face reveal-back');
-    back.appendChild(html('span', '', '?'));
+    back.appendChild(revealFaceSvg('back'));
     const front = html('div', 'reveal-face reveal-front');
-    front.appendChild(tokenIconSvg(type, 160));
+    front.appendChild(revealFaceSvg('front', type));
     disc.appendChild(back);
     disc.appendChild(front);
+
+    const rays = revealRaysSvg();
+    rays.classList.add('reveal-rays');
 
     const caption = html('div', 'reveal-caption');
     caption.appendChild(html('strong', '', token.name));
     caption.appendChild(html('span', '', REVEAL_SUB[type] ?? `+${token.value} puntaa`));
 
-    scene.appendChild(disc);
+    const stage = html('div', 'reveal-stage');
+    stage.appendChild(rays);
+    stage.appendChild(disc);
+    scene.appendChild(stage);
     scene.appendChild(caption);
     overlay.appendChild(scene);
     // Dialogi on top layerissa, joten paljastus lisätään sen sisään.
@@ -5078,6 +5410,7 @@ class UI {
 
     if (this.reducedMotion) {
       disc.classList.add('flipped');
+      rays.classList.add('shown');
       caption.classList.add('shown');
       sfx.play(treasureSound(type));
       await this.wait(900);
@@ -5088,6 +5421,7 @@ class UI {
       await this.wait(760);
       sfx.play('clack');
       sfx.play(treasureSound(type));
+      rays.classList.add('shown');
       caption.classList.add('shown');
       await this.wait(1250);
       overlay.classList.add('leaving');
@@ -5195,10 +5529,10 @@ class UI {
     this.turnStatus.textContent = 'Noppa pyörii…';
 
     const player = this.game.player;
-    const spot = this.dieRestingSpot(player);
+    this.dieJitter = { x: (Math.random() - 0.5) * 0.06, y: (Math.random() - 0.5) * 0.05 };
     const from = this.mapToPane(pixelOf(this.game.board, player.pos));
-    const to = this.mapToPane(spot);
-    this.dieSpot = spot;
+    const to = this.dieRestingSpot();
+    this.dieThrown = true;
 
     await this.boardDie.roll(value, from, to, {
       reduced: this.reducedMotion,
@@ -5292,6 +5626,7 @@ const START_CITIES = [
   { id: 'kairo', name: 'Kairo' },
 ];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
+const APP_VERSION = '2026-07-26';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -5433,6 +5768,61 @@ setupForm.addEventListener('submit', () => {
   setTimeout(startGame, 0);
 });
 
+// --- yläpalkki ja päivitys --------------------------------------------------
+
+const CHROME_KEY = 'afrikan-tahti-chrome';
+const app = document.querySelector('.app');
+const chromeShow = document.getElementById('chrome-show');
+const chromeHide = document.getElementById('chrome-hide');
+
+function setChrome(visible) {
+  app.classList.toggle('chrome-hidden', !visible);
+  chromeShow.setAttribute('aria-expanded', visible ? 'true' : 'false');
+  try {
+    localStorage.setItem(CHROME_KEY, visible ? 'shown' : 'hidden');
+  } catch {
+    /* asetuksen tallennus ei ole välttämätöntä */
+  }
+  // Kartta täyttää eri kokoisen alueen, joten näkymäikkuna lasketaan uudelleen.
+  ui?.fitViewBox();
+}
+
+function loadChrome() {
+  try {
+    return localStorage.getItem(CHROME_KEY) === 'shown';
+  } catch {
+    return false;
+  }
+}
+
+chromeShow.addEventListener('click', () => setChrome(true));
+chromeHide.addEventListener('click', () => setChrome(false));
+setChrome(loadChrome());
+
+/**
+ * Hakee uusimman version: poistaa palvelutyöntekijän välimuistit ja lataa
+ * sivun uudelleen. Kesken oleva peli säilyy, koska se on tallennettu erikseen.
+ */
+const updateBtn = document.getElementById('update-btn');
+updateBtn.addEventListener('click', async () => {
+  updateBtn.disabled = true;
+  updateBtn.textContent = 'Päivitetään…';
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+    }
+    if (window.caches) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+  } catch {
+    /* päivitys onnistuu myös ilman välimuistin siivousta */
+  }
+  location.reload();
+});
+
+document.getElementById('app-version').textContent = APP_VERSION;
 document.getElementById('newgame-btn').addEventListener('click', openSetup);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());

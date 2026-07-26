@@ -16,8 +16,10 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
   pergamenttia käsin piirrettyine katkoviivoineen
 - Animoitu rytmi: nappula hyppii reittiä piste kerrallaan ja tapahtumat jäävät
   hetkeksi näkyviin
-- Kolmiulotteinen noppa heitetään nappulan vierestä, se pomppii laudalle ja jää
-  siihen lepäämään seuraavaan heittoon asti
+- Kolmiulotteinen noppa heitetään nappulan vierestä kartan vasemman alakulman
+  merelle: lento lasketaan oikealla painovoimalla, noppa kimpoaa pienenevin
+  pompuin, pyörintä hidastuu ja varjo kasvaa ja haalistuu korkeuden mukaan.
+  Lepopaikka on avomerellä, joten noppa ei jää nappuloiden päälle.
 - Kartan yksityiskohdissa pieniä, aina samanlaisina toistuvia vaihteluita:
   reittipisteet mutkittelevat ja vaihtelevat koossa ja tummuudessa, kaupungit
   ovat aavistuksen soikeita ja nimet hitusen vinossa
@@ -25,8 +27,14 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
   noppa, askeleet, laiva, lento, oikea ja väärä vastaus, aarteen paljastus,
   ryöstäjä ja voitto — yläpalkin 🔊-painike vaimentaa
 - Oikean vastauksen jälkeen ruudulle tulee ensin "Oikein!", tauko ja sitten
-  aarteen paljastus: iso laatta kääntyy 3D:nä ympäri ja näyttää löydön
+  aarteen paljastus: iso käsin piirretty laatta kääntyy 3D:nä ympäri ja näyttää
+  löydön. Laatta, sen kehät, viivoitus ja taustan sädeviivat on piirretty samalla
+  mustekynätyylillä kuin kartta
 - Koko ruudun sovelluskehys: kaikki oleellinen näkyy kerralla, vain tapahtumaloki vierii
+- Yläpalkin voi piilottaa (▲) ja tuoda takaisin kartan kulman ☰-painikkeella;
+  valinta muistetaan
+- **Päivitä**-painike hakee uusimman version: se tyhjentää palvelutyöntekijän
+  välimuistin ja lataa pelin uudelleen kesken olevaa peliä menettämättä
 - Asennettava sovellus (PWA): toimii offline ja jatkaa keskeytynyttä peliä
 - Mitoitettu iPadille ja iPhonelle: sama asettelu skaalautuu, eikä mikään vaadi
   vierittämistä

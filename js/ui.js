@@ -26,6 +26,8 @@ import {
   drawTerrain,
   drawTokenIcon,
   drawWaves,
+  revealFaceSvg,
+  revealRaysSvg,
   tokenIconSvg,
 } from './mapart.js';
 
@@ -143,7 +145,7 @@ export class UI {
     const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
     this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
-    if (this.dieSpot && this.boardDie) this.boardDie.place(this.mapToPane(this.dieSpot));
+    if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
   }
 
   /** Kartan koordinaatit kartta-alueen pikseleiksi. */
@@ -156,14 +158,19 @@ export class UI {
     return { x: screen.x - rect.left, y: screen.y - rect.top };
   }
 
-  /** Nopan lepopaikka pelaajan nappulan vierestä, kartan sisäpuolelta. */
-  dieRestingSpot(player) {
-    const { x, y } = pixelOf(this.game.board, player.pos);
-    const dirX = x > 700 ? -1 : 1;
-    const dirY = y > 760 ? -1 : 1;
+  /**
+   * Nopan lepopaikka: kartan vasen alakulma on avomerta, joten noppa ei jää
+   * kenenkään nappulan tai kaupungin päälle. Paikka arpoutuu hieman joka
+   * heitolla, jotta noppa ei osu aina täsmälleen samaan kohtaan.
+   */
+  dieRestingSpot() {
+    const pane = this.mapPane;
+    const w = pane.clientWidth || 600;
+    const h = pane.clientHeight || 600;
+    const jitter = this.dieJitter ?? { x: 0, y: 0 };
     return {
-      x: Math.max(40, Math.min(960, x + dirX * 52)),
-      y: Math.max(40, Math.min(960, y + dirY * 50)),
+      x: w * (0.115 + jitter.x),
+      y: h * (0.865 + jitter.y),
     };
   }
 
@@ -820,17 +827,23 @@ export class UI {
     const disc = html('div', `reveal-disc ${type}`);
 
     const back = html('div', 'reveal-face reveal-back');
-    back.appendChild(html('span', '', '?'));
+    back.appendChild(revealFaceSvg('back'));
     const front = html('div', 'reveal-face reveal-front');
-    front.appendChild(tokenIconSvg(type, 160));
+    front.appendChild(revealFaceSvg('front', type));
     disc.appendChild(back);
     disc.appendChild(front);
+
+    const rays = revealRaysSvg();
+    rays.classList.add('reveal-rays');
 
     const caption = html('div', 'reveal-caption');
     caption.appendChild(html('strong', '', token.name));
     caption.appendChild(html('span', '', REVEAL_SUB[type] ?? `+${token.value} puntaa`));
 
-    scene.appendChild(disc);
+    const stage = html('div', 'reveal-stage');
+    stage.appendChild(rays);
+    stage.appendChild(disc);
+    scene.appendChild(stage);
     scene.appendChild(caption);
     overlay.appendChild(scene);
     // Dialogi on top layerissa, joten paljastus lisätään sen sisään.
@@ -838,6 +851,7 @@ export class UI {
 
     if (this.reducedMotion) {
       disc.classList.add('flipped');
+      rays.classList.add('shown');
       caption.classList.add('shown');
       sfx.play(treasureSound(type));
       await this.wait(900);
@@ -848,6 +862,7 @@ export class UI {
       await this.wait(760);
       sfx.play('clack');
       sfx.play(treasureSound(type));
+      rays.classList.add('shown');
       caption.classList.add('shown');
       await this.wait(1250);
       overlay.classList.add('leaving');
@@ -955,10 +970,10 @@ export class UI {
     this.turnStatus.textContent = 'Noppa pyörii…';
 
     const player = this.game.player;
-    const spot = this.dieRestingSpot(player);
+    this.dieJitter = { x: (Math.random() - 0.5) * 0.06, y: (Math.random() - 0.5) * 0.05 };
     const from = this.mapToPane(pixelOf(this.game.board, player.pos));
-    const to = this.mapToPane(spot);
-    this.dieSpot = spot;
+    const to = this.dieRestingSpot();
+    this.dieThrown = true;
 
     await this.boardDie.roll(value, from, to, {
       reduced: this.reducedMotion,

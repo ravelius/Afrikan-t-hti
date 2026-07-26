@@ -22,8 +22,11 @@
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
         <button id="sound-btn" class="ghost" type="button" aria-label="Äänet päälle tai pois">🔊</button>
+        <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">Päivitä</button>
         <button id="rules-btn" class="ghost" type="button">Säännöt</button>
         <button id="newgame-btn" class="ghost" type="button">Uusi peli</button>
+        <button id="chrome-hide" class="ghost icon-btn" type="button"
+                aria-label="Piilota yläpalkki" title="Piilota yläpalkki">▲</button>
       </div>
     </header>
 
@@ -32,6 +35,8 @@
         <svg id="board" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"
              role="img" aria-label="Afrikan aarrekartta"></svg>
         <div id="board-hint" class="board-hint"></div>
+        <button id="chrome-show" class="chrome-show" type="button"
+                aria-label="Näytä yläpalkki" title="Näytä valikko">☰</button>
       </section>
 
       <aside class="rail">
@@ -113,6 +118,9 @@
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
       <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
+      <p><b>Yläpalkki ja päivitys.</b> ▲ piilottaa yläpalkin, jolloin kartalle jää enemmän
+        tilaa; oikean yläkulman ☰ tuo sen takaisin. <b>Päivitä</b> hakee uusimman version
+        pelistä — kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
       <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman
         laivalipun hintaa), hän saa vuoronsa alussa 100 puntaa pankilta.</p>
     </div>

@@ -10,6 +10,7 @@ const START_CITIES = [
   { id: 'kairo', name: 'Kairo' },
 ];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
+const APP_VERSION = '2026-07-26';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -151,6 +152,61 @@ setupForm.addEventListener('submit', () => {
   setTimeout(startGame, 0);
 });
 
+// --- yläpalkki ja päivitys --------------------------------------------------
+
+const CHROME_KEY = 'afrikan-tahti-chrome';
+const app = document.querySelector('.app');
+const chromeShow = document.getElementById('chrome-show');
+const chromeHide = document.getElementById('chrome-hide');
+
+function setChrome(visible) {
+  app.classList.toggle('chrome-hidden', !visible);
+  chromeShow.setAttribute('aria-expanded', visible ? 'true' : 'false');
+  try {
+    localStorage.setItem(CHROME_KEY, visible ? 'shown' : 'hidden');
+  } catch {
+    /* asetuksen tallennus ei ole välttämätöntä */
+  }
+  // Kartta täyttää eri kokoisen alueen, joten näkymäikkuna lasketaan uudelleen.
+  ui?.fitViewBox();
+}
+
+function loadChrome() {
+  try {
+    return localStorage.getItem(CHROME_KEY) === 'shown';
+  } catch {
+    return false;
+  }
+}
+
+chromeShow.addEventListener('click', () => setChrome(true));
+chromeHide.addEventListener('click', () => setChrome(false));
+setChrome(loadChrome());
+
+/**
+ * Hakee uusimman version: poistaa palvelutyöntekijän välimuistit ja lataa
+ * sivun uudelleen. Kesken oleva peli säilyy, koska se on tallennettu erikseen.
+ */
+const updateBtn = document.getElementById('update-btn');
+updateBtn.addEventListener('click', async () => {
+  updateBtn.disabled = true;
+  updateBtn.textContent = 'Päivitetään…';
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+    }
+    if (window.caches) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+  } catch {
+    /* päivitys onnistuu myös ilman välimuistin siivousta */
+  }
+  location.reload();
+});
+
+document.getElementById('app-version').textContent = APP_VERSION;
 document.getElementById('newgame-btn').addEventListener('click', openSetup);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
