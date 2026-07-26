@@ -7227,124 +7227,128 @@ const ASIA_FACTS = {
 // ===== js/packs/asia.js =====
 // Aasia-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
 //
-// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Aasian karttaa:
-//   x = (pituusaste - 40) * 6.69 + 30   (lännestä 40° itään 180°)
-//   y = (76 - leveysaste) * 11.5        (pohjoisesta 76° etelään -11°)
+// Koordinaatisto on 1000 x 1000 yksikköä.
 //
-// Mittasuhteet on valittu niin, että kartta on oikeassa muodossa 54. leveys-
-// asteella eli Siperian eteläosassa. Manner on yksi ääriviiva Iranista
-// Beringinsalmelle ja Malakan niemimaan kärkeen; lännessä se jatkuu kartan
-// reunan yli Lähi-idän laudalle. Japani, Sahalin, Taiwan, Sri Lanka, Sumatra,
-// Java, Borneo ja Luzon ovat omia saariaan, joihin pääsee vain laivalla.
+// Kartta on Lambertin konformisessa kartioprojektiossa, standardileveys-
+// piireinä 20° ja 60° pohjoista leveyttä ja keskimeridiaanina 105° itäistä
+// pituutta. Muodot pysyvät oikeina sekä tropiikissa että Siperiassa, toisin
+// kuin yksinkertaisessa lieriöprojektiossa, joka venyttäisi pohjoisen
+// leveäksi. Lähdeaineisto on tools/mapdata/asia.json ja koordinaatit
+// lasketaan komennolla `node tools/project.mjs asia`.
+//
+// Manner on yksi ääriviiva Iranista Beringinsalmelle ja Malakan niemimaan
+// kärkeen; lännessä se jatkuu kartan reunan yli Lähi-idän laudalle. Japani,
+// Sahalin, Taiwan, Sri Lanka, Sumatra, Java, Borneo ja Luzon ovat omia
+// saariaan, joihin pääsee vain laivalla.
 
 const AS_MAP = {
   width: 1000,
   height: 1000,
   mainlandPoints: [
-    [30, 92], [96.9, 80.5], [163.8, 69], [230.7, 34.5], [297.6, 23],
-    [364.5, 11.5], [431.4, 5.8], [498.3, 11.5], [518.4, 34.5], [618.7, 34.5],
-    [699, 46], [765.9, 69], [832.8, 69], [899.7, 80.5], [966.6, 115],
-    [953.2, 149.5], [913.1, 161], [866.3, 184], [852.9, 218.5], [826.1, 276],
-    [806, 287.5], [799.4, 230], [812.7, 184], [765.9, 195.5], [719.1, 195.5],
-    [685.6, 241.5], [699, 322], [665.6, 368], [632.1, 379.5], [612, 414],
-    [625.4, 471.5], [605.3, 483], [605.3, 448.5], [592, 414], [578.6, 414],
-    [558.5, 425.5], [571.9, 506], [551.8, 598], [525.1, 621], [498.3, 632.5],
-    [484.9, 632.5], [471.5, 667], [491.6, 747.5], [464.9, 770.5], [451.5, 759],
-    [431.4, 724.5], [424.7, 770.5], [431.4, 839.5], [458.2, 859.1], [451.5, 816.5],
-    [418, 782], [418, 736], [411.3, 690], [391.3, 667], [391.3, 632.5],
-    [364.5, 621], [344.4, 632.5], [331.1, 644], [297.6, 690], [297.6, 782],
-    [277.5, 782], [270.8, 736], [250.8, 667], [230.7, 609.5], [217.3, 609.5],
-    [210.6, 598], [170.5, 586.5], [143.7, 575], [130.4, 575], [96.9, 563.5],
-    [83.5, 529], [56.8, 494.5], [30, 448.5], [30, 356.5], [30, 241.5],
+    [320.7, 34.3], [361.1, 52.4], [402.4, 65], [453.3, 49.3], [491.3, 49.5],
+    [527.7, 44.8], [561.5, 42.2], [594.8, 48.7], [607.2, 73.3], [661.1, 63.6],
+    [707.5, 60.7], [753.5, 65], [787.7, 42.9], [827.3, 25.7], [882.8, 18],
+    [901.6, 47.4], [888.3, 76.8], [875.3, 117.4], [886.6, 149.2], [898.4, 205.3],
+    [888.4, 224.6], [855, 184.6], [840.9, 143.1], [814.3, 172.2], [780.1, 189.8],
+    [770.5, 239.9], [809.6, 301.5], [791.6, 352], [759.9, 373], [746.1, 408.2],
+    [774.8, 452.8], [753.1, 469], [745.9, 439.5], [723.6, 413.6], [708.5, 416.7],
+    [687.3, 430.8], [715.7, 497.9], [702.3, 584], [666.4, 609.9], [627.8, 623.7],
+    [607.8, 624.6], [588.3, 657.4], [622.9, 734.4], [577.9, 758.5], [555.2, 746.7],
+    [523.1, 711.2], [509, 756.1], [516.4, 828.6], [565.4, 851.5], [553.8, 805.7],
+    [496.6, 766.9], [500.3, 720.9], [493.3, 675.4], [464.5, 650.3], [468.6, 618.2],
+    [430.9, 601.8], [399.7, 606.7], [377.8, 612.8], [316.8, 641.6], [291.1, 728.8],
+    [257.8, 718.4], [261.8, 671], [254.4, 597.4], [246.6, 536.5], [228.8, 528.7],
+    [224.4, 515.1], [178.1, 479.8], [150.7, 451.8], [134.9, 441.8], [102.4, 406.9],
+    [106.4, 371.3], [98.4, 325.5], [100.3, 273.1], [155.1, 213.8], [224.5, 138.6],
   ],
   japanPoints: [
-    [750.0, 350.8], [776.8, 373.8], [753.4, 414], [746.7, 460], [740.0, 477.3],
-    [713.2, 483], [686.5, 483], [676.4, 517.5], [669.8, 494.5], [693.2, 465.8],
-    [719.9, 448.5], [740.0, 425.5], [746.7, 391],
+    [829.3, 320.6], [864, 326.6], [855.4, 369.8], [864.5, 409.9], [862.9, 427.2],
+    [833.6, 444.3], [801.7, 455.3], [798.5, 488.3], [784.4, 471.2], [805, 438.2],
+    [830.6, 412.9], [845.1, 385.3], [840.2, 354.4],
   ],
   sahalinPoints: [
-    [733.7, 253], [742.4, 287.5], [739.1, 345], [728.4, 345], [725.0, 287.5],
-    [730.4, 253],
+    [799.5, 238.7], [820, 263.3], [838.7, 310.7], [828.5, 315.4], [804.8, 270.3],
+    [796.8, 240],
   ],
   taiwanPoints: [
-    [579.9, 581.1], [577.9, 623], [563.9, 617.3], [564.5, 583.4],
+    [738.3, 562.9], [742.6, 599.6], [723.1, 596.7], [719.2, 568.6],
   ],
   sriLankaPoints: [
-    [296.6, 759.3], [312.3, 791.2], [300.9, 808.1], [293.6, 776.3],
+    [296.2, 707.3], [310.7, 745.4], [289.4, 755.5], [288.3, 721.9],
   ],
   sumatraPoints: [
-    [402, 805], [423.4, 831.8], [453.5, 883.5], [471.5, 941.9], [458.2, 937.3],
-    [429.4, 887.5], [400.6, 841.5], [389.6, 812.1],
+    [463.6, 790], [500.7, 822.7], [554.7, 881.9], [591.6, 945.9], [564.4, 939.1],
+    [513.3, 881.6], [467.2, 824.7], [453.6, 793.7],
   ],
   javaPoints: [
-    [468.2, 941], [525.1, 967.4], [528.4, 978.4], [471.5, 959.9],
+    [583.4, 946], [706.6, 971.3], [713.5, 982], [590.4, 966.7],
   ],
   borneoPoints: [
-    [491.6, 851], [525.1, 793.5], [558.5, 810.8], [551.8, 828], [545.1, 885.5],
-    [525.1, 914.3], [498.3, 908.5], [491.6, 874],
+    [627.8, 841.6], [683.7, 776.6], [744.9, 786.5], [735.7, 806.3], [732.3, 870.2],
+    [697.2, 907.4], [643.9, 905.1], [628.9, 866.8],
   ],
   luzonPoints: [
-    [566.5, 659.3], [580.6, 678.5], [580.6, 713], [571.9, 720.8], [563.2, 703.8],
-    [561.9, 682.3],
+    [735.2, 637], [755.7, 650.9], [762.4, 684.5], [750.6, 692.4], [737.2, 679],
+    [732, 660.8],
   ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const AS_CITIES = [
   {
-    id: 'teheran', name: 'Teheran', x: 106, y: 463, start: true, airport: true,
+    id: 'teheran', name: 'Teheran', x: 164, y: 342, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Lähi-idän laudalla.
     links: [{ pack: 'middleeast', city: 'teheran', label: 'Lähi-idän lauta' }],
   },
   {
-    id: 'tokio', name: 'Tokio', x: 738, y: 463, start: true, airport: true,
+    id: 'tokio', name: 'Tokio', x: 856, y: 417, start: true, airport: true,
     la: 'start', lx: 18, ly: 5,
   },
 
-  { id: 'jekaterinburg', name: 'Jekaterinburg', x: 168, y: 221, la: 'start', lx: 16, ly: 5 },
-  { id: 'astana', name: 'Astana', x: 240, y: 285, la: 'start', lx: 16, ly: 5 },
-  { id: 'novosibirsk', name: 'Novosibirsk', x: 317, y: 242, la: 'middle', lx: 0, ly: -22 },
-  { id: 'irkutsk', name: 'Irkutsk', x: 460, y: 273, la: 'middle', lx: 0, ly: -22 },
-  { id: 'jakutsk', name: 'Jakutsk', x: 630, y: 161, la: 'middle', lx: 0, ly: -22 },
-  { id: 'magadan', name: 'Magadan', x: 771, y: 189, la: 'end', lx: -16, ly: 5 },
-  { id: 'kamtsatka', name: 'Kamtšatka', x: 823, y: 265, la: 'start', lx: 16, ly: 5 },
-  { id: 'sahalin', name: 'Sahalin', x: 735, y: 299, la: 'start', lx: 16, ly: 5 },
-  { id: 'vladivostok', name: 'Vladivostok', x: 636, y: 372, la: 'start', lx: 16, ly: 5 },
-  { id: 'ulanbator', name: 'Ulan Bator', x: 478, y: 323, la: 'middle', lx: 0, ly: -22 },
+  { id: 'jekaterinburg', name: 'Jekaterinburg', x: 333, y: 194, la: 'start', lx: 16, ly: 5 },
+  { id: 'astana', name: 'Astana', x: 367, y: 275, la: 'start', lx: 16, ly: 5 },
+  { id: 'novosibirsk', name: 'Novosibirsk', x: 447, y: 260, la: 'middle', lx: 0, ly: -22 },
+  { id: 'irkutsk', name: 'Irkutsk', x: 574, y: 305, la: 'middle', lx: 0, ly: -22 },
+  { id: 'jakutsk', name: 'Jakutsk', x: 703, y: 184, la: 'end', lx: -16, ly: 5 },
+  { id: 'magadan', name: 'Magadan', x: 815, y: 165, la: 'end', lx: -16, ly: 5 },
+  { id: 'kamtsatka', name: 'Kamtšatka', x: 890, y: 198, la: 'start', lx: 16, ly: 5 },
+  { id: 'sahalin', name: 'Sahalin', x: 818, y: 276, la: 'start', lx: 16, ly: 5 },
+  { id: 'vladivostok', name: 'Vladivostok', x: 769, y: 366, la: 'start', lx: 16, ly: 5 },
+  { id: 'ulanbator', name: 'Ulan Bator', x: 591, y: 360, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'peking', name: 'Peking', x: 541, y: 415, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'peking', name: 'Peking', x: 666, y: 425, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'peking', label: 'Maailma-lauta' }],
   },
-  { id: 'soul', name: 'Soul', x: 612, y: 442, la: 'start', lx: 16, ly: 5 },
-  { id: 'xian', name: 'Xi’an', x: 491, y: 480, la: 'end', lx: -16, ly: 5 },
-  { id: 'shanghai', name: 'Shanghai', x: 566, y: 512, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'taipei', name: 'Taipei', x: 572, y: 592, la: 'start', lx: 16, ly: 5 },
-  { id: 'hongkong', name: 'Hongkong', x: 526, y: 618, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'manila', name: 'Manila', x: 572, y: 696, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'hanoi', name: 'Hanoi', x: 470, y: 633, la: 'end', lx: -16, ly: 5 },
-  { id: 'bangkok', name: 'Bangkok', x: 435, y: 715, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'yangon', name: 'Yangon', x: 398, y: 668, la: 'end', lx: -16, ly: 5 },
-  { id: 'singapore', name: 'Singapore', x: 450, y: 852, airport: true, la: 'middle', lx: 0, ly: 30 },
-  { id: 'sumatra', name: 'Sumatra', x: 400, y: 816, la: 'start', lx: 16, ly: 5 },
-  { id: 'borneo', name: 'Borneo', x: 525, y: 857, la: 'start', lx: 16, ly: 5 },
-  { id: 'jakarta', name: 'Jakarta', x: 482, y: 950, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'lhasa', name: 'Lhasa', x: 376, y: 520, la: 'start', lx: 16, ly: 5 },
-  { id: 'kathmandu', name: 'Kathmandu', x: 331, y: 562, la: 'start', lx: 16, ly: 5 },
-  { id: 'delhi', name: 'Delhi', x: 274, y: 545, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'kolkata', name: 'Kolkata', x: 354, y: 614, la: 'end', lx: -16, ly: 5 },
+  { id: 'soul', name: 'Soul', x: 752, y: 432, la: 'start', lx: 16, ly: 5 },
+  { id: 'xian', name: 'Xi’an', x: 611, y: 486, la: 'end', lx: -16, ly: 5 },
+  { id: 'shanghai', name: 'Shanghai', x: 713, y: 503, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'taipei', name: 'Taipei', x: 731, y: 579, la: 'start', lx: 16, ly: 5 },
+  { id: 'hongkong', name: 'Hongkong', x: 667, y: 606, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'manila', name: 'Manila', x: 748, y: 669, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'hanoi', name: 'Hanoi', x: 586, y: 625, la: 'end', lx: -16, ly: 5 },
+  { id: 'bangkok', name: 'Bangkok', x: 529, y: 703, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'yangon', name: 'Yangon', x: 486, y: 666, la: 'end', lx: -16, ly: 5 },
+  { id: 'singapore', name: 'Singapore', x: 563, y: 850, airport: true, la: 'middle', lx: 0, ly: 30 },
+  { id: 'sumatra', name: 'Sumatra', x: 488, y: 812, la: 'start', lx: 16, ly: 5 },
+  { id: 'borneo', name: 'Borneo', x: 644, y: 846, la: 'start', lx: 16, ly: 5 },
+  { id: 'jakarta', name: 'Jakarta', x: 605, y: 953, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'lhasa', name: 'Lhasa', x: 461, y: 514, la: 'start', lx: 16, ly: 5 },
+  { id: 'kathmandu', name: 'Kathmandu', x: 395, y: 540, la: 'start', lx: 16, ly: 5 },
+  { id: 'delhi', name: 'Delhi', x: 324, y: 504, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'kolkata', name: 'Kolkata', x: 417, y: 593, la: 'end', lx: -16, ly: 5 },
   {
-    id: 'mumbai', name: 'Mumbai', x: 250, y: 654, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'mumbai', name: 'Mumbai', x: 258, y: 586, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'mumbai', label: 'Maailma-lauta' }],
   },
-  { id: 'chennai', name: 'Chennai', x: 293, y: 718, la: 'end', lx: -16, ly: 5 },
-  { id: 'colombo', name: 'Colombo', x: 300, y: 787, la: 'middle', lx: 0, ly: 28 },
-  { id: 'karachi', name: 'Karachi', x: 211, y: 588, la: 'end', lx: -16, ly: 5 },
-  { id: 'kabul', name: 'Kabul', x: 225, y: 477, la: 'end', lx: -16, ly: 5 },
-  { id: 'samarkand', name: 'Samarkand', x: 210, y: 417, la: 'end', lx: -16, ly: 5 },
-  { id: 'kashgar', name: 'Kašgar', x: 270, y: 420, la: 'start', lx: 16, ly: 5 },
+  { id: 'chennai', name: 'Chennai', x: 308, y: 669, la: 'end', lx: -16, ly: 5 },
+  { id: 'colombo', name: 'Colombo', x: 295, y: 736, la: 'middle', lx: 0, ly: 28 },
+  { id: 'karachi', name: 'Karachi', x: 230, y: 506, la: 'end', lx: -16, ly: 5 },
+  { id: 'kabul', name: 'Kabul', x: 287, y: 425, la: 'end', lx: -16, ly: 5 },
+  { id: 'samarkand', name: 'Samarkand', x: 292, y: 369, la: 'start', lx: 16, ly: 5 },
+  { id: 'kashgar', name: 'Kašgar', x: 356, y: 397, la: 'end', lx: -16, ly: 5 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -7396,24 +7400,24 @@ const AS_EDGES = [
   { a: 'soul', b: 'vladivostok', steps: 4 },
 
   // Laivareitit
-  { a: 'vladivostok', b: 'sahalin', steps: 4, type: 'sea', via: [[690, 344]] },
-  { a: 'sahalin', b: 'magadan', steps: 5, type: 'sea', via: [[768, 252], [780, 220]] },
-  { a: 'magadan', b: 'kamtsatka', steps: 4, type: 'sea', via: [[800, 224]] },
-  { a: 'sahalin', b: 'tokio', steps: 5, type: 'sea', via: [[786, 350], [790, 412], [772, 440]] },
-  { a: 'tokio', b: 'soul', steps: 4, type: 'sea', via: [[730, 505], [690, 532], [640, 500]] },
-  { a: 'tokio', b: 'shanghai', steps: 5, type: 'sea', via: [[694, 560], [620, 540]] },
-  { a: 'shanghai', b: 'taipei', steps: 4, type: 'sea', via: [[600, 555]] },
-  { a: 'taipei', b: 'manila', steps: 4, type: 'sea', via: [[590, 645]] },
-  { a: 'hongkong', b: 'manila', steps: 4, type: 'sea', via: [[556, 660]] },
-  { a: 'manila', b: 'borneo', steps: 5, type: 'sea', via: [[566, 760], [548, 800]] },
-  { a: 'borneo', b: 'singapore', steps: 5, type: 'sea', via: [[492, 838], [472, 848]] },
-  { a: 'borneo', b: 'jakarta', steps: 5, type: 'sea', via: [[512, 930]] },
-  { a: 'singapore', b: 'jakarta', steps: 5, type: 'sea', via: [[470, 895], [478, 928]] },
-  { a: 'singapore', b: 'sumatra', steps: 4, type: 'sea', via: [[430, 850]] },
-  { a: 'sumatra', b: 'yangon', steps: 5, type: 'sea', via: [[390, 780], [388, 726]] },
-  { a: 'chennai', b: 'colombo', steps: 3, type: 'sea', via: [[286, 758]] },
-  { a: 'colombo', b: 'mumbai', steps: 6, type: 'sea', via: [[262, 762], [232, 700]] },
-  { a: 'mumbai', b: 'karachi', steps: 4, type: 'sea', via: [[212, 630]] },
+  { a: 'vladivostok', b: 'sahalin', steps: 4, type: 'sea', via: [[796, 323]] },
+  { a: 'sahalin', b: 'magadan', steps: 5, type: 'sea', via: [[821, 234], [825, 191]] },
+  { a: 'magadan', b: 'kamtsatka', steps: 4, type: 'sea', via: [[846, 171]] },
+  { a: 'sahalin', b: 'tokio', steps: 5, type: 'sea', via: [[822, 330], [820, 385]] },
+  { a: 'tokio', b: 'soul', steps: 4, type: 'sea', via: [[848, 471], [808, 504], [768, 483]] },
+  { a: 'tokio', b: 'shanghai', steps: 5, type: 'sea', via: [[844, 473], [781, 509]] },
+  { a: 'shanghai', b: 'taipei', steps: 4, type: 'sea', via: [[741, 535]] },
+  { a: 'taipei', b: 'manila', steps: 4, type: 'sea', via: [[744, 620]] },
+  { a: 'hongkong', b: 'manila', steps: 4, type: 'sea', via: [[702, 649]] },
+  { a: 'manila', b: 'borneo', steps: 5, type: 'sea', via: [[735, 723], [689, 769], [651, 808]] },
+  { a: 'borneo', b: 'singapore', steps: 5, type: 'sea', via: [[609, 850], [584, 849]] },
+  { a: 'borneo', b: 'jakarta', steps: 5, type: 'sea', via: [[630, 899], [618, 933]] },
+  { a: 'singapore', b: 'jakarta', steps: 5, type: 'sea', via: [[585, 896], [598, 936]] },
+  { a: 'singapore', b: 'sumatra', steps: 4, type: 'sea', via: [[529, 829]] },
+  { a: 'sumatra', b: 'yangon', steps: 5, type: 'sea', via: [[450, 762], [464, 695]] },
+  { a: 'chennai', b: 'colombo', steps: 3, type: 'sea', via: [[298, 707]] },
+  { a: 'colombo', b: 'mumbai', steps: 6, type: 'sea', via: [[241, 713], [224, 633]] },
+  { a: 'mumbai', b: 'karachi', steps: 4, type: 'sea', via: [[232, 542]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -7523,17 +7527,17 @@ const ASIA = {
 
   decor: {
     mapLabel: 'AASIA',
-    mapLabelPos: { x: 800, y: 800 },
-    compass: { x: 830, y: 620, r: 58 },
+    mapLabelPos: { x: 185, y: 792 },
+    compass: { x: 880, y: 618, r: 56 },
     waveSkip: [
-      { x: 800, y: 800, r: 120 },
-      { x: 830, y: 620, r: 100 },
-      { x: 130, y: 800, r: 95 },
-      { x: 900, y: 430, r: 105 },
+      { x: 185, y: 792, r: 130 },
+      { x: 880, y: 618, r: 95 },
+      { x: 330, y: 930, r: 95 },
+      { x: 862, y: 882, r: 105 },
     ],
-    ship: { x: 900, y: 430 },
-    serpent: { x: 130, y: 800 },
-    dieSpot: { x: 0.12, y: 0.9 },
+    ship: { x: 862, y: 882 },
+    serpent: { x: 330, y: 930 },
+    dieSpot: { x: 0.06, y: 0.2 },
     terrainBands: [
       { maxY: 340, kind: 'trees' },
       { maxY: 600, kind: 'mountains' },
@@ -8600,121 +8604,124 @@ const NORTHAMERICA_FACTS = {
 // ===== js/packs/northamerica.js =====
 // Pohjois-Amerikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
 //
-// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Pohjois-Amerikan
-// karttaa:
-//   x = (pituusaste + 166) * 8.4 + 15   (lännestä -166° itään -50°)
-//   y = (73 - leveysaste) * 14.3        (pohjoisesta 73° etelään 3°)
+// Koordinaatisto on 1000 x 1000 yksikköä.
 //
-// Mittasuhteet on valittu niin, että kartta on oikeassa muodossa 54. leveys-
-// asteella eli Kanadan eteläosassa. Manner on yksi ääriviiva Beringinsalmelta
-// Panaman kannakselle: Hudsoninlahti ja Kalifornianlahti työntyvät siihen
-// lahtina. Grönlanti, Newfoundland, Kuuba, Puerto Rico, Bermuda ja Havaiji
+// Kartta on Lambertin konformisessa kartioprojektiossa, standardileveys-
+// piireinä 20° ja 60° pohjoista leveyttä ja keskimeridiaanina 100° läntistä
+// pituutta. Muodot pysyvät oikeina sekä Meksikossa että Alaskassa, toisin kuin
+// yksinkertaisessa lieriöprojektiossa, joka venyttäisi pohjoisen leveäksi.
+// Lähdeaineisto on tools/mapdata/northamerica.json ja koordinaatit lasketaan
+// komennolla `node tools/project.mjs northamerica`.
+//
+// Manner on yksi ääriviiva Beringinsalmelta Panaman kannakselle;
+// Hudsoninlahti ja Kalifornianlahti työntyvät siihen lahtina. Grönlanti, Newfoundland, Kuuba, Puerto Rico, Bermuda ja Havaiji
 // ovat omia saariaan, joihin pääsee vain laivalla.
 
 const NA_MAP = {
   width: 1000,
   height: 1000,
   mainlandPoints: [
-    [23.4, 121.6], [15, 107.3], [31.8, 93], [40.2, 78.7], [15, 62.9],
-    [73.8, 35.8], [94.8, 22.9], [149.4, 35.8], [191.4, 41.5], [225, 48.6],
-    [275.4, 50.1], [334.2, 42.9], [367.8, 50.1], [443.4, 64.4], [485.4, 71.5],
-    [527.4, 64.4], [569.4, 64.4], [611.4, 64.4], [619.8, 114.4], [628.2, 157.3],
-    [636.6, 207.4], [670.2, 236], [695.4, 257.4], [720.6, 250.3], [737.4, 221.7],
-    [754.2, 185.9], [758.4, 157.3], [754.2, 135.8], [804.6, 157.3], [838.2, 185.9],
-    [863.4, 207.4], [880.2, 228.8], [897, 257.4], [922.2, 278.9], [934.8, 307.4],
-    [913.8, 328.9], [888.6, 350.4], [871.8, 371.8], [855, 400.4], [842.4, 403.3],
-    [821.4, 429], [808.8, 450.5], [787.8, 471.9], [779.4, 486.2], [771, 507.7],
-    [771, 536.3], [745.8, 572], [729, 593.5], [733.2, 636.4], [735.7, 675],
-    [724.8, 683.5], [716.4, 650.6], [708, 622.1], [695.4, 614.9], [670.2, 612],
-    [653.4, 629.2], [624, 619.2], [611.4, 629.2], [594.6, 672.1], [590.4, 729.3],
-    [603, 769.3], [615.6, 783.6], [636.6, 777.9], [653.4, 765.1], [678.6, 736.5],
-    [666, 782.2], [670.2, 815.1], [703.8, 829.4], [708, 865.2], [716.4, 908.1],
-    [741.6, 908.1], [737.4, 926.6], [712.2, 922.4], [695.4, 900.9], [678.6, 865.2],
-    [653.4, 850.9], [632.4, 829.4], [611.4, 815.1], [586.2, 808], [561, 793.7],
-    [535.8, 772.2], [523.2, 750.8], [523.2, 722.2], [514.8, 703.6], [502.2, 679.3],
-    [489.6, 657.8], [477, 636.4], [464.4, 614.9], [456, 600.6], [447.6, 614.9],
-    [460.2, 643.5], [477, 679.3], [487.1, 712.1], [468.6, 679.3], [451.8, 650.6],
-    [435, 607.8], [426.6, 579.1], [414, 557.7], [393, 522], [380.4, 503.4],
-    [367.8, 464.8], [363.6, 421.9], [367.8, 381.8], [363.6, 351.8], [376.2, 343.2],
-    [342.6, 314.6], [317.4, 271.7], [292.2, 228.8], [267, 207.4], [233.4, 185.9],
-    [191.4, 185.9], [166.2, 193.1], [141, 200.2], [124.2, 221.7], [99, 236],
-    [65.4, 250.3], [48.6, 257.4], [65.4, 214.5], [48.6, 185.9], [23.4, 178.8],
-    [31.8, 143],
+    [301.9, 153.9], [306.4, 141.6], [321.9, 139.3], [333.7, 133.3], [332.7, 113.7],
+    [372, 116], [387.6, 113.2], [403.5, 138.6], [419.4, 154.3], [431.9, 168.3],
+    [455.6, 180.7], [486.8, 185.7], [501.8, 197], [538.8, 218.3], [560.8, 227.8],
+    [584.5, 223.6], [607.5, 224.2], [630.5, 223.6], [638.1, 266.2], [646, 301.4],
+    [655.2, 341.3], [682, 361], [703.4, 374.8], [721.2, 365.7], [728.5, 340.9],
+    [733.2, 310.3], [730, 287.1], [722.9, 270.6], [759, 278.4], [788.1, 292.7],
+    [810.9, 302.1], [828.9, 312.9], [849.8, 328], [874.8, 334.2], [894.1, 348.9],
+    [886.4, 371.7], [874.3, 395.8], [867.7, 416.8], [873.4, 426.2], [891.6, 423.9],
+    [898.5, 412.1], [903, 419.5], [896.2, 433.7], [882.6, 441.2], [872.1, 456.3],
+    [861.7, 447.7], [866.9, 430.2], [862.2, 442.8], [852.3, 449.1], [840.9, 474.2],
+    [834.8, 493.6], [820.3, 515.3], [815.4, 528.1], [811.7, 546.1], [817.7, 567.1],
+    [798.4, 600.4], [784.1, 620.6], [796, 651.9], [805.6, 680.6], [794.3, 690],
+    [779.2, 666.9], [765.3, 647], [750.2, 644.1], [721.5, 646.4], [704.1, 662],
+    [669.8, 657.4], [655.9, 666.1], [637.7, 700.4], [634, 745.8], [651.3, 777.4],
+    [668.4, 788.1], [695.7, 781.3], [716.4, 768.6], [745.5, 741.6], [734.5, 780.4],
+    [743.7, 806.5], [790.8, 810.9], [802.1, 839.4], [821.1, 873.3], [857.1, 865.3],
+    [854.9, 882.6], [817.5, 886.8], [789.9, 872.8], [761.2, 846.4], [724.5, 839],
+    [693.8, 824], [664.4, 814.2], [630.1, 809.7], [596.3, 798.1], [563.6, 779.7],
+    [548.2, 761.5], [549.7, 738.6], [540.3, 723.2], [526.5, 702.8], [513.2, 684.6],
+    [500.5, 666.3], [488.4, 647.9], [480.7, 635.6], [469.5, 645], [480.4, 669.1],
+    [496.3, 699.5], [505.5, 726.7], [486.3, 698.2], [469.8, 673.1], [456.4, 637],
+    [451.3, 613.7], [441.2, 594.8], [425.6, 563.3], [416.5, 546.4], [412.1, 514.8],
+    [417.1, 482.4], [429.2, 454.2], [431.9, 431.2], [444.1, 427.8], [423.3, 398.7],
+    [414.8, 360.7], [408.8, 322.5], [398.6, 299.7], [384.6, 274.2], [359.1, 260.7],
+    [341.1, 256.8], [323.2, 252.2], [303.6, 259.6], [282, 258], [255.3, 251.3],
+    [241.9, 247.3], [273.2, 229.4], [278.9, 204.3], [269.9, 188.5], [293.7, 170.6],
   ],
   greenlandPoints: [
-    [947.4, 164.5], [964.2, 150.2], [981, 121.6], [985.2, 85.8], [989.4, 50.1],
-    [993.6, 21.5], [1000, 14.3], [1000, 71.5], [1000, 128.7], [1006.2, 171.6],
-    [972.6, 188.8],
+    [847.3, 245.5], [850.9, 229.9], [847.6, 204], [833.4, 177], [818.4, 149.4],
+    [806.2, 126.6], [812.5, 117.5], [842.3, 156.2], [866, 199], [876.7, 234.5],
+    [869, 254.4],
   ],
   newfoundlandPoints: [
-    [910.4, 363.2], [930.6, 350.4], [943.2, 334.6], [960, 336.1], [966.7, 363.2],
-    [951.6, 377.5], [926.4, 371.8],
+    [895.7, 396.4], [906.7, 379.6], [910.4, 363.9], [923.2, 357.7], [938.9, 372.6],
+    [932.9, 388.8], [911.2, 395.8],
   ],
   cubaPoints: [
-    [696.2, 729.3], [716.4, 712.1], [733.2, 713.6], [754.2, 722.2], [779.4, 747.9],
-    [786.1, 756.5], [766.8, 759.3], [741.6, 736.5], [716.4, 730.7],
+    [766.6, 732.3], [788.8, 714.2], [809.4, 710.9], [836.5, 711.4], [872.8, 722.8],
+    [883, 726.9], [859.7, 736.1], [823.9, 726.3], [791.8, 728.7],
   ],
   puertoRicoPoints: [
-    [842.1, 776.4], [860.4, 776.4], [860.4, 789.9], [842.1, 789.9],
+    [959, 718.9], [978.4, 711], [982, 719.6], [962.4, 727.6],
   ],
   bermudaPoints: [
-    [858.2, 575.6], [871.8, 575.6], [871.8, 588.4], [858.2, 588.4],
+    [921.1, 564.3], [927.1, 561.7], [929.7, 567.8], [923.7, 570.3],
   ],
   hawaiiPoints: [
-    [62.9, 730.7], [82.2, 733.6], [99, 743.6], [99.8, 772.2], [86.4, 752.2],
-    [67.9, 739.3],
+    [18, 535], [35.6, 552.1], [47.6, 571.4], [34.7, 590.6], [30.6, 567.2],
+    [18.6, 544.4],
   ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const NA_CITIES = [
   {
-    id: 'newyork', name: 'New York', x: 788, y: 462, start: true, airport: true,
+    id: 'newyork', name: 'New York', x: 816, y: 507, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'newyork', label: 'Maailma-lauta' }],
   },
   {
-    id: 'sanfrancisco', name: 'San Francisco', x: 381, y: 503, start: true, airport: true,
+    id: 'sanfrancisco', name: 'San Francisco', x: 419, y: 546, start: true, airport: true,
     la: 'end', lx: -18, ly: 5,
   },
 
-  { id: 'nome', name: 'Nome', x: 34, y: 128, la: 'start', lx: 16, ly: 5 },
-  { id: 'anchorage', name: 'Anchorage', x: 150, y: 169, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'whitehorse', name: 'Whitehorse', x: 275, y: 176, la: 'middle', lx: 0, ly: -22 },
-  { id: 'yellowknife', name: 'Yellowknife', x: 448, y: 150, la: 'middle', lx: 0, ly: -22 },
-  { id: 'vancouver', name: 'Vancouver', x: 375, y: 339, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'yellowstone', name: 'Yellowstone', x: 481, y: 406, la: 'end', lx: -16, ly: 5 },
-  { id: 'mountrushmore', name: 'Mount Rushmore', x: 540, y: 416, la: 'middle', lx: 0, ly: -24 },
-  { id: 'winnipeg', name: 'Winnipeg', x: 594, y: 330, la: 'middle', lx: 0, ly: -22 },
-  { id: 'churchill', name: 'Churchill', x: 618, y: 203, la: 'end', lx: -16, ly: 5 },
-  { id: 'iqaluit', name: 'Iqaluit', x: 812, y: 168, la: 'start', lx: 16, ly: 5 },
-  { id: 'nuuk', name: 'Nuuk', x: 990, y: 120, la: 'end', lx: -16, ly: 5 },
-  { id: 'labrador', name: 'Labrador', x: 902, y: 282, la: 'end', lx: -16, ly: 5 },
-  { id: 'stjohns', name: 'St. John’s', x: 948, y: 358, la: 'end', lx: -16, ly: -14 },
-  { id: 'halifax', name: 'Halifax', x: 850, y: 390, la: 'start', lx: 16, ly: 5 },
-  { id: 'montreal', name: 'Montreal', x: 791, y: 393, la: 'middle', lx: 0, ly: -22 },
-  { id: 'toronto', name: 'Toronto', x: 742, y: 419, la: 'end', lx: -16, ly: 5 },
-  { id: 'chicago', name: 'Chicago', x: 674, y: 445, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'appalakit', name: 'Appalakit', x: 733, y: 508, la: 'end', lx: -16, ly: 5 },
-  { id: 'bermuda', name: 'Bermuda', x: 865, y: 582, la: 'start', lx: 16, ly: 5 },
-  { id: 'denver', name: 'Denver', x: 527, y: 476, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'santafe', name: 'Santa Fe', x: 519, y: 533, la: 'start', lx: 16, ly: 5 },
-  { id: 'grandcanyon', name: 'Grand Canyon', x: 468, y: 528, la: 'end', lx: -16, ly: 5 },
-  { id: 'losangeles', name: 'Los Angeles', x: 417, y: 556, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'hawaii', name: 'Havaiji', x: 83, y: 739, la: 'middle', lx: 0, ly: 28 },
-  { id: 'dallas', name: 'Dallas', x: 596, y: 575, la: 'end', lx: -16, ly: 5 },
-  { id: 'neworleans', name: 'New Orleans', x: 653, y: 615, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'miami', name: 'Miami', x: 726, y: 666, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 773, y: 758, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sanjuan', name: 'San Juan', x: 854, y: 779, la: 'start', lx: 16, ly: 5 },
-  { id: 'monterrey', name: 'Monterrey', x: 567, y: 676, la: 'end', lx: -16, ly: 5 },
-  { id: 'mexico', name: 'Mexico City', x: 577, y: 766, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'merida', name: 'Mérida', x: 655, y: 778, la: 'start', lx: 16, ly: -6 },
-  { id: 'guatemala', name: 'Guatemala', x: 649, y: 835, la: 'end', lx: -16, ly: 5 },
-  { id: 'managua', name: 'Managua', x: 684, y: 871, la: 'end', lx: -16, ly: 16 },
+  { id: 'nome', name: 'Nome', x: 304, y: 154, la: 'start', lx: 16, ly: 5 },
+  { id: 'anchorage', name: 'Anchorage', x: 342, y: 234, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'whitehorse', name: 'Whitehorse', x: 413, y: 279, la: 'middle', lx: 0, ly: 28 },
+  { id: 'yellowknife', name: 'Yellowknife', x: 530, y: 291, la: 'middle', lx: 0, ly: -22 },
+  { id: 'vancouver', name: 'Vancouver', x: 446, y: 423, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'yellowstone', name: 'Yellowstone', x: 527, y: 493, la: 'end', lx: -16, ly: 5 },
+  { id: 'mountrushmore', name: 'Mount Rushmore', x: 585, y: 489, la: 'middle', lx: 0, ly: -24 },
+  { id: 'winnipeg', name: 'Winnipeg', x: 628, y: 439, la: 'middle', lx: 0, ly: -22 },
+  { id: 'churchill', name: 'Churchill', x: 643, y: 339, la: 'end', lx: -16, ly: 5 },
+  { id: 'iqaluit', name: 'Iqaluit', x: 749, y: 282, la: 'start', lx: 16, ly: 5 },
+  { id: 'nuuk', name: 'Nuuk', x: 851, y: 205, la: 'end', lx: -16, ly: 5 },
+  { id: 'labrador', name: 'Labrador', x: 862, y: 343, la: 'end', lx: -16, ly: 5 },
+  { id: 'stjohns', name: 'St. John’s', x: 924, y: 373, la: 'end', lx: -16, ly: -14 },
+  { id: 'halifax', name: 'Halifax', x: 881, y: 436, la: 'start', lx: 16, ly: 5 },
+  { id: 'montreal', name: 'Montreal', x: 805, y: 450, la: 'middle', lx: 0, ly: -22 },
+  { id: 'toronto', name: 'Toronto', x: 768, y: 488, la: 'end', lx: -16, ly: 5 },
+  { id: 'chicago', name: 'Chicago', x: 707, y: 520, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'appalakit', name: 'Appalakit', x: 774, y: 556, la: 'end', lx: -16, ly: 5 },
+  { id: 'bermuda', name: 'Bermuda', x: 925, y: 566, la: 'start', lx: 16, ly: 5 },
+  { id: 'denver', name: 'Denver', x: 566, y: 549, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'santafe', name: 'Santa Fe', x: 552, y: 604, la: 'start', lx: 16, ly: 5 },
+  { id: 'grandcanyon', name: 'Grand Canyon', x: 501, y: 582, la: 'end', lx: -16, ly: 5 },
+  { id: 'losangeles', name: 'Los Angeles', x: 444, y: 593, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'hawaii', name: 'Havaiji', x: 33, y: 564, la: 'middle', lx: 0, ly: 28 },
+  { id: 'dallas', name: 'Dallas', x: 637, y: 625, la: 'start', lx: 16, ly: 5 },
+  { id: 'neworleans', name: 'New Orleans', x: 700, y: 648, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'miami', name: 'Miami', x: 800, y: 677, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 863, y: 729, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sanjuan', name: 'San Juan', x: 971, y: 719, la: 'end', lx: -16, ly: 5 },
+  { id: 'monterrey', name: 'Monterrey', x: 605, y: 704, la: 'end', lx: -16, ly: 5 },
+  { id: 'mexico', name: 'Mexico City', x: 617, y: 774, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'merida', name: 'Mérida', x: 724, y: 764, la: 'start', lx: 16, ly: -6 },
+  { id: 'guatemala', name: 'Guatemala', x: 717, y: 823, la: 'end', lx: -16, ly: 5 },
+  { id: 'managua', name: 'Managua', x: 770, y: 846, la: 'end', lx: -16, ly: 16 },
   {
-    id: 'panama', name: 'Panama', x: 728, y: 916, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'panama', name: 'Panama', x: 856, y: 870, airport: true, la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Etelä-Amerikan laudalla: kannas yhdistää mantereet.
     links: [{ pack: 'southamerica', city: 'panama', label: 'Etelä-Amerikan lauta' }],
   },
@@ -8772,24 +8779,24 @@ const NA_EDGES = [
 
   // Laivareitit
   { a: 'anchorage', b: 'vancouver', steps: 6, type: 'sea',
-    via: [[150, 240], [130, 262], [200, 292], [280, 306], [330, 332]] },
+    via: [[316, 275], [342, 303], [380, 359], [415, 402]] },
   { a: 'sanfrancisco', b: 'hawaii', steps: 7, type: 'sea',
-    via: [[300, 560], [220, 620], [150, 690]] },
+    via: [[358, 572], [229, 590], [95, 577]] },
   { a: 'hawaii', b: 'losangeles', steps: 7, type: 'sea',
-    via: [[170, 760], [260, 700], [350, 620]] },
-  { a: 'miami', b: 'santiagodecuba', steps: 3, type: 'sea', via: [[762, 712]] },
-  { a: 'miami', b: 'bermuda', steps: 5, type: 'sea', via: [[790, 640], [830, 606]] },
-  { a: 'santiagodecuba', b: 'sanjuan', steps: 4, type: 'sea', via: [[812, 770]] },
-  { a: 'sanjuan', b: 'bermuda', steps: 5, type: 'sea', via: [[880, 720], [878, 650]] },
-  { a: 'bermuda', b: 'newyork', steps: 5, type: 'sea', via: [[848, 540], [820, 496]] },
-  { a: 'bermuda', b: 'halifax', steps: 5, type: 'sea', via: [[888, 530], [890, 460]] },
-  { a: 'halifax', b: 'stjohns', steps: 4, type: 'sea', via: [[912, 392]] },
-  { a: 'stjohns', b: 'nuuk', steps: 6, type: 'sea', via: [[955, 300], [936, 226], [944, 160], [962, 128]] },
-  { a: 'nuuk', b: 'iqaluit', steps: 4, type: 'sea', via: [[930, 118]] },
+    via: [[60, 630], [223, 650], [378, 636]] },
+  { a: 'miami', b: 'santiagodecuba', steps: 3, type: 'sea', via: [[823, 700]] },
+  { a: 'miami', b: 'bermuda', steps: 5, type: 'sea', via: [[856, 630], [903, 591]] },
+  { a: 'santiagodecuba', b: 'sanjuan', steps: 4, type: 'sea', via: [[919, 725]] },
+  { a: 'sanjuan', b: 'bermuda', steps: 5, type: 'sea', via: [[955, 654], [942, 599]] },
+  { a: 'bermuda', b: 'newyork', steps: 5, type: 'sea', via: [[875, 543], [836, 522]] },
+  { a: 'bermuda', b: 'halifax', steps: 5, type: 'sea', via: [[911, 505], [901, 462]] },
+  { a: 'halifax', b: 'stjohns', steps: 4, type: 'sea', via: [[904, 406]] },
+  { a: 'stjohns', b: 'nuuk', steps: 6, type: 'sea', via: [[924, 325], [903, 258], [868, 226]] },
+  { a: 'nuuk', b: 'iqaluit', steps: 4, type: 'sea', via: [[807, 227]] },
   { a: 'iqaluit', b: 'churchill', steps: 6, type: 'sea',
-    via: [[770, 150], [740, 172], [700, 200], [662, 208]] },
-  { a: 'santiagodecuba', b: 'merida', steps: 4, type: 'sea', via: [[706, 762]] },
-  { a: 'santiagodecuba', b: 'panama', steps: 5, type: 'sea', via: [[790, 830], [780, 890]] },
+    via: [[735, 274], [718, 296], [694, 319], [666, 334]] },
+  { a: 'santiagodecuba', b: 'merida', steps: 4, type: 'sea', via: [[779, 748]] },
+  { a: 'santiagodecuba', b: 'panama', steps: 5, type: 'sea', via: [[857, 790], [850, 835]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -8900,11 +8907,11 @@ const NORTHAMERICA = {
     waveSkip: [
       { x: 250, y: 880, r: 175 },
       { x: 120, y: 430, r: 95 },
-      { x: 240, y: 620, r: 95 },
-      { x: 905, y: 690, r: 105 },
+      { x: 140, y: 700, r: 95 },
+      { x: 848, y: 880, r: 105 },
     ],
-    ship: { x: 905, y: 690 },
-    serpent: { x: 240, y: 620 },
+    ship: { x: 848, y: 880 },
+    serpent: { x: 140, y: 700 },
     dieSpot: { x: 0.05, y: 0.34 },
     terrainBands: [
       { maxY: 260, kind: 'mountains' },
@@ -10015,10 +10022,13 @@ const SOUTHAMERICA_FACTS = {
 // ===== js/packs/southamerica.js =====
 // Etelä-Amerikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
 //
-// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Etelä-Amerikan
-// karttaa:
-//   x = (pituusaste + 93) * 13.3 + 65   (lännestä -93° itään -33°)
-//   y = (14 - leveysaste) * 14.1        (pohjoisesta 14° etelään -57°)
+// Koordinaatisto on 1000 x 1000 yksikköä.
+//
+// Kartta on Lambertin konformisessa kartioprojektiossa, standardileveys-
+// piireinä 5° ja 45° etelää ja keskimeridiaanina 60° läntistä pituutta.
+// Muodot pysyvät oikeina sekä päiväntasaajalla että Patagoniassa. Lähde-
+// aineisto on tools/mapdata/southamerica.json ja koordinaatit lasketaan
+// komennolla `node tools/project.mjs southamerica`.
 //
 // Manner on yksi ääriviiva Panaman kannakselta Tulimaahan. Galápagos,
 // Falklandinsaaret, Juan Fernándezin Robinson Crusoe, San Ambrosio ja
@@ -10030,109 +10040,109 @@ const SA_MAP = {
   width: 1000,
   height: 1000,
   mainlandPoints: [
-    [198, 62], [208.6, 70.5], [224.6, 71.9], [237.9, 64.9], [244.6, 62],
-    [257.9, 66.3], [272.5, 74.7], [279.1, 76.1], [291.1, 64.9], [297.8, 50.8],
-    [307.1, 42.3], [315, 38.1], [337.7, 32.4], [353.6, 22.6], [357.6, 31],
-    [349.6, 42.3], [368.2, 35.3], [374.9, 35.3], [393.5, 49.4], [410.8, 49.4],
-    [430.8, 47.9], [448, 47.9], [469.3, 46.5], [478.6, 62], [493.3, 76.1],
-    [503.9, 84.6], [527.8, 101.5], [550.5, 114.2], [577.1, 119.8], [606.3, 128.3],
-    [623.6, 141], [630.3, 169.2], [636.9, 190.3], [650.2, 211.5], [683.5, 225.6],
-    [712.7, 232.7], [746, 238.3], [789.9, 249.6], [816.5, 269.3], [833.7, 279.2],
-    [837.7, 297.5], [837.7, 311.6], [823.1, 338.4], [809.8, 352.5], [789.9, 379.3],
-    [783.2, 406.1], [773.9, 437.1], [763.3, 465.3], [756.6, 500.6], [727.3, 521.7],
-    [703.4, 533], [682.1, 535.8], [656.9, 556.9], [655.5, 578.1], [636.9, 606.3],
-    [620.9, 620.4], [606.3, 645.8], [591.7, 669.8], [570.4, 689.5], [554.4, 689.5],
-    [537.2, 685.3], [525.2, 685.3], [537.2, 705], [547.8, 733.2], [477.3, 747.3],
-    [473.3, 768.4], [450.7, 772.7], [437.4, 775.5], [437.4, 803.7], [433.4, 831.9],
-    [404.2, 844.6], [410.8, 860.1], [426.8, 871.4], [401.5, 902.4], [390.9, 934.8],
-    [389.5, 971.5], [406.8, 981.4], [370.9, 977.1], [350.9, 958.8], [358.9, 947.5],
-    [324.4, 930.6], [311.1, 902.4], [304.4, 874.2], [297.8, 831.9], [317.7, 803.7],
-    [331, 782.5], [324.4, 747.3], [328.3, 719.1], [349.6, 662.7], [352.3, 620.4],
-    [364.3, 556.9], [365.6, 531.6], [368.2, 482.2], [366.9, 458.3], [353.6, 437.1],
-    [337.7, 430.1], [301.7, 408.9], [287.1, 387.8], [277.8, 366.6], [257.9, 324.3],
-    [244.6, 303.1], [228.6, 282], [221.9, 267.9], [225.9, 246.8], [233.9, 235.5],
-    [225.9, 211.5], [231.3, 193.2], [251.2, 174.8], [257.9, 162.2], [271.1, 148],
-    [272.5, 126.9], [271.1, 105.8], [265.8, 84.6], [257.9, 80.4], [244.6, 84.6],
-    [231.3, 81.8], [224.6, 91.6], [218, 84.6], [200.7, 81.8], [198, 77.5],
+    [181.9, 96], [195.7, 103.2], [214.1, 101.7], [228.2, 91.6], [235.3, 87.4],
+    [251.3, 89.8], [269.4, 96.8], [277.2, 97.4], [289.4, 83.3], [295.2, 66.7],
+    [305, 56], [313.8, 50.2], [339.7, 41.2], [357.5, 28.3], [363, 37.5],
+    [354.8, 51.1], [376, 41.3], [383.8, 40.7], [406.7, 55.1], [426.9, 54],
+    [450.2, 51.3], [470.4, 50.5], [495.3, 48.3], [506.5, 65.5], [523.6, 80.9],
+    [535.9, 90.2], [563.1, 108.8], [588.5, 122.9], [618.3, 130], [650.7, 140.6],
+    [669.2, 155.2], [674.5, 185.1], [680.1, 207.4], [692.7, 230], [726.8, 247.4],
+    [757, 257.9], [791.2, 268], [835.3, 286], [859.4, 309.9], [875.3, 322.7],
+    [876, 341.1], [873.4, 354.6], [854.2, 377.3], [838.7, 388.2], [815, 410.1],
+    [804.6, 434.1], [791.3, 461.5], [777.4, 486], [766.6, 517.6], [737.6, 533.5],
+    [714.9, 541.3], [695.6, 541.8], [671.3, 559.2], [668.4, 578.6], [650.2, 603.4],
+    [635.7, 615.5], [621.8, 638.3], [608.5, 660], [590.2, 677.7], [577.2, 677.3],
+    [563.1, 673], [553.3, 672.8], [562.8, 691.5], [570.7, 718.4], [515, 731.5],
+    [512.2, 751.8], [494.8, 756.3], [484.7, 759.4], [485.7, 786.6], [483.8, 814.4],
+    [462.9, 827.9], [468.6, 843.1], [480.6, 853.9], [464.3, 886.2], [459.1, 920.3],
+    [460.7, 959.2], [472.6, 969.2], [448.9, 966.2], [434.2, 947.6], [438.5, 935.2],
+    [413.5, 919.6], [401.3, 891.5], [393.5, 863.5], [383.8, 822.2], [395.6, 793.1],
+    [403.6, 771.7], [395.1, 738.5], [395.5, 711.6], [407.9, 657.2], [406.7, 617.7],
+    [412.2, 558.2], [411.6, 534.7], [410.4, 488.8], [407.5, 466.7], [393.3, 448],
+    [377.6, 442.8], [341.3, 426.6], [324.8, 408.4], [313.3, 389.6], [288.1, 352.1],
+    [271.8, 333.8], [252.5, 315.8], [243.5, 303.2], [244.3, 281.9], [250.9, 269.5],
+    [238.8, 246.9], [241.5, 227.6], [260.2, 205.8], [265.6, 191.7], [278.2, 175.1],
+    [276.7, 152.8], [272.3, 130.5], [263.2, 108.6], [253.5, 105.2], [239, 112],
+    [223.4, 111.3], [217.6, 123.1], [208.8, 116.7], [188.7, 117], [184.9, 112.9],
   ],
   galapagosPoints: [
-    [86.3, 198.8], [96.9, 194.6], [106.2, 203], [114.2, 210.1], [104.9, 217.1],
-    [92.9, 214.3], [85, 205.9],
+    [88.8, 263.7], [99, 256.9], [110.7, 263], [120.7, 268.1], [112.5, 277.3],
+    [99.4, 277.4], [89.1, 271.1],
   ],
   falklandPoints: [
-    [486.6, 920.7], [505.2, 917.9], [523.9, 920.7], [534.5, 929.2], [518.5, 934.8],
-    [499.9, 933.4], [485.3, 927.8],
+    [524, 903.1], [536.8, 900.2], [549.6, 903.2], [556.8, 912.1], [545.8, 917.8],
+    [533.2, 916.3], [523.1, 910.5],
   ],
   robinsonPoints: [
-    [246.5, 666.8], [261.5, 666.8], [261.5, 677], [246.2, 677],
+    [325.2, 672.1], [333.9, 670.9], [334.9, 677.4], [326.2, 678.7],
   ],
   ambrosioPoints: [
-    [231.6, 563.8], [246.9, 563.8], [246.9, 574], [231.6, 574],
+    [298.7, 579.4], [307.9, 578], [308.9, 584.4], [299.7, 585.8],
   ],
   hornPoints: [
-    [399.8, 979.8], [415.1, 979.8], [415.1, 991.4], [399.8, 991.4],
+    [464.6, 966.6], [481.1, 965.7], [481.9, 981.1], [465.6, 982],
   ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const SA_CITIES = [
   {
-    id: 'panama', name: 'Panama', x: 244, y: 74, start: true, airport: true,
+    id: 'panama', name: 'Panama', x: 236, y: 97, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Pohjois-Amerikan laudalla: kannas yhdistää mantereet.
     links: [{ pack: 'northamerica', city: 'panama', label: 'Pohjois-Amerikan lauta' }],
   },
   {
-    id: 'buenosaires', name: 'Buenos Aires', x: 528, y: 694, start: true, airport: true,
+    id: 'buenosaires', name: 'Buenos Aires', x: 552, y: 677, start: true, airport: true,
     la: 'start', lx: 18, ly: 5,
   },
 
-  { id: 'caracas', name: 'Caracas', x: 414, y: 57 },
-  { id: 'bogota', name: 'Bogotá', x: 317, y: 131, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'quito', name: 'Quito', x: 258, y: 200, la: 'end', lx: -16, ly: 5 },
-  { id: 'galapagos', name: 'Galápagos', x: 101, y: 208, la: 'middle', lx: 0, ly: 26 },
-  { id: 'boavista', name: 'Boa Vista', x: 495, y: 158 },
-  { id: 'cayenne', name: 'Cayenne', x: 600, y: 136, la: 'start', lx: 16, ly: 5 },
-  { id: 'macapa', name: 'Macapá', x: 620, y: 200, la: 'start', lx: 16, ly: 5 },
-  { id: 'manaus', name: 'Manaus', x: 504, y: 241, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'santarem', name: 'Santarém', x: 574, y: 240, la: 'middle', lx: 0, ly: -22 },
-  { id: 'saoluis', name: 'São Luís', x: 707, y: 241, la: 'middle', lx: 0, ly: -22 },
+  { id: 'caracas', name: 'Caracas', x: 429, y: 59 },
+  { id: 'bogota', name: 'Bogotá', x: 327, y: 151, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'quito', name: 'Quito', x: 271, y: 230, la: 'end', lx: -16, ly: 5 },
+  { id: 'galapagos', name: 'Galápagos', x: 106, y: 269, la: 'middle', lx: 0, ly: 26 },
+  { id: 'boavista', name: 'Boa Vista', x: 526, y: 168 },
+  { id: 'cayenne', name: 'Cayenne', x: 645, y: 143, la: 'start', lx: 16, ly: 5 },
+  { id: 'macapa', name: 'Macapá', x: 661, y: 210, la: 'start', lx: 16, ly: 5 },
+  { id: 'manaus', name: 'Manaus', x: 536, y: 254, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'santarem', name: 'Santarém', x: 611, y: 245, la: 'middle', lx: 0, ly: -22 },
+  { id: 'saoluis', name: 'São Luís', x: 752, y: 263, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'joaopessoa', name: 'João Pessoa', x: 830, y: 300, airport: true,
+    id: 'joaopessoa', name: 'João Pessoa', x: 872, y: 342, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Etelä-Atlantin postilentoreitti Dakariin: Brasilian itäkärki on
     // Afrikkaa lähinnä oleva kohta koko Amerikassa.
     links: [{ pack: 'africa', city: 'dakar', label: 'Afrikan lauta' }],
   },
-  { id: 'salvador', name: 'Salvador', x: 783, y: 385, la: 'start', lx: 16, ly: 5 },
-  { id: 'iquitos', name: 'Iquitos', x: 328, y: 250, la: 'end', lx: -16, ly: 5 },
-  { id: 'portovelho', name: 'Porto Velho', x: 452, y: 321, la: 'end', lx: -16, ly: 5 },
-  { id: 'bananal', name: 'Ilha do Bananal', x: 635, y: 350, la: 'start', lx: 16, ly: 5 },
-  { id: 'machupicchu', name: 'Machu Picchu', x: 342, y: 380, la: 'start', lx: 16, ly: -6 },
-  { id: 'titicaca', name: 'Titicaca', x: 384, y: 424, la: 'start', lx: 16, ly: 8 },
-  { id: 'lima', name: 'Lima', x: 284, y: 371, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'santacruz', name: 'Santa Cruz', x: 462, y: 448 },
-  { id: 'campogrande', name: 'Campo Grande', x: 575, y: 486, la: 'start', lx: 16, ly: 5 },
+  { id: 'salvador', name: 'Salvador', x: 811, y: 408, la: 'start', lx: 16, ly: 5 },
+  { id: 'iquitos', name: 'Iquitos', x: 351, y: 272, la: 'end', lx: -16, ly: 5 },
+  { id: 'portovelho', name: 'Porto Velho', x: 483, y: 332, la: 'end', lx: -16, ly: 5 },
+  { id: 'bananal', name: 'Ilha do Bananal', x: 666, y: 364, la: 'start', lx: 16, ly: 5 },
+  { id: 'machupicchu', name: 'Machu Picchu', x: 373, y: 402, la: 'start', lx: 16, ly: -6 },
+  { id: 'titicaca', name: 'Titicaca', x: 417, y: 430, la: 'start', lx: 16, ly: 8 },
+  { id: 'lima', name: 'Lima', x: 319, y: 394, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'santacruz', name: 'Santa Cruz', x: 496, y: 453 },
+  { id: 'campogrande', name: 'Campo Grande', x: 602, y: 489, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'rio', name: 'Rio de Janeiro', x: 722, y: 515, airport: true,
+    id: 'rio', name: 'Rio de Janeiro', x: 736, y: 529, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'rio', label: 'Maailma-lauta' }],
   },
-  { id: 'saopaulo', name: 'São Paulo', x: 668, y: 537, la: 'end', lx: -16, ly: 16 },
-  { id: 'iguazu', name: 'Iguazú', x: 578, y: 560, la: 'end', lx: -16, ly: 5 },
-  { id: 'portoalegre', name: 'Porto Alegre', x: 615, y: 626, la: 'start', lx: 16, ly: 5 },
-  { id: 'antofagasta', name: 'Antofagasta', x: 373, y: 534, la: 'end', lx: -16, ly: 5 },
-  { id: 'salta', name: 'Salta', x: 432, y: 547, la: 'start', lx: 16, ly: 5 },
-  { id: 'catamarca', name: 'Catamarca', x: 424, y: 606, la: 'start', lx: 16, ly: 5 },
-  { id: 'valparaiso', name: 'Valparaíso', x: 356, y: 666, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'sanambrosio', name: 'San Ambrosio', x: 239, y: 569, la: 'middle', lx: 0, ly: 28 },
-  { id: 'robinsoncrusoe', name: 'Robinson Crusoe', x: 253, y: 672, la: 'middle', lx: 0, ly: 28 },
-  { id: 'puertomontt', name: 'Puerto Montt', x: 338, y: 784, la: 'end', lx: -16, ly: 5 },
-  { id: 'sanjorge', name: 'San Jorge', x: 411, y: 841, la: 'start', lx: 16, ly: 5 },
-  { id: 'falkland', name: 'Falkland', x: 517, y: 926, la: 'start', lx: 16, ly: 5 },
-  { id: 'puntaarenas', name: 'Punta Arenas', x: 365, y: 944, la: 'end', lx: -16, ly: 5 },
-  { id: 'caphorn', name: 'Kap Horn', x: 407, y: 987, la: 'middle', lx: 0, ly: -22 },
+  { id: 'saopaulo', name: 'São Paulo', x: 679, y: 522, la: 'start', lx: 16, ly: -6 },
+  { id: 'iguazu', name: 'Iguazú', x: 601, y: 557, la: 'end', lx: -16, ly: 5 },
+  { id: 'portoalegre', name: 'Porto Alegre', x: 631, y: 613, la: 'start', lx: 16, ly: 5 },
+  { id: 'antofagasta', name: 'Antofagasta', x: 416, y: 533, la: 'end', lx: -16, ly: 5 },
+  { id: 'salta', name: 'Salta', x: 472, y: 545, la: 'start', lx: 16, ly: 5 },
+  { id: 'catamarca', name: 'Catamarca', x: 465, y: 601, la: 'start', lx: 16, ly: 5 },
+  { id: 'valparaiso', name: 'Valparaíso', x: 412, y: 657, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'sanambrosio', name: 'San Ambrosio', x: 304, y: 582, la: 'middle', lx: 0, ly: 28 },
+  { id: 'robinsoncrusoe', name: 'Robinson Crusoe', x: 330, y: 675, la: 'middle', lx: 0, ly: 28 },
+  { id: 'puertomontt', name: 'Puerto Montt', x: 408, y: 770, la: 'end', lx: -16, ly: 5 },
+  { id: 'sanjorge', name: 'San Jorge', x: 459, y: 824, la: 'start', lx: 16, ly: 5 },
+  { id: 'falkland', name: 'Falkland', x: 540, y: 909, la: 'start', lx: 16, ly: 5 },
+  { id: 'puntaarenas', name: 'Punta Arenas', x: 433, y: 925, la: 'end', lx: -16, ly: 5 },
+  { id: 'caphorn', name: 'Kap Horn', x: 473, y: 974, la: 'middle', lx: 0, ly: -22 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -10193,27 +10203,27 @@ const SA_EDGES = [
 
   // Laivareitit
   { a: 'panama', b: 'galapagos', steps: 5, type: 'sea',
-    via: [[190, 90], [150, 130], [110, 165]] },
+    via: [[179, 168], [130, 223]] },
   { a: 'galapagos', b: 'lima', steps: 6, type: 'sea',
-    via: [[130, 240], [180, 300], [230, 345]] },
+    via: [[165, 318], [255, 357]] },
   { a: 'panama', b: 'caracas', steps: 6, type: 'sea',
-    via: [[280, 20], [340, 12], [395, 18]] },
+    via: [[299, 32], [409, 18]] },
   { a: 'caracas', b: 'cayenne', steps: 6, type: 'sea',
-    via: [[470, 20], [540, 55], [590, 92]] },
+    via: [[505, 43], [597, 91]] },
   { a: 'macapa', b: 'saoluis', steps: 5, type: 'sea',
-    via: [[665, 180], [700, 195]] },
+    via: [[708, 223], [742, 241]] },
   { a: 'salvador', b: 'saoluis', steps: 6, type: 'sea',
-    via: [[860, 340], [880, 288], [868, 240], [820, 200], [762, 196]] },
+    via: [[852, 391], [911, 333], [903, 267], [821, 242], [777, 248]] },
   { a: 'lima', b: 'antofagasta', steps: 6, type: 'sea',
-    via: [[255, 400], [290, 460], [330, 505]] },
-  { a: 'antofagasta', b: 'sanambrosio', steps: 4, type: 'sea', via: [[300, 545]] },
-  { a: 'sanambrosio', b: 'robinsoncrusoe', steps: 4, type: 'sea', via: [[225, 615]] },
-  { a: 'robinsoncrusoe', b: 'valparaiso', steps: 3, type: 'sea', via: [[295, 662]] },
+    via: [[293, 433], [376, 489]] },
+  { a: 'antofagasta', b: 'sanambrosio', steps: 4, type: 'sea', via: [[359, 557]] },
+  { a: 'sanambrosio', b: 'robinsoncrusoe', steps: 4, type: 'sea', via: [[314, 629]] },
+  { a: 'robinsoncrusoe', b: 'valparaiso', steps: 3, type: 'sea', via: [[371, 665]] },
   { a: 'puertomontt', b: 'puntaarenas', steps: 5, type: 'sea',
-    via: [[295, 815], [280, 870], [300, 925]] },
-  { a: 'puntaarenas', b: 'caphorn', steps: 3, type: 'sea', via: [[360, 975]] },
-  { a: 'caphorn', b: 'falkland', steps: 4, type: 'sea', via: [[450, 975], [495, 950]] },
-  { a: 'falkland', b: 'sanjorge', steps: 4, type: 'sea', via: [[490, 890], [440, 860]] },
+    via: [[379, 823], [369, 896], [411, 935]] },
+  { a: 'puntaarenas', b: 'caphorn', steps: 3, type: 'sea', via: [[453, 964]] },
+  { a: 'caphorn', b: 'falkland', steps: 4, type: 'sea', via: [[510, 959], [536, 936]] },
+  { a: 'falkland', b: 'sanjorge', steps: 4, type: 'sea', via: [[517, 877], [493, 839]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -10248,7 +10258,9 @@ const SOUTHAMERICA = {
   edges: SA_EDGES,
   airRoutes: SA_AIR_ROUTES,
   islands: ['galapagos', 'sanambrosio', 'robinsoncrusoe', 'falkland', 'caphorn'],
-  minCityDistance: 55,
+  // Andien kaupungit ovat oikeasti tiheässä: Lima, Machu Picchu ja Titicaca
+  // mahtuvat pienelle alueelle, joten vähimmäisetäisyys on hieman muita väljempi.
+  minCityDistance: 50,
 
   tokens: {
     // Smaragdin tilalla on Kolumbian oma jalokivi ja topaasin tilalla
@@ -10321,10 +10333,10 @@ const SOUTHAMERICA = {
 
   decor: {
     mapLabel: 'ETELÄ-AMERIKKA',
-    mapLabelPos: { x: 760, y: 832 },
+    mapLabelPos: { x: 790, y: 900 },
     compass: { x: 148, y: 800, r: 58 },
     waveSkip: [
-      { x: 760, y: 832, r: 170 },
+      { x: 790, y: 900, r: 170 },
       { x: 148, y: 800, r: 100 },
       { x: 150, y: 420, r: 95 },
       { x: 830, y: 120, r: 105 },
@@ -15064,7 +15076,7 @@ class UI {
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.16';
+const APP_VERSION = '2026-07-26.17';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');

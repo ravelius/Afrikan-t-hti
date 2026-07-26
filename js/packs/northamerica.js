@@ -1,14 +1,16 @@
 // Pohjois-Amerikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
 //
-// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Pohjois-Amerikan
-// karttaa:
-//   x = (pituusaste + 166) * 8.4 + 15   (lännestä -166° itään -50°)
-//   y = (73 - leveysaste) * 14.3        (pohjoisesta 73° etelään 3°)
+// Koordinaatisto on 1000 x 1000 yksikköä.
 //
-// Mittasuhteet on valittu niin, että kartta on oikeassa muodossa 54. leveys-
-// asteella eli Kanadan eteläosassa. Manner on yksi ääriviiva Beringinsalmelta
-// Panaman kannakselle: Hudsoninlahti ja Kalifornianlahti työntyvät siihen
-// lahtina. Grönlanti, Newfoundland, Kuuba, Puerto Rico, Bermuda ja Havaiji
+// Kartta on Lambertin konformisessa kartioprojektiossa, standardileveys-
+// piireinä 20° ja 60° pohjoista leveyttä ja keskimeridiaanina 100° läntistä
+// pituutta. Muodot pysyvät oikeina sekä Meksikossa että Alaskassa, toisin kuin
+// yksinkertaisessa lieriöprojektiossa, joka venyttäisi pohjoisen leveäksi.
+// Lähdeaineisto on tools/mapdata/northamerica.json ja koordinaatit lasketaan
+// komennolla `node tools/project.mjs northamerica`.
+//
+// Manner on yksi ääriviiva Beringinsalmelta Panaman kannakselle;
+// Hudsoninlahti ja Kalifornianlahti työntyvät siihen lahtina. Grönlanti, Newfoundland, Kuuba, Puerto Rico, Bermuda ja Havaiji
 // ovat omia saariaan, joihin pääsee vain laivalla.
 
 import { NORTHAMERICA_QUESTIONS, NORTHAMERICA_FACTS } from './northamerica-questions.js';
@@ -18,106 +20,107 @@ const NA_MAP = {
   width: 1000,
   height: 1000,
   mainlandPoints: [
-    [23.4, 121.6], [15, 107.3], [31.8, 93], [40.2, 78.7], [15, 62.9],
-    [73.8, 35.8], [94.8, 22.9], [149.4, 35.8], [191.4, 41.5], [225, 48.6],
-    [275.4, 50.1], [334.2, 42.9], [367.8, 50.1], [443.4, 64.4], [485.4, 71.5],
-    [527.4, 64.4], [569.4, 64.4], [611.4, 64.4], [619.8, 114.4], [628.2, 157.3],
-    [636.6, 207.4], [670.2, 236], [695.4, 257.4], [720.6, 250.3], [737.4, 221.7],
-    [754.2, 185.9], [758.4, 157.3], [754.2, 135.8], [804.6, 157.3], [838.2, 185.9],
-    [863.4, 207.4], [880.2, 228.8], [897, 257.4], [922.2, 278.9], [934.8, 307.4],
-    [913.8, 328.9], [888.6, 350.4], [871.8, 371.8], [855, 400.4], [842.4, 403.3],
-    [821.4, 429], [808.8, 450.5], [787.8, 471.9], [779.4, 486.2], [771, 507.7],
-    [771, 536.3], [745.8, 572], [729, 593.5], [733.2, 636.4], [735.7, 675],
-    [724.8, 683.5], [716.4, 650.6], [708, 622.1], [695.4, 614.9], [670.2, 612],
-    [653.4, 629.2], [624, 619.2], [611.4, 629.2], [594.6, 672.1], [590.4, 729.3],
-    [603, 769.3], [615.6, 783.6], [636.6, 777.9], [653.4, 765.1], [678.6, 736.5],
-    [666, 782.2], [670.2, 815.1], [703.8, 829.4], [708, 865.2], [716.4, 908.1],
-    [741.6, 908.1], [737.4, 926.6], [712.2, 922.4], [695.4, 900.9], [678.6, 865.2],
-    [653.4, 850.9], [632.4, 829.4], [611.4, 815.1], [586.2, 808], [561, 793.7],
-    [535.8, 772.2], [523.2, 750.8], [523.2, 722.2], [514.8, 703.6], [502.2, 679.3],
-    [489.6, 657.8], [477, 636.4], [464.4, 614.9], [456, 600.6], [447.6, 614.9],
-    [460.2, 643.5], [477, 679.3], [487.1, 712.1], [468.6, 679.3], [451.8, 650.6],
-    [435, 607.8], [426.6, 579.1], [414, 557.7], [393, 522], [380.4, 503.4],
-    [367.8, 464.8], [363.6, 421.9], [367.8, 381.8], [363.6, 351.8], [376.2, 343.2],
-    [342.6, 314.6], [317.4, 271.7], [292.2, 228.8], [267, 207.4], [233.4, 185.9],
-    [191.4, 185.9], [166.2, 193.1], [141, 200.2], [124.2, 221.7], [99, 236],
-    [65.4, 250.3], [48.6, 257.4], [65.4, 214.5], [48.6, 185.9], [23.4, 178.8],
-    [31.8, 143],
+    [301.9, 153.9], [306.4, 141.6], [321.9, 139.3], [333.7, 133.3], [332.7, 113.7],
+    [372, 116], [387.6, 113.2], [403.5, 138.6], [419.4, 154.3], [431.9, 168.3],
+    [455.6, 180.7], [486.8, 185.7], [501.8, 197], [538.8, 218.3], [560.8, 227.8],
+    [584.5, 223.6], [607.5, 224.2], [630.5, 223.6], [638.1, 266.2], [646, 301.4],
+    [655.2, 341.3], [682, 361], [703.4, 374.8], [721.2, 365.7], [728.5, 340.9],
+    [733.2, 310.3], [730, 287.1], [722.9, 270.6], [759, 278.4], [788.1, 292.7],
+    [810.9, 302.1], [828.9, 312.9], [849.8, 328], [874.8, 334.2], [894.1, 348.9],
+    [886.4, 371.7], [874.3, 395.8], [867.7, 416.8], [873.4, 426.2], [891.6, 423.9],
+    [898.5, 412.1], [903, 419.5], [896.2, 433.7], [882.6, 441.2], [872.1, 456.3],
+    [861.7, 447.7], [866.9, 430.2], [862.2, 442.8], [852.3, 449.1], [840.9, 474.2],
+    [834.8, 493.6], [820.3, 515.3], [815.4, 528.1], [811.7, 546.1], [817.7, 567.1],
+    [798.4, 600.4], [784.1, 620.6], [796, 651.9], [805.6, 680.6], [794.3, 690],
+    [779.2, 666.9], [765.3, 647], [750.2, 644.1], [721.5, 646.4], [704.1, 662],
+    [669.8, 657.4], [655.9, 666.1], [637.7, 700.4], [634, 745.8], [651.3, 777.4],
+    [668.4, 788.1], [695.7, 781.3], [716.4, 768.6], [745.5, 741.6], [734.5, 780.4],
+    [743.7, 806.5], [790.8, 810.9], [802.1, 839.4], [821.1, 873.3], [857.1, 865.3],
+    [854.9, 882.6], [817.5, 886.8], [789.9, 872.8], [761.2, 846.4], [724.5, 839],
+    [693.8, 824], [664.4, 814.2], [630.1, 809.7], [596.3, 798.1], [563.6, 779.7],
+    [548.2, 761.5], [549.7, 738.6], [540.3, 723.2], [526.5, 702.8], [513.2, 684.6],
+    [500.5, 666.3], [488.4, 647.9], [480.7, 635.6], [469.5, 645], [480.4, 669.1],
+    [496.3, 699.5], [505.5, 726.7], [486.3, 698.2], [469.8, 673.1], [456.4, 637],
+    [451.3, 613.7], [441.2, 594.8], [425.6, 563.3], [416.5, 546.4], [412.1, 514.8],
+    [417.1, 482.4], [429.2, 454.2], [431.9, 431.2], [444.1, 427.8], [423.3, 398.7],
+    [414.8, 360.7], [408.8, 322.5], [398.6, 299.7], [384.6, 274.2], [359.1, 260.7],
+    [341.1, 256.8], [323.2, 252.2], [303.6, 259.6], [282, 258], [255.3, 251.3],
+    [241.9, 247.3], [273.2, 229.4], [278.9, 204.3], [269.9, 188.5], [293.7, 170.6],
   ],
   greenlandPoints: [
-    [947.4, 164.5], [964.2, 150.2], [981, 121.6], [985.2, 85.8], [989.4, 50.1],
-    [993.6, 21.5], [1000, 14.3], [1000, 71.5], [1000, 128.7], [1006.2, 171.6],
-    [972.6, 188.8],
+    [847.3, 245.5], [850.9, 229.9], [847.6, 204], [833.4, 177], [818.4, 149.4],
+    [806.2, 126.6], [812.5, 117.5], [842.3, 156.2], [866, 199], [876.7, 234.5],
+    [869, 254.4],
   ],
   newfoundlandPoints: [
-    [910.4, 363.2], [930.6, 350.4], [943.2, 334.6], [960, 336.1], [966.7, 363.2],
-    [951.6, 377.5], [926.4, 371.8],
+    [895.7, 396.4], [906.7, 379.6], [910.4, 363.9], [923.2, 357.7], [938.9, 372.6],
+    [932.9, 388.8], [911.2, 395.8],
   ],
   cubaPoints: [
-    [696.2, 729.3], [716.4, 712.1], [733.2, 713.6], [754.2, 722.2], [779.4, 747.9],
-    [786.1, 756.5], [766.8, 759.3], [741.6, 736.5], [716.4, 730.7],
+    [766.6, 732.3], [788.8, 714.2], [809.4, 710.9], [836.5, 711.4], [872.8, 722.8],
+    [883, 726.9], [859.7, 736.1], [823.9, 726.3], [791.8, 728.7],
   ],
   puertoRicoPoints: [
-    [842.1, 776.4], [860.4, 776.4], [860.4, 789.9], [842.1, 789.9],
+    [959, 718.9], [978.4, 711], [982, 719.6], [962.4, 727.6],
   ],
   bermudaPoints: [
-    [858.2, 575.6], [871.8, 575.6], [871.8, 588.4], [858.2, 588.4],
+    [921.1, 564.3], [927.1, 561.7], [929.7, 567.8], [923.7, 570.3],
   ],
   hawaiiPoints: [
-    [62.9, 730.7], [82.2, 733.6], [99, 743.6], [99.8, 772.2], [86.4, 752.2],
-    [67.9, 739.3],
+    [18, 535], [35.6, 552.1], [47.6, 571.4], [34.7, 590.6], [30.6, 567.2],
+    [18.6, 544.4],
   ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const NA_CITIES = [
   {
-    id: 'newyork', name: 'New York', x: 788, y: 462, start: true, airport: true,
+    id: 'newyork', name: 'New York', x: 816, y: 507, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'newyork', label: 'Maailma-lauta' }],
   },
   {
-    id: 'sanfrancisco', name: 'San Francisco', x: 381, y: 503, start: true, airport: true,
+    id: 'sanfrancisco', name: 'San Francisco', x: 419, y: 546, start: true, airport: true,
     la: 'end', lx: -18, ly: 5,
   },
 
-  { id: 'nome', name: 'Nome', x: 34, y: 128, la: 'start', lx: 16, ly: 5 },
-  { id: 'anchorage', name: 'Anchorage', x: 150, y: 169, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'whitehorse', name: 'Whitehorse', x: 275, y: 176, la: 'middle', lx: 0, ly: -22 },
-  { id: 'yellowknife', name: 'Yellowknife', x: 448, y: 150, la: 'middle', lx: 0, ly: -22 },
-  { id: 'vancouver', name: 'Vancouver', x: 375, y: 339, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'yellowstone', name: 'Yellowstone', x: 481, y: 406, la: 'end', lx: -16, ly: 5 },
-  { id: 'mountrushmore', name: 'Mount Rushmore', x: 540, y: 416, la: 'middle', lx: 0, ly: -24 },
-  { id: 'winnipeg', name: 'Winnipeg', x: 594, y: 330, la: 'middle', lx: 0, ly: -22 },
-  { id: 'churchill', name: 'Churchill', x: 618, y: 203, la: 'end', lx: -16, ly: 5 },
-  { id: 'iqaluit', name: 'Iqaluit', x: 812, y: 168, la: 'start', lx: 16, ly: 5 },
-  { id: 'nuuk', name: 'Nuuk', x: 990, y: 120, la: 'end', lx: -16, ly: 5 },
-  { id: 'labrador', name: 'Labrador', x: 902, y: 282, la: 'end', lx: -16, ly: 5 },
-  { id: 'stjohns', name: 'St. John’s', x: 948, y: 358, la: 'end', lx: -16, ly: -14 },
-  { id: 'halifax', name: 'Halifax', x: 850, y: 390, la: 'start', lx: 16, ly: 5 },
-  { id: 'montreal', name: 'Montreal', x: 791, y: 393, la: 'middle', lx: 0, ly: -22 },
-  { id: 'toronto', name: 'Toronto', x: 742, y: 419, la: 'end', lx: -16, ly: 5 },
-  { id: 'chicago', name: 'Chicago', x: 674, y: 445, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'appalakit', name: 'Appalakit', x: 733, y: 508, la: 'end', lx: -16, ly: 5 },
-  { id: 'bermuda', name: 'Bermuda', x: 865, y: 582, la: 'start', lx: 16, ly: 5 },
-  { id: 'denver', name: 'Denver', x: 527, y: 476, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'santafe', name: 'Santa Fe', x: 519, y: 533, la: 'start', lx: 16, ly: 5 },
-  { id: 'grandcanyon', name: 'Grand Canyon', x: 468, y: 528, la: 'end', lx: -16, ly: 5 },
-  { id: 'losangeles', name: 'Los Angeles', x: 417, y: 556, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'hawaii', name: 'Havaiji', x: 83, y: 739, la: 'middle', lx: 0, ly: 28 },
-  { id: 'dallas', name: 'Dallas', x: 596, y: 575, la: 'end', lx: -16, ly: 5 },
-  { id: 'neworleans', name: 'New Orleans', x: 653, y: 615, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'miami', name: 'Miami', x: 726, y: 666, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 773, y: 758, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sanjuan', name: 'San Juan', x: 854, y: 779, la: 'start', lx: 16, ly: 5 },
-  { id: 'monterrey', name: 'Monterrey', x: 567, y: 676, la: 'end', lx: -16, ly: 5 },
-  { id: 'mexico', name: 'Mexico City', x: 577, y: 766, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'merida', name: 'Mérida', x: 655, y: 778, la: 'start', lx: 16, ly: -6 },
-  { id: 'guatemala', name: 'Guatemala', x: 649, y: 835, la: 'end', lx: -16, ly: 5 },
-  { id: 'managua', name: 'Managua', x: 684, y: 871, la: 'end', lx: -16, ly: 16 },
+  { id: 'nome', name: 'Nome', x: 304, y: 154, la: 'start', lx: 16, ly: 5 },
+  { id: 'anchorage', name: 'Anchorage', x: 342, y: 234, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'whitehorse', name: 'Whitehorse', x: 413, y: 279, la: 'middle', lx: 0, ly: 28 },
+  { id: 'yellowknife', name: 'Yellowknife', x: 530, y: 291, la: 'middle', lx: 0, ly: -22 },
+  { id: 'vancouver', name: 'Vancouver', x: 446, y: 423, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'yellowstone', name: 'Yellowstone', x: 527, y: 493, la: 'end', lx: -16, ly: 5 },
+  { id: 'mountrushmore', name: 'Mount Rushmore', x: 585, y: 489, la: 'middle', lx: 0, ly: -24 },
+  { id: 'winnipeg', name: 'Winnipeg', x: 628, y: 439, la: 'middle', lx: 0, ly: -22 },
+  { id: 'churchill', name: 'Churchill', x: 643, y: 339, la: 'end', lx: -16, ly: 5 },
+  { id: 'iqaluit', name: 'Iqaluit', x: 749, y: 282, la: 'start', lx: 16, ly: 5 },
+  { id: 'nuuk', name: 'Nuuk', x: 851, y: 205, la: 'end', lx: -16, ly: 5 },
+  { id: 'labrador', name: 'Labrador', x: 862, y: 343, la: 'end', lx: -16, ly: 5 },
+  { id: 'stjohns', name: 'St. John’s', x: 924, y: 373, la: 'end', lx: -16, ly: -14 },
+  { id: 'halifax', name: 'Halifax', x: 881, y: 436, la: 'start', lx: 16, ly: 5 },
+  { id: 'montreal', name: 'Montreal', x: 805, y: 450, la: 'middle', lx: 0, ly: -22 },
+  { id: 'toronto', name: 'Toronto', x: 768, y: 488, la: 'end', lx: -16, ly: 5 },
+  { id: 'chicago', name: 'Chicago', x: 707, y: 520, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'appalakit', name: 'Appalakit', x: 774, y: 556, la: 'end', lx: -16, ly: 5 },
+  { id: 'bermuda', name: 'Bermuda', x: 925, y: 566, la: 'start', lx: 16, ly: 5 },
+  { id: 'denver', name: 'Denver', x: 566, y: 549, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'santafe', name: 'Santa Fe', x: 552, y: 604, la: 'start', lx: 16, ly: 5 },
+  { id: 'grandcanyon', name: 'Grand Canyon', x: 501, y: 582, la: 'end', lx: -16, ly: 5 },
+  { id: 'losangeles', name: 'Los Angeles', x: 444, y: 593, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'hawaii', name: 'Havaiji', x: 33, y: 564, la: 'middle', lx: 0, ly: 28 },
+  { id: 'dallas', name: 'Dallas', x: 637, y: 625, la: 'start', lx: 16, ly: 5 },
+  { id: 'neworleans', name: 'New Orleans', x: 700, y: 648, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'miami', name: 'Miami', x: 800, y: 677, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 863, y: 729, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sanjuan', name: 'San Juan', x: 971, y: 719, la: 'end', lx: -16, ly: 5 },
+  { id: 'monterrey', name: 'Monterrey', x: 605, y: 704, la: 'end', lx: -16, ly: 5 },
+  { id: 'mexico', name: 'Mexico City', x: 617, y: 774, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'merida', name: 'Mérida', x: 724, y: 764, la: 'start', lx: 16, ly: -6 },
+  { id: 'guatemala', name: 'Guatemala', x: 717, y: 823, la: 'end', lx: -16, ly: 5 },
+  { id: 'managua', name: 'Managua', x: 770, y: 846, la: 'end', lx: -16, ly: 16 },
   {
-    id: 'panama', name: 'Panama', x: 728, y: 916, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'panama', name: 'Panama', x: 856, y: 870, airport: true, la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Etelä-Amerikan laudalla: kannas yhdistää mantereet.
     links: [{ pack: 'southamerica', city: 'panama', label: 'Etelä-Amerikan lauta' }],
   },
@@ -175,24 +178,24 @@ const NA_EDGES = [
 
   // Laivareitit
   { a: 'anchorage', b: 'vancouver', steps: 6, type: 'sea',
-    via: [[150, 240], [130, 262], [200, 292], [280, 306], [330, 332]] },
+    via: [[316, 275], [342, 303], [380, 359], [415, 402]] },
   { a: 'sanfrancisco', b: 'hawaii', steps: 7, type: 'sea',
-    via: [[300, 560], [220, 620], [150, 690]] },
+    via: [[358, 572], [229, 590], [95, 577]] },
   { a: 'hawaii', b: 'losangeles', steps: 7, type: 'sea',
-    via: [[170, 760], [260, 700], [350, 620]] },
-  { a: 'miami', b: 'santiagodecuba', steps: 3, type: 'sea', via: [[762, 712]] },
-  { a: 'miami', b: 'bermuda', steps: 5, type: 'sea', via: [[790, 640], [830, 606]] },
-  { a: 'santiagodecuba', b: 'sanjuan', steps: 4, type: 'sea', via: [[812, 770]] },
-  { a: 'sanjuan', b: 'bermuda', steps: 5, type: 'sea', via: [[880, 720], [878, 650]] },
-  { a: 'bermuda', b: 'newyork', steps: 5, type: 'sea', via: [[848, 540], [820, 496]] },
-  { a: 'bermuda', b: 'halifax', steps: 5, type: 'sea', via: [[888, 530], [890, 460]] },
-  { a: 'halifax', b: 'stjohns', steps: 4, type: 'sea', via: [[912, 392]] },
-  { a: 'stjohns', b: 'nuuk', steps: 6, type: 'sea', via: [[955, 300], [936, 226], [944, 160], [962, 128]] },
-  { a: 'nuuk', b: 'iqaluit', steps: 4, type: 'sea', via: [[930, 118]] },
+    via: [[60, 630], [223, 650], [378, 636]] },
+  { a: 'miami', b: 'santiagodecuba', steps: 3, type: 'sea', via: [[823, 700]] },
+  { a: 'miami', b: 'bermuda', steps: 5, type: 'sea', via: [[856, 630], [903, 591]] },
+  { a: 'santiagodecuba', b: 'sanjuan', steps: 4, type: 'sea', via: [[919, 725]] },
+  { a: 'sanjuan', b: 'bermuda', steps: 5, type: 'sea', via: [[955, 654], [942, 599]] },
+  { a: 'bermuda', b: 'newyork', steps: 5, type: 'sea', via: [[875, 543], [836, 522]] },
+  { a: 'bermuda', b: 'halifax', steps: 5, type: 'sea', via: [[911, 505], [901, 462]] },
+  { a: 'halifax', b: 'stjohns', steps: 4, type: 'sea', via: [[904, 406]] },
+  { a: 'stjohns', b: 'nuuk', steps: 6, type: 'sea', via: [[924, 325], [903, 258], [868, 226]] },
+  { a: 'nuuk', b: 'iqaluit', steps: 4, type: 'sea', via: [[807, 227]] },
   { a: 'iqaluit', b: 'churchill', steps: 6, type: 'sea',
-    via: [[770, 150], [740, 172], [700, 200], [662, 208]] },
-  { a: 'santiagodecuba', b: 'merida', steps: 4, type: 'sea', via: [[706, 762]] },
-  { a: 'santiagodecuba', b: 'panama', steps: 5, type: 'sea', via: [[790, 830], [780, 890]] },
+    via: [[735, 274], [718, 296], [694, 319], [666, 334]] },
+  { a: 'santiagodecuba', b: 'merida', steps: 4, type: 'sea', via: [[779, 748]] },
+  { a: 'santiagodecuba', b: 'panama', steps: 5, type: 'sea', via: [[857, 790], [850, 835]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -303,11 +306,11 @@ export const NORTHAMERICA = {
     waveSkip: [
       { x: 250, y: 880, r: 175 },
       { x: 120, y: 430, r: 95 },
-      { x: 240, y: 620, r: 95 },
-      { x: 905, y: 690, r: 105 },
+      { x: 140, y: 700, r: 95 },
+      { x: 848, y: 880, r: 105 },
     ],
-    ship: { x: 905, y: 690 },
-    serpent: { x: 240, y: 620 },
+    ship: { x: 848, y: 880 },
+    serpent: { x: 140, y: 700 },
     dieSpot: { x: 0.05, y: 0.34 },
     terrainBands: [
       { maxY: 260, kind: 'mountains' },
