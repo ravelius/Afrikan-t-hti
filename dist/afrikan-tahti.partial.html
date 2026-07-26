@@ -1339,10 +1339,14 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
       <div class="setup-hero">
         <span class="setup-star">★</span>
         <div>
-          <h2>Afrikan tähti</h2>
-          <p class="setup-tagline">Etsi tähti, vastaa kysymyksiin, palaa kotiin.</p>
+          <h2 id="setup-title">Afrikan tähti</h2>
+          <p id="setup-tagline" class="setup-tagline">Etsi tähti, vastaa kysymyksiin, palaa kotiin.</p>
         </div>
       </div>
+      <label class="row">
+        Pelilauta
+        <select id="board-select"></select>
+      </label>
       <label class="row">
         Pelaajia
         <select id="player-count">
@@ -1463,162 +1467,14 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   </dialog>
 
 <script>
-// ===== js/board.js =====
-// Pelilauta: kaupungit, reitit ja kartan piirtotiedot.
-//
-// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Afrikan karttaa:
-//   x = (pituusaste + 20) * 13.333   (lännestä -20° itään 55°)
-//   y = (40 - leveysaste) * 12.5     (pohjoisesta 40° etelään -40°)
-
-const MAP = {
-  width: 1000,
-  height: 1000,
-  // Rannikkoviiva oikeista koordinaateista projisoituna; mapart.js pyöristää
-  // pisteet pehmeäksi käyräksi ja lisää käsin piirretyn vapinan.
-  africaPoints: [
-    [188.0, 51.3], [240.0, 60.0], [280.0, 43.8], [333.3, 40.0], [373.3, 35.0],
-    [400.0, 33.8], [413.3, 77.5], [466.7, 95.0], [520.0, 120.0], [546.7, 97.5],
-    [586.7, 97.5], [626.7, 108.7], [666.7, 107.5], [693.3, 110.0], [713.3, 150.0],
-    [733.3, 200.0], [760.0, 237.5], [780.0, 275.0], [793.3, 312.5], [820.0, 331.2],
-    [846.7, 356.2], [866.7, 368.8], [906.7, 356.2], [946.7, 352.5], [952.0, 375.0],
-    [933.3, 400.0], [906.7, 437.5], [866.7, 475.0], [826.7, 512.5], [800.0, 550.0],
-    [793.3, 587.5], [806.7, 637.5], [808.0, 675.0], [773.3, 712.5], [733.3, 750.0],
-    [706.7, 800.0], [693.3, 825.0], [666.7, 862.5], [640.0, 900.0], [600.0, 925.0],
-    [560.0, 931.2], [520.0, 935.0], [500.0, 900.0], [466.7, 837.5], [440.0, 787.5],
-    [426.7, 725.0], [426.7, 675.0], [446.7, 637.5], [426.7, 575.0], [393.3, 525.0],
-    [393.3, 475.0], [373.3, 450.0], [320.0, 425.0], [280.0, 431.2], [226.7, 437.5],
-    [166.7, 445.0], [120.0, 425.0], [93.3, 393.8], [66.7, 362.5], [46.7, 337.5],
-    [33.3, 316.2], [53.3, 300.0], [53.3, 262.5], [66.7, 237.5], [93.3, 212.5],
-    [120.0, 175.0], [140.0, 137.5], [160.0, 112.5], [186.7, 87.5],
-  ],
-  madagascarPoints: [
-    [925.3, 653.8], [936.0, 677.5], [932.0, 693.8], [940.0, 702.5], [926.7, 718.8],
-    [917.3, 737.5], [902.7, 775.0], [894.7, 800.0], [869.3, 820.0], [849.3, 803.8],
-    [844.0, 775.0], [860.0, 748.8], [856.0, 727.5], [884.0, 696.2], [902.7, 681.2],
-    [918.7, 666.2],
-  ],
-};
-
-// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
-const CITIES = [
-  { id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true },
-  { id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true },
-
-  { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
-  { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },
-  { id: 'alkufra', name: 'Al Kufra', x: 577, y: 197 },
-  { id: 'sahara', name: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
-  { id: 'ahaggar', name: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
-  { id: 'timbuktu', name: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
-  { id: 'gao', name: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
-  { id: 'dakar', name: 'Dakar', x: 45, y: 318, la: 'start', lx: 16, ly: 5 },
-  { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
-  { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
-  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: 26 },
-  { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
-  { id: 'kano', name: 'Kano', x: 394, y: 336 },
-  { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
-  { id: 'kongo', name: 'Kongo', x: 440, y: 560, la: 'end', lx: -16, ly: 5 },
-  { id: 'angola', name: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
-  { id: 'namib', name: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
-  { id: 'kapkaupunki', name: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6 },
-  { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
-  { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
-  { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', x: 836, y: 616, la: 'start', lx: 16, ly: 5 },
-  { id: 'kilimandzaro', name: 'Kilimandžaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
-  { id: 'viktoria', name: 'Viktoria Nyanza', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
-  { id: 'tanganjika', name: 'Tanganjika', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
-  { id: 'bahrelghazal', name: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
-  { id: 'darfur', name: 'Darfur', x: 575, y: 318 },
-  { id: 'suakin', name: 'Suakin', x: 764, y: 261 },
-  { id: 'addisabeba', name: 'Addis Abeba', x: 783, y: 387, la: 'end', lx: -16, ly: 5 },
-  { id: 'rashafun', name: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
-];
-
-const SEA_FEE = 100;
-const FLIGHT_PRICE = 300;
-
-// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
-// type 'sea' = laivareitti, jonne astuminen maksaa SEA_FEE.
-const EDGES = [
-  // Pohjois-Afrikka
-  { a: 'tanger', b: 'tripoli', steps: 4 },
-  { a: 'tanger', b: 'sahara', steps: 5 },
-  { a: 'tanger', b: 'ahaggar', steps: 4 },
-  { a: 'tripoli', b: 'kairo', steps: 4 },
-  { a: 'tripoli', b: 'murzuk', steps: 2 },
-  { a: 'tripoli', b: 'sahara', steps: 2 },
-  { a: 'murzuk', b: 'sahara', steps: 1 },
-  { a: 'murzuk', b: 'alkufra', steps: 2 },
-  { a: 'alkufra', b: 'kairo', steps: 3 },
-  { a: 'alkufra', b: 'darfur', steps: 3 },
-  { a: 'kairo', b: 'suakin', steps: 3 },
-  { a: 'sahara', b: 'ahaggar', steps: 2 },
-  { a: 'sahara', b: 'darfur', steps: 4 },
-
-  // Länsi-Afrikka
-  { a: 'ahaggar', b: 'timbuktu', steps: 3 },
-  { a: 'ahaggar', b: 'gao', steps: 2 },
-  { a: 'timbuktu', b: 'gao', steps: 1 },
-  { a: 'timbuktu', b: 'dakar', steps: 4 },
-  { a: 'timbuktu', b: 'kumasi', steps: 3 },
-  { a: 'dakar', b: 'sierraleone', steps: 2 },
-  { a: 'sierraleone', b: 'kappalmas', steps: 2 },
-  { a: 'kappalmas', b: 'kumasi', steps: 2 },
-  { a: 'kumasi', b: 'orjarannikko', steps: 1 },
-  { a: 'orjarannikko', b: 'kano', steps: 2 },
-  { a: 'orjarannikko', b: 'kamerun', steps: 2 },
-  { a: 'gao', b: 'kano', steps: 3 },
-  { a: 'kano', b: 'kamerun', steps: 2 },
-  { a: 'kano', b: 'bahrelghazal', steps: 5 },
-
-  // Keski- ja Etelä-Afrikka
-  { a: 'kamerun', b: 'kongo', steps: 3 },
-  { a: 'kongo', b: 'bahrelghazal', steps: 5 },
-  { a: 'kongo', b: 'angola', steps: 2 },
-  { a: 'kongo', b: 'tanganjika', steps: 4 },
-  { a: 'angola', b: 'namib', steps: 3 },
-  { a: 'namib', b: 'kapkaupunki', steps: 3 },
-  { a: 'kapkaupunki', b: 'kimberley', steps: 2 },
-  { a: 'kimberley', b: 'mosambik', steps: 4 },
-  { a: 'kimberley', b: 'tanganjika', steps: 5 },
-
-  // Itä-Afrikka
-  { a: 'kilimandzaro', b: 'viktoria', steps: 2 },
-  { a: 'viktoria', b: 'tanganjika', steps: 2 },
-  { a: 'viktoria', b: 'bahrelghazal', steps: 3 },
-  { a: 'bahrelghazal', b: 'darfur', steps: 2 },
-  { a: 'bahrelghazal', b: 'addisabeba', steps: 3 },
-  { a: 'addisabeba', b: 'suakin', steps: 3 },
-  { a: 'addisabeba', b: 'rashafun', steps: 3 },
-  { a: 'addisabeba', b: 'kilimandzaro', steps: 3 },
-
-  // Laivareitit
-  { a: 'tanger', b: 'dakar', steps: 3, type: 'sea', via: [[150, 110], [95, 178], [45, 252]] },
-  { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
-  { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
-  { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
-  { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea', via: [[600, 976], [782, 942], [902, 832]] },
-  { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea', via: [[812, 752]] },
-  { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea', via: [[862, 642]] },
-  { a: 'sansibar', b: 'mosambik', steps: 3, type: 'sea', via: [[822, 642], [792, 712]] },
-  { a: 'sansibar', b: 'kilimandzaro', steps: 2, type: 'sea' },
-  { a: 'sansibar', b: 'rashafun', steps: 5, type: 'sea', via: [[852, 540], [902, 458]] },
-  { a: 'rashafun', b: 'suakin', steps: 4, type: 'sea', via: [[880, 322], [800, 268]] },
-];
-
-// Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
-const AIR_ROUTES = [
-  { a: 'tanger', b: 'kairo' },
-  { a: 'kairo', b: 'kapkaupunki' },
-  { a: 'tanger', b: 'kapkaupunki' },
-];
-
-const TOKEN_CITIES = CITIES.filter((c) => !c.start).map((c) => c.id);
-
 // ===== js/tokens.js =====
-// Laatat: jalokivet, Afrikan tähti, hevosenkengät, ryöstäjät ja tyhjät.
+// Laatat: jalokivet, tähti, hevosenkengät, ryöstäjät ja tyhjät.
+//
+// Laattatyyppien tunnisteet (star, ruby, …) ovat samat kaikilla laudoilla,
+// jotta kuvakkeet ja tyylit toimivat sellaisenaan. Lauta voi antaa tyypeille
+// oman nimen ja värin themedTokenTypes-apurilla, ja laattojen määrät
+// määritellään laudan paketissa niin, että niitä on yksi jokaiseen
+// aarrekaupunkiin.
 
 const TOKEN_TYPES = {
   star: { id: 'star', name: 'Afrikan tähti', symbol: '★', value: 0, color: '#f6c445' },
@@ -1630,28 +1486,26 @@ const TOKEN_TYPES = {
   empty: { id: 'empty', name: 'Tyhjä', symbol: '·', value: 0, color: '#6f5b45' },
 };
 
-// Yhteensä 30 laattaa, yksi jokaiseen kaupunkiin aloituskaupunkeja lukuun ottamatta.
-const TOKEN_COUNTS = {
-  star: 1,
-  horseshoe: 2,
-  robber: 3,
-  ruby: 4,
-  emerald: 5,
-  topaz: 6,
-  empty: 9,
-};
+/** Laattatyypit laudan omilla nimillä ja väreillä. */
+function themedTokenTypes(overrides = {}) {
+  const out = {};
+  for (const [id, type] of Object.entries(TOKEN_TYPES)) {
+    out[id] = { ...type, ...(overrides[id] ?? {}) };
+  }
+  return out;
+}
 
-function tokenPileTemplate() {
+function tokenPileTemplate(counts) {
   const pile = [];
-  for (const [type, count] of Object.entries(TOKEN_COUNTS)) {
+  for (const [type, count] of Object.entries(counts)) {
     for (let i = 0; i < count; i++) pile.push(type);
   }
   return pile;
 }
 
 /** Sekoittaa laattapinon (Fisher–Yates). */
-function createTokenPile(rng = Math.random) {
-  const pile = tokenPileTemplate();
+function createTokenPile(counts, rng = Math.random) {
+  const pile = tokenPileTemplate(counts);
   for (let i = pile.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
     [pile[i], pile[j]] = [pile[j], pile[i]];
@@ -1659,15 +1513,15 @@ function createTokenPile(rng = Math.random) {
   return pile;
 }
 
-// ===== js/questions.js =====
-// Tietovisakysymykset. Jokaisella laattakaupungilla on omat kysymyksensä, jotka
+// ===== js/packs/africa-questions.js =====
+// Afrikka-laudan tietovisakysymykset. Jokaisella laattakaupungilla on omat kysymyksensä, jotka
 // liittyvät paikan maantietoon, kulttuuriin tai historiaan. `general` toimii
 // varapakkana, jos kaupungin omat kysymykset on jo käytetty.
 //
 // Muoto: { q: kysymys, options: [4 vaihtoehtoa], correct: oikean indeksi, fact: selitys }
 // Vaihtoehdot sekoitetaan vasta kysyttäessä, joten oikea vastaus voi olla tässä missä vain.
 
-const QUESTIONS = {
+const AFRICA_QUESTIONS = {
   tripoli: [
     {
       q: 'Minkä maan pääkaupunki Tripoli on?',
@@ -2533,18 +2387,11 @@ const QUESTIONS = {
   ],
 };
 
-/** Kaikki kysymykset yhtenä listana (testejä varten). */
-function allQuestions() {
-  return Object.entries(QUESTIONS).flatMap(([key, list]) =>
-    list.map((question) => ({ ...question, key })),
-  );
-}
-
 /**
  * "Tiesitkö että…" -tiedot paikoista. Peli näyttää yhden pelaajan nykyisestä
  * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
  */
-const PLACE_FACTS = {
+const AFRICA_FACTS = {
   tanger: [
     'Tanger on ollut satamakaupunki jo foinikialaisten ajoista. Gibraltarin salmi erottaa sen Espanjasta vain noin 14 kilometrin levyisenä.',
     'Tangeria hallittiin vuosina 1923–1956 kansainvälisenä vyöhykkeenä, jota useat maat valvoivat yhdessä.',
@@ -2674,6 +2521,230 @@ const PLACE_FACTS = {
     'Niemi oli antiikin aikana kauppapaikka, jonne purjehdittiin monsuunituulten avulla.',
   ],
 };
+
+// ===== js/packs/africa.js =====
+// Afrikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
+//
+// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa suoraan Afrikan karttaa:
+//   x = (pituusaste + 20) * 13.333   (lännestä -20° itään 55°)
+//   y = (40 - leveysaste) * 12.5     (pohjoisesta 40° etelään -40°)
+
+const AFRICA_MAP = {
+  width: 1000,
+  height: 1000,
+  // Rannikkoviiva oikeista koordinaateista projisoituna; mapart.js pyöristää
+  // pisteet pehmeäksi käyräksi ja lisää käsin piirretyn vapinan.
+  africaPoints: [
+    [188.0, 51.3], [240.0, 60.0], [280.0, 43.8], [333.3, 40.0], [373.3, 35.0],
+    [400.0, 33.8], [413.3, 77.5], [466.7, 95.0], [520.0, 120.0], [546.7, 97.5],
+    [586.7, 97.5], [626.7, 108.7], [666.7, 107.5], [693.3, 110.0], [713.3, 150.0],
+    [733.3, 200.0], [760.0, 237.5], [780.0, 275.0], [793.3, 312.5], [820.0, 331.2],
+    [846.7, 356.2], [866.7, 368.8], [906.7, 356.2], [946.7, 352.5], [952.0, 375.0],
+    [933.3, 400.0], [906.7, 437.5], [866.7, 475.0], [826.7, 512.5], [800.0, 550.0],
+    [793.3, 587.5], [806.7, 637.5], [808.0, 675.0], [773.3, 712.5], [733.3, 750.0],
+    [706.7, 800.0], [693.3, 825.0], [666.7, 862.5], [640.0, 900.0], [600.0, 925.0],
+    [560.0, 931.2], [520.0, 935.0], [500.0, 900.0], [466.7, 837.5], [440.0, 787.5],
+    [426.7, 725.0], [426.7, 675.0], [446.7, 637.5], [426.7, 575.0], [393.3, 525.0],
+    [393.3, 475.0], [373.3, 450.0], [320.0, 425.0], [280.0, 431.2], [226.7, 437.5],
+    [166.7, 445.0], [120.0, 425.0], [93.3, 393.8], [66.7, 362.5], [46.7, 337.5],
+    [33.3, 316.2], [53.3, 300.0], [53.3, 262.5], [66.7, 237.5], [93.3, 212.5],
+    [120.0, 175.0], [140.0, 137.5], [160.0, 112.5], [186.7, 87.5],
+  ],
+  madagascarPoints: [
+    [925.3, 653.8], [936.0, 677.5], [932.0, 693.8], [940.0, 702.5], [926.7, 718.8],
+    [917.3, 737.5], [902.7, 775.0], [894.7, 800.0], [869.3, 820.0], [849.3, 803.8],
+    [844.0, 775.0], [860.0, 748.8], [856.0, 727.5], [884.0, 696.2], [902.7, 681.2],
+    [918.7, 666.2],
+  ],
+};
+
+// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+const AFRICA_CITIES = [
+  { id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true },
+  { id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true },
+
+  { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
+  { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },
+  { id: 'alkufra', name: 'Al Kufra', x: 577, y: 197 },
+  { id: 'sahara', name: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
+  { id: 'ahaggar', name: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
+  { id: 'timbuktu', name: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
+  { id: 'gao', name: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
+  { id: 'dakar', name: 'Dakar', x: 45, y: 318, la: 'start', lx: 16, ly: 5 },
+  { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
+  { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
+  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: 26 },
+  { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
+  { id: 'kano', name: 'Kano', x: 394, y: 336 },
+  { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
+  { id: 'kongo', name: 'Kongo', x: 440, y: 560, la: 'end', lx: -16, ly: 5 },
+  { id: 'angola', name: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
+  { id: 'namib', name: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
+  { id: 'kapkaupunki', name: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6 },
+  { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
+  { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
+  { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sansibar', name: 'Sansibar', x: 836, y: 616, la: 'start', lx: 16, ly: 5 },
+  { id: 'kilimandzaro', name: 'Kilimandžaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
+  { id: 'viktoria', name: 'Viktoria Nyanza', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
+  { id: 'tanganjika', name: 'Tanganjika', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
+  { id: 'bahrelghazal', name: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
+  { id: 'darfur', name: 'Darfur', x: 575, y: 318 },
+  { id: 'suakin', name: 'Suakin', x: 764, y: 261 },
+  { id: 'addisabeba', name: 'Addis Abeba', x: 783, y: 387, la: 'end', lx: -16, ly: 5 },
+  { id: 'rashafun', name: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
+];
+
+// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
+// type 'sea' = laivareitti, jonne astuminen maksaa SEA_FEE.
+const AFRICA_EDGES = [
+  // Pohjois-Afrikka
+  { a: 'tanger', b: 'tripoli', steps: 4 },
+  { a: 'tanger', b: 'sahara', steps: 5 },
+  { a: 'tanger', b: 'ahaggar', steps: 4 },
+  { a: 'tripoli', b: 'kairo', steps: 4 },
+  { a: 'tripoli', b: 'murzuk', steps: 2 },
+  { a: 'tripoli', b: 'sahara', steps: 2 },
+  { a: 'murzuk', b: 'sahara', steps: 1 },
+  { a: 'murzuk', b: 'alkufra', steps: 2 },
+  { a: 'alkufra', b: 'kairo', steps: 3 },
+  { a: 'alkufra', b: 'darfur', steps: 3 },
+  { a: 'kairo', b: 'suakin', steps: 3 },
+  { a: 'sahara', b: 'ahaggar', steps: 2 },
+  { a: 'sahara', b: 'darfur', steps: 4 },
+
+  // Länsi-Afrikka
+  { a: 'ahaggar', b: 'timbuktu', steps: 3 },
+  { a: 'ahaggar', b: 'gao', steps: 2 },
+  { a: 'timbuktu', b: 'gao', steps: 1 },
+  { a: 'timbuktu', b: 'dakar', steps: 4 },
+  { a: 'timbuktu', b: 'kumasi', steps: 3 },
+  { a: 'dakar', b: 'sierraleone', steps: 2 },
+  { a: 'sierraleone', b: 'kappalmas', steps: 2 },
+  { a: 'kappalmas', b: 'kumasi', steps: 2 },
+  { a: 'kumasi', b: 'orjarannikko', steps: 1 },
+  { a: 'orjarannikko', b: 'kano', steps: 2 },
+  { a: 'orjarannikko', b: 'kamerun', steps: 2 },
+  { a: 'gao', b: 'kano', steps: 3 },
+  { a: 'kano', b: 'kamerun', steps: 2 },
+  { a: 'kano', b: 'bahrelghazal', steps: 5 },
+
+  // Keski- ja Etelä-Afrikka
+  { a: 'kamerun', b: 'kongo', steps: 3 },
+  { a: 'kongo', b: 'bahrelghazal', steps: 5 },
+  { a: 'kongo', b: 'angola', steps: 2 },
+  { a: 'kongo', b: 'tanganjika', steps: 4 },
+  { a: 'angola', b: 'namib', steps: 3 },
+  { a: 'namib', b: 'kapkaupunki', steps: 3 },
+  { a: 'kapkaupunki', b: 'kimberley', steps: 2 },
+  { a: 'kimberley', b: 'mosambik', steps: 4 },
+  { a: 'kimberley', b: 'tanganjika', steps: 5 },
+
+  // Itä-Afrikka
+  { a: 'kilimandzaro', b: 'viktoria', steps: 2 },
+  { a: 'viktoria', b: 'tanganjika', steps: 2 },
+  { a: 'viktoria', b: 'bahrelghazal', steps: 3 },
+  { a: 'bahrelghazal', b: 'darfur', steps: 2 },
+  { a: 'bahrelghazal', b: 'addisabeba', steps: 3 },
+  { a: 'addisabeba', b: 'suakin', steps: 3 },
+  { a: 'addisabeba', b: 'rashafun', steps: 3 },
+  { a: 'addisabeba', b: 'kilimandzaro', steps: 3 },
+
+  // Laivareitit
+  { a: 'tanger', b: 'dakar', steps: 3, type: 'sea', via: [[150, 110], [95, 178], [45, 252]] },
+  { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
+  { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
+  { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
+  { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea', via: [[600, 976], [782, 942], [902, 832]] },
+  { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea', via: [[812, 752]] },
+  { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea', via: [[862, 642]] },
+  { a: 'sansibar', b: 'mosambik', steps: 3, type: 'sea', via: [[822, 642], [792, 712]] },
+  { a: 'sansibar', b: 'kilimandzaro', steps: 2, type: 'sea' },
+  { a: 'sansibar', b: 'rashafun', steps: 5, type: 'sea', via: [[852, 540], [902, 458]] },
+  { a: 'rashafun', b: 'suakin', steps: 4, type: 'sea', via: [[880, 322], [800, 268]] },
+];
+
+// Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
+const AFRICA_AIR_ROUTES = [
+  { a: 'tanger', b: 'kairo' },
+  { a: 'kairo', b: 'kapkaupunki' },
+  { a: 'tanger', b: 'kapkaupunki' },
+];
+
+// Karttapaketti: kaikki mitä pelimoottori tarvitsee yhdestä laudasta.
+// Uusi manner lisätään tekemällä vastaava tiedosto ja lisäämällä se pack.js:ään.
+const AFRICA = {
+  id: 'africa',
+  name: 'Afrikan tähti',
+  boardLabel: 'Afrikka',
+  tagline: 'Etsi tähti, vastaa kysymyksiin, palaa kotiin.',
+  ariaLabel: 'Afrikan aarrekartta',
+
+  map: { ...AFRICA_MAP, outlines: [AFRICA_MAP.africaPoints, AFRICA_MAP.madagascarPoints] },
+  cities: AFRICA_CITIES,
+  edges: AFRICA_EDGES,
+  airRoutes: AFRICA_AIR_ROUTES,
+  islands: ['sansibar'], // saarikaupungit: rannikon ulkopuolella, vain laivayhteys
+  minCityDistance: 75,
+
+  tokens: {
+    types: themedTokenTypes(),
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 6, empty: 9 },
+  },
+
+  questions: AFRICA_QUESTIONS,
+  placeFacts: AFRICA_FACTS,
+
+  texts: {
+    intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.',
+    starFound: (name, city) => `★ ${name} löysi AFRIKAN TÄHDEN kaupungista ${city}!`,
+    starToast: 'AFRIKAN TÄHTI!',
+    starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
+    winStar: 'toi Afrikan tähden turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Afrikan tähden kotiin ${money} punnan kanssa.`,
+  },
+
+  decor: {
+    mapLabel: 'AFRIKA',
+    mapLabelPos: { x: 886, y: 96 },
+    compass: { x: 168, y: 772, r: 62 },
+    // Aaltoja ei piirretä näihin kohtiin: laivadoodle, meripeto ja karttanimi.
+    waveSkip: [
+      { x: 232, y: 556, r: 95 },
+      { x: 858, y: 905, r: 110 },
+      { x: 880, y: 92, r: 135 },
+    ],
+    ship: { x: 214, y: 548 },
+    serpent: { x: 852, y: 902 },
+    // Nopan lepopaikka suhteellisina koordinaatteina: avomerta vasemmassa alakulmassa.
+    dieSpot: { x: 0.115, y: 0.865 },
+    // Maaston merkit leveysvyöhykkeittäin: pohjoisessa dyynejä, keskellä puita,
+    // etelässä vuoria.
+    terrainBands: [
+      { maxY: 300, kind: 'dunes' },
+      { maxY: 640, kind: 'trees' },
+      { maxY: Infinity, kind: 'mountains' },
+    ],
+  },
+};
+
+// ===== js/pack.js =====
+// Karttapakettien rekisteri. Jokainen paketti on yksi pelilauta: kartta,
+// kaupungit, reitit, laatat, kysymykset ja teema. Uusi lauta lisätään
+// tekemällä js/packs/-hakemistoon vastaava tiedosto ja listaamalla se tässä.
+
+const PACKS = [AFRICA];  // TODO: MIDDLE_EAST lisätään kun paketti on valmis
+
+function packById(id) {
+  return PACKS.find((pack) => pack.id === id) ?? PACKS[0];
+}
+
+/** Paketin kaikki kysymykset yhtenä listana (testejä ja tarkistuksia varten). */
+function allQuestions(pack) {
+  return Object.entries(pack.questions).flatMap(([key, list]) =>
+    list.map((question) => ({ ...question, key })),
+  );
+}
 
 // ===== js/sound.js =====
 // Peliäänet syntetisoituna Web Audio API:lla — ei äänitiedostoja, joten peli
@@ -3166,6 +3237,10 @@ class BoardDie {
 // Puhdas sääntölogiikka: laudan rakenne, siirtojen laskenta ja etäisyydet.
 // Tämä moduuli ei tiedä mitään DOM:ista, joten sen voi testata suoraan Nodella.
 
+// Matkustamisen hinnat ovat samat kaikilla laudoilla.
+const SEA_FEE = 100;
+const FLIGHT_PRICE = 300;
+
 /**
  * Sijainti on joko kaupungissa tai reitin varrella:
  *   { type: 'city', city: 'kairo' }
@@ -3437,6 +3512,9 @@ function pixelOf(board, pos) {
 // ===== js/mapart.js =====
 // Aarrekartan grafiikka: pergamentti, käsin piirretty rannikko, aallot, maasto,
 // kompassiruusu ja reunuskoristeet. Kaikki piirretään SVG:nä ilman kuvatiedostoja.
+//
+// Piirto ei tiedä mitään yksittäisestä laudasta: rannikot tulevat paketin
+// map.outlines-listasta ja koristeet paketin decor-osiosta.
 
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -3488,8 +3566,17 @@ function smoothClosedPath(points) {
   return `${d} Z`;
 }
 
-const AFRICA_PATH = smoothClosedPath(MAP.africaPoints);
-const MADAGASCAR_PATH = smoothClosedPath(MAP.madagascarPoints);
+// Pehmeiksi käyriksi lasketut rannikot muistetaan karttakohtaisesti.
+const outlineCache = new WeakMap();
+
+function outlinePaths(map) {
+  let paths = outlineCache.get(map);
+  if (!paths) {
+    paths = map.outlines.map(smoothClosedPath);
+    outlineCache.set(map, paths);
+  }
+  return paths;
+}
 
 /** Suodattimet ja liukuvärit, joilla paperi ja mustejälki saavat elävän pinnan. */
 function drawDefs(svg) {
@@ -3573,14 +3660,15 @@ function drawPaperOverlay(svg) {
 }
 
 /** Manner: rannikon kaikuviivat, täyttö ja mustepiirto. */
-function drawLand(svg) {
+function drawLand(svg, map) {
+  const paths = outlinePaths(map);
   const g = el('g', { class: 'landmass', filter: 'url(#rough)' }, svg);
-  for (const d of [AFRICA_PATH, MADAGASCAR_PATH]) {
+  for (const d of paths) {
     el('path', { d, class: 'sea-echo sea-echo-1' }, g);
     el('path', { d, class: 'sea-echo sea-echo-2' }, g);
     el('path', { d, class: 'sea-echo sea-echo-3' }, g);
   }
-  for (const d of [AFRICA_PATH, MADAGASCAR_PATH]) {
+  for (const d of paths) {
     el('path', { d, class: 'land' }, g);
     el('path', { d, class: 'coast' }, g);
   }
@@ -3613,24 +3701,21 @@ function distanceToPolygon([px, py], poly) {
   return best;
 }
 
-const AFRICA = MAP.africaPoints;
-const MADAGASCAR = MAP.madagascarPoints;
-
-function onLand(p) {
-  return pointInPolygon(p, AFRICA) || pointInPolygon(p, MADAGASCAR);
+function onLand(p, map) {
+  return map.outlines.some((outline) => pointInPolygon(p, outline));
 }
 
-function coastDistance(p) {
-  return Math.min(distanceToPolygon(p, AFRICA), distanceToPolygon(p, MADAGASCAR));
+function coastDistance(p, map) {
+  return map.outlines.reduce((best, outline) => Math.min(best, distanceToPolygon(p, outline)), Infinity);
 }
 
 /** Ruudukon pisteet merellä, riittävän kaukana rannikosta. */
-function seaPoints(spacing = 92, margin = 46) {
+function seaPoints(map, spacing = 92, margin = 46) {
   const points = [];
-  for (let x = 30; x < MAP.width; x += spacing) {
-    for (let y = 30; y < MAP.height; y += spacing) {
+  for (let x = 30; x < map.width; x += spacing) {
+    for (let y = 30; y < map.height; y += spacing) {
       const p = [x, y];
-      if (onLand(p) || coastDistance(p) < margin) continue;
+      if (onLand(p, map) || coastDistance(p, map) < margin) continue;
       points.push(p);
     }
   }
@@ -3638,12 +3723,12 @@ function seaPoints(spacing = 92, margin = 46) {
 }
 
 /** Ruudukon pisteet maalla, riittävän kaukana rannikosta ja esteistä. */
-function landPoints(obstacles, spacing = 78, clearance = 34) {
+function landPoints(map, obstacles, spacing = 78, clearance = 34) {
   const points = [];
-  for (let x = 40; x < MAP.width; x += spacing) {
-    for (let y = 40; y < MAP.height; y += spacing) {
+  for (let x = 40; x < map.width; x += spacing) {
+    for (let y = 40; y < map.height; y += spacing) {
       const p = [x, y];
-      if (!onLand(p) || coastDistance(p) < 34) continue;
+      if (!onLand(p, map) || coastDistance(p, map) < 34) continue;
       if (obstacles.some((o) => Math.hypot(p[0] - o.x, p[1] - o.y) < clearance)) continue;
       points.push(p);
     }
@@ -3656,9 +3741,9 @@ function blocked(p, zones) {
 }
 
 /** Merelle piirretyt kaksoiskaaret, jotka merkitsevät aaltoja. */
-function drawWaves(svg, skipZones = []) {
+function drawWaves(svg, map, skipZones = []) {
   const g = el('g', { class: 'waves', filter: 'url(#rough-soft)' }, svg);
-  seaPoints().forEach((p, i) => {
+  seaPoints(map).forEach((p, i) => {
     if (i % 2 === 1 || blocked(p, skipZones)) return;
     const key = `wave:${p[0]}:${p[1]}`;
     const x = p[0] + vary(`${key}:x`, 9);
@@ -3681,13 +3766,37 @@ function drawWaves(svg, skipZones = []) {
   });
 }
 
+// Yksittäisten maastomerkkien piirto: dyynit, puu ja vuoret.
+const TERRAIN_MARKS = {
+  dunes(mark, x, y) {
+    el('path', {
+      d: `M${x - 16},${y} q8,-9 16,0 M${x - 2},${y + 8} q8,-9 16,0`,
+      class: 'terrain-mark',
+    }, mark);
+  },
+  trees(mark, x, y) {
+    el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, mark);
+    el('path', {
+      d: `M${x},${y - 4} q-11,-2 -13,-10 q9,1 13,7 q4,-6 13,-7 q-2,8 -13,10 z`,
+      class: 'terrain-fill',
+    }, mark);
+  },
+  mountains(mark, x, y) {
+    el('path', {
+      d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
+      class: 'terrain-mark',
+    }, mark);
+  },
+};
+
 /**
- * Maaston merkit vanhan kartan tapaan: pohjoisessa dyynejä, keskellä puita ja
- * etelässä vuoria. Piirretään vain kohtiin, joissa ei ole reittejä tai nimiä.
+ * Maaston merkit vanhan kartan tapaan. Merkin laji valitaan paketin
+ * leveysvyöhykkeistä (decor.terrainBands), ja merkit piirretään vain kohtiin,
+ * joissa ei ole reittejä tai nimiä.
  */
-function drawTerrain(svg, obstacles) {
+function drawTerrain(svg, map, obstacles, bands) {
   const g = el('g', { class: 'terrain', filter: 'url(#rough-soft)' }, svg);
-  landPoints(obstacles).forEach((p, i) => {
+  landPoints(map, obstacles).forEach((p, i) => {
     if (i % 2 === 1) return;
     const key = `terrain:${p[0]}:${p[1]}`;
     const x = p[0] + vary(`${key}:x`, 8);
@@ -3698,23 +3807,8 @@ function drawTerrain(svg, obstacles) {
       opacity: (0.8 + hash01(`${key}:o`) * 0.4).toFixed(2),
       'transform-origin': `${x.toFixed(1)}px ${y.toFixed(1)}px`,
     }, g);
-    if (y < 300) {
-      el('path', {
-        d: `M${x - 16},${y} q8,-9 16,0 M${x - 2},${y + 8} q8,-9 16,0`,
-        class: 'terrain-mark',
-      }, mark);
-    } else if (y < 640) {
-      el('path', { d: `M${x},${y + 8} L${x},${y - 4}`, class: 'terrain-mark' }, mark);
-      el('path', {
-        d: `M${x},${y - 4} q-11,-2 -13,-10 q9,1 13,7 q4,-6 13,-7 q-2,8 -13,10 z`,
-        class: 'terrain-fill',
-      }, mark);
-    } else {
-      el('path', {
-        d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
-        class: 'terrain-mark',
-      }, mark);
-    }
+    const band = bands.find((b) => y < b.maxY) ?? bands[bands.length - 1];
+    (TERRAIN_MARKS[band.kind] ?? TERRAIN_MARKS.mountains)(mark, x, y);
   });
 }
 
@@ -3744,8 +3838,8 @@ function drawCompass(svg, cx, cy, r = 62) {
 }
 
 /** Onko piste mantereella (myös testien käytössä). */
-function isOnLand(point) {
-  return onLand(point);
+function isOnLand(point, map) {
+  return onLand(point, map);
 }
 
 // --- laattojen kuvakkeet ---------------------------------------------------
@@ -3926,29 +4020,40 @@ function tokenIconSvg(type, size = 18) {
 }
 
 /** Purjelaiva, meripeto ja karttaotsikko täyttämässä tyhjää merta. */
-function drawDoodles(svg) {
-  const ship = el('g', { class: 'doodle-ship', transform: 'translate(214,548)' }, svg);
-  el('path', { d: 'M-40,10 L40,10 L28,30 L-28,30 Z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M-2,10 L-2,-48 M18,10 L18,-30', class: 'doodle' }, ship);
-  el('path', { d: 'M0,-46 q26,16 0,30 z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M20,-28 q18,12 0,22 z', class: 'doodle-fill' }, ship);
-  el('path', { d: 'M-52,38 q13,9 26,0 M18,38 q13,9 26,0', class: 'doodle' }, ship);
+function drawDoodles(svg, decor) {
+  if (decor.ship) {
+    const ship = el('g', {
+      class: 'doodle-ship', transform: `translate(${decor.ship.x},${decor.ship.y})`,
+    }, svg);
+    el('path', { d: 'M-40,10 L40,10 L28,30 L-28,30 Z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M-2,10 L-2,-48 M18,10 L18,-30', class: 'doodle' }, ship);
+    el('path', { d: 'M0,-46 q26,16 0,30 z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M20,-28 q18,12 0,22 z', class: 'doodle-fill' }, ship);
+    el('path', { d: 'M-52,38 q13,9 26,0 M18,38 q13,9 26,0', class: 'doodle' }, ship);
+  }
 
-  const serpent = el('g', { class: 'doodle-serpent', transform: 'translate(852,902)' }, svg);
-  el('path', {
-    d: 'M-78,14 q14,-30 30,-2 q10,18 22,0 q10,-16 22,-2',
-    class: 'doodle',
-  }, serpent);
-  el('path', {
-    d: 'M-4,10 q14,-22 34,-16 q-8,7 -6,16 q-12,6 -28,0 z',
-    class: 'doodle-fill',
-  }, serpent);
-  el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+  if (decor.serpent) {
+    const serpent = el('g', {
+      class: 'doodle-serpent', transform: `translate(${decor.serpent.x},${decor.serpent.y})`,
+    }, svg);
+    el('path', {
+      d: 'M-78,14 q14,-30 30,-2 q10,18 22,0 q10,-16 22,-2',
+      class: 'doodle',
+    }, serpent);
+    el('path', {
+      d: 'M-4,10 q14,-22 34,-16 q-8,7 -6,16 q-12,6 -28,0 z',
+      class: 'doodle-fill',
+    }, serpent);
+    el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+  }
 
-  const title = el('g', { class: 'map-title-group', transform: 'translate(886,96)' }, svg);
+  const title = el('g', {
+    class: 'map-title-group',
+    transform: `translate(${decor.mapLabelPos.x},${decor.mapLabelPos.y})`,
+  }, svg);
   el('text', {
     x: 0, y: 0, class: 'map-title', 'text-anchor': 'middle', 'font-size': 34,
-  }, title).textContent = 'AFRIKA';
+  }, title).textContent = decor.mapLabel;
   el('path', { d: 'M-80,14 L80,14 M-58,22 L58,22', class: 'doodle' }, title);
 }
 
@@ -3975,9 +4080,10 @@ function mulberry32(seed) {
 
 class Game {
   /**
-   * @param {{players: Array<{name, color, isBot, start}>, rng?: () => number}} opts
+   * @param {{players: Array<{name, color, isBot, start}>, pack?: object, rng?: () => number}} opts
+   *   pack = karttapaketti (lauta, laatat, kysymykset); oletuksena Afrikka.
    */
-  constructor({ players, seed = Math.floor(Math.random() * 2 ** 32), rng }) {
+  constructor({ players, pack = packById('africa'), seed = Math.floor(Math.random() * 2 ** 32), rng }) {
     if (players.length < 2 || players.length > 4) {
       throw new Error('Pelaajia pitää olla 2–4');
     }
@@ -3990,8 +4096,10 @@ class Game {
       this.rngCalls++;
       return source();
     };
-    this.board = buildBoard(CITIES, EDGES);
-    this.airRoutes = AIR_ROUTES;
+    this.pack = pack;
+    this.tokenTypes = pack.tokens.types;
+    this.board = buildBoard(pack.cities, pack.edges);
+    this.airRoutes = pack.airRoutes;
 
     this.players = players.map((p, i) => ({
       id: i,
@@ -4006,11 +4114,12 @@ class Game {
       finds: [], // löydetyt laatat tyyppeinä
     }));
 
-    const pile = createTokenPile(this.rng);
-    if (pile.length !== TOKEN_CITIES.length) {
-      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${TOKEN_CITIES.length}`);
+    const tokenCities = pack.cities.filter((c) => !c.start).map((c) => c.id);
+    const pile = createTokenPile(pack.tokens.counts, this.rng);
+    if (pile.length !== tokenCities.length) {
+      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${tokenCities.length}`);
     }
-    this.tokens = new Map(TOKEN_CITIES.map((city, i) => [city, pile[i]]));
+    this.tokens = new Map(tokenCities.map((city, i) => [city, pile[i]]));
     this.revealed = new Map(); // kaupunki -> laattatyyppi
 
     this.current = 0;
@@ -4031,7 +4140,7 @@ class Game {
     this.turnCount = 1;
     this.log = [];
     this.events = []; // näytölle animoitavat tapahtumat
-    this.say(null, 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.');
+    this.say(null, pack.texts.intro);
     this.beginTurn();
   }
 
@@ -4386,7 +4495,7 @@ class Game {
    * kysymykset palaavat mukaan.
    */
   pickQuestion(cityId) {
-    const pool = [...(QUESTIONS[cityId] ?? []), ...QUESTIONS.general];
+    const pool = [...(this.pack.questions[cityId] ?? []), ...this.pack.questions.general];
     const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
     const deck = fresh.length ? fresh : pool;
     const question = deck[Math.floor(this.rng() * deck.length)];
@@ -4433,7 +4542,7 @@ class Game {
     this.revealed.set(cityId, type);
 
     const p = this.player;
-    const token = TOKEN_TYPES[type];
+    const token = this.tokenTypes[type];
     p.finds.push(type);
     const city = this.board.cityById.get(cityId);
 
@@ -4442,9 +4551,9 @@ class Game {
         p.hasStar = true;
         this.starFound = true;
         this.starCity = cityId;
-        this.say(p.id, `★ ${p.name} löysi AFRIKAN TÄHDEN kaupungista ${city.name}!`);
-        this.say(null, 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.');
-        this.emit('treasure', 'AFRIKAN TÄHTI!', {
+        this.say(p.id, this.pack.texts.starFound(p.name, city.name));
+        this.say(null, this.pack.texts.starChase);
+        this.emit('treasure', this.pack.texts.starToast, {
           token: type,
           sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
         });
@@ -4491,7 +4600,7 @@ class Game {
     this.winner = p;
     this.phase = 'over';
     const reason = p.hasStar
-      ? 'toi Afrikan tähden turvallisesti kotiin'
+      ? this.pack.texts.winStar
       : 'ehti hevosenkengän kanssa kotiin ensimmäisenä';
     this.say(p.id, `🏆 ${p.name} ${reason} kaupungissa ${city.name} ja voitti pelin!`);
     return true;
@@ -4503,6 +4612,7 @@ class Game {
   toJSON() {
     return {
       version: 1,
+      packId: this.pack.id,
       seed: this.seed,
       rngCalls: this.rngCalls,
       players: this.players.map((p) => ({ ...p })),
@@ -4540,8 +4650,12 @@ class Game {
       return source();
     };
 
-    game.board = buildBoard(CITIES, EDGES);
-    game.airRoutes = AIR_ROUTES;
+    // Vanhoissa tallennuksissa ei ole packId:tä — ne ovat Afrikka-pelejä.
+    const pack = packById(data.packId ?? 'africa');
+    game.pack = pack;
+    game.tokenTypes = pack.tokens.types;
+    game.board = buildBoard(pack.cities, pack.edges);
+    game.airRoutes = pack.airRoutes;
     game.players = data.players.map((p) => ({ ...p }));
     game.tokens = new Map(data.tokens);
     game.revealed = new Map(data.revealed);
@@ -4737,7 +4851,6 @@ const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
 const LETTERS = ['A', 'B', 'C', 'D'];
-const COMPASS = { x: 168, y: 772, r: 62 };
 
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
@@ -4822,6 +4935,8 @@ class UI {
   }
 
   mount() {
+    this.svg.setAttribute('aria-label', this.game.pack.ariaLabel);
+    document.body.dataset.pack = this.game.pack.id;
     this.drawBoard();
     this.boardDie = new BoardDie(this.mapPane);
     this.fitViewBox();
@@ -4871,10 +4986,11 @@ class UI {
     const pane = this.mapPane;
     const w = pane.clientWidth || 600;
     const h = pane.clientHeight || 600;
+    const spot = this.game.pack.decor.dieSpot;
     const jitter = this.dieJitter ?? { x: 0, y: 0 };
     return {
-      x: w * (0.115 + jitter.x),
-      y: h * (0.865 + jitter.y),
+      x: w * (spot.x + jitter.x),
+      y: h * (spot.y + jitter.y),
     };
   }
 
@@ -4902,25 +5018,24 @@ class UI {
   // --- kartta -------------------------------------------------------------
 
   drawBoard() {
-    const { board } = this.game;
+    const { board, pack } = this.game;
+    const { decor } = pack;
     this.svg.textContent = '';
 
     drawDefs(this.svg);
     drawParchment(this.svg);
-    drawLand(this.svg);
-    drawWaves(this.svg, [
-      { x: COMPASS.x, y: COMPASS.y, r: COMPASS.r + 45 },
-      { x: 232, y: 556, r: 95 },
-      { x: 858, y: 905, r: 110 },
-      { x: 880, y: 92, r: 135 },
+    drawLand(this.svg, pack.map);
+    drawWaves(this.svg, pack.map, [
+      { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
+      ...decor.waveSkip,
     ]);
-    drawTerrain(this.svg, this.mapObstacles());
-    drawCompass(this.svg, COMPASS.x, COMPASS.y, COMPASS.r);
-    drawDoodles(this.svg);
+    drawTerrain(this.svg, pack.map, this.mapObstacles(), decor.terrainBands);
+    drawCompass(this.svg, decor.compass.x, decor.compass.y, decor.compass.r);
+    drawDoodles(this.svg, decor);
 
     // Lentoreitit kaarina.
     const air = el('g', { class: 'air-routes' }, this.svg);
-    for (const route of AIR_ROUTES) {
+    for (const route of this.game.airRoutes) {
       const a = board.cityById.get(route.a);
       const b = board.cityById.get(route.b);
       const mx = (a.x + b.x) / 2 + (b.y - a.y) * 0.12;
@@ -5130,7 +5245,7 @@ class UI {
       const marks = html('span', 'chip-marks');
       if (p.hasStar) marks.appendChild(tokenIconSvg('star', 17));
       for (let i = 0; i < p.horseshoes; i++) marks.appendChild(tokenIconSvg('horseshoe', 17));
-      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0);
+      const gems = p.finds.filter((t) => game.tokenTypes[t].value > 0);
       if (gems.length) {
         marks.appendChild(tokenIconSvg(gems[gems.length - 1], 17));
         if (gems.length > 1) marks.appendChild(html('span', 'gem-count', `×${gems.length}`));
@@ -5271,7 +5386,7 @@ class UI {
     const { game } = this;
     const player = game.player;
     const city = this.factCity(player.pos);
-    const facts = PLACE_FACTS[city.id];
+    const facts = game.pack.placeFacts[city.id];
     if (!facts || facts.length === 0) return;
 
     const pick = Math.floor(hash01(`fact:${city.id}:${game.turnCount}:${player.id}`) * facts.length);
@@ -5314,7 +5429,7 @@ class UI {
     const w = this.game.winner;
     document.getElementById('winner-title').textContent = `🏆 ${w.name} voitti!`;
     document.getElementById('winner-text').textContent = w.hasStar
-      ? `${w.name} toi Afrikan tähden kotiin ${w.money} punnan kanssa.`
+      ? this.game.pack.texts.winnerStar(w.name, w.money)
       : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`;
     if (!this.winnerDialog.open) this.winnerDialog.showModal();
   }
@@ -5385,7 +5500,7 @@ class UI {
         const verdict = quiz.timedOut ? 'Aika loppui!' : quiz.right ? 'Oikein!' : 'Väärin.';
         this.quizResult.appendChild(html('strong', 'quiz-verdict', verdict));
       } else {
-        const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
+        const found = quiz.found ? game.tokenTypes[quiz.found] : null;
         const body = html('div');
         if (quiz.right && found) {
           this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));
@@ -5554,7 +5669,7 @@ class UI {
 
   /** Iso laatta kääntyy ruudun keskellä ja paljastaa sisällön. */
   async playTokenReveal(type) {
-    const token = TOKEN_TYPES[type];
+    const token = this.game.tokenTypes[type];
     const overlay = html('div', 'reveal-overlay');
     const scene = html('div', 'reveal-scene');
     const disc = html('div', `reveal-disc ${type}`);
@@ -5795,15 +5910,12 @@ class UI {
 // Käynnistys: aloitusruutu, pelin luonti, tallennus ja dialogit.
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
-const START_CITIES = [
-  { id: 'tanger', name: 'Tanger' },
-  { id: 'kairo', name: 'Kairo' },
-];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
 const APP_VERSION = '2026-07-26.3';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
+const boardSelect = document.getElementById('board-select');
 const countSelect = document.getElementById('player-count');
 const playerSetup = document.getElementById('player-setup');
 const rulesDialog = document.getElementById('rules-dialog');
@@ -5843,8 +5955,28 @@ function clearSave() {
 
 // --- aloitusruutu ----------------------------------------------------------
 
+for (const pack of PACKS) {
+  const opt = document.createElement('option');
+  opt.value = pack.id;
+  opt.textContent = pack.boardLabel;
+  boardSelect.appendChild(opt);
+}
+
+function selectedPack() {
+  return packById(boardSelect.value);
+}
+
+/** Laudan vaihto päivittää otsikon, kuvaustekstin ja aloituskaupungit. */
+function updateBoardChoice() {
+  const pack = selectedPack();
+  document.getElementById('setup-title').textContent = pack.name;
+  document.getElementById('setup-tagline').textContent = pack.tagline;
+  buildPlayerRows();
+}
+
 function buildPlayerRows() {
   const count = Number(countSelect.value);
+  const startCities = selectedPack().cities.filter((c) => c.start);
   playerSetup.textContent = '';
   for (let i = 0; i < count; i++) {
     const row = document.createElement('div');
@@ -5864,13 +5996,13 @@ function buildPlayerRows() {
 
     const start = document.createElement('select');
     start.dataset.role = 'start';
-    for (const city of START_CITIES) {
+    for (const city of startCities) {
       const opt = document.createElement('option');
       opt.value = city.id;
       opt.textContent = city.name;
       start.appendChild(opt);
     }
-    start.value = i % 2 === 0 ? 'tanger' : 'kairo';
+    start.value = startCities[i % startCities.length].id;
     row.appendChild(start);
 
     const botLabel = document.createElement('label');
@@ -5898,6 +6030,7 @@ function readPlayers() {
 
 function attach(game) {
   if (ui) ui.destroy();
+  document.querySelector('.brand').textContent = game.pack.name;
   ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
   ui.mount();
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
@@ -5905,13 +6038,13 @@ function attach(game) {
 
 function startGame() {
   clearSave();
-  attach(new Game({ players: readPlayers() }));
+  attach(new Game({ players: readPlayers(), pack: selectedPack() }));
 }
 
 function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
-  buildPlayerRows();
+  updateBoardChoice();
   setupDialog.showModal();
 }
 
@@ -5936,6 +6069,7 @@ document.addEventListener('pointerdown', (event) => {
   if (button && !button.classList.contains('quiz-option')) sfx.play('click');
 });
 
+boardSelect.addEventListener('change', updateBoardChoice);
 countSelect.addEventListener('change', buildPlayerRows);
 setupForm.addEventListener('submit', () => {
   // Dialogin sulkeutuminen tapahtuu selaimen toimesta; peli luodaan sen jälkeen.

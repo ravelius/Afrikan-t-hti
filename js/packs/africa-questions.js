@@ -1,11 +1,11 @@
-// Tietovisakysymykset. Jokaisella laattakaupungilla on omat kysymyksensä, jotka
+// Afrikka-laudan tietovisakysymykset. Jokaisella laattakaupungilla on omat kysymyksensä, jotka
 // liittyvät paikan maantietoon, kulttuuriin tai historiaan. `general` toimii
 // varapakkana, jos kaupungin omat kysymykset on jo käytetty.
 //
 // Muoto: { q: kysymys, options: [4 vaihtoehtoa], correct: oikean indeksi, fact: selitys }
 // Vaihtoehdot sekoitetaan vasta kysyttäessä, joten oikea vastaus voi olla tässä missä vain.
 
-export const QUESTIONS = {
+export const AFRICA_QUESTIONS = {
   tripoli: [
     {
       q: 'Minkä maan pääkaupunki Tripoli on?',
@@ -871,18 +871,11 @@ export const QUESTIONS = {
   ],
 };
 
-/** Kaikki kysymykset yhtenä listana (testejä varten). */
-export function allQuestions() {
-  return Object.entries(QUESTIONS).flatMap(([key, list]) =>
-    list.map((question) => ({ ...question, key })),
-  );
-}
-
 /**
  * "Tiesitkö että…" -tiedot paikoista. Peli näyttää yhden pelaajan nykyisestä
  * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
  */
-export const PLACE_FACTS = {
+export const AFRICA_FACTS = {
   tanger: [
     'Tanger on ollut satamakaupunki jo foinikialaisten ajoista. Gibraltarin salmi erottaa sen Espanjasta vain noin 14 kilometrin levyisenä.',
     'Tangeria hallittiin vuosina 1923–1956 kansainvälisenä vyöhykkeenä, jota useat maat valvoivat yhdessä.',

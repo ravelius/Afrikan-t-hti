@@ -1,7 +1,9 @@
 // Puhdas sääntölogiikka: laudan rakenne, siirtojen laskenta ja etäisyydet.
 // Tämä moduuli ei tiedä mitään DOM:ista, joten sen voi testata suoraan Nodella.
 
-import { SEA_FEE } from './board.js';
+// Matkustamisen hinnat ovat samat kaikilla laudoilla.
+export const SEA_FEE = 100;
+export const FLIGHT_PRICE = 300;
 
 /**
  * Sijainti on joko kaupungissa tai reitin varrella:

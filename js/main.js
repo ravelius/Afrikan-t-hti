@@ -3,17 +3,15 @@
 import { Game } from './game.js';
 import { UI } from './ui.js';
 import { sfx } from './sound.js';
+import { PACKS, packById } from './pack.js';
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
-const START_CITIES = [
-  { id: 'tanger', name: 'Tanger' },
-  { id: 'kairo', name: 'Kairo' },
-];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
 const APP_VERSION = '2026-07-26.3';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
+const boardSelect = document.getElementById('board-select');
 const countSelect = document.getElementById('player-count');
 const playerSetup = document.getElementById('player-setup');
 const rulesDialog = document.getElementById('rules-dialog');
@@ -53,8 +51,28 @@ function clearSave() {
 
 // --- aloitusruutu ----------------------------------------------------------
 
+for (const pack of PACKS) {
+  const opt = document.createElement('option');
+  opt.value = pack.id;
+  opt.textContent = pack.boardLabel;
+  boardSelect.appendChild(opt);
+}
+
+function selectedPack() {
+  return packById(boardSelect.value);
+}
+
+/** Laudan vaihto päivittää otsikon, kuvaustekstin ja aloituskaupungit. */
+function updateBoardChoice() {
+  const pack = selectedPack();
+  document.getElementById('setup-title').textContent = pack.name;
+  document.getElementById('setup-tagline').textContent = pack.tagline;
+  buildPlayerRows();
+}
+
 function buildPlayerRows() {
   const count = Number(countSelect.value);
+  const startCities = selectedPack().cities.filter((c) => c.start);
   playerSetup.textContent = '';
   for (let i = 0; i < count; i++) {
     const row = document.createElement('div');
@@ -74,13 +92,13 @@ function buildPlayerRows() {
 
     const start = document.createElement('select');
     start.dataset.role = 'start';
-    for (const city of START_CITIES) {
+    for (const city of startCities) {
       const opt = document.createElement('option');
       opt.value = city.id;
       opt.textContent = city.name;
       start.appendChild(opt);
     }
-    start.value = i % 2 === 0 ? 'tanger' : 'kairo';
+    start.value = startCities[i % startCities.length].id;
     row.appendChild(start);
 
     const botLabel = document.createElement('label');
@@ -108,6 +126,7 @@ function readPlayers() {
 
 function attach(game) {
   if (ui) ui.destroy();
+  document.querySelector('.brand').textContent = game.pack.name;
   ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
   ui.mount();
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
@@ -115,13 +134,13 @@ function attach(game) {
 
 function startGame() {
   clearSave();
-  attach(new Game({ players: readPlayers() }));
+  attach(new Game({ players: readPlayers(), pack: selectedPack() }));
 }
 
 function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
-  buildPlayerRows();
+  updateBoardChoice();
   setupDialog.showModal();
 }
 
@@ -146,6 +165,7 @@ document.addEventListener('pointerdown', (event) => {
   if (button && !button.classList.contains('quiz-option')) sfx.play('click');
 });
 
+boardSelect.addEventListener('change', updateBoardChoice);
 countSelect.addEventListener('change', buildPlayerRows);
 setupForm.addEventListener('submit', () => {
   // Dialogin sulkeutuminen tapahtuu selaimen toimesta; peli luodaan sen jälkeen.

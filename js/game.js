@@ -1,9 +1,8 @@
 // Pelin tila ja säännöt: vuorot, laattojen kääntäminen ja voittoehdot.
 
-import { CITIES, EDGES, AIR_ROUTES, TOKEN_CITIES, FLIGHT_PRICE } from './board.js';
-import { buildBoard, findMoves, posKey, reachableCities } from './rules.js';
-import { TOKEN_TYPES, createTokenPile } from './tokens.js';
-import { QUESTIONS } from './questions.js';
+import { FLIGHT_PRICE, buildBoard, findMoves, posKey, reachableCities } from './rules.js';
+import { createTokenPile } from './tokens.js';
+import { packById } from './pack.js';
 
 export const START_MONEY = 300;
 export const SEA_FARE = 100; // laivamatkan hinta vuorolta
@@ -26,9 +25,10 @@ export function mulberry32(seed) {
 
 export class Game {
   /**
-   * @param {{players: Array<{name, color, isBot, start}>, rng?: () => number}} opts
+   * @param {{players: Array<{name, color, isBot, start}>, pack?: object, rng?: () => number}} opts
+   *   pack = karttapaketti (lauta, laatat, kysymykset); oletuksena Afrikka.
    */
-  constructor({ players, seed = Math.floor(Math.random() * 2 ** 32), rng }) {
+  constructor({ players, pack = packById('africa'), seed = Math.floor(Math.random() * 2 ** 32), rng }) {
     if (players.length < 2 || players.length > 4) {
       throw new Error('Pelaajia pitää olla 2–4');
     }
@@ -41,8 +41,10 @@ export class Game {
       this.rngCalls++;
       return source();
     };
-    this.board = buildBoard(CITIES, EDGES);
-    this.airRoutes = AIR_ROUTES;
+    this.pack = pack;
+    this.tokenTypes = pack.tokens.types;
+    this.board = buildBoard(pack.cities, pack.edges);
+    this.airRoutes = pack.airRoutes;
 
     this.players = players.map((p, i) => ({
       id: i,
@@ -57,11 +59,12 @@ export class Game {
       finds: [], // löydetyt laatat tyyppeinä
     }));
 
-    const pile = createTokenPile(this.rng);
-    if (pile.length !== TOKEN_CITIES.length) {
-      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${TOKEN_CITIES.length}`);
+    const tokenCities = pack.cities.filter((c) => !c.start).map((c) => c.id);
+    const pile = createTokenPile(pack.tokens.counts, this.rng);
+    if (pile.length !== tokenCities.length) {
+      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${tokenCities.length}`);
     }
-    this.tokens = new Map(TOKEN_CITIES.map((city, i) => [city, pile[i]]));
+    this.tokens = new Map(tokenCities.map((city, i) => [city, pile[i]]));
     this.revealed = new Map(); // kaupunki -> laattatyyppi
 
     this.current = 0;
@@ -82,7 +85,7 @@ export class Game {
     this.turnCount = 1;
     this.log = [];
     this.events = []; // näytölle animoitavat tapahtumat
-    this.say(null, 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.');
+    this.say(null, pack.texts.intro);
     this.beginTurn();
   }
 
@@ -437,7 +440,7 @@ export class Game {
    * kysymykset palaavat mukaan.
    */
   pickQuestion(cityId) {
-    const pool = [...(QUESTIONS[cityId] ?? []), ...QUESTIONS.general];
+    const pool = [...(this.pack.questions[cityId] ?? []), ...this.pack.questions.general];
     const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
     const deck = fresh.length ? fresh : pool;
     const question = deck[Math.floor(this.rng() * deck.length)];
@@ -484,7 +487,7 @@ export class Game {
     this.revealed.set(cityId, type);
 
     const p = this.player;
-    const token = TOKEN_TYPES[type];
+    const token = this.tokenTypes[type];
     p.finds.push(type);
     const city = this.board.cityById.get(cityId);
 
@@ -493,9 +496,9 @@ export class Game {
         p.hasStar = true;
         this.starFound = true;
         this.starCity = cityId;
-        this.say(p.id, `★ ${p.name} löysi AFRIKAN TÄHDEN kaupungista ${city.name}!`);
-        this.say(null, 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.');
-        this.emit('treasure', 'AFRIKAN TÄHTI!', {
+        this.say(p.id, this.pack.texts.starFound(p.name, city.name));
+        this.say(null, this.pack.texts.starChase);
+        this.emit('treasure', this.pack.texts.starToast, {
           token: type,
           sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
         });
@@ -542,7 +545,7 @@ export class Game {
     this.winner = p;
     this.phase = 'over';
     const reason = p.hasStar
-      ? 'toi Afrikan tähden turvallisesti kotiin'
+      ? this.pack.texts.winStar
       : 'ehti hevosenkengän kanssa kotiin ensimmäisenä';
     this.say(p.id, `🏆 ${p.name} ${reason} kaupungissa ${city.name} ja voitti pelin!`);
     return true;
@@ -554,6 +557,7 @@ export class Game {
   toJSON() {
     return {
       version: 1,
+      packId: this.pack.id,
       seed: this.seed,
       rngCalls: this.rngCalls,
       players: this.players.map((p) => ({ ...p })),
@@ -591,8 +595,12 @@ export class Game {
       return source();
     };
 
-    game.board = buildBoard(CITIES, EDGES);
-    game.airRoutes = AIR_ROUTES;
+    // Vanhoissa tallennuksissa ei ole packId:tä — ne ovat Afrikka-pelejä.
+    const pack = packById(data.packId ?? 'africa');
+    game.pack = pack;
+    game.tokenTypes = pack.tokens.types;
+    game.board = buildBoard(pack.cities, pack.edges);
+    game.airRoutes = pack.airRoutes;
     game.players = data.players.map((p) => ({ ...p }));
     game.tokens = new Map(data.tokens);
     game.revealed = new Map(data.revealed);

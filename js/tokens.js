@@ -1,4 +1,10 @@
-// Laatat: jalokivet, Afrikan tähti, hevosenkengät, ryöstäjät ja tyhjät.
+// Laatat: jalokivet, tähti, hevosenkengät, ryöstäjät ja tyhjät.
+//
+// Laattatyyppien tunnisteet (star, ruby, …) ovat samat kaikilla laudoilla,
+// jotta kuvakkeet ja tyylit toimivat sellaisenaan. Lauta voi antaa tyypeille
+// oman nimen ja värin themedTokenTypes-apurilla, ja laattojen määrät
+// määritellään laudan paketissa niin, että niitä on yksi jokaiseen
+// aarrekaupunkiin.
 
 export const TOKEN_TYPES = {
   star: { id: 'star', name: 'Afrikan tähti', symbol: '★', value: 0, color: '#f6c445' },
@@ -10,28 +16,26 @@ export const TOKEN_TYPES = {
   empty: { id: 'empty', name: 'Tyhjä', symbol: '·', value: 0, color: '#6f5b45' },
 };
 
-// Yhteensä 30 laattaa, yksi jokaiseen kaupunkiin aloituskaupunkeja lukuun ottamatta.
-export const TOKEN_COUNTS = {
-  star: 1,
-  horseshoe: 2,
-  robber: 3,
-  ruby: 4,
-  emerald: 5,
-  topaz: 6,
-  empty: 9,
-};
+/** Laattatyypit laudan omilla nimillä ja väreillä. */
+export function themedTokenTypes(overrides = {}) {
+  const out = {};
+  for (const [id, type] of Object.entries(TOKEN_TYPES)) {
+    out[id] = { ...type, ...(overrides[id] ?? {}) };
+  }
+  return out;
+}
 
-export function tokenPileTemplate() {
+export function tokenPileTemplate(counts) {
   const pile = [];
-  for (const [type, count] of Object.entries(TOKEN_COUNTS)) {
+  for (const [type, count] of Object.entries(counts)) {
     for (let i = 0; i < count; i++) pile.push(type);
   }
   return pile;
 }
 
 /** Sekoittaa laattapinon (Fisher–Yates). */
-export function createTokenPile(rng = Math.random) {
-  const pile = tokenPileTemplate();
+export function createTokenPile(counts, rng = Math.random) {
+  const pile = tokenPileTemplate(counts);
   for (let i = pile.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
     [pile[i], pile[j]] = [pile[j], pile[i]];

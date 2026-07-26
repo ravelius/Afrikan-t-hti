@@ -1,9 +1,6 @@
 // Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
-import { AIR_ROUTES } from './board.js';
 import { pixelOf, pointAlong, posKey } from './rules.js';
-import { TOKEN_TYPES } from './tokens.js';
-import { PLACE_FACTS } from './questions.js';
 import {
   chooseMove,
   chooseQuizAnswer,
@@ -36,7 +33,6 @@ const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
 const LETTERS = ['A', 'B', 'C', 'D'];
-const COMPASS = { x: 168, y: 772, r: 62 };
 
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
@@ -121,6 +117,8 @@ export class UI {
   }
 
   mount() {
+    this.svg.setAttribute('aria-label', this.game.pack.ariaLabel);
+    document.body.dataset.pack = this.game.pack.id;
     this.drawBoard();
     this.boardDie = new BoardDie(this.mapPane);
     this.fitViewBox();
@@ -170,10 +168,11 @@ export class UI {
     const pane = this.mapPane;
     const w = pane.clientWidth || 600;
     const h = pane.clientHeight || 600;
+    const spot = this.game.pack.decor.dieSpot;
     const jitter = this.dieJitter ?? { x: 0, y: 0 };
     return {
-      x: w * (0.115 + jitter.x),
-      y: h * (0.865 + jitter.y),
+      x: w * (spot.x + jitter.x),
+      y: h * (spot.y + jitter.y),
     };
   }
 
@@ -201,25 +200,24 @@ export class UI {
   // --- kartta -------------------------------------------------------------
 
   drawBoard() {
-    const { board } = this.game;
+    const { board, pack } = this.game;
+    const { decor } = pack;
     this.svg.textContent = '';
 
     drawDefs(this.svg);
     drawParchment(this.svg);
-    drawLand(this.svg);
-    drawWaves(this.svg, [
-      { x: COMPASS.x, y: COMPASS.y, r: COMPASS.r + 45 },
-      { x: 232, y: 556, r: 95 },
-      { x: 858, y: 905, r: 110 },
-      { x: 880, y: 92, r: 135 },
+    drawLand(this.svg, pack.map);
+    drawWaves(this.svg, pack.map, [
+      { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
+      ...decor.waveSkip,
     ]);
-    drawTerrain(this.svg, this.mapObstacles());
-    drawCompass(this.svg, COMPASS.x, COMPASS.y, COMPASS.r);
-    drawDoodles(this.svg);
+    drawTerrain(this.svg, pack.map, this.mapObstacles(), decor.terrainBands);
+    drawCompass(this.svg, decor.compass.x, decor.compass.y, decor.compass.r);
+    drawDoodles(this.svg, decor);
 
     // Lentoreitit kaarina.
     const air = el('g', { class: 'air-routes' }, this.svg);
-    for (const route of AIR_ROUTES) {
+    for (const route of this.game.airRoutes) {
       const a = board.cityById.get(route.a);
       const b = board.cityById.get(route.b);
       const mx = (a.x + b.x) / 2 + (b.y - a.y) * 0.12;
@@ -429,7 +427,7 @@ export class UI {
       const marks = html('span', 'chip-marks');
       if (p.hasStar) marks.appendChild(tokenIconSvg('star', 17));
       for (let i = 0; i < p.horseshoes; i++) marks.appendChild(tokenIconSvg('horseshoe', 17));
-      const gems = p.finds.filter((t) => TOKEN_TYPES[t].value > 0);
+      const gems = p.finds.filter((t) => game.tokenTypes[t].value > 0);
       if (gems.length) {
         marks.appendChild(tokenIconSvg(gems[gems.length - 1], 17));
         if (gems.length > 1) marks.appendChild(html('span', 'gem-count', `×${gems.length}`));
@@ -570,7 +568,7 @@ export class UI {
     const { game } = this;
     const player = game.player;
     const city = this.factCity(player.pos);
-    const facts = PLACE_FACTS[city.id];
+    const facts = game.pack.placeFacts[city.id];
     if (!facts || facts.length === 0) return;
 
     const pick = Math.floor(hash01(`fact:${city.id}:${game.turnCount}:${player.id}`) * facts.length);
@@ -613,7 +611,7 @@ export class UI {
     const w = this.game.winner;
     document.getElementById('winner-title').textContent = `🏆 ${w.name} voitti!`;
     document.getElementById('winner-text').textContent = w.hasStar
-      ? `${w.name} toi Afrikan tähden kotiin ${w.money} punnan kanssa.`
+      ? this.game.pack.texts.winnerStar(w.name, w.money)
       : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`;
     if (!this.winnerDialog.open) this.winnerDialog.showModal();
   }
@@ -684,7 +682,7 @@ export class UI {
         const verdict = quiz.timedOut ? 'Aika loppui!' : quiz.right ? 'Oikein!' : 'Väärin.';
         this.quizResult.appendChild(html('strong', 'quiz-verdict', verdict));
       } else {
-        const found = quiz.found ? TOKEN_TYPES[quiz.found] : null;
+        const found = quiz.found ? game.tokenTypes[quiz.found] : null;
         const body = html('div');
         if (quiz.right && found) {
           this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));
@@ -853,7 +851,7 @@ export class UI {
 
   /** Iso laatta kääntyy ruudun keskellä ja paljastaa sisällön. */
   async playTokenReveal(type) {
-    const token = TOKEN_TYPES[type];
+    const token = this.game.tokenTypes[type];
     const overlay = html('div', 'reveal-overlay');
     const scene = html('div', 'reveal-scene');
     const disc = html('div', `reveal-disc ${type}`);
