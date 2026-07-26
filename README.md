@@ -1,7 +1,8 @@
-# Afrikan tähti ★
+# Maailman tähdet ★
 
 Selaimessa pelattava seikkailupeli, jonka innoittajana on klassinen Afrikan tähti
--lautapeli. Ei riippuvuuksia, ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja
+-lautapeli. Maailman tähdet on itsenäinen, avoin harrastusprojekti, jolla ei ole
+yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja
 JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
 maantieteestä kiinnostavasti.
 
@@ -14,7 +15,9 @@ maantieteestä kiinnostavasti.
 - SVG-kartta, jossa kymmeniä kaupunkeja, maareitit, laivareitit ja lentoyhteydet
 - Laatat: tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät — Lähi-idässä
   topaasin tilalla on turkoosi, joka on saanut nimensä Turkista
-- Lähes 200 kysymystä: jokaisella kaupungilla omat kysymyksensä + laudan yleinen varapakka
+- Lähes 200 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
+  kysymyksensä + laudan yleinen varapakka. Pelaajakohtainen tasovalinta
+  (esim. lapsille helpot) ja vaikeasta kysymyksestä 100 punnan bonus
 - Suomenkielinen käyttöliittymä ja "Tiesitkö että…" -tietoruutu, joka kertoo
   vuorossa olevan pelaajan sijainnista — 64 tietoa, kaksi jokaisesta kaupungista
 - Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
@@ -173,6 +176,11 @@ assets/             sovelluskuvakkeet
 tools/              yhden tiedoston koonti ja kuvakkeiden generointi
 tests/              node --test -testit säännöille ja kokonaiselle pelille
 ```
+
+## Periaatteet
+
+Projektin arvopohja — miksi peli on olemassa ja millä perusteilla sisältö
+hyväksytään — on kirjattu tiedostoon [docs/periaatteet.md](docs/periaatteet.md).
 
 ## Uuden laudan lisääminen
 

@@ -8,7 +8,9 @@ import {
   wantsFiftyFifty,
   wantsHint,
 } from './ai.js';
-import { FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HINT_PRICE, QUIZ_SECONDS, SEA_FARE } from './game.js';
+import {
+  FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
+} from './game.js';
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -491,6 +493,7 @@ export class UI {
         this.doAction(() => game.actionQuiz());
       });
       this.actionsEl.appendChild(quizBtn);
+      this.addHardQuizButton(city);
 
       const skipBtn = html('button', '', '➡ Päätä vuoro');
       skipBtn.addEventListener('click', () => this.doAction(() => game.actionSkipQuiz()));
@@ -523,6 +526,7 @@ export class UI {
         this.doAction(() => game.actionTravel('stay'));
       });
       this.actionsEl.appendChild(stayBtn);
+      this.addHardQuizButton(game.cityOf());
     }
 
     if (modes.includes('land')) {
@@ -546,6 +550,18 @@ export class UI {
       flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
+  }
+
+  /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
+  addHardQuizButton(city) {
+    const { game } = this;
+    if (!city || !game.hardAvailable(city.id)) return;
+    const hardBtn = html('button', '', `★ Vaikea kysymys (+${HARD_BONUS} p)`);
+    hardBtn.addEventListener('click', () => {
+      sfx.play('paper');
+      this.doAction(() => game.actionQuiz({ hard: true }));
+    });
+    this.actionsEl.appendChild(hardBtn);
   }
 
   /**
@@ -628,7 +644,8 @@ export class UI {
     }
 
     const city = game.board.cityById.get(quiz.cityId);
-    this.quizCity.textContent = `${city.name} — ${game.player.name}`;
+    const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
+    this.quizCity.textContent = `${city.name} — ${game.player.name}${hardTag}`;
     this.quizQuestion.textContent = quiz.question;
     this.quizOptions.textContent = '';
 

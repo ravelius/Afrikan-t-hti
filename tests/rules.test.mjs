@@ -6,8 +6,8 @@ import { buildBoard, findMoves, posKey, cityDistances, pointAlong } from '../js/
 import { isOnLand } from '../js/mapart.js';
 import { tokenPileTemplate } from '../js/tokens.js';
 import {
-  Game, mulberry32, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE, HINT_PRICE,
-  QUIZ_SECONDS, SEA_FARE,
+  Game, mulberry32, questionLevel, START_MONEY, STRANDED_AID, FIFTY_FIFTY_PRICE,
+  HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from '../js/game.js';
 import {
   chooseMove, chooseQuizAnswer, chooseTravel, wantsFiftyFifty, wantsHint,
@@ -82,6 +82,13 @@ for (const pack of PACKS) {
 
     const texts = allQuestions(pack).map((q) => q.q);
     assert.equal(new Set(texts).size, texts.length, 'sama kysymys esiintyy kahdesti');
+
+    // Vaikeustasot: taso on 1–3, ja helppoja ja vaikeita on riittävästi,
+    // jotta lapsipelaajan taso ja vaikean kysymyksen bonus toimivat.
+    const levels = allQuestions(pack).map(questionLevel);
+    assert.ok(levels.every((l) => [1, 2, 3].includes(l)), 'virheellinen vaikeustaso');
+    assert.ok(levels.filter((l) => l === 1).length >= 10, 'liian vähän helppoja kysymyksiä');
+    assert.ok(levels.filter((l) => l === 3).length >= 10, 'liian vähän vaikeita kysymyksiä');
   });
 
   test(`${pack.id}: jokaisella kaupungilla on tiesitkö-tietoja`, () => {
@@ -348,6 +355,102 @@ test('oikea vastaus kääntää laatan, väärä ei', () => {
   assert.ok(lose.tokens.has('timbuktu'), 'laatta jää kääntämättä');
   lose.closeQuiz();
   assert.equal(lose.current, 1);
+});
+
+test('helppojen kysymysten pelaaja saa tason 1 kysymyksen', () => {
+  const game = new Game({
+    players: [
+      { name: 'Lapsi', color: '#f00', start: 'tanger', quizLevel: 'easy' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    rng: mulberry32(17),
+  });
+  const levelByText = new Map(allQuestions(AFRICA).map((q) => [q.q, questionLevel(q)]));
+  game.player.pos = { type: 'city', city: 'tripoli' };
+  game.tokens.set('tripoli', 'topaz');
+  for (let i = 0; i < 5; i++) {
+    game.phase = 'offer';
+    game.actionQuiz();
+    assert.equal(levelByText.get(game.quiz.question), 1, `"${game.quiz.question}" ei ole helppo`);
+    game.quiz = null;
+  }
+});
+
+test('vaikea kysymys antaa bonuksen oikeasta vastauksesta', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    rng: mulberry32(23),
+  });
+  const levelByText = new Map(allQuestions(AFRICA).map((q) => [q.q, questionLevel(q)]));
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'topaz');
+
+  assert.ok(game.hardAvailable('timbuktu'));
+  game.phase = 'offer';
+  const tulos = game.actionQuiz({ hard: true });
+  assert.ok(tulos.ok);
+  assert.ok(game.quiz.hard);
+  assert.equal(levelByText.get(game.quiz.question), 3, 'kysymyksen pitää olla vaikea');
+
+  game.answerQuiz(game.quiz.correct);
+  assert.equal(game.player.money, START_MONEY + HARD_BONUS + 300, 'bonus ja topaasin arvo');
+  assert.equal(game.revealed.get('timbuktu'), 'topaz');
+});
+
+test('väärä vastaus vaikeaan kysymykseen ei anna bonusta', () => {
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    rng: mulberry32(29),
+  });
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'topaz');
+  game.phase = 'offer';
+  game.actionQuiz({ hard: true });
+  game.answerQuiz((game.quiz.correct + 1) % 4);
+  assert.equal(game.player.money, START_MONEY);
+  assert.ok(game.tokens.has('timbuktu'), 'laatta jää kääntämättä');
+});
+
+test('tasovalinta laskeutuu pehmeästi, jos tason kysymyksiä ei ole', () => {
+  // Oma minilauta: kysymyksiä on vain oletustasolla 2.
+  const pack = {
+    ...AFRICA,
+    questions: {
+      timbuktu: [
+        { q: 'T1?', options: ['a', 'b', 'c', 'd'], correct: 0, fact: 'f', hint: 'h' },
+      ],
+      general: [
+        { q: 'G1?', options: ['a', 'b', 'c', 'd'], correct: 0, fact: 'f', hint: 'h' },
+      ],
+    },
+  };
+  const game = new Game({
+    players: [
+      { name: 'Lapsi', color: '#f00', start: 'tanger', quizLevel: 'easy' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    pack,
+    rng: mulberry32(31),
+  });
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'topaz');
+
+  // Helppoja ei ole, joten pelaaja saa tason 2 kysymyksen virheen sijaan.
+  game.phase = 'offer';
+  assert.ok(game.actionQuiz().ok);
+  assert.ok(['T1?', 'G1?'].includes(game.quiz.question));
+  game.quiz = null;
+
+  // Vaikeita ei ole, joten vaikeaa kysymystä ei tarjota.
+  assert.equal(game.hardAvailable('timbuktu'), false);
+  game.phase = 'offer';
+  assert.equal(game.actionQuiz({ hard: true }).ok, false);
 });
 
 test('sama kysymys ei toistu ennen kuin pakka on käyty läpi', () => {

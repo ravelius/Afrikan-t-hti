@@ -1,7 +1,7 @@
 {
-  "name": "Afrikan tähti",
-  "short_name": "Afrikan tähti",
-  "description": "Afrikan tähti -lautapeli tietovisalla: etsi tähti Afrikan kartalta.",
+  "name": "Maailman tähdet",
+  "short_name": "Maailman tähdet",
+  "description": "Maailman tähdet: etsi tähtiaarre kartalta ja opi maailmasta tietovisan avulla.",
   "lang": "fi",
   "start_url": "./index.html",
   "scope": "./",

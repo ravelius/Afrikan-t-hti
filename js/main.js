@@ -7,7 +7,7 @@ import { PACKS, packById } from './pack.js';
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.4';
+const APP_VERSION = '2026-07-26.5';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -101,6 +101,17 @@ function buildPlayerRows() {
     start.value = startCities[i % startCities.length].id;
     row.appendChild(start);
 
+    const level = document.createElement('select');
+    level.dataset.role = 'level';
+    level.title = 'Kysymysten vaikeustaso';
+    for (const [value, label] of [['normal', 'tavalliset'], ['easy', 'helpot']]) {
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = label;
+      level.appendChild(opt);
+    }
+    row.appendChild(level);
+
     const botLabel = document.createElement('label');
     botLabel.className = 'bot-label';
     const bot = document.createElement('input');
@@ -120,13 +131,13 @@ function readPlayers() {
     name: row.querySelector('[data-role="name"]').value.trim() || `Pelaaja ${i + 1}`,
     start: row.querySelector('[data-role="start"]').value,
     isBot: row.querySelector('[data-role="bot"]').checked,
+    quizLevel: row.querySelector('[data-role="level"]').value,
     color: COLORS[i],
   }));
 }
 
 function attach(game) {
   if (ui) ui.destroy();
-  document.querySelector('.brand').textContent = game.pack.name;
   ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
   ui.mount();
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten

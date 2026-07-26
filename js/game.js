@@ -10,6 +10,12 @@ export const FIFTY_FIFTY_PRICE = 80; // kahden väärän vaihtoehdon piilotus
 export const HINT_PRICE = 40; // sanallinen vihje kysymykseen
 export const QUIZ_SECONDS = 45; // vastausaika tiimalasin verran
 export const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
+export const HARD_BONUS = 100; // palkkio vaikeasta kysymyksestä oikein vastattaessa
+
+// Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
+export function questionLevel(question) {
+  return question.level ?? 2;
+}
 export { FLIGHT_PRICE };
 
 /** Siemenellinen satunnaisgeneraattori, jotta pelin voi toistaa testeissä. */
@@ -52,6 +58,8 @@ export class Game {
       color: p.color,
       isBot: !!p.isBot,
       start: p.start,
+      // 'easy' = helpot kysymykset (esim. lapsipelaajalle), 'normal' = tavalliset
+      quizLevel: p.quizLevel === 'easy' ? 'easy' : 'normal',
       money: START_MONEY,
       pos: { type: 'city', city: p.start },
       hasStar: false,
@@ -319,18 +327,27 @@ export class Game {
     return { ok: true };
   }
 
-  /** Avaa tietovisakysymyksen: oikea vastaus kääntää laatan ilmaiseksi. */
-  actionQuiz() {
+  /**
+   * Avaa tietovisakysymyksen: oikea vastaus kääntää laatan ilmaiseksi.
+   * `hard: true` arpoo vaikean kysymyksen, josta oikein vastattaessa saa
+   * laatan lisäksi HARD_BONUS puntaa.
+   */
+  actionQuiz({ hard = false } = {}) {
     if (this.phase !== 'offer' && this.phase !== 'action') {
       return { ok: false, error: 'Väärä vaihe' };
     }
     const city = this.tokenHere();
     if (!city) return { ok: false, error: 'Täällä ei ole laattaa' };
+    if (hard && !this.hardAvailable(city.id)) {
+      return { ok: false, error: 'Täällä ei ole vaikeita kysymyksiä' };
+    }
 
-    const question = this.pickQuestion(city.id);
+    const difficulty = hard ? 'hard' : this.player.quizLevel;
+    const question = this.pickQuestion(city.id, difficulty);
     const order = this.shuffledOrder(question.options.length);
     this.quiz = {
       cityId: city.id,
+      hard,
       question: question.q,
       fact: question.fact,
       options: order.map((i) => question.options[i]),
@@ -362,6 +379,12 @@ export class Game {
 
     if (this.quiz.right) {
       this.say(p.id, `${p.name} vastasi oikein kaupungissa ${city.name} ja saa kääntää laatan.`);
+      // Vaikean kysymyksen palkkio maksetaan ennen laatan kääntöä,
+      // joten ryöstäjä vie senkin.
+      if (this.quiz.hard) {
+        p.money += HARD_BONUS;
+        this.say(p.id, `Vaikeasta kysymyksestä ${p.name} saa ${HARD_BONUS} punnan palkkion.`);
+      }
       this.quiz.found = this.revealToken(this.quiz.cityId);
     } else {
       const oikea = this.quiz.options[this.quiz.correct];
@@ -434,16 +457,40 @@ export class Game {
     return { ok: true };
   }
 
+  /** Onko kaupungin pakassa vaikeita kysymyksiä? */
+  hardAvailable(cityId) {
+    const pool = [...(this.pack.questions[cityId] ?? []), ...this.pack.questions.general];
+    return pool.some((q) => questionLevel(q) === 3);
+  }
+
   /**
    * Arpoo kysymyksen: kaupungin omat ja yleiset kysymykset ovat samassa pakassa,
    * ja arvonta osuu vain vielä kysymättömiin. Kun pakka on tyhjä, kaikki
    * kysymykset palaavat mukaan.
+   *
+   * Vaikeustaso rajaa pakkaa: 'easy' suosii helppoja, 'normal' jättää vaikeat
+   * pois ja 'hard' poimii vaikeita. Jos sopivan tasoisia ei ole, pakka
+   * lavenee portaittain, jotta kysymys löytyy aina.
    */
-  pickQuestion(cityId) {
+  pickQuestion(cityId, difficulty = 'normal') {
     const pool = [...(this.pack.questions[cityId] ?? []), ...this.pack.questions.general];
-    const fresh = pool.filter((q) => !this.usedQuestions.has(q.q));
-    const deck = fresh.length ? fresh : pool;
-    const question = deck[Math.floor(this.rng() * deck.length)];
+    const steps = {
+      easy: [[1], [1, 2]],
+      normal: [[1, 2]],
+      hard: [[3], [2, 3]],
+    }[difficulty] ?? [[1, 2]];
+
+    let deck = pool;
+    for (const levels of steps) {
+      const fit = pool.filter((q) => levels.includes(questionLevel(q)));
+      if (fit.length) {
+        deck = fit;
+        break;
+      }
+    }
+    const fresh = deck.filter((q) => !this.usedQuestions.has(q.q));
+    const usable = fresh.length ? fresh : deck;
+    const question = usable[Math.floor(this.rng() * usable.length)];
     this.usedQuestions.add(question.q);
     return question;
   }
