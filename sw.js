@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'afrikan-tahti-2026-07-26';
+const CACHE = 'afrikan-tahti-2026-07-26.2';
 const SHELL = [
   './',
   './index.html',
