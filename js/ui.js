@@ -292,6 +292,7 @@ export class UI {
     const view = this.computeView();
     this.viewBoxSize = { vw: view.vw, vh: view.vh };
     this.svg.style.transform = '';
+    this.boardRoot?.removeAttribute('transform');
     this.svg.setAttribute('viewBox', `${view.tlx} ${view.tly} ${view.vw} ${view.vh}`);
     this.committedView = { ...view, paneW: pane.clientWidth };
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
@@ -310,13 +311,16 @@ export class UI {
       return;
     }
     const view = this.computeView();
-    const k0 = base.paneW / base.vw; // pikseliä per karttayksikkö
+    // Sisältö siirretään niin, että lopputulos vastaa haluttua viewBoxia,
+    // vaikka itse viewBox-attribuutti kirjoitetaan vasta eleen päätyttyä.
     const scale = base.vw / view.vw;
-    const tx = scale * k0 * (base.tlx - view.tlx);
-    const ty = scale * k0 * (base.tly - view.tly);
+    const tx = base.tlx - view.tlx * scale;
+    const ty = base.tly - view.tly * scale;
     this.viewBoxSize = { vw: view.vw, vh: view.vh };
-    this.svg.style.transformOrigin = '0 0';
-    this.svg.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+    this.boardRoot?.setAttribute(
+      'transform',
+      `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${scale.toFixed(5)})`,
+    );
   }
 
   /** Esikatselu piirretään korkeintaan kerran ruudunpäivitystä kohden. */
@@ -384,18 +388,24 @@ export class UI {
     this.svg.textContent = '';
 
     drawDefs(this.svg);
-    drawParchment(this.svg);
-    drawLand(this.svg, pack.map);
-    drawWaves(this.svg, pack.map, [
+    // Kaikki piirretään juuriryhmään: esikatselu siirtää ryhmää, ei SVG:tä,
+    // jolloin elementin taakse ei paljastu tyhjää taustaa raahatessa.
+    const root = el('g', { class: 'board-root' }, this.svg);
+    const svg = { appendChild: (node) => root.appendChild(node) };
+    this.boardRoot = root;
+
+    drawParchment(svg);
+    drawLand(svg, pack.map);
+    drawWaves(svg, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
       ...decor.waveSkip,
     ]);
-    drawTerrain(this.svg, pack.map, this.mapObstacles(), decor.terrainBands);
-    drawCompass(this.svg, decor.compass.x, decor.compass.y, decor.compass.r);
-    drawDoodles(this.svg, decor);
+    drawTerrain(svg, pack.map, this.mapObstacles(), decor.terrainBands);
+    drawCompass(svg, decor.compass.x, decor.compass.y, decor.compass.r);
+    drawDoodles(svg, decor);
 
     // Lentoreitit kaarina.
-    const air = el('g', { class: 'air-routes' }, this.svg);
+    const air = el('g', { class: 'air-routes' }, root);
     for (const route of this.game.airRoutes) {
       const a = board.cityById.get(route.a);
       const b = board.cityById.get(route.b);
@@ -405,7 +415,7 @@ export class UI {
     }
 
     // Reitit ja askelpisteet. Merireitit kaartavat rannikon ympäri.
-    const routes = el('g', { class: 'routes', filter: 'url(#rough-soft)' }, this.svg);
+    const routes = el('g', { class: 'routes', filter: 'url(#rough-soft)' }, root);
     for (const e of board.edges) {
       const d = e.poly.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
       el('path', {
@@ -433,7 +443,7 @@ export class UI {
     }
 
     // Laivamatkojen hinnat erikseen, jotta teksti pysyy terävänä.
-    const fares = el('g', { class: 'fares' }, this.svg);
+    const fares = el('g', { class: 'fares' }, root);
     for (const e of board.edges) {
       if (e.type !== 'sea') continue;
       const mid = pointAlong(e.poly, 0.5);
@@ -448,7 +458,7 @@ export class UI {
     }
 
     // Kaupungit ja nimet.
-    const cities = el('g', { class: 'cities' }, this.svg);
+    const cities = el('g', { class: 'cities' }, root);
     for (const c of board.cities) {
       const wobble = `rotate(${vary(`city:rot:${c.id}`, 12).toFixed(1)} ${c.x} ${c.y})`;
       const base = c.start ? 20 : 11.6;
@@ -493,10 +503,10 @@ export class UI {
       label.textContent = c.name;
     }
 
-    this.tokenLayer = el('g', { class: 'tokens' }, this.svg);
-    this.targetLayer = el('g', { class: 'targets' }, this.svg);
-    this.pawnLayer = el('g', { class: 'pawns' }, this.svg);
-    drawPaperOverlay(this.svg);
+    this.tokenLayer = el('g', { class: 'tokens' }, root);
+    this.targetLayer = el('g', { class: 'targets' }, root);
+    this.pawnLayer = el('g', { class: 'pawns' }, root);
+    drawPaperOverlay(svg);
   }
 
   /** Kartalla näkyvät vain käännetyt laatat omina kuvakkeinaan. */
