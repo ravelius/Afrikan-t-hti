@@ -73,6 +73,7 @@ export class Game {
     this.winner = null;
     this.turnCount = 1;
     this.log = [];
+    this.events = []; // näytölle animoitavat tapahtumat
     this.say(null, 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.');
     this.beginTurn();
   }
@@ -81,6 +82,18 @@ export class Game {
 
   get player() {
     return this.players[this.current];
+  }
+
+  /** Lisää tapahtuman, jonka käyttöliittymä näyttää hetkeksi kartan päällä. */
+  emit(kind, text, extra = {}) {
+    this.events.push({ kind, text, ...extra });
+  }
+
+  /** Poimii kertyneet tapahtumat ja tyhjentää jonon. */
+  takeEvents() {
+    const events = this.events;
+    this.events = [];
+    return events;
   }
 
   say(playerId, text) {
@@ -143,6 +156,7 @@ export class Game {
     if (this.needsAid(p)) {
       p.money += STRANDED_AID;
       this.say(p.id, `${p.name} on jumissa ilman rahaa ja saa pankilta ${STRANDED_AID} puntaa.`);
+      this.emit('aid', `${p.name} sai pankilta ${STRANDED_AID} puntaa`, { icon: '💰' });
     }
   }
 
@@ -185,6 +199,7 @@ export class Game {
     this.say(p.id, `${p.name} heitti ${die}.`);
     if (this.moves.size === 0) {
       this.say(p.id, `${p.name} ei pysty liikkumaan ja jää paikalleen.`);
+      this.emit('stuck', `${p.name} ei pysty liikkumaan`, { icon: '⛔' });
       this.endTurn();
       return { ok: true, moved: false, die };
     }
@@ -209,6 +224,9 @@ export class Game {
       ? `kaupunkiin ${city.name}`
       : `reitille ${this.routeName(move.pos.edge)}`;
     this.say(p.id, `${p.name} siirtyi ${where}${fare}.`);
+    if (move.cost) {
+      this.emit('fare', `Laivamatka −${move.cost} puntaa`, { icon: '⚓' });
+    }
 
     this.moves = null;
     this.die = null;
@@ -329,6 +347,7 @@ export class Game {
     this.lastPath = null;
     const city = this.board.cityById.get(destination);
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
+    this.emit('flight', `Lento kaupunkiin ${city.name}`, { icon: '✈', sub: `−${FLIGHT_PRICE} puntaa` });
     if (this.checkWin()) return { ok: true, win: true };
     this.endTurn();
     return { ok: true };
@@ -354,21 +373,35 @@ export class Game {
         this.starCity = cityId;
         this.say(p.id, `★ ${p.name} löysi AFRIKAN TÄHDEN kaupungista ${city.name}!`);
         this.say(null, 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.');
+        this.emit('treasure', 'AFRIKAN TÄHTI!', {
+          token: type,
+          sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
+        });
         break;
       case 'horseshoe':
         p.horseshoes++;
         this.say(p.id, `Ω ${p.name} löysi hevosenkengän kaupungista ${city.name}.`);
+        this.emit('treasure', 'Hevosenkenkä', {
+          token: type,
+          sub: 'Voi voittaa pelin, jos tähti löytyy',
+        });
         break;
       case 'robber':
         this.say(p.id, `☠ Ryöstäjä yllätti pelaajan ${p.name} ja vei ${p.money} puntaa!`);
+        this.emit('robber', 'Ryöstäjä!', {
+          token: type,
+          sub: p.money ? `${p.name} menetti ${p.money} puntaa` : `${p.name} ei ollut menetettävää`,
+        });
         p.money = 0;
         break;
       case 'empty':
         this.say(p.id, `${p.name} käänsi tyhjän laatan kaupungissa ${city.name}.`);
+        this.emit('treasure', 'Tyhjä laatta', { token: type, sub: 'Ei aarretta täällä' });
         break;
       default:
         p.money += token.value;
         this.say(p.id, `${token.symbol} ${p.name} löysi jalokiven ${token.name} (${token.value} puntaa).`);
+        this.emit('treasure', token.name, { token: type, sub: `+${token.value} puntaa` });
     }
 
     this.checkWin();
@@ -449,6 +482,7 @@ export class Game {
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;
     game.log = data.log ?? [];
+    game.events = [];
     game.moves = null;
 
     // Kesken jäänyt siirtovalinta lasketaan uudelleen nopan silmäluvusta.

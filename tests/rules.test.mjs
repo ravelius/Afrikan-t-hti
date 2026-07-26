@@ -387,3 +387,21 @@ test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysy
   game.answerQuiz(game.quiz.correct);
   assert.equal(game.revealed.get('kano'), 'ruby');
 });
+
+test('kaupungit ovat mantereella ja riittävän erillään', () => {
+  const ISLAND_CITIES = new Set(['sansibar']); // oma saarensa rannikon ulkopuolella
+  for (const city of CITIES) {
+    if (ISLAND_CITIES.has(city.id)) {
+      assert.ok(!isOnLand([city.x, city.y]), `${city.name} pitäisi olla saari`);
+      continue;
+    }
+    assert.ok(isOnLand([city.x, city.y]), `${city.name} on meressä`);
+  }
+
+  for (let i = 0; i < CITIES.length; i++) {
+    for (let j = i + 1; j < CITIES.length; j++) {
+      const d = Math.hypot(CITIES[i].x - CITIES[j].x, CITIES[i].y - CITIES[j].y);
+      assert.ok(d >= 75, `${CITIES[i].name} ja ${CITIES[j].name} ovat liian lähekkäin (${Math.round(d)})`);
+    }
+  }
+});

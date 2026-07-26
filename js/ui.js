@@ -20,10 +20,15 @@ import {
 } from './mapart.js';
 
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-const BOT_DELAY = 850;
+const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
 const LETTERS = ['A', 'B', 'C', 'D'];
 const COMPASS = { x: 168, y: 772, r: 62 };
+
+// Animaatioiden rytmi millisekunteina.
+const STEP_MS = 190; // yksi askel kartalla
+const FLIGHT_MS = 900;
+const TOAST_MS = { treasure: 1700, robber: 1700, die: 950, default: 1200 };
 
 function html(tag, className, text) {
   const node = document.createElement(tag);
@@ -60,6 +65,9 @@ export class UI {
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
 
+    this.mapPane = this.svg.parentElement;
+    this.busy = false;
+    this.movingPlayerId = null;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
@@ -230,11 +238,30 @@ export class UI {
     }
   }
 
+  /** Pelinappula: varjo, vaalea kehys, pelaajan väri ja kiilto. */
+  pawnShape(parent, player, active) {
+    const g = el('g', { class: 'pawn' }, parent);
+    el('ellipse', { cx: 2, cy: 9, rx: 11, ry: 4, class: 'pawn-shadow' }, g);
+    if (active) {
+      el('circle', { r: 15, class: 'pawn-pulse', stroke: player.color }, g);
+      el('circle', { r: 17, class: 'pawn-active-ring' }, g);
+    }
+    el('circle', { r: 13, class: 'pawn-ring' }, g);
+    el('circle', { r: 9.5, fill: player.color, class: 'pawn-dot' }, g);
+    el('path', { d: 'M-5,-3 a6,6 0 0 1 8,-3', class: 'pawn-gloss', fill: 'none',
+      stroke: 'rgba(255,255,255,0.6)', 'stroke-width': 2.2, 'stroke-linecap': 'round' }, g);
+    if (player.hasStar) {
+      el('text', { x: 0, y: -18, class: 'pawn-star', 'text-anchor': 'middle' }, g).textContent = '★';
+    }
+    return g;
+  }
+
   drawPawns() {
     const { game } = this;
     this.pawnLayer.textContent = '';
     const groups = new Map();
     for (const p of game.players) {
+      if (p.id === this.movingPlayerId) continue; // liikkuva nappula piirretään erikseen
       const key = posKey(p.pos);
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(p);
@@ -243,23 +270,11 @@ export class UI {
       const base = pixelOf(game.board, players[0].pos);
       players.forEach((p, i) => {
         const angle = (i / Math.max(players.length, 1)) * Math.PI * 2 - Math.PI / 2;
-        const spread = players.length > 1 ? 16 : 0;
+        const spread = players.length > 1 ? 17 : 0;
         const x = base.x + Math.cos(angle) * spread;
         const y = base.y + Math.sin(angle) * spread;
-        const g = el('g', { class: 'pawn' }, this.pawnLayer);
-        el('ellipse', { cx: x + 2, cy: y + 8, rx: 10, ry: 4, class: 'pawn-shadow' }, g);
-        el('circle', {
-          cx: x,
-          cy: y,
-          r: 11,
-          fill: p.color,
-          class: p.id === game.current ? 'pawn-dot active' : 'pawn-dot',
-        }, g);
-        if (p.hasStar) {
-          el('text', {
-            x, y: y - 16, class: 'pawn-star', 'text-anchor': 'middle',
-          }, g).textContent = '★';
-        }
+        const g = this.pawnShape(this.pawnLayer, p, p.id === game.current && !this.busy);
+        g.setAttribute('transform', `translate(${x},${y})`);
       });
     }
   }
@@ -371,7 +386,7 @@ export class UI {
     for (const dest of actions.fly) {
       const city = game.board.cityById.get(dest);
       const flyBtn = html('button', '', `✈ ${city.name} (${FLIGHT_PRICE} p)`);
-      flyBtn.addEventListener('click', () => this.doAction(() => game.actionFly(dest)));
+      flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
   }
@@ -434,6 +449,7 @@ export class UI {
 
     quiz.options.forEach((text, i) => {
       const btn = html('button', 'quiz-option');
+      btn.style.setProperty('--i', String(i));
       btn.appendChild(html('span', 'letter', LETTERS[i]));
       btn.appendChild(html('span', 'text', text));
       if (quiz.hidden.includes(i)) {
@@ -486,99 +502,174 @@ export class UI {
     if (!this.quizDialog.open) this.quizDialog.showModal();
   }
 
-  // --- toiminnot ----------------------------------------------------------
+  // --- toiminnot ja animaatiot ---------------------------------------------
+
+  wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  showError(message) {
+    this.errorEl.textContent = message;
+    this.errorEl.hidden = false;
+  }
+
+  /**
+   * Suorittaa toiminnon ja antaa animaatioiden pyöriä rauhassa: uusi klikkaus
+   * tai botin vuoro odottaa, kunnes edellinen tapahtuma on näytetty.
+   */
+  async run(fn, { after } = {}) {
+    if (this.busy) return;
+    this.busy = true;
+    this.actionsEl.dataset.busy = 'true';
+    try {
+      const result = fn();
+      if (result && result.ok === false) {
+        this.showError(result.error);
+        return;
+      }
+      if (after) await after(result);
+      await this.playEvents();
+    } finally {
+      this.busy = false;
+      delete this.actionsEl.dataset.busy;
+      this.render();
+    }
+  }
 
   doAction(fn) {
-    const result = fn();
-    if (result && result.ok === false) {
-      this.errorEl.textContent = result.error;
-      this.errorEl.hidden = false;
-      return;
-    }
-    this.render();
+    this.run(fn);
   }
 
-  doMove(key) {
-    this.doAction(() => this.game.actionMove(key));
-  }
-
-  /** Heittää nopan kevyen animaation kanssa. */
+  /** Nopanheitto: silmäluku pyörii kartan päällä ja jää hetkeksi näkyviin. */
   doRoll() {
-    const { game } = this;
-    const result = game.actionRoll();
-    if (result.ok === false) {
-      this.errorEl.textContent = result.error;
-      this.errorEl.hidden = false;
-      return;
-    }
-    this.animateDie(result.die).then(() => this.render());
+    this.run(() => this.game.actionRoll(), { after: (result) => this.animateDie(result.die) });
   }
 
-  animateDie(value) {
-    if (!value || this.reducedMotion) return Promise.resolve();
-    this.actionsEl.textContent = ''; // estä tuplaklikkaus heiton aikana
-    this.turnStatus.textContent = 'Noppa pyörii…';
-    const dieEl = this.dieEl;
-    dieEl.hidden = false;
-    dieEl.classList.add('rolling');
+  /** Siirto: nappula hyppii reittiä pitkin piste kerrallaan. */
+  doMove(key) {
+    const { game } = this;
+    const move = game.moves?.get(key);
+    if (!move) return;
+    const player = game.player;
+    const from = player.pos;
+    const path = move.path;
+    this.run(() => game.actionMove(key), { after: () => this.animatePawn(player, from, path) });
+  }
 
-    return new Promise((resolve) => {
-      let ticks = 0;
-      const timer = setInterval(() => {
-        const face = 1 + Math.floor(Math.random() * 6);
-        dieEl.textContent = DIE_FACES[face];
-        if (++ticks >= 8) {
-          clearInterval(timer);
-          dieEl.classList.remove('rolling');
-          dieEl.classList.add('landed');
-          dieEl.textContent = `${DIE_FACES[value]} ${value}`;
-          setTimeout(() => {
-            dieEl.classList.remove('landed');
-            resolve();
-          }, 260);
-        }
-      }, 70);
+  doFly(destination) {
+    const { game } = this;
+    const player = game.player;
+    const from = player.pos;
+    this.run(() => game.actionFly(destination), {
+      after: () => this.animatePawn(player, from, [player.pos], FLIGHT_MS),
     });
+  }
+
+  /** Siirtää nappulaa askel kerrallaan annettua polkua pitkin. */
+  async animatePawn(player, from, path, stepMs = STEP_MS) {
+    if (!path || path.length === 0) return;
+    const { board } = this.game;
+
+    this.movingPlayerId = player.id;
+    this.drawPawns();
+    const g = this.pawnShape(this.pawnLayer, player, false);
+    g.classList.add('pawn-moving');
+    if (stepMs !== STEP_MS) g.style.transitionDuration = `${stepMs}ms`;
+
+    const start = pixelOf(board, from);
+    g.style.transform = `translate(${start.x}px, ${start.y}px)`;
+    g.getBoundingClientRect(); // varmistaa, että ensimmäinenkin askel animoituu
+
+    for (const pos of path) {
+      const { x, y } = pixelOf(board, pos);
+      g.style.transform = `translate(${x}px, ${y}px)`;
+      await this.wait(this.reducedMotion ? 0 : stepMs);
+    }
+
+    g.remove();
+    this.movingPlayerId = null;
+    this.drawPawns();
+  }
+
+  /** Noppa pyörii kartan päällä ja pysähtyy silmälukuun. */
+  async animateDie(value) {
+    if (!value) return;
+    this.dieEl.hidden = false;
+    this.dieEl.textContent = `${DIE_FACES[value]} ${value}`;
+    if (this.reducedMotion) return;
+
+    const toast = this.buildToast({ kind: 'die', text: 'Noppa pyörii…' });
+    const icon = toast.querySelector('.toast-icon');
+    const label = toast.querySelector('.toast-text');
+
+    for (let i = 0; i < 8; i++) {
+      icon.textContent = DIE_FACES[1 + Math.floor(Math.random() * 6)];
+      await this.wait(70);
+    }
+    icon.textContent = DIE_FACES[value];
+    label.textContent = `Heitit ${value}`;
+    toast.classList.add('landed');
+    await this.wait(TOAST_MS.die);
+    await this.removeToast(toast);
+  }
+
+  buildToast({ kind, text, sub, icon, token }) {
+    const box = html('div', `event-toast ${kind === 'robber' ? 'bad' : kind}`);
+    if (token) box.appendChild(tokenIconSvg(token, kind === 'die' ? 30 : 34));
+    else box.appendChild(html('span', 'toast-icon', icon ?? '•'));
+    const body = html('div');
+    body.appendChild(html('span', 'toast-text', text));
+    if (sub) body.appendChild(html('span', 'toast-sub', sub));
+    box.appendChild(body);
+    this.mapPane.appendChild(box);
+    return box;
+  }
+
+  async removeToast(box) {
+    box.classList.add('leaving');
+    await this.wait(this.reducedMotion ? 0 : 300);
+    box.remove();
+  }
+
+  /** Näyttää kertyneet tapahtumat yksi kerrallaan kartan päällä. */
+  async playEvents() {
+    const events = this.game.takeEvents();
+    for (const event of events) {
+      const box = this.buildToast(event);
+      await this.wait(this.reducedMotion ? 0 : TOAST_MS[event.kind] ?? TOAST_MS.default);
+      await this.removeToast(box);
+    }
   }
 
   scheduleBot() {
     clearTimeout(this.botTimer);
     const { game } = this;
-    if (game.phase === 'over' || !game.player.isBot) return;
+    if (this.busy || game.phase === 'over' || !game.player.isBot) return;
     const delay = game.phase === 'quiz' ? BOT_QUIZ_DELAY : BOT_DELAY;
     this.botTimer = setTimeout(() => this.botStep(), delay);
   }
 
   botStep() {
     const { game } = this;
-    if (game.phase === 'over' || !game.player.isBot) return;
+    if (this.busy || game.phase === 'over' || !game.player.isBot) return;
 
     if (game.phase === 'quiz') {
-      if (game.quiz.chosen !== null) game.closeQuiz();
-      else if (wantsHint(game)) game.actionFiftyFifty();
-      else game.answerQuiz(chooseQuizAnswer(game));
-      this.render();
+      if (game.quiz.chosen !== null) this.run(() => game.closeQuiz());
+      else if (wantsHint(game)) this.run(() => game.actionFiftyFifty());
+      else this.run(() => game.answerQuiz(chooseQuizAnswer(game)));
       return;
     }
 
     if (game.phase === 'move') {
       const key = chooseMove(game);
-      if (key) game.actionMove(key);
-      else game.endTurn();
-      this.render();
+      if (key) this.doMove(key);
+      else this.run(() => game.endTurn());
       return;
     }
 
     const action = chooseAction(game);
-    if (action.type === 'quiz') {
-      game.actionQuiz();
-    } else if (action.type === 'fly') {
-      game.actionFly(action.destination);
-    } else {
-      const result = game.actionRoll();
-      this.animateDie(result.die).then(() => this.render());
-      return;
-    }
-    this.render();
+    if (action.type === 'quiz') this.run(() => game.actionQuiz());
+    else if (action.type === 'fly') this.doFly(action.destination);
+    else this.doRoll();
   }
 }

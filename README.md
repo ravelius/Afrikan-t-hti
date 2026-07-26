@@ -11,7 +11,10 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
 - Yli 100 kysymystä: jokaisella kaupungilla omat kysymyksensä + yleinen varapakka
 - Suomenkielinen käyttöliittymä, tapahtumaloki ja nopan heittoanimaatio
 - Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
-  kompassiruusu, aallot ja punaiset ✗-merkit kääntämättömille laatoille
+  kompassiruusu, aallot ja maaston merkit — myös kysymyslaatikot ovat samaa
+  pergamenttia käsin piirrettyine katkoviivoineen
+- Animoitu rytmi: nappula hyppii reittiä piste kerrallaan, noppa pyörii kartan
+  päällä ja tapahtumat (aarre, ryöstäjä, laivamatka) jäävät hetkeksi näkyviin
 - Koko ruudun sovelluskehys: kaikki oleellinen näkyy kerralla, vain tapahtumaloki vierii
 - Asennettava sovellus (PWA): toimii offline ja jatkaa keskeytynyttä peliä
 - Mitoitettu erityisesti iPadille (sekä vaaka- että pystytaso)

@@ -55,7 +55,7 @@
 
   <!-- Aloitusruutu -->
   <dialog id="setup" class="dialog">
-    <form method="dialog" id="setup-form">
+    <form method="dialog" id="setup-form" class="dialog-card">
       <div class="setup-hero">
         <span class="setup-star">★</span>
         <div>
@@ -80,6 +80,7 @@
 
   <!-- Säännöt -->
   <dialog id="rules-dialog" class="dialog">
+   <div class="dialog-card">
     <h2>Säännöt</h2>
     <div class="rules-text">
       <p><b>Tavoite.</b> Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon.
@@ -110,10 +111,12 @@
     <menu>
       <button id="rules-close" class="primary" type="button">Sulje</button>
     </menu>
+   </div>
   </dialog>
 
   <!-- Tietovisa -->
   <dialog id="quiz-dialog" class="dialog quiz">
+   <div class="dialog-card">
     <div class="quiz-head">
       <span class="quiz-badge">Tietovisa</span>
       <span id="quiz-city" class="quiz-city"></span>
@@ -125,15 +128,18 @@
       <button id="quiz-hint" type="button" hidden>50:50</button>
       <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
     </menu>
+   </div>
   </dialog>
 
   <!-- Voittoruutu -->
   <dialog id="winner-dialog" class="dialog">
+   <div class="dialog-card">
     <h2 id="winner-title">Voitto!</h2>
     <p id="winner-text"></p>
     <menu>
       <button id="winner-close" class="primary" type="button">Uusi peli</button>
     </menu>
+   </div>
   </dialog>
 
   <script type="module" src="js/main.js"></script>

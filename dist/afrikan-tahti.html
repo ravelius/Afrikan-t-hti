@@ -146,6 +146,53 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
 
 .board-hint:empty { display: none; }
 
+/* --- tapahtumaikkuna kartan päällä --- */
+
+.event-toast {
+  position: absolute;
+  left: 50%;
+  top: 16%;
+  transform: translate(-50%, 0);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(46, 33, 20, 0.96), rgba(30, 21, 12, 0.96));
+  border: 1px solid var(--accent);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  color: var(--ink-light);
+  font-size: 1.05rem;
+  font-weight: 600;
+  pointer-events: none;
+  max-width: 80%;
+  text-align: left;
+  animation: toast-in 0.28s cubic-bezier(0.2, 1.4, 0.5, 1);
+}
+
+.event-toast.leaving { animation: toast-out 0.3s ease-in forwards; }
+.event-toast .toast-icon { font-size: 1.6rem; line-height: 1; }
+.event-toast .toast-sub { display: block; font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.event-toast.treasure { border-color: #eec66b; }
+.event-toast.bad { border-color: #d9705f; }
+.event-toast.die { font-size: 1.4rem; }
+.event-toast.die .toast-icon { font-size: 2.6rem; color: var(--accent); }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 18px) scale(0.92); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes toast-out {
+  to { opacity: 0; transform: translate(-50%, -14px) scale(0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-toast, .event-toast.leaving { animation: none; }
+  .pawn-pulse { animation: none; }
+  .pawn-moving { transition: none; }
+}
+
 .rail {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
@@ -204,6 +251,9 @@ button, .brand, .turn-pill, .player-chip, .log-card h2 {
   grid-template-columns: 1fr;
   gap: 0.4rem;
 }
+
+/* Toiminnot lepäävät, kun animaatio on käynnissä. */
+.actions[data-busy] { opacity: 0.45; pointer-events: none; }
 
 button {
   font: inherit;
@@ -353,7 +403,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .wave { fill: none; stroke: var(--sea-ink); stroke-width: 2; opacity: 0.45; stroke-linecap: round; }
 
-.route { stroke: #6d5333; stroke-width: 2.4; opacity: 0.5; fill: none; }
+.route { stroke: #6d5333; stroke-width: 2.2; opacity: 0.42; fill: none; }
 .route-sea { stroke: var(--sea-ink); stroke-width: 2.2; stroke-dasharray: 11 9; opacity: 0.75; }
 .air-route {
   fill: none;
@@ -364,13 +414,13 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   opacity: 0.5;
 }
 
-.step { fill: #f7ecd4; stroke: #6d5333; stroke-width: 1.6; }
-.step-sea { fill: #e2eef3; stroke: #446979; }
+.step { fill: #e8d7b0; stroke: #8a7048; stroke-width: 1.2; opacity: 0.7; }
+.step-sea { fill: #dfe9ee; stroke: #6d8c9a; opacity: 0.65; }
 
 .fare { fill: var(--sea-ink); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
 
-.city { fill: #fdf5e2; stroke: var(--map-ink); stroke-width: 3; }
-.city-start { fill: #f0c765; stroke: #6d4d12; stroke-width: 4; }
+.city { fill: #f3e5c4; stroke: #6b5230; stroke-width: 2.4; }
+.city-start { fill: #eec66b; stroke: #6d4d12; stroke-width: 3.4; }
 .airport { font-size: 14px; fill: #55401f; }
 
 .city-label {
@@ -457,115 +507,227 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   to { transform: rotate(360deg); }
 }
 
-.pawn-shadow { fill: rgba(60, 40, 18, 0.35); }
-.pawn-dot { stroke: #2b1f12; stroke-width: 2.5; }
-.pawn-dot.active { stroke: #fff8e6; stroke-width: 3.5; }
+.pawn-shadow { fill: rgba(58, 38, 16, 0.32); }
+.pawn-ring { fill: #fdf6e4; stroke: #2b1f12; stroke-width: 2; }
+.pawn-dot { stroke: #241a10; stroke-width: 2; }
+.pawn-gloss { fill: rgba(255, 255, 255, 0.4); }
 .pawn-star { fill: #b8860b; font-size: 20px; }
 
-/* --- dialogit --- */
-
-.dialog {
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--panel);
-  color: var(--ink-light);
-  padding: 1.1rem;
-  max-width: 560px;
-  width: calc(100% - 2rem);
-  max-height: 90dvh;
-  overflow-y: auto;
+.pawn-active-ring {
+  fill: none;
+  stroke: #2b1f12;
+  stroke-width: 2.5;
+  opacity: 0.9;
 }
 
-.dialog::backdrop { background: rgba(10, 6, 3, 0.7); }
-.dialog h2 { margin-top: 0; font-family: "Iowan Old Style", Georgia, serif; }
+.pawn-pulse {
+  fill: none;
+  stroke-width: 3;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pawn-pulse 1.8s ease-out infinite;
+}
+
+@keyframes pawn-pulse {
+  0% { transform: scale(0.85); opacity: 0.75; }
+  70% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.pawn-moving { transition: transform 0.19s cubic-bezier(0.34, 1.3, 0.64, 1); }
+
+/* --- dialogit: pergamenttikortit karttatyylillä --- */
+
+:root {
+  --paper-noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/><feColorMatrix values='0 0 0 0 0.42  0 0 0 0 0.33  0 0 0 0 0.19  0 0 0 0.2 0'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  /* Epäsäännöllinen kulmapyöristys tekee reunasta käsin piirretyn oloisen. */
+  --sketch-radius: 110px 16px 96px 18px / 18px 96px 16px 110px;
+  --sketch-radius-alt: 20px 104px 16px 100px / 100px 18px 108px 16px;
+}
+
+.dialog {
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: var(--map-ink);
+  max-width: 620px;
+  width: calc(100% - 2rem);
+  max-height: 92dvh;
+  overflow: visible;
+}
+
+.dialog::backdrop {
+  background: rgba(14, 9, 4, 0.72);
+}
+
+/* Modaalin oma fokusrengas ei kuulu paperikortin ympärille. */
+.dialog:focus,
+.dialog:focus-visible,
+.dialog-card:focus,
+.dialog-card:focus-visible {
+  outline: none;
+}
+
+/* Paperikortti dialogin sisällä */
+.dialog > form,
+.dialog > .paper-card,
+.dialog.paper > * {
+  position: relative;
+}
+
+.dialog {
+  --card-bg: radial-gradient(circle at 42% 34%, #f6e7c6 0%, #ecd8ae 58%, #d9be8d 100%);
+}
+
+.dialog-card {
+  position: relative;
+  background-image: var(--paper-noise), var(--card-bg);
+  background-blend-mode: multiply, normal;
+  border: 2.5px dashed var(--map-ink);
+  border-radius: var(--sketch-radius);
+  padding: 1.15rem 1.3rem;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  max-height: 92dvh;
+  overflow-y: auto;
+  animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
+}
+
+/* Toinen, hieman kiertynyt reunaviiva vahvistaa käsin piirretyn vaikutelman. */
+.dialog-card::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1.5px dashed rgba(70, 51, 31, 0.45);
+  border-radius: var(--sketch-radius-alt);
+  transform: rotate(-0.5deg);
+  pointer-events: none;
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(16px) rotate(-1.2deg) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.dialog h2 {
+  margin: 0 0 0.6rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  color: var(--map-ink);
+}
+
+.dialog p, .dialog label, .dialog .muted { color: #5a4326; }
+.dialog .muted { color: #7a6039; }
 
 .dialog menu {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 0.5rem;
   margin: 1rem 0 0;
   padding: 0;
 }
 
-.setup-hero {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.7rem 0.9rem;
-  margin: -0.3rem 0 1rem;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #efdcb4, #d3b076);
-  color: #3a2a15;
+.dialog button[hidden] { display: none; }
+
+.dialog button {
+  background: rgba(255, 255, 255, 0.35);
+  border: 2px dashed var(--map-ink);
+  border-radius: 90px 12px 84px 14px / 14px 84px 12px 90px;
+  color: var(--map-ink);
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-.setup-hero h2 { margin: 0; font-size: 1.25rem; letter-spacing: 0.04em; }
-.setup-star { font-size: 2rem; color: #9a6a12; }
-.setup-tagline { margin: 0.15rem 0 0; font-size: 0.85rem; opacity: 0.8; }
+.dialog button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.6); }
+
+.dialog button.primary {
+  background: linear-gradient(180deg, #e9c169, #d3a03c);
+  border-style: solid;
+  border-color: #7a5a12;
+  color: #33240a;
+}
+
+.dialog button.primary:hover:not(:disabled) { background: linear-gradient(180deg, #f2d183, #dcae4c); }
 
 .row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
 .player-setup { display: flex; flex-direction: column; gap: 0.5rem; }
 .setup-row { display: flex; align-items: center; gap: 0.5rem; }
 
-.setup-row input[type="text"] {
-  flex: 1 1 auto;
-  min-width: 0;
+.setup-row input[type="text"],
+.dialog select {
   padding: 0.45rem 0.55rem;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  background: var(--panel-2);
-  color: var(--ink-light);
+  border-radius: 10px;
+  border: 1.5px dashed rgba(70, 51, 31, 0.6);
+  background: rgba(255, 252, 244, 0.6);
+  color: var(--map-ink);
   font: inherit;
 }
 
-select {
-  padding: 0.45rem 0.55rem;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  background: var(--panel-2);
-  color: var(--ink-light);
-  font: inherit;
-}
+.setup-row input[type="text"] { flex: 1 1 auto; min-width: 0; }
 
-.bot-label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; color: var(--muted); }
+.bot-label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; color: #7a6039; }
 .rules-text p { margin: 0 0 0.7rem; line-height: 1.45; }
+
+.setup-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0 0 0.7rem;
+  margin: 0 0 0.9rem;
+  border-bottom: 2px dashed rgba(70, 51, 31, 0.45);
+}
+
+.setup-hero h2 { margin: 0; }
+.setup-star { font-size: 2.1rem; color: #b8860b; }
+.setup-tagline { margin: 0.15rem 0 0; font-size: 0.85rem; color: #7a6039; }
 
 /* --- tietovisa --- */
 
-.dialog.quiz {
-  max-width: 760px;
-  background: linear-gradient(180deg, #0d2038, #07142a);
-  border: 2px solid var(--accent);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+.quiz-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px dashed rgba(70, 51, 31, 0.4);
 }
-
-.quiz-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.7rem; }
 
 .quiz-badge {
-  background: var(--accent);
-  color: #1a2530;
+  border: 2px dashed var(--map-ink);
+  border-radius: 999px;
+  color: var(--map-ink);
+  font-family: "Iowan Old Style", Georgia, serif;
   font-weight: 700;
   font-size: 0.7rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  transform: rotate(-1.5deg);
 }
 
-.quiz-city { color: #bcd7ee; font-size: 0.9rem; }
+.quiz-city { color: #7a6039; font-size: 0.9rem; font-style: italic; }
 
 .quiz-question {
-  margin: 0 0 0.9rem;
-  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+  margin: 0 0 1rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: clamp(1.1rem, 2.3vw, 1.35rem);
   line-height: 1.35;
-  font-weight: 600;
+  color: var(--map-ink);
   text-wrap: balance;
-  color: #f6fbff;
+  animation: ink-in 0.4s ease-out both;
+}
+
+@keyframes ink-in {
+  from { opacity: 0; filter: blur(2px); transform: translateY(6px); }
+  to { opacity: 1; filter: none; transform: none; }
 }
 
 .quiz-options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.55rem;
+  gap: 0.6rem;
 }
 
 .quiz-option {
@@ -573,45 +735,92 @@ select {
   align-items: center;
   gap: 0.7rem;
   text-align: left;
-  padding: 0.65rem 0.9rem;
-  min-height: 56px;
-  border: 2px solid #2b5a86;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #163c5e, #0b2138);
-  color: #eaf4ff;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  padding: 0.7rem 0.9rem;
+  min-height: 58px;
+  border: 2px dashed var(--map-ink) !important;
+  border-radius: 86px 14px 92px 12px / 12px 92px 14px 86px !important;
+  background: rgba(255, 252, 243, 0.5) !important;
+  color: var(--map-ink) !important;
+  font-family: "Segoe UI", system-ui, sans-serif !important;
+  font-weight: 500;
+  transition: background 0.15s ease, transform 0.15s ease;
+  animation: option-in 0.3s ease-out both;
+  animation-delay: calc(var(--i, 0) * 70ms);
 }
 
-.quiz-option:hover:not(:disabled) { background: #1b3d5f; border-color: var(--accent); }
+.quiz-option:nth-child(even) { transform: rotate(0.4deg); }
+.quiz-option:nth-child(odd) { transform: rotate(-0.4deg); }
+
+@keyframes option-in {
+  from { opacity: 0; transform: translateY(10px) rotate(-1deg); }
+}
+
+.quiz-option:hover:not(:disabled) { background: rgba(255, 255, 255, 0.85) !important; }
 .quiz-option:disabled { opacity: 1; cursor: default; }
-.quiz-option .letter { color: var(--accent); font-weight: 700; flex: 0 0 auto; width: 1.2em; }
+
+.quiz-option .letter {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.9em;
+  height: 1.9em;
+  border: 2px solid var(--map-ink);
+  border-radius: 50%;
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-weight: 700;
+  color: var(--map-ink);
+}
+
 .quiz-option .text { flex: 1 1 auto; }
 
-.quiz-option.hidden-option { opacity: 0.22; text-decoration: line-through; }
-.quiz-option.correct { background: #1d6b3f; border-color: #46d17f; color: #f2fff7; }
-.quiz-option.wrong { background: #7a2320; border-color: #e0655f; color: #fff0ee; }
+.quiz-option.correct {
+  background: rgba(94, 158, 106, 0.32) !important;
+  border-color: #2f6b3f !important;
+  border-style: solid !important;
+  animation: stamp 0.4s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+.quiz-option.correct .letter { border-color: #2f6b3f; color: #21532f; }
+
+.quiz-option.wrong {
+  background: rgba(176, 58, 43, 0.22) !important;
+  border-color: var(--mark) !important;
+  text-decoration: line-through;
+  text-decoration-color: rgba(176, 58, 43, 0.8);
+  text-decoration-thickness: 2px;
+}
+
+.quiz-option.hidden-option { opacity: 0.25; text-decoration: line-through; }
+
+@keyframes stamp {
+  0% { transform: scale(1.06) rotate(-1.5deg); }
+  60% { transform: scale(0.98) rotate(0.6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
 
 .quiz-result {
-  margin: 0.9rem 0 0;
-  padding: 0.65rem 0.85rem;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 1rem 0 0;
+  padding: 0.7rem 0.9rem;
+  border: 2px dashed rgba(70, 51, 31, 0.5);
+  border-radius: 80px 14px 86px 12px / 12px 86px 14px 80px;
+  background: rgba(255, 255, 255, 0.42);
   font-size: 0.95rem;
   line-height: 1.4;
+  color: var(--map-ink);
+  animation: ink-in 0.35s ease-out both;
 }
 
-#quiz-hint {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: #2b5a86;
-  color: #eaf4ff;
-  margin-right: auto;
-}
+/* [hidden] ei saa hävitä display: flexin alle. */
+.quiz-result[hidden] { display: none; }
+.quiz-result.right { border-color: #2f6b3f; }
+.quiz-result.wrong { border-color: var(--mark); }
+.quiz-result .muted { color: #6f5836; display: block; margin-top: 0.15rem; }
 
+#quiz-hint { margin-right: auto; }
 .gem-count { font-size: 0.78rem; color: var(--muted); }
-
-.quiz-result.right { border-left: 4px solid #46d17f; }
-.quiz-result.wrong { border-left: 4px solid #e0655f; }
-.quiz-result .muted { color: #b9cfe2; }
 
 /* --- kapea / pystyasento: kartta ylös, ohjaus alle --- */
 
@@ -641,6 +850,7 @@ select {
   .topbar { padding: 0.35rem 0.55rem; gap: 0.5rem; }
   .turn-pill { font-size: 0.8rem; }
   .quiz-options { grid-template-columns: minmax(0, 1fr); }
+  .dialog-card { padding: 0.9rem 1rem; }
 }
 
 @media (pointer: coarse) {
@@ -694,7 +904,7 @@ select {
 
   <!-- Aloitusruutu -->
   <dialog id="setup" class="dialog">
-    <form method="dialog" id="setup-form">
+    <form method="dialog" id="setup-form" class="dialog-card">
       <div class="setup-hero">
         <span class="setup-star">★</span>
         <div>
@@ -719,6 +929,7 @@ select {
 
   <!-- Säännöt -->
   <dialog id="rules-dialog" class="dialog">
+   <div class="dialog-card">
     <h2>Säännöt</h2>
     <div class="rules-text">
       <p><b>Tavoite.</b> Löydä Afrikan tähti ja palaa sen kanssa Tangeriin tai Kairoon.
@@ -749,10 +960,12 @@ select {
     <menu>
       <button id="rules-close" class="primary" type="button">Sulje</button>
     </menu>
+   </div>
   </dialog>
 
   <!-- Tietovisa -->
   <dialog id="quiz-dialog" class="dialog quiz">
+   <div class="dialog-card">
     <div class="quiz-head">
       <span class="quiz-badge">Tietovisa</span>
       <span id="quiz-city" class="quiz-city"></span>
@@ -764,15 +977,18 @@ select {
       <button id="quiz-hint" type="button" hidden>50:50</button>
       <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
     </menu>
+   </div>
   </dialog>
 
   <!-- Voittoruutu -->
   <dialog id="winner-dialog" class="dialog">
+   <div class="dialog-card">
     <h2 id="winner-title">Voitto!</h2>
     <p id="winner-text"></p>
     <menu>
       <button id="winner-close" class="primary" type="button">Uusi peli</button>
     </menu>
+   </div>
   </dialog>
 
 <script>
@@ -818,18 +1034,18 @@ const CITIES = [
   { id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true },
 
   { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
-  { id: 'murzuk', name: 'Murzuk', x: 452, y: 176 },
+  { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },
   { id: 'alkufra', name: 'Al Kufra', x: 577, y: 197 },
-  { id: 'sahara', name: 'Sahara', x: 400, y: 187, la: 'end', lx: -16, ly: 5 },
-  { id: 'ahaggar', name: 'Ahaggar', x: 340, y: 212, la: 'end', lx: -16, ly: 5 },
-  { id: 'timbuktu', name: 'Timbuktu', x: 227, y: 290, la: 'end', lx: -16, ly: 5 },
-  { id: 'gao', name: 'Gao', x: 267, y: 296, la: 'start', lx: 16, ly: 5 },
+  { id: 'sahara', name: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
+  { id: 'ahaggar', name: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
+  { id: 'timbuktu', name: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
+  { id: 'gao', name: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
   { id: 'dakar', name: 'Dakar', x: 45, y: 318, la: 'start', lx: 16, ly: 5 },
   { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
-  { id: 'kappalmas', name: 'Kap Palmas', x: 164, y: 445, la: 'end', lx: -16, ly: 5 },
-  { id: 'kumasi', name: 'Kumasi', x: 245, y: 416, la: 'end', lx: -16, ly: 26 },
-  { id: 'orjarannikko', name: 'Orjarannikko', x: 312, y: 420 },
-  { id: 'kano', name: 'Kano', x: 380, y: 350 },
+  { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
+  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: 26 },
+  { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
+  { id: 'kano', name: 'Kano', x: 394, y: 336 },
   { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
   { id: 'kongo', name: 'Kongo', x: 440, y: 560, la: 'end', lx: -16, ly: 5 },
   { id: 'angola', name: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
@@ -838,12 +1054,12 @@ const CITIES = [
   { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
   { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
   { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', x: 814, y: 588, la: 'start', lx: 16, ly: 5 },
-  { id: 'kilimandzaro', name: 'Kilimandžaro', x: 765, y: 537, la: 'start', lx: 16, ly: -14 },
-  { id: 'viktoria', name: 'Viktoria Nyanza', x: 707, y: 512, la: 'end', lx: -18, ly: -8 },
-  { id: 'tanganjika', name: 'Tanganjika', x: 664, y: 575, la: 'end', lx: -16, ly: 5 },
+  { id: 'sansibar', name: 'Sansibar', x: 836, y: 616, la: 'start', lx: 16, ly: 5 },
+  { id: 'kilimandzaro', name: 'Kilimandžaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
+  { id: 'viktoria', name: 'Viktoria Nyanza', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
+  { id: 'tanganjika', name: 'Tanganjika', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
   { id: 'bahrelghazal', name: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
-  { id: 'darfur', name: 'Darfur', x: 587, y: 337 },
+  { id: 'darfur', name: 'Darfur', x: 575, y: 318 },
   { id: 'suakin', name: 'Suakin', x: 764, y: 261 },
   { id: 'addisabeba', name: 'Addis Abeba', x: 783, y: 387, la: 'end', lx: -16, ly: 5 },
   { id: 'rashafun', name: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
@@ -2425,6 +2641,7 @@ class Game {
     this.winner = null;
     this.turnCount = 1;
     this.log = [];
+    this.events = []; // näytölle animoitavat tapahtumat
     this.say(null, 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.');
     this.beginTurn();
   }
@@ -2433,6 +2650,18 @@ class Game {
 
   get player() {
     return this.players[this.current];
+  }
+
+  /** Lisää tapahtuman, jonka käyttöliittymä näyttää hetkeksi kartan päällä. */
+  emit(kind, text, extra = {}) {
+    this.events.push({ kind, text, ...extra });
+  }
+
+  /** Poimii kertyneet tapahtumat ja tyhjentää jonon. */
+  takeEvents() {
+    const events = this.events;
+    this.events = [];
+    return events;
   }
 
   say(playerId, text) {
@@ -2495,6 +2724,7 @@ class Game {
     if (this.needsAid(p)) {
       p.money += STRANDED_AID;
       this.say(p.id, `${p.name} on jumissa ilman rahaa ja saa pankilta ${STRANDED_AID} puntaa.`);
+      this.emit('aid', `${p.name} sai pankilta ${STRANDED_AID} puntaa`, { icon: '💰' });
     }
   }
 
@@ -2537,6 +2767,7 @@ class Game {
     this.say(p.id, `${p.name} heitti ${die}.`);
     if (this.moves.size === 0) {
       this.say(p.id, `${p.name} ei pysty liikkumaan ja jää paikalleen.`);
+      this.emit('stuck', `${p.name} ei pysty liikkumaan`, { icon: '⛔' });
       this.endTurn();
       return { ok: true, moved: false, die };
     }
@@ -2561,6 +2792,9 @@ class Game {
       ? `kaupunkiin ${city.name}`
       : `reitille ${this.routeName(move.pos.edge)}`;
     this.say(p.id, `${p.name} siirtyi ${where}${fare}.`);
+    if (move.cost) {
+      this.emit('fare', `Laivamatka −${move.cost} puntaa`, { icon: '⚓' });
+    }
 
     this.moves = null;
     this.die = null;
@@ -2681,6 +2915,7 @@ class Game {
     this.lastPath = null;
     const city = this.board.cityById.get(destination);
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
+    this.emit('flight', `Lento kaupunkiin ${city.name}`, { icon: '✈', sub: `−${FLIGHT_PRICE} puntaa` });
     if (this.checkWin()) return { ok: true, win: true };
     this.endTurn();
     return { ok: true };
@@ -2706,21 +2941,35 @@ class Game {
         this.starCity = cityId;
         this.say(p.id, `★ ${p.name} löysi AFRIKAN TÄHDEN kaupungista ${city.name}!`);
         this.say(null, 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.');
+        this.emit('treasure', 'AFRIKAN TÄHTI!', {
+          token: type,
+          sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
+        });
         break;
       case 'horseshoe':
         p.horseshoes++;
         this.say(p.id, `Ω ${p.name} löysi hevosenkengän kaupungista ${city.name}.`);
+        this.emit('treasure', 'Hevosenkenkä', {
+          token: type,
+          sub: 'Voi voittaa pelin, jos tähti löytyy',
+        });
         break;
       case 'robber':
         this.say(p.id, `☠ Ryöstäjä yllätti pelaajan ${p.name} ja vei ${p.money} puntaa!`);
+        this.emit('robber', 'Ryöstäjä!', {
+          token: type,
+          sub: p.money ? `${p.name} menetti ${p.money} puntaa` : `${p.name} ei ollut menetettävää`,
+        });
         p.money = 0;
         break;
       case 'empty':
         this.say(p.id, `${p.name} käänsi tyhjän laatan kaupungissa ${city.name}.`);
+        this.emit('treasure', 'Tyhjä laatta', { token: type, sub: 'Ei aarretta täällä' });
         break;
       default:
         p.money += token.value;
         this.say(p.id, `${token.symbol} ${p.name} löysi jalokiven ${token.name} (${token.value} puntaa).`);
+        this.emit('treasure', token.name, { token: type, sub: `+${token.value} puntaa` });
     }
 
     this.checkWin();
@@ -2801,6 +3050,7 @@ class Game {
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;
     game.log = data.log ?? [];
+    game.events = [];
     game.moves = null;
 
     // Kesken jäänyt siirtovalinta lasketaan uudelleen nopan silmäluvusta.
@@ -2944,10 +3194,15 @@ function chooseQuizAnswer(game, skill = BOT_SKILL) {
 // Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-const BOT_DELAY = 850;
+const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
 const LETTERS = ['A', 'B', 'C', 'D'];
 const COMPASS = { x: 168, y: 772, r: 62 };
+
+// Animaatioiden rytmi millisekunteina.
+const STEP_MS = 190; // yksi askel kartalla
+const FLIGHT_MS = 900;
+const TOAST_MS = { treasure: 1700, robber: 1700, die: 950, default: 1200 };
 
 function html(tag, className, text) {
   const node = document.createElement(tag);
@@ -2984,6 +3239,9 @@ class UI {
     this.quizContinue = document.getElementById('quiz-continue');
     this.quizContinue.addEventListener('click', () => this.doAction(() => this.game.closeQuiz()));
 
+    this.mapPane = this.svg.parentElement;
+    this.busy = false;
+    this.movingPlayerId = null;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
@@ -3154,11 +3412,30 @@ class UI {
     }
   }
 
+  /** Pelinappula: varjo, vaalea kehys, pelaajan väri ja kiilto. */
+  pawnShape(parent, player, active) {
+    const g = el('g', { class: 'pawn' }, parent);
+    el('ellipse', { cx: 2, cy: 9, rx: 11, ry: 4, class: 'pawn-shadow' }, g);
+    if (active) {
+      el('circle', { r: 15, class: 'pawn-pulse', stroke: player.color }, g);
+      el('circle', { r: 17, class: 'pawn-active-ring' }, g);
+    }
+    el('circle', { r: 13, class: 'pawn-ring' }, g);
+    el('circle', { r: 9.5, fill: player.color, class: 'pawn-dot' }, g);
+    el('path', { d: 'M-5,-3 a6,6 0 0 1 8,-3', class: 'pawn-gloss', fill: 'none',
+      stroke: 'rgba(255,255,255,0.6)', 'stroke-width': 2.2, 'stroke-linecap': 'round' }, g);
+    if (player.hasStar) {
+      el('text', { x: 0, y: -18, class: 'pawn-star', 'text-anchor': 'middle' }, g).textContent = '★';
+    }
+    return g;
+  }
+
   drawPawns() {
     const { game } = this;
     this.pawnLayer.textContent = '';
     const groups = new Map();
     for (const p of game.players) {
+      if (p.id === this.movingPlayerId) continue; // liikkuva nappula piirretään erikseen
       const key = posKey(p.pos);
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(p);
@@ -3167,23 +3444,11 @@ class UI {
       const base = pixelOf(game.board, players[0].pos);
       players.forEach((p, i) => {
         const angle = (i / Math.max(players.length, 1)) * Math.PI * 2 - Math.PI / 2;
-        const spread = players.length > 1 ? 16 : 0;
+        const spread = players.length > 1 ? 17 : 0;
         const x = base.x + Math.cos(angle) * spread;
         const y = base.y + Math.sin(angle) * spread;
-        const g = el('g', { class: 'pawn' }, this.pawnLayer);
-        el('ellipse', { cx: x + 2, cy: y + 8, rx: 10, ry: 4, class: 'pawn-shadow' }, g);
-        el('circle', {
-          cx: x,
-          cy: y,
-          r: 11,
-          fill: p.color,
-          class: p.id === game.current ? 'pawn-dot active' : 'pawn-dot',
-        }, g);
-        if (p.hasStar) {
-          el('text', {
-            x, y: y - 16, class: 'pawn-star', 'text-anchor': 'middle',
-          }, g).textContent = '★';
-        }
+        const g = this.pawnShape(this.pawnLayer, p, p.id === game.current && !this.busy);
+        g.setAttribute('transform', `translate(${x},${y})`);
       });
     }
   }
@@ -3295,7 +3560,7 @@ class UI {
     for (const dest of actions.fly) {
       const city = game.board.cityById.get(dest);
       const flyBtn = html('button', '', `✈ ${city.name} (${FLIGHT_PRICE} p)`);
-      flyBtn.addEventListener('click', () => this.doAction(() => game.actionFly(dest)));
+      flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
   }
@@ -3358,6 +3623,7 @@ class UI {
 
     quiz.options.forEach((text, i) => {
       const btn = html('button', 'quiz-option');
+      btn.style.setProperty('--i', String(i));
       btn.appendChild(html('span', 'letter', LETTERS[i]));
       btn.appendChild(html('span', 'text', text));
       if (quiz.hidden.includes(i)) {
@@ -3410,100 +3676,175 @@ class UI {
     if (!this.quizDialog.open) this.quizDialog.showModal();
   }
 
-  // --- toiminnot ----------------------------------------------------------
+  // --- toiminnot ja animaatiot ---------------------------------------------
+
+  wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  showError(message) {
+    this.errorEl.textContent = message;
+    this.errorEl.hidden = false;
+  }
+
+  /**
+   * Suorittaa toiminnon ja antaa animaatioiden pyöriä rauhassa: uusi klikkaus
+   * tai botin vuoro odottaa, kunnes edellinen tapahtuma on näytetty.
+   */
+  async run(fn, { after } = {}) {
+    if (this.busy) return;
+    this.busy = true;
+    this.actionsEl.dataset.busy = 'true';
+    try {
+      const result = fn();
+      if (result && result.ok === false) {
+        this.showError(result.error);
+        return;
+      }
+      if (after) await after(result);
+      await this.playEvents();
+    } finally {
+      this.busy = false;
+      delete this.actionsEl.dataset.busy;
+      this.render();
+    }
+  }
 
   doAction(fn) {
-    const result = fn();
-    if (result && result.ok === false) {
-      this.errorEl.textContent = result.error;
-      this.errorEl.hidden = false;
-      return;
-    }
-    this.render();
+    this.run(fn);
   }
 
-  doMove(key) {
-    this.doAction(() => this.game.actionMove(key));
-  }
-
-  /** Heittää nopan kevyen animaation kanssa. */
+  /** Nopanheitto: silmäluku pyörii kartan päällä ja jää hetkeksi näkyviin. */
   doRoll() {
-    const { game } = this;
-    const result = game.actionRoll();
-    if (result.ok === false) {
-      this.errorEl.textContent = result.error;
-      this.errorEl.hidden = false;
-      return;
-    }
-    this.animateDie(result.die).then(() => this.render());
+    this.run(() => this.game.actionRoll(), { after: (result) => this.animateDie(result.die) });
   }
 
-  animateDie(value) {
-    if (!value || this.reducedMotion) return Promise.resolve();
-    this.actionsEl.textContent = ''; // estä tuplaklikkaus heiton aikana
-    this.turnStatus.textContent = 'Noppa pyörii…';
-    const dieEl = this.dieEl;
-    dieEl.hidden = false;
-    dieEl.classList.add('rolling');
+  /** Siirto: nappula hyppii reittiä pitkin piste kerrallaan. */
+  doMove(key) {
+    const { game } = this;
+    const move = game.moves?.get(key);
+    if (!move) return;
+    const player = game.player;
+    const from = player.pos;
+    const path = move.path;
+    this.run(() => game.actionMove(key), { after: () => this.animatePawn(player, from, path) });
+  }
 
-    return new Promise((resolve) => {
-      let ticks = 0;
-      const timer = setInterval(() => {
-        const face = 1 + Math.floor(Math.random() * 6);
-        dieEl.textContent = DIE_FACES[face];
-        if (++ticks >= 8) {
-          clearInterval(timer);
-          dieEl.classList.remove('rolling');
-          dieEl.classList.add('landed');
-          dieEl.textContent = `${DIE_FACES[value]} ${value}`;
-          setTimeout(() => {
-            dieEl.classList.remove('landed');
-            resolve();
-          }, 260);
-        }
-      }, 70);
+  doFly(destination) {
+    const { game } = this;
+    const player = game.player;
+    const from = player.pos;
+    this.run(() => game.actionFly(destination), {
+      after: () => this.animatePawn(player, from, [player.pos], FLIGHT_MS),
     });
+  }
+
+  /** Siirtää nappulaa askel kerrallaan annettua polkua pitkin. */
+  async animatePawn(player, from, path, stepMs = STEP_MS) {
+    if (!path || path.length === 0) return;
+    const { board } = this.game;
+
+    this.movingPlayerId = player.id;
+    this.drawPawns();
+    const g = this.pawnShape(this.pawnLayer, player, false);
+    g.classList.add('pawn-moving');
+    if (stepMs !== STEP_MS) g.style.transitionDuration = `${stepMs}ms`;
+
+    const start = pixelOf(board, from);
+    g.style.transform = `translate(${start.x}px, ${start.y}px)`;
+    g.getBoundingClientRect(); // varmistaa, että ensimmäinenkin askel animoituu
+
+    for (const pos of path) {
+      const { x, y } = pixelOf(board, pos);
+      g.style.transform = `translate(${x}px, ${y}px)`;
+      await this.wait(this.reducedMotion ? 0 : stepMs);
+    }
+
+    g.remove();
+    this.movingPlayerId = null;
+    this.drawPawns();
+  }
+
+  /** Noppa pyörii kartan päällä ja pysähtyy silmälukuun. */
+  async animateDie(value) {
+    if (!value) return;
+    this.dieEl.hidden = false;
+    this.dieEl.textContent = `${DIE_FACES[value]} ${value}`;
+    if (this.reducedMotion) return;
+
+    const toast = this.buildToast({ kind: 'die', text: 'Noppa pyörii…' });
+    const icon = toast.querySelector('.toast-icon');
+    const label = toast.querySelector('.toast-text');
+
+    for (let i = 0; i < 8; i++) {
+      icon.textContent = DIE_FACES[1 + Math.floor(Math.random() * 6)];
+      await this.wait(70);
+    }
+    icon.textContent = DIE_FACES[value];
+    label.textContent = `Heitit ${value}`;
+    toast.classList.add('landed');
+    await this.wait(TOAST_MS.die);
+    await this.removeToast(toast);
+  }
+
+  buildToast({ kind, text, sub, icon, token }) {
+    const box = html('div', `event-toast ${kind === 'robber' ? 'bad' : kind}`);
+    if (token) box.appendChild(tokenIconSvg(token, kind === 'die' ? 30 : 34));
+    else box.appendChild(html('span', 'toast-icon', icon ?? '•'));
+    const body = html('div');
+    body.appendChild(html('span', 'toast-text', text));
+    if (sub) body.appendChild(html('span', 'toast-sub', sub));
+    box.appendChild(body);
+    this.mapPane.appendChild(box);
+    return box;
+  }
+
+  async removeToast(box) {
+    box.classList.add('leaving');
+    await this.wait(this.reducedMotion ? 0 : 300);
+    box.remove();
+  }
+
+  /** Näyttää kertyneet tapahtumat yksi kerrallaan kartan päällä. */
+  async playEvents() {
+    const events = this.game.takeEvents();
+    for (const event of events) {
+      const box = this.buildToast(event);
+      await this.wait(this.reducedMotion ? 0 : TOAST_MS[event.kind] ?? TOAST_MS.default);
+      await this.removeToast(box);
+    }
   }
 
   scheduleBot() {
     clearTimeout(this.botTimer);
     const { game } = this;
-    if (game.phase === 'over' || !game.player.isBot) return;
+    if (this.busy || game.phase === 'over' || !game.player.isBot) return;
     const delay = game.phase === 'quiz' ? BOT_QUIZ_DELAY : BOT_DELAY;
     this.botTimer = setTimeout(() => this.botStep(), delay);
   }
 
   botStep() {
     const { game } = this;
-    if (game.phase === 'over' || !game.player.isBot) return;
+    if (this.busy || game.phase === 'over' || !game.player.isBot) return;
 
     if (game.phase === 'quiz') {
-      if (game.quiz.chosen !== null) game.closeQuiz();
-      else if (wantsHint(game)) game.actionFiftyFifty();
-      else game.answerQuiz(chooseQuizAnswer(game));
-      this.render();
+      if (game.quiz.chosen !== null) this.run(() => game.closeQuiz());
+      else if (wantsHint(game)) this.run(() => game.actionFiftyFifty());
+      else this.run(() => game.answerQuiz(chooseQuizAnswer(game)));
       return;
     }
 
     if (game.phase === 'move') {
       const key = chooseMove(game);
-      if (key) game.actionMove(key);
-      else game.endTurn();
-      this.render();
+      if (key) this.doMove(key);
+      else this.run(() => game.endTurn());
       return;
     }
 
     const action = chooseAction(game);
-    if (action.type === 'quiz') {
-      game.actionQuiz();
-    } else if (action.type === 'fly') {
-      game.actionFly(action.destination);
-    } else {
-      const result = game.actionRoll();
-      this.animateDie(result.die).then(() => this.render());
-      return;
-    }
-    this.render();
+    if (action.type === 'quiz') this.run(() => game.actionQuiz());
+    else if (action.type === 'fly') this.doFly(action.destination);
+    else this.doRoll();
   }
 }
 
