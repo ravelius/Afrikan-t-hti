@@ -595,7 +595,7 @@ test('vaellus: maailmankartalta voi lentää toiselle laudalle', () => {
   // Tanger on lentokenttä: maailmankartta listaa muut laudat.
   game.phase = 'action';
   const dests = game.worldDestinations();
-  assert.equal(dests.length, 2, 'kaksi muuta lautaa');
+  assert.equal(dests.length, 3, 'kolme muuta lautaa');
 
   p.money = 300;
   assert.ok(game.actionWorldFlight('istanbul').ok);
@@ -644,7 +644,7 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   p.pos = { type: 'city', city: 'kairo' };
   game.phase = 'action';
   const options = game.gatewayOptions();
-  assert.equal(options.length, 1);
+  assert.equal(options.length, 2, 'Lähi-itään ja Maailma-laudalle');
   assert.equal(options[0].pack, 'middleeast');
 
   const afrikanLaatat = game.tokens.size;
@@ -714,7 +714,7 @@ test('kilpapelin voittaja voi jatkaa vaellusta', () => {
   // Portit aukeavat myös jatketussa pelissä.
   game.current = 1;
   game.phase = 'action';
-  assert.equal(game.gatewayOptions().length, 1, 'Kairossa oleva pääsee portista');
+  assert.equal(game.gatewayOptions().length, 2, 'Kairossa oleva pääsee porteista');
 });
 
 test('sama kysymys ei toistu ennen kuin pakka on käyty läpi', () => {

@@ -6,8 +6,11 @@ yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käänn�
 JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
 maantieteestä kiinnostavasti.
 
-- **Kolme pelilautaa:** Afrikka (Afrikan tähti), Lähi-itä (Idän tähti) ja
-  ensimmäisenä kaupunkilautana Istanbul (Sulttaanin timantti)
+- **Neljä pelilautaa:** koko maapallon kattava Maailma (Maailman tähti),
+  Afrikka (Afrikan tähti), Lähi-itä (Idän tähti) ja ensimmäisenä
+  kaupunkilautana Istanbul (Sulttaanin timantti). Maailma-laudalla valtameret
+  ylitetään laivalla tai lentäen, ja Kairosta laskeudutaan tarkemmille
+  laudoille — sama portaikko jatkuu kaupunkitasolle asti
 - **Vaellustila:** yksin pelattaessa peli ei pääty — kerää löytöjä ja siirry
   porttikaupungeista laudalta toiselle, myös kaupunkitasolle. Kilpapelin
   voittaja voi jatkaa vaeltamista voittoruudusta

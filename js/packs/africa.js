@@ -43,7 +43,10 @@ const AFRICA_CITIES = [
   {
     id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true,
     // Sama kaupunki on myös Lähi-idän laudalla: vaelluksessa tästä jatketaan.
-    links: [{ pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' }],
+    links: [
+      { pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' },
+      { pack: 'maailma', city: 'kairo', label: 'Maailma-lauta' },
+    ],
   },
 
   { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
