@@ -51,9 +51,10 @@
 
         <section id="players" class="players" aria-label="Pelaajat"></section>
 
-        <section class="card log-card">
-          <h2>Tapahtumat</h2>
-          <ul id="log" class="log"></ul>
+        <section class="card fact-card">
+          <h2>Tiesitkö että…</h2>
+          <p id="fact-place" class="fact-place"></p>
+          <p id="fact-text" class="fact-text"></p>
         </section>
       </aside>
     </main>
@@ -93,9 +94,11 @@
         Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä
         aloituskaupunkiin ensimmäisenä.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
-        lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä.
-        2) Heitä noppa ja valitse kohde kartalta. 3) Jos päädyit kaupunkiin, jossa on
-        avaamaton aarre, voit vielä kokeilla tietovisaa — sen jälkeen vuoro vaihtuu.</p>
+        lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä. Jos
+        vaihtoehtoja ei ole — esimerkiksi sisämaassa tai kesken reittiä — vuoro alkaa
+        suoraan nopanheitosta. 2) Heitä noppa ja valitse kohde kartalta. 3) Jos päädyit
+        kaupunkiin, jossa on avaamaton aarre, voit vielä kokeilla tietovisaa — sen
+        jälkeen vuoro vaihtuu.</p>
       <p><b>Liikkuminen.</b> Noppa kertoo, kuinka monta askelta voit enintään kulkea —
         tasalukua ei tarvita, vaan kaupunkiin saa pysähtyä jo matkan varrella. Matka
         kulkee valitulla tavalla: maitse vain maareittejä ja laivalla vain meriteitä.
@@ -117,6 +120,8 @@
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
+      <p><b>Tiesitkö että…</b> Ohjauspaneeli kertoo tietoa siitä paikasta, jossa vuorossa
+        oleva pelaaja on. Tieto vaihtuu kierroksittain.</p>
       <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
       <p><b>Päivitys.</b> Yläpalkin <b>Päivitä</b> hakee uusimman version pelistä —
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>

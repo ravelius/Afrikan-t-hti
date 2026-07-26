@@ -69,6 +69,7 @@ export class Game {
     // kohde, 'offer' = kokeile tietovisaa, 'quiz' = kysymys auki
     this.phase = 'action';
     this.travelMode = null;
+    this.autoTravel = false;
     this.pendingFare = 0;
     this.die = null;
     this.moves = null;
@@ -177,6 +178,7 @@ export class Game {
     this.lastPath = null;
     this.travelMode = null;
     this.pendingFare = 0;
+    this.autoTravel = false;
 
     // Hevosenkenkä tai tähti kotikaupungissa ratkaisee pelin heti vuoron alussa.
     if (this.checkWin()) return;
@@ -186,6 +188,13 @@ export class Game {
       this.say(p.id, `${p.name} on jumissa ilman rahaa ja saa pankilta ${STRANDED_AID} puntaa.`);
       this.emit('aid', `${p.name} sai pankilta ${STRANDED_AID} puntaa`, { icon: '💰' });
     }
+
+    // Kun vaihtoehtoja ei ole — esimerkiksi sisämaan kaupungissa tai kesken
+    // reittiä — matkustustapa valitaan valmiiksi ja vuoro alkaa suoraan
+    // nopanheitosta. Turhaa napinpainallusta ei tarvita.
+    const modes = this.travelModes(p);
+    this.autoTravel = modes.length === 1 && modes[0] !== 'stay';
+    if (this.autoTravel) this.actionTravel(modes[0]);
   }
 
   /**
@@ -238,6 +247,7 @@ export class Game {
   /** Palaa matkustustavan valintaan ennen nopanheittoa. */
   actionCancelTravel() {
     if (this.phase !== 'roll') return { ok: false, error: 'Väärä vaihe' };
+    if (this.autoTravel) return { ok: false, error: 'Muita matkustustapoja ei ole' };
     this.travelMode = null;
     this.pendingFare = 0;
     this.phase = 'action';
@@ -553,6 +563,7 @@ export class Game {
       current: this.current,
       phase: this.phase,
       travelMode: this.travelMode,
+      autoTravel: this.autoTravel,
       pendingFare: this.pendingFare,
       die: this.die,
       quiz: this.quiz,
@@ -589,6 +600,7 @@ export class Game {
     game.current = data.current;
     game.phase = data.phase;
     game.travelMode = data.travelMode ?? null;
+    game.autoTravel = !!data.autoTravel;
     game.pendingFare = data.pendingFare ?? 0;
     game.die = data.die ?? null;
     game.quiz = data.quiz ?? null;

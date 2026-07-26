@@ -10,7 +10,7 @@ const START_CITIES = [
   { id: 'kairo', name: 'Kairo' },
 ];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.2';
+const APP_VERSION = '2026-07-26.3';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');

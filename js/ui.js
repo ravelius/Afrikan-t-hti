@@ -3,6 +3,7 @@
 import { AIR_ROUTES } from './board.js';
 import { pixelOf, pointAlong, posKey } from './rules.js';
 import { TOKEN_TYPES } from './tokens.js';
+import { PLACE_FACTS } from './questions.js';
 import {
   chooseMove,
   chooseQuizAnswer,
@@ -78,7 +79,9 @@ export class UI {
     this.dieEl = document.getElementById('die');
     this.actionsEl = document.getElementById('actions');
     this.errorEl = document.getElementById('error');
-    this.logEl = document.getElementById('log');
+    this.factPlace = document.getElementById('fact-place');
+    this.factText = document.getElementById('fact-text');
+    this.factKey = null;
 
     this.winnerDialog = document.getElementById('winner-dialog');
     this.quizDialog = document.getElementById('quiz-dialog');
@@ -503,9 +506,12 @@ export class UI {
       rollBtn.addEventListener('click', () => this.doRoll());
       this.actionsEl.appendChild(rollBtn);
 
-      const backBtn = html('button', '', '↩ Vaihda matkustustapa');
-      backBtn.addEventListener('click', () => this.doAction(() => game.actionCancelTravel()));
-      this.actionsEl.appendChild(backBtn);
+      // Kun matkustustapa valittiin automaattisesti, ei ole mihin palata.
+      if (!game.autoTravel) {
+        const backBtn = html('button', '', '↩ Vaihda matkustustapa');
+        backBtn.addEventListener('click', () => this.doAction(() => game.actionCancelTravel()));
+        this.actionsEl.appendChild(backBtn);
+      }
       return;
     }
 
@@ -544,17 +550,43 @@ export class UI {
     }
   }
 
-  renderLog() {
-    this.logEl.textContent = '';
-    for (const entry of this.game.log.slice(0, 40)) {
-      const li = html('li', 'log-item');
-      const dot = html('span', 'dot small');
-      dot.style.background =
-        entry.playerId === null ? 'transparent' : this.game.players[entry.playerId].color;
-      li.appendChild(dot);
-      li.appendChild(html('span', '', entry.text));
-      this.logEl.appendChild(li);
-    }
+  /**
+   * Kaupunki, jonka tiedon paneeli näyttää. Reitin varrella valitaan se pää,
+   * jota lähempänä pelaaja on.
+   */
+  factCity(pos) {
+    const { board } = this.game;
+    if (pos.type === 'city') return board.cityById.get(pos.city);
+    const edge = board.edgeById.get(pos.edge);
+    const nearer = pos.idx * 2 <= edge.steps ? edge.a : edge.b;
+    return board.cityById.get(nearer);
+  }
+
+  /**
+   * "Tiesitkö että…" -tieto pelaajan sijainnista. Tieto vaihtuu kierroksittain,
+   * mutta pysyy samana saman vuoron ajan, jotta sen ehtii lukea.
+   */
+  renderFact() {
+    const { game } = this;
+    const player = game.player;
+    const city = this.factCity(player.pos);
+    const facts = PLACE_FACTS[city.id];
+    if (!facts || facts.length === 0) return;
+
+    const pick = Math.floor(hash01(`fact:${city.id}:${game.turnCount}:${player.id}`) * facts.length);
+    const text = facts[Math.min(pick, facts.length - 1)];
+    const key = `${city.id}:${text}`;
+    if (key === this.factKey) return;
+    this.factKey = key;
+
+    const onRoute = player.pos.type === 'edge';
+    this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
+    this.factText.textContent = text;
+
+    // Uusi tieto häivähtää esiin, jotta vaihdoksen huomaa.
+    this.factText.classList.remove('fact-in');
+    void this.factText.offsetWidth;
+    this.factText.classList.add('fact-in');
   }
 
   render() {
@@ -565,7 +597,7 @@ export class UI {
     this.renderTurnPill();
     this.renderPlayers();
     this.renderActions();
-    this.renderLog();
+    this.renderFact();
     this.renderQuiz();
 
     if (this.game.phase === 'over') {

@@ -877,3 +877,138 @@ export function allQuestions() {
     list.map((question) => ({ ...question, key })),
   );
 }
+
+/**
+ * "Tiesitkö että…" -tiedot paikoista. Peli näyttää yhden pelaajan nykyisestä
+ * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
+ */
+export const PLACE_FACTS = {
+  tanger: [
+    'Tanger on ollut satamakaupunki jo foinikialaisten ajoista. Gibraltarin salmi erottaa sen Espanjasta vain noin 14 kilometrin levyisenä.',
+    'Tangeria hallittiin vuosina 1923–1956 kansainvälisenä vyöhykkeenä, jota useat maat valvoivat yhdessä.',
+  ],
+  kairo: [
+    'Kairo on Afrikan väkirikkaimpia kaupunkeja. Sen laidalla Gizassa seisovat yli 4 500 vuotta vanhat pyramidit.',
+    'Kaupungin halki virtaa Niili, yksi maailman pisimmistä joista.',
+  ],
+  tripoli: [
+    'Tripolin nimi tulee kreikan sanoista, jotka tarkoittavat kolmea kaupunkia.',
+    'Tripoli on Libyan pääkaupunki ja sen tärkein satama Välimeren rannalla.',
+  ],
+  murzuk: [
+    'Murzuk oli aikoinaan tärkeä pysähdyspaikka Saharan halki kulkeneilla karavaanireiteillä.',
+    'Murzukin hiekkameri on yksi Saharan laajimmista dyynialueista.',
+  ],
+  alkufra: [
+    'Al Kufra on keidasryhmä keskellä Saharaa. Sen pelloille pumpataan vettä syvältä maanalaisesta pohjavesivarastosta.',
+    'Kufran kastellut pellot näkyvät satelliittikuvissa vihreinä ympyröinä keskellä autiomaata.',
+  ],
+  sahara: [
+    'Sahara on maailman laajin kuuma autiomaa — melkein Yhdysvaltojen kokoinen.',
+    'Sahara oli muutama tuhat vuotta sitten vehreä savanni. Kalliomaalaukset kertovat yhä siellä laiduntaneesta karjasta.',
+  ],
+  ahaggar: [
+    'Ahaggar on vuoristo keskellä Saharaa. Sen huiput kohoavat lähes 3 000 metriin ja yöt ovat siellä kylmiä.',
+    'Ahaggarin vuoret ovat tuaregien vanhaa kotiseutua.',
+  ],
+  timbuktu: [
+    'Timbuktu oli keskiajalla oppineisuuden keskus, jonka kirjastoissa säilytettiin kymmeniätuhansia käsikirjoituksia.',
+    'Kaupunki rikastui suolan ja kullan vaihdannasta Saharan karavaanireittien varrella.',
+  ],
+  gao: [
+    'Gao oli Songhain valtakunnan pääkaupunki. Se oli 1400–1500-luvuilla yksi Afrikan mahtavimmista valtioista.',
+    'Kaupunki sijaitsee Nigerjoen rannalla, aavikon ja savannin rajalla.',
+  ],
+  dakar: [
+    'Dakar sijaitsee Cap-Vertin niemimaalla, Afrikan mantereen läntisimmässä kärjessä.',
+    'Dakarin edustalla on Goréen saari, josta lähti orjalaivoja. Saari on nykyään maailmanperintökohde.',
+  ],
+  sierraleone: [
+    'Sierra Leone tarkoittaa portugaliksi leijonavuoria. Nimen antoivat merenkulkijat rannikon vuorille.',
+    'Maan pääkaupunki Freetown perustettiin vapautettujen orjien asuinpaikaksi.',
+  ],
+  kappalmas: [
+    'Kap Palmas on niemi Liberian eteläkärjessä. Portugalilaiset merenkulkijat nimesivät sen rannan palmujen mukaan.',
+    'Kap Palmasin kohdalla Afrikan rannikko kääntyy jyrkästi lännestä itään.',
+  ],
+  kumasi: [
+    'Kumasi on ashantien kuningaskunnan vanha pääkaupunki, ja ashantien kuninkaan hovi toimii siellä yhä.',
+    'Kumasin tori on yksi Länsi-Afrikan suurimmista.',
+  ],
+  orjarannikko: [
+    'Orjarannikko oli eurooppalaisten kauppiaiden nimitys Guineanlahden rannikolle, jolta vietiin ihmisiä orjuuteen Amerikkaan.',
+    'Naapurirannikot saivat nimensä kauppatavaran mukaan: Kultarannikko, Norsunluurannikko ja Pippurirannikko.',
+  ],
+  kano: [
+    'Kano on yli tuhat vuotta vanha kauppakaupunki, jota ympäröivät savesta rakennetut muurit.',
+    'Kano oli Saharan karavaanireittien eteläinen pääte, jossa vaihdettiin suolaa, kangasta ja nahkaa.',
+  ],
+  kamerun: [
+    'Kamerunvuori on Länsi-Afrikan korkein huippu ja yhä toimiva tulivuori.',
+    'Maan nimi tulee portugalin katkarapua tarkoittavasta sanasta: merenkulkijat löysivät niitä jokisuulta.',
+  ],
+  kongo: [
+    'Kongojoki on virtaamaltaan maailman toiseksi suurin joki heti Amazonin jälkeen.',
+    'Kongon altaassa kasvaa maailman toiseksi laajin sademetsä.',
+  ],
+  angola: [
+    'Angolan rannikkoa viilentää kylmä Benguelan merivirta, joka tekee rannasta poikkeuksellisen kuivan.',
+    'Angola on yksi Afrikan suurimmista öljyn ja timanttien tuottajista.',
+  ],
+  namib: [
+    'Namib on maailman vanhimpia autiomaita: se on ollut kuiva yli 50 miljoonaa vuotta.',
+    'Namibin dyynit ovat maailman korkeimpia — osa niistä kohoaa yli 300 metriin.',
+  ],
+  kapkaupunki: [
+    'Kapkaupungin yllä kohoaa Taffelivuori, jonka tasainen laki peittyy usein pilveen.',
+    'Kaupungin eteläpuolinen Hyväntoivonniemi oli tärkeä välietappi Euroopan ja Intian välisellä purjehdusreitillä.',
+  ],
+  kimberley: [
+    'Kimberleyn timanttilöytö 1870-luvulla sai aikaan valtavan kaivosryntäyksen.',
+    'Kaupungin Big Hole on käsin kaivettu kuoppa ja yksi maailman suurimmista.',
+  ],
+  mosambik: [
+    'Mosambikin rannikko on lähes 2 500 kilometriä pitkä, ja saaren suuntaan avautuu Mosambikin kanaali.',
+    'Mosambik oli portugalilaisten siirtomaa satojen vuosien ajan, ja portugali on yhä maan virallinen kieli.',
+  ],
+  madagaskar: [
+    'Madagaskar erosi muusta mantereesta kymmeniä miljoonia vuosia sitten. Siksi valtaosa sen eläimistä ja kasveista ei elä missään muualla.',
+    'Saaren ensimmäiset asukkaat purjehtivat sinne Kaakkois-Aasiasta, ja malagassin kieli on yhä sukua Indonesian kielille.',
+  ],
+  sansibar: [
+    'Sansibar tunnettiin mausteistaan, erityisesti neilikasta.',
+    'Sansibarin ja Britannian välinen sota vuonna 1896 kesti alle tunnin ja on historian lyhin sota.',
+  ],
+  kilimandzaro: [
+    'Kilimandžaro on Afrikan korkein vuori, 5 895 metriä. Sen huipulla on jäätiköitä aivan päiväntasaajan tuntumassa.',
+    'Kilimandžaro on tulivuori, joka kohoaa yksinään savannin keskeltä.',
+  ],
+  viktoria: [
+    'Viktorianjärvi on Afrikan suurin järvi ja maailman toiseksi suurin makean veden järvi.',
+    'Järvestä saa alkunsa Valkoinen Niili.',
+  ],
+  tanganjika: [
+    'Tanganjikajärvi on maailman toiseksi syvin järvi: sen pohja on yli 1 400 metrin syvyydessä.',
+    'Järvessä elää satoja kalalajeja, joita ei tavata missään muualla.',
+  ],
+  bahrelghazal: [
+    'Bahr el Ghazal on Niilin sivujoki, ja sen nimi tarkoittaa arabiaksi gasellien jokea.',
+    'Alueella leviää Sudd, yksi maailman laajimmista suoalueista.',
+  ],
+  darfur: [
+    'Darfur tarkoittaa furien maata: fur on alueen suurimpia kansoja.',
+    'Alueen keskellä kohoaa Marran vuoristo, jonka rinteillä sataa selvästi enemmän kuin ympäröivässä puoliaavikossa.',
+  ],
+  suakin: [
+    'Suakin oli vuosisatoja Sudanin tärkein satama. Sen vanhat talot rakennettiin koralliharkoista.',
+    'Suakinista lähdettiin pyhiinvaellusmatkalle Punaisenmeren yli Mekkaan.',
+  ],
+  addisabeba: [
+    'Addis Abeba on yksi maailman korkeimmalla sijaitsevista pääkaupungeista, noin 2 400 metrissä.',
+    'Nimi tarkoittaa amharaksi uutta kukkaa.',
+  ],
+  rashafun: [
+    'Ras Hafun on Afrikan mantereen itäisin niemi.',
+    'Niemi oli antiikin aikana kauppapaikka, jonne purjehdittiin monsuunituulten avulla.',
+  ],
+};

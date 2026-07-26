@@ -49,7 +49,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-button, .brand, .turn-pill, .player-chip, .log-card h2 {
+button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   -webkit-user-select: none;
   user-select: none;
 }
@@ -458,37 +458,52 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .chip-marks { letter-spacing: 0.08em; }
 .chip-marks .star { color: var(--accent); }
 
-/* --- loki --- */
+/* --- tiesitkö että --- */
 
-.log-card {
+.fact-card {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  border-color: #55402a;
+  background:
+    linear-gradient(180deg, rgba(217, 161, 59, 0.07), rgba(0, 0, 0, 0)) ,
+    var(--panel);
 }
 
-.log-card h2 {
-  margin: 0 0 0.4rem;
-  font-size: 0.75rem;
+.fact-card h2 {
+  margin: 0 0 0.35rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.fact-place {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--muted);
 }
 
-.log {
-  list-style: none;
+.fact-text {
   margin: 0;
-  padding: 0;
   overflow-y: auto;
   min-height: 0;
   flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.84rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--ink-light);
   -webkit-overflow-scrolling: touch;
 }
 
-.log-item { display: flex; gap: 0.4rem; align-items: baseline; }
+/* Uusi tieto häivähtää esiin, jotta vaihdoksen huomaa. */
+.fact-text.fact-in { animation: fact-in 0.45s ease-out both; }
+
+@keyframes fact-in {
+  from { opacity: 0; transform: translateY(5px); }
+}
 
 /* --- kartta --- */
 
@@ -1198,8 +1213,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   .turn-card { grid-row: 1 / span 2; }
   .actions { grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); }
   .actions button { font-size: 0.92rem; padding: 0.5rem 0.55rem; }
-  .log-card { max-height: 118px; }
-  .log { font-size: 0.8rem; }
+  .fact-card { max-height: 132px; }
+  .fact-text { font-size: 0.84rem; }
 }
 
 /* --- puhelin: kaikki mahtuu ruudulle ilman vieritystä --- */
@@ -1234,9 +1249,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   .chip-row { font-size: 0.72rem; }
   .chip-where { max-width: 96px; }
 
-  .log-card { max-height: 74px; padding: 0.4rem 0.55rem; }
-  .log-card h2 { display: none; }
-  .log { font-size: 0.74rem; gap: 0.2rem; }
+  .fact-card { max-height: 92px; padding: 0.4rem 0.55rem; }
+  .fact-card h2 { font-size: 0.68rem; margin-bottom: 0.2rem; }
+  .fact-place { font-size: 0.7rem; margin-bottom: 0.15rem; }
+  .fact-text { font-size: 0.78rem; line-height: 1.35; }
 
   .topbar { padding: 0.3rem 0.5rem; gap: 0.4rem; }
   .brand { font-size: 0.92rem; letter-spacing: 0.04em; }
@@ -1262,7 +1278,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /* Matala vaakanäyttö (esim. puhelin kyljellään) */
 @media (max-height: 480px) and (orientation: landscape) {
-  .log-card { display: none; }
+  .fact-card { display: none; }
   .players { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
   .actions button { min-height: 38px; font-size: 0.82rem; }
 }
@@ -1314,9 +1330,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
         <section id="players" class="players" aria-label="Pelaajat"></section>
 
-        <section class="card log-card">
-          <h2>Tapahtumat</h2>
-          <ul id="log" class="log"></ul>
+        <section class="card fact-card">
+          <h2>Tiesitkö että…</h2>
+          <p id="fact-place" class="fact-place"></p>
+          <p id="fact-text" class="fact-text"></p>
         </section>
       </aside>
     </main>
@@ -1356,9 +1373,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
         Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä
         aloituskaupunkiin ensimmäisenä.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
-        lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä.
-        2) Heitä noppa ja valitse kohde kartalta. 3) Jos päädyit kaupunkiin, jossa on
-        avaamaton aarre, voit vielä kokeilla tietovisaa — sen jälkeen vuoro vaihtuu.</p>
+        lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä. Jos
+        vaihtoehtoja ei ole — esimerkiksi sisämaassa tai kesken reittiä — vuoro alkaa
+        suoraan nopanheitosta. 2) Heitä noppa ja valitse kohde kartalta. 3) Jos päädyit
+        kaupunkiin, jossa on avaamaton aarre, voit vielä kokeilla tietovisaa — sen
+        jälkeen vuoro vaihtuu.</p>
       <p><b>Liikkuminen.</b> Noppa kertoo, kuinka monta askelta voit enintään kulkea —
         tasalukua ei tarvita, vaan kaupunkiin saa pysähtyä jo matkan varrella. Matka
         kulkee valitulla tavalla: maitse vain maareittejä ja laivalla vain meriteitä.
@@ -1380,6 +1399,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
         rubiini 1000 p 4, smaragdi 600 p 5, topaasi 300 p 6, tyhjä 9.
         Ryöstäjä vie kaikki rahat. Jalokiven arvo lisätään heti rahoihin.</p>
       <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
+      <p><b>Tiesitkö että…</b> Ohjauspaneeli kertoo tietoa siitä paikasta, jossa vuorossa
+        oleva pelaaja on. Tieto vaihtuu kierroksittain.</p>
       <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
       <p><b>Päivitys.</b> Yläpalkin <b>Päivitä</b> hakee uusimman version pelistä —
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
@@ -2524,6 +2545,141 @@ function allQuestions() {
     list.map((question) => ({ ...question, key })),
   );
 }
+
+/**
+ * "Tiesitkö että…" -tiedot paikoista. Peli näyttää yhden pelaajan nykyisestä
+ * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
+ */
+const PLACE_FACTS = {
+  tanger: [
+    'Tanger on ollut satamakaupunki jo foinikialaisten ajoista. Gibraltarin salmi erottaa sen Espanjasta vain noin 14 kilometrin levyisenä.',
+    'Tangeria hallittiin vuosina 1923–1956 kansainvälisenä vyöhykkeenä, jota useat maat valvoivat yhdessä.',
+  ],
+  kairo: [
+    'Kairo on Afrikan väkirikkaimpia kaupunkeja. Sen laidalla Gizassa seisovat yli 4 500 vuotta vanhat pyramidit.',
+    'Kaupungin halki virtaa Niili, yksi maailman pisimmistä joista.',
+  ],
+  tripoli: [
+    'Tripolin nimi tulee kreikan sanoista, jotka tarkoittavat kolmea kaupunkia.',
+    'Tripoli on Libyan pääkaupunki ja sen tärkein satama Välimeren rannalla.',
+  ],
+  murzuk: [
+    'Murzuk oli aikoinaan tärkeä pysähdyspaikka Saharan halki kulkeneilla karavaanireiteillä.',
+    'Murzukin hiekkameri on yksi Saharan laajimmista dyynialueista.',
+  ],
+  alkufra: [
+    'Al Kufra on keidasryhmä keskellä Saharaa. Sen pelloille pumpataan vettä syvältä maanalaisesta pohjavesivarastosta.',
+    'Kufran kastellut pellot näkyvät satelliittikuvissa vihreinä ympyröinä keskellä autiomaata.',
+  ],
+  sahara: [
+    'Sahara on maailman laajin kuuma autiomaa — melkein Yhdysvaltojen kokoinen.',
+    'Sahara oli muutama tuhat vuotta sitten vehreä savanni. Kalliomaalaukset kertovat yhä siellä laiduntaneesta karjasta.',
+  ],
+  ahaggar: [
+    'Ahaggar on vuoristo keskellä Saharaa. Sen huiput kohoavat lähes 3 000 metriin ja yöt ovat siellä kylmiä.',
+    'Ahaggarin vuoret ovat tuaregien vanhaa kotiseutua.',
+  ],
+  timbuktu: [
+    'Timbuktu oli keskiajalla oppineisuuden keskus, jonka kirjastoissa säilytettiin kymmeniätuhansia käsikirjoituksia.',
+    'Kaupunki rikastui suolan ja kullan vaihdannasta Saharan karavaanireittien varrella.',
+  ],
+  gao: [
+    'Gao oli Songhain valtakunnan pääkaupunki. Se oli 1400–1500-luvuilla yksi Afrikan mahtavimmista valtioista.',
+    'Kaupunki sijaitsee Nigerjoen rannalla, aavikon ja savannin rajalla.',
+  ],
+  dakar: [
+    'Dakar sijaitsee Cap-Vertin niemimaalla, Afrikan mantereen läntisimmässä kärjessä.',
+    'Dakarin edustalla on Goréen saari, josta lähti orjalaivoja. Saari on nykyään maailmanperintökohde.',
+  ],
+  sierraleone: [
+    'Sierra Leone tarkoittaa portugaliksi leijonavuoria. Nimen antoivat merenkulkijat rannikon vuorille.',
+    'Maan pääkaupunki Freetown perustettiin vapautettujen orjien asuinpaikaksi.',
+  ],
+  kappalmas: [
+    'Kap Palmas on niemi Liberian eteläkärjessä. Portugalilaiset merenkulkijat nimesivät sen rannan palmujen mukaan.',
+    'Kap Palmasin kohdalla Afrikan rannikko kääntyy jyrkästi lännestä itään.',
+  ],
+  kumasi: [
+    'Kumasi on ashantien kuningaskunnan vanha pääkaupunki, ja ashantien kuninkaan hovi toimii siellä yhä.',
+    'Kumasin tori on yksi Länsi-Afrikan suurimmista.',
+  ],
+  orjarannikko: [
+    'Orjarannikko oli eurooppalaisten kauppiaiden nimitys Guineanlahden rannikolle, jolta vietiin ihmisiä orjuuteen Amerikkaan.',
+    'Naapurirannikot saivat nimensä kauppatavaran mukaan: Kultarannikko, Norsunluurannikko ja Pippurirannikko.',
+  ],
+  kano: [
+    'Kano on yli tuhat vuotta vanha kauppakaupunki, jota ympäröivät savesta rakennetut muurit.',
+    'Kano oli Saharan karavaanireittien eteläinen pääte, jossa vaihdettiin suolaa, kangasta ja nahkaa.',
+  ],
+  kamerun: [
+    'Kamerunvuori on Länsi-Afrikan korkein huippu ja yhä toimiva tulivuori.',
+    'Maan nimi tulee portugalin katkarapua tarkoittavasta sanasta: merenkulkijat löysivät niitä jokisuulta.',
+  ],
+  kongo: [
+    'Kongojoki on virtaamaltaan maailman toiseksi suurin joki heti Amazonin jälkeen.',
+    'Kongon altaassa kasvaa maailman toiseksi laajin sademetsä.',
+  ],
+  angola: [
+    'Angolan rannikkoa viilentää kylmä Benguelan merivirta, joka tekee rannasta poikkeuksellisen kuivan.',
+    'Angola on yksi Afrikan suurimmista öljyn ja timanttien tuottajista.',
+  ],
+  namib: [
+    'Namib on maailman vanhimpia autiomaita: se on ollut kuiva yli 50 miljoonaa vuotta.',
+    'Namibin dyynit ovat maailman korkeimpia — osa niistä kohoaa yli 300 metriin.',
+  ],
+  kapkaupunki: [
+    'Kapkaupungin yllä kohoaa Taffelivuori, jonka tasainen laki peittyy usein pilveen.',
+    'Kaupungin eteläpuolinen Hyväntoivonniemi oli tärkeä välietappi Euroopan ja Intian välisellä purjehdusreitillä.',
+  ],
+  kimberley: [
+    'Kimberleyn timanttilöytö 1870-luvulla sai aikaan valtavan kaivosryntäyksen.',
+    'Kaupungin Big Hole on käsin kaivettu kuoppa ja yksi maailman suurimmista.',
+  ],
+  mosambik: [
+    'Mosambikin rannikko on lähes 2 500 kilometriä pitkä, ja saaren suuntaan avautuu Mosambikin kanaali.',
+    'Mosambik oli portugalilaisten siirtomaa satojen vuosien ajan, ja portugali on yhä maan virallinen kieli.',
+  ],
+  madagaskar: [
+    'Madagaskar erosi muusta mantereesta kymmeniä miljoonia vuosia sitten. Siksi valtaosa sen eläimistä ja kasveista ei elä missään muualla.',
+    'Saaren ensimmäiset asukkaat purjehtivat sinne Kaakkois-Aasiasta, ja malagassin kieli on yhä sukua Indonesian kielille.',
+  ],
+  sansibar: [
+    'Sansibar tunnettiin mausteistaan, erityisesti neilikasta.',
+    'Sansibarin ja Britannian välinen sota vuonna 1896 kesti alle tunnin ja on historian lyhin sota.',
+  ],
+  kilimandzaro: [
+    'Kilimandžaro on Afrikan korkein vuori, 5 895 metriä. Sen huipulla on jäätiköitä aivan päiväntasaajan tuntumassa.',
+    'Kilimandžaro on tulivuori, joka kohoaa yksinään savannin keskeltä.',
+  ],
+  viktoria: [
+    'Viktorianjärvi on Afrikan suurin järvi ja maailman toiseksi suurin makean veden järvi.',
+    'Järvestä saa alkunsa Valkoinen Niili.',
+  ],
+  tanganjika: [
+    'Tanganjikajärvi on maailman toiseksi syvin järvi: sen pohja on yli 1 400 metrin syvyydessä.',
+    'Järvessä elää satoja kalalajeja, joita ei tavata missään muualla.',
+  ],
+  bahrelghazal: [
+    'Bahr el Ghazal on Niilin sivujoki, ja sen nimi tarkoittaa arabiaksi gasellien jokea.',
+    'Alueella leviää Sudd, yksi maailman laajimmista suoalueista.',
+  ],
+  darfur: [
+    'Darfur tarkoittaa furien maata: fur on alueen suurimpia kansoja.',
+    'Alueen keskellä kohoaa Marran vuoristo, jonka rinteillä sataa selvästi enemmän kuin ympäröivässä puoliaavikossa.',
+  ],
+  suakin: [
+    'Suakin oli vuosisatoja Sudanin tärkein satama. Sen vanhat talot rakennettiin koralliharkoista.',
+    'Suakinista lähdettiin pyhiinvaellusmatkalle Punaisenmeren yli Mekkaan.',
+  ],
+  addisabeba: [
+    'Addis Abeba on yksi maailman korkeimmalla sijaitsevista pääkaupungeista, noin 2 400 metrissä.',
+    'Nimi tarkoittaa amharaksi uutta kukkaa.',
+  ],
+  rashafun: [
+    'Ras Hafun on Afrikan mantereen itäisin niemi.',
+    'Niemi oli antiikin aikana kauppapaikka, jonne purjehdittiin monsuunituulten avulla.',
+  ],
+};
 
 // ===== js/sound.js =====
 // Peliäänet syntetisoituna Web Audio API:lla — ei äänitiedostoja, joten peli
@@ -3868,6 +4024,7 @@ class Game {
     // kohde, 'offer' = kokeile tietovisaa, 'quiz' = kysymys auki
     this.phase = 'action';
     this.travelMode = null;
+    this.autoTravel = false;
     this.pendingFare = 0;
     this.die = null;
     this.moves = null;
@@ -3976,6 +4133,7 @@ class Game {
     this.lastPath = null;
     this.travelMode = null;
     this.pendingFare = 0;
+    this.autoTravel = false;
 
     // Hevosenkenkä tai tähti kotikaupungissa ratkaisee pelin heti vuoron alussa.
     if (this.checkWin()) return;
@@ -3985,6 +4143,13 @@ class Game {
       this.say(p.id, `${p.name} on jumissa ilman rahaa ja saa pankilta ${STRANDED_AID} puntaa.`);
       this.emit('aid', `${p.name} sai pankilta ${STRANDED_AID} puntaa`, { icon: '💰' });
     }
+
+    // Kun vaihtoehtoja ei ole — esimerkiksi sisämaan kaupungissa tai kesken
+    // reittiä — matkustustapa valitaan valmiiksi ja vuoro alkaa suoraan
+    // nopanheitosta. Turhaa napinpainallusta ei tarvita.
+    const modes = this.travelModes(p);
+    this.autoTravel = modes.length === 1 && modes[0] !== 'stay';
+    if (this.autoTravel) this.actionTravel(modes[0]);
   }
 
   /**
@@ -4037,6 +4202,7 @@ class Game {
   /** Palaa matkustustavan valintaan ennen nopanheittoa. */
   actionCancelTravel() {
     if (this.phase !== 'roll') return { ok: false, error: 'Väärä vaihe' };
+    if (this.autoTravel) return { ok: false, error: 'Muita matkustustapoja ei ole' };
     this.travelMode = null;
     this.pendingFare = 0;
     this.phase = 'action';
@@ -4352,6 +4518,7 @@ class Game {
       current: this.current,
       phase: this.phase,
       travelMode: this.travelMode,
+      autoTravel: this.autoTravel,
       pendingFare: this.pendingFare,
       die: this.die,
       quiz: this.quiz,
@@ -4388,6 +4555,7 @@ class Game {
     game.current = data.current;
     game.phase = data.phase;
     game.travelMode = data.travelMode ?? null;
+    game.autoTravel = !!data.autoTravel;
     game.pendingFare = data.pendingFare ?? 0;
     game.die = data.die ?? null;
     game.quiz = data.quiz ?? null;
@@ -4618,7 +4786,9 @@ class UI {
     this.dieEl = document.getElementById('die');
     this.actionsEl = document.getElementById('actions');
     this.errorEl = document.getElementById('error');
-    this.logEl = document.getElementById('log');
+    this.factPlace = document.getElementById('fact-place');
+    this.factText = document.getElementById('fact-text');
+    this.factKey = null;
 
     this.winnerDialog = document.getElementById('winner-dialog');
     this.quizDialog = document.getElementById('quiz-dialog');
@@ -5043,9 +5213,12 @@ class UI {
       rollBtn.addEventListener('click', () => this.doRoll());
       this.actionsEl.appendChild(rollBtn);
 
-      const backBtn = html('button', '', '↩ Vaihda matkustustapa');
-      backBtn.addEventListener('click', () => this.doAction(() => game.actionCancelTravel()));
-      this.actionsEl.appendChild(backBtn);
+      // Kun matkustustapa valittiin automaattisesti, ei ole mihin palata.
+      if (!game.autoTravel) {
+        const backBtn = html('button', '', '↩ Vaihda matkustustapa');
+        backBtn.addEventListener('click', () => this.doAction(() => game.actionCancelTravel()));
+        this.actionsEl.appendChild(backBtn);
+      }
       return;
     }
 
@@ -5084,17 +5257,43 @@ class UI {
     }
   }
 
-  renderLog() {
-    this.logEl.textContent = '';
-    for (const entry of this.game.log.slice(0, 40)) {
-      const li = html('li', 'log-item');
-      const dot = html('span', 'dot small');
-      dot.style.background =
-        entry.playerId === null ? 'transparent' : this.game.players[entry.playerId].color;
-      li.appendChild(dot);
-      li.appendChild(html('span', '', entry.text));
-      this.logEl.appendChild(li);
-    }
+  /**
+   * Kaupunki, jonka tiedon paneeli näyttää. Reitin varrella valitaan se pää,
+   * jota lähempänä pelaaja on.
+   */
+  factCity(pos) {
+    const { board } = this.game;
+    if (pos.type === 'city') return board.cityById.get(pos.city);
+    const edge = board.edgeById.get(pos.edge);
+    const nearer = pos.idx * 2 <= edge.steps ? edge.a : edge.b;
+    return board.cityById.get(nearer);
+  }
+
+  /**
+   * "Tiesitkö että…" -tieto pelaajan sijainnista. Tieto vaihtuu kierroksittain,
+   * mutta pysyy samana saman vuoron ajan, jotta sen ehtii lukea.
+   */
+  renderFact() {
+    const { game } = this;
+    const player = game.player;
+    const city = this.factCity(player.pos);
+    const facts = PLACE_FACTS[city.id];
+    if (!facts || facts.length === 0) return;
+
+    const pick = Math.floor(hash01(`fact:${city.id}:${game.turnCount}:${player.id}`) * facts.length);
+    const text = facts[Math.min(pick, facts.length - 1)];
+    const key = `${city.id}:${text}`;
+    if (key === this.factKey) return;
+    this.factKey = key;
+
+    const onRoute = player.pos.type === 'edge';
+    this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
+    this.factText.textContent = text;
+
+    // Uusi tieto häivähtää esiin, jotta vaihdoksen huomaa.
+    this.factText.classList.remove('fact-in');
+    void this.factText.offsetWidth;
+    this.factText.classList.add('fact-in');
   }
 
   render() {
@@ -5105,7 +5304,7 @@ class UI {
     this.renderTurnPill();
     this.renderPlayers();
     this.renderActions();
-    this.renderLog();
+    this.renderFact();
     this.renderQuiz();
 
     if (this.game.phase === 'over') {
@@ -5607,7 +5806,7 @@ const START_CITIES = [
   { id: 'kairo', name: 'Kairo' },
 ];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.2';
+const APP_VERSION = '2026-07-26.3';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');

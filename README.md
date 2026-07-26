@@ -10,7 +10,8 @@ ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä.
 - SVG-kartta, jossa 32 kaupunkia, maareitit, laivareitit ja kolme lentoyhteyttä
 - 30 laattaa: Afrikan tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät
 - Yli 100 kysymystä: jokaisella kaupungilla omat kysymyksensä + yleinen varapakka
-- Suomenkielinen käyttöliittymä, tapahtumaloki ja nopan heittoanimaatio
+- Suomenkielinen käyttöliittymä ja "Tiesitkö että…" -tietoruutu, joka kertoo
+  vuorossa olevan pelaajan sijainnista — 64 tietoa, kaksi jokaisesta kaupungista
 - Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
   kompassiruusu, aallot ja maaston merkit — myös kysymyslaatikot ovat samaa
   pergamenttia käsin piirrettyine katkoviivoineen
@@ -86,6 +87,9 @@ löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupun
 | ✈ Lennä (300 p) | Suoraan toiselle lentokentälle: Tanger, Kairo, Kapkaupunki |
 | ❓ Jää paikalleen | Aarrekaupungissa: kokeile kysymystä liikkumatta |
 
+   Jos tarjolla on vain yksi tapa — esimerkiksi sisämaan kaupungissa tai kesken
+   reittiä — se valitaan automaattisesti ja vuoro alkaa suoraan nopanheitosta.
+
 2. **Heitä noppa** — noppa pyörii kartalla ja jää siihen lepäämään. Silmäluku on
    askelten enimmäismäärä.
 3. **Valitse kohde** kartalta.
@@ -98,6 +102,10 @@ vastauksesta vuoro päättyy — seuraavalla vuorolla samassa kaupungissa saa uu
 Sama kysymys ei toistu ennen kuin pakka on käyty läpi.
 
 **Lentoreitit** näkyvät kartalla haalean punaisina pistekatkoviivoina.
+
+**Tiesitkö että…** Ohjauspaneelissa näkyy tietoa siitä paikasta, jossa vuorossa oleva
+pelaaja on. Reitin varrella näytetään lähempänä olevan kaupungin tieto, ja tieto
+vaihtuu kierroksittain.
 
 **Rahan käyttö.** Rahalla ei voi ostaa aarteita, vaan sitä tarvitaan matkustamiseen ja
 vihjeisiin: 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa kysymyksestä kaksi

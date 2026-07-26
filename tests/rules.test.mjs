@@ -12,7 +12,7 @@ import {
 import {
   chooseMove, chooseQuizAnswer, chooseTravel, wantsFiftyFifty, wantsHint,
 } from '../js/ai.js';
-import { QUESTIONS, allQuestions } from '../js/questions.js';
+import { QUESTIONS, PLACE_FACTS, allQuestions } from '../js/questions.js';
 
 const board = buildBoard(CITIES, EDGES);
 
@@ -581,4 +581,52 @@ test('matkustustavan valinnan voi perua ennen heittoa', () => {
   game.actionCancelTravel();
   assert.equal(game.phase, 'action');
   assert.equal(game.travelMode, null);
+});
+
+test('matkustustapa valitaan automaattisesti kun vaihtoehtoja ei ole', () => {
+  const game = newGame(51);
+
+  // Sisämaan kaupungissa ilman aarretta maitse on ainoa tapa: vuoro alkaa heitosta.
+  game.player.pos = { type: 'city', city: 'murzuk' };
+  game.tokens.delete('murzuk');
+  game.phase = 'action';
+  game.beginTurn();
+  assert.equal(game.phase, 'roll');
+  assert.equal(game.travelMode, 'land');
+  assert.ok(game.autoTravel);
+  assert.equal(game.actionCancelTravel().ok, false, 'peruutettavaa ei ole');
+
+  // Kesken reittiä matka jatkuu samalla tavalla ilman kysymistä.
+  game.player.pos = { type: 'edge', edge: 'tanger|tripoli', idx: 1 };
+  game.phase = 'action';
+  game.beginTurn();
+  assert.equal(game.phase, 'roll');
+  assert.ok(game.autoTravel);
+
+  // Aarrekaupungissa valinta on aito: liikkua tai jäädä vastaamaan.
+  game.player.pos = { type: 'city', city: 'gao' };
+  game.tokens.set('gao', 'topaz');
+  game.phase = 'action';
+  game.beginTurn();
+  assert.equal(game.phase, 'action');
+  assert.equal(game.autoTravel, false);
+  assert.deepEqual(game.travelModes().sort(), ['land', 'stay']);
+
+  // Aloituskaupungissa on satama ja lentokenttä, joten valinta kysytään.
+  const alku = newGame(52);
+  assert.equal(alku.phase, 'action');
+  assert.equal(alku.autoTravel, false);
+});
+
+test('jokaisella kaupungilla on tiesitkö-tietoja', () => {
+  for (const city of CITIES) {
+    const facts = PLACE_FACTS[city.id];
+    assert.ok(Array.isArray(facts) && facts.length >= 2, `${city.id}: liian vähän tietoja`);
+    for (const fact of facts) {
+      assert.ok(fact.trim().length > 20, `${city.id}: liian lyhyt tieto`);
+      assert.equal(new Set(facts).size, facts.length, `${city.id}: sama tieto kahdesti`);
+    }
+  }
+  const extra = Object.keys(PLACE_FACTS).filter((id) => !CITIES.some((c) => c.id === id));
+  assert.deepEqual(extra, [], 'tietoja kaupungeille joita ei ole laudalla');
 });
