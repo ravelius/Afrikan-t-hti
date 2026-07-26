@@ -1,0 +1,1293 @@
+/* Afrikan tähti — sovelluskehys (tumma pähkinäpuu) ja aarrekartta (pergamentti). */
+
+:root {
+  /* Sovelluksen kehys */
+  --bg: #1d1610;
+  --panel: #2a1f16;
+  --panel-2: #35271a;
+  --line: #4b3826;
+  --ink-light: #f3e6d0;
+  --muted: #b39c7d;
+  --accent: #d9a13b;
+  --accent-dark: #8a6114;
+  --danger: #ff9b8a;
+
+  /* Kartta */
+  --paper: #efdcb4;
+  --paper-dark: #dcc08f;
+  --map-ink: #46331f;
+  --map-ink-soft: #8a6c46;
+  --sea-ink: #4f7385;
+  --mark: #b03a2b;
+
+  --radius: 12px;
+  --gap: 0.6rem;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink-light);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, .brand, .turn-pill, .player-chip, .log-card h2 {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* --- sovelluskehys --- */
+
+.app {
+  position: relative;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  /* Kapealla ruudulla sisältö ei saa venyttää asettelua leveämmäksi. */
+  overflow: hidden;
+  min-width: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.45rem 0.8rem;
+  background: linear-gradient(180deg, #3a2a1c, #251b12);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: clamp(1rem, 2.2vw, 1.3rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.turn-pill {
+  flex: 0 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.topbar-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+}
+
+/* Yläpalkin voi piilottaa, jolloin kartalle jää enemmän tilaa. */
+.app.chrome-hidden .topbar { display: none; }
+.app.chrome-hidden { grid-template-rows: minmax(0, 1fr); }
+
+/* Nappi on kartan päällä, jotta se ei peitä ohjauspaneelia. */
+.chrome-show {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  display: none;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(37, 27, 18, 0.82);
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+
+.app.chrome-hidden .chrome-show { display: grid; }
+.chrome-show:hover { background: rgba(58, 42, 28, 0.92); }
+
+.icon-btn { padding-inline: 0.55rem; }
+
+.stage {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) clamp(250px, 26vw, 340px);
+  gap: var(--gap);
+  padding: var(--gap);
+  min-height: 0;
+}
+
+.map-pane {
+  position: relative;
+  min-height: 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: #241a12;
+  overflow: hidden;
+  display: flex;
+}
+
+#board {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: manipulation;
+}
+
+.board-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 0.6rem;
+  transform: translateX(-50%);
+  background: rgba(28, 20, 12, 0.82);
+  border: 1px solid var(--line);
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  pointer-events: none;
+  max-width: 90%;
+  text-align: center;
+}
+
+.board-hint:empty { display: none; }
+
+/* --- laudalla lepäävä 3D-noppa --- */
+
+.die-layer {
+  --die-size: clamp(32px, 5.4vmin, 56px);
+  --half: calc(var(--die-size) / 2);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.die-layer[hidden] { display: none; }
+
+.board-die {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--die-size);
+  height: var(--die-size);
+  perspective: 900px;
+  will-change: transform;
+}
+
+/* Varjo jää laudan pintaan, kun noppa nousee ilmaan. */
+.die-shadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--die-size) * 1.16);
+  height: calc(var(--die-size) * 0.72);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 42% 42%, rgba(44, 27, 10, 0.85), rgba(44, 27, 10, 0) 70%);
+  opacity: 0.44;
+  will-change: transform, opacity;
+}
+
+.die-cube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.die-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 12%;
+  gap: 4%;
+  border-radius: 18%;
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.55), rgba(120, 86, 40, 0.16) 62%),
+    radial-gradient(circle at 30% 24%, #fffaf0 0%, #f5e7cb 48%, #dcc39a 100%);
+  border: 1px solid rgba(80, 58, 30, 0.5);
+  box-shadow:
+    inset -3px -4px 7px rgba(108, 76, 34, 0.42),
+    inset 3px 4px 6px rgba(255, 255, 255, 0.55);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Sivutahkot ovat aavistuksen tummempia, jolloin kuutio saa syvyyttä. */
+.die-face.face-3, .die-face.face-4 { filter: brightness(0.9); }
+.die-face.face-5, .die-face.face-6 { filter: brightness(0.82); }
+
+.die-face .pip {
+  align-self: center;
+  justify-self: center;
+  width: 74%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #7a5c35 0%, #46331a 55%, #2b1e0d 100%);
+  box-shadow:
+    inset 0 -1.5px 1.5px rgba(255, 255, 255, 0.3),
+    inset 0 1.5px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Valo tulee aina samasta suunnasta: kiilto ei pyöri nopan mukana. */
+.die-gloss {
+  position: absolute;
+  inset: -6%;
+  border-radius: 24%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 26% 20%, rgba(255, 252, 240, 0.5), rgba(255, 255, 255, 0) 46%),
+    radial-gradient(circle at 78% 84%, rgba(40, 24, 8, 0.24), rgba(0, 0, 0, 0) 52%);
+  mix-blend-mode: soft-light;
+}
+
+/* --- tapahtumaikkuna kartan päällä --- */
+
+.event-toast {
+  position: absolute;
+  left: 50%;
+  top: 16%;
+  transform: translate(-50%, 0);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(46, 33, 20, 0.96), rgba(30, 21, 12, 0.96));
+  border: 1px solid var(--accent);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  color: var(--ink-light);
+  font-size: 1.05rem;
+  font-weight: 600;
+  pointer-events: none;
+  max-width: 80%;
+  text-align: left;
+  animation: toast-in 0.28s cubic-bezier(0.2, 1.4, 0.5, 1);
+}
+
+.event-toast.leaving { animation: toast-out 0.3s ease-in forwards; }
+.event-toast .toast-icon { font-size: 1.6rem; line-height: 1; }
+.event-toast .toast-sub { display: block; font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.event-toast.treasure { border-color: #eec66b; }
+.event-toast.bad { border-color: #d9705f; }
+.event-toast.die { font-size: 1.4rem; }
+.event-toast.die .toast-icon { font-size: 2.6rem; color: var(--accent); }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 18px) scale(0.92); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes toast-out {
+  to { opacity: 0; transform: translate(-50%, -14px) scale(0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-toast, .event-toast.leaving { animation: none; }
+  .pawn-pulse { animation: none; }
+  .pawn-moving { transition: none; }
+  .board-die, .die-cube, .die-shadow { transition: none !important; }
+}
+
+.rail {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: var(--gap);
+  min-height: 0;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.7rem;
+  min-width: 0;
+}
+
+/* --- vuorolaatikko --- */
+
+.turn-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.turn-status {
+  font-size: 0.9rem;
+  color: var(--muted);
+  min-width: 0;
+}
+
+.die {
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--accent);
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+.die.rolling { animation: die-shake 0.14s linear infinite; }
+.die.landed { animation: die-land 0.26s ease-out; }
+
+@keyframes die-shake {
+  0% { transform: rotate(-12deg) translateY(0); }
+  50% { transform: rotate(12deg) translateY(-4px); }
+  100% { transform: rotate(-12deg) translateY(0); }
+}
+
+@keyframes die-land {
+  0% { transform: scale(1.45); }
+  60% { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+}
+
+/* Toiminnot lepäävät, kun animaatio on käynnissä. */
+.actions[data-busy] { opacity: 0.45; pointer-events: none; }
+
+button {
+  font: inherit;
+  padding: 0.5rem 0.8rem;
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--ink-light);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:hover:not(:disabled) { background: #43331f; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+button.primary {
+  background: linear-gradient(180deg, #eab84e, #d09024);
+  border-color: var(--accent-dark);
+  color: #2c1e07;
+  font-weight: 700;
+}
+
+button.primary:hover:not(:disabled) { background: linear-gradient(180deg, #f3c661, #d9a13b); }
+button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7rem; }
+
+.error {
+  margin-top: 0.5rem;
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+.muted { color: var(--muted); font-size: 0.88rem; }
+
+/* --- pelaajat --- */
+
+.players {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.4rem;
+}
+
+.player-chip {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.4rem 0.55rem;
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.player-chip.current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.chip-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 0;
+}
+
+.chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 2px solid #1b1410;
+  flex: 0 0 auto;
+}
+
+.dot.small { width: 9px; height: 9px; }
+
+.chip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  min-width: 0;
+}
+
+.money { color: var(--accent); font-variant-numeric: tabular-nums; }
+.chip-where { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip-marks { letter-spacing: 0.08em; }
+.chip-marks .star { color: var(--accent); }
+
+/* --- loki --- */
+
+.log-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.log-card h2 {
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.84rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.log-item { display: flex; gap: 0.4rem; align-items: baseline; }
+
+/* --- kartta --- */
+
+.paper { fill: url(#paper-grad); }
+.grain { filter: url(#grain); opacity: 0.5; mix-blend-mode: multiply; pointer-events: none; }
+.vignette { fill: url(#vignette-grad); pointer-events: none; }
+
+.graticule { stroke: #9d8253; stroke-width: 1; opacity: 0.28; fill: none; }
+
+.sea-echo { fill: none; stroke: #b99a68; stroke-linejoin: round; }
+.sea-echo-1 { stroke-width: 46; opacity: 0.17; }
+.sea-echo-2 { stroke-width: 26; opacity: 0.2; }
+.sea-echo-3 { stroke-width: 10; opacity: 0.26; }
+
+.land { fill: url(#land-grad); }
+.coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
+.coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
+
+.wave { fill: none; stroke: var(--sea-ink); stroke-width: 2; opacity: 0.45; stroke-linecap: round; }
+
+.route { stroke: #6d5333; stroke-width: 2.2; opacity: 0.42; fill: none; }
+.route-sea { stroke: var(--sea-ink); stroke-width: 2.2; stroke-dasharray: 11 9; opacity: 0.75; }
+.air-route {
+  fill: none;
+  stroke: var(--mark);
+  stroke-width: 2.4;
+  stroke-dasharray: 3 13;
+  stroke-linecap: round;
+  opacity: 0.42;
+}
+
+.step { fill: #e8d7b0; stroke: #8a7048; stroke-width: 1.2; opacity: 0.7; }
+.step-sea { fill: #dfe9ee; stroke: #6d8c9a; opacity: 0.65; }
+
+.fare { fill: var(--sea-ink); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+
+.city { fill: #f3e5c4; stroke: #6b5230; stroke-width: 2.4; }
+.city-start { fill: #eec66b; stroke: #6d4d12; stroke-width: 3.4; }
+.airport { font-size: 14px; fill: #8d3a2c; }
+
+.city-label {
+  fill: var(--map-ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  paint-order: stroke;
+  stroke: rgba(239, 220, 180, 0.9);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.city-label.start-label { font-size: 21px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* --- laattojen kuvakkeet --- */
+
+.token-disc { fill: #f7ecd2; stroke: var(--map-ink); stroke-width: 2.5; }
+
+.icon-star { fill: #e8b23c; stroke: #6d4d12; stroke-width: 1.6; stroke-linejoin: round; }
+
+.icon-shoe {
+  fill: none;
+  stroke: #9aa3ad;
+  stroke-width: 5;
+  stroke-linecap: round;
+  paint-order: stroke;
+}
+.icon-shoe-hole { fill: #4c5560; }
+
+.icon-hat { fill: #34291d; }
+.icon-mask { fill: #6b5a45; }
+.icon-eye { fill: #f7ecd2; }
+
+.icon-empty { fill: none; stroke: #8a765a; stroke-width: 2; stroke-dasharray: 4 4; }
+.icon-empty-line { stroke: #8a765a; stroke-width: 2; stroke-linecap: round; }
+
+.icon-gem { stroke: #3b2a13; stroke-width: 1.5; stroke-linejoin: round; }
+.icon-gem-facets { fill: none; stroke: rgba(255, 255, 255, 0.55); stroke-width: 1.1; }
+.gem-ruby { fill: #d2402f; }
+.gem-emerald { fill: #2f9e63; }
+.gem-topaz { fill: #e0a020; }
+
+.token-icon { display: inline-block; vertical-align: -0.22em; }
+
+.map-title {
+  fill: var(--map-ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  letter-spacing: 0.3em;
+  opacity: 0.55;
+}
+
+.compass { fill: none; stroke: var(--map-ink); stroke-width: 2; opacity: 0.65; }
+.compass-fill { fill: var(--map-ink); opacity: 0.6; }
+.compass-letter {
+  fill: var(--map-ink);
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: 22px;
+  opacity: 0.7;
+}
+
+.doodle { fill: none; stroke: var(--map-ink); stroke-width: 2.2; opacity: 0.45; stroke-linecap: round; }
+.terrain-mark { fill: none; stroke: var(--map-ink); stroke-width: 2; opacity: 0.3; stroke-linecap: round; }
+.terrain-fill { fill: var(--map-ink); opacity: 0.26; }
+.doodle-fill { fill: var(--map-ink); opacity: 0.45; }
+
+.target { cursor: pointer; }
+.target-hit { fill: transparent; }
+.target-ring {
+  fill: rgba(176, 58, 43, 0.18);
+  stroke: var(--mark);
+  stroke-width: 3.5;
+  stroke-dasharray: 6 5;
+  animation: target-spin 6s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.target:hover .target-ring { fill: rgba(176, 58, 43, 0.35); }
+.target-cost { fill: var(--mark); font-size: 17px; font-weight: 700; }
+
+@keyframes target-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pawn-shadow { fill: rgba(58, 38, 16, 0.32); }
+.pawn-ring { fill: #fdf6e4; stroke: #2b1f12; stroke-width: 2; }
+.pawn-dot { stroke: #241a10; stroke-width: 2; }
+.pawn-gloss { fill: rgba(255, 255, 255, 0.4); }
+.pawn-star { fill: #b8860b; font-size: 20px; }
+
+.pawn-active-ring {
+  fill: none;
+  stroke: #2b1f12;
+  stroke-width: 2.5;
+  opacity: 0.9;
+}
+
+.pawn-pulse {
+  fill: none;
+  stroke-width: 3;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pawn-pulse 1.8s ease-out infinite;
+}
+
+@keyframes pawn-pulse {
+  0% { transform: scale(0.85); opacity: 0.75; }
+  70% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.pawn-moving { transition: transform 0.19s cubic-bezier(0.34, 1.3, 0.64, 1); }
+
+/* --- dialogit: pergamenttikortit karttatyylillä --- */
+
+:root {
+  --paper-noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/><feColorMatrix values='0 0 0 0 0.42  0 0 0 0 0.33  0 0 0 0 0.19  0 0 0 0.2 0'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  /* Epäsäännöllinen kulmapyöristys tekee reunasta käsin piirretyn oloisen. */
+  --sketch-radius: 110px 16px 96px 18px / 18px 96px 16px 110px;
+  --sketch-radius-alt: 20px 104px 16px 100px / 100px 18px 108px 16px;
+}
+
+.dialog {
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: var(--map-ink);
+  max-width: 620px;
+  width: calc(100% - 2rem);
+  max-height: 92dvh;
+  overflow: visible;
+}
+
+.dialog::backdrop {
+  background: rgba(14, 9, 4, 0.72);
+}
+
+/* Modaalin oma fokusrengas ei kuulu paperikortin ympärille. */
+.dialog:focus,
+.dialog:focus-visible,
+.dialog-card:focus,
+.dialog-card:focus-visible {
+  outline: none;
+}
+
+/* Paperikortti dialogin sisällä */
+.dialog > form,
+.dialog > .paper-card,
+.dialog.paper > * {
+  position: relative;
+}
+
+.dialog {
+  --card-bg: radial-gradient(circle at 42% 34%, #f6e7c6 0%, #ecd8ae 58%, #d9be8d 100%);
+}
+
+.dialog-card {
+  position: relative;
+  background-image: var(--paper-noise), var(--card-bg);
+  background-blend-mode: multiply, normal;
+  border: 2.5px dashed var(--map-ink);
+  border-radius: var(--sketch-radius);
+  padding: 1.15rem 1.3rem;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  max-height: 92dvh;
+  overflow-y: auto;
+  animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
+}
+
+/* Toinen, hieman kiertynyt reunaviiva vahvistaa käsin piirretyn vaikutelman. */
+.dialog-card::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1.5px dashed rgba(70, 51, 31, 0.45);
+  border-radius: var(--sketch-radius-alt);
+  transform: rotate(-0.5deg);
+  pointer-events: none;
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(16px) rotate(-1.2deg) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.dialog h2 {
+  margin: 0 0 0.6rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  color: var(--map-ink);
+}
+
+.dialog p, .dialog label, .dialog .muted { color: #5a4326; }
+.dialog .muted { color: #7a6039; }
+
+.dialog menu {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.dialog button[hidden] { display: none; }
+
+.dialog button {
+  background: rgba(255, 255, 255, 0.35);
+  border: 2px dashed var(--map-ink);
+  border-radius: 90px 12px 84px 14px / 14px 84px 12px 90px;
+  color: var(--map-ink);
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.dialog button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.6); }
+
+.dialog button.primary {
+  background: linear-gradient(180deg, #e9c169, #d3a03c);
+  border-style: solid;
+  border-color: #7a5a12;
+  color: #33240a;
+}
+
+.dialog button.primary:hover:not(:disabled) { background: linear-gradient(180deg, #f2d183, #dcae4c); }
+
+.row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
+.player-setup { display: flex; flex-direction: column; gap: 0.5rem; }
+.setup-row { display: flex; align-items: center; gap: 0.5rem; }
+
+.setup-row input[type="text"],
+.dialog select {
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  border: 1.5px dashed rgba(70, 51, 31, 0.6);
+  background: rgba(255, 252, 244, 0.6);
+  color: var(--map-ink);
+  font: inherit;
+}
+
+.setup-row input[type="text"] { flex: 1 1 auto; min-width: 0; }
+
+.bot-label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; color: #7a6039; }
+.rules-text p { margin: 0 0 0.7rem; line-height: 1.45; }
+
+.setup-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0 0 0.7rem;
+  margin: 0 0 0.9rem;
+  border-bottom: 2px dashed rgba(70, 51, 31, 0.45);
+}
+
+.setup-hero h2 { margin: 0; }
+.setup-star { font-size: 2.1rem; color: #b8860b; }
+.setup-tagline { margin: 0.15rem 0 0; font-size: 0.85rem; color: #7a6039; }
+
+/* --- tietovisa --- */
+
+.quiz-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px dashed rgba(70, 51, 31, 0.4);
+}
+
+.quiz-badge {
+  border: 2px dashed var(--map-ink);
+  border-radius: 999px;
+  color: var(--map-ink);
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.7rem;
+  transform: rotate(-1.5deg);
+}
+
+.quiz-city { color: #7a6039; font-size: 0.9rem; font-style: italic; }
+
+.quiz-question {
+  margin: 0 0 1rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: clamp(1.1rem, 2.3vw, 1.35rem);
+  line-height: 1.35;
+  color: var(--map-ink);
+  text-wrap: balance;
+  animation: ink-in 0.4s ease-out both;
+}
+
+@keyframes ink-in {
+  from { opacity: 0; filter: blur(2px); transform: translateY(6px); }
+  to { opacity: 1; filter: none; transform: none; }
+}
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  min-height: 58px;
+  border: 2px dashed var(--map-ink) !important;
+  border-radius: 86px 14px 92px 12px / 12px 92px 14px 86px !important;
+  background: rgba(255, 252, 243, 0.5) !important;
+  color: var(--map-ink) !important;
+  font-family: "Segoe UI", system-ui, sans-serif !important;
+  font-weight: 500;
+  transition: background 0.15s ease, transform 0.15s ease;
+  animation: option-in 0.3s ease-out both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+.quiz-option:nth-child(even) { transform: rotate(0.4deg); }
+.quiz-option:nth-child(odd) { transform: rotate(-0.4deg); }
+
+@keyframes option-in {
+  from { opacity: 0; transform: translateY(10px) rotate(-1deg); }
+}
+
+.quiz-option:hover:not(:disabled) { background: rgba(255, 255, 255, 0.85) !important; }
+.quiz-option:disabled { opacity: 1; cursor: default; }
+
+.quiz-option .letter {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.9em;
+  height: 1.9em;
+  border: 2px solid var(--map-ink);
+  border-radius: 50%;
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-weight: 700;
+  color: var(--map-ink);
+}
+
+.quiz-option .text { flex: 1 1 auto; }
+
+.quiz-option.correct {
+  background: rgba(94, 158, 106, 0.32) !important;
+  border-color: #2f6b3f !important;
+  border-style: solid !important;
+  animation: stamp 0.4s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+.quiz-option.correct .letter { border-color: #2f6b3f; color: #21532f; }
+
+.quiz-option.wrong {
+  background: rgba(176, 58, 43, 0.22) !important;
+  border-color: var(--mark) !important;
+  text-decoration: line-through;
+  text-decoration-color: rgba(176, 58, 43, 0.8);
+  text-decoration-thickness: 2px;
+}
+
+.quiz-option.hidden-option { opacity: 0.25; text-decoration: line-through; }
+
+@keyframes stamp {
+  0% { transform: scale(1.06) rotate(-1.5deg); }
+  60% { transform: scale(0.98) rotate(0.6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.quiz-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 1rem 0 0;
+  padding: 0.7rem 0.9rem;
+  border: 2px dashed rgba(70, 51, 31, 0.5);
+  border-radius: 80px 14px 86px 12px / 12px 86px 14px 80px;
+  background: rgba(255, 255, 255, 0.42);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--map-ink);
+  animation: ink-in 0.35s ease-out both;
+}
+
+/* [hidden] ei saa hävitä display: flexin alle. */
+.quiz-result[hidden] { display: none; }
+.quiz-result.right { border-color: #2f6b3f; }
+.quiz-result.wrong { border-color: var(--mark); }
+.quiz-result .muted { color: #6f5836; display: block; margin-top: 0.15rem; }
+
+.lifeline {
+  border: 2px dashed rgba(70, 51, 31, 0.6) !important;
+  border-radius: 60px 12px 66px 10px / 10px 66px 12px 60px !important;
+  background: rgba(255, 252, 243, 0.42) !important;
+  color: var(--map-ink) !important;
+  font-size: 0.85rem;
+}
+
+.lifeline:disabled { opacity: 0.4; }
+#quiz-hint { margin-right: auto; }
+
+/* --- tiimalasi: 45 sekunnin vastausaika --- */
+
+.quiz-head-text { display: flex; align-items: center; gap: 0.6rem; min-width: 0; flex: 1 1 auto; }
+
+.quiz-timer {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  animation: hg-arrive 0.5s ease-out both;
+}
+
+.quiz-timer[hidden] { display: none; }
+
+@keyframes hg-arrive {
+  from { opacity: 0; transform: translateY(-6px) rotate(-8deg); }
+}
+
+.hourglass {
+  width: 34px;
+  height: 52px;
+  overflow: visible;
+  transform: rotate(-1.5deg);
+  transform-origin: 50% 50%;
+}
+
+.hourglass.turning { animation: hg-turn 0.7s cubic-bezier(0.35, 0.05, 0.25, 1); }
+
+@keyframes hg-turn {
+  from { transform: rotate(178.5deg); }
+  to { transform: rotate(-1.5deg); }
+}
+
+.hg-wood { filter: url(#hg-rough); }
+
+.hg-wood rect {
+  fill: #8a6534;
+  stroke: var(--map-ink);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+.hg-glass {
+  fill: rgba(255, 255, 255, 0.16);
+  stroke: var(--map-ink);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  filter: url(#hg-rough);
+}
+
+.hg-sand { fill: #c08a3e; opacity: 0.92; }
+.hg-stream { fill: #b07f38; opacity: 0.75; animation: hg-pour 0.5s steps(2, end) infinite; }
+.hg-stream[hidden] { display: none; }
+
+@keyframes hg-pour {
+  0%, 100% { opacity: 0.72; transform: translateX(0); }
+  50% { opacity: 0.5; transform: translateX(0.25px); }
+}
+
+.hg-shine {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.quiz-seconds {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #7a6039;
+  min-width: 1.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.quiz-timer.urgent .hg-sand { fill: #a83c2c; }
+.quiz-timer.urgent .hg-stream { fill: #a83c2c; }
+.quiz-timer.urgent .quiz-seconds { color: var(--mark); }
+.quiz-timer.urgent .hourglass { animation: hg-shake 1s ease-in-out infinite; }
+
+@keyframes hg-shake {
+  0%, 100% { transform: rotate(-1.5deg); }
+  45% { transform: rotate(1.5deg); }
+}
+
+.quiz-hint-text {
+  display: flex;
+  gap: 0.5rem;
+  margin: -0.5rem 0 0.9rem;
+  padding: 0.55rem 0.8rem;
+  border: 2px dashed rgba(120, 90, 40, 0.55);
+  border-radius: 70px 12px 74px 10px / 10px 74px 12px 70px;
+  background: rgba(240, 220, 170, 0.35);
+  font-size: 0.92rem;
+  font-style: italic;
+  line-height: 1.35;
+  color: #6b5227;
+  animation: ink-in 0.45s ease-out both;
+}
+
+.quiz-hint-text[hidden] { display: none; }
+.quiz-hint-text::before { content: "✎"; font-style: normal; opacity: 0.7; }
+
+/* --- aarteen paljastus: iso laatta kääntyy 3D:nä --- */
+
+.reveal-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  gap: 1rem;
+  background: radial-gradient(circle at 50% 45%, rgba(26, 16, 7, 0.72), rgba(12, 8, 3, 0.92));
+  z-index: 20;
+  animation: fade-in 0.25s ease-out;
+}
+
+.reveal-overlay.leaving { animation: fade-out 0.3s ease-in forwards; }
+
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+
+.reveal-scene {
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+  perspective: 1100px;
+}
+
+/* Laatta ja sen taakse piirtyvät sädeviivat samassa ruudussa. */
+.reveal-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(52vmin, 280px);
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+}
+
+.reveal-rays {
+  position: absolute;
+  width: 168%;
+  height: 168%;
+  overflow: visible;
+  opacity: 0;
+  transform: scale(0.82) rotate(-6deg);
+  transition: opacity 0.5s ease-out, transform 0.7s cubic-bezier(0.2, 1.1, 0.4, 1);
+  pointer-events: none;
+}
+
+.reveal-rays path {
+  fill: none;
+  stroke: rgba(246, 226, 184, 0.5);
+  stroke-linecap: round;
+}
+
+.reveal-rays.shown { opacity: 1; transform: scale(1) rotate(0deg); }
+
+.reveal-disc {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform: rotateY(0deg) rotateZ(-2deg);
+  transition: transform 0.9s cubic-bezier(0.32, 0.86, 0.24, 1);
+  animation: disc-drop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+/* Kääntö ei ole täysin suora, jotta liike näyttää kädellä käännetyltä. */
+.reveal-disc.flipped { transform: rotateY(180deg) rotateZ(2.5deg); }
+
+@keyframes disc-drop {
+  from { transform: rotateY(0deg) rotateZ(-9deg) scale(0.62) translateY(-26px); opacity: 0; }
+}
+
+.reveal-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Varjo kuuluu tahkolle: .reveal-disc ei saa suodatinta, koska se litistäisi 3D:n. */
+  filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.5));
+}
+
+.reveal-face svg { width: 100%; height: 100%; overflow: visible; }
+
+.reveal-front { transform: rotateY(180deg); }
+
+.reveal-disc-body { stroke: none; }
+
+.reveal-ring {
+  fill: none;
+  stroke: var(--map-ink);
+  stroke-width: 2.6;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+
+.reveal-ring.thin { stroke-width: 1.4; opacity: 0.5; stroke-dasharray: 9 6; }
+
+.reveal-ticks path { stroke: var(--map-ink); stroke-width: 1.5; opacity: 0.45; }
+.reveal-hatch path { stroke: rgba(70, 51, 31, 0.3); stroke-width: 1.1; fill: none; }
+
+.reveal-mark {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: 96px;
+  fill: rgba(70, 51, 31, 0.72);
+}
+
+.reveal-caption {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+}
+
+.reveal-caption.shown { opacity: 1; transform: none; }
+
+.reveal-caption strong {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: clamp(1.4rem, 4.5vmin, 2rem);
+  letter-spacing: 0.05em;
+  color: #f6e2b8;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+}
+
+.reveal-caption span {
+  color: #d8c4a2;
+  font-size: 0.98rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.quiz-verdict {
+  font-family: "Iowan Old Style", Georgia, serif;
+  font-size: clamp(1.3rem, 3.4vw, 1.7rem);
+  letter-spacing: 0.04em;
+}
+.gem-count { font-size: 0.78rem; color: var(--muted); }
+
+/* --- kapea / pystyasento: kartta ylös, ohjaus alle --- */
+
+@media (max-width: 900px), (orientation: portrait) {
+  .stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .rail {
+    grid-template-rows: auto;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .turn-card { grid-row: 1 / span 2; }
+  .actions { grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); }
+  .actions button { font-size: 0.92rem; padding: 0.5rem 0.55rem; }
+  .log-card { max-height: 118px; }
+  .log { font-size: 0.8rem; }
+}
+
+/* --- puhelin: kaikki mahtuu ruudulle ilman vieritystä --- */
+
+@media (max-width: 560px) {
+  :root { --gap: 0.45rem; }
+
+  .stage { grid-template-rows: minmax(150px, 1fr) auto; padding: 0.45rem; }
+  .rail { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .turn-card { grid-row: auto; padding: 0.5rem 0.55rem; }
+  .turn-row { margin-bottom: 0.35rem; }
+  .turn-status { font-size: 0.82rem; }
+
+  .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem; }
+  .actions button {
+    font-size: 0.82rem;
+    padding: 0.4rem 0.4rem;
+    min-height: 44px;
+    line-height: 1.15;
+  }
+
+  /* Pelaajakortit yhdelle riville, tarvittaessa vieritettävänä. */
+  .players {
+    display: flex;
+    gap: 0.35rem;
+    overflow-x: auto;
+    padding-bottom: 0.1rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .player-chip { flex: 0 0 auto; min-width: 108px; padding: 0.3rem 0.45rem; }
+  .chip-head { font-size: 0.8rem; }
+  .chip-row { font-size: 0.72rem; }
+  .chip-where { max-width: 96px; }
+
+  .log-card { max-height: 74px; padding: 0.4rem 0.55rem; }
+  .log-card h2 { display: none; }
+  .log { font-size: 0.74rem; gap: 0.2rem; }
+
+  .topbar { padding: 0.3rem 0.5rem; gap: 0.4rem; }
+  .brand { font-size: 0.92rem; letter-spacing: 0.04em; }
+  /* Vuorossa oleva näkyy pelaajakorteissa, joten palkkiin ei tarvita erillistä merkkiä. */
+  .turn-pill { display: none; }
+  .topbar-actions button { font-size: 0.78rem; padding: 0.3rem 0.5rem; min-height: 32px; }
+
+  .board-hint { font-size: 0.76rem; padding: 0.25rem 0.6rem; }
+  .event-toast { font-size: 0.92rem; padding: 0.55rem 0.8rem; top: 10%; }
+  .event-toast .toast-icon { font-size: 1.3rem; }
+
+  .quiz-options { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .quiz-option { min-height: 48px; padding: 0.5rem 0.7rem; font-size: 0.92rem; }
+  .quiz-question { font-size: 1rem; margin-bottom: 0.7rem; }
+  .dialog-card { padding: 0.8rem 0.85rem; }
+  .dialog { width: calc(100% - 1rem); }
+  .reveal-disc { width: min(56vmin, 200px); }
+  .reveal-caption strong { font-size: 1.25rem; }
+}
+
+/* Matala vaakanäyttö (esim. puhelin kyljellään) */
+@media (max-height: 480px) and (orientation: landscape) {
+  .log-card { display: none; }
+  .players { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+  .actions button { min-height: 38px; font-size: 0.82rem; }
+}
+
+@media (pointer: coarse) {
+  button { min-height: 46px; }
+  .quiz-option { min-height: 62px; font-size: 1.02rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .target-ring, .die.rolling, .die.landed { animation: none; }
+}
