@@ -43,7 +43,7 @@ jobs:
           mkdir -p _site/dist
           cp index.html manifest.webmanifest sw.js .nojekyll _site/
           cp -r css js assets _site/
-          cp dist/afrikan-tahti.html _site/dist/
+          cp dist/maailman-tahdet.html _site/dist/
 
       - uses: actions/upload-pages-artifact@v3
         with:

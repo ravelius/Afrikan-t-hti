@@ -1,6 +1,7 @@
 # Osallistuminen
 
-Kiitos kiinnostuksesta! Tämä peli on rakennettu niin, että uusien lautojen ja
+Kiitos kiinnostuksesta! Lue ensin [pelin periaatteet](docs/periaatteet.md) —
+ne kertovat, millä perusteilla sisältö hyväksytään peliin. Tämä peli on rakennettu niin, että uusien lautojen ja
 kysymysten lisääminen on mahdollisimman helppoa — myös ilman syvää
 ohjelmointikokemusta. Kaikki muutokset tehdään pull requesteina, ja testit
 tarkistavat automaattisesti, että lisäys on ehjä.
@@ -21,8 +22,13 @@ Kysymyksen muoto:
   correct: 0,                     // oikean vastauksen paikka listassa (0–3)
   fact: 'Tripoli on Libyan pääkaupunki ja suurin kaupunki.',  // selitys vastauksen jälkeen
   hint: 'Maan öljyvarat ovat Afrikan suurimmat.',  // ostettava vihje
+  level: 2,  // vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea
 }
 ```
+
+Vaikeustasot: taso 1 on lapsellekin ratkaistavissa, taso 2 on tavallista
+yleistietoa ja taso 3 vaatii erikoistietoa — siitä saa pelissä bonuksen.
+Jos `level` puuttuu, kysymys on tasoa 2.
 
 Pelisäännöt kysymyksille (testit valvovat näitä):
 
