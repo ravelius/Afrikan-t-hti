@@ -62,8 +62,8 @@ const AFRICA_CITIES = [
   { id: 'gao', name: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
   {
     id: 'dakar', name: 'Dakar', x: 45, y: 318, airport: true, la: 'start', lx: 16, ly: 5,
-    // Etelä-Atlantin ylitys Dakarista Etelä-Amerikkaan on vanha postilentoreitti.
-    links: [{ pack: 'maailma', city: 'rio', label: 'Maailma-lauta' }],
+    // Etelä-Atlantin ylitys Dakarista Brasiliaan on vanha postilentoreitti.
+    links: [{ pack: 'southamerica', city: 'joaopessoa', label: 'Etelä-Amerikan lauta' }],
   },
   { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
   { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },

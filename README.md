@@ -6,18 +6,22 @@ yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käänn�
 JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
 maantieteestä kiinnostavasti.
 
-- **Viisi pelilautaa:** koko maapallon kattava Maailma (Maailman tähti),
-  Afrikka (Afrikan tähti), Eurooppa (Euroopan tähti), Lähi-itä (Idän tähti) ja
-  ensimmäisenä kaupunkilautana Istanbul (Sulttaanin timantti). Maailma-laudalla
-  valtameret ylitetään laivalla tai lentäen, ja Lontoosta ja Kairosta
+- **Kuusi pelilautaa:** koko maapallon kattava Maailma (Maailman tähti),
+  Afrikka (Afrikan tähti), Eurooppa (Euroopan tähti), Etelä-Amerikka
+  (Etelä-Amerikan tähti), Lähi-itä (Idän tähti) ja ensimmäisenä
+  kaupunkilautana Istanbul (Sulttaanin timantti). Maailma-laudalla valtameret
+  ylitetään laivalla tai lentäen, ja Lontoosta, Kairosta ja Rio de Janeirosta
   laskeudutaan tarkemmille laudoille — sama portaikko jatkuu kaupunkitasolle
   asti. Istanbul on sekä Euroopan että Lähi-idän laudalla, joten mantereelta
   toiselle pääsee myös kävellen
 - **Vaellustila:** yksin pelattaessa peli ei pääty — kerää löytöjä ja siirry
   porttikaupungeista laudalta toiselle, myös kaupunkitasolle. Kilpapelin
   voittaja voi jatkaa vaeltamista voittoruudusta
-- **Raahattava kartta:** raahaa sormella tai hiirellä, lähennä nipistämällä
-  tai rullalla; kaksoisnapautus palauttaa koko laudan
+- **Porttikaupungit:** jokaisella laudalla on muutama kaupunki, josta lähtee
+  pitkä lento toiselle laudalle — Tangerista Madridiin, Dakarista Brasiliaan,
+  Dubaista Mumbaihin. Kartalla portin tunnistaa katkoviivakehästä, ja lennon
+  jälkeen karttanäkymä vaihtuu suoraan perille. Kartta itsessään on staattinen:
+  koko lauta näkyy aina kerralla, eikä sitä tarvitse raahata tai zoomata
 - **Rosvon kaksintaistelu:** rosvolaatta ei vie rahoja suoraan, vaan rosvo
   esittää kiperän kysymyksen kahdeksalla vaihtoehdolla — suora oikea vastaus
   tuo 200 punnan saaliin, helpotus maksaa puolet rahoista, ja kolmella
@@ -31,13 +35,17 @@ maantieteestä kiinnostavasti.
 - SVG-kartta, jossa kymmeniä kaupunkeja, maareitit, laivareitit ja lentoyhteydet
 - Euroopan laudalla 34 kaupunkia Lissabonista Moskovaan ja Kreetalta Tromssaan:
   Kanaalitunneli, Itämeren lautat, Välimeren saaret ja Mustanmeren satamat
+- Etelä-Amerikan laudalla 37 kaupunkia Panamasta Kap Hornille: Andien
+  ylängöt, Amazonin jokireitit, Atacaman autiomaa ja Patagonian vuonot —
+  Galápagos, Falkland ja Robinson Crusoen saari vain laivalla
 - Laatat: tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät — Lähi-idässä
   topaasin tilalla on turkoosi, joka on saanut nimensä Turkista
-- Yli 300 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
+- Lähes 500 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
   kysymyksensä + laudan yleinen varapakka. Pelaajakohtainen tasovalinta
   (esim. lapsille helpot) ja vaikeasta kysymyksestä 100 punnan bonus
 - Suomenkielinen käyttöliittymä ja "Tiesitkö että…" -tietoruutu, joka kertoo
-  vuorossa olevan pelaajan sijainnista — 64 tietoa, kaksi jokaisesta kaupungista
+  vuorossa olevan pelaajan sijainnista — yli 350 tietoa, vähintään kaksi
+  jokaisesta kaupungista
 - Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
   kompassiruusu, aallot ja maaston merkit — myös kysymyslaatikot ovat samaa
   pergamenttia käsin piirrettyine katkoviivoineen

@@ -88,8 +88,8 @@ const WORLD_CITIES = [
   },
   {
     id: 'rio', name: 'Rio de Janeiro', x: 380, y: 590.8, airport: true, la: 'end', lx: -16, ly: 5,
-    // Etelä-Atlantin postilentoreitti Dakariin.
-    links: [{ pack: 'africa', city: 'dakar', label: 'Afrikan lauta' }],
+    // Sama kaupunki on myös Etelä-Amerikan laudalla.
+    links: [{ pack: 'southamerica', city: 'rio', label: 'Etelä-Amerikan lauta' }],
   },
   {
     id: 'mumbai', name: 'Mumbai', x: 706, y: 473.0, airport: true, la: 'start', lx: 16, ly: 5,

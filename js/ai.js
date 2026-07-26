@@ -42,6 +42,23 @@ function goalDistances(game, p, money = p.money) {
 }
 
 /**
+ * Lyhin tavoite-etäisyys niiden naapurikaupunkien joukossa, joihin nykyisestä
+ * kaupungista pääsee annetulla matkustustavalla.
+ */
+function nearestByMode(game, dist, type) {
+  const city = game.cityOf();
+  if (!city) return Infinity;
+  let best = Infinity;
+  for (const edgeId of game.board.adj.get(city.id)) {
+    const edge = game.board.edgeById.get(edgeId);
+    if (edge.type !== type) continue;
+    const other = edge.a === city.id ? edge.b : edge.a;
+    best = Math.min(best, dist.get(other) ?? Infinity);
+  }
+  return best;
+}
+
+/**
  * Valitsee matkustustavan vuoron alussa: jää paikalleen kokeilemaan kysymystä,
  * lennä, mene laivalla tai kulje maitse.
  */
@@ -68,11 +85,14 @@ export function chooseTravel(game) {
   }
 
   if (modes.includes('sea')) {
-    // Vertaa: kuinka paljon meritie lyhentää matkaa maateihin verrattuna.
-    // Lippuun on varaa jo siksi, että 'sea' on tarjolla.
-    const landOnly = goalDistances(game, p, 0);
-    const hereLand = distanceOf(game.board, p.pos, landOnly);
-    if (!Number.isFinite(hereLand) || hereLand - here >= 3) return { type: 'sea' };
+    // Meritie kannattaa vain jos se vie lähemmäs kuin paras maatie. Vertailu
+    // tehdään naapurikaupunkien kesken: jos katsottaisiin vain sitä pääseekö
+    // tavoitteeseen kuivin jaloin, botti nousisi laivaan myös väärään suuntaan
+    // aina kun viimeinen laatta on saarella. Lippuun on varaa jo siksi, että
+    // 'sea' on tarjolla.
+    const bySea = nearestByMode(game, dist, 'sea');
+    const byLand = modes.includes('land') ? nearestByMode(game, dist, 'land') : Infinity;
+    if (bySea < byLand) return { type: 'sea' };
   }
 
   if (modes.includes('land')) return { type: 'land' };
