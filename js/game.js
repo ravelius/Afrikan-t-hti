@@ -2,7 +2,7 @@
 
 import { FLIGHT_PRICE, buildBoard, findMoves, posKey, reachableCities } from './rules.js';
 import { createTokenPile } from './tokens.js';
-import { PACKS, packById } from './pack.js';
+import { PACKS, packById, sourceList } from './pack.js';
 
 export const START_MONEY = 300;
 export const SEA_FARE = 100; // laivamatkan hinta vuorolta
@@ -488,6 +488,7 @@ export class Game {
       hard,
       question: question.q,
       fact: question.fact,
+      source: sourceList(question.source),
       options: order.map((i) => question.options[i]),
       correct: order.indexOf(question.correct),
       hint: question.hint ?? null,
@@ -619,6 +620,7 @@ export class Game {
     this.duel = {
       question: question.q,
       fact: question.fact,
+      source: sourceList(question.source),
       options: order.map((i) => question.options[i]),
       correct: order.indexOf(question.correct),
       hidden: [],

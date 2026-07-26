@@ -19,3 +19,48 @@ export function allQuestions(pack) {
     list.map((question) => ({ ...question, key })),
   );
 }
+
+// --- lähteet ---------------------------------------------------------------
+//
+// Periaate 2: jokainen pelin väittämä on tarkistettavissa. Kysymykseen,
+// kaksintaisteluun ja Tiesitkö että -tietoon voi liittää lähteen, joka näkyy
+// pelaajalle vastauksen jälkeen. Lähde on merkkijono — verkko-osoite tai
+// sanallinen viite, esimerkiksi kirjan nimi ja sivu. Useampi lähde annetaan
+// listana.
+
+/** Lähteet aina listana; tyhjä lista jos lähdettä ei ole annettu. */
+export function sourceList(source) {
+  if (!source) return [];
+  return (Array.isArray(source) ? source : [source]).filter((s) => typeof s === 'string' && s.trim());
+}
+
+/** Onko lähde verkko-osoite, joka voidaan näyttää linkkinä? */
+export function isSourceUrl(source) {
+  return /^https?:\/\/\S+$/.test(source.trim());
+}
+
+/**
+ * Lyhyt näyttönimi lähteelle: verkko-osoitteesta pelkkä palvelimen nimi,
+ * muuten teksti sellaisenaan.
+ */
+export function sourceLabel(source) {
+  const text = source.trim();
+  if (!isSourceUrl(text)) return text;
+  try {
+    return new URL(text).hostname.replace(/^www\./, '');
+  } catch {
+    return text;
+  }
+}
+
+/**
+ * Tiesitkö että -tieto voi olla pelkkä merkkijono tai { text, source }.
+ * Näin vanha sisältö kelpaa sellaisenaan ja uuteen voi liittää lähteen.
+ */
+export function factText(fact) {
+  return typeof fact === 'string' ? fact : fact?.text ?? '';
+}
+
+export function factSource(fact) {
+  return typeof fact === 'string' ? [] : sourceList(fact?.source);
+}

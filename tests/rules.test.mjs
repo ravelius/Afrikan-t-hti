@@ -1,7 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { PACKS, packById, allQuestions } from '../js/pack.js';
+import {
+  PACKS, packById, allQuestions, factSource, factText, isSourceUrl, sourceLabel, sourceList,
+} from '../js/pack.js';
+
+/** Lähde on merkkijono tai lista merkkijonoja; verkko-osoite vain http(s). */
+function checkSources(source, where) {
+  if (source === undefined) return 0;
+  const list = Array.isArray(source) ? source : [source];
+  assert.ok(list.length > 0, `${where}: tyhjä lähdelista`);
+  for (const item of list) {
+    assert.equal(typeof item, 'string', `${where}: lähteen pitää olla merkkijono`);
+    assert.ok(item.trim().length >= 4, `${where}: liian lyhyt lähde`);
+    if (/^\w+:\/\//.test(item.trim())) {
+      assert.ok(isSourceUrl(item), `${where}: vain http- ja https-osoitteet kelpaavat`);
+    }
+  }
+  return list.length;
+}
 import { buildBoard, findMoves, posKey, cityDistances, pointAlong } from '../js/rules.js';
 import { isOnLand } from '../js/mapart.js';
 import { tokenPileTemplate } from '../js/tokens.js';
@@ -80,6 +97,11 @@ for (const pack of PACKS) {
         !q.hint.toLowerCase().includes(oikea),
         `kysymyksen "${q.q}" vihje paljastaa vastauksen`,
       );
+      checkSources(q.source, `kysymys "${q.q}"`);
+    }
+
+    for (const duel of pack.duels ?? []) {
+      checkSources(duel.source, `kaksintaistelu "${duel.q}"`);
     }
 
     const texts = allQuestions(pack).map((q) => q.q);
@@ -97,10 +119,12 @@ for (const pack of PACKS) {
     for (const city of pack.cities) {
       const facts = pack.placeFacts[city.id];
       assert.ok(Array.isArray(facts) && facts.length >= 2, `${city.id}: liian vähän tietoja`);
+      const texts = facts.map(factText);
       for (const fact of facts) {
-        assert.ok(fact.trim().length > 20, `${city.id}: liian lyhyt tieto`);
-        assert.equal(new Set(facts).size, facts.length, `${city.id}: sama tieto kahdesti`);
+        assert.ok(factText(fact).trim().length > 20, `${city.id}: liian lyhyt tieto`);
+        checkSources(typeof fact === 'string' ? undefined : fact.source, `tieto ${city.id}`);
       }
+      assert.equal(new Set(texts).size, texts.length, `${city.id}: sama tieto kahdesti`);
     }
     const extra = Object.keys(pack.placeFacts).filter((id) => !pack.cities.some((c) => c.id === id));
     assert.deepEqual(extra, [], 'tietoja kaupungeille joita ei ole laudalla');
@@ -1025,4 +1049,47 @@ test('matkustustapa valitaan automaattisesti kun vaihtoehtoja ei ole', () => {
   const alku = newGame(52);
   assert.equal(alku.phase, 'action');
   assert.equal(alku.autoTravel, false);
+});
+
+test('lähdekentän apurit tulkitsevat lähteet oikein', () => {
+  assert.deepEqual(sourceList(undefined), []);
+  assert.deepEqual(sourceList(''), []);
+  assert.deepEqual(sourceList('Kirja, s. 12'), ['Kirja, s. 12']);
+  assert.deepEqual(sourceList(['a', '', 'b']), ['a', 'b']);
+
+  assert.ok(isSourceUrl('https://www.example.org/sivu'));
+  assert.ok(!isSourceUrl('Kirja, s. 12'));
+  assert.ok(!isSourceUrl('ftp://example.org'));
+
+  // Verkko-osoitteesta näytetään palvelimen nimi, muu teksti sellaisenaan.
+  assert.equal(sourceLabel('https://www.example.org/pitka/polku'), 'example.org');
+  assert.equal(sourceLabel('Kirja, s. 12'), 'Kirja, s. 12');
+});
+
+test('tieto voi olla merkkijono tai teksti lähteineen', () => {
+  assert.equal(factText('Pelkkä teksti.'), 'Pelkkä teksti.');
+  assert.deepEqual(factSource('Pelkkä teksti.'), []);
+
+  const withSource = { text: 'Teksti lähteellä.', source: 'https://example.org/x' };
+  assert.equal(factText(withSource), 'Teksti lähteellä.');
+  assert.deepEqual(factSource(withSource), ['https://example.org/x']);
+});
+
+test('kysymyksen lähde kulkeutuu tietovisaan ja kaksintaisteluun', () => {
+  const pack = packById('africa');
+  const game = new Game({
+    players: [
+      { name: 'A', color: '#f00', start: 'tanger' },
+      { name: 'B', color: '#00f', start: 'kairo' },
+    ],
+    pack,
+    seed: 909,
+  });
+
+  // Lähteetön kysymys antaa tyhjän listan, ei undefinedia.
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'topaz');
+  game.phase = 'action';
+  game.actionTravel('stay');
+  assert.ok(Array.isArray(game.quiz.source));
 });

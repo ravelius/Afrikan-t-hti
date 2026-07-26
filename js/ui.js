@@ -15,7 +15,7 @@ import {
   DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HARD_BONUS,
   HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
-import { PACKS } from './pack.js';
+import { PACKS, factSource, factText, isSourceUrl, sourceLabel } from './pack.js';
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -829,7 +829,8 @@ export class UI {
     if (!facts || facts.length === 0) return;
 
     const pick = Math.floor(hash01(`fact:${city.id}:${game.turnCount}:${player.id}`) * facts.length);
-    const text = facts[Math.min(pick, facts.length - 1)];
+    const fact = facts[Math.min(pick, facts.length - 1)];
+    const text = factText(fact);
     const key = `${city.id}:${text}`;
     if (key === this.factKey) return;
     this.factKey = key;
@@ -837,11 +838,36 @@ export class UI {
     const onRoute = player.pos.type === 'edge';
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
     this.factText.textContent = text;
+    const source = this.sourceLine(factSource(fact));
+    if (source) this.factText.appendChild(source);
 
     // Uusi tieto häivähtää esiin, jotta vaihdoksen huomaa.
     this.factText.classList.remove('fact-in');
     void this.factText.offsetWidth;
     this.factText.classList.add('fact-in');
+  }
+
+  /**
+   * Lähderivi vastauksen perään. Verkko-osoite näytetään linkkinä palvelimen
+   * nimellä, sanallinen viite sellaisenaan. Periaate 2: väite on tarkistettavissa.
+   */
+  sourceLine(sources) {
+    if (!sources || sources.length === 0) return null;
+    const row = html('span', 'source-line');
+    row.appendChild(html('span', 'source-label', 'Lähde:'));
+    sources.forEach((source, i) => {
+      if (i > 0) row.appendChild(html('span', '', ' · '));
+      if (isSourceUrl(source)) {
+        const link = html('a', '', sourceLabel(source));
+        link.href = source;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        row.appendChild(link);
+      } else {
+        row.appendChild(html('span', '', source));
+      }
+    });
+    return row;
   }
 
   render() {
@@ -968,6 +994,8 @@ export class UI {
           );
         }
         if (quiz.fact) body.appendChild(html('span', 'muted', quiz.fact));
+        const quizSource = this.sourceLine(quiz.source);
+        if (quizSource) body.appendChild(quizSource);
         this.quizResult.appendChild(body);
       }
     }
@@ -1049,6 +1077,8 @@ export class UI {
           );
         }
         if (duel.fact) body.appendChild(html('span', 'muted', duel.fact));
+        const duelSource = this.sourceLine(duel.source);
+        if (duelSource) body.appendChild(duelSource);
         this.quizResult.appendChild(body);
       }
     }

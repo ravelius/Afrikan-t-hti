@@ -23,6 +23,7 @@ Kysymyksen muoto:
   fact: 'Tripoli on Libyan pääkaupunki ja suurin kaupunki.',  // selitys vastauksen jälkeen
   hint: 'Maan öljyvarat ovat Afrikan suurimmat.',  // ostettava vihje
   level: 2,  // vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea
+  source: 'https://www.britannica.com/place/Tripoli-Libya',  // vapaaehtoinen lähde
 }
 ```
 
@@ -34,12 +35,53 @@ Jokaisella laudalla on lisäksi pieni **rosvon kaksintaistelupakka**
 (`duels`-lista paketissa): erityisen kiperiä kysymyksiä, joissa on kahdeksan
 vaihtoehtoa ja `fact`, mutta ei vihjettä — helpotukset hoitaa rosvo.
 
+### Lähde
+
+Periaate 2 sanoo, että jokainen pelin väittämä on tarkistettavissa. Siksi
+kysymykseen, kaksintaisteluun ja Tiesitkö että -tietoon voi liittää `source`-
+kentän. Se näkyy pelaajalle vastauksen jälkeen pienenä "Lähde:" -rivinä.
+
+```js
+source: 'https://www.britannica.com/place/Tripoli-Libya'   // verkko-osoite
+source: 'Maailman valtiot ja liput, WSOY 2019, s. 88'      // kirja
+source: ['https://data.worldbank.org/...', 'YK 2023']      // useampi
+```
+
+Verkko-osoitteesta näytetään pelkkä palvelimen nimi (`britannica.com`) ja siitä
+tulee linkki; sanallinen viite näytetään sellaisenaan. Vain `http`- ja
+`https`-osoitteet kelpaavat.
+
+Tiesitkö että -tieto on joko pelkkä merkkijono tai teksti lähteineen — vanha
+muoto kelpaa yhä sellaisenaan:
+
+```js
+kairo: [
+  'Kairon halki virtaava Niili on koko Egyptin elämänlanka.',
+  { text: 'Kairon asukasluku ylittää 20 miljoonaa.', source: 'YK 2023' },
+],
+```
+
+**Lähde on toistaiseksi vapaaehtoinen**, koska suurin osa vanhasta sisällöstä on
+kirjoitettu ennen kentän olemassaoloa. Uuteen sisältöön se kannattaa aina
+merkitä. Nykytilanteen näkee komennolla:
+
+```bash
+node tools/source-report.mjs             # kattavuus laudoittain
+node tools/source-report.mjs --missing   # lista lähteettömistä
+```
+
+Hyvä lähde on sellainen, josta väitteen voi oikeasti tarkistaa: tietosanakirja,
+tilastolaitos, museo, yliopisto tai kirja sivunumeroineen. Älä merkitse lähdettä,
+jota et ole itse lukenut.
+
 Pelisäännöt kysymyksille (testit valvovat näitä):
 
 - tasan neljä erilaista vaihtoehtoa
 - `fact` ja `hint` ovat pakollisia
 - vihje **ei saa sisältää** oikeaa vastausta sellaisenaan
 - sama kysymysteksti ei saa esiintyä laudalla kahdesti
+- jos `source` on annettu, se on merkkijono tai lista merkkijonoja, ja
+  verkko-osoitteen pitää alkaa `http://` tai `https://`
 - tärkeintä: **tarkista faktat!** Peli on opetuspeli, joten jokaisen väitteen
   pitää olla totta.
 
@@ -87,6 +129,7 @@ Vaiheet:
 ```bash
 npm test                        # kaikkien lautojen testit
 node tools/build-standalone.mjs # yhden tiedoston versio kokoontuu virheittä
+node tools/source-report.mjs    # lähteiden kattavuus
 ```
 
 Kerro pull requestin kuvauksessa lyhyesti, mistä lähteistä tarkistit

@@ -492,6 +492,29 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   -webkit-overflow-scrolling: touch;
 }
 
+/* Lähdeviite: pieni ja vaatimaton, mutta aina saatavilla. */
+.source-line {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.source-line .source-label {
+  margin-right: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  opacity: 0.75;
+}
+
+.source-line a { color: inherit; text-decoration: underline dotted; }
+.source-line a:hover { color: var(--accent); }
+
+/* Pergamenttilaatikossa lähde on mustetta, ei vaaleaa tekstiä. */
+.quiz-result .source-line { color: #7a6039; }
+.quiz-result .source-line a:hover { color: var(--mark); }
+
 /* Uusi tieto häivähtää esiin, jotta vaihdoksen huomaa. */
 .fact-text.fact-in { animation: fact-in 0.45s ease-out both; }
 
