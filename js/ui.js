@@ -175,6 +175,9 @@ export class UI {
 
     svg.addEventListener('pointerdown', (event) => {
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      // Eleen ajaksi mustesuodattimet pois: ne piirretään uudelleen joka
+      // ruudunpäivityksellä ja tekevät raahauksesta nykivän.
+      svg.classList.add('panning');
       if (pointers.size === 1) this.panned = false;
       if (pointers.size === 2) {
         const [a, b] = [...pointers.values()];
@@ -211,8 +214,11 @@ export class UI {
     const release = (event) => {
       pointers.delete(event.pointerId);
       if (pointers.size < 2) pinchStart = null;
-      // Ote irtosi: kirjoitetaan lopullinen näkymä.
-      if (pointers.size === 0) this.fitViewBox();
+      // Ote irtosi: kirjoitetaan lopullinen näkymä ja suodattimet takaisin.
+      if (pointers.size === 0) {
+        svg.classList.remove('panning');
+        this.fitViewBox();
+      }
     };
     svg.addEventListener('pointerup', release);
     svg.addEventListener('pointercancel', release);

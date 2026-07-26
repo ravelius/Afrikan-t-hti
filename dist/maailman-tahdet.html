@@ -162,6 +162,18 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 
 .board-hint:empty { display: none; }
 
+/* Raahauksen ja zoomauksen aikana mustesuodattimet ja paperin kuitupinta
+   jätetään pois: selaimen ei tarvitse laskea niitä uudelleen joka
+   ruudunpäivityksellä, jolloin kartta liikkuu sulavasti myös puhelimessa. */
+#board.panning .landmass,
+#board.panning .waves,
+#board.panning .terrain { filter: none !important; }
+
+#board.panning .grain { display: none; }
+
+/* Oma piirtokerros vain eleen ajaksi — pysyvänä se veisi turhaan muistia. */
+#board.panning { will-change: transform; }
+
 /* --- laudalla lepäävä 3D-noppa --- */
 
 .die-layer {
@@ -1909,7 +1921,10 @@ const MAAILMA_FACTS = {
 //
 // Koordinaatisto on 1000 x 1000 yksikköä ja kattaa koko maapallon:
 //   x = (pituusaste + 180) / 0.36    (lännestä 180°W itään 180°E)
-//   y = (80 - leveysaste) * 1000/140 (pohjoisesta 80°N etelään 60°S)
+//   y = 305 + (80 - leveysaste) * 1000/360  (pohjoisesta 80°N etelään 60°S)
+//
+// Mittakaava on sama molemmissa suunnissa, joten mantereet eivät veny
+// pystysuunnassa. Kartan ylä- ja alalaitaan jää siksi avomerta.
 //
 // Mantereet ylitetään laivalla valtamerten poikki tai lentäen. Tässä on
 // aluksi vain yksi kaupunki mannerta kohden — yhteisö voi lisätä kaupunkeja
@@ -1921,105 +1936,105 @@ const WORLD_MAP = {
   height: 1000,
   // Amerikat: yksi manner Alaskasta Kap Hornille, Panama kannaksena.
   americasPoints: [
-    [33.3, 100.0], [38.9, 142.9], [83.3, 150.0], [125.0, 157.1], [152.8, 221.4],
-    [155.6, 285.7], [175.0, 335.7], [194.4, 407.1], [208.3, 428.6], [233.3, 457.1],
-    [263.9, 500.0], [283.3, 521.4], [280.6, 585.7], [275.0, 614.3], [288.9, 671.4],
-    [305.6, 700.0], [302.8, 785.7], [297.2, 857.1], [300.0, 928.6], [311.1, 964.3],
-    [319.4, 892.9], [327.8, 850.0], [341.7, 821.4], [366.7, 771.4], [388.9, 728.6],
-    [402.8, 628.6], [377.8, 592.9], [361.1, 571.4], [355.6, 535.7], [333.3, 507.1],
-    [322.2, 500.0], [300.0, 485.7], [286.1, 507.1], [269.4, 492.9], [255.6, 457.1],
-    [258.3, 421.4], [250.0, 435.7], [230.6, 385.7], [238.9, 364.3], [252.8, 364.3],
-    [272.2, 378.6], [277.8, 392.9], [275.0, 350.0], [288.9, 321.4], [294.4, 285.7],
-    [305.6, 264.3], [316.7, 250.0], [333.3, 235.7], [347.2, 200.0], [338.9, 178.6],
-    [322.2, 142.9], [311.1, 114.3], [277.8, 92.9], [250.0, 78.6], [194.4, 85.7],
-    [138.9, 71.4], [83.3, 64.3], [50.0, 71.4],
+    [33.3, 343.9], [38.9, 360.6], [83.3, 363.3], [125.0, 366.1], [152.8, 391.1],
+    [155.6, 416.1], [175.0, 435.6], [194.4, 463.3], [208.3, 471.7], [233.3, 482.8],
+    [263.9, 499.4], [283.3, 507.8], [280.6, 532.8], [275.0, 543.9], [288.9, 566.1],
+    [305.6, 577.2], [302.8, 610.6], [297.2, 638.3], [300.0, 666.1], [311.1, 680.0],
+    [319.4, 652.2], [327.8, 635.6], [341.7, 624.4], [366.7, 605.0], [388.9, 588.3],
+    [402.8, 549.5], [377.8, 535.6], [361.1, 527.2], [355.6, 513.3], [333.3, 502.2],
+    [322.2, 499.4], [300.0, 493.9], [286.1, 502.2], [269.4, 496.7], [255.6, 482.8],
+    [258.3, 468.9], [250.0, 474.4], [230.6, 455.0], [238.9, 446.7], [252.8, 446.7],
+    [272.2, 452.2], [277.8, 457.8], [275.0, 441.1], [288.9, 430.0], [294.4, 416.1],
+    [305.6, 407.8], [316.7, 402.2], [333.3, 396.7], [347.2, 382.8], [338.9, 374.5],
+    [322.2, 360.6], [311.1, 349.5], [277.8, 341.1], [250.0, 335.6], [194.4, 338.3],
+    [138.9, 332.8], [83.3, 330.0], [50.0, 332.8],
   ],
   // Afrikka, Eurooppa ja Aasia ovat yhtä mannermassaa; Itämeri, Välimeri,
   // Mustameri ja Punainenmeri ovat sen sisäänvetoja.
   afroeurasiaPoints: [
-    [475.0, 264.3], [497.2, 242.9], [486.1, 228.6], [500.0, 221.4], [511.1, 200.0],
-    [522.2, 185.7], [525.0, 167.9], [530.6, 160.7], [536.1, 182.1], [555.6, 178.6],
-    [577.8, 146.4], [566.7, 139.3], [547.2, 142.9], [533.3, 160.7], [527.8, 150.0],
-    [513.9, 135.7], [538.9, 85.7], [569.4, 64.3], [625.0, 85.7], [666.7, 78.6],
-    [708.3, 50.0], [750.0, 28.6], [805.6, 21.4], [861.1, 50.0], [916.7, 71.4],
-    [972.2, 71.4], [994.4, 100.0], [972.2, 142.9], [950.0, 171.4], [930.6, 214.3],
-    [888.9, 185.7], [875.0, 257.1], [863.9, 264.3], [858.3, 321.4], [838.9, 307.1],
-    [836.1, 342.9], [825.0, 407.1], [800.0, 421.4], [797.2, 450.0], [791.7, 500.0],
-    [786.1, 564.3], [777.8, 521.4], [772.2, 485.7], [761.1, 457.1], [752.8, 414.3],
-    [738.9, 428.6], [722.2, 464.3], [713.9, 514.3], [702.8, 464.3], [700.0, 421.4],
-    [683.3, 392.9], [661.1, 392.9], [658.3, 385.7], [666.7, 414.3], [650.0, 450.0],
-    [625.0, 476.0], [619.4, 475.0], [600.0, 371.4], [588.9, 378.6], [613.9, 485.7],
-    [641.7, 496.4], [633.3, 535.7], [619.4, 571.4], [611.1, 628.6], [600.0, 700.0],
-    [597.2, 742.9], [591.7, 785.7], [577.8, 814.3], [550.0, 814.3], [533.3, 700.0],
-    [525.0, 607.1], [525.0, 542.9], [500.0, 528.6], [477.8, 542.9], [463.9, 507.1],
-    [452.8, 464.3], [455.6, 421.4], [472.2, 357.1], [483.3, 330.0], [508.3, 314.3],
-    [527.8, 307.1], [541.7, 342.9], [555.6, 350.0], [569.4, 342.9], [583.3, 350.0],
-    [589.7, 357.1], [597.2, 335.7], [600.0, 310.7], [583.3, 314.3], [575.0, 307.1],
-    [572.2, 285.7], [580.6, 278.6], [597.2, 271.4], [613.9, 275.0], [615.3, 264.3],
-    [602.8, 250.0], [591.7, 242.9], [583.3, 242.9], [577.8, 264.3], [579.2, 277.1],
-    [566.7, 285.7], [558.3, 300.0], [563.9, 314.3], [550.0, 285.7], [538.9, 250.0],
-    [533.3, 257.1], [544.4, 300.0], [533.3, 278.6], [527.8, 257.1], [513.9, 264.3],
-    [508.3, 271.4], [500.0, 292.9], [494.4, 305.0], [485.6, 304.3], [475.0, 307.1],
+    [475.0, 407.8], [497.2, 399.5], [486.1, 393.9], [500.0, 391.1], [511.1, 382.8],
+    [522.2, 377.2], [525.0, 370.3], [530.6, 367.5], [536.1, 375.8], [555.6, 374.5],
+    [577.8, 361.9], [566.7, 359.2], [547.2, 360.6], [533.3, 367.5], [527.8, 363.3],
+    [513.9, 357.8], [538.9, 338.3], [569.4, 330.0], [625.0, 338.3], [666.7, 335.6],
+    [708.3, 324.4], [750.0, 316.1], [805.6, 313.3], [861.1, 324.4], [916.7, 332.8],
+    [972.2, 332.8], [994.4, 343.9], [972.2, 360.6], [950.0, 371.7], [930.6, 388.3],
+    [888.9, 377.2], [875.0, 405.0], [863.9, 407.8], [858.3, 430.0], [838.9, 424.4],
+    [836.1, 438.4], [825.0, 463.3], [800.0, 468.9], [797.2, 480.0], [791.7, 499.4],
+    [786.1, 524.5], [777.8, 507.8], [772.2, 493.9], [761.1, 482.8], [752.8, 466.1],
+    [738.9, 471.7], [722.2, 485.6], [713.9, 505.0], [702.8, 485.6], [700.0, 468.9],
+    [683.3, 457.8], [661.1, 457.8], [658.3, 455.0], [666.7, 466.1], [650.0, 480.0],
+    [625.0, 490.1], [619.4, 489.7], [600.0, 449.4], [588.9, 452.2], [613.9, 493.9],
+    [641.7, 498.0], [633.3, 513.3], [619.4, 527.2], [611.1, 549.5], [600.0, 577.2],
+    [597.2, 593.9], [591.7, 610.6], [577.8, 621.7], [550.0, 621.7], [533.3, 577.2],
+    [525.0, 541.1], [525.0, 516.1], [500.0, 510.6], [477.8, 516.1], [463.9, 502.2],
+    [452.8, 485.6], [455.6, 468.9], [472.2, 443.9], [483.3, 433.3], [508.3, 427.2],
+    [527.8, 424.4], [541.7, 438.4], [555.6, 441.1], [569.4, 438.4], [583.3, 441.1],
+    [589.7, 443.9], [597.2, 435.6], [600.0, 425.8], [583.3, 427.2], [575.0, 424.4],
+    [572.2, 416.1], [580.6, 413.3], [597.2, 410.5], [613.9, 411.9], [615.3, 407.8],
+    [602.8, 402.2], [591.7, 399.5], [583.3, 399.5], [577.8, 407.8], [579.2, 412.8],
+    [566.7, 416.1], [558.3, 421.7], [563.9, 427.2], [550.0, 416.1], [538.9, 402.2],
+    [533.3, 405.0], [544.4, 421.7], [533.3, 413.3], [527.8, 405.0], [513.9, 407.8],
+    [508.3, 410.5], [500.0, 418.9], [494.4, 423.6], [485.6, 423.3], [475.0, 424.4],
   ],
   britainPoints: [
-    [486.1, 214.3], [502.8, 207.1], [501.4, 192.9], [495.8, 171.4], [488.9, 157.1],
-    [483.3, 178.6], [486.1, 192.9], [487.5, 207.1],
+    [486.1, 388.3], [502.8, 385.5], [501.4, 380.0], [495.8, 371.7], [488.9, 366.1],
+    [483.3, 374.5], [486.1, 380.0], [487.5, 385.5],
   ],
   australiaPoints: [
-    [816.7, 728.6], [838.9, 700.0], [863.9, 657.1], [880.6, 657.1], [894.4, 650.0],
-    [905.6, 707.1], [916.7, 728.6], [925.0, 764.3], [919.4, 814.3], [905.6, 850.0],
-    [888.9, 842.9], [875.0, 821.4], [858.3, 800.0], [844.4, 807.1], [819.4, 814.3],
-    [813.9, 757.1],
+    [816.7, 588.3], [838.9, 577.2], [863.9, 560.5], [880.6, 560.5], [894.4, 557.8],
+    [905.6, 580.0], [916.7, 588.3], [925.0, 602.2], [919.4, 621.7], [905.6, 635.6],
+    [888.9, 632.8], [875.0, 624.4], [858.3, 616.1], [844.4, 618.9], [819.4, 621.7],
+    [813.9, 599.4],
   ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const WORLD_CITIES = [
-  { id: 'lontoo', name: 'Lontoo', x: 500, y: 204, start: true, airport: true, la: 'end', lx: -16, ly: 5,
+  { id: 'lontoo', name: 'Lontoo', x: 500, y: 384.3, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'europe', city: 'lontoo', label: 'Euroopan lauta' }] },
-  { id: 'newyork', name: 'New York', x: 287, y: 283, start: true, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'newyork', name: 'New York', x: 287, y: 415.1, start: true, airport: true, la: 'end', lx: -16, ly: 5 },
 
   {
-    id: 'kairo', name: 'Kairo', x: 585, y: 365, la: 'start', lx: 16, ly: 5,
+    id: 'kairo', name: 'Kairo', x: 585, y: 446.9, la: 'start', lx: 16, ly: 5,
     // Kairosta laskeudutaan tarkemmille laudoille.
     links: [
       { pack: 'africa', city: 'kairo', label: 'Afrikan lauta' },
       { pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' },
     ],
   },
-  { id: 'rio', name: 'Rio de Janeiro', x: 380, y: 735, la: 'end', lx: -16, ly: 5 },
-  { id: 'mumbai', name: 'Mumbai', x: 706, y: 432, la: 'start', lx: 16, ly: 5 },
-  { id: 'peking', name: 'Peking', x: 823, y: 286, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'sydney', name: 'Sydney', x: 913, y: 810, airport: true, la: 'end', lx: -16, ly: -10 },
-  { id: 'moskova', name: 'Moskova', x: 604, y: 173, la: 'start', lx: 16, ly: 5 },
+  { id: 'rio', name: 'Rio de Janeiro', x: 380, y: 590.8, la: 'end', lx: -16, ly: 5 },
+  { id: 'mumbai', name: 'Mumbai', x: 706, y: 473.0, la: 'start', lx: 16, ly: 5 },
+  { id: 'peking', name: 'Peking', x: 823, y: 416.2, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'sydney', name: 'Sydney', x: 913, y: 620.0, airport: true, la: 'end', lx: -16, ly: -10 },
+  { id: 'moskova', name: 'Moskova', x: 604, y: 372.3, la: 'start', lx: 16, ly: 5 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
 // type 'sea' = valtamerireitti; via = reittipisteet veden päällä.
 const WORLD_EDGES = [
   // Siperian rata on laudan ainoa maareitti.
-  { a: 'moskova', b: 'peking', steps: 7, via: [[667, 179], [750, 214], [792, 250]] },
+  { a: 'moskova', b: 'peking', steps: 7, via: [[667, 374.6], [750, 388.2], [792, 402.2]] },
 
   // Valtamerten laivareitit
-  { a: 'lontoo', b: 'newyork', steps: 5, type: 'sea', via: [[417, 214], [361, 250]] },
+  { a: 'lontoo', b: 'newyork', steps: 5, type: 'sea', via: [[417, 388.2], [361, 402.2]] },
   {
     a: 'lontoo', b: 'kairo', steps: 5, type: 'sea',
-    via: [[483, 221], [472, 264], [472, 314], [479, 317], [486, 318], [497, 310], [510, 303], [533, 296], [550, 321], [578, 332]],
+    via: [[483, 390.9], [472, 407.7], [472, 427.1], [479, 428.3], [486, 428.7], [497, 425.6], [510, 422.8], [533, 420.1], [550, 429.8], [578, 434.1]],
   },
-  { a: 'lontoo', b: 'moskova', steps: 4, type: 'sea', via: [[508, 186], [528, 171], [553, 168], [571, 152]] },
-  { a: 'newyork', b: 'rio', steps: 5, type: 'sea', via: [[306, 321], [347, 429], [375, 536], [417, 571], [411, 679]] },
+  { a: 'lontoo', b: 'moskova', steps: 4, type: 'sea', via: [[508, 377.3], [528, 371.5], [553, 370.3], [571, 364.1]] },
+  { a: 'newyork', b: 'rio', steps: 5, type: 'sea', via: [[306, 429.8], [347, 471.8], [375, 513.4], [417, 527.1], [411, 569.1]] },
   {
     a: 'kairo', b: 'mumbai', steps: 5, type: 'sea',
-    via: [[597, 386], [610, 450], [617, 480], [632, 481], [655, 468], [689, 450]],
+    via: [[597, 455.1], [610, 480.0], [617, 491.7], [632, 492.1], [655, 487.0], [689, 480.0]],
   },
   {
     a: 'mumbai', b: 'peking', steps: 6, type: 'sea',
-    via: [[711, 536], [774, 552], [786, 572], [806, 486], [823, 418], [844, 343], [844, 314]],
+    via: [[711, 513.4], [774, 519.7], [786, 527.4], [806, 494.0], [823, 467.6], [844, 438.4], [844, 427.1]],
   },
-  { a: 'peking', b: 'sydney', steps: 6, type: 'sea', via: [[861, 393], [889, 500], [911, 629], [928, 700], [932, 762]] },
+  { a: 'peking', b: 'sydney', steps: 6, type: 'sea', via: [[861, 457.8], [889, 499.4], [911, 549.6], [928, 577.2], [932, 601.3]] },
   {
     a: 'mumbai', b: 'sydney', steps: 6, type: 'sea',
-    via: [[711, 536], [740, 650], [778, 771], [817, 843], [875, 857], [911, 843]],
+    via: [[711, 513.4], [740, 557.8], [778, 604.8], [817, 632.8], [875, 638.3], [911, 632.8]],
   },
 ];
 
@@ -2049,7 +2064,8 @@ const MAAILMA = {
   edges: WORLD_EDGES,
   airRoutes: WORLD_AIR_ROUTES,
   islands: [],
-  minCityDistance: 90,
+  // Oikeassa mittakaavassa esimerkiksi Kairo ja Moskova ovat aidosti lähekkäin.
+  minCityDistance: 70,
 
   tokens: {
     types: themedTokenTypes({ star: { name: 'Maailman tähti' } }),
@@ -2105,23 +2121,23 @@ const MAAILMA = {
 
   decor: {
     mapLabel: 'MAAILMA',
-    mapLabelPos: { x: 140, y: 900 },
-    compass: { x: 85, y: 570, r: 58 },
+    mapLabelPos: { x: 140, y: 655.0 },
+    compass: { x: 85, y: 526.7, r: 58 },
     waveSkip: [
-      { x: 417, y: 393, r: 90 },
-      { x: 736, y: 857, r: 100 },
-      { x: 140, y: 900, r: 130 },
+      { x: 417, y: 457.8, r: 90 },
+      { x: 736, y: 638.3, r: 100 },
+      { x: 140, y: 655.0, r: 130 },
     ],
-    ship: { x: 417, y: 393 },
-    serpent: { x: 736, y: 857 },
+    ship: { x: 417, y: 457.8 },
+    serpent: { x: 736, y: 638.3 },
     // Nopan lepopaikka: Tyynimeri laudan vasemmassa laidassa.
     dieSpot: { x: 0.08, y: 0.62 },
     // Pohjoisessa vuoria ja tuntureita, keskivyöhykkeellä metsää,
     // tropiikissa aavikoita ja etelässä taas metsää.
     terrainBands: [
-      { maxY: 250, kind: 'mountains' },
-      { maxY: 470, kind: 'trees' },
-      { maxY: 620, kind: 'dunes' },
+      { maxY: 402.2, kind: 'mountains' },
+      { maxY: 487.8, kind: 'trees' },
+      { maxY: 546.1, kind: 'dunes' },
       { maxY: Infinity, kind: 'trees' },
     ],
   },
@@ -4359,13 +4375,15 @@ const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Dublin on Irlannin pääkaupunki ja saaren suurin kaupunki.',
       hint: 'Maata kutsutaan smaragdisaareksi.',
+      source: 'https://fi.wikipedia.org/wiki/Dublin',
     },
     {
-      q: 'Mikä on Irlannin toinen virallinen kieli englannin rinnalla?',
-      options: ['iiri', 'kymri', 'bretoni', 'skotti'],
+      q: 'Mikä on Irlannin ensimmäinen virallinen kieli?',
+      options: ['iiri', 'englanti', 'kymri', 'bretoni'],
       correct: 0,
-      fact: 'Iiri on kelttiläinen kieli, jota opetetaan kaikissa Irlannin kouluissa. Sitä puhutaan päivittäin etenkin länsirannikon gaeltacht-alueilla.',
+      fact: 'Iiri on Irlannin kansalliskieli ja ensimmäinen virallinen kieli, englanti toinen. Iiriä puhutaan päivittäin etenkin länsirannikon gaeltacht-alueilla.',
       hint: 'Kielen nimi on sama kuin maan nimi lyhennettynä.',
+      source: 'https://fi.wikipedia.org/wiki/Irlanti',
     },
     {
       q: 'Mikä joki virtaa Dublinin halki?',
@@ -4374,6 +4392,7 @@ const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Liffey laskee Dublinin kohdalla Irlanninmereen. Shannon on Irlannin pisin joki, mutta se virtaa lännempänä.',
       hint: 'Joen nimi alkaa L-kirjaimella.',
+      source: 'https://fi.wikipedia.org/wiki/Dublin',
     },
   ],
 
@@ -4392,6 +4411,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Castle Rock on tulivuoren jäänne, jonka jäätikkö hioi jyrkäksi kallioksi.',
       hint: 'Kallio syntyi kauan sitten sulasta kivestä.',
+      source: 'https://en.wikipedia.org/wiki/Edinburgh_Castle',
     },
     {
       q: 'Mikä Edinburghissa elokuussa järjestettävä tapahtuma on maailman suurin esittävän taiteen festivaali?',
@@ -4400,6 +4420,7 @@ const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Edinburgh Festival Fringe kokoaa elokuussa tuhansia esityksiä eri puolilta maailmaa.',
       hint: 'Nimi tarkoittaa englanniksi reunaa.',
+      source: 'https://en.wikipedia.org/wiki/Edinburgh_Festival_Fringe',
     },
   ],
 
@@ -4411,6 +4432,7 @@ const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Seine halkoo Pariisin ja kiertää keskellä olevan Cité-saaren.',
       hint: 'Joen nimi alkaa S-kirjaimella.',
+      source: 'https://fi.wikipedia.org/wiki/Pariisi',
     },
     {
       q: 'Mitä varten Eiffel-torni alun perin rakennettiin?',
@@ -4418,6 +4440,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Torni valmistui vuoden 1889 maailmannäyttelyyn ja oli aikanaan maailman korkein rakennus.',
       hint: 'Tapahtuma esitteli maailmalle tekniikan uutuuksia.',
+      source: 'https://fi.wikipedia.org/wiki/Eiffel-torni',
     },
     {
       q: 'Mikä on Ranskan kansallispäivä?',
@@ -4425,6 +4448,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Päivä muistuttaa Bastiljin valtauksesta vuonna 1789, Ranskan suuren vallankumouksen alusta.',
       hint: 'Päivä on keskellä kesää.',
+      source: 'https://fi.wikipedia.org/wiki/Bastiljin_valtaus',
     },
   ],
 
@@ -4436,6 +4460,7 @@ const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Bordeaux’n ympärillä on tuhansia viinitiloja, ja alue on yksi maailman tunnetuimmista viinialueista.',
       hint: 'Tuote tehdään rypäleistä.',
+      source: 'https://fi.wikipedia.org/wiki/Bordeaux',
     },
     {
       q: 'Minkä valtameren rannikolla Bordeaux sijaitsee?',
@@ -4451,6 +4476,7 @@ const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Dune du Pilat kohoaa yli sadan metrin korkeuteen Atlantin rannalla ja siirtyy tuulen mukana hiukan joka vuosi.',
       hint: 'Dyynin nimi alkaa samalla kirjaimella kuin Pariisi.',
+      source: 'https://en.wikipedia.org/wiki/Dune_of_Pilat',
     },
   ],
 
@@ -4469,6 +4495,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Järistys ja sen aiheuttama hyökyaalto tuhosivat suuren osan kaupungista. Keskusta rakennettiin sen jälkeen uudelleen suoraan ruutukaavaan.',
       hint: 'Maa tärisi ja meri nousi perässä.',
+      source: 'https://fi.wikipedia.org/wiki/Lissabon',
     },
     {
       q: 'Mitä portugalilaista laulutyyliä Lissabonissa kuullaan?',
@@ -4477,6 +4504,7 @@ const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Fado on haikea laulutyyli, joka on Unescon aineettoman kulttuuriperinnön luettelossa.',
       hint: 'Nimi tarkoittaa portugaliksi kohtaloa.',
+      source: 'https://fi.wikipedia.org/wiki/Fado',
     },
   ],
 
@@ -4495,6 +4523,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Pradossa on laaja kokoelma espanjalaista maalaustaidetta, muun muassa Velázquezia ja Goyaa.',
       hint: 'Museon nimi tarkoittaa espanjaksi niittyä.',
+      source: 'https://fi.wikipedia.org/wiki/Madrid',
     },
     {
       q: 'Mikä tekee Madridista erityisen Euroopan suurten pääkaupunkien joukossa?',
@@ -4506,8 +4535,9 @@ const EUROPE_QUESTIONS = {
       ],
       correct: 0,
       level: 3,
-      fact: 'Madrid on noin 650 metrin korkeudessa ylätasangolla — Euroopan suurista pääkaupungeista korkeimmalla.',
+      fact: 'Madrid on 655 metrin korkeudessa ylätasangolla. Euroopan pääkaupungeista vain pikkuruinen Andorra la Vella on korkeammalla.',
       hint: 'Vastaus liittyy siihen, kuinka ylhäällä kaupunki on.',
+      source: 'https://fi.wikipedia.org/wiki/Madrid',
     },
   ],
 
@@ -4563,6 +4593,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Anne Frank kirjoitti päiväkirjaansa perheen piilopaikassa toisen maailmansodan aikana. Talo on nykyään museo.',
       hint: 'Päiväkirjan kirjoitti nuori tyttö.',
+      source: 'https://fi.wikipedia.org/wiki/Anne_Frank',
     },
   ],
 
@@ -4581,6 +4612,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Berliinin muuri erotti kaupungin itä- ja länsiosat 28 vuodeksi. Se avattiin marraskuussa 1989.',
       hint: 'Rakennelma oli betonia ja piikkilankaa.',
+      source: 'https://fi.wikipedia.org/wiki/Berliinin_muuri',
     },
     {
       q: 'Mikä on Berliinin tunnetuin portti?',
@@ -4588,6 +4620,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Brandenburgin portti valmistui 1791 ja on Saksan yhdistymisen tunnetuin symboli.',
       hint: 'Portti on nimetty ympäröivän maakunnan mukaan.',
+      source: 'https://fi.wikipedia.org/wiki/Brandenburgin_portti',
     },
   ],
 
@@ -4604,16 +4637,18 @@ const EUROPE_QUESTIONS = {
       q: 'Mikä on Prahan kuuluisin silta?',
       options: ['Kaarlensilta', 'Rialto', 'Ponte Vecchio', 'Tower Bridge'],
       correct: 0,
-      fact: 'Kaarlensilta valmistui 1300-luvulla, ja sen kaiteita reunustaa kolmisenkymmentä patsasta.',
+      fact: 'Sillan rakentaminen alkoi 1357 ja se valmistui vasta 1402. Kaiteita reunustaa kolmisenkymmentä patsasta.',
       hint: 'Silta on nimetty kuninkaan mukaan.',
+      source: 'https://en.wikipedia.org/wiki/Charles_Bridge',
     },
     {
       q: 'Mitä Prahan raatihuoneen kuuluisa kello näyttää tavallisen kellonajan lisäksi?',
       options: ['tähtitieteellisiä tietoja', 'säätilan', 'junien lähtöajat', 'vuoroveden'],
       correct: 0,
       level: 3,
-      fact: 'Vuonna 1410 valmistunut Orloj näyttää auringon ja kuun aseman sekä vanhan ajanlaskun. Se on maailman vanhin yhä toimiva laatuaan.',
+      fact: 'Orlojin vanhin osa, kellokoneisto ja tähtitieteellinen taulu, on vuodelta 1410.',
       hint: 'Kello kertoo taivaankappaleista.',
+      source: 'https://en.wikipedia.org/wiki/Prague_astronomical_clock',
     },
   ],
 
@@ -4632,6 +4667,7 @@ const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Tonava on Euroopan toiseksi pisin joki ja virtaa kymmenen maan halki.',
       hint: 'Joesta on tehty kuuluisa valssi.',
+      source: 'https://fi.wikipedia.org/wiki/Tonava',
     },
     {
       q: 'Minkä maan pääkaupunki Wien on?',
@@ -4665,6 +4701,7 @@ const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Unkari on suomen ja viron kaukainen sukukieli, vaikka sanastot ovat ehtineet erkaantua kauas toisistaan.',
       hint: 'Kieli on suomen kaukainen sukulainen.',
+      source: 'https://en.wikipedia.org/wiki/Hungarian_language',
     },
   ],
 
@@ -4688,6 +4725,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Sodassa tuhoutunut vanhakaupunki rakennettiin uudelleen maalausten ja valokuvien avulla. Se on Unescon maailmanperintökohde.',
       hint: 'Kaupunki palautettiin ennalleen vanhojen kuvien avulla.',
+      source: 'https://fi.wikipedia.org/wiki/Varsova',
     },
     {
       q: 'Kuka Varsovan seudulla varttunut säveltäjä tunnetaan pianomusiikistaan?',
@@ -4695,6 +4733,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Chopin vietti nuoruutensa Varsovassa ja sävelsi lähes kaiken musiikkinsa pianolle.',
       hint: 'Säveltäjän mukaan on nimetty Varsovan lentoasema.',
+      source: 'https://fi.wikipedia.org/wiki/Fryderyk_Chopin',
     },
   ],
 
@@ -4705,6 +4744,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Mont Blanc kohoaa noin 4 800 metriin Ranskan ja Italian rajalla.',
       hint: 'Nimi tarkoittaa ranskaksi valkoista vuorta.',
+      source: 'https://fi.wikipedia.org/wiki/Mont_Blanc',
     },
     {
       q: 'Mikä muovasi Alppien laaksot U-kirjaimen muotoisiksi?',
@@ -4761,6 +4801,7 @@ const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Vatikaanivaltio on pinta-alaltaan maailman pienin itsenäinen valtio.',
       hint: 'Valtiota johtaa paavi.',
+      source: 'https://fi.wikipedia.org/wiki/Vatikaanivaltio',
     },
     {
       q: 'Mihin Colosseumia käytettiin antiikin aikana?',
@@ -4768,6 +4809,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Colosseum valmistui vuonna 80 jaa., ja siihen mahtui kymmeniätuhansia katsojia.',
       hint: 'Yleisö tuli katsomaan esityksiä.',
+      source: 'https://fi.wikipedia.org/wiki/Colosseum',
     },
     {
       q: 'Mikä oli Rooman valtakunnan hallintokieli?',
@@ -4780,11 +4822,12 @@ const EUROPE_QUESTIONS = {
 
   sisilia: [
     {
-      q: 'Mikä Euroopan korkein toimiva tulivuori sijaitsee Sisiliassa?',
+      q: 'Mikä Euroopan suurin toimiva tulivuori sijaitsee Sisiliassa?',
       options: ['Etna', 'Vesuvius', 'Stromboli', 'Hekla'],
       correct: 0,
-      fact: 'Etna kohoaa yli 3 300 metriin ja purkautuu useita kertoja vuosikymmenessä.',
+      fact: 'Etna on Euroopan suurin toimiva tulivuori ja yksi maailman aktiivisimmista. Se kohoaa yli 3 300 metriin.',
       hint: 'Nimi on lyhyt ja alkaa E-kirjaimella.',
+      source: 'https://fi.wikipedia.org/wiki/Etna',
     },
     {
       q: 'Minkä maan osa Sisilia on?',
@@ -4793,6 +4836,7 @@ const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Sisilia on Italian suurin saari ja yksi maan itsehallintoalueista.',
       hint: 'Maa on saappaan muotoinen.',
+      source: 'https://fi.wikipedia.org/wiki/Sisilia',
     },
     {
       q: 'Mitä Sisiliassa kasvatetaan runsaasti?',
@@ -4844,6 +4888,7 @@ const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Kreeta on Kreikan suurin saari ja Välimeren viidenneksi suurin.',
       hint: 'Maan pääkaupunki on Ateena.',
+      source: 'https://fi.wikipedia.org/wiki/Kreeta',
     },
     {
       q: 'Mikä on kreetalaisen ruokavalion perusta?',
@@ -5013,6 +5058,7 @@ const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Volga virtaa noin 3 500 kilometriä ja laskee Kaspianmereen. Kanavat yhdistävät Moskovan siihen.',
       hint: 'Joki laskee Kaspianmereen.',
+      source: 'https://fi.wikipedia.org/wiki/Volga',
     },
   ],
 
@@ -5130,6 +5176,7 @@ const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Kööpenhamina on Tanskan pääkaupunki ja sijaitsee Sjællandin saarella.',
       hint: 'Maa on Pohjoismaista eteläisin.',
+      source: 'https://fi.wikipedia.org/wiki/K%C3%B6%C3%B6penhamina',
     },
     {
       q: 'Kenen sadun mukaan Kööpenhaminan tunnetuin patsas on tehty?',
@@ -5343,7 +5390,7 @@ const EUROPE_FACTS = {
     'Kaupunki tunnettiin ennen nimillä Bysantion ja Konstantinopoli, ja se oli kahden valtakunnan pääkaupunki lähes 1 600 vuoden ajan.',
   ],
   dublin: [
-    'Dublinin nimi tulee iirin sanoista dubh linn, musta lammikko, joka oli viikinkien satamapaikka Liffey-joen mutkassa.',
+    { text: 'Dublinin nimi tulee iirin sanoista dubh linn, musta lammikko, joka oli viikinkien satamapaikka Liffey-joen mutkassa.', source: 'https://fi.wikipedia.org/wiki/Dublin' },
     'Irlannin kansallissymboli on kolmiapila, ja maan lempinimi smaragdisaari kertoo runsaista sateista ja vihreistä laitumista.',
   ],
   edinburgh: [
@@ -5380,14 +5427,14 @@ const EUROPE_FACTS = {
   ],
   praha: [
     'Prahan linna on pinta-alaltaan yksi maailman suurimmista linnoista ja toimii yhä Tšekin presidentin virka-asuntona.',
-    'Tšekissä juodaan asukasta kohden enemmän olutta kuin missään muualla maailmassa; ensimmäinen panimo perustettiin jo 993.',
+    { text: 'Tšekissä juodaan asukasta kohden enemmän olutta kuin missään muualla maailmassa; ensimmäinen panimo perustettiin jo 993.', source: 'https://fi.wikipedia.org/wiki/T%C5%A1ekki' },
   ],
   wien: [
-    'Wienin kahvilakulttuuri on Unescon aineettoman kulttuuriperinnön luettelossa: kahvilassa saa istua tuntikausia yhden kupillisen kanssa.',
+    { text: 'Wienin kahvilakulttuuri on ollut vuodesta 2011 Itävallan kansallisessa aineettoman kulttuuriperinnön luettelossa: kahvilassa saa istua tuntikausia yhden kupillisen kanssa.', source: 'https://en.wikipedia.org/wiki/Viennese_caf%C3%A9' },
     'Wienin juomavesi tulee putkia pitkin suoraan Alpeilta, ja vesijohto valmistui jo vuonna 1873.',
   ],
   budapest: [
-    'Budapestin maanalainen on Manner-Euroopan vanhin metro. Se avattiin vuonna 1896 ja on Unescon maailmanperintökohde.',
+    { text: 'Budapestin maanalainen on Manner-Euroopan vanhin metro. Se avattiin vuonna 1896 ja on Unescon maailmanperintökohde.', source: 'https://fi.wikipedia.org/wiki/Budapestin_metro' },
     'Tonava jakaa kaupungin: Buda on kukkulainen ja rauhallinen, Pest tasainen ja vilkas.',
   ],
   varsova: [
@@ -5395,16 +5442,16 @@ const EUROPE_FACTS = {
     'Puolan kieli kirjoitetaan latinalaisin kirjaimin, mutta siinä on omia merkkejä kuten ł, ż ja ę.',
   ],
   alpit: [
-    'Alppien halki kulkee Gotthardin pohjatunneli, joka on yli 57 kilometriä pitkä — maailman pisin rautatietunneli.',
+    { text: 'Alppien halki kulkee Gotthardin pohjatunneli, joka on yli 57 kilometriä pitkä — maailman pisin rautatietunneli.', source: 'https://fi.wikipedia.org/wiki/Gotthardin_pohjatunneli' },
     'Alppien jäätiköt ovat sulaneet nopeasti, ja niiden reunoilta on paljastunut esineitä, jotka ovat olleet jään alla tuhansia vuosia.',
   ],
   milano: [
-    'Milanon tuomiokirkon rakentaminen kesti lähes kuusi vuosisataa, ja sen katolla on yli kolmetuhatta patsasta.',
+    { text: 'Milanon tuomiokirkon rakentaminen kesti lähes kuusi vuosisataa: se alkoi vuonna 1386 ja viimeiset yksityiskohdat valmistuivat 1965.', source: 'https://en.wikipedia.org/wiki/Milan_Cathedral' },
     'Milano on Italian talouden keskus: siellä sijaitsevat maan pörssi ja suuri osa muoti- ja muotoilualan yrityksistä.',
   ],
   rooma: [
     'Roomassa on yhä käytössä antiikin aikana rakennettuja vesijohtoja, ja kaupungin kaduilla on tuhansia ilmaisia juomavesihanoja.',
-    'Pantheonin betonikupoli on lähes kahden vuosituhannen jälkeen yhä maailman suurin ilman terästä rakennettu kupoli.',
+    { text: 'Pantheonin betonikupoli on lähes kahden vuosituhannen jälkeen yhä maailman suurin ilman terästä rakennettu kupoli.', source: 'https://en.wikipedia.org/wiki/Pantheon,_Rome' },
   ],
   sisilia: [
     'Sisilia on ollut vuorollaan kreikkalaisten, roomalaisten, arabien ja normannien hallussa, ja kaikki näkyvät yhä saaren ruoassa ja rakennuksissa.',
@@ -5467,8 +5514,8 @@ const EUROPE_FACTS = {
     'Saamen kieliä on useita, ja niissä on kymmeniä sanoja lumelle sen mukaan, millaista hangella on kulkea.',
   ],
   tromssa: [
-    'Tromssassa on maailman pohjoisin yliopisto, ja kaupungissa toimii myös oma panimo ja katedraali.',
-    'Tromssan kaupunki sijaitsee saarella, ja mantereelle pääsee vuonon yli kaartuvaa siltaa pitkin.',
+    { text: 'Tromssassa on maailman pohjoisin yliopisto, ja kaupungissa toimii myös oma panimo ja katedraali.', source: 'https://en.wikipedia.org/wiki/University_of_Troms%C3%B8' },
+    { text: 'Tromssan kaupunki sijaitsee saarella, ja mantereelle pääsee vuonon yli kaartuvaa siltaa pitkin.', source: 'https://fi.wikipedia.org/wiki/Tromssa' },
   ],
 };
 
@@ -9495,6 +9542,9 @@ class UI {
 
     svg.addEventListener('pointerdown', (event) => {
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      // Eleen ajaksi mustesuodattimet pois: ne piirretään uudelleen joka
+      // ruudunpäivityksellä ja tekevät raahauksesta nykivän.
+      svg.classList.add('panning');
       if (pointers.size === 1) this.panned = false;
       if (pointers.size === 2) {
         const [a, b] = [...pointers.values()];
@@ -9531,8 +9581,11 @@ class UI {
     const release = (event) => {
       pointers.delete(event.pointerId);
       if (pointers.size < 2) pinchStart = null;
-      // Ote irtosi: kirjoitetaan lopullinen näkymä.
-      if (pointers.size === 0) this.fitViewBox();
+      // Ote irtosi: kirjoitetaan lopullinen näkymä ja suodattimet takaisin.
+      if (pointers.size === 0) {
+        svg.classList.remove('panning');
+        this.fitViewBox();
+      }
     };
     svg.addEventListener('pointerup', release);
     svg.addEventListener('pointercancel', release);
@@ -10836,7 +10889,7 @@ class UI {
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.10';
+const APP_VERSION = '2026-07-26.11';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');

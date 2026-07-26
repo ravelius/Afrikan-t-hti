@@ -154,6 +154,18 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 
 .board-hint:empty { display: none; }
 
+/* Raahauksen ja zoomauksen aikana mustesuodattimet ja paperin kuitupinta
+   jätetään pois: selaimen ei tarvitse laskea niitä uudelleen joka
+   ruudunpäivityksellä, jolloin kartta liikkuu sulavasti myös puhelimessa. */
+#board.panning .landmass,
+#board.panning .waves,
+#board.panning .terrain { filter: none !important; }
+
+#board.panning .grain { display: none; }
+
+/* Oma piirtokerros vain eleen ajaksi — pysyvänä se veisi turhaan muistia. */
+#board.panning { will-change: transform; }
+
 /* --- laudalla lepäävä 3D-noppa --- */
 
 .die-layer {
