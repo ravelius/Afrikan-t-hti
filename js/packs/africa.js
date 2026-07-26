@@ -40,7 +40,11 @@ const AFRICA_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const AFRICA_CITIES = [
   { id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true },
-  { id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true },
+  {
+    id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true,
+    // Sama kaupunki on myös Lähi-idän laudalla: vaelluksessa tästä jatketaan.
+    links: [{ pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' }],
+  },
 
   { id: 'tripoli', name: 'Tripoli', x: 443, y: 89 },
   { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },

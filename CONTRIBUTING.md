@@ -65,9 +65,16 @@ Vaiheet:
    tasan yksi.
 6. **Kirjoita sisältö:** vähintään 2 kysymystä joka aarrekaupungille, vähintään
    10 yleiskysymystä ja vähintään 2 "Tiesitkö että…" -tietoa joka kaupungille.
-7. **Rekisteröi paketti** lisäämällä se `js/pack.js`-tiedoston `PACKS`-listaan
+7. **Linkitä lauta maailmaan.** Kaupungille voi antaa `links`-listan, joka
+   yhdistää sen toisen laudan kaupunkiin (esim. Kairo on sekä Afrikan että
+   Lähi-idän laudalla, ja Lähi-idän Istanbulista laskeudutaan Istanbulin
+   kaupunkilaudalle). Vaellustilassa pelaaja voi siirtyä linkkiä pitkin.
+   Kaupunkilauta tehdään täsmälleen samalla paketilla — "kaupungit" ovat
+   silloin kaupunginosia ja laivareitit vaikkapa lauttoja (malli:
+   `js/packs/istanbul.js`).
+8. **Rekisteröi paketti** lisäämällä se `js/pack.js`-tiedoston `PACKS`-listaan
    sekä tiedostolistoihin `sw.js` ja `tools/build-standalone.mjs`.
-8. **Aja testit:** `npm test`. Testit ajetaan automaattisesti jokaiselle
+9. **Aja testit:** `npm test`. Testit ajetaan automaattisesti jokaiselle
    paketille: laudan yhtenäisyys, laattamäärät, kysymyspankin eheys,
    laivareittien sijainti vedellä ja kokonainen bottien pelaama peli.
 

@@ -4,8 +4,9 @@
 
 import { AFRICA } from './packs/africa.js';
 import { MIDDLE_EAST } from './packs/middleeast.js';
+import { ISTANBUL } from './packs/istanbul.js';
 
-export const PACKS = [AFRICA, MIDDLE_EAST];
+export const PACKS = [AFRICA, MIDDLE_EAST, ISTANBUL];
 
 export function packById(id) {
   return PACKS.find((pack) => pack.id === id) ?? PACKS[0];

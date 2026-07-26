@@ -11,6 +11,7 @@ export const HINT_PRICE = 40; // sanallinen vihje kysymykseen
 export const QUIZ_SECONDS = 45; // vastausaika tiimalasin verran
 export const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 export const HARD_BONUS = 100; // palkkio vaikeasta kysymyksestä oikein vastattaessa
+export const STAR_PRIZE = 2000; // tähden arvo vaellustilassa, jossa peli ei pääty
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 export function questionLevel(question) {
@@ -31,12 +32,14 @@ export function mulberry32(seed) {
 
 export class Game {
   /**
-   * @param {{players: Array<{name, color, isBot, start}>, pack?: object, rng?: () => number}} opts
-   *   pack = karttapaketti (lauta, laatat, kysymykset); oletuksena Afrikka.
+   * @param {{players: Array<{name, color, isBot, start}>, pack?: object, roaming?: boolean, rng?: () => number}} opts
+   *   pack = aloituslauta; oletuksena Afrikka.
+   *   roaming = vaellustila: ei voittoehtoa, ja porttikaupungeista pääsee
+   *   toisille laudoille. Yksin pelattaessa vaellus on aina päällä.
    */
-  constructor({ players, pack = packById('africa'), seed = Math.floor(Math.random() * 2 ** 32), rng }) {
-    if (players.length < 2 || players.length > 4) {
-      throw new Error('Pelaajia pitää olla 2–4');
+  constructor({ players, pack = packById('africa'), roaming, seed = Math.floor(Math.random() * 2 ** 32), rng }) {
+    if (players.length < 1 || players.length > 4) {
+      throw new Error('Pelaajia pitää olla 1–4');
     }
     // Arvonnat tulevat siemenestä ja niiden määrä lasketaan, jotta tallennettu
     // peli voidaan palauttaa täsmälleen samaan tilanteeseen.
@@ -47,10 +50,12 @@ export class Game {
       this.rngCalls++;
       return source();
     };
-    this.pack = pack;
-    this.tokenTypes = pack.tokens.types;
-    this.board = buildBoard(pack.cities, pack.edges);
-    this.airRoutes = pack.airRoutes;
+    this.roaming = roaming ?? players.length === 1;
+    this.rootPackId = pack.id;
+    // Jokainen lauta on oma maailmansa: laatat ja löydöt säilyvät, vaikka
+    // pelaaja käy välillä toisella laudalla.
+    this.worlds = new Map();
+    this.enterWorld(pack);
 
     this.players = players.map((p, i) => ({
       id: i,
@@ -58,6 +63,7 @@ export class Game {
       color: p.color,
       isBot: !!p.isBot,
       start: p.start,
+      packId: pack.id,
       // 'easy' = helpot kysymykset (esim. lapsipelaajalle), 'normal' = tavalliset
       quizLevel: p.quizLevel === 'easy' ? 'easy' : 'normal',
       money: START_MONEY,
@@ -66,14 +72,6 @@ export class Game {
       horseshoes: 0,
       finds: [], // löydetyt laatat tyyppeinä
     }));
-
-    const tokenCities = pack.cities.filter((c) => !c.start).map((c) => c.id);
-    const pile = createTokenPile(pack.tokens.counts, this.rng);
-    if (pile.length !== tokenCities.length) {
-      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${tokenCities.length}`);
-    }
-    this.tokens = new Map(tokenCities.map((city, i) => [city, pile[i]]));
-    this.revealed = new Map(); // kaupunki -> laattatyyppi
 
     this.current = 0;
     // 'action' = valitse matkustustapa, 'roll' = heitä noppa, 'move' = valitse
@@ -87,20 +85,84 @@ export class Game {
     this.quiz = null;
     this.usedQuestions = new Set();
     this.lastPath = null;
-    this.starFound = false;
-    this.starCity = null;
     this.winner = null;
     this.turnCount = 1;
     this.log = [];
     this.events = []; // näytölle animoitavat tapahtumat
     this.say(null, pack.texts.intro);
+    if (this.roaming) {
+      this.say(null, 'Vaellus: peli ei pääty — kerää löytöjä ja jatka porttikaupungeista uusille laudoille.');
+    }
     this.beginTurn();
+  }
+
+  /** Luo laudan tilan, kun sille saavutaan ensimmäistä kertaa. */
+  enterWorld(pack) {
+    if (this.worlds.has(pack.id)) return this.worlds.get(pack.id);
+    const tokenCities = pack.cities.filter((c) => !c.start).map((c) => c.id);
+    const pile = createTokenPile(pack.tokens.counts, this.rng);
+    if (pile.length !== tokenCities.length) {
+      throw new Error(`Laattoja ${pile.length}, kaupunkeja ${tokenCities.length}`);
+    }
+    const world = {
+      pack,
+      board: buildBoard(pack.cities, pack.edges),
+      tokens: new Map(tokenCities.map((city, i) => [city, pile[i]])),
+      revealed: new Map(), // kaupunki -> laattatyyppi
+      starFound: false,
+      starCity: null,
+    };
+    this.worlds.set(pack.id, world);
+    return world;
   }
 
   // --- apurit -------------------------------------------------------------
 
   get player() {
     return this.players[this.current];
+  }
+
+  /** Pelaajan lauta ja sen tila. */
+  worldOf(player = this.player) {
+    return this.worlds.get(player.packId);
+  }
+
+  // Vuorossa olevan pelaajan lauta: muu koodi (säännöt, piirto, botit) näkee
+  // pelin aina yhden laudan pelinä näiden läpi.
+  get world() {
+    return this.worldOf();
+  }
+
+  get pack() {
+    return this.world.pack;
+  }
+
+  get board() {
+    return this.world.board;
+  }
+
+  get tokens() {
+    return this.world.tokens;
+  }
+
+  get revealed() {
+    return this.world.revealed;
+  }
+
+  get tokenTypes() {
+    return this.pack.tokens.types;
+  }
+
+  get airRoutes() {
+    return this.pack.airRoutes;
+  }
+
+  get starFound() {
+    return this.world.starFound;
+  }
+
+  set starFound(value) {
+    this.world.starFound = value;
   }
 
   /** Lisää tapahtuman, jonka käyttöliittymä näyttää hetkeksi kartan päällä. */
@@ -125,18 +187,19 @@ export class Game {
   }
 
   cityOf(player = this.player) {
-    return player.pos.type === 'city' ? this.board.cityById.get(player.pos.city) : null;
+    const board = this.worldOf(player).board;
+    return player.pos.type === 'city' ? board.cityById.get(player.pos.city) : null;
   }
 
   tokenHere(player = this.player) {
     const city = this.cityOf(player);
-    return city && this.tokens.has(city.id) ? city : null;
+    return city && this.worldOf(player).tokens.has(city.id) ? city : null;
   }
 
-  routeName(edgeIdValue) {
-    const e = this.board.edgeById.get(edgeIdValue);
-    const a = this.board.cityById.get(e.a).name;
-    const b = this.board.cityById.get(e.b).name;
+  routeName(edgeIdValue, board = this.board) {
+    const e = board.edgeById.get(edgeIdValue);
+    const a = board.cityById.get(e.a).name;
+    const b = board.cityById.get(e.b).name;
     return `${a}–${b}`;
   }
 
@@ -176,7 +239,46 @@ export class Game {
       roll: this.phase === 'roll',
       quiz: this.phase === 'offer',
       fly: this.phase === 'action' ? this.airportDestinations() : [],
+      gateways: this.gatewayOptions(),
     };
+  }
+
+  /**
+   * Porttikaupungit: vaelluksessa laudalta toiselle siirrytään kaupungeista,
+   * joilla on linkki (esim. Kairo on sekä Afrikan että Lähi-idän laudalla).
+   */
+  gatewayOptions() {
+    if (!this.roaming || this.phase !== 'action') return [];
+    const city = this.cityOf();
+    if (!city || !city.links) return [];
+    return city.links.map((link, index) => ({ ...link, index }));
+  }
+
+  /** Siirtyy porttikaupungista toiselle laudalle. Vie koko vuoron. */
+  actionGateway(index) {
+    const link = this.gatewayOptions()[index];
+    if (!link) return { ok: false, error: 'Täältä ei ole siirtymää toiselle laudalle' };
+    const p = this.player;
+    const pack = packById(link.pack);
+    this.enterWorld(pack);
+    p.packId = pack.id;
+    p.pos = { type: 'city', city: link.city };
+    this.lastPath = null;
+    this.say(p.id, `${p.name} jatkoi matkaa: ${link.label}.`);
+    this.emit('flight', link.label, { icon: '🧭' });
+    this.endTurn();
+    return { ok: true };
+  }
+
+  /** Voittoruudusta voi jatkaa vaellusta: peli ei enää pääty. */
+  continueRoaming() {
+    if (this.phase !== 'over' || !this.winner) return { ok: false, error: 'Peli on kesken' };
+    this.roaming = true;
+    this.winner = null;
+    this.phase = 'action';
+    this.say(null, 'Retki jatkuu! Peli ei enää pääty — kerätkää löytöjä ja tutkikaa maailmaa porttikaupunkien kautta.');
+    this.endTurn();
+    return { ok: true };
   }
 
   // --- vuoron kulku -------------------------------------------------------
@@ -541,14 +643,20 @@ export class Game {
     switch (type) {
       case 'star':
         p.hasStar = true;
-        this.starFound = true;
-        this.starCity = cityId;
-        this.say(p.id, this.pack.texts.starFound(p.name, city.name));
-        this.say(null, this.pack.texts.starChase);
-        this.emit('treasure', this.pack.texts.starToast, {
-          token: type,
-          sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
-        });
+        this.world.starFound = true;
+        this.world.starCity = cityId;
+        if (this.roaming) {
+          p.money += STAR_PRIZE;
+          this.say(p.id, `★ ${p.name} löysi aarteen ${token.name} kaupungista ${city.name} — arvo ${STAR_PRIZE} puntaa!`);
+          this.emit('treasure', this.pack.texts.starToast, { token: type, sub: `+${STAR_PRIZE} puntaa` });
+        } else {
+          this.say(p.id, this.pack.texts.starFound(p.name, city.name));
+          this.say(null, this.pack.texts.starChase);
+          this.emit('treasure', this.pack.texts.starToast, {
+            token: type,
+            sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
+          });
+        }
         break;
       case 'horseshoe':
         p.horseshoes++;
@@ -582,6 +690,7 @@ export class Game {
 
   /** Voitto: tähden tai hevosenkengän kanssa aloituskaupunkiin sen jälkeen kun tähti on löytynyt. */
   checkWin() {
+    if (this.roaming) return false;
     if (this.winner) return true;
     if (!this.starFound) return false;
     const p = this.player;
@@ -604,12 +713,19 @@ export class Game {
   toJSON() {
     return {
       version: 1,
-      packId: this.pack.id,
+      packId: this.rootPackId,
+      roaming: this.roaming,
       seed: this.seed,
       rngCalls: this.rngCalls,
       players: this.players.map((p) => ({ ...p })),
-      tokens: [...this.tokens.entries()],
-      revealed: [...this.revealed.entries()],
+      worlds: Object.fromEntries(
+        [...this.worlds].map(([id, w]) => [id, {
+          tokens: [...w.tokens.entries()],
+          revealed: [...w.revealed.entries()],
+          starFound: w.starFound,
+          starCity: w.starCity,
+        }]),
+      ),
       usedQuestions: [...this.usedQuestions],
       current: this.current,
       phase: this.phase,
@@ -618,8 +734,6 @@ export class Game {
       pendingFare: this.pendingFare,
       die: this.die,
       quiz: this.quiz,
-      starFound: this.starFound,
-      starCity: this.starCity,
       winnerId: this.winner ? this.winner.id : null,
       turnCount: this.turnCount,
       log: this.log,
@@ -642,15 +756,32 @@ export class Game {
       return source();
     };
 
-    // Vanhoissa tallennuksissa ei ole packId:tä — ne ovat Afrikka-pelejä.
-    const pack = packById(data.packId ?? 'africa');
-    game.pack = pack;
-    game.tokenTypes = pack.tokens.types;
-    game.board = buildBoard(pack.cities, pack.edges);
-    game.airRoutes = pack.airRoutes;
-    game.players = data.players.map((p) => ({ ...p }));
-    game.tokens = new Map(data.tokens);
-    game.revealed = new Map(data.revealed);
+    // Vanhoissa tallennuksissa ei ole packId:tä eikä maailmoja — ne ovat
+    // yhden laudan Afrikka-pelejä.
+    const rootPack = packById(data.packId ?? 'africa');
+    game.rootPackId = rootPack.id;
+    game.roaming = !!data.roaming;
+    game.worlds = new Map();
+    const worldsData = data.worlds ?? {
+      [rootPack.id]: {
+        tokens: data.tokens,
+        revealed: data.revealed,
+        starFound: !!data.starFound,
+        starCity: data.starCity ?? null,
+      },
+    };
+    for (const [id, w] of Object.entries(worldsData)) {
+      const pack = packById(id);
+      game.worlds.set(pack.id, {
+        pack,
+        board: buildBoard(pack.cities, pack.edges),
+        tokens: new Map(w.tokens ?? []),
+        revealed: new Map(w.revealed ?? []),
+        starFound: !!w.starFound,
+        starCity: w.starCity ?? null,
+      });
+    }
+    game.players = data.players.map((p) => ({ packId: rootPack.id, ...p }));
     game.usedQuestions = new Set(data.usedQuestions ?? []);
     game.current = data.current;
     game.phase = data.phase;
@@ -660,8 +791,6 @@ export class Game {
     game.die = data.die ?? null;
     game.quiz = data.quiz ?? null;
     game.lastPath = null;
-    game.starFound = !!data.starFound;
-    game.starCity = data.starCity ?? null;
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;
     game.log = data.log ?? [];
