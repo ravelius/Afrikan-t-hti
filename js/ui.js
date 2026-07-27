@@ -735,6 +735,16 @@ export class UI {
       });
       this.actionsEl.appendChild(gwBtn);
     }
+
+    // Tietoportti: maan lauta aukeaa pääkaupungista vaikealla kysymyksellä.
+    for (const gate of game.countryGateOptions()) {
+      const gateBtn = html('button', '', `★ ${gate.label} — vaikea kysymys`);
+      gateBtn.addEventListener('click', () => {
+        sfx.play('paper');
+        this.doAction(() => game.actionGateQuiz(gate.index));
+      });
+      this.actionsEl.appendChild(gateBtn);
+    }
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
@@ -877,7 +887,9 @@ export class UI {
 
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
-    this.quizCity.textContent = `${city.name} — ${game.player.name}${hardTag}`;
+    this.quizCity.textContent = quiz.gate
+      ? `${city.name} — portti: ${quiz.gate.label}`
+      : `${city.name} — ${game.player.name}${hardTag}`;
     // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
     if (this.typedQuizFor !== quiz) {
       this.typedQuizFor = quiz;
@@ -937,7 +949,10 @@ export class UI {
       } else {
         const found = quiz.found ? game.tokenTypes[quiz.found] : null;
         const body = html('div');
-        if (quiz.right && found) {
+        if (quiz.gate && quiz.right) {
+          body.appendChild(html('strong', '', `★ Portti aukeaa — ${quiz.gate.label}!`));
+          body.appendChild(html('span', 'muted', 'Tieto avasi tien: matka jatkuu ilmaiseksi.'));
+        } else if (quiz.right && found) {
           this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));
           body.appendChild(html('strong', '', `Löysit: ${found.name}`));
         } else if (quiz.right) {

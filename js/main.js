@@ -7,7 +7,7 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.1';
+const APP_VERSION = '2026-07-27.2';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');

@@ -852,6 +852,56 @@ test('vaellus: valitsematon lähtöpiste tallentuu ja palautuu', () => {
   assert.equal(restored.player.packId, 'southamerica');
 });
 
+test('tietoportti: vaikea kysymys avaa maan laudan ilmaiseksi', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    rng: mulberry32(71),
+  });
+  game.actionPickStart('lontoo', 0); // Euroopan laudalle
+  const p = game.player;
+  p.pos = { type: 'city', city: 'helsinki' };
+  game.phase = 'action';
+
+  // Suomen lauta ei ole rahalla ostettava portti vaan tietoportti.
+  assert.deepEqual(game.gatewayOptions().map((l) => l.pack), [], 'ei maksullista porttia Suomeen');
+  const gates = game.countryGateOptions();
+  assert.equal(gates.length, 1);
+  assert.equal(gates[0].pack, 'suomi');
+
+  // Oikea vastaus avaa portin: siirtyminen on ilmainen eikä laattoja käänny.
+  const rahaEnnen = p.money;
+  const laattojaEnnen = game.tokens.size;
+  assert.ok(game.actionGateQuiz(gates[0].index).ok);
+  assert.ok(game.quiz.gate, 'kysymys on porttikysymys');
+  game.answerQuiz(game.quiz.correct);
+  assert.equal(game.tokens.size, laattojaEnnen, 'laatta ei käänny porttikysymyksestä');
+  const closed = game.closeQuiz();
+  assert.ok(closed.gated);
+  assert.equal(p.packId, 'suomi');
+  assert.deepEqual(p.pos, { type: 'city', city: 'helsinki' });
+  assert.equal(p.money, rahaEnnen, 'portti on ilmainen');
+
+  // Väärä vastaus: portti ei aukea ja vuoro päättyy (yksinpelissä sama pelaaja).
+  const toinen = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    rng: mulberry32(72),
+  });
+  toinen.actionPickStart('lontoo', 0);
+  toinen.player.pos = { type: 'city', city: 'helsinki' };
+  toinen.phase = 'action';
+  toinen.actionGateQuiz(0);
+  toinen.answerQuiz((toinen.quiz.correct + 1) % 4);
+  toinen.closeQuiz();
+  assert.equal(toinen.player.packId, 'europe', 'väärällä vastauksella jäädään laudalle');
+
+  // Suomesta pois pääsee tavallisesta portista (manner ei ole maalauta).
+  const takaisin = game.gatewayOptions();
+  assert.equal(game.phase, 'action');
+  assert.deepEqual(takaisin.map((l) => l.pack), ['europe']);
+});
+
 test('vaellus: monen laudan peli tallentuu ja palautuu', () => {
   const game = new Game({
     players: [{ name: 'Yksin', color: '#f00', start: 'kairo' }],
@@ -963,7 +1013,10 @@ test('aarretta ei voi ostaa rahalla', () => {
   });
   assert.equal(typeof game.actionBuy, 'undefined');
   const actions = game.availableActions();
-  assert.deepEqual(Object.keys(actions).sort(), ['fly', 'gateways', 'quiz', 'roll', 'travel']);
+  assert.deepEqual(
+    Object.keys(actions).sort(),
+    ['countryGates', 'fly', 'gateways', 'quiz', 'roll', 'travel'],
+  );
   assert.ok(actions.travel.includes('land'));
   // Portit ovat käytössä myös kilpapelissä: Tangerista lennetään Espanjaan.
   assert.deepEqual(actions.gateways.map((l) => l.pack), ['europe']);

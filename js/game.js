@@ -285,6 +285,7 @@ export class Game {
       quiz: this.phase === 'offer',
       fly: this.phase === 'action' ? this.airportDestinations() : [],
       gateways: this.gatewayOptions(),
+      countryGates: this.countryGateOptions(),
     };
   }
 
@@ -299,7 +300,55 @@ export class Game {
     const city = this.cityOf();
     if (!city || !city.links) return [];
     if (this.player.money < FLIGHT_PRICE) return [];
-    return city.links.map((link, index) => ({ ...link, index }));
+    // Maakohtaisille laudoille ei lennetä rahalla, vaan portti avataan
+    // tiedolla pääkaupungissa (countryGateOptions).
+    return city.links
+      .map((link, index) => ({ ...link, index }))
+      .filter((link) => packById(link.pack).scope !== 'country');
+  }
+
+  /**
+   * Tietoportit: mantereen pääkaupungista pääsee maan omalle laudalle
+   * vastaamalla vaikeaan kysymykseen oikein. Portti on ilmainen — se
+   * avataan tiedolla, ei rahalla. Väärästä vastauksesta vuoro päättyy.
+   */
+  countryGateOptions() {
+    if (this.phase !== 'action') return [];
+    const city = this.cityOf();
+    if (!city || !city.links) return [];
+    return city.links
+      .map((link, index) => ({ ...link, index }))
+      .filter((link) => packById(link.pack).scope === 'country');
+  }
+
+  /** Avaa tietoportin kysymyksen. Kysymys on aina vaikea (taso 3). */
+  actionGateQuiz(index) {
+    if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
+    const gate = this.countryGateOptions()[index];
+    if (!gate) return { ok: false, error: 'Täällä ei ole tietoporttia' };
+    const city = this.cityOf();
+
+    const question = this.pickQuestion(city.id, 'hard');
+    const order = this.shuffledOrder(question.options.length);
+    this.quiz = {
+      cityId: city.id,
+      hard: false,
+      gate: { pack: gate.pack, city: gate.city, label: gate.label },
+      question: question.q,
+      fact: question.fact,
+      source: sourceList(question.source),
+      options: order.map((i) => question.options[i]),
+      correct: order.indexOf(question.correct),
+      hint: question.hint ?? null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
   }
 
   /** Onko kaupungista lentoja toiselle laudalle? Kartta merkitsee ne. */
@@ -538,6 +587,17 @@ export class Game {
     this.quiz.chosen = index;
     this.quiz.right = index === this.quiz.correct;
 
+    // Tietoportti: oikea vastaus avaa portin, laattoja ei käännetä.
+    if (this.quiz.gate) {
+      if (this.quiz.right) {
+        this.say(p.id, `★ ${p.name} vastasi oikein — portti aukeaa: ${this.quiz.gate.label}!`);
+      } else {
+        const oikea = this.quiz.options[this.quiz.correct];
+        this.say(p.id, `${p.name} vastasi väärin — portti ei auennut. Oikea vastaus oli "${oikea}".`);
+      }
+      return { ok: true, right: this.quiz.right };
+    }
+
     if (this.quiz.right) {
       this.say(p.id, `${p.name} vastasi oikein kaupungissa ${city.name} ja saa kääntää laatan.`);
       // Vaikean kysymyksen palkkio maksetaan ennen laatan kääntöä,
@@ -611,8 +671,23 @@ export class Game {
   /** Sulkee kysymyksen ja päättää vuoron — tai aloittaa rosvon kaksintaistelun. */
   closeQuiz() {
     if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    const gate = this.quiz.right ? this.quiz.gate : null;
     this.quiz = null;
     if (this.phase === 'over') return { ok: true };
+    // Voitettu tietoportti: siirtyminen maan laudalle on ilmainen.
+    if (gate) {
+      const p = this.player;
+      const pack = packById(gate.pack);
+      this.enterWorld(pack);
+      p.packId = pack.id;
+      p.pos = { type: 'city', city: gate.city };
+      this.lastPath = null;
+      this.say(p.id, `${p.name} astui portista: ${gate.label}.`);
+      this.emit('flight', gate.label, { icon: '★', sub: 'Tieto avasi portin' });
+      this.phase = 'action';
+      this.endTurn();
+      return { ok: true, gated: true };
+    }
     if (this.duelArmed) {
       this.duelArmed = false;
       this.beginDuel();
