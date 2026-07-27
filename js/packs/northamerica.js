@@ -308,6 +308,8 @@ export const NORTHAMERICA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Montezuman aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Montezuman aarteen kotiin ${money} punnan kanssa.`,
+    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
+    diary: 'Siirtokunnat ovat pärjänneet ilman meitä hämmentävän hyvin. Päätin olla ottamatta teekutsuja puheeksi.',
   },
 
   decor: {

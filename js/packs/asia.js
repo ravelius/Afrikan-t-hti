@@ -360,6 +360,8 @@ export const ASIA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Keisarin jadesinetin turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Keisarin jadesinetin kotiin ${money} punnan kanssa.`,
+    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
+    diary: 'Klubilla tätä mannerta kutsuttiin Itämaiksi ja odotettiin kameleita. Luotijuna ohitti odotukseni kolmensadan kilometrin tuntinopeudella.',
   },
 
   decor: {

@@ -165,6 +165,11 @@ const WORLD_CITIES = [
     id: 'losangeles', name: 'Los Angeles', x: 190, y: 438, airport: true, la: 'end', lx: -16, ly: 12,
     links: [{ pack: 'northamerica', city: 'losangeles', label: 'Pohjois-Amerikan lauta' }],
   },
+  {
+    id: 'ateena', name: 'Ateena', x: 556, y: 412, airport: true, la: 'start', lx: 16, ly: 8,
+    // Etelä-Euroopan portti: Eurooppaan pääsee myös Välimeren suunnasta.
+    links: [{ pack: 'europe', city: 'ateena', label: 'Euroopan lauta' }],
+  },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -192,6 +197,7 @@ const WORLD_EDGES = [
   },
   { a: 'peking', b: 'sydney', steps: 6, type: 'sea', via: [[861, 457.8], [889, 499.4], [911, 549.6], [928, 577.2], [932, 601.3]] },
   { a: 'peking', b: 'tokio', steps: 2, type: 'sea', via: [[850, 442], [872, 450]] },
+  { a: 'ateena', b: 'kairo', steps: 2, type: 'sea', via: [[572, 432]] },
   { a: 'mumbai', b: 'singapore', steps: 4, type: 'sea', via: [[711, 513.4], [752, 526]] },
   { a: 'singapore', b: 'sydney', steps: 5, type: 'sea', via: [[855, 528], [888, 548], [925, 578], [933, 602]] },
   { a: 'kapkaupunki', b: 'rio', steps: 6, type: 'sea', via: [[500, 648], [430, 632]] },
@@ -220,6 +226,8 @@ const WORLD_AIR_ROUTES = [
   { a: 'mumbai', b: 'singapore' },
   { a: 'singapore', b: 'sydney' },
   { a: 'kairo', b: 'kapkaupunki' },
+  { a: 'lontoo', b: 'ateena' },
+  { a: 'ateena', b: 'moskova' },
   { a: 'rio', b: 'kapkaupunki' },
 ];
 
@@ -248,12 +256,13 @@ export const MAAILMA = {
   airRoutes: WORLD_AIR_ROUTES,
   // Tokio ja Singapore ovat koristesaarilla.
   islands: ['tokio', 'singapore'],
-  // Oikeassa mittakaavassa esimerkiksi Kairo ja Moskova ovat aidosti lähekkäin.
-  minCityDistance: 70,
+  // Oikeassa mittakaavassa Välimeren rannat ovat aidosti lähekkäin:
+  // Ateena ja Kairo mahtuvat molemmat, kun raja on tavallista pienempi.
+  minCityDistance: 45,
 
   tokens: {
     types: themedTokenTypes({ star: { name: 'Magellanin kompassi' } }),
-    counts: { star: 1, horseshoe: 2, robber: 1, ruby: 1, emerald: 2, topaz: 2, empty: 1 },
+    counts: { star: 1, horseshoe: 2, robber: 1, ruby: 1, emerald: 2, topaz: 2, empty: 2 },
   },
 
   questions: MAAILMA_QUESTIONS,
@@ -300,6 +309,8 @@ export const MAAILMA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Magellanin kompassin turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Magellanin kompassin kotiin ${money} punnan kanssa.`,
+    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
+    diary: 'Isoisoisä kiersi tämän pallon 80 päivässä ja piti sitä saavutuksena. Nykyään sen tekee vuorokaudessa kuka tahansa. Minä aion käyttää aikaa — katsoakseni, mitä hän ei ehtinyt nähdä.',
   },
 
   decor: {

@@ -785,6 +785,18 @@ export class UI {
       this.factKey = null;
       return;
     }
+
+    // Laudalle saavuttaessa tietoruudussa on herra Foggin päiväkirjamerkintä.
+    // Se väistyy, kun matkaaja lähtee saapumiskaupungista liikkeelle.
+    const note = game.diaryNote;
+    if (note && note.packId === game.pack.id && posKey(game.player.pos) === note.pos) {
+      const key = `diary:${note.packId}`;
+      if (this.factKey === key) return;
+      this.factKey = key;
+      this.factPlace.textContent = 'Herra Foggin päiväkirjasta';
+      this.typeText(this.factText, note.text);
+      return;
+    }
     const player = game.player;
     const city = this.factCity(player.pos);
     const facts = game.pack.placeFacts[city.id];

@@ -1,43 +1,65 @@
-# Tarina — työversio, suunnitellaan yhdessä
+# Tarina: herra Reginald Fogg
 
-Tämä on muistiinpano pelin tarinasta ja sävystä. Mitään tästä ei ole vielä
-toteutettu peliin — hahmo, tekstit ja tapahtumat suunnitellaan yhdessä.
+## Hahmo
 
-## Idea
+**Reginald Fogg** on maailmanmatkaaja Phileas Foggin pojanpojanpoika. Hän
+perii sukukartanon vintiltä isoisoisänsä matkalaukun, vuoden 1872
+maailmankartan, kukkarollisen puntia ja vihreän passin — ja päättää toistaa
+kuuluisan matkan. Hän olettaa maailman olevan suunnilleen siinä kunnossa
+kuin isoisoisä sen jätti.
 
-Pelaaja on **menneen maailman matkaaja nykymaailmassa**: vanhanaikainen
-kartta, punnat kukkarossa ja vihreä passi taskussa — mutta maailma, jossa hän
-kulkee, on tämän päivän maailma.
+Se ei ole.
 
-- **Vanha aika näkyy pelin pinnassa:** pergamenttikartat, käsin piirretyt
-  reitit, purjelaivat, kompassiruusut ja punta valuuttana. Vanha maailma oli
-  yksinkertainen, ja se toimii pelissä ja visuaalisesti hyvin.
-- **Uusi aika näkyy sisällössä:** kysymykset, "Tiesitkö että" -tiedot ja
-  kohtaamiset kertovat nykypäivästä — elinoloista, kulttuurista ja siitä,
-  miten paikat ovat muuttuneet.
-- **Sävy:** hienoinen ironia. Siirtomaita ei enää ole, vaikka niiden
-  vaikutukset näkyvät yhä. Matkaaja huomaa yllättyneenä, että maailma on
-  mennyt eteenpäin — ja juuri näistä huomioista syntyy pelin historiallinen
-  perspektiivi ja karaktääri.
+## Sävy: särmää, mutta piikki osoittaa aina oikeaan suuntaan
 
-## Miksi tämä toimii
+Ironian kohde on **herra Fogg ja hänen vanha maailmansa** — ei koskaan maat
+tai ihmiset, joita hän kohtaa. Tämä on tarinan tärkein sääntö (ja periaate
+3: kunnioitus ja tasapuolisuus).
 
-Vanhan kartan estetiikka antaa tilaa taiteellisemmille toteutuksille:
-kartan ei tarvitse olla mittatarkka, kunhan se on kaunis ja selkeä.
-Syvyys ei tule kartasta vaan huomioista — siitä, mitä matkaaja oppii
-kohdatessaan nykymaailman.
+- Fogg odottaa alamaisia — kohtaa itsenäisiä valtioita, jotka pärjäävät
+  mainiosti ilman häntä.
+- Fogg odottaa "eksotiikkaa" — kohtaa luotijunia, verkkovaltioita ja
+  metropoleja, jotka ovat hänen Lontootaan edellä.
+- Foggin kartta on väärässä nimissä, rajoissa ja oletuksissa. Hänen puntansa
+  kelpaavat lähinnä "museokappaleina". Hänen passinsa herättää lähinnä
+  hellyyttä.
+- Fogg on kuitenkin sympaattinen: hän huomaa itsekin olevansa vanhentunut
+  kartta, ja juuri se tekee hänestä hyvän matkakumppanin. Hän oppii —
+  hitaasti, mutta oppii.
 
-## Avauskohtaus (sovittu)
+Syvyys tulee huomioista: siirtomaita ei enää ole, mutta niiden jäljet
+näkyvät — ja se sanotaan ääneen kevyesti, ei saarnaten.
 
-Vanha herra lähtee Lontoosta puvuntakki päällä ja matkalaukku kädessään.
-Lontoossa hän ostaa lentolipun — ja peli alkaa, kun pelaaja valitsee
-ensimmäisen kohteen kartalta. Tämä on toteutettu pelin aloituksena:
-nappula seisoo Lontoossa maailmankartalla, ja ensimmäinen matka on ilmainen.
+## Miten tarina näkyy pelissä (toteutettu)
 
-## Avoimia kysymyksiä (päätetään yhdessä)
+1. **Avaus:** aloitusruutu esittelee perinnön, ja peli alkaa Lontoosta
+   maailmankartalta. Ensimmäinen matka on "jo maksettu lippu".
+2. **Päiväkirja:** jokaisella laudalla on `texts.diary` — Foggin merkintä,
+   joka naksuu kirjoituskoneella tietoruutuun laudalle saavuttaessa ja
+   väistyy, kun matka jatkuu. Esimerkkejä:
+   - *Pohjois-Amerikka:* "Siirtokunnat ovat pärjänneet ilman meitä
+     hämmentävän hyvin. Päätin olla ottamatta teekutsuja puheeksi."
+   - *Lähi-itä:* "Kauppias ottaa puntani vastaan ystävällisesti —
+     museokappaleita, hän sanoo, ja antaa vaihtorahat sovelluksella."
+   - *Suomi:* "Karttani sanoo: Suuriruhtinaskunta. Nykyään maa, jossa
+     hallitus toimii verkossa ja järvetkin on laskettu."
+3. **Ulkoasu:** pergamenttikartat, punnat, kirjoituskonefontti ja filmi-
+   vinjetti ovat Foggin maailmaa; kysymysten ja tietojen sisältö on
+   nykymaailmaa. Jännite näiden välillä *on* tarina.
 
-- Kuka herra on? Nimi, tausta, miksi hän lähtee juuri nyt?
-- Miten huomiot kerrotaan: lyhyinä välähdyksinä porttien ylityksissä,
-  "Tiesitkö että" -tekstien sävynä vai erillisinä tarinakortteina?
-- Kuinka paljon ironiaa on sopivasti, ettei sävy muutu ivalliseksi?
-  (Periaate 3: kunnioitus ja tasapuolisuus.)
+## Kirjoitusohjeet uusille merkinnöille
+
+- Minä-muoto, kuiva brittiläinen alivireisyys, korkeintaan kolme virkettä.
+- Vitsi rakentuu: vanha oletus → nykyhavainto → Foggin laconinen reaktio.
+- Ei koskaan pilkkaa paikallisia, ruokaa, kieltä tai uskontoa. Pilkan
+  kohde on Foggin kartta, klubi, imperiumi tai Fogg itse.
+- Faktat pidetään oikeina silloinkin, kun ne ovat vitsin sisällä
+  (esim. järvien määrä).
+
+## Avoinna (mietitään yhdessä)
+
+- Kohtaamiset: saisiko rosvo tai lentokenttävirkailija oman repliikin
+  Foggin tyyliin?
+- Päiväkirjan laajennus: toinen merkintä, joka avautuu kun laudan
+  pääaarre löytyy ("jälkikirjoitus")?
+- Loppuuko matka koskaan — vai onko pointti, ettei lopu?

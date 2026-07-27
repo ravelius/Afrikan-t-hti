@@ -90,6 +90,7 @@ export class Game {
     this.quiz = null;
     this.duel = null;
     this.duelArmed = false;
+    this.diaryNote = null;
     this.usedQuestions = new Set();
     this.lastPath = null;
     this.winner = null;
@@ -130,10 +131,12 @@ export class Game {
       p.packId = target.id;
       p.pos = { type: 'city', city: link.city };
       p.start = link.city;
+      this.setDiary(target);
       this.say(p.id, `${p.name} aloittaa matkansa: ${link.label}.`);
     } else {
       p.pos = { type: 'city', city: city.id };
       p.start = city.id;
+      this.setDiary(this.pack);
       this.say(p.id, `${p.name} aloittaa matkansa kaupungista ${city.name}.`);
     }
     this.phase = 'action';
@@ -356,6 +359,19 @@ export class Game {
     return !!(city && city.links && city.links.length);
   }
 
+  /**
+   * Herra Foggin päiväkirjamerkintä kirjataan laudalle saavuttaessa. Merkintä
+   * näkyy tietoruudussa, kunnes matkaaja liikkuu saapumiskaupungista.
+   */
+  setDiary(pack) {
+    if (!pack.texts.diary) return;
+    this.diaryNote = {
+      packId: pack.id,
+      pos: posKey(this.player.pos),
+      text: pack.texts.diary,
+    };
+  }
+
   /** Lentää porttikaupungista toiselle laudalle. Vie koko vuoron. */
   actionGateway(index) {
     const link = this.gatewayOptions()[index];
@@ -366,6 +382,7 @@ export class Game {
     this.enterWorld(pack);
     p.packId = pack.id;
     p.pos = { type: 'city', city: link.city };
+    this.setDiary(pack);
     this.lastPath = null;
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
     this.emit('flight', link.label, { icon: '🧭', sub: `−${FLIGHT_PRICE} puntaa` });
@@ -502,6 +519,7 @@ export class Game {
     const fare = this.pendingFare;
     p.money -= fare;
     p.pos = move.pos;
+    this.diaryNote = null; // liikkeelle lähtö sulkee päiväkirjan
     this.lastPath = move.path;
     this.pendingFare = 0;
 
@@ -681,6 +699,7 @@ export class Game {
       this.enterWorld(pack);
       p.packId = pack.id;
       p.pos = { type: 'city', city: gate.city };
+      this.setDiary(pack);
       this.lastPath = null;
       this.say(p.id, `${p.name} astui portista: ${gate.label}.`);
       this.emit('flight', gate.label, { icon: '★', sub: 'Tieto avasi portin' });
@@ -891,6 +910,7 @@ export class Game {
     }
     p.money -= FLIGHT_PRICE;
     p.pos = { type: 'city', city: destination };
+    this.diaryNote = null;
     this.lastPath = null;
     const city = this.board.cityById.get(destination);
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
@@ -1010,6 +1030,7 @@ export class Game {
       quiz: this.quiz,
       duel: this.duel,
       duelArmed: this.duelArmed,
+      diaryNote: this.diaryNote,
       winnerId: this.winner ? this.winner.id : null,
       turnCount: this.turnCount,
       log: this.log,
@@ -1068,6 +1089,7 @@ export class Game {
     game.quiz = data.quiz ?? null;
     game.duel = data.duel ?? null;
     game.duelArmed = !!data.duelArmed;
+    game.diaryNote = data.diaryNote ?? null;
     game.lastPath = null;
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;

@@ -311,6 +311,8 @@ export const SOUTHAMERICA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi El Doradon aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi El Doradon aarteen kotiin ${money} punnan kanssa.`,
+    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
+    diary: 'Esi-isäni tulivat hakemaan El Doradon kultaa ja veivät minkä irti saivat. Minä ostan jääkaappimagneetin ja maksan ylihintaa. Jonkinlaista oikeudenmukaisuutta sekin.',
   },
 
   decor: {

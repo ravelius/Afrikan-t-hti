@@ -196,6 +196,8 @@ export const ISTANBUL = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Sulttaanin timantin turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Sulttaanin timantin kotiin ${money} punnan kanssa.`,
+    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
+    diary: 'Karttaani on painettu Konstantinopoli. Kaupunki on ehtinyt vaihtaa nimeä, valtakuntaa ja rakentaa sillan mantereiden välille. Minä olen vaihtanut hattua.',
   },
 
   decor: {

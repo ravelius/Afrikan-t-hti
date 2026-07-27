@@ -174,6 +174,11 @@ for (const pack of PACKS) {
     }
   });
 
+  test(`${pack.id}: herra Foggin päiväkirjamerkintä on kirjoitettu`, () => {
+    assert.equal(typeof pack.texts.diary, 'string', 'texts.diary puuttuu');
+    assert.ok(pack.texts.diary.length >= 30, 'päiväkirjamerkintä on liian lyhyt');
+  });
+
   test(`${pack.id}: rosvon kaksintaistelupakka on ehjä`, () => {
     assert.ok(pack.duels.length >= 4, 'liian vähän kaksintaistelukysymyksiä');
     for (const q of pack.duels) {
@@ -778,6 +783,7 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   assert.ok(game.actionGateway(0).ok);
   assert.equal(p.money, rahaEnnen - FLIGHT_PRICE, 'pitkä lento maksaa lennon hinnan');
   assert.equal(p.packId, 'middleeast');
+  assert.equal(game.diaryNote?.packId, 'middleeast', 'saapuminen kirjaa päiväkirjamerkinnän');
   assert.equal(p.pos.city, 'kairo');
   assert.equal(game.pack.id, 'middleeast', 'aktiivinen lauta seuraa pelaajaa');
   assert.ok(game.tokens.size > 0, 'uudella laudalla on omat laatat');

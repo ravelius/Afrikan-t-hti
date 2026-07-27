@@ -247,6 +247,8 @@ export const AFRICA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Afrikan tähden turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Afrikan tähden kotiin ${money} punnan kanssa.`,
+    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
+    diary: 'Vanha karttani väittää tätä mannerta paikoin tyhjäksi. Piirtäjä ei ilmeisesti vaivautunut kysymään niiltä miljoonilta, jotka asuivat täällä silloinkin.',
   },
 
   decor: {
