@@ -42,7 +42,11 @@ const AFRICA_CITIES = [
   {
     id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true,
     // Gibraltarin salmen yli Espanjaan: lyhin hyppy Afrikasta Eurooppaan.
-    links: [{ pack: 'europe', city: 'madrid', label: 'Euroopan lauta' }],
+    // Tanger on myös maailmankartalla, joten sinne pääsee takaisin.
+    links: [
+      { pack: 'europe', city: 'madrid', label: 'Euroopan lauta' },
+      { pack: 'maailma', city: 'tanger', label: 'Maailma-lauta' },
+    ],
   },
   {
     id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true,

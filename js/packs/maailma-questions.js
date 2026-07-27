@@ -4,6 +4,57 @@
 // Muoto: { q, options[4], correct, fact, hint, level? } — ks. CONTRIBUTING.md.
 
 export const MAAILMA_QUESTIONS = {
+  tanger: [
+    {
+      q: 'Minkä kapean salmen rannalla Tanger sijaitsee?',
+      options: ['Gibraltarinsalmen', 'Bosporinsalmen', 'Malakansalmen', 'Öresundin'],
+      correct: 0,
+      level: 1,
+      fact: 'Salmi on kapeimmillaan noin 14 kilometriä leveä — Afrikasta näkee Espanjan rannikon selvin silmin.',
+      hint: 'Salmen pohjoispuolella kohoaa kuuluisa kallio, joka on antanut sille nimen.',
+    },
+    {
+      q: 'Mihin maahan Tanger kuuluu?',
+      options: ['Marokkoon', 'Algeriaan', 'Tunisiaan', 'Espanjaan'],
+      correct: 0,
+      level: 1,
+      fact: 'Marokko on Afrikan luoteisin valtio, ja Tanger sen pohjoisin suuri satamakaupunki.',
+      hint: 'Maan pääkaupunki on Rabat ja suurin kaupunki Casablanca.',
+    },
+    {
+      q: 'Mitkä kaksi merta Gibraltarinsalmi yhdistää?',
+      options: [
+        'Atlantin valtameren ja Välimeren',
+        'Välimeren ja Punaisenmeren',
+        'Mustanmeren ja Välimeren',
+        'Atlantin valtameren ja Pohjanmeren',
+      ],
+      correct: 0,
+      fact: 'Salmi on ainoa luonnollinen väylä Välimerelle lännestä, joten sen läpi kulkee valtava osa laivaliikenteestä.',
+      hint: 'Toinen niistä on valtameri, toinen sisämeri.',
+    },
+    {
+      q: 'Mikä vuoristo kohoaa Tangerista etelään ja erottaa rannikon Saharasta?',
+      options: ['Atlasvuoret', 'Pyreneet', 'Apenniinit', 'Draakonivuoret'],
+      correct: 0,
+      fact: 'Atlasvuorten huiput ovat lumipeitteisiä talvella, vaikka Sahara alkaa vuorten toiselta puolen.',
+      hint: 'Vuoristo on saanut nimensä kreikkalaisesta jättiläisestä, joka kannatteli taivasta.',
+    },
+    {
+      q: 'Mikä oli Tangerin erikoinen kansainvälinen asema vuosina 1923-1956?',
+      options: [
+        'Sitä hallitsi useiden maiden yhteinen kansainvälinen hallinto',
+        'Se oli itsenäinen kuningaskunta',
+        'Se kuului Yhdistyneisiin kansakuntiin suoraan',
+        'Se oli miehittämätön vapaasatama ilman hallintoa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kansainvälisen vyöhykkeen aikana kaupunkia hallitsivat yhdessä muun muassa Ranska, Espanja ja Britannia — se veti puoleensa kirjailijoita, vakoojia ja pankkiireja.',
+      hint: 'Yksikään yksittäinen valtio ei hallinnut kaupunkia, vaan monta yhdessä.',
+    },
+  ],
+
   kairo: [
     {
       q: 'Millä mantereella Kairo sijaitsee?',
@@ -692,6 +743,15 @@ export const MAAILMA_FACTS = {
       voice: 'isoisa',
     },
   ],
+  tanger: [
+    'Gibraltarinsalmen kapeimmalla kohdalla Afrikan ja Euroopan väliä on noin 14 kilometriä — selkeällä säällä mantereet näkevät toisensa.',
+    'Tangerin sataman kautta kulkee nykyään yksi Välimeren vilkkaimmista konttiterminaaleista, Tanger Med.',
+    {
+      text: 'Salmessa on niin kapeaa, että kannelta erottaa molemmat maanosat yhtä aikaa. Kaupungin torilla kuulin kolmea kieltä yhdessä keskustelussa, eikä kukaan pitänyt sitä merkillisenä. Meillä siitä olisi kirjoitettu tutkielma.',
+      voice: 'isoisa',
+    },
+  ],
+
   kairo: [
     'Gizan suuri pyramidi on ainoa antiikin seitsemästä ihmeestä, joka on yhä pystyssä.',
     'Kairon halki virtaava Niili on koko Egyptin elämänlanka — sen varrella asuu lähes koko kansa.',

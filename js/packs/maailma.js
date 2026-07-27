@@ -170,6 +170,14 @@ const WORLD_CITIES = [
     // Etelä-Euroopan portti: Eurooppaan pääsee myös Välimeren suunnasta.
     links: [{ pack: 'europe', city: 'ateena', label: 'Euroopan lauta' }],
   },
+  {
+    // Afrikan luoteiskulma. Ilman tätä mantereella oli maailmankartalla vain
+    // Kairo ja Kapkaupunki, eikä niiden välillä ollut laivareittiä lainkaan:
+    // purjehtien piti kiertää Rion tai Sydneyn kautta. Tanger on Afrikan
+    // laudan aloituskaupunki, joten portti vie sinne suoraan.
+    id: 'tanger', name: 'Tanger', x: 484, y: 436, airport: true, la: 'end', lx: -16, ly: 10,
+    links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
+  },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -206,6 +214,17 @@ const WORLD_EDGES = [
     a: 'mumbai', b: 'sydney', steps: 6, type: 'sea',
     via: [[711, 513.4], [740, 557.8], [778, 604.8], [817, 632.8], [875, 638.3], [911, 632.8]],
   },
+  // Atlantin itäranta: Lontoo - Tanger - Kapkaupunki. Tätä reittiä Afrikan
+  // ympäri purjehdittiin ennen Suezin kanavaa, ja ilman sitä mantereen
+  // kahden kaupungin välillä ei ollut laivayhteyttä lainkaan.
+  {
+    a: 'lontoo', b: 'tanger', steps: 3, type: 'sea',
+    via: [[478, 396], [468, 412], [470, 428]],
+  },
+  {
+    a: 'tanger', b: 'kapkaupunki', steps: 7, type: 'sea',
+    via: [[462, 458], [452, 486], [462, 516], [488, 546], [516, 578], [540, 600]],
+  },
 ];
 
 // Mannertenväliset lennot.
@@ -229,6 +248,8 @@ const WORLD_AIR_ROUTES = [
   { a: 'lontoo', b: 'ateena' },
   { a: 'ateena', b: 'moskova' },
   { a: 'rio', b: 'kapkaupunki' },
+  { a: 'tanger', b: 'newyork' },
+  { a: 'tanger', b: 'kapkaupunki' },
 ];
 
 export const MAAILMA = {
@@ -262,7 +283,8 @@ export const MAAILMA = {
 
   tokens: {
     types: themedTokenTypes({ star: { name: 'Magellanin kompassi' } }),
-    counts: { star: 1, horseshoe: 2, robber: 1, ruby: 1, emerald: 2, topaz: 2, empty: 2 },
+    // 12 aarrekaupunkia: laattoja on oltava täsmälleen yhtä monta.
+    counts: { star: 1, horseshoe: 2, robber: 1, ruby: 1, emerald: 2, topaz: 3, empty: 2 },
   },
 
   questions: MAAILMA_QUESTIONS,
@@ -342,6 +364,7 @@ export const MAAILMA = {
       singapore: 'Malaijien niemimaan eteläkärjessä, kapean salmen partaalla, on satama jonka läpi kulkee puoli maailman rahtia. Ohitin sen yöllä enkä noussut kannelle katsomaan.',
       kapkaupunki: 'Afrikan eteläkärjessä kaksi valtamerta lyö yhteen, ja siellä on kaupunki pöydänmuotoisen vuoren juurella. Näin vuoren kaukaa mereltä. Sen olisi pitänyt riittää houkutukseksi.',
       losangeles: 'Pohjois-Amerikan länsirannikolla, vuorten kuivalla puolella, kerrottiin kasvavan pikkukaupunkia appelsiinitarhojen keskelle. Pidin kertomusta liioitteluna ja jatkoin matkaa.',
+      tanger: 'Afrikan luoteisimmassa kulmassa, siinä salmessa jossa manner on kivenheiton päässä Euroopasta, on satamakaupunki jossa puhutaan viittä kieltä samassa korttelissa. Näin sen kannelta enkä noussut maihin.',
       ateena: 'Välimeren pohjoisrannalla seisoo kukkulalla marmoritemppeli, joka oli vanha jo roomalaisille. Sen kaupungissa en käynyt: satamaan tuli lastia ja laiva lähti ennen aikojaan.',
     },
   },

@@ -1824,6 +1824,57 @@ function createTokenPile(counts, rng = Math.random) {
 // Muoto: { q, options[4], correct, fact, hint, level? } — ks. CONTRIBUTING.md.
 
 const MAAILMA_QUESTIONS = {
+  tanger: [
+    {
+      q: 'Minkä kapean salmen rannalla Tanger sijaitsee?',
+      options: ['Gibraltarinsalmen', 'Bosporinsalmen', 'Malakansalmen', 'Öresundin'],
+      correct: 0,
+      level: 1,
+      fact: 'Salmi on kapeimmillaan noin 14 kilometriä leveä — Afrikasta näkee Espanjan rannikon selvin silmin.',
+      hint: 'Salmen pohjoispuolella kohoaa kuuluisa kallio, joka on antanut sille nimen.',
+    },
+    {
+      q: 'Mihin maahan Tanger kuuluu?',
+      options: ['Marokkoon', 'Algeriaan', 'Tunisiaan', 'Espanjaan'],
+      correct: 0,
+      level: 1,
+      fact: 'Marokko on Afrikan luoteisin valtio, ja Tanger sen pohjoisin suuri satamakaupunki.',
+      hint: 'Maan pääkaupunki on Rabat ja suurin kaupunki Casablanca.',
+    },
+    {
+      q: 'Mitkä kaksi merta Gibraltarinsalmi yhdistää?',
+      options: [
+        'Atlantin valtameren ja Välimeren',
+        'Välimeren ja Punaisenmeren',
+        'Mustanmeren ja Välimeren',
+        'Atlantin valtameren ja Pohjanmeren',
+      ],
+      correct: 0,
+      fact: 'Salmi on ainoa luonnollinen väylä Välimerelle lännestä, joten sen läpi kulkee valtava osa laivaliikenteestä.',
+      hint: 'Toinen niistä on valtameri, toinen sisämeri.',
+    },
+    {
+      q: 'Mikä vuoristo kohoaa Tangerista etelään ja erottaa rannikon Saharasta?',
+      options: ['Atlasvuoret', 'Pyreneet', 'Apenniinit', 'Draakonivuoret'],
+      correct: 0,
+      fact: 'Atlasvuorten huiput ovat lumipeitteisiä talvella, vaikka Sahara alkaa vuorten toiselta puolen.',
+      hint: 'Vuoristo on saanut nimensä kreikkalaisesta jättiläisestä, joka kannatteli taivasta.',
+    },
+    {
+      q: 'Mikä oli Tangerin erikoinen kansainvälinen asema vuosina 1923-1956?',
+      options: [
+        'Sitä hallitsi useiden maiden yhteinen kansainvälinen hallinto',
+        'Se oli itsenäinen kuningaskunta',
+        'Se kuului Yhdistyneisiin kansakuntiin suoraan',
+        'Se oli miehittämätön vapaasatama ilman hallintoa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kansainvälisen vyöhykkeen aikana kaupunkia hallitsivat yhdessä muun muassa Ranska, Espanja ja Britannia — se veti puoleensa kirjailijoita, vakoojia ja pankkiireja.',
+      hint: 'Yksikään yksittäinen valtio ei hallinnut kaupunkia, vaan monta yhdessä.',
+    },
+  ],
+
   kairo: [
     {
       q: 'Millä mantereella Kairo sijaitsee?',
@@ -2512,6 +2563,15 @@ const MAAILMA_FACTS = {
       voice: 'isoisa',
     },
   ],
+  tanger: [
+    'Gibraltarinsalmen kapeimmalla kohdalla Afrikan ja Euroopan väliä on noin 14 kilometriä — selkeällä säällä mantereet näkevät toisensa.',
+    'Tangerin sataman kautta kulkee nykyään yksi Välimeren vilkkaimmista konttiterminaaleista, Tanger Med.',
+    {
+      text: 'Salmessa on niin kapeaa, että kannelta erottaa molemmat maanosat yhtä aikaa. Kaupungin torilla kuulin kolmea kieltä yhdessä keskustelussa, eikä kukaan pitänyt sitä merkillisenä. Meillä siitä olisi kirjoitettu tutkielma.',
+      voice: 'isoisa',
+    },
+  ],
+
   kairo: [
     'Gizan suuri pyramidi on ainoa antiikin seitsemästä ihmeestä, joka on yhä pystyssä.',
     'Kairon halki virtaava Niili on koko Egyptin elämänlanka — sen varrella asuu lähes koko kansa.',
@@ -2732,6 +2792,14 @@ const WORLD_CITIES = [
     // Etelä-Euroopan portti: Eurooppaan pääsee myös Välimeren suunnasta.
     links: [{ pack: 'europe', city: 'ateena', label: 'Euroopan lauta' }],
   },
+  {
+    // Afrikan luoteiskulma. Ilman tätä mantereella oli maailmankartalla vain
+    // Kairo ja Kapkaupunki, eikä niiden välillä ollut laivareittiä lainkaan:
+    // purjehtien piti kiertää Rion tai Sydneyn kautta. Tanger on Afrikan
+    // laudan aloituskaupunki, joten portti vie sinne suoraan.
+    id: 'tanger', name: 'Tanger', x: 484, y: 436, airport: true, la: 'end', lx: -16, ly: 10,
+    links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
+  },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -2768,6 +2836,17 @@ const WORLD_EDGES = [
     a: 'mumbai', b: 'sydney', steps: 6, type: 'sea',
     via: [[711, 513.4], [740, 557.8], [778, 604.8], [817, 632.8], [875, 638.3], [911, 632.8]],
   },
+  // Atlantin itäranta: Lontoo - Tanger - Kapkaupunki. Tätä reittiä Afrikan
+  // ympäri purjehdittiin ennen Suezin kanavaa, ja ilman sitä mantereen
+  // kahden kaupungin välillä ei ollut laivayhteyttä lainkaan.
+  {
+    a: 'lontoo', b: 'tanger', steps: 3, type: 'sea',
+    via: [[478, 396], [468, 412], [470, 428]],
+  },
+  {
+    a: 'tanger', b: 'kapkaupunki', steps: 7, type: 'sea',
+    via: [[462, 458], [452, 486], [462, 516], [488, 546], [516, 578], [540, 600]],
+  },
 ];
 
 // Mannertenväliset lennot.
@@ -2791,6 +2870,8 @@ const WORLD_AIR_ROUTES = [
   { a: 'lontoo', b: 'ateena' },
   { a: 'ateena', b: 'moskova' },
   { a: 'rio', b: 'kapkaupunki' },
+  { a: 'tanger', b: 'newyork' },
+  { a: 'tanger', b: 'kapkaupunki' },
 ];
 
 const MAAILMA = {
@@ -2824,7 +2905,8 @@ const MAAILMA = {
 
   tokens: {
     types: themedTokenTypes({ star: { name: 'Magellanin kompassi' } }),
-    counts: { star: 1, horseshoe: 2, robber: 1, ruby: 1, emerald: 2, topaz: 2, empty: 2 },
+    // 12 aarrekaupunkia: laattoja on oltava täsmälleen yhtä monta.
+    counts: { star: 1, horseshoe: 2, robber: 1, ruby: 1, emerald: 2, topaz: 3, empty: 2 },
   },
 
   questions: MAAILMA_QUESTIONS,
@@ -2904,6 +2986,7 @@ const MAAILMA = {
       singapore: 'Malaijien niemimaan eteläkärjessä, kapean salmen partaalla, on satama jonka läpi kulkee puoli maailman rahtia. Ohitin sen yöllä enkä noussut kannelle katsomaan.',
       kapkaupunki: 'Afrikan eteläkärjessä kaksi valtamerta lyö yhteen, ja siellä on kaupunki pöydänmuotoisen vuoren juurella. Näin vuoren kaukaa mereltä. Sen olisi pitänyt riittää houkutukseksi.',
       losangeles: 'Pohjois-Amerikan länsirannikolla, vuorten kuivalla puolella, kerrottiin kasvavan pikkukaupunkia appelsiinitarhojen keskelle. Pidin kertomusta liioitteluna ja jatkoin matkaa.',
+      tanger: 'Afrikan luoteisimmassa kulmassa, siinä salmessa jossa manner on kivenheiton päässä Euroopasta, on satamakaupunki jossa puhutaan viittä kieltä samassa korttelissa. Näin sen kannelta enkä noussut maihin.',
       ateena: 'Välimeren pohjoisrannalla seisoo kukkulalla marmoritemppeli, joka oli vanha jo roomalaisille. Sen kaupungissa en käynyt: satamaan tuli lastia ja laiva lähti ennen aikojaan.',
     },
   },
@@ -4723,7 +4806,11 @@ const AFRICA_CITIES = [
   {
     id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true,
     // Gibraltarin salmen yli Espanjaan: lyhin hyppy Afrikasta Eurooppaan.
-    links: [{ pack: 'europe', city: 'madrid', label: 'Euroopan lauta' }],
+    // Tanger on myös maailmankartalla, joten sinne pääsee takaisin.
+    links: [
+      { pack: 'europe', city: 'madrid', label: 'Euroopan lauta' },
+      { pack: 'maailma', city: 'tanger', label: 'Maailma-lauta' },
+    ],
   },
   {
     id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true,
@@ -13602,6 +13689,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Kilpailu muistuttaa vuoden 1925 lääkekuljetusta, jossa seerumi tuotiin valjakoilla kurkkumätäepidemian keskelle.',
       fact: 'Reitti on noin 1 600 kilometriä Anchoragesta Nomeen, ja se ajetaan maaliskuussa.',
     },
+    {
+      q: 'Miten Nomeen pääsee?',
+      options: [
+        'lentäen tai laivalla, koska maantietä ei ole',
+        'junalla',
+        'autolla Anchoragesta',
+        'kävellen jäätä pitkin ympäri vuoden',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunkiin ei johda maantietä muualta Alaskasta. Tavarat tuodaan laivalla kesällä ja lentokoneella ympäri vuoden.',
+      hint: 'Maantieyhteys puuttuu kokonaan.',
+    },
+    {
+      q: 'Mikä toi Nomeen tuhansia ihmisiä vuonna 1899?',
+      options: ['kulta suoraan rannan hiekasta', 'öljy', 'turkiskauppa', 'kalastus'],
+      correct: 0,
+      fact: 'Rannan hiekasta löytyi kultaa, joten kuka tahansa saattoi huuhtoa sitä ilman valtausta. Väkiluku moninkertaistui yhdessä kesässä.',
+      hint: 'Löytö tehtiin suoraan meren rannalta.',
+    },
+    {
+      q: 'Mitä tapahtumaa Iditarod-koiravaljakkokilpailu muistaa?',
+      options: [
+        'lääkekuljetusta Nomeen vuonna 1925',
+        'kultaryntäystä',
+        'sotaa',
+        'ensimmäistä lentoa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Vuonna 1925 kurkkumätäseerumi vietiin Nomeen valjakoilla halki Alaskan, koska muuta keinoa ei ollut. Kilpailu kulkee osin samaa reittiä.',
+      hint: 'Tapahtumassa vietiin lääkettä kaupunkiin talvella.',
+    },
   ],
 
   anchorage: [
@@ -13620,6 +13740,39 @@ const NORTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Myyjämaa hallitsi aluetta turkiskaupan takia ja pelkäsi menettävänsä sen sodassa.',
       fact: 'Kauppahinta oli 7,2 miljoonaa dollaria. Kauppaa pilkattiin aikanaan nimellä Sewardin hulluus.',
+    },
+    {
+      q: 'Mikä Anchorage on Alaskassa?',
+      options: [
+        'osavaltion suurin kaupunki',
+        'osavaltion pääkaupunki',
+        'pieni kalastajakylä',
+        'sotilastukikohta ilman asukkaita',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Anchoragessa asuu noin 40 prosenttia koko osavaltion väestöstä. Pääkaupunki on kuitenkin Juneau.',
+      hint: 'Kaupunki on suuri mutta ei hallinnon keskus.',
+    },
+    {
+      q: 'Mikä koetteli Anchoragea vuonna 1964?',
+      options: ['voimakas maanjäristys', 'tulivuorenpurkaus', 'hurrikaani', 'kuivuus'],
+      correct: 0,
+      fact: 'Järistys oli mitatuista maailman toiseksi voimakkain. Maa siirtyi paikoin metrejä, ja sen jälkeen rakentamista tiukennettiin.',
+      hint: 'Tapahtuma liittyi maan liikkeisiin.',
+    },
+    {
+      q: 'Miksi Anchoragen lentoasema on tärkeä rahtiliikenteelle?',
+      options: [
+        'se on kätevällä välilaskupaikalla Aasian ja Amerikan välillä',
+        'siellä on halvinta polttoainetta',
+        'se on maailman suurin lentoasema',
+        'siellä ei sada koskaan',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Isoympyrää pitkin lentävät rahtikoneet käyvät tankkaamassa matkalla Aasian ja Pohjois-Amerikan välillä. Siksi kentän rahtimäärä on maailman suurimpia.',
+      hint: 'Syy on sijainti lentoreitillä, ei kentän koko.',
     },
   ],
 
@@ -13640,6 +13793,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Metalli on keltaista ja sitä huuhdottiin jokien pohjahiekasta.',
       fact: 'Klondiken ryntäyksessä perille asti pääsi vain osa lähtijöistä. Kanadan poliisi vaati jokaiselta tulijalta vuoden ruokavarat.',
     },
+    {
+      q: 'Minkä joen varrella Whitehorse sijaitsee?',
+      options: ['Yukon-joen', 'Mississippin', 'Coloradon', 'Saint Lawrence -joen'],
+      correct: 0,
+      level: 1,
+      fact: 'Joki oli kultaryntäyksen aikaan pääreitti sisämaahan. Höyrylaivat kulkivat sitä pitkin aina 1950-luvulle asti.',
+      hint: 'Joki antaa nimensä koko territoriolle.',
+    },
+    {
+      q: 'Miten kullankaivajat matkasivat Klondikeen 1890-luvulla?',
+      options: [
+        'kiipeämällä vuorisolan yli ja jatkamalla jokea pitkin',
+        'junalla suoraan perille',
+        'lentokoneella',
+        'hevoskärryillä valtatietä',
+      ],
+      correct: 0,
+      fact: 'Chilkootin solan yli piti kantaa tonni tarvikkeita, ennen kuin rajaviranomaiset päästivät matkaan. Sen jälkeen rakennettiin lautta ja laskettiin jokea.',
+      hint: 'Matka alkoi jyrkällä nousulla ja jatkui vedellä.',
+    },
+    {
+      q: 'Kuinka pitkä Yukon-joki on?',
+      options: [
+        'noin 3 200 kilometriä',
+        'noin 320 kilometriä',
+        'noin 32 kilometriä',
+        'yli 10 000 kilometriä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Joki virtaa Kanadasta Alaskan halki Beringinmereen. Se on Pohjois-Amerikan pisimpiä jokia.',
+      hint: 'Pituus on tuhansia kilometrejä.',
+    },
   ],
 
   yellowknife: [
@@ -13659,6 +13845,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Järvi on Pohjois-Amerikan syvin, ja sen nimi viittaa työhön pakotettuihin ihmisiin.',
       fact: 'Järvi on yli 600 metriä syvä. Talvella sen jäälle rakennetaan teitä kaivoksille.',
     },
+    {
+      q: 'Mistä Yellowknife elää nykyään?',
+      options: ['timanttikaivoksista', 'kalastuksesta', 'viininviljelystä', 'laivanrakennuksesta'],
+      correct: 0,
+      level: 1,
+      fact: 'Pohjois-Kanadasta löytyi timantteja 1990-luvulla, ja alueesta tuli yksi maailman suurimmista tuottajista. Kaivoksille kuljetaan talvella jäätietä.',
+      hint: 'Kaivoksista saadaan kirkkaita jalokiviä.',
+    },
+    {
+      q: 'Miksi revontulia näkyy Yellowknifessä poikkeuksellisen usein?',
+      options: [
+        'kaupunki on revontulivyöhykkeen alla ja ilma on kuivaa',
+        'kaupunki on päiväntasaajalla',
+        'siellä on paljon katuvaloja',
+        'siellä ei ole koskaan pilviä kesällä',
+      ],
+      correct: 0,
+      fact: 'Kaupunki osuu vyöhykkeelle, jolla revontulia esiintyy useimmin, ja kuiva sisämaailma pitää taivaan usein kirkkaana.',
+      hint: 'Sijainti osuu vyöhykkeeseen, jolla ilmiö on yleisin.',
+    },
+    {
+      q: 'Mitä ovat pohjoisen talvitiet?',
+      options: [
+        'jäätyneiden järvien yli aurattuja reittejä',
+        'lumitunneleita',
+        'köysiratoja',
+        'rautateitä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Talvella järvien jään päälle aurataan teitä, joita pitkin kuljetetaan polttoainetta ja tarvikkeita kaivoksille. Lämpimät talvet lyhentävät niiden käyttöaikaa.',
+      hint: 'Reitti kelpaa vain silloin, kun vesi on kovaa.',
+    },
   ],
 
   vancouver: [
@@ -13677,6 +13896,44 @@ const NORTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Vuoret jatkuvat Kalliovuorten länsipuolella pitkin Tyynenmeren rantaa.',
       fact: 'Vancouverista pääsee samana päivänä sekä laskettelemaan että merenrannalle, koska vuoret nousevat aivan kaupungin takaa.',
+    },
+    {
+      q: 'Mikä Vancouverin satama on Kanadassa?',
+      options: [
+        'maan vilkkain satama',
+        'maan ainoa satama',
+        'pieni huvivenesatama',
+        'sotilassatama ilman kauppaa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Sataman kautta kulkee vilja, puu ja kontit Aasian suuntaan. Se on jäätön ympäri vuoden.',
+      hint: 'Satama on maansa suurin, ja liikenne suuntautuu Aasiaan.',
+    },
+    {
+      q: 'Mitkä kisat järjestettiin Vancouverissa vuonna 2010?',
+      options: [
+        'talviolympialaiset',
+        'kesäolympialaiset',
+        'jalkapallon MM-kisat',
+        'yleisurheilun MM-kisat',
+      ],
+      correct: 0,
+      fact: 'Kisojen laskettelulajit pidettiin lähellä Whistlerissä. Kaupunki rakensi kisoja varten uuden metrolinjan lentoasemalle.',
+      hint: 'Lajit kilpailtiin lumella ja jäällä.',
+    },
+    {
+      q: 'Millaista metsää Vancouverin ympäristössä kasvaa?',
+      options: [
+        'lauhkeaa sademetsää',
+        'havumetsää ilman aluskasvillisuutta',
+        'sademetsää päiväntasaajan tapaan',
+        'aavikkopensaikkoa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Rannikolla sataa runsaasti ja on leutoa, joten puut kasvavat valtaviksi ja sammal peittää kaiken. Lauhkeaa sademetsää on maailmassa vain vähän.',
+      hint: 'Metsätyyppi on harvinainen ja tarvitsee paljon sadetta mutta ei kuumuutta.',
     },
   ],
 
@@ -13702,6 +13959,29 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Nimi tarkoittaa suomeksi vanhaa uskollista.',
       fact: 'Geysir purkautuu keskimäärin puolentoista tunnin välein ja suihkuttaa vettä 30–55 metrin korkeuteen.',
     },
+    {
+      q: 'Mitä Yellowstonessa purkautuu maasta kuumana?',
+      options: ['vettä ja höyryä', 'laavaa jatkuvasti', 'hiekkaa', 'jäätä'],
+      correct: 0,
+      level: 1,
+      fact: 'Puistossa on yli 10 000 kuumaa lähdettä, geysiriä ja mutahautaa. Ne saavat lämpönsä maankuoren alla olevasta magmasta.',
+      hint: 'Ilmiöt liittyvät kuumaan veteen.',
+    },
+    {
+      q: 'Mikä eläin palautettiin Yellowstoneen vuonna 1995?',
+      options: ['susi', 'norsu', 'kameli', 'panda'],
+      correct: 0,
+      fact: 'Susien palautus muutti puiston tasapainoa: hirvieläinten laidunnus väheni ja jokivarsien pensaikot toipuivat.',
+      hint: 'Eläin on koiraeläin, joka elää laumassa.',
+    },
+    {
+      q: 'Mikä sijaitsee Yellowstonen alla?',
+      options: ['suuri magmakammio', 'valtameri', 'jäätikkö', 'suolakerros'],
+      correct: 0,
+      level: 3,
+      fact: 'Puisto on jättimäisen tulivuoren kalderan päällä, ja magmakammio lämmittää lähteet. Purkauksia on ollut satojen tuhansien vuosien välein.',
+      hint: 'Lämmönlähde on sula kivi maan alla.',
+    },
   ],
 
   mountrushmore: [
@@ -13726,6 +14006,29 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Osavaltio on preeriaa Black Hillsin kukkuloita lukuun ottamatta, ja sen pohjoisnaapurilla on lähes sama nimi.',
       fact: 'Vuori on Black Hillsissä, jota lakota-kansa pitää pyhänä alueena. Siitä on kiistelty siitä asti kun sieltä löytyi kultaa 1874.',
     },
+    {
+      q: 'Kuinka monen presidentin kasvot Mount Rushmoresta on veistetty?',
+      options: ['neljän', 'yhden', 'kymmenen', 'kahden'],
+      correct: 0,
+      level: 1,
+      fact: 'Kalliosta veistettiin George Washingtonin, Thomas Jeffersonin, Theodore Rooseveltin ja Abraham Lincolnin kasvot vuosina 1927–1941.',
+      hint: 'Määrä on sama kuin vuodenaikoja.',
+    },
+    {
+      q: 'Mistä kivilajista Mount Rushmoren kallio on?',
+      options: ['graniitista', 'hiekkakivestä', 'kalkkikivestä', 'marmorista'],
+      correct: 0,
+      fact: 'Graniitti kuluu hyvin hitaasti, arviolta senttimetrin kymmenessä tuhannessa vuodessa. Siksi veistokseen valittiin juuri tämä kallio.',
+      hint: 'Kivilaji on kova ja karkearakeinen.',
+    },
+    {
+      q: 'Mitä toista muistomerkkiä veistetään lähistöllä Black Hillsissä?',
+      options: ['Crazy Horse -muistomerkkiä', 'vapaudenpatsasta', 'pyramidia', 'suurta muuria'],
+      correct: 0,
+      level: 3,
+      fact: 'Lakota-päällikön muistomerkkiä on veistetty vuodesta 1948, ja työ jatkuu yhä. Alue on lakotoille pyhä, ja sen omistuksesta on kiistelty pitkään.',
+      hint: 'Muistomerkki esittää lakota-päällikköä.',
+    },
   ],
 
   winnipeg: [
@@ -13744,6 +14047,39 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Kanadalainen sotilas toi karhunpennun Lontoon eläintarhaan, ja siellä sen tapasi kirjailijan poika.',
       fact: 'A. A. Milnen poika Christopher Robin ihastui karhunpentuun Lontoon eläintarhassa, ja isä kirjoitti sen tarinaksi.',
+    },
+    {
+      q: 'Millainen talvi Winnipegissä on?',
+      options: [
+        'hyvin kylmä ja pitkä',
+        'leuto ja sateinen',
+        'lyhyt ja luminen vain vuoristossa',
+        'lämmin',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Pakkanen voi painua alle -30 asteen, ja kaupunkia kutsutaan leikillä Winterpegiksi. Keskustassa on siksi katettuja kävelysiltoja.',
+      hint: 'Kaupungin lempinimessä on englannin talvi.',
+    },
+    {
+      q: 'Minkä kahden joen yhtymäkohdassa Winnipeg sijaitsee?',
+      options: [
+        'Red Riverin ja Assiniboinen',
+        'Mississippin ja Missourin',
+        'Yukonin ja Klondiken',
+        'Coloradon ja Rio Granden',
+      ],
+      correct: 0,
+      fact: 'Jokien risteys on ollut kauppapaikka vuosisatoja, ensin alkuperäiskansoille ja sitten turkiskauppiaille.',
+      hint: 'Toinen joista on nimeltään punainen.',
+    },
+    {
+      q: 'Mikä kansa syntyi Punaisenjoen laaksossa turkiskaupan aikana?',
+      options: ['métis-kansa', 'inuiitit', 'maorit', 'samit'],
+      correct: 0,
+      level: 3,
+      fact: 'Métis-kansa polveutuu alkuperäiskansojen ja eurooppalaisten turkiskauppiaiden perheistä. Sillä on oma kieli michif, lippu ja tunnustettu asema Kanadassa.',
+      hint: 'Kansalla on oma kieli nimeltä michif.',
     },
   ],
 
@@ -13764,6 +14100,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Lahti on valtava sisämeri Kanadan keskellä, nimetty englantilaisen tutkimusmatkailijan mukaan.',
       fact: 'Churchilliin ei johda maantietä: sinne pääsee junalla, lentäen tai laivalla.',
     },
+    {
+      q: 'Miksi jääkarhut kokoontuvat Churchillin lähelle syksyllä?',
+      options: [
+        'ne odottavat lahden jäätymistä päästäkseen hylkeenpyyntiin',
+        'ne etsivät marjoja',
+        'ne pesivät siellä',
+        'ne muuttavat etelään',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Karhut odottavat rannalla, kunnes lahti jäätyy ja hylkeenpyynti alkaa. Jään myöhästyminen pidentää niiden paastoa.',
+      hint: 'Odotus liittyy jäähän ja saaliseläimeen.',
+    },
+    {
+      q: 'Miten Churchilliin pääsee?',
+      options: [
+        'junalla tai lentäen, koska maantietä ei ole',
+        'autolla etelästä',
+        'laivalla ympäri vuoden',
+        'köysiradalla',
+      ],
+      correct: 0,
+      fact: 'Kaupunkiin johtaa rautatie ja lentokenttä; satama on auki vain lyhyen jäättömän kauden. Maantieyhteyttä ei ole rakennettu.',
+      hint: 'Maantietä ei ole, mutta kiskot ovat.',
+    },
+    {
+      q: 'Mikä valkoinen valas kerääntyy kesällä Churchillin edustalle?',
+      options: ['beluga', 'sinivalas', 'miekkavalas', 'kaskelotti'],
+      correct: 0,
+      level: 3,
+      fact: 'Tuhannet valkoiset belugat tulevat jokisuulle kesäksi poikimaan ja ruokailemaan. Ne ovat äänekkäitä ja niitä kutsutaan meren kanarialinnuiksi.',
+      hint: 'Valasta kutsutaan meren kanarialinnuksi.',
+    },
   ],
 
   iqaluit: [
@@ -13782,6 +14151,44 @@ const NORTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Kansa asuu arktisella alueella Grönlannista Alaskaan, ja sen kieli on inuktitut.',
       fact: 'Territorion asukkaista noin 85 prosenttia kuuluu tähän kansaan, ja inuktitut on yksi virallisista kielistä.',
+    },
+    {
+      q: 'Mitä nimi Iqaluit tarkoittaa inuktitutin kielellä?',
+      options: [
+        'paikkaa, jossa on paljon kalaa',
+        'kylmää lahtea',
+        'valkoista vuorta',
+        'suurta kaupunkia',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Nimi viittaa alueen kalaisuuteen. Kaupunki sai nykyisen nimensä 1987, kun aiempi englanninkielinen nimi jäi pois käytöstä.',
+      hint: 'Nimi liittyy ruokaan, jota vedestä saadaan.',
+    },
+    {
+      q: 'Miten tavarat saapuvat Iqaluitiin?',
+      options: [
+        'laivalla lyhyen kesän aikana ja muuten lentäen',
+        'junalla',
+        'kuorma-autolla etelästä',
+        'putkea pitkin',
+      ],
+      correct: 0,
+      fact: 'Vuosittainen laivakuljetus tuo ruoan ja rakennustarvikkeet kerralla, ja loppuvuoden tavarat lennätetään. Siksi hinnat ovat korkeat.',
+      hint: 'Meritse pääsee vain osan vuotta.',
+    },
+    {
+      q: 'Millä kirjoitetaan inuktitutia?',
+      options: [
+        'omilla tavumerkeillä',
+        'kiinalaisilla merkeillä',
+        'kyrillisillä kirjaimilla',
+        'hieroglyfeillä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Inuktitutia kirjoitetaan tavumerkeillä, jotka näkyvät myös liikennemerkeissä ja kylteissä. Kieli on Nunavutin virallinen kieli englannin ja ranskan ohella.',
+      hint: 'Merkit vastaavat tavuja, eivät yksittäisiä äänteitä.',
     },
   ],
 
@@ -13802,6 +14209,44 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Jäätön alue on kapea kaistale rannikkoa, jossa kaikki asutus sijaitsee.',
       fact: 'Mannerjäätikkö on maailman toiseksi suurin Etelämantereen jälkeen. Paksuimmillaan se on yli kolme kilometriä.',
     },
+    {
+      q: 'Missä Nuuk sijaitsee?',
+      options: [
+        'Grönlannin lounaisrannikolla',
+        'Grönlannin keskellä jäätiköllä',
+        'Islannissa',
+        'Kanadan preerialla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on vuonojen suojassa, jossa meri pysyy talvellakin osin sulana. Se on maailman pohjoisimpia pääkaupunkeja.',
+      hint: 'Paikka on rannikolla, ei jäätiköllä.',
+    },
+    {
+      q: 'Mikä on Grönlannin asema?',
+      options: [
+        'Tanskan kuningaskunnan itsehallintoalue',
+        'itsenäinen tasavalta',
+        'Kanadan maakunta',
+        'Norjan lääni',
+      ],
+      correct: 0,
+      fact: 'Grönlannilla on oma parlamentti ja hallitus, ja se päättää itse useimmista asioistaan. Ulkopolitiikka ja puolustus ovat pääosin Tanskan vastuulla.',
+      hint: 'Alueella on oma parlamentti mutta ei täyttä itsenäisyyttä.',
+    },
+    {
+      q: 'Mitä tutkijat saavat selville Grönlannin jäätiköstä poratuista jäänäytteistä?',
+      options: [
+        'menneiden aikojen ilmastosta',
+        'tulevista maanjäristyksistä',
+        'merenpohjan muodosta',
+        'tähtien liikkeistä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Jään kerroksiin on tallentunut ilmakuplia ja pölyä satojentuhansien vuosien ajalta. Niistä luetaan lämpötiloja ja ilmakehän koostumusta.',
+      hint: 'Jään sisään on jäänyt ilmaa vuosituhansien takaa.',
+    },
   ],
 
   labrador: [
@@ -13820,6 +14265,34 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Rotu kehittyi kalastajien apuna alueella, jossa se veti verkkoja jääkylmästä merestä.',
       fact: 'Rodun esi-isät auttoivat kalastajia Newfoundlandissa ja Labradorissa. Lopulliseen muotoonsa rotu jalostettiin Britanniassa.',
+    },
+    {
+      q: 'Millaista maastoa Labradorissa on?',
+      options: ['tundraa ja havumetsää', 'sademetsää', 'aavikkoa', 'viinitarhoja'],
+      correct: 0,
+      level: 1,
+      fact: 'Etelässä kasvaa havumetsää ja pohjoisessa maisema muuttuu puuttomaksi tundraksi. Rannikko on karu ja kallioinen.',
+      hint: 'Pohjoisessa puut loppuvat kokonaan.',
+    },
+    {
+      q: 'Mitä Labradorin rannikolta kalastetaan nykyään?',
+      options: ['rapuja ja katkarapuja', 'tonnikalaa', 'sardiineja', 'ankeriaita'],
+      correct: 0,
+      fact: 'Turskakannan romahdettua 1990-luvulla kalastus siirtyi äyriäisiin. Ne ovat nyt alueen tärkein saalis.',
+      hint: 'Saalis liikkuu pohjalla ja siinä on kuori.',
+    },
+    {
+      q: 'Mistä Churchill Falls on Labradorissa kuuluisa?',
+      options: [
+        'suuresta vesivoimalaitoksesta',
+        'kultakaivoksesta',
+        'lentoasemasta',
+        'yliopistosta',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Voimalaitos on Pohjois-Amerikan suurimpia, ja sen sähköstä suuri osa myydään naapurimaakuntaan. Sopimuksen ehdoista on kiistelty vuosikymmeniä.',
+      hint: 'Laitos tuottaa sähköä putoavasta vedestä.',
     },
   ],
 
@@ -13840,6 +14313,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Kylmä ja lämmin merivirta kohtaavat matalikolla, mikä teki siitä maailman rikkaimman kalavesialueen.',
       fact: 'Kannat romahtivat liikakalastuksen takia, ja Kanada lopetti pyynnin 1992. Kanta ei ole toipunut entiselleen.',
     },
+    {
+      q: 'Mistä St. John’sin rinteet tunnetaan?',
+      options: [
+        'kirkkaanvärisistä puutaloista',
+        'marmoripalatseista',
+        'pilvenpiirtäjistä',
+        'luolakodeista',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Rinteiden puutalot on maalattu kirkkain värein, ja korttelia kutsutaan hyytelöpapurivistöksi. Värit erottuvat myös sumussa.',
+      hint: 'Talot erottuvat sumusta väriensä ansiosta.',
+    },
+    {
+      q: 'Mitä Grand Banks -matalikolta pyydettiin vuosisatojen ajan?',
+      options: ['turskaa', 'valaita', 'helmiä', 'hylkeitä'],
+      correct: 0,
+      fact: 'Matalikko oli maailman tuottoisimpia kalavesiä, ja sinne purjehdittiin Euroopasta jo 1500-luvulla. Kanta romahti 1992 ja kalastus kiellettiin.',
+      hint: 'Kala on valkolihainen ja siitä tehdään myös kuivattua ruokaa.',
+    },
+    {
+      q: 'Mikä löydettiin L’Anse aux Meadowsista Newfoundlandin pohjoiskärjestä?',
+      options: [
+        'viikinkien asuinpaikka noin vuodelta 1000',
+        'kultakaivos',
+        'muinainen kaupunki',
+        'meteoriittikraatteri',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Löytö osoitti, että eurooppalaiset kävivät Amerikassa jo 500 vuotta ennen Kolumbusta. Paikka on maailmanperintökohde.',
+      hint: 'Löytö liittyy pohjoismaisiin merenkulkijoihin.',
+    },
   ],
 
   halifax: [
@@ -13858,6 +14364,44 @@ const NORTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Laiva upposi jäävuoreen ensimmäisellä matkallaan Southamptonista New Yorkiin.',
       fact: 'Halifax oli lähin suuri satama onnettomuuspaikalle. Kaupungin hautausmaille on haudattu yli sata uhria.',
+    },
+    {
+      q: 'Millainen kaupunki Halifax on?',
+      options: [
+        'Atlantin rannikon satamakaupunki',
+        'sisämaan kaivoskaupunki',
+        'vuoristokylä',
+        'aavikkokaupunki',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Halifaxin luonnonsatama on syvä ja jäätön, joten se on ollut sotilas- ja kauppasatama 1700-luvulta asti.',
+      hint: 'Kaupunki elää merestä ja laivoista.',
+    },
+    {
+      q: 'Mitä Halifaxissa tapahtui vuonna 1917?',
+      options: [
+        'satamassa sattui suuri räjähdys',
+        'kaupunki upposi',
+        'tulivuori purkautui',
+        'kaupunki siirrettiin',
+      ],
+      correct: 0,
+      fact: 'Kaksi laivaa törmäsi, ja toisen räjähdysainelasti syttyi. Onnettomuus tuhosi kaupunginosan, ja sen jälkeen apua saatiin muun muassa Bostonista — kiitokseksi Halifax lähettää sinne joulukuusen joka vuosi.',
+      hint: 'Tapahtuma liittyi kahden laivan törmäykseen.',
+    },
+    {
+      q: 'Miksi Halifaxin satama pysyy auki talvella?',
+      options: [
+        'vesi on syvää ja meri pysyy sulana',
+        'satama lämmitetään',
+        'satamaa käytetään vain kesällä',
+        'jäänmurtajat kulkevat päivittäin',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Syvä ja avoin satama sekä lämmin merivirta pitävät veden sulana, kun sisämaan väylät jäätyvät. Siksi talviliikenne ohjautui sinne.',
+      hint: 'Syy on veden syvyydessä ja lämpötilassa.',
     },
   ],
 
@@ -13878,6 +14422,34 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Joki yhdistää Suuret järvet Atlanttiin ja on nimetty pyhimyksen mukaan.',
       fact: 'Väylä vie valtamerialukset Atlantilta Suurille järville asti, yli 3 700 kilometrin päähän sisämaahan.',
     },
+    {
+      q: 'Mikä kukkula kohoaa keskellä Montrealia?',
+      options: ['Mont Royal', 'Fuji', 'Table Mountain', 'Vesuvius'],
+      correct: 0,
+      level: 1,
+      fact: 'Kukkulan puisto suunniteltiin samalla kädellä kuin New Yorkin Central Park. Kaupungin nimi juontuu kukkulan nimestä.',
+      hint: 'Kaupungin nimi on lyhentynyt kukkulan nimestä.',
+    },
+    {
+      q: 'Mikä Montrealin maanalainen verkosto on maailman laajimpia?',
+      options: [
+        'kauppojen ja käytävien verkosto keskustan alla',
+        'viemäritunnelit',
+        'luolasto',
+        'metroasemien parkkihallit',
+      ],
+      correct: 0,
+      fact: 'Kymmenien kilometrien käytäväverkosto yhdistää kauppoja, asemia ja toimistoja. Talvipakkasilla keskustassa voi liikkua ulos menemättä.',
+      hint: 'Verkosto auttaa liikkumaan pakkasella.',
+    },
+    {
+      q: 'Mikä maailmannäyttely järjestettiin Montrealissa vuonna 1967?',
+      options: ['Expo 67', 'maailman ensimmäinen maailmannäyttely', 'olympialaiset', 'MM-kisat'],
+      correct: 0,
+      level: 3,
+      fact: 'Näyttely rakennettiin osin tekosaarille, ja sen jäljiltä kaupunkiin jäi metro ja pallomainen Biosphère. Yli 50 miljoonaa kävijää oli tuolloin ennätys.',
+      hint: 'Tapahtuma oli maailmannäyttely, ja se on nimetty vuoden mukaan.',
+    },
   ],
 
   toronto: [
@@ -13896,6 +14468,34 @@ const NORTHAMERICA_QUESTIONS = {
       level: 1,
       hint: 'Putoukset ovat Kanadan ja Yhdysvaltain rajalla Erie- ja Ontariojärven välissä.',
       fact: 'Putousten yli virtaa yli 2 800 kuutiometriä vettä sekunnissa. Vesi pyörittää myös suuria vesivoimaloita.',
+    },
+    {
+      q: 'Mikä torni on Toronton maamerkki?',
+      options: ['CN Tower', 'Eiffel-torni', 'Big Ben', 'Galata-torni'],
+      correct: 0,
+      level: 1,
+      fact: 'Vuonna 1976 valmistunut torni oli maailman korkein vapaasti seisova rakennelma yli 30 vuotta. Sen lasilattialta näkee suoraan alas.',
+      hint: 'Torni on yli 500 metriä korkea ja siinä on lasilattia.',
+    },
+    {
+      q: 'Kuinka monta kieltä Torontossa puhutaan?',
+      options: ['yli 150', 'noin viisi', 'noin 20', 'vain englantia'],
+      correct: 0,
+      fact: 'Yli puolet asukkaista on syntynyt Kanadan ulkopuolella, ja kaupunki on yksi maailman monikulttuurisimmista.',
+      hint: 'Määrä on yli sata.',
+    },
+    {
+      q: 'Mihin Suurten järvien laivaväylä johtaa Torontosta?',
+      options: [
+        'Atlantille Saint Lawrence -jokea pitkin',
+        'Tyynellemerelle',
+        'Jäämerelle',
+        'Meksikonlahdelle',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Sulkujen ketju nostaa ja laskee laivat järvien ja meren välillä. Väylä on auki noin yhdeksän kuukautta vuodessa.',
+      hint: 'Reitti kulkee sulkujen kautta itään mereen.',
     },
   ],
 
@@ -13916,6 +14516,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Teräsrunko mahdollisti sen, ettei seinien tarvinnut enää kannattaa koko rakennusta.',
       fact: 'Home Insurance Building valmistui 1885 ja oli ensimmäinen teräsrunkoinen korkea rakennus. Suurpalo 1871 oli tehnyt tilaa uudelle rakentamiselle.',
     },
+    {
+      q: 'Mikä on Chicagon asema Yhdysvalloissa?',
+      options: [
+        'yksi maan suurimmista kaupungeista ja rautateiden solmukohta',
+        'maan pääkaupunki',
+        'pieni satamakylä',
+        'osavaltio',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Chicago kasvoi rautateiden risteykseen, ja sen kautta kulki vilja ja liha itärannikolle. Asema on yhä maan vilkkaimpia.',
+      hint: 'Kaupunki kasvoi kiskojen risteykseen.',
+    },
+    {
+      q: 'Mikä tuhosi suuren osan Chicagosta vuonna 1871?',
+      options: ['suurpalo', 'tulva', 'maanjäristys', 'hurrikaani'],
+      correct: 0,
+      fact: 'Palo tuhosi puisen keskustan, ja uudelleenrakentamisessa siirryttiin teräkseen ja kiveen. Se avasi tien pilvenpiirtäjille.',
+      hint: 'Puukaupungin suurin vihollinen.',
+    },
+    {
+      q: 'Mitä Chicago-joelle tehtiin vuonna 1900?',
+      options: [
+        'sen virtaussuunta käännettiin pois järvestä',
+        'se peitettiin kokonaan',
+        'se padottiin kuivaksi',
+        'se siirrettiin toiseen kaupunkiin',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kaupungin jätevedet pilasivat juomaveden, joten joki käännettiin virtaamaan sisämaahan päin kanavan avulla. Työ oli aikansa suurimpia.',
+      hint: 'Muutos koski veden kulkusuuntaa.',
+    },
   ],
 
   appalakit: [
@@ -13934,6 +14567,34 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Reitti on noin 3 500 kilometriä pitkä ja kulkee Georgiasta Maineen.',
       fact: 'Koko reitin kävelemiseen menee yleensä viisi tai kuusi kuukautta. Vain osa yrittäjistä pääsee perille asti.',
+    },
+    {
+      q: 'Millaisia vuoria Appalakit ovat?',
+      options: [
+        'vanhoja ja kuluneita metsäisiä vuoria',
+        'teräviä ja jäätikköisiä huippuja',
+        'tulivuoria',
+        'hiekkadyynejä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Vuoret ovat satoja miljoonia vuosia vanhoja ja siksi pyöreitä ja metsän peittämiä. Ne olivat aikoinaan Alppien korkuisia.',
+      hint: 'Ikä näkyy pyöreinä muotoina.',
+    },
+    {
+      q: 'Mitä Appalakeista on louhittu paljon?',
+      options: ['kivihiiltä', 'timantteja', 'kultaa', 'suolaa'],
+      correct: 0,
+      fact: 'Kivihiili on ollut alueen tärkein elinkeino ja samalla sen suurin ympäristöongelma. Kaivosten sulkeminen on muuttanut kokonaisia laaksoja.',
+      hint: 'Polttoaine on mustaa ja syntyi muinaisista soista.',
+    },
+    {
+      q: 'Mikä musiikkiperinne on syntynyt Appalakeilla?',
+      options: ['bluegrass ja vuoristokansanmusiikki', 'jazz', 'reggae', 'tango'],
+      correct: 0,
+      level: 3,
+      fact: 'Banjo, viulu ja mandoliini yhdistyivät irlantilaisten, englantilaisten ja afroamerikkalaisten perinteistä. Bluegrass syntyi tästä 1940-luvulla.',
+      hint: 'Soittimina ovat banjo ja viulu.',
     },
   ],
 
@@ -13959,6 +14620,44 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Alue Floridan, Puerto Ricon ja saarten välissä sai maineensa 1950-luvun lehtijutuista.',
       fact: 'Tutkimusten mukaan alueella katoaa aluksia suunnilleen saman verran kuin muillakin vilkkailla merialueilla.',
     },
+    {
+      q: 'Kenen aluetta Bermuda on?',
+      options: [
+        'Britannian merentakainen alue',
+        'Yhdysvaltain osavaltio',
+        'itsenäinen tasavalta',
+        'Kanadan maakunta',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Saarilla on oma parlamentti ja hallitus, mutta ulkopolitiikka on Britannian vastuulla. Bermuda on yksi Britannian vanhimmista merentakaisista alueista.',
+      hint: 'Alueella on oma parlamentti mutta kuningaskunta hoitaa ulkopolitiikan.',
+    },
+    {
+      q: 'Miksi Bermudan talojen katot ovat valkoisia ja porrastettuja?',
+      options: [
+        'ne keräävät sadeveden talousvedeksi',
+        'ne suojaavat lumelta',
+        'ne on maalattu koristeeksi',
+        'ne estävät maanjäristysvahingot',
+      ],
+      correct: 0,
+      fact: 'Saarella ei ole jokia eikä järviä, joten katot ohjaavat sadeveden säiliöihin. Kalkittu pinta myös puhdistaa vettä.',
+      hint: 'Syy liittyy juomaveden hankintaan.',
+    },
+    {
+      q: 'Miksi Bermudassa on lämmintä pohjoisesta sijainnista huolimatta?',
+      options: [
+        'Golfvirta lämmittää merta',
+        'saari on tulivuoren päällä',
+        'siellä ei tuule',
+        'saari on trooppisella vyöhykkeellä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Lämmin merivirta pitää talvet leutoina ja mahdollistaa koralliriutat, jotka ovat maailman pohjoisimpia.',
+      hint: 'Sama virta lämmittää myös Länsi-Eurooppaa.',
+    },
   ],
 
   denver: [
@@ -13983,6 +14682,34 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Vuoristo kulkee Pohjois-Amerikan halki Alaskasta New Mexicoon.',
       fact: 'Vuoristo muodostaa mannerjakajan: sen länsipuolelta vedet virtaavat Tyynellemerelle ja itäpuolelta Atlantille.',
     },
+    {
+      q: 'Minkä osavaltion pääkaupunki Denver on?',
+      options: ['Coloradon', 'Texasin', 'Nevadan', 'Kansasin'],
+      correct: 0,
+      level: 1,
+      fact: 'Denver on Kalliovuorten itäpuolella tasangon reunalla. Vuoret näkyvät keskustasta selvästi lännessä.',
+      hint: 'Osavaltion nimi on espanjaa ja tarkoittaa punaista.',
+    },
+    {
+      q: 'Miksi urheilijat harjoittelevat mielellään Denverin korkeudessa?',
+      options: [
+        'ohuessa ilmassa keho tuottaa enemmän punasoluja',
+        'ilma on kosteampaa',
+        'siellä ei sada',
+        'ruoka on halvempaa',
+      ],
+      correct: 0,
+      fact: 'Mailin korkeudessa hapen osapaine on pienempi, ja keho sopeutuu siihen. Merenpinnan tasolla kestävyys tuntuu sen jälkeen paremmalta.',
+      hint: 'Vaikutus liittyy hapen määrään ilmassa.',
+    },
+    {
+      q: 'Mikä synnytti Denverin vuonna 1858?',
+      options: ['kultaryntäys', 'rautatie', 'kaivosyhtiön tehdas', 'armeijan varuskunta'],
+      correct: 0,
+      level: 3,
+      fact: 'Kultaa löytyi joesta, ja telttakylä kasvoi kaupungiksi muutamassa vuodessa. Kulta loppui pian, mutta kauppa ja rautatie jäivät.',
+      hint: 'Alku oli sama kuin Kalgoorliessa ja Klondikessa.',
+    },
   ],
 
   santafe: [
@@ -14001,6 +14728,34 @@ const NORTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Materiaali on auringossa kuivattua maata ja olkea, ja se pitää sisätilat viileinä.',
       fact: 'Kaupungin rakennusmääräykset vaativat yhä keskustassa perinteistä pueblo-tyyliä, joten katukuva on yhtenäinen.',
+    },
+    {
+      q: 'Mikä Santa Fe on New Mexicossa?',
+      options: ['osavaltion pääkaupunki', 'suurin kaupunki', 'satamakaupunki', 'kaivoskylä'],
+      correct: 0,
+      level: 1,
+      fact: 'Santa Fe perustettiin 1610, ja se on Yhdysvaltain vanhimpia yhä toimivia pääkaupunkeja. Se on myös maan korkeimmalla sijaitseva osavaltion pääkaupunki.',
+      hint: 'Kaupunki hoitaa osavaltion hallintoa, vaikkei ole sen suurin.',
+    },
+    {
+      q: 'Mikä kauppareitti päättyi Santa Feen 1800-luvulla?',
+      options: ['Santa Fe Trail', 'Silkkitie', 'Oregon Trail', 'Route 66'],
+      correct: 0,
+      fact: 'Vaunusaattueet toivat tavaraa Missourista preerian halki. Reitti yhdisti Yhdysvaltain idän ja Meksikon pohjoisen.',
+      hint: 'Reitti on nimetty päätepisteensä mukaan.',
+    },
+    {
+      q: 'Ketkä ovat pueblo-kansat?',
+      options: [
+        'alueen alkuperäiskansoja, jotka rakensivat monikerroksisia savitiilikyliä',
+        'espanjalaisia siirtolaisia',
+        'kullankaivajia',
+        'paimentolaisia Meksikosta',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Pueblo-kansat ovat asuneet alueella tuhansia vuosia, ja osa kylistä on yhä asuttuja. Taos Pueblo on maailmanperintökohde.',
+      hint: 'Sana tarkoittaa espanjaksi kylää, ja kylät ovat savitiilestä.',
     },
   ],
 
@@ -14021,6 +14776,34 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Osavaltion lempinimi on suoraan rotkon mukaan Grand Canyon State.',
       fact: 'Rotkon pohjalla on usein yli 15 astetta lämpimämpää kuin reunalla, koska korkeusero on niin suuri.',
     },
+    {
+      q: 'Kuinka syvä Grand Canyon on syvimmillään?',
+      options: [
+        'yli kilometrin',
+        'noin sata metriä',
+        'noin kymmenen metriä',
+        'yli kymmenen kilometriä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kanjoni on paikoin yli 1 800 metriä syvä ja 29 kilometriä leveä. Sen pohjalla virtaa Colorado-joki.',
+      hint: 'Syvyys on satoja metrejä yli tuhannen.',
+    },
+    {
+      q: 'Miten kanjonin pohjalle pääsee?',
+      options: ['jalan, muulilla tai joella veneellä', 'autolla', 'hissillä', 'junalla'],
+      correct: 0,
+      fact: 'Pohjalle laskeutuminen ja nousu vievät päivän suuntaansa, ja lämpötila nousee alhaalla kymmeniä asteita. Muulikaravaanit ovat kulkeneet reittejä yli sata vuotta.',
+      hint: 'Autolle ei ole tietä alas.',
+    },
+    {
+      q: 'Mikä kansa asuu kanjonin sisällä sivukanjonissa?',
+      options: ['havasupai', 'inuiitit', 'métis', 'maorit'],
+      correct: 0,
+      level: 3,
+      fact: 'Havasupai-kansan kylään Supaihin ei johda tietä: sinne mennään kävellen, hevosella tai helikopterilla. Kylän lähellä on turkoosin värisiä vesiputouksia.',
+      hint: 'Kansan kylään ei johda tietä lainkaan.',
+    },
   ],
 
   losangeles: [
@@ -14039,6 +14822,39 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Siirroksessa Tyynenmeren laatta liukuu Pohjois-Amerikan laatan ohi.',
       fact: 'Kaupunki liikkuu siirroksen takia muutaman senttimetrin vuodessa kohti San Franciscoa.',
+    },
+    {
+      q: 'Minkä valtameren rannalla Los Angeles sijaitsee?',
+      options: ['Tyynenmeren', 'Atlantin', 'Intian valtameren', 'Jäämeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupungin rannat ovat surffauksen kotiseutua, ja satama-alue on maan vilkkain. Meri viilentää rannikkoa kesähelteillä.',
+      hint: 'Sama valtameri huuhtoo myös Japanin rantoja.',
+    },
+    {
+      q: 'Mikä on Los Angelesin ja Long Beachin satama Yhdysvalloissa?',
+      options: [
+        'maan vilkkain konttisatama',
+        'maan ainoa satama',
+        'pieni kalasatama',
+        'suljettu sotilassatama',
+      ],
+      correct: 0,
+      fact: 'Suuri osa Aasiasta tulevasta tavarasta saapuu maahan näiden satamien kautta. Kontit jatkavat matkaa junilla ja rekoilla itään.',
+      hint: 'Satamien kautta tulee tavara Aasiasta.',
+    },
+    {
+      q: 'Mistä Los Angeles saa juomavetensä?',
+      options: [
+        'satojen kilometrien päästä akvedukteja pitkin',
+        'paikallisista joista',
+        'merivedestä suolattuna',
+        'sadevesisäiliöistä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Vesi tuodaan Sierra Nevadan sulamisvesistä ja Colorado-joesta pitkiä kanavia pitkin. Vesikysymys on muovannut koko Kalifornian historiaa.',
+      hint: 'Vesi ei ole peräisin kaupungin läheltä.',
     },
   ],
 
@@ -14069,6 +14885,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Laatta liikkuu paikallaan pysyvän sulan pisteen yli, ja siksi saaret ovat jonossa iän mukaan.',
       fact: 'Kīlauea on yksi maailman aktiivisimmista tulivuorista. Mauna Kea on merenpohjasta mitattuna maailman korkein vuori.',
     },
+    {
+      q: 'Mitkä ovat Havaijin viralliset kielet?',
+      options: [
+        'havaiji ja englanti',
+        'espanja ja englanti',
+        'japani ja englanti',
+        'vain englanti',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Havaijin kieli oli pitkään väistymässä, mutta kielipesät ja koulut ovat elvyttäneet sitä. Paikannimet ja tervehdykset ovat arjessa laajassa käytössä.',
+      hint: 'Toinen kielistä on saarten oma alkuperäiskieli.',
+    },
+    {
+      q: 'Mikä on lei?',
+      options: ['kukista tai lehdistä punottu seppele', 'tanssi', 'vene', 'juhlaruoka'],
+      correct: 0,
+      fact: 'Lei annetaan tervehdykseksi, kiitokseksi tai juhlan merkiksi. Sen tekeminen ja antaminen on osa havaijilaista tapakulttuuria.',
+      hint: 'Se annetaan kaulaan tervehdyksen merkiksi.',
+    },
+    {
+      q: 'Mikä on Mauna Kea merenpohjasta huipulle mitattuna?',
+      options: [
+        'maailman korkein vuori',
+        'maailman matalin saari',
+        'maailman suurin kraatteri',
+        'maailman vanhin kallio',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Merenpohjasta mitattuna vuori on yli 10 000 metriä korkea, vaikka merenpinnan yläpuolelle jää 4 207 metriä. Huipulla on tähtitieteellisiä observatorioita, ja alue on havaijilaisille pyhä.',
+      hint: 'Mittaus alkaa meren pohjasta, ei pinnasta.',
+    },
   ],
 
   dallas: [
@@ -14093,6 +14942,44 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Tapaus sattui avoautossa Dealey Plazalla, ja siitä on kiistelty siitä lähtien.',
       fact: 'Tapahtumapaikan varastorakennuksessa on nykyään museo, joka kertoo tapahtumista ja niiden tutkinnasta.',
     },
+    {
+      q: 'Mikä Texas on Yhdysvalloissa?',
+      options: [
+        'pinta-alaltaan toiseksi suurin osavaltio',
+        'pienin osavaltio',
+        'maan pääkaupunki',
+        'itsenäinen valtio',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Vain Alaska on suurempi. Texas oli itsenäinen tasavalta vuosina 1836–1845 ennen liittymistään Yhdysvaltoihin.',
+      hint: 'Vain Alaska on suurempi.',
+    },
+    {
+      q: 'Mistä Dallasin varhainen vauraus syntyi?',
+      options: [
+        'puuvillakaupasta ja myöhemmin öljystä',
+        'kalastuksesta',
+        'turkiskaupasta',
+        'kaivostoiminnasta',
+      ],
+      correct: 0,
+      fact: 'Dallas oli puuvillan kauppapaikka, ja 1930-luvun öljylöydöt tekivät siitä rahoituksen keskuksen. Nykyään talous nojaa palveluihin ja tekniikkaan.',
+      hint: 'Ensin kasvi, sitten musta neste.',
+    },
+    {
+      q: 'Mikä on erityistä Dallas–Fort Worthin lentoasemassa?',
+      options: [
+        'se on pinta-alaltaan suurempi kuin Manhattan',
+        'se on maailman pienin',
+        'siellä ei ole kiitoteitä',
+        'se on veden päällä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kenttä on yksi maailman vilkkaimmista ja niin laaja, että terminaalien välillä kulkee oma juna.',
+      hint: 'Vertailukohtana on New Yorkin saari.',
+    },
   ],
 
   neworleans: [
@@ -14111,6 +14998,29 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Napoleon myi alueen rahoittaakseen sotiaan Euroopassa.',
       fact: 'Kauppa kaksinkertaisti Yhdysvaltain pinta-alan yhdellä sopimuksella. Hinta oli 15 miljoonaa dollaria.',
+    },
+    {
+      q: 'Minkä joen suulla New Orleans sijaitsee?',
+      options: ['Mississippin', 'Coloradon', 'Rio Granden', 'Hudsonin'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on joen mutkassa lähellä Meksikonlahtea, ja suuri osa siitä on merenpinnan alapuolella. Padot ja pumput pitävät veden loitolla.',
+      hint: 'Joki on Yhdysvaltain tunnetuin ja pisimpiä.',
+    },
+    {
+      q: 'Mikä karnevaali täyttää New Orleansin kadut helmi-maaliskuussa?',
+      options: ['Mardi Gras', 'Oktoberfest', 'Diwali', 'Hanami'],
+      correct: 0,
+      fact: 'Kulkueiden vaunuja rakentavat yhdistykset ympäri vuoden, ja katsojille heitetään helminauhoja. Juhla päättyy paastonajan alkuun.',
+      hint: 'Juhla päättyy paastonajan alkaessa.',
+    },
+    {
+      q: 'Mitä New Orleansissa tapahtui vuonna 2005?',
+      options: ['hurrikaani Katrina ja tulvat', 'suurpalo', 'maanjäristys', 'kuivuus'],
+      correct: 0,
+      level: 3,
+      fact: 'Myrskyn jälkeen padot pettivät ja suuri osa kaupungista jäi veden alle. Sen jälkeen tulvasuojausta on rakennettu uudelleen ja korotettu.',
+      hint: 'Tapahtuma liittyi myrskyyn ja pettäneisiin patoihin.',
     },
   ],
 
@@ -14131,6 +15041,34 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Aluetta kutsutaan ruohojoeksi, koska vesi virtaa siellä hitaasti ruohikon läpi merta kohti.',
       fact: 'Alue on ainoa paikka maailmassa, jossa alligaattorit ja krokotiilit elävät luonnossa samalla alueella.',
     },
+    {
+      q: 'Mikä kieli kuuluu Miamin kaduilla englannin ohella?',
+      options: ['espanja', 'ranska', 'saksa', 'japani'],
+      correct: 0,
+      level: 1,
+      fact: 'Suurella osalla asukkaista on juuret Kuubassa tai muualla Latinalaisessa Amerikassa. Kaksikielisyys näkyy kaupoissa, radiossa ja kouluissa.',
+      hint: 'Kieli on sama kuin Havannassa.',
+    },
+    {
+      q: 'Millainen alue Everglades on?',
+      options: ['hitaasti virtaava ruohoinen kosteikko', 'hiekka-aavikko', 'vuoristo', 'havumetsä'],
+      correct: 0,
+      fact: 'Vesi virtaa leveänä ja matalana järveltä merelle, ja aluetta kutsutaan ruohojoeksi. Siellä elää alligaattoreita ja harvinaisia lintuja.',
+      hint: 'Aluetta kutsutaan ruohojoeksi.',
+    },
+    {
+      q: 'Miksi merenpinnan nousu on Miamille erityisen hankala?',
+      options: [
+        'kaupunki on huokoisen kalkkikiven päällä, jonka läpi vesi nousee',
+        'kaupungissa ei ole patoja rakennettu koskaan',
+        'kaupunki on vuorella',
+        'meri on siellä matalampi kuin muualla',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Muuri ei auta, koska vesi nousee maaperän läpi kaduille. Siksi katuja on korotettu ja pumppuja rakennettu lisää.',
+      hint: 'Ongelma tulee alhaalta, ei rannalta.',
+    },
   ],
 
   santiagodecuba: [
@@ -14149,6 +15087,29 @@ const NORTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Tyylit syntyivät espanjalaisten ja afrikkalaisten perinteiden kohdatessa saarella.',
       fact: 'Son cubano on salsan perusta. Buena Vista Social Club teki saaren vanhat mestarit tunnetuiksi maailmalla 1990-luvulla.',
+    },
+    {
+      q: 'Millä saarella Santiago de Cuba sijaitsee?',
+      options: ['Kuuballa', 'Jamaikalla', 'Haitilla', 'Puerto Ricossa'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on saaren kaakkoisosassa vuorten ja meren välissä. Se oli Kuuban ensimmäinen pääkaupunki 1500-luvulla.',
+      hint: 'Saari on Karibian suurin.',
+    },
+    {
+      q: 'Mikä vuoristo kohoaa Santiago de Cuban takana?',
+      options: ['Sierra Maestra', 'Andit', 'Alpit', 'Atlas'],
+      correct: 0,
+      fact: 'Vuoristo on Kuuban korkein ja metsäinen. Sen kylissä kahvinviljely on vanha elinkeino.',
+      hint: 'Vuoriston nimi tarkoittaa espanjaksi päävuoristoa.',
+    },
+    {
+      q: 'Mikä musiikkityyli sai alkunsa Kuuban itäosassa?',
+      options: ['son', 'tango', 'samba', 'reggae'],
+      correct: 0,
+      level: 3,
+      fact: 'Sonissa yhdistyivät espanjalainen kitaramusiikki ja afrikkalaiset rytmit. Siitä kehittyivät myöhemmin salsa ja monet muut lajit.',
+      hint: 'Tyylistä kehittyi myöhemmin salsa.',
     },
   ],
 
@@ -14169,6 +15130,34 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Saari oli Madridista käsin hallittu yli 400 vuotta vuoteen 1898 asti.',
       fact: 'Saarella on kaksi virallista kieltä, mutta arjessa puhutaan lähes yksinomaan toista niistä.',
     },
+    {
+      q: 'Mikä linnoitus vartioi San Juanin satamaa?',
+      options: ['El Morro', 'Kreml', 'Tower of London', 'Suomenlinna'],
+      correct: 0,
+      level: 1,
+      fact: '1500-luvulla aloitettu linnoitus on kuusikerroksinen ja seisoo niemen kärjessä. Se on maailmanperintökohde.',
+      hint: 'Linnoitus seisoo niemen kärjessä sataman suulla.',
+    },
+    {
+      q: 'Mikä musiikkilaji on levinnyt Puerto Ricosta maailmalle?',
+      options: ['reggaetón', 'polkka', 'tango', 'fado'],
+      correct: 0,
+      fact: 'Reggaetón syntyi 1990-luvulla karibialaisten ja latinalaisamerikkalaisten tyylien yhdistelmästä. Se on nykyään yksi maailman kuunnelluimmista lajeista.',
+      hint: 'Laji syntyi 1990-luvulla Karibialla.',
+    },
+    {
+      q: 'Millainen asema Puerto Ricolla on Yhdysvalloissa?',
+      options: [
+        'se on Yhdysvaltain alue, jonka asukkaat ovat kansalaisia mutta eivät äänestä presidentinvaaleissa',
+        'se on osavaltio',
+        'se on itsenäinen valtio',
+        'se on Espanjan alue',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Puerto Rico on liittovaltioon kuulumaton alue. Asemasta on äänestetty useita kertoja, ja mielipiteet jakautuvat osavaltioaseman, nykytilan ja itsenäisyyden välillä.',
+      hint: 'Asukkaat ovat kansalaisia, mutta alue ei ole osavaltio.',
+    },
   ],
 
   monterrey: [
@@ -14187,6 +15176,34 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Vuoristo jakautuu itäiseen ja läntiseen haaraan, joiden väliin jää Meksikon ylätasanko.',
       fact: 'Kaupungin maamerkki on Cerro de la Silla eli Satulavuori, jonka kaksihuippuinen siluetti näkyy sen vaakunassa.',
+    },
+    {
+      q: 'Missä maassa Monterrey sijaitsee?',
+      options: ['Meksikossa', 'Yhdysvalloissa', 'Guatemalassa', 'Kuubassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Monterrey on maan pohjoisosassa lähellä Yhdysvaltain rajaa. Se on Meksikon teollisuuden ja koulutuksen keskuksia.',
+      hint: 'Maa on Yhdysvaltain eteläinen naapuri.',
+    },
+    {
+      q: 'Mikä satulan muotoinen vuori on Monterreyn tunnus?',
+      options: ['Cerro de la Silla', 'Fuji', 'Kilimandžaro', 'Table Mountain'],
+      correct: 0,
+      fact: 'Vuoren kaksihuippuinen muoto näkyy kaupungin vaakunassa ja lukemattomissa logoissa. Nimi tarkoittaa satulavuorta.',
+      hint: 'Nimi tarkoittaa espanjaksi satulaa.',
+    },
+    {
+      q: 'Mistä Monterrey tunnetaan Meksikossa?',
+      options: [
+        'teollisuudesta ja yliopistoista',
+        'kalastuksesta',
+        'viininviljelystä',
+        'matkailusta rannoille',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kaupungissa on terästehtaita, panimoita ja maan tunnetuimpia teknillisiä yliopistoja. Sitä kutsutaan usein Meksikon teollisuuspääkaupungiksi.',
+      hint: 'Kaupunkia kutsutaan maan teollisuuspääkaupungiksi.',
     },
   ],
 
@@ -14212,6 +15229,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Pehmeä järvisavi tiivistyy, kun sen alta otetaan vettä.',
       fact: 'Osa kaupungista on vajonnut yli kymmenen metriä sadassa vuodessa. Vanhat rakennukset kallistuvat ja kadut aaltoilevat.',
     },
+    {
+      q: 'Kuinka korkealla Mexico City sijaitsee?',
+      options: [
+        'noin 2 240 metrissä',
+        'merenpinnan tasolla',
+        'noin 500 metrissä',
+        'yli 5 000 metrissä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on vuorten ympäröimässä laaksossa, joten ilma on ohutta ja illat viileitä. Korkeus vaikuttaa myös ruoanlaittoon ja urheiluun.',
+      hint: 'Korkeus on yli kaksi kilometriä.',
+    },
+    {
+      q: 'Mitä ovat chinampat?',
+      options: [
+        'järven matalikkoon rakennettuja viljelylauttoja',
+        'kalaverkkoja',
+        'temppeleitä',
+        'asuintaloja',
+      ],
+      correct: 0,
+      fact: 'Atsteekit kasvattivat ruokansa keinosaarilla, joita kutsutaan usein kelluviksi puutarhoiksi. Xochimilcossa niitä viljellään yhä.',
+      hint: 'Viljelyalue rakennettiin veden päälle.',
+    },
+    {
+      q: 'Mikä on Zócalo?',
+      options: ['kaupungin valtava pääaukio', 'vuori', 'joki', 'juhlapäivä'],
+      correct: 0,
+      level: 3,
+      fact: 'Aukio on yksi maailman suurimmista, ja sen laidalla ovat katedraali ja hallintopalatsi. Sen alta on kaivettu esiin atsteekkien Templo Mayor.',
+      hint: 'Paikka on avoin tila keskustassa, jonka laidalla on katedraali.',
+    },
   ],
 
   merida: [
@@ -14236,6 +15286,39 @@ const NORTHAMERICA_QUESTIONS = {
       hint: 'Kraatteri on nimeltään Chicxulub, ja tapahtumaa pidetään dinosaurusten häviämisen syynä.',
       fact: 'Kraatteri on noin 180 kilometriä leveä. Sen reunoilla on rivi luonnon kaivoja eli cenotéja.',
     },
+    {
+      q: 'Ketkä ovat Jukatanin niemimaan alkuperäiskansa?',
+      options: ['mayat', 'atsteekit', 'inkat', 'apassit'],
+      correct: 0,
+      level: 1,
+      fact: 'Mayakieltä puhutaan Jukatanilla yhä satojentuhansien ihmisten arjessa. Niemimaalla on satoja mayakaupunkien raunioita.',
+      hint: 'Kansan rakentamia pyramideja on ympäri niemimaata.',
+    },
+    {
+      q: 'Mikä on cenote?',
+      options: [
+        'kalkkikiveen romahtanut kuoppa, jossa on pohjavettä',
+        'tulivuori',
+        'hiekkaranta',
+        'temppeli',
+      ],
+      correct: 0,
+      fact: 'Cenotet olivat mayoille tärkeitä vesilähteitä ja pyhiä paikkoja. Niissä uidaan nykyään myös vieraiden kanssa.',
+      hint: 'Paikassa pääsee uimaan maan alle kalkkikiven sisään.',
+    },
+    {
+      q: 'Miksi Jukatanin niemimaalla ei ole juurikaan jokia?',
+      options: [
+        'vesi virtaa kalkkikiven sisällä maan alla',
+        'alueella ei sada lainkaan',
+        'joet on padottu',
+        'alue on jäätikön peitossa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Huokoinen kalkkikivi imee sadeveden, joka virtaa maanalaisissa käytävissä. Siksi vesi otetaan cenoteista ja kaivoista.',
+      hint: 'Vesi kulkee maan alla, ei pinnalla.',
+    },
   ],
 
   guatemala: [
@@ -14254,6 +15337,29 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Kaupungin pyramidit nousevat sademetsän latvojen yläpuolelle, ja ne nähtiin Tähtien sodan ensimmäisessä elokuvassa.',
       fact: 'Kaupunki oli mayojen mahtavimpia, ja sen suurin pyramidi on 65 metriä korkea. Se hylättiin noin vuonna 900.',
+    },
+    {
+      q: 'Millaisessa maastossa Guatemala City sijaitsee?',
+      options: ['vuoristossa tulivuorten keskellä', 'aavikossa', 'saarella', 'tundralla'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on noin 1 500 metrin korkeudessa, ja lähistöllä on useita tulivuoria. Ilmasto on siksi kevätmäinen ympäri vuoden.',
+      hint: 'Korkeus tekee ilmastosta miellyttävän vuoden ympäri.',
+    },
+    {
+      q: 'Mikä on Guatemalan tunnetuin vientituote?',
+      options: ['kahvi', 'kivihiili', 'teräs', 'villa'],
+      correct: 0,
+      fact: 'Vuorten rinteillä kasvatettu kahvi on maan tärkeimpiä vientituotteita. Sadonkorjuu työllistää kymmeniätuhansia.',
+      hint: 'Tuote kasvaa rinteillä ja juodaan kuumana.',
+    },
+    {
+      q: 'Mikä on huipil?',
+      options: ['käsin kudottu perinteinen pusero', 'juhlaruoka', 'soitin', 'tanssi'],
+      correct: 0,
+      level: 3,
+      fact: 'Jokaisella kylällä on omat kuvionsa ja värinsä, joten puvusta näkee mistä sen kutoja on kotoisin. Kudonta on taito, joka siirtyy sukupolvelta toiselle.',
+      hint: 'Vaatteen kuviot kertovat, mistä kylästä kutoja on.',
     },
   ],
 
@@ -14278,6 +15384,39 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Härkähait pystyvät säätelemään suolatasapainoaan ja nousevat jokea pitkin merestä järveen.',
       fact: 'Härkähai ui San Juan -jokea pitkin Karibianmereltä järveen. Pitkään luultiin, että järvessä eli oma lajinsa.',
+    },
+    {
+      q: 'Minkä järven rannalla Managua sijaitsee?',
+      options: ['Managuajärven', 'Titicacajärven', 'Michiganjärven', 'Viktoriajärven'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on järven etelärannalla, ja taustalla näkyy tulivuoria. Järvi on osa maan laajaa vesistöä.',
+      hint: 'Järvi on nimetty samoin kuin kaupunki.',
+    },
+    {
+      q: 'Miksi Managuan keskustassa on vähän korkeita rakennuksia?',
+      options: [
+        'maanjäristykset ovat tuhonneet keskustan',
+        'rakentaminen on kielletty',
+        'kaupunki on hyvin uusi',
+        'maaperä on jäässä',
+      ],
+      correct: 0,
+      fact: 'Vuoden 1972 maanjäristys tuhosi keskustan lähes kokonaan, eikä sitä rakennettu ennalleen. Kaupunki kasvoi sen sijaan laajalle matalana.',
+      hint: 'Syy liittyy maan liikkeisiin.',
+    },
+    {
+      q: 'Mikä on erikoista Nicaraguajärven hailla?',
+      options: [
+        'ne elävät makeassa vedessä',
+        'ne ovat maailman suurimpia',
+        'ne hehkuvat pimeässä',
+        'ne elävät maalla',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Härkähait pääsevät järveen jokea pitkin ja sopeutuvat makeaan veteen. Aikoinaan luultiin, että kyseessä on oma lajinsa.',
+      hint: 'Erikoisuus liittyy veden suolapitoisuuteen.',
     },
   ],
 
@@ -14307,6 +15446,34 @@ const NORTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Kannaksen keskellä on 26 metriä merenpinnan yläpuolella oleva Gatún-järvi.',
       fact: 'Sulut nostavat laivan järvelle ja laskevat sen toisella puolella takaisin merenpintaan. Yksi sulutus käyttää valtavan määrän makeaa vettä.',
+    },
+    {
+      q: 'Millainen maa-alue Panama on?',
+      options: [
+        'kapea kannas kahden mantereen välissä',
+        'suuri saari',
+        'niemimaa Euroopassa',
+        'sisämaavaltio',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kannas yhdistää Pohjois- ja Etelä-Amerikan ja erottaa kaksi valtamerta. Kapeimmillaan se on noin 50 kilometriä leveä.',
+      hint: 'Maa yhdistää kaksi mannerta ja erottaa kaksi merta.',
+    },
+    {
+      q: 'Milloin Panaman kanava avattiin liikenteelle?',
+      options: ['1914', '1814', '1954', '2014'],
+      correct: 0,
+      fact: 'Rakennustyö kesti vuosikymmeniä ja vaati valtavan määrän työtä ja ihmishenkiä, erityisesti trooppisten tautien takia. Kanava lyhensi laivamatkan Amerikan ympäri.',
+      hint: 'Avaaminen osui ensimmäisen maailmansodan alkuvuoteen.',
+    },
+    {
+      q: 'Kuka hallinnoi Panaman kanavaa nykyään?',
+      options: ['Panama itse vuodesta 1999', 'Yhdysvallat', 'Britannia', 'YK'],
+      correct: 0,
+      level: 3,
+      fact: 'Kanava siirtyi sopimuksen mukaisesti Panamalle vuoden 1999 lopussa. Sitä laajennettiin 2016 suuremmille laivoille.',
+      hint: 'Hallinta siirtyi maalle itselleen vuosituhannen vaihteessa.',
     },
   ],
 
@@ -14449,186 +15616,334 @@ const NORTHAMERICA_FACTS = {
     'Vapaudenpatsas oli Ranskan lahja Yhdysvalloille ja pystytettiin 1886.',
     'New York tunnettiin ensin nimellä Uusi Amsterdam, kunnes englantilaiset ottivat sen haltuunsa 1664.',
     'Kaupungissa puhutaan arviolta yli 700 kieltä, mikä tekee siitä maailman kielellisesti monimuotoisimman.',
+    {
+      text: 'Satamassa nousee laivasta enemmän ihmisiä päivässä kuin kotikylässäni asuu, ja jokainen aikoo rikastua. Kaupungissa ei ole ainuttakaan kunnollista klubia, mutta liikettä on kuin muurahaispesässä.',
+      voice: 'isoisa',
+    },
   ],
   sanfrancisco: [
     'Golden Gate -silta valmistui 1937 ja on 2 737 metriä pitkä.',
     'Vuoden 1849 kultaryntäys kasvatti kaupungin muutamassa vuodessa tuhannesta yli 25 000 asukkaaseen.',
     'Kaupungin kesät ovat viileitä ja sumuisia, koska kylmä merivesi jäähdyttää ilman rannikolla.',
+    {
+      text: 'Kaksikymmentä vuotta sitten tämä oli kylä; kulta teki siitä kaupungin yhdessä vuodessa. Sumu tulee lahdelle joka iltapäivä kuin sovittuun aikaan, ja se on ainoa täsmällinen asia täällä.',
+      voice: 'isoisa',
+    },
   ],
   nome: [
     'Nome kasvoi kultaryntäyksestä 1899, kun kultaa löytyi suoraan meren rantahiekasta.',
     'Iditarod-koiravaljakkokilpailu päättyy Nomeen noin 1 600 kilometrin matkan jälkeen.',
     'Vuonna 1925 kaupunkiin tuotiin valjakoilla kurkkumätäseerumia; matka innoitti Balto-koiran tarinan.',
+    {
+      text: 'Rannan hiekasta huuhdotaan kultaa ilman valtausta, joten kuka tahansa voi kokeilla. Talvella meri jäätyy eikä laivoja tule; kirjeeni saapuu Lontooseen ensi kesänä.',
+      voice: 'isoisa',
+    },
   ],
   anchorage: [
     'Anchoragessa asuu noin 40 prosenttia koko Alaskan väestöstä.',
     'Yhdysvallat osti Alaskan Venäjältä 1867 hintaan 7,2 miljoonaa dollaria.',
     'Kaupungin lentoasema on yksi maailman vilkkaimmista rahtiliikenteessä, koska se on lyhimmän reitin varrella Aasian ja Euroopan välillä.',
+    {
+      text: 'Venäjä myi tämän maan kuudella sentillä hehtaarilta, ja Lontoossa naurettiin ostajalle. Katselen vuoria ja metsiä enkä osaa yhtyä nauruun.',
+      voice: 'isoisa',
+    },
   ],
   whitehorse: [
     'Whitehorse on Yukonin territorion pääkaupunki ja kasvoi Klondiken kultaryntäyksen reitille.',
     'Kanadan poliisi vaati kultaryntäyksen aikaan jokaiselta tulijalta vuoden ruokavarat ennen rajan ylitystä.',
     'Kaupunki on yksi Kanadan vähäsateisimpia paikkoja, koska rannikkovuoret pysäyttävät kosteuden.',
+    {
+      text: 'Joen varrella odottavat miehet, joilla on tonni tarvikkeita ja yksi aikomus. Kaikilla on sama laskelma, ja siksi useimmat palaavat kotiin köyhempinä kuin lähtivät.',
+      voice: 'isoisa',
+    },
   ],
   yellowknife: [
     'Yellowknife on yksi maailman parhaista paikoista nähdä revontulia.',
     'Kaupunki on Isonorjajärven rannalla; järvi on Pohjois-Amerikan syvin, yli 600 metriä.',
     'Talvella järven jäälle rakennetaan teitä, joita pitkin ajetaan kuorma-autoilla kaivoksille.',
+    {
+      text: 'Talvi kestää täällä puoli vuotta ja taivas palaa vihreänä lähes joka selkeä yö. Paikalliset eivät nosta katsettaan; minä kaadoin teekuppini.',
+      voice: 'isoisa',
+    },
   ],
   vancouver: [
     'Vancouver on Kanadan lämpimin suurkaupunki: meri pitää talvet leutoina.',
     'Kaupungin takana kohoavat Rannikkovuoret, joten laskettelurinteille pääsee tunnissa keskustasta.',
     'Satama on Kanadan suurin ja käsittelee enemmän tavaraa kuin mikään muu maan satama.',
+    {
+      text: 'Rannikon metsässä puut ovat niin paksuja, ettei kymmenen miestä ylety toistensa käsiin rungon ympäri. Satamaan rakennetaan rautatietä mantereen halki; sitä pidetään mahdottomana urakkana.',
+      voice: 'isoisa',
+    },
   ],
   yellowstone: [
     'Yellowstone perustettiin 1872 ja on maailman ensimmäinen kansallispuisto.',
     'Puisto sijaitsee suuren tulivuoren kraatterin päällä, ja siellä on yli 10 000 kuumaa lähdettä ja geysiriä.',
     'Old Faithful -geysir purkautuu keskimäärin puolentoista tunnin välein 30–55 metrin korkeuteen.',
+    {
+      text: 'Maasta suihkuaa kuumaa vettä säännöllisin väliajoin, ja alue on juuri julistettu kansallispuistoksi. Ajatus maasta, jota ei omisteta vaan säilytetään, on minulle uusi ja hyvä.',
+      voice: 'isoisa',
+    },
   ],
   mountrushmore: [
     'Mount Rushmoren veistostyö kesti 1927–1941, ja jokaisen presidentin kasvot ovat noin 18 metriä korkeat.',
     'Vuori on Black Hillsissä, jota lakota-kansa pitää pyhänä alueena.',
     'Lähistöllä on veistetty vuosikymmeniä myös Crazy Horsen muistomerkkiä, josta tulee vielä suurempi.',
+    {
+      text: 'Näillä kukkuloilla on graniittia ja mäntyä, ja ne ovat lakotoille pyhiä. Sopimus takasi alueen heille; sopimus on jo rikottu, ja se tehtiin meidän puoleltamme.',
+      voice: 'isoisa',
+    },
   ],
   winnipeg: [
     'Winnipeg on Kanadan preerian portti: talvella lämpötila laskee usein alle −30 asteen.',
     'Nalle Puh sai nimensä Winnipegistä kotoisin olleen karhunpennun mukaan.',
     'Kaupungin keskellä yhtyvät Red- ja Assiniboine-joet; risteystä on käytetty kauppapaikkana tuhansia vuosia.',
+    {
+      text: 'Kahden joen yhtymässä käydään turkiskauppaa, ja talvi on kylmempi kuin missään missä olen ollut. Täällä syntyi kansa, jolla on oma kielensä; kartassani sitä ei mainita.',
+      voice: 'isoisa',
+    },
   ],
   churchill: [
     'Churchillia kutsutaan maailman jääkarhupääkaupungiksi.',
     'Kaupunkiin ei johda maantietä: sinne pääsee junalla, lentäen tai laivalla.',
     'Kesällä Hudsoninlahdelle saapuu tuhansia valkovalaita, jotka viihtyvät lahden matalissa jokisuissa.',
+    {
+      text: 'Lahden rannalla on kauppa-asema, ja syksyllä jääkarhut kävelevät sen ohi odottamassa jäätä. Kukaan ei pidä sitä ihmeenä, mutta minä pidän.',
+      voice: 'isoisa',
+    },
   ],
   iqaluit: [
     'Iqaluit tarkoittaa inuktitutin kielellä paikkaa jossa on paljon kaloja.',
     'Nunavutin territorio perustettiin 1999 inuiittien omaksi alueeksi.',
     'Kaupungista ei johda maantietä minnekään: kaikki tavara tuodaan laivalla avovesikaudella tai lentäen.',
+    {
+      text: 'Puuttomalla rannalla asuu kansa, joka rakentaa lumesta talon tunnissa ja löytää tien ilman karttaa. Meidän retkikuntamme ovat kadonneet näillä vesillä; heidän eivät.',
+      voice: 'isoisa',
+    },
   ],
   nuuk: [
     'Nuuk on maailman pohjoisin pääkaupunki ja perustettiin 1728.',
     'Noin 80 prosenttia Grönlannista on mannerjäätikön peitossa; paksuimmillaan jää on yli kolme kilometriä.',
     'Grönlanti kuuluu Tanskan valtakuntaan mutta hoitaa itse suurimman osan omista asioistaan.',
+    {
+      text: 'Jäätikkö peittää saaren niin, että asutus on vain kapealla rantakaistaleella. Jäähän on kerrostunut vuosituhansien ilma; joku älykkäämpi kuin minä keksii vielä lukea sen.',
+      voice: 'isoisa',
+    },
   ],
   labrador: [
     'Labrador on karua kalliota, tundraa ja havumetsää, ja sen rannikolla on vain muutamia kyliä.',
     'Labradorinnoutajan esi-isät auttoivat kalastajia vetämällä verkkoja jääkylmästä merestä.',
     'L’Anse aux Meadowsissa Newfoundlandin pohjoiskärjessä on ainoa varmistettu viikinkiasutus Amerikassa.',
+    {
+      text: 'Rannikko on kalliota, sumua ja havumetsää, ja pohjoisessa puut loppuvat kokonaan. Turskaa on niin paljon, ettei sen loppumista voi kuvitella kukaan.',
+      voice: 'isoisa',
+    },
   ],
   stjohns: [
     'St. John’s on yksi Pohjois-Amerikan vanhimmista eurooppalaisperäisistä kaupungeista.',
     'Grand Banksin matalikko oli vuosisatoja maailman rikkain turskavesi, kunnes kanta romahti 1990-luvulla.',
     'Kaupungin puutalot on maalattu kirkkain värein; rivistöä kutsutaan nimellä Jellybean Row.',
+    {
+      text: 'Sumuisen sataman puutalot on maalattu kirkkain värein, jotta ne erottuvat harmaudesta. Täällä kerrotaan, että pohjoisemmalla rannikolla asui merenkulkijoita ennen Kolumbusta; en usko sitä vielä.',
+      voice: 'isoisa',
+    },
   ],
   halifax: [
     'Halifaxin satama on yksi maailman suurimmista luonnonsatamista ja jäätyy harvoin.',
     'Titanicin uhreja on haudattu Halifaxin hautausmaille yli sata.',
     'Vuonna 1917 kaupungissa tapahtui räjähdys, joka oli ydinaseita edeltäneen ajan suurimpia ihmisen aiheuttamia räjähdyksiä.',
+    {
+      text: 'Syvä satama ei jäädy talvellakaan, joten laivat tulevat tänne kun muut väylät ovat kiinni. Kaupunki elää merestä ja tietää sen.',
+      voice: 'isoisa',
+    },
   ],
   montreal: [
     'Montreal on Pariisin jälkeen yksi maailman suurimmista ranskankielisistä kaupungeista.',
     'Kaupungin alla kulkee kymmenien kilometrien maanalainen käytävästö, jota pitkin liikutaan talvipakkasilla.',
     'Saint Lawrence -väylä vie valtamerialukset Atlantilta Suurille järville, yli 3 700 kilometrin päähän sisämaahan.',
+    {
+      text: 'Kukkulan juurella puhutaan ranskaa kaupoissa ja englantia pankeissa. Talvi on niin kylmä, että kaupunkilaiset puhuvat siitä ylpeydellä eivätkä valittaen.',
+      voice: 'isoisa',
+    },
   ],
   toronto: [
     'Torontossa asuu yli kolme miljoonaa ihmistä, ja lähes puolet heistä on syntynyt Kanadan ulkopuolella.',
     'CN Tower oli valmistuessaan 1976 maailman korkein vapaasti seisova rakennus.',
     'Niagaran putoukset ovat noin sadan kilometrin päässä kaupungista.',
+    {
+      text: 'Järven rannalla kasvaa kaupunki, joka on kymmenessä vuodessa kaksinkertaistunut. Putoukset ovat päivämatkan päässä ja niiden ääni kuuluu ennen kuin ne näkyvät.',
+      voice: 'isoisa',
+    },
   ],
   chicago: [
     'Chicagoa kutsutaan Tuuliseksi kaupungiksi, koska Michiganjärveltä puhaltaa purevia tuulia.',
     'Maailman ensimmäinen teräsrunkoinen pilvenpiirtäjä valmistui Chicagoon 1885.',
     'Vuoden 1871 suurpalo tuhosi suuren osan kaupungista ja teki tilaa uudelle rakentamiselle.',
+    {
+      text: 'Kaupunki paloi poroksi kaksi vuotta sitten ja rakentaa nyt uudelleen kivestä ja teräksestä. Karjaa ja viljaa kulkee täältä itään enemmän kuin uskoisin, jos en olisi nähnyt vaunujonoa.',
+      voice: 'isoisa',
+    },
   ],
   appalakit: [
     'Appalakit syntyivät yli 400 miljoonaa vuotta sitten ja ovat kuluneet matalaksi.',
     'Appalachian Trail on noin 3 500 kilometriä pitkä vaellusreitti Georgiasta Maineen.',
     'Vuoret olivat pitkään este länteen suuntautuvalle asutukselle, kunnes solat löydettiin.',
+    {
+      text: 'Vuoret ovat matalia ja metsäisiä, ja niiden alla on kivihiiltä. Laaksoissa soitetaan viulua ja banjoa; sävelmät ovat tuttuja, sanat eivät.',
+      voice: 'isoisa',
+    },
   ],
   bermuda: [
     'Bermuda on Britannian merentakainen alue keskellä Atlanttia, noin tuhannen kilometrin päässä Yhdysvalloista.',
     'Bermudan kolmion tarina syntyi 1950-luvun lehtijutuista; katoamisia sattuu alueella suunnilleen saman verran kuin muillakin vilkkailla merialueilla.',
     'Saarilla ei ole jokia eikä järviä, joten sadevesi kerätään talojen valkoisilta katoilta.',
+    {
+      text: 'Saarella ei ole yhtään jokea, joten sadevesi kerätään katoilta säiliöihin. Ratkaisu on yksinkertainen ja toimiva, mistä syystä sitä ei ole keksitty Lontoossa.',
+      voice: 'isoisa',
+    },
   ],
   denver: [
     'Denver on tasan mailin eli noin 1 609 metrin korkeudessa, ja osavaltiotalon portaissa on siitä merkki.',
     'Kalliovuoret muodostavat mannerjakajan: lännestä vedet virtaavat Tyynellemerelle, idästä Atlantille.',
     'Ohut ilma vaikuttaa kaupungissa jopa leivontaan: reseptejä on säädettävä korkeuden mukaan.',
+    {
+      text: 'Vuorten juurella on kaupunki mailin korkeudessa, ja ilma on täällä ohutta. Kulta toi ihmiset, mutta rautatie pitää heidät.',
+      voice: 'isoisa',
+    },
   ],
   santafe: [
     'Santa Fe on Yhdysvaltain vanhin osavaltion pääkaupunki: espanjalaiset perustivat sen 1610.',
     'Vanhat talot on rakennettu adobesta eli auringossa kuivatusta savitiilestä.',
     'Kaupunki on noin 2 200 metrin korkeudessa ja siten maan korkeimmalla sijaitseva osavaltion pääkaupunki.',
+    {
+      text: 'Savitiilikaupunki on ollut hallinnon paikka kauemmin kuin yksikään englanninkielinen kaupunki tässä maanosassa. Espanja tuli tänne, ennen kuin Britannia keksi tulla lainkaan.',
+      voice: 'isoisa',
+    },
   ],
   grandcanyon: [
     'Grand Canyon on noin 446 kilometriä pitkä ja paikoin yli 1 800 metriä syvä.',
     'Rotkon vanhimmat kivikerrokset ovat lähes kaksi miljardia vuotta vanhoja.',
     'Rotkon pohjalla on usein yli 15 astetta lämpimämpää kuin reunalla.',
+    {
+      text: 'Joki on kaivanut kallioon rotkon, jonka pohjaa tuskin näkee. Kerrokset kertovat ajasta, jota en osaa laskea; jätän sen tehtävän viisaammille.',
+      voice: 'isoisa',
+    },
   ],
   losangeles: [
     'Hollywoodin kirjainkyltti pystytettiin 1923 mainostamaan asuinaluetta, ja siinä luki alun perin Hollywoodland.',
     'San Andreasin siirros liikuttaa kaupunkia muutaman senttimetrin vuodessa kohti San Franciscoa.',
     'La Brean asfalttilammikoista on kaivettu esiin kymmeniätuhansia jääkauden eläinten luita.',
+    {
+      text: 'Appelsiinilehtojen keskellä on tomuinen pikkukaupunki, jossa asuu tuskin kymmentä tuhatta. Rautatien sanotaan tulevan; en usko sen muuttavan paikkaa miksikään.',
+      voice: 'isoisa',
+    },
   ],
   hawaii: [
     'Havaiji on ainoa Yhdysvaltain osavaltio, joka on kokonaan saaristoa ja tropiikissa.',
     'Saaret ovat syntyneet tulivuorista kuuman pisteen yllä, ja siksi ne ovat jonossa iän mukaan.',
     'Mauna Kea on merenpohjasta mitattuna maailman korkein vuori, yli 10 000 metriä.',
+    {
+      text: 'Saarilla on oma kuningaskunta, oma kieli ja tulivuoria jotka purkautuvat rauhallisesti. Amerikkalaiset istuttavat sokeriruokoa ja puhuvat maan tulevaisuudesta hieman liian kovaan ääneen.',
+      voice: 'isoisa',
+    },
   ],
   dallas: [
     'Dallas kasvoi puuvillan ja myöhemmin öljyn varassa.',
     'Presidentti John F. Kennedy murhattiin Dallasissa marraskuussa 1963.',
     'Dallas–Fort Worthin lentoasema on pinta-alaltaan suurempi kuin Manhattanin saari.',
+    {
+      text: 'Preerialla on puuvillan kauppapaikka, jossa kaikki tuntuu olevan suurempaa kuin tarpeen. Karjaa ajetaan pohjoiseen kymmenin tuhansin; melu kuuluu kilometrien päähän.',
+      voice: 'isoisa',
+    },
   ],
   neworleans: [
     'Jazz syntyi New Orleansissa 1900-luvun alussa afroamerikkalaisten yhteisöjen musiikista.',
     'Yhdysvallat osti Louisianan Ranskalta 1803 ja kaksinkertaisti pinta-alansa yhdellä sopimuksella.',
     'Suuri osa kaupungista on merenpinnan alapuolella, ja sitä suojaavat padot ja pumput.',
+    {
+      text: 'Jokisatamassa puhutaan ranskaa, espanjaa ja englantia samassa korttelissa, ja musiikki soi kadulla arkenakin. Kaupunki on merenpinnan alapuolella ja tietää sen; padot ovat siksi puheenaihe joka kevät.',
+      voice: 'isoisa',
+    },
   ],
   miami: [
     'Miamissa puhutaan espanjaa yhtä yleisesti kuin englantia.',
     'Kaupungin länsipuolella on Everglades, ainoa paikka maailmassa jossa alligaattorit ja krokotiilit elävät luonnossa samalla alueella.',
     'Miami Beachin art deco -kortteli on yksi maailman laajimmista 1920–1940-lukujen rakennuskokonaisuuksista.',
+    {
+      text: 'Lahden rannalla on kalastajakylä, jonka takana leviää loputon ruohoinen suo. Maa on huokoista kalkkikiveä; siihen ei kannata rakentaa mitään mitä ei halua kastella.',
+      voice: 'isoisa',
+    },
   ],
   santiagodecuba: [
     'Santiago de Cuba oli saaren ensimmäinen pääkaupunki 1500-luvulla.',
     'Son cubano -musiikkityyli, salsan perusta, kehittyi Kuuban itäosassa.',
     'Kaupunki on Kuuban vuoristoisimmalla alueella Sierra Maestran juurella.',
+    {
+      text: 'Vuorten juurella oleva satama oli saaren ensimmäinen pääkaupunki. Kadulla soitetaan kitaraa ja rumpuja samaan aikaan, ja siitä syntyy jotain mitä en osaa nuotintaa.',
+      voice: 'isoisa',
+    },
   ],
   sanjuan: [
     'Puerto Rico on Yhdysvaltain alue, jonka asukkaat ovat maan kansalaisia mutta eivät äänestä presidentinvaaleissa saarella asuessaan.',
     'San Juanin vanhakaupunki ja sen linnoitukset ovat Unescon maailmanperintökohde.',
     'Saarella sijaitsee El Yunque, Yhdysvaltain kansallismetsistä ainoa trooppinen sademetsä.',
+    {
+      text: 'Espanjalaisten linnoitus vartioi satamaa kuudessa kerroksessa, ja sen muurit ovat kolmesataa vuotta vanhat. Saari on Espanjan hallussa; kuulen puhuttavan muutoksesta ennen vuosisadan loppua.',
+      voice: 'isoisa',
+    },
   ],
   monterrey: [
     'Monterrey on Meksikon teollisuuden ja yritysten keskus, noin 200 kilometriä Texasin rajasta.',
     'Kaupungin maamerkki on Cerro de la Silla eli Satulavuori, joka näkyy sen vaakunassa.',
     'Sitä ympäröivät Sierra Madre Orientalin jyrkät vuoret, joissa on syviä luolia ja kanjoneita.',
+    {
+      text: 'Vuorten välissä on kaupunki, jonka tunnusmerkki on satulan muotoinen huippu. Täällä rakennetaan tehtaita nopeammin kuin ehdin kirjata niiden nimet.',
+      voice: 'isoisa',
+    },
   ],
   mexico: [
     'Mexico City on rakennettu atsteekkien pääkaupungin Tenochtitlánin ja kuivatun järven päälle.',
     'Osa kaupungista on vajonnut yli kymmenen metriä sadassa vuodessa, koska pohjavettä pumpataan pehmeästä savesta.',
     'Kaupunki on noin 2 240 metrin korkeudessa, ja sitä vartioivat tulivuoret Popocatépetl ja Iztaccíhuatl.',
+    {
+      text: 'Kaupunki on rakennettu kuivatun järven pohjalle kahden kilometrin korkeuteen. Rakennukset painuvat hitaasti; syy on vedessä, jota pumpataan maan alta.',
+      voice: 'isoisa',
+    },
   ],
   merida: [
     'Mérida rakennettiin mayakaupungin päälle, ja sen rakennuksissa on vanhojen temppelien kiviä.',
     'Jukatanin niemimaalla on Chicxulubin törmäyskraatteri, joka syntyi 66 miljoonaa vuotta sitten.',
     'Niemimaalla ei ole juuri jokia: sadevesi imeytyy kalkkikiveen ja kerääntyy cenote-kaivoihin.',
+    {
+      text: 'Niemimaalla ei ole jokia lainkaan, ja vesi otetaan kalkkikiven kuopista. Mayakaupunkien rauniot ovat metsän peitossa, ja niitä on enemmän kuin kukaan on laskenut.',
+      voice: 'isoisa',
+    },
   ],
   guatemala: [
     'Guatemala on Väli-Amerikan väkirikkain maa, ja siellä puhutaan yli kahtakymmentä mayakieltä.',
     'Tikalin mayakaupungin suurin pyramidi on 65 metriä korkea ja nousee sademetsän latvojen yli.',
     'Maassa on yli kolmekymmentä tulivuorta, joista useat ovat aktiivisia.',
+    {
+      text: 'Vuorten välissä tulivuorten katveessa on kaupunki, jossa on ikuinen kevät. Kylien kudotut puvut kertovat kotipaikan; se on tarkempi osoite kuin mikään kartta.',
+      voice: 'isoisa',
+    },
   ],
   managua: [
     'Managua tuhoutui maanjäristyksessä 1972, eikä vanhaa keskustaa rakennettu ennalleen.',
     'Nicaraguajärvessä elää härkähaita, jotka nousevat sinne merestä jokea pitkin.',
     'Nicaragua on Väli-Amerikan suurin maa pinta-alaltaan.',
+    {
+      text: 'Järven rannalla tulivuorten katveessa on kaupunki, joka on rakennettu uudelleen useammin kuin muistan. Järvessä kerrotaan elävän haita; nauroin ja olin väärässä.',
+      voice: 'isoisa',
+    },
   ],
   panama: [
     'Panaman kanava avattiin 1914 ja lyhensi New Yorkin ja San Franciscon välimatkan noin 13 000 kilometrillä.',
     'Kanavan sulut nostavat laivat 26 metrin korkeuteen Gatún-tekojärvelle ja laskevat ne toisella puolella takaisin merenpintaan.',
     'Panaman kannas mutkittelee niin, että kanavassa purjehditaan Atlantilta Tyynellemerelle luoteesta kaakkoon.',
+    {
+      text: 'Kannas on kapeimmillaan päivän matka, ja täällä puhutaan kanavan kaivamisesta valtamerestä toiseen. Ranskalaiset aikovat yrittää; toivotan onnea ja pidän suunnitelmaa liian optimistisena.',
+      voice: 'isoisa',
+    },
   ],
 };
 
@@ -14944,11 +16259,51 @@ const NORTHAMERICA = {
     // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
     diaries: [
       'Siirtokunnat ovat pärjänneet ilman meitä hämmentävän hyvin. Päätin olla ottamatta teekutsuja puheeksi.',
+      'Isoisä odotti täältä siirtokuntia ja sai vastaansa kaksi liittovaltiota, jotka pärjäävät hämmentävän hyvin ilman meitä. Päätin olla ottamatta teekutsuja puheeksi.',
+      '"Manner on tyhjä lännestä itään", kirjoitti isoisä ja tarkoitti sitä kohteliaisuutena. Täällä oli satoja kansoja, kieliä ja kaupunkeja ennen ensimmäistäkään purjetta. Tyhjyys oli hänen kartassaan, ei maassa.',
+      'Isoisä laski, että mantereen ylitys vaunuilla kestää viisi kuukautta. Juna vie sen nyt kolmessa vuorokaudessa ja lentokone kuudessa tunnissa. Hän ehti nähdä ensimmäisen näistä ja piti sitä lopullisena.',
+      '"Kulta loppuu ja kaupungit katoavat", ennusti isoisä kaivoskaupungeista. Osa katosi ja osa on nyt miljoonakaupunkeja. Hän oli oikeassa puolet ajasta, mikä on ennustajalle kunniallinen tulos.',
+      'Isoisän kartassa raja kulkee suorana viivana länteen. Suora viiva on yhä siellä, ja se leikkaa yhä läpi jokia, vuoria ja kansoja, jotka olivat paikalla ennen viivan piirtäjää.',
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
-    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
-    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
-    starHints: {},
+    // kaupungin nimeä.
+    starHints: {
+      nome: 'Beringinmeren rannalla on kaupunki, jonne kulta houkutteli tuhansia suoraan rannan hiekasta. Sinne ei johda maantietä, ja koiravaljakot saapuvat maaliskuussa.',
+      anchorage: 'Luoteisen niemimaan vuonon pohjukassa on osavaltion suurin kaupunki, jonka lentoasemalla rahtikoneet tankkaavat matkalla Aasiaan.',
+      whitehorse: 'Luoteisen sisämaan jokivarressa on kaupunki, jonka ohi kullankaivajat laskivat lautoillaan kohti kultakenttiä.',
+      yellowknife: 'Pohjoisen suuren järven rannalla on kaupunki, jonka taivas palaa vihreänä lähes joka selkeä yö ja jonka kaivoksista nousee timantteja.',
+      vancouver: 'Läntisellä rannikolla vuorten juurella on jäätön satama, jonka takana kasvaa lauhkeaa sademetsää.',
+      yellowstone: 'Läntisellä ylängöllä on alue, jossa kuuma vesi suihkuaa maasta säännöllisin väliajoin. Se julistettiin maailman ensimmäiseksi kansallispuistoksi.',
+      mountrushmore: 'Preeriakukkuloiden graniittiin on veistetty neljän presidentin kasvot. Lähistöllä veistetään lakota-päällikön muistomerkkiä, ja alue on lakotoille pyhä.',
+      winnipeg: 'Preerialla kahden joen yhtymäkohdassa on kaupunki, jossa talvipakkanen painuu alle kolmenkymmenen asteen ja jonka seudulla syntyi métis-kansa.',
+      churchill: 'Suuren pohjoisen lahden rannalla on kauppa-asema, jonka ohi jääkarhut kävelevät syksyisin odottamaan jään tuloa.',
+      iqaluit: 'Koillisen saariston rannalla on inuiittien hallintokaupunki, jonne tavarat tuodaan laivalla vain lyhyen kesän aikana.',
+      nuuk: 'Jättimäisen jäätikkösaaren lounaisrannikolla vuonon suojassa on yksi maailman pohjoisimmista pääkaupungeista.',
+      labrador: 'Koillisrannikolla on karu niemimaa, jossa etelän havumetsä vaihtuu pohjoisen tundraksi ja jonka vesivoimalaitos on maanosan suurimpia.',
+      stjohns: 'Itäisimmällä saarella, sumuisen rannikon kalliorinteillä, on satama jonka puutalot on maalattu kirkkain värein.',
+      halifax: 'Atlantin rannikolla on syvä satama, joka ei jäädy talvellakaan. Vuonna 1917 siellä sattui laivojen törmäyksestä alkanut suuronnettomuus.',
+      montreal: 'Suuren joen saarella kukkulan juurella on kaupunki, jossa puhutaan ranskaa ja jonka keskustan alla kulkee kilometrien käytäväverkosto.',
+      toronto: 'Suuren järven pohjoisrannalla on maan väkirikkain kaupunki, jonka torni oli pitkään maailman korkein vapaasti seisova rakennelma.',
+      chicago: 'Toisen suuren järven rannalla on kaupunki, joka paloi 1871 ja rakensi sen jälkeen maailman ensimmäiset pilvenpiirtäjät.',
+      appalakit: 'Idässä kulkee vanha ja kulunut vuorijono, jonka laaksoissa on kivihiiltä ja jonka harjannetta pitkin kulkee pitkä vaellusreitti.',
+      bermuda: 'Kaukana Atlantilla on saariryhmä, jonka valkoiset katot keräävät sadeveden ja jonka ympärillä on maailman pohjoisimmat koralliriutat.',
+      denver: 'Kalliovuorten juurella tasangon reunalla on kaupunki tasan mailin korkeudessa merenpinnasta.',
+      santafe: 'Lounaisen ylängön korkealla tasangolla on savitiilistä rakennettu vanha hallintokaupunki, jonne päättyi vaunureitti preerian halki.',
+      grandcanyon: 'Lounaisen ylängön halki virtaava joki on uurtanut yli kilometrin syvyisen rotkon. Sen pohjalle laskeudutaan jalan tai muulilla.',
+      losangeles: 'Tyynenmeren rannalla vuorten sulkemassa altaassa on kaupunki, joka on levinnyt satojen kilometrien matkalle ja tuo vetensä kaukaa.',
+      hawaii: 'Keskellä Tyyntämerta on tulivuorista syntynyt saariryhmä, jonka korkein vuori on merenpohjasta mitattuna maailman korkein.',
+      dallas: 'Etelän preerialla on kaupunki, joka rikastui ensin puuvillasta ja sitten öljystä. Sen lentoasema on laajempi kuin moni saari.',
+      neworleans: 'Suuren joen mutkassa lähellä lahtea on kaupunki, jonka kaduilla syntyi jazz ja jonka karnevaali päättyy paastonajan alkuun.',
+      miami: 'Kaakkoisen niemimaan kärjessä on kaupunki, jonka länsipuolella leviää ruohoinen suo ja jonka alla on huokoista kalkkikiveä.',
+      santiagodecuba: 'Karibian suurimman saaren kaakkoisosassa vuorten ja meren välissä on satama, joka oli saaren ensimmäinen pääkaupunki.',
+      sanjuan: 'Karibian saarella, jonka asukkaat ovat Yhdysvaltain kansalaisia, on satama jota vartioi kuusikerroksinen 1500-luvun linnoitus.',
+      monterrey: 'Etelänaapurin pohjoisosassa vuorten välissä on teollisuuskaupunki, jonka tunnus on satulan muotoinen vuori.',
+      mexico: 'Vuorten ympäröimässä laaksossa kahden kilometrin korkeudessa on kaupunki, joka rakennettiin kuivatun järven päälle atsteekkien pääkaupungin paikalle.',
+      merida: 'Kaakkoisella niemimaalla, jossa ei ole jokia vaan kalkkikiven kuoppia täynnä pohjavettä, on mayakaupunkien ympäröimä hallintokaupunki.',
+      guatemala: 'Keski-Amerikan vuoristossa tulivuorten keskellä on maan suurin kaupunki, jonka takamailla kasvatetaan kahvia ja kudotaan kylän omia kuvioita.',
+      managua: 'Keski-Amerikan järven rannalla tulivuorten katveessa on matalaksi rakennettu pääkaupunki. Järvessä elää haita.',
+      panama: 'Kahden mantereen välisellä kapealla kannaksella on kaupunki kanavan päässä. Sulut nostavat laivat tekojärven tasolle ja laskevat toiselle merelle.',
+    },
   },
 
   decor: {
@@ -23596,7 +24951,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.12';
+const APP_VERSION = '2026-07-27.13';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

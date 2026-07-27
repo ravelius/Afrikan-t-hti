@@ -886,9 +886,9 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   game.phase = 'action';
   assert.deepEqual(game.gatewayOptions(), []);
 
-  // Tanger on porttikaupunki: Gibraltarin yli Eurooppaan.
+  // Tanger on porttikaupunki: Gibraltarin yli Eurooppaan tai maailmankartalle.
   p.pos = { type: 'city', city: 'tanger' };
-  assert.deepEqual(game.gatewayOptions().map((l) => l.pack), ['europe']);
+  assert.deepEqual(game.gatewayOptions().map((l) => l.pack), ['europe', 'maailma']);
 
   // Kairosta pääsee Lähi-idän laudalle.
   p.pos = { type: 'city', city: 'kairo' };
@@ -1144,8 +1144,9 @@ test('aarretta ei voi ostaa rahalla', () => {
     ['countryGates', 'fly', 'gateways', 'quiz', 'roll', 'travel'],
   );
   assert.ok(actions.travel.includes('land'));
-  // Portit ovat käytössä myös kilpapelissä: Tangerista lennetään Espanjaan.
-  assert.deepEqual(actions.gateways.map((l) => l.pack), ['europe']);
+  // Portit ovat käytössä myös kilpapelissä: Tangerista lennetään Espanjaan
+  // tai takaisin maailmankartalle.
+  assert.deepEqual(actions.gateways.map((l) => l.pack), ['europe', 'maailma']);
 });
 
 test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 80', () => {
