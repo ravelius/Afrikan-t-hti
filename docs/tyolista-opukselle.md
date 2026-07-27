@@ -381,6 +381,26 @@ Opuksen työt tässä paketissa:
 4. Aja `npm test`, nosta versiot (sw.js + main.js), standalone-buildi,
    PR ja kuittaus TILANNE-osioon.
 
+**Rinnakkaistus (käytä alagentteja, jotta paketti valmistuu nopeammin):**
+
+- Jaa 21 kaupunkia noin kolmeen erään ja anna kukin erä omalle
+  agentille rinnakkain. Anna jokaiselle agentille tarina.md:n
+  "Vaihtelun paletti" -osio kokonaan sekä valmiit 11 mallikaupunkia
+  luettavaksi ennen kirjoittamista.
+- Faktantarkistus rinnakkain: jokaisen tekstierän väitteet tarkistaa
+  ERI agentti kuin se, joka tekstit kirjoitti. Väärä väite → teksti
+  korjataan tai vaihdetaan.
+- Kysymysten aikuistarkistus (kohta 2) voi kulkea omana agenttinaan
+  samaan aikaan kirjoituksen kanssa.
+- **Kokoa tulokset itse.** Yhtenäistämiskierrosta ei saa ulkoistaa:
+  vain koko laudan kerralla näkevä huomaa tehokeinojen toiston
+  vierekkäisissä kaupungeissa ja iso/pieni-tasapainon vinouman.
+  Muokkaa tiedostoa vain pääsessiossa — agentit palauttavat tekstit
+  vastauksenaan, eivät kirjoita tiedostoon.
+- Vain yksi sessio kerrallaan muokkaa africa-questions.js:ää. Jos
+  sessioita on kaksi, toinen ottaa VAIN kohdan 3 (js/packs/africa.js:n
+  diaries + starHints) — eri tiedosto, ei konflikteja.
+
 Tekstien kirjoitussäännöt (tiivistelmä — koko ohje tarina.md:ssä):
 minä-muoto, 1–3 virkettä, ensimmäinen virke konkreettinen; korkeintaan
 kolmasosa teksteistä alkaa isoisällä, vähintään kolmasosassa isoisää ei
