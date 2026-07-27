@@ -1340,21 +1340,24 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   .fact-text { font-size: 0.84rem; }
 }
 
-/* --- pelitila: kartta täyttää ruudun, paneelit kelluvat sen päällä --- */
+/* --- kartta täyttää ruudun, paneelit kelluvat sen päällä --- */
 /*
- * Aloituskartalla (data-mode="start") asettelu on kahdessa palstassa, jotta
- * ohje ja matkaajan tiedot näkyvät rauhassa. Kun matka on alkanut, kartta on
- * pääasia: .stage muuttuu yhdeksi sarakkeeksi ja .rail asettuu kartan päälle
- * kelluviksi pergamenttikorteiksi. Kartta ei kutistu — vain paneelit siirtyvät
- * sen päälle, joten fitViewBox saa käyttöönsä koko alan.
+ * Kartta on aina pääasia — myös aloitusnäkymässä, jossa kohde valitaan
+ * kartalta: .stage on yksi sarake ja .rail asettuu kartan päälle kelluviksi
+ * pergamenttikorteiksi. Kartta ei kutistu, joten fitViewBox saa käyttöönsä
+ * koko alan. Aiemmin aloitusnäkymä oli kahdessa palstassa, mutta siinä
+ * vaiheessa paneelissa on vain ohjerivi ja matkaajan tiedot: leveällä
+ * näytöllä sivupalkki jäi lähes tyhjäksi ja söi kartalta satoja pikseleitä.
+ *
+ * body[data-mode] kertoo yhä vaiheen (start / play) muuta käyttöä varten.
  */
 
-body[data-mode='play'] .stage {
+body[data-mode] .stage {
   grid-template-columns: minmax(0, 1fr);
   position: relative;
 }
 
-body[data-mode='play'] .rail {
+body[data-mode] .rail {
   position: absolute;
   inset: var(--gap);
   display: block;
@@ -1362,10 +1365,19 @@ body[data-mode='play'] .rail {
   z-index: 4;
 }
 
-body[data-mode='play'] .rail > * { pointer-events: auto; }
+body[data-mode] .rail > * { pointer-events: auto; }
+
+/*
+ * Kartan oma ohjerivi nousee ylös keskelle: alhaalla keskellä on nyt kelluva
+ * toimintokortti, jonka alle rivi jäisi piiloon.
+ */
+body[data-mode] .board-hint {
+  top: 0.6rem;
+  bottom: auto;
+}
 
 /* Toiminnot alas keskelle kelluvana korttina. */
-body[data-mode='play'] .turn-card {
+body[data-mode] .turn-card {
   position: absolute;
   left: 50%;
   bottom: 0.4rem;
@@ -1376,26 +1388,26 @@ body[data-mode='play'] .turn-card {
   backdrop-filter: blur(3px);
 }
 
-body[data-mode='play'] .actions {
+body[data-mode] .actions {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 /* Tila ja rahat ylös oikealle pieneksi pilleriksi. */
-body[data-mode='play'] .players {
+body[data-mode] .players {
   position: absolute;
   top: 0;
   right: 0;
   width: min(240px, 45%);
 }
 
-body[data-mode='play'] .player-chip {
+body[data-mode] .player-chip {
   background: var(--overlay-card);
   border-color: var(--overlay-line);
   backdrop-filter: blur(3px);
 }
 
 /* Päiväkirja ja havainto vasempaan alakulmaan. */
-body[data-mode='play'] .fact-card {
+body[data-mode] .fact-card {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -1409,11 +1421,11 @@ body[data-mode='play'] .fact-card {
 
 /* Kapealla ruudulla kelluvat kortit pinoutuvat alas eivätkä peitä karttaa. */
 @media (max-width: 700px) {
-  body[data-mode='play'] .stage {
+  body[data-mode] .stage {
     grid-template-rows: minmax(0, 1fr) auto;
   }
 
-  body[data-mode='play'] .rail {
+  body[data-mode] .rail {
     position: static;
     inset: auto;
     display: grid;
@@ -1421,13 +1433,19 @@ body[data-mode='play'] .fact-card {
     gap: var(--gap);
   }
 
-  body[data-mode='play'] .turn-card,
-  body[data-mode='play'] .players,
-  body[data-mode='play'] .fact-card {
+  body[data-mode] .turn-card,
+  body[data-mode] .players,
+  body[data-mode] .fact-card {
     position: static;
     transform: none;
     width: auto;
     max-height: none;
+  }
+
+  /* Kortit ovat taas kartan alla, joten ohjerivi mahtuu kartan alareunaan. */
+  body[data-mode] .board-hint {
+    top: auto;
+    bottom: 0.6rem;
   }
 }
 
