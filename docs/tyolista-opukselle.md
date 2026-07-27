@@ -365,9 +365,11 @@ Opuksen työt tässä paketissa:
    kumasi, orjarannikko, kano, kamerun, angola, namib, mosambik,
    madagaskar, viktoria, tanganjika, bahrelghazal, darfur, suakin,
    rashafun. Isoisän merkintöihin (voice: 'isoisa') ei kosketa, paitsi
-   jos fakta on väärin. Mitä pienempi ja yllättävämpi huomio, sitä
-   parempi; osa saa olla hyvin arkisia asioita vastapainoksi maan
-   tunnetuimmille. Faktat pysyvät tosina — tarkista jokainen väite.
+   jos fakta on väärin. Tasapainosääntö (tarina.md): kaupungin kahdesta
+   tekstistä toinen saa olla iso (saapumisen huuma, mittakaava, maisema)
+   ja toinen pieni ja arkinen — EI pelkkiä pikkuhuomioita. Sama
+   tehokeino ei toistu vierekkäisissä kaupungeissa. Faktat pysyvät
+   tosina — tarkista jokainen väite.
 2. **Kysymysten aikuistarkistus:** käy Afrikan kysymyspankki läpi ja
    korvaa loputkin lastenvisailta maistuvat kysymykset arvokkaammilla
    samantasoisilla (level-kenttä säilyy, minimit testeissä: joka

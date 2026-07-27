@@ -109,11 +109,28 @@ Avaustapoja (sekoita vapaasti):
 5. Toisen ihmisen repliikki: opas, kauppias, kanssamatkustaja.
 6. Kuiva fakta, joka kääntyy yllätykseksi viimeisessä virkkeessä.
 
-Mitä pienempi ja yllättävämpi huomio, sitä parempi. Osa havainnoista saa
-olla hyvinkin pieniä arkisia asioita — ne ovat vastapainoa maan
-tunnusomaisimmille asioille, jotka kysymykset ja isot faktat jo kattavat.
 Ensimmäinen virke on aina konkreettinen: jotain näkyy, kuuluu, maksaa tai
 tapahtuu.
+
+**Tasapaino: älä tee kaikista huomioista pieniä.** Hyvässä laudassa on
+kahdenlaisia tekstejä:
+
+- **Isot** — saapumisen huuma, mittakaava, maisema: se mikä paikassa
+  oikeasti hämmästyttää. Näissä saa tuulettaa.
+- **Pienet** — arkinen, yllättävä yksityiskohta, joka jää mieleen juuri
+  siksi, ettei sitä odota. Nämä ovat vastapainoa, eivät koko ruokalista.
+
+Nyrkkisääntö: kaupungin kahdesta nuoren herran tekstistä toinen saa olla
+iso ja toinen pieni. Pelaaja näkee kerralla vain yhden tekstin, joten
+vaihtelu ratkeaa koko laudan tasolla.
+
+Kaksi lisäsääntöä:
+
+- Keksitty saa olla vain kertojan oma kokemus (eksyminen, hengästyminen,
+  hävitty tinkiminen) — ei koskaan maailmaa koskeva väite. Kaikki
+  paikkaa koskevat faktat tarkistetaan.
+- Sama tehokeino ei saa toistua vierekkäisissä kaupungeissa: kaksi
+  "opas sanoi" -tekstiä peräkkäin syö molemmat.
 
 ## Avoinna (mietitään yhdessä)
 
