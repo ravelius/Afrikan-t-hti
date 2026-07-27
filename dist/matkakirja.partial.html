@@ -737,10 +737,12 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .intro {
   position: absolute;
   left: 50%;
-  /* Tilarivi ("Minne ensin?") kelluu aivan alalaidassa, joten teksti
-     asettuu sen yläpuolelle. */
-  bottom: 3.4rem;
   transform: translateX(-50%);
+  /* Kaistan ylälaidan ja korkeuden laskee js/ui.js placeIntro: se on se
+     tyhjä pergamentti, joka jää laudan alle. Teksti keskittyy kaistaan. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: min(560px, 84%);
   text-align: center;
   pointer-events: none; /* kartta jää napautettavaksi tekstin takaa */
@@ -750,15 +752,16 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .intro-text {
   margin: 0;
   color: var(--map-ink);
-  font-size: clamp(0.86rem, 1.5vw, 1.02rem);
+  /* Kokoa säätää js/ui.js fitIntro kaistan korkeuden mukaan. */
+  font-size: 1.02rem;
   line-height: 1.6;
   white-space: pre-line; /* omistajan teksti on kolmena kappaleena */
   text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9), 0 0 6px rgba(247, 237, 216, 0.75);
 }
 
 @media (max-width: 700px) {
-  .intro { bottom: 3rem; width: 90%; }
-  .intro-text { font-size: 0.82rem; line-height: 1.5; }
+  .intro { width: 90%; }
+  .intro-text { line-height: 1.5; }
 }
 
 /* Pallonpuoliskokartan kehykset ja asteverkko. */
@@ -23469,7 +23472,10 @@ const NS = 'http://www.w3.org/2000/svg';
 
 // Paperi jatkuu reilusti pelialueen ulkopuolelle, jotta se täyttää ruudun
 // näkymäikkunan (viewBox) muodosta riippumatta.
-const PAPER = { x: -700, y: -700, w: 2400, h: 2400 };
+// Pergamentti ulottuu selvästi laudan ulkopuolelle: kapealla pystyruudulla
+// näkymä on paljon lautaa korkeampi, ja liian pieni arkki jätti alalaitaan
+// tumman kaistan.
+const PAPER = { x: -1200, y: -1200, w: 3600, h: 3600 };
 
 /**
  * Deterministinen 0–1 -arvo merkkijonosta (FNV-1a). Sama piirre saa aina saman
@@ -23584,14 +23590,14 @@ function drawParchment(svg) {
   el('rect', { x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'paper' }, svg);
 
   const grid = el('g', { class: 'graticule' }, svg);
-  for (let x = -500; x < 1500; x += 125) {
+  for (let x = -1200; x < 2400; x += 125) {
     el('line', {
       x1: x + vary(`grid:v:${x}`, 2), y1: PAPER.y,
       x2: x + vary(`grid:v2:${x}`, 2), y2: PAPER.y + PAPER.h,
       opacity: (0.7 + hash01(`grid:vo:${x}`) * 0.6).toFixed(2),
     }, grid);
   }
-  for (let y = -500; y < 1500; y += 125) {
+  for (let y = -1200; y < 2400; y += 125) {
     el('line', {
       x1: PAPER.x, y1: y + vary(`grid:h:${y}`, 2),
       x2: PAPER.x + PAPER.w, y2: y + vary(`grid:h2:${y}`, 2),
@@ -25547,13 +25553,22 @@ const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 // Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
-const INTRO_SPACE = 0.34;
+const INTRO_SPACE = 0.5;
+// Kuinka paljon lautaa lasketaan yläreunasta aloitusnäkymässä.
+const INTRO_TOP = 0.05;
+// Kirjoituskoneen tahti: avaus saa naksua rauhassa, muut tekstit ripeästi.
+const TYPE_MS = 50;
+const INTRO_TYPE_MS = 190;
+// Avaustekstin kirjasinkoko sovitetaan kaistaan näiden rajojen sisällä.
+const INTRO_FONT_MAX = 1.02;
+const INTRO_FONT_MIN = 0.72;
 // Omistajan päättämä avausteksti. ÄLÄ muokkaa ilman omistajan lupaa
 // (docs/tyolista-opukselle.md, paketti 3).
 const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, '
   + 'kukkarollinen puntia ja päiväkirja, joka päättyy kesken lauseen.\n\n'
   + 'Ostin lipun samana iltana.\n\n'
-  + 'Jonkun on kirjoitettava se loppuun.';
+  + 'Jonkun on kirjoitettava se loppuun.\n\n'
+  + 'Minne menisin ensin?';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -25599,6 +25614,7 @@ class UI {
     this.passportCount = document.getElementById('passport-count');
     this.passportFinds = document.getElementById('passport-finds');
 
+    this.turnCard = document.getElementById('actions').closest('.turn-card');
     this.introEl = document.getElementById('intro');
     this.introText = document.getElementById('intro-text');
 
@@ -25797,14 +25813,49 @@ class UI {
     // pergamentti on avaustekstiä varten, eikä sitä saa jakaa ylä- ja
     // alareunan kesken. Muulloin sisältö keskitetään kuten ennen.
     const alkuun = this.game.phase === 'pickstart';
-    const vy = alkuun ? box.y : box.y + box.h / 2 - vh / 2;
+    const vy = alkuun ? box.y - box.h * INTRO_TOP : box.y + box.h / 2 - vh / 2;
     this.svg.setAttribute(
       'viewBox',
       `${box.x + box.w / 2 - vw / 2} ${vy} ${vw} ${vh}`,
     );
+    if (alkuun) this.placeIntro(box, vy, vh, h);
     this.placeFactCard(w, h);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
+  }
+
+  /**
+   * Avausteksti keskelle sitä tyhjää pergamenttia, joka jää laudan alle.
+   * Kaista lasketaan näkymästä eikä arvata prosentteina, koska kapealla
+   * ruudulla laatikko on myös pystysuunnassa kirjekuoressa.
+   */
+  placeIntro(box, vy, vh, paneH) {
+    const paneY = (boardY) => ((boardY - vy) / vh) * paneH;
+    // Kaista alkaa laudan alareunasta ja päättyy rajauslaatikon pohjaan.
+    // Rajataan paneelin sisään, jottei teksti valu ulos matalalla ruudulla.
+    const ylin = Math.max(0, paneY(box.y + box.h / (1 + INTRO_SPACE)));
+    // Kaista jatkuu paneelin pohjaan asti: pergamentti ulottuu sinne, joten
+    // kapealla ruudulla teksti saa käyttöönsä kaiken tyhjän tilan.
+    const alin = paneH;
+    this.introEl.style.top = `${Math.round(ylin)}px`;
+    this.introEl.style.height = `${Math.max(0, Math.round(alin - ylin))}px`;
+    this.fitIntro();
+  }
+
+  /**
+   * Kutistaa avaustekstiä, jos se ei mahdu kaistaan. Matalalla ruudulla
+   * kaista jää kapeaksi, eikä teksti saa valua laudan tai kartan reunan yli.
+   */
+  fitIntro() {
+    const kaista = this.introEl.clientHeight;
+    if (!kaista) return;
+    let koko = INTRO_FONT_MAX;
+    this.introText.style.fontSize = `${koko}rem`;
+    // Kolme askelta riittää: pienempää kuin INTRO_FONT_MIN ei mennä.
+    for (let i = 0; i < 3 && this.introText.scrollHeight > kaista; i++) {
+      koko = Math.max(INTRO_FONT_MIN, koko - 0.09);
+      this.introText.style.fontSize = `${koko}rem`;
+    }
   }
 
   /**
@@ -26197,11 +26248,15 @@ class UI {
 
     // Lähtöpisteen valinta tehdään kartalta yhdellä napautuksella, joten
     // toimintopaneelissa on vain ohje.
+    // Aloitusnäkymässä ei ole toimintoja eikä tilariviä: avausteksti hoitaa
+    // kehotuksen, ja tyhjä kortti vain veisi tilaa kartalta.
     if (game.phase === 'pickstart') {
-      this.turnStatus.textContent = 'Minne ensin?';
+      this.turnStatus.textContent = '';
       this.hint.textContent = '';
+      this.turnCard.hidden = true;
       return;
     }
+    this.turnCard.hidden = false;
 
     if (p.isBot) {
       this.turnStatus.textContent = `${p.name} miettii…`;
@@ -26600,7 +26655,9 @@ class UI {
     }
     if (this.introShown) return;
     this.introShown = true;
-    this.typeText(this.introText, INTRO_TEXT, 'intro');
+    // Avausteksti kirjoittuu selvästi hitaammin kuin muut: se on matkan
+    // ensimmäinen hetki eikä pelitilanteen ilmoitus.
+    this.typeText(this.introText, INTRO_TEXT, 'intro', () => this.fitIntro(), INTRO_TYPE_MS);
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
@@ -27098,7 +27155,7 @@ class UI {
    * kirjoituksen, jotta tekstit eivät sekoitu keskenään. Liikkeen
    * vähennystä toivovalle teksti ilmestyy kerralla.
    */
-  typeText(target, text, slot = 'fact', done = null) {
+  typeText(target, text, slot = 'fact', done = null, speed = TYPE_MS) {
     this.typeTimers ??= {};
     clearInterval(this.typeTimers[slot]);
     if (this.reducedMotion) {
@@ -27116,7 +27173,7 @@ class UI {
         clearInterval(this.typeTimers[slot]);
         done?.();
       }
-    }, 50);
+    }, speed);
   }
 
   showError(message) {
@@ -27313,7 +27370,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.3';
+const APP_VERSION = '2026-07-28.4';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
