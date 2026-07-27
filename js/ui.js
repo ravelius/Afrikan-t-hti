@@ -32,6 +32,7 @@ import {
   drawTerrain,
   drawTokenIcon,
   drawWaves,
+  isOnLand,
   revealFaceSvg,
   revealRaysSvg,
   tokenIconSvg,
@@ -47,6 +48,10 @@ const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
+// Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
+const FACT_CORNER = 0.34;
+const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
+const TURN_WIDTH = 560; // pidettävä samana kuin .turn-card css:ssä
 
 // Tapahtumakuplien äänet.
 const EVENT_SOUND = { fare: 'ferry', flight: 'flight', aid: 'coin', stuck: 'stuck' };
@@ -78,7 +83,6 @@ export class UI {
 
     this.svg = document.getElementById('board');
     this.hint = document.getElementById('board-hint');
-    this.playersEl = document.getElementById('players');
     this.turnPill = document.getElementById('turn-pill');
     this.turnStatus = document.getElementById('turn-status');
     this.dieEl = document.getElementById('die');
@@ -87,6 +91,7 @@ export class UI {
     this.passportDialog = document.getElementById('passport-dialog');
     this.passportGrid = document.getElementById('passport-grid');
     this.passportCount = document.getElementById('passport-count');
+    this.passportFinds = document.getElementById('passport-finds');
 
     this.factVoiceEl = document.getElementById('fact-voice');
     this.factPlace = document.getElementById('fact-place');
@@ -253,8 +258,55 @@ export class UI {
       'viewBox',
       `${box.x + box.w / 2 - vw / 2} ${box.y + box.h / 2 - vh / 2} ${vw} ${vh}`,
     );
+    this.placeFactCard(w, h);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
+  }
+
+  /**
+   * Päiväkirjakortti asetetaan sille kartan nurkalle, jossa on eniten merta.
+   * Näin kortti ei koskaan peitä mannerta ja lauta näkyy kokonaisena. Kortti
+   * on kartan päällä, joten jokin nurkka menetetään joka tapauksessa — meri
+   * on niistä halvin.
+   *
+   * Alanurkat hylätään, jos kortti ja toimintokortti eivät mahdu rinnakkain:
+   * silloin ne peittäisivät toisensa.
+   */
+  placeFactCard(paneW, paneH) {
+    const vb = this.svg.viewBox.baseVal;
+    if (!vb || !vb.width) return;
+    const { map } = this.game.pack;
+
+    // Nurkan kokoinen otos: kolmannes leveydestä ja korkeudesta.
+    const meriosuus = (kx, ky) => {
+      let meri = 0;
+      let kaikki = 0;
+      for (let i = 0; i <= 6; i++) {
+        for (let j = 0; j <= 6; j++) {
+          const x = vb.x + vb.width * (kx + (i / 6) * FACT_CORNER);
+          const y = vb.y + vb.height * (ky + (j / 6) * FACT_CORNER);
+          kaikki++;
+          if (!isOnLand([x, y], map)) meri++;
+        }
+      }
+      return meri / kaikki;
+    };
+
+    const loppu = 1 - FACT_CORNER;
+    const nurkat = [
+      { id: 'tl', kx: 0, ky: 0 },
+      { id: 'tr', kx: loppu, ky: 0 },
+      { id: 'bl', kx: 0, ky: loppu },
+      { id: 'br', kx: loppu, ky: loppu },
+    ];
+    // Mahtuvatko päiväkirja ja toimintokortti samalle riville?
+    const mahtuu = paneW >= FACT_WIDTH + TURN_WIDTH + 40;
+    for (const n of nurkat) {
+      n.meri = meriosuus(n.kx, n.ky);
+      if (!mahtuu && n.id[0] === 'b') n.meri -= 1; // alanurkat viimeisiksi
+    }
+    nurkat.sort((a, b) => b.meri - a.meri);
+    this.factCard.dataset.corner = nurkat[0].id;
   }
 
   /** Kartan koordinaatit kartta-alueen pikseleiksi. */
@@ -567,56 +619,19 @@ export class UI {
       this.turnPill.appendChild(html('span', '', `🏆 ${game.winner.name} voitti`));
       return;
     }
+    // Erillinen pelaajapaneeli on poistettu: matkaajan tiedot mahtuvat tähän,
+    // ja löydöt näkyvät passissa.
     const p = game.player;
     const dot = html('span', 'dot');
     dot.style.background = p.color;
     this.turnPill.appendChild(dot);
     const city = this.factCity(p.pos);
     const where = p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name;
-    this.turnPill.appendChild(html('span', '', `${p.money} p · ${where}`));
-  }
-
-  renderPlayers() {
-    const { game } = this;
-    this.playersEl.textContent = '';
-    for (const p of game.players) {
-      const chip = html('div', 'player-chip' + (p.id === game.current ? ' current' : ''));
-
-      const head = html('div', 'chip-head');
-      const dot = html('span', 'dot');
-      dot.style.background = p.color;
-      head.appendChild(dot);
-      head.appendChild(html('span', 'chip-name', p.name + (p.isBot ? ' 🤖' : '')));
-      chip.appendChild(head);
-
-      const row = html('div', 'chip-row');
-      row.appendChild(html('span', 'money', `${p.money} p`));
-      const marks = html('span', 'chip-marks');
-      if (p.hasStar) marks.appendChild(tokenIconSvg('star', 17));
-      for (let i = 0; i < p.horseshoes; i++) marks.appendChild(tokenIconSvg('horseshoe', 17));
-      const gems = p.finds.filter((t) => game.tokenTypes[t].value > 0);
-      if (gems.length) {
-        marks.appendChild(tokenIconSvg(gems[gems.length - 1], 17));
-        if (gems.length > 1) marks.appendChild(html('span', 'gem-count', `×${gems.length}`));
-      }
-      row.appendChild(marks);
-      chip.appendChild(row);
-
-      // Kokemuspisteet ja tietoprosentti: matkan mittarit rahan rinnalla.
-      const stats = html('div', 'chip-row chip-stats');
-      stats.appendChild(html('span', 'xp', `${p.xp ?? 0} kp`));
-      const percent = game.knowledgePercent(p);
-      if (percent !== null) {
-        stats.appendChild(html('span', 'knowledge', `Tieto ${percent} %`));
-      }
-      chip.appendChild(stats);
-
-      const city = game.cityOf(p);
-      const where = city ? city.name : game.routeName(p.pos.edge, game.worldOf(p).board);
-      const elsewhere = p.packId !== this.drawnPackId ? ` · ${game.worldOf(p).pack.boardLabel}` : '';
-      chip.appendChild(html('div', 'chip-row chip-where', where + elsewhere));
-      this.playersEl.appendChild(chip);
-    }
+    const osat = [`${p.money} p`, `${p.xp ?? 0} kp`];
+    const tieto = game.knowledgePercent(p);
+    if (tieto !== null) osat.push(`Tieto ${tieto} %`);
+    osat.push(where);
+    this.turnPill.appendChild(html('span', '', osat.join(' · ')));
   }
 
   renderActions() {
@@ -697,7 +712,6 @@ export class UI {
         this.doAction(() => game.actionQuiz());
       });
       this.actionsEl.appendChild(quizBtn);
-      this.addHardQuizButton(city);
 
       const skipBtn = html('button', '', '➡ Päätä vuoro');
       skipBtn.addEventListener('click', () => this.doAction(() => game.actionSkipQuiz()));
@@ -747,13 +761,13 @@ export class UI {
       this.turnStatus.textContent = 'Valitse matkustustapa.';
 
       if (modes.includes('land')) {
-        const landBtn = html('button', modes.includes('stay') ? '' : 'primary', '🥾 Jalan');
+        const landBtn = this.iconButton('🥾', 'Jalan', modes.includes('stay') ? '' : 'primary');
         landBtn.addEventListener('click', () => this.doWalk());
         this.actionsEl.appendChild(landBtn);
       }
 
       if (hasSlow) {
-        const moreBtn = html('button', '', '⛵✈ Laiva & lento…');
+        const moreBtn = this.iconButton('⛵', 'Laiva & lento');
         moreBtn.addEventListener('click', () => {
           this.travelExpanded = true;
           this.render();
@@ -762,13 +776,12 @@ export class UI {
       }
 
       if (modes.includes('stay')) {
-        const stayBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
+        const stayBtn = this.iconButton('❓', 'Vastaa kysymykseen', 'primary');
         stayBtn.addEventListener('click', () => {
           sfx.play('paper');
           this.doAction(() => game.actionTravel('stay'));
         });
         this.actionsEl.appendChild(stayBtn);
-        this.addHardQuizButton(game.cityOf());
       }
       return;
     }
@@ -777,7 +790,7 @@ export class UI {
     this.turnStatus.textContent = 'Laivalla, lentäen vai portin kautta?';
 
     if (modes.includes('sea')) {
-      const seaBtn = html('button', '', `⛵ Laivalla (${SEA_FARE} p)`);
+      const seaBtn = html('button', 'wide', `⛵ Laivalla (${SEA_FARE} p)`);
       seaBtn.addEventListener('click', () => {
         sfx.play('ferry');
         this.doAction(() => game.actionTravel('sea'));
@@ -787,14 +800,14 @@ export class UI {
 
     for (const dest of flights) {
       const city = game.board.cityById.get(dest);
-      const flyBtn = html('button', '', `✈ Lennä: ${city.name} (${FLIGHT_PRICE} p)`);
+      const flyBtn = html('button', 'wide', `✈ ${city.name} (${FLIGHT_PRICE} p)`);
       flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
 
     // Vaelluksessa porttikaupungeista jatketaan toisille laudoille.
     for (const link of gateways) {
-      const gwBtn = html('button', '', `🧭 ${link.label}`);
+      const gwBtn = html('button', 'wide', `🧭 ${link.label}`);
       gwBtn.addEventListener('click', () => {
         sfx.play('flight');
         this.doAction(() => game.actionGateway(link.index));
@@ -804,7 +817,7 @@ export class UI {
 
     // Tietoportti: maan lauta aukeaa pääkaupungista vaikealla kysymyksellä.
     for (const gate of countryGates) {
-      const gateBtn = html('button', '', `★ ${gate.label} — vaikea kysymys`);
+      const gateBtn = html('button', 'wide', `★ ${gate.label} — vaikea kysymys`);
       gateBtn.addEventListener('click', () => {
         sfx.play('paper');
         this.doAction(() => game.actionGateQuiz(gate.index));
@@ -812,12 +825,27 @@ export class UI {
       this.actionsEl.appendChild(gateBtn);
     }
 
-    const backBtn = html('button', '', '↩ Takaisin');
+    const backBtn = this.iconButton('↩', 'Takaisin');
     backBtn.addEventListener('click', () => {
       this.travelExpanded = false;
       this.render();
     });
     this.actionsEl.appendChild(backBtn);
+  }
+
+  /**
+   * Toimintonappi ikonina. Teksti jää saavutettavuutta varten title- ja
+   * aria-label-määreisiin sekä leveälle ruudulle näkyväksi selitteeksi, jotta
+   * napit vievät kartalta mahdollisimman vähän tilaa.
+   */
+  iconButton(icon, label, extra = '') {
+    const btn = html('button', `icon-btn${extra ? ` ${extra}` : ''}`);
+    btn.type = 'button';
+    btn.title = label;
+    btn.setAttribute('aria-label', label);
+    btn.appendChild(html('span', 'icon-glyph', icon));
+    btn.appendChild(html('span', 'icon-label', label));
+    return btn;
   }
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
@@ -843,18 +871,6 @@ export class UI {
       const { game } = this;
       if (game.phase === 'roll' && game.autoTravel && !game.player.isBot) this.doRoll();
     }, AUTO_ROLL_MS);
-  }
-
-  /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
-  addHardQuizButton(city) {
-    const { game } = this;
-    if (!city || !game.hardAvailable(city.id)) return;
-    const hardBtn = html('button', '', `★ Vaikea kysymys (+${HARD_BONUS} p)`);
-    hardBtn.addEventListener('click', () => {
-      sfx.play('paper');
-      this.doAction(() => game.actionQuiz({ hard: true }));
-    });
-    this.actionsEl.appendChild(hardBtn);
   }
 
   /**
@@ -979,7 +995,6 @@ export class UI {
     this.drawTargets();
     this.drawPawns();
     this.renderTurnPill();
-    this.renderPlayers();
     this.renderActions();
     this.renderFact();
     this.renderQuiz();
@@ -1027,7 +1042,40 @@ export class UI {
     this.passportCount.textContent = stamps.length === 1
       ? '1 leima'
       : `${stamps.length} leimaa`;
+    this.renderFinds();
     if (!this.passportDialog.open) this.passportDialog.showModal();
+  }
+
+  /**
+   * Matkasaalis passissa: tähti, hevosenkengät ja jalokivet. Nämä näkyivät
+   * ennen erillisessä pelaajapaneelissa, joka vei tilaa kartalta.
+   */
+  renderFinds() {
+    const { game } = this;
+    const p = game.player;
+    this.passportFinds.textContent = '';
+
+    const rivi = (icon, text) => {
+      const row = html('div', 'find');
+      row.appendChild(icon);
+      row.appendChild(html('span', 'find-text', text));
+      this.passportFinds.appendChild(row);
+    };
+
+    if (p.hasStar) rivi(tokenIconSvg('star', 20), game.pack.tokens.types.star.name);
+    if (p.horseshoes) rivi(tokenIconSvg('horseshoe', 20), `Hevosenkenkiä ${p.horseshoes}`);
+
+    // Jalokivet tyypeittäin: sama laji voi toistua monelta laudalta.
+    const gems = p.finds.filter((t) => (game.tokenTypes[t]?.value ?? 0) > 0);
+    const counts = new Map();
+    for (const type of gems) counts.set(type, (counts.get(type) ?? 0) + 1);
+    for (const [type, n] of counts) {
+      rivi(tokenIconSvg(type, 20), `${game.tokenTypes[type].name}${n > 1 ? ` ×${n}` : ''}`);
+    }
+
+    if (!this.passportFinds.childElementCount) {
+      this.passportFinds.appendChild(html('p', 'muted', 'Laukku on vielä tyhjä.'));
+    }
   }
 
   showWinner() {

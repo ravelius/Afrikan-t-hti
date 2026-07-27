@@ -696,7 +696,10 @@ export class Game {
     // Tietoportti: oikea vastaus avaa portin, laattoja ei käännetä.
     if (this.quiz.gate) {
       if (this.quiz.right) {
-        this.say(p.id, `★ ${p.name} vastasi oikein — portti aukeaa: ${this.quiz.gate.label}!`);
+        // Tietoportin kysymys on aina vaikea, joten siitä saa samat
+        // kokemuspisteet kuin muustakin oikein vastatusta vaikeasta.
+        this.awardXp(p, XP_HARD_ANSWER);
+        this.say(p.id, `★ ${p.name} vastasi oikein — portti aukeaa: ${this.quiz.gate.label}! (+${XP_HARD_ANSWER} kp)`);
       } else {
         const oikea = this.quiz.options[this.quiz.correct];
         this.say(p.id, `${p.name} vastasi väärin — portti ei auennut. Oikea vastaus oli "${oikea}".`);

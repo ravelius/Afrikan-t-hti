@@ -484,6 +484,50 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .chip-marks { letter-spacing: 0.08em; }
 .chip-marks .star { color: var(--accent); }
 
+/*
+ * Ikoninapit: kartalta viedään mahdollisimman vähän tilaa, joten
+ * matkustustavan valinta on ikoni ja lyhyt selite. Kapealla napilla selite
+ * piiloutuu ja jäljelle jää pelkkä ikoni — title ja aria-label kertovat
+ * merkityksen niille, jotka eivät ikonia tunnista.
+ */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.7rem;
+}
+
+.icon-glyph { font-size: 1.15rem; line-height: 1; }
+.icon-label { white-space: nowrap; }
+
+/* Alle 520 px napit kutistuvat pelkiksi ikoneiksi. */
+@media (max-width: 520px) {
+  .icon-label { display: none; }
+  .icon-btn { padding: 0.5rem; }
+}
+
+/* Vaiheen B napit ovat rivin levyisiä: nimet ovat pitkiä. */
+.actions .wide { grid-column: 1 / -1; }
+
+/* Passin matkasaalis: laatta ja sen nimi allekkain. */
+.passport-finds {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.find {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  /* Passi on vaaleaa pergamenttia, joten teksti perii dialogin tumman musteen. */
+  color: inherit;
+}
+
+.find-text { font-variant-numeric: tabular-nums; }
+
 /* Matkan mittarit: kokemuspisteet ja tietoprosentti rahan alla. */
 .chip-stats { gap: 0.6rem; font-size: 0.76rem; }
 .chip-stats .xp,
@@ -1386,23 +1430,12 @@ body[data-mode] .board-hint {
  * kortit menivät päällekkäin kaikilla alle ~1240 px:n leveyksillä,
  * esimerkiksi tabletilla pystyasennossa.
  */
-body[data-mode] .rail-bottom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.4rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: var(--gap);
-  max-height: 100%;
-}
-
 body[data-mode] .turn-card {
-  flex: 0 1 560px;
-  /* Automaattiset marginaalit keskittävät napit, kun päiväkirja on kapea. */
-  margin-inline: auto;
+  position: absolute;
+  left: 50%;
+  bottom: 0.4rem;
+  transform: translateX(-50%);
+  width: min(560px, calc(100% - 1.2rem));
   background: var(--overlay-card);
   border-color: var(--overlay-line);
   backdrop-filter: blur(3px);
@@ -1412,29 +1445,25 @@ body[data-mode] .actions {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
-/* Tila ja rahat ylös oikealle pieneksi pilleriksi. */
-body[data-mode] .players {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: min(240px, 45%);
-}
-
-body[data-mode] .player-chip {
-  background: var(--overlay-card);
-  border-color: var(--overlay-line);
-  backdrop-filter: blur(3px);
-}
-
-/* Päiväkirja ja havainto alarivin vasempaan laitaan. */
+/*
+ * Päiväkirja kelluu sillä kartan nurkalla, jossa on eniten merta; nurkan
+ * valitsee js/ui.js placeFactCard ja kertoo sen data-corner-määreellä.
+ * Alanurkat jäävät valitsematta, jos toimintokortti ei mahdu viereen.
+ */
 body[data-mode] .fact-card {
-  flex: 0 1 340px;
-  max-height: 40vh;
+  position: absolute;
+  width: min(340px, 46%);
+  max-height: 38%;
   overflow-y: auto;
   background: var(--overlay-card);
   border-color: var(--overlay-line);
   backdrop-filter: blur(3px);
 }
+
+body[data-mode] .fact-card[data-corner='tl'] { top: 0; left: 0; }
+body[data-mode] .fact-card[data-corner='tr'] { top: 0; right: 0; }
+body[data-mode] .fact-card[data-corner='bl'] { bottom: 0; left: 0; }
+body[data-mode] .fact-card[data-corner='br'] { bottom: 0; right: 0; }
 
 /* Kapealla ruudulla kelluvat kortit pinoutuvat alas eivätkä peitä karttaa. */
 @media (max-width: 700px) {
@@ -1446,27 +1475,21 @@ body[data-mode] .fact-card {
     position: static;
     inset: auto;
     display: grid;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
     gap: var(--gap);
   }
 
-  body[data-mode] .rail-bottom {
-    position: static;
-    display: contents;
-  }
-
-  /* Kartan alla toiminnot ovat ensin, kuten ennen alarivin käyttöönottoa. */
+  /* Kartan alla toiminnot ovat ensin, päiväkirja niiden jälkeen. */
   body[data-mode] .turn-card { order: 1; }
-  body[data-mode] .players { order: 2; }
   body[data-mode] .fact-card { order: 3; }
 
   body[data-mode] .turn-card,
-  body[data-mode] .players,
   body[data-mode] .fact-card {
     position: static;
     transform: none;
     width: auto;
     max-height: none;
+    inset: auto;
   }
 
   /* Kortit ovat taas kartan alla, joten ohjerivi mahtuu kartan alareunaan. */
@@ -1560,7 +1583,6 @@ body[data-mode] .fact-card {
       <h1 class="brand">Matkakirja</h1>
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
-        <button id="sound-btn" class="ghost" type="button" aria-label="Äänet päälle tai pois">🔊</button>
         <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
           <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true">↻</span>
         </button>
@@ -1582,29 +1604,24 @@ body[data-mode] .fact-card {
       </section>
 
       <aside class="rail">
-        <section id="players" class="players" aria-label="Pelaajat"></section>
-
         <!--
-          Päiväkirja ja toiminnot ovat samassa alarivissä, jotta ne eivät voi
-          kellua toistensa päälle: kun ne eivät mahdu rinnakkain, rivi katkeaa
-          ja päiväkirja siirtyy nappien yläpuolelle.
+          Päiväkirja asettuu sille kartan nurkalle, jossa on eniten merta
+          (js/ui.js placeFactCard) — näin se ei koskaan peitä mannerta.
         -->
-        <div class="rail-bottom">
-          <section class="card fact-card">
-            <h2 id="fact-voice">Matkapäiväkirjasta</h2>
-            <p id="fact-place" class="fact-place"></p>
-            <p id="fact-text" class="fact-text"></p>
-          </section>
+        <section class="card fact-card" data-corner="bl">
+          <h2 id="fact-voice">Matkapäiväkirjasta</h2>
+          <p id="fact-place" class="fact-place"></p>
+          <p id="fact-text" class="fact-text"></p>
+        </section>
 
-          <section class="card turn-card">
-            <div class="turn-row">
-              <div id="die" class="die" hidden></div>
-              <div id="turn-status" class="turn-status"></div>
-            </div>
-            <div id="actions" class="actions"></div>
-            <div id="error" class="error" hidden></div>
-          </section>
-        </div>
+        <section class="card turn-card">
+          <div class="turn-row">
+            <div id="die" class="die" hidden></div>
+            <div id="turn-status" class="turn-status"></div>
+          </div>
+          <div id="actions" class="actions"></div>
+          <div id="error" class="error" hidden></div>
+        </section>
       </aside>
     </main>
   </div>
@@ -1619,6 +1636,8 @@ body[data-mode] .fact-card {
       käynyt, jää siihen leima — ne säilyvät myös uusiin peleihin.</p>
     <p id="passport-count" class="passport-count"></p>
     <div id="passport-grid" class="passport-grid"></div>
+    <p class="passport-count">Matkasaalis</p>
+    <div id="passport-finds" class="passport-finds"></div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
     </form>
@@ -1649,7 +1668,8 @@ body[data-mode] .fact-card {
         uusi yritys seuraavalla vuorolla. Kiertotiekin voi löytyä: Suomeen pääsee
         myös ruotsinlaivalla Tukholmasta Ahvenanmaalle.</p>
       <p><b>Kartta.</b> Koko lauta näkyy aina kerralla, joten karttaa ei tarvitse
-        raahata eikä zoomata. Porttikaupungin tunnistaa katkoviivakehästä.</p>
+        raahata eikä zoomata. Päiväkirjakortti hakeutuu sille kartan nurkalle, jossa
+        on eniten merta, jottei se peitä mannerta.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa. Näkyvillä on kerrallaan vain
         muutama nappi: <b>Jalan</b> lähtee heti matkaan ja heittää nopan samalla
         painalluksella, <b>Laiva &amp; lento…</b> avaa loput vaihtoehdot (laiva 100 p,
@@ -1670,9 +1690,9 @@ body[data-mode] .fact-card {
         ottamatta on kätketty aarre. Sen saa auki vain vastaamalla oikein arvottuun
         monivalintakysymykseen (A–D) — rahalla aarretta ei voi ostaa. Väärästä vastauksesta
         vuoro päättyy, ja seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.</p>
-      <p><b>Vaikeustasot.</b> Aarrekaupungissa voi pyytää
-        <b>vaikean kysymyksen</b>: oikeasta vastauksesta saa laatan lisäksi 100 punnan
-        palkkion, mutta väärästä vuoro päättyy kuten tavallisesti.</p>
+      <p><b>Vaikeat kysymykset.</b> Vaikeaa kysymystä ei enää valita erikseen
+        aarrekaupungissa: se on varattu <b>tietoporteille</b>, joista maan oma
+        kartta aukeaa. Oikeasta vastauksesta saa 25 kokemuspistettä.</p>
       <p><b>Aikaraja.</b> Vastausaikaa on 45 sekuntia. Tiimalasi valuu kysymyksen vieressä,
         ja jos hiekka loppuu, vastaus lasketaan vääräksi ja vuoro päättyy.</p>
       <p><b>Rahan käyttö.</b> 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa
@@ -1695,14 +1715,14 @@ body[data-mode] .fact-card {
         päiväkirjasta löytyy taitettu sivu, joka vihjaa laudan pääaarteen suunnasta —
         muttei koskaan nimeä kaupunkia.</p>
       <p><b>Kokemuspisteet ja tieto.</b> Pisteitä kertyy matkasta eikä onnesta:
-        uudesta kaupungista 10, uudesta laudasta 50, oikeasta vastauksesta vaikeaan
-        kysymykseen 25 ja laudan pääaarteesta 100. Paneelin tietoprosentti kertoo,
+        uudesta kaupungista 10, uudesta laudasta 50, tietoportin vaikeasta
+        kysymyksestä 25 ja laudan pääaarteesta 100. Yläpalkin tietoprosentti kertoo,
         kuinka moneen kysymykseen olet vastannut oikein — kaksintaistelut mukaan
-        lukien.</p>
+        lukien. Rahat, pisteet ja sijainti näkyvät yläpalkissa; löydöt passissa.</p>
       <p><b>Vihreä passi.</b> Yläpalkin <b>Passi</b> avaa isoisän passin. Siihen jää
         leima jokaisesta laudasta, jolla olet käynyt, ja leimat säilyvät myös uusiin
-        peleihin.</p>
-      <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
+        peleihin. Samasta näkymästä näkee matkasaaliin: tähden, hevosenkengät ja
+        jalokivet.</p>
       <p><b>Päivitys.</b> Yläpalkin <b>Päivitä</b> hakee uusimman version pelistä —
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
       <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman
@@ -22574,7 +22594,10 @@ class Game {
     // Tietoportti: oikea vastaus avaa portin, laattoja ei käännetä.
     if (this.quiz.gate) {
       if (this.quiz.right) {
-        this.say(p.id, `★ ${p.name} vastasi oikein — portti aukeaa: ${this.quiz.gate.label}!`);
+        // Tietoportin kysymys on aina vaikea, joten siitä saa samat
+        // kokemuspisteet kuin muustakin oikein vastatusta vaikeasta.
+        this.awardXp(p, XP_HARD_ANSWER);
+        this.say(p.id, `★ ${p.name} vastasi oikein — portti aukeaa: ${this.quiz.gate.label}! (+${XP_HARD_ANSWER} kp)`);
       } else {
         const oikea = this.quiz.options[this.quiz.correct];
         this.say(p.id, `${p.name} vastasi väärin — portti ei auennut. Oikea vastaus oli "${oikea}".`);
@@ -23310,6 +23333,10 @@ const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
+// Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
+const FACT_CORNER = 0.34;
+const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
+const TURN_WIDTH = 560; // pidettävä samana kuin .turn-card css:ssä
 
 // Tapahtumakuplien äänet.
 const EVENT_SOUND = { fare: 'ferry', flight: 'flight', aid: 'coin', stuck: 'stuck' };
@@ -23341,7 +23368,6 @@ class UI {
 
     this.svg = document.getElementById('board');
     this.hint = document.getElementById('board-hint');
-    this.playersEl = document.getElementById('players');
     this.turnPill = document.getElementById('turn-pill');
     this.turnStatus = document.getElementById('turn-status');
     this.dieEl = document.getElementById('die');
@@ -23350,6 +23376,7 @@ class UI {
     this.passportDialog = document.getElementById('passport-dialog');
     this.passportGrid = document.getElementById('passport-grid');
     this.passportCount = document.getElementById('passport-count');
+    this.passportFinds = document.getElementById('passport-finds');
 
     this.factVoiceEl = document.getElementById('fact-voice');
     this.factPlace = document.getElementById('fact-place');
@@ -23516,8 +23543,55 @@ class UI {
       'viewBox',
       `${box.x + box.w / 2 - vw / 2} ${box.y + box.h / 2 - vh / 2} ${vw} ${vh}`,
     );
+    this.placeFactCard(w, h);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
+  }
+
+  /**
+   * Päiväkirjakortti asetetaan sille kartan nurkalle, jossa on eniten merta.
+   * Näin kortti ei koskaan peitä mannerta ja lauta näkyy kokonaisena. Kortti
+   * on kartan päällä, joten jokin nurkka menetetään joka tapauksessa — meri
+   * on niistä halvin.
+   *
+   * Alanurkat hylätään, jos kortti ja toimintokortti eivät mahdu rinnakkain:
+   * silloin ne peittäisivät toisensa.
+   */
+  placeFactCard(paneW, paneH) {
+    const vb = this.svg.viewBox.baseVal;
+    if (!vb || !vb.width) return;
+    const { map } = this.game.pack;
+
+    // Nurkan kokoinen otos: kolmannes leveydestä ja korkeudesta.
+    const meriosuus = (kx, ky) => {
+      let meri = 0;
+      let kaikki = 0;
+      for (let i = 0; i <= 6; i++) {
+        for (let j = 0; j <= 6; j++) {
+          const x = vb.x + vb.width * (kx + (i / 6) * FACT_CORNER);
+          const y = vb.y + vb.height * (ky + (j / 6) * FACT_CORNER);
+          kaikki++;
+          if (!isOnLand([x, y], map)) meri++;
+        }
+      }
+      return meri / kaikki;
+    };
+
+    const loppu = 1 - FACT_CORNER;
+    const nurkat = [
+      { id: 'tl', kx: 0, ky: 0 },
+      { id: 'tr', kx: loppu, ky: 0 },
+      { id: 'bl', kx: 0, ky: loppu },
+      { id: 'br', kx: loppu, ky: loppu },
+    ];
+    // Mahtuvatko päiväkirja ja toimintokortti samalle riville?
+    const mahtuu = paneW >= FACT_WIDTH + TURN_WIDTH + 40;
+    for (const n of nurkat) {
+      n.meri = meriosuus(n.kx, n.ky);
+      if (!mahtuu && n.id[0] === 'b') n.meri -= 1; // alanurkat viimeisiksi
+    }
+    nurkat.sort((a, b) => b.meri - a.meri);
+    this.factCard.dataset.corner = nurkat[0].id;
   }
 
   /** Kartan koordinaatit kartta-alueen pikseleiksi. */
@@ -23830,56 +23904,19 @@ class UI {
       this.turnPill.appendChild(html('span', '', `🏆 ${game.winner.name} voitti`));
       return;
     }
+    // Erillinen pelaajapaneeli on poistettu: matkaajan tiedot mahtuvat tähän,
+    // ja löydöt näkyvät passissa.
     const p = game.player;
     const dot = html('span', 'dot');
     dot.style.background = p.color;
     this.turnPill.appendChild(dot);
     const city = this.factCity(p.pos);
     const where = p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name;
-    this.turnPill.appendChild(html('span', '', `${p.money} p · ${where}`));
-  }
-
-  renderPlayers() {
-    const { game } = this;
-    this.playersEl.textContent = '';
-    for (const p of game.players) {
-      const chip = html('div', 'player-chip' + (p.id === game.current ? ' current' : ''));
-
-      const head = html('div', 'chip-head');
-      const dot = html('span', 'dot');
-      dot.style.background = p.color;
-      head.appendChild(dot);
-      head.appendChild(html('span', 'chip-name', p.name + (p.isBot ? ' 🤖' : '')));
-      chip.appendChild(head);
-
-      const row = html('div', 'chip-row');
-      row.appendChild(html('span', 'money', `${p.money} p`));
-      const marks = html('span', 'chip-marks');
-      if (p.hasStar) marks.appendChild(tokenIconSvg('star', 17));
-      for (let i = 0; i < p.horseshoes; i++) marks.appendChild(tokenIconSvg('horseshoe', 17));
-      const gems = p.finds.filter((t) => game.tokenTypes[t].value > 0);
-      if (gems.length) {
-        marks.appendChild(tokenIconSvg(gems[gems.length - 1], 17));
-        if (gems.length > 1) marks.appendChild(html('span', 'gem-count', `×${gems.length}`));
-      }
-      row.appendChild(marks);
-      chip.appendChild(row);
-
-      // Kokemuspisteet ja tietoprosentti: matkan mittarit rahan rinnalla.
-      const stats = html('div', 'chip-row chip-stats');
-      stats.appendChild(html('span', 'xp', `${p.xp ?? 0} kp`));
-      const percent = game.knowledgePercent(p);
-      if (percent !== null) {
-        stats.appendChild(html('span', 'knowledge', `Tieto ${percent} %`));
-      }
-      chip.appendChild(stats);
-
-      const city = game.cityOf(p);
-      const where = city ? city.name : game.routeName(p.pos.edge, game.worldOf(p).board);
-      const elsewhere = p.packId !== this.drawnPackId ? ` · ${game.worldOf(p).pack.boardLabel}` : '';
-      chip.appendChild(html('div', 'chip-row chip-where', where + elsewhere));
-      this.playersEl.appendChild(chip);
-    }
+    const osat = [`${p.money} p`, `${p.xp ?? 0} kp`];
+    const tieto = game.knowledgePercent(p);
+    if (tieto !== null) osat.push(`Tieto ${tieto} %`);
+    osat.push(where);
+    this.turnPill.appendChild(html('span', '', osat.join(' · ')));
   }
 
   renderActions() {
@@ -23960,7 +23997,6 @@ class UI {
         this.doAction(() => game.actionQuiz());
       });
       this.actionsEl.appendChild(quizBtn);
-      this.addHardQuizButton(city);
 
       const skipBtn = html('button', '', '➡ Päätä vuoro');
       skipBtn.addEventListener('click', () => this.doAction(() => game.actionSkipQuiz()));
@@ -24010,13 +24046,13 @@ class UI {
       this.turnStatus.textContent = 'Valitse matkustustapa.';
 
       if (modes.includes('land')) {
-        const landBtn = html('button', modes.includes('stay') ? '' : 'primary', '🥾 Jalan');
+        const landBtn = this.iconButton('🥾', 'Jalan', modes.includes('stay') ? '' : 'primary');
         landBtn.addEventListener('click', () => this.doWalk());
         this.actionsEl.appendChild(landBtn);
       }
 
       if (hasSlow) {
-        const moreBtn = html('button', '', '⛵✈ Laiva & lento…');
+        const moreBtn = this.iconButton('⛵', 'Laiva & lento');
         moreBtn.addEventListener('click', () => {
           this.travelExpanded = true;
           this.render();
@@ -24025,13 +24061,12 @@ class UI {
       }
 
       if (modes.includes('stay')) {
-        const stayBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
+        const stayBtn = this.iconButton('❓', 'Vastaa kysymykseen', 'primary');
         stayBtn.addEventListener('click', () => {
           sfx.play('paper');
           this.doAction(() => game.actionTravel('stay'));
         });
         this.actionsEl.appendChild(stayBtn);
-        this.addHardQuizButton(game.cityOf());
       }
       return;
     }
@@ -24040,7 +24075,7 @@ class UI {
     this.turnStatus.textContent = 'Laivalla, lentäen vai portin kautta?';
 
     if (modes.includes('sea')) {
-      const seaBtn = html('button', '', `⛵ Laivalla (${SEA_FARE} p)`);
+      const seaBtn = html('button', 'wide', `⛵ Laivalla (${SEA_FARE} p)`);
       seaBtn.addEventListener('click', () => {
         sfx.play('ferry');
         this.doAction(() => game.actionTravel('sea'));
@@ -24050,14 +24085,14 @@ class UI {
 
     for (const dest of flights) {
       const city = game.board.cityById.get(dest);
-      const flyBtn = html('button', '', `✈ Lennä: ${city.name} (${FLIGHT_PRICE} p)`);
+      const flyBtn = html('button', 'wide', `✈ ${city.name} (${FLIGHT_PRICE} p)`);
       flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
 
     // Vaelluksessa porttikaupungeista jatketaan toisille laudoille.
     for (const link of gateways) {
-      const gwBtn = html('button', '', `🧭 ${link.label}`);
+      const gwBtn = html('button', 'wide', `🧭 ${link.label}`);
       gwBtn.addEventListener('click', () => {
         sfx.play('flight');
         this.doAction(() => game.actionGateway(link.index));
@@ -24067,7 +24102,7 @@ class UI {
 
     // Tietoportti: maan lauta aukeaa pääkaupungista vaikealla kysymyksellä.
     for (const gate of countryGates) {
-      const gateBtn = html('button', '', `★ ${gate.label} — vaikea kysymys`);
+      const gateBtn = html('button', 'wide', `★ ${gate.label} — vaikea kysymys`);
       gateBtn.addEventListener('click', () => {
         sfx.play('paper');
         this.doAction(() => game.actionGateQuiz(gate.index));
@@ -24075,12 +24110,27 @@ class UI {
       this.actionsEl.appendChild(gateBtn);
     }
 
-    const backBtn = html('button', '', '↩ Takaisin');
+    const backBtn = this.iconButton('↩', 'Takaisin');
     backBtn.addEventListener('click', () => {
       this.travelExpanded = false;
       this.render();
     });
     this.actionsEl.appendChild(backBtn);
+  }
+
+  /**
+   * Toimintonappi ikonina. Teksti jää saavutettavuutta varten title- ja
+   * aria-label-määreisiin sekä leveälle ruudulle näkyväksi selitteeksi, jotta
+   * napit vievät kartalta mahdollisimman vähän tilaa.
+   */
+  iconButton(icon, label, extra = '') {
+    const btn = html('button', `icon-btn${extra ? ` ${extra}` : ''}`);
+    btn.type = 'button';
+    btn.title = label;
+    btn.setAttribute('aria-label', label);
+    btn.appendChild(html('span', 'icon-glyph', icon));
+    btn.appendChild(html('span', 'icon-label', label));
+    return btn;
   }
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
@@ -24106,18 +24156,6 @@ class UI {
       const { game } = this;
       if (game.phase === 'roll' && game.autoTravel && !game.player.isBot) this.doRoll();
     }, AUTO_ROLL_MS);
-  }
-
-  /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
-  addHardQuizButton(city) {
-    const { game } = this;
-    if (!city || !game.hardAvailable(city.id)) return;
-    const hardBtn = html('button', '', `★ Vaikea kysymys (+${HARD_BONUS} p)`);
-    hardBtn.addEventListener('click', () => {
-      sfx.play('paper');
-      this.doAction(() => game.actionQuiz({ hard: true }));
-    });
-    this.actionsEl.appendChild(hardBtn);
   }
 
   /**
@@ -24242,7 +24280,6 @@ class UI {
     this.drawTargets();
     this.drawPawns();
     this.renderTurnPill();
-    this.renderPlayers();
     this.renderActions();
     this.renderFact();
     this.renderQuiz();
@@ -24290,7 +24327,40 @@ class UI {
     this.passportCount.textContent = stamps.length === 1
       ? '1 leima'
       : `${stamps.length} leimaa`;
+    this.renderFinds();
     if (!this.passportDialog.open) this.passportDialog.showModal();
+  }
+
+  /**
+   * Matkasaalis passissa: tähti, hevosenkengät ja jalokivet. Nämä näkyivät
+   * ennen erillisessä pelaajapaneelissa, joka vei tilaa kartalta.
+   */
+  renderFinds() {
+    const { game } = this;
+    const p = game.player;
+    this.passportFinds.textContent = '';
+
+    const rivi = (icon, text) => {
+      const row = html('div', 'find');
+      row.appendChild(icon);
+      row.appendChild(html('span', 'find-text', text));
+      this.passportFinds.appendChild(row);
+    };
+
+    if (p.hasStar) rivi(tokenIconSvg('star', 20), game.pack.tokens.types.star.name);
+    if (p.horseshoes) rivi(tokenIconSvg('horseshoe', 20), `Hevosenkenkiä ${p.horseshoes}`);
+
+    // Jalokivet tyypeittäin: sama laji voi toistua monelta laudalta.
+    const gems = p.finds.filter((t) => (game.tokenTypes[t]?.value ?? 0) > 0);
+    const counts = new Map();
+    for (const type of gems) counts.set(type, (counts.get(type) ?? 0) + 1);
+    for (const [type, n] of counts) {
+      rivi(tokenIconSvg(type, 20), `${game.tokenTypes[type].name}${n > 1 ? ` ×${n}` : ''}`);
+    }
+
+    if (!this.passportFinds.childElementCount) {
+      this.passportFinds.appendChild(html('p', 'muted', 'Laukku on vielä tyhjä.'));
+    }
   }
 
   showWinner() {
@@ -24951,7 +25021,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.13';
+const APP_VERSION = '2026-07-27.14';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -25022,18 +25092,11 @@ function startGame() {
 
 // --- äänet ------------------------------------------------------------------
 
-const soundBtn = document.getElementById('sound-btn');
-
-function updateSoundButton() {
-  soundBtn.textContent = sfx.enabled ? '🔊' : '🔇';
-  soundBtn.title = sfx.enabled ? 'Äänet päällä' : 'Äänet pois';
-}
-
-soundBtn.addEventListener('click', () => {
-  sfx.setEnabled(!sfx.enabled);
-  updateSoundButton();
-});
-updateSoundButton();
+// Äänet ovat aina päällä: erillinen vaimennusnappi poistettiin yläpalkista,
+// ja laitteen oma äänenvoimakkuus riittää. Asetetaan lippu suoraan, jottei
+// setEnabled soita kuittausääntä heti sivun latauduttua — ja jotta aiemmin
+// vaimennettu peli ei jäisi mykäksi ilman nappia, jolla äänet saisi takaisin.
+sfx.enabled = true;
 
 // Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
 document.addEventListener('pointerdown', (event) => {
