@@ -3,8 +3,8 @@
 //   node tools/build-standalone.mjs
 //
 // Tuottaa:
-//   dist/maailman-tahdet.html          täysi HTML-sivu (avaa selaimessa suoraan)
-//   dist/maailman-tahdet.partial.html  sama ilman <html>/<head>/<body>-kuorta
+//   dist/matkakirja.html          täysi HTML-sivu (avaa selaimessa suoraan)
+//   dist/matkakirja.partial.html  sama ilman <html>/<head>/<body>-kuorta
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -88,7 +88,7 @@ const script = `<script>\n${bundle}\n</script>`;
 
 // Artefaktialustat käärivät sisällön itse, joten niille riittää runko ilman
 // <html>/<head>/<body>-tageja.
-const partial = `<title>Maailman tähdet</title>
+const partial = `<title>Matkakirja</title>
 
 <style>
 ${css}
@@ -104,7 +104,7 @@ const full = `<!DOCTYPE html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Maailman tähdet</title>
+<title>Matkakirja</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>★</text></svg>" />
 <style>
 ${css}
@@ -119,10 +119,10 @@ ${script}
 `;
 
 mkdirSync(join(root, 'dist'), { recursive: true });
-writeFileSync(join(root, 'dist/maailman-tahdet.partial.html'), partial);
-writeFileSync(join(root, 'dist/maailman-tahdet.html'), full);
+writeFileSync(join(root, 'dist/matkakirja.partial.html'), partial);
+writeFileSync(join(root, 'dist/matkakirja.html'), full);
 
 console.log(
-  `dist/maailman-tahdet.html (${Math.round(full.length / 1024)} kt)`,
-  `\ndist/maailman-tahdet.partial.html (${Math.round(partial.length / 1024)} kt)`,
+  `dist/matkakirja.html (${Math.round(full.length / 1024)} kt)`,
+  `\ndist/matkakirja.partial.html (${Math.round(partial.length / 1024)} kt)`,
 );
