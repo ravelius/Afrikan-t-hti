@@ -1,5 +1,33 @@
 # Työlista toteuttajalle (Opus)
 
+## Vakiokäynnistys
+
+Jos saat tehtäväksi "jatka työlistaa" (tai vastaavaa), toimi näin ilman
+lisäohjeita:
+
+1. Lue tämä tiedosto kokonaan.
+2. Katso TILANNE-osiosta, mikä paketti on seuraavaksi tekemättä omalla
+   kaistallasi (jos kaistaa ei ole kerrottu, olet kaista A; jos kaistan A
+   seuraava paketti on jo jonkun työn alla tai valmis, ota kaista B:n
+   seuraava lauta).
+3. Tee paketti, avaa PR, yhdistä se mainiin ja **kuittaa paketti
+   TILANNE-osioon** samassa PR:ssä (✅ + PR-numero + päivämäärä; kaista B
+   kuittaa lauta kerrallaan).
+4. Aloita haara uusiksi tuoreen mainin päälle ja jatka seuraavaan, kunnes
+   sessio on käytetty — kuittaa aina ennen lopettamista.
+
+## TILANNE
+
+- Paketti 1 (pikakorjaukset): ✅ PR #16
+- Paketti 2 (kartta koko ruutuun): tekemättä
+- Paketti 3 (kaksivaiheinen matkavalinta): tekemättä
+- Paketti 4 (kaksi ääntä): tekemättä
+- Paketti 5 (sisältö, kaista B): Maailma ⬜ Afrikka ⬜ Eurooppa ⬜
+  Suomi ⬜ Istanbul ⬜ Aasia ⬜ Oseania ⬜ P-Amerikka ⬜ E-Amerikka ⬜
+  Lähi-itä ⬜
+- Paketti 6 (pisteet ja passi): tekemättä
+- Paketti 7 (nimi → Matkakirja): tekemättä
+
 Tämä on omistajan ja suunnittelusession sopima työlista. Tee työpaketit
 järjestyksessä; jokainen paketti on oma commit/PR. Jokaisen paketin jälkeen:
 
