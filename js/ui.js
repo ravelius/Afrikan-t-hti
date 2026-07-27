@@ -26,6 +26,7 @@ import {
   drawCompass,
   drawDefs,
   drawDoodles,
+  drawHemisphereFrames,
   drawLand,
   drawPaperOverlay,
   drawParchment,
@@ -387,6 +388,8 @@ export class UI {
     this.boardRoot = root;
 
     drawParchment(svg);
+    // Pallonpuoliskokartalla kehykset ja asteverkko piirtyvät maiden alle.
+    drawHemisphereFrames(svg, pack.map);
     drawLand(svg, pack.map);
     drawWaves(svg, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },

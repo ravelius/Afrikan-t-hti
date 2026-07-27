@@ -726,6 +726,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .fare { fill: var(--sea-ink); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
 
+/* Pallonpuoliskokartan kehykset ja asteverkko. */
+.hemi-ring {
+  fill: none;
+  stroke: var(--map-ink);
+  stroke-width: 2.2;
+  opacity: 0.75;
+}
+
+.hemi-ring.outer { stroke-width: 1.4; opacity: 0.55; }
+.hemi-tick { stroke: var(--map-ink); stroke-width: 1; opacity: 0.45; }
+
+.graticule-line {
+  fill: none;
+  stroke: var(--map-ink-soft);
+  stroke-width: 0.8;
+  opacity: 0.32;
+}
+
+.graticule-line.strong { stroke-width: 1.4; opacity: 0.45; }
+
 .city { fill: #f3e5c4; stroke: #6b5230; stroke-width: 2.4; }
 .city-start { fill: #eec66b; stroke: #6d4d12; stroke-width: 3.4; }
 .airport { font-size: 14px; fill: #8d3a2c; }

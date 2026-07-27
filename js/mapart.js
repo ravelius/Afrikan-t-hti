@@ -320,6 +320,97 @@ export function drawTerrain(svg, map, obstacles, bands) {
 }
 
 /** Kompassiruusu. */
+/**
+ * Pallonpuoliskokartan kehykset: 1600-luvun maailmankartoissa kumpikin
+ * puolisko piirrettiin kaksoiskehän sisään, jonka väliin merkittiin asteet.
+ * Sisään piirretään asteverkko — stereografisessa projektiossa sekä
+ * pituus- että leveyspiirit ovat ympyränkaaria, mutta tässä riittää
+ * kaarien approksimointi murtoviivalla samasta projektiokaavasta.
+ */
+/** Murtoviiva SVG-poluksi. */
+function linePath(points) {
+  return points
+    .map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`)
+    .join('');
+}
+
+export function drawHemisphereFrames(svg, map) {
+  const kehat = map.hemispheres ?? [];
+  const navat = map.polars ?? [];
+  if (!kehat.length && !navat.length) return;
+  const g = el('g', { class: 'hemi-frames', filter: 'url(#rough-soft)' }, svg);
+
+  const RAD = Math.PI / 180;
+  // Sama kaava kuin tools/hemispheres.mjs — pidettävä yhtenäisenä.
+  const project = ({ cx, cy, r, lon0 }) => (lon, lat) => {
+    let d = lon - lon0;
+    while (d > 180) d -= 360;
+    while (d < -180) d += 360;
+    const k = r / (1 + Math.cos(lat * RAD) * Math.cos(d * RAD));
+    return [cx + k * Math.cos(lat * RAD) * Math.sin(d * RAD), cy - k * Math.sin(lat * RAD)];
+  };
+
+  for (const kehä of kehat) {
+    const { cx, cy, r } = kehä;
+    const f = project(kehä);
+
+    // Asteverkko: pituuspiirit 30° välein, leveyspiirit 30° välein.
+    const verkko = el('g', { class: 'graticule' }, g);
+    for (let lon = -180; lon < 180; lon += 30) {
+      const pts = [];
+      for (let lat = -88; lat <= 88; lat += 4) {
+        const d = ((lon - kehä.lon0 + 540) % 360) - 180;
+        if (Math.abs(d) > 89.5) continue;
+        pts.push(f(lon, lat));
+      }
+      if (pts.length > 1) el('path', { d: linePath(pts), class: 'graticule-line' }, verkko);
+    }
+    for (let lat = -60; lat <= 60; lat += 30) {
+      const pts = [];
+      for (let d = -89.5; d <= 89.5; d += 3) pts.push(f(kehä.lon0 + d, lat));
+      el('path', { d: linePath(pts), class: 'graticule-line' }, verkko);
+    }
+    // Päiväntasaaja hieman vahvempana.
+    const eq = [];
+    for (let d = -89.5; d <= 89.5; d += 3) eq.push(f(kehä.lon0 + d, 0));
+    el('path', { d: linePath(eq), class: 'graticule-line strong' }, verkko);
+
+    // Kaksoiskehä ja astepykälät väliin.
+    el('circle', { cx, cy, r: r + 13, class: 'hemi-ring outer' }, g);
+    el('circle', { cx, cy, r, class: 'hemi-ring' }, g);
+    const ticks = el('g', { class: 'hemi-ticks' }, g);
+    for (let a = 0; a < 360; a += 5) {
+      const rad = a * RAD;
+      const iso = a % 15 === 0;
+      const r1 = r + (iso ? 1 : 5);
+      const r2 = r + 12;
+      el('path', {
+        d: `M${(cx + r1 * Math.cos(rad)).toFixed(1)},${(cy + r1 * Math.sin(rad)).toFixed(1)}`
+          + `L${(cx + r2 * Math.cos(rad)).toFixed(1)},${(cy + r2 * Math.sin(rad)).toFixed(1)}`,
+        class: 'hemi-tick',
+      }, ticks);
+    }
+  }
+
+  // Napaympyrät: yksinkertaisempi kehä ja säteittäinen verkko.
+  for (const napa of navat) {
+    const { cx, cy, r } = napa;
+    const verkko = el('g', { class: 'graticule' }, g);
+    for (let a = 0; a < 360; a += 30) {
+      const rad = a * RAD;
+      el('path', {
+        d: `M${cx},${cy}L${(cx + r * Math.cos(rad)).toFixed(1)},${(cy + r * Math.sin(rad)).toFixed(1)}`,
+        class: 'graticule-line',
+      }, verkko);
+    }
+    for (const osa of [0.34, 0.67]) {
+      el('circle', { cx, cy, r: (r * osa).toFixed(1), class: 'graticule-line', fill: 'none' }, verkko);
+    }
+    el('circle', { cx, cy, r: r + 9, class: 'hemi-ring outer' }, g);
+    el('circle', { cx, cy, r, class: 'hemi-ring' }, g);
+  }
+}
+
 export function drawCompass(svg, cx, cy, r = 62) {
   const g = el('g', { class: 'compass-rose', transform: `translate(${cx},${cy})` }, svg);
   el('circle', { r, class: 'compass' }, g);
