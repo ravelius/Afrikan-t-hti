@@ -26,7 +26,7 @@ const EU_MAP = {
     [393.6, 376.1], [414.7, 378.7], [412.8, 402.4], [401.3, 447.1], [401.3, 460.2],
     [422.4, 468.1], [441.6, 462.9], [470.4, 460.2], [483.8, 473.4], [528.0, 460.2],
     [568.3, 455.0], [585.6, 462.9], [614.4, 439.2], [652.8, 426.1], [672.0, 420.8],
-    [614.4, 397.1], [614.4, 378.7], [679.7, 378.7], [662.4, 357.7], [681.6, 328.8],
+    [614.4, 397.1], [614.4, 378.7], [683.0, 380.0], [673.0, 361.0], [692.0, 331.0],
     [710.4, 328.8], [748.8, 328.8], [793.0, 315.6], [729.6, 305.1], [689.3, 310.3],
     [643.2, 307.7], [622.1, 276.2], [622.1, 231.4], [641.3, 197.2], [681.6, 165.7],
     [639.4, 163.1], [614.4, 197.2], [564.5, 239.3], [554.9, 289.3], [566.4, 331.4],
@@ -123,8 +123,19 @@ const EU_CITIES = [
     links: [{ pack: 'maailma', city: 'moskova', label: 'Maailma-lauta' }],
   },
   { id: 'pietari', name: 'Pietari', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
-  { id: 'helsinki', name: 'Helsinki', x: 688, y: 310, la: 'end', lx: -16, ly: 5 },
-  { id: 'tukholma', name: 'Tukholma', x: 558, y: 333, airport: true, la: 'end', lx: -16, ly: 5 },
+  {
+    id: 'helsinki', name: 'Helsinki', x: 688, y: 303, airport: true, la: 'end', lx: -16, ly: -12,
+    // Suomen oma lauta avautuu Helsingistä.
+    links: [{ pack: 'suomi', city: 'helsinki', label: 'Suomen lauta' }],
+  },
+  { id: 'tallinna', name: 'Tallinna', x: 684, y: 374, la: 'start', lx: 14, ly: 12 },
+  { id: 'riika', name: 'Riika', x: 648, y: 434, la: 'end', lx: -14, ly: 14 },
+  { id: 'vilna', name: 'Vilna', x: 703, y: 470, la: 'start', lx: 16, ly: 5 },
+  {
+    id: 'tukholma', name: 'Tukholma', x: 558, y: 333, airport: true, la: 'end', lx: -16, ly: 5,
+    // Ruotsinlaiva Ahvenanmaalle — Suomen laudalle.
+    links: [{ pack: 'suomi', city: 'maarianhamina', label: 'Suomen lauta (laiva Ahvenanmaalle)' }],
+  },
   { id: 'oslo', name: 'Oslo', x: 418, y: 318, la: 'end', lx: -16, ly: 5 },
   { id: 'kobenhavn', name: 'Kööpenhamina', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
   { id: 'lappi', name: 'Lappi', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
@@ -169,6 +180,10 @@ const EU_EDGES = [
   { a: 'bukarest', b: 'odessa', steps: 3 },
   { a: 'odessa', b: 'kiova', steps: 3 },
   { a: 'kiova', b: 'varsova', steps: 5 },
+  { a: 'pietari', b: 'tallinna', steps: 3 },
+  { a: 'tallinna', b: 'riika', steps: 2 },
+  { a: 'riika', b: 'vilna', steps: 2 },
+  { a: 'vilna', b: 'varsova', steps: 3 },
   { a: 'kiova', b: 'moskova', steps: 5 },
   { a: 'moskova', b: 'pietari', steps: 4 },
   { a: 'pietari', b: 'helsinki', steps: 3 },
@@ -194,6 +209,8 @@ const EU_EDGES = [
   { a: 'istanbul', b: 'odessa', steps: 4, type: 'sea' },
   { a: 'dubrovnik', b: 'rooma', steps: 3, type: 'sea' },
   { a: 'tukholma', b: 'helsinki', steps: 2, type: 'sea' },
+  { a: 'helsinki', b: 'tallinna', steps: 1, type: 'sea', via: [[672, 340]] },
+  { a: 'riika', b: 'tukholma', steps: 3, type: 'sea', via: [[610, 395], [580, 365]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -211,9 +228,9 @@ const EU_AIR_ROUTES = [
 
 export const EUROPE = {
   id: 'europe',
-  name: 'Euroopan tähti',
+  name: 'Meripihkahuone',
   boardLabel: 'Eurooppa',
-  tagline: 'Etsi Euroopan tähti tunturien, kanavien ja antiikin raunioiden takaa.',
+  tagline: 'Etsi kadonneen Meripihkahuoneen aarre tunturien, kanavien ja raunioiden takaa.',
   ariaLabel: 'Euroopan aarrekartta',
 
   map: {
@@ -232,10 +249,10 @@ export const EUROPE = {
   tokens: {
     // Meripihka on Itämeren oma jalokivi: fossiloitunutta puuhartsia.
     types: themedTokenTypes({
-      star: { name: 'Euroopan tähti' },
+      star: { name: 'Meripihkahuoneen aarre' },
       topaz: { name: 'Meripihka', color: '#d98f2b' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 10 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 7, empty: 11 },
   },
 
   questions: EUROPE_QUESTIONS,
@@ -281,12 +298,12 @@ export const EUROPE = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Euroopan tähti ja palatkaa Lontooseen tai Istanbuliin.',
-    starFound: (name, city) => `★ ${name} löysi EUROOPAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'EUROOPAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää kadonneen Meripihkahuoneen aarre ja palatkaa Lontooseen tai Istanbuliin.',
+    starFound: (name, city) => `★ ${name} löysi MERIPIHKAHUONEEN AARTEEN kaupungista ${city}!`,
+    starToast: 'MERIPIHKAHUONEEN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Euroopan tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Euroopan tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Meripihkahuoneen aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Meripihkahuoneen aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -296,11 +313,11 @@ export const EUROPE = {
     waveSkip: [
       { x: 175, y: 150, r: 135 },
       { x: 118, y: 330, r: 100 },
-      { x: 880, y: 930, r: 110 },
-      { x: 250, y: 960, r: 95 },
+      { x: 575, y: 975, r: 110 },
+      { x: 60, y: 640, r: 95 },
     ],
-    ship: { x: 250, y: 960 },
-    serpent: { x: 880, y: 930 },
+    ship: { x: 60, y: 640 },
+    serpent: { x: 575, y: 975 },
     dieSpot: { x: 0.055, y: 0.52 },
     terrainBands: [
       { maxY: 300, kind: 'mountains' },

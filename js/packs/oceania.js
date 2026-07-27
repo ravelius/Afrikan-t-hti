@@ -98,7 +98,7 @@ const OC_CITIES = [
   },
   {
     id: 'perth', name: 'Perth', x: 123, y: 650, start: true, airport: true,
-    la: 'start', lx: 18, ly: 5,
+    la: 'end', lx: -16, ly: 5,
   },
 
   { id: 'melbourne', name: 'Melbourne', x: 492, y: 696, airport: true, la: 'end', lx: -16, ly: 5 },
@@ -211,9 +211,9 @@ const OC_AIR_ROUTES = [
 
 export const OCEANIA = {
   id: 'oceania',
-  name: 'Oseanian tähti',
+  name: 'Eteläristin helmi',
   boardLabel: 'Oseania',
-  tagline: 'Etsi tähti punaiselta keskustalta, Suurelta valliriutalta ja Tyynenmeren saarilta.',
+  tagline: 'Etsi Eteläristin helmi punaiselta keskustalta, Suurelta valliriutalta ja Tyynenmeren saarilta.',
   ariaLabel: 'Oseanian aarrekartta',
 
   map: {
@@ -239,7 +239,7 @@ export const OCEANIA = {
     // Topaasin tilalla opaali: Coober Pedy tuottaa valtaosan maailman
     // jalo-opaaleista, ja kaivoskaupungissa asutaan maan alla helteen takia.
     types: themedTokenTypes({
-      star: { name: 'Oseanian tähti' },
+      star: { name: 'Eteläristin helmi' },
       topaz: { name: 'Opaali', color: '#7fb7c9' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 6, empty: 9 },
@@ -294,12 +294,12 @@ export const OCEANIA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Oseanian tähti ja palatkaa Sydneyyn tai Perthiin.',
-    starFound: (name, city) => `★ ${name} löysi OSEANIAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'OSEANIAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Eteläristin helmi ja palatkaa Sydneyyn tai Perthiin.',
+    starFound: (name, city) => `★ ${name} löysi ETELÄRISTIN HELMEN kaupungista ${city}!`,
+    starToast: 'ETELÄRISTIN HELMI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Oseanian tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Oseanian tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Eteläristin helmen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Eteläristin helmen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {

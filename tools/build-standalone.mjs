@@ -32,6 +32,8 @@ const MODULES = [
   'js/packs/northamerica.js',
   'js/packs/southamerica-questions.js',
   'js/packs/southamerica.js',
+  'js/packs/suomi-questions.js',
+  'js/packs/suomi.js',
   'js/packs/istanbul-questions.js',
   'js/packs/istanbul.js',
   'js/pack.js',

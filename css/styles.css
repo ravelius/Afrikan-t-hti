@@ -22,6 +22,10 @@
 
   --radius: 12px;
   --gap: 0.6rem;
+
+  /* Vanhan matkakirjoituskoneen fontti kaikelle käyttöliittymätekstille.
+     Kartan käsin piirretyt nimet pysyvät serif-musteella. */
+  --font-type: "American Typewriter", "Courier Prime", "Courier New", Courier, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -34,7 +38,7 @@ html, body {
 }
 
 body {
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-type);
   background: var(--bg);
   color: var(--ink-light);
   -webkit-text-size-adjust: 100%;
@@ -75,7 +79,7 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-type);
   font-size: clamp(1rem, 2.2vw, 1.3rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -465,7 +469,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .fact-card h2 {
   margin: 0 0 0.35rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-type);
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -535,6 +539,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .sea-echo-3 { stroke-width: 10; opacity: 0.26; }
 
 .land { fill: url(#land-grad); }
+.lake { fill: #ecd9ae; }
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
 
@@ -584,6 +589,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .city-label.start-label { font-size: 21px; letter-spacing: 0.1em; text-transform: uppercase; }
 
+/* Kaupunkilaudalla nimet ovat astetta pienempiä: mittakaava on kortteleissa. */
+#board[data-style='city'] .city-label { font-size: 16px; }
+#board[data-style='city'] .city-label.start-label { font-size: 18px; }
+
 /* --- laattojen kuvakkeet --- */
 
 .token-disc { fill: #f7ecd2; stroke: var(--map-ink); stroke-width: 2.5; }
@@ -613,6 +622,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .gem-topaz { fill: #e0a020; }
 body[data-pack='middleeast'] .gem-topaz,
 body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
+body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 
 .token-icon { display: inline-block; vertical-align: -0.22em; }
 
@@ -621,6 +631,14 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   letter-spacing: 0.3em;
   opacity: 0.55;
+}
+
+.map-legend {
+  fill: var(--sea-ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  opacity: 0.75;
 }
 
 .compass { fill: none; stroke: var(--map-ink); stroke-width: 2; opacity: 0.65; }
@@ -638,6 +656,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 .doodle-fill { fill: var(--map-ink); opacity: 0.45; }
 
 .target { cursor: pointer; }
+.target-ring.picked { stroke: #e8b23c; }
 .target-hit { fill: transparent; }
 .target-ring {
   fill: rgba(176, 58, 43, 0.18);
@@ -759,7 +778,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 
 .dialog h2 {
   margin: 0 0 0.6rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-type);
   font-size: 1.35rem;
   letter-spacing: 0.06em;
   color: var(--map-ink);
@@ -784,7 +803,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   border: 2px dashed var(--map-ink);
   border-radius: 90px 12px 84px 14px / 14px 84px 12px 90px;
   color: var(--map-ink);
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -847,7 +866,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   border: 2px dashed var(--map-ink);
   border-radius: 999px;
   color: var(--map-ink);
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-weight: 700;
   font-size: 0.7rem;
   letter-spacing: 0.18em;
@@ -860,7 +879,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 
 .quiz-question {
   margin: 0 0 1rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-type);
   font-size: clamp(1.1rem, 2.3vw, 1.35rem);
   line-height: 1.35;
   color: var(--map-ink);
@@ -890,7 +909,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   border-radius: 86px 14px 92px 12px / 12px 92px 14px 86px !important;
   background: rgba(255, 252, 243, 0.5) !important;
   color: var(--map-ink) !important;
-  font-family: "Segoe UI", system-ui, sans-serif !important;
+  font-family: var(--font-type) !important;
   font-weight: 500;
   transition: background 0.15s ease, transform 0.15s ease;
   animation: option-in 0.3s ease-out both;
@@ -915,7 +934,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   height: 1.9em;
   border: 2px solid var(--map-ink);
   border-radius: 50%;
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-weight: 700;
   color: var(--map-ink);
 }
@@ -1046,7 +1065,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 }
 
 .quiz-seconds {
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-size: 0.98rem;
   font-weight: 700;
   color: #7a6039;
@@ -1204,7 +1223,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 .reveal-caption.shown { opacity: 1; transform: none; }
 
 .reveal-caption strong {
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-size: clamp(1.4rem, 4.5vmin, 2rem);
   letter-spacing: 0.05em;
   color: #f6e2b8;
@@ -1218,7 +1237,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 }
 
 .quiz-verdict {
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-size: clamp(1.3rem, 3.4vw, 1.7rem);
   letter-spacing: 0.04em;
 }

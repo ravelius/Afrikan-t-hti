@@ -141,10 +141,10 @@ const AS_CITIES = [
   { id: 'irkutsk', name: 'Irkutsk', x: 647, y: 309, la: 'middle', lx: 0, ly: -22 },
   { id: 'jakutsk', name: 'Jakutsk', x: 777, y: 189, la: 'end', lx: -16, ly: 5 },
   { id: 'magadan', name: 'Magadan', x: 889, y: 169, la: 'end', lx: -16, ly: 5 },
-  { id: 'kamtsatka', name: 'Kamtšatka', x: 965, y: 202, la: 'end', lx: -16, ly: 5 },
+  { id: 'kamtsatka', name: 'Kamtšatka', x: 965, y: 202, la: 'end', lx: -16, ly: 24 },
   { id: 'sahalin', name: 'Sahalin', x: 892, y: 280, la: 'start', lx: 16, ly: 5 },
   { id: 'vladivostok', name: 'Vladivostok', x: 843, y: 370, la: 'start', lx: 16, ly: 5 },
-  { id: 'ulanbator', name: 'Ulan Bator', x: 665, y: 364, la: 'middle', lx: 0, ly: -22 },
+  { id: 'ulanbator', name: 'Ulan Bator', x: 665, y: 364, la: 'middle', lx: 0, ly: 24 },
   {
     id: 'peking', name: 'Peking', x: 740, y: 429, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
@@ -157,7 +157,7 @@ const AS_CITIES = [
   { id: 'hongkong', name: 'Hongkong', x: 739, y: 607, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'manila', name: 'Manila', x: 822, y: 675, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'hanoi', name: 'Hanoi', x: 660, y: 630, la: 'end', lx: -16, ly: 5 },
-  { id: 'bangkok', name: 'Bangkok', x: 603, y: 708, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'bangkok', name: 'Bangkok', x: 603, y: 708, airport: true, la: 'end', lx: -16, ly: 24 },
   { id: 'yangon', name: 'Yangon', x: 559, y: 671, la: 'end', lx: -16, ly: 5 },
   { id: 'singapore', name: 'Singapore', x: 634, y: 851, airport: true, la: 'middle', lx: 0, ly: 30 },
   { id: 'sumatra', name: 'Sumatra', x: 562, y: 817, la: 'start', lx: 16, ly: 5 },
@@ -168,7 +168,7 @@ const AS_CITIES = [
     links: [{ pack: 'oceania', city: 'bali', label: 'Oseanian lauta' }],
   },
   { id: 'lhasa', name: 'Lhasa', x: 535, y: 519, la: 'start', lx: 16, ly: 5 },
-  { id: 'kathmandu', name: 'Kathmandu', x: 468, y: 545, la: 'start', lx: 16, ly: 5 },
+  { id: 'kathmandu', name: 'Kathmandu', x: 468, y: 545, la: 'middle', lx: 0, ly: 24 },
   { id: 'delhi', name: 'Delhi', x: 398, y: 509, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'kolkata', name: 'Kolkata', x: 490, y: 598, la: 'end', lx: -16, ly: 5 },
   {
@@ -181,7 +181,7 @@ const AS_CITIES = [
   { id: 'karachi', name: 'Karachi', x: 303, y: 511, la: 'end', lx: -16, ly: 5 },
   { id: 'kabul', name: 'Kabul', x: 360, y: 429, la: 'end', lx: -16, ly: 5 },
   { id: 'samarkand', name: 'Samarkand', x: 365, y: 374, la: 'start', lx: 16, ly: 5 },
-  { id: 'kashgar', name: 'Kašgar', x: 429, y: 402, la: 'end', lx: -16, ly: 5 },
+  { id: 'kashgar', name: 'Kašgar', x: 429, y: 402, la: 'start', lx: 16, ly: 5 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -271,9 +271,9 @@ const AS_AIR_ROUTES = [
 
 export const ASIA = {
   id: 'asia',
-  name: 'Aasian tähti',
+  name: 'Keisarin jadesinetti',
   boardLabel: 'Aasia',
-  tagline: 'Etsi tähti Silkkitieltä, Himalajalta, Siperian taigalta ja trooppisilta saarilta.',
+  tagline: 'Etsi keisarin kadonnut jadesinetti Silkkitieltä, Himalajalta, Siperian taigalta ja trooppisilta saarilta.',
   ariaLabel: 'Aasian aarrekartta',
 
   map: {
@@ -295,7 +295,7 @@ export const ASIA = {
     // Topaasin tilalla jade: Kiinassa sitä on arvostettu kultaa enemmän
     // tuhansien vuosien ajan.
     types: themedTokenTypes({
-      star: { name: 'Aasian tähti' },
+      star: { name: 'Keisarin jadesinetti' },
       topaz: { name: 'Jade', color: '#5fa87a' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
@@ -350,12 +350,12 @@ export const ASIA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Aasian tähti ja palatkaa Teheraniin tai Tokioon.',
-    starFound: (name, city) => `★ ${name} löysi AASIAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'AASIAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Keisarin jadesinetti ja palatkaa Teheraniin tai Tokioon.',
+    starFound: (name, city) => `★ ${name} löysi KEISARIN JADESINETIN kaupungista ${city}!`,
+    starToast: 'KEISARIN JADESINETTI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Aasian tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Aasian tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Keisarin jadesinetin turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Keisarin jadesinetin kotiin ${money} punnan kanssa.`,
   },
 
   decor: {

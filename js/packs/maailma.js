@@ -70,6 +70,30 @@ const WORLD_MAP = {
     [888.9, 632.8], [875.0, 624.4], [858.3, 616.1], [844.4, 618.9], [819.4, 621.7],
     [813.9, 599.4],
   ],
+  // Koristesaaret täyttävät valtameriä; niissä ei ole kaupunkeja eikä reittejä.
+  greenlandPoints: [
+    [303, 349], [309, 326], [326, 309], [352, 299], [383, 296], [412, 300],
+    [425, 312], [420, 330], [405, 344], [383, 354], [360, 363], [338, 360],
+    [317, 357],
+  ],
+  madagascarPoints: [
+    [622, 560], [633, 566], [640, 580], [638, 596], [628, 604], [618, 598],
+    [615, 582], [616, 570],
+  ],
+  japanPoints: [
+    [871, 432], [878, 420], [886, 407], [895, 399], [902, 404], [897, 417],
+    [888, 430], [879, 439], [872, 441],
+  ],
+  indonesiaPoints: [
+    [768, 536], [786, 545], [804, 551], [822, 552], [836, 556], [843, 562],
+    [837, 566], [818, 562], [796, 556], [776, 547], [763, 542],
+  ],
+  nzNorthPoints: [
+    [963, 622], [972, 630], [978, 641], [972, 647], [963, 640], [958, 630],
+  ],
+  nzSouthPoints: [
+    [975, 650], [983, 658], [989, 670], [983, 676], [974, 668], [970, 658],
+  ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
@@ -160,7 +184,7 @@ const WORLD_AIR_ROUTES = [
 
 export const MAAILMA = {
   id: 'maailma',
-  name: 'Maailman tähti',
+  name: 'Magellanin kompassi',
   boardLabel: 'Maailma',
   tagline: 'Kierrä maapallo: valtameret, mantereet ja suuret kaupungit.',
   ariaLabel: 'Maailman aarrekartta',
@@ -170,7 +194,12 @@ export const MAAILMA = {
     outlines: [
       WORLD_MAP.americasPoints, WORLD_MAP.afroeurasiaPoints,
       WORLD_MAP.britainPoints, WORLD_MAP.australiaPoints,
+      WORLD_MAP.greenlandPoints, WORLD_MAP.madagascarPoints, WORLD_MAP.japanPoints,
+      WORLD_MAP.indonesiaPoints, WORLD_MAP.nzNorthPoints, WORLD_MAP.nzSouthPoints,
     ],
+    // Tiivis kehys: pohjoisen ja etelän tyhjät merikaistat jäävät pois,
+    // mutta Grönlanti ja Uusi-Seelanti mahtuvat mukaan.
+    frame: { x: 15, y: 285, w: 985, h: 475 },
   },
   cities: WORLD_CITIES,
   edges: WORLD_EDGES,
@@ -180,7 +209,7 @@ export const MAAILMA = {
   minCityDistance: 70,
 
   tokens: {
-    types: themedTokenTypes({ star: { name: 'Maailman tähti' } }),
+    types: themedTokenTypes({ star: { name: 'Magellanin kompassi' } }),
     counts: { star: 1, horseshoe: 1, robber: 1, ruby: 1, emerald: 1, topaz: 1 },
   },
 
@@ -222,12 +251,12 @@ export const MAAILMA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Maailman tähti ja palatkaa Lontooseen tai New Yorkiin.',
-    starFound: (name, city) => `★ ${name} löysi MAAILMAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'MAAILMAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Magellanin kompassi — maailmanympäripurjehtijan kadonnut aarre.',
+    starFound: (name, city) => `★ ${name} löysi MAGELLANIN KOMPASSIN kaupungista ${city}!`,
+    starToast: 'MAGELLANIN KOMPASSI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Maailman tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Maailman tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Magellanin kompassin turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Magellanin kompassin kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -235,11 +264,12 @@ export const MAAILMA = {
     mapLabelPos: { x: 140, y: 655.0 },
     compass: { x: 85, y: 526.7, r: 58 },
     waveSkip: [
-      { x: 417, y: 457.8, r: 90 },
+      { x: 180, y: 478, r: 90 },
       { x: 736, y: 638.3, r: 100 },
       { x: 140, y: 655.0, r: 130 },
     ],
-    ship: { x: 417, y: 457.8 },
+    // Laiva purjehtii keskellä Tyyntämerta, kaukana rannikoista.
+    ship: { x: 180, y: 478 },
     serpent: { x: 736, y: 638.3 },
     // Nopan lepopaikka: Tyynimeri laudan vasemmassa laidassa.
     dieSpot: { x: 0.08, y: 0.62 },

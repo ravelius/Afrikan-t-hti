@@ -125,7 +125,7 @@ const SA_CITIES = [
   { id: 'sanjorge', name: 'San Jorge', x: 460, y: 829, la: 'start', lx: 16, ly: 5 },
   { id: 'falkland', name: 'Falkland', x: 542, y: 915, la: 'start', lx: 16, ly: 5 },
   { id: 'puntaarenas', name: 'Punta Arenas', x: 434, y: 931, la: 'end', lx: -16, ly: 5 },
-  { id: 'caphorn', name: 'Kap Horn', x: 474, y: 980, la: 'middle', lx: 0, ly: -22 },
+  { id: 'caphorn', name: 'Kap Horn', x: 474, y: 980, la: 'start', lx: 16, ly: 8 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -225,9 +225,9 @@ const SA_AIR_ROUTES = [
 
 export const SOUTHAMERICA = {
   id: 'southamerica',
-  name: 'Etelä-Amerikan tähti',
+  name: 'El Dorado',
   boardLabel: 'Etelä-Amerikka',
-  tagline: 'Etsi tähti Andien huipuilta, Amazonin sademetsästä ja Patagonian tuulilta.',
+  tagline: 'Etsi El Doradon kulta Andien huipuilta, Amazonin sademetsästä ja Patagonian tuulilta.',
   ariaLabel: 'Etelä-Amerikan aarrekartta',
 
   map: {
@@ -249,7 +249,7 @@ export const SOUTHAMERICA = {
     // Smaragdin tilalla on Kolumbian oma jalokivi ja topaasin tilalla
     // Andien hopea, jonka takia koko manner aikanaan valloitettiin.
     types: themedTokenTypes({
-      star: { name: 'Etelä-Amerikan tähti' },
+      star: { name: 'El Doradon aarre' },
       topaz: { name: 'Potosín hopea', color: '#c9ccd4' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
@@ -305,12 +305,12 @@ export const SOUTHAMERICA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Etelä-Amerikan tähti ja palatkaa Panamaan tai Buenos Airesiin.',
-    starFound: (name, city) => `★ ${name} löysi ETELÄ-AMERIKAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'ETELÄ-AMERIKAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää El Doradon aarre ja palatkaa Panamaan tai Buenos Airesiin.',
+    starFound: (name, city) => `★ ${name} löysi EL DORADON AARTEEN kaupungista ${city}!`,
+    starToast: 'EL DORADON AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Etelä-Amerikan tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Etelä-Amerikan tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi El Doradon aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi El Doradon aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {

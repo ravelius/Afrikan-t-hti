@@ -110,14 +110,25 @@ Vaiheet:
    `type: 'sea'` ja tarvittaessa `via`-pisteet, joilla reitti kiertää rannikon —
    testit tarkistavat, että laivareitit kulkevat veden päällä.
 5. **Mitoita laatat.** Laattojen yhteismäärän on oltava sama kuin
-   aarrekaupunkien määrä (kaupungit miinus aloituskaupungit), ja tähtiä on aina
-   tasan yksi.
+   aarrekaupunkien määrä (kaupungit miinus aloituskaupungit), ja pääaarteita
+   (`star`-laattoja) on aina tasan yksi. **Keksi laudalle oma aarre:**
+   Afrikan tähti on vain Afrikassa — muilla laudoilla pääaarre on paikallinen
+   legenda, kuten Meripihkahuoneen aarre (Eurooppa), Montezuman aarre
+   (Pohjois-Amerikka) tai Lapin kulta (Suomi). Nimi annetaan
+   `tokens.types`-kohdassa ja `texts`-teksteissä.
+   **Järvet ja kaupunkilaudat:** suuret järvet voi piirtää vetenä maan
+   sisään (`map.lakes` — malli: `js/packs/suomi.js`), ja niiden yli voi vetää
+   laivareittejä. Kaupunkitason lauta saa `style: 'city'`, jolloin solmut ja
+   nimet piirtyvät pienempinä ja maastoon tulee kortteleita (malli:
+   `js/packs/istanbul.js`).
 6. **Kirjoita sisältö:** vähintään 2 kysymystä joka aarrekaupungille, vähintään
    10 yleiskysymystä ja vähintään 2 "Tiesitkö että…" -tietoa joka kaupungille.
 7. **Linkitä lauta maailmaan.** Kaupungille voi antaa `links`-listan, joka
    yhdistää sen toisen laudan kaupunkiin (esim. Kairo on sekä Afrikan että
    Lähi-idän laudalla, ja Lähi-idän Istanbulista laskeudutaan Istanbulin
    kaupunkilaudalle). Vaellustilassa pelaaja voi siirtyä linkkiä pitkin.
+   Linkkien on oltava vastavuoroisia: kohdekaupungista pitää päästä myös
+   takaisin lähtölaudalle — testit valvovat tätä.
    Kaupunkilauta tehdään täsmälleen samalla paketilla — "kaupungit" ovat
    silloin kaupunginosia ja laivareitit vaikkapa lauttoja (malli:
    `js/packs/istanbul.js`).

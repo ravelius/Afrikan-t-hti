@@ -754,6 +754,84 @@ export const EUROPE_QUESTIONS = {
     },
   ],
 
+  tallinna: [
+    {
+      q: 'Minkä maan pääkaupunki Tallinna on?',
+      options: ['Viro', 'Latvia', 'Liettua', 'Suomi'],
+      correct: 0,
+      level: 1,
+      fact: 'Tallinna on Viron pääkaupunki, ja sinne pääsee Helsingistä lautalla noin kahdessa tunnissa.',
+      hint: 'Maan kieli on läheistä sukua suomelle.',
+    },
+    {
+      q: 'Mistä Tallinnan keskiaikainen vanhakaupunki tunnetaan?',
+      options: ['muureista ja torneista', 'pilvenpiirtäjistä', 'kanavista', 'pyramideista'],
+      correct: 0,
+      fact: 'Vanhakaupunki muureineen ja torneineen on Unescon maailmanperintökohde — yksi Euroopan parhaiten säilyneistä.',
+      hint: 'Kaupunkia puolustettiin keskiajalla kivirakenteilla.',
+    },
+    {
+      q: 'Millä Viro tunnetaan nykyään erityisesti?',
+      options: ['sähköisistä palveluista', 'öljyntuotannosta', 'viinitiloista', 'vuoristohiihdosta'],
+      correct: 0,
+      level: 3,
+      fact: 'Virossa lähes kaikki asiointi hoituu verkossa, ja maa otti ensimmäisenä maailmassa käyttöön valtiolliset nettivaalit vuonna 2005.',
+      hint: 'Maata kutsutaan joskus e-valtioksi.',
+    },
+  ],
+
+  riika: [
+    {
+      q: 'Minkä maan pääkaupunki Riika on?',
+      options: ['Latvia', 'Liettua', 'Viro', 'Puola'],
+      correct: 0,
+      level: 1,
+      fact: 'Riika on Latvian pääkaupunki ja Baltian maiden suurin kaupunki.',
+      hint: 'Maa on Baltian kolmikon keskimmäinen.',
+    },
+    {
+      q: 'Mistä rakennustyylistä Riian keskusta on kuuluisa?',
+      options: ['jugendista', 'barokista', 'funkiksesta', 'goottilaisesta tyylistä'],
+      correct: 0,
+      fact: 'Riiassa on noin 800 jugendtaloa — enemmän kuin missään muussa Euroopan kaupungissa.',
+      hint: 'Tyyli oli muodissa 1900-luvun alussa, ja sen nimi tulee saksasta.',
+    },
+    {
+      q: 'Mikä joki virtaa Riian halki mereen?',
+      options: ['Väinäjoki', 'Veiksel', 'Nemunas', 'Narvanjoki'],
+      correct: 0,
+      level: 3,
+      fact: 'Väinäjoki eli Daugava alkaa Venäjältä ja laskee Riianlahteen; sen varrella on tuotettu suuri osa Latvian sähköstä vesivoimalla.',
+      hint: 'Joen nimi on suomeksi sama kuin eräällä Karjalan joella.',
+    },
+  ],
+
+  vilna: [
+    {
+      q: 'Minkä maan pääkaupunki Vilna on?',
+      options: ['Liettua', 'Latvia', 'Viro', 'Valko-Venäjä'],
+      correct: 0,
+      level: 1,
+      fact: 'Vilna on Liettuan pääkaupunki maan kaakkoisosassa.',
+      hint: 'Maa on Baltian kolmikon eteläisin.',
+    },
+    {
+      q: 'Mikä Vilnan vanhastakaupungista tekee erityisen?',
+      options: ['se on yksi Euroopan suurimmista', 'se on rakennettu veden päälle', 'se on kokonaan uudelleenrakennettu', 'siellä ei saa asua'],
+      correct: 0,
+      fact: 'Vilnan barokkinen vanhakaupunki on yksi Itä-Euroopan laajimmista ja Unescon maailmanperintökohde.',
+      hint: 'Kokoa voi verrata muihin vanhoihinkaupunkeihin.',
+    },
+    {
+      q: 'Mikä oli Liettuan ja Puolan yhteisen valtion nimi 1569–1795?',
+      options: ['Puola-Liettua', 'Baltian liitto', 'Kuurinmaa', 'Suurruhtinaskunta'],
+      correct: 0,
+      level: 3,
+      fact: 'Puola-Liettuan valtio oli aikansa suurimpia Euroopassa ja ulottui Itämereltä lähes Mustallemerelle.',
+      hint: 'Nimi yhdistää kaksi maata viivalla.',
+    },
+  ],
+
   tukholma: [
     {
       q: 'Kuinka monelle saarelle Tukholman keskusta on rakennettu?',
@@ -1138,6 +1216,18 @@ export const EUROPE_FACTS = {
   helsinki: [
     'Helsingin edustalla on yli 300 saarta, ja monille niistä pääsee kaupungin omalla lautalla.',
     'Suomen kieli ei ole sukua ruotsille eikä venäjälle vaan virolle ja unkarille — se kuuluu suomalais-ugrilaisiin kieliin.',
+  ],
+  tallinna: [
+    'Helsingin ja Tallinnan väliä kulkee vuosittain miljoonia matkustajia — reitti on yksi maailman vilkkaimmista laivayhteyksistä.',
+    'Viron kieli on niin läheistä sukua suomelle, että moni kyltti aukeaa suomalaiselle ilman opiskelua.',
+  ],
+  riika: [
+    'Riian keskusmarkkinahallit rakennettiin 1920-luvulla vanhoista ilmalaivahalleista.',
+    'Latvian laulujuhlaperinne on Unescon aineettoman kulttuuriperinnön luettelossa — kuoroissa laulaa kymmeniätuhansia ihmisiä.',
+  ],
+  vilna: [
+    'Vilnassa on taiteilijoiden julistama leikkimielinen Užupisin "tasavalta", jolla on oma perustuslaki käännettynä kymmenille kielille.',
+    'Liettua oli viimeinen Euroopan maa, joka kristillistyi — vasta 1387.',
   ],
   tukholma: [
     'Tukholman vanhankaupungin kujista kapein on alle metrin levyinen.',

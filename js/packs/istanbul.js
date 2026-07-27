@@ -45,7 +45,10 @@ const IST_CITIES = [
     id: 'lentoasema', name: 'Lentoasema', x: 80, y: 120, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Takaisin Lähi-idän laudalle.
-    links: [{ pack: 'middleeast', city: 'istanbul', label: 'Lähi-idän lauta' }],
+    links: [
+      { pack: 'middleeast', city: 'istanbul', label: 'Lähi-idän lauta' },
+      { pack: 'europe', city: 'istanbul', label: 'Euroopan lauta' },
+    ],
   },
   {
     id: 'sabihagokcen', name: 'Sabiha Gökçen', x: 880, y: 620, start: true, airport: true,
@@ -118,6 +121,8 @@ export const ISTANBUL = {
   boardLabel: 'Istanbul (kaupunki)',
   tagline: 'Sukella suurkaupunkiin: basaarit, palatsit ja Bosporin lautat.',
   ariaLabel: 'Istanbulin aarrekartta',
+  // Kaupunkilauta: pienemmät solmut, pienemmät nimet ja kortteleita maastona.
+  style: 'city',
 
   map: {
     ...IST_MAP,
@@ -204,8 +209,10 @@ export const ISTANBUL = {
     ship: { x: 250, y: 845 },
     // Nopan lepopaikka: Marmaranmeri laudan alalaidassa keskellä.
     dieSpot: { x: 0.5, y: 0.9 },
-    // Kaupunkilaudalla maastomerkit ovat puistojen puita.
+    // Kaupunkilaudalla maasto on kortteleita; rannoilla ja ylängöillä puita.
     terrainBands: [
+      { maxY: 260, kind: 'trees' },
+      { maxY: 720, kind: 'houses' },
       { maxY: Infinity, kind: 'trees' },
     ],
   },

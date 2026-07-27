@@ -30,6 +30,10 @@
 
   --radius: 12px;
   --gap: 0.6rem;
+
+  /* Vanhan matkakirjoituskoneen fontti kaikelle käyttöliittymätekstille.
+     Kartan käsin piirretyt nimet pysyvät serif-musteella. */
+  --font-type: "American Typewriter", "Courier Prime", "Courier New", Courier, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -42,7 +46,7 @@ html, body {
 }
 
 body {
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-type);
   background: var(--bg);
   color: var(--ink-light);
   -webkit-text-size-adjust: 100%;
@@ -83,7 +87,7 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-type);
   font-size: clamp(1rem, 2.2vw, 1.3rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -473,7 +477,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .fact-card h2 {
   margin: 0 0 0.35rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-type);
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -543,6 +547,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .sea-echo-3 { stroke-width: 10; opacity: 0.26; }
 
 .land { fill: url(#land-grad); }
+.lake { fill: #ecd9ae; }
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
 
@@ -592,6 +597,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .city-label.start-label { font-size: 21px; letter-spacing: 0.1em; text-transform: uppercase; }
 
+/* Kaupunkilaudalla nimet ovat astetta pienempiä: mittakaava on kortteleissa. */
+#board[data-style='city'] .city-label { font-size: 16px; }
+#board[data-style='city'] .city-label.start-label { font-size: 18px; }
+
 /* --- laattojen kuvakkeet --- */
 
 .token-disc { fill: #f7ecd2; stroke: var(--map-ink); stroke-width: 2.5; }
@@ -621,6 +630,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .gem-topaz { fill: #e0a020; }
 body[data-pack='middleeast'] .gem-topaz,
 body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
+body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 
 .token-icon { display: inline-block; vertical-align: -0.22em; }
 
@@ -629,6 +639,14 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   letter-spacing: 0.3em;
   opacity: 0.55;
+}
+
+.map-legend {
+  fill: var(--sea-ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  opacity: 0.75;
 }
 
 .compass { fill: none; stroke: var(--map-ink); stroke-width: 2; opacity: 0.65; }
@@ -646,6 +664,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 .doodle-fill { fill: var(--map-ink); opacity: 0.45; }
 
 .target { cursor: pointer; }
+.target-ring.picked { stroke: #e8b23c; }
 .target-hit { fill: transparent; }
 .target-ring {
   fill: rgba(176, 58, 43, 0.18);
@@ -767,7 +786,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 
 .dialog h2 {
   margin: 0 0 0.6rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-type);
   font-size: 1.35rem;
   letter-spacing: 0.06em;
   color: var(--map-ink);
@@ -792,7 +811,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   border: 2px dashed var(--map-ink);
   border-radius: 90px 12px 84px 14px / 14px 84px 12px 90px;
   color: var(--map-ink);
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -855,7 +874,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   border: 2px dashed var(--map-ink);
   border-radius: 999px;
   color: var(--map-ink);
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-weight: 700;
   font-size: 0.7rem;
   letter-spacing: 0.18em;
@@ -868,7 +887,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 
 .quiz-question {
   margin: 0 0 1rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: var(--font-type);
   font-size: clamp(1.1rem, 2.3vw, 1.35rem);
   line-height: 1.35;
   color: var(--map-ink);
@@ -898,7 +917,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   border-radius: 86px 14px 92px 12px / 12px 92px 14px 86px !important;
   background: rgba(255, 252, 243, 0.5) !important;
   color: var(--map-ink) !important;
-  font-family: "Segoe UI", system-ui, sans-serif !important;
+  font-family: var(--font-type) !important;
   font-weight: 500;
   transition: background 0.15s ease, transform 0.15s ease;
   animation: option-in 0.3s ease-out both;
@@ -923,7 +942,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
   height: 1.9em;
   border: 2px solid var(--map-ink);
   border-radius: 50%;
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-weight: 700;
   color: var(--map-ink);
 }
@@ -1054,7 +1073,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 }
 
 .quiz-seconds {
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-size: 0.98rem;
   font-weight: 700;
   color: #7a6039;
@@ -1212,7 +1231,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 .reveal-caption.shown { opacity: 1; transform: none; }
 
 .reveal-caption strong {
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-size: clamp(1.4rem, 4.5vmin, 2rem);
   letter-spacing: 0.05em;
   color: #f6e2b8;
@@ -1226,7 +1245,7 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 }
 
 .quiz-verdict {
-  font-family: "Iowan Old Style", Georgia, serif;
+  font-family: var(--font-type);
   font-size: clamp(1.3rem, 3.4vw, 1.7rem);
   letter-spacing: 0.04em;
 }
@@ -1383,28 +1402,28 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
       <div class="setup-hero">
         <span class="setup-star">★</span>
         <div>
-          <h2 id="setup-title">Afrikan tähti</h2>
-          <p id="setup-tagline" class="setup-tagline">Etsi tähti, vastaa kysymyksiin, palaa kotiin.</p>
+          <h2 id="setup-title">Maailman tähdet</h2>
+          <p id="setup-tagline" class="setup-tagline">Vanha herra lähtee Lontoosta puvuntakki
+            päällä ja matkalaukku kädessä katsomaan, millaiseksi maailma on muuttunut.
+            Kerää löytöjä ja opi matkalla.</p>
         </div>
       </div>
       <label class="row">
-        Pelilauta
-        <select id="board-select"></select>
+        Nimesi
+        <input id="player-name" type="text" value="Matkaaja" maxlength="16" />
       </label>
       <label class="row">
-        Pelaajia
-        <select id="player-count">
-          <option value="1">1 (vaellus)</option>
-          <option value="2" selected>2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
+        Kysymykset
+        <select id="player-level">
+          <option value="normal" selected>tavalliset</option>
+          <option value="easy">helpot (esim. lapsille)</option>
         </select>
       </label>
-      <p id="roam-note" class="setup-tagline" hidden>Vaelluksessa peli ei pääty:
-        kerää löytöjä, ja porttikaupungeista pääset jatkamaan toisille laudoille.</p>
-      <div id="player-setup" class="player-setup"></div>
+      <p class="setup-tagline">Matka alkaa maailmankartalta. Napauta kaupunkia, niin
+        astut sen mantereen kartalle — vaellus ei pääty, ja porttikaupungeista pääset
+        aina uusille laudoille.</p>
       <menu>
-        <button value="start" class="primary">Aloita peli</button>
+        <button value="start" class="primary">Lähde matkaan</button>
       </menu>
     </form>
   </dialog>
@@ -1414,20 +1433,19 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
    <div class="dialog-card">
     <h2>Säännöt</h2>
     <div class="rules-text">
-      <p><b>Tavoite.</b> Löydä laudan tähtiaarre — Afrikassa Afrikan tähti, Lähi-idässä
-        Idän tähti — ja palaa sen kanssa johonkin aloituskaupungeista. Kun tähti on
-        löytynyt, myös hevosenkengän haltija voi voittaa pääsemällä aloituskaupunkiin
-        ensimmäisenä.</p>
-      <p><b>Pelilauta.</b> Uuden pelin alussa valitaan lauta: Maailma, Afrikka,
-        Lähi-itä tai Istanbulin kaupunkilauta. Maailma-laudalla koko maapallo on
-        yhtä karttaa: mantereet ylitetään laivalla valtamerten poikki tai lentäen,
-        ja Kairosta voi laskeutua Afrikan ja Lähi-idän tarkemmille laudoille.
-        Jokaisella laudalla on omat paikkansa, reittinsä, tähtiaarteensa ja
-        kysymyksensä.</p>
-      <p><b>Vaellus.</b> Yksin pelattaessa peli ei pääty: tähti on arvokas löytö
-        (2000 p), ja porttikaupungeista (esim. Kairo tai Istanbul) pääsee jatkamaan
-        toiselle laudalle — myös kaupunkitasolle. Kilpapelin voittaja voi voittoruudusta valita
-        <i>Jatka vaeltamista</i>, jolloin sama peli jatkuu ilman voittoehtoa.</p>
+      <p><b>Peli.</b> Maailman tähdet on yksin pelattava vaellus: kierrä maailmaa,
+        avaa aarteita vastaamalla kysymyksiin ja opi matkalla maista, kulttuureista
+        ja elämästä eri puolilla maapalloa. Peli ei pääty — jokaisella laudalla on
+        oma tähtiaarteensa (2000 p), ja löytöjä voi kerätä niin kauan kuin huvittaa.</p>
+      <p><b>Matkaan lähtö.</b> Uusi peli alkaa maailmankartalta. Valitse kaupunki:
+        siitä astut ilmaiseksi suoraan mantereen tarkemmalle kartalle — tai voit
+        jäädä kiertämään maailmankarttaa, jolla valtameret ylitetään laivalla tai
+        lentäen. Jokaisella laudalla on omat paikkansa, reittinsä, tähtiaarteensa
+        ja kysymyksensä.</p>
+      <p><b>Portit.</b> Porttikaupungin tunnistaa katkoviivakehästä: siitä pääsee
+        lennolla (300 p) toiselle laudalle — mantereelta toiselle, maailmankartalle
+        tai vaikka kaupunkitason laudalle kuten Istanbuliin. Laudan aarteet ja
+        löydöt säilyvät, vaikka kävisit välillä muualla.</p>
       <p><b>Kartta.</b> Koko lauta näkyy aina kerralla, joten karttaa ei tarvitse
         raahata eikä zoomata. Porttikaupungin tunnistaa katkoviivakehästä.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
@@ -1448,10 +1466,10 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
         ottamatta on kätketty aarre. Sen saa auki vain vastaamalla oikein arvottuun
         monivalintakysymykseen (A–D) — rahalla aarretta ei voi ostaa. Väärästä vastauksesta
         vuoro päättyy, ja seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.</p>
-      <p><b>Vaikeustasot.</b> Jokaiselle pelaajalle valitaan aloitusruudussa kysymysten
-        taso: tavalliset tai helpot (esimerkiksi lapsipelaajalle). Aarrekaupungissa voi
-        lisäksi pyytää <b>vaikean kysymyksen</b>: oikeasta vastauksesta saa laatan lisäksi
-        100 punnan palkkion, mutta väärästä vuoro päättyy kuten tavallisesti.</p>
+      <p><b>Vaikeustasot.</b> Aloitusruudussa valitaan kysymysten taso: tavalliset
+        tai helpot (esimerkiksi lapsipelaajalle). Aarrekaupungissa voi lisäksi pyytää
+        <b>vaikean kysymyksen</b>: oikeasta vastauksesta saa laatan lisäksi 100 punnan
+        palkkion, mutta väärästä vuoro päättyy kuten tavallisesti.</p>
       <p><b>Aikaraja.</b> Vastausaikaa on 45 sekuntia. Tiimalasi valuu kysymyksen vieressä,
         ja jos hiekka loppuu, vastaus lasketaan vääräksi ja vuoro päättyy.</p>
       <p><b>Rahan käyttö.</b> 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa
@@ -1466,7 +1484,8 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
         vääristä vaihtoehdoista, mutta rosvo vie siitä puolet rahoistasi — ja toisesta
         helpotuksesta taas puolet. Väärä vastaus tai ajan loppuminen vie kaikki rahat.
         Kolmella hevosenkengällä rosvon voi ohittaa kokonaan.</p>
-      <p><b>Alkurahat.</b> Jokainen aloittaa 300 punnalla.</p>
+      <p><b>Matkakassa.</b> Matka alkaa 300 punnalla — vanhan maailman valuutta
+        kelpaa tässä pelissä yhä kaikkialla.</p>
       <p><b>Tiesitkö että…</b> Ohjauspaneeli kertoo tietoa siitä paikasta, jossa vuorossa
         oleva pelaaja on. Tieto vaihtuu kierroksittain.</p>
       <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
@@ -1959,6 +1978,30 @@ const WORLD_MAP = {
     [888.9, 632.8], [875.0, 624.4], [858.3, 616.1], [844.4, 618.9], [819.4, 621.7],
     [813.9, 599.4],
   ],
+  // Koristesaaret täyttävät valtameriä; niissä ei ole kaupunkeja eikä reittejä.
+  greenlandPoints: [
+    [303, 349], [309, 326], [326, 309], [352, 299], [383, 296], [412, 300],
+    [425, 312], [420, 330], [405, 344], [383, 354], [360, 363], [338, 360],
+    [317, 357],
+  ],
+  madagascarPoints: [
+    [622, 560], [633, 566], [640, 580], [638, 596], [628, 604], [618, 598],
+    [615, 582], [616, 570],
+  ],
+  japanPoints: [
+    [871, 432], [878, 420], [886, 407], [895, 399], [902, 404], [897, 417],
+    [888, 430], [879, 439], [872, 441],
+  ],
+  indonesiaPoints: [
+    [768, 536], [786, 545], [804, 551], [822, 552], [836, 556], [843, 562],
+    [837, 566], [818, 562], [796, 556], [776, 547], [763, 542],
+  ],
+  nzNorthPoints: [
+    [963, 622], [972, 630], [978, 641], [972, 647], [963, 640], [958, 630],
+  ],
+  nzSouthPoints: [
+    [975, 650], [983, 658], [989, 670], [983, 676], [974, 668], [970, 658],
+  ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
@@ -2049,7 +2092,7 @@ const WORLD_AIR_ROUTES = [
 
 const MAAILMA = {
   id: 'maailma',
-  name: 'Maailman tähti',
+  name: 'Magellanin kompassi',
   boardLabel: 'Maailma',
   tagline: 'Kierrä maapallo: valtameret, mantereet ja suuret kaupungit.',
   ariaLabel: 'Maailman aarrekartta',
@@ -2059,7 +2102,12 @@ const MAAILMA = {
     outlines: [
       WORLD_MAP.americasPoints, WORLD_MAP.afroeurasiaPoints,
       WORLD_MAP.britainPoints, WORLD_MAP.australiaPoints,
+      WORLD_MAP.greenlandPoints, WORLD_MAP.madagascarPoints, WORLD_MAP.japanPoints,
+      WORLD_MAP.indonesiaPoints, WORLD_MAP.nzNorthPoints, WORLD_MAP.nzSouthPoints,
     ],
+    // Tiivis kehys: pohjoisen ja etelän tyhjät merikaistat jäävät pois,
+    // mutta Grönlanti ja Uusi-Seelanti mahtuvat mukaan.
+    frame: { x: 15, y: 285, w: 985, h: 475 },
   },
   cities: WORLD_CITIES,
   edges: WORLD_EDGES,
@@ -2069,7 +2117,7 @@ const MAAILMA = {
   minCityDistance: 70,
 
   tokens: {
-    types: themedTokenTypes({ star: { name: 'Maailman tähti' } }),
+    types: themedTokenTypes({ star: { name: 'Magellanin kompassi' } }),
     counts: { star: 1, horseshoe: 1, robber: 1, ruby: 1, emerald: 1, topaz: 1 },
   },
 
@@ -2111,12 +2159,12 @@ const MAAILMA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Maailman tähti ja palatkaa Lontooseen tai New Yorkiin.',
-    starFound: (name, city) => `★ ${name} löysi MAAILMAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'MAAILMAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Magellanin kompassi — maailmanympäripurjehtijan kadonnut aarre.',
+    starFound: (name, city) => `★ ${name} löysi MAGELLANIN KOMPASSIN kaupungista ${city}!`,
+    starToast: 'MAGELLANIN KOMPASSI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Maailman tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Maailman tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Magellanin kompassin turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Magellanin kompassin kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -2124,11 +2172,12 @@ const MAAILMA = {
     mapLabelPos: { x: 140, y: 655.0 },
     compass: { x: 85, y: 526.7, r: 58 },
     waveSkip: [
-      { x: 417, y: 457.8, r: 90 },
+      { x: 180, y: 478, r: 90 },
       { x: 736, y: 638.3, r: 100 },
       { x: 140, y: 655.0, r: 130 },
     ],
-    ship: { x: 417, y: 457.8 },
+    // Laiva purjehtii keskellä Tyyntämerta, kaukana rannikoista.
+    ship: { x: 180, y: 478 },
     serpent: { x: 736, y: 638.3 },
     // Nopan lepopaikka: Tyynimeri laudan vasemmassa laidassa.
     dieSpot: { x: 0.08, y: 0.62 },
@@ -3256,7 +3305,7 @@ const AFRICA_CITIES = [
   },
   { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
   { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
-  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: 26 },
+  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
   { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
   { id: 'kano', name: 'Kano', x: 394, y: 336, airport: true },
   { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
@@ -5126,6 +5175,84 @@ const EUROPE_QUESTIONS = {
     },
   ],
 
+  tallinna: [
+    {
+      q: 'Minkä maan pääkaupunki Tallinna on?',
+      options: ['Viro', 'Latvia', 'Liettua', 'Suomi'],
+      correct: 0,
+      level: 1,
+      fact: 'Tallinna on Viron pääkaupunki, ja sinne pääsee Helsingistä lautalla noin kahdessa tunnissa.',
+      hint: 'Maan kieli on läheistä sukua suomelle.',
+    },
+    {
+      q: 'Mistä Tallinnan keskiaikainen vanhakaupunki tunnetaan?',
+      options: ['muureista ja torneista', 'pilvenpiirtäjistä', 'kanavista', 'pyramideista'],
+      correct: 0,
+      fact: 'Vanhakaupunki muureineen ja torneineen on Unescon maailmanperintökohde — yksi Euroopan parhaiten säilyneistä.',
+      hint: 'Kaupunkia puolustettiin keskiajalla kivirakenteilla.',
+    },
+    {
+      q: 'Millä Viro tunnetaan nykyään erityisesti?',
+      options: ['sähköisistä palveluista', 'öljyntuotannosta', 'viinitiloista', 'vuoristohiihdosta'],
+      correct: 0,
+      level: 3,
+      fact: 'Virossa lähes kaikki asiointi hoituu verkossa, ja maa otti ensimmäisenä maailmassa käyttöön valtiolliset nettivaalit vuonna 2005.',
+      hint: 'Maata kutsutaan joskus e-valtioksi.',
+    },
+  ],
+
+  riika: [
+    {
+      q: 'Minkä maan pääkaupunki Riika on?',
+      options: ['Latvia', 'Liettua', 'Viro', 'Puola'],
+      correct: 0,
+      level: 1,
+      fact: 'Riika on Latvian pääkaupunki ja Baltian maiden suurin kaupunki.',
+      hint: 'Maa on Baltian kolmikon keskimmäinen.',
+    },
+    {
+      q: 'Mistä rakennustyylistä Riian keskusta on kuuluisa?',
+      options: ['jugendista', 'barokista', 'funkiksesta', 'goottilaisesta tyylistä'],
+      correct: 0,
+      fact: 'Riiassa on noin 800 jugendtaloa — enemmän kuin missään muussa Euroopan kaupungissa.',
+      hint: 'Tyyli oli muodissa 1900-luvun alussa, ja sen nimi tulee saksasta.',
+    },
+    {
+      q: 'Mikä joki virtaa Riian halki mereen?',
+      options: ['Väinäjoki', 'Veiksel', 'Nemunas', 'Narvanjoki'],
+      correct: 0,
+      level: 3,
+      fact: 'Väinäjoki eli Daugava alkaa Venäjältä ja laskee Riianlahteen; sen varrella on tuotettu suuri osa Latvian sähköstä vesivoimalla.',
+      hint: 'Joen nimi on suomeksi sama kuin eräällä Karjalan joella.',
+    },
+  ],
+
+  vilna: [
+    {
+      q: 'Minkä maan pääkaupunki Vilna on?',
+      options: ['Liettua', 'Latvia', 'Viro', 'Valko-Venäjä'],
+      correct: 0,
+      level: 1,
+      fact: 'Vilna on Liettuan pääkaupunki maan kaakkoisosassa.',
+      hint: 'Maa on Baltian kolmikon eteläisin.',
+    },
+    {
+      q: 'Mikä Vilnan vanhastakaupungista tekee erityisen?',
+      options: ['se on yksi Euroopan suurimmista', 'se on rakennettu veden päälle', 'se on kokonaan uudelleenrakennettu', 'siellä ei saa asua'],
+      correct: 0,
+      fact: 'Vilnan barokkinen vanhakaupunki on yksi Itä-Euroopan laajimmista ja Unescon maailmanperintökohde.',
+      hint: 'Kokoa voi verrata muihin vanhoihinkaupunkeihin.',
+    },
+    {
+      q: 'Mikä oli Liettuan ja Puolan yhteisen valtion nimi 1569–1795?',
+      options: ['Puola-Liettua', 'Baltian liitto', 'Kuurinmaa', 'Suurruhtinaskunta'],
+      correct: 0,
+      level: 3,
+      fact: 'Puola-Liettuan valtio oli aikansa suurimpia Euroopassa ja ulottui Itämereltä lähes Mustallemerelle.',
+      hint: 'Nimi yhdistää kaksi maata viivalla.',
+    },
+  ],
+
   tukholma: [
     {
       q: 'Kuinka monelle saarelle Tukholman keskusta on rakennettu?',
@@ -5511,6 +5638,18 @@ const EUROPE_FACTS = {
     'Helsingin edustalla on yli 300 saarta, ja monille niistä pääsee kaupungin omalla lautalla.',
     'Suomen kieli ei ole sukua ruotsille eikä venäjälle vaan virolle ja unkarille — se kuuluu suomalais-ugrilaisiin kieliin.',
   ],
+  tallinna: [
+    'Helsingin ja Tallinnan väliä kulkee vuosittain miljoonia matkustajia — reitti on yksi maailman vilkkaimmista laivayhteyksistä.',
+    'Viron kieli on niin läheistä sukua suomelle, että moni kyltti aukeaa suomalaiselle ilman opiskelua.',
+  ],
+  riika: [
+    'Riian keskusmarkkinahallit rakennettiin 1920-luvulla vanhoista ilmalaivahalleista.',
+    'Latvian laulujuhlaperinne on Unescon aineettoman kulttuuriperinnön luettelossa — kuoroissa laulaa kymmeniätuhansia ihmisiä.',
+  ],
+  vilna: [
+    'Vilnassa on taiteilijoiden julistama leikkimielinen Užupisin "tasavalta", jolla on oma perustuslaki käännettynä kymmenille kielille.',
+    'Liettua oli viimeinen Euroopan maa, joka kristillistyi — vasta 1387.',
+  ],
   tukholma: [
     'Tukholman vanhankaupungin kujista kapein on alle metrin levyinen.',
     'Ruotsissa on jokamiehenoikeus: luonnossa saa liikkua ja telttailla myös toisen mailla, kunhan ei häiritse eikä tuhoa.',
@@ -5559,7 +5698,7 @@ const EU_MAP = {
     [393.6, 376.1], [414.7, 378.7], [412.8, 402.4], [401.3, 447.1], [401.3, 460.2],
     [422.4, 468.1], [441.6, 462.9], [470.4, 460.2], [483.8, 473.4], [528.0, 460.2],
     [568.3, 455.0], [585.6, 462.9], [614.4, 439.2], [652.8, 426.1], [672.0, 420.8],
-    [614.4, 397.1], [614.4, 378.7], [679.7, 378.7], [662.4, 357.7], [681.6, 328.8],
+    [614.4, 397.1], [614.4, 378.7], [683.0, 380.0], [673.0, 361.0], [692.0, 331.0],
     [710.4, 328.8], [748.8, 328.8], [793.0, 315.6], [729.6, 305.1], [689.3, 310.3],
     [643.2, 307.7], [622.1, 276.2], [622.1, 231.4], [641.3, 197.2], [681.6, 165.7],
     [639.4, 163.1], [614.4, 197.2], [564.5, 239.3], [554.9, 289.3], [566.4, 331.4],
@@ -5656,8 +5795,19 @@ const EU_CITIES = [
     links: [{ pack: 'maailma', city: 'moskova', label: 'Maailma-lauta' }],
   },
   { id: 'pietari', name: 'Pietari', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
-  { id: 'helsinki', name: 'Helsinki', x: 688, y: 310, la: 'end', lx: -16, ly: 5 },
-  { id: 'tukholma', name: 'Tukholma', x: 558, y: 333, airport: true, la: 'end', lx: -16, ly: 5 },
+  {
+    id: 'helsinki', name: 'Helsinki', x: 688, y: 303, airport: true, la: 'end', lx: -16, ly: -12,
+    // Suomen oma lauta avautuu Helsingistä.
+    links: [{ pack: 'suomi', city: 'helsinki', label: 'Suomen lauta' }],
+  },
+  { id: 'tallinna', name: 'Tallinna', x: 684, y: 374, la: 'start', lx: 14, ly: 12 },
+  { id: 'riika', name: 'Riika', x: 648, y: 434, la: 'end', lx: -14, ly: 14 },
+  { id: 'vilna', name: 'Vilna', x: 703, y: 470, la: 'start', lx: 16, ly: 5 },
+  {
+    id: 'tukholma', name: 'Tukholma', x: 558, y: 333, airport: true, la: 'end', lx: -16, ly: 5,
+    // Ruotsinlaiva Ahvenanmaalle — Suomen laudalle.
+    links: [{ pack: 'suomi', city: 'maarianhamina', label: 'Suomen lauta (laiva Ahvenanmaalle)' }],
+  },
   { id: 'oslo', name: 'Oslo', x: 418, y: 318, la: 'end', lx: -16, ly: 5 },
   { id: 'kobenhavn', name: 'Kööpenhamina', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
   { id: 'lappi', name: 'Lappi', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
@@ -5702,6 +5852,10 @@ const EU_EDGES = [
   { a: 'bukarest', b: 'odessa', steps: 3 },
   { a: 'odessa', b: 'kiova', steps: 3 },
   { a: 'kiova', b: 'varsova', steps: 5 },
+  { a: 'pietari', b: 'tallinna', steps: 3 },
+  { a: 'tallinna', b: 'riika', steps: 2 },
+  { a: 'riika', b: 'vilna', steps: 2 },
+  { a: 'vilna', b: 'varsova', steps: 3 },
   { a: 'kiova', b: 'moskova', steps: 5 },
   { a: 'moskova', b: 'pietari', steps: 4 },
   { a: 'pietari', b: 'helsinki', steps: 3 },
@@ -5727,6 +5881,8 @@ const EU_EDGES = [
   { a: 'istanbul', b: 'odessa', steps: 4, type: 'sea' },
   { a: 'dubrovnik', b: 'rooma', steps: 3, type: 'sea' },
   { a: 'tukholma', b: 'helsinki', steps: 2, type: 'sea' },
+  { a: 'helsinki', b: 'tallinna', steps: 1, type: 'sea', via: [[672, 340]] },
+  { a: 'riika', b: 'tukholma', steps: 3, type: 'sea', via: [[610, 395], [580, 365]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -5744,9 +5900,9 @@ const EU_AIR_ROUTES = [
 
 const EUROPE = {
   id: 'europe',
-  name: 'Euroopan tähti',
+  name: 'Meripihkahuone',
   boardLabel: 'Eurooppa',
-  tagline: 'Etsi Euroopan tähti tunturien, kanavien ja antiikin raunioiden takaa.',
+  tagline: 'Etsi kadonneen Meripihkahuoneen aarre tunturien, kanavien ja raunioiden takaa.',
   ariaLabel: 'Euroopan aarrekartta',
 
   map: {
@@ -5765,10 +5921,10 @@ const EUROPE = {
   tokens: {
     // Meripihka on Itämeren oma jalokivi: fossiloitunutta puuhartsia.
     types: themedTokenTypes({
-      star: { name: 'Euroopan tähti' },
+      star: { name: 'Meripihkahuoneen aarre' },
       topaz: { name: 'Meripihka', color: '#d98f2b' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 10 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 7, empty: 11 },
   },
 
   questions: EUROPE_QUESTIONS,
@@ -5814,12 +5970,12 @@ const EUROPE = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Euroopan tähti ja palatkaa Lontooseen tai Istanbuliin.',
-    starFound: (name, city) => `★ ${name} löysi EUROOPAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'EUROOPAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää kadonneen Meripihkahuoneen aarre ja palatkaa Lontooseen tai Istanbuliin.',
+    starFound: (name, city) => `★ ${name} löysi MERIPIHKAHUONEEN AARTEEN kaupungista ${city}!`,
+    starToast: 'MERIPIHKAHUONEEN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Euroopan tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Euroopan tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Meripihkahuoneen aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Meripihkahuoneen aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -5829,11 +5985,11 @@ const EUROPE = {
     waveSkip: [
       { x: 175, y: 150, r: 135 },
       { x: 118, y: 330, r: 100 },
-      { x: 880, y: 930, r: 110 },
-      { x: 250, y: 960, r: 95 },
+      { x: 575, y: 975, r: 110 },
+      { x: 60, y: 640, r: 95 },
     ],
-    ship: { x: 250, y: 960 },
-    serpent: { x: 880, y: 930 },
+    ship: { x: 60, y: 640 },
+    serpent: { x: 575, y: 975 },
     dieSpot: { x: 0.055, y: 0.52 },
     terrainBands: [
       { maxY: 300, kind: 'mountains' },
@@ -5926,7 +6082,7 @@ const ME_CITIES = [
   { id: 'sana', name: 'Sana', x: 505, y: 842, la: 'start', lx: 16, ly: 5 },
   { id: 'aden', name: 'Aden', x: 526, y: 917 },
   { id: 'salalah', name: 'Salalah', x: 752, y: 794 },
-  { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'end', lx: -16, ly: 5 },
+  { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'start', lx: 16, ly: 5 },
   {
     id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26,
     // Persianlahden vaihtoasema: täältä lähtee pitkä lento itään.
@@ -6016,9 +6172,9 @@ const ME_AIR_ROUTES = [
 
 const MIDDLE_EAST = {
   id: 'middleeast',
-  name: 'Idän tähti',
+  name: 'Sheban kuningattaren aarre',
   boardLabel: 'Lähi-itä',
-  tagline: 'Etsi Idän tähti basaarien ja aavikoiden kätköistä.',
+  tagline: 'Etsi Sheban kuningattaren aarre basaarien ja aavikoiden kätköistä.',
   ariaLabel: 'Lähi-idän aarrekartta',
 
   map: { ...ME_MAP, outlines: [ME_MAP.mainlandPoints, ME_MAP.cyprusPoints] },
@@ -6031,7 +6187,7 @@ const MIDDLE_EAST = {
   tokens: {
     // Turkoosi on saanut nimensä Turkista, jonka kautta kivi kulki Eurooppaan.
     types: themedTokenTypes({
-      star: { name: 'Idän tähti' },
+      star: { name: 'Sheban kuningattaren aarre' },
       topaz: { name: 'Turkoosi', color: '#3aaea6' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 3, emerald: 4, topaz: 6, empty: 8 },
@@ -6081,12 +6237,12 @@ const MIDDLE_EAST = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Idän tähti ja palatkaa Istanbuliin tai Kairoon.',
-    starFound: (name, city) => `★ ${name} löysi IDÄN TÄHDEN kaupungista ${city}!`,
-    starToast: 'IDÄN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Sheban kuningattaren aarre ja palatkaa Istanbuliin tai Kairoon.',
+    starFound: (name, city) => `★ ${name} löysi SHEBAN KUNINGATTAREN AARTEEN kaupungista ${city}!`,
+    starToast: 'SHEBAN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Idän tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Idän tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Sheban kuningattaren aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Sheban kuningattaren aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -7346,10 +7502,10 @@ const AS_CITIES = [
   { id: 'irkutsk', name: 'Irkutsk', x: 647, y: 309, la: 'middle', lx: 0, ly: -22 },
   { id: 'jakutsk', name: 'Jakutsk', x: 777, y: 189, la: 'end', lx: -16, ly: 5 },
   { id: 'magadan', name: 'Magadan', x: 889, y: 169, la: 'end', lx: -16, ly: 5 },
-  { id: 'kamtsatka', name: 'Kamtšatka', x: 965, y: 202, la: 'end', lx: -16, ly: 5 },
+  { id: 'kamtsatka', name: 'Kamtšatka', x: 965, y: 202, la: 'end', lx: -16, ly: 24 },
   { id: 'sahalin', name: 'Sahalin', x: 892, y: 280, la: 'start', lx: 16, ly: 5 },
   { id: 'vladivostok', name: 'Vladivostok', x: 843, y: 370, la: 'start', lx: 16, ly: 5 },
-  { id: 'ulanbator', name: 'Ulan Bator', x: 665, y: 364, la: 'middle', lx: 0, ly: -22 },
+  { id: 'ulanbator', name: 'Ulan Bator', x: 665, y: 364, la: 'middle', lx: 0, ly: 24 },
   {
     id: 'peking', name: 'Peking', x: 740, y: 429, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
@@ -7362,7 +7518,7 @@ const AS_CITIES = [
   { id: 'hongkong', name: 'Hongkong', x: 739, y: 607, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'manila', name: 'Manila', x: 822, y: 675, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'hanoi', name: 'Hanoi', x: 660, y: 630, la: 'end', lx: -16, ly: 5 },
-  { id: 'bangkok', name: 'Bangkok', x: 603, y: 708, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'bangkok', name: 'Bangkok', x: 603, y: 708, airport: true, la: 'end', lx: -16, ly: 24 },
   { id: 'yangon', name: 'Yangon', x: 559, y: 671, la: 'end', lx: -16, ly: 5 },
   { id: 'singapore', name: 'Singapore', x: 634, y: 851, airport: true, la: 'middle', lx: 0, ly: 30 },
   { id: 'sumatra', name: 'Sumatra', x: 562, y: 817, la: 'start', lx: 16, ly: 5 },
@@ -7373,7 +7529,7 @@ const AS_CITIES = [
     links: [{ pack: 'oceania', city: 'bali', label: 'Oseanian lauta' }],
   },
   { id: 'lhasa', name: 'Lhasa', x: 535, y: 519, la: 'start', lx: 16, ly: 5 },
-  { id: 'kathmandu', name: 'Kathmandu', x: 468, y: 545, la: 'start', lx: 16, ly: 5 },
+  { id: 'kathmandu', name: 'Kathmandu', x: 468, y: 545, la: 'middle', lx: 0, ly: 24 },
   { id: 'delhi', name: 'Delhi', x: 398, y: 509, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'kolkata', name: 'Kolkata', x: 490, y: 598, la: 'end', lx: -16, ly: 5 },
   {
@@ -7386,7 +7542,7 @@ const AS_CITIES = [
   { id: 'karachi', name: 'Karachi', x: 303, y: 511, la: 'end', lx: -16, ly: 5 },
   { id: 'kabul', name: 'Kabul', x: 360, y: 429, la: 'end', lx: -16, ly: 5 },
   { id: 'samarkand', name: 'Samarkand', x: 365, y: 374, la: 'start', lx: 16, ly: 5 },
-  { id: 'kashgar', name: 'Kašgar', x: 429, y: 402, la: 'end', lx: -16, ly: 5 },
+  { id: 'kashgar', name: 'Kašgar', x: 429, y: 402, la: 'start', lx: 16, ly: 5 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -7476,9 +7632,9 @@ const AS_AIR_ROUTES = [
 
 const ASIA = {
   id: 'asia',
-  name: 'Aasian tähti',
+  name: 'Keisarin jadesinetti',
   boardLabel: 'Aasia',
-  tagline: 'Etsi tähti Silkkitieltä, Himalajalta, Siperian taigalta ja trooppisilta saarilta.',
+  tagline: 'Etsi keisarin kadonnut jadesinetti Silkkitieltä, Himalajalta, Siperian taigalta ja trooppisilta saarilta.',
   ariaLabel: 'Aasian aarrekartta',
 
   map: {
@@ -7500,7 +7656,7 @@ const ASIA = {
     // Topaasin tilalla jade: Kiinassa sitä on arvostettu kultaa enemmän
     // tuhansien vuosien ajan.
     types: themedTokenTypes({
-      star: { name: 'Aasian tähti' },
+      star: { name: 'Keisarin jadesinetti' },
       topaz: { name: 'Jade', color: '#5fa87a' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
@@ -7555,12 +7711,12 @@ const ASIA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Aasian tähti ja palatkaa Teheraniin tai Tokioon.',
-    starFound: (name, city) => `★ ${name} löysi AASIAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'AASIAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Keisarin jadesinetti ja palatkaa Teheraniin tai Tokioon.',
+    starFound: (name, city) => `★ ${name} löysi KEISARIN JADESINETIN kaupungista ${city}!`,
+    starToast: 'KEISARIN JADESINETTI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Aasian tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Aasian tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Keisarin jadesinetin turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Keisarin jadesinetin kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -8602,7 +8758,7 @@ const OC_CITIES = [
   },
   {
     id: 'perth', name: 'Perth', x: 123, y: 650, start: true, airport: true,
-    la: 'start', lx: 18, ly: 5,
+    la: 'end', lx: -16, ly: 5,
   },
 
   { id: 'melbourne', name: 'Melbourne', x: 492, y: 696, airport: true, la: 'end', lx: -16, ly: 5 },
@@ -8715,9 +8871,9 @@ const OC_AIR_ROUTES = [
 
 const OCEANIA = {
   id: 'oceania',
-  name: 'Oseanian tähti',
+  name: 'Eteläristin helmi',
   boardLabel: 'Oseania',
-  tagline: 'Etsi tähti punaiselta keskustalta, Suurelta valliriutalta ja Tyynenmeren saarilta.',
+  tagline: 'Etsi Eteläristin helmi punaiselta keskustalta, Suurelta valliriutalta ja Tyynenmeren saarilta.',
   ariaLabel: 'Oseanian aarrekartta',
 
   map: {
@@ -8743,7 +8899,7 @@ const OCEANIA = {
     // Topaasin tilalla opaali: Coober Pedy tuottaa valtaosan maailman
     // jalo-opaaleista, ja kaivoskaupungissa asutaan maan alla helteen takia.
     types: themedTokenTypes({
-      star: { name: 'Oseanian tähti' },
+      star: { name: 'Eteläristin helmi' },
       topaz: { name: 'Opaali', color: '#7fb7c9' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 6, empty: 9 },
@@ -8798,12 +8954,12 @@ const OCEANIA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Oseanian tähti ja palatkaa Sydneyyn tai Perthiin.',
-    starFound: (name, city) => `★ ${name} löysi OSEANIAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'OSEANIAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Eteläristin helmi ja palatkaa Sydneyyn tai Perthiin.',
+    starFound: (name, city) => `★ ${name} löysi ETELÄRISTIN HELMEN kaupungista ${city}!`,
+    starToast: 'ETELÄRISTIN HELMI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Oseanian tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Oseanian tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Eteläristin helmen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Eteläristin helmen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -9981,34 +10137,34 @@ const NA_CITIES = [
   { id: 'yellowknife', name: 'Yellowknife', x: 530, y: 290, la: 'middle', lx: 0, ly: -22 },
   { id: 'vancouver', name: 'Vancouver', x: 447, y: 422, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'yellowstone', name: 'Yellowstone', x: 527, y: 493, la: 'end', lx: -16, ly: 5 },
-  { id: 'mountrushmore', name: 'Mount Rushmore', x: 586, y: 489, la: 'middle', lx: 0, ly: -24 },
+  { id: 'mountrushmore', name: 'Mount Rushmore', x: 586, y: 489, la: 'middle', lx: -14, ly: -24 },
   { id: 'winnipeg', name: 'Winnipeg', x: 629, y: 439, la: 'middle', lx: 0, ly: -22 },
   { id: 'churchill', name: 'Churchill', x: 644, y: 338, la: 'end', lx: -16, ly: 5 },
   { id: 'iqaluit', name: 'Iqaluit', x: 750, y: 281, la: 'start', lx: 16, ly: 5 },
   { id: 'nuuk', name: 'Nuuk', x: 852, y: 204, la: 'end', lx: -16, ly: 5 },
   { id: 'labrador', name: 'Labrador', x: 863, y: 343, la: 'end', lx: -16, ly: 5 },
-  { id: 'stjohns', name: 'St. John’s', x: 926, y: 372, la: 'end', lx: -16, ly: -14 },
+  { id: 'stjohns', name: 'St. John’s', x: 926, y: 372, la: 'end', lx: -16, ly: 18 },
   { id: 'halifax', name: 'Halifax', x: 883, y: 436, la: 'start', lx: 16, ly: 5 },
   { id: 'montreal', name: 'Montreal', x: 807, y: 450, la: 'middle', lx: 0, ly: -22 },
   { id: 'toronto', name: 'Toronto', x: 769, y: 488, la: 'end', lx: -16, ly: 5 },
-  { id: 'chicago', name: 'Chicago', x: 709, y: 520, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'appalakit', name: 'Appalakit', x: 776, y: 556, la: 'end', lx: -16, ly: 5 },
+  { id: 'chicago', name: 'Chicago', x: 709, y: 520, airport: true, la: 'start', lx: 16, ly: 12 },
+  { id: 'appalakit', name: 'Appalakit', x: 776, y: 556, la: 'end', lx: -16, ly: 26 },
   { id: 'bermuda', name: 'Bermuda', x: 927, y: 566, la: 'start', lx: 16, ly: 5 },
-  { id: 'denver', name: 'Denver', x: 567, y: 550, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'denver', name: 'Denver', x: 567, y: 550, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'santafe', name: 'Santa Fe', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
-  { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'end', lx: -16, ly: 5 },
+  { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
   { id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'hawaii', name: 'Havaiji', x: 37, y: 579, la: 'middle', lx: 0, ly: 28 },
   { id: 'dallas', name: 'Dallas', x: 638, y: 626, la: 'start', lx: 16, ly: 5 },
   { id: 'neworleans', name: 'New Orleans', x: 701, y: 649, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'miami', name: 'Miami', x: 801, y: 678, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 865, y: 730, la: 'middle', lx: 0, ly: -22 },
+  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 865, y: 730, la: 'middle', lx: 0, ly: 24 },
   { id: 'sanjuan', name: 'San Juan', x: 973, y: 720, la: 'end', lx: -16, ly: 5 },
   { id: 'monterrey', name: 'Monterrey', x: 606, y: 705, la: 'end', lx: -16, ly: 5 },
   { id: 'mexico', name: 'Mexico City', x: 618, y: 775, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'merida', name: 'Mérida', x: 725, y: 765, la: 'start', lx: 16, ly: -6 },
   { id: 'guatemala', name: 'Guatemala', x: 718, y: 824, la: 'end', lx: -16, ly: 5 },
-  { id: 'managua', name: 'Managua', x: 771, y: 847, la: 'end', lx: -16, ly: 16 },
+  { id: 'managua', name: 'Managua', x: 771, y: 847, la: 'start', lx: 14, ly: 16 },
   {
     id: 'panama', name: 'Panama', x: 857, y: 871, airport: true, la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Etelä-Amerikan laudalla: kannas yhdistää mantereet.
@@ -10105,9 +10261,9 @@ const NA_AIR_ROUTES = [
 
 const NORTHAMERICA = {
   id: 'northamerica',
-  name: 'Pohjois-Amerikan tähti',
+  name: 'Montezuman aarre',
   boardLabel: 'Pohjois-Amerikka',
-  tagline: 'Etsi tähti Kalliovuorilta, preerialta, Karibian saarilta ja Alaskan tundralta.',
+  tagline: 'Etsi Montezuman kadonnut aarre Kalliovuorilta, preerialta, Karibian saarilta ja Alaskan tundralta.',
   ariaLabel: 'Pohjois-Amerikan aarrekartta',
 
   map: {
@@ -10128,7 +10284,7 @@ const NORTHAMERICA = {
     // Topaasin tilalla Klondiken kulta: kultaryntäys veti 1890-luvulla
     // kymmeniätuhansia onnenonkijoita Yukonin jokilaaksoon.
     types: themedTokenTypes({
-      star: { name: 'Pohjois-Amerikan tähti' },
+      star: { name: 'Montezuman aarre' },
       topaz: { name: 'Klondiken kulta', color: '#e0b02a' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
@@ -10180,12 +10336,12 @@ const NORTHAMERICA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Pohjois-Amerikan tähti ja palatkaa New Yorkiin tai San Franciscoon.',
-    starFound: (name, city) => `★ ${name} löysi POHJOIS-AMERIKAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'POHJOIS-AMERIKAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Montezuman aarre ja palatkaa New Yorkiin tai San Franciscoon.',
+    starFound: (name, city) => `★ ${name} löysi MONTEZUMAN AARTEEN kaupungista ${city}!`,
+    starToast: 'MONTEZUMAN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Pohjois-Amerikan tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Pohjois-Amerikan tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Montezuman aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Montezuman aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -11432,7 +11588,7 @@ const SA_CITIES = [
   { id: 'sanjorge', name: 'San Jorge', x: 460, y: 829, la: 'start', lx: 16, ly: 5 },
   { id: 'falkland', name: 'Falkland', x: 542, y: 915, la: 'start', lx: 16, ly: 5 },
   { id: 'puntaarenas', name: 'Punta Arenas', x: 434, y: 931, la: 'end', lx: -16, ly: 5 },
-  { id: 'caphorn', name: 'Kap Horn', x: 474, y: 980, la: 'middle', lx: 0, ly: -22 },
+  { id: 'caphorn', name: 'Kap Horn', x: 474, y: 980, la: 'start', lx: 16, ly: 8 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -11532,9 +11688,9 @@ const SA_AIR_ROUTES = [
 
 const SOUTHAMERICA = {
   id: 'southamerica',
-  name: 'Etelä-Amerikan tähti',
+  name: 'El Dorado',
   boardLabel: 'Etelä-Amerikka',
-  tagline: 'Etsi tähti Andien huipuilta, Amazonin sademetsästä ja Patagonian tuulilta.',
+  tagline: 'Etsi El Doradon kulta Andien huipuilta, Amazonin sademetsästä ja Patagonian tuulilta.',
   ariaLabel: 'Etelä-Amerikan aarrekartta',
 
   map: {
@@ -11556,7 +11712,7 @@ const SOUTHAMERICA = {
     // Smaragdin tilalla on Kolumbian oma jalokivi ja topaasin tilalla
     // Andien hopea, jonka takia koko manner aikanaan valloitettiin.
     types: themedTokenTypes({
-      star: { name: 'Etelä-Amerikan tähti' },
+      star: { name: 'El Doradon aarre' },
       topaz: { name: 'Potosín hopea', color: '#c9ccd4' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
@@ -11612,12 +11768,12 @@ const SOUTHAMERICA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Etelä-Amerikan tähti ja palatkaa Panamaan tai Buenos Airesiin.',
-    starFound: (name, city) => `★ ${name} löysi ETELÄ-AMERIKAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'ETELÄ-AMERIKAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää El Doradon aarre ja palatkaa Panamaan tai Buenos Airesiin.',
+    starFound: (name, city) => `★ ${name} löysi EL DORADON AARTEEN kaupungista ${city}!`,
+    starToast: 'EL DORADON AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Etelä-Amerikan tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Etelä-Amerikan tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi El Doradon aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi El Doradon aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {
@@ -11637,6 +11793,856 @@ const SOUTHAMERICA = {
       { maxY: 300, kind: 'trees' },
       { maxY: 620, kind: 'mountains' },
       { maxY: Infinity, kind: 'mountains' },
+    ],
+  },
+};
+
+// ===== js/packs/suomi-questions.js =====
+// Suomi-laudan kysymykset ja Tiesitkö että -tiedot.
+//
+// level: 1 = helppo (lapsille), 2 = perus (oletus), 3 = vaikea (bonus).
+// Vihje ei saa sisältää oikeaa vastausta — testit valvovat tätä.
+
+const SUOMI_QUESTIONS = {
+  turku: [
+    {
+      q: 'Mikä joki virtaa Turun halki?',
+      options: ['Aurajoki', 'Vantaanjoki', 'Kokemäenjoki', 'Oulujoki'],
+      correct: 0,
+      level: 1,
+      fact: 'Aurajoen rannat ovat turkulaisten olohuone: kesäisin jokilaivat ja rantabulevardit täyttyvät.',
+      hint: 'Joen nimi muistuttaa peltotyökalua.',
+    },
+    {
+      q: 'Mikä keskiaikainen rakennus vartioi Turun jokisuuta?',
+      options: ['Turun linna', 'Olavinlinna', 'Hämeen linna', 'Suomenlinna'],
+      correct: 0,
+      fact: 'Linna on Suomen suurin keskiaikainen rakennus, ja sen vanhimmat osat ovat 1280-luvulta.',
+      hint: 'Linna on nimetty kaupunkinsa mukaan.',
+    },
+    {
+      q: 'Minä vuonna Turun suurpalo tuhosi lähes koko kaupungin?',
+      options: ['1827', '1808', '1852', '1900'],
+      correct: 0,
+      level: 3,
+      fact: 'Palo oli Pohjoismaiden suurin kaupunkipalo. Sen jälkeen yliopisto siirrettiin Helsinkiin.',
+      hint: 'Samalla vuosikymmenellä Suomi oli juuri siirtynyt Venäjän vallan alle.',
+    },
+  ],
+
+  maarianhamina: [
+    {
+      q: 'Mikä on Ahvenanmaan virallinen kieli?',
+      options: ['ruotsi', 'suomi', 'norja', 'tanska'],
+      correct: 0,
+      level: 1,
+      fact: 'Ahvenanmaa on yksikielisesti ruotsinkielinen itsehallintoalue, vaikka se kuuluu Suomeen.',
+      hint: 'Länsinaapurin kieli.',
+    },
+    {
+      q: 'Mitä Ahvenanmaan itsehallinto tarkoittaa?',
+      options: [
+        'maakunnalla on omat päättäjät ja lait monissa asioissa',
+        'Ahvenanmaa on itsenäinen valtio',
+        'Ahvenanmaa kuuluu Ruotsiin',
+        'saarilla ei tarvitse noudattaa lakeja',
+      ],
+      correct: 0,
+      fact: 'Ahvenanmaalla on oma maakuntapäivät, oma lippu ja omat postimerkit — mutta se on osa Suomea.',
+      hint: 'Itsehallinto on itsenäisyyttä pienempi asia.',
+    },
+    {
+      q: 'Miksi Ahvenanmaalla ei ole varuskuntia eikä sotilaita?',
+      options: [
+        'saaret demilitarisoitiin kansainvälisellä sopimuksella',
+        'saarille ei mahdu varuskuntaa',
+        'Ruotsi kielsi sotilaat',
+        'sotilaita ei ole varaa palkata',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Demilitarisointi alkoi Krimin sodan rauhasta 1856 ja vahvistettiin 1921 — saaret ovat aseeton alue.',
+      hint: 'Ratkaisu syntyi 1800-luvun suurvaltasodan jälkeen.',
+    },
+  ],
+
+  tampere: [
+    {
+      q: 'Minkä kahden järven välissä Tampere sijaitsee?',
+      options: [
+        'Näsijärven ja Pyhäjärven',
+        'Saimaan ja Päijänteen',
+        'Inarijärven ja Oulujärven',
+        'Kallaveden ja Keiteleen',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Järvien välissä kuohuva Tammerkoski antoi voiman tehtaille, joista kaupunki syntyi.',
+      hint: 'Koski yhdistää järvet keskellä kaupunkia.',
+    },
+    {
+      q: 'Mikä teollisuus toi Tampereelle lempinimen "Suomen Manchester"?',
+      options: ['puuvillatehtaat', 'autotehtaat', 'telakat', 'kaivokset'],
+      correct: 0,
+      fact: 'Finlaysonin puuvillatehdas oli aikanaan Pohjoismaiden suurin, ja sen alue on nyt kulttuurikeskus.',
+      hint: 'Sama ala teki Manchesterista suurkaupungin.',
+    },
+    {
+      q: 'Mikä perinneherkku ostetaan Tampereella kauppahallista puolukkahillon kera?',
+      options: ['mustamakkara', 'kalakukko', 'leipäjuusto', 'karjalanpaisti'],
+      correct: 0,
+      fact: 'Tampereen kauppahalli on Pohjoismaiden suurin, ja sen tunnetuin herkku syödään paikan päällä.',
+      hint: 'Nimessä on väri ja ruokalaji.',
+    },
+  ],
+
+  pori: [
+    {
+      q: 'Mikä kuuluisa musiikkitapahtuma järjestetään Porissa joka kesä?',
+      options: ['Pori Jazz', 'Ruisrock', 'oopperajuhlat', 'tangomarkkinat'],
+      correct: 0,
+      level: 1,
+      fact: 'Festivaali on järjestetty vuodesta 1966 ja se on Euroopan vanhimpia lajissaan.',
+      hint: 'Musiikkityyli syntyi Yhdysvalloissa.',
+    },
+    {
+      q: 'Mikä on Porin kuuluisa hiekkaranta?',
+      options: ['Yyteri', 'Hietaniemi', 'Nallikari', 'Kalajoki'],
+      correct: 0,
+      fact: 'Kilometrien pituiset dyynit tekevät rannasta Pohjoismaiden suurimpia — siellä myös lainelautaillaan.',
+      hint: 'Nimi alkaa aakkosten harvinaisimmalla kirjaimella.',
+    },
+  ],
+
+  vaasa: [
+    {
+      q: 'Mikä Vaasan edustan saaristo on Unescon maailmanperintökohde?',
+      options: ['Merenkurkun saaristo', 'Turun saaristo', 'Ahvenanmaa', 'Suomenlahden saaret'],
+      correct: 0,
+      fact: 'Merenkurkussa maa kohoaa merestä lähes sentin vuodessa — uutta maata syntyy silmissä.',
+      hint: 'Kapein kohta Suomen ja Ruotsin välissä.',
+    },
+    {
+      q: 'Miksi maa kohoaa Merenkurkussa yhä?',
+      options: [
+        'jääkauden jään paino suli pois ja maa oikenee',
+        'meri haihtuu auringossa',
+        'tulivuoret nostavat maata',
+        'joet kasaavat hiekkaa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kilometrien paksuinen mannerjää painoi maankuorta alas; jään sulettua kuori nousee yhä, noin 8 mm vuodessa.',
+      hint: 'Syy on kymmenientuhansien vuosien takainen.',
+    },
+  ],
+
+  jyvaskyla: [
+    {
+      q: 'Missä maakunnassa Jyväskylä sijaitsee?',
+      options: ['Keski-Suomessa', 'Lapissa', 'Savossa', 'Uudellamaalla'],
+      correct: 0,
+      level: 1,
+      fact: 'Jyväskylä on maakuntansa keskus ja tunnettu opiskelijakaupunki.',
+      hint: 'Maakunnan nimi kertoo sijainnin kartalla.',
+    },
+    {
+      q: 'Kenen kuuluisan arkkitehdin rakennuksia Jyväskylässä on kymmeniä?',
+      options: ['Alvar Aallon', 'Eliel Saarisen', 'C. L. Engelin', 'Reima Pietilän'],
+      correct: 0,
+      fact: 'Arkkitehti vietti kouluvuotensa Jyväskylässä, ja kaupungissa on hänen nimikkomuseonsa.',
+      hint: 'Hänen suunnittelemansa maljakko on maailmankuulu.',
+    },
+    {
+      q: 'Mikä perustettiin Jyväskylään ensimmäisenä Suomessa vuonna 1863?',
+      options: [
+        'suomenkielinen opettajaseminaari',
+        'ensimmäinen yliopisto',
+        'ensimmäinen rautatieasema',
+        'ensimmäinen sanomalehti',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Uno Cygnaeuksen johtama seminaari koulutti opettajat kansakouluihin — siksi Jyväskylää kutsutaan Suomen Ateenaksi.',
+      hint: 'Kaupunkia kutsutaan koulujensa vuoksi Suomen Ateenaksi.',
+    },
+  ],
+
+  lappeenranta: [
+    {
+      q: 'Minkä järven rannalla Lappeenranta sijaitsee?',
+      options: ['Saimaan', 'Päijänteen', 'Inarijärven', 'Näsijärven'],
+      correct: 0,
+      level: 1,
+      fact: 'Saimaa on Suomen suurin järvi ja Euroopan neljänneksi suurin luonnonjärvi.',
+      hint: 'Suomen suurin järvi.',
+    },
+    {
+      q: 'Minne Saimaan kanava johtaa Lappeenrannan läheltä?',
+      options: ['Suomenlahdelle Viipurin kautta', 'Laatokkaan', 'Päijänteeseen', 'Pohjanlahdelle'],
+      correct: 0,
+      level: 3,
+      fact: 'Kanavan loppuosa kulkee Venäjältä vuokratulla alueella — harvinainen järjestely maailmassa.',
+      hint: 'Kanava laskee mereen naapurimaan puolella.',
+    },
+  ],
+
+  savonlinna: [
+    {
+      q: 'Mikä linna kohoaa keskellä Savonlinnaa?',
+      options: ['Olavinlinna', 'Turun linna', 'Hämeen linna', 'Kajaanin linna'],
+      correct: 0,
+      level: 1,
+      fact: 'Vuonna 1475 perustettu linna rakennettiin saarelle keskelle Saimaan virtoja.',
+      hint: 'Linna on nimetty pyhimyksen mukaan.',
+    },
+    {
+      q: 'Mikä kuuluisa kesätapahtuma linnassa järjestetään?',
+      options: ['oopperajuhlat', 'jazzfestivaali', 'elokuvajuhlat', 'tangomarkkinat'],
+      correct: 0,
+      fact: 'Juhlat keräävät kesäisin kymmeniätuhansia kuulijoita linnanpihalle — laulu kaikuu muurien sisällä.',
+      hint: 'Laulajat esittävät aarioita linnanpihalla.',
+    },
+    {
+      q: 'Mikä harvinainen eläin elää vain Saimaassa?',
+      options: ['saimaannorppa', 'merikotka', 'majava', 'ahma'],
+      correct: 0,
+      level: 1,
+      fact: 'Norppia on vain noin 500. Kanta jäi järveen "vangiksi", kun maa kohosi jääkauden jälkeen.',
+      hint: 'Se on makeassa vedessä elävä hylje.',
+    },
+  ],
+
+  kuopio: [
+    {
+      q: 'Mikä perinneruoka yhdistetään Kuopioon?',
+      options: ['kalakukko', 'karjalanpiirakka', 'mustamakkara', 'leipäjuusto'],
+      correct: 0,
+      level: 1,
+      fact: 'Herkussa muikut tai ahvenet leivotaan ruisleivän sisään — eväs säilyi ennen pitkilläkin matkoilla.',
+      hint: 'Kala leivotaan ruisleivän sisään.',
+    },
+    {
+      q: 'Miltä mäeltä avautuu Kuopion kuuluisin näköala järville?',
+      options: ['Puijolta', 'Kolilta', 'Aavasaksalta', 'Pyynikiltä'],
+      correct: 0,
+      fact: 'Mäen tornista näkee Kallaveden saariston, ja rinteessä on myös hyppyrimäet.',
+      hint: 'Mäellä hypätään talvisin mäkihyppyä.',
+    },
+  ],
+
+  joensuu: [
+    {
+      q: 'Minkä maakunnan keskus Joensuu on?',
+      options: ['Pohjois-Karjalan', 'Savon', 'Kainuun', 'Lapin'],
+      correct: 0,
+      level: 1,
+      fact: 'Karjalaisuus kuuluu kaupungissa murteena ja näkyy piirakkoina toreilla.',
+      hint: 'Maakunta on Suomen itäisin.',
+    },
+    {
+      q: 'Mikä kansallismaisema kohoaa Pielisen rannalla Joensuun pohjoispuolella?',
+      options: ['Koli', 'Punkaharju', 'Aavasaksa', 'Pallastunturi'],
+      correct: 0,
+      level: 3,
+      fact: 'Vaaran laelta avautuva järvimaisema innoitti Sibeliusta ja kultakauden taidemaalareita.',
+      hint: 'Suomen tunnetuin vaaramaisema, josta on maalattu lukemattomia tauluja.',
+    },
+  ],
+
+  kajaani: [
+    {
+      q: 'Minkä maakunnan keskus Kajaani on?',
+      options: ['Kainuun', 'Lapin', 'Pohjanmaan', 'Savon'],
+      correct: 0,
+      level: 1,
+      fact: 'Maakunta tunnetaan vaaroistaan, soistaan ja Nälkämaan laulusta.',
+      hint: 'Nälkämaan laulu kertoo tästä maakunnasta.',
+    },
+    {
+      q: 'Kuka kuuluisa runonkerääjä työskenteli Kajaanissa piirilääkärinä?',
+      options: ['Elias Lönnrot', 'Aleksis Kivi', 'J. L. Runeberg', 'Mika Waltari'],
+      correct: 0,
+      level: 3,
+      fact: 'Hän teki Kajaanista käsin keruumatkansa Vienan Karjalaan ja kokosi runoista Kalevalan.',
+      hint: 'Hänen kokoamansa teos on Suomen kansalliseepos.',
+    },
+  ],
+
+  kemi: [
+    {
+      q: 'Mikä rakennus nousee Kemiin joka talvi ja sulaa keväällä?',
+      options: ['lumilinna', 'hiekkalinna', 'lasikirkko', 'jääkarusselli'],
+      correct: 0,
+      level: 1,
+      fact: 'Maailman suurin lumilinna on rakennettu Kemiin vuodesta 1996 — sisällä on jopa hotelli ja ravintola.',
+      hint: 'Se rakennetaan pakkasella vedestä ja tykkilumesta.',
+    },
+    {
+      q: 'Mikä jäänmurtaja vie matkailijoita risteilylle Kemin edustalle?',
+      options: ['Sampo', 'Urho', 'Sisu', 'Otso'],
+      correct: 0,
+      level: 3,
+      fact: 'Vuonna 1961 valmistunut murtaja jäi eläkkeeltä matkailukäyttöön: kyytiläiset voivat uida jäissä pelastuspuvuissa.',
+      hint: 'Nimi on sama kuin Kalevalan ihmemyllyllä.',
+    },
+  ],
+
+  rovaniemi: [
+    {
+      q: 'Kuka kuuluisa hahmo asuu Rovaniemen napapiirillä?',
+      options: ['Joulupukki', 'Lumiukko', 'Peikko', 'Petteri Punakuono'],
+      correct: 0,
+      level: 1,
+      fact: 'Napapiirin pajakylään saapuu vuosittain puoli miljoonaa kirjettä ja satojatuhansia vieraita.',
+      hint: 'Hänelle kirjoitetaan kirjeitä ympäri maailmaa joulun alla.',
+    },
+    {
+      q: 'Minkä eläimen sarvien muotoon Rovaniemen keskusta jälleenrakennettiin sodan jälkeen?',
+      options: ['poron', 'hirven', 'karhun', 'ahman'],
+      correct: 0,
+      level: 3,
+      fact: 'Lapin sota poltti Rovaniemen 1944. Alvar Aallon asemakaavassa pääkadut piirtävät sarvet ja stadion on silmä.',
+      hint: 'Eläin on Lapin tunnetuin.',
+    },
+  ],
+
+  kittila: [
+    {
+      q: 'Mikä suuri laskettelukeskus sijaitsee Kittilässä?',
+      options: ['Levi', 'Ruka', 'Tahko', 'Himos'],
+      correct: 0,
+      level: 1,
+      fact: 'Tunturissa ajetaan alppihiihdon maailmancupin pujottelu marraskuisin.',
+      hint: 'Nimi on lyhyt ja tarkoittaa myös leveää.',
+    },
+    {
+      q: 'Mitä Kittilän suurelta kaivokselta louhitaan?',
+      options: ['kultaa', 'rautaa', 'nikkeliä', 'timantteja'],
+      correct: 0,
+      level: 3,
+      fact: 'Kittilän kaivos on Euroopan suurin kultakaivos — Lapin kulta ei siis ole pelkkää tarinaa.',
+      hint: 'Samaa metallia huuhdotaan Lapin joista vaskoolilla.',
+    },
+  ],
+
+  inari: [
+    {
+      q: 'Minkä kansan kulttuurikeskus Sajos sijaitsee Inarissa?',
+      options: ['saamelaisten', 'karjalaisten', 'romanien', 'kveenien'],
+      correct: 0,
+      level: 1,
+      fact: 'Sajoksessa kokoontuu Saamelaiskäräjät, joka päättää alkuperäiskansan kieltä ja kulttuuria koskevista asioista.',
+      hint: 'Euroopan unionin alueen ainoa alkuperäiskansa.',
+    },
+    {
+      q: 'Mikä museo esittelee saamelaiskulttuuria ja pohjoista luontoa Inarissa?',
+      options: ['Siida', 'Arktikum', 'Kiasma', 'Luostarinmäki'],
+      correct: 0,
+      level: 3,
+      fact: 'Museon nimi tarkoittaa saamelaista talvikylää. Ulkomuseoalue kertoo elämästä ennen teitä ja sähköjä.',
+      hint: 'Nimi tarkoittaa lapinkylää.',
+    },
+    {
+      q: 'Kuinka montaa saamen kieltä Suomessa puhutaan?',
+      options: ['kolmea', 'yhtä', 'kahta', 'viittä'],
+      correct: 0,
+      level: 3,
+      fact: 'Pohjoissaame, inarinsaame ja koltansaame. Inarinsaamea puhutaan vain Inarissa — puhujia on muutama sata.',
+      hint: 'Yhtä niistä puhutaan vain Inarissa.',
+    },
+  ],
+
+  kilpisjarvi: [
+    {
+      q: 'Mikä jyrkkärinteinen tunturi kohoaa Kilpisjärven kylän yllä?',
+      options: ['Saana', 'Halti', 'Ylläs', 'Ounastunturi'],
+      correct: 0,
+      fact: 'Tunturi on saamelaisille pyhä paikka, ja sen laelta näkee kolmen valtakunnan rajamaille.',
+      hint: 'Nimi on lyhyt ja naisennimen kuuloinen.',
+    },
+    {
+      q: 'Minkä kolmen maan rajapyykki on Kilpisjärven lähellä?',
+      options: [
+        'Suomen, Ruotsin ja Norjan',
+        'Suomen, Venäjän ja Norjan',
+        'Suomen, Ruotsin ja Tanskan',
+        'Suomen, Viron ja Ruotsin',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Keltainen rajapyykki on pienessä järvessä, ja sen ympäri voi kävellä — kolmessa maassa minuutissa.',
+      hint: 'Käsivarsi työntyy kahden länsinaapurin väliin.',
+    },
+  ],
+
+  utsjoki: [
+    {
+      q: 'Mikä kuuluisa lohijoki erottaa Utsjoen Norjasta?',
+      options: ['Teno', 'Tornionjoki', 'Ivalojoki', 'Kemijoki'],
+      correct: 0,
+      fact: 'Joki on Euroopan parhaita luonnonlohijokia, ja sen kalastusta säädellään Suomen ja Norjan sopimuksella.',
+      hint: 'Saameksi joki on Deatnu, suuri joki.',
+    },
+    {
+      q: 'Mikä tekee Utsjoesta ainutlaatuisen Suomen kuntien joukossa?',
+      options: [
+        'saamelaiset ovat siellä enemmistönä',
+        'siellä ei ole lainkaan teitä',
+        'se on Suomen suurin kunta',
+        'siellä ei ole yhtään järveä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Utsjoki on Suomen ainoa kunta, jossa alkuperäiskansa on enemmistössä, ja Suomen pohjoisin kunta.',
+      hint: 'Asia liittyy kunnan asukkaisiin.',
+    },
+    {
+      q: 'Mitä kaamos tarkoittaa?',
+      options: [
+        'aurinko ei nouse lainkaan',
+        'aurinko ei laske lainkaan',
+        'järvet jäätyvät pohjaan asti',
+        'lunta sataa joka päivä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Utsjoella kaamos kestää lähes kaksi kuukautta. Sen vastapainona kesällä on yhtä pitkä yötön yö.',
+      hint: 'Kaamos koetaan talvella napapiirin pohjoispuolella.',
+    },
+  ],
+
+  general: [
+    {
+      q: 'Mikä on Suomen pääkaupunki?',
+      options: ['Helsinki', 'Turku', 'Tampere', 'Oulu'],
+      correct: 0,
+      level: 1,
+      fact: 'Helsingistä tuli pääkaupunki 1812; sitä ennen pääkaupunki oli Turku.',
+      hint: 'Suomenlinnan merilinnoitus on sen edustalla.',
+    },
+    {
+      q: 'Mikä eläin on Suomen kansalliseläin?',
+      options: ['karhu', 'susi', 'hirvi', 'ilves'],
+      correct: 0,
+      level: 1,
+      fact: 'Metsän kuninkaalla on suomen kielessä sadoittain kiertonimiä, kuten kontio, otso ja mesikämmen.',
+      hint: 'Se nukkuu talviunta pesässään.',
+    },
+    {
+      q: 'Mikä lintu on Suomen kansallislintu?',
+      options: ['laulujoutsen', 'talitiainen', 'varis', 'merikotka'],
+      correct: 0,
+      level: 1,
+      fact: 'Lintu oli 1950-luvulla lähes hävitetty Suomesta; rauhoituksen jälkeen kanta on elpynyt kymmeniintuhansiin.',
+      hint: 'Iso valkoinen lintu, joka esiintyy myös eurokolikossa.',
+    },
+    {
+      q: 'Millä rahalla Suomessa maksetaan?',
+      options: ['eurolla', 'markalla', 'kruunulla', 'punnalla'],
+      correct: 0,
+      level: 1,
+      fact: 'Suomi vaihtoi markan euroon 2002 ensimmäisten maiden joukossa. Naapurit Ruotsi ja Norja käyttävät yhä kruunuja.',
+      hint: 'Sama raha kuin useimmissa EU-maissa.',
+    },
+    {
+      q: 'Mitkä ovat Suomen lipun värit?',
+      options: [
+        'sininen ja valkoinen',
+        'punainen ja keltainen',
+        'musta ja valkoinen',
+        'vihreä ja valkoinen',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Värien on sanottu kuvaavan järviä ja lunta. Siniristilippu otettiin käyttöön 1918.',
+      hint: 'Värit kuvaavat järviä ja lunta.',
+    },
+    {
+      q: 'Kuinka pitkä on Suomen ja Venäjän välinen raja?',
+      options: ['noin 1 300 km', 'noin 300 km', 'noin 600 km', 'noin 2 500 km'],
+      correct: 0,
+      level: 3,
+      fact: 'Raja on EU:n pisin ulkoraja Venäjän kanssa. Sen itäpuolella aika on tunnin edellä.',
+      hint: 'Matka on suunnilleen sama kuin Helsingistä Utsjoelle.',
+    },
+    {
+      q: 'Minä vuonna Suomi liittyi puolustusliitto Natoon?',
+      options: ['2023', '2022', '1995', '2004'],
+      correct: 0,
+      level: 3,
+      fact: 'Venäjän hyökkäys Ukrainaan 2022 käänsi mielipiteen nopeasti, ja jäsenyys varmistui huhtikuussa 2023.',
+      hint: 'Vuosi hyökkäyssodan alkamisen jälkeen.',
+    },
+    {
+      q: 'Minä vuonna Suomi liittyi Euroopan unioniin?',
+      options: ['1995', '1985', '2000', '2004'],
+      correct: 0,
+      level: 3,
+      fact: 'Suomi liittyi yhdessä Ruotsin ja Itävallan kanssa kansanäänestyksen jälkeen.',
+      hint: 'Samana vuonna liittyivät myös Ruotsi ja Itävalta.',
+    },
+    {
+      q: 'Kuinka monta saunaa Suomessa arvioidaan olevan?',
+      options: ['yli 3 miljoonaa', 'noin 100 000', 'noin puoli miljoonaa', 'noin 10 miljoonaa'],
+      correct: 0,
+      level: 3,
+      fact: 'Saunoja on enemmän kuin henkilöautoja — noin yksi jokaista kahta asukasta kohden.',
+      hint: 'Niitä on enemmän kuin henkilöautoja.',
+    },
+    {
+      q: 'Mikä suomalaisyhtiö oli 2000-luvun alussa maailman suurin matkapuhelinvalmistaja?',
+      options: ['Nokia', 'Ericsson', 'Motorola', 'Salora'],
+      correct: 0,
+      fact: 'Parhaimmillaan yhtiö myi joka kolmannen maailman puhelimista ja toi neljänneksen Suomen viennistä.',
+      hint: 'Yhtiö on saanut nimensä pirkanmaalaisesta kaupungista.',
+    },
+    {
+      q: 'Kuka sävelsi Finlandian?',
+      options: ['Jean Sibelius', 'Oskar Merikanto', 'Toivo Kuula', 'Kaija Saariaho'],
+      correct: 0,
+      fact: 'Sävelruno kantaesitettiin 1899 sortovuosien aikaan, ja siitä tuli itsenäisyystahdon vertauskuva.',
+      hint: 'Hänen päivänään 8. joulukuuta liputetaan suomalaiselle musiikille.',
+    },
+    {
+      q: 'Mitä jokamiehenoikeudet tarkoittavat?',
+      options: [
+        'luonnossa saa liikkua, marjastaa ja sienestää myös toisen mailla',
+        'jokainen mies on kutsuttava armeijaan',
+        'kuka tahansa saa metsästää missä vain',
+        'rannat ovat aina yksityisiä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Oikeuksiin kuuluu myös tilapäinen leiriytyminen — kunhan ei häiritse eikä roskaa.',
+      hint: 'Ne koskevat kaikkia luonnossa liikkujia, eivät vain miehiä.',
+    },
+  ],
+};
+
+const SUOMI_FACTS = {
+  helsinki: [
+    'Suomenlinnaan pääsee Kauppatorilta lautalla vartissa — merilinnoitus on Unescon maailmanperintökohde, jossa asuu 800 ihmistä.',
+    'Helsingin alla on kymmeniä kilometrejä tunneleita ja jopa maanalainen uimahalli — kallioon louhittu kaupunki toimii myös väestönsuojana.',
+  ],
+  turku: [
+    'Joulurauha on julistettu Turun Brinkkalan talon parvekkeelta jo 1300-luvulta asti — julistusta kuuntelee joka jouluaatto koko Suomi.',
+    'Turun saaristossa on yli 20 000 saarta ja luotoa, ja Saariston rengastien voi kiertää polkupyörällä lauttoja hyppien.',
+  ],
+  maarianhamina: [
+    'Maarianhaminan satamassa seisoo Pommern, maailman ainoa alkuperäisessä asussaan säilynyt nelimastoinen viljapurjelaiva.',
+    'Ahvenanmaalla on omat postimerkit ja oma rekisterikilpi, vaikka saaret kuuluvat Suomeen.',
+  ],
+  tampere: [
+    'Tampereella on maailman ainoa muumilaakson taidetta esittelevä Muumimuseo.',
+    'Tammerkosken partaalla sijaitseva Finlaysonin alue oli 1800-luvulla kuin kaupunki kaupungissa: sillä oli oma kirkko, poliisi ja sairaala.',
+  ],
+  pori: [
+    'Yyterin dyynit ovat kilometrien pituiset — ranta on yksi Pohjoismaiden pisimmistä hiekkarannoista.',
+    'Porin jazzfestivaali on tuonut kaupunkiin esiintyjiä Miles Davisista Stingiin jo yli puolen vuosisadan ajan.',
+  ],
+  vaasa: [
+    'Merenkurkussa syntyy maankohoamisen ansiosta joka vuosi noin sata hehtaaria uutta maata — saaret kasvavat yhteen silmissä.',
+    'Vaasan seudulla on Pohjoismaiden suurin energiateknologian keskittymä, jonka laitteita viedään ympäri maailmaa.',
+  ],
+  jyvaskyla: [
+    'Jyväskylässä on enemmän Alvar Aallon suunnittelemia rakennuksia kuin missään muualla maailmassa.',
+    'Kaupunkia kutsutaan Suomen Ateenaksi, koska suomenkielinen koulutus sai siellä alkunsa 1800-luvulla.',
+  ],
+  lappeenranta: [
+    'Lappeenrannan linnoituksen valleilta näkee Saimaalle — kaupunki oli vuosisatoja Ruotsin ja Venäjän rajaseutua.',
+    'Saimaan kanavaa pitkin pääsi ennen laivalla Lappeenrannasta Viipuriin ja merelle asti; kanava valmistui 1856.',
+  ],
+  savonlinna: [
+    'Olavinlinnan oopperajuhlien katsomoon mahtuu yli 2 000 kuulijaa — esitykset pidetään keskiaikaisen linnan pihassa.',
+    'Saimaannorppa on yksi maailman harvinaisimmista hylkeistä: sitä suojellaan muun muassa verkkokalastuskielloin.',
+  ],
+  kuopio: [
+    'Kuopion torilla myydään kalakukkoa suoraan leipurien kojuista, ja savolainen puheenparsi kuuluu kaupassa kaupan päälle.',
+    'Puijon tornista avautuu näkymä Kallaveden satoihin saariin; ensimmäinen torni rakennettiin jo 1856.',
+  ],
+  joensuu: [
+    'Joensuussa toimii Euroopan metsäinstituutti — kaupunki on yksi maailman johtavista metsäosaamisen keskuksista.',
+    'Ilosaarirock on järjestetty vuodesta 1971 ja on yksi Euroopan vanhimmista yhä jatkuvista rockfestivaaleista.',
+  ],
+  kajaani: [
+    'Kajaanin linnan rauniot seisovat Kajaaninjoen saarella; linnassa istui aikoinaan vankina myös historioitsija Johannes Messenius.',
+    'Kainuun tervaa soudettiin 1800-luvulla veneillä Ouluun asti — terva oli aikansa öljy, jota vietiin maailman laivastoille.',
+  ],
+  kemi: [
+    'Kemin lumilinna rakennetaan joka talvi uudelleen merivedestä tykitetystä lumesta — arkkitehtuuri vaihtuu vuosittain.',
+    'Jäänmurtaja Sampolla pääsee kävelemään jäälle keskellä merta ja kellumaan pelastuspuvussa avannossa.',
+  ],
+  rovaniemi: [
+    'Napapiirin pajakylässä voi ylittää napapiirin viivan jalan — ja saada siitä todistuksen.',
+    'Arktikum-museon lasiputki osoittaa suoraan pohjoiseen; museo kertoo arktisten alueiden elämästä ja ilmastonmuutoksesta.',
+  ],
+  kittila: [
+    'Levillä ajetaan alppihiihdon maailmancupia, ja tunturin huipulle pääsee gondolihissillä ympäri vuoden.',
+    'Kittilän kultakaivos on Euroopan suurin — kultaa louhitaan yli kilometrin syvyydestä.',
+  ],
+  inari: [
+    'Inarijärvessä on yli 3 000 saarta; Ukonkivi oli saamelaisten pyhä uhripaikka.',
+    'Saamelaiskäräjät kokoontuu Inarin Sajoksessa — rakennuksen muoto kiertyy kuin nuotiopiiri.',
+  ],
+  kilpisjarvi: [
+    'Suomen korkein tunturi Halti (1 324 m) on Kilpisjärveltä vaellusmatkan päässä Käsivarren erämaassa.',
+    'Mallan luonnonpuisto on Suomen vanhimpia suojelualueita — siellä kasvaa tunturikasveja, joita ei tapaa muualla maassa.',
+  ],
+  utsjoki: [
+    'Utsjoella aurinko ei laske lainkaan noin 70 vuorokauteen kesällä — yöttömän yön aikaan voi lukea ulkona keskiyöllä.',
+    'Tenojoki on Euroopan parhaita luonnonlohijokia, ja sen rannoilla saamelainen kalastusperinne elää yhä.',
+  ],
+  oulu: [
+    'Oulussa järjestetään joka elokuu ilmakitaransoiton MM-kisat — laji keksittiin kaupungissa vitsinä, josta tuli maailmanilmiö.',
+    'Oulu oli 1800-luvulla maailman johtavia tervanviejiä; terva laskettiin jokea pitkin veneillä kaupungin satamaan.',
+  ],
+};
+
+// ===== js/packs/suomi.js =====
+// Suomi-lauta: ensimmäinen maakohtainen kartta.
+//
+// Koordinaatisto on 1000 x 1000 yksikköä ja vastaa likimain Suomen karttaa:
+//   x = (pituusaste - 18.5) * 71.4    (lännestä 18,5° itään 32,5°)
+//   y = (70.6 - leveysaste) * 86.2    (pohjoisesta 70,6° etelään 59,0°)
+//
+// Kartta on tarkoituksella hieman taiteellinen: rannikko on piirretty
+// väljästi, jotta kaupungit ja reitit mahtuvat, ja suurimmat järvet —
+// Saimaa, Päijänne, Oulujärvi ja Inarijärvi — on piirretty vetenä maan
+// sisään (map.lakes). Savonlinna on Saimaan saarikaupunki, jonne pääsee
+// vain järven laivareittejä pitkin, kuten höyrylaivojen aikaan.
+
+const FI_MAP = {
+  width: 1000,
+  height: 1000,
+  mainlandPoints: [
+    // Etelärannikko lännestä itään
+    [300, 935], [380, 922], [460, 917], [520, 900], [600, 890], [668, 878],
+    // Itäraja etelästä pohjoiseen
+    [743, 810], [800, 760], [870, 710], [934, 672], [905, 610], [864, 560],
+    [835, 517], [828, 460], [835, 405], [764, 328], [740, 270], [714, 181],
+    [750, 95], [671, 45],
+    // Pohjoisraja ja käsivarsi
+    [607, 52], [521, 103], [514, 147], [420, 150], [321, 147], [255, 128],
+    [157, 112], [146, 134], [190, 165], [250, 190], [310, 210], [357, 224],
+    // Länsiraja ja Pohjanlahden rannikko pohjoisesta etelään
+    [386, 328], [400, 415], [425, 430], [480, 495], [415, 515], [322, 585],
+    [205, 652], [190, 710], [208, 790], [205, 820], [200, 848], [225, 893],
+  ],
+  alandPoints: [
+    [85, 893], [112, 884], [130, 895], [126, 915], [100, 922], [82, 910],
+  ],
+  // Suurimmat järvet piirretään vetenä maan sisään.
+  lakes: [
+    // Saimaa Savonlinnan saarineen; pohjoinen haara kurottaa kohti Kuopiota.
+    [
+      [688, 780], [678, 750], [682, 720], [695, 700], [715, 690], [735, 700],
+      [750, 715], [765, 712], [772, 730], [768, 752], [755, 768], [758, 788],
+      [745, 802], [725, 810], [708, 808], [695, 796],
+    ],
+    // Päijänne
+    [
+      [500, 810], [492, 780], [498, 750], [510, 738], [522, 752], [518, 782],
+      [512, 810], [506, 822],
+    ],
+    // Oulujärvi
+    [
+      [600, 555], [618, 544], [638, 541], [645, 552], [635, 561], [615, 562],
+    ],
+    // Inarijärvi
+    [
+      [588, 132], [612, 120], [640, 124], [658, 140], [642, 154], [616, 152],
+      [598, 145],
+    ],
+  ],
+};
+
+// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+const FI_CITIES = [
+  {
+    id: 'helsinki', name: 'Helsinki', x: 460, y: 899, start: true, airport: true,
+    la: 'start', lx: 26, ly: 16,
+    // Takaisin Euroopan laudalle.
+    links: [{ pack: 'europe', city: 'helsinki', label: 'Euroopan lauta' }],
+  },
+  {
+    id: 'oulu', name: 'Oulu', x: 498, y: 482, start: true, airport: true,
+    la: 'start', lx: 18, ly: 5,
+  },
+
+  // Etelä ja länsi
+  { id: 'turku', name: 'Turku', x: 269, y: 875, la: 'end', lx: -16, ly: -10 },
+  {
+    id: 'maarianhamina', name: 'Maarianhamina', x: 103, y: 905, la: 'middle', lx: 0, ly: 32,
+    // Ruotsinlaiva vie Tukholmaan — Euroopan laudalle.
+    links: [{ pack: 'europe', city: 'tukholma', label: 'Euroopan lauta (laiva Tukholmaan)' }],
+  },
+  { id: 'tampere', name: 'Tampere', x: 376, y: 784, la: 'end', lx: -16, ly: 5 },
+  { id: 'pori', name: 'Pori', x: 236, y: 785, la: 'end', lx: -14, ly: -10 },
+  { id: 'vaasa', name: 'Vaasa', x: 223, y: 647, la: 'start', lx: 16, ly: 5 },
+
+  // Järvi-Suomi ja itä
+  { id: 'jyvaskyla', name: 'Jyväskylä', x: 518, y: 721, la: 'start', lx: 16, ly: -8 },
+  { id: 'lappeenranta', name: 'Lappeenranta', x: 692, y: 822, la: 'middle', lx: 0, ly: 28 },
+  { id: 'savonlinna', name: 'Savonlinna', x: 741, y: 752, la: 'start', lx: 18, ly: 5 },
+  { id: 'kuopio', name: 'Kuopio', x: 656, y: 665, la: 'end', lx: -16, ly: 5 },
+  { id: 'joensuu', name: 'Joensuu', x: 804, y: 690, la: 'start', lx: 16, ly: 5 },
+  { id: 'kajaani', name: 'Kajaani', x: 659, y: 550, la: 'start', lx: 16, ly: -8 },
+
+  // Pohjoinen
+  { id: 'kemi', name: 'Kemi', x: 433, y: 419, la: 'end', lx: -14, ly: -10 },
+  { id: 'rovaniemi', name: 'Rovaniemi', x: 516, y: 353, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'kittila', name: 'Kittilä', x: 457, y: 254, la: 'end', lx: -16, ly: 5 },
+  { id: 'inari', name: 'Inari', x: 598, y: 162, la: 'start', lx: 16, ly: 10 },
+  { id: 'kilpisjarvi', name: 'Kilpisjärvi', x: 164, y: 134, la: 'start', lx: 14, ly: 24 },
+  { id: 'utsjoki', name: 'Utsjoki', x: 609, y: 60, la: 'end', lx: -16, ly: 5 },
+];
+
+// steps = kuinka monta silmälukua reitin kulkeminen vaatii.
+// type 'sea' = laiva- tai lauttareitti; Saimaalla se on järvilaiva.
+const FI_EDGES = [
+  // Etelä-Suomi
+  { a: 'helsinki', b: 'turku', steps: 4 },
+  { a: 'helsinki', b: 'tampere', steps: 3 },
+  { a: 'helsinki', b: 'lappeenranta', steps: 5 },
+  { a: 'turku', b: 'tampere', steps: 3 },
+  { a: 'turku', b: 'pori', steps: 2 },
+  { a: 'pori', b: 'tampere', steps: 3 },
+
+  // Länsirannikko
+  { a: 'pori', b: 'vaasa', steps: 3 },
+  { a: 'vaasa', b: 'oulu', steps: 6 },
+
+  // Järvi-Suomi
+  { a: 'tampere', b: 'jyvaskyla', steps: 3 },
+  { a: 'jyvaskyla', b: 'kuopio', steps: 3 },
+  { a: 'kuopio', b: 'kajaani', steps: 3 },
+  { a: 'kuopio', b: 'joensuu', steps: 3 },
+  { a: 'joensuu', b: 'kajaani', steps: 4 },
+  { a: 'lappeenranta', b: 'joensuu', steps: 4 },
+
+  // Pohjoinen
+  { a: 'oulu', b: 'kajaani', steps: 4 },
+  { a: 'oulu', b: 'kemi', steps: 2 },
+  { a: 'kemi', b: 'rovaniemi', steps: 2 },
+  { a: 'rovaniemi', b: 'kittila', steps: 3 },
+  { a: 'rovaniemi', b: 'inari', steps: 4 },
+  { a: 'kittila', b: 'inari', steps: 4 },
+  { a: 'kittila', b: 'kilpisjarvi', steps: 6 },
+  { a: 'inari', b: 'utsjoki', steps: 2 },
+
+  // Laivareitit: rannikko, saaristo ja Saimaan järvilaivat
+  { a: 'helsinki', b: 'maarianhamina', steps: 4, type: 'sea', via: [[390, 945], [290, 940], [180, 935]] },
+  { a: 'turku', b: 'maarianhamina', steps: 2, type: 'sea', via: [[195, 905], [150, 902]] },
+  { a: 'kuopio', b: 'savonlinna', steps: 3, type: 'sea', via: [[700, 705], [720, 725]] },
+  { a: 'savonlinna', b: 'lappeenranta', steps: 2, type: 'sea', via: [[735, 790], [712, 808]] },
+];
+
+// Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
+const FI_AIR_ROUTES = [
+  { a: 'helsinki', b: 'oulu' },
+  { a: 'helsinki', b: 'rovaniemi' },
+  { a: 'oulu', b: 'rovaniemi' },
+];
+
+const SUOMI = {
+  id: 'suomi',
+  name: 'Lapin kulta',
+  boardLabel: 'Suomi',
+  tagline: 'Kierrä Suomi järviltä tuntureille ja huuhdo Lapin kulta.',
+  ariaLabel: 'Suomen aarrekartta',
+
+  map: {
+    ...FI_MAP,
+    outlines: [FI_MAP.mainlandPoints, FI_MAP.alandPoints],
+    lakes: FI_MAP.lakes,
+  },
+  cities: FI_CITIES,
+  edges: FI_EDGES,
+  airRoutes: FI_AIR_ROUTES,
+  // Maarianhamina on Ahvenanmaan saarella ja Savonlinna Saimaan saarilla.
+  islands: ['maarianhamina', 'savonlinna'],
+  minCityDistance: 60,
+
+  tokens: {
+    // Spektroliitti on Suomen oma jalokivi: sitä löytyy vain Ylämaalta.
+    types: themedTokenTypes({
+      star: { name: 'Lapin kulta' },
+      topaz: { name: 'Spektroliitti', color: '#4a6fb3' },
+    }),
+    counts: { star: 1, horseshoe: 2, robber: 2, ruby: 2, emerald: 3, topaz: 4, empty: 3 },
+  },
+
+  questions: SUOMI_QUESTIONS,
+  placeFacts: SUOMI_FACTS,
+
+  // Rosvon kaksintaistelukysymykset.
+  duels: [
+    {
+      q: 'Kuinka monta järveä Suomessa on virallisen laskutavan mukaan?',
+      options: ['noin 188 000', 'noin 1 800', 'noin 18 000', 'noin 88 000', 'noin 250 000', 'noin 500 000', 'noin miljoona', 'noin 8 000'],
+      correct: 0,
+      fact: 'Vähintään viiden aarin kokoisia järviä on laskettu 187 888 — siitä nimitys tuhansien järvien maa.',
+    },
+    {
+      q: 'Mikä on Suomen korkein tunturi?',
+      options: ['Halti', 'Saana', 'Ylläs', 'Levi', 'Pallastunturi', 'Ounastunturi', 'Koli', 'Ruka'],
+      correct: 0,
+      fact: 'Halti (1 324 m) on Käsivarren erämaassa Kilpisjärven lähellä; sen korkein huippu jää Norjan puolelle.',
+    },
+    {
+      q: 'Minä vuonna Suomi itsenäistyi?',
+      options: ['1917', '1905', '1918', '1920', '1809', '1863', '1939', '1944'],
+      correct: 0,
+      fact: 'Eduskunta hyväksyi itsenäisyysjulistuksen 6. joulukuuta 1917 — päivää juhlitaan itsenäisyyspäivänä.',
+    },
+    {
+      q: 'Mikä näistä on Suomen kansalliseepos?',
+      options: ['Kalevala', 'Edda', 'Nibelungeinlaulu', 'Beowulf', 'Kanteletar', 'Seitsemän veljestä', 'Tuntematon sotilas', 'Egilin saaga'],
+      correct: 0,
+      fact: 'Elias Lönnrot kokosi Kalevalan karjalaisista ja suomalaisista kansanrunoista; se ilmestyi 1835 ja laajempana 1849.',
+    },
+    {
+      q: 'Mistä Lapin kultaryntäys alkoi 1800-luvun lopulla?',
+      options: ['Ivalojoelta', 'Tornionjoelta', 'Ounasjoelta', 'Kemijoelta', 'Tenojoelta', 'Oulujoelta', 'Kymijoelta', 'Vantaanjoelta'],
+      correct: 0,
+      fact: 'Ivalojoen kultaryntäys alkoi 1870 — parhaimmillaan joen törmillä asui satoja kullankaivajia. Huuhdontaperinne elää Lapissa yhä.',
+    },
+    {
+      q: 'Mikä suomalainen sana on lainattu kymmeniin kieliin sellaisenaan?',
+      options: ['sauna', 'sisu', 'kahvi', 'järvi', 'revontuli', 'poro', 'salmiakki', 'löyly'],
+      correct: 0,
+      fact: 'Sauna on tunnetuin suomen kielen lainasana maailmalla. Suomessa saunoja on enemmän kuin henkilöautoja.',
+    },
+  ],
+
+  texts: {
+    intro: 'Peli alkaa! Etsikää Lapin kulta ja palatkaa Helsinkiin tai Ouluun.',
+    starFound: (name, city) => `★ ${name} löysi LAPIN KULLAN: ${city}!`,
+    starToast: 'LAPIN KULTA!',
+    starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
+    winStar: 'toi Lapin kullan turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Lapin kullan kotiin ${money} punnan kanssa.`,
+  },
+
+  decor: {
+    mapLabel: 'SUOMI',
+    mapLabelPos: { x: 250, y: 470 },
+    compass: { x: 140, y: 300, r: 58 },
+    waveSkip: [
+      { x: 250, y: 470, r: 140 },
+      { x: 140, y: 300, r: 100 },
+      { x: 150, y: 560, r: 90 },
+      { x: 150, y: 975, r: 110 },
+    ],
+    ship: { x: 150, y: 560 },
+    serpent: { x: 150, y: 975 },
+    // Nopan lepopaikka: Pohjanlahti kartan vasemmassa laidassa.
+    dieSpot: { x: 0.1, y: 0.45 },
+    // Pohjoisessa tuntureita, muualla metsää.
+    terrainBands: [
+      { maxY: 310, kind: 'mountains' },
+      { maxY: Infinity, kind: 'trees' },
     ],
   },
 };
@@ -12254,7 +13260,10 @@ const IST_CITIES = [
     id: 'lentoasema', name: 'Lentoasema', x: 80, y: 120, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Takaisin Lähi-idän laudalle.
-    links: [{ pack: 'middleeast', city: 'istanbul', label: 'Lähi-idän lauta' }],
+    links: [
+      { pack: 'middleeast', city: 'istanbul', label: 'Lähi-idän lauta' },
+      { pack: 'europe', city: 'istanbul', label: 'Euroopan lauta' },
+    ],
   },
   {
     id: 'sabihagokcen', name: 'Sabiha Gökçen', x: 880, y: 620, start: true, airport: true,
@@ -12327,6 +13336,8 @@ const ISTANBUL = {
   boardLabel: 'Istanbul (kaupunki)',
   tagline: 'Sukella suurkaupunkiin: basaarit, palatsit ja Bosporin lautat.',
   ariaLabel: 'Istanbulin aarrekartta',
+  // Kaupunkilauta: pienemmät solmut, pienemmät nimet ja kortteleita maastona.
+  style: 'city',
 
   map: {
     ...IST_MAP,
@@ -12413,8 +13424,10 @@ const ISTANBUL = {
     ship: { x: 250, y: 845 },
     // Nopan lepopaikka: Marmaranmeri laudan alalaidassa keskellä.
     dieSpot: { x: 0.5, y: 0.9 },
-    // Kaupunkilaudalla maastomerkit ovat puistojen puita.
+    // Kaupunkilaudalla maasto on kortteleita; rannoilla ja ylängöillä puita.
     terrainBands: [
+      { maxY: 260, kind: 'trees' },
+      { maxY: 720, kind: 'houses' },
       { maxY: Infinity, kind: 'trees' },
     ],
   },
@@ -12427,7 +13440,7 @@ const ISTANBUL = {
 
 const PACKS = [
   MAAILMA, AFRICA, EUROPE, ASIA, OCEANIA, NORTHAMERICA, SOUTHAMERICA, MIDDLE_EAST,
-  ISTANBUL,
+  SUOMI, ISTANBUL,
 ];
 
 function packById(id) {
@@ -13412,6 +14425,11 @@ function drawLand(svg, map) {
     el('path', { d, class: 'land' }, g);
     el('path', { d, class: 'coast' }, g);
   }
+  for (const lake of map.lakes ?? []) {
+    const d = smoothClosedPath(lake);
+    el('path', { d, class: 'lake' }, g);
+    el('path', { d, class: 'coast' }, g);
+  }
 }
 
 // --- geometria: missä on merta, missä tyhjää maata ------------------------
@@ -13442,11 +14460,14 @@ function distanceToPolygon([px, py], poly) {
 }
 
 function onLand(p, map) {
-  return map.outlines.some((outline) => pointInPolygon(p, outline));
+  if (!map.outlines.some((outline) => pointInPolygon(p, outline))) return false;
+  // Järvet ovat vettä maan sisällä (map.lakes) — esimerkiksi Saimaa tai Inari.
+  return !(map.lakes ?? []).some((lake) => pointInPolygon(p, lake));
 }
 
 function coastDistance(p, map) {
-  return map.outlines.reduce((best, outline) => Math.min(best, distanceToPolygon(p, outline)), Infinity);
+  const shores = [...map.outlines, ...(map.lakes ?? [])];
+  return shores.reduce((best, outline) => Math.min(best, distanceToPolygon(p, outline)), Infinity);
 }
 
 /** Ruudukon pisteet merellä, riittävän kaukana rannikosta. */
@@ -13524,6 +14545,17 @@ const TERRAIN_MARKS = {
   mountains(mark, x, y) {
     el('path', {
       d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
+      class: 'terrain-mark',
+    }, mark);
+  },
+  // Kaupunkilaudan korttelit: kaksi pientä taloa harjakattoineen.
+  houses(mark, x, y) {
+    el('path', {
+      d: `M${x - 13},${y + 7} L${x - 13},${y - 1} L${x - 7},${y - 7} L${x - 1},${y - 1} L${x - 1},${y + 7} Z`,
+      class: 'terrain-mark',
+    }, mark);
+    el('path', {
+      d: `M${x + 3},${y + 7} L${x + 3},${y + 1} L${x + 8},${y - 4} L${x + 13},${y + 1} L${x + 13},${y + 7} Z`,
       class: 'terrain-mark',
     }, mark);
   },
@@ -13854,17 +14886,20 @@ class Game {
     this.worlds = new Map();
     this.enterWorld(pack);
 
+    // Ilman aloituskaupunkia (start: null) lähtöpiste valitaan kartalta
+    // pelin alussa; nappula odottaa sitä ensimmäisessä aloituskaupungissa.
+    const firstStart = pack.cities.find((c) => c.start);
     this.players = players.map((p, i) => ({
       id: i,
       name: p.name,
       color: p.color,
       isBot: !!p.isBot,
-      start: p.start,
+      start: p.start ?? null,
       packId: pack.id,
       // 'easy' = helpot kysymykset (esim. lapsipelaajalle), 'normal' = tavalliset
       quizLevel: p.quizLevel === 'easy' ? 'easy' : 'normal',
       money: START_MONEY,
-      pos: { type: 'city', city: p.start },
+      pos: { type: 'city', city: p.start ?? firstStart.id },
       hasStar: false,
       horseshoes: 0,
       finds: [], // löydetyt laatat tyyppeinä
@@ -13892,7 +14927,45 @@ class Game {
     if (this.roaming) {
       this.say(null, 'Vaellus: peli ei pääty — kerää löytöjä ja jatka porttikaupungeista uusille laudoille.');
     }
+    // Vaellus alkaa lähtöpisteen valinnalla, jos sitä ei ole annettu valmiiksi.
+    // Matkaaja seisoo Lontoossa (laudan ensimmäisessä aloituskaupungissa)
+    // lentolippu kädessään; ensimmäinen kohde valitaan kartalta ilmaiseksi.
+    if (this.roaming && this.players.some((p) => !p.start)) {
+      this.phase = 'pickstart';
+      this.say(null, `Matka alkaa: ${this.cityOf().name} odottaa lähtijää. Valitse ensimmäinen kohde kartalta — lippu on jo maksettu.`);
+    } else {
+      this.beginTurn();
+    }
+  }
+
+  /**
+   * Lähtöpisteen valinta pelin alussa. Valinta on ilmainen: pelaaja voi jäädä
+   * valittuun kaupunkiin maailmankartalle tai astua sen portin läpi suoraan
+   * toiselle laudalle (linkIndex osoittaa kaupungin links-listaan).
+   */
+  actionPickStart(cityId, linkIndex = null) {
+    if (this.phase !== 'pickstart') return { ok: false, error: 'Lähtöpiste on jo valittu' };
+    const city = this.board.cityById.get(cityId);
+    if (!city) return { ok: false, error: 'Tuntematon kaupunki' };
+    const p = this.player;
+    const link = linkIndex === null ? null : (city.links ?? [])[linkIndex];
+    if (linkIndex !== null && !link) return { ok: false, error: 'Täältä ei ole tuota porttia' };
+
+    if (link) {
+      const target = packById(link.pack);
+      this.enterWorld(target);
+      p.packId = target.id;
+      p.pos = { type: 'city', city: link.city };
+      p.start = link.city;
+      this.say(p.id, `${p.name} aloittaa matkansa: ${link.label}.`);
+    } else {
+      p.pos = { type: 'city', city: city.id };
+      p.start = city.id;
+      this.say(p.id, `${p.name} aloittaa matkansa kaupungista ${city.name}.`);
+    }
+    this.phase = 'action';
     this.beginTurn();
+    return { ok: true };
   }
 
   /** Luo laudan tilan, kun sille saavutaan ensimmäistä kertaa. */
@@ -14131,7 +15204,8 @@ class Game {
     const canTravel = this.travelModes(p).some((m) => m !== 'stay');
     if (!canTravel) return true;
 
-    const racingHome = p.hasStar || (this.starFound && p.horseshoes > 0);
+    // Vaelluksessa kotiin ei tarvitse ehtiä, joten tavoitteita ovat aina laatat.
+    const racingHome = !this.roaming && (p.hasStar || (this.starFound && p.horseshoes > 0));
     const goals = racingHome
       ? new Set(this.players.map((pl) => pl.start))
       : new Set(this.tokens.keys());
@@ -15086,36 +16160,91 @@ class UI {
   drawBoardFor(pack) {
     this.drawnPackId = pack.id;
     this.svg.setAttribute('aria-label', pack.ariaLabel);
+    this.svg.dataset.style = pack.style ?? 'map';
     document.body.dataset.pack = pack.id;
     this.drawBoard();
     this.fitViewBox();
   }
 
+  /**
+   * Pelisisällön rajauslaatikko: kaupungit nimineen, reitit, lentokaaret ja
+   * koristeet. Näkymä sovitetaan tähän eikä koko karttapohjaan, jolloin lauta
+   * näkyy mahdollisimman suurena eikä tyhjää merta jää reunoille.
+   */
+  boardBounds() {
+    const { board, pack } = this.game;
+    if (pack.map.frame) return pack.map.frame;
+
+    const pts = [];
+    const charWidth = 9.5; // karkea arvio nimikirjaimen leveydestä
+    for (const c of board.cities) {
+      pts.push([c.x - 34, c.y - 34], [c.x + 34, c.y + 34]);
+      const w = c.name.length * charWidth;
+      const anchor = c.la ?? 'middle';
+      const lx = c.x + (c.lx ?? 0);
+      const ly = c.y + (c.ly ?? -(c.start ? 28 : 19));
+      const x0 = anchor === 'start' ? lx : anchor === 'end' ? lx - w : lx - w / 2;
+      pts.push([x0, ly - 18], [x0 + w, ly + 6]);
+    }
+    for (const e of board.edges) {
+      for (const p of e.poly) pts.push(p);
+    }
+    for (const route of this.game.airRoutes) {
+      const a = board.cityById.get(route.a);
+      const b = board.cityById.get(route.b);
+      pts.push([(a.x + b.x) / 2 + (b.y - a.y) * 0.12, (a.y + b.y) / 2 - (b.x - a.x) * 0.12]);
+    }
+    const d = pack.decor;
+    pts.push(
+      [d.compass.x - d.compass.r - 14, d.compass.y - d.compass.r - 26],
+      [d.compass.x + d.compass.r + 14, d.compass.y + d.compass.r + 14],
+    );
+    pts.push([d.mapLabelPos.x - 110, d.mapLabelPos.y - 34], [d.mapLabelPos.x + 110, d.mapLabelPos.y + 60]);
+    if (d.ship) pts.push([d.ship.x - 62, d.ship.y - 56], [d.ship.x + 62, d.ship.y + 46]);
+    if (d.serpent) pts.push([d.serpent.x - 96, d.serpent.y - 26], [d.serpent.x + 96, d.serpent.y + 30]);
+
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const [x, y] of pts) {
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+    const pad = 12;
+    return { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
+  }
+
   destroy() {
     clearTimeout(this.botTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
+    for (const timer of Object.values(this.typeTimers ?? {})) clearInterval(timer);
     this.stopQuizTimer();
     this.observer?.disconnect();
   }
 
   /**
-   * Venyttää näkymäikkunan ruudun muotoiseksi, jolloin pergamentti täyttää
-   * koko alueen ja pelialue pysyy silti kokonaan näkyvissä.
-   */
-  /**
-   * Näkymäikkuna venytetään kartta-alueen muotoiseksi, jolloin pergamentti
-   * täyttää koko alueen ja pelialue pysyy kokonaan näkyvissä. Kartta on
-   * staattinen: sitä ei zoomata eikä raahata, joten kaikki on aina esillä.
+   * Sovittaa näkymän pelisisällön rajauslaatikkoon ja venyttää sen ruudun
+   * muotoiseksi, jolloin pergamentti täyttää koko alueen ja pelialue näkyy
+   * mahdollisimman suurena. Kartta on staattinen: sitä ei zoomata eikä
+   * raahata, joten kaikki on aina esillä.
    */
   fitViewBox() {
     const pane = this.svg.parentElement;
     const w = pane.clientWidth;
     const h = pane.clientHeight;
     if (!w || !h) return;
-    const size = 1000;
-    const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
+    const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
+    const scale = Math.min(w / box.w, h / box.h);
+    const vw = w / scale;
+    const vh = h / scale;
     this.viewBoxSize = { vw, vh };
-    this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
+    this.svg.setAttribute(
+      'viewBox',
+      `${box.x + box.w / 2 - vw / 2} ${box.y + box.h / 2 - vh / 2} ${vw} ${vh}`,
+    );
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
   }
@@ -15173,6 +16302,7 @@ class UI {
   drawBoard() {
     const { board, pack } = this.game;
     const { decor } = pack;
+    this.contentBox = this.boardBounds();
     this.svg.textContent = '';
 
     drawDefs(this.svg);
@@ -15230,10 +16360,11 @@ class UI {
       }
     }
 
-    // Laivamatkojen hinnat erikseen, jotta teksti pysyy terävänä.
+    // Vakiohinta kerrotaan kerran kartan selitteessä; reitille merkitään
+    // hinta vain, jos se poikkeaa vakiosta. Näin meri pysyy siistinä.
     const fares = el('g', { class: 'fares' }, root);
     for (const e of board.edges) {
-      if (e.type !== 'sea') continue;
+      if (e.type !== 'sea' || e.fee === SEA_FARE) continue;
       const mid = pointAlong(e.poly, 0.5);
       el('text', {
         x: mid.x,
@@ -15245,11 +16376,26 @@ class UI {
       }, fares).textContent = `⚓${e.fee}`;
     }
 
+    // Selite kartan otsikon alle: mitä matkustaminen maksaa tällä laudalla.
+    const legendParts = [];
+    if (board.edges.some((e) => e.type === 'sea')) legendParts.push(`⚓ laiva ${SEA_FARE} p`);
+    if (pack.airRoutes.length) legendParts.push(`✈ lento ${FLIGHT_PRICE} p`);
+    if (legendParts.length) {
+      el('text', {
+        x: decor.mapLabelPos.x,
+        y: decor.mapLabelPos.y + 44,
+        class: 'map-legend',
+        'text-anchor': 'middle',
+      }, root).textContent = legendParts.join('  ·  ');
+    }
+
     // Kaupungit ja nimet.
     const cities = el('g', { class: 'cities' }, root);
+    // Kaupunkilaudalla solmut ovat pienempiä: mittakaava on kortteleissa.
+    const nodeScale = pack.style === 'city' ? 0.82 : 1;
     for (const c of board.cities) {
       const wobble = `rotate(${vary(`city:rot:${c.id}`, 12).toFixed(1)} ${c.x} ${c.y})`;
-      const base = c.start ? 20 : 11.6;
+      const base = (c.start ? 20 : 11.6) * nodeScale;
       const rx = base + vary(`city:rx:${c.id}`, 0.7);
       const ry = base + vary(`city:ry:${c.id}`, 0.7);
       if (c.start) {
@@ -15332,6 +16478,26 @@ class UI {
   drawTargets() {
     const { game } = this;
     this.targetLayer.textContent = '';
+
+    // Lähtöpisteen valinta: kaikki kaupungit ovat napautettavia.
+    if (game.phase === 'pickstart') {
+      for (const c of game.board.cities) {
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
+        el('circle', {
+          cx: c.x,
+          cy: c.y,
+          r: c.start ? 27 : 22,
+          class: `target-ring${this.pendingStart === c.id ? ' picked' : ''}`,
+        }, g);
+        g.addEventListener('click', () => {
+          this.pendingStart = c.id;
+          this.render();
+        });
+      }
+      return;
+    }
+
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
@@ -15451,6 +16617,36 @@ class UI {
 
     const p = game.player;
     this.dieEl.hidden = true; // silmäluku näkyy laudalla olevassa nopassa
+
+    // Lähtöpisteen valinta: kaupungin napautus kartalla avaa porttivaihtoehdot.
+    if (game.phase === 'pickstart') {
+      const cityId = this.pendingStart;
+      const city = cityId ? game.board.cityById.get(cityId) : null;
+      if (!city) {
+        const here = game.cityOf();
+        this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — valitse ensimmäinen kohde kartalta.`;
+        this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
+        return;
+      }
+      this.turnStatus.textContent = `${city.name} — minne astut?`;
+      this.hint.textContent = 'Ensimmäinen matka on ilmainen.';
+      (city.links ?? []).forEach((link, i) => {
+        const btn = html('button', i === 0 ? 'primary' : '', `🧭 ${link.label}`);
+        btn.addEventListener('click', () => {
+          this.pendingStart = null;
+          sfx.play('flight');
+          this.doAction(() => game.actionPickStart(cityId, i));
+        });
+        this.actionsEl.appendChild(btn);
+      });
+      const stayBtn = html('button', city.links?.length ? '' : 'primary', '🌍 Jää maailmankartalle');
+      stayBtn.addEventListener('click', () => {
+        this.pendingStart = null;
+        this.doAction(() => game.actionPickStart(cityId));
+      });
+      this.actionsEl.appendChild(stayBtn);
+      return;
+    }
 
     if (p.isBot) {
       this.turnStatus.textContent = `${p.name} miettii…`;
@@ -15581,6 +16777,15 @@ class UI {
    */
   renderFact() {
     const { game } = this;
+    if (game.phase === 'pickstart') {
+      if (this.factKey === 'pickstart') return;
+      this.factKey = 'pickstart';
+      this.factPlace.textContent = 'Lontoo — matkan alku';
+      this.typeText(this.factText, 'Vanha herra vetää puvuntakin suoraksi, nostaa '
+        + 'matkalaukkunsa ja ostaa lentolipun. Vanha kartta kädessä hän lähtee '
+        + 'katsomaan, millaiseksi maailma on muuttunut.');
+      return;
+    }
     const player = game.player;
     const city = this.factCity(player.pos);
     const facts = game.pack.placeFacts[city.id];
@@ -15595,9 +16800,10 @@ class UI {
 
     const onRoute = player.pos.type === 'edge';
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
-    this.factText.textContent = text;
     const source = this.sourceLine(factSource(fact));
-    if (source) this.factText.appendChild(source);
+    this.typeText(this.factText, text, 'fact', () => {
+      if (source) this.factText.appendChild(source);
+    });
 
     // Uusi tieto häivähtää esiin, jotta vaihdoksen huomaa.
     this.factText.classList.remove('fact-in');
@@ -15653,9 +16859,9 @@ class UI {
     if (!this.winnerDialog.open) sfx.play('win');
     const w = this.game.winner;
     document.getElementById('winner-title').textContent = `🏆 ${w.name} voitti!`;
-    document.getElementById('winner-text').textContent = w.hasStar
+    this.typeText(document.getElementById('winner-text'), w.hasStar
       ? this.game.pack.texts.winnerStar(w.name, w.money)
-      : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`;
+      : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`, 'winner');
     const roamBtn = document.getElementById('winner-roam');
     roamBtn.onclick = () => {
       this.winnerDialog.close();
@@ -15682,7 +16888,11 @@ class UI {
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
     this.quizCity.textContent = `${city.name} — ${game.player.name}${hardTag}`;
-    this.quizQuestion.textContent = quiz.question;
+    // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
+    if (this.typedQuizFor !== quiz) {
+      this.typedQuizFor = quiz;
+      this.typeText(this.quizQuestion, quiz.question, 'quiz');
+    }
     this.quizOptions.textContent = '';
 
     quiz.options.forEach((text, i) => {
@@ -15769,7 +16979,10 @@ class UI {
     const p = game.player;
 
     this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
-    this.quizQuestion.textContent = duel.question;
+    if (this.typedQuizFor !== duel) {
+      this.typedQuizFor = duel;
+      this.typeText(this.quizQuestion, duel.question, 'quiz');
+    }
     this.quizOptions.textContent = '';
 
     duel.options.forEach((text, i) => {
@@ -16080,6 +17293,33 @@ class UI {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  /**
+   * Kirjoituskone: teksti naksuu ruudulle sana kerrallaan kuin vanhalla
+   * matkakirjoituskoneella. Sama paikka (slot) keskeyttää edellisen
+   * kirjoituksen, jotta tekstit eivät sekoitu keskenään. Liikkeen
+   * vähennystä toivovalle teksti ilmestyy kerralla.
+   */
+  typeText(target, text, slot = 'fact', done = null) {
+    this.typeTimers ??= {};
+    clearInterval(this.typeTimers[slot]);
+    if (this.reducedMotion) {
+      target.textContent = text;
+      done?.();
+      return;
+    }
+    const words = String(text).split(' ');
+    let shown = 0;
+    target.textContent = '';
+    this.typeTimers[slot] = setInterval(() => {
+      shown++;
+      target.textContent = words.slice(0, shown).join(' ');
+      if (shown >= words.length) {
+        clearInterval(this.typeTimers[slot]);
+        done?.();
+      }
+    }, 50);
+  }
+
   showError(message) {
     this.errorEl.textContent = message;
     this.errorEl.hidden = false;
@@ -16272,15 +17512,14 @@ class UI {
 // ===== js/main.js =====
 // Käynnistys: aloitusruutu, pelin luonti, tallennus ja dialogit.
 
-const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
+const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.20';
+const APP_VERSION = '2026-07-27.1';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
-const boardSelect = document.getElementById('board-select');
-const countSelect = document.getElementById('player-count');
-const playerSetup = document.getElementById('player-setup');
+const nameInput = document.getElementById('player-name');
+const levelSelect = document.getElementById('player-level');
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
 
@@ -16317,91 +17556,18 @@ function clearSave() {
 }
 
 // --- aloitusruutu ----------------------------------------------------------
+//
+// Peli on yksin pelattava vaellus: aloitusruudussa kysytään vain nimi ja
+// kysymysten taso, ja matka alkaa aina maailmankartalta, jolta lähtöpiste
+// valitaan ilmaiseksi.
 
-for (const pack of PACKS) {
-  const opt = document.createElement('option');
-  opt.value = pack.id;
-  opt.textContent = pack.boardLabel;
-  boardSelect.appendChild(opt);
-}
-
-function selectedPack() {
-  return packById(boardSelect.value);
-}
-
-/** Laudan vaihto päivittää otsikon, kuvaustekstin ja aloituskaupungit. */
-function updateBoardChoice() {
-  const pack = selectedPack();
-  document.getElementById('setup-title').textContent = pack.name;
-  document.getElementById('setup-tagline').textContent = pack.tagline;
-  buildPlayerRows();
-}
-
-function buildPlayerRows() {
-  const count = Number(countSelect.value);
-  const startCities = selectedPack().cities.filter((c) => c.start);
-  document.getElementById('roam-note').hidden = count !== 1;
-  playerSetup.textContent = '';
-  for (let i = 0; i < count; i++) {
-    const row = document.createElement('div');
-    row.className = 'setup-row';
-
-    const dot = document.createElement('span');
-    dot.className = 'dot';
-    dot.style.background = COLORS[i];
-    row.appendChild(dot);
-
-    const name = document.createElement('input');
-    name.type = 'text';
-    name.value = `Pelaaja ${i + 1}`;
-    name.maxLength = 16;
-    name.dataset.role = 'name';
-    row.appendChild(name);
-
-    const start = document.createElement('select');
-    start.dataset.role = 'start';
-    for (const city of startCities) {
-      const opt = document.createElement('option');
-      opt.value = city.id;
-      opt.textContent = city.name;
-      start.appendChild(opt);
-    }
-    start.value = startCities[i % startCities.length].id;
-    row.appendChild(start);
-
-    const level = document.createElement('select');
-    level.dataset.role = 'level';
-    level.title = 'Kysymysten vaikeustaso';
-    for (const [value, label] of [['normal', 'tavalliset'], ['easy', 'helpot']]) {
-      const opt = document.createElement('option');
-      opt.value = value;
-      opt.textContent = label;
-      level.appendChild(opt);
-    }
-    row.appendChild(level);
-
-    const botLabel = document.createElement('label');
-    botLabel.className = 'bot-label';
-    const bot = document.createElement('input');
-    bot.type = 'checkbox';
-    bot.dataset.role = 'bot';
-    bot.checked = i > 0;
-    botLabel.appendChild(bot);
-    botLabel.appendChild(document.createTextNode('botti'));
-    row.appendChild(botLabel);
-
-    playerSetup.appendChild(row);
-  }
-}
-
-function readPlayers() {
-  return [...playerSetup.querySelectorAll('.setup-row')].map((row, i) => ({
-    name: row.querySelector('[data-role="name"]').value.trim() || `Pelaaja ${i + 1}`,
-    start: row.querySelector('[data-role="start"]').value,
-    isBot: row.querySelector('[data-role="bot"]').checked,
-    quizLevel: row.querySelector('[data-role="level"]').value,
-    color: COLORS[i],
-  }));
+function readPlayer() {
+  return {
+    name: nameInput.value.trim() || 'Matkaaja',
+    start: null, // lähtöpiste valitaan maailmankartalta
+    quizLevel: levelSelect.value,
+    color: PLAYER_COLOR,
+  };
 }
 
 function attach(game) {
@@ -16413,13 +17579,12 @@ function attach(game) {
 
 function startGame() {
   clearSave();
-  attach(new Game({ players: readPlayers(), pack: selectedPack() }));
+  attach(new Game({ players: [readPlayer()], pack: packById('maailma') }));
 }
 
 function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
-  updateBoardChoice();
   setupDialog.showModal();
 }
 
@@ -16444,8 +17609,6 @@ document.addEventListener('pointerdown', (event) => {
   if (button && !button.classList.contains('quiz-option')) sfx.play('click');
 });
 
-boardSelect.addEventListener('change', updateBoardChoice);
-countSelect.addEventListener('change', buildPlayerRows);
 setupForm.addEventListener('submit', () => {
   // Dialogin sulkeutuminen tapahtuu selaimen toimesta; peli luodaan sen jälkeen.
   setTimeout(startGame, 0);

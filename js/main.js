@@ -3,17 +3,16 @@
 import { Game } from './game.js';
 import { UI } from './ui.js';
 import { sfx } from './sound.js';
-import { PACKS, packById } from './pack.js';
+import { packById } from './pack.js';
 
-const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
+const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.20';
+const APP_VERSION = '2026-07-27.1';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
-const boardSelect = document.getElementById('board-select');
-const countSelect = document.getElementById('player-count');
-const playerSetup = document.getElementById('player-setup');
+const nameInput = document.getElementById('player-name');
+const levelSelect = document.getElementById('player-level');
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
 
@@ -50,91 +49,18 @@ function clearSave() {
 }
 
 // --- aloitusruutu ----------------------------------------------------------
+//
+// Peli on yksin pelattava vaellus: aloitusruudussa kysytään vain nimi ja
+// kysymysten taso, ja matka alkaa aina maailmankartalta, jolta lähtöpiste
+// valitaan ilmaiseksi.
 
-for (const pack of PACKS) {
-  const opt = document.createElement('option');
-  opt.value = pack.id;
-  opt.textContent = pack.boardLabel;
-  boardSelect.appendChild(opt);
-}
-
-function selectedPack() {
-  return packById(boardSelect.value);
-}
-
-/** Laudan vaihto päivittää otsikon, kuvaustekstin ja aloituskaupungit. */
-function updateBoardChoice() {
-  const pack = selectedPack();
-  document.getElementById('setup-title').textContent = pack.name;
-  document.getElementById('setup-tagline').textContent = pack.tagline;
-  buildPlayerRows();
-}
-
-function buildPlayerRows() {
-  const count = Number(countSelect.value);
-  const startCities = selectedPack().cities.filter((c) => c.start);
-  document.getElementById('roam-note').hidden = count !== 1;
-  playerSetup.textContent = '';
-  for (let i = 0; i < count; i++) {
-    const row = document.createElement('div');
-    row.className = 'setup-row';
-
-    const dot = document.createElement('span');
-    dot.className = 'dot';
-    dot.style.background = COLORS[i];
-    row.appendChild(dot);
-
-    const name = document.createElement('input');
-    name.type = 'text';
-    name.value = `Pelaaja ${i + 1}`;
-    name.maxLength = 16;
-    name.dataset.role = 'name';
-    row.appendChild(name);
-
-    const start = document.createElement('select');
-    start.dataset.role = 'start';
-    for (const city of startCities) {
-      const opt = document.createElement('option');
-      opt.value = city.id;
-      opt.textContent = city.name;
-      start.appendChild(opt);
-    }
-    start.value = startCities[i % startCities.length].id;
-    row.appendChild(start);
-
-    const level = document.createElement('select');
-    level.dataset.role = 'level';
-    level.title = 'Kysymysten vaikeustaso';
-    for (const [value, label] of [['normal', 'tavalliset'], ['easy', 'helpot']]) {
-      const opt = document.createElement('option');
-      opt.value = value;
-      opt.textContent = label;
-      level.appendChild(opt);
-    }
-    row.appendChild(level);
-
-    const botLabel = document.createElement('label');
-    botLabel.className = 'bot-label';
-    const bot = document.createElement('input');
-    bot.type = 'checkbox';
-    bot.dataset.role = 'bot';
-    bot.checked = i > 0;
-    botLabel.appendChild(bot);
-    botLabel.appendChild(document.createTextNode('botti'));
-    row.appendChild(botLabel);
-
-    playerSetup.appendChild(row);
-  }
-}
-
-function readPlayers() {
-  return [...playerSetup.querySelectorAll('.setup-row')].map((row, i) => ({
-    name: row.querySelector('[data-role="name"]').value.trim() || `Pelaaja ${i + 1}`,
-    start: row.querySelector('[data-role="start"]').value,
-    isBot: row.querySelector('[data-role="bot"]').checked,
-    quizLevel: row.querySelector('[data-role="level"]').value,
-    color: COLORS[i],
-  }));
+function readPlayer() {
+  return {
+    name: nameInput.value.trim() || 'Matkaaja',
+    start: null, // lähtöpiste valitaan maailmankartalta
+    quizLevel: levelSelect.value,
+    color: PLAYER_COLOR,
+  };
 }
 
 function attach(game) {
@@ -146,13 +72,12 @@ function attach(game) {
 
 function startGame() {
   clearSave();
-  attach(new Game({ players: readPlayers(), pack: selectedPack() }));
+  attach(new Game({ players: [readPlayer()], pack: packById('maailma') }));
 }
 
 function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
-  updateBoardChoice();
   setupDialog.showModal();
 }
 
@@ -177,8 +102,6 @@ document.addEventListener('pointerdown', (event) => {
   if (button && !button.classList.contains('quiz-option')) sfx.play('click');
 });
 
-boardSelect.addEventListener('change', updateBoardChoice);
-countSelect.addEventListener('change', buildPlayerRows);
 setupForm.addEventListener('submit', () => {
   // Dialogin sulkeutuminen tapahtuu selaimen toimesta; peli luodaan sen jälkeen.
   setTimeout(startGame, 0);
