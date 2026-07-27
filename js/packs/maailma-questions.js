@@ -291,6 +291,32 @@ export const MAAILMA_QUESTIONS = {
     },
   ],
 
+  ateena: [
+    {
+      q: 'Mikä kuuluisa temppelikukkula kohoaa Ateenan keskellä?',
+      options: ['Akropolis', 'Kapitolium', 'Palatinus', 'Olympos'],
+      correct: 0,
+      level: 1,
+      fact: 'Akropoliin Parthenon rakennettiin lähes 2 500 vuotta sitten Athene-jumalattaren kunniaksi.',
+      hint: 'Nimi tarkoittaa yläkaupunkia.',
+    },
+    {
+      q: 'Mikä hallitustapa syntyi antiikin Ateenassa?',
+      options: ['demokratia', 'keisarikunta', 'sulttaanikunta', 'ritarilaitos'],
+      correct: 0,
+      fact: 'Ateenan kansalaiset kokoontuivat äänestämään suoraan — sana tarkoittaa kansanvaltaa.',
+      hint: 'Sana on kreikkaa ja käytössä yhä lähes kaikkialla.',
+    },
+    {
+      q: 'Missä pidettiin nykyajan ensimmäiset olympialaiset vuonna 1896?',
+      options: ['Ateenassa', 'Pariisissa', 'Lontoossa', 'Roomassa'],
+      correct: 0,
+      level: 3,
+      fact: 'Kisat palasivat antiikin juurilleen: ensimmäiset uuden ajan olympialaiset juostiin Ateenan marmoristadionilla.',
+      hint: 'Kisat palasivat sinne, mistä ne olivat alun perin kotoisin.',
+    },
+  ],
+
   general: [
     {
       q: 'Kuinka monta mannerta maapallolla yleensä lasketaan olevan?',
@@ -410,6 +436,10 @@ export const MAAILMA_FACTS = {
   losangeles: [
     'Los Angelesin seudulla puhutaan yli 200 kieltä — se on maailman monikulttuurisimpia kaupunkeja.',
     'Kaupungin nimi oli alun perin espanjaa ja paljon pidempi: El Pueblo de la Reina de los Ángeles.',
+  ],
+  ateena: [
+    'Ateenan metroa kaivettaessa löytyi niin paljon muinaisjäännöksiä, että asemista tehtiin samalla pieniä museoita.',
+    'Akropoliilla on käynyt enemmän ihmisiä kuin antiikin Ateenassa asui koko sen historian aikana.',
   ],
   lontoo: [
     'Lontoossa puhutaan yli 300 kieltä — se on yksi maailman monikulttuurisimmista kaupungeista.',

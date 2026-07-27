@@ -227,6 +227,8 @@ export const SUOMI = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Lapin kullan turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Lapin kullan kotiin ${money} punnan kanssa.`,
+    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
+    diary: 'Karttani sanoo: Suuriruhtinaskunta. Nykyään maa, jossa hallitus toimii verkossa ja järvetkin on laskettu — 187 888, he tarkistivat.',
   },
 
   decor: {

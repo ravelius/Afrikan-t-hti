@@ -7,7 +7,7 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.3';
+const APP_VERSION = '2026-07-27.4';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -56,7 +56,7 @@ function clearSave() {
 
 function readPlayer() {
   return {
-    name: nameInput.value.trim() || 'Matkaaja',
+    name: nameInput.value.trim() || 'Herra Fogg',
     start: null, // lähtöpiste valitaan maailmankartalta
     quizLevel: levelSelect.value,
     color: PLAYER_COLOR,

@@ -110,7 +110,10 @@ const EU_CITIES = [
   { id: 'milano', name: 'Milano', x: 388, y: 698, la: 'start', lx: 16, ly: 5 },
   { id: 'rooma', name: 'Rooma', x: 451, y: 792, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sisilia', name: 'Sisilia', x: 468, y: 891, la: 'end', lx: -16, ly: 5 },
-  { id: 'ateena', name: 'Ateena', x: 667, y: 895, airport: true, la: 'end', lx: -16, ly: 5 },
+  {
+    id: 'ateena', name: 'Ateena', x: 667, y: 895, airport: true, la: 'end', lx: -16, ly: 5,
+    links: [{ pack: 'maailma', city: 'ateena', label: 'Maailma-lauta' }],
+  },
   { id: 'kreeta', name: 'Kreeta', x: 694, y: 964, la: 'middle', lx: 0, ly: 26 },
   { id: 'dubrovnik', name: 'Dubrovnik', x: 560, y: 770, la: 'middle', lx: 0, ly: -22 },
   { id: 'sofia', name: 'Sofia', x: 659, y: 771, la: 'start', lx: 16, ly: 5 },
@@ -304,6 +307,8 @@ export const EUROPE = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Meripihkahuoneen aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Meripihkahuoneen aarteen kotiin ${money} punnan kanssa.`,
+    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
+    diary: 'Kotimantere. Puolet karttani rajoista on väärin, ja loput ylitetään näyttämättä passia. Kukaan ei tarkasta papereitani — en tiedä, olenko helpottunut vai loukkaantunut.',
   },
 
   decor: {
