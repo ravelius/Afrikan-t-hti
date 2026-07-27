@@ -66,9 +66,10 @@ Sävy- ja sisältösäännöt ovat tiedostoissa `docs/tarina.md` ja
    uusi peli alkaa suoraan maailmankartalta (pickstart). `js/main.js`:
    `openSetup()` → luo pelin suoraan (`startGame()`), `index.html`:
    poista `#setup`-dialogi. Nimi on aina "Herra Fogg". Helpot kysymykset
-   (quizLevel 'easy') tarvitsevat uuden kodin: lisää pieni valinta
-   Säännöt-dialogiin ("Helpot kysymykset – esim. lapsipelaajalle",
-   checkbox, tallennetaan localStorageen ja luetaan pelin luonnissa).
+   jätetään toistaiseksi kokonaan pois: pelaaja saa aina tason 'normal'.
+   ÄLÄ poista level-kenttiä kysymyspankeista eikä moottorin tukea
+   (pickQuestion, testit) — taso 1 -kysymykset kuuluvat normaalipakkaan
+   ja helpotustila voidaan palauttaa myöhemmin.
 
 7. **"Vuorossa:" pois yläpalkista.** Yksinpelissä turha. `renderTurnPill`
    (js/ui.js): näytä pillerissä sen sijaan raha ja sijainti:
@@ -203,16 +204,21 @@ Hiotaan nykyiset 10 lautaa ennen uusia. Määrätavoitteet:
 
 ## Paketti 7: pelin nimi uusiksi
 
-Omistaja ei halua nimeen sanaa "tähti". Ehdokkaat (omistaja valitsee,
-ÄLÄ vaihda ennen päätöstä — kerää ehdotukset README-luonnokseen tai
-kysy):
+Omistaja ei halua nimeen sanaa "tähti", ja nimen pitää olla
+kaupallistettavissa. Linjaus: **pelin nimeen ei hahmon nimeä** — oma,
+mieluiten keksitty nimi on tavaramerkkinä vahvin ja helpoin rekisteröidä.
+Herra Fogg pysyy hahmona pelin sisällä (Vernen hahmo on vapaata
+kulttuuriperintöä; ennakkotapaus Inklen kaupallinen 80 Days -peli).
+Ennen kansainvälistä kaupallistamista tehdään tavaramerkkihaku
+peliluokissa (EUIPO, luokat 9/41).
 
-- **Foggin perintö** (suositus: lyhyt, tarinallinen, kertoo mekaniikankin)
+Ehdokkaat (omistaja valitsee, ÄLÄ vaihda ennen päätöstä):
+
+- **Perintökartta** (suositus: oma sana, tarinallinen, ei riskiä)
 - Vanha kartta
-- Perintökartta
 - Punta ja passi
-- Herra Foggin matkassa
 - 150 vuotta myöhässä
+- tai kokonaan keksitty sana (vahvin tavaramerkkinä)
 
 Kun nimi on päätetty, vaihto koskee: `index.html` (title, brand, meta),
 `manifest.webmanifest`, `sw.js` (CACHE-etuliite), `js/main.js`,
