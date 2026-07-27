@@ -49,6 +49,14 @@ const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
+// Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
+const INTRO_SPACE = 0.34;
+// Omistajan päättämä avausteksti. ÄLÄ muokkaa ilman omistajan lupaa
+// (docs/tyolista-opukselle.md, paketti 3).
+const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, '
+  + 'kukkarollinen puntia ja päiväkirja, joka päättyy kesken lauseen.\n\n'
+  + 'Ostin lipun samana iltana.\n\n'
+  + 'Jonkun on kirjoitettava se loppuun.';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -93,6 +101,9 @@ export class UI {
     this.passportGrid = document.getElementById('passport-grid');
     this.passportCount = document.getElementById('passport-count');
     this.passportFinds = document.getElementById('passport-finds');
+
+    this.introEl = document.getElementById('intro');
+    this.introText = document.getElementById('intro-text');
 
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
@@ -193,7 +204,9 @@ export class UI {
    */
   boardBounds() {
     const { board, pack } = this.game;
-    if (pack.map.frame) return pack.map.frame;
+    // Valmiiksi rajattu lauta (esim. Maailma) käyttää omaa kehystään.
+    // Kopio, koska aloitusnäkymä kasvattaa laatikkoa eikä pakkaa saa muuttaa.
+    if (pack.map.frame) return this.withIntroSpace({ ...pack.map.frame });
 
     const pts = [];
     // Karkea arvio nimikirjaimen leveydestä. Aloituskaupungit piirtyvät
@@ -241,7 +254,21 @@ export class UI {
       if (y > maxY) maxY = y;
     }
     const pad = 12;
-    return { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
+    const box = { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
+    // Aloitusnäkymässä pergamenttia jatketaan kartan alapuolelle, jotta
+    // avausteksti mahtuu siihen ja lauta nousee ruudun yläreunaan. Näkymä
+    // keskittää laatikon, joten alaosan kasvattaminen nostaa karttaa ylös.
+    return this.withIntroSpace(box);
+  }
+
+  /**
+   * Aloitusnäkymässä pergamenttia jatketaan kartan alapuolelle avaustekstiä
+   * varten. Näkymä kiinnitetään yläreunaan (fitViewBox), joten kasvatus
+   * nostaa laudan ruudun ylälaitaan ja jättää tekstille tyhjän alaosan.
+   */
+  withIntroSpace(box) {
+    if (this.game.phase !== 'pickstart') return box;
+    return { ...box, h: box.h * (1 + INTRO_SPACE) };
   }
 
   destroy() {
@@ -269,9 +296,14 @@ export class UI {
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
+    // Aloitusnäkymässä lauta kiinnitetään yläreunaan: alapuolelle jäävä
+    // pergamentti on avaustekstiä varten, eikä sitä saa jakaa ylä- ja
+    // alareunan kesken. Muulloin sisältö keskitetään kuten ennen.
+    const alkuun = this.game.phase === 'pickstart';
+    const vy = alkuun ? box.y : box.y + box.h / 2 - vh / 2;
     this.svg.setAttribute(
       'viewBox',
-      `${box.x + box.w / 2 - vw / 2} ${box.y + box.h / 2 - vh / 2} ${vw} ${vh}`,
+      `${box.x + box.w / 2 - vw / 2} ${vy} ${vw} ${vh}`,
     );
     this.placeFactCard(w, h);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
@@ -669,9 +701,8 @@ export class UI {
     // Lähtöpisteen valinta tehdään kartalta yhdellä napautuksella, joten
     // toimintopaneelissa on vain ohje.
     if (game.phase === 'pickstart') {
-      const here = game.cityOf();
-      this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — napauta kohdetta kartalta.`;
-      this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
+      this.turnStatus.textContent = 'Minne ensin?';
+      this.hint.textContent = '';
       return;
     }
 
@@ -990,6 +1021,7 @@ export class UI {
     // Saapumiskortti kuuluu vain offer-vaiheeseen: botin vuorolla ja muissa
     // vaiheissa se suljetaan, jottei se jää roikkumaan kartan päälle.
     if (this.game.phase !== 'offer' || this.game.player.isBot) this.closeArrival();
+    this.renderIntro();
     this.stampPassport();
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
@@ -1054,6 +1086,24 @@ export class UI {
   closeArrival() {
     this.arrivalShownFor = null;
     if (this.arrivalDialog.open) this.arrivalDialog.close();
+  }
+
+  /**
+   * Avausteksti kirjoittuu kartan alapuoliseen tyhjään pergamenttiin.
+   * Teksti on omistajan lukkoon lyömä eikä sitä muokata täällä; se naksuu
+   * esiin kirjoituskoneen tapaan ja väistyy heti kun kohde on valittu.
+   */
+  renderIntro() {
+    const nakyy = this.game.phase === 'pickstart';
+    this.introEl.hidden = !nakyy;
+    if (!nakyy) {
+      this.introShown = false;
+      this.introText.textContent = '';
+      return;
+    }
+    if (this.introShown) return;
+    this.introShown = true;
+    this.typeText(this.introText, INTRO_TEXT, 'intro');
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */

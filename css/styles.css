@@ -726,6 +726,38 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .fare { fill: var(--sea-ink); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
 
+/*
+ * Avausteksti kartan alapuolisessa tyhjässä pergamentissa. Kartta nousee
+ * ruudun yläreunaan (boardBounds jatkaa laatikkoa alaspäin), joten pelaaja
+ * näkee kohteet ja voi napauttaa niitä heti luettuaan tekstin.
+ */
+.intro {
+  position: absolute;
+  left: 50%;
+  /* Tilarivi ("Minne ensin?") kelluu aivan alalaidassa, joten teksti
+     asettuu sen yläpuolelle. */
+  bottom: 3.4rem;
+  transform: translateX(-50%);
+  width: min(560px, 84%);
+  text-align: center;
+  pointer-events: none; /* kartta jää napautettavaksi tekstin takaa */
+  z-index: 3;
+}
+
+.intro-text {
+  margin: 0;
+  color: var(--map-ink);
+  font-size: clamp(0.86rem, 1.5vw, 1.02rem);
+  line-height: 1.6;
+  white-space: pre-line; /* omistajan teksti on kolmena kappaleena */
+  text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9), 0 0 6px rgba(247, 237, 216, 0.75);
+}
+
+@media (max-width: 700px) {
+  .intro { bottom: 3rem; width: 90%; }
+  .intro-text { font-size: 0.82rem; line-height: 1.5; }
+}
+
 /* Pallonpuoliskokartan kehykset ja asteverkko. */
 .hemi-ring {
   fill: none;

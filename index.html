@@ -39,6 +39,13 @@
         <svg id="board" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"
              role="img" aria-label="Afrikan aarrekartta"></svg>
         <div id="board-hint" class="board-hint"></div>
+        <!--
+          Aloitusteksti kirjoittuu kartan alapuolelle jäävään tyhjään
+          pergamenttiin, jotta kohteen voi napauttaa heti luettuaan.
+        -->
+        <section id="intro" class="intro" hidden>
+          <p id="intro-text" class="intro-text"></p>
+        </section>
       </section>
 
       <aside class="rail">
@@ -65,38 +72,6 @@
   </div>
 
   <!-- Aloitusruutu -->
-
-  <!-- Matkan avaus: juoni kerrotaan kerran uuden pelin alussa -->
-  <dialog id="intro-dialog" class="dialog">
-   <div class="dialog-card">
-    <h2>Perintö</h2>
-    <div class="rules-text">
-      <p>Sukukartanon vintiltä löytyi matkalaukku. Sen sisällä oli vuoden 1872
-        maailmankartta, kukkarollinen puntia, vihreä passi ja paksu, kulunut
-        päiväkirja vuodelta 1873.</p>
-      <p>Päiväkirja on <b>isoisän</b>. Hän kiersi maailman kahdeksassakymmenessä
-        päivässä ja merkitsi muistiin kaiken näkemänsä — joet, vuoret, satamat,
-        basaarien tuoksut. Myös sen, mihin hän ei ehtinyt. Niitä sivuja on
-        yllättävän monta.</p>
-      <p>Sinä olet <b>nuori herra Fogg</b>, ja sinä lähdet katsomaan, mikä
-        pitää vielä paikkansa. Osa isoisän maailmasta on kadonnut: rajat ovat
-        toisaalla, valtakunnat hajonneet, punnat museokappaleita. Osa ei ole
-        muuttunut lainkaan — ja juuri niissä kohdin vanha herra osoittautuu
-        hämmentävän usein oikeaan osuneeksi.</p>
-      <p>Jokaisella laudalla on kätketty <b>pääaarre</b>. Aarteita ei osteta
-        rahalla vaan avataan tiedolla: kaupungissa esitetään kysymys, ja oikea
-        vastaus paljastaa mitä maan alla on. Isoisän päiväkirja vihjaa
-        harvakseltaan, mistä suunnasta kannattaa etsiä — muttei koskaan nimeä
-        kaupunkia.</p>
-      <p>Matka ei pääty. Kerää löytöjä, leimoja passiin ja kokemusta niin
-        kauan kuin huvittaa. Ensimmäinen lippu on jo maksettu — napauta
-        maailmankartalta kaupunkia, niin olet siellä.</p>
-    </div>
-    <form method="dialog" class="dialog-actions">
-      <button class="primary" value="start">Lähde matkaan</button>
-    </form>
-   </div>
-  </dialog>
 
   <!-- Saapuminen aarrekaupunkiin -->
   <dialog id="arrival-dialog" class="dialog">
