@@ -73,3 +73,25 @@ export function factText(fact) {
 export function factSource(fact) {
   return typeof fact === 'string' ? [] : sourceList(fact?.source);
 }
+
+// --- kaksi ääntä -----------------------------------------------------------
+//
+// Tietoruudussa puhuu vuorotellen kaksi hahmoa: nuori herra Fogg, joka on
+// matkalla juuri nyt, ja hänen isoisänsä, jonka 1870-luvun päiväkirjaa nuori
+// herra lukee matkalla. Merkitsemätön teksti on nuoren havainto, jolloin
+// vanha sisältö kelpaa sellaisenaan.
+
+export const VOICES = {
+  nuori: 'Nuoren herran havainto',
+  isoisa: 'Isoisän päiväkirjasta, 1873',
+};
+
+/** Kumman äänellä tieto kerrotaan: 'isoisa' vai 'nuori'. */
+export function factVoice(fact) {
+  return typeof fact === 'object' && fact?.voice === 'isoisa' ? 'isoisa' : 'nuori';
+}
+
+/** Äänen otsikkorivi tietoruutuun. */
+export function voiceTitle(voice) {
+  return VOICES[voice] ?? VOICES.nuori;
+}

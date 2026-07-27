@@ -1487,7 +1487,7 @@ body[data-mode='play'] .fact-card {
         <section id="players" class="players" aria-label="Pelaajat"></section>
 
         <section class="card fact-card">
-          <h2>Tiesitkö että…</h2>
+          <h2 id="fact-voice">Matkapäiväkirjasta</h2>
           <p id="fact-place" class="fact-place"></p>
           <p id="fact-text" class="fact-text"></p>
         </section>
@@ -1561,8 +1561,11 @@ body[data-mode='play'] .fact-card {
         Kolmella hevosenkengällä rosvon voi ohittaa kokonaan.</p>
       <p><b>Matkakassa.</b> Matka alkaa 300 punnalla — vanhan maailman valuutta
         kelpaa tässä pelissä yhä kaikkialla.</p>
-      <p><b>Tiesitkö että…</b> Ohjauspaneeli kertoo tietoa siitä paikasta, jossa vuorossa
-        oleva pelaaja on. Tieto vaihtuu kierroksittain.</p>
+      <p><b>Kaksi ääntä.</b> Tietoruutu kertoo siitä paikasta, jossa vuorossa oleva
+        pelaaja on, ja siinä puhuu vuorotellen kaksi ääntä: <b>isoisän päiväkirja</b>
+        vuodelta 1873 ja <b>nuoren herran havainto</b> tästä päivästä. Harvakseltaan
+        päiväkirjasta löytyy taitettu sivu, joka vihjaa laudan pääaarteen suunnasta —
+        muttei koskaan nimeä kaupunkia.</p>
       <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
       <p><b>Päivitys.</b> Yläpalkin <b>Päivitä</b> hakee uusimman version pelistä —
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
@@ -2465,8 +2468,29 @@ const MAAILMA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Magellanin kompassin turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Magellanin kompassin kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Isoisoisä kiersi tämän pallon 80 päivässä ja piti sitä saavutuksena. Nykyään sen tekee vuorokaudessa kuka tahansa. Minä aion käyttää aikaa — katsoakseni, mitä hän ei ehtinyt nähdä.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    diaries: [
+      'Isoisä kiersi tämän pallon kahdeksassakymmenessä päivässä ja piti sitä saavutuksena. Nykyään sen tekee vuorokaudessa kuka tahansa, jolla on varaa lippuun. Minä aion käyttää aikaa — katsoakseni, mitä hän ei ehtinyt nähdä.',
+      'Isoisän kartassa kolmannes maailmasta on väritetty samalla punaisella. Nykyisessä kartassa siinä tilassa on yli viisikymmentä itsenäistä valtiota, joilla kaikilla on oma lippu ja oma mielipide meistä. Päätin olla ottamatta asiaa puheeksi ensimmäisenä iltana.',
+      '"Matkalla tarvitaan kolme asiaa: kello, kartta ja kärsivällisyyttä", isoisä kirjoitti. Minulla on puhelin, joka on kaikki kolme, ja silti eksyn lentokentällä. Hänen listassaan taisi olla neljäs kohta, jota en osaa lukea.',
+      'Isoisä laski matkansa hinnaksi kaksituhatta puntaa ja piti sitä ruhtinaallisena. Sama summa riittää nykyään yhteen lentolippuun ja kohtuulliseen aamiaiseen. Rahassa mitattuna maailma on kutistunut; kaikessa muussa se on kasvanut.',
+      'Ensimmäisellä sivulla lukee: "Lähden selvittämään, onko maailma niin suuri kuin sanotaan." Viimeisellä sivulla lukee: "On." Väliin mahtuu kaksisataa sivua, joista aion tarkistaa jokaisen.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
+    // ei koskaan kaupungin nimeä.
+    starHints: {
+      kairo: 'Suurin joista tulee etelästä ja hajoaa Välimereen kolmiona. Sen suistossa on kaupunki, jonka basaarissa puhuttiin haudatuista kuninkaista. Laivani kääntyi itään ennen kuin ehdin.',
+      rio: 'Päiväntasaajan eteläpuolella, Atlantin länsirannalla, on lahti jota purjehtijat pitivät maailman kauneimpana. Kirjasin sen muistiin ja jatkoin pohjoiseen. Typerää.',
+      mumbai: 'Intian niemimaan länsirannikolla sataa neljä kuukautta yhteen menoon, ja siellä on satama, jonne monsuuni tuo laivat takaisin. Sinne minun olisi pitänyt jäädä odottamaan.',
+      peking: 'Kiinan pohjoisosassa, suuren muurin eteläpuolella, kerrottiin olevan kaupunki jonka keskellä on toinen kaupunki, jonne ei päästetä ketään. Katselin sitä kartalta enkä uskaltanut lähteä.',
+      sydney: 'Eteläisen mantereen kaakkoiskulmassa on luonnonsatama, jota merimiehet ylistivät kolmella mantereella. Purjehdin ohi pimeällä. Kadun sitä yhä.',
+      moskova: 'Kaukana Euroopan tasangon itälaidalla, joen mutkassa, kohoaa sipulikupolien kaupunki. Sinne olisi pitänyt mennä talvella, kun tiet ovat jäässä eivätkä mudassa.',
+      tokio: 'Itäisimmässä saariketjussa, siellä mistä aurinko meille tulee, on pääkaupunki jota kukaan klubilla ei ollut nähnyt omin silmin. Se jäi matkani kaukaisimmaksi puuttuvaksi kohdaksi.',
+      singapore: 'Malaijien niemimaan eteläkärjessä, kapean salmen partaalla, on satama jonka läpi kulkee puoli maailman rahtia. Ohitin sen yöllä enkä noussut kannelle katsomaan.',
+      kapkaupunki: 'Afrikan eteläkärjessä kaksi valtamerta lyö yhteen, ja siellä on kaupunki pöydänmuotoisen vuoren juurella. Näin vuoren kaukaa mereltä. Sen olisi pitänyt riittää houkutukseksi.',
+      losangeles: 'Pohjois-Amerikan länsirannikolla, vuorten kuivalla puolella, kerrottiin kasvavan pikkukaupunkia appelsiinitarhojen keskelle. Pidin kertomusta liioitteluna ja jatkoin matkaa.',
+      ateena: 'Välimeren pohjoisrannalla seisoo kukkulalla marmoritemppeli, joka oli vanha jo roomalaisille. Sen kaupungissa en käynyt: satamaan tuli lastia ja laiva lähti ennen aikojaan.',
+    },
   },
 
   decor: {
@@ -3787,8 +3811,48 @@ const AFRICA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Afrikan tähden turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Afrikan tähden kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Vanha karttani väittää tätä mannerta paikoin tyhjäksi. Piirtäjä ei ilmeisesti vaivautunut kysymään niiltä miljoonilta, jotka asuivat täällä silloinkin.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    diaries: [
+      'Isoisän kartassa tämä manner on paikoin väritetty tyhjäksi. Piirtäjä ei ilmeisesti vaivautunut kysymään niiltä miljoonilta, jotka asuivat täällä jo silloin. Tyhjä kohta kartassa kertoo piirtäjästä, ei maasta.',
+      '"Sisämaahan ei pääse", isoisä kirjoitti kolme kertaa eri sivuille, aina yhtä varmasti. Nousin lentokoneeseen ja olin siellä kahdessa tunnissa. Hänen kolme kuukauttaan ovat nyt aamupäivä.',
+      'Isoisä laski manterella olevan "muutama kymmenen heimoa". Nykyään täällä on 54 itsenäistä valtiota ja yli tuhat elävää kieltä. Hänen laskutaitonsa oli kunnossa; lähdeaineisto ei.',
+      '"Kuuma ilma tekee ihmisistä hitaita", merkitsi isoisä varjoon istuutuneena. Ympärilläni on maanosa, jonka väestön keski-ikä on alle kaksikymmentä vuotta ja joka rakentaa nopeammin kuin ehdin katsoa. Hitaus taisi olla omakohtainen havainto.',
+      'Isoisä ihaili suuria jokia ja luetteli ne nimeltä oikein — Niili, Kongo, Niger, Sambesi. Se on hänen päiväkirjansa tarkin sivu. Vedet hän näki; ihmiset hän arvasi.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
+    // ei koskaan kaupungin nimeä.
+    starHints: {
+      tripoli: 'Välimeren eteläisellä rannalla, siellä missä aavikko tulee melkein mereen asti, on satamakaupunki jonka läpi karavaanit purkavat lastinsa laivoihin.',
+      murzuk: 'Suoraan etelään Välimeren rannikolta, keskellä autiomaata, on keidaskaupunki joka oli karavaanireitin tärkein pysähdys. Sinne on rannikolta kuukausi kamelilla.',
+      alkufra: 'Kaukana koillisessa autiomaassa, kaukana kaikista reiteistä, on keidasryhmä jonne pääsee vain sen tietäen. Kukaan tuntemani eurooppalainen ei ollut käynyt siellä.',
+      sahara: 'Keskellä maailman suurinta hiekkamerta, kaukana kaikista rannikoista, on paikka johon karavaanit pysähtyivät veden vuoksi. Sitä ei löydä kartalta, vaan oppaalta.',
+      ahaggar: 'Läntisen autiomaan keskellä kohoaa vulkaaninen vuoristo, jonka huipuilla on yöllä kylmä. Tuaregit tunsivat sen polut; me emme.',
+      timbuktu: 'Aavikon eteläreunalla, suuren joen mutkassa, kerrottiin kaupungista jonka kirjastot hävettivät Oxfordia. En ehtinyt käydä. Käy sinä.',
+      gao: 'Saman suuren joen varrella, alempana itään päin aavikon reunaa, oli mahtavan valtakunnan pääkaupunki, jonka hallitsijan hautakumpu on savesta.',
+      dakar: 'Läntisimmässä kärjessä, siinä missä manner työntyy pisimmälle Atlanttiin, on satama josta on Amerikkaan lyhyempi matka kuin Lontooseen.',
+      sierraleone: 'Läntisellä rannikolla etelämpänä on vuorinen niemi ja sen suojassa satama, joka perustettiin vapautettujen ihmisten kotipaikaksi. Nimi tarkoittaa leijonavuoria.',
+      kappalmas: 'Siinä kohdassa, jossa läntinen rannikko kääntyy jyrkästi itään, on niemi jonka ohi jokainen etelään menevä laiva purjehtii. Palmuja on niin paljon että ne näkyvät mereltä.',
+      kumasi: 'Guineanlahden pohjoispuolella, sisämaassa sademetsän keskellä, oli kultarikkaan valtakunnan pääkaupunki. Sen kuninkaan istuin on kultaa eikä sitä saa laskea maahan.',
+      orjarannikko: 'Guineanlahden pohjukassa on rannikonpätkä, jolle eurooppalaiset antoivat nimen sen mukaan mitä sieltä veivät. Se nimi on häpeällinen ja se on meidän antamamme.',
+      kano: 'Aavikon ja metsän välissä, sisämaassa itään Nigerin mutkasta, on savimuurien ympäröimä kauppakaupunki. Sen indigovärjäämöt ovat toimineet satoja vuosia.',
+      kamerun: 'Guineanlahden pohjukassa, aivan rannikolla, kohoaa tulivuori suoraan merestä. Se on koko läntisen rannikon korkein kohta ja sataa siellä enemmän kuin missään.',
+      kongo: 'Keskellä mannerta, päiväntasaajalla, laskee mereen joki jonka virtaama on maailman toiseksi suurin. Sen suulle pääsee laivalla; ylemmäs ei koskilta.',
+      angola: 'Lounaisrannikolla, päiväntasaajan eteläpuolella, on portugalilaisten satama jonka takana alkaa ylätasanko. Sieltä vietiin ihmisiä Brasiliaan kolmesataa vuotta.',
+      namib: 'Lounaassa, siinä missä autiomaa tulee kylmään merivirtaan asti, on rannikko jonka hiekasta löytyy laivanhylkyjä. Sumu tulee mereltä joka aamu eikä sada koskaan.',
+      kapkaupunki: 'Aivan mantereen eteläkärjessä, pöydänmuotoisen vuoren juurella, on satama jossa kaksi valtamerta kohtaa. Kaikki Intiaan menevät laivat täydentävät siellä vetensä.',
+      kimberley: 'Eteläisellä ylätasangolla, kaukana rannikoilta sisämaassa, kaivettiin maahan kuoppa niin suuri että se näkyy taivaalle. Sieltä nostettiin timantteja.',
+      mosambik: 'Kaakkoisrannikolla, suuren saaren vastapäätä salmen toisella puolen, on portugalilaisten vanha satamakaupunki omalla pikkusaarellaan.',
+      madagaskar: 'Kaakossa, salmen takana omalla suurella saarellaan, on maa jossa kasvit ja eläimet eivät muistuta mantereen omia lainkaan. Ne kehittyivät erillään miljoonia vuosia.',
+      sansibar: 'Itärannikon edustalla, pienellä saarella päiväntasaajan tuntumassa, on satama joka tuoksuu neilikalle kilometrien päähän. Sieltä lähtivät karavaanit sisämaahan.',
+      kilimandzaro: 'Itä-Afrikassa, aivan päiväntasaajan tuntumassa, kohoaa yksinäinen vuori jonka huipulla on lunta ympäri vuoden. Lontoossa minua ei uskottu.',
+      viktoria: 'Keskellä itäistä ylätasankoa, päiväntasaajan molemmin puolin, on järvi joka on kuin sisämeri: toista rantaa ei näy. Sen pohjoisrannalta lähtee Niili.',
+      tanganjika: 'Idässä, kahden hautavajoaman välissä, on kapea ja hyvin pitkä järvi joka on maailman toiseksi syvin. Rannalta rannalle kestää laivalla koko päivän.',
+      bahrelghazal: 'Ylä-Niilin varrella, keskellä mannerta pohjoisessa, on suunnaton suoalue jossa joki hajoaa ruohikkoon. Siellä katosi useampi retkikunta kuin yksikään uskalsi laskea.',
+      darfur: 'Niilin länsipuolella, autiomaan ja savannin rajalla, on sulttaanikunnan vuoristoinen ylänkö. Sinne ei ollut asiaa ilman sulttaanin lupaa.',
+      suakin: 'Punaisenmeren länsirannalla on korallista rakennettu satamakaupunki omalla saarellaan. Sen valkoiset talot on tehty merestä nostetusta kivestä.',
+      addisabeba: 'Koillisen ylängöllä, kahden ja puolen kilometrin korkeudessa, perustettiin keisarikunnalle uusi pääkaupunki kuumien lähteiden viereen. Siellä on viileää päiväntasaajan lähelläkin.',
+      rashafun: 'Mantereen itäisimmässä kärjessä, siinä missä rannikko kääntyy Intian valtamerelle, on niemi jonka ohi purjehtivat jo antiikin kauppiaat suitsuketta hakemaan.',
+    },
   },
 
   decor: {
@@ -6287,8 +6351,15 @@ const EUROPE = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Meripihkahuoneen aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Meripihkahuoneen aarteen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Kotimantere. Puolet karttani rajoista on väärin, ja loput ylitetään näyttämättä passia. Kukaan ei tarkasta papereitani — en tiedä, olenko helpottunut vai loukkaantunut.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Kotimantere. Puolet karttani rajoista on väärin, ja loput ylitetään näyttämättä passia. Kukaan ei tarkasta papereitani — en tiedä, olenko helpottunut vai loukkaantunut.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {
@@ -6556,8 +6627,15 @@ const MIDDLE_EAST = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Sheban kuningattaren aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Sheban kuningattaren aarteen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Basaari tuoksuu täsmälleen kirjojeni kuvauksilta. Kauppias ottaa puntani vastaan ystävällisesti — museokappaleita, hän sanoo, ja antaa vaihtorahat sovelluksella.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Basaari tuoksuu täsmälleen kirjojeni kuvauksilta. Kauppias ottaa puntani vastaan ystävällisesti — museokappaleita, hän sanoo, ja antaa vaihtorahat sovelluksella.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {
@@ -8036,8 +8114,15 @@ const ASIA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Keisarin jadesinetin turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Keisarin jadesinetin kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Klubilla tätä mannerta kutsuttiin Itämaiksi ja odotettiin kameleita. Luotijuna ohitti odotukseni kolmensadan kilometrin tuntinopeudella.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Klubilla tätä mannerta kutsuttiin Itämaiksi ja odotettiin kameleita. Luotijuna ohitti odotukseni kolmensadan kilometrin tuntinopeudella.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {
@@ -9281,8 +9366,15 @@ const OCEANIA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Eteläristin helmen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Eteläristin helmen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Karttani kutsuu tätä maailman laidaksi. Täältä katsoen laidalla onkin Lontoo — ja myönnettäköön, moni asia näytti sieltä käsin nurinkuriselta.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Karttani kutsuu tätä maailman laidaksi. Täältä katsoen laidalla onkin Lontoo — ja myönnettäköön, moni asia näytti sieltä käsin nurinkuriselta.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {
@@ -10669,8 +10761,15 @@ const NORTHAMERICA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Montezuman aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Montezuman aarteen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Siirtokunnat ovat pärjänneet ilman meitä hämmentävän hyvin. Päätin olla ottamatta teekutsuja puheeksi.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Siirtokunnat ovat pärjänneet ilman meitä hämmentävän hyvin. Päätin olla ottamatta teekutsuja puheeksi.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {
@@ -12103,8 +12202,15 @@ const SOUTHAMERICA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi El Doradon aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi El Doradon aarteen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Esi-isäni tulivat hakemaan El Doradon kultaa ja veivät minkä irti saivat. Minä ostan jääkaappimagneetin ja maksan ylihintaa. Jonkinlaista oikeudenmukaisuutta sekin.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Esi-isäni tulivat hakemaan El Doradon kultaa ja veivät minkä irti saivat. Minä ostan jääkaappimagneetin ja maksan ylihintaa. Jonkinlaista oikeudenmukaisuutta sekin.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {
@@ -12957,8 +13063,35 @@ const SUOMI = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Lapin kullan turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Lapin kullan kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Karttani sanoo: Suuriruhtinaskunta. Nykyään maa, jossa hallitus toimii verkossa ja järvetkin on laskettu — 187 888, he tarkistivat.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    diaries: [
+      'Isoisän kartta sanoo: Suuriruhtinaskunta. Nykyään tämä on maa, jossa hallitus toimii verkossa ja järvetkin on laskettu — 187 888, he tarkistivat. Isoisä olisi vaatinut nähdä laskutoimituksen.',
+      '"Kesällä aurinko ei laske ollenkaan pohjoisessa, ja se tekee ihmisistä puheliaita", isoisä kirjoitti. Ensimmäinen väite pitää paikkansa. Toisesta olen kuullut eriäviä näkemyksiä paikallisilta itseltään.',
+      'Isoisä matkusti täällä reellä ja piti tervaa maan tärkeimpänä vientituotteena. Terva vaihtui paperiin, paperi puhelimiin ja puhelimet ohjelmistoihin. Metsä on yhä samassa paikassa ja tekee yhä työtä.',
+      '"Talvi kestää täällä puoli vuotta ja on itse asiassa vuoden paras aika", isoisä merkitsi muistiin. Pidin sitä pakkasen aiheuttamana harhana, kunnes näin ensimmäisen kunnolla auratun jäätien.',
+      'Isoisä ihmetteli, että talonpojankin lapset osasivat lukea. Nykyään täällä ihmetellään, jos joku ei osaa. Muutos on hänen listassaan pieni rivi; minusta se on koko kirjan tärkein.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
+    // ei koskaan kaupungin nimeä.
+    starHints: {
+      turku: 'Lounaisrannikolla, siellä missä saaristo alkaa, on maan vanhin kaupunki: linna joen suulla ja tuomiokirkko vähän ylempänä. Sinne saapuu laiva lännestä joka päivä.',
+      maarianhamina: 'Lännessä, keskellä Pohjanlahtea, on saariryhmä joka kuuluu tähän maahan mutta puhuu naapurin kieltä. Sen ainoa kaupunki elää purjelaivoista ja postista.',
+      tampere: 'Sisämaassa, kahden suuren järven välissä, vesi putoaa kosken kautta alempaan järveen. Sen kosken partaalle rakennettiin punatiilinen tehdaskaupunki — ensimmäinen laatuaan koko maassa.',
+      pori: 'Länsirannikolla, suuren joen suulla, on satamakaupunki jonka edustalla on maan pisin hiekkaranta. Meri vetäytyy siellä kaiken aikaa kauemmas kaupungista.',
+      vaasa: 'Pohjanlahden rannalla, kapeimman kohdan kohdalla, maa nousee merestä sentin vuodessa. Siellä on kaupunki, josta pääsee naapurimaahan lautalla nopeammin kuin pääkaupunkiin.',
+      jyvaskyla: 'Keskellä maata, suuren pitkän järven pohjoispäässä, on kaupunki joka kasvoi koulujen ympärille. Sinne perustettiin ensimmäinen suomenkielinen oppikoulu koko ruhtinaskunnassa.',
+      lappeenranta: 'Kaakossa, suuren järvialtaan eteläkulmassa, on linnoituskaupunki jonka ohi kaivettiin kanava merelle. Kanava teki siitä sisämaan sataman.',
+      savonlinna: 'Idässä, keskellä sokkeloista järvialuetta, seisoo keskiaikainen linna omalla saarellaan kahden salmen välissä. Sen muureilla kuulemma lauletaan nykyään.',
+      kuopio: 'Itä-Suomessa, järvien keskellä, on kaupunki jonka takana kohoaa jyrkkä mäki. Mäen laelta näkee vettä joka suuntaan — ja kalatorilla myydään kalaa piirakan sisällä.',
+      joensuu: 'Aivan itärajan tuntumassa, siellä missä suuri reittivesi laskee etelään, on kaupunki jonka läpi virtaa joki. Sitä sanotaan Karjalan porteiksi.',
+      kajaani: 'Koillisessa, suuren järven laskujoen varrella, on raunioituneen linnan kaupunki. Sen kautta soudettiin tervaveneet koskia alas merelle asti — vaarallista työtä nuorille miehille.',
+      kemi: 'Aivan Pohjanlahden perukassa, suuren pohjoisen joen suulla, on satamakaupunki jonne uitettiin tukit sisämaasta. Talvella siellä jäätyy koko lahti.',
+      rovaniemi: 'Pohjoisessa, tasan sillä viivalla jonka takana aurinko ei kesällä laske, yhtyy kaksi jokea. Niiden yhtymäkohdassa on kauppapaikka, jonka läpi kaikki Lapin matkat kulkevat.',
+      kittila: 'Lapissa, tunturien länsipuolella, kultajoen latvoilla, on kirkonkylä jonne huuhtojat kokoontuivat. Siellä mitattiin maan kylmimmät pakkaset.',
+      inari: 'Kaukana pohjoisessa on järvi, jossa sanottiin olevan kolmetuhatta saarta, ja sen rannalla kylä joka on saamelaisen kulttuurin keskus. Sinne asti en päässyt: tie loppui kesken.',
+      kilpisjarvi: 'Aivan luoteisimmassa kolkassa, siellä missä kolmen valtakunnan rajat kohtaavat pyykillä, kohoavat maan korkeimmat tunturit. Kylä on pieni ja tuuli kova.',
+      utsjoki: 'Pohjoisimmassa pisteessä, suuren lohijoen varrella, kulkee raja naapurimaahan keskellä virtaa. Siellä puhutaan saamea enemmän kuin suomea — ainoana kuntana koko maassa.',
+    },
   },
 
   decor: {
@@ -13747,8 +13880,33 @@ const ISTANBUL = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Sulttaanin timantin turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Sulttaanin timantin kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Karttaani on painettu Konstantinopoli. Kaupunki on ehtinyt vaihtaa nimeä, valtakuntaa ja rakentaa sillan mantereiden välille. Minä olen vaihtanut hattua.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    diaries: [
+      'Isoisän karttaan on painettu Konstantinopoli. Kaupunki on sittemmin ehtinyt vaihtaa nimeä, valtakuntaa ja rakentaa sillan mantereiden välille. Minä olen vaihtanut hattua.',
+      '"Tämä on ainoa kaupunki, joka seisoo kahdella mantereella yhtä aikaa", isoisä kirjoitti, ja lisäsi ettei uskonut sitä ennen kuin näki. Väite pitää yhä. Nykyään mantereiden väli ylitetään metrolla, tunnelissa, salmen alta.',
+      'Isoisä laski kaupungissa olleen miljoona asukasta ja piti lukua käsittämättömänä. Nykyään heitä on toistakymmentä miljoonaa, ja jokainen heistä näyttää olevan matkalla samaan suuntaan kuin minä.',
+      '"Basaarissa on neljätuhatta puotia ja jokaisessa sama hinta kolmella eri tavalla sanottuna", isoisä valitti. Tinkiminen jatkuu ennallaan. Ainoa muutos on, että vaihtorahat annetaan puhelimella.',
+      'Isoisä nousi laivaan Kultaisen sarven suulla ja kirjoitti, että kalanhaju seuraa matkustajaa Wieniin asti. Sama laituri, sama haju, sama kala leivän välissä. Jotkin asiat eivät kaipaa parannusta.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
+    // ei koskaan kaupungin nimeä.
+    starHints: {
+      rumelinlinnoitus: 'Salmen Euroopan puoleisella rannalla, kaukana pohjoisessa kaupungin yläpuolella, kohoaa jyrkälle rinteelle muurattu linnake. Se pystytettiin katkaisemaan laivaliikenne salmessa, ja sen tornit näkyvät kannelle asti.',
+      dolmabahce: 'Euroopan rannalla, keskikaupungin pohjoispuolella, on aivan vesirajaan eurooppalaiseen tapaan rakennettu hovin asuinrakennus. Sulttaani muutti sinne vanhasta niemen kärjestä.',
+      taksim: 'Kultaisen sarven pohjoispuolella, ylhäällä rinteen päällä, on aukio jonne uudet kadut ja lähetystöt vedettiin. Siellä liikkuu se osa kaupunkia, joka katsoo länteen.',
+      galata: 'Aivan Kultaisen sarven pohjoisrannalla kohoaa rinteestä pyöreä kivitorni, jonka genovalaiset rakensivat vartioimaan omaa kaupunginosaansa. Sen huipulta näkee molemmille mantereille.',
+      pierreloti: 'Kultaisen sarven yläjuoksulla, sen pohjoispuoleisella kukkulalla, on hautausmaan yläpuolinen kahvila. Sieltä ranskalainen kirjailija katseli kaupunkia ja kirjoitti siitä liikaa.',
+      balat: 'Kultaisen sarven länsirannalla, vanhojen maamuurien sisäpuolella, on kortteleita joissa asuivat juutalaiset ja kreikkalaiset perheet vuosisatoja. Talot on maalattu joka väriin.',
+      maustebasaari: 'Aivan Kultaisen sarven suulla, laivalaitureiden vieressä, on L-kirjaimen muotoinen katettu halli, joka rakennettiin moskeijan tuloilla. Sinne tuotiin mausteet Egyptistä.',
+      suuribasaari: 'Vanhan kaupungin sydämessä, kukkulan laella, on katettu kauppakaupunki jossa on kuusikymmentä katua saman katon alla. Sisään mennään yhdestä portista ja ulos jostakin aivan toisesta.',
+      topkapi: 'Vanhan kaupungin itäisimmässä kärjessä, siinä niemellä jossa salmi, Kultainen sarvi ja Marmaranmeri kohtaavat, on muurien ympäröimä hallitsijan asuinsija puutarhoineen. Sieltä johdettiin valtakuntaa neljäsataa vuotta.',
+      hagiasofia: 'Vanhassa kaupungissa, aivan palatsin porttien länsipuolella, on rakennus jonka kupoli oli tuhat vuotta maailman suurin. Se on ollut kirkko, moskeija ja museo — ja järjestyksessä.',
+      sinimoskeija: 'Vanhassa kaupungissa, suuren kupolin eteläpuolella hippodromin laidalla, on rukoushuone jolla on kuusi minareettia — enemmän kuin yhdelläkään toisella koko kaupungissa. Sisäseinät on laatoitettu siniseksi.',
+      uskudar: 'Salmen Aasian puoleisella rannalla, vastapäätä vanhaa kaupunkia, on kaupunginosa josta karavaanit lähtivät itään. Sinne mennessä ylitetään maanosien raja.',
+      neitsyttorni: 'Salmen keskellä, aivan Aasian rannan tuntumassa, on pienelle luodolle rakennettu valkoinen torni. Siitä kerrotaan tarinaa, jossa ennustus toteutuu käärmeen ja hedelmäkorin avulla.',
+      kadikoy: 'Aasian puolella, etelämpänä salmen suulla, on satamakaupunginosa joka perustettiin ennen vanhaa kaupunkia — ja väärään paikkaan, sanoi oraakkeli. Nykyään siellä on kalatori ja lauttalaituri.',
+      prinssisaaret: 'Kaakossa, Marmaranmerellä tunnin laivamatkan päässä, on saariryhmä jonne karkotettiin ruhtinaita. Saarilla ei ole autoja lainkaan; siellä kuljetaan yhä hevosella ja polkupyörällä.',
+    },
   },
 
   decor: {
@@ -13835,6 +13993,28 @@ function factText(fact) {
 
 function factSource(fact) {
   return typeof fact === 'string' ? [] : sourceList(fact?.source);
+}
+
+// --- kaksi ääntä -----------------------------------------------------------
+//
+// Tietoruudussa puhuu vuorotellen kaksi hahmoa: nuori herra Fogg, joka on
+// matkalla juuri nyt, ja hänen isoisänsä, jonka 1870-luvun päiväkirjaa nuori
+// herra lukee matkalla. Merkitsemätön teksti on nuoren havainto, jolloin
+// vanha sisältö kelpaa sellaisenaan.
+
+const VOICES = {
+  nuori: 'Nuoren herran havainto',
+  isoisa: 'Isoisän päiväkirjasta, 1873',
+};
+
+/** Kumman äänellä tieto kerrotaan: 'isoisa' vai 'nuori'. */
+function factVoice(fact) {
+  return typeof fact === 'object' && fact?.voice === 'isoisa' ? 'isoisa' : 'nuori';
+}
+
+/** Äänen otsikkorivi tietoruutuun. */
+function voiceTitle(voice) {
+  return VOICES[voice] ?? VOICES.nuori;
 }
 
 // ===== js/sound.js =====
@@ -15180,6 +15360,7 @@ const HARD_BONUS = 100; // palkkio vaikeasta kysymyksestä oikein vastattaessa
 const STAR_PRIZE = 2000; // tähden arvo vaellustilassa, jossa peli ei pääty
 const DUEL_PRIZE = 200; // rosvon saalis, jos kaksintaistelun voittaa suoraan
 const DUEL_BYPASS_SHOES = 3; // näin monella hevosenkengällä rosvon voi ohittaa
+const HINT_EVERY_TURNS = 4; // näin harvoin isoisän vihje aarteesta
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 function questionLevel(question) {
@@ -15524,16 +15705,42 @@ class Game {
     return !!(city && city.links && city.links.length);
   }
 
+  /** Kaupunki, johon laudan pääaarre on kätketty — löytynyt tai ei. */
+  starCityOf(world = this.world) {
+    if (world.starCity) return world.starCity;
+    for (const [cityId, type] of world.tokens) {
+      if (type === 'star') return cityId;
+    }
+    return null;
+  }
+
+  /**
+   * Isoisän päiväkirjan taitettu sivu: vihje laudan pääaarteesta. Vihje
+   * viittaa suuntaan tai alueeseen muttei nimeä kaupunkia, ja se nousee
+   * tietoruutuun harvakseltaan — joka HINT_EVERY_TURNS vuoro. Kun aarre on
+   * löytynyt, sivua ei enää tarvita.
+   */
+  starHint() {
+    const world = this.world;
+    if (!world || world.starFound) return null;
+    if (this.turnCount % HINT_EVERY_TURNS !== 0) return null;
+    const cityId = this.starCityOf(world);
+    return this.pack.texts.starHints?.[cityId] ?? null;
+  }
+
   /**
    * Herra Foggin päiväkirjamerkintä kirjataan laudalle saavuttaessa. Merkintä
    * näkyy tietoruudussa, kunnes matkaaja liikkuu saapumiskaupungista.
    */
   setDiary(pack) {
-    if (!pack.texts.diary) return;
+    const notes = pack.texts.diaries ?? (pack.texts.diary ? [pack.texts.diary] : []);
+    if (!notes.length) return;
+    // Merkintä arvotaan pelin omalla satunnaisluvulla, jotta sama peli
+    // toistuu tallennuksesta samanlaisena.
     this.diaryNote = {
       packId: pack.id,
       pos: posKey(this.player.pos),
-      text: pack.texts.diary,
+      text: notes[Math.floor(this.rng() * notes.length)],
     };
   }
 
@@ -16528,6 +16735,7 @@ class UI {
     this.dieEl = document.getElementById('die');
     this.actionsEl = document.getElementById('actions');
     this.errorEl = document.getElementById('error');
+    this.factVoiceEl = document.getElementById('fact-voice');
     this.factPlace = document.getElementById('fact-place');
     this.factText = document.getElementById('fact-text');
     this.factCard = this.factText.closest('.fact-card');
@@ -17300,8 +17508,10 @@ class UI {
   }
 
   /**
-   * "Tiesitkö että…" -tieto pelaajan sijainnista. Tieto vaihtuu kierroksittain,
-   * mutta pysyy samana saman vuoron ajan, jotta sen ehtii lukea.
+   * Tietoruutu pelaajan sijainnista. Siinä puhuu vuorotellen kaksi ääntä:
+   * isoisän 1870-luvun päiväkirja ja nuoren herran nykyhavainto. Teksti
+   * vaihtuu kierroksittain mutta pysyy samana saman vuoron ajan, jotta sen
+   * ehtii lukea.
    */
   renderFact() {
     const { game } = this;
@@ -17311,22 +17521,37 @@ class UI {
       // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
       // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
+      this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
       return;
     }
 
-    // Laudalle saavuttaessa tietoruudussa on herra Foggin päiväkirjamerkintä.
-    // Se väistyy, kun matkaaja lähtee saapumiskaupungista liikkeelle.
+    // Laudalle saavuttaessa tietoruudussa on saapumismerkintä. Se väistyy,
+    // kun matkaaja lähtee saapumiskaupungista liikkeelle.
     const note = game.diaryNote;
     if (note && note.packId === game.pack.id && posKey(game.player.pos) === note.pos) {
-      const key = `diary:${note.packId}`;
+      const key = `diary:${note.packId}:${note.text}`;
       if (this.factKey === key) return;
       this.factKey = key;
-      this.factPlace.textContent = 'Herra Foggin päiväkirjasta';
+      this.factVoiceEl.textContent = 'Matkapäiväkirjasta';
+      this.factPlace.textContent = game.pack.boardLabel;
       this.typeText(this.factText, note.text);
       return;
     }
+
+    // Isoisän vihje laudan pääaarteesta nousee esiin harvakseltaan.
+    const hint = game.starHint();
+    if (hint) {
+      const key = `hint:${game.pack.id}:${game.turnCount}`;
+      if (this.factKey === key) return;
+      this.factKey = key;
+      this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
+      this.factPlace.textContent = game.pack.boardLabel;
+      this.typeText(this.factText, hint);
+      return;
+    }
+
     const player = game.player;
     const city = this.factCity(player.pos);
     const facts = game.pack.placeFacts[city.id];
@@ -17339,7 +17564,9 @@ class UI {
     if (key === this.factKey) return;
     this.factKey = key;
 
+    // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
     const onRoute = player.pos.type === 'edge';
+    this.factVoiceEl.textContent = voiceTitle(factVoice(fact));
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
     const source = this.sourceLine(factSource(fact));
     this.typeText(this.factText, text, 'fact', () => {
@@ -18059,7 +18286,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.7';
+const APP_VERSION = '2026-07-27.8';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

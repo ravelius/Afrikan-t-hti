@@ -15,7 +15,7 @@ import {
   DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HARD_BONUS,
   HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
-import { factSource, factText, isSourceUrl, sourceLabel } from './pack.js';
+import { factSource, factText, factVoice, isSourceUrl, sourceLabel, voiceTitle } from './pack.js';
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -83,6 +83,7 @@ export class UI {
     this.dieEl = document.getElementById('die');
     this.actionsEl = document.getElementById('actions');
     this.errorEl = document.getElementById('error');
+    this.factVoiceEl = document.getElementById('fact-voice');
     this.factPlace = document.getElementById('fact-place');
     this.factText = document.getElementById('fact-text');
     this.factCard = this.factText.closest('.fact-card');
@@ -855,8 +856,10 @@ export class UI {
   }
 
   /**
-   * "Tiesitkö että…" -tieto pelaajan sijainnista. Tieto vaihtuu kierroksittain,
-   * mutta pysyy samana saman vuoron ajan, jotta sen ehtii lukea.
+   * Tietoruutu pelaajan sijainnista. Siinä puhuu vuorotellen kaksi ääntä:
+   * isoisän 1870-luvun päiväkirja ja nuoren herran nykyhavainto. Teksti
+   * vaihtuu kierroksittain mutta pysyy samana saman vuoron ajan, jotta sen
+   * ehtii lukea.
    */
   renderFact() {
     const { game } = this;
@@ -866,22 +869,37 @@ export class UI {
       // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
       // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
+      this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
       return;
     }
 
-    // Laudalle saavuttaessa tietoruudussa on herra Foggin päiväkirjamerkintä.
-    // Se väistyy, kun matkaaja lähtee saapumiskaupungista liikkeelle.
+    // Laudalle saavuttaessa tietoruudussa on saapumismerkintä. Se väistyy,
+    // kun matkaaja lähtee saapumiskaupungista liikkeelle.
     const note = game.diaryNote;
     if (note && note.packId === game.pack.id && posKey(game.player.pos) === note.pos) {
-      const key = `diary:${note.packId}`;
+      const key = `diary:${note.packId}:${note.text}`;
       if (this.factKey === key) return;
       this.factKey = key;
-      this.factPlace.textContent = 'Herra Foggin päiväkirjasta';
+      this.factVoiceEl.textContent = 'Matkapäiväkirjasta';
+      this.factPlace.textContent = game.pack.boardLabel;
       this.typeText(this.factText, note.text);
       return;
     }
+
+    // Isoisän vihje laudan pääaarteesta nousee esiin harvakseltaan.
+    const hint = game.starHint();
+    if (hint) {
+      const key = `hint:${game.pack.id}:${game.turnCount}`;
+      if (this.factKey === key) return;
+      this.factKey = key;
+      this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
+      this.factPlace.textContent = game.pack.boardLabel;
+      this.typeText(this.factText, hint);
+      return;
+    }
+
     const player = game.player;
     const city = this.factCity(player.pos);
     const facts = game.pack.placeFacts[city.id];
@@ -894,7 +912,9 @@ export class UI {
     if (key === this.factKey) return;
     this.factKey = key;
 
+    // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
     const onRoute = player.pos.type === 'edge';
+    this.factVoiceEl.textContent = voiceTitle(factVoice(fact));
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
     const source = this.sourceLine(factSource(fact));
     this.typeText(this.factText, text, 'fact', () => {

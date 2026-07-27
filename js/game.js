@@ -14,6 +14,7 @@ export const HARD_BONUS = 100; // palkkio vaikeasta kysymyksestä oikein vastatt
 export const STAR_PRIZE = 2000; // tähden arvo vaellustilassa, jossa peli ei pääty
 export const DUEL_PRIZE = 200; // rosvon saalis, jos kaksintaistelun voittaa suoraan
 export const DUEL_BYPASS_SHOES = 3; // näin monella hevosenkengällä rosvon voi ohittaa
+export const HINT_EVERY_TURNS = 4; // näin harvoin isoisän vihje aarteesta
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 export function questionLevel(question) {
@@ -359,16 +360,42 @@ export class Game {
     return !!(city && city.links && city.links.length);
   }
 
+  /** Kaupunki, johon laudan pääaarre on kätketty — löytynyt tai ei. */
+  starCityOf(world = this.world) {
+    if (world.starCity) return world.starCity;
+    for (const [cityId, type] of world.tokens) {
+      if (type === 'star') return cityId;
+    }
+    return null;
+  }
+
+  /**
+   * Isoisän päiväkirjan taitettu sivu: vihje laudan pääaarteesta. Vihje
+   * viittaa suuntaan tai alueeseen muttei nimeä kaupunkia, ja se nousee
+   * tietoruutuun harvakseltaan — joka HINT_EVERY_TURNS vuoro. Kun aarre on
+   * löytynyt, sivua ei enää tarvita.
+   */
+  starHint() {
+    const world = this.world;
+    if (!world || world.starFound) return null;
+    if (this.turnCount % HINT_EVERY_TURNS !== 0) return null;
+    const cityId = this.starCityOf(world);
+    return this.pack.texts.starHints?.[cityId] ?? null;
+  }
+
   /**
    * Herra Foggin päiväkirjamerkintä kirjataan laudalle saavuttaessa. Merkintä
    * näkyy tietoruudussa, kunnes matkaaja liikkuu saapumiskaupungista.
    */
   setDiary(pack) {
-    if (!pack.texts.diary) return;
+    const notes = pack.texts.diaries ?? (pack.texts.diary ? [pack.texts.diary] : []);
+    if (!notes.length) return;
+    // Merkintä arvotaan pelin omalla satunnaisluvulla, jotta sama peli
+    // toistuu tallennuksesta samanlaisena.
     this.diaryNote = {
       packId: pack.id,
       pos: posKey(this.player.pos),
-      text: pack.texts.diary,
+      text: notes[Math.floor(this.rng() * notes.length)],
     };
   }
 

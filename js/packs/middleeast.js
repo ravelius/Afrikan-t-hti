@@ -244,8 +244,15 @@ export const MIDDLE_EAST = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Sheban kuningattaren aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Sheban kuningattaren aarteen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Basaari tuoksuu täsmälleen kirjojeni kuvauksilta. Kauppias ottaa puntani vastaan ystävällisesti — museokappaleita, hän sanoo, ja antaa vaihtorahat sovelluksella.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Basaari tuoksuu täsmälleen kirjojeni kuvauksilta. Kauppias ottaa puntani vastaan ystävällisesti — museokappaleita, hän sanoo, ja antaa vaihtorahat sovelluksella.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {

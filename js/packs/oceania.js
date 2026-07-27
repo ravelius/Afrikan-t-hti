@@ -300,8 +300,15 @@ export const OCEANIA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Eteläristin helmen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Eteläristin helmen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Karttani kutsuu tätä maailman laidaksi. Täältä katsoen laidalla onkin Lontoo — ja myönnettäköön, moni asia näytti sieltä käsin nurinkuriselta.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Karttani kutsuu tätä maailman laidaksi. Täältä katsoen laidalla onkin Lontoo — ja myönnettäköön, moni asia näytti sieltä käsin nurinkuriselta.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {
