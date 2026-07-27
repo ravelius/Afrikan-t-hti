@@ -2,13 +2,43 @@
 
 ## Hahmo
 
-**Reginald Fogg** on maailmanmatkaaja Phileas Foggin pojanpojanpoika. Hän
-perii sukukartanon vintiltä isoisoisänsä matkalaukun, vuoden 1872
-maailmankartan, kukkarollisen puntia ja vihreän passin — ja päättää toistaa
-kuuluisan matkan. Hän olettaa maailman olevan suunnilleen siinä kunnossa
-kuin isoisoisä sen jätti.
+**Reginald Fogg** on nuori mies, joka perii sukukartanon vintiltä isoisänsä
+matkalaukun: vuoden 1872 maailmankartan, kukkarollisen puntia, vihreän
+passin ja paksun, kuluneen matkapäiväkirjan vuodelta 1873.
+
+Nuori herra Fogg lähtee matkaan täpinöissään. Isoisä ei lähde minnekään —
+hän kuoli aikaa sitten. Matkustava osapuoli on hänen päiväkirjansa, jota
+pojanpoika lukee junissa, laivoissa ja lentokentillä, ja jonka merkinnät
+ovat vuoroin hämmentävän tarkkoja ja vuoroin toivottoman vanhentuneita.
+
+Nuori herra olettaa maailman olevan suunnilleen siinä kunnossa kuin isoisä
+sen jätti.
 
 Se ei ole.
+
+## Kaksi ääntä
+
+Pelin tietoruudussa puhuu vuorotellen kaksi hahmoa. Tämä on tarinan
+rakenne, ei koriste:
+
+- **Isoisän päiväkirjasta, 1873** — vanha ääni. Saa loistaa asioissa, jotka
+  ovat yhä totta: joet, vuoret, monsuuni, keskiyön aurinko, basaarin
+  tuoksut, satamien järjestys. Saa olla toivottoman vanhentunut nimissä,
+  rajoissa, tekniikassa ja oletuksissa siitä, kuka maailmaa hallitsee.
+- **Nuoren herran havainto** — nykyaika. Faktat, lähteet ja kuiva
+  huvittuneisuus isoisän merkinnöistä. Nuori herra ei ole isoisäänsä
+  viisaampi ihmisenä; hän vain sattuu elämään sata viisikymmentä vuotta
+  myöhemmin ja tietää siksi enemmän.
+
+Vitsi syntyy näiden välistä. Joskus isoisä on oikeassa ja nuori herra
+yllättyy siitä — se on tärkeää, jottei vanha ääni ole pelkkä narri.
+
+## Päiväkirjan taitettu sivu
+
+Isoisä ei löytänyt kaikkea, mitä lähti hakemaan. Sinne tänne päiväkirjaan
+on jäänyt merkintä paikasta, jonne hän ei ehtinyt: suunta, seutu, huhu —
+ei koskaan kaupungin nimeä. Nämä nousevat pelissä esiin harvakseltaan ja
+kaventavat aluetta, jolta laudan pääaarretta kannattaa etsiä.
 
 ## Sävy: särmää, mutta piikki osoittaa aina oikeaan suuntaan
 
@@ -34,9 +64,9 @@ näkyvät — ja se sanotaan ääneen kevyesti, ei saarnaten.
 
 1. **Avaus:** aloitusruutu esittelee perinnön, ja peli alkaa Lontoosta
    maailmankartalta. Ensimmäinen matka on "jo maksettu lippu".
-2. **Päiväkirja:** jokaisella laudalla on `texts.diary` — Foggin merkintä,
-   joka naksuu kirjoituskoneella tietoruutuun laudalle saavuttaessa ja
-   väistyy, kun matka jatkuu. Esimerkkejä:
+2. **Päiväkirja:** jokaisella laudalla on `texts.diaries` — lista
+   merkintöjä, joista arvotaan yksi laudalle saavuttaessa. Merkintä naksuu
+   kirjoituskoneella tietoruutuun ja väistyy, kun matka jatkuu. Esimerkkejä:
    - *Pohjois-Amerikka:* "Siirtokunnat ovat pärjänneet ilman meitä
      hämmentävän hyvin. Päätin olla ottamatta teekutsuja puheeksi."
    - *Lähi-itä:* "Kauppias ottaa puntani vastaan ystävällisesti —
@@ -50,7 +80,11 @@ näkyvät — ja se sanotaan ääneen kevyesti, ei saarnaten.
 ## Kirjoitusohjeet uusille merkinnöille
 
 - Minä-muoto, kuiva brittiläinen alivireisyys, korkeintaan kolme virkettä.
-- Vitsi rakentuu: vanha oletus → nykyhavainto → Foggin laconinen reaktio.
+- Vitsi rakentuu: vanha oletus → nykyhavainto → nuoren herran laconinen
+  reaktio. Saapumismerkinnässä isoisän sitaatti ja pojanpojan vastaus
+  samassa merkinnässä toimii hyvin.
+- Isoisän äänessä: 1870-luvun sanasto, varma sävy, mittaukset ja
+  havainnot. Nuoren äänessä: nykyfaktat ja lähteet.
 - Ei koskaan pilkkaa paikallisia, ruokaa, kieltä tai uskontoa. Pilkan
   kohde on Foggin kartta, klubi, imperiumi tai Fogg itse.
 - Faktat pidetään oikeina silloinkin, kun ne ovat vitsin sisällä

@@ -308,8 +308,15 @@ export const NORTHAMERICA = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Montezuman aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Montezuman aarteen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Siirtokunnat ovat pärjänneet ilman meitä hämmentävän hyvin. Päätin olla ottamatta teekutsuja puheeksi.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Siirtokunnat ovat pärjänneet ilman meitä hämmentävän hyvin. Päätin olla ottamatta teekutsuja puheeksi.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {

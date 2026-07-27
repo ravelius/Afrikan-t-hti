@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  PACKS, packById, allQuestions, factSource, factText, isSourceUrl, sourceLabel, sourceList,
+  PACKS, packById, allQuestions, factSource, factText, factVoice, isSourceUrl,
+  sourceLabel, sourceList, voiceTitle,
 } from '../js/pack.js';
 
 /** Lähde on merkkijono tai lista merkkijonoja; verkko-osoite vain http(s). */
@@ -25,7 +26,7 @@ import { tokenPileTemplate } from '../js/tokens.js';
 import {
   Game, mulberry32, questionLevel, FLIGHT_PRICE, START_MONEY, STAR_PRIZE, STRANDED_AID,
   DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, HARD_BONUS, HINT_PRICE,
-  QUIZ_SECONDS, SEA_FARE,
+  QUIZ_SECONDS, SEA_FARE, HINT_EVERY_TURNS,
 } from '../js/game.js';
 import {
   chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
@@ -47,6 +48,13 @@ function newGame(seed = 5) {
 }
 
 // --- jokaista pakettia koskevat eheystestit --------------------------------
+
+// Laudat, joiden kahden äänen sisältö on kirjoitettu valmiiksi: näiltä
+// vaaditaan täysi määrä saapumismerkintöjä ja aarrevihje jokaiselle
+// aarrekaupungille. Kun laudan sisältö valmistuu, lisää sen tunnus tähän —
+// muutos on julkaisuportti, ei muotoseikka (docs/tyolista-opukselle.md,
+// paketit 4 ja 5).
+const VOICES_DONE = new Set(['maailma', 'africa', 'suomi', 'istanbul']);
 
 for (const pack of PACKS) {
   const packBoard = buildBoard(pack.cities, pack.edges);
@@ -194,9 +202,46 @@ for (const pack of PACKS) {
     }
   });
 
-  test(`${pack.id}: herra Foggin päiväkirjamerkintä on kirjoitettu`, () => {
-    assert.equal(typeof pack.texts.diary, 'string', 'texts.diary puuttuu');
-    assert.ok(pack.texts.diary.length >= 30, 'päiväkirjamerkintä on liian lyhyt');
+  test(`${pack.id}: saapumismerkinnät on kirjoitettu`, () => {
+    const notes = pack.texts.diaries;
+    assert.ok(Array.isArray(notes) && notes.length > 0, 'texts.diaries puuttuu');
+    assert.equal(new Set(notes).size, notes.length, 'sama merkintä kahdesti');
+    for (const note of notes) {
+      assert.equal(typeof note, 'string');
+      assert.ok(note.length >= 30, `merkintä on liian lyhyt: "${note}"`);
+    }
+    if (VOICES_DONE.has(pack.id)) {
+      assert.ok(notes.length >= 4, 'saapumismerkintöjä tarvitaan vähintään neljä');
+    }
+  });
+
+  // Isoisän taitettu sivu vihjaa laudan pääaarteesta. Vihje ei saa paljastaa
+  // kaupunkia eikä osoittaa kaupunkiin, jota laudalla ei ole. Täysi kattavuus
+  // vaaditaan laudoilta, joiden sisältö on kirjoitettu (VOICES_DONE).
+  test(`${pack.id}: aarrevihjeet eivät paljasta kaupunkia`, () => {
+    const hints = pack.texts.starHints;
+    assert.ok(hints && typeof hints === 'object', 'texts.starHints puuttuu');
+    const extra = Object.keys(hints).filter((id) => !pack.cities.some((c) => c.id === id));
+    assert.deepEqual(extra, [], 'vihje osoittaa tuntemattomaan kaupunkiin');
+
+    for (const city of pack.cities) {
+      const hint = hints[city.id];
+      if (!hint) continue;
+      assert.ok(hint.length >= 40, `${city.id}: vihje on liian lyhyt`);
+      // Nimen jokainen kunnollinen sana tarkistetaan erikseen sanarajoilla:
+      // lyhyt alkuosa (esim. "Al Kufra") osuisi muuten keskelle muita sanoja.
+      for (const word of city.name.split(/[ ()]+/).filter((w) => w.length >= 4)) {
+        assert.ok(
+          !new RegExp(`\\b${word}`, 'i').test(hint),
+          `${city.id}: vihje nimeää kaupungin ("${word}")`,
+        );
+      }
+    }
+
+    if (!VOICES_DONE.has(pack.id)) return;
+    for (const city of pack.cities.filter((c) => !c.start)) {
+      assert.ok(hints[city.id], `vihje puuttuu kaupungilta ${city.id}`);
+    }
   });
 
   test(`${pack.id}: rosvon kaksintaistelupakka on ehjä`, () => {
@@ -1356,4 +1401,80 @@ test('kysymyksen lähde kulkeutuu tietovisaan ja kaksintaisteluun', () => {
   game.phase = 'action';
   game.actionTravel('stay');
   assert.ok(Array.isArray(game.quiz.source));
+});
+
+// --- kaksi ääntä (paketti 4) -----------------------------------------------
+
+test('merkitsemätön tieto on nuoren herran havainto, merkitty isoisän', () => {
+  assert.equal(factVoice('Pelkkä merkkijono on vanhaa sisältöä.'), 'nuori');
+  assert.equal(factVoice({ text: 'Ilman merkintää.' }), 'nuori');
+  assert.equal(factVoice({ text: 'Merkitty.', voice: 'isoisa' }), 'isoisa');
+  // Tuntematon ääni ei saa kaataa piirtoa vaan putoaa nuoreen.
+  assert.equal(factVoice({ text: 'Outo.', voice: 'kapteeni' }), 'nuori');
+
+  assert.match(voiceTitle('isoisa'), /Isoisän päiväkirjasta/);
+  assert.match(voiceTitle('nuori'), /Nuoren herran havainto/);
+  assert.equal(voiceTitle(undefined), voiceTitle('nuori'));
+});
+
+test('saapumismerkintä arvotaan listasta pelin omalla arvonnalla', () => {
+  const seen = new Set();
+  for (let seed = 1; seed <= 40; seed++) {
+    const game = new Game({
+      players: [{ name: 'Yksin', color: '#f00', start: null }],
+      pack: packById('maailma'),
+      rng: mulberry32(seed),
+    });
+    game.actionPickStart('kairo', 0); // portti Afrikan laudalle
+    assert.equal(game.diaryNote.packId, 'africa');
+    assert.ok(packById('africa').texts.diaries.includes(game.diaryNote.text));
+    seen.add(game.diaryNote.text);
+  }
+  assert.ok(seen.size >= 2, 'sama merkintä joka pelissä — arvonta ei toimi');
+
+  // Sama siemen antaa saman merkinnän, jotta tallennus toistuu oikein.
+  const toista = () => {
+    const g = new Game({
+      players: [{ name: 'Yksin', color: '#f00', start: null }],
+      pack: packById('maailma'),
+      rng: mulberry32(7),
+    });
+    g.actionPickStart('kairo', 0);
+    return g.diaryNote.text;
+  };
+  assert.equal(toista(), toista());
+});
+
+test('isoisän vihje osoittaa tähtikaupunkiin ja vaikenee kun aarre on löytynyt', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
+    pack: packById('africa'),
+    rng: mulberry32(21),
+  });
+
+  const starCity = game.starCityOf();
+  assert.ok(starCity, 'tähtikaupunkia ei löytynyt');
+  assert.equal(game.tokens.get(starCity), 'star');
+
+  // Vihje nousee esiin vain joka HINT_EVERY_TURNS vuoro.
+  game.turnCount = HINT_EVERY_TURNS;
+  assert.equal(game.starHint(), packById('africa').texts.starHints[starCity]);
+  game.turnCount = HINT_EVERY_TURNS + 1;
+  assert.equal(game.starHint(), null, 'vihje näkyy liian usein');
+
+  // Löytynyt aarre sulkee taitetun sivun.
+  game.turnCount = HINT_EVERY_TURNS * 2;
+  assert.ok(game.starHint());
+  game.world.starFound = true;
+  assert.equal(game.starHint(), null, 'vihje jatkuu vaikka aarre on löytynyt');
+});
+
+test('vihjeetön lauta ei kaada tietoruutua', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'lissabon' }],
+    pack: packById('europe'), // vihjeet vielä kirjoittamatta
+    rng: mulberry32(3),
+  });
+  game.turnCount = HINT_EVERY_TURNS;
+  assert.equal(game.starHint(), null);
 });

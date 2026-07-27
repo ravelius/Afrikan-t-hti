@@ -307,8 +307,15 @@ export const EUROPE = {
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Meripihkahuoneen aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Meripihkahuoneen aarteen kotiin ${money} punnan kanssa.`,
-    // Herra Foggin päiväkirjamerkintä laudalle saavuttaessa.
-    diary: 'Kotimantere. Puolet karttani rajoista on väärin, ja loput ylitetään näyttämättä passia. Kukaan ei tarkasta papereitani — en tiedä, olenko helpottunut vai loukkaantunut.',
+    // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
+    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
+    diaries: [
+      'Kotimantere. Puolet karttani rajoista on väärin, ja loput ylitetään näyttämättä passia. Kukaan ei tarkasta papereitani — en tiedä, olenko helpottunut vai loukkaantunut.',
+    ],
+    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
+    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
+    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
+    starHints: {},
   },
 
   decor: {
