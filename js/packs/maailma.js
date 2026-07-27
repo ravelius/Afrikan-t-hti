@@ -295,6 +295,18 @@ export const MAAILMA = {
       fact: 'Metri määriteltiin alun perin niin, että napojen kautta kulkeva ympärysmitta on 40 miljoonaa metriä.',
     },
     {
+      q: 'Mikä on maailman korkeimmalla sijaitseva pääkaupunki?',
+      options: ['La Paz', 'Quito', 'Bogotá', 'Kathmandu', 'Addis Abeba', 'Mexico City', 'Nairobi', 'Ulan Bator'],
+      correct: 0,
+      fact: 'Bolivian hallitus istuu La Pazissa noin 3 600 metrin korkeudessa; naapurikaupunki El Alto ja sen lentokenttä ovat vielä ylempänä.',
+    },
+    {
+      q: 'Kuinka monta kieltä maailmassa arvioidaan puhuttavan?',
+      options: ['noin 7 000', 'noin 200', 'noin 700', 'noin 1 500', 'noin 25 000', 'noin 70', 'noin 300', 'noin 70 000'],
+      correct: 0,
+      fact: 'Kieliä lasketaan olevan noin seitsemäntuhatta, ja arviolta puolet niistä on uhanalaisia — moni jää ilman uusia puhujia.',
+    },
+    {
       q: 'Mikä raja kulkee Tyynenmeren poikki niin, että sen ylittäessä vaihtuu päivä?',
       options: ['kansainvälinen päivämääräraja', 'nollameridiaani', 'päiväntasaaja', 'Kauriin kääntöpiiri', 'Kravun kääntöpiiri', 'pohjoinen napapiiri', 'eteläinen napapiiri', 'keskipäivän linja'],
       correct: 0,
