@@ -197,16 +197,19 @@ selittelyä eikä ohjeita. Avauskortissa/tietoruudussa näytetään TÄSMÄLLEEN
 tämä teksti (kirjoituskoneella naksuen, kolme kappaletta):
 
 > Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872,
-> kukkarollinen puntia ja päiväkirja, joka päättyy kesken lauseen.
+> kukkarollinen puntia ja kulunut päiväkirja.
 >
-> Viimeinen lause: "Afrikassa kerrotaan tähdestä, joka —"
+> Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä."
+> Viimeinen lause päättyy kesken.
 >
-> Jonkun on kirjoitettava se loppuun.
+> Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.
 >
 > Ostin lipun samana iltana.
 
-(Päivitetty 27.7.2026 omistajan pyynnöstä "Afrikka ensin" -vaiheessa:
-kesken jäänyt lause näytetään ja se vihjaa Afrikan tähdestä.)
+(Päivitetty 27.7.2026 omistajan pyynnöstä: ei mainintaa Afrikasta, koska
+aloituspaikan saa valita vapaasti. Isoisän 80 päivän ennätys mainitaan —
+se pohjustaa tulevan aikaraja-vastustajan, joka toteutetaan Afrikan
+sisällön jälkeen.)
 
 - Tilarivi pickstartissa ilman valintaa: pelkkä "Minne ensin?"
 - Kaikki muut avauksen ohje- ja lokirivit ("Peli alkaa! Etsikää…",

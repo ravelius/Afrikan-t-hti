@@ -62,9 +62,10 @@ const INTRO_FONT_MIN = 0.72;
 // Omistajan päättämä avausteksti. ÄLÄ muokkaa ilman omistajan lupaa
 // (docs/tyolista-opukselle.md, paketti 3).
 const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, '
-  + 'kukkarollinen puntia ja päiväkirja, joka päättyy kesken lauseen.\n\n'
-  + 'Viimeinen lause: "Afrikassa kerrotaan tähdestä, joka —"\n\n'
-  + 'Jonkun on kirjoitettava se loppuun.\n\n'
+  + 'kukkarollinen puntia ja kulunut päiväkirja.\n\n'
+  + 'Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä." '
+  + 'Viimeinen lause päättyy kesken.\n\n'
+  + 'Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.\n\n'
   + 'Ostin lipun samana iltana.';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
