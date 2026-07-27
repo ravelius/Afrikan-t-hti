@@ -16,6 +16,26 @@ aiemmista skripteistä; selain `/opt/pw-browsers/chromium-*/chrome-linux/chrome`
 Sävy- ja sisältösäännöt ovat tiedostoissa `docs/tarina.md` ja
 `docs/periaatteet.md` — lue molemmat ennen tarinatekstien kirjoittamista.
 
+## Rinnakkaiset sessiot (työnjako)
+
+Työn voi jakaa usealle sessiolle näin — ÄLÄ poikkea jaosta, koska
+paketit 1–4 ja 6 muokkaavat samoja tiedostoja (ui.js, game.js, css):
+
+- **Kaista A (koodi):** paketit 1 → 2 → 3 → 4 → 6 → 7 tässä
+  järjestyksessä, yksi sessio kerrallaan.
+- **Kaista B (sisältö):** paketti 5 rinnakkain kaistan A kanssa —
+  muokkaa VAIN `js/packs/*-questions.js`-tiedostoja ja pakkojen
+  duels/starHints/diaries-listoja, ei koskaan js/ui.js:ää, js/game.js:ää
+  eikä css:ää. Jos sisältösessioita on kaksi, jaa laudat: B1 = Maailma,
+  Afrikka, Eurooppa; B2 = Suomi, Istanbul, Aasia, Oseania, Amerikat,
+  Lähi-itä. Huom: paketin 4 äänimerkinnät (voice-kenttä) saa lisätä
+  sisältöön vasta kun kaista A on toteuttanut paketin 4 rungon.
+- Jokainen sessio omalla haaralla, pienet PR:t, merge usein; mergen
+  jälkeen haara uusiksi tuoreen mainin päälle
+  (`git fetch origin main && git checkout -B <haara> origin/main`).
+- `npm test` vihreänä ennen jokaista mergeä. Jos main on ehtinyt
+  liikkua, rebase ja aja testit uudelleen ennen mergeä.
+
 ---
 
 ## Paketti 1: pikakorjaukset (bugit ja tyyli)
