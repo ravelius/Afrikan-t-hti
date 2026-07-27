@@ -53,7 +53,7 @@ function newGame(seed = 5) {
 // jokaisella aarrekaupungilla on vähintään viisi omaa kysymystä, joista
 // ainakin yksi on helppo (taso 1) ja yksi vaikea (taso 3), ja yleispakassa on
 // vähintään 15 kysymystä. Kesken olevilla laudoilla pätevät vanhat minimit.
-const SISALTO_VALMIS = new Set(['maailma', 'africa', 'europe', 'suomi', 'istanbul']);
+const SISALTO_VALMIS = new Set(['maailma', 'africa', 'europe', 'suomi', 'istanbul', 'asia']);
 const MIN_CITY_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 5 : 2);
 const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10);
 
@@ -64,7 +64,7 @@ const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10)
 // aarrekaupungille. Kun laudan sisältö valmistuu, lisää sen tunnus tähän —
 // muutos on julkaisuportti, ei muotoseikka (docs/tyolista-opukselle.md,
 // paketit 4 ja 5).
-const VOICES_DONE = new Set(['maailma', 'africa', 'suomi', 'istanbul', 'europe']);
+const VOICES_DONE = new Set(['maailma', 'africa', 'suomi', 'istanbul', 'asia', 'europe']);
 
 for (const pack of PACKS) {
   const packBoard = buildBoard(pack.cities, pack.edges);
