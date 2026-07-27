@@ -218,6 +218,15 @@ tavaramerkkinä vahvin. Vernen Fogg-hahmo on vapaata kulttuuriperintöä
 (ennakkotapaus Inklen kaupallinen 80 Days). Ennen kansainvälistä
 kaupallistamista tehdään tavaramerkkihaku peliluokissa (EUIPO, 9/41).
 
+**Omistajan toimenpide samassa yhteydessä:** repon nimen ja kuvauksen
+vaihto tehdään GitHubin asetuksissa (Settings → General → Repository
+name, esim. `matkakirja`, ja About-kuvaus) — Claude ei voi tehdä sitä.
+Huomio: git-osoitteet ohjautuvat vanhalla nimellä automaattisesti, mutta
+GitHub Pages -osoite vaihtuu (ravelius.github.io/matkakirja/) eikä vanha
+ohjaa uuteen — kirjanmerkit ja kotivalikkoon asennetut versiot pitää
+avata uudesta osoitteesta. Muistuta omistajaa tästä, kun paketti 7 on
+valmis.
+
 Kun nimi on päätetty, vaihto koskee: `index.html` (title, brand, meta),
 `manifest.webmanifest`, `sw.js` (CACHE-etuliite), `js/main.js`,
 `tools/build-standalone.mjs` (otsikot ja tiedostonimet), `README.md`,
