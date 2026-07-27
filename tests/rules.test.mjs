@@ -151,6 +151,13 @@ for (const pack of PACKS) {
         checkSources(typeof fact === 'string' ? undefined : fact.source, `tieto ${city.id}`);
       }
       assert.equal(new Set(texts).size, texts.length, `${city.id}: sama tieto kahdesti`);
+
+      // Valmiilla laudalla tietoruudussa vuorottelee kaksi ääntä, joten
+      // jokaisella kaupungilla on sekä isoisän merkintä että nuoren havainto.
+      if (!SISALTO_VALMIS.has(pack.id)) continue;
+      const voices = facts.map(factVoice);
+      assert.ok(voices.includes('isoisa'), `${city.id}: isoisän merkintä puuttuu`);
+      assert.ok(voices.includes('nuori'), `${city.id}: nuoren havainto puuttuu`);
     }
     const extra = Object.keys(pack.placeFacts).filter((id) => !pack.cities.some((c) => c.id === id));
     assert.deepEqual(extra, [], 'tietoja kaupungeille joita ei ole laudalla');
