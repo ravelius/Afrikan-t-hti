@@ -7,7 +7,7 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.14';
+const APP_VERSION = '2026-07-27.15';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -70,10 +70,20 @@ function attach(game) {
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
 }
 
+/**
+ * Matkan juoni kerrotaan kerran uuden pelin alussa. Kesken jäänyttä peliä
+ * jatkettaessa tarinaa ei toisteta — sen voi lukea uudelleen Säännöistä.
+ */
+function showIntro() {
+  const dialog = document.getElementById('intro-dialog');
+  if (dialog && !dialog.open) dialog.showModal();
+}
+
 function startGame() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
   attach(new Game({ players: [newPlayer()], pack: packById('maailma') }));
+  showIntro();
 }
 
 // --- äänet ------------------------------------------------------------------

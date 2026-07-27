@@ -507,6 +507,33 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 /* Vaiheen B napit ovat rivin levyisiä: nimet ovat pitkiä. */
 .actions .wide { grid-column: 1 / -1; }
 
+/*
+ * Saapumiskortti: kaupungin matkatarina keskellä ruutua. Kortti on kapeampi
+ * kuin säännöt, jotta teksti pysyy luettavan mittaisena rivinä.
+ */
+.arrival-card { max-width: 460px; }
+
+.arrival-card h2 {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  letter-spacing: 0.06em;
+}
+
+.arrival-text {
+  margin: 0.5rem 0 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  min-height: 4.5em; /* teksti naksuu esiin: kortti ei saa hypähdellä */
+}
+
+.arrival-ask {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--accent-ink, inherit);
+  font-weight: 700;
+}
+
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */
 .passport-finds {
   display: flex;

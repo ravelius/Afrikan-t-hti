@@ -515,6 +515,33 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 /* Vaiheen B napit ovat rivin levyisiä: nimet ovat pitkiä. */
 .actions .wide { grid-column: 1 / -1; }
 
+/*
+ * Saapumiskortti: kaupungin matkatarina keskellä ruutua. Kortti on kapeampi
+ * kuin säännöt, jotta teksti pysyy luettavan mittaisena rivinä.
+ */
+.arrival-card { max-width: 460px; }
+
+.arrival-card h2 {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  letter-spacing: 0.06em;
+}
+
+.arrival-text {
+  margin: 0.5rem 0 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  min-height: 4.5em; /* teksti naksuu esiin: kortti ei saa hypähdellä */
+}
+
+.arrival-ask {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--accent-ink, inherit);
+  font-weight: 700;
+}
+
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */
 .passport-finds {
   display: flex;
@@ -1633,6 +1660,51 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0; right: 0; }
   </div>
 
   <!-- Aloitusruutu -->
+
+  <!-- Matkan avaus: juoni kerrotaan kerran uuden pelin alussa -->
+  <dialog id="intro-dialog" class="dialog">
+   <div class="dialog-card">
+    <h2>Perintö</h2>
+    <div class="rules-text">
+      <p>Sukukartanon vintiltä löytyi matkalaukku. Sen sisällä oli vuoden 1872
+        maailmankartta, kukkarollinen puntia, vihreä passi ja paksu, kulunut
+        päiväkirja vuodelta 1873.</p>
+      <p>Päiväkirja on <b>isoisän</b>. Hän kiersi maailman kahdeksassakymmenessä
+        päivässä ja merkitsi muistiin kaiken näkemänsä — joet, vuoret, satamat,
+        basaarien tuoksut. Myös sen, mihin hän ei ehtinyt. Niitä sivuja on
+        yllättävän monta.</p>
+      <p>Sinä olet <b>nuori herra Fogg</b>, ja sinä lähdet katsomaan, mikä
+        pitää vielä paikkansa. Osa isoisän maailmasta on kadonnut: rajat ovat
+        toisaalla, valtakunnat hajonneet, punnat museokappaleita. Osa ei ole
+        muuttunut lainkaan — ja juuri niissä kohdin vanha herra osoittautuu
+        hämmentävän usein oikeaan osuneeksi.</p>
+      <p>Jokaisella laudalla on kätketty <b>pääaarre</b>. Aarteita ei osteta
+        rahalla vaan avataan tiedolla: kaupungissa esitetään kysymys, ja oikea
+        vastaus paljastaa mitä maan alla on. Isoisän päiväkirja vihjaa
+        harvakseltaan, mistä suunnasta kannattaa etsiä — muttei koskaan nimeä
+        kaupunkia.</p>
+      <p>Matka ei pääty. Kerää löytöjä, leimoja passiin ja kokemusta niin
+        kauan kuin huvittaa. Ensimmäinen lippu on jo maksettu.</p>
+    </div>
+    <form method="dialog" class="dialog-actions">
+      <button class="primary" value="start">Lähde matkaan</button>
+    </form>
+   </div>
+  </dialog>
+
+  <!-- Saapuminen aarrekaupunkiin -->
+  <dialog id="arrival-dialog" class="dialog">
+   <div class="dialog-card arrival-card">
+    <h2 id="arrival-city"></h2>
+    <p id="arrival-voice" class="fact-place"></p>
+    <p id="arrival-text" class="arrival-text"></p>
+    <p class="arrival-ask">Kaupungissa on avaamaton aarre. Haluatko avata sen?</p>
+    <div class="dialog-actions">
+      <button id="arrival-yes" class="primary" type="button">Avaa — vastaa kysymykseen</button>
+      <button id="arrival-no" type="button">Ei nyt — jatka matkaa</button>
+    </div>
+   </div>
+  </dialog>
 
   <!-- Vihreä passi -->
   <dialog id="passport-dialog" class="dialog">
@@ -16386,6 +16458,34 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Putous syöksyy Guayanan ylängön pöytävuoren laidalta, ja se on nimetty sen löytäneen lentäjän mukaan.',
       fact: 'Vesi putoaa Auyán-tepuin laidalta 979 metrin korkeudesta ja hajoaa sumuksi jo ennen kuin se osuu maahan.',
     },
+    {
+      q: 'Minkä meren rannikolla Venezuela sijaitsee?',
+      options: ['Karibianmeren', 'Tyynenmeren', 'Välimeren', 'Punaisenmeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Caracas on rannikkovuorten takana laaksossa, ja satama on vuoren toisella puolen. Rannikolta on lyhyt matka Karibian saarille.',
+      hint: 'Meri on saariensa mukaan nimetty ja lämmin.',
+    },
+    {
+      q: 'Mikä on Venezuelan tärkein vientituote?',
+      options: ['öljy', 'kahvi', 'kupari', 'banaani'],
+      correct: 0,
+      fact: 'Maalla on maailman suurimpia todettuja öljyvarantoja. Talouden riippuvuus yhdestä tuotteesta on tehnyt siitä herkän hinnanvaihteluille.',
+      hint: 'Tuote pumpataan maasta ja se on musta.',
+    },
+    {
+      q: 'Mistä salamailmiöstä Maracaibo-järven suisto on kuuluisa?',
+      options: [
+        'salamoita iskee lähes joka yö samaan paikkaan',
+        'salamat ovat vihreitä',
+        'salamoita ei esiinny koskaan',
+        'salamat kuuluvat mutta eivät näy',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Catatumbo-joen suistossa ukkostaa noin 250 yönä vuodessa, ja salamointi näkyy kymmenien kilometrien päähän. Merimiehet käyttivät sitä majakkana.',
+      hint: 'Ilmiö toistuu lähes joka yö samassa paikassa.',
+    },
   ],
 
   bogota: [
@@ -16413,6 +16513,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Tarina kertoo päälliköstä, joka voiteli itsensä kultapölyllä ennen järveen sukeltamista.',
       fact: 'Muiscojen päällikkö uhrasi kultaesineitä Guatavita-järveen. Espanjalaiset kuulivat tarinan ja lähtivät etsimään kultaista kaupunkia, jota ei ollut olemassa.',
     },
+    {
+      q: 'Kuinka korkealla Bogotá sijaitsee?',
+      options: [
+        'noin 2 600 metrissä',
+        'merenpinnan tasolla',
+        'noin 600 metrissä',
+        'yli 5 000 metrissä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Korkeus tekee ilmastosta viileän: lämpötila on ympäri vuoden noin 14 astetta. Kaupunkia reunustavat vihreät vuoret.',
+      hint: 'Korkeus on yli kaksi kilometriä.',
+    },
+    {
+      q: 'Mikä on ciclovía?',
+      options: ['sunnuntaisin pyöräilijöille suljetut kadut', 'kaupungin metro', 'tori', 'juhla'],
+      correct: 0,
+      fact: 'Joka sunnuntai yli sata kilometriä katuja suljetaan autoilta ja täyttyy pyöräilijöistä ja kävelijöistä. Tapa on levinnyt monille muille kaupungeille.',
+      hint: 'Kadut annetaan yhdeksi päiväksi pyörille ja jaloille.',
+    },
+    {
+      q: 'Mikä on Zipaquirán suolakatedraali Bogotán lähellä?',
+      options: [
+        'kirkko vanhan suolakaivoksen käytäviin',
+        'luola ilman rakennuksia',
+        'museo maan päällä',
+        'tulivuoren kraatteri',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kirkko rakennettiin satojen metrien syvyyteen vanhoihin suolakaivoskäytäviin. Seinät ovat kiiltävää suolakiveä.',
+      hint: 'Rakennus on maan alla vanhassa kaivoksessa.',
+    },
   ],
 
   quito: [
@@ -16436,6 +16569,39 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Kaupunki on päiväntasaajalla, jossa auringon rata pysyy samanlaisena kuukaudesta toiseen.',
       fact: 'Päiväntasaajalla aurinko nousee ja laskee jokseenkin samaan aikaan joka päivä: valoisaa on noin 12 tuntia vuoden ympäri.',
+    },
+    {
+      q: 'Kuinka korkealla Quito sijaitsee?',
+      options: [
+        'noin 2 850 metrissä',
+        'merenpinnan tasolla',
+        'noin 850 metrissä',
+        'yli 5 000 metrissä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Quito on maailman korkeimmalla sijaitsevia pääkaupunkeja. Ilma on ohutta, ja vieraat väsyvät ensimmäisinä päivinä nopeasti.',
+      hint: 'Korkeus on lähes kolme kilometriä.',
+    },
+    {
+      q: 'Mikä tunnustus Quiton vanhallakaupungilla on?',
+      options: [
+        'se oli ensimmäisiä Unescon maailmanperintökohteita',
+        'se on maailman uusin kaupunginosa',
+        'se on kokonaan museo',
+        'se on suljettu vierailta',
+      ],
+      correct: 0,
+      fact: 'Vanhakaupunki pääsi listalle heti ensimmäisten joukossa vuonna 1978. Sen kirkot ja aukiot ovat säilyneet poikkeuksellisen ehjinä.',
+      hint: 'Kohde pääsi listalle heti ensimmäisten joukossa 1978.',
+    },
+    {
+      q: 'Mikä lumihuippuinen tulivuori kohoaa Quiton eteläpuolella?',
+      options: ['Cotopaxi', 'Fuji', 'Etna', 'Kilimandžaro'],
+      correct: 0,
+      level: 3,
+      fact: 'Cotopaxi on yksi maailman korkeimmista aktiivisista tulivuorista, ja se näkyy kirkkaalla säällä kaupunkiin. Sen purkauksia seurataan tarkasti.',
+      hint: 'Tulivuori on lähes 5 900 metriä korkea ja yhä aktiivinen.',
     },
   ],
 
@@ -16464,6 +16630,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Laji on nimetty saariryhmän mukaan, jolla se elää.',
       fact: 'Kylmä Humboldtin merivirta tuo saarille viileää vettä, ja siksi pingviinit pärjäävät siellä päiväntasaajasta huolimatta.',
     },
+    {
+      q: 'Kuinka kaukana Galápagossaaret ovat mantereesta?',
+      options: [
+        'noin 1 000 kilometriä',
+        'noin 10 kilometriä',
+        'noin 100 kilometriä',
+        'yli 10 000 kilometriä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Saaret ovat keskellä Tyyntämerta päiväntasaajalla. Eristyneisyys on syy siihen, että lajit kehittyivät omanlaisikseen.',
+      hint: 'Etäisyys on satoja kilometrejä, ei kymmeniä.',
+    },
+    {
+      q: 'Miksi Galápagosin eläimet eivät pelkää ihmisiä?',
+      options: [
+        'saarilla ei ole ollut suuria maapetoja',
+        'eläimet on kesytetty',
+        'ne ovat sokeita',
+        'niitä ruokitaan päivittäin',
+      ],
+      correct: 0,
+      fact: 'Ilman petoja eläimille ei kehittynyt pakoreaktiota. Siksi ne antavat ihmisen tulla lähelle — ja siksi vierailijoita koskevat tiukat säännöt.',
+      hint: 'Syy on siinä, mitä saarilta puuttuu.',
+    },
+    {
+      q: 'Mikä liskolaji sukeltaa Galápagosissa merestä ravintonsa?',
+      options: ['merileguaani', 'varaani', 'kameleontti', 'gekko'],
+      correct: 0,
+      level: 3,
+      fact: 'Merileguaani on ainoa merestä ruokaa hakeva lisko: se laiduntaa leviä kalliopohjassa. Pisaroita suolaa se aivastaa pois sieraimistaan.',
+      hint: 'Lisko syö leviä veden alta.',
+    },
   ],
 
   boavista: [
@@ -16482,6 +16681,39 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Huippu on tasainen kuin lauta, ja seinämät nousevat pystysuorina sademetsän yllä.',
       fact: 'Roraima on tepui, jonka huipulla elää lajeja joita ei tavata mistään muualta. Se innoitti Arthur Conan Doylen romaania Kadonnut maailma.',
+    },
+    {
+      q: 'Millaista maisemaa Boa Vistan ympärillä on?',
+      options: [
+        'savannia ja jokia sademetsän reunalla',
+        'jäätiköitä',
+        'hiekka-aavikkoa',
+        'vuoristoa ilman kasvillisuutta',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Roraiman savanni erottuu ympäröivästä sademetsästä avoimena ruohomaana. Kaupunki on rakennettu viuhkamaisen kaavan mukaan.',
+      hint: 'Maisema on avointa ruohomaata metsän keskellä.',
+    },
+    {
+      q: 'Ketkä alkuperäiskansat asuvat Roraiman alueella?',
+      options: ['muun muassa makuxit ja yanomamit', 'maorit', 'inuiitit', 'aboriginaalit'],
+      correct: 0,
+      fact: 'Alueella on laajoja alkuperäiskansojen suojelualueita. Kansat elävät viljelystä, kalastuksesta ja metsästyksestä, ja niiden maaoikeuksista käydään jatkuvaa keskustelua.',
+      hint: 'Kansoja on useita, ja yksi niistä tunnetaan sademetsän pohjoisosassa.',
+    },
+    {
+      q: 'Minkä kolmen maan raja kohtaa Roraima-vuorella?',
+      options: [
+        'Brasilian, Venezuelan ja Guyanan',
+        'Perun, Chilen ja Bolivian',
+        'Kolumbian, Ecuadorin ja Perun',
+        'Argentiinan, Chilen ja Uruguayn',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Pöytävuoren laella on kolmen maan rajapyykki. Vuori innoitti romaanin Kadonnut maailma.',
+      hint: 'Yksi maista on Guyana.',
     },
   ],
 
@@ -16502,6 +16734,34 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Päiväntasaajan läheisyys antaa lisävauhtia Maan pyörimisestä.',
       fact: 'Euroopan avaruusjärjestön laukaisukeskus on Kourousssa, koska päiväntasaajalla Maan pyöriminen antaa kantoraketille ilmaista vauhtia.',
     },
+    {
+      q: 'Millä rahalla Ranskan Guayanassa maksetaan?',
+      options: ['eurolla', 'dollarilla', 'realilla', 'punnalla'],
+      correct: 0,
+      level: 1,
+      fact: 'Alue on osa Ranskaa ja siten myös Euroopan unionia, joten valuutta on euro. Se on EU:n ainoa alue Etelä-Amerikan mantereella.',
+      hint: 'Sama raha kuin Pariisissa.',
+    },
+    {
+      q: 'Miksi Kourou on hyvä paikka laukaista raketteja?',
+      options: [
+        'se on lähellä päiväntasaajaa, jolloin maapallon pyöriminen auttaa',
+        'siellä ei sada',
+        'siellä on korkeat vuoret',
+        'siellä on kylmä ilmasto',
+      ],
+      correct: 0,
+      fact: 'Päiväntasaajan lähellä maan pyörimisnopeus antaa raketille lisävauhtia, ja laukaisut suuntautuvat turvallisesti merelle.',
+      hint: 'Apu tulee maapallon pyörimisestä.',
+    },
+    {
+      q: 'Mikä Ranskan Guayana oli 1800-luvulta 1950-luvulle?',
+      options: ['rangaistussiirtola', 'itsenäinen valtio', 'Britannian alue', 'asumaton alue'],
+      correct: 0,
+      level: 3,
+      fact: 'Ranska lähetti sinne tuomittuja, ja vankiloista tunnetuin oli Paholaissaari. Siirtola lakkautettiin vuonna 1953.',
+      hint: 'Alueelle lähetettiin ihmisiä pakolla Euroopasta.',
+    },
   ],
 
   macapa: [
@@ -16520,6 +16780,34 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 1,
       hint: 'Joki on maailman vesirikkain ja virtaa läpi sademetsän.',
       fact: 'Suisto on niin leveä, ettei vastarantaa näe. Joki työntää makeaa vettä satoja kilometrejä merelle.',
+    },
+    {
+      q: 'Mikä rakennus Macapássa on rakennettu päiväntasaajan päälle?',
+      options: ['jalkapallostadion', 'kirkko', 'rautatieasema', 'majakka'],
+      correct: 0,
+      level: 1,
+      fact: 'Stadionin keskiviiva kulkee päiväntasaajaa pitkin, joten joukkueet pelaavat eri pallonpuoliskoilla. Stadionin lempinimi on Zerão.',
+      hint: 'Rakennuksessa pelataan palloa ja keskiviiva jakaa maapallon.',
+    },
+    {
+      q: 'Miten Macapáan pääsee muualta Brasiliasta?',
+      options: [
+        'lentäen tai laivalla, koska maantietä ei ole',
+        'junalla',
+        'moottoritietä pitkin',
+        'köysiradalla',
+      ],
+      correct: 0,
+      fact: 'Kaupunki on Amazonin suistossa ilman maantieyhteyttä muualle maahan. Tavarat saapuvat jokea pitkin.',
+      hint: 'Maantieyhteys puuttuu kokonaan.',
+    },
+    {
+      q: 'Mikä on pororoca?',
+      options: ['vuorovesiaalto, joka nousee Amazonia ylös', 'tuuli', 'sademetsän puu', 'kalalaji'],
+      correct: 0,
+      level: 3,
+      fact: 'Nousuvesi työntyy jokea vastaan metrien korkuisena aaltona, joka etenee kymmeniä kilometrejä. Sitä myös surffataan.',
+      hint: 'Ilmiö syntyy vuorovedestä joen suulla.',
     },
   ],
 
@@ -16545,6 +16833,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Tumma ja vaalea vesi kulkevat kilometrikaupalla sekoittumatta.',
       fact: 'Musta Rio Negro ja savinen Solimões virtaavat rinnakkain noin kuusi kilometriä, koska niiden lämpötila ja virtausnopeus poikkeavat toisistaan.',
     },
+    {
+      q: 'Mikä ylellinen rakennus muistuttaa Manausin kumikaudesta?',
+      options: ['oopperatalo', 'linna', 'kylpylä', 'katedraali'],
+      correct: 0,
+      level: 1,
+      fact: 'Vuonna 1896 valmistunut oopperatalo rakennettiin Euroopasta tuoduista materiaaleista keskelle sademetsää. Kumikauppa rahoitti sen.',
+      hint: 'Rakennuksessa esitetään musiikkia ja se rakennettiin kumirahalla.',
+    },
+    {
+      q: 'Miten Manausiin pääsee?',
+      options: [
+        'lentäen tai jokilaivalla',
+        'junalla',
+        'moottoritietä pitkin etelästä',
+        'meritse suoraan Atlantilta autolla',
+      ],
+      correct: 0,
+      fact: 'Kaupunki on tuhannen kilometrin päässä merestä sademetsän keskellä. Valtamerilaivat pääsevät sinne jokea pitkin.',
+      hint: 'Reitit kulkevat ilmassa ja vettä pitkin.',
+    },
+    {
+      q: 'Miksi Rio Negron musta ja Solimõesin ruskea vesi eivät sekoitu heti?',
+      options: [
+        'jokien lämpötila, nopeus ja tiheys ovat erilaiset',
+        'toinen joki on suolainen',
+        'vesissä on eri väriaine',
+        'joet ovat eri korkeudella',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Vedet virtaavat rinnakkain kilometrien matkan, ennen kuin ne sekoittuvat. Ero syntyy lämpötilasta, virtausnopeudesta ja veteen liuenneesta aineksesta.',
+      hint: 'Syy on veden fysiikassa, ei väriaineessa.',
+    },
   ],
 
   santarem: [
@@ -16564,6 +16885,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Metsätyyppi on maailman lajirikkain ja saa vettä ympäri vuoden.',
       fact: 'Amazoniassa sataa niin usein, että suuri osa vedestä palaa ilmaan puiden kautta ja sataa uudestaan alas — metsä tekee oman sateensa.',
     },
+    {
+      q: 'Millaiset rannat Tapajós-joen varrella ovat?',
+      options: [
+        'valkoista hiekkaa ja kirkasta vettä',
+        'kivikkoa ja jäätä',
+        'mustaa laavahiekkaa',
+        'mutaisia rantoja ilman hiekkaa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Tapajósin vesi on kirkasta ja rannat hiekkaisia, joten alueella on suosittuja uimarantoja keskellä sademetsää.',
+      hint: 'Ranta muistuttaa merenrantaa keskellä metsää.',
+    },
+    {
+      q: 'Mitä Santarémin satamasta viedään nykyään paljon?',
+      options: ['soijaa', 'kivihiiltä', 'autoja', 'paperia'],
+      correct: 0,
+      fact: 'Soijapeltoja on raivattu alueelle laajasti, ja sato viedään jokea pitkin maailmalle. Laajeneminen on samalla kutistanut metsää.',
+      hint: 'Tuote on palkokasvi, josta tehdään rehua ja ruokaöljyä.',
+    },
+    {
+      q: 'Mitä on terra preta eli Amazonin musta multa?',
+      options: [
+        'muinaisten asukkaiden tekemää poikkeuksellisen ravinteikasta maata',
+        'tulivuoren tuhkaa',
+        'jäätikön jauhamaa savea',
+        'merestä nostettua liejua',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Tuhansia vuosia sitten ihmiset paransivat maata hiilellä ja jätteillä, ja se on yhä poikkeuksellisen viljavaa. Löydöt kertovat, että sademetsässä asui suuria yhteisöjä.',
+      hint: 'Maan teki ihminen, ei luonto yksin.',
+    },
   ],
 
   saoluis: [
@@ -16582,6 +16936,34 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Portugalilainen azulejo-perinne suojasi talot kosteudelta.',
       fact: 'Historiallinen keskusta on Unescon maailmanperintökohde, ja sen talot on päällystetty portugalilaisilla azulejoilla.',
+    },
+    {
+      q: 'Millä saarella São Luís sijaitsee?',
+      options: [
+        'oman nimensä saarella rannikon edustalla',
+        'Amazonin suistosaarella',
+        'Karibian saarella',
+        'Tulimaan saarella',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on saarella, joka on yhdistetty mantereeseen silloilla. Se on Brasilian ainoa Ranskan perustama osavaltion pääkaupunki.',
+      hint: 'Saari on nimetty samoin kuin kaupunki.',
+    },
+    {
+      q: 'Mikä juhla täyttää São Luísin kadut kesäkuussa?',
+      options: ['bumba-meu-boi', 'karnevaali helmikuussa', 'oktoberfest', 'kirsikankukkajuhla'],
+      correct: 0,
+      fact: 'Juhlassa esitetään tanssein ja lauluin tarina härästä; asut ja rummut ovat näyttäviä. Perinne on Unescon aineettoman kulttuuriperinnön listalla.',
+      hint: 'Juhlan tarinassa pääosassa on härkä.',
+    },
+    {
+      q: 'Mikä hiekkadyynialue on São Luísin lähellä?',
+      options: ['Lençóis Maranhenses', 'Sahara', 'Namib', 'Atacama'],
+      correct: 0,
+      level: 3,
+      fact: 'Sadekauden jälkeen dyynien väliin syntyy tuhansia kirkkaita lampia, joissa voi uida. Alue on kansallispuisto.',
+      hint: 'Dyynien väliin syntyy sadekauden jälkeen lampia.',
     },
   ],
 
@@ -16607,6 +16989,29 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Meri erottaa Amerikan Euroopasta ja Afrikasta.',
       fact: 'Postilennot kulkivat Dakarista Brasilian itäkärkeen 1920- ja 1930-luvuilla. Reitti oli lyhin mahdollinen mannerten välillä.',
     },
+    {
+      q: 'Missä maassa João Pessoa sijaitsee?',
+      options: ['Brasiliassa', 'Argentiinassa', 'Perussa', 'Kolumbiassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Brasilian koillisrannikolla ja on maan vanhimpia. Se tunnetaan vihreydestään ja rauhallisista rannoistaan.',
+      hint: 'Maa on Etelä-Amerikan suurin.',
+    },
+    {
+      q: 'Mitä kasvia koillisrannikon plantaaseilla on kasvatettu vuosisatoja?',
+      options: ['sokeriruokoa', 'vehnää', 'perunaa', 'teetä'],
+      correct: 0,
+      fact: 'Sokeriruoko toi alueelle vaurautta ja samalla orjuutetun työvoiman. Ruokoa jalostetaan yhä sokeriksi ja etanoliksi.',
+      hint: 'Kasvista tehdään sokeria ja polttoainetta.',
+    },
+    {
+      q: 'Mikä tanssimusiikin laji on Brasilian koillisosan omaa perinnettä?',
+      options: ['forró', 'tango', 'salsa', 'polkka'],
+      correct: 0,
+      level: 3,
+      fact: 'Forróa soitetaan haitarilla, kolmiorummulla ja rautakolmiolla, ja sitä tanssitaan pareittain. Juhannuksen aikaan sitä tanssitaan kaikkialla koillisessa.',
+      hint: 'Soittimina ovat haitari, rumpu ja kolmio.',
+    },
   ],
 
   salvador: [
@@ -16625,6 +17030,29 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Orjuutetut afrikkalaiset naamioivat harjoittelunsa tanssiksi.',
       fact: 'Lajissa yhdistyvät potkut, akrobatia ja musiikki. Se kehittyi Bahiassa afrikkalaisten perinteiden pohjalta.',
+    },
+    {
+      q: 'Mikä on Pelourinho?',
+      options: ['Salvadorin värikäs vanhakaupunki', 'satama', 'vuori', 'ranta'],
+      correct: 0,
+      level: 1,
+      fact: 'Vanhankaupungin mukulakivikadut ja pastellinväriset talot ovat maailmanperintökohde. Alueella soitetaan rumpuja lähes päivittäin.',
+      hint: 'Alue on kaupungin vanhin ja väreiltään kirkas.',
+    },
+    {
+      q: 'Mikä katuruoka on Salvadorin tunnetuin?',
+      options: ['acarajé', 'pizza', 'sushi', 'tortilla'],
+      correct: 0,
+      fact: 'Acarajé on papupullanen, joka paistetaan palmuöljyssä ja täytetään katkarapumuhennoksella. Sitä myyvät valkopukuiset baianat.',
+      hint: 'Ruoka on papupullanen, joka paistetaan palmuöljyssä.',
+    },
+    {
+      q: 'Mikä afrobrasilialainen uskonto on Salvadorissa vahva?',
+      options: ['candomblé', 'shintolaisuus', 'hindulaisuus', 'sikhiläisyys'],
+      correct: 0,
+      level: 3,
+      fact: 'Candomblé säilytti Länsi-Afrikasta tuotujen ihmisten uskomuksia ja rituaaleja. Se vaikuttaa myös musiikkiin, ruokaan ja juhliin.',
+      hint: 'Uskonto säilytti Länsi-Afrikasta tuotujen ihmisten perinteitä.',
     },
   ],
 
@@ -16650,6 +17078,34 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Samassa maassa sijaitsevat myös Lima ja Machu Picchu.',
       fact: 'Iquitos on Perun Amazonian keskus. Vaikka maa tunnetaan Andeista, yli puolet sen pinta-alasta on sademetsää.',
     },
+    {
+      q: 'Mikä kulkuneuvo täyttää Iquitosin kadut?',
+      options: ['moottoririksa eli mototaxi', 'raitiovaunu', 'metro', 'hevoskärry'],
+      correct: 0,
+      level: 1,
+      fact: 'Kolmipyöräiset moottoririksat ovat kaupungin tavallisin taksi. Autoja on vähän, koska niitä ei voi ajaa kaupunkiin maanteitse.',
+      hint: 'Kulkuneuvossa on kolme pyörää ja moottori.',
+    },
+    {
+      q: 'Mistä Iquitos rikastui 1800-luvun lopulla?',
+      options: ['kumista', 'kullasta', 'kahvista', 'kalastuksesta'],
+      correct: 0,
+      fact: 'Kumibuumi toi kaupunkiin eurooppalaista rakennustaidetta ja kaakeloituja julkisivuja. Buumi päättyi, kun kumipuun siemeniä vietiin Aasiaan.',
+      hint: 'Aine saatiin puun maitiaisnesteestä.',
+    },
+    {
+      q: 'Mistä Amazon-joki saa alkunsa Iquitosin yläpuolella?',
+      options: [
+        'Marañónin ja Ucayalin yhtymäkohdasta',
+        'jäätiköstä Patagoniassa',
+        'Titicaca-järvestä',
+        'Atlantin lahdelmasta',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kaksi Andeilta tulevaa jokea yhtyvät, ja siitä alkaa Amazon-joeksi kutsuttu uoma. Latvahaarat alkavat Perun vuorilta.',
+      hint: 'Kaksi Andeilta tulevaa jokea yhtyy Perun sademetsässä.',
+    },
   ],
 
   portovelho: [
@@ -16674,6 +17130,34 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Nimi tuli siitä, että rakennustyömailla kuoli tuhansia ihmisiä malariaan ja keltakuumeeseen.',
       fact: 'Rata rakennettiin kumikuljetuksia varten. Se valmistui vasta kun kumibuumi oli jo ohi, ja jäi lopulta vähälle käytölle.',
     },
+    {
+      q: 'Missä maassa Porto Velho sijaitsee?',
+      options: ['Brasiliassa', 'Boliviassa', 'Perussa', 'Kolumbiassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Rondônian osavaltion pääkaupunki Madeira-joen varrella. Se kasvoi nopeasti rautatien ja myöhemmin maanteiden myötä.',
+      hint: 'Maa on Etelä-Amerikan suurin ja portugalinkielinen.',
+    },
+    {
+      q: 'Mitä Madeira-joessa tuotetaan nykyään suuressa mittakaavassa?',
+      options: ['vesivoimaa', 'suolaa', 'timantteja', 'merikaloja'],
+      correct: 0,
+      fact: 'Joen suuret voimalaitokset tuottavat sähköä laajalle alueelle. Padot ovat muuttaneet kalojen vaellusreittejä ja rantojen elämää.',
+      hint: 'Tuotanto perustuu virtaavaan veteen.',
+    },
+    {
+      q: 'Mitä Rondôniassa on tapahtunut metsille 1970-luvulta lähtien?',
+      options: [
+        'suuri osa sademetsästä on raivattu pelloiksi ja laitumiksi',
+        'metsä on kasvanut kaksinkertaiseksi',
+        'metsä on muuttunut aavikoksi luonnostaan',
+        'metsää ei ole koskaan ollut',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Teiden rakentaminen avasi alueen asutukselle, ja metsää raivattiin karjalle ja pelloille. Satelliittikuvissa raivaus näkyy kalanruotokuviona teiden varsilla.',
+      hint: 'Muutos näkyy satelliittikuvissa kalanruotokuviona.',
+    },
   ],
 
   bananal: [
@@ -16697,6 +17181,39 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Sadekaudella suuri osa saaresta jää veden alle.',
       fact: 'Kuivalla kaudella esiin tulee cerrado-kasvillisuutta, jolla elää muun muassa jaguaareja ja isomuurahaiskarhuja.',
+    },
+    {
+      q: 'Mikä on jokisaari?',
+      options: [
+        'joen haarojen väliin jäävä maa-alue',
+        'meressä oleva saari',
+        'tekosaari',
+        'jäävuori',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Araguaia-joki jakautuu kahdeksi haaraksi ja yhtyy taas satojen kilometrien päässä. Väliin jäävä maa on maailman suurin jokisaari.',
+      hint: 'Saaren ympärillä virtaa joki, ei meri.',
+    },
+    {
+      q: 'Mikä alkuperäiskansa asuu Bananalin saarella?',
+      options: ['karajá-kansa', 'maorit', 'inuiitit', 'samit'],
+      correct: 0,
+      fact: 'Karajá-kansa on asunut joen varrella pitkään ja tunnetaan muun muassa savinukeistaan. Saarella on kansallispuisto ja alkuperäiskansojen alue.',
+      hint: 'Kansa tunnetaan käsintehdyistä savinukeista.',
+    },
+    {
+      q: 'Mitä Bananalin saarella tapahtuu sadekaudella?',
+      options: [
+        'suuri osa saaresta jää tulvaveden alle',
+        'saari kuivuu kokonaan',
+        'saari peittyy lumeen',
+        'saari katoaa mereen',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Tulva levittää veden laajalle savannille ja tuo mukanaan kaloja. Kuivalla kaudella vesi vetäytyy ja jättää jälkeensä lampia.',
+      hint: 'Muutos liittyy veden nousuun.',
     },
   ],
 
@@ -16730,6 +17247,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Saumoihin ei mahdu veistä, vaikka sidosainetta ei käytetty lainkaan.',
       fact: 'Jättikivet on sovitettu toisiinsa niin tarkasti, että rakennelmat ovat kestäneet vuosisatojen maanjäristykset.',
     },
+    {
+      q: 'Kuinka korkealla Machu Picchu sijaitsee?',
+      options: [
+        'noin 2 430 metrissä',
+        'noin 243 metrissä',
+        'noin 5 000 metrissä',
+        'merenpinnan tasolla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki rakennettiin vuorenharjanteelle jyrkkien rinteiden väliin. Alempana virtaa Urubamba-joki.',
+      hint: 'Korkeus on yli kaksi kilometriä.',
+    },
+    {
+      q: 'Miten Machu Picchuun pääsee?',
+      options: [
+        'junalla laaksoon ja sieltä bussilla tai kävellen',
+        'autolla suoraan perille',
+        'lentokoneella kaupunkiin',
+        'laivalla',
+      ],
+      correct: 0,
+      fact: 'Maantietä perille ei ole. Osa kävijöistä vaeltaa Inkapolkua useita päiviä alkuperäisiä kivettyjä reittejä pitkin.',
+      hint: 'Viimeinen osuus tehdään jalan tai bussilla, ei omalla autolla.',
+    },
+    {
+      q: 'Mikä oli quipu?',
+      options: ['solmuista tehty tiedon tallennusväline', 'soitin', 'ase', 'vene'],
+      correct: 0,
+      level: 3,
+      fact: 'Inkat tallensivat lukuja ja tietoja narujen solmuihin. Järjestelmää on osin pystytty tulkitsemaan, osin ei.',
+      hint: 'Tieto tallennettiin naruihin ja solmuihin.',
+    },
   ],
 
   titicaca: [
@@ -16762,6 +17312,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Samasta kasvista tehdään myös veneet, ja se kasvaa järven matalikoilla.',
       fact: 'Uros-kansa rakentaa saarensa, majansa ja veneensä totorasta. Saarille lisätään jatkuvasti uutta ainesta, koska alaosa lahoaa.',
     },
+    {
+      q: 'Kuinka korkealla Titicaca-järvi on?',
+      options: [
+        'noin 3 800 metrissä',
+        'noin 380 metrissä',
+        'merenpinnan tasolla',
+        'yli 6 000 metrissä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Järvi on Andien ylätasangolla, ja ilma on siellä ohutta. Vesi tasaa lämpötiloja, joten rannoilla voidaan viljellä perunaa ja kinuaa.',
+      hint: 'Korkeus on lähes neljä kilometriä.',
+    },
+    {
+      q: 'Mitä totora-kaislasta tehdään Titicacalla?',
+      options: [
+        'veneitä, taloja ja kelluvia saaria',
+        'paperia',
+        'vaatteita',
+        'työkaluja metallista',
+      ],
+      correct: 0,
+      fact: 'Uros-kansa rakentaa kaislasta sekä saaret että veneet, ja saaria täytyy paikata jatkuvasti uudella kaislalla.',
+      hint: 'Materiaali kasvaa vedessä ja siitä syntyy myös maata.',
+    },
+    {
+      q: 'Mitä kieliä Titicacan rannoilla puhutaan?',
+      options: ['aimaraa ja ketšuaa', 'portugalia ja hollantia', 'englantia ja ranskaa', 'arabiaa'],
+      correct: 0,
+      level: 3,
+      fact: 'Molemmat kielet ovat Perussa ja Boliviassa virallisia espanjan rinnalla, ja niitä puhutaan miljoonien ihmisten arjessa.',
+      hint: 'Kielet ovat Andien omia ja virallisia kahdessa maassa.',
+    },
   ],
 
   lima: [
@@ -16786,6 +17369,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Kylmä merivirta jäähdyttää ilman sumuiseksi, mutta pisarat eivät kasva tarpeeksi suuriksi putoamaan.',
       fact: 'Limassa sataa alle 20 millimetriä vuodessa, mutta talvella kaupunkia peittää kuukausikaupalla harmaa merisumu, garúa.',
     },
+    {
+      q: 'Minkä valtameren rannalla Lima sijaitsee?',
+      options: ['Tyynenmeren', 'Atlantin', 'Intian valtameren', 'Jäämeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on jyrkän rantatörmän päällä meren äärellä. Kylmä merivirta tekee vedestä viileää surffareillekin.',
+      hint: 'Sama valtameri huuhtoo Chilen rannikkoa.',
+    },
+    {
+      q: 'Mikä on ceviche?',
+      options: [
+        'sitrusmehussa kypsennettyä kalaa',
+        'keitto lihasta',
+        'paistettu jälkiruoka',
+        'juoma maissista',
+      ],
+      correct: 0,
+      fact: 'Tuore kala kypsennetään limemehun happamuudella ja tarjotaan sipulin ja chilin kanssa. Ruoka on Perun kansallisruokia.',
+      hint: 'Kala kypsyy happamassa mehussa ilman lämpöä.',
+    },
+    {
+      q: 'Miksi Limassa sataa hyvin vähän, vaikka meri on vieressä?',
+      options: [
+        'kylmä merivirta ja Andit estävät sateen',
+        'kaupunki on vuorella',
+        'siellä on liian kylmä',
+        'meri on liian kaukana',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kylmä vesi jäähdyttää ilman, joten kosteus tiivistyy sumuksi eikä sateeksi. Andit estävät kostean ilman tulon idästä.',
+      hint: 'Selitys on merivirrassa ja vuorissa.',
+    },
   ],
 
   santacruz: [
@@ -16805,6 +17421,34 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Kaupungista jatkuu tasankoa aina Amazonin altaalle asti.',
       fact: 'Santa Cruz on vain noin 400 metrin korkeudessa, vaikka saman maan toinen puoli kohoaa yli neljään kilometriin.',
     },
+    {
+      q: 'Mitä Santa Cruzin seudulla viljellään laajasti?',
+      options: ['soijaa', 'riisiä vuoristossa', 'teetä', 'viinirypäleitä jäätiköllä'],
+      correct: 0,
+      level: 1,
+      fact: 'Alavat maat ovat Bolivian maatalouden keskus, ja soija on tärkeä vientituote. Alue kasvaa nopeammin kuin maan vuoristo-osat.',
+      hint: 'Kasvi on palkokasvi, josta tehdään rehua ja öljyä.',
+    },
+    {
+      q: 'Kuinka monta virallista kieltä Boliviassa on?',
+      options: ['yli kolmekymmentä', 'kaksi', 'yksi', 'kuusi'],
+      correct: 0,
+      level: 3,
+      fact: 'Espanjan lisäksi virallisia ovat kaikki maan alkuperäiskansojen kielet, muun muassa ketšua, aimara ja guaraní. Määrä on maailman suurimpia.',
+      hint: 'Määrä on kymmeniä, koska mukana ovat kaikki alkuperäiskansojen kielet.',
+    },
+    {
+      q: 'Missä Bolivian hallitus ja parlamentti toimivat?',
+      options: [
+        'La Pazissa, vaikka perustuslaillinen pääkaupunki on Sucre',
+        'Santa Cruzissa',
+        'Limassa',
+        'Brasíliassa',
+      ],
+      correct: 0,
+      fact: 'Hallinto siirtyi La Paziin 1800-luvun lopulla, mutta korkein oikeus ja perustuslaillinen pääkaupunkiasema jäivät Sucreen.',
+      hint: 'Kaupunkeja on kaksi: toisessa hallinto, toisessa perustuslaillinen asema.',
+    },
   ],
 
   campogrande: [
@@ -16823,6 +17467,39 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 1,
       hint: 'Peto on täplikäs ja uskaltaa uida — se saalistaa jopa kaimaaneja.',
       fact: 'Peto puree saalistaan kallon läpi. Pantanalissa elää maailman tiheimpiä kantoja tästä lajista.',
+    },
+    {
+      q: 'Mitä Pantanalin kosteikoilla tehdään elinkeinoksi?',
+      options: [
+        'karjankasvatusta ja luontomatkailua',
+        'kaivostoimintaa',
+        'laivanrakennusta',
+        'viininviljelyä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Karjaa laidunnetaan tulva-alueilla kuivan kauden aikaan, ja luontomatkailu tuo lisätuloja. Molemmat riippuvat tulvien rytmistä.',
+      hint: 'Elinkeinot liittyvät karjaan ja luontoon.',
+    },
+    {
+      q: 'Mikä suuri sininen papukaija on Pantanalin tunnus?',
+      options: ['hyasinttiara', 'kakadu', 'undulaatti', 'tukaani'],
+      correct: 0,
+      fact: 'Hyasinttiara on maailman suurin lentävä papukaija. Kanta romahti häkkilintukaupan takia, mutta suojelu on kääntänyt sen nousuun.',
+      hint: 'Lintu on maailman suurin lentävä papukaija.',
+    },
+    {
+      q: 'Miksi Pantanal tulvii joka vuosi?',
+      options: [
+        'maasto on hyvin tasainen ja sadekausi tuo valtavat vesimäärät',
+        'meri nousee alueelle',
+        'jäätiköt sulavat',
+        'padot avataan kerran vuodessa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Vesi valuu tasangolle nopeammin kuin se ehtii virrata pois, joten alue muuttuu kuukausiksi valtavaksi matalaksi vesialueeksi. Kuivalla kaudella se palautuu laitumiksi.',
+      hint: 'Syy on maaston tasaisuudessa ja sateen määrässä.',
     },
   ],
 
@@ -16851,6 +17528,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Asema siirtyi lopulta sisämaahan, tyhjälle paikalle varta vasten rakennetulle kaupungille.',
       fact: 'Rio hoiti tehtävää lähes kaksisataa vuotta, kunnes se siirtyi 1960 Brasílialle.',
     },
+    {
+      q: 'Mikä on Rion tunnetuin ranta?',
+      options: ['Copacabana', 'Bondi', 'Waikiki', 'Yyteri'],
+      correct: 0,
+      level: 1,
+      fact: 'Copacabanan neljä kilometriä pitkä ranta on kaupungin olohuone: siellä pelataan jalkapalloa ja lentopalloa aamusta iltaan.',
+      hint: 'Rannasta on tehty lauluja ympäri maailman.',
+    },
+    {
+      q: 'Mitä favelat ovat?',
+      options: [
+        'rinteille kasvaneita tiiviitä asuinalueita',
+        'matkailukohteita ilman asukkaita',
+        'tehdasalueita',
+        'puistoja',
+      ],
+      correct: 0,
+      fact: 'Favelat syntyivät, kun kaupunkiin muuttaneet rakensivat kotinsa rinteille ilman kaavoitusta. Niissä asuu miljoonia ihmisiä, ja monilla on omat yhdistyksensä, kauppansa ja musiikkinsa.',
+      hint: 'Alueet kasvoivat rinteille ilman kaavoitusta.',
+    },
+    {
+      q: 'Mitkä kisat järjestettiin Rio de Janeirossa vuonna 2016?',
+      options: [
+        'kesäolympialaiset',
+        'talviolympialaiset',
+        'jalkapallon MM-kisat',
+        'yleisurheilun MM-kisat',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kisat olivat ensimmäiset Etelä-Amerikassa järjestetyt olympialaiset. Niitä varten rakennettiin metrolinja ja kunnostettiin satama-alue.',
+      hint: 'Kisat olivat ensimmäiset koko maanosassa.',
+    },
   ],
 
   saopaulo: [
@@ -16869,6 +17579,34 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Punamullan värinen terra roxa -maaperä sopi pensaalle täydellisesti.',
       fact: 'Ylängön hedelmällinen terra roxa teki alueesta maailman johtavan tuottajan, ja rikkaus rakensi kaupungin.',
+    },
+    {
+      q: 'Missä maassa São Paulo sijaitsee?',
+      options: ['Brasiliassa', 'Argentiinassa', 'Chilessä', 'Perussa'],
+      correct: 0,
+      level: 1,
+      fact: 'São Paulo on maan talouden keskus ja eteläisen pallonpuoliskon väkirikkain kaupunki. Se sijaitsee ylängöllä lähellä rannikkoa.',
+      hint: 'Maan kieli on portugali.',
+    },
+    {
+      q: 'Mikä on Avenida Paulista?',
+      options: ['kaupungin tunnetuin pääkatu', 'puisto', 'stadion', 'joki'],
+      correct: 0,
+      fact: 'Katu oli ensin kahviparonien huviloiden rivistö ja on nyt pankkien ja museoiden keskus. Sunnuntaisin se suljetaan autoilta.',
+      hint: 'Kohde on leveä katu, jonka varrella on museoita ja pankkeja.',
+    },
+    {
+      q: 'Mikä maahanmuuttajayhteisö São Paulossa on maailman suurin Japanin ulkopuolella?',
+      options: [
+        'japanilaisyhteisö',
+        'islantilaisyhteisö',
+        'norjalaisyhteisö',
+        'uusiseelantilaisyhteisö',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Japanilaisia muutti Brasiliaan 1900-luvun alusta lähtien maatöihin. Liberdaden kaupunginosassa on lyhtyjä, kauppoja ja ravintoloita.',
+      hint: 'Yhteisö tuli 1900-luvun alussa maatöihin Aasiasta.',
     },
   ],
 
@@ -16889,6 +17627,29 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Kolmas maa, Paraguay, on aivan lähellä mutta ei rajaudu itse putouksiin.',
       fact: 'Raja kulkee putousten läpi, ja Paraguayn kolmoispiste on vain parinkymmenen kilometrin päässä.',
     },
+    {
+      q: 'Kuinka monta erillistä putousta Iguazússa on?',
+      options: ['yli 270', 'kolme', 'noin 30', 'tuhansia'],
+      correct: 0,
+      level: 1,
+      fact: 'Putoukset jakautuvat lähes kolmen kilometrin matkalle, ja niiden määrä vaihtelee veden korkeuden mukaan.',
+      hint: 'Määrä on satoja.',
+    },
+    {
+      q: 'Mikä on Paholaisen kurkku Iguazússa?',
+      options: ['putousten suurin ja jyrkin kohta', 'luola', 'joki', 'polku'],
+      correct: 0,
+      fact: 'U-muotoiseen kuiluun syöksyy suuri osa joen vedestä, ja vesipöly nousee kymmenien metrien korkeuteen. Kuilun reunalle vie kävelysilta.',
+      hint: 'Kohta on suurin kuilu, jonne vesi syöksyy.',
+    },
+    {
+      q: 'Mikä lintu pesii putousten takana kallioseinämillä?',
+      options: ['kiitäjälintu, joka lentää vesiverhon läpi', 'pingviini', 'kotka', 'flamingo'],
+      correct: 0,
+      level: 3,
+      fact: 'Suitsilinnut lentävät putousverhon läpi pesille kallionkoloihin. Vesi suojaa pesiä pedoilta.',
+      hint: 'Lintu lentää suoraan vesiverhon läpi.',
+    },
   ],
 
   portoalegre: [
@@ -16907,6 +17668,39 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Juoma imetään metalliputkella kurpitsakupista, ja se on tehty kuivatuista lehdistä.',
       fact: 'Juoma nautitaan yhteisestä kupista bombilla-putken läpi. Tapa periytyy guaraní-kansalta.',
+    },
+    {
+      q: 'Minkä vesistön rannalla Porto Alegre sijaitsee?',
+      options: [
+        'laajan laguunin pohjukassa',
+        'valtameren rannalla',
+        'vuoristojärven rannalla',
+        'aavikon keitaalla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Guaíban rannalla, ja vedet laskevat sieltä laajaan Patojen laguuniin ja edelleen merelle. Auringonlaskut laguunin yli ovat kaupungin ylpeys.',
+      hint: 'Vesistö on matala ja laaja, ei avomeri.',
+    },
+    {
+      q: 'Ketkä ovat gaúchot?',
+      options: [
+        'Etelä-Amerikan pampan karjapaimenia',
+        'kalastajia',
+        'kaivostyöläisiä',
+        'muusikoita',
+      ],
+      correct: 0,
+      fact: 'Gaúcho-perinne yhdistää Etelä-Brasilian, Uruguayn ja Argentiinan pampat: hevoset, karja ja grilliruoka kuuluvat siihen. Nimeä käytetään myös osavaltion asukkaista.',
+      hint: 'Työ tehdään hevosen selästä karjan parissa.',
+    },
+    {
+      q: 'Mikä on chimarrão?',
+      options: ['mate-teen juomatapa yhteisestä astiasta', 'grilliruoka', 'tanssi', 'hevosrotu'],
+      correct: 0,
+      level: 3,
+      fact: 'Kuivattuja mate-lehtiä juodaan kuumalla vedellä kurpitsa-astiasta metalliputken läpi. Astia kiertää seurueessa, ja tarjoamiseen liittyy omat tapansa.',
+      hint: 'Juoma kiertää seurueessa samasta astiasta putken kautta.',
     },
   ],
 
@@ -16927,6 +17721,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Ainetta käytettiin lannoitteena ja ruudin valmistukseen, kunnes se korvattiin keinotekoisella.',
       fact: 'Aine oli Chilen tärkein vientituote, kunnes typen teollinen sidonta teki siitä kannattamatonta. Autiomaahan jäi aavekaupunkeja.',
     },
+    {
+      q: 'Miksi Atacamassa ei juuri sada?',
+      options: [
+        'Andit ja kylmä merivirta estävät kosteuden',
+        'alue on liian kylmä',
+        'alue on merenpinnan alapuolella',
+        'siellä sataa vain lunta',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Vuoret pysäyttävät idän kostean ilman ja kylmä merivirta estää sateen mereltä. Osassa aavikkoa ei ole mitattu sadetta vuosikymmeniin.',
+      hint: 'Syitä on kaksi: vuoret ja kylmä meri.',
+    },
+    {
+      q: 'Mitä metallia Atacamasta louhitaan nykyään eniten?',
+      options: ['kuparia', 'kultaa', 'rautaa', 'hopeaa'],
+      correct: 0,
+      fact: 'Chile on maailman suurin kuparintuottaja, ja suuret avolouhokset ovat Atacaman alueella. Kaivokset käyttävät paljon vettä kuivalla alueella.',
+      hint: 'Metalli on punaruskeaa ja johtaa sähköä hyvin.',
+    },
+    {
+      q: 'Miksi Atacamaan on rakennettu suuria observatorioita?',
+      options: [
+        'ilma on kuivaa, kirkasta ja korkealla',
+        'siellä on pimeää ympäri vuorokauden',
+        'siellä on paljon sähköä',
+        'siellä ei ole tuulta koskaan',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kuiva ilma ja korkeus tekevät taivaasta poikkeuksellisen kirkkaan, ja lähialueella on vähän valosaastetta. Alueella toimii useita maailman suurimpia kaukoputkia.',
+      hint: 'Syy liittyy ilman kuivuuteen ja korkeuteen.',
+    },
   ],
 
   salta: [
@@ -16945,6 +17772,29 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Nimi tarkoittaa espanjaksi junaa pilviin.',
       fact: 'Rata kiipeää Saltasta Andien solaan noin 4 200 metrin korkeuteen ja ylittää La Polvorillan sillan.',
+    },
+    {
+      q: 'Millaista musiikkia Saltan seudulla soitetaan?',
+      options: ['andienperinteistä folklorea', 'tangoa vain', 'reggaetónia', 'oopperaa'],
+      correct: 0,
+      level: 1,
+      fact: 'Kitara, rumpu ja huilut kuuluvat pohjoisen Argentiinan perinteeseen, ja peña-illoissa lauletaan yhdessä. Tyyli eroaa selvästi Buenos Airesin tangosta.',
+      hint: 'Tyyli on maaseudun perinnemusiikkia, ei kaupungin tanssia.',
+    },
+    {
+      q: 'Mikä on empanada?',
+      options: ['täytetty ja uunissa paistettu piirakka', 'keitto', 'jälkiruoka', 'juoma'],
+      correct: 0,
+      fact: 'Saltan empanadat täytetään käsin pilkotulla lihalla ja mausteilla. Jokaisella maakunnalla on oma täytteensä ja taittelutapansa.',
+      hint: 'Ruoka on kämmenen kokoinen täytetty piirakka.',
+    },
+    {
+      q: 'Mikä maailmanperintölaakso on Saltasta pohjoiseen?',
+      options: ['Quebrada de Humahuaca', 'Yosemite', 'Kaakkuri', 'Loiren laakso'],
+      correct: 0,
+      level: 3,
+      fact: 'Kapea värikallioinen laakso on ollut kulkureitti tuhansia vuosia, myös inkojen aikaan. Kylissä eletään yhä maanviljelystä ja käsityöstä.',
+      hint: 'Laakso on kapea, värikallioinen ja vanha kulkureitti.',
     },
   ],
 
@@ -16965,6 +17815,34 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Vuori yltää lähes 6 900 metriin, ja sen huipulla on maailman korkeimmalla sijaitseva järvi.',
       fact: 'Ojos del Salado on noin 6 890 metriä korkea ja kohoaa Atacaman autiomaan yllä.',
     },
+    {
+      q: 'Millainen ilmasto Catamarcan maakunnassa on?',
+      options: [
+        'kuiva ja aurinkoinen',
+        'kostea ja sateinen',
+        'arktinen',
+        'trooppinen sademetsäilmasto',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Alue on vuorten ja kuivien laaksojen maata, jossa sataa vähän. Kastelu tekee laaksoista viljelykelpoisia.',
+      hint: 'Sadetta on vähän ja aurinkoa paljon.',
+    },
+    {
+      q: 'Mitä Catamarcan kastelluissa laaksoissa kasvatetaan?',
+      options: ['viinirypäleitä ja oliiveja', 'riisiä', 'kaakaota', 'kumipuita'],
+      correct: 0,
+      fact: 'Kuiva ilma ja suuri lämpötilaero yön ja päivän välillä sopivat viiniköynnökselle. Alueen viinit ja oliiviöljy ovat tunnettuja.',
+      hint: 'Tuotteista tehdään viiniä ja öljyä.',
+    },
+    {
+      q: 'Mikä on puna?',
+      options: ['korkea kuiva ylätasanko Andeilla', 'syvä laakso', 'sademetsä', 'jäätikkö'],
+      correct: 0,
+      level: 3,
+      fact: 'Punalla ollaan yli 3 500 metrissä, ilma on ohutta ja yöt kylmiä. Siellä laiduntaa laamoja ja vikunjoita ja sijaitsee maailman korkein tulivuori.',
+      hint: 'Alue on ylhäällä, kuiva ja puuton.',
+    },
   ],
 
   valparaiso: [
@@ -16983,6 +17861,34 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Laitteita kutsutaan espanjaksi nimellä ascensor, ja ne kiipeävät kiskoja pitkin.',
       fact: 'Kaupunkiin rakennettiin kymmeniä tällaisia laitteita 1880-luvulta alkaen, ja osa niistä kulkee yhä päivittäin.',
+    },
+    {
+      q: 'Mikä tunnustus Valparaíson vanhallakaupungilla on?',
+      options: [
+        'se on Unescon maailmanperintökohde',
+        'se on suljettu vierailta',
+        'se on kokonaan uusi',
+        'se on museo ilman asukkaita',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Rinteille kiipeävät värikkäät talot, portaat ja hissit ovat kaupungin tunnusmerkki. Alue on asuttu ja täynnä seinämaalauksia.',
+      hint: 'Tunnustus on sama kuin Suomenlinnalla.',
+    },
+    {
+      q: 'Kuka runoilija asui talossaan Valparaíson rinteessä?',
+      options: ['Pablo Neruda', 'William Shakespeare', 'Homeros', 'Aleksis Kivi'],
+      correct: 0,
+      fact: 'Nerudan talo La Sebastiana on nykyään museo, josta on näkymä koko lahdelle. Hän sai kirjallisuuden Nobelin 1971.',
+      hint: 'Runoilija sai kirjallisuuden Nobelin 1971.',
+    },
+    {
+      q: 'Mikä valtion toiminto sijaitsee Valparaísossa eikä pääkaupungissa?',
+      options: ['parlamentti', 'presidentin kanslia', 'korkein oikeus', 'keskuspankki'],
+      correct: 0,
+      level: 3,
+      fact: 'Chilen kansalliskongressi siirrettiin Valparaísoon 1990-luvun alussa. Hallitus ja presidentti toimivat Santiagossa.',
+      hint: 'Toiminto liittyy lakien säätämiseen.',
     },
   ],
 
@@ -17003,6 +17909,34 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Sama maa omistaa myös Pääsiäissaaren.',
       fact: 'Desventuradas tarkoittaa espanjaksi onnettomia saaria. Saarten ympärille on perustettu yksi maailman suurimmista merensuojelualueista.',
     },
+    {
+      q: 'Missä valtameressä San Ambrosion saari on?',
+      options: ['Tyynellämerellä', 'Atlantilla', 'Intian valtamerellä', 'Jäämerellä'],
+      correct: 0,
+      level: 1,
+      fact: 'Saari kuuluu Desventuradas-saariin noin 850 kilometriä Chilen rannikolta. Ympärillä on avomerta joka suuntaan.',
+      hint: 'Sama valtameri huuhtoo Chilen rannikkoa.',
+    },
+    {
+      q: 'Miksi San Ambrosiolla ei asuta pysyvästi?',
+      options: [
+        'saarella ei ole makeaa vettä eikä satamaa',
+        'saari on liian kylmä',
+        'saarelle on pääsykielto kaikilta',
+        'saari on veden alla',
+      ],
+      correct: 0,
+      fact: 'Jyrkkäseinäisellä kalliosaarella ei ole luonnonsatamaa eikä lähdettä. Kalastajat käyvät kausittain, mutta kukaan ei asu siellä ympäri vuoden.',
+      hint: 'Puuttuvat asiat ovat juomavesi ja rantautumispaikka.',
+    },
+    {
+      q: 'Mikä merialue saarten ympärille perustettiin 2010-luvulla?',
+      options: ['laaja merisuojelualue', 'öljykenttä', 'laivaväylä', 'kalankasvatusalue'],
+      correct: 0,
+      level: 3,
+      fact: 'Suojelualue kattaa satojatuhansia neliökilometrejä merta, jossa elää useita vain siellä tavattavia lajeja. Kalastus on siellä tarkoin rajoitettua.',
+      hint: 'Alueella rajoitetaan kalastusta lajien suojelemiseksi.',
+    },
   ],
 
   robinsoncrusoe: [
@@ -17021,6 +17955,44 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Saariryhmä on nimetty sen löytäneen espanjalaisen merenkulkijan mukaan.',
       fact: 'Chile nimesi saaren virallisesti Robinson Crusoeksi 1966 matkailun toivossa.',
+    },
+    {
+      q: 'Mistä Robinson Crusoen saari sai nimensä?',
+      options: [
+        'kuuluisasta romaanista',
+        'löytäjän sukunimestä',
+        'saaren muodosta',
+        'kasvilajista',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Chile nimesi saaren uudelleen 1966 matkailun vuoksi. Romaanin esikuvana pidetään merimiestä, joka eli saarella yksin neljä vuotta.',
+      hint: 'Nimi on peräisin kirjasta.',
+    },
+    {
+      q: 'Millainen eliöstö Juan Fernándezin saarilla on?',
+      options: [
+        'paljon lajeja, joita ei tavata muualla',
+        'täsmälleen sama kuin mantereella',
+        'ei lainkaan kasveja',
+        'vain tuotuja lajeja',
+      ],
+      correct: 0,
+      fact: 'Eristyneisyys on synnyttänyt omia kasveja ja lintuja, kuten juanfernandezinkolibrin. Vieraslajit ovat niiden suurin uhka.',
+      hint: 'Eristys on synnyttänyt omia lajeja.',
+    },
+    {
+      q: 'Mikä koetteli saaren kylää vuonna 2010?',
+      options: [
+        'maanjäristyksen jälkeinen hyökyaalto',
+        'tulivuorenpurkaus',
+        'kuivuus',
+        'lumimyrsky',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Mantereen suuren maanjäristyksen aiheuttama aalto tuhosi rantakylän. Kylä on rakennettu uudelleen ja varoitusjärjestelmiä parannettu.',
+      hint: 'Aalto syntyi mantereen maanjäristyksestä.',
     },
   ],
 
@@ -17046,6 +18018,29 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Kylmät suojaisat vuonot sopivat merikasvatusaltaille.',
       fact: 'Chilestä tuli 1990-luvulla yksi maailman suurimmista kasvatetun kalan tuottajista, vaikka laji ei ole alueen alkuperäinen.',
     },
+    {
+      q: 'Mikä on curanto?',
+      options: ['kuumissa kivissä maakuopassa kypsennetty ateria', 'juoma', 'tanssi', 'vene'],
+      correct: 0,
+      level: 1,
+      fact: 'Simpukat, liha, peruna ja kasvikset kypsennetään kuopassa kuumien kivien ja lehtien alla. Tapa on peräisin Chiloén saarelta.',
+      hint: 'Ruoka kypsyy maakuopassa kuumien kivien alla.',
+    },
+    {
+      q: 'Mistä maasta alueelle muutti siirtolaisia 1850-luvulta alkaen?',
+      options: ['Saksasta', 'Japanista', 'Norjasta', 'Intiasta'],
+      correct: 0,
+      fact: 'Saksalaiset siirtolaiset raivasivat metsää ja perustivat maatiloja ja panimoita. Vaikutus näkyy yhä rakennuksissa ja sukunimissä.',
+      hint: 'Maa on Keski-Euroopassa.',
+    },
+    {
+      q: 'Mikä on Carretera Austral?',
+      options: ['etelään Patagonian halki johtava tie', 'rautatie', 'laivareitti', 'lentoreitti'],
+      correct: 0,
+      level: 3,
+      fact: 'Yli tuhannen kilometrin sorapainotteinen tie rakennettiin 1970-luvulta alkaen yhdistämään syrjäiset kylät. Matkalla on lauttoja, koska vuonot katkaisevat tien.',
+      hint: 'Reitillä tarvitaan sekä autoa että lauttaa.',
+    },
   ],
 
   sanjorge: [
@@ -17064,6 +18059,39 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Laji on nimetty samasta merenkulkijasta kuin salmi Etelä-Amerikan kärjessä.',
       fact: 'Punta Tombon yhdyskunnassa pesii satojatuhansia lintuja — yksi maailman suurimmista mannerpingviiniyhdyskunnista.',
+    },
+    {
+      q: 'Millaista maisemaa Patagonian rannikolla on?',
+      options: [
+        'puutonta aroa ja jyrkkiä rantatörmiä',
+        'sademetsää',
+        'hiekkadyynejä',
+        'riisipeltoja',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Tuuli pitää maiseman matalana ja puuttomana. Rannoilla pesii merilintuja ja hylkeitä.',
+      hint: 'Maisema on avoin, tuulinen ja puuton.',
+    },
+    {
+      q: 'Mitä San Jorgen lahden alueelta on tuotettu 1900-luvun alusta?',
+      options: ['öljyä', 'kivihiiltä', 'timantteja', 'suolaa'],
+      correct: 0,
+      fact: 'Öljy löytyi Comodoro Rivadavian luota 1907 kaivettaessa vesikaivoa. Löytö muutti koko alueen talouden.',
+      hint: 'Löytö tehtiin vahingossa vettä etsittäessä.',
+    },
+    {
+      q: 'Mitä Patagonian jatkuva tuuli mahdollistaa nykyään?',
+      options: [
+        'tuulivoiman tuotannon',
+        'laskettelun',
+        'riisinviljelyn',
+        'koralliriuttojen kasvun',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Alue on yksi maailman tuulisimmista, ja sinne on rakennettu suuria tuulipuistoja. Sähköä siirretään pohjoiseen suurkaupunkeihin.',
+      hint: 'Tuulesta tehdään sähköä.',
     },
   ],
 
@@ -17084,6 +18112,39 @@ const SOUTHAMERICA_QUESTIONS = {
       hint: 'Eläimiä on saarilla moninkertaisesti asukkaisiin nähden, ja niistä saadaan villaa.',
       fact: 'Saarilla on satoja tuhansia näitä eläimiä ja vain noin 3 500 asukasta. Villa on ollut vuosisadan ajan tärkein vientituote.',
     },
+    {
+      q: 'Mitkä linnut pesivät Falklandinsaarilla suurina yhdyskuntina?',
+      options: ['pingviinit', 'strutsit', 'papukaijat', 'tukaanit'],
+      correct: 0,
+      level: 1,
+      fact: 'Saarilla pesii useita pingviinilajeja sekä albatrosseja. Lintujen määrä ylittää moninkertaisesti asukasluvun.',
+      hint: 'Lintu ei lennä mutta ui erinomaisesti.',
+    },
+    {
+      q: 'Mikä on Falklandinsaarten pääelinkeino?',
+      options: [
+        'kalastuslisenssit ja lampaanhoito',
+        'kaivostoiminta',
+        'metsätalous',
+        'autoteollisuus',
+      ],
+      correct: 0,
+      fact: 'Kalastuslupien myynti ja villantuotanto ovat saarten talouden perusta, ja matkailu on kasvanut. Saarilla on enemmän lampaita kuin ihmisiä.',
+      hint: 'Toinen tulonlähde tulee merestä, toinen villasta.',
+    },
+    {
+      q: 'Miten Falklandinsaarten asemaa kuvataan?',
+      options: [
+        'Britannia hallinnoi saaria, ja Argentiina esittää niihin vaatimuksen',
+        'saaret ovat itsenäinen valtio',
+        'saaret kuuluvat YK:lle',
+        'saarilla ei ole hallintoa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Saarilla on brittiläinen hallinto ja oma paikallishallinto, ja Argentiina pitää saaria omanaan. Saarten asukkaat ovat äänestäneet nykyisen aseman puolesta.',
+      hint: 'Kaksi maata esittää saarista eri näkemyksen.',
+    },
   ],
 
   puntaarenas: [
@@ -17102,6 +18163,34 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 3,
       hint: 'Uusi oikoreitti Keski-Amerikassa lyhensi laivojen matkaa tuhansia kilometrejä.',
       fact: 'Kun laivojen ei enää tarvinnut kiertää koko Etelä-Amerikkaa, kaupungin satama hiljeni.',
+    },
+    {
+      q: 'Mikä on Punta Arenasin asema maailman kaupunkien joukossa?',
+      options: [
+        'yksi maailman eteläisimmistä kaupungeista',
+        'maailman pohjoisin kaupunki',
+        'maailman korkein kaupunki',
+        'maailman kuivin kaupunki',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Magalhãesin salmen rannalla lähellä mantereen eteläkärkeä. Sieltä lähtevät monet Etelämantereen tutkimusretket.',
+      hint: 'Sijainti on lähellä mantereen eteläkärkeä.',
+    },
+    {
+      q: 'Kuka purjehti ensimmäisenä salmen läpi vuonna 1520?',
+      options: ['Fernão de Magalhães', 'Kristoffer Kolumbus', 'James Cook', 'Vasco da Gama'],
+      correct: 0,
+      fact: 'Retkikunta etsi reittiä Tyynellemerelle, ja salmi sai myöhemmin purjehtijan nimen. Matka jatkui ensimmäisenä maailmanympäripurjehduksena.',
+      hint: 'Salmi on nimetty hänen mukaansa.',
+    },
+    {
+      q: 'Mitä alueelta on viety maailmalle 1800-luvun lopulta lähtien?',
+      options: ['lampaanvillaa', 'kahvia', 'kumia', 'kaakaota'],
+      correct: 0,
+      level: 3,
+      fact: 'Patagonian laajat lammastilat tekivät alueesta vauraan, ja villaa vietiin Eurooppaan laivoilla. Villakaupan aika näkyy kaupungin komeissa taloissa.',
+      hint: 'Tuote kerätään keritsemällä.',
     },
   ],
 
@@ -17131,6 +18220,34 @@ const SOUTHAMERICA_QUESTIONS = {
       level: 2,
       hint: 'Länsituulet kiertävät koko eteläisen pallonpuoliskon esteettä ja puristuvat kapeaan väliin.',
       fact: 'Eteläisellä pallonpuoliskolla tuulella ei ole mantereiden estettä. Drake-salmessa se kasvattaa aallot valtaviksi.',
+    },
+    {
+      q: 'Minkä maan aluetta Kap Horn on?',
+      options: ['Chilen', 'Argentiinan', 'Britannian', 'Uruguayn'],
+      correct: 0,
+      level: 1,
+      fact: 'Kap Horn on Chilen eteläisimmällä saarella, ja sen lähellä on majakka ja pieni merivartioasema. Alue kuuluu kansallispuistoon.',
+      hint: 'Maa on pitkä ja kapea Tyynenmeren rannalla.',
+    },
+    {
+      q: 'Mitä purjehtijat perinteisesti sanovat Kap Hornin kiertämisestä?',
+      options: [
+        'se on merimiehen kunniamerkki',
+        'se on kielletty',
+        'se on helpoin reitti',
+        'se onnistuu vain kesällä',
+      ],
+      correct: 0,
+      fact: 'Purjelaivakaudella kierroksen tehneillä oli oikeus tiettyihin perinteisiin, kuten korvarenkaaseen. Nykyään reitti on avomeripurjehtijoiden haave ja koetinkivi.',
+      hint: 'Perinteeseen liittyy oikeus korvarenkaaseen.',
+    },
+    {
+      q: 'Mikä merivirta kiertää Etelämannerta Kap Hornin eteläpuolella?',
+      options: ['länsituulten ajovirta', 'Golfvirta', 'Humboldtin virta', 'Benguelan virta'],
+      correct: 0,
+      level: 3,
+      fact: 'Virta on maailman voimakkain: se kiertää koko Etelämantereen eikä törmää mihinkään mantereeseen. Siksi aallot kasvavat siellä valtaviksi.',
+      hint: 'Virta kiertää koko Etelämantereen esteettä.',
     },
   ],
 
@@ -17268,186 +18385,334 @@ const SOUTHAMERICA_FACTS = {
     'Panaman kanava avattiin 1914 ja lyhensi New Yorkin ja San Franciscon välimatkan noin 13 000 kilometrillä.',
     'Kanavan sulut nostavat laivat 26 metrin korkeuteen Gatún-tekojärvelle ja laskevat ne toisella puolella takaisin merenpintaan.',
     'Panaman kannas mutkittelee niin, että kanavassa purjehditaan Atlantilta Tyynellemerelle luoteesta kaakkoon.',
+    {
+      text: 'Kannas on kapeimmillaan päivän matka, ja täällä puhutaan kanavan kaivamisesta merestä toiseen. Ranskalaiset aikovat yrittää; pidän suunnitelmaa liian optimistisena.',
+      voice: 'isoisa',
+    },
   ],
   buenosaires: [
     'Buenos Aires tarkoittaa espanjaksi hyviä ilmoja: nimi tulee merenkulkijoiden suojeluspyhimykseltä.',
     'Tango syntyi 1800-luvun lopulla Buenos Airesin ja Montevideon satamakortteleissa siirtolaisten keskuudessa.',
     'Kaupungin ohi virtaava Río de la Plata on maailman leveimpiä jokisuita: vastarantaa ei näe.',
+    {
+      text: 'Satamakaupunki on täynnä siirtolaisia Italiasta ja Espanjasta, ja karjaa viedään täältä laivoin Eurooppaan. Kaupunki pitää itseään eurooppalaisena; minä pidän sitä parempana kuin useimpia Euroopan kaupunkeja.',
+      voice: 'isoisa',
+    },
   ],
   caracas: [
     'Caracas on rannikkovuoriston laaksossa noin 900 metrin korkeudessa, vaikka Karibianmeri on vain kymmenen kilometrin päässä.',
     'Kaupungin ja sen lentokentän välissä on vuorijono, jonka läpi kuljetaan tunneleita pitkin.',
     'Venezuelassa on maailman suurimmat todetut öljyvarat, suurelta osin Orinocon raskaan öljyn vyöhykkeellä.',
+    {
+      text: 'Rannikkovuorten takana laaksossa on kaupunki, jossa muistetaan tarkkaan mies nimeltä Bolívar. Hän vapautti puolet maanosasta; meidän puolellamme häntä ei mainita kouluissa lainkaan.',
+      voice: 'isoisa',
+    },
   ],
   bogota: [
     'Bogotá on noin 2 640 metrin korkeudessa, ja siellä on sama viileä sää ympäri vuoden.',
     'Kaupungin kultamuseossa on kymmeniätuhansia esikolumbiaanisia kultaesineitä.',
     'Bogotássa suljetaan sunnuntaisin satoja kilometrejä katuja autoilta pyöräilijöiden käyttöön — tapaa kutsutaan nimellä ciclovía.',
+    {
+      text: 'Kahden kilometrin korkeudessa ylätasangolla on kaupunki, jossa on viileää ympäri vuoden. Järvestä on nostettu kultaesineitä; siitä syntyi tarina, jonka takia moni eurooppalainen kuoli sademetsässä turhaan.',
+      voice: 'isoisa',
+    },
   ],
   quito: [
     'Quiton vanhakaupunki oli yksi ensimmäisistä Unescon maailmanperintökohteista vuonna 1978.',
     'Kaupunki on lähes päiväntasaajalla, joten päivä ja yö ovat yhtä pitkiä ympäri vuoden.',
     'Quiton yllä kohoaa Pichincha-tulivuori, joka peitti kaupungin tuhkaan purkautuessaan 1999.',
+    {
+      text: 'Päiväntasaaja kulkee kaupungin ohi, ja silti täällä palelee illalla. Korkeus tekee sen; kartta ei kerro korkeutta, ja siksi kartta valehtelee.',
+      voice: 'isoisa',
+    },
   ],
   galapagos: [
     'Galápagossaaret ovat noin tuhannen kilometrin päässä mantereesta ja syntyneet tulivuorista kuuman pisteen yllä.',
     'Merileguaani on maailman ainoa merestä ruokailemaan sukeltava liskolaji ja elää vain näillä saarilla.',
     'Saarten ympärillä kohtaavat kylmä Humboldtin virta ja lämpimät trooppiset vedet, mikä tekee vedenalaisesta lajistosta poikkeuksellisen.',
+    {
+      text: 'Saarilla eläimet eivät pakene, koska ne eivät ole oppineet pelkäämään. Nuori luonnontieteilijä kävi täällä ja kirjoitti kirjan, joka on järkyttänyt Englannin pappilat perusteellisesti.',
+      voice: 'isoisa',
+    },
   ],
   boavista: [
     'Boa Vista on Brasilian ainoa osavaltion pääkaupunki päiväntasaajan pohjoispuolella.',
     'Kaupunki on rakennettu viuhkamaisen kaavan mukaan 1940-luvulla, mikä on Amazonian kaupungeissa harvinaista.',
     'Boa Vistan pohjoispuolella kohoaa Roraiman pöytävuori, jonka huipulla elää kasvilajeja joita ei tavata muualta.',
+    {
+      text: 'Sademetsän keskellä avautuu savanni, jonka takana kohoaa pöytämäinen vuori pilviin. Sen laella kerrotaan olevan oma maailmansa; en päässyt tarkistamaan.',
+      voice: 'isoisa',
+    },
   ],
   cayenne: [
     'Ranskan Guayana on Ranskan merentakainen departementti ja siten Euroopan unionin ainoa alue Etelä-Amerikassa.',
     'Euroopan avaruusjärjestön laukaisukeskus sijaitsee lähellä Kouroussa, koska päiväntasaajan läheisyys antaa raketille lisävauhtia.',
     'Cayennenpippuri sai nimensä kaupungista, vaikka chilit ovat kotoisin laajemmalti trooppisesta Amerikasta.',
+    {
+      text: 'Ranska pitää tätä rannikkoa siirtomaanaan ja lähettää tänne tuomittuja. Kuumuus ja kuume hoitavat rangaistuksen loppuun; se on julmempi tuomio kuin yksikään kirjattu.',
+      voice: 'isoisa',
+    },
   ],
   macapa: [
     'Päiväntasaaja kulkee Macapán läpi, ja kaupungin stadionin keskiviiva on merkitty sen kohdalle.',
     'Macapá on Amazonin pohjoisrannalla, eikä sinne johda yhtään siltaa pääuoman yli.',
     'Amazonin suistossa esiintyy pororoca-vuoroveden aalto, joka nousee jokea ylös kilometrikaupalla.',
+    {
+      text: 'Päiväntasaaja kulkee suoraan kylän läpi, joten seison toisella jalalla eri pallonpuoliskolla kuin toisella. Tein sen kahdesti enkä hävennyt kumpaakaan kertaa.',
+      voice: 'isoisa',
+    },
   ],
   manaus: [
     'Manausin oopperatalo Teatro Amazonas valmistui 1896 kumibuumin rahoilla keskelle sademetsää.',
     'Kaupungin edustalla musta Rio Negro ja savinen Solimões virtaavat rinnakkain kilometrejä sekoittumatta.',
     'Manaus on noin 1 500 kilometrin päässä merestä, mutta valtamerialukset pääsevät sinne Amazonia pitkin.',
+    {
+      text: 'Tuhat kilometriä sademetsää ylävirtaan on kaupunki, jossa on oopperatalo ja eurooppalaista marmoria. Kaiken maksaa kumi; epäilen että kumi ei maksa sitä ikuisesti.',
+      voice: 'isoisa',
+    },
   ],
   santarem: [
     'Santarémissa kirkasvetinen Tapajós kohtaa savisen Amazonin, ja veden raja näkyy silmin.',
     'Kaupunki on yksi Amazonian vanhimpia: portugalilaiset perustivat sen 1661 aiemman alkuperäisasutuksen paikalle.',
     'Lähellä sijaitseva Alter do Chão tunnetaan valkoisista jokirannoistaan, joita kutsutaan Amazonin Karibiaksi.',
+    {
+      text: 'Kaksi jokea kohtaa täällä, ja toisen vesi on kirkasta ja toisen ruskeaa. Rannat ovat valkoista hiekkaa keskellä metsää, mikä on kuin meri ilman merta.',
+      voice: 'isoisa',
+    },
   ],
   saoluis: [
     'São Luís on ainoa Brasilian osavaltion pääkaupunki, jonka perustivat ranskalaiset — vuonna 1612.',
     'Vanhankaupungin talot on päällystetty portugalilaisilla azulejo-kaakeleilla, ja alue on Unescon maailmanperintökohde.',
     'Kaupungin lähistöllä on Lençóis Maranhensesin dyynialue, jonka hiekkakumpujen väliin muodostuu sadekaudella tuhansia sinisiä lampia.',
+    {
+      text: 'Kaupungin talot on päällystetty kaakeleilla, jotka on tuotu laivalla Portugalista. Kesäkuussa kaduilla tanssitaan tarinaa härästä; rummut kuuluvat aamuun asti.',
+      voice: 'isoisa',
+    },
   ],
   joaopessoa: [
     'Ponta do Seixas João Pessoan laidalla on Amerikan mantereen itäisin kohta.',
     'Kaupunki on yksi Brasilian vanhimpia: se perustettiin 1585.',
     'Etelä-Atlantin ensimmäiset postilennot Afrikasta suuntasivat juuri Brasilian itäkärkeen, koska matka oli lyhin mahdollinen.',
+    {
+      text: 'Tässä on koko mantereen itäisin kohta, ja Afrikkaan on täältä lyhyempi matka kuin maan omaan pääkaupunkiin. Sokeriruokoa kasvatetaan niin pitkälle kuin silmä kantaa.',
+      voice: 'isoisa',
+    },
   ],
   salvador: [
     'Salvador oli Brasilian pääkaupunki 1549–1763, siis yli kaksisataa vuotta.',
     'Kaupungin Pelourinho-kaupunginosa on Unescon maailmanperintökohde ja tunnettu värikkäistä siirtomaataloistaan.',
     'Capoeira, joka yhdistää taistelun, tanssin ja musiikin, kehittyi Bahiassa afrikkalaisten perinteiden pohjalta.',
+    {
+      text: 'Kaupunki oli maan pääkaupunki ennen kuin se siirtyi etelään. Rummut, tanssi ja uskonto ovat täällä Afrikasta tuotujen ihmisten perintöä; se perintö kannattaisi merkitä kartalle isommalla kuin siirtomaaherrojen nimet.',
+      voice: 'isoisa',
+    },
   ],
   iquitos: [
     'Iquitos on maailman suurin kaupunki, johon ei johda maantietä: sinne pääsee vain jokea pitkin tai lentäen.',
     'Kaupunki rikastui kumibuumin aikaan, ja sen keskustassa on yhä eurooppalaistyylisiä kaakelijulkisivuja.',
     'Belénin kaupunginosassa talot on rakennettu paalujen tai lauttojen varaan, koska joen pinta vaihtelee vuodessa monta metriä.',
+    {
+      text: 'Sademetsän keskellä on kaupunki, jonne ei johda ainuttakaan tietä. Kumikauppa on tehnyt siitä rikkaan; kaakeloidut julkisivut näyttävät Lissabonilta ja ympärillä on viidakko.',
+      voice: 'isoisa',
+    },
   ],
   portovelho: [
     'Porto Velho kasvoi Madeira–Mamoré-rautatien päätepisteeseen 1900-luvun alussa.',
     'Madeira on Amazonin suurin sivujoki ja kuljettaa valtavia määriä Andeilta huuhtoutunutta lietettä.',
     'Rautatien rakentamisessa kuoli tuhansia työntekijöitä malariaan ja keltakuumeeseen, ja rataa kutsuttiin Paholaisen rautatieksi.',
+    {
+      text: 'Joen varrella rakennetaan rautatietä koskien ohi, ja työmaalla kuolee miehiä nopeammin kuin kiskoja saadaan paikoilleen. Rataa kutsutaan täällä paholaisen radaksi, eikä nimi ole liioittelua.',
+      voice: 'isoisa',
+    },
   ],
   bananal: [
     'Ilha do Bananal on maailman suurin jokisaari: Araguaia jakautuu kahtia ja yhtyy vasta satojen kilometrien päässä.',
     'Sadekaudella suuri osa saaresta jää tulvaveden alle, ja kuivalla kaudella esiin tulee cerrado-savannia.',
     'Saarella asuu karajá-kansaa, joka tunnetaan savesta muotoilluista ritxoko-nukeista.',
+    {
+      text: 'Joki jakautuu kahtia ja yhtyy taas satojen kilometrien päässä; väliin jää maailman suurin jokisaari. Sadekaudella se on suurimmaksi osaksi veden alla, mikä tekee kartanpiirtämisestä epäkiitollista.',
+      voice: 'isoisa',
+    },
   ],
   machupicchu: [
     'Machu Picchu rakennettiin noin vuonna 1450, eivätkä espanjalaiset koskaan löytäneet sitä.',
     'Kaupunki on 2 430 metrin korkeudessa jyrkän harjanteen päällä, ja sen ympärillä on satoja viljelyterasseja.',
     'Inkojen muureissa kivet on hiottu yhteen ilman laastia niin tarkasti, että rakenteet ovat kestäneet vuosisatojen maanjäristykset.',
+    {
+      text: 'Vuorenharjalla kerrotaan olevan kivikaupunki, jota espanjalaiset eivät koskaan löytäneet. Paikalliset tietävät sen tarkkaan; me kutsumme sen löytämistä löytöretkeksi, kun joku meistä ehtii paikalle.',
+      voice: 'isoisa',
+    },
   ],
   titicaca: [
     'Titicaca on noin 3 812 metrin korkeudessa ja Etelä-Amerikan suurin makean veden järvi tilavuudeltaan.',
     'Uros-kansa asuu järvellä kelluvilla saarilla, jotka on punottu totora-kaislasta.',
     'Järven raja jakaa veden Perun ja Bolivian kesken, ja molemmilla mailla on sillä aluksia.',
+    {
+      text: 'Neljän kilometrin korkeudessa on järvi, jolla purjehditaan kaislaveneillä. Saaret kelluvat, koska ne on tehty kaislasta; kirjoitin sen muistiin kolme kertaa varmistuakseni.',
+      voice: 'isoisa',
+    },
   ],
   lima: [
     'Francisco Pizarro perusti Liman 1535, ja siitä tuli Espanjan Etelä-Amerikan hallinnon keskus.',
     'Limassa sataa alle 20 millimetriä vuodessa, mutta talvella kaupunkia peittää kuukausiksi garúa-merisumu.',
     'Rannikon ohi virtaa kylmä Humboldtin merivirta, joka tekee maasta autiomaata mutta merestä yhden maailman kalarikkaimmista.',
+    {
+      text: 'Kaupunki on autiomaassa meren rannalla, eikä täällä sada käytännössä koskaan. Sumu peittää auringon kuukausiksi; ilmasto on kuin Lontoo ilman sadetta, mikä on outo yhdistelmä.',
+      voice: 'isoisa',
+    },
   ],
   santacruz: [
     'Santa Cruz de la Sierra on kasvanut Bolivian suurimmaksi kaupungiksi, vaikka maa tunnetaan Andien vuoristosta.',
     'Kaupunki on vain noin 400 metrin korkeudessa alavilla mailla, kun La Paz on yli 3 600 metrissä.',
     'Santa Cruzin itäpuolelta alkaa Chiquitanían alue, jonka jesuiittakirkot ovat Unescon maailmanperintökohde.',
+    {
+      text: 'Andien itäpuolella alavilla mailla on kaupunki, jonne pääsee vain huonoja teitä pitkin. Täällä puhutaan espanjan ohella kieliä, joita hallinto ei tunnusta; ne olivat täällä ensin.',
+      voice: 'isoisa',
+    },
   ],
   campogrande: [
     'Campo Granden länsipuolelta alkaa Pantanal, yksi maailman laajimmista makean veden kosteikoista.',
     'Pantanalissa elää maailman tiheimpiä jaguaarikantoja, ja niitä on siellä helpompi nähdä kuin sademetsässä.',
     'Kaupunkia kutsutaan nimellä Cidade Morena punaruskean maaperänsä takia.',
+    {
+      text: 'Länsipuolella alkaa kosteikko, joka tulvii puoli vuotta ja kuivuu toisen puolen. Karjapaimenet siirtävät karjan veden mukana; jaguaari seuraa perässä, mistä ei puhuta ääneen.',
+      voice: 'isoisa',
+    },
   ],
   rio: [
     'Kristus Vapahtaja -patsas valmistui 1931 ja seisoo 710 metriä korkean Corcovadon huipulla.',
     'Rio oli Brasilian pääkaupunki 1763–1960, kunnes tehtävä siirtyi varta vasten rakennetulle Brasílialle.',
     'Nimi Rio de Janeiro tarkoittaa tammikuun jokea: portugalilaiset saapuivat lahdelle tammikuussa 1502 ja luulivat sitä joen suuksi.',
+    {
+      text: 'Lahti vuorten välissä on kauneinta mitä olen nähnyt, ja sen sanon vasten kotimaani rantoja. Keisari hallitsee täällä portugaliksi, ja kaupunki tanssii tavalla jota en osaa kuvata enkä unohtaa.',
+      voice: 'isoisa',
+    },
   ],
   saopaulo: [
     'São Paulon metropolialue on eteläisen pallonpuoliskon väkirikkain: siellä asuu yli 20 miljoonaa ihmistä.',
     'Kaupungin rikkaus rakentui 1800-luvulla kahvista, jolle ylängön punainen terra roxa -maaperä sopi täydellisesti.',
     'São Paulo on noin 800 metrin korkeudessa, ja siksi sen ilmasto on selvästi viileämpi kuin Rion.',
+    {
+      text: 'Ylängöllä kasvaa kaupunki, jonka rikkaus tulee kahvista. Rautatie vie sadon satamaan, ja jokainen kuppi Lontoossa alkaa täältä.',
+      voice: 'isoisa',
+    },
   ],
   iguazu: [
     'Iguazún putouksissa on yli 270 erillistä putousta lähes kolmen kilometrin matkalla.',
     'Suurin osa putouksista on Argentiinan puolella, mutta laajimmat näkymät ovat Brasilian puolelta.',
     'Nimi tulee guaranín kielen sanoista y (vesi) ja guasu (suuri).',
+    {
+      text: 'Putoukset ovat leveämpiä kuin mikään näkemäni, ja niiden ääni kuuluu ennen kuin vesi näkyy. Niagara on tämän rinnalla kunnioitettava mutta vaatimaton.',
+      voice: 'isoisa',
+    },
   ],
   portoalegre: [
     'Porto Alegre on Rio Grande do Sulin pääkaupunki aivan Brasilian eteläkulmassa.',
     'Alueen talvet ovat Brasilian viileimpiä, ja ylängöillä sataa toisinaan lunta.',
     'Etelä-Brasiliassa juodaan matea samaan tapaan kuin Uruguayssa ja Argentiinassa: kurpitsakupista metalliputken läpi.',
+    {
+      text: 'Laguunin rannalla on satama, ja ympärillä ratsastavat paimenet karjan perässä. Teetä juodaan täällä putken läpi yhteisestä astiasta, ja kieltäytyminen olisi loukkaus.',
+      voice: 'isoisa',
+    },
   ],
   antofagasta: [
     'Antofagasta on Atacaman autiomaan laidalla, jonka osissa ei ole mitattu sadetta vuosikausiin.',
     'Kaupunki kuului Bolivialle, kunnes Chile valtasi sen Tyynenmeren sodassa 1879–1884.',
     'Atacaman kuivuus ja korkeus tekevät siitä yhden maailman parhaista paikoista tähtitieteelle: alueella on useita suuria observatorioita.',
+    {
+      text: 'Autiomaassa ei ole sadetta, mutta salpietaria on niin paljon, että sitä viedään laivoilla Eurooppaan lannoitteeksi. Vesi tuodaan tänne putkessa vuorilta; kaikki muu tuodaan laivalla.',
+      voice: 'isoisa',
+    },
   ],
   salta: [
     'Salta on Luoteis-Argentiinan keskus ja tunnettu hyvin säilyneestä siirtomaa-ajan keskustastaan.',
     'Tren a las Nubes -rata nousee kaupungista Andien solaan noin 4 200 metrin korkeuteen.',
     'Alueen Cafayaten laaksossa viljellään viiniä yli 1 700 metrin korkeudessa — maailman korkeimpia viinialueita.',
+    {
+      text: 'Vuorten laaksossa on kaupunki, jossa soitetaan kitaraa ja lauletaan yhdessä myöhään. Aavikko alkaa heti kaupungin takana ja nousee neljään kilometriin.',
+      voice: 'isoisa',
+    },
   ],
   catamarca: [
     'Catamarca on kuivaa vuoristomaakuntaa, jonka laaksoissa viljellään keinokastelun turvin viiniä ja oliiveja.',
     'Maakunnan ja Chilen rajalla kohoaa Ojos del Salado, maailman korkein tulivuori.',
     'Alueen käsityöläiset kutovat yhä perinteisiä poncho-viittoja vikunjan ja laaman villasta.',
+    {
+      text: 'Kuivissa laaksoissa kastellaan viiniköynnöksiä kanavilla, jotka on kaivettu ennen espanjalaisia. Ylhäällä puna-tasangolla laiduntaa laamoja ja ilma on niin ohutta että pysähdyn joka sadas askel.',
+      voice: 'isoisa',
+    },
   ],
   valparaiso: [
     'Valparaíso oli 1800-luvulla purjelaivojen tärkein pysähdyspaikka Kap Hornin kierron jälkeen.',
     'Kaupungin jyrkille rinteille noustaan vinohisseillä, joita rakennettiin 1880-luvulta alkaen kymmeniä.',
     'Panaman kanavan avaaminen 1914 vei satamalta suuren osan sen merkityksestä.',
+    {
+      text: 'Rinteille kiipeävä satamakaupunki on täynnä portaita ja hissejä. Kaikki Kap Hornin kiertäneet laivat pysähtyvät täällä; sanotaan että kanava Panamaan lopettaisi sen, mutta sellaista kanavaa ei ole.',
+      voice: 'isoisa',
+    },
   ],
   sanambrosio: [
     'San Ambrosio on asumaton tulivuorisaari noin 850 kilometrin päässä Chilen mantereesta.',
     'Saari kuuluu Desventuradas-saariin, mikä tarkoittaa espanjaksi onnettomia saaria.',
     'Chile on perustanut saarten ympärille yhden maailman suurimmista merensuojelualueista.',
+    {
+      text: 'Avomerellä on kalliosaari ilman satamaa ja ilman lähdettä. Kalastajat käyvät siellä kausittain; asua siellä ei voi kukaan, ja se on saaren ainoa mielipide asiasta.',
+      voice: 'isoisa',
+    },
   ],
   robinsoncrusoe: [
     'Skotlantilainen merimies Alexander Selkirk eli saarella yksin yli neljä vuotta vuodesta 1704 alkaen.',
     'Daniel Defoen romaani Robinson Crusoe ilmestyi 1719, ja Chile nimesi saaren sen mukaan vasta 1966.',
     'Saari kuuluu Juan Fernándezin saariin, joiden kasvistosta suuri osa on kotoperäistä.',
+    {
+      text: 'Saarella eli aikoinaan skotlantilainen merimies neljä vuotta yksin, ja hänen tarinastaan tehtiin kirja jota luetaan yhä. Kirja on parempi kuin totuus, mutta totuus on karumpi ja siksi opettavaisempi.',
+      voice: 'isoisa',
+    },
   ],
   puertomontt: [
     'Puerto Montt on Chilen yhtenäisen tieverkon eteläinen päätepiste: sen eteläpuolella kuljetaan lautoilla.',
     'Kaupungin perustivat 1850-luvulla saksalaiset siirtolaiset, mikä näkyy yhä rakennuksissa ja sukunimissä.',
     'Alueen suojaisat vuonot tekivät Chilestä 1990-luvulla yhden maailman suurimmista kasvatetun lohen tuottajista.',
+    {
+      text: 'Etelässä alkaa vuonojen ja saarten sokkelo, jota kukaan ei ole kokonaan kartoittanut. Saksalaiset siirtolaiset ovat raivanneet metsää ja rakentaneet taloja, jotka näyttävät Baijerilta sateessa.',
+      voice: 'isoisa',
+    },
   ],
   sanjorge: [
     'San Jorgen lahti on Argentiinan Patagonian suurin lahti ja maan tärkein öljyntuotantoalue.',
     'Rannikon Punta Tombossa pesii satojatuhansia magelhaeninpingviinejä.',
     'Patagonian rannikkoa piiskaavat lähes jatkuvat länsituulet, jotka kallistavat pensaatkin itään.',
+    {
+      text: 'Patagonian arolla tuuli ei lakkaa hetkeksikään, ja puita ei ole. Rannoilla pesii pingviinejä tuhansittain; ne eivät välitä tuulesta, mikä on niiden etu minuun nähden.',
+      voice: 'isoisa',
+    },
   ],
   falkland: [
     'Falklandinsaarilla on satoja tuhansia lampaita ja vain noin 3 500 asukasta.',
     'Britannia ja Argentiina kävivät saarista sodan 1982; Argentiina kutsuu niitä Malvinassaariksi.',
     'Saarilla pesii viisi pingviinilajia, ja lintuja on moninkertaisesti asukaslukuun nähden.',
+    {
+      text: 'Saarilla on enemmän lampaita kuin ihmisiä ja enemmän pingviinejä kuin lampaita. Britannia hallitsee saaria ja naapurimaa pitää niitä ominaan; asiasta kiistellään vielä pitkään.',
+      voice: 'isoisa',
+    },
   ],
   puntaarenas: [
     'Punta Arenas on Magalhãesin salmen rannalla ja oli tärkeä pysähdyspaikka ennen Panaman kanavaa.',
     'Kaupunki on yksi maailman eteläisimmistä yli 100 000 asukkaan kaupungeista.',
     'Salmen läpi purjehtiminen oli purjelaiva-aikaan turvallisempaa kuin Kap Hornin kierto, mutta myös vaikeampaa vastatuulessa.',
+    {
+      text: 'Salmen rannalla on kaupunki, jonka ohi kulkee jokainen Tyynellemerelle purjehtiva laiva. Villakauppa on tehnyt siitä vauraan; jos joku joskus kaivaa kanavan pohjoiseen, tämä vauraus loppuu.',
+      voice: 'isoisa',
+    },
   ],
   caphorn: [
     'Kap Horn on Hornoksen saarella ja merkitsee Etelä-Amerikan eteläisintä kärkeä.',
     'Kap Hornin ohi purjehtiminen oli purjelaiva-aikaan merenkulkijan arvomerkki, eivätkä kaikki laivat päässeet perille.',
     'Eteläisen pallonpuoliskon länsituulet kiertävät maapallon ilman mantereiden estettä ja kasvattavat aallot Drake-salmessa valtaviksi.',
+    {
+      text: 'Mantereen eteläisin kärki on kallio, jonka ohi purjehtiminen on merimiehen kunniamerkki. Aallot kiertävät täällä koko maapallon törmäämättä mihinkään; sen huomaa kannella seisoessaan.',
+      voice: 'isoisa',
+    },
   ],
 };
 
@@ -17766,11 +19031,51 @@ const SOUTHAMERICA = {
     // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
     diaries: [
       'Esi-isäni tulivat hakemaan El Doradon kultaa ja veivät minkä irti saivat. Minä ostan jääkaappimagneetin ja maksan ylihintaa. Jonkinlaista oikeudenmukaisuutta sekin.',
+      'Isoisän kartassa tämä manner on merkitty kahden kuningaskunnan väreillä. Nyt täällä on kaksitoista itsenäistä valtiota, ja niiden vapaussodat käytiin ennen kuin hän ehti pakata laukkunsa.',
+      '"Sademetsä on tyhjä ja kulkukelvoton", kirjoitti isoisä varmana. Metsässä asui miljoonia ihmisiä, jotka olivat parantaneet maaperää niin hyvin, että se on viljavaa vieläkin. Kulkukelvoton oli hänen jalkansa, ei metsä.',
+      'Isoisä ihasteli Andien korkeutta ja arveli, ettei niiden yli voi kulkea kuin muulilla. Bussi vie nyt solan yli kolmessa tunnissa, ja muuli seisoo tien vieressä katsomassa. Molemmat ovat yhä käytössä.',
+      '"Kahvi, kumi ja hopea — siinä koko manner", tiivisti isoisä talouden. Lisäisin listalle litiumin, soijan, lentokoneet ja sen, että tuotteiden hinnasta päätetään nykyään useammin täällä kuin Lontoossa.',
+      'Isoisä merkitsi muistiin, että putoukset ovat vaikuttavat mutta Niagara vaikuttavampi. Seisoin molempien äärellä ja olen eri mieltä. Tämä on ainoa kohta, jossa uskallan sanoa hänen erehtyneen mittasuhteissa.',
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
-    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
-    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
-    starHints: {},
+    // kaupungin nimeä.
+    starHints: {
+      caracas: 'Karibian rannikolla vuorten takana laaksossa on pääkaupunki, jossa muistetaan tarkkaan mantereen vapauttajan nimi. Maalla on suuret öljyvarat.',
+      bogota: 'Andien ylätasangolla kahden kilometrin korkeudessa on pääkaupunki, jossa on viileää ympäri vuoden. Lähistön järvestä on nostettu kultaesineitä.',
+      quito: 'Päiväntasaajan kohdalla vuorten välissä on pääkaupunki, jossa päivä ja yö ovat yhtä pitkiä ympäri vuoden. Lumihuippuinen tulivuori näkyy kaupunkiin.',
+      galapagos: 'Tuhannen kilometrin päässä mantereesta päiväntasaajalla on saariryhmä, jonka eläimet eivät pakene ihmistä. Siellä elää pingviinejä keskellä lämpöä.',
+      boavista: 'Pohjoisessa sademetsän keskellä avautuu savanni, jonka takana kohoaa jyrkkäseinäinen pöytävuori kolmen maan rajalle.',
+      cayenne: 'Koillisrannikolla on Euroopan unioniin kuuluva alue, jossa maksetaan eurolla ja josta laukaistaan raketteja päiväntasaajan lähellä.',
+      macapa: 'Suuren joen suistossa päiväntasaajan kohdalla on kaupunki, jonne ei johda maantietä. Sen stadionin keskiviiva jakaa maapallon kahtia.',
+      manaus: 'Tuhannen kilometrin päässä merestä sademetsän keskellä on kaupunki, jossa on oopperatalo. Kaksi erilaista jokivettä virtaa siellä rinnakkain sekoittumatta.',
+      santarem: 'Kahden joen yhtymässä sademetsän keskellä on satama, jonka rannat ovat valkoista hiekkaa ja vesi kirkasta.',
+      saoluis: 'Koillisrannikon saarella on kaupunki, jonka talot on päällystetty kaakeleilla ja jossa tanssitaan kesäkuussa tarinaa härästä.',
+      joaopessoa: 'Koillisrannikolla on kaupunki lähellä koko mantereen itäisintä kohtaa. Sieltä on Afrikkaan lyhyempi matka kuin maan pääkaupunkiin.',
+      salvador: 'Koillisrannikon lahden rannalla on kaupunki, joka oli maan ensimmäinen pääkaupunki. Sen rummut, tanssi ja ruoka ovat Afrikasta tuotujen ihmisten perintöä.',
+      iquitos: 'Sademetsän keskellä on suuri kaupunki, jonne ei johda ainuttakaan maantietä. Kumikauppa rakensi sen kaakeloidut julkisivut.',
+      portovelho: 'Sademetsän lounaisosassa suuren sivujoen varrella on kaupunki, jonka ohi rakennettiin rautatie koskien kiertämiseksi.',
+      bananal: 'Sisämaan savannissa joki jakautuu kahtia ja yhtyy taas satojen kilometrien päässä. Väliin jää maailman suurin jokisaari.',
+      machupicchu: 'Andien harjanteella pilvien alapuolella on inkojen kivikaupunki, jonne ei johda maantietä. Muurien kivet on hiottu yhteen ilman laastia.',
+      titicaca: 'Lähes neljän kilometrin korkeudessa kahden maan rajalla on suuri järvi, jolla purjehditaan kaislaveneillä ja jonka saaret kelluvat.',
+      lima: 'Tyynenmeren rannalla autiomaassa on pääkaupunki, jossa ei käytännössä koskaan sada mutta jossa sumu peittää auringon kuukausiksi.',
+      santacruz: 'Andien itäpuolella alavilla mailla on maan suurin kaupunki, jonka ympärillä kasvatetaan soijaa.',
+      campogrande: 'Sisämaassa on kaupunki, jonka länsipuolella alkaa laaja kosteikko. Se tulvii puoli vuotta ja kuivuu laitumeksi toisen puolen.',
+      rio: 'Kaakkoisrannikolla vuorten välisen lahden äärellä on kaupunki, jonka yllä seisoo vuorella valtava patsas.',
+      saopaulo: 'Kaakkoisella ylängöllä lähellä rannikkoa on eteläisen pallonpuoliskon väkirikkain kaupunki, joka rikastui kahvista.',
+      iguazu: 'Kahden maan rajalla sisämaassa on satojen putousten sarja, jonka suurinta kuilua kutsutaan paholaisen kurkuksi.',
+      portoalegre: 'Etelässä laajan laguunin pohjukassa on satama, jonka ympäristössä ratsastavat karjapaimenet ja juodaan mate-teetä yhteisestä astiasta.',
+      antofagasta: 'Maailman kuivimman autiomaan rannikolla on satama, josta viedään kuparia ja jonne vesi tuodaan putkessa vuorilta.',
+      salta: 'Luoteisen vuoriston laaksossa on kaupunki, jossa soitetaan perinnemusiikkia ja josta rautatie nousee neljän kilometrin korkeuteen.',
+      catamarca: 'Kuivien vuorilaaksojen maakunnassa kastellaan viiniköynnöksiä, ja ylätasangolla kohoaa maailman korkein tulivuori.',
+      valparaiso: 'Tyynenmeren rannalla jyrkille rinteille rakennettu satamakaupunki nousee vinohisseillä. Maan parlamentti kokoontuu siellä.',
+      sanambrosio: 'Avomerellä satojen kilometrien päässä rannikosta on pieni tulivuorisaari ilman satamaa ja ilman makeaa vettä.',
+      robinsoncrusoe: 'Tyynellämerellä on saari, joka on nimetty romaanin mukaan. Sen esikuvana oli merimies, joka eli siellä yksin neljä vuotta.',
+      puertomontt: 'Eteläisen rannikon kohdalla, siellä missä alkaa vuonojen ja saarten sokkelo, on satama jonne saksalaiset siirtolaiset asettuivat 1850-luvulla.',
+      sanjorge: 'Patagonian tuulisella arorannikolla on lahti, jonka rannoilta pumpataan öljyä ja jonka niemillä pesii pingviinejä tuhansittain.',
+      falkland: 'Kaukana etelässä avomerellä on saariryhmä, jossa on enemmän lampaita kuin ihmisiä. Kaksi maata esittää siitä eri näkemyksen.',
+      puntaarenas: 'Mantereen eteläkärjen salmen rannalla on kaupunki, jonka ohi purjehti jokainen Tyynellemerelle matkaava laiva ennen kanavan avaamista.',
+      caphorn: 'Mantereen eteläisimmässä kärjessä on kallioinen saari, jonka ohi purjehtiminen on merimiehen kunniamerkki. Aallot kiertävät siellä koko maapallon.',
+    },
   },
 
   decor: {
@@ -23384,6 +24689,20 @@ class UI {
     this.passportCount = document.getElementById('passport-count');
     this.passportFinds = document.getElementById('passport-finds');
 
+    this.arrivalDialog = document.getElementById('arrival-dialog');
+    this.arrivalCity = document.getElementById('arrival-city');
+    this.arrivalVoice = document.getElementById('arrival-voice');
+    this.arrivalText = document.getElementById('arrival-text');
+    document.getElementById('arrival-yes').addEventListener('click', () => {
+      this.closeArrival();
+      sfx.play('paper');
+      this.doAction(() => this.game.actionQuiz());
+    });
+    document.getElementById('arrival-no').addEventListener('click', () => {
+      this.closeArrival();
+      this.doAction(() => this.game.actionSkipQuiz());
+    });
+
     this.factVoiceEl = document.getElementById('fact-voice');
     this.factPlace = document.getElementById('fact-place');
     this.factText = document.getElementById('fact-text');
@@ -23994,19 +25313,12 @@ class UI {
     this.hint.textContent = '';
     const modes = game.travelModes();
 
+    // Saapuminen aarrekaupunkiin kerrotaan keskelle ruutua omana korttinaan;
+    // valinta tehdään siellä, joten toimintopaneeliin ei tule nappeja.
     if (game.phase === 'offer') {
       const city = game.cityOf();
-      this.turnStatus.textContent = `${city.name}: kokeile kysymystä tai päätä vuoro.`;
-      const quizBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
-      quizBtn.addEventListener('click', () => {
-        sfx.play('paper');
-        this.doAction(() => game.actionQuiz());
-      });
-      this.actionsEl.appendChild(quizBtn);
-
-      const skipBtn = html('button', '', '➡ Päätä vuoro');
-      skipBtn.addEventListener('click', () => this.doAction(() => game.actionSkipQuiz()));
-      this.actionsEl.appendChild(skipBtn);
+      this.turnStatus.textContent = `${city.name} — saavuit perille.`;
+      this.openArrival(city);
       return;
     }
 
@@ -24279,6 +25591,9 @@ class UI {
     // Matkavalinnan toinen vaihe koskee vain käsillä olevaa valintaa: heti
     // kun vaihe vaihtuu, ollaan taas seuraavan vuoron ensimmäisessä vaiheessa.
     if (this.game.phase !== 'action') this.travelExpanded = false;
+    // Saapumiskortti kuuluu vain offer-vaiheeseen: botin vuorolla ja muissa
+    // vaiheissa se suljetaan, jottei se jää roikkumaan kartan päälle.
+    if (this.game.phase !== 'offer' || this.game.player.isBot) this.closeArrival();
     this.stampPassport();
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
@@ -24315,6 +25630,34 @@ class UI {
       sfx.play('paper');
       setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
+  }
+
+  /**
+   * Saapumiskortti: kaupungin matkatarina keskellä ruutua ja sen lopussa
+   * valinta, avataanko aarre. Kieltävä vastaus päättää vuoron, jolloin
+   * seuraava nopanheitto alkaa tavalliseen tapaan.
+   */
+  openArrival(city) {
+    if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
+    this.arrivalShownFor = city.id;
+
+    const facts = this.game.pack.placeFacts[city.id] ?? [];
+    const pick = Math.floor(hash01(`arrival:${city.id}:${this.game.turnCount}`) * facts.length);
+    const fact = facts[Math.min(pick, facts.length - 1)];
+
+    this.arrivalCity.textContent = city.name;
+    this.arrivalVoice.textContent = fact ? voiceTitle(factVoice(fact)) : '';
+    this.arrivalText.textContent = '';
+    const source = fact ? this.sourceLine(factSource(fact)) : null;
+    this.typeText(this.arrivalText, factText(fact), 'arrival', () => {
+      if (source) this.arrivalText.appendChild(source);
+    });
+    if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+  }
+
+  closeArrival() {
+    this.arrivalShownFor = null;
+    if (this.arrivalDialog.open) this.arrivalDialog.close();
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
@@ -25027,7 +26370,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.14';
+const APP_VERSION = '2026-07-27.15';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -25090,10 +26433,20 @@ function attach(game) {
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
 }
 
+/**
+ * Matkan juoni kerrotaan kerran uuden pelin alussa. Kesken jäänyttä peliä
+ * jatkettaessa tarinaa ei toisteta — sen voi lukea uudelleen Säännöistä.
+ */
+function showIntro() {
+  const dialog = document.getElementById('intro-dialog');
+  if (dialog && !dialog.open) dialog.showModal();
+}
+
 function startGame() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
   attach(new Game({ players: [newPlayer()], pack: packById('maailma') }));
+  showIntro();
 }
 
 // --- äänet ------------------------------------------------------------------

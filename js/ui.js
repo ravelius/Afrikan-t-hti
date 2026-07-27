@@ -93,6 +93,20 @@ export class UI {
     this.passportCount = document.getElementById('passport-count');
     this.passportFinds = document.getElementById('passport-finds');
 
+    this.arrivalDialog = document.getElementById('arrival-dialog');
+    this.arrivalCity = document.getElementById('arrival-city');
+    this.arrivalVoice = document.getElementById('arrival-voice');
+    this.arrivalText = document.getElementById('arrival-text');
+    document.getElementById('arrival-yes').addEventListener('click', () => {
+      this.closeArrival();
+      sfx.play('paper');
+      this.doAction(() => this.game.actionQuiz());
+    });
+    document.getElementById('arrival-no').addEventListener('click', () => {
+      this.closeArrival();
+      this.doAction(() => this.game.actionSkipQuiz());
+    });
+
     this.factVoiceEl = document.getElementById('fact-voice');
     this.factPlace = document.getElementById('fact-place');
     this.factText = document.getElementById('fact-text');
@@ -703,19 +717,12 @@ export class UI {
     this.hint.textContent = '';
     const modes = game.travelModes();
 
+    // Saapuminen aarrekaupunkiin kerrotaan keskelle ruutua omana korttinaan;
+    // valinta tehdään siellä, joten toimintopaneeliin ei tule nappeja.
     if (game.phase === 'offer') {
       const city = game.cityOf();
-      this.turnStatus.textContent = `${city.name}: kokeile kysymystä tai päätä vuoro.`;
-      const quizBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
-      quizBtn.addEventListener('click', () => {
-        sfx.play('paper');
-        this.doAction(() => game.actionQuiz());
-      });
-      this.actionsEl.appendChild(quizBtn);
-
-      const skipBtn = html('button', '', '➡ Päätä vuoro');
-      skipBtn.addEventListener('click', () => this.doAction(() => game.actionSkipQuiz()));
-      this.actionsEl.appendChild(skipBtn);
+      this.turnStatus.textContent = `${city.name} — saavuit perille.`;
+      this.openArrival(city);
       return;
     }
 
@@ -988,6 +995,9 @@ export class UI {
     // Matkavalinnan toinen vaihe koskee vain käsillä olevaa valintaa: heti
     // kun vaihe vaihtuu, ollaan taas seuraavan vuoron ensimmäisessä vaiheessa.
     if (this.game.phase !== 'action') this.travelExpanded = false;
+    // Saapumiskortti kuuluu vain offer-vaiheeseen: botin vuorolla ja muissa
+    // vaiheissa se suljetaan, jottei se jää roikkumaan kartan päälle.
+    if (this.game.phase !== 'offer' || this.game.player.isBot) this.closeArrival();
     this.stampPassport();
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
@@ -1024,6 +1034,34 @@ export class UI {
       sfx.play('paper');
       setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
+  }
+
+  /**
+   * Saapumiskortti: kaupungin matkatarina keskellä ruutua ja sen lopussa
+   * valinta, avataanko aarre. Kieltävä vastaus päättää vuoron, jolloin
+   * seuraava nopanheitto alkaa tavalliseen tapaan.
+   */
+  openArrival(city) {
+    if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
+    this.arrivalShownFor = city.id;
+
+    const facts = this.game.pack.placeFacts[city.id] ?? [];
+    const pick = Math.floor(hash01(`arrival:${city.id}:${this.game.turnCount}`) * facts.length);
+    const fact = facts[Math.min(pick, facts.length - 1)];
+
+    this.arrivalCity.textContent = city.name;
+    this.arrivalVoice.textContent = fact ? voiceTitle(factVoice(fact)) : '';
+    this.arrivalText.textContent = '';
+    const source = fact ? this.sourceLine(factSource(fact)) : null;
+    this.typeText(this.arrivalText, factText(fact), 'arrival', () => {
+      if (source) this.arrivalText.appendChild(source);
+    });
+    if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+  }
+
+  closeArrival() {
+    this.arrivalShownFor = null;
+    if (this.arrivalDialog.open) this.arrivalDialog.close();
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
