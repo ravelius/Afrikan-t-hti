@@ -14,6 +14,14 @@ const winnerDialog = document.getElementById('winner-dialog');
 
 let ui = null;
 
+// Pystyasento. Androidilla tämä lukitsee laitteen; iOS ei tue rajapintaa,
+// joten siellä vaaka-asennon hoitaa css:n .rotate-guard.
+try {
+  screen.orientation?.lock?.('portrait').catch(() => {});
+} catch {
+  /* selain ei tue lukitusta — kehote riittää */
+}
+
 // --- tallennus -------------------------------------------------------------
 
 function saveGame(game) {

@@ -1213,14 +1213,36 @@ export class Game {
   }
 
   /** Siirtolista UI:lle: avain, sijainti, hinta ja kaupungin tiedot. */
+  /**
+   * Tarjottavat päätepisteet. Kaikki `this.moves`-siirrot ovat yhä laillisia,
+   * mutta kartalla ehdotetaan vain kaupunkeja: reitin varren pisteet ovat
+   * pelaajalle merkityksettömiä valintoja ja täyttivät kartan renkailla.
+   * Jos jollakin lähtösuunnalla ei ole kaupunkia nopan päässä, siltä
+   * suunnalta tarjotaan pisin piste, jottei suunta katoa kokonaan.
+   */
   moveOptions() {
     if (this.phase !== 'move' || !this.moves) return [];
-    return [...this.moves.entries()].map(([key, m]) => ({
+    const kaikki = [...this.moves.entries()].map(([key, m]) => ({
       key,
       pos: m.pos,
+      suunta: m.path && m.path.length ? posKey(m.path[0]) : key,
       city: m.pos.type === 'city' ? this.board.cityById.get(m.pos.city) : null,
       hasToken: m.pos.type === 'city' && this.tokens.has(m.pos.city),
     }));
+
+    const suunnat = new Map();
+    for (const opt of kaikki) {
+      const lista = suunnat.get(opt.suunta) ?? [];
+      lista.push(opt);
+      suunnat.set(opt.suunta, lista);
+    }
+
+    const tarjottavat = [];
+    for (const lista of suunnat.values()) {
+      const kaupungit = lista.filter((opt) => opt.city);
+      tarjottavat.push(...(kaupungit.length ? kaupungit : lista));
+    }
+    return tarjottavat;
   }
 }
 

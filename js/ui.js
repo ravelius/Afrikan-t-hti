@@ -111,6 +111,7 @@ export class UI {
     this.passportGrid = document.getElementById('passport-grid');
     this.passportCount = document.getElementById('passport-count');
     this.passportFinds = document.getElementById('passport-finds');
+    this.passportProgress = document.getElementById('passport-progress');
 
     this.turnCard = document.getElementById('actions').closest('.turn-card');
     this.introEl = document.getElementById('intro');
@@ -655,7 +656,12 @@ export class UI {
       const { x, y } = pixelOf(game.board, opt.pos);
       const g = el('g', { class: 'target' }, this.targetLayer);
       el('circle', { cx: x, cy: y, r: 30, class: 'target-hit' }, g);
-      el('circle', { cx: x, cy: y, r: opt.city ? 22 : 14, class: 'target-ring' }, g);
+      el('circle', {
+        cx: x,
+        cy: y,
+        r: opt.city ? 22 : 14,
+        class: opt.city ? 'target-ring' : 'target-ring far',
+      }, g);
       g.addEventListener('click', () => this.doMove(opt.key));
     }
   }
@@ -711,19 +717,30 @@ export class UI {
       this.turnPill.appendChild(html('span', '', `🏆 ${game.winner.name} voitti`));
       return;
     }
-    // Erillinen pelaajapaneeli on poistettu: matkaajan tiedot mahtuvat tähän,
-    // ja löydöt näkyvät passissa.
+    // Yläpalkkiin jää pelkkä kukkaro. Sijainti, kokemus ja tietoprosentti
+    // ovat passissa: kartta on tärkeämpi kuin mittaristo.
+    this.turnPill.appendChild(html('span', '', `£${game.player.money}`));
+  }
+
+  /** Matkan tiedot passiin: missä ollaan, paljonko kokemusta ja tietoa. */
+  renderProgress() {
+    const { game } = this;
     const p = game.player;
-    const dot = html('span', 'dot');
-    dot.style.background = p.color;
-    this.turnPill.appendChild(dot);
+    this.passportProgress.textContent = '';
+
+    const rivi = (label, value) => {
+      const row = html('div', 'find');
+      row.appendChild(html('span', 'find-text', label));
+      row.appendChild(html('span', 'find-value', value));
+      this.passportProgress.appendChild(row);
+    };
+
     const city = this.factCity(p.pos);
-    const where = p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name;
-    const osat = [`${p.money} p`, `${p.xp ?? 0} kp`];
+    rivi('Sijainti', p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name);
+    rivi('Kukkaro', `£${p.money}`);
+    rivi('Kokemus', `${p.xp ?? 0} kp`);
     const tieto = game.knowledgePercent(p);
-    if (tieto !== null) osat.push(`Tieto ${tieto} %`);
-    osat.push(where);
-    this.turnPill.appendChild(html('span', '', osat.join(' · ')));
+    if (tieto !== null) rivi('Tieto tästä laudasta', `${tieto} %`);
   }
 
   renderActions() {
@@ -764,7 +781,7 @@ export class UI {
 
     if (game.phase === 'move') {
       this.turnStatus.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
-      this.hint.textContent = 'Napauta punaista rengasta kartalla.';
+      this.hint.textContent = 'Napauta rengasta kartalla.';
       return;
     }
 
@@ -1177,6 +1194,7 @@ export class UI {
     this.passportCount.textContent = stamps.length === 1
       ? '1 leima'
       : `${stamps.length} leimaa`;
+    this.renderProgress();
     this.renderFinds();
     if (!this.passportDialog.open) this.passportDialog.showModal();
   }
