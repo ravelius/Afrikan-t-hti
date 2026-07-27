@@ -1668,8 +1668,8 @@ export const AFRICA_FACTS = {
     },
   ],
   madagaskar: [
-    'Madagaskar erosi muusta mantereesta kymmeniä miljoonia vuosia sitten. Siksi valtaosa sen eläimistä ja kasveista ei elä missään muualla.',
-    'Saaren ensimmäiset asukkaat purjehtivat sinne Kaakkois-Aasiasta, ja malagassin kieli on yhä sukua Indonesian kielille.',
+    'Matka rannikolta ylängölle vei kokonaisen päivän, ja maisema vaihtui matkalla sademetsästä punaisiin kukkuloihin ja riisiterasseihin. Saari irtosi mantereesta jo dinosaurusten aikaan, ja siksi täällä elää yli sata lemurilajia, jotka ovat kotoisin vain täältä.',
+    'Vaniljatilalla jokainen kukka pölytetään käsin pienellä tikulla, sillä kukka aukeaa vain yhdeksi aamuksi eikä sen luontaista pölyttäjää ole tällä saarella. Madagaskar on silti maailman suurin vaniljantuottaja, eli jokaisen vaniljatangon takana on joku, joka ehti paikalle ajoissa.',
     {
       text: 'Saarella on kädellisiä, joita ei ole missään muualla, ja puita joiden runko on paksumpi kuin vaunu on pitkä. Kieli ei muistuta mantereen kieliä lainkaan, mistä päättelin väärin; ne purjehtivat tänne idästä.',
       voice: 'isoisa',
@@ -1692,40 +1692,40 @@ export const AFRICA_FACTS = {
     },
   ],
   viktoria: [
-    'Viktorianjärvi on Afrikan suurin järvi ja maailman toiseksi suurin makean veden järvi.',
-    'Järvestä saa alkunsa Valkoinen Niili.',
+    'Kysyin, miksi lautta ei lähde, ja sain yhden sanan vastaukseksi: merenkäynti. Järvellä. Viktoria on pinta-alaltaan yli kymmenen Saimaan kokoinen, sen rantoja jakaa kolme maata, ja aallokko on sen mukainen.',
+    'Kävin katsomassa kohtaa, jossa Niili lähtee järvestä liikkeelle — sitä samaa, jota isoisän aikalaiset etsivät vuosikausia. Kosket jäivät vuonna 1954 padon alle, joten katselin kymmenen minuuttia täysin tavallista vettä ja tunsin oloni auttamattoman myöhästyneeksi.',
     {
       text: 'Järvi on kuin sisämeri: toista rantaa ei näy, ja aallokko nousee kuin Pohjanmerellä. Nimen antoi maanmieheni kuningattaren mukaan, vaikka rannoilla oli ollut nimiä jo pitkään.',
       voice: 'isoisa',
     },
   ],
   tanganjika: [
-    'Tanganjikajärvi on maailman toiseksi syvin järvi: sen pohja on yli 1 400 metrin syvyydessä.',
-    'Järvessä elää satoja kalalajeja, joita ei tavata missään muualla.',
+    'Järvellä on kulkenut lautta, joka rakennettiin Saksassa vuonna 1913, lähetettiin tänne tuhansina laatikoina ja koottiin rannalla uudelleen. Sodan aikana sen oma miehistö upotti sen, ja pohjasta se nostettiin kahdesti: ensimmäisen noston jälkeen se upposi myrskyssä takaisin. Liikenteeseen se palasi vasta yksitoista vuotta upotuksen jälkeen.',
+    'Järven pinta on lähes 800 metriä merenpinnan yläpuolella, mutta sen pohja melkein 700 metriä merenpinnan alapuolella — syvempi järvi on vain Baikal. Alimmissa kerroksissa ei ole happea, joten järven kaikki sadat kalalajit mahtuvat ylimpään parisataan metriin.',
     {
       text: 'Järvi on kapea ja niin pitkä, että laivamatka rannalta rannalle kestää päivän. Vesi on kirkasta ja täynnä kaloja, joita ei tunneta muualla. Täällä kaksi maanmiestäni tapasi toisensa ja kutsui sitä löytöretkeksi.',
       voice: 'isoisa',
     },
   ],
   bahrelghazal: [
-    'Bahr el Ghazal on Niilin sivujoki, ja sen nimi tarkoittaa arabiaksi gasellien jokea.',
-    'Alueella leviää Sudd, yksi maailman laajimmista suoalueista.',
+    'Joki ei pääty mereen eikä järveen vaan ruohoon: se katoaa Suddin soille, yhdelle maailman laajimmista kosteikoista, joka tulvakaudella kasvaa moninkertaiseksi. Noin puolet näille soille saapuvasta vedestä ei jatka koskaan pohjoiseen — se haihtuu matkalla.',
+    'Ruohikossa seisoi yli metrin mittainen lintu, joka ei liikahtanut koko sinä aikana kun katsoin sitä. Kenkänokan nokka on leveä kuin puukenkä, ja juuri nämä suot ovat yksi lajin tärkeimmistä elinalueista maailmassa.',
     {
       text: 'Joki hajoaa ruohikkoon niin laajalti, ettei uomaa löydä. Veneemme jäi kiinni kolme kertaa päivässä, ja paikalliset kalastajat kulkivat ohitsemme vaivatta. Karttani sanoi tässä olevan "joki".',
       voice: 'isoisa',
     },
   ],
   darfur: [
-    'Darfur tarkoittaa furien maata: fur on alueen suurimpia kansoja.',
-    'Alueen keskellä kohoaa Marran vuoristo, jonka rinteillä sataa selvästi enemmän kuin ympäröivässä puoliaavikossa.',
+    'Puoliaavikon keskeltä nousee yli kolmen kilometrin korkuinen tulivuori, ja sen huipulla on kaksi kraatterijärveä. Rinteillä sataa niin paljon enemmän kuin ympärillä, että siellä kasvatetaan appelsiineja ja perunoita: vuori tekee itselleen oman ilmastonsa.',
+    'Täältä lähti kamelikaravaaneja Egyptiin reittiä pitkin, jonka nimi on Neljänkymmenen päivän tie. Nimi ei ollut runoutta vaan aikataulu. Darfur oli tuolloin oma sulttaanikuntansa: se kaatui vuonna 1874, nousi vielä kerran jaloilleen vuosisadan vaihteessa ja hävisi kartalta lopullisesti vasta 1916.',
     {
       text: 'Puoliaavikon keskellä kohoaa vuoristo, jonka rinteillä sataa ja kasvaa hedelmäpuita. Alueen nimi tarkoittaa yksinkertaisesti furien maata — eli sitä, kenen maa se on. Harvinaisen selkeä nimi kartalla.',
       voice: 'isoisa',
     },
   ],
   suakin: [
-    'Suakin oli vuosisatoja Sudanin tärkein satama. Sen vanhat talot rakennettiin koralliharkoista.',
-    'Suakinista lähdettiin pyhiinvaellusmatkalle Punaisenmeren yli Mekkaan.',
+    'Vanha kaupunki seisoo omalla saarellaan keskellä lahtea, ja sen kaksi- ja kolmikerroksiset kauppiastalot on veistetty merestä nostetusta korallikivestä. Suurin osa niistä on nyt romahtanut: korallikivi kestää auringon ja suolan, mutta ei sitä, ettei kukaan enää korjaa kattoja.',
+    'Isoisän päiväkirjassa tämä on Sudanin tärkein satama, ja sitä se oli ollut vuosisatoja. Vuonna 1905 alettiin rakentaa uutta satamaa kuusikymmentä kilometriä pohjoisemmaksi, ja laivat siirtyivät sinne muutamassa vuodessa. Satama jäi paikalleen — ilman laivoja.',
     {
       text: 'Valkoiset talot on rakennettu merestä nostetusta korallikivestä, mikä on kekseliäämpää kuin mikään Lontoon uudisrakennus. Satamasta lähtee joka vuosi laivoja pyhiinvaellukselle meren yli.',
       voice: 'isoisa',
@@ -1740,8 +1740,8 @@ export const AFRICA_FACTS = {
     },
   ],
   rashafun: [
-    'Ras Hafun on Afrikan mantereen itäisin niemi.',
-    'Niemi oli antiikin aikana kauppapaikka, jonne purjehdittiin monsuunituulten avulla.',
+    'Niemelle kävellään pitkin kapeaa hiekkakannasta, jonka meri on itse kasannut: Ras Hafun oli ennen saari, ja aallot sitoivat sen kiinni mantereeseen. Kannaksen takana on Afrikan mantereen itäisin kohta, ja seuraava maa itään päin on Intia.',
+    'Hiekasta on kaivettu esiin roomalaisten, egyptiläisten ja intialaisten ruukkujen sirpaleita. Kaksituhatta vuotta vanha kreikankielinen purjehdusopas tuntee sataman nimellä Opone ja luettelee, mitä täältä kannatti ostaa: kanelia ja kilpikonnankuorta.',
     {
       text: 'Mantereen itäisimmässä kärjessä purjehtivat jo antiikin kauppiaat suitsuketta hakemaan. Monsuuni kääntyy vuodenaikojen mukaan, joten purjelaiva pääsee Intiaan ja takaisin saman vuoden aikana — tämän tiesivät täällä kaikki ennen kuin höyrykone keksittiin.',
       voice: 'isoisa',
