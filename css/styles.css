@@ -1,5 +1,13 @@
 /* Afrikan tähti — sovelluskehys (tumma pähkinäpuu) ja aarrekartta (pergamentti). */
 
+/*
+ * hidden-attribuutin pitää voittaa aina. Selaimen oletus on display: none,
+ * mutta mikä tahansa myöhempi display-sääntö (flex, grid, block) kumoaa sen,
+ * jolloin piilotettu elementti jää näkyviin. Tämä sääntö tekee attribuutista
+ * ehdottoman, eikä yksittäisiä [hidden]-korjauksia tarvita.
+ */
+[hidden] { display: none !important; }
+
 :root {
   /* Sovelluksen kehys */
   --bg: #1d1610;
@@ -184,7 +192,6 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   z-index: 3;
 }
 
-.die-layer[hidden] { display: none; }
 
 .board-die {
   position: absolute;
@@ -585,10 +592,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .city-gate {
   fill: none;
   stroke: #8d3a2c;
-  stroke-width: 2.2;
+  stroke-width: 1.6;
   stroke-dasharray: 7 6;
   stroke-linecap: round;
-  opacity: 0.72;
+  opacity: 0.4;
 }
 
 .city-label {
@@ -672,8 +679,25 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 .doodle-fill { fill: var(--map-ink); opacity: 0.45; }
 
 .target { cursor: pointer; }
-.target-ring.picked { stroke: #e8b23c; }
 .target-hit { fill: transparent; }
+
+/*
+ * Lähtöpisteen valinnassa rengas on joka kaupungin päällä yhtä aikaa, joten
+ * pyörivä katkoviiva tekisi koko kartasta levottoman. Nämä renkaat vain
+ * merkitsevät vaihtoehdon; siirtovaiheen punaiset renkaat ovat kehotus
+ * toimia ja saavat siksi jäädä eläviksi.
+ */
+.target-ring.pick {
+  fill: none;
+  stroke: #b08a3c;
+  stroke-width: 2;
+  animation: none;
+}
+
+.target:hover .target-ring.pick { fill: rgba(176, 138, 60, 0.18); }
+.target-ring.pick.picked { stroke: #e8b23c; stroke-width: 3; }
+.target-ring.picked { stroke: #e8b23c; }
+
 .target-ring {
   fill: rgba(176, 58, 43, 0.18);
   stroke: var(--mark);
@@ -812,7 +836,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   padding: 0;
 }
 
-.dialog button[hidden] { display: none; }
 
 .dialog button {
   background: rgba(255, 255, 255, 0.35);
@@ -836,36 +859,7 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 .dialog button.primary:hover:not(:disabled) { background: linear-gradient(180deg, #f2d183, #dcae4c); }
 
 .row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
-.player-setup { display: flex; flex-direction: column; gap: 0.5rem; }
-.setup-row { display: flex; align-items: center; gap: 0.5rem; }
-
-.setup-row input[type="text"],
-.dialog select {
-  padding: 0.45rem 0.55rem;
-  border-radius: 10px;
-  border: 1.5px dashed rgba(70, 51, 31, 0.6);
-  background: rgba(255, 252, 244, 0.6);
-  color: var(--map-ink);
-  font: inherit;
-}
-
-.setup-row input[type="text"] { flex: 1 1 auto; min-width: 0; }
-
-.bot-label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; color: #7a6039; }
 .rules-text p { margin: 0 0 0.7rem; line-height: 1.45; }
-
-.setup-hero {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0 0 0.7rem;
-  margin: 0 0 0.9rem;
-  border-bottom: 2px dashed rgba(70, 51, 31, 0.45);
-}
-
-.setup-hero h2 { margin: 0; }
-.setup-star { font-size: 2.1rem; color: #b8860b; }
-.setup-tagline { margin: 0.15rem 0 0; font-size: 0.85rem; color: #7a6039; }
 
 /* --- tietovisa --- */
 
@@ -997,8 +991,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   animation: ink-in 0.35s ease-out both;
 }
 
-/* [hidden] ei saa hävitä display: flexin alle. */
-.quiz-result[hidden] { display: none; }
 .quiz-result.right { border-color: #2f6b3f; }
 .quiz-result.wrong { border-color: var(--mark); }
 .quiz-result .muted { color: #6f5836; display: block; margin-top: 0.15rem; }
@@ -1026,7 +1018,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   animation: hg-arrive 0.5s ease-out both;
 }
 
-.quiz-timer[hidden] { display: none; }
 
 @keyframes hg-arrive {
   from { opacity: 0; transform: translateY(-6px) rotate(-8deg); }
@@ -1066,7 +1057,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 
 .hg-sand { fill: #c08a3e; opacity: 0.92; }
 .hg-stream { fill: #b07f38; opacity: 0.75; animation: hg-pour 0.5s steps(2, end) infinite; }
-.hg-stream[hidden] { display: none; }
 
 @keyframes hg-pour {
   0%, 100% { opacity: 0.72; transform: translateX(0); }
@@ -1115,7 +1105,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   animation: ink-in 0.45s ease-out both;
 }
 
-.quiz-hint-text[hidden] { display: none; }
 .quiz-hint-text::before { content: "✎"; font-style: normal; opacity: 0.7; }
 
 /* --- aarteen paljastus: iso laatta kääntyy 3D:nä --- */

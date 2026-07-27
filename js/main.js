@@ -7,12 +7,8 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.4';
+const APP_VERSION = '2026-07-27.5';
 
-const setupDialog = document.getElementById('setup');
-const setupForm = document.getElementById('setup-form');
-const nameInput = document.getElementById('player-name');
-const levelSelect = document.getElementById('player-level');
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
 
@@ -48,37 +44,36 @@ function clearSave() {
   }
 }
 
-// --- aloitusruutu ----------------------------------------------------------
+// --- pelin aloitus ----------------------------------------------------------
 //
-// Peli on yksin pelattava vaellus: aloitusruudussa kysytään vain nimi ja
-// kysymysten taso, ja matka alkaa aina maailmankartalta, jolta lähtöpiste
-// valitaan ilmaiseksi.
+// Peli on yksin pelattava vaellus eikä aloitusdialogia enää ole: uusi peli
+// avautuu suoraan maailmankartalle, jolta ensimmäinen kohde valitaan
+// ilmaiseksi. Matkaaja on aina herra Fogg.
+//
+// Kysymysten helpotustila on toistaiseksi pois käytöstä — kaikki pelaavat
+// tasolla 'normal'. Kysymyspankkien level-kentät ja moottorin tuki jäävät
+// paikoilleen, jotta helpotus voidaan palauttaa myöhemmin.
 
-function readPlayer() {
+function newPlayer() {
   return {
-    name: nameInput.value.trim() || 'Herra Fogg',
+    name: 'Herra Fogg',
     start: null, // lähtöpiste valitaan maailmankartalta
-    quizLevel: levelSelect.value,
+    quizLevel: 'normal',
     color: PLAYER_COLOR,
   };
 }
 
 function attach(game) {
   if (ui) ui.destroy();
-  ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
+  ui = new UI(game, { onNewGame: startGame, onChange: saveGame });
   ui.mount();
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
 }
 
 function startGame() {
-  clearSave();
-  attach(new Game({ players: [readPlayer()], pack: packById('maailma') }));
-}
-
-function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
-  setupDialog.showModal();
+  attach(new Game({ players: [newPlayer()], pack: packById('maailma') }));
 }
 
 // --- äänet ------------------------------------------------------------------
@@ -100,11 +95,6 @@ updateSoundButton();
 document.addEventListener('pointerdown', (event) => {
   const button = event.target.closest?.('button');
   if (button && !button.classList.contains('quiz-option')) sfx.play('click');
-});
-
-setupForm.addEventListener('submit', () => {
-  // Dialogin sulkeutuminen tapahtuu selaimen toimesta; peli luodaan sen jälkeen.
-  setTimeout(startGame, 0);
 });
 
 // --- päivitys ----------------------------------------------------------------
@@ -133,10 +123,10 @@ updateBtn.addEventListener('click', async () => {
 });
 
 document.getElementById('app-version').textContent = APP_VERSION;
-document.getElementById('newgame-btn').addEventListener('click', openSetup);
+document.getElementById('newgame-btn').addEventListener('click', startGame);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
-document.getElementById('winner-close').addEventListener('click', openSetup);
+document.getElementById('winner-close').addEventListener('click', startGame);
 
 // Palvelutyöntekijä tekee pelistä asennettavan ja offline-toimivan.
 // Ohitetaan hiljaisesti, jos sivu on avattu file://-osoitteesta tai hiekkalaatikossa.
@@ -154,4 +144,4 @@ if (hasManifest && 'serviceWorker' in navigator && location.protocol.startsWith(
 // Kesken jäänyt peli jatkuu automaattisesti, muuten kysytään pelaajat.
 const saved = loadGame();
 if (saved) attach(saved);
-else openSetup();
+else startGame();
