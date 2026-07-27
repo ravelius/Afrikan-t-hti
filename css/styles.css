@@ -1376,13 +1376,30 @@ body[data-mode] .board-hint {
   bottom: auto;
 }
 
-/* Toiminnot alas keskelle kelluvana korttina. */
-body[data-mode] .turn-card {
+/*
+ * Alarivi: päiväkirja vasemmalla, toiminnot sen oikealla puolella. Rivi
+ * katkeaa, kun kortit eivät mahdu rinnakkain — silloin päiväkirja nousee
+ * omalle rivilleen nappien yläpuolelle eikä peitä niitä. Ilman tätä
+ * kortit menivät päällekkäin kaikilla alle ~1240 px:n leveyksillä,
+ * esimerkiksi tabletilla pystyasennossa.
+ */
+body[data-mode] .rail-bottom {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
   bottom: 0.4rem;
-  transform: translateX(-50%);
-  width: min(560px, calc(100% - 1.2rem));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: var(--gap);
+  max-height: 100%;
+}
+
+body[data-mode] .turn-card {
+  flex: 0 1 560px;
+  /* Automaattiset marginaalit keskittävät napit, kun päiväkirja on kapea. */
+  margin-inline: auto;
   background: var(--overlay-card);
   border-color: var(--overlay-line);
   backdrop-filter: blur(3px);
@@ -1406,13 +1423,10 @@ body[data-mode] .player-chip {
   backdrop-filter: blur(3px);
 }
 
-/* Päiväkirja ja havainto vasempaan alakulmaan. */
+/* Päiväkirja ja havainto alarivin vasempaan laitaan. */
 body[data-mode] .fact-card {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: min(340px, 46%);
-  max-height: 42%;
+  flex: 0 1 340px;
+  max-height: 40vh;
   overflow-y: auto;
   background: var(--overlay-card);
   border-color: var(--overlay-line);
@@ -1432,6 +1446,16 @@ body[data-mode] .fact-card {
     grid-template-rows: auto auto auto;
     gap: var(--gap);
   }
+
+  body[data-mode] .rail-bottom {
+    position: static;
+    display: contents;
+  }
+
+  /* Kartan alla toiminnot ovat ensin, kuten ennen alarivin käyttöönottoa. */
+  body[data-mode] .turn-card { order: 1; }
+  body[data-mode] .players { order: 2; }
+  body[data-mode] .fact-card { order: 3; }
 
   body[data-mode] .turn-card,
   body[data-mode] .players,
