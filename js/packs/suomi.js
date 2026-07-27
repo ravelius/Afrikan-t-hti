@@ -150,6 +150,9 @@ export const SUOMI = {
   id: 'suomi',
   name: 'Lapin kulta',
   boardLabel: 'Suomi',
+  // Maakohtainen lauta: portti tänne aukeaa mantereen pääkaupungista
+  // vastaamalla vaikeaan kysymykseen oikein.
+  scope: 'country',
   tagline: 'Kierrä Suomi järviltä tuntureille ja huuhdo Lapin kulta.',
   ariaLabel: 'Suomen aarrekartta',
 

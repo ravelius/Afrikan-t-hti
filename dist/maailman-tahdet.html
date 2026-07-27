@@ -1446,6 +1446,11 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
         lennolla (300 p) toiselle laudalle — mantereelta toiselle, maailmankartalle
         tai vaikka kaupunkitason laudalle kuten Istanbuliin. Laudan aarteet ja
         löydöt säilyvät, vaikka kävisit välillä muualla.</p>
+      <p><b>Tietoportit.</b> Maan oma kartta (esim. Suomi) ei aukea rahalla vaan
+        tiedolla: maan pääkaupungissa voi vastata vaikeaan kysymykseen, ja oikea
+        vastaus avaa portin ilmaiseksi. Väärästä vastauksesta vuoro päättyy —
+        uusi yritys seuraavalla vuorolla. Kiertotiekin voi löytyä: Suomeen pääsee
+        myös ruotsinlaivalla Tukholmasta Ahvenanmaalle.</p>
       <p><b>Kartta.</b> Koko lauta näkyy aina kerralla, joten karttaa ei tarvitse
         raahata eikä zoomata. Porttikaupungin tunnistaa katkoviivakehästä.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
@@ -12549,6 +12554,9 @@ const SUOMI = {
   id: 'suomi',
   name: 'Lapin kulta',
   boardLabel: 'Suomi',
+  // Maakohtainen lauta: portti tänne aukeaa mantereen pääkaupungista
+  // vastaamalla vaikeaan kysymykseen oikein.
+  scope: 'country',
   tagline: 'Kierrä Suomi järviltä tuntureille ja huuhdo Lapin kulta.',
   ariaLabel: 'Suomen aarrekartta',
 
@@ -15112,6 +15120,7 @@ class Game {
       quiz: this.phase === 'offer',
       fly: this.phase === 'action' ? this.airportDestinations() : [],
       gateways: this.gatewayOptions(),
+      countryGates: this.countryGateOptions(),
     };
   }
 
@@ -15126,7 +15135,55 @@ class Game {
     const city = this.cityOf();
     if (!city || !city.links) return [];
     if (this.player.money < FLIGHT_PRICE) return [];
-    return city.links.map((link, index) => ({ ...link, index }));
+    // Maakohtaisille laudoille ei lennetä rahalla, vaan portti avataan
+    // tiedolla pääkaupungissa (countryGateOptions).
+    return city.links
+      .map((link, index) => ({ ...link, index }))
+      .filter((link) => packById(link.pack).scope !== 'country');
+  }
+
+  /**
+   * Tietoportit: mantereen pääkaupungista pääsee maan omalle laudalle
+   * vastaamalla vaikeaan kysymykseen oikein. Portti on ilmainen — se
+   * avataan tiedolla, ei rahalla. Väärästä vastauksesta vuoro päättyy.
+   */
+  countryGateOptions() {
+    if (this.phase !== 'action') return [];
+    const city = this.cityOf();
+    if (!city || !city.links) return [];
+    return city.links
+      .map((link, index) => ({ ...link, index }))
+      .filter((link) => packById(link.pack).scope === 'country');
+  }
+
+  /** Avaa tietoportin kysymyksen. Kysymys on aina vaikea (taso 3). */
+  actionGateQuiz(index) {
+    if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
+    const gate = this.countryGateOptions()[index];
+    if (!gate) return { ok: false, error: 'Täällä ei ole tietoporttia' };
+    const city = this.cityOf();
+
+    const question = this.pickQuestion(city.id, 'hard');
+    const order = this.shuffledOrder(question.options.length);
+    this.quiz = {
+      cityId: city.id,
+      hard: false,
+      gate: { pack: gate.pack, city: gate.city, label: gate.label },
+      question: question.q,
+      fact: question.fact,
+      source: sourceList(question.source),
+      options: order.map((i) => question.options[i]),
+      correct: order.indexOf(question.correct),
+      hint: question.hint ?? null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
   }
 
   /** Onko kaupungista lentoja toiselle laudalle? Kartta merkitsee ne. */
@@ -15365,6 +15422,17 @@ class Game {
     this.quiz.chosen = index;
     this.quiz.right = index === this.quiz.correct;
 
+    // Tietoportti: oikea vastaus avaa portin, laattoja ei käännetä.
+    if (this.quiz.gate) {
+      if (this.quiz.right) {
+        this.say(p.id, `★ ${p.name} vastasi oikein — portti aukeaa: ${this.quiz.gate.label}!`);
+      } else {
+        const oikea = this.quiz.options[this.quiz.correct];
+        this.say(p.id, `${p.name} vastasi väärin — portti ei auennut. Oikea vastaus oli "${oikea}".`);
+      }
+      return { ok: true, right: this.quiz.right };
+    }
+
     if (this.quiz.right) {
       this.say(p.id, `${p.name} vastasi oikein kaupungissa ${city.name} ja saa kääntää laatan.`);
       // Vaikean kysymyksen palkkio maksetaan ennen laatan kääntöä,
@@ -15438,8 +15506,23 @@ class Game {
   /** Sulkee kysymyksen ja päättää vuoron — tai aloittaa rosvon kaksintaistelun. */
   closeQuiz() {
     if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    const gate = this.quiz.right ? this.quiz.gate : null;
     this.quiz = null;
     if (this.phase === 'over') return { ok: true };
+    // Voitettu tietoportti: siirtyminen maan laudalle on ilmainen.
+    if (gate) {
+      const p = this.player;
+      const pack = packById(gate.pack);
+      this.enterWorld(pack);
+      p.packId = pack.id;
+      p.pos = { type: 'city', city: gate.city };
+      this.lastPath = null;
+      this.say(p.id, `${p.name} astui portista: ${gate.label}.`);
+      this.emit('flight', gate.label, { icon: '★', sub: 'Tieto avasi portin' });
+      this.phase = 'action';
+      this.endTurn();
+      return { ok: true, gated: true };
+    }
     if (this.duelArmed) {
       this.duelArmed = false;
       this.beginDuel();
@@ -16745,6 +16828,16 @@ class UI {
       });
       this.actionsEl.appendChild(gwBtn);
     }
+
+    // Tietoportti: maan lauta aukeaa pääkaupungista vaikealla kysymyksellä.
+    for (const gate of game.countryGateOptions()) {
+      const gateBtn = html('button', '', `★ ${gate.label} — vaikea kysymys`);
+      gateBtn.addEventListener('click', () => {
+        sfx.play('paper');
+        this.doAction(() => game.actionGateQuiz(gate.index));
+      });
+      this.actionsEl.appendChild(gateBtn);
+    }
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
@@ -16887,7 +16980,9 @@ class UI {
 
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
-    this.quizCity.textContent = `${city.name} — ${game.player.name}${hardTag}`;
+    this.quizCity.textContent = quiz.gate
+      ? `${city.name} — portti: ${quiz.gate.label}`
+      : `${city.name} — ${game.player.name}${hardTag}`;
     // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
     if (this.typedQuizFor !== quiz) {
       this.typedQuizFor = quiz;
@@ -16947,7 +17042,10 @@ class UI {
       } else {
         const found = quiz.found ? game.tokenTypes[quiz.found] : null;
         const body = html('div');
-        if (quiz.right && found) {
+        if (quiz.gate && quiz.right) {
+          body.appendChild(html('strong', '', `★ Portti aukeaa — ${quiz.gate.label}!`));
+          body.appendChild(html('span', 'muted', 'Tieto avasi tien: matka jatkuu ilmaiseksi.'));
+        } else if (quiz.right && found) {
           this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));
           body.appendChild(html('strong', '', `Löysit: ${found.name}`));
         } else if (quiz.right) {
@@ -17514,7 +17612,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.1';
+const APP_VERSION = '2026-07-27.2';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
