@@ -62,8 +62,8 @@ Myöhemmäksi sovitut (EI vielä työn alle):
   Reitti kiertäisi päivämäärärajan yli, mikä vaatisi tuen reitille, joka
   jatkuu kartan reunan yli. Odottaa omistajan päätöstä.
 - Yksittäiset maat mantereiden jälkeen (Suomen mallin mukaan).
-- Kysymysten vaihtelu (tapahtumakortit, väittämät, karttakysymykset) —
-  omistajan kanssa suunniteltu suunta, palataan kun Afrikka on valmis.
+- Kysymysten vaihtelu: **paketti 10 alempana — seuraava työn alle
+  otettava paketti.**
 
 Tämä on omistajan ja suunnittelusession sopima työlista. Tee työpaketit
 järjestyksessä; jokainen paketti on oma commit/PR. Jokaisen paketin jälkeen:
@@ -440,6 +440,46 @@ tehdä pelistä ahdistavaa. Omistajan päätökset:
 - Tallennus toJSON/fromJSON (vuorolaskuri), testit ajan kirjanpidolle
   ja vertailurivien nousulle. Vanha tallenne ilman aikaa jatkuu
   päivästä 1.
+
+## Paketti 10: kysymysten vaihtelu (Afrikka ensin)
+
+Ongelma: jokaisessa pysähdyksessä on sama neljän vaihtoehdon tietovisa,
+mikä puuduttaa yksinpelissä. Ratkaisu: kolme uutta muotoa, jotka
+vuorottelevat monivalinnan kanssa. Sisältö kirjoitetaan VAIN Afrikalle
+tässä paketissa; muut laudat saavat omansa myöhemmin.
+
+1. **Isoisän väittämä (totta vai tarua).** Tietoruutuun nousee isoisän
+   päiväkirjamerkintä, ja pelaaja arvioi: totta vai tarua. Kaksi nappia,
+   ei neljää. Data: pakkaan `questions.claims` = lista
+   { q, correct: boolean, fact, source? } — isoisän äänellä kirjoitettu
+   väite, joka on joko yhä totta tai vanhentunut. Tämä on tarinan ydintä:
+   sama jännite (mikä muuttui, mikä pysyi) muuttuu pelimekaniikaksi.
+   Vähintään 12 väittämää Afrikalle, noin puolet totta. Faktat
+   tarkistetaan kuten kysymyksissä.
+2. **Karttakysymys.** "Näytä kartalta: missä on X?" — pelaaja napauttaa
+   kaupunkia omalla laudallaan. Oikein/väärin ratkeaa napautuksesta;
+   väärästä näytetään oikea paikka. Moottoriin uusi kysymystyyppi, UI:hin
+   napautustila (kaupunkirenkaat korostuvat vastausvaihtoehtoina, esim.
+   4 ehdokasta). Kysymykset voi johtaa laudan omasta datasta (kaupungit,
+   aarrekaupungit), joten erillistä sisältöpankkia ei välttämättä tarvita.
+3. **Tapahtumakortit.** Välillä kysymyksen sijaan tapahtuu jotain:
+   hiekkamyrsky viivyttää (+1 vuoro paikallaan), paikallinen festivaali
+   (pieni rahabonus + tarinateksti), kyyti tutulle karavaanille (ilmainen
+   siirto naapurikaupunkiin). Data: pakkaan `events` = lista
+   { text, effect }, effect pidetään pienenä ja aina reiluna — tapahtuma
+   ei saa koskaan viedä aarretta tai isoa summaa. Vähintään 8 tapahtumaa
+   Afrikalle, tekstit tarina.md:n säännöillä.
+
+**Vuorottelu:** moottori arpoo muodon painotetusti, esim. 60 %
+monivalinta, 15 % väittämä, 10 % karttakysymys, 15 % tapahtuma — painot
+vakioina, jotta niitä voi säätää pelitestissä. Sama erikoismuoto ei
+toistu kahta kertaa peräkkäin. Tietoportit ja vaikean kysymyksen bonus
+pysyvät aina tavallisena monivalintana (niissä panos on suurempi).
+
+Testit: claims/events-rakenteiden eheys (tyhjät tekstit, faktat,
+lähdemuoto), vuorottelun jakaumatesti siemenellä, karttakysymyksen
+oikea/väärä-logiikka. Tallennus toJSON/fromJSON, versionostot,
+standalone.
 
 ## Muistilista jokaiseen pakettiin
 
