@@ -28,6 +28,22 @@ export const AFRICA_QUESTIONS = {
       fact: 'Libyan virallinen kieli on arabia, vaikka italian siirtomaakausi näkyy yhä kaupungeissa.',
       hint: 'Samaa kieltä puhutaan myös Kairossa.',
     },
+    {
+      q: 'Millä mantereella Tripoli sijaitsee?',
+      options: ['Afrikassa', 'Aasiassa', 'Euroopassa', 'Etelä-Amerikassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Tripoli on Afrikan pohjoisrannikolla. Välimeri erottaa sen Euroopasta, ja Maltalle on sieltä lyhyempi matka kuin moneen Afrikan pääkaupunkiin.',
+      hint: 'Sama manner kuin Saharalla ja Kilimandžarolla.',
+    },
+    {
+      q: 'Minkä roomalaisajan kaupungin rauniot Tripolin lähellä ovat maailmanperintökohde?',
+      options: ['Leptis Magna', 'Karthago', 'Petra', 'Palmyra'],
+      correct: 0,
+      level: 3,
+      fact: 'Leptis Magna oli keisari Septimius Severuksen kotikaupunki. Sen teatteri ja basilika kaivettiin esiin hiekan alta, ja ne ovat yhä nähtävissä.',
+      hint: 'Nimen toinen sana tarkoittaa latinaksi suurta.',
+    },
   ],
 
   murzuk: [
@@ -55,6 +71,25 @@ export const AFRICA_QUESTIONS = {
       fact: 'Yksikyttyräinen dromedaari tunnetaan aavikon laivana.',
       hint: 'Sillä on vain yksi kyttyrä.',
     },
+    {
+      q: 'Millainen maisema on Murzukin hiekkameri eli erg?',
+      options: ['laaja dyynikenttä', 'suolajärvi', 'kivinen ylätasanko', 'sademetsä'],
+      correct: 0,
+      fact: 'Erg tarkoittaa arabiaksi juuri tällaista maisemaa. Murzukin erg on yksi Saharan suurimmista, ja dyynien välissä kiertää kuivia laaksoja.',
+      hint: 'Tuuli kasaa hiekkaa kummuiksi, jotka siirtyvät hitaasti.',
+    },
+    {
+      q: 'Miksi aavikkokaupungin talot rakennetaan paksuseinäisiksi ja pienin ikkunoin?',
+      options: [
+        'paksu seinä pitää sisällä viileänä päivällä',
+        'jotta hiekka ei näkyisi seinissä',
+        'koska muuta materiaalia ei ole olemassa',
+        'jotta talot kestäisivät tulvat',
+      ],
+      correct: 0,
+      fact: 'Paksu savi- tai kiviseinä lämpenee hitaasti, joten sisällä on päivällä viileää ja yöllä lämmintä. Sama keino toimii yhä ilman sähköä.',
+      hint: 'Kyse on siitä, kuinka hitaasti lämpö kulkee seinän läpi.',
+    },
   ],
 
   alkufra: [
@@ -78,6 +113,32 @@ export const AFRICA_QUESTIONS = {
       correct: 1,
       fact: 'Taatelipalmu kestää kuivuutta ja antaa varjoa muille viljelykasveille.',
       hint: 'Sen hedelmiä syödään usein kuivattuina.',
+    },
+    {
+      q: 'Mikä on keidas?',
+      options: [
+        'aavikon kohta, jossa on vettä ja kasvillisuutta',
+        'korkea hiekkadyyni',
+        'kuiva jokiuoma',
+        'suolan peittämä järvenpohja',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Keitaalla vesi saadaan lähteestä tai kaivosta. Sen ympärillä kasvaa taatelipalmuja, ja palmujen varjossa viljellään vehnää ja vihanneksia.',
+      hint: 'Ilman vettä paikkaa ei kutsuttaisi tällä nimellä.',
+    },
+    {
+      q: 'Mitä Al Kufran vihreät ympyrät ovat satelliittikuvissa?',
+      options: [
+        'kiertokastelulaitteiden kastelemia peltoja',
+        'suolajärviä',
+        'aurinkovoimaloita',
+        'pyöreitä hiekkadyynejä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Keskipisteestä kiertävä kastelupuomi kastelee pyöreän alan. Vesi pumpataan syvältä pohjavesivarastosta, joka kertyi aikana, jolloin Saharassa vielä satoi.',
+      hint: 'Kastelulaite kiertää keskipisteensä ympäri kuin kellon viisari.',
     },
   ],
 
@@ -109,6 +170,21 @@ export const AFRICA_QUESTIONS = {
       fact: 'Kuivassa ilmassa on vähän vesihöyryä, joten lämpö karkaa nopeasti avaruuteen.',
       hint: 'Kyse on ilman kosteudesta.',
     },
+    {
+      q: 'Kuinka suuri osa Saharasta on hiekkadyynejä?',
+      options: ['noin viidennes', 'lähes kaikki', 'noin puolet', 'ei lainkaan'],
+      correct: 0,
+      level: 3,
+      fact: 'Suurin osa Saharasta on kivikkoista hamadaa ja soraikkoa. Hiekkameret eli ergit peittävät vain osan pinta-alasta, vaikka kuvissa näkyvät useimmin ne.',
+      hint: 'Suurin osa aavikosta on kivikkoa ja soraa.',
+    },
+    {
+      q: 'Mikä tuuli kantaa Saharan hiekkaa Välimeren yli Eurooppaan?',
+      options: ['sirokko', 'monsuuni', 'passaatituuli', 'myrskypyörre'],
+      correct: 0,
+      fact: 'Sirokko puhaltaa aavikolta pohjoiseen ja jättää hienoa hiekkapölyä Italian autonkatoille ja jopa Alppien lumelle.',
+      hint: 'Tuuli puhaltaa aavikolta merelle päin pohjoiseen.',
+    },
   ],
 
   ahaggar: [
@@ -133,6 +209,26 @@ export const AFRICA_QUESTIONS = {
       level: 3,
       fact: 'Indigolla värjätty huntu antoi tuaregeille lisänimen "siniset miehet".',
       hint: 'Sama väri kuin farkkukankaassa.',
+    },
+    {
+      q: 'Millainen maasto Ahaggarin alueella on?',
+      options: ['vuoristoa keskellä autiomaata', 'sademetsää', 'jäätikköä', 'suoaluetta'],
+      correct: 0,
+      level: 1,
+      fact: 'Ahaggarin huiput kohoavat lähes 3 000 metriin. Korkealla on selvästi viileämpää kuin ympäröivällä aavikolla, ja yöt ovat kylmiä.',
+      hint: 'Maasto kohoaa korkealle, ja siksi siellä on viileämpää.',
+    },
+    {
+      q: 'Millä tuaregit ovat perinteisesti hankkineet elantonsa?',
+      options: [
+        'karjanhoidolla ja karavaanikaupalla',
+        'kalastuksella',
+        'riisinviljelyllä',
+        'metsätöillä',
+      ],
+      correct: 0,
+      fact: 'Tuaregit ovat paimentaneet kameleita, vuohia ja lampaita sekä kuljettaneet tavaraa aavikon halki. Nykyään monet asuvat kaupungeissa ja tekevät työtä esimerkiksi matkailussa ja kaivoksilla.',
+      hint: 'Elanto liittyy eläimiin ja aavikon halki kulkevaan kauppaan.',
     },
   ],
 
@@ -163,6 +259,27 @@ export const AFRICA_QUESTIONS = {
       fact: 'Timbuktun kirjastoissa säilytettiin kymmeniätuhansia käsikirjoituksia.',
       hint: 'Kaupungissa säilytettiin tuhansia vanhoja kirjoja.',
     },
+    {
+      q: 'Millaisessa maastossa Timbuktu sijaitsee?',
+      options: ['aavikon eteläreunalla', 'sademetsässä', 'korkeassa vuoristossa', 'saarella meressä'],
+      correct: 0,
+      level: 1,
+      fact: 'Timbuktu on Sahelin vyöhykkeellä lähellä Niger-jokea. Juuri siksi aavikon karavaanit ja joen veneet kohtasivat siellä.',
+      hint: 'Kaupunki on siellä, missä hiekka vaihtuu vähitellen ruohoksi.',
+    },
+    {
+      q: 'Mitä aiheita Timbuktun vanhat käsikirjoitukset käsittelevät?',
+      options: [
+        'tähtitiedettä, lääketiedettä ja lakia',
+        'vain kauppakirjanpitoa',
+        'pelkästään runoutta',
+        'karttoja Euroopasta',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Käsikirjoituksissa on tähtitiedettä, matematiikkaa, lääketiedettä, lakia ja historiaa. Monet ovat yhä perheiden hallussa, ja niitä on kuljetettu turvaan ja digitoitu.',
+      hint: 'Aiheet ovat samoja, joita opiskellaan yliopistossa yhä tänään.',
+    },
   ],
 
   gao: [
@@ -186,6 +303,22 @@ export const AFRICA_QUESTIONS = {
       correct: 0,
       fact: 'Kultaa vietiin pohjoiseen ja suolaa tuotiin etelään.',
       hint: 'Se punnittiin tarkasti ja kiilsi keltaisena.',
+    },
+    {
+      q: 'Millä kulkuneuvolla ihmiset ja tavara liikkuvat Niger-jokea pitkin Gaossa?',
+      options: ['pitkillä puuveneillä', 'junalla', 'köysiradalla', 'valtamerilaivoilla'],
+      correct: 0,
+      level: 1,
+      fact: 'Niger-joki on Gaon valtatie. Pitkät puuveneet eli pinassit kuljettavat ihmisiä, karjaa ja tavaraa, ja joesta myös kalastetaan.',
+      hint: 'Kulkuneuvo tehdään puusta ja kulkee vettä pitkin.',
+    },
+    {
+      q: 'Mikä Gaon maamerkki on Unescon maailmanperintökohde?',
+      options: ['Askian hautakumpu', 'Kheopsin pyramidi', 'Suuri Zimbabwe', 'Meroën pyramidit'],
+      correct: 0,
+      level: 3,
+      fact: 'Askia Muhammadin savesta rakennettu, pyramidia muistuttava hautakumpu valmistui 1400-luvun lopulla ja on yhä kaupungin tunnetuin rakennus.',
+      hint: 'Rakennus on tehty savesta, ei kivestä.',
     },
   ],
 
@@ -212,6 +345,21 @@ export const AFRICA_QUESTIONS = {
       fact: 'Kofar Matan värjäämöt ovat toimineet 1400-luvulta asti indigolla.',
       hint: 'Indigo tarttuu parhaiten kudottuun materiaaliin.',
     },
+    {
+      q: 'Mistä Kanon vanhat kaupunginmuurit on rakennettu?',
+      options: ['savesta', 'marmorista', 'teräksestä', 'lasista'],
+      correct: 0,
+      level: 1,
+      fact: 'Muureja alettiin rakentaa savesta jo 1000-luvulla, ja niiden jäänteitä on yhä nähtävissä kaupungin laidoilla.',
+      hint: 'Sama materiaali kuin alueen perinteisissä taloissa.',
+    },
+    {
+      q: 'Mikä kieli on Kanossa ja koko Pohjois-Nigeriassa yleisin?',
+      options: ['hausa', 'joruba', 'swahili', 'amhara'],
+      correct: 0,
+      fact: 'Hausa on Länsi-Afrikan laajimmin puhuttuja kieliä, ja se toimii kauppakielenä yli valtionrajojen. Kano on sen kulttuurin keskuksia.',
+      hint: 'Kieli toimii kauppakielenä useassa Saharan eteläpuolisessa maassa.',
+    },
   ],
 
   dakar: [
@@ -237,6 +385,22 @@ export const AFRICA_QUESTIONS = {
       fact: 'Pariisi–Dakar ajettiin Euroopasta Saharan halki vuoteen 2007 asti.',
       hint: 'Kilpailu on nimetty juuri tämän kaupungin mukaan.',
     },
+    {
+      q: 'Minkä valtameren rannalla Dakar sijaitsee?',
+      options: ['Atlantin', 'Intian valtameren', 'Tyynenmeren', 'Punaisenmeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Dakar on mantereen läntisin suurkaupunki, ja sen satama on Länsi-Afrikan vilkkaimpia. Kalastusveneet lähtevät samalta rannalta joka aamu.',
+      hint: 'Sama valtameri on koko Afrikan länsipuolella.',
+    },
+    {
+      q: 'Mikä musiikkilaji syntyi Senegalissa ja on siellä erityisen suosittu?',
+      options: ['mbalax', 'tango', 'reggaeton', 'flamenco'],
+      correct: 0,
+      level: 3,
+      fact: 'Mbalax yhdistää sabar-rumpujen perinteiset rytmit nykysoittimiin. Youssou N’Dour teki lajia tunnetuksi maailmalla.',
+      hint: 'Laji rakentuu sabar-rumpujen rytmien päälle.',
+    },
   ],
 
   sierraleone: [
@@ -260,6 +424,22 @@ export const AFRICA_QUESTIONS = {
       correct: 1,
       fact: 'Timanttikauppa rahoitti maan sisällissotaa 1990-luvulla.',
       hint: 'Niistä käytettiin nimitystä veritimantit.',
+    },
+    {
+      q: 'Minkä valtameren rannalla Sierra Leone sijaitsee?',
+      options: ['Atlantin', 'Intian valtameren', 'Tyynenmeren', 'Välimeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Rannikolla on hiekkarantoja ja mangrovesoita. Freetownin luonnonsatama on yksi Afrikan syvimmistä, ja siksi kaupunki kasvoi juuri sinne.',
+      hint: 'Sama valtameri kuin Dakarin edessä.',
+    },
+    {
+      q: 'Mikä kieli toimii Sierra Leonessa asukkaiden yhteisenä kielenä?',
+      options: ['krio', 'swahili', 'arabia', 'afrikaans'],
+      correct: 0,
+      level: 3,
+      fact: 'Krio on englantiin pohjautuva kreolikieli, jota puhuu valtaosa maan asukkaista oman äidinkielensä ohella.',
+      hint: 'Kieli on kreolikieli, jonka pohjana on englanti.',
     },
   ],
 
@@ -285,6 +465,27 @@ export const AFRICA_QUESTIONS = {
       fact: 'Liberia julistautui itsenäiseksi vuonna 1847.',
       hint: 'Presidentti Monroe antoi nimen pääkaupungille.',
     },
+    {
+      q: 'Millaista kasvillisuutta Kap Palmasin rannikolla kasvaa?',
+      options: ['palmuja ja sademetsää', 'kaktuksia', 'havumetsää', 'tundrakasveja'],
+      correct: 0,
+      level: 1,
+      fact: 'Liberian rannikko on palmujen ja sademetsän aluetta, ja maan sademetsät ovat Länsi-Afrikan laajimpia jäljellä olevia.',
+      hint: 'Niemen nimi kertoo, mitä siellä kasvaa.',
+    },
+    {
+      q: 'Miksi suuri osa maailman kauppalaivoista kulkee Liberian lipun alla?',
+      options: [
+        'Liberia ylläpitää avointa laivarekisteriä, johon kuka tahansa varustamo voi rekisteröidä laivansa',
+        'Liberia omistaa maailman suurimman laivaston',
+        'kaikki maailman laivat rakennetaan Liberiassa',
+        'Liberia hallitsee Atlantin laivareittejä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Liberian rekisteri on yksi maailman suurimmista. Varustamot valitsevat rekisterin maksujen ja säännösten perusteella, eikä laiva välttämättä käy koskaan maassa.',
+      hint: 'Kyse on rekisteröinnistä, ei laivanrakennuksesta.',
+    },
   ],
 
   kumasi: [
@@ -308,6 +509,27 @@ export const AFRICA_QUESTIONS = {
       correct: 0,
       fact: 'Ghana itsenäistyi ensimmäisenä Saharan eteläpuolisena siirtomaana 1957.',
       hint: 'Nimi kertoo, mitä rannikolta vietiin.',
+    },
+    {
+      q: 'Mitä Kumasin suurella torilla myydään?',
+      options: [
+        'ruokaa, kankaita ja arkitavaraa',
+        'pelkästään kultaa',
+        'pelkästään kirjoja',
+        'ei mitään, tori on museo',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kejetian tori on Länsi-Afrikan suurimpia. Siellä käy päivittäin kymmeniätuhansia ihmisiä ostamassa ruokaa, kankaita ja astioita.',
+      hint: 'Tori on tavallisten päivittäisten ostosten paikka.',
+    },
+    {
+      q: 'Mikä käsin kudottu kangas on ashantien tunnetuin?',
+      options: ['kente', 'batiikki', 'tweed', 'sari'],
+      correct: 0,
+      level: 3,
+      fact: 'Kangas kudotaan kapeina raitoina, jotka ommellaan yhteen. Värit ja kuviot kertovat merkityksiä, ja kangasta käytetään juhlissa.',
+      hint: 'Kangas kudotaan kapeina raitoina ja ommellaan yhteen.',
     },
   ],
 
@@ -337,6 +559,27 @@ export const AFRICA_QUESTIONS = {
       correct: 1,
       fact: 'Guineanlahti on Atlantin valtameren osa.',
       hint: 'Lahti on nimetty alueen mukaan, joka alkaa G-kirjaimella.',
+    },
+    {
+      q: 'Mikä valtameri on Guineanlahden takana?',
+      options: ['Atlantti', 'Intian valtameri', 'Tyynimeri', 'Jäämeri'],
+      correct: 0,
+      level: 1,
+      fact: 'Guineanlahti on osa Atlanttia. Sen yli kuljetettiin satojen vuosien ajan ihmisiä Amerikkaan, ja nykyään lahden kautta kulkee vilkas laivaliikenne.',
+      hint: 'Sama valtameri erottaa Afrikan Amerikasta.',
+    },
+    {
+      q: 'Miksi rannikoiden vanhoja eurooppalaisia nimiä ei enää käytetä?',
+      options: [
+        'ne kuvasivat kauppatavaraa eurooppalaisten näkökulmasta',
+        'ne olivat liian pitkiä sanottaviksi',
+        'ne olivat portugalia eikä englantia',
+        'alueet ovat jääneet veden alle',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Rannikot nimettiin sen mukaan, mitä sieltä vietiin. Itsenäistyttyään maat ottivat käyttöön omat nimensä, kuten Ghana ja Benin, jotka viittaavat alueen omiin valtakuntiin.',
+      hint: 'Nimet kertoivat kaupasta, eivät alueen omasta historiasta.',
     },
   ],
 
@@ -370,6 +613,26 @@ export const AFRICA_QUESTIONS = {
       fact: 'Douala on suurin kaupunki, mutta pääkaupunki on Yaoundé.',
       hint: 'Maan suurin kaupunki ei ole pääkaupunki.',
     },
+    {
+      q: 'Mikä on Kamerunin suosituin urheilulaji?',
+      options: ['jalkapallo', 'jääkiekko', 'kriketti', 'baseball'],
+      correct: 0,
+      level: 1,
+      fact: 'Kamerunin maajoukkue on yksi Afrikan menestyneimmistä: se pelasi ensimmäisenä afrikkalaisena joukkueena MM-kisojen puolivälierissä vuonna 1990.',
+      hint: 'Lajia pelataan pallolla jaloin, ja MM-kisat kiinnostavat koko maata.',
+    },
+    {
+      q: 'Mitä Kamerunvuoren rinteillä viljellään?',
+      options: [
+        'kahvia ja banaania',
+        'oliiveja ja viinirypäleitä',
+        'ruista ja perunaa',
+        'ei mitään, maaperä on liian karua',
+      ],
+      correct: 0,
+      fact: 'Tulivuoren tuhkasta syntynyt maaperä on hyvin ravinteikasta, joten rinteillä kasvatetaan kahvia, banaania ja öljypalmua.',
+      hint: 'Tulivuoren tuhka tekee maaperästä poikkeuksellisen ravinteikkaan.',
+    },
   ],
 
   kongo: [
@@ -393,6 +656,27 @@ export const AFRICA_QUESTIONS = {
       correct: 1,
       fact: 'Kinshasa ja Brazzaville ovat vastakkain joen eri puolilla.',
       hint: 'Kaupunki on joen vastarannalla Brazzavillea vastapäätä.',
+    },
+    {
+      q: 'Millainen metsä kasvaa Kongojoen ympärillä?',
+      options: ['sademetsä', 'havumetsä', 'lehtokuusikko', 'ei metsää lainkaan'],
+      correct: 0,
+      level: 1,
+      fact: 'Kongon altaan metsä on maailman toiseksi laajin Amazonin jälkeen. Siellä sataa lähes päivittäin, ja metsässä elää muun muassa gorilloja ja metsänorsuja.',
+      hint: 'Metsätyyppi saa nimensä siitä, kuinka usein siellä sataa.',
+    },
+    {
+      q: 'Miksi Kongojokea ei voi purjehtia suoraan mereltä sisämaahan?',
+      options: [
+        'joessa on koskia ja putouksia lähellä suistoa',
+        'joki on koko matkalta liian matala',
+        'joki jäätyy talvella',
+        'joki katoaa aavikkoon',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Livingstonen putoukset katkaisevat reitin, joten tavara siirretään rautatielle ja taas veneeseen. Siksi joella on kaksi erillistä laivaliikennettä.',
+      hint: 'Matka katkeaa vesiportaisiin lähellä merta.',
     },
   ],
 
@@ -419,6 +703,22 @@ export const AFRICA_QUESTIONS = {
       fact: 'Angola on yksi Afrikan suurimmista öljyntuottajista.',
       hint: 'Sitä pumpataan myös meren pohjasta.',
     },
+    {
+      q: 'Minkä valtameren rannalla Angola sijaitsee?',
+      options: ['Atlantin', 'Intian valtameren', 'Tyynenmeren', 'Jäämeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Angolan rannikko on Atlantilla. Kylmä Benguelan merivirta viilentää sitä ja tekee etelärannikosta hyvin kuivan.',
+      hint: 'Sama valtameri kuin Dakarin ja Kap Palmasin edessä.',
+    },
+    {
+      q: 'Mikä harvinainen antilooppi on Angolan kansalliseläin?',
+      options: ['jättisapelisarviantilooppi', 'gnu', 'gaselli', 'jänishirvi'],
+      correct: 0,
+      level: 3,
+      fact: 'Lajia elää luonnonvaraisena vain Angolassa. Sitä pidettiin kadonneena maan sisällissodan jälkeen, kunnes riistakamerat löysivät eläimiä uudelleen 2000-luvulla.',
+      hint: 'Eläintä ei elä luonnonvaraisena missään muualla maailmassa.',
+    },
   ],
 
   namib: [
@@ -444,6 +744,21 @@ export const AFRICA_QUESTIONS = {
       fact: 'Windhoek sijaitsee maan keskiosan ylängöllä.',
       hint: 'Nimessä on saksalainen kaiku.',
     },
+    {
+      q: 'Mitä Namibin rannikolla on lähes joka aamu?',
+      options: ['sumua', 'lunta', 'rankkasadetta', 'ukkosta'],
+      correct: 0,
+      level: 1,
+      fact: 'Kylmä merivirta tiivistää ilman kosteuden sumuksi. Kasvit ja eläimet, kuten kuoriaiset, keräävät juomavetensä suoraan sumusta.',
+      hint: 'Kosteus tulee mereltä, mutta ei sateena.',
+    },
+    {
+      q: 'Kuinka korkeita Namibin suurimmat dyynit ovat?',
+      options: ['yli 300 metriä', 'noin 30 metriä', 'noin kolme metriä', 'yli 3 000 metriä'],
+      correct: 0,
+      fact: 'Sossusvlein dyynit ovat maailman korkeimpia. Korkeimmat kohoavat yli 300 metriin, eli suunnilleen Eiffel-tornin korkeuteen.',
+      hint: 'Korkeus on samaa luokkaa kuin Eiffel-tornin.',
+    },
   ],
 
   kapkaupunki: [
@@ -468,6 +783,27 @@ export const AFRICA_QUESTIONS = {
       level: 3,
       fact: 'Parlamentti kokoontuu Kapkaupungissa, hallitus istuu Pretoriassa.',
       hint: 'Kaupungissa kokoontuu parlamentti.',
+    },
+    {
+      q: 'Miksi Pöytävuoren laen pilveä kutsutaan pöytäliinaksi?',
+      options: [
+        'se levittäytyy tasaisen laen päälle kaakkoistuulessa',
+        'se on aina neliönmuotoinen',
+        'se laskeutuu vain ruoka-aikaan',
+        'se on kudottu kangas vuoren huipulla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaakkoistuuli nostaa kostean ilman vuoren yli, ja laelle tiivistyy pilvi. Paikalliset sanovat vuoren kattavan pöytänsä.',
+      hint: 'Nimi syntyy siitä, miten pilvi asettuu tasaisen laen päälle.',
+    },
+    {
+      q: 'Mikä kasvillisuustyyppi ympäröi Kapkaupunkia?',
+      options: ['fynbos', 'tundra', 'taiga', 'mangrove'],
+      correct: 0,
+      level: 3,
+      fact: 'Fynbos on pensasmaista kasvillisuutta, jossa on tuhansia vain siellä kasvavia lajeja. Kapin kasvimaailma on yksi maailman rikkaimmista.',
+      hint: 'Nimi on afrikaansia ja tarkoittaa hienoa pensaikkoa.',
     },
   ],
 
@@ -495,6 +831,22 @@ export const AFRICA_QUESTIONS = {
       fact: 'Kimberliitti sai nimensä juuri Kimberleyn mukaan.',
       hint: 'Kivilaji on nimetty juuri tämän kaupungin mukaan.',
     },
+    {
+      q: 'Millä välineillä Kimberleyn Iso reikä kaivettiin 1870-luvulla?',
+      options: ['lapioilla ja hakuilla', 'kaivinkoneilla', 'vesisuihkulla', 'poravaunuilla'],
+      correct: 0,
+      level: 1,
+      fact: 'Kuoppa kaivettiin käsin: tuhannet kaivajat nostivat maata köysillä ja kärryillä. Työ oli raskasta ja vaarallista, ja onnettomuudet olivat tavallisia.',
+      hint: 'Koneita ei siihen aikaan ollut vielä käytössä.',
+    },
+    {
+      q: 'Mikä uutuus tuli Kimberleyn kaduille vuonna 1882 ensimmäisenä Afrikassa?',
+      options: ['sähköinen katuvalaistus', 'metro', 'lennätin', 'raitiovaunu'],
+      correct: 0,
+      level: 3,
+      fact: 'Timanttirahalla kaupunki sai sähkövalot kaduilleen jo 1882 — ennen useimpia Euroopan kaupunkeja.',
+      hint: 'Uutuus liittyy valoon ja sähköön.',
+    },
   ],
 
   mosambik: [
@@ -518,6 +870,22 @@ export const AFRICA_QUESTIONS = {
       correct: 2,
       fact: 'Portugalin kieli on yhä Mosambikin virallinen kieli.',
       hint: 'Sama valta kuin Angolassa.',
+    },
+    {
+      q: 'Minkä valtameren rannalla Mosambik sijaitsee?',
+      options: ['Intian valtameren', 'Atlantin', 'Tyynenmeren', 'Jäämeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Mosambikin rannikko on lähes 2 500 kilometriä pitkä. Siellä on koralliriuttoja, mangrovemetsiä ja kalastajakyliä.',
+      hint: 'Sama valtameri huuhtoo myös Intian rantoja.',
+    },
+    {
+      q: 'Mikä mosambikilainen mauste on levinnyt maailmalle kanaruokien kanssa?',
+      options: ['piri-piri', 'sahrami', 'vanilja', 'kaneli'],
+      correct: 0,
+      level: 3,
+      fact: 'Piri-piri on pieni tuliterä chili. Tapa marinoida kanaa siitä tehdyllä kastikkeella levisi Mosambikista Portugalin kautta ravintoloihin ympäri maailmaa.',
+      hint: 'Nimi tarkoittaa pientä chiliä, ja se sanotaan kahdesti.',
     },
   ],
 
@@ -545,6 +913,21 @@ export const AFRICA_QUESTIONS = {
       fact: 'Järjestys on Grönlanti, Uusi-Guinea, Borneo ja Madagaskar.',
       hint: 'Saari kuuluu Tanskaan.',
     },
+    {
+      q: 'Mikä paksurunkoinen puu on Madagaskarin tunnusomaisimpia?',
+      options: ['baobab', 'mänty', 'eukalyptus', 'tammi'],
+      correct: 0,
+      fact: 'Puun paksu runko varastoi vettä kuivaa aikaa varten. Morondavan baobabkuja on saaren tunnetuimpia maisemia.',
+      hint: 'Runko on niin paksu, että se toimii vesisäiliönä.',
+    },
+    {
+      q: 'Minkä alueen kielille malagassi on sukua?',
+      options: ['Kaakkois-Aasian kielille', 'arabialle', 'swahilille', 'ranskalle'],
+      correct: 0,
+      level: 3,
+      fact: 'Malagassi kuuluu austronesialaisiin kieliin. Saaren ensimmäiset asukkaat purjehtivat sinne Borneon suunnalta noin 1 500 vuotta sitten.',
+      hint: 'Ensimmäiset asukkaat tulivat merta pitkin kaukaa idästä.',
+    },
   ],
 
   sansibar: [
@@ -571,6 +954,32 @@ export const AFRICA_QUESTIONS = {
       fact: 'Stone Town eli Kivikaupunki on Unescon maailmanperintökohde.',
       hint: 'Nimi viittaa rakennusmateriaaliin.',
     },
+    {
+      q: 'Missä Sansibar sijaitsee?',
+      options: [
+        'saarilla Afrikan itärannikon edustalla',
+        'keskellä Saharaa',
+        'Atlantin rannikolla',
+        'korkeassa vuoristossa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Sansibar on saariryhmä Intian valtamerellä noin 40 kilometriä Tansanian rannikolta. Lautta kulkee mantereelta parissa tunnissa.',
+      hint: 'Paikkaa ympäröi vesi joka puolelta.',
+    },
+    {
+      q: 'Mistä Sansibarin kivikaupungin puuovet tunnetaan?',
+      options: [
+        'veistetyistä kuvioista ja messinkinastoista',
+        'lasimaalauksista',
+        'rautaristikoista',
+        'siitä, ettei niissä ole koristeita',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Ovet ovat kaupungin ylpeys. Niihin on veistetty kuvioita ja lyöty messinkinastoja, ja tyyleissä näkyy swahilikulttuurin, Omanin ja Intian vaikutus.',
+      hint: 'Koristelu on tehty puuhun ja metalliin.',
+    },
   ],
 
   kilimandzaro: [
@@ -594,6 +1003,27 @@ export const AFRICA_QUESTIONS = {
       correct: 0,
       fact: 'Kilimandžaro on kolmesta kartiosta koostuva kerrostulivuori.',
       hint: 'Se syntyi purkauksista, ei laattojen puristuksesta.',
+    },
+    {
+      q: 'Mikä on erityistä Kilimandžaron huipulla?',
+      options: [
+        'siellä on jäätä, vaikka päiväntasaaja on lähellä',
+        'siellä kasvaa sademetsä',
+        'siellä on järvi',
+        'siellä on kaupunki',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Vuori on niin korkea, että huipulla on jäätiköitä päiväntasaajan tuntumassa. Jäätiköt ovat kutistuneet selvästi sadan vuoden aikana.',
+      hint: 'Asia liittyy kylmyyteen kuumalla vyöhykkeellä.',
+    },
+    {
+      q: 'Kuinka monta kasvillisuusvyöhykettä Kilimandžaron rinteillä on?',
+      options: ['viisi', 'yksi', 'kaksi', 'kymmenen'],
+      correct: 0,
+      level: 3,
+      fact: 'Rinne vaihtuu viljelysmailta sademetsään, nummeen, alppiaavikkoon ja lopuksi kivi- ja jäähuipulle. Nousu on kuin matka päiväntasaajalta navalle.',
+      hint: 'Nousu vastaa matkaa päiväntasaajalta navalle.',
     },
   ],
 
@@ -625,6 +1055,22 @@ export const AFRICA_QUESTIONS = {
       fact: 'John Hanning Speke nimesi järven 1858 kuningatar Viktorian mukaan.',
       hint: 'Nimeäjä oli brittiläinen tutkimusmatkailija.',
     },
+    {
+      q: 'Mikä on Viktoriajärven rantaseudun tärkeimpiä elinkeinoja?',
+      options: ['kalastus', 'kaivostyö', 'metsänhakkuu', 'laivanrakennus'],
+      correct: 0,
+      level: 1,
+      fact: 'Järvi elättää miljoonia ihmisiä. Saalis myydään usein samana päivänä rannan toreilla, ja lautat kuljettavat matkustajia rannalta rannalle.',
+      hint: 'Elinkeino liittyy järven eläimiin, joita syödään.',
+    },
+    {
+      q: 'Mikä kala tuotiin Viktoriajärveen 1950-luvulla?',
+      options: ['niilinahven', 'lohi', 'hauki', 'ankerias'],
+      correct: 0,
+      level: 3,
+      fact: 'Istutetusta kalasta tuli suuri ja tärkeä vientikala, mutta se myös hävitti monia järven omia lajeja. Järven kalasto muuttui pysyvästi.',
+      hint: 'Kala on nimetty toisen kuuluisan vesistön mukaan.',
+    },
   ],
 
   tanganjika: [
@@ -655,6 +1101,22 @@ export const AFRICA_QUESTIONS = {
       fact: 'Tapaamiseen liitetään lause "Doctor Livingstone, I presume?".',
       hint: 'Kuuluisa lause alkaa sanalla "Doctor".',
     },
+    {
+      q: 'Millainen Tanganjikajärvi on muodoltaan?',
+      options: ['kapea ja hyvin pitkä', 'lähes pyöreä', 'kolmikulmainen', 'pieni ja matala'],
+      correct: 0,
+      level: 1,
+      fact: 'Järvi on noin 670 kilometriä pitkä mutta paikoin vain 50 kilometriä leveä. Se on maailman pisin makean veden järvi.',
+      hint: 'Muoto seuraa hautavajoaman kapeaa rakoa.',
+    },
+    {
+      q: 'Mikä kalaryhmä on tehnyt Tanganjikajärven tunnetuksi tutkijoille?',
+      options: ['kirjoahvenet eli siklidit', 'sillit', 'lohet', 'turskat'],
+      correct: 0,
+      level: 3,
+      fact: 'Järvessä elää satoja vain siellä tavattavia lajeja, ja osa hoitaa poikasiaan suussaan. Samoja kaloja pidetään akvaarioissa ympäri maailmaa.',
+      hint: 'Kalat ovat suosittuja akvaarioissa.',
+    },
   ],
 
   bahrelghazal: [
@@ -681,6 +1143,31 @@ export const AFRICA_QUESTIONS = {
       fact: 'Sudd on yksi maailman suurimmista makean veden kosteikoista.',
       hint: 'Sama joki jatkaa matkaansa Egyptiin.',
     },
+    {
+      q: 'Millaista maastoa Bahr el Ghazalin alueella on?',
+      options: [
+        'jokia ja laajoja kosteikkoja',
+        'jäätiköitä',
+        'pelkkiä hiekkadyynejä',
+        'korkeaa vuoristoa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Alue on Niilin sivujokien latvavesiä. Sadeaikana joet tulvivat laajoiksi ruohikkoisiksi kosteikoiksi, joissa liikutaan veneellä.',
+      hint: 'Maasto liittyy veteen ja ruohoon.',
+    },
+    {
+      q: 'Miten alueen karjapaimenet siirtyvät vuodenaikojen mukaan?',
+      options: [
+        'kuivalla kaudella karja viedään jokivarsien laitumille',
+        'karja pidetään ympäri vuoden samassa aitauksessa',
+        'karja siirretään vuorille lumen takia',
+        'karja kuljetetaan junalla etelään',
+      ],
+      correct: 0,
+      fact: 'Karjatalous seuraa vettä: tulva-aikana asutaan ylävillä mailla ja kuivalla kaudella siirrytään jokivarsille, joissa on ruohoa.',
+      hint: 'Siirtymä seuraa veden korkeutta.',
+    },
   ],
 
   darfur: [
@@ -705,6 +1192,26 @@ export const AFRICA_QUESTIONS = {
       correct: 2,
       fact: 'Khartum sijaitsee Sinisen ja Valkoisen Niilin yhtymäkohdassa.',
       hint: 'Kaupunki on kahden Niilin yhtymäkohdassa.',
+    },
+    {
+      q: 'Millainen maasto Darfurissa on?',
+      options: [
+        'puoliaavikkoa ja keskellä vuoristoinen ylänkö',
+        'sademetsää',
+        'saaristoa',
+        'jäätikköä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Darfurissa vaihtelevat puoliaavikko ja savanni. Keskellä kohoaa Marran vulkaaninen vuoristo, jonka rinteillä sataa selvästi enemmän kuin ympärillä.',
+      hint: 'Alue on kuivaa, mutta keskellä maasto kohoaa korkealle.',
+    },
+    {
+      q: 'Mitä viljelykasveja Darfurin savannilla kasvatetaan?',
+      options: ['durraa ja hirssiä', 'riisiä ja teetä', 'perunaa ja ruista', 'kaakaota'],
+      correct: 0,
+      fact: 'Durra eli sorghum ja hirssi kestävät kuivuutta, joten ne ovat Sudanin savannin peruskasveja. Niistä leivotaan ohutta kisra-leipää.',
+      hint: 'Kasvit kestävät kuivuutta, ja niistä leivotaan ohutta leipää.',
     },
   ],
 
@@ -731,6 +1238,26 @@ export const AFRICA_QUESTIONS = {
       fact: 'Suezin kanava avattiin liikenteelle vuonna 1869.',
       hint: 'Kanava avattiin liikenteelle vuonna 1869.',
     },
+    {
+      q: 'Mikä teki Suakinista tärkeän kaupungin?',
+      options: ['sen satama', 'sen kultakaivos', 'sen yliopisto', 'sen tulivuori'],
+      correct: 0,
+      level: 1,
+      fact: 'Suakin oli vuosisatoja Sudanin pääsatama Punaisellamerellä. Nykyään suurin osa laivoista käyttää lähellä olevaa Port Sudania.',
+      hint: 'Merkitys tuli merestä ja laivoista.',
+    },
+    {
+      q: 'Miksi Punaisenmeren riutat ovat sukeltajien suosiossa?',
+      options: [
+        'vesi on kirkasta ja koralli- ja kalalajeja on runsaasti',
+        'meressä ei ole lainkaan kaloja',
+        'vesi on makeaa',
+        'meri on kaikkialla vain metrin syvyinen',
+      ],
+      correct: 0,
+      fact: 'Punaisessameressä elää yli tuhat kalalajia ja satoja korallilajeja, ja monia niistä ei tavata missään muualla.',
+      hint: 'Sukeltaja näkee siellä kauas ja paljon.',
+    },
   ],
 
   addisabeba: [
@@ -755,6 +1282,32 @@ export const AFRICA_QUESTIONS = {
       correct: 1,
       fact: 'Kahvipensas on kotoisin Etiopian Kaffan ylängöiltä.',
       hint: 'Sen pavut paahdetaan ennen käyttöä.',
+    },
+    {
+      q: 'Mikä on erityistä Addis Abeban sijainnissa?',
+      options: [
+        'se on hyvin korkealla vuoristossa',
+        'se on meren rannalla',
+        'se on keskellä aavikkoa',
+        'se on saarella',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on noin 2 400 metrin korkeudessa, joten siellä on viileää päiväntasaajan lähellä. Etiopia on vuoristomaa, jolla ei ole merirajaa.',
+      hint: 'Ilmasto on viileämpi kuin sijainti antaisi odottaa.',
+    },
+    {
+      q: 'Millainen kalenteri on Etiopiassa käytössä?',
+      options: [
+        'oma kalenteri, jossa on 13 kuukautta',
+        'kalenteri ilman kuukausia',
+        'täsmälleen sama kuin Euroopassa',
+        'kalenteri, jossa vuosi on 200 päivää',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Etiopian kalenterissa on kaksitoista 30 päivän kuukautta ja lyhyt kolmastoista kuukausi. Vuosiluku on noin seitsemän vuotta jäljessä länsimaisesta.',
+      hint: 'Vuodessa on yksi kuukausi enemmän kuin meillä.',
     },
   ],
 
@@ -786,6 +1339,26 @@ export const AFRICA_QUESTIONS = {
       level: 3,
       fact: 'Alue sai nimensä sarvimaisesta muodostaan kartalla.',
       hint: 'Yksi maista on Etiopia.',
+    },
+    {
+      q: 'Mihin valtamereen Ras Hafunin niemi työntyy?',
+      options: ['Intian valtamereen', 'Atlanttiin', 'Tyyneenmereen', 'Jäämereen'],
+      correct: 0,
+      level: 1,
+      fact: 'Niemi on Afrikan mantereen itäisin kärki, ja sen ohi kulkevat vilkkaat laivareitit Punaisenmeren suulle.',
+      hint: 'Sama valtameri kuin Sansibarin edessä.',
+    },
+    {
+      q: 'Miten monsuunituulet vaikuttivat Somalian rannikon kauppaan?',
+      options: [
+        'purjelaivat kulkivat tuulen mukana Arabiaan ja Intiaan ja palasivat samana vuonna',
+        'tuulet estivät merenkulun kokonaan',
+        'tuulet toivat lunta rannikolle',
+        'tuulilla ei ollut merkitystä merenkulussa',
+      ],
+      correct: 0,
+      fact: 'Monsuuni vaihtaa suuntaa vuodenaikojen mukaan, joten dhow-purjelaivat pääsivät Intian valtameren yli ja takaisin. Kauppa suitsukkeilla ja mausteilla kesti tuhansia vuosia.',
+      hint: 'Tuuli kääntyy vuodenaikojen mukaan päinvastaiseksi.',
     },
   ],
 
@@ -917,129 +1490,257 @@ export const AFRICA_FACTS = {
   tanger: [
     'Tanger on ollut satamakaupunki jo foinikialaisten ajoista. Gibraltarin salmi erottaa sen Espanjasta vain noin 14 kilometrin levyisenä.',
     'Tangeria hallittiin vuosina 1923–1956 kansainvälisenä vyöhykkeenä, jota useat maat valvoivat yhdessä.',
+    {
+      text: 'Salmen yli näkee Espanjaan selkeällä säällä, ja silti tämä on toinen maanosa. Kaksi maanosaa katsoo toisiaan neljäntoista kilometrin päästä eikä kumpikaan ole toistaan vanhempi.',
+      voice: 'isoisa',
+    },
   ],
   kairo: [
     'Kairo on Afrikan väkirikkaimpia kaupunkeja. Sen laidalla Gizassa seisovat yli 4 500 vuotta vanhat pyramidit.',
     'Kaupungin halki virtaa Niili, yksi maailman pisimmistä joista.',
+    {
+      text: 'Basaarissa neuvoteltiin hinnasta kolme kuppia teetä, ja häviön kärsin minä. Pyramidit olivat vanhoja jo silloin, kun Rooma oli kylä — tämän kirjoitan muistiin, jotta en kotona väittäisi mitään muuta.',
+      voice: 'isoisa',
+    },
   ],
   tripoli: [
     'Tripolin nimi tulee kreikan sanoista, jotka tarkoittavat kolmea kaupunkia.',
     'Tripoli on Libyan pääkaupunki ja sen tärkein satama Välimeren rannalla.',
+    {
+      text: 'Rannikolla on satama, jonka läpi aavikon karavaanit purkavat lastinsa laivoihin. Kaupungin nimi tarkoittaa kreikaksi kolmea kaupunkia, mikä on tarkempaa kuin useimmat karttani nimet.',
+      voice: 'isoisa',
+    },
   ],
   murzuk: [
     'Murzuk oli aikoinaan tärkeä pysähdyspaikka Saharan halki kulkeneilla karavaanireiteillä.',
     'Murzukin hiekkameri on yksi Saharan laajimmista dyynialueista.',
+    {
+      text: 'Tänne on rannikolta kuukausi kamelin selässä, ja jokainen päivä on samanlainen kuin edellinen. Oppaani tietää tien ilman karttaa; minulla on kartta ja en tiedä tietä.',
+      voice: 'isoisa',
+    },
   ],
   alkufra: [
     'Al Kufra on keidasryhmä keskellä Saharaa. Sen pelloille pumpataan vettä syvältä maanalaisesta pohjavesivarastosta.',
     'Kufran kastellut pellot näkyvät satelliittikuvissa vihreinä ympyröinä keskellä autiomaata.',
+    {
+      text: 'Keidas ilmestyy hiekan keskelle kuin virhe kartassa: taatelipalmuja, varjoa ja vettä. Vesi tulee maan alta, ja sen määrän tietävät vain ne, jotka ovat asuneet täällä sukupolvia.',
+      voice: 'isoisa',
+    },
   ],
   sahara: [
     'Sahara on maailman laajin kuuma autiomaa — melkein Yhdysvaltojen kokoinen.',
     'Sahara oli muutama tuhat vuotta sitten vehreä savanni. Kalliomaalaukset kertovat yhä siellä laiduntaneesta karjasta.',
+    {
+      text: 'Päivällä helle halkeilee, yöllä tarvitsen kaksi peittoa. Kallioon on piirretty karjaa ja metsästäjiä — joku on siis paimentanut lehmiä siellä, missä minä en löydä vettä.',
+      voice: 'isoisa',
+    },
   ],
   ahaggar: [
     'Ahaggar on vuoristo keskellä Saharaa. Sen huiput kohoavat lähes 3 000 metriin ja yöt ovat siellä kylmiä.',
     'Ahaggarin vuoret ovat tuaregien vanhaa kotiseutua.',
+    {
+      text: 'Keskellä autiomaata kohoaa vuoristo, jonka huipuilla palelin kuin Skotlannissa. Tuaregit tuntevat nämä polut nimeltä; me nimesimme ne uudelleen ja luulimme sitä löytämiseksi.',
+      voice: 'isoisa',
+    },
   ],
   timbuktu: [
     'Timbuktu oli keskiajalla oppineisuuden keskus, jonka kirjastoissa säilytettiin kymmeniätuhansia käsikirjoituksia.',
     'Kaupunki rikastui suolan ja kullan vaihdannasta Saharan karavaanireittien varrella.',
+    {
+      text: 'Klubilla kaupungin nimeä käytetään tarkoittamaan paikkaa, jota ei ole. Täällä on kirjastoja, joissa on käsikirjoituksia tähtitieteestä ja laista — enemmän kirjoja kuin monessa englantilaisessa pikkukaupungissa.',
+      voice: 'isoisa',
+    },
   ],
   gao: [
     'Gao oli Songhain valtakunnan pääkaupunki. Se oli 1400–1500-luvuilla yksi Afrikan mahtavimmista valtioista.',
     'Kaupunki sijaitsee Nigerjoen rannalla, aavikon ja savannin rajalla.',
+    {
+      text: 'Joen rannalla oli valtakunnan pääkaupunki silloin, kun Englannissa riideltiin ruusuista. Hallitsijan hautakumpu on savesta, ja se on yhä pystyssä — savea kannattaa siis olla kunnioittavampi kuin olen ollut.',
+      voice: 'isoisa',
+    },
   ],
   dakar: [
     'Dakar sijaitsee Cap-Vertin niemimaalla, Afrikan mantereen läntisimmässä kärjessä.',
     'Dakarin edustalla on Goréen saari, josta lähti orjalaivoja. Saari on nykyään maailmanperintökohde.',
+    {
+      text: 'Tästä läntisimmästä kärjestä on Amerikkaan lyhyempi matka kuin kotiin Lontooseen. Edustan pikkusaarelta lähti laivoja, joiden lastina oli ihmisiä. Sen laivauksen järjesti minun maanosani, ei tämä.',
+      voice: 'isoisa',
+    },
   ],
   sierraleone: [
     'Sierra Leone tarkoittaa portugaliksi leijonavuoria. Nimen antoivat merenkulkijat rannikon vuorille.',
     'Maan pääkaupunki Freetown perustettiin vapautettujen orjien asuinpaikaksi.',
+    {
+      text: 'Vuorisen niemen suojassa on satama, jonka nimi tarkoittaa vapautta. Nimi on annettu siksi, että vapaus oli ensin otettu pois — sitä ei sanota ääneen niissä juhlapuheissa, joita olen kuunnellut.',
+      voice: 'isoisa',
+    },
   ],
   kappalmas: [
     'Kap Palmas on niemi Liberian eteläkärjessä. Portugalilaiset merenkulkijat nimesivät sen rannan palmujen mukaan.',
     'Kap Palmasin kohdalla Afrikan rannikko kääntyy jyrkästi lännestä itään.',
+    {
+      text: 'Tässä kohdassa rannikko kääntyy jyrkästi itään, ja palmuja on niin paljon että ne näkyvät kannelle asti. Purjehtija tietää sijaintinsa puista; minä tarvitsin siihen sekstantin ja kaksi tuntia.',
+      voice: 'isoisa',
+    },
   ],
   kumasi: [
     'Kumasi on ashantien kuningaskunnan vanha pääkaupunki, ja ashantien kuninkaan hovi toimii siellä yhä.',
     'Kumasin tori on yksi Länsi-Afrikan suurimmista.',
+    {
+      text: 'Sisämaassa sademetsän keskellä on kuningaskunta, jonka hovi on järjestetty tarkemmin kuin meidän. Kuninkaan istuinta ei lasketa maahan eikä kukaan istu sillä — meidän kuningattaremme istuu omallaan, mikä lienee makuasia.',
+      voice: 'isoisa',
+    },
   ],
   orjarannikko: [
     'Orjarannikko oli eurooppalaisten kauppiaiden nimitys Guineanlahden rannikolle, jolta vietiin ihmisiä orjuuteen Amerikkaan.',
     'Naapurirannikot saivat nimensä kauppatavaran mukaan: Kultarannikko, Norsunluurannikko ja Pippurirannikko.',
+    {
+      text: 'Kartassani tämä rannikonpätkä on nimetty sen mukaan, mitä täältä vietiin. Nimi ei kerro alueesta mitään; se kertoo meistä kaiken. En piirrä sitä uudelleen, mutta kirjoitan tähän, kenen käsialaa se on.',
+      voice: 'isoisa',
+    },
   ],
   kano: [
     'Kano on yli tuhat vuotta vanha kauppakaupunki, jota ympäröivät savesta rakennetut muurit.',
     'Kano oli Saharan karavaanireittien eteläinen pääte, jossa vaihdettiin suolaa, kangasta ja nahkaa.',
+    {
+      text: 'Kaupunkia ympäröivät savimuurit, ja sen värjäämökuopat ovat toimineet kauemmin kuin yksikään tuntemani englantilainen tehdas. Indigo tarttuu käsiin viikoksi; sen sain kokeilla itse.',
+      voice: 'isoisa',
+    },
   ],
   kamerun: [
     'Kamerunvuori on Länsi-Afrikan korkein huippu ja yhä toimiva tulivuori.',
     'Maan nimi tulee portugalin katkarapua tarkoittavasta sanasta: merenkulkijat löysivät niitä jokisuulta.',
+    {
+      text: 'Tulivuori nousee suoraan merestä, ja sen rinteillä sataa enemmän kuin missään muualla, missä olen seisonut. Sateenvarjoni kesti kaksi minuuttia. Vuori on ollut tässä kauemmin.',
+      voice: 'isoisa',
+    },
   ],
   kongo: [
     'Kongojoki on virtaamaltaan maailman toiseksi suurin joki heti Amazonin jälkeen.',
     'Kongon altaassa kasvaa maailman toiseksi laajin sademetsä.',
+    {
+      text: 'Joen suulle pääsee laivalla, ylemmäs ei: koskia on niin paljon, että vesi kuuluu ennen kuin näkyy. Kartassani on tässä kohdassa tyhjä alue ja sana "tuntematon" — tuntematon meille, ei niille jotka siellä asuvat.',
+      voice: 'isoisa',
+    },
   ],
   angola: [
     'Angolan rannikkoa viilentää kylmä Benguelan merivirta, joka tekee rannasta poikkeuksellisen kuivan.',
     'Angola on yksi Afrikan suurimmista öljyn ja timanttien tuottajista.',
+    {
+      text: 'Portugalilaisten satamasta lähtivät laivat Brasiliaan kolmensadan vuoden ajan, ja lastina oli ihmisiä. Meri on tässä kylmä keskellä tropiikkia, mikä on merivirran ansiota; muusta ei kannata kiittää ketään.',
+      voice: 'isoisa',
+    },
   ],
   namib: [
     'Namib on maailman vanhimpia autiomaita: se on ollut kuiva yli 50 miljoonaa vuotta.',
     'Namibin dyynit ovat maailman korkeimpia — osa niistä kohoaa yli 300 metriin.',
+    {
+      text: 'Sumu tulee mereltä joka aamu eikä sada koskaan. Hiekasta törröttää laivanhylkyjä, ja jokainen niistä oli jonkun kapteenin varma laskelma. Pidän tämän sivun mielessäni ennen kuin taas sanon jotain olevani varma.',
+      voice: 'isoisa',
+    },
   ],
   kapkaupunki: [
     'Kapkaupungin yllä kohoaa Taffelivuori, jonka tasainen laki peittyy usein pilveen.',
     'Kaupungin eteläpuolinen Hyväntoivonniemi oli tärkeä välietappi Euroopan ja Intian välisellä purjehdusreitillä.',
+    {
+      text: 'Pöydänmuotoisen vuoren juurella täydennämme vesitynnyrit, kuten kaikki Intiaan menevät ovat tehneet. Kaksi valtamerta kohtaa tässä, eikä kumpikaan kysy meiltä lupaa.',
+      voice: 'isoisa',
+    },
   ],
   kimberley: [
     'Kimberleyn timanttilöytö 1870-luvulla sai aikaan valtavan kaivosryntäyksen.',
     'Kaupungin Big Hole on käsin kaivettu kuoppa ja yksi maailman suurimmista.',
+    {
+      text: 'Maahan on kaivettu lapioilla kuoppa, jonka pohjaa en näe. Tuhannet miehet nostavat maata köysillä, ja voiton laskee joku, joka ei ole koskaan seisonut reunalla. Kivet lähetetään Lontooseen.',
+      voice: 'isoisa',
+    },
   ],
   mosambik: [
     'Mosambikin rannikko on lähes 2 500 kilometriä pitkä, ja saaren suuntaan avautuu Mosambikin kanaali.',
     'Mosambik oli portugalilaisten siirtomaa satojen vuosien ajan, ja portugali on yhä maan virallinen kieli.',
+    {
+      text: 'Kaakkoisrannikolla on portugalilaisten vanha satamakaupunki omalla pikkusaarellaan, ja salmen takana häämöttää suuri saari. Riutta on niin kirkas, että näen kalat kannelta.',
+      voice: 'isoisa',
+    },
   ],
   madagaskar: [
     'Madagaskar erosi muusta mantereesta kymmeniä miljoonia vuosia sitten. Siksi valtaosa sen eläimistä ja kasveista ei elä missään muualla.',
     'Saaren ensimmäiset asukkaat purjehtivat sinne Kaakkois-Aasiasta, ja malagassin kieli on yhä sukua Indonesian kielille.',
+    {
+      text: 'Saarella on kädellisiä, joita ei ole missään muualla, ja puita joiden runko on paksumpi kuin vaunu on pitkä. Kieli ei muistuta mantereen kieliä lainkaan, mistä päättelin väärin; ne purjehtivat tänne idästä.',
+      voice: 'isoisa',
+    },
   ],
   sansibar: [
     'Sansibar tunnettiin mausteistaan, erityisesti neilikasta.',
     'Sansibarin ja Britannian välinen sota vuonna 1896 kesti alle tunnin ja on historian lyhin sota.',
+    {
+      text: 'Saari tuoksuu neilikalle kilometrien päähän, ja kivikaupungin ovet on veistetty kuvioille, joita en osaa lukea. Talot on rakennettu korallista ja tyyleissä näkyy Oman, Intia ja swahilirannikko — ei Eurooppa.',
+      voice: 'isoisa',
+    },
   ],
   kilimandzaro: [
     'Kilimandžaro on Afrikan korkein vuori, 5 895 metriä. Sen huipulla on jäätiköitä aivan päiväntasaajan tuntumassa.',
     'Kilimandžaro on tulivuori, joka kohoaa yksinään savannin keskeltä.',
+    {
+      text: 'Kirjoitin Lontooseen, että päiväntasaajan tuntumassa on vuori, jonka huipulla on lunta ympäri vuoden. Vastaus tuli neljän kuukauden päästä: "Ei liene mahdollista." Lumi ei tiettävästi ole lukenut kirjettä.',
+      voice: 'isoisa',
+    },
   ],
   viktoria: [
     'Viktorianjärvi on Afrikan suurin järvi ja maailman toiseksi suurin makean veden järvi.',
     'Järvestä saa alkunsa Valkoinen Niili.',
+    {
+      text: 'Järvi on kuin sisämeri: toista rantaa ei näy, ja aallokko nousee kuin Pohjanmerellä. Nimen antoi maanmieheni kuningattaren mukaan, vaikka rannoilla oli ollut nimiä jo pitkään.',
+      voice: 'isoisa',
+    },
   ],
   tanganjika: [
     'Tanganjikajärvi on maailman toiseksi syvin järvi: sen pohja on yli 1 400 metrin syvyydessä.',
     'Järvessä elää satoja kalalajeja, joita ei tavata missään muualla.',
+    {
+      text: 'Järvi on kapea ja niin pitkä, että laivamatka rannalta rannalle kestää päivän. Vesi on kirkasta ja täynnä kaloja, joita ei tunneta muualla. Täällä kaksi maanmiestäni tapasi toisensa ja kutsui sitä löytöretkeksi.',
+      voice: 'isoisa',
+    },
   ],
   bahrelghazal: [
     'Bahr el Ghazal on Niilin sivujoki, ja sen nimi tarkoittaa arabiaksi gasellien jokea.',
     'Alueella leviää Sudd, yksi maailman laajimmista suoalueista.',
+    {
+      text: 'Joki hajoaa ruohikkoon niin laajalti, ettei uomaa löydä. Veneemme jäi kiinni kolme kertaa päivässä, ja paikalliset kalastajat kulkivat ohitsemme vaivatta. Karttani sanoi tässä olevan "joki".',
+      voice: 'isoisa',
+    },
   ],
   darfur: [
     'Darfur tarkoittaa furien maata: fur on alueen suurimpia kansoja.',
     'Alueen keskellä kohoaa Marran vuoristo, jonka rinteillä sataa selvästi enemmän kuin ympäröivässä puoliaavikossa.',
+    {
+      text: 'Puoliaavikon keskellä kohoaa vuoristo, jonka rinteillä sataa ja kasvaa hedelmäpuita. Alueen nimi tarkoittaa yksinkertaisesti furien maata — eli sitä, kenen maa se on. Harvinaisen selkeä nimi kartalla.',
+      voice: 'isoisa',
+    },
   ],
   suakin: [
     'Suakin oli vuosisatoja Sudanin tärkein satama. Sen vanhat talot rakennettiin koralliharkoista.',
     'Suakinista lähdettiin pyhiinvaellusmatkalle Punaisenmeren yli Mekkaan.',
+    {
+      text: 'Valkoiset talot on rakennettu merestä nostetusta korallikivestä, mikä on kekseliäämpää kuin mikään Lontoon uudisrakennus. Satamasta lähtee joka vuosi laivoja pyhiinvaellukselle meren yli.',
+      voice: 'isoisa',
+    },
   ],
   addisabeba: [
     'Addis Abeba on yksi maailman korkeimmalla sijaitsevista pääkaupungeista, noin 2 400 metrissä.',
     'Nimi tarkoittaa amharaksi uutta kukkaa.',
+    {
+      text: 'Kahden ja puolen kilometrin korkeudessa on viileää päiväntasaajan lähelläkin, ja illalla tarvitsen takin. Tämä keisarikunta on säilyttänyt itsenäisyytensä, mikä hämmentää klubissani suuresti; minua se ei enää hämmennä.',
+      voice: 'isoisa',
+    },
   ],
   rashafun: [
     'Ras Hafun on Afrikan mantereen itäisin niemi.',
     'Niemi oli antiikin aikana kauppapaikka, jonne purjehdittiin monsuunituulten avulla.',
+    {
+      text: 'Mantereen itäisimmässä kärjessä purjehtivat jo antiikin kauppiaat suitsuketta hakemaan. Monsuuni kääntyy vuodenaikojen mukaan, joten purjelaiva pääsee Intiaan ja takaisin saman vuoden aikana — tämän tiesivät täällä kaikki ennen kuin höyrykone keksittiin.',
+      voice: 'isoisa',
+    },
   ],
 };
