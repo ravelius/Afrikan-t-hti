@@ -41,10 +41,12 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Taustalaatikot pois kartan päältä: ✅ #44
 - Maailmankartta kahtena pallonpuoliskona + suora hyppy mantereelle: ✅ #45
 - Paketti 8 aloitettu: avausteksti, tyylipaletti, 11 kaupungin tekstit ja
-  neljä kysymyskorvausta (suunnittelusessio itse): ✅ — Opus jatkaa
-  paketin 8 loput.
+  neljä kysymyskorvausta (suunnittelusessio itse): ✅
+- Paketti 8 (Afrikka ensin): ✅ — 21 kaupungin havainnot uusiksi,
+  21 lastenvisakysymystä korvattu, saapumismerkinnät hiottu ja koko
+  laudan yhtenäistämiskierros ajettu. Seuraavaksi paketti 9.
 
-## Seuraavaksi: PAKETTI 8 (Afrikka ensin — tämä on työn alla NYT)
+## Seuraavaksi: PAKETTI 9 (paketti 8 on valmis)
 
 Omistajan linjaus 27.7.2026: **työstetään pelkkää Afrikkaa, kunnes
 peruspeli on kunnossa.** Muihin lautoihin ei kosketa ennen kuin Afrikka on
@@ -341,7 +343,7 @@ Kun nimi on päätetty, vaihto koskee: `index.html` (title, brand, meta),
 `CONTRIBUTING.md`. Tallennusavain (`SAVE_KEY`) voi jäädä ennalleen, ettei
 kesken olevat pelit katoa.
 
-## Paketti 8: AFRIKKA ENSIN — peruspeli kuntoon (työn alla)
+## Paketti 8: AFRIKKA ENSIN — peruspeli kuntoon (VALMIS)
 
 Omistajan linjaus: peruspeli hiotaan valmiiksi pelkällä Afrikalla ennen
 kuin mihinkään muuhun kosketaan. **Muokkaa vain Afrikan sisältöä**
@@ -410,7 +412,7 @@ minä-muoto, 1–3 virkettä, ensimmäinen virke konkreettinen; korkeintaan
 kolmasosa teksteistä alkaa isoisällä, vähintään kolmasosassa isoisää ei
 mainita; piikki osuu Foggiin/imperiumiin, ei koskaan kohdemaihin.
 
-## Paketti 9: aikamittari ja isoisän ennätys (VASTA paketin 8 jälkeen)
+## Paketti 9: aikamittari ja isoisän ennätys (SEURAAVAKSI)
 
 Aika on pelin vastustaja — isoisän 80 päivän ennätys — mutta se ei saa
 tehdä pelistä ahdistavaa. Omistajan päätökset:

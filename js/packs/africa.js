@@ -255,9 +255,9 @@ export const AFRICA = {
     diaries: [
       'Isoisän kartassa tämä manner on paikoin väritetty tyhjäksi. Piirtäjä ei ilmeisesti vaivautunut kysymään niiltä miljoonilta, jotka asuivat täällä jo silloin. Tyhjä kohta kartassa kertoo piirtäjästä, ei maasta.',
       '"Sisämaahan ei pääse", isoisä kirjoitti kolme kertaa eri sivuille, aina yhtä varmasti. Nousin lentokoneeseen ja olin siellä kahdessa tunnissa. Hänen kolme kuukauttaan ovat nyt aamupäivä.',
-      'Isoisä laski manterella olevan "muutama kymmenen heimoa". Nykyään täällä on 54 itsenäistä valtiota ja yli tuhat elävää kieltä. Hänen laskutaitonsa oli kunnossa; lähdeaineisto ei.',
-      '"Kuuma ilma tekee ihmisistä hitaita", merkitsi isoisä varjoon istuutuneena. Ympärilläni on maanosa, jonka väestön keski-ikä on alle kaksikymmentä vuotta ja joka rakentaa nopeammin kuin ehdin katsoa. Hitaus taisi olla omakohtainen havainto.',
-      'Isoisä ihaili suuria jokia ja luetteli ne nimeltä oikein — Niili, Kongo, Niger, Sambesi. Se on hänen päiväkirjansa tarkin sivu. Vedet hän näki; ihmiset hän arvasi.',
+      'Isoisä laski manterella olevan "muutama kymmenen heimoa". Nykyään täällä on 54 itsenäistä valtiota ja yli tuhat elävää kieltä, ja jokaisella niistä on oma sanansa vieraalle.',
+      'Lentokentältä keskustaan taksi ohitti kolme työmaata, joissa valot paloivat vielä yhdeksältä illalla. Tämän mantereen väestön keski-ikä on alle kaksikymmentä vuotta — nuorin koko maailmassa. Istuin takapenkillä ja tunsin itseni vanhentuneeksi kartaksi.',
+      'Niili, Kongo, Niger, Sambesi. Päiväkirjan tarkin sivu on se, jolle isoisä luetteli mantereen suuret joet — jokaisen nimen hän sai oikein. Vedet hän näki; ihmiset hän arvasi.',
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
     // ei koskaan kaupungin nimeä.
