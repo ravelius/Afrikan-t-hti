@@ -46,6 +46,15 @@ function newGame(seed = 5) {
   });
 }
 
+// Sisällön määrätavoitteet nostetaan lauta kerrallaan sitä mukaa kun sisältö
+// on kirjoitettu (docs/tyolista-opukselle.md, paketti 5). Valmiilla laudalla
+// jokaisella aarrekaupungilla on vähintään viisi omaa kysymystä, joista
+// ainakin yksi on helppo (taso 1) ja yksi vaikea (taso 3), ja yleispakassa on
+// vähintään 15 kysymystä. Kesken olevilla laudoilla pätevät vanhat minimit.
+const SISALTO_VALMIS = new Set(['maailma']);
+const MIN_CITY_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 5 : 2);
+const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10);
+
 // --- jokaista pakettia koskevat eheystestit --------------------------------
 
 for (const pack of PACKS) {
@@ -77,10 +86,19 @@ for (const pack of PACKS) {
 
   test(`${pack.id}: kysymyspankki on ehjä`, () => {
     const cityIds = pack.cities.filter((c) => !c.start).map((c) => c.id);
+    const minCity = MIN_CITY_QUESTIONS(pack.id);
     for (const id of cityIds) {
-      assert.ok(pack.questions[id]?.length >= 2, `kaupungilta ${id} puuttuu kysymyksiä`);
+      const omat = pack.questions[id] ?? [];
+      assert.ok(omat.length >= minCity, `kaupungilta ${id} puuttuu kysymyksiä (${omat.length}/${minCity})`);
+      if (!SISALTO_VALMIS.has(pack.id)) continue;
+      const omatLevels = omat.map(questionLevel);
+      assert.ok(omatLevels.includes(1), `kaupungilta ${id} puuttuu helppo kysymys`);
+      assert.ok(omatLevels.includes(3), `kaupungilta ${id} puuttuu vaikea kysymys`);
     }
-    assert.ok(pack.questions.general.length >= 10);
+    assert.ok(
+      pack.questions.general.length >= MIN_GENERAL_QUESTIONS(pack.id),
+      `yleispakassa on liian vähän kysymyksiä (${pack.questions.general.length})`,
+    );
 
     for (const q of allQuestions(pack)) {
       assert.ok(q.q.trim().length > 0, 'tyhjä kysymys');
