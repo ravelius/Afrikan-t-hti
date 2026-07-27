@@ -1750,149 +1750,297 @@ export const EUROPE_FACTS = {
   lontoo: [
     'Lontoon metro avattiin vuonna 1863 ja on maailman vanhin. Sen lempinimi Tube tulee tunnelien pyöreästä muodosta.',
     'Thamesin vuorovesi nostaa ja laskee veden pintaa Lontoossa noin seitsemän metriä vuorokaudessa.',
+    {
+      text: 'Lähden kotoa, jossa on sumu, juna maan alla ja klubi, jossa maailma tunnetaan paremmin kuin missään. Ainakin niin siellä sanotaan; tämä matka on tehty sen väitteen tarkistamiseksi.',
+      voice: 'isoisa',
+    },
   ],
   istanbul: [
     'Istanbul on ainoa suurkaupunki, joka sijaitsee kahdella mantereella: Bosporinsalmi erottaa sen Euroopan ja Aasian puolen.',
     'Kaupunki tunnettiin ennen nimillä Bysantion ja Konstantinopoli, ja se oli kahden valtakunnan pääkaupunki lähes 1 600 vuoden ajan.',
+    {
+      text: 'Kaupunki seisoo kahden maanosan päällä, ja salmen yli soudetaan kuin kadun poikki. Basaarissa opin, että hinta on keskustelu eikä numero.',
+      voice: 'isoisa',
+    },
   ],
   dublin: [
     { text: 'Dublinin nimi tulee iirin sanoista dubh linn, musta lammikko, joka oli viikinkien satamapaikka Liffey-joen mutkassa.', source: 'https://fi.wikipedia.org/wiki/Dublin' },
     'Irlannin kansallissymboli on kolmiapila, ja maan lempinimi smaragdisaari kertoo runsaista sateista ja vihreistä laitumista.',
+    {
+      text: 'Sade tulee sivuttain ja loppuu kesken lauseen. Täällä puhutaan omaa kieltä, jota Lontoossa pidetään kuolevana; minä kuulin sitä joka kadulla.',
+      voice: 'isoisa',
+    },
   ],
   edinburgh: [
     'Edinburghin vanhakaupunki ja uusikaupunki ovat molemmat Unescon maailmanperintökohteita — keskiaikainen sokkelo ja 1700-luvun ruutukaava vierekkäin.',
     'Skotlannin ylängöillä puhutaan yhä gaelia, ja kielen elvyttämiseksi on perustettu omia kouluja.',
+    {
+      text: 'Linna seisoo kalliolla, joka on vanhan tulivuoren kanta. Kaupunki on jaettu vanhaan ja uuteen puoleen, ja kumpikin pitää itseään oikeana.',
+      voice: 'isoisa',
+    },
   ],
   pariisi: [
     'Pariisin katujen alla kulkee satoja kilometrejä vanhoja kivilouhoksia. Osa niistä on katakombeja, joihin siirrettiin vanhojen hautausmaiden luut 1700-luvulla.',
     'Louvre oli alun perin linnoitus ja kuninkaanlinna. Museoksi se avattiin vasta Ranskan vallankumouksen jälkeen vuonna 1793.',
+    {
+      text: 'Kaupunki toipuu piirityksestä ja rakentaa leveitä katuja kujien tilalle. Näyttelyihin pystytetään rautaa ja lasia; kivi kestää, rauta ei.',
+      voice: 'isoisa',
+    },
   ],
   bordeaux: [
     'Bordeaux’n satamasta on viety viiniä Englantiin 1100-luvulta asti, jolloin alue kuului Englannin kruunulle.',
     'Kaupungin puolikuun muotoinen jokiranta on Unescon maailmanperintökohde: 1700-luvun julkisivut jatkuvat lähes taukoamatta kilometrien matkan.',
+    {
+      text: 'Joki tuo vuoroveden kaupunkiin asti, ja soraiselta maalta tulee viini, jota klubissani pidetään melkein englantilaisena. Se ei ole englantilaista.',
+      voice: 'isoisa',
+    },
   ],
   lissabon: [
     'Lissabonin keltaiset raitiovaunut kiipeävät niin jyrkkiä katuja, että kaupungissa on myös julkisia hissejä ja köysiratoja.',
     'Portugalilaiset purjehtijat lähtivät Lissabonista etsimään merireittiä Intiaan; Vasco da Gama saapui perille vuonna 1498.',
+    {
+      text: 'Kaupunki nousi maanjäristyksen raunioista suoriksi kortteleiksi, ja kukkuloilla lauletaan surumielisiä lauluja. Torni joen suulla muistuttaa, että täältä lähdettiin maailmalle kauan ennen meitä.',
+      voice: 'isoisa',
+    },
   ],
   madrid: [
     'Madridin Retiro-puisto oli alun perin kuninkaan yksityinen puutarha. Se avattiin kaikille 1800-luvulla ja on nykyään kaupunkilaisten olohuone.',
     'Espanjassa syödään päivällinen usein vasta kello 21 jälkeen, ja työpäivä katkeaa pitkään lounastaukoon.',
+    {
+      text: 'Kaupunki on korkealla ylätasangolla, joten kesä on kuumempi ja talvi kylmempi kuin rannikolla. Kadut täyttyvät väestä vasta auringonlaskun jälkeen, mikä on järkevää enkä aio omaksua sitä.',
+      voice: 'isoisa',
+    },
   ],
   barcelona: [
     'Barcelonan Eixample-kaupunginosan korttelit on suunniteltu viistetyin kulmin, jotta risteyksiin syntyy pieniä aukioita.',
     'Sagrada Famílian rakentaminen alkoi vuonna 1882, ja se rahoitetaan yhä lahjoituksilla ja pääsymaksuilla.',
+    {
+      text: 'Vanhat muurit on purettu ja kaupunki kasvaa ruutukaavaan, jonka kulmat on viistetty. Täällä puhutaan omaa kieltä, eikä se ole murre, vaikka niin vakuutetaan.',
+      voice: 'isoisa',
+    },
   ],
   amsterdam: [
     'Amsterdamin taloissa on ullakolla usein nostokoukku: portaat ovat niin kapeat, että huonekalut nostetaan sisään ikkunasta.',
     'Kaupungissa on enemmän polkupyöriä kuin asukkaita, ja pyöriä nostetaan vuosittain tuhansittain kanavista.',
+    {
+      text: 'Talot seisovat paalujen päällä pehmeässä maassa ja nojaavat toisiinsa kuin väsyneet herrat. Osa maasta on merenpinnan alapuolella ja pysyy kuivana vain siksi, että sitä pumpataan.',
+      voice: 'isoisa',
+    },
   ],
   berliini: [
     'Berliinissä on enemmän siltoja kuin Venetsiassa — kaupungin halki virtaa Spree ja sitä ympäröi kanavien verkosto.',
     'Muurin paikka on merkitty katukiveykseen kaksoisrivillä mukulakiviä, joten reitin voi kävellä vielä tänäkin päivänä.',
+    {
+      text: 'Kaupunki on uuden valtakunnan pääkaupunki ja rakentaa kuin kilpaa. Kaksi vuotta sitten sitä ei ollut tässä muodossa olemassa; Lontoo on ollut Lontoo tuhat vuotta, mikä on turvallisempi järjestys.',
+      voice: 'isoisa',
+    },
   ],
   praha: [
     'Prahan linna on pinta-alaltaan yksi maailman suurimmista linnoista ja toimii yhä Tšekin presidentin virka-asuntona.',
     { text: 'Tšekissä juodaan asukasta kohden enemmän olutta kuin missään muualla maailmassa; ensimmäinen panimo perustettiin jo 993.', source: 'https://fi.wikipedia.org/wiki/T%C5%A1ekki' },
+    {
+      text: 'Sillalla seisoo kolmekymmentä pyhimystä ja raatihuoneen kello näyttää tähtien paikat. Kaupunki kuuluu keisarikuntaan mutta puhuu omaa kieltään yhä äänekkäämmin.',
+      voice: 'isoisa',
+    },
   ],
   wien: [
     { text: 'Wienin kahvilakulttuuri on ollut vuodesta 2011 Itävallan kansallisessa aineettoman kulttuuriperinnön luettelossa: kahvilassa saa istua tuntikausia yhden kupillisen kanssa.', source: 'https://en.wikipedia.org/wiki/Viennese_caf%C3%A9' },
     'Wienin juomavesi tulee putkia pitkin suoraan Alpeilta, ja vesijohto valmistui jo vuonna 1873.',
+    {
+      text: 'Musiikkia soitetaan täällä kuin muualla juodaan teetä, ja valssia tanssitaan myös arkena. Kaupunki purki juuri muurinsa ja rakensi niiden paikalle kehäkadun.',
+      voice: 'isoisa',
+    },
   ],
   budapest: [
     { text: 'Budapestin maanalainen on Manner-Euroopan vanhin metro. Se avattiin vuonna 1896 ja on Unescon maailmanperintökohde.', source: 'https://fi.wikipedia.org/wiki/Budapestin_metro' },
     'Tonava jakaa kaupungin: Buda on kukkulainen ja rauhallinen, Pest tasainen ja vilkas.',
+    {
+      text: 'Kaksi kaupunkia joen kahta puolta yhdistettiin tänä vuonna yhdeksi. Kuumista lähteistä nousee vesi, jossa on kylvetty roomalaisten ajoista; sitä yhdistäminen ei muuta.',
+      voice: 'isoisa',
+    },
   ],
   varsova: [
     'Varsovan vaakunassa on merenneito, joka legendan mukaan käski kalastajien perustaa kaupungin joen mutkaan.',
     'Puolan kieli kirjoitetaan latinalaisin kirjaimin, mutta siinä on omia merkkejä kuten ł, ż ja ę.',
+    {
+      text: 'Kaupunki on keisarikunnan maakuntakaupunki, eikä sitä sanota täällä ääneen mielellään. Kadulla soitetaan pianoa niin, että pysähdyn kuuntelemaan; sävellykset ovat maanmiehen, joka kuoli Pariisissa.',
+      voice: 'isoisa',
+    },
   ],
   alpit: [
     { text: 'Alppien halki kulkee Gotthardin pohjatunneli, joka on yli 57 kilometriä pitkä — maailman pisin rautatietunneli.', source: 'https://fi.wikipedia.org/wiki/Gotthardin_pohjatunneli' },
     'Alppien jäätiköt ovat sulaneet nopeasti, ja niiden reunoilta on paljastunut esineitä, jotka ovat olleet jään alla tuhansia vuosia.',
+    {
+      text: 'Vuoret ylitetään solien kautta muulin kanssa, ja laaksot ovat jään jäljiltä U:n muotoisia. Sanovat poraavansa tunnelin vuoren läpi; en usko sen valmistuvan elinaikanani.',
+      voice: 'isoisa',
+    },
   ],
   milano: [
     { text: 'Milanon tuomiokirkon rakentaminen kesti lähes kuusi vuosisataa: se alkoi vuonna 1386 ja viimeiset yksityiskohdat valmistuivat 1965.', source: 'https://en.wikipedia.org/wiki/Milan_Cathedral' },
     'Milano on Italian talouden keskus: siellä sijaitsevat maan pörssi ja suuri osa muoti- ja muotoilualan yrityksistä.',
+    {
+      text: 'Tuomiokirkkoa on rakennettu viisisataa vuotta eikä se ole valmis. Se on kärsivällisyyttä, jota en tunnista omasta maastani.',
+      voice: 'isoisa',
+    },
   ],
   rooma: [
     'Roomassa on yhä käytössä antiikin aikana rakennettuja vesijohtoja, ja kaupungin kaduilla on tuhansia ilmaisia juomavesihanoja.',
     { text: 'Pantheonin betonikupoli on lähes kahden vuosituhannen jälkeen yhä maailman suurin ilman terästä rakennettu kupoli.', source: 'https://en.wikipedia.org/wiki/Pantheon,_Rome' },
+    {
+      text: 'Kaupunki on juuri tullut uuden Italian pääkaupungiksi, ja paavi on jäänyt muuriensa sisälle. Akveduktit tuovat vettä yhä, mikä on enemmän kuin voin sanoa monesta uudemmasta laitoksesta.',
+      voice: 'isoisa',
+    },
   ],
   sisilia: [
     'Sisilia on ollut vuorollaan kreikkalaisten, roomalaisten, arabien ja normannien hallussa, ja kaikki näkyvät yhä saaren ruoassa ja rakennuksissa.',
     'Etnan rinteillä viljellään viiniä ja pistaaseja, koska tuhka tekee maaperästä poikkeuksellisen ravinteikasta.',
+    {
+      text: 'Saarella on kreikkalaisia temppeleitä, arabialaisia kupoleita ja normannien kirkkoja samassa korttelissa. Etna savuaa taustalla eikä välitä kenestäkään niistä.',
+      voice: 'isoisa',
+    },
   ],
   ateena: [
     'Ateenassa on asuttu yhtäjaksoisesti yli 3 000 vuotta, mikä tekee siitä yhden Euroopan vanhimmista kaupungeista.',
     'Kreikan kieltä on kirjoitettu samalla kirjaimistolla lähes 2 800 vuotta, ja siitä ovat peräisin sanat kuten museo, teatteri ja matematiikka.',
+    {
+      text: 'Kaupunki on pieni ja tomuinen, ja kuningaskunta vasta muutaman vuosikymmenen ikäinen. Kukkulan temppeli on kestänyt kaksituhatta vuotta eikä ole huomannut kumpaakaan asiaa.',
+      voice: 'isoisa',
+    },
   ],
   kreeta: [
     'Knossoksen palatsissa oli juokseva vesi ja viemäröinti jo pronssikaudella, noin 3 500 vuotta sitten.',
     'Kreetan Samarian rotko on Euroopan pisimpiä: se kulkee 16 kilometriä vuorilta merelle ja kapenee paikoin muutaman metrin levyiseksi.',
+    {
+      text: 'Saari kuuluu sulttaanin valtakuntaan, ja kapinoita on ollut useita. Oliiviöljyä käytetään kaikkeen, ja se on parempaa kuin mikään voi, jota Lontoossa myydään.',
+      voice: 'isoisa',
+    },
   ],
   dubrovnik: [
     'Dubrovnik perusti Euroopan ensimmäisiin kuuluvan karanteenin vuonna 1377: laivaväen piti odottaa saarella 30 päivää ennen kaupunkiin pääsyä.',
     'Ragusan tasavalta kielsi orjakaupan jo vuonna 1416, varhain Euroopan mittapuulla.',
+    {
+      text: 'Muurien sisällä on kaupunki, joka oli oma tasavaltansa vuosisatoja ja säilyi neuvottelemalla eikä sotimalla. Meidän laivastomme olisi ollut halvempi hoitaa samalla tavalla.',
+      voice: 'isoisa',
+    },
   ],
   sofia: [
     'Sofian keskustassa seisovat vierekkäin ortodoksinen katedraali, moskeija, synagoga ja katolinen kirkko muutaman korttelin säteellä.',
     'Sofia on yksi Euroopan korkeimmalla sijaitsevista pääkaupungeista, noin 550 metrissä, ja hiihtokeskus on kaupungin rajojen sisällä.',
+    {
+      text: 'Kaupunki on sulttaanin maakuntakaupunki vuoren juurella, ja vuorella on lunta vielä keväällä. Sanovat, että tänne syntyy pian oma valtio; sitä on syytä seurata.',
+      voice: 'isoisa',
+    },
   ],
   bukarest: [
     'Bukarestin parlamenttitalo on yksi maailman suurimmista ja painavimmista rakennuksista. Se valmistui 1980-luvulla.',
     'Romaniassa puhutaan latinasta polveutuvaa kieltä, mutta sanastossa on paljon lainoja naapureiden slaavilaisista kielistä.',
+    {
+      text: 'Ruhtinaskunnassa puhutaan kieltä, joka on latinaa slaavilaisten keskellä, ja kirjaimet vaihtuivat latinalaisiin vasta äskettäin. Kadut jäljittelevät Pariisia, mikä on täällä kohteliaisuus.',
+      voice: 'isoisa',
+    },
   ],
   kiova: [
     'Kiovan Petšerskin luostarin alla kiemurtelee kilometrien pituinen luolasto, jota on kaivettu 1000-luvulta lähtien.',
     'Kiovan Rus oli keskiajalla mahtava ruhtinaskunta, jonka perintöä pitävät omanaan useat nykyiset itäslaavilaiset kansat.',
+    {
+      text: 'Luostarin käytävät kulkevat maan alla, ja kaupunki on ollut pyhä paikka tuhat vuotta. Keisarikunta hallitsee, mutta kaupunki on vanhempi kuin yksikään sitä hallinnut valta.',
+      voice: 'isoisa',
+    },
   ],
   odessa: [
     'Odessa perustettiin 1794 vapaasatamaksi, ja kaupunkiin muutti väkeä kymmenistä maista — siksi sen kulttuuri on poikkeuksellisen monikielinen.',
     'Odessan oopperatalo on rakennettu tanskalaisen ja itävaltalaisen arkkitehdin suunnitelmien mukaan, ja sitä pidetään yhtenä Euroopan kauneimmista.',
+    {
+      text: 'Satamasta lähtee vehnää koko Euroopalle, ja portaat nousevat rannasta kaupunkiin kuin teatterissa. Täällä vitsaillaan enemmän kuin missään muualla keisarikunnassa; se lienee sataman tuomaa.',
+      voice: 'isoisa',
+    },
   ],
   moskova: [
     'Moskovan Punaisen torin nimi ei tule väristä eikä politiikasta: vanha venäjän sana krasnyi tarkoitti sekä punaista että kaunista.',
     'Moskova on Euroopan väkirikkain kaupunki, ja sen metrolla tehdään arkisin miljoonia matkoja päivässä.',
+    {
+      text: 'Vanhassa kaupungissa on puutaloja ja kupoleita, ja kellot soivat niin että keskustelu keskeytyy. Pääkaupunki on Pietarissa, mutta sydän on ilmeisesti täällä; sen kuulee heti kun kysyy.',
+      voice: 'isoisa',
+    },
   ],
   pietari: [
     'Pietarin siltoja nostetaan kesäöisin ylös, jotta laivat pääsevät Nevaa pitkin — jalankulkijan kannattaa tarkistaa aikataulu ennen kotimatkaa.',
     'Kaupunki on rakennettu yli sadalle saarelle, ja sitä on kutsuttu Pohjolan Venetsiaksi.',
+    {
+      text: 'Kaupunki on rakennettu suolle keisarin käskyllä, ja se näkyy: kaikki on suoraa ja märkää. Kesäöinä ei tarvita kynttilää lainkaan, mikä on hyödyllistä ja hieman häiritsevää.',
+      voice: 'isoisa',
+    },
   ],
   helsinki: [
     'Helsingin edustalla on yli 300 saarta, ja monille niistä pääsee kaupungin omalla lautalla.',
     'Suomen kieli ei ole sukua ruotsille eikä venäjälle vaan virolle ja unkarille — se kuuluu suomalais-ugrilaisiin kieliin.',
+    {
+      text: 'Suuriruhtinaskunnan pääkaupunki on pieni ja valkoinen, ja satamassa tarvitaan jäänmurtajaa puoli vuotta. Kaduilla kuuluu kaksi kieltä, eikä kolmatta täällä tarvita — ei edes minun.',
+      voice: 'isoisa',
+    },
   ],
   tallinna: [
     'Helsingin ja Tallinnan väliä kulkee vuosittain miljoonia matkustajia — reitti on yksi maailman vilkkaimmista laivayhteyksistä.',
     'Viron kieli on niin läheistä sukua suomelle, että moni kyltti aukeaa suomalaiselle ilman opiskelua.',
+    {
+      text: 'Muurien ja tornien takana on hansakaupunki, jossa kauppa oli järjestetty jo keskiajalla. Alakaupunki ja ylälinna eivät ole koskaan olleet aivan samaa mieltä mistään.',
+      voice: 'isoisa',
+    },
   ],
   riika: [
     'Riian keskusmarkkinahallit rakennettiin 1920-luvulla vanhoista ilmalaivahalleista.',
     'Latvian laulujuhlaperinne on Unescon aineettoman kulttuuriperinnön luettelossa — kuoroissa laulaa kymmeniätuhansia ihmisiä.',
+    {
+      text: 'Joen suussa on satama, joka lähettää puuta ja pellavaa Englantiin. Kaupunki puhuu saksaa kauppapöydässä ja latviaa toreilla; jälkimmäinen on täällä kotoisin.',
+      voice: 'isoisa',
+    },
   ],
   vilna: [
     'Vilnassa on taiteilijoiden julistama leikkimielinen Užupisin "tasavalta", jolla on oma perustuslaki käännettynä kymmenille kielille.',
     'Liettua oli viimeinen Euroopan maa, joka kristillistyi — vasta 1387.',
+    {
+      text: 'Kaupungissa on kirjapainoja ja oppineita niin paljon, että sitä kutsutaan Pohjolan Jerusalemiksi. Barokkikirkkoja on niin monta, että laskin ne kahdesti väärin.',
+      voice: 'isoisa',
+    },
   ],
   tukholma: [
     'Tukholman vanhankaupungin kujista kapein on alle metrin levyinen.',
     'Ruotsissa on jokamiehenoikeus: luonnossa saa liikkua ja telttailla myös toisen mailla, kunhan ei häiritse eikä tuhoa.',
+    {
+      text: 'Kaupunki on rakennettu saarille, ja vesi on niin kirkasta että keskustassa kalastetaan. Vanhakaupunki on kapea kuin käytävä, ja siellä kaikki tuntevat toisensa hieman liian hyvin.',
+      voice: 'isoisa',
+    },
   ],
   oslo: [
     'Oslo lahjoittaa joka vuosi kuusen Lontoon Trafalgar Squarelle kiitokseksi toisen maailmansodan aikaisesta tuesta.',
     'Norjan Oslovuono ja rannikko ovat niin syviä, että suuret risteilijät pääsevät aivan kaupungin keskustaan asti.',
+    {
+      text: 'Kaupunki on Kristiania, ja vuono tuo laivat suoraan keskustaan. Norja on liitossa Ruotsin kanssa, mutta omasta lipusta puhutaan täällä yhä useammin.',
+      voice: 'isoisa',
+    },
   ],
   kobenhavn: [
     'Kööpenhaminan ja Ruotsin Malmön yhdistää Juutinrauman silta, joka sukeltaa keskellä salmea tunneliin tekosaaren kautta.',
     'Tanskalainen sana hygge tarkoittaa lämmintä ja kiireetöntä yhdessäoloa — kynttilöitä, kahvia ja hyvää seuraa.',
+    {
+      text: 'Kaupungissa on huvipuisto lyhtyineen ja musiikkeineen, ja se on ollut auki jo kolmekymmentä vuotta. Tanska menetti äskettäin maakuntansa etelässä, eikä siitä puhuta päivällisellä.',
+      voice: 'isoisa',
+    },
   ],
   lappi: [
     'Napapiiri kulkee Rovaniemen pohjoispuolelta: sen pohjoispuolella aurinko ei laske keskikesällä eikä nouse keskitalvella.',
     'Saamen kieliä on useita, ja niissä on kymmeniä sanoja lumelle sen mukaan, millaista hangella on kulkea.',
+    {
+      text: 'Täällä aurinko ei laske kesällä lainkaan eikä nouse talvella; kirjoitan kellonajan muistiin, koska muuten en tiedä sitä. Poroja paimennetaan tuhansittain, ja se on työtä, jota en osaisi päivääkään.',
+      voice: 'isoisa',
+    },
   ],
   tromssa: [
     { text: 'Tromssassa on maailman pohjoisin yliopisto, ja kaupungissa toimii myös oma panimo ja katedraali.', source: 'https://en.wikipedia.org/wiki/University_of_Troms%C3%B8' },
     { text: 'Tromssan kaupunki sijaitsee saarella, ja mantereelle pääsee vuonon yli kaartuvaa siltaa pitkin.', source: 'https://fi.wikipedia.org/wiki/Tromssa' },
+    {
+      text: 'Täältä lähtevät retkikunnat jäämerelle, ja satamassa lastataan turkiksia ja hylkeenrasvaa. Lämmin merivirta pitää sataman sulana keskellä talvea, mitä en ollut uskoa ennen kuin näin sen.',
+      voice: 'isoisa',
+    },
   ],
 };

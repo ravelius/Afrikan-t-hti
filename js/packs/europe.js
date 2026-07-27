@@ -308,14 +308,52 @@ export const EUROPE = {
     winStar: 'toi Meripihkahuoneen aarteen turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Meripihkahuoneen aarteen kotiin ${money} punnan kanssa.`,
     // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
-    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
     diaries: [
       'Kotimantere. Puolet karttani rajoista on väärin, ja loput ylitetään näyttämättä passia. Kukaan ei tarkasta papereitani — en tiedä, olenko helpottunut vai loukkaantunut.',
+      '"Mannermaalla tarvitaan passi, kultaa ja kärsivällisyyttä", kirjoitti isoisä. Minulla on kortti, jolla maksan junalipun Lissabonista Tallinnaan, eikä kukaan kysy mitään. Kärsivällisyyttä tarvitaan enää vaihdoilla.',
+      'Isoisän kartassa tämä maanosa on jaettu viiden keisarin kesken. Nyt tässä on yli neljäkymmentä valtiota, joista moni käyttää samaa rahaa ja jokainen omaa lippuaan. Hänen viisi keisariaan mahtuisivat nykyään yhteen kokoushuoneeseen — ja jonottaisivat vuoroaan.',
+      '"Junat myöhästyvät kaikkialla paitsi Sveitsissä", merkitsi isoisä huolellisesti. Istun asemalla ja katson taulua, joka sanoo saman asian sataviisikymmentä vuotta myöhemmin. Jotkut havainnot eivät vanhene lainkaan.',
+      'Isoisä luetteli maanosan suuret joet ja sai ne oikein: Volga, Tonava, Rein, Veiksel. Rajat hän sai väärin lähes kaikki. Vedet pysyivät, rajat eivät — tämä on matkani lyhyin oppitunti.',
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
-    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
-    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
-    starHints: {},
+    // kaupungin nimeä.
+    starHints: {
+      dublin: 'Läntisimmällä saarella, joen mutkassa jonka viikingit nimesivät mustaksi lammikoksi, on satamakaupunki jossa puhutaan kahta kieltä. Sinne pääsee vain laivalla.',
+      edinburgh: 'Pohjoisen saaren itärannikolla, vanhan tulivuoren kannalle rakennetun linnan juurella, on kaupunki joka jakautuu vanhaan ja uuteen puoleen. Molemmat pitävät itseään oikeana.',
+      pariisi: 'Suuren joen mutkassa keskellä läntistä mannerta on kaupunki, jonka leveät bulevardit korvasivat juuri vanhat kujat. Se pitää itseään maailman keskuksena, ja on siinä lähellä.',
+      bordeaux: 'Läntisellä rannikolla, siellä missä vuorovesi nousee jokea ylös soraisten viinitarhojen välissä, on satama josta lähetetään tynnyreitä Englantiin.',
+      lissabon: 'Mantereen lounaisimmassa kärjessä, joen suulla jonka vartioksi rakennettiin torni, on kaupunki joka nousi maanjäristyksen raunioista suoriksi kortteleiksi.',
+      madrid: 'Läntisen niemimaan keskellä, korkealla kuivalla ylätasangolla kaukana kaikista rannikoista, on pääkaupunki jonka kadut täyttyvät väestä vasta auringonlaskun jälkeen.',
+      barcelona: 'Läntisen niemimaan koillisrannalla Välimeren äärellä on satamakaupunki, jonka uudet korttelit on piirretty ruutuun ja niiden kulmat viistetty.',
+      amsterdam: 'Alavalla luoteisrannikolla, kanavien ja puupaalujen päälle rakennetussa kaupungissa, talot nojaavat toisiinsa. Maa on siellä osin merenpinnan alapuolella.',
+      berliini: 'Pohjoisen tasangon keskellä, kahden hidasvirtaisen joen välissä, on juuri perustetun valtakunnan pääkaupunki. Se rakentaa kuin kilpaa, koska sillä on kiire olla vanha.',
+      praha: 'Keskisellä mantereella, jyrkän jokimutkan yllä kohoavan linna-alueen juurella, on kaupunki jonka sillan kaiteilla seisoo kolmekymmentä pyhimystä.',
+      wien: 'Suuren itään virtaavan joen varrella on keisarikunnan pääkaupunki, jossa valssia tanssitaan arkenakin. Muurien paikalle on juuri valmistunut leveä kehäkatu.',
+      budapest: 'Saman suuren joen varrella kauempana itään, siellä missä kaksi kaupunkia yhdistettiin yhdeksi, nousee kuumista lähteistä vesi kylpyaltaisiin.',
+      varsova: 'Pohjoisella tasangolla idässä, Veiksel-joen varrella, on maakuntakaupunki jonka oma valtio on pyyhitty kartalta. Kadulla soitetaan silti sen omaa musiikkia.',
+      alpit: 'Keskisen mantereen vuoristossa, siellä missä laaksot ovat jään jäljiltä U:n muotoisia ja solat ylitetään muulin kanssa, on koko maanosan korkein huippu.',
+      milano: 'Etelän suuren tasangon pohjoislaidalla, vuorten juurella, on kaupunki jonka marmorikatedraalia on rakennettu viisisataa vuotta eikä se ole valmis.',
+      rooma: 'Etelän niemimaan keskellä, seitsemän kukkulan päällä joen varrella, on kaupunki josta tehtiin juuri uuden kuningaskunnan pääkaupunki. Sen akveduktit toimivat yhä.',
+      sisilia: 'Etelän niemimaan kärjen takana, salmen toisella puolen, on saari jolla savuaa maanosan suurin tulivuori. Sen kirkoissa on arabialaisia kupoleita.',
+      ateena: 'Kaakkoisen niemimaan kärjessä, kalliokukkulan juurella jolla seisoo kaksituhatta vuotta vanha temppeli, on nuoren kuningaskunnan tomuinen pääkaupunki.',
+      kreeta: 'Kaikkein eteläisimmällä suurella saarella, sulttaanin valtakunnan laidalla, kukoisti maanosan varhaisin korkeakulttuuri. Oliiviöljyä käytetään siellä kaikkeen.',
+      dubrovnik: 'Kaakkoisrannikolla, korkeiden kivimuurien sisällä, on satamakaupunki joka oli vuosisatoja oma tasavaltansa ja säilyi neuvottelemalla eikä sotimalla.',
+      sofia: 'Kaakkoisen mantereen sisämaassa, korkean vuoren juurella, on maakuntakaupunki jonka ympärille syntyy pian oma valtio. Ruusuöljyä myydään siellä pulloittain.',
+      bukarest: 'Alavalla tasangolla Tonavan ja Karpaattien välissä on ruhtinaskunnan pääkaupunki, jossa puhutaan latinasta polveutuvaa kieltä slaavilaisten naapurien keskellä.',
+      kiova: 'Idässä, Dnepr-joen jyrkällä rannalla, on tuhat vuotta pyhänä pidetty kaupunki, jonka luostarin käytävät kulkevat maan alla.',
+      odessa: 'Mustanmeren pohjoisrannalla on satama, josta vehnä lähtee koko maanosaan ja jonka portaat nousevat rannasta kaupunkiin kuin teatterissa.',
+      moskova: 'Idän tasangolla, kaukana kaikista meristä, on vanha kaupunki jossa kupolit ja puutalot vuorottelevat. Se ei ole enää pääkaupunki, mutta pitää itseään sinä.',
+      pietari: 'Suomenlahden pohjukassa, keisarin käskyllä suolle rakennetussa kaupungissa, kaikki kadut ovat suoria eikä kesäöisin tarvita kynttilää.',
+      helsinki: 'Pohjoisen lahden rannalla on suuriruhtinaskunnan pieni valkoinen pääkaupunki, jonka satamaan tarvitaan jäänmurtajaa puoli vuotta.',
+      tallinna: 'Saman lahden eteläpuolella, muurien ja tornien takana, on hansakaupunki jonka ylälinna ja alakaupunki eivät ole koskaan olleet samaa mieltä mistään.',
+      riika: 'Itämeren kaakkoisrannalla, suuren joen suussa, on satama joka lähettää puuta ja pellavaa Englantiin. Kauppapöydässä puhutaan saksaa, toreilla maan omaa kieltä.',
+      vilna: 'Itämeren kaakkoisessa takamaassa, sisämaassa kahden joen yhtymäkohdassa, on kaupunki jota kutsutaan Pohjolan Jerusalemiksi. Barokkikirkkoja on siellä liikaa laskettavaksi.',
+      tukholma: 'Pohjoisen niemimaan itärannalla, neljälletoista saarelle rakennetussa kaupungissa, vesi on niin kirkasta että keskustassa kalastetaan.',
+      oslo: 'Pohjoisen niemimaan länsipuolella, pitkän vuonon pohjukassa, on pääkaupunki jonka nimi vaihdettiin kuninkaan mukaan. Vuoret alkavat heti kaupungin takaa.',
+      kobenhavn: 'Pohjolan salmien varrella, siellä missä Itämerestä pääsee Pohjanmerelle, on kuningaskunnan pääkaupunki. Sen huvipuistossa palavat lyhdyt iltaan asti.',
+      lappi: 'Kaikkein pohjoisimmassa sisämaassa, siellä missä aurinko ei kesällä laske eikä talvella nouse, paimennetaan poroja tuhansittain.',
+      tromssa: 'Pohjoisimmalla rannikolla, saarella vuonon suojassa, on satama josta lähdetään jäämerelle. Lämmin merivirta pitää sen sulana keskellä talvea.',
+    },
   },
 
   decor: {
