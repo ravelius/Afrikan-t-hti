@@ -167,10 +167,16 @@ export class UI {
     if (pack.map.frame) return pack.map.frame;
 
     const pts = [];
-    const charWidth = 9.5; // karkea arvio nimikirjaimen leveydestä
+    // Karkea arvio nimikirjaimen leveydestä. Aloituskaupungit piirtyvät
+    // isommalla versaalifontilla (21px, kirjainväli 0.1em), joten niissä
+    // kirjain vie puolitoista kertaa tavallisen levyn — muuten esimerkiksi
+    // Aasian Tokio jäisi rajauksen ulkopuolelle ja leikkautuisi reunaan.
+    const CHAR_W = 9.5;
+    const START_CHAR_W = 15.2;
+    const STROKE = 2; // nimen vaalea reunusviiva levittää tekstiä hieman
     for (const c of board.cities) {
       pts.push([c.x - 34, c.y - 34], [c.x + 34, c.y + 34]);
-      const w = c.name.length * charWidth;
+      const w = c.name.length * (c.start ? START_CHAR_W : CHAR_W) + STROKE * 2;
       const anchor = c.la ?? 'middle';
       const lx = c.x + (c.lx ?? 0);
       const ly = c.y + (c.ly ?? -(c.start ? 28 : 19));
@@ -853,6 +859,9 @@ export class UI {
 
   render() {
     this.onChange?.(this.game);
+    // Aloituskartalla asettelu on kahdessa palstassa; pelin käynnistyttyä
+    // kartta täyttää koko ruudun ja paneelit kelluvat sen päällä.
+    document.body.dataset.mode = this.game.phase === 'pickstart' ? 'start' : 'play';
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
     this.drawTokens();
