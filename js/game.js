@@ -2,7 +2,7 @@
 
 import { FLIGHT_PRICE, buildBoard, findMoves, posKey, reachableCities } from './rules.js';
 import { createTokenPile } from './tokens.js';
-import { PACKS, packById, sourceList } from './pack.js';
+import { packById, sourceList } from './pack.js';
 
 export const START_MONEY = 300;
 export const SEA_FARE = 100; // laivamatkan hinta vuorolta
@@ -279,38 +279,6 @@ export class Game {
     this.lastPath = null;
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
     this.emit('flight', link.label, { icon: '🧭', sub: `−${FLIGHT_PRICE} puntaa` });
-    this.endTurn();
-    return { ok: true };
-  }
-
-  /**
-   * Maailmankartan lennot: vaelluksessa miltä tahansa lentokentältä voi
-   * lentää toisen laudan aloituskentälle lennon hinnalla.
-   */
-  worldDestinations() {
-    if (!this.roaming || this.phase !== 'action') return [];
-    const city = this.cityOf();
-    if (!city || !city.airport || this.player.money < FLIGHT_PRICE) return [];
-    return PACKS.filter((p) => p.id !== this.pack.id).map((p) => ({
-      pack: p.id,
-      label: p.boardLabel,
-      city: p.cities.find((c) => c.start).id,
-    }));
-  }
-
-  /** Lentää maailmankartalla toiselle laudalle. Vie koko vuoron. */
-  actionWorldFlight(packId) {
-    const dest = this.worldDestinations().find((d) => d.pack === packId);
-    if (!dest) return { ok: false, error: 'Sinne ei ole lentoa täältä' };
-    const p = this.player;
-    const pack = packById(dest.pack);
-    p.money -= FLIGHT_PRICE;
-    this.enterWorld(pack);
-    p.packId = pack.id;
-    p.pos = { type: 'city', city: dest.city };
-    this.lastPath = null;
-    this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla laudalle ${pack.boardLabel}.`);
-    this.emit('flight', `Lento: ${pack.boardLabel}`, { icon: '🌍', sub: `−${FLIGHT_PRICE} puntaa` });
     this.endTurn();
     return { ok: true };
   }

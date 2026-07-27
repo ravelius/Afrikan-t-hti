@@ -145,7 +145,6 @@ export const ISTANBUL = {
   placeFacts: ISTANBUL_FACTS,
 
   // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
-  worldPos: { x: 262, y: 42 },
   duels: [
     {
       q: 'Minä vuonna Konstantinopoli valloitettiin ja siitä tuli osmanien pääkaupunki?',

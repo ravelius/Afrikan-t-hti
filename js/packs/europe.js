@@ -241,7 +241,6 @@ export const EUROPE = {
   questions: EUROPE_QUESTIONS,
   placeFacts: EUROPE_FACTS,
 
-  worldPos: { x: 250, y: 40 },
   duels: [
     {
       q: 'Mikä näistä kaupungeista EI ole koskaan ollut valtion pääkaupunki?',

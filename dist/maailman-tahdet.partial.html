@@ -1324,16 +1324,6 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
 }
 
 /* Maailmankartta */
-#world-map { margin: 0.6rem 0; }
-.world-map-svg { width: 100%; display: block; }
-.world-paper { fill: #e9d7ae; stroke: #6d5335; stroke-width: 2; }
-.world-route { fill: none; stroke: #a5502f; stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
-.world-node .world-disc { fill: #f0e2bd; stroke: #6d5335; stroke-width: 2; }
-.world-node.here .world-disc { fill: #e8b23c; }
-.world-node:not(.here) { cursor: pointer; }
-.world-node:not(.here):hover .world-disc { fill: #f6ce7a; }
-.world-star { font-size: 14px; }
-.world-label { font-size: 12px; fill: #3d2c17; font-weight: 600; }
 
 </style>
 
@@ -1430,12 +1420,10 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
         kysymyksensä.</p>
       <p><b>Vaellus.</b> Yksin pelattaessa peli ei pääty: tähti on arvokas löytö
         (2000 p), ja porttikaupungeista (esim. Kairo tai Istanbul) pääsee jatkamaan
-        toiselle laudalle — myös kaupunkitasolle. Lentokentällä avautuu lisäksi
-        <b>maailmankartta</b>, josta voi lentää (300 p) suoraan toisen laudan
-        aloituskentälle. Kilpapelin voittaja voi voittoruudusta valita
+        toiselle laudalle — myös kaupunkitasolle. Kilpapelin voittaja voi voittoruudusta valita
         <i>Jatka vaeltamista</i>, jolloin sama peli jatkuu ilman voittoehtoa.</p>
-      <p><b>Kartta.</b> Karttaa voi raahata sormella tai hiirellä ja lähentää
-        nipistämällä tai rullalla. Kaksoisnapautus palauttaa koko laudan näkyviin.</p>
+      <p><b>Kartta.</b> Koko lauta näkyy aina kerralla, joten karttaa ei tarvitse
+        raahata eikä zoomata. Porttikaupungin tunnistaa katkoviivakehästä.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa: maitse, laivalla (100 p),
         lentäen (300 p) tai jää paikalleen kokeilemaan kaupungin kysymystä. Jos
         vaihtoehtoja ei ole — esimerkiksi sisämaassa tai kesken reittiä — vuoro alkaa
@@ -1527,18 +1515,6 @@ body[data-pack='istanbul'] .gem-topaz { fill: #3aaea6; }
       <button id="quiz-hint" class="lifeline" type="button" hidden>Vihje</button>
       <button id="quiz-5050" class="lifeline" type="button" hidden>50:50</button>
       <button id="quiz-continue" class="primary" type="button" hidden>Jatka</button>
-    </menu>
-   </div>
-  </dialog>
-
-  <!-- Maailmankartta -->
-  <dialog id="world-dialog" class="dialog">
-   <div class="dialog-card">
-    <h2>🌍 Maailmankartta</h2>
-    <p class="setup-tagline">Valitse lauta, jolle lennät (300 p).</p>
-    <div id="world-map"></div>
-    <menu>
-      <button id="world-close" class="primary" type="button">Sulje</button>
     </menu>
    </div>
   </dialog>
@@ -2095,7 +2071,6 @@ const MAAILMA = {
   placeFacts: MAAILMA_FACTS,
 
   // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
-  worldPos: { x: 60, y: 40 },
   duels: [
     {
       q: 'Mikä näistä maista on väkiluvultaan suurin?',
@@ -3405,7 +3380,6 @@ const AFRICA = {
   placeFacts: AFRICA_FACTS,
 
   // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
-  worldPos: { x: 150, y: 150 },
   duels: [
     {
       q: 'Mikä näistä joista EI virtaa Afrikassa?',
@@ -5794,7 +5768,6 @@ const EUROPE = {
   questions: EUROPE_QUESTIONS,
   placeFacts: EUROPE_FACTS,
 
-  worldPos: { x: 250, y: 40 },
   duels: [
     {
       q: 'Mikä näistä kaupungeista EI ole koskaan ollut valtion pääkaupunki?',
@@ -6062,7 +6035,6 @@ const MIDDLE_EAST = {
   placeFacts: MIDDLEEAST_FACTS,
 
   // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
-  worldPos: { x: 250, y: 85 },
   duels: [
     {
       q: 'Mikä näistä kaupungeista EI ole pääkaupunki?',
@@ -7477,7 +7449,6 @@ const ASIA = {
   questions: ASIA_QUESTIONS,
   placeFacts: ASIA_FACTS,
 
-  worldPos: { x: 268, y: 52 },
   duels: [
     {
       q: 'Mikä on maailman korkein vuori?',
@@ -8704,7 +8675,6 @@ const OCEANIA = {
   questions: OCEANIA_QUESTIONS,
   placeFacts: OCEANIA_FACTS,
 
-  worldPos: { x: 300, y: 152 },
   duels: [
     {
       q: 'Mikä on maailman suurin koralliriutta?',
@@ -10082,7 +10052,6 @@ const NORTHAMERICA = {
   questions: NORTHAMERICA_QUESTIONS,
   placeFacts: NORTHAMERICA_FACTS,
 
-  worldPos: { x: 74, y: 46 },
   duels: [
     {
       q: 'Mikä on Pohjois-Amerikan korkein vuori?',
@@ -11509,7 +11478,6 @@ const SOUTHAMERICA = {
   questions: SOUTHAMERICA_QUESTIONS,
   placeFacts: SOUTHAMERICA_FACTS,
 
-  worldPos: { x: 118, y: 128 },
   duels: [
     {
       q: 'Mikä on maailman korkeimmalla sijaitseva pääkaupunki?',
@@ -12299,7 +12267,6 @@ const ISTANBUL = {
   placeFacts: ISTANBUL_FACTS,
 
   // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
-  worldPos: { x: 262, y: 42 },
   duels: [
     {
       q: 'Minä vuonna Konstantinopoli valloitettiin ja siitä tuli osmanien pääkaupunki?',
@@ -14024,38 +13991,6 @@ class Game {
     return { ok: true };
   }
 
-  /**
-   * Maailmankartan lennot: vaelluksessa miltä tahansa lentokentältä voi
-   * lentää toisen laudan aloituskentälle lennon hinnalla.
-   */
-  worldDestinations() {
-    if (!this.roaming || this.phase !== 'action') return [];
-    const city = this.cityOf();
-    if (!city || !city.airport || this.player.money < FLIGHT_PRICE) return [];
-    return PACKS.filter((p) => p.id !== this.pack.id).map((p) => ({
-      pack: p.id,
-      label: p.boardLabel,
-      city: p.cities.find((c) => c.start).id,
-    }));
-  }
-
-  /** Lentää maailmankartalla toiselle laudalle. Vie koko vuoron. */
-  actionWorldFlight(packId) {
-    const dest = this.worldDestinations().find((d) => d.pack === packId);
-    if (!dest) return { ok: false, error: 'Sinne ei ole lentoa täältä' };
-    const p = this.player;
-    const pack = packById(dest.pack);
-    p.money -= FLIGHT_PRICE;
-    this.enterWorld(pack);
-    p.packId = pack.id;
-    p.pos = { type: 'city', city: dest.city };
-    this.lastPath = null;
-    this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla laudalle ${pack.boardLabel}.`);
-    this.emit('flight', `Lento: ${pack.boardLabel}`, { icon: '🌍', sub: `−${FLIGHT_PRICE} puntaa` });
-    this.endTurn();
-    return { ok: true };
-  }
-
   /** Voittoruudusta voi jatkaa vaellusta: peli ei enää pääty. */
   continueRoaming() {
     if (this.phase !== 'over' || !this.winner) return { ok: false, error: 'Peli on kesken' };
@@ -15527,65 +15462,6 @@ class UI {
       });
       this.actionsEl.appendChild(gwBtn);
     }
-
-    // Lentokentältä avautuu maailmankartta.
-    if (game.worldDestinations().length) {
-      const worldBtn = html('button', '', `🌍 Maailmankartta (${FLIGHT_PRICE} p)`);
-      worldBtn.addEventListener('click', () => this.openWorldMap());
-      this.actionsEl.appendChild(worldBtn);
-    }
-  }
-
-  /** Maailmankartta: laudat tähtinä, joiden välillä lennetään. */
-  openWorldMap() {
-    const { game } = this;
-    const dialog = document.getElementById('world-dialog');
-    const holder = document.getElementById('world-map');
-    holder.textContent = '';
-
-    const svg = el('svg', { viewBox: '0 0 360 220', class: 'world-map-svg' });
-    el('rect', { x: 4, y: 4, width: 352, height: 212, rx: 10, class: 'world-paper' }, svg);
-
-    const current = game.pack;
-    const destinations = game.worldDestinations();
-
-    // Lentoreitit nykyiseltä laudalta muille.
-    for (const dest of destinations) {
-      const from = current.worldPos;
-      const to = this.packById(dest.pack).worldPos;
-      const mx = (from.x + to.x) / 2 + (to.y - from.y) * 0.2;
-      const my = (from.y + to.y) / 2 - (to.x - from.x) * 0.2;
-      el('path', {
-        d: `M${from.x},${from.y} Q${mx},${my} ${to.x},${to.y}`,
-        class: 'world-route',
-      }, svg);
-    }
-
-    // Laudat tähtinä; nykyinen kullanvärisenä.
-    for (const pack of [current, ...destinations.map((d) => this.packById(d.pack))]) {
-      const here = pack.id === current.id;
-      const node = el('g', {
-        transform: `translate(${pack.worldPos.x},${pack.worldPos.y})`,
-        class: here ? 'world-node here' : 'world-node',
-      }, svg);
-      el('circle', { r: 15, class: 'world-disc' }, node);
-      el('text', { y: 5, 'text-anchor': 'middle', class: 'world-star' }, node).textContent = here ? '📍' : '★';
-      el('text', { y: 30, 'text-anchor': 'middle', class: 'world-label' }, node).textContent = pack.boardLabel;
-      if (!here) {
-        node.addEventListener('click', () => {
-          dialog.close();
-          sfx.play('flight');
-          this.doAction(() => game.actionWorldFlight(pack.id));
-        });
-      }
-    }
-
-    holder.appendChild(svg);
-    dialog.showModal();
-  }
-
-  packById(id) {
-    return PACKS.find((p) => p.id === id);
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
@@ -16311,7 +16187,7 @@ class UI {
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.18';
+const APP_VERSION = '2026-07-26.19';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -16518,9 +16394,6 @@ document.getElementById('newgame-btn').addEventListener('click', openSetup);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
 document.getElementById('winner-close').addEventListener('click', openSetup);
-document.getElementById('world-close').addEventListener('click', () => {
-  document.getElementById('world-dialog').close();
-});
 
 // Palvelutyöntekijä tekee pelistä asennettavan ja offline-toimivan.
 // Ohitetaan hiljaisesti, jos sivu on avattu file://-osoitteesta tai hiekkalaatikossa.

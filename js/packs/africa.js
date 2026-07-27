@@ -198,7 +198,6 @@ export const AFRICA = {
   placeFacts: AFRICA_FACTS,
 
   // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
-  worldPos: { x: 150, y: 150 },
   duels: [
     {
       q: 'Mikä näistä joista EI virtaa Afrikassa?',

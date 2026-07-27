@@ -185,7 +185,6 @@ for (const pack of PACKS) {
       );
       assert.ok(q.fact && q.fact.length > 0, `"${q.q}": selitys puuttuu`);
     }
-    assert.ok(pack.worldPos, 'laudalta puuttuu paikka maailmankartalta');
   });
 
   test(`${pack.id}: porttikaupunkien linkit osoittavat oikeisiin paikkoihin`, () => {
@@ -609,28 +608,33 @@ test('rosvon voi ohittaa kolmella hevosenkengällä', () => {
   assert.equal(toinen.actionDuelBypass().ok, false);
 });
 
-test('vaellus: maailmankartalta voi lentää toiselle laudalle', () => {
-  const game = new Game({
-    players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
-    rng: mulberry32(67),
-  });
-  const p = game.player;
+test('portit yhdistävät kaikki laudat toisiinsa', () => {
+  // Porttikaupungit ovat ainoa tapa siirtyä laudalta toiselle, joten yhdenkään
+  // laudan ei saa jäädä saarekkeeksi kun uusia lautoja lisätään.
+  const linked = new Map(PACKS.map((p) => [p.id, new Set()]));
+  for (const pack of PACKS) {
+    for (const city of pack.cities) {
+      for (const link of city.links ?? []) {
+        linked.get(pack.id).add(link.pack);
+        linked.get(link.pack).add(pack.id);
+      }
+    }
+  }
 
-  // Tanger on lentokenttä: maailmankartta listaa muut laudat.
-  game.phase = 'action';
-  const dests = game.worldDestinations();
-  assert.equal(dests.length, PACKS.length - 1, 'kaikki muut laudat paitsi oma');
-
-  p.money = 300;
-  assert.ok(game.actionWorldFlight('istanbul').ok);
-  assert.equal(p.packId, 'istanbul');
-  assert.equal(p.money, 0, 'lento maksoi 300');
-  assert.equal(p.pos.city, 'lentoasema', 'saavutaan aloituskentälle');
-
-  // Ilman rahaa maailmankartta ei aukea.
-  game.current = 0;
-  game.phase = 'action';
-  assert.deepEqual(game.worldDestinations(), []);
+  const seen = new Set([PACKS[0].id]);
+  const queue = [PACKS[0].id];
+  while (queue.length) {
+    for (const next of linked.get(queue.pop())) {
+      if (seen.has(next)) continue;
+      seen.add(next);
+      queue.push(next);
+    }
+  }
+  assert.deepEqual(
+    PACKS.map((p) => p.id).filter((id) => !seen.has(id)),
+    [],
+    'laudalle ei pääse porttikaupunkien kautta',
+  );
 });
 
 test('vaellus: yksin pelattaessa peli ei pääty ja tähti on arvokas löytö', () => {

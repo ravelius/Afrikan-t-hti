@@ -256,7 +256,6 @@ export const SOUTHAMERICA = {
   questions: SOUTHAMERICA_QUESTIONS,
   placeFacts: SOUTHAMERICA_FACTS,
 
-  worldPos: { x: 118, y: 128 },
   duels: [
     {
       q: 'Mikä on maailman korkeimmalla sijaitseva pääkaupunki?',

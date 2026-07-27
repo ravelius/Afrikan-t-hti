@@ -250,7 +250,6 @@ export const ASIA = {
   questions: ASIA_QUESTIONS,
   placeFacts: ASIA_FACTS,
 
-  worldPos: { x: 268, y: 52 },
   duels: [
     {
       q: 'Mikä on maailman korkein vuori?',

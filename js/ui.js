@@ -15,7 +15,7 @@ import {
   DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HARD_BONUS,
   HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
-import { PACKS, factSource, factText, isSourceUrl, sourceLabel } from './pack.js';
+import { factSource, factText, isSourceUrl, sourceLabel } from './pack.js';
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -613,65 +613,6 @@ export class UI {
       });
       this.actionsEl.appendChild(gwBtn);
     }
-
-    // Lentokentältä avautuu maailmankartta.
-    if (game.worldDestinations().length) {
-      const worldBtn = html('button', '', `🌍 Maailmankartta (${FLIGHT_PRICE} p)`);
-      worldBtn.addEventListener('click', () => this.openWorldMap());
-      this.actionsEl.appendChild(worldBtn);
-    }
-  }
-
-  /** Maailmankartta: laudat tähtinä, joiden välillä lennetään. */
-  openWorldMap() {
-    const { game } = this;
-    const dialog = document.getElementById('world-dialog');
-    const holder = document.getElementById('world-map');
-    holder.textContent = '';
-
-    const svg = el('svg', { viewBox: '0 0 360 220', class: 'world-map-svg' });
-    el('rect', { x: 4, y: 4, width: 352, height: 212, rx: 10, class: 'world-paper' }, svg);
-
-    const current = game.pack;
-    const destinations = game.worldDestinations();
-
-    // Lentoreitit nykyiseltä laudalta muille.
-    for (const dest of destinations) {
-      const from = current.worldPos;
-      const to = this.packById(dest.pack).worldPos;
-      const mx = (from.x + to.x) / 2 + (to.y - from.y) * 0.2;
-      const my = (from.y + to.y) / 2 - (to.x - from.x) * 0.2;
-      el('path', {
-        d: `M${from.x},${from.y} Q${mx},${my} ${to.x},${to.y}`,
-        class: 'world-route',
-      }, svg);
-    }
-
-    // Laudat tähtinä; nykyinen kullanvärisenä.
-    for (const pack of [current, ...destinations.map((d) => this.packById(d.pack))]) {
-      const here = pack.id === current.id;
-      const node = el('g', {
-        transform: `translate(${pack.worldPos.x},${pack.worldPos.y})`,
-        class: here ? 'world-node here' : 'world-node',
-      }, svg);
-      el('circle', { r: 15, class: 'world-disc' }, node);
-      el('text', { y: 5, 'text-anchor': 'middle', class: 'world-star' }, node).textContent = here ? '📍' : '★';
-      el('text', { y: 30, 'text-anchor': 'middle', class: 'world-label' }, node).textContent = pack.boardLabel;
-      if (!here) {
-        node.addEventListener('click', () => {
-          dialog.close();
-          sfx.play('flight');
-          this.doAction(() => game.actionWorldFlight(pack.id));
-        });
-      }
-    }
-
-    holder.appendChild(svg);
-    dialog.showModal();
-  }
-
-  packById(id) {
-    return PACKS.find((p) => p.id === id);
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */

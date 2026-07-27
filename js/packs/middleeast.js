@@ -198,7 +198,6 @@ export const MIDDLE_EAST = {
   placeFacts: MIDDLEEAST_FACTS,
 
   // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
-  worldPos: { x: 250, y: 85 },
   duels: [
     {
       q: 'Mikä näistä kaupungeista EI ole pääkaupunki?',

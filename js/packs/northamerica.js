@@ -247,7 +247,6 @@ export const NORTHAMERICA = {
   questions: NORTHAMERICA_QUESTIONS,
   placeFacts: NORTHAMERICA_FACTS,
 
-  worldPos: { x: 74, y: 46 },
   duels: [
     {
       q: 'Mikä on Pohjois-Amerikan korkein vuori?',

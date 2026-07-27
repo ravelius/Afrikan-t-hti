@@ -188,7 +188,6 @@ export const MAAILMA = {
   placeFacts: MAAILMA_FACTS,
 
   // Sijainti maailmankartalla ja rosvon kaksintaistelukysymykset.
-  worldPos: { x: 60, y: 40 },
   duels: [
     {
       q: 'Mikä näistä maista on väkiluvultaan suurin?',

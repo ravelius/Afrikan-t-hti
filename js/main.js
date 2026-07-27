@@ -7,7 +7,7 @@ import { PACKS, packById } from './pack.js';
 
 const COLORS = ['#d94f3d', '#3d7dd9', '#4caf50', '#e6b422'];
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-26.18';
+const APP_VERSION = '2026-07-26.19';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');
@@ -214,9 +214,6 @@ document.getElementById('newgame-btn').addEventListener('click', openSetup);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
 document.getElementById('winner-close').addEventListener('click', openSetup);
-document.getElementById('world-close').addEventListener('click', () => {
-  document.getElementById('world-dialog').close();
-});
 
 // Palvelutyöntekijä tekee pelistä asennettavan ja offline-toimivan.
 // Ohitetaan hiljaisesti, jos sivu on avattu file://-osoitteesta tai hiekkalaatikossa.

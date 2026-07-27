@@ -231,7 +231,6 @@ export const OCEANIA = {
   questions: OCEANIA_QUESTIONS,
   placeFacts: OCEANIA_FACTS,
 
-  worldPos: { x: 300, y: 152 },
   duels: [
     {
       q: 'Mikä on maailman suurin koralliriutta?',
