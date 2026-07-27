@@ -109,16 +109,13 @@ export class Game {
     this.turnCount = 1;
     this.log = [];
     this.events = []; // näytölle animoitavat tapahtumat
-    this.say(null, pack.texts.intro);
-    if (this.roaming) {
-      this.say(null, 'Vaellus: peli ei pääty — kerää löytöjä ja jatka porttikaupungeista uusille laudoille.');
-    }
+    // Avaus on pelkkää kerrontaa: sääntöasiat ovat Säännöt-dialogissa eivätkä
+    // lokirivejä. Laudan intro-teksti jää pakkoihin muuta käyttöä varten.
     // Vaellus alkaa lähtöpisteen valinnalla, jos sitä ei ole annettu valmiiksi.
     // Matkaaja seisoo Lontoossa (laudan ensimmäisessä aloituskaupungissa)
     // lentolippu kädessään; ensimmäinen kohde valitaan kartalta ilmaiseksi.
     if (this.roaming && this.players.some((p) => !p.start)) {
       this.phase = 'pickstart';
-      this.say(null, `Matka alkaa: ${this.cityOf().name} odottaa lähtijää. Valitse ensimmäinen kohde kartalta — lippu on jo maksettu.`);
     } else {
       this.beginTurn();
     }

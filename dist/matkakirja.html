@@ -734,6 +734,38 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .fare { fill: var(--sea-ink); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
 
+/*
+ * Avausteksti kartan alapuolisessa tyhjässä pergamentissa. Kartta nousee
+ * ruudun yläreunaan (boardBounds jatkaa laatikkoa alaspäin), joten pelaaja
+ * näkee kohteet ja voi napauttaa niitä heti luettuaan tekstin.
+ */
+.intro {
+  position: absolute;
+  left: 50%;
+  /* Tilarivi ("Minne ensin?") kelluu aivan alalaidassa, joten teksti
+     asettuu sen yläpuolelle. */
+  bottom: 3.4rem;
+  transform: translateX(-50%);
+  width: min(560px, 84%);
+  text-align: center;
+  pointer-events: none; /* kartta jää napautettavaksi tekstin takaa */
+  z-index: 3;
+}
+
+.intro-text {
+  margin: 0;
+  color: var(--map-ink);
+  font-size: clamp(0.86rem, 1.5vw, 1.02rem);
+  line-height: 1.6;
+  white-space: pre-line; /* omistajan teksti on kolmena kappaleena */
+  text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9), 0 0 6px rgba(247, 237, 216, 0.75);
+}
+
+@media (max-width: 700px) {
+  .intro { bottom: 3rem; width: 90%; }
+  .intro-text { font-size: 0.82rem; line-height: 1.5; }
+}
+
 /* Pallonpuoliskokartan kehykset ja asteverkko. */
 .hemi-ring {
   fill: none;
@@ -1715,6 +1747,13 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         <svg id="board" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"
              role="img" aria-label="Afrikan aarrekartta"></svg>
         <div id="board-hint" class="board-hint"></div>
+        <!--
+          Aloitusteksti kirjoittuu kartan alapuolelle jäävään tyhjään
+          pergamenttiin, jotta kohteen voi napauttaa heti luettuaan.
+        -->
+        <section id="intro" class="intro" hidden>
+          <p id="intro-text" class="intro-text"></p>
+        </section>
       </section>
 
       <aside class="rail">
@@ -1741,38 +1780,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   </div>
 
   <!-- Aloitusruutu -->
-
-  <!-- Matkan avaus: juoni kerrotaan kerran uuden pelin alussa -->
-  <dialog id="intro-dialog" class="dialog">
-   <div class="dialog-card">
-    <h2>Perintö</h2>
-    <div class="rules-text">
-      <p>Sukukartanon vintiltä löytyi matkalaukku. Sen sisällä oli vuoden 1872
-        maailmankartta, kukkarollinen puntia, vihreä passi ja paksu, kulunut
-        päiväkirja vuodelta 1873.</p>
-      <p>Päiväkirja on <b>isoisän</b>. Hän kiersi maailman kahdeksassakymmenessä
-        päivässä ja merkitsi muistiin kaiken näkemänsä — joet, vuoret, satamat,
-        basaarien tuoksut. Myös sen, mihin hän ei ehtinyt. Niitä sivuja on
-        yllättävän monta.</p>
-      <p>Sinä olet <b>nuori herra Fogg</b>, ja sinä lähdet katsomaan, mikä
-        pitää vielä paikkansa. Osa isoisän maailmasta on kadonnut: rajat ovat
-        toisaalla, valtakunnat hajonneet, punnat museokappaleita. Osa ei ole
-        muuttunut lainkaan — ja juuri niissä kohdin vanha herra osoittautuu
-        hämmentävän usein oikeaan osuneeksi.</p>
-      <p>Jokaisella laudalla on kätketty <b>pääaarre</b>. Aarteita ei osteta
-        rahalla vaan avataan tiedolla: kaupungissa esitetään kysymys, ja oikea
-        vastaus paljastaa mitä maan alla on. Isoisän päiväkirja vihjaa
-        harvakseltaan, mistä suunnasta kannattaa etsiä — muttei koskaan nimeä
-        kaupunkia.</p>
-      <p>Matka ei pääty. Kerää löytöjä, leimoja passiin ja kokemusta niin
-        kauan kuin huvittaa. Ensimmäinen lippu on jo maksettu — napauta
-        maailmankartalta kaupunkia, niin olet siellä.</p>
-    </div>
-    <form method="dialog" class="dialog-actions">
-      <button class="primary" value="start">Lähde matkaan</button>
-    </form>
-   </div>
-  </dialog>
 
   <!-- Saapuminen aarrekaupunkiin -->
   <dialog id="arrival-dialog" class="dialog">
@@ -24222,16 +24229,13 @@ class Game {
     this.turnCount = 1;
     this.log = [];
     this.events = []; // näytölle animoitavat tapahtumat
-    this.say(null, pack.texts.intro);
-    if (this.roaming) {
-      this.say(null, 'Vaellus: peli ei pääty — kerää löytöjä ja jatka porttikaupungeista uusille laudoille.');
-    }
+    // Avaus on pelkkää kerrontaa: sääntöasiat ovat Säännöt-dialogissa eivätkä
+    // lokirivejä. Laudan intro-teksti jää pakkoihin muuta käyttöä varten.
     // Vaellus alkaa lähtöpisteen valinnalla, jos sitä ei ole annettu valmiiksi.
     // Matkaaja seisoo Lontoossa (laudan ensimmäisessä aloituskaupungissa)
     // lentolippu kädessään; ensimmäinen kohde valitaan kartalta ilmaiseksi.
     if (this.roaming && this.players.some((p) => !p.start)) {
       this.phase = 'pickstart';
-      this.say(null, `Matka alkaa: ${this.cityOf().name} odottaa lähtijää. Valitse ensimmäinen kohde kartalta — lippu on jo maksettu.`);
     } else {
       this.beginTurn();
     }
@@ -25548,6 +25552,14 @@ const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
+// Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
+const INTRO_SPACE = 0.34;
+// Omistajan päättämä avausteksti. ÄLÄ muokkaa ilman omistajan lupaa
+// (docs/tyolista-opukselle.md, paketti 3).
+const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, '
+  + 'kukkarollinen puntia ja päiväkirja, joka päättyy kesken lauseen.\n\n'
+  + 'Ostin lipun samana iltana.\n\n'
+  + 'Jonkun on kirjoitettava se loppuun.';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -25592,6 +25604,9 @@ class UI {
     this.passportGrid = document.getElementById('passport-grid');
     this.passportCount = document.getElementById('passport-count');
     this.passportFinds = document.getElementById('passport-finds');
+
+    this.introEl = document.getElementById('intro');
+    this.introText = document.getElementById('intro-text');
 
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
@@ -25692,7 +25707,9 @@ class UI {
    */
   boardBounds() {
     const { board, pack } = this.game;
-    if (pack.map.frame) return pack.map.frame;
+    // Valmiiksi rajattu lauta (esim. Maailma) käyttää omaa kehystään.
+    // Kopio, koska aloitusnäkymä kasvattaa laatikkoa eikä pakkaa saa muuttaa.
+    if (pack.map.frame) return this.withIntroSpace({ ...pack.map.frame });
 
     const pts = [];
     // Karkea arvio nimikirjaimen leveydestä. Aloituskaupungit piirtyvät
@@ -25740,7 +25757,21 @@ class UI {
       if (y > maxY) maxY = y;
     }
     const pad = 12;
-    return { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
+    const box = { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
+    // Aloitusnäkymässä pergamenttia jatketaan kartan alapuolelle, jotta
+    // avausteksti mahtuu siihen ja lauta nousee ruudun yläreunaan. Näkymä
+    // keskittää laatikon, joten alaosan kasvattaminen nostaa karttaa ylös.
+    return this.withIntroSpace(box);
+  }
+
+  /**
+   * Aloitusnäkymässä pergamenttia jatketaan kartan alapuolelle avaustekstiä
+   * varten. Näkymä kiinnitetään yläreunaan (fitViewBox), joten kasvatus
+   * nostaa laudan ruudun ylälaitaan ja jättää tekstille tyhjän alaosan.
+   */
+  withIntroSpace(box) {
+    if (this.game.phase !== 'pickstart') return box;
+    return { ...box, h: box.h * (1 + INTRO_SPACE) };
   }
 
   destroy() {
@@ -25768,9 +25799,14 @@ class UI {
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
+    // Aloitusnäkymässä lauta kiinnitetään yläreunaan: alapuolelle jäävä
+    // pergamentti on avaustekstiä varten, eikä sitä saa jakaa ylä- ja
+    // alareunan kesken. Muulloin sisältö keskitetään kuten ennen.
+    const alkuun = this.game.phase === 'pickstart';
+    const vy = alkuun ? box.y : box.y + box.h / 2 - vh / 2;
     this.svg.setAttribute(
       'viewBox',
-      `${box.x + box.w / 2 - vw / 2} ${box.y + box.h / 2 - vh / 2} ${vw} ${vh}`,
+      `${box.x + box.w / 2 - vw / 2} ${vy} ${vw} ${vh}`,
     );
     this.placeFactCard(w, h);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
@@ -26168,9 +26204,8 @@ class UI {
     // Lähtöpisteen valinta tehdään kartalta yhdellä napautuksella, joten
     // toimintopaneelissa on vain ohje.
     if (game.phase === 'pickstart') {
-      const here = game.cityOf();
-      this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — napauta kohdetta kartalta.`;
-      this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
+      this.turnStatus.textContent = 'Minne ensin?';
+      this.hint.textContent = '';
       return;
     }
 
@@ -26489,6 +26524,7 @@ class UI {
     // Saapumiskortti kuuluu vain offer-vaiheeseen: botin vuorolla ja muissa
     // vaiheissa se suljetaan, jottei se jää roikkumaan kartan päälle.
     if (this.game.phase !== 'offer' || this.game.player.isBot) this.closeArrival();
+    this.renderIntro();
     this.stampPassport();
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
@@ -26553,6 +26589,24 @@ class UI {
   closeArrival() {
     this.arrivalShownFor = null;
     if (this.arrivalDialog.open) this.arrivalDialog.close();
+  }
+
+  /**
+   * Avausteksti kirjoittuu kartan alapuoliseen tyhjään pergamenttiin.
+   * Teksti on omistajan lukkoon lyömä eikä sitä muokata täällä; se naksuu
+   * esiin kirjoituskoneen tapaan ja väistyy heti kun kohde on valittu.
+   */
+  renderIntro() {
+    const nakyy = this.game.phase === 'pickstart';
+    this.introEl.hidden = !nakyy;
+    if (!nakyy) {
+      this.introShown = false;
+      this.introText.textContent = '';
+      return;
+    }
+    if (this.introShown) return;
+    this.introShown = true;
+    this.typeText(this.introText, INTRO_TEXT, 'intro');
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
@@ -27265,7 +27319,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.2';
+const APP_VERSION = '2026-07-28.3';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -27328,20 +27382,10 @@ function attach(game) {
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
 }
 
-/**
- * Matkan juoni kerrotaan kerran uuden pelin alussa. Kesken jäänyttä peliä
- * jatkettaessa tarinaa ei toisteta — sen voi lukea uudelleen Säännöistä.
- */
-function showIntro() {
-  const dialog = document.getElementById('intro-dialog');
-  if (dialog && !dialog.open) dialog.showModal();
-}
-
 function startGame() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
   attach(new Game({ players: [newPlayer()], pack: packById('maailma') }));
-  showIntro();
 }
 
 // --- äänet ------------------------------------------------------------------

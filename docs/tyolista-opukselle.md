@@ -18,15 +18,35 @@ lisäohjeita:
 
 ## TILANNE
 
+Kaikki alkuperäiset paketit ovat valmiit. Kuittaukset jäivät matkan
+varrella tekemättä, joten ne on koottu tähän jälkikäteen PR-numeroiden
+perusteella (27.–28.7.2026).
+
 - Paketti 1 (pikakorjaukset): ✅ PR #16
 - Paketti 2 (kartta koko ruutuun): ✅ PR #18
-- Paketti 3 (kaksivaiheinen matkavalinta): tekemättä
-- Paketti 4 (kaksi ääntä): tekemättä
-- Paketti 5 (sisältö, kaista B): Maailma ⬜ Afrikka ⬜ Eurooppa ⬜
-  Suomi ⬜ Istanbul ⬜ Aasia ⬜ Oseania ⬜ P-Amerikka ⬜ E-Amerikka ⬜
-  Lähi-itä ⬜
-- Paketti 6 (pisteet ja passi): tekemättä
-- Paketti 7 (nimi → Matkakirja): tekemättä
+- Paketti 3 (kaksivaiheinen matkavalinta): ✅ PR #20
+  - aloitusteksti (omistajan päättämä): ✅ PR #47
+- Paketti 4 (kaksi ääntä): ✅ PR #21
+- Paketti 5 (sisältö, kaista B): Maailma ✅ Afrikka ✅ Eurooppa ✅ (#28, #29)
+  Suomi ✅ (#30) Istanbul ✅ (#31) Aasia ✅ Oseania ✅ (#34)
+  P-Amerikka ✅ (#35) E-Amerikka ✅ (#37) Lähi-itä ✅ (#41)
+- Paketti 6 (pisteet ja passi): ✅ PR #24
+- Paketti 7 (nimi → Matkakirja): ✅ PR #25
+
+Pakettien jälkeen tehty omistajan toivelistan mukaan:
+
+- Tanger maailmankartalle ja Afrikan ympäri purjehdittava reitti: ✅ #38
+- Kevyempi käyttöliittymä (paneeli, äänet, ikonit, päiväkirja merelle): ✅ #39
+- Aloitustarina ja saapumiskortti: ✅ #40
+- Taustalaatikot pois kartan päältä: ✅ #44
+- Maailmankartta kahtena pallonpuoliskona + suora hyppy mantereelle: ✅ #45
+
+## Seuraavaksi (ei vielä sovittu)
+
+- Tyynellämerellä ei ole laivareittejä: Los Angelesista pääsee vain maitse.
+  Reitti kiertäisi päivämäärärajan yli, mikä vaatisi tuen reitille, joka
+  jatkuu kartan reunan yli. Odottaa omistajan päätöstä.
+- Yksittäiset maat mantereiden jälkeen (Suomen mallin mukaan).
 
 Tämä on omistajan ja suunnittelusession sopima työlista. Tee työpaketit
 järjestyksessä; jokainen paketti on oma commit/PR. Jokaisen paketin jälkeen:
