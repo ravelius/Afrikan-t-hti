@@ -28,6 +28,26 @@ export const SUOMI_QUESTIONS = {
       fact: 'Palo oli Pohjoismaiden suurin kaupunkipalo. Sen jälkeen yliopisto siirrettiin Helsinkiin.',
       hint: 'Samalla vuosikymmenellä Suomi oli juuri siirtynyt Venäjän vallan alle.',
     },
+    {
+      q: 'Mikä asema Turulla oli Suomessa 1800-luvun alkuun asti?',
+      options: [
+        'maan tärkein kaupunki ja hallinnon keskus',
+        'pieni kalastajakylä',
+        'maan pohjoisin kaupunki',
+        'kaivoskaupunki',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Turku oli Ruotsin ajan Suomessa suurin kaupunki ja hallinnon keskus. Pääkaupungiksi tuli Helsinki 1812, ja yliopisto siirtyi sinne suurpalon jälkeen.',
+      hint: 'Asema siirtyi Helsingille 1800-luvun alussa.',
+    },
+    {
+      q: 'Mikä keskiajalta periytyvä perinne alkaa Turussa jouluaattona?',
+      options: ['joulurauhan julistus', 'uudenvuoden ilotulitus', 'vappumarssi', 'juhannuskokko'],
+      correct: 0,
+      fact: 'Joulurauha julistetaan Vanhalla Suurtorilla, ja se luetaan radiossa ja televisiossa jouluaattona kello 12. Perinne on katkennut vain harvoina vuosina.',
+      hint: 'Perinne toistuu jouluaattona tasan kello 12.',
+    },
   ],
 
   maarianhamina: [
@@ -64,6 +84,31 @@ export const SUOMI_QUESTIONS = {
       fact: 'Demilitarisointi alkoi Krimin sodan rauhasta 1856 ja vahvistettiin 1921 — saaret ovat aseeton alue.',
       hint: 'Ratkaisu syntyi 1800-luvun suurvaltasodan jälkeen.',
     },
+    {
+      q: 'Missä Maarianhamina sijaitsee?',
+      options: [
+        'Ahvenanmaan saaristossa',
+        'Lapin tuntureilla',
+        'Saimaan rannalla',
+        'Pohjanmaan sisämaassa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Ahvenanmaan maakunnan keskus. Saaristossa on yli 6 000 saarta ja luotoa, ja mantereelle kulkee lautta ja lentokone.',
+      hint: 'Paikka on saarilla Suomen ja Ruotsin välissä.',
+    },
+    {
+      q: 'Mikä museolaiva on Maarianhaminan tunnetuin nähtävyys?',
+      options: [
+        'nelimastoinen purjelaiva Pommern',
+        'jäänmurtaja Sampo',
+        'sotalaiva Vasa',
+        'höyrylaiva Ukkopekka',
+      ],
+      correct: 0,
+      fact: 'Laiva kuljetti viljaa Australiasta Eurooppaan 1900-luvun alussa. Siihen ei koskaan asennettu moottoria, ja se on säilytetty museona satamassa.',
+      hint: 'Laiva purjehti viljalasteja Australiasta Eurooppaan.',
+    },
   ],
 
   tampere: [
@@ -94,6 +139,21 @@ export const SUOMI_QUESTIONS = {
       fact: 'Tampereen kauppahalli on Pohjoismaiden suurin, ja sen tunnetuin herkku syödään paikan päällä.',
       hint: 'Nimessä on väri ja ruokalaji.',
     },
+    {
+      q: 'Kuinka suuri korkeusero Tammerkoskessa on kahden järven välillä?',
+      options: ['noin 18 metriä', 'noin kaksi metriä', 'noin 80 metriä', 'noin 200 metriä'],
+      correct: 0,
+      level: 3,
+      fact: 'Näsijärvi on tuon verran Pyhäjärveä ylempänä. Pudotus pyöritti aikoinaan tehtaita ja tuottaa yhä sähköä kolmessa voimalaitoksessa keskellä kaupunkia.',
+      hint: 'Ero on suurempi kuin kerrostalo mutta pienempi kuin sadan metrin torni.',
+    },
+    {
+      q: 'Mikä maailman ainoa museo toimii Tampereella?',
+      options: ['Muumimuseo', 'sarjakuvamuseo', 'peikkomuseo', 'nukketeatterimuseo'],
+      correct: 0,
+      fact: 'Museo on maailman ainoa Tove Janssonin Muumeille omistettu museo. Kokoelmassa on alkuperäisiä kuvituksia ja tarkkoja pienoismalleja.',
+      hint: 'Museo perustuu Tove Janssonin kirjojen hahmoihin.',
+    },
   ],
 
   pori: [
@@ -111,6 +171,34 @@ export const SUOMI_QUESTIONS = {
       correct: 0,
       fact: 'Kilometrien pituiset dyynit tekevät rannasta Pohjoismaiden suurimpia — siellä myös lainelautaillaan.',
       hint: 'Nimi alkaa aakkosten harvinaisimmalla kirjaimella.',
+    },
+    {
+      q: 'Minkä joen suulla Pori sijaitsee?',
+      options: ['Kokemäenjoen', 'Aurajoen', 'Oulujoen', 'Kymijoen'],
+      correct: 0,
+      level: 1,
+      fact: 'Joki tulee Pirkanmaalta ja laskee Selkämereen Porin kohdalla. Sen suistoon on kasvanut laaja ruovikko- ja niittyalue.',
+      hint: 'Joki tulee Pirkanmaalta ja laskee Selkämereen.',
+    },
+    {
+      q: 'Mikä on Yyterin rannan erityispiirre?',
+      options: [
+        'pitkä hiekkaranta ja dyynit',
+        'jyrkät kalliorannat',
+        'mangrovemetsä',
+        'kivinen sorapohja',
+      ],
+      correct: 0,
+      fact: 'Hiekkaranta on kilometrien pituinen, ja sen takana on Suomen laajimpia dyynialueita. Dyynikasvillisuus on herkkää, joten alue on suojeltu.',
+      hint: 'Tuuli on kasannut hiekan kummuiksi rannan taakse.',
+    },
+    {
+      q: 'Mikä Porin edustan lahti on kansainvälisesti merkittävä lintualue?',
+      options: ['Preiviikinlahti', 'Liminganlahti', 'Vanhankaupunginlahti', 'Siikalahti'],
+      correct: 0,
+      level: 3,
+      fact: 'Lahti on Ramsar-sopimuksen suojelema kosteikko. Keväällä siellä levähtää kymmeniätuhansia muuttolintuja matkallaan pohjoiseen.',
+      hint: 'Alue on Ramsar-kosteikko heti kaupungin länsipuolella.',
     },
   ],
 
@@ -134,6 +222,39 @@ export const SUOMI_QUESTIONS = {
       level: 3,
       fact: 'Kilometrien paksuinen mannerjää painoi maankuorta alas; jään sulettua kuori nousee yhä, noin 8 mm vuodessa.',
       hint: 'Syy on kymmenientuhansien vuosien takainen.',
+    },
+    {
+      q: 'Minkä meren rannalla Vaasa sijaitsee?',
+      options: ['Pohjanlahden', 'Suomenlahden', 'Jäämeren', 'Laatokan'],
+      correct: 0,
+      level: 1,
+      fact: 'Vaasa on Merenkurkun kohdalla, jossa meri kapenee noin 80 kilometriin. Ruotsin Uumajaan pääsee lautalla muutamassa tunnissa.',
+      hint: 'Meri erottaa kaupungin Ruotsista.',
+    },
+    {
+      q: 'Mikä teollisuuden ala on Vaasan seudun suuri työllistäjä?',
+      options: [
+        'energiateknologia',
+        'purjelaivojen rakentaminen',
+        'uraanikaivostoiminta',
+        'sokerinjalostus',
+      ],
+      correct: 0,
+      fact: 'Seudulla on Pohjoismaiden suurimpia energia-alan keskittymiä: siellä valmistetaan moottoreita, sähköjärjestelmiä ja akkuja.',
+      hint: 'Ala liittyy sähköön ja moottoreihin.',
+    },
+    {
+      q: 'Miksi Vaasa siirrettiin nykyiselle paikalleen 1800-luvulla?',
+      options: [
+        'kaupunki paloi ja vanha satama mataloitui',
+        'sota tuhosi sen kokonaan',
+        'joki tulvi joka kevät',
+        'asukkaat halusivat lähemmäs Ruotsia',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Vaasa paloi 1852, ja koska maankohoaminen oli jättänyt vanhan sataman liian matalaksi, kaupunki rakennettiin uudelleen lähemmäs rantaa.',
+      hint: 'Syitä oli kaksi: tuli ja mataloituva satama.',
     },
   ],
 
@@ -166,6 +287,26 @@ export const SUOMI_QUESTIONS = {
       fact: 'Uno Cygnaeuksen johtama seminaari koulutti opettajat kansakouluihin — siksi Jyväskylää kutsutaan Suomen Ateenaksi.',
       hint: 'Kaupunkia kutsutaan koulujensa vuoksi Suomen Ateenaksi.',
     },
+    {
+      q: 'Minkä järven pohjoispäässä Jyväskylä sijaitsee?',
+      options: ['Päijänteen', 'Saimaan', 'Inarijärven', 'Oulujärven'],
+      correct: 0,
+      level: 1,
+      fact: 'Päijänne on Suomen toiseksi suurin järvi. Sen vettä johdetaan pitkässä kalliotunnelissa pääkaupunkiseudun juomavedeksi.',
+      hint: 'Järven vettä johdetaan tunnelissa pääkaupunkiseudulle.',
+    },
+    {
+      q: 'Mikä kansainvälinen urheilutapahtuma ajetaan Jyväskylän seudulla?',
+      options: [
+        'MM-ralli',
+        'Formula 1 -kilpailu',
+        'maratonin MM-kilpailu',
+        'purjehduksen MM-kilpailu',
+      ],
+      correct: 0,
+      fact: 'Kilpailu tunnetaan nopeista sorateistä ja pitkistä hyppyristä. Se on yksi rallin MM-sarjan vanhimmista osakilpailuista.',
+      hint: 'Laji ajetaan sorateillä ja siihen kuuluu hyppyreitä.',
+    },
   ],
 
   lappeenranta: [
@@ -184,6 +325,34 @@ export const SUOMI_QUESTIONS = {
       level: 3,
       fact: 'Kanavan loppuosa kulkee Venäjältä vuokratulla alueella — harvinainen järjestely maailmassa.',
       hint: 'Kanava laskee mereen naapurimaan puolella.',
+    },
+    {
+      q: 'Mikä Saimaa on?',
+      options: ['Suomen suurin järvi', 'meren lahti', 'pitkä joki', 'rakennettu tekoallas'],
+      correct: 0,
+      level: 1,
+      fact: 'Saimaa on Suomen suurin ja Euroopan neljänneksi suurin järvi. Sen sokkeloisilla rannoilla on tuhansia saaria ja mökkejä.',
+      hint: 'Vesistö on järvi, ei merenlahti.',
+    },
+    {
+      q: 'Mikä puolustusrakennelma kohoaa Lappeenrannan satamassa?',
+      options: [
+        '1700-luvun maalinnoitus',
+        'keskiaikainen kivilinna',
+        'lumilinna',
+        'vedenalainen bunkkeri',
+      ],
+      correct: 0,
+      fact: 'Satamanmäen linnoitus rakennettiin 1700-luvulla valleista ja muureista. Sen sisällä on nykyään museoita ja Suomen vanhin ortodoksinen kirkko.',
+      hint: 'Rakennelma on tehty valleista ja muureista, ei tornista.',
+    },
+    {
+      q: 'Kuinka monta sulkua Saimaan kanavassa on?',
+      options: ['kahdeksan', 'kaksi', 'kaksikymmentä', 'ei yhtään'],
+      correct: 0,
+      level: 3,
+      fact: 'Sulut nostavat ja laskevat laivat noin 76 metrin korkeuseron yli Saimaalta meren pintaan. Kanava valmistui 1856 ja uusittiin 1960-luvulla.',
+      hint: 'Sulkuja tarvitaan yli 70 metrin korkeuseroon.',
     },
   ],
 
@@ -211,6 +380,26 @@ export const SUOMI_QUESTIONS = {
       fact: 'Norppia on vain noin 500. Kanta jäi järveen "vangiksi", kun maa kohosi jääkauden jälkeen.',
       hint: 'Se on makeassa vedessä elävä hylje.',
     },
+    {
+      q: 'Minä vuonna Olavinlinnan rakentaminen aloitettiin?',
+      options: ['1475', '1275', '1675', '1875'],
+      correct: 0,
+      level: 3,
+      fact: 'Linna perustettiin keskiajan lopulla Ruotsin ja Novgorodin rajalle. Se rakennettiin saarelle, jonka ympärillä virtaa vahva salmi.',
+      hint: 'Rakentaminen alkoi keskiajan lopulla 1400-luvulla.',
+    },
+    {
+      q: 'Miksi saimaannorppa on uhanalainen?',
+      options: [
+        'kanta on pieni ja pesät ovat rantakinosten varassa',
+        'se on liian suuri saalistamaan',
+        'se muuttaa talvella etelään',
+        'sitä metsästetään laillisesti',
+      ],
+      correct: 0,
+      fact: 'Norppa kaivaa pesäkolonsa rantakinokseen, joten leudot talvet ovat sille vaara. Kanta on muutamia satoja yksilöitä ja on kasvanut hitaasti suojelun ansiosta.',
+      hint: 'Uhka liittyy lumen määrään ja kalanpyydyksiin.',
+    },
   ],
 
   kuopio: [
@@ -228,6 +417,34 @@ export const SUOMI_QUESTIONS = {
       correct: 0,
       fact: 'Mäen tornista näkee Kallaveden saariston, ja rinteessä on myös hyppyrimäet.',
       hint: 'Mäellä hypätään talvisin mäkihyppyä.',
+    },
+    {
+      q: 'Minkä järven rannalla Kuopio sijaitsee?',
+      options: ['Kallaveden', 'Näsijärven', 'Päijänteen', 'Inarijärven'],
+      correct: 0,
+      level: 1,
+      fact: 'Kallavesi kuuluu Saimaan vesistöön. Kuopion satamatorilta pääsee kesällä laivalla suoraan järvelle.',
+      hint: 'Järvi kuuluu Saimaan vesistöön.',
+    },
+    {
+      q: 'Mitä kalakukon sisällä on?',
+      options: [
+        'kalaa ja silavaa ruistaikinan sisällä',
+        'perunaa ja lihaa',
+        'riisiä ja kanaa',
+        'omenaa ja kanelia',
+      ],
+      correct: 0,
+      fact: 'Kalakukko on ruistaikinan sisään haudutettu piirakka, jossa on tavallisesti muikkuja. Se on Pohjois-Savon perinneruoka ja EU:n nimisuojattu tuote.',
+      hint: 'Täyte kypsyy tiiviin ruiskuoren sisällä uunissa.',
+    },
+    {
+      q: 'Mikä tieteenala on Kuopion yliopistokampuksen vahvuus?',
+      options: ['terveystieteet ja farmasia', 'merenkulkuoppi', 'kaivostekniikka', 'viininviljely'],
+      correct: 0,
+      level: 3,
+      fact: 'Kuopiossa on Itä-Suomen yliopiston terveystieteiden kampus, tunnettua lääke- ja ravitsemustutkimusta sekä suuri yliopistollinen sairaala.',
+      hint: 'Ala liittyy terveyteen ja lääkkeisiin.',
     },
   ],
 
@@ -248,6 +465,29 @@ export const SUOMI_QUESTIONS = {
       fact: 'Vaaran laelta avautuva järvimaisema innoitti Sibeliusta ja kultakauden taidemaalareita.',
       hint: 'Suomen tunnetuin vaaramaisema, josta on maalattu lukemattomia tauluja.',
     },
+    {
+      q: 'Minkä joen suulla Joensuu sijaitsee?',
+      options: ['Pielisjoen', 'Aurajoen', 'Kymijoen', 'Tornionjoen'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki perustettiin 1848 Pielisjoen suulle Pyhäselän rannalle. Kaupungin nimi kertoo paikan suoraan.',
+      hint: 'Kaupungin nimi kertoo paikan ilman selitystä.',
+    },
+    {
+      q: 'Mikä ala on Joensuun tutkimuksen ja yliopistokampuksen vahvuus?',
+      options: ['metsätiede', 'merentutkimus', 'avaruustutkimus', 'laivanrakennus'],
+      correct: 0,
+      fact: 'Joensuussa toimii Euroopan metsäinstituutti ja metsäalan tutkimusta. Pohjois-Karjala on yksi Suomen metsäisimmistä maakunnista.',
+      hint: 'Ala liittyy puihin ja niiden käyttöön.',
+    },
+    {
+      q: 'Mikä soitin liittyy karjalaiseen runolauluun?',
+      options: ['kantele', 'haitari', 'viulu', 'säkkipilli'],
+      correct: 0,
+      level: 3,
+      fact: 'Kanteleella säestettiin runolaulua, jonka aineistosta Elias Lönnrot kokosi Kalevalan. Soittimia tehdään ja soitetaan yhä.',
+      hint: 'Soitinta näppäillään sylissä ja siinä on kielet.',
+    },
   ],
 
   kajaani: [
@@ -266,6 +506,39 @@ export const SUOMI_QUESTIONS = {
       level: 3,
       fact: 'Hän teki Kajaanista käsin keruumatkansa Vienan Karjalaan ja kokosi runoista Kalevalan.',
       hint: 'Hänen kokoamansa teos on Suomen kansalliseepos.',
+    },
+    {
+      q: 'Minkä joen varrella Kajaani sijaitsee?',
+      options: ['Kajaaninjoen', 'Aurajoen', 'Tenojoen', 'Kymijoen'],
+      correct: 0,
+      level: 1,
+      fact: 'Joki laskee Oulujärveen, ja sen saarella ovat Kajaanin linnan rauniot keskellä kaupunkia.',
+      hint: 'Joki laskee Oulujärveen.',
+    },
+    {
+      q: 'Mitä Kainuusta kuljetettiin 1700- ja 1800-luvuilla Ouluun?',
+      options: [
+        'tervaa pitkillä tervaveneillä',
+        'viljaa Ruotsiin',
+        'malmia Venäjälle',
+        'jäätä Pietariin',
+      ],
+      correct: 0,
+      fact: 'Kainuun metsissä poltettiin tervaa, jota vietiin koskia alas Ouluun ja sieltä laivoilla maailman purjelaivastoihin. Terva tiivisti laivojen puuosat.',
+      hint: 'Tuote poltettiin männyistä ja tiivisti laivojen puuosat.',
+    },
+    {
+      q: 'Mitä Kajaanin linnalle tapahtui vuonna 1716?',
+      options: [
+        'se tuhoutui piirityksessä Suuren Pohjan sodan aikana',
+        'se paloi salamaniskusta',
+        'se purettiin tien tieltä',
+        'se upposi järveen',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Linna antautui piirityksen jälkeen, ja sen puolustusrakenteet räjäytettiin. Rauniot ovat yhä joen saarella.',
+      hint: 'Tuho ajoittuu 1700-luvun alun sotaan.',
     },
   ],
 
@@ -286,6 +559,34 @@ export const SUOMI_QUESTIONS = {
       fact: 'Vuonna 1961 valmistunut murtaja jäi eläkkeeltä matkailukäyttöön: kyytiläiset voivat uida jäissä pelastuspuvuissa.',
       hint: 'Nimi on sama kuin Kalevalan ihmemyllyllä.',
     },
+    {
+      q: 'Mistä Kemin lumilinna rakennetaan?',
+      options: ['lumesta ja jäästä', 'puusta', 'tiilestä', 'betonista'],
+      correct: 0,
+      level: 1,
+      fact: 'Linna rakennetaan uudelleen joka talvi eri muotoon. Siellä on hotellihuoneita, kappeli ja ravintola, jossa astiat ovat jäätä.',
+      hint: 'Materiaali sulaa keväällä pois.',
+    },
+    {
+      q: 'Mikä teollisuuden ala on Kemissä merkittävä?',
+      options: ['sellu- ja paperiteollisuus', 'autoteollisuus', 'laivanrakennus', 'lasinpuhallus'],
+      correct: 0,
+      fact: 'Kemissä toimii suuri sellutehdas, joka käyttää raaka-aineena Lapin puuta. Naapurikunnassa on Euroopan ainoa kromikaivos.',
+      hint: 'Ala käyttää raaka-aineena puuta.',
+    },
+    {
+      q: 'Miksi Perämeri jäätyy talvella lähes kokonaan?',
+      options: [
+        'se on matala ja vesi on lähes suolatonta',
+        'se on Suomen syvin merialue',
+        'siellä ei ole lainkaan virtauksia',
+        'se on suolaisin merialue',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Jokien tuoma makea vesi tekee Perämerestä lähes suolattoman, ja matala vesi jäähtyy nopeasti. Siksi Suomi tarvitsee jäänmurtajia talvimerenkulkuun.',
+      hint: 'Selitys löytyy suolaisuudesta ja syvyydestä.',
+    },
   ],
 
   rovaniemi: [
@@ -305,6 +606,34 @@ export const SUOMI_QUESTIONS = {
       fact: 'Lapin sota poltti Rovaniemen 1944. Alvar Aallon asemakaavassa pääkadut piirtävät sarvet ja stadion on silmä.',
       hint: 'Eläin on Lapin tunnetuin.',
     },
+    {
+      q: 'Mikä kuvitteellinen raja kulkee Rovaniemen kohdalla?',
+      options: ['napapiiri', 'päiväntasaaja', 'nollameridiaani', 'Kravun kääntöpiiri'],
+      correct: 0,
+      level: 1,
+      fact: 'Raja kulkee muutama kilometri keskustasta pohjoiseen. Sen pohjoispuolella aurinko ei kesäpäivänseisauksen aikaan laske lainkaan.',
+      hint: 'Rajan pohjoispuolella on kesällä yötön yö.',
+    },
+    {
+      q: 'Minkä kahden joen yhtymäkohdassa Rovaniemi sijaitsee?',
+      options: [
+        'Kemijoen ja Ounasjoen',
+        'Aurajoen ja Kymijoen',
+        'Tenojoen ja Ivalojoen',
+        'Oulujoen ja Iijoen',
+      ],
+      correct: 0,
+      fact: 'Kemijoki on Suomen pisin joki, ja Ounasjoki liittyy siihen kaupungin kohdalla. Jokia pitkin uitettiin ennen tukkeja merelle.',
+      hint: 'Toinen joista on Suomen pisin joki.',
+    },
+    {
+      q: 'Kuka suunnitteli Rovaniemen sodanjälkeisen asemakaavan?',
+      options: ['Alvar Aalto', 'Eliel Saarinen', 'Carl Ludvig Engel', 'Reima Pietilä'],
+      correct: 0,
+      level: 3,
+      fact: 'Vuonna 1945 laadittu kaava tunnetaan poronsarvikaavana. Sama arkkitehti suunnitteli kaupunkiin kirjaston, teatterin ja kaupungintalon.',
+      hint: 'Sama arkkitehti suunnitteli myös Jyväskylän rakennuksia kymmenittäin.',
+    },
   ],
 
   kittila: [
@@ -323,6 +652,34 @@ export const SUOMI_QUESTIONS = {
       level: 3,
       fact: 'Kittilän kaivos on Euroopan suurin kultakaivos — Lapin kulta ei siis ole pelkkää tarinaa.',
       hint: 'Samaa metallia huuhdotaan Lapin joista vaskoolilla.',
+    },
+    {
+      q: 'Missä maakunnassa Kittilä sijaitsee?',
+      options: ['Lapissa', 'Uudellamaalla', 'Varsinais-Suomessa', 'Ahvenanmaalla'],
+      correct: 0,
+      level: 1,
+      fact: 'Kittilä on Ounasjoen varrella, ja kunnan alueella on useita tuntureita. Levin rinteet ovat Suomen suurin hiihtokeskus.',
+      hint: 'Maakunta on Suomen pohjoisin ja laajin.',
+    },
+    {
+      q: 'Miksi Kittilässä on oma lentoasema?',
+      options: ['talvimatkailun takia', 'armeijan takia', 'kalastuksen takia', 'rajakaupan takia'],
+      correct: 0,
+      fact: 'Lentoasemalle saapuu talvikaudella suoria lentoja Euroopasta. Matkailu on kunnan suurimpia työllistäjiä kaivoksen ohella.',
+      hint: 'Syy näkyy rinteissä ja hotelleissa joulukuusta huhtikuuhun.',
+    },
+    {
+      q: 'Mikä on Kittilän kaivoksen erityisyys?',
+      options: [
+        'se on Euroopan suurimpia kultakaivoksia',
+        'se on maailman syvin kaivos',
+        'se on Euroopan ainoa timanttikaivos',
+        'se louhii uraania',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Malmi louhitaan pääosin maan alta, ja metalli erotetaan rikasteesta paikan päällä. Samaa metallia huuhdottiin Lapin joista jo 1800-luvulla.',
+      hint: 'Metalli on sama, jota huuhdottiin Lapin joista 1870-luvulla.',
     },
   ],
 
@@ -351,6 +708,26 @@ export const SUOMI_QUESTIONS = {
       fact: 'Pohjoissaame, inarinsaame ja koltansaame. Inarinsaamea puhutaan vain Inarissa — puhujia on muutama sata.',
       hint: 'Yhtä niistä puhutaan vain Inarissa.',
     },
+    {
+      q: 'Millainen vesistö Inarijärvi on?',
+      options: ['Suomen kolmanneksi suurin järvi', 'merenlahti', 'tekoallas', 'koskinen joki'],
+      correct: 0,
+      level: 1,
+      fact: 'Järvessä on yli 3 000 saarta, ja sen vedet laskevat Paatsjoen kautta Jäämereen. Järvi on saamelaisalueen tärkein vesistö.',
+      hint: 'Vesistö on järvi, ja sen vedet päätyvät Jäämereen.',
+    },
+    {
+      q: 'Mikä on Saamelaiskäräjät?',
+      options: [
+        'saamelaisten vaaleilla valittu edustuselin',
+        'matkailuyhdistys',
+        'museo',
+        'kunnanvaltuusto',
+      ],
+      correct: 0,
+      fact: 'Saamelaiskäräjät hoitaa saamelaisten kieltä ja kulttuuria koskevia asioita ja kokoontuu Inarissa Sajos-rakennuksessa.',
+      hint: 'Elin valitaan vaaleilla ja päättää kieli- ja kulttuuriasioista.',
+    },
   ],
 
   kilpisjarvi: [
@@ -373,6 +750,44 @@ export const SUOMI_QUESTIONS = {
       level: 1,
       fact: 'Keltainen rajapyykki on pienessä järvessä, ja sen ympäri voi kävellä — kolmessa maassa minuutissa.',
       hint: 'Käsivarsi työntyy kahden länsinaapurin väliin.',
+    },
+    {
+      q: 'Mikä on erityistä Kilpisjärven kylän sijainnissa?',
+      options: [
+        'se on Suomen korkeimmalla sijaitsevia kyliä',
+        'se on maan eteläisin kylä',
+        'se on maan suurin kaupunki',
+        'se on saari meressä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kylä on noin 470 metrin korkeudessa paljaan tunturimaaston keskellä. Järvessä voi olla jäätä vielä kesäkuussa.',
+      hint: 'Erityisyys liittyy korkeuteen merenpinnasta.',
+    },
+    {
+      q: 'Millaista luontoa Kilpisjärven ympärillä on?',
+      options: [
+        'tunturikoivikkoa ja paljakkaa',
+        'lehtimetsää ja peltoja',
+        'sademetsää',
+        'hiekka-aavikkoa',
+      ],
+      correct: 0,
+      fact: 'Metsänraja kulkee kylän korkeudella, joten ylempänä kasvaa vain matalaa varvikkoa ja jäkälää. Alueella kasvaa kasveja, joita ei tavata muualla Suomessa.',
+      hint: 'Puut loppuvat ylempänä kokonaan.',
+    },
+    {
+      q: 'Missä on Suomen korkein kohta?',
+      options: [
+        'Haltin rinteellä Norjan rajalla',
+        'Saanan laella',
+        'Ylläksen huipulla',
+        'Kolin kalliolla',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Suomen korkein kohta on 1 324 metriä ja se sijaitsee tunturin rinteellä; itse laki on rajan takana Norjan puolella. Sinne vaelletaan useamman päivän reittiä.',
+      hint: 'Korkein kohta on rinteellä, ei laella.',
     },
   ],
 
@@ -409,6 +824,26 @@ export const SUOMI_QUESTIONS = {
       level: 1,
       fact: 'Utsjoella kaamos kestää lähes kaksi kuukautta. Sen vastapainona kesällä on yhtä pitkä yötön yö.',
       hint: 'Kaamos koetaan talvella napapiirin pohjoispuolella.',
+    },
+    {
+      q: 'Mikä on Utsjoen asema Suomen kuntien joukossa?',
+      options: [
+        'se on Suomen pohjoisin kunta',
+        'se on Suomen eteläisin kunta',
+        'se on Suomen suurin kaupunki',
+        'se on saarikunta Ahvenanmaalla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kunnan pohjoisraja seuraa Tenojokea, ja Nuorgamin kylä on Suomen pohjoisin asuttu paikka. Jäämerelle on sieltä lyhyt matka.',
+      hint: 'Kunnasta on lyhyempi matka Jäämerelle kuin mistään muusta Suomen kunnasta.',
+    },
+    {
+      q: 'Mitä kalaa Tenojoesta pyydetään perinteisin menetelmin?',
+      options: ['lohta', 'haukea', 'silakkaa', 'muikkua'],
+      correct: 0,
+      fact: 'Tenon lohenkalastuksessa käytetään yhä patoja ja veneellä kulkutusta. Lohikantojen heikennyttyä kalastusta on rajoitettu Suomen ja Norjan sopimuksella.',
+      hint: 'Kala nousee mereltä jokeen kudulle.',
     },
   ],
 
@@ -517,6 +952,29 @@ export const SUOMI_QUESTIONS = {
       fact: 'Oikeuksiin kuuluu myös tilapäinen leiriytyminen — kunhan ei häiritse eikä roskaa.',
       hint: 'Ne koskevat kaikkia luonnossa liikkujia, eivät vain miehiä.',
     },
+    {
+      q: 'Kuinka monta järveä Suomessa on?',
+      options: ['yli 180 000', 'noin 1 800', 'noin 18 000', 'noin 1,8 miljoonaa'],
+      correct: 0,
+      fact: 'Suomessa on noin 188 000 järveä, kun mukaan lasketaan pienetkin lammet. Siksi maata kutsutaan tuhansien järvien maaksi.',
+      hint: 'Määrä on satojatuhansia.',
+    },
+    {
+      q: 'Mikä on Suomen kansalliskukka?',
+      options: ['kielo', 'ruusu', 'kanerva', 'valkovuokko'],
+      correct: 0,
+      level: 1,
+      fact: 'Kielo valittiin kansalliskukaksi 1967. Se kasvaa lehdoissa ja kukkii touko-kesäkuussa voimakkaan tuoksuisena.',
+      hint: 'Kukka on valkoinen, kellomainen ja voimakkaan tuoksuinen.',
+    },
+    {
+      q: 'Kuinka suuri osa Suomen maa-alasta on metsää?',
+      options: ['noin kolme neljäsosaa', 'noin puolet', 'noin neljäsosa', 'noin kymmenesosa'],
+      correct: 0,
+      level: 3,
+      fact: 'Metsä peittää noin kolme neljäsosaa maa-alasta, mikä tekee Suomesta Euroopan metsäisimmän maan.',
+      hint: 'Osuus on Euroopan suurin.',
+    },
   ],
 };
 
@@ -524,77 +982,153 @@ export const SUOMI_FACTS = {
   helsinki: [
     'Suomenlinnaan pääsee Kauppatorilta lautalla vartissa — merilinnoitus on Unescon maailmanperintökohde, jossa asuu 800 ihmistä.',
     'Helsingin alla on kymmeniä kilometrejä tunneleita ja jopa maanalainen uimahalli — kallioon louhittu kaupunki toimii myös väestönsuojana.',
+    {
+      text: 'Suuriruhtinaskunnan pääkaupunki on valkoinen ja uusi, ja satamassa tarvitaan jäänmurtajaa puoli vuotta. Kaupunki on rakennettu kalliolle; sen huomaa jokaisesta kadusta.',
+      voice: 'isoisa',
+    },
   ],
   turku: [
     'Joulurauha on julistettu Turun Brinkkalan talon parvekkeelta jo 1300-luvulta asti — julistusta kuuntelee joka jouluaatto koko Suomi.',
     'Turun saaristossa on yli 20 000 saarta ja luotoa, ja Saariston rengastien voi kiertää polkupyörällä lauttoja hyppien.',
+    {
+      text: 'Kaupunki on maan vanhin ja palanut äskettäin lähes kokonaan. Linna jokisuulla on seisonut kuusisataa vuotta, mikä tekee siitä kaupungin luotettavimman rakennuksen.',
+      voice: 'isoisa',
+    },
   ],
   maarianhamina: [
     'Maarianhaminan satamassa seisoo Pommern, maailman ainoa alkuperäisessä asussaan säilynyt nelimastoinen viljapurjelaiva.',
     'Ahvenanmaalla on omat postimerkit ja oma rekisterikilpi, vaikka saaret kuuluvat Suomeen.',
+    {
+      text: 'Saaristossa puhutaan ruotsia ja purjehditaan enemmän kuin kävellään. Kaupunki on perustettu vasta muutama vuosikymmen sitten, ja sen varustajat aikovat ostaa maailman parhaat purjelaivat.',
+      voice: 'isoisa',
+    },
   ],
   tampere: [
     'Tampereella on maailman ainoa muumilaakson taidetta esittelevä Muumimuseo.',
     'Tammerkosken partaalla sijaitseva Finlaysonin alue oli 1800-luvulla kuin kaupunki kaupungissa: sillä oli oma kirkko, poliisi ja sairaala.',
+    {
+      text: 'Kosken partaalla jyskyttävät puuvillatehtaat, ja paikkaa kutsutaan täällä Manchesteriksi. Vertaus on kohteliaisuus meille, vaikka koski on parempi voimanlähde kuin yksikään höyrykone.',
+      voice: 'isoisa',
+    },
   ],
   pori: [
     'Yyterin dyynit ovat kilometrien pituiset — ranta on yksi Pohjoismaiden pisimmistä hiekkarannoista.',
     'Porin jazzfestivaali on tuonut kaupunkiin esiintyjiä Miles Davisista Stingiin jo yli puolen vuosisadan ajan.',
+    {
+      text: 'Joen suulla on satama ja sen edessä hiekkaranta, joka on pidempi kuin mikään näkemäni Englannissa. Tuuli siirtää dyynejä vuosittain; en ehtinyt mitata kuinka paljon.',
+      voice: 'isoisa',
+    },
   ],
   vaasa: [
     'Merenkurkussa syntyy maankohoamisen ansiosta joka vuosi noin sata hehtaaria uutta maata — saaret kasvavat yhteen silmissä.',
     'Vaasan seudulla on Pohjoismaiden suurin energiateknologian keskittymä, jonka laitteita viedään ympäri maailmaa.',
+    {
+      text: 'Kaupunki on juuri siirretty lähemmäs rantaa, koska vanha satama jäi liian matalaksi. Maa nousee täällä merestä yhä, mikä on hämmentävä ajatus miehelle joka piti maata paikallaan pysyvänä.',
+      voice: 'isoisa',
+    },
   ],
   jyvaskyla: [
     'Jyväskylässä on enemmän Alvar Aallon suunnittelemia rakennuksia kuin missään muualla maailmassa.',
     'Kaupunkia kutsutaan Suomen Ateenaksi, koska suomenkielinen koulutus sai siellä alkunsa 1800-luvulla.',
+    {
+      text: 'Järven pohjukassa on pieni kaupunki, jossa opetetaan opettajia suomen kielellä. Sitä pidetään täällä tärkeämpänä kuin mitään rakennusta, ja epäilen että he ovat oikeassa.',
+      voice: 'isoisa',
+    },
   ],
   lappeenranta: [
     'Lappeenrannan linnoituksen valleilta näkee Saimaalle — kaupunki oli vuosisatoja Ruotsin ja Venäjän rajaseutua.',
     'Saimaan kanavaa pitkin pääsi ennen laivalla Lappeenrannasta Viipuriin ja merelle asti; kanava valmistui 1856.',
+    {
+      text: 'Suuren järven rannalla on linnoitus, ja sen vierestä lähtee vasta valmistunut kanava merelle. Kanava lyhentää puun matkan kuukausilla; se on paras rakennelma jonka olen tässä maassa nähnyt.',
+      voice: 'isoisa',
+    },
   ],
   savonlinna: [
     'Olavinlinnan oopperajuhlien katsomoon mahtuu yli 2 000 kuulijaa — esitykset pidetään keskiaikaisen linnan pihassa.',
     'Saimaannorppa on yksi maailman harvinaisimmista hylkeistä: sitä suojellaan muun muassa verkkokalastuskielloin.',
+    {
+      text: 'Salmen saarella seisoo linna, jonka muurit ovat kolme metriä paksut. Sen sisäpihalla ääni kaikuu niin, että laulaminen siellä olisi ilmeisen järkevää.',
+      voice: 'isoisa',
+    },
   ],
   kuopio: [
     'Kuopion torilla myydään kalakukkoa suoraan leipurien kojuista, ja savolainen puheenparsi kuuluu kaupassa kaupan päälle.',
     'Puijon tornista avautuu näkymä Kallaveden satoihin saariin; ensimmäinen torni rakennettiin jo 1856.',
+    {
+      text: 'Torilla myydään ruisleivän sisään haudutettuja kaloja, ja mäeltä näkyy järviä enemmän kuin ehdin laskea. Ostin kaksi ja söin molemmat enkä pyydä sitä anteeksi.',
+      voice: 'isoisa',
+    },
   ],
   joensuu: [
     'Joensuussa toimii Euroopan metsäinstituutti — kaupunki on yksi maailman johtavista metsäosaamisen keskuksista.',
     'Ilosaarirock on järjestetty vuodesta 1971 ja on yksi Euroopan vanhimmista yhä jatkuvista rockfestivaaleista.',
+    {
+      text: 'Joen suulla on uusi kaupunki, jonka läpi uitetaan tukkeja merelle. Metsää on täällä niin paljon, ettei kukaan osaa kuvitella sen loppumista — en minäkään.',
+      voice: 'isoisa',
+    },
   ],
   kajaani: [
     'Kajaanin linnan rauniot seisovat Kajaaninjoen saarella; linnassa istui aikoinaan vankina myös historioitsija Johannes Messenius.',
     'Kainuun tervaa soudettiin 1800-luvulla veneillä Ouluun asti — terva oli aikansa öljy, jota vietiin maailman laivastoille.',
+    {
+      text: 'Joen saarella on linnan rauniot, ja kaupungissa poltetaan tervaa metsien keskellä. Täkäläinen piirilääkäri kiertää kylissä keräämässä vanhoja runoja, mikä kuulostaa oudolta työltä lääkärille.',
+      voice: 'isoisa',
+    },
   ],
   kemi: [
     'Kemin lumilinna rakennetaan joka talvi uudelleen merivedestä tykitetystä lumesta — arkkitehtuuri vaihtuu vuosittain.',
     'Jäänmurtaja Sampolla pääsee kävelemään jäälle keskellä merta ja kellumaan pelastuspuvussa avannossa.',
+    {
+      text: 'Perämeri jäätyy tänne asti umpeen, ja jäällä kuljetaan hevosella kuin tiellä. Meri on täällä lähes makeaa; totesin sen itse enkä esitä siitä lisäselityksiä.',
+      voice: 'isoisa',
+    },
   ],
   rovaniemi: [
     'Napapiirin pajakylässä voi ylittää napapiirin viivan jalan — ja saada siitä todistuksen.',
     'Arktikum-museon lasiputki osoittaa suoraan pohjoiseen; museo kertoo arktisten alueiden elämästä ja ilmastonmuutoksesta.',
+    {
+      text: 'Kahden joen yhtymäkohdassa on kirkonkylä, ja kesäkuussa aurinko ei laske lainkaan. Kirjoitin tämän kello yksitoista yöllä ilman kynttilää ja tarkistin kellon kahdesti.',
+      voice: 'isoisa',
+    },
   ],
   kittila: [
     'Levillä ajetaan alppihiihdon maailmancupia, ja tunturin huipulle pääsee gondolihissillä ympäri vuoden.',
     'Kittilän kultakaivos on Euroopan suurin — kultaa louhitaan yli kilometrin syvyydestä.',
+    {
+      text: 'Tunturien juurella on kyliä, joissa elanto tulee poroista ja kalasta. Joista on löydetty kultaa, ja siitä syntyi ryntäys, joka jätti jälkeensä lähinnä tarinoita.',
+      voice: 'isoisa',
+    },
   ],
   inari: [
     'Inarijärvessä on yli 3 000 saarta; Ukonkivi oli saamelaisten pyhä uhripaikka.',
     'Saamelaiskäräjät kokoontuu Inarin Sajoksessa — rakennuksen muoto kiertyy kuin nuotiopiiri.',
+    {
+      text: 'Järvessä on enemmän saaria kuin ehdin laskea, ja sen vedet laskevat Jäämereen. Täällä puhutaan kieltä, joka ei ole suomea eikä ruotsia ja joka oli täällä ennen molempia.',
+      voice: 'isoisa',
+    },
   ],
   kilpisjarvi: [
     'Suomen korkein tunturi Halti (1 324 m) on Kilpisjärveltä vaellusmatkan päässä Käsivarren erämaassa.',
     'Mallan luonnonpuisto on Suomen vanhimpia suojelualueita — siellä kasvaa tunturikasveja, joita ei tapaa muualla maassa.',
+    {
+      text: 'Kolmen valtakunnan rajapyykki seisoo järven rannalla, ja tunturin rinteillä oli lunta vielä kesäkuussa. Puut loppuvat tällä korkeudella kokonaan; sen jälkeen alkaa jäkälä ja tuuli.',
+      voice: 'isoisa',
+    },
   ],
   utsjoki: [
     'Utsjoella aurinko ei laske lainkaan noin 70 vuorokauteen kesällä — yöttömän yön aikaan voi lukea ulkona keskiyöllä.',
     'Tenojoki on Euroopan parhaita luonnonlohijokia, ja sen rannoilla saamelainen kalastusperinne elää yhä.',
+    {
+      text: 'Pohjoisin kirkonkylä on lohijoen varrella, ja joki on samalla valtakunnan raja. Talvella aurinko ei nouse viikkoihin, ja täällä eletään siitä huolimatta täysin tavallista elämää — se hämmästytti minua enemmän kuin pimeys.',
+      voice: 'isoisa',
+    },
   ],
   oulu: [
     'Oulussa järjestetään joka elokuu ilmakitaransoiton MM-kisat — laji keksittiin kaupungissa vitsinä, josta tuli maailmanilmiö.',
     'Oulu oli 1800-luvulla maailman johtavia tervanviejiä; terva laskettiin jokea pitkin veneillä kaupungin satamaan.',
+    {
+      text: 'Satamasta lähtee tervaa maailman purjelaivastoihin, ja tynnyrit tuodaan jokea alas pitkillä veneillä. Kukaan täällä ei usko purjelaivojen loppuvan; en usko sitä minäkään.',
+      voice: 'isoisa',
+    },
   ],
 };
