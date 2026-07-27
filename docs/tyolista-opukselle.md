@@ -64,6 +64,8 @@ Myöhemmäksi sovitut (EI vielä työn alle):
 - Yksittäiset maat mantereiden jälkeen (Suomen mallin mukaan).
 - Kysymysten vaihtelu: **paketti 10 alempana — seuraava työn alle
   otettava paketti.**
+- "Lue lisää" -Wikipedia-tiivistelmät: **paketti 11 alempana — otetaan
+  paketin 10 JÄLKEEN, ei rinnakkain** (molemmat muokkaavat js/ui.js:ää).
 
 Tämä on omistajan ja suunnittelusession sopima työlista. Tee työpaketit
 järjestyksessä; jokainen paketti on oma commit/PR. Jokaisen paketin jälkeen:
@@ -480,6 +482,45 @@ Testit: claims/events-rakenteiden eheys (tyhjät tekstit, faktat,
 lähdemuoto), vuorottelun jakaumatesti siemenellä, karttakysymyksen
 oikea/väärä-logiikka. Tallennus toJSON/fromJSON, versionostot,
 standalone.
+
+## Paketti 11: "Lue lisää" — Wikipedia-tiivistelmät (Afrikka ensin)
+
+Pelaaja voi pyytää lisätietoa nykyisestä sijainnistaan: pieni
+**"Lue lisää"** -nappi tietoruudun kulmaan ja saapumiskorttiin (EI
+kaupungin napautukseen — napautus tarkoittaa jo siirtymistä). Nappi avaa
+pergamenttityylisen dialogin, jossa on Wikipedian tiivistelmä ja kuva.
+
+Toteutus:
+
+- **Rajapinta:** Wikipedian REST-summary, selaimesta suoraan ilman
+  avainta: `https://fi.wikipedia.org/api/rest_v1/page/summary/<otsikko>`.
+  Vastauksesta käytetään `extract` (teksti) ja `thumbnail.source` (kuva).
+  Jos suomenkielistä artikkelia ei ole tai `extract` on alle ~200
+  merkkiä, kokeillaan samaa en.wikipedia.orgista.
+- **Data:** jokaiselle Afrikan kaupungille `wiki`-kenttä pakkadataan
+  (js/packs/africa.js cities): artikkelin tarkka otsikko, esim.
+  `wiki: 'Kap Palmas'`. **Tarkista jokainen otsikko oikeasti**
+  (rajapintakutsulla tai selaimella) — väärä otsikko antaa väärän
+  paikan tai täsmennyssivun. Jos kelvollista artikkelia ei ole
+  kummallakaan kielellä, jätä kenttä pois — nappi ei näy sillä
+  kaupungilla. Muiden lautojen wiki-kentät lisätään myöhemmin;
+  UI ja moottorituki tehdään valmiiksi kaikille.
+- **Dialogi:** otsikko, kuva (max korkeus rajattu, `loading="lazy"`),
+  tiivistelmä kirjoituskonefontilla, ja AINA alareunassa lähdemaininta:
+  "Lähde: Wikipedia (CC BY-SA)" + linkki artikkeliin uuteen välilehteen.
+  Lisenssiehto: maininta ja linkki ovat pakollisia, myös kaupallisessa
+  käytössä.
+- **Offline ja virheet:** peli on PWA — jos haku epäonnistuu (ei
+  yhteyttä, 404), dialogissa lukee kohteliaasti "Tietoja ei saatu
+  haettua. Matka jatkuu." Peli ei saa koskaan jäädä jumiin tästä.
+  Ei välimuistiteta sw.js:ssä (ulkoinen alkuperä) — selaimen oma
+  välimuisti riittää. Standalone-versiossa nappi toimii samoin
+  (vaatii verkon).
+- **Testit:** wiki-kenttä on merkkijono jos se on olemassa;
+  Afrikan kaupungeista vähintään 25:llä on wiki-kenttä. Rajapintaa ei
+  kutsuta testeissä — fetch-logiikka eristetään omaan funktioonsa ja
+  testataan virhepolut tekaistulla vastauksella.
+- Versionostot, standalone-buildi, kuvakaappaus dialogista.
 
 ## Muistilista jokaiseen pakettiin
 
