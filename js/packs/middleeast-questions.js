@@ -30,6 +30,22 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Izmirin viikunat ja rusinat ovat kuuluisia — suuri osa maailman kuivatuista viikunoista tulee yhä Turkista.',
       hint: 'Niitä syödään usein kuivattuina jouluherkkuna.',
     },
+    {
+      q: 'Missä maassa Izmir sijaitsee?',
+      options: ['Turkissa', 'Kreikassa', 'Kyproksella', 'Syyriassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Izmir on Turkin kolmanneksi suurin kaupunki ja tärkeä satama Egeanmeren rannalla. Rantabulevardi Kordon on kaupunkilaisten kävelypaikka.',
+      hint: 'Maa ulottuu kahdelle mantereelle.',
+    },
+    {
+      q: 'Mikä antiikin suurkaupunki on Izmirin lähellä?',
+      options: ['Efesos', 'Kartago', 'Petra', 'Persepolis'],
+      correct: 0,
+      level: 3,
+      fact: 'Efesoksen kirjasto, teatteri ja marmorikadut ovat säilyneet poikkeuksellisen hyvin. Kaupunki jäi merkitykseltään vähäiseksi, kun satama liettyi umpeen.',
+      hint: 'Kaupungin kirjaston julkisivu on kuvattu lukemattomiin kirjoihin.',
+    },
   ],
 
   ankara: [
@@ -54,6 +70,22 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Angoravuohen mohair-villa on saanut nimensä Ankaran vanhasta nimestä Angora.',
       hint: 'Sama eläin kiipeilee mielellään kallioilla ja syö melkein mitä vain.',
+    },
+    {
+      q: 'Millaisessa maastossa Ankara sijaitsee?',
+      options: ['sisämaan ylängöllä', 'merenrannalla', 'sademetsässä', 'saarella'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Anatolian ylängöllä noin 900 metrin korkeudessa. Talvet ovat kylmiä ja kesät kuivia.',
+      hint: 'Merta ei näy mistään päin kaupunkia.',
+    },
+    {
+      q: 'Milloin Ankarasta tuli Turkin pääkaupunki?',
+      options: ['1923', '1453', '1877', '1980'],
+      correct: 0,
+      level: 3,
+      fact: 'Pääkaupunki siirrettiin sisämaahan tasavallan perustamisen yhteydessä. Silloin kaupungissa asui vain kymmeniätuhansia ihmisiä.',
+      hint: 'Vuosi on sama kuin tasavallan perustamisvuosi.',
     },
   ],
 
@@ -80,6 +112,27 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Sadat kuumailmapallot nousevat Kappadokian ylle tyyninä aamuina.',
       hint: 'Se nousee taivaalle polttimen liekin voimalla.',
     },
+    {
+      q: 'Mitä pehmeään tuhkakiveen on louhittu Kappadokiassa?',
+      options: [
+        'asuntoja, kirkkoja ja varastoja',
+        'kaivoksia malmille',
+        'rautatietunneleita',
+        'kanavia',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kivi on niin pehmeää, että siihen voi kaivertaa käsityökaluilla. Osa kalliohuoneista on yhä käytössä varastoina ja hotelleina.',
+      hint: 'Kiveen on kaiverrettu tiloja, joissa ihmiset asuivat.',
+    },
+    {
+      q: 'Miksi Kappadokiaan rakennettiin maanalaisia kaupunkeja?',
+      options: ['suojaksi hyökkäyksiltä', 'kaivostyötä varten', 'kylmyyden takia', 'tulvien takia'],
+      correct: 0,
+      level: 3,
+      fact: 'Kaupungeissa oli ilmanvaihtokuiluja, kaivoja ja vierivillä kivillä suljettavia käytäviä. Niihin vetäydyttiin, kun alueen yli kulki vihollisjoukkoja.',
+      hint: 'Käytävät voitiin sulkea vierivillä kivillä.',
+    },
   ],
 
   nikosia: [
@@ -103,6 +156,27 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Halloumi valmistetaan vuohen- ja lampaanmaidosta, eikä se sula kuumassakaan.',
       hint: 'Juusto ei sula vaan saa pinnalleen rapean kuoren.',
+    },
+    {
+      q: 'Millä saarella Nikosia sijaitsee?',
+      options: ['Kyproksella', 'Kreetalla', 'Maltalla', 'Sisiliassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Kypros on Välimeren kolmanneksi suurin saari. Nikosia on sen keskellä sisämaassa.',
+      hint: 'Saari on Välimeren itäosassa lähellä Turkin rannikkoa.',
+    },
+    {
+      q: 'Mitkä kaksi kieltä ovat Kyproksella virallisia?',
+      options: [
+        'kreikka ja turkki',
+        'arabia ja ranska',
+        'italia ja englanti',
+        'hepreaa ja armenia',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Saarella asuu sekä kreikan- että turkinkielisiä kyproslaisia. Saaren jakautuminen 1974 on yhä ratkaisematta, ja neuvotteluja on käyty vuosikymmeniä.',
+      hint: 'Kielet ovat kahden naapurimaan valtakieliä.',
     },
   ],
 
@@ -129,6 +203,22 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Syyria on kuuluisa pistaaseistaan, ja niitä käytetään myös makeisissa kuten baklavassa.',
       hint: 'Vihreä pähkinä raottaa kuortaan itsestään kypsyessään.',
     },
+    {
+      q: 'Missä maassa Aleppo sijaitsee?',
+      options: ['Syyriassa', 'Libanonissa', 'Irakissa', 'Jordaniassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Aleppo on maan pohjoisosassa ja on ollut kauppareittien risteys tuhansia vuosia. Se on maan suurimpia kaupunkeja.',
+      hint: 'Maan pääkaupunki on Damaskos.',
+    },
+    {
+      q: 'Mikä rakennus kohoaa Aleppon vanhankaupungin keskellä kukkulalla?',
+      options: ['keskiaikainen linnoitus', 'majakka', 'rautatieasema', 'oopperatalo'],
+      correct: 0,
+      level: 3,
+      fact: 'Linnoitus on yksi maailman vanhimmista ja suurimmista. Se vaurioitui sodassa pahoin, ja sitä sekä katettua basaaria on kunnostettu askel kerrallaan.',
+      hint: 'Rakennus on puolustusta varten ja seisoo korkealla kukkulalla.',
+    },
   ],
 
   damaskos: [
@@ -154,6 +244,27 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Damaskosteräksestä taottiin kuuluisan kestäviä, aaltokuvioisia miekanteriä.',
       hint: 'Siitä taottiin aaltokuvioisia miekanteriä.',
     },
+    {
+      q: 'Mikä on souk?',
+      options: ['katettu basaarikuja', 'moskeija', 'linnoitus', 'puutarha'],
+      correct: 0,
+      level: 1,
+      fact: 'Damaskoksen Hamidiyya-souk on katettu peltiholvilla, jonka rei’istä valo lankeaa pisteinä maahan. Kujilla myydään kangasta, mausteita ja makeisia.',
+      hint: 'Paikassa käydään kauppaa katon alla.',
+    },
+    {
+      q: 'Mikä tekee Damaskoksesta asuttavan keskellä kuivaa seutua?',
+      options: [
+        'vuorilta virtaava joki ja sen kastelema keidas',
+        'meren läheisyys',
+        'runsas sade',
+        'suuri järvi',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Barada-joki kastelee Ghoutan viljelysalueen, joka on ruokkinut kaupunkia vuosituhansia. Vedenoton kasvu on kuivattanut jokea viime vuosikymmeninä.',
+      hint: 'Vesi tulee vuorilta ja kastelee viljelysalueen.',
+    },
   ],
 
   jerusalem: [
@@ -178,6 +289,22 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Kuollutmeri on niin suolainen, ettei siinä elä kaloja — ja sen ranta on maanpinnan alin kohta.',
       hint: 'Järven vesi on melkein kymmenen kertaa valtamerta suolaisempaa.',
     },
+    {
+      q: 'Mikä ympäröi Jerusalemin vanhaakaupunkia?',
+      options: ['korkea kivimuuri', 'kanava', 'metsä', 'hiekkavalli'],
+      correct: 0,
+      level: 1,
+      fact: 'Nykyiset muurit rakennettiin 1500-luvulla, ja niissä on seitsemän käytössä olevaa porttia. Muurien sisällä on neljä perinteistä kaupunginosaa.',
+      hint: 'Rakennelma on kivestä ja siinä on portteja.',
+    },
+    {
+      q: 'Mikä kultakupolinen rakennus seisoo Jerusalemin vanhankaupungin kukkulalla?',
+      options: ['Kalliomoskeija', 'Hagia Sofia', 'Pyhän Pietarin kirkko', 'Kaaba'],
+      correct: 0,
+      level: 3,
+      fact: 'Rakennus valmistui 690-luvulla ja on islamin vanhimpia säilyneitä. Sama kukkula on juutalaisuudessa Temppelivuori, ja paikka on pyhä useille uskonnoille.',
+      hint: 'Rakennuksen kupoli on kullattu ja se valmistui 600-luvulla.',
+    },
   ],
 
   petra: [
@@ -201,6 +328,27 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Petra on Jordanian kuuluisin nähtävyys ja Unescon maailmanperintökohde.',
       hint: 'Maan pääkaupunki on Amman.',
+    },
+    {
+      q: 'Mikä on Petran tunnetuin kallioon veistetty julkisivu?',
+      options: ['Aarrekammio', 'Kaaba', 'Parthenon', 'Sfinksi'],
+      correct: 0,
+      level: 1,
+      fact: 'Al-Khazneh eli Aarrekammio on noin 40 metriä korkea ja veistetty suoraan kalliojyrkänteeseen. Nimi syntyi tarusta, jonka mukaan sen uurnassa olisi aarre.',
+      hint: 'Nimi viittaa aarteen säilytyspaikkaan.',
+    },
+    {
+      q: 'Miten nabatealaiset saivat vettä autiomaakaupunkiinsa?',
+      options: [
+        'padoilla, kanavilla ja kallioon hakatuilla vesisäiliöillä',
+        'kaivamalla kaivoja mereen asti',
+        'tuomalla vettä laivoilla',
+        'he eivät tarvinneet vettä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Harvinaiset rankkasateet ohjattiin kouruilla ja putkilla säiliöihin, ja tulvat pysäytettiin padoilla. Vesitekniikka teki kaupungista mahdollisen keskellä autiomaata.',
+      hint: 'Sadevesi otettiin talteen ja johdettiin säiliöihin.',
     },
   ],
 
@@ -228,6 +376,26 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Pyhän Katariinan luostari on toiminut yhtäjaksoisesti yli 1 400 vuotta, ja sen kirjasto on maailman vanhimpia.',
       hint: 'Siellä munkit ovat rukoilleet ja kopioineet kirjoja yli tuhat vuotta.',
     },
+    {
+      q: 'Millaista maastoa Siinain niemimaalla on?',
+      options: ['vuoristoista autiomaata', 'sademetsää', 'suoaluetta', 'jäätikköä'],
+      correct: 0,
+      level: 1,
+      fact: 'Niemimaalla on graniittivuoria, kuivia laaksoja ja rannikolla koralliriuttoja. Beduiiniyhteisöt ovat asuneet alueella vuosisatoja.',
+      hint: 'Maasto on kuivaa ja korkeaa.',
+    },
+    {
+      q: 'Mitä Siinain rannikolla tehdään Punaisenmeren puolella?',
+      options: [
+        'sukelletaan koralliriutoilla',
+        'lasketellaan',
+        'kalastetaan jään läpi',
+        'viljellään riisiä',
+      ],
+      correct: 0,
+      fact: 'Punaisenmeren riutat ovat kirkasvetisiä ja lajirikkaita, ja sukellusmatkailu on alueen tärkeä elinkeino.',
+      hint: 'Toiminta tapahtuu veden alla.',
+    },
   ],
 
   luxor: [
@@ -253,6 +421,21 @@ export const MIDDLEEAST_QUESTIONS = {
       level: 1,
       fact: 'Niili kastelee Luxorin pellot — sen itärannalla asuttiin ja länsirannalle haudattiin.',
       hint: 'Sama joki virtaa myös Kairon halki.',
+    },
+    {
+      q: 'Kummalla puolella jokea faaraoiden haudat ovat?',
+      options: ['länsirannalla', 'itärannalla', 'molemmilla rannoilla', 'saarella keskellä jokea'],
+      correct: 0,
+      level: 1,
+      fact: 'Muinaiset egyptiläiset rakensivat temppelit auringonnousun puolelle ja haudat auringonlaskun puolelle. Kuninkaiden laakso on siksi länsirannalla.',
+      hint: 'Puoli on sama kuin auringonlaskun suunta.',
+    },
+    {
+      q: 'Mikä valtava temppelialue on Luxorissa?',
+      options: ['Karnak', 'Parthenon', 'Borobudur', 'Angkor Wat'],
+      correct: 0,
+      fact: 'Karnakin pylvässalissa on 134 valtavaa pylvästä, ja aluetta rakennettiin lähes kahden vuosituhannen ajan. Se on maailman suurimpia uskonnollisia rakennuskokonaisuuksia.',
+      hint: 'Alueen pylvässalissa on yli sata jättipylvästä.',
     },
   ],
 
@@ -280,6 +463,21 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Medinan ajwa-taatelit ovat kuuluisimpia lajikkeita — taatelipalmu on keitaiden tärkein puu.',
       hint: 'Makeat hedelmät kypsyvät korkeiden palmujen latvoissa.',
     },
+    {
+      q: 'Missä maassa Medina sijaitsee?',
+      options: ['Saudi-Arabiassa', 'Egyptissä', 'Jordaniassa', 'Irakissa'],
+      correct: 0,
+      level: 1,
+      fact: 'Medina on maan länsiosassa noin 300 kilometriä Punaisenmeren rannikolta sisämaahan. Kaupunkiin saapuu vuosittain miljoonia vierailijoita.',
+      hint: 'Maa on Arabian niemimaan suurin.',
+    },
+    {
+      q: 'Kuka on haudattu Medinan Profeetan moskeijaan?',
+      options: ['profeetta Muhammad', 'Aleksanteri Suuri', 'Saladin', 'Harun al-Rashid'],
+      correct: 0,
+      fact: 'Moskeija rakennettiin profeetan kodin paikalle, ja se on laajentunut satojen tuhansien ihmisten tilaksi. Vihreä kupoli merkitsee hautapaikkaa.',
+      hint: 'Kyseessä on islamin perustajahahmo.',
+    },
   ],
 
   mekka: [
@@ -305,6 +503,31 @@ export const MIDDLEEAST_QUESTIONS = {
       level: 3,
       fact: 'Hadž kokoaa Mekkaan vuosittain miljoonia pyhiinvaeltajia kaikkialta maailmasta.',
       hint: 'Jokaisen muslimin toivotaan tekevän matkan kerran elämässään.',
+    },
+    {
+      q: 'Ketkä voivat käydä Mekan pyhällä alueella?',
+      options: [
+        'muslimit',
+        'kaikki matkailijat',
+        'vain Saudi-Arabian kansalaiset',
+        'vain tutkijat',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupungin pyhä alue on varattu muslimeille, ja siitä kerrotaan opastauluilla teiden varsilla. Pyhiinvaellus on yksi islamin viidestä pilarista.',
+      hint: 'Alue on varattu uskonnon omille harjoittajille.',
+    },
+    {
+      q: 'Milloin suuri pyhiinvaellus tehdään?',
+      options: [
+        'kerran vuodessa tiettynä kuukautena',
+        'joka kuukausi',
+        'milloin tahansa',
+        'kerran kymmenessä vuodessa',
+      ],
+      correct: 0,
+      fact: 'Hadž ajoittuu islamilaisen kuukalenterin viimeiseen kuukauteen, joten se siirtyy vuosittain aiemmaksi. Osallistujia on miljoonia.',
+      hint: 'Ajankohta seuraa kuukalenteria ja siirtyy vuosittain.',
     },
   ],
 
@@ -332,6 +555,26 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Riadin kamelimarkkinat ovat maailman suurimpia — eläimiä on kaupan tuhansia päivässä.',
       hint: 'Eläin jaksaa kulkea aavikolla päiväkausia lähes ilman vettä.',
     },
+    {
+      q: 'Mitä Saudi-Arabia tekee öljytulojen rinnalle?',
+      options: [
+        'monipuolistaa talouttaan muun muassa aurinkoenergialla ja matkailulla',
+        'luopuu kokonaan viennistä',
+        'siirtyy kalastukseen',
+        'rakentaa laivanrakennusteollisuutta',
+      ],
+      correct: 0,
+      fact: 'Maa rakentaa aurinkovoimaloita, avaa matkailua ja kehittää palvelualoja vähentääkseen riippuvuuttaan öljystä.',
+      hint: 'Tavoitteena on vähentää riippuvuutta yhdestä tuotteesta.',
+    },
+    {
+      q: 'Mikä maailmanperintökohde on Riadin laidalla?',
+      options: ['Diriyahin savitiilikaupunki', 'Petra', 'Palmyra', 'Persepolis'],
+      correct: 0,
+      level: 3,
+      fact: 'Diriyah oli Saudi-suvun ensimmäinen keskus 1700-luvulla. Sen savitiilirakennuksia on kunnostettu museoalueeksi.',
+      hint: 'Kohde on savitiilistä rakennettu vanha kaupunginosa.',
+    },
   ],
 
   rubalkhali: [
@@ -356,6 +599,26 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Beduiinit kiersivät keitaalta toiselle kamelien, vuohien ja telttojen kanssa.',
       hint: 'He asuvat teltoissa ja siirtyvät keitaalta toiselle.',
+    },
+    {
+      q: 'Millainen maasto Rub al-Khalissa on?',
+      options: [
+        'korkeita hiekkadyynejä ja suola-altaita',
+        'kalliovuoristoa',
+        'savannia',
+        'suoaluetta',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Dyynit kohoavat paikoin yli 200 metriin. Aavikon reunoilla on kuivuneiden järvien suolapohjia, jotka kertovat kosteammasta menneisyydestä.',
+      hint: 'Maisema on hiekkaa niin pitkälle kuin näkee.',
+    },
+    {
+      q: 'Mitä aavikon hiekan alta löydettiin 1900-luvulla?',
+      options: ['suuria öljyesiintymiä', 'kultaa', 'timantteja', 'kivihiiltä'],
+      correct: 0,
+      fact: 'Löytö muutti koko Arabian niemimaan talouden muutamassa vuosikymmenessä. Aiemmin alue eli karjanhoidosta ja kaupasta.',
+      hint: 'Aine pumpataan maasta ja se on nestemäistä.',
     },
   ],
 
@@ -382,6 +645,31 @@ export const MIDDLEEAST_QUESTIONS = {
       level: 3,
       fact: 'Jemenin vuorilla viljelty papu laivattiin maailmalle Mokhan satamasta — siitä tulee sana mokka.',
       hint: 'Mokka-nimitys tulee jemeniläisestä satamakaupungista.',
+    },
+    {
+      q: 'Millaisia Sanan vanhankaupungin talot ovat?',
+      options: [
+        'monikerroksisia savitiilitaloja koristeellisin ikkunoin',
+        'matalia puumajoja',
+        'lasisia pilvenpiirtäjiä',
+        'luolakoteja',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Talot ovat jopa kahdeksankerroksisia, ja niiden yläikkunat on kehystetty valkoisella kipsillä. Rakennustapa on satoja vuosia vanha.',
+      hint: 'Talot ovat korkeita ja rakennettu savitiilestä.',
+    },
+    {
+      q: 'Miksi Sanan vanhakaupunki on maailmanperinnön vaarantuneiden kohteiden listalla?',
+      options: [
+        'sota ja rankkasateet ovat vaurioittaneet rakennuksia',
+        'kaupunki on autioitunut',
+        'alue on veden alla',
+        'rakennukset ovat liian uusia',
+      ],
+      correct: 0,
+      fact: 'Vanhoja taloja on vaurioitunut, ja niiden korjaaminen vaatii perinteisiä menetelmiä ja materiaaleja. Paikalliset käsityöläiset ovat kunnostaneet osan.',
+      hint: 'Syitä on kaksi: konflikti ja sää.',
     },
   ],
 
@@ -410,6 +698,26 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Suezin kanavan avauduttua Aden oli maailman vilkkaimpia satamia: höyrylaivat lastasivat siellä hiiltä matkalla Intiaan.',
       hint: 'Höyrykoneiden pannuihin tarvittiin polttoainetta pitkällä reitillä.',
     },
+    {
+      q: 'Minkä maan satamakaupunki Aden on?',
+      options: ['Jemenin', 'Omanin', 'Saudi-Arabian', 'Djiboutin'],
+      correct: 0,
+      level: 1,
+      fact: 'Aden on maan eteläisin suuri kaupunki ja sen tärkein satama. Se on toiminut kauppasatamana tuhansia vuosia.',
+      hint: 'Maa on Arabian niemimaan eteläkärjessä.',
+    },
+    {
+      q: 'Miksi Adenin ohittava meritie on maailmankaupalle tärkeä?',
+      options: [
+        'se johtaa Punaisellemerelle ja Suezin kanavalle',
+        'se on ainoa reitti Intiaan',
+        'se on maailman syvin väylä',
+        'se on ainoa jäätön reitti',
+      ],
+      correct: 0,
+      fact: 'Suuri osa Euroopan ja Aasian välisestä laivaliikenteestä kulkee kapean salmen kautta. Salmen nimi tarkoittaa itkun porttia.',
+      hint: 'Reitti jatkuu pohjoiseen kanavan kautta Välimerelle.',
+    },
   ],
 
   salalah: [
@@ -436,6 +744,31 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Salalah on Omanin eteläisen Dhofarin maakunnan pääkaupunki.',
       hint: 'Maan pääkaupunki on Masqat.',
     },
+    {
+      q: 'Mistä puusta suitsuke saadaan?',
+      options: [
+        'suitsukepuun pihkasta',
+        'palmun lehdistä',
+        'oliivipuun hedelmistä',
+        'sypressin rungosta',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Puun kuoreen tehdään viilto, ja siitä valuva pihka kovettuu paloiksi. Dhofarin suitsukepuut ovat maailmanperintökohde.',
+      hint: 'Tuote on puun kuoresta valuvaa kovettunutta pihkaa.',
+    },
+    {
+      q: 'Mitä Salalahin seudulla kasvatetaan monsuunisateiden ansiosta?',
+      options: [
+        'kookospähkinöitä ja banaaneja',
+        'viinirypäleitä',
+        'vehnää',
+        'riisiä tulvapelloilla',
+      ],
+      correct: 0,
+      fact: 'Kesämonsuuni tuo alueelle sumua ja sadetta, joten rinteet vihertävät. Se on Arabian niemimaalla poikkeuksellista.',
+      hint: 'Hedelmät ovat trooppisia, ei aavikon.',
+    },
   ],
 
   masqat: [
@@ -460,6 +793,22 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Portugalilaiset ja omanilaiset rakensivat satamien turvaksi kymmeniä linnoituksia.',
       hint: 'Ne rakennettiin suojaamaan satamia merirosvoilta ja valloittajilta.',
+    },
+    {
+      q: 'Minkä meren rannalla Masqat sijaitsee?',
+      options: ['Omaninlahden', 'Välimeren', 'Mustanmeren', 'Kaspianmeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on jyrkkien vuorten ja meren välissä, ja vanhat vartiotornit seisovat kallioilla sataman suulla.',
+      hint: 'Lahti on nimetty saman maan mukaan kuin kaupungin valtio.',
+    },
+    {
+      q: 'Mikä on falaj?',
+      options: ['vanha kastelukanavajärjestelmä', 'purjelaiva', 'linnoitus', 'juhla'],
+      correct: 0,
+      level: 3,
+      fact: 'Falaj johtaa vettä vuorilta pelloille painovoiman avulla, ja vesivuorot jaetaan kylän kesken tarkkojen sääntöjen mukaan. Järjestelmä on maailmanperintökohde ja yhä käytössä.',
+      hint: 'Järjestelmä siirtää vettä vuorilta pelloille ilman pumppuja.',
     },
   ],
 
@@ -486,6 +835,32 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Yhdistyneet arabiemiirikunnat on seitsemän emiraatin liitto — pääkaupunki on Abu Dhabi, mutta Dubai on suurin.',
       hint: 'Valtio on seitsemän pienen emiraatin liitto.',
     },
+    {
+      q: 'Millainen ilmasto Dubaissa on?',
+      options: [
+        'kuuma ja kuiva aavikkoilmasto',
+        'viileä ja sateinen',
+        'trooppinen sademetsäilmasto',
+        'arktinen',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kesällä lämpötila nousee yli 45 asteen ja kosteus on korkea. Siksi arki siirtyy sisätiloihin ja iltaan.',
+      hint: 'Sadetta tulee muutamana päivänä vuodessa.',
+    },
+    {
+      q: 'Mistä Dubain talous saa nykyään suurimman osan tuloistaan?',
+      options: [
+        'kaupasta, satamasta, lentoliikenteestä ja matkailusta',
+        'yksinomaan öljystä',
+        'kalastuksesta',
+        'maataloudesta',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Öljyn osuus emiraatin taloudesta on nykyään pieni. Satama ja lentoasema tekivät kaupungista Aasian ja Euroopan välisen solmukohdan.',
+      hint: 'Öljyn osuus on nykyään yllättävän pieni.',
+    },
   ],
 
   doha: [
@@ -510,6 +885,22 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Ennen öljyä ja maakaasua elanto tuli merestä — nyt Qatar on yksi maailman rikkaimmista maista.',
       hint: 'Ennen öljyä ja kaasua elanto nostettiin merestä.',
+    },
+    {
+      q: 'Minkä lahden rannalla Doha sijaitsee?',
+      options: ['Persianlahden', 'Adeninlahden', 'Suezinlahden', 'Biskajanlahden'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on niemimaan itärannikolla, ja sen rantabulevardi Corniche kaartaa lahden ympäri.',
+      hint: 'Lahti erottaa Arabian niemimaan Iranista.',
+    },
+    {
+      q: 'Mikä museo on Dohan tunnetuimpia rakennuksia?',
+      options: ['Islamilaisen taiteen museo', 'Louvre', 'Prado', 'Ermitaasi'],
+      correct: 0,
+      level: 3,
+      fact: 'Museon suunnitteli arkkitehti I. M. Pei, ja se rakennettiin omalle tekosaarelleen. Kokoelmassa on esineitä kolmelta mantereelta ja 1 400 vuoden ajalta.',
+      hint: 'Rakennus seisoo omalla tekosaarellaan.',
     },
   ],
 
@@ -536,6 +927,26 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Kuwait-tornien suuret pallot ovat vesisäiliöitä, ja ylimmässä on myös näköalakerros.',
       hint: 'Aavikkokaupungissa tätä nestettä on pakko varastoida.',
     },
+    {
+      q: 'Minkä lahden pohjukassa Kuwait sijaitsee?',
+      options: ['Persianlahden', 'Punaisenmeren', 'Välimeren', 'Omaninlahden'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on lahden pohjoiskärjessä luonnonsataman äärellä. Sataman suoja teki siitä kauppapaikan jo 1700-luvulla.',
+      hint: 'Sama lahti kuin Dohassa ja Dubaissa.',
+    },
+    {
+      q: 'Mistä kuwaitilaiset saivat elantonsa ennen öljyä?',
+      options: [
+        'helmenkalastuksesta ja purjelaivakaupasta',
+        'maanviljelystä',
+        'kaivostoiminnasta',
+        'metsätaloudesta',
+      ],
+      correct: 0,
+      fact: 'Dhow-laivat purjehtivat Intiaan ja Itä-Afrikkaan, ja helmiä sukellettiin kesäisin. Japanilaiset viljellyt helmet lopettivat elinkeinon 1930-luvulla.',
+      hint: 'Elinkeinot liittyivät mereen ja purjelaivoihin.',
+    },
   ],
 
   bagdad: [
@@ -560,6 +971,27 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Tuhannen ja yhden yön tarinoihin kuuluvat myös Aladdin ja merenkulkija Sinbad.',
       hint: 'Samaan kokoelmaan kuuluvat Aladdin ja merenkulkija Sinbad.',
+    },
+    {
+      q: 'Missä maassa Bagdad sijaitsee?',
+      options: ['Irakissa', 'Iranissa', 'Syyriassa', 'Jordaniassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Bagdad on Irakin pääkaupunki ja maan suurin kaupunki. Se perustettiin 700-luvulla pyöreäksi kaupungiksi Tigrisin rannalle.',
+      hint: 'Maa tunnetaan myös Kaksoisvirranmaana.',
+    },
+    {
+      q: 'Mikä asema Bagdadilla oli 800-luvulla?',
+      options: [
+        'se oli yksi maailman suurimmista ja oppineimmista kaupungeista',
+        'se oli pieni kylä',
+        'se oli autio',
+        'se oli Rooman maakuntakeskus',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kalifaatin pääkaupungissa käännettiin kreikkalaista ja intialaista tiedettä arabiaksi, ja siellä kehitettiin algebraa ja tähtitiedettä. Käännöstyö säilytti tekstejä, jotka olisivat muuten kadonneet.',
+      hint: 'Kaupungissa käännettiin ja kehitettiin tiedettä kalifaatin aikaan.',
     },
   ],
 
@@ -587,6 +1019,26 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Mosul on Irakin toiseksi suurin kaupunki — pääkaupunki on Bagdad.',
       hint: 'Maan pääkaupunki on Bagdad.',
     },
+    {
+      q: 'Minkä joen varrella Mosul sijaitsee?',
+      options: ['Tigrisin', 'Niilin', 'Jordanin', 'Eufratin'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on joen länsirannalla, ja vastarannalla ovat Niniven rauniot. Joki on ollut alueen elinehto tuhansia vuosia.',
+      hint: 'Joki on Kaksoisvirranmaan itäinen virta.',
+    },
+    {
+      q: 'Mitä Mosulissa on kunnostettu 2010-luvun lopulta lähtien?',
+      options: [
+        'vanhaakaupunkia ja al-Nurin moskeijaa',
+        'metroverkkoa',
+        'lentoasemaa vain',
+        'satamaa',
+      ],
+      correct: 0,
+      fact: 'Sodassa tuhoutunutta vanhaakaupunkia ja sen kuuluisaa vinoa minareettia on rakennettu uudelleen kansainvälisellä yhteistyöllä. Työssä käytetään alkuperäisiä materiaaleja ja paikallisia käsityöläisiä.',
+      hint: 'Kohteena on vanhakaupunki ja sen tunnettu vino minareetti.',
+    },
   ],
 
   tabriz: [
@@ -610,6 +1062,22 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Tabriz oli silkkitien tärkeä etappi, jossa idän karavaanit kohtasivat lännen kauppiaat.',
       hint: 'Reitti sai nimensä Kiinasta tuodusta arvokankaasta.',
+    },
+    {
+      q: 'Missä maassa Tabriz sijaitsee?',
+      options: ['Iranissa', 'Turkissa', 'Irakissa', 'Azerbaidžanissa'],
+      correct: 0,
+      level: 1,
+      fact: 'Tabriz on maan luoteisosassa vuorten ympäröimässä laaksossa. Se on ollut useaan otteeseen valtakunnan pääkaupunki.',
+      hint: 'Maan pääkaupunki on Teheran.',
+    },
+    {
+      q: 'Mikä kieli on Tabrizissa yleisesti puhuttu persian ohella?',
+      options: ['azeri', 'arabia', 'armenia', 'kurdi'],
+      correct: 0,
+      level: 3,
+      fact: 'Azeri on turkkilainen kieli, ja sitä puhuu Iranissa miljoonia ihmisiä. Tabriz on maan azerinkielisen kulttuurin keskus.',
+      hint: 'Kieli on turkkilainen kieli ja naapurimaan valtakieli.',
     },
   ],
 
@@ -638,6 +1106,25 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Persian sana tarkoitti muurien ympäröimää puutarhaa, ja kreikan kautta siitä tuli monien kielten sana taivaan puutarhalle.',
       hint: 'Muurien ympäröimä puutarha oli kuin taivas maan päällä.',
     },
+    {
+      q: 'Mikä kulkuneuvo helpottaa liikkumista Teheranin ruuhkissa?',
+      options: ['metro', 'köysirata', 'kanaalivene', 'raitiovaunu vain'],
+      correct: 0,
+      fact: 'Teheranin metro avattiin 1999, ja se kuljettaa päivittäin miljoonia matkustajia. Kaupungissa on myös omat vaunut naisille.',
+      hint: 'Kulkuneuvo kulkee maan alla.',
+    },
+    {
+      q: 'Mikä tekee persialaisesta puutarhasta erityisen?',
+      options: [
+        'se on jaettu neljään osaan vesikanavilla',
+        'se on kokonaan katettu',
+        'siinä ei kasva puita',
+        'se on rakennettu veden päälle',
+      ],
+      correct: 0,
+      fact: 'Nelijakoinen chahar bagh -puutarha vesikanavineen on ollut esikuvana puutarhoille Intiaa ja Espanjaa myöten. Yhdeksän persialaista puutarhaa on maailmanperintökohteita.',
+      hint: 'Puutarhan jakavat neljään osaan vesikanavat.',
+    },
   ],
 
   isfahan: [
@@ -664,6 +1151,26 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Kuninkaiden aukiolla pelattiin aikoinaan poolo-otteluita, ja shaahi seurasi peliä palatsinsa parvekkeelta.',
       hint: 'Sen laidalla shaahi seurasi poolo-otteluita palatsistaan.',
     },
+    {
+      q: 'Missä maassa Isfahan sijaitsee?',
+      options: ['Iranissa', 'Irakissa', 'Afganistanissa', 'Turkissa'],
+      correct: 0,
+      level: 1,
+      fact: 'Isfahan oli 1600-luvulla Persian pääkaupunki ja yksi maailman suurimmista kaupungeista. Sen aukio, moskeijat ja sillat ovat maailmanperintökohteita.',
+      hint: 'Maassa puhutaan persiaa.',
+    },
+    {
+      q: 'Mikä on Isfahanin kuuluisten siltojen erityispiirre?',
+      options: [
+        'ne toimivat myös patoina ja kohtaamispaikkoina',
+        'ne ovat rautaa',
+        'ne ovat liikkuvia',
+        'ne on rakennettu maan alle',
+      ],
+      correct: 0,
+      fact: 'Si-o-se-polin ja Khajun sillat padottavat vettä ja niiden holvikaarissa istutaan iltaisin laulamassa. Joki kuivuu välillä kokonaan vedenoton takia.',
+      hint: 'Silta pidättää vettä ja toimii samalla oleskelupaikkana.',
+    },
   ],
 
   persepolis: [
@@ -688,6 +1195,27 @@ export const MIDDLEEAST_QUESTIONS = {
       correct: 0,
       fact: 'Portaikkojen seinillä marssii lähettiläitä valtakunnan joka kolkasta lahjat käsissään.',
       hint: 'Portaikkojen seinillä marssii lähettiläitä kaikkialta valtakunnasta.',
+    },
+    {
+      q: 'Missä maassa Persepoliin rauniot ovat?',
+      options: ['Iranissa', 'Irakissa', 'Turkissa', 'Egyptissä'],
+      correct: 0,
+      level: 1,
+      fact: 'Rauniot ovat maan lounaisosassa Shirazin lähellä. Alue on ollut maailmanperintökohde vuodesta 1979.',
+      hint: 'Sama maa kuin Isfahanissa ja Tabrizissa.',
+    },
+    {
+      q: 'Millä kirjoituksella Persepoliin piirtokirjoitukset on tehty?',
+      options: [
+        'nuolenpääkirjoituksella kolmella kielellä',
+        'hieroglyfeillä',
+        'latinalaisilla kirjaimilla',
+        'kiinalaisilla merkeillä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kolmikieliset piirtokirjoitukset auttoivat tutkijoita ratkaisemaan nuolenpääkirjoituksen 1800-luvulla. Sama menetelmä toimi kuin Rosettan kivellä hieroglyfeissä.',
+      hint: 'Sama kirjoitustapa kuin Kaksoisvirranmaan savitauluissa.',
     },
   ],
 
@@ -781,6 +1309,29 @@ export const MIDDLEEAST_QUESTIONS = {
       fact: 'Sumerilaiset painoivat merkkejä ruokokynällä savitauluihin yli 5 000 vuotta sitten.',
       hint: 'Merkit painettiin ruokokynällä pehmeisiin savitauluihin.',
     },
+    {
+      q: 'Mistä falafel tehdään?',
+      options: ['kikherneistä tai härkäpavuista', 'riisistä', 'perunasta', 'maissista'],
+      correct: 0,
+      level: 1,
+      fact: 'Liotetut pavut jauhetaan mausteiden kanssa ja paistetaan palloiksi. Falafel on tavallinen katuruoka ympäri Lähi-itää.',
+      hint: 'Raaka-aine on palkokasvi.',
+    },
+    {
+      q: 'Mikä kieli on Iranin virallinen kieli?',
+      options: ['persia', 'arabia', 'turkki', 'urdu'],
+      correct: 0,
+      fact: 'Persia eli farsi kirjoitetaan arabialaisin kirjaimin, mutta se on eri kieliperhettä kuin arabia. Maassa puhutaan lisäksi azeria, kurdia ja monia muita kieliä.',
+      hint: 'Kieltä kutsutaan myös nimellä farsi.',
+    },
+    {
+      q: 'Mikä on qanat?',
+      options: ['maanalainen kanava, joka johtaa pohjavettä pelloille', 'vene', 'tori', 'juhla'],
+      correct: 0,
+      level: 3,
+      fact: 'Qanat kaivetaan loivasti viettäväksi tunneliksi vuorten juurelta kylään, ja pystykuilut näkyvät maastossa kuoppariveinä. Osa on ollut käytössä tuhansia vuosia.',
+      hint: 'Rakenne näkyy maan pinnalla kuoppariveinä.',
+    },
   ],
 };
 
@@ -793,117 +1344,233 @@ export const MIDDLEEAST_FACTS = {
     'Istanbul on maailman ainoa suurkaupunki, joka levittäytyy kahdelle mantereelle: Bosporinsalmen toinen ranta on Eurooppaa ja toinen Aasiaa.',
     'Istanbulin suuri basaari on yksi maailman vanhimmista ja suurimmista katetuista kauppapaikoista — kujia on kymmeniä ja myymälöitä tuhansia.',
     'Kaupunki on ollut kolmen valtakunnan pääkaupunki: Rooman, Bysantin ja osmanien.',
+    {
+      text: 'Kaupunki seisoo kahden maanosan päällä, ja salmen yli soudetaan kuin kadun poikki. Basaarissa opin, että hinta on keskustelu eikä numero.',
+      voice: 'isoisa',
+    },
   ],
   kairo: [
     'Kairo on arabimaailman suurin kaupunki, ja sen laidalla Gizassa seisovat yli 4 500 vuotta vanhat pyramidit.',
     'Kairon al-Azharissa on opetettu yli tuhat vuotta — se on maailman vanhimpia yliopistoja.',
+    {
+      text: 'Basaarissa neuvoteltiin hinnasta kolme kuppia teetä, ja häviön kärsin minä. Kanava Suezissa on ollut auki neljä vuotta ja lyhentänyt Intian-matkani kuukausilla.',
+      voice: 'isoisa',
+    },
   ],
   izmir: [
     'Izmir oli antiikin Smyrna, ja sen torin eli agoran rauniot ovat yhä keskellä nykykaupunkia.',
     'Izmirin satamasta on laivattu viikunoita ja rusinoita maailmalle vuosisatojen ajan.',
+    {
+      text: 'Egeanmeren rannalla on satama, jonka nimi oli antiikissa toinen ja josta viedään viikunoita ja rusinoita. Rannikolla makaa marmorikaupunki, jonka satama liettyi umpeen; meidän satamillemme voi käydä samoin.',
+      voice: 'isoisa',
+    },
   ],
   ankara: [
     'Ankara valittiin Turkin pääkaupungiksi vuonna 1923, koska se sijaitsee suojassa keskellä Anatolian ylänköä.',
     'Angoravuohen pehmeä mohair-villa on saanut nimensä Ankaran vanhasta nimestä — samoin pörröinen angorakani.',
+    {
+      text: 'Ylängöllä on kaupunki, joka tunnetaan lähinnä vuohistaan ja niiden villasta. Kukaan ei väitä sen olevan tärkeä; merkitsen sen silti muistiin, koska ylängöllä on tapana yllättää.',
+      voice: 'isoisa',
+    },
   ],
   kapadokia: [
     'Kappadokian pehmeään tuffikiveen on kaiverrettu koteja, kyyhkyslakkoja, kirkkoja ja kokonaisia maanalaisia kaupunkeja.',
     'Derinkuyun maanalainen kaupunki ulottuu noin 60 metrin syvyyteen, ja sinne saattoi suojautua tuhansia ihmisiä karjoineen.',
+    {
+      text: 'Pehmeään tuhkakiveen on kaiverrettu asuntoja, kirkkoja ja kokonaisia maanalaisia kaupunkeja. Käytävät voi sulkea vierivillä kivillä; se on parempi lukko kuin yksikään Lontoossa myytävä.',
+      voice: 'isoisa',
+    },
   ],
   nikosia: [
     'Nikosia on Euroopan viimeinen jaettu pääkaupunki: vartioitu vihreä linja erottaa sen kreikkalais- ja turkkilaisosan.',
     'Kypros antoi nimensä kuparille — saaren kaivokset olivat antiikin maailman tärkeimmät.',
+    {
+      text: 'Saaren keskellä sisämaassa on kaupunki, jossa kuulee kahta kieltä samalla torilla. Britannia hallinnoi saarta nyt; historia osoittaa, ettei sellainen järjestely yleensä kestä.',
+      voice: 'isoisa',
+    },
   ],
   halab: [
     'Aleppon linnoitus kohoaa kukkulalla, jolla on asuttu jo yli 4 000 vuotta.',
     'Aleppon saippuaa keitetään oliiviöljystä ja laakerimarjaöljystä ja kypsytetään kuukausia — palat leimataan käsin.',
+    {
+      text: 'Basaarin katetut kujat jatkuvat kilometrikaupalla, ja saippuaa keitetään oliiviöljystä ja laakerista. Kaupunki kilpailee naapurinsa kanssa siitä, kumpi on maailman vanhin; kumpikin on vanhempi kuin koko minun maani.',
+      voice: 'isoisa',
+    },
   ],
   damaskos: [
     'Damaskos on yksi maailman vanhimmista yhä asutuista kaupungeista — sen kaduilla on kävelty tuhansia vuosia.',
     'Umaijadien suuri moskeija on islamin vanhimpia, ja sen paikalla on sitä ennen ollut temppeli ja kirkko.',
+    {
+      text: 'Vuorilta tuleva joki kastelee keitaan, ja sen ansiosta kaupunki on ollut asuttu yhtäjaksoisesti kauemmin kuin osaan laskea. Teräs, jonka nimi tulee täältä, oli aikoinaan parempaa kuin mikään eurooppalainen.',
+      voice: 'isoisa',
+    },
   ],
   jerusalem: [
     'Jerusalemin muurien ympäröimä vanhakaupunki jakautuu neljään kortteliin: juutalaiseen, kristittyyn, muslimien ja armenialaisten.',
     'Kalliomoskeijan kultainen kupoli on hallinnut Jerusalemin siluettia yli 1 300 vuoden ajan.',
+    {
+      text: 'Muurien sisällä kolme uskontoa pitää samoja kortteleita pyhinä, ja jokainen tuntee reitit toistensa ohi. Riitely paikasta ei ole uutta eikä loppunut; sen huomaa jo portilla.',
+      voice: 'isoisa',
+    },
   ],
   petra: [
     'Petra oli nabatealaisten karavaanikaupunki, joka rikastui suitsuke- ja maustekaupan tulliporttina.',
     'Petra unohtui ulkomaailmalta sadoiksi vuosiksi, kunnes tutkimusmatkailija Johann Burckhardt löysi sen uudelleen vuonna 1812.',
+    {
+      text: 'Kapean rotkon päässä avautuu kallioon veistetty julkisivu, joka on korkeampi kuin klubini talo. Kaupunki eli vedestä, jonka nabatealaiset keräsivät kalliokouruihin; ilman sitä täällä ei olisi mitään.',
+      voice: 'isoisa',
+    },
   ],
   siinai: [
     'Siinain niemimaa on Aasian ja Afrikan välinen maasilta, jonka halki kauppiaat ja pyhiinvaeltajat ovat kulkeneet vuosituhansia.',
     'Pyhän Katariinan luostarissa on toiminut munkkeja yhtäjaksoisesti yli 1 400 vuotta, ja sen kirjasto on maailman vanhimpia.',
+    {
+      text: 'Vuorten keskellä toimii luostari, joka on ollut auki kauemmin kuin yksikään tuntemani laitos. Rannikon vedessä on koralleja niin kirkkaassa vedessä, että kalat näkyvät veneestä.',
+      voice: 'isoisa',
+    },
   ],
   luxor: [
     'Luxoria kutsutaan maailman suurimmaksi ulkoilmamuseoksi: temppeleitä ja hautoja on joka puolella.',
     'Karnakin temppeliä rakennettiin ja laajennettiin yli tuhannen vuoden ajan — sen suursali on metsä jättiläispylväitä.',
+    {
+      text: 'Joen länsirannalla on kuninkaiden hautoja kallion sisässä, ja itärannalla temppeleitä pylväineen. Meidän katedraalimme ovat nuoria; sen tunnustan täällä ääneen enkä kotona.',
+      voice: 'isoisa',
+    },
   ],
   medina: [
     'Islamin ajanlasku alkaa vuodesta 622, jolloin profeetta Muhammad muutti Mekasta Medinaan.',
     'Medinan keitaat ovat kuuluisia taateleistaan — arvostetuin lajike on tumma ajwa.',
+    {
+      text: 'Keitaskaupunki elää taateleista ja pyhiinvaeltajista, ja sen moskeijaan minulla ei ole asiaa. Kunnioitan sitä; en odottanut itseltäni sitä lausetta matkan alussa.',
+      voice: 'isoisa',
+    },
   ],
   mekka: [
     'Hadž-pyhiinvaellus kokoaa Mekkaan vuosittain miljoonia ihmisiä kaikkialta maailmasta.',
     'Mekan suuren moskeijan keskellä on Kaaba, jota kohti muslimit rukoilevat kaikkialla maailmassa.',
+    {
+      text: 'Miljoona ihmistä saapuu vuosittain samaan paikkaan samaan aikaan ja poistuu järjestyksessä. Mikään Euroopan hallinto ei selviäisi vastaavasta ilman armeijaa.',
+      voice: 'isoisa',
+    },
   ],
   riad: [
     'Riadin nimi tulee arabian puutarhoja tarkoittavasta sanasta — kaupunki syntyi aavikon keitaalle.',
     'Riad kasvoi muutamassa vuosikymmenessä savitiilikylästä miljoonakaupungiksi öljyn löytymisen jälkeen.',
+    {
+      text: 'Aavikon keskellä on savitiilikaupunki, jossa kaupataan kameleita ja taateleita. Ympärillä ei ole mitään; sanon sen ilman ylenkatsetta, koska tyhjyys on täällä turva eikä puute.',
+      voice: 'isoisa',
+    },
   ],
   rubalkhali: [
     'Rub al-Khali on maailman suurin yhtenäinen hiekka-aavikko — lähes Ranskan kokoinen hiekkameri.',
     'Ensimmäiset tunnetut eurooppalaiset ylittivät Rub al-Khalin vasta 1930-luvulla kamelikaravaanilla.',
+    {
+      text: 'Aavikkoa sanotaan tyhjäksi neljännekseksi, eikä sitä ole ylittänyt yksikään eurooppalainen. Beduiinit ylittävät sen tarvittaessa; heille se ei ole tyhjä vaan kartta, jota en osaa lukea.',
+      voice: 'isoisa',
+    },
   ],
   sana: [
     'Sana on yli 2 200 metrin korkeudessa — yksi maailman korkeimmalla sijaitsevista pääkaupungeista.',
     'Sanan vanhankaupungin tornitalot on rakennettu savesta ja koristeltu valkoisin kipsikuvioin kuin piparkakut.',
+    {
+      text: 'Vuorten keskellä on kaupunki, jonka savitiilitalot ovat kahdeksankerroksisia ja ikkunat kipsikoristeisia. Kahvi lähti maailmalle näiden vuorten rinteiltä; Lontoon kahvilat ovat sen velkaa tälle paikalle.',
+      voice: 'isoisa',
+    },
   ],
   aden: [
     'Adenin vanha kaupunginosa on rakennettu sammuneen tulivuoren kraatteriin.',
     'Höyrylaivojen aikaan Aden oli maailman vilkkaimpia satamia: laivat lastasivat siellä hiiltä matkalla Intiaan.',
+    {
+      text: 'Sammuneen tulivuoren kraatterissa on satama, jossa jokainen höyrylaiva täydentää hiilivarastonsa. Britannia hallitsee satamaa; se on meille reitti Intiaan ja heille oma kaupunkinsa.',
+      voice: 'isoisa',
+    },
   ],
   salalah: [
     'Salalahin seudun suitsukepuiden pihkaa vietiin jo faaraoiden Egyptiin ja Rooman temppeleihin.',
     'Kesän khareef-monsuuni muuttaa Salalahin ympäristön vihreäksi keskellä Arabian kuuminta aikaa.',
+    {
+      text: 'Kesämonsuuni tekee tästä nurkasta vihreän, kun koko muu niemimaa on ruskea. Suitsuketta on viety täältä faaraoiden aikaan asti; hinta oli aikoinaan kullan luokkaa.',
+      voice: 'isoisa',
+    },
   ],
   masqat: [
     'Masqatin dhow-laivat kuljettivat taateleita, suitsuketta ja mausteita monsuunituulten mukana Intiaan ja Afrikkaan.',
     'Omanilaiset merenkulkijat purjehtivat aikoinaan Sansibariin asti, ja saari kuului pitkään Omanin sulttaanille.',
+    {
+      text: 'Vuorten ja meren välissä on satama, jonka kalliolla seisoo linnoituksia. Vuorilta johdetaan vettä pelloille kanavia pitkin, ja vesivuorot jaetaan kylän kesken tarkemmin kuin perintöosuudet Englannissa.',
+      voice: 'isoisa',
+    },
   ],
   dubai: [
     'Burj Khalifa on 828 metriä korkea — huipulta näkee kirkkaalla säällä yli sadan kilometrin päähän.',
     'Vielä 1900-luvun puolivälissä Dubai oli pieni helmenkalastajien ja kauppiaiden satamakylä.',
+    {
+      text: 'Rannalla on kylä, jossa sukelletaan helmiä kesäisin ja purjehditaan Intiaan talvella. Muuta täällä ei ole; kirjaan tämän havainnon ja epäilen, ettei se vanhene.',
+      voice: 'isoisa',
+    },
   ],
   doha: [
     'Qatarin niemimaalla ei ole yhtään jokea, joten juomavesi valmistetaan merivedestä.',
     'Dohan islamilaisen taiteen museo seisoo omalla tekosaarellaan sataman edustalla.',
+    {
+      text: 'Niemimaan rannalla on helmenkalastajien kylä, jossa on muutama tuhat asukasta. Vesi on täällä arvokkaampaa kuin helmet, mikä on hyvä muistaa ennen kuin kehuu helmiä.',
+      voice: 'isoisa',
+    },
   ],
   kuwait: [
     'Kuwait-tornien suuret pallot ovat vesisäiliöitä — ylimmässä on myös pyörivä näköalakerros.',
     'Kuwaitin luonnonsatama teki pienestä kalastajakylästä helmenpyynnin ja kaupan keskuksen jo ennen öljyä.',
+    {
+      text: 'Lahden pohjukan satamasta lähtevät purjelaivat Intiaan ja Itä-Afrikkaan. Vesi tuodaan kaupunkiin veneillä joen suulta; se on hankalin vesihuolto jonka olen nähnyt.',
+      voice: 'isoisa',
+    },
   ],
   bagdad: [
     'Bagdad perustettiin vuonna 762 täysin pyöreäksi kaupungiksi, jonka keskellä oli kalifin palatsi.',
     'Islamin kulta-aikana Bagdad oli maailman suurimpia kaupunkeja, jonka Viisauden taloon koottiin aikansa tiede.',
+    {
+      text: 'Tigrisin rannalla on kaupunki, joka oli tuhat vuotta sitten maailman oppinein. Siellä käännettiin kreikkalaiset tekstit, jotka me luulemme säilyttäneemme itse.',
+      voice: 'isoisa',
+    },
   ],
   mosul: [
     'Mosulin naapurissa ovat muinaisen Niniven rauniot — Assyrian pääkaupungin, josta Raamattukin kertoo.',
     'Ohut musliinikangas on saanut nimensä Mosulista, jonka kautta sitä tuotiin Eurooppaan.',
+    {
+      text: 'Joen vastarannalla ovat Niniven kummut, joita kaivetaan parhaillaan. Löydöt viedään Lontooseen ja Pariisiin; kysymystä siitä, kenelle ne kuuluvat, ei esitetä ääneen.',
+      voice: 'isoisa',
+    },
   ],
   tabriz: [
     'Tabrizin katettu basaari on yksi maailman vanhimmista ja suurimmista — sen holvikäytäviä on kilometrien verran.',
     'Tabriz oli silkkitien tärkeä etappi, jossa idän karavaanit kohtasivat lännen kauppiaat.',
+    {
+      text: 'Katettu basaari on niin laaja, että eksyin siihen kahdesti saman päivän aikana. Mattoja solmitaan täällä niin tiheään, että kuviota ei erota kuin lähietäisyydeltä.',
+      voice: 'isoisa',
+    },
   ],
   teheran: [
     'Teheran nojaa Elburzvuoristoon: kaupungista pääsee talvella hiihtämään alle tunnissa.',
     'Damavandin yli 5 600-metrinen lumihuippu näkyy Teheraniin kirkkaalla säällä.',
+    {
+      text: 'Šaahin kaupunki on kuivalla ylätasangolla, ja vettä tuodaan vuorilta maanalaisia kanavia pitkin. Kanavat on kaivettu käsin satoja vuosia sitten, ja ne toimivat paremmin kuin Lontoon vesijohto.',
+      voice: 'isoisa',
+    },
   ],
   isfahan: [
     'Naqsh-e Jahanin aukio on yksi maailman suurimmista — sen laidalla pelattiin poolo-otteluita jo 1600-luvulla.',
     'Isfahanin vanhojen siltojen holveissa istutaan iltaisin teellä, ja Si-o-se-polin sillassa on 33 kaarta.',
+    {
+      text: 'Sanotaan, että kaupunki on puoli maailmaa, ja aukion laidalla seisoessa väite tuntuu kohtuulliselta. Sinisiä kaakeleita on niin paljon, että taivas näyttää jatkuvan seinissä.',
+      voice: 'isoisa',
+    },
   ],
   persepolis: [
     'Persepoliin palatsit seisovat suurella kiviterassilla, jonne noustaan leveitä seremoniaportaita pitkin.',
     'Persepoliin reliefeissä marssii lahjoja tuovia lähettiläitä 23 kansasta — kulkue on kuin valtakunnan kuvakirja.',
+    {
+      text: 'Tasangolla makaa palatsin rauniot, joiden reliefeissä kansat tuovat lahjoja kuninkaalle. Aleksanteri poltti paikan; me kutsumme häntä suureksi, mikä kertoo enemmän meistä kuin hänestä.',
+      voice: 'isoisa',
+    },
   ],
 };

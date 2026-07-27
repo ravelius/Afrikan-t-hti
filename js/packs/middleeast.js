@@ -248,11 +248,43 @@ export const MIDDLE_EAST = {
     // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
     diaries: [
       'Basaari tuoksuu täsmälleen kirjojeni kuvauksilta. Kauppias ottaa puntani vastaan ystävällisesti — museokappaleita, hän sanoo, ja antaa vaihtorahat sovelluksella.',
+      'Isoisän kartassa tämä alue on jaettu kahden keisarikunnan kesken ja loput on merkitty tyhjäksi. Nyt tässä on parikymmentä valtiota, joiden rajat piirsivät pääosin eurooppalaiset virkamiehet viivoittimella. Se näkyy kartassa yhä.',
+      '"Aavikko on este, joka on kierrettävä", kirjoitti isoisä. Karavaanit olivat kulkeneet sen halki tuhat vuotta ennen häntä, ja nyt sen yli lennetään kuudessa tunnissa. Este oli hänen mielikuvituksessaan.',
+      'Isoisä ihaili suitsuketta, silkkiä ja terästä ja piti niitä idän tuotteina. Ne olivat idän keksintöjä, mikä on eri asia, ja sen hän kirjoitti muistiin vasta kolmannella sivulla.',
+      '"Öljyllä ei ole täällä käyttöä", merkitsi isoisä Persianlahden rannalla. Yhden lauseen kohdalla hän oli väärässä perusteellisemmin kuin koko muussa päiväkirjassaan yhteensä.',
+      'Isoisä kirjasi tarkasti kaupunkien iän ja sai luvut oikein: Damaskos, Aleppo, Jeriko. Sivun alalaidassa hän lisää, että meidän Lontoomme on tähän verrattuna uudisrakennus. Se on hänen rehellisin lauseensa.',
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
-    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
-    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
-    starHints: {},
+    // kaupungin nimeä.
+    starHints: {
+      izmir: 'Egeanmeren rannalla on satama, jota kutsuttiin antiikissa toisella nimellä. Sen lähellä makaa marmorikaupunki, jonka satama liettyi umpeen.',
+      ankara: 'Sisämaan ylängöllä noin kilometrin korkeudessa on kaupunki, joka tunnetaan vuohistaan ja niiden pehmeästä villasta.',
+      kapadokia: 'Keski-Anatolian tuhkakivialueella on kartiomaisia kivitorneja ja kokonaisia maanalaisia kaupunkeja, joiden käytävät suljettiin vierivillä kivillä.',
+      nikosia: 'Välimeren itäisen saaren keskellä sisämaassa on pääkaupunki, jossa kuulee kahta kieltä samalla torilla.',
+      halab: 'Pohjoisessa kauppareittien risteyksessä on kaupunki, jonka katetut basaarikujat jatkuvat kilometrikaupalla ja jossa keitetään saippuaa oliiviöljystä.',
+      damaskos: 'Vuorilta tulevan joen kastelemalla keitaalla on kaupunki, joka on ollut asuttu yhtäjaksoisesti pidempään kuin melkein mikään muu.',
+      jerusalem: 'Vuoriston harjanteella muurien sisällä on kaupunki, jonka samoja kortteleita kolme uskontoa pitää pyhinä.',
+      petra: 'Etelän autiomaassa kapean rotkon päässä on kallioon veistetty kaupunki, joka eli kalliokouruihin kerätystä sadevedestä.',
+      siinai: 'Kahden lahden väliin jäävällä niemimaalla on graniittivuoria ja niiden keskellä luostari, joka on toiminut yli tuhat vuotta.',
+      luxor: 'Suuren joen varrella sisämaassa on temppelikaupunki, jonka länsirannan kallioihin on hakattu kuninkaiden hautoja.',
+      medina: 'Punaisenmeren takana sisämaan keitaalla on kaupunki, joka elää taateleista ja pyhiinvaeltajista. Se on islamin toiseksi pyhin paikka.',
+      mekka: 'Länsirannikon vuorten laaksossa on kaupunki, jonne miljoona ihmistä saapuu vuosittain samaan aikaan. Rukoiltaessa käännytään kaikkialla maailmassa sitä kohti.',
+      riad: 'Keskellä Arabian niemimaata aavikon ympäröimänä on savitiilikaupunki, jonka laidalla käydään kamelikauppaa.',
+      rubalkhali: 'Niemimaan etelävyöhykkeellä on maailman suurin yhtenäinen hiekka-aavikko, jonka dyynit kohoavat satoihin metreihin.',
+      sana: 'Vuorten keskellä yli kahden kilometrin korkeudessa on kaupunki, jonka savitiilitalot ovat kahdeksankerroksisia ja ikkunat kipsikoristeisia.',
+      aden: 'Niemimaan eteläkärjessä sammuneen tulivuoren kraatterissa on satama, jossa höyrylaivat täydensivät hiilivarastonsa.',
+      salalah: 'Kaakkoisrannikon nurkassa kesämonsuuni tekee maisemasta vihreän. Sieltä on viety suitsuketta faaraoiden ajoista asti.',
+      masqat: 'Kaakkoisrannikolla jyrkkien vuorten ja meren välissä on satama, jonka kallioilla seisoo vanhoja linnoituksia.',
+      dubai: 'Persianlahden etelärannalla on helmenkalastajien kylä lahdelman varrella. Sieltä purjehditaan talvisin Intiaan.',
+      doha: 'Persianlahteen työntyvän niemimaan itärannalla on helmenkalastajien kaupunki, jossa juomavesi on arvokkaampaa kuin helmet.',
+      kuwait: 'Persianlahden pohjoisimmassa pohjukassa on luonnonsatama, josta purjelaivat lähtevät Intiaan ja Itä-Afrikkaan.',
+      bagdad: 'Kaksoisvirranmaan itäisen virran rannalla on kaupunki, joka oli tuhat vuotta sitten maailman oppinein.',
+      mosul: 'Saman virran varrella pohjoisempana on kaupunki, jonka vastarannalla ovat muinaisen suurkaupungin kummut.',
+      tabriz: 'Luoteisen ylängön laaksossa on kaupunki, jonka katettuun basaariin eksyy ja jossa solmitaan mattoja vientiin.',
+      teheran: 'Lumihuippuisen vuoren juurella ylätasangolla on kaupunki, johon vesi tuodaan vuorilta maanalaisia kanavia pitkin.',
+      isfahan: 'Keskellä maata joen varrella on kaupunki, jonka aukiota ja sinisiä kaakelikupoleita sananlasku kutsuu puoleksi maailmaksi.',
+      persepolis: 'Lounaisen ylätasangon reunalla makaa palatsin rauniot, joiden reliefeissä kansat tuovat lahjoja kuninkaalle.',
+    },
   },
 
   decor: {
