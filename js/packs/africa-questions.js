@@ -1508,24 +1508,24 @@ export const AFRICA_FACTS = {
     },
   ],
   tripoli: [
-    'Tripolin nimi tulee kreikan sanoista, jotka tarkoittavat kolmea kaupunkia.',
-    'Tripoli on Libyan pääkaupunki ja sen tärkein satama Välimeren rannalla.',
+    'Rannikkotietä itään ajetaan pari tuntia, ja sitten aukeaa kokonainen roomalainen kaupunki: Leptis Magnan pääkatu, teatteri ja satama-allas meren rannalla. Tripolin nimi tarkoittaa kreikaksi kolmea kaupunkia — kaksi niistä on nykyään raunioina, ja kolmas on tämä, yhä pystyssä ja täynnä liikennettä.',
+    'Vanhankaupungin kujalta avautuu pieni aukio, ja sen keskellä seisoo roomalainen riemukaari vuodelta 165. Se on kuopassa, koska katu on noussut sen ympärillä neljä metriä kahdeksantoista vuosisadan aikana. Join sen varjossa pullosta vettä ja tajusin nojaavani keisari Marcus Aureliukseen.',
     {
       text: 'Rannikolla on satama, jonka läpi aavikon karavaanit purkavat lastinsa laivoihin. Kaupungin nimi tarkoittaa kreikaksi kolmea kaupunkia, mikä on tarkempaa kuin useimmat karttani nimet.',
       voice: 'isoisa',
     },
   ],
   murzuk: [
-    'Murzuk oli aikoinaan tärkeä pysähdyspaikka Saharan halki kulkeneilla karavaanireiteillä.',
-    'Murzukin hiekkameri on yksi Saharan laajimmista dyynialueista.',
+    'Ei puuta, ei tolppaa, ei varjoa. Murzukin hiekkameri on yksi Saharan laajimmista dyynialueista, ja kaupunki sen laidalla oli aikoinaan koko Fezzanin pääkaupunki: keskellä tyhjyyttä, koska tyhjyyden halki kulki tie.',
+    '"Kirahveja", sanoi kuljettaja ja pyyhkäisi hiekkaa kallion pinnalta. Fezzanin kallioihin on hakattu kirahveja, norsuja ja krokotiileja tuhansia vuosia sitten, silloin kun täällä oli ruohoa ja vettä. Aavikko on nuorempi kuin sen omat kuvat.',
     {
       text: 'Tänne on rannikolta kuukausi kamelin selässä, ja jokainen päivä on samanlainen kuin edellinen. Oppaani tietää tien ilman karttaa; minulla on kartta ja en tiedä tietä.',
       voice: 'isoisa',
     },
   ],
   alkufra: [
-    'Al Kufra on keidasryhmä keskellä Saharaa. Sen pelloille pumpataan vettä syvältä maanalaisesta pohjavesivarastosta.',
-    'Kufran kastellut pellot näkyvät satelliittikuvissa vihreinä ympyröinä keskellä autiomaata.',
+    'Ikkunasta katsottuna aavikkoon on piirretty täydellisiä vihreitä ympyröitä, kymmenittäin ja tarkalleen samankokoisia. Ne ovat peltoja: keskellä pyörii pitkä kastelupuomi, ja ympyrä on juuri se, minkä puomi ehtii kastella. Kaikki muu näkyvissä oleva on hiekkaa.',
+    'Vesi tulee täällä hanasta kuten kotona, mutta se on nostettu satojen metrien syvyydestä hiekkakivestä, ja se on satanut maahan kymmeniä tuhansia vuosia sitten. Isoisä kirjoitti, ettei kukaan hänen tuntemansa ollut käynyt täällä; lähimmälle rannikolle on yhä yli kahdeksansataa kilometriä, joten uskon häntä.',
     {
       text: 'Keidas ilmestyy hiekan keskelle kuin virhe kartassa: taatelipalmuja, varjoa ja vettä. Vesi tulee maan alta, ja sen määrän tietävät vain ne, jotka ovat asuneet täällä sukupolvia.',
       voice: 'isoisa',
@@ -1540,8 +1540,8 @@ export const AFRICA_FACTS = {
     },
   ],
   ahaggar: [
-    'Ahaggar on vuoristo keskellä Saharaa. Sen huiput kohoavat lähes 3 000 metriin ja yöt ovat siellä kylmiä.',
-    'Ahaggarin vuoret ovat tuaregien vanhaa kotiseutua.',
+    'Herätys oli kello neljä, koska kaikki muutkin heräsivät. Assekremin kalliolta katsotaan auringonnousua, ja kun valo tulee, Ahaggarin laavatapit nousevat hiekan yläpuolelle kuin mustat tornit: nämä ovat vanhojen tulivuorten kovat sisukset, ja pehmeämpi vuori on kulunut niiden ympäriltä pois.',
+    'Kivien kylkiin on kirjoitettu pisteitä, ympyröitä ja viivoja — tifinagh, berberien kirjaimisto, jota tuaregit ovat käyttäneet katkeamatta. Se ei ole museotavaraa: samojen merkkien uudempi muoto näkyy Algerian tienviitoissa, ja sille on nykyään oma näppäimistönsä puhelimessa.',
     {
       text: 'Keskellä autiomaata kohoaa vuoristo, jonka huipuilla palelin kuin Skotlannissa. Tuaregit tuntevat nämä polut nimeltä; me nimesimme ne uudelleen ja luulimme sitä löytämiseksi.',
       voice: 'isoisa',
@@ -1556,8 +1556,8 @@ export const AFRICA_FACTS = {
     },
   ],
   gao: [
-    'Gao oli Songhain valtakunnan pääkaupunki. Se oli 1400–1500-luvuilla yksi Afrikan mahtavimmista valtioista.',
-    'Kaupunki sijaitsee Nigerjoen rannalla, aavikon ja savannin rajalla.',
+    'Tulin Gaoon aavikon puolelta, ja joki tuli vastaan varoittamatta: Niger on tässä leveä, ruskea ja hidas, ja vastarannalla kohoaa vaaleanpunainen dyyni. Täältä hallittiin 1400- ja 1500-luvulla Songhain valtakuntaa, yhtä Afrikan historian suurimmista — ja sen valtaväylä oli tämä joki, ei mikään tie.',
+    'Askian hauta on savea, noin seitsemäntoista metriä korkea, ja sen kyljistä törröttää puunpätkiä. Ne eivät ole koristeita vaan telineet: savipinta rapataan uudelleen sateiden jälkeen, ja tikkaat on rakennettu valmiiksi seinän sisään. Rakennus on vuodelta 1495 ja seisoo yhä, koska sitä korjataan käsin.',
     {
       text: 'Joen rannalla oli valtakunnan pääkaupunki silloin, kun Englannissa riideltiin ruusuista. Hallitsijan hautakumpu on savesta, ja se on yhä pystyssä — savea kannattaa siis olla kunnioittavampi kuin olen ollut.',
       voice: 'isoisa',
@@ -1572,48 +1572,48 @@ export const AFRICA_FACTS = {
     },
   ],
   sierraleone: [
-    'Sierra Leone tarkoittaa portugaliksi leijonavuoria. Nimen antoivat merenkulkijat rannikon vuorille.',
-    'Maan pääkaupunki Freetown perustettiin vapautettujen orjien asuinpaikaksi.',
+    'Lentokone laskeutuu Lungiin, mutta kaupunki on lahden toisella puolella, joten viimeinen etappi ostetaan lipputiskiltä ja tehdään vesibussilla. Kannelta näkyy se, mistä maa sai nimensä: vuoret nousevat suoraan merestä, ja portugalilaiset merenkulkijat kirjasivat ne noin 1462 leijonavuoriksi.',
+    '"Tuossa se oli", sanoi mies ja osoitti tyhjää kohtaa aukion keskellä. Siinä kasvoi kapokkipuu, jonka alle kokoontuivat vuonna 1792 orjuudesta vapautetut ihmiset, jotka perustivat Freetownin. Puu kaatui myrskyssä toukokuussa 2023, ja aukiolla seistään yhä samassa kohdassa.',
     {
       text: 'Vuorisen niemen suojassa on satama, jonka nimi tarkoittaa vapautta. Nimi on annettu siksi, että vapaus oli ensin otettu pois — sitä ei sanota ääneen niissä juhlapuheissa, joita olen kuunnellut.',
       voice: 'isoisa',
     },
   ],
   kappalmas: [
-    'Kap Palmas on niemi Liberian eteläkärjessä. Portugalilaiset merenkulkijat nimesivät sen rannan palmujen mukaan.',
-    'Kap Palmasin kohdalla Afrikan rannikko kääntyy jyrkästi lännestä itään.',
+    'Kartalla tässä on kulma: rannikko on tullut Atlantin rantaa etelään asti ja kääntyy Kap Palmasin kohdalla jyrkästi itään kohti Guineanlahtea. Purjelaivojen aikaan tämän niemen ohi kulki koko läntinen liikenne, ja rannan palmut näkyivät merelle niin selvästi, että portugalilaiset nimesivät paikan niiden mukaan. Seison nyt siinä kohdassa, jossa Afrikka kääntyy.',
+    'Niemen kupeessa on Harperin kaupunki, jonka perustivat 1830-luvulla Amerikasta tulleet vapautetut orjat ja vapaana syntyneet mustat amerikkalaiset. Se kuului kolmen vuoden ajan omaan pieneen tasavaltaansa nimeltä Maryland, kunnes liittyi Liberiaan vuonna 1857. Isoisän kartassa on tilaa eurooppalaisille väreille; tänne niitä ei koskaan tullut, sillä Liberia oli itsenäinen jo 1847.',
     {
       text: 'Tässä kohdassa rannikko kääntyy jyrkästi itään, ja palmuja on niin paljon että ne näkyvät kannelle asti. Purjehtija tietää sijaintinsa puista; minä tarvitsin siihen sekstantin ja kaksi tuntia.',
       voice: 'isoisa',
     },
   ],
   kumasi: [
-    'Kumasi on ashantien kuningaskunnan vanha pääkaupunki, ja ashantien kuninkaan hovi toimii siellä yhä.',
-    'Kumasin tori on yksi Länsi-Afrikan suurimmista.',
+    '"Seuraa kenkiä, niin löydät ulos", sanoi myyjä, kun myönsin eksyneeni. Kejetian toria sanotaan Länsi-Afrikan suurimmaksi yhtenäiseksi toriksi: yli kahdeksantuhatta myyntipaikkaa, tavarat riveissä lajeittain. Kengät loppuivat, tomaatit alkoivat, ja ovi oli siinä.',
+    'Manhyian palatsimuseossa on esillä kultaista hovitavaraa, jonka brittijoukot veivät Kumasista vuonna 1874. Kaksi lontoolaista museota palautti niistä 32 esinettä vuonna 2024 — kolmen vuoden lainaksi, jatko-optiolla. Isoisän maa siis lainaa takaisin sen, minkä otti.',
     {
       text: 'Sisämaassa sademetsän keskellä on kuningaskunta, jonka hovi on järjestetty tarkemmin kuin meidän. Kuninkaan istuinta ei lasketa maahan eikä kukaan istu sillä — meidän kuningattaremme istuu omallaan, mikä lienee makuasia.',
       voice: 'isoisa',
     },
   ],
   orjarannikko: [
-    'Orjarannikko oli eurooppalaisten kauppiaiden nimitys Guineanlahden rannikolle, jolta vietiin ihmisiä orjuuteen Amerikkaan.',
-    'Naapurirannikot saivat nimensä kauppatavaran mukaan: Kultarannikko, Norsunluurannikko ja Pippurirannikko.',
+    'Ouidahissa hiekkatie kulkee kaupungilta rannalle neljä kilometriä, ja sen päässä kuuluu enää meri. Tien päähän pystytettiin vuonna 1995 muistomerkki, Ei-paluun portti: tämän sataman kautta vietiin arviolta yli miljoona ihmistä laivoilla Amerikkaan. Kaaren läpi näkyy vain vettä.',
+    'Beninissä 10. tammikuuta on vapaapäivä. Se on vodunin juhla, ja Ouidah täyttyy rummuista ja tanssijoista koko päiväksi. Sana vodun tarkoittaa fonin kielellä henkeä — meillä siitä tehtiin kauhuelokuvia, mikä kertoo enemmän meistä kuin sanasta.',
     {
       text: 'Kartassani tämä rannikonpätkä on nimetty sen mukaan, mitä täältä vietiin. Nimi ei kerro alueesta mitään; se kertoo meistä kaiken. En piirrä sitä uudelleen, mutta kirjoitan tähän, kenen käsialaa se on.',
       voice: 'isoisa',
     },
   ],
   kano: [
-    'Kano on yli tuhat vuotta vanha kauppakaupunki, jota ympäröivät savesta rakennetut muurit.',
-    'Kano oli Saharan karavaanireittien eteläinen pääte, jossa vaihdettiin suolaa, kangasta ja nahkaa.',
+    'Lentoni Kanoon lähti kolme tuntia myöhässä hiekan takia. Joulukuusta helmikuuhun harmattan-tuuli tuo Saharasta niin paksun pölyn, että näkyvyys putoaa kilometriin tai sen alle ja aurinko näkyy keskipäivällä kalpeana kiekkona. Pöly on kulkenut satoja kilometrejä ollakseen minun aikatauluni tiellä.',
+    'Kurmin torilla on käyty kauppaa vuodesta 1463: emiiri perusti sen, kun karavaanikaupan tavarat eivät enää mahtuneet kaupunkiin. Tori aloitti siis lähes kolmekymmentä vuotta ennen kuin Kolumbus lähti etsimään Intiaa väärään suuntaan. Se on yhä auki.',
     {
       text: 'Kaupunkia ympäröivät savimuurit, ja sen värjäämökuopat ovat toimineet kauemmin kuin yksikään tuntemani englantilainen tehdas. Indigo tarttuu käsiin viikoksi; sen sain kokeilla itse.',
       voice: 'isoisa',
     },
   ],
   kamerun: [
-    'Kamerunvuori on Länsi-Afrikan korkein huippu ja yhä toimiva tulivuori.',
-    'Maan nimi tulee portugalin katkarapua tarkoittavasta sanasta: merenkulkijat löysivät niitä jokisuulta.',
+    'Kamerunvuori nousee suoraan merenrannasta yli neljään kilometriin, ja alkuvuodesta sinne juostaan. Race of Hope on 38 kilometrin nousu huipulle ja takaisin alas; nopeimmat miehet tekevät sen alle viidessä tunnissa. Minä hengästyin ensimmäisellä tunnilla enkä ollut vielä metsärajallakaan.',
+    '"Neljäkymmentäkaksi", sanoi vieressäni istunut mies bussissa, kun kysyin mitä Kamerunista pitää tietää. Roger Milla teki maalin MM-kisoissa 42-vuotiaana vuonna 1994, eikä kukaan ole vieläkään tehnyt sitä vanhempana. Muuta mies ei sanonut koko matkalla, eikä tarvinnutkaan.',
     {
       text: 'Tulivuori nousee suoraan merestä, ja sen rinteillä sataa enemmän kuin missään muualla, missä olen seisonut. Sateenvarjoni kesti kaksi minuuttia. Vuori on ollut tässä kauemmin.',
       voice: 'isoisa',
@@ -1628,16 +1628,16 @@ export const AFRICA_FACTS = {
     },
   ],
   angola: [
-    'Angolan rannikkoa viilentää kylmä Benguelan merivirta, joka tekee rannasta poikkeuksellisen kuivan.',
-    'Angola on yksi Afrikan suurimmista öljyn ja timanttien tuottajista.',
+    'Kalandulan putoukset kuulee ennen kuin näkee, ja vesisumu kastelee jo ennen näköalapaikkaa. Lucala-joki putoaa siinä 105 metriä alas 400 metrin levyisenä kaarena, tilavuudeltaan yhtenä Afrikan suurimmista putouksista. Kaiteita ei ole, joten seisoin selvästi kauempana reunasta kuin kukaan muu.',
+    'Jättisapeliantilooppia ei nähty Angolassa vuosikymmeniin, ja moni piti sitä hävinneenä. Vuonna 2004 riistakamera Cangandalan kansallispuistossa kuvasi lauman, joka oli ollut siellä koko ajan. Sitä ei elä luonnonvaraisena missään muualla maailmassa.',
     {
       text: 'Portugalilaisten satamasta lähtivät laivat Brasiliaan kolmensadan vuoden ajan, ja lastina oli ihmisiä. Meri on tässä kylmä keskellä tropiikkia, mikä on merivirran ansiota; muusta ei kannata kiittää ketään.',
       voice: 'isoisa',
     },
   ],
   namib: [
-    'Namib on maailman vanhimpia autiomaita: se on ollut kuiva yli 50 miljoonaa vuotta.',
-    'Namibin dyynit ovat maailman korkeimpia — osa niistä kohoaa yli 300 metriin.',
+    'Kiipesin dyynin harjalle auringonnousuun: yli kolmesataa metriä hiekkaa, ja joka askeleesta puolet valuu takaisin alas. Ylhäältä näkyy vain lisää dyyniä, oranssina niin kauas kuin katse kantaa. Nousuun meni tunti, alastuloon kaksi minuuttia.',
+    'Namibin autiomaassa kasvaa welwitschia, jolla on kaksi lehteä. Ei kahta kerrallaan vaan kaksi koko elämänsä ajan, ja elämä voi kestää yli tuhat vuotta. Afrikaansinkielinen nimi tarkoittaa kahta lehteä, jotka eivät kuole.',
     {
       text: 'Sumu tulee mereltä joka aamu eikä sada koskaan. Hiekasta törröttää laivanhylkyjä, ja jokainen niistä oli jonkun kapteenin varma laskelma. Pidän tämän sivun mielessäni ennen kuin taas sanon jotain olevani varma.',
       voice: 'isoisa',
@@ -1660,8 +1660,8 @@ export const AFRICA_FACTS = {
     },
   ],
   mosambik: [
-    'Mosambikin rannikko on lähes 2 500 kilometriä pitkä, ja saaren suuntaan avautuu Mosambikin kanaali.',
-    'Mosambik oli portugalilaisten siirtomaa satojen vuosien ajan, ja portugali on yhä maan virallinen kieli.',
+    'Silta saarelle on yli kolme kilometriä pitkä ja yhden auton levyinen, joten ennen ajoa katsotaan, tuleeko vastaan ketään. Odotin vuoroani kymmenen minuuttia keskellä Intian valtamerta. Sillan päässä on kolmen kilometrin mittainen saari, joka oli Portugalin Itä-Afrikan pääkaupunki vuoteen 1898.',
+    'Mosambik ei ollut koskaan brittien vaan portugalilaisten siirtomaa, ja itsenäistyi vuonna 1975. Silti se liittyi Kansainyhteisöön vuonna 1995 — ensimmäisenä maana, jolla ei ollut imperiumiin mitään siteitä. Isoisän klubissa asiasta olisi keskusteltu pitkään ja kovaan ääneen.',
     {
       text: 'Kaakkoisrannikolla on portugalilaisten vanha satamakaupunki omalla pikkusaarellaan, ja salmen takana häämöttää suuri saari. Riutta on niin kirkas, että näen kalat kannelta.',
       voice: 'isoisa',
