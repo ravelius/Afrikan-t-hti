@@ -53,7 +53,7 @@ function newGame(seed = 5) {
 // jokaisella aarrekaupungilla on vähintään viisi omaa kysymystä, joista
 // ainakin yksi on helppo (taso 1) ja yksi vaikea (taso 3), ja yleispakassa on
 // vähintään 15 kysymystä. Kesken olevilla laudoilla pätevät vanhat minimit.
-const SISALTO_VALMIS = new Set(['maailma', 'africa', 'europe']);
+const SISALTO_VALMIS = new Set(['maailma', 'africa', 'europe', 'suomi']);
 const MIN_CITY_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 5 : 2);
 const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10);
 
