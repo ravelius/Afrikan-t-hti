@@ -56,9 +56,10 @@ Myöhemmäksi sovitut (EI vielä työn alle):
   Reitti kiertäisi päivämäärärajan yli, mikä vaatisi tuen reitille, joka
   jatkuu kartan reunan yli. Odottaa omistajan päätöstä.
 - Yksittäiset maat mantereiden jälkeen (Suomen mallin mukaan).
-- Vastustaja (aika / isoisän 80 päivän ennätys) ja kysymysten vaihtelu
-  (tapahtumakortit, väittämät, karttakysymykset) — omistajan kanssa
-  suunniteltu suunta, palataan kun Afrikan sisältö on valmis.
+- Aikamittari ja isoisän ennätys: paketti 9 alempana — tehdään VASTA
+  paketin 8 jälkeen.
+- Kysymysten vaihtelu (tapahtumakortit, väittämät, karttakysymykset) —
+  omistajan kanssa suunniteltu suunta, palataan kun Afrikka on valmis.
 
 Tämä on omistajan ja suunnittelusession sopima työlista. Tee työpaketit
 järjestyksessä; jokainen paketti on oma commit/PR. Jokaisen paketin jälkeen:
@@ -408,6 +409,33 @@ Tekstien kirjoitussäännöt (tiivistelmä — koko ohje tarina.md:ssä):
 minä-muoto, 1–3 virkettä, ensimmäinen virke konkreettinen; korkeintaan
 kolmasosa teksteistä alkaa isoisällä, vähintään kolmasosassa isoisää ei
 mainita; piikki osuu Foggiin/imperiumiin, ei koskaan kohdemaihin.
+
+## Paketti 9: aikamittari ja isoisän ennätys (VASTA paketin 8 jälkeen)
+
+Aika on pelin vastustaja — isoisän 80 päivän ennätys — mutta se ei saa
+tehdä pelistä ahdistavaa. Omistajan päätökset:
+
+- **Vuoro = 6 tuntia.** Vakio `TURN_HOURS = 6` (js/game.js) — vain yksi
+  säätökohta, koska oikea arvo varmistuu pelitestissä. Neljä vuoroa on
+  yksi matkapäivä, ja vuorokaudenaika kiertää: aamu, keskipäivä, ilta,
+  yö.
+- **Mittari on päiväkirjan päivämäärä, ei kello eikä palkki.**
+  Yläpalkin pilleriin rahan ja sijainnin rinnalle esim. "Päivä 14,
+  ilta". Kirjoituskonetyyli, osa tarinaa — ei hälytysväriä.
+- **Isoisän haamu näkyy vertailuriveinä.** Muutaman päivän välein
+  päiväkirjaan nousee rivi isoisän aikataulusta samalta matkapäivältä
+  (esim. "Päivänä 20 isoisä nousi laivaan Suezissa"). Toteutus:
+  pakkaan `texts.schedule` = lista { day, text } -merkintöjä; moottori
+  nostaa rivin, kun päivä ohitetaan. Sisältö kirjoitetaan Afrikalle
+  ensin, muille laudoille myöhemmin — tekstit tarina.md:n säännöillä.
+- **Ennätys on tavoite, EI game over.** Ajan loppuminen ei päätä peliä
+  koskaan. Jos laudan pääaarre löytyy 80 päivän sisällä, passiin tulee
+  kunniamerkintä ("80 päivää rikottu") ja XP-bonus; hitaammin
+  matkanneelle päiväkirja toteaa kuivasti, että isoisä olisi ollut jo
+  kotona — mutta isoisä ei nähnyt kaikkea tätä.
+- Tallennus toJSON/fromJSON (vuorolaskuri), testit ajan kirjanpidolle
+  ja vertailurivien nousulle. Vanha tallenne ilman aikaa jatkuu
+  päivästä 1.
 
 ## Muistilista jokaiseen pakettiin
 
