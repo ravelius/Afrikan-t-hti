@@ -26,6 +26,7 @@ import {
   drawCompass,
   drawDefs,
   drawDoodles,
+  drawHemisphereFrames,
   drawLand,
   drawPaperOverlay,
   drawParchment,
@@ -387,6 +388,8 @@ export class UI {
     this.boardRoot = root;
 
     drawParchment(svg);
+    // Pallonpuoliskokartalla kehykset ja asteverkko piirtyvät maiden alle.
+    drawHemisphereFrames(svg, pack.map);
     drawLand(svg, pack.map);
     drawWaves(svg, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
@@ -562,12 +565,9 @@ export class UI {
           cx: c.x,
           cy: c.y,
           r: c.start ? 27 : 22,
-          class: `target-ring pick${this.pendingStart === c.id ? ' picked' : ''}`,
+          class: 'target-ring pick',
         }, g);
-        g.addEventListener('click', () => {
-          this.pendingStart = c.id;
-          this.render();
-        });
+        g.addEventListener('click', () => this.doPickStart(c));
       }
       return;
     }
@@ -666,33 +666,12 @@ export class UI {
     const p = game.player;
     this.dieEl.hidden = true; // silmäluku näkyy laudalla olevassa nopassa
 
-    // Lähtöpisteen valinta: kaupungin napautus kartalla avaa porttivaihtoehdot.
+    // Lähtöpisteen valinta tehdään kartalta yhdellä napautuksella, joten
+    // toimintopaneelissa on vain ohje.
     if (game.phase === 'pickstart') {
-      const cityId = this.pendingStart;
-      const city = cityId ? game.board.cityById.get(cityId) : null;
-      if (!city) {
-        const here = game.cityOf();
-        this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — valitse ensimmäinen kohde kartalta.`;
-        this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
-        return;
-      }
-      this.turnStatus.textContent = `${city.name} — minne astut?`;
-      this.hint.textContent = 'Ensimmäinen matka on ilmainen.';
-      (city.links ?? []).forEach((link, i) => {
-        const btn = html('button', i === 0 ? 'primary' : '', `🧭 ${link.label}`);
-        btn.addEventListener('click', () => {
-          this.pendingStart = null;
-          sfx.play('flight');
-          this.doAction(() => game.actionPickStart(cityId, i));
-        });
-        this.actionsEl.appendChild(btn);
-      });
-      const stayBtn = html('button', city.links?.length ? '' : 'primary', '🌍 Jää maailmankartalle');
-      stayBtn.addEventListener('click', () => {
-        this.pendingStart = null;
-        this.doAction(() => game.actionPickStart(cityId));
-      });
-      this.actionsEl.appendChild(stayBtn);
+      const here = game.cityOf();
+      this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — napauta kohdetta kartalta.`;
+      this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
       return;
     }
 
@@ -853,6 +832,19 @@ export class UI {
     btn.appendChild(html('span', 'icon-glyph', icon));
     btn.appendChild(html('span', 'icon-label', label));
     return btn;
+  }
+
+  /**
+   * Lähtöpisteen valinta: napautus vie suoraan perille. Porttikaupungista
+   * laskeudutaan mantereen omalle laudalle, muualta jäädään maailmankartalle.
+   * Useamman portin kaupungeista (Kairo, Mumbai) otetaan ensimmäinen eli
+   * kaupungin oma manner — välikysymystä ei enää esitetä.
+   */
+  doPickStart(city) {
+    const { game } = this;
+    const portti = (city.links ?? []).length > 0;
+    sfx.play(portti ? 'flight' : 'paper');
+    this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
   }
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */

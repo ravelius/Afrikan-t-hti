@@ -734,6 +734,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .fare { fill: var(--sea-ink); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
 
+/* Pallonpuoliskokartan kehykset ja asteverkko. */
+.hemi-ring {
+  fill: none;
+  stroke: var(--map-ink);
+  stroke-width: 2.2;
+  opacity: 0.75;
+}
+
+.hemi-ring.outer { stroke-width: 1.4; opacity: 0.55; }
+.hemi-tick { stroke: var(--map-ink); stroke-width: 1; opacity: 0.45; }
+
+.graticule-line {
+  fill: none;
+  stroke: var(--map-ink-soft);
+  stroke-width: 0.8;
+  opacity: 0.32;
+}
+
+.graticule-line.strong { stroke-width: 1.4; opacity: 0.45; }
+
 .city { fill: #f3e5c4; stroke: #6b5230; stroke-width: 2.4; }
 .city-start { fill: #eec66b; stroke: #6d4d12; stroke-width: 3.4; }
 .airport { font-size: 14px; fill: #8d3a2c; }
@@ -1745,7 +1765,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         harvakseltaan, mistä suunnasta kannattaa etsiä — muttei koskaan nimeä
         kaupunkia.</p>
       <p>Matka ei pääty. Kerää löytöjä, leimoja passiin ja kokemusta niin
-        kauan kuin huvittaa. Ensimmäinen lippu on jo maksettu.</p>
+        kauan kuin huvittaa. Ensimmäinen lippu on jo maksettu — napauta
+        maailmankartalta kaupunkia, niin olet siellä.</p>
     </div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="start">Lähde matkaan</button>
@@ -1792,11 +1813,11 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         avaa aarteita vastaamalla kysymyksiin ja opi matkalla maista, kulttuureista
         ja elämästä eri puolilla maapalloa. Peli ei pääty — jokaisella laudalla on
         oma tähtiaarteensa (2000 p), ja löytöjä voi kerätä niin kauan kuin huvittaa.</p>
-      <p><b>Matkaan lähtö.</b> Uusi peli alkaa maailmankartalta. Valitse kaupunki:
-        siitä astut ilmaiseksi suoraan mantereen tarkemmalle kartalle — tai voit
-        jäädä kiertämään maailmankarttaa, jolla valtameret ylitetään laivalla tai
-        lentäen. Jokaisella laudalla on omat paikkansa, reittinsä, tähtiaarteensa
-        ja kysymyksensä.</p>
+      <p><b>Matkaan lähtö.</b> Uusi peli alkaa maailmankartalta. Napauta kaupunkia:
+        matka lähtee heti ja laskeudut ilmaiseksi sen mantereen omalle kartalle.
+        Maailmankartalle pääsee myöhemmin takaisin porttikaupungeista, ja siellä
+        valtameret ylitetään laivalla tai lentäen. Jokaisella laudalla on omat
+        paikkansa, reittinsä, tähtiaarteensa ja kysymyksensä.</p>
       <p><b>Portit.</b> Porttikaupungin tunnistaa katkoviivakehästä: siitä pääsee
         lennolla (300 p) toiselle laudalle — mantereelta toiselle, maailmankartalle
         tai vaikka kaupunkitason laudalle kuten Istanbuliin. Laudan aarteet ja
@@ -2782,124 +2803,144 @@ const MAAILMA_FACTS = {
 };
 
 // ===== js/packs/maailma.js =====
-// Maailma-lauta: koko maapallo yhtenä vieritettävänä pelilautana.
+// Maailma-lauta: koko maapallo kahtena pallonpuoliskona.
 //
-// Koordinaatisto on 1000 x 1000 yksikköä ja kattaa koko maapallon:
-//   x = (pituusaste + 180) / 0.36    (lännestä 180°W itään 180°E)
-//   y = 305 + (80 - leveysaste) * 1000/360  (pohjoisesta 80°N etelään 60°S)
+// Kartta on piirretty 1600-luvun maailmankarttojen tapaan (Blaeu, Visscher):
+// kaksi ympyrää vierekkäin, napa-alueet omissa pikkuympyröissään ylä- ja
+// alalaidassa. Vasen ympyrä on Amerikkojen puolisko (keskimeridiaani 110°W),
+// oikea Afrikan, Euroopan ja Aasian puolisko (70°E). Uusi-Seelanti jää
+// vasempaan ympyrään, koska se on 174°E eli oikean puoliskon rajan takana.
 //
-// Mittakaava on sama molemmissa suunnissa, joten mantereet eivät veny
-// pystysuunnassa. Kartan ylä- ja alalaitaan jää siksi avomerta.
+// Projektio on stereografinen atsimutaali päiväntasaajan asennossa; kaava on
+// tools/hemispheres.mjs:ssä, joka myös tuotti nämä koordinaatit vanhasta
+// lieriöprojektiosta. Piirtokoodin vastaava kaava on mapart.js:n
+// drawHemisphereFrames-funktiossa — ne on pidettävä yhtenäisinä.
+//
+// Syy vaihtoon oli mittasuhde: lieriöprojektio oli 1,87:1 ja jäi pystyruudulla
+// kapeaksi nauhaksi. Pallonpuoliskot ovat noin 1,45:1, joten puhelimella ja
+// tabletilla kartta on noin kolmanneksen isompi.
+//
+// Atlantin ylittävät laivareitit (Lontoo-New York, Kapkaupunki-Rio) kulkevat
+// ympyröiden välistä: puoliskojen raja on 20°W, ja ympyröiden vastakkaiset
+// reunat ovat siinä kohdin vierekkäin.
 //
 // Mantereet ylitetään laivalla valtamerten poikki, lentäen tai kahta
 // maareittiä pitkin (Siperian rata ja Amerikan mannerrata). Lähes joka
 // kaupunki on portti mantereensa tarkemmalle laudalle.
 
 const WORLD_MAP = {
-  width: 1000,
-  height: 1000,
-  // Amerikat: yksi manner Alaskasta Kap Hornille, Panama kannaksena.
-  americasPoints: [
-    [33.3, 343.9], [38.9, 360.6], [83.3, 363.3], [125.0, 366.1], [152.8, 391.1],
-    [155.6, 416.1], [175.0, 435.6], [194.4, 463.3], [208.3, 471.7], [233.3, 482.8],
-    [263.9, 499.4], [283.3, 507.8], [280.6, 532.8], [275.0, 543.9], [288.9, 566.1],
-    [305.6, 577.2], [302.8, 610.6], [297.2, 638.3], [300.0, 666.1], [311.1, 680.0],
-    [319.4, 652.2], [327.8, 635.6], [341.7, 624.4], [366.7, 605.0], [388.9, 588.3],
-    [402.8, 549.5], [377.8, 535.6], [361.1, 527.2], [355.6, 513.3], [333.3, 502.2],
-    [322.2, 499.4], [300.0, 493.9], [286.1, 502.2], [269.4, 496.7], [255.6, 482.8],
-    [258.3, 468.9], [250.0, 474.4], [230.6, 455.0], [238.9, 446.7], [252.8, 446.7],
-    [272.2, 452.2], [277.8, 457.8], [275.0, 441.1], [288.9, 430.0], [294.4, 416.1],
-    [305.6, 407.8], [316.7, 402.2], [333.3, 396.7], [347.2, 382.8], [338.9, 374.5],
-    [322.2, 360.6], [311.1, 349.5], [277.8, 341.1], [250.0, 335.6], [194.4, 338.3],
-    [138.9, 332.8], [83.3, 330.0], [50.0, 332.8],
+  width: 1150,
+  height: 800,
+  // Kaksi pallonpuoliskoa vierekkäin, 1600-luvun maailmankarttojen tapaan.
+  // Vasen ympyrä on Amerikkojen puolisko (keskimeridiaani -110°), oikea
+  // Afrikan, Euroopan ja Aasian puolisko (70°). Projektio on
+  // stereografinen atsimutaali — sama jota Blaeu ja Visscher käyttivät.
+  // Napa-alueet ovat omissa pikkuympyröissään ylä- ja alalaidassa.
+  hemispheres: [
+    { cx: 290, cy: 400, r: 270, lon0: -110 },
+    { cx: 862, cy: 400, r: 270, lon0: 70 },
   ],
-  // Afrikka, Eurooppa ja Aasia ovat yhtä mannermassaa; Itämeri, Välimeri,
-  // Mustameri ja Punainenmeri ovat sen sisäänvetoja.
+  polars: [
+    { cx: 576, cy: 136, r: 122, north: true },
+    { cx: 576, cy: 664, r: 122, north: false },
+  ],
+  americasPoints: [
+    [213.4, 197.1], [202.5, 217.3], [225.9, 234], [249.2, 245.3], [262, 275.3],
+    [261.3, 300.4], [274.9, 319.8], [290, 345], [301.4, 352.3], [322.5, 361.5],
+    [349.4, 375.2], [367.1, 382.2], [364.9, 405.1], [359.6, 415.1], [371.2, 436.2],
+    [385.5, 448.3], [378, 480.7], [367.2, 507.6], [360.9, 537.3], [362.6, 555.1],
+    [380, 527.2], [392.6, 511.8], [408.4, 503.7], [438.8, 489.6], [468.6, 476.8],
+    [495.6, 430], [465.2, 410.1], [445.9, 400], [439.3, 384.6], [414.9, 374.1],
+    [403.5, 372.1], [381.8, 368.3], [369.4, 376.9], [354.1, 372.6], [341.4, 360.7],
+    [342.9, 348], [336.2, 353.4], [319.1, 336.9], [325.4, 328.9], [336.6, 328],
+    [353.2, 331.4], [358.6, 336.1], [354.1, 320.5], [363.7, 307.8], [365, 292.8],
+    [371.4, 282], [377.9, 273.4], [388.1, 262.8], [390.6, 242.8], [380.2, 236.6],
+    [362.1, 226.5], [349.8, 217], [329.4, 214.3], [314.8, 211.5], [290, 217.8],
+    [266.1, 208], [244.8, 195.7], [229.9, 190.4],
+  ],
+  greenlandPoints: [
+    [345.4, 218.4], [333.8, 190.2], [324.7, 166.7], [318.6, 151.2], [318.2, 143.3],
+    [326.7, 140.3], [346.6, 143.2], [372.7, 156.8], [386.9, 175.8], [388.8, 196.4],
+    [384.9, 216], [370.5, 220.9], [357.2, 223.9],
+  ],
   afroeurasiaPoints: [
-    [475.0, 407.8], [497.2, 399.5], [486.1, 393.9], [500.0, 391.1], [511.1, 382.8],
-    [522.2, 377.2], [525.0, 370.3], [530.6, 367.5], [536.1, 375.8], [555.6, 374.5],
-    [577.8, 361.9], [566.7, 359.2], [547.2, 360.6], [533.3, 367.5], [527.8, 363.3],
-    [513.9, 357.8], [538.9, 338.3], [569.4, 330.0], [625.0, 338.3], [666.7, 335.6],
-    [708.3, 324.4], [750.0, 316.1], [805.6, 313.3], [861.1, 324.4], [916.7, 332.8],
-    [972.2, 332.8], [994.4, 343.9], [972.2, 360.6], [950.0, 371.7], [930.6, 388.3],
-    [888.9, 377.2], [875.0, 405.0], [863.9, 407.8], [858.3, 430.0], [838.9, 424.4],
-    [836.1, 438.4], [825.0, 463.3], [800.0, 468.9], [797.2, 480.0], [791.7, 499.4],
-    [786.1, 524.5], [777.8, 507.8], [772.2, 493.9], [761.1, 482.8], [752.8, 466.1],
-    [738.9, 471.7], [722.2, 485.6], [713.9, 505.0], [702.8, 485.6], [700.0, 468.9],
-    [683.3, 457.8], [661.1, 457.8], [658.3, 455.0], [666.7, 466.1], [650.0, 480.0],
-    [625.0, 490.1], [619.4, 489.7], [600.0, 449.4], [588.9, 452.2], [613.9, 493.9],
-    [641.7, 498.0], [633.3, 513.3], [619.4, 527.2], [611.1, 549.5], [600.0, 577.2],
-    [597.2, 593.9], [591.7, 610.6], [577.8, 621.7], [550.0, 621.7], [533.3, 577.2],
-    [525.0, 541.1], [525.0, 516.1], [500.0, 510.6], [477.8, 516.1], [463.9, 502.2],
-    [452.8, 485.6], [455.6, 468.9], [472.2, 443.9], [483.3, 433.3], [508.3, 427.2],
-    [527.8, 424.4], [541.7, 438.4], [555.6, 441.1], [569.4, 438.4], [583.3, 441.1],
-    [589.7, 443.9], [597.2, 435.6], [600.0, 425.8], [583.3, 427.2], [575.0, 424.4],
-    [572.2, 416.1], [580.6, 413.3], [597.2, 410.5], [613.9, 411.9], [615.3, 407.8],
-    [602.8, 402.2], [591.7, 399.5], [583.3, 399.5], [577.8, 407.8], [579.2, 412.8],
-    [566.7, 416.1], [558.3, 421.7], [563.9, 427.2], [550.0, 416.1], [538.9, 402.2],
-    [533.3, 405.0], [544.4, 421.7], [533.3, 413.3], [527.8, 405.0], [513.9, 407.8],
-    [508.3, 410.5], [500.0, 418.9], [494.4, 423.6], [485.6, 423.3], [475.0, 424.4],
+    [691.9, 238.4], [717.3, 241.7], [713.2, 229], [726.1, 233.6], [740.5, 229.9],
+    [752.2, 228.8], [759.2, 222.4], [764.6, 221.7], [762.1, 233], [775.3, 238.5],
+    [795.5, 231], [790.7, 224.9], [779.1, 220.3], [766.2, 222.7], [766.3, 215.9],
+    [763.5, 204], [792.7, 193], [811.5, 192.5], [830.1, 213.1], [849.6, 213.7],
+    [867.3, 200], [880.2, 186.5], [895.3, 175.5], [921.6, 174.7], [947.9, 160.5],
+    [1015.9, 171.7], [1025.7, 204.1], [986.2, 218.1], [997, 256.2], [989.5, 264.1],
+    [995.3, 291.1], [975.9, 291], [978, 306.8], [973.7, 335.2], [951.4, 344.3],
+    [950.1, 355.2], [946.4, 374], [942, 397.5], [934.1, 382.3], [928.5, 369.9],
+    [918.2, 360.4], [910.1, 345.8], [898.8, 351.5], [885.2, 364.2], [878.4, 381],
+    [869, 364.5], [866.6, 350], [853, 340.1], [835, 339.5], [832.9, 336.9],
+    [839.3, 347.1], [824.9, 358.9], [803, 366.8], [798.1, 366.2], [785, 326.8],
+    [775, 328], [793, 369.8], [817.2, 374.5], [809.6, 387.7], [797.1, 400],
+    [790, 420.3], [781.7, 446.6], [781.1, 462.8], [778.9, 479.8], [769.3, 493.5],
+    [745.2, 500], [717.2, 455.5], [703.4, 415.9], [703.2, 387.3], [673.7, 379],
+    [643.8, 384.4], [625.8, 362.3], [614.1, 333.6], [626, 309.2], [661.8, 282.7],
+    [680.7, 274.9], [709.2, 279.4], [728.6, 283.8], [735.8, 303.8], [747.7, 310.3],
+    [760.7, 310.6], [772.2, 316], [777.1, 319.9], [785, 312.9], [789.2, 303.6],
+    [775.3, 302], [769.2, 297.4], [769.4, 288.1], [776.9, 287.1], [790.5, 287.6],
+    [802.8, 291.9], [804.7, 287.9], [796.7, 280.1], [789.4, 275.1], [783.3, 273.3],
+    [776.4, 280.7], [775.9, 286.3], [764.9, 286.7], [756.1, 290.4], [759.1, 297.7],
+    [751.3, 282.1], [748.6, 263.2], [742.7, 264.2], [744.3, 286.4], [738.5, 273.4],
+    [738.3, 262.1], [725.3, 259.4], [718.9, 259.9], [706.2, 265.8], [698, 268.6],
+    [689.7, 263.7], [678.4, 258.9],
   ],
   britainPoints: [
-    [486.1, 388.3], [502.8, 385.5], [501.4, 380.0], [495.8, 371.7], [488.9, 366.1],
-    [483.3, 374.5], [486.1, 380.0], [487.5, 385.5],
+    [718.3, 222.6], [732.6, 228.7], [736.3, 221.9], [740.3, 209.9], [742, 200.2],
+    [730, 205.8], [726.2, 213.4], [721.9, 220.3],
   ],
   australiaPoints: [
-    [816.7, 588.3], [838.9, 577.2], [863.9, 560.5], [880.6, 560.5], [894.4, 557.8],
-    [905.6, 580.0], [916.7, 588.3], [925.0, 602.2], [919.4, 621.7], [905.6, 635.6],
-    [888.9, 632.8], [875.0, 624.4], [858.3, 616.1], [844.4, 618.9], [819.4, 621.7],
-    [813.9, 599.4],
-  ],
-  // Koristesaaret täyttävät valtameriä; niissä ei ole kaupunkeja eikä reittejä.
-  greenlandPoints: [
-    [303, 349], [309, 326], [326, 309], [352, 299], [383, 296], [412, 300],
-    [425, 312], [420, 330], [405, 344], [383, 354], [360, 363], [338, 360],
-    [317, 357],
+    [966.4, 460.6], [989.6, 452.6], [1018.7, 438], [1037.9, 440.6], [1055.3, 439.5],
+    [1063.6, 471.6], [1074.4, 487.1], [1077.4, 510.5], [1057.6, 533.7], [1033.4, 543.1],
+    [1019.5, 531], [1010.9, 515], [998.6, 499.6], [984.7, 498.5], [961.7, 495.2],
+    [961.9, 471.4],
   ],
   madagascarPoints: [
-    [622, 560], [633, 566], [640, 580], [638, 596], [628, 604], [618, 598],
-    [615, 582], [616, 570],
+    [800.2, 429.4], [810, 434.3], [816.7, 446.5], [816, 461.1], [808.4, 469.2],
+    [799.5, 464.5], [795.4, 449.9], [795.4, 438.8],
   ],
   japanPoints: [
-    [871, 432], [878, 420], [886, 407], [895, 399], [902, 404], [897, 417],
-    [888, 430], [879, 439], [872, 441],
+    [1008, 288.8], [1008.5, 272.1], [1007.4, 253.3], [1008.9, 239.3], [1018.7, 241.2],
+    [1024, 259.4], [1023.5, 279.4], [1019.1, 293.9], [1012.9, 298.9],
   ],
   indonesiaPoints: [
-    [768, 536], [786, 545], [804, 551], [822, 552], [836, 556], [843, 562],
-    [837, 566], [818, 562], [796, 556], [776, 547], [763, 542],
+    [925.5, 407.9], [941.6, 416.4], [958.2, 422.8], [975.6, 424.8], [989.4, 430],
+    [996, 437], [989.3, 440.5], [970.9, 434.5], [950.4, 427.1], [932.4, 417.9],
+    [920.9, 413.1],
   ],
   nzNorthPoints: [
-    [963, 622], [972, 630], [978, 641], [972, 647], [963, 640], [958, 630],
+    [87.5, 538.1], [103.3, 542.8], [117.8, 552.8], [117.6, 563.9], [102.9, 561.4], [88.8, 552.2],
   ],
   nzSouthPoints: [
-    [975, 650], [983, 658], [989, 670], [983, 676], [974, 668], [970, 658],
+    [122.9, 565.6], [136.6, 570], [151.9, 580], [153.7, 590.1], [139.5, 587], [126.3, 578.3],
   ],
-  // Arktinen jääraja täyttää kartan ylälaidan korkeilla näytöillä.
-  arcticPoints: [
-    [-40, 228], [1045, 228], [1045, 258], [950, 266], [850, 255], [745, 268],
-    [640, 257], [535, 270], [430, 259], [325, 272], [220, 261], [115, 274],
-    [20, 263], [-40, 270],
-  ],
-  // Etelämantereen jäinen rannikko täyttää kartan alalaidan.
+  // Pohjoisnavalla ei ole mannerta: napaympyrässä on vain merta ja asteverkko.
+  // Etelämanner etelänavan ympyrässä: rannikko noin 70. leveyspiirillä,
+  // jota Rossin ja Weddellin merten lahdet painavat etelämmäs.
   antarcticaPoints: [
-    [-40, 745], [60, 728], [160, 736], [280, 722], [400, 732], [520, 718],
-    [640, 728], [760, 714], [880, 724], [1000, 716], [1045, 745], [1045, 850],
-    [-40, 850],
+    [576, 781.6], [602.6, 775.2], [621.2, 754.2], [632.1, 732.1], [642, 714.1],
+    [651.6, 696.3], [653.4, 676], [643.8, 657.8], [629.8, 644.9], [620.6, 631.4],
+    [614.1, 610], [600.5, 584.7], [576, 570.4], [549.4, 576.8], [530.8, 597.8],
+    [519.9, 619.9], [510, 637.9], [500.4, 655.7], [498.6, 676], [508.2, 694.2],
+    [522.2, 707.1], [531.4, 720.6], [537.9, 742], [551.5, 767.3],
   ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const WORLD_CITIES = [
-  { id: 'lontoo', name: 'Lontoo', x: 500, y: 384.3, start: true, airport: true, la: 'end', lx: -16, ly: 5,
+  { id: 'lontoo', name: 'Lontoo', x: 731.7, y: 225.9, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'europe', city: 'lontoo', label: 'Euroopan lauta' }] },
   {
-    id: 'newyork', name: 'New York', x: 287, y: 415.1, start: true, airport: true,
+    id: 'newyork', name: 'New York', x: 359, y: 293.2, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'northamerica', city: 'newyork', label: 'Pohjois-Amerikan lauta' }],
   },
 
   {
-    id: 'kairo', name: 'Kairo', x: 585, y: 446.9, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'kairo', name: 'Kairo', x: 772.5, y: 322.1, airport: true, la: 'start', lx: 16, ly: 5,
     // Kairosta laskeudutaan tarkemmille laudoille.
     links: [
       { pack: 'africa', city: 'kairo', label: 'Afrikan lauta' },
@@ -2907,47 +2948,50 @@ const WORLD_CITIES = [
     ],
   },
   {
-    id: 'rio', name: 'Rio de Janeiro', x: 380, y: 590.8, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'rio', name: 'Rio de Janeiro', x: 457.7, y: 477, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Etelä-Amerikan laudalla.
     links: [{ pack: 'southamerica', city: 'rio', label: 'Etelä-Amerikan lauta' }],
   },
   {
-    id: 'mumbai', name: 'Mumbai', x: 706, y: 473.0, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'mumbai', name: 'Mumbai', x: 871.5, y: 353.5, airport: true, la: 'start', lx: 16, ly: 5,
     links: [
       { pack: 'asia', city: 'mumbai', label: 'Aasian lauta' },
       { pack: 'middleeast', city: 'dubai', label: 'Lähi-idän lauta' },
     ],
   },
   {
-    id: 'peking', name: 'Peking', x: 823, y: 416.2, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'peking', name: 'Peking', x: 959.8, y: 286.6, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'asia', city: 'peking', label: 'Aasian lauta' }],
   },
   {
-    id: 'sydney', name: 'Sydney', x: 913, y: 620.0, airport: true, la: 'end', lx: -16, ly: -10,
+    id: 'sydney', name: 'Sydney', x: 1051.9, y: 527.7, airport: true, la: 'end', lx: -16, ly: -10,
     links: [{ pack: 'oceania', city: 'sydney', label: 'Oseanian lauta' }],
   },
   {
-    id: 'moskova', name: 'Moskova', x: 604, y: 372.3, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'moskova', name: 'Moskova', x: 806.6, y: 248.6, airport: true, la: 'start', lx: 16, ly: 5,
     links: [{ pack: 'europe', city: 'moskova', label: 'Euroopan lauta' }],
   },
   {
-    id: 'tokio', name: 'Tokio', x: 893, y: 432, airport: true, la: 'start', lx: 18, ly: 5,
+    id: 'tokio', name: 'Tokio', x: 1029.6, y: 279.5, airport: true, la: 'start', lx: 18, ly: 5,
     links: [{ pack: 'asia', city: 'tokio', label: 'Aasian lauta' }],
   },
   {
-    id: 'singapore', name: 'Singapore', x: 793, y: 530, airport: true, la: 'start', lx: 18, ly: -12,
+    id: 'singapore', name: 'Singapore', x: 948.4, y: 402.6, airport: true, la: 'start', lx: 18, ly: -12,
     links: [{ pack: 'asia', city: 'singapore', label: 'Aasian lauta' }],
   },
   {
-    id: 'kapkaupunki', name: 'Kapkaupunki', x: 560, y: 608, airport: true, la: 'end', lx: -18, ly: 10,
+    id: 'kapkaupunki', name: 'Kapkaupunki', x: 750.3, y: 483, airport: true, la: 'end', lx: -18, ly: 10,
     links: [{ pack: 'africa', city: 'kapkaupunki', label: 'Afrikan lauta' }],
   },
   {
-    id: 'losangeles', name: 'Los Angeles', x: 190, y: 438, airport: true, la: 'end', lx: -16, ly: 12,
+    id: 'losangeles', name: 'Los Angeles', x: 286.5, y: 322.3, airport: true, la: 'end', lx: -16, ly: 12,
     links: [{ pack: 'northamerica', city: 'losangeles', label: 'Pohjois-Amerikan lauta' }],
   },
   {
-    id: 'ateena', name: 'Ateena', x: 556, y: 412, airport: true, la: 'start', lx: 16, ly: 8,
+    id: 'ateena', name: 'Ateena', x: 757.8, y: 279.4, airport: true,
+    // Nimi alapuolelle: Moskova on nyt Ateenasta koilliseen ja lähempänä
+    // kuin lieriöprojektiossa.
+    la: 'middle', lx: 0, ly: 26,
     // Etelä-Euroopan portti: Eurooppaan pääsee myös Välimeren suunnasta.
     links: [{ pack: 'europe', city: 'ateena', label: 'Euroopan lauta' }],
   },
@@ -2956,7 +3000,7 @@ const WORLD_CITIES = [
     // Kairo ja Kapkaupunki, eikä niiden välillä ollut laivareittiä lainkaan:
     // purjehtien piti kiertää Rion tai Sydneyn kautta. Tanger on Afrikan
     // laudan aloituskaupunki, joten portti vie sinne suoraan.
-    id: 'tanger', name: 'Tanger', x: 484, y: 436, airport: true, la: 'end', lx: -16, ly: 10,
+    id: 'tanger', name: 'Tanger', x: 679.8, y: 278.7, airport: true, la: 'end', lx: -16, ly: 10,
     links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
   },
 ];
@@ -2965,46 +3009,48 @@ const WORLD_CITIES = [
 // type 'sea' = valtamerireitti; via = reittipisteet veden päällä.
 const WORLD_EDGES = [
   // Maareitit: Siperian rata ja Amerikan mannerrata.
-  { a: 'moskova', b: 'peking', steps: 7, via: [[667, 374.6], [750, 388.2], [792, 402.2]] },
-  { a: 'losangeles', b: 'newyork', steps: 5, via: [[225, 428], [262, 412]] },
+  { a: 'moskova', b: 'peking', steps: 7, via: [[845, 258.9], [899, 270.9], [931.6, 279]] },
+  { a: 'losangeles', b: 'newyork', steps: 5, via: [[313.3, 312.3], [339.5, 293.7]] },
 
   // Valtamerten laivareitit
-  { a: 'lontoo', b: 'newyork', steps: 5, type: 'sea', via: [[417, 388.2], [361, 402.2]] },
+  { a: 'lontoo', b: 'newyork', steps: 5, type: 'sea', via: [[443.9, 213.6], [412.1, 259]] },
   {
     a: 'lontoo', b: 'kairo', steps: 5, type: 'sea',
-    via: [[483, 390.9], [472, 407.7], [472, 427.1], [479, 428.3], [486, 428.7], [497, 425.6], [510, 422.8], [533, 420.1], [550, 429.8], [578, 434.1]],
+    via: [[713.6, 223.7], [689.3, 236.4], [673.2, 260.6], [679.6, 266.2], [686.5, 270.5], [699.3, 272.3], [713.2, 275], [735.1, 280.9], [746.2, 296.8], [769.2, 308]],
   },
-  { a: 'lontoo', b: 'moskova', steps: 4, type: 'sea', via: [[508, 377.3], [528, 371.5], [553, 370.3], [571, 364.1]] },
-  { a: 'newyork', b: 'rio', steps: 5, type: 'sea', via: [[306, 429.8], [347, 471.8], [375, 513.4], [417, 527.1], [411, 569.1]] },
+  // Itämeren reitti: yksi välipiste siirretty muutaman yksikön verran
+  // vedelle, koska pallonpuoliskoprojektio kaarsi rannikon sen yli.
+  { a: 'lontoo', b: 'moskova', steps: 4, type: 'sea', via: [[742.9, 222.3], [764.1, 225], [776.2, 233], [790.4, 231.6]] },
+  { a: 'newyork', b: 'rio', steps: 5, type: 'sea', via: [[377.7, 304.6], [424.8, 340.2], [461.6, 383.5], [517, 399.8], [502.2, 458.5]] },
   {
     a: 'kairo', b: 'mumbai', steps: 5, type: 'sea',
-    via: [[597, 455.1], [610, 480.0], [617, 491.7], [632, 492.1], [655, 487.0], [689, 480.0]],
+    via: [[781.6, 331.9], [790.4, 356.7], [795.9, 367.9], [809, 368.9], [828.9, 365.2], [857.5, 359.6]],
   },
   {
     a: 'mumbai', b: 'peking', steps: 6, type: 'sea',
-    via: [[711, 513.4], [774, 519.7], [786, 527.4], [806, 494.0], [823, 467.6], [844, 438.4], [844, 427.1]],
+    via: [[876, 388.2], [930.9, 393.2], [941.9, 400.2], [959.5, 368], [972.5, 339.9], [985.2, 304.7], [981.3, 292.4]],
   },
-  { a: 'peking', b: 'sydney', steps: 6, type: 'sea', via: [[861, 457.8], [889, 499.4], [911, 549.6], [928, 577.2], [932, 601.3]] },
-  { a: 'peking', b: 'tokio', steps: 2, type: 'sea', via: [[850, 442], [872, 450]] },
-  { a: 'ateena', b: 'kairo', steps: 2, type: 'sea', via: [[572, 432]] },
-  { a: 'mumbai', b: 'singapore', steps: 4, type: 'sea', via: [[711, 513.4], [752, 526]] },
-  { a: 'singapore', b: 'sydney', steps: 5, type: 'sea', via: [[855, 528], [888, 548], [925, 578], [933, 602]] },
-  { a: 'kapkaupunki', b: 'rio', steps: 6, type: 'sea', via: [[500, 648], [430, 632]] },
-  { a: 'kapkaupunki', b: 'sydney', steps: 7, type: 'sea', via: [[610, 642], [680, 656], [760, 652], [830, 648], [890, 650]] },
+  { a: 'peking', b: 'sydney', steps: 6, type: 'sea', via: [[1007.7, 321.5], [1049, 364.9], [1078.7, 431.4], [1094.6, 475.9], [1086.8, 513.3]] },
+  { a: 'peking', b: 'tokio', steps: 2, type: 'sea', via: [[992, 307], [1016.5, 309.3]] },
+  { a: 'ateena', b: 'kairo', steps: 2, type: 'sea', via: [[764.6, 304.6]] },
+  { a: 'mumbai', b: 'singapore', steps: 4, type: 'sea', via: [[876, 388.2], [911.4, 398.9]] },
+  { a: 'singapore', b: 'sydney', steps: 5, type: 'sea', via: [[1011, 400.9], [1048.7, 426.1], [1090.1, 475.9], [1087.7, 514.9]] },
+  { a: 'kapkaupunki', b: 'rio', steps: 6, type: 'sea', via: [[714.5, 548.8], [488.5, 554.1]] },
+  { a: 'kapkaupunki', b: 'sydney', steps: 7, type: 'sea', via: [[799.7, 508.2], [852, 515.8], [908.4, 515.6], [961.7, 525.7], [1009, 551.7]] },
   {
     a: 'mumbai', b: 'sydney', steps: 6, type: 'sea',
-    via: [[711, 513.4], [740, 557.8], [778, 604.8], [817, 632.8], [875, 638.3], [911, 632.8]],
+    via: [[876, 388.2], [900.5, 426.6], [929.8, 471.7], [956.6, 506.2], [1003.6, 531.1], [1040.7, 542.8]],
   },
   // Atlantin itäranta: Lontoo - Tanger - Kapkaupunki. Tätä reittiä Afrikan
   // ympäri purjehdittiin ennen Suezin kanavaa, ja ilman sitä mantereen
   // kahden kaupungin välillä ei ollut laivayhteyttä lainkaan.
   {
     a: 'lontoo', b: 'tanger', steps: 3, type: 'sea',
-    via: [[478, 396], [468, 412], [470, 428]],
+    via: [[705, 226.4], [681.8, 239], [670.5, 260.5]],
   },
   {
     a: 'tanger', b: 'kapkaupunki', steps: 7, type: 'sea',
-    via: [[462, 458], [452, 486], [462, 516], [488, 546], [516, 578], [540, 600]],
+    via: [[634, 290], [617, 305], [610, 320], [604, 335], [610, 350], [616, 365], [627, 382], [640, 398], [668, 404], [692, 408], [696, 425], [706, 455], [724, 485]],
   },
 ];
 
@@ -3046,12 +3092,12 @@ const MAAILMA = {
       WORLD_MAP.americasPoints, WORLD_MAP.afroeurasiaPoints,
       WORLD_MAP.britainPoints, WORLD_MAP.australiaPoints,
       WORLD_MAP.greenlandPoints, WORLD_MAP.madagascarPoints, WORLD_MAP.japanPoints,
-      WORLD_MAP.indonesiaPoints, WORLD_MAP.nzNorthPoints, WORLD_MAP.nzSouthPoints,
-      WORLD_MAP.arcticPoints, WORLD_MAP.antarcticaPoints,
+      WORLD_MAP.indonesiaPoints, WORLD_MAP.nzNorthPoints, WORLD_MAP.nzSouthPoints, WORLD_MAP.antarcticaPoints,
     ],
-    // Tiivis kehys: tyhjät merikaistat jäävät pois, mutta Grönlanti,
-    // Uusi-Seelanti ja Etelämantereen rannikko mahtuvat mukaan.
-    frame: { x: 25, y: 288, w: 970, h: 520 },
+    // Kehys sulkee sisäänsä molemmat pallonpuoliskot ja napaympyrät.
+    // Suhde on noin 1,45:1 — selvästi lähempänä ruudun muotoa kuin vanha
+    // lieriöprojektion 1,87:1, joten pystyasennossa kartta on isompi.
+    frame: { x: 6, y: 0, w: 1138, h: 800 },
   },
   cities: WORLD_CITIES,
   edges: WORLD_EDGES,
@@ -3151,26 +3197,33 @@ const MAAILMA = {
   },
 
   decor: {
+    // Koristeet asettuvat ympyröiden ulkopuolelle kuten vanhoissa kartoissa:
+    // nimi vasempaan alakulmaan, kompassi oikeaan, laiva ja merikäärme
+    // ympyröiden väliin jäävään tyhjään.
     mapLabel: 'MAAILMA',
-    mapLabelPos: { x: 140, y: 655.0 },
-    compass: { x: 85, y: 526.7, r: 58 },
+    mapLabelPos: { x: 150, y: 742 },
+    compass: { x: 1046, y: 726, r: 58 },
     waveSkip: [
-      { x: 170, y: 545, r: 90 },
-      { x: 736, y: 638.3, r: 100 },
-      { x: 140, y: 655.0, r: 130 },
+      { x: 150, y: 742, r: 150 },
+      { x: 1046, y: 726, r: 100 },
+      { x: 168, y: 150, r: 95 },
+      { x: 980, y: 158, r: 115 },
     ],
-    // Laiva purjehtii keskellä Tyyntämerta, kaukana rannikoista.
-    ship: { x: 170, y: 545 },
-    serpent: { x: 736, y: 638.3 },
-    // Nopan lepopaikka: Tyynimeri laudan vasemmassa laidassa.
-    dieSpot: { x: 0.08, y: 0.62 },
+    // Laiva ja merikäärme ympyröiden ulkopuolelle kartan kulmiin, kuten
+    // vanhoissa kartoissa: napaympyröiden sisään ne jäisivät piiloon.
+    ship: { x: 168, y: 150 },
+    serpent: { x: 980, y: 158 },
+    // Nopan lepopaikka: vasen alakulma ympyröiden ulkopuolella.
+    dieSpot: { x: 0.06, y: 0.9 },
     // Pohjoisessa vuoria ja tuntureita, keskivyöhykkeellä metsää,
     // tropiikissa aavikoita ja etelässä taas metsää.
+    // Vyöhykkeet seuraavat nyt ympyröiden pystysuuntaa: keskellä on
+    // päiväntasaaja (y 400), ylhäällä ja alhaalla navat.
     terrainBands: [
-      { maxY: 402.2, kind: 'mountains' },
-      { maxY: 487.8, kind: 'trees' },
-      { maxY: 546.1, kind: 'dunes' },
-      { maxY: 700, kind: 'trees' },
+      { maxY: 300, kind: 'mountains' },
+      { maxY: 360, kind: 'trees' },
+      { maxY: 445, kind: 'dunes' },
+      { maxY: 520, kind: 'trees' },
       { maxY: Infinity, kind: 'mountains' },
     ],
   },
@@ -23727,6 +23780,97 @@ function drawTerrain(svg, map, obstacles, bands) {
 }
 
 /** Kompassiruusu. */
+/**
+ * Pallonpuoliskokartan kehykset: 1600-luvun maailmankartoissa kumpikin
+ * puolisko piirrettiin kaksoiskehän sisään, jonka väliin merkittiin asteet.
+ * Sisään piirretään asteverkko — stereografisessa projektiossa sekä
+ * pituus- että leveyspiirit ovat ympyränkaaria, mutta tässä riittää
+ * kaarien approksimointi murtoviivalla samasta projektiokaavasta.
+ */
+/** Murtoviiva SVG-poluksi. */
+function linePath(points) {
+  return points
+    .map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`)
+    .join('');
+}
+
+function drawHemisphereFrames(svg, map) {
+  const kehat = map.hemispheres ?? [];
+  const navat = map.polars ?? [];
+  if (!kehat.length && !navat.length) return;
+  const g = el('g', { class: 'hemi-frames', filter: 'url(#rough-soft)' }, svg);
+
+  const RAD = Math.PI / 180;
+  // Sama kaava kuin tools/hemispheres.mjs — pidettävä yhtenäisenä.
+  const project = ({ cx, cy, r, lon0 }) => (lon, lat) => {
+    let d = lon - lon0;
+    while (d > 180) d -= 360;
+    while (d < -180) d += 360;
+    const k = r / (1 + Math.cos(lat * RAD) * Math.cos(d * RAD));
+    return [cx + k * Math.cos(lat * RAD) * Math.sin(d * RAD), cy - k * Math.sin(lat * RAD)];
+  };
+
+  for (const kehä of kehat) {
+    const { cx, cy, r } = kehä;
+    const f = project(kehä);
+
+    // Asteverkko: pituuspiirit 30° välein, leveyspiirit 30° välein.
+    const verkko = el('g', { class: 'graticule' }, g);
+    for (let lon = -180; lon < 180; lon += 30) {
+      const pts = [];
+      for (let lat = -88; lat <= 88; lat += 4) {
+        const d = ((lon - kehä.lon0 + 540) % 360) - 180;
+        if (Math.abs(d) > 89.5) continue;
+        pts.push(f(lon, lat));
+      }
+      if (pts.length > 1) el('path', { d: linePath(pts), class: 'graticule-line' }, verkko);
+    }
+    for (let lat = -60; lat <= 60; lat += 30) {
+      const pts = [];
+      for (let d = -89.5; d <= 89.5; d += 3) pts.push(f(kehä.lon0 + d, lat));
+      el('path', { d: linePath(pts), class: 'graticule-line' }, verkko);
+    }
+    // Päiväntasaaja hieman vahvempana.
+    const eq = [];
+    for (let d = -89.5; d <= 89.5; d += 3) eq.push(f(kehä.lon0 + d, 0));
+    el('path', { d: linePath(eq), class: 'graticule-line strong' }, verkko);
+
+    // Kaksoiskehä ja astepykälät väliin.
+    el('circle', { cx, cy, r: r + 13, class: 'hemi-ring outer' }, g);
+    el('circle', { cx, cy, r, class: 'hemi-ring' }, g);
+    const ticks = el('g', { class: 'hemi-ticks' }, g);
+    for (let a = 0; a < 360; a += 5) {
+      const rad = a * RAD;
+      const iso = a % 15 === 0;
+      const r1 = r + (iso ? 1 : 5);
+      const r2 = r + 12;
+      el('path', {
+        d: `M${(cx + r1 * Math.cos(rad)).toFixed(1)},${(cy + r1 * Math.sin(rad)).toFixed(1)}`
+          + `L${(cx + r2 * Math.cos(rad)).toFixed(1)},${(cy + r2 * Math.sin(rad)).toFixed(1)}`,
+        class: 'hemi-tick',
+      }, ticks);
+    }
+  }
+
+  // Napaympyrät: yksinkertaisempi kehä ja säteittäinen verkko.
+  for (const napa of navat) {
+    const { cx, cy, r } = napa;
+    const verkko = el('g', { class: 'graticule' }, g);
+    for (let a = 0; a < 360; a += 30) {
+      const rad = a * RAD;
+      el('path', {
+        d: `M${cx},${cy}L${(cx + r * Math.cos(rad)).toFixed(1)},${(cy + r * Math.sin(rad)).toFixed(1)}`,
+        class: 'graticule-line',
+      }, verkko);
+    }
+    for (const osa of [0.34, 0.67]) {
+      el('circle', { cx, cy, r: (r * osa).toFixed(1), class: 'graticule-line', fill: 'none' }, verkko);
+    }
+    el('circle', { cx, cy, r: r + 9, class: 'hemi-ring outer' }, g);
+    el('circle', { cx, cy, r, class: 'hemi-ring' }, g);
+  }
+}
+
 function drawCompass(svg, cx, cy, r = 62) {
   const g = el('g', { class: 'compass-rose', transform: `translate(${cx},${cy})` }, svg);
   el('circle', { r, class: 'compass' }, g);
@@ -25743,6 +25887,8 @@ class UI {
     this.boardRoot = root;
 
     drawParchment(svg);
+    // Pallonpuoliskokartalla kehykset ja asteverkko piirtyvät maiden alle.
+    drawHemisphereFrames(svg, pack.map);
     drawLand(svg, pack.map);
     drawWaves(svg, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
@@ -25918,12 +26064,9 @@ class UI {
           cx: c.x,
           cy: c.y,
           r: c.start ? 27 : 22,
-          class: `target-ring pick${this.pendingStart === c.id ? ' picked' : ''}`,
+          class: 'target-ring pick',
         }, g);
-        g.addEventListener('click', () => {
-          this.pendingStart = c.id;
-          this.render();
-        });
+        g.addEventListener('click', () => this.doPickStart(c));
       }
       return;
     }
@@ -26022,33 +26165,12 @@ class UI {
     const p = game.player;
     this.dieEl.hidden = true; // silmäluku näkyy laudalla olevassa nopassa
 
-    // Lähtöpisteen valinta: kaupungin napautus kartalla avaa porttivaihtoehdot.
+    // Lähtöpisteen valinta tehdään kartalta yhdellä napautuksella, joten
+    // toimintopaneelissa on vain ohje.
     if (game.phase === 'pickstart') {
-      const cityId = this.pendingStart;
-      const city = cityId ? game.board.cityById.get(cityId) : null;
-      if (!city) {
-        const here = game.cityOf();
-        this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — valitse ensimmäinen kohde kartalta.`;
-        this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
-        return;
-      }
-      this.turnStatus.textContent = `${city.name} — minne astut?`;
-      this.hint.textContent = 'Ensimmäinen matka on ilmainen.';
-      (city.links ?? []).forEach((link, i) => {
-        const btn = html('button', i === 0 ? 'primary' : '', `🧭 ${link.label}`);
-        btn.addEventListener('click', () => {
-          this.pendingStart = null;
-          sfx.play('flight');
-          this.doAction(() => game.actionPickStart(cityId, i));
-        });
-        this.actionsEl.appendChild(btn);
-      });
-      const stayBtn = html('button', city.links?.length ? '' : 'primary', '🌍 Jää maailmankartalle');
-      stayBtn.addEventListener('click', () => {
-        this.pendingStart = null;
-        this.doAction(() => game.actionPickStart(cityId));
-      });
-      this.actionsEl.appendChild(stayBtn);
+      const here = game.cityOf();
+      this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — napauta kohdetta kartalta.`;
+      this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
       return;
     }
 
@@ -26209,6 +26331,19 @@ class UI {
     btn.appendChild(html('span', 'icon-glyph', icon));
     btn.appendChild(html('span', 'icon-label', label));
     return btn;
+  }
+
+  /**
+   * Lähtöpisteen valinta: napautus vie suoraan perille. Porttikaupungista
+   * laskeudutaan mantereen omalle laudalle, muualta jäädään maailmankartalle.
+   * Useamman portin kaupungeista (Kairo, Mumbai) otetaan ensimmäinen eli
+   * kaupungin oma manner — välikysymystä ei enää esitetä.
+   */
+  doPickStart(city) {
+    const { game } = this;
+    const portti = (city.links ?? []).length > 0;
+    sfx.play(portti ? 'flight' : 'paper');
+    this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
   }
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
@@ -27130,7 +27265,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.17';
+const APP_VERSION = '2026-07-28.2';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
