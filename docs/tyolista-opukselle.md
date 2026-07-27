@@ -159,19 +159,24 @@ Tavoite: näytöllä mahdollisimman vähän nappeja kerralla (js/ui.js
 - Moottoriin ei kosketa; tämä on puhtaasti renderActions-ryhmittelyä.
 - Päivitä Säännöt-dialogin "Vuoron kulku" -teksti vastaavasti.
 
-**Samassa paketissa: aloitusteksti tiiviiksi.** Nykyinen avaus on ohjetta
-tarinan paikalla. Muutokset (js/ui.js pickstart-haara + js/game.js
-constructor-say-rivit):
+**Samassa paketissa: aloitusteksti (OMISTAJAN PÄÄTTÄMÄ TEKSTI).**
+Pelin avaus on kokonaan minämuodossa, kuin seikkailukirjan alku — ei
+selittelyä eikä ohjeita. Avauskortissa/tietoruudussa näytetään TÄSMÄLLEEN
+tämä teksti (kirjoituskoneella naksuen, kolme kappaletta):
+
+> Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872,
+> kukkarollinen puntia ja päiväkirja, joka päättyy kesken lauseen.
+>
+> Ostin lipun samana iltana.
+>
+> Jonkun on kirjoitettava se loppuun.
+
 - Tilarivi pickstartissa ilman valintaa: pelkkä "Minne ensin?"
-- Kartan alareunan vihjepilleri: ohjeen tilalle yksi rivi tarinaa:
-  "Isoisän kartta, kourallinen puntia — ja lippu, jonka kohta
-  'määränpää' on tyhjä."
-- Lokin aloitusrivit ("Peli alkaa! Etsikää…", "Vaellus: peli ei
-  pääty…", "Matka alkaa: … lippu on jo maksettu.") lyhennetään yhteen
-  riviin tai poistetaan — sääntöasiat kuuluvat Säännöt-dialogiin.
+- Kaikki muut avauksen ohje- ja lokirivit ("Peli alkaa! Etsikää…",
+  "Vaellus: peli ei pääty…", "lippu on jo maksettu" jne.) poistetaan —
+  sääntöasiat kuuluvat Säännöt-dialogiin.
 - Kaupungin valinnan jälkeiset tekstit saavat jäädä ennalleen.
-- Periaate: aloituksessa enintään yksi lause tunnelmaa ja yksi lyhyt
-  kysymys, ei ohjeita joita kartta näyttää itse.
+- Tekstiä ei muokata eikä jatketa ilman omistajan lupaa.
 
 ## Paketti 4: kaksi ääntä — kerronta korvaa "Tiesitkö että" -jutut
 
