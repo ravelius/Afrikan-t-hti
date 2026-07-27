@@ -25,6 +25,9 @@
         <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
           <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true">↻</span>
         </button>
+        <button id="passport-btn" class="ghost" type="button" title="Vihreä passi ja sen leimat">
+          <span class="wide-label">Passi</span><span class="narrow-label" aria-hidden="true">🛂</span>
+        </button>
         <button id="rules-btn" class="ghost" type="button">Säännöt</button>
         <button id="newgame-btn" class="ghost" type="button">
           <span class="wide-label">Uusi peli</span><span class="narrow-label" aria-hidden="true">Uusi</span>
@@ -61,6 +64,20 @@
   </div>
 
   <!-- Aloitusruutu -->
+
+  <!-- Vihreä passi -->
+  <dialog id="passport-dialog" class="dialog">
+   <div class="dialog-card passport-card">
+    <h2>Vihreä passi</h2>
+    <p class="muted">Isoisän passi kulkee mukana. Jokaisesta laudasta, jolla olet
+      käynyt, jää siihen leima — ne säilyvät myös uusiin peleihin.</p>
+    <p id="passport-count" class="passport-count"></p>
+    <div id="passport-grid" class="passport-grid"></div>
+    <form method="dialog" class="dialog-actions">
+      <button class="primary" value="close">Sulje</button>
+    </form>
+   </div>
+  </dialog>
 
   <!-- Säännöt -->
   <dialog id="rules-dialog" class="dialog">
@@ -131,6 +148,14 @@
         vuodelta 1873 ja <b>nuoren herran havainto</b> tästä päivästä. Harvakseltaan
         päiväkirjasta löytyy taitettu sivu, joka vihjaa laudan pääaarteen suunnasta —
         muttei koskaan nimeä kaupunkia.</p>
+      <p><b>Kokemuspisteet ja tieto.</b> Pisteitä kertyy matkasta eikä onnesta:
+        uudesta kaupungista 10, uudesta laudasta 50, oikeasta vastauksesta vaikeaan
+        kysymykseen 25 ja laudan pääaarteesta 100. Paneelin tietoprosentti kertoo,
+        kuinka moneen kysymykseen olet vastannut oikein — kaksintaistelut mukaan
+        lukien.</p>
+      <p><b>Vihreä passi.</b> Yläpalkin <b>Passi</b> avaa isoisän passin. Siihen jää
+        leima jokaisesta laudasta, jolla olet käynyt, ja leimat säilyvät myös uusiin
+        peleihin.</p>
       <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
       <p><b>Päivitys.</b> Yläpalkin <b>Päivitä</b> hakee uusimman version pelistä —
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>

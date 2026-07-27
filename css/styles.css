@@ -481,6 +481,74 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .chip-marks { letter-spacing: 0.08em; }
 .chip-marks .star { color: var(--accent); }
 
+/* Matkan mittarit: kokemuspisteet ja tietoprosentti rahan alla. */
+.chip-stats { gap: 0.6rem; font-size: 0.76rem; }
+.chip-stats .xp,
+.chip-stats .knowledge { font-variant-numeric: tabular-nums; }
+.chip-stats .xp { color: #9ec48a; }
+
+/* Vihreä passi: leimat ruudukossa, kukin kuin painettu leimasimella. */
+.passport-card { max-width: 520px; }
+
+.passport-count {
+  margin: 0.6rem 0 0.4rem;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.passport-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.6rem;
+  max-height: 46vh;
+  overflow-y: auto;
+}
+
+.stamp {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.55rem 0.5rem;
+  /* Dialogi on vaaleaa pergamenttia, joten leiman muste on tummanvihreää. */
+  border: 2px solid rgba(58, 102, 48, 0.7);
+  border-radius: 6px;
+  background: rgba(120, 168, 108, 0.16);
+  color: #35602c;
+  text-align: center;
+  /* Leimasin ei osu koskaan aivan suoraan. */
+  transform: rotate(-1.5deg);
+}
+
+.passport-grid .stamp:nth-child(even) { transform: rotate(1.2deg); }
+.passport-grid .stamp:nth-child(3n) { transform: rotate(-0.6deg); }
+
+.stamp-label {
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stamp-date {
+  font-family: var(--font-type);
+  font-size: 0.68rem;
+  opacity: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+
+.event-toast.stamp {
+  /* Leimakupla on tavallinen tapahtumakupla, ei passin leima. */
+  transform: none;
+  border-color: rgba(120, 168, 108, 0.55);
+  background: var(--overlay-card);
+  color: var(--ink-light);
+  text-align: left;
+}
+
 /* --- tiesitkö että --- */
 
 .fact-card {
