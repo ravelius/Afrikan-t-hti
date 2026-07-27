@@ -746,7 +746,7 @@ export const AFRICA_QUESTIONS = {
     },
     {
       q: 'Mitä Namibin rannikolla on lähes joka aamu?',
-      options: ['sumua', 'lunta', 'rankkasadetta', 'ukkosta'],
+      options: ['sumua', 'hiekkamyrskyjä', 'rankkasadetta', 'ukkosta'],
       correct: 0,
       level: 1,
       fact: 'Kylmä merivirta tiivistää ilman kosteuden sumuksi. Kasvit ja eläimet, kuten kuoriaiset, keräävät juomavetensä suoraan sumusta.',
@@ -1008,9 +1008,9 @@ export const AFRICA_QUESTIONS = {
       q: 'Mikä on erityistä Kilimandžaron huipulla?',
       options: [
         'siellä on jäätä, vaikka päiväntasaaja on lähellä',
-        'siellä kasvaa sademetsä',
-        'siellä on järvi',
-        'siellä on kaupunki',
+        'siellä savuaa yhä avoin tulikita',
+        'siellä on kraatterijärvi',
+        'siellä on ympärivuotinen tutkimusasema',
       ],
       correct: 0,
       level: 1,
@@ -1107,7 +1107,7 @@ export const AFRICA_QUESTIONS = {
       correct: 0,
       level: 1,
       fact: 'Järvi on noin 670 kilometriä pitkä mutta paikoin vain 50 kilometriä leveä. Se on maailman pisin makean veden järvi.',
-      hint: 'Muoto seuraa hautavajoaman kapeaa rakoa.',
+      hint: 'Muodon määräsi maankuoren repeämä, ei jäätikkö eikä joki.',
     },
     {
       q: 'Mikä kalaryhmä on tehnyt Tanganjikajärven tunnetuksi tutkijoille?',
@@ -1446,7 +1446,7 @@ export const AFRICA_QUESTIONS = {
       options: ['swahilista', 'zulusta', 'arabiasta suoraan', 'afrikaansista'],
       correct: 0,
       fact: 'Swahilin safari tarkoittaa matkaa; sana juontuu arabian sanasta safar.',
-      hint: 'Kieltä puhutaan Tansaniassa ja Keniassa.',
+      hint: 'Kieli on bantukieli, vaikka sana itse on kulkeutunut arabiasta.',
     },
     {
       q: 'Mikä on maailman suurin kuuma aavikko?',
@@ -1468,7 +1468,7 @@ export const AFRICA_QUESTIONS = {
       options: ['swahili', 'zulu', 'joruba', 'amhara'],
       correct: 0,
       fact: 'Swahili on Tansanian ja Kenian yhteinen valtakieli.',
-      hint: 'Sana safari on peräisin tästä kielestä.',
+      hint: 'Kieli syntyi rannikon kauppasatamissa, ei sisämaassa.',
     },
     {
       q: 'Missä kokouksessa Euroopan vallat sopivat Afrikan jakamisesta siirtomaihin 1884–85?',
