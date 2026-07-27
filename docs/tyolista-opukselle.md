@@ -19,7 +19,7 @@ lisäohjeita:
 ## TILANNE
 
 - Paketti 1 (pikakorjaukset): ✅ PR #16
-- Paketti 2 (kartta koko ruutuun): tekemättä
+- Paketti 2 (kartta koko ruutuun): ✅ PR #18
 - Paketti 3 (kaksivaiheinen matkavalinta): tekemättä
 - Paketti 4 (kaksi ääntä): tekemättä
 - Paketti 5 (sisältö, kaista B): Maailma ⬜ Afrikka ⬜ Eurooppa ⬜
