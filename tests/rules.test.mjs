@@ -52,7 +52,7 @@ function newGame(seed = 5) {
 // jokaisella aarrekaupungilla on vähintään viisi omaa kysymystä, joista
 // ainakin yksi on helppo (taso 1) ja yksi vaikea (taso 3), ja yleispakassa on
 // vähintään 15 kysymystä. Kesken olevilla laudoilla pätevät vanhat minimit.
-const SISALTO_VALMIS = new Set(['maailma', 'africa']);
+const SISALTO_VALMIS = new Set(['maailma', 'africa', 'europe']);
 const MIN_CITY_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 5 : 2);
 const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10);
 
@@ -63,7 +63,7 @@ const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10)
 // aarrekaupungille. Kun laudan sisältö valmistuu, lisää sen tunnus tähän —
 // muutos on julkaisuportti, ei muotoseikka (docs/tyolista-opukselle.md,
 // paketit 4 ja 5).
-const VOICES_DONE = new Set(['maailma', 'africa', 'suomi', 'istanbul']);
+const VOICES_DONE = new Set(['maailma', 'africa', 'suomi', 'istanbul', 'europe']);
 
 for (const pack of PACKS) {
   const packBoard = buildBoard(pack.cities, pack.edges);
@@ -1495,9 +1495,13 @@ test('isoisän vihje osoittaa tähtikaupunkiin ja vaikenee kun aarre on löytyny
 });
 
 test('vihjeetön lauta ei kaada tietoruutua', () => {
+  // Lauta, jonka vihjeet ovat vielä kirjoittamatta: tietoruutu ei saa kaatua.
+  // Tyhjä starHints tehdään tässä käsin, jotta testi ei riipu siitä, minkä
+  // laudan sisältö on kirjoitettu (kaista B täydentää lautoja yksi kerrallaan).
+  const base = packById('europe');
   const game = new Game({
     players: [{ name: 'Yksin', color: '#f00', start: 'lissabon' }],
-    pack: packById('europe'), // vihjeet vielä kirjoittamatta
+    pack: { ...base, texts: { ...base.texts, starHints: {} } },
     rng: mulberry32(3),
   });
   game.turnCount = HINT_EVERY_TURNS;
