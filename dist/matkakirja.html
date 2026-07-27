@@ -1765,7 +1765,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         harvakseltaan, mistä suunnasta kannattaa etsiä — muttei koskaan nimeä
         kaupunkia.</p>
       <p>Matka ei pääty. Kerää löytöjä, leimoja passiin ja kokemusta niin
-        kauan kuin huvittaa. Ensimmäinen lippu on jo maksettu.</p>
+        kauan kuin huvittaa. Ensimmäinen lippu on jo maksettu — napauta
+        maailmankartalta kaupunkia, niin olet siellä.</p>
     </div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="start">Lähde matkaan</button>
@@ -1812,11 +1813,11 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         avaa aarteita vastaamalla kysymyksiin ja opi matkalla maista, kulttuureista
         ja elämästä eri puolilla maapalloa. Peli ei pääty — jokaisella laudalla on
         oma tähtiaarteensa (2000 p), ja löytöjä voi kerätä niin kauan kuin huvittaa.</p>
-      <p><b>Matkaan lähtö.</b> Uusi peli alkaa maailmankartalta. Valitse kaupunki:
-        siitä astut ilmaiseksi suoraan mantereen tarkemmalle kartalle — tai voit
-        jäädä kiertämään maailmankarttaa, jolla valtameret ylitetään laivalla tai
-        lentäen. Jokaisella laudalla on omat paikkansa, reittinsä, tähtiaarteensa
-        ja kysymyksensä.</p>
+      <p><b>Matkaan lähtö.</b> Uusi peli alkaa maailmankartalta. Napauta kaupunkia:
+        matka lähtee heti ja laskeudut ilmaiseksi sen mantereen omalle kartalle.
+        Maailmankartalle pääsee myöhemmin takaisin porttikaupungeista, ja siellä
+        valtameret ylitetään laivalla tai lentäen. Jokaisella laudalla on omat
+        paikkansa, reittinsä, tähtiaarteensa ja kysymyksensä.</p>
       <p><b>Portit.</b> Porttikaupungin tunnistaa katkoviivakehästä: siitä pääsee
         lennolla (300 p) toiselle laudalle — mantereelta toiselle, maailmankartalle
         tai vaikka kaupunkitason laudalle kuten Istanbuliin. Laudan aarteet ja
@@ -26063,12 +26064,9 @@ class UI {
           cx: c.x,
           cy: c.y,
           r: c.start ? 27 : 22,
-          class: `target-ring pick${this.pendingStart === c.id ? ' picked' : ''}`,
+          class: 'target-ring pick',
         }, g);
-        g.addEventListener('click', () => {
-          this.pendingStart = c.id;
-          this.render();
-        });
+        g.addEventListener('click', () => this.doPickStart(c));
       }
       return;
     }
@@ -26167,33 +26165,12 @@ class UI {
     const p = game.player;
     this.dieEl.hidden = true; // silmäluku näkyy laudalla olevassa nopassa
 
-    // Lähtöpisteen valinta: kaupungin napautus kartalla avaa porttivaihtoehdot.
+    // Lähtöpisteen valinta tehdään kartalta yhdellä napautuksella, joten
+    // toimintopaneelissa on vain ohje.
     if (game.phase === 'pickstart') {
-      const cityId = this.pendingStart;
-      const city = cityId ? game.board.cityById.get(cityId) : null;
-      if (!city) {
-        const here = game.cityOf();
-        this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — valitse ensimmäinen kohde kartalta.`;
-        this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
-        return;
-      }
-      this.turnStatus.textContent = `${city.name} — minne astut?`;
-      this.hint.textContent = 'Ensimmäinen matka on ilmainen.';
-      (city.links ?? []).forEach((link, i) => {
-        const btn = html('button', i === 0 ? 'primary' : '', `🧭 ${link.label}`);
-        btn.addEventListener('click', () => {
-          this.pendingStart = null;
-          sfx.play('flight');
-          this.doAction(() => game.actionPickStart(cityId, i));
-        });
-        this.actionsEl.appendChild(btn);
-      });
-      const stayBtn = html('button', city.links?.length ? '' : 'primary', '🌍 Jää maailmankartalle');
-      stayBtn.addEventListener('click', () => {
-        this.pendingStart = null;
-        this.doAction(() => game.actionPickStart(cityId));
-      });
-      this.actionsEl.appendChild(stayBtn);
+      const here = game.cityOf();
+      this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — napauta kohdetta kartalta.`;
+      this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
       return;
     }
 
@@ -26354,6 +26331,19 @@ class UI {
     btn.appendChild(html('span', 'icon-glyph', icon));
     btn.appendChild(html('span', 'icon-label', label));
     return btn;
+  }
+
+  /**
+   * Lähtöpisteen valinta: napautus vie suoraan perille. Porttikaupungista
+   * laskeudutaan mantereen omalle laudalle, muualta jäädään maailmankartalle.
+   * Useamman portin kaupungeista (Kairo, Mumbai) otetaan ensimmäinen eli
+   * kaupungin oma manner — välikysymystä ei enää esitetä.
+   */
+  doPickStart(city) {
+    const { game } = this;
+    const portti = (city.links ?? []).length > 0;
+    sfx.play(portti ? 'flight' : 'paper');
+    this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
   }
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
@@ -27275,7 +27265,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.1';
+const APP_VERSION = '2026-07-28.2';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

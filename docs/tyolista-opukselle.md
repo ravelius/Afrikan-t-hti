@@ -159,6 +159,20 @@ Tavoite: näytöllä mahdollisimman vähän nappeja kerralla (js/ui.js
 - Moottoriin ei kosketa; tämä on puhtaasti renderActions-ryhmittelyä.
 - Päivitä Säännöt-dialogin "Vuoron kulku" -teksti vastaavasti.
 
+**Samassa paketissa: aloitusteksti tiiviiksi.** Nykyinen avaus on ohjetta
+tarinan paikalla. Muutokset (js/ui.js pickstart-haara + js/game.js
+constructor-say-rivit):
+- Tilarivi pickstartissa ilman valintaa: pelkkä "Minne ensin?"
+- Kartan alareunan vihjepilleri: ohjeen tilalle yksi rivi tarinaa:
+  "Isoisän kartta, kourallinen puntia — ja lippu, jonka kohta
+  'määränpää' on tyhjä."
+- Lokin aloitusrivit ("Peli alkaa! Etsikää…", "Vaellus: peli ei
+  pääty…", "Matka alkaa: … lippu on jo maksettu.") lyhennetään yhteen
+  riviin tai poistetaan — sääntöasiat kuuluvat Säännöt-dialogiin.
+- Kaupungin valinnan jälkeiset tekstit saavat jäädä ennalleen.
+- Periaate: aloituksessa enintään yksi lause tunnelmaa ja yksi lyhyt
+  kysymys, ei ohjeita joita kartta näyttää itse.
+
 ## Paketti 4: kaksi ääntä — kerronta korvaa "Tiesitkö että" -jutut
 
 Tämä on ison tarinapäivityksen ydin. Lue ensin `docs/tarina.md`.
