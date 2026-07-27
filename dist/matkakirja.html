@@ -122,6 +122,21 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   text-overflow: ellipsis;
 }
 
+/*
+ * Päiväkirjan päivämäärä. Aika on tarinaa eikä uhkaa, joten mittari on
+ * kirjoituskonetekstiä muun pillerin sävyissä — ei hälytysväriä missään
+ * vaiheessa, ei myöskään ennätyksen umpeuduttua.
+ */
+.turn-pill .clock {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.turn-pill .clock::before {
+  content: '·';
+  margin-right: 0.45rem;
+}
+
 .topbar-actions {
   margin-left: auto;
   display: flex;
@@ -560,6 +575,13 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .find-text { font-variant-numeric: tabular-nums; }
 
+/* Matkan tiedot passissa: selite vasemmalle, luku oikeaan reunaan. */
+.find-value {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
 /* Matkan mittarit: kokemuspisteet ja tietoprosentti rahan alla. */
 .chip-stats { gap: 0.6rem; font-size: 0.76rem; }
 .chip-stats .xp,
@@ -909,17 +931,30 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 .target-ring.pick.picked { stroke: #e8b23c; stroke-width: 3; }
 .target-ring.picked { stroke: #e8b23c; }
 
+/*
+ * Siirtorenkaat olivat punaisia, paksuja ja pyöriviä — jalan liikuttaessa
+ * niitä on monta kerralla ja kartta muuttui levottomaksi. Sama kullanruskea
+ * sävy kuin lähtöpisteen renkaissa riittää kertomaan, mihin voi napauttaa.
+ */
 .target-ring {
-  fill: rgba(176, 58, 43, 0.18);
-  stroke: var(--mark);
-  stroke-width: 3.5;
+  fill: rgba(176, 138, 60, 0.16);
+  stroke: #a8763a;
+  stroke-width: 2.2;
   stroke-dasharray: 6 5;
-  animation: target-spin 6s linear infinite;
   transform-box: fill-box;
   transform-origin: center;
 }
 
-.target:hover .target-ring { fill: rgba(176, 58, 43, 0.35); }
+/* Suunta, jolla ei ole kaupunkia nopan päässä: pelkkä hillitty piste. */
+.target-ring.far {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-dasharray: 3 4;
+  opacity: 0.7;
+}
+
+.target:hover .target-ring { fill: rgba(176, 138, 60, 0.34); }
+.target:hover .target-ring.far { fill: rgba(176, 138, 60, 0.22); opacity: 1; }
 .target-cost { fill: var(--mark); font-size: 17px; font-weight: 700; }
 
 @keyframes target-spin {
@@ -1692,8 +1727,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 
   .topbar { padding: 0.3rem 0.5rem; gap: 0.4rem; }
   .brand { font-size: 0.92rem; letter-spacing: 0.04em; }
-  /* Vuorossa oleva näkyy pelaajakorteissa, joten palkkiin ei tarvita erillistä merkkiä. */
-  .turn-pill { display: none; }
+  /* Pilleri on nyt pelkkä kukkaro ja päivämäärä, joten se mahtuu kapeallekin. */
+  .turn-pill { font-size: 0.78rem; padding: 0.2rem 0.5rem; gap: 0.3rem; }
   .topbar-actions button { font-size: 0.78rem; padding: 0.3rem 0.5rem; min-height: 32px; }
   /* Kapealla ruudulla napit lyhenevät, jotta pelin nimi mahtuu kokonaan. */
   .wide-label { display: none; }
@@ -1730,10 +1765,50 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 
 /* Maailmankartta */
 
+/*
+ * Vaakalukko. Kosketuslaitteella peli näkyy vain pystyasennossa: kartta on
+ * pystysuora ja vaakataitto tekisi siitä kaistaleen. Työpöydällä (pointer:
+ * fine) tätä ei sovelleta, koska siellä ikkuna on aina "vaakassa".
+ */
+.rotate-guard { display: none; }
+
+@media (pointer: coarse) and (orientation: landscape) {
+  .rotate-guard {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--bg, #1d1610);
+    color: #e8d9b8;
+  }
+
+  .rotate-guard .rotate-glyph {
+    font-size: 2.6rem;
+    transform: rotate(90deg);
+  }
+
+  .app { display: none; }
+}
+
 </style>
 </head>
 <body>
-<div class="app">
+<!--
+    iOS ei tue screen.orientation.lockia, joten vaaka-asento estetään
+    peittämällä peli kehotuksella. Erillistä vaakataittoa ei tehdä.
+  -->
+  <div class="rotate-guard" aria-hidden="true">
+    <p class="rotate-glyph">📱</p>
+    <p>Matkakirja luetaan pystyssä.</p>
+    <p class="muted">Käännä laite pystyasentoon.</p>
+  </div>
+  <div class="app">
     <header class="topbar">
       <h1 class="brand">Matkakirja</h1>
       <div id="turn-pill" class="turn-pill"></div>
@@ -1810,6 +1885,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     <h2>Vihreä passi</h2>
     <p class="muted">Isoisän passi kulkee mukana. Jokaisesta laudasta, jolla olet
       käynyt, jää siihen leima — ne säilyvät myös uusiin peleihin.</p>
+    <p class="passport-count">Matka</p>
+    <div id="passport-progress" class="passport-finds"></div>
     <p id="passport-count" class="passport-count"></p>
     <div id="passport-grid" class="passport-grid"></div>
     <p class="passport-count">Matkasaalis</p>
@@ -5263,6 +5340,25 @@ const AFRICA = {
       'Isoisä laski manterella olevan "muutama kymmenen heimoa". Nykyään täällä on 54 itsenäistä valtiota ja yli tuhat elävää kieltä, ja jokaisella niistä on oma sanansa vieraalle.',
       'Lentokentältä keskustaan taksi ohitti kolme työmaata, joissa valot paloivat vielä yhdeksältä illalla. Tämän mantereen väestön keski-ikä on alle kaksikymmentä vuotta — nuorin koko maailmassa. Istuin takapenkillä ja tunsin itseni vanhentuneeksi kartaksi.',
       'Niili, Kongo, Niger, Sambesi. Päiväkirjan tarkin sivu on se, jolle isoisä luetteli mantereen suuret joet — jokaisen nimen hän sai oikein. Vedet hän näki; ihmiset hän arvasi.',
+    ],
+    // Isoisän aikataulu: haamu, joka kulkee rinnalla. Rivi nousee esiin, kun
+    // matkapäivä ohittaa merkinnän päivän. Ennätys on tavoite eikä tuomio —
+    // päivän 80 jälkeenkin merkinnät jatkuvat, sävy vain vaihtuu.
+    schedule: [
+      { day: 2, text: 'Isoisä odotti Tangerissa laivaa, joka ei tullut. Päiväkirjaan tuli kaksi sivua satamamaksuista ja yksi rivi maisemasta.' },
+      { day: 6, text: 'Höyrylaiva itään pitkin rannikkoa. Isoisä merkitsi muistiin jokaisen sataman nimen ja kirjoitti kolme niistä väärin.' },
+      { day: 12, text: 'Isoisä oli Egyptissä ja osti kartan, joka oli hänen omaansa vanhempi. Hän käytti sitä loppumatkan.' },
+      { day: 19, text: 'Aikataulu piti, mutta vain koska laiva lähti myöhässä samaan suuntaan kuin hänkin.' },
+      { day: 26, text: 'Punaisellamerellä. Isoisä kirjoitti kaipaavansa sadetta, minkä hän myöhemmin yliviivasi.' },
+      { day: 34, text: 'Isoisä kuuli satamassa karavaanireitistä, joka vie kuukaudessa aavikon halki sisämaahan. Hän ei lähtenyt. Sivun reunaan hän kirjoitti: "toiste".' },
+      { day: 42, text: 'Puolimatka. Isoisä laski, että kotiin ehtii, jos mikään ei mene pieleen — ja kirjoitti sen alle, että jokin menee aina.' },
+      { day: 50, text: 'Mausteita ostettiin kotiin vietäväksi. Ne loppuivat matkalla, ja päiväkirjassa asiaa selitetään puoli sivua.' },
+      { day: 58, text: 'Isoisä kiersi mantereen eteläkärjen ja huomasi olevansa aikataulussa ensimmäistä kertaa koko matkalla.' },
+      { day: 66, text: 'Atlantille päin. Isoisä totesi, ettei hän ollut nähnyt sisämaasta mitään — ja jatkoi matkaa rannikkoa pitkin.' },
+      { day: 73, text: 'Viimeinen satama ennen kotimatkaa. Isoisä kirjoitti nimensä laivayhtiön kirjaan ja alleviivasi päivämäärän.' },
+      { day: 80, text: 'Isoisä oli kotona. Tähän kohtaan päiväkirjassa ei ole muuta kuin päivämäärä ja kaksi alleviivausta.' },
+      { day: 84, text: 'Isoisä olisi jo kotona. Minä en ole. Tästä eteenpäin kirjoitan sivuja, joita hänellä ei ole.' },
+      { day: 100, text: 'Isoisän päiväkirja loppuu kesken lauseen. Tästä eteenpäin kartta on minun.' },
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
     // ei koskaan kaupungin nimeä.
@@ -24163,6 +24259,20 @@ const DUEL_PRIZE = 200; // rosvon saalis, jos kaksintaistelun voittaa suoraan
 const DUEL_BYPASS_SHOES = 3; // näin monella hevosenkengällä rosvon voi ohittaa
 const HINT_EVERY_TURNS = 4; // näin harvoin isoisän vihje aarteesta
 
+// Aika on pelin vastustaja, ei sen tuomari: ajan loppuminen ei päätä peliä
+// koskaan. Vuoro on kuusi tuntia, joten neljä vuoroa on yksi matkapäivä.
+const TURN_HOURS = 6;
+const RECORD_DAYS = 80; // isoisän ennätys
+const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
+
+/** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
+function timeOfDayName(hour) {
+  if (hour < 6) return 'aamu';
+  if (hour < 12) return 'keskipäivä';
+  if (hour < 18) return 'ilta';
+  return 'yö';
+}
+
 // Kokemuspisteet kertyvät matkasta, eivät onnesta: uusista paikoista,
 // uusista laudoista ja vaikeista kysymyksistä.
 const XP_NEW_CITY = 10;
@@ -24249,6 +24359,11 @@ class Game {
     this.duel = null;
     this.duelArmed = false;
     this.diaryNote = null;
+    // Isoisän aikataulu: näytetty rivi ja jo nähtyjen avaimet.
+    this.scheduleNote = null;
+    this.scheduleShown = new Set();
+    this.recordNoted = false;
+    this.recordMark = null;
     this.usedQuestions = new Set();
     this.lastPath = null;
     this.winner = null;
@@ -24561,6 +24676,66 @@ class Game {
     return Math.round((player.quizCorrect / player.quizAsked) * 100);
   }
 
+  // --- aika ---------------------------------------------------------------
+
+  /** Kuluneet tunnit matkan alusta. Ensimmäinen vuoro on hetki nolla. */
+  elapsedHours() {
+    return (this.turnCount - 1) * TURN_HOURS;
+  }
+
+  /** Matkapäivä ykkösestä alkaen. */
+  dayCount() {
+    return Math.floor(this.elapsedHours() / 24) + 1;
+  }
+
+  /** Vuorokaudenaika: aamu, keskipäivä, ilta tai yö. */
+  timeOfDay() {
+    return timeOfDayName(this.elapsedHours() % 24);
+  }
+
+  /** Päiväkirjan päivämäärä yläpalkkiin: "Päivä 14, ilta". */
+  clockLabel() {
+    return `Päivä ${this.dayCount()}, ${this.timeOfDay()}`;
+  }
+
+  /**
+   * Isoisän aikataulu: kun matkapäivä ohittaa merkinnän päivän, rivi nousee
+   * tietoruutuun. Merkintä näytetään kerran, ja näytetyt jäävät talteen, jotta
+   * tallennuksesta jatkava ei näe samaa riviä uudelleen.
+   */
+  updateSchedule() {
+    this.scheduleNote = null;
+    const rivit = this.pack.texts.schedule;
+    if (!Array.isArray(rivit)) return;
+    const day = this.dayCount();
+    for (const rivi of rivit) {
+      const key = `${this.pack.id}:${rivi.day}`;
+      if (rivi.day > day || this.scheduleShown.has(key)) continue;
+      this.scheduleShown.add(key);
+      this.scheduleNote = { packId: this.pack.id, day: rivi.day, text: rivi.text };
+      return; // yksi rivi kerrallaan, vaikka useampi päivä olisi ohitettu
+    }
+  }
+
+  /**
+   * Isoisän ennätys aarteen löytyessä. Ennätys on tavoite eikä tuomio: ajan
+   * loppuminen ei päätä peliä koskaan eikä hitaampi matka menetä mitään.
+   * Palauttaa merkinnän, jonka käyttöliittymä voi leimata passiin.
+   */
+  noteRecord(player = this.player) {
+    if (this.recordNoted) return null;
+    this.recordNoted = true;
+    const day = this.dayCount();
+    if (day <= RECORD_DAYS) {
+      this.awardXp(player, XP_RECORD);
+      this.say(player.id, `Päivä ${day}. Isoisän ennätys oli ${RECORD_DAYS} päivää — se on nyt rikottu.`);
+      this.recordMark = { packId: this.pack.id, day, label: `${RECORD_DAYS} päivää rikottu` };
+      return this.recordMark;
+    }
+    this.say(player.id, `Päivä ${day}. Isoisä olisi ollut jo kotona — mutta hän ei nähnyt tätä kaikkea.`);
+    return null;
+  }
+
   /** Kaupunki, johon laudan pääaarre on kätketty — löytynyt tai ei. */
   starCityOf(world = this.world) {
     if (world.starCity) return world.starCity;
@@ -24691,6 +24866,7 @@ class Game {
     this.phase = 'action';
     this.current = (this.current + 1) % this.players.length;
     if (this.current === 0) this.turnCount++;
+    this.updateSchedule();
     this.beginTurn();
   }
 
@@ -25180,6 +25356,7 @@ class Game {
         this.world.starFound = true;
         this.world.starCity = cityId;
         this.awardXp(p, XP_STAR);
+        this.noteRecord(p);
         if (this.roaming) {
           p.money += STAR_PRIZE;
           this.say(p.id, `★ ${p.name} löysi aarteen ${token.name} kaupungista ${city.name} — arvo ${STAR_PRIZE} puntaa!`);
@@ -25273,6 +25450,10 @@ class Game {
       duel: this.duel,
       duelArmed: this.duelArmed,
       diaryNote: this.diaryNote,
+      scheduleNote: this.scheduleNote,
+      scheduleShown: [...this.scheduleShown],
+      recordNoted: this.recordNoted,
+      recordMark: this.recordMark,
       winnerId: this.winner ? this.winner.id : null,
       turnCount: this.turnCount,
       log: this.log,
@@ -25342,6 +25523,12 @@ class Game {
     game.duel = data.duel ?? null;
     game.duelArmed = !!data.duelArmed;
     game.diaryNote = data.diaryNote ?? null;
+    // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
+    // yhtään isoisän aikataulurivistä.
+    game.scheduleNote = data.scheduleNote ?? null;
+    game.scheduleShown = new Set(data.scheduleShown ?? []);
+    game.recordNoted = !!data.recordNoted;
+    game.recordMark = data.recordMark ?? null;
     game.lastPath = null;
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;
@@ -25359,14 +25546,36 @@ class Game {
   }
 
   /** Siirtolista UI:lle: avain, sijainti, hinta ja kaupungin tiedot. */
+  /**
+   * Tarjottavat päätepisteet. Kaikki `this.moves`-siirrot ovat yhä laillisia,
+   * mutta kartalla ehdotetaan vain kaupunkeja: reitin varren pisteet ovat
+   * pelaajalle merkityksettömiä valintoja ja täyttivät kartan renkailla.
+   * Jos jollakin lähtösuunnalla ei ole kaupunkia nopan päässä, siltä
+   * suunnalta tarjotaan pisin piste, jottei suunta katoa kokonaan.
+   */
   moveOptions() {
     if (this.phase !== 'move' || !this.moves) return [];
-    return [...this.moves.entries()].map(([key, m]) => ({
+    const kaikki = [...this.moves.entries()].map(([key, m]) => ({
       key,
       pos: m.pos,
+      suunta: m.path && m.path.length ? posKey(m.path[0]) : key,
       city: m.pos.type === 'city' ? this.board.cityById.get(m.pos.city) : null,
       hasToken: m.pos.type === 'city' && this.tokens.has(m.pos.city),
     }));
+
+    const suunnat = new Map();
+    for (const opt of kaikki) {
+      const lista = suunnat.get(opt.suunta) ?? [];
+      lista.push(opt);
+      suunnat.set(opt.suunta, lista);
+    }
+
+    const tarjottavat = [];
+    for (const lista of suunnat.values()) {
+      const kaupungit = lista.filter((opt) => opt.city);
+      tarjottavat.push(...(kaupungit.length ? kaupungit : lista));
+    }
+    return tarjottavat;
   }
 }
 
@@ -25640,6 +25849,7 @@ class UI {
     this.passportGrid = document.getElementById('passport-grid');
     this.passportCount = document.getElementById('passport-count');
     this.passportFinds = document.getElementById('passport-finds');
+    this.passportProgress = document.getElementById('passport-progress');
 
     this.turnCard = document.getElementById('actions').closest('.turn-card');
     this.introEl = document.getElementById('intro');
@@ -26184,7 +26394,12 @@ class UI {
       const { x, y } = pixelOf(game.board, opt.pos);
       const g = el('g', { class: 'target' }, this.targetLayer);
       el('circle', { cx: x, cy: y, r: 30, class: 'target-hit' }, g);
-      el('circle', { cx: x, cy: y, r: opt.city ? 22 : 14, class: 'target-ring' }, g);
+      el('circle', {
+        cx: x,
+        cy: y,
+        r: opt.city ? 22 : 14,
+        class: opt.city ? 'target-ring' : 'target-ring far',
+      }, g);
       g.addEventListener('click', () => this.doMove(opt.key));
     }
   }
@@ -26240,19 +26455,33 @@ class UI {
       this.turnPill.appendChild(html('span', '', `🏆 ${game.winner.name} voitti`));
       return;
     }
-    // Erillinen pelaajapaneeli on poistettu: matkaajan tiedot mahtuvat tähän,
-    // ja löydöt näkyvät passissa.
+    // Yläpalkissa on kukkaro ja päiväkirjan päivämäärä. Sijainti, kokemus ja
+    // tietoprosentti ovat passissa: kartta on tärkeämpi kuin mittaristo.
+    this.turnPill.appendChild(html('span', '', `£${game.player.money}`));
+    // Mittari on päivämäärä, ei kello eikä palkki: aika on tarinaa, ei uhkaa,
+    // joten se ei saa hälytysväriä eikä muutu punaiseksi ennätyksen jälkeen.
+    this.turnPill.appendChild(html('span', 'clock', game.clockLabel()));
+  }
+
+  /** Matkan tiedot passiin: missä ollaan, paljonko kokemusta ja tietoa. */
+  renderProgress() {
+    const { game } = this;
     const p = game.player;
-    const dot = html('span', 'dot');
-    dot.style.background = p.color;
-    this.turnPill.appendChild(dot);
+    this.passportProgress.textContent = '';
+
+    const rivi = (label, value) => {
+      const row = html('div', 'find');
+      row.appendChild(html('span', 'find-text', label));
+      row.appendChild(html('span', 'find-value', value));
+      this.passportProgress.appendChild(row);
+    };
+
     const city = this.factCity(p.pos);
-    const where = p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name;
-    const osat = [`${p.money} p`, `${p.xp ?? 0} kp`];
+    rivi('Sijainti', p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name);
+    rivi('Kukkaro', `£${p.money}`);
+    rivi('Kokemus', `${p.xp ?? 0} kp`);
     const tieto = game.knowledgePercent(p);
-    if (tieto !== null) osat.push(`Tieto ${tieto} %`);
-    osat.push(where);
-    this.turnPill.appendChild(html('span', '', osat.join(' · ')));
+    if (tieto !== null) rivi('Tieto tästä laudasta', `${tieto} %`);
   }
 
   renderActions() {
@@ -26293,7 +26522,7 @@ class UI {
 
     if (game.phase === 'move') {
       this.turnStatus.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
-      this.hint.textContent = 'Napauta punaista rengasta kartalla.';
+      this.hint.textContent = 'Napauta rengasta kartalla.';
       return;
     }
 
@@ -26514,6 +26743,19 @@ class UI {
       return;
     }
 
+    // Isoisän aikataulu nousee esiin, kun matkapäivä ohittaa merkinnän. Rivi
+    // menee saapumismerkinnän edelle, koska se näkyy vain yhden vuoron ajan.
+    const aikataulu = game.scheduleNote;
+    if (aikataulu && aikataulu.packId === game.pack.id) {
+      const key = `schedule:${aikataulu.packId}:${aikataulu.day}`;
+      if (this.factKey === key) return;
+      this.factKey = key;
+      this.factVoiceEl.textContent = 'Isoisän aikataulusta';
+      this.factPlace.textContent = `Päivä ${aikataulu.day}`;
+      this.typeText(this.factText, aikataulu.text);
+      return;
+    }
+
     // Laudalle saavuttaessa tietoruudussa on saapumismerkintä. Se väistyy,
     // kun matkaaja lähtee saapumiskaupungista liikkeelle.
     const note = game.diaryNote;
@@ -26637,6 +26879,20 @@ class UI {
       sfx.play('paper');
       setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
+
+    // Kunniamerkintä: isoisän ennätys rikottiin tällä laudalla. Sekin on
+    // passissa eikä pelitallenteessa, joten se jää talteen uusiin peleihin.
+    const mark = game.recordMark;
+    if (mark && stampBoard(`kunnia:${mark.packId}`, `${game.pack.boardLabel} — ${mark.label}`)) {
+      const box = this.buildToast({
+        kind: 'stamp',
+        icon: '🏅',
+        text: mark.label,
+        sub: `Aarre löytyi päivänä ${mark.day}`,
+      });
+      sfx.play('paper');
+      setTimeout(() => this.removeToast(box), TOAST_MS.default);
+    }
   }
 
   /**
@@ -26706,6 +26962,7 @@ class UI {
     this.passportCount.textContent = stamps.length === 1
       ? '1 leima'
       : `${stamps.length} leimaa`;
+    this.renderProgress();
     this.renderFinds();
     if (!this.passportDialog.open) this.passportDialog.showModal();
   }
@@ -27425,12 +27682,20 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.8';
+const APP_VERSION = '2026-07-28.9';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
 
 let ui = null;
+
+// Pystyasento. Androidilla tämä lukitsee laitteen; iOS ei tue rajapintaa,
+// joten siellä vaaka-asennon hoitaa css:n .rotate-guard.
+try {
+  screen.orientation?.lock?.('portrait').catch(() => {});
+} catch {
+  /* selain ei tue lukitusta — kehote riittää */
+}
 
 // --- tallennus -------------------------------------------------------------
 

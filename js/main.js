@@ -7,12 +7,20 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.8';
+const APP_VERSION = '2026-07-28.9';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
 
 let ui = null;
+
+// Pystyasento. Androidilla tämä lukitsee laitteen; iOS ei tue rajapintaa,
+// joten siellä vaaka-asennon hoitaa css:n .rotate-guard.
+try {
+  screen.orientation?.lock?.('portrait').catch(() => {});
+} catch {
+  /* selain ei tue lukitusta — kehote riittää */
+}
 
 // --- tallennus -------------------------------------------------------------
 

@@ -16,6 +16,15 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <!--
+    iOS ei tue screen.orientation.lockia, joten vaaka-asento estetään
+    peittämällä peli kehotuksella. Erillistä vaakataittoa ei tehdä.
+  -->
+  <div class="rotate-guard" aria-hidden="true">
+    <p class="rotate-glyph">📱</p>
+    <p>Matkakirja luetaan pystyssä.</p>
+    <p class="muted">Käännä laite pystyasentoon.</p>
+  </div>
   <div class="app">
     <header class="topbar">
       <h1 class="brand">Matkakirja</h1>
@@ -93,6 +102,8 @@
     <h2>Vihreä passi</h2>
     <p class="muted">Isoisän passi kulkee mukana. Jokaisesta laudasta, jolla olet
       käynyt, jää siihen leima — ne säilyvät myös uusiin peleihin.</p>
+    <p class="passport-count">Matka</p>
+    <div id="passport-progress" class="passport-finds"></div>
     <p id="passport-count" class="passport-count"></p>
     <div id="passport-grid" class="passport-grid"></div>
     <p class="passport-count">Matkasaalis</p>
