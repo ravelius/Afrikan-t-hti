@@ -202,23 +202,21 @@ Hiotaan nykyiset 10 lautaa ennen uusia. Määrätavoitteet:
   Tämä on keräilyn ydin ja sopii tarinaan (vihreä passi!).
 - Testit: XP-kirjanpito ja prosentin laskenta.
 
-## Paketti 7: pelin nimi uusiksi
+## Paketti 7: pelin nimi on MATKAKIRJA
 
-Omistaja ei halua nimeen sanaa "tähti", ja nimen pitää olla
-kaupallistettavissa. Linjaus: **pelin nimeen ei hahmon nimeä** — oma,
-mieluiten keksitty nimi on tavaramerkkinä vahvin ja helpoin rekisteröidä.
-Herra Fogg pysyy hahmona pelin sisällä (Vernen hahmo on vapaata
-kulttuuriperintöä; ennakkotapaus Inklen kaupallinen 80 Days -peli).
-Ennen kansainvälistä kaupallistamista tehdään tavaramerkkihaku
-peliluokissa (EUIPO, luokat 9/41).
+Omistaja on päättänyt: pelin uusi nimi on **Matkakirja**. Vaihda nimi
+kaikkialle: `index.html` (title, .brand-otsikko, meta description ja
+apple-mobile-web-app-title), `manifest.webmanifest` (name, short_name),
+`sw.js` (CACHE-etuliite esim. 'matkakirja-2026-XX-XX.N'), `README.md`
+(otsikko ja kuvaus), `CONTRIBUTING.md`, `tools/build-standalone.mjs`
+(otsikot ja tulostiedostojen nimet, esim. dist/matkakirja.html).
+`SAVE_KEY` (js/main.js) pidetään ennallaan, ettei kesken olevat pelit
+katoa. Hahmo pysyy herra Foggina pelin sisällä.
 
-Ehdokkaat (omistaja valitsee, ÄLÄ vaihda ennen päätöstä):
-
-- **Perintökartta** (suositus: oma sana, tarinallinen, ei riskiä)
-- Vanha kartta
-- Punta ja passi
-- 150 vuotta myöhässä
-- tai kokonaan keksitty sana (vahvin tavaramerkkinä)
+Tausta: nimeen ei haluttu sanaa "tähti" eikä hahmon nimeä — oma nimi on
+tavaramerkkinä vahvin. Vernen Fogg-hahmo on vapaata kulttuuriperintöä
+(ennakkotapaus Inklen kaupallinen 80 Days). Ennen kansainvälistä
+kaupallistamista tehdään tavaramerkkihaku peliluokissa (EUIPO, 9/41).
 
 Kun nimi on päätetty, vaihto koskee: `index.html` (title, brand, meta),
 `manifest.webmanifest`, `sw.js` (CACHE-etuliite), `js/main.js`,
