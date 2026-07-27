@@ -7,10 +7,9 @@
 // Mittakaava on sama molemmissa suunnissa, joten mantereet eivät veny
 // pystysuunnassa. Kartan ylä- ja alalaitaan jää siksi avomerta.
 //
-// Mantereet ylitetään laivalla valtamerten poikki tai lentäen. Tässä on
-// aluksi vain yksi kaupunki mannerta kohden — yhteisö voi lisätä kaupunkeja
-// ja tihentää verkkoa. Kairosta laskeudutaan Afrikan ja Lähi-idän
-// tarkemmille laudoille.
+// Mantereet ylitetään laivalla valtamerten poikki, lentäen tai kahta
+// maareittiä pitkin (Siperian rata ja Amerikan mannerrata). Lähes joka
+// kaupunki on portti mantereensa tarkemmalle laudalle.
 
 import { MAAILMA_QUESTIONS, MAAILMA_FACTS } from './maailma-questions.js';
 import { themedTokenTypes } from '../tokens.js';
@@ -94,6 +93,18 @@ const WORLD_MAP = {
   nzSouthPoints: [
     [975, 650], [983, 658], [989, 670], [983, 676], [974, 668], [970, 658],
   ],
+  // Arktinen jääraja täyttää kartan ylälaidan korkeilla näytöillä.
+  arcticPoints: [
+    [-40, 228], [1045, 228], [1045, 258], [950, 266], [850, 255], [745, 268],
+    [640, 257], [535, 270], [430, 259], [325, 272], [220, 261], [115, 274],
+    [20, 263], [-40, 270],
+  ],
+  // Etelämantereen jäinen rannikko täyttää kartan alalaidan.
+  antarcticaPoints: [
+    [-40, 745], [60, 728], [160, 736], [280, 722], [400, 732], [520, 718],
+    [640, 728], [760, 714], [880, 724], [1000, 716], [1045, 745], [1045, 850],
+    [-40, 850],
+  ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
@@ -138,13 +149,30 @@ const WORLD_CITIES = [
     id: 'moskova', name: 'Moskova', x: 604, y: 372.3, airport: true, la: 'start', lx: 16, ly: 5,
     links: [{ pack: 'europe', city: 'moskova', label: 'Euroopan lauta' }],
   },
+  {
+    id: 'tokio', name: 'Tokio', x: 893, y: 432, airport: true, la: 'start', lx: 18, ly: 5,
+    links: [{ pack: 'asia', city: 'tokio', label: 'Aasian lauta' }],
+  },
+  {
+    id: 'singapore', name: 'Singapore', x: 793, y: 530, airport: true, la: 'start', lx: 18, ly: -12,
+    links: [{ pack: 'asia', city: 'singapore', label: 'Aasian lauta' }],
+  },
+  {
+    id: 'kapkaupunki', name: 'Kapkaupunki', x: 560, y: 608, airport: true, la: 'end', lx: -18, ly: 10,
+    links: [{ pack: 'africa', city: 'kapkaupunki', label: 'Afrikan lauta' }],
+  },
+  {
+    id: 'losangeles', name: 'Los Angeles', x: 190, y: 438, airport: true, la: 'end', lx: -16, ly: 12,
+    links: [{ pack: 'northamerica', city: 'losangeles', label: 'Pohjois-Amerikan lauta' }],
+  },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
 // type 'sea' = valtamerireitti; via = reittipisteet veden päällä.
 const WORLD_EDGES = [
-  // Siperian rata on laudan ainoa maareitti.
+  // Maareitit: Siperian rata ja Amerikan mannerrata.
   { a: 'moskova', b: 'peking', steps: 7, via: [[667, 374.6], [750, 388.2], [792, 402.2]] },
+  { a: 'losangeles', b: 'newyork', steps: 5, via: [[225, 428], [262, 412]] },
 
   // Valtamerten laivareitit
   { a: 'lontoo', b: 'newyork', steps: 5, type: 'sea', via: [[417, 388.2], [361, 402.2]] },
@@ -163,6 +191,11 @@ const WORLD_EDGES = [
     via: [[711, 513.4], [774, 519.7], [786, 527.4], [806, 494.0], [823, 467.6], [844, 438.4], [844, 427.1]],
   },
   { a: 'peking', b: 'sydney', steps: 6, type: 'sea', via: [[861, 457.8], [889, 499.4], [911, 549.6], [928, 577.2], [932, 601.3]] },
+  { a: 'peking', b: 'tokio', steps: 2, type: 'sea', via: [[850, 442], [872, 450]] },
+  { a: 'mumbai', b: 'singapore', steps: 4, type: 'sea', via: [[711, 513.4], [752, 526]] },
+  { a: 'singapore', b: 'sydney', steps: 5, type: 'sea', via: [[855, 528], [888, 548], [925, 578], [933, 602]] },
+  { a: 'kapkaupunki', b: 'rio', steps: 6, type: 'sea', via: [[500, 648], [430, 632]] },
+  { a: 'kapkaupunki', b: 'sydney', steps: 7, type: 'sea', via: [[610, 642], [680, 656], [760, 652], [830, 648], [890, 650]] },
   {
     a: 'mumbai', b: 'sydney', steps: 6, type: 'sea',
     via: [[711, 513.4], [740, 557.8], [778, 604.8], [817, 632.8], [875, 638.3], [911, 632.8]],
@@ -180,6 +213,14 @@ const WORLD_AIR_ROUTES = [
   { a: 'newyork', b: 'rio' },
   { a: 'lontoo', b: 'moskova' },
   { a: 'moskova', b: 'peking' },
+  { a: 'peking', b: 'tokio' },
+  { a: 'tokio', b: 'sydney' },
+  { a: 'tokio', b: 'losangeles' },
+  { a: 'newyork', b: 'losangeles' },
+  { a: 'mumbai', b: 'singapore' },
+  { a: 'singapore', b: 'sydney' },
+  { a: 'kairo', b: 'kapkaupunki' },
+  { a: 'rio', b: 'kapkaupunki' },
 ];
 
 export const MAAILMA = {
@@ -196,21 +237,23 @@ export const MAAILMA = {
       WORLD_MAP.britainPoints, WORLD_MAP.australiaPoints,
       WORLD_MAP.greenlandPoints, WORLD_MAP.madagascarPoints, WORLD_MAP.japanPoints,
       WORLD_MAP.indonesiaPoints, WORLD_MAP.nzNorthPoints, WORLD_MAP.nzSouthPoints,
+      WORLD_MAP.arcticPoints, WORLD_MAP.antarcticaPoints,
     ],
-    // Tiivis kehys: pohjoisen ja etelän tyhjät merikaistat jäävät pois,
-    // mutta Grönlanti ja Uusi-Seelanti mahtuvat mukaan.
-    frame: { x: 15, y: 285, w: 985, h: 475 },
+    // Tiivis kehys: tyhjät merikaistat jäävät pois, mutta Grönlanti,
+    // Uusi-Seelanti ja Etelämantereen rannikko mahtuvat mukaan.
+    frame: { x: 25, y: 288, w: 970, h: 520 },
   },
   cities: WORLD_CITIES,
   edges: WORLD_EDGES,
   airRoutes: WORLD_AIR_ROUTES,
-  islands: [],
+  // Tokio ja Singapore ovat koristesaarilla.
+  islands: ['tokio', 'singapore'],
   // Oikeassa mittakaavassa esimerkiksi Kairo ja Moskova ovat aidosti lähekkäin.
   minCityDistance: 70,
 
   tokens: {
     types: themedTokenTypes({ star: { name: 'Magellanin kompassi' } }),
-    counts: { star: 1, horseshoe: 1, robber: 1, ruby: 1, emerald: 1, topaz: 1 },
+    counts: { star: 1, horseshoe: 2, robber: 1, ruby: 1, emerald: 2, topaz: 2, empty: 1 },
   },
 
   questions: MAAILMA_QUESTIONS,
@@ -264,12 +307,12 @@ export const MAAILMA = {
     mapLabelPos: { x: 140, y: 655.0 },
     compass: { x: 85, y: 526.7, r: 58 },
     waveSkip: [
-      { x: 180, y: 478, r: 90 },
+      { x: 170, y: 545, r: 90 },
       { x: 736, y: 638.3, r: 100 },
       { x: 140, y: 655.0, r: 130 },
     ],
     // Laiva purjehtii keskellä Tyyntämerta, kaukana rannikoista.
-    ship: { x: 180, y: 478 },
+    ship: { x: 170, y: 545 },
     serpent: { x: 736, y: 638.3 },
     // Nopan lepopaikka: Tyynimeri laudan vasemmassa laidassa.
     dieSpot: { x: 0.08, y: 0.62 },
@@ -279,7 +322,8 @@ export const MAAILMA = {
       { maxY: 402.2, kind: 'mountains' },
       { maxY: 487.8, kind: 'trees' },
       { maxY: 546.1, kind: 'dunes' },
-      { maxY: Infinity, kind: 'trees' },
+      { maxY: 700, kind: 'trees' },
+      { maxY: Infinity, kind: 'mountains' },
     ],
   },
 };

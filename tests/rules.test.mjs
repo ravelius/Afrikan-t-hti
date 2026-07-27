@@ -250,8 +250,9 @@ for (const pack of PACKS) {
 
     // Otsikko selitteineen ei saa peittää kaupunkeja eikä reittejä.
     const title = decor.mapLabelPos;
+    const titleHalf = Math.max(115, decor.mapLabel.length * 12.5);
     const inTitle = (x, y) =>
-      x > title.x - 115 && x < title.x + 115 && y > title.y - 36 && y < title.y + 62;
+      x > title.x - titleHalf && x < title.x + titleHalf && y > title.y - 36 && y < title.y + 62;
     for (const c of pack.cities) {
       assert.ok(!inTitle(c.x, c.y), `otsikko peittää kaupungin ${c.name}`);
     }

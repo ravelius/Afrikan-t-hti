@@ -74,9 +74,10 @@ const NA_MAP = {
     [926, 565.9], [927.7, 565.3], [928.4, 566.2], [927.3, 567.1], [926.3, 566.7],
   ],
   hawaiiPoints: [
-    [18, 535], [27.6, 539.2], [32.3, 550.3], [35.4, 558.5], [42.3, 565.3],
-    [42.3, 578.3], [46.8, 590.2], [36.8, 594.4], [35.7, 584.9], [38.2, 570.8],
-    [32.3, 559], [25.2, 549], [19.2, 541.2],
+    // Saariketju on tuotu lähemmäs mannerta, jotta lauta rajautuu tiiviisti.
+    [168, 590], [177.6, 594.2], [182.3, 605.3], [185.4, 613.5], [192.3, 620.3],
+    [192.3, 633.3], [196.8, 645.2], [186.8, 649.4], [185.7, 639.9], [188.2, 625.8],
+    [182.3, 614], [175.2, 604], [169.2, 596.2],
   ],
 };
 
@@ -115,8 +116,11 @@ const NA_CITIES = [
   { id: 'denver', name: 'Denver', x: 567, y: 550, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'santafe', name: 'Santa Fe', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
   { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
-  { id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'hawaii', name: 'Havaiji', x: 37, y: 579, la: 'middle', lx: 0, ly: 28 },
+  {
+    id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, airport: true, la: 'end', lx: -16, ly: 5,
+    links: [{ pack: 'maailma', city: 'losangeles', label: 'Maailma-lauta' }],
+  },
+  { id: 'hawaii', name: 'Havaiji', x: 185, y: 628, la: 'middle', lx: 0, ly: 34 },
   { id: 'dallas', name: 'Dallas', x: 638, y: 626, la: 'start', lx: 16, ly: 5 },
   { id: 'neworleans', name: 'New Orleans', x: 701, y: 649, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'miami', name: 'Miami', x: 801, y: 678, airport: true, la: 'start', lx: 16, ly: 5 },
@@ -188,9 +192,9 @@ const NA_EDGES = [
   { a: 'anchorage', b: 'vancouver', steps: 6, type: 'sea',
     via: [[316, 274], [342, 303], [380, 359], [415, 402]] },
   { a: 'sanfrancisco', b: 'hawaii', steps: 7, type: 'sea',
-    via: [[359, 572], [229, 590], [95, 578]] },
+    via: [[350, 588], [265, 606]] },
   { a: 'hawaii', b: 'losangeles', steps: 7, type: 'sea',
-    via: [[59, 630], [222, 650], [378, 636]] },
+    via: [[245, 674], [350, 657]] },
   { a: 'miami', b: 'santiagodecuba', steps: 3, type: 'sea', via: [[825, 700]] },
   { a: 'miami', b: 'bermuda', steps: 5, type: 'sea', via: [[857, 631], [905, 591]] },
   { a: 'santiagodecuba', b: 'sanjuan', steps: 4, type: 'sea', via: [[921, 726]] },
@@ -309,15 +313,15 @@ export const NORTHAMERICA = {
   decor: {
     mapLabel: 'POHJOIS-AMERIKKA',
     mapLabelPos: { x: 250, y: 880 },
-    compass: { x: 120, y: 430, r: 56 },
+    compass: { x: 195, y: 330, r: 56 },
     waveSkip: [
       { x: 250, y: 880, r: 175 },
-      { x: 120, y: 430, r: 95 },
-      { x: 140, y: 700, r: 95 },
+      { x: 195, y: 330, r: 95 },
+      { x: 255, y: 768, r: 95 },
       { x: 935, y: 128, r: 100 },
     ],
     ship: { x: 935, y: 128 },
-    serpent: { x: 140, y: 700 },
+    serpent: { x: 255, y: 768 },
     dieSpot: { x: 0.05, y: 0.34 },
     terrainBands: [
       { maxY: 260, kind: 'mountains' },

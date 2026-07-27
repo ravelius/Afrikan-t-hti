@@ -84,6 +84,7 @@ export class UI {
     this.errorEl = document.getElementById('error');
     this.factPlace = document.getElementById('fact-place');
     this.factText = document.getElementById('fact-text');
+    this.factCard = this.factText.closest('.fact-card');
     this.factKey = null;
 
     this.winnerDialog = document.getElementById('winner-dialog');
@@ -189,7 +190,8 @@ export class UI {
       [d.compass.x - d.compass.r - 14, d.compass.y - d.compass.r - 26],
       [d.compass.x + d.compass.r + 14, d.compass.y + d.compass.r + 14],
     );
-    pts.push([d.mapLabelPos.x - 110, d.mapLabelPos.y - 34], [d.mapLabelPos.x + 110, d.mapLabelPos.y + 60]);
+    const titleHalf = Math.max(110, d.mapLabel.length * 12.5);
+    pts.push([d.mapLabelPos.x - titleHalf, d.mapLabelPos.y - 34], [d.mapLabelPos.x + titleHalf, d.mapLabelPos.y + 60]);
     if (d.ship) pts.push([d.ship.x - 62, d.ship.y - 56], [d.ship.x + 62, d.ship.y + 46]);
     if (d.serpent) pts.push([d.serpent.x - 96, d.serpent.y - 26], [d.serpent.x + 96, d.serpent.y + 30]);
 
@@ -777,13 +779,10 @@ export class UI {
    */
   renderFact() {
     const { game } = this;
+    // Aloitusnäkymässä kartta saa puhua puolestaan: tietoruutu on piilossa.
+    this.factCard.hidden = game.phase === 'pickstart';
     if (game.phase === 'pickstart') {
-      if (this.factKey === 'pickstart') return;
-      this.factKey = 'pickstart';
-      this.factPlace.textContent = 'Lontoo — matkan alku';
-      this.typeText(this.factText, 'Vanha herra vetää puvuntakin suoraksi, nostaa '
-        + 'matkalaukkunsa ja ostaa lentolipun. Vanha kartta kädessä hän lähtee '
-        + 'katsomaan, millaiseksi maailma on muuttunut.');
+      this.factKey = null;
       return;
     }
     const player = game.player;

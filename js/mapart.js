@@ -112,8 +112,8 @@ export function drawDefs(svg) {
 
   const vignette = el('radialGradient', { id: 'vignette-grad', cx: '50%', cy: '50%', r: '62%' }, defs);
   el('stop', { offset: '52%', 'stop-color': 'rgba(90,60,25,0)' }, vignette);
-  el('stop', { offset: '84%', 'stop-color': 'rgba(88,58,24,0.16)' }, vignette);
-  el('stop', { offset: '100%', 'stop-color': 'rgba(66,41,15,0.42)' }, vignette);
+  el('stop', { offset: '84%', 'stop-color': 'rgba(88,58,24,0.07)' }, vignette);
+  el('stop', { offset: '100%', 'stop-color': 'rgba(66,41,15,0.16)' }, vignette);
 
   return defs;
 }
