@@ -361,14 +361,53 @@ export const ASIA = {
     winStar: 'toi Keisarin jadesinetin turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Keisarin jadesinetin kotiin ${money} punnan kanssa.`,
     // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
-    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
     diaries: [
       'Klubilla tätä mannerta kutsuttiin Itämaiksi ja odotettiin kameleita. Luotijuna ohitti odotukseni kolmensadan kilometrin tuntinopeudella.',
+      'Isoisän kartassa tämä maanosa on väritetty kolmen keisarikunnan väreillä. Nyt tässä on lähes viisikymmentä valtiota, ja useimmat itsenäistyivät hänen kuolemansa jälkeen. Kartta on kaunis ja täysin käyttökelvoton.',
+      '"Matka Bombayhin kestää kolme viikkoa, jos tuuli suosii", kirjoitti isoisä. Nousin koneeseen aamulla ja söin illallisen perillä. Hän olisi pitänyt sitä huijauksena, ja ymmärrän kannan.',
+      'Isoisä merkitsi muistiin, ettei korkeimmille huipuille ole nousuja eikä tule. Everestillä on nykyään jono ja aikataulu. Hän oli oikeassa siinä, ettei vuori siitä miksikään muutu.',
+      '"Kiina valmistaa posliinia ja silkkiä, Britannia koneita", tiivisti isoisä työnjaon. Tarkistin asian: koneet tehdään täällä ja Lontoossa niitä myydään. Työnjako säilyi, suunta vaihtui.',
+      'Isoisä laski matka-aikoja karavaanipäivissä ja monsuunituulissa. Molemmat ovat yhä olemassa: tuuli kääntyy kesäkuussa ja aavikon poikki menee yhä tie. Vain minun kärsivällisyyteni on kadonnut.',
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
-    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
-    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
-    starHints: {},
+    // kaupungin nimeä.
+    starHints: {
+      jekaterinburg: 'Vuorijonon itäpuolella, siellä missä Euroopan ja Aasian raja on merkitty kiveen, on kaupunki jossa jalostetaan malmia ja hiotaan korukiviä.',
+      astana: 'Keskellä puuttomia aroja, kaukana kaikista meristä, on paikka jossa talvituuli käy läpi paksuimmasta takista. Sinne kaavaillaan uutta hallintokaupunkia.',
+      novosibirsk: 'Suuren pohjoiseen virtaavan joen ylityspaikassa keskellä Siperiaa rakennetaan rautatiesiltaa. Sen työmaan ympärille kasvaa kaupunki nopeammin kuin uskoin.',
+      irkutsk: 'Maailman syvimmän järven länsipuolella on kauppakaupunki, jota kutsutaan Siperian Pariisiksi. Sieltä lähtee teetä länteen karavaaneina.',
+      jakutsk: 'Kaukana pohjoisessa, ikiroudan päälle rakennetussa kaupungissa, elohopea jäätyy lämpömittarissa. Sinne pääsee kesällä jokilaivalla ja talvella jäätietä.',
+      magadan: 'Idän kaukaisimmalla rannikolla, kylmän meren pohjukassa, on satama josta ei johda rautatietä minnekään. Sisämaassa kerrotaan olevan kultaa.',
+      kamtsatka: 'Kaukoidän niemimaalla savuaa parikymmentä tulivuorta, ja joet ovat täynnä lohta. Sinne ei johda maantietä, joten laiva on ainoa keino.',
+      sahalin: 'Kaukoidässä, kapean salmen takana pitkulaisella saarella, asuu kalastajakansoja ja sumu on lähes jatkuva. Kaksi valtakuntaa kiistelee sen omistuksesta.',
+      vladivostok: 'Tyynenmeren rannalla, valtakunnan itäisimmässä kolkassa, on uusi sotasatama jonka nimi kertoo idän hallitsemisesta.',
+      ulanbator: 'Arojen keskellä, jokilaaksossa kilometrin korkeudella, on luostarikaupunki jonka ympärillä paimenten asumukset siirtyvät kausien mukaan.',
+      peking: 'Muurin eteläpuolella on suorakulmainen keisarikaupunki, jonka sisimpään palatsiin ei päästetä ketään. Sen kujat ovat kapeampia kuin vaunu.',
+      soul: 'Vuorten ympäröimässä laaksossa joen varrella on kuningaskunnan pääkaupunki, joka on suljettu ulkomaalaisilta. Siellä on oma aakkosto, jonka oppii päivässä.',
+      xian: 'Sisämaassa, siellä missä karavaanireitti päättyy muurien sisälle, on vanha keisarikaupunki. Sen kaupunginmuurin päällä voi ajaa vaunuilla.',
+      shanghai: 'Suuren joen suistossa itärannikolla on satama, jossa džonkit ja eurooppalaiset laivat purjehtivat sekaisin. Kauppa käy siellä yötä päivää.',
+      taipei: 'Kaakkoisen saaren pohjoisosassa, teeplantaasien ja kuumien lähteiden keskellä, on kaupunki jonka saari on kartoissa nimeltään kaunis.',
+      hongkong: 'Eteläisellä rannikolla on jyrkkä saari ja sen suojassa erinomainen satama, jonka Britannia otti sopimuksella jota en puolusta.',
+      manila: 'Kaakkoisen saariston suurimmalla saarella on espanjalaisten muurikaupunki lahden rannalla. Sinne saapuvat gallionit Amerikan puolelta.',
+      hanoi: 'Kaakkoisen niemimaan pohjoisosassa, jokien ja järvien keskellä, on kaupunki jossa tavarat kannetaan kantosauvoilla. Ranskalaiset ovat sinne juuri saapuneet.',
+      bangkok: 'Kaakkoisen niemimaan keskellä, kanaalien halkomassa kuningaskunnassa, on kaupunki jossa kauppa käydään veneistä. Se ei ole kenenkään siirtomaa.',
+      yangon: 'Lännempänä samalla niemimaalla, laajan suiston jokisatamassa, kohoaa kullattu pagodi joka näkyy joelle asti.',
+      singapore: 'Kapean salmen suussa on saari, jossa laivat ottavat hiiltä ja jossa kuulee neljää kieltä yhden korttelin matkalla.',
+      sumatra: 'Päiväntasaajan ylittävällä suurella saarella on vuorijono, tulivuorijärvi ja sademetsä. Rinteillä kasvatetaan kahvia vientiin.',
+      borneo: 'Päiväntasaajalla, saarella jonka sisämaahan pääsee vain jokea pitkin, elää punaturkkisia apinoita puiden latvoissa.',
+      jakarta: 'Eteläisellä saarella, hollantilaisten kanaalikaupungissa, on kuuma kuin uunissa. He ovat rakentaneet sinne Amsterdamin kopion.',
+      lhasa: 'Maailman korkeimmalla ylätasangolla, kalliolle rakennetun palatsin juurella, on kaupunki jonne ulkomaalainen ei saa lupaa.',
+      kathmandu: 'Korkeiden vuorten eteläpuolella on temppeleiden täyttämä laakso. Pohjoisessa kohoavat huiput, joille kukaan ei ole noussut.',
+      delhi: 'Suuren niemimaan pohjoisosassa, tasangolla jokien välissä, on kaupunki jonka lähellä seisoo valkoinen marmorihauta.',
+      kolkata: 'Suuren suiston jokisatamassa niemimaan itäpuolella on Britannian Intian pääkaupunki. Rikkaus tulee sieltä juutista ja teestä.',
+      mumbai: 'Niemimaan länsirannikolla, seitsemästä saaresta yhdeksi täytetyllä maalla, on puuvillakaupunki jonne monsuuni saapuu kesäkuussa.',
+      chennai: 'Niemimaan itärannikolla, pitkän hiekkarannan äärellä, on kaupunki jossa puhutaan kieltä joka on vanhempi kuin latina.',
+      colombo: 'Niemimaan eteläkärjen takana omalla saarellaan on satama, josta viedään teetä ja kanelia. Ylängöillä on plantaaseja.',
+      karachi: 'Lännempänä, suuren joen suulla, on satama josta lähtee puuvilla ja vehnä. Joen laaksossa on hyvin vanhoja raunioita.',
+      kabul: 'Vuorisolien takana, hedelmätarhojen keskellä kahden kilometrin korkeudella, on kaupunki joka muistaa jokaisen armeijan nimeltä.',
+      samarkand: 'Keski-Aasiassa, aavikon ja vuorten välissä, on sinisten kupolien kaupunki. Sen korkeakoulut opettivat tähtitiedettä ennen Oxfordia.',
+      kashgar: 'Aavikon läntisellä laidalla kohtaavat karavaanireitin kaksi haaraa. Sinne on Bagdadista lyhyempi matka kuin keisarin pääkaupungista.',
+    },
   },
 
   decor: {
