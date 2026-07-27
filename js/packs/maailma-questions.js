@@ -639,53 +639,105 @@ export const MAAILMA_FACTS = {
   tokio: [
     'Tokiossa on enemmän ravintoloita kuin missään muussa maailman kaupungissa — myös eniten Michelin-tähtiä.',
     'Shibuyan risteyksessä voi ylittää kadun jopa 3 000 ihmistä yhdellä vihreällä valolla.',
+    {
+      text: 'Edo on nimetty uudelleen Tokioksi, ja keisari on siirtynyt sinne Kiotosta. Maa aikoo ilmeisesti oppia meiltä kaiken kahdessakymmenessä vuodessa. Toivotan onnea.',
+      voice: 'isoisa',
+    },
   ],
   singapore: [
     'Singaporen lentokentällä on maailman korkein sisävesiputous.',
     'Purukumin myynti on Singaporessa kielletty ilman reseptiä — katujen siisteys on kansallisylpeys.',
+    {
+      text: 'Salmen suussa on saari, jossa laivat ottavat hiiltä ja jossa kuulee kymmentä kieltä yhden korttelin matkalla. Sen koko rikkaus perustuu siihen, että kaikkien on kulkettava tästä.',
+      voice: 'isoisa',
+    },
   ],
   kapkaupunki: [
     'Pöytävuoren kansallispuistossa kasvaa enemmän kasvilajeja kuin koko Britanniassa.',
     'Kapkaupungin edustan Robben Islandin vankilasaari, jossa Nelson Mandela istui 18 vuotta, on nykyään museo.',
+    {
+      text: 'Pöytävuoren laella on valkoinen pilviliina aina kun tuuli kääntyy kaakkoon. Täytämme vesitynnyrit ja jatkamme Intiaan, kuten kaikki ennen meitä ovat tehneet.',
+      voice: 'isoisa',
+    },
   ],
   losangeles: [
     'Los Angelesin seudulla puhutaan yli 200 kieltä — se on maailman monikulttuurisimpia kaupunkeja.',
     'Kaupungin nimi oli alun perin espanjaa ja paljon pidempi: El Pueblo de la Reina de los Ángeles.',
+    {
+      text: 'Kalifornian eteläosassa on tomuinen pikkukaupunki appelsiinilehtojen keskellä, asukkaita tuskin kymmentä tuhatta. Rautatien sanotaan tulevan tänne asti. En usko sen muuttavan paikkaa miksikään.',
+      voice: 'isoisa',
+    },
   ],
   ateena: [
     'Ateenan metroa kaivettaessa löytyi niin paljon muinaisjäännöksiä, että asemista tehtiin samalla pieniä museoita.',
     'Akropoliilla on käynyt enemmän ihmisiä kuin antiikin Ateenassa asui koko sen historian aikana.',
+    {
+      text: 'Kaupunki on pieni ja tomuinen, mutta kukkulalla seisoo temppeli, jonka marmori on kestänyt kaksituhatta vuotta ja kestää yhä. Sikäli kuin sitä ei kuljeteta pois — mistä en syytä ketään muuta kuin omaa maatani.',
+      voice: 'isoisa',
+    },
   ],
   lontoo: [
     'Lontoossa puhutaan yli 300 kieltä — se on yksi maailman monikulttuurisimmista kaupungeista.',
     'Lontoon metro eli "the Tube" on maailman vanhin — se avattiin jo 1863 höyryvetureilla.',
+    {
+      text: 'Kotikaupungissani kulkee juna maan alla, kaasulyhdyt palavat aamuun ja sumu on niin paksua, että vaunut kulkevat käyden. Enempää ei ihminen voi rakentaa; tähän maailma pysähtyy.',
+      voice: 'isoisa',
+    },
   ],
   newyork: [
     'Vapaudenpatsas oli Ranskan lahja Yhdysvalloille — se koottiin paikalleen 1886.',
     'New Yorkia kutsutaan Isoksi omenaksi, ja sen metro kulkee vuorokauden ympäri.',
+    {
+      text: 'Satamassa nousee laivasta enemmän ihmisiä päivässä kuin kotikylässäni asuu. Brooklyniin rakennetaan siltaa ja väitetään sen valmistuvan vuosikymmenessä; uskoin puoleen siitä.',
+      voice: 'isoisa',
+    },
   ],
   kairo: [
     'Gizan suuri pyramidi on ainoa antiikin seitsemästä ihmeestä, joka on yhä pystyssä.',
     'Kairon halki virtaava Niili on koko Egyptin elämänlanka — sen varrella asuu lähes koko kansa.',
+    {
+      text: 'Kanava Suezissa on ollut auki neljä vuotta ja lyhentänyt Intian-matkani kuukausilla. Pyramidit ovat seisoneet neljätuhatta vuotta ja tulevat seisomaan senkin jälkeen, kun kanavamme on hiekan alla.',
+      voice: 'isoisa',
+    },
   ],
   rio: [
     'Rion karnevaaleilla sambakoulut tanssivat läpi yön — katsomoissa on kymmeniätuhansia ihmisiä.',
     'Sokeritopan vuorelle noustaan köysiradalla, ja huipulta näkyy koko lahti.',
+    {
+      text: 'Täällä hallitsee keisari ja hallinnon kieli on portugali. Lahti vuorten välissä on kauneinta mitä olen matkoillani nähnyt, ja sen sanon vasten kotimaani rantoja.',
+      voice: 'isoisa',
+    },
   ],
   mumbai: [
     'Mumbain dabbawalat kuljettavat joka päivä yli sata tuhatta kotona keitettyä lounasta työpaikoille — lähes virheettä.',
     'Mumbai oli aikoinaan seitsemän erillistä saarta, jotka yhdistettiin täyttömaalla.',
+    {
+      text: 'Bombayssa on puuvillaa, kuumuutta ja monsuuni, joka saapuu kesäkuussa täsmällisemmin kuin postivaunu Doverista. Luonto pitää täällä aikataulunsa; me emme pitäneet omaamme.',
+      voice: 'isoisa',
+    },
   ],
   peking: [
     'Kielletyssä kaupungissa on tarun mukaan 9 999 huonetta — se oli keisarien koti 500 vuotta.',
     'Pekingin vanhat hutong-kujat ovat kapeimmillaan alle metrin levyisiä.',
+    {
+      text: 'Keisari asuu muurien sisällä kaupungissa, jonne minua ei päästetty, eikä minun mielipidettäni kysytty. Pohjoisen vuorilla kiemurtelee muuri, jota on rakennettu kauemmin kuin koko valtakuntani on ollut olemassa.',
+      voice: 'isoisa',
+    },
   ],
   sydney: [
     'Sydneyn oopperatalon katto on päällystetty yli miljoonalla valkoisella laatalla.',
     'Sydneyn satama on yksi maailman suurimmista luonnonsatamista — lautat ovat osa arkiliikennettä.',
+    {
+      text: 'Siirtokunta, jonne lähetimme vankeja, on kasvanut satamakaupungiksi, jonka lahti on maailman parhaita. Villalaivat purjehtivat täältä Lontooseen sadassa päivässä, eikä kukaan täällä kaipaa meitä.',
+      voice: 'isoisa',
+    },
   ],
   moskova: [
     'Moskovan metroasemat rakennettiin kuin maanalaisiksi palatseiksi kristallikruunuineen ja mosaiikkeineen.',
     'Kremlin muurien sisällä on katedraaleja, palatseja ja maailman suurin kello, joka ei ole koskaan soinut.',
+    {
+      text: 'Tsaarin vanha kaupunki on puuta ja kupolia, ja talvi kestää täällä puolet vuodesta. Sanovat rakentavansa rautatien Tyynellemerelle asti — kuulin sen kolmelta mieheltä ja pidin kaikkia kolmea hupsuina.',
+      voice: 'isoisa',
+    },
   ],
 };
