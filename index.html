@@ -21,7 +21,6 @@
       <h1 class="brand">Matkakirja</h1>
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
-        <button id="sound-btn" class="ghost" type="button" aria-label="Äänet päälle tai pois">🔊</button>
         <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
           <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true">↻</span>
         </button>
@@ -43,29 +42,24 @@
       </section>
 
       <aside class="rail">
-        <section id="players" class="players" aria-label="Pelaajat"></section>
-
         <!--
-          Päiväkirja ja toiminnot ovat samassa alarivissä, jotta ne eivät voi
-          kellua toistensa päälle: kun ne eivät mahdu rinnakkain, rivi katkeaa
-          ja päiväkirja siirtyy nappien yläpuolelle.
+          Päiväkirja asettuu sille kartan nurkalle, jossa on eniten merta
+          (js/ui.js placeFactCard) — näin se ei koskaan peitä mannerta.
         -->
-        <div class="rail-bottom">
-          <section class="card fact-card">
-            <h2 id="fact-voice">Matkapäiväkirjasta</h2>
-            <p id="fact-place" class="fact-place"></p>
-            <p id="fact-text" class="fact-text"></p>
-          </section>
+        <section class="card fact-card" data-corner="bl">
+          <h2 id="fact-voice">Matkapäiväkirjasta</h2>
+          <p id="fact-place" class="fact-place"></p>
+          <p id="fact-text" class="fact-text"></p>
+        </section>
 
-          <section class="card turn-card">
-            <div class="turn-row">
-              <div id="die" class="die" hidden></div>
-              <div id="turn-status" class="turn-status"></div>
-            </div>
-            <div id="actions" class="actions"></div>
-            <div id="error" class="error" hidden></div>
-          </section>
-        </div>
+        <section class="card turn-card">
+          <div class="turn-row">
+            <div id="die" class="die" hidden></div>
+            <div id="turn-status" class="turn-status"></div>
+          </div>
+          <div id="actions" class="actions"></div>
+          <div id="error" class="error" hidden></div>
+        </section>
       </aside>
     </main>
   </div>
@@ -80,6 +74,8 @@
       käynyt, jää siihen leima — ne säilyvät myös uusiin peleihin.</p>
     <p id="passport-count" class="passport-count"></p>
     <div id="passport-grid" class="passport-grid"></div>
+    <p class="passport-count">Matkasaalis</p>
+    <div id="passport-finds" class="passport-finds"></div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
     </form>
@@ -110,7 +106,8 @@
         uusi yritys seuraavalla vuorolla. Kiertotiekin voi löytyä: Suomeen pääsee
         myös ruotsinlaivalla Tukholmasta Ahvenanmaalle.</p>
       <p><b>Kartta.</b> Koko lauta näkyy aina kerralla, joten karttaa ei tarvitse
-        raahata eikä zoomata. Porttikaupungin tunnistaa katkoviivakehästä.</p>
+        raahata eikä zoomata. Päiväkirjakortti hakeutuu sille kartan nurkalle, jossa
+        on eniten merta, jottei se peitä mannerta.</p>
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa. Näkyvillä on kerrallaan vain
         muutama nappi: <b>Jalan</b> lähtee heti matkaan ja heittää nopan samalla
         painalluksella, <b>Laiva &amp; lento…</b> avaa loput vaihtoehdot (laiva 100 p,
@@ -131,9 +128,9 @@
         ottamatta on kätketty aarre. Sen saa auki vain vastaamalla oikein arvottuun
         monivalintakysymykseen (A–D) — rahalla aarretta ei voi ostaa. Väärästä vastauksesta
         vuoro päättyy, ja seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.</p>
-      <p><b>Vaikeustasot.</b> Aarrekaupungissa voi pyytää
-        <b>vaikean kysymyksen</b>: oikeasta vastauksesta saa laatan lisäksi 100 punnan
-        palkkion, mutta väärästä vuoro päättyy kuten tavallisesti.</p>
+      <p><b>Vaikeat kysymykset.</b> Vaikeaa kysymystä ei enää valita erikseen
+        aarrekaupungissa: se on varattu <b>tietoporteille</b>, joista maan oma
+        kartta aukeaa. Oikeasta vastauksesta saa 25 kokemuspistettä.</p>
       <p><b>Aikaraja.</b> Vastausaikaa on 45 sekuntia. Tiimalasi valuu kysymyksen vieressä,
         ja jos hiekka loppuu, vastaus lasketaan vääräksi ja vuoro päättyy.</p>
       <p><b>Rahan käyttö.</b> 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa
@@ -156,14 +153,14 @@
         päiväkirjasta löytyy taitettu sivu, joka vihjaa laudan pääaarteen suunnasta —
         muttei koskaan nimeä kaupunkia.</p>
       <p><b>Kokemuspisteet ja tieto.</b> Pisteitä kertyy matkasta eikä onnesta:
-        uudesta kaupungista 10, uudesta laudasta 50, oikeasta vastauksesta vaikeaan
-        kysymykseen 25 ja laudan pääaarteesta 100. Paneelin tietoprosentti kertoo,
+        uudesta kaupungista 10, uudesta laudasta 50, tietoportin vaikeasta
+        kysymyksestä 25 ja laudan pääaarteesta 100. Yläpalkin tietoprosentti kertoo,
         kuinka moneen kysymykseen olet vastannut oikein — kaksintaistelut mukaan
-        lukien.</p>
+        lukien. Rahat, pisteet ja sijainti näkyvät yläpalkissa; löydöt passissa.</p>
       <p><b>Vihreä passi.</b> Yläpalkin <b>Passi</b> avaa isoisän passin. Siihen jää
         leima jokaisesta laudasta, jolla olet käynyt, ja leimat säilyvät myös uusiin
-        peleihin.</p>
-      <p><b>Äänet.</b> Yläpalkin kaiutinpainike vaimentaa tai palauttaa äänet.</p>
+        peleihin. Samasta näkymästä näkee matkasaaliin: tähden, hevosenkengät ja
+        jalokivet.</p>
       <p><b>Päivitys.</b> Yläpalkin <b>Päivitä</b> hakee uusimman version pelistä —
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
       <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman

@@ -481,6 +481,50 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .chip-marks { letter-spacing: 0.08em; }
 .chip-marks .star { color: var(--accent); }
 
+/*
+ * Ikoninapit: kartalta viedään mahdollisimman vähän tilaa, joten
+ * matkustustavan valinta on ikoni ja lyhyt selite. Kapealla napilla selite
+ * piiloutuu ja jäljelle jää pelkkä ikoni — title ja aria-label kertovat
+ * merkityksen niille, jotka eivät ikonia tunnista.
+ */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.7rem;
+}
+
+.icon-glyph { font-size: 1.15rem; line-height: 1; }
+.icon-label { white-space: nowrap; }
+
+/* Alle 520 px napit kutistuvat pelkiksi ikoneiksi. */
+@media (max-width: 520px) {
+  .icon-label { display: none; }
+  .icon-btn { padding: 0.5rem; }
+}
+
+/* Vaiheen B napit ovat rivin levyisiä: nimet ovat pitkiä. */
+.actions .wide { grid-column: 1 / -1; }
+
+/* Passin matkasaalis: laatta ja sen nimi allekkain. */
+.passport-finds {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.find {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  /* Passi on vaaleaa pergamenttia, joten teksti perii dialogin tumman musteen. */
+  color: inherit;
+}
+
+.find-text { font-variant-numeric: tabular-nums; }
+
 /* Matkan mittarit: kokemuspisteet ja tietoprosentti rahan alla. */
 .chip-stats { gap: 0.6rem; font-size: 0.76rem; }
 .chip-stats .xp,
@@ -1383,23 +1427,12 @@ body[data-mode] .board-hint {
  * kortit menivät päällekkäin kaikilla alle ~1240 px:n leveyksillä,
  * esimerkiksi tabletilla pystyasennossa.
  */
-body[data-mode] .rail-bottom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.4rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: var(--gap);
-  max-height: 100%;
-}
-
 body[data-mode] .turn-card {
-  flex: 0 1 560px;
-  /* Automaattiset marginaalit keskittävät napit, kun päiväkirja on kapea. */
-  margin-inline: auto;
+  position: absolute;
+  left: 50%;
+  bottom: 0.4rem;
+  transform: translateX(-50%);
+  width: min(560px, calc(100% - 1.2rem));
   background: var(--overlay-card);
   border-color: var(--overlay-line);
   backdrop-filter: blur(3px);
@@ -1409,29 +1442,25 @@ body[data-mode] .actions {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
-/* Tila ja rahat ylös oikealle pieneksi pilleriksi. */
-body[data-mode] .players {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: min(240px, 45%);
-}
-
-body[data-mode] .player-chip {
-  background: var(--overlay-card);
-  border-color: var(--overlay-line);
-  backdrop-filter: blur(3px);
-}
-
-/* Päiväkirja ja havainto alarivin vasempaan laitaan. */
+/*
+ * Päiväkirja kelluu sillä kartan nurkalla, jossa on eniten merta; nurkan
+ * valitsee js/ui.js placeFactCard ja kertoo sen data-corner-määreellä.
+ * Alanurkat jäävät valitsematta, jos toimintokortti ei mahdu viereen.
+ */
 body[data-mode] .fact-card {
-  flex: 0 1 340px;
-  max-height: 40vh;
+  position: absolute;
+  width: min(340px, 46%);
+  max-height: 38%;
   overflow-y: auto;
   background: var(--overlay-card);
   border-color: var(--overlay-line);
   backdrop-filter: blur(3px);
 }
+
+body[data-mode] .fact-card[data-corner='tl'] { top: 0; left: 0; }
+body[data-mode] .fact-card[data-corner='tr'] { top: 0; right: 0; }
+body[data-mode] .fact-card[data-corner='bl'] { bottom: 0; left: 0; }
+body[data-mode] .fact-card[data-corner='br'] { bottom: 0; right: 0; }
 
 /* Kapealla ruudulla kelluvat kortit pinoutuvat alas eivätkä peitä karttaa. */
 @media (max-width: 700px) {
@@ -1443,27 +1472,21 @@ body[data-mode] .fact-card {
     position: static;
     inset: auto;
     display: grid;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
     gap: var(--gap);
   }
 
-  body[data-mode] .rail-bottom {
-    position: static;
-    display: contents;
-  }
-
-  /* Kartan alla toiminnot ovat ensin, kuten ennen alarivin käyttöönottoa. */
+  /* Kartan alla toiminnot ovat ensin, päiväkirja niiden jälkeen. */
   body[data-mode] .turn-card { order: 1; }
-  body[data-mode] .players { order: 2; }
   body[data-mode] .fact-card { order: 3; }
 
   body[data-mode] .turn-card,
-  body[data-mode] .players,
   body[data-mode] .fact-card {
     position: static;
     transform: none;
     width: auto;
     max-height: none;
+    inset: auto;
   }
 
   /* Kortit ovat taas kartan alla, joten ohjerivi mahtuu kartan alareunaan. */

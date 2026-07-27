@@ -7,7 +7,7 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.13';
+const APP_VERSION = '2026-07-27.14';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -78,18 +78,11 @@ function startGame() {
 
 // --- äänet ------------------------------------------------------------------
 
-const soundBtn = document.getElementById('sound-btn');
-
-function updateSoundButton() {
-  soundBtn.textContent = sfx.enabled ? '🔊' : '🔇';
-  soundBtn.title = sfx.enabled ? 'Äänet päällä' : 'Äänet pois';
-}
-
-soundBtn.addEventListener('click', () => {
-  sfx.setEnabled(!sfx.enabled);
-  updateSoundButton();
-});
-updateSoundButton();
+// Äänet ovat aina päällä: erillinen vaimennusnappi poistettiin yläpalkista,
+// ja laitteen oma äänenvoimakkuus riittää. Asetetaan lippu suoraan, jottei
+// setEnabled soita kuittausääntä heti sivun latauduttua — ja jotta aiemmin
+// vaimennettu peli ei jäisi mykäksi ilman nappia, jolla äänet saisi takaisin.
+sfx.enabled = true;
 
 // Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
 document.addEventListener('pointerdown', (event) => {
