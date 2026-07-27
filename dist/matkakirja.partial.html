@@ -1463,10 +1463,10 @@ body[data-mode] .turn-card {
   bottom: 0.4rem;
   transform: translateX(-50%);
   width: min(560px, calc(100% - 1.2rem));
-  background: var(--overlay-card);
-  border-color: var(--overlay-line);
-  backdrop-filter: blur(3px);
 }
+
+/* Ilman taustalaatikkoa napit osuivat kiinni kartan kehykseen. */
+body[data-mode] .turn-card { bottom: 0.9rem; }
 
 body[data-mode] .actions {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1482,15 +1482,76 @@ body[data-mode] .fact-card {
   width: min(340px, 46%);
   max-height: 38%;
   overflow-y: auto;
-  background: var(--overlay-card);
-  border-color: var(--overlay-line);
-  backdrop-filter: blur(3px);
 }
 
-body[data-mode] .fact-card[data-corner='tl'] { top: 0; left: 0; }
-body[data-mode] .fact-card[data-corner='tr'] { top: 0; right: 0; }
-body[data-mode] .fact-card[data-corner='bl'] { bottom: 0; left: 0; }
-body[data-mode] .fact-card[data-corner='br'] { bottom: 0; right: 0; }
+/*
+ * Kartan päällä ei ole laatikoita: päiväkirja ja toiminnot kirjoitetaan
+ * suoraan pergamentille kartan omalla musteella. Vaalea tekstivarjo pitää
+ * kirjaimet luettavina myös ruudukkoviivojen ja rannikon päällä — sama
+ * keino kuin kartan kaupunkinimissä.
+ *
+ * Nämä koskevat vain kelluvaa asettelua. Kapealla ruudulla (< 700 px)
+ * kortit ovat kartan alla tummalla taustalla ja pitävät vanhat värinsä.
+ */
+@media (min-width: 701px) {
+  body[data-mode] .turn-card,
+  body[data-mode] .fact-card {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0.2rem 0.35rem;
+    color: var(--map-ink);
+    text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9), 0 0 6px rgba(247, 237, 216, 0.75);
+  }
+
+  body[data-mode] .fact-card h2 {
+    color: #7a5514; /* tumma kulta erottuu pergamentilta, kirkas ei */
+  }
+
+  body[data-mode] .fact-place,
+  body[data-mode] .turn-status {
+    color: var(--map-ink-soft);
+  }
+
+  body[data-mode] .fact-text,
+  body[data-mode] .fact-text .source-line {
+    color: var(--map-ink);
+  }
+
+  body[data-mode] .error { color: #9c2f20; }
+
+  /*
+   * Napit jäävät napeiksi, mutta pergamentin sävyisiksi: tumma täyttö
+   * näyttäisi laatikolta juuri siellä mistä laatikot poistettiin.
+   */
+  body[data-mode] .actions button {
+    background: rgba(247, 237, 216, 0.82);
+    border-color: rgba(122, 85, 20, 0.5);
+    color: var(--map-ink);
+    text-shadow: none;
+    backdrop-filter: blur(2px);
+  }
+
+  body[data-mode] .actions button:hover:not(:disabled) {
+    background: rgba(255, 248, 232, 0.95);
+  }
+
+  /* Ensisijainen valinta pysyy kultaisena — se erottuu pergamentiltakin. */
+  body[data-mode] .actions button.primary {
+    background: linear-gradient(180deg, #eab84e, #d09024);
+    border-color: var(--accent-dark);
+    color: #2c1e07;
+  }
+
+  body[data-mode] .actions button.primary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #f3c661, #d9a13b);
+  }
+}
+
+body[data-mode] .fact-card[data-corner='tl'] { top: 0.4rem; left: 0.4rem; }
+body[data-mode] .fact-card[data-corner='tr'] { top: 0.4rem; right: 0.4rem; }
+body[data-mode] .fact-card[data-corner='bl'] { bottom: 0.9rem; left: 0.4rem; }
+body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 
 /* Kapealla ruudulla kelluvat kortit pinoutuvat alas eivätkä peitä karttaa. */
 @media (max-width: 700px) {
@@ -27063,7 +27124,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.16';
+const APP_VERSION = '2026-07-27.17';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
