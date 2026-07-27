@@ -36,6 +36,25 @@ export const EUROPE_QUESTIONS = {
       hint: 'Joen nimi alkaa L-kirjaimella.',
       source: 'https://fi.wikipedia.org/wiki/Dublin',
     },
+    {
+      q: 'Minkä Dublinin yliopiston kirjastossa säilytetään Book of Kellsiä?',
+      options: ['Trinity College', 'Sorbonne', 'Uppsalan yliopisto', 'Leidenin yliopisto'],
+      correct: 0,
+      fact: 'Book of Kells on noin vuodelta 800: käsin kirjoitettu ja kuvitettu evankeliumikirja, jonka sivuja käännetään näyttelyssä päivittäin.',
+      hint: 'Yliopiston nimi tarkoittaa kolminaisuutta.',
+    },
+    {
+      q: 'Mitä Irlannissa juhlitaan 17. maaliskuuta?',
+      options: [
+        'Pyhän Patrickin päivää',
+        'kansallista kalastuspäivää',
+        'kevätpäivän tasausta',
+        'kuninkaan syntymäpäivää',
+      ],
+      correct: 0,
+      fact: 'Päivä on Irlannin kansallispäivä ja siitä on tullut kulkueiden juhla myös siirtolaisten kaupungeissa ympäri maailmaa.',
+      hint: 'Päivä on nimetty maan suojeluspyhimyksen mukaan.',
+    },
   ],
 
   edinburgh: [
@@ -63,6 +82,20 @@ export const EUROPE_QUESTIONS = {
       fact: 'Edinburgh Festival Fringe kokoaa elokuussa tuhansia esityksiä eri puolilta maailmaa.',
       hint: 'Nimi tarkoittaa englanniksi reunaa.',
       source: 'https://en.wikipedia.org/wiki/Edinburgh_Festival_Fringe',
+    },
+    {
+      q: 'Mikä katu yhdistää Edinburghin linnan ja Holyroodin palatsin?',
+      options: ['Royal Mile', 'Oxford Street', 'Champs-Élysées', 'Rambla'],
+      correct: 0,
+      fact: 'Katu on vanhan skotlantilaisen mailin pituinen. Sen päissä ovat linna kalliolla ja kuninkaallinen palatsi, ja välissä kapeat kujat eli closet.',
+      hint: 'Nimi kertoo sekä pituuden että kuninkaallisen luonteen.',
+    },
+    {
+      q: 'Mikä soitin liittyy Skotlannin juhlakulkueisiin?',
+      options: ['säkkipilli', 'harppu', 'balalaikka', 'panhuilu'],
+      correct: 0,
+      fact: 'Soittimessa on ilmasäiliö, jota puristetaan kyynärvarrella. Tartan-kuvioinen kiltti ja soittokunnat kuuluvat yhä paraateihin ja häihin.',
+      hint: 'Soittimessa on pilli ja ilmasäiliö kyynärvarren alla.',
     },
   ],
 
@@ -92,6 +125,21 @@ export const EUROPE_QUESTIONS = {
       hint: 'Päivä on keskellä kesää.',
       source: 'https://fi.wikipedia.org/wiki/Bastiljin_valtaus',
     },
+    {
+      q: 'Mikä Pariisin maanalainen käytäväverkosto syntyi vanhoista kivilouhoksista?',
+      options: ['katakombit', 'metro', 'viemäriverkosto', 'rautatietunnelit'],
+      correct: 0,
+      level: 3,
+      fact: 'Kalkkikiveä louhittiin kaupungin rakennuksiin, ja tyhjiin käytäviin siirrettiin 1700-luvun lopulla luita ahtailta hautausmailta. Osa on nykyään museona.',
+      hint: 'Käytäviin siirrettiin aikoinaan luita ahtailta hautausmailta.',
+    },
+    {
+      q: 'Mikä Pariisin kirkko avattiin uudelleen 2024 tulipalon jälkeen?',
+      options: ['Notre-Dame', 'Sacré-Cœur', 'Pyhän Paavalin katedraali', 'Sagrada Família'],
+      correct: 0,
+      fact: 'Katedraali vaurioitui pahoin tulipalossa 2019. Se avattiin uudelleen vuoden 2024 lopulla, ja korjaukseen osallistui satoja kivenveistäjiä ja puuseppiä.',
+      hint: 'Nimi tarkoittaa ranskaksi "Meidän rouvamme".',
+    },
   ],
 
   bordeaux: [
@@ -120,6 +168,21 @@ export const EUROPE_QUESTIONS = {
       hint: 'Dyynin nimi alkaa samalla kirjaimella kuin Pariisi.',
       source: 'https://en.wikipedia.org/wiki/Dune_of_Pilat',
     },
+    {
+      q: 'Mikä joki virtaa Bordeaux’n halki?',
+      options: ['Garonne', 'Loire', 'Rhône', 'Seine'],
+      correct: 0,
+      fact: 'Joki tuo vuorovedet kaupunkiin asti. Sen mutkaan rakennettu satama teki Bordeaux’sta kauppakaupungin, ja joki laskee Gironden suistoon.',
+      hint: 'Joki laskee Gironden suistoon Atlantille.',
+    },
+    {
+      q: 'Millainen maaperä tekee Bordeaux’n seudusta hyvän viinialueen?',
+      options: ['sora- ja kivikkomaa', 'suomaa', 'liejuinen savi', 'paljas kallio'],
+      correct: 0,
+      level: 3,
+      fact: 'Médocin maat päästävät veden läpi ja lämpenevät päivällä, mikä pakottaa köynnöksen juuret syvälle. Sama maaperä on kelvannut viljelyyn jo roomalaisajoista.',
+      hint: 'Maaperä ei pidätä vettä, ja se lämpenee nopeasti.',
+    },
   ],
 
   lissabon: [
@@ -147,6 +210,21 @@ export const EUROPE_QUESTIONS = {
       fact: 'Fado on haikea laulutyyli, joka on Unescon aineettoman kulttuuriperinnön luettelossa.',
       hint: 'Nimi tarkoittaa portugaliksi kohtaloa.',
       source: 'https://fi.wikipedia.org/wiki/Fado',
+    },
+    {
+      q: 'Millä kulkuneuvolla nousee Lissabonin jyrkkiä kukkuloita?',
+      options: ['kapeilla raitiovaunuilla', 'gondoleilla', 'hevosvaunuilla', 'köysiradalla merelle'],
+      correct: 0,
+      fact: 'Vanhat vaunut kiipeävät kaduille, joille bussi ei mahdu. Kaupungissa on myös rinnehissejä, ja linja 28 on niistä kaikista tunnetuin.',
+      hint: 'Kulkuneuvo kulkee kiskoilla katujen jyrkissä mutkissa.',
+    },
+    {
+      q: 'Mikä torni vartioi Lissabonin satamaa Tejo-joen suulla?',
+      options: ['Belémin torni', 'Big Ben', 'Galatan torni', 'Pisan torni'],
+      correct: 0,
+      level: 3,
+      fact: 'Torni rakennettiin 1500-luvulla puolustukseksi ja löytöretkien lähtöpaikan merkiksi. Se on maailmanperintökohde yhdessä lähellä olevan luostarin kanssa.',
+      hint: 'Torni on samassa kaupunginosassa kuin Jerónimosin luostari.',
     },
   ],
 
@@ -181,6 +259,21 @@ export const EUROPE_QUESTIONS = {
       hint: 'Vastaus liittyy siihen, kuinka ylhäällä kaupunki on.',
       source: 'https://fi.wikipedia.org/wiki/Madrid',
     },
+    {
+      q: 'Mikä on Madridin keskustan suuri kaupunkipuisto?',
+      options: ['El Retiro', 'Hyde Park', 'Tiergarten', 'Villa Borghese'],
+      correct: 0,
+      fact: 'Puisto oli ensin kuninkaallinen puutarha ja avattiin kaikille 1800-luvulla. Sen lammella soudetaan ja lasipalatsissa on näyttelyitä.',
+      hint: 'Nimi tarkoittaa espanjaksi vetäytymistä ja lepoa.',
+    },
+    {
+      q: 'Mikä pata on Madridin perinteinen talviruoka?',
+      options: ['cocido madrileño', 'paella', 'gazpacho', 'tortilla'],
+      correct: 0,
+      level: 3,
+      fact: 'Kikherne- ja lihapata syödään useassa osassa: ensin liemi nuudeleilla, sitten kikherneet ja kaali, lopuksi lihat.',
+      hint: 'Ruoka syödään useassa osassa, liemi ensin.',
+    },
   ],
 
   barcelona: [
@@ -205,6 +298,26 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Barcelona on yksi Välimeren vilkkaimmista satamakaupungeista.',
       hint: 'Sama meri huuhtoo Italian ja Kreikan rantoja.',
+    },
+    {
+      q: 'Mikä on erityistä Barcelonan Eixample-kaupunginosan korttelien kulmissa?',
+      options: [
+        'kulmat on viistetty, jotta risteyksiin mahtuu valoa ja liikennettä',
+        'kulmissa on tornit',
+        'kulmat ovat pyöreitä puistoja',
+        'kortteleissa ei ole kulmia lainkaan',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Ildefons Cerdàn 1800-luvun kaavassa jokainen kulma viistettiin. Muoto näkyy yhä ilmakuvissa, ja monet viisteet on nykyään otettu terasseiksi ja pyöräteiksi.',
+      hint: 'Ratkaisu liittyy risteysten muotoon ja valoon.',
+    },
+    {
+      q: 'Mikä tapahtuma muutti Barcelonan teollisuusrannan uimarannoiksi vuonna 1992?',
+      options: ['kesäolympialaiset', 'maailmannäyttely', 'jalkapallon MM-kisat', 'talviolympialaiset'],
+      correct: 0,
+      fact: 'Kisojen vuoksi vanha satama- ja tehdasranta rakennettiin uudelleen. Kaupunkilaiset saivat rannat, ja matkailu kasvoi voimakkaasti.',
+      hint: 'Tapahtuma järjestetään neljän vuoden välein eri kaupungissa.',
     },
   ],
 
@@ -237,6 +350,31 @@ export const EUROPE_QUESTIONS = {
       hint: 'Päiväkirjan kirjoitti nuori tyttö.',
       source: 'https://fi.wikipedia.org/wiki/Anne_Frank',
     },
+    {
+      q: 'Miksi Amsterdamin vanhat talot seisovat puupaalujen päällä?',
+      options: [
+        'maaperä on pehmeää turvetta ja hiekkaa',
+        'jotta tulvavesi mahtuisi talon alle',
+        'koska kivijalat olivat kiellettyjä',
+        'jotta taloja voi siirtää paikasta toiseen',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Paalut lyödään pehmeän maan läpi kantavaan hiekkakerrokseen. Keskusrautatieasema seisoo tuhansien paalujen päällä, ja vinot julkisivut kertovat paalujen painumisesta.',
+      hint: 'Syy on siinä, mitä katujen alla on.',
+    },
+    {
+      q: 'Miksi Amsterdamin kanavatalot ovat niin kapeita?',
+      options: [
+        'veroa maksettiin talon leveydestä ja tontit olivat kapeita',
+        'korkeat talot olivat halvempia rakentaa',
+        'kanavat vaativat pyöreitä taloja',
+        'talot rakennettiin siirrettäviksi',
+      ],
+      correct: 0,
+      fact: 'Kapeat ja korkeat talot vaativat oman keinonsa: tavara nostettiin ylimpiin kerroksiin harjapuomilla, ja nostokoukkuja näkyy julkisivuissa yhä.',
+      hint: 'Syy liittyy tontin leveyteen ja verotukseen.',
+    },
   ],
 
   berliini: [
@@ -263,6 +401,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Brandenburgin portti valmistui 1791 ja on Saksan yhdistymisen tunnetuin symboli.',
       hint: 'Portti on nimetty ympäröivän maakunnan mukaan.',
       source: 'https://fi.wikipedia.org/wiki/Brandenburgin_portti',
+    },
+    {
+      q: 'Mikä Berliinin saari on museoiden keskittymä ja maailmanperintökohde?',
+      options: ['Museosaari', 'Vasasaari', 'Isola Bella', 'Gotlanti'],
+      correct: 0,
+      level: 3,
+      fact: 'Spree-joen saarelle rakennettiin 1800-luvulla viisi museota. Niiden kokoelmissa ovat muun muassa Pergamonin alttari ja Nefertitin rintakuva.',
+      hint: 'Kohde on joen keskellä oleva saari kaupungin sydämessä.',
+    },
+    {
+      q: 'Mikä on Berliinin East Side Gallery?',
+      options: [
+        'maalauksin peitetty muurin osa',
+        'kaupungin suurin taidemuseo',
+        'konserttitalo',
+        'kirjakauppojen kortteli',
+      ],
+      correct: 0,
+      fact: 'Runsaan kilometrin mittainen muurinpätkä maalattiin 1990 taideteoksiksi. Se on nykyään sekä muistomerkki että ulkoilmagalleria.',
+      hint: 'Kohde on säilynyt osa rakennelmaa, joka jakoi kaupungin.',
     },
   ],
 
@@ -292,6 +450,25 @@ export const EUROPE_QUESTIONS = {
       hint: 'Kello kertoo taivaankappaleista.',
       source: 'https://en.wikipedia.org/wiki/Prague_astronomical_clock',
     },
+    {
+      q: 'Mitä Prahan Kaarlensillan kaiteilla olevat patsaat esittävät?',
+      options: ['pyhimyksiä', 'kuninkaita', 'säveltäjiä', 'eläimiä'],
+      correct: 0,
+      fact: 'Sillalla on kolmekymmentä patsasta. Alkuperäiset on siirretty museoon säilymään, ja sillalla seisovat kopiot.',
+      hint: 'Hahmot liittyvät kirkkoon.',
+    },
+    {
+      q: 'Mikä tekee Prahan linnasta poikkeuksellisen?',
+      options: [
+        'se on pinta-alaltaan maailman suurimpia linna-alueita',
+        'se on kokonaan maan alla',
+        'se on rakennettu puusta',
+        'siellä ei ole yhtään rakennusta',
+      ],
+      correct: 0,
+      fact: 'Muurien sisään mahtuu katedraali, palatseja, puutarhoja ja kokonainen kuja pieniä taloja. Alueella toimii yhä presidentin kanslia.',
+      hint: 'Kyse on alueen koosta, ei korkeudesta.',
+    },
   ],
 
   wien: [
@@ -319,6 +496,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Wien on Itävallan pääkaupunki ja maan suurin kaupunki.',
       hint: 'Maassa puhutaan saksaa ja sen eteläosassa kohoavat Alpit.',
     },
+    {
+      q: 'Mikä Wienin laitos on kouluttanut lipizzanhevosia 1500-luvulta asti?',
+      options: [
+        'Espanjalainen ratsastuskoulu',
+        'Italialainen ooppera',
+        'Ranskalainen baletti',
+        'Unkarilainen sirkus',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Koulun nimi tulee hevosten alkuperästä. Valkoiset lipizzanit esiintyvät yhä keisarillisessa ratsastussalissa, ja varsat syntyvät tummina.',
+      hint: 'Nimi kertoo hevosten alkuperämaan Pyreneiden takaa.',
+    },
+    {
+      q: 'Mikä Wienin Prater-puiston maamerkki valmistui vuonna 1897?',
+      options: ['suuri maailmanpyörä', 'vuoristorata', 'karuselli', 'vesiliukumäki'],
+      correct: 0,
+      fact: 'Laitteen vaunut ovat pieniä huoneita, joissa voi myös ruokailla. Pyörä on ollut käytössä yli sadan vuoden ajan.',
+      hint: 'Laite pyörii pystysuunnassa ja siitä näkee kaupungin yli.',
+    },
   ],
 
   budapest: [
@@ -344,6 +541,27 @@ export const EUROPE_QUESTIONS = {
       fact: 'Unkari on suomen ja viron kaukainen sukukieli, vaikka sanastot ovat ehtineet erkaantua kauas toisistaan.',
       hint: 'Kieli on suomen kaukainen sukulainen.',
       source: 'https://en.wikipedia.org/wiki/Hungarian_language',
+    },
+    {
+      q: 'Mitä Budapestin kuumien lähteiden vedellä tehdään?',
+      options: ['kylvetään ja uidaan', 'kastellaan riisipeltoja', 'kalastetaan', 'ei mitään'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupungissa on kymmeniä kylpylöitä, joihin vesi tulee suoraan lähteistä. Osassa altaista uidaan ulkona myös talvella, ja monet pelaavat siellä shakkia.',
+      hint: 'Lämmin vesi houkuttelee ihmiset veteen.',
+    },
+    {
+      q: 'Mikä Budapestin metrolinja on Euroopan vanhimpia?',
+      options: [
+        'linja 1 vuodelta 1896',
+        'linja 4 vuodelta 2014',
+        'linja 3 vuodelta 1976',
+        'kaupungissa ei ole metroa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Rata avattiin 1896 ja on Lontoon jälkeen Euroopan vanhin maanalainen rata. Se kulkee matalassa aivan kadun alla ja on maailmanperintökohde.',
+      hint: 'Rata avattiin samana vuonna kuin ensimmäiset nykyajan olympialaiset.',
     },
   ],
 
@@ -377,6 +595,21 @@ export const EUROPE_QUESTIONS = {
       hint: 'Säveltäjän mukaan on nimetty Varsovan lentoasema.',
       source: 'https://fi.wikipedia.org/wiki/Fryderyk_Chopin',
     },
+    {
+      q: 'Kuka Varsovassa syntynyt tutkija sai kaksi Nobelin palkintoa?',
+      options: ['Maria Skłodowska-Curie', 'Ada Lovelace', 'Lise Meitner', 'Rosalind Franklin'],
+      correct: 0,
+      level: 3,
+      fact: 'Hän sai palkinnon fysiikassa 1903 ja kemiassa 1911. Löytämänsä alkuaineen nimi polonium kunnioittaa kotimaataan, joka ei silloin ollut kartalla itsenäisenä.',
+      hint: 'Hän nimesi löytämänsä alkuaineen kotimaansa mukaan.',
+    },
+    {
+      q: 'Mikä on Puolan tunnetuin arkiruoka?',
+      options: ['pierogit', 'paella', 'sushi', 'moussaka'],
+      correct: 0,
+      fact: 'Nyytit täytetään esimerkiksi perunalla ja tuorejuustolla, sienillä, hapankaalilla tai kesällä mansikoilla. Ne keitetään ja usein paistetaan pinnalta.',
+      hint: 'Ruoka on täytettyjä taikinanyyttejä.',
+    },
   ],
 
   alpit: [
@@ -408,6 +641,32 @@ export const EUROPE_QUESTIONS = {
       fact: 'Lämpötila laskee noin puoli astetta jokaista sataa metriä kohti, koska ilmanpaine pienenee korkeutta kohti.',
       hint: 'Syy liittyy ilmanpaineeseen.',
     },
+    {
+      q: 'Minkä maiden alueella Alpit sijaitsevat?',
+      options: [
+        'muun muassa Ranskan, Sveitsin, Italian ja Itävallan',
+        'vain Espanjan',
+        'vain Norjan',
+        'Kreikan ja Turkin',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Alppien kaari kulkee kahdeksan maan alueella. Vuoristo on Euroopan vesitorni: sieltä lähtevät Rein, Rhône, Po ja Tonavan sivujoet.',
+      hint: 'Vuoristo ylittää monta valtionrajaa Keski-Euroopassa.',
+    },
+    {
+      q: 'Mikä Alppien alittava rautatietunneli on maailman pisimpiä?',
+      options: [
+        'Gotthardin pohjatunneli',
+        'Kanaalitunneli',
+        'Mont Blancin tunneli',
+        'Simplonin tunneli',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Tunneli avattiin Sveitsissä 2016. Se on noin 57 kilometriä pitkä ja kulkee lähes tasaisena vuorten alta, joten junat pääsevät kovaa vauhtia.',
+      hint: 'Tunneli avattiin 2016 ja kulkee Sveitsin läpi.',
+    },
   ],
 
   milano: [
@@ -432,6 +691,21 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Po-joen tasanko on Italian tärkein maatalous- ja teollisuusalue.',
       hint: 'Alue on nimetty Italian pisimmän joen mukaan.',
+    },
+    {
+      q: 'Mikä on Milanon suuri marmorinen katedraali?',
+      options: ['Duomo', 'Sagrada Família', 'Hagia Sofia', 'Pyhän Marcuksen kirkko'],
+      correct: 0,
+      level: 1,
+      fact: 'Rakentaminen kesti lähes kuusi vuosisataa. Katolla voi kävellä marmoripiikkien ja patsaiden keskellä, ja ylimpänä on kultainen Madonna.',
+      hint: 'Sana tarkoittaa italiaksi tuomiokirkkoa.',
+    },
+    {
+      q: 'Mikä Milanon oopperatalo on maailman tunnetuimpia?',
+      options: ['La Scala', 'Bolshoi', 'Metropolitan', 'Covent Garden'],
+      correct: 0,
+      fact: 'Talo avattiin 1778. Sen kausi alkaa perinteisesti 7. joulukuuta, Milanon suojeluspyhimyksen päivänä, ja lippujonot ovat pitkiä.',
+      hint: 'Nimi tarkoittaa italiaksi portaita.',
     },
   ],
 
@@ -460,6 +734,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Latinasta kehittyivät myöhemmin muun muassa italia, ranska, espanja, portugali ja romania.',
       hint: 'Kieltä käytetään yhä kasvien ja eläinten tieteellisissä nimissä.',
     },
+    {
+      q: 'Minkä antiikin rakennuksen betonikupoli on Roomassa yhä maailman suurin ilman tukirakenteita?',
+      options: ['Pantheon', 'Colosseum', 'Forum Romanum', 'Circus Maximus'],
+      correct: 0,
+      level: 3,
+      fact: 'Kupoli valmistui noin vuonna 125. Sen keskellä oleva pyöreä aukko eli oculus on rakennuksen ainoa valonlähde, ja lattiassa on reiät sadevedelle.',
+      hint: 'Rakennuksen katossa on pyöreä aukko taivaalle.',
+    },
+    {
+      q: 'Mistä Rooman akveduktit toivat vettä kaupunkiin?',
+      options: [
+        'vuorten lähteistä',
+        'merestä suolattuna',
+        'kattojen sadevedestä',
+        'suoraan Tiber-joesta',
+      ],
+      correct: 0,
+      fact: 'Yksitoista akveduktia johti lähdevettä kaupungin suihkulähteisiin ja kylpylöihin. Osa vanhoista linjoista syöttää Rooman suihkulähteitä yhä.',
+      hint: 'Vesi tuotiin kaukaa korkeammalta puhtaana.',
+    },
   ],
 
   sisilia: [
@@ -487,6 +781,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Sitruunat ja appelsiinit ovat Sisilian vanha vientituote; arabit toivat sitrusviljelyn saarelle keskiajalla.',
       hint: 'Hedelmät ovat happamia ja keltaisia tai oransseja.',
     },
+    {
+      q: 'Minkä kansojen jäljet näkyvät Sisilian rakennuksissa?',
+      options: [
+        'kreikkalaisten, arabien ja normannien',
+        'viikinkien ja saamelaisten',
+        'inkojen ja atsteekkien',
+        'mongolien ja kiinalaisten',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Agrigentossa seisovat kreikkalaiset temppelit, ja Palermon normanniaikaisissa kirkoissa on arabialaisia kupoleita ja bysanttilaisia mosaiikkeja.',
+      hint: 'Vaikutteet tulivat Kreikasta, arabimaailmasta ja Pohjolasta.',
+    },
+    {
+      q: 'Mikä on Sisilian tunnetuin jälkiruoka?',
+      options: ['cannolo', 'sacherkakku', 'churro', 'pavlova'],
+      correct: 0,
+      fact: 'Rapea taikinaputki täytetään makeutetulla ricottalla vasta juuri ennen syömistä, jotta kuori pysyy rapeana. Kesällä syödään granitaa eli jäähilettä.',
+      hint: 'Täytteenä on makeutettua ricottaa rapean kuoren sisällä.',
+    },
   ],
 
   ateena: [
@@ -511,6 +825,21 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Kisat pidettiin antiikin perinteen kunniaksi Kreikassa. Antiikin kisat oli aikanaan pidetty Olympiassa.',
       hint: 'Paikka valittiin antiikin perinteen kunniaksi.',
+    },
+    {
+      q: 'Mitä sana Akropolis tarkoittaa?',
+      options: ['yläkaupunkia', 'markkinapaikkaa', 'satamaa', 'teatteria'],
+      correct: 0,
+      level: 1,
+      fact: 'Kalliokukkulalle rakennettiin temppeleitä, ja se toimi myös turvapaikkana. Monessa kreikkalaisessa kaupungissa oli oma vastaava kukkulansa.',
+      hint: 'Sana kertoo, että paikka on ylhäällä muun kaupungin päällä.',
+    },
+    {
+      q: 'Mikä on Ateenan vanha kaupunginosa Akropoliin rinteellä?',
+      options: ['Plaka', 'Soho', 'Montmartre', 'Trastevere'],
+      correct: 0,
+      fact: 'Kapeat kujat kiertävät kukkulan juurta, ja alue on yksi kaupungin pisimpään yhtäjaksoisesti asuttuja osia.',
+      hint: 'Kaupunginosa kiertää kukkulan rinnettä kapeina kujina.',
     },
   ],
 
@@ -539,6 +868,21 @@ export const EUROPE_QUESTIONS = {
       fact: 'Kreetalainen ruokavalio perustuu oliiviöljyyn, vihanneksiin, kalaan ja viljaan. Se on välimerellisen ruokavalion tunnetuin esimerkki.',
       hint: 'Tuote puristetaan puun hedelmistä.',
     },
+    {
+      q: 'Mikä Kreetan palatsi liittyy labyrintin tarinaan?',
+      options: ['Knossos', 'Versailles', 'Alhambra', 'Mykene'],
+      correct: 0,
+      fact: 'Palatsissa oli satoja huoneita ja käytäviä useassa kerroksessa. Se kaivettiin esiin 1900-luvun alussa, ja seinillä on säilynyt värikkäitä maalauksia.',
+      hint: 'Palatsin käytäväsokkelo saattoi synnyttää tarun sokkelosta.',
+    },
+    {
+      q: 'Mikä Kreetan rotko on Euroopan pisimpiä vaelluskohteita?',
+      options: ['Samarian rotko', 'Verdonin rotko', 'Vikoksen rotko', 'Tarnin rotko'],
+      correct: 0,
+      level: 3,
+      fact: 'Rotko on noin 16 kilometriä pitkä ja kapenee kapeimmillaan pariin metriin. Kansallispuiston läpi kävellään päivässä, ja lopussa odottaa meri.',
+      hint: 'Kansallispuiston läpi kävellään yhdessä päivässä.',
+    },
   ],
 
   dubrovnik: [
@@ -565,6 +909,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Ragusan tasavalta oli vuosisatoja itsenäinen kauppavaltio, joka kilpaili Venetsian kanssa.',
       hint: 'Nimi alkaa R-kirjaimella.',
     },
+    {
+      q: 'Mikä on Dubrovnikin vanhankaupungin pääkatu?',
+      options: ['Stradun', 'Rambla', 'Nevski', 'Korso'],
+      correct: 0,
+      fact: 'Kalkkikivellä päällystetty katu rakennettiin täytetyn merensalmen päälle, joten se on suora keskellä muuten mutkaista kaupunkia.',
+      hint: 'Katu kulkee entisen merensalmen päällä.',
+    },
+    {
+      q: 'Miten Ragusan tasavalta säilytti itsenäisyytensä vuosisatoja?',
+      options: [
+        'diplomatialla ja maksamalla veroa naapurivalloille',
+        'suurella maa-armeijalla',
+        'eristäytymällä kaikesta kaupasta',
+        'liittymällä Venetsiaan',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kaupunki neuvotteli sopimuksia ja maksoi veroa Osmanien valtakunnalle, jotta laivat saivat kulkea vapaasti. Sen kauppalaivasto oli Välimeren suurimpia.',
+      hint: 'Ratkaisu löytyi neuvottelupöydästä ja rahakirstusta.',
+    },
   ],
 
   sofia: [
@@ -590,6 +954,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Bulgarian Ruusulaaksossa tuotetaan ruusuöljyä, jota käytetään hajuvesissä ympäri maailman.',
       hint: 'Kukassa on piikkejä ja se annetaan usein lahjaksi.',
     },
+    {
+      q: 'Mikä kohoaa heti Sofian eteläpuolella?',
+      options: ['korkea vuori', 'suuri järvi', 'meri', 'aavikko'],
+      correct: 0,
+      level: 1,
+      fact: 'Vitošan huippu kohoaa yli 2 200 metriin aivan kaupungin laidalla. Sinne pääsee kaupunkiliikenteellä hiihtämään ja vaeltamaan.',
+      hint: 'Maastonmuoto näkyy kaupungin kaduilta ja siellä hiihdetään.',
+    },
+    {
+      q: 'Mikä kultakupolinen katedraali on Sofian tunnetuin maamerkki?',
+      options: [
+        'Aleksanteri Nevskin katedraali',
+        'Pietarinkirkko',
+        'Vasilin katedraali',
+        'Temppeliaukion kirkko',
+      ],
+      correct: 0,
+      fact: 'Katedraali valmistui 1912, ja siihen mahtuu tuhansia ihmisiä. Se rakennettiin muistoksi sodasta, joka johti Bulgarian itsenäistymiseen.',
+      hint: 'Kirkko on nimetty keskiaikaisen venäläisen ruhtinaan mukaan.',
+    },
   ],
 
   bukarest: [
@@ -613,6 +997,22 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Karpaattien metsissä elää yhä yksi Euroopan suurimmista karhukannoista.',
       hint: 'Vuoristo kiertää Transilvanian.',
+    },
+    {
+      q: 'Millä kirjaimistolla romaniaa kirjoitetaan?',
+      options: ['latinalaisilla', 'kyrillisillä', 'kreikkalaisilla', 'arabialaisilla'],
+      correct: 0,
+      level: 1,
+      fact: 'Romania on romaanisen kielen saareke slaavilaisten kielten keskellä. Kyrillisistä kirjaimista siirryttiin latinalaisiin 1800-luvulla.',
+      hint: 'Samat kirjaimet kuin suomessa ja italiassa.',
+    },
+    {
+      q: 'Mikä Bukarestin rakennus on maailman suurimpia hallintorakennuksia?',
+      options: ['Parlamenttipalatsi', 'Kreml', 'Buckinghamin palatsi', 'Escorial'],
+      correct: 0,
+      level: 3,
+      fact: 'Rakennus valmistui 1990-luvulla, ja siinä on tuhansia huoneita. Sen tieltä purettiin kokonainen vanha kaupunginosa, mistä keskustellaan yhä.',
+      hint: 'Rakennus valmistui vasta 1990-luvulla.',
     },
   ],
 
@@ -645,6 +1045,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Joki alkaa Venäjän puolelta, virtaa Valko-Venäjän ja Ukrainan halki ja laskee Mustaanmereen.',
       hint: 'Nimi alkaa D-kirjaimella ja on lyhyt.',
     },
+    {
+      q: 'Mikä Kiovan luostari on kaivettu osin maan alle?',
+      options: ['Petsherskan luolaluostari', 'Athosvuoren luostari', 'Valamo', 'Monte Cassino'],
+      correct: 0,
+      fact: 'Luostari perustettiin 1000-luvulla, ja munkit kaivoivat käytäviä hiekkakiveen. Se on maailmanperintökohde ja yhä toimiva luostari.',
+      hint: 'Luostarin käytävät kulkevat maan alla.',
+    },
+    {
+      q: 'Mikä oli Kiovan Rus?',
+      options: [
+        'keskiaikainen valtakunta, jonka keskus oli Kiova',
+        'Itämeren kauppaliitto',
+        'Bysantin maakunta',
+        'nykyinen kaupunginosa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kiovan Rus oli 800–1200-luvuilla laaja itäslaavilainen valtakunta. Useat nykyiset maat vetoavat sen perintöön omassa historiankirjoituksessaan.',
+      hint: 'Kyse on keskiajan valtiosta, ei nykyisestä alueesta.',
+    },
   ],
 
   odessa: [
@@ -676,6 +1096,22 @@ export const EUROPE_QUESTIONS = {
       fact: 'Syvät vesikerrokset sekoittuvat huonosti pintaveteen, joten syvyydessä on lähes hapetonta vettä. Siksi sinne on säilynyt jopa antiikin laivanhylkyjä.',
       hint: 'Vastaus liittyy siihen, mitä syvällä ei ole.',
     },
+    {
+      q: 'Mitä Odessan satamasta viedään maailmalle?',
+      options: ['viljaa', 'timantteja', 'kahvia', 'puuvillaa'],
+      correct: 0,
+      level: 1,
+      fact: 'Satama on Ukrainan tärkeimpiä. Sen kautta viedään vehnää, maissia ja auringonkukkaöljyä eri maanosiin, ja sadon määrä vaikuttaa ruoan hintaan kaukana.',
+      hint: 'Tuote kasvaa Ukrainan mustan mullan pelloilla.',
+    },
+    {
+      q: 'Mitä Odessassa on vietetty 1. huhtikuuta 1970-luvulta asti?',
+      options: ['Humorina-huumoripäivää', 'lumijuhlaa', 'sadonkorjuujuhlaa', 'kalastuspäivää'],
+      correct: 0,
+      level: 3,
+      fact: 'Odessa on tunnettu omasta huumoristaan ja koomikoistaan. Juhlassa kaupungilla kulkee kulkueita ja kadut täyttyvät vitseistä.',
+      hint: 'Juhla osuu aprillipäivään.',
+    },
   ],
 
   moskova: [
@@ -702,6 +1138,26 @@ export const EUROPE_QUESTIONS = {
       hint: 'Joki laskee Kaspianmereen.',
       source: 'https://fi.wikipedia.org/wiki/Volga',
     },
+    {
+      q: 'Millainen rakennus Moskovan valtionyliopiston päärakennus on?',
+      options: [
+        '1950-luvulla valmistunut tornitalo',
+        'keskiaikainen luostari',
+        'lasipilvenpiirtäjä 2000-luvulta',
+        'puinen palatsi',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Yli 200 metriä korkea rakennus valmistui 1953 ja kuuluu kaupungin "seitsemään sisareen". Sen käytävien yhteispituus lasketaan kymmenissä kilometreissä.',
+      hint: 'Rakennus valmistui pian toisen maailmansodan jälkeen ja kohoaa yli 200 metriin.',
+    },
+    {
+      q: 'Mikä on GUM Punaisen torin laidalla?',
+      options: ['tavaratalo', 'kirkko', 'rautatieasema', 'museo'],
+      correct: 0,
+      fact: 'Vuonna 1893 valmistunut lasikattoinen kauppakäytävä toimii yhä tavaratalona. Sen käytävät ovat kolmessa kerroksessa siltojen yhdistäminä.',
+      hint: 'Rakennuksessa käydään ostoksilla lasikaton alla.',
+    },
   ],
 
   pietari: [
@@ -727,6 +1183,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Kaupunki perustettiin Nevan suistoon märälle maalle, ja rakennukset seisovat paalujen varassa.',
       hint: 'Maa oli märkää ja pehmeää.',
     },
+    {
+      q: 'Minkä joen suistoon Pietari on rakennettu?',
+      options: ['Nevan', 'Volgan', 'Tonavan', 'Reinin'],
+      correct: 0,
+      level: 1,
+      fact: 'Joki virtaa Laatokasta Suomenlahteen vain 74 kilometrin matkan. Kaupunki rakennettiin suiston saarille, ja siellä on satoja siltoja.',
+      hint: 'Joki tulee Laatokasta Suomenlahteen.',
+    },
+    {
+      q: 'Miksi Pietarin kääntösillat nostetaan öisin ylös?',
+      options: [
+        'jotta laivat mahtuvat kulkemaan jokea pitkin',
+        'jotta sillat eivät jäätyisi',
+        'liikenteen rauhoittamiseksi',
+        'juhlavalojen vuoksi',
+      ],
+      correct: 0,
+      fact: 'Navigointikaudella sillat nousevat yöllä, jotta laivat pääsevät Laatokan ja Suomenlahden väliä. Kaupunkilaiset laskevat aikataulut tarkasti, ettei jää väärälle rannalle.',
+      hint: 'Syy liittyy vesiliikenteeseen.',
+    },
   ],
 
   helsinki: [
@@ -751,6 +1227,26 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Kansalliskielet ovat suomi ja ruotsi. Saamelaisilla on kotiseutualueellaan oikeus käyttää saamen kieliä viranomaisissa.',
       hint: 'Toinen kieli on naapurimaan kieli.',
+    },
+    {
+      q: 'Mikä Helsingin kirkko on louhittu kallion sisään?',
+      options: [
+        'Temppeliaukion kirkko',
+        'Tuomiokirkko',
+        'Uspenskin katedraali',
+        'Kallion kirkko',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kirkkosali louhittiin kallioon 1969 keskelle asuinkorttelia. Kuparilevyistä tehty kupoli näkyy ulos, ja akustiikan vuoksi siellä äänitetään levyjä.',
+      hint: 'Sisäänkäynti on kaivettu kiven kylkeen, ja ulos näkyy vain kuparikupoli.',
+    },
+    {
+      q: 'Mikä on Helsingin vanha puistokatu, jonka keskellä on esiintymislava?',
+      options: ['Esplanadi', 'Aleksanterinkatu', 'Mannerheimintie', 'Bulevardi'],
+      correct: 0,
+      fact: 'Puisto avattiin kaupunkilaisten kävelypaikaksi 1818. Kesällä lavalla soitetaan ja talvella siellä on joulumarkkinat.',
+      hint: 'Kadun keskellä on puisto ja lava, ei ajokaistoja.',
     },
   ],
 
@@ -778,6 +1274,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Virossa lähes kaikki asiointi hoituu verkossa, ja maa otti ensimmäisenä maailmassa käyttöön valtiolliset nettivaalit vuonna 2005.',
       hint: 'Maata kutsutaan joskus e-valtioksi.',
     },
+    {
+      q: 'Miten Tallinnan vanhakaupunki jakautuu kahteen osaan?',
+      options: [
+        'ylälinna kalliolla ja alakaupunki sen juurella',
+        'joki jakaa sen kahtia',
+        'meri jakaa sen kahteen saareen',
+        'muuri jakaa sen kahteen valtioon',
+      ],
+      correct: 0,
+      fact: 'Toompean kalliolla asuivat piispa ja aatelisto, alakaupungissa kauppiaat ja käsityöläiset. Molemmilla oli omat muurinsa ja porttinsa, jotka suljettiin yöksi.',
+      hint: 'Jako perustuu korkeuseroon.',
+    },
+    {
+      q: 'Mikä tapahtumasarja liittyy Viron itsenäistymiseen 1980-luvun lopulla?',
+      options: ['laulava vallankumous', 'karnevaali', 'oopperafestivaali', 'urkukilpailu'],
+      correct: 0,
+      level: 3,
+      fact: 'Laulujuhlien lavalle kokoontui satojatuhansia ihmisiä laulamaan kansanlauluja, joita oli aiemmin rajoitettu. Liikettä alettiin kutsua laulavaksi vallankumoukseksi.',
+      hint: 'Muutosta vietiin eteenpäin laulamalla yhdessä.',
+    },
   ],
 
   riika: [
@@ -803,6 +1319,31 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Väinäjoki eli Daugava alkaa Venäjältä ja laskee Riianlahteen; sen varrella on tuotettu suuri osa Latvian sähköstä vesivoimalla.',
       hint: 'Joen nimi on suomeksi sama kuin eräällä Karjalan joella.',
+    },
+    {
+      q: 'Mistä Riian keskustorin suuret kauppahallit on tehty?',
+      options: [
+        'vanhoista ilmalaivojen halleista',
+        'purjelaivojen rungoista',
+        'linnan muureista',
+        'rautatievaunuista',
+      ],
+      correct: 0,
+      fact: 'Hallit koottiin 1930-luvulla osin saksalaisten zeppelinien suojista. Tori on Euroopan suurimpia, ja siellä myydään kalaa, leipää ja kotimaisia vihanneksia.',
+      hint: 'Rakennukset suojasivat aiemmin ilmassa liikkuvia jättiläisiä.',
+    },
+    {
+      q: 'Millainen kieli latvia on?',
+      options: [
+        'balttilainen kieli, joita on elossa vain kaksi',
+        'slaavilainen kieli',
+        'suomalais-ugrilainen kieli',
+        'germaaninen kieli',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Latvia ja liettua ovat ainoat elossa olevat balttilaiset kielet. Ne ovat indoeurooppalaisia mutta eivät slaavilaisia, ja ne ovat säilyttäneet vanhoja piirteitä.',
+      hint: 'Naapurimaan kieli on sen ainoa läheinen sukulainen.',
     },
   ],
 
@@ -830,6 +1371,26 @@ export const EUROPE_QUESTIONS = {
       fact: 'Puola-Liettuan valtio oli aikansa suurimpia Euroopassa ja ulottui Itämereltä lähes Mustallemerelle.',
       hint: 'Nimi yhdistää kaksi maata viivalla.',
     },
+    {
+      q: 'Mikä Vilnan kaupunginosa julistautui leikkimielisesti omaksi tasavallakseen?',
+      options: ['Užupis', 'Montmartre', 'Kreuzberg', 'Trastevere'],
+      correct: 0,
+      fact: 'Taiteilijoiden asuttama kaupunginosa julisti 1997 oman "tasavaltansa", jonka perustuslaki on kirjoitettu seinään usealla kielellä. Kyse on leikistä, ei valtiosta.',
+      hint: 'Alueen perustuslaki on kirjoitettu seinään monella kielellä.',
+    },
+    {
+      q: 'Millä nimellä Vilnaa kutsuttiin sen juutalaisen oppineisuuden vuoksi?',
+      options: [
+        'Pohjolan Jerusalemiksi',
+        'Idän Roomaksi',
+        'Baltian Venetsiaksi',
+        'Pikku Pariisiksi',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kaupunki oli vuosisatoja juutalaisen oppineisuuden keskus. Yhteisö tuhoutui lähes kokonaan toisessa maailmansodassa, ja sen historiaa kerrotaan nykyään museoissa ja muistomerkeissä.',
+      hint: 'Lempinimi vertasi kaupunkia toiseen pyhään kaupunkiin kauempana etelässä.',
+    },
   ],
 
   tukholma: [
@@ -855,6 +1416,21 @@ export const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Laiva kaatui neitsytmatkallaan 1628 ja nostettiin merestä 1961 poikkeuksellisen hyvin säilyneenä.',
       hint: 'Nimi on sama kuin Ruotsin vanhan kuningassuvun.',
+    },
+    {
+      q: 'Mikä on Tukholman vanhankaupungin nimi?',
+      options: ['Gamla stan', 'Södermalm', 'Kungsholmen', 'Djurgården'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunginosa on 1200-luvulta, ja sen kujat ovat kapeimmillaan alle metrin levyisiä. Siellä ovat kuninkaanlinna ja Suurkirkko.',
+      hint: 'Nimi tarkoittaa ruotsiksi vanhaa kaupunkia.',
+    },
+    {
+      q: 'Kuinka monta saarta ja luotoa Tukholman saaristossa on?',
+      options: ['noin 30 000', 'noin 300', 'noin kolme', 'ei yhtään'],
+      correct: 0,
+      fact: 'Saaristo ulottuu kaupungista avomerelle asti. Saarten välillä liikennöivät lautat ja vanhat höyrylaivat, ja monilla saarilla on kesämökkejä.',
+      hint: 'Määrä on kymmeniätuhansia.',
     },
   ],
 
@@ -886,6 +1462,21 @@ export const EUROPE_QUESTIONS = {
       fact: 'Alfred Nobel määräsi testamentissaan, että tämän palkinnon jakaa norjalainen komitea muiden jäädessä Ruotsiin.',
       hint: 'Palkinto liittyy sotien lopettamiseen.',
     },
+    {
+      q: 'Kuka norjalainen tutkija purjehti Tyynenmeren yli balsalautalla vuonna 1947?',
+      options: ['Thor Heyerdahl', 'Roald Amundsen', 'Fridtjof Nansen', 'Erik Punainen'],
+      correct: 0,
+      level: 3,
+      fact: 'Kon-Tiki-lautta purjehti Perusta Polynesiaan 101 päivässä. Lautta on esillä Oslon museossa, ja matkasta tehty elokuva sai Oscarin.',
+      hint: 'Hänen lauttansa nimi on nykyään museon nimi.',
+    },
+    {
+      q: 'Mikä polaarilaiva on esillä Oslossa?',
+      options: ['Fram', 'Vasa', 'Mary Rose', 'Endeavour'],
+      correct: 0,
+      fact: 'Laiva vei Fridtjof Nansenin pohjoiseen jäihin ja Roald Amundsenin etelänavan retkelle. Sen runko rakennettiin pyöreäksi, jotta jää nostaisi laivan puristuksen sijaan.',
+      hint: 'Nimi tarkoittaa norjaksi eteenpäin.',
+    },
   ],
 
   kobenhavn: [
@@ -911,6 +1502,21 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Kaupungissa on satoja kilometrejä pyöräteitä, ja suuri osa asukkaista kulkee töihin niitä pitkin.',
       hint: 'Kulkuvälineessä on kaksi rengasta ja polkimet.',
+    },
+    {
+      q: 'Mikä Kööpenhaminan huvipuisto avattiin jo vuonna 1843?',
+      options: ['Tivoli', 'Liseberg', 'Prater', 'Linnanmäki'],
+      correct: 0,
+      level: 3,
+      fact: 'Puisto on maailman vanhimpia yhä toimivia huvipuistoja. Sen puutarhat ja lyhdyt tekivät vaikutuksen Walt Disneyhin, joka kävi siellä ennen omien puistojensa suunnittelua.',
+      hint: 'Puisto on yksi maailman vanhimmista yhä toimivista.',
+    },
+    {
+      q: 'Mikä yhteys johtaa Kööpenhaminasta Ruotsin Malmöön?',
+      options: ['Juutinrauman silta ja tunneli', 'lautta ainoastaan', 'Suuri Belt -silta', 'köysirata'],
+      correct: 0,
+      fact: 'Yhteys avattiin vuonna 2000. Silta johtaa tekosaarelle, josta matka jatkuu tunnelina meren alla, jotta lentokoneiden laskeutuminen ei häiriinny.',
+      hint: 'Matka jatkuu tekosaarelta meren alle.',
     },
   ],
 
@@ -941,6 +1547,21 @@ export const EUROPE_QUESTIONS = {
       correct: 0,
       fact: 'Napapiirin pohjoispuolella aurinko pysyy talvella horisontin alapuolella useita viikkoja.',
       hint: 'Ilmiö on kesän valoisan ajan vastakohta.',
+    },
+    {
+      q: 'Mikä on Suomen korkein tunturi?',
+      options: ['Halti', 'Ylläs', 'Levi', 'Saana'],
+      correct: 0,
+      level: 3,
+      fact: 'Suomen korkein kohta on 1 324 metriä tunturin rinteellä; itse laki on Norjan puolella rajaa. Sinne kävellään useamman päivän vaelluksella.',
+      hint: 'Korkein kohta on aivan Norjan rajalla.',
+    },
+    {
+      q: 'Kuinka monta saamen kieltä Suomessa käytetään?',
+      options: ['kolme', 'yksi', 'kuusi', 'ei yhtään'],
+      correct: 0,
+      fact: 'Suomessa käytetään pohjoissaamea, inarinsaamea ja koltansaamea. Kaikilla on oma kirjakieli, opetusta ja omat sanansa lumesta ja poroista.',
+      hint: 'Kieliä on enemmän kuin yksi mutta alle viisi.',
     },
   ],
 
@@ -976,6 +1597,31 @@ export const EUROPE_QUESTIONS = {
       level: 1,
       fact: 'Napapiirin pohjoispuolella aurinko pysyy keskikesällä horisontin yläpuolella vuorokauden ympäri.',
       hint: 'Ilmiö on kaamoksen vastakohta.',
+    },
+    {
+      q: 'Mikä kolmiomainen kirkko on Tromssan maamerkki?',
+      options: [
+        'Jäämeren katedraali',
+        'Nidarosin tuomiokirkko',
+        'Uspenskin katedraali',
+        'Riian tuomiokirkko',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Vuonna 1965 valmistunut kirkko muistuttaa jäävuorta tai telttaa. Sen päätyseinä on yhtä suurta lasimaalausta, ja kirkko näkyy sillan takaa kaupunkiin.',
+      hint: 'Kirkon muoto muistuttaa jäävuorta tai telttaa.',
+    },
+    {
+      q: 'Mitä Tromssan yliopistossa tutkitaan erityisesti?',
+      options: [
+        'arktista luontoa ja revontulia',
+        'aavikoiden kasveja',
+        'trooppisia sairauksia',
+        'viininviljelyä',
+      ],
+      correct: 0,
+      fact: 'Yliopisto on maailman pohjoisimpia. Siellä tutkitaan merta, jäätä ja revontulia, ja kaupunkia on kutsuttu Pohjolan Pariisiksi vilkkaan elämänsä vuoksi.',
+      hint: 'Tutkimusala seuraa suoraan kaupungin sijainnista.',
     },
   ],
 
