@@ -45,6 +45,7 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
+const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 
 // Tapahtumakuplien äänet.
 const EVENT_SOUND = { fare: 'ferry', flight: 'flight', aid: 'coin', stuck: 'stuck' };
@@ -131,6 +132,8 @@ export class UI {
 
     this.mapPane = this.svg.parentElement;
     this.busy = false;
+    this.travelExpanded = false; // matkavalinnan toinen vaihe auki
+    this.autoRollTimer = null;
     this.movingPlayerId = null;
     this.revealShownFor = null;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -217,6 +220,7 @@ export class UI {
 
   destroy() {
     clearTimeout(this.botTimer);
+    clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
     for (const timer of Object.values(this.typeTimers ?? {})) clearInterval(timer);
     this.stopQuizTimer();
@@ -687,38 +691,75 @@ export class UI {
     }
 
     if (game.phase === 'roll') {
+      // Kun matkustustapa valittiin automaattisesti, ei ole valittavaa eikä
+      // mihin palata: noppa pyörähtää itsestään.
+      if (game.autoTravel) {
+        this.turnStatus.textContent = `${TRAVEL_LABEL[game.travelMode]} — noppa pyörähtää.`;
+        this.autoRoll();
+        return;
+      }
       this.turnStatus.textContent = `${TRAVEL_LABEL[game.travelMode]} — heitä noppa.`;
       const rollBtn = html('button', 'primary', '🎲 Heitä noppa');
       rollBtn.addEventListener('click', () => this.doRoll());
       this.actionsEl.appendChild(rollBtn);
 
-      // Kun matkustustapa valittiin automaattisesti, ei ole mihin palata.
-      if (!game.autoTravel) {
-        const backBtn = html('button', '', '↩ Vaihda matkustustapa');
-        backBtn.addEventListener('click', () => this.doAction(() => game.actionCancelTravel()));
-        this.actionsEl.appendChild(backBtn);
+      const backBtn = html('button', '', '↩ Vaihda matkustustapa');
+      backBtn.addEventListener('click', () => this.doAction(() => game.actionCancelTravel()));
+      this.actionsEl.appendChild(backBtn);
+      return;
+    }
+
+    // Vaihe 'action': matkustustavan valinta. Näytöllä pidetään kerrallaan
+    // vain kourallinen nappeja — laivat, lennot ja portit odottavat
+    // toisen vaiheen takana.
+    this.renderTravelChoice(modes);
+  }
+
+  /**
+   * Matkustustavan valinta kahdessa vaiheessa. Vaihe A: jalan, "laiva &
+   * lento…" ja aarrekaupungin kysymys. Vaihe B (`travelExpanded`): kaikki
+   * maksulliset ja laudalta toiselle vievät vaihtoehdot.
+   */
+  renderTravelChoice(modes) {
+    const { game } = this;
+    const flights = game.airportDestinations();
+    const gateways = game.gatewayOptions();
+    const countryGates = game.countryGateOptions();
+    const hasSlow = modes.includes('sea') || flights.length > 0
+      || gateways.length > 0 || countryGates.length > 0;
+
+    if (!this.travelExpanded) {
+      this.turnStatus.textContent = 'Valitse matkustustapa.';
+
+      if (modes.includes('land')) {
+        const landBtn = html('button', modes.includes('stay') ? '' : 'primary', '🥾 Jalan');
+        landBtn.addEventListener('click', () => this.doWalk());
+        this.actionsEl.appendChild(landBtn);
+      }
+
+      if (hasSlow) {
+        const moreBtn = html('button', '', '⛵✈ Laiva & lento…');
+        moreBtn.addEventListener('click', () => {
+          this.travelExpanded = true;
+          this.render();
+        });
+        this.actionsEl.appendChild(moreBtn);
+      }
+
+      if (modes.includes('stay')) {
+        const stayBtn = html('button', 'primary', '❓ Vastaa kysymykseen');
+        stayBtn.addEventListener('click', () => {
+          sfx.play('paper');
+          this.doAction(() => game.actionTravel('stay'));
+        });
+        this.actionsEl.appendChild(stayBtn);
+        this.addHardQuizButton(game.cityOf());
       }
       return;
     }
 
-    // Vaihe 'action': matkustustavan valinta.
-    this.turnStatus.textContent = 'Valitse matkustustapa.';
-
-    if (modes.includes('stay')) {
-      const stayBtn = html('button', 'primary', '❓ Jää paikalleen ja vastaa');
-      stayBtn.addEventListener('click', () => {
-        sfx.play('paper');
-        this.doAction(() => game.actionTravel('stay'));
-      });
-      this.actionsEl.appendChild(stayBtn);
-      this.addHardQuizButton(game.cityOf());
-    }
-
-    if (modes.includes('land')) {
-      const landBtn = html('button', modes.includes('stay') ? '' : 'primary', '🥾 Maitse');
-      landBtn.addEventListener('click', () => this.doAction(() => game.actionTravel('land')));
-      this.actionsEl.appendChild(landBtn);
-    }
+    // Vaihe B.
+    this.turnStatus.textContent = 'Laivalla, lentäen vai portin kautta?';
 
     if (modes.includes('sea')) {
       const seaBtn = html('button', '', `⛵ Laivalla (${SEA_FARE} p)`);
@@ -729,7 +770,7 @@ export class UI {
       this.actionsEl.appendChild(seaBtn);
     }
 
-    for (const dest of game.airportDestinations()) {
+    for (const dest of flights) {
       const city = game.board.cityById.get(dest);
       const flyBtn = html('button', '', `✈ Lennä: ${city.name} (${FLIGHT_PRICE} p)`);
       flyBtn.addEventListener('click', () => this.doFly(dest));
@@ -737,7 +778,7 @@ export class UI {
     }
 
     // Vaelluksessa porttikaupungeista jatketaan toisille laudoille.
-    for (const link of game.gatewayOptions()) {
+    for (const link of gateways) {
       const gwBtn = html('button', '', `🧭 ${link.label}`);
       gwBtn.addEventListener('click', () => {
         sfx.play('flight');
@@ -747,7 +788,7 @@ export class UI {
     }
 
     // Tietoportti: maan lauta aukeaa pääkaupungista vaikealla kysymyksellä.
-    for (const gate of game.countryGateOptions()) {
+    for (const gate of countryGates) {
       const gateBtn = html('button', '', `★ ${gate.label} — vaikea kysymys`);
       gateBtn.addEventListener('click', () => {
         sfx.play('paper');
@@ -755,6 +796,38 @@ export class UI {
       });
       this.actionsEl.appendChild(gateBtn);
     }
+
+    const backBtn = html('button', '', '↩ Takaisin');
+    backBtn.addEventListener('click', () => {
+      this.travelExpanded = false;
+      this.render();
+    });
+    this.actionsEl.appendChild(backBtn);
+  }
+
+  /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
+  doWalk() {
+    const { game } = this;
+    this.run(
+      () => {
+        const chosen = game.actionTravel('land');
+        return chosen.ok ? game.actionRoll() : chosen;
+      },
+      { after: (result) => this.animateDie(result.die) },
+    );
+  }
+
+  /**
+   * Heittää nopan ilman painallusta. Sallittu vain kun matkustustapa
+   * valikoitui itsestään — muuten pelaaja saa aina painaa itse.
+   */
+  autoRoll() {
+    if (this.busy || this.autoRollTimer) return;
+    this.autoRollTimer = setTimeout(() => {
+      this.autoRollTimer = null;
+      const { game } = this;
+      if (game.phase === 'roll' && game.autoTravel && !game.player.isBot) this.doRoll();
+    }, AUTO_ROLL_MS);
   }
 
   /** Vaikean kysymyksen nappi, jos kaupungin pakassa on vaikeita kysymyksiä. */
@@ -862,6 +935,9 @@ export class UI {
     // Aloituskartalla asettelu on kahdessa palstassa; pelin käynnistyttyä
     // kartta täyttää koko ruudun ja paneelit kelluvat sen päällä.
     document.body.dataset.mode = this.game.phase === 'pickstart' ? 'start' : 'play';
+    // Matkavalinnan toinen vaihe koskee vain käsillä olevaa valintaa: heti
+    // kun vaihe vaihtuu, ollaan taas seuraavan vuoron ensimmäisessä vaiheessa.
+    if (this.game.phase !== 'action') this.travelExpanded = false;
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
     this.drawTokens();

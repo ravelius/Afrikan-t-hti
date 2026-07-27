@@ -388,6 +388,34 @@ test('kesken reitin ei saa kääntyä takaisin', () => {
   assert.equal(moves.get('c:tripoli').path.length, 2);
 });
 
+// Käyttöliittymän "Jalan"-nappi tekee molemmat askeleet yhdellä painalluksella
+// ja reitin varrella noppa pyörähtää itsestään. Kumpikin nojaa siihen, että
+// moottorissa nämä kaksi kutsua saa ketjuttaa peräkkäin.
+test('maavalinnan ja nopanheiton saa ketjuttaa yhdellä painalluksella', () => {
+  const game = newGame(9);
+  const chosen = game.actionTravel('land');
+  assert.ok(chosen.ok);
+  assert.equal(game.phase, 'roll');
+  assert.equal(game.autoTravel, false, 'Tangerissa on muitakin tapoja');
+
+  const rolled = game.actionRoll();
+  assert.ok(rolled.ok);
+  assert.ok(rolled.die >= 1 && rolled.die <= 6);
+  assert.equal(game.phase, 'move');
+});
+
+test('kesken reittiä matkustustapa lukittuu ja valitaan automaattisesti', () => {
+  const game = newGame(11);
+  game.player.pos = { type: 'edge', edge: 'tanger|tripoli', idx: 2, from: 'tanger' };
+  assert.deepEqual(game.travelModes(), ['land'], 'reitin varrella ei ole valinnanvaraa');
+
+  game.beginTurn();
+  assert.equal(game.autoTravel, true);
+  assert.equal(game.travelMode, 'land');
+  assert.equal(game.phase, 'roll', 'matkustustapa on jo valittu puolesta');
+  assert.equal(game.actionCancelTravel().ok, false, 'automaattivalintaa ei peruta');
+});
+
 test('saarelta pääsee vain laivalla ja vain jos rahat riittävät', () => {
   const game = newGame();
   game.player.pos = { type: 'city', city: 'sansibar' };
