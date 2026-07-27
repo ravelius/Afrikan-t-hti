@@ -8,7 +8,7 @@ tarkistavat automaattisesti, että lisäys on ehjä.
 
 ## Helpoin tapa: lisää kysymyksiä tai tietoja
 
-Kysymykset ja "Tiesitkö että…" -tiedot ovat tavallisissa JavaScript-tiedostoissa:
+Kysymykset ja paikkatiedot ovat tavallisissa JavaScript-tiedostoissa:
 
 - `js/packs/africa-questions.js` — Afrikan lauta
 - `js/packs/europe-questions.js` — Euroopan lauta
@@ -41,7 +41,7 @@ vaihtoehtoa ja `fact`, mutta ei vihjettä — helpotukset hoitaa rosvo.
 ### Lähde
 
 Periaate 2 sanoo, että jokainen pelin väittämä on tarkistettavissa. Siksi
-kysymykseen, kaksintaisteluun ja Tiesitkö että -tietoon voi liittää `source`-
+kysymykseen, kaksintaisteluun ja paikkatietoon voi liittää `source`-
 kentän. Se näkyy pelaajalle vastauksen jälkeen pienenä "Lähde:" -rivinä.
 
 ```js
@@ -54,7 +54,7 @@ Verkko-osoitteesta näytetään pelkkä palvelimen nimi (`britannica.com`) ja si
 tulee linkki; sanallinen viite näytetään sellaisenaan. Vain `http`- ja
 `https`-osoitteet kelpaavat.
 
-Tiesitkö että -tieto on joko pelkkä merkkijono tai teksti lähteineen — vanha
+Paikkatieto on joko pelkkä merkkijono tai teksti lähteineen — vanha
 muoto kelpaa yhä sellaisenaan:
 
 ```js
@@ -122,7 +122,7 @@ Vaiheet:
    nimet piirtyvät pienempinä ja maastoon tulee kortteleita (malli:
    `js/packs/istanbul.js`).
 6. **Kirjoita sisältö:** vähintään 2 kysymystä joka aarrekaupungille, vähintään
-   10 yleiskysymystä ja vähintään 2 "Tiesitkö että…" -tietoa joka kaupungille.
+   10 yleiskysymystä ja vähintään 2 paikkatietoa joka kaupungille.
 7. **Linkitä lauta maailmaan.** Kaupungille voi antaa `links`-listan, joka
    yhdistää sen toisen laudan kaupunkiin (esim. Kairo on sekä Afrikan että
    Lähi-idän laudalla, ja Lähi-idän Istanbulista laskeudutaan Istanbulin

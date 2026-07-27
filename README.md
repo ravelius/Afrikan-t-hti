@@ -1,7 +1,7 @@
-# Maailman tähdet ★
+# Matkakirja ★
 
 Selaimessa pelattava seikkailupeli, jonka innoittajana on klassinen Afrikan tähti
--lautapeli. Maailman tähdet on itsenäinen, avoin harrastusprojekti, jolla ei ole
+-lautapeli. Matkakirja on itsenäinen, avoin harrastusprojekti, jolla ei ole
 yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja
 JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
 maantieteestä kiinnostavasti.
@@ -63,9 +63,9 @@ maantieteestä kiinnostavasti.
 - Yli 720 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
   kysymyksensä + laudan yleinen varapakka. Pelaajakohtainen tasovalinta
   (esim. lapsille helpot) ja vaikeasta kysymyksestä 100 punnan bonus
-- Suomenkielinen käyttöliittymä ja "Tiesitkö että…" -tietoruutu, joka kertoo
-  vuorossa olevan pelaajan sijainnista — yli 660 tietoa, vähintään kaksi
-  jokaisesta kaupungista
+- Suomenkielinen käyttöliittymä ja tietoruutu, jossa puhuu vuorotellen kaksi
+  ääntä: isoisän päiväkirja vuodelta 1873 ja nuoren herran nykyhavainto —
+  yli 660 tietoa, vähintään kaksi jokaisesta kaupungista
 - Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
   kompassiruusu, aallot ja maaston merkit — myös kysymyslaatikot ovat samaa
   pergamenttia käsin piirrettyine katkoviivoineen
@@ -159,9 +159,16 @@ Sama kysymys ei toistu ennen kuin pakka on käyty läpi.
 
 **Lentoreitit** näkyvät kartalla haalean punaisina pistekatkoviivoina.
 
-**Tiesitkö että…** Ohjauspaneelissa näkyy tietoa siitä paikasta, jossa vuorossa oleva
-pelaaja on. Reitin varrella näytetään lähempänä olevan kaupungin tieto, ja tieto
-vaihtuu kierroksittain.
+**Kaksi ääntä.** Ohjauspaneelissa näkyy tietoa siitä paikasta, jossa vuorossa oleva
+pelaaja on, ja siinä puhuu vuorotellen isoisän päiväkirja ja nuoren herran havainto.
+Reitin varrella näytetään lähempänä olevan kaupungin tieto, ja tieto vaihtuu
+kierroksittain. Harvakseltaan päiväkirjasta löytyy taitettu sivu, joka vihjaa laudan
+pääaarteen suunnasta nimeämättä kaupunkia.
+
+**Kokemuspisteet ja passi.** Pisteitä kertyy matkasta: uusi kaupunki 10, uusi lauta 50,
+oikea vastaus vaikeaan kysymykseen 25 ja laudan pääaarre 100. Paneelin tietoprosentti
+kertoo, kuinka moneen kysymykseen on vastannut oikein. Vihreä passi saa leiman
+jokaisesta laudasta, jolla on käynyt — leimat säilyvät pelikertojen yli.
 
 **Rahan käyttö.** Rahalla ei voi ostaa aarteita, vaan sitä tarvitaan matkustamiseen ja
 vihjeisiin: 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa kysymyksestä kaksi
