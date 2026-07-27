@@ -1154,7 +1154,10 @@ export class UI {
     this.introShown = true;
     // Avausteksti kirjoittuu selvästi hitaammin kuin muut: se on matkan
     // ensimmäinen hetki eikä pelitilanteen ilmoitus.
-    this.typeText(this.introText, INTRO_TEXT, 'intro', () => this.fitIntro(), INTRO_TYPE_MS);
+    this.typeText(this.introText, INTRO_TEXT, 'intro', null, INTRO_TYPE_MS);
+    // Koko teksti on jo paikallaan, joten koon voi sovittaa heti — sen
+    // jälkeen mikään ei enää liiku kirjoituksen aikana.
+    this.fitIntro();
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
@@ -1652,22 +1655,47 @@ export class UI {
    * kirjoituksen, jotta tekstit eivät sekoitu keskenään. Liikkeen
    * vähennystä toivovalle teksti ilmestyy kerralla.
    */
+  /**
+   * Kirjoituskoneteksti. Koko teksti on alusta asti paikallaan, mutta
+   * kirjoittamaton osa on näkymätöntä: se varaa tilansa, joten rivitys ei
+   * muutu kesken kirjoituksen eikä jo luettu teksti hyppää paikaltaan.
+   * Aiemmin sanat lisättiin yksi kerrallaan, jolloin koko kappale latoutui
+   * uudelleen joka sanalla.
+   */
   typeText(target, text, slot = 'fact', done = null, speed = TYPE_MS) {
     this.typeTimers ??= {};
     clearInterval(this.typeTimers[slot]);
+    const full = String(text);
     if (this.reducedMotion) {
-      target.textContent = text;
+      target.textContent = full;
       done?.();
       return;
     }
-    const words = String(text).split(' ');
-    let shown = 0;
+
     target.textContent = '';
+    const kirjoitettu = html('span', 'typed');
+    const tuleva = html('span', 'pending');
+    target.appendChild(kirjoitettu);
+    target.appendChild(tuleva);
+
+    const words = full.split(' ');
+    let shown = 0;
+    const piirra = () => {
+      kirjoitettu.textContent = words.slice(0, shown).join(' ');
+      tuleva.textContent = shown < words.length
+        ? (shown ? ' ' : '') + words.slice(shown).join(' ')
+        : '';
+    };
+    piirra();
+
     this.typeTimers[slot] = setInterval(() => {
       shown++;
-      target.textContent = words.slice(0, shown).join(' ');
+      piirra();
       if (shown >= words.length) {
         clearInterval(this.typeTimers[slot]);
+        // Lopuksi pelkkä teksti, jotta perään lisättävä lähderivi asettuu
+        // luontevasti eikä jää näkymättömän jäänteen taakse.
+        target.textContent = full;
         done?.();
       }
     }, speed);
