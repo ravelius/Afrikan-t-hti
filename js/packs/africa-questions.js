@@ -29,12 +29,12 @@ export const AFRICA_QUESTIONS = {
       hint: 'Samaa kieltä puhutaan myös Kairossa.',
     },
     {
-      q: 'Millä mantereella Tripoli sijaitsee?',
-      options: ['Afrikassa', 'Aasiassa', 'Euroopassa', 'Etelä-Amerikassa'],
+      q: 'Mistä Libya saa suurimman osan vientituloistaan?',
+      options: ['öljystä', 'kahvista', 'puuvillasta', 'matkailusta'],
       correct: 0,
       level: 1,
-      fact: 'Tripoli on Afrikan pohjoisrannikolla. Välimeri erottaa sen Euroopasta, ja Maltalle on sieltä lyhyempi matka kuin moneen Afrikan pääkaupunkiin.',
-      hint: 'Sama manner kuin Saharalla ja Kilimandžarolla.',
+      fact: 'Libyan öljyvarat ovat Afrikan suurimmat, ja vienti kulkee Tripolin ja muiden rannikkokaupunkien satamien kautta.',
+      hint: 'Sama vientituote hallitsee Persianlahden maiden taloutta.',
     },
     {
       q: 'Minkä roomalaisajan kaupungin rauniot Tripolin lähellä ovat maailmanperintökohde?',
@@ -1395,20 +1395,19 @@ export const AFRICA_QUESTIONS = {
       hint: 'Salmen eteläpuolella on Marokko.',
     },
     {
-      q: 'Mikä on maailman nopein maaeläin?',
-      options: ['gepardi', 'leijona', 'antilooppi', 'strutsi'],
+      q: 'Mikä on Egyptin pääkaupunki?',
+      options: ['Kairo', 'Aleksandria', 'Luxor', 'Assuan'],
       correct: 0,
       level: 1,
-      fact: 'Gepardi kiihtyy hetkellisesti yli 100 kilometriin tunnissa.',
-      hint: 'Sillä on pilkullinen turkki ja kyynelviiru silmien alla.',
+      fact: 'Kairo on koko Afrikan suurimpia kaupunkeja: suurkaupunkialueella asuu yli 20 miljoonaa ihmistä.',
+      hint: 'Kaupunki sijaitsee Niilin varrella lähellä suistoa.',
     },
     {
-      q: 'Mikä on maailman suurin kädellinen?',
-      options: ['orangutan', 'gorilla', 'simpanssi', 'paviaani'],
-      correct: 1,
-      level: 1,
-      fact: 'Urosgorilla voi painaa yli 200 kiloa.',
-      hint: 'Se elää vuoristosademetsissä.',
+      q: 'Mikä Afrikan maa tuottaa eniten kaakaota maailmassa?',
+      options: ['Norsunluurannikko', 'Ghana', 'Etiopia', 'Kenia'],
+      correct: 0,
+      fact: 'Norsunluurannikko tuottaa noin 40 prosenttia maailman kaakaosta; naapuri Ghana on kakkonen. Suklaalevyn tie alkaa siis useimmiten Guineanlahden rannikolta.',
+      hint: 'Maa on saanut nimensä kauppatavarasta, jota rannikolta aikoinaan vietiin.',
     },
     {
       q: 'Mikä valtameri sijaitsee Afrikasta itään?',
@@ -1472,12 +1471,17 @@ export const AFRICA_QUESTIONS = {
       hint: 'Sana safari on peräisin tästä kielestä.',
     },
     {
-      q: 'Millä eläimellä on maailman pisin kaula?',
-      options: ['strutsilla', 'kirahvilla', 'flamingolla', 'kamelilla'],
-      correct: 1,
-      level: 1,
-      fact: 'Kirahvin kaulassa on silti vain seitsemän nikamaa, kuten ihmisellä.',
-      hint: 'Se syö mieluiten puiden latvoista.',
+      q: 'Missä kokouksessa Euroopan vallat sopivat Afrikan jakamisesta siirtomaihin 1884–85?',
+      options: [
+        'Berliinin konferenssissa',
+        'Wienin kongressissa',
+        'Pariisin rauhankonferenssissa',
+        'Jaltan konferenssissa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Berliinin konferenssissa 1884–85 Euroopan vallat piirsivät Afrikan rajat neuvottelupöydässä — yhtään afrikkalaista ei ollut paikalla. Suoria viivoja näkyy kartalla yhä.',
+      hint: 'Kokous pidettiin Saksan pääkaupungissa.',
     },
   ],
 };
@@ -1488,16 +1492,16 @@ export const AFRICA_QUESTIONS = {
  */
 export const AFRICA_FACTS = {
   tanger: [
-    'Tanger on ollut satamakaupunki jo foinikialaisten ajoista. Gibraltarin salmi erottaa sen Espanjasta vain noin 14 kilometrin levyisenä.',
-    'Tangeria hallittiin vuosina 1923–1956 kansainvälisenä vyöhykkeenä, jota useat maat valvoivat yhdessä.',
+    'Lautta Espanjasta kesti reilun puolituntisen, ja silti vaihtui manner ja kieli. Medinan kujilla eksyin sadan metrin matkalla kahdesti — molemmilla kerroilla samaan minttuteepöytään.',
+    'Valkoiset talot nousevat rinnettä kuin katsomo, ja ylhäältä näkyy kahden meren raja: Atlantti ja Välimeri kohtaavat juuri tässä.',
     {
       text: 'Salmen yli näkee Espanjaan selkeällä säällä, ja silti tämä on toinen maanosa. Kaksi maanosaa katsoo toisiaan neljäntoista kilometrin päästä eikä kumpikaan ole toistaan vanhempi.',
       voice: 'isoisa',
     },
   ],
   kairo: [
-    'Kairo on Afrikan väkirikkaimpia kaupunkeja. Sen laidalla Gizassa seisovat yli 4 500 vuotta vanhat pyramidit.',
-    'Kaupungin halki virtaa Niili, yksi maailman pisimmistä joista.',
+    'Pyramidit eivät seiso keskellä aavikkoa vaan kaupungin laidalla: kadun päästä näkyy neljä ja puoli tuhatta vuotta historiaa, ja sen edessä on pysäköintialue.',
+    'Liikenteessä äänitorvi ei ole varoitus vaan keskustelua. Niili virtaa kaiken keskellä tyynenä, kuin ei olisi huomannut rannoilleen kasvanutta kahdenkymmenen miljoonan ihmisen kaupunkia.',
     {
       text: 'Basaarissa neuvoteltiin hinnasta kolme kuppia teetä, ja häviön kärsin minä. Pyramidit olivat vanhoja jo silloin, kun Rooma oli kylä — tämän kirjoitan muistiin, jotta en kotona väittäisi mitään muuta.',
       voice: 'isoisa',
@@ -1528,8 +1532,8 @@ export const AFRICA_FACTS = {
     },
   ],
   sahara: [
-    'Sahara on maailman laajin kuuma autiomaa — melkein Yhdysvaltojen kokoinen.',
-    'Sahara oli muutama tuhat vuotta sitten vehreä savanni. Kalliomaalaukset kertovat yhä siellä laiduntaneesta karjasta.',
+    'Palelin yöllä ensimmäistä kertaa koko matkalla: auringonlaskun jälkeen lämpötila putosi kymmeniä asteita, ja opas ojensi villahuovan sanaakaan sanomatta.',
+    'Vain noin neljäsosa Saharasta on hiekkadyynejä — loput kivikkoa, soraa ja vuoria. Opas kaatoi teetä kolmannen kerran, sillä kolme lasillista kuuluu asiaan, ja katsoi karttaani hyväntahtoisesti.',
     {
       text: 'Päivällä helle halkeilee, yöllä tarvitsen kaksi peittoa. Kallioon on piirretty karjaa ja metsästäjiä — joku on siis paimentanut lehmiä siellä, missä minä en löydä vettä.',
       voice: 'isoisa',
@@ -1544,8 +1548,8 @@ export const AFRICA_FACTS = {
     },
   ],
   timbuktu: [
-    'Timbuktu oli keskiajalla oppineisuuden keskus, jonka kirjastoissa säilytettiin kymmeniätuhansia käsikirjoituksia.',
-    'Kaupunki rikastui suolan ja kullan vaihdannasta Saharan karavaanireittien varrella.',
+    'Kadut ovat hiekkaa, ja aamulla niistä lukee yön tapahtumat: vuohien sorkanjäljet, moottoripyörän ura, lakaisijan viuhka. Puoleenpäivään mennessä tuuli on pyyhkinyt sivun tyhjäksi.',
+    'Vuonna 2012 kaupungin keskiaikaisia käsikirjoituksia pelastettiin sodan alta veneillä Nigeriä pitkin etelään — kirjastonhoitajat salakuljettivat ne itse, arkku kerrallaan.',
     {
       text: 'Klubilla kaupungin nimeä käytetään tarkoittamaan paikkaa, jota ei ole. Täällä on kirjastoja, joissa on käsikirjoituksia tähtitieteestä ja laista — enemmän kirjoja kuin monessa englantilaisessa pikkukaupungissa.',
       voice: 'isoisa',
@@ -1560,8 +1564,8 @@ export const AFRICA_FACTS = {
     },
   ],
   dakar: [
-    'Dakar sijaitsee Cap-Vertin niemimaalla, Afrikan mantereen läntisimmässä kärjessä.',
-    'Dakarin edustalla on Goréen saari, josta lähti orjalaivoja. Saari on nykyään maailmanperintökohde.',
+    'Illalla koko rantabulevardi lähtee liikkeelle: satoja lenkkeilijöitä, ja punttisali suoraan hiekalla Atlantin äärellä. Tämä on mantereen läntisin kärki — pidemmälle länteen pääsee vain uimalla.',
+    'Goréen lautalla koululaiset lauloivat koko kahdenkymmenen minuutin matkan. Saarella on ovi, joka avautuu suoraan merelle, eikä sen kynnyksellä laula kukaan.',
     {
       text: 'Tästä läntisimmästä kärjestä on Amerikkaan lyhyempi matka kuin kotiin Lontooseen. Edustan pikkusaarelta lähti laivoja, joiden lastina oli ihmisiä. Sen laivauksen järjesti minun maanosani, ei tämä.',
       voice: 'isoisa',
@@ -1616,8 +1620,8 @@ export const AFRICA_FACTS = {
     },
   ],
   kongo: [
-    'Kongojoki on virtaamaltaan maailman toiseksi suurin joki heti Amazonin jälkeen.',
-    'Kongon altaassa kasvaa maailman toiseksi laajin sademetsä.',
+    'Kinshasan ja Brazzavillen välissä joki on niin leveä, että kahden pääkaupungin väliä kuljetaan lautalla. Lähempänä toisiaan ei kahta pääkaupunkia maailmasta löydy.',
+    'Sademetsä ei ole hiljainen hetkeäkään: se sirisee, kopisee ja huutaa kerroksittain, ja sateen kuulee tulevan minuutteja ennen kuin ensimmäinen pisara osuu.',
     {
       text: 'Joen suulle pääsee laivalla, ylemmäs ei: koskia on niin paljon, että vesi kuuluu ennen kuin näkyy. Kartassani on tässä kohdassa tyhjä alue ja sana "tuntematon" — tuntematon meille, ei niille jotka siellä asuvat.',
       voice: 'isoisa',
@@ -1640,16 +1644,16 @@ export const AFRICA_FACTS = {
     },
   ],
   kapkaupunki: [
-    'Kapkaupungin yllä kohoaa Taffelivuori, jonka tasainen laki peittyy usein pilveen.',
-    'Kaupungin eteläpuolinen Hyväntoivonniemi oli tärkeä välietappi Euroopan ja Intian välisellä purjehdusreitillä.',
+    'Pöytävuoren köysiradan lattia pyörii hitaasti ympäri, jotta jokainen näkee kaiken. Ylhäällä pilvi valuu tasaisen laen yli kuin hidastettu vesiputous.',
+    'Hyväntoivonniemi ei olekaan Afrikan eteläisin kärki — eteläisin on Kap Agulhas idempänä. Purjehtijat pelkäsivät silti juuri tätä niemeä, ja "Myrskyjen niemi" sai toiveikkaamman nimensä jo 1400-luvulla, jotta reitille uskaltauduttaisiin.',
     {
       text: 'Pöydänmuotoisen vuoren juurella täydennämme vesitynnyrit, kuten kaikki Intiaan menevät ovat tehneet. Kaksi valtamerta kohtaa tässä, eikä kumpikaan kysy meiltä lupaa.',
       voice: 'isoisa',
     },
   ],
   kimberley: [
-    'Kimberleyn timanttilöytö 1870-luvulla sai aikaan valtavan kaivosryntäyksen.',
-    'Kaupungin Big Hole on käsin kaivettu kuoppa ja yksi maailman suurimmista.',
+    'Iso reikä on yhä siinä: puoli kilometriä leveä, kokonaan käsin kaivettu, ja pohjalla seisoo nykyään vihreä vesi. Katuvalot syttyivät täällä timanttirahalla jo 1882, ensimmäisenä koko eteläisellä pallonpuoliskolla.',
+    'Timantit nousivat maan uumenista pintaan tulivuorenpiipuissa, ja kivilaji sai nimensä tästä kaupungista: kimberliitti.',
     {
       text: 'Maahan on kaivettu lapioilla kuoppa, jonka pohjaa en näe. Tuhannet miehet nostavat maata köysillä, ja voiton laskee joku, joka ei ole koskaan seisonut reunalla. Kivet lähetetään Lontooseen.',
       voice: 'isoisa',
@@ -1672,16 +1676,16 @@ export const AFRICA_FACTS = {
     },
   ],
   sansibar: [
-    'Sansibar tunnettiin mausteistaan, erityisesti neilikasta.',
-    'Sansibarin ja Britannian välinen sota vuonna 1896 kesti alle tunnin ja on historian lyhin sota.',
+    'Stone Townin puuoviin on taottu messinkipiikkejä, jotka Intiassa torjuivat norsuja. Täällä norsuja ei ole koskaan ollut — piikit ovat alusta asti olleet pelkkää komeutta.',
+    'Freddie Mercury syntyi tällä saarella vuonna 1946, kun Sansibar oli vielä sulttaanikunta. Syntymätalo on nykyään pieni museo Stone Townin kujalla.',
     {
       text: 'Saari tuoksuu neilikalle kilometrien päähän, ja kivikaupungin ovet on veistetty kuvioille, joita en osaa lukea. Talot on rakennettu korallista ja tyyleissä näkyy Oman, Intia ja swahilirannikko — ei Eurooppa.',
       voice: 'isoisa',
     },
   ],
   kilimandzaro: [
-    'Kilimandžaro on Afrikan korkein vuori, 5 895 metriä. Sen huipulla on jäätiköitä aivan päiväntasaajan tuntumassa.',
-    'Kilimandžaro on tulivuori, joka kohoaa yksinään savannin keskeltä.',
+    'Huipulle ei tarvita köysiä eikä hakkuja, vain viikko aikaa ja hidas askel: reitti nousee sademetsästä nummen ja kivierämaan läpi jäätikölle. Opas sanoi tärkeimmän sanan heti portilla: pole pole — hitaasti, hitaasti.',
+    'Isoisän "ikuinen lumi" on kutistunut murto-osaan sadassa vuodessa, ja jäätiköiden arvioidaan katoavan lähivuosikymmeninä. Ikuisuus vaihtoi aikataulua.',
     {
       text: 'Kirjoitin Lontooseen, että päiväntasaajan tuntumassa on vuori, jonka huipulla on lunta ympäri vuoden. Vastaus tuli neljän kuukauden päästä: "Ei liene mahdollista." Lumi ei tiettävästi ole lukenut kirjettä.',
       voice: 'isoisa',
@@ -1728,8 +1732,8 @@ export const AFRICA_FACTS = {
     },
   ],
   addisabeba: [
-    'Addis Abeba on yksi maailman korkeimmalla sijaitsevista pääkaupungeista, noin 2 400 metrissä.',
-    'Nimi tarkoittaa amharaksi uutta kukkaa.',
+    'Hengästyin hotellin portaissa ja ehdin jo loukkaantua, kunnes muistin seisovani 2 400 metrin korkeudessa. Nimi tarkoittaa amharaksi uutta kukkaa.',
+    'Kahvi juodaan täällä seremoniassa, joka kestää tunnin ja alkaa siitä, että pavut paahdetaan pannulla vieraan nenän edessä. Kahvipensas on kotoisin juuri näiltä ylängöiltä, joten tunti tuntuu kohtuulliselta.',
     {
       text: 'Kahden ja puolen kilometrin korkeudessa on viileää päiväntasaajan lähelläkin, ja illalla tarvitsen takin. Tämä keisarikunta on säilyttänyt itsenäisyytensä, mikä hämmentää klubissani suuresti; minua se ei enää hämmennä.',
       voice: 'isoisa',

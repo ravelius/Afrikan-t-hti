@@ -40,13 +40,25 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Aloitustarina ja saapumiskortti: ✅ #40
 - Taustalaatikot pois kartan päältä: ✅ #44
 - Maailmankartta kahtena pallonpuoliskona + suora hyppy mantereelle: ✅ #45
+- Paketti 8 aloitettu: avausteksti, tyylipaletti, 11 kaupungin tekstit ja
+  neljä kysymyskorvausta (suunnittelusessio itse): ✅ — Opus jatkaa
+  paketin 8 loput.
 
-## Seuraavaksi (ei vielä sovittu)
+## Seuraavaksi: PAKETTI 8 (Afrikka ensin — tämä on työn alla NYT)
+
+Omistajan linjaus 27.7.2026: **työstetään pelkkää Afrikkaa, kunnes
+peruspeli on kunnossa.** Muihin lautoihin ei kosketa ennen kuin Afrikka on
+valmis. Katso paketti 8 alempana.
+
+Myöhemmäksi sovitut (EI vielä työn alle):
 
 - Tyynellämerellä ei ole laivareittejä: Los Angelesista pääsee vain maitse.
   Reitti kiertäisi päivämäärärajan yli, mikä vaatisi tuen reitille, joka
   jatkuu kartan reunan yli. Odottaa omistajan päätöstä.
 - Yksittäiset maat mantereiden jälkeen (Suomen mallin mukaan).
+- Vastustaja (aika / isoisän 80 päivän ennätys) ja kysymysten vaihtelu
+  (tapahtumakortit, väittämät, karttakysymykset) — omistajan kanssa
+  suunniteltu suunta, palataan kun Afrikan sisältö on valmis.
 
 Tämä on omistajan ja suunnittelusession sopima työlista. Tee työpaketit
 järjestyksessä; jokainen paketti on oma commit/PR. Jokaisen paketin jälkeen:
@@ -187,9 +199,14 @@ tämä teksti (kirjoituskoneella naksuen, kolme kappaletta):
 > Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872,
 > kukkarollinen puntia ja päiväkirja, joka päättyy kesken lauseen.
 >
-> Ostin lipun samana iltana.
+> Viimeinen lause: "Afrikassa kerrotaan tähdestä, joka —"
 >
 > Jonkun on kirjoitettava se loppuun.
+>
+> Ostin lipun samana iltana.
+
+(Päivitetty 27.7.2026 omistajan pyynnöstä "Afrikka ensin" -vaiheessa:
+kesken jäänyt lause näytetään ja se vihjaa Afrikan tähdestä.)
 
 - Tilarivi pickstartissa ilman valintaa: pelkkä "Minne ensin?"
 - Kaikki muut avauksen ohje- ja lokirivit ("Peli alkaa! Etsikää…",
@@ -319,6 +336,53 @@ Kun nimi on päätetty, vaihto koskee: `index.html` (title, brand, meta),
 `tools/build-standalone.mjs` (otsikot ja tiedostonimet), `README.md`,
 `CONTRIBUTING.md`. Tallennusavain (`SAVE_KEY`) voi jäädä ennalleen, ettei
 kesken olevat pelit katoa.
+
+## Paketti 8: AFRIKKA ENSIN — peruspeli kuntoon (työn alla)
+
+Omistajan linjaus: peruspeli hiotaan valmiiksi pelkällä Afrikalla ennen
+kuin mihinkään muuhun kosketaan. **Muokkaa vain Afrikan sisältöä**
+(`js/packs/africa-questions.js`, `js/packs/africa.js` texts-osiot) — ei
+muita lautoja, ei js/ui.js:ää eikä js/game.js:ää tässä paketissa.
+
+Lue ensin `docs/tarina.md` kokonaan — erityisesti uusi osio
+**"Vaihtelun paletti"**. Se on tämän paketin tärkein ohje.
+
+Suunnittelusessio on jo tehnyt (älä tee uudestaan):
+
+- Avausteksti päivitetty (paketti 3:n sitaatti yllä on voimassa oleva).
+- Lapselliset kysymykset korvattu: Tripolin manner-kysymys ja yleispakan
+  gepardi/gorilla/kirahvi.
+- Nuoren herran havainnot kirjoitettu uusiksi 11 kaupungille:
+  tanger, kairo, sahara, timbuktu, dakar, kongo, kapkaupunki, kimberley,
+  sansibar, kilimandzaro, addisabeba. **Nämä ovat mallitekstit — lue ne
+  ennen kuin kirjoitat omat.**
+
+Opuksen työt tässä paketissa:
+
+1. **Loput 21 kaupunkia:** kirjoita AFRICA_FACTS-tietojen nuoren herran
+   havainnot (merkkijonoalkiot) uusiksi vaihtelun paletin mukaan:
+   tripoli, murzuk, alkufra, ahaggar, gao, sierraleone, kappalmas,
+   kumasi, orjarannikko, kano, kamerun, angola, namib, mosambik,
+   madagaskar, viktoria, tanganjika, bahrelghazal, darfur, suakin,
+   rashafun. Isoisän merkintöihin (voice: 'isoisa') ei kosketa, paitsi
+   jos fakta on väärin. Mitä pienempi ja yllättävämpi huomio, sitä
+   parempi; osa saa olla hyvin arkisia asioita vastapainoksi maan
+   tunnetuimmille. Faktat pysyvät tosina — tarkista jokainen väite.
+2. **Kysymysten aikuistarkistus:** käy Afrikan kysymyspankki läpi ja
+   korvaa loputkin lastenvisailta maistuvat kysymykset arvokkaammilla
+   samantasoisilla (level-kenttä säilyy, minimit testeissä: joka
+   kaupungilla ≥5 kysymystä, ≥1 helppo ja ≥1 vaikea; helppo saa olla
+   helppo, kunhan se ei aliarvioi aikuista).
+3. **Saapumismerkinnät ja aarrevihjeet:** lue `texts.diaries` ja
+   `texts.starHints` (js/packs/africa.js) vaihtelun paletin silmin —
+   kevyt hionta sallittu, sävysäännöt tarina.md:ssä.
+4. Aja `npm test`, nosta versiot (sw.js + main.js), standalone-buildi,
+   PR ja kuittaus TILANNE-osioon.
+
+Tekstien kirjoitussäännöt (tiivistelmä — koko ohje tarina.md:ssä):
+minä-muoto, 1–3 virkettä, ensimmäinen virke konkreettinen; korkeintaan
+kolmasosa teksteistä alkaa isoisällä, vähintään kolmasosassa isoisää ei
+mainita; piikki osuu Foggiin/imperiumiin, ei koskaan kohdemaihin.
 
 ## Muistilista jokaiseen pakettiin
 
