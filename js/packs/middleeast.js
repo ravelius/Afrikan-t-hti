@@ -83,7 +83,7 @@ const ME_CITIES = [
   { id: 'sana', name: 'Sana', x: 505, y: 842, la: 'start', lx: 16, ly: 5 },
   { id: 'aden', name: 'Aden', x: 526, y: 917 },
   { id: 'salalah', name: 'Salalah', x: 752, y: 794 },
-  { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'end', lx: -16, ly: 5 },
+  { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'start', lx: 16, ly: 5 },
   {
     id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26,
     // Persianlahden vaihtoasema: täältä lähtee pitkä lento itään.
@@ -173,9 +173,9 @@ const ME_AIR_ROUTES = [
 
 export const MIDDLE_EAST = {
   id: 'middleeast',
-  name: 'Idän tähti',
+  name: 'Sheban kuningattaren aarre',
   boardLabel: 'Lähi-itä',
-  tagline: 'Etsi Idän tähti basaarien ja aavikoiden kätköistä.',
+  tagline: 'Etsi Sheban kuningattaren aarre basaarien ja aavikoiden kätköistä.',
   ariaLabel: 'Lähi-idän aarrekartta',
 
   map: { ...ME_MAP, outlines: [ME_MAP.mainlandPoints, ME_MAP.cyprusPoints] },
@@ -188,7 +188,7 @@ export const MIDDLE_EAST = {
   tokens: {
     // Turkoosi on saanut nimensä Turkista, jonka kautta kivi kulki Eurooppaan.
     types: themedTokenTypes({
-      star: { name: 'Idän tähti' },
+      star: { name: 'Sheban kuningattaren aarre' },
       topaz: { name: 'Turkoosi', color: '#3aaea6' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 3, emerald: 4, topaz: 6, empty: 8 },
@@ -238,12 +238,12 @@ export const MIDDLE_EAST = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Idän tähti ja palatkaa Istanbuliin tai Kairoon.',
-    starFound: (name, city) => `★ ${name} löysi IDÄN TÄHDEN kaupungista ${city}!`,
-    starToast: 'IDÄN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Sheban kuningattaren aarre ja palatkaa Istanbuliin tai Kairoon.',
+    starFound: (name, city) => `★ ${name} löysi SHEBAN KUNINGATTAREN AARTEEN kaupungista ${city}!`,
+    starToast: 'SHEBAN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Idän tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Idän tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Sheban kuningattaren aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Sheban kuningattaren aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {

@@ -187,6 +187,97 @@ for (const pack of PACKS) {
     }
   });
 
+  test(`${pack.id}: kaupunkien nimet eivät mene päällekkäin`, () => {
+    // Karkea arvio nimikyltin laatikosta samalla kaavalla kuin piirrossa.
+    // Ei pikselintarkka, mutta nappaa aidot ruuhkat (nimi nimen päällä).
+    const labelRect = (c) => {
+      const perChar = c.start ? 11 : 8.6;
+      const w = c.name.length * perChar;
+      const anchor = c.la ?? 'middle';
+      const lx = c.x + (c.lx ?? 0);
+      const ly = c.y + (c.ly ?? -(c.start ? 28 : 19));
+      const x0 = anchor === 'start' ? lx : anchor === 'end' ? lx - w : lx - w / 2;
+      return { x0, x1: x0 + w, y0: ly - 14, y1: ly + 4 };
+    };
+    const overlap = (r, s, slack) =>
+      r.x0 < s.x1 - slack && s.x0 < r.x1 - slack && r.y0 < s.y1 - slack && s.y0 < r.y1 - slack;
+
+    const rects = pack.cities.map((c) => ({ city: c, rect: labelRect(c) }));
+    for (let i = 0; i < rects.length; i++) {
+      for (let j = i + 1; j < rects.length; j++) {
+        assert.ok(
+          !overlap(rects[i].rect, rects[j].rect, 3),
+          `nimet ${rects[i].city.name} ja ${rects[j].city.name} menevät päällekkäin`,
+        );
+      }
+      // Nimi ei saa peittää toisen kaupungin palloa eikä sen laattaa.
+      for (const other of pack.cities) {
+        if (other.id === rects[i].city.id) continue;
+        const spots = [{ x: other.x, y: other.y, r: other.start ? 21 : 13 }];
+        // Laatta on vain aarrekaupungeissa.
+        if (!other.start) spots.push({ x: other.x + 22, y: other.y + 18, r: 17 });
+        for (const spot of spots) {
+          const r = rects[i].rect;
+          const nx = Math.max(r.x0, Math.min(spot.x, r.x1));
+          const ny = Math.max(r.y0, Math.min(spot.y, r.y1));
+          assert.ok(
+            Math.hypot(spot.x - nx, spot.y - ny) >= spot.r - 4,
+            `nimi ${rects[i].city.name} peittää kaupungin ${other.name}`,
+          );
+        }
+      }
+    }
+  });
+
+  test(`${pack.id}: koristeet ovat vedessä ja irti pelialueesta`, () => {
+    const { decor } = pack;
+    const cityDist = (p) =>
+      Math.min(...pack.cities.map((c) => Math.hypot(c.x - p.x, c.y - p.y)));
+
+    assert.ok(!isOnLand([decor.compass.x, decor.compass.y], pack.map), 'kompassi on maalla');
+    assert.ok(
+      cityDist(decor.compass) >= decor.compass.r + 20,
+      'kompassi on liian lähellä kaupunkia',
+    );
+    if (decor.ship) {
+      assert.ok(!isOnLand([decor.ship.x, decor.ship.y], pack.map), 'laiva on maalla');
+      assert.ok(cityDist(decor.ship) >= 65, 'laiva on liian lähellä kaupunkia');
+    }
+    if (decor.serpent) {
+      assert.ok(!isOnLand([decor.serpent.x, decor.serpent.y], pack.map), 'merikäärme on maalla');
+      assert.ok(cityDist(decor.serpent) >= 70, 'merikäärme on liian lähellä kaupunkia');
+    }
+
+    // Otsikko selitteineen ei saa peittää kaupunkeja eikä reittejä.
+    const title = decor.mapLabelPos;
+    const inTitle = (x, y) =>
+      x > title.x - 115 && x < title.x + 115 && y > title.y - 36 && y < title.y + 62;
+    for (const c of pack.cities) {
+      assert.ok(!inTitle(c.x, c.y), `otsikko peittää kaupungin ${c.name}`);
+    }
+    for (const e of packBoard.edges) {
+      for (const [x, y] of e.poly) {
+        assert.ok(!inTitle(x, y), `otsikko peittää reitin ${e.id}`);
+      }
+    }
+  });
+
+  test(`${pack.id}: porttien linkit ovat vastavuoroisia`, () => {
+    // Portista pitää päästä myös takaisin: kohdekaupungista on linkki
+    // lähtölaudalle, jottei vaeltaja jää loukkuun vieraalle laudalle.
+    for (const city of pack.cities) {
+      for (const link of city.links ?? []) {
+        const target = PACKS.find((p) => p.id === link.pack)
+          ?.cities.find((c) => c.id === link.city);
+        if (!target) continue; // linkkien kohteet tarkistetaan omassa testissään
+        assert.ok(
+          (target.links ?? []).some((back) => back.pack === pack.id),
+          `${pack.id}:${city.id} → ${link.pack}:${link.city} ilman paluulinkkiä`,
+        );
+      }
+    }
+  });
+
   test(`${pack.id}: porttikaupunkien linkit osoittavat oikeisiin paikkoihin`, () => {
     for (const city of pack.cities) {
       for (const link of city.links ?? []) {
@@ -715,6 +806,50 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   game.actionGateway(0);
   assert.equal(p.packId, 'africa');
   assert.equal(game.tokens.size, afrikanLaatat, 'Afrikan laatat säilyivät');
+});
+
+test('vaellus: lähtöpiste valitaan maailmankartalta ja portti vie mantereelle', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    rng: mulberry32(53),
+  });
+  assert.equal(game.phase, 'pickstart');
+  assert.ok(game.roaming);
+  assert.equal(game.actionTravel('land').ok, false, 'ennen valintaa ei matkusteta');
+
+  // Kairon portista astutaan suoraan Afrikan laudalle — ilmaiseksi.
+  const rahaEnnen = game.player.money;
+  assert.ok(game.actionPickStart('kairo', 0).ok);
+  assert.equal(game.player.money, rahaEnnen, 'lähtöpisteen valinta on ilmainen');
+  assert.equal(game.player.packId, 'africa');
+  assert.deepEqual(game.player.pos, { type: 'city', city: 'kairo' });
+  assert.equal(game.player.start, 'kairo');
+  assert.notEqual(game.phase, 'pickstart');
+
+  // Maailmankartalle voi myös jäädä.
+  const stay = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    rng: mulberry32(54),
+  });
+  assert.ok(stay.actionPickStart('sydney').ok);
+  assert.equal(stay.player.packId, 'maailma');
+  assert.equal(stay.player.pos.city, 'sydney');
+  assert.equal(stay.actionPickStart('lontoo').ok, false, 'lähtöpiste valitaan vain kerran');
+});
+
+test('vaellus: valitsematon lähtöpiste tallentuu ja palautuu', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    seed: 888,
+  });
+  const restored = Game.fromJSON(JSON.parse(JSON.stringify(game.toJSON())));
+  assert.ok(restored);
+  assert.equal(restored.phase, 'pickstart');
+  assert.ok(restored.actionPickStart('rio', 0).ok);
+  assert.equal(restored.player.packId, 'southamerica');
 });
 
 test('vaellus: monen laudan peli tallentuu ja palautuu', () => {

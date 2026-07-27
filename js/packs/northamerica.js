@@ -99,34 +99,34 @@ const NA_CITIES = [
   { id: 'yellowknife', name: 'Yellowknife', x: 530, y: 290, la: 'middle', lx: 0, ly: -22 },
   { id: 'vancouver', name: 'Vancouver', x: 447, y: 422, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'yellowstone', name: 'Yellowstone', x: 527, y: 493, la: 'end', lx: -16, ly: 5 },
-  { id: 'mountrushmore', name: 'Mount Rushmore', x: 586, y: 489, la: 'middle', lx: 0, ly: -24 },
+  { id: 'mountrushmore', name: 'Mount Rushmore', x: 586, y: 489, la: 'middle', lx: -14, ly: -24 },
   { id: 'winnipeg', name: 'Winnipeg', x: 629, y: 439, la: 'middle', lx: 0, ly: -22 },
   { id: 'churchill', name: 'Churchill', x: 644, y: 338, la: 'end', lx: -16, ly: 5 },
   { id: 'iqaluit', name: 'Iqaluit', x: 750, y: 281, la: 'start', lx: 16, ly: 5 },
   { id: 'nuuk', name: 'Nuuk', x: 852, y: 204, la: 'end', lx: -16, ly: 5 },
   { id: 'labrador', name: 'Labrador', x: 863, y: 343, la: 'end', lx: -16, ly: 5 },
-  { id: 'stjohns', name: 'St. John’s', x: 926, y: 372, la: 'end', lx: -16, ly: -14 },
+  { id: 'stjohns', name: 'St. John’s', x: 926, y: 372, la: 'end', lx: -16, ly: 18 },
   { id: 'halifax', name: 'Halifax', x: 883, y: 436, la: 'start', lx: 16, ly: 5 },
   { id: 'montreal', name: 'Montreal', x: 807, y: 450, la: 'middle', lx: 0, ly: -22 },
   { id: 'toronto', name: 'Toronto', x: 769, y: 488, la: 'end', lx: -16, ly: 5 },
-  { id: 'chicago', name: 'Chicago', x: 709, y: 520, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'appalakit', name: 'Appalakit', x: 776, y: 556, la: 'end', lx: -16, ly: 5 },
+  { id: 'chicago', name: 'Chicago', x: 709, y: 520, airport: true, la: 'start', lx: 16, ly: 12 },
+  { id: 'appalakit', name: 'Appalakit', x: 776, y: 556, la: 'end', lx: -16, ly: 26 },
   { id: 'bermuda', name: 'Bermuda', x: 927, y: 566, la: 'start', lx: 16, ly: 5 },
-  { id: 'denver', name: 'Denver', x: 567, y: 550, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'denver', name: 'Denver', x: 567, y: 550, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'santafe', name: 'Santa Fe', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
-  { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'end', lx: -16, ly: 5 },
+  { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
   { id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'hawaii', name: 'Havaiji', x: 37, y: 579, la: 'middle', lx: 0, ly: 28 },
   { id: 'dallas', name: 'Dallas', x: 638, y: 626, la: 'start', lx: 16, ly: 5 },
   { id: 'neworleans', name: 'New Orleans', x: 701, y: 649, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'miami', name: 'Miami', x: 801, y: 678, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 865, y: 730, la: 'middle', lx: 0, ly: -22 },
+  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 865, y: 730, la: 'middle', lx: 0, ly: 24 },
   { id: 'sanjuan', name: 'San Juan', x: 973, y: 720, la: 'end', lx: -16, ly: 5 },
   { id: 'monterrey', name: 'Monterrey', x: 606, y: 705, la: 'end', lx: -16, ly: 5 },
   { id: 'mexico', name: 'Mexico City', x: 618, y: 775, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'merida', name: 'Mérida', x: 725, y: 765, la: 'start', lx: 16, ly: -6 },
   { id: 'guatemala', name: 'Guatemala', x: 718, y: 824, la: 'end', lx: -16, ly: 5 },
-  { id: 'managua', name: 'Managua', x: 771, y: 847, la: 'end', lx: -16, ly: 16 },
+  { id: 'managua', name: 'Managua', x: 771, y: 847, la: 'start', lx: 14, ly: 16 },
   {
     id: 'panama', name: 'Panama', x: 857, y: 871, airport: true, la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Etelä-Amerikan laudalla: kannas yhdistää mantereet.
@@ -223,9 +223,9 @@ const NA_AIR_ROUTES = [
 
 export const NORTHAMERICA = {
   id: 'northamerica',
-  name: 'Pohjois-Amerikan tähti',
+  name: 'Montezuman aarre',
   boardLabel: 'Pohjois-Amerikka',
-  tagline: 'Etsi tähti Kalliovuorilta, preerialta, Karibian saarilta ja Alaskan tundralta.',
+  tagline: 'Etsi Montezuman kadonnut aarre Kalliovuorilta, preerialta, Karibian saarilta ja Alaskan tundralta.',
   ariaLabel: 'Pohjois-Amerikan aarrekartta',
 
   map: {
@@ -246,7 +246,7 @@ export const NORTHAMERICA = {
     // Topaasin tilalla Klondiken kulta: kultaryntäys veti 1890-luvulla
     // kymmeniätuhansia onnenonkijoita Yukonin jokilaaksoon.
     types: themedTokenTypes({
-      star: { name: 'Pohjois-Amerikan tähti' },
+      star: { name: 'Montezuman aarre' },
       topaz: { name: 'Klondiken kulta', color: '#e0b02a' },
     }),
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
@@ -298,12 +298,12 @@ export const NORTHAMERICA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Pohjois-Amerikan tähti ja palatkaa New Yorkiin tai San Franciscoon.',
-    starFound: (name, city) => `★ ${name} löysi POHJOIS-AMERIKAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'POHJOIS-AMERIKAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Montezuman aarre ja palatkaa New Yorkiin tai San Franciscoon.',
+    starFound: (name, city) => `★ ${name} löysi MONTEZUMAN AARTEEN kaupungista ${city}!`,
+    starToast: 'MONTEZUMAN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Pohjois-Amerikan tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Pohjois-Amerikan tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Montezuman aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Montezuman aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {

@@ -67,7 +67,7 @@ const AFRICA_CITIES = [
   },
   { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
   { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
-  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: 26 },
+  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
   { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
   { id: 'kano', name: 'Kano', x: 394, y: 336, airport: true },
   { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },

@@ -6,17 +6,21 @@ yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käänn�
 JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
 maantieteestä kiinnostavasti.
 
-- **Yhdeksän pelilautaa:** koko maapallon kattava Maailma (Maailman tähti),
-  kaikki kuusi asuttua mannerta — Afrikka, Eurooppa, Aasia, Oseania,
-  Pohjois-Amerikka ja Etelä-Amerikka — sekä Lähi-itä (Idän tähti) ja
-  ensimmäisenä kaupunkilautana Istanbul (Sulttaanin timantti). Maailma-laudalla valtameret
-  ylitetään laivalla tai lentäen, ja Lontoosta, Kairosta ja Rio de Janeirosta
-  laskeudutaan tarkemmille laudoille — sama portaikko jatkuu kaupunkitasolle
-  asti. Istanbul on sekä Euroopan että Lähi-idän laudalla, joten mantereelta
-  toiselle pääsee myös kävellen
-- **Vaellustila:** yksin pelattaessa peli ei pääty — kerää löytöjä ja siirry
-  porttikaupungeista laudalta toiselle, myös kaupunkitasolle. Kilpapelin
-  voittaja voi jatkaa vaeltamista voittoruudusta
+- **Tarina:** vanhan maailman herrasmies lähtee Lontoosta puvuntakki päällä
+  ja matkalaukku kädessä katsomaan, millaiseksi maailma on muuttunut. Vanha
+  kartta ja punnat, nykypäivän maailma — peli alkaa maailmankartalta, jolta
+  ensimmäinen kohde valitaan ilmaiseksi
+- **Kymmenen pelilautaa:** koko maapallon kattava Maailma (Magellanin
+  kompassi), kaikki kuusi asuttua mannerta — Afrikka (Afrikan tähti), Eurooppa
+  (Meripihkahuoneen aarre), Aasia (Keisarin jadesinetti), Oseania (Eteläristin
+  helmi), Pohjois-Amerikka (Montezuman aarre) ja Etelä-Amerikka (El Doradon
+  aarre) — sekä Lähi-itä (Sheban kuningattaren aarre), ensimmäisenä
+  maakohtaisena karttana Suomi (Lapin kulta) järvineen ja ensimmäisenä
+  kaupunkilautana Istanbul (Sulttaanin timantti). Jokaisella laudalla on oma
+  pääaarteensa — Afrikan tähti on vain Afrikassa
+- **Vaellus:** peli on yksin pelattava eikä pääty koskaan — kerää löytöjä ja
+  siirry porttikaupungeista laudalta toiselle, maailmankartalta mantereille,
+  maihin ja kaupunkitasolle asti
 - **Porttikaupungit:** jokaisella laudalla on muutama kaupunki, josta lähtee
   pitkä lento toiselle laudalle — Tangerista Madridiin, Dakarista Brasiliaan,
   Dubaista Mumbaihin. Kartalla portin tunnistaa katkoviivakehästä, ja lennon
@@ -26,13 +30,16 @@ maantieteestä kiinnostavasti.
   esittää kiperän kysymyksen kahdeksalla vaihtoehdolla — suora oikea vastaus
   tuo 200 punnan saaliin, helpotus maksaa puolet rahoista, ja kolmella
   hevosenkengällä rosvon voi ohittaa
-- 1–4 pelaajaa samalla koneella, kukin joko ihminen tai botti
+- Yksinpeli: nimi ja kysymysten taso valitaan alussa, ja matka alkaa
+  maailmankartalta. Käyttöliittymän tekstit naksuvat ruudulle kuin vanhalla
+  matkakirjoituskoneella
 - Aarteet avataan **vain tietovisalla**: arvottu monivalintakysymys (A–D) paikan
   maantiedosta, kulttuurista ja yleistiedosta; 40 punnan vihje ja 80 punnan 50:50
   auttavat pinteessä, ja tiimalasi antaa vastausaikaa 45 sekuntia
 - SVG-kartta, jossa kymmeniä kaupunkeja, maareitit, laivareitit ja lentoyhteydet
-- Euroopan laudalla 34 kaupunkia Lissabonista Moskovaan ja Kreetalta Tromssaan:
-  Kanaalitunneli, Itämeren lautat, Välimeren saaret ja Mustanmeren satamat
+- Euroopan laudalla 37 kaupunkia Lissabonista Moskovaan ja Kreetalta Tromssaan:
+  Kanaalitunneli, Baltian pääkaupungit, Itämeren lautat, Välimeren saaret ja
+  Mustanmeren satamat
 - Etelä-Amerikan laudalla 37 kaupunkia Panamasta Kap Hornille: Andien
   ylängöt, Amazonin jokireitit, Atacaman autiomaa ja Patagonian vuonot —
   Galápagos, Falkland ja Robinson Crusoen saari vain laivalla
@@ -46,8 +53,13 @@ maantieteestä kiinnostavasti.
   preeria, Suuret järvet ja Väli-Amerikan kannas — Grönlanti, Newfoundland,
   Kuuba, Bermuda ja Havaiji omina saarinaan. Panama ja New York yhdistävät
   laudan Etelä-Amerikkaan ja Maailma-lautaan
-- Laatat: tähti, hevosenkengät, ryöstäjät, jalokivet ja tyhjät — Lähi-idässä
-  topaasin tilalla on turkoosi, joka on saanut nimensä Turkista
+- Suomen laudalla 19 kaupunkia Helsingistä Utsjoelle: Saimaa, Päijänne,
+  Oulujärvi ja Inarijärvi oikeina järvinä, järvilaivat Savonlinnan
+  saarikaupunkiin, ruotsinlaiva Maarianhaminan kautta Tukholmaan ja Lapin
+  kultamaat — ensimmäinen maakohtainen kartta
+- Laatat: pääaarre, hevosenkengät, ryöstäjät, jalokivet ja tyhjät — jalokivet
+  vaihtuvat laudan mukaan: Lähi-idässä turkoosi, Euroopassa meripihka,
+  Suomessa spektroliitti, Pohjois-Amerikassa Klondiken kulta
 - Yli 720 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
   kysymyksensä + laudan yleinen varapakka. Pelaajakohtainen tasovalinta
   (esim. lapsille helpot) ja vaikeasta kysymyksestä 100 punnan bonus

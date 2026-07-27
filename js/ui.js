@@ -150,36 +150,91 @@ export class UI {
   drawBoardFor(pack) {
     this.drawnPackId = pack.id;
     this.svg.setAttribute('aria-label', pack.ariaLabel);
+    this.svg.dataset.style = pack.style ?? 'map';
     document.body.dataset.pack = pack.id;
     this.drawBoard();
     this.fitViewBox();
   }
 
+  /**
+   * Pelisisällön rajauslaatikko: kaupungit nimineen, reitit, lentokaaret ja
+   * koristeet. Näkymä sovitetaan tähän eikä koko karttapohjaan, jolloin lauta
+   * näkyy mahdollisimman suurena eikä tyhjää merta jää reunoille.
+   */
+  boardBounds() {
+    const { board, pack } = this.game;
+    if (pack.map.frame) return pack.map.frame;
+
+    const pts = [];
+    const charWidth = 9.5; // karkea arvio nimikirjaimen leveydestä
+    for (const c of board.cities) {
+      pts.push([c.x - 34, c.y - 34], [c.x + 34, c.y + 34]);
+      const w = c.name.length * charWidth;
+      const anchor = c.la ?? 'middle';
+      const lx = c.x + (c.lx ?? 0);
+      const ly = c.y + (c.ly ?? -(c.start ? 28 : 19));
+      const x0 = anchor === 'start' ? lx : anchor === 'end' ? lx - w : lx - w / 2;
+      pts.push([x0, ly - 18], [x0 + w, ly + 6]);
+    }
+    for (const e of board.edges) {
+      for (const p of e.poly) pts.push(p);
+    }
+    for (const route of this.game.airRoutes) {
+      const a = board.cityById.get(route.a);
+      const b = board.cityById.get(route.b);
+      pts.push([(a.x + b.x) / 2 + (b.y - a.y) * 0.12, (a.y + b.y) / 2 - (b.x - a.x) * 0.12]);
+    }
+    const d = pack.decor;
+    pts.push(
+      [d.compass.x - d.compass.r - 14, d.compass.y - d.compass.r - 26],
+      [d.compass.x + d.compass.r + 14, d.compass.y + d.compass.r + 14],
+    );
+    pts.push([d.mapLabelPos.x - 110, d.mapLabelPos.y - 34], [d.mapLabelPos.x + 110, d.mapLabelPos.y + 60]);
+    if (d.ship) pts.push([d.ship.x - 62, d.ship.y - 56], [d.ship.x + 62, d.ship.y + 46]);
+    if (d.serpent) pts.push([d.serpent.x - 96, d.serpent.y - 26], [d.serpent.x + 96, d.serpent.y + 30]);
+
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const [x, y] of pts) {
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+    const pad = 12;
+    return { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
+  }
+
   destroy() {
     clearTimeout(this.botTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
+    for (const timer of Object.values(this.typeTimers ?? {})) clearInterval(timer);
     this.stopQuizTimer();
     this.observer?.disconnect();
   }
 
   /**
-   * Venyttää näkymäikkunan ruudun muotoiseksi, jolloin pergamentti täyttää
-   * koko alueen ja pelialue pysyy silti kokonaan näkyvissä.
-   */
-  /**
-   * Näkymäikkuna venytetään kartta-alueen muotoiseksi, jolloin pergamentti
-   * täyttää koko alueen ja pelialue pysyy kokonaan näkyvissä. Kartta on
-   * staattinen: sitä ei zoomata eikä raahata, joten kaikki on aina esillä.
+   * Sovittaa näkymän pelisisällön rajauslaatikkoon ja venyttää sen ruudun
+   * muotoiseksi, jolloin pergamentti täyttää koko alueen ja pelialue näkyy
+   * mahdollisimman suurena. Kartta on staattinen: sitä ei zoomata eikä
+   * raahata, joten kaikki on aina esillä.
    */
   fitViewBox() {
     const pane = this.svg.parentElement;
     const w = pane.clientWidth;
     const h = pane.clientHeight;
     if (!w || !h) return;
-    const size = 1000;
-    const [vw, vh] = w > h ? [size * (w / h), size] : [size, size / (w / h)];
+    const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
+    const scale = Math.min(w / box.w, h / box.h);
+    const vw = w / scale;
+    const vh = h / scale;
     this.viewBoxSize = { vw, vh };
-    this.svg.setAttribute('viewBox', `${500 - vw / 2} ${500 - vh / 2} ${vw} ${vh}`);
+    this.svg.setAttribute(
+      'viewBox',
+      `${box.x + box.w / 2 - vw / 2} ${box.y + box.h / 2 - vh / 2} ${vw} ${vh}`,
+    );
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
   }
@@ -237,6 +292,7 @@ export class UI {
   drawBoard() {
     const { board, pack } = this.game;
     const { decor } = pack;
+    this.contentBox = this.boardBounds();
     this.svg.textContent = '';
 
     drawDefs(this.svg);
@@ -294,10 +350,11 @@ export class UI {
       }
     }
 
-    // Laivamatkojen hinnat erikseen, jotta teksti pysyy terävänä.
+    // Vakiohinta kerrotaan kerran kartan selitteessä; reitille merkitään
+    // hinta vain, jos se poikkeaa vakiosta. Näin meri pysyy siistinä.
     const fares = el('g', { class: 'fares' }, root);
     for (const e of board.edges) {
-      if (e.type !== 'sea') continue;
+      if (e.type !== 'sea' || e.fee === SEA_FARE) continue;
       const mid = pointAlong(e.poly, 0.5);
       el('text', {
         x: mid.x,
@@ -309,11 +366,26 @@ export class UI {
       }, fares).textContent = `⚓${e.fee}`;
     }
 
+    // Selite kartan otsikon alle: mitä matkustaminen maksaa tällä laudalla.
+    const legendParts = [];
+    if (board.edges.some((e) => e.type === 'sea')) legendParts.push(`⚓ laiva ${SEA_FARE} p`);
+    if (pack.airRoutes.length) legendParts.push(`✈ lento ${FLIGHT_PRICE} p`);
+    if (legendParts.length) {
+      el('text', {
+        x: decor.mapLabelPos.x,
+        y: decor.mapLabelPos.y + 44,
+        class: 'map-legend',
+        'text-anchor': 'middle',
+      }, root).textContent = legendParts.join('  ·  ');
+    }
+
     // Kaupungit ja nimet.
     const cities = el('g', { class: 'cities' }, root);
+    // Kaupunkilaudalla solmut ovat pienempiä: mittakaava on kortteleissa.
+    const nodeScale = pack.style === 'city' ? 0.82 : 1;
     for (const c of board.cities) {
       const wobble = `rotate(${vary(`city:rot:${c.id}`, 12).toFixed(1)} ${c.x} ${c.y})`;
-      const base = c.start ? 20 : 11.6;
+      const base = (c.start ? 20 : 11.6) * nodeScale;
       const rx = base + vary(`city:rx:${c.id}`, 0.7);
       const ry = base + vary(`city:ry:${c.id}`, 0.7);
       if (c.start) {
@@ -396,6 +468,26 @@ export class UI {
   drawTargets() {
     const { game } = this;
     this.targetLayer.textContent = '';
+
+    // Lähtöpisteen valinta: kaikki kaupungit ovat napautettavia.
+    if (game.phase === 'pickstart') {
+      for (const c of game.board.cities) {
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
+        el('circle', {
+          cx: c.x,
+          cy: c.y,
+          r: c.start ? 27 : 22,
+          class: `target-ring${this.pendingStart === c.id ? ' picked' : ''}`,
+        }, g);
+        g.addEventListener('click', () => {
+          this.pendingStart = c.id;
+          this.render();
+        });
+      }
+      return;
+    }
+
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
@@ -515,6 +607,36 @@ export class UI {
 
     const p = game.player;
     this.dieEl.hidden = true; // silmäluku näkyy laudalla olevassa nopassa
+
+    // Lähtöpisteen valinta: kaupungin napautus kartalla avaa porttivaihtoehdot.
+    if (game.phase === 'pickstart') {
+      const cityId = this.pendingStart;
+      const city = cityId ? game.board.cityById.get(cityId) : null;
+      if (!city) {
+        const here = game.cityOf();
+        this.turnStatus.textContent = `${here?.name ?? 'Lontoo'} — valitse ensimmäinen kohde kartalta.`;
+        this.hint.textContent = 'Lippu ensimmäiseen kohteeseen on jo maksettu.';
+        return;
+      }
+      this.turnStatus.textContent = `${city.name} — minne astut?`;
+      this.hint.textContent = 'Ensimmäinen matka on ilmainen.';
+      (city.links ?? []).forEach((link, i) => {
+        const btn = html('button', i === 0 ? 'primary' : '', `🧭 ${link.label}`);
+        btn.addEventListener('click', () => {
+          this.pendingStart = null;
+          sfx.play('flight');
+          this.doAction(() => game.actionPickStart(cityId, i));
+        });
+        this.actionsEl.appendChild(btn);
+      });
+      const stayBtn = html('button', city.links?.length ? '' : 'primary', '🌍 Jää maailmankartalle');
+      stayBtn.addEventListener('click', () => {
+        this.pendingStart = null;
+        this.doAction(() => game.actionPickStart(cityId));
+      });
+      this.actionsEl.appendChild(stayBtn);
+      return;
+    }
 
     if (p.isBot) {
       this.turnStatus.textContent = `${p.name} miettii…`;
@@ -645,6 +767,15 @@ export class UI {
    */
   renderFact() {
     const { game } = this;
+    if (game.phase === 'pickstart') {
+      if (this.factKey === 'pickstart') return;
+      this.factKey = 'pickstart';
+      this.factPlace.textContent = 'Lontoo — matkan alku';
+      this.typeText(this.factText, 'Vanha herra vetää puvuntakin suoraksi, nostaa '
+        + 'matkalaukkunsa ja ostaa lentolipun. Vanha kartta kädessä hän lähtee '
+        + 'katsomaan, millaiseksi maailma on muuttunut.');
+      return;
+    }
     const player = game.player;
     const city = this.factCity(player.pos);
     const facts = game.pack.placeFacts[city.id];
@@ -659,9 +790,10 @@ export class UI {
 
     const onRoute = player.pos.type === 'edge';
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
-    this.factText.textContent = text;
     const source = this.sourceLine(factSource(fact));
-    if (source) this.factText.appendChild(source);
+    this.typeText(this.factText, text, 'fact', () => {
+      if (source) this.factText.appendChild(source);
+    });
 
     // Uusi tieto häivähtää esiin, jotta vaihdoksen huomaa.
     this.factText.classList.remove('fact-in');
@@ -717,9 +849,9 @@ export class UI {
     if (!this.winnerDialog.open) sfx.play('win');
     const w = this.game.winner;
     document.getElementById('winner-title').textContent = `🏆 ${w.name} voitti!`;
-    document.getElementById('winner-text').textContent = w.hasStar
+    this.typeText(document.getElementById('winner-text'), w.hasStar
       ? this.game.pack.texts.winnerStar(w.name, w.money)
-      : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`;
+      : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`, 'winner');
     const roamBtn = document.getElementById('winner-roam');
     roamBtn.onclick = () => {
       this.winnerDialog.close();
@@ -746,7 +878,11 @@ export class UI {
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
     this.quizCity.textContent = `${city.name} — ${game.player.name}${hardTag}`;
-    this.quizQuestion.textContent = quiz.question;
+    // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
+    if (this.typedQuizFor !== quiz) {
+      this.typedQuizFor = quiz;
+      this.typeText(this.quizQuestion, quiz.question, 'quiz');
+    }
     this.quizOptions.textContent = '';
 
     quiz.options.forEach((text, i) => {
@@ -833,7 +969,10 @@ export class UI {
     const p = game.player;
 
     this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
-    this.quizQuestion.textContent = duel.question;
+    if (this.typedQuizFor !== duel) {
+      this.typedQuizFor = duel;
+      this.typeText(this.quizQuestion, duel.question, 'quiz');
+    }
     this.quizOptions.textContent = '';
 
     duel.options.forEach((text, i) => {
@@ -1142,6 +1281,33 @@ export class UI {
 
   wait(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Kirjoituskone: teksti naksuu ruudulle sana kerrallaan kuin vanhalla
+   * matkakirjoituskoneella. Sama paikka (slot) keskeyttää edellisen
+   * kirjoituksen, jotta tekstit eivät sekoitu keskenään. Liikkeen
+   * vähennystä toivovalle teksti ilmestyy kerralla.
+   */
+  typeText(target, text, slot = 'fact', done = null) {
+    this.typeTimers ??= {};
+    clearInterval(this.typeTimers[slot]);
+    if (this.reducedMotion) {
+      target.textContent = text;
+      done?.();
+      return;
+    }
+    const words = String(text).split(' ');
+    let shown = 0;
+    target.textContent = '';
+    this.typeTimers[slot] = setInterval(() => {
+      shown++;
+      target.textContent = words.slice(0, shown).join(' ');
+      if (shown >= words.length) {
+        clearInterval(this.typeTimers[slot]);
+        done?.();
+      }
+    }, 50);
   }
 
   showError(message) {

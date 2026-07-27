@@ -11,10 +11,11 @@ import { SOUTHAMERICA } from './packs/southamerica.js';
 import { NORTHAMERICA } from './packs/northamerica.js';
 import { ASIA } from './packs/asia.js';
 import { OCEANIA } from './packs/oceania.js';
+import { SUOMI } from './packs/suomi.js';
 
 export const PACKS = [
   MAAILMA, AFRICA, EUROPE, ASIA, OCEANIA, NORTHAMERICA, SOUTHAMERICA, MIDDLE_EAST,
-  ISTANBUL,
+  SUOMI, ISTANBUL,
 ];
 
 export function packById(id) {

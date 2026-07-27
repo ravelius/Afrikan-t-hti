@@ -160,6 +160,11 @@ export function drawLand(svg, map) {
     el('path', { d, class: 'land' }, g);
     el('path', { d, class: 'coast' }, g);
   }
+  for (const lake of map.lakes ?? []) {
+    const d = smoothClosedPath(lake);
+    el('path', { d, class: 'lake' }, g);
+    el('path', { d, class: 'coast' }, g);
+  }
 }
 
 // --- geometria: missä on merta, missä tyhjää maata ------------------------
@@ -190,11 +195,14 @@ function distanceToPolygon([px, py], poly) {
 }
 
 function onLand(p, map) {
-  return map.outlines.some((outline) => pointInPolygon(p, outline));
+  if (!map.outlines.some((outline) => pointInPolygon(p, outline))) return false;
+  // Järvet ovat vettä maan sisällä (map.lakes) — esimerkiksi Saimaa tai Inari.
+  return !(map.lakes ?? []).some((lake) => pointInPolygon(p, lake));
 }
 
 function coastDistance(p, map) {
-  return map.outlines.reduce((best, outline) => Math.min(best, distanceToPolygon(p, outline)), Infinity);
+  const shores = [...map.outlines, ...(map.lakes ?? [])];
+  return shores.reduce((best, outline) => Math.min(best, distanceToPolygon(p, outline)), Infinity);
 }
 
 /** Ruudukon pisteet merellä, riittävän kaukana rannikosta. */
@@ -272,6 +280,17 @@ const TERRAIN_MARKS = {
   mountains(mark, x, y) {
     el('path', {
       d: `M${x - 15},${y + 8} l9,-14 l7,10 l6,-8 l8,12 z`,
+      class: 'terrain-mark',
+    }, mark);
+  },
+  // Kaupunkilaudan korttelit: kaksi pientä taloa harjakattoineen.
+  houses(mark, x, y) {
+    el('path', {
+      d: `M${x - 13},${y + 7} L${x - 13},${y - 1} L${x - 7},${y - 7} L${x - 1},${y - 1} L${x - 1},${y + 7} Z`,
+      class: 'terrain-mark',
+    }, mark);
+    el('path', {
+      d: `M${x + 3},${y + 7} L${x + 3},${y + 1} L${x + 8},${y - 4} L${x + 13},${y + 1} L${x + 13},${y + 7} Z`,
       class: 'terrain-mark',
     }, mark);
   },

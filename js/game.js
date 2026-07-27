@@ -59,17 +59,20 @@ export class Game {
     this.worlds = new Map();
     this.enterWorld(pack);
 
+    // Ilman aloituskaupunkia (start: null) lähtöpiste valitaan kartalta
+    // pelin alussa; nappula odottaa sitä ensimmäisessä aloituskaupungissa.
+    const firstStart = pack.cities.find((c) => c.start);
     this.players = players.map((p, i) => ({
       id: i,
       name: p.name,
       color: p.color,
       isBot: !!p.isBot,
-      start: p.start,
+      start: p.start ?? null,
       packId: pack.id,
       // 'easy' = helpot kysymykset (esim. lapsipelaajalle), 'normal' = tavalliset
       quizLevel: p.quizLevel === 'easy' ? 'easy' : 'normal',
       money: START_MONEY,
-      pos: { type: 'city', city: p.start },
+      pos: { type: 'city', city: p.start ?? firstStart.id },
       hasStar: false,
       horseshoes: 0,
       finds: [], // löydetyt laatat tyyppeinä
@@ -97,7 +100,45 @@ export class Game {
     if (this.roaming) {
       this.say(null, 'Vaellus: peli ei pääty — kerää löytöjä ja jatka porttikaupungeista uusille laudoille.');
     }
+    // Vaellus alkaa lähtöpisteen valinnalla, jos sitä ei ole annettu valmiiksi.
+    // Matkaaja seisoo Lontoossa (laudan ensimmäisessä aloituskaupungissa)
+    // lentolippu kädessään; ensimmäinen kohde valitaan kartalta ilmaiseksi.
+    if (this.roaming && this.players.some((p) => !p.start)) {
+      this.phase = 'pickstart';
+      this.say(null, `Matka alkaa: ${this.cityOf().name} odottaa lähtijää. Valitse ensimmäinen kohde kartalta — lippu on jo maksettu.`);
+    } else {
+      this.beginTurn();
+    }
+  }
+
+  /**
+   * Lähtöpisteen valinta pelin alussa. Valinta on ilmainen: pelaaja voi jäädä
+   * valittuun kaupunkiin maailmankartalle tai astua sen portin läpi suoraan
+   * toiselle laudalle (linkIndex osoittaa kaupungin links-listaan).
+   */
+  actionPickStart(cityId, linkIndex = null) {
+    if (this.phase !== 'pickstart') return { ok: false, error: 'Lähtöpiste on jo valittu' };
+    const city = this.board.cityById.get(cityId);
+    if (!city) return { ok: false, error: 'Tuntematon kaupunki' };
+    const p = this.player;
+    const link = linkIndex === null ? null : (city.links ?? [])[linkIndex];
+    if (linkIndex !== null && !link) return { ok: false, error: 'Täältä ei ole tuota porttia' };
+
+    if (link) {
+      const target = packById(link.pack);
+      this.enterWorld(target);
+      p.packId = target.id;
+      p.pos = { type: 'city', city: link.city };
+      p.start = link.city;
+      this.say(p.id, `${p.name} aloittaa matkansa: ${link.label}.`);
+    } else {
+      p.pos = { type: 'city', city: city.id };
+      p.start = city.id;
+      this.say(p.id, `${p.name} aloittaa matkansa kaupungista ${city.name}.`);
+    }
+    this.phase = 'action';
     this.beginTurn();
+    return { ok: true };
   }
 
   /** Luo laudan tilan, kun sille saavutaan ensimmäistä kertaa. */
@@ -336,7 +377,8 @@ export class Game {
     const canTravel = this.travelModes(p).some((m) => m !== 'stay');
     if (!canTravel) return true;
 
-    const racingHome = p.hasStar || (this.starFound && p.horseshoes > 0);
+    // Vaelluksessa kotiin ei tarvitse ehtiä, joten tavoitteita ovat aina laatat.
+    const racingHome = !this.roaming && (p.hasStar || (this.starFound && p.horseshoes > 0));
     const goals = racingHome
       ? new Set(this.players.map((pl) => pl.start))
       : new Set(this.tokens.keys());
