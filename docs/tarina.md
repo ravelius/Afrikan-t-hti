@@ -90,6 +90,31 @@ näkyvät — ja se sanotaan ääneen kevyesti, ei saarnaten.
 - Faktat pidetään oikeina silloinkin, kun ne ovat vitsin sisällä
   (esim. järvien määrä).
 
+## Vaihtelun paletti (nuoren herran havainnot)
+
+Kaikki tekstit eivät saa alkaa samalla tavalla — eivätkä varsinkaan kaikki
+isoisällä. Nyrkkisäännöt lautaa kohden:
+
+- korkeintaan kolmasosa teksteistä alkaa isoisän lainauksella tai
+  viittauksella isoisään;
+- vähintään kolmasosassa isoisää ei mainita lainkaan.
+
+Avaustapoja (sekoita vapaasti):
+
+1. Nuoren herran tuuletus: miten mahtavaa oli tulla laivalla meren yli,
+   millaiset näkymät aukesivat.
+2. Aistihavainto: tuoksu, ääni, valo, lämpötila.
+3. Pieni arkinen sattumus: portaikko, lippujono, teelasi, lenkkeilijät.
+4. Sähkösanomatyyli: lyhyt toteamus, piste.
+5. Toisen ihmisen repliikki: opas, kauppias, kanssamatkustaja.
+6. Kuiva fakta, joka kääntyy yllätykseksi viimeisessä virkkeessä.
+
+Mitä pienempi ja yllättävämpi huomio, sitä parempi. Osa havainnoista saa
+olla hyvinkin pieniä arkisia asioita — ne ovat vastapainoa maan
+tunnusomaisimmille asioille, jotka kysymykset ja isot faktat jo kattavat.
+Ensimmäinen virke on aina konkreettinen: jotain näkyy, kuuluu, maksaa tai
+tapahtuu.
+
 ## Avoinna (mietitään yhdessä)
 
 - Kohtaamiset: saisiko rosvo tai lentokenttävirkailija oman repliikin
