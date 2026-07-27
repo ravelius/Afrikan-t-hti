@@ -50,13 +50,22 @@ const FLIGHT_MS = 900;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 // Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
-const INTRO_SPACE = 0.34;
+const INTRO_SPACE = 0.5;
+// Kuinka paljon lautaa lasketaan yläreunasta aloitusnäkymässä.
+const INTRO_TOP = 0.05;
+// Kirjoituskoneen tahti: avaus saa naksua rauhassa, muut tekstit ripeästi.
+const TYPE_MS = 50;
+const INTRO_TYPE_MS = 190;
+// Avaustekstin kirjasinkoko sovitetaan kaistaan näiden rajojen sisällä.
+const INTRO_FONT_MAX = 1.02;
+const INTRO_FONT_MIN = 0.72;
 // Omistajan päättämä avausteksti. ÄLÄ muokkaa ilman omistajan lupaa
 // (docs/tyolista-opukselle.md, paketti 3).
 const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, '
   + 'kukkarollinen puntia ja päiväkirja, joka päättyy kesken lauseen.\n\n'
   + 'Ostin lipun samana iltana.\n\n'
-  + 'Jonkun on kirjoitettava se loppuun.';
+  + 'Jonkun on kirjoitettava se loppuun.\n\n'
+  + 'Minne menisin ensin?';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -102,6 +111,7 @@ export class UI {
     this.passportCount = document.getElementById('passport-count');
     this.passportFinds = document.getElementById('passport-finds');
 
+    this.turnCard = document.getElementById('actions').closest('.turn-card');
     this.introEl = document.getElementById('intro');
     this.introText = document.getElementById('intro-text');
 
@@ -300,14 +310,49 @@ export class UI {
     // pergamentti on avaustekstiä varten, eikä sitä saa jakaa ylä- ja
     // alareunan kesken. Muulloin sisältö keskitetään kuten ennen.
     const alkuun = this.game.phase === 'pickstart';
-    const vy = alkuun ? box.y : box.y + box.h / 2 - vh / 2;
+    const vy = alkuun ? box.y - box.h * INTRO_TOP : box.y + box.h / 2 - vh / 2;
     this.svg.setAttribute(
       'viewBox',
       `${box.x + box.w / 2 - vw / 2} ${vy} ${vw} ${vh}`,
     );
+    if (alkuun) this.placeIntro(box, vy, vh, h);
     this.placeFactCard(w, h);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
+  }
+
+  /**
+   * Avausteksti keskelle sitä tyhjää pergamenttia, joka jää laudan alle.
+   * Kaista lasketaan näkymästä eikä arvata prosentteina, koska kapealla
+   * ruudulla laatikko on myös pystysuunnassa kirjekuoressa.
+   */
+  placeIntro(box, vy, vh, paneH) {
+    const paneY = (boardY) => ((boardY - vy) / vh) * paneH;
+    // Kaista alkaa laudan alareunasta ja päättyy rajauslaatikon pohjaan.
+    // Rajataan paneelin sisään, jottei teksti valu ulos matalalla ruudulla.
+    const ylin = Math.max(0, paneY(box.y + box.h / (1 + INTRO_SPACE)));
+    // Kaista jatkuu paneelin pohjaan asti: pergamentti ulottuu sinne, joten
+    // kapealla ruudulla teksti saa käyttöönsä kaiken tyhjän tilan.
+    const alin = paneH;
+    this.introEl.style.top = `${Math.round(ylin)}px`;
+    this.introEl.style.height = `${Math.max(0, Math.round(alin - ylin))}px`;
+    this.fitIntro();
+  }
+
+  /**
+   * Kutistaa avaustekstiä, jos se ei mahdu kaistaan. Matalalla ruudulla
+   * kaista jää kapeaksi, eikä teksti saa valua laudan tai kartan reunan yli.
+   */
+  fitIntro() {
+    const kaista = this.introEl.clientHeight;
+    if (!kaista) return;
+    let koko = INTRO_FONT_MAX;
+    this.introText.style.fontSize = `${koko}rem`;
+    // Kolme askelta riittää: pienempää kuin INTRO_FONT_MIN ei mennä.
+    for (let i = 0; i < 3 && this.introText.scrollHeight > kaista; i++) {
+      koko = Math.max(INTRO_FONT_MIN, koko - 0.09);
+      this.introText.style.fontSize = `${koko}rem`;
+    }
   }
 
   /**
@@ -700,11 +745,15 @@ export class UI {
 
     // Lähtöpisteen valinta tehdään kartalta yhdellä napautuksella, joten
     // toimintopaneelissa on vain ohje.
+    // Aloitusnäkymässä ei ole toimintoja eikä tilariviä: avausteksti hoitaa
+    // kehotuksen, ja tyhjä kortti vain veisi tilaa kartalta.
     if (game.phase === 'pickstart') {
-      this.turnStatus.textContent = 'Minne ensin?';
+      this.turnStatus.textContent = '';
       this.hint.textContent = '';
+      this.turnCard.hidden = true;
       return;
     }
+    this.turnCard.hidden = false;
 
     if (p.isBot) {
       this.turnStatus.textContent = `${p.name} miettii…`;
@@ -1103,7 +1152,9 @@ export class UI {
     }
     if (this.introShown) return;
     this.introShown = true;
-    this.typeText(this.introText, INTRO_TEXT, 'intro');
+    // Avausteksti kirjoittuu selvästi hitaammin kuin muut: se on matkan
+    // ensimmäinen hetki eikä pelitilanteen ilmoitus.
+    this.typeText(this.introText, INTRO_TEXT, 'intro', () => this.fitIntro(), INTRO_TYPE_MS);
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
@@ -1601,7 +1652,7 @@ export class UI {
    * kirjoituksen, jotta tekstit eivät sekoitu keskenään. Liikkeen
    * vähennystä toivovalle teksti ilmestyy kerralla.
    */
-  typeText(target, text, slot = 'fact', done = null) {
+  typeText(target, text, slot = 'fact', done = null, speed = TYPE_MS) {
     this.typeTimers ??= {};
     clearInterval(this.typeTimers[slot]);
     if (this.reducedMotion) {
@@ -1619,7 +1670,7 @@ export class UI {
         clearInterval(this.typeTimers[slot]);
         done?.();
       }
-    }, 50);
+    }, speed);
   }
 
   showError(message) {
