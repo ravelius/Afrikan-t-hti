@@ -29,6 +29,31 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Tuhannet rakentajat pystyttivät muurit ja tornit ennätysajassa kesällä 1452.',
       hint: 'Rakentajilla oli kova kiire ennen suurta piiritystä.',
     },
+    {
+      q: 'Mikä silta ylittää Bosporin Rumelin linnoituksen kohdalla?',
+      options: [
+        'Fatih Sultan Mehmetin silta',
+        'Galatan silta',
+        'Juutinrauman silta',
+        'Golden Gate',
+      ],
+      correct: 0,
+      fact: 'Vuonna 1988 valmistunut riippusilta on Bosporin toinen silta. Se kaartuu salmen yli aivan linnoituksen kohdalla.',
+      hint: 'Silta on nimetty sen sulttaanin mukaan, joka valloitti kaupungin.',
+    },
+    {
+      q: 'Mitkä kaksi merta Bosporinsalmi yhdistää?',
+      options: [
+        'Mustanmeren ja Marmaranmeren',
+        'Välimeren ja Atlantin',
+        'Punaisenmeren ja Intian valtameren',
+        'Itämeren ja Pohjanmeren',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Salmi on noin 30 kilometriä pitkä ja kapeimmillaan alle kilometrin leveä. Sen kautta kulkee vilkas laivaliikenne pohjoisesta maailman merille.',
+      hint: 'Toinen meri on pohjoisessa, toinen etelässä.',
+    },
   ],
 
   dolmabahce: [
@@ -54,6 +79,31 @@ export const ISTANBUL_QUESTIONS = {
       level: 1,
       fact: 'Palatsin portilta pääsi astumaan suoraan veneeseen.',
       hint: 'Sulttaani saapui palatsiinsa usein veneellä.',
+    },
+    {
+      q: 'Mistä nimi Dolmabahçe tulee?',
+      options: [
+        'täytetystä puutarhasta',
+        'sulttaanin nimestä',
+        'kaupunginosan kalastajista',
+        'valkoisesta marmorista',
+      ],
+      correct: 0,
+      fact: 'Merestä täytettiin maata puutarhaksi, ja nimi tarkoittaa juuri täytettyä puutarhaa. Palatsi rakennettiin sille 1800-luvun puolivälissä.',
+      hint: 'Nimi kertoo, että maa on otettu mereltä.',
+    },
+    {
+      q: 'Mikä muutos tapahtui vuonna 1856, kun Dolmabahçen palatsi valmistui?',
+      options: [
+        'sulttaanit siirtyivät sinne vanhasta palatsista',
+        'palatsi muutettiin sairaalaksi',
+        'palatsista tuli koulu',
+        'palatsi jäi tyhjilleen',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Sulttaanit jättivät vanhan niemen palatsin ja siirtyivät tähän eurooppalaistyyliseen rakennukseen, jossa oli kaasuvalot ja keskuslämmitys.',
+      hint: 'Muutos koski sitä, missä sulttaani asui.',
     },
   ],
 
@@ -81,6 +131,27 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Aukion paikalla jaettiin kaupungin vesi eri kaupunginosiin — nimi tulee jakamisesta.',
       hint: 'Nimi liittyy siihen, miten kaupungin juomavesi aikoinaan ohjattiin.',
     },
+    {
+      q: 'Mikä on Taksimin aukion keskellä?',
+      options: ['tasavallan muistomerkki', 'suihkulähde', 'moskeija', 'majakka'],
+      correct: 0,
+      level: 1,
+      fact: 'Aukion keskellä on vuonna 1928 paljastettu Tasavallan muistomerkki. Aukio on kaupungin juhlien ja mielenosoitusten paikka.',
+      hint: 'Muistomerkki liittyy valtiomuodon muutokseen 1920-luvulla.',
+    },
+    {
+      q: 'Mikä lyhyt maanalainen rata nousee Taksimin suunnasta rinteen alle?',
+      options: [
+        'Tünel, yksi maailman vanhimpia maanalaisia ratoja',
+        'köysirata katolle',
+        'hissi tornissa',
+        'kanaali veneille',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Vuonna 1875 avattu rata nousee jyrkän rinteen ylös ja on vain puoli kilometriä pitkä. Se on yksi maailman vanhimmista kaupunkien maanalaisista radoista.',
+      hint: 'Rata avattiin 1875 ja matka kestää alle kaksi minuuttia.',
+    },
   ],
 
   galata: [
@@ -107,6 +178,21 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Tarinan mukaan Hezârfen Ahmed Çelebi liiti tornista Bosporin yli Üsküdariin asti.',
       hint: 'Tarinan mukaan hän ylitti salmen linnun tavoin.',
     },
+    {
+      q: 'Mihin Galata-tornia käytettiin osmanien aikana?',
+      options: ['palovartiotornina', 'vankilana ainoastaan', 'moskeijana', 'majakkana avomerelle'],
+      correct: 0,
+      level: 1,
+      fact: 'Tornista tarkkailtiin tulipaloja puutalokaupungissa, ja hälytys annettiin rummuilla ja lipuilla.',
+      hint: 'Puukaupungissa suurin vaara oli tuli.',
+    },
+    {
+      q: 'Kuinka korkea Galata-torni on?',
+      options: ['noin 67 metriä', 'noin 20 metriä', 'noin 200 metriä', 'noin 400 metriä'],
+      correct: 0,
+      fact: 'Kivinen torni kohoaa noin 67 metriä ja seisoo kukkulalla, joten sen huipulta näkee yli koko vanhankaupungin.',
+      hint: 'Korkeus on parinkymmenen kerroksen luokkaa.',
+    },
   ],
 
   pierreloti: [
@@ -131,6 +217,22 @@ export const ISTANBUL_QUESTIONS = {
       level: 1,
       fact: 'Kultainen sarvi on Bosporista erkaneva kapea lahti, kaupungin ikivanha satama.',
       hint: 'Lahden nimessä on jalometalli.',
+    },
+    {
+      q: 'Mitä Pierre Lotin kukkulalla nykyään tehdään?',
+      options: ['juodaan teetä ja katsellaan maisemaa', 'uidaan', 'kalastetaan', 'lasketellaan'],
+      correct: 0,
+      level: 1,
+      fact: 'Kukkulalla on kahvila, jossa tee juodaan pienistä lasikupeista. Ylös nousee köysirata hautausmaan rinteen yli.',
+      hint: 'Toiminta on rauhallista, ja siihen kuuluu pieni lasikuppi.',
+    },
+    {
+      q: 'Mikä laaja vanha hautausmaa levittäytyy kukkulan rinteille?',
+      options: ['Eyüp Sultanin hautausmaa', 'Père Lachaise', 'Hietaniemen hautausmaa', 'Highgate'],
+      correct: 0,
+      level: 3,
+      fact: 'Kukkula nousee Eyüpin kaupunginosassa, jossa on merkittävä moskeija ja sen ympärillä satojen vuosien aikana kasvanut hautausmaa.',
+      hint: 'Hautausmaa on samannimisessä kaupunginosassa kuin sen viereinen moskeija.',
     },
   ],
 
@@ -158,6 +260,31 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Vanhat talot ovat täyttyneet kahviloista, kirpputoreista ja pikkuputiikeista.',
       hint: 'Vanhoihin taloihin on avattu putiikkeja ja kuppiloita.',
     },
+    {
+      q: 'Mikä Balatin rannalla seisova kirkko on tehty valetusta raudasta?',
+      options: [
+        'bulgarialainen Pyhän Stefanoksen kirkko',
+        'puinen kappeli',
+        'marmorinen basilika',
+        'tiilinen luostari',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kirkko valettiin Wienissä raudasta ja tuotiin osina laivalla paikalle 1890-luvulla. Se koottiin rannalle kuin suuri rakennussarja.',
+      hint: 'Kirkko valettiin metallista ja koottiin paikan päällä.',
+    },
+    {
+      q: 'Mitä Balatin ja naapurikorttelien uskonnollisista rakennuksista voi sanoa?',
+      options: [
+        'samalla alueella on synagogia, kirkkoja ja moskeijoita',
+        'alueella on vain moskeijoita',
+        'alueella ei ole yhtään uskonnollista rakennusta',
+        'rakennukset ovat kaikki museoita',
+      ],
+      correct: 0,
+      fact: 'Balatissa ja naapurissa Fenerissä on ollut vuosisatoja synagogia, kreikkalaisortodoksisia kirkkoja ja moskeijoita muutaman korttelin säteellä.',
+      hint: 'Vastaus liittyy siihen, kuinka lähellä eri uskontojen rakennukset ovat.',
+    },
   ],
 
   maustebasaari: [
@@ -183,6 +310,32 @@ export const ISTANBUL_QUESTIONS = {
       correct: 0,
       fact: 'Lokumia eli "turkkilaista iloa" on tehty Istanbulissa 1700-luvulta asti, usein ruusuvedellä ja pistaasilla maustettuna.',
       hint: 'Pehmeät palat pyöritellään tomusokerissa.',
+    },
+    {
+      q: 'Missä Maustebasaari sijaitsee?',
+      options: [
+        'Eminönün satama-aukiolla vanhankaupungin puolella',
+        'Aasian puolella kaukana rannasta',
+        'Prinssisaarilla',
+        'Taksimin aukion laidalla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Basaari on lauttalaiturien vieressä Uuden moskeijan kupeessa. Sen katetut kujat rakennettiin 1600-luvulla moskeijan tulojen turvaamiseksi.',
+      hint: 'Paikka on lauttalaiturien vieressä vanhankaupungin puolella.',
+    },
+    {
+      q: 'Mitä basaarin yrttikauppiailta ostettiin osmanien aikana?',
+      options: [
+        'yrttejä ja mausteita lääkkeeksi',
+        'rautaa ja nauloja',
+        'kangasta ja nahkaa',
+        'aseita ja ruutia',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kauppiaat myivät mausteita ja rohdoksia lääkkeeksi. Osa liikkeistä myy yhä yrttisekoituksia vanhoilla nimillään.',
+      hint: 'Kauppiaita kutsuttiin yrttikauppiaiksi.',
     },
   ],
 
@@ -210,6 +363,31 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Tinkiminen on osa kaupankäynnin iloa — myyjä tarjoaa usein teetä kaupanpäälle.',
       hint: 'Ensimmäinen hinta on vasta keskustelun avaus.',
     },
+    {
+      q: 'Mitä Suuressa basaarissa myydään eniten?',
+      options: [
+        'mattoja, koruja ja keramiikkaa',
+        'autoja ja moottoripyöriä',
+        'huonekaluja',
+        'eläimiä',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Basaarissa on omat kujansa kulta- ja hopeasepille, matoille ja nahkatuotteille. Katetut käytävät suojaavat sateelta ja helteeltä.',
+      hint: 'Tuotteet ovat käsityötä ja mahtuvat matkalaukkuun.',
+    },
+    {
+      q: 'Miksi Suuri basaari on katettu ja portein suljettava?',
+      options: [
+        'suojaksi säältä ja tavaroiden turvaamiseksi',
+        'koska maanjäristykset kaatavat katot',
+        'koska se oli ennen kirkko',
+        'jotta valo ei pääsisi sisään lainkaan',
+      ],
+      correct: 0,
+      fact: 'Katetut kujat suojaavat sateelta ja auringolta, ja portit on suljettu yöksi vuosisatojen ajan. Sisällä on omat kaivot ja pieniä moskeijoita.',
+      hint: 'Syy liittyy sekä sateeseen että varkaisiin.',
+    },
   ],
 
   topkapi: [
@@ -234,6 +412,21 @@ export const ISTANBUL_QUESTIONS = {
       correct: 0,
       fact: 'Palatsi rakennettiin Sarayburnun niemelle, jossa salmi ja lahti kohtaavat.',
       hint: 'Palatsi seisoo niemen kärjessä kahden veden välissä.',
+    },
+    {
+      q: 'Mikä Topkapın palatsi on nykyään?',
+      options: ['museo', 'presidentin virka-asunto', 'hotelli', 'koulu'],
+      correct: 0,
+      level: 1,
+      fact: 'Palatsi muutettiin museoksi 1924. Sen pihoilla ja saleissa on esillä aseita, käsikirjoituksia ja sulttaanien kokoelmia.',
+      hint: 'Sisään pääsee nykyään pääsylipulla.',
+    },
+    {
+      q: 'Mikä Topkapın osa oli sulttaanin perheen yksityisalue?',
+      options: ['harem', 'suuret keittiöt', 'aarrekammio', 'ulkoportti'],
+      correct: 0,
+      fact: 'Haremissa asuivat sulttaanin perhe ja hovin naiset. Sen sadat huoneet on koristeltu kaakeleilla, ja osa niistä on avoinna kävijöille.',
+      hint: 'Alue oli perheen ja hovin naisten asuinosa.',
     },
   ],
 
@@ -260,6 +453,26 @@ export const ISTANBUL_QUESTIONS = {
       level: 3,
       fact: 'Nimi on kreikkaa: rakennus omistettiin Kristukselle Pyhänä Viisautena.',
       hint: 'Nimi on kreikkaa ja liittyy tietämiseen.',
+    },
+    {
+      q: 'Mikä Hagia Sofia on nykyään?',
+      options: ['moskeija', 'museo', 'kirkko', 'konserttitalo'],
+      correct: 0,
+      fact: 'Rakennus oli kirkko lähes tuhat vuotta, sitten moskeija, vuodesta 1934 museo ja vuodesta 2020 jälleen moskeija. Se kuuluu maailmanperintökohteeseen.',
+      hint: 'Käyttö muuttui viimeksi vuonna 2020.',
+    },
+    {
+      q: 'Kuinka kauan Hagia Sofian kupoli oli maailman suurin?',
+      options: [
+        'lähes tuhat vuotta',
+        'kymmenen vuotta',
+        'noin sata vuotta',
+        'se ei ole koskaan ollut suurin',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kupoli valmistui vuonna 537, ja suurempaa ei rakennettu ennen Firenzen tuomiokirkkoa 1400-luvulla. Kupolia on korjattu maanjäristysten jälkeen useasti.',
+      hint: 'Suurempi kupoli valmistui vasta Firenzessä 1400-luvulla.',
     },
   ],
 
@@ -288,6 +501,21 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Moskeijaan astutaan sukkasillaan, ja hartiat ja polvet peitetään.',
       hint: 'Ne jätetään ovelle hyllyyn tai kannetaan pussissa.',
     },
+    {
+      q: 'Mikä aukio on Sinisen moskeijan ja Hagia Sofian välissä?',
+      options: ['Sultanahmetin aukio', 'Taksimin aukio', 'Punainen tori', 'Pyhän Markuksen aukio'],
+      correct: 0,
+      fact: 'Moskeija ja Hagia Sofia seisovat saman puiston kahdella laidalla. Aukion alla on antiikin kilparadan jäänteitä.',
+      hint: 'Aukio on nimetty saman sulttaanin mukaan kuin moskeija.',
+    },
+    {
+      q: 'Kuinka monta kaakelia Sinisen moskeijan sisäseinillä on?',
+      options: ['yli 20 000', 'noin 200', 'noin 2 000', 'yli miljoona'],
+      correct: 0,
+      level: 3,
+      fact: 'Seinät on päällystetty İznikin kaakeleilla, joiden siniset kuviot antoivat moskeijalle lempinimen. Kaakelit on maalattu käsin.',
+      hint: 'Määrä on kymmeniätuhansia.',
+    },
   ],
 
   uskudar: [
@@ -315,6 +543,26 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Aasian karavaanit ja pyhiinvaeltajat lähtivät Üsküdarista kohti Mekkaa ja idän kaupunkeja.',
       hint: 'Sieltä alkoi maamatka kohti Mekkaa ja itää.',
     },
+    {
+      q: 'Miten Üsküdarista pääsee Euroopan puolelle?',
+      options: [
+        'lautalla ja merenalaisella metrolla',
+        'vain autolla',
+        'köysiradalla',
+        'ei mitenkään',
+      ],
+      correct: 0,
+      fact: 'Lautat kulkevat jatkuvasti, ja Marmaray-metro kulkee tunnelissa Bosporin pohjan alla. Matka mantereelta mantereelle kestää muutaman minuutin.',
+      hint: 'Toinen tapa kulkee salmen pohjan alla.',
+    },
+    {
+      q: 'Kuka suunnitteli useita Üsküdarin klassisia moskeijoita 1500-luvulla?',
+      options: ['Mimar Sinan', 'Le Corbusier', 'Antoni Gaudí', 'Filippo Brunelleschi'],
+      correct: 0,
+      level: 3,
+      fact: 'Osmanien pääarkkitehti suunnitteli satoja rakennuksia, joista useita juuri tähän kaupunginosaan. Hänen tunnetuin työnsä on Selimiye Edirnessä.',
+      hint: 'Arkkitehdin tunnetuin työ on Edirnen suuri moskeija.',
+    },
   ],
 
   neitsyttorni: [
@@ -339,6 +587,22 @@ export const ISTANBUL_QUESTIONS = {
       correct: 0,
       fact: 'Torni on ollut vartiopaikka, majakka ja karanteeniasema — nykyään se on museo.',
       hint: 'Sen valo opasti laivoja salmen suulla.',
+    },
+    {
+      q: 'Mikä Neitsyttornissa on nykyään?',
+      options: ['museonäyttely ja kahvila', 'vankila', 'koulu', 'asuintalo'],
+      correct: 0,
+      level: 1,
+      fact: 'Torni kunnostettiin ja avattiin uudelleen vuonna 2023. Pikkusaarelle pääsee veneellä rannasta.',
+      hint: 'Sinne mennään nykyään käymään, ei asumaan.',
+    },
+    {
+      q: 'Mihin Neitsyttornia käytettiin 1800-luvulla?',
+      options: ['karanteeniasemana', 'pankkina', 'kouluna', 'teatterina'],
+      correct: 0,
+      level: 3,
+      fact: 'Torni toimi karanteeniasemana koleraepidemioiden aikana. Myöhemmin siitä tehtiin majakka ja radioasema.',
+      hint: 'Käyttö liittyi tautien torjuntaan.',
     },
   ],
 
@@ -367,6 +631,31 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Tiskeillä kimaltavat aamun saalis, oliivit, juustot ja mausteet.',
       hint: 'Tiskeillä kimaltaa aamun saalis suoraan veneistä.',
     },
+    {
+      q: 'Miksi antiikin kirjoittaja kutsui Kadıköyn seudun perustajia sokeiden kaupungiksi?',
+      options: [
+        'koska he eivät valinneet parempaa paikkaa salmen toiselta puolelta',
+        'koska kaupungissa oli tautiepidemia',
+        'koska siellä oli aina pimeää',
+        'koska he eivät osanneet lukea',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Tarinan mukaan persialainen sotapäällikkö ihmetteli, miksi Khalkedonin perustajat eivät valinneet vastarannan niemeä, jolle Bysantion syntyi. Nimitys jäi elämään.',
+      hint: 'Vertailukohta on salmen vastarannan niemi.',
+    },
+    {
+      q: 'Mistä Kadıköyn kadut ovat nykyään tunnettuja?',
+      options: [
+        'kahviloista, kirjakaupoista ja katutaiteesta',
+        'autonäyttelyistä',
+        'kalanviljelylaitoksista',
+        'hiihtokeskuksista',
+      ],
+      correct: 0,
+      fact: 'Kaupunginosa on opiskelijoiden ja taiteilijoiden suosima. Sen kujilla on levykauppoja, kirjakauppoja ja suuria seinämaalauksia.',
+      hint: 'Alue on nuorten ja opiskelijoiden suosiossa.',
+    },
   ],
 
   prinssisaaret: [
@@ -392,6 +681,26 @@ export const ISTANBUL_QUESTIONS = {
       level: 1,
       fact: 'Lautat kulkevat saarille Kadıköystä ja Eminönüstä pitkin Marmaranmerta.',
       hint: 'Matka taittuu vain vettä pitkin.',
+    },
+    {
+      q: 'Millä kulkuneuvoilla Prinssisaarilla liikutaan nykyään?',
+      options: [
+        'sähköisillä pikkuautoilla ja polkupyörillä',
+        'moottoripyörillä',
+        'hevoskärryillä',
+        'junalla',
+      ],
+      correct: 0,
+      fact: 'Hevoskärryistä luovuttiin vuonna 2020 hevosten sairastumisen jälkeen, ja tilalle tuli sähköisiä pikkuautoja. Polkupyörä on saarilla tavallisin kulkuneuvo.',
+      hint: 'Kulkuneuvot ovat hiljaisia ja pieniä.',
+    },
+    {
+      q: 'Mikä on Prinssisaarten suurin saari?',
+      options: ['Büyükada', 'Heybeliada', 'Burgazada', 'Kınalıada'],
+      correct: 0,
+      level: 3,
+      fact: 'Saariston suurin ja vilkkain saari on kukkuloineen ja puuhuviloineen kesäkohde. Sen kukkulalla on vanha luostari.',
+      hint: 'Nimi tarkoittaa turkiksi suurta saarta.',
     },
   ],
 
@@ -487,6 +796,34 @@ export const ISTANBUL_QUESTIONS = {
       fact: 'Bysantin hippodromilla kilpailtiin hevosvaunuilla — aukiolla seisoo yhä sieltä tuotu egyptiläinen obeliski.',
       hint: 'Siellä kilpailtiin hevosvaunuilla kymmenientuhansien katsojien edessä.',
     },
+    {
+      q: 'Mikä on Turkin pääkaupunki?',
+      options: ['Ankara', 'Istanbul', 'Izmir', 'Bursa'],
+      correct: 0,
+      fact: 'Pääkaupunki siirrettiin sisämaahan Ankaraan 1923 tasavallan perustamisen yhteydessä. Istanbul on silti maan suurin kaupunki ja talouden keskus.',
+      hint: 'Pääkaupunki siirrettiin sisämaahan 1920-luvulla.',
+    },
+    {
+      q: 'Mikä tunneli yhdistää Istanbulin mantereet junaliikenteessä?',
+      options: ['Marmaray', 'Kanaalitunneli', 'Gotthardin pohjatunneli', 'Seikanin tunneli'],
+      correct: 0,
+      level: 3,
+      fact: 'Vuonna 2013 avattu tunneli kulkee Bosporin pohjan alla ja yhdistää Euroopan ja Aasian puolen lähijunaliikenteen.',
+      hint: 'Tunneli avattiin 2013 ja kulkee salmen pohjan alla.',
+    },
+    {
+      q: 'Millä maksetaan Istanbulin lautoissa, metrossa ja busseissa?',
+      options: [
+        'ladattavalla matkakortilla',
+        'kolikkopussilla',
+        'setelillä kuljettajalle',
+        'kultakolikolla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Sama kortti kelpaa kaikissa kaupungin kulkuneuvoissa, myös lautoilla. Sitä ladataan automaateilla ja kioskeilla.',
+      hint: 'Väline on muovinen ja se ladataan automaatilla.',
+    },
   ],
 };
 
@@ -498,69 +835,137 @@ export const ISTANBUL_FACTS = {
   lentoasema: [
     'Istanbulin lentoasema on matkustajamääriltään Euroopan suurimpia — sen kautta lentää vuosittain kymmeniä miljoonia matkustajia.',
     'Lentoasemalta on yli 40 kilometriä keskustaan, ja matka taittuu metrolla.',
+    {
+      text: 'Karttani mukaan tässä kohdassa on peltoja ja vuohia kaupungin ulkopuolella. Lokit kaartelevat samalla tavalla kuin sataman yllä, ja se on ainoa asia jonka tunnistan.',
+      voice: 'isoisa',
+    },
   ],
   sabihagokcen: [
     'Sabiha Gökçen on nimetty maailman ensimmäisen naishävittäjälentäjän mukaan — hän oli Atatürkin kasvattitytär.',
     'Kenttä palvelee Istanbulin Aasian-puoleista osaa Marmaranmeren tuntumassa.',
+    {
+      text: 'Aasian puolella kaupungin ulkopuolella on kyliä ja karavaanireittien alkupää. Matka itään kestää kuukausia, eikä sitä lyhennä mikään keksintö.',
+      voice: 'isoisa',
+    },
   ],
   rumelinlinnoitus: [
     'Rumelin linnoitus rakennettiin salmen kapeimpaan kohtaan vain neljässä kuukaudessa vuonna 1452.',
     'Linnoitusta vastapäätä Aasian rannalla seisoo vanhempi sisar, Anadolun linnoitus.',
+    {
+      text: 'Salmen kapeimmalla kohdalla seisoo linnoitus, joka rakennettiin muutamassa kuukaudessa. Sen kanuunat pysäyttivät ennen jokaisen laivan; nyt ne pysäyttävät lähinnä kalastajien katseita.',
+      voice: 'isoisa',
+    },
   ],
   dolmabahce: [
     'Dolmabahçen juhlasalin kattokruunussa on 750 lamppua — se on maailman suurimpia.',
     'Palatsin kellot on pysäytetty aikaan 9.05, Atatürkin kuolinhetkeen.',
+    {
+      text: 'Sulttaani on siirtynyt vanhasta palatsista uuteen, jossa on kaasuvalot ja kristallikruunut. Rakennus on niin eurooppalainen, että tunnistan sen huonekalut Lontoon näyttelystä.',
+      voice: 'isoisa',
+    },
   ],
   taksim: [
     'İstiklal-kadulla kävelee viikonloppuisin jopa miljoonia ihmisiä päivässä.',
     'Taksimin nimi tulee vedenjakelusta: aukiolla jaettiin kaupungin vesi eri kaupunginosiin.',
+    {
+      text: 'Kaupungin laidalla on aukio, jolta vesi jaetaan kaupunginosille. Vesijohdot ovat roomalaisten perintöä; me olemme lisänneet niihin hanan ja pitäneet itseämme keksijöinä.',
+      voice: 'isoisa',
+    },
   ],
   galata: [
     'Galata-tornia on käytetty vankilana, tähtitornina ja palovartiotornina.',
     'Tarun mukaan Hezârfen Ahmed Çelebi liiti tekosiivillä tornista Bosporin yli 1600-luvulla.',
+    {
+      text: 'Genovalaisten torni kohoaa kukkulalla, ja huipulta näkee koko kaupungin. Vartijat tarkkailevat tulipaloja, mikä on puukaupungissa hyödyllisempi virka kuin yksikään klubini luottamustehtävä.',
+      voice: 'isoisa',
+    },
   ],
   pierreloti: [
     'Pierre Lotin kahvilasta avautuu kuuluisin näköala Kultaiseen sarveen.',
     'Kukkulalle nousee köysirata vanhan hautausmaan sypressien yli.',
+    {
+      text: 'Kukkulan kahvilassa juodaan teetä pienistä laseista ja katsellaan lahdelle. Alhaalla on hautausmaa, ja sen hiljaisuus tekee teestä paremman.',
+      voice: 'isoisa',
+    },
   ],
   balat: [
     'Balatin värikkäät talot ovat suosituimpia valokuvauspaikkoja koko kaupungissa.',
     'Naapurikorttelissa Fenerissä toimii yhä ekumeeninen patriarkaatti, ortodoksisen kirkon vanha keskus.',
+    {
+      text: 'Yhdessä korttelissa on synagoga, kirkko ja moskeija, ja kujat ovat niin jyrkkiä että hevonen kieltäytyy. Asukkaat pitävät tätä tavallisena; minä kirjoitan siitä kolme sivua.',
+      voice: 'isoisa',
+    },
   ],
   maustebasaari: [
     'Maustebasaari rakennettiin 1660-luvulla, ja sen tuotot ylläpitivät viereistä Uutta moskeijaa.',
     'Basaarin kujilla myydään myös lokumia, kuivattuja hedelmiä ja sata lajia juustoa.',
+    {
+      text: 'Basaarissa myydään yrttejä lääkkeeksi ja mausteita, joiden nimiä en osaa kirjoittaa. Ostin jotain kurkkukipuun ja se auttoi, mistä en aio kertoa lääkärilleni.',
+      voice: 'isoisa',
+    },
   ],
   suuribasaari: [
     'Suuressa basaarissa on yli 60 katettua kujaa ja noin 4 000 myymälää.',
     'Basaarin kultakauppiaiden kujat ovat toimineet samoilla paikoilla vuosisatoja.',
+    {
+      text: 'Katettuja kujia on niin monta, että hukkasin suunnan kolmesti. Tinkiminen on täällä kohteliaisuutta eikä riitaa; maksoin ensimmäisen hinnan ja loukkasin siten myyjää.',
+      voice: 'isoisa',
+    },
   ],
   topkapi: [
     'Topkapın keittiöissä valmistettiin parhaimmillaan ruokaa kymmenelle tuhannelle hengelle päivässä.',
     'Palatsin aarrekammiossa säilytetään 86-karaattista Kauhantekijän timanttia.',
+    {
+      text: 'Niemen palatsissa on aarrekammio, jonka jalokivet ovat suurempia kuin uskoisin kertomatta. Sulttaani on jo siirtynyt asumaan muualle, mutta keittiöt käyvät yhä.',
+      voice: 'isoisa',
+    },
   ],
   hagiasofia: [
     'Hagia Sofian kupoli oli lähes tuhat vuotta maailman suurin — sen halkaisija on yli 30 metriä.',
     'Rakennus on ollut kirkko, moskeija, museo ja jälleen moskeija.',
+    {
+      text: 'Kupoli on niin suuri, ettei sitä ylitetty tuhanteen vuoteen. Rakennus on ollut kirkko ja on nyt moskeija; kivet eivät ole huomanneet muutosta.',
+      voice: 'isoisa',
+    },
   ],
   sinimoskeija: [
     'Sinisen moskeijan sisäseiniä peittää yli 20 000 käsin maalattua İznikin kaakelia.',
     'Moskeija rakennettiin suoraan Bysantin keisaripalatsin raunioiden päälle.',
+    {
+      text: 'Sisäseinät on päällystetty sinisillä kaakeleilla, ja niitä on kymmeniätuhansia. Riisuin kenkäni ovella, ja tein sen ensimmäisen kerran elämässäni mukisematta.',
+      voice: 'isoisa',
+    },
   ],
   uskudar: [
     'Üsküdarin rannalta katsotaan kuuluisinta auringonlaskua: vanhakaupunki piirtyy siluettina vastarannalle.',
     'Üsküdar oli karavaanien ja pyhiinvaeltajien lähtöpaikka kohti Mekkaa.',
+    {
+      text: 'Salmen toisella puolella alkaa Aasia, ja sinne pääsee soutamalla neljännestunnissa. Kirjoitin kotiin olleeni kahdessa maanosassa samana päivänä; kotona ei uskottu.',
+      voice: 'isoisa',
+    },
   ],
   neitsyttorni: [
     'Neitsyttorni on rakennettu pienelle luodolle Bosporin suulle — se on ollut majakka, vartiotorni ja karanteeniasema.',
     'Tornin tarussa prinsessaa suojeltiin käärme-ennustukselta, mutta käärme saapui hedelmäkorissa.',
+    {
+      text: 'Salmen suulla on pikkusaari ja sillä torni, jota käytetään karanteeniasemana. Tarina kertoo prinsessasta ja ennustuksesta, ja merimiehet kertovat sen mieluummin kuin puhuvat karanteenista.',
+      voice: 'isoisa',
+    },
   ],
   kadikoy: [
     'Kadıköyn paikalla oli antiikin Khalkedon, jota kutsuttiin "sokeain maaksi".',
     'Kadıköyn kalatorilla ja kahviloissa sykkii Aasian puolen arki — ja seinät ovat täynnä katutaidetta.',
+    {
+      text: 'Aasian puolen tori on täynnä kalaa ja vihanneksia, ja hinnat ovat kolmanneksen halvemmat kuin vastarannalla. Antiikin kirjoittaja kutsui tämän paikan perustajia sokeiksi; hän ei ilmeisesti käynyt torilla.',
+      voice: 'isoisa',
+    },
   ],
   prinssisaaret: [
     'Prinssisaarilla ei pitkään saanut ajaa autolla — liikenne hoidettiin hevoskärryillä.',
     'Bysantin aikana saarten luostarit toimivat vallasta syrjäytettyjen prinssien karkotuspaikkoina.',
+    {
+      text: 'Saarille purjehditaan kesäksi pakoon kaupungin kuumuutta, eikä siellä ole muita vaunuja kuin hevosen vetämiä. Bysantin aikaan sinne karkotettiin prinssejä; nykyään sinne karkotetaan itsensä vapaaehtoisesti.',
+      voice: 'isoisa',
+    },
   ],
 };
