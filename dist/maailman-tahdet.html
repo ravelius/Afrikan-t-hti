@@ -148,6 +148,22 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   touch-action: manipulation;
 }
 
+/* Vanhan filmin vaalea vinjetti: kartan reunat haalistuvat kuin
+   ikääntyneessä filmiruudussa. Piirretään ruudun päälle, joten se
+   myötäilee aina näkyvää aluetta laudan rajauksesta riippumatta. */
+.map-pane::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 75% 75% at 50% 50%,
+    rgba(250, 242, 219, 0) 55%,
+    rgba(250, 242, 219, 0.26) 80%,
+    rgba(252, 246, 228, 0.6) 100%
+  );
+}
+
 .board-hint {
   position: absolute;
   left: 50%;
@@ -1775,6 +1791,133 @@ const MAAILMA_QUESTIONS = {
     },
   ],
 
+  tokio: [
+    {
+      q: 'Mikä Tokion seudusta tekee erityisen maailman kaupunkien joukossa?',
+      options: [
+        'se on maailman väkirikkain kaupunkiseutu',
+        'se on maailman vanhin kaupunki',
+        'se on maailman korkeimmalla sijaitseva pääkaupunki',
+        'se on maailman eteläisin pääkaupunki',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Tokion suurkaupunkialueella asuu lähes 40 miljoonaa ihmistä — enemmän kuin monessa valtiossa.',
+      hint: 'Asia liittyy asukkaisiin.',
+    },
+    {
+      q: 'Millä nimellä tunnetaan Japanin huippunopeat junat?',
+      options: ['shinkansen', 'maglev-metro', 'samurai express', 'fuji-juna'],
+      correct: 0,
+      fact: 'Luotijunat ovat kulkeneet vuodesta 1964, ja niiden keskimyöhästyminen lasketaan sekunneissa.',
+      hint: 'Nimi on japania ja tarkoittaa uutta runkolinjaa.',
+    },
+    {
+      q: 'Mikä pyhänä pidetty vuori näkyy kirkkaalla säällä Tokioon?',
+      options: ['Fuji', 'Aso', 'Tateyama', 'Ontake'],
+      correct: 0,
+      level: 3,
+      fact: 'Fuji (3 776 m) on Japanin korkein vuori ja tulivuori, jonka huipulle vaeltaa kesäisin satojatuhansia.',
+      hint: 'Vuori on kuvattu lukemattomiin puupiirroksiin.',
+    },
+  ],
+
+  singapore: [
+    {
+      q: 'Mikä Singapore on?',
+      options: [
+        'saarella sijaitseva kaupunkivaltio',
+        'Kiinan maakunta',
+        'Intian pääkaupunki',
+        'Australian osavaltio',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Singapore on yksi maailman harvoista kaupunkivaltioista — koko maa on yhtä kaupunkia saarella.',
+      hint: 'Koko maa mahtuu yhden kaupungin rajoihin.',
+    },
+    {
+      q: 'Miksi Singaporen satama on maailmankaupalle tärkeä?',
+      options: [
+        'se vartioi Malakansalmen laivareittiä',
+        'sieltä viedään maailman öljy',
+        'se on ainoa satama Aasiassa',
+        'sinne pääsee vain purjelaivalla',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Merkittävä osa maailman konttiliikenteestä kulkee Malakansalmen kautta, ja Singapore on sen portti.',
+      hint: 'Kapea salmi yhdistää kaksi valtamerta.',
+    },
+  ],
+
+  kapkaupunki: [
+    {
+      q: 'Minkä muotoinen vuori kohoaa Kapkaupungin ylle?',
+      options: ['pöytämäisen tasainen', 'teräväkärkinen', 'kaksihuippuinen', 'täysin pyöreä'],
+      correct: 0,
+      level: 1,
+      fact: 'Pöytävuoren tasainen laki on yli kilometrin korkeudella, ja pilviverhoa kutsutaan pöytäliinaksi.',
+      hint: 'Vuoren nimi kertoo saman kuin sen muoto.',
+    },
+    {
+      q: 'Mitkä kaksi valtamerta kohtaavat Etelä-Afrikan kärjessä?',
+      options: [
+        'Atlantti ja Intian valtameri',
+        'Atlantti ja Tyynimeri',
+        'Intian valtameri ja Tyynimeri',
+        'Atlantti ja Jäämeri',
+      ],
+      correct: 0,
+      fact: 'Virallinen rajapiste on Kap Agulhas, Afrikan eteläisin kärki, hieman Hyväntoivonniemestä itään.',
+      hint: 'Toinen niistä on Afrikan länsipuolella, toinen itäpuolella.',
+    },
+    {
+      q: 'Mikä historian jakso päättyi Etelä-Afrikassa vuonna 1994?',
+      options: ['apartheid eli rotuerottelu', 'siirtomaakausi', 'kultaryntäys', 'sisällissota'],
+      correct: 0,
+      level: 3,
+      fact: 'Ensimmäisissä vapaissa vaaleissa 1994 presidentiksi valittiin Nelson Mandela, joka oli istunut vankilassa 27 vuotta.',
+      hint: 'Sana on afrikaansia ja tarkoittaa erillisyyttä.',
+    },
+  ],
+
+  losangeles: [
+    {
+      q: 'Mistä Los Angeles tunnetaan erityisesti?',
+      options: ['elokuvateollisuudesta', 'autotehtaista', 'öljynporauksesta', 'kalastuksesta'],
+      correct: 0,
+      level: 1,
+      fact: 'Hollywoodin kukkuloilla tehdään elokuvia yli sadan vuoden perinteellä — kyltti pystytettiin 1923.',
+      hint: 'Kaupunginosan valkoiset kirjaimet näkyvät kauas.',
+    },
+    {
+      q: 'Mikä kuvaa Los Angelesin kaupunkirakennetta?',
+      options: [
+        'kaupunki on levinnyt satojen kilometrien matkalle',
+        'kaupunki on rakennettu veden alle',
+        'kaupungissa ei ole yhtään autoa',
+        'kaupunki on yhä pieni kalastajakylä',
+      ],
+      correct: 0,
+      fact: 'Los Angelesin seutu on kasvanut moottoriteiden varsille niin laajaksi, että sitä kutsutaan sadan lähiön kaupungiksi.',
+      hint: 'Autoilu muovasi kaupungin muodon.',
+    },
+    {
+      q: 'Mikä mannerlaattojen raja tekee Kaliforniasta maanjäristysaluetta?',
+      options: [
+        'San Andreasin siirros',
+        'Atlantin keskiselänne',
+        'Mariaanien hauta',
+        'Alppien poimuvuoristo',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'San Andreasin siirroksessa Tyynenmeren laatta liukuu Pohjois-Amerikan laattaa vasten noin 5 cm vuodessa.',
+      hint: 'Kahden mannerlaatan raja kulkee osavaltion halki.',
+    },
+  ],
+
   general: [
     {
       q: 'Kuinka monta mannerta maapallolla yleensä lasketaan olevan?',
@@ -1879,6 +2022,22 @@ const MAAILMA_QUESTIONS = {
  * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
  */
 const MAAILMA_FACTS = {
+  tokio: [
+    'Tokiossa on enemmän ravintoloita kuin missään muussa maailman kaupungissa — myös eniten Michelin-tähtiä.',
+    'Shibuyan risteyksessä voi ylittää kadun jopa 3 000 ihmistä yhdellä vihreällä valolla.',
+  ],
+  singapore: [
+    'Singaporen lentokentällä on maailman korkein sisävesiputous.',
+    'Purukumin myynti on Singaporessa kielletty ilman reseptiä — katujen siisteys on kansallisylpeys.',
+  ],
+  kapkaupunki: [
+    'Pöytävuoren kansallispuistossa kasvaa enemmän kasvilajeja kuin koko Britanniassa.',
+    'Kapkaupungin edustan Robben Islandin vankilasaari, jossa Nelson Mandela istui 18 vuotta, on nykyään museo.',
+  ],
+  losangeles: [
+    'Los Angelesin seudulla puhutaan yli 200 kieltä — se on maailman monikulttuurisimpia kaupunkeja.',
+    'Kaupungin nimi oli alun perin espanjaa ja paljon pidempi: El Pueblo de la Reina de los Ángeles.',
+  ],
   lontoo: [
     'Lontoossa puhutaan yli 300 kieltä — se on yksi maailman monikulttuurisimmista kaupungeista.',
     'Lontoon metro eli "the Tube" on maailman vanhin — se avattiin jo 1863 höyryvetureilla.',
@@ -1923,10 +2082,9 @@ const MAAILMA_FACTS = {
 // Mittakaava on sama molemmissa suunnissa, joten mantereet eivät veny
 // pystysuunnassa. Kartan ylä- ja alalaitaan jää siksi avomerta.
 //
-// Mantereet ylitetään laivalla valtamerten poikki tai lentäen. Tässä on
-// aluksi vain yksi kaupunki mannerta kohden — yhteisö voi lisätä kaupunkeja
-// ja tihentää verkkoa. Kairosta laskeudutaan Afrikan ja Lähi-idän
-// tarkemmille laudoille.
+// Mantereet ylitetään laivalla valtamerten poikki, lentäen tai kahta
+// maareittiä pitkin (Siperian rata ja Amerikan mannerrata). Lähes joka
+// kaupunki on portti mantereensa tarkemmalle laudalle.
 
 const WORLD_MAP = {
   width: 1000,
@@ -2007,6 +2165,18 @@ const WORLD_MAP = {
   nzSouthPoints: [
     [975, 650], [983, 658], [989, 670], [983, 676], [974, 668], [970, 658],
   ],
+  // Arktinen jääraja täyttää kartan ylälaidan korkeilla näytöillä.
+  arcticPoints: [
+    [-40, 228], [1045, 228], [1045, 258], [950, 266], [850, 255], [745, 268],
+    [640, 257], [535, 270], [430, 259], [325, 272], [220, 261], [115, 274],
+    [20, 263], [-40, 270],
+  ],
+  // Etelämantereen jäinen rannikko täyttää kartan alalaidan.
+  antarcticaPoints: [
+    [-40, 745], [60, 728], [160, 736], [280, 722], [400, 732], [520, 718],
+    [640, 728], [760, 714], [880, 724], [1000, 716], [1045, 745], [1045, 850],
+    [-40, 850],
+  ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
@@ -2051,13 +2221,30 @@ const WORLD_CITIES = [
     id: 'moskova', name: 'Moskova', x: 604, y: 372.3, airport: true, la: 'start', lx: 16, ly: 5,
     links: [{ pack: 'europe', city: 'moskova', label: 'Euroopan lauta' }],
   },
+  {
+    id: 'tokio', name: 'Tokio', x: 893, y: 432, airport: true, la: 'start', lx: 18, ly: 5,
+    links: [{ pack: 'asia', city: 'tokio', label: 'Aasian lauta' }],
+  },
+  {
+    id: 'singapore', name: 'Singapore', x: 793, y: 530, airport: true, la: 'start', lx: 18, ly: -12,
+    links: [{ pack: 'asia', city: 'singapore', label: 'Aasian lauta' }],
+  },
+  {
+    id: 'kapkaupunki', name: 'Kapkaupunki', x: 560, y: 608, airport: true, la: 'end', lx: -18, ly: 10,
+    links: [{ pack: 'africa', city: 'kapkaupunki', label: 'Afrikan lauta' }],
+  },
+  {
+    id: 'losangeles', name: 'Los Angeles', x: 190, y: 438, airport: true, la: 'end', lx: -16, ly: 12,
+    links: [{ pack: 'northamerica', city: 'losangeles', label: 'Pohjois-Amerikan lauta' }],
+  },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
 // type 'sea' = valtamerireitti; via = reittipisteet veden päällä.
 const WORLD_EDGES = [
-  // Siperian rata on laudan ainoa maareitti.
+  // Maareitit: Siperian rata ja Amerikan mannerrata.
   { a: 'moskova', b: 'peking', steps: 7, via: [[667, 374.6], [750, 388.2], [792, 402.2]] },
+  { a: 'losangeles', b: 'newyork', steps: 5, via: [[225, 428], [262, 412]] },
 
   // Valtamerten laivareitit
   { a: 'lontoo', b: 'newyork', steps: 5, type: 'sea', via: [[417, 388.2], [361, 402.2]] },
@@ -2076,6 +2263,11 @@ const WORLD_EDGES = [
     via: [[711, 513.4], [774, 519.7], [786, 527.4], [806, 494.0], [823, 467.6], [844, 438.4], [844, 427.1]],
   },
   { a: 'peking', b: 'sydney', steps: 6, type: 'sea', via: [[861, 457.8], [889, 499.4], [911, 549.6], [928, 577.2], [932, 601.3]] },
+  { a: 'peking', b: 'tokio', steps: 2, type: 'sea', via: [[850, 442], [872, 450]] },
+  { a: 'mumbai', b: 'singapore', steps: 4, type: 'sea', via: [[711, 513.4], [752, 526]] },
+  { a: 'singapore', b: 'sydney', steps: 5, type: 'sea', via: [[855, 528], [888, 548], [925, 578], [933, 602]] },
+  { a: 'kapkaupunki', b: 'rio', steps: 6, type: 'sea', via: [[500, 648], [430, 632]] },
+  { a: 'kapkaupunki', b: 'sydney', steps: 7, type: 'sea', via: [[610, 642], [680, 656], [760, 652], [830, 648], [890, 650]] },
   {
     a: 'mumbai', b: 'sydney', steps: 6, type: 'sea',
     via: [[711, 513.4], [740, 557.8], [778, 604.8], [817, 632.8], [875, 638.3], [911, 632.8]],
@@ -2093,6 +2285,14 @@ const WORLD_AIR_ROUTES = [
   { a: 'newyork', b: 'rio' },
   { a: 'lontoo', b: 'moskova' },
   { a: 'moskova', b: 'peking' },
+  { a: 'peking', b: 'tokio' },
+  { a: 'tokio', b: 'sydney' },
+  { a: 'tokio', b: 'losangeles' },
+  { a: 'newyork', b: 'losangeles' },
+  { a: 'mumbai', b: 'singapore' },
+  { a: 'singapore', b: 'sydney' },
+  { a: 'kairo', b: 'kapkaupunki' },
+  { a: 'rio', b: 'kapkaupunki' },
 ];
 
 const MAAILMA = {
@@ -2109,21 +2309,23 @@ const MAAILMA = {
       WORLD_MAP.britainPoints, WORLD_MAP.australiaPoints,
       WORLD_MAP.greenlandPoints, WORLD_MAP.madagascarPoints, WORLD_MAP.japanPoints,
       WORLD_MAP.indonesiaPoints, WORLD_MAP.nzNorthPoints, WORLD_MAP.nzSouthPoints,
+      WORLD_MAP.arcticPoints, WORLD_MAP.antarcticaPoints,
     ],
-    // Tiivis kehys: pohjoisen ja etelän tyhjät merikaistat jäävät pois,
-    // mutta Grönlanti ja Uusi-Seelanti mahtuvat mukaan.
-    frame: { x: 15, y: 285, w: 985, h: 475 },
+    // Tiivis kehys: tyhjät merikaistat jäävät pois, mutta Grönlanti,
+    // Uusi-Seelanti ja Etelämantereen rannikko mahtuvat mukaan.
+    frame: { x: 25, y: 288, w: 970, h: 520 },
   },
   cities: WORLD_CITIES,
   edges: WORLD_EDGES,
   airRoutes: WORLD_AIR_ROUTES,
-  islands: [],
+  // Tokio ja Singapore ovat koristesaarilla.
+  islands: ['tokio', 'singapore'],
   // Oikeassa mittakaavassa esimerkiksi Kairo ja Moskova ovat aidosti lähekkäin.
   minCityDistance: 70,
 
   tokens: {
     types: themedTokenTypes({ star: { name: 'Magellanin kompassi' } }),
-    counts: { star: 1, horseshoe: 1, robber: 1, ruby: 1, emerald: 1, topaz: 1 },
+    counts: { star: 1, horseshoe: 2, robber: 1, ruby: 1, emerald: 2, topaz: 2, empty: 1 },
   },
 
   questions: MAAILMA_QUESTIONS,
@@ -2177,12 +2379,12 @@ const MAAILMA = {
     mapLabelPos: { x: 140, y: 655.0 },
     compass: { x: 85, y: 526.7, r: 58 },
     waveSkip: [
-      { x: 180, y: 478, r: 90 },
+      { x: 170, y: 545, r: 90 },
       { x: 736, y: 638.3, r: 100 },
       { x: 140, y: 655.0, r: 130 },
     ],
     // Laiva purjehtii keskellä Tyyntämerta, kaukana rannikoista.
-    ship: { x: 180, y: 478 },
+    ship: { x: 170, y: 545 },
     serpent: { x: 736, y: 638.3 },
     // Nopan lepopaikka: Tyynimeri laudan vasemmassa laidassa.
     dieSpot: { x: 0.08, y: 0.62 },
@@ -2192,7 +2394,8 @@ const MAAILMA = {
       { maxY: 402.2, kind: 'mountains' },
       { maxY: 487.8, kind: 'trees' },
       { maxY: 546.1, kind: 'dunes' },
-      { maxY: Infinity, kind: 'trees' },
+      { maxY: 700, kind: 'trees' },
+      { maxY: Infinity, kind: 'mountains' },
     ],
   },
 };
@@ -3317,7 +3520,10 @@ const AFRICA_CITIES = [
   { id: 'kongo', name: 'Kongo', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'angola', name: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
   { id: 'namib', name: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
-  { id: 'kapkaupunki', name: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6 },
+  {
+    id: 'kapkaupunki', name: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
+    links: [{ pack: 'maailma', city: 'kapkaupunki', label: 'Maailma-lauta' }],
+  },
   { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
   { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
   { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
@@ -7499,6 +7705,7 @@ const AS_CITIES = [
   {
     id: 'tokio', name: 'Tokio', x: 930, y: 422, start: true, airport: true,
     la: 'start', lx: 18, ly: 5,
+    links: [{ pack: 'maailma', city: 'tokio', label: 'Maailma-lauta' }],
   },
 
   { id: 'jekaterinburg', name: 'Jekaterinburg', x: 406, y: 198, la: 'start', lx: 16, ly: 5 },
@@ -7525,7 +7732,10 @@ const AS_CITIES = [
   { id: 'hanoi', name: 'Hanoi', x: 660, y: 630, la: 'end', lx: -16, ly: 5 },
   { id: 'bangkok', name: 'Bangkok', x: 603, y: 708, airport: true, la: 'end', lx: -16, ly: 24 },
   { id: 'yangon', name: 'Yangon', x: 559, y: 671, la: 'end', lx: -16, ly: 5 },
-  { id: 'singapore', name: 'Singapore', x: 634, y: 851, airport: true, la: 'middle', lx: 0, ly: 30 },
+  {
+    id: 'singapore', name: 'Singapore', x: 634, y: 851, airport: true, la: 'middle', lx: 0, ly: 30,
+    links: [{ pack: 'maailma', city: 'singapore', label: 'Maailma-lauta' }],
+  },
   { id: 'sumatra', name: 'Sumatra', x: 562, y: 817, la: 'start', lx: 16, ly: 5 },
   { id: 'borneo', name: 'Borneo', x: 718, y: 852, la: 'start', lx: 16, ly: 5 },
   {
@@ -10117,9 +10327,10 @@ const NA_MAP = {
     [926, 565.9], [927.7, 565.3], [928.4, 566.2], [927.3, 567.1], [926.3, 566.7],
   ],
   hawaiiPoints: [
-    [18, 535], [27.6, 539.2], [32.3, 550.3], [35.4, 558.5], [42.3, 565.3],
-    [42.3, 578.3], [46.8, 590.2], [36.8, 594.4], [35.7, 584.9], [38.2, 570.8],
-    [32.3, 559], [25.2, 549], [19.2, 541.2],
+    // Saariketju on tuotu lähemmäs mannerta, jotta lauta rajautuu tiiviisti.
+    [168, 590], [177.6, 594.2], [182.3, 605.3], [185.4, 613.5], [192.3, 620.3],
+    [192.3, 633.3], [196.8, 645.2], [186.8, 649.4], [185.7, 639.9], [188.2, 625.8],
+    [182.3, 614], [175.2, 604], [169.2, 596.2],
   ],
 };
 
@@ -10158,8 +10369,11 @@ const NA_CITIES = [
   { id: 'denver', name: 'Denver', x: 567, y: 550, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'santafe', name: 'Santa Fe', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
   { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
-  { id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'hawaii', name: 'Havaiji', x: 37, y: 579, la: 'middle', lx: 0, ly: 28 },
+  {
+    id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, airport: true, la: 'end', lx: -16, ly: 5,
+    links: [{ pack: 'maailma', city: 'losangeles', label: 'Maailma-lauta' }],
+  },
+  { id: 'hawaii', name: 'Havaiji', x: 185, y: 628, la: 'middle', lx: 0, ly: 34 },
   { id: 'dallas', name: 'Dallas', x: 638, y: 626, la: 'start', lx: 16, ly: 5 },
   { id: 'neworleans', name: 'New Orleans', x: 701, y: 649, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'miami', name: 'Miami', x: 801, y: 678, airport: true, la: 'start', lx: 16, ly: 5 },
@@ -10231,9 +10445,9 @@ const NA_EDGES = [
   { a: 'anchorage', b: 'vancouver', steps: 6, type: 'sea',
     via: [[316, 274], [342, 303], [380, 359], [415, 402]] },
   { a: 'sanfrancisco', b: 'hawaii', steps: 7, type: 'sea',
-    via: [[359, 572], [229, 590], [95, 578]] },
+    via: [[350, 588], [265, 606]] },
   { a: 'hawaii', b: 'losangeles', steps: 7, type: 'sea',
-    via: [[59, 630], [222, 650], [378, 636]] },
+    via: [[245, 674], [350, 657]] },
   { a: 'miami', b: 'santiagodecuba', steps: 3, type: 'sea', via: [[825, 700]] },
   { a: 'miami', b: 'bermuda', steps: 5, type: 'sea', via: [[857, 631], [905, 591]] },
   { a: 'santiagodecuba', b: 'sanjuan', steps: 4, type: 'sea', via: [[921, 726]] },
@@ -10352,15 +10566,15 @@ const NORTHAMERICA = {
   decor: {
     mapLabel: 'POHJOIS-AMERIKKA',
     mapLabelPos: { x: 250, y: 880 },
-    compass: { x: 120, y: 430, r: 56 },
+    compass: { x: 195, y: 330, r: 56 },
     waveSkip: [
       { x: 250, y: 880, r: 175 },
-      { x: 120, y: 430, r: 95 },
-      { x: 140, y: 700, r: 95 },
+      { x: 195, y: 330, r: 95 },
+      { x: 255, y: 768, r: 95 },
       { x: 935, y: 128, r: 100 },
     ],
     ship: { x: 935, y: 128 },
-    serpent: { x: 140, y: 700 },
+    serpent: { x: 255, y: 768 },
     dieSpot: { x: 0.05, y: 0.34 },
     terrainBands: [
       { maxY: 260, kind: 'mountains' },
@@ -14385,8 +14599,8 @@ function drawDefs(svg) {
 
   const vignette = el('radialGradient', { id: 'vignette-grad', cx: '50%', cy: '50%', r: '62%' }, defs);
   el('stop', { offset: '52%', 'stop-color': 'rgba(90,60,25,0)' }, vignette);
-  el('stop', { offset: '84%', 'stop-color': 'rgba(88,58,24,0.16)' }, vignette);
-  el('stop', { offset: '100%', 'stop-color': 'rgba(66,41,15,0.42)' }, vignette);
+  el('stop', { offset: '84%', 'stop-color': 'rgba(88,58,24,0.07)' }, vignette);
+  el('stop', { offset: '100%', 'stop-color': 'rgba(66,41,15,0.16)' }, vignette);
 
   return defs;
 }
@@ -16177,6 +16391,7 @@ class UI {
     this.errorEl = document.getElementById('error');
     this.factPlace = document.getElementById('fact-place');
     this.factText = document.getElementById('fact-text');
+    this.factCard = this.factText.closest('.fact-card');
     this.factKey = null;
 
     this.winnerDialog = document.getElementById('winner-dialog');
@@ -16282,7 +16497,8 @@ class UI {
       [d.compass.x - d.compass.r - 14, d.compass.y - d.compass.r - 26],
       [d.compass.x + d.compass.r + 14, d.compass.y + d.compass.r + 14],
     );
-    pts.push([d.mapLabelPos.x - 110, d.mapLabelPos.y - 34], [d.mapLabelPos.x + 110, d.mapLabelPos.y + 60]);
+    const titleHalf = Math.max(110, d.mapLabel.length * 12.5);
+    pts.push([d.mapLabelPos.x - titleHalf, d.mapLabelPos.y - 34], [d.mapLabelPos.x + titleHalf, d.mapLabelPos.y + 60]);
     if (d.ship) pts.push([d.ship.x - 62, d.ship.y - 56], [d.ship.x + 62, d.ship.y + 46]);
     if (d.serpent) pts.push([d.serpent.x - 96, d.serpent.y - 26], [d.serpent.x + 96, d.serpent.y + 30]);
 
@@ -16870,13 +17086,10 @@ class UI {
    */
   renderFact() {
     const { game } = this;
+    // Aloitusnäkymässä kartta saa puhua puolestaan: tietoruutu on piilossa.
+    this.factCard.hidden = game.phase === 'pickstart';
     if (game.phase === 'pickstart') {
-      if (this.factKey === 'pickstart') return;
-      this.factKey = 'pickstart';
-      this.factPlace.textContent = 'Lontoo — matkan alku';
-      this.typeText(this.factText, 'Vanha herra vetää puvuntakin suoraksi, nostaa '
-        + 'matkalaukkunsa ja ostaa lentolipun. Vanha kartta kädessä hän lähtee '
-        + 'katsomaan, millaiseksi maailma on muuttunut.');
+      this.factKey = null;
       return;
     }
     const player = game.player;
@@ -17612,7 +17825,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.2';
+const APP_VERSION = '2026-07-27.3';
 
 const setupDialog = document.getElementById('setup');
 const setupForm = document.getElementById('setup-form');

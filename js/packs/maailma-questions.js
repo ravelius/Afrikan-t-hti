@@ -164,6 +164,133 @@ export const MAAILMA_QUESTIONS = {
     },
   ],
 
+  tokio: [
+    {
+      q: 'Mikä Tokion seudusta tekee erityisen maailman kaupunkien joukossa?',
+      options: [
+        'se on maailman väkirikkain kaupunkiseutu',
+        'se on maailman vanhin kaupunki',
+        'se on maailman korkeimmalla sijaitseva pääkaupunki',
+        'se on maailman eteläisin pääkaupunki',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Tokion suurkaupunkialueella asuu lähes 40 miljoonaa ihmistä — enemmän kuin monessa valtiossa.',
+      hint: 'Asia liittyy asukkaisiin.',
+    },
+    {
+      q: 'Millä nimellä tunnetaan Japanin huippunopeat junat?',
+      options: ['shinkansen', 'maglev-metro', 'samurai express', 'fuji-juna'],
+      correct: 0,
+      fact: 'Luotijunat ovat kulkeneet vuodesta 1964, ja niiden keskimyöhästyminen lasketaan sekunneissa.',
+      hint: 'Nimi on japania ja tarkoittaa uutta runkolinjaa.',
+    },
+    {
+      q: 'Mikä pyhänä pidetty vuori näkyy kirkkaalla säällä Tokioon?',
+      options: ['Fuji', 'Aso', 'Tateyama', 'Ontake'],
+      correct: 0,
+      level: 3,
+      fact: 'Fuji (3 776 m) on Japanin korkein vuori ja tulivuori, jonka huipulle vaeltaa kesäisin satojatuhansia.',
+      hint: 'Vuori on kuvattu lukemattomiin puupiirroksiin.',
+    },
+  ],
+
+  singapore: [
+    {
+      q: 'Mikä Singapore on?',
+      options: [
+        'saarella sijaitseva kaupunkivaltio',
+        'Kiinan maakunta',
+        'Intian pääkaupunki',
+        'Australian osavaltio',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Singapore on yksi maailman harvoista kaupunkivaltioista — koko maa on yhtä kaupunkia saarella.',
+      hint: 'Koko maa mahtuu yhden kaupungin rajoihin.',
+    },
+    {
+      q: 'Miksi Singaporen satama on maailmankaupalle tärkeä?',
+      options: [
+        'se vartioi Malakansalmen laivareittiä',
+        'sieltä viedään maailman öljy',
+        'se on ainoa satama Aasiassa',
+        'sinne pääsee vain purjelaivalla',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Merkittävä osa maailman konttiliikenteestä kulkee Malakansalmen kautta, ja Singapore on sen portti.',
+      hint: 'Kapea salmi yhdistää kaksi valtamerta.',
+    },
+  ],
+
+  kapkaupunki: [
+    {
+      q: 'Minkä muotoinen vuori kohoaa Kapkaupungin ylle?',
+      options: ['pöytämäisen tasainen', 'teräväkärkinen', 'kaksihuippuinen', 'täysin pyöreä'],
+      correct: 0,
+      level: 1,
+      fact: 'Pöytävuoren tasainen laki on yli kilometrin korkeudella, ja pilviverhoa kutsutaan pöytäliinaksi.',
+      hint: 'Vuoren nimi kertoo saman kuin sen muoto.',
+    },
+    {
+      q: 'Mitkä kaksi valtamerta kohtaavat Etelä-Afrikan kärjessä?',
+      options: [
+        'Atlantti ja Intian valtameri',
+        'Atlantti ja Tyynimeri',
+        'Intian valtameri ja Tyynimeri',
+        'Atlantti ja Jäämeri',
+      ],
+      correct: 0,
+      fact: 'Virallinen rajapiste on Kap Agulhas, Afrikan eteläisin kärki, hieman Hyväntoivonniemestä itään.',
+      hint: 'Toinen niistä on Afrikan länsipuolella, toinen itäpuolella.',
+    },
+    {
+      q: 'Mikä historian jakso päättyi Etelä-Afrikassa vuonna 1994?',
+      options: ['apartheid eli rotuerottelu', 'siirtomaakausi', 'kultaryntäys', 'sisällissota'],
+      correct: 0,
+      level: 3,
+      fact: 'Ensimmäisissä vapaissa vaaleissa 1994 presidentiksi valittiin Nelson Mandela, joka oli istunut vankilassa 27 vuotta.',
+      hint: 'Sana on afrikaansia ja tarkoittaa erillisyyttä.',
+    },
+  ],
+
+  losangeles: [
+    {
+      q: 'Mistä Los Angeles tunnetaan erityisesti?',
+      options: ['elokuvateollisuudesta', 'autotehtaista', 'öljynporauksesta', 'kalastuksesta'],
+      correct: 0,
+      level: 1,
+      fact: 'Hollywoodin kukkuloilla tehdään elokuvia yli sadan vuoden perinteellä — kyltti pystytettiin 1923.',
+      hint: 'Kaupunginosan valkoiset kirjaimet näkyvät kauas.',
+    },
+    {
+      q: 'Mikä kuvaa Los Angelesin kaupunkirakennetta?',
+      options: [
+        'kaupunki on levinnyt satojen kilometrien matkalle',
+        'kaupunki on rakennettu veden alle',
+        'kaupungissa ei ole yhtään autoa',
+        'kaupunki on yhä pieni kalastajakylä',
+      ],
+      correct: 0,
+      fact: 'Los Angelesin seutu on kasvanut moottoriteiden varsille niin laajaksi, että sitä kutsutaan sadan lähiön kaupungiksi.',
+      hint: 'Autoilu muovasi kaupungin muodon.',
+    },
+    {
+      q: 'Mikä mannerlaattojen raja tekee Kaliforniasta maanjäristysaluetta?',
+      options: [
+        'San Andreasin siirros',
+        'Atlantin keskiselänne',
+        'Mariaanien hauta',
+        'Alppien poimuvuoristo',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'San Andreasin siirroksessa Tyynenmeren laatta liukuu Pohjois-Amerikan laattaa vasten noin 5 cm vuodessa.',
+      hint: 'Kahden mannerlaatan raja kulkee osavaltion halki.',
+    },
+  ],
+
   general: [
     {
       q: 'Kuinka monta mannerta maapallolla yleensä lasketaan olevan?',
@@ -268,6 +395,22 @@ export const MAAILMA_QUESTIONS = {
  * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
  */
 export const MAAILMA_FACTS = {
+  tokio: [
+    'Tokiossa on enemmän ravintoloita kuin missään muussa maailman kaupungissa — myös eniten Michelin-tähtiä.',
+    'Shibuyan risteyksessä voi ylittää kadun jopa 3 000 ihmistä yhdellä vihreällä valolla.',
+  ],
+  singapore: [
+    'Singaporen lentokentällä on maailman korkein sisävesiputous.',
+    'Purukumin myynti on Singaporessa kielletty ilman reseptiä — katujen siisteys on kansallisylpeys.',
+  ],
+  kapkaupunki: [
+    'Pöytävuoren kansallispuistossa kasvaa enemmän kasvilajeja kuin koko Britanniassa.',
+    'Kapkaupungin edustan Robben Islandin vankilasaari, jossa Nelson Mandela istui 18 vuotta, on nykyään museo.',
+  ],
+  losangeles: [
+    'Los Angelesin seudulla puhutaan yli 200 kieltä — se on maailman monikulttuurisimpia kaupunkeja.',
+    'Kaupungin nimi oli alun perin espanjaa ja paljon pidempi: El Pueblo de la Reina de los Ángeles.',
+  ],
   lontoo: [
     'Lontoossa puhutaan yli 300 kieltä — se on yksi maailman monikulttuurisimmista kaupungeista.',
     'Lontoon metro eli "the Tube" on maailman vanhin — se avattiin jo 1863 höyryvetureilla.',

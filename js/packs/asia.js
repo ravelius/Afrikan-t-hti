@@ -133,6 +133,7 @@ const AS_CITIES = [
   {
     id: 'tokio', name: 'Tokio', x: 930, y: 422, start: true, airport: true,
     la: 'start', lx: 18, ly: 5,
+    links: [{ pack: 'maailma', city: 'tokio', label: 'Maailma-lauta' }],
   },
 
   { id: 'jekaterinburg', name: 'Jekaterinburg', x: 406, y: 198, la: 'start', lx: 16, ly: 5 },
@@ -159,7 +160,10 @@ const AS_CITIES = [
   { id: 'hanoi', name: 'Hanoi', x: 660, y: 630, la: 'end', lx: -16, ly: 5 },
   { id: 'bangkok', name: 'Bangkok', x: 603, y: 708, airport: true, la: 'end', lx: -16, ly: 24 },
   { id: 'yangon', name: 'Yangon', x: 559, y: 671, la: 'end', lx: -16, ly: 5 },
-  { id: 'singapore', name: 'Singapore', x: 634, y: 851, airport: true, la: 'middle', lx: 0, ly: 30 },
+  {
+    id: 'singapore', name: 'Singapore', x: 634, y: 851, airport: true, la: 'middle', lx: 0, ly: 30,
+    links: [{ pack: 'maailma', city: 'singapore', label: 'Maailma-lauta' }],
+  },
   { id: 'sumatra', name: 'Sumatra', x: 562, y: 817, la: 'start', lx: 16, ly: 5 },
   { id: 'borneo', name: 'Borneo', x: 718, y: 852, la: 'start', lx: 16, ly: 5 },
   {
