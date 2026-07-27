@@ -480,7 +480,7 @@ export class UI {
           cx: c.x,
           cy: c.y,
           r: c.start ? 27 : 22,
-          class: `target-ring${this.pendingStart === c.id ? ' picked' : ''}`,
+          class: `target-ring pick${this.pendingStart === c.id ? ' picked' : ''}`,
         }, g);
         g.addEventListener('click', () => {
           this.pendingStart = c.id;
@@ -555,7 +555,9 @@ export class UI {
     const dot = html('span', 'dot');
     dot.style.background = p.color;
     this.turnPill.appendChild(dot);
-    this.turnPill.appendChild(html('span', '', `Vuorossa: ${p.name}`));
+    const city = this.factCity(p.pos);
+    const where = p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name;
+    this.turnPill.appendChild(html('span', '', `${p.money} p · ${where}`));
   }
 
   renderPlayers() {
@@ -782,7 +784,11 @@ export class UI {
     // Aloitusnäkymässä kartta saa puhua puolestaan: tietoruutu on piilossa.
     this.factCard.hidden = game.phase === 'pickstart';
     if (game.phase === 'pickstart') {
+      // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
+      // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
+      this.factPlace.textContent = '';
+      this.factText.textContent = '';
       return;
     }
 
@@ -883,6 +889,39 @@ export class UI {
 
   // --- tietovisa ----------------------------------------------------------
 
+  /**
+   * Vastausnapit rakennetaan vain kun kysymys vaihtuu, ja päivitetään muuten
+   * paikallaan. Jos ne rakennettaisiin joka renderillä uudelleen, esiin-
+   * liukuva option-in-animaatio alkaisi alusta joka kerta ja koko lista
+   * välähtäisi esimerkiksi väärän vastauksen jälkeen.
+   */
+  syncOptions(data, onPick) {
+    if (this.builtOptionsFor !== data) {
+      this.builtOptionsFor = data;
+      this.optionButtons = data.options.map((text, i) => {
+        const btn = html('button', 'quiz-option');
+        btn.style.setProperty('--i', String(i));
+        btn.appendChild(html('span', 'letter', LETTERS[i]));
+        btn.appendChild(html('span', 'text', text));
+        btn.addEventListener('click', () => {
+          if (!btn.disabled) onPick(i);
+        });
+        return btn;
+      });
+      this.quizOptions.textContent = '';
+      for (const btn of this.optionButtons) this.quizOptions.appendChild(btn);
+    }
+
+    const answered = data.chosen !== null;
+    this.optionButtons.forEach((btn, i) => {
+      const hidden = data.hidden.includes(i);
+      btn.classList.toggle('hidden-option', hidden);
+      btn.classList.toggle('correct', answered && i === data.correct);
+      btn.classList.toggle('wrong', answered && i === data.chosen && !data.right);
+      btn.disabled = hidden || answered || this.game.player.isBot;
+    });
+  }
+
   renderQuiz() {
     const { game } = this;
     if (game.phase === 'duel' && game.duel) {
@@ -906,27 +945,7 @@ export class UI {
       this.typedQuizFor = quiz;
       this.typeText(this.quizQuestion, quiz.question, 'quiz');
     }
-    this.quizOptions.textContent = '';
-
-    quiz.options.forEach((text, i) => {
-      const btn = html('button', 'quiz-option');
-      btn.style.setProperty('--i', String(i));
-      btn.appendChild(html('span', 'letter', LETTERS[i]));
-      btn.appendChild(html('span', 'text', text));
-      if (quiz.hidden.includes(i)) {
-        btn.classList.add('hidden-option');
-        btn.disabled = true;
-      } else if (quiz.chosen !== null) {
-        btn.disabled = true;
-        if (i === quiz.correct) btn.classList.add('correct');
-        if (i === quiz.chosen && !quiz.right) btn.classList.add('wrong');
-      } else if (game.player.isBot) {
-        btn.disabled = true;
-      } else {
-        btn.addEventListener('click', () => this.answerQuiz(i));
-      }
-      this.quizOptions.appendChild(btn);
-    });
+    this.syncOptions(quiz, (i) => this.answerQuiz(i));
 
     const answered = quiz.chosen !== null;
     // Vastauksen jälkeen näytetään ensin pelkkä tuomio, ja vasta aarteen
@@ -999,27 +1018,7 @@ export class UI {
       this.typedQuizFor = duel;
       this.typeText(this.quizQuestion, duel.question, 'quiz');
     }
-    this.quizOptions.textContent = '';
-
-    duel.options.forEach((text, i) => {
-      const btn = html('button', 'quiz-option');
-      btn.style.setProperty('--i', String(i));
-      btn.appendChild(html('span', 'letter', LETTERS[i]));
-      btn.appendChild(html('span', 'text', text));
-      if (duel.hidden.includes(i)) {
-        btn.classList.add('hidden-option');
-        btn.disabled = true;
-      } else if (duel.chosen !== null) {
-        btn.disabled = true;
-        if (i === duel.correct) btn.classList.add('correct');
-        if (i === duel.chosen && !duel.right) btn.classList.add('wrong');
-      } else if (p.isBot) {
-        btn.disabled = true;
-      } else {
-        btn.addEventListener('click', () => this.answerDuelUi(i));
-      }
-      this.quizOptions.appendChild(btn);
-    });
+    this.syncOptions(duel, (i) => this.answerDuelUi(i));
 
     const answered = duel.chosen !== null;
     const revealed = this.revealShownFor === duel;

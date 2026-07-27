@@ -8,6 +8,14 @@
 <style>
 /* Afrikan tähti — sovelluskehys (tumma pähkinäpuu) ja aarrekartta (pergamentti). */
 
+/*
+ * hidden-attribuutin pitää voittaa aina. Selaimen oletus on display: none,
+ * mutta mikä tahansa myöhempi display-sääntö (flex, grid, block) kumoaa sen,
+ * jolloin piilotettu elementti jää näkyviin. Tämä sääntö tekee attribuutista
+ * ehdottoman, eikä yksittäisiä [hidden]-korjauksia tarvita.
+ */
+[hidden] { display: none !important; }
+
 :root {
   /* Sovelluksen kehys */
   --bg: #1d1610;
@@ -192,7 +200,6 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   z-index: 3;
 }
 
-.die-layer[hidden] { display: none; }
 
 .board-die {
   position: absolute;
@@ -593,10 +600,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .city-gate {
   fill: none;
   stroke: #8d3a2c;
-  stroke-width: 2.2;
+  stroke-width: 1.6;
   stroke-dasharray: 7 6;
   stroke-linecap: round;
-  opacity: 0.72;
+  opacity: 0.4;
 }
 
 .city-label {
@@ -680,8 +687,25 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 .doodle-fill { fill: var(--map-ink); opacity: 0.45; }
 
 .target { cursor: pointer; }
-.target-ring.picked { stroke: #e8b23c; }
 .target-hit { fill: transparent; }
+
+/*
+ * Lähtöpisteen valinnassa rengas on joka kaupungin päällä yhtä aikaa, joten
+ * pyörivä katkoviiva tekisi koko kartasta levottoman. Nämä renkaat vain
+ * merkitsevät vaihtoehdon; siirtovaiheen punaiset renkaat ovat kehotus
+ * toimia ja saavat siksi jäädä eläviksi.
+ */
+.target-ring.pick {
+  fill: none;
+  stroke: #b08a3c;
+  stroke-width: 2;
+  animation: none;
+}
+
+.target:hover .target-ring.pick { fill: rgba(176, 138, 60, 0.18); }
+.target-ring.pick.picked { stroke: #e8b23c; stroke-width: 3; }
+.target-ring.picked { stroke: #e8b23c; }
+
 .target-ring {
   fill: rgba(176, 58, 43, 0.18);
   stroke: var(--mark);
@@ -820,7 +844,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   padding: 0;
 }
 
-.dialog button[hidden] { display: none; }
 
 .dialog button {
   background: rgba(255, 255, 255, 0.35);
@@ -844,36 +867,7 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 .dialog button.primary:hover:not(:disabled) { background: linear-gradient(180deg, #f2d183, #dcae4c); }
 
 .row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
-.player-setup { display: flex; flex-direction: column; gap: 0.5rem; }
-.setup-row { display: flex; align-items: center; gap: 0.5rem; }
-
-.setup-row input[type="text"],
-.dialog select {
-  padding: 0.45rem 0.55rem;
-  border-radius: 10px;
-  border: 1.5px dashed rgba(70, 51, 31, 0.6);
-  background: rgba(255, 252, 244, 0.6);
-  color: var(--map-ink);
-  font: inherit;
-}
-
-.setup-row input[type="text"] { flex: 1 1 auto; min-width: 0; }
-
-.bot-label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; color: #7a6039; }
 .rules-text p { margin: 0 0 0.7rem; line-height: 1.45; }
-
-.setup-hero {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0 0 0.7rem;
-  margin: 0 0 0.9rem;
-  border-bottom: 2px dashed rgba(70, 51, 31, 0.45);
-}
-
-.setup-hero h2 { margin: 0; }
-.setup-star { font-size: 2.1rem; color: #b8860b; }
-.setup-tagline { margin: 0.15rem 0 0; font-size: 0.85rem; color: #7a6039; }
 
 /* --- tietovisa --- */
 
@@ -1005,8 +999,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   animation: ink-in 0.35s ease-out both;
 }
 
-/* [hidden] ei saa hävitä display: flexin alle. */
-.quiz-result[hidden] { display: none; }
 .quiz-result.right { border-color: #2f6b3f; }
 .quiz-result.wrong { border-color: var(--mark); }
 .quiz-result .muted { color: #6f5836; display: block; margin-top: 0.15rem; }
@@ -1034,7 +1026,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   animation: hg-arrive 0.5s ease-out both;
 }
 
-.quiz-timer[hidden] { display: none; }
 
 @keyframes hg-arrive {
   from { opacity: 0; transform: translateY(-6px) rotate(-8deg); }
@@ -1074,7 +1065,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 
 .hg-sand { fill: #c08a3e; opacity: 0.92; }
 .hg-stream { fill: #b07f38; opacity: 0.75; animation: hg-pour 0.5s steps(2, end) infinite; }
-.hg-stream[hidden] { display: none; }
 
 @keyframes hg-pour {
   0%, 100% { opacity: 0.72; transform: translateX(0); }
@@ -1123,7 +1113,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   animation: ink-in 0.45s ease-out both;
 }
 
-.quiz-hint-text[hidden] { display: none; }
 .quiz-hint-text::before { content: "✎"; font-style: normal; opacity: 0.7; }
 
 /* --- aarteen paljastus: iso laatta kääntyy 3D:nä --- */
@@ -1413,36 +1402,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   </div>
 
   <!-- Aloitusruutu -->
-  <dialog id="setup" class="dialog">
-    <form method="dialog" id="setup-form" class="dialog-card">
-      <div class="setup-hero">
-        <span class="setup-star">★</span>
-        <div>
-          <h2 id="setup-title">Maailman tähdet</h2>
-          <p id="setup-tagline" class="setup-tagline">Herra Reginald Fogg, maailmanmatkaajan
-            pojanpojanpoika, perii vanhan kartan, kukkarollisen puntia ja vihreän passin —
-            ja lähtee Lontoosta tarkistamaan, pitääkö kartta vielä paikkansa. (Ei pidä.)</p>
-        </div>
-      </div>
-      <label class="row">
-        Nimesi
-        <input id="player-name" type="text" value="Herra Fogg" maxlength="16" />
-      </label>
-      <label class="row">
-        Kysymykset
-        <select id="player-level">
-          <option value="normal" selected>tavalliset</option>
-          <option value="easy">helpot (esim. lapsille)</option>
-        </select>
-      </label>
-      <p class="setup-tagline">Matka alkaa maailmankartalta. Napauta kaupunkia, niin
-        astut sen mantereen kartalle — vaellus ei pääty, ja porttikaupungeista pääset
-        aina uusille laudoille.</p>
-      <menu>
-        <button value="start" class="primary">Lähde matkaan</button>
-      </menu>
-    </form>
-  </dialog>
 
   <!-- Säännöt -->
   <dialog id="rules-dialog" class="dialog">
@@ -3738,7 +3697,7 @@ const AFRICA = {
   },
 
   decor: {
-    mapLabel: 'AFRIKA',
+    mapLabel: 'AFRIKKA',
     mapLabelPos: { x: 886, y: 96 },
     compass: { x: 168, y: 772, r: 62 },
     // Aaltoja ei piirretä näihin kohtiin: laivadoodle, meripeto ja karttanimi.
@@ -5961,11 +5920,11 @@ const EU_MAP = {
     [313.0, 305.1], [322.6, 249.8], [364.8, 223.6], [403.2, 220.9], [451.2, 171.0],
     [489.6, 118.4], [518.4, 92.0], [576.0, 65.8], [633.6, 47.3], [706.6, 23.7],
     [748.8, 28.9], [787.2, 52.6], [844.8, 57.9], [883.2, 65.8], [940.8, 92.0],
-    [999.6, 99.9], [999.6, 694.3], [960.0, 723.2], [931.2, 710.1], [912.0, 702.2],
+    [1045, 99.9], [1045, 694.3], [960.0, 723.2], [931.2, 710.1], [912.0, 702.2],
     [883.2, 699.6], [854.4, 725.9], [852.5, 704.8], [835.2, 699.6], [816.0, 668.0],
     [787.2, 670.6], [779.5, 699.6], [764.2, 715.4], [760.3, 736.4], [746.9, 752.2],
     [748.8, 778.5], [748.8, 791.6], [777.6, 810.0], [806.4, 810.0], [864.0, 789.0],
-    [912.0, 807.4], [950.4, 807.4], [999.6, 802.1], [999.6, 936.3], [917.8, 941.5],
+    [912.0, 807.4], [950.4, 807.4], [1045, 802.1], [1045, 936.3], [917.8, 941.5],
     [864.0, 925.8], [825.6, 933.6], [798.7, 938.9], [758.4, 928.4], [729.6, 920.5],
     [720.0, 883.7], [727.7, 841.6], [714.2, 831.1], [691.2, 817.9], [672.0, 825.8],
     [662.4, 833.7], [650.9, 828.5], [652.8, 862.6], [662.4, 881.1], [672.0, 894.2],
@@ -5995,9 +5954,9 @@ const EU_MAP = {
     [685.4, 975.7], [664.3, 970.5],
   ],
   maghrebPoints: [
-    [0.0, 960.0], [97.9, 952.1], [169.0, 970.5], [211.2, 949.4], [268.8, 925.8],
+    [-45, 960.0], [97.9, 952.1], [169.0, 970.5], [211.2, 949.4], [268.8, 925.8],
     [316.8, 923.1], [376.3, 917.9], [409.0, 915.2], [424.3, 923.1], [412.8, 957.3],
-    [432.0, 1002.0], [0.0, 1002.0],
+    [432.0, 1045], [-45, 1045],
   ],
 };
 
@@ -6274,15 +6233,15 @@ const ME_MAP = {
   width: 1000,
   height: 1000,
   mainlandPoints: [
-    [0, 999.6], [0, 364.6], [62.5, 370.4], [125, 385.1], [170.0, 379.3], [197.5, 367.5],
+    [-45, 1045], [-45, 364.6], [62.5, 370.4], [125, 385.1], [170.0, 379.3], [197.5, 367.5],
     [222.5, 379.3], [255.0, 371.9], [272.5, 341.0], [278.7, 311.6], [290.0, 276.4],
     [296.3, 244.0], [300.0, 211.7], [265.0, 223.4], [215.0, 232.3], [165.0, 226.4],
     [130.0, 223.4], [90.0, 211.7], [75.0, 188.2], [62.5, 161.7], [55.0, 135.2], [53.7, 107.3],
     [90.0, 102.9], [126.3, 86.7], [182.5, 73.5], [237.5, 58.8], [280.0, 57.3], [325.0, 85.3],
-    [385.0, 89.7], [432.5, 76.4], [440.0, 35.3], [450.0, 0.0], [580.0, 0.0], [607.5, 64.7],
+    [385.0, 89.7], [432.5, 76.4], [440.0, 35.3], [450.0, -45], [580.0, -45], [607.5, 64.7],
     [633.8, 105.8], [625.0, 141.1], [623.8, 176.4], [645.0, 197.0], [687.5, 213.1],
     [732.5, 210.2], [750.0, 191.1], [742.5, 147.0], [725.0, 100.0], [720.0, 52.9],
-    [732.5, 0.0], [1000, 0.0], [1000, 552.7], [937.5, 555.7], [887.5, 546.8], [850.0, 538.0],
+    [732.5, -45], [1045, -45], [1045, 552.7], [937.5, 555.7], [887.5, 546.8], [850.0, 538.0],
     [832.5, 514.5], [815.0, 499.8], [775.0, 508.6], [725.0, 488.0], [687.5, 470.4],
     [657.5, 435.1], [625.0, 411.6], [615.0, 407.2], [605.0, 426.3], [615.0, 458.6],
     [637.5, 491.0], [660.0, 520.4], [667.5, 541.0], [677.5, 527.7], [688.7, 532.1],
@@ -6297,7 +6256,7 @@ const ME_MAP = {
     [250.0, 493.9], [270.0, 535.1], [292.5, 579.2], [317.5, 629.2], [335.0, 676.2],
     [355.0, 726.2], [375.0, 782.0], [400.0, 835.0], [432.5, 876.1], [462.5, 911.4],
     [477.5, 927.6], [487.5, 946.7], [530.0, 970.2], [575.0, 979.0], [625.0, 987.8],
-    [665.0, 998.1], [665.0, 999.6],
+    [665.0, 998.1], [665.0, 1045],
   ],
   cyprusPoints: [
     [207.5, 245.5], [240.0, 252.8], [263.7, 247.0], [247.5, 263.1], [225.0, 276.4],
@@ -13514,16 +13473,16 @@ const IST_MAP = {
   height: 1000,
   // Euroopan puoli: Bosporin länsiranta, Kultainen sarvi ja Marmaran rannikko.
   europePoints: [
-    [0, 0], [430, 0],
+    [-45, -45], [430, -45],
     [450, 80], [420, 160], [445, 240], [415, 320], [430, 400], [455, 470],
     [380, 470], [300, 430], [230, 400],
     [240, 430], [310, 465], [390, 510], [440, 555],
     [450, 600], [435, 660],
-    [380, 700], [280, 730], [160, 750], [0, 770],
+    [380, 700], [280, 730], [160, 750], [-45, 770],
   ],
   // Aasian puoli: Bosporin itäranta ja Marmaran rannikko.
   asiaPoints: [
-    [570, 0], [1000, 0], [1000, 780],
+    [570, -45], [1045, -45], [1045, 780],
     [880, 770], [760, 750], [650, 725], [585, 702], [560, 680],
     [560, 640], [555, 570], [580, 490], [565, 410], [590, 330],
     [560, 250], [585, 170], [555, 90],
@@ -16871,7 +16830,7 @@ class UI {
           cx: c.x,
           cy: c.y,
           r: c.start ? 27 : 22,
-          class: `target-ring${this.pendingStart === c.id ? ' picked' : ''}`,
+          class: `target-ring pick${this.pendingStart === c.id ? ' picked' : ''}`,
         }, g);
         g.addEventListener('click', () => {
           this.pendingStart = c.id;
@@ -16946,7 +16905,9 @@ class UI {
     const dot = html('span', 'dot');
     dot.style.background = p.color;
     this.turnPill.appendChild(dot);
-    this.turnPill.appendChild(html('span', '', `Vuorossa: ${p.name}`));
+    const city = this.factCity(p.pos);
+    const where = p.pos.type === 'edge' ? `matkalla — ${city.name}` : city.name;
+    this.turnPill.appendChild(html('span', '', `${p.money} p · ${where}`));
   }
 
   renderPlayers() {
@@ -17173,7 +17134,11 @@ class UI {
     // Aloitusnäkymässä kartta saa puhua puolestaan: tietoruutu on piilossa.
     this.factCard.hidden = game.phase === 'pickstart';
     if (game.phase === 'pickstart') {
+      // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
+      // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
+      this.factPlace.textContent = '';
+      this.factText.textContent = '';
       return;
     }
 
@@ -17274,6 +17239,39 @@ class UI {
 
   // --- tietovisa ----------------------------------------------------------
 
+  /**
+   * Vastausnapit rakennetaan vain kun kysymys vaihtuu, ja päivitetään muuten
+   * paikallaan. Jos ne rakennettaisiin joka renderillä uudelleen, esiin-
+   * liukuva option-in-animaatio alkaisi alusta joka kerta ja koko lista
+   * välähtäisi esimerkiksi väärän vastauksen jälkeen.
+   */
+  syncOptions(data, onPick) {
+    if (this.builtOptionsFor !== data) {
+      this.builtOptionsFor = data;
+      this.optionButtons = data.options.map((text, i) => {
+        const btn = html('button', 'quiz-option');
+        btn.style.setProperty('--i', String(i));
+        btn.appendChild(html('span', 'letter', LETTERS[i]));
+        btn.appendChild(html('span', 'text', text));
+        btn.addEventListener('click', () => {
+          if (!btn.disabled) onPick(i);
+        });
+        return btn;
+      });
+      this.quizOptions.textContent = '';
+      for (const btn of this.optionButtons) this.quizOptions.appendChild(btn);
+    }
+
+    const answered = data.chosen !== null;
+    this.optionButtons.forEach((btn, i) => {
+      const hidden = data.hidden.includes(i);
+      btn.classList.toggle('hidden-option', hidden);
+      btn.classList.toggle('correct', answered && i === data.correct);
+      btn.classList.toggle('wrong', answered && i === data.chosen && !data.right);
+      btn.disabled = hidden || answered || this.game.player.isBot;
+    });
+  }
+
   renderQuiz() {
     const { game } = this;
     if (game.phase === 'duel' && game.duel) {
@@ -17297,27 +17295,7 @@ class UI {
       this.typedQuizFor = quiz;
       this.typeText(this.quizQuestion, quiz.question, 'quiz');
     }
-    this.quizOptions.textContent = '';
-
-    quiz.options.forEach((text, i) => {
-      const btn = html('button', 'quiz-option');
-      btn.style.setProperty('--i', String(i));
-      btn.appendChild(html('span', 'letter', LETTERS[i]));
-      btn.appendChild(html('span', 'text', text));
-      if (quiz.hidden.includes(i)) {
-        btn.classList.add('hidden-option');
-        btn.disabled = true;
-      } else if (quiz.chosen !== null) {
-        btn.disabled = true;
-        if (i === quiz.correct) btn.classList.add('correct');
-        if (i === quiz.chosen && !quiz.right) btn.classList.add('wrong');
-      } else if (game.player.isBot) {
-        btn.disabled = true;
-      } else {
-        btn.addEventListener('click', () => this.answerQuiz(i));
-      }
-      this.quizOptions.appendChild(btn);
-    });
+    this.syncOptions(quiz, (i) => this.answerQuiz(i));
 
     const answered = quiz.chosen !== null;
     // Vastauksen jälkeen näytetään ensin pelkkä tuomio, ja vasta aarteen
@@ -17390,27 +17368,7 @@ class UI {
       this.typedQuizFor = duel;
       this.typeText(this.quizQuestion, duel.question, 'quiz');
     }
-    this.quizOptions.textContent = '';
-
-    duel.options.forEach((text, i) => {
-      const btn = html('button', 'quiz-option');
-      btn.style.setProperty('--i', String(i));
-      btn.appendChild(html('span', 'letter', LETTERS[i]));
-      btn.appendChild(html('span', 'text', text));
-      if (duel.hidden.includes(i)) {
-        btn.classList.add('hidden-option');
-        btn.disabled = true;
-      } else if (duel.chosen !== null) {
-        btn.disabled = true;
-        if (i === duel.correct) btn.classList.add('correct');
-        if (i === duel.chosen && !duel.right) btn.classList.add('wrong');
-      } else if (p.isBot) {
-        btn.disabled = true;
-      } else {
-        btn.addEventListener('click', () => this.answerDuelUi(i));
-      }
-      this.quizOptions.appendChild(btn);
-    });
+    this.syncOptions(duel, (i) => this.answerDuelUi(i));
 
     const answered = duel.chosen !== null;
     const revealed = this.revealShownFor === duel;
@@ -17921,12 +17879,8 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.4';
+const APP_VERSION = '2026-07-27.5';
 
-const setupDialog = document.getElementById('setup');
-const setupForm = document.getElementById('setup-form');
-const nameInput = document.getElementById('player-name');
-const levelSelect = document.getElementById('player-level');
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
 
@@ -17962,37 +17916,36 @@ function clearSave() {
   }
 }
 
-// --- aloitusruutu ----------------------------------------------------------
+// --- pelin aloitus ----------------------------------------------------------
 //
-// Peli on yksin pelattava vaellus: aloitusruudussa kysytään vain nimi ja
-// kysymysten taso, ja matka alkaa aina maailmankartalta, jolta lähtöpiste
-// valitaan ilmaiseksi.
+// Peli on yksin pelattava vaellus eikä aloitusdialogia enää ole: uusi peli
+// avautuu suoraan maailmankartalle, jolta ensimmäinen kohde valitaan
+// ilmaiseksi. Matkaaja on aina herra Fogg.
+//
+// Kysymysten helpotustila on toistaiseksi pois käytöstä — kaikki pelaavat
+// tasolla 'normal'. Kysymyspankkien level-kentät ja moottorin tuki jäävät
+// paikoilleen, jotta helpotus voidaan palauttaa myöhemmin.
 
-function readPlayer() {
+function newPlayer() {
   return {
-    name: nameInput.value.trim() || 'Herra Fogg',
+    name: 'Herra Fogg',
     start: null, // lähtöpiste valitaan maailmankartalta
-    quizLevel: levelSelect.value,
+    quizLevel: 'normal',
     color: PLAYER_COLOR,
   };
 }
 
 function attach(game) {
   if (ui) ui.destroy();
-  ui = new UI(game, { onNewGame: openSetup, onChange: saveGame });
+  ui = new UI(game, { onNewGame: startGame, onChange: saveGame });
   ui.mount();
   window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
 }
 
 function startGame() {
-  clearSave();
-  attach(new Game({ players: [readPlayer()], pack: packById('maailma') }));
-}
-
-function openSetup() {
   if (winnerDialog.open) winnerDialog.close();
   clearSave();
-  setupDialog.showModal();
+  attach(new Game({ players: [newPlayer()], pack: packById('maailma') }));
 }
 
 // --- äänet ------------------------------------------------------------------
@@ -18014,11 +17967,6 @@ updateSoundButton();
 document.addEventListener('pointerdown', (event) => {
   const button = event.target.closest?.('button');
   if (button && !button.classList.contains('quiz-option')) sfx.play('click');
-});
-
-setupForm.addEventListener('submit', () => {
-  // Dialogin sulkeutuminen tapahtuu selaimen toimesta; peli luodaan sen jälkeen.
-  setTimeout(startGame, 0);
 });
 
 // --- päivitys ----------------------------------------------------------------
@@ -18047,10 +17995,10 @@ updateBtn.addEventListener('click', async () => {
 });
 
 document.getElementById('app-version').textContent = APP_VERSION;
-document.getElementById('newgame-btn').addEventListener('click', openSetup);
+document.getElementById('newgame-btn').addEventListener('click', startGame);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
-document.getElementById('winner-close').addEventListener('click', openSetup);
+document.getElementById('winner-close').addEventListener('click', startGame);
 
 // Palvelutyöntekijä tekee pelistä asennettavan ja offline-toimivan.
 // Ohitetaan hiljaisesti, jos sivu on avattu file://-osoitteesta tai hiekkalaatikossa.
@@ -18068,7 +18016,7 @@ if (hasManifest && 'serviceWorker' in navigator && location.protocol.startsWith(
 // Kesken jäänyt peli jatkuu automaattisesti, muuten kysytään pelaajat.
 const saved = loadGame();
 if (saved) attach(saved);
-else openSetup();
+else startGame();
 </script>
 </body>
 </html>

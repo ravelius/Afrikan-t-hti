@@ -145,6 +145,26 @@ for (const pack of PACKS) {
     }
   });
 
+  test(`${pack.id}: kartan reunaan yltävä manner jatkuu reunan yli`, () => {
+    // Jos ääriviiva pysähtyy tarkalleen kehykseen, maa näyttää katkeavan
+    // mereen suorana viivana. Reunaan yltävän ääriviivan pitää siksi jatkua
+    // selvästi kehyksen yli — häivytyksen hoitaa kartan vinjetti.
+    const OVER = 10; // kuinka kauas kehyksen yli pisteen pitää yltää
+    for (const outline of pack.map.outlines) {
+      const xs = outline.map(([x]) => x);
+      const ys = outline.map(([, y]) => y);
+      const reaches = (vals, edge, sign) => vals.some((v) => sign * (v - edge) >= -2);
+      const crosses = (vals, edge, sign) => vals.some((v) => sign * (v - edge) > OVER);
+      for (const [vals, edge, sign, side] of [
+        [xs, 0, -1, 'vasen'], [xs, pack.map.width, 1, 'oikea'],
+        [ys, 0, -1, 'ylä'], [ys, pack.map.height, 1, 'ala'],
+      ]) {
+        if (!reaches(vals, edge, sign)) continue;
+        assert.ok(crosses(vals, edge, sign), `ääriviiva pysähtyy ${side}reunaan`);
+      }
+    }
+  });
+
   test(`${pack.id}: kaupungit ovat mantereella ja riittävän erillään`, () => {
     const islands = new Set(pack.islands ?? []);
     for (const city of pack.cities) {

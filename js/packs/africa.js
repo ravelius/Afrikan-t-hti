@@ -252,7 +252,7 @@ export const AFRICA = {
   },
 
   decor: {
-    mapLabel: 'AFRIKA',
+    mapLabel: 'AFRIKKA',
     mapLabelPos: { x: 886, y: 96 },
     compass: { x: 168, y: 772, r: 62 },
     // Aaltoja ei piirretä näihin kohtiin: laivadoodle, meripeto ja karttanimi.

@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'maailman-tahdet-2026-07-27.4';
+const CACHE = 'maailman-tahdet-2026-07-27.5';
 const SHELL = [
   './',
   './index.html',
