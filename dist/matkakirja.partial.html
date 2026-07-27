@@ -1379,13 +1379,30 @@ body[data-mode] .board-hint {
   bottom: auto;
 }
 
-/* Toiminnot alas keskelle kelluvana korttina. */
-body[data-mode] .turn-card {
+/*
+ * Alarivi: päiväkirja vasemmalla, toiminnot sen oikealla puolella. Rivi
+ * katkeaa, kun kortit eivät mahdu rinnakkain — silloin päiväkirja nousee
+ * omalle rivilleen nappien yläpuolelle eikä peitä niitä. Ilman tätä
+ * kortit menivät päällekkäin kaikilla alle ~1240 px:n leveyksillä,
+ * esimerkiksi tabletilla pystyasennossa.
+ */
+body[data-mode] .rail-bottom {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
   bottom: 0.4rem;
-  transform: translateX(-50%);
-  width: min(560px, calc(100% - 1.2rem));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: var(--gap);
+  max-height: 100%;
+}
+
+body[data-mode] .turn-card {
+  flex: 0 1 560px;
+  /* Automaattiset marginaalit keskittävät napit, kun päiväkirja on kapea. */
+  margin-inline: auto;
   background: var(--overlay-card);
   border-color: var(--overlay-line);
   backdrop-filter: blur(3px);
@@ -1409,13 +1426,10 @@ body[data-mode] .player-chip {
   backdrop-filter: blur(3px);
 }
 
-/* Päiväkirja ja havainto vasempaan alakulmaan. */
+/* Päiväkirja ja havainto alarivin vasempaan laitaan. */
 body[data-mode] .fact-card {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: min(340px, 46%);
-  max-height: 42%;
+  flex: 0 1 340px;
+  max-height: 40vh;
   overflow-y: auto;
   background: var(--overlay-card);
   border-color: var(--overlay-line);
@@ -1435,6 +1449,16 @@ body[data-mode] .fact-card {
     grid-template-rows: auto auto auto;
     gap: var(--gap);
   }
+
+  body[data-mode] .rail-bottom {
+    position: static;
+    display: contents;
+  }
+
+  /* Kartan alla toiminnot ovat ensin, kuten ennen alarivin käyttöönottoa. */
+  body[data-mode] .turn-card { order: 1; }
+  body[data-mode] .players { order: 2; }
+  body[data-mode] .fact-card { order: 3; }
 
   body[data-mode] .turn-card,
   body[data-mode] .players,
@@ -1558,22 +1582,29 @@ body[data-mode] .fact-card {
       </section>
 
       <aside class="rail">
-        <section class="card turn-card">
-          <div class="turn-row">
-            <div id="die" class="die" hidden></div>
-            <div id="turn-status" class="turn-status"></div>
-          </div>
-          <div id="actions" class="actions"></div>
-          <div id="error" class="error" hidden></div>
-        </section>
-
         <section id="players" class="players" aria-label="Pelaajat"></section>
 
-        <section class="card fact-card">
-          <h2 id="fact-voice">Matkapäiväkirjasta</h2>
-          <p id="fact-place" class="fact-place"></p>
-          <p id="fact-text" class="fact-text"></p>
-        </section>
+        <!--
+          Päiväkirja ja toiminnot ovat samassa alarivissä, jotta ne eivät voi
+          kellua toistensa päälle: kun ne eivät mahdu rinnakkain, rivi katkeaa
+          ja päiväkirja siirtyy nappien yläpuolelle.
+        -->
+        <div class="rail-bottom">
+          <section class="card fact-card">
+            <h2 id="fact-voice">Matkapäiväkirjasta</h2>
+            <p id="fact-place" class="fact-place"></p>
+            <p id="fact-text" class="fact-text"></p>
+          </section>
+
+          <section class="card turn-card">
+            <div class="turn-row">
+              <div id="die" class="die" hidden></div>
+              <div id="turn-status" class="turn-status"></div>
+            </div>
+            <div id="actions" class="actions"></div>
+            <div id="error" class="error" hidden></div>
+          </section>
+        </div>
       </aside>
     </main>
   </div>
@@ -8604,6 +8635,34 @@ const ASIA_QUESTIONS = {
       hint: 'Rata on maailman pisin yhtenäinen junayhteys ja päättyy Vladivostokiin.',
       fact: 'Rata on Moskovasta Vladivostokiin noin 9 300 kilometriä, ja koko matka kestää lähes viikon.',
     },
+    {
+      q: 'Minkä kahden maanosan rajalla Jekaterinburg sijaitsee?',
+      options: [
+        'Euroopan ja Aasian',
+        'Afrikan ja Aasian',
+        'Euroopan ja Afrikan',
+        'Aasian ja Australian',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Uralvuoret ovat perinteinen Euroopan ja Aasian raja, ja kaupungin lähellä on rajaa merkitsevä obeliski.',
+      hint: 'Uralvuoret merkitsevät juuri tätä rajaa.',
+    },
+    {
+      q: 'Mitä Uralin alueella on louhittu ja jalostettu vuosisatoja?',
+      options: ['metallimalmeja ja korukiviä', 'öljyä', 'kivihiiltä ainoastaan', 'merisuolaa'],
+      correct: 0,
+      fact: 'Uralin malmit tekivät alueesta Venäjän raskaan teollisuuden ytimen. Alueelta tunnetaan myös malakiitti ja muut korukivet.',
+      hint: 'Alue tunnetaan raudasta ja malakiitista.',
+    },
+    {
+      q: 'Kuinka kauan junamatka Moskovasta Jekaterinburgiin kestää?',
+      options: ['noin vuorokauden', 'noin tunnin', 'noin viikon', 'noin kuukauden'],
+      correct: 0,
+      level: 3,
+      fact: 'Matka on noin 1 800 kilometriä. Vladivostokiin junassa istutaan vielä viikon verran lisää.',
+      hint: 'Matkaa on 1 800 kilometriä junalla.',
+    },
   ],
 
   astana: [
@@ -8623,6 +8682,33 @@ const ASIA_QUESTIONS = {
       hint: 'Täältä laukaistiin Sputnik ja Juri Gagarin.',
       fact: 'Kosmodromi rakennettiin 1955, ja Venäjä vuokraa aluetta Kazakstanilta. Ensimmäinen ihminen avaruuteen lähti täältä 1961.',
     },
+    {
+      q: 'Millaisessa maisemassa Astana sijaitsee?',
+      options: ['laajoilla aroilla', 'sademetsässä', 'korkeassa vuoristossa', 'saarella'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki nousi puuttomalle arolle, jossa talvet ovat hyvin kylmiä. Se on yksi maailman kylmimmistä pääkaupungeista.',
+      hint: 'Maisema on puuton ja tasainen.',
+    },
+    {
+      q: 'Milloin Astanasta tuli Kazakstanin pääkaupunki?',
+      options: ['1997', '1897', '1947', '2017'],
+      correct: 0,
+      fact: 'Pääkaupunki siirrettiin Almatysta pohjoiseen, ja uusi keskusta rakennettiin arolle nopeasti.',
+      hint: 'Siirto tehtiin 1990-luvun lopulla.',
+    },
+    {
+      q: 'Mitä kieliä Kazakstanissa käytetään laajasti?',
+      options: [
+        'kazakkia ja venäjää',
+        'kiinaa ja mongolia',
+        'persiaa ja arabiaa',
+        'turkkia ja kurdia',
+      ],
+      correct: 0,
+      fact: 'Kazakki on valtionkieli ja venäjä yleinen asiointikieli. Kazakin kirjaimisto on siirtymässä kyrillisestä latinalaiseen.',
+      hint: 'Toinen kieli on suuren naapurimaan valtakieli.',
+    },
   ],
 
   novosibirsk: [
@@ -8641,6 +8727,34 @@ const ASIA_QUESTIONS = {
       level: 2,
       hint: 'Vyöhyke on havumetsää, jota on myös Suomessa ja Kanadassa.',
       fact: 'Siperian taiga on maailman laajin yhtenäinen metsäalue. Sen alla on paikoin ikirouta.',
+    },
+    {
+      q: 'Minkä joen varrella Novosibirsk sijaitsee?',
+      options: ['Obin', 'Volgan', 'Amurin', 'Gangesin'],
+      correct: 0,
+      level: 1,
+      fact: 'Ob on yksi Siperian suurista pohjoiseen virtaavista joista. Kaupunki syntyi sen ylittävän rautatiesillan työmaalle 1890-luvulla.',
+      hint: 'Joki virtaa pohjoiseen Jäämereen.',
+    },
+    {
+      q: 'Miksi Novosibirsk syntyi vasta 1890-luvulla?',
+      options: [
+        'Transsiperian radan siltatyömaan takia',
+        'kaivoksen takia',
+        'meren sataman takia',
+        'kaupungin siirron takia',
+      ],
+      correct: 0,
+      fact: 'Kaupunki kasvoi siltatyömaan ympärille ja on siksi Venäjän suurten kaupunkien nuorin.',
+      hint: 'Syy liittyy rautatiehen ja jokeen.',
+    },
+    {
+      q: 'Mikä tiedekaupunki rakennettiin Novosibirskin laitamille 1950-luvulla?',
+      options: ['Akademgorodok', 'Baikonur', 'Skolkovo', 'Magnitogorsk'],
+      correct: 0,
+      level: 3,
+      fact: 'Metsään rakennettiin kokonainen tutkimuskaupunki instituutteineen ja yliopistoineen. Se on yhä Siperian tieteen keskus.',
+      hint: 'Nimi tarkoittaa suunnilleen akatemiakaupunkia.',
     },
   ],
 
@@ -8665,6 +8779,39 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Laji on nimeltään norppa, ja se on jäänyt eristyksiin sisämaahan.',
       fact: 'Baikalinnorppa on ainoa hyljelaji, joka elää koko elämänsä makeassa vedessä. Kukaan ei tiedä varmasti, miten se päätyi järveen.',
+    },
+    {
+      q: 'Millainen vesistö Baikal on?',
+      options: ['maailman syvin järvi', 'merenlahti', 'tekoallas', 'koskinen joki'],
+      correct: 0,
+      level: 1,
+      fact: 'Järvi on yli 1 600 metriä syvä, ja siinä on noin viidennes maailman jäätymättömästä makeasta pintavedestä.',
+      hint: 'Vesistössä on viidennes maailman makeasta pintavedestä.',
+    },
+    {
+      q: 'Mitä Baikalilla tehdään keskitalvella?',
+      options: [
+        'ajetaan autolla ja luistellaan jäällä',
+        'uidaan',
+        'kelluvia markkinoita',
+        'ei mitään, alue on suljettu',
+      ],
+      correct: 0,
+      fact: 'Jää kasvaa yli metrin paksuiseksi, ja sen yli kulkee talviteitä. Kirkas jää on niin läpinäkyvää, että pohja näkyy paikoin.',
+      hint: 'Toimintaan tarvitaan hyvin paksu jää.',
+    },
+    {
+      q: 'Miksi Baikalin eliölajisto on poikkeuksellinen?',
+      options: [
+        'järvi on hyvin vanha ja siellä elää satoja vain siellä tavattavia lajeja',
+        'järvessä ei elä mitään',
+        'kaikki lajit on istutettu',
+        'järvi on suolainen',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Järvi on noin 25 miljoonaa vuotta vanha. Sen eliöistä suuri osa on kehittynyt vain siellä, myös makean veden hylje.',
+      hint: 'Ikä on miljoonia vuosia, ja siitä seuraa omia lajeja.',
     },
   ],
 
@@ -8695,6 +8842,38 @@ const ASIA_QUESTIONS = {
       hint: 'Vain ohut pintakerros sulaa kesällä; sen alla maa pysyy jäässä.',
       fact: 'Jakutiassa ikirouta ulottuu paikoin yli kilometrin syvyyteen. Sen sulaessa maahan syntyy painanteita ja rakennukset kallistuvat.',
     },
+    {
+      q: 'Miksi Jakutskissa talot rakennetaan pilareiden päälle?',
+      options: [
+        'jotta talon lämpö ei sulattaisi ikiroutaa',
+        'tulvien takia',
+        'maanjäristysten takia',
+        'tuulen takia',
+      ],
+      correct: 0,
+      fact: 'Jos rakennus lämmittää maata, ikirouta sulaa ja talo painuu. Siksi talot nostetaan paaluille ja putket kulkevat maan päällä.',
+      hint: 'Syy on maassa, joka ei saa sulaa.',
+    },
+    {
+      q: 'Kuinka kylmää Jakutskissa voi talvella olla?',
+      options: [
+        'alle -50 astetta',
+        'noin -10 astetta',
+        'noin nolla astetta',
+        'enintään -30 astetta',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Tammikuun keskilämpötila on noin -40 astetta ja kylmimmät mittaukset lähellä -60 astetta. Autot pidetään talvella käynnissä tai lämmitetyissä halleissa.',
+      hint: 'Lukema on lähempänä -60 kuin -20 astetta.',
+    },
+    {
+      q: 'Mitä Jakutian alueelta louhitaan?',
+      options: ['timantteja', 'merisuolaa', 'marmoria', 'fosforia'],
+      correct: 0,
+      fact: 'Jakutian timanttikaivokset ovat maailman suurimpia. Mirnyin avolouhos on satoja metrejä syvä.',
+      hint: 'Kivi on kova ja kirkas ja sitä käytetään sormuksissa.',
+    },
   ],
 
   magadan: [
@@ -8713,6 +8892,44 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Metalli on keltaista, ja sen takia alueelle rakennettiin tie nimeltä Kolyman valtatie.',
       fact: 'Kolyman kultakentät olivat Neuvostoliiton tärkeimpiä. Alueen tietä kutsutaan sen historian takia luiden tieksi.',
+    },
+    {
+      q: 'Missä Magadan sijaitsee?',
+      options: [
+        'Venäjän Kaukoidässä meren rannalla',
+        'Keski-Euroopassa',
+        'Intian niemimaalla',
+        'Australiassa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Ohotanmeren rannalla, eikä sinne ole rautatietä. Matka tehdään lentäen tai pitkää valtatietä pitkin.',
+      hint: 'Paikka on Venäjän itäisimmässä osassa meren äärellä.',
+    },
+    {
+      q: 'Mikä tie johtaa Magadanista sisämaahan?',
+      options: [
+        'Kolyman valtatie',
+        'Silkkitie',
+        'Transsiperian rata',
+        'Panamerikkalainen valtatie',
+      ],
+      correct: 0,
+      fact: 'Yli 2 000 kilometriä pitkä tie rakennettiin 1930–1950-luvuilla vankityövoimalla, ja se kulkee ikiroudan yli Jakutskiin.',
+      hint: 'Tie on nimetty saman joen mukaan kuin koko alue.',
+    },
+    {
+      q: 'Mitä Magadanin alueen historiaan liittyy 1930–1950-luvuilla?',
+      options: [
+        'laajat pakkotyöleirit',
+        'alue oli täysin asumaton',
+        'alue kuului Japanille',
+        'alueella oli suurkaupunki jo 1800-luvulla',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kolyman kulta- ja tinakaivoksilla työskenteli satoja tuhansia leirien vankeja. Uhrien muistoksi kaupungissa on Surun maski -muistomerkki.',
+      hint: 'Kaupungissa on aiheeseen liittyvä muistomerkki nimeltä Surun maski.',
     },
   ],
 
@@ -8733,6 +8950,33 @@ const ASIA_QUESTIONS = {
       hint: 'Sama laji elää myös Suomessa, mutta Kamtšatkalla yksilöt ovat poikkeuksellisen suuria.',
       fact: 'Kamtšatkan karhut lihovat syksyllä jokiin nousevalla lohella. Niemimaalla elää tuhansia yksilöitä.',
     },
+    {
+      q: 'Kuinka monta tulivuorta Kamtšatkalla on aktiivisia?',
+      options: ['yli kaksikymmentä', 'yksi', 'noin sata', 'ei yhtään'],
+      correct: 0,
+      level: 3,
+      fact: 'Niemimaalla on noin 300 tulivuorta, joista yli kaksikymmentä on aktiivisia. Alue kuuluu Unescon maailmanperintöön.',
+      hint: 'Luku on kymmenien luokkaa, ei satojen.',
+    },
+    {
+      q: 'Mikä kala nousee Kamtšatkan jokiin suurina parvina?',
+      options: ['lohi', 'turska', 'silakka', 'ahven'],
+      correct: 0,
+      fact: 'Kamtšatkan joet ovat maailman tärkeimpiä villilohen kudualueita. Karhut kalastavat niissä koko kesän.',
+      hint: 'Kala nousee mereltä jokeen ja karhut odottavat sitä.',
+    },
+    {
+      q: 'Miten Kamtšatkalle pääsee?',
+      options: [
+        'lentäen tai laivalla, koska maantietä ei ole',
+        'junalla',
+        'autolla Moskovasta',
+        'kävellen jäätä pitkin',
+      ],
+      correct: 0,
+      fact: 'Niemimaata ei yhdistä maantie muuhun Venäjään, joten ihmiset ja tavarat kulkevat lentokoneella ja laivalla.',
+      hint: 'Maantieyhteys puuttuu kokonaan.',
+    },
   ],
 
   sahalin: [
@@ -8752,6 +8996,30 @@ const ASIA_QUESTIONS = {
       hint: 'Merenpohjan esiintymät ovat Venäjän tärkeimpiä, ja niistä nesteytettynä laivataan Japaniin.',
       fact: 'Sahalinin edustan hankkeet ovat Venäjän suurimpia energiaprojekteja. Jäät vaikeuttavat työtä puolet vuodesta.',
     },
+    {
+      q: 'Mikä salmi erottaa Sahalinin mantereesta?',
+      options: ['Tatarinsalmi', 'Beringinsalmi', 'Malakansalmi', 'Gibraltarinsalmi'],
+      correct: 0,
+      level: 1,
+      fact: 'Salmi on kapeimmillaan vain noin seitsemän kilometriä leveä ja jäätyy talvella.',
+      hint: 'Salmi on hyvin kapea ja jäätyy talvella.',
+    },
+    {
+      q: 'Mikä maa hallitsi Sahalinin eteläosaa vuosina 1905–1945?',
+      options: ['Japani', 'Kiina', 'Korea', 'Yhdysvallat'],
+      correct: 0,
+      level: 3,
+      fact: 'Saaren eteläosa oli Japanin hallussa nimellä Karafuto. Toisen maailmansodan jälkeen koko saari siirtyi Neuvostoliitolle.',
+      hint: 'Maa on saaren eteläpuolella oleva saarivaltio.',
+    },
+    {
+      q: 'Ketkä ovat Sahalinin alkuperäiskansoja?',
+      options: ['nivkhit ja ainut', 'maorit', 'saamelaiset', 'atsteekit'],
+      correct: 0,
+      level: 3,
+      fact: 'Nivkhit ja ainut ovat kalastaja- ja metsästäjäkansoja, joiden kielet ja elinkeinot ovat saarella vanhempia kuin valtioiden rajat.',
+      hint: 'Kansat ovat Kaukoidän kalastajakansoja.',
+    },
   ],
 
   vladivostok: [
@@ -8770,6 +9038,29 @@ const ASIA_QUESTIONS = {
       level: 2,
       hint: 'Meri erottaa Venäjän ja Korean saaristomaasta idässä.',
       fact: 'Satama jäätyy talvella, ja sitä pidetään auki jäänmurtajilla.',
+    },
+    {
+      q: 'Mikä Vladivostok on Venäjälle?',
+      options: ['tärkein Tyynenmeren satama', 'pääkaupunki', 'vuoristokylä', 'saari'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Venäjän Tyynenmeren laivaston tukikohta ja tärkeä satama, joka pidetään talvella auki jäänmurtajilla.',
+      hint: 'Merkitys liittyy laivoihin ja Tyyneenmereen.',
+    },
+    {
+      q: 'Mitä nimi Vladivostok tarkoittaa?',
+      options: ['idän hallitsemista', 'kaunista lahtea', 'uutta kaupunkia', 'kylmää satamaa'],
+      correct: 0,
+      level: 3,
+      fact: 'Nimi annettiin 1860 perustetulle sotilastukikohdalle, ja se kertoo suoraan tarkoituksen.',
+      hint: 'Nimi kertoo ilmansuunnan ja vallan.',
+    },
+    {
+      q: 'Mikä silta on Vladivostokin maamerkki?',
+      options: ['Kultaisen sarven silta', 'Bosporinsilta', 'Golden Gate', 'Juutinrauman silta'],
+      correct: 0,
+      fact: 'Vuonna 2012 valmistunut vinoköysisilta ylittää Kultaisen sarven lahden, jonka mukaan se on nimetty.',
+      hint: 'Silta on nimetty lahden mukaan, jonka yli se kaartuu.',
     },
   ],
 
@@ -8797,6 +9088,22 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Asumus on pyöreä, huovalla verhottu ja kootaan uudelleen muutamassa tunnissa.',
       fact: 'Mongoliaksi asumusta kutsutaan nimellä ger. Sen ovi osoittaa perinteisesti etelään.',
+    },
+    {
+      q: 'Millaisessa maisemassa Ulan Bator sijaitsee?',
+      options: ['aroilla vuorten välissä', 'sademetsässä', 'merenrannalla', 'saarella'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on jokilaaksossa noin 1 300 metrin korkeudessa arojen ja vuorten keskellä. Se on maailman kylmimpiä pääkaupunkeja.',
+      hint: 'Maisema on puuton ja korkealla.',
+    },
+    {
+      q: 'Kuinka suuri osa mongolialaisista asuu pääkaupungissa?',
+      options: ['noin puolet', 'noin kymmenesosa', 'lähes kaikki', 'ei kukaan'],
+      correct: 0,
+      level: 3,
+      fact: 'Mongoliassa on noin 3,5 miljoonaa asukasta, joista noin puolet asuu pääkaupungissa. Maa on maailman harvimmin asuttuja.',
+      hint: 'Osuus on suurempi kuin kolmasosa.',
     },
   ],
 
@@ -8830,6 +9137,26 @@ const ASIA_QUESTIONS = {
       hint: 'Alueelle ei saanut astua ilman keisarin lupaa, ja siinä on lähes tuhat rakennusta.',
       fact: 'Palatsialue valmistui 1420 ja siellä asui 24 keisaria. Nykyään se on museo ja maailmanperintökohde.',
     },
+    {
+      q: 'Kuinka pitkä Kiinan muuri on kaikkine haaroineen?',
+      options: [
+        'yli 20 000 kilometriä',
+        'noin 500 kilometriä',
+        'noin 2 000 kilometriä',
+        'noin 100 000 kilometriä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Muurin kaikki osat ja haarat mitattiin 2000-luvulla yli 21 000 kilometriksi. Se ei ole yhtenäinen muuri vaan monessa vaiheessa rakennettu verkosto.',
+      hint: 'Luku on kymmeniätuhansia kilometrejä.',
+    },
+    {
+      q: 'Mikä on hutong?',
+      options: ['vanha kuja ja sen matalat pihatalot', 'tori', 'temppeli', 'jokivene'],
+      correct: 0,
+      fact: 'Hutongit ovat vanhan Pekingin kujia, joiden varrella on pihan ympärille rakennettuja matalia taloja. Monet on purettu, osa suojeltu.',
+      hint: 'Sana tarkoittaa kujaa ja sen taloja.',
+    },
   ],
 
   soul: [
@@ -8848,6 +9175,34 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Kuningas Sejong teetti kirjaimiston, jonka muodot jäljittelevät suun asentoa.',
       fact: 'Aakkosto otettiin käyttöön 1446. Sitä pidetään yhtenä maailman järjestelmällisimmistä kirjoitusjärjestelmistä.',
+    },
+    {
+      q: 'Minkä joen varrella Soul sijaitsee?',
+      options: ['Han-joen', 'Jangtsen', 'Mekongin', 'Gangesin'],
+      correct: 0,
+      level: 1,
+      fact: 'Joki halkoo kaupungin, ja sen rannat ovat puistoja ja pyöräteitä. Joen yli kulkee kymmeniä siltoja.',
+      hint: 'Joki antoi nimensä myös maan talouden nousulle.',
+    },
+    {
+      q: 'Mikä korealaisen kulttuurin vientituote tunnetaan maailmalla?',
+      options: [
+        'populaarimusiikki ja televisiosarjat',
+        'oopperaperinne',
+        'sirkus',
+        'jääveistokset',
+      ],
+      correct: 0,
+      fact: 'Korealainen musiikki, sarjat ja elokuvat ovat 2000-luvulla levinneet maailmalle, ja niitä käännetään kymmenille kielille.',
+      hint: 'Ilmiö liittyy musiikkiin ja televisiosarjoihin.',
+    },
+    {
+      q: 'Mikä palatsi oli Joseon-dynastian pääpalatsi Soulissa?',
+      options: ['Gyeongbokgung', 'Topkapı', 'Kielletty kaupunki', 'Potala'],
+      correct: 0,
+      level: 3,
+      fact: 'Palatsi rakennettiin 1395, tuhoutui sodissa ja on rakennettu uudelleen. Sen porteilla esitetään vartionvaihto.',
+      hint: 'Palatsi on Joseon-dynastian ensimmäinen ja tärkein.',
     },
   ],
 
@@ -8868,6 +9223,34 @@ const ASIA_QUESTIONS = {
       hint: 'Reitti vei Keski-Aasian halki Välimerelle, ja sen tärkein vientituote oli hieno kangas.',
       fact: 'Xi’an oli kolmentoista dynastian pääkaupunki ja aikanaan yksi maailman suurimmista kaupungeista.',
     },
+    {
+      q: 'Mitä terrakotta-armeija on?',
+      options: [
+        'tuhansia poltetusta savesta tehtyjä sotilaita',
+        'kivinen muuri',
+        'pronssiveistos',
+        'seinämaalaus',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Ensimmäisen keisarin haudan luo haudattiin tuhansia savisotilaita, joilla on kullakin omat kasvot. Osa on yhä kaivamatta.',
+      hint: 'Hahmot ovat poltettua savea ja luonnollisen kokoisia.',
+    },
+    {
+      q: 'Mikä rakennelma ympäröi Xi’anin vanhaakaupunkia?',
+      options: ['yhtenäinen kaupunginmuuri', 'kanava', 'metrolinja', 'aita'],
+      correct: 0,
+      fact: 'Muuri on noin 14 kilometriä pitkä ja niin leveä, että sen päällä voi pyöräillä koko kierroksen.',
+      hint: 'Rakennelman päällä voi pyöräillä.',
+    },
+    {
+      q: 'Mitä Silkkitietä pitkin vietiin idästä länteen?',
+      options: ['silkkiä, paperia ja posliinia', 'kumia ja kaakaota', 'kivihiiltä', 'banaaneja'],
+      correct: 0,
+      level: 3,
+      fact: 'Silkin ohella länteen kulki paperi, posliini ja tee. Vastaan tuli hopeaa, hevosia, lasia ja uusia uskontoja.',
+      hint: 'Tuotteet olivat kevyitä, kalliita ja kestivät pitkän matkan.',
+    },
   ],
 
   shanghai: [
@@ -8887,6 +9270,34 @@ const ASIA_QUESTIONS = {
       hint: 'Joki on Aasian pisin, noin 6 300 kilometriä.',
       fact: 'Joen varrella on Kolmen rotkon pato, maailman suurin vesivoimalaitos.',
     },
+    {
+      q: 'Missä Shanghai sijaitsee?',
+      options: [
+        'Kiinan itärannikolla joen suistossa',
+        'Kiinan sisämaassa vuoristossa',
+        'saarella Tyynellämerellä',
+        'Kiinan pohjoisrajalla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Jangtsen suistossa, ja sen satama on konttiliikenteellä mitattuna maailman vilkkaimpia.',
+      hint: 'Sijainti on suuren joen suistossa meren äärellä.',
+    },
+    {
+      q: 'Mikä Shanghain rantakatu tunnetaan vanhoista pankkitaloistaan?',
+      options: ['Bund', 'Broadway', 'Rambla', 'Nevski'],
+      correct: 0,
+      fact: 'Kadun varrella on 1900-luvun alun pankki- ja kauppataloja. Vastarannalla Pudongissa kohoavat pilvenpiirtäjät.',
+      hint: 'Katu on joen rannalla vastapäätä pilvenpiirtäjiä.',
+    },
+    {
+      q: 'Millainen juna kulkee Shanghain lentoasemalta keskustaan?',
+      options: ['magneettikelluntajuna', 'köysirata', 'kanaalivene', 'hevosvetoinen raitiovaunu'],
+      correct: 0,
+      level: 3,
+      fact: 'Juna kulkee noin 30 kilometrin matkan huippunopeudella 431 kilometriä tunnissa, ja matka kestää alle kahdeksan minuuttia.',
+      hint: 'Juna ei kosketa kiskoa lainkaan.',
+    },
   ],
 
   taipei: [
@@ -8905,6 +9316,39 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Saarella valmistetaan suurin osa maailman kaikkein kehittyneimmistä puolijohteista.',
       fact: 'Yksi taiwanilainen yhtiö valmistaa valtaosan maailman edistyneimmistä siruista. Siksi saarta kutsutaan alan sydämeksi.',
+    },
+    {
+      q: 'Mikä Taipei 101 on?',
+      options: ['pilvenpiirtäjä', 'museo', 'temppeli', 'silta'],
+      correct: 0,
+      level: 1,
+      fact: 'Vuonna 2004 valmistunut torni oli maailman korkein rakennus viisi vuotta. Sen huipulla oleva teräspallo vaimentaa maanjäristysten ja taifuunien liikettä.',
+      hint: 'Nimen numero kertoo kerrosten määrän.',
+    },
+    {
+      q: 'Mitä Taiwanin yömarkkinoilla tehdään?',
+      options: [
+        'syödään katuruokaa ja pelataan pelejä',
+        'katsotaan oopperaa',
+        'myydään autoja',
+        'uidaan',
+      ],
+      correct: 0,
+      fact: 'Yömarkkinat aukeavat illalla, ja niillä myydään nuudeleita, kuplateetä ja paistettua kanaa. Ne ovat tavallinen tapa syödä ulkona.',
+      hint: 'Toiminta liittyy ruokaan ja iltaan.',
+    },
+    {
+      q: 'Miksi Taiwanin asemasta on erimielisyyttä?',
+      options: [
+        'Kiina pitää saarta osanaan, mutta saarella on oma hallinto ja vaalit',
+        'saari on asumaton',
+        'saari kuuluu Japanille',
+        'saarta hallitsee YK',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Taiwanilla on oma hallinto, armeija ja vaalit, mutta Kiinan kansantasavalta pitää saarta osanaan. Useimmat maat käyvät Taiwanin kanssa kauppaa ilman virallisia diplomaattisuhteita.',
+      hint: 'Kysymys on siitä, kuka päättää saaren asioista.',
     },
   ],
 
@@ -8930,6 +9374,34 @@ const ASIA_QUESTIONS = {
       hint: 'Tasaista maata on vähän ja ihmisiä paljon, joten on rakennettu ylöspäin.',
       fact: 'Hongkongissa on enemmän yli 150-metrisiä rakennuksia kuin missään muussa kaupungissa maailmassa.',
     },
+    {
+      q: 'Mikä lauttayhteys on kulkenut Hongkongin satamassa yli sadan vuoden ajan?',
+      options: ['Star Ferry', 'Titanic', 'Vasa', 'Kon-Tiki'],
+      correct: 0,
+      level: 1,
+      fact: 'Lautat ovat kulkeneet Victorian sataman yli 1880-luvulta lähtien ja ovat yhä halpa arkinen kulkuneuvo.',
+      hint: 'Nimessä on tähti.',
+    },
+    {
+      q: 'Mikä rata nousee Hongkongin Victoria Peakille?',
+      options: ['jyrkkä vaunurata vuodelta 1888', 'metro', 'hissi', 'gondolirata'],
+      correct: 0,
+      fact: 'Vaunurata kiipeää jyrkkää rinnettä kukkulan huipulle, josta näkyy koko satama ja pilvenpiirtäjien rivistö.',
+      hint: 'Rata avattiin jo 1888 ja se kiipeää rinnettä.',
+    },
+    {
+      q: 'Mitä tarkoittaa periaate "yksi maa, kaksi järjestelmää"?',
+      options: [
+        'Hongkong on osa Kiinaa mutta sillä on oma talous- ja oikeusjärjestelmä',
+        'kaksi valtiota jakaa kaupungin',
+        'kaupungissa on kaksi virallista kieltä',
+        'kaupungissa on kaksi pormestaria',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kun Britannia luovutti Hongkongin Kiinalle 1997, sovittiin että kaupunki säilyttää oman talous- ja oikeusjärjestelmänsä. Järjestelyn tulkinnasta on käyty paljon keskustelua.',
+      hint: 'Sanapari kuvaa kaupungin erityisasemaa Kiinassa.',
+    },
   ],
 
   manila: [
@@ -8948,6 +9420,44 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Määrä on yksi maailman suurimmista saarivaltioiden joukossa, mutta vain noin 2 000 saarta on asuttuja.',
       fact: 'Saaria on noin 7 640. Suurimmat ovat Luzon ja Mindanao, ja niillä asuu suurin osa väestöstä.',
+    },
+    {
+      q: 'Missä Manila sijaitsee?',
+      options: [
+        'Luzonin saarella lahden rannalla',
+        'Borneon sisämaassa',
+        'Australiassa',
+        'Uudessa-Seelannissa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Manilanlahden rannalla Filippiinien suurimmalla saarella. Lahti on kuulu auringonlaskuistaan ja vilkkaasta laivaliikenteestä.',
+      hint: 'Paikka on maan suurimmalla saarella.',
+    },
+    {
+      q: 'Mitkä kaksi kieltä ovat Filippiinien virallisia?',
+      options: [
+        'filipino ja englanti',
+        'espanja ja englanti',
+        'kiina ja malaiji',
+        'japani ja korea',
+      ],
+      correct: 0,
+      fact: 'Filipino perustuu tagalogiin, ja englanti on toinen virallinen kieli. Maassa puhutaan lisäksi yli sataa muuta kieltä.',
+      hint: 'Toinen kieli periytyi 1900-luvun alun siirtomaavallalta.',
+    },
+    {
+      q: 'Mikä on jeepney?',
+      options: [
+        'värikäs pikkubussi, joka toimii linja-autona',
+        'polkuriksa',
+        'jokivene',
+        'junavaunu',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Jeepneyt tehtiin alun perin sodan jälkeen jätetyistä maastoautoista. Ne on maalattu kirkkain värein ja ne kulkevat kiinteitä reittejä.',
+      hint: 'Kulkuneuvon nimi juontuu sotilasautosta.',
     },
   ],
 
@@ -8968,6 +9478,29 @@ const ASIA_QUESTIONS = {
       hint: 'Lahdesta kohoaa lähes 2 000 pystysuoraa kalliosaarta, ja sen nimi tarkoittaa laskeutuvaa lohikäärmettä.',
       fact: 'Lahti on Unescon maailmanperintökohde. Kalliot ovat kalkkikiveä, jota merivesi on syövyttänyt miljoonia vuosia.',
     },
+    {
+      q: 'Mitä Hanoin kaduilla liikkuu erityisen paljon?',
+      options: ['skoottereita', 'hevosvaunuja', 'poroja', 'gondoleja'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupungissa on miljoonia moottoripyöriä ja skoottereita. Niillä kuljetetaan tavaraa ja koko perhe.',
+      hint: 'Kulkuneuvossa on kaksi pyörää ja moottori.',
+    },
+    {
+      q: 'Mikä on Vietnamin tunnetuin ruokalaji?',
+      options: ['pho eli riisinuudelikeitto', 'sushi', 'tortilla', 'gulassi'],
+      correct: 0,
+      fact: 'Phossa on lihaliemi, riisinuudelit ja tuoreita yrttejä. Sitä syödään usein aamiaiseksi kadunvarren kioskeissa.',
+      hint: 'Ruoka on keitto, jossa on riisinuudeleita.',
+    },
+    {
+      q: 'Mikä Hanoin rakennus toimi maan ensimmäisenä yliopistona?',
+      options: ['Kirjallisuuden temppeli', 'Sorbonne', 'Nalanda', 'Al-Azhar'],
+      correct: 0,
+      level: 3,
+      fact: 'Vuonna 1070 perustetussa temppelissä koulutettiin virkamiehiä. Sen kivikilvissä ovat tutkinnon suorittaneiden nimet.',
+      hint: 'Paikka on temppeli, jossa koulutettiin virkamiehiä.',
+    },
   ],
 
   bangkok: [
@@ -8987,6 +9520,33 @@ const ASIA_QUESTIONS = {
       hint: 'Uskonnon perustaja syntyi Nepalissa, ja Thaimaassa on yli 30 000 sen temppeliä.',
       fact: 'Noin 90 prosenttia thaimaalaisista on buddhalaisia. Moni mies viettää osan elämästään munkkina.',
     },
+    {
+      q: 'Mikä joki halkoo Bangkokin?',
+      options: ['Chao Phraya', 'Mekong', 'Ganges', 'Jangtse'],
+      correct: 0,
+      fact: 'Joella kulkevat pikaveneet ja lautat ovat osa arjen liikennettä. Kanaaleja pitkin päästään kaupunginosien läpi.',
+      hint: 'Joki laskee Thaimaanlahteen kaupungin eteläpuolella.',
+    },
+    {
+      q: 'Mitä Bangkokin kelluvilla markkinoilla myydään?',
+      options: ['ruokaa ja hedelmiä suoraan veneistä', 'autoja', 'huonekaluja', 'kirjoja'],
+      correct: 0,
+      fact: 'Kanaaleissa myydään hedelmiä, keittoja ja makeisia veneistä. Markkinat ovat osin matkailukohteita, mutta myös tapa käydä kauppaa.',
+      hint: 'Kauppa käydään veneistä käsin.',
+    },
+    {
+      q: 'Mikä on erityistä Bangkokin virallisessa thainkielisessä nimessä?',
+      options: [
+        'se on yksi maailman pisimmistä paikannimistä',
+        'se on vain kolme kirjainta',
+        'se on latinaa',
+        'sitä ei ole olemassa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Juhlallinen muoto on kymmeniä sanoja pitkä. Arjessa thaimaalaiset käyttävät lyhennettä Krung Thep.',
+      hint: 'Erityisyys liittyy nimen pituuteen.',
+    },
   ],
 
   yangon: [
@@ -9005,6 +9565,34 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Pagodi on peitetty tonneilla kultalehteä, ja sen huipussa on tuhansia jalokiviä.',
       fact: 'Pagodi kohoaa lähes sata metriä. Sen kultaus uusitaan lahjoitusvaroin säännöllisesti.',
+    },
+    {
+      q: 'Mitä Yangonin kaduilla myydään aamiaiseksi?',
+      options: ['nuudelikeittoa', 'pizzaa', 'pannukakkuja', 'sushia'],
+      correct: 0,
+      level: 1,
+      fact: 'Mohinga on kalaliemeen tehty riisinuudelikeitto, jota myydään aamulla kadunkulmissa. Sitä pidetään maan kansallisruokana.',
+      hint: 'Ruoka on aamiaiskeitto, jossa on riisinuudeleita.',
+    },
+    {
+      q: 'Minkä suuren suiston lähellä Yangon sijaitsee?',
+      options: ['Irrawaddyn suiston', 'Mekongin suiston', 'Gangesin suiston', 'Jangtsen suiston'],
+      correct: 0,
+      fact: 'Kaupunki on jokisataman ympärillä lähellä laajaa suistoa, jonka riisipellot ruokkivat suuren osan maata.',
+      hint: 'Suiston joki on maan tärkein ja virtaa pohjoisesta etelään.',
+    },
+    {
+      q: 'Mikä oli Yangonin asema vuoteen 2006 asti?',
+      options: [
+        'maan pääkaupunki',
+        'pieni kalastajakylä',
+        'suljettu sotilastukikohta',
+        'osa Intiaa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Pääkaupunki siirrettiin 2006 sisämaahan rakennettuun Naypyidawiin. Yangon on yhä maan suurin kaupunki ja talouden keskus.',
+      hint: 'Asema siirtyi 2006 sisämaan uuteen kaupunkiin.',
     },
   ],
 
@@ -9030,6 +9618,39 @@ const ASIA_QUESTIONS = {
       hint: 'Salmi on lyhin meritie Intian valtamereltä Tyynellemerelle, ja siitä kulkee valtaosa Aasian laivaliikenteestä.',
       fact: 'Salmen kautta kulkee noin neljännes maailman kaupatuista tavaroista. Sen kapein kohta on vain muutaman kilometrin levyinen.',
     },
+    {
+      q: 'Millaisessa ilmastossa Singapore on?',
+      options: [
+        'trooppisessa ilmastossa päiväntasaajan lähellä',
+        'napa-alueen ilmastossa',
+        'aavikkoilmastossa',
+        'vuoristoilmastossa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Singapore on noin asteen päässä päiväntasaajasta. Lämpötila on ympäri vuoden noin 30 astetta ja sateita tulee usein.',
+      hint: 'Lämpötila on lähes sama joka kuukausi.',
+    },
+    {
+      q: 'Mistä Singapore saa juomavetensä?',
+      options: [
+        'sadevedestä, kierrätyksestä, tuonnista ja merivedestä',
+        'vain joista',
+        'vain kaivoista',
+        'vain jäätiköistä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Vettä kerätään sadealtaisiin, puhdistetaan uudelleen käyttöön, tuodaan Malesiasta ja tehdään merivedestä. Näitä neljää lähdettä kutsutaan neljäksi hanaksi.',
+      hint: 'Lähteitä on neljä, ja niitä kutsutaan hanoiksi.',
+    },
+    {
+      q: 'Mikä Singaporen puisto tunnetaan puumaisista teräsrakennelmista?',
+      options: ['Gardens by the Bay', 'Central Park', 'Hyde Park', 'Retiro'],
+      correct: 0,
+      fact: 'Puiston superpuut ovat pystypuutarhoja, jotka keräävät sadevettä ja aurinkoenergiaa. Puistossa on myös viilennetty kukkakupoli.',
+      hint: 'Rakennelmia kutsutaan superpuiksi.',
+    },
   ],
 
   sumatra: [
@@ -9049,6 +9670,29 @@ const ASIA_QUESTIONS = {
       hint: 'Apinan nimi tarkoittaa malaijiksi metsän ihmistä, ja se on punaruskea.',
       fact: 'Sumatranorangutani on äärimmäisen uhanalainen. Sen elinympäristöä on raivattu palmuöljyplantaaseiksi.',
     },
+    {
+      q: 'Mikä Sumatra on?',
+      options: ['suuri saari', 'manner', 'niemimaa', 'järvi'],
+      correct: 0,
+      level: 1,
+      fact: 'Sumatra on maailman kuudenneksi suurin saari. Sen halki kulkee vuorijono, ja päiväntasaaja ylittää saaren keskiosan.',
+      hint: 'Sitä ympäröi vesi joka puolelta.',
+    },
+    {
+      q: 'Mikä Sumatran järvi syntyi jättimäisessä tulivuorenpurkauksessa?',
+      options: ['Toba', 'Baikal', 'Titicaca', 'Viktoria'],
+      correct: 0,
+      level: 3,
+      fact: 'Järvi on noin 74 000 vuotta sitten tapahtuneen purkauksen kaldera. Se on maailman suurimpia tulivuorijärviä, ja keskellä on saari.',
+      hint: 'Järvi täyttää tulivuoren romahtaneen kraatterin.',
+    },
+    {
+      q: 'Mitä Sumatralla kasvatetaan vientiin?',
+      options: ['kahvia, palmuöljyä ja kumia', 'viinirypäleitä', 'vehnää', 'sokerijuurikasta'],
+      correct: 0,
+      fact: 'Saarelta viedään palmuöljyä, kahvia ja kumia. Viljelyalueiden laajeneminen on samalla kutistanut sademetsiä.',
+      hint: 'Tuotteista yksi juodaan ja yhdestä tehdään renkaita.',
+    },
   ],
 
   borneo: [
@@ -9067,6 +9711,38 @@ const ASIA_QUESTIONS = {
       level: 1,
       hint: 'Metsä on maailman vanhimpia ja lajirikkaimpia, ja siellä elää orangutaneja.',
       fact: 'Borneon sademetsä on arviolta yli 100 miljoonaa vuotta vanha. Siellä elää lajeja, joita ei tunneta mistään muualta.',
+    },
+    {
+      q: 'Mikä on Borneon korkein vuori?',
+      options: ['Kinabalu', 'Fuji', 'Everest', 'Kilimandžaro'],
+      correct: 0,
+      fact: 'Kinabalu kohoaa yli 4 000 metriin Malesian Sabahissa. Sen rinteillä kasvaa kasveja, joita ei tavata muualla.',
+      hint: 'Vuori on saaren pohjoisosassa Malesian puolella.',
+    },
+    {
+      q: 'Mitkä kolme maata jakavat Borneon saaren?',
+      options: [
+        'Indonesia, Malesia ja Brunei',
+        'Intia, Kiina ja Nepal',
+        'Filippiinit, Vietnam ja Laos',
+        'Australia, Fidži ja Tonga',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Suurin osa saaresta on Indonesian Kalimantania. Pohjoisessa ovat Malesian Sarawak ja Sabah sekä pieni sulttaanikunta Brunei.',
+      hint: 'Yksi kolmesta on pieni sulttaanikunta.',
+    },
+    {
+      q: 'Mitä orangutanit tarvitsevat elääkseen?',
+      options: [
+        'laajaa yhtenäistä sademetsää',
+        'avointa savannia',
+        'korkeaa vuoristoa',
+        'merenrantaa',
+      ],
+      correct: 0,
+      fact: 'Orangutanit liikkuvat puissa ja tarvitsevat laajoja metsäalueita. Metsien pirstoutuminen on niiden suurin uhka, ja kuntoutusasemilla poikasia opetetaan takaisin luontoon.',
+      hint: 'Eläin liikkuu puiden latvoissa eikä maassa.',
     },
   ],
 
@@ -9092,6 +9768,34 @@ const ASIA_QUESTIONS = {
       hint: 'Kaksi mannerlaattaa törmää saariketjun alla, ja toinen työntyy toisen alle.',
       fact: 'Indonesiassa on yli 120 aktiivista tulivuorta. Krakatau purkautui 1883 niin voimakkaasti, että ääni kuultiin tuhansien kilometrien päähän.',
     },
+    {
+      q: 'Millä saarella Jakarta sijaitsee?',
+      options: ['Jaavalla', 'Sumatralla', 'Borneolla', 'Balilla'],
+      correct: 0,
+      level: 1,
+      fact: 'Jaava on Indonesian väkirikkain saari: siellä asuu yli 150 miljoonaa ihmistä. Jakarta on saaren pohjoisrannikolla.',
+      hint: 'Saari on Indonesian väkirikkain.',
+    },
+    {
+      q: 'Miksi Indonesia rakentaa uutta pääkaupunkia Borneolle?',
+      options: [
+        'Jakarta vajoaa ja tulvii',
+        'Borneolla on viileämpää',
+        'Jakarta on liian pieni saari',
+        'uutta pääkaupunkia ei rakenneta',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Jakarta vajoaa paikoin senttejä vuodessa pohjaveden oton takia, ja tulvat toistuvat. Uutta pääkaupunkia Nusantaraa rakennetaan Borneon itäosaan.',
+      hint: 'Syy liittyy maan vajoamiseen ja tulviin.',
+    },
+    {
+      q: 'Mikä on Indonesian virallinen kieli?',
+      options: ['indonesia', 'hollanti', 'javaani', 'portugali'],
+      correct: 0,
+      fact: 'Indonesia on malaijiin perustuva yleiskieli, joka valittiin yhdistämään satojen kielten maa. Se opitaan koulussa oman äidinkielen rinnalla.',
+      hint: 'Kieli on nimetty maan mukaan.',
+    },
   ],
 
   lhasa: [
@@ -9110,6 +9814,39 @@ const ASIA_QUESTIONS = {
       level: 2,
       hint: 'Ylänkö on keskimäärin yli 4 000 metrin korkeudessa — korkeampi kuin mikään muu laaja alue maailmassa.',
       fact: 'Ylängöltä saavat alkunsa Aasian suurimmat joet: Jangtse, Mekong, Ganges ja Indus.',
+    },
+    {
+      q: 'Kuinka korkealla Lhasa sijaitsee?',
+      options: [
+        'noin 3 650 metrissä',
+        'noin 365 metrissä',
+        'noin 8 000 metrissä',
+        'merenpinnan tasolla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Ilmassa on kolmanneksen vähemmän happea kuin merenpinnalla, joten vierailijat tarvitsevat pari päivää sopeutumiseen.',
+      hint: 'Korkeus on lähempänä neljää kilometriä kuin yhtä.',
+    },
+    {
+      q: 'Mikä palatsi kohoaa Lhasan yllä kalliolla?',
+      options: ['Potala', 'Topkapı', 'Versailles', 'Alhambra'],
+      correct: 0,
+      fact: 'Palatsi rakennettiin 1600-luvulla ja oli dalai-lamojen talvipalatsi. Se on maailmanperintökohde.',
+      hint: 'Palatsi oli dalai-lamojen talvipalatsi.',
+    },
+    {
+      q: 'Millainen tee on tiibetiläisessä arjessa tavallinen?',
+      options: [
+        'suolainen tee jakkivoin kanssa',
+        'makea jäätee',
+        'kylmä maitotee',
+        'yrttitee ilman lisäkkeitä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Teetä juodaan suolaisena ja siihen sekoitetaan jakkivoita. Korkealla ja kylmässä se antaa energiaa ja nestettä.',
+      hint: 'Juomaan sekoitetaan voita ja suolaa.',
     },
   ],
 
@@ -9130,6 +9867,29 @@ const ASIA_QUESTIONS = {
       hint: 'Kansa muutti Tiibetistä Nepaliin satoja vuosia sitten ja on sopeutunut ohueen ilmaan.',
       fact: 'Tenzing Norgay nousi Edmund Hillaryn kanssa Everestin huipulle 1953. Kansan nimestä on tullut ammattinimike.',
     },
+    {
+      q: 'Minkä vuoriston juurella Kathmandu sijaitsee?',
+      options: ['Himalajan', 'Alppien', 'Andien', 'Uralin'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on laaksossa noin 1 400 metrin korkeudessa. Pohjoisessa kohoavat maailman korkeimmat vuoret.',
+      hint: 'Vuoristossa on maailman korkein huippu.',
+    },
+    {
+      q: 'Mikä on stupa?',
+      options: ['kupolimainen buddhalainen rakennelma', 'tori', 'silta', 'asuintalo'],
+      correct: 0,
+      fact: 'Kathmandun laaksossa on suuria stupia, joiden ympäri kierretään myötäpäivään. Boudhanathin stupa on niistä tunnetuimpia.',
+      hint: 'Rakennelman ympäri kierretään myötäpäivään.',
+    },
+    {
+      q: 'Mitä Kathmandun laaksossa tapahtui vuonna 2015?',
+      options: ['voimakas maanjäristys', 'tulivuorenpurkaus', 'hyökyaalto', 'pyörremyrsky'],
+      correct: 0,
+      level: 3,
+      fact: 'Maanjäristys vaurioitti temppeleitä ja koteja laajasti. Osa maailmanperintökohteista on rakennettu uudelleen vanhoin menetelmin.',
+      hint: 'Tapahtuma liittyi maan liikkeisiin, ja temppeleitä on korjattu sen jälkeen.',
+    },
   ],
 
   delhi: [
@@ -9148,6 +9908,34 @@ const ASIA_QUESTIONS = {
       level: 1,
       hint: 'Mogulihallitsija Shah Jahan rakennutti sen puolisonsa muistoksi 1600-luvulla.',
       fact: 'Rakennus valmistui 1653, ja sen rakentamiseen meni yli kaksikymmentä vuotta. Marmori vaihtaa sävyä vuorokaudenajan mukaan.',
+    },
+    {
+      q: 'Mikä metroverkko kuljettaa Delhissä miljoonia matkustajia päivittäin?',
+      options: ['Delhin metro', 'köysirata', 'kanaalivene', 'hevosvetoinen raitiovaunu'],
+      correct: 0,
+      level: 1,
+      fact: 'Vuonna 2002 avattu metro on kasvanut yhdeksi maailman laajimmista. Se kulkee osin maan alla ja osin siltaa pitkin.',
+      hint: 'Kulkuneuvo kulkee osin maan alla.',
+    },
+    {
+      q: 'Mitä eroa on Delhillä ja New Delhillä?',
+      options: [
+        'New Delhi on Delhin sisällä oleva hallintoalue',
+        'ne ovat eri maissa',
+        'New Delhi on kylä kaukana Delhistä',
+        'ne ovat sama nimi eri kielillä',
+      ],
+      correct: 0,
+      fact: 'Vanhan Delhin viereen rakennettiin 1910–1930-luvuilla uusi hallintokaupunki leveine katuineen. Se on nykyään Intian pääkaupunki osana Delhin suuraluetta.',
+      hint: 'Toinen on rakennettu 1900-luvulla hallintoa varten.',
+    },
+    {
+      q: 'Mikä 1200-luvulla rakennettu minareetti on Delhin maamerkki?',
+      options: ['Qutb Minar', 'Galata-torni', 'Big Ben', 'Pisan torni'],
+      correct: 0,
+      level: 3,
+      fact: 'Punaisesta hiekkakivestä tehty 73 metriä korkea torni valmistui 1200-luvulla ja on maailmanperintökohde.',
+      hint: 'Torni on punaisesta hiekkakivestä ja yli 70 metriä korkea.',
     },
   ],
 
@@ -9168,6 +9956,29 @@ const ASIA_QUESTIONS = {
       hint: 'Kaupunki tunnettiin silloin nimellä Calcutta ja oli Britannian valtakunnan toiseksi suurin kaupunki.',
       fact: 'Pääkaupunki siirrettiin Delhiin 1911. Kaupunki on yhä Intian kulttuurin ja kirjallisuuden keskuksia.',
     },
+    {
+      q: 'Mikä kulkuneuvo on Kolkatassa yhä käytössä toisin kuin muissa Intian kaupungeissa?',
+      options: ['raitiovaunu', 'purjelaiva', 'köysirata', 'metro'],
+      correct: 0,
+      level: 1,
+      fact: 'Kolkatassa on Intian ainoa yhä toimiva raitiovaunuverkko, joka aloitti hevosvetoisena 1800-luvulla.',
+      hint: 'Kulkuneuvo kulkee kiskoilla katujen keskellä.',
+    },
+    {
+      q: 'Mikä silta on Kolkatan tunnus?',
+      options: ['Howrah-silta', 'Tower Bridge', 'Golden Gate', 'Bosporinsilta'],
+      correct: 0,
+      fact: 'Teräksinen ulokesilta valmistui 1943, ja se on niitattu ilman pultteja. Sen yli kulkee päivittäin satojatuhansia ihmisiä.',
+      hint: 'Silta on niitattu teräksestä eikä siinä ole pultteja.',
+    },
+    {
+      q: 'Mikä on Kolkatan vuoden tärkein juhla?',
+      options: ['Durga Puja', 'joulu', 'kirsikankukkajuhla', 'uudenvuoden karnevaali'],
+      correct: 0,
+      level: 3,
+      fact: 'Syksyinen juhla täyttää kaupungin väliaikaisilla temppeleillä ja veistoksilla. Unesco lisäsi sen aineettoman kulttuuriperinnön listalle 2021.',
+      hint: 'Juhlaa varten rakennetaan väliaikaisia temppeleitä syksyllä.',
+    },
   ],
 
   mumbai: [
@@ -9186,6 +9997,29 @@ const ASIA_QUESTIONS = {
       level: 2,
       hint: 'Kaupungissa ovat maan pörssi ja keskuspankki, mutta hallitus istuu muualla.',
       fact: 'Mumbai rakennettiin seitsemälle saarelle, jotka yhdistettiin maankohotustöillä yhdeksi niemekkeeksi.',
+    },
+    {
+      q: 'Mikä on dabbawala?',
+      options: ['kotilounaiden kuljettaja', 'katukauppias', 'kalastaja', 'raitiovaunun kuljettaja'],
+      correct: 0,
+      fact: 'Dabbawalat noutavat kotona tehdyt lounaat ja toimittavat ne työpaikoille junilla ja polkupyörillä. Päivittäin liikkuu yli sata tuhatta ateriaa.',
+      hint: 'Työ liittyy kotona tehtyihin lounaisiin.',
+    },
+    {
+      q: 'Mikä Mumbain rautatieasema on maailmanperintökohde?',
+      options: ['Chhatrapati Shivaji Terminus', 'Grand Central', 'King’s Cross', 'Gare du Nord'],
+      correct: 0,
+      level: 3,
+      fact: 'Vuonna 1888 valmistunut asema yhdistää goottilaisen ja intialaisen tyylin. Se on yksi maailman vilkkaimmista asemista.',
+      hint: 'Asema valmistui 1888 ja on nimetty marathakuninkaan mukaan.',
+    },
+    {
+      q: 'Mikä luolatemppelisaari Mumbain edustalla on maailmanperintökohde?',
+      options: ['Elephanta', 'Petra', 'Lascaux', 'Angkor'],
+      correct: 0,
+      level: 3,
+      fact: 'Saarella on kallioon louhittuja hindutemppeleitä 400–700-luvuilta. Sinne pääsee lautalla noin tunnissa.',
+      hint: 'Saari on nimetty norsun mukaan.',
     },
   ],
 
@@ -9206,6 +10040,34 @@ const ASIA_QUESTIONS = {
       hint: 'Kieli on yksi maailman vanhimmista yhä puhutuista kirjakielistä ja kuuluu dravidakieliin.',
       fact: 'Kieltä puhutaan myös Sri Lankassa ja Singaporessa, joissa se on virallinen kieli.',
     },
+    {
+      q: 'Minkä lahden rannalla Chennai sijaitsee?',
+      options: ['Bengalinlahden', 'Arabianmeren', 'Punaisenmeren', 'Välimeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupungin Marina Beach on yksi maailman pisimpiä kaupunkirantoja. Bengalinlahdelta saapuvat monsuunisateet loka-joulukuussa.',
+      hint: 'Lahti on Intian niemimaan itäpuolella.',
+    },
+    {
+      q: 'Mikä klassinen tanssilaji on Tamil Nadun perinnettä?',
+      options: ['bharatanatyam', 'flamenco', 'baletti', 'hula'],
+      correct: 0,
+      fact: 'Bharatanatyam on vuosisatoja vanha klassinen tanssi, jossa asennot ja käsimerkit kertovat tarinaa. Chennai on sen tärkein opetuskeskus.',
+      hint: 'Laji on klassinen intialainen tanssi.',
+    },
+    {
+      q: 'Mistä teollisuudesta Chennai tunnetaan?',
+      options: [
+        'autoteollisuudesta',
+        'laivanrakennuksesta',
+        'kaivosteollisuudesta',
+        'paperiteollisuudesta',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Chennain seudulla valmistetaan suuri osa Intian autoista, ja kaupunkia on kutsuttu Intian Detroitiksi.',
+      hint: 'Kaupunkia on kutsuttu Intian Detroitiksi.',
+    },
   ],
 
   colombo: [
@@ -9224,6 +10086,33 @@ const ASIA_QUESTIONS = {
       level: 1,
       hint: 'Vuoriston viljelmiä kutsutaan yhä saaren vanhalla nimellä Ceylon.',
       fact: 'Britit istuttivat teetä saarelle 1860-luvulla, kun kahviviljelmät tuhoutuivat kasvitautiin.',
+    },
+    {
+      q: 'Mitkä ovat Sri Lankan pääkielet?',
+      options: ['sinhala ja tamili', 'hindi ja urdu', 'malaiji ja englanti', 'nepali ja bengali'],
+      correct: 0,
+      fact: 'Sinhala ja tamili ovat molemmat virallisia kieliä, ja englanti toimii yhdistävänä asiointikielenä. Molemmilla on oma kirjaimistonsa.',
+      hint: 'Kielet kirjoitetaan omilla kirjaimistoillaan.',
+    },
+    {
+      q: 'Miksi Sri Lankan tee kasvaa hyvin saaren keskiosassa?',
+      options: [
+        'ylängöllä on viileää ja sateista',
+        'ranta on kuuma ja kuiva',
+        'saarella sataa lunta',
+        'maaperä on suolaista',
+      ],
+      correct: 0,
+      fact: 'Teeplantaasit ovat 1 000–2 000 metrin korkeudessa. Korkeus näkyy myös teelaatujen luokituksessa.',
+      hint: 'Syy liittyy korkeuteen ja kosteuteen.',
+    },
+    {
+      q: 'Mikä kalliolinnoitus Sri Lankan sisämaassa on maailmanperintökohde?',
+      options: ['Sigiriya', 'Machu Picchu', 'Angkor Wat', 'Petra'],
+      correct: 0,
+      level: 3,
+      fact: 'Noin 200 metriä korkealle kalliolle rakennettiin 400-luvulla palatsi ja puutarhat. Rinteessä on kuuluja seinämaalauksia.',
+      hint: 'Kohde on palatsi jyrkän kalliomassan päällä.',
     },
   ],
 
@@ -9244,6 +10133,39 @@ const ASIA_QUESTIONS = {
       hint: 'Kulttuurin kaupungeissa Mohenjo-darossa ja Harappassa oli viemärit jo 4 500 vuotta sitten.',
       fact: 'Kulttuuri kukoisti noin 2600–1900 eaa. Sen kirjoitusta ei ole vieläkään pystytty lukemaan.',
     },
+    {
+      q: 'Minkä meren rannalla Karachi sijaitsee?',
+      options: ['Arabianmeren', 'Bengalinlahden', 'Kaspianmeren', 'Mustanmeren'],
+      correct: 0,
+      level: 1,
+      fact: 'Karachi on Pakistanin tärkein satama, jonka kautta kulkee suurin osa maan ulkomaankaupasta.',
+      hint: 'Meri on Intian niemimaan länsipuolella.',
+    },
+    {
+      q: 'Mikä oli Karachin asema vuosina 1947–1959?',
+      options: [
+        'maan pääkaupunki',
+        'pieni kalastajakylä',
+        'suljettu sotilastukikohta',
+        'osa Intiaa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Karachi oli itsenäistymisen jälkeen ensimmäinen pääkaupunki. Hallinto siirtyi myöhemmin Islamabadiin, joka rakennettiin tarkoitusta varten.',
+      hint: 'Asema siirtyi uuteen kaupunkiin, joka rakennettiin sitä varten.',
+    },
+    {
+      q: 'Mitä Induksen laakson vanhoista kaupungeista tiedetään?',
+      options: [
+        'niissä oli suoria katuja, kaivoja ja viemäreitä',
+        'ne olivat telttakyliä',
+        'ne rakennettiin puusta',
+        'niistä ei tiedetä mitään',
+      ],
+      correct: 0,
+      fact: 'Yli 4 000 vuotta vanhoissa kaupungeissa oli tiilitalot, suorat kadut ja vesihuolto. Niiden kirjoitusta ei ole vielä osattu lukea.',
+      hint: 'Löydöt kertovat kaduista ja vesihuollosta.',
+    },
   ],
 
   kabul: [
@@ -9263,6 +10185,34 @@ const ASIA_QUESTIONS = {
       hint: 'Vuoristo on Himalajan läntinen jatke, ja sen solat ovat olleet valloittajien reitti Intiaan.',
       fact: 'Vuoriston huiput kohoavat yli 7 000 metriin. Khyberin sola sen eteläpuolella on ollut kauppa- ja sotatie vuosituhansia.',
     },
+    {
+      q: 'Millaisessa maastossa Kabul sijaitsee?',
+      options: ['vuorten ympäröimässä laaksossa', 'merenrannalla', 'sademetsässä', 'saarella'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on noin 1 800 metrin korkeudessa laaksossa, jonka läpi virtaa Kabul-joki. Talvella sataa lunta.',
+      hint: 'Ympärillä on vuoria ja korkeus on lähes kaksi kilometriä.',
+    },
+    {
+      q: 'Mitkä kauppareitit kulkivat Kabulin kautta?',
+      options: [
+        'karavaanireitit Intiasta Keski-Aasiaan',
+        'merireitit Eurooppaan',
+        'Amerikan-reitit',
+        'napareitit',
+      ],
+      correct: 0,
+      fact: 'Kabul oli vuorisolien varrella tärkeä pysähdys Intian ja Keski-Aasian välisillä reiteillä. Khyberin sola on lähellä.',
+      hint: 'Reitti kulki vuorisolien kautta Intiaan.',
+    },
+    {
+      q: 'Mitä kieliä Afganistanissa puhutaan eniten?',
+      options: ['daria ja pashtua', 'turkkia ja arabiaa', 'hindiä ja urdua', 'venäjää ja kazakkia'],
+      correct: 0,
+      level: 3,
+      fact: 'Dari on persian muoto ja pashtu oma kielensä; molemmat ovat virallisia. Maassa puhutaan lisäksi useita muita kieliä.',
+      hint: 'Toinen kielistä on persian muoto.',
+    },
   ],
 
   samarkand: [
@@ -9281,6 +10231,35 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Maa on yksi maailman kahdesta valtiosta, joita ympäröivät pelkät sisämaavaltiot.',
       fact: 'Tamerlan teki kaupungista valtakuntansa pääkaupungin 1300-luvulla ja rakennutti sinne mahtavia rakennuksia.',
+    },
+    {
+      q: 'Mikä aukio on Samarkandin tunnetuin nähtävyys?',
+      options: ['Registan', 'Punainen tori', 'Sultanahmet', 'Zócalo'],
+      correct: 0,
+      level: 1,
+      fact: 'Aukiota reunustaa kolme medresaa eli korkeakoulua, joiden julkisivut on peitetty sinisillä kaakeleilla.',
+      hint: 'Aukiota reunustaa kolme kaakeloitua korkeakoulua.',
+    },
+    {
+      q: 'Kuka teki Samarkandista valtakuntansa pääkaupungin 1300-luvulla?',
+      options: ['Timur', 'Tšingis-kaani', 'Aleksanteri Suuri', 'Mehmed II'],
+      correct: 0,
+      level: 3,
+      fact: 'Timur kutsui valtakuntaansa käsityöläisiä ja rakennusmestareita kaukaa, ja kaupunki täyttyi kupoleista ja puutarhoista. Hänen hautansa Gur-e Amir on kaupungissa.',
+      hint: 'Hallitsijan hauta Gur-e Amir on samassa kaupungissa.',
+    },
+    {
+      q: 'Mikä tähtitieteen laitos Samarkandiin rakennettiin 1400-luvulla?',
+      options: [
+        'Ulugbekin observatorio',
+        'Greenwichin observatorio',
+        'Tycho Brahen tähtitorni',
+        'Palomarin observatorio',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Ulugbek mittasi vuoden pituuden muutaman minuutin tarkkuudella ja laati tähtiluettelon. Observatorion suuren kvadrantin kaari on säilynyt.',
+      hint: 'Laitoksen rakensi hallitsija, joka oli itse tähtitieteilijä.',
     },
   ],
 
@@ -9305,6 +10284,28 @@ const ASIA_QUESTIONS = {
       level: 3,
       hint: 'Nimeä on tulkittu tarkoittavan paikkaa, josta ei ole paluuta.',
       fact: 'Autiomaa on yksi maailman suurimmista hiekka-autiomaista. Karavaanit kiersivät sen aina reunoja pitkin keitaalta toiselle.',
+    },
+    {
+      q: 'Missä maassa Kašgar sijaitsee nykyään?',
+      options: ['Kiinassa', 'Kazakstanissa', 'Intiassa', 'Iranissa'],
+      correct: 0,
+      level: 1,
+      fact: 'Kašgar on Kiinan läntisimmässä osassa Xinjiangin alueella. Sinne on Bagdadista lyhyempi matka kuin Pekingistä.',
+      hint: 'Maa on Aasian väkirikkaimpia, ja kaupunki on sen läntisin.',
+    },
+    {
+      q: 'Ketkä ovat Kašgarin seudun perinteinen väestö?',
+      options: ['uiguurit', 'mongolit', 'tiibetiläiset', 'korealaiset'],
+      correct: 0,
+      fact: 'Uiguurit ovat turkkilaiskieltä puhuva kansa, jonka kieli kirjoitetaan arabialaisin kirjaimin. Kašgar on ollut heidän kulttuurinsa keskuksia.',
+      hint: 'Kansan kieli on turkkilaiskieli.',
+    },
+    {
+      q: 'Mitä Kašgarin markkinoilla on perinteisesti myyty?',
+      options: ['karjaa, mattoja ja käsitöitä', 'autoja', 'kirjoja', 'merikalaa'],
+      correct: 0,
+      fact: 'Markkinoilla on myyty vuosisatoja lampaita, aaseja, mattoja ja veitsiä. Osa kaupasta käydään yhä samalla paikalla.',
+      hint: 'Kauppatavara liittyy eläimiin ja käsityöhön.',
     },
   ],
 
@@ -9488,186 +10489,334 @@ const ASIA_FACTS = {
     'Teheran on Elburz-vuorten juurella; kaupungin pohjoisosat ovat satoja metrejä korkeammalla kuin eteläosat.',
     'Iran tunnettiin ennen vuotta 1935 nimellä Persia, ja sen kieli farsi on indoeurooppalainen.',
     'Kaupungin liikennettä varjostaa usein saastesumu, koska vuoret estävät ilmaa vaihtumasta.',
+    {
+      text: 'Šaahin kaupunki on kuivalla ylätasangolla, ja vettä johdetaan sinne vuorilta maanalaisia kanavia pitkin. Kanavat on kaivettu käsin satoja vuosia sitten ja ne toimivat paremmin kuin Lontoon vesijohto.',
+      voice: 'isoisa',
+    },
   ],
   tokio: [
     'Tokion metropolialueella asuu yli 35 miljoonaa ihmistä — enemmän kuin missään muussa kaupunkialueessa maailmassa.',
     'Kaupunki tunnettiin vuoteen 1868 asti nimellä Edo.',
     'Shibuyan risteystä ylittää ruuhka-aikaan kerralla tuhansia jalankulkijoita.',
+    {
+      text: 'Edo on nimetty Tokioksi ja keisari on siirtynyt sinne. Kaupunki on puuta ja paperia ja tulipalot ovat sen suurin vihollinen; siitä huolimatta se on maailman suurimpia.',
+      voice: 'isoisa',
+    },
   ],
   jekaterinburg: [
     'Jekaterinburgin lähellä on kivipylväs, joka merkitsee Euroopan ja Aasian rajaa.',
     'Kaupunki perustettiin 1723 rautaruukiksi Uralin malmivarojen ääreen.',
     'Transsiperian rata kulkee kaupungin kautta; Moskovaan on noin 1 800 kilometriä.',
+    {
+      text: 'Uralin harjanteella on kivi, joka merkitsee Euroopan ja Aasian rajaa. Astuin sen yli edestakaisin kolme kertaa, koska kukaan ei ollut katsomassa.',
+      voice: 'isoisa',
+    },
   ],
   astana: [
     'Kazakstanin pääkaupunki siirrettiin Almatysta Astanaan vuonna 1997.',
     'Astana on yksi maailman kylmimmistä pääkaupungeista: talvella lämpötila laskee usein alle −30 asteen.',
     'Kazakstan on maailman suurin sisämaavaltio, ja siellä sijaitsee Baikonurin kosmodromi.',
+    {
+      text: 'Arolla ei ole puita eikä kaupunkeja, vain tuulta ja hevosia. Tänne ei tule koskaan pääkaupunkia; sen uskallan kirjoittaa muistiin.',
+      voice: 'isoisa',
+    },
   ],
   novosibirsk: [
     'Novosibirsk syntyi 1893, kun Transsiperian radalle rakennettiin silta Ob-joen yli.',
     'Se on Siperian suurin kaupunki ja Venäjän kolmanneksi suurin.',
     'Kaupungin kupeessa on Akademgorodok, neuvostoaikana perustettu tiedekaupunki.',
+    {
+      text: 'Obin rannalla on työmaa, jolle rakennetaan rautatiesiltaa. Insinöörit sanovat että tähän kasvaa kaupunki; epäilen sitä, mutta merkitsen väitteen ylös.',
+      voice: 'isoisa',
+    },
   ],
   irkutsk: [
     'Irkutsk on Baikal-järven kupeessa; järvi on maailman syvin, yli 1 600 metriä.',
     'Baikalissa on noin viidennes maailman jäätymättömästä pintamakeasta vedestä.',
     'Baikalinnorppa on maailman ainoa hyljelaji, joka elää koko elämänsä makeassa vedessä.',
+    {
+      text: 'Järvi on niin syvä, ettei pohjaa löydy luotinuoralla, ja vesi on kylmää kuin sula lumi. Kauppiaat kutsuvat kaupunkia Siperian Pariisiksi, mikä on liioittelua mutta ei kohtuutonta.',
+      voice: 'isoisa',
+    },
   ],
   jakutsk: [
     'Jakutsk on maailman kylmimpiä kaupunkeja: talvella lämpötila laskee säännöllisesti alle −40 asteen.',
     'Talot on rakennettu paaluille, jottei niiden lämpö sulattaisi ikiroutaa alta.',
     'Jakutiassa ikirouta ulottuu paikoin yli kilometrin syvyyteen.',
+    {
+      text: 'Maa on jäässä ympäri vuoden, ja kuoppa kaivetaan tulella eikä lapiolla. Talvella elohopea jäätyi lämpömittarissani; kirjoitin sen ylös enkä uskonut omaa käsialaani.',
+      voice: 'isoisa',
+    },
   ],
   magadan: [
     'Magadan perustettiin 1930-luvulla kullan louhinnan ja pakkotyöleirien tukikohdaksi.',
     'Kolyman valtatietä kutsutaan sen historian takia luiden tieksi.',
     'Kaupunki on Ohotanmeren rannalla, ja satama jäätyy talveksi.',
+    {
+      text: 'Ohotanmeren rannalla on vain kalastajien leirejä ja jäätä puoli vuotta. Sisämaasta sanotaan löytyvän kultaa, ja pelkään että se löydetään.',
+      voice: 'isoisa',
+    },
   ],
   kamtsatka: [
     'Kamtšatkan tulivuoret ovat Unescon maailmanperintökohde; niitä on yli kaksikymmentä aktiivista.',
     'Kljutševskaja Sopka on Euraasian korkein aktiivinen tulivuori, yli 4 700 metriä.',
     'Niemimaan joet täyttyvät kesällä lohesta, ja karhut kerääntyvät niiden rannoille.',
+    {
+      text: 'Niemimaalla savuaa enemmän tulivuoria kuin ehdin laskea, ja joet ovat täynnä lohta. Karhut kalastavat paremmin kuin minä, mikä ei ollut korkea vaatimus.',
+      voice: 'isoisa',
+    },
   ],
   sahalin: [
     'Sahalin on Venäjän suurin saari: noin 950 kilometriä pitkä mutta kapeimmillaan 26 kilometriä leveä.',
     'Saaren edustan öljy- ja kaasuhankkeet ovat Venäjän suurimpia energiaprojekteja.',
     'Saari kuului osittain Japanille vuosina 1905–1945.',
+    {
+      text: 'Saari on pitkä ja sumuinen, ja sen rannoilla asuu kalastajakansoja joiden kieli ei muistuta venäjää. Venäjä ja Japani kiistelevät saaresta; saari ei osallistu keskusteluun.',
+      voice: 'isoisa',
+    },
   ],
   vladivostok: [
     'Transsiperian rata päättyy Vladivostokiin; Moskovasta on matkaa noin 9 300 kilometriä.',
     'Kaupungin nimi tarkoittaa venäjäksi idän hallitsijaa.',
     'Satama jäätyy talvella, ja sitä pidetään auki jäänmurtajilla.',
+    {
+      text: 'Tyynenmeren rannalle on perustettu uusi sotasatama, jonka nimi tarkoittaa idän hallitsemista. Nimi on rehellisempi kuin useimmat karttani nimet.',
+      voice: 'isoisa',
+    },
   ],
   ulanbator: [
     'Ulan Bator on maailman kylmin pääkaupunki: vuoden keskilämpötila on pakkasen puolella.',
     'Mongoliassa on enemmän hevosia kuin ihmisiä.',
     'Kaupungin laidoilla asutaan yhä jurtissa, joita mongoliaksi kutsutaan nimellä ger.',
+    {
+      text: 'Luostarikaupunki on aroilla, ja sen ympärillä jurtat siirtyvät kausien mukaan. Paimen tarjosi minulle hapanmaitoa; kieltäytyminen olisi ollut töykeämpää kuin juominen.',
+      voice: 'isoisa',
+    },
   ],
   peking: [
     'Pekingin nimi tarkoittaa pohjoista pääkaupunkia.',
     'Kielletty kaupunki valmistui 1420, ja siellä asui 24 keisaria.',
     'Kiinan muuria on kaikkine haaroineen yli 20 000 kilometriä, mutta se ei näy avaruudesta paljain silmin.',
+    {
+      text: 'Kaupunki on suorakulmainen kuin shakkilauta, ja sen kujat ovat kapeampia kuin vaununi. Keisarin palatsiin ei päästetä ketään, ja siitä huolimatta jokainen tuntee sen pohjapiirroksen.',
+      voice: 'isoisa',
+    },
   ],
   soul: [
     'Soulin seudulla asuu noin puolet Etelä-Korean väestöstä.',
     'Raja Pohjois-Koreaan on vain noin 50 kilometrin päässä kaupungista.',
     'Korean hangul-aakkosto luotiin 1440-luvulla, ja sen kirjainten muodot jäljittelevät suun asentoa.',
+    {
+      text: 'Vuorten ympäröimä kaupunki on suljettu ulkomaalaisilta lähes kokonaan. Kirjaimisto on niin yksinkertainen, että opin sen aakkoset päivässä — mikä on nöyryyttävää oman kieleni rinnalla.',
+      voice: 'isoisa',
+    },
   ],
   xian: [
     'Xi’anin läheltä löytyi 1974 terrakotta-armeija: arviolta yli 8 000 savisoturia.',
     'Kaupunki oli kolmentoista dynastian pääkaupunki ja Silkkitien itäinen päätepiste.',
     'Vanhan kaupungin ympärillä on yhä ehjä 14 kilometrin pituinen muuri.',
+    {
+      text: 'Silkkitien vanha pääte on muurien sisällä, ja karavaanit tulevat lännestä yhä. Muurin päällä voi ajaa vaunuilla, mikä on käytännöllisempää kuin missään Euroopan muurissa.',
+      voice: 'isoisa',
+    },
   ],
   shanghai: [
     'Shanghain satama käsittelee enemmän konttiliikennettä kuin mikään muu satama maailmassa.',
     'Kaupunki on Jangtsen suistossa; joki on Aasian pisin, noin 6 300 kilometriä.',
     'Bundin rantabulevardin rakennukset ovat 1900-luvun alun eurooppalaisten pankkien perua.',
+    {
+      text: 'Joen suistossa on satama, jossa purjehtii sekä eurooppalaisia laivoja että tuhansia džonkkeja. Kauppa käy niin vilkkaana, ettei kukaan huomaa yksittäistä englantilaista — mikä on minulle uutta.',
+      voice: 'isoisa',
+    },
   ],
   taipei: [
     'Taiwan tunnettiin ennen nimellä Formosa, mikä tarkoittaa portugaliksi kaunista.',
     'Saaren Yushan-vuori kohoaa lähes 4 000 metriin.',
     'Saarella valmistetaan suurin osa maailman kaikkein kehittyneimmistä mikrosiruista.',
+    {
+      text: 'Saaren pohjoisosassa on kaupunki teeplantaasien keskellä, ja ilma on kosteaa kuin kylpylässä. Kartoissa saari on Formosa, kaunis; nimi ei ole liioiteltu.',
+      voice: 'isoisa',
+    },
   ],
   hongkong: [
     'Hongkong siirtyi Britannialta Kiinalle 1997 erityishallintoalueena.',
     'Kaupungissa on enemmän yli 150-metrisiä rakennuksia kuin missään muualla maailmassa.',
     'Victoria Peakille nouseva vaunurata on kulkenut vuodesta 1888.',
+    {
+      text: 'Britannia sai saaren sopimuksella, jota ei tehty tasaveroisten kesken. Satama on erinomainen, ja se on ainoa asia tässä järjestelyssä josta voin kirjoittaa punastumatta.',
+      voice: 'isoisa',
+    },
   ],
   manila: [
     'Manilan perustivat espanjalaiset 1571, ja sieltä purjehti hopealaivoja Meksikoon.',
     'Filippiineillä on noin 7 640 saarta, joista vain noin 2 000 on asuttuja.',
     'Maa oli Espanjan siirtomaa yli 300 vuotta, ja siksi enemmistö on katolilaisia.',
+    {
+      text: 'Espanjalaisten kaupunki on muurien sisällä, ja lahdella purjehtii gallioneja. Saaria sanotaan olevan tuhansia; kysyin tarkkaa lukua ja sain kolme eri vastausta.',
+      voice: 'isoisa',
+    },
   ],
   hanoi: [
     'Hanoi on yli tuhat vuotta vanha kaupunki Punaisenjoen suistossa.',
     'Ha Longin lahdesta kohoaa lähes 2 000 pystysuoraa kalkkikivisaarta.',
     'Kaupungin vanhassakaupungissa kadut on nimetty niillä myydyn tavaran mukaan.',
+    {
+      text: 'Kaupunki on jokien ja järvien keskellä, ja kaduilla kannetaan kaikkea kantosauvoilla. Ranskalaiset ovat juuri saapuneet, ja heidän itsevarmuutensa on minulle tuttua ja siksi huolestuttavaa.',
+      voice: 'isoisa',
+    },
   ],
   bangkok: [
     'Bangkokin seremoniallinen nimi on maailman pisin paikannimi, yli 160 kirjainta.',
     'Thaimaa on ainoa Kaakkois-Aasian maa, jota ei koskaan siirtomaitettu.',
     'Noin 90 prosenttia thaimaalaisista on buddhalaisia, ja maassa on yli 30 000 temppeliä.',
+    {
+      text: 'Kaupunki on rakennettu kanaalien varrelle ja kauppa käydään veneistä. Kuningaskunta ei ole kenenkään siirtomaa, ja sen huomaa siitä miten täällä katsotaan silmiin.',
+      voice: 'isoisa',
+    },
   ],
   yangon: [
     'Yangon oli Myanmarin pääkaupunki vuoteen 2005 asti, jolloin hallinto siirtyi Naypyidawiin.',
     'Shwedagon-pagodi kohoaa lähes sata metriä ja on peitetty kultalehdellä.',
     'Maa tunnettiin aiemmin nimellä Burma.',
+    {
+      text: 'Kullattu pagodi näkyy joelta ennen kuin kaupunki näkyy. Britannia on liittänyt alueen Intiaansa, eikä siitä puhuta täällä ystävällisesti.',
+      voice: 'isoisa',
+    },
   ],
   singapore: [
     'Singapore itsenäistyi Malesiasta 1965 ja on yksi maailman tiheimmin asutuista maista.',
     'Malakansalmen kautta kulkee noin neljännes maailman kaupatuista tavaroista.',
     'Maalla on neljä virallista kieltä: englanti, malaiji, mandariinikiina ja tamili.',
+    {
+      text: 'Saarella on satama, jossa lastataan hiiltä ja purkataan koko maailma. Kadulla kuulee malaijia, kiinaa, tamilia ja englantia saman korttelin matkalla, eikä kukaan pidä sitä ihmeenä.',
+      voice: 'isoisa',
+    },
   ],
   sumatra: [
     'Sumatran halki kulkee päiväntasaaja.',
     'Saarella on Toba, maailman suurin kraatterijärvi: se syntyi valtavassa purkauksessa noin 74 000 vuotta sitten.',
     'Sumatranorangutani on äärimmäisen uhanalainen, kun sademetsää raivataan plantaaseiksi.',
+    {
+      text: 'Saaren halki kulkevat vuorijono ja päiväntasaaja, ja sademetsässä on eläimiä joita ei ole missään muualla. Rinteillä kasvatetaan kahvia, joka on parempaa kuin klubini kahvi ja halvempaa.',
+      voice: 'isoisa',
+    },
   ],
   borneo: [
     'Borneo on maailman kolmanneksi suurin saari ja jaettu Indonesian, Malesian ja Brunein kesken.',
     'Saaren sademetsä on arviolta yli 100 miljoonaa vuotta vanha.',
     'Indonesia rakentaa saarelle uutta pääkaupunkiaan, koska Jakarta vajoaa.',
+    {
+      text: 'Sademetsä on niin tiheä, että joki on ainoa tie sisämaahan. Puissa liikkuu punaturkkisia apinoita, jotka katsovat minua kuin epäonnistunutta sukulaista.',
+      voice: 'isoisa',
+    },
   ],
   jakarta: [
     'Jakarta on Javan saarella, joka on maailman tiheimmin asuttu suuri saari.',
     'Kaupunki vajoaa nopeasti, koska pohjavettä pumpataan sen alta.',
     'Indonesiassa on yli 120 aktiivista tulivuorta; Krakataun purkaus 1883 kuultiin tuhansien kilometrien päähän.',
+    {
+      text: 'Hollantilaisten Batavia on kanaalien halkoma ja kuuma kuin uuni. He ovat rakentaneet Amsterdamin tropiikkiin, mikä on itsepäisyyttä jota osaan arvostaa.',
+      voice: 'isoisa',
+    },
   ],
   lhasa: [
     'Lhasa on noin 3 650 metrin korkeudessa, ja Potala-palatsi oli dalai-lamojen talvipalatsi.',
     'Tiibetin ylänkö on keskimäärin yli 4 000 metrin korkeudessa ja sitä kutsutaan maailman katoksi.',
     'Ylängöltä saavat alkunsa Jangtse, Mekong, Ganges ja Indus.',
+    {
+      text: 'Kaupunki on niin korkealla, että hengästyn kirjoittaessani. Kalliolla oleva palatsi on suurempi kuin mikään näkemäni rakennus, ja sinne pääsy vaatii luvan jota minulle ei myönnetä.',
+      voice: 'isoisa',
+    },
   ],
   kathmandu: [
     'Kathmandu on Himalajan retkikuntien lähtöpiste, ja laakso on täynnä vanhoja temppeleitä.',
     'Nepalissa on kahdeksan maailman kymmenestä korkeimmasta vuoresta.',
     'Šerpat muuttivat Tiibetistä Nepaliin satoja vuosia sitten ja ovat sopeutuneet ohueen ilmaan.',
+    {
+      text: 'Laakso on täynnä temppeleitä ja pagodeja, ja pohjoisessa kohoavat huiput pilvien yläpuolelle. Kukaan ei ole noussut niille, ja sanotaan ettei kenenkään pidäkään.',
+      voice: 'isoisa',
+    },
   ],
   delhi: [
     'Delhi on yksi maailman suurimmista kaupunkialueista.',
     'New Delhi rakennettiin 1910-luvulta alkaen hallintokaupungiksi vanhan Delhin viereen.',
     'Agran Taj Mahal valmistui 1653, ja sen marmori vaihtaa sävyä vuorokaudenajan mukaan.',
+    {
+      text: 'Kaupunki on Britannian Intian toinen keskus, ja marmorihauta Agrassa on kauneinta mitä olen nähnyt. Kirjoitin siitä kotiin ja lisäsin, ettei sitä rakentanut kukaan meistä.',
+      voice: 'isoisa',
+    },
   ],
   kolkata: [
     'Kolkata oli Brittiläisen Intian pääkaupunki vuoteen 1911 asti.',
     'Gangesin ja Brahmaputran yhteinen suisto on maailman suurin.',
     'Suiston mangrovemetsissä eli Sundarbansissa elää bengalintiikereitä.',
+    {
+      text: 'Britannian Intian pääkaupunki on jokisatama, jossa on kirjapainoja, klubeja ja hyttysiä. Rikkaus tulee juutista ja teestä, eikä klubissa kysytä kenen käsissä sen tuotto on.',
+      voice: 'isoisa',
+    },
   ],
   mumbai: [
     'Mumbai rakennettiin seitsemälle saarelle, jotka yhdistettiin maankohotustöillä.',
     'Kaupunki on Intian talouden keskus: siellä ovat maan pörssi ja keskuspankki.',
     'Bollywood tekee vuosittain satoja elokuvia, ja Intiassa valmistuu niitä enemmän kuin missään muualla.',
+    {
+      text: 'Bombay on seitsemästä saaresta yhdeksi täytetty puuvillakaupunki. Monsuuni saapuu kesäkuussa täsmällisesti; junat eivät.',
+      voice: 'isoisa',
+    },
   ],
   chennai: [
     'Chennai tunnettiin ennen nimellä Madras ja on eteläisen Intian suurimpia kaupunkeja.',
     'Alueen kieli tamili on yksi maailman vanhimmista yhä puhutuista kirjakielistä.',
     'Marina Beach on yksi maailman pisimmistä kaupunkirannoista.',
+    {
+      text: 'Madras on pitkän hiekkarannan kaupunki, jossa puhutaan kieltä joka on vanhempi kuin latina. Sitä minulle muistutettiin kohteliaasti ja aiheellisesti.',
+      voice: 'isoisa',
+    },
   ],
   colombo: [
     'Colombo on Sri Lankan suurin kaupunki ja satama.',
     'Saari tunnettiin ennen nimellä Ceylon, ja sen teetä myydään yhä sillä nimellä.',
     'Britit istuttivat teetä saarelle 1860-luvulla, kun kahviviljelmät tuhoutuivat kasvitautiin.',
+    {
+      text: 'Saarelta viedään teetä ja kanelia, ja satamassa lastataan laivoja vuorokauden ympäri. Vuorten teeplantaasit ovat brittiläisten istuttamia; maa oli täällä ennen niitä.',
+      voice: 'isoisa',
+    },
   ],
   karachi: [
     'Karachi oli Pakistanin ensimmäinen pääkaupunki ja on yhä maan suurin kaupunki ja satama.',
     'Indus-joen laaksossa kukoisti 4 500 vuotta sitten kaupunkikulttuuri, jonka kaupungeissa oli viemärit.',
     'Kulttuurin kirjoitusta ei ole vieläkään pystytty lukemaan.',
+    {
+      text: 'Indus-joen suulla on satama, jonka läpi kulkee puuvilla ja vehnä. Joen laaksossa kerrotaan olevan hyvin vanhoja raunioita; kukaan ei tiedä kuinka vanhoja, ja se on rehellinen vastaus.',
+      voice: 'isoisa',
+    },
   ],
   kabul: [
     'Kabul on noin 1 800 metrin korkeudessa vuorten ympäröimässä laaksossa.',
     'Kaupunki on ollut Silkkitien risteyspaikka yli 3 000 vuotta.',
     'Hindukuš-vuoriston huiput kohoavat yli 7 000 metriin kaupungin pohjoispuolella.',
+    {
+      text: 'Vuorisolien takana on kaupunki hedelmätarhojen keskellä, ja siellä muistetaan tarkkaan jokainen armeija joka on tullut ja poistunut. Meidän armeijamme mainitaan nimeltä; en jatkanut keskustelua.',
+      voice: 'isoisa',
+    },
   ],
   samarkand: [
     'Samarkand on yksi maailman vanhimmista yhtäjaksoisesti asutuista kaupungeista.',
     'Registanin aukio siniturkooseine medreseineen on Unescon maailmanperintökohde.',
     'Tamerlan teki kaupungista valtakuntansa pääkaupungin 1300-luvulla.',
+    {
+      text: 'Sinisten kupolien kaupunki on aavikon ja vuorten välissä, ja sen medresat opettivat tähtitiedettä silloin kun Oxford opetti latinaa. Tämä tieto ei ole klubissani suosittu.',
+      voice: 'isoisa',
+    },
   ],
   kashgar: [
     'Kašgarissa yhtyivät Silkkitien pohjoinen ja eteläinen haara, jotka kiersivät Taklamakanin autiomaan.',
     'Kaupungin torilla on käyty kauppaa yli kahden vuosituhannen ajan.',
     'Taklamakan on yksi maailman suurimmista hiekka-autiomaista, ja karavaanit kiersivät sen aina reunoja pitkin.',
+    {
+      text: 'Aavikon laidalla kohtaavat Silkkitien pohjoinen ja eteläinen haara, ja markkinoilla myydään lampaita ja mattoja. Bagdadiin on täältä lyhyempi matka kuin Pekingiin, minkä tarkistin kahdesti.',
+      voice: 'isoisa',
+    },
   ],
 };
 
@@ -10032,14 +11181,53 @@ const ASIA = {
     winStar: 'toi Keisarin jadesinetin turvallisesti kotiin',
     winnerStar: (name, money) => `${name} toi Keisarin jadesinetin kotiin ${money} punnan kanssa.`,
     // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
-    // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
     diaries: [
       'Klubilla tätä mannerta kutsuttiin Itämaiksi ja odotettiin kameleita. Luotijuna ohitti odotukseni kolmensadan kilometrin tuntinopeudella.',
+      'Isoisän kartassa tämä maanosa on väritetty kolmen keisarikunnan väreillä. Nyt tässä on lähes viisikymmentä valtiota, ja useimmat itsenäistyivät hänen kuolemansa jälkeen. Kartta on kaunis ja täysin käyttökelvoton.',
+      '"Matka Bombayhin kestää kolme viikkoa, jos tuuli suosii", kirjoitti isoisä. Nousin koneeseen aamulla ja söin illallisen perillä. Hän olisi pitänyt sitä huijauksena, ja ymmärrän kannan.',
+      'Isoisä merkitsi muistiin, ettei korkeimmille huipuille ole nousuja eikä tule. Everestillä on nykyään jono ja aikataulu. Hän oli oikeassa siinä, ettei vuori siitä miksikään muutu.',
+      '"Kiina valmistaa posliinia ja silkkiä, Britannia koneita", tiivisti isoisä työnjaon. Tarkistin asian: koneet tehdään täällä ja Lontoossa niitä myydään. Työnjako säilyi, suunta vaihtui.',
+      'Isoisä laski matka-aikoja karavaanipäivissä ja monsuunituulissa. Molemmat ovat yhä olemassa: tuuli kääntyy kesäkuussa ja aavikon poikki menee yhä tie. Vain minun kärsivällisyyteni on kadonnut.',
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
-    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
-    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
-    starHints: {},
+    // kaupungin nimeä.
+    starHints: {
+      jekaterinburg: 'Vuorijonon itäpuolella, siellä missä Euroopan ja Aasian raja on merkitty kiveen, on kaupunki jossa jalostetaan malmia ja hiotaan korukiviä.',
+      astana: 'Keskellä puuttomia aroja, kaukana kaikista meristä, on paikka jossa talvituuli käy läpi paksuimmasta takista. Sinne kaavaillaan uutta hallintokaupunkia.',
+      novosibirsk: 'Suuren pohjoiseen virtaavan joen ylityspaikassa keskellä Siperiaa rakennetaan rautatiesiltaa. Sen työmaan ympärille kasvaa kaupunki nopeammin kuin uskoin.',
+      irkutsk: 'Maailman syvimmän järven länsipuolella on kauppakaupunki, jota kutsutaan Siperian Pariisiksi. Sieltä lähtee teetä länteen karavaaneina.',
+      jakutsk: 'Kaukana pohjoisessa, ikiroudan päälle rakennetussa kaupungissa, elohopea jäätyy lämpömittarissa. Sinne pääsee kesällä jokilaivalla ja talvella jäätietä.',
+      magadan: 'Idän kaukaisimmalla rannikolla, kylmän meren pohjukassa, on satama josta ei johda rautatietä minnekään. Sisämaassa kerrotaan olevan kultaa.',
+      kamtsatka: 'Kaukoidän niemimaalla savuaa parikymmentä tulivuorta, ja joet ovat täynnä lohta. Sinne ei johda maantietä, joten laiva on ainoa keino.',
+      sahalin: 'Kaukoidässä, kapean salmen takana pitkulaisella saarella, asuu kalastajakansoja ja sumu on lähes jatkuva. Kaksi valtakuntaa kiistelee sen omistuksesta.',
+      vladivostok: 'Tyynenmeren rannalla, valtakunnan itäisimmässä kolkassa, on uusi sotasatama jonka nimi kertoo idän hallitsemisesta.',
+      ulanbator: 'Arojen keskellä, jokilaaksossa kilometrin korkeudella, on luostarikaupunki jonka ympärillä paimenten asumukset siirtyvät kausien mukaan.',
+      peking: 'Muurin eteläpuolella on suorakulmainen keisarikaupunki, jonka sisimpään palatsiin ei päästetä ketään. Sen kujat ovat kapeampia kuin vaunu.',
+      soul: 'Vuorten ympäröimässä laaksossa joen varrella on kuningaskunnan pääkaupunki, joka on suljettu ulkomaalaisilta. Siellä on oma aakkosto, jonka oppii päivässä.',
+      xian: 'Sisämaassa, siellä missä karavaanireitti päättyy muurien sisälle, on vanha keisarikaupunki. Sen kaupunginmuurin päällä voi ajaa vaunuilla.',
+      shanghai: 'Suuren joen suistossa itärannikolla on satama, jossa džonkit ja eurooppalaiset laivat purjehtivat sekaisin. Kauppa käy siellä yötä päivää.',
+      taipei: 'Kaakkoisen saaren pohjoisosassa, teeplantaasien ja kuumien lähteiden keskellä, on kaupunki jonka saari on kartoissa nimeltään kaunis.',
+      hongkong: 'Eteläisellä rannikolla on jyrkkä saari ja sen suojassa erinomainen satama, jonka Britannia otti sopimuksella jota en puolusta.',
+      manila: 'Kaakkoisen saariston suurimmalla saarella on espanjalaisten muurikaupunki lahden rannalla. Sinne saapuvat gallionit Amerikan puolelta.',
+      hanoi: 'Kaakkoisen niemimaan pohjoisosassa, jokien ja järvien keskellä, on kaupunki jossa tavarat kannetaan kantosauvoilla. Ranskalaiset ovat sinne juuri saapuneet.',
+      bangkok: 'Kaakkoisen niemimaan keskellä, kanaalien halkomassa kuningaskunnassa, on kaupunki jossa kauppa käydään veneistä. Se ei ole kenenkään siirtomaa.',
+      yangon: 'Lännempänä samalla niemimaalla, laajan suiston jokisatamassa, kohoaa kullattu pagodi joka näkyy joelle asti.',
+      singapore: 'Kapean salmen suussa on saari, jossa laivat ottavat hiiltä ja jossa kuulee neljää kieltä yhden korttelin matkalla.',
+      sumatra: 'Päiväntasaajan ylittävällä suurella saarella on vuorijono, tulivuorijärvi ja sademetsä. Rinteillä kasvatetaan kahvia vientiin.',
+      borneo: 'Päiväntasaajalla, saarella jonka sisämaahan pääsee vain jokea pitkin, elää punaturkkisia apinoita puiden latvoissa.',
+      jakarta: 'Eteläisellä saarella, hollantilaisten kanaalikaupungissa, on kuuma kuin uunissa. He ovat rakentaneet sinne Amsterdamin kopion.',
+      lhasa: 'Maailman korkeimmalla ylätasangolla, kalliolle rakennetun palatsin juurella, on kaupunki jonne ulkomaalainen ei saa lupaa.',
+      kathmandu: 'Korkeiden vuorten eteläpuolella on temppeleiden täyttämä laakso. Pohjoisessa kohoavat huiput, joille kukaan ei ole noussut.',
+      delhi: 'Suuren niemimaan pohjoisosassa, tasangolla jokien välissä, on kaupunki jonka lähellä seisoo valkoinen marmorihauta.',
+      kolkata: 'Suuren suiston jokisatamassa niemimaan itäpuolella on Britannian Intian pääkaupunki. Rikkaus tulee sieltä juutista ja teestä.',
+      mumbai: 'Niemimaan länsirannikolla, seitsemästä saaresta yhdeksi täytetyllä maalla, on puuvillakaupunki jonne monsuuni saapuu kesäkuussa.',
+      chennai: 'Niemimaan itärannikolla, pitkän hiekkarannan äärellä, on kaupunki jossa puhutaan kieltä joka on vanhempi kuin latina.',
+      colombo: 'Niemimaan eteläkärjen takana omalla saarellaan on satama, josta viedään teetä ja kanelia. Ylängöillä on plantaaseja.',
+      karachi: 'Lännempänä, suuren joen suulla, on satama josta lähtee puuvilla ja vehnä. Joen laaksossa on hyvin vanhoja raunioita.',
+      kabul: 'Vuorisolien takana, hedelmätarhojen keskellä kahden kilometrin korkeudella, on kaupunki joka muistaa jokaisen armeijan nimeltä.',
+      samarkand: 'Keski-Aasiassa, aavikon ja vuorten välissä, on sinisten kupolien kaupunki. Sen korkeakoulut opettivat tähtitiedettä ennen Oxfordia.',
+      kashgar: 'Aavikon läntisellä laidalla kohtaavat karavaanireitin kaksi haaraa. Sinne on Bagdadista lyhyempi matka kuin keisarin pääkaupungista.',
+    },
   },
 
   decor: {
@@ -10093,6 +11281,34 @@ const OCEANIA_QUESTIONS = {
       hint: 'Paikallinen sanonta lupaa neljä vuodenaikaa yhden päivän aikana.',
       fact: 'Kylmä ilma etelästä ja kuuma sisämaasta kohtaavat kaupungin kohdalla, ja lämpötila voi pudota kymmenen astetta tunnissa.',
     },
+    {
+      q: 'Mikä on Melbournen asema Australiassa?',
+      options: [
+        'yksi maan suurimmista kaupungeista',
+        'pieni kaivoskylä',
+        'maan pohjoisin kaupunki',
+        'saari rannikon edustalla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Melbourne on Victorian osavaltion pääkaupunki ja Australian suurimpia kaupunkeja. Se toimi maan pääkaupunkina vuosina 1901–1927.',
+      hint: 'Kaupunki hoiti maan hallintoa ennen Canberraa.',
+    },
+    {
+      q: 'Mikä kulkuneuvo on Melbournen tunnusmerkki?',
+      options: ['raitiovaunu', 'gondoli', 'köysirata', 'riksa'],
+      correct: 0,
+      fact: 'Melbournen raitiovaunuverkko on maailman laajin. Keskustan alueella osa matkoista on maksuttomia.',
+      hint: 'Kulkuneuvo kulkee kiskoilla katujen keskellä.',
+    },
+    {
+      q: 'Mikä pallolaji täyttää Melbournen stadionin syyskuussa?',
+      options: ['australialainen jalkapallo', 'jääkiekko', 'sumo', 'baseball'],
+      correct: 0,
+      level: 3,
+      fact: 'Lajin loppuottelu pelataan Melbourne Cricket Groundilla, jolle mahtuu noin satatuhatta katsojaa. Laji kehittyi Australiassa 1850-luvulla.',
+      hint: 'Laji kehittyi Australiassa eikä sitä pelata juuri muualla.',
+    },
   ],
 
   brisbane: [
@@ -10111,6 +11327,34 @@ const OCEANIA_QUESTIONS = {
       level: 1,
       hint: 'Alueet ovat Brisbanen molemmin puolin, ja ne tunnetaan surffauksesta.',
       fact: 'Gold Coastilla on yhtenäistä hiekkarantaa yli 50 kilometriä. Alue on Australian suosituin lomakohde.',
+    },
+    {
+      q: 'Minkä joen varrella Brisbane sijaitsee?',
+      options: ['Brisbane-joen', 'Murrayn', 'Darlingin', 'Swan-joen'],
+      correct: 0,
+      fact: 'Joki kiemurtelee kaupungin läpi niin mutkaisena, että kaupunginosat ovat usein veden eri puolilla. Jokilaivat ovat osa joukkoliikennettä.',
+      hint: 'Joki on nimetty samoin kuin kaupunki.',
+    },
+    {
+      q: 'Minkä osavaltion pääkaupunki Brisbane on?',
+      options: ['Queenslandin', 'Victorian', 'Tasmanian', 'Länsi-Australian'],
+      correct: 0,
+      level: 3,
+      fact: 'Queensland on Australian koillisosavaltio, jonka rannikolla ovat Suuri valliriutta ja tunnetut hiekkarannat.',
+      hint: 'Osavaltio on nimetty kuningattaren mukaan.',
+    },
+    {
+      q: 'Millainen ilmasto Brisbanessa on?',
+      options: [
+        'lämmin ja kostea ympäri vuoden',
+        'kylmä ja luminen',
+        'kuiva aavikkoilmasto',
+        'viileä ja sumuinen',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Talvellakin päivälämpötila on yli 20 astetta, ja kesällä sataa ukkoskuuroja. Uima-altaat ja verannat kuuluvat asumiseen.',
+      hint: 'Talvea tuskin huomaa.',
     },
   ],
 
@@ -10136,6 +11380,39 @@ const OCEANIA_QUESTIONS = {
       hint: 'Kun vesi kuumenee, koralli hylkiä sisällään elävät levät ja menettää värinsä.',
       fact: 'Suurella valliriutalla on koettu useita laajoja vaalentumisia 2000-luvulla. Koralli voi toipua, jos lämpöjakso jää lyhyeksi.',
     },
+    {
+      q: 'Kuinka pitkä Suuri valliriutta on?',
+      options: [
+        'yli 2 000 kilometriä',
+        'noin 20 kilometriä',
+        'noin 200 kilometriä',
+        'yli 20 000 kilometriä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Riutta koostuu tuhansista erillisistä riutoista ja saarista. Se on maailman suurin elävien olentojen muodostama rakenne ja näkyy avaruudesta.',
+      hint: 'Pituus on tuhansia kilometrejä.',
+    },
+    {
+      q: 'Mikä sademetsäalue ulottuu Cairnsin lähellä merenrantaan?',
+      options: ['Daintreen sademetsä', 'Amazonin sademetsä', 'Kongon sademetsä', 'Taiga'],
+      correct: 0,
+      fact: 'Daintree on yksi maailman vanhimmista yhtäjaksoisista sademetsistä, ja se rajautuu suoraan koralliriuttaan. Kaksi maailmanperintökohdetta kohtaa rannalla.',
+      hint: 'Sademetsä ja riutta kohtaavat samalla rannalla.',
+    },
+    {
+      q: 'Mitä varten Cairnsin satamasta lähtee päivittäin veneitä?',
+      options: [
+        'riutalle sukeltamaan ja snorklaamaan',
+        'valaanpyyntiin',
+        'malmin kuljetukseen',
+        'jäänmurtoon',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Matkailu riutalle on kaupungin tärkein elinkeino. Veneet vievät kävijöitä riuttakohteisiin päivittäin sään salliessa.',
+      hint: 'Toiminta liittyy riuttaan ja veden alle.',
+    },
   ],
 
   darwin: [
@@ -10155,6 +11432,39 @@ const OCEANIA_QUESTIONS = {
       hint: 'Myrsky nimeltä Tracy pyyhkäisi kaupungin yli jouluaattona.',
       fact: 'Myrsky tuhosi noin 70 prosenttia kaupungin rakennuksista. Darwin rakennettiin uudelleen tiukoilla myrskymääräyksillä.',
     },
+    {
+      q: 'Millainen vuodenaikojen vaihtelu Darwinissa on?',
+      options: [
+        'sadekausi ja kuiva kausi',
+        'neljä vuodenaikaa',
+        'talvi ja kesä yhtä pitkinä',
+        'ei vaihtelua lainkaan',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Marraskuusta huhtikuuhun on sadekausi ukkosineen, ja muut kuukaudet ovat kuivia ja aurinkoisia. Paikalliset tunnistavat lisäksi useita välikausia.',
+      hint: 'Vaihtelu on sateessa, ei lämmössä.',
+    },
+    {
+      q: 'Mikä tekee Darwinista Australian pohjoisen portin?',
+      options: [
+        'se on lähempänä Aasiaa kuin muut suuret kaupungit',
+        'se on maan suurin kaupunki',
+        'siellä on maan ainoa satama',
+        'se on maan kylmin kaupunki',
+      ],
+      correct: 0,
+      fact: 'Darwinista on Jakartaan lyhyempi matka kuin Sydneyyn. Kaupunki on aina ollut kauppa- ja liikenneyhteys Kaakkois-Aasian suuntaan.',
+      hint: 'Etäisyys pohjoiseen on lyhyempi kuin etelään.',
+    },
+    {
+      q: 'Ketkä ovat Darwinin seudun alkuperäisiä asukkaita?',
+      options: ['larrakia-kansa', 'maorit', 'polynesialaiset merenkulkijat', 'inuiitit'],
+      correct: 0,
+      level: 3,
+      fact: 'Larrakia-kansa on asunut seudulla tuhansia vuosia, ja alueen tapahtumat alkavat usein heidän tervehdyksellään. Kansa kutsuu itseään myös salt water people -nimellä.',
+      hint: 'Kansa tunnetaan myös nimellä salt water people.',
+    },
   ],
 
   adelaide: [
@@ -10173,6 +11483,39 @@ const OCEANIA_QUESTIONS = {
       level: 2,
       hint: 'Barossa Valley on maan tunnetuin viljelyalue tälle juomalle.',
       fact: 'Barossan laakson vanhimmat köynnökset on istutettu 1840-luvulla, ja osa on maailman vanhimpia yhä satoa tuottavia.',
+    },
+    {
+      q: 'Millä rannikolla Adelaide sijaitsee?',
+      options: [
+        'etelärannikolla',
+        'pohjoisrannikolla',
+        'itärannikolla',
+        'sisämaassa ilman rannikkoa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Etelä-Australian lahden rannalla, ja sen keskusta on suunniteltu ruutukaavaan puistovyöhykkeen sisään.',
+      hint: 'Rannikko on kaupungin osavaltion nimessä.',
+    },
+    {
+      q: 'Mikä tekee Adelaiden keskustan kaavasta poikkeuksellisen?',
+      options: [
+        'koko keskustaa ympäröi yhtenäinen puistovyöhyke',
+        'kaupungissa ei ole katuja',
+        'kaikki talot ovat samanlaisia',
+        'keskusta on veden päällä',
+      ],
+      correct: 0,
+      fact: 'Vuonna 1837 laadittu kaava jätti keskustan ympärille yhtenäisen puistokehän, joka on yhä rakentamaton.',
+      hint: 'Ratkaisu on vihreä ja kiertää koko keskustan.',
+    },
+    {
+      q: 'Mikä Adelaiden lähellä oleva alue tunnetaan viinitiloistaan?',
+      options: ['Barossan laakso', 'Napa Valley', 'Bordeaux', 'Rioja'],
+      correct: 0,
+      level: 3,
+      fact: 'Barossan laaksoon asettui 1800-luvulla saksalaisia siirtolaisia, jotka toivat mukanaan viiniperinteen. Alueella on Australian vanhimpia köynnöksiä.',
+      hint: 'Laakson viiniperinne alkoi saksalaisten siirtolaisten mukana.',
     },
   ],
 
@@ -10198,6 +11541,39 @@ const OCEANIA_QUESTIONS = {
       hint: 'Palvelu perustettiin 1928 ja käyttää pieniä lentokoneita.',
       fact: 'Palvelu lentää vuosittain miljoonia kilometrejä. Se syntyi, koska monelta tilalta oli päiväkausien matka lähimpään sairaalaan.',
     },
+    {
+      q: 'Millainen maisema Alice Springsiä ympäröi?',
+      options: [
+        'punaista autiomaata ja matalia vuorijonoja',
+        'sademetsää',
+        'jäätiköitä',
+        'suoalueita',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on MacDonnellin vuorijonon kohdalla keskellä kuivaa sisämaata. Yöt ovat talvella kylmiä ja päivät lämpimiä.',
+      hint: 'Maaperä on punaista ja sateita on vähän.',
+    },
+    {
+      q: 'Mistä Alice Springs sai alkunsa 1870-luvulla?',
+      options: ['sähkölennätinlinjan asemasta', 'kultakaivoksesta', 'satamasta', 'lentoasemasta'],
+      correct: 0,
+      fact: 'Kaupunki syntyi lennätinlinjan toistoasemasta, joka yhdisti Australian etelän ja pohjoisen ja siten Britanniaan. Vanha asema on nykyään museo.',
+      hint: 'Alku liittyy viestien välittämiseen sähköllä.',
+    },
+    {
+      q: 'Miten syrjäisten karjatilojen lapset ovat perinteisesti käyneet koulua?',
+      options: [
+        'radion ja nykyään verkon välityksellä',
+        'kävelemällä satoja kilometrejä',
+        'eivät lainkaan',
+        'asuen kaupungissa ympäri vuoden',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'School of the Air aloitti opetuksen radiolla 1950-luvulla; nykyään tunnit pidetään verkossa. Oppilaita voi olla satojen kilometrien säteellä.',
+      hint: 'Opetus tuli ensin ilmateitse, ei postissa.',
+    },
   ],
 
   uluru: [
@@ -10216,6 +11592,38 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Nimi annettiin 1873 Etelä-Australian silloisen pääministerin mukaan.',
       fact: 'Kalliolla on nykyään kaksoisnimi. Kiipeäminen sen päälle kiellettiin 2019 alkuperäisasukkaiden pitkäaikaisen toiveen mukaisesti.',
+    },
+    {
+      q: 'Kuinka korkealle Uluru kohoaa ympäröivästä tasangosta?',
+      options: ['noin 350 metriä', 'noin 35 metriä', 'noin 1 500 metriä', 'noin 3 500 metriä'],
+      correct: 0,
+      fact: 'Kallio kohoaa noin 350 metriä ja jatkuu syvälle maan alle. Sen ympäri kävellään noin kymmenen kilometrin reittiä.',
+      hint: 'Korkeus on satoja metrejä, ei kilometrejä.',
+    },
+    {
+      q: 'Kenen perinteistä maata Uluru on?',
+      options: [
+        'anangu-kansan',
+        'maorien',
+        'polynesialaisten',
+        'aboriginaalit eivät ole asuneet alueella',
+      ],
+      correct: 0,
+      fact: 'Anangu-kansa on Ulurun perinteinen haltija, ja kalliolla on heille pyhiä paikkoja. Kansallispuistoa hoidetaan yhdessä heidän kanssaan.',
+      hint: 'Kansa on alueen perinteinen haltija ja hoitaa puistoa yhdessä valtion kanssa.',
+    },
+    {
+      q: 'Mitä Ulurulla ei ole enää saanut tehdä vuodesta 2019?',
+      options: [
+        'kiivetä kallion päälle',
+        'valokuvata kalliota',
+        'kävellä kallion ympäri',
+        'yöpyä lähialueella',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kiipeäminen kiellettiin 2019 alueen perinteisten haltijoiden pyynnöstä, koska paikka on heille pyhä. Kallion ympäri kiertävä reitti on yhä avoinna.',
+      hint: 'Kielto tuli alueen perinteisten haltijoiden pyynnöstä.',
     },
   ],
 
@@ -10241,6 +11649,39 @@ const OCEANIA_QUESTIONS = {
       hint: 'Nouseva kuu heijastuu paljastuneelta liejutasangolta katkonaisena juovana.',
       fact: 'Ilmiötä kutsutaan nimellä Staircase to the Moon. Se näkyy muutamana iltana kuukaudessa maalis–lokakuussa.',
     },
+    {
+      q: 'Millä Australian rannikolla Broome sijaitsee?',
+      options: ['luoteisrannikolla', 'kaakkoisrannikolla', 'etelärannikolla', 'sisämaassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Broome on Kimberleyn alueella Intian valtameren rannalla. Vuorovesi vaihtelee siellä yli yhdeksän metriä.',
+      hint: 'Suunta on kohti Intian valtamerta ja Aasiaa.',
+    },
+    {
+      q: 'Keitä Broomen helmenkalastukseen tuli töihin 1900-luvun alussa?',
+      options: [
+        'sukeltajia Japanista ja Kaakkois-Aasiasta',
+        'kalastajia Islannista',
+        'kaivostyöläisiä Walesista',
+        'paimenia Mongoliasta',
+      ],
+      correct: 0,
+      fact: 'Sukeltajia saapui muun muassa Japanista, Malaijilta ja Filippiineiltä, ja kaupungin hautausmaa kertoo työn vaarallisuudesta. Perinne näkyy yhä kaupungin ruoassa ja nimissä.',
+      hint: 'Työntekijät tulivat pääosin Aasiasta.',
+    },
+    {
+      q: 'Mitä Broomen rannikolla on säilynyt 130 miljoonaa vuotta?',
+      options: [
+        'dinosaurusten jalanjälkiä kalliossa',
+        'jäätikön uurteita',
+        'meteoriittikraatteri',
+        'muinainen kaupunki',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Gantheaume Pointin kallioissa on dinosaurusten jälkiä, jotka paljastuvat matalan veden aikaan. Jäljet ovat kuuluisia ja tarkasti suojeltuja.',
+      hint: 'Jäljet paljastuvat vain matalan veden aikaan.',
+    },
   ],
 
   kalgoorlie: [
@@ -10265,6 +11706,39 @@ const OCEANIA_QUESTIONS = {
       hint: 'Insinööri C. Y. O’Connor suunnitteli hankkeen, joka pumppasi vettä ylämäkeen aavikon halki.',
       fact: 'Putki valmistui 1903 ja toimii yhä. Se oli aikanaan maailman kunnianhimoisimpia vesihankkeita.',
     },
+    {
+      q: 'Mikä Kalgoorliessa on Australian suurimpia?',
+      options: ['avolouhos', 'satama', 'yliopisto', 'huvipuisto'],
+      correct: 0,
+      level: 1,
+      fact: 'Super Pit -avolouhos on kilometrejä pitkä ja satoja metrejä syvä. Kaivostoiminta on jatkunut kaupungissa 1890-luvulta.',
+      hint: 'Kohde on maahan kaivettu ja hyvin suuri.',
+    },
+    {
+      q: 'Mikä kultaryntäys synnytti Kalgoorlien?',
+      options: [
+        '1890-luvun löydöt Länsi-Australiassa',
+        '1849 Kalifornian ryntäys',
+        '1870-luvun Etelä-Afrikan löydöt',
+        '1990-luvun löydöt',
+      ],
+      correct: 0,
+      fact: 'Kultaa löydettiin 1893, ja autiomaahan syntyi kaupunki muutamassa vuodessa. Osa 1890-luvun komeista rakennuksista on yhä käytössä.',
+      hint: 'Ryntäys ajoittuu 1890-luvulle.',
+    },
+    {
+      q: 'Kuinka pitkä vesiputki rakennettiin Kalgoorlieen 1900-luvun alussa?',
+      options: [
+        'yli 500 kilometriä',
+        'noin 50 kilometriä',
+        'noin 5 kilometriä',
+        'yli 5 000 kilometriä',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Putki tuo vettä rannikolta autiomaahan ja nousee matkalla satoja metrejä pumppuasemien avulla. Se on yhä käytössä.',
+      hint: 'Pituus on satoja kilometrejä.',
+    },
   ],
 
   townsville: [
@@ -10283,6 +11757,39 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Laji on maailman myrkyllisimpiä eläimiä, ja rannoilla uidaan sen takia verkkoaitauksissa.',
       fact: 'Merivaakun lonkerot voivat olla kolme metriä pitkiä. Uimarit käyttävät kaudella ohuita suojapukuja.',
+    },
+    {
+      q: 'Mikä saari on Townsvillen edustalla lauttamatkan päässä?',
+      options: ['Magnetic Island', 'Tasmania', 'Uusi-Guinea', 'Sahalin'],
+      correct: 0,
+      level: 1,
+      fact: 'Saarella on kansallispuisto, koalapopulaatio ja hiekkarantoja. Lautta kulkee mantereelta noin 20 minuutissa.',
+      hint: 'Nimi viittaa magneettiin.',
+    },
+    {
+      q: 'Mikä tutkimuslaitos toimii Townsvillessä?',
+      options: [
+        'meritieteen ja riuttatutkimuksen laitos',
+        'napatutkimusasema',
+        'avaruuskeskus',
+        'aavikkotutkimusasema',
+      ],
+      correct: 0,
+      fact: 'Kaupungissa on Australian merentutkimuksen instituutti ja riuttatutkimuksen keskuksia. Suuri valliriutta on tutkijoiden työpaikka aivan edustalla.',
+      hint: 'Tutkimuskohde on aivan kaupungin edessä vedessä.',
+    },
+    {
+      q: 'Miksi Pohjois-Queenslandin rannoilla uidaan kesällä verkkoaitauksissa?',
+      options: [
+        'myrkyllisten meduusojen takia',
+        'hain takia',
+        'virtausten takia',
+        'kylmän veden takia',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Meduusakaudella rannoille asennetaan verkkoja ja uimarit käyttävät suojapukuja. Merivaakun pisto on hyvin kivulias ja vaarallinen.',
+      hint: 'Syy on pieni, läpinäkyvä ja polttava.',
     },
   ],
 
@@ -10303,6 +11810,33 @@ const OCEANIA_QUESTIONS = {
       hint: 'Eläin on musta, pienikokoinen ja tunnettu voimakkaasta puremastaan ja karjunnastaan.',
       fact: 'Laji elää luonnossa vain Tasmaniassa. Sitä uhkaa tarttuva kasvainsairaus, jota vastaan kantaa yritetään suojella.',
     },
+    {
+      q: 'Mikä purjehduskilpailu päättyy Hobartiin joulun jälkeen?',
+      options: ['Sydney–Hobart-purjehdus', 'America’s Cup', 'Vendée Globe', 'Volvo Ocean Race'],
+      correct: 0,
+      level: 3,
+      fact: 'Kilpailu lähtee Sydneystä tapaninpäivänä ja ylittää myrskyisän Bass-salmen. Se on yksi maailman vaativimmista avomeripurjehduksista.',
+      hint: 'Kilpailu lähtee Sydneystä tapaninpäivänä.',
+    },
+    {
+      q: 'Mikä oli Hobartin rooli 1800-luvun alussa?',
+      options: [
+        'rangaistussiirtola ja satama',
+        'kultakaivoskaupunki',
+        'teollisuuskeskus',
+        'lomakohde',
+      ],
+      correct: 0,
+      fact: 'Britannia perusti Tasmaniaan rangaistussiirtoloita, joista Port Arthur on nykyään maailmanperintökohde ja museo.',
+      hint: 'Kaupunkiin tuotiin ihmisiä pakolla Britanniasta.',
+    },
+    {
+      q: 'Millainen luonto Tasmaniassa on?',
+      options: ['viileää sademetsää ja vuoristoa', 'aavikkoa', 'suolajärviä', 'korallisaaria'],
+      correct: 0,
+      fact: 'Saaren länsiosassa on viileää sademetsää ja erämaita, jotka kuuluvat maailmanperintöön. Tasmania on Australian vihrein ja sateisin osa.',
+      hint: 'Ilmasto on selvästi viileämpi kuin mantereella.',
+    },
   ],
 
   nullarbor: [
@@ -10321,6 +11855,28 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Indian Pacific -juna kulkee tätä reittiä Sydneystä Perthiin.',
       fact: 'Suora osuus on 478 kilometriä ilman ainuttakaan mutkaa. Koko matka Sydneystä Perthiin kestää kolme vuorokautta.',
+    },
+    {
+      q: 'Mitä nimi Nullarbor tarkoittaa?',
+      options: ['ei yhtään puuta', 'suuri hiekka', 'kuiva joki', 'pitkä tie'],
+      correct: 0,
+      level: 1,
+      fact: 'Nimi tulee latinan sanoista nulla arbor. Tasanko on maailman suurimpia yhtenäisiä kalkkikivialueita.',
+      hint: 'Nimi on latinaa ja kertoo, mitä alueelta puuttuu.',
+    },
+    {
+      q: 'Mitä Nullarborin kalkkikiven sisällä on?',
+      options: ['laaja luolaverkosto', 'kultasuoni', 'pohjavesijärvi pinnalla', 'jäätikkö'],
+      correct: 0,
+      fact: 'Kalkkikiveen on liuennut luolia ja kuiluja, joita tutkitaan yhä. Osa luolista on kilometrien pituisia.',
+      hint: 'Kalkkikivi liukenee veteen ja jättää tyhjää tilaa.',
+    },
+    {
+      q: 'Mitä eläimiä Nullarborin tasangolla näkee tien varrella?',
+      options: ['kenguruja ja vombatteja', 'norsuja', 'poroja', 'tiikereitä'],
+      correct: 0,
+      fact: 'Tasangolla elää kenguruja, vombatteja ja dingoja. Autoilijoita varoitetaan liikkumaan varovasti aamun ja illan hämärässä.',
+      hint: 'Eläimet ovat Australian omia nisäkkäitä.',
     },
   ],
 
@@ -10346,6 +11902,29 @@ const OCEANIA_QUESTIONS = {
       hint: 'Autiomaassa on tuhansia yhdensuuntaisia punaisia hiekkaharjuja.',
       fact: 'Simpsonin autiomaassa on maailman pisimpiä hiekkaharjuja: osa jatkuu satoja kilometrejä katkeamatta.',
     },
+    {
+      q: 'Kuinka moni ihminen asuu Birdsvillessä?',
+      options: ['alle sata', 'noin tuhat', 'noin kymmenentuhatta', 'yli miljoona'],
+      correct: 0,
+      level: 1,
+      fact: 'Kylässä on vain kymmeniä pysyviä asukkaita, mutta syyskuun kilpailuviikonloppuna paikalla on tuhansia vieraita.',
+      hint: 'Asukasluku on kymmenien luokkaa.',
+    },
+    {
+      q: 'Mikä tapahtuma tuo Birdsvilleen tuhansia ihmisiä kerran vuodessa?',
+      options: ['hevoskilpailut', 'jääkiekkoturnaus', 'purjehduskilpailu', 'hiihtokilpailu'],
+      correct: 0,
+      fact: 'Birdsvillen laukkakilpailut järjestetään syyskuussa keskellä autiomaata, ja osa vieraista saapuu pikkulentokoneella.',
+      hint: 'Kilpailussa juoksevat eläimet, eivät ihmiset.',
+    },
+    {
+      q: 'Mikä autiomaareitti alkaa Birdsvillestä?',
+      options: ['Birdsville Track', 'Silkkitie', 'Route 66', 'Panamerikkalainen valtatie'],
+      correct: 0,
+      level: 3,
+      fact: 'Yli 500 kilometriä pitkä hiekkatie kulkee Simpsonin autiomaan reunaa Etelä-Australiaan. Sinne lähdetään varaosien ja lisävesien kanssa.',
+      hint: 'Reitti on nimetty kylän mukaan.',
+    },
   ],
 
   exmouth: [
@@ -10364,6 +11943,39 @@ const OCEANIA_QUESTIONS = {
       level: 2,
       hint: 'Eläin on täplikäs jättiläinen, joka syö planktonia eikä ole vaarallinen ihmiselle.',
       fact: 'Valashai voi kasvaa yli 12-metriseksi. Ningaloon riutalle ne saapuvat korallien kutuaikaan maalis–heinäkuussa.',
+    },
+    {
+      q: 'Missä Ningaloon riutta sijaitsee suhteessa rantaan?',
+      options: [
+        'aivan rannan tuntumassa',
+        'sadan kilometrin päässä',
+        'joen suistossa',
+        'järven pohjalla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Riutalle pääsee paikoin uimalla suoraan rannalta, mikä on harvinaista suurten riuttojen joukossa.',
+      hint: 'Riutalle pääsee ilman venettä.',
+    },
+    {
+      q: 'Milloin valashait saapuvat Ningaloon riutalle?',
+      options: [
+        'keväällä koralliemän jälkeen',
+        'keskitalvella',
+        'vain öisin',
+        'ne eivät saavu koskaan',
+      ],
+      correct: 0,
+      fact: 'Valashait tulevat syömään planktonia koralliemän jälkeen maalis-heinäkuussa. Ne ovat maailman suurimpia kaloja mutta täysin vaarattomia ihmiselle.',
+      hint: 'Saapuminen liittyy korallien lisääntymiseen.',
+    },
+    {
+      q: 'Mikä kansallispuisto rajautuu Exmouthin lähellä riuttaan?',
+      options: ['Cape Range', 'Yellowstone', 'Serengeti', 'Fiordland'],
+      correct: 0,
+      level: 3,
+      fact: 'Kalkkikivirotkojen kansallispuisto ulottuu rannikolle asti, joten samana päivänä voi vaeltaa rotkossa ja snorklata riutalla.',
+      hint: 'Puiston nimi viittaa niemen vuorijonoon.',
     },
   ],
 
@@ -10384,6 +11996,43 @@ const OCEANIA_QUESTIONS = {
       hint: 'Kaupunki on syvällä Queenslandin sisämaassa.',
       fact: 'Matkaa Townsvilleen on lähes 900 kilometriä. Mount Isan kunta on pinta-alaltaan suurempi kuin moni Euroopan valtio.',
     },
+    {
+      q: 'Mitä metalleja Mount Isan kaivoksista louhitaan?',
+      options: [
+        'kuparia, lyijyä ja sinkkiä',
+        'kultaa ja timantteja',
+        'rautaa ja hiiltä',
+        'uraania ja hopeaa',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kaupungin kaivokset ovat maailman suurimpia kupari-, lyijy- ja sinkkituottajia. Malmi sulatetaan osin paikan päällä.',
+      hint: 'Metalleja on kolme, ja niistä yksi on johtimissa.',
+    },
+    {
+      q: 'Kuinka laaja Mount Isan kaupunkialue on hallinnollisesti?',
+      options: [
+        'yksi maailman laajimmista kaupunkialueista',
+        'pienempi kuin yksi kortteli',
+        'saaren kokoinen',
+        'tarkalleen sata neliökilometriä',
+      ],
+      correct: 0,
+      fact: 'Kaupungin hallinnollinen alue on kymmeniätuhansia neliökilometrejä, koska ympärillä on laajoja karjatiloja ja autiomaata.',
+      hint: 'Alueeseen kuuluu karjatiloja ja autiomaata.',
+    },
+    {
+      q: 'Mistä Mount Isan asukkaat saavat vetensä?',
+      options: [
+        'padotusta tekojärvestä',
+        'merestä suolattuna',
+        'sulavista jäätiköistä',
+        'sadevesitankeista ainoastaan',
+      ],
+      correct: 0,
+      fact: 'Lähelle rakennettiin pato, jonka tekojärvi turvaa kaupungin ja kaivoksen veden kuivalla alueella.',
+      hint: 'Vesi on padottu jokeen.',
+    },
   ],
 
   cooberpedy: [
@@ -10402,6 +12051,34 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Kesähelteet nousevat yli 40 asteen, mutta kallioon louhitussa tilassa on tasainen lämpötila.',
       fact: 'Kaupungissa on maan alla koteja, kirkkoja, hotelleja ja kauppoja. Asumuksia kutsutaan nimellä dugout.',
+    },
+    {
+      q: 'Miksi Coober Pedyssä asutaan maan alla?',
+      options: [
+        'kaivetuissa asunnoissa on viileää helteessä',
+        'maan päällä ei ole tilaa',
+        'maanjäristysten takia',
+        'tulvien takia',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kesähelteessä lämpötila nousee yli 40 asteen, mutta kalliohuoneissa on tasaisesti noin 23 astetta. Maan alla on koteja, kirkkoja ja hotelleja.',
+      hint: 'Syy liittyy lämpötilaan.',
+    },
+    {
+      q: 'Mitä opaali on?',
+      options: ['värejä hohtava jalokivi', 'metalli', 'suola', 'puulaji'],
+      correct: 0,
+      fact: 'Opaali taittaa valoa niin, että kivi hohtaa eri värejä katselukulman mukaan. Coober Pedy tuottaa suuren osan maailman jalo-opaaleista.',
+      hint: 'Kiven väri vaihtuu katselukulman mukaan.',
+    },
+    {
+      q: 'Mitä Coober Pedyn ympäristössä pitää varoa jalan liikkuessa?',
+      options: ['vanhoja kaivoskuiluja', 'tulvia', 'lumivyöryjä', 'tiikereitä'],
+      correct: 0,
+      level: 3,
+      fact: 'Alueella on satojatuhansia kaivettuja kuiluja, joita ei ole kaikkia merkitty. Kävelijöitä kehotetaan pysymään merkityillä reiteillä.',
+      hint: 'Vaara on maassa ja ihmisen tekemä.',
     },
   ],
 
@@ -10422,6 +12099,34 @@ const OCEANIA_QUESTIONS = {
       hint: 'Iltapäivän merituuli on niin säännöllinen, että sitä kutsutaan nimellä Fremantle Doctor.',
       fact: 'Geraldton on yksi maailman tunnetuimmista purjelautailupaikoista tasaisen ja voimakkaan tuulensa takia.',
     },
+    {
+      q: 'Mikä tuuli tekee Geraldtonista purjelautailijoiden suosikin?',
+      options: [
+        'voimakas ja säännöllinen merituuli',
+        'monsuuni',
+        'sirokko',
+        'passaatituulen puuttuminen',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Iltapäivän merituuli puhaltaa lähes joka päivä kesäkaudella, ja se on niin säännöllinen että se on saanut lempinimen.',
+      hint: 'Tuuli tulee mereltä iltapäivällä lähes joka päivä.',
+    },
+    {
+      q: 'Minkä laivan haaksirikko vuonna 1629 liittyy Geraldtonin edustan saariin?',
+      options: ['Batavia', 'Titanic', 'Vasa', 'Mary Rose'],
+      correct: 0,
+      level: 3,
+      fact: 'Hollantilainen Batavia ajoi karille Houtman Abrolhos -saarilla, ja haaksirikkoa seurasi kapina. Löydetyt osat ovat museossa kaupungissa.',
+      hint: 'Laiva oli hollantilainen ja samannimisen kaupungin mukaan nimetty.',
+    },
+    {
+      q: 'Mitä Geraldtonin satamasta viedään?',
+      options: ['vehnää ja malmia', 'autoja', 'paperia', 'kalaöljyä ainoastaan'],
+      correct: 0,
+      fact: 'Satama palvelee vehnänviljelyaluetta ja sisämaan kaivoksia. Vehnäsiilot ovat kaupungin näkyvimpiä rakennuksia.',
+      hint: 'Toinen tuote kasvaa pellolla ja toinen louhitaan.',
+    },
   ],
 
   portmoresby: [
@@ -10440,6 +12145,38 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Määrä on maailmanennätys, ja se selittyy vuoristolaaksojen eristyneisyydellä.',
       fact: 'Maassa on noin 12 prosenttia kaikista maailman kielistä, vaikka väkiluku on alle kymmenen miljoonaa.',
+    },
+    {
+      q: 'Millä saarella Port Moresby sijaitsee?',
+      options: ['Uudessa-Guineassa', 'Tasmaniassa', 'Balilla', 'Uudessa-Seelannissa'],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Uuden-Guinean eteläisellä rannikolla. Saaren itäosa on Papua-Uusi-Guinea ja länsiosa kuuluu Indonesiaan.',
+      hint: 'Saari on maailman toiseksi suurin.',
+    },
+    {
+      q: 'Miksi Papua-Uudessa-Guineassa puhutaan niin monta kieltä?',
+      options: [
+        'vuoristo ja laaksot erottivat yhteisöt toisistaan',
+        'maahan tuotiin kieliä siirtolaisuuden myötä',
+        'kielet on keksitty 1900-luvulla',
+        'kieliä opetetaan kouluissa erikseen',
+      ],
+      correct: 0,
+      fact: 'Jyrkät vuoret ja syvät laaksot pitivät yhteisöt erillään tuhansia vuosia, ja kieliä kehittyi yli 800. Tok Pisin toimii yhteisenä kielenä.',
+      hint: 'Syy on maastossa, joka erottaa laaksot toisistaan.',
+    },
+    {
+      q: 'Mikä on Tok Pisin?',
+      options: [
+        'yhteinen kieli, joka syntyi kauppatilanteissa',
+        'perinteinen tanssi',
+        'juhla-ateria',
+        'vene',
+      ],
+      correct: 0,
+      fact: 'Tok Pisin on kreolikieli, joka syntyi eri kieliä puhuvien ihmisten välisestä kaupasta. Se on maan virallisia kieliä englannin ja hiri motun ohella.',
+      hint: 'Kieli syntyi eri kieliä puhuvien ihmisten välisestä kaupasta.',
     },
   ],
 
@@ -10465,6 +12202,39 @@ const OCEANIA_QUESTIONS = {
       hint: 'Saaren keskellä kulkee vuorijono, jonka huipuilla on jäätiköitä päiväntasaajan lähellä.',
       fact: 'Puncak Jaya kohoaa 4 884 metriin ja on Oseanian korkein vuori. Sen jäätiköt ovat kutistuneet nopeasti.',
     },
+    {
+      q: 'Mikä tekee Sepik-joesta poikkeuksellisen?',
+      options: [
+        'se mutkittelee laajalti eikä sen varrella ole suuria kaupunkeja',
+        'se on maailman pisin joki',
+        'se jäätyy talvella',
+        'se virtaa vuorelle päin',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Yli tuhat kilometriä pitkä joki mutkittelee alavaa aluetta, ja kyliin kuljetaan veneellä. Joki tulvii säännöllisesti laajoille alueille.',
+      hint: 'Kyliin mennään veneellä, ei autolla.',
+    },
+    {
+      q: 'Mistä Sepikin alueen taide on tunnettu?',
+      options: [
+        'puuveistoksista ja naamioista',
+        'lasitaiteesta',
+        'öljyvärimaalauksista',
+        'marmoriveistoksista',
+      ],
+      correct: 0,
+      fact: 'Alueen veistokset, naamiot ja seremoniatalot ovat maailmankuuluja, ja niitä on museoissa ympäri maailmaa. Taide liittyy suku- ja henkitarinoihin.',
+      hint: 'Materiaali on puuta.',
+    },
+    {
+      q: 'Mikä on haus tambaran?',
+      options: ['kylän seremoniatalo', 'vene', 'kalaverkko', 'juhlaruoka'],
+      correct: 0,
+      level: 3,
+      fact: 'Seremoniatalot ovat korkeita, koristeltuja rakennuksia, joissa säilytetään yhteisölle tärkeitä esineitä. Rakentaminen on yhteinen ponnistus.',
+      hint: 'Rakennus on kylän yhteinen ja korkea.',
+    },
   ],
 
   honiara: [
@@ -10483,6 +12253,34 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Saarella on Honiaran kaupunki, ja sen ympärillä oleva merialue sai lempinimen Ironbottom Sound.',
       fact: 'Saaren edustalle upposi kymmeniä laivoja, ja merenpohja on siksi yksi maailman tunnetuimmista sukelluskohteista.',
+    },
+    {
+      q: 'Millainen valtio Salomonsaaret on?',
+      options: [
+        'satojen saarten muodostama saarivaltio',
+        'yhden saaren valtio',
+        'sisämaavaltio',
+        'Australian osavaltio',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Maahan kuuluu lähes tuhat saarta, joista muutamat kymmenet ovat asuttuja. Liikenne kulkee veneillä ja pikkukoneilla.',
+      hint: 'Saaria on satoja.',
+    },
+    {
+      q: 'Mitä valuuttana on käytetty Salomonsaarilla perinteisesti rahan ohella?',
+      options: ['simpukkarahaa', 'kultahippuja', 'suolapaloja', 'paperiseteleitä'],
+      correct: 0,
+      fact: 'Simpukoista tehtyjä nauhoja käytetään yhä juhlissa ja sopimuksissa, vaikka arjessa maksetaan Salomonsaarten dollareilla.',
+      hint: 'Väline tehdään merestä saatavasta materiaalista.',
+    },
+    {
+      q: 'Mikä uhkaa matalia Tyynenmeren saaria eniten?',
+      options: ['merenpinnan nousu', 'hiekkamyrskyt', 'jäätiköiden kasvu', 'aavikoituminen'],
+      correct: 0,
+      level: 3,
+      fact: 'Merenpinnan nousu ja voimistuvat myrskyt syövyttävät rantoja ja suolaavat pelloja. Osa kylistä on jo siirretty ylemmäs.',
+      hint: 'Uhka liittyy veden korkeuteen.',
     },
   ],
 
@@ -10508,6 +12306,34 @@ const OCEANIA_QUESTIONS = {
       hint: 'Kaksi mannerlaattaa kohtaa saariketjun alla.',
       fact: 'Vanuatun Yasur-tulivuori on purkautunut lähes yhtäjaksoisesti satojen vuosien ajan, ja sen kraatterin reunalle voi kävellä.',
     },
+    {
+      q: 'Missä Port Vila sijaitsee?',
+      options: [
+        'Vanuatun saariryhmässä',
+        'Uudessa-Seelannissa',
+        'Australian sisämaassa',
+        'Japanissa',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Kaupunki on Efaten saarella, ja Vanuatuun kuuluu yli 80 saarta. Satamassa käy risteilijöitä ja rahtilaivoja.',
+      hint: 'Saariryhmä on Tyynenmeren lounaisosassa.',
+    },
+    {
+      q: 'Kuinka monta kieltä Vanuatussa puhutaan?',
+      options: ['yli sata', 'noin viisi', 'yksi', 'yli tuhat'],
+      correct: 0,
+      fact: 'Pienessä maassa puhutaan yli sataa kieltä, ja bislama toimii yhteisenä kielenä englannin ja ranskan ohella.',
+      hint: 'Määrä on satojen alkupää.',
+    },
+    {
+      q: 'Mikä perinne on säilynyt Pentecostenin saarella?',
+      options: ['maahyppy köysien varassa', 'lumikenkäkilpailu', 'hevoskilpailut', 'jääkalastus'],
+      correct: 0,
+      level: 3,
+      fact: 'Miehet hyppäävät puutornista jalkoihin sidottujen liaanien varassa sadonkorjuun yhteydessä. Perinnettä pidetään benjihyppäämisen esikuvana.',
+      hint: 'Perinnettä pidetään benjihyppäämisen esikuvana.',
+    },
   ],
 
   noumea: [
@@ -10526,6 +12352,34 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Metallia käytetään ruostumattomaan teräkseen ja akkuihin.',
       fact: 'Saarella on arviolta noin kymmenesosa maailman nikkelivaroista, ja kaivostoiminta on sen talouden selkäranka.',
+    },
+    {
+      q: 'Mitä kieltä Nouméassa puhutaan virallisesti?',
+      options: ['ranskaa', 'espanjaa', 'portugalia', 'japania'],
+      correct: 0,
+      level: 1,
+      fact: 'Uusi-Kaledonia on Ranskan merentakainen alue, joten ranska on virallinen kieli. Alueella puhutaan lisäksi kymmeniä kanakkien kieliä.',
+      hint: 'Kieli tulee siitä maasta, jonka aluetta saari on.',
+    },
+    {
+      q: 'Ketkä ovat Uuden-Kaledonian alkuperäiskansa?',
+      options: ['kanakit', 'maorit', 'aboriginaalit', 'inuiitit'],
+      correct: 0,
+      fact: 'Kanakit ovat saarten alkuperäiskansa, ja heidän asemastaan ja alueen itsenäisyydestä on äänestetty useita kertoja.',
+      hint: 'Kansan nimi alkaa k-kirjaimella ja sitä käytetään myös alueen puolueiden nimissä.',
+    },
+    {
+      q: 'Mikä laguuni Uuden-Kaledonian ympärillä on maailmanperintökohde?',
+      options: [
+        'maailman suurimpiin kuuluva korallilaguuni',
+        'jäätikkölaguuni',
+        'suolajärvi',
+        'tulivuorijärvi',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Saarta kiertää yksi maailman laajimmista laguuneista, jossa elää merilehmiä ja merikilpikonnia. Laguuni on Unescon listalla.',
+      hint: 'Kohde on riutan sisäpuolinen matala merialue.',
     },
   ],
 
@@ -10546,6 +12400,39 @@ const OCEANIA_QUESTIONS = {
       hint: 'Puu on suippo havupuu, jota kasvatetaan huonekasvina ympäri maailman.',
       fact: 'Puu kasvaa saarella luonnonvaraisena yli 60-metriseksi. James Cook toivoi siitä laivanmastoja, mutta puu osoittautui liian hauraaksi.',
     },
+    {
+      q: 'Kuinka suuri Norfolkinsaari on?',
+      options: [
+        'pieni, vain noin 35 neliökilometriä',
+        'noin 3 500 neliökilometriä',
+        'mannerkokoinen',
+        'kokonaan veden alla',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Saari on pieni ja jyrkkärantainen. Sen asukasluku on noin kaksi tuhatta, ja saari kuuluu Australiaan.',
+      hint: 'Pinta-ala on kymmeniä neliökilometrejä.',
+    },
+    {
+      q: 'Ketkä asettuivat Norfolkinsaarelle 1856?',
+      options: [
+        'Pitcairnin saaren asukkaat',
+        'islantilaiset kalastajat',
+        'japanilaiset helmensukeltajat',
+        'hollantilaiset kauppiaat',
+      ],
+      correct: 0,
+      fact: 'Pitcairnilta siirtyi saarelle Bountyn kapinallisten jälkeläisiä, kun heidän oma saarensa kävi ahtaaksi. Osa suvuista asuu saarella yhä.',
+      hint: 'Tulijat olivat Bountyn kapinallisten jälkeläisiä.',
+    },
+    {
+      q: 'Mikä kieli on Norfolkinsaarella virallinen englannin rinnalla?',
+      options: ['norfuk', 'maori', 'bislama', 'ranska'],
+      correct: 0,
+      level: 3,
+      fact: 'Norfuk on englannin ja tahitin sekoituksesta syntynyt kieli, jota Pitcairnilta tulleet toivat mukanaan. Sitä opetetaan saaren koulussa.',
+      hint: 'Kieli syntyi englannin ja tahitin sekoituksesta.',
+    },
   ],
 
   suva: [
@@ -10564,6 +12451,34 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Linja seuraa suunnilleen 180. pituuspiiriä, ja sen yli astuessa vaihtuu päivä.',
       fact: 'Fidžin saaria on linjan molemmin puolin, mutta koko maa noudattaa samaa päivää käytännön syistä.',
+    },
+    {
+      q: 'Mikä on Fidžin pääsaari, jolla Suva sijaitsee?',
+      options: ['Viti Levu', 'Tasmania', 'Honshu', 'Jaava'],
+      correct: 0,
+      level: 1,
+      fact: 'Viti Levu on Fidžin suurin saari, ja Suva on sen kaakkoisrannikolla. Maahan kuuluu yli 300 saarta.',
+      hint: 'Nimen alkuosa on maan nimen fidžinkielinen muoto.',
+    },
+    {
+      q: 'Mikä juoma kuuluu Fidžin perinteisiin tervehdysseremonioihin?',
+      options: ['kava', 'tee', 'kahvi', 'limonadi'],
+      correct: 0,
+      fact: 'Kava valmistetaan pippurikasvin juuresta ja tarjotaan seremoniassa tietyssä järjestyksessä. Vieraan odotetaan ottavan kuppi vastaan kaksin käsin.',
+      hint: 'Juoma tehdään kasvin juuresta ja tarjotaan seremoniassa.',
+    },
+    {
+      q: 'Mikä on Etelä-Tyynenmeren yliopiston erityispiirre?',
+      options: [
+        'sen omistaa kaksitoista Tyynenmeren maata yhdessä',
+        'se on maailman pienin yliopisto',
+        'se toimii vain verkossa',
+        'se on suljettu vieraille',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Yliopiston pääkampus on Suvassa, ja se palvelee kahdentoista jäsenmaan opiskelijoita eri saarilla. Opetusta annetaan myös etäyhteyksin.',
+      hint: 'Omistajia on kaksitoista eri maata.',
     },
   ],
 
@@ -10584,6 +12499,39 @@ const OCEANIA_QUESTIONS = {
       hint: 'Kansa saapui polynesialaisilta saarilta kanooteilla noin 1300-luvulla.',
       fact: 'Maorien kielellä maan nimi on Aotearoa, pitkän valkoisen pilven maa. Se on yksi maan virallisista kielistä.',
     },
+    {
+      q: 'Miksi Aucklandia kutsutaan purjeiden kaupungiksi?',
+      options: [
+        'asukkailla on poikkeuksellisen paljon veneitä',
+        'kaupungissa tehdään purjeita',
+        'kaupungin lippu on purje',
+        'siellä ei ole autoja',
+      ],
+      correct: 0,
+      fact: 'Kaupunki on kahden sataman välissä kannaksella, ja veneitä on asukaslukuun suhteutettuna erittäin paljon.',
+      hint: 'Nimitys liittyy veneiden määrään.',
+    },
+    {
+      q: 'Mille maankohoumille Auckland on rakennettu?',
+      options: [
+        'kymmenien sammuneiden tulivuorten päälle',
+        'hiekkasärkälle',
+        'jäätikkömoreenille',
+        'koralliriutalle',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Kaupungin alueella on noin 50 tulivuorenkeilaa ja kraatteria, joista monet ovat puistoja. Vulkaanikentän arvellaan olevan yhä aktiivinen.',
+      hint: 'Maastonmuodot syntyivät purkauksista.',
+    },
+    {
+      q: 'Mikä maorien kielen nimi on te reo?',
+      options: ['se on maorin kielen oma nimi', 'se on tanssi', 'se on juhla', 'se on vene'],
+      correct: 0,
+      level: 1,
+      fact: 'Te reo Māori on Uuden-Seelannin virallinen kieli, ja sen elvyttämiseksi on perustettu kielipesiä ja kouluja. Paikannimet ja tervehdykset ovat arjessa laajassa käytössä.',
+      hint: 'Kyse on kielestä.',
+    },
   ],
 
   wellington: [
@@ -10602,6 +12550,33 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Salmi on nimetty brittiläisen tutkimusmatkailijan mukaan, joka purjehti alueella 1770-luvulla.',
       fact: 'Salmi on kapeimmillaan noin 22 kilometriä leveä. Sen yli kulkee autolautta, ja ylitys kestää kolmisen tuntia.',
+    },
+    {
+      q: 'Mistä Wellington on kuuluisa säänsä puolesta?',
+      options: ['tuulisuudesta', 'hellekausista', 'kuivuudesta', 'lumimyrskyistä'],
+      correct: 0,
+      level: 1,
+      fact: 'Cookinsalmen kaventama tuuli puhaltaa kaupungin läpi, ja Wellingtonia kutsutaan maailman tuulisimmaksi pääkaupungiksi.',
+      hint: 'Salmi kanavoi ilmavirtaukset kaupungin läpi.',
+    },
+    {
+      q: 'Mikä elokuva-ala on tehnyt Wellingtonista tunnetun?',
+      options: [
+        'erikoisefektit ja jälkituotanto',
+        'piirretyt elokuvat',
+        'dokumenttielokuvat',
+        'mainoselokuvat',
+      ],
+      correct: 0,
+      fact: 'Kaupungissa toimivat studiot tekivät efektit muun muassa Taru sormusten herrasta -elokuviin. Alalla työskentelee tuhansia ihmisiä.',
+      hint: 'Ala liittyy tietokoneella tehtyihin kuviin.',
+    },
+    {
+      q: 'Mikä on Te Papa?',
+      options: ['Uuden-Seelannin kansallismuseo', 'satama', 'vuori', 'juhla'],
+      correct: 0,
+      fact: 'Museo esittelee maan luontoa, maorikulttuuria ja historiaa; sen kokoelmissa on myös jättikalmarin näyte. Sisäänpääsy on maksuton.',
+      hint: 'Nimi tarkoittaa maorin kielessä aarreaittaa tai kotia.',
     },
   ],
 
@@ -10622,6 +12597,44 @@ const OCEANIA_QUESTIONS = {
       hint: 'Jonon korkein huippu Aoraki kohoaa yli 3 700 metriin.',
       fact: 'Vuoristossa on satoja jäätiköitä. Läntinen rinne on maailman sateisimpia paikkoja, itäinen taas kuivaa lakeutta.',
     },
+    {
+      q: 'Mikä tasanko ympäröi Christchurchia?',
+      options: [
+        'Canterburyn tasanko',
+        'Nullarborin tasanko',
+        'Siperian tasanko',
+        'Sahelin vyöhyke',
+      ],
+      correct: 0,
+      level: 1,
+      fact: 'Laaja tasanko on Uuden-Seelannin tärkeintä maatalousaluetta, ja sen takana kohoavat Eteläiset Alpit.',
+      hint: 'Tasanko on nimetty englantilaisen kaupungin mukaan.',
+    },
+    {
+      q: 'Mitä Christchurchissa tapahtui vuonna 2011?',
+      options: [
+        'voimakas maanjäristys vaurioitti keskustaa',
+        'tulivuori purkautui',
+        'kaupunki tulvi mereen',
+        'kaupunki siirrettiin',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Maanjäristys tuhosi katedraalin ja suuren osan keskustan rakennuksista. Kaupunkia on rakennettu sen jälkeen uudelleen matalammaksi ja joustavammaksi.',
+      hint: 'Tapahtuma liittyi maan liikkeisiin.',
+    },
+    {
+      q: 'Miksi Christchurchia kutsutaan puutarhakaupungiksi?',
+      options: [
+        'puistoja ja puutarhoja on poikkeuksellisen paljon',
+        'siellä kasvatetaan kaikki maan vihannekset',
+        'kaupungissa ei ole taloja',
+        'kaupunki on kasvihuoneessa',
+      ],
+      correct: 0,
+      fact: 'Avonjoen varren puistot ja kaupungin puutarhat ovat kaupungin tunnusmerkki. Joella voi meloa tai kulkea puistoveneellä.',
+      hint: 'Nimitys liittyy vihreään ja kukkiin.',
+    },
   ],
 
   milfordsound: [
@@ -10640,6 +12653,38 @@ const OCEANIA_QUESTIONS = {
       level: 1,
       hint: 'Lintu on yökukkuja, sen nokan päässä on sieraimet, ja siitä on nimetty myös hedelmä.',
       fact: 'Kiivi munii poikkeuksellisen suuren munan kokoonsa nähden. Kaikki lajit ovat uhanalaisia tuotujen petojen takia.',
+    },
+    {
+      q: 'Miten Milford Sound syntyi?',
+      options: [
+        'jäätikkö kaivoi laakson, jonka meri täytti',
+        'meteoriitti iskeytyi rannikkoon',
+        'tulivuori romahti',
+        'joki kaivoi kanjonin',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Jäätikkö kulutti jyrkkäseinäisen laakson, ja jään sulettua meri täytti sen. Seinämät nousevat yli tuhat metriä suoraan vedestä.',
+      hint: 'Muodostuman kaivoi jää, ei joki.',
+    },
+    {
+      q: 'Kuinka paljon Milford Soundissa sataa?',
+      options: [
+        'yli 6 000 millimetriä vuodessa',
+        'noin 600 millimetriä vuodessa',
+        'noin 60 millimetriä vuodessa',
+        'siellä ei sada',
+      ],
+      correct: 0,
+      fact: 'Alue on yksi maailman sateisimmista. Sateen jälkeen kalliojyrkänteille syntyy satoja väliaikaisia vesiputouksia.',
+      hint: 'Sademäärä on tuhansia millimetrejä.',
+    },
+    {
+      q: 'Mikä kansallispuisto ympäröi Milford Soundia?',
+      options: ['Fiordland', 'Yellowstone', 'Serengeti', 'Cape Range'],
+      correct: 0,
+      fact: 'Fiordlandin kansallispuisto on maan suurin ja kuuluu maailmanperintöön. Sen vuonoihin pääsee pääosin vain veneellä tai vaeltaen.',
+      hint: 'Nimi kertoo, että alueella on useita vuonoja.',
     },
   ],
 
@@ -10665,6 +12710,33 @@ const OCEANIA_QUESTIONS = {
       hint: 'Jako periytyy Portugalin ja Alankomaiden siirtomaarajasta.',
       fact: 'Saaren länsiosa kuuluu Indonesiaan. Itäosassa on lisäksi Oecusse, erillinen alue keskellä Indonesian puolta.',
     },
+    {
+      q: 'Millä saarella Dili sijaitsee?',
+      options: ['Timorin saarella', 'Balilla', 'Uudessa-Guineassa', 'Tasmaniassa'],
+      correct: 0,
+      level: 1,
+      fact: 'Dili on Timorin saaren pohjoisrannikolla. Saaren itäosa on itsenäinen Itä-Timor ja länsiosa kuuluu Indonesiaan.',
+      hint: 'Saari on jaettu kahden valtion kesken.',
+    },
+    {
+      q: 'Milloin Itä-Timor itsenäistyi?',
+      options: ['2002', '1902', '1962', '2022'],
+      correct: 0,
+      fact: 'Maa itsenäistyi vuonna 2002 pitkän ja vaikean vaiheen jälkeen, ja se on Aasian nuorimpia valtioita. Kansanäänestys itsenäisyydestä pidettiin 1999.',
+      hint: 'Itsenäistyminen tapahtui 2000-luvun alussa.',
+    },
+    {
+      q: 'Mitkä ovat Itä-Timorin viralliset kielet?',
+      options: [
+        'tetum ja portugali',
+        'englanti ja hollanti',
+        'indonesia ja malaiji',
+        'espanja ja tagalog',
+      ],
+      correct: 0,
+      fact: 'Tetum on paikallinen yleiskieli ja portugali periytyy siirtomaa-ajalta. Indonesia ja englanti ovat käytössä työkielinä.',
+      hint: 'Toinen kieli periytyi siirtomaa-ajalta Euroopasta.',
+    },
   ],
 
   bali: [
@@ -10683,6 +12755,33 @@ const OCEANIA_QUESTIONS = {
       level: 3,
       hint: 'Järjestelmää kutsutaan nimellä subak, ja sitä hallinnoivat temppeliyhteisöt yhdessä.',
       fact: 'Subak on toiminut yli tuhat vuotta. Vesi jaetaan pelloille yhteisellä päätöksellä, ei omistuksen mukaan.',
+    },
+    {
+      q: 'Mikä uskonto on Balilla vallitseva?',
+      options: ['hindulaisuus', 'islam', 'buddhalaisuus', 'kristinusko'],
+      correct: 0,
+      fact: 'Bali on Indonesian ainoa saari, jossa hindulaisuus on valtauskonto. Se näkyy temppeleissä, juhlissa ja päivittäisissä uhrilahjoissa.',
+      hint: 'Uskonto on peräisin Intian niemimaalta.',
+    },
+    {
+      q: 'Mikä on subak?',
+      options: ['riisiterassien yhteinen kastelujärjestelmä', 'tanssi', 'vene', 'juhlaruoka'],
+      correct: 0,
+      level: 3,
+      fact: 'Subak on satoja vuosia vanha järjestelmä, jossa kylät jakavat kastelu­veden yhdessä temppeliverkoston ohjaamana. Se on Unescon maailmanperintökohde.',
+      hint: 'Järjestelmä jakaa vettä pelloille yhteisillä säännöillä.',
+    },
+    {
+      q: 'Mikä päivä Balilla vietetään täydellisessä hiljaisuudessa?',
+      options: [
+        'Nyepi eli hiljaisuuden päivä',
+        'uudenvuodenpäivä lännen kalenterissa',
+        'juhannus',
+        'työn päivä',
+      ],
+      correct: 0,
+      fact: 'Nyepin aikana saarella ei liikuta ulkona, valoja ei sytytetä eikä lentokenttä ota koneita vastaan. Päivä on balilaisen kalenterin uusivuosi.',
+      hint: 'Päivänä myös lentokenttä on suljettu.',
     },
   ],
 
@@ -10825,161 +12924,289 @@ const OCEANIA_FACTS = {
     'Sydneyn oopperatalon katto koostuu betonisista kuorista, jotka on päällystetty yli miljoonalla laatalla.',
     'Kaupungin satama on yksi maailman suurimmista luonnonsatamista.',
     'Sydney oli Britannian ensimmäinen rangaistussiirtola Australiassa, perustettu 1788.',
+    {
+      text: 'Vankileiristä on kasvanut satamakaupunki, jonka lahti on maailman parhaita. Villalaivat lähtevät täältä Lontooseen sadassa päivässä, ja kaupunki tuntuu tulevan hyvin toimeen ilman meitä.',
+      voice: 'isoisa',
+    },
   ],
   perth: [
     'Perth on yksi maailman eristyneimmistä suurkaupungeista: lähin miljoonakaupunki on yli 2 000 kilometrin päässä.',
     'Kaupunki on lähempänä Jakartaa kuin Sydneytä.',
     'Iltapäivän merituulta kutsutaan nimellä Fremantle Doctor, koska se viilentää helteisen päivän.',
+    {
+      text: 'Läntisimmän rannikon kaupunki on niin kaukana muista, että posti kulkee kuukausia. Iltapäivällä nousee merituuli säännöllisesti kuin kellokoneisto; sen varaan voi laskea enemmän kuin aikatauluihin.',
+      voice: 'isoisa',
+    },
   ],
   melbourne: [
     'Melbourne oli Australian pääkaupunki 1901–1927, kunnes tehtävä siirtyi Canberraan.',
     'Kaupungin säästä sanotaan, että siellä on neljä vuodenaikaa yhden päivän aikana.',
     'Melbournessa kulkee maailman laajin raitiotieverkko, yli 250 kilometriä raidetta.',
+    {
+      text: 'Kultaryntäys on tehnyt tästä siirtokunnasta rikkaan, ja kaupunkiin rakennetaan leveitä katuja ja kirjastoja kilpaa. Sää vaihtuu neljä kertaa päivässä, mikä on ainoa asia joka muistuttaa kotia.',
+      voice: 'isoisa',
+    },
   ],
   brisbane: [
     'Brisbane on Australian kolmanneksi suurin kaupunki ja Queenslandin pääkaupunki.',
     'Kaupungin ympärillä ovat Gold Coast ja Sunshine Coast, maan suosituimmat rantakohteet.',
     'Brisbane-joki mutkittelee kaupungin läpi niin, että keskustassa on vaikea hahmottaa ilmansuuntia.',
+    {
+      text: 'Joki mutkittelee niin, että kaupunki näyttää olevan itsensä molemmilla puolilla. Talvi on lämpimämpi kuin Englannin kesä; en kerro tätä kotona, koska sitä ei uskota.',
+      voice: 'isoisa',
+    },
   ],
   cairns: [
     'Cairnsista lähdetään Suurelle valliriutalle, joka on yli 2 300 kilometriä pitkä.',
     'Riutta koostuu lähes 3 000 erillisestä riutasta ja sadoista saarista.',
     'Kaupungin takana on Daintree, yksi maailman vanhimmista yhtäjaksoisista sademetsistä.',
+    {
+      text: 'Rannikon edustalla on riutta, jonka väreille en löydä sanoja päiväkirjastani. Sademetsä tulee suoraan rantaan asti, ja kaksi ihmettä kohtaa saman veneretken aikana.',
+      voice: 'isoisa',
+    },
   ],
   darwin: [
     'Darwin on Australian ainoa trooppinen osavaltiotason pääkaupunki.',
     'Hirmumyrsky Tracy tuhosi jouluna 1974 noin 70 prosenttia kaupungin rakennuksista.',
     'Vuodessa on vain kaksi vuodenaikaa: sadekausi ja kuiva kausi.',
+    {
+      text: 'Pohjoisrannikolla vuodenajat ovat sadekausi ja kuiva kausi, eikä muuta tarvita. Jakartaan on täältä lyhyempi matka kuin Sydneyhin, minkä tarkistin kahdesti kartalta.',
+      voice: 'isoisa',
+    },
   ],
   adelaide: [
     'Adelaide suunniteltiin ruutukaavaan puistovyöhykkeen ympäröimäksi ennen kuin sinne rakennettiin mitään.',
     'Barossan laakso kaupungin lähellä on Australian tunnetuin viinialue.',
     'Adelaide on ainoa Australian osavaltion pääkaupunki, jota ei perustettu rangaistussiirtolaksi.',
+    {
+      text: 'Kaupunki on suunniteltu ruutuun ja ympäröity puistokehällä, mikä on järkevämpää kuin Lontoon syntyminen sattumalta. Laaksossa kasvatetaan viiniä, ja se on parempaa kuin klubini varasto.',
+      voice: 'isoisa',
+    },
   ],
   alicesprings: [
     'Alice Springs perustettiin lennätinlinjan asemaksi 1870-luvulla keskelle mannerta.',
     'Royal Flying Doctor Service vie lääkärin lentokoneella syrjäisille karjatiloille.',
     'Kaupungista on lähimpään suurempaan kaupunkiin noin 1 500 kilometriä.',
+    {
+      text: 'Keskellä mannerta on lennätinasema, jonka kautta viestit kulkevat etelästä pohjoiseen. Punainen maa jatkuu joka suuntaan; oppaani sanoo täällä olevan vettä, ja hän on oikeassa.',
+      voice: 'isoisa',
+    },
   ],
   uluru: [
     'Uluru kohoaa 348 metriä ympäröivältä tasangolta, ja suurin osa siitä on maan alla.',
     'Kallio on anangu-kansalle pyhä, ja sille kiipeäminen kiellettiin 2019.',
     'Kivi näyttää vaihtavan väriä auringon kulman mukaan, kirkkaimmillaan se hehkuu punaisena laskun aikaan.',
+    {
+      text: 'Tasangolta nousee yksinäinen punainen kallio, jonka väri vaihtuu auringon mukaan. Alueen asukkaat pitävät sitä pyhänä; me merkitsemme sen karttaan ja nimeämme uudelleen, mikä on huono vaihtokauppa.',
+      voice: 'isoisa',
+    },
   ],
   broome: [
     'Broomessa tuotettiin 1900-luvun alussa valtaosa maailman helmiäisnapeista.',
     'Sukeltajia tuli helmenkalastukseen Japanista, Malesiasta ja Filippiineiltä.',
     'Täydenkuun aikaan nouseva kuu heijastuu liejutasangolta portaita muistuttavana juovana.',
+    {
+      text: 'Helmenkalastajat sukeltavat täällä syvyyksiin, ja hautausmaa kertoo, kuinka moni ei noussut. Työtä tekevät pääosin Aasiasta tulleet miehet; voitot lasketaan Lontoossa.',
+      voice: 'isoisa',
+    },
   ],
   kalgoorlie: [
     'Kalgoorlien kultaryntäys alkoi 1893, ja kaupunki kasvoi keskelle aavikkoa.',
     'Super Pit -avolouhos on yli kolme kilometriä pitkä ja puoli kilometriä syvä.',
     'Kaupungin vesi tuodaan yli 500 kilometrin putkea pitkin rannikolta; putki valmistui 1903 ja toimii yhä.',
+    {
+      text: 'Autiomaassa on kultaa ja siksi kaupunki, jossa on oopperatalo mutta ei vettä. Rannikolta aiotaan rakentaa putki satojen kilometrien halki; sitä pidetään mahdottomana, ja epäilen että se onnistuu.',
+      voice: 'isoisa',
+    },
   ],
   townsville: [
     'Townsville on Pohjois-Queenslandin suurin kaupunki ja riuttatutkimuksen keskus.',
     'Rannoilla uidaan kesäisin verkkoaitauksissa myrkyllisten merivaakkujen takia.',
     'Kaupungin edustalla on Magnetic Island, jonka nimesi James Cook luullessaan sen häiritsevän kompassia.',
+    {
+      text: 'Rannikolla on satama ja sen edessä riutta. Kesällä vedessä on läpinäkyviä meduusoja, joiden pistoa varoitetaan enemmän kuin haita — neuvo kannattaa ottaa vastaan.',
+      voice: 'isoisa',
+    },
   ],
   hobart: [
     'Hobart on Sydneyn jälkeen Australian toiseksi vanhin kaupunki, perustettu 1804.',
     'Tasmanianpiru elää luonnossa vain tällä saarella.',
     'Kaupunki on monen Etelämantereelle suuntaavan retkikunnan lähtösatama.',
+    {
+      text: 'Saarella on rangaistussiirtola, viileä sade ja metsä jota kukaan ei ole mitannut. Ilmasto muistuttaa Englantia niin paljon, että kaipaus katoaa kokonaan.',
+      voice: 'isoisa',
+    },
   ],
   nullarbor: [
     'Nullarborin nimi tulee latinan sanoista nulla arbor eli ei puuta.',
     'Se on maailman suurin yhtenäinen kalkkikivitasanko.',
     'Tasangon halki kulkee maailman pisin täysin suora rautatieosuus, 478 kilometriä ilman mutkaa.',
+    {
+      text: 'Tasangolla ei ole yhtään puuta, ja nimi kertoo sen latinaksi. Kalkkikiven alla on luolia; kävelin päivän enkä nähnyt mitään muuta kuin taivaanrannan.',
+      voice: 'isoisa',
+    },
   ],
   birdsville: [
     'Birdsvillessä asuu noin sata ihmistä, mutta vuosittaisiin hevoskilpailuihin saapuu tuhansia.',
     'Kylästä länteen alkaa Simpsonin autiomaa tuhansine punaisine hiekkaharjuineen.',
     'Birdsville Track on kuuluisa hiekkatie, jota pitkin karjaa on ajettu satoja kilometrejä.',
+    {
+      text: 'Autiomaan laidalla on kylä, jossa on hotelli, kaivo ja tuskin muuta. Kerran vuodessa täällä kilpaillaan hevosilla, ja koko alue kokoontuu paikalle.',
+      voice: 'isoisa',
+    },
   ],
   exmouth: [
     'Ningaloon riutta alkaa paikoin vain metrien päästä rannasta.',
     'Riutalle saapuu vuosittain valashaita, maailman suurimpia kaloja.',
     'Alue on yksi harvoja paikkoja, joissa suurelle riutalle pääsee suoraan rannalta uimalla.',
+    {
+      text: 'Riutta on niin lähellä rantaa, että sinne kahlaa. Vedessä liikkuu kaloja, joiden koko ylittää kaiken minkä olen kirjannut; suurin niistä ei syö muuta kuin planktonia.',
+      voice: 'isoisa',
+    },
   ],
   mountisa: [
     'Mount Isan kaivos on yksi maailman tuottavimmista hopeakaivoksista.',
     'Kunta on pinta-alaltaan suurempi kuin moni Euroopan valtio.',
     'Lähimmälle rannikolle Townsvilleen on lähes 900 kilometriä.',
+    {
+      text: 'Sisämaan malmikaivokset ovat satoja kilometrejä lähimmästä satamasta. Kaupungin ympärillä on karjatiloja, joista yksi on kokonaista maakuntaa suurempi.',
+      voice: 'isoisa',
+    },
   ],
   cooberpedy: [
     'Coober Pedy tuottaa suuren osan maailman jalo-opaaleista.',
     'Suuri osa asukkaista asuu maan alla louhituissa kodeissa helteen takia.',
     'Kaupungin ympärillä on satojatuhansia kaivoskuoppia, ja alueella on varoitettava putoamisvaarasta.',
+    {
+      text: 'Opaalinkaivajat asuvat kuoppiin kaivetuissa huoneissa, koska maan alla on viileää. Ajatus vaikuttaa aluksi eriskummalliselta ja tunnin päästä täysin järkevältä.',
+      voice: 'isoisa',
+    },
   ],
   geraldton: [
     'Geraldtonin edustalla haaksirikkoutui 1629 hollantilainen Batavia-laiva.',
     'Kaupunki on yksi maailman tunnetuimmista purjelautailupaikoista tasaisen tuulensa takia.',
     'Länsirannikolla on Houtman Abrolhos, saariryhmä jonka riutat ovat maailman eteläisimpiä koralliriuttoja.',
+    {
+      text: 'Länsirannikolla puhaltaa iltapäivätuuli niin säännöllisesti, että purjeet nostetaan kellon mukaan. Saarilla edustalla makaa hollantilaisen laivan hylky ja karmea tarina kapinasta.',
+      voice: 'isoisa',
+    },
   ],
   portmoresby: [
     'Papua-Uudessa-Guineassa puhutaan yli 800 kieltä — enemmän kuin missään muussa maassa.',
     'Maassa on noin 12 prosenttia kaikista maailman kielistä, vaikka väkiluku on alle kymmenen miljoonaa.',
     'Kokoda Track, tunnettu vaellusreitti ja toisen maailmansodan taistelupaikka, alkaa kaupungin läheltä.',
+    {
+      text: 'Saaren vuoristossa laaksot ovat niin erillään, että jokaisessa puhutaan omaa kieltä. Niitä sanotaan olevan satoja; en usko lukua, mutta en pysty kumoamaan sitä.',
+      voice: 'isoisa',
+    },
   ],
   sepik: [
     'Sepik on Uuden-Guinean pisin joki ja mutkittelee yli tuhat kilometriä sademetsän halki.',
     'Joen varren kylät tunnetaan puuveistoksista ja suurista henkitaloista.',
     'Uuden-Guinean korkein huippu Puncak Jaya kohoaa 4 884 metriin ja sillä on jäätikkö päiväntasaajan lähellä.',
+    {
+      text: 'Joki mutkittelee sademetsän halki, ja kyliin kuljetaan veneellä. Veistetyt naamiot ovat parempaa työtä kuin mikään Lontoon näyttelyssä nähty; sanoin sen ääneen ja tarkoitin sitä.',
+      voice: 'isoisa',
+    },
   ],
   honiara: [
     'Honiara on Guadalcanalin saarella Salomonsaarilla.',
     'Saaren ympärillä käytiin 1942–1943 toisen maailmansodan raskaimpia Tyynenmeren taisteluita.',
     'Merenpohjaan upposi niin paljon laivoja, että alue sai nimen Ironbottom Sound.',
+    {
+      text: 'Saaria on satoja ja niiden välillä kuljetaan kanooteilla. Kauppa käydään osin simpukkanauhoilla, mikä on yhtä sopimuksenvaraista kuin meidän kultakantamme.',
+      voice: 'isoisa',
+    },
   ],
   portvila: [
     'Vanuatussa on yli 80 saarta ja useita aktiivisia tulivuoria.',
     'Maa oli ennen itsenäistymistään 1980 Britannian ja Ranskan yhteishallinnossa.',
     'Yasur-tulivuori on purkautunut lähes yhtäjaksoisesti satojen vuosien ajan.',
+    {
+      text: 'Saariryhmässä on tulivuoria, jotka jyrisevät yöllä, ja kyliä joissa puhutaan omaa kieltä joka saarella. Erään saaren miehet hyppäävät tornista liaanin varassa; katsoin kahdesti.',
+      voice: 'isoisa',
+    },
   ],
   noumea: [
     'Uusi-Kaledonia on Ranskan merentakainen alue, ja Nouméa on sen pääkaupunki.',
     'Saarella on arviolta noin kymmenesosa maailman nikkelivaroista.',
     'Saarta ympäröi maailman toiseksi suurin koralliriutta-alue, joka on maailmanperintökohde.',
+    {
+      text: 'Ranska on ottanut nämä saaret ja tuonut mukanaan hallinnon ja kielen. Saarten oma kansa on ollut täällä ensin, mikä on jokaisessa siirtokunnassa sama ja yhtä usein sivuutettu tosiasia.',
+      voice: 'isoisa',
+    },
   ],
   norfolk: [
     'Norfolkinsaari oli 1800-luvulla ankara rangaistussiirtola, jonne lähetettiin Sydneystä vaarallisimpina pidetyt vangit.',
     'Saaren siirtolarakennukset ovat Unescon maailmanperintökohde.',
     'Norfolkinaraukaria kasvaa saarella luonnonvaraisena yli 60-metriseksi.',
+    {
+      text: 'Pikkusaarella on ollut ankara rangaistussiirtola, ja nyt siellä asuu Bountyn kapinallisten jälkeläisiä. He puhuvat omaa sekakieltään, jota en ymmärrä sanaa mutta kuuntelen mielelläni.',
+      voice: 'isoisa',
+    },
   ],
   suva: [
     'Suva on Etelä-Tyynenmeren suurimpia kaupunkeja ja alueen yliopiston sijaintipaikka.',
     'Fidži koostuu yli 300 saaresta, joista noin sata on asuttuja.',
     'Päivämäärän vaihtumislinja kulkee saarten läpi, mutta koko maa noudattaa samaa päivää.',
+    {
+      text: 'Saarivaltiossa tarjotaan vieraalle juuresta valmistettua juomaa tarkassa järjestyksessä. Kieltäytyminen olisi loukkaus, joten join ja kirjoitin muistiin että maku on maanläheinen.',
+      voice: 'isoisa',
+    },
   ],
   auckland: [
     'Aucklandissa asuu noin kolmasosa koko Uuden-Seelannin väestöstä.',
     'Kaupunki on rakennettu yli 50 tulivuoren kartion päälle.',
     'Maorien kielellä maan nimi on Aotearoa, pitkän valkoisen pilven maa.',
+    {
+      text: 'Kaupunki on kahden sataman välissä kannaksella, ja veneitä on enemmän kuin vaunuja. Maori-kansa asutti nämä saaret vuosisatoja ennen meitä ja purjehti tänne avomeren yli tähtien avulla.',
+      voice: 'isoisa',
+    },
   ],
   wellington: [
     'Wellington on maailman eteläisin itsenäisen valtion pääkaupunki.',
     'Kaupunkia kutsutaan tuuliseksi: Cookinsalmi ohjaa tuulet suoraan sen läpi.',
     'Salmi on kapeimmillaan noin 22 kilometriä leveä, ja sen yli kulkee autolautta.',
+    {
+      text: 'Salmen tuuli puhaltaa kaupungin läpi niin, että hattua ei kannata pitää kädessä. Pääkaupunki on siirretty tänne keskemmälle, mikä on käytännöllinen ratkaisu kahden saaren maassa.',
+      voice: 'isoisa',
+    },
   ],
   christchurch: [
     'Christchurch on Eteläsaaren suurin kaupunki ja kärsi pahoin maanjäristyksissä 2010 ja 2011.',
     'Kaupungin länsipuolella kohoavat Eteläiset Alpit satoine jäätikköineen.',
     'Canterburyn lakeus kaupungin ympärillä on Uuden-Seelannin laajin tasanko.',
+    {
+      text: 'Tasangolle on rakennettu englantilainen kaupunki katedraaleineen ja puutarhoineen. Takana kohoavat lumihuippuiset vuoret, jotka eivät muistuta Englantia lainkaan.',
+      voice: 'isoisa',
+    },
   ],
   milfordsound: [
     'Milford Soundin seinämät kohoavat yli 1 200 metriin suoraan merestä.',
     'Fiordlandin sateisimmilla alueilla sataa yli seitsemän metriä vuodessa.',
     'Kiivi, Uuden-Seelannin kansallislintu, ei osaa lentää ja munii kokoonsa nähden poikkeuksellisen suuren munan.',
+    {
+      text: 'Vuono on jyrkkä kuin halkaisu, ja seinämiltä putoaa vettä sadan putouksen verran sateen jälkeen. Sataa lähes joka päivä; sanoin sen valitukseksi ja huomasin sen olevan kehu.',
+      voice: 'isoisa',
+    },
   ],
   dili: [
     'Itä-Timor itsenäistyi 2002 ja on yksi maailman nuorimmista valtioista.',
     'Maa oli Portugalin siirtomaa yli 400 vuotta, ja portugali on yhä yksi virallisista kielistä.',
     'Timorin saaren länsiosa kuuluu Indonesiaan; itäosalla on lisäksi erillinen Oecussen alue.',
+    {
+      text: 'Saari on jaettu kahden siirtomaavallan kesken viivalla, joka ei seuraa vuoria eikä kieliä. Kauppa käy santelipuulla, ja sitä on hakattu jo enemmän kuin metsä kestää.',
+      voice: 'isoisa',
+    },
   ],
   bali: [
     'Bali on ainoa Indonesian saari, jossa enemmistö on hinduja.',
     'Saaren riisiterassit ja niiden subak-kastelujärjestelmä ovat Unescon maailmanperintökohde.',
     'Subak on toiminut yli tuhat vuotta: vesi jaetaan pelloille yhteisellä päätöksellä.',
+    {
+      text: 'Saarella temppeleitä on enemmän kuin kyliä, ja riisipellot laskeutuvat rinteitä portaina. Vesi jaetaan peltojen kesken yhteisillä säännöillä, jotka toimivat ilman yhtäkään virkamiestä.',
+      voice: 'isoisa',
+    },
   ],
 };
 
@@ -11287,11 +13514,46 @@ const OCEANIA = {
     // KAISTA B: tälle laudalle tarvitaan vielä vähintään neljä merkintää.
     diaries: [
       'Karttani kutsuu tätä maailman laidaksi. Täältä katsoen laidalla onkin Lontoo — ja myönnettäköön, moni asia näytti sieltä käsin nurinkuriselta.',
+      'Isoisän kartalla tämä alue on enimmäkseen tyhjää sinistä, ja reunaan on kirjoitettu "tuntematon". Tässä on tuhansia saaria, joilla on asuttu kolmetuhatta vuotta ja purjehdittu avomerellä tähtien avulla ilman kompassia. Tuntematon oli hänen sanansa, ei heidän.',
+      '"Siirtokunnat tarvitsevat meitä vielä sata vuotta", arvioi isoisä. Täällä on nyt oma perustuslaki, oma raha ja oma tapa lausua jokainen sana; Lontoo mainitaan lähinnä krikettiotteluiden yhteydessä.',
+      'Isoisä kirjoitti riutasta kaksi sivua ja päätyi sanaan sanoinkuvaamaton. Riutta on yhä siellä ja yhä sanoinkuvaamaton, mutta nyt sitä mitataan myös asteina: lämpenevä meri vaalentaa korallin.',
+      '"Näillä saarilla aika kuluu hitaasti", merkitsi isoisä hyväntahtoisesti. Kysyin asiaa satamassa, ja minulle näytettiin merenpinnan mittaustaulukkoa ja kysyttiin kummalla meistä on kiire. Hitaus taisi olla hänen omansa.',
+      'Isoisä päätteli, ettei saarten välillä voi olla kauppaa, koska etäisyydet ovat liian suuria. Kauppaa käytiin tuhat vuotta ennen häntä: obsidiaania, simpukkaa ja sukulaisuussuhteita kulki saarelta saarelle kanooteilla.',
     ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
-    // kaupungin nimeä. KAISTA B: vihje puuttuu vielä kaikilta
-    // aarrekaupungeilta — ks. docs/tyolista-opukselle.md, paketti 4.
-    starHints: {},
+    // kaupungin nimeä.
+    starHints: {
+      melbourne: 'Kaakkoisrannikolla, kultaryntäyksen rikastuttamassa siirtokunnassa, on kaupunki jossa on leveät kadut ja kiskoilla kulkevia vaunuja. Sää vaihtuu siellä neljä kertaa päivässä.',
+      brisbane: 'Itärannikolla mutkittelevan joen varrella on kaupunki, jossa talvi on lämpimämpi kuin Englannin kesä. Pohjoisessa alkavat pitkät hiekkarannat.',
+      cairns: 'Koillisrannikolla, siellä missä sademetsä tulee suoraan riuttaan asti, on satama josta lähdetään korallien luo.',
+      darwin: 'Mantereen pohjoisrannikolla on satama, josta on Jaavaan lyhyempi matka kuin etelän suurkaupunkeihin. Vuodenajat ovat siellä sadekausi ja kuiva kausi.',
+      adelaide: 'Etelärannikolla on ruutuun kaavoitettu kaupunki, jota kiertää yhtenäinen puistokehä. Sen takana laaksossa kasvatetaan viiniä.',
+      alicesprings: 'Lähes tarkalleen mantereen keskellä, punaisen maan ja matalien vuorijonojen välissä, on lennätinasema jonka kautta viestit kulkevat etelästä pohjoiseen.',
+      uluru: 'Keskellä punaista autiomaata kohoaa tasangolta yksinäinen hiekkakivikallio, jonka väri vaihtuu auringon mukaan. Alueen asukkaille paikka on pyhä.',
+      broome: 'Luoteisrannikolla on helmenkalastajien satama, jossa vuorovesi vaihtelee yli yhdeksän metriä. Sukeltajat ovat tulleet sinne pääosin Aasiasta.',
+      kalgoorlie: 'Lännen autiomaassa on kultakaupunki, johon vesi tuodaan satojen kilometrien putkessa rannikolta asti.',
+      townsville: 'Koillisrannikolla riutan edessä on satama, jonka lähisaarella elää koaloita. Kesällä rannoilla varotaan läpinäkyviä meduusoja.',
+      hobart: 'Kaakon saarella myrskyisän salmen takana on satama, joka aloitti rangaistussiirtolana. Sinne päättyy purjehduskilpailu joulun jälkeen.',
+      nullarbor: 'Etelärannikon takana on tasanko, jolla ei kasva yhtään puuta ja jonka kalkkikiven alla on luolia. Sen halki kulkee suora rautatie.',
+      birdsville: 'Sisämaan autiomaan laidalla on kylä, jossa on hotelli, kaivo ja kerran vuodessa hevoskilpailut.',
+      exmouth: 'Länsirannikon niemellä on riutta niin lähellä rantaa, että sinne kahlaa. Keväällä sinne saapuvat maailman suurimmat kalat.',
+      mountisa: 'Sisämaassa satojen kilometrien päässä rannikosta on kaivoskaupunki, jossa louhitaan kuparia, lyijyä ja sinkkiä.',
+      cooberpedy: 'Etelän autiomaassa on opaalinkaivajien kaupunki, jossa osa asukkaista asuu maan alle kaivetuissa huoneissa.',
+      geraldton: 'Länsirannikolla on vehnäsatama, jonka edustan saarilla makaa hollantilaisen laivan hylky. Iltapäivätuuli puhaltaa siellä kellon tarkkuudella.',
+      portmoresby: 'Pohjoisen suuren saaren eteläisellä rannikolla on hallintokaupunki, jonka takamaiden laaksoissa puhutaan satoja eri kieltä.',
+      sepik: 'Saman suuren saaren pohjoisosassa mutkittelee joki, jonka kyliin kuljetaan veneellä. Sen varrella veistetään naamioita ja korkeita seremoniataloja.',
+      honiara: 'Koillisen saariryhmän suurimmalla saarella on satama, ja kauppaa käydään osin simpukkanauhoilla. Saaria on satoja.',
+      portvila: 'Tulivuorisaarten ryhmässä lounaisella Tyynellämerellä on satamakaupunki, jonka naapurisaarella miehet hyppäävät tornista liaanin varassa.',
+      noumea: 'Riutan ympäröimällä saarella lounaisella Tyynellämerellä on ranskalainen hallintokaupunki. Saaren oma kansa on ollut siellä ensin.',
+      norfolk: 'Pienellä jyrkkärantaisella saarella mantereen ja eteläisten saarten välissä oli ankara rangaistussiirtola. Nyt siellä asuu kapinallisten jälkeläisiä.',
+      suva: 'Itäisen saarivaltion suurimmalla saarella on satama, jossa vieraalle tarjotaan juuresta valmistettua juomaa tarkassa järjestyksessä.',
+      auckland: 'Kahden sataman välisellä kannaksella, sammuneiden tulivuorten päällä, on kaupunki jossa on enemmän veneitä kuin vaunuja.',
+      wellington: 'Kahden saaren välisen salmen rannalla on pääkaupunki, jossa tuuli ei lakkaa. Hallinto siirrettiin sinne keskemmälle maata.',
+      christchurch: 'Eteläisen saaren tasangolla on englantilaiseen malliin rakennettu kaupunki puutarhoineen. Sen takana kohoavat lumihuippuiset vuoret.',
+      milfordsound: 'Eteläisen saaren lounaisnurkassa on jäätikön kaivama vuono, jonka seinämiltä putoaa sateen jälkeen satoja putouksia.',
+      dili: 'Kahden vallan kesken jaetun saaren pohjoisrannikolla on satama, josta viedään santelipuuta.',
+      bali: 'Eteläisellä saarella temppeleitä on enemmän kuin kyliä, ja riisipellot laskeutuvat rinteillä portaina.',
+    },
   },
 
   decor: {
@@ -21334,7 +23596,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-27.11';
+const APP_VERSION = '2026-07-27.12';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

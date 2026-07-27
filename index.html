@@ -43,22 +43,29 @@
       </section>
 
       <aside class="rail">
-        <section class="card turn-card">
-          <div class="turn-row">
-            <div id="die" class="die" hidden></div>
-            <div id="turn-status" class="turn-status"></div>
-          </div>
-          <div id="actions" class="actions"></div>
-          <div id="error" class="error" hidden></div>
-        </section>
-
         <section id="players" class="players" aria-label="Pelaajat"></section>
 
-        <section class="card fact-card">
-          <h2 id="fact-voice">Matkapäiväkirjasta</h2>
-          <p id="fact-place" class="fact-place"></p>
-          <p id="fact-text" class="fact-text"></p>
-        </section>
+        <!--
+          Päiväkirja ja toiminnot ovat samassa alarivissä, jotta ne eivät voi
+          kellua toistensa päälle: kun ne eivät mahdu rinnakkain, rivi katkeaa
+          ja päiväkirja siirtyy nappien yläpuolelle.
+        -->
+        <div class="rail-bottom">
+          <section class="card fact-card">
+            <h2 id="fact-voice">Matkapäiväkirjasta</h2>
+            <p id="fact-place" class="fact-place"></p>
+            <p id="fact-text" class="fact-text"></p>
+          </section>
+
+          <section class="card turn-card">
+            <div class="turn-row">
+              <div id="die" class="die" hidden></div>
+              <div id="turn-status" class="turn-status"></div>
+            </div>
+            <div id="actions" class="actions"></div>
+            <div id="error" class="error" hidden></div>
+          </section>
+        </div>
       </aside>
     </main>
   </div>
