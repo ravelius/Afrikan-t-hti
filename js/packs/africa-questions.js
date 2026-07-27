@@ -1591,7 +1591,7 @@ export const AFRICA_FACTS = {
   ],
   kappalmas: [
     'Kartalla tässä on kulma: rannikko on tullut Atlantin rantaa etelään asti ja kääntyy Kap Palmasin kohdalla jyrkästi itään kohti Guineanlahtea. Purjelaivojen aikaan tämän niemen ohi kulki koko läntinen liikenne, ja rannan palmut näkyivät merelle niin selvästi, että portugalilaiset nimesivät paikan niiden mukaan. Seison nyt siinä kohdassa, jossa Afrikka kääntyy.',
-    'Niemen kupeessa on Harperin kaupunki, jonka perustivat 1830-luvulla Amerikasta tulleet vapautetut orjat ja vapaana syntyneet mustat amerikkalaiset. Se kuului kolmen vuoden ajan omaan pieneen tasavaltaansa nimeltä Maryland, kunnes liittyi Liberiaan vuonna 1857. Isoisän kartassa on tilaa eurooppalaisille väreille; tänne niitä ei koskaan tullut, sillä Liberia oli itsenäinen jo 1847.',
+    'Niemen kupeessa on Harperin kaupunki, jonka perustivat 1830-luvulla Amerikasta tulleet vapautetut orjat ja vapaana syntyneet mustat amerikkalaiset. Se pysyi Liberiasta erillään yli kaksi vuosikymmentä ja julistautui lopulta omaksi pieneksi tasavallakseen nimeltä Maryland, kunnes liittyi Liberiaan vuonna 1857 — maahan, joka oli julistautunut itsenäiseksi jo 1847, kauan ennen kuin Eurooppa istui jakamaan loput mantereesta.',
     {
       text: 'Tässä kohdassa rannikko kääntyy jyrkästi itään, ja palmuja on niin paljon että ne näkyvät kannelle asti. Purjehtija tietää sijaintinsa puista; minä tarvitsin siihen sekstantin ja kaksi tuntia.',
       voice: 'isoisa',
@@ -1607,7 +1607,7 @@ export const AFRICA_FACTS = {
   ],
   orjarannikko: [
     'Ouidahissa hiekkatie kulkee kaupungilta rannalle neljä kilometriä, ja sen päässä kuuluu enää meri. Tien päähän pystytettiin vuonna 1995 muistomerkki, Ei-paluun portti: tämän sataman kautta vietiin arviolta yli miljoona ihmistä laivoilla Amerikkaan. Kaaren läpi näkyy vain vettä.',
-    'Beninissä 10. tammikuuta on vapaapäivä. Se on vodunin juhla, ja Ouidah täyttyy rummuista ja tanssijoista koko päiväksi. Sana vodun tarkoittaa fonin kielellä henkeä — meillä siitä tehtiin kauhuelokuvia, mikä kertoo enemmän meistä kuin sanasta.',
+    'Ouidahin käärmetemppelissä asuu kymmeniä kuningaspytoneja, ja kerran viikossa ne päästetään ulos kaupungille. Useimmat palaavat itse, ja talon lattialta löytynyt python kannetaan takaisin eikä tapeta. Temppeliä vastapäätä seisoo katolinen basilika, ja tie kulkee molempien ovien ohi.',
     {
       text: 'Kartassani tämä rannikonpätkä on nimetty sen mukaan, mitä täältä vietiin. Nimi ei kerro alueesta mitään; se kertoo meistä kaiken. En piirrä sitä uudelleen, mutta kirjoitan tähän, kenen käsialaa se on.',
       voice: 'isoisa',
@@ -1615,7 +1615,7 @@ export const AFRICA_FACTS = {
   ],
   kano: [
     'Lentoni Kanoon lähti kolme tuntia myöhässä hiekan takia. Joulukuusta helmikuuhun harmattan-tuuli tuo Saharasta niin paksun pölyn, että näkyvyys putoaa kilometriin tai sen alle ja aurinko näkyy keskipäivällä kalpeana kiekkona. Pöly on kulkenut satoja kilometrejä ollakseen minun aikatauluni tiellä.',
-    'Kurmin torilla on käyty kauppaa vuodesta 1463: emiiri perusti sen, kun karavaanikaupan tavarat eivät enää mahtuneet kaupunkiin. Tori aloitti siis lähes kolmekymmentä vuotta ennen kuin Kolumbus lähti etsimään Intiaa väärään suuntaan. Se on yhä auki.',
+    'Elokuvajulisteessa kaikki oli hausaksi, myös näyttelijöiden nimet. Kanossa tehdään hausankielisiä elokuvia niin paljon, että alalla on oma nimensä, Kannywood, ja niiden laulukohtaukset ovat perintöä intialaisilta esikuvilta, joita täällä on katsottu vuosikymmeniä.',
     {
       text: 'Kaupunkia ympäröivät savimuurit, ja sen värjäämökuopat ovat toimineet kauemmin kuin yksikään tuntemani englantilainen tehdas. Indigo tarttuu käsiin viikoksi; sen sain kokeilla itse.',
       voice: 'isoisa',
@@ -1639,7 +1639,7 @@ export const AFRICA_FACTS = {
   ],
   angola: [
     'Kalandulan putoukset kuulee ennen kuin näkee, ja vesisumu kastelee jo ennen näköalapaikkaa. Lucala-joki putoaa siinä 105 metriä alas 400 metrin levyisenä kaarena, tilavuudeltaan yhtenä Afrikan suurimmista putouksista. Kaiteita ei ole, joten seisoin selvästi kauempana reunasta kuin kukaan muu.',
-    'Jättisapeliantilooppia ei nähty Angolassa vuosikymmeniin, ja moni piti sitä hävinneenä. Vuonna 2004 riistakamera Cangandalan kansallispuistossa kuvasi lauman, joka oli ollut siellä koko ajan. Sitä ei elä luonnonvaraisena missään muualla maailmassa.',
+    'Benguelan rautatie nousee Lobiton satamasta yli tuhat kilometriä sisämaahan Kongon rajalle asti. Se rakennettiin sata vuotta sitten kuparia varten, katkesi sisällissodassa vuosikymmeniksi ja avattiin uudelleen 2010-luvulla. Mereltä pääsee siis taas junalla mantereen sisään, jos malttaa istua reilun vuorokauden.',
     {
       text: 'Portugalilaisten satamasta lähtivät laivat Brasiliaan kolmensadan vuoden ajan, ja lastina oli ihmisiä. Meri on tässä kylmä keskellä tropiikkia, mikä on merivirran ansiota; muusta ei kannata kiittää ketään.',
       voice: 'isoisa',
@@ -1703,7 +1703,7 @@ export const AFRICA_FACTS = {
   ],
   viktoria: [
     'Kysyin, miksi lautta ei lähde, ja sain yhden sanan vastaukseksi: merenkäynti. Järvellä. Viktoria on pinta-alaltaan yli kymmenen Saimaan kokoinen, sen rantoja jakaa kolme maata, ja aallokko on sen mukainen.',
-    'Kävin katsomassa kohtaa, jossa Niili lähtee järvestä liikkeelle — sitä samaa, jota isoisän aikalaiset etsivät vuosikausia. Kosket jäivät vuonna 1954 padon alle, joten katselin kymmenen minuuttia täysin tavallista vettä ja tunsin oloni auttamattoman myöhästyneeksi.',
+    'Kävin katsomassa kohtaa, jossa Niili lähtee järvestä liikkeelle. Kosket jäivät vuonna 1954 padon alle, joten seisoin kymmenen minuuttia katsomassa täysin tavallista vettä ja kuvasin sen silti.',
     {
       text: 'Järvi on kuin sisämeri: toista rantaa ei näy, ja aallokko nousee kuin Pohjanmerellä. Nimen antoi maanmieheni kuningattaren mukaan, vaikka rannoilla oli ollut nimiä jo pitkään.',
       voice: 'isoisa',
