@@ -16,6 +16,13 @@ export const DUEL_PRIZE = 200; // rosvon saalis, jos kaksintaistelun voittaa suo
 export const DUEL_BYPASS_SHOES = 3; // näin monella hevosenkengällä rosvon voi ohittaa
 export const HINT_EVERY_TURNS = 4; // näin harvoin isoisän vihje aarteesta
 
+// Kokemuspisteet kertyvät matkasta, eivät onnesta: uusista paikoista,
+// uusista laudoista ja vaikeista kysymyksistä.
+export const XP_NEW_CITY = 10;
+export const XP_NEW_BOARD = 50;
+export const XP_HARD_ANSWER = 25;
+export const XP_STAR = 100;
+
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 export function questionLevel(question) {
   return question.level ?? 2;
@@ -77,6 +84,10 @@ export class Game {
       hasStar: false,
       horseshoes: 0,
       finds: [], // löydetyt laatat tyyppeinä
+      xp: 0,
+      // Tietoprosentin laskurit: mukana sekä tietovisat että kaksintaistelut.
+      quizAsked: 0,
+      quizCorrect: 0,
     }));
 
     this.current = 0;
@@ -140,6 +151,7 @@ export class Game {
       this.setDiary(this.pack);
       this.say(p.id, `${p.name} aloittaa matkansa kaupungista ${city.name}.`);
     }
+    this.visitCity(p);
     this.phase = 'action';
     this.beginTurn();
     return { ok: true };
@@ -158,6 +170,7 @@ export class Game {
       board: buildBoard(pack.cities, pack.edges),
       tokens: new Map(tokenCities.map((city, i) => [city, pile[i]])),
       revealed: new Map(), // kaupunki -> laattatyyppi
+      visited: new Set(), // kaupungit, joissa on jo käyty (kokemuspisteitä varten)
       starFound: false,
       starCity: null,
     };
@@ -360,6 +373,51 @@ export class Game {
     return !!(city && city.links && city.links.length);
   }
 
+  /**
+   * Kokemuspisteet kertyvät matkasta: uusi kaupunki, uusi lauta, oikea
+   * vastaus vaikeaan kysymykseen ja laudan pääaarre. Rahalla niitä ei saa.
+   */
+  awardXp(player, amount) {
+    player.xp = (player.xp ?? 0) + amount;
+    return amount;
+  }
+
+  /**
+   * Merkitsee kaupungin käydyksi ja palkitsee ensikäynnistä. Laudan
+   * ensimmäinen kaupunki on myös uusi lauta. Kutsu on turvallista toistaa:
+   * jo käyty kaupunki ei tuota pisteitä uudelleen.
+   */
+  visitCity(player = this.player) {
+    if (player.pos.type !== 'city') return 0;
+    const world = this.worldOf(player);
+    if (!world || world.visited.has(player.pos.city)) return 0;
+
+    let gained = 0;
+    if (world.visited.size === 0) {
+      gained += this.awardXp(player, XP_NEW_BOARD);
+      this.say(player.id, `${player.name} astui uudelle laudalle: ${world.pack.boardLabel} (+${XP_NEW_BOARD} kp).`);
+    }
+    world.visited.add(player.pos.city);
+    gained += this.awardXp(player, XP_NEW_CITY);
+    return gained;
+  }
+
+  /**
+   * Kirjaa vastatun kysymyksen tietoprosenttia varten. Mukaan lasketaan
+   * tietovisat, tietoportit, kaksintaistelut ja umpeen valuneet tiimalasit —
+   * kaikki, missä pelaajalta kysyttiin jotain.
+   */
+  countAnswer(player, right) {
+    player.quizAsked = (player.quizAsked ?? 0) + 1;
+    if (right) player.quizCorrect = (player.quizCorrect ?? 0) + 1;
+  }
+
+  /** Tietoprosentti kokonaislukuna; null, jos mitään ei ole vielä kysytty. */
+  knowledgePercent(player = this.player) {
+    if (!player.quizAsked) return null;
+    return Math.round((player.quizCorrect / player.quizAsked) * 100);
+  }
+
   /** Kaupunki, johon laudan pääaarre on kätketty — löytynyt tai ei. */
   starCityOf(world = this.world) {
     if (world.starCity) return world.starCity;
@@ -409,6 +467,7 @@ export class Game {
     this.enterWorld(pack);
     p.packId = pack.id;
     p.pos = { type: 'city', city: link.city };
+    this.visitCity(p);
     this.setDiary(pack);
     this.lastPath = null;
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
@@ -551,6 +610,7 @@ export class Game {
     this.pendingFare = 0;
 
     const city = this.cityOf();
+    if (city) this.visitCity(p);
     const fareText = fare ? ` (laivamatka ${fare} puntaa)` : '';
     const where = city
       ? `kaupunkiin ${city.name}`
@@ -631,6 +691,7 @@ export class Game {
     const city = this.board.cityById.get(this.quiz.cityId);
     this.quiz.chosen = index;
     this.quiz.right = index === this.quiz.correct;
+    this.countAnswer(p, this.quiz.right);
 
     // Tietoportti: oikea vastaus avaa portin, laattoja ei käännetä.
     if (this.quiz.gate) {
@@ -649,7 +710,8 @@ export class Game {
       // joten ryöstäjä vie senkin.
       if (this.quiz.hard) {
         p.money += HARD_BONUS;
-        this.say(p.id, `Vaikeasta kysymyksestä ${p.name} saa ${HARD_BONUS} punnan palkkion.`);
+        this.awardXp(p, XP_HARD_ANSWER);
+        this.say(p.id, `Vaikeasta kysymyksestä ${p.name} saa ${HARD_BONUS} punnan palkkion ja ${XP_HARD_ANSWER} kokemuspistettä.`);
       }
       this.quiz.found = this.revealToken(this.quiz.cityId);
     } else {
@@ -687,6 +749,7 @@ export class Game {
     quiz.right = false;
     quiz.timedOut = true;
     quiz.seconds = 0;
+    this.countAnswer(p, false);
     const oikea = quiz.options[quiz.correct];
     this.say(p.id, `${p.name} ei ehtinyt vastata kaupungissa ${city.name} — oikea vastaus oli "${oikea}".`);
     return { ok: true, right: false, timedOut: true };
@@ -726,6 +789,7 @@ export class Game {
       this.enterWorld(pack);
       p.packId = pack.id;
       p.pos = { type: 'city', city: gate.city };
+      this.visitCity(p);
       this.setDiary(pack);
       this.lastPath = null;
       this.say(p.id, `${p.name} astui portista: ${gate.label}.`);
@@ -833,6 +897,7 @@ export class Game {
     const p = this.player;
     duel.chosen = index;
     duel.right = index === duel.correct;
+    this.countAnswer(p, duel.right);
     if (duel.right) {
       if (duel.reliefs === 0) {
         p.money += DUEL_PRIZE;
@@ -862,6 +927,7 @@ export class Game {
     duel.right = false;
     duel.timedOut = true;
     duel.seconds = 0;
+    this.countAnswer(p, false);
     const loss = p.money;
     p.money = 0;
     duel.taken += loss;
@@ -937,6 +1003,7 @@ export class Game {
     }
     p.money -= FLIGHT_PRICE;
     p.pos = { type: 'city', city: destination };
+    this.visitCity(p);
     this.diaryNote = null;
     this.lastPath = null;
     const city = this.board.cityById.get(destination);
@@ -966,6 +1033,7 @@ export class Game {
         p.hasStar = true;
         this.world.starFound = true;
         this.world.starCity = cityId;
+        this.awardXp(p, XP_STAR);
         if (this.roaming) {
           p.money += STAR_PRIZE;
           this.say(p.id, `★ ${p.name} löysi aarteen ${token.name} kaupungista ${city.name} — arvo ${STAR_PRIZE} puntaa!`);
@@ -1043,6 +1111,7 @@ export class Game {
         [...this.worlds].map(([id, w]) => [id, {
           tokens: [...w.tokens.entries()],
           revealed: [...w.revealed.entries()],
+          visited: [...w.visited],
           starFound: w.starFound,
           starCity: w.starCity,
         }]),
@@ -1090,6 +1159,7 @@ export class Game {
       [rootPack.id]: {
         tokens: data.tokens,
         revealed: data.revealed,
+        visited: data.visited,
         starFound: !!data.starFound,
         starCity: data.starCity ?? null,
       },
@@ -1101,11 +1171,20 @@ export class Game {
         board: buildBoard(pack.cities, pack.edges),
         tokens: new Map(w.tokens ?? []),
         revealed: new Map(w.revealed ?? []),
+        // Vanhoissa tallennuksissa käyntejä ei kirjattu: jo käännetyt laatat
+        // kertovat, missä on käyty, joten kokemuspisteet eivät kerry uudelleen.
+        visited: new Set(w.visited ?? (w.revealed ?? []).map(([city]) => city)),
         starFound: !!w.starFound,
         starCity: w.starCity ?? null,
       });
     }
-    game.players = data.players.map((p) => ({ packId: rootPack.id, ...p }));
+    game.players = data.players.map((p) => ({
+      packId: rootPack.id,
+      xp: 0,
+      quizAsked: 0,
+      quizCorrect: 0,
+      ...p,
+    }));
     game.usedQuestions = new Set(data.usedQuestions ?? []);
     game.current = data.current;
     game.phase = data.phase;

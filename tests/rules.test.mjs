@@ -27,6 +27,7 @@ import {
   Game, mulberry32, questionLevel, FLIGHT_PRICE, START_MONEY, STAR_PRIZE, STRANDED_AID,
   DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, HARD_BONUS, HINT_PRICE,
   QUIZ_SECONDS, SEA_FARE, HINT_EVERY_TURNS,
+  XP_NEW_CITY, XP_NEW_BOARD, XP_HARD_ANSWER, XP_STAR,
 } from '../js/game.js';
 import {
   chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
@@ -1477,4 +1478,131 @@ test('vihjeetön lauta ei kaada tietoruutua', () => {
   });
   game.turnCount = HINT_EVERY_TURNS;
   assert.equal(game.starHint(), null);
+});
+
+// --- kokemuspisteet, tietoprosentti ja passi (paketti 6) --------------------
+
+test('kokemuspisteitä kertyy uusista paikoista, ei uudelleen käynneistä', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    rng: mulberry32(31),
+  });
+  const p = game.player;
+  assert.equal(p.xp, 0, 'lähtöruudussa ei vielä pisteitä');
+
+  // Lähtöpisteen valinta vie Afrikan laudalle: uusi lauta + uusi kaupunki.
+  game.actionPickStart('kairo', 0);
+  assert.equal(p.packId, 'africa');
+  assert.equal(p.xp, XP_NEW_BOARD + XP_NEW_CITY);
+  assert.ok(game.world.visited.has('kairo'));
+
+  // Sama kaupunki uudelleen ei tuota mitään.
+  const ennen = p.xp;
+  assert.equal(game.visitCity(p), 0);
+  assert.equal(p.xp, ennen);
+
+  // Uusi kaupunki samalla laudalla: vain kaupungin pisteet.
+  p.pos = { type: 'city', city: 'tripoli' };
+  assert.equal(game.visitCity(p), XP_NEW_CITY);
+  assert.equal(p.xp, ennen + XP_NEW_CITY);
+
+  // Reitin varrella ei olla missään kaupungissa.
+  p.pos = { type: 'edge', edge: 'tanger|tripoli', idx: 2 };
+  assert.equal(game.visitCity(p), 0);
+});
+
+test('vaikea kysymys ja laudan pääaarre antavat kokemuspisteitä', () => {
+  const game = newGame(44);
+  const p = game.player;
+  p.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+  const ennen = p.xp;
+
+  game.actionTravel('stay');
+  game.quiz.hard = true; // pakotetaan vaikeaksi ilman erillistä pakkaa
+  game.answerQuiz(game.quiz.correct);
+  assert.equal(p.xp, ennen + XP_HARD_ANSWER);
+
+  // Tähti tuo laudan suurimmat pisteet.
+  const xpEnnenTahtea = p.xp;
+  game.tokens.set('gao', 'star');
+  p.pos = { type: 'city', city: 'gao' };
+  game.revealToken('gao');
+  assert.equal(p.xp, xpEnnenTahtea + XP_STAR);
+});
+
+test('tietoprosentti laskee tietovisat ja kaksintaistelut yhteen', () => {
+  const game = newGame(52);
+  const p = game.player;
+  assert.equal(game.knowledgePercent(p), null, 'ennen kysymyksiä ei ole prosenttia');
+
+  game.countAnswer(p, true);
+  assert.equal(game.knowledgePercent(p), 100);
+  game.countAnswer(p, false);
+  assert.equal(game.knowledgePercent(p), 50);
+  game.countAnswer(p, true);
+  game.countAnswer(p, true);
+  assert.equal(p.quizAsked, 4);
+  assert.equal(p.quizCorrect, 3);
+  assert.equal(game.knowledgePercent(p), 75);
+});
+
+test('vastatut kysymykset kirjautuvat myös oikeista pelitilanteista', () => {
+  const game = newGame(61);
+  const p = game.player;
+  p.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+
+  game.actionTravel('stay');
+  const vaara = (game.quiz.correct + 1) % game.quiz.options.length;
+  game.answerQuiz(vaara);
+  assert.equal(p.quizAsked, 1);
+  assert.equal(p.quizCorrect, 0);
+  game.closeQuiz();
+
+  // Umpeen valunut tiimalasi on myös kysymys, johon vastattiin väärin.
+  // Vuoro ehti vaihtua, joten palataan saman pelaajan vuoroon.
+  game.current = 0;
+  game.phase = 'action';
+  game.beginTurn();
+  assert.ok(game.actionTravel('stay').ok);
+  assert.ok(game.timeoutQuiz().ok);
+  assert.equal(p.quizAsked, 2);
+  assert.equal(p.quizCorrect, 0);
+});
+
+test('kokemuspisteet, laskurit ja käydyt kaupungit säilyvät tallennuksessa', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    rng: mulberry32(77),
+  });
+  game.actionPickStart('kairo', 0);
+  game.countAnswer(game.player, true);
+  game.countAnswer(game.player, false);
+
+  const data = JSON.parse(JSON.stringify(game.toJSON()));
+  const restored = Game.fromJSON(data);
+
+  assert.equal(restored.player.xp, game.player.xp);
+  assert.equal(restored.player.quizAsked, 2);
+  assert.equal(restored.player.quizCorrect, 1);
+  assert.equal(restored.knowledgePercent(), 50);
+  assert.deepEqual([...restored.world.visited], [...game.world.visited]);
+  // Palautetussa pelissä sama kaupunki ei tuota pisteitä uudelleen.
+  assert.equal(restored.visitCity(restored.player), 0);
+});
+
+test('vanha tallennus ilman käyntitietoja ei jaa pisteitä uudelleen', () => {
+  const game = newGame(88);
+  game.tokens.delete('timbuktu');
+  game.revealed.set('timbuktu', 'emerald');
+  const data = JSON.parse(JSON.stringify(game.toJSON()));
+  delete data.worlds.africa.visited;
+
+  const restored = Game.fromJSON(data);
+  assert.ok(restored.world.visited.has('timbuktu'), 'käännetty laatta kertoo käynnistä');
+  restored.player.pos = { type: 'city', city: 'timbuktu' };
+  assert.equal(restored.visitCity(restored.player), 0);
 });

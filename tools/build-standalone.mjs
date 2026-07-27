@@ -37,6 +37,7 @@ const MODULES = [
   'js/packs/istanbul-questions.js',
   'js/packs/istanbul.js',
   'js/pack.js',
+  'js/passport.js',
   'js/sound.js',
   'js/die.js',
   'js/rules.js',

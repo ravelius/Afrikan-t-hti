@@ -16,6 +16,7 @@ import {
   HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
 import { factSource, factText, factVoice, isSourceUrl, sourceLabel, voiceTitle } from './pack.js';
+import { stampBoard, stampDate, stampList } from './passport.js';
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -83,6 +84,10 @@ export class UI {
     this.dieEl = document.getElementById('die');
     this.actionsEl = document.getElementById('actions');
     this.errorEl = document.getElementById('error');
+    this.passportDialog = document.getElementById('passport-dialog');
+    this.passportGrid = document.getElementById('passport-grid');
+    this.passportCount = document.getElementById('passport-count');
+
     this.factVoiceEl = document.getElementById('fact-voice');
     this.factPlace = document.getElementById('fact-place');
     this.factText = document.getElementById('fact-text');
@@ -597,6 +602,15 @@ export class UI {
       row.appendChild(marks);
       chip.appendChild(row);
 
+      // Kokemuspisteet ja tietoprosentti: matkan mittarit rahan rinnalla.
+      const stats = html('div', 'chip-row chip-stats');
+      stats.appendChild(html('span', 'xp', `${p.xp ?? 0} kp`));
+      const percent = game.knowledgePercent(p);
+      if (percent !== null) {
+        stats.appendChild(html('span', 'knowledge', `Tieto ${percent} %`));
+      }
+      chip.appendChild(stats);
+
       const city = game.cityOf(p);
       const where = city ? city.name : game.routeName(p.pos.edge, game.worldOf(p).board);
       const elsewhere = p.packId !== this.drawnPackId ? ` · ${game.worldOf(p).pack.boardLabel}` : '';
@@ -958,6 +972,7 @@ export class UI {
     // Matkavalinnan toinen vaihe koskee vain käsillä olevaa valintaa: heti
     // kun vaihe vaihtuu, ollaan taas seuraavan vuoron ensimmäisessä vaiheessa.
     if (this.game.phase !== 'action') this.travelExpanded = false;
+    this.stampPassport();
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
     this.drawTokens();
@@ -974,6 +989,45 @@ export class UI {
       return;
     }
     this.scheduleBot();
+  }
+
+  /**
+   * Vihreä passi saa leiman jokaisesta laudasta, jolla matkaaja on käynyt.
+   * Leimat säilyvät pelikertojen yli, joten aloitusnäkymässä ei leimata:
+   * lauta on vasta valitsematta.
+   */
+  stampPassport() {
+    const { game } = this;
+    if (game.phase === 'pickstart') return;
+    if (stampBoard(game.pack.id, game.pack.boardLabel)) {
+      const box = this.buildToast({
+        kind: 'stamp',
+        icon: '🛂',
+        text: 'Passiin uusi leima',
+        sub: game.pack.boardLabel,
+      });
+      sfx.play('paper');
+      setTimeout(() => this.removeToast(box), TOAST_MS.default);
+    }
+  }
+
+  /** Passidialogi: leimat ruudukossa, vanhin ensin. */
+  openPassport() {
+    const stamps = stampList();
+    this.passportGrid.textContent = '';
+    if (stamps.length === 0) {
+      this.passportGrid.appendChild(html('p', 'muted', 'Passi on vielä puhdas. Ensimmäinen leima tulee heti, kun astut laudalle.'));
+    }
+    for (const stamp of stamps) {
+      const mark = html('div', 'stamp');
+      mark.appendChild(html('span', 'stamp-label', stamp.label));
+      mark.appendChild(html('span', 'stamp-date', stampDate(stamp.date)));
+      this.passportGrid.appendChild(mark);
+    }
+    this.passportCount.textContent = stamps.length === 1
+      ? '1 leima'
+      : `${stamps.length} leimaa`;
+    if (!this.passportDialog.open) this.passportDialog.showModal();
   }
 
   showWinner() {
