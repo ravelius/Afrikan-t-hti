@@ -259,6 +259,25 @@ export const AFRICA = {
       'Lentokentältä keskustaan taksi ohitti kolme työmaata, joissa valot paloivat vielä yhdeksältä illalla. Tämän mantereen väestön keski-ikä on alle kaksikymmentä vuotta — nuorin koko maailmassa. Istuin takapenkillä ja tunsin itseni vanhentuneeksi kartaksi.',
       'Niili, Kongo, Niger, Sambesi. Päiväkirjan tarkin sivu on se, jolle isoisä luetteli mantereen suuret joet — jokaisen nimen hän sai oikein. Vedet hän näki; ihmiset hän arvasi.',
     ],
+    // Isoisän aikataulu: haamu, joka kulkee rinnalla. Rivi nousee esiin, kun
+    // matkapäivä ohittaa merkinnän päivän. Ennätys on tavoite eikä tuomio —
+    // päivän 80 jälkeenkin merkinnät jatkuvat, sävy vain vaihtuu.
+    schedule: [
+      { day: 2, text: 'Isoisä odotti Tangerissa laivaa, joka ei tullut. Päiväkirjaan tuli kaksi sivua satamamaksuista ja yksi rivi maisemasta.' },
+      { day: 6, text: 'Höyrylaiva itään pitkin rannikkoa. Isoisä merkitsi muistiin jokaisen sataman nimen ja kirjoitti kolme niistä väärin.' },
+      { day: 12, text: 'Isoisä oli Egyptissä ja osti kartan, joka oli hänen omaansa vanhempi. Hän käytti sitä loppumatkan.' },
+      { day: 19, text: 'Aikataulu piti, mutta vain koska laiva lähti myöhässä samaan suuntaan kuin hänkin.' },
+      { day: 26, text: 'Punaisellamerellä. Isoisä kirjoitti kaipaavansa sadetta, minkä hän myöhemmin yliviivasi.' },
+      { day: 34, text: 'Isoisä kuuli satamassa karavaanireitistä, joka vie kuukaudessa aavikon halki sisämaahan. Hän ei lähtenyt. Sivun reunaan hän kirjoitti: "toiste".' },
+      { day: 42, text: 'Puolimatka. Isoisä laski, että kotiin ehtii, jos mikään ei mene pieleen — ja kirjoitti sen alle, että jokin menee aina.' },
+      { day: 50, text: 'Mausteita ostettiin kotiin vietäväksi. Ne loppuivat matkalla, ja päiväkirjassa asiaa selitetään puoli sivua.' },
+      { day: 58, text: 'Isoisä kiersi mantereen eteläkärjen ja huomasi olevansa aikataulussa ensimmäistä kertaa koko matkalla.' },
+      { day: 66, text: 'Atlantille päin. Isoisä totesi, ettei hän ollut nähnyt sisämaasta mitään — ja jatkoi matkaa rannikkoa pitkin.' },
+      { day: 73, text: 'Viimeinen satama ennen kotimatkaa. Isoisä kirjoitti nimensä laivayhtiön kirjaan ja alleviivasi päivämäärän.' },
+      { day: 80, text: 'Isoisä oli kotona. Tähän kohtaan päiväkirjassa ei ole muuta kuin päivämäärä ja kaksi alleviivausta.' },
+      { day: 84, text: 'Isoisä olisi jo kotona. Minä en ole. Tästä eteenpäin kirjoitan sivuja, joita hänellä ei ole.' },
+      { day: 100, text: 'Isoisän päiväkirja loppuu kesken lauseen. Tästä eteenpäin kartta on minun.' },
+    ],
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
     // ei koskaan kaupungin nimeä.
     starHints: {

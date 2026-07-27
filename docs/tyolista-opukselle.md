@@ -42,15 +42,19 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Maailmankartta kahtena pallonpuoliskona + suora hyppy mantereelle: ✅ #45
 - Paketti 8 aloitettu: avausteksti, tyylipaletti, 11 kaupungin tekstit ja
   neljä kysymyskorvausta (suunnittelusessio itse): ✅
-- Paketti 8 (Afrikka ensin): ✅ — 21 kaupungin havainnot uusiksi,
+- Paketti 8 (Afrikka ensin): ✅ #55 — 21 kaupungin havainnot uusiksi,
   21 lastenvisakysymystä korvattu, saapumismerkinnät hiottu ja koko
-  laudan yhtenäistämiskierros ajettu. Seuraavaksi paketti 9.
+  laudan yhtenäistämiskierros ajettu.
+- Paketti 9 (aikamittari ja isoisän ennätys): ✅ — vuoro on 6 tuntia,
+  yläpalkissa päiväkirjan päivämäärä, isoisän aikataulu Afrikalle ja
+  80 päivän ennätys passin kunniamerkintänä.
+- Yläpalkkiin pelkkä kukkaro, siirtorenkaat hillityiksi ja vaakalukko: ✅
 
-## Seuraavaksi: PAKETTI 9 (paketti 8 on valmis)
+## Seuraavaksi: omistajan toivelista (paketit 8 ja 9 ovat valmiit)
 
 Omistajan linjaus 27.7.2026: **työstetään pelkkää Afrikkaa, kunnes
 peruspeli on kunnossa.** Muihin lautoihin ei kosketa ennen kuin Afrikka on
-valmis. Katso paketti 8 alempana.
+valmis. Paketit 8 ja 9 ovat valmiit; muut laudat odottavat yhä.
 
 Myöhemmäksi sovitut (EI vielä työn alle):
 
@@ -58,8 +62,6 @@ Myöhemmäksi sovitut (EI vielä työn alle):
   Reitti kiertäisi päivämäärärajan yli, mikä vaatisi tuen reitille, joka
   jatkuu kartan reunan yli. Odottaa omistajan päätöstä.
 - Yksittäiset maat mantereiden jälkeen (Suomen mallin mukaan).
-- Aikamittari ja isoisän ennätys: paketti 9 alempana — tehdään VASTA
-  paketin 8 jälkeen.
 - Kysymysten vaihtelu (tapahtumakortit, väittämät, karttakysymykset) —
   omistajan kanssa suunniteltu suunta, palataan kun Afrikka on valmis.
 
@@ -412,7 +414,7 @@ minä-muoto, 1–3 virkettä, ensimmäinen virke konkreettinen; korkeintaan
 kolmasosa teksteistä alkaa isoisällä, vähintään kolmasosassa isoisää ei
 mainita; piikki osuu Foggiin/imperiumiin, ei koskaan kohdemaihin.
 
-## Paketti 9: aikamittari ja isoisän ennätys (SEURAAVAKSI)
+## Paketti 9: aikamittari ja isoisän ennätys (VALMIS)
 
 Aika on pelin vastustaja — isoisän 80 päivän ennätys — mutta se ei saa
 tehdä pelistä ahdistavaa. Omistajan päätökset:

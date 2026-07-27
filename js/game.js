@@ -16,6 +16,20 @@ export const DUEL_PRIZE = 200; // rosvon saalis, jos kaksintaistelun voittaa suo
 export const DUEL_BYPASS_SHOES = 3; // näin monella hevosenkengällä rosvon voi ohittaa
 export const HINT_EVERY_TURNS = 4; // näin harvoin isoisän vihje aarteesta
 
+// Aika on pelin vastustaja, ei sen tuomari: ajan loppuminen ei päätä peliä
+// koskaan. Vuoro on kuusi tuntia, joten neljä vuoroa on yksi matkapäivä.
+export const TURN_HOURS = 6;
+export const RECORD_DAYS = 80; // isoisän ennätys
+export const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
+
+/** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
+export function timeOfDayName(hour) {
+  if (hour < 6) return 'aamu';
+  if (hour < 12) return 'keskipäivä';
+  if (hour < 18) return 'ilta';
+  return 'yö';
+}
+
 // Kokemuspisteet kertyvät matkasta, eivät onnesta: uusista paikoista,
 // uusista laudoista ja vaikeista kysymyksistä.
 export const XP_NEW_CITY = 10;
@@ -103,6 +117,11 @@ export class Game {
     this.duel = null;
     this.duelArmed = false;
     this.diaryNote = null;
+    // Isoisän aikataulu: näytetty rivi ja jo nähtyjen avaimet.
+    this.scheduleNote = null;
+    this.scheduleShown = new Set();
+    this.recordNoted = false;
+    this.recordMark = null;
     this.usedQuestions = new Set();
     this.lastPath = null;
     this.winner = null;
@@ -415,6 +434,66 @@ export class Game {
     return Math.round((player.quizCorrect / player.quizAsked) * 100);
   }
 
+  // --- aika ---------------------------------------------------------------
+
+  /** Kuluneet tunnit matkan alusta. Ensimmäinen vuoro on hetki nolla. */
+  elapsedHours() {
+    return (this.turnCount - 1) * TURN_HOURS;
+  }
+
+  /** Matkapäivä ykkösestä alkaen. */
+  dayCount() {
+    return Math.floor(this.elapsedHours() / 24) + 1;
+  }
+
+  /** Vuorokaudenaika: aamu, keskipäivä, ilta tai yö. */
+  timeOfDay() {
+    return timeOfDayName(this.elapsedHours() % 24);
+  }
+
+  /** Päiväkirjan päivämäärä yläpalkkiin: "Päivä 14, ilta". */
+  clockLabel() {
+    return `Päivä ${this.dayCount()}, ${this.timeOfDay()}`;
+  }
+
+  /**
+   * Isoisän aikataulu: kun matkapäivä ohittaa merkinnän päivän, rivi nousee
+   * tietoruutuun. Merkintä näytetään kerran, ja näytetyt jäävät talteen, jotta
+   * tallennuksesta jatkava ei näe samaa riviä uudelleen.
+   */
+  updateSchedule() {
+    this.scheduleNote = null;
+    const rivit = this.pack.texts.schedule;
+    if (!Array.isArray(rivit)) return;
+    const day = this.dayCount();
+    for (const rivi of rivit) {
+      const key = `${this.pack.id}:${rivi.day}`;
+      if (rivi.day > day || this.scheduleShown.has(key)) continue;
+      this.scheduleShown.add(key);
+      this.scheduleNote = { packId: this.pack.id, day: rivi.day, text: rivi.text };
+      return; // yksi rivi kerrallaan, vaikka useampi päivä olisi ohitettu
+    }
+  }
+
+  /**
+   * Isoisän ennätys aarteen löytyessä. Ennätys on tavoite eikä tuomio: ajan
+   * loppuminen ei päätä peliä koskaan eikä hitaampi matka menetä mitään.
+   * Palauttaa merkinnän, jonka käyttöliittymä voi leimata passiin.
+   */
+  noteRecord(player = this.player) {
+    if (this.recordNoted) return null;
+    this.recordNoted = true;
+    const day = this.dayCount();
+    if (day <= RECORD_DAYS) {
+      this.awardXp(player, XP_RECORD);
+      this.say(player.id, `Päivä ${day}. Isoisän ennätys oli ${RECORD_DAYS} päivää — se on nyt rikottu.`);
+      this.recordMark = { packId: this.pack.id, day, label: `${RECORD_DAYS} päivää rikottu` };
+      return this.recordMark;
+    }
+    this.say(player.id, `Päivä ${day}. Isoisä olisi ollut jo kotona — mutta hän ei nähnyt tätä kaikkea.`);
+    return null;
+  }
+
   /** Kaupunki, johon laudan pääaarre on kätketty — löytynyt tai ei. */
   starCityOf(world = this.world) {
     if (world.starCity) return world.starCity;
@@ -545,6 +624,7 @@ export class Game {
     this.phase = 'action';
     this.current = (this.current + 1) % this.players.length;
     if (this.current === 0) this.turnCount++;
+    this.updateSchedule();
     this.beginTurn();
   }
 
@@ -1034,6 +1114,7 @@ export class Game {
         this.world.starFound = true;
         this.world.starCity = cityId;
         this.awardXp(p, XP_STAR);
+        this.noteRecord(p);
         if (this.roaming) {
           p.money += STAR_PRIZE;
           this.say(p.id, `★ ${p.name} löysi aarteen ${token.name} kaupungista ${city.name} — arvo ${STAR_PRIZE} puntaa!`);
@@ -1127,6 +1208,10 @@ export class Game {
       duel: this.duel,
       duelArmed: this.duelArmed,
       diaryNote: this.diaryNote,
+      scheduleNote: this.scheduleNote,
+      scheduleShown: [...this.scheduleShown],
+      recordNoted: this.recordNoted,
+      recordMark: this.recordMark,
       winnerId: this.winner ? this.winner.id : null,
       turnCount: this.turnCount,
       log: this.log,
@@ -1196,6 +1281,12 @@ export class Game {
     game.duel = data.duel ?? null;
     game.duelArmed = !!data.duelArmed;
     game.diaryNote = data.diaryNote ?? null;
+    // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
+    // yhtään isoisän aikataulurivistä.
+    game.scheduleNote = data.scheduleNote ?? null;
+    game.scheduleShown = new Set(data.scheduleShown ?? []);
+    game.recordNoted = !!data.recordNoted;
+    game.recordMark = data.recordMark ?? null;
     game.lastPath = null;
     game.winner = data.winnerId === null ? null : game.players[data.winnerId] ?? null;
     game.turnCount = data.turnCount ?? 1;

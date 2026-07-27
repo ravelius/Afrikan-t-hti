@@ -114,6 +114,21 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   text-overflow: ellipsis;
 }
 
+/*
+ * Päiväkirjan päivämäärä. Aika on tarinaa eikä uhkaa, joten mittari on
+ * kirjoituskonetekstiä muun pillerin sävyissä — ei hälytysväriä missään
+ * vaiheessa, ei myöskään ennätyksen umpeuduttua.
+ */
+.turn-pill .clock {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.turn-pill .clock::before {
+  content: '·';
+  margin-right: 0.45rem;
+}
+
 .topbar-actions {
   margin-left: auto;
   display: flex;

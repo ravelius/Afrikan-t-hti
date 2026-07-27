@@ -717,9 +717,12 @@ export class UI {
       this.turnPill.appendChild(html('span', '', `🏆 ${game.winner.name} voitti`));
       return;
     }
-    // Yläpalkkiin jää pelkkä kukkaro. Sijainti, kokemus ja tietoprosentti
-    // ovat passissa: kartta on tärkeämpi kuin mittaristo.
+    // Yläpalkissa on kukkaro ja päiväkirjan päivämäärä. Sijainti, kokemus ja
+    // tietoprosentti ovat passissa: kartta on tärkeämpi kuin mittaristo.
     this.turnPill.appendChild(html('span', '', `£${game.player.money}`));
+    // Mittari on päivämäärä, ei kello eikä palkki: aika on tarinaa, ei uhkaa,
+    // joten se ei saa hälytysväriä eikä muutu punaiseksi ennätyksen jälkeen.
+    this.turnPill.appendChild(html('span', 'clock', game.clockLabel()));
   }
 
   /** Matkan tiedot passiin: missä ollaan, paljonko kokemusta ja tietoa. */
@@ -1002,6 +1005,19 @@ export class UI {
       return;
     }
 
+    // Isoisän aikataulu nousee esiin, kun matkapäivä ohittaa merkinnän. Rivi
+    // menee saapumismerkinnän edelle, koska se näkyy vain yhden vuoron ajan.
+    const aikataulu = game.scheduleNote;
+    if (aikataulu && aikataulu.packId === game.pack.id) {
+      const key = `schedule:${aikataulu.packId}:${aikataulu.day}`;
+      if (this.factKey === key) return;
+      this.factKey = key;
+      this.factVoiceEl.textContent = 'Isoisän aikataulusta';
+      this.factPlace.textContent = `Päivä ${aikataulu.day}`;
+      this.typeText(this.factText, aikataulu.text);
+      return;
+    }
+
     // Laudalle saavuttaessa tietoruudussa on saapumismerkintä. Se väistyy,
     // kun matkaaja lähtee saapumiskaupungista liikkeelle.
     const note = game.diaryNote;
@@ -1121,6 +1137,20 @@ export class UI {
         icon: '🛂',
         text: 'Passiin uusi leima',
         sub: game.pack.boardLabel,
+      });
+      sfx.play('paper');
+      setTimeout(() => this.removeToast(box), TOAST_MS.default);
+    }
+
+    // Kunniamerkintä: isoisän ennätys rikottiin tällä laudalla. Sekin on
+    // passissa eikä pelitallenteessa, joten se jää talteen uusiin peleihin.
+    const mark = game.recordMark;
+    if (mark && stampBoard(`kunnia:${mark.packId}`, `${game.pack.boardLabel} — ${mark.label}`)) {
+      const box = this.buildToast({
+        kind: 'stamp',
+        icon: '🏅',
+        text: mark.label,
+        sub: `Aarre löytyi päivänä ${mark.day}`,
       });
       sfx.play('paper');
       setTimeout(() => this.removeToast(box), TOAST_MS.default);

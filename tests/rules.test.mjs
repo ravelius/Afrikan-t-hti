@@ -28,6 +28,7 @@ import {
   DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, HARD_BONUS, HINT_PRICE,
   QUIZ_SECONDS, SEA_FARE, HINT_EVERY_TURNS,
   XP_NEW_CITY, XP_NEW_BOARD, XP_HARD_ANSWER, XP_STAR,
+  TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
 } from '../js/game.js';
 import {
   chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
@@ -1562,12 +1563,14 @@ test('vaikea kysymys ja laudan pääaarre antavat kokemuspisteitä', () => {
   game.answerQuiz(game.quiz.correct);
   assert.equal(p.xp, ennen + XP_HARD_ANSWER);
 
-  // Tähti tuo laudan suurimmat pisteet.
+  // Tähti tuo laudan suurimmat pisteet. Ensimmäisenä päivänä löytynyt aarre
+  // rikkoo myös isoisän ennätyksen, joten mukaan tulee ennätysbonus.
   const xpEnnenTahtea = p.xp;
   game.tokens.set('gao', 'star');
   p.pos = { type: 'city', city: 'gao' };
   game.revealToken('gao');
-  assert.equal(p.xp, xpEnnenTahtea + XP_STAR);
+  assert.ok(game.dayCount() <= RECORD_DAYS);
+  assert.equal(p.xp, xpEnnenTahtea + XP_STAR + XP_RECORD);
 });
 
 test('tietoprosentti laskee tietovisat ja kaksintaistelut yhteen', () => {
@@ -1643,4 +1646,152 @@ test('vanha tallennus ilman käyntitietoja ei jaa pisteitä uudelleen', () => {
   assert.ok(restored.world.visited.has('timbuktu'), 'käännetty laatta kertoo käynnistä');
   restored.player.pos = { type: 'city', city: 'timbuktu' };
   assert.equal(restored.visitCity(restored.player), 0);
+});
+
+// --- paketti 9: aikamittari ja isoisän ennätys -----------------------------
+
+test('vuoro on kuusi tuntia ja neljä vuoroa on yksi matkapäivä', () => {
+  const game = newGame(101);
+  assert.equal(TURN_HOURS, 6);
+  assert.equal(game.turnCount, 1);
+  assert.equal(game.dayCount(), 1);
+  assert.equal(game.timeOfDay(), 'aamu');
+
+  const paivat = [];
+  for (let i = 0; i < 8; i++) {
+    game.turnCount = i + 1;
+    paivat.push([game.dayCount(), game.timeOfDay()]);
+  }
+  assert.deepEqual(paivat, [
+    [1, 'aamu'], [1, 'keskipäivä'], [1, 'ilta'], [1, 'yö'],
+    [2, 'aamu'], [2, 'keskipäivä'], [2, 'ilta'], [2, 'yö'],
+  ]);
+
+  game.turnCount = 53; // 52 vuoroa = 13 vuorokautta
+  assert.equal(game.dayCount(), 14);
+  assert.equal(game.clockLabel(), 'Päivä 14, aamu');
+});
+
+test('vuorokaudenajan nimi seuraa tuntia eikä vuoron pituutta', () => {
+  assert.equal(timeOfDayName(0), 'aamu');
+  assert.equal(timeOfDayName(5), 'aamu');
+  assert.equal(timeOfDayName(6), 'keskipäivä');
+  assert.equal(timeOfDayName(12), 'ilta');
+  assert.equal(timeOfDayName(23), 'yö');
+});
+
+test('isoisän aikataulurivi nousee kerran, kun matkapäivä ohittaa sen', () => {
+  const game = newGame(102);
+  const eka = game.pack.texts.schedule[0];
+  assert.ok(eka.day > 1, 'ensimmäinen merkintä on vasta ensimmäisen päivän jälkeen');
+
+  // Juuri ennen merkinnän päivää rivi ei vielä nouse.
+  game.turnCount = Math.floor(((eka.day - 1) * 24) / TURN_HOURS);
+  game.updateSchedule();
+  assert.equal(game.scheduleNote, null);
+
+  game.turnCount = Math.floor(((eka.day - 1) * 24) / TURN_HOURS) + 1;
+  assert.equal(game.dayCount(), eka.day);
+  game.updateSchedule();
+  assert.equal(game.scheduleNote.text, eka.text);
+  assert.equal(game.scheduleNote.day, eka.day);
+
+  // Sama rivi ei tule toista kertaa.
+  game.updateSchedule();
+  assert.notEqual(game.scheduleNote?.day, eka.day);
+});
+
+test('ohitetut aikataulurivit nousevat yksi kerrallaan', () => {
+  const game = newGame(103);
+  const [eka, toka] = game.pack.texts.schedule;
+  game.turnCount = Math.floor((toka.day * 24) / TURN_HOURS);
+  game.updateSchedule();
+  assert.equal(game.scheduleNote.day, eka.day, 'vanhin ohitettu rivi ensin');
+  game.updateSchedule();
+  assert.equal(game.scheduleNote.day, toka.day);
+});
+
+test('ennätys rikkoutuu ennen päivää 80 ja tuo kunniamerkinnän', () => {
+  const game = newGame(104);
+  const p = game.player;
+  const ennen = p.xp;
+  game.turnCount = 40; // päivä 10
+  assert.ok(game.dayCount() < RECORD_DAYS);
+
+  const mark = game.noteRecord(p);
+  assert.equal(mark.day, game.dayCount());
+  assert.equal(mark.label, `${RECORD_DAYS} päivää rikottu`);
+  assert.equal(p.xp - ennen, XP_RECORD);
+  assert.equal(game.recordMark.packId, game.pack.id);
+
+  // Merkintä tehdään vain kerran.
+  assert.equal(game.noteRecord(p), null);
+});
+
+test('ennätyksen ylitys ei päätä peliä eikä vie mitään', () => {
+  const game = newGame(105);
+  const p = game.player;
+  const ennen = p.xp;
+  game.turnCount = 4 * (RECORD_DAYS + 10);
+  assert.ok(game.dayCount() > RECORD_DAYS);
+
+  assert.equal(game.noteRecord(p), null, 'kunniamerkintää ei tule');
+  assert.equal(game.recordMark, null);
+  assert.equal(p.xp, ennen, 'hitaampi matka ei menetä pisteitä');
+  assert.notEqual(game.phase, 'over', 'aika ei koskaan päätä peliä');
+  assert.match(game.log[0].text, /ei nähnyt tätä kaikkea/);
+});
+
+test('aika ja aikataulu säilyvät tallennuksessa', () => {
+  const game = newGame(106);
+  game.turnCount = 40;
+  game.updateSchedule();
+  game.noteRecord(game.player);
+  const nahdyt = [...game.scheduleShown];
+  assert.ok(nahdyt.length > 0);
+
+  const restored = Game.fromJSON(JSON.parse(JSON.stringify(game.toJSON())));
+  assert.equal(restored.turnCount, 40);
+  assert.equal(restored.dayCount(), game.dayCount());
+  assert.deepEqual([...restored.scheduleShown], nahdyt);
+  assert.equal(restored.recordNoted, true);
+  assert.deepEqual(restored.recordMark, game.recordMark);
+
+  // Jo nähty rivi ei nouse uudelleen tallennuksesta jatkettaessa.
+  restored.updateSchedule();
+  assert.ok(!nahdyt.includes(`${restored.pack.id}:${restored.scheduleNote?.day}`));
+});
+
+test('vanha tallennus ilman aikaa jatkuu päivästä 1', () => {
+  const game = newGame(107);
+  const data = JSON.parse(JSON.stringify(game.toJSON()));
+  delete data.turnCount;
+  delete data.scheduleShown;
+  delete data.scheduleNote;
+  delete data.recordNoted;
+  delete data.recordMark;
+
+  const restored = Game.fromJSON(data);
+  assert.equal(restored.dayCount(), 1);
+  assert.equal(restored.timeOfDay(), 'aamu');
+  assert.equal(restored.scheduleShown.size, 0);
+  assert.equal(restored.recordNoted, false);
+  assert.equal(restored.recordMark, null);
+});
+
+test('Afrikan aikataulu on nouseva ja ulottuu ennätyksen yli', () => {
+  const schedule = packById('africa').texts.schedule;
+  assert.ok(Array.isArray(schedule) && schedule.length >= 8);
+  for (let i = 1; i < schedule.length; i++) {
+    assert.ok(schedule[i].day > schedule[i - 1].day, 'päivät nousevat');
+  }
+  assert.ok(schedule.some((r) => r.day === RECORD_DAYS), 'ennätyspäivällä on oma rivi');
+  assert.ok(
+    schedule.some((r) => r.day > RECORD_DAYS),
+    'matka jatkuu ennätyksen jälkeenkin',
+  );
+  for (const rivi of schedule) {
+    assert.equal(typeof rivi.text, 'string');
+    assert.ok(rivi.text.length > 40, `liian lyhyt merkintä päivälle ${rivi.day}`);
+  }
 });
