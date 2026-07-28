@@ -374,7 +374,7 @@ export const MAAILMA = {
       ],
       newyork: [
         'Kaartaessa näkyy kapea saari, joka on rakennettu pystysuoraan: tornit alkavat vedestä ja kaikki muu jää niiden ympärille matalaksi.',
-        'Kirjaan on liimattu laivayhtiön kuitti taitettuna neljään. Isoisä ylitti tämän saman meren yhdessätoista päivässä; minä teen sen ennen päivällistä.',
+        'Kirjaan on liimattu laivayhtiön kuitti taitettuna neljään. Isoisä ylitti tämän saman meren reilussa viikossa ja piti sitä huimana; minä teen sen ennen päivällistä.',
         'Kirjan välistä putosi irrallinen liuska, jonka ainoa rivi kuuluu: "lännessä, kolme korttelia satamasta". En tiedä minkä sataman, ja juuri se on hauskinta.',
       ],
       kairo: [
@@ -388,7 +388,7 @@ export const MAAILMA = {
         'Tässä kohtaa kirjaa muste vaihtuu ruskeasta mustaan. Isoisä on ostanut uuden pullon jossakin, minne hän ei merkinnyt saapuneensa.',
       ],
       mumbai: [
-        'Rannikko tulee vastaan kaarena, ja kaupunki työntyy merelle kapeana kielekkeenä. Lahden yli kulkee silta suorana valkoisena viivana.',
+        'Rannikko tulee vastaan kaarena, ja kaupunki työntyy merelle kapeana kielekkeenä. Lahden yli kaartaa silta valkoisena vinoköysinauhana.',
         'Lännessä seisoo monsuunipilvi kuin seinä, ja kone kiertää sen alitse. Alla vilkkuu kattoja niin tiheässä, etten erota katuja lainkaan.',
         'Kirjan välissä on kuivunut lehti ja sen alla rivi: "sade tulee kesäkuussa, laivat sen jälkeen". Isoisä oli kerrankin aikataulussa.',
       ],
@@ -408,7 +408,7 @@ export const MAAILMA = {
         'Kirjan sivujen väliin on jäänyt junanlipun palanen, ja sen taakse on kirjoitettu kilometrimäärä. Isoisä laski sen käsin ja sai sen oikein.',
       ],
       tokio: [
-        'Selkeällä säällä lännessä kohoaa yksinäinen lumihuippuinen kartio, ja alla kaupunki jatkuu horisonttiin asti joka suuntaan.',
+        'Selkeällä säällä lounaassa kohoaa yksinäinen lumihuippuinen kartio, ja alla kaupunki jatkuu horisonttiin asti joka suuntaan.',
         'Laskukaarre menee lahden yli, ja rannikko on rakennettu suoraksi: telakoita, nostureita ja säiliöitä peräkkäin. Kenttä itse on täyttömaalla.',
         'Kirjan viimeisillä sivuilla on tyhjä ruutu ja sen yläpuolella tämä kaupunki. Isoisä varasi paikan piirrokselle, jota ei koskaan tehnyt.',
       ],
@@ -419,7 +419,7 @@ export const MAAILMA = {
       ],
       kapkaupunki: [
         'Vuori näkyy ennen kaupunkia: laki on suora kuin pöytä, ja sen yli valuu pilvi reunan ali. Kaupunki on kiilattu vuoren ja meren väliin.',
-        'Rannikkoa seurataan etelään, ja niemien takana vesi vaihtaa väriä. Kaksi valtamerta tekee tässä töitä yhtä aikaa, eikä kumpikaan väisty.',
+        'Rannikkoa seurataan etelään, ja niemien eri puolilla vesi on eri lämpöistä: kylmä Benguela lännessä, lämmin Agulhas idässä. Valtamerten raja on vasta kaukana kaakossa.',
         'Sivun keskellä on kolme pistettä ja niiden alla lyhyitä viivoja, kuin merkintöjä äänistä. Isoisä on yrittänyt kirjoittaa muistiin ääntä.',
       ],
       losangeles: [

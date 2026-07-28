@@ -60,6 +60,9 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Paketti 13 (pulmien variointi): ✅ (28.7.2026) — sama pulma on joka
   pelikerralla erilainen. Kolme generatiivista (hieroglyfit, punnukset,
   kuunvaiheet) ja kaksi käsin kirjoitettua varianttisarjaa.
+- Paketti 14 (lentoanimaatio): ✅ (28.7.2026) — kone liitää reittiä
+  pitkin ja repliikki kirjoittuu kartalle. 70 lentorepliikkiä Maailmalle
+  ja Afrikalle, joista puolet hehkuttaa isoisän päiväkirjaa.
 - Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
   tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
   tarkistettu artikkeliotsikko.
@@ -710,7 +713,7 @@ osuu oikeaan ja hieroglyfiluvut pysyvät piirtorajoissa; kymmenellä
 siemenellä syntyy vähintään kaksi erilaista tehtävää per pulma
 (variointi todella varioi). Versionostot, standalone, kuvakaappaus.
 
-## Paketti 14: Indiana Jones -lentoanimaatio (paketin 13 jälkeen)
+## Paketti 14: Indiana Jones -lentoanimaatio (paketin 13 jälkeen) — VALMIS
 
 Omistajan toive: kun lennetään, pieni lentokone liitää punaista
 reittiviivaa pitkin kohteesta toiseen kuin vanhoissa seikkailufilmeissä,
