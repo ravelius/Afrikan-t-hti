@@ -60,12 +60,28 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Paketti 13 (pulmien variointi): ✅ (28.7.2026) — sama pulma on joka
   pelikerralla erilainen. Kolme generatiivista (hieroglyfit, punnukset,
   kuunvaiheet) ja kaksi käsin kirjoitettua varianttisarjaa.
+- Paketti 14 (lentoanimaatio): ✅ (28.7.2026) — kone liitää reittiä
+  pitkin ja repliikki kirjoittuu kartalle. 70 lentorepliikkiä Maailmalle
+  ja Afrikalle, joista puolet hehkuttaa isoisän päiväkirjaa.
 - Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
   tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
   tarkistettu artikkeliotsikko.
 - Paketti 10 (kysymysten vaihtelu): ✅ (28.7.2026) — isoisän väittämät,
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
+
+## Avoimet asiat (Fablelle)
+
+- **Paketin 12 pulmien faktantarkistus jäi tekemättä.** Käynnistin
+  tarkistusagentin, mutta se ei palannut, ja paketti ehti mainiin (#72).
+  Tarkistin itse laskemalla, että kaikkien viiden pulman merkitty vastaus
+  on oikea (hieroglyfien yhteenlasku, vaa'an tasapaino, leilisarjat,
+  kuunvaiheiden järjestys) — nämä ovat nyt myös testeissä paketin 13
+  jäljiltä. **Verkkotarkistamatta ovat yhä:** xhosan naksutusäänteiden
+  artikulaatiokuvaukset (c/x/q ja se, alkaako isiXhosa lateraalisella
+  naksauksella), ashantien punnusten 3 %:n tarkkuusväite, ja Timbuktun
+  käsikirjoitusviite (Kashf al-Ghummah, 1733, Mamma Haidara -kirjasto).
+  Väitteet ovat tiedostossa js/packs/africa-puzzles.js fact-kentissä.
 
 ## Seuraavaksi: PAKETTI 13 (pulmien variointi), sitten PAKETTI 14
 
@@ -697,7 +713,7 @@ osuu oikeaan ja hieroglyfiluvut pysyvät piirtorajoissa; kymmenellä
 siemenellä syntyy vähintään kaksi erilaista tehtävää per pulma
 (variointi todella varioi). Versionostot, standalone, kuvakaappaus.
 
-## Paketti 14: Indiana Jones -lentoanimaatio (paketin 13 jälkeen)
+## Paketti 14: Indiana Jones -lentoanimaatio (paketin 13 jälkeen) — VALMIS
 
 Omistajan toive: kun lennetään, pieni lentokone liitää punaista
 reittiviivaa pitkin kohteesta toiseen kuin vanhoissa seikkailufilmeissä,

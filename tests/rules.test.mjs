@@ -2635,3 +2635,70 @@ test('kuunvaiheiden sarja jatkuu oikein', () => {
     );
   }
 });
+
+// --- paketti 14: lentorepliikit --------------------------------------------
+
+test('lentorepliikit ovat ehjiä ja kohdistuvat laudan kaupunkeihin', () => {
+  for (const pack of PACKS) {
+    const rivit = pack.texts?.flightLines;
+    if (!rivit) continue;
+    const idt = new Set(pack.cities.map((c) => c.id));
+    for (const [cityId, lista] of Object.entries(rivit)) {
+      assert.ok(idt.has(cityId), `${pack.id}: flightLines viittaa kaupunkiin ${cityId}, jota ei ole laudalla`);
+      assert.ok(Array.isArray(lista) && lista.length > 0, `${pack.id}/${cityId}: tyhjä rivilista`);
+      for (const rivi of lista) {
+        assert.equal(typeof rivi, 'string');
+        assert.ok(rivi.length > 20, `${pack.id}/${cityId}: liian lyhyt rivi "${rivi}"`);
+      }
+    }
+    // Sama rivi ei saa esiintyä kahdesti koko laudalla.
+    const kaikki = [...Object.values(rivit).flat(), ...(pack.texts.flightDefault ?? [])];
+    assert.equal(new Set(kaikki).size, kaikki.length, `${pack.id}: sama lentorepliikki kahdesti`);
+  }
+});
+
+test('jokaiselle lentokohteelle löytyy repliikki', () => {
+  for (const pack of PACKS) {
+    if (!pack.texts?.flightLines) continue;
+    const game = new Game({ players: [{ name: 'A', color: '#f00' }], pack, seed: 1 });
+    // Lentokentät ovat lennon kohteita; niille pitää löytyä rivi omista tai
+    // yleisistä. Yleisrivit riittävät, mutta jonkin on löydyttävä.
+    for (const city of pack.cities.filter((c) => c.airport)) {
+      assert.ok(
+        game.flightLine(city.id),
+        `${pack.id}: kaupungille ${city.id} ei löydy lentorepliikkiä`,
+      );
+    }
+  }
+});
+
+test('lentorepliikin arvonta on siemenellä deterministinen', () => {
+  const uusi = (seed) => new Game({
+    players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed,
+  });
+  const a = uusi(77).flightLine('kairo');
+  const b = uusi(77).flightLine('kairo');
+  assert.equal(a, b, 'sama siemen antoi eri repliikin');
+  assert.ok(packById('maailma').texts.flightLines.kairo.includes(a));
+
+  // Eri siemenet tuottavat vaihtelua.
+  const nahdyt = new Set();
+  for (let seed = 1; seed <= 20; seed++) nahdyt.add(uusi(seed).flightLine('kairo'));
+  assert.ok(nahdyt.size >= 2, 'arvonta ei varioi');
+});
+
+test('tuntematon kohde saa yleisrivin', () => {
+  const game = new Game({
+    players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed: 3,
+  });
+  const rivi = game.flightLine('ei-tallaista-kaupunkia');
+  assert.ok(packById('maailma').texts.flightDefault.includes(rivi));
+});
+
+test('lauta ilman lentorepliikkejä ei kaadu', () => {
+  const pack = packById('suomi');
+  const game = new Game({ players: [{ name: 'A', color: '#f00' }], pack, seed: 5 });
+  if (!pack.texts?.flightLines && !pack.texts?.flightDefault) {
+    assert.equal(game.flightLine('helsinki'), null);
+  }
+});

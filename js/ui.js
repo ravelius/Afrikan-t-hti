@@ -15,7 +15,9 @@ import {
   DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HARD_BONUS,
   HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
-import { factSource, factText, factVoice, isSourceUrl, sourceLabel, voiceTitle } from './pack.js';
+import {
+  factSource, factText, factVoice, isSourceUrl, packById, sourceLabel, voiceTitle,
+} from './pack.js';
 import { stampBoard, stampDate, stampList } from './passport.js';
 import { fetchArticle, fetchImage, fetchSummary } from './wiki.js';
 import { drawPuzzle } from './packs/africa-puzzles.js';
@@ -66,6 +68,8 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
+// Lentoanimaation kesto: sen verran, että repliikin ehtii lukea.
+const FLY_ANIM_MS = 2000;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 // Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
@@ -660,6 +664,8 @@ export class UI {
     this.tokenLayer = el('g', { class: 'tokens' }, root);
     this.targetLayer = el('g', { class: 'targets' }, root);
     this.pawnLayer = el('g', { class: 'pawns' }, root);
+    // Lentoanimaatio piirtyy kaiken päälle: kone ja sen perässä kulkeva viiva.
+    this.flightLayer = el('g', { class: 'flight' }, root);
     drawPaperOverlay(svg);
   }
 
@@ -969,8 +975,13 @@ export class UI {
     // Vaelluksessa porttikaupungeista jatketaan toisille laudoille.
     for (const link of gateways) {
       const gwBtn = html('button', 'wide', `🧭 ${link.label}`);
-      gwBtn.addEventListener('click', () => {
+      gwBtn.addEventListener('click', async () => {
         sfx.play('flight');
+        // Animaatio ajetaan LÄHTÖlaudalla ennen laudan vaihtoa: kohdelaudan
+        // koordinaatit eivät tarkoita täällä mitään. Kone lentää kartan
+        // reunaa kohti, koska matka jatkuu kuvan ulkopuolelle.
+        const lahto = pixelOf(game.board, game.player.pos);
+        await this.animateFlight(lahto, this.mapEdgeToward(lahto), game.flightLine(link.city, packById(link.pack)));
         this.doAction(() => game.actionGateway(link.index));
       });
       this.actionsEl.appendChild(gwBtn);
@@ -1015,11 +1026,35 @@ export class UI {
    * Useamman portin kaupungeista (Kairo, Mumbai) otetaan ensimmäinen eli
    * kaupungin oma manner — välikysymystä ei enää esitetä.
    */
-  doPickStart(city) {
+  async doPickStart(city) {
     const { game } = this;
     const portti = (city.links ?? []).length > 0;
     sfx.play(portti ? 'flight' : 'paper');
+    // Pelin avaus on se filmihetki: kone lähtee Lontoosta ja laskeutuu
+    // valittuun kohteeseen ennen kuin mantereen kartta aukeaa.
+    const lontoo = game.board.cityById.get('lontoo');
+    if (lontoo && lontoo.id !== city.id) {
+      await this.animateFlight(
+        { x: lontoo.x, y: lontoo.y }, { x: city.x, y: city.y }, game.flightLine(city.id),
+      );
+    }
     this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
+  }
+
+  /**
+   * Piste kartan reunalla annetusta pisteestä ulospäin. Porttilennolla matka
+   * jatkuu toiselle laudalle, joten kone katoaa kuvan reunan yli.
+   */
+  mapEdgeToward(from) {
+    const { width, height } = this.game.pack.map;
+    const keskiX = width / 2;
+    const keskiY = height / 2;
+    const dx = from.x - keskiX;
+    const dy = from.y - keskiY;
+    const pituus = Math.hypot(dx, dy) || 1;
+    // Skaalataan niin, että piste osuu selvästi kartan ulkopuolelle.
+    const k = (Math.max(width, height) * 0.75) / pituus;
+    return { x: from.x + dx * k, y: from.y + dy * k };
   }
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
@@ -2035,10 +2070,104 @@ export class UI {
     const { game } = this;
     const player = game.player;
     const from = player.pos;
+    // Repliikki arvotaan ennen siirtoa, jotta rng-kutsu osuu samaan kohtaan
+    // riippumatta siitä, näytetäänkö animaatio.
+    const line = game.flightLine(destination);
     sfx.play('flight');
     this.run(() => game.actionFly(destination), {
-      after: () => this.animatePawn(player, from, [player.pos], FLIGHT_MS),
+      after: async () => {
+        await this.animateFlight(
+          pixelOf(game.board, from), pixelOf(game.board, player.pos), line,
+        );
+        await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
+      },
     });
+  }
+
+  /**
+   * Indiana Jones -lentoanimaatio: pieni kone liitää kahden pisteen väliä ja
+   * punainen viiva piirtyy sen perässä, kuten vanhoissa seikkailufilmeissä.
+   * Puhtaasti kosmeettinen — pelitila on jo päivittynyt, tämä vain näytetään
+   * ennen näkymän vaihtoa.
+   *
+   * `prefers-reduced-motion` ohittaa animaation kokonaan: silloin ei piirretä
+   * mitään eikä odoteta, jotta peli etenee samaa tahtia kuin ennenkin.
+   */
+  async animateFlight(a, b, line = null) {
+    if (this.reducedMotion || !a || !b) return;
+    this.flightLayer.textContent = '';
+
+    // Kaari kahden pisteen välillä: suora viiva näyttäisi tylsältä, ja
+    // vanhojen karttojen lentoreitit kaartavat aina.
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const pituus = Math.hypot(dx, dy);
+    if (pituus < 1) return;
+    // Kaarevuus on osuus matkasta, jotta lyhyet hypyt eivät kaarra villisti.
+    const kx = (a.x + b.x) / 2 - dy * 0.16;
+    const ky = (a.y + b.y) / 2 + dx * 0.16;
+    const d = `M${a.x},${a.y} Q${kx},${ky} ${b.x},${b.y}`;
+
+    const reitti = el('path', { d, class: 'flight-trail' }, this.flightLayer);
+    const kokoPituus = reitti.getTotalLength();
+    reitti.style.strokeDasharray = kokoPituus;
+    reitti.style.strokeDashoffset = kokoPituus;
+
+    const kone = el('g', { class: 'flight-plane' }, this.flightLayer);
+    // Yksinkertainen kone ylhäältä: runko, siivet ja pyrstö.
+    el('path', {
+      d: 'M14,0 L-6,0 M-10,0 L-14,0 M2,0 L-8,-9 L-4,-9 L6,0 L-4,9 L-8,9 z '
+        + 'M-11,0 L-15,-5 L-13,-5 L-9,0 L-13,5 L-15,5 z',
+      class: 'flight-plane-body',
+    }, kone);
+
+    if (line) this.showFlightLine(line);
+
+    await new Promise((resolve) => {
+      const alku = performance.now();
+      const askel = (nyt) => {
+        const t = Math.min(1, (nyt - alku) / FLY_ANIM_MS);
+        // Pehmeä kiihdytys ja jarrutus, jottei kone nykäise liikkeelle.
+        const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+        reitti.style.strokeDashoffset = kokoPituus * (1 - e);
+
+        const p = reitti.getPointAtLength(kokoPituus * e);
+        // Suunta katsotaan hieman edempää, jotta kone osoittaa menosuuntaan.
+        const eteen = reitti.getPointAtLength(Math.min(kokoPituus, kokoPituus * e + 1));
+        const kulma = Math.atan2(eteen.y - p.y, eteen.x - p.x) * 180 / Math.PI;
+        kone.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${kulma})`);
+
+        if (t < 1) requestAnimationFrame(askel);
+        else resolve();
+      };
+      requestAnimationFrame(askel);
+    });
+
+    this.flightLayer.textContent = '';
+    this.hideFlightLine();
+  }
+
+  /** Nuoren herran repliikki lennon ajaksi, kirjoituskoneella. */
+  showFlightLine(line) {
+    if (!this.flightLine) {
+      this.flightLine = html('p', 'flight-line');
+      this.mapPane.appendChild(this.flightLine);
+    }
+    // Sijainti lasketaan KARTTAKOORDINAATEISTA, ei paneelin korkeudesta:
+    // aloitusnäkymässä svg-elementti on paneelin korkuinen mutta piirretty
+    // kartta täyttää siitä vain yläosan, joten paneeliin sidottu rivi
+    // putoaisi kartan alapuolelle.
+    const { width, height } = this.game.pack.map;
+    const kohta = this.mapToPane({ x: width / 2, y: height * 0.9 });
+    this.flightLine.style.top = `${Math.round(kohta.y)}px`;
+    this.flightLine.style.left = `${Math.round(kohta.x)}px`;
+    this.flightLine.hidden = false;
+    this.flightLine.textContent = '';
+    this.typeText(this.flightLine, line, 'flight');
+  }
+
+  hideFlightLine() {
+    if (this.flightLine) this.flightLine.hidden = true;
   }
 
   /** Siirtää nappulaa askel kerrallaan annettua polkua pitkin. */

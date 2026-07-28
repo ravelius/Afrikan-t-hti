@@ -362,6 +362,96 @@ export const MAAILMA = {
   ],
 
   texts: {
+    // Lentorepliikit: nuori herra puhuu koneessa matkan ajan. Noin puolet
+    // riveistä on kohteen odotusta, puolet isoisän päiväkirjan hehkutusta —
+    // kirjarivit saavat viitata pelin oikeisiin asioihin (merkityt kaupungit,
+    // luonnoskirjan kaaviot, taitetut sivut) muttei paljastaa mitään.
+    flightLines: {
+      lontoo: [
+        'Alla mutkittelee Thames, ja lasku seuraa sitä länteen — sillat tulevat vastaan tutussa järjestyksessä. Kotiin siis, hetkeksi.',
+        'Pilvien alta paljastuu harmaa ruutupelto ja sen keskellä kaupunki, joka ei tiedä minun olleen poissa. Minä tiedän, ja se saa riittää.',
+        'Päiväkirjan ensimmäisellä sivulla on tämän kaupungin nimi ja päiväys, ja muste on painunut siitä läpi kolmelle seuraavalle sivulle.',
+      ],
+      newyork: [
+        'Kaartaessa näkyy kapea saari, joka on rakennettu pystysuoraan: tornit alkavat vedestä ja kaikki muu jää niiden ympärille matalaksi.',
+        'Kirjaan on liimattu laivayhtiön kuitti taitettuna neljään. Isoisä ylitti tämän saman meren reilussa viikossa ja piti sitä huimana; minä teen sen ennen päivällistä.',
+        'Kirjan välistä putosi irrallinen liuska, jonka ainoa rivi kuuluu: "lännessä, kolme korttelia satamasta". En tiedä minkä sataman, ja juuri se on hauskinta.',
+      ],
+      kairo: [
+        'Ikkunasta näkyy, miten vihreä nauha kulkee keskellä hiekkaa ja levenee lopussa kolmioksi. Koko maa mahtuu tuohon nauhaan.',
+        'Pyramidit erottuvat kaupungin laidalla jo ennen laskusiivekkeitä: kolme kolmiota, ja niiden ympärillä katuja ja pysäköintialue.',
+        'Aukeamalla on rivi tikkuja ja kaaria, ja niiden viereen on kirjattu numeroita. Isoisä on siis ratkaissut jotakin aivan itse.',
+      ],
+      rio: [
+        'Alla kaartuu lahti, jonka reunoilta vuoret nousevat suoraan merestä, ja kentän kiitorata on rakennettu vedelle. Pidän kiinni käsinojasta.',
+        'Päiväkirjan reunaan on piirretty vuori, leveä alhaalta ja pyöreä ylhäältä. Isoisä ei nähnyt sitä itse — hän piirsi sen kuulemansa mukaan.',
+        'Tässä kohtaa kirjaa muste vaihtuu ruskeasta mustaan. Isoisä on ostanut uuden pullon jossakin, minne hän ei merkinnyt saapuneensa.',
+      ],
+      mumbai: [
+        'Rannikko tulee vastaan kaarena, ja kaupunki työntyy merelle kapeana kielekkeenä. Lahden yli kaartaa silta valkoisena vinoköysinauhana.',
+        'Lännessä seisoo monsuunipilvi kuin seinä, ja kone kiertää sen alitse. Alla vilkkuu kattoja niin tiheässä, etten erota katuja lainkaan.',
+        'Kirjan välissä on kuivunut lehti ja sen alla rivi: "sade tulee kesäkuussa, laivat sen jälkeen". Isoisä oli kerrankin aikataulussa.',
+      ],
+      peking: [
+        'Kuiva ylätasanko vaihtuu alla vihreiksi kukkuloiksi, ja niiden harjaa pitkin kulkee muuri. Sen jälkeen kaupunki alkaa kuin viivalla vedettynä.',
+        'Isoisä on merkinnyt tämän kaupungin kohdalle kaksi ristiä. Muualla riittää yksi, joten täällä on jotain, mitä hän ei saanut nähdä.',
+        'Isoisän käsiala pienenee tällä sivulla, kuin hän olisi kirjoittanut salaa. Neljä sanaa vain: "muurin eteläpuolella, portin takana".',
+      ],
+      sydney: [
+        'Kone tulee sisään mereltä, ja alla haarautuu satama moneen suuntaan kuin sormet. Silta ja oopperatalo ovat siinä pienet kuin koristeet.',
+        'Rannikko on valkoista hiekkaa lahti toisensa jälkeen, ja aallokossa näkyy mustia pisteitä: surffaajia jonossa odottamassa vuoroaan.',
+        'Selasin kirjaa laskun ajan ja löysin sivun, jolle on piirretty luonnonsatama muistista. Rannat ovat kohdillaan, vaikkei isoisä noussut maihin.',
+      ],
+      moskova: [
+        'Metsä jatkuu allamme tunnin toisensa perään, ja sitten se aukeaa: tiet lähtevät kaupungista joka suuntaan kuin pyörän puolat.',
+        'Päiväkirjassa on tässä välissä aukko: kaksi viikkoa ilman ainuttakaan merkintää, ja sitten yksi rivi. Aion selvittää, mitä väliin jäi.',
+        'Kirjan sivujen väliin on jäänyt junanlipun palanen, ja sen taakse on kirjoitettu kilometrimäärä. Isoisä laski sen käsin ja sai sen oikein.',
+      ],
+      tokio: [
+        'Selkeällä säällä lounaassa kohoaa yksinäinen lumihuippuinen kartio, ja alla kaupunki jatkuu horisonttiin asti joka suuntaan.',
+        'Laskukaarre menee lahden yli, ja rannikko on rakennettu suoraksi: telakoita, nostureita ja säiliöitä peräkkäin. Kenttä itse on täyttömaalla.',
+        'Kirjan viimeisillä sivuilla on tyhjä ruutu ja sen yläpuolella tämä kaupunki. Isoisä varasi paikan piirrokselle, jota ei koskaan tehnyt.',
+      ],
+      singapore: [
+        'Meri on alla täynnä laivoja, jotka seisovat paikallaan riveissä ja odottavat vuoroaan satamaan. Laskin kaksikymmentä ja luovutin.',
+        'Päiväkirjaan on piirretty kapea salmi ja sen reunaan nuoli. Nuolen päässä ei lue mitään, mikä on isoisän tapa sanoa: en käynyt.',
+        'Kirjan sivut aaltoilevat tässä kohdassa — ne ovat joskus kastuneet ja kuivuneet uudelleen. Teksti on silti luettavissa, ja se kertoo säästä.',
+      ],
+      kapkaupunki: [
+        'Vuori näkyy ennen kaupunkia: laki on suora kuin pöytä, ja sen yli valuu pilvi reunan ali. Kaupunki on kiilattu vuoren ja meren väliin.',
+        'Rannikkoa seurataan etelään, ja niemien eri puolilla vesi on eri lämpöistä: kylmä Benguela lännessä, lämmin Agulhas idässä. Valtamerten raja on vasta kaukana kaakossa.',
+        'Sivun keskellä on kolme pistettä ja niiden alla lyhyitä viivoja, kuin merkintöjä äänistä. Isoisä on yrittänyt kirjoittaa muistiin ääntä.',
+      ],
+      losangeles: [
+        'Ruudukko alkaa alla eikä lopu ennen merta, ja moottoritiet erottuvat siitä leveinä vaaleina nauhoina. Illalla sama ruudukko palaa valoina.',
+        'Isoisän kartassa tässä kohdassa on appelsiinitarhoja ja pikkukaupungin nimi, ja kirjassa hän kutsuu koko kertomusta liioitteluksi. Menen katsomaan.',
+        'Kirjan takakannen sisäpuolella on lista kaupungeista, ja osa niistä on rengastettu lyijykynällä. En ole nähnyt vielä puoltakaan niistä.',
+      ],
+      ateena: [
+        'Saaria näkyy kymmenittäin, valkoisia reunoja sinisessä, ja sitten manner. Kukkulalla erottuu suorakaide, joka on seissyt siinä yli kaksi vuosituhatta.',
+        'Egeanmeren yli tullaan matalalla, ja ruskeat rinteet alkavat heti vesirajasta ilman rantatasankoa. Vihreää näkyy vain laaksojen pohjilla.',
+        'Päiväkirjassa lukee tämän kohdalla vain: "satamaan tuli lastia, laiva lähti". Rivin alle on myöhemmin lisätty yksi sana: "harmittaa".',
+      ],
+      tanger: [
+        'Salmi on alla kapea kuin joki: toisella rannalla Eurooppa, toisella Afrikka, ja väliä on nelisentoista kilometriä. Ylitämme sen minuutissa.',
+        'Isoisä on kirjoittanut tämän sivun laivan kannella: käsiala kallistuu oikealle koko sivun ajan. Aallokko näkyy musteessa paremmin kuin sanoissa.',
+        'Kirjasta löytyi kartanpala, joka on leikattu saksilla irti isommasta. Sen reuna sopii yhteen erään toisen sivun repeämän kanssa.',
+      ],
+    },
+
+    // Yleisrivit: käytetään kun kohteelle ei ole omaa riviä.
+    flightDefault: [
+      'Kone kääntyy kaarteeseen, ja horisontti nousee ikkunan reunaan asti. Tästä eteenpäin kartta ei enää auta — nyt katsotaan ulos.',
+      'Pilvet loppuvat alta kesken, ja maa tulee näkyviin ilman varoitusta. En tiedä mitä siellä odottaa, ja se on koko matkan paras kohta.',
+      'Moottorit vaihtavat ääntä ja nokka kääntyy alaspäin. Kaksi tuntia sitten olin toisessa ilmastossa enkä ole vieläkään ehtinyt riisua takkia.',
+      'Siivet kallistuvat, ja alla vaihtuu maasto kokonaan toisenlaiseksi. Tämän takia minä lähdin: en aarteen vuoksi vaan tämän hetken.',
+      'Varjomme juoksee alla maastossa ja hyppii jokaisen harjanteen yli. Se ehtii perille ennen minua, kuten tähänkin asti joka kerta.',
+      'Isoisän kynä on lipsahtanut tällä sivulla ja vetänyt pitkän viivan poikki tekstin. Alle hän on kirjoittanut selitykseksi: "juna liikkui".',
+      'Päiväkirjan välissä on piirros vaa\'asta ja sen perässä kolme huutomerkkiä. Kolme huutomerkkiä ei ole isoisän tapaista, joten asia on ollut iso.',
+      'Kirjanmerkkinä on taitettu sivu, jolla lukee vain: "etelään, ja kysy kalastajilta". Kysyn kyllä, kunhan ensin selviää keneltä.',
+      'Yhdellä sivulla on kuun vaiheita piirretty riviin ja yksi niistä ympyröity. Muuta selitystä ei ole, ja se riittää minulle mainiosti.',
+      'Muste on tällä aukeamalla vaaleampaa kuin muualla, kuin kirjoitettuna kiireessä. Kiireessä kirjoitettu sivu on aina se kiinnostavin.',
+    ],
     intro: 'Peli alkaa! Etsikää Magellanin kompassi — maailmanympäripurjehtijan kadonnut aarre.',
     starFound: (name, city) => `★ ${name} löysi MAGELLANIN KOMPASSIN kaupungista ${city}!`,
     starToast: 'MAGELLANIN KOMPASSI!',
