@@ -19,7 +19,7 @@ import {
   factSource, factText, factVoice, isSourceUrl, packById, sourceLabel, voiceTitle,
 } from './pack.js';
 import { stampBoard, stampDate, stampList } from './passport.js';
-import { fetchArticle, fetchImage, fetchSummary } from './wiki.js';
+import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from './wiki.js';
 import { drawPuzzle } from './packs/africa-puzzles.js';
 
 // Tiivistelmät ja kuvat haetaan kerran per artikkeli: sama kuva näkyy
@@ -37,6 +37,15 @@ async function cachedImage(title) {
     wikiImageCache.set(title, cachedSummary(title).then((s) => fetchImage(s)));
   }
   return wikiImageCache.get(title);
+}
+
+const wikiGalleryCache = new Map();
+
+async function cachedGallery(title) {
+  if (!wikiGalleryCache.has(title)) {
+    wikiGalleryCache.set(title, cachedSummary(title).then((s) => fetchImages(s)));
+  }
+  return wikiGalleryCache.get(title);
 }
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
@@ -166,6 +175,10 @@ export class UI {
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
     this.arrivalImage = document.getElementById('arrival-image');
+    this.arrivalImage.addEventListener('click', () => {
+      const city = this.game.board.cityById.get(this.arrivalShownFor);
+      if (city?.wiki) this.openLightbox(city.wiki, city.name);
+    });
     this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
@@ -187,6 +200,13 @@ export class UI {
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
     this.wikiSource = document.getElementById('wiki-source');
+    this.wikiImage.addEventListener('click', () => {
+      if (this.wikiOpenFor) this.openLightbox(this.wikiOpenFor, this.wikiTitle.textContent);
+    });
+    this.factImage = document.getElementById('fact-image');
+    this.factImage.addEventListener('click', () => {
+      if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
+    });
 
     this.eventDialog = document.getElementById('event-dialog');
     this.eventText = document.getElementById('event-text');
@@ -1128,6 +1148,7 @@ export class UI {
       this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
+      this.factImage.hidden = true;
       return;
     }
 
@@ -1140,6 +1161,7 @@ export class UI {
       this.factKey = key;
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
+      this.factImage.hidden = true;
       this.typeText(this.factText, aikataulu.text);
       return;
     }
@@ -1153,6 +1175,7 @@ export class UI {
       this.factKey = key;
       this.factVoiceEl.textContent = 'Matkapäiväkirjasta';
       this.factPlace.textContent = game.pack.boardLabel;
+      this.factImage.hidden = true;
       this.typeText(this.factText, note.text);
       return;
     }
@@ -1165,6 +1188,7 @@ export class UI {
       this.factKey = key;
       this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
       this.factPlace.textContent = game.pack.boardLabel;
+      this.factImage.hidden = true;
       this.typeText(this.factText, hint);
       return;
     }
@@ -1185,6 +1209,9 @@ export class UI {
     const onRoute = player.pos.type === 'edge';
     this.factVoiceEl.textContent = voiceTitle(factVoice(fact));
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
+    // Havaintoon voi liittyä kuva: pieni linkki avaa ilmiön Wikipedia-kuvan.
+    this.factImageTitle = typeof fact === 'string' ? null : fact.wiki ?? null;
+    this.factImage.hidden = !this.factImageTitle;
     const source = this.sourceLine(factSource(fact));
     this.typeText(this.factText, text, 'fact', () => {
       if (source) this.factText.appendChild(source);
@@ -1378,29 +1405,36 @@ export class UI {
   async openWiki(cityId) {
     const city = this.game.board.cityById.get(cityId);
     if (!city?.wiki) return;
+    await this.openWikiArticle(city.wiki, city.name);
+  }
 
-    this.wikiOpenFor = cityId;
-    this.wikiTitle.textContent = city.name;
+  /**
+   * Sama dialogi mille tahansa artikkelille — esimerkiksi havainnossa
+   * mainitulle ilmiölle (Katso kuva), jolla ei ole omaa kaupunkia.
+   */
+  async openWikiArticle(title, label = title) {
+    this.wikiOpenFor = title;
+    this.wikiTitle.textContent = label;
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
     this.wikiExtract.textContent = 'Haetaan…';
     this.wikiSource.textContent = '';
     if (!this.wikiDialog.open) this.wikiDialog.showModal();
 
-    const summary = await cachedSummary(city.wiki);
+    const summary = await cachedSummary(title);
     // Pelaaja on voinut ehtiä sulkea dialogin tai avata toisen paikan.
-    if (!this.wikiDialog.open || this.wikiOpenFor !== cityId) return;
+    if (!this.wikiDialog.open || this.wikiOpenFor !== title) return;
 
     if (!summary) {
       this.wikiExtract.textContent = 'Tietoja ei saatu haettua. Matka jatkuu.';
       return;
     }
 
-    this.wikiTitle.textContent = summary.title || city.name;
-    cachedImage(city.wiki).then((image) => {
-      if (!this.wikiDialog.open || this.wikiOpenFor !== cityId || !image) return;
+    this.wikiTitle.textContent = summary.title || label;
+    cachedImage(title).then((image) => {
+      if (!this.wikiDialog.open || this.wikiOpenFor !== title || !image) return;
       this.wikiImage.src = image;
-      this.wikiImage.alt = summary.title || city.name;
+      this.wikiImage.alt = summary.title || label;
       this.wikiImage.hidden = false;
     });
     this.wikiExtract.textContent = summary.extract;
@@ -1408,7 +1442,7 @@ export class UI {
     // Koko artikkeli ladataan tiivistelmän perään; tiivistelmä jää, jos
     // hakua ei saada tehtyä. Kysytään vain kerran per avaus.
     fetchArticle(summary.title, summary.lang).then((article) => {
-      if (!this.wikiDialog.open || this.wikiOpenFor !== cityId || !article) return;
+      if (!this.wikiDialog.open || this.wikiOpenFor !== title || !article) return;
       if (article.length <= summary.extract.length) return;
       this.renderArticle(this.wikiExtract, article);
     });
@@ -1420,6 +1454,76 @@ export class UI {
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     this.wikiSource.appendChild(link);
+  }
+
+  /**
+   * Kuvakatselin: napautettu kuva aukeaa isona, ja jos artikkelissa on
+   * useampia kelvollisia kuvia, niitä voi selata nuolista tai pyyhkäisemällä.
+   * Katselin lisätään avoimen dialogin sisään, koska dialogi on selaimen
+   * top layerissa — muualle lisätty kerros jäisi sen alle.
+   */
+  async openLightbox(title, alt = '') {
+    if (!title) return;
+    const parent = [this.wikiDialog, this.arrivalDialog].find((d) => d.open) ?? document.body;
+    const overlay = html('div', 'lightbox');
+    const img = html('img', 'lightbox-img');
+    img.alt = alt;
+    const prev = html('button', 'lightbox-nav prev', '‹');
+    const next = html('button', 'lightbox-nav next', '›');
+    const counter = html('div', 'lightbox-counter');
+    const close = html('button', 'lightbox-close', '✕');
+    prev.hidden = next.hidden = true;
+    overlay.append(img, prev, next, counter, close);
+    parent.appendChild(overlay);
+
+    let kuvat = [];
+    let kohdalla = 0;
+    const nayta = () => {
+      if (!kuvat.length) return;
+      img.src = upsizeImage(kuvat[kohdalla]);
+      counter.textContent = kuvat.length > 1 ? `${kohdalla + 1} / ${kuvat.length}` : '';
+      prev.hidden = next.hidden = kuvat.length < 2;
+    };
+    // Jos suurennosta ei ole olemassa (alkuperäinen on pienempi), palataan
+    // kuvalistan omaan osoitteeseen.
+    img.addEventListener('error', () => {
+      if (kuvat.length && img.src !== kuvat[kohdalla]) img.src = kuvat[kohdalla];
+    });
+    const siirry = (askel) => {
+      if (kuvat.length < 2) return;
+      kohdalla = (kohdalla + askel + kuvat.length) % kuvat.length;
+      nayta();
+      sfx.play('swipe');
+    };
+    prev.addEventListener('click', (e) => { e.stopPropagation(); siirry(-1); });
+    next.addEventListener('click', (e) => { e.stopPropagation(); siirry(1); });
+    close.addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.remove();
+    });
+    // Pyyhkäisy vaihtaa kuvaa sormella.
+    let alkuX = null;
+    overlay.addEventListener('pointerdown', (e) => { alkuX = e.clientX; });
+    overlay.addEventListener('pointerup', (e) => {
+      if (alkuX === null) return;
+      const siirtyma = e.clientX - alkuX;
+      alkuX = null;
+      if (Math.abs(siirtyma) > 40) siirry(siirtyma < 0 ? 1 : -1);
+    });
+
+    // Ensimmäinen kuva heti ruutuun, koko galleria kun lista on haettu.
+    const eka = await cachedImage(title);
+    if (!overlay.isConnected) return;
+    if (eka) {
+      kuvat = [eka];
+      nayta();
+    }
+    const lista = await cachedGallery(title);
+    if (!overlay.isConnected || !lista.length) return;
+    const nykyinen = kuvat[0] ?? null;
+    kuvat = lista;
+    kohdalla = Math.max(0, lista.indexOf(nykyinen));
+    nayta();
   }
 
   closeArrival() {

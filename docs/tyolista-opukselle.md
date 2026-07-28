@@ -90,13 +90,38 @@ Mamma Haidara -kirjasto, Library of Congressin näyttely — opettaa
 laskemaan vuodenaikojen alut tähtien liikkeistä) täsmäävät lähteisiin.
 Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 
-## Seuraavaksi: PAKETTI 17 (ambienssi)
+## Seuraavaksi: PAKETTI 18 (Katso kuva -linkit havaintoihin)
 
-**Paketit 1–16 ovat valmiit (28.7.2026).** Omistajan mukaan äänet ovat
-paketin 16 jälkeenkin kököt: kokonaistasoa ja kaikua on jo hillitty
-(#94), ja repossa on viritysivu `/aanet.html`, jolla omistaja käy äänet
-läpi ja antaa äänikohtaisen palautteen — älä tee uutta yleisremonttia
-ennen sitä palautetta. Seuraavaksi tehdään paketti 17 (alempana).
+**Paketit 1–17 ovat valmiit (28.7.2026).** Äänistä: omistaja käy äänet
+läpi viritysivulla `/aanet.html` ja antaa äänikohtaisen palautteen —
+älä tee uutta äänten yleisremonttia ennen sitä palautetta.
+Seuraavaksi tehdään paketti 18 (alempana).
+
+## Paketti 18: Katso kuva -linkit Afrikan havaintoihin
+
+Omistajan toive: kun havainto kuvailee ilmiötä ("tulivuori jolla kaksi
+kraatterijärveä", "kallioihin hakatut kirahvit"), pienestä linkistä
+pitäisi aueta kuva siitä. Mekanismi on valmis (#99): placeFacts-faktalle
+voi antaa `wiki`-kentän (Wikipedia-artikkelin otsikko), jolloin
+tietokorttiin ilmestyy "Katso kuva" -linkki. Se avaa artikkelin kuvan,
+tiivistelmän ja kuvagallerian. Esimerkit: africa-questions.js:n faktat
+Leptis Magna, Tadrart Acacus, Assekrem, Sudd, Kenkänokka, Deriba Caldera.
+
+Tehtävä: käy KAIKKI `AFRICA_FACTS`-faktat läpi ja lisää `wiki`-kenttä
+niihin, joissa on selvästi kuvautuva kohde tai ilmiö. Säännöt:
+
+- Vain kun faktassa on konkreettinen katsottava asia (rakennus,
+  luonnonmuodostuma, eläin, esine). Yleistunnelmalle ei linkkiä —
+  tavoite on ehkä 1 linkki per kaupunki, ei joka faktalle.
+- Otsikko suomeksi jos artikkeli on olemassa fi-Wikipediassa (esim.
+  'Kenkänokka'), muuten englanniksi ('Deriba Caldera'). Haku kokeilee
+  fi → en. Väärä otsikko ei kaada mitään (dialogi sanoo ettei tietoja
+  saatu), mutta älä arvaa: jos et ole varma artikkelin nimestä, jätä
+  linkki pois.
+- Merkkijonofakta muuttuu olioksi: `{ text: '...', wiki: 'Otsikko' }`.
+  `voice`- ja `source`-kentät säilytetään jos ovat.
+- Testit ajetaan (`node --test tests/rules.test.mjs`) — placeFacts-testi
+  tarkistaa wiki-kenttien muodon. Versionostot ja standalone kuten aina.
 
 ## Paketti 17: ambienssi — taustaäänimaisema kohteen mukaan — VALMIS
 

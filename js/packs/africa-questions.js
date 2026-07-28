@@ -1621,7 +1621,10 @@ export const AFRICA_FACTS = {
     },
   ],
   tripoli: [
-    'Rannikkotietä itään ajetaan pari tuntia, ja sitten aukeaa kokonainen roomalainen kaupunki: Leptis Magnan pääkatu, teatteri ja satama-allas meren rannalla. Tripolin nimi tarkoittaa kreikaksi kolmea kaupunkia — kaksi niistä on nykyään raunioina, ja kolmas on tämä, yhä pystyssä ja täynnä liikennettä.',
+    {
+      text: 'Rannikkotietä itään ajetaan pari tuntia, ja sitten aukeaa kokonainen roomalainen kaupunki: Leptis Magnan pääkatu, teatteri ja satama-allas meren rannalla. Tripolin nimi tarkoittaa kreikaksi kolmea kaupunkia — kaksi niistä on nykyään raunioina, ja kolmas on tämä, yhä pystyssä ja täynnä liikennettä.',
+      wiki: 'Leptis Magna',
+    },
     'Vanhankaupungin kujalta avautuu pieni aukio, ja sen keskellä seisoo roomalainen riemukaari vuodelta 165. Se on kuopassa, koska katu on noussut sen ympärillä neljä metriä kahdeksantoista vuosisadan aikana. Join sen varjossa pullosta vettä ja tajusin nojaavani keisari Marcus Aureliukseen.',
     {
       text: 'Rannikolla on satama, jonka läpi aavikon karavaanit purkavat lastinsa laivoihin. Kaupungin nimi tarkoittaa kreikaksi kolmea kaupunkia, mikä on tarkempaa kuin useimmat karttani nimet.',
@@ -1630,7 +1633,10 @@ export const AFRICA_FACTS = {
   ],
   murzuk: [
     'Ei puuta, ei tolppaa, ei varjoa. Murzukin hiekkameri on yksi Saharan laajimmista dyynialueista, ja kaupunki sen laidalla oli aikoinaan koko Fezzanin pääkaupunki: keskellä tyhjyyttä, koska tyhjyyden halki kulki tie.',
-    '"Kirahveja", sanoi kuljettaja ja pyyhkäisi hiekkaa kallion pinnalta. Fezzanin kallioihin on hakattu kirahveja, norsuja ja krokotiileja tuhansia vuosia sitten, silloin kun täällä oli ruohoa ja vettä. Aavikko on nuorempi kuin sen omat kuvat.',
+    {
+      text: '"Kirahveja", sanoi kuljettaja ja pyyhkäisi hiekkaa kallion pinnalta. Fezzanin kallioihin on hakattu kirahveja, norsuja ja krokotiileja tuhansia vuosia sitten, silloin kun täällä oli ruohoa ja vettä. Aavikko on nuorempi kuin sen omat kuvat.',
+      wiki: 'Tadrart Acacus',
+    },
     {
       text: 'Tänne on rannikolta kuukausi kamelin selässä, ja jokainen päivä on samanlainen kuin edellinen. Oppaani tietää tien ilman karttaa; minulla on kartta ja en tiedä tietä.',
       voice: 'isoisa',
@@ -1653,7 +1659,10 @@ export const AFRICA_FACTS = {
     },
   ],
   ahaggar: [
-    'Herätys oli kello neljä, koska kaikki muutkin heräsivät. Assekremin kalliolta katsotaan auringonnousua, ja kun valo tulee, Ahaggarin laavatapit nousevat hiekan yläpuolelle kuin mustat tornit: nämä ovat vanhojen tulivuorten kovat sisukset, ja pehmeämpi vuori on kulunut niiden ympäriltä pois.',
+    {
+      text: 'Herätys oli kello neljä, koska kaikki muutkin heräsivät. Assekremin kalliolta katsotaan auringonnousua, ja kun valo tulee, Ahaggarin laavatapit nousevat hiekan yläpuolelle kuin mustat tornit: nämä ovat vanhojen tulivuorten kovat sisukset, ja pehmeämpi vuori on kulunut niiden ympäriltä pois.',
+      wiki: 'Assekrem',
+    },
     'Kivien kylkiin on kirjoitettu pisteitä, ympyröitä ja viivoja — tifinagh, berberien kirjaimisto, jota tuaregit ovat käyttäneet katkeamatta. Se ei ole museotavaraa: samojen merkkien uudempi muoto näkyy Algerian tienviitoissa, ja sille on nykyään oma näppäimistönsä puhelimessa.',
     {
       text: 'Keskellä autiomaata kohoaa vuoristo, jonka huipuilla palelin kuin Skotlannissa. Tuaregit tuntevat nämä polut nimeltä; me nimesimme ne uudelleen ja luulimme sitä löytämiseksi.',
@@ -1821,15 +1830,24 @@ export const AFRICA_FACTS = {
     },
   ],
   bahrelghazal: [
-    'Joki ei pääty mereen eikä järveen vaan ruohoon: se katoaa Suddin soille, yhdelle maailman laajimmista kosteikoista, joka tulvakaudella kasvaa moninkertaiseksi. Noin puolet näille soille saapuvasta vedestä ei jatka koskaan pohjoiseen — se haihtuu matkalla.',
-    'Ruohikossa seisoi yli metrin mittainen lintu, joka ei liikahtanut koko sinä aikana kun katsoin sitä. Kenkänokan nokka on leveä kuin puukenkä, ja juuri nämä suot ovat yksi lajin tärkeimmistä elinalueista maailmassa.',
+    {
+      text: 'Joki ei pääty mereen eikä järveen vaan ruohoon: se katoaa Suddin soille, yhdelle maailman laajimmista kosteikoista, joka tulvakaudella kasvaa moninkertaiseksi. Noin puolet näille soille saapuvasta vedestä ei jatka koskaan pohjoiseen — se haihtuu matkalla.',
+      wiki: 'Sudd',
+    },
+    {
+      text: 'Ruohikossa seisoi yli metrin mittainen lintu, joka ei liikahtanut koko sinä aikana kun katsoin sitä. Kenkänokan nokka on leveä kuin puukenkä, ja juuri nämä suot ovat yksi lajin tärkeimmistä elinalueista maailmassa.',
+      wiki: 'Kenkänokka',
+    },
     {
       text: 'Joki hajoaa ruohikkoon niin laajalti, ettei uomaa löydä. Veneemme jäi kiinni kolme kertaa päivässä, ja paikalliset kalastajat kulkivat ohitsemme vaivatta. Karttani sanoi tässä olevan "joki".',
       voice: 'isoisa',
     },
   ],
   darfur: [
-    'Puoliaavikon keskeltä nousee yli kolmen kilometrin korkuinen tulivuori, ja sen huipulla on kaksi kraatterijärveä. Rinteillä sataa niin paljon enemmän kuin ympärillä, että siellä kasvatetaan appelsiineja ja perunoita: vuori tekee itselleen oman ilmastonsa.',
+    {
+      text: 'Puoliaavikon keskeltä nousee yli kolmen kilometrin korkuinen tulivuori, ja sen huipulla on kaksi kraatterijärveä. Rinteillä sataa niin paljon enemmän kuin ympärillä, että siellä kasvatetaan appelsiineja ja perunoita: vuori tekee itselleen oman ilmastonsa.',
+      wiki: 'Deriba Caldera',
+    },
     'Täältä lähti kamelikaravaaneja Egyptiin reittiä pitkin, jonka nimi on Neljänkymmenen päivän tie. Nimi ei ollut runoutta vaan aikataulu. Darfur oli tuolloin oma sulttaanikuntansa: se kaatui vuonna 1874, nousi vielä kerran jaloilleen vuosisadan vaihteessa ja hävisi kartalta lopullisesti vasta 1916.',
     {
       text: 'Puoliaavikon keskellä kohoaa vuoristo, jonka rinteillä sataa ja kasvaa hedelmäpuita. Alueen nimi tarkoittaa yksinkertaisesti furien maata — eli sitä, kenen maa se on. Harvinaisen selkeä nimi kartalla.',
