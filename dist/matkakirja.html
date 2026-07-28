@@ -207,33 +207,6 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 
 .board-hint:empty { display: none; }
 
-/*
- * Karttakysymyksen kysymysrivi: tavallista ohjeriviä painavampi, jotta se
- * luetaan kysymyksenä eikä huomautuksena — ja läpinäkymätön, koska se voi
- * osua päiväkirjakortin päälle.
- */
-.board-hint.ask {
-  background: rgba(28, 20, 12, 0.95);
-  border: 1.5px solid rgba(217, 161, 59, 0.75);
-  border-radius: 12px;
-  color: #f3e6c6;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.35);
-  max-width: min(34rem, 92%);
-}
-
-/*
- * Karttakysymyksen ajaksi päiväkirjakortti väistyy: se peitti kysymysrivin
- * ja karttaa pitää nyt lukea koko ruudulta. Kortti palaa heti vastattua.
- */
-body.map-ask .fact-card {
-  opacity: 0.12;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
 /* --- laudalla lepäävä 3D-noppa --- */
 
 .die-layer {
@@ -1102,28 +1075,6 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 .target:hover .target-ring.pick { fill: rgba(176, 138, 60, 0.18); }
 .target-ring.pick.picked { stroke: #e8b23c; stroke-width: 3; }
 .target-ring.picked { stroke: #e8b23c; }
-
-/*
- * Karttakysymyksen vastausehdokkaat: täytetty, hehkuva ja sykkivä rengas.
- * Pelkkä ohut valintarengas hukkui karttaan, eikä pelaaja tiennyt mitä
- * napauttaa — nämä neljä saavat siksi erottua kunnolla.
- */
-.target-ring.pick.quiz {
-  fill: rgba(217, 144, 36, 0.25);
-  stroke: #8f5c1d;
-  stroke-width: 3.4;
-  filter: drop-shadow(0 0 3px rgba(255, 248, 230, 0.95));
-  animation: quiz-ring-pulse 1.6s ease-in-out infinite;
-}
-
-@keyframes quiz-ring-pulse {
-  0%, 100% { stroke-width: 3.4; opacity: 1; }
-  50% { stroke-width: 6; opacity: 0.7; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .target-ring.pick.quiz { animation: none; }
-}
 
 /*
  * Siirtorenkaat olivat punaisia, paksuja ja pyöriviä — jalan liikuttaessa
@@ -2072,6 +2023,20 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .fact-card .fact-image-btn { color: var(--accent); }
 }
 
+/* Valokuvakysymyksen vedos: kuin arkistokuva paksulla reunuksella. */
+.quiz-photo {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  margin: 0.2rem 0 0.6rem;
+  border: 4px solid #f7efdc;
+  outline: 1px solid rgba(70, 51, 31, 0.4);
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(60, 42, 22, 0.25);
+  cursor: zoom-in;
+}
+
 .wiki-card { max-width: 560px; }
 
 /* Kuvan napautus avaa katselimen — kursori kertoo sen hiirikäyttäjälle. */
@@ -2541,6 +2506,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     <!-- Pulman piirros: isoisän luonnos, joka piirretään koodina. -->
     <svg id="quiz-sketch" class="quiz-sketch" viewBox="0 0 320 150"
          preserveAspectRatio="xMidYMid meet" aria-hidden="true" hidden></svg>
+    <!-- Valokuvakysymyksen kuva: matkavalokuvaajan vedos. -->
+    <img id="quiz-photo" class="quiz-photo" alt="" hidden />
     <p id="quiz-question" class="quiz-question"></p>
     <p id="quiz-hint-text" class="quiz-hint-text" hidden></p>
     <div id="quiz-options" class="quiz-options"></div>
@@ -26502,7 +26469,7 @@ const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
 // varmistuvat vasta pelitestissä. Jos laudalla ei ole väittämiä tai
 // tapahtumia, niiden paino siirtyy monivalinnalle — peli toimii jokaisella
 // laudalla ilman uutta sisältöä.
-const FORM_WEIGHTS = { quiz: 60, claim: 15, map: 10, event: 15 };
+const FORM_WEIGHTS = { quiz: 60, claim: 15, photo: 10, event: 15 };
 
 // Tietovisan kehys: joku paikallinen esittää kysymyksen. Kysyjä valitaan
 // kaupungin äänimaiseman mukaan, joten sama tyyppi ei kysele aavikolla ja
@@ -26545,7 +26512,7 @@ const ASKERS = {
     'nuori tulkki hymyilee ja kysyy',
   ],
 };
-const MAP_CHOICES = 4; // karttakysymyksen ehdokaskaupungit
+const PHOTO_CHOICES = 4; // valokuvakysymyksen nimivaihtoehdot
 
 /** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
 function timeOfDayName(hour) {
@@ -27264,14 +27231,17 @@ class Game {
     const painot = { ...FORM_WEIGHTS };
     if (!(this.pack.questions?.claims ?? []).length) painot.claim = 0;
     if (!(this.pack.events ?? []).length) painot.event = 0;
-    // Karttakysymys tarvitsee tarpeeksi kaupunkeja ehdokkaiksi.
-    if (this.board.cities.length < MAP_CHOICES + 1) painot.map = 0;
+    // Valokuvakysymys tarvitsee ladattuja kuvia (käyttöliittymä syöttää
+    // ne setPhotoPool-kutsulla) ja tarpeeksi kaupunkeja nimivaihtoehdoiksi.
+    if (this.photoTargets().length === 0 || this.board.cities.length < PHOTO_CHOICES) {
+      painot.photo = 0;
+    }
     if (this.lastForm && this.lastForm !== 'quiz') painot[this.lastForm] = 0;
     // Kaupungin omissa kysymyksissä voi olla vaikeita, joita ei ole vielä
     // kysytty; monivalinta on aina mahdollinen, joten se kerää loput.
     const siirtyy = FORM_WEIGHTS.claim - painot.claim
       + FORM_WEIGHTS.event - painot.event
-      + FORM_WEIGHTS.map - painot.map;
+      + FORM_WEIGHTS.photo - painot.photo;
     painot.quiz += siirtyy;
     return painot;
   }
@@ -27308,7 +27278,7 @@ class Game {
     const muoto = hard ? 'quiz' : (form ?? this.pickForm(city.id));
     this.lastForm = muoto;
     if (muoto === 'claim') return this.openClaim(city);
-    if (muoto === 'map') return this.openMapQuestion(city);
+    if (muoto === 'photo') return this.openPhotoQuestion(city);
     if (muoto === 'event') return this.openEvent(city);
 
     const difficulty = hard ? 'hard' : this.player.quizLevel;
@@ -27376,146 +27346,59 @@ class Game {
   }
 
   /**
-   * Karttakysymys: karttaa pitää oikeasti lukea. Muotoja on kaksi —
-   * ilmansuunta ("mikä näistä on pohjoisin?") ja naapuruus ("mihin pääsee
-   * suoraan yhtä reittiä?"). Vanha "missä on X?" -muoto oli kehäpäätelmä,
-   * koska kaupunkien nimet lukevat kartalla valmiiksi. Kysymys johdetaan
-   * laudan omasta datasta, joten se toimii jokaisella laudalla.
+   * Käyttöliittymä syöttää tänne kaupungit, joiden Wikipedia-kuva on
+   * saatu ladattua. Lista ei ole pelitilaa eikä sitä tallenneta: ilman
+   * verkkoa se jää tyhjäksi ja valokuvamuoto putoaa painoista pois.
    */
-  openMapQuestion(city) {
-    // Ehdokkaiksi kelpaavat kaikki paitsi kaupunki, jossa nyt seistään.
-    const pool = this.board.cities.filter((c) => c.id !== city.id);
+  setPhotoPool(cityIds) {
+    this.photoPool = new Set(cityIds);
+  }
 
-    // Ilmansuunta: neljästä arvotusta yhden pitää erottua selvästi, jottei
-    // vastaus jää mittailun varaan.
-    const suunta = (raja) => {
-      const akselit = [
-        ['pohjoisin', (c) => -c.y],
-        ['eteläisin', (c) => c.y],
-        ['läntisin', (c) => -c.x],
-        ['itäisin', (c) => c.x],
-      ];
-      for (let yritys = 0; yritys < 8; yritys++) {
-        const [nimi, arvo] = akselit[Math.floor(this.rng() * akselit.length)];
-        const arvottu = this.shuffledOrder(pool.length).slice(0, MAP_CHOICES).map((i) => pool[i]);
-        const jarjestys = [...arvottu].sort((a, b) => arvo(b) - arvo(a));
-        if (arvo(jarjestys[0]) - arvo(jarjestys[1]) < raja) continue;
-        return {
-          question: `Katso karttaa: mikä näistä on ${nimi}?`,
-          ehdokkaat: arvottu,
-          kohde: jarjestys[0],
-          fact: `${jarjestys[0].name} on näistä ${nimi}. Vanhassa kartassa pohjoinen on ylhäällä — kompassiruusu kartan kulmassa muistuttaa siitä.`,
-        };
-      }
-      return null;
-    };
-
-    // Kaupungin naapurit reittiverkossa.
-    const naapuriIdt = (id) => new Set(
-      [...(this.board.adj.get(id) ?? [])]
-        .map((eid) => this.board.edgeById.get(eid))
-        .map((e) => (e.a === id ? e.b : e.a)),
+  /** Kuvakohteet, joita ei ole vielä kysytty tässä pelissä. */
+  photoTargets() {
+    return [...(this.photoPool ?? [])].filter(
+      (id) => this.board.cityById.has(id) && !this.usedQuestions.has(`photo:${id}`),
     );
+  }
 
-    // Naapuruus: mihin ehdokkaista pääsee kohteesta suoraan yhtä reittiä?
-    const naapuruus = () => {
-      for (let yritys = 0; yritys < 8; yritys++) {
-        const kohde = pool[Math.floor(this.rng() * pool.length)];
-        const naapurit = naapuriIdt(kohde.id);
-        const oikeat = [...naapurit].filter((id) => id !== city.id);
-        if (!oikeat.length) continue;
-        const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
-        const vaarat = pool.filter((c) => c.id !== kohde.id && c.id !== oikea.id && !naapurit.has(c.id));
-        if (vaarat.length < MAP_CHOICES - 1) continue;
-        const arvottu = this.shuffledOrder(vaarat.length).slice(0, MAP_CHOICES - 1).map((i) => vaarat[i]);
-        return {
-          question: `Katso karttaa: mihin näistä pääsee kaupungista ${kohde.name} suoraan yhtä reittiä pitkin?`,
-          ehdokkaat: [oikea, ...arvottu],
-          kohde: oikea,
-          fact: `Reitti ${kohde.name} – ${oikea.name} kulkee laudalla suoraan, ilman välipysähdyksiä.`,
-        };
-      }
-      return null;
-    };
+  /**
+   * Valokuvakysymys: matkavalokuvaaja näyttää oikean valokuvan paikasta
+   * (Wikipedian kuva, sama putki kuin saapumiskorteissa), ja pelaaja
+   * päättelee mikä paikka kuvassa on. Vanhat karttakysymykset testasivat
+   * pelilaudan keksittyä reittiverkkoa — tämä opettaa miltä paikat
+   * oikeasti näyttävät.
+   */
+  openPhotoQuestion(city) {
+    const kohteet = this.photoTargets();
+    // Ilman ladattuja kuvia pudotaan tavalliseen monivalintaan.
+    if (!kohteet.length) return this.actionQuiz({ form: 'quiz' });
 
-    // Linnuntie: mikä ehdokkaista on lähimpänä ankkurikaupunkia? Reittien
-    // mutkat pettävät silmää, joten etäisyys pitää katsoa suorana viivana.
-    // Lähimmän ja toiseksi lähimmän eron pitää olla selvä, ettei vastaus
-    // jää millimetrien mittailuksi.
-    const linnuntie = (raja) => {
-      for (let yritys = 0; yritys < 12; yritys++) {
-        const ankkuri = pool[Math.floor(this.rng() * pool.length)];
-        const muut = pool.filter((c) => c.id !== ankkuri.id);
-        if (muut.length < MAP_CHOICES) break;
-        const arvottu = this.shuffledOrder(muut.length).slice(0, MAP_CHOICES).map((i) => muut[i]);
-        const etaisyys = (c) => Math.hypot(c.x - ankkuri.x, c.y - ankkuri.y);
-        const jarjestys = [...arvottu].sort((a, b) => etaisyys(a) - etaisyys(b));
-        if (etaisyys(jarjestys[1]) - etaisyys(jarjestys[0]) < raja) continue;
-        return {
-          question: `Katso karttaa: mikä näistä on linnuntietä lähimpänä kaupunkia ${ankkuri.name}?`,
-          ehdokkaat: arvottu,
-          kohde: jarjestys[0],
-          fact: `${jarjestys[0].name} on linnuntietä lähimpänä kaupunkia ${ankkuri.name}. Reitit mutkittelevat, mutta linnuntie on suora viiva kaupungista toiseen.`,
-        };
-      }
-      return null;
-    };
+    const kohdeId = kohteet[Math.floor(this.rng() * kohteet.length)];
+    const kohde = this.board.cityById.get(kohdeId);
+    this.usedQuestions.add(`photo:${kohdeId}`);
 
-    // Välipysähdys: mihin ehdokkaista pääsee kohteesta kahdella reitillä,
-    // yhden välipysähdyksen kautta? Vaatii reittiverkon seuraamista.
-    // Väärät ehdokkaat eivät ole naapureita eivätkä kahden reitin päässä,
-    // jottei vastaus jää tulkinnasta kiinni.
-    const valipysahdys = () => {
-      for (let yritys = 0; yritys < 12; yritys++) {
-        const kohde = pool[Math.floor(this.rng() * pool.length)];
-        const naapurit = naapuriIdt(kohde.id);
-        const kahden = new Set();
-        for (const nid of naapurit) for (const mid of naapuriIdt(nid)) kahden.add(mid);
-        kahden.delete(kohde.id);
-        for (const nid of naapurit) kahden.delete(nid);
-        const oikeat = [...kahden].filter((id) => id !== city.id);
-        if (!oikeat.length) continue;
-        const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
-        const vaarat = pool.filter((c) => c.id !== kohde.id && c.id !== oikea.id
-          && !kahden.has(c.id) && !naapurit.has(c.id));
-        if (vaarat.length < MAP_CHOICES - 1) continue;
-        const arvottu = this.shuffledOrder(vaarat.length).slice(0, MAP_CHOICES - 1).map((i) => vaarat[i]);
-        return {
-          question: `Katso karttaa: mihin näistä pääsee kaupungista ${kohde.name} kahdella reitillä, yhden välipysähdyksen kautta?`,
-          ehdokkaat: [oikea, ...arvottu],
-          kohde: oikea,
-          fact: `Kaupungista ${kohde.name} pääsee kaupunkiin ${oikea.name} yhden välipysähdyksen kautta. Muihin ehdokkaisiin reittejä pitkin on pidempi matka.`,
-        };
-      }
-      return null;
-    };
-
-    // Muoto arvotaan; varamuodot takaavat, että kysymys löytyy aina.
-    // Normaalitasolla painotetaan vaikeampia muotoja (linnuntie ja
-    // välipysähdys) — pelkkä "mikä on pohjoisin" oli aikuiselle liian
-    // helppo. Lapsen tasolla vanhat muodot riittävät.
-    const arpa = this.rng();
-    const helppo = this.player.quizLevel === 'easy';
-    const tehtava = (helppo
-      ? ((arpa < 0.5 ? suunta(55) : null) ?? naapuruus())
-      : (arpa < 0.4 ? linnuntie(90)
-        : arpa < 0.75 ? valipysahdys()
-          : ((this.rng() < 0.5 ? suunta(55) : null) ?? naapuruus())))
-      ?? naapuruus() ?? suunta(1) ?? suunta(0);
-
-    const jarj = this.shuffledOrder(tehtava.ehdokkaat.length);
-    const vaihtoehdot = jarj.map((i) => tehtava.ehdokkaat[i]);
+    // Väärät vaihtoehdot ovat laudan muiden kaupunkien nimiä.
+    const muut = this.board.cities.filter((c) => c.id !== kohdeId);
+    const vaarat = this.shuffledOrder(muut.length)
+      .slice(0, PHOTO_CHOICES - 1)
+      .map((i) => muut[i]);
+    const jarj = this.shuffledOrder(PHOTO_CHOICES);
+    const ehdokkaat = jarj.map((i) => [kohde, ...vaarat][i]);
 
     this.quiz = {
-      kind: 'map',
+      kind: 'photo',
       cityId: city.id,
+      // Kuvan kohde voi olla eri paikka kuin missä seistään — kuva
+      // ladataan otsikon perusteella käyttöliittymässä.
+      photoCity: kohde.id,
+      photoWiki: kohde.wiki ?? kohde.name,
       hard: false,
-      question: tehtava.question,
-      fact: tehtava.fact,
+      frame: 'matkavalokuvaaja levittää vedoksensa pöytään ja kysyy',
+      question: 'Mikä paikka valokuvassa on?',
+      fact: `Kuvassa on ${kohde.name}. Valokuva: Wikipedia (CC).`,
       source: [],
-      options: vaihtoehdot.map((c) => c.name),
-      mapCities: vaihtoehdot.map((c) => c.id),
-      correct: vaihtoehdot.indexOf(tehtava.kohde),
+      options: ehdokkaat.map((c) => c.name),
+      correct: ehdokkaat.indexOf(kohde),
       hint: null,
       hintShown: false,
       hidden: [],
@@ -28666,6 +28549,11 @@ class UI {
     });
 
     this.quizSketch = document.getElementById('quiz-sketch');
+    this.quizPhoto = document.getElementById('quiz-photo');
+    this.quizPhoto.addEventListener('click', () => {
+      const quiz = this.game.quiz;
+      if (quiz?.photoWiki) this.openLightbox(quiz.photoWiki, 'Matkavalokuvaajan vedos');
+    });
     this.quizBadge = document.getElementById('quiz-badge');
 
     this.wikiDialog = document.getElementById('wiki-dialog');
@@ -29229,24 +29117,6 @@ class UI {
       return;
     }
 
-    // Karttakysymys: ehdokaskaupungit ovat vastausvaihtoehtoja, ja vastaus
-    // annetaan napauttamalla lautaa. Renkaat ovat samat kuin lähtöpisteen
-    // valinnassa, koska tässäkin osoitetaan paikkaa eikä kehoteta liikkumaan.
-    const quiz = game.quiz;
-    if (game.phase === 'quiz' && quiz?.kind === 'map' && quiz.chosen === null) {
-      quiz.mapCities.forEach((cityId, i) => {
-        const c = game.board.cityById.get(cityId);
-        if (!c) return;
-        const g = el('g', { class: 'target' }, this.targetLayer);
-        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
-        // Sykkivä rengas erottuu siirtorenkaista: pelaajan pitää huomata,
-        // että juuri nämä kaupungit ovat vastausvaihtoehtoja.
-        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring pick quiz' }, g);
-        g.addEventListener('click', () => this.answerQuiz(i));
-      });
-      return;
-    }
-
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
@@ -29746,9 +29616,40 @@ class UI {
     playPlaceAmbience(city?.id ?? null, city?.ambience ?? null);
   }
 
+  /**
+   * Lataa laudan kaupunkien kuvia taustalla valokuvakysymyksiä varten ja
+   * kertoo moottorille, mitkä ovat valmiina. Lista ei ole pelitilaa:
+   * ilman verkkoa se jää tyhjäksi ja valokuvamuoto putoaa pois käytöstä.
+   * Haut porrastetaan, ettei Wikipediaa kuormiteta ryöpyllä.
+   */
+  primePhotoPool() {
+    const pack = this.game.pack;
+    this.photoPools ??= new Map();
+    if (!this.photoPools.has(pack.id)) {
+      const valmiit = new Set();
+      this.photoPools.set(pack.id, valmiit);
+      const kaupungit = pack.cities.filter((c) => c.wiki);
+      // Sekoitus tavallisella satunnaisluvulla — kuvien latausjärjestys
+      // ei ole pelitilaa eikä saa kuluttaa pelin siemenlukua.
+      const arvottu = [...kaupungit].sort(() => Math.random() - 0.5).slice(0, 12);
+      arvottu.forEach((c, i) => {
+        setTimeout(() => {
+          if (this.dead) return;
+          cachedImage(c.wiki).then((url) => {
+            if (this.dead || !url) return;
+            valmiit.add(c.id);
+            if (this.game.pack.id === pack.id) this.game.setPhotoPool([...valmiit]);
+          });
+        }, 400 * i);
+      });
+    }
+    this.game.setPhotoPool([...this.photoPools.get(pack.id)]);
+  }
+
   render() {
     this.syncAmbience();
     if (this.dead) return;
+    this.primePhotoPool();
     this.onChange?.(this.game);
     // Aloituskartalla asettelu on kahdessa palstassa; pelin käynnistyttyä
     // kartta täyttää koko ruudun ja paneelit kelluvat sen päällä.
@@ -30172,11 +30073,6 @@ class UI {
   renderQuiz() {
     if (this.dead) return; // kesken jäänyt animaatioketju voi kutsua tätä vielä destroyn jälkeen
     const { game } = this;
-    // Karttakysymyksen erikoistila puretaan aina ensin; avoin karttakysymys
-    // laittaa sen takaisin alempana. Ilman tätä päiväkirja jäisi himmeäksi
-    // kysymyksen sulkeuduttua.
-    this.hint.classList.remove('ask');
-    document.body.classList.remove('map-ask');
     this.renderEvent();
     if (game.phase === 'duel' && game.duel) {
       this.renderDuel();
@@ -30186,21 +30082,6 @@ class UI {
     if (game.phase !== 'quiz' || !quiz) {
       this.stopQuizTimer();
       if (this.quizDialog.open) this.quizDialog.close();
-      return;
-    }
-
-    // Karttakysymykseen vastataan napauttamalla lautaa, joten modaali pysyy
-    // kiinni siihen asti. Vastauksen jälkeen tulos näytetään normaalisti.
-    // Ohjerivi kertoo suoraan miten vastataan — ilman kehotusta pelaaja jäi
-    // odottamaan vastausvaihtoehtoja, joita ei koskaan tullut.
-    if (quiz.kind === 'map' && quiz.chosen === null) {
-      this.stopQuizTimer();
-      if (this.quizDialog.open) this.quizDialog.close();
-      this.hint.textContent = `${quiz.question} Napauta vastausta kartalla.`;
-      this.hint.classList.add('ask');
-      // Päiväkirja väistyy kysymyksen ajaksi: kysymysrivi jäi sen alle
-      // eikä karttaa voinut lukea kortin läpi.
-      document.body.classList.add('map-ask');
       return;
     }
 
@@ -30217,10 +30098,25 @@ class UI {
       drawPuzzle(this.quizSketch, quiz.puzzleId, quiz.sketchData);
     }
 
-    // Leima näkyy vain pulmissa: irrallinen "Tietovisa"-sana on turha,
-    // kun kehys kertoo kuka kysymyksen esittää.
-    this.quizBadge.hidden = quiz.kind !== 'puzzle';
-    this.quizBadge.textContent = 'Pulma';
+    // Valokuvakysymyksen kuva ladataan kerran per kysymys. Jos kuvaa ei
+    // saada (esim. verkko katkesi kysymyksen avauduttua), tilalle jää
+    // kysymysteksti — vaihtoehtoihin voi silti vastata tai antaa ajan
+    // valua umpeen.
+    this.quizPhoto.hidden = quiz.kind !== 'photo';
+    if (quiz.kind === 'photo' && this.photoShownFor !== quiz) {
+      this.photoShownFor = quiz;
+      this.quizPhoto.removeAttribute('src');
+      cachedImage(quiz.photoWiki).then((url) => {
+        if (this.photoShownFor !== quiz || !url) return;
+        this.quizPhoto.src = url;
+        this.quizPhoto.alt = 'Matkavalokuvaajan vedos';
+      });
+    }
+
+    // Leima näkyy vain pulmissa ja valokuvissa: irrallinen "Tietovisa"-sana
+    // on turha, kun kehys kertoo kuka kysymyksen esittää.
+    this.quizBadge.hidden = quiz.kind !== 'puzzle' && quiz.kind !== 'photo';
+    this.quizBadge.textContent = quiz.kind === 'photo' ? 'Valokuva' : 'Pulma';
     if (quiz.kind === 'puzzle') {
       this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
     } else if (quiz.kind === 'claim') {
@@ -30228,8 +30124,6 @@ class UI {
       // jota merkintä koskee — se on usein muu kuin pelaajan sijainti.
       const aihe = quiz.place ? ` · ${quiz.place}` : '';
       this.quizCity.textContent = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
-    } else if (quiz.kind === 'map') {
-      this.quizCity.textContent = `${city.name} — kartalta`;
     } else if (quiz.gate) {
       this.quizCity.textContent = `${city.name} — portti: ${quiz.gate.label}`;
     } else {
@@ -31061,7 +30955,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.1';
+const APP_VERSION = '2026-07-29.2';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

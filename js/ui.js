@@ -194,6 +194,11 @@ export class UI {
     });
 
     this.quizSketch = document.getElementById('quiz-sketch');
+    this.quizPhoto = document.getElementById('quiz-photo');
+    this.quizPhoto.addEventListener('click', () => {
+      const quiz = this.game.quiz;
+      if (quiz?.photoWiki) this.openLightbox(quiz.photoWiki, 'Matkavalokuvaajan vedos');
+    });
     this.quizBadge = document.getElementById('quiz-badge');
 
     this.wikiDialog = document.getElementById('wiki-dialog');
@@ -757,24 +762,6 @@ export class UI {
       return;
     }
 
-    // Karttakysymys: ehdokaskaupungit ovat vastausvaihtoehtoja, ja vastaus
-    // annetaan napauttamalla lautaa. Renkaat ovat samat kuin lähtöpisteen
-    // valinnassa, koska tässäkin osoitetaan paikkaa eikä kehoteta liikkumaan.
-    const quiz = game.quiz;
-    if (game.phase === 'quiz' && quiz?.kind === 'map' && quiz.chosen === null) {
-      quiz.mapCities.forEach((cityId, i) => {
-        const c = game.board.cityById.get(cityId);
-        if (!c) return;
-        const g = el('g', { class: 'target' }, this.targetLayer);
-        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
-        // Sykkivä rengas erottuu siirtorenkaista: pelaajan pitää huomata,
-        // että juuri nämä kaupungit ovat vastausvaihtoehtoja.
-        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring pick quiz' }, g);
-        g.addEventListener('click', () => this.answerQuiz(i));
-      });
-      return;
-    }
-
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
@@ -1275,9 +1262,40 @@ export class UI {
     playPlaceAmbience(city?.id ?? null, city?.ambience ?? null);
   }
 
+  /**
+   * Lataa laudan kaupunkien kuvia taustalla valokuvakysymyksiä varten ja
+   * kertoo moottorille, mitkä ovat valmiina. Lista ei ole pelitilaa:
+   * ilman verkkoa se jää tyhjäksi ja valokuvamuoto putoaa pois käytöstä.
+   * Haut porrastetaan, ettei Wikipediaa kuormiteta ryöpyllä.
+   */
+  primePhotoPool() {
+    const pack = this.game.pack;
+    this.photoPools ??= new Map();
+    if (!this.photoPools.has(pack.id)) {
+      const valmiit = new Set();
+      this.photoPools.set(pack.id, valmiit);
+      const kaupungit = pack.cities.filter((c) => c.wiki);
+      // Sekoitus tavallisella satunnaisluvulla — kuvien latausjärjestys
+      // ei ole pelitilaa eikä saa kuluttaa pelin siemenlukua.
+      const arvottu = [...kaupungit].sort(() => Math.random() - 0.5).slice(0, 12);
+      arvottu.forEach((c, i) => {
+        setTimeout(() => {
+          if (this.dead) return;
+          cachedImage(c.wiki).then((url) => {
+            if (this.dead || !url) return;
+            valmiit.add(c.id);
+            if (this.game.pack.id === pack.id) this.game.setPhotoPool([...valmiit]);
+          });
+        }, 400 * i);
+      });
+    }
+    this.game.setPhotoPool([...this.photoPools.get(pack.id)]);
+  }
+
   render() {
     this.syncAmbience();
     if (this.dead) return;
+    this.primePhotoPool();
     this.onChange?.(this.game);
     // Aloituskartalla asettelu on kahdessa palstassa; pelin käynnistyttyä
     // kartta täyttää koko ruudun ja paneelit kelluvat sen päällä.
@@ -1701,11 +1719,6 @@ export class UI {
   renderQuiz() {
     if (this.dead) return; // kesken jäänyt animaatioketju voi kutsua tätä vielä destroyn jälkeen
     const { game } = this;
-    // Karttakysymyksen erikoistila puretaan aina ensin; avoin karttakysymys
-    // laittaa sen takaisin alempana. Ilman tätä päiväkirja jäisi himmeäksi
-    // kysymyksen sulkeuduttua.
-    this.hint.classList.remove('ask');
-    document.body.classList.remove('map-ask');
     this.renderEvent();
     if (game.phase === 'duel' && game.duel) {
       this.renderDuel();
@@ -1715,21 +1728,6 @@ export class UI {
     if (game.phase !== 'quiz' || !quiz) {
       this.stopQuizTimer();
       if (this.quizDialog.open) this.quizDialog.close();
-      return;
-    }
-
-    // Karttakysymykseen vastataan napauttamalla lautaa, joten modaali pysyy
-    // kiinni siihen asti. Vastauksen jälkeen tulos näytetään normaalisti.
-    // Ohjerivi kertoo suoraan miten vastataan — ilman kehotusta pelaaja jäi
-    // odottamaan vastausvaihtoehtoja, joita ei koskaan tullut.
-    if (quiz.kind === 'map' && quiz.chosen === null) {
-      this.stopQuizTimer();
-      if (this.quizDialog.open) this.quizDialog.close();
-      this.hint.textContent = `${quiz.question} Napauta vastausta kartalla.`;
-      this.hint.classList.add('ask');
-      // Päiväkirja väistyy kysymyksen ajaksi: kysymysrivi jäi sen alle
-      // eikä karttaa voinut lukea kortin läpi.
-      document.body.classList.add('map-ask');
       return;
     }
 
@@ -1746,10 +1744,25 @@ export class UI {
       drawPuzzle(this.quizSketch, quiz.puzzleId, quiz.sketchData);
     }
 
-    // Leima näkyy vain pulmissa: irrallinen "Tietovisa"-sana on turha,
-    // kun kehys kertoo kuka kysymyksen esittää.
-    this.quizBadge.hidden = quiz.kind !== 'puzzle';
-    this.quizBadge.textContent = 'Pulma';
+    // Valokuvakysymyksen kuva ladataan kerran per kysymys. Jos kuvaa ei
+    // saada (esim. verkko katkesi kysymyksen avauduttua), tilalle jää
+    // kysymysteksti — vaihtoehtoihin voi silti vastata tai antaa ajan
+    // valua umpeen.
+    this.quizPhoto.hidden = quiz.kind !== 'photo';
+    if (quiz.kind === 'photo' && this.photoShownFor !== quiz) {
+      this.photoShownFor = quiz;
+      this.quizPhoto.removeAttribute('src');
+      cachedImage(quiz.photoWiki).then((url) => {
+        if (this.photoShownFor !== quiz || !url) return;
+        this.quizPhoto.src = url;
+        this.quizPhoto.alt = 'Matkavalokuvaajan vedos';
+      });
+    }
+
+    // Leima näkyy vain pulmissa ja valokuvissa: irrallinen "Tietovisa"-sana
+    // on turha, kun kehys kertoo kuka kysymyksen esittää.
+    this.quizBadge.hidden = quiz.kind !== 'puzzle' && quiz.kind !== 'photo';
+    this.quizBadge.textContent = quiz.kind === 'photo' ? 'Valokuva' : 'Pulma';
     if (quiz.kind === 'puzzle') {
       this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
     } else if (quiz.kind === 'claim') {
@@ -1757,8 +1770,6 @@ export class UI {
       // jota merkintä koskee — se on usein muu kuin pelaajan sijainti.
       const aihe = quiz.place ? ` · ${quiz.place}` : '';
       this.quizCity.textContent = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
-    } else if (quiz.kind === 'map') {
-      this.quizCity.textContent = `${city.name} — kartalta`;
     } else if (quiz.gate) {
       this.quizCity.textContent = `${city.name} — portti: ${quiz.gate.label}`;
     } else {

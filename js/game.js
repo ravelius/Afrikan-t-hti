@@ -27,7 +27,7 @@ export const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
 // varmistuvat vasta pelitestissä. Jos laudalla ei ole väittämiä tai
 // tapahtumia, niiden paino siirtyy monivalinnalle — peli toimii jokaisella
 // laudalla ilman uutta sisältöä.
-export const FORM_WEIGHTS = { quiz: 60, claim: 15, map: 10, event: 15 };
+export const FORM_WEIGHTS = { quiz: 60, claim: 15, photo: 10, event: 15 };
 
 // Tietovisan kehys: joku paikallinen esittää kysymyksen. Kysyjä valitaan
 // kaupungin äänimaiseman mukaan, joten sama tyyppi ei kysele aavikolla ja
@@ -70,7 +70,7 @@ export const ASKERS = {
     'nuori tulkki hymyilee ja kysyy',
   ],
 };
-export const MAP_CHOICES = 4; // karttakysymyksen ehdokaskaupungit
+export const PHOTO_CHOICES = 4; // valokuvakysymyksen nimivaihtoehdot
 
 /** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
 export function timeOfDayName(hour) {
@@ -790,14 +790,17 @@ export class Game {
     const painot = { ...FORM_WEIGHTS };
     if (!(this.pack.questions?.claims ?? []).length) painot.claim = 0;
     if (!(this.pack.events ?? []).length) painot.event = 0;
-    // Karttakysymys tarvitsee tarpeeksi kaupunkeja ehdokkaiksi.
-    if (this.board.cities.length < MAP_CHOICES + 1) painot.map = 0;
+    // Valokuvakysymys tarvitsee ladattuja kuvia (käyttöliittymä syöttää
+    // ne setPhotoPool-kutsulla) ja tarpeeksi kaupunkeja nimivaihtoehdoiksi.
+    if (this.photoTargets().length === 0 || this.board.cities.length < PHOTO_CHOICES) {
+      painot.photo = 0;
+    }
     if (this.lastForm && this.lastForm !== 'quiz') painot[this.lastForm] = 0;
     // Kaupungin omissa kysymyksissä voi olla vaikeita, joita ei ole vielä
     // kysytty; monivalinta on aina mahdollinen, joten se kerää loput.
     const siirtyy = FORM_WEIGHTS.claim - painot.claim
       + FORM_WEIGHTS.event - painot.event
-      + FORM_WEIGHTS.map - painot.map;
+      + FORM_WEIGHTS.photo - painot.photo;
     painot.quiz += siirtyy;
     return painot;
   }
@@ -834,7 +837,7 @@ export class Game {
     const muoto = hard ? 'quiz' : (form ?? this.pickForm(city.id));
     this.lastForm = muoto;
     if (muoto === 'claim') return this.openClaim(city);
-    if (muoto === 'map') return this.openMapQuestion(city);
+    if (muoto === 'photo') return this.openPhotoQuestion(city);
     if (muoto === 'event') return this.openEvent(city);
 
     const difficulty = hard ? 'hard' : this.player.quizLevel;
@@ -902,146 +905,59 @@ export class Game {
   }
 
   /**
-   * Karttakysymys: karttaa pitää oikeasti lukea. Muotoja on kaksi —
-   * ilmansuunta ("mikä näistä on pohjoisin?") ja naapuruus ("mihin pääsee
-   * suoraan yhtä reittiä?"). Vanha "missä on X?" -muoto oli kehäpäätelmä,
-   * koska kaupunkien nimet lukevat kartalla valmiiksi. Kysymys johdetaan
-   * laudan omasta datasta, joten se toimii jokaisella laudalla.
+   * Käyttöliittymä syöttää tänne kaupungit, joiden Wikipedia-kuva on
+   * saatu ladattua. Lista ei ole pelitilaa eikä sitä tallenneta: ilman
+   * verkkoa se jää tyhjäksi ja valokuvamuoto putoaa painoista pois.
    */
-  openMapQuestion(city) {
-    // Ehdokkaiksi kelpaavat kaikki paitsi kaupunki, jossa nyt seistään.
-    const pool = this.board.cities.filter((c) => c.id !== city.id);
+  setPhotoPool(cityIds) {
+    this.photoPool = new Set(cityIds);
+  }
 
-    // Ilmansuunta: neljästä arvotusta yhden pitää erottua selvästi, jottei
-    // vastaus jää mittailun varaan.
-    const suunta = (raja) => {
-      const akselit = [
-        ['pohjoisin', (c) => -c.y],
-        ['eteläisin', (c) => c.y],
-        ['läntisin', (c) => -c.x],
-        ['itäisin', (c) => c.x],
-      ];
-      for (let yritys = 0; yritys < 8; yritys++) {
-        const [nimi, arvo] = akselit[Math.floor(this.rng() * akselit.length)];
-        const arvottu = this.shuffledOrder(pool.length).slice(0, MAP_CHOICES).map((i) => pool[i]);
-        const jarjestys = [...arvottu].sort((a, b) => arvo(b) - arvo(a));
-        if (arvo(jarjestys[0]) - arvo(jarjestys[1]) < raja) continue;
-        return {
-          question: `Katso karttaa: mikä näistä on ${nimi}?`,
-          ehdokkaat: arvottu,
-          kohde: jarjestys[0],
-          fact: `${jarjestys[0].name} on näistä ${nimi}. Vanhassa kartassa pohjoinen on ylhäällä — kompassiruusu kartan kulmassa muistuttaa siitä.`,
-        };
-      }
-      return null;
-    };
-
-    // Kaupungin naapurit reittiverkossa.
-    const naapuriIdt = (id) => new Set(
-      [...(this.board.adj.get(id) ?? [])]
-        .map((eid) => this.board.edgeById.get(eid))
-        .map((e) => (e.a === id ? e.b : e.a)),
+  /** Kuvakohteet, joita ei ole vielä kysytty tässä pelissä. */
+  photoTargets() {
+    return [...(this.photoPool ?? [])].filter(
+      (id) => this.board.cityById.has(id) && !this.usedQuestions.has(`photo:${id}`),
     );
+  }
 
-    // Naapuruus: mihin ehdokkaista pääsee kohteesta suoraan yhtä reittiä?
-    const naapuruus = () => {
-      for (let yritys = 0; yritys < 8; yritys++) {
-        const kohde = pool[Math.floor(this.rng() * pool.length)];
-        const naapurit = naapuriIdt(kohde.id);
-        const oikeat = [...naapurit].filter((id) => id !== city.id);
-        if (!oikeat.length) continue;
-        const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
-        const vaarat = pool.filter((c) => c.id !== kohde.id && c.id !== oikea.id && !naapurit.has(c.id));
-        if (vaarat.length < MAP_CHOICES - 1) continue;
-        const arvottu = this.shuffledOrder(vaarat.length).slice(0, MAP_CHOICES - 1).map((i) => vaarat[i]);
-        return {
-          question: `Katso karttaa: mihin näistä pääsee kaupungista ${kohde.name} suoraan yhtä reittiä pitkin?`,
-          ehdokkaat: [oikea, ...arvottu],
-          kohde: oikea,
-          fact: `Reitti ${kohde.name} – ${oikea.name} kulkee laudalla suoraan, ilman välipysähdyksiä.`,
-        };
-      }
-      return null;
-    };
+  /**
+   * Valokuvakysymys: matkavalokuvaaja näyttää oikean valokuvan paikasta
+   * (Wikipedian kuva, sama putki kuin saapumiskorteissa), ja pelaaja
+   * päättelee mikä paikka kuvassa on. Vanhat karttakysymykset testasivat
+   * pelilaudan keksittyä reittiverkkoa — tämä opettaa miltä paikat
+   * oikeasti näyttävät.
+   */
+  openPhotoQuestion(city) {
+    const kohteet = this.photoTargets();
+    // Ilman ladattuja kuvia pudotaan tavalliseen monivalintaan.
+    if (!kohteet.length) return this.actionQuiz({ form: 'quiz' });
 
-    // Linnuntie: mikä ehdokkaista on lähimpänä ankkurikaupunkia? Reittien
-    // mutkat pettävät silmää, joten etäisyys pitää katsoa suorana viivana.
-    // Lähimmän ja toiseksi lähimmän eron pitää olla selvä, ettei vastaus
-    // jää millimetrien mittailuksi.
-    const linnuntie = (raja) => {
-      for (let yritys = 0; yritys < 12; yritys++) {
-        const ankkuri = pool[Math.floor(this.rng() * pool.length)];
-        const muut = pool.filter((c) => c.id !== ankkuri.id);
-        if (muut.length < MAP_CHOICES) break;
-        const arvottu = this.shuffledOrder(muut.length).slice(0, MAP_CHOICES).map((i) => muut[i]);
-        const etaisyys = (c) => Math.hypot(c.x - ankkuri.x, c.y - ankkuri.y);
-        const jarjestys = [...arvottu].sort((a, b) => etaisyys(a) - etaisyys(b));
-        if (etaisyys(jarjestys[1]) - etaisyys(jarjestys[0]) < raja) continue;
-        return {
-          question: `Katso karttaa: mikä näistä on linnuntietä lähimpänä kaupunkia ${ankkuri.name}?`,
-          ehdokkaat: arvottu,
-          kohde: jarjestys[0],
-          fact: `${jarjestys[0].name} on linnuntietä lähimpänä kaupunkia ${ankkuri.name}. Reitit mutkittelevat, mutta linnuntie on suora viiva kaupungista toiseen.`,
-        };
-      }
-      return null;
-    };
+    const kohdeId = kohteet[Math.floor(this.rng() * kohteet.length)];
+    const kohde = this.board.cityById.get(kohdeId);
+    this.usedQuestions.add(`photo:${kohdeId}`);
 
-    // Välipysähdys: mihin ehdokkaista pääsee kohteesta kahdella reitillä,
-    // yhden välipysähdyksen kautta? Vaatii reittiverkon seuraamista.
-    // Väärät ehdokkaat eivät ole naapureita eivätkä kahden reitin päässä,
-    // jottei vastaus jää tulkinnasta kiinni.
-    const valipysahdys = () => {
-      for (let yritys = 0; yritys < 12; yritys++) {
-        const kohde = pool[Math.floor(this.rng() * pool.length)];
-        const naapurit = naapuriIdt(kohde.id);
-        const kahden = new Set();
-        for (const nid of naapurit) for (const mid of naapuriIdt(nid)) kahden.add(mid);
-        kahden.delete(kohde.id);
-        for (const nid of naapurit) kahden.delete(nid);
-        const oikeat = [...kahden].filter((id) => id !== city.id);
-        if (!oikeat.length) continue;
-        const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
-        const vaarat = pool.filter((c) => c.id !== kohde.id && c.id !== oikea.id
-          && !kahden.has(c.id) && !naapurit.has(c.id));
-        if (vaarat.length < MAP_CHOICES - 1) continue;
-        const arvottu = this.shuffledOrder(vaarat.length).slice(0, MAP_CHOICES - 1).map((i) => vaarat[i]);
-        return {
-          question: `Katso karttaa: mihin näistä pääsee kaupungista ${kohde.name} kahdella reitillä, yhden välipysähdyksen kautta?`,
-          ehdokkaat: [oikea, ...arvottu],
-          kohde: oikea,
-          fact: `Kaupungista ${kohde.name} pääsee kaupunkiin ${oikea.name} yhden välipysähdyksen kautta. Muihin ehdokkaisiin reittejä pitkin on pidempi matka.`,
-        };
-      }
-      return null;
-    };
-
-    // Muoto arvotaan; varamuodot takaavat, että kysymys löytyy aina.
-    // Normaalitasolla painotetaan vaikeampia muotoja (linnuntie ja
-    // välipysähdys) — pelkkä "mikä on pohjoisin" oli aikuiselle liian
-    // helppo. Lapsen tasolla vanhat muodot riittävät.
-    const arpa = this.rng();
-    const helppo = this.player.quizLevel === 'easy';
-    const tehtava = (helppo
-      ? ((arpa < 0.5 ? suunta(55) : null) ?? naapuruus())
-      : (arpa < 0.4 ? linnuntie(90)
-        : arpa < 0.75 ? valipysahdys()
-          : ((this.rng() < 0.5 ? suunta(55) : null) ?? naapuruus())))
-      ?? naapuruus() ?? suunta(1) ?? suunta(0);
-
-    const jarj = this.shuffledOrder(tehtava.ehdokkaat.length);
-    const vaihtoehdot = jarj.map((i) => tehtava.ehdokkaat[i]);
+    // Väärät vaihtoehdot ovat laudan muiden kaupunkien nimiä.
+    const muut = this.board.cities.filter((c) => c.id !== kohdeId);
+    const vaarat = this.shuffledOrder(muut.length)
+      .slice(0, PHOTO_CHOICES - 1)
+      .map((i) => muut[i]);
+    const jarj = this.shuffledOrder(PHOTO_CHOICES);
+    const ehdokkaat = jarj.map((i) => [kohde, ...vaarat][i]);
 
     this.quiz = {
-      kind: 'map',
+      kind: 'photo',
       cityId: city.id,
+      // Kuvan kohde voi olla eri paikka kuin missä seistään — kuva
+      // ladataan otsikon perusteella käyttöliittymässä.
+      photoCity: kohde.id,
+      photoWiki: kohde.wiki ?? kohde.name,
       hard: false,
-      question: tehtava.question,
-      fact: tehtava.fact,
+      frame: 'matkavalokuvaaja levittää vedoksensa pöytään ja kysyy',
+      question: 'Mikä paikka valokuvassa on?',
+      fact: `Kuvassa on ${kohde.name}. Valokuva: Wikipedia (CC).`,
       source: [],
-      options: vaihtoehdot.map((c) => c.name),
-      mapCities: vaihtoehdot.map((c) => c.id),
-      correct: vaihtoehdot.indexOf(tehtava.kohde),
+      options: ehdokkaat.map((c) => c.name),
+      correct: ehdokkaat.indexOf(kohde),
       hint: null,
       hintShown: false,
       hidden: [],
