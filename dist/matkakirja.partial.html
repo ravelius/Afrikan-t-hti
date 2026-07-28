@@ -573,6 +573,19 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   background: rgba(234, 184, 78, 0.18);
 }
 
+/* Wikipedian kuva saapumiskortissa; Lue lisää -linkki on heti sen alla. */
+.arrival-image {
+  display: block;
+  width: 100%;
+  max-height: 170px;
+  object-fit: cover;
+  margin: 0.15rem 0 0.3rem;
+  border-radius: 6px;
+  border: 1px solid rgba(70, 51, 31, 0.3);
+}
+
+.arrival-card .wiki-btn { margin: 0 0 0.7rem; }
+
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */
 .passport-finds {
   display: flex;
@@ -1059,6 +1072,11 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
   max-height: 92dvh;
   overflow-y: auto;
+  /* Vieritys vain pystysuuntaan: sivuttaisvieritys ei saa herätä koskaan. */
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  overflow-wrap: break-word;
   animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
 }
 
@@ -1853,6 +1871,14 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   color: #9c6f1e;
 }
 
+/* Dialogin sisälläkin Lue lisää on pelkkä tekstilinkki, ei nappi. */
+.dialog .wiki-btn,
+.dialog .wiki-btn:hover:not(:disabled) {
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
 /* Kapealla näytöllä tietokortti on tumma, joten linkki vaalenee. */
 @media (max-width: 700px) {
   .fact-card .wiki-btn { color: var(--accent); }
@@ -1872,6 +1898,27 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   font-size: 0.92rem;
   line-height: 1.5;
   white-space: pre-wrap;
+}
+
+/* Koko artikkelin väliotsikot (renderArticle muotoilee tekstistä). */
+.wiki-p { margin: 0 0 0.65rem; }
+
+.wiki-h2 {
+  margin: 1.1rem 0 0.4rem;
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+  border-bottom: 1px dashed rgba(70, 51, 31, 0.35);
+  padding-bottom: 0.15rem;
+}
+
+.wiki-h3 {
+  margin: 0.8rem 0 0.3rem;
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.03em;
 }
 
 /* Lähdemaininta on lisenssiehto, ei koriste: se näkyy aina. */
@@ -1956,6 +2003,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   <dialog id="arrival-dialog" class="dialog">
    <div class="dialog-card arrival-card">
     <h2 id="arrival-city"></h2>
+    <img id="arrival-image" class="arrival-image" alt="" hidden />
+    <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
     <p class="arrival-ask">Isoisä on merkinnyt tämän paikan karttaansa.</p>
     <div class="dialog-actions">
       <button id="arrival-yes" class="primary" type="button">Tutki paikka</button>
@@ -2268,6 +2317,49 @@ async function fetchSummary(title, { fetchImpl = globalThis.fetch, langs = WIKI_
     vara = vara ?? osuma;
   }
   return vara;
+}
+
+/**
+ * Koko artikkelin osoite: MediaWiki extracts pelkkänä tekstinä. Pelkkä
+ * teksti on tarkoituksella — HTML:ää ei upoteta peliin, ja kapea teksti ei
+ * voi aiheuttaa sivuttaisvieritystä. Väliotsikot tulevat muodossa
+ * "== Otsikko ==", ja käyttöliittymä muotoilee ne itse.
+ */
+function articleUrl(lang, title) {
+  const params = new URLSearchParams({
+    action: 'query',
+    prop: 'extracts',
+    explaintext: '1',
+    redirects: '1',
+    format: 'json',
+    origin: '*',
+    titles: title,
+  });
+  return `https://${lang}.wikipedia.org/w/api.php?${params}`;
+}
+
+/** Poimii artikkelitekstin extracts-vastauksesta. Null, jos sivua ei ole. */
+function parseArticle(data) {
+  const pages = data?.query?.pages;
+  if (!pages || typeof pages !== 'object') return null;
+  const page = Object.values(pages)[0];
+  const text = typeof page?.extract === 'string' ? page.extract.trim() : '';
+  return text || null;
+}
+
+/**
+ * Hakee koko artikkelin siltä kieleltä, jolta tiivistelmä löytyi.
+ * Ei koskaan heitä — null tarkoittaa, että tiivistelmä saa jäädä.
+ */
+async function fetchArticle(title, lang, { fetchImpl = globalThis.fetch } = {}) {
+  if (!title || !lang || typeof fetchImpl !== 'function') return null;
+  try {
+    const res = await fetchImpl(articleUrl(lang, title));
+    if (res && res.ok) return parseArticle(await res.json());
+  } catch {
+    /* ei yhteyttä — tiivistelmä riittää */
+  }
+  return null;
 }
 
 // ===== js/packs/maailma-questions.js =====
@@ -26277,6 +26369,15 @@ function chooseDuelAnswer(game) {
 // ===== js/ui.js =====
 // Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
+// Tiivistelmät haetaan kerran per artikkeli: sama kuva näkyy sekä
+// saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
+const wikiSummaryCache = new Map();
+
+async function cachedSummary(title) {
+  if (!wikiSummaryCache.has(title)) wikiSummaryCache.set(title, fetchSummary(title));
+  return wikiSummaryCache.get(title);
+}
+
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
@@ -26357,6 +26458,9 @@ class UI {
 
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
+    this.arrivalImage = document.getElementById('arrival-image');
+    this.arrivalWiki = document.getElementById('arrival-wiki');
+    this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
     document.getElementById('arrival-yes').addEventListener('click', () => {
       this.closeArrival();
       sfx.play('paper');
@@ -27456,23 +27560,70 @@ class UI {
     if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
     this.arrivalShownFor = city.id;
 
-    // Kortti kertoo vain päätöksen. Paikan tarina tulee kartan
-    // päiväkirjasta ja Lue lisää on vain karttanäkymässä, jottei sama
-    // tieto toistu kahdessa paikassa.
+    // Kortti kertoo vain päätöksen — paikan tarina tulee kartan
+    // päiväkirjasta. Wikipedian kuva tuo paikan eläväksi, ja sen alla on
+    // Lue lisää; teksti itsessään ei toistu kahdessa paikassa.
     this.arrivalCity.textContent = city.name;
+    this.arrivalImage.hidden = true;
+    this.arrivalImage.removeAttribute('src');
+    this.arrivalWiki.hidden = true;
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+    if (!city.wiki) return;
+
+    cachedSummary(city.wiki).then((summary) => {
+      // Pelaaja on voinut ehtiä jatkaa matkaa haun aikana.
+      if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
+      if (!summary) return;
+      if (summary.image) {
+        this.arrivalImage.src = summary.image;
+        this.arrivalImage.alt = summary.title || city.name;
+        this.arrivalImage.hidden = false;
+      }
+      this.arrivalWiki.hidden = false;
+    });
   }
 
   /**
-   * "Lue lisää": Wikipedian tiivistelmä paikasta. Dialogi avautuu heti ja
-   * täyttyy kun haku valmistuu, jottei nappi tunnu jumittuneelta. Jos haku
-   * epäonnistuu — ei yhteyttä, 404 tai täsmennyssivu — dialogissa lukee
-   * kohteliaasti, ettei tietoja saatu, eikä peli jää siitä jumiin.
+   * Muotoilee koko artikkelin tekstin: MediaWiki extracts palauttaa
+   * väliotsikot muodossa "== Otsikko ==", ja ne muutetaan omiksi
+   * otsikkoriveiksi. Pelkkää tekstiä — HTML:ää ei upoteta.
+   */
+  renderArticle(container, text) {
+    container.textContent = '';
+    let para = [];
+    const flush = () => {
+      if (para.length) container.appendChild(html('p', 'wiki-p', para.join(' ')));
+      para = [];
+    };
+    for (const line of text.split('\n')) {
+      const t = line.trim();
+      if (!t) {
+        flush();
+        continue;
+      }
+      const m = t.match(/^(={2,6})\s*(.+?)\s*={2,6}$/);
+      if (m) {
+        flush();
+        container.appendChild(html('p', m[1].length <= 2 ? 'wiki-h2' : 'wiki-h3', m[2]));
+      } else {
+        para.push(t);
+      }
+    }
+    flush();
+  }
+
+  /**
+   * "Lue lisää": Wikipedian artikkeli paikasta. Dialogi avautuu heti,
+   * tiivistelmä täyttyy kun haku valmistuu, ja koko artikkeli ladataan
+   * perään samalta kieleltä. Jos haku epäonnistuu — ei yhteyttä, 404 tai
+   * täsmennyssivu — dialogissa lukee kohteliaasti, ettei tietoja saatu,
+   * eikä peli jää siitä jumiin.
    */
   async openWiki(cityId) {
     const city = this.game.board.cityById.get(cityId);
     if (!city?.wiki) return;
 
+    this.wikiOpenFor = cityId;
     this.wikiTitle.textContent = city.name;
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
@@ -27480,9 +27631,9 @@ class UI {
     this.wikiSource.textContent = '';
     if (!this.wikiDialog.open) this.wikiDialog.showModal();
 
-    const summary = await fetchSummary(city.wiki);
-    // Pelaaja on voinut ehtiä sulkea dialogin haun aikana.
-    if (!this.wikiDialog.open) return;
+    const summary = await cachedSummary(city.wiki);
+    // Pelaaja on voinut ehtiä sulkea dialogin tai avata toisen paikan.
+    if (!this.wikiDialog.open || this.wikiOpenFor !== cityId) return;
 
     if (!summary) {
       this.wikiExtract.textContent = 'Tietoja ei saatu haettua. Matka jatkuu.';
@@ -27496,6 +27647,14 @@ class UI {
       this.wikiImage.hidden = false;
     }
     this.wikiExtract.textContent = summary.extract;
+
+    // Koko artikkeli ladataan tiivistelmän perään; tiivistelmä jää, jos
+    // hakua ei saada tehtyä. Kysytään vain kerran per avaus.
+    fetchArticle(summary.title, summary.lang).then((article) => {
+      if (!this.wikiDialog.open || this.wikiOpenFor !== cityId || !article) return;
+      if (article.length <= summary.extract.length) return;
+      this.renderArticle(this.wikiExtract, article);
+    });
 
     // CC BY-SA vaatii maininnan ja linkin — myös kaupallisessa käytössä.
     this.wikiSource.textContent = 'Lähde: Wikipedia (CC BY-SA) — ';
@@ -28322,7 +28481,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.16';
+const APP_VERSION = '2026-07-28.17';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

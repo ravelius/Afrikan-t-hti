@@ -31,7 +31,7 @@ import {
   TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
   FORM_WEIGHTS, MAP_CHOICES,
 } from '../js/game.js';
-import { fetchSummary, parseSummary, summaryUrl } from '../js/wiki.js';
+import { articleUrl, fetchSummary, parseArticle, parseSummary, summaryUrl } from '../js/wiki.js';
 import {
   chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
   wantsDuelBypass, wantsDuelRelief, wantsFiftyFifty, wantsHint,
@@ -2088,6 +2088,22 @@ function fakeFetch(vastaukset) {
     return { ok: true, json: async () => v };
   };
 }
+
+test('articleUrl pyytää koko artikkelin pelkkänä tekstinä oikealta kieleltä', () => {
+  const url = articleUrl('fi', 'Kap Palmas');
+  assert.ok(url.startsWith('https://fi.wikipedia.org/w/api.php?'));
+  assert.ok(url.includes('explaintext=1'), 'pelkkä teksti on pakollinen');
+  assert.ok(url.includes('titles=Kap+Palmas'));
+  assert.ok(url.includes('origin=*'), 'CORS-avaus puuttuu');
+});
+
+test('parseArticle poimii artikkelin ja hylkää puuttuvan sivun', () => {
+  const data = { query: { pages: { 123: { extract: 'Kappale.\n\n== Historia ==\nLisää tekstiä.' } } } };
+  assert.ok(parseArticle(data).startsWith('Kappale.'));
+  assert.equal(parseArticle({ query: { pages: { '-1': { missing: '' } } } }), null);
+  assert.equal(parseArticle(null), null);
+  assert.equal(parseArticle({}), null);
+});
 
 test('fetchSummary suosii suomea ja kelpuuttaa pitkän tiivistelmän', async () => {
   const s = await fetchSummary('Timbuktu', {

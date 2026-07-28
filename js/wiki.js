@@ -64,3 +64,46 @@ export async function fetchSummary(title, { fetchImpl = globalThis.fetch, langs 
   }
   return vara;
 }
+
+/**
+ * Koko artikkelin osoite: MediaWiki extracts pelkkänä tekstinä. Pelkkä
+ * teksti on tarkoituksella — HTML:ää ei upoteta peliin, ja kapea teksti ei
+ * voi aiheuttaa sivuttaisvieritystä. Väliotsikot tulevat muodossa
+ * "== Otsikko ==", ja käyttöliittymä muotoilee ne itse.
+ */
+export function articleUrl(lang, title) {
+  const params = new URLSearchParams({
+    action: 'query',
+    prop: 'extracts',
+    explaintext: '1',
+    redirects: '1',
+    format: 'json',
+    origin: '*',
+    titles: title,
+  });
+  return `https://${lang}.wikipedia.org/w/api.php?${params}`;
+}
+
+/** Poimii artikkelitekstin extracts-vastauksesta. Null, jos sivua ei ole. */
+export function parseArticle(data) {
+  const pages = data?.query?.pages;
+  if (!pages || typeof pages !== 'object') return null;
+  const page = Object.values(pages)[0];
+  const text = typeof page?.extract === 'string' ? page.extract.trim() : '';
+  return text || null;
+}
+
+/**
+ * Hakee koko artikkelin siltä kieleltä, jolta tiivistelmä löytyi.
+ * Ei koskaan heitä — null tarkoittaa, että tiivistelmä saa jäädä.
+ */
+export async function fetchArticle(title, lang, { fetchImpl = globalThis.fetch } = {}) {
+  if (!title || !lang || typeof fetchImpl !== 'function') return null;
+  try {
+    const res = await fetchImpl(articleUrl(lang, title));
+    if (res && res.ok) return parseArticle(await res.json());
+  } catch {
+    /* ei yhteyttä — tiivistelmä riittää */
+  }
+  return null;
+}
