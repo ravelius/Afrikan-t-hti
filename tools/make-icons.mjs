@@ -1,31 +1,21 @@
-// Luo sovelluskuvakkeet (assets/icon.svg + PNG:t) pelin oikeasta rannikkoviivasta.
+// Luo sovelluskuvakkeet (assets/icon.svg + PNG:t): vanha maailmankartta
+// kahtena pallonpuoliskona, kuten pelin aloitusnäkymässä. Punainen
+// lentoreitti ylittää Atlantin ja Afrikan tähti lepää Afrikan päällä.
 //
 //   node tools/make-icons.mjs                     # vain SVG
 //   node tools/make-icons.mjs --png <polku>       # myös PNG:t Playwrightilla
 //
 // PNG:t on versioitu repoon, joten skriptiä ei tarvitse ajaa normaalisti.
+// Jos Playwrightin selainta ei löydy automaattisesti, anna polku
+// ympäristömuuttujassa ICON_CHROMIUM.
 
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { MAP } from '../js/board.js';
-import { AFRICA_PATH } from '../js/mapart.js';
-
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const xs = MAP.africaPoints.map((p) => p[0]);
-const ys = MAP.africaPoints.map((p) => p[1]);
-const bbox = {
-  x: Math.min(...xs), y: Math.min(...ys),
-  w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys),
-};
-
 const SIZE = 512;
-const PAD = 104;
-const scale = Math.min((SIZE - PAD * 2) / bbox.w, (SIZE - PAD * 2) / bbox.h);
-const tx = (SIZE - bbox.w * scale) / 2 - bbox.x * scale;
-const ty = (SIZE - bbox.h * scale) / 2 - bbox.y * scale;
 
 /** Viisisakarainen tähti annettuun kohtaan. */
 function starPath(cx, cy, outer, inner, turn = -Math.PI / 2) {
@@ -38,8 +28,10 @@ function starPath(cx, cy, outer, inner, turn = -Math.PI / 2) {
   return `M${pts.join(' L')} Z`;
 }
 
-// Kuvake: pergamenttilaatta, jossa Afrikan ääriviiva ja sen päällä kultainen tähti.
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="Afrikan tähti">
+// Kuvake: pergamenttilaatta, jolla vanha maailmankartta kahtena
+// pallonpuoliskona. Mantereet ovat tarkoituksella karkeita läiskiä —
+// kuvakkeen pitää lukea "vanha maailmankartta" vielä 60 pikselissä.
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="Matkakirja">
   <defs>
     <radialGradient id="paper" cx="40%" cy="34%" r="78%">
       <stop offset="0%" stop-color="#f8ecd0"/>
@@ -51,18 +43,56 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE
       <stop offset="58%" stop-color="#e5ac36"/>
       <stop offset="100%" stop-color="#b9811d"/>
     </radialGradient>
+    <clipPath id="lansi"><circle cx="164" cy="266" r="106"/></clipPath>
+    <clipPath id="ita"><circle cx="348" cy="266" r="106"/></clipPath>
   </defs>
+
   <rect width="${SIZE}" height="${SIZE}" rx="112" fill="#241a12"/>
   <rect x="24" y="24" width="${SIZE - 48}" height="${SIZE - 48}" rx="92" fill="url(#paper)"/>
   <rect x="52" y="52" width="${SIZE - 104}" height="${SIZE - 104}" rx="72"
         fill="none" stroke="#46331f" stroke-width="6" stroke-dasharray="22 16" opacity="0.45"/>
-  <g transform="translate(${tx.toFixed(1)},${ty.toFixed(1)}) scale(${scale.toFixed(4)})">
-    <path d="${AFRICA_PATH}" fill="#d3b076" stroke="#46331f"
-          stroke-width="${(11 / scale).toFixed(1)}" stroke-linejoin="round"/>
+
+  <!-- Pallonpuoliskot -->
+  <circle cx="164" cy="266" r="106" fill="#f1e2bd" stroke="#46331f" stroke-width="7"/>
+  <circle cx="348" cy="266" r="106" fill="#f1e2bd" stroke="#46331f" stroke-width="7"/>
+
+  <!-- Astejanat himmeinä -->
+  <g stroke="#46331f" fill="none" stroke-width="3" opacity="0.2">
+    <ellipse cx="164" cy="266" rx="48" ry="106"/>
+    <line x1="60" y1="266" x2="268" y2="266"/>
+    <ellipse cx="348" cy="266" rx="48" ry="106"/>
+    <line x1="244" y1="266" x2="452" y2="266"/>
   </g>
-  <g transform="rotate(-7 272 296)">
-    <path d="${starPath(272, 296, 96, 40)}" fill="url(#gold)" stroke="#46331f"
-          stroke-width="12" stroke-linejoin="round"/>
+
+  <!-- Läntinen pallonpuolisko: Amerikat -->
+  <g clip-path="url(#lansi)" fill="#c9ab7c" stroke="#46331f" stroke-width="6" stroke-linejoin="round">
+    <path d="M84,222 q4,-40 46,-50 q46,-11 80,3 q26,11 13,32 q-17,9 -24,28 q-5,17 -22,23 q-11,21 -28,15 q-9,-15 -28,-19 q-30,-9 -37,-32 z"/>
+    <path d="M158,286 q24,-7 39,9 q13,13 7,36 q-7,28 -17,47 q-9,17 -20,10 q-11,-9 -13,-32 q-2,-26 -5,-43 q-2,-21 9,-27 z"/>
+  </g>
+
+  <!-- Itäinen pallonpuolisko: Eurooppa, Aasia, Afrikka, Australia -->
+  <g clip-path="url(#ita)" fill="#c9ab7c" stroke="#46331f" stroke-width="6" stroke-linejoin="round">
+    <path d="M262,234 q11,-43 56,-51 q58,-13 103,-2 q37,9 43,30 q4,19 -19,26 q-28,6 -54,4 q-17,13 -39,9 q-26,-5 -47,0 q-32,4 -43,-16 z"/>
+    <path d="M298,264 q19,-15 45,-9 q24,7 26,30 q2,26 -9,50 q-9,21 -26,23 q-17,0 -26,-21 q-9,-24 -13,-43 q-4,-21 3,-30 z"/>
+    <path d="M402,326 q19,-9 34,2 q13,11 7,28 q-9,19 -28,17 q-19,-2 -24,-19 q-4,-17 11,-28 z"/>
+  </g>
+
+  <!-- Lentoreitti Atlantin yli -->
+  <path d="M184,232 Q256,170 332,234" fill="none" stroke="#c2452f"
+        stroke-width="9" stroke-linecap="round" stroke-dasharray="1 20"/>
+  <circle cx="184" cy="232" r="9" fill="#c2452f"/>
+  <circle cx="332" cy="234" r="9" fill="#c2452f"/>
+
+  <!-- Afrikan tähti lepää Afrikan päällä -->
+  <g transform="rotate(-7 332 296)">
+    <path d="${starPath(332, 296, 30, 12.5)}" fill="url(#gold)" stroke="#5c430f"
+          stroke-width="6" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Aallot -->
+  <g stroke="#7d9bb0" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.7">
+    <path d="M84,424 q12,-9 24,0 q12,9 24,0"/>
+    <path d="M380,418 q12,-9 24,0 q12,9 24,0"/>
   </g>
 </svg>
 `;
@@ -75,7 +105,8 @@ if (pngFlag !== -1) {
   const playwrightPath = process.argv[pngFlag + 1];
   if (!playwrightPath) throw new Error('Anna Playwrightin polku: --png <polku/index.mjs>');
   const { chromium } = await import(playwrightPath);
-  const browser = await chromium.launch();
+  const executablePath = process.env.ICON_CHROMIUM;
+  const browser = await chromium.launch(executablePath ? { executablePath } : {});
   const page = await browser.newPage();
 
   for (const [size, padding, file] of [

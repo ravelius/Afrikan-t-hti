@@ -1069,20 +1069,22 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
  * sävy kuin lähtöpisteen renkaissa riittää kertomaan, mihin voi napauttaa.
  */
 .target-ring {
-  fill: rgba(176, 138, 60, 0.16);
-  stroke: #a8763a;
-  stroke-width: 2.2;
-  stroke-dasharray: 6 5;
+  fill: rgba(217, 144, 36, 0.28);
+  stroke: #8f5c1d;
+  stroke-width: 3.4;
+  stroke-dasharray: 7 5;
   transform-box: fill-box;
   transform-origin: center;
+  /* Vaalea hehku irrottaa renkaan maastosta ilman animaatiota. */
+  filter: drop-shadow(0 0 3px rgba(255, 248, 230, 0.95));
 }
 
 /* Suunta, jolla ei ole kaupunkia nopan päässä: pelkkä hillitty piste. */
 .target-ring.far {
-  fill: none;
-  stroke-width: 1.6;
+  fill: rgba(217, 144, 36, 0.12);
+  stroke-width: 2.2;
   stroke-dasharray: 3 4;
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 .target:hover .target-ring { fill: rgba(176, 138, 60, 0.34); }
@@ -30136,7 +30138,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.29';
+const APP_VERSION = '2026-07-28.30';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
