@@ -95,7 +95,7 @@ Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 **Paketit 1–17 ovat valmiit (28.7.2026).** Äänistä: omistaja käy äänet
 läpi viritysivulla `/aanet.html` ja antaa äänikohtaisen palautteen —
 älä tee uutta äänten yleisremonttia ennen sitä palautetta.
-Seuraavaksi tehdään paketti 18 (alempana).
+Seuraavaksi tehdään paketti 18, ja sen jälkeen paketti 19 (alempana).
 
 ## Paketti 18: Katso kuva -linkit Afrikan havaintoihin
 
@@ -122,6 +122,35 @@ niihin, joissa on selvästi kuvautuva kohde tai ilmiö. Säännöt:
   `voice`- ja `source`-kentät säilytetään jos ovat.
 - Testit ajetaan (`node --test tests/rules.test.mjs`) — placeFacts-testi
   tarkistaa wiki-kenttien muodon. Versionostot ja standalone kuten aina.
+
+## Paketti 19: matkamuistot aarrepalkinnoiksi (Afrikka)
+
+Omistajan toive: palkinto voisi välillä olla muutakin kuin jalokivi —
+matkamuisto: voodoo-esine, taideteos, upea matto, sormus, pergamentti…
+Osa muutetaan heti rahaksi, osa jää muistoesineiksi laukkuun. Sormusta
+tai pergamenttia "voisi ehkä käyttää myöhemmin jossain hyväksi" — sitä
+EI toteuteta vielä, mutta esineille varataan `id`, jotta myöhempi käyttö
+on mahdollista.
+
+- **Uusi laattaluokka `muisto`** (js/tokens.js): Afrikka-teemaiset
+  esineet, esim. tuaregin hopeasormus, vodun-veistos (Orjarannikko),
+  kelim-matto, ebenpuinen naamio, pergamenttikäärö Timbuktusta,
+  strutsinsulka. Jokaisella: `id`, `name`, lyhyt `kuvaus` (mistä esine
+  kertoo — opetuksellinen rivi), `arvo` (puntina; 0 = pelkkä muisto).
+- **Jakauma:** korvaa laattajakaumasta (counts) osa jalokivistä ja
+  tyhjistä muistoilla — esim. 3–4 muistolaattaa per lauta. Tyhjien määrä
+  saa laskea: "isoisän vanhentunut merkintä" on pettymys, muisto ei.
+- **Paljastus:** arvollinen muisto myydään heti ("Löysit: kelim-matto —
+  kauppias maksaa siitä 150 puntaa"), arvoton jää matkasaaliiseen
+  ("Löysit: tuaregin hopeasormus — se jää laukkuusi"). Muistot näkyvät
+  passin matkasaaliissa omina esineinään.
+- **Kuvitus:** drawTokenIcon-tyylinen piirros jokaiselle esineelle
+  (tokens.js:n käsin piirretty tyyli, ei emojia) + paljastuskiekon kuva.
+- **Tallennus:** vanha tallennus toimii ennallaan (uusia tyyppejä vain
+  lisätään; puuttuvat kentät oletuksiin).
+- **Testit:** laattajakauman summa ennallaan, jokaiselle muistolle on
+  piirros ja kuvaus, arvot kohtuullisia (0–300 p). Versionostot ja
+  standalone kuten aina.
 
 ## Paketti 17: ambienssi — taustaäänimaisema kohteen mukaan — VALMIS
 

@@ -28,6 +28,48 @@ export const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
 // tapahtumia, niiden paino siirtyy monivalinnalle — peli toimii jokaisella
 // laudalla ilman uutta sisältöä.
 export const FORM_WEIGHTS = { quiz: 60, claim: 15, map: 10, event: 15 };
+
+// Tietovisan kehys: joku paikallinen esittää kysymyksen. Kysyjä valitaan
+// kaupungin äänimaiseman mukaan, joten sama tyyppi ei kysele aavikolla ja
+// satamassa. Rivit jatkavat otsikossa kaupungin nimen perässä ja päättyvät
+// käyttöliittymässä kaksoispisteeseen.
+export const ASKERS = {
+  basaari: [
+    'maustekauppias punnitsee sahramia ja kysyy',
+    'teenkeittäjä ojentaa höyryävän lasin ja kysyy',
+    'kankuri levittää kankaansa tiskille ja kysyy',
+    'vanha kirjuri nostaa katseen kirjastaan ja kysyy',
+  ],
+  aavikko: [
+    'karavaanin vetäjä kohentaa nuotiota ja kysyy',
+    'opas tähyää dyynien yli ja kysyy',
+    'kaivon vartija ojentaa vesileilin ja kysyy',
+  ],
+  meri: [
+    'satamakirjuri sulkee lokikirjansa ja kysyy',
+    'vanha kalastaja paikkaa verkkoaan ja kysyy',
+    'perämies laskee kiikarinsa ja kysyy',
+  ],
+  sademetsa: [
+    'jokiluotsi työntää veneen vesille ja kysyy',
+    'kantaja laskee taakkansa maahan ja kysyy',
+    'opas raivaa polkua ja kysyy',
+  ],
+  savanni: [
+    'karjapaimen nojaa sauvaansa ja kysyy',
+    'jäljittäjä osoittaa jälkiä maassa ja kysyy',
+  ],
+  ylanko: [
+    'vuoristo-opas kiristää köyttä ja kysyy',
+    'paimen viittoo istumaan kivelle ja kysyy',
+  ],
+  yleinen: [
+    'majatalon isäntä laskee lampun pöytään ja kysyy',
+    'matkatoveri selaa isoisän kirjaa ja kysyy',
+    'harmaantunut vanhus istahtaa viereen ja kysyy',
+    'nuori tulkki hymyilee ja kysyy',
+  ],
+};
 export const MAP_CHOICES = 4; // karttakysymyksen ehdokaskaupungit
 
 /** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
@@ -801,6 +843,7 @@ export class Game {
     this.quiz = {
       cityId: city.id,
       hard,
+      frame: this.pickAsker(city),
       question: question.q,
       fact: question.fact,
       source: sourceList(question.source),
@@ -1509,6 +1552,12 @@ export class Game {
     const question = pool[Math.floor(this.rng() * pool.length)];
     this.usedQuestions.add(question.q);
     return question;
+  }
+
+  /** Kysymyksen kehys: paikallinen kysyjä kaupungin maiseman mukaan. */
+  pickAsker(city) {
+    const pool = [...(ASKERS[city?.ambience] ?? []), ...ASKERS.yleinen];
+    return pool[Math.floor(this.rng() * pool.length)];
   }
 
   /** Sekoitettu indeksijärjestys vastausvaihtoehdoille. */

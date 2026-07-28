@@ -1746,7 +1746,10 @@ export class UI {
       drawPuzzle(this.quizSketch, quiz.puzzleId, quiz.sketchData);
     }
 
-    this.quizBadge.textContent = quiz.kind === 'puzzle' ? 'Pulma' : 'Tietovisa';
+    // Leima näkyy vain pulmissa: irrallinen "Tietovisa"-sana on turha,
+    // kun kehys kertoo kuka kysymyksen esittää.
+    this.quizBadge.hidden = quiz.kind !== 'puzzle';
+    this.quizBadge.textContent = 'Pulma';
     if (quiz.kind === 'puzzle') {
       this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
     } else if (quiz.kind === 'claim') {
@@ -1756,10 +1759,14 @@ export class UI {
       this.quizCity.textContent = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
     } else if (quiz.kind === 'map') {
       this.quizCity.textContent = `${city.name} — kartalta`;
+    } else if (quiz.gate) {
+      this.quizCity.textContent = `${city.name} — portti: ${quiz.gate.label}`;
     } else {
-      this.quizCity.textContent = quiz.gate
-        ? `${city.name} — portti: ${quiz.gate.label}`
-        : `${city.name} — ${game.player.name}${hardTag}`;
+      // Kehystarina: paikallinen kysyjä. Vanhassa tallenteessa kehystä ei
+      // ole, jolloin otsikkona on pelkkä kaupunki.
+      this.quizCity.textContent = quiz.frame
+        ? `${city.name} — ${quiz.frame}:${hardTag}`
+        : `${city.name}${hardTag}`;
     }
     // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
     if (this.typedQuizFor !== quiz) {
@@ -1842,6 +1849,7 @@ export class UI {
     const duel = game.duel;
     const p = game.player;
 
+    this.quizBadge.hidden = true;
     this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
     if (this.typedQuizFor !== duel) {
       this.typedQuizFor = duel;

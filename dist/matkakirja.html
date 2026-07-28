@@ -26503,6 +26503,48 @@ const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
 // tapahtumia, niiden paino siirtyy monivalinnalle — peli toimii jokaisella
 // laudalla ilman uutta sisältöä.
 const FORM_WEIGHTS = { quiz: 60, claim: 15, map: 10, event: 15 };
+
+// Tietovisan kehys: joku paikallinen esittää kysymyksen. Kysyjä valitaan
+// kaupungin äänimaiseman mukaan, joten sama tyyppi ei kysele aavikolla ja
+// satamassa. Rivit jatkavat otsikossa kaupungin nimen perässä ja päättyvät
+// käyttöliittymässä kaksoispisteeseen.
+const ASKERS = {
+  basaari: [
+    'maustekauppias punnitsee sahramia ja kysyy',
+    'teenkeittäjä ojentaa höyryävän lasin ja kysyy',
+    'kankuri levittää kankaansa tiskille ja kysyy',
+    'vanha kirjuri nostaa katseen kirjastaan ja kysyy',
+  ],
+  aavikko: [
+    'karavaanin vetäjä kohentaa nuotiota ja kysyy',
+    'opas tähyää dyynien yli ja kysyy',
+    'kaivon vartija ojentaa vesileilin ja kysyy',
+  ],
+  meri: [
+    'satamakirjuri sulkee lokikirjansa ja kysyy',
+    'vanha kalastaja paikkaa verkkoaan ja kysyy',
+    'perämies laskee kiikarinsa ja kysyy',
+  ],
+  sademetsa: [
+    'jokiluotsi työntää veneen vesille ja kysyy',
+    'kantaja laskee taakkansa maahan ja kysyy',
+    'opas raivaa polkua ja kysyy',
+  ],
+  savanni: [
+    'karjapaimen nojaa sauvaansa ja kysyy',
+    'jäljittäjä osoittaa jälkiä maassa ja kysyy',
+  ],
+  ylanko: [
+    'vuoristo-opas kiristää köyttä ja kysyy',
+    'paimen viittoo istumaan kivelle ja kysyy',
+  ],
+  yleinen: [
+    'majatalon isäntä laskee lampun pöytään ja kysyy',
+    'matkatoveri selaa isoisän kirjaa ja kysyy',
+    'harmaantunut vanhus istahtaa viereen ja kysyy',
+    'nuori tulkki hymyilee ja kysyy',
+  ],
+};
 const MAP_CHOICES = 4; // karttakysymyksen ehdokaskaupungit
 
 /** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
@@ -27275,6 +27317,7 @@ class Game {
     this.quiz = {
       cityId: city.id,
       hard,
+      frame: this.pickAsker(city),
       question: question.q,
       fact: question.fact,
       source: sourceList(question.source),
@@ -27983,6 +28026,12 @@ class Game {
     const question = pool[Math.floor(this.rng() * pool.length)];
     this.usedQuestions.add(question.q);
     return question;
+  }
+
+  /** Kysymyksen kehys: paikallinen kysyjä kaupungin maiseman mukaan. */
+  pickAsker(city) {
+    const pool = [...(ASKERS[city?.ambience] ?? []), ...ASKERS.yleinen];
+    return pool[Math.floor(this.rng() * pool.length)];
   }
 
   /** Sekoitettu indeksijärjestys vastausvaihtoehdoille. */
@@ -30168,7 +30217,10 @@ class UI {
       drawPuzzle(this.quizSketch, quiz.puzzleId, quiz.sketchData);
     }
 
-    this.quizBadge.textContent = quiz.kind === 'puzzle' ? 'Pulma' : 'Tietovisa';
+    // Leima näkyy vain pulmissa: irrallinen "Tietovisa"-sana on turha,
+    // kun kehys kertoo kuka kysymyksen esittää.
+    this.quizBadge.hidden = quiz.kind !== 'puzzle';
+    this.quizBadge.textContent = 'Pulma';
     if (quiz.kind === 'puzzle') {
       this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
     } else if (quiz.kind === 'claim') {
@@ -30178,10 +30230,14 @@ class UI {
       this.quizCity.textContent = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
     } else if (quiz.kind === 'map') {
       this.quizCity.textContent = `${city.name} — kartalta`;
+    } else if (quiz.gate) {
+      this.quizCity.textContent = `${city.name} — portti: ${quiz.gate.label}`;
     } else {
-      this.quizCity.textContent = quiz.gate
-        ? `${city.name} — portti: ${quiz.gate.label}`
-        : `${city.name} — ${game.player.name}${hardTag}`;
+      // Kehystarina: paikallinen kysyjä. Vanhassa tallenteessa kehystä ei
+      // ole, jolloin otsikkona on pelkkä kaupunki.
+      this.quizCity.textContent = quiz.frame
+        ? `${city.name} — ${quiz.frame}:${hardTag}`
+        : `${city.name}${hardTag}`;
     }
     // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
     if (this.typedQuizFor !== quiz) {
@@ -30264,6 +30320,7 @@ class UI {
     const duel = game.duel;
     const p = game.player;
 
+    this.quizBadge.hidden = true;
     this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
     if (this.typedQuizFor !== duel) {
       this.typedQuizFor = duel;
@@ -31004,7 +31061,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.37';
+const APP_VERSION = '2026-07-29.1';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
