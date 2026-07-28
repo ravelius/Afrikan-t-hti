@@ -830,6 +830,31 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .intro.intro-fade { opacity: 0; }
 
+/* Perillä: matka jatkuu vasta kun pelaaja astuu ulos koneesta. */
+.flight-exit {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  z-index: 6;
+  background: rgba(247, 237, 216, 0.94);
+  border: 1.5px solid rgba(122, 85, 20, 0.75);
+  border-radius: 10px;
+  color: var(--map-ink);
+  font-family: var(--font-type);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.55rem 1.2rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  animation: flight-exit-in 0.4s ease 0.25s backwards;
+}
+
+.flight-exit:hover { background: #fff8e8; }
+
+@keyframes flight-exit-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+}
+
 @media (max-width: 700px) {
   .intro { width: 90%; }
   .intro-text { line-height: 1.5; }
@@ -27444,10 +27469,6 @@ const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 // Lentoanimaation kesto: sen verran, että repliikin ehtii lukea.
 const FLY_ANIM_MS = 2000;
-// Näkymän zoomaus lennon reitille ja siitä takaisin.
-const ZOOM_MS = 700;
-// Kuinka pitkään repliikki saa levätä ruudussa kirjoittumisen jälkeen.
-const FLIGHT_LINE_HOLD_MS = 1600;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 // Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
@@ -29472,18 +29493,21 @@ class UI {
   }
 
   /**
-   * Zoomaa näkymän kahden pisteen ympärille lennon ajaksi. Palauttaa
-   * lähtönäkymän viewBox-merkkijonon, jotta sen voi ajaa takaisin.
+   * Zoomaa näkymän kahden pisteen ympärille lennon ajaksi — kertaheitolla,
+   * ei liukuen: viewBoxin animointi piirtää koko kartan joka ruudulla
+   * uudelleen ja tökkii hitaammilla koneilla. Rajaus on tiukka, jotta
+   * lentoreitti täyttää reilusti yli puolet ruudusta ja matka näyttää
+   * matkalta. Palauttaa lähtönäkymän viewBox-merkkijonon paluuta varten.
    */
-  async zoomToFlight(a, b) {
+  zoomToFlight(a, b) {
     const alkuperainen = this.svg.getAttribute('viewBox');
     const pane = this.svg.parentElement;
     if (!pane.clientWidth || !pane.clientHeight) return alkuperainen;
 
-    // Laatikko pisteiden ympärille: reilu marginaali, eikä ikinä niin
-    // tiukka etteivät kaupunkien nimet ja kaari mahtuisi kuvaan.
-    const PAD = 130;
-    const MIN_SPAN = 420;
+    // Marginaali kasvaa matkan mukana: reitti vie aina noin 60 % ruudusta.
+    const dist = Math.hypot(b.x - a.x, b.y - a.y);
+    const PAD = Math.max(60, dist * 0.3);
+    const MIN_SPAN = 240;
     let x0 = Math.min(a.x, b.x) - PAD;
     let y0 = Math.min(a.y, b.y) - PAD;
     let x1 = Math.max(a.x, b.x) + PAD;
@@ -29494,28 +29518,25 @@ class UI {
     const scale = Math.min(pane.clientWidth / (x1 - x0), pane.clientHeight / (y1 - y0));
     const vw = pane.clientWidth / scale;
     const vh = pane.clientHeight / scale;
-    const kohde = [
-      (x0 + x1) / 2 - vw / 2, (y0 + y1) / 2 - vh / 2, vw, vh,
-    ];
-    await this.animateViewBox(kohde, ZOOM_MS);
+    this.svg.setAttribute(
+      'viewBox',
+      `${(x0 + x1) / 2 - vw / 2} ${(y0 + y1) / 2 - vh / 2} ${vw} ${vh}`,
+    );
     return alkuperainen;
   }
 
-  /** Liu'uttaa viewBoxin nykyisestä kohteeseen pehmeällä käyrällä. */
-  async animateViewBox(kohde, ms) {
-    const lahto = (this.svg.getAttribute('viewBox') ?? '0 0 1000 1000')
-      .split(/\s+/).map(Number);
-    await new Promise((resolve) => {
-      const alku = performance.now();
-      const askel = (nyt) => {
-        const t = Math.min(1, (nyt - alku) / ms);
-        const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-        const arvot = lahto.map((v, i) => v + (kohde[i] - v) * e);
-        this.svg.setAttribute('viewBox', arvot.join(' '));
-        if (t < 1) requestAnimationFrame(askel);
-        else resolve();
-      };
-      requestAnimationFrame(askel);
+  /** Nappi, jolla astutaan ulos koneesta — matka jatkuu vasta siitä. */
+  waitFlightExit() {
+    return new Promise((resolve) => {
+      const btn = html('button', 'flight-exit', 'Olet perillä — astu ulos koneesta');
+      btn.type = 'button';
+      this.mapPane.appendChild(btn);
+      btn.addEventListener('click', () => {
+        sfx.play('paper');
+        btn.remove();
+        resolve();
+      }, { once: true });
+      btn.focus();
     });
   }
 
@@ -29536,7 +29557,7 @@ class UI {
   async animateFlight(a, b, line = null, { zoom = true, zoomBack = true } = {}) {
     if (this.reducedMotion || !a || !b) return;
     this.flightLayer.textContent = '';
-    const palautus = zoom ? await this.zoomToFlight(a, b) : null;
+    const palautus = zoom ? this.zoomToFlight(a, b) : null;
 
     // Kaari kahden pisteen välillä: suora viiva näyttäisi tylsältä, ja
     // vanhojen karttojen lentoreitit kaartavat aina.
@@ -29584,15 +29605,12 @@ class UI {
       requestAnimationFrame(askel);
     });
 
-    // Kone jää hetkeksi kohteeseen ja repliikki saa kirjoittua loppuun ja
-    // tulla luetuksi — omistajan palaute: teksti hävisi liian nopeasti.
-    if (line) {
-      const odota = Math.max(0, (this.flightLineReadyAt ?? 0) - performance.now())
-        + FLIGHT_LINE_HOLD_MS;
-      await new Promise((resolve) => { setTimeout(resolve, odota); });
-    }
+    // Kone jää kohteeseen ja repliikki pysyy ruudussa, kunnes pelaaja
+    // astuu itse ulos koneesta — kukin lukee omaan tahtiinsa, eikä
+    // kartta vaihdu kesken lauseen.
+    await this.waitFlightExit();
 
-    if (palautus && zoomBack) await this.animateViewBox(palautus.split(/\s+/).map(Number), ZOOM_MS);
+    if (palautus && zoomBack) this.svg.setAttribute('viewBox', palautus);
     this.flightLayer.textContent = '';
     this.hideFlightLine();
   }
@@ -29603,8 +29621,6 @@ class UI {
       this.flightLine = html('p', 'flight-line');
       this.mapPane.appendChild(this.flightLine);
     }
-    // Arvio kirjoituskoneen valmistumishetkestä pitoa varten.
-    this.flightLineReadyAt = performance.now() + String(line).split(' ').length * TYPE_MS;
     // Sijainti lasketaan NÄKYVÄSTÄ viewBoxista, ei koko kartasta: lennon
     // ajaksi näkymä on zoomattu lähelle reittiä, ja koko karttaan sidottu
     // rivi jäisi kuvan ulkopuolelle.
@@ -29761,7 +29777,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.24';
+const APP_VERSION = '2026-07-28.25';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
