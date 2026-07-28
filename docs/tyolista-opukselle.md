@@ -55,6 +55,9 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   yläpalkissa päiväkirjan päivämäärä, isoisän aikataulu Afrikalle ja
   80 päivän ennätys passin kunniamerkintänä.
 - Yläpalkkiin pelkkä kukkaro, siirtorenkaat hillityiksi ja vaakalukko: ✅
+- Paketti 10 (kysymysten vaihtelu): ✅ (28.7.2026) — isoisän väittämät,
+  karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
+  Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
 ## Seuraavaksi: omistajan toivelista (paketit 8 ja 9 ovat valmiit)
 
@@ -455,7 +458,7 @@ tehdä pelistä ahdistavaa. Omistajan päätökset:
   ja vertailurivien nousulle. Vanha tallenne ilman aikaa jatkuu
   päivästä 1.
 
-## Paketti 10: kysymysten vaihtelu (Afrikka ensin)
+## Paketti 10: kysymysten vaihtelu (Afrikka ensin) — VALMIS
 
 Ongelma: jokaisessa pysähdyksessä on sama neljän vaihtoehdon tietovisa,
 mikä puuduttaa yksinpelissä. Ratkaisu: kolme uutta muotoa, jotka
