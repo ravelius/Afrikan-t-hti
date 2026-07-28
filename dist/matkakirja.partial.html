@@ -24528,6 +24528,121 @@ function stampDate(iso) {
   return `${Number(d)}.${Number(m)}.${y}`;
 }
 
+// ===== js/aani-ehdokkaat.js =====
+// Äänivaihtoehdot: jokaiselle striimipaikalle, tehosteelle ja musiikille
+// muutama ehdokas Freesoundista (vain CC-lisenssit, osoitteet varmistettu).
+// Paras valitaan /aanet.html-sivulla; valinta tallentuu selaimeen ja peli
+// käyttää sitä oletuksen sijaan heti seuraavasta latauksesta. Kun omistaja
+// on valinnut, voittajat kovakoodataan oletuksiksi kaikille.
+
+const AVAIN = 'matkakirja-aanivalinnat';
+
+const EHDOKKAAT = {
+  'kaupunki:kairo': {
+    otsikko: 'Kairo — kaupungin ääni',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3', nimi: 'Yöhälinä ("cairo night out") — rucisko, CC BY-NC' },
+      { url: 'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3', nimi: 'Khan el-Khalilin basaari — 3bagbrew, CC0' },
+      { url: 'https://cdn.freesound.org/previews/683/683118_8105512-lq.mp3', nimi: 'Attaban katukauppiaat — AhmadAiuby, CC0' },
+    ],
+  },
+  'kaupunki:sahara': {
+    otsikko: 'Sahara — aavikon ääni',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/146/146745_832093-lq.mp3', nimi: 'Saharan tuuli soittaa lotaria — omestreandre, CC BY' },
+      { url: 'https://cdn.freesound.org/previews/714/714271_14696146-lq.mp3', nimi: 'Aavikon äänimaisema — Metris, CC BY' },
+      { url: 'https://cdn.freesound.org/previews/579/579250_2977885-lq.mp3', nimi: 'Tuuli puissa — Danjocross, CC0' },
+    ],
+  },
+  'kaupunki:dakar': {
+    otsikko: 'Dakar — sisäpiha',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3', nimi: 'Ouakamin piha illalla (19 h) — LaureC, CC0' },
+      { url: 'https://cdn.freesound.org/previews/677/677252_9756914-lq.mp3', nimi: 'Ouakamin piha aamulla (9.30) — LaureC, CC0' },
+    ],
+  },
+  'kaupunki:kimberley': {
+    otsikko: 'Kimberley — savannin yö',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3', nimi: 'Savannin sirkat — AugustSandberg, CC0' },
+    ],
+  },
+  'kaupunki:angola': {
+    otsikko: 'Angola — savannin yö',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3', nimi: 'Savannin sirkat — AugustSandberg, CC0' },
+    ],
+  },
+  'musiikki:tietovisa': {
+    otsikko: 'Tietovisan taustamusiikki',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3', nimi: 'Arabialainen huilu — DYEKHO, CC0' },
+      { url: 'https://cdn.freesound.org/previews/466/466570_197130-lq.mp3', nimi: 'Kalimba-luuppi — CarlosCarty, CC BY' },
+      { url: 'https://cdn.freesound.org/previews/160/160461_1-lq.mp3', nimi: 'Oud-improvisaatio — Freesound, CC0' },
+    ],
+  },
+  'tehoste:dice': {
+    otsikko: 'Noppa',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/94/94031_1554038-lq.mp3', nimi: 'Dice Roll — LoafDV, CC0' },
+      { url: 'https://cdn.freesound.org/previews/535/535816_9613218-lq.mp3', nimi: 'Dés — Lendewell, CC0' },
+      { url: 'https://cdn.freesound.org/previews/764/764471_15688439-lq.mp3', nimi: 'Dice Rolling — CarikaDarvall, CC0' },
+    ],
+  },
+  'tehoste:pen': {
+    otsikko: 'Kirjoitus (alkuteksti)',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/862/862556_12084000-lq.mp3', nimi: 'Kirjoituskone 1946 — ColinMWJones, CC0' },
+      { url: 'https://cdn.freesound.org/previews/856/856167_18901108-lq.mp3', nimi: 'Mustekynä pergamentilla — brktkrgll, CC0' },
+      { url: 'https://cdn.freesound.org/previews/750/750171_5109200-lq.mp3', nimi: 'Täytekynän raapina — DataJuggler, CC0' },
+    ],
+  },
+  'tehoste:jet': {
+    otsikko: 'Lentokohtauksen moottori',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/416/416891_2456794-lq.mp3', nimi: 'Lentoonlähtö matkustamosta — Apheo, CC0' },
+      { url: 'https://cdn.freesound.org/previews/436/436942_843915-lq.mp3', nimi: 'Matkalento sisältä — Filmscore, CC0' },
+    ],
+  },
+  'tehoste:quizOpen': {
+    otsikko: 'Kysymyksen avaus',
+    ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/842/842183_13307919-lq.mp3', nimi: 'Sivunkääntö — AardsReal, CC0' },
+      { url: 'https://cdn.freesound.org/previews/165/165464_1956076-lq.mp3', nimi: 'Harppukuvio — Puniho, CC BY' },
+    ],
+  },
+};
+
+/** Valittu osoite paikalle, tai null jos oletus kelpaa. */
+function valittuAani(slot) {
+  try {
+    return JSON.parse(localStorage.getItem(AVAIN) ?? '{}')[slot] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Tallentaa valinnan; null poistaa sen (palataan oletukseen). */
+function valitseAani(slot, url) {
+  try {
+    const valinnat = JSON.parse(localStorage.getItem(AVAIN) ?? '{}');
+    if (url) valinnat[slot] = url;
+    else delete valinnat[slot];
+    localStorage.setItem(AVAIN, JSON.stringify(valinnat));
+  } catch {
+    /* yksityinen selaustila — valinta ei säily */
+  }
+}
+
+/** Kaikki valinnat kerralla (Kopioi valinnat -nappia varten). */
+function kaikkiValinnat() {
+  try {
+    return JSON.parse(localStorage.getItem(AVAIN) ?? '{}');
+  } catch {
+    return {};
+  }
+}
+
 // ===== js/sound.js =====
 // Peliäänet syntetisoituna Web Audio API:lla — ei äänitiedostoja, joten peli
 // pysyy kevyenä ja toimii myös offline.
@@ -25051,7 +25166,8 @@ class Sound {
     this.samples = {};
     this.sampleHits = {};
     for (const [name, { url }] of Object.entries(REAL_SAMPLES)) {
-      fetch(url)
+      // Omistajan valitsema äänite (/aanet.html) ohittaa oletuksen.
+      fetch(valittuAani(`tehoste:${name}`) ?? url)
         .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error('http'))))
         .then((data) => this.ctx.decodeAudioData(data))
         .then((buf) => {
@@ -25150,17 +25266,11 @@ const REAL_SAMPLES = {
 const REAL_PLAYERS = {
   dieTick: (s) => s.playSlice('dice', { dur: 0.08, gain: 0.4, isku: true }),
   dieLand: (s) => s.playSlice('dice', { tail: 0.6, gain: 0.55 }),
-  // Joka sana saa 2–3 näppäilyn purskeen iskukohdilta: yksittäinen
-  // satunnaissiivu osui liian usein näppäilyjen väliin ja kone kuulosti
-  // laiskalta. Purske täyttää sanan mittaisen välin (~190 ms).
-  pen: (s) => {
-    let soi = s.playSlice('pen', { dur: 0.09, gain: 0.35, isku: true });
-    soi = s.playSlice('pen', { dur: 0.09, gain: 0.3, isku: true, delay: 0.06 + Math.random() * 0.03 }) || soi;
-    if (Math.random() < 0.7) {
-      soi = s.playSlice('pen', { dur: 0.09, gain: 0.32, isku: true, delay: 0.13 + Math.random() * 0.03 }) || soi;
-    }
-    return soi;
-  },
+  // Yksi kunnollinen lyönti sanan ilmestymishetkellä: siivu alkaa aina
+  // iskukohdasta ja on tarpeeksi pitkä, että lyönnin sointi kuuluu —
+  // lyhyet pätkät eivät kuulostaneet kirjoituskoneelta. Rytmi tulee
+  // tekstin kirjoittumisesta (typeText), ei purskeista.
+  pen: (s) => s.playSlice('pen', { dur: 0.24, gain: 0.35, isku: true }),
   // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
   quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
 };
@@ -25411,9 +25521,13 @@ const HAIVYTYS_MS = 1800;
 let nykyinen = null; // { audio, cityId }
 
 function haivyta(audio, kohde, done) {
+  // Uusi häivytys keskeyttää saman äänen edellisen, etteivät kaksi
+  // silmukkaa vedä voimakkuutta eri suuntiin.
+  const oma = (audio.haivytysId = (audio.haivytysId ?? 0) + 1);
   const alku = audio.volume;
   const t0 = performance.now();
   const askel = (nyt) => {
+    if (audio.haivytysId !== oma) return;
     const t = Math.min(1, (nyt - t0) / HAIVYTYS_MS);
     audio.volume = alku + (kohde - alku) * t;
     if (t < 1) requestAnimationFrame(askel);
@@ -25448,7 +25562,8 @@ function playPlaceAmbience(cityId, fallbackType) {
   if (nykyinen?.cityId === cityId) return;
 
   stopPlaceStream();
-  const audio = new Audio(entry.url);
+  // Omistajan valitsema äänite (/aanet.html) ohittaa oletuksen.
+  const audio = new Audio(valittuAani(`kaupunki:${cityId}`) ?? entry.url);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
@@ -25488,8 +25603,11 @@ const MUSIIKKI_VOIMA = 0.09;
 let musiikki = null;
 
 function startQuizMusic() {
+  // Kaupungin ääni väistyy reilusti kysymyksen ajaksi — kaksi ääntä
+  // päällekkäin täydellä voimalla oli puuroa.
+  if (nykyinen) haivyta(nykyinen.audio, VOIMA * 0.15);
   if (!sfx.enabled || musiikki) return;
-  const audio = new Audio(QUIZ_MUSIC.url);
+  const audio = new Audio(valittuAani('musiikki:tietovisa') ?? QUIZ_MUSIC.url);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
@@ -25506,6 +25624,8 @@ function startQuizMusic() {
 }
 
 function stopQuizMusic() {
+  // Kaupungin ääni palaa täyteen voimaansa.
+  if (nykyinen) haivyta(nykyinen.audio, VOIMA);
   const vanha = musiikki;
   musiikki = null;
   if (!vanha) return;
@@ -29066,7 +29186,7 @@ class UI {
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
-    for (const timer of Object.values(this.typeTimers ?? {})) clearInterval(timer);
+    for (const timer of Object.values(this.typeTimers ?? {})) clearTimeout(timer);
     this.stopQuizTimer();
     this.observer?.disconnect();
   }
@@ -30884,7 +31004,7 @@ class UI {
    */
   typeText(target, text, slot = 'fact', done = null, speed = TYPE_MS) {
     this.typeTimers ??= {};
-    clearInterval(this.typeTimers[slot]);
+    clearTimeout(this.typeTimers[slot]);
     const full = String(text);
     if (this.reducedMotion) {
       target.textContent = full;
@@ -30908,19 +31028,33 @@ class UI {
     };
     piirra();
 
-    this.typeTimers[slot] = setInterval(() => {
+    // Avaustekstillä on kirjoittajan rytmi: sanaväli huojuu ja
+    // välimerkin jälkeen pidetään tauko — tasainen konemainen tahti
+    // kuulosti ja näytti luonnottomalta.
+    const viive = (sana) => {
+      if (slot !== 'intro') return speed;
+      const perus = speed * (0.7 + Math.random() * 0.6);
+      if (/[.!?]$/.test(sana)) return perus + 420;
+      if (/[,;:—–]$/.test(sana)) return perus + 170;
+      return perus;
+    };
+
+    const kirjoita = () => {
       shown++;
       piirra();
-      // Avausteksti kirjoittuu käsin: kynä raapaisee joka sanalla.
+      // Kirjoituskoneen lyönti täsmälleen sillä hetkellä, kun sana
+      // ilmestyy — ei ennen eikä jälkeen.
       if (slot === 'intro') sfx.play('pen');
       if (shown >= words.length) {
-        clearInterval(this.typeTimers[slot]);
         // Lopuksi pelkkä teksti, jotta perään lisättävä lähderivi asettuu
         // luontevasti eikä jää näkymättömän jäänteen taakse.
         target.textContent = full;
         done?.();
+        return;
       }
-    }, speed);
+      this.typeTimers[slot] = setTimeout(kirjoita, viive(words[shown - 1]));
+    };
+    this.typeTimers[slot] = setTimeout(kirjoita, speed);
   }
 
   showError(message) {
@@ -31302,7 +31436,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.6';
+const APP_VERSION = '2026-07-29.7';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

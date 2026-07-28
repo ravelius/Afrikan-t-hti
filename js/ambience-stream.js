@@ -8,6 +8,7 @@
 // tekijämaininta lisensseineen. Vain CC-lisensoituja äänitteitä.
 
 import { sfx } from './sound.js';
+import { valittuAani } from './aani-ehdokkaat.js';
 
 export const STREAMS = {
   kairo: {
@@ -39,9 +40,13 @@ const HAIVYTYS_MS = 1800;
 let nykyinen = null; // { audio, cityId }
 
 function haivyta(audio, kohde, done) {
+  // Uusi häivytys keskeyttää saman äänen edellisen, etteivät kaksi
+  // silmukkaa vedä voimakkuutta eri suuntiin.
+  const oma = (audio.haivytysId = (audio.haivytysId ?? 0) + 1);
   const alku = audio.volume;
   const t0 = performance.now();
   const askel = (nyt) => {
+    if (audio.haivytysId !== oma) return;
     const t = Math.min(1, (nyt - t0) / HAIVYTYS_MS);
     audio.volume = alku + (kohde - alku) * t;
     if (t < 1) requestAnimationFrame(askel);
@@ -76,7 +81,8 @@ export function playPlaceAmbience(cityId, fallbackType) {
   if (nykyinen?.cityId === cityId) return;
 
   stopPlaceStream();
-  const audio = new Audio(entry.url);
+  // Omistajan valitsema äänite (/aanet.html) ohittaa oletuksen.
+  const audio = new Audio(valittuAani(`kaupunki:${cityId}`) ?? entry.url);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
@@ -116,8 +122,11 @@ const MUSIIKKI_VOIMA = 0.09;
 let musiikki = null;
 
 export function startQuizMusic() {
+  // Kaupungin ääni väistyy reilusti kysymyksen ajaksi — kaksi ääntä
+  // päällekkäin täydellä voimalla oli puuroa.
+  if (nykyinen) haivyta(nykyinen.audio, VOIMA * 0.15);
   if (!sfx.enabled || musiikki) return;
-  const audio = new Audio(QUIZ_MUSIC.url);
+  const audio = new Audio(valittuAani('musiikki:tietovisa') ?? QUIZ_MUSIC.url);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
@@ -134,6 +143,8 @@ export function startQuizMusic() {
 }
 
 export function stopQuizMusic() {
+  // Kaupungin ääni palaa täyteen voimaansa.
+  if (nykyinen) haivyta(nykyinen.audio, VOIMA);
   const vanha = musiikki;
   musiikki = null;
   if (!vanha) return;

@@ -391,7 +391,7 @@ export class UI {
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
-    for (const timer of Object.values(this.typeTimers ?? {})) clearInterval(timer);
+    for (const timer of Object.values(this.typeTimers ?? {})) clearTimeout(timer);
     this.stopQuizTimer();
     this.observer?.disconnect();
   }
@@ -2210,7 +2210,7 @@ export class UI {
    */
   typeText(target, text, slot = 'fact', done = null, speed = TYPE_MS) {
     this.typeTimers ??= {};
-    clearInterval(this.typeTimers[slot]);
+    clearTimeout(this.typeTimers[slot]);
     const full = String(text);
     if (this.reducedMotion) {
       target.textContent = full;
@@ -2234,19 +2234,33 @@ export class UI {
     };
     piirra();
 
-    this.typeTimers[slot] = setInterval(() => {
+    // Avaustekstillä on kirjoittajan rytmi: sanaväli huojuu ja
+    // välimerkin jälkeen pidetään tauko — tasainen konemainen tahti
+    // kuulosti ja näytti luonnottomalta.
+    const viive = (sana) => {
+      if (slot !== 'intro') return speed;
+      const perus = speed * (0.7 + Math.random() * 0.6);
+      if (/[.!?]$/.test(sana)) return perus + 420;
+      if (/[,;:—–]$/.test(sana)) return perus + 170;
+      return perus;
+    };
+
+    const kirjoita = () => {
       shown++;
       piirra();
-      // Avausteksti kirjoittuu käsin: kynä raapaisee joka sanalla.
+      // Kirjoituskoneen lyönti täsmälleen sillä hetkellä, kun sana
+      // ilmestyy — ei ennen eikä jälkeen.
       if (slot === 'intro') sfx.play('pen');
       if (shown >= words.length) {
-        clearInterval(this.typeTimers[slot]);
         // Lopuksi pelkkä teksti, jotta perään lisättävä lähderivi asettuu
         // luontevasti eikä jää näkymättömän jäänteen taakse.
         target.textContent = full;
         done?.();
+        return;
       }
-    }, speed);
+      this.typeTimers[slot] = setTimeout(kirjoita, viive(words[shown - 1]));
+    };
+    this.typeTimers[slot] = setTimeout(kirjoita, speed);
   }
 
   showError(message) {
