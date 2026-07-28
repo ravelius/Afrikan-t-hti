@@ -800,6 +800,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  /* Avausteksti häipyy pehmeästi, kun ensimmäinen lento lähtee. */
+  transition: opacity 0.9s ease;
   /* Kaistan ylälaidan ja korkeuden laskee js/ui.js placeIntro: se on se
      tyhjä pergamentti, joka jää laudan alle. Teksti keskittyy kaistaan. */
   display: flex;
@@ -820,6 +822,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   white-space: pre-line; /* omistajan teksti on kolmena kappaleena */
   text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9), 0 0 6px rgba(247, 237, 216, 0.75);
 }
+
+.intro.intro-fade { opacity: 0; }
 
 @media (max-width: 700px) {
   .intro { width: 90%; }
@@ -27434,6 +27438,10 @@ const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 // Lentoanimaation kesto: sen verran, että repliikin ehtii lukea.
 const FLY_ANIM_MS = 2000;
+// Näkymän zoomaus lennon reitille ja siitä takaisin.
+const ZOOM_MS = 700;
+// Kuinka pitkään repliikki saa levätä ruudussa kirjoittumisen jälkeen.
+const FLIGHT_LINE_HOLD_MS = 1600;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 // Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
@@ -28345,7 +28353,11 @@ class UI {
         // koordinaatit eivät tarkoita täällä mitään. Kone lentää kartan
         // reunaa kohti, koska matka jatkuu kuvan ulkopuolelle.
         const lahto = pixelOf(game.board, game.player.pos);
-        await this.animateFlight(lahto, this.mapEdgeToward(lahto), game.flightLine(link.city, packById(link.pack)));
+        // Reunan yli katoavaa lentoa ei zoomata: kohde ei ole tällä kartalla.
+        await this.animateFlight(
+          lahto, this.mapEdgeToward(lahto),
+          game.flightLine(link.city, packById(link.pack)), { zoom: false },
+        );
         this.doAction(() => game.actionGateway(link.index));
       });
       this.actionsEl.appendChild(gwBtn);
@@ -28394,12 +28406,15 @@ class UI {
     const { game } = this;
     const portti = (city.links ?? []).length > 0;
     sfx.play(portti ? 'flight' : 'paper');
-    // Pelin avaus on se filmihetki: kone lähtee Lontoosta ja laskeutuu
-    // valittuun kohteeseen ennen kuin mantereen kartta aukeaa.
+    // Pelin avaus on se filmihetki: avausteksti häipyy, näkymä zoomaa
+    // Lontoon ja kohteen ympärille ja kone lentää ennen kuin mantereen
+    // kartta aukeaa. Takaisin ei zoomata — lauta vaihtuu heti perään.
     const lontoo = game.board.cityById.get('lontoo');
     if (lontoo && lontoo.id !== city.id) {
+      this.introEl.classList.add('intro-fade');
       await this.animateFlight(
         { x: lontoo.x, y: lontoo.y }, { x: city.x, y: city.y }, game.flightLine(city.id),
+        { zoomBack: false },
       );
     }
     this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
@@ -28762,6 +28777,8 @@ class UI {
   renderIntro() {
     const nakyy = this.game.phase === 'pickstart';
     this.introEl.hidden = !nakyy;
+    // Uusi peli tuo tekstin takaisin täyteen näkyvyyteen häivytyksestä.
+    if (nakyy) this.introEl.classList.remove('intro-fade');
     if (!nakyy) {
       this.introShown = false;
       this.introText.textContent = '';
@@ -29449,17 +29466,71 @@ class UI {
   }
 
   /**
+   * Zoomaa näkymän kahden pisteen ympärille lennon ajaksi. Palauttaa
+   * lähtönäkymän viewBox-merkkijonon, jotta sen voi ajaa takaisin.
+   */
+  async zoomToFlight(a, b) {
+    const alkuperainen = this.svg.getAttribute('viewBox');
+    const pane = this.svg.parentElement;
+    if (!pane.clientWidth || !pane.clientHeight) return alkuperainen;
+
+    // Laatikko pisteiden ympärille: reilu marginaali, eikä ikinä niin
+    // tiukka etteivät kaupunkien nimet ja kaari mahtuisi kuvaan.
+    const PAD = 130;
+    const MIN_SPAN = 420;
+    let x0 = Math.min(a.x, b.x) - PAD;
+    let y0 = Math.min(a.y, b.y) - PAD;
+    let x1 = Math.max(a.x, b.x) + PAD;
+    let y1 = Math.max(a.y, b.y) + PAD;
+    if (x1 - x0 < MIN_SPAN) { const c = (x0 + x1) / 2; x0 = c - MIN_SPAN / 2; x1 = c + MIN_SPAN / 2; }
+    if (y1 - y0 < MIN_SPAN) { const c = (y0 + y1) / 2; y0 = c - MIN_SPAN / 2; y1 = c + MIN_SPAN / 2; }
+
+    const scale = Math.min(pane.clientWidth / (x1 - x0), pane.clientHeight / (y1 - y0));
+    const vw = pane.clientWidth / scale;
+    const vh = pane.clientHeight / scale;
+    const kohde = [
+      (x0 + x1) / 2 - vw / 2, (y0 + y1) / 2 - vh / 2, vw, vh,
+    ];
+    await this.animateViewBox(kohde, ZOOM_MS);
+    return alkuperainen;
+  }
+
+  /** Liu'uttaa viewBoxin nykyisestä kohteeseen pehmeällä käyrällä. */
+  async animateViewBox(kohde, ms) {
+    const lahto = (this.svg.getAttribute('viewBox') ?? '0 0 1000 1000')
+      .split(/\s+/).map(Number);
+    await new Promise((resolve) => {
+      const alku = performance.now();
+      const askel = (nyt) => {
+        const t = Math.min(1, (nyt - alku) / ms);
+        const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+        const arvot = lahto.map((v, i) => v + (kohde[i] - v) * e);
+        this.svg.setAttribute('viewBox', arvot.join(' '));
+        if (t < 1) requestAnimationFrame(askel);
+        else resolve();
+      };
+      requestAnimationFrame(askel);
+    });
+  }
+
+  /**
    * Indiana Jones -lentoanimaatio: pieni kone liitää kahden pisteen väliä ja
    * punainen viiva piirtyy sen perässä, kuten vanhoissa seikkailufilmeissä.
    * Puhtaasti kosmeettinen — pelitila on jo päivittynyt, tämä vain näytetään
    * ennen näkymän vaihtoa.
    *
+   * Näkymä zoomaa lennon ajaksi lähelle lähtöä ja kohdetta (zoom: false
+   * ohittaa, esim. porttilennot kartan reunan yli). zoomBack palauttaa
+   * näkymän lennon jälkeen — pois silloin, kun lauta vaihtuu heti perään.
+   * Repliikki pidetään ruudussa, kunnes se on ehditty kirjoittaa ja lukea.
+   *
    * `prefers-reduced-motion` ohittaa animaation kokonaan: silloin ei piirretä
    * mitään eikä odoteta, jotta peli etenee samaa tahtia kuin ennenkin.
    */
-  async animateFlight(a, b, line = null) {
+  async animateFlight(a, b, line = null, { zoom = true, zoomBack = true } = {}) {
     if (this.reducedMotion || !a || !b) return;
     this.flightLayer.textContent = '';
+    const palautus = zoom ? await this.zoomToFlight(a, b) : null;
 
     // Kaari kahden pisteen välillä: suora viiva näyttäisi tylsältä, ja
     // vanhojen karttojen lentoreitit kaartavat aina.
@@ -29507,6 +29578,15 @@ class UI {
       requestAnimationFrame(askel);
     });
 
+    // Kone jää hetkeksi kohteeseen ja repliikki saa kirjoittua loppuun ja
+    // tulla luetuksi — omistajan palaute: teksti hävisi liian nopeasti.
+    if (line) {
+      const odota = Math.max(0, (this.flightLineReadyAt ?? 0) - performance.now())
+        + FLIGHT_LINE_HOLD_MS;
+      await new Promise((resolve) => { setTimeout(resolve, odota); });
+    }
+
+    if (palautus && zoomBack) await this.animateViewBox(palautus.split(/\s+/).map(Number), ZOOM_MS);
     this.flightLayer.textContent = '';
     this.hideFlightLine();
   }
@@ -29517,12 +29597,13 @@ class UI {
       this.flightLine = html('p', 'flight-line');
       this.mapPane.appendChild(this.flightLine);
     }
-    // Sijainti lasketaan KARTTAKOORDINAATEISTA, ei paneelin korkeudesta:
-    // aloitusnäkymässä svg-elementti on paneelin korkuinen mutta piirretty
-    // kartta täyttää siitä vain yläosan, joten paneeliin sidottu rivi
-    // putoaisi kartan alapuolelle.
-    const { width, height } = this.game.pack.map;
-    const kohta = this.mapToPane({ x: width / 2, y: height * 0.9 });
+    // Arvio kirjoituskoneen valmistumishetkestä pitoa varten.
+    this.flightLineReadyAt = performance.now() + String(line).split(' ').length * TYPE_MS;
+    // Sijainti lasketaan NÄKYVÄSTÄ viewBoxista, ei koko kartasta: lennon
+    // ajaksi näkymä on zoomattu lähelle reittiä, ja koko karttaan sidottu
+    // rivi jäisi kuvan ulkopuolelle.
+    const vb = this.svg.viewBox.baseVal;
+    const kohta = this.mapToPane({ x: vb.x + vb.width / 2, y: vb.y + vb.height * 0.86 });
     this.flightLine.style.top = `${Math.round(kohta.y)}px`;
     this.flightLine.style.left = `${Math.round(kohta.x)}px`;
     this.flightLine.hidden = false;
@@ -29674,7 +29755,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.22';
+const APP_VERSION = '2026-07-28.24';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
