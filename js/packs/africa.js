@@ -286,7 +286,7 @@ export const AFRICA = {
       ],
       dakar: [
         'Manner päättyy alla, ja edessä on pelkkä Atlantti: läntisin kärki, eikä eteenpäin ole vettä kummempaa Amerikkaan asti. Minua huimaa jo ajatuksesta.',
-        'Tähän on merkitty katkoviiva meren yli länteen, ja katkoviiva on isoisän tapa sanoa: tätä en kulkenut. Se viiva ei jätä minua rauhaan.',
+        'Tähän on merkitty katkoviiva meren yli länteen, ja katkoviiva merkitsee hänellä aina reittiä, jota hän ei itse kulkenut. Se viiva ei jätä minua rauhaan.',
       ],
       kano: [
         'Ilma muuttuu alla keltaiseksi ja aurinko kalpeaksi kiekoksi keskellä päivää: harmattan tuo Saharasta pölyä, ja näkyvyys loppuu kilometriin. Tätä minä tulin katsomaan.',
@@ -306,7 +306,7 @@ export const AFRICA = {
       ],
       addisabeba: [
         'Laskukierros tehdään yli kahden kilometrin korkeudessa, koska maa on siellä. Maa, kahdessa kilometrissä — ja katson laaksoja, jotka putoavat pystysuorina.',
-        'Sivun laidassa on kahvipapu ja kellotaulu vierekkäin: isoisä odotti tunnin ja piti sitä merkitsemisen arvoisena. Siitä tunnista minä maksaisin mitä tahansa.',
+        'Sivun laidassa on kahvipapu ja kellotaulu vierekkäin: isoisä odotti tunnin ja kirjasi sen ylös. Siitä tunnista minä maksaisin mitä tahansa.',
       ],
     },
     intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.',
