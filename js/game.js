@@ -951,6 +951,19 @@ export class Game {
     return { ok: true };
   }
 
+  /**
+   * Lentorepliikki kohteeseen: kohdekaupungin oma rivi, tai yleisrivi jos
+   * omaa ei ole. Arvotaan pelin rng:llä, jotta sama peli toistuu samoin.
+   * Palauttaa null, jos pakassa ei ole repliikkejä lainkaan.
+   */
+  flightLine(cityId, pack = this.pack) {
+    const omat = pack.texts?.flightLines?.[cityId] ?? [];
+    const yleiset = pack.texts?.flightDefault ?? [];
+    const pakka = omat.length ? omat : yleiset;
+    if (!pakka.length) return null;
+    return pakka[Math.floor(this.rng() * pakka.length)];
+  }
+
   /** Naapurikaupunki ilmaista kyytiä varten; null jos naapureita ei ole. */
   rideTarget(player) {
     if (player.pos.type !== 'city') return null;

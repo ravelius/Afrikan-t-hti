@@ -67,6 +67,19 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
+## Avoimet asiat (Fablelle)
+
+- **Paketin 12 pulmien faktantarkistus jäi tekemättä.** Käynnistin
+  tarkistusagentin, mutta se ei palannut, ja paketti ehti mainiin (#72).
+  Tarkistin itse laskemalla, että kaikkien viiden pulman merkitty vastaus
+  on oikea (hieroglyfien yhteenlasku, vaa'an tasapaino, leilisarjat,
+  kuunvaiheiden järjestys) — nämä ovat nyt myös testeissä paketin 13
+  jäljiltä. **Verkkotarkistamatta ovat yhä:** xhosan naksutusäänteiden
+  artikulaatiokuvaukset (c/x/q ja se, alkaako isiXhosa lateraalisella
+  naksauksella), ashantien punnusten 3 %:n tarkkuusväite, ja Timbuktun
+  käsikirjoitusviite (Kashf al-Ghummah, 1733, Mamma Haidara -kirjasto).
+  Väitteet ovat tiedostossa js/packs/africa-puzzles.js fact-kentissä.
+
 ## Seuraavaksi: PAKETTI 13 (pulmien variointi), sitten PAKETTI 14
 
 **Paketit 1–12 ovat valmiit (28.7.2026).** Lisäksi korjattu: pulmien
