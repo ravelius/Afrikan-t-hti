@@ -18,6 +18,7 @@ import {
 import { factSource, factText, factVoice, isSourceUrl, sourceLabel, voiceTitle } from './pack.js';
 import { stampBoard, stampDate, stampList } from './passport.js';
 import { fetchArticle, fetchImage, fetchSummary } from './wiki.js';
+import { drawPuzzle } from './packs/africa-puzzles.js';
 
 // Tiivistelmät ja kuvat haetaan kerran per artikkeli: sama kuva näkyy
 // sekä saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
@@ -149,6 +150,8 @@ export class UI {
       this.closeArrival();
       this.doAction(() => this.game.actionSkipQuiz());
     });
+
+    this.quizSketch = document.getElementById('quiz-sketch');
 
     this.wikiDialog = document.getElementById('wiki-dialog');
     this.wikiTitle = document.getElementById('wiki-title');
@@ -1531,7 +1534,17 @@ export class UI {
 
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
-    if (quiz.kind === 'claim') {
+    // Pulman piirros ensin, kysymysrivi alla — kortti on isoisän luonnos.
+    this.quizSketch.hidden = quiz.kind !== 'puzzle';
+    if (quiz.kind === 'puzzle' && this.sketchFor !== quiz) {
+      this.sketchFor = quiz;
+      this.quizSketch.textContent = '';
+      drawPuzzle(this.quizSketch, quiz.puzzleId, quiz.sketchData);
+    }
+
+    if (quiz.kind === 'puzzle') {
+      this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
+    } else if (quiz.kind === 'claim') {
       // Väittämässä puhuu isoisä, ei peli: otsikko kertoo äänen.
       this.quizCity.textContent = `Isoisän päiväkirjasta, 1873 — totta vai tarua?`;
     } else if (quiz.kind === 'map') {
@@ -1700,7 +1713,8 @@ export class UI {
   renderTimer(quiz) {
     // Toimii sekä tietovisalle että kaksintaistelulle: molemmilla on
     // chosen- ja seconds-kentät.
-    const show = !this.game.player.isBot && quiz.chosen === null;
+    // Pulmassa ei ole kelloa: se on päättelytehtävä, ei nopeuskilpailu.
+    const show = !this.game.player.isBot && quiz.chosen === null && quiz.kind !== 'puzzle';
     this.quizTimerEl.hidden = !show;
     if (!show) {
       this.stopQuizTimer();

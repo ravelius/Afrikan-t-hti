@@ -344,6 +344,15 @@ export const AFRICA = {
       { x: 858, y: 905, r: 110 },
       { x: 880, y: 92, r: 135 },
     ],
+    // Maamerkit vihjaavat pulmista ja sitovat kartan paikkoihin. Sijoitus on
+    // kaupungin viereen mutta nimikilven vastakkaiselle puolelle, jottei
+    // piirros törmää tekstiin.
+    landmarks: [
+      { kind: 'pyramids', x: 683, y: 175 },        // Giza Kairon eteläpuolella
+      { kind: 'tablemountain', x: 490, y: 880 },   // Pöytävuori Kapkaupungin luoteispuolella
+      { kind: 'snowpeak', x: 728, y: 548 },        // Kilimandžaron lumihuippu
+      { kind: 'dhow', x: 894, y: 616 },            // dhow Sansibarin edustalla
+    ],
     ship: { x: 214, y: 548 },
     serpent: { x: 852, y: 902 },
     // Nopan lepopaikka suhteellisina koordinaatteina: avomerta vasemmassa alakulmassa.

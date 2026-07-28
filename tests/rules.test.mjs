@@ -367,6 +367,14 @@ for (const pack of PACKS) {
 
   test(`${pack.id}: koristeet ovat vedessä ja irti pelialueesta`, () => {
     const { decor } = pack;
+    /** Pisteen etäisyys janasta a–b. */
+    const segDist = (p, a, b) => {
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const pit = dx * dx + dy * dy;
+      const t = pit === 0 ? 0 : Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / pit));
+      return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
+    };
     const cityDist = (p) =>
       Math.min(...pack.cities.map((c) => Math.hypot(c.x - p.x, c.y - p.y)));
 
@@ -382,6 +390,36 @@ for (const pack of PACKS) {
     if (decor.serpent) {
       assert.ok(!isOnLand([decor.serpent.x, decor.serpent.y], pack.map), 'merikäärme on maalla');
       assert.ok(cityDist(decor.serpent) >= 70, 'merikäärme on liian lähellä kaupunkia');
+    }
+
+    // Maamerkit ovat tarkoituksella lähellä kaupunkiaan (ne vihjaavat
+    // pulmista), joten niille pätee löysempi etäisyys kuin merikoristeille.
+    // Ne eivät silti saa peittää kaupunkia, sen nimeä eivätkä reittiä.
+    for (const mark of decor.landmarks ?? []) {
+      const nimi = `maamerkki ${mark.kind}`;
+      assert.ok(
+        mark.x > 40 && mark.x < 960 && mark.y > 40 && mark.y < 960,
+        `${nimi} on kartan reunan ulkopuolella`,
+      );
+      assert.ok(cityDist(mark) >= 34, `${nimi} peittää kaupungin`);
+      // Piirros on noin 70 x 46 yksikköä; nimikilpi ei saa jäädä sen alle.
+      for (const c of pack.cities) {
+        const nx = c.x + (c.lx ?? 0);
+        const ny = c.y + (c.ly ?? 0);
+        assert.ok(
+          Math.abs(nx - mark.x) > 40 || Math.abs(ny - mark.y) > 26,
+          `${nimi} peittää nimen ${c.name}`,
+        );
+      }
+      for (const e of packBoard.edges) {
+        const a = pack.cities.find((c) => c.id === e.a);
+        const b = pack.cities.find((c) => c.id === e.b);
+        if (!a || !b) continue;
+        assert.ok(
+          segDist(mark, a, b) >= 18,
+          `${nimi} osuu reitille ${a.name}–${b.name}`,
+        );
+      }
     }
 
     // Otsikko selitteineen ei saa peittää kaupunkeja eikä reittejä.

@@ -621,6 +621,41 @@ export function tokenIconSvg(type, size = 18) {
 }
 
 /** Purjelaiva, meripeto ja karttaotsikko täyttämässä tyhjää merta. */
+/**
+ * Maamerkkien piirrokset. Samaa mustetyyliä kuin purjelaiva ja meripeto:
+ * ohut viiva, muutama täytetty pinta, ei yksityiskohtia. Jokainen piirtyy
+ * origon ympärille, jotta sijoitus on pelkkä siirto.
+ */
+const LANDMARKS = {
+  // Giza: kolme pyramidia rivissä, takimmainen pienempänä syvyyden vuoksi.
+  pyramids: (g) => {
+    el('path', { d: 'M-26,14 L-9,-16 L8,14 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M2,14 L15,-8 L28,14 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M20,14 L28,1 L36,14 Z', class: 'doodle-fill' }, g);
+    // Hiekan viiva jalustan alla sitoo ryhmän maahan.
+    el('path', { d: 'M-32,16 q32,6 70,0', class: 'doodle' }, g);
+  },
+  // Pöytävuori: litteä laki ja jyrkät reunat, päällä pöytäliinapilvi.
+  tablemountain: (g) => {
+    el('path', { d: 'M-30,16 L-22,-8 L22,-8 L30,16 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-24,-12 q10,-7 24,-4 q12,3 22,2', class: 'doodle' }, g);
+    el('path', { d: 'M-30,16 q30,5 60,0', class: 'doodle' }, g);
+  },
+  // Kilimandžaro: leveä kartio, jonka laki on lumessa.
+  snowpeak: (g) => {
+    el('path', { d: 'M-30,16 L0,-20 L30,16 Z', class: 'doodle' }, g);
+    el('path', { d: 'M-12,-6 L0,-20 L12,-6 q-12,5 -24,0 z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-30,16 q30,5 60,0', class: 'doodle' }, g);
+  },
+  // Dhow: kolmiomainen latinalaispurje, joka on Intian valtameren tuntomerkki.
+  dhow: (g) => {
+    el('path', { d: 'M-20,10 L22,10 L14,20 L-14,20 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-6,10 L2,-26', class: 'doodle' }, g);
+    el('path', { d: 'M2,-24 L18,8 L-4,8 z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-28,26 q12,7 24,0 M6,26 q12,7 24,0', class: 'doodle' }, g);
+  },
+};
+
 export function drawDoodles(svg, decor) {
   if (decor.ship) {
     const ship = el('g', {
@@ -646,6 +681,17 @@ export function drawDoodles(svg, decor) {
       class: 'doodle-fill',
     }, serpent);
     el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+  }
+
+  // Maamerkit: pieniä viivapiirroksia vanhojen karttojen tapaan. Ne myös
+  // vihjaavat pulmista (pyramidit ↔ Kairo, Pöytävuori ↔ Kapkaupunki), joten
+  // ne ovat tarkoituksella lähellä kaupunkiaan. Ei tekstiä — pelkkä kuva.
+  for (const mark of decor.landmarks ?? []) {
+    const g = el('g', {
+      class: `doodle-landmark landmark-${mark.kind}`,
+      transform: `translate(${mark.x},${mark.y})${mark.flip ? ' scale(-1,1)' : ''}`,
+    }, svg);
+    LANDMARKS[mark.kind]?.(g);
   }
 
   const title = el('g', {

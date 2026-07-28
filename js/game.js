@@ -44,6 +44,7 @@ export const XP_NEW_CITY = 10;
 export const XP_NEW_BOARD = 50;
 export const XP_HARD_ANSWER = 25;
 export const XP_STAR = 100;
+export const XP_PUZZLE = 25; // isoisän luonnoskirjan pulma ratkaistu
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 export function questionLevel(question) {
@@ -128,6 +129,9 @@ export class Game {
     // Pysähdyksen muoto: sama erikoismuoto ei toistu kahdesti peräkkäin.
     this.lastForm = null;
     this.eventCard = null;
+    // Pulmat avautuvat kerran pelissä: avaimena 'pakka:kaupunki'.
+    this.puzzlesSeen = new Set();
+    this.puzzlePrevPhase = null;
     // Isoisän aikataulu: näytetty rivi ja jo nähtyjen avaimet.
     this.scheduleNote = null;
     this.scheduleShown = new Set();
@@ -953,6 +957,55 @@ export class Game {
     return naapurit[Math.floor(this.rng() * naapurit.length)];
   }
 
+  /**
+   * Isoisän luonnoskirjan pulma, jos sellainen odottaa nykyisessä
+   * kaupungissa. Pulma ei ole sidottu laattaan eikä tutkimiseen, jotta myös
+   * aloituskaupungin pulma aukeaa — siksi laukaisin on pelkkä saapuminen.
+   * Palauttaa null, jos pulmaa ei ole tai se on jo nähty tässä pelissä.
+   */
+  pendingPuzzle(player = this.player) {
+    if (player.pos.type !== 'city') return null;
+    const puzzle = (this.pack.puzzles ?? []).find((p) => p.city === player.pos.city);
+    if (!puzzle) return null;
+    return this.puzzlesSeen.has(`${this.pack.id}:${puzzle.city}`) ? null : puzzle;
+  }
+
+  /**
+   * Avaa pulman. Pulma on monivalinta kuten muutkin, joten vastaaminen ja
+   * tuloksen näyttö toimivat ennallaan — vain palkinto ja sulkeminen
+   * poikkeavat: pulma ei käännä laattaa eikä päätä vuoroa.
+   */
+  openPuzzle() {
+    const puzzle = this.pendingPuzzle();
+    if (!puzzle) return { ok: false, error: 'Ei avointa pulmaa' };
+
+    this.puzzlesSeen.add(`${this.pack.id}:${puzzle.city}`);
+    this.puzzlePrevPhase = this.phase;
+    const order = this.shuffledOrder(puzzle.options.length);
+    this.quiz = {
+      kind: 'puzzle',
+      cityId: puzzle.city,
+      puzzleId: puzzle.id,
+      sketchData: puzzle.sketch ?? null,
+      title: puzzle.title,
+      hard: false,
+      question: puzzle.q,
+      fact: puzzle.fact,
+      source: sourceList(puzzle.source),
+      options: order.map((i) => puzzle.options[i]),
+      correct: order.indexOf(puzzle.correct),
+      hint: null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: null,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
+  }
+
   /** Vastaa kysymykseen. Tulos jää näkyviin kunnes closeQuiz() kutsutaan. */
   answerQuiz(index) {
     if (this.phase !== 'quiz' || !this.quiz || this.quiz.chosen !== null) {
@@ -966,6 +1019,19 @@ export class Game {
     this.quiz.chosen = index;
     this.quiz.right = index === this.quiz.correct;
     this.countAnswer(p, this.quiz.right);
+
+    // Pulma: oikeasta kokemuspisteitä, väärästä ei rangaistusta. Pulma ei
+    // käännä laattaa eikä koskaan estä etenemistä — oikea ratkaisu vain
+    // näytetään.
+    if (this.quiz.kind === 'puzzle') {
+      if (this.quiz.right) {
+        this.awardXp(p, XP_PUZZLE);
+        this.say(p.id, `${p.name} ratkaisi isoisän pulman (+${XP_PUZZLE} kp).`);
+      } else {
+        this.say(p.id, `${p.name} ei ratkaissut isoisän pulmaa — isoisä olisi ollut armollinen.`);
+      }
+      return { ok: true, right: this.quiz.right };
+    }
 
     // Tietoportti: oikea vastaus avaa portin, laattoja ei käännetä.
     if (this.quiz.gate) {
@@ -1041,6 +1107,7 @@ export class Game {
     // Väittämässä on kaksi vaihtoehtoa ja karttakysymyksessä vastataan
     // kartalta — kummassakaan puolikkaan poistamisessa ei ole järkeä.
     if (quiz.options.length < 4) return { ok: false, error: 'Tähän ei voi käyttää 50:50:tä' };
+    if (quiz.kind === 'puzzle') return { ok: false, error: 'Pulma ratkaistaan itse' };
 
     const p = this.player;
     if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
@@ -1059,6 +1126,13 @@ export class Game {
   /** Sulkee kysymyksen ja päättää vuoron — tai aloittaa rosvon kaksintaistelun. */
   closeQuiz() {
     if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    // Pulma keskeytti saapumisen, joten vuoro jatkuu siitä mihin jäätiin.
+    if (this.quiz.kind === 'puzzle') {
+      this.quiz = null;
+      if (this.phase !== 'over') this.phase = this.puzzlePrevPhase ?? 'action';
+      this.puzzlePrevPhase = null;
+      return { ok: true, puzzle: true };
+    }
     const gate = this.quiz.right ? this.quiz.gate : null;
     this.quiz = null;
     if (this.phase === 'over') return { ok: true };
@@ -1417,6 +1491,7 @@ export class Game {
       diaryNote: this.diaryNote,
       lastForm: this.lastForm,
       eventCard: this.eventCard,
+      puzzlesSeen: [...this.puzzlesSeen],
       scheduleNote: this.scheduleNote,
       scheduleShown: [...this.scheduleShown],
       recordNoted: this.recordNoted,
@@ -1492,6 +1567,7 @@ export class Game {
     game.diaryNote = data.diaryNote ?? null;
     game.lastForm = data.lastForm ?? null;
     game.eventCard = data.eventCard ?? null;
+    game.puzzlesSeen = new Set(data.puzzlesSeen ?? []);
     // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
     // yhtään isoisän aikataulurivistä.
     game.scheduleNote = data.scheduleNote ?? null;
