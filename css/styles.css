@@ -1629,6 +1629,19 @@ body[data-mode] .fact-card {
     background: rgba(255, 248, 232, 0.95);
   }
 
+  /*
+   * Yleinen opacity 0.45 tekee napista pergamentin päällä lähes
+   * näkymättömän, joten estetty nappi pidetään ääriviivoiltaan näkyvänä
+   * ja vain teksti vaimennetaan.
+   */
+  body[data-mode] .actions button:disabled {
+    opacity: 1;
+    background: rgba(247, 237, 216, 0.55);
+    border-color: rgba(122, 85, 20, 0.35);
+    color: rgba(58, 42, 22, 0.6);
+    text-shadow: none;
+  }
+
   /* Ensisijainen valinta pysyy kultaisena — se erottuu pergamentiltakin. */
   body[data-mode] .actions button.primary {
     background: linear-gradient(180deg, #eab84e, #d09024);

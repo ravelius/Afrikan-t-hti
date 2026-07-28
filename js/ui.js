@@ -435,15 +435,24 @@ export class UI {
   }
 
   /**
-   * Nopan lepopaikka: kartan vasen alakulma on avomerta, joten noppa ei jää
-   * kenenkään nappulan tai kaupungin päälle. Paikka arpoutuu hieman joka
-   * heitolla, jotta noppa ei osu aina täsmälleen samaan kohtaan.
+   * Nopan lepopaikka: avomerta, jotta noppa ei jää kenenkään nappulan tai
+   * kaupungin päälle. Paikka arpoutuu hieman joka heitolla, jotta noppa ei
+   * osu aina täsmälleen samaan kohtaan. Päiväkirjakortti hakeutuu
+   * merellisimpään kulmaan — usein samaan, jonne nopan paikka on valittu —
+   * joten kortin kulmaa väistetään peilaamalla paikka vastakkaiselle
+   * sivulle (tai pakan omaan varapaikkaan decor.dieSpotAlt).
    */
   dieRestingSpot() {
     const pane = this.mapPane;
     const w = pane.clientWidth || 600;
     const h = pane.clientHeight || 600;
-    const spot = this.game.pack.decor.dieSpot;
+    const decor = this.game.pack.decor;
+    let spot = decor.dieSpot;
+    const corner = this.factCard?.hidden ? null : this.factCard?.dataset.corner;
+    if (corner) {
+      const spotCorner = (spot.y < 0.5 ? 't' : 'b') + (spot.x < 0.5 ? 'l' : 'r');
+      if (spotCorner === corner) spot = decor.dieSpotAlt ?? { x: 1 - spot.x, y: spot.y };
+    }
     const jitter = this.dieJitter ?? { x: 0, y: 0 };
     return {
       x: w * (spot.x + jitter.x),

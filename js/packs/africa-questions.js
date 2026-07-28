@@ -48,12 +48,12 @@ export const AFRICA_QUESTIONS = {
 
   murzuk: [
     {
-      q: 'Murzuk sijaitsee keskellä maailman suurinta kuumaa aavikkoa. Mikä se on?',
-      options: ['Kalahari', 'Namib', 'Gobi', 'Sahara'],
-      correct: 3,
+      q: 'Mitä arvokasta karavaanit kuljettivat Saharan halki etelään, missä siitä maksettiin jopa kullalla?',
+      options: ['suolaa', 'silkkiä', 'lasia', 'rautaa'],
+      correct: 0,
       level: 1,
-      fact: 'Sahara on pinta-alaltaan noin 9 miljoonaa neliökilometriä.',
-      hint: 'Se ulottuu Atlantilta Punaisellemerelle.',
+      fact: 'Suola oli Länsi-Afrikassa ajoittain kullan arvoista. Sitä louhittiin aavikon kaivoksista laattoina, jotka sidottiin kamelien kylkiin.',
+      hint: 'Sitä louhittiin aavikolta suurina laattoina, ja sitä tarvitaan ruoassa.',
     },
     {
       q: 'Murzukin ympäristö tunnetaan Fezzanina. Missä maassa se on?',
@@ -1400,12 +1400,11 @@ export const AFRICA_QUESTIONS = {
       hint: 'Salmen eteläpuolella on Marokko.',
     },
     {
-      q: 'Mikä on Egyptin pääkaupunki?',
-      options: ['Kairo', 'Aleksandria', 'Luxor', 'Assuan'],
+      q: 'Mikä on Marokon pääkaupunki?',
+      options: ['Rabat', 'Casablanca', 'Marrakech', 'Fès'],
       correct: 0,
-      level: 1,
-      fact: 'Kairo on koko Afrikan suurimpia kaupunkeja: suurkaupunkialueella asuu yli 20 miljoonaa ihmistä.',
-      hint: 'Kaupunki sijaitsee Niilin varrella lähellä suistoa.',
+      fact: 'Moni veikkaa Casablancaa, mutta pääkaupunki on Rabat — kuninkaan ja hallinnon kaupunki Atlantin rannalla.',
+      hint: 'Se ei ole maan suurin eikä tunnetuin kaupunki.',
     },
     {
       q: 'Mikä Afrikan maa tuottaa eniten kaakaota maailmassa?',

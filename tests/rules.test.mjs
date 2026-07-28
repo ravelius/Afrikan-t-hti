@@ -65,6 +65,10 @@ const SISALTO_VALMIS = new Set([
 const MIN_CITY_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 5 : 2);
 const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10);
 
+// Laudat, joilta on siivottu kysymykset, joiden oikea vastaus lukee saman
+// laudan kartalla kaupunkinimenä. Laajennetaan lauta kerrallaan.
+const VASTAUS_EI_KARTALLA = new Set(['africa']);
+
 // --- jokaista pakettia koskevat eheystestit --------------------------------
 
 // Laudat, joiden kahden äänen sisältö on kirjoitettu valmiiksi: näiltä
@@ -151,6 +155,28 @@ for (const pack of PACKS) {
     assert.ok(levels.every((l) => [1, 2, 3].includes(l)), 'virheellinen vaikeustaso');
     assert.ok(levels.filter((l) => l === 1).length >= 10, 'liian vähän helppoja kysymyksiä');
     assert.ok(levels.filter((l) => l === 3).length >= 10, 'liian vähän vaikeita kysymyksiä');
+
+    // Vastaus ei saa lukea kartalla: oikea vaihtoehto ei saa olla saman
+    // laudan TOISEN kaupungin nimi (oma nimi on sallittu — kysymys kysytään
+    // siinä kaupungissa, jossa pelaaja jo seisoo). Tarkistettu lauta
+    // kerrallaan; laajenna settiä kun laudan kysymykset on käyty läpi
+    // (docs/tyolista-opukselle.md, Myöhemmäksi sovitut).
+    if (VASTAUS_EI_KARTALLA.has(pack.id)) {
+      const cityByName = new Map(pack.cities.map((c) => [c.name.toLowerCase(), c.id]));
+      for (const [key, qs] of Object.entries(pack.questions)) {
+        for (const q of qs) {
+          // Väittämillä (claims) ei ole vaihtoehtoja, joten kartalta ei
+          // voi lukea niiden vastausta.
+          if (!Array.isArray(q.options)) continue;
+          const answer = q.options[q.correct];
+          const labelId = cityByName.get(answer.toLowerCase());
+          assert.ok(
+            !labelId || labelId === key,
+            `kysymyksen "${q.q}" vastaus "${answer}" lukee kartalla (${labelId})`,
+          );
+        }
+      }
+    }
   });
 
   test(`${pack.id}: jokaisella kaupungilla on tiesitkö-tietoja`, () => {
