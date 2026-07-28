@@ -213,6 +213,17 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   line-height: 1.4;
   padding: 0.5rem 1rem;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.35);
+  max-width: min(34rem, 92%);
+}
+
+/*
+ * Karttakysymyksen ajaksi päiväkirjakortti väistyy: se peitti kysymysrivin
+ * ja karttaa pitää nyt lukea koko ruudulta. Kortti palaa heti vastattua.
+ */
+body.map-ask .fact-card {
+  opacity: 0.12;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 /* --- laudalla lepäävä 3D-noppa --- */

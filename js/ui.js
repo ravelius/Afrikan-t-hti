@@ -1594,6 +1594,11 @@ export class UI {
   renderQuiz() {
     if (this.dead) return; // kesken jäänyt animaatioketju voi kutsua tätä vielä destroyn jälkeen
     const { game } = this;
+    // Karttakysymyksen erikoistila puretaan aina ensin; avoin karttakysymys
+    // laittaa sen takaisin alempana. Ilman tätä päiväkirja jäisi himmeäksi
+    // kysymyksen sulkeuduttua.
+    this.hint.classList.remove('ask');
+    document.body.classList.remove('map-ask');
     this.renderEvent();
     if (game.phase === 'duel' && game.duel) {
       this.renderDuel();
@@ -1610,12 +1615,14 @@ export class UI {
     // kiinni siihen asti. Vastauksen jälkeen tulos näytetään normaalisti.
     // Ohjerivi kertoo suoraan miten vastataan — ilman kehotusta pelaaja jäi
     // odottamaan vastausvaihtoehtoja, joita ei koskaan tullut.
-    this.hint.classList.remove('ask');
     if (quiz.kind === 'map' && quiz.chosen === null) {
       this.stopQuizTimer();
       if (this.quizDialog.open) this.quizDialog.close();
       this.hint.textContent = `${quiz.question} Napauta vastausta kartalla.`;
       this.hint.classList.add('ask');
+      // Päiväkirja väistyy kysymyksen ajaksi: kysymysrivi jäi sen alle
+      // eikä karttaa voinut lukea kortin läpi.
+      document.body.classList.add('map-ask');
       return;
     }
 
@@ -1999,12 +2006,20 @@ export class UI {
     // Dialogi on top layerissa, joten paljastus lisätään sen sisään.
     this.quizDialog.appendChild(overlay);
 
+    // Näyttöaika kasvaa selitteen mukana: "+300 puntaa" saa vilahtaa,
+    // mutta pitkä selite (esim. tyhjän laatan "merkintä oli vanhentunut")
+    // pitää ehtiä lukea. Napautus ohittaa odotuksen.
+    const seliteMs = (REVEAL_SUB[type] ?? '').length * 45;
+    const napautus = new Promise((resolve) => {
+      overlay.addEventListener('pointerdown', resolve, { once: true });
+    });
+
     if (this.reducedMotion) {
       disc.classList.add('flipped');
       rays.classList.add('shown');
       caption.classList.add('shown');
       sfx.play(treasureSound(type));
-      await this.wait(900);
+      await Promise.race([this.wait(900 + seliteMs), napautus]);
     } else {
       await this.wait(420);
       disc.classList.add('flipped');
@@ -2014,7 +2029,7 @@ export class UI {
       sfx.play(treasureSound(type));
       rays.classList.add('shown');
       caption.classList.add('shown');
-      await this.wait(1250);
+      await Promise.race([this.wait(1250 + seliteMs), napautus]);
       overlay.classList.add('leaving');
       await this.wait(300);
     }
