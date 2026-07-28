@@ -18,6 +18,10 @@ export const STREAMS = {
     url: 'https://cdn.freesound.org/previews/146/146745_832093-lq.mp3',
     credit: '"Sahara wind harp (lotar)" — omestreandre, Freesound (CC BY 4.0)',
   },
+  dakar: {
+    url: 'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3',
+    credit: '"Dakar Ouakam cour intérieure" — LaureC, Freesound (CC0)',
+  },
   kimberley: {
     url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3',
     credit: '"African savanna 2" — AugustSandberg, Freesound (CC0)',
@@ -98,4 +102,43 @@ export function playPlaceAmbience(cityId, fallbackType) {
 /** Tekijämaininta soivalle äänitteelle, tai null. */
 export function placeStreamCredit(cityId) {
   return STREAMS[cityId]?.credit ?? null;
+}
+
+// Tietovisan taustamusiikki: hiljainen huililuuppi kysymyksen ajaksi.
+// Aina sama — tunnistettava "nyt mietitään" -sävy. Ilman verkkoa
+// kysymys on hiljainen, mikä on myös ihan hyvä.
+const QUIZ_MUSIC = {
+  url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3',
+  credit: '"Arabic Flute 04" — DYEKHO, Freesound (CC0)',
+};
+const MUSIIKKI_VOIMA = 0.09;
+
+let musiikki = null;
+
+export function startQuizMusic() {
+  if (!sfx.enabled || musiikki) return;
+  const audio = new Audio(QUIZ_MUSIC.url);
+  audio.loop = true;
+  audio.preload = 'auto';
+  audio.volume = 0;
+  musiikki = audio;
+  audio.play().then(() => {
+    if (musiikki !== audio) {
+      audio.pause();
+      return;
+    }
+    haivyta(audio, MUSIIKKI_VOIMA);
+  }).catch(() => {
+    if (musiikki === audio) musiikki = null;
+  });
+}
+
+export function stopQuizMusic() {
+  const vanha = musiikki;
+  musiikki = null;
+  if (!vanha) return;
+  haivyta(vanha, 0, () => {
+    vanha.pause();
+    vanha.removeAttribute('src');
+  });
 }

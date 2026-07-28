@@ -2109,6 +2109,35 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
+/* Kuvateksti suurennoksen alla: artikkelin oma selite kuvalle. */
+.lightbox-caption {
+  position: absolute;
+  bottom: 2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(40rem, 88vw);
+  max-height: 4.2em;
+  overflow: hidden;
+  text-align: center;
+  color: #f0e2c4;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+/* Latausilmaisin: näkyy kunnes kuva on oikeasti perillä. */
+.lightbox-loading {
+  color: #e8d9b5;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  animation: lightbox-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes lightbox-pulse {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.4; }
+}
+
 .wiki-image {
   display: block;
   max-width: 100%;

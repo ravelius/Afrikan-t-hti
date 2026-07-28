@@ -48,7 +48,9 @@ async function cachedGallery(title) {
   return wikiGalleryCache.get(title);
 }
 import { sfx, treasureSound } from './sound.js';
-import { playPlaceAmbience, stopPlaceStream } from './ambience-stream.js';
+import {
+  playPlaceAmbience, startQuizMusic, stopPlaceStream, stopQuizMusic,
+} from './ambience-stream.js';
 import { BoardDie } from './die.js';
 import {
   el,
@@ -385,6 +387,7 @@ export class UI {
     // tilaa uuden päälle (esim. edellisen pelin kysymyksen tekstin).
     this.dead = true;
     stopPlaceStream();
+    stopQuizMusic();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -1496,26 +1499,41 @@ export class UI {
     const overlay = html('div', 'lightbox');
     const img = html('img', 'lightbox-img');
     img.alt = alt;
+    const lataus = html('div', 'lightbox-loading', 'Ladataan…');
+    const kuvateksti = html('div', 'lightbox-caption');
     const prev = html('button', 'lightbox-nav prev', '‹');
     const next = html('button', 'lightbox-nav next', '›');
     const counter = html('div', 'lightbox-counter');
     const close = html('button', 'lightbox-close', '✕');
-    prev.hidden = next.hidden = true;
-    overlay.append(img, prev, next, counter, close);
+    prev.hidden = next.hidden = kuvateksti.hidden = true;
+    img.hidden = true; // rikkinäisen kuvan kysymysmerkki ei saa vilahtaa
+    overlay.append(img, lataus, kuvateksti, prev, next, counter, close);
     parent.appendChild(overlay);
 
-    let kuvat = [];
+    let kuvat = []; // { src, caption }
     let kohdalla = 0;
+    img.addEventListener('load', () => {
+      img.hidden = false;
+      lataus.hidden = true;
+    });
     const nayta = () => {
       if (!kuvat.length) return;
-      img.src = upsizeImage(kuvat[kohdalla]);
+      const kohde = kuvat[kohdalla];
+      img.hidden = true;
+      lataus.hidden = false;
+      lataus.textContent = 'Ladataan…';
+      img.src = upsizeImage(kohde.src);
+      kuvateksti.textContent = kohde.caption ?? '';
+      kuvateksti.hidden = !kohde.caption;
       counter.textContent = kuvat.length > 1 ? `${kohdalla + 1} / ${kuvat.length}` : '';
       prev.hidden = next.hidden = kuvat.length < 2;
     };
     // Jos suurennosta ei ole olemassa (alkuperäinen on pienempi), palataan
-    // kuvalistan omaan osoitteeseen.
+    // kuvalistan omaan osoitteeseen; jos sekään ei lataudu, sanotaan se.
     img.addEventListener('error', () => {
-      if (kuvat.length && img.src !== kuvat[kohdalla]) img.src = kuvat[kohdalla];
+      if (!kuvat.length) return;
+      if (img.src !== kuvat[kohdalla].src) img.src = kuvat[kohdalla].src;
+      else lataus.textContent = 'Kuvaa ei saatu ladattua.';
     });
     const siirry = (askel) => {
       if (kuvat.length < 2) return;
@@ -1543,14 +1561,14 @@ export class UI {
     const eka = await cachedImage(title);
     if (!overlay.isConnected) return;
     if (eka) {
-      kuvat = [eka];
+      kuvat = [{ src: eka, caption: null }];
       nayta();
     }
     const lista = await cachedGallery(title);
     if (!overlay.isConnected || !lista.length) return;
-    const nykyinen = kuvat[0] ?? null;
+    const nykyinen = kuvat[0]?.src ?? null;
     kuvat = lista;
-    kohdalla = Math.max(0, lista.indexOf(nykyinen));
+    kohdalla = Math.max(0, lista.findIndex((k) => k.src === nykyinen));
     nayta();
   }
 
@@ -1728,6 +1746,7 @@ export class UI {
     const quiz = game.quiz;
     if (game.phase !== 'quiz' || !quiz) {
       this.stopQuizTimer();
+      stopQuizMusic();
       if (this.quizDialog.open) this.quizDialog.close();
       return;
     }
@@ -1784,8 +1803,11 @@ export class UI {
         : `${city.name}${hardTag}`;
     }
     // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
+    // Samalla kääntyy päiväkirjan sivu ja hiljainen mietintämusiikki alkaa.
     if (this.typedQuizFor !== quiz) {
       this.typedQuizFor = quiz;
+      sfx.play('quizOpen');
+      startQuizMusic();
       this.typeText(this.quizQuestion, quiz.question, 'quiz');
     } else if (this.quizQuestion.textContent !== String(quiz.question)) {
       // Itsekorjaus: jos jokin muu kirjoitus on ehtinyt sotkea tekstin
@@ -1868,6 +1890,7 @@ export class UI {
     this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
     if (this.typedQuizFor !== duel) {
       this.typedQuizFor = duel;
+      startQuizMusic();
       this.typeText(this.quizQuestion, duel.question, 'quiz');
     } else if (this.quizQuestion.textContent !== String(duel.question)) {
       // Sama itsekorjaus kuin tietovisassa: teksti ei saa jäädä eriämään.

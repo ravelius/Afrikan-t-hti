@@ -133,7 +133,11 @@ export function pickImage(items) {
   return null;
 }
 
-/** Kaikki kelvolliset valokuvat kuvalistasta, enintään max kappaletta. */
+/**
+ * Kaikki kelvolliset valokuvat kuvalistasta, enintään max kappaletta.
+ * Palauttaa olioita { src, caption } — kuvateksti tulee artikkelista,
+ * jos kuvalle on kirjoitettu sellainen.
+ */
 export function pickImages(items, max = 12) {
   const kuvat = [];
   for (const item of items ?? []) {
@@ -142,7 +146,10 @@ export function pickImages(items, max = 12) {
     const srcset = item.srcset;
     const src = srcset?.[srcset.length - 1]?.src ?? srcset?.[0]?.src;
     if (!src) continue;
-    kuvat.push(src.startsWith('//') ? `https:${src}` : src);
+    kuvat.push({
+      src: src.startsWith('//') ? `https:${src}` : src,
+      caption: item.caption?.text?.trim() || null,
+    });
     if (kuvat.length >= max) break;
   }
   return kuvat;
@@ -173,7 +180,9 @@ export async function fetchImages(summary, { fetchImpl = globalThis.fetch, max =
   } catch {
     /* ei yhteyttä — yksi kuva on parempi kuin ei yhtään */
   }
-  return summary.image && !BAD_IMAGE.test(summary.image) ? [summary.image] : [];
+  return summary.image && !BAD_IMAGE.test(summary.image)
+    ? [{ src: summary.image, caption: null }]
+    : [];
 }
 
 /**

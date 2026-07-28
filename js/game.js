@@ -227,7 +227,7 @@ export class Game {
     this.visitCity(p);
     this.phase = 'action';
     this.beginTurn();
-    this.maybeOpenPuzzle();
+    this.offerQuiz();
     return { ok: true };
   }
 
@@ -606,8 +606,8 @@ export class Game {
     this.lastPath = null;
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
     this.emit('flight', link.label, { icon: '🧭', sub: `−${FLIGHT_PRICE} puntaa` });
+    if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();
-    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
@@ -757,19 +757,20 @@ export class Game {
     this.moves = null;
     this.die = null;
     if (this.checkWin()) return { ok: true, win: true };
-    if (this.offerQuiz()) {
-      this.maybeOpenPuzzle();
-      return { ok: true, offer: true };
-    }
+    if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();
-    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
-  /** Aarrekaupunkiin saapunut saa kokeilla kysymystä ennen vuoron vaihtumista. */
+  /**
+   * Saapumiskortti tarjotaan, kun kaupungissa on laatta TAI näkemätön
+   * pulma. Pulma ei enää hyppää ruudulle itsestään laskeuduttaessa —
+   * se aukeaa vasta Tutki paikka -napista.
+   */
   offerQuiz() {
     const city = this.cityOf();
-    if (!city || !this.tokens.has(city.id)) return false;
+    if (!city) return false;
+    if (!this.tokens.has(city.id) && !this.pendingPuzzle()) return false;
     this.phase = 'offer';
     return true;
   }
@@ -828,6 +829,11 @@ export class Game {
     if (this.phase !== 'offer' && this.phase !== 'action') {
       return { ok: false, error: 'Väärä vaihe' };
     }
+    // Isoisän pulma avataan ensin: Tutki paikka (oletuskutsu ilman muotoa)
+    // näyttää sen ennen laatan kysymystä, ja pulman jälkeen palataan
+    // saapumiskorttiin. Nimetty muoto tai vaikea kysymys ohittaa pulman.
+    if (!hard && form === null && this.pendingPuzzle()) return this.openPuzzle();
+
     const city = this.tokenHere();
     if (!city) return { ok: false, error: 'Täällä ei ole laattaa' };
     if (hard && !this.hardAvailable(city.id)) {
@@ -1075,18 +1081,6 @@ export class Game {
   }
 
   /**
-   * Avaa pulman, jos nykyisessä kaupungissa odottaa näkemätön pulma.
-   * Kutsutaan jokaisen saapumisen päätteeksi — myös laudalle
-   * laskeuduttaessa (portit, lennot, pelin aloitus), sillä pulma ei ole
-   * sidottu laattaan vaan pelkkään saapumiseen.
-   */
-  maybeOpenPuzzle() {
-    if (this.phase === 'over' || this.quiz || this.duel) return false;
-    if (!this.pendingPuzzle()) return false;
-    return this.openPuzzle().ok;
-  }
-
-  /**
    * Avaa pulman. Pulma on monivalinta kuten muutkin, joten vastaaminen ja
    * tuloksen näyttö toimivat ennallaan — vain palkinto ja sulkeminen
    * poikkeavat: pulma ei käännä laattaa eikä päätä vuoroa.
@@ -1277,8 +1271,8 @@ export class Game {
       this.say(p.id, `${p.name} astui portista: ${gate.label}.`);
       this.emit('flight', gate.label, { icon: '★', sub: 'Tieto avasi portin' });
       this.phase = 'action';
+      if (this.offerQuiz()) return { ok: true, gated: true, offer: true };
       this.endTurn();
-      this.maybeOpenPuzzle();
       return { ok: true, gated: true };
     }
     if (this.duelArmed) {
@@ -1506,12 +1500,8 @@ export class Game {
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
     this.emit('flight', `Lento kaupunkiin ${city.name}`, { icon: '✈', sub: `−${FLIGHT_PRICE} puntaa` });
     if (this.checkWin()) return { ok: true, win: true };
-    if (this.offerQuiz()) {
-      this.maybeOpenPuzzle();
-      return { ok: true, offer: true };
-    }
+    if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();
-    this.maybeOpenPuzzle();
     return { ok: true };
   }
 

@@ -251,6 +251,28 @@ class Sound {
     const t0 = ctx.currentTime;
     const kesto = kestoMs / 1000;
 
+    // Oikea moottoriäänitys, jos se on ehditty ladata: lentoonlähtö
+    // matkustamosta kuultuna. Ilman verkkoa soi syntetisoitu kone.
+    const jet = this.samples?.jet;
+    if (jet) {
+      const src = ctx.createBufferSource();
+      src.buffer = jet;
+      src.loop = true; // lyhyempikin äänite kantaa koko kohtauksen yli
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.5, t0 + 0.9);
+      g.gain.setValueAtTime(0.5, t0 + Math.max(1, kesto - 1));
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+      src.connect(g).connect(this.bus);
+      src.start(t0);
+      src.stop(t0 + kesto + 0.1);
+      this.flightNodes = { lahteet: [src], vaimennukset: [g] };
+      src.onended = () => {
+        if (this.flightNodes?.lahteet?.includes(src)) this.flightNodes = null;
+      };
+      return;
+    }
+
     const osc = ctx.createOscillator();
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(this.jitter(84), t0);
@@ -312,9 +334,11 @@ class Sound {
     osc.start(t0); lfo.start(t0); virtaus.start(t0); runko.start(t0);
     osc.stop(t0 + kesto + 0.1); lfo.stop(t0 + kesto + 0.1);
     virtaus.stop(t0 + kesto + 0.1); runko.stop(t0 + kesto + 0.1);
-    this.flightNodes = { osc, lfo, g, virtaus, runko, vg, rg };
+    this.flightNodes = { lahteet: [osc, lfo, virtaus, runko], vaimennukset: [g, vg, rg] };
     // Siivotaan itsestään, jos stopFlight jää kutsumatta.
-    osc.onended = () => { this.flightNodes = null; };
+    osc.onended = () => {
+      if (this.flightNodes?.lahteet?.includes(osc)) this.flightNodes = null;
+    };
   }
 
   /** Lopettaa moottoriäänen pehmeästi. */
@@ -324,16 +348,12 @@ class Sound {
     this.flightNodes = null;
     const t = this.ctx.currentTime;
     try {
-      for (const gain of [solmut.g, solmut.vg, solmut.rg]) {
-        if (!gain) continue;
+      for (const gain of solmut.vaimennukset) {
         gain.gain.cancelScheduledValues(t);
         gain.gain.setValueAtTime(Math.max(gain.gain.value, 0.0001), t);
         gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
       }
-      solmut.osc.stop(t + 0.4);
-      solmut.lfo.stop(t + 0.4);
-      solmut.virtaus?.stop(t + 0.4);
-      solmut.runko?.stop(t + 0.4);
+      for (const src of solmut.lahteet) src.stop(t + 0.4);
     } catch {
       /* solmu oli jo pysäytetty */
     }
@@ -515,7 +535,7 @@ class Sound {
    * hiljaisuuteen; `tail` soittaa äänitteen lopun (esim. nopan asettuminen).
    * Palauttaa false, jos puskuria ei ole ladattu — silloin soi synteesi.
    */
-  playSlice(name, { dur = 0.1, gain = 0.3, tail = null } = {}) {
+  playSlice(name, { dur = 0.1, gain = 0.3, tail = null, alusta = false } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
     if (!ctx || !buf) return false;
@@ -525,7 +545,9 @@ class Sound {
     const kesto = tail ?? dur;
     const alku = tail != null
       ? Math.max(0, buf.duration - tail - 0.15)
-      : buf.duration * 0.2 + Math.random() * Math.max(0.01, buf.duration * 0.6 - dur);
+      : alusta
+        ? 0
+        : buf.duration * 0.2 + Math.random() * Math.max(0.01, buf.duration * 0.6 - dur);
     // Pehmeä alku ja loppu, ettei leikkauskohta naksu.
     const g = ctx.createGain();
     const t0 = ctx.currentTime;
@@ -546,9 +568,22 @@ const REAL_SAMPLES = {
     url: 'https://cdn.freesound.org/previews/94/94031_1554038-lq.mp3',
     credit: '"Dice Roll" — LoafDV, Freesound (CC0)',
   },
+  // Vuoden 1946 kirjoituskone: mustekynän raapaisu ei toiminut, joten
+  // avausteksti naksuu kuin matkakirjoituskoneella.
   pen: {
-    url: 'https://cdn.freesound.org/previews/856/856167_18901108-lq.mp3',
-    credit: '"Ink Quill Writing on Parchment" — brktkrgll, Freesound (CC0)',
+    url: 'https://cdn.freesound.org/previews/862/862556_12084000-lq.mp3',
+    credit: '"1946 L C Speed Typewriter" — ColinMWJones, Freesound (CC0)',
+  },
+  // Lentoonlähtö matkustamosta äänitettynä — lentokohtauksessa istutaan
+  // koneessa isoisän kirja sylissä.
+  jet: {
+    url: 'https://cdn.freesound.org/previews/416/416891_2456794-lq.mp3',
+    credit: '"Airplane takeoff interior" — Apheo, Freesound (CC0)',
+  },
+  // Sivunkääntö: kysymyskortti avautuu kuin päiväkirjan sivu.
+  quizOpen: {
+    url: 'https://cdn.freesound.org/previews/842/842183_13307919-lq.mp3',
+    credit: '"Page Turn Free" — AardsReal, Freesound (CC0)',
   },
 };
 
@@ -556,7 +591,11 @@ const REAL_SAMPLES = {
 const REAL_PLAYERS = {
   dieTick: (s) => s.playSlice('dice', { dur: 0.08, gain: 0.4 }),
   dieLand: (s) => s.playSlice('dice', { tail: 0.6, gain: 0.55 }),
-  pen: (s) => s.playSlice('pen', { dur: 0.11, gain: 0.3 }),
+  // Satunnainen siivu kirjoituskoneäänityksestä osuu milloin näppäimeen,
+  // milloin väliin — rytmi elää kuin oikealla koneella.
+  pen: (s) => s.playSlice('pen', { dur: 0.12, gain: 0.35 }),
+  // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
+  quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
 };
 
 
@@ -650,6 +689,11 @@ export const AMBIENCE_TYPES = Object.keys(AMBIENCES);
 
 const SOUNDS = {
   // Käyttöliittymä
+  // Kysymyskortin avaus ilman verkkoa: paperi ja pehmeä kello.
+  quizOpen: (s) => {
+    s.hiss({ dur: 0.4, type: 'highpass', freq: 800, sweepTo: 2400, gain: 0.07 });
+    s.bell({ freq: 740, dur: 0.5, gain: 0.06, delay: 0.1 });
+  },
   click: (s) => s.knock({ freqs: [540, 880], dur: 0.045, gain: 0.06, q: 8 }),
   paper: (s) => s.hiss({ dur: 0.34, type: 'highpass', freq: 900, sweepTo: 2800, gain: 0.075 }),
   // Kynän raapaisu pergamentilla — avaustekstin käsinkirjoitus. Hyvin
