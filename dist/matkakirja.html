@@ -6455,7 +6455,7 @@ const AFRICA_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const AFRICA_CITIES = [
   {
-    id: 'tanger', name: 'Tanger', wiki: 'Tanger', x: 189, y: 52, start: true, airport: true,
+    id: 'tanger', name: 'Tanger', wiki: 'Tanger', ambience: 'basaari', x: 189, y: 52, start: true, airport: true,
     // Gibraltarin salmen yli Espanjaan: lyhin hyppy Afrikasta Eurooppaan.
     // Tanger on myös maailmankartalla, joten sinne pääsee takaisin.
     links: [
@@ -6464,7 +6464,7 @@ const AFRICA_CITIES = [
     ],
   },
   {
-    id: 'kairo', name: 'Kairo', wiki: 'Kairo', x: 683, y: 125, start: true, airport: true,
+    id: 'kairo', name: 'Kairo', wiki: 'Kairo', ambience: 'basaari', x: 683, y: 125, start: true, airport: true,
     // Sama kaupunki on myös Lähi-idän laudalla: vaelluksessa tästä jatketaan.
     links: [
       { pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' },
@@ -6472,43 +6472,43 @@ const AFRICA_CITIES = [
     ],
   },
 
-  { id: 'tripoli', name: 'Tripoli', wiki: 'Tripoli', x: 443, y: 89, airport: true },
-  { id: 'murzuk', name: 'Murzuk', wiki: 'Murzuk', x: 474, y: 196 },
-  { id: 'alkufra', name: 'Al Kufra', wiki: 'Kufra', x: 577, y: 197 },
-  { id: 'sahara', name: 'Sahara', wiki: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
-  { id: 'ahaggar', name: 'Ahaggar', wiki: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
-  { id: 'timbuktu', name: 'Timbuktu', wiki: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
-  { id: 'gao', name: 'Gao', wiki: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
+  { id: 'tripoli', name: 'Tripoli', wiki: 'Tripoli', ambience: 'basaari', x: 443, y: 89, airport: true },
+  { id: 'murzuk', name: 'Murzuk', wiki: 'Murzuk', ambience: 'aavikko', x: 474, y: 196 },
+  { id: 'alkufra', name: 'Al Kufra', wiki: 'Kufra', ambience: 'aavikko', x: 577, y: 197 },
+  { id: 'sahara', name: 'Sahara', wiki: 'Sahara', ambience: 'aavikko', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
+  { id: 'ahaggar', name: 'Ahaggar', wiki: 'Ahaggar', ambience: 'aavikko', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
+  { id: 'timbuktu', name: 'Timbuktu', wiki: 'Timbuktu', ambience: 'aavikko', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
+  { id: 'gao', name: 'Gao', wiki: 'Gao', ambience: 'aavikko', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'dakar', name: 'Dakar', wiki: 'Dakar', x: 45, y: 318, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'dakar', name: 'Dakar', wiki: 'Dakar', ambience: 'meri', x: 45, y: 318, airport: true, la: 'start', lx: 16, ly: 5,
     // Etelä-Atlantin ylitys Dakarista Brasiliaan on vanha postilentoreitti.
     links: [{ pack: 'southamerica', city: 'joaopessoa', label: 'Etelä-Amerikan lauta' }],
   },
-  { id: 'sierraleone', name: 'Sierra Leone', wiki: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
-  { id: 'kappalmas', name: 'Kap Palmas', wiki: 'Cape Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
-  { id: 'kumasi', name: 'Kumasi', wiki: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
-  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', x: 330, y: 404 },
-  { id: 'kano', name: 'Kano', wiki: 'Kano', x: 394, y: 336, airport: true },
-  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
-  { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'angola', name: 'Angola', wiki: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
-  { id: 'namib', name: 'Namib', wiki: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
+  { id: 'sierraleone', name: 'Sierra Leone', wiki: 'Sierra Leone', ambience: 'sademetsa', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
+  { id: 'kappalmas', name: 'Kap Palmas', wiki: 'Cape Palmas', ambience: 'meri', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
+  { id: 'kumasi', name: 'Kumasi', wiki: 'Kumasi', ambience: 'sademetsa', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
+  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', ambience: 'meri', x: 330, y: 404 },
+  { id: 'kano', name: 'Kano', wiki: 'Kano', ambience: 'savanni', x: 394, y: 336, airport: true },
+  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', ambience: 'sademetsa', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
+  { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', ambience: 'sademetsa', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'angola', name: 'Angola', wiki: 'Angola', ambience: 'savanni', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
+  { id: 'namib', name: 'Namib', wiki: 'Namib', ambience: 'aavikko', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
   {
-    id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
+    id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
     links: [{ pack: 'maailma', city: 'kapkaupunki', label: 'Maailma-lauta' }],
   },
-  { id: 'kimberley', name: 'Kimberley', wiki: 'Kimberley (Etelä-Afrikka)', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
-  { id: 'mosambik', name: 'Mosambik', wiki: 'Mosambikin saari', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
-  { id: 'madagaskar', name: 'Madagaskar', wiki: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', wiki: 'Sansibar', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'kilimandzaro', name: 'Kilimandžaro', wiki: 'Kilimanjaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
-  { id: 'viktoria', name: 'Viktoria Nyanza', wiki: 'Victoria-järvi', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
-  { id: 'tanganjika', name: 'Tanganjika', wiki: 'Tanganjikajärvi', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
-  { id: 'bahrelghazal', name: 'Bahr el Ghazal', wiki: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
-  { id: 'darfur', name: 'Darfur', wiki: 'Darfur', x: 575, y: 318 },
-  { id: 'suakin', name: 'Suakin', wiki: 'Suakin', x: 764, y: 261 },
-  { id: 'addisabeba', name: 'Addis Abeba', wiki: 'Addis Abeba', x: 783, y: 387, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'rashafun', name: 'Ras Hafun', wiki: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
+  { id: 'kimberley', name: 'Kimberley', wiki: 'Kimberley (Etelä-Afrikka)', ambience: 'savanni', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
+  { id: 'mosambik', name: 'Mosambik', wiki: 'Mosambikin saari', ambience: 'meri', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
+  { id: 'madagaskar', name: 'Madagaskar', wiki: 'Madagaskar', ambience: 'sademetsa', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sansibar', name: 'Sansibar', wiki: 'Sansibar', ambience: 'meri', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'kilimandzaro', name: 'Kilimandžaro', wiki: 'Kilimanjaro', ambience: 'ylanko', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
+  { id: 'viktoria', name: 'Viktoria Nyanza', wiki: 'Victoria-järvi', ambience: 'savanni', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
+  { id: 'tanganjika', name: 'Tanganjika', wiki: 'Tanganjikajärvi', ambience: 'savanni', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
+  { id: 'bahrelghazal', name: 'Bahr el Ghazal', wiki: 'Bahr el Ghazal', ambience: 'savanni', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
+  { id: 'darfur', name: 'Darfur', wiki: 'Darfur', ambience: 'savanni', x: 575, y: 318 },
+  { id: 'suakin', name: 'Suakin', wiki: 'Suakin', ambience: 'meri', x: 764, y: 261 },
+  { id: 'addisabeba', name: 'Addis Abeba', wiki: 'Addis Abeba', ambience: 'ylanko', x: 783, y: 387, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'rashafun', name: 'Ras Hafun', wiki: 'Ras Hafun', ambience: 'meri', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -24235,11 +24235,19 @@ function stampDate(iso) {
 
 const STORAGE_KEY = 'afrikan-tahti-sound';
 
+// Ambienssin ristihäivytys ja tapahtumien väli. Väli on tarkoituksella pitkä
+// ja epäsäännöllinen: säännöllinen ääni alkaa kuulua kellona.
+const AMBIENCE_FADE = 2;
+const AMBIENCE_EVENT_MIN = 8000;
+const AMBIENCE_EVENT_MAX = 30000;
+
 class Sound {
   constructor() {
     this.ctx = null;
     this.master = null;
     this.noise = null;
+    this.ambience = null;
+    this.ambienceType = null;
     this.enabled = this.loadSetting();
   }
 
@@ -24259,6 +24267,7 @@ class Sound {
       /* tallennus ei ole välttämätöntä */
     }
     if (enabled) this.play('click');
+    else this.setAmbience(null);
   }
 
   /** Luo äänikontekstin ensimmäisellä kerralla ja herättää sen tarvittaessa. */
@@ -24516,6 +24525,147 @@ class Sound {
     }
   }
 
+  // --- ambienssi ------------------------------------------------------------
+  //
+  // Hiljainen taustaäänimaisema, joka vaihtuu kohteen mukaan. Rakenne on
+  // kaikilla tyypeillä sama: jatkuva pohja (suodatettua kohinaa hitailla
+  // LFO:illa) ja sen päällä satunnaisia tapahtumia epäsäännöllisin välein.
+  // Kaikki on tarkoituksella hyvin hiljaista — ambienssin kuuluu huomata
+  // vasta kun se lakkaa.
+
+  /**
+   * Vaihtaa äänimaiseman ristihäivytyksellä. `null` sammuttaa.
+   * Sama tyyppi uudelleen ei tee mitään, jotta maisema ei nykäise
+   * jokaisella renderöinnillä.
+   */
+  setAmbience(type) {
+    if (type === this.ambienceType) return;
+    this.ambienceType = type ?? null;
+
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+
+    // Vanha häivytetään pois ja puretaan vasta sen jälkeen.
+    if (this.ambience) this.fadeOutAmbience(this.ambience);
+    this.ambience = null;
+    if (!type || !AMBIENCES[type]) return;
+
+    const out = ctx.createGain();
+    out.gain.setValueAtTime(0.0001, ctx.currentTime);
+    out.gain.exponentialRampToValueAtTime(1, ctx.currentTime + AMBIENCE_FADE);
+    out.connect(this.bus);
+
+    const maisema = { out, nodes: [], timer: null, type };
+    this.ambience = maisema;
+    AMBIENCES[type](this, maisema);
+    this.scheduleAmbienceEvent(maisema);
+  }
+
+  /** Häivyttää ja purkaa yhden maiseman. */
+  fadeOutAmbience(maisema) {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    clearTimeout(maisema.timer);
+    maisema.timer = null;
+    maisema.loppuu = true;
+    try {
+      maisema.out.gain.cancelScheduledValues(t);
+      maisema.out.gain.setValueAtTime(Math.max(maisema.out.gain.value, 0.0001), t);
+      maisema.out.gain.exponentialRampToValueAtTime(0.0001, t + AMBIENCE_FADE);
+    } catch {
+      /* solmu oli jo purettu */
+    }
+    for (const n of maisema.nodes) {
+      try { n.stop(t + AMBIENCE_FADE + 0.1); } catch { /* jo pysäytetty */ }
+    }
+  }
+
+  /**
+   * Jatkuva pohja: kohinaa suodattimen läpi, ja hidas LFO liikuttaa
+   * voimakkuutta niin ettei ääni ole tasainen seinä.
+   */
+  ambienceBed(maisema, { type = 'lowpass', freq = 500, q = 0.7, gain = 0.04, lfoHz = 0.08, lfoDepth = 0.5 }) {
+    const ctx = this.ctx;
+    const t0 = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = this.noise;
+    src.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.value = freq;
+    f.Q.value = q;
+    const g = ctx.createGain();
+    g.gain.value = gain;
+
+    // Hidas huojunta: puuskia ja laantumista.
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = lfoHz;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = gain * lfoDepth;
+    lfo.connect(lfoGain).connect(g.gain);
+
+    src.connect(f).connect(g).connect(maisema.out);
+    src.start(t0);
+    lfo.start(t0);
+    maisema.nodes.push(src, lfo);
+  }
+
+  /** Ajastaa seuraavan satunnaisen tapahtuman epäsäännöllisen välin päähän. */
+  scheduleAmbienceEvent(maisema) {
+    if (maisema.loppuu) return;
+    const viive = AMBIENCE_EVENT_MIN + Math.random() * (AMBIENCE_EVENT_MAX - AMBIENCE_EVENT_MIN);
+    maisema.timer = setTimeout(() => {
+      if (maisema.loppuu || this.ambience !== maisema) return;
+      const tapahtuma = AMBIENCE_EVENTS[maisema.type];
+      if (tapahtuma) {
+        try { tapahtuma(this, maisema); } catch { /* ei saa kaataa peliä */ }
+      }
+      this.scheduleAmbienceEvent(maisema);
+    }, viive);
+    // Ajastin ei saa pitää Nodea hereillä testeissä.
+    if (maisema.timer && typeof maisema.timer.unref === 'function') maisema.timer.unref();
+  }
+
+  /** Lyhyt ambienssiääni maiseman omaan ulostuloon (ei kaikubussiin suoraan). */
+  ambienceHit({ maisema, freq = 800, dur = 0.5, gain = 0.02, type = 'bandpass', q = 4, sweepTo = null }) {
+    const ctx = this.ctx;
+    if (!ctx || maisema.loppuu) return;
+    const t0 = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = this.noise;
+    src.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.setValueAtTime(this.jitter(freq), t0);
+    if (sweepTo) f.frequency.exponentialRampToValueAtTime(Math.max(sweepTo, 40), t0 + dur);
+    f.Q.value = q;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(this.jitter(gain), t0 + dur * 0.25);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(f).connect(g).connect(maisema.out);
+    src.start(t0);
+    src.stop(t0 + dur + 0.05);
+  }
+
+  /** Lyhyt sävelambienssi: linnut, kulkuset ja vastaavat. */
+  ambienceTone({ maisema, freq = 900, to = null, dur = 0.3, gain = 0.02, type = 'sine', delay = 0 }) {
+    const ctx = this.ctx;
+    if (!ctx || maisema.loppuu) return;
+    const t0 = ctx.currentTime + delay;
+    const osc = ctx.createOscillator();
+    osc.type = type;
+    osc.frequency.setValueAtTime(this.jitter(freq), t0);
+    if (to) osc.frequency.exponentialRampToValueAtTime(Math.max(this.jitter(to), 20), t0 + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(this.jitter(gain), t0 + dur * 0.2);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g).connect(maisema.out);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.05);
+  }
+
   // --- pelin äänet --------------------------------------------------------
 
   play(name) {
@@ -24524,6 +24674,94 @@ class Sound {
     if (sound) sound(this);
   }
 }
+
+// --- äänimaisemat -----------------------------------------------------------
+//
+// Jokainen maisema on jatkuva pohja; tapahtumat ovat erikseen alla. Kaikki
+// voimakkuudet ovat välillä 0,03–0,05: taustan kuuluu jäädä huomaamatta,
+// kunnes se lakkaa.
+
+const AMBIENCES = {
+  // Aavikko: matala tuulen suhina, jossa pitkät puuskat.
+  aavikko: (s, m) => {
+    s.ambienceBed(m, { type: 'lowpass', freq: 420, gain: 0.045, lfoHz: 0.06, lfoDepth: 0.6 });
+    s.ambienceBed(m, { type: 'bandpass', freq: 1100, q: 0.5, gain: 0.018, lfoHz: 0.11 });
+  },
+  // Meri: aallot paisuvat ja laantuvat hitaasti.
+  meri: (s, m) => {
+    s.ambienceBed(m, { type: 'lowpass', freq: 600, gain: 0.05, lfoHz: 0.13, lfoDepth: 0.75 });
+    s.ambienceBed(m, { type: 'highpass', freq: 1800, gain: 0.012, lfoHz: 0.09 });
+  },
+  // Sademetsä: tiheä korkea sirinä ja kostea pohja.
+  sademetsa: (s, m) => {
+    s.ambienceBed(m, { type: 'bandpass', freq: 3600, q: 1.6, gain: 0.03, lfoHz: 0.22, lfoDepth: 0.35 });
+    s.ambienceBed(m, { type: 'lowpass', freq: 300, gain: 0.03, lfoHz: 0.05 });
+  },
+  // Savanni: heinäsirkkojen kapea kaista ja kuiva tuuli.
+  savanni: (s, m) => {
+    s.ambienceBed(m, { type: 'bandpass', freq: 5200, q: 3.2, gain: 0.022, lfoHz: 0.3, lfoDepth: 0.5 });
+    s.ambienceBed(m, { type: 'lowpass', freq: 500, gain: 0.032, lfoHz: 0.07 });
+  },
+  // Ylänkö: ohut viima, ei juuri muuta.
+  ylanko: (s, m) => {
+    s.ambienceBed(m, { type: 'highpass', freq: 900, gain: 0.03, lfoHz: 0.1, lfoDepth: 0.6 });
+  },
+  // Basaari: ei yritetä puhetta — vain matala hälypohja, jonka päälle tulee
+  // kulkusia ja kavionkopsetta harvakseltaan.
+  basaari: (s, m) => {
+    s.ambienceBed(m, { type: 'bandpass', freq: 700, q: 0.8, gain: 0.035, lfoHz: 0.17, lfoDepth: 0.45 });
+  },
+};
+
+// Satunnaiset tapahtumat maiseman päällä, 8–30 sekunnin välein.
+const AMBIENCE_EVENTS = {
+  // Hiekan rahinaa puuskassa.
+  aavikko: (s, m) => s.ambienceHit({
+    maisema: m, type: 'highpass', freq: 1800, sweepTo: 3400, dur: 1.6, gain: 0.022, q: 0.6,
+  }),
+  // Harva lokinhuuto: kaksi laskevaa säveltä.
+  meri: (s, m) => {
+    if (Math.random() < 0.55) {
+      s.ambienceTone({ maisema: m, freq: 1500, to: 950, dur: 0.3, gain: 0.016, type: 'triangle' });
+      s.ambienceTone({ maisema: m, freq: 1400, to: 900, dur: 0.26, gain: 0.013, type: 'triangle', delay: 0.42 });
+    } else {
+      s.ambienceHit({ maisema: m, type: 'lowpass', freq: 900, sweepTo: 300, dur: 2.4, gain: 0.03, q: 0.5 });
+    }
+  },
+  // Vesipisara tai kaukainen linnun vihellys.
+  sademetsa: (s, m) => {
+    if (Math.random() < 0.5) {
+      s.ambienceTone({ maisema: m, freq: 2400, to: 1300, dur: 0.09, gain: 0.02, type: 'sine' });
+    } else {
+      s.ambienceTone({ maisema: m, freq: 1900, to: 2600, dur: 0.22, gain: 0.014, type: 'sine' });
+      s.ambienceTone({ maisema: m, freq: 2600, to: 1800, dur: 0.18, gain: 0.012, type: 'sine', delay: 0.24 });
+    }
+  },
+  // Sirkkojen tiheys nousee hetkeksi.
+  savanni: (s, m) => s.ambienceHit({
+    maisema: m, type: 'bandpass', freq: 5600, dur: 2.2, gain: 0.016, q: 4,
+  }),
+  // Yksittäinen viiman kiihdytys.
+  ylanko: (s, m) => s.ambienceHit({
+    maisema: m, type: 'highpass', freq: 1200, sweepTo: 2600, dur: 2.8, gain: 0.018, q: 0.5,
+  }),
+  // Kulkunen tai kavionkopse.
+  basaari: (s, m) => {
+    if (Math.random() < 0.5) {
+      for (let i = 0; i < 3; i++) {
+        s.ambienceTone({
+          maisema: m, freq: 2100 + i * 90, dur: 0.12, gain: 0.012, type: 'triangle', delay: i * 0.14,
+        });
+      }
+    } else {
+      for (let i = 0; i < 4; i++) {
+        s.ambienceHit({ maisema: m, freq: 260, dur: 0.09, gain: 0.014, q: 7 });
+      }
+    }
+  },
+};
+
+const AMBIENCE_TYPES = Object.keys(AMBIENCES);
 
 const SOUNDS = {
   // Käyttöliittymä
@@ -28997,7 +29235,28 @@ class UI {
     return row;
   }
 
+  /**
+   * Äänimaisema seuraa matkaajaa: kaupungin oma ambienssi, tai meri kun
+   * ollaan reitillä merellä. Ilman ambience-kenttää ei soiteta mitään, joten
+   * muut laudat pysyvät hiljaisina kunnes ne saavat omansa.
+   */
+  syncAmbience() {
+    const { game } = this;
+    if (game.phase === 'pickstart' || game.phase === 'over') {
+      sfx.setAmbience(null);
+      return;
+    }
+    const pos = game.player.pos;
+    if (pos.type === 'edge') {
+      const edge = game.board.edgeById.get(pos.edge);
+      sfx.setAmbience(edge?.type === 'sea' ? 'meri' : null);
+      return;
+    }
+    sfx.setAmbience(game.board.cityById.get(pos.city)?.ambience ?? null);
+  }
+
   render() {
+    this.syncAmbience();
     if (this.dead) return;
     this.onChange?.(this.game);
     // Aloituskartalla asettelu on kahdessa palstassa; pelin käynnistyttyä
@@ -30205,7 +30464,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.32';
+const APP_VERSION = '2026-07-28.33';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
