@@ -64,11 +64,11 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
-## Seuraavaksi: EI PAKETTIA LISTALLA — omistajan päätös
+## Seuraavaksi: PAKETTI 13 (pulmien variointi)
 
-**Paketit 1–12 ovat valmiit (28.7.2026).** Haettu tuore main; siinä ei ole
-pakettia 13. Vakiokäynnistyksen kohdan 5 mukaan lopetan tähän enkä keksi
-uutta pakettia.
+**Paketit 1–12 ovat valmiit (28.7.2026).** Lisäksi korjattu: pulmien
+laukaisin puuttui kaikista saapumispoluista (#74). Seuraavaksi tehdään
+paketti 13 (alempana).
 
 Toteuttajan havainnot seuraavaa pakettia varten:
 
@@ -642,6 +642,51 @@ rinnalle. Lue ensin docs/tarina.md.
 fact, kaupunki on laudalla), kerran-per-peli-logiikka ja tallennus,
 maamerkkien sijoitus. Versionostot, standalone, kuvakaappaus pulmakortista
 ja kartasta.
+
+## Paketti 13: pulmien variointi (Afrikka)
+
+Omistajan toive: sama pulma on joka pelikerralla vähän erilainen, vaikka
+se nojaa graafisesti samaan systeemiin. Piirtofunktiot saavat jo datan
+parametrina (`sketchData`), joten grafiikka taipuu tähän suoraan.
+
+**Moottori:**
+
+- Pulma saa valinnaisen `generate(rng)`-funktion (js/packs/
+  africa-puzzles.js), joka palauttaa `{ sketch, q, options, correct }`
+  — `openPuzzle` kutsuu sitä pelin omalla rng:llä, jos se on määritelty;
+  muuten käytetään staattisia kenttiä kuten nyt. `fact`-selite pysyy
+  aina samana (se on tarkistettu fakta).
+- Determinismi: generointi tapahtuu VAIN avaushetkellä pelin rng:llä,
+  ja avattu pulma tallentuu quiz-tilassa kuten nyt — tallennettu peli
+  jatkuu täsmälleen samasta pulmasta.
+
+**Generatiiviset pulmat (arvotaan joka peliin):**
+
+1. **Hieroglyfit:** arvotaan kolme esimerkkilukua ja kysytty luku.
+   Rajat: jokainen numero 0–3, jotta glyfirivit pysyvät lyhyinä ja
+   piirrettävinä; kysytty luku ei saa olla sama kuin mikään esimerkki.
+   Väärät vaihtoehdot: numeroiden permutaatiot ja ±10/±100-virheet —
+   ei satunnaislukuja, vaan uskottavia lukuvirheitä.
+2. **Kultapunnukset:** arvotaan punnussarja (esim. 1, 2, 5, 10 mithqalin
+   yhdistelmiä) ja pussin paino niin, että täsmälleen yksi tarjolla
+   oleva punnus tasapainottaa vaa'an. Piirros näyttää arvot.
+3. **Kuunvaiheet:** arvotaan aloitusvaihe ja suunta (kasvava/vähenevä);
+   kahdeksan vaihetta antaa kymmeniä sarjoja. Vaihtoehdot piirretään
+   kuunvaiheina, ei sanoina — piirtofunktio osaa tämän jo.
+
+**Käsin kirjoitetut variantit (arvotaan valmiista):**
+
+4. **Naksutusmerkit:** kolme varianttia — kysytään vuoroin c, x tai q,
+   ja suuprofiilien järjestys vaihtelee.
+5. **Vesileilit:** 2–3 valmiiksi kirjoitettua tavoitetta (4, 2 ja 1
+   mittaa) toimintosarjavaihtoehtoineen. Jokainen tarkistettu käsin —
+   toimintosarjojen generointi koneella tuottaisi kömpelöä kieltä.
+
+**Testit:** generointi on siemenellä deterministinen; sadalla siemenellä
+jokainen generoitu pulma tuottaa 4 uniikkia vaihtoehtoa, correct-indeksi
+osuu oikeaan ja hieroglyfiluvut pysyvät piirtorajoissa; kymmenellä
+siemenellä syntyy vähintään kaksi erilaista tehtävää per pulma
+(variointi todella varioi). Versionostot, standalone, kuvakaappaus.
 
 ## Muistilista jokaiseen pakettiin
 
