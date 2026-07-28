@@ -118,6 +118,27 @@ function html(tag, className, text) {
   return node;
 }
 
+/**
+ * Lyhentää Wikipedian tiivistelmän saapumiskortin parin lauseen esittelyksi.
+ * Suomen järjestysluvut ("3. suurin") voivat katkaista lauseen liian
+ * aikaisin — se on harvinaista ja lopputulos on silti luettava.
+ */
+function shortIntro(text, maxChars = 280, maxSentences = 3) {
+  const siisti = String(text).replace(/\s+/g, ' ').trim();
+  const lauseet = siisti.match(/[^.!?]+[.!?]+/g);
+  if (!lauseet) {
+    return siisti.length > maxChars ? `${siisti.slice(0, maxChars).trimEnd()}…` : siisti;
+  }
+  let esittely = '';
+  let maara = 0;
+  for (const lause of lauseet) {
+    if (maara && (maara >= maxSentences || esittely.length + lause.length > maxChars)) break;
+    esittely += lause;
+    maara++;
+  }
+  return esittely.trim();
+}
+
 export class UI {
   constructor(game, { onNewGame, onChange }) {
     this.game = game;
@@ -145,6 +166,7 @@ export class UI {
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
     this.arrivalImage = document.getElementById('arrival-image');
+    this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
     document.getElementById('arrival-yes').addEventListener('click', () => {
@@ -228,6 +250,7 @@ export class UI {
 
     this.mapPane = this.svg.parentElement;
     this.busy = false;
+    this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
     this.travelExpanded = false; // matkavalinnan toinen vaihe auki
     this.autoRollTimer = null;
     this.movingPlayerId = null;
@@ -331,6 +354,11 @@ export class UI {
   }
 
   destroy() {
+    // Kuollut instanssi ei saa enää koskea jaettuun DOM:iin: sen
+    // tapahtumakuuntelijat ja kesken olevat animaatioketjut jäävät elämään
+    // uuden pelin rinnalle, ja ilman lippua ne piirtäisivät vanhan pelin
+    // tilaa uuden päälle (esim. edellisen pelin kysymyksen tekstin).
+    this.dead = true;
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -1196,6 +1224,7 @@ export class UI {
   }
 
   render() {
+    if (this.dead) return;
     this.onChange?.(this.game);
     // Aloituskartalla asettelu on kahdessa palstassa; pelin käynnistyttyä
     // kartta täyttää koko ruudun ja paneelit kelluvat sen päällä.
@@ -1268,12 +1297,13 @@ export class UI {
     if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
     this.arrivalShownFor = city.id;
 
-    // Kortti kertoo vain päätöksen — paikan tarina tulee kartan
-    // päiväkirjasta. Wikipedian kuva tuo paikan eläväksi, ja sen alla on
-    // Lue lisää; teksti itsessään ei toistu kahdessa paikassa.
+    // Kortissa on kuva, parin lauseen esittely ja päätös. Esittely tulee
+    // Wikipedian tiivistelmästä; kunnes haku valmistuu — tai jos paikalla
+    // ei ole artikkelia — kortissa lukee isoisän vakiorivi.
     this.arrivalCity.textContent = city.name;
     this.arrivalImage.hidden = true;
     this.arrivalImage.removeAttribute('src');
+    this.arrivalIntro.textContent = 'Isoisä on merkinnyt tämän paikan karttaansa.';
     this.arrivalWiki.hidden = true;
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
@@ -1287,6 +1317,7 @@ export class UI {
         this.arrivalImage.alt = summary.title || city.name;
         this.arrivalImage.hidden = false;
       }
+      if (summary.extract) this.arrivalIntro.textContent = shortIntro(summary.extract);
       this.arrivalWiki.hidden = false;
     });
   }
@@ -1538,6 +1569,7 @@ export class UI {
   }
 
   renderQuiz() {
+    if (this.dead) return; // kesken jäänyt animaatioketju voi kutsua tätä vielä destroyn jälkeen
     const { game } = this;
     this.renderEvent();
     if (game.phase === 'duel' && game.duel) {
@@ -1592,6 +1624,12 @@ export class UI {
     if (this.typedQuizFor !== quiz) {
       this.typedQuizFor = quiz;
       this.typeText(this.quizQuestion, quiz.question, 'quiz');
+    } else if (this.quizQuestion.textContent !== String(quiz.question)) {
+      // Itsekorjaus: jos jokin muu kirjoitus on ehtinyt sotkea tekstin
+      // (esim. edellisen pelin kesken jäänyt kirjoituskone), kysymys
+      // asetetaan kerralla kokonaan — muuten vaihtoehdot ja tulos
+      // näkyisivät väärän kysymyksen alla.
+      this.quizQuestion.textContent = quiz.question;
     }
     this.syncOptions(quiz, (i) => this.answerQuiz(i));
 
@@ -1667,6 +1705,9 @@ export class UI {
     if (this.typedQuizFor !== duel) {
       this.typedQuizFor = duel;
       this.typeText(this.quizQuestion, duel.question, 'quiz');
+    } else if (this.quizQuestion.textContent !== String(duel.question)) {
+      // Sama itsekorjaus kuin tietovisassa: teksti ei saa jäädä eriämään.
+      this.quizQuestion.textContent = duel.question;
     }
     this.syncOptions(duel, (i) => this.answerDuelUi(i));
 
@@ -2021,7 +2062,7 @@ export class UI {
    * tai botin vuoro odottaa, kunnes edellinen tapahtuma on näytetty.
    */
   async run(fn, { after } = {}) {
-    if (this.busy) return;
+    if (this.busy || this.dead) return;
     this.busy = true;
     this.actionsEl.dataset.busy = 'true';
     try {
