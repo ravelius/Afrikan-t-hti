@@ -1622,43 +1622,46 @@ body[data-mode] .fact-card {
   body[data-mode] .error { color: #9c2f20; }
 
   /*
-   * Napit jäävät napeiksi, mutta pergamentin sävyisiksi: tumma täyttö
-   * näyttäisi laatikolta juuri siellä mistä laatikot poistettiin.
+   * Vähäeleiset napit: ei täyttöä eikä varjoja, vain ohut mustekehys —
+   * kuin kartalle piirretyt merkinnät. Vaalea tekstivarjo pitää tekstin
+   * luettavana ruudukkoviivojen päällä, kuten muissakin karttateksteissä.
    */
   body[data-mode] .actions button {
-    background: rgba(247, 237, 216, 0.82);
-    border-color: rgba(122, 85, 20, 0.5);
+    background: none;
+    border: 1px solid rgba(122, 85, 20, 0.35);
     color: var(--map-ink);
-    text-shadow: none;
-    backdrop-filter: blur(2px);
+    text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9);
+    backdrop-filter: none;
+    box-shadow: none;
   }
 
   body[data-mode] .actions button:hover:not(:disabled) {
-    background: rgba(255, 248, 232, 0.95);
+    background: rgba(255, 248, 232, 0.6);
   }
 
   /*
    * Yleinen opacity 0.45 tekee napista pergamentin päällä lähes
-   * näkymättömän, joten estetty nappi pidetään ääriviivoiltaan näkyvänä
-   * ja vain teksti vaimennetaan.
+   * näkymättömän, joten estetty nappi pitää kehyksensä ja vain teksti
+   * vaimenee.
    */
   body[data-mode] .actions button:disabled {
     opacity: 1;
-    background: rgba(247, 237, 216, 0.55);
-    border-color: rgba(122, 85, 20, 0.35);
-    color: rgba(58, 42, 22, 0.6);
+    background: none;
+    border-color: rgba(122, 85, 20, 0.22);
+    color: rgba(58, 42, 22, 0.45);
     text-shadow: none;
   }
 
-  /* Ensisijainen valinta pysyy kultaisena — se erottuu pergamentiltakin. */
+  /* Ensisijainen valinta erottuu tummalla kullalla, ei kultalaatalla. */
   body[data-mode] .actions button.primary {
-    background: linear-gradient(180deg, #eab84e, #d09024);
-    border-color: var(--accent-dark);
-    color: #2c1e07;
+    background: none;
+    border-color: rgba(176, 138, 60, 0.85);
+    color: #7a5514;
+    font-weight: 700;
   }
 
   body[data-mode] .actions button.primary:hover:not(:disabled) {
-    background: linear-gradient(180deg, #f3c661, #d9a13b);
+    background: rgba(234, 184, 78, 0.18);
   }
 }
 
@@ -28316,7 +28319,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.14';
+const APP_VERSION = '2026-07-28.15';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
