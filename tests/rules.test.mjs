@@ -1955,7 +1955,8 @@ test('isoisän väittämä on kaksivaihtoehtoinen eikä salli apukeinoja', () =>
   assert.ok(game.actionQuiz({ form: 'claim' }).ok);
   const quiz = game.quiz;
   assert.equal(quiz.kind, 'claim');
-  assert.deepEqual(quiz.options, ['Totta', 'Tarua']);
+  assert.deepEqual(quiz.options, ['Pitää yhä paikkansa', 'Ei enää pidä']);
+  assert.ok(typeof quiz.place === 'string' && quiz.place.length >= 3, 'väittämällä on paikka');
   assert.equal(game.actionFiftyFifty().ok, false, '50:50 ei kuulu väittämään');
   assert.equal(game.actionHint().ok, false, 'väittämässä ei ole vihjettä');
 
@@ -2085,6 +2086,8 @@ test('Afrikan väittämät ovat ehjiä ja tasapainossa', () => {
   for (const c of claims) {
     assert.ok(c.q && c.q.length >= 80, `liian lyhyt väittämä: ${c.q}`);
     assert.ok(c.fact && c.fact.length >= 60, `liian lyhyt selitys: ${c.q}`);
+    // Paikka näytetään otsikossa, ettei merkintää lue väärään maisemaan.
+    assert.ok(typeof c.place === 'string' && c.place.length >= 3, `väittämältä puuttuu paikka: ${c.q}`);
     checkSources(c.source, `väittämä "${c.q}"`);
   }
   const tekstit = claims.map((c) => c.q);

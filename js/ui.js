@@ -1577,8 +1577,10 @@ export class UI {
     if (quiz.kind === 'puzzle') {
       this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
     } else if (quiz.kind === 'claim') {
-      // Väittämässä puhuu isoisä, ei peli: otsikko kertoo äänen.
-      this.quizCity.textContent = `Isoisän päiväkirjasta, 1873 — totta vai tarua?`;
+      // Väittämässä puhuu isoisä, ei peli: otsikko kertoo äänen ja paikan,
+      // jota merkintä koskee — se on usein muu kuin pelaajan sijainti.
+      const aihe = quiz.place ? ` · ${quiz.place}` : '';
+      this.quizCity.textContent = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
     } else if (quiz.kind === 'map') {
       this.quizCity.textContent = `${city.name} — kartalta`;
     } else {
