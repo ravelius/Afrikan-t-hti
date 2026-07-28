@@ -727,6 +727,16 @@ uhkuvaa kohteesta riippuen.
   1–2 virkettä, minä-muoto, saapumisen jännitys ja odotus. Esim.
   tyyliin: "Siivet kallistuvat ja alla aukeaa Sahara — meri ilman
   rantaa." tai "Kartanlukija sanoi kaksi sanaa: pidä kiinni."
+- **Osa riveistä hehkuttaa isoisän päiväkirjaa** (omistajan toive):
+  nuori herra selaa kirjaa lennolla ja innostuu siitä, mitä sinne on
+  kirjattu — merkittyjä paikkoja, taitettuja sivuja, piirroksia ja
+  vihjeitä. Nämä rivit saavat viitata pelin oikeisiin asioihin
+  (isoisän merkitsemät kaupungit, luonnoskirjan kaaviot, päiväkirjan
+  taitetut sivut) muttei paljastaa mitään täsmälleen. Esim. tyyliin:
+  "Selasin kirjaa koko nousun ajan: tälle sivulle isoisä on piirtänyt
+  vaa'an ja perään kolme huutomerkkiä." tai "Kirjanmerkkinä on
+  taitettu sivu — sillä lukee vain: 'etelään, ja kysy kalastajilta'."
+  Suhde noin puolet ja puolet: kohteen odotus / kirjan hehkutus.
 - Kirjoitetaan Maailma-laudalle (kaikki lentokohteet) ja Afrikalle
   (porttikaupungit) — muut laudat saavat yleisrivit toistaiseksi.
   HUOM: tämä on ainoa kohta, jossa Maailma-laudan tekstejä saa
