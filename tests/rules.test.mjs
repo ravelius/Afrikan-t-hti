@@ -2680,8 +2680,26 @@ test('lentorepliikit ovat ehjiä ja kohdistuvat laudan kaupunkeihin', () => {
       }
     }
     // Sama rivi ei saa esiintyä kahdesti koko laudalla.
-    const kaikki = [...Object.values(rivit).flat(), ...(pack.texts.flightDefault ?? [])];
+    const kaikki = [
+      ...Object.values(rivit).flat(),
+      ...(pack.texts.flightDefault ?? []),
+      ...(pack.texts.flightFirst ?? []),
+    ];
     assert.equal(new Set(kaikki).size, kaikki.length, `${pack.id}: sama lentorepliikki kahdesti`);
+  }
+});
+
+test('ensimmäinen lento hehkuttaa aina matkakirjaa', () => {
+  const rivit = packById('maailma').texts.flightFirst;
+  assert.ok(Array.isArray(rivit) && rivit.length >= 4, 'flightFirst-rivejä on liian vähän');
+  for (const rivi of rivit) {
+    assert.ok(rivi.length > 20, `liian lyhyt rivi "${rivi}"`);
+    assert.ok(/kirja|sivu/i.test(rivi), `rivi ei puhu matkakirjasta: "${rivi}"`);
+  }
+  // Arvonta poimii aina flightFirst-pakasta, kun se on olemassa.
+  const game = new Game({ players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed: 9 });
+  for (let i = 0; i < 5; i++) {
+    assert.ok(rivit.includes(game.firstFlightLine('tanger')));
   }
 });
 

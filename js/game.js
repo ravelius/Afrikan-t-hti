@@ -1008,6 +1008,17 @@ export class Game {
     return pakka[Math.floor(this.rng() * pakka.length)];
   }
 
+  /**
+   * Ensimmäisen lennon repliikki: matka alkaa, joten rivi hehkuttaa aina
+   * matkakirjaa. Jos laudalla ei ole flightFirst-rivejä, käytetään
+   * tavallista lentorepliikkiä.
+   */
+  firstFlightLine(cityId) {
+    const pakka = this.pack.texts?.flightFirst ?? [];
+    if (!pakka.length) return this.flightLine(cityId);
+    return pakka[Math.floor(this.rng() * pakka.length)];
+  }
+
   /** Naapurikaupunki ilmaista kyytiä varten; null jos naapureita ei ole. */
   rideTarget(player) {
     if (player.pos.type !== 'city') return null;
