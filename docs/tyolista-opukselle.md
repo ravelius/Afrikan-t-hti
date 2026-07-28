@@ -70,25 +70,22 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
-## Avoimet asiat (Fablelle)
+## Avoimet asiat
 
-- **Paketin 12 pulmien faktantarkistus jäi tekemättä.** Käynnistin
-  tarkistusagentin, mutta se ei palannut, ja paketti ehti mainiin (#72).
-  Tarkistin itse laskemalla, että kaikkien viiden pulman merkitty vastaus
-  on oikea (hieroglyfien yhteenlasku, vaa'an tasapaino, leilisarjat,
-  kuunvaiheiden järjestys) — nämä ovat nyt myös testeissä paketin 13
-  jäljiltä. **Verkkotarkistamatta ovat yhä:** xhosan naksutusäänteiden
-  artikulaatiokuvaukset (c/x/q ja se, alkaako isiXhosa lateraalisella
-  naksauksella), ashantien punnusten 3 %:n tarkkuusväite, ja Timbuktun
-  käsikirjoitusviite (Kashf al-Ghummah, 1733, Mamma Haidara -kirjasto).
-  Väitteet ovat tiedostossa js/packs/africa-puzzles.js fact-kentissä.
+Ei avoimia asioita. Paketin 12 pulmien verkkotarkistus tehtiin
+28.7.2026 (suunnittelusessio): xhosan naksutuskuvaukset (c dentaalinen,
+x lateraalinen "hevosen hoputus", q "korkin poksahdus") ja Timbuktun
+käsikirjoitusviite (Kashf al-Ghummah fi Nafa al-Ummah, al-Ghalawi 1733,
+Mamma Haidara -kirjasto, Library of Congressin näyttely — opettaa
+laskemaan vuodenaikojen alut tähtien liikkeistä) täsmäävät lähteisiin.
+Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 
-## Seuraavaksi: PAKETTI 13 (pulmien variointi), sitten PAKETTI 14
+## Seuraavaksi: EI PAKETTIA LISTALLA — omistaja päättää seuraavan
 
-**Paketit 1–12 ovat valmiit (28.7.2026).** Lisäksi korjattu: pulmien
-laukaisin puuttui kaikista saapumispoluista (#74). Työjono: paketti 13
-(pulmien variointi), sen jälkeen paketti 14 (lentoanimaatio) — molemmat
-alempana.
+**Paketit 1–14 ovat valmiit (28.7.2026).** Lisäksi korjattu: pulmien
+laukaisin (#74) sekä aloituslennon zoomaus, repliikin kesto ja
+avaustekstin häivytys (#80). Vakiokäynnistyksen kohdan 5 mukaan uusi
+sessio lopettaa tähän, kunnes omistaja lisää seuraavan paketin.
 
 Toteuttajan havainnot seuraavaa pakettia varten:
 
