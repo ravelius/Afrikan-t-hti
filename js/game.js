@@ -837,8 +837,14 @@ export class Game {
       hard: false,
       question: claim.q,
       fact: claim.fact,
+      // Väite koskee usein muuta paikkaa kuin sitä, jossa pelaaja seisoo —
+      // paikka näytetään otsikossa, ettei merkintää lue väärään maisemaan.
+      place: claim.place ?? null,
       source: sourceList(claim.source),
-      options: ['Totta', 'Tarua'],
+      // Kysymys on "pitääkö tämä yhä paikkansa?": merkintä oli totta
+      // vuonna 1873, ja pelaaja arvioi onko maailma ehtinyt muuttua.
+      // Pelkkä "totta vai tarua" olisi epäreilu menneen ajan merkinnälle.
+      options: ['Pitää yhä paikkansa', 'Ei enää pidä'],
       correct: claim.correct ? 0 : 1,
       hint: null,
       hintShown: false,
