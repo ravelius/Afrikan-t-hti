@@ -194,6 +194,7 @@ export class UI {
     });
 
     this.quizSketch = document.getElementById('quiz-sketch');
+    this.quizSelite = document.getElementById('quiz-selite');
     this.quizPhoto = document.getElementById('quiz-photo');
     this.quizPhoto.addEventListener('click', () => {
       const quiz = this.game.quiz;
@@ -1743,6 +1744,9 @@ export class UI {
       this.quizSketch.textContent = '';
       drawPuzzle(this.quizSketch, quiz.puzzleId, quiz.sketchData);
     }
+    // Piirroksen selite: kertoo mitä luonnoksessa näkyy.
+    this.quizSelite.hidden = quiz.kind !== 'puzzle' || !quiz.selite;
+    if (!this.quizSelite.hidden) this.quizSelite.textContent = quiz.selite;
 
     // Valokuvakysymyksen kuva ladataan kerran per kysymys. Jos kuvaa ei
     // saada (esim. verkko katkesi kysymyksen avauduttua), tilalle jää
@@ -1802,7 +1806,7 @@ export class UI {
     const used = quiz.hidden.length > 0;
     // Väittämässä on kaksi vaihtoehtoa ja karttakysymykseen vastataan
     // kartalta, joten 50:50 ei kuulu niihin lainkaan.
-    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4 || quiz.kind === 'puzzle';
+    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4;
     this.quizFifty.disabled = used || p.money < FIFTY_FIFTY_PRICE;
     this.quizFifty.textContent = used ? '50:50 käytetty' : `50:50 (${FIFTY_FIFTY_PRICE} p)`;
 

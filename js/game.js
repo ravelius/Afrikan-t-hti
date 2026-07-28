@@ -1113,13 +1113,16 @@ export class Game {
       puzzleId: puzzle.id,
       sketchData: sketch,
       title: puzzle.title,
+      // Selite kertoo, mitä piirroksessa näkyy — pulmat olivat ilman sitä
+      // liian kryptisiä.
+      selite: puzzle.selite ?? null,
       hard: false,
       question: arvottu?.q ?? puzzle.q,
       fact: puzzle.fact,
       source: sourceList(puzzle.source),
       options: order.map((i) => options[i]),
       correct: order.indexOf(correct),
-      hint: null,
+      hint: arvottu?.hint ?? puzzle.hint ?? null,
       hintShown: false,
       hidden: [],
       chosen: null,
@@ -1229,10 +1232,10 @@ export class Game {
     const quiz = this.quiz;
     if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
     if (quiz.hidden.length) return { ok: false, error: '50:50 on jo käytetty' };
-    // Väittämässä on kaksi vaihtoehtoa ja karttakysymyksessä vastataan
-    // kartalta — kummassakaan puolikkaan poistamisessa ei ole järkeä.
+    // Väittämässä on kaksi vaihtoehtoa — puolikkaan poistamisessa ei ole
+    // järkeä. Pulmissa 50:50 sallitaan: "pulma ratkaistaan itse" oli liian
+    // ankara, kun pulma sattuu olemaan vaikea.
     if (quiz.options.length < 4) return { ok: false, error: 'Tähän ei voi käyttää 50:50:tä' };
-    if (quiz.kind === 'puzzle') return { ok: false, error: 'Pulma ratkaistaan itse' };
 
     const p = this.player;
     if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };

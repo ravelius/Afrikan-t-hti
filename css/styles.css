@@ -2015,6 +2015,15 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .fact-card .fact-image-btn { color: var(--accent); }
 }
 
+/* Pulman piirroksen selite: hiljainen rivi luonnoksen alla. */
+.quiz-selite {
+  margin: -0.2rem 0 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  font-style: italic;
+  opacity: 0.75;
+}
+
 /* Valokuvakysymyksen vedos: kuin arkistokuva paksulla reunuksella. */
 .quiz-photo {
   display: block;
