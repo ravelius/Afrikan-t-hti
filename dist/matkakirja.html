@@ -1933,6 +1933,45 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   opacity: 0.8;
 }
 
+/*
+ * Isoisän luonnoskirjan pulma: piirros on osa korttia, ei kuvitusta sen
+ * vieressä. Sama mustetyyli kuin kartan koristeissa — ohut viiva, ei väriä.
+ */
+.quiz-sketch {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  /* Korkeus on annettava erikseen: pelkkä viewBox ei anna svg:lle
+     luontaista korkeutta flex-asettelussa, jolloin piirros litistyy pois. */
+  aspect-ratio: 320 / 150;
+  height: auto;
+  flex: none;
+  margin: 0 auto 0.8rem;
+  color: #3b2a18;
+}
+
+.quiz-sketch .ink {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.quiz-sketch .ink-fill {
+  fill: currentColor;
+  fill-opacity: 0.72;
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+
+.quiz-sketch .ink-text {
+  fill: currentColor;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  text-anchor: middle;
+}
+
 </style>
 </head>
 <body>
@@ -2159,7 +2198,7 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    <div class="dialog-card">
     <div class="quiz-head">
       <div class="quiz-head-text">
-        <span class="quiz-badge">Tietovisa</span>
+        <span id="quiz-badge" class="quiz-badge">Tietovisa</span>
         <span id="quiz-city" class="quiz-city"></span>
       </div>
       <div id="quiz-timer" class="quiz-timer" hidden>
@@ -2186,6 +2225,9 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         <span id="quiz-seconds" class="quiz-seconds">45</span>
       </div>
     </div>
+    <!-- Pulman piirros: isoisän luonnos, joka piirretään koodina. -->
+    <svg id="quiz-sketch" class="quiz-sketch" viewBox="0 0 320 150"
+         preserveAspectRatio="xMidYMid meet" aria-hidden="true" hidden></svg>
     <p id="quiz-question" class="quiz-question"></p>
     <p id="quiz-hint-text" class="quiz-hint-text" hidden></p>
     <div id="quiz-options" class="quiz-options"></div>
@@ -5494,6 +5536,313 @@ const AFRICA_FACTS = {
   ],
 };
 
+// ===== js/packs/africa-puzzles.js =====
+// Isoisän luonnoskirjan pulmat (Afrikka).
+//
+// Pulma on päättelytehtävä tietovisan rinnalla: kortissa on piirros, isoisän
+// käsin kirjoittama rivi ja neljä vaihtoehtoa. Pulma aukeaa kerran pelissä,
+// kun kaupunkiin saavutaan ensimmäistä kertaa, eikä se koskaan estä
+// etenemistä — väärästä vastauksesta ei rangaista, oikea ratkaisu näytetään.
+//
+// Piirrokset tehdään koodina: inline-SVG samalla mustetyylillä kuin kartan
+// koristeet. EI ulkoisia kuvia eikä verkkohakuja, jotta standalone-versio ja
+// offline toimivat.
+//
+// Tärkeintä: pulma on ratkaistavissa pelkästä piirroksesta. Hieroglyfipulmassa
+// järjestelmä päätellään annetuista esimerkeistä, ei ennakkotiedosta.
+
+const ink = (d, parent) => el('path', { d, class: 'ink' }, parent);
+const fill = (d, parent) => el('path', { d, class: 'ink-fill' }, parent);
+const text = (x, y, s, parent, size = 13) => {
+  const t = el('text', { x, y, class: 'ink-text', 'font-size': size }, parent);
+  t.textContent = s;
+  return t;
+};
+
+// --- hieroglyfimerkit -------------------------------------------------------
+// Sauva = 1, kaari (karjan jalkaköysi) = 10, köysikiehkura = 100. Arvoja ei
+// kerrota pelaajalle: järjestelmä päätellään kolmesta esimerkkirivistä.
+
+/** Pystysauva. */
+const sauva = (x, y, p) => ink(`M${x},${y - 8} L${x},${y + 8}`, p);
+
+/** Kaari: ylösalaisin oleva U. */
+const kaari = (x, y, p) => ink(`M${x - 6},${y + 8} L${x - 6},${y - 2} q6,-9 12,0 L${x + 6},${y + 8}`, p);
+
+/** Köysikiehkura: kaksikierroksinen spiraali. */
+const kiehkura = (x, y, p) =>
+  ink(`M${x + 7},${y + 5} q-13,3 -12,-6 q1,-8 9,-7 q7,1 6,7 q-1,5 -6,4 q-4,-1 -3,-4`, p);
+
+// --- piirrokset -------------------------------------------------------------
+
+const SKETCHES = {
+  /**
+   * Kairo: neljä lukua allekkain. Kolme ensimmäistä opettavat järjestelmän
+   * arvoineen, neljäs kysyy. Merkit suurimmasta pienimpään vasemmalta
+   * oikealle, jotta rivit ovat keskenään vertailukelpoisia.
+   */
+  hieroglyfit: (svg) => {
+    const g = el('g', {}, svg);
+    /** Yksi rivi: merkkiryhmä vasemmalle, arvo oikealle. */
+    const rivi = (y, ryhmat, arvo) => {
+      let x = 30;
+      for (const [piirra, kpl] of ryhmat) {
+        for (let i = 0; i < kpl; i++) {
+          piirra(x, y, g);
+          x += 16;
+        }
+        x += 8; // väli merkkilajien välissä
+      }
+      text(258, y + 5, arvo, g, 15);
+    };
+    rivi(22, [[sauva, 3]], '3');
+    rivi(56, [[kaari, 2], [sauva, 3]], '23');
+    rivi(90, [[kiehkura, 1], [kaari, 3], [sauva, 1]], '131');
+    ink('M24,108 L286,108', g);
+    rivi(132, [[kiehkura, 2], [kaari, 1], [sauva, 3]], '?');
+  },
+
+  /**
+   * Kumasi: kaksivartinen vaaka tavoitetilassa eli tasan vaakasuorassa.
+   * Luvut tulevat pulmadatasta, jottei piirros ja vaihtoehdot voi eriytyä.
+   */
+  punnukset: (svg, data = {}) => {
+    const { kulta = 10, vasen = 2, oikea = [5, 4] } = data;
+    const g = el('g', { transform: 'translate(160,20)' }, svg);
+    // Tolppa, jalka ja vaakasuora varsi.
+    ink('M0,96 L0,10 M-78,10 L78,10', g);
+    fill('M-14,104 L14,104 L8,96 L-8,96 z', g);
+    // Narut ja matalat vadit.
+    ink('M-78,10 L-78,30 M78,10 L78,30', g);
+    ink('M-104,30 q26,20 52,0 M52,30 q26,20 52,0', g);
+
+    // Vasen vati: nyöritetty kultahiekkapussi ja yksi punnus.
+    fill('M-96,30 q-6,-16 7,-20 q10,-4 14,6 q4,11 -4,14 z', g);
+    ink('M-90,12 L-82,12', g);
+    text(-86, 52, String(kulta), g, 12);
+    el('rect', { x: -68, y: 14, width: 16, height: 16, class: 'ink' }, g);
+    text(-60, 27, String(vasen), g, 12);
+
+    // Oikea vati: kaksi tunnettua punnusta ja katkoviivalla kysytty.
+    ink('M54,30 L70,30 L62,14 z', g);
+    text(62, 27, String(oikea[0]), g, 11);
+    ink('M78,22 L86,12 L94,22 L86,32 z', g);
+    text(86, 26, String(oikea[1]), g, 11);
+    el('rect', {
+      x: 100, y: 14, width: 16, height: 16, class: 'ink', 'stroke-dasharray': '3 3',
+    }, g);
+    text(108, 27, '?', g, 12);
+  },
+
+  /**
+   * Kapkaupunki: kolme suun poikkileikkausta samalla kaavalla. Piste kertoo
+   * kosketuskohdan ja nuoli ilman purkaussuunnan. Kaikki kolme merkkiä
+   * näkyvät — kysymys on, millä niistä sana isiXhosa alkaa.
+   */
+  naksutus: (svg) => {
+    const suu = (x, merkki, kohta) => {
+      const g = el('g', { transform: `translate(${x},14)` }, svg);
+      // Kitalaki ja leuka; katse vasemmalle.
+      ink('M-30,6 q30,-12 58,2', g);
+      ink('M-30,52 q30,12 58,-4', g);
+      // Ylähampaat edessä, poskihampaat takana.
+      ink('M-26,6 L-26,15 M-20,7 L-20,16', g);
+      ink('M8,3 L8,12 M16,4 L16,13', g);
+      // Kieli.
+      fill('M-20,40 q20,-12 40,-6 q-16,12 -40,6 z', g);
+
+      // 0 = etuhampaat, 1 = poskihampaat sivulle, 2 = hammasvalli alas.
+      if (kohta === 0) {
+        el('circle', { cx: -24, cy: 14, r: 2.6, class: 'ink-fill' }, g);
+        ink('M-30,22 L-46,22', g);
+        fill('M-46,22 l7,-3 l0,6 z', g);
+      } else if (kohta === 1) {
+        el('circle', { cx: 10, cy: 14, r: 2.6, class: 'ink-fill' }, g);
+        ink('M10,14 q10,-10 22,-14', g);
+        fill('M32,0 l-7,1 l3,5 z', g);
+      } else {
+        el('circle', { cx: -6, cy: 12, r: 2.6, class: 'ink-fill' }, g);
+        ink('M-6,16 L-6,34', g);
+        fill('M-6,34 l-3,-7 l6,0 z', g);
+      }
+      text(0, 74, merkki, g, 17);
+    };
+    suu(56, 'c', 0);
+    suu(160, 'x', 1);
+    suu(264, 'q', 2);
+  },
+
+  /**
+   * Timbuktu: käsikirjoitussivu ja kuunvaiheiden sarja. Pimeä osa on
+   * varjostettu, valaistu jätetty tyhjäksi. Valaistu reuna kasvaa oikealta,
+   * kuten pohjoisella pallonpuoliskolla.
+   */
+  kuunvaiheet: (svg) => {
+    const g = el('g', {}, svg);
+    // Kaksoisviivakehys.
+    ink('M10,6 L310,6 L310,144 L10,144 z', g);
+    ink('M15,11 L305,11 L305,139 L15,139 z', g);
+    // Käsinkirjoitetut rivit oikealta vasemmalle, alin lyhyempi.
+    ink('M120,26 q30,4 60,0 q40,-4 100,0', g);
+    ink('M120,36 q30,4 60,0 q40,-4 100,0', g);
+    ink('M186,46 q24,4 48,0 q30,-4 46,0', g);
+    // Nelisakaraiset tähdet yläkulmissa.
+    for (const [sx, sy] of [[32, 26], [288, 26]]) {
+      ink(`M${sx},${sy - 6} L${sx},${sy + 6} M${sx - 6},${sy} L${sx + 6},${sy}`, g);
+    }
+
+    /**
+     * Kuunvaihe: pimeä osa varjostetaan ohuilla viivoilla, valaistu jää
+     * tyhjäksi. `valaistu` on 0…1 oikeasta reunasta lukien.
+     */
+    const kuu = (cx, valaistu) => {
+      const r = 20;
+      const cy = 92;
+      el('circle', { cx, cy, r, class: 'ink' }, g);
+      if (valaistu >= 1) return;
+      // Varjostus rajataan kuun pimeään osaan leikkauspolulla.
+      const raja = cx + r - 2 * r * valaistu;
+      const id = `kuu-${cx}`;
+      const clip = el('clipPath', { id }, g);
+      if (valaistu <= 0) {
+        el('circle', { cx, cy, r, class: '' }, clip);
+      } else {
+        el('path', {
+          d: `M${cx},${cy - r} a${r},${r} 0 0,0 0,${2 * r} L${raja},${cy + r} `
+            + `a${r * (1 - 2 * valaistu)},${r} 0 0,${valaistu < 0.5 ? 0 : 1} 0,${-2 * r} z`,
+        }, clip);
+      }
+      const varjo = el('g', { 'clip-path': `url(#${id})` }, g);
+      for (let y = cy - r; y <= cy + r; y += 4) {
+        ink(`M${cx - r},${y} L${cx + r},${y}`, varjo);
+      }
+    };
+    kuu(70, 0);      // uusikuu: kokonaan pimeä
+    kuu(130, 0.18);  // kasvava sirppi
+    kuu(190, 0.5);   // puolikuu
+    // Neljäs: tyhjä kehä ja kysymysmerkki.
+    el('circle', { cx: 250, cy: 92, r: 20, class: 'ink' }, g);
+    text(250, 99, '?', g, 20);
+    ink('M50,124 L270,124', g);
+  },
+
+  /**
+   * Sahara: kaksi nahkaleiliä, 3 ja 5 mittaa. EI asteikkoa eikä poikkiviivoja
+   * kyljissä — koko pulman idea on, ettei leileistä voi lukea välimittoja.
+   */
+  vesileilit: (svg) => {
+    /** Leili: pussimainen vartalo, kapea kaula ja kantolenkit. */
+    const leili = (x, y, koko, merkki) => {
+      const g = el('g', { transform: `translate(${x},${y}) scale(${koko})` }, svg);
+      ink('M0,-26 q-30,6 -30,30 q0,26 30,26 q30,0 30,-26 q0,-24 -30,-30 z', g);
+      // Kaula ja nyöri suulla.
+      ink('M-7,-27 L-7,-40 q7,-4 14,0 L7,-27', g);
+      ink('M-9,-38 q9,5 18,0', g);
+      // Kantolenkit kyljissä.
+      ink('M-30,0 q-7,4 0,8 M30,0 q7,4 0,8', g);
+      text(0, 12, merkki, g, 22);
+    };
+    leili(78, 62, 0.78, '3');
+    leili(226, 56, 1, '5');
+    // Tavoite ympyröitynä leilien alle.
+    el('circle', { cx: 160, cy: 132, r: 14, class: 'ink' }, svg);
+    text(160, 139, '4', svg, 17);
+  },
+};
+
+/**
+ * Afrikan viisi pulmaa. `sketch` välitetään piirrokselle, jotta piirroksen
+ * luvut tulevat samasta paikasta kuin vastausvaihtoehdot.
+ */
+const AFRICA_PUZZLES = [
+  {
+    id: 'hieroglyfit',
+    city: 'kairo',
+    title: 'Hieroglyfien luvut',
+    q: 'Temppelin seinään on hakattu lukuja, ja opas luki kolme niistä minulle ääneen. Neljättä hän ei lukenut — sanoi, että pärjään kyllä itsekin.',
+    options: ['312', '2103', '213', '231'],
+    correct: 2,
+    fact: 'Sauva on 1, kaari — karjan jalkaköysi — on 10 ja köysikiehkura 100. Merkkejä ei aseteta paikoilleen vaan lasketaan yhteen, joten kaksi kiehkuraa, yksi kaari ja kolme sauvaa tekevät 213. Nollaa ei ole eikä paikka-arvoa, mikä on nokkelaa pienillä luvuilla ja tuskaista suurilla: miljoonaan riittää yksi merkki, mutta lukuun 999 999 tarvitaan viisikymmentäneljä.',
+    source: [
+      'https://en.wikipedia.org/wiki/Egyptian_numerals',
+      'MacTutor, University of St Andrews: Egyptian numerals',
+    ],
+  },
+  {
+    id: 'punnukset',
+    city: 'kumasi',
+    title: 'Kultapunnusten vaaka',
+    q: 'Kauppias punnitsee kultahiekkaa messinkipunnuksilla, joiden arvot hän tuntee ulkoa. Toinen vati on valmis, toisesta puuttuu vielä yksi punnus — mikä?',
+    options: ['2', '3', '4', '6'],
+    correct: 1,
+    sketch: { kulta: 10, vasen: 2, oikea: [5, 4] },
+    fact: 'Vasemmalla on 10 + 2 = 12, joten oikealle tarvitaan 5 + 4 + 3. Akanien kultapunnukset — abrammuo — valettiin messingistä kadotetun vahan menetelmällä, ja täydessä sarjassa oli yli kuusikymmentä eri arvoa. Kultahiekka oli maksuväline, ja punnusten muotoihin valettiin sananlaskuja, joten esine oli yhtä aikaa mitta ja muistisääntö.',
+    source: [
+      'https://en.wikipedia.org/wiki/Akan_goldweights',
+      'Maxwell Museum, University of New Mexico: Asante Gold Weights',
+    ],
+  },
+  {
+    id: 'naksutus',
+    city: 'kapkaupunki',
+    title: 'Kolme naksausta',
+    q: 'Piirsin muistiin kolme kohtaa, joista kieli irtoaa naksahtaen; jokaisella on oma kirjaimensa. Kansa kutsuu itseään nimellä isiXhosa — millä näistä nimi alkaa?',
+    options: [
+      'c — kielen kärki etuhampailta',
+      'q — kielen kärki hammasvallilta',
+      'c — kielen sivu poskihampailta',
+      'x — kielen sivu poskihampailta',
+    ],
+    correct: 3,
+    fact: 'Xhosan kolme naksausta eroavat toisistaan vain irrotuspaikan mukaan: c on dentaalinen (kielen kärki ylähampaiden takana, kuin paheksuva "ts"), x on lateraalinen (ilma purkautuu kielen sivulta, kuin hevosta kannustettaessa) ja q on postalveolaarinen (kielen kärki hammasvallilla, vedetään alas, poksahtaa kuin korkki). Nimi isiXhosa alkaa lateraalisella naksauksella. Isoisä kirjoitti muistiin kolme kuvaa ja luuli sitä kieliopiksi.',
+    source: [
+      'https://en.wikipedia.org/wiki/Xhosa_language',
+      'https://en.wikipedia.org/wiki/Lateral_click',
+    ],
+  },
+  {
+    id: 'kuunvaiheet',
+    city: 'timbuktu',
+    title: 'Kuu käsikirjoituksen sivulla',
+    q: 'Kirjaston mestari käänsi eteeni sivun, jolle kuu on piirretty neljä kertaa peräkkäin. Kolme ensimmäistä ymmärrän; neljäs on jätetty tyhjäksi, ja hän odottaa minun sanovan sen ääneen.',
+    options: ['kasvava kupera kuu', 'täysikuu', 'kasvava sirppi', 'vähenevä puolikuu'],
+    correct: 0,
+    fact: 'Sarja etenee neljänneksittäin: pimeä uusikuu, kasvava sirppi, puolikuu — ja seuraavana kasvava kupera kuu, jossa yli puolet kiekosta on valaistu mutta reuna ei ole vielä täysi. Timbuktussa tähtitiede ei ollut koristetta: kaupungin kirjastoissa on käsikirjoituksia, joissa opetetaan laskemaan vuodenaikojen alut tähtien liikkeistä. Isoisän klubilla kaupungin nimeä käytettiin tarkoittamaan paikkaa, jota ei ole; samassa paikassa käytiin oppikirjaa läpi rivi riviltä.',
+    source: [
+      'Library of Congress: Ancient Manuscripts from the Desert Libraries of Timbuktu',
+    ],
+  },
+  {
+    id: 'vesileilit',
+    city: 'sahara',
+    title: 'Neljä mittaa vettä',
+    q: 'Leilejä on kaksi, toiseen menee kolme mittaa ja toiseen viisi, eikä kummankaan kyljessä ole yhtään viivaa. Oppaani tarvitsee tasan neljä ennen kuin lähdemme.',
+    options: [
+      'Täytä 3, kaada 5:een, täytä 3, kaada 5 täyteen, tyhjennä 5, kaada loput viitoseen',
+      'Täytä 5, kaada 3 täyteen, tyhjennä 5, kaada 3 viitoseen',
+      'Täytä 5, kaada 3 täyteen, tyhjennä 3, kaada loput 3:een, täytä 5, kaada 3 täyteen',
+      'Täytä 5, kaada 3 täyteen, tyhjennä 3, kaada loput 3:een, täytä 3',
+    ],
+    correct: 2,
+    fact: 'Kun täydestä viitosesta kaadetaan kolmonen täyteen, viitoseen jää 2. Tyhjennä kolmonen, siirrä ne kaksi mittaa sinne ja täytä viitonen uudelleen: kolmoseen mahtuu enää yksi, ja viitoseen jää tasan neljä. Muut sarjat päätyvät yhteen, kolmeen tai viiteen mittaan — ne eivät ole vääriä kaatoja, ne vain loppuvat väärään lukuun. Karavaanissa vesi mitataan tarkkaan, koska seuraava kaivo on siellä missä se on, ei siellä missä isoisän kartassa lukee.',
+    source: 'Klassinen kahden astian mittapulma',
+  },
+];
+
+/**
+ * Piirtää pulman luonnoksen annettuun SVG-elementtiin. `data` välitetään
+ * piirrokselle, jotta luvut tulevat pulmadatasta eivätkä piirroskoodista —
+ * näin piirros ja vastausvaihtoehdot eivät voi eriytyä toisistaan.
+ */
+function drawPuzzle(svg, id, data) {
+  SKETCHES[id]?.(svg, data);
+}
+
+/** Onko pulmalle olemassa piirros? Testit vartioivat tätä. */
+function hasSketch(id) {
+  return typeof SKETCHES[id] === 'function';
+}
+
 // ===== js/packs/africa.js =====
 // Afrikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
 //
@@ -5741,6 +6090,8 @@ const AFRICA = {
   // laatta jää kääntämättä, joten kaupunkiin voi palata. Viivästys johtuu
   // säästä, luonnosta, kertojan omasta typeryydestä tai imperiumin
   // jäänteistä, ei koskaan kohdemaasta tai sen ihmisistä.
+  puzzles: AFRICA_PUZZLES,
+
   events: [
     { text: 'Sade alkoi iltapäivällä kuin kello olisi soinut, ja kadun poikki juoksi hetkessä ruskea puro. Istuin katoksen alla tunnin ja huomasin olevani ainoa, joka ei ollut osannut varata sitä tuntia valmiiksi.', effect: { kind: 'viive' } },
     { text: 'Auto pysähtyi, koska tiellä seisoi norsulauma eikä sillä ollut kiire. Afrikannorsu on maailman suurin maaeläin, joten väistämisjärjestys oli selvä kaikille muille paitsi minulle, joka ehdotin äänitorvea.', effect: { kind: 'viive' } },
@@ -5835,6 +6186,15 @@ const AFRICA = {
       { x: 232, y: 556, r: 95 },
       { x: 858, y: 905, r: 110 },
       { x: 880, y: 92, r: 135 },
+    ],
+    // Maamerkit vihjaavat pulmista ja sitovat kartan paikkoihin. Sijoitus on
+    // kaupungin viereen mutta nimikilven vastakkaiselle puolelle, jottei
+    // piirros törmää tekstiin.
+    landmarks: [
+      { kind: 'pyramids', x: 683, y: 175 },        // Giza Kairon eteläpuolella
+      { kind: 'tablemountain', x: 490, y: 880 },   // Pöytävuori Kapkaupungin luoteispuolella
+      { kind: 'snowpeak', x: 728, y: 548 },        // Kilimandžaron lumihuippu
+      { kind: 'dhow', x: 894, y: 616 },            // dhow Sansibarin edustalla
     ],
     ship: { x: 214, y: 548 },
     serpent: { x: 852, y: 902 },
@@ -24639,6 +24999,41 @@ function tokenIconSvg(type, size = 18) {
 }
 
 /** Purjelaiva, meripeto ja karttaotsikko täyttämässä tyhjää merta. */
+/**
+ * Maamerkkien piirrokset. Samaa mustetyyliä kuin purjelaiva ja meripeto:
+ * ohut viiva, muutama täytetty pinta, ei yksityiskohtia. Jokainen piirtyy
+ * origon ympärille, jotta sijoitus on pelkkä siirto.
+ */
+const LANDMARKS = {
+  // Giza: kolme pyramidia rivissä, takimmainen pienempänä syvyyden vuoksi.
+  pyramids: (g) => {
+    el('path', { d: 'M-26,14 L-9,-16 L8,14 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M2,14 L15,-8 L28,14 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M20,14 L28,1 L36,14 Z', class: 'doodle-fill' }, g);
+    // Hiekan viiva jalustan alla sitoo ryhmän maahan.
+    el('path', { d: 'M-32,16 q32,6 70,0', class: 'doodle' }, g);
+  },
+  // Pöytävuori: litteä laki ja jyrkät reunat, päällä pöytäliinapilvi.
+  tablemountain: (g) => {
+    el('path', { d: 'M-30,16 L-22,-8 L22,-8 L30,16 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-24,-12 q10,-7 24,-4 q12,3 22,2', class: 'doodle' }, g);
+    el('path', { d: 'M-30,16 q30,5 60,0', class: 'doodle' }, g);
+  },
+  // Kilimandžaro: leveä kartio, jonka laki on lumessa.
+  snowpeak: (g) => {
+    el('path', { d: 'M-30,16 L0,-20 L30,16 Z', class: 'doodle' }, g);
+    el('path', { d: 'M-12,-6 L0,-20 L12,-6 q-12,5 -24,0 z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-30,16 q30,5 60,0', class: 'doodle' }, g);
+  },
+  // Dhow: kolmiomainen latinalaispurje, joka on Intian valtameren tuntomerkki.
+  dhow: (g) => {
+    el('path', { d: 'M-20,10 L22,10 L14,20 L-14,20 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-6,10 L2,-26', class: 'doodle' }, g);
+    el('path', { d: 'M2,-24 L18,8 L-4,8 z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-28,26 q12,7 24,0 M6,26 q12,7 24,0', class: 'doodle' }, g);
+  },
+};
+
 function drawDoodles(svg, decor) {
   if (decor.ship) {
     const ship = el('g', {
@@ -24664,6 +25059,17 @@ function drawDoodles(svg, decor) {
       class: 'doodle-fill',
     }, serpent);
     el('path', { d: 'M-86,10 q-10,6 -6,16 q8,-4 8,-12', class: 'doodle-fill' }, serpent);
+  }
+
+  // Maamerkit: pieniä viivapiirroksia vanhojen karttojen tapaan. Ne myös
+  // vihjaavat pulmista (pyramidit ↔ Kairo, Pöytävuori ↔ Kapkaupunki), joten
+  // ne ovat tarkoituksella lähellä kaupunkiaan. Ei tekstiä — pelkkä kuva.
+  for (const mark of decor.landmarks ?? []) {
+    const g = el('g', {
+      class: `doodle-landmark landmark-${mark.kind}`,
+      transform: `translate(${mark.x},${mark.y})${mark.flip ? ' scale(-1,1)' : ''}`,
+    }, svg);
+    LANDMARKS[mark.kind]?.(g);
   }
 
   const title = el('g', {
@@ -24719,6 +25125,7 @@ const XP_NEW_CITY = 10;
 const XP_NEW_BOARD = 50;
 const XP_HARD_ANSWER = 25;
 const XP_STAR = 100;
+const XP_PUZZLE = 25; // isoisän luonnoskirjan pulma ratkaistu
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 function questionLevel(question) {
@@ -24802,6 +25209,9 @@ class Game {
     // Pysähdyksen muoto: sama erikoismuoto ei toistu kahdesti peräkkäin.
     this.lastForm = null;
     this.eventCard = null;
+    // Pulmat avautuvat kerran pelissä: avaimena 'pakka:kaupunki'.
+    this.puzzlesSeen = new Set();
+    this.puzzlePrevPhase = null;
     // Isoisän aikataulu: näytetty rivi ja jo nähtyjen avaimet.
     this.scheduleNote = null;
     this.scheduleShown = new Set();
@@ -25627,6 +26037,55 @@ class Game {
     return naapurit[Math.floor(this.rng() * naapurit.length)];
   }
 
+  /**
+   * Isoisän luonnoskirjan pulma, jos sellainen odottaa nykyisessä
+   * kaupungissa. Pulma ei ole sidottu laattaan eikä tutkimiseen, jotta myös
+   * aloituskaupungin pulma aukeaa — siksi laukaisin on pelkkä saapuminen.
+   * Palauttaa null, jos pulmaa ei ole tai se on jo nähty tässä pelissä.
+   */
+  pendingPuzzle(player = this.player) {
+    if (player.pos.type !== 'city') return null;
+    const puzzle = (this.pack.puzzles ?? []).find((p) => p.city === player.pos.city);
+    if (!puzzle) return null;
+    return this.puzzlesSeen.has(`${this.pack.id}:${puzzle.city}`) ? null : puzzle;
+  }
+
+  /**
+   * Avaa pulman. Pulma on monivalinta kuten muutkin, joten vastaaminen ja
+   * tuloksen näyttö toimivat ennallaan — vain palkinto ja sulkeminen
+   * poikkeavat: pulma ei käännä laattaa eikä päätä vuoroa.
+   */
+  openPuzzle() {
+    const puzzle = this.pendingPuzzle();
+    if (!puzzle) return { ok: false, error: 'Ei avointa pulmaa' };
+
+    this.puzzlesSeen.add(`${this.pack.id}:${puzzle.city}`);
+    this.puzzlePrevPhase = this.phase;
+    const order = this.shuffledOrder(puzzle.options.length);
+    this.quiz = {
+      kind: 'puzzle',
+      cityId: puzzle.city,
+      puzzleId: puzzle.id,
+      sketchData: puzzle.sketch ?? null,
+      title: puzzle.title,
+      hard: false,
+      question: puzzle.q,
+      fact: puzzle.fact,
+      source: sourceList(puzzle.source),
+      options: order.map((i) => puzzle.options[i]),
+      correct: order.indexOf(puzzle.correct),
+      hint: null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: null,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
+  }
+
   /** Vastaa kysymykseen. Tulos jää näkyviin kunnes closeQuiz() kutsutaan. */
   answerQuiz(index) {
     if (this.phase !== 'quiz' || !this.quiz || this.quiz.chosen !== null) {
@@ -25640,6 +26099,19 @@ class Game {
     this.quiz.chosen = index;
     this.quiz.right = index === this.quiz.correct;
     this.countAnswer(p, this.quiz.right);
+
+    // Pulma: oikeasta kokemuspisteitä, väärästä ei rangaistusta. Pulma ei
+    // käännä laattaa eikä koskaan estä etenemistä — oikea ratkaisu vain
+    // näytetään.
+    if (this.quiz.kind === 'puzzle') {
+      if (this.quiz.right) {
+        this.awardXp(p, XP_PUZZLE);
+        this.say(p.id, `${p.name} ratkaisi isoisän pulman (+${XP_PUZZLE} kp).`);
+      } else {
+        this.say(p.id, `${p.name} ei ratkaissut isoisän pulmaa — isoisä olisi ollut armollinen.`);
+      }
+      return { ok: true, right: this.quiz.right };
+    }
 
     // Tietoportti: oikea vastaus avaa portin, laattoja ei käännetä.
     if (this.quiz.gate) {
@@ -25715,6 +26187,7 @@ class Game {
     // Väittämässä on kaksi vaihtoehtoa ja karttakysymyksessä vastataan
     // kartalta — kummassakaan puolikkaan poistamisessa ei ole järkeä.
     if (quiz.options.length < 4) return { ok: false, error: 'Tähän ei voi käyttää 50:50:tä' };
+    if (quiz.kind === 'puzzle') return { ok: false, error: 'Pulma ratkaistaan itse' };
 
     const p = this.player;
     if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
@@ -25733,6 +26206,13 @@ class Game {
   /** Sulkee kysymyksen ja päättää vuoron — tai aloittaa rosvon kaksintaistelun. */
   closeQuiz() {
     if (!this.quiz) return { ok: false, error: 'Ei avointa kysymystä' };
+    // Pulma keskeytti saapumisen, joten vuoro jatkuu siitä mihin jäätiin.
+    if (this.quiz.kind === 'puzzle') {
+      this.quiz = null;
+      if (this.phase !== 'over') this.phase = this.puzzlePrevPhase ?? 'action';
+      this.puzzlePrevPhase = null;
+      return { ok: true, puzzle: true };
+    }
     const gate = this.quiz.right ? this.quiz.gate : null;
     this.quiz = null;
     if (this.phase === 'over') return { ok: true };
@@ -26091,6 +26571,7 @@ class Game {
       diaryNote: this.diaryNote,
       lastForm: this.lastForm,
       eventCard: this.eventCard,
+      puzzlesSeen: [...this.puzzlesSeen],
       scheduleNote: this.scheduleNote,
       scheduleShown: [...this.scheduleShown],
       recordNoted: this.recordNoted,
@@ -26166,6 +26647,7 @@ class Game {
     game.diaryNote = data.diaryNote ?? null;
     game.lastForm = data.lastForm ?? null;
     game.eventCard = data.eventCard ?? null;
+    game.puzzlesSeen = new Set(data.puzzlesSeen ?? []);
     // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
     // yhtään isoisän aikataulurivistä.
     game.scheduleNote = data.scheduleNote ?? null;
@@ -26529,6 +27011,9 @@ class UI {
       this.closeArrival();
       this.doAction(() => this.game.actionSkipQuiz());
     });
+
+    this.quizSketch = document.getElementById('quiz-sketch');
+    this.quizBadge = document.getElementById('quiz-badge');
 
     this.wikiDialog = document.getElementById('wiki-dialog');
     this.wikiTitle = document.getElementById('wiki-title');
@@ -27911,7 +28396,21 @@ class UI {
 
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
-    if (quiz.kind === 'claim') {
+    // Pulman piirros ensin, kysymysrivi alla — kortti on isoisän luonnos.
+    // HUOM: SVGElement ei peri HTMLElementiä, joten .hidden-ominaisuus ei
+    // heijastu attribuuttiin — se jäisi päälle ja [hidden]-sääntö piilottaisi
+    // piirroksen pysyvästi. Attribuuttia on siis käsiteltävä suoraan.
+    this.quizSketch.toggleAttribute('hidden', quiz.kind !== 'puzzle');
+    if (quiz.kind === 'puzzle' && this.sketchFor !== quiz) {
+      this.sketchFor = quiz;
+      this.quizSketch.textContent = '';
+      drawPuzzle(this.quizSketch, quiz.puzzleId, quiz.sketchData);
+    }
+
+    this.quizBadge.textContent = quiz.kind === 'puzzle' ? 'Pulma' : 'Tietovisa';
+    if (quiz.kind === 'puzzle') {
+      this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
+    } else if (quiz.kind === 'claim') {
       // Väittämässä puhuu isoisä, ei peli: otsikko kertoo äänen.
       this.quizCity.textContent = `Isoisän päiväkirjasta, 1873 — totta vai tarua?`;
     } else if (quiz.kind === 'map') {
@@ -27938,7 +28437,7 @@ class UI {
     const used = quiz.hidden.length > 0;
     // Väittämässä on kaksi vaihtoehtoa ja karttakysymykseen vastataan
     // kartalta, joten 50:50 ei kuulu niihin lainkaan.
-    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4;
+    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4 || quiz.kind === 'puzzle';
     this.quizFifty.disabled = used || p.money < FIFTY_FIFTY_PRICE;
     this.quizFifty.textContent = used ? '50:50 käytetty' : `50:50 (${FIFTY_FIFTY_PRICE} p)`;
 
@@ -28080,7 +28579,8 @@ class UI {
   renderTimer(quiz) {
     // Toimii sekä tietovisalle että kaksintaistelulle: molemmilla on
     // chosen- ja seconds-kentät.
-    const show = !this.game.player.isBot && quiz.chosen === null;
+    // Pulmassa ei ole kelloa: se on päättelytehtävä, ei nopeuskilpailu.
+    const show = !this.game.player.isBot && quiz.chosen === null && quiz.kind !== 'puzzle';
     this.quizTimerEl.hidden = !show;
     if (!show) {
       this.stopQuizTimer();

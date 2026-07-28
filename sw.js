@@ -17,6 +17,7 @@ const SHELL = [
   './js/packs/maailma-questions.js',
   './js/packs/africa.js',
   './js/packs/africa-questions.js',
+  './js/packs/africa-puzzles.js',
   './js/packs/europe.js',
   './js/packs/europe-questions.js',
   './js/packs/middleeast.js',
