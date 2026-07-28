@@ -2193,6 +2193,8 @@ export class UI {
     }, kone);
 
     if (line) this.showFlightLine(line);
+    // Potkurihurina koko kohtauksen ajaksi: nousee ja laskee sen mukana.
+    sfx.startFlight(FLY_OVERLAY_MS);
 
     await new Promise((resolve) => {
       const alku = performance.now();
@@ -2213,6 +2215,8 @@ export class UI {
       };
       requestAnimationFrame(askel);
     });
+
+    sfx.stopFlight();
 
     // Kone jää kohteeseen ja repliikki pysyy ruudussa, kunnes pelaaja
     // astuu itse ulos koneesta — kukin lukee omaan tahtiinsa, eikä

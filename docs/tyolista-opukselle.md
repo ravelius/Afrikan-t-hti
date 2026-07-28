@@ -66,6 +66,10 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Paketti 15 (lentorepliikkien tunnelataus): ✅ (28.7.2026) — kaikki 70
   riviä kirjoitettu uusiksi innostuksella. Neljä testiä vartioi paketin
   14 faktakorjauksia, jottei uudelleenkirjoitus palauta niitä.
+- Paketti 16 (äänet): ✅ (28.7.2026) — generoitu kaiku ja kompressori,
+  materiaalipohjaiset äänet (resonoiva noppa, soittorasiakello,
+  FM-kolikko, sumutorvi), potkurihurina lennolle ja vireheitto
+  väsymisen estoon.
 - Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
   tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
   tarkistettu artikkeliotsikko.
@@ -773,7 +777,7 @@ uhkuvaa kohteesta riippuen.
   kohdekaupunki on laudalla), arvonta siemenellä deterministinen.
   Animaatiosta kuvakaappaus.
 
-## Paketti 16: äänet oleellisesti paremmiksi (js/sound.js)
+## Paketti 16: äänet oleellisesti paremmiksi (js/sound.js) — VALMIS
 
 Omistajan kysymys "voiko ääniä parantaa oleellisesti?" — voi. Pysytään
 Web Audiossa ilman äänitiedostoja (offline ja standalone säilyvät
