@@ -872,20 +872,29 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   stroke-dasharray: 10 8;
 }
 
+/*
+ * Isoisän käsiala: kursiivinen kaunokirjoitus, jota ei ole tarkoituskaan
+ * pystyä lukemaan kuin osittain — kuin vanhan kartan reunamerkinnät.
+ * Snell Roundhand ja Savoye löytyvät Applen laitteilta, Segoe Script
+ * Windowsista; cursive on varalla.
+ */
 .flight-zone-name {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: "Snell Roundhand", "Savoye LET", "Bradley Hand",
+    "Segoe Script", "Comic Sans MS", cursive;
   font-style: italic;
-  font-size: 19px;
-  letter-spacing: 0.12em;
-  fill: rgba(70, 51, 31, 0.4);
+  font-size: 21px;
+  letter-spacing: 0.1em;
+  fill: rgba(70, 51, 31, 0.3);
 }
 
 /* Isoisän himmeät merkinnät ja piirrokset kalvon laidoilla. */
 .flight-note-text {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: "Snell Roundhand", "Savoye LET", "Bradley Hand",
+    "Segoe Script", "Comic Sans MS", cursive;
   font-style: italic;
-  font-size: 21px;
-  fill: rgba(70, 51, 31, 0.35);
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  fill: rgba(70, 51, 31, 0.28);
 }
 
 .flight-doodle {
@@ -3853,6 +3862,15 @@ const MAAILMA = {
       'Taitetulla sivulla lukee vain: "etelään, ja kysy kalastajilta". Käänsin sen esiin vahingossa, enkä nyt saa sitä pois mielestäni.',
       'Kuun vaiheita on piirretty riviin ja yksi niistä ympyröity, ilman sanaakaan selitystä. Toivon, ettei selitystä tulekaan ennen kuin arvaan sen itse.',
       'Muste on tällä aukeamalla vaaleampaa, kuin kirjoitettuna kiireessä. Sytytin lukuvalon vaikka ulkona paistaa: kiireessä kirjoitettu sivu on aina se kiinnostavin.',
+    ],
+    // Ensimmäinen lento: matka alkaa, ja repliikki hehkuttaa aina
+    // matkakirjaa — se on koko pelin lähtölaukaus.
+    flightFirst: [
+      'Kone nousee ja isoisän kirja on sylissäni auki ensimmäiseltä sivulta: kahdeksankymmentä päivää. Hyvä on, isoisä — katsotaan mihin minä pystyn.',
+      'Selasin kirjaa jo kiitotiellä: joka sivulla on paikka, jonka haluan nähdä omin silmin, ja nyt siivet vievät kohti ensimmäistä. Vihdoinkin!',
+      'Painan kämmeneni kirjan kannelle: sata viisikymmentä vuotta ja kesken jäänyt lause. Tästä hetkestä alkaen sitä kirjoitetaan loppuun.',
+      'Kirja hyppii polvillani koneen mukana, ja huomaan hymyileväni aivan itsekseni. Tämä on se sivu, jolla minun matkani alkaa.',
+      'Avaan kirjan sattumanvaraiselta kohdalta ja lupaan käydä joka paikassa, jonka isoisä alleviivasi. Lupaus on holtiton, ja juuri siksi teen sen.',
     ],
     intro: 'Peli alkaa! Etsikää Magellanin kompassi — maailmanympäripurjehtijan kadonnut aarre.',
     starFound: (name, city) => `★ ${name} löysi MAGELLANIN KOMPASSIN kaupungista ${city}!`,
@@ -26648,6 +26666,17 @@ class Game {
     return pakka[Math.floor(this.rng() * pakka.length)];
   }
 
+  /**
+   * Ensimmäisen lennon repliikki: matka alkaa, joten rivi hehkuttaa aina
+   * matkakirjaa. Jos laudalla ei ole flightFirst-rivejä, käytetään
+   * tavallista lentorepliikkiä.
+   */
+  firstFlightLine(cityId) {
+    const pakka = this.pack.texts?.flightFirst ?? [];
+    if (!pakka.length) return this.flightLine(cityId);
+    return pakka[Math.floor(this.rng() * pakka.length)];
+  }
+
   /** Naapurikaupunki ilmaista kyytiä varten; null jos naapureita ei ole. */
   rideTarget(player) {
     if (player.pos.type !== 'city') return null;
@@ -28545,7 +28574,10 @@ class UI {
     const lontoo = game.board.cityById.get('lontoo');
     if (lontoo && lontoo.id !== city.id) {
       this.introEl.classList.add('intro-fade');
-      await this.animateFlight('Lontoo', city.name, game.flightLine(city.id));
+      await this.animateFlight(
+        'Lontoo', city.name, game.firstFlightLine(city.id),
+        { dx: city.x - lontoo.x, dy: city.y - lontoo.y },
+      );
     }
     this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
   }
@@ -29565,15 +29597,16 @@ class UI {
     const { game } = this;
     const player = game.player;
     const from = player.pos;
-    const fromName = from.type === 'city' ? (game.board.cityById.get(from.city)?.name ?? '') : '';
-    const toName = game.board.cityById.get(destination)?.name ?? '';
+    const lahto = from.type === 'city' ? game.board.cityById.get(from.city) : null;
+    const kohde = game.board.cityById.get(destination);
+    const suunta = lahto && kohde ? { dx: kohde.x - lahto.x, dy: kohde.y - lahto.y } : null;
     // Repliikki arvotaan ennen siirtoa, jotta rng-kutsu osuu samaan kohtaan
     // riippumatta siitä, näytetäänkö animaatio.
     const line = game.flightLine(destination);
     sfx.play('flight');
     this.run(() => game.actionFly(destination), {
       after: async () => {
-        await this.animateFlight(fromName, toName, line);
+        await this.animateFlight(lahto?.name ?? '', kohde?.name ?? '', line, suunta);
         await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
       },
     });
@@ -29613,7 +29646,7 @@ class UI {
    * `prefers-reduced-motion` ohittaa animaation kokonaan: silloin ei piirretä
    * mitään eikä odoteta, jotta peli etenee samaa tahtia kuin ennenkin.
    */
-  async animateFlight(fromLabel, toLabel, line = null) {
+  async animateFlight(fromLabel, toLabel, line = null, dir = null) {
     if (this.reducedMotion) return;
 
     const overlay = html('div', 'flight-overlay');
@@ -29651,20 +29684,36 @@ class UI {
     el('path', { d: 'M330,520 q14,-10 28,0 q14,10 28,0', fill: 'none', class: 'flight-doodle' }, scene);
     el('path', { d: 'M540,60 l14,-18 l12,18 l10,-12 l9,12', fill: 'none', class: 'flight-doodle' }, scene);
 
-    // Lento kulkee diagonaalisesti vasemmalta alhaalta oikealle ylös.
-    const a = { x: 130, y: 450 };
-    const b = { x: 870, y: 120 };
+    // Lennon suunta seuraa oikeaa maantiedettä, kun molempien päiden
+    // koordinaatit tunnetaan: Lontoosta Tangeriin lennetään ylhäältä
+    // oikealta alas vasemmalle, kuten oikeallakin kartalla. Ilman suuntaa
+    // (esim. porttilento toiselle laudalle) lento nousee vasemmalta ylös.
+    const itaan = dir ? dir.dx >= 0 : true;
+    const etelaan = dir ? dir.dy >= 0 : false;
+    const a = { x: itaan ? 130 : 870, y: etelaan ? 120 : 450 };
+    const b = { x: itaan ? 870 : 130, y: etelaan ? 450 : 120 };
     el('circle', { cx: a.x, cy: a.y, r: 9, class: 'flight-dot' }, scene);
     el('circle', { cx: b.x, cy: b.y, r: 9, class: 'flight-dot' }, scene);
-    const nimi = (p, teksti, anchor) => {
-      const t = el('text', { x: p.x, y: p.y + 56, 'text-anchor': anchor, class: 'flight-name' }, scene);
+    const nimi = (p, teksti) => {
+      const t = el('text', {
+        x: p.x, y: p.y + 56, 'text-anchor': p.x > 500 ? 'end' : 'start', class: 'flight-name',
+      }, scene);
       t.textContent = teksti;
     };
-    if (fromLabel) nimi(a, fromLabel, 'start');
-    if (toLabel) nimi(b, toLabel, 'end');
+    if (fromLabel) nimi(a, fromLabel);
+    if (toLabel) nimi(b, toLabel);
 
-    // Kaari nousee kuin lentorata vanhan filmin kartalla.
-    const d = `M${a.x},${a.y} Q${(a.x + b.x) / 2 - 60},${(a.y + b.y) / 2 - 150} ${b.x},${b.y}`;
+    // Kaari kaartuu aina ylöspäin kulkusuunnasta riippumatta, kuin
+    // lentorata vanhan filmin kartalla.
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    let px = -dy / len;
+    let py = dx / len;
+    if (py > 0) { px = -px; py = -py; }
+    const kx = (a.x + b.x) / 2 + px * 170;
+    const ky = (a.y + b.y) / 2 + py * 170;
+    const d = `M${a.x},${a.y} Q${kx},${ky} ${b.x},${b.y}`;
     const reitti = el('path', { d, class: 'flight-trail' }, scene);
     const kokoPituus = reitti.getTotalLength();
     reitti.style.strokeDasharray = kokoPituus;

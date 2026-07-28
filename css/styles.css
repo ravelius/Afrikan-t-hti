@@ -864,20 +864,29 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   stroke-dasharray: 10 8;
 }
 
+/*
+ * Isoisän käsiala: kursiivinen kaunokirjoitus, jota ei ole tarkoituskaan
+ * pystyä lukemaan kuin osittain — kuin vanhan kartan reunamerkinnät.
+ * Snell Roundhand ja Savoye löytyvät Applen laitteilta, Segoe Script
+ * Windowsista; cursive on varalla.
+ */
 .flight-zone-name {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: "Snell Roundhand", "Savoye LET", "Bradley Hand",
+    "Segoe Script", "Comic Sans MS", cursive;
   font-style: italic;
-  font-size: 19px;
-  letter-spacing: 0.12em;
-  fill: rgba(70, 51, 31, 0.4);
+  font-size: 21px;
+  letter-spacing: 0.1em;
+  fill: rgba(70, 51, 31, 0.3);
 }
 
 /* Isoisän himmeät merkinnät ja piirrokset kalvon laidoilla. */
 .flight-note-text {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: "Snell Roundhand", "Savoye LET", "Bradley Hand",
+    "Segoe Script", "Comic Sans MS", cursive;
   font-style: italic;
-  font-size: 21px;
-  fill: rgba(70, 51, 31, 0.35);
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  fill: rgba(70, 51, 31, 0.28);
 }
 
 .flight-doodle {

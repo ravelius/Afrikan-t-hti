@@ -452,6 +452,15 @@ export const MAAILMA = {
       'Kuun vaiheita on piirretty riviin ja yksi niistä ympyröity, ilman sanaakaan selitystä. Toivon, ettei selitystä tulekaan ennen kuin arvaan sen itse.',
       'Muste on tällä aukeamalla vaaleampaa, kuin kirjoitettuna kiireessä. Sytytin lukuvalon vaikka ulkona paistaa: kiireessä kirjoitettu sivu on aina se kiinnostavin.',
     ],
+    // Ensimmäinen lento: matka alkaa, ja repliikki hehkuttaa aina
+    // matkakirjaa — se on koko pelin lähtölaukaus.
+    flightFirst: [
+      'Kone nousee ja isoisän kirja on sylissäni auki ensimmäiseltä sivulta: kahdeksankymmentä päivää. Hyvä on, isoisä — katsotaan mihin minä pystyn.',
+      'Selasin kirjaa jo kiitotiellä: joka sivulla on paikka, jonka haluan nähdä omin silmin, ja nyt siivet vievät kohti ensimmäistä. Vihdoinkin!',
+      'Painan kämmeneni kirjan kannelle: sata viisikymmentä vuotta ja kesken jäänyt lause. Tästä hetkestä alkaen sitä kirjoitetaan loppuun.',
+      'Kirja hyppii polvillani koneen mukana, ja huomaan hymyileväni aivan itsekseni. Tämä on se sivu, jolla minun matkani alkaa.',
+      'Avaan kirjan sattumanvaraiselta kohdalta ja lupaan käydä joka paikassa, jonka isoisä alleviivasi. Lupaus on holtiton, ja juuri siksi teen sen.',
+    ],
     intro: 'Peli alkaa! Etsikää Magellanin kompassi — maailmanympäripurjehtijan kadonnut aarre.',
     starFound: (name, city) => `★ ${name} löysi MAGELLANIN KOMPASSIN kaupungista ${city}!`,
     starToast: 'MAGELLANIN KOMPASSI!',

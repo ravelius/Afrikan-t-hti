@@ -1037,7 +1037,10 @@ export class UI {
     const lontoo = game.board.cityById.get('lontoo');
     if (lontoo && lontoo.id !== city.id) {
       this.introEl.classList.add('intro-fade');
-      await this.animateFlight('Lontoo', city.name, game.flightLine(city.id));
+      await this.animateFlight(
+        'Lontoo', city.name, game.firstFlightLine(city.id),
+        { dx: city.x - lontoo.x, dy: city.y - lontoo.y },
+      );
     }
     this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
   }
@@ -2058,15 +2061,16 @@ export class UI {
     const { game } = this;
     const player = game.player;
     const from = player.pos;
-    const fromName = from.type === 'city' ? (game.board.cityById.get(from.city)?.name ?? '') : '';
-    const toName = game.board.cityById.get(destination)?.name ?? '';
+    const lahto = from.type === 'city' ? game.board.cityById.get(from.city) : null;
+    const kohde = game.board.cityById.get(destination);
+    const suunta = lahto && kohde ? { dx: kohde.x - lahto.x, dy: kohde.y - lahto.y } : null;
     // Repliikki arvotaan ennen siirtoa, jotta rng-kutsu osuu samaan kohtaan
     // riippumatta siitä, näytetäänkö animaatio.
     const line = game.flightLine(destination);
     sfx.play('flight');
     this.run(() => game.actionFly(destination), {
       after: async () => {
-        await this.animateFlight(fromName, toName, line);
+        await this.animateFlight(lahto?.name ?? '', kohde?.name ?? '', line, suunta);
         await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
       },
     });
@@ -2106,7 +2110,7 @@ export class UI {
    * `prefers-reduced-motion` ohittaa animaation kokonaan: silloin ei piirretä
    * mitään eikä odoteta, jotta peli etenee samaa tahtia kuin ennenkin.
    */
-  async animateFlight(fromLabel, toLabel, line = null) {
+  async animateFlight(fromLabel, toLabel, line = null, dir = null) {
     if (this.reducedMotion) return;
 
     const overlay = html('div', 'flight-overlay');
@@ -2144,20 +2148,36 @@ export class UI {
     el('path', { d: 'M330,520 q14,-10 28,0 q14,10 28,0', fill: 'none', class: 'flight-doodle' }, scene);
     el('path', { d: 'M540,60 l14,-18 l12,18 l10,-12 l9,12', fill: 'none', class: 'flight-doodle' }, scene);
 
-    // Lento kulkee diagonaalisesti vasemmalta alhaalta oikealle ylös.
-    const a = { x: 130, y: 450 };
-    const b = { x: 870, y: 120 };
+    // Lennon suunta seuraa oikeaa maantiedettä, kun molempien päiden
+    // koordinaatit tunnetaan: Lontoosta Tangeriin lennetään ylhäältä
+    // oikealta alas vasemmalle, kuten oikeallakin kartalla. Ilman suuntaa
+    // (esim. porttilento toiselle laudalle) lento nousee vasemmalta ylös.
+    const itaan = dir ? dir.dx >= 0 : true;
+    const etelaan = dir ? dir.dy >= 0 : false;
+    const a = { x: itaan ? 130 : 870, y: etelaan ? 120 : 450 };
+    const b = { x: itaan ? 870 : 130, y: etelaan ? 450 : 120 };
     el('circle', { cx: a.x, cy: a.y, r: 9, class: 'flight-dot' }, scene);
     el('circle', { cx: b.x, cy: b.y, r: 9, class: 'flight-dot' }, scene);
-    const nimi = (p, teksti, anchor) => {
-      const t = el('text', { x: p.x, y: p.y + 56, 'text-anchor': anchor, class: 'flight-name' }, scene);
+    const nimi = (p, teksti) => {
+      const t = el('text', {
+        x: p.x, y: p.y + 56, 'text-anchor': p.x > 500 ? 'end' : 'start', class: 'flight-name',
+      }, scene);
       t.textContent = teksti;
     };
-    if (fromLabel) nimi(a, fromLabel, 'start');
-    if (toLabel) nimi(b, toLabel, 'end');
+    if (fromLabel) nimi(a, fromLabel);
+    if (toLabel) nimi(b, toLabel);
 
-    // Kaari nousee kuin lentorata vanhan filmin kartalla.
-    const d = `M${a.x},${a.y} Q${(a.x + b.x) / 2 - 60},${(a.y + b.y) / 2 - 150} ${b.x},${b.y}`;
+    // Kaari kaartuu aina ylöspäin kulkusuunnasta riippumatta, kuin
+    // lentorata vanhan filmin kartalla.
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    let px = -dy / len;
+    let py = dx / len;
+    if (py > 0) { px = -px; py = -py; }
+    const kx = (a.x + b.x) / 2 + px * 170;
+    const ky = (a.y + b.y) / 2 + py * 170;
+    const d = `M${a.x},${a.y} Q${kx},${ky} ${b.x},${b.y}`;
     const reitti = el('path', { d, class: 'flight-trail' }, scene);
     const kokoPituus = reitti.getTotalLength();
     reitti.style.strokeDasharray = kokoPituus;
