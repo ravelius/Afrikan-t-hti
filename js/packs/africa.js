@@ -6,6 +6,7 @@
 
 
 import { AFRICA_QUESTIONS, AFRICA_FACTS } from './africa-questions.js';
+import { AFRICA_PUZZLES } from './africa-puzzles.js';
 import { themedTokenTypes } from '../tokens.js';
 
 const AFRICA_MAP = {
@@ -249,6 +250,8 @@ export const AFRICA = {
   // laatta jää kääntämättä, joten kaupunkiin voi palata. Viivästys johtuu
   // säästä, luonnosta, kertojan omasta typeryydestä tai imperiumin
   // jäänteistä, ei koskaan kohdemaasta tai sen ihmisistä.
+  puzzles: AFRICA_PUZZLES,
+
   events: [
     { text: 'Sade alkoi iltapäivällä kuin kello olisi soinut, ja kadun poikki juoksi hetkessä ruskea puro. Istuin katoksen alla tunnin ja huomasin olevani ainoa, joka ei ollut osannut varata sitä tuntia valmiiksi.', effect: { kind: 'viive' } },
     { text: 'Auto pysähtyi, koska tiellä seisoi norsulauma eikä sillä ollut kiire. Afrikannorsu on maailman suurin maaeläin, joten väistämisjärjestys oli selvä kaikille muille paitsi minulle, joka ehdotin äänitorvea.', effect: { kind: 'viive' } },
@@ -343,6 +346,15 @@ export const AFRICA = {
       { x: 232, y: 556, r: 95 },
       { x: 858, y: 905, r: 110 },
       { x: 880, y: 92, r: 135 },
+    ],
+    // Maamerkit vihjaavat pulmista ja sitovat kartan paikkoihin. Sijoitus on
+    // kaupungin viereen mutta nimikilven vastakkaiselle puolelle, jottei
+    // piirros törmää tekstiin.
+    landmarks: [
+      { kind: 'pyramids', x: 683, y: 175 },        // Giza Kairon eteläpuolella
+      { kind: 'tablemountain', x: 490, y: 880 },   // Pöytävuori Kapkaupungin luoteispuolella
+      { kind: 'snowpeak', x: 728, y: 548 },        // Kilimandžaron lumihuippu
+      { kind: 'dhow', x: 894, y: 616 },            // dhow Sansibarin edustalla
     ],
     ship: { x: 214, y: 548 },
     serpent: { x: 852, y: 902 },

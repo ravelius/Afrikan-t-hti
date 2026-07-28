@@ -55,6 +55,8 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   yläpalkissa päiväkirjan päivämäärä, isoisän aikataulu Afrikalle ja
   80 päivän ennätys passin kunniamerkintänä.
 - Yläpalkkiin pelkkä kukkaro, siirtorenkaat hillityiksi ja vaakalukko: ✅
+- Paketti 12 (luonnoskirjan pulmat ja maamerkit): ✅ (28.7.2026) — viisi
+  pulmaa Afrikalle, piirrokset SVG-koodina ja neljä maamerkkiä kartalle.
 - Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
   tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
   tarkistettu artikkeliotsikko.
@@ -551,7 +553,7 @@ Toteutus:
   testataan virhepolut tekaistulla vastauksella.
 - Versionostot, standalone-buildi, kuvakaappaus dialogista.
 
-## Paketti 12: Isoisän luonnoskirjan pulmat ja kartan maamerkit (Afrikka)
+## Paketti 12: Isoisän luonnoskirjan pulmat ja kartan maamerkit (Afrikka) — VALMIS
 
 Omistajan idea: muutama erikoistehtävä, jossa **kauniisti piirretty
 yksinkertainen pulma** — Verne-ajan hengessä, kuin isoisän päiväkirjaan

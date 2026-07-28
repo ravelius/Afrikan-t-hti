@@ -5,6 +5,7 @@ import {
   PACKS, packById, allQuestions, factSource, factText, factVoice, isSourceUrl,
   sourceLabel, sourceList, voiceTitle,
 } from '../js/pack.js';
+import { hasSketch } from '../js/packs/africa-puzzles.js';
 
 /** Lähde on merkkijono tai lista merkkijonoja; verkko-osoite vain http(s). */
 function checkSources(source, where) {
@@ -29,7 +30,7 @@ import {
   QUIZ_SECONDS, SEA_FARE, HINT_EVERY_TURNS,
   XP_NEW_CITY, XP_NEW_BOARD, XP_HARD_ANSWER, XP_STAR,
   TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
-  FORM_WEIGHTS, MAP_CHOICES,
+  FORM_WEIGHTS, MAP_CHOICES, XP_PUZZLE,
 } from '../js/game.js';
 import {
   articleUrl, BAD_IMAGE, fetchImage, fetchSummary, parseArticle, parseSummary,
@@ -367,6 +368,14 @@ for (const pack of PACKS) {
 
   test(`${pack.id}: koristeet ovat vedessä ja irti pelialueesta`, () => {
     const { decor } = pack;
+    /** Pisteen etäisyys janasta a–b. */
+    const segDist = (p, a, b) => {
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const pit = dx * dx + dy * dy;
+      const t = pit === 0 ? 0 : Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / pit));
+      return Math.hypot(p.x - (a.x + t * dx), p.y - (a.y + t * dy));
+    };
     const cityDist = (p) =>
       Math.min(...pack.cities.map((c) => Math.hypot(c.x - p.x, c.y - p.y)));
 
@@ -382,6 +391,36 @@ for (const pack of PACKS) {
     if (decor.serpent) {
       assert.ok(!isOnLand([decor.serpent.x, decor.serpent.y], pack.map), 'merikäärme on maalla');
       assert.ok(cityDist(decor.serpent) >= 70, 'merikäärme on liian lähellä kaupunkia');
+    }
+
+    // Maamerkit ovat tarkoituksella lähellä kaupunkiaan (ne vihjaavat
+    // pulmista), joten niille pätee löysempi etäisyys kuin merikoristeille.
+    // Ne eivät silti saa peittää kaupunkia, sen nimeä eivätkä reittiä.
+    for (const mark of decor.landmarks ?? []) {
+      const nimi = `maamerkki ${mark.kind}`;
+      assert.ok(
+        mark.x > 40 && mark.x < 960 && mark.y > 40 && mark.y < 960,
+        `${nimi} on kartan reunan ulkopuolella`,
+      );
+      assert.ok(cityDist(mark) >= 34, `${nimi} peittää kaupungin`);
+      // Piirros on noin 70 x 46 yksikköä; nimikilpi ei saa jäädä sen alle.
+      for (const c of pack.cities) {
+        const nx = c.x + (c.lx ?? 0);
+        const ny = c.y + (c.ly ?? 0);
+        assert.ok(
+          Math.abs(nx - mark.x) > 40 || Math.abs(ny - mark.y) > 26,
+          `${nimi} peittää nimen ${c.name}`,
+        );
+      }
+      for (const e of packBoard.edges) {
+        const a = pack.cities.find((c) => c.id === e.a);
+        const b = pack.cities.find((c) => c.id === e.b);
+        if (!a || !b) continue;
+        assert.ok(
+          segDist(mark, a, b) >= 18,
+          `${nimi} osuu reitille ${a.name}–${b.name}`,
+        );
+      }
     }
 
     // Otsikko selitteineen ei saa peittää kaupunkeja eikä reittejä.
@@ -2193,4 +2232,198 @@ test('fetchSummary ei kutsu verkkoa ilman otsikkoa', async () => {
   const s = await fetchSummary('', { fetchImpl: async () => { kutsuja++; return { ok: false }; } });
   assert.equal(s, null);
   assert.equal(kutsuja, 0);
+});
+
+// --- paketti 12: isoisän luonnoskirjan pulmat -------------------------------
+
+test('Afrikan pulmadata on ehjä', () => {
+  const puzzles = packById('africa').puzzles ?? [];
+  assert.equal(puzzles.length, 5, 'Afrikalla pitää olla viisi pulmaa');
+  const cityIds = new Set(packById('africa').cities.map((c) => c.id));
+  const nahdyt = new Set();
+  for (const p of puzzles) {
+    assert.ok(p.id && typeof p.id === 'string', 'pulmalta puuttuu id');
+    assert.ok(!nahdyt.has(p.id), `sama pulma-id kahdesti: ${p.id}`);
+    nahdyt.add(p.id);
+    assert.ok(cityIds.has(p.city), `pulman ${p.id} kaupunki ${p.city} ei ole laudalla`);
+    assert.ok(hasSketch(p.id), `pulmalta ${p.id} puuttuu piirros`);
+    assert.ok(p.title && p.title.length > 2, `pulmalta ${p.id} puuttuu otsikko`);
+    assert.ok(p.q && p.q.length > 20, `pulman ${p.id} kysymys on liian lyhyt`);
+    assert.equal(p.options.length, 4, `pulmalla ${p.id} ei ole neljää vaihtoehtoa`);
+    assert.equal(new Set(p.options).size, 4, `pulmalla ${p.id} on kaksi samaa vaihtoehtoa`);
+    assert.ok(
+      Number.isInteger(p.correct) && p.correct >= 0 && p.correct < 4,
+      `pulman ${p.id} oikea vastaus on virheellinen`,
+    );
+    assert.ok(p.fact && p.fact.length > 40, `pulmalta ${p.id} puuttuu selitys`);
+    checkSources(p.source, `pulma "${p.id}"`);
+  }
+  // Yksi kaupunki, yksi pulma: muuten toinen jäisi ikuisesti avaamatta.
+  const kaupungit = puzzles.map((p) => p.city);
+  assert.equal(new Set(kaupungit).size, kaupungit.length, 'kahdella pulmalla sama kaupunki');
+});
+
+/** Peli, jossa matkaaja seisoo annetussa kaupungissa. */
+function puzzleGame(seed, city) {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
+    seed,
+  });
+  game.player.pos = { type: 'city', city };
+  return game;
+}
+
+test('pulma odottaa pulmakaupungissa ja avautuu kerran pelissä', () => {
+  const puzzle = packById('africa').puzzles[0];
+  const game = puzzleGame(401, puzzle.city);
+
+  assert.ok(game.pendingPuzzle(), 'pulman pitäisi odottaa');
+  assert.ok(game.openPuzzle().ok);
+  assert.equal(game.quiz.kind, 'puzzle');
+  assert.equal(game.quiz.options.length, 4);
+  assert.equal(game.quiz.seconds, null, 'pulmassa ei ole kelloa');
+
+  game.answerQuiz(game.quiz.correct);
+  game.closeQuiz();
+
+  // Sama kaupunki uudelleen: pulma ei enää aukea.
+  assert.equal(game.pendingPuzzle(), null, 'pulma avautui toisen kerran');
+  assert.equal(game.openPuzzle().ok, false);
+});
+
+test('pulmakaupungin ulkopuolella ei ole pulmaa', () => {
+  const pulmakaupungit = new Set(packById('africa').puzzles.map((p) => p.city));
+  const muu = packById('africa').cities.find((c) => !pulmakaupungit.has(c.id));
+  const game = puzzleGame(402, muu.id);
+  assert.equal(game.pendingPuzzle(), null);
+});
+
+test('oikea pulma tuo kokemuspisteet, väärä ei rankaise', () => {
+  const puzzle = packById('africa').puzzles[0];
+
+  const oikein = puzzleGame(403, puzzle.city);
+  const xpEnnen = oikein.player.xp ?? 0;
+  const rahaEnnen = oikein.player.money;
+  oikein.openPuzzle();
+  oikein.answerQuiz(oikein.quiz.correct);
+  assert.equal(oikein.quiz.right, true);
+  assert.equal((oikein.player.xp ?? 0) - xpEnnen, XP_PUZZLE);
+  assert.equal(oikein.player.money, rahaEnnen, 'pulma ei liikuta rahaa');
+
+  const vaarin = puzzleGame(404, puzzle.city);
+  const xp2 = vaarin.player.xp ?? 0;
+  const raha2 = vaarin.player.money;
+  vaarin.openPuzzle();
+  vaarin.answerQuiz((vaarin.quiz.correct + 1) % 4);
+  assert.equal(vaarin.quiz.right, false);
+  assert.equal(vaarin.player.xp ?? 0, xp2, 'väärästä ei saa kokemuspisteitä');
+  assert.equal(vaarin.player.money, raha2, 'väärästä ei rangaista rahalla');
+  // Oikea ratkaisu on silti näkyvissä.
+  assert.ok(vaarin.quiz.options[vaarin.quiz.correct]);
+  assert.ok(vaarin.quiz.fact);
+});
+
+test('pulma ei käännä laattaa eikä päätä vuoroa', () => {
+  const puzzle = packById('africa').puzzles.find((p) => p.city !== 'kairo');
+  const game = puzzleGame(405, puzzle.city);
+  game.tokens.set(puzzle.city, 'emerald');
+  game.phase = 'action';
+  const vuoroEnnen = game.turnCount;
+
+  game.openPuzzle();
+  game.answerQuiz(game.quiz.correct);
+  game.closeQuiz();
+
+  assert.ok(game.tokens.has(puzzle.city), 'pulma käänsi laatan');
+  assert.equal(game.turnCount, vuoroEnnen, 'pulma päätti vuoron');
+  assert.equal(game.phase, 'action', 'vuoro jatkuu siitä mihin jäätiin');
+});
+
+test('pulmassa ei ole apukeinoja', () => {
+  const puzzle = packById('africa').puzzles[0];
+  const game = puzzleGame(406, puzzle.city);
+  game.openPuzzle();
+  assert.equal(game.actionFiftyFifty().ok, false, '50:50 ei kuulu pulmaan');
+  assert.equal(game.actionHint().ok, false, 'pulmassa ei ole vihjettä');
+});
+
+test('nähdyt pulmat säilyvät tallennuksessa', () => {
+  const puzzle = packById('africa').puzzles[0];
+  const game = puzzleGame(407, puzzle.city);
+  game.openPuzzle();
+  game.answerQuiz(game.quiz.correct);
+  game.closeQuiz();
+
+  const kopio = Game.fromJSON(JSON.parse(JSON.stringify(game.toJSON())));
+  kopio.player.pos = { type: 'city', city: puzzle.city };
+  assert.equal(kopio.pendingPuzzle(), null, 'pulma unohtui tallennuksessa');
+});
+
+test('vanha tallenne ilman pulmatietoa jatkuu', () => {
+  const game = puzzleGame(408, 'tanger');
+  const data = JSON.parse(JSON.stringify(game.toJSON()));
+  delete data.puzzlesSeen;
+  const kopio = Game.fromJSON(data);
+  assert.ok(kopio.puzzlesSeen instanceof Set);
+  assert.equal(kopio.puzzlesSeen.size, 0);
+});
+
+test('vesileilipulmassa vain merkitty vastaus tuottaa neljä mittaa', () => {
+  // Sarjat luetaan pulman vaihtoehdoista sanasta sanaan, jotta testi kaatuu,
+  // jos joku muokkaa tekstiä muuttamatta logiikkaa (tai päinvastoin).
+  const puzzle = packById('africa').puzzles.find((p) => p.id === 'vesileilit');
+  const KOOT = { kolmonen: 3, viitonen: 5 };
+
+  /** Suorittaa yhden sarjan ja palauttaa leilien sisällöt. */
+  const aja = (teksti) => {
+    const tila = { kolmonen: 0, viitonen: 0 };
+    for (const askel of teksti.toLowerCase().split(',').map((s) => s.trim())) {
+      const tayta = askel.match(/^täytä (kolmonen|viitonen)$/);
+      const tyhjenna = askel.match(/^tyhjennä (kolmonen|viitonen)$/);
+      const kaadaTayteen = askel.match(/^kaada (?:siitä )?(kolmonen|viitonen) täyteen$/);
+      const kaada = askel.match(/^kaada (?:se |kolmonen |viitonen |(?:kolmosen|viitosen) loput )?(kolmoseen|viitoseen)$/);
+
+      if (tayta) {
+        tila[tayta[1]] = KOOT[tayta[1]];
+      } else if (tyhjenna) {
+        tila[tyhjenna[1]] = 0;
+      } else if (kaadaTayteen) {
+        const kohde = kaadaTayteen[1];
+        const lahde = kohde === 'kolmonen' ? 'viitonen' : 'kolmonen';
+        const maara = Math.min(tila[lahde], KOOT[kohde] - tila[kohde]);
+        tila[lahde] -= maara;
+        tila[kohde] += maara;
+      } else if (kaada) {
+        const kohde = kaada[1] === 'kolmoseen' ? 'kolmonen' : 'viitonen';
+        const lahde = kohde === 'kolmonen' ? 'viitonen' : 'kolmonen';
+        const maara = Math.min(tila[lahde], KOOT[kohde] - tila[kohde]);
+        tila[lahde] -= maara;
+        tila[kohde] += maara;
+      } else {
+        assert.fail(`tunnistamaton askel: "${askel}"`);
+      }
+    }
+    return tila;
+  };
+
+  puzzle.options.forEach((teksti, i) => {
+    const { kolmonen, viitonen } = aja(teksti);
+    const nelja = kolmonen === 4 || viitonen === 4;
+    if (i === puzzle.correct) {
+      assert.ok(nelja, `merkitty oikea vastaus ei tuota neljää: ${kolmonen}/${viitonen}`);
+    } else {
+      assert.ok(!nelja, `väärä vaihtoehto ${i} tuottaakin neljä mittaa`);
+    }
+  });
+});
+
+test('kultapunnuspulmassa vain merkitty vastaus tasapainottaa vaa%an', () => {
+  const puzzle = packById('africa').puzzles.find((p) => p.id === 'punnukset');
+  const { kulta, vasen, oikea } = puzzle.sketch;
+  const vaje = (kulta + vasen) - oikea.reduce((a, b) => a + b, 0);
+  puzzle.options.forEach((teksti, i) => {
+    const tasapaino = Number(teksti) === vaje;
+    if (i === puzzle.correct) assert.ok(tasapaino, `merkitty vastaus ${teksti} ei tasapainota (tarvitaan ${vaje})`);
+    else assert.ok(!tasapaino, `väärä vaihtoehto ${teksti} tasapainottaakin vaa'an`);
+  });
 });

@@ -1924,3 +1924,42 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   font-size: 0.78rem;
   opacity: 0.8;
 }
+
+/*
+ * Isoisän luonnoskirjan pulma: piirros on osa korttia, ei kuvitusta sen
+ * vieressä. Sama mustetyyli kuin kartan koristeissa — ohut viiva, ei väriä.
+ */
+.quiz-sketch {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  /* Korkeus on annettava erikseen: pelkkä viewBox ei anna svg:lle
+     luontaista korkeutta flex-asettelussa, jolloin piirros litistyy pois. */
+  aspect-ratio: 320 / 150;
+  height: auto;
+  flex: none;
+  margin: 0 auto 0.8rem;
+  color: #3b2a18;
+}
+
+.quiz-sketch .ink {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.quiz-sketch .ink-fill {
+  fill: currentColor;
+  fill-opacity: 0.72;
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+
+.quiz-sketch .ink-text {
+  fill: currentColor;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  text-anchor: middle;
+}
