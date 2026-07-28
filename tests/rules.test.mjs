@@ -1961,3 +1961,28 @@ test('Afrikan tapahtumakortit ovat ehjiä ja reiluja', () => {
   const tekstit = events.map((e) => e.text);
   assert.equal(new Set(tekstit).size, tekstit.length, 'sama tapahtuma kahdesti');
 });
+
+test('Afrikan väittämät ovat ehjiä ja tasapainossa', () => {
+  const claims = packById('africa').questions.claims;
+  assert.ok(Array.isArray(claims) && claims.length >= 12, 'väittämiä on liian vähän');
+  const tosia = claims.filter((c) => c.correct === true).length;
+  const taruja = claims.filter((c) => c.correct === false).length;
+  assert.equal(tosia + taruja, claims.length, 'correct pitää olla boolean');
+  // Noin puolet totta: muuten pelaaja oppii vastaamaan aina samaa.
+  assert.ok(Math.abs(tosia - taruja) <= 2, `epätasapaino: ${tosia} tosi / ${taruja} tarua`);
+  for (const c of claims) {
+    assert.ok(c.q && c.q.length >= 80, `liian lyhyt väittämä: ${c.q}`);
+    assert.ok(c.fact && c.fact.length >= 60, `liian lyhyt selitys: ${c.q}`);
+    checkSources(c.source, `väittämä "${c.q}"`);
+  }
+  const tekstit = claims.map((c) => c.q);
+  assert.equal(new Set(tekstit).size, tekstit.length, 'sama väittämä kahdesti');
+});
+
+test('väittämät eivät ole mukana monivalintojen eheystarkistuksessa', () => {
+  const pack = packById('africa');
+  const kaikki = allQuestions(pack);
+  assert.ok(kaikki.length > 0);
+  assert.ok(kaikki.every((q) => Array.isArray(q.options)), 'väittämä vuoti monivalintoihin');
+  assert.ok(!kaikki.some((q) => q.key === 'claims'));
+});
