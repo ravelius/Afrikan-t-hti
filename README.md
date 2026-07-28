@@ -2,95 +2,88 @@
 
 Selaimessa pelattava seikkailupeli, jonka innoittajana on klassinen Afrikan tähti
 -lautapeli. Matkakirja on itsenäinen, avoin harrastusprojekti, jolla ei ole
-yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei käännösvaihetta — pelkkää HTML:ää, CSS:ää ja
-JavaScriptiä. Pelin ideana on oppia ja opettaa maiden kulttuurista, arjesta ja
-maantieteestä kiinnostavasti.
+yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei
+käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana on
+oppia ja opettaa maiden kulttuurista, arjesta ja maantieteestä kiinnostavasti.
 
-- **Tarina:** vanhan maailman herrasmies lähtee Lontoosta puvuntakki päällä
-  ja matkalaukku kädessä katsomaan, millaiseksi maailma on muuttunut. Vanha
-  kartta ja punnat, nykypäivän maailma — peli alkaa maailmankartalta, jolta
-  ensimmäinen kohde valitaan ilmaiseksi
-- **Kymmenen pelilautaa:** koko maapallon kattava Maailma (Magellanin
-  kompassi), kaikki kuusi asuttua mannerta — Afrikka (Afrikan tähti), Eurooppa
-  (Meripihkahuoneen aarre), Aasia (Keisarin jadesinetti), Oseania (Eteläristin
-  helmi), Pohjois-Amerikka (Montezuman aarre) ja Etelä-Amerikka (El Doradon
-  aarre) — sekä Lähi-itä (Sheban kuningattaren aarre), ensimmäisenä
-  maakohtaisena karttana Suomi (Lapin kulta) järvineen ja ensimmäisenä
-  kaupunkilautana Istanbul (Sulttaanin timantti). Jokaisella laudalla on oma
-  pääaarteensa — Afrikan tähti on vain Afrikassa
-- **Vaellus:** peli on yksin pelattava eikä pääty koskaan — kerää löytöjä ja
-  siirry porttikaupungeista laudalta toiselle, maailmankartalta mantereille,
-  maihin ja kaupunkitasolle asti
-- **Porttikaupungit:** jokaisella laudalla on muutama kaupunki, josta lähtee
-  pitkä lento toiselle laudalle — Tangerista Madridiin, Dakarista Brasiliaan,
-  Dubaista Mumbaihin. Kartalla portin tunnistaa katkoviivakehästä, ja lennon
-  jälkeen karttanäkymä vaihtuu suoraan perille. Kartta itsessään on staattinen:
-  koko lauta näkyy aina kerralla, eikä sitä tarvitse raahata tai zoomata
+## Tarina
+
+Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, kukkarollinen
+puntia ja kulunut päiväkirja. Ensimmäisellä sivulla lukee *"Maailman ympäri
+kahdeksassakymmenessä päivässä"* — viimeinen lause päättyy kesken.
+
+Nuori herra Fogg lähtee kirjoittamaan sen loppuun, mielellään nopeammin.
+Mukana matkustaa isoisän päiväkirja vuodelta 1873: sen merkinnät ovat
+vuoroin hämmentävän tarkkoja ja vuoroin toivottoman vanhentuneita, ja juuri
+siitä jännitteestä pelin tarina syntyy. Piikki osuu aina Foggiin, klubiin
+tai imperiumiin — ei koskaan maihin ja ihmisiin, joita matkalla kohdataan
+([docs/tarina.md](docs/tarina.md), [docs/periaatteet.md](docs/periaatteet.md)).
+
+Peli alkaa maailmankartalta: napauta kaupunkia, ja kone lentää Lontoosta
+kohteeseen vanhan seikkailufilmin karttakohtauksena — punainen viiva piirtyy
+koneen perässä isoisän karttalehdelle, jolla kulkevat kääntöpiirit ja himmeät
+päiväkirjamerkinnät. Matka jatkuu, kun astut ulos koneesta.
+
+## Peli pähkinänkuoressa
+
+- **Yksinpeli ilman loppua:** vaellus alkaa maailmankartalta ja jatkuu
+  porttikaupunkien kautta laudalta toiselle — mantereille, maihin ja
+  kaupunkitasolle. Löytöjä voi kerätä niin kauan kuin huvittaa.
+- **Kymmenen pelilautaa**, jokaisella oma pääaarre: Maailma (Magellanin
+  kompassi), Afrikka (Afrikan tähti — vain täällä), Eurooppa
+  (Meripihkahuoneen aarre), Aasia (Keisarin jadesinetti), Oseania
+  (Eteläristin helmi), Pohjois-Amerikka (Montezuman aarre), Etelä-Amerikka
+  (El Doradon aarre), Lähi-itä (Sheban kuningattaren aarre), Suomi (Lapin
+  kulta) ja Istanbul (Sulttaanin timantti).
+- **Afrikka on viimeistelty pisimmälle** ("Afrikka ensin"): elävät
+  kahden äänen tekstit joka kaupungille, isoisän väittämät, tapahtumakortit,
+  karttakysymykset, luonnoskirjan pulmat ja kartalle piirretyt maamerkit
+  (Gizan pyramidit, Pöytävuori, Kilimandžaro, dhow). Muut laudat saavat
+  saman käsittelyn lauta kerrallaan.
+- **Aika on vastustaja, ei rangaistus:** vuoro on kuusi tuntia ja yläpalkissa
+  kulkee päiväkirjan päivämäärä ("Päivä 14, ilta"). Isoisän aikataulu
+  kommentoi matkaa samoilta päiviltä, ja 80 päivän ennätyksen alittamisesta
+  saa kunniamerkinnän passiin — ajan loppuminen ei päätä peliä koskaan.
+- **Pysähdykset vaihtelevat:** tavallisen monivalinnan rinnalla isoisän
+  väittämät (totta vai tarua), karttakysymykset (mikä näistä on pohjoisin?
+  mihin pääsee suoraan yhtä reittiä?) ja tapahtumakortit, joissa ei kysytä
+  mitään vaan matkalla sattuu jotain pientä ja reilua.
+- **Isoisän luonnoskirjan pulmat:** viisi kauniisti piirrettyä
+  päättelytehtävää Afrikassa — hieroglyfiluvut, Ashantien kultapunnukset,
+  xhosan naksutusmerkit, käsikirjoituksen kuunvaiheet ja karavaanin
+  vesileilit. Pulmat avautuvat kerran pelissä kaupunkiin saavuttaessa ja
+  varioituvat pelikerrasta toiseen: sama grafiikka, eri tehtävä.
+- **Isoisä on merkinnyt paikkoja karttaansa:** aarrekaupunkiin saapuessa
+  kortti näyttää paikan valokuvan ja kysyy, tutkitko paikan. Aarteet
+  avataan tiedolla, ei rahalla.
+- **Lue lisää:** jokaisesta Afrikan kaupungista voi avata Wikipedian
+  artikkelin kuvineen suoraan pelistä (lähdemaininta CC BY-SA;
+  montaasipääkuvat vaihdetaan automaattisesti yhteen valokuvaan).
+- **Kaksi ääntä:** kartan päiväkirjassa vuorottelevat isoisän merkinnät
+  vuodelta 1873 ja nuoren herran nykyhavainnot — yli 1000 paikkatietoa,
+  Afrikassa pieniä yllättäviä arkihuomioita isojen nähtävyyksien rinnalla.
+  Harvakseltaan päiväkirjasta löytyy taitettu sivu, joka vihjaa pääaarteen
+  suunnasta nimeämättä kaupunkia.
+- **Yli 1500 kysymystä ja väittämää** kolmella vaikeustasolla: paikan omat
+  kysymykset arvotaan aina ennen laudan yleispakkaa, joten kysymys liittyy
+  maahan jossa seisot. Vaikeasta kysymyksestä 100 punnan bonus; 40 punnan
+  vihje, 80 punnan 50:50 ja 45 sekunnin tiimalasi auttavat pinteessä.
 - **Rosvon kaksintaistelu:** rosvolaatta ei vie rahoja suoraan, vaan rosvo
-  esittää kiperän kysymyksen kahdeksalla vaihtoehdolla — suora oikea vastaus
-  tuo 200 punnan saaliin, helpotus maksaa puolet rahoista, ja kolmella
-  hevosenkengällä rosvon voi ohittaa
-- Yksinpeli: nimi ja kysymysten taso valitaan alussa, ja matka alkaa
-  maailmankartalta. Käyttöliittymän tekstit naksuvat ruudulle kuin vanhalla
-  matkakirjoituskoneella
-- Aarteet avataan **vain tietovisalla**: arvottu monivalintakysymys (A–D) paikan
-  maantiedosta, kulttuurista ja yleistiedosta; 40 punnan vihje ja 80 punnan 50:50
-  auttavat pinteessä, ja tiimalasi antaa vastausaikaa 45 sekuntia
-- SVG-kartta, jossa kymmeniä kaupunkeja, maareitit, laivareitit ja lentoyhteydet
-- Euroopan laudalla 37 kaupunkia Lissabonista Moskovaan ja Kreetalta Tromssaan:
-  Kanaalitunneli, Baltian pääkaupungit, Itämeren lautat, Välimeren saaret ja
-  Mustanmeren satamat
-- Etelä-Amerikan laudalla 37 kaupunkia Panamasta Kap Hornille: Andien
-  ylängöt, Amazonin jokireitit, Atacaman autiomaa ja Patagonian vuonot —
-  Galápagos, Falkland ja Robinson Crusoen saari vain laivalla
-- Oseanian laudalla 32 kaupunkia Perthistä Fidžille: punainen keskusta,
-  Suuri valliriutta, Uusi-Guinea, Uusi-Seelanti ja Tyynenmeren saaret —
-  laudalla on enemmän laivamatkoja kuin millään muulla
-- Aasian laudalla 37 kaupunkia Teheranista Tokioon ja Jakutskista Jakartaan:
-  Silkkitie, Himalaja, Siperian taiga ja trooppinen saaristo — Japani, Sahalin,
-  Taiwan, Sri Lanka, Sumatra, Java, Borneo ja Luzon vain laivalla
-- Pohjois-Amerikan laudalla 37 kaupunkia Nomesta Panamaan: Kalliovuoret,
-  preeria, Suuret järvet ja Väli-Amerikan kannas — Grönlanti, Newfoundland,
-  Kuuba, Bermuda ja Havaiji omina saarinaan. Panama ja New York yhdistävät
-  laudan Etelä-Amerikkaan ja Maailma-lautaan
-- Suomen laudalla 19 kaupunkia Helsingistä Utsjoelle: Saimaa, Päijänne,
-  Oulujärvi ja Inarijärvi oikeina järvinä, järvilaivat Savonlinnan
-  saarikaupunkiin, ruotsinlaiva Maarianhaminan kautta Tukholmaan ja Lapin
-  kultamaat — ensimmäinen maakohtainen kartta
-- Laatat: pääaarre, hevosenkengät, ryöstäjät, jalokivet ja tyhjät — jalokivet
-  vaihtuvat laudan mukaan: Lähi-idässä turkoosi, Euroopassa meripihka,
-  Suomessa spektroliitti, Pohjois-Amerikassa Klondiken kulta
-- Yli 720 kysymystä kolmella vaikeustasolla: jokaisella kaupungilla omat
-  kysymyksensä + laudan yleinen varapakka. Pelaajakohtainen tasovalinta
-  (esim. lapsille helpot) ja vaikeasta kysymyksestä 100 punnan bonus
-- Suomenkielinen käyttöliittymä ja tietoruutu, jossa puhuu vuorotellen kaksi
-  ääntä: isoisän päiväkirja vuodelta 1873 ja nuoren herran nykyhavainto —
-  yli 660 tietoa, vähintään kaksi jokaisesta kaupungista
-- Käsin piirretyn aarrekartan ulkoasu: pergamentti, mustepiirretty rannikko,
-  kompassiruusu, aallot ja maaston merkit — myös kysymyslaatikot ovat samaa
-  pergamenttia käsin piirrettyine katkoviivoineen
-- Animoitu rytmi: nappula hyppii reittiä piste kerrallaan ja tapahtumat jäävät
-  hetkeksi näkyviin
-- Kolmiulotteinen noppa heitetään nappulan vierestä kartan vasemman alakulman
-  merelle: lento lasketaan oikealla painovoimalla, noppa kimpoaa pienenevin
-  pompuin, pyörintä hidastuu ja varjo kasvaa ja haalistuu korkeuden mukaan.
-  Lepopaikka on avomerellä, joten noppa ei jää nappuloiden päälle.
-- Kartan yksityiskohdissa pieniä, aina samanlaisina toistuvia vaihteluita:
-  reittipisteet mutkittelevat ja vaihtelevat koossa ja tummuudessa, kaupungit
-  ovat aavistuksen soikeita ja nimet hitusen vinossa
-- Syntetisoidut äänet kaikille toiminnoille (Web Audio, ei äänitiedostoja):
-  noppa, askeleet, laiva, lento, oikea ja väärä vastaus, aarteen paljastus,
-  ryöstäjä ja voitto — yläpalkin 🔊-painike vaimentaa
-- Oikean vastauksen jälkeen ruudulle tulee ensin "Oikein!", tauko ja sitten
-  aarteen paljastus: iso käsin piirretty laatta kääntyy 3D:nä ympäri ja näyttää
-  löydön. Laatta, sen kehät, viivoitus ja taustan sädeviivat on piirretty samalla
-  mustekynätyylillä kuin kartta
-- Koko ruudun sovelluskehys: kaikki oleellinen näkyy kerralla, vain tapahtumaloki vierii
-- **Päivitä**-painike hakee uusimman version: se tyhjentää palvelutyöntekijän
-  välimuistin ja lataa pelin uudelleen kesken olevaa peliä menettämättä
-- Asennettava sovellus (PWA): toimii offline ja jatkaa keskeytynyttä peliä
-- Mitoitettu iPadille ja iPhonelle: sama asettelu skaalautuu, eikä mikään vaadi
-  vierittämistä
+  esittää kiperän kysymyksen kahdeksalla vaihtoehdolla — oikea vastaus tuo
+  200 punnan saaliin, ja kolmella hevosenkengällä rosvon voi ohittaa.
+- **Kokemuspisteet ja vihreä passi:** uusi kaupunki 10, uusi lauta 50,
+  vaikea kysymys 25, pulma 25 ja pääaarre 100 pistettä; tietoprosentti
+  kertoo osumatarkkuuden. Passi saa leiman jokaisesta laudasta, ja leimat
+  säilyvät pelikertojen yli.
+- **Käsin piirretyn aarrekartan ulkoasu:** pergamentti, mustepiirretty
+  rannikko, kompassiruusu, maamerkit ja filmivinjetti; tekstit naksuvat
+  ruudulle kuin vanhalla matkakirjoituskoneella, ja kolmiulotteinen noppa
+  heitetään kartan merelle. Kartta näkyy aina kokonaan — ei raahausta.
+- **Syntetisoidut äänet** kaikille toiminnoille (Web Audio, ei
+  äänitiedostoja): noppa, askeleet, laiva, lento, vastaukset, paljastus.
+- **Asennettava sovellus (PWA):** toimii offline, jatkaa keskeytyneen pelin
+  automaattisesti, ja **Päivitä**-painike hakee uusimman version peliä
+  menettämättä. Mitoitettu iPadille ja iPhonelle.
 
 ## Julkaisu puhelimeen (GitHub Pages)
 
@@ -127,82 +120,49 @@ seuraavalla avauskerralla; *Uusi peli* aloittaa alusta.
 
 ## Säännöt
 
-**Tavoite.** Löydä laudan tähtiaarre — Afrikassa Afrikan tähti, Lähi-idässä Idän tähti —
-ja palaa sen kanssa johonkin aloituskaupungeista (Afrikassa Tanger tai Kairo, Lähi-idässä
-Istanbul tai Kairo). Kun tähti on löytynyt, myös hevosenkengän haltija voi voittaa
-pääsemällä aloituskaupunkiin ensimmäisenä.
+**Tavoite.** Löydä laudan pääaarre — Afrikassa Afrikan tähti — ja vie se
+johonkin laudan aloituskaupungeista. Vaelluksessa peli ei pääty: tähti on
+2000 punnan arvoinen löytö, ja matka jatkuu porttikaupunkien kautta uusille
+laudoille. Isoisän 80 päivän ennätyksen alittaminen tuo kunniamerkinnän.
 
 **Vuoron kulku.**
 
-1. **Valitse matkustustapa**
+1. **Valitse matkustustapa.** Näkyvillä on kerrallaan vain muutama nappi:
 
 | Tapa | Selitys |
 | --- | --- |
-| 🥾 Maitse | Ilmainen, kulkee vain maareittejä |
-| ⛵ Laivalla (100 p) | Kulkee vain meriteitä; maksu peritään satamasta lähdettäessä |
-| ✈ Lennä (300 p) | Suoraan toiselle lentokenttäkaupungille |
-| ❓ Jää paikalleen | Aarrekaupungissa: kokeile kysymystä liikkumatta |
+| 🥾 Jalan | Ilmainen; lähtee heti ja heittää nopan samalla painalluksella |
+| ⛵✈ Laiva & lento… | Avaa loput: laiva (100 p), lennot (300 p), portit ja tietoportit |
+| 🔍 Tutki paikka | Isoisän merkitsemässä kaupungissa: kokeile liikkumatta |
 
-   Jos tarjolla on vain yksi tapa — esimerkiksi sisämaan kaupungissa tai kesken
-   reittiä — se valitaan automaattisesti ja vuoro alkaa suoraan nopanheitosta.
+   Jos vaihtoehtoja on vain yksi — esimerkiksi sisämaassa tai kesken reitin —
+   noppa pyörähtää itsestään.
 
-2. **Heitä noppa** — noppa pyörii kartalla ja jää siihen lepäämään. Silmäluku on
-   askelten enimmäismäärä.
-3. **Valitse kohde** kartalta.
-4. **Kokeile tietovisaa**, jos päädyit kaupunkiin jossa on avaamaton aarre.
-   Vastauksen jälkeen vuoro vaihtuu.
+2. **Heitä noppa** — noppa jää lepäämään kartan merelle. Silmäluku on
+   askelten enimmäismäärä: tasalukua ei tarvita, ja kaupunkiin saa pysähtyä
+   jo matkan varrella. Kesken reitin ei saa kääntyä takaisin.
+3. **Valitse kohde** kartalta napauttamalla.
+4. **Tutki paikka**, jos saavuit isoisän merkitsemään kaupunkiin — pysähdys
+   voi olla tietovisa, isoisän väittämä, karttakysymys tai tapahtumakortti.
+   Sen jälkeen vuoro vaihtuu ja kello siirtyy kuusi tuntia.
 
-**Tietovisa.** Aarrekaupungissa saat arvotun kysymyksen ja neljä vaihtoehtoa (A–D). Kysymykset liittyvät kaupungin maantietoon, kulttuuriin ja historiaan,
-ja pakassa on mukana myös yleisiä Afrikka-kysymyksiä. Oikea vastaus avaa aarteen, väärästä
-vastauksesta vuoro päättyy — seuraavalla vuorolla samassa kaupungissa saa uuden kysymyksen.
-Sama kysymys ei toistu ennen kuin pakka on käyty läpi.
+**Portit.** Porttikaupungin tunnistaa katkoviivakehästä: sieltä pääsee
+lennolla (300 p) toiselle laudalle. Maakohtaiset kartat (esim. Suomi) eivät
+aukea rahalla vaan tiedolla — mantereen pääkaupungissa vastataan vaikeaan
+kysymykseen, ja oikea vastaus avaa portin ilmaiseksi.
 
-**Lentoreitit** näkyvät kartalla haalean punaisina pistekatkoviivoina.
+**Aarteet.** Jokaisessa isoisän merkitsemässä kaupungissa on yksi laatta.
+Oikea vastaus kääntää laatan; väärästä vuoro päättyy ja samassa kaupungissa
+saa uuden kysymyksen seuraavalla vuorolla. Laattoina ovat pääaarre,
+hevosenkengät, ryöstäjät, jalokivet (arvo 300–1000 puntaa suoraan kukkaroon)
+ja tyhjät — tyhjän kohdalla isoisän merkintä oli vanhentunut. Jalokivet
+vaihtuvat laudan mukaan: Lähi-idässä turkoosi, Euroopassa meripihka,
+Suomessa spektroliitti.
 
-**Kaksi ääntä.** Ohjauspaneelissa näkyy tietoa siitä paikasta, jossa vuorossa oleva
-pelaaja on, ja siinä puhuu vuorotellen isoisän päiväkirja ja nuoren herran havainto.
-Reitin varrella näytetään lähempänä olevan kaupungin tieto, ja tieto vaihtuu
-kierroksittain. Harvakseltaan päiväkirjasta löytyy taitettu sivu, joka vihjaa laudan
-pääaarteen suunnasta nimeämättä kaupunkia.
-
-**Kokemuspisteet ja passi.** Pisteitä kertyy matkasta: uusi kaupunki 10, uusi lauta 50,
-oikea vastaus vaikeaan kysymykseen 25 ja laudan pääaarre 100. Paneelin tietoprosentti
-kertoo, kuinka moneen kysymykseen on vastannut oikein. Vihreä passi saa leiman
-jokaisesta laudasta, jolla on käynyt — leimat säilyvät pelikertojen yli.
-
-**Rahan käyttö.** Rahalla ei voi ostaa aarteita, vaan sitä tarvitaan matkustamiseen ja
-vihjeisiin: 40 puntaa ostaa sanallisen vihjeen, 80 puntaa poistaa kysymyksestä kaksi
-väärää vaihtoehtoa (50:50), 100 puntaa maksaa laivamatkan ja 300 puntaa lennon.
-
-**Aikaraja.** Vastausaikaa on 45 sekuntia. Kysymyksen vieressä valuu piirretty tiimalasi,
-jonka hiekka putoaa yläkuvusta alakupuun; viimeiset kymmenen sekuntia näkyvät punaisena.
-Jos hiekka loppuu, vastaus lasketaan vääräksi ja vuoro päättyy.
-
-**Liikkuminen.** Silmäluku on askelten *enimmäismäärä* — tasalukua ei tarvita, vaan
-kaupunkiin saa pysähtyä jo matkan varrella. Jos silmäluku loppuu kesken reittiä,
-pysähdyt reitin varrelle. Reittiä voi vaihtaa kaupungissa, mutta kesken reitin ei saa
-kääntyä takaisin. Laivareitille (sininen katkoviiva) astuminen maksaa 100 puntaa, ja
-ilman rahaa laivaan ei pääse.
-
-**Aarteet.** Jokaisessa aarrekaupungissa on yksi laatta, ja kartalla näkyvät vain jo
-avatut aarteet omina kuvakkeinaan. Laattojen määrät vaihtelevat laudoittain (suluissa
-Afrikka / Lähi-itä):
-
-| Laatta | Määrä | Vaikutus |
-| --- | --- | --- |
-| ★ Tähti | 1 / 1 | Vie se kotiin ja voitat |
-| Ω Hevosenkenkä | 2 / 2 | Voittaa, jos ehtii kotiin ennen tähteä |
-| ☠ Ryöstäjä | 3 / 3 | Vie kaikki rahat |
-| ◆ Rubiini | 4 / 3 | 1000 puntaa |
-| ◆ Smaragdi | 5 / 4 | 600 puntaa |
-| ◆ Topaasi / Turkoosi | 6 / 6 | 300 puntaa |
-| · Tyhjä | 9 / 8 | Ei mitään |
-
-Jokainen aloittaa 300 punnalla. Jalokiven arvo lisätään heti pelaajan rahoihin.
-
-**Kotisääntö.** Jos pelaaja on rahaton eikä pääse mihinkään tavoitteeseen ilman
-laivalippua (esim. jumissa Sansibarissa), hän saa vuoronsa alussa 100 puntaa pankilta.
-Tämä estää pelin lukkiutumisen; alkuperäisessä pelissä vastaavaa sääntöä ei ole.
+**Rahan käyttö.** Rahalla ei osteta aarteita vaan matkoja ja apuja: laiva
+100 p, lento 300 p, vihje 40 p ja 50:50 80 p. Jokainen aloittaa 300 punnalla.
+Rahaton ja jumiin jäänyt matkaaja saa pankilta 100 puntaa (kotisääntö, jota
+alkuperäisessä pelissä ei ole).
 
 Kartat ja reitit ovat oma tulkintamme: kaupungit on sijoitettu todellisten
 koordinaattiensa mukaan ja reittien pituudet on tasapainotettu peliä varten.
@@ -214,26 +174,31 @@ index.html          runko ja dialogit
 css/styles.css      ulkoasu
 js/pack.js          karttapakettien rekisteri (laudat)
 js/packs/           yksi paketti per lauta: kartta, kaupungit, reitit,
-                    laatat, kysymykset ja teema (africa.js, middleeast.js)
+                    laatat, kysymykset, tekstit ja teema — Afrikalla myös
+                    väittämät, tapahtumat, pulmat (africa-puzzles.js),
+                    isoisän aikataulu ja wiki-otsikot
 js/tokens.js        laattatyypit ja pinon sekoitus
 js/rules.js         puhdas sääntölogiikka (siirrot, etäisyydet) — testattavissa Nodella
-js/game.js          pelitila, vuorot, laattojen kääntäminen, voittoehdot
-js/ai.js            bottien päätöksenteko
-js/mapart.js        aarrekartan grafiikka (pergamentti, rannikko, kompassi, aallot)
-js/sound.js         syntetisoidut ääniefektit ja äänien päälle/pois-asetus
-js/ui.js            kartan ja paneelin piirto, tietovisa, bottien ohjaus
-js/main.js          käynnistys, aloitusruutu ja pelin tallennus
+js/game.js          pelitila, vuorot, aika, laatat, pulmat ja voittoehdot
+js/wiki.js          Lue lisää: Wikipedian tiivistelmä, artikkeli ja kuvavalinta
+js/mapart.js        aarrekartan grafiikka (pergamentti, rannikko, maamerkit)
+js/sound.js         syntetisoidut ääniefektit
+js/ui.js            kartan ja korttien piirto, tietovisa, lentokohtaus
+js/main.js          käynnistys ja pelin tallennus
+js/ai.js            kysymysvalinnan apurit (testien käytössä; botit poistettu pelistä)
 sw.js               palvelutyöntekijä (offline-tuki)
 manifest.webmanifest  sovelluksen tiedot kotivalikkoa varten
 assets/             sovelluskuvakkeet
 tools/              yhden tiedoston koonti ja kuvakkeiden generointi
 tests/              node --test -testit säännöille ja kokonaiselle pelille
+docs/               tarina, periaatteet ja työlista
 ```
 
 ## Periaatteet
 
 Projektin arvopohja — miksi peli on olemassa ja millä perusteilla sisältö
 hyväksytään — on kirjattu tiedostoon [docs/periaatteet.md](docs/periaatteet.md).
+Tarinan säännöt ja kirjoitusohjeet ovat tiedostossa [docs/tarina.md](docs/tarina.md).
 
 ## Uuden laudan lisääminen
 
@@ -247,10 +212,10 @@ moottoriin ei tarvitse koskea. Ohjeet ovat tiedostossa
 npm test
 ```
 
-Testit kattavat laudan yhtenäisyyden, siirtojen laskennan (kaupunkiin ilman tasalukua,
-ei paluuta kesken reitin, laivamaksut), laattojen vaikutukset, tietovisan kulun ja
-kysymyspankin eheyden, voittoehdot, tallennuksen palautuksen sekä kokonaisen bottien
-pelaaman pelin päättymisen.
+Testit kattavat laudan yhtenäisyyden, siirtojen laskennan, laattojen
+vaikutukset, tietovisan ja sen erikoismuotojen kulun, pulmien generoinnin,
+kysymyspankkien eheyden (mm. ettei oikea vastaus lue saman laudan kartalla),
+ajan kirjanpidon, tallennuksen palautuksen ja voittoehdot.
 
 ## Yhden tiedoston versio
 
@@ -258,8 +223,8 @@ pelaaman pelin päättymisen.
 node tools/build-standalone.mjs
 ```
 
-Kokoaa kaiken tiedostoon `dist/afrikan-tahti.html`, jonka voi avata selaimessa
-suoraan ilman palvelinta.
+Kokoaa kaiken tiedostoon `dist/matkakirja.html`, jonka voi avata selaimessa
+suoraan ilman palvelinta (Lue lisää -toiminto tarvitsee silti verkon).
 
 ## Kuvakkeet
 
