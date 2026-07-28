@@ -40,6 +40,7 @@ const MODULES = [
   'js/packs/istanbul.js',
   'js/pack.js',
   'js/passport.js',
+  'js/aani-ehdokkaat.js',
   'js/sound.js',
   'js/ambience-stream.js',
   'js/die.js',

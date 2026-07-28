@@ -6,6 +6,8 @@
 
 const STORAGE_KEY = 'afrikan-tahti-sound';
 
+import { valittuAani } from './aani-ehdokkaat.js';
+
 // Ambienssin ristihäivytys ja tapahtumien väli. Väli on tarkoituksella pitkä
 // ja epäsäännöllinen: säännöllinen ääni alkaa kuulua kellona.
 const AMBIENCE_FADE = 2;
@@ -522,7 +524,8 @@ class Sound {
     this.samples = {};
     this.sampleHits = {};
     for (const [name, { url }] of Object.entries(REAL_SAMPLES)) {
-      fetch(url)
+      // Omistajan valitsema äänite (/aanet.html) ohittaa oletuksen.
+      fetch(valittuAani(`tehoste:${name}`) ?? url)
         .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error('http'))))
         .then((data) => this.ctx.decodeAudioData(data))
         .then((buf) => {
@@ -621,17 +624,11 @@ const REAL_SAMPLES = {
 const REAL_PLAYERS = {
   dieTick: (s) => s.playSlice('dice', { dur: 0.08, gain: 0.4, isku: true }),
   dieLand: (s) => s.playSlice('dice', { tail: 0.6, gain: 0.55 }),
-  // Joka sana saa 2–3 näppäilyn purskeen iskukohdilta: yksittäinen
-  // satunnaissiivu osui liian usein näppäilyjen väliin ja kone kuulosti
-  // laiskalta. Purske täyttää sanan mittaisen välin (~190 ms).
-  pen: (s) => {
-    let soi = s.playSlice('pen', { dur: 0.09, gain: 0.35, isku: true });
-    soi = s.playSlice('pen', { dur: 0.09, gain: 0.3, isku: true, delay: 0.06 + Math.random() * 0.03 }) || soi;
-    if (Math.random() < 0.7) {
-      soi = s.playSlice('pen', { dur: 0.09, gain: 0.32, isku: true, delay: 0.13 + Math.random() * 0.03 }) || soi;
-    }
-    return soi;
-  },
+  // Yksi kunnollinen lyönti sanan ilmestymishetkellä: siivu alkaa aina
+  // iskukohdasta ja on tarpeeksi pitkä, että lyönnin sointi kuuluu —
+  // lyhyet pätkät eivät kuulostaneet kirjoituskoneelta. Rytmi tulee
+  // tekstin kirjoittumisesta (typeText), ei purskeista.
+  pen: (s) => s.playSlice('pen', { dur: 0.24, gain: 0.35, isku: true }),
   // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
   quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
 };

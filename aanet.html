@@ -33,12 +33,19 @@
     <button id="lento-alku">startFlight</button>
     <button id="lento-loppu">stopFlight</button>
   </div>
-  <div class="osio">Paikkojen äänitteet (striimi Freesoundista)</div>
-  <div id="striimit" class="grid"></div>
-  <p id="striimi-tieto"></p>
+  <div class="osio">Äänivalinnat — soita ehdokkaat ja valitse paras</div>
+  <p>Valinta tallentuu tähän selaimeen ja peli käyttää sitä heti, kun
+     lataat pelin uudelleen. Kun olet valinnut, paina alinta nappia ja
+     lähetä teksti Claudelle — valinnat kovakoodataan kaikille.</p>
+  <div id="valinnat"></div>
+  <div class="grid" style="margin-top:1rem">
+    <button id="kopioi">Kopioi valinnat</button>
+    <button id="seis">■ pysäytä ääni</button>
+  </div>
+  <pre id="valinnat-teksti" style="white-space:pre-wrap"></pre>
   <script type="module">
     import { sfx } from './js/sound.js';
-    import { STREAMS } from './js/ambience-stream.js';
+    import { EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani } from './js/aani-ehdokkaat.js';
     const nimet = [
       'quizOpen', 'click', 'paper', 'swipe', 'pen', 'dieTick', 'dieLand', 'step', 'arrive',
       'ferry', 'flight', 'correct', 'wrong', 'hint', 'tick', 'timeout',
@@ -55,26 +62,63 @@
     document.getElementById('lento-alku').addEventListener('click', () => sfx.startFlight());
     document.getElementById('lento-loppu').addEventListener('click', () => sfx.stopFlight());
 
-    // Striimattavat paikkaäänitteet: soita/pysäytä ja näytä tekijämaininta.
-    const striimit = document.getElementById('striimit');
-    const tieto = document.getElementById('striimi-tieto');
+    // Valintaosio: jokaiselle paikalle rivi per ehdokas — soita ja valitse.
+    const valinnat = document.getElementById('valinnat');
     let soiva = null;
-    for (const [kaupunki, { url, credit }] of Object.entries(STREAMS)) {
-      const b = document.createElement('button');
-      b.textContent = kaupunki;
-      b.addEventListener('click', () => {
-        if (soiva) { soiva.pause(); soiva = null; }
-        soiva = new Audio(url);
-        soiva.volume = 0.3;
-        soiva.play();
-        tieto.textContent = credit;
+    const pysayta = () => { if (soiva) { soiva.pause(); soiva = null; } };
+    document.getElementById('seis').addEventListener('click', pysayta);
+
+    const rakenna = () => {
+      valinnat.textContent = '';
+      for (const [slot, { otsikko, ehdokkaat }] of Object.entries(EHDOKKAAT)) {
+        const os = document.createElement('div');
+        os.className = 'osio';
+        os.textContent = otsikko;
+        valinnat.appendChild(os);
+        const valittu = valittuAani(slot) ?? ehdokkaat[0].url;
+        for (const { url, nimi } of ehdokkaat) {
+          const rivi = document.createElement('div');
+          rivi.className = 'grid';
+          rivi.style.margin = '0.3rem 0';
+          const soita = document.createElement('button');
+          soita.textContent = '▶';
+          soita.style.minWidth = '3rem';
+          soita.addEventListener('click', () => {
+            pysayta();
+            soiva = new Audio(url);
+            soiva.volume = 0.35;
+            soiva.play();
+          });
+          const valitse = document.createElement('button');
+          const kaytossa = url === valittu;
+          valitse.textContent = (kaytossa ? '✓ ' : '') + nimi;
+          if (kaytossa) valitse.style.borderColor = '#d9a13b';
+          valitse.style.minWidth = '0';
+          valitse.style.textAlign = 'left';
+          valitse.addEventListener('click', () => {
+            valitseAani(slot, url);
+            rakenna();
+          });
+          rivi.appendChild(soita);
+          rivi.appendChild(valitse);
+          valinnat.appendChild(rivi);
+        }
+      }
+    };
+    rakenna();
+
+    // Kopioi valinnat: teksti, jonka voi liittää Claudelle sellaisenaan.
+    document.getElementById('kopioi').addEventListener('click', () => {
+      const kaikki = kaikkiValinnat();
+      const rivit = Object.entries(EHDOKKAAT).map(([slot, { otsikko, ehdokkaat }]) => {
+        const url = kaikki[slot] ?? ehdokkaat[0].url;
+        const nimi = ehdokkaat.find((e) => e.url === url)?.nimi ?? url;
+        return `${otsikko}: ${nimi}`;
       });
-      striimit.appendChild(b);
-    }
-    const seis = document.createElement('button');
-    seis.textContent = '■ pysäytä';
-    seis.addEventListener('click', () => { if (soiva) { soiva.pause(); soiva = null; } });
-    striimit.appendChild(seis);
+      const teksti = `Äänivalinnat:\n${rivit.join('\n')}`;
+      document.getElementById('valinnat-teksti').textContent = teksti;
+      navigator.clipboard?.writeText(teksti).catch(() => {});
+    });
   </script>
 </body>
 </html>
