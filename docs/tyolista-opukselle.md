@@ -64,7 +64,30 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
-## Seuraavaksi: PAKETTI 12 (luonnoskirjan pulmat ja maamerkit)
+## Seuraavaksi: EI PAKETTIA LISTALLA — omistajan päätös
+
+**Paketit 1–12 ovat valmiit (28.7.2026).** Haettu tuore main; siinä ei ole
+pakettia 13. Vakiokäynnistyksen kohdan 5 mukaan lopetan tähän enkä keksi
+uutta pakettia.
+
+Toteuttajan havainnot seuraavaa pakettia varten:
+
+- **Afrikalla on nyt viisi sisältölajia, muilla laudoilla ei yhtään:**
+  `questions.claims` (väittämät), `events` (tapahtumat), `puzzles`
+  (pulmat), `texts.schedule` (isoisän aikataulu) ja kaupunkien
+  `wiki`-kentät. Kaikki ovat valinnaisia ja moottori toimii ilman niitä,
+  joten laajennus muille laudoille voi edetä lauta kerrallaan.
+- **Karttojen maamerkit ovat toistaiseksi vain Afrikalla.** `mapart.js`:n
+  LANDMARKS-kokoelma on lautariippumaton, joten uusi maamerkki on yksi
+  piirtofunktio ja yksi rivi pakan decor-osiossa. Koristetesti vartioi
+  sijoitusta automaattisesti kaikilla laudoilla.
+- **`texts.schedule` vaatii yhä päätöksen** (kirjattu paketissa 10): onko
+  isoisän 80 päivää lautakohtainen vertailuluku vai yksi matka, jonka eri
+  laudat näyttävät eri paloina? Afrikan aikataulu on kokonainen kierros,
+  joka päättyy kotiinpaluuseen, eikä `docs/tarina.md`:n mukaan
+  päiväkirjoja ole kuin yksi.
+- **`TURN_HOURS = 6` odottaa yhä pelitestiä.** Yhden vakion muutos
+  (js/game.js).
 
 Omistajan linjaus 27.7.2026: **työstetään pelkkää Afrikkaa, kunnes
 peruspeli on kunnossa.** Muihin lautoihin ei kosketa ennen kuin Afrikka on
