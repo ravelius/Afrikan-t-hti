@@ -30,7 +30,7 @@ import {
   QUIZ_SECONDS, SEA_FARE, HINT_EVERY_TURNS,
   XP_NEW_CITY, XP_NEW_BOARD, XP_HARD_ANSWER, XP_STAR,
   TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
-  FORM_WEIGHTS, MAP_CHOICES, XP_PUZZLE,
+  FORM_WEIGHTS, PHOTO_CHOICES, XP_PUZZLE,
 } from '../js/game.js';
 import {
   articleUrl, BAD_IMAGE, fetchImage, fetchSummary, parseArticle, parseSummary,
@@ -1894,7 +1894,9 @@ test('Afrikan aikataulu on nouseva ja ulottuu ennätyksen yli', () => {
 
 test('pysähdyksen muoto arvotaan painojen mukaan', () => {
   const game = newGame(301);
-  const lukumaarat = { quiz: 0, claim: 0, map: 0, event: 0 };
+  // Valokuvamuoto on painoissa vain, kun kuvia on ladattu.
+  game.setPhotoPool(['tripoli', 'kairo']);
+  const lukumaarat = { quiz: 0, claim: 0, photo: 0, event: 0 };
   for (let i = 0; i < 6000; i++) {
     game.lastForm = null; // ilman toistoestoa painot näkyvät sellaisinaan
     lukumaarat[game.pickForm('timbuktu')]++;
@@ -1912,7 +1914,8 @@ test('pysähdyksen muoto arvotaan painojen mukaan', () => {
 
 test('sama erikoismuoto ei toistu kahdesti peräkkäin', () => {
   const game = newGame(302);
-  for (const muoto of ['claim', 'map', 'event']) {
+  game.setPhotoPool(['tripoli', 'kairo']);
+  for (const muoto of ['claim', 'photo', 'event']) {
     game.lastForm = muoto;
     assert.equal(game.formWeights('timbuktu')[muoto], 0, `${muoto} sai painon heti perään`);
   }
@@ -1929,10 +1932,11 @@ test('lauta ilman väittämiä ja tapahtumia toimii silti', () => {
   try {
     delete pack.questions.claims;
     delete pack.events;
+    game.setPhotoPool(['tripoli']);
     const painot = game.formWeights('timbuktu');
     assert.equal(painot.claim, 0);
     assert.equal(painot.event, 0);
-    assert.ok(painot.map > 0, 'karttakysymys toimii ilman sisältöä');
+    assert.ok(painot.photo > 0, 'valokuvakysymys toimii ilman kirjoitettua sisältöä');
     assert.equal(
       Object.values(painot).reduce((a, b) => a + b, 0),
       Object.values(FORM_WEIGHTS).reduce((a, b) => a + b, 0),
@@ -1971,83 +1975,49 @@ test('isoisän väittämä on kaksivaihtoehtoinen eikä salli apukeinoja', () =>
   assert.ok(quiz.found, 'oikea vastaus kääntää laatan');
 });
 
-test('karttakysymys johdetaan laudan datasta ja vastaus on pääteltävissä kartalta', () => {
-  const akselit = {
-    pohjoisin: (c) => -c.y,
-    eteläisin: (c) => c.y,
-    läntisin: (c) => -c.x,
-    itäisin: (c) => c.x,
-  };
-  const naapuriIdt = (board, id) => new Set(
-    [...board.adj.get(id)]
-      .map((eid) => board.edgeById.get(eid))
-      .map((e) => (e.a === id ? e.b : e.a)),
-  );
-  const muodot = { suunta: 0, naapuruus: 0, linnuntie: 0, valipysahdys: 0 };
-  for (const seed of [301, 302, 303, 304, 305, 306, 307, 308, 309, 310,
-    311, 312, 313, 314, 315, 316, 317, 318, 319, 320]) {
+test('valokuvakysymys: kuvan paikka arvataan laudan nimistä', () => {
+  for (const seed of [301, 302, 303, 304, 305]) {
     const game = newGame(seed);
     game.player.pos = { type: 'city', city: 'timbuktu' };
     game.tokens.set('timbuktu', 'emerald');
-    assert.ok(game.actionQuiz({ form: 'map' }).ok);
+    game.setPhotoPool(['tripoli', 'kairo', 'sansibar']);
+    assert.ok(game.actionQuiz({ form: 'photo' }).ok);
     const quiz = game.quiz;
-    assert.equal(quiz.kind, 'map');
-    assert.equal(quiz.mapCities.length, MAP_CHOICES);
-    assert.equal(new Set(quiz.mapCities).size, MAP_CHOICES, 'ehdokkaat ovat eri kaupunkeja');
-    assert.ok(!quiz.mapCities.includes('timbuktu'), 'oma kaupunki ei ole ehdokas');
-
-    const kohde = game.board.cityById.get(quiz.mapCities[quiz.correct]);
-    const suunta = Object.keys(akselit).find((s) => quiz.question.includes(s));
-    if (suunta) {
-      muodot.suunta++;
-      const arvo = akselit[suunta];
-      const paras = quiz.mapCities
-        .map((id) => game.board.cityById.get(id))
-        .sort((a, b) => arvo(b) - arvo(a))[0];
-      assert.equal(paras.id, kohde.id, `${suunta}: oikea vastaus ei ole äärimmäisin`);
-    } else if (quiz.question.includes('linnuntietä lähimpänä')) {
-      muodot.linnuntie++;
-      const ankkuri = game.board.cities.find((c) => quiz.question.includes(`lähimpänä kaupunkia ${c.name}?`));
-      assert.ok(ankkuri, 'kysymys nimeää ankkurikaupungin');
-      const etaisyys = (id) => {
-        const c = game.board.cityById.get(id);
-        return Math.hypot(c.x - ankkuri.x, c.y - ankkuri.y);
-      };
-      const lahin = [...quiz.mapCities].sort((a, b) => etaisyys(a) - etaisyys(b))[0];
-      assert.equal(lahin, kohde.id, 'oikea vastaus ei ole lähimpänä ankkuria');
-    } else if (quiz.question.includes('välipysähdyksen kautta')) {
-      muodot.valipysahdys++;
-      const lahto = game.board.cities.find((c) => quiz.question.includes(`kaupungista ${c.name} kahdella`));
-      assert.ok(lahto, 'kysymys nimeää lähtökaupungin');
-      const naapurit = naapuriIdt(game.board, lahto.id);
-      const kahden = new Set();
-      for (const nid of naapurit) for (const mid of naapuriIdt(game.board, nid)) kahden.add(mid);
-      kahden.delete(lahto.id);
-      for (const nid of naapurit) kahden.delete(nid);
-      assert.ok(kahden.has(kohde.id), 'oikea vastaus ei ole kahden reitin päässä');
-      for (const id of quiz.mapCities) {
-        if (id === kohde.id) continue;
-        assert.ok(!kahden.has(id) && !naapurit.has(id),
-          `väärä ehdokas ${id} on liian lähellä lähtökaupunkia — vastaus jää tulkinnasta kiinni`);
-      }
-    } else {
-      muodot.naapuruus++;
-      const lahto = game.board.cities.find((c) => quiz.question.includes(`kaupungista ${c.name} suoraan`));
-      assert.ok(lahto, 'kysymys nimeää lähtökaupungin');
-      assert.ok(naapuriIdt(game.board, lahto.id).has(kohde.id), 'oikea vastaus ei ole lähtökaupungin naapuri');
-    }
+    assert.equal(quiz.kind, 'photo');
+    assert.ok(['tripoli', 'kairo', 'sansibar'].includes(quiz.photoCity), 'kohde tulee kuvalistasta');
+    assert.ok(quiz.photoWiki, 'kuvalle on artikkelin otsikko');
+    assert.equal(quiz.options.length, PHOTO_CHOICES);
+    assert.equal(new Set(quiz.options).size, PHOTO_CHOICES, 'vaihtoehdot ovat eri nimiä');
+    const kohde = game.board.cityById.get(quiz.photoCity);
+    assert.equal(quiz.options[quiz.correct], kohde.name, 'oikea vaihtoehto on kuvan paikka');
+    assert.ok(quiz.frame.includes('valokuvaaja'), 'kehys kertoo kysyjän');
 
     // Väärä vastaus ei käännä laattaa.
-    game.answerQuiz((quiz.correct + 1) % MAP_CHOICES);
+    game.answerQuiz((quiz.correct + 1) % PHOTO_CHOICES);
     assert.equal(quiz.right, false);
     assert.ok(!quiz.found);
   }
-  // Normaalitasolla vaikeampia muotoja pitää tulla selvästi: pelkkä
-  // "mikä on pohjoisin" oli aikuiselle liian helppo.
-  assert.ok(muodot.linnuntie > 0, 'linnuntie-muodon pitää esiintyä');
-  assert.ok(muodot.valipysahdys > 0, 'välipysähdys-muodon pitää esiintyä');
-  assert.ok(muodot.linnuntie + muodot.valipysahdys >= 10,
-    `vaikeampien muotojen pitää olla enemmistö (${JSON.stringify(muodot)})`);
+});
+
+test('valokuvakysymys ei toista samaa kuvaa ja putoaa pois ilman kuvia', () => {
+  const game = newGame(306);
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+
+  // Ilman ladattuja kuvia muoto ei saa painoa ja pakotettunakin se
+  // putoaa tavalliseen monivalintaan.
+  assert.equal(game.formWeights('timbuktu').photo, 0);
+  assert.ok(game.actionQuiz({ form: 'photo' }).ok);
+  assert.equal(game.quiz.kind, undefined, 'ilman kuvia avautuu monivalinta');
+
+  // Yhden kuvan lista: sama kuva ei tule kahdesti.
+  const toinen = newGame(307);
+  toinen.player.pos = { type: 'city', city: 'timbuktu' };
+  toinen.tokens.set('timbuktu', 'emerald');
+  toinen.setPhotoPool(['tripoli']);
+  assert.ok(toinen.actionQuiz({ form: 'photo' }).ok);
+  assert.equal(toinen.quiz.photoCity, 'tripoli');
+  assert.equal(toinen.photoTargets().length, 0, 'kysytty kuva ei ole enää tarjolla');
 });
 
 /** Yksin pelattava Afrikan peli: vuorolaskuri kasvaa joka vuorolla. */

@@ -41,7 +41,7 @@ jobs:
       - name: Kerää julkaistavat tiedostot
         run: |
           mkdir -p _site/dist
-          cp index.html manifest.webmanifest sw.js .nojekyll _site/
+          cp index.html aanet.html manifest.webmanifest sw.js .nojekyll _site/
           cp -r css js assets _site/
           cp dist/matkakirja.html _site/dist/
 
