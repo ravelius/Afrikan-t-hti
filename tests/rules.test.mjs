@@ -31,6 +31,7 @@ import {
   TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
   FORM_WEIGHTS, MAP_CHOICES,
 } from '../js/game.js';
+import { fetchSummary, parseSummary, summaryUrl } from '../js/wiki.js';
 import {
   chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
   wantsDuelBypass, wantsDuelRelief, wantsFiftyFifty, wantsHint,
@@ -1985,4 +1986,118 @@ test('väittämät eivät ole mukana monivalintojen eheystarkistuksessa', () => 
   assert.ok(kaikki.length > 0);
   assert.ok(kaikki.every((q) => Array.isArray(q.options)), 'väittämä vuoti monivalintoihin');
   assert.ok(!kaikki.some((q) => q.key === 'claims'));
+});
+
+// --- paketti 11: "Lue lisää" -----------------------------------------------
+
+test('Afrikan kaupungeilla on tarkistettu wiki-otsikko', () => {
+  const cities = packById('africa').cities;
+  const wikit = cities.filter((c) => c.wiki);
+  assert.ok(wikit.length >= 25, `wiki-kenttiä vain ${wikit.length}/${cities.length}`);
+  for (const c of cities) {
+    if (c.wiki === undefined) continue;
+    assert.equal(typeof c.wiki, 'string', `${c.id}: wiki ei ole merkkijono`);
+    assert.ok(c.wiki.trim().length > 1, `${c.id}: tyhjä wiki-otsikko`);
+  }
+});
+
+test('kaikkien lautojen wiki-kentät ovat merkkijonoja jos ne ovat olemassa', () => {
+  for (const pack of PACKS) {
+    for (const c of pack.cities) {
+      if (c.wiki === undefined) continue;
+      assert.equal(typeof c.wiki, 'string', `${pack.id}/${c.id}`);
+    }
+  }
+});
+
+test('summaryUrl koodaa otsikon', () => {
+  assert.equal(
+    summaryUrl('fi', 'Kimberley (Etelä-Afrikka)'),
+    'https://fi.wikipedia.org/api/rest_v1/page/summary/Kimberley%20(Etel%C3%A4-Afrikka)',
+  );
+});
+
+test('parseSummary hylkää kelvottomat vastaukset', () => {
+  assert.equal(parseSummary(null, 'fi'), null);
+  assert.equal(parseSummary({ type: 'disambiguation', extract: 'Gao voi tarkoittaa' }, 'fi'), null);
+  assert.equal(parseSummary({ extract: '   ' }, 'fi'), null);
+  assert.equal(parseSummary({ title: 'X' }, 'fi'), null, 'ilman tiivistelmää ei kelpaa');
+});
+
+test('parseSummary poimii tekstin, kuvan ja artikkelin osoitteen', () => {
+  const s = parseSummary({
+    title: 'Timbuktu',
+    extract: 'Timbuktu on kaupunki Malissa.',
+    thumbnail: { source: 'https://kuva.example/timbuktu.jpg' },
+    content_urls: { desktop: { page: 'https://fi.wikipedia.org/wiki/Timbuktu' } },
+  }, 'fi');
+  assert.equal(s.lang, 'fi');
+  assert.equal(s.title, 'Timbuktu');
+  assert.equal(s.image, 'https://kuva.example/timbuktu.jpg');
+  assert.equal(s.url, 'https://fi.wikipedia.org/wiki/Timbuktu');
+});
+
+/** Tekaistu fetch: palauttaa kielikohtaisen vastauksen ilman verkkoa. */
+function fakeFetch(vastaukset) {
+  return async (url) => {
+    const lang = url.slice(8, 10);
+    const v = vastaukset[lang];
+    if (v === 'virhe') throw new Error('ei yhteyttä');
+    if (!v) return { ok: false, status: 404, json: async () => ({}) };
+    return { ok: true, json: async () => v };
+  };
+}
+
+test('fetchSummary suosii suomea ja kelpuuttaa pitkän tiivistelmän', async () => {
+  const s = await fetchSummary('Timbuktu', {
+    fetchImpl: fakeFetch({ fi: { title: 'Timbuktu', extract: 'a'.repeat(250) } }),
+  });
+  assert.equal(s.lang, 'fi');
+  assert.equal(s.extract.length, 250);
+});
+
+test('lyhyt suomenkielinen tiivistelmä väistyy englannin tieltä', async () => {
+  const s = await fetchSummary('Gao', {
+    fetchImpl: fakeFetch({
+      fi: { title: 'Gao', extract: 'Lyhyt tynkä.' },
+      en: { title: 'Gao', extract: 'b'.repeat(400) },
+    }),
+  });
+  assert.equal(s.lang, 'en');
+});
+
+test('lyhyt tynkä kelpaa, jos parempaa ei ole', async () => {
+  const s = await fetchSummary('Gao', {
+    fetchImpl: fakeFetch({ fi: { title: 'Gao', extract: 'Lyhyt tynkä.' } }),
+  });
+  assert.equal(s.lang, 'fi', 'lyhyt on parempi kuin ei mitään');
+});
+
+test('puuttuva suomenkielinen artikkeli kaatuu englantiin', async () => {
+  const s = await fetchSummary('Ras Hafun', {
+    fetchImpl: fakeFetch({ en: { title: 'Ras Hafun', extract: 'c'.repeat(300) } }),
+  });
+  assert.equal(s.lang, 'en');
+});
+
+test('verkkovirhe ei kaada peliä vaan palauttaa null', async () => {
+  const s = await fetchSummary('Timbuktu', { fetchImpl: fakeFetch({ fi: 'virhe', en: 'virhe' }) });
+  assert.equal(s, null);
+});
+
+test('täsmennyssivu ei kelpaa kummallakaan kielellä', async () => {
+  const s = await fetchSummary('Tripoli', {
+    fetchImpl: fakeFetch({
+      fi: { type: 'disambiguation', extract: 'Tripoli voi tarkoittaa' },
+      en: { type: 'disambiguation', extract: 'Tripoli may refer to' },
+    }),
+  });
+  assert.equal(s, null);
+});
+
+test('fetchSummary ei kutsu verkkoa ilman otsikkoa', async () => {
+  let kutsuja = 0;
+  const s = await fetchSummary('', { fetchImpl: async () => { kutsuja++; return { ok: false }; } });
+  assert.equal(s, null);
+  assert.equal(kutsuja, 0);
 });

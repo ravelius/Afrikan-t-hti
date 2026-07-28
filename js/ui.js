@@ -17,6 +17,7 @@ import {
 } from './game.js';
 import { factSource, factText, factVoice, isSourceUrl, sourceLabel, voiceTitle } from './pack.js';
 import { stampBoard, stampDate, stampList } from './passport.js';
+import { fetchSummary } from './wiki.js';
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -130,6 +131,16 @@ export class UI {
       this.closeArrival();
       this.doAction(() => this.game.actionSkipQuiz());
     });
+
+    this.wikiDialog = document.getElementById('wiki-dialog');
+    this.wikiTitle = document.getElementById('wiki-title');
+    this.wikiImage = document.getElementById('wiki-image');
+    this.wikiExtract = document.getElementById('wiki-extract');
+    this.wikiSource = document.getElementById('wiki-source');
+    this.arrivalWiki = document.getElementById('arrival-wiki');
+    this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
+    this.factWiki = document.getElementById('fact-wiki');
+    this.factWiki.addEventListener('click', () => this.openWiki(this.factWikiCity));
 
     this.eventDialog = document.getElementById('event-dialog');
     this.eventText = document.getElementById('event-text');
@@ -1030,6 +1041,7 @@ export class UI {
       // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
       // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
+      this.factWiki.hidden = true;
       this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
@@ -1076,6 +1088,9 @@ export class UI {
 
     const player = game.player;
     const city = this.factCity(player.pos);
+    // "Lue lisää" koskee aina sitä paikkaa, jonka teksti ruudussa on.
+    this.factWikiCity = city.id;
+    this.factWiki.hidden = !city.wiki;
     const facts = game.pack.placeFacts[city.id];
     if (!facts || facts.length === 0) return;
 
@@ -1201,6 +1216,7 @@ export class UI {
     const pick = Math.floor(hash01(`arrival:${city.id}:${this.game.turnCount}`) * facts.length);
     const fact = facts[Math.min(pick, facts.length - 1)];
 
+    this.arrivalWiki.hidden = !city.wiki;
     this.arrivalCity.textContent = city.name;
     this.arrivalVoice.textContent = fact ? voiceTitle(factVoice(fact)) : '';
     this.arrivalText.textContent = '';
@@ -1209,6 +1225,49 @@ export class UI {
       if (source) this.arrivalText.appendChild(source);
     });
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+  }
+
+  /**
+   * "Lue lisää": Wikipedian tiivistelmä paikasta. Dialogi avautuu heti ja
+   * täyttyy kun haku valmistuu, jottei nappi tunnu jumittuneelta. Jos haku
+   * epäonnistuu — ei yhteyttä, 404 tai täsmennyssivu — dialogissa lukee
+   * kohteliaasti, ettei tietoja saatu, eikä peli jää siitä jumiin.
+   */
+  async openWiki(cityId) {
+    const city = this.game.board.cityById.get(cityId);
+    if (!city?.wiki) return;
+
+    this.wikiTitle.textContent = city.name;
+    this.wikiImage.hidden = true;
+    this.wikiImage.removeAttribute('src');
+    this.wikiExtract.textContent = 'Haetaan…';
+    this.wikiSource.textContent = '';
+    if (!this.wikiDialog.open) this.wikiDialog.showModal();
+
+    const summary = await fetchSummary(city.wiki);
+    // Pelaaja on voinut ehtiä sulkea dialogin haun aikana.
+    if (!this.wikiDialog.open) return;
+
+    if (!summary) {
+      this.wikiExtract.textContent = 'Tietoja ei saatu haettua. Matka jatkuu.';
+      return;
+    }
+
+    this.wikiTitle.textContent = summary.title || city.name;
+    if (summary.image) {
+      this.wikiImage.src = summary.image;
+      this.wikiImage.alt = summary.title || city.name;
+      this.wikiImage.hidden = false;
+    }
+    this.wikiExtract.textContent = summary.extract;
+
+    // CC BY-SA vaatii maininnan ja linkin — myös kaupallisessa käytössä.
+    this.wikiSource.textContent = 'Lähde: Wikipedia (CC BY-SA) — ';
+    const link = html('a', '', 'lue artikkeli');
+    link.href = summary.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    this.wikiSource.appendChild(link);
   }
 
   closeArrival() {

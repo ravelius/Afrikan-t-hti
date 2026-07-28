@@ -66,6 +66,7 @@
           <h2 id="fact-voice">Matkapäiväkirjasta</h2>
           <p id="fact-place" class="fact-place"></p>
           <p id="fact-text" class="fact-text"></p>
+          <button id="fact-wiki" class="ghost wiki-btn" type="button" hidden>Lue lisää</button>
         </section>
 
         <section class="card turn-card">
@@ -88,11 +89,25 @@
     <h2 id="arrival-city"></h2>
     <p id="arrival-voice" class="fact-place"></p>
     <p id="arrival-text" class="arrival-text"></p>
+    <button id="arrival-wiki" class="ghost wiki-btn" type="button" hidden>Lue lisää</button>
     <p class="arrival-ask">Kaupungissa on avaamaton aarre. Haluatko avata sen?</p>
     <div class="dialog-actions">
       <button id="arrival-yes" class="primary" type="button">Avaa — vastaa kysymykseen</button>
       <button id="arrival-no" type="button">Ei nyt — jatka matkaa</button>
     </div>
+   </div>
+  </dialog>
+
+  <!-- Lue lisää: Wikipedian tiivistelmä -->
+  <dialog id="wiki-dialog" class="dialog">
+   <div class="dialog-card wiki-card">
+    <h2 id="wiki-title">Lue lisää</h2>
+    <img id="wiki-image" class="wiki-image" alt="" loading="lazy" hidden />
+    <p id="wiki-extract" class="wiki-extract"></p>
+    <p id="wiki-source" class="wiki-source"></p>
+    <form method="dialog" class="dialog-actions">
+      <button class="primary" value="close">Sulje</button>
+    </form>
    </div>
   </dialog>
 

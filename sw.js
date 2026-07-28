@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-07-28.10';
+const CACHE = 'matkakirja-2026-07-28.11';
 const SHELL = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const SHELL = [
   './js/rules.js',
   './js/pack.js',
   './js/passport.js',
+  './js/wiki.js',
   './js/packs/maailma.js',
   './js/packs/maailma-questions.js',
   './js/packs/africa.js',
@@ -59,6 +60,10 @@ self.addEventListener('activate', (event) => {
 // Yläpalkin Päivitä-nappi tyhjentää välimuistin, jolloin uusin versio tulee heti.
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // Vain oma alkuperä. Ulkoiset kutsut (Wikipedian tiivistelmät) menevät
+  // suoraan verkkoon: niitä ei välimuistiteta, ja ennen kaikkea alla oleva
+  // index.html-varapolku palauttaisi niille HTML-sivun JSONin sijaan.
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.match(event.request).then((hit) => {
       const network = fetch(event.request)

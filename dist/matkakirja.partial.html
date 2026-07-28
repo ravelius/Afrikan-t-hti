@@ -1791,6 +1791,41 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .app { display: none; }
 }
 
+/*
+ * "Lue lisää": Wikipedian tiivistelmä paikasta. Nappi on hillitty, koska se
+ * on lisätieto eikä pelin kehotus — pelaaja etsii sen kun haluaa.
+ */
+.wiki-btn {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+  min-height: 0;
+  align-self: flex-start;
+}
+
+.wiki-card { max-width: 560px; }
+
+.wiki-image {
+  display: block;
+  max-width: 100%;
+  max-height: 220px;
+  margin: 0 auto 0.6rem;
+  border-radius: 6px;
+}
+
+.wiki-extract {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* Lähdemaininta on lisenssiehto, ei koriste: se näkyy aina. */
+.wiki-source {
+  margin-top: 0.7rem;
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
 </style>
 
 <!--
@@ -1843,6 +1878,7 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
           <h2 id="fact-voice">Matkapäiväkirjasta</h2>
           <p id="fact-place" class="fact-place"></p>
           <p id="fact-text" class="fact-text"></p>
+          <button id="fact-wiki" class="ghost wiki-btn" type="button" hidden>Lue lisää</button>
         </section>
 
         <section class="card turn-card">
@@ -1865,11 +1901,25 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     <h2 id="arrival-city"></h2>
     <p id="arrival-voice" class="fact-place"></p>
     <p id="arrival-text" class="arrival-text"></p>
+    <button id="arrival-wiki" class="ghost wiki-btn" type="button" hidden>Lue lisää</button>
     <p class="arrival-ask">Kaupungissa on avaamaton aarre. Haluatko avata sen?</p>
     <div class="dialog-actions">
       <button id="arrival-yes" class="primary" type="button">Avaa — vastaa kysymykseen</button>
       <button id="arrival-no" type="button">Ei nyt — jatka matkaa</button>
     </div>
+   </div>
+  </dialog>
+
+  <!-- Lue lisää: Wikipedian tiivistelmä -->
+  <dialog id="wiki-dialog" class="dialog">
+   <div class="dialog-card wiki-card">
+    <h2 id="wiki-title">Lue lisää</h2>
+    <img id="wiki-image" class="wiki-image" alt="" loading="lazy" hidden />
+    <p id="wiki-extract" class="wiki-extract"></p>
+    <p id="wiki-source" class="wiki-source"></p>
+    <form method="dialog" class="dialog-actions">
+      <button class="primary" value="close">Sulje</button>
+    </form>
    </div>
   </dialog>
 
@@ -2095,6 +2145,74 @@ function createTokenPile(counts, rng = Math.random) {
     [pile[i], pile[j]] = [pile[j], pile[i]];
   }
   return pile;
+}
+
+// ===== js/wiki.js =====
+// "Lue lisää": Wikipedian tiivistelmä nykyisestä sijainnista.
+//
+// Rajapinta on Wikipedian REST-summary, jota selain voi kutsua suoraan ilman
+// avainta. Suomenkielinen artikkeli on ensisijainen; jos sitä ei ole, se on
+// täsmennyssivu tai tiivistelmä jää lyhyeksi, kokeillaan englantia.
+//
+// Lisenssi: Wikipedian teksti on CC BY-SA, joten maininta ja linkki
+// artikkeliin ovat pakollisia myös kaupallisessa käytössä. Ne kuuluvat
+// dialogin alareunaan aina, myös silloin kun kuvaa ei ole.
+
+const WIKI_LANGS = ['fi', 'en'];
+// Tätä lyhyempi tiivistelmä on käytännössä tynkä: kokeillaan toista kieltä.
+const MIN_EXTRACT = 200;
+
+/** REST-summaryn osoite. Otsikko koodataan, koska siinä voi olla välilyöntejä. */
+function summaryUrl(lang, title) {
+  return `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+}
+
+/**
+ * Poimii pelin tarvitsemat kentät REST-vastauksesta. Palauttaa null, jos
+ * vastaus ei kelpaa: puuttuva sivu, täsmennyssivu tai tyhjä tiivistelmä.
+ * Erotettu omaksi funktiokseen, jotta virhepolut voi testata ilman verkkoa.
+ */
+function parseSummary(data, lang) {
+  if (!data || typeof data !== 'object') return null;
+  if (data.type === 'disambiguation') return null;
+  const extract = typeof data.extract === 'string' ? data.extract.trim() : '';
+  if (!extract) return null;
+  return {
+    lang,
+    title: data.title ?? '',
+    extract,
+    image: data.thumbnail?.source ?? null,
+    // Sivun ihmisluettava osoite lähdemainintaa varten.
+    url: data.content_urls?.desktop?.page
+      ?? `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(data.title ?? '')}`,
+  };
+}
+
+/**
+ * Hakee tiivistelmän: suomi ensin, sitten englanti. Lyhyt suomenkielinen
+ * tiivistelmä hyväksytään vasta, jos englanniksikaan ei löydy parempaa —
+ * lyhyt on silti parempi kuin ei mitään.
+ *
+ * Ei koskaan heitä: peli ei saa jäädä jumiin siihen, ettei verkkoa ole.
+ * Palauttaa null, kun mitään käyttökelpoista ei löytynyt.
+ */
+async function fetchSummary(title, { fetchImpl = globalThis.fetch, langs = WIKI_LANGS } = {}) {
+  if (!title || typeof fetchImpl !== 'function') return null;
+  let vara = null;
+  for (const lang of langs) {
+    let osuma = null;
+    try {
+      const res = await fetchImpl(summaryUrl(lang, title));
+      if (res && res.ok) osuma = parseSummary(await res.json(), lang);
+    } catch {
+      /* ei yhteyttä tai kelvoton vastaus — kokeillaan seuraavaa kieltä */
+    }
+    if (!osuma) continue;
+    if (osuma.extract.length >= MIN_EXTRACT) return osuma;
+    // Tynkä talteen siltä varalta, ettei parempaa löydy.
+    vara = vara ?? osuma;
+  }
+  return vara;
 }
 
 // ===== js/packs/maailma-questions.js =====
@@ -5218,7 +5336,7 @@ const AFRICA_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const AFRICA_CITIES = [
   {
-    id: 'tanger', name: 'Tanger', x: 189, y: 52, start: true, airport: true,
+    id: 'tanger', name: 'Tanger', wiki: 'Tanger', x: 189, y: 52, start: true, airport: true,
     // Gibraltarin salmen yli Espanjaan: lyhin hyppy Afrikasta Eurooppaan.
     // Tanger on myös maailmankartalla, joten sinne pääsee takaisin.
     links: [
@@ -5227,7 +5345,7 @@ const AFRICA_CITIES = [
     ],
   },
   {
-    id: 'kairo', name: 'Kairo', x: 683, y: 125, start: true, airport: true,
+    id: 'kairo', name: 'Kairo', wiki: 'Kairo', x: 683, y: 125, start: true, airport: true,
     // Sama kaupunki on myös Lähi-idän laudalla: vaelluksessa tästä jatketaan.
     links: [
       { pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' },
@@ -5235,43 +5353,43 @@ const AFRICA_CITIES = [
     ],
   },
 
-  { id: 'tripoli', name: 'Tripoli', x: 443, y: 89, airport: true },
-  { id: 'murzuk', name: 'Murzuk', x: 474, y: 196 },
-  { id: 'alkufra', name: 'Al Kufra', x: 577, y: 197 },
-  { id: 'sahara', name: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
-  { id: 'ahaggar', name: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
-  { id: 'timbuktu', name: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
-  { id: 'gao', name: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
+  { id: 'tripoli', name: 'Tripoli', wiki: 'Tripoli', x: 443, y: 89, airport: true },
+  { id: 'murzuk', name: 'Murzuk', wiki: 'Murzuk', x: 474, y: 196 },
+  { id: 'alkufra', name: 'Al Kufra', wiki: 'Kufra', x: 577, y: 197 },
+  { id: 'sahara', name: 'Sahara', wiki: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
+  { id: 'ahaggar', name: 'Ahaggar', wiki: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
+  { id: 'timbuktu', name: 'Timbuktu', wiki: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
+  { id: 'gao', name: 'Gao', wiki: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'dakar', name: 'Dakar', x: 45, y: 318, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'dakar', name: 'Dakar', wiki: 'Dakar', x: 45, y: 318, airport: true, la: 'start', lx: 16, ly: 5,
     // Etelä-Atlantin ylitys Dakarista Brasiliaan on vanha postilentoreitti.
     links: [{ pack: 'southamerica', city: 'joaopessoa', label: 'Etelä-Amerikan lauta' }],
   },
-  { id: 'sierraleone', name: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
-  { id: 'kappalmas', name: 'Kap Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
-  { id: 'kumasi', name: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
-  { id: 'orjarannikko', name: 'Orjarannikko', x: 330, y: 404 },
-  { id: 'kano', name: 'Kano', x: 394, y: 336, airport: true },
-  { id: 'kamerun', name: 'Kamerun', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
-  { id: 'kongo', name: 'Kongo', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'angola', name: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
-  { id: 'namib', name: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
+  { id: 'sierraleone', name: 'Sierra Leone', wiki: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
+  { id: 'kappalmas', name: 'Kap Palmas', wiki: 'Cape Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
+  { id: 'kumasi', name: 'Kumasi', wiki: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
+  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', x: 330, y: 404 },
+  { id: 'kano', name: 'Kano', wiki: 'Kano', x: 394, y: 336, airport: true },
+  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
+  { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'angola', name: 'Angola', wiki: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
+  { id: 'namib', name: 'Namib', wiki: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
   {
-    id: 'kapkaupunki', name: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
+    id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
     links: [{ pack: 'maailma', city: 'kapkaupunki', label: 'Maailma-lauta' }],
   },
-  { id: 'kimberley', name: 'Kimberley', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
-  { id: 'mosambik', name: 'Mosambik', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
-  { id: 'madagaskar', name: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'kilimandzaro', name: 'Kilimandžaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
-  { id: 'viktoria', name: 'Viktoria Nyanza', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
-  { id: 'tanganjika', name: 'Tanganjika', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
-  { id: 'bahrelghazal', name: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
-  { id: 'darfur', name: 'Darfur', x: 575, y: 318 },
-  { id: 'suakin', name: 'Suakin', x: 764, y: 261 },
-  { id: 'addisabeba', name: 'Addis Abeba', x: 783, y: 387, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'rashafun', name: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
+  { id: 'kimberley', name: 'Kimberley', wiki: 'Kimberley (Etelä-Afrikka)', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
+  { id: 'mosambik', name: 'Mosambik', wiki: 'Mosambikin saari', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
+  { id: 'madagaskar', name: 'Madagaskar', wiki: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sansibar', name: 'Sansibar', wiki: 'Sansibar', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'kilimandzaro', name: 'Kilimandžaro', wiki: 'Kilimanjaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
+  { id: 'viktoria', name: 'Viktoria Nyanza', wiki: 'Victoria-järvi', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
+  { id: 'tanganjika', name: 'Tanganjika', wiki: 'Tanganjikajärvi', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
+  { id: 'bahrelghazal', name: 'Bahr el Ghazal', wiki: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
+  { id: 'darfur', name: 'Darfur', wiki: 'Darfur', x: 575, y: 318 },
+  { id: 'suakin', name: 'Suakin', wiki: 'Suakin', x: 764, y: 261 },
+  { id: 'addisabeba', name: 'Addis Abeba', wiki: 'Addis Abeba', x: 783, y: 387, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'rashafun', name: 'Ras Hafun', wiki: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -26190,6 +26308,16 @@ class UI {
       this.doAction(() => this.game.actionSkipQuiz());
     });
 
+    this.wikiDialog = document.getElementById('wiki-dialog');
+    this.wikiTitle = document.getElementById('wiki-title');
+    this.wikiImage = document.getElementById('wiki-image');
+    this.wikiExtract = document.getElementById('wiki-extract');
+    this.wikiSource = document.getElementById('wiki-source');
+    this.arrivalWiki = document.getElementById('arrival-wiki');
+    this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
+    this.factWiki = document.getElementById('fact-wiki');
+    this.factWiki.addEventListener('click', () => this.openWiki(this.factWikiCity));
+
     this.eventDialog = document.getElementById('event-dialog');
     this.eventText = document.getElementById('event-text');
     this.eventEffect = document.getElementById('event-effect');
@@ -27089,6 +27217,7 @@ class UI {
       // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
       // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
+      this.factWiki.hidden = true;
       this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
@@ -27135,6 +27264,9 @@ class UI {
 
     const player = game.player;
     const city = this.factCity(player.pos);
+    // "Lue lisää" koskee aina sitä paikkaa, jonka teksti ruudussa on.
+    this.factWikiCity = city.id;
+    this.factWiki.hidden = !city.wiki;
     const facts = game.pack.placeFacts[city.id];
     if (!facts || facts.length === 0) return;
 
@@ -27260,6 +27392,7 @@ class UI {
     const pick = Math.floor(hash01(`arrival:${city.id}:${this.game.turnCount}`) * facts.length);
     const fact = facts[Math.min(pick, facts.length - 1)];
 
+    this.arrivalWiki.hidden = !city.wiki;
     this.arrivalCity.textContent = city.name;
     this.arrivalVoice.textContent = fact ? voiceTitle(factVoice(fact)) : '';
     this.arrivalText.textContent = '';
@@ -27268,6 +27401,49 @@ class UI {
       if (source) this.arrivalText.appendChild(source);
     });
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+  }
+
+  /**
+   * "Lue lisää": Wikipedian tiivistelmä paikasta. Dialogi avautuu heti ja
+   * täyttyy kun haku valmistuu, jottei nappi tunnu jumittuneelta. Jos haku
+   * epäonnistuu — ei yhteyttä, 404 tai täsmennyssivu — dialogissa lukee
+   * kohteliaasti, ettei tietoja saatu, eikä peli jää siitä jumiin.
+   */
+  async openWiki(cityId) {
+    const city = this.game.board.cityById.get(cityId);
+    if (!city?.wiki) return;
+
+    this.wikiTitle.textContent = city.name;
+    this.wikiImage.hidden = true;
+    this.wikiImage.removeAttribute('src');
+    this.wikiExtract.textContent = 'Haetaan…';
+    this.wikiSource.textContent = '';
+    if (!this.wikiDialog.open) this.wikiDialog.showModal();
+
+    const summary = await fetchSummary(city.wiki);
+    // Pelaaja on voinut ehtiä sulkea dialogin haun aikana.
+    if (!this.wikiDialog.open) return;
+
+    if (!summary) {
+      this.wikiExtract.textContent = 'Tietoja ei saatu haettua. Matka jatkuu.';
+      return;
+    }
+
+    this.wikiTitle.textContent = summary.title || city.name;
+    if (summary.image) {
+      this.wikiImage.src = summary.image;
+      this.wikiImage.alt = summary.title || city.name;
+      this.wikiImage.hidden = false;
+    }
+    this.wikiExtract.textContent = summary.extract;
+
+    // CC BY-SA vaatii maininnan ja linkin — myös kaupallisessa käytössä.
+    this.wikiSource.textContent = 'Lähde: Wikipedia (CC BY-SA) — ';
+    const link = html('a', '', 'lue artikkeli');
+    link.href = summary.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    this.wikiSource.appendChild(link);
   }
 
   closeArrival() {
@@ -28086,7 +28262,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.10';
+const APP_VERSION = '2026-07-28.11';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
