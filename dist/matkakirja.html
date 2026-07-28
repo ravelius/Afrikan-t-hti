@@ -912,30 +912,12 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .flight-doodle-fill { fill: rgba(70, 51, 31, 0.28); }
 
-/* Perillä: matka jatkuu vasta kun pelaaja astuu ulos koneesta. */
-.flight-exit {
-  position: absolute;
-  left: 50%;
-  bottom: 6%;
-  transform: translateX(-50%);
-  z-index: 6;
-  background: rgba(247, 237, 216, 0.94);
-  border: 1.5px solid rgba(122, 85, 20, 0.75);
-  border-radius: 10px;
-  color: var(--map-ink);
-  font-family: var(--font-type);
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  padding: 0.55rem 1.2rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-  animation: flight-exit-in 0.4s ease 0.25s backwards;
+/* Lentokohtaus häipyy pois pehmeästi. */
+.flight-overlay.flight-leaving {
+  opacity: 0;
+  transition: opacity 0.28s ease;
 }
 
-.flight-exit:hover { background: #fff8e8; }
-
-@keyframes flight-exit-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-}
 
 @media (max-width: 700px) {
   .intro { width: 90%; }
@@ -25213,13 +25195,17 @@ class Sound {
    * hiljaisuuteen; `tail` soittaa äänitteen lopun (esim. nopan asettuminen).
    * Palauttaa false, jos puskuria ei ole ladattu — silloin soi synteesi.
    */
-  playSlice(name, { dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0 } = {}) {
+  playSlice(name, {
+    dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0, tasavire = false,
+  } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
     if (!ctx || !buf) return false;
     const src = ctx.createBufferSource();
     src.buffer = buf;
-    src.playbackRate.value = this.jitter(1, 0.05);
+    // Vireheitto elävöittää kolahduksia, mutta vääristää mekaanisia ääniä
+    // (kirjoituskone kuulosti sen kanssa oudolta).
+    src.playbackRate.value = tasavire ? 1 : this.jitter(1, 0.05);
     const kesto = tail ?? dur;
     const iskut = isku ? this.sampleHits?.[name] : null;
     const alku = tail != null
@@ -25276,7 +25262,7 @@ const REAL_PLAYERS = {
   // iskukohdasta ja on tarpeeksi pitkä, että lyönnin sointi kuuluu —
   // lyhyet pätkät eivät kuulostaneet kirjoituskoneelta. Rytmi tulee
   // tekstin kirjoittumisesta (typeText), ei purskeista.
-  pen: (s) => s.playSlice('pen', { dur: 0.24, gain: 0.35, isku: true }),
+  pen: (s) => s.playSlice('pen', { dur: 0.24, gain: 0.35, isku: true, tasavire: true }),
   // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
   quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
 };
@@ -29820,12 +29806,14 @@ class UI {
       const gwBtn = html('button', 'wide', `🧭 ${link.label}`);
       gwBtn.addEventListener('click', async () => {
         sfx.play('flight');
-        // Kalvo toimii laudanvaihdossa suoraan: lähtönä nykyinen kaupunki,
-        // kohteena portin nimi — koordinaatteja ei tarvita.
-        await this.animateFlight(
-          game.cityOf()?.name ?? '', link.label,
-          game.flightLine(link.city, packById(link.pack)),
-        );
+        // Lentokalvo kuuluu vain maailmankartalle — mantereella lento
+        // tapahtuu suoraan karttanäkymässä.
+        if (game.pack.id === 'maailma') {
+          await this.animateFlight(
+            game.cityOf()?.name ?? '', link.label,
+            game.flightLine(link.city, packById(link.pack)),
+          );
+        }
         this.doAction(() => game.actionGateway(link.index));
       });
       this.actionsEl.appendChild(gwBtn);
@@ -31040,8 +31028,10 @@ class UI {
     const viive = (sana) => {
       if (slot !== 'intro') return speed;
       const perus = speed * (0.7 + Math.random() * 0.6);
-      if (/[.!?]$/.test(sana)) return perus + 420;
-      if (/[,;:—–]$/.test(sana)) return perus + 170;
+      if (/[.!?]$/.test(sana)) return perus + 620 + Math.random() * 320;
+      if (/[,;:—–]$/.test(sana)) return perus + 300 + Math.random() * 160;
+      // Kirjoittaja pysähtyy välillä miettimään kesken virkkeenkin.
+      if (Math.random() < 0.15) return perus + 280 + Math.random() * 340;
       return perus;
     };
 
@@ -31124,7 +31114,11 @@ class UI {
     sfx.play('flight');
     this.run(() => game.actionFly(destination), {
       after: async () => {
-        await this.animateFlight(lahto?.name ?? '', kohde?.name ?? '', line, suunta);
+        // Lentokalvo kuuluu vain maailmankartalle; mantereella nappula
+        // lentää suoraan karttanäkymässä.
+        if (game.pack.id === 'maailma') {
+          await this.animateFlight(lahto?.name ?? '', kohde?.name ?? '', line, suunta);
+        }
         await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
       },
     });
@@ -31137,29 +31131,11 @@ class UI {
    * lentoreitti täyttää reilusti yli puolet ruudusta ja matka näyttää
    * matkalta. Palauttaa lähtönäkymän viewBox-merkkijonon paluuta varten.
    */
-  /** Nappi, jolla astutaan ulos koneesta — matka jatkuu vasta siitä. */
-  waitFlightExit() {
-    return new Promise((resolve) => {
-      const btn = html('button', 'flight-exit', 'Olet perillä — astu ulos koneesta');
-      btn.type = 'button';
-      this.mapPane.appendChild(btn);
-      btn.addEventListener('click', () => {
-        sfx.play('paper');
-        btn.remove();
-        resolve();
-      }, { once: true });
-      btn.focus();
-    });
-  }
-
   /**
    * Indiana Jones -lentoanimaatio läpikuultavana kalvona kartan päällä.
-   * Karttaa ei zoomata — se on hitailla koneilla raskasta ja suurennettuna
-   * ruman näköistä. Sen sijaan lento piirretään omana yksinkertaisena
-   * kohtauksenaan: kaksi pistettä nimineen, kaareva punainen viiva joka
-   * piirtyy koneen perässä, ja alla kuultaa maailmankartta. Reitti täyttää
-   * aina valtaosan ruudusta, joten lyhytkin hyppy näyttää matkalta.
-   * Matka jatkuu vasta, kun pelaaja astuu ulos koneesta.
+   * Näytetään vain maailmankartalla — mantereella lento tapahtuu suoraan
+   * karttanäkymässä. Kohtaus häipyy itsestään hetken kuluttua perillä,
+   * ja napautus mihin tahansa ohittaa sen heti.
    *
    * `prefers-reduced-motion` ohittaa animaation kokonaan: silloin ei piirretä
    * mitään eikä odoteta, jotta peli etenee samaa tahtia kuin ennenkin.
@@ -31170,6 +31146,11 @@ class UI {
     const overlay = html('div', 'flight-overlay');
     const scene = el('svg', { viewBox: '0 0 1000 560', class: 'flight-scene' }, overlay);
     this.mapPane.appendChild(overlay);
+
+    // Napautus mihin tahansa ohittaa kohtauksen — lento hyppää perille
+    // ja kalvo häipyy saman tien.
+    let ohitettu = false;
+    overlay.addEventListener('pointerdown', () => { ohitettu = true; }, { once: true });
 
     // Isoisän karttalehti: käsin piirretyt vyöhykeviivat katkoviivalla
     // (kääntöpiirit) ja himmeitä päiväkirjamerkintöjä piirroksineen.
@@ -31253,7 +31234,8 @@ class UI {
     await new Promise((resolve) => {
       const alku = performance.now();
       const askel = (nyt) => {
-        const t = Math.min(1, (nyt - alku) / FLY_OVERLAY_MS);
+        // Napautus hyppää suoraan perille.
+        const t = ohitettu ? 1 : Math.min(1, (nyt - alku) / FLY_OVERLAY_MS);
         // Pehmeä kiihdytys ja jarrutus, jottei kone nykäise liikkeelle.
         const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
         reitti.style.strokeDashoffset = kokoPituus * (1 - e);
@@ -31272,11 +31254,20 @@ class UI {
 
     sfx.stopFlight();
 
-    // Kone jää kohteeseen ja repliikki pysyy ruudussa, kunnes pelaaja
-    // astuu itse ulos koneesta — kukin lukee omaan tahtiinsa, eikä
-    // kartta vaihdu kesken lauseen.
-    await this.waitFlightExit();
+    // Kohtaus häipyy itsestään pienen lukutauon jälkeen — tai heti, kun
+    // pelaaja napauttaa mihin tahansa.
+    if (!ohitettu) {
+      await new Promise((resolve) => {
+        const ajastin = setTimeout(resolve, 1900);
+        overlay.addEventListener('pointerdown', () => {
+          clearTimeout(ajastin);
+          resolve();
+        }, { once: true });
+      });
+    }
 
+    overlay.classList.add('flight-leaving');
+    await this.wait(280);
     overlay.remove();
     this.hideFlightLine();
   }
@@ -31442,7 +31433,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.7';
+const APP_VERSION = '2026-07-29.8';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

@@ -904,30 +904,12 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .flight-doodle-fill { fill: rgba(70, 51, 31, 0.28); }
 
-/* Perillä: matka jatkuu vasta kun pelaaja astuu ulos koneesta. */
-.flight-exit {
-  position: absolute;
-  left: 50%;
-  bottom: 6%;
-  transform: translateX(-50%);
-  z-index: 6;
-  background: rgba(247, 237, 216, 0.94);
-  border: 1.5px solid rgba(122, 85, 20, 0.75);
-  border-radius: 10px;
-  color: var(--map-ink);
-  font-family: var(--font-type);
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  padding: 0.55rem 1.2rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-  animation: flight-exit-in 0.4s ease 0.25s backwards;
+/* Lentokohtaus häipyy pois pehmeästi. */
+.flight-overlay.flight-leaving {
+  opacity: 0;
+  transition: opacity 0.28s ease;
 }
 
-.flight-exit:hover { background: #fff8e8; }
-
-@keyframes flight-exit-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-}
 
 @media (max-width: 700px) {
   .intro { width: 90%; }

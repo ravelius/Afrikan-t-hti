@@ -1019,12 +1019,14 @@ export class UI {
       const gwBtn = html('button', 'wide', `🧭 ${link.label}`);
       gwBtn.addEventListener('click', async () => {
         sfx.play('flight');
-        // Kalvo toimii laudanvaihdossa suoraan: lähtönä nykyinen kaupunki,
-        // kohteena portin nimi — koordinaatteja ei tarvita.
-        await this.animateFlight(
-          game.cityOf()?.name ?? '', link.label,
-          game.flightLine(link.city, packById(link.pack)),
-        );
+        // Lentokalvo kuuluu vain maailmankartalle — mantereella lento
+        // tapahtuu suoraan karttanäkymässä.
+        if (game.pack.id === 'maailma') {
+          await this.animateFlight(
+            game.cityOf()?.name ?? '', link.label,
+            game.flightLine(link.city, packById(link.pack)),
+          );
+        }
         this.doAction(() => game.actionGateway(link.index));
       });
       this.actionsEl.appendChild(gwBtn);
@@ -2240,8 +2242,10 @@ export class UI {
     const viive = (sana) => {
       if (slot !== 'intro') return speed;
       const perus = speed * (0.7 + Math.random() * 0.6);
-      if (/[.!?]$/.test(sana)) return perus + 420;
-      if (/[,;:—–]$/.test(sana)) return perus + 170;
+      if (/[.!?]$/.test(sana)) return perus + 620 + Math.random() * 320;
+      if (/[,;:—–]$/.test(sana)) return perus + 300 + Math.random() * 160;
+      // Kirjoittaja pysähtyy välillä miettimään kesken virkkeenkin.
+      if (Math.random() < 0.15) return perus + 280 + Math.random() * 340;
       return perus;
     };
 
@@ -2324,7 +2328,11 @@ export class UI {
     sfx.play('flight');
     this.run(() => game.actionFly(destination), {
       after: async () => {
-        await this.animateFlight(lahto?.name ?? '', kohde?.name ?? '', line, suunta);
+        // Lentokalvo kuuluu vain maailmankartalle; mantereella nappula
+        // lentää suoraan karttanäkymässä.
+        if (game.pack.id === 'maailma') {
+          await this.animateFlight(lahto?.name ?? '', kohde?.name ?? '', line, suunta);
+        }
         await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
       },
     });
@@ -2337,29 +2345,11 @@ export class UI {
    * lentoreitti täyttää reilusti yli puolet ruudusta ja matka näyttää
    * matkalta. Palauttaa lähtönäkymän viewBox-merkkijonon paluuta varten.
    */
-  /** Nappi, jolla astutaan ulos koneesta — matka jatkuu vasta siitä. */
-  waitFlightExit() {
-    return new Promise((resolve) => {
-      const btn = html('button', 'flight-exit', 'Olet perillä — astu ulos koneesta');
-      btn.type = 'button';
-      this.mapPane.appendChild(btn);
-      btn.addEventListener('click', () => {
-        sfx.play('paper');
-        btn.remove();
-        resolve();
-      }, { once: true });
-      btn.focus();
-    });
-  }
-
   /**
    * Indiana Jones -lentoanimaatio läpikuultavana kalvona kartan päällä.
-   * Karttaa ei zoomata — se on hitailla koneilla raskasta ja suurennettuna
-   * ruman näköistä. Sen sijaan lento piirretään omana yksinkertaisena
-   * kohtauksenaan: kaksi pistettä nimineen, kaareva punainen viiva joka
-   * piirtyy koneen perässä, ja alla kuultaa maailmankartta. Reitti täyttää
-   * aina valtaosan ruudusta, joten lyhytkin hyppy näyttää matkalta.
-   * Matka jatkuu vasta, kun pelaaja astuu ulos koneesta.
+   * Näytetään vain maailmankartalla — mantereella lento tapahtuu suoraan
+   * karttanäkymässä. Kohtaus häipyy itsestään hetken kuluttua perillä,
+   * ja napautus mihin tahansa ohittaa sen heti.
    *
    * `prefers-reduced-motion` ohittaa animaation kokonaan: silloin ei piirretä
    * mitään eikä odoteta, jotta peli etenee samaa tahtia kuin ennenkin.
@@ -2370,6 +2360,11 @@ export class UI {
     const overlay = html('div', 'flight-overlay');
     const scene = el('svg', { viewBox: '0 0 1000 560', class: 'flight-scene' }, overlay);
     this.mapPane.appendChild(overlay);
+
+    // Napautus mihin tahansa ohittaa kohtauksen — lento hyppää perille
+    // ja kalvo häipyy saman tien.
+    let ohitettu = false;
+    overlay.addEventListener('pointerdown', () => { ohitettu = true; }, { once: true });
 
     // Isoisän karttalehti: käsin piirretyt vyöhykeviivat katkoviivalla
     // (kääntöpiirit) ja himmeitä päiväkirjamerkintöjä piirroksineen.
@@ -2453,7 +2448,8 @@ export class UI {
     await new Promise((resolve) => {
       const alku = performance.now();
       const askel = (nyt) => {
-        const t = Math.min(1, (nyt - alku) / FLY_OVERLAY_MS);
+        // Napautus hyppää suoraan perille.
+        const t = ohitettu ? 1 : Math.min(1, (nyt - alku) / FLY_OVERLAY_MS);
         // Pehmeä kiihdytys ja jarrutus, jottei kone nykäise liikkeelle.
         const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
         reitti.style.strokeDashoffset = kokoPituus * (1 - e);
@@ -2472,11 +2468,20 @@ export class UI {
 
     sfx.stopFlight();
 
-    // Kone jää kohteeseen ja repliikki pysyy ruudussa, kunnes pelaaja
-    // astuu itse ulos koneesta — kukin lukee omaan tahtiinsa, eikä
-    // kartta vaihdu kesken lauseen.
-    await this.waitFlightExit();
+    // Kohtaus häipyy itsestään pienen lukutauon jälkeen — tai heti, kun
+    // pelaaja napauttaa mihin tahansa.
+    if (!ohitettu) {
+      await new Promise((resolve) => {
+        const ajastin = setTimeout(resolve, 1900);
+        overlay.addEventListener('pointerdown', () => {
+          clearTimeout(ajastin);
+          resolve();
+        }, { once: true });
+      });
+    }
 
+    overlay.classList.add('flight-leaving');
+    await this.wait(280);
     overlay.remove();
     this.hideFlightLine();
   }

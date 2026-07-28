@@ -565,13 +565,17 @@ class Sound {
    * hiljaisuuteen; `tail` soittaa äänitteen lopun (esim. nopan asettuminen).
    * Palauttaa false, jos puskuria ei ole ladattu — silloin soi synteesi.
    */
-  playSlice(name, { dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0 } = {}) {
+  playSlice(name, {
+    dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0, tasavire = false,
+  } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
     if (!ctx || !buf) return false;
     const src = ctx.createBufferSource();
     src.buffer = buf;
-    src.playbackRate.value = this.jitter(1, 0.05);
+    // Vireheitto elävöittää kolahduksia, mutta vääristää mekaanisia ääniä
+    // (kirjoituskone kuulosti sen kanssa oudolta).
+    src.playbackRate.value = tasavire ? 1 : this.jitter(1, 0.05);
     const kesto = tail ?? dur;
     const iskut = isku ? this.sampleHits?.[name] : null;
     const alku = tail != null
@@ -628,7 +632,7 @@ const REAL_PLAYERS = {
   // iskukohdasta ja on tarpeeksi pitkä, että lyönnin sointi kuuluu —
   // lyhyet pätkät eivät kuulostaneet kirjoituskoneelta. Rytmi tulee
   // tekstin kirjoittumisesta (typeText), ei purskeista.
-  pen: (s) => s.playSlice('pen', { dur: 0.24, gain: 0.35, isku: true }),
+  pen: (s) => s.playSlice('pen', { dur: 0.24, gain: 0.35, isku: true, tasavire: true }),
   // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
   quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
 };
