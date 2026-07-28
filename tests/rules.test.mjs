@@ -2367,3 +2367,63 @@ test('vanha tallenne ilman pulmatietoa jatkuu', () => {
   assert.ok(kopio.puzzlesSeen instanceof Set);
   assert.equal(kopio.puzzlesSeen.size, 0);
 });
+
+test('vesileilipulmassa vain merkitty vastaus tuottaa neljä mittaa', () => {
+  // Sarjat luetaan pulman vaihtoehdoista sanasta sanaan, jotta testi kaatuu,
+  // jos joku muokkaa tekstiä muuttamatta logiikkaa (tai päinvastoin).
+  const puzzle = packById('africa').puzzles.find((p) => p.id === 'vesileilit');
+  const KOOT = { kolmonen: 3, viitonen: 5 };
+
+  /** Suorittaa yhden sarjan ja palauttaa leilien sisällöt. */
+  const aja = (teksti) => {
+    const tila = { kolmonen: 0, viitonen: 0 };
+    for (const askel of teksti.toLowerCase().split(',').map((s) => s.trim())) {
+      const tayta = askel.match(/^täytä (kolmonen|viitonen)$/);
+      const tyhjenna = askel.match(/^tyhjennä (kolmonen|viitonen)$/);
+      const kaadaTayteen = askel.match(/^kaada (?:siitä )?(kolmonen|viitonen) täyteen$/);
+      const kaada = askel.match(/^kaada (?:se |kolmonen |viitonen |(?:kolmosen|viitosen) loput )?(kolmoseen|viitoseen)$/);
+
+      if (tayta) {
+        tila[tayta[1]] = KOOT[tayta[1]];
+      } else if (tyhjenna) {
+        tila[tyhjenna[1]] = 0;
+      } else if (kaadaTayteen) {
+        const kohde = kaadaTayteen[1];
+        const lahde = kohde === 'kolmonen' ? 'viitonen' : 'kolmonen';
+        const maara = Math.min(tila[lahde], KOOT[kohde] - tila[kohde]);
+        tila[lahde] -= maara;
+        tila[kohde] += maara;
+      } else if (kaada) {
+        const kohde = kaada[1] === 'kolmoseen' ? 'kolmonen' : 'viitonen';
+        const lahde = kohde === 'kolmonen' ? 'viitonen' : 'kolmonen';
+        const maara = Math.min(tila[lahde], KOOT[kohde] - tila[kohde]);
+        tila[lahde] -= maara;
+        tila[kohde] += maara;
+      } else {
+        assert.fail(`tunnistamaton askel: "${askel}"`);
+      }
+    }
+    return tila;
+  };
+
+  puzzle.options.forEach((teksti, i) => {
+    const { kolmonen, viitonen } = aja(teksti);
+    const nelja = kolmonen === 4 || viitonen === 4;
+    if (i === puzzle.correct) {
+      assert.ok(nelja, `merkitty oikea vastaus ei tuota neljää: ${kolmonen}/${viitonen}`);
+    } else {
+      assert.ok(!nelja, `väärä vaihtoehto ${i} tuottaakin neljä mittaa`);
+    }
+  });
+});
+
+test('kultapunnuspulmassa vain merkitty vastaus tasapainottaa vaa%an', () => {
+  const puzzle = packById('africa').puzzles.find((p) => p.id === 'punnukset');
+  const { kulta, vasen, oikea } = puzzle.sketch;
+  const vaje = (kulta + vasen) - oikea.reduce((a, b) => a + b, 0);
+  puzzle.options.forEach((teksti, i) => {
+    const tasapaino = Number(teksti) === vaje;
+    if (i === puzzle.correct) assert.ok(tasapaino, `merkitty vastaus ${teksti} ei tasapainota (tarvitaan ${vaje})`);
+    else assert.ok(!tasapaino, `väärä vaihtoehto ${teksti} tasapainottaakin vaa'an`);
+  });
+});
