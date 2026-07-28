@@ -42,8 +42,10 @@ class Sound {
 
       // Masteriketju: kaikki äänet → kompressori → ulos. Kompressori pitää
       // päällekkäiset äänet kasassa ilman että kokonaisvoimakkuus nousee.
+      // Hillitty kokonaistaso: syntetisoitu ääni antaa anteeksi paljon
+      // enemmän hiljaisena kuin kovana.
       this.master = this.ctx.createGain();
-      this.master.gain.value = 0.32;
+      this.master.gain.value = 0.24;
       const comp = this.ctx.createDynamicsCompressor();
       comp.threshold.value = -20;
       comp.knee.value = 26;
@@ -57,9 +59,9 @@ class Sound {
       // parannus — ilman sitä äänet kuulostavat siltä, että ne syntyvät
       // korvan sisällä eivätkä huoneessa.
       this.dry = this.ctx.createGain();
-      this.dry.gain.value = 0.75;
+      this.dry.gain.value = 0.82;
       this.wet = this.ctx.createGain();
-      this.wet.gain.value = 0.25;
+      this.wet.gain.value = 0.18;
       this.reverb = this.ctx.createConvolver();
       this.reverb.buffer = this.makeImpulse(1.2);
       this.dry.connect(this.master);

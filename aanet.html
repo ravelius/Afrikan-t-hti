@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matkakirja — äänitesti</title>
+  <style>
+    body {
+      margin: 0; padding: 1.2rem; background: #241a12; color: #f0e2c4;
+      font-family: 'Courier New', monospace;
+    }
+    h1 { font-size: 1.1rem; letter-spacing: 0.08em; color: #d9a13b; }
+    p { max-width: 40rem; line-height: 1.5; color: #cbb691; }
+    .grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    button {
+      background: rgba(247, 237, 216, 0.08); color: #f0e2c4;
+      border: 1px solid rgba(214, 188, 140, 0.45); border-radius: 8px;
+      font-family: inherit; font-size: 0.95rem; padding: 0.7rem 1rem;
+      min-width: 8.5rem; cursor: pointer;
+    }
+    button:active { background: rgba(247, 237, 216, 0.2); }
+    .osio { margin-top: 1.4rem; font-size: 0.8rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #9c8661; }
+  </style>
+</head>
+<body>
+  <h1>Matkakirja — äänitesti</h1>
+  <p>Viritysivu: napauta ääntä ja kerro, mikä kuulostaa huonolta ja miltä
+     sen pitäisi kuulostaa. Ei linkitetty pelistä.</p>
+  <div id="lista" class="grid"></div>
+  <div class="osio">Lento</div>
+  <div class="grid">
+    <button id="lento-alku">startFlight</button>
+    <button id="lento-loppu">stopFlight</button>
+  </div>
+  <script type="module">
+    import { sfx } from './js/sound.js';
+    const nimet = [
+      'click', 'paper', 'swipe', 'dieTick', 'dieLand', 'step', 'arrive',
+      'ferry', 'flight', 'correct', 'wrong', 'hint', 'tick', 'timeout',
+      'flip', 'clack', 'star', 'gem', 'horseshoe', 'robber', 'empty',
+      'coin', 'stuck', 'turn', 'win',
+    ];
+    const lista = document.getElementById('lista');
+    for (const nimi of nimet) {
+      const b = document.createElement('button');
+      b.textContent = nimi;
+      b.addEventListener('click', () => sfx.play(nimi));
+      lista.appendChild(b);
+    }
+    document.getElementById('lento-alku').addEventListener('click', () => sfx.startFlight());
+    document.getElementById('lento-loppu').addEventListener('click', () => sfx.stopFlight());
+  </script>
+</body>
+</html>

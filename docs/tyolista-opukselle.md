@@ -87,12 +87,39 @@ Mamma Haidara -kirjasto, Library of Congressin näyttely — opettaa
 laskemaan vuodenaikojen alut tähtien liikkeistä) täsmäävät lähteisiin.
 Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 
-## Seuraavaksi: PAKETTI 16 (äänet)
+## Seuraavaksi: PAKETTI 17 (ambienssi)
 
-**Paketit 1–15 ovat valmiit (28.7.2026).** Lento on sittemmin muutettu
-läpikuultavaksi kalvoksi kartan päälle: suunta seuraa maantiedettä,
-ensimmäinen lento hehkuttaa matkakirjaa (texts.flightFirst) ja
-merkinnät ovat käsialaa. Seuraavaksi paketti 16 (alempana).
+**Paketit 1–16 ovat valmiit (28.7.2026).** Omistajan mukaan äänet ovat
+paketin 16 jälkeenkin kököt: kokonaistasoa ja kaikua on jo hillitty
+(#94), ja repossa on viritysivu `/aanet.html`, jolla omistaja käy äänet
+läpi ja antaa äänikohtaisen palautteen — älä tee uutta yleisremonttia
+ennen sitä palautetta. Seuraavaksi tehdään paketti 17 (alempana).
+
+## Paketti 17: ambienssi — taustaäänimaisema kohteen mukaan
+
+Omistajan toive: hiljainen taustaääni, jossa tuulen suhinaa ja välillä
+muita luonnon tai kaupungin ääniä, ja tyyppi vaihtuu kohteen mukaan.
+Toteutus Web Audiolla ilman tiedostoja (js/sound.js).
+
+- **Tyypit (muutama, kierrätetään):** `aavikko` (matala tuulen suhina,
+  hiekan rahinaa puuskissa), `meri` (aaltojen kohina paisuen ja
+  laantuen, harva lokinhuuto), `sademetsa` (sirinä, satunnaiset
+  vesipisarat, kaukainen linnun vihellys), `savanni` (heinäsirkat,
+  kuiva tuuli), `ylanko` (ohut viima), `basaari` (VAIKEIN — ei
+  yritetä puhetta: vaimeita kulkusia, kavionkopsetta ja etäistä
+  rytmiä harvakseltaan). Kaikki HYVIN hiljaisia (gain ~0.03–0.05):
+  ambienssin kuuluu huomata vasta kun se lakkaa.
+- **Rakenne:** jatkuva pohja (suodatettu kohina hitailla LFO:illa) +
+  satunnaisia tapahtumia pitkin, epäsäännöllisin välein (8–30 s) —
+  Math.random käy, äänet eivät ole pelitilaa.
+- **Data:** Afrikan kaupungeille `ambience`-kenttä (africa.js cities);
+  muut laudat myöhemmin, ilman kenttää ambienssia ei soiteta.
+  Vaihto ristihäivytyksellä (~2 s) kaupungin vaihtuessa; merellä
+  liikuttaessa aina `meri`.
+- **Reunaehdot:** käynnistys vasta käyttäjän eleestä (iOS), ei saa
+  kuulua dialogien tai kirjoituskoneen yli, sfx.enabled sammuttaa,
+  akku: yksi yhteinen kohinapuskuri ja vähän solmuja. Savutesti:
+  jokainen tyyppi käynnistyy ja sammuu ilman virhettä.
 
 ## Paketti 15: lentorepliikkien tunnelataus (pieni paketti) — VALMIS
 
