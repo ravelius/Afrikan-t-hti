@@ -83,11 +83,12 @@ Mamma Haidara -kirjasto, Library of Congressin näyttely — opettaa
 laskemaan vuodenaikojen alut tähtien liikkeistä) täsmäävät lähteisiin.
 Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 
-## Seuraavaksi: PAKETTI 15 (lentorepliikkien tunnelataus)
+## Seuraavaksi: PAKETTI 16 (äänet)
 
-**Paketit 1–14 ovat valmiit (28.7.2026).** Lento on sittemmin muutettu
-läpikuultavaksi kalvoksi kartan päälle (ei zoomausta) ja perillä
-odottaa "astu ulos koneesta" -nappi. Seuraavaksi paketti 15 (alempana).
+**Paketit 1–15 ovat valmiit (28.7.2026).** Lento on sittemmin muutettu
+läpikuultavaksi kalvoksi kartan päälle: suunta seuraa maantiedettä,
+ensimmäinen lento hehkuttaa matkakirjaa (texts.flightFirst) ja
+merkinnät ovat käsialaa. Seuraavaksi paketti 16 (alempana).
 
 ## Paketti 15: lentorepliikkien tunnelataus (pieni paketti) — VALMIS
 
@@ -771,6 +772,46 @@ uhkuvaa kohteesta riippuen.
 - Testit: flightLines-rivien eheys (pituus > 20, uniikkius,
   kohdekaupunki on laudalla), arvonta siemenellä deterministinen.
   Animaatiosta kuvakaappaus.
+
+## Paketti 16: äänet oleellisesti paremmiksi (js/sound.js)
+
+Omistajan kysymys "voiko ääniä parantaa oleellisesti?" — voi. Pysytään
+Web Audiossa ilman äänitiedostoja (offline ja standalone säilyvät
+kevyinä, ja synteesi istuu käsintehtyyn estetiikkaan). Kolme tasoa:
+
+1. **Tila (suurin yksittäinen parannus).** Generoitu kaiku:
+   ConvolverNode, jonka impulssivaste on eksponentiaalisesti laskeva
+   kohinapulssi (~1.2 s). Kaikki äänet ajetaan sen läpi (dry/wet-suhde
+   ~0.25). Masteriin DynamicsCompressorNode pehmeillä asetuksilla.
+2. **Materiaalit.** Äänet rakennetaan kuulostamaan esineiltä:
+   - noppa: kohinapurske 2–3 resonoivan bandpass-suodattimen läpi
+     (~180/290/430 Hz) = puinen kopsahdus pergamentilla; pomput
+     hiljenevät ja kiristyvät.
+   - tähti/jalokivet: epäharmoniset kellopartiaalit (soittorasia) —
+     esim. perustaajuus + 2.76x + 5.4x omilla vaimenemisillaan.
+   - kolikko: FM-synteesi (modulaattori ~3.5x kantoaalto, nopea
+     vaimennus) = metallinen kilahdus.
+   - passin leima: matala siniläiskä (~80 Hz) + kohinaklikki.
+   - lento: potkurihurina koko kalvokohtauksen ajaksi — saha-aalto
+     alipäästön läpi, LFO moduloi voimakkuutta ~14 Hz, nousee ja
+     laskee kohtauksen mukana (kesto FLY_OVERLAY_MS).
+   - laiva: kaksi hieman eri vireistä kanttiaaltoa alipäästön läpi =
+     sumutorvi; oikea/väärä vastaus: lyhyt puhdas terssi / vaimea
+     matala "hmph" ilman piippausta.
+3. **Väsymisen esto.** Jokaiseen soittoon ±3 % satunnainen vire- ja
+   voimakkuusheitto (Math.random käy — äänet eivät ole pelitilaa).
+   Usein toistuvat äänet (askel, klikki, kirjoituskone) pidetään
+   erityisen hiljaisina ja lyhyinä.
+
+Reunaehdot: ei uusia tiedostoja eikä riippuvuuksia; sfx-rajapinta
+(play-nimet) säilyy, jotta ui.js ei muutu paitsi lennon
+aloitus/lopetus (esim. sfx.startFlight()/stopFlight() tai kesto
+parametrina); äänet luodaan laiskasti käyttäjän eleestä kuten nyt
+(iOS vaatii); kokonaisvoimakkuus ei saa nousta nykyisestä.
+Kuuntele oikeasti: aja peli Playwrightilla ja tallenna ääninäyte tai
+vähintään tarkista konsolista, ettei soitto heitä virheitä millään
+äänellä. Versionostot ja testit kuten aina (sound.js:lle savutesti:
+jokainen SOUNDS-nimi soi ilman poikkeusta OfflineAudioContextissa).
 
 ## Muistilista jokaiseen pakettiin
 
