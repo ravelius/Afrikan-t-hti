@@ -1805,15 +1805,33 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 }
 
 /*
- * "Lue lisää": Wikipedian tiivistelmä paikasta. Nappi on hillitty, koska se
- * on lisätieto eikä pelin kehotus — pelaaja etsii sen kun haluaa.
+ * "Lue lisää": Wikipedian tiivistelmä paikasta. Ei kehystä eikä taustaa —
+ * pelkkä tekstilinkki pergamentilla, kuten omistaja päätti. Tumma kulta
+ * erottuu pergamentilta; kapean näytön tumma kortti saa oman värin alla.
  */
 .wiki-btn {
   margin-top: 0.4rem;
   font-size: 0.78rem;
-  padding: 0.2rem 0.6rem;
+  padding: 0.1rem 0;
   min-height: 0;
   align-self: flex-start;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: #7a5514;
+  letter-spacing: 0.05em;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.wiki-btn:hover:not(:disabled) {
+  background: none;
+  color: #9c6f1e;
+}
+
+/* Kapealla näytöllä tietokortti on tumma, joten linkki vaalenee. */
+@media (max-width: 700px) {
+  .fact-card .wiki-btn { color: var(--accent); }
 }
 
 .wiki-card { max-width: 560px; }
@@ -28292,7 +28310,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.13';
+const APP_VERSION = '2026-07-28.14';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
