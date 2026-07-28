@@ -6,11 +6,19 @@
 
 const STORAGE_KEY = 'afrikan-tahti-sound';
 
+// Ambienssin ristihäivytys ja tapahtumien väli. Väli on tarkoituksella pitkä
+// ja epäsäännöllinen: säännöllinen ääni alkaa kuulua kellona.
+const AMBIENCE_FADE = 2;
+const AMBIENCE_EVENT_MIN = 8000;
+const AMBIENCE_EVENT_MAX = 30000;
+
 class Sound {
   constructor() {
     this.ctx = null;
     this.master = null;
     this.noise = null;
+    this.ambience = null;
+    this.ambienceType = null;
     this.enabled = this.loadSetting();
   }
 
@@ -30,6 +38,7 @@ class Sound {
       /* tallennus ei ole välttämätöntä */
     }
     if (enabled) this.play('click');
+    else this.setAmbience(null);
   }
 
   /** Luo äänikontekstin ensimmäisellä kerralla ja herättää sen tarvittaessa. */
@@ -288,6 +297,148 @@ class Sound {
     }
   }
 
+
+  // --- ambienssi ------------------------------------------------------------
+  //
+  // Hiljainen taustaäänimaisema, joka vaihtuu kohteen mukaan. Rakenne on
+  // kaikilla tyypeillä sama: jatkuva pohja (suodatettua kohinaa hitailla
+  // LFO:illa) ja sen päällä satunnaisia tapahtumia epäsäännöllisin välein.
+  // Kaikki on tarkoituksella hyvin hiljaista — ambienssin kuuluu huomata
+  // vasta kun se lakkaa.
+
+  /**
+   * Vaihtaa äänimaiseman ristihäivytyksellä. `null` sammuttaa.
+   * Sama tyyppi uudelleen ei tee mitään, jotta maisema ei nykäise
+   * jokaisella renderöinnillä.
+   */
+  setAmbience(type) {
+    if (type === this.ambienceType) return;
+    this.ambienceType = type ?? null;
+
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+
+    // Vanha häivytetään pois ja puretaan vasta sen jälkeen.
+    if (this.ambience) this.fadeOutAmbience(this.ambience);
+    this.ambience = null;
+    if (!type || !AMBIENCES[type]) return;
+
+    const out = ctx.createGain();
+    out.gain.setValueAtTime(0.0001, ctx.currentTime);
+    out.gain.exponentialRampToValueAtTime(1, ctx.currentTime + AMBIENCE_FADE);
+    out.connect(this.bus);
+
+    const maisema = { out, nodes: [], timer: null, type };
+    this.ambience = maisema;
+    AMBIENCES[type](this, maisema);
+    this.scheduleAmbienceEvent(maisema);
+  }
+
+  /** Häivyttää ja purkaa yhden maiseman. */
+  fadeOutAmbience(maisema) {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    clearTimeout(maisema.timer);
+    maisema.timer = null;
+    maisema.loppuu = true;
+    try {
+      maisema.out.gain.cancelScheduledValues(t);
+      maisema.out.gain.setValueAtTime(Math.max(maisema.out.gain.value, 0.0001), t);
+      maisema.out.gain.exponentialRampToValueAtTime(0.0001, t + AMBIENCE_FADE);
+    } catch {
+      /* solmu oli jo purettu */
+    }
+    for (const n of maisema.nodes) {
+      try { n.stop(t + AMBIENCE_FADE + 0.1); } catch { /* jo pysäytetty */ }
+    }
+  }
+
+  /**
+   * Jatkuva pohja: kohinaa suodattimen läpi, ja hidas LFO liikuttaa
+   * voimakkuutta niin ettei ääni ole tasainen seinä.
+   */
+  ambienceBed(maisema, { type = 'lowpass', freq = 500, q = 0.7, gain = 0.04, lfoHz = 0.08, lfoDepth = 0.5 }) {
+    const ctx = this.ctx;
+    const t0 = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = this.noise;
+    src.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.value = freq;
+    f.Q.value = q;
+    const g = ctx.createGain();
+    g.gain.value = gain;
+
+    // Hidas huojunta: puuskia ja laantumista.
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = lfoHz;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = gain * lfoDepth;
+    lfo.connect(lfoGain).connect(g.gain);
+
+    src.connect(f).connect(g).connect(maisema.out);
+    src.start(t0);
+    lfo.start(t0);
+    maisema.nodes.push(src, lfo);
+  }
+
+  /** Ajastaa seuraavan satunnaisen tapahtuman epäsäännöllisen välin päähän. */
+  scheduleAmbienceEvent(maisema) {
+    if (maisema.loppuu) return;
+    const viive = AMBIENCE_EVENT_MIN + Math.random() * (AMBIENCE_EVENT_MAX - AMBIENCE_EVENT_MIN);
+    maisema.timer = setTimeout(() => {
+      if (maisema.loppuu || this.ambience !== maisema) return;
+      const tapahtuma = AMBIENCE_EVENTS[maisema.type];
+      if (tapahtuma) {
+        try { tapahtuma(this, maisema); } catch { /* ei saa kaataa peliä */ }
+      }
+      this.scheduleAmbienceEvent(maisema);
+    }, viive);
+    // Ajastin ei saa pitää Nodea hereillä testeissä.
+    if (maisema.timer && typeof maisema.timer.unref === 'function') maisema.timer.unref();
+  }
+
+  /** Lyhyt ambienssiääni maiseman omaan ulostuloon (ei kaikubussiin suoraan). */
+  ambienceHit({ maisema, freq = 800, dur = 0.5, gain = 0.02, type = 'bandpass', q = 4, sweepTo = null }) {
+    const ctx = this.ctx;
+    if (!ctx || maisema.loppuu) return;
+    const t0 = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = this.noise;
+    src.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.setValueAtTime(this.jitter(freq), t0);
+    if (sweepTo) f.frequency.exponentialRampToValueAtTime(Math.max(sweepTo, 40), t0 + dur);
+    f.Q.value = q;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(this.jitter(gain), t0 + dur * 0.25);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(f).connect(g).connect(maisema.out);
+    src.start(t0);
+    src.stop(t0 + dur + 0.05);
+  }
+
+  /** Lyhyt sävelambienssi: linnut, kulkuset ja vastaavat. */
+  ambienceTone({ maisema, freq = 900, to = null, dur = 0.3, gain = 0.02, type = 'sine', delay = 0 }) {
+    const ctx = this.ctx;
+    if (!ctx || maisema.loppuu) return;
+    const t0 = ctx.currentTime + delay;
+    const osc = ctx.createOscillator();
+    osc.type = type;
+    osc.frequency.setValueAtTime(this.jitter(freq), t0);
+    if (to) osc.frequency.exponentialRampToValueAtTime(Math.max(this.jitter(to), 20), t0 + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(this.jitter(gain), t0 + dur * 0.2);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g).connect(maisema.out);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.05);
+  }
+
   // --- pelin äänet --------------------------------------------------------
 
   play(name) {
@@ -296,6 +447,95 @@ class Sound {
     if (sound) sound(this);
   }
 }
+
+
+// --- äänimaisemat -----------------------------------------------------------
+//
+// Jokainen maisema on jatkuva pohja; tapahtumat ovat erikseen alla. Kaikki
+// voimakkuudet ovat välillä 0,03–0,05: taustan kuuluu jäädä huomaamatta,
+// kunnes se lakkaa.
+
+const AMBIENCES = {
+  // Aavikko: matala tuulen suhina, jossa pitkät puuskat.
+  aavikko: (s, m) => {
+    s.ambienceBed(m, { type: 'lowpass', freq: 420, gain: 0.045, lfoHz: 0.06, lfoDepth: 0.6 });
+    s.ambienceBed(m, { type: 'bandpass', freq: 1100, q: 0.5, gain: 0.018, lfoHz: 0.11 });
+  },
+  // Meri: aallot paisuvat ja laantuvat hitaasti.
+  meri: (s, m) => {
+    s.ambienceBed(m, { type: 'lowpass', freq: 600, gain: 0.05, lfoHz: 0.13, lfoDepth: 0.75 });
+    s.ambienceBed(m, { type: 'highpass', freq: 1800, gain: 0.012, lfoHz: 0.09 });
+  },
+  // Sademetsä: tiheä korkea sirinä ja kostea pohja.
+  sademetsa: (s, m) => {
+    s.ambienceBed(m, { type: 'bandpass', freq: 3600, q: 1.6, gain: 0.03, lfoHz: 0.22, lfoDepth: 0.35 });
+    s.ambienceBed(m, { type: 'lowpass', freq: 300, gain: 0.03, lfoHz: 0.05 });
+  },
+  // Savanni: heinäsirkkojen kapea kaista ja kuiva tuuli.
+  savanni: (s, m) => {
+    s.ambienceBed(m, { type: 'bandpass', freq: 5200, q: 3.2, gain: 0.022, lfoHz: 0.3, lfoDepth: 0.5 });
+    s.ambienceBed(m, { type: 'lowpass', freq: 500, gain: 0.032, lfoHz: 0.07 });
+  },
+  // Ylänkö: ohut viima, ei juuri muuta.
+  ylanko: (s, m) => {
+    s.ambienceBed(m, { type: 'highpass', freq: 900, gain: 0.03, lfoHz: 0.1, lfoDepth: 0.6 });
+  },
+  // Basaari: ei yritetä puhetta — vain matala hälypohja, jonka päälle tulee
+  // kulkusia ja kavionkopsetta harvakseltaan.
+  basaari: (s, m) => {
+    s.ambienceBed(m, { type: 'bandpass', freq: 700, q: 0.8, gain: 0.035, lfoHz: 0.17, lfoDepth: 0.45 });
+  },
+};
+
+// Satunnaiset tapahtumat maiseman päällä, 8–30 sekunnin välein.
+const AMBIENCE_EVENTS = {
+  // Hiekan rahinaa puuskassa.
+  aavikko: (s, m) => s.ambienceHit({
+    maisema: m, type: 'highpass', freq: 1800, sweepTo: 3400, dur: 1.6, gain: 0.022, q: 0.6,
+  }),
+  // Harva lokinhuuto: kaksi laskevaa säveltä.
+  meri: (s, m) => {
+    if (Math.random() < 0.55) {
+      s.ambienceTone({ maisema: m, freq: 1500, to: 950, dur: 0.3, gain: 0.016, type: 'triangle' });
+      s.ambienceTone({ maisema: m, freq: 1400, to: 900, dur: 0.26, gain: 0.013, type: 'triangle', delay: 0.42 });
+    } else {
+      s.ambienceHit({ maisema: m, type: 'lowpass', freq: 900, sweepTo: 300, dur: 2.4, gain: 0.03, q: 0.5 });
+    }
+  },
+  // Vesipisara tai kaukainen linnun vihellys.
+  sademetsa: (s, m) => {
+    if (Math.random() < 0.5) {
+      s.ambienceTone({ maisema: m, freq: 2400, to: 1300, dur: 0.09, gain: 0.02, type: 'sine' });
+    } else {
+      s.ambienceTone({ maisema: m, freq: 1900, to: 2600, dur: 0.22, gain: 0.014, type: 'sine' });
+      s.ambienceTone({ maisema: m, freq: 2600, to: 1800, dur: 0.18, gain: 0.012, type: 'sine', delay: 0.24 });
+    }
+  },
+  // Sirkkojen tiheys nousee hetkeksi.
+  savanni: (s, m) => s.ambienceHit({
+    maisema: m, type: 'bandpass', freq: 5600, dur: 2.2, gain: 0.016, q: 4,
+  }),
+  // Yksittäinen viiman kiihdytys.
+  ylanko: (s, m) => s.ambienceHit({
+    maisema: m, type: 'highpass', freq: 1200, sweepTo: 2600, dur: 2.8, gain: 0.018, q: 0.5,
+  }),
+  // Kulkunen tai kavionkopse.
+  basaari: (s, m) => {
+    if (Math.random() < 0.5) {
+      for (let i = 0; i < 3; i++) {
+        s.ambienceTone({
+          maisema: m, freq: 2100 + i * 90, dur: 0.12, gain: 0.012, type: 'triangle', delay: i * 0.14,
+        });
+      }
+    } else {
+      for (let i = 0; i < 4; i++) {
+        s.ambienceHit({ maisema: m, freq: 260, dur: 0.09, gain: 0.014, q: 7 });
+      }
+    }
+  },
+};
+
+export const AMBIENCE_TYPES = Object.keys(AMBIENCES);
 
 const SOUNDS = {
   // Käyttöliittymä

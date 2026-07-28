@@ -1223,7 +1223,28 @@ export class UI {
     return row;
   }
 
+  /**
+   * Äänimaisema seuraa matkaajaa: kaupungin oma ambienssi, tai meri kun
+   * ollaan reitillä merellä. Ilman ambience-kenttää ei soiteta mitään, joten
+   * muut laudat pysyvät hiljaisina kunnes ne saavat omansa.
+   */
+  syncAmbience() {
+    const { game } = this;
+    if (game.phase === 'pickstart' || game.phase === 'over') {
+      sfx.setAmbience(null);
+      return;
+    }
+    const pos = game.player.pos;
+    if (pos.type === 'edge') {
+      const edge = game.board.edgeById.get(pos.edge);
+      sfx.setAmbience(edge?.type === 'sea' ? 'meri' : null);
+      return;
+    }
+    sfx.setAmbience(game.board.cityById.get(pos.city)?.ambience ?? null);
+  }
+
   render() {
+    this.syncAmbience();
     if (this.dead) return;
     this.onChange?.(this.game);
     // Aloituskartalla asettelu on kahdessa palstassa; pelin käynnistyttyä

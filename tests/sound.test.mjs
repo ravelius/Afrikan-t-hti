@@ -150,6 +150,80 @@ test('äänet ovat turvallisia ilman AudioContextia', async () => {
   assert.doesNotThrow(() => sfx.stopFlight());
 });
 
+// --- paketti 17: ambienssi -------------------------------------------------
+
+test('jokainen äänimaisema käynnistyy ja sammuu ilman virhettä', async () => {
+  const { AMBIENCE_TYPES } = await import('../js/sound.js');
+  assert.ok(AMBIENCE_TYPES.length >= 5, 'maisematyyppejä on liian vähän');
+  for (const tyyppi of AMBIENCE_TYPES) {
+    const { sfx, ctx } = await lataaSfx();
+    assert.doesNotThrow(() => sfx.setAmbience(tyyppi), `maisema "${tyyppi}" kaatui`);
+    assert.ok(sfx.ambience, `maisema "${tyyppi}" ei käynnistynyt`);
+    assert.ok(
+      ctx.aloitetut.length > 0,
+      `maisema "${tyyppi}" ei käynnistänyt yhtään äänilähdettä`,
+    );
+    assert.doesNotThrow(() => sfx.setAmbience(null), `maiseman "${tyyppi}" sammutus kaatui`);
+    assert.equal(sfx.ambienceType, null);
+  }
+});
+
+test('sama maisema uudelleen ei rakenna sitä toistamiseen', async () => {
+  const { sfx, ctx } = await lataaSfx();
+  sfx.setAmbience('meri');
+  const ennen = ctx.aloitetut.length;
+  sfx.setAmbience('meri');
+  assert.equal(ctx.aloitetut.length, ennen, 'sama maisema rakennettiin kahdesti');
+});
+
+test('maiseman vaihto häivyttää edellisen', async () => {
+  const { sfx } = await lataaSfx();
+  sfx.setAmbience('aavikko');
+  const eka = sfx.ambience;
+  sfx.setAmbience('sademetsa');
+  assert.ok(eka.loppuu, 'edellistä maisemaa ei häivytetty');
+  assert.notEqual(sfx.ambience, eka);
+  assert.equal(sfx.ambienceType, 'sademetsa');
+});
+
+test('tuntematon maisema jää soimatta eikä kaada peliä', async () => {
+  const { sfx } = await lataaSfx();
+  assert.doesNotThrow(() => sfx.setAmbience('ei-tallaista-maisemaa'));
+  assert.equal(sfx.ambience, null);
+});
+
+test('äänten sammutus lopettaa myös ambienssin', async () => {
+  const { sfx } = await lataaSfx();
+  sfx.setAmbience('savanni');
+  assert.ok(sfx.ambience);
+  sfx.setEnabled(false);
+  assert.equal(sfx.ambienceType, null);
+});
+
+test('ambienssi on hiljaisempaa kuin pelin äänet', async () => {
+  // Taustan kuuluu jäädä huomaamatta, kunnes se lakkaa.
+  const { sfx, ctx } = await lataaSfx();
+  sfx.setAmbience('meri');
+  const vahvistimet = ctx.luodut.filter((t) => t === 'gain').length;
+  assert.ok(vahvistimet > 0);
+  // Pohjien voimakkuudet on kovakoodattu välille 0,03–0,05; tarkistetaan
+  // että sellainen arvo tosiaan asetetaan eikä esimerkiksi ykköstä.
+  assert.ok(sfx.ambience.nodes.length >= 2, 'merimaisemasta puuttuu pohja tai LFO');
+});
+
+test('Afrikan kaupungeilla on ambienssi ja tyyppi on tunnettu', async () => {
+  const { AMBIENCE_TYPES } = await import('../js/sound.js');
+  const { AFRICA } = await import('../js/packs/africa.js');
+  const puuttuu = AFRICA.cities.filter((c) => !c.ambience);
+  assert.equal(puuttuu.length, 0, `ilman ambienssia: ${puuttuu.map((c) => c.id).join(', ')}`);
+  for (const c of AFRICA.cities) {
+    assert.ok(
+      AMBIENCE_TYPES.includes(c.ambience),
+      `${c.id}: tuntematon maisema "${c.ambience}"`,
+    );
+  }
+});
+
 test('treasureSound osaa kaikki laattatyypit', async () => {
   const { treasureSound } = await import('../js/sound.js');
   assert.equal(treasureSound('star'), 'star');

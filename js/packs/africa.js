@@ -41,7 +41,7 @@ const AFRICA_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const AFRICA_CITIES = [
   {
-    id: 'tanger', name: 'Tanger', wiki: 'Tanger', x: 189, y: 52, start: true, airport: true,
+    id: 'tanger', name: 'Tanger', wiki: 'Tanger', ambience: 'basaari', x: 189, y: 52, start: true, airport: true,
     // Gibraltarin salmen yli Espanjaan: lyhin hyppy Afrikasta Eurooppaan.
     // Tanger on myös maailmankartalla, joten sinne pääsee takaisin.
     links: [
@@ -50,7 +50,7 @@ const AFRICA_CITIES = [
     ],
   },
   {
-    id: 'kairo', name: 'Kairo', wiki: 'Kairo', x: 683, y: 125, start: true, airport: true,
+    id: 'kairo', name: 'Kairo', wiki: 'Kairo', ambience: 'basaari', x: 683, y: 125, start: true, airport: true,
     // Sama kaupunki on myös Lähi-idän laudalla: vaelluksessa tästä jatketaan.
     links: [
       { pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' },
@@ -58,43 +58,43 @@ const AFRICA_CITIES = [
     ],
   },
 
-  { id: 'tripoli', name: 'Tripoli', wiki: 'Tripoli', x: 443, y: 89, airport: true },
-  { id: 'murzuk', name: 'Murzuk', wiki: 'Murzuk', x: 474, y: 196 },
-  { id: 'alkufra', name: 'Al Kufra', wiki: 'Kufra', x: 577, y: 197 },
-  { id: 'sahara', name: 'Sahara', wiki: 'Sahara', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
-  { id: 'ahaggar', name: 'Ahaggar', wiki: 'Ahaggar', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
-  { id: 'timbuktu', name: 'Timbuktu', wiki: 'Timbuktu', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
-  { id: 'gao', name: 'Gao', wiki: 'Gao', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
+  { id: 'tripoli', name: 'Tripoli', wiki: 'Tripoli', ambience: 'basaari', x: 443, y: 89, airport: true },
+  { id: 'murzuk', name: 'Murzuk', wiki: 'Murzuk', ambience: 'aavikko', x: 474, y: 196 },
+  { id: 'alkufra', name: 'Al Kufra', wiki: 'Kufra', ambience: 'aavikko', x: 577, y: 197 },
+  { id: 'sahara', name: 'Sahara', wiki: 'Sahara', ambience: 'aavikko', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
+  { id: 'ahaggar', name: 'Ahaggar', wiki: 'Ahaggar', ambience: 'aavikko', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
+  { id: 'timbuktu', name: 'Timbuktu', wiki: 'Timbuktu', ambience: 'aavikko', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
+  { id: 'gao', name: 'Gao', wiki: 'Gao', ambience: 'aavikko', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'dakar', name: 'Dakar', wiki: 'Dakar', x: 45, y: 318, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'dakar', name: 'Dakar', wiki: 'Dakar', ambience: 'meri', x: 45, y: 318, airport: true, la: 'start', lx: 16, ly: 5,
     // Etelä-Atlantin ylitys Dakarista Brasiliaan on vanha postilentoreitti.
     links: [{ pack: 'southamerica', city: 'joaopessoa', label: 'Etelä-Amerikan lauta' }],
   },
-  { id: 'sierraleone', name: 'Sierra Leone', wiki: 'Sierra Leone', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
-  { id: 'kappalmas', name: 'Kap Palmas', wiki: 'Cape Palmas', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
-  { id: 'kumasi', name: 'Kumasi', wiki: 'Kumasi', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
-  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', x: 330, y: 404 },
-  { id: 'kano', name: 'Kano', wiki: 'Kano', x: 394, y: 336, airport: true },
-  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
-  { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'angola', name: 'Angola', wiki: 'Angola', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
-  { id: 'namib', name: 'Namib', wiki: 'Namib', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
+  { id: 'sierraleone', name: 'Sierra Leone', wiki: 'Sierra Leone', ambience: 'sademetsa', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
+  { id: 'kappalmas', name: 'Kap Palmas', wiki: 'Cape Palmas', ambience: 'meri', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
+  { id: 'kumasi', name: 'Kumasi', wiki: 'Kumasi', ambience: 'sademetsa', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
+  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', ambience: 'meri', x: 330, y: 404 },
+  { id: 'kano', name: 'Kano', wiki: 'Kano', ambience: 'savanni', x: 394, y: 336, airport: true },
+  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', ambience: 'sademetsa', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
+  { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', ambience: 'sademetsa', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'angola', name: 'Angola', wiki: 'Angola', ambience: 'savanni', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
+  { id: 'namib', name: 'Namib', wiki: 'Namib', ambience: 'aavikko', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
   {
-    id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
+    id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
     links: [{ pack: 'maailma', city: 'kapkaupunki', label: 'Maailma-lauta' }],
   },
-  { id: 'kimberley', name: 'Kimberley', wiki: 'Kimberley (Etelä-Afrikka)', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
-  { id: 'mosambik', name: 'Mosambik', wiki: 'Mosambikin saari', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
-  { id: 'madagaskar', name: 'Madagaskar', wiki: 'Madagaskar', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sansibar', name: 'Sansibar', wiki: 'Sansibar', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'kilimandzaro', name: 'Kilimandžaro', wiki: 'Kilimanjaro', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
-  { id: 'viktoria', name: 'Viktoria Nyanza', wiki: 'Victoria-järvi', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
-  { id: 'tanganjika', name: 'Tanganjika', wiki: 'Tanganjikajärvi', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
-  { id: 'bahrelghazal', name: 'Bahr el Ghazal', wiki: 'Bahr el Ghazal', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
-  { id: 'darfur', name: 'Darfur', wiki: 'Darfur', x: 575, y: 318 },
-  { id: 'suakin', name: 'Suakin', wiki: 'Suakin', x: 764, y: 261 },
-  { id: 'addisabeba', name: 'Addis Abeba', wiki: 'Addis Abeba', x: 783, y: 387, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'rashafun', name: 'Ras Hafun', wiki: 'Ras Hafun', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
+  { id: 'kimberley', name: 'Kimberley', wiki: 'Kimberley (Etelä-Afrikka)', ambience: 'savanni', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
+  { id: 'mosambik', name: 'Mosambik', wiki: 'Mosambikin saari', ambience: 'meri', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
+  { id: 'madagaskar', name: 'Madagaskar', wiki: 'Madagaskar', ambience: 'sademetsa', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sansibar', name: 'Sansibar', wiki: 'Sansibar', ambience: 'meri', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'kilimandzaro', name: 'Kilimandžaro', wiki: 'Kilimanjaro', ambience: 'ylanko', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
+  { id: 'viktoria', name: 'Viktoria Nyanza', wiki: 'Victoria-järvi', ambience: 'savanni', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
+  { id: 'tanganjika', name: 'Tanganjika', wiki: 'Tanganjikajärvi', ambience: 'savanni', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
+  { id: 'bahrelghazal', name: 'Bahr el Ghazal', wiki: 'Bahr el Ghazal', ambience: 'savanni', x: 627, y: 400, la: 'end', lx: -16, ly: 5 },
+  { id: 'darfur', name: 'Darfur', wiki: 'Darfur', ambience: 'savanni', x: 575, y: 318 },
+  { id: 'suakin', name: 'Suakin', wiki: 'Suakin', ambience: 'meri', x: 764, y: 261 },
+  { id: 'addisabeba', name: 'Addis Abeba', wiki: 'Addis Abeba', ambience: 'ylanko', x: 783, y: 387, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'rashafun', name: 'Ras Hafun', wiki: 'Ras Hafun', ambience: 'meri', x: 940, y: 368, la: 'end', lx: -18, ly: -4 },
 ];
 
 

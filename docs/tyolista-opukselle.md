@@ -70,6 +70,9 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   materiaalipohjaiset äänet (resonoiva noppa, soittorasiakello,
   FM-kolikko, sumutorvi), potkurihurina lennolle ja vireheitto
   väsymisen estoon.
+- Paketti 17 (ambienssi): ✅ (28.7.2026) — kuusi äänimaisemaa (aavikko,
+  meri, sademetsä, savanni, ylänkö, basaari) ja ambience-kenttä kaikille
+  32 Afrikan kaupungille. Vaihto ristihäivytyksellä, merellä aina meri.
 - Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
   tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
   tarkistettu artikkeliotsikko.
@@ -95,7 +98,7 @@ paketin 16 jälkeenkin kököt: kokonaistasoa ja kaikua on jo hillitty
 läpi ja antaa äänikohtaisen palautteen — älä tee uutta yleisremonttia
 ennen sitä palautetta. Seuraavaksi tehdään paketti 17 (alempana).
 
-## Paketti 17: ambienssi — taustaäänimaisema kohteen mukaan
+## Paketti 17: ambienssi — taustaäänimaisema kohteen mukaan — VALMIS
 
 Omistajan toive: hiljainen taustaääni, jossa tuulen suhinaa ja välillä
 muita luonnon tai kaupungin ääniä, ja tyyppi vaihtuu kohteen mukaan.
