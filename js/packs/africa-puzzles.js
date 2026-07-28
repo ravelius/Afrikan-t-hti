@@ -399,7 +399,7 @@ function arvoKuunvaiheet(rng) {
  */
 const NAKSUTUSVARIANTIT = [
   {
-    q: 'Piirsin muistiin kolme kohtaa, joista kieli irtoaa naksahtaen; jokaisella on oma kirjaimensa. Kansa kutsuu itseään nimellä isiXhosa — millä näistä nimi alkaa?',
+    q: 'Piirsin muistiin kolme kohtaa, joista kieli irtoaa naksahtaen; jokaisella on oma kirjaimensa. Kansan kielen nimi on isiXhosa, ja sen keskellä kuuluu naksaus — kirjainpari Xh. Mikä näistä se on?',
     vastaus: 'x — kielen sivu poskihampailta',
     muut: [
       'c — kielen kärki etuhampailta',
@@ -407,6 +407,7 @@ const NAKSUTUSVARIANTIT = [
       'c — kielen sivu poskihampailta',
     ],
     jarjestys: [0, 1, 2],
+    hint: 'Nimi on kirjoitettu kysymykseen: isiXhosa. Mikä naksauskirjain sen keskeltä löytyy?',
   },
   {
     q: 'Kolme naksausta, kolme kirjainta. Sana cela — pyytää — alkaa kevyimmällä niistä, samalla jolla englantilainen paheksuu. Mikä se on?',
@@ -417,6 +418,7 @@ const NAKSUTUSVARIANTIT = [
       'c — kielen kärki hammasvallilta',
     ],
     jarjestys: [2, 0, 1],
+    hint: 'Sana cela alkaa c:llä — ja paheksuva "ts, ts" syntyy kielen kärjellä ylähampaiden takana.',
   },
   {
     q: 'Kolmas naksaus on syvin: kieli irtoaa kitalaen etuosasta ja poksahtaa kuin korkki pullosta. Sana qala — aloittaa — alkaa sillä. Mikä kirjain?',
@@ -427,6 +429,7 @@ const NAKSUTUSVARIANTIT = [
       'q — kielen sivu poskihampailta',
     ],
     jarjestys: [1, 2, 0],
+    hint: 'Sana qala alkaa q:lla — korkin poksahdus syntyy kielen kärjellä hammasvallilta.',
   },
 ];
 
@@ -438,6 +441,7 @@ function arvoNaksutus(rng) {
     q: v.q,
     options,
     correct: options.indexOf(v.vastaus),
+    hint: v.hint,
   };
 }
 
@@ -449,6 +453,7 @@ function arvoNaksutus(rng) {
 const LEILIVARIANTIT = [
   {
     tavoite: 4,
+    hint: 'Kun täydestä viitosesta kaadetaan kolmonen täyteen, viitoseen jää kaksi mittaa. Mieti, mihin ne kaksi saadaan talteen.',
     q: 'Leilejä on kaksi, toiseen menee kolme mittaa ja toiseen viisi, eikä kummankaan kyljessä ole yhtään viivaa. Oppaani tarvitsee tasan neljä ennen kuin lähdemme.',
     vastaus: 'Täytä 5, kaada 3 täyteen, tyhjennä 3, kaada loput 3:een, täytä 5, kaada 3 täyteen',
     muut: [
@@ -459,6 +464,7 @@ const LEILIVARIANTIT = [
   },
   {
     tavoite: 2,
+    hint: 'Paljonko viitoseen jää, kun siitä kaadetaan kolmonen täyteen?',
     q: 'Kolmen ja viiden mitan leilit, ei yhtään viivaa kyljessä. Tällä kertaa oppaani tahtoo tasan kaksi mittaa.',
     vastaus: 'Täytä 5, kaada 3 täyteen',
     muut: [
@@ -469,6 +475,7 @@ const LEILIVARIANTIT = [
   },
   {
     tavoite: 1,
+    hint: 'Täytä kolmonen kahdesti ja kaada molemmat viitoseen — toisella kerralla kaikki ei enää mahdu.',
     q: 'Samat kaksi leiliä, kolme ja viisi mittaa. Nyt tarvitaan tasan yksi mitta — sen verran vettä menee teekannuun.',
     vastaus: 'Täytä 3, kaada 5:een, täytä 3, kaada 5 täyteen',
     muut: [
@@ -487,6 +494,7 @@ function arvoVesileilit(rng) {
     q: v.q,
     options,
     correct: options.indexOf(v.vastaus),
+    hint: v.hint,
   };
 }
 
@@ -508,6 +516,8 @@ export const AFRICA_PUZZLES = [
     generate: GENERATORS.hieroglyfit,
     city: 'kairo',
     title: 'Hieroglyfien luvut',
+    selite: 'Piirroksessa: seinän lukumerkit — sauva, kaari ja köysikiehkura. Kolmen ensimmäisen rivin arvo lukee vieressä; neljäs on ratkaistava.',
+    hint: 'Sauva on yksi, kaari kymmenen ja kiehkura sata. Merkit lasketaan yhteen.',
     q: 'Temppelin seinään on hakattu lukuja, ja opas luki kolme niistä minulle ääneen. Neljättä hän ei lukenut — sanoi, että pärjään kyllä itsekin.',
     options: ['312', '2103', '213', '231'],
     correct: 2,
@@ -522,6 +532,8 @@ export const AFRICA_PUZZLES = [
     generate: GENERATORS.punnukset,
     city: 'kumasi',
     title: 'Kultapunnusten vaaka',
+    selite: 'Piirroksessa: vaaka. Vasemmalla vadissa kultahiekka ja punnus, oikealla punnukset — luvut ovat punnusten arvoja.',
+    hint: 'Laske ensin valmiin vadin summa. Puuttuva punnus on erotus.',
     q: 'Kauppias punnitsee kultahiekkaa messinkipunnuksilla, joiden arvot hän tuntee ulkoa. Toinen vati on valmis, toisesta puuttuu vielä yksi punnus — mikä?',
     options: ['2', '3', '4', '6'],
     correct: 1,
@@ -537,6 +549,8 @@ export const AFRICA_PUZZLES = [
     generate: GENERATORS.naksutus,
     city: 'kapkaupunki',
     title: 'Kolme naksausta',
+    selite: 'Piirroksessa: suu sivulta kolmesti — ylhäällä hampaat ja kitalaki, alhaalla kieli. Nuoli näyttää, mistä kohtaa kieli irtoaa naksahtaen; alla naksauksen kirjain.',
+    hint: 'Katso kysytty kirjain ja etsi vaihtoehto, jonka kuvaus vastaa sen nuolta piirroksessa.',
     q: 'Piirsin muistiin kolme kohtaa, joista kieli irtoaa naksahtaen; jokaisella on oma kirjaimensa. Kansa kutsuu kieltään nimellä isiXhosa — mikä näistä on sen Xh?',
     options: [
       'c — kielen kärki etuhampailta',
@@ -556,6 +570,8 @@ export const AFRICA_PUZZLES = [
     generate: GENERATORS.kuunvaiheet,
     city: 'timbuktu',
     title: 'Kuu käsikirjoituksen sivulla',
+    selite: 'Piirroksessa: kuun vaiheet järjestyksessä vasemmalta oikealle — viimeinen on jätetty tyhjäksi.',
+    hint: 'Katso paljonko valo kasvaa tai vähenee askelten välillä, ja jatka sarjaa yhdellä askeleella.',
     q: 'Kirjaston mestari käänsi eteeni sivun, jolle kuu on piirretty neljä kertaa peräkkäin. Kolme ensimmäistä ymmärrän; neljäs on jätetty tyhjäksi, ja hän odottaa minun sanovan sen ääneen.',
     options: ['kasvava kupera kuu', 'täysikuu', 'kasvava sirppi', 'vähenevä puolikuu'],
     correct: 0,
@@ -569,6 +585,8 @@ export const AFRICA_PUZZLES = [
     generate: GENERATORS.vesileilit,
     city: 'sahara',
     title: 'Neljä mittaa vettä',
+    selite: 'Piirroksessa: kaksi leiliä — pienempään mahtuu kolme mittaa, isompaan viisi. Kaataa saa leilistä toiseen, täyttää ja tyhjentää saa vapaasti.',
+    hint: 'Kun täydestä viitosesta kaadetaan kolmonen täyteen, viitoseen jää kaksi mittaa. Mieti, mihin ne kaksi saadaan talteen.',
     q: 'Leilejä on kaksi, kolmosleiliin menee kolme mittaa ja viitosleiliin viisi, eikä kummankaan kyljessä ole yhtään viivaa. Oppaani tarvitsee tasan neljä mittaa toiseen leiliin ennen kuin lähdemme.',
     options: [
       'Täytä kolmonen, kaada se viitoseen, täytä kolmonen, kaada viitonen täyteen, tyhjennä viitonen, kaada kolmosen loput viitoseen',

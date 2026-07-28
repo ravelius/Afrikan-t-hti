@@ -2416,12 +2416,30 @@ test('pulma ei käännä laattaa eikä päätä vuoroa', () => {
   assert.equal(game.phase, 'action', 'vuoro jatkuu siitä mihin jäätiin');
 });
 
-test('pulmassa ei ole apukeinoja', () => {
+test('pulmassa on apukeinot: vihje ja 50:50', () => {
   const puzzle = packById('africa').puzzles[0];
   const game = puzzleGame(406, puzzle.city);
   game.openPuzzle();
-  assert.equal(game.actionFiftyFifty().ok, false, '50:50 ei kuulu pulmaan');
-  assert.equal(game.actionHint().ok, false, 'pulmassa ei ole vihjettä');
+  assert.ok(game.quiz.hint, 'pulmalla on vihjeteksti');
+  assert.ok(game.quiz.selite, 'pulmalla on piirroksen selite');
+  assert.equal(game.actionHint().ok, true, 'vihjeen voi ostaa');
+  assert.equal(game.actionFiftyFifty().ok, true, '50:50 toimii pulmassa');
+  assert.equal(game.quiz.hidden.length, 2, 'kaksi väärää piiloon');
+  assert.ok(!game.quiz.hidden.includes(game.quiz.correct), 'oikea vaihtoehto jää näkyviin');
+});
+
+test('jokaisella pulmalla ja variantilla on vihje ja selite', () => {
+  for (const p of packById('africa').puzzles) {
+    assert.ok(typeof p.selite === 'string' && p.selite.length > 20, `${p.id}: selite puuttuu`);
+    assert.ok(typeof p.hint === 'string' && p.hint.length > 10, `${p.id}: vihje puuttuu`);
+    if (!p.generate) continue;
+    // Kaikilla arvotuilla varianteilla on oma tai peritty vihje.
+    for (let i = 0; i < 30; i++) {
+      const arvottu = p.generate(mulberry32(1000 + i));
+      const hint = arvottu?.hint ?? p.hint;
+      assert.ok(typeof hint === 'string' && hint.length > 10, `${p.id}: variantin vihje puuttuu`);
+    }
+  }
 });
 
 test('nähdyt pulmat säilyvät tallennuksessa', () => {
