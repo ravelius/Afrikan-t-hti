@@ -207,6 +207,22 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 
 .board-hint:empty { display: none; }
 
+/*
+ * Karttakysymyksen kysymysrivi: tavallista ohjeriviä painavampi, jotta se
+ * luetaan kysymyksenä eikä huomautuksena — ja läpinäkymätön, koska se voi
+ * osua päiväkirjakortin päälle.
+ */
+.board-hint.ask {
+  background: rgba(28, 20, 12, 0.95);
+  border: 1.5px solid rgba(217, 161, 59, 0.75);
+  border-radius: 12px;
+  color: #f3e6c6;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.35);
+}
+
 /* --- laudalla lepäävä 3D-noppa --- */
 
 .die-layer {
@@ -1075,6 +1091,28 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 .target:hover .target-ring.pick { fill: rgba(176, 138, 60, 0.18); }
 .target-ring.pick.picked { stroke: #e8b23c; stroke-width: 3; }
 .target-ring.picked { stroke: #e8b23c; }
+
+/*
+ * Karttakysymyksen vastausehdokkaat: täytetty, hehkuva ja sykkivä rengas.
+ * Pelkkä ohut valintarengas hukkui karttaan, eikä pelaaja tiennyt mitä
+ * napauttaa — nämä neljä saavat siksi erottua kunnolla.
+ */
+.target-ring.pick.quiz {
+  fill: rgba(217, 144, 36, 0.25);
+  stroke: #8f5c1d;
+  stroke-width: 3.4;
+  filter: drop-shadow(0 0 3px rgba(255, 248, 230, 0.95));
+  animation: quiz-ring-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes quiz-ring-pulse {
+  0%, 100% { stroke-width: 3.4; opacity: 1; }
+  50% { stroke-width: 6; opacity: 0.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .target-ring.pick.quiz { animation: none; }
+}
 
 /*
  * Siirtorenkaat olivat punaisia, paksuja ja pyöriviä — jalan liikuttaessa
@@ -28760,7 +28798,9 @@ class UI {
         if (!c) return;
         const g = el('g', { class: 'target' }, this.targetLayer);
         el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
-        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring pick' }, g);
+        // Sykkivä rengas erottuu siirtorenkaista: pelaajan pitää huomata,
+        // että juuri nämä kaupungit ovat vastausvaihtoehtoja.
+        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring pick quiz' }, g);
         g.addEventListener('click', () => this.answerQuiz(i));
       });
       return;
@@ -29618,10 +29658,14 @@ class UI {
 
     // Karttakysymykseen vastataan napauttamalla lautaa, joten modaali pysyy
     // kiinni siihen asti. Vastauksen jälkeen tulos näytetään normaalisti.
+    // Ohjerivi kertoo suoraan miten vastataan — ilman kehotusta pelaaja jäi
+    // odottamaan vastausvaihtoehtoja, joita ei koskaan tullut.
+    this.hint.classList.remove('ask');
     if (quiz.kind === 'map' && quiz.chosen === null) {
       this.stopQuizTimer();
       if (this.quizDialog.open) this.quizDialog.close();
-      this.hint.textContent = quiz.question;
+      this.hint.textContent = `${quiz.question} Napauta vastausta kartalla.`;
+      this.hint.classList.add('ask');
       return;
     }
 
