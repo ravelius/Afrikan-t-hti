@@ -73,6 +73,9 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Paketti 17 (ambienssi): ✅ (28.7.2026) — kuusi äänimaisemaa (aavikko,
   meri, sademetsä, savanni, ylänkö, basaari) ja ambience-kenttä kaikille
   32 Afrikan kaupungille. Vaihto ristihäivytyksellä, merellä aina meri.
+- Paketti 18 (Katso kuva -linkit): ✅ (28.7.2026) — 24 uutta wiki-kenttää
+  Afrikan havaintoihin, yhteensä 30 linkkiä 29 kaupungilla. Jokainen
+  otsikko tarkistettu rajapinnasta ja jokaisella on kuva.
 - Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
   tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
   tarkistettu artikkeliotsikko.
@@ -97,7 +100,7 @@ läpi viritysivulla `/aanet.html` ja antaa äänikohtaisen palautteen —
 älä tee uutta äänten yleisremonttia ennen sitä palautetta.
 Seuraavaksi tehdään paketti 18, ja sen jälkeen paketti 19 (alempana).
 
-## Paketti 18: Katso kuva -linkit Afrikan havaintoihin
+## Paketti 18: Katso kuva -linkit Afrikan havaintoihin — VALMIS
 
 Omistajan toive: kun havainto kuvailee ilmiötä ("tulivuori jolla kaksi
 kraatterijärveä", "kallioihin hakatut kirahvit"), pienestä linkistä

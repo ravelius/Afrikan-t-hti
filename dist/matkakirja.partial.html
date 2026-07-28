@@ -5745,14 +5745,20 @@ const AFRICA_QUESTIONS = {
 const AFRICA_FACTS = {
   tanger: [
     'Lautta Espanjasta kesti reilun puolituntisen, ja silti vaihtui manner ja kieli. Medinan kujilla eksyin sadan metrin matkalla kahdesti — molemmilla kerroilla samaan minttuteepöytään.',
-    'Valkoiset talot nousevat rinnettä kuin katsomo, ja ylhäältä näkyy kahden meren raja: Atlantti ja Välimeri kohtaavat juuri tässä.',
+    {
+      text: 'Valkoiset talot nousevat rinnettä kuin katsomo, ja ylhäältä näkyy kahden meren raja: Atlantti ja Välimeri kohtaavat juuri tässä.',
+      wiki: 'Gibraltarinsalmi',
+    },
     {
       text: 'Salmen yli näkee Espanjaan selkeällä säällä, ja silti tämä on toinen maanosa. Kaksi maanosaa katsoo toisiaan neljäntoista kilometrin päästä eikä kumpikaan ole toistaan vanhempi.',
       voice: 'isoisa',
     },
   ],
   kairo: [
-    'Pyramidit eivät seiso keskellä aavikkoa vaan kaupungin laidalla: kadun päästä näkyy neljä ja puoli tuhatta vuotta historiaa, ja sen edessä on pysäköintialue.',
+    {
+      text: 'Pyramidit eivät seiso keskellä aavikkoa vaan kaupungin laidalla: kadun päästä näkyy neljä ja puoli tuhatta vuotta historiaa, ja sen edessä on pysäköintialue.',
+      wiki: 'Gizan pyramidit',
+    },
     'Liikenteessä äänitorvi ei ole varoitus vaan keskustelua. Niili virtaa kaiken keskellä tyynenä, kuin ei olisi huomannut rannoilleen kasvanutta kahdenkymmenen miljoonan ihmisen kaupunkia.',
     {
       text: 'Basaarissa neuvoteltiin hinnasta kolme kuppia teetä, ja häviön kärsin minä. Pyramidit olivat vanhoja jo silloin, kun Rooma oli kylä — tämän kirjoitan muistiin, jotta en kotona väittäisi mitään muuta.',
@@ -5782,7 +5788,10 @@ const AFRICA_FACTS = {
     },
   ],
   alkufra: [
-    'Ikkunasta katsottuna aavikkoon on piirretty täydellisiä vihreitä ympyröitä, kymmenittäin ja tarkalleen samankokoisia. Ne ovat peltoja: keskellä pyörii pitkä kastelupuomi, ja ympyrä on juuri se, minkä puomi ehtii kastella. Kaikki muu näkyvissä oleva on hiekkaa.',
+    {
+      text: 'Ikkunasta katsottuna aavikkoon on piirretty täydellisiä vihreitä ympyröitä, kymmenittäin ja tarkalleen samankokoisia. Ne ovat peltoja: keskellä pyörii pitkä kastelupuomi, ja ympyrä on juuri se, minkä puomi ehtii kastella. Kaikki muu näkyvissä oleva on hiekkaa.',
+      wiki: 'Center-pivot irrigation',
+    },
     'Vesi tulee täällä hanasta kuten kotona, mutta se on nostettu satojen metrien syvyydestä hiekkakivestä, ja se on satanut maahan kymmeniä tuhansia vuosia sitten. Isoisä kirjoitti, ettei kukaan hänen tuntemansa ollut käynyt täällä; lähimmälle rannikolle on yhä yli kahdeksansataa kilometriä, joten uskon häntä.',
     {
       text: 'Keidas ilmestyy hiekan keskelle kuin virhe kartassa: taatelipalmuja, varjoa ja vettä. Vesi tulee maan alta, ja sen määrän tietävät vain ne, jotka ovat asuneet täällä sukupolvia.',
@@ -5794,6 +5803,7 @@ const AFRICA_FACTS = {
     'Vain noin neljäsosa Saharasta on hiekkadyynejä — loput kivikkoa, soraa ja vuoria. Opas kaatoi teetä kolmannen kerran, sillä kolme lasillista kuuluu asiaan, ja katsoi karttaani hyväntahtoisesti.',
     {
       text: 'Päivällä helle halkeilee, yöllä tarvitsen kaksi peittoa. Kallioon on piirretty karjaa ja metsästäjiä — joku on siis paimentanut lehmiä siellä, missä minä en löydä vettä.',
+      wiki: 'Tassili n’Ajjer',
       voice: 'isoisa',
     },
   ],
@@ -5810,7 +5820,10 @@ const AFRICA_FACTS = {
   ],
   timbuktu: [
     'Kadut ovat hiekkaa, ja aamulla niistä lukee yön tapahtumat: vuohien sorkanjäljet, moottoripyörän ura, lakaisijan viuhka. Puoleenpäivään mennessä tuuli on pyyhkinyt sivun tyhjäksi.',
-    'Vuonna 2012 kaupungin keskiaikaisia käsikirjoituksia pelastettiin sodan alta veneillä Nigeriä pitkin etelään — kirjastonhoitajat salakuljettivat ne itse, arkku kerrallaan.',
+    {
+      text: 'Vuonna 2012 kaupungin keskiaikaisia käsikirjoituksia pelastettiin sodan alta veneillä Nigeriä pitkin etelään — kirjastonhoitajat salakuljettivat ne itse, arkku kerrallaan.',
+      wiki: 'Timbuktu Manuscripts',
+    },
     {
       text: 'Klubilla kaupungin nimeä käytetään tarkoittamaan paikkaa, jota ei ole. Täällä on kirjastoja, joissa on käsikirjoituksia tähtitieteestä ja laista — enemmän kirjoja kuin monessa englantilaisessa pikkukaupungissa.',
       voice: 'isoisa',
@@ -5818,7 +5831,10 @@ const AFRICA_FACTS = {
   ],
   gao: [
     'Tulin Gaoon aavikon puolelta, ja joki tuli vastaan varoittamatta: Niger on tässä leveä, ruskea ja hidas, ja vastarannalla kohoaa vaaleanpunainen dyyni. Täältä hallittiin 1400- ja 1500-luvulla Songhain valtakuntaa, yhtä Afrikan historian suurimmista — ja sen valtaväylä oli tämä joki, ei mikään tie.',
-    'Askian hauta on savea, noin seitsemäntoista metriä korkea, ja sen kyljistä törröttää puunpätkiä. Ne eivät ole koristeita vaan telineet: savipinta rapataan uudelleen sateiden jälkeen, ja tikkaat on rakennettu valmiiksi seinän sisään. Rakennus on vuodelta 1495 ja seisoo yhä, koska sitä korjataan käsin.',
+    {
+      text: 'Askian hauta on savea, noin seitsemäntoista metriä korkea, ja sen kyljistä törröttää puunpätkiä. Ne eivät ole koristeita vaan telineet: savipinta rapataan uudelleen sateiden jälkeen, ja tikkaat on rakennettu valmiiksi seinän sisään. Rakennus on vuodelta 1495 ja seisoo yhä, koska sitä korjataan käsin.',
+      wiki: 'Tomb of Askia',
+    },
     {
       text: 'Joen rannalla oli valtakunnan pääkaupunki silloin, kun Englannissa riideltiin ruusuista. Hallitsijan hautakumpu on savesta, ja se on yhä pystyssä — savea kannattaa siis olla kunnioittavampi kuin olen ollut.',
       voice: 'isoisa',
@@ -5826,7 +5842,10 @@ const AFRICA_FACTS = {
   ],
   dakar: [
     'Illalla koko rantabulevardi lähtee liikkeelle: satoja lenkkeilijöitä, ja punttisali suoraan hiekalla Atlantin äärellä. Tämä on mantereen läntisin kärki — pidemmälle länteen pääsee vain uimalla.',
-    'Goréen lautalla koululaiset lauloivat koko kahdenkymmenen minuutin matkan. Saarella on ovi, joka avautuu suoraan merelle, eikä sen kynnyksellä laula kukaan.',
+    {
+      text: 'Goréen lautalla koululaiset lauloivat koko kahdenkymmenen minuutin matkan. Saarella on ovi, joka avautuu suoraan merelle, eikä sen kynnyksellä laula kukaan.',
+      wiki: 'House of Slaves',
+    },
     {
       text: 'Tästä läntisimmästä kärjestä on Amerikkaan lyhyempi matka kuin kotiin Lontooseen. Edustan pikkusaarelta lähti laivoja, joiden lastina oli ihmisiä. Sen laivauksen järjesti minun maanosani, ei tämä.',
       voice: 'isoisa',
@@ -5834,7 +5853,10 @@ const AFRICA_FACTS = {
   ],
   sierraleone: [
     'Lentokone laskeutuu Lungiin, mutta kaupunki on lahden toisella puolella, joten viimeinen etappi ostetaan lipputiskiltä ja tehdään vesibussilla. Kannelta näkyy se, mistä maa sai nimensä: vuoret nousevat suoraan merestä, ja portugalilaiset merenkulkijat kirjasivat ne noin 1462 leijonavuoriksi.',
-    '"Tuossa se oli", sanoi mies ja osoitti tyhjää kohtaa aukion keskellä. Siinä kasvoi kapokkipuu, jonka alle kokoontuivat vuonna 1792 orjuudesta vapautetut ihmiset, jotka perustivat Freetownin. Puu kaatui myrskyssä toukokuussa 2023, ja aukiolla seistään yhä samassa kohdassa.',
+    {
+      text: '"Tuossa se oli", sanoi mies ja osoitti tyhjää kohtaa aukion keskellä. Siinä kasvoi kapokkipuu, jonka alle kokoontuivat vuonna 1792 orjuudesta vapautetut ihmiset, jotka perustivat Freetownin. Puu kaatui myrskyssä toukokuussa 2023, ja aukiolla seistään yhä samassa kohdassa.',
+      wiki: 'Cotton Tree (Sierra Leone)',
+    },
     {
       text: 'Vuorisen niemen suojassa on satama, jonka nimi tarkoittaa vapautta. Nimi on annettu siksi, että vapaus oli ensin otettu pois — sitä ei sanota ääneen niissä juhlapuheissa, joita olen kuunnellut.',
       voice: 'isoisa',
@@ -5842,14 +5864,20 @@ const AFRICA_FACTS = {
   ],
   kappalmas: [
     'Kartalla tässä on kulma: rannikko on tullut Atlantin rantaa etelään asti ja kääntyy Kap Palmasin kohdalla jyrkästi itään kohti Guineanlahtea. Purjelaivojen aikaan tämän niemen ohi kulki koko läntinen liikenne, ja rannan palmut näkyivät merelle niin selvästi, että portugalilaiset nimesivät paikan niiden mukaan. Seison nyt siinä kohdassa, jossa Afrikka kääntyy.',
-    'Niemen kupeessa on Harperin kaupunki, jonka perustivat 1830-luvulla Amerikasta tulleet vapautetut orjat ja vapaana syntyneet mustat amerikkalaiset. Se pysyi Liberiasta erillään yli kaksi vuosikymmentä ja julistautui lopulta omaksi pieneksi tasavallakseen nimeltä Maryland, kunnes liittyi Liberiaan vuonna 1857 — maahan, joka oli julistautunut itsenäiseksi jo 1847, kauan ennen kuin Eurooppa istui jakamaan loput mantereesta.',
+    {
+      text: 'Niemen kupeessa on Harperin kaupunki, jonka perustivat 1830-luvulla Amerikasta tulleet vapautetut orjat ja vapaana syntyneet mustat amerikkalaiset. Se pysyi Liberiasta erillään yli kaksi vuosikymmentä ja julistautui lopulta omaksi pieneksi tasavallakseen nimeltä Maryland, kunnes liittyi Liberiaan vuonna 1857 — maahan, joka oli julistautunut itsenäiseksi jo 1847, kauan ennen kuin Eurooppa istui jakamaan loput mantereesta.',
+      wiki: 'Harper, Liberia',
+    },
     {
       text: 'Tässä kohdassa rannikko kääntyy jyrkästi itään, ja palmuja on niin paljon että ne näkyvät kannelle asti. Purjehtija tietää sijaintinsa puista; minä tarvitsin siihen sekstantin ja kaksi tuntia.',
       voice: 'isoisa',
     },
   ],
   kumasi: [
-    '"Seuraa kenkiä, niin löydät ulos", sanoi myyjä, kun myönsin eksyneeni. Kejetian toria sanotaan Länsi-Afrikan suurimmaksi yhtenäiseksi toriksi: yli kahdeksantuhatta myyntipaikkaa, tavarat riveissä lajeittain. Kengät loppuivat, tomaatit alkoivat, ja ovi oli siinä.',
+    {
+      text: '"Seuraa kenkiä, niin löydät ulos", sanoi myyjä, kun myönsin eksyneeni. Kejetian toria sanotaan Länsi-Afrikan suurimmaksi yhtenäiseksi toriksi: yli kahdeksantuhatta myyntipaikkaa, tavarat riveissä lajeittain. Kengät loppuivat, tomaatit alkoivat, ja ovi oli siinä.',
+      wiki: 'Kejetia Market',
+    },
     'Manhyian palatsimuseossa on esillä kultaista hovitavaraa, jonka brittijoukot veivät Kumasista vuonna 1874. Kaksi lontoolaista museota palautti niistä 32 esinettä vuonna 2024 — kolmen vuoden lainaksi, jatko-optiolla. Isoisän maa siis lainaa takaisin sen, minkä otti.',
     {
       text: 'Sisämaassa sademetsän keskellä on kuningaskunta, jonka hovi on järjestetty tarkemmin kuin meidän. Kuninkaan istuinta ei lasketa maahan eikä kukaan istu sillä — meidän kuningattaremme istuu omallaan, mikä lienee makuasia.',
@@ -5857,7 +5885,10 @@ const AFRICA_FACTS = {
     },
   ],
   orjarannikko: [
-    'Ouidahissa hiekkatie kulkee kaupungilta rannalle neljä kilometriä, ja sen päässä kuuluu enää meri. Tien päähän pystytettiin vuonna 1995 muistomerkki, Ei-paluun portti: tämän sataman kautta vietiin arviolta yli miljoona ihmistä laivoilla Amerikkaan. Kaaren läpi näkyy vain vettä.',
+    {
+      text: 'Ouidahissa hiekkatie kulkee kaupungilta rannalle neljä kilometriä, ja sen päässä kuuluu enää meri. Tien päähän pystytettiin vuonna 1995 muistomerkki, Ei-paluun portti: tämän sataman kautta vietiin arviolta yli miljoona ihmistä laivoilla Amerikkaan. Kaaren läpi näkyy vain vettä.',
+      wiki: 'Door of No Return, Ouidah',
+    },
     'Ouidahin käärmetemppelissä asuu kymmeniä kuningaspytoneja, ja kerran viikossa ne päästetään ulos kaupungille. Useimmat palaavat itse, ja talon lattialta löytynyt python kannetaan takaisin eikä tapeta. Temppeliä vastapäätä seisoo katolinen basilika, ja tie kulkee molempien ovien ohi.',
     {
       text: 'Kartassani tämä rannikonpätkä on nimetty sen mukaan, mitä täältä vietiin. Nimi ei kerro alueesta mitään; se kertoo meistä kaiken. En piirrä sitä uudelleen, mutta kirjoitan tähän, kenen käsialaa se on.',
@@ -5865,7 +5896,10 @@ const AFRICA_FACTS = {
     },
   ],
   kano: [
-    'Lentoni Kanoon lähti kolme tuntia myöhässä hiekan takia. Joulukuusta helmikuuhun harmattan-tuuli tuo Saharasta niin paksun pölyn, että näkyvyys putoaa kilometriin tai sen alle ja aurinko näkyy keskipäivällä kalpeana kiekkona. Pöly on kulkenut satoja kilometrejä ollakseen minun aikatauluni tiellä.',
+    {
+      text: 'Lentoni Kanoon lähti kolme tuntia myöhässä hiekan takia. Joulukuusta helmikuuhun harmattan-tuuli tuo Saharasta niin paksun pölyn, että näkyvyys putoaa kilometriin tai sen alle ja aurinko näkyy keskipäivällä kalpeana kiekkona. Pöly on kulkenut satoja kilometrejä ollakseen minun aikatauluni tiellä.',
+      wiki: 'Harmattan',
+    },
     'Elokuvajulisteessa kaikki oli hausaksi, myös näyttelijöiden nimet. Kanossa tehdään hausankielisiä elokuvia niin paljon, että alalla on oma nimensä, Kannywood, ja niiden laulukohtaukset ovat perintöä intialaisilta esikuvilta, joita täällä on katsottu vuosikymmeniä.',
     {
       text: 'Kaupunkia ympäröivät savimuurit, ja sen värjäämökuopat ovat toimineet kauemmin kuin yksikään tuntemani englantilainen tehdas. Indigo tarttuu käsiin viikoksi; sen sain kokeilla itse.',
@@ -5885,11 +5919,15 @@ const AFRICA_FACTS = {
     'Sademetsä ei ole hiljainen hetkeäkään: se sirisee, kopisee ja huutaa kerroksittain, ja sateen kuulee tulevan minuutteja ennen kuin ensimmäinen pisara osuu.',
     {
       text: 'Joen suulle pääsee laivalla, ylemmäs ei: koskia on niin paljon, että vesi kuuluu ennen kuin näkyy. Kartassani on tässä kohdassa tyhjä alue ja sana "tuntematon" — tuntematon meille, ei niille jotka siellä asuvat.',
+      wiki: 'Livingstone Falls',
       voice: 'isoisa',
     },
   ],
   angola: [
-    'Kalandulan putoukset kuulee ennen kuin näkee, ja vesisumu kastelee jo ennen näköalapaikkaa. Lucala-joki putoaa siinä 105 metriä alas 400 metrin levyisenä kaarena, tilavuudeltaan yhtenä Afrikan suurimmista putouksista. Kaiteita ei ole, joten seisoin selvästi kauempana reunasta kuin kukaan muu.',
+    {
+      text: 'Kalandulan putoukset kuulee ennen kuin näkee, ja vesisumu kastelee jo ennen näköalapaikkaa. Lucala-joki putoaa siinä 105 metriä alas 400 metrin levyisenä kaarena, tilavuudeltaan yhtenä Afrikan suurimmista putouksista. Kaiteita ei ole, joten seisoin selvästi kauempana reunasta kuin kukaan muu.',
+      wiki: 'Kalandula Falls',
+    },
     'Benguelan rautatie nousee Lobiton satamasta yli tuhat kilometriä sisämaahan Kongon rajalle asti. Se rakennettiin sata vuotta sitten kuparia varten, katkesi sisällissodassa vuosikymmeniksi ja avattiin uudelleen 2010-luvulla. Mereltä pääsee siis taas junalla mantereen sisään, jos malttaa istua reilun vuorokauden.',
     {
       text: 'Portugalilaisten satamasta lähtivät laivat Brasiliaan kolmensadan vuoden ajan, ja lastina oli ihmisiä. Meri on tässä kylmä keskellä tropiikkia, mikä on merivirran ansiota; muusta ei kannata kiittää ketään.',
@@ -5898,14 +5936,20 @@ const AFRICA_FACTS = {
   ],
   namib: [
     'Kiipesin dyynin harjalle auringonnousuun: yli kolmesataa metriä hiekkaa, ja joka askeleesta puolet valuu takaisin alas. Ylhäältä näkyy vain lisää dyyniä, oranssina niin kauas kuin katse kantaa. Nousuun meni tunti, alastuloon kaksi minuuttia.',
-    'Namibin autiomaassa kasvaa welwitschia, jolla on kaksi lehteä. Ei kahta kerrallaan vaan kaksi koko elämänsä ajan, ja elämä voi kestää yli tuhat vuotta. Afrikaansinkielinen nimi tarkoittaa kahta lehteä, jotka eivät kuole.',
+    {
+      text: 'Namibin autiomaassa kasvaa welwitschia, jolla on kaksi lehteä. Ei kahta kerrallaan vaan kaksi koko elämänsä ajan, ja elämä voi kestää yli tuhat vuotta. Afrikaansinkielinen nimi tarkoittaa kahta lehteä, jotka eivät kuole.',
+      wiki: 'Welwitschia',
+    },
     {
       text: 'Sumu tulee mereltä joka aamu eikä sada koskaan. Hiekasta törröttää laivanhylkyjä, ja jokainen niistä oli jonkun kapteenin varma laskelma. Pidän tämän sivun mielessäni ennen kuin taas sanon jotain olevani varma.',
       voice: 'isoisa',
     },
   ],
   kapkaupunki: [
-    'Pöytävuoren köysiradan lattia pyörii hitaasti ympäri, jotta jokainen näkee kaiken. Ylhäällä pilvi valuu tasaisen laen yli kuin hidastettu vesiputous.',
+    {
+      text: 'Pöytävuoren köysiradan lattia pyörii hitaasti ympäri, jotta jokainen näkee kaiken. Ylhäällä pilvi valuu tasaisen laen yli kuin hidastettu vesiputous.',
+      wiki: 'Table Mountain',
+    },
     'Hyväntoivonniemi ei olekaan Afrikan eteläisin kärki — eteläisin on Kap Agulhas idempänä. Purjehtijat pelkäsivät silti juuri tätä niemeä, ja "Myrskyjen niemi" sai toiveikkaamman nimensä jo 1400-luvulla, jotta reitille uskaltauduttaisiin.',
     {
       text: 'Pöydänmuotoisen vuoren juurella täydennämme vesitynnyrit, kuten kaikki Intiaan menevät ovat tehneet. Kaksi valtamerta kohtaa tässä, eikä kumpikaan kysy meiltä lupaa.',
@@ -5913,7 +5957,10 @@ const AFRICA_FACTS = {
     },
   ],
   kimberley: [
-    'Iso reikä on yhä siinä: puoli kilometriä leveä, kokonaan käsin kaivettu, ja pohjalla seisoo nykyään vihreä vesi. Katuvalot syttyivät täällä timanttirahalla jo 1882, ensimmäisenä koko eteläisellä pallonpuoliskolla.',
+    {
+      text: 'Iso reikä on yhä siinä: puoli kilometriä leveä, kokonaan käsin kaivettu, ja pohjalla seisoo nykyään vihreä vesi. Katuvalot syttyivät täällä timanttirahalla jo 1882, ensimmäisenä koko eteläisellä pallonpuoliskolla.',
+      wiki: 'Big Hole',
+    },
     'Timantit nousivat maan uumenista pintaan tulivuorenpiipuissa, ja kivilaji sai nimensä tästä kaupungista: kimberliitti.',
     {
       text: 'Maahan on kaivettu lapioilla kuoppa, jonka pohjaa en näe. Tuhannet miehet nostavat maata köysillä, ja voiton laskee joku, joka ei ole koskaan seisonut reunalla. Kivet lähetetään Lontooseen.',
@@ -5929,7 +5976,10 @@ const AFRICA_FACTS = {
     },
   ],
   madagaskar: [
-    'Matka rannikolta ylängölle vei kokonaisen päivän, ja maisema vaihtui matkalla sademetsästä punaisiin kukkuloihin ja riisiterasseihin. Saari irtosi mantereesta jo dinosaurusten aikaan, ja siksi täällä elää yli sata lemurilajia, jotka ovat kotoisin vain täältä.',
+    {
+      text: 'Matka rannikolta ylängölle vei kokonaisen päivän, ja maisema vaihtui matkalla sademetsästä punaisiin kukkuloihin ja riisiterasseihin. Saari irtosi mantereesta jo dinosaurusten aikaan, ja siksi täällä elää yli sata lemurilajia, jotka ovat kotoisin vain täältä.',
+      wiki: 'Lemur',
+    },
     'Vaniljatilalla jokainen kukka pölytetään käsin pienellä tikulla, sillä kukka aukeaa vain yhdeksi aamuksi eikä sen luontaista pölyttäjää ole tällä saarella. Madagaskar on silti maailman suurin vaniljantuottaja, eli jokaisen vaniljatangon takana on joku, joka ehti paikalle ajoissa.',
     {
       text: 'Saarella on kädellisiä, joita ei ole missään muualla, ja puita joiden runko on paksumpi kuin vaunu on pitkä. Kieli ei muistuta mantereen kieliä lainkaan, mistä päättelin väärin; ne purjehtivat tänne idästä.',
@@ -5937,7 +5987,10 @@ const AFRICA_FACTS = {
     },
   ],
   sansibar: [
-    'Stone Townin puuoviin on taottu messinkipiikkejä, jotka Intiassa torjuivat norsuja. Täällä norsuja ei ole koskaan ollut — piikit ovat alusta asti olleet pelkkää komeutta.',
+    {
+      text: 'Stone Townin puuoviin on taottu messinkipiikkejä, jotka Intiassa torjuivat norsuja. Täällä norsuja ei ole koskaan ollut — piikit ovat alusta asti olleet pelkkää komeutta.',
+      wiki: 'Stone Town',
+    },
     'Freddie Mercury syntyi tällä saarella vuonna 1946, kun Sansibar oli vielä sulttaanikunta. Syntymätalo on nykyään pieni museo Stone Townin kujalla.',
     {
       text: 'Saari tuoksuu neilikalle kilometrien päähän, ja kivikaupungin ovet on veistetty kuvioille, joita en osaa lukea. Talot on rakennettu korallista ja tyyleissä näkyy Oman, Intia ja swahilirannikko — ei Eurooppa.',
@@ -5946,7 +5999,10 @@ const AFRICA_FACTS = {
   ],
   kilimandzaro: [
     'Huipulle ei tarvita köysiä eikä hakkuja, vain viikko aikaa ja hidas askel: reitti nousee sademetsästä nummen ja kivierämaan läpi jäätikölle. Opas sanoi tärkeimmän sanan heti portilla: pole pole — hitaasti, hitaasti.',
-    'Isoisän "ikuinen lumi" on kutistunut murto-osaan sadassa vuodessa, ja jäätiköiden arvioidaan katoavan lähivuosikymmeninä. Ikuisuus vaihtoi aikataulua.',
+    {
+      text: 'Isoisän "ikuinen lumi" on kutistunut murto-osaan sadassa vuodessa, ja jäätiköiden arvioidaan katoavan lähivuosikymmeninä. Ikuisuus vaihtoi aikataulua.',
+      wiki: 'Furtwängler Glacier',
+    },
     {
       text: 'Kirjoitin Lontooseen, että päiväntasaajan tuntumassa on vuori, jonka huipulla on lunta ympäri vuoden. Vastaus tuli neljän kuukauden päästä: "Ei liene mahdollista." Lumi ei tiettävästi ole lukenut kirjettä.',
       voice: 'isoisa',
@@ -5954,14 +6010,20 @@ const AFRICA_FACTS = {
   ],
   viktoria: [
     'Kysyin, miksi lautta ei lähde, ja sain yhden sanan vastaukseksi: merenkäynti. Järvellä. Viktoria on pinta-alaltaan yli kymmenen Saimaan kokoinen, sen rantoja jakaa kolme maata, ja aallokko on sen mukainen.',
-    'Kävin katsomassa kohtaa, jossa Niili lähtee järvestä liikkeelle. Kosket jäivät vuonna 1954 padon alle, joten seisoin kymmenen minuuttia katsomassa täysin tavallista vettä ja kuvasin sen silti.',
+    {
+      text: 'Kävin katsomassa kohtaa, jossa Niili lähtee järvestä liikkeelle. Kosket jäivät vuonna 1954 padon alle, joten seisoin kymmenen minuuttia katsomassa täysin tavallista vettä ja kuvasin sen silti.',
+      wiki: 'Ripon Falls',
+    },
     {
       text: 'Järvi on kuin sisämeri: toista rantaa ei näy, ja aallokko nousee kuin Pohjanmerellä. Nimen antoi maanmieheni kuningattaren mukaan, vaikka rannoilla oli ollut nimiä jo pitkään.',
       voice: 'isoisa',
     },
   ],
   tanganjika: [
-    'Järvellä on kulkenut lautta, joka rakennettiin Saksassa vuonna 1913, lähetettiin tänne tuhansina laatikoina ja koottiin rannalla uudelleen. Sodan aikana sen oma miehistö upotti sen, ja pohjasta se nostettiin kahdesti: ensimmäisen noston jälkeen se upposi myrskyssä takaisin. Liikenteeseen se palasi vasta yksitoista vuotta upotuksen jälkeen.',
+    {
+      text: 'Järvellä on kulkenut lautta, joka rakennettiin Saksassa vuonna 1913, lähetettiin tänne tuhansina laatikoina ja koottiin rannalla uudelleen. Sodan aikana sen oma miehistö upotti sen, ja pohjasta se nostettiin kahdesti: ensimmäisen noston jälkeen se upposi myrskyssä takaisin. Liikenteeseen se palasi vasta yksitoista vuotta upotuksen jälkeen.',
+      wiki: 'MV Liemba',
+    },
     'Järven pinta on lähes 800 metriä merenpinnan yläpuolella, mutta sen pohja melkein 700 metriä merenpinnan alapuolella — syvempi järvi on vain Baikal. Alimmissa kerroksissa ei ole happea, joten järven kaikki sadat kalalajit mahtuvat ylimpään parisataan metriin.',
     {
       text: 'Järvi on kapea ja niin pitkä, että laivamatka rannalta rannalle kestää päivän. Vesi on kirkasta ja täynnä kaloja, joita ei tunneta muualla. Täällä kaksi maanmiestäni tapasi toisensa ja kutsui sitä löytöretkeksi.',
@@ -6003,7 +6065,10 @@ const AFRICA_FACTS = {
   ],
   addisabeba: [
     'Hengästyin hotellin portaissa ja ehdin jo loukkaantua, kunnes muistin seisovani 2 400 metrin korkeudessa. Nimi tarkoittaa amharaksi uutta kukkaa.',
-    'Kahvi juodaan täällä seremoniassa, joka kestää tunnin ja alkaa siitä, että pavut paahdetaan pannulla vieraan nenän edessä. Kahvipensas on kotoisin juuri näiltä ylängöiltä, joten tunti tuntuu kohtuulliselta.',
+    {
+      text: 'Kahvi juodaan täällä seremoniassa, joka kestää tunnin ja alkaa siitä, että pavut paahdetaan pannulla vieraan nenän edessä. Kahvipensas on kotoisin juuri näiltä ylängöiltä, joten tunti tuntuu kohtuulliselta.',
+      wiki: 'Coffea arabica',
+    },
     {
       text: 'Kahden ja puolen kilometrin korkeudessa on viileää päiväntasaajan lähelläkin, ja illalla tarvitsen takin. Tämä keisarikunta on säilyttänyt itsenäisyytensä, mikä hämmentää klubissani suuresti; minua se ei enää hämmennä.',
       voice: 'isoisa',
@@ -6011,7 +6076,10 @@ const AFRICA_FACTS = {
   ],
   rashafun: [
     'Niemelle kävellään pitkin kapeaa hiekkakannasta, jonka meri on itse kasannut: Ras Hafun oli ennen saari, ja aallot sitoivat sen kiinni mantereeseen. Kannaksen takana on Afrikan mantereen itäisin kohta, ja seuraava maa itään päin on Intia.',
-    'Hiekasta on kaivettu esiin roomalaisten, egyptiläisten ja intialaisten ruukkujen sirpaleita. Kaksituhatta vuotta vanha kreikankielinen purjehdusopas tuntee sataman nimellä Opone ja luettelee, mitä täältä kannatti ostaa: kanelia ja kilpikonnankuorta.',
+    {
+      text: 'Hiekasta on kaivettu esiin roomalaisten, egyptiläisten ja intialaisten ruukkujen sirpaleita. Kaksituhatta vuotta vanha kreikankielinen purjehdusopas tuntee sataman nimellä Opone ja luettelee, mitä täältä kannatti ostaa: kanelia ja kilpikonnankuorta.',
+      wiki: 'Opone',
+    },
     {
       text: 'Mantereen itäisimmässä kärjessä purjehtivat jo antiikin kauppiaat suitsuketta hakemaan. Monsuuni kääntyy vuodenaikojen mukaan, joten purjelaiva pääsee Intiaan ja takaisin saman vuoden aikana — tämän tiesivät täällä kaikki ennen kuin höyrykone keksittiin.',
       voice: 'isoisa',
@@ -31055,7 +31123,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.1';
+const APP_VERSION = '2026-07-29.2';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
