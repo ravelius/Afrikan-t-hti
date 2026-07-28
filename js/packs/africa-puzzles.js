@@ -36,6 +36,49 @@ const kaari = (x, y, p) => ink(`M${x - 6},${y + 8} L${x - 6},${y - 2} q6,-9 12,0
 const kiehkura = (x, y, p) =>
   ink(`M${x + 7},${y + 5} q-13,3 -12,-6 q1,-8 9,-7 q7,1 6,7 q-1,5 -6,4 q-4,-1 -3,-4`, p);
 
+
+/** Hieroglyfirivin [sadat, kymmenet, ykköset] lukuarvona. */
+export function arvoksi([sadat, kymmenet, ykkoset]) {
+  return sadat * 100 + kymmenet * 10 + ykkoset;
+}
+
+/**
+ * Kuunvaihe: pimeä osa varjostetaan ohuilla viivoilla, valaistu jää tyhjäksi.
+ * `valaistu` on 0…1 ja kasvaa oikeasta reunasta, kuten pohjoisella
+ * pallonpuoliskolla. Erillinen funktio, koska sitä tarvitaan sekä sarjassa
+ * että vastausvaihtoehdoissa.
+ */
+export function piirraKuu(parent, cx, cy, valaistu, { peilaa = false, r = 20 } = {}) {
+  // Vähenevä kuu on kasvavan peilikuva. Peilaus tehdään muunnoksella eikä
+  // negatiivisella valaistusarvolla: negatiivinen luku rikkoisi kaaren
+  // parametrit ja kuu piirtyisi kokonaan pimeänä.
+  const g = peilaa
+    ? el('g', { transform: `translate(${2 * cx},0) scale(-1,1)` }, parent)
+    : parent;
+  el('circle', { cx, cy, r, class: 'ink' }, g);
+  if (valaistu >= 1) return;
+
+  const id = `kuu-${cx}-${cy}-${Math.round(valaistu * 100)}-${peilaa ? 'p' : 'n'}`;
+  const clip = el('clipPath', { id }, g);
+  if (valaistu <= 0) {
+    // Uusikuu: koko kiekko pimeä.
+    el('circle', { cx, cy, r }, clip);
+  } else {
+    // Terminaattori on ellipsi, jonka leveys kertoo vaiheen. Pimeä osa on
+    // vasemmalla, joten valaistu reuna kasvaa oikealta.
+    const leveys = Math.abs(r * (1 - 2 * valaistu));
+    const kaari = valaistu < 0.5 ? 0 : 1;
+    el('path', {
+      d: `M${cx},${cy - r} a${r},${r} 0 0,0 0,${2 * r} `
+        + `a${leveys},${r} 0 0,${kaari} 0,${-2 * r} z`,
+    }, clip);
+  }
+  const varjo = el('g', { 'clip-path': `url(#${id})` }, g);
+  for (let y = cy - r; y <= cy + r; y += 4) {
+    ink(`M${cx - r},${y} L${cx + r},${y}`, varjo);
+  }
+}
+
 // --- piirrokset -------------------------------------------------------------
 
 const SKETCHES = {
@@ -44,25 +87,28 @@ const SKETCHES = {
    * arvoineen, neljäs kysyy. Merkit suurimmasta pienimpään vasemmalta
    * oikealle, jotta rivit ovat keskenään vertailukelpoisia.
    */
-  hieroglyfit: (svg) => {
+  hieroglyfit: (svg, data = {}) => {
+    // Rivit tulevat pulmadatasta: [sadat, kymmenet, ykköset] ja arvo.
+    const {
+      esimerkit = [[0, 0, 3], [0, 2, 3], [1, 3, 1]],
+      kysytty = [2, 1, 3],
+    } = data;
     const g = el('g', {}, svg);
     /** Yksi rivi: merkkiryhmä vasemmalle, arvo oikealle. */
-    const rivi = (y, ryhmat, arvo) => {
+    const rivi = (y, [sadat, kymmenet, ykkoset], arvo) => {
       let x = 30;
-      for (const [piirra, kpl] of ryhmat) {
+      for (const [piirra, kpl] of [[kiehkura, sadat], [kaari, kymmenet], [sauva, ykkoset]]) {
         for (let i = 0; i < kpl; i++) {
           piirra(x, y, g);
           x += 16;
         }
-        x += 8; // väli merkkilajien välissä
+        if (kpl) x += 8; // väli merkkilajien välissä
       }
       text(258, y + 5, arvo, g, 15);
     };
-    rivi(22, [[sauva, 3]], '3');
-    rivi(56, [[kaari, 2], [sauva, 3]], '23');
-    rivi(90, [[kiehkura, 1], [kaari, 3], [sauva, 1]], '131');
+    esimerkit.forEach((r, i) => rivi(22 + i * 34, r, String(arvoksi(r))));
     ink('M24,108 L286,108', g);
-    rivi(132, [[kiehkura, 2], [kaari, 1], [sauva, 3]], '?');
+    rivi(132, kysytty, '?');
   },
 
   /**
@@ -77,7 +123,8 @@ const SKETCHES = {
     fill('M-14,104 L14,104 L8,96 L-8,96 z', g);
     // Narut ja matalat vadit.
     ink('M-78,10 L-78,30 M78,10 L78,30', g);
-    ink('M-104,30 q26,20 52,0 M52,30 q26,20 52,0', g);
+    // Oikea vati on leveämpi: siihen mahtuu kolme punnusta lukuineen.
+    ink('M-104,30 q26,20 52,0 M40,30 q38,22 76,0', g);
 
     // Vasen vati: nyöritetty kultahiekkapussi ja yksi punnus.
     fill('M-96,30 q-6,-16 7,-20 q10,-4 14,6 q4,11 -4,14 z', g);
@@ -87,14 +134,16 @@ const SKETCHES = {
     text(-60, 27, String(vasen), g, 12);
 
     // Oikea vati: kaksi tunnettua punnusta ja katkoviivalla kysytty.
-    ink('M54,30 L70,30 L62,14 z', g);
-    text(62, 27, String(oikea[0]), g, 11);
-    ink('M78,22 L86,12 L94,22 L86,32 z', g);
-    text(86, 26, String(oikea[1]), g, 11);
+    // Luvut kirjoitetaan punnusten ALLE, koska kaksinumeroinen arvo ei mahdu
+    // pienen kolmion tai vinoneliön sisään.
+    ink('M44,26 L62,26 L53,8 z', g);
+    text(53, 46, String(oikea[0]), g, 12);
+    ink('M70,17 L79,6 L88,17 L79,28 z', g);
+    text(79, 46, String(oikea[1]), g, 12);
     el('rect', {
-      x: 100, y: 14, width: 16, height: 16, class: 'ink', 'stroke-dasharray': '3 3',
+      x: 96, y: 8, width: 18, height: 18, class: 'ink', 'stroke-dasharray': '3 3',
     }, g);
-    text(108, 27, '?', g, 12);
+    text(105, 46, '?', g, 13);
   },
 
   /**
@@ -102,7 +151,7 @@ const SKETCHES = {
    * kosketuskohdan ja nuoli ilman purkaussuunnan. Kaikki kolme merkkiä
    * näkyvät — kysymys on, millä niistä sana isiXhosa alkaa.
    */
-  naksutus: (svg) => {
+  naksutus: (svg, data = {}) => {
     const suu = (x, merkki, kohta) => {
       const g = el('g', { transform: `translate(${x},14)` }, svg);
       // Kitalaki ja leuka; katse vasemmalle.
@@ -130,9 +179,13 @@ const SKETCHES = {
       }
       text(0, 74, merkki, g, 17);
     };
-    suu(56, 'c', 0);
-    suu(160, 'x', 1);
-    suu(264, 'q', 2);
+    // Suuprofiilien järjestys vaihtelee varianteittain, jotta sama kuva ei
+    // toistu joka pelikerralla samassa asennossa.
+    const merkit = [['c', 0], ['x', 1], ['q', 2]];
+    (data.jarjestys ?? [0, 1, 2]).forEach((idx, i) => {
+      const [merkki, kohta] = merkit[idx];
+      suu(56 + i * 104, merkki, kohta);
+    });
   },
 
   /**
@@ -140,7 +193,9 @@ const SKETCHES = {
    * varjostettu, valaistu jätetty tyhjäksi. Valaistu reuna kasvaa oikealta,
    * kuten pohjoisella pallonpuoliskolla.
    */
-  kuunvaiheet: (svg) => {
+  kuunvaiheet: (svg, data = {}) => {
+    // Sarja tulee datasta: kolme vaihetta valaistusosuuksina 0…1.
+    const { sarja = [{ v: 0 }, { v: 0.18 }, { v: 0.5 }] } = data;
     const g = el('g', {}, svg);
     // Kaksoisviivakehys.
     ink('M10,6 L310,6 L310,144 L10,144 z', g);
@@ -153,39 +208,10 @@ const SKETCHES = {
     for (const [sx, sy] of [[32, 26], [288, 26]]) {
       ink(`M${sx},${sy - 6} L${sx},${sy + 6} M${sx - 6},${sy} L${sx + 6},${sy}`, g);
     }
-
-    /**
-     * Kuunvaihe: pimeä osa varjostetaan ohuilla viivoilla, valaistu jää
-     * tyhjäksi. `valaistu` on 0…1 oikeasta reunasta lukien.
-     */
-    const kuu = (cx, valaistu) => {
-      const r = 20;
-      const cy = 92;
-      el('circle', { cx, cy, r, class: 'ink' }, g);
-      if (valaistu >= 1) return;
-      // Varjostus rajataan kuun pimeään osaan leikkauspolulla.
-      const raja = cx + r - 2 * r * valaistu;
-      const id = `kuu-${cx}`;
-      const clip = el('clipPath', { id }, g);
-      if (valaistu <= 0) {
-        el('circle', { cx, cy, r, class: '' }, clip);
-      } else {
-        el('path', {
-          d: `M${cx},${cy - r} a${r},${r} 0 0,0 0,${2 * r} L${raja},${cy + r} `
-            + `a${r * (1 - 2 * valaistu)},${r} 0 0,${valaistu < 0.5 ? 0 : 1} 0,${-2 * r} z`,
-        }, clip);
-      }
-      const varjo = el('g', { 'clip-path': `url(#${id})` }, g);
-      for (let y = cy - r; y <= cy + r; y += 4) {
-        ink(`M${cx - r},${y} L${cx + r},${y}`, varjo);
-      }
-    };
-    kuu(70, 0);      // uusikuu: kokonaan pimeä
-    kuu(130, 0.18);  // kasvava sirppi
-    kuu(190, 0.5);   // puolikuu
+    sarja.forEach((k, i) => piirraKuu(g, 70 + i * 60, 92, k.v, { peilaa: k.peilaa }));
     // Neljäs: tyhjä kehä ja kysymysmerkki.
-    el('circle', { cx: 250, cy: 92, r: 20, class: 'ink' }, g);
-    text(250, 99, '?', g, 20);
+    el('circle', { cx: 70 + sarja.length * 60, cy: 92, r: 20, class: 'ink' }, g);
+    text(70 + sarja.length * 60, 99, '?', g, 20);
     ink('M50,124 L270,124', g);
   },
 
@@ -193,7 +219,8 @@ const SKETCHES = {
    * Sahara: kaksi nahkaleiliä, 3 ja 5 mittaa. EI asteikkoa eikä poikkiviivoja
    * kyljissä — koko pulman idea on, ettei leileistä voi lukea välimittoja.
    */
-  vesileilit: (svg) => {
+  vesileilit: (svg, data = {}) => {
+    const { tavoite = 4 } = data;
     /** Leili: pussimainen vartalo, kapea kaula ja kantolenkit. */
     const leili = (x, y, koko, merkki) => {
       const g = el('g', { transform: `translate(${x},${y}) scale(${koko})` }, svg);
@@ -209,10 +236,267 @@ const SKETCHES = {
     leili(226, 56, 1, '5');
     // Tavoite ympyröitynä leilien alle.
     el('circle', { cx: 160, cy: 132, r: 14, class: 'ink' }, svg);
-    text(160, 139, '4', svg, 17);
+    text(160, 139, String(tavoite), svg, 17);
   },
 };
 
+
+
+// --- arvonta ----------------------------------------------------------------
+//
+// Sama pulma on joka pelikerralla vähän erilainen. Arvonta tapahtuu vain
+// avaushetkellä pelin omalla rng:llä (js/game.js openPuzzle), joten
+// tallennettu peli jatkuu samasta pulmasta. `fact` ei koskaan vaihdu: se on
+// tarkistettu fakta.
+
+/** Kokonaisluku väliltä [min, max]. */
+const arvoLuku = (rng, min, max) => min + Math.floor(rng() * (max - min + 1));
+
+/** Poimii yhden alkion listasta. */
+const poimi = (rng, lista) => lista[Math.floor(rng() * lista.length)];
+
+/** Sekoittaa listan kopion. */
+function sekoita(rng, lista) {
+  const t = [...lista];
+  for (let i = t.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [t[i], t[j]] = [t[j], t[i]];
+  }
+  return t;
+}
+
+/**
+ * Hieroglyfit: arvotaan kolme esimerkkiä ja kysytty luku. Numerot pysyvät
+ * välillä 0–3, jotta glyfirivit ovat lyhyitä ja piirrettäviä. Väärät
+ * vaihtoehdot ovat uskottavia lukuvirheitä — numeroiden permutaatioita ja
+ * ±10/±100 — eivät satunnaislukuja.
+ */
+function arvoHieroglyfit(rng) {
+  const numerot = () => [arvoLuku(rng, 0, 3), arvoLuku(rng, 0, 3), arvoLuku(rng, 0, 3)];
+  /** Kelpo rivi: ei pelkkiä nollia. */
+  const rivi = () => {
+    let r = numerot();
+    while (arvoksi(r) === 0) r = numerot();
+    return r;
+  };
+
+  const esimerkit = [];
+  // Ensimmäinen esimerkki pidetään pienenä, jotta järjestelmä on helppo
+  // lukea; kaksi seuraavaa saavat olla mitä tahansa.
+  esimerkit.push([0, 0, arvoLuku(rng, 2, 3)]);
+  while (esimerkit.length < 3) {
+    const r = rivi();
+    if (!esimerkit.some((e) => arvoksi(e) === arvoksi(r))) esimerkit.push(r);
+  }
+  // Kysytty luku on kolminumeroinen, jotta kaikkia kolmea merkkiä tarvitaan,
+  // eikä se saa olla sama kuin mikään esimerkki.
+  let kysytty = [arvoLuku(rng, 1, 3), arvoLuku(rng, 1, 3), arvoLuku(rng, 1, 3)];
+  while (esimerkit.some((e) => arvoksi(e) === arvoksi(kysytty))) {
+    kysytty = [arvoLuku(rng, 1, 3), arvoLuku(rng, 1, 3), arvoLuku(rng, 1, 3)];
+  }
+
+  const oikea = arvoksi(kysytty);
+  const [a, b, c] = kysytty;
+  // Uskottavat lukuvirheet: numerot väärässä järjestyksessä tai yksi
+  // merkkilaji laskettu väärin.
+  const ehdokkaat = [
+    arvoksi([c, b, a]), arvoksi([b, a, c]), arvoksi([a, c, b]),
+    oikea + 10, oikea - 10, oikea + 100, oikea - 100,
+  ];
+  const vaarat = [];
+  for (const v of ehdokkaat) {
+    if (v !== oikea && v > 0 && !vaarat.includes(v)) vaarat.push(v);
+  }
+  const options = sekoita(rng, [oikea, ...vaarat.slice(0, 3)]).map(String);
+  return {
+    sketch: { esimerkit, kysytty },
+    options,
+    correct: options.indexOf(String(oikea)),
+  };
+}
+
+/**
+ * Kultapunnukset: arvotaan pussin paino ja punnukset niin, että täsmälleen
+ * yksi tarjolla oleva punnus tasapainottaa vaa'an. Arvot ovat akanien
+ * punnussarjojen tapaan pieniä kokonaislukuja.
+ */
+function arvoPunnukset(rng) {
+  const SARJA = [1, 2, 3, 4, 5, 6, 8, 10, 12];
+  const kulta = poimi(rng, [8, 10, 12, 14, 16]);
+  const vasen = poimi(rng, [1, 2, 3, 4]);
+  const yhteensa = kulta + vasen;
+
+  // Kaksi tunnettua punnusta oikealle niin, että puuttuva on kelvollinen.
+  let oikea; let puuttuva;
+  do {
+    oikea = sekoita(rng, SARJA).slice(0, 2);
+    puuttuva = yhteensa - oikea[0] - oikea[1];
+  } while (!SARJA.includes(puuttuva));
+
+  // Väärät vaihtoehdot ovat lähellä oikeaa — ei satunnaislukuja.
+  const vaarat = [];
+  for (const d of sekoita(rng, [1, -1, 2, -2, 3, -3])) {
+    const v = puuttuva + d;
+    if (v > 0 && v !== puuttuva && !vaarat.includes(v)) vaarat.push(v);
+    if (vaarat.length === 3) break;
+  }
+  const options = sekoita(rng, [puuttuva, ...vaarat]).map(String);
+  return {
+    sketch: { kulta, vasen, oikea },
+    options,
+    correct: options.indexOf(String(puuttuva)),
+  };
+}
+
+// Kuun kahdeksan vaihetta järjestyksessä: nimi, valaistu osuus 0…1 ja tieto
+// siitä, kummalla puolella valaistu reuna on. Kasvavassa kuussa valo on
+// oikealla, vähenevässä vasemmalla (pohjoinen pallonpuolisko).
+const KUUT = [
+  { nimi: 'uusikuu', v: 0, peilaa: false },
+  { nimi: 'kasvava sirppi', v: 0.18, peilaa: false },
+  { nimi: 'ensimmäinen neljännes', v: 0.5, peilaa: false },
+  { nimi: 'kasvava kupera kuu', v: 0.82, peilaa: false },
+  { nimi: 'täysikuu', v: 1, peilaa: false },
+  { nimi: 'vähenevä kupera kuu', v: 0.82, peilaa: true },
+  { nimi: 'viimeinen neljännes', v: 0.5, peilaa: true },
+  { nimi: 'vähenevä sirppi', v: 0.18, peilaa: true },
+];
+
+/**
+ * Kuunvaiheet: arvotaan kohta kierrosta, josta sarja alkaa. Sarja etenee
+ * AINA eteenpäin — kuu ei kulje takaperin, ja taaksepäin luettu sarja antaisi
+ * vähenevälle kuulle "kasvava"-nimet. Aloituskohta ratkaisee, osuuko sarja
+ * kasvavaan vai vähenevään puoliskoon.
+ */
+function arvoKuunvaiheet(rng) {
+  const alku = arvoLuku(rng, 0, 7);
+  const indeksi = (i) => (alku + i) % 8;
+
+  const sarja = [0, 1, 2].map((i) => KUUT[indeksi(i)]);
+  const vastaus = KUUT[indeksi(3)];
+  // Väärät vaihtoehdot ovat saman kierron muita vaiheita: uskottavia, koska
+  // ne kuuluvat samaan sarjaan, mutta väärässä kohdassa.
+  const vaarat = [];
+  for (const i of [2, 4, 5, 1, 6]) {
+    const ehdokas = KUUT[indeksi(i)];
+    if (ehdokas.nimi !== vastaus.nimi && !vaarat.includes(ehdokas.nimi)) {
+      vaarat.push(ehdokas.nimi);
+    }
+    if (vaarat.length === 3) break;
+  }
+  const options = sekoita(rng, [vastaus.nimi, ...vaarat]);
+  return {
+    sketch: { sarja: sarja.map((k) => ({ v: k.v, peilaa: k.peilaa })) },
+    options,
+    correct: options.indexOf(vastaus.nimi),
+  };
+}
+
+/**
+ * Naksutusmerkit: kolme käsin kirjoitettua varianttia. Kysytään vuoroin c, x
+ * tai q, ja suuprofiilien järjestys vaihtelee. Sanat ja artikulaatiokuvaukset
+ * on kirjoitettu käsin, koska ne ovat kielitiedettä eivätkä arvattavia.
+ */
+const NAKSUTUSVARIANTIT = [
+  {
+    q: 'Piirsin muistiin kolme kohtaa, joista kieli irtoaa naksahtaen; jokaisella on oma kirjaimensa. Kansa kutsuu itseään nimellä isiXhosa — millä näistä nimi alkaa?',
+    vastaus: 'x — kielen sivu poskihampailta',
+    muut: [
+      'c — kielen kärki etuhampailta',
+      'q — kielen kärki hammasvallilta',
+      'c — kielen sivu poskihampailta',
+    ],
+    jarjestys: [0, 1, 2],
+  },
+  {
+    q: 'Kolme naksausta, kolme kirjainta. Sana cela — pyytää — alkaa kevyimmällä niistä, samalla jolla englantilainen paheksuu. Mikä se on?',
+    vastaus: 'c — kielen kärki ylähampaiden takaa',
+    muut: [
+      'x — kielen sivu poskihampailta',
+      'q — kielen kärki hammasvallilta',
+      'c — kielen kärki hammasvallilta',
+    ],
+    jarjestys: [2, 0, 1],
+  },
+  {
+    q: 'Kolmas naksaus on syvin: kieli irtoaa kitalaen etuosasta ja poksahtaa kuin korkki pullosta. Sana qala — aloittaa — alkaa sillä. Mikä kirjain?',
+    vastaus: 'q — kielen kärki hammasvallilta',
+    muut: [
+      'c — kielen kärki etuhampailta',
+      'x — kielen sivu poskihampailta',
+      'q — kielen sivu poskihampailta',
+    ],
+    jarjestys: [1, 2, 0],
+  },
+];
+
+function arvoNaksutus(rng) {
+  const v = poimi(rng, NAKSUTUSVARIANTIT);
+  const options = sekoita(rng, [v.vastaus, ...v.muut]);
+  return {
+    sketch: { jarjestys: v.jarjestys },
+    q: v.q,
+    options,
+    correct: options.indexOf(v.vastaus),
+  };
+}
+
+/**
+ * Vesileilit: valmiiksi kirjoitetut tavoitteet toimintosarjoineen. Sarjat on
+ * tarkistettu käsin simuloimalla — koneella generoitu toimintosarja tuottaisi
+ * kömpelöä kieltä, ja testi tarkistaa jokaisen sarjan lopputuloksen.
+ */
+const LEILIVARIANTIT = [
+  {
+    tavoite: 4,
+    q: 'Leilejä on kaksi, toiseen menee kolme mittaa ja toiseen viisi, eikä kummankaan kyljessä ole yhtään viivaa. Oppaani tarvitsee tasan neljä ennen kuin lähdemme.',
+    vastaus: 'Täytä 5, kaada 3 täyteen, tyhjennä 3, kaada loput 3:een, täytä 5, kaada 3 täyteen',
+    muut: [
+      'Täytä 3, kaada 5:een, täytä 3, kaada 5 täyteen, tyhjennä 5, kaada loput viitoseen',
+      'Täytä 5, kaada 3 täyteen, tyhjennä 5, kaada 3 viitoseen',
+      'Täytä 5, kaada 3 täyteen, tyhjennä 3, kaada loput 3:een, täytä 3',
+    ],
+  },
+  {
+    tavoite: 2,
+    q: 'Kolmen ja viiden mitan leilit, ei yhtään viivaa kyljessä. Tällä kertaa oppaani tahtoo tasan kaksi mittaa.',
+    vastaus: 'Täytä 5, kaada 3 täyteen',
+    muut: [
+      'Täytä 3, kaada 5:een, täytä 3',
+      'Täytä 5, kaada 3 täyteen, kaada 5 pois',
+      'Täytä 3, kaada 5:een',
+    ],
+  },
+  {
+    tavoite: 1,
+    q: 'Samat kaksi leiliä, kolme ja viisi mittaa. Nyt tarvitaan tasan yksi mitta — sen verran vettä menee teekannuun.',
+    vastaus: 'Täytä 3, kaada 5:een, täytä 3, kaada 5 täyteen',
+    muut: [
+      'Täytä 5, kaada 3 täyteen, tyhjennä 3',
+      'Täytä 3, kaada 5:een, tyhjennä 5',
+      'Täytä 5, kaada 3 täyteen, kaada 5 pois',
+    ],
+  },
+];
+
+function arvoVesileilit(rng) {
+  const v = poimi(rng, LEILIVARIANTIT);
+  const options = sekoita(rng, [v.vastaus, ...v.muut]);
+  return {
+    sketch: { tavoite: v.tavoite },
+    q: v.q,
+    options,
+    correct: options.indexOf(v.vastaus),
+  };
+}
+
+export const GENERATORS = {
+  hieroglyfit: arvoHieroglyfit,
+  punnukset: arvoPunnukset,
+  kuunvaiheet: arvoKuunvaiheet,
+  naksutus: arvoNaksutus,
+  vesileilit: arvoVesileilit,
+};
 
 /**
  * Afrikan viisi pulmaa. `sketch` välitetään piirrokselle, jotta piirroksen
@@ -221,6 +505,7 @@ const SKETCHES = {
 export const AFRICA_PUZZLES = [
   {
     id: 'hieroglyfit',
+    generate: GENERATORS.hieroglyfit,
     city: 'kairo',
     title: 'Hieroglyfien luvut',
     q: 'Temppelin seinään on hakattu lukuja, ja opas luki kolme niistä minulle ääneen. Neljättä hän ei lukenut — sanoi, että pärjään kyllä itsekin.',
@@ -234,6 +519,7 @@ export const AFRICA_PUZZLES = [
   },
   {
     id: 'punnukset',
+    generate: GENERATORS.punnukset,
     city: 'kumasi',
     title: 'Kultapunnusten vaaka',
     q: 'Kauppias punnitsee kultahiekkaa messinkipunnuksilla, joiden arvot hän tuntee ulkoa. Toinen vati on valmis, toisesta puuttuu vielä yksi punnus — mikä?',
@@ -248,6 +534,7 @@ export const AFRICA_PUZZLES = [
   },
   {
     id: 'naksutus',
+    generate: GENERATORS.naksutus,
     city: 'kapkaupunki',
     title: 'Kolme naksausta',
     q: 'Piirsin muistiin kolme kohtaa, joista kieli irtoaa naksahtaen; jokaisella on oma kirjaimensa. Kansa kutsuu kieltään nimellä isiXhosa — mikä näistä on sen Xh?',
@@ -266,6 +553,7 @@ export const AFRICA_PUZZLES = [
   },
   {
     id: 'kuunvaiheet',
+    generate: GENERATORS.kuunvaiheet,
     city: 'timbuktu',
     title: 'Kuu käsikirjoituksen sivulla',
     q: 'Kirjaston mestari käänsi eteeni sivun, jolle kuu on piirretty neljä kertaa peräkkäin. Kolme ensimmäistä ymmärrän; neljäs on jätetty tyhjäksi, ja hän odottaa minun sanovan sen ääneen.',
@@ -278,6 +566,7 @@ export const AFRICA_PUZZLES = [
   },
   {
     id: 'vesileilit',
+    generate: GENERATORS.vesileilit,
     city: 'sahara',
     title: 'Neljä mittaa vettä',
     q: 'Leilejä on kaksi, kolmosleiliin menee kolme mittaa ja viitosleiliin viisi, eikä kummankaan kyljessä ole yhtään viivaa. Oppaani tarvitsee tasan neljä mittaa toiseen leiliin ennen kuin lähdemme.',

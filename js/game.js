@@ -999,19 +999,28 @@ export class Game {
 
     this.puzzlesSeen.add(`${this.pack.id}:${puzzle.city}`);
     this.puzzlePrevPhase = this.phase;
-    const order = this.shuffledOrder(puzzle.options.length);
+    // Sama pulma on joka pelikerralla vähän erilainen. Generointi tapahtuu
+    // VAIN tässä, pelin omalla rng:llä, ja tulos jää quiz-tilaan — näin
+    // tallennettu peli jatkuu täsmälleen samasta pulmasta. `fact` on aina
+    // pulman oma: se on tarkistettu fakta eikä se saa vaihdella.
+    const arvottu = puzzle.generate ? puzzle.generate(this.rng) : null;
+    const sketch = arvottu?.sketch ?? puzzle.sketch ?? null;
+    const options = arvottu?.options ?? puzzle.options;
+    const correct = arvottu?.correct ?? puzzle.correct;
+
+    const order = this.shuffledOrder(options.length);
     this.quiz = {
       kind: 'puzzle',
       cityId: puzzle.city,
       puzzleId: puzzle.id,
-      sketchData: puzzle.sketch ?? null,
+      sketchData: sketch,
       title: puzzle.title,
       hard: false,
-      question: puzzle.q,
+      question: arvottu?.q ?? puzzle.q,
       fact: puzzle.fact,
       source: sourceList(puzzle.source),
-      options: order.map((i) => puzzle.options[i]),
-      correct: order.indexOf(puzzle.correct),
+      options: order.map((i) => options[i]),
+      correct: order.indexOf(correct),
       hint: null,
       hintShown: false,
       hidden: [],

@@ -57,6 +57,9 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Yläpalkkiin pelkkä kukkaro, siirtorenkaat hillityiksi ja vaakalukko: ✅
 - Paketti 12 (luonnoskirjan pulmat ja maamerkit): ✅ (28.7.2026) — viisi
   pulmaa Afrikalle, piirrokset SVG-koodina ja neljä maamerkkiä kartalle.
+- Paketti 13 (pulmien variointi): ✅ (28.7.2026) — sama pulma on joka
+  pelikerralla erilainen. Kolme generatiivista (hieroglyfit, punnukset,
+  kuunvaiheet) ja kaksi käsin kirjoitettua varianttisarjaa.
 - Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
   tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
   tarkistettu artikkeliotsikko.
@@ -643,7 +646,7 @@ fact, kaupunki on laudalla), kerran-per-peli-logiikka ja tallennus,
 maamerkkien sijoitus. Versionostot, standalone, kuvakaappaus pulmakortista
 ja kartasta.
 
-## Paketti 13: pulmien variointi (Afrikka)
+## Paketti 13: pulmien variointi (Afrikka) — VALMIS
 
 Omistajan toive: sama pulma on joka pelikerralla vähän erilainen, vaikka
 se nojaa graafisesti samaan systeemiin. Piirtofunktiot saavat jo datan
