@@ -25055,13 +25055,40 @@ class Sound {
   loadRealSamples() {
     if (this.samples) return;
     this.samples = {};
+    this.sampleHits = {};
     for (const [name, { url }] of Object.entries(REAL_SAMPLES)) {
       fetch(url)
         .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error('http'))))
         .then((data) => this.ctx.decodeAudioData(data))
-        .then((buf) => { this.samples[name] = buf; })
+        .then((buf) => {
+          this.samples[name] = buf;
+          this.sampleHits[name] = this.findHits(buf);
+        })
         .catch(() => { /* ei verkkoa — synteesi kelpaa */ });
     }
+  }
+
+  /**
+   * Etsii äänitteestä iskukohdat (esim. kirjoituskoneen näppäilyt tai
+   * nopan kopsahdukset): kohdat, joissa taso ylittää osan äänitteen
+   * huipusta. Satunnainen siivu osui usein iskujen väliseen hiljaisuuteen,
+   * jolloin ääntä ei kuulunut — iskulistalta siivu osuu aina.
+   */
+  findHits(buf, { kynnys = 0.3, valiMs = 100 } = {}) {
+    const data = buf.getChannelData(0);
+    const rate = buf.sampleRate;
+    const vali = Math.floor(rate * (valiMs / 1000));
+    let huippu = 0;
+    for (let i = 0; i < data.length; i += 16) huippu = Math.max(huippu, Math.abs(data[i]));
+    const raja = huippu * kynnys;
+    const iskut = [];
+    for (let i = 0; i < data.length; i += 8) {
+      if (Math.abs(data[i]) >= raja) {
+        iskut.push(Math.max(0, i / rate - 0.005));
+        i += vali;
+      }
+    }
+    return iskut;
   }
 
   /**
@@ -25070,7 +25097,7 @@ class Sound {
    * hiljaisuuteen; `tail` soittaa äänitteen lopun (esim. nopan asettuminen).
    * Palauttaa false, jos puskuria ei ole ladattu — silloin soi synteesi.
    */
-  playSlice(name, { dur = 0.1, gain = 0.3, tail = null, alusta = false } = {}) {
+  playSlice(name, { dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0 } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
     if (!ctx || !buf) return false;
@@ -25078,14 +25105,17 @@ class Sound {
     src.buffer = buf;
     src.playbackRate.value = this.jitter(1, 0.05);
     const kesto = tail ?? dur;
+    const iskut = isku ? this.sampleHits?.[name] : null;
     const alku = tail != null
       ? Math.max(0, buf.duration - tail - 0.15)
       : alusta
         ? 0
-        : buf.duration * 0.2 + Math.random() * Math.max(0.01, buf.duration * 0.6 - dur);
+        : iskut?.length
+          ? iskut[Math.floor(Math.random() * iskut.length)]
+          : buf.duration * 0.2 + Math.random() * Math.max(0.01, buf.duration * 0.6 - dur);
     // Pehmeä alku ja loppu, ettei leikkauskohta naksu.
     const g = ctx.createGain();
-    const t0 = ctx.currentTime;
+    const t0 = ctx.currentTime + delay;
     g.gain.setValueAtTime(0.0001, t0);
     g.gain.exponentialRampToValueAtTime(gain, t0 + 0.01);
     g.gain.setValueAtTime(gain, t0 + Math.max(0.02, kesto - 0.04));
@@ -25124,11 +25154,19 @@ const REAL_SAMPLES = {
 
 // Mitkä äänet soivat oikeasta äänitteestä ja miten siivu otetaan.
 const REAL_PLAYERS = {
-  dieTick: (s) => s.playSlice('dice', { dur: 0.08, gain: 0.4 }),
+  dieTick: (s) => s.playSlice('dice', { dur: 0.08, gain: 0.4, isku: true }),
   dieLand: (s) => s.playSlice('dice', { tail: 0.6, gain: 0.55 }),
-  // Satunnainen siivu kirjoituskoneäänityksestä osuu milloin näppäimeen,
-  // milloin väliin — rytmi elää kuin oikealla koneella.
-  pen: (s) => s.playSlice('pen', { dur: 0.12, gain: 0.35 }),
+  // Joka sana saa 2–3 näppäilyn purskeen iskukohdilta: yksittäinen
+  // satunnaissiivu osui liian usein näppäilyjen väliin ja kone kuulosti
+  // laiskalta. Purske täyttää sanan mittaisen välin (~190 ms).
+  pen: (s) => {
+    let soi = s.playSlice('pen', { dur: 0.09, gain: 0.35, isku: true });
+    soi = s.playSlice('pen', { dur: 0.09, gain: 0.3, isku: true, delay: 0.06 + Math.random() * 0.03 }) || soi;
+    if (Math.random() < 0.7) {
+      soi = s.playSlice('pen', { dur: 0.09, gain: 0.32, isku: true, delay: 0.13 + Math.random() * 0.03 }) || soi;
+    }
+    return soi;
+  },
   // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
   quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
 };
@@ -31270,7 +31308,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.5';
+const APP_VERSION = '2026-07-29.6';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
