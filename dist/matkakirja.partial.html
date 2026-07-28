@@ -2112,6 +2112,35 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
+/* Kuvateksti suurennoksen alla: artikkelin oma selite kuvalle. */
+.lightbox-caption {
+  position: absolute;
+  bottom: 2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(40rem, 88vw);
+  max-height: 4.2em;
+  overflow: hidden;
+  text-align: center;
+  color: #f0e2c4;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+/* Latausilmaisin: näkyy kunnes kuva on oikeasti perillä. */
+.lightbox-loading {
+  color: #e8d9b5;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  animation: lightbox-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes lightbox-pulse {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.4; }
+}
+
 .wiki-image {
   display: block;
   max-width: 100%;
@@ -2465,9 +2494,10 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         laivalipun hintaa), hän saa vuoronsa alussa 100 puntaa pankilta.</p>
       <p class="muted"><b>Äänitteet:</b> osassa paikoista soi oikea kenttä-äänitys
         Freesound-palvelusta (CC-lisenssit): rucisko (Kairo, CC BY-NC),
-        omestreandre (Sahara, CC BY), AugustSandberg (savanni, CC0).
-        Tehosteissa: LoafDV (noppa, CC0), ColinMWJones (kirjoituskone, CC0)
-        ja Apheo (suihkumoottori, CC0).
+        omestreandre (Sahara, CC BY), AugustSandberg (savanni, CC0),
+        LaureC (Dakar, CC0). Tehosteissa: LoafDV (noppa), ColinMWJones
+        (kirjoituskone), Apheo (suihkumoottori), AardsReal (sivunkääntö)
+        ja DYEKHO (tietovisan musiikki) — kaikki CC0.
         Kuvat ja artikkelit: Wikipedia (CC BY-SA).</p>
     </div>
     <menu>
@@ -2722,7 +2752,11 @@ function pickImage(items) {
   return null;
 }
 
-/** Kaikki kelvolliset valokuvat kuvalistasta, enintään max kappaletta. */
+/**
+ * Kaikki kelvolliset valokuvat kuvalistasta, enintään max kappaletta.
+ * Palauttaa olioita { src, caption } — kuvateksti tulee artikkelista,
+ * jos kuvalle on kirjoitettu sellainen.
+ */
 function pickImages(items, max = 12) {
   const kuvat = [];
   for (const item of items ?? []) {
@@ -2731,7 +2765,10 @@ function pickImages(items, max = 12) {
     const srcset = item.srcset;
     const src = srcset?.[srcset.length - 1]?.src ?? srcset?.[0]?.src;
     if (!src) continue;
-    kuvat.push(src.startsWith('//') ? `https:${src}` : src);
+    kuvat.push({
+      src: src.startsWith('//') ? `https:${src}` : src,
+      caption: item.caption?.text?.trim() || null,
+    });
     if (kuvat.length >= max) break;
   }
   return kuvat;
@@ -2762,7 +2799,9 @@ async function fetchImages(summary, { fetchImpl = globalThis.fetch, max = 12 } =
   } catch {
     /* ei yhteyttä — yksi kuva on parempi kuin ei yhtään */
   }
-  return summary.image && !BAD_IMAGE.test(summary.image) ? [summary.image] : [];
+  return summary.image && !BAD_IMAGE.test(summary.image)
+    ? [{ src: summary.image, caption: null }]
+    : [];
 }
 
 /**
@@ -25025,7 +25064,7 @@ class Sound {
    * hiljaisuuteen; `tail` soittaa äänitteen lopun (esim. nopan asettuminen).
    * Palauttaa false, jos puskuria ei ole ladattu — silloin soi synteesi.
    */
-  playSlice(name, { dur = 0.1, gain = 0.3, tail = null } = {}) {
+  playSlice(name, { dur = 0.1, gain = 0.3, tail = null, alusta = false } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
     if (!ctx || !buf) return false;
@@ -25035,7 +25074,9 @@ class Sound {
     const kesto = tail ?? dur;
     const alku = tail != null
       ? Math.max(0, buf.duration - tail - 0.15)
-      : buf.duration * 0.2 + Math.random() * Math.max(0.01, buf.duration * 0.6 - dur);
+      : alusta
+        ? 0
+        : buf.duration * 0.2 + Math.random() * Math.max(0.01, buf.duration * 0.6 - dur);
     // Pehmeä alku ja loppu, ettei leikkauskohta naksu.
     const g = ctx.createGain();
     const t0 = ctx.currentTime;
@@ -25068,6 +25109,11 @@ const REAL_SAMPLES = {
     url: 'https://cdn.freesound.org/previews/416/416891_2456794-lq.mp3',
     credit: '"Airplane takeoff interior" — Apheo, Freesound (CC0)',
   },
+  // Sivunkääntö: kysymyskortti avautuu kuin päiväkirjan sivu.
+  quizOpen: {
+    url: 'https://cdn.freesound.org/previews/842/842183_13307919-lq.mp3',
+    credit: '"Page Turn Free" — AardsReal, Freesound (CC0)',
+  },
 };
 
 // Mitkä äänet soivat oikeasta äänitteestä ja miten siivu otetaan.
@@ -25077,6 +25123,8 @@ const REAL_PLAYERS = {
   // Satunnainen siivu kirjoituskoneäänityksestä osuu milloin näppäimeen,
   // milloin väliin — rytmi elää kuin oikealla koneella.
   pen: (s) => s.playSlice('pen', { dur: 0.12, gain: 0.35 }),
+  // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
+  quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
 };
 
 // --- äänimaisemat -----------------------------------------------------------
@@ -25169,6 +25217,11 @@ const AMBIENCE_TYPES = Object.keys(AMBIENCES);
 
 const SOUNDS = {
   // Käyttöliittymä
+  // Kysymyskortin avaus ilman verkkoa: paperi ja pehmeä kello.
+  quizOpen: (s) => {
+    s.hiss({ dur: 0.4, type: 'highpass', freq: 800, sweepTo: 2400, gain: 0.07 });
+    s.bell({ freq: 740, dur: 0.5, gain: 0.06, delay: 0.1 });
+  },
   click: (s) => s.knock({ freqs: [540, 880], dur: 0.045, gain: 0.06, q: 8 }),
   paper: (s) => s.hiss({ dur: 0.34, type: 'highpass', freq: 900, sweepTo: 2800, gain: 0.075 }),
   // Kynän raapaisu pergamentilla — avaustekstin käsinkirjoitus. Hyvin
@@ -25383,6 +25436,45 @@ function playPlaceAmbience(cityId, fallbackType) {
 /** Tekijämaininta soivalle äänitteelle, tai null. */
 function placeStreamCredit(cityId) {
   return STREAMS[cityId]?.credit ?? null;
+}
+
+// Tietovisan taustamusiikki: hiljainen huililuuppi kysymyksen ajaksi.
+// Aina sama — tunnistettava "nyt mietitään" -sävy. Ilman verkkoa
+// kysymys on hiljainen, mikä on myös ihan hyvä.
+const QUIZ_MUSIC = {
+  url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3',
+  credit: '"Arabic Flute 04" — DYEKHO, Freesound (CC0)',
+};
+const MUSIIKKI_VOIMA = 0.09;
+
+let musiikki = null;
+
+function startQuizMusic() {
+  if (!sfx.enabled || musiikki) return;
+  const audio = new Audio(QUIZ_MUSIC.url);
+  audio.loop = true;
+  audio.preload = 'auto';
+  audio.volume = 0;
+  musiikki = audio;
+  audio.play().then(() => {
+    if (musiikki !== audio) {
+      audio.pause();
+      return;
+    }
+    haivyta(audio, MUSIIKKI_VOIMA);
+  }).catch(() => {
+    if (musiikki === audio) musiikki = null;
+  });
+}
+
+function stopQuizMusic() {
+  const vanha = musiikki;
+  musiikki = null;
+  if (!vanha) return;
+  haivyta(vanha, 0, () => {
+    vanha.pause();
+    vanha.removeAttribute('src');
+  });
 }
 
 // ===== js/die.js =====
@@ -26867,7 +26959,7 @@ class Game {
     this.visitCity(p);
     this.phase = 'action';
     this.beginTurn();
-    this.maybeOpenPuzzle();
+    this.offerQuiz();
     return { ok: true };
   }
 
@@ -27246,8 +27338,8 @@ class Game {
     this.lastPath = null;
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
     this.emit('flight', link.label, { icon: '🧭', sub: `−${FLIGHT_PRICE} puntaa` });
+    if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();
-    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
@@ -27397,19 +27489,20 @@ class Game {
     this.moves = null;
     this.die = null;
     if (this.checkWin()) return { ok: true, win: true };
-    if (this.offerQuiz()) {
-      this.maybeOpenPuzzle();
-      return { ok: true, offer: true };
-    }
+    if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();
-    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
-  /** Aarrekaupunkiin saapunut saa kokeilla kysymystä ennen vuoron vaihtumista. */
+  /**
+   * Saapumiskortti tarjotaan, kun kaupungissa on laatta TAI näkemätön
+   * pulma. Pulma ei enää hyppää ruudulle itsestään laskeuduttaessa —
+   * se aukeaa vasta Tutki paikka -napista.
+   */
   offerQuiz() {
     const city = this.cityOf();
-    if (!city || !this.tokens.has(city.id)) return false;
+    if (!city) return false;
+    if (!this.tokens.has(city.id) && !this.pendingPuzzle()) return false;
     this.phase = 'offer';
     return true;
   }
@@ -27468,6 +27561,11 @@ class Game {
     if (this.phase !== 'offer' && this.phase !== 'action') {
       return { ok: false, error: 'Väärä vaihe' };
     }
+    // Isoisän pulma avataan ensin: Tutki paikka (oletuskutsu ilman muotoa)
+    // näyttää sen ennen laatan kysymystä, ja pulman jälkeen palataan
+    // saapumiskorttiin. Nimetty muoto tai vaikea kysymys ohittaa pulman.
+    if (!hard && form === null && this.pendingPuzzle()) return this.openPuzzle();
+
     const city = this.tokenHere();
     if (!city) return { ok: false, error: 'Täällä ei ole laattaa' };
     if (hard && !this.hardAvailable(city.id)) {
@@ -27715,18 +27813,6 @@ class Game {
   }
 
   /**
-   * Avaa pulman, jos nykyisessä kaupungissa odottaa näkemätön pulma.
-   * Kutsutaan jokaisen saapumisen päätteeksi — myös laudalle
-   * laskeuduttaessa (portit, lennot, pelin aloitus), sillä pulma ei ole
-   * sidottu laattaan vaan pelkkään saapumiseen.
-   */
-  maybeOpenPuzzle() {
-    if (this.phase === 'over' || this.quiz || this.duel) return false;
-    if (!this.pendingPuzzle()) return false;
-    return this.openPuzzle().ok;
-  }
-
-  /**
    * Avaa pulman. Pulma on monivalinta kuten muutkin, joten vastaaminen ja
    * tuloksen näyttö toimivat ennallaan — vain palkinto ja sulkeminen
    * poikkeavat: pulma ei käännä laattaa eikä päätä vuoroa.
@@ -27917,8 +28003,8 @@ class Game {
       this.say(p.id, `${p.name} astui portista: ${gate.label}.`);
       this.emit('flight', gate.label, { icon: '★', sub: 'Tieto avasi portin' });
       this.phase = 'action';
+      if (this.offerQuiz()) return { ok: true, gated: true, offer: true };
       this.endTurn();
-      this.maybeOpenPuzzle();
       return { ok: true, gated: true };
     }
     if (this.duelArmed) {
@@ -28146,12 +28232,8 @@ class Game {
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
     this.emit('flight', `Lento kaupunkiin ${city.name}`, { icon: '✈', sub: `−${FLIGHT_PRICE} puntaa` });
     if (this.checkWin()) return { ok: true, win: true };
-    if (this.offerQuiz()) {
-      this.maybeOpenPuzzle();
-      return { ok: true, offer: true };
-    }
+    if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();
-    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
@@ -28942,6 +29024,7 @@ class UI {
     // tilaa uuden päälle (esim. edellisen pelin kysymyksen tekstin).
     this.dead = true;
     stopPlaceStream();
+    stopQuizMusic();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -30052,26 +30135,41 @@ class UI {
     const overlay = html('div', 'lightbox');
     const img = html('img', 'lightbox-img');
     img.alt = alt;
+    const lataus = html('div', 'lightbox-loading', 'Ladataan…');
+    const kuvateksti = html('div', 'lightbox-caption');
     const prev = html('button', 'lightbox-nav prev', '‹');
     const next = html('button', 'lightbox-nav next', '›');
     const counter = html('div', 'lightbox-counter');
     const close = html('button', 'lightbox-close', '✕');
-    prev.hidden = next.hidden = true;
-    overlay.append(img, prev, next, counter, close);
+    prev.hidden = next.hidden = kuvateksti.hidden = true;
+    img.hidden = true; // rikkinäisen kuvan kysymysmerkki ei saa vilahtaa
+    overlay.append(img, lataus, kuvateksti, prev, next, counter, close);
     parent.appendChild(overlay);
 
-    let kuvat = [];
+    let kuvat = []; // { src, caption }
     let kohdalla = 0;
+    img.addEventListener('load', () => {
+      img.hidden = false;
+      lataus.hidden = true;
+    });
     const nayta = () => {
       if (!kuvat.length) return;
-      img.src = upsizeImage(kuvat[kohdalla]);
+      const kohde = kuvat[kohdalla];
+      img.hidden = true;
+      lataus.hidden = false;
+      lataus.textContent = 'Ladataan…';
+      img.src = upsizeImage(kohde.src);
+      kuvateksti.textContent = kohde.caption ?? '';
+      kuvateksti.hidden = !kohde.caption;
       counter.textContent = kuvat.length > 1 ? `${kohdalla + 1} / ${kuvat.length}` : '';
       prev.hidden = next.hidden = kuvat.length < 2;
     };
     // Jos suurennosta ei ole olemassa (alkuperäinen on pienempi), palataan
-    // kuvalistan omaan osoitteeseen.
+    // kuvalistan omaan osoitteeseen; jos sekään ei lataudu, sanotaan se.
     img.addEventListener('error', () => {
-      if (kuvat.length && img.src !== kuvat[kohdalla]) img.src = kuvat[kohdalla];
+      if (!kuvat.length) return;
+      if (img.src !== kuvat[kohdalla].src) img.src = kuvat[kohdalla].src;
+      else lataus.textContent = 'Kuvaa ei saatu ladattua.';
     });
     const siirry = (askel) => {
       if (kuvat.length < 2) return;
@@ -30099,14 +30197,14 @@ class UI {
     const eka = await cachedImage(title);
     if (!overlay.isConnected) return;
     if (eka) {
-      kuvat = [eka];
+      kuvat = [{ src: eka, caption: null }];
       nayta();
     }
     const lista = await cachedGallery(title);
     if (!overlay.isConnected || !lista.length) return;
-    const nykyinen = kuvat[0] ?? null;
+    const nykyinen = kuvat[0]?.src ?? null;
     kuvat = lista;
-    kohdalla = Math.max(0, lista.indexOf(nykyinen));
+    kohdalla = Math.max(0, lista.findIndex((k) => k.src === nykyinen));
     nayta();
   }
 
@@ -30284,6 +30382,7 @@ class UI {
     const quiz = game.quiz;
     if (game.phase !== 'quiz' || !quiz) {
       this.stopQuizTimer();
+      stopQuizMusic();
       if (this.quizDialog.open) this.quizDialog.close();
       return;
     }
@@ -30340,8 +30439,11 @@ class UI {
         : `${city.name}${hardTag}`;
     }
     // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
+    // Samalla kääntyy päiväkirjan sivu ja hiljainen mietintämusiikki alkaa.
     if (this.typedQuizFor !== quiz) {
       this.typedQuizFor = quiz;
+      sfx.play('quizOpen');
+      startQuizMusic();
       this.typeText(this.quizQuestion, quiz.question, 'quiz');
     } else if (this.quizQuestion.textContent !== String(quiz.question)) {
       // Itsekorjaus: jos jokin muu kirjoitus on ehtinyt sotkea tekstin
@@ -30424,6 +30526,7 @@ class UI {
     this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
     if (this.typedQuizFor !== duel) {
       this.typedQuizFor = duel;
+      startQuizMusic();
       this.typeText(this.quizQuestion, duel.question, 'quiz');
     } else if (this.quizQuestion.textContent !== String(duel.question)) {
       // Sama itsekorjaus kuin tietovisassa: teksti ei saa jäädä eriämään.

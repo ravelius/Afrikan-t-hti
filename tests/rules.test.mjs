@@ -44,15 +44,21 @@ import {
 const AFRICA = packById('africa');
 const board = buildBoard(AFRICA.cities, AFRICA.edges);
 
-/** Kahden pelaajan peli testejä varten (Afrikan laudalla). */
+/**
+ * Kahden pelaajan peli testejä varten (Afrikan laudalla). Pulmat
+ * merkitään nähdyiksi, jotta actionQuiz avaa tietovisan eikä pulmaa —
+ * pulmien omat testit käyttävät puzzleGame-apuria.
+ */
 function newGame(seed = 5) {
-  return new Game({
+  const game = new Game({
     players: [
       { name: 'A', color: '#f00', start: 'tanger' },
       { name: 'B', color: '#00f', start: 'kairo' },
     ],
     seed,
   });
+  for (const p of AFRICA.puzzles ?? []) game.puzzlesSeen.add(`africa:${p.city}`);
+  return game;
 }
 
 // Sisällön määrätavoitteet nostetaan lauta kerrallaan sitä mukaa kun sisältö
@@ -675,7 +681,9 @@ function playBotStep(game) {
     else if (wantsFiftyFifty(game)) game.actionFiftyFifty();
     else game.answerQuiz(chooseQuizAnswer(game));
   } else if (game.phase === 'offer') {
-    game.actionQuiz({ form: 'quiz' });
+    // Pulmakaupungin tarjous ilman laattaa: botti jatkaa matkaa.
+    if (game.tokenHere()) game.actionQuiz({ form: 'quiz' });
+    else game.actionSkipQuiz();
   } else if (game.phase === 'roll') {
     game.actionRoll();
   } else {
@@ -2336,7 +2344,7 @@ test('pulmakaupungin ulkopuolella ei ole pulmaa', () => {
   assert.equal(game.pendingPuzzle(), null);
 });
 
-test('pulma aukeaa laudalle laskeuduttaessa: aloitus Kairoon maailmankartalta', () => {
+test('pulma aukeaa Tutki paikka -napista, ei itsestään: aloitus Kairoon', () => {
   const game = new Game({
     players: [{ name: 'Yksin', color: '#f00', start: null }],
     pack: packById('maailma'),
@@ -2349,17 +2357,22 @@ test('pulma aukeaa laudalle laskeuduttaessa: aloitus Kairoon maailmankartalta', 
   const tulos = game.actionPickStart('kairo', idx);
   assert.ok(tulos.ok);
   assert.equal(game.pack.id, 'africa');
-  assert.equal(game.quiz?.kind, 'puzzle', 'pulman pitäisi avautua heti laskeuduttua');
+  // Kysymys ei saa hypätä ruudulle heti laskeuduttua — saapumiskortti
+  // tarjoaa tutkimista, ja pulma aukeaa vasta Tutki paikka -napista.
+  assert.equal(game.quiz, null, 'pulma ei saa avautua itsestään');
+  assert.equal(game.phase, 'offer', 'saapuminen tarjoaa tutkimista');
+  assert.ok(game.actionQuiz().ok);
+  assert.equal(game.quiz?.kind, 'puzzle', 'Tutki paikka avaa pulman');
   assert.equal(game.quiz.cityId, 'kairo');
 
-  // Pulman jälkeen vuoro jatkuu normaalisti eikä pulma aukea uudelleen.
+  // Pulman jälkeen palataan tarjoukseen eikä pulma aukea uudelleen.
   game.answerQuiz(game.quiz.correct);
   game.closeQuiz();
   assert.notEqual(game.phase, 'quiz');
   assert.equal(game.pendingPuzzle(), null);
 });
 
-test('pulma aukeaa siirryttäessä pulmakaupunkiin jalan', () => {
+test('jalan saapuminen pulmakaupunkiin tarjoaa tutkimista ja Tutki avaa pulman', () => {
   const puzzle = packById('africa').puzzles[0];
   const game = puzzleGame(404, puzzle.city);
   // Siirretään pelaaja pois ja takaisin actionMove-polkua pitkin:
@@ -2372,7 +2385,10 @@ test('pulma aukeaa siirryttäessä pulmakaupunkiin jalan', () => {
   game.moves = new Map([[puzzle.city, { pos: { type: 'city', city: puzzle.city }, path: [] }]]);
   const tulos = game.actionMove(puzzle.city);
   assert.ok(tulos.ok);
-  assert.equal(game.quiz?.kind, 'puzzle', 'pulman pitäisi avautua saapuessa');
+  assert.equal(game.quiz, null, 'pulma ei saa avautua itsestään');
+  assert.equal(game.phase, 'offer', 'saapuminen tarjoaa tutkimista');
+  assert.ok(game.actionQuiz().ok);
+  assert.equal(game.quiz?.kind, 'puzzle', 'Tutki paikka avaa pulman');
 });
 
 test('oikea pulma tuo kokemuspisteet, väärä ei rankaise', () => {

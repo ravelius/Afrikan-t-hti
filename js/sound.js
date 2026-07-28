@@ -535,7 +535,7 @@ class Sound {
    * hiljaisuuteen; `tail` soittaa äänitteen lopun (esim. nopan asettuminen).
    * Palauttaa false, jos puskuria ei ole ladattu — silloin soi synteesi.
    */
-  playSlice(name, { dur = 0.1, gain = 0.3, tail = null } = {}) {
+  playSlice(name, { dur = 0.1, gain = 0.3, tail = null, alusta = false } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
     if (!ctx || !buf) return false;
@@ -545,7 +545,9 @@ class Sound {
     const kesto = tail ?? dur;
     const alku = tail != null
       ? Math.max(0, buf.duration - tail - 0.15)
-      : buf.duration * 0.2 + Math.random() * Math.max(0.01, buf.duration * 0.6 - dur);
+      : alusta
+        ? 0
+        : buf.duration * 0.2 + Math.random() * Math.max(0.01, buf.duration * 0.6 - dur);
     // Pehmeä alku ja loppu, ettei leikkauskohta naksu.
     const g = ctx.createGain();
     const t0 = ctx.currentTime;
@@ -578,6 +580,11 @@ const REAL_SAMPLES = {
     url: 'https://cdn.freesound.org/previews/416/416891_2456794-lq.mp3',
     credit: '"Airplane takeoff interior" — Apheo, Freesound (CC0)',
   },
+  // Sivunkääntö: kysymyskortti avautuu kuin päiväkirjan sivu.
+  quizOpen: {
+    url: 'https://cdn.freesound.org/previews/842/842183_13307919-lq.mp3',
+    credit: '"Page Turn Free" — AardsReal, Freesound (CC0)',
+  },
 };
 
 // Mitkä äänet soivat oikeasta äänitteestä ja miten siivu otetaan.
@@ -587,6 +594,8 @@ const REAL_PLAYERS = {
   // Satunnainen siivu kirjoituskoneäänityksestä osuu milloin näppäimeen,
   // milloin väliin — rytmi elää kuin oikealla koneella.
   pen: (s) => s.playSlice('pen', { dur: 0.12, gain: 0.35 }),
+  // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
+  quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
 };
 
 
@@ -680,6 +689,11 @@ export const AMBIENCE_TYPES = Object.keys(AMBIENCES);
 
 const SOUNDS = {
   // Käyttöliittymä
+  // Kysymyskortin avaus ilman verkkoa: paperi ja pehmeä kello.
+  quizOpen: (s) => {
+    s.hiss({ dur: 0.4, type: 'highpass', freq: 800, sweepTo: 2400, gain: 0.07 });
+    s.bell({ freq: 740, dur: 0.5, gain: 0.06, delay: 0.1 });
+  },
   click: (s) => s.knock({ freqs: [540, 880], dur: 0.045, gain: 0.06, q: 8 }),
   paper: (s) => s.hiss({ dur: 0.34, type: 'highpass', freq: 900, sweepTo: 2800, gain: 0.075 }),
   // Kynän raapaisu pergamentilla — avaustekstin käsinkirjoitus. Hyvin
