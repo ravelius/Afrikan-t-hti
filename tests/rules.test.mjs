@@ -31,7 +31,10 @@ import {
   TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
   FORM_WEIGHTS, MAP_CHOICES,
 } from '../js/game.js';
-import { articleUrl, fetchSummary, parseArticle, parseSummary, summaryUrl } from '../js/wiki.js';
+import {
+  articleUrl, BAD_IMAGE, fetchImage, fetchSummary, parseArticle, parseSummary,
+  pickImage, summaryUrl,
+} from '../js/wiki.js';
 import {
   chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
   wantsDuelBypass, wantsDuelRelief, wantsFiftyFifty, wantsHint,
@@ -2103,6 +2106,39 @@ test('parseArticle poimii artikkelin ja hylkää puuttuvan sivun', () => {
   assert.equal(parseArticle({ query: { pages: { '-1': { missing: '' } } } }), null);
   assert.equal(parseArticle(null), null);
   assert.equal(parseArticle({}), null);
+});
+
+test('pickImage ohittaa montaasit, symbolit ja svg:t', () => {
+  const items = [
+    { type: 'image', title: 'File:Addis Abeba montage.jpg', srcset: [{ src: '//x/montage.jpg' }] },
+    { type: 'image', title: 'File:Flag of Ethiopia.svg', srcset: [{ src: '//x/flag.svg' }] },
+    { type: 'video', title: 'File:Video.webm', srcset: [{ src: '//x/video.jpg' }] },
+    { type: 'image', title: 'File:Meskel Square.jpg', srcset: [{ src: '//x/small.jpg' }, { src: '//x/big.jpg' }] },
+  ];
+  assert.equal(pickImage(items), 'https://x/big.jpg');
+  assert.equal(pickImage([]), null);
+  assert.equal(pickImage(null), null);
+});
+
+test('fetchImage vaihtaa montaasin oikeaan valokuvaan', async () => {
+  assert.ok(BAD_IMAGE.test('Addis_Ababa_montage_2.png'));
+  const summary = { lang: 'fi', title: 'Addis Abeba', image: 'https://x/Addis_montage.jpg' };
+  const image = await fetchImage(summary, {
+    fetchImpl: async () => ({
+      ok: true,
+      json: async () => ({ items: [{ type: 'image', title: 'File:Katunäkymä.jpg', srcset: [{ src: '//x/katu.jpg' }] }] }),
+    }),
+  });
+  assert.equal(image, 'https://x/katu.jpg');
+  // Tavallinen valokuva kelpaa sellaisenaan ilman uutta hakua.
+  const suora = await fetchImage(
+    { lang: 'fi', title: 'X', image: 'https://x/tori.jpg' },
+    { fetchImpl: async () => { throw new Error('ei saa kutsua'); } },
+  );
+  assert.equal(suora, 'https://x/tori.jpg');
+  // Ilman verkkoa montaasi jää varakuvaksi.
+  const vara = await fetchImage(summary, { fetchImpl: async () => { throw new Error('offline'); } });
+  assert.equal(vara, summary.image);
 });
 
 test('fetchSummary suosii suomea ja kelpuuttaa pitkän tiivistelmän', async () => {

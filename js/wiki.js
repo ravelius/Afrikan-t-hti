@@ -107,3 +107,48 @@ export async function fetchArticle(title, lang, { fetchImpl = globalThis.fetch }
   }
   return null;
 }
+
+/** Artikkelin kuvalistan osoite (REST media-list). */
+export function mediaListUrl(lang, title) {
+  return `https://${lang}.wikipedia.org/api/rest_v1/page/media-list/${encodeURIComponent(title)}`;
+}
+
+/**
+ * Kelvottomat kuvat: kaupunkiartikkelin pääkuva on usein monen kuvan
+ * montaasi, joka pienessä kortissa näyttää köntältä. Myös liput, vaakunat,
+ * kartat, logot ja svg-symbolit ohitetaan — yksi valokuva kertoo paikasta
+ * enemmän kuin kuusi pientä.
+ */
+export const BAD_IMAGE = /montage|collage|kollaasi|mosaic|banner|coat|vaakuna|flag|lippu|locator|\bmap\b|kartta|logo|seal|icon|\.svg$/i;
+
+/** Poimii kuvalistasta ensimmäisen kelvollisen valokuvan osoitteen. */
+export function pickImage(items) {
+  for (const item of items ?? []) {
+    if (item?.type !== 'image') continue;
+    if (BAD_IMAGE.test(item.title ?? '')) continue;
+    const srcset = item.srcset;
+    const src = srcset?.[srcset.length - 1]?.src ?? srcset?.[0]?.src;
+    if (src) return src.startsWith('//') ? `https:${src}` : src;
+  }
+  return null;
+}
+
+/**
+ * Paras kuva paikalle: tiivistelmän kuva sellaisenaan, jos se ei ole
+ * montaasi; muuten artikkelin kuvalistasta ensimmäinen oikea valokuva.
+ * Montaasi jää varakuvaksi, jos kuvalistaa ei saada haettua.
+ */
+export async function fetchImage(summary, { fetchImpl = globalThis.fetch } = {}) {
+  if (!summary) return null;
+  if (summary.image && !BAD_IMAGE.test(summary.image)) return summary.image;
+  try {
+    const res = await fetchImpl(mediaListUrl(summary.lang, summary.title));
+    if (res && res.ok) {
+      const img = pickImage((await res.json()).items);
+      if (img) return img;
+    }
+  } catch {
+    /* ei yhteyttä — montaasi on parempi kuin ei kuvaa */
+  }
+  return summary.image ?? null;
+}

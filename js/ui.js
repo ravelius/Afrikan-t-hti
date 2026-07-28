@@ -17,15 +17,23 @@ import {
 } from './game.js';
 import { factSource, factText, factVoice, isSourceUrl, sourceLabel, voiceTitle } from './pack.js';
 import { stampBoard, stampDate, stampList } from './passport.js';
-import { fetchArticle, fetchSummary } from './wiki.js';
+import { fetchArticle, fetchImage, fetchSummary } from './wiki.js';
 
-// Tiivistelmät haetaan kerran per artikkeli: sama kuva näkyy sekä
-// saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
+// Tiivistelmät ja kuvat haetaan kerran per artikkeli: sama kuva näkyy
+// sekä saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
 const wikiSummaryCache = new Map();
+const wikiImageCache = new Map();
 
 async function cachedSummary(title) {
   if (!wikiSummaryCache.has(title)) wikiSummaryCache.set(title, fetchSummary(title));
   return wikiSummaryCache.get(title);
+}
+
+async function cachedImage(title) {
+  if (!wikiImageCache.has(title)) {
+    wikiImageCache.set(title, cachedSummary(title).then((s) => fetchImage(s)));
+  }
+  return wikiImageCache.get(title);
 }
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
@@ -1241,12 +1249,12 @@ export class UI {
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
 
-    cachedSummary(city.wiki).then((summary) => {
+    Promise.all([cachedSummary(city.wiki), cachedImage(city.wiki)]).then(([summary, image]) => {
       // Pelaaja on voinut ehtiä jatkaa matkaa haun aikana.
       if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
       if (!summary) return;
-      if (summary.image) {
-        this.arrivalImage.src = summary.image;
+      if (image) {
+        this.arrivalImage.src = image;
         this.arrivalImage.alt = summary.title || city.name;
         this.arrivalImage.hidden = false;
       }
@@ -1312,11 +1320,12 @@ export class UI {
     }
 
     this.wikiTitle.textContent = summary.title || city.name;
-    if (summary.image) {
-      this.wikiImage.src = summary.image;
+    cachedImage(city.wiki).then((image) => {
+      if (!this.wikiDialog.open || this.wikiOpenFor !== cityId || !image) return;
+      this.wikiImage.src = image;
       this.wikiImage.alt = summary.title || city.name;
       this.wikiImage.hidden = false;
-    }
+    });
     this.wikiExtract.textContent = summary.extract;
 
     // Koko artikkeli ladataan tiivistelmän perään; tiivistelmä jää, jos
