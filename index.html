@@ -83,17 +83,16 @@
 
   <!-- Aloitusruutu -->
 
-  <!-- Saapuminen aarrekaupunkiin -->
+  <!-- Saapuminen isoisän merkitsemään kaupunkiin. Kortti on kevyt ja
+       kertoo vain päätöksen: paikan tarina tulee kartan päiväkirjasta,
+       jottei sama tieto toistu kahdessa paikassa. -->
   <dialog id="arrival-dialog" class="dialog">
    <div class="dialog-card arrival-card">
     <h2 id="arrival-city"></h2>
-    <p id="arrival-voice" class="fact-place"></p>
-    <p id="arrival-text" class="arrival-text"></p>
-    <button id="arrival-wiki" class="ghost wiki-btn" type="button" hidden>Lue lisää</button>
-    <p class="arrival-ask">Kaupungissa on avaamaton aarre. Haluatko avata sen?</p>
+    <p class="arrival-ask">Isoisä on merkinnyt tämän paikan karttaansa.</p>
     <div class="dialog-actions">
-      <button id="arrival-yes" class="primary" type="button">Avaa — vastaa kysymykseen</button>
-      <button id="arrival-no" type="button">Ei nyt — jatka matkaa</button>
+      <button id="arrival-yes" class="primary" type="button">Tutki paikka</button>
+      <button id="arrival-no" type="button">Jatka matkaa</button>
     </div>
    </div>
   </dialog>
@@ -171,11 +170,12 @@
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa. Näkyvillä on kerrallaan vain
         muutama nappi: <b>Jalan</b> lähtee heti matkaan ja heittää nopan samalla
         painalluksella, <b>Laiva &amp; lento…</b> avaa loput vaihtoehdot (laiva 100 p,
-        lennot 300 p sekä portit toisille laudoille), ja aarrekaupungissa voi jäädä
-        <b>vastaamaan kysymykseen</b>. Jos vaihtoehtoja ei ole — esimerkiksi sisämaassa
-        tai kesken reittiä — noppa pyörähtää itsestään. 2) Valitse kohde kartalta.
-        3) Jos päädyit kaupunkiin, jossa on avaamaton aarre, voit vielä kokeilla
-        tietovisaa — sen jälkeen vuoro vaihtuu.</p>
+        lennot 300 p sekä portit toisille laudoille), ja isoisän merkitsemässä
+        kaupungissa voi jäädä <b>tutkimaan paikkaa</b>. Jos vaihtoehtoja ei ole —
+        esimerkiksi sisämaassa tai kesken reittiä — noppa pyörähtää itsestään.
+        2) Valitse kohde kartalta. 3) Jos päädyit kaupunkiin, jonka isoisä on
+        merkinnyt karttaansa, voit vielä tutkia paikan — sen jälkeen vuoro
+        vaihtuu.</p>
       <p><b>Liikkuminen.</b> Noppa kertoo, kuinka monta askelta voit enintään kulkea —
         tasalukua ei tarvita, vaan kaupunkiin saa pysähtyä jo matkan varrella. Matka
         kulkee valitulla tavalla: maitse vain maareittejä ja laivalla vain meriteitä.

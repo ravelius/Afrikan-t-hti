@@ -526,13 +526,20 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * Saapumiskortti: kaupungin matkatarina keskellä ruutua. Kortti on kapeampi
  * kuin säännöt, jotta teksti pysyy luettavan mittaisena rivinä.
  */
-.arrival-card { max-width: 460px; }
+/*
+ * Saapumiskortti on kevyt: ohut yksinkertainen kehys ilman tuplaraamia,
+ * ei tekstiä eikä kultalaattaa — vain paikan nimi ja päätös.
+ */
+.arrival-card { max-width: 380px; border-width: 1.5px; }
+
+.arrival-card::before { display: none; }
 
 .arrival-card h2 {
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   letter-spacing: 0.06em;
 }
 
+/* Tapahtumakortin teksti (luokka jäi tapahtumille, kun saapumiskortti keveni). */
 .arrival-text {
   margin: 0.5rem 0 0.9rem;
   font-size: 0.95rem;
@@ -541,12 +548,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 .arrival-ask {
-  margin: 0 0 0.6rem;
+  margin: 0.2rem 0 1rem;
   font-family: var(--font-type);
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
   color: var(--accent-ink, inherit);
-  font-weight: 700;
+}
+
+.arrival-card .dialog-actions button {
+  background: none;
+  border-width: 1px;
+}
+
+.arrival-card .dialog-actions button.primary {
+  background: none;
+  border: 1.5px solid rgba(176, 138, 60, 0.9);
+  color: #7a5514;
+}
+
+.arrival-card .dialog-actions button.primary:hover:not(:disabled) {
+  background: rgba(234, 184, 78, 0.18);
 }
 
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */

@@ -1353,7 +1353,7 @@ export class Game {
         break;
       case 'empty':
         this.say(p.id, `${p.name} käänsi tyhjän laatan kaupungissa ${city.name}.`);
-        this.emit('treasure', 'Tyhjä laatta', { token: type, sub: 'Ei aarretta täällä' });
+        this.emit('treasure', 'Tyhjä laatta', { token: type, sub: 'Isoisän merkintä oli vanhentunut' });
         break;
       default:
         p.money += token.value;

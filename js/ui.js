@@ -84,7 +84,7 @@ const REVEAL_SUB = {
   star: 'Vie tähti kotiin ja voitat pelin!',
   horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
   robber: 'Rosvo haastaa kaksintaisteluun!',
-  empty: 'Ei aarretta täällä',
+  empty: 'Isoisän merkintä oli vanhentunut — täältä ei löytynyt mitään',
 };
 
 function html(tag, className, text) {
@@ -120,8 +120,6 @@ export class UI {
 
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
-    this.arrivalVoice = document.getElementById('arrival-voice');
-    this.arrivalText = document.getElementById('arrival-text');
     document.getElementById('arrival-yes').addEventListener('click', () => {
       this.closeArrival();
       sfx.play('paper');
@@ -137,8 +135,6 @@ export class UI {
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
     this.wikiSource = document.getElementById('wiki-source');
-    this.arrivalWiki = document.getElementById('arrival-wiki');
-    this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
     this.factWiki = document.getElementById('fact-wiki');
     this.factWiki.addEventListener('click', () => this.openWiki(this.factWikiCity));
 
@@ -916,7 +912,7 @@ export class UI {
       }
 
       if (modes.includes('stay')) {
-        const stayBtn = this.iconButton('❓', 'Vastaa kysymykseen', 'primary');
+        const stayBtn = this.iconButton('🔍', 'Tutki paikka', 'primary');
         stayBtn.addEventListener('click', () => {
           sfx.play('paper');
           this.doAction(() => game.actionTravel('stay'));
@@ -1223,18 +1219,10 @@ export class UI {
     if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
     this.arrivalShownFor = city.id;
 
-    const facts = this.game.pack.placeFacts[city.id] ?? [];
-    const pick = Math.floor(hash01(`arrival:${city.id}:${this.game.turnCount}`) * facts.length);
-    const fact = facts[Math.min(pick, facts.length - 1)];
-
-    this.arrivalWiki.hidden = !city.wiki;
+    // Kortti kertoo vain päätöksen. Paikan tarina tulee kartan
+    // päiväkirjasta ja Lue lisää on vain karttanäkymässä, jottei sama
+    // tieto toistu kahdessa paikassa.
     this.arrivalCity.textContent = city.name;
-    this.arrivalVoice.textContent = fact ? voiceTitle(factVoice(fact)) : '';
-    this.arrivalText.textContent = '';
-    const source = fact ? this.sourceLine(factSource(fact)) : null;
-    this.typeText(this.arrivalText, factText(fact), 'arrival', () => {
-      if (source) this.arrivalText.appendChild(source);
-    });
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
   }
 
