@@ -24,9 +24,11 @@ export function packById(id) {
 
 /** Paketin kaikki kysymykset yhtenä listana (testejä ja tarkistuksia varten). */
 export function allQuestions(pack) {
-  return Object.entries(pack.questions).flatMap(([key, list]) =>
-    list.map((question) => ({ ...question, key })),
-  );
+  return Object.entries(pack.questions)
+    // Isoisän väittämät ovat eri muotoa (kaksi kiinteää vaihtoehtoa eikä
+    // options-listaa), joten ne eivät kuulu monivalintojen joukkoon.
+    .filter(([key]) => key !== 'claims')
+    .flatMap(([key, list]) => list.map((question) => ({ ...question, key })));
 }
 
 // --- lähteet ---------------------------------------------------------------

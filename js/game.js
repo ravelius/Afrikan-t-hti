@@ -22,6 +22,14 @@ export const TURN_HOURS = 6;
 export const RECORD_DAYS = 80; // isoisän ennätys
 export const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
 
+// Pysähdyksen muoto arvotaan painotetusti, jottei joka kaupungissa ole sama
+// neljän vaihtoehdon tietovisa. Painot ovat vakioina, koska oikeat arvot
+// varmistuvat vasta pelitestissä. Jos laudalla ei ole väittämiä tai
+// tapahtumia, niiden paino siirtyy monivalinnalle — peli toimii jokaisella
+// laudalla ilman uutta sisältöä.
+export const FORM_WEIGHTS = { quiz: 60, claim: 15, map: 10, event: 15 };
+export const MAP_CHOICES = 4; // karttakysymyksen ehdokaskaupungit
+
 /** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
 export function timeOfDayName(hour) {
   if (hour < 6) return 'aamu';
@@ -117,6 +125,9 @@ export class Game {
     this.duel = null;
     this.duelArmed = false;
     this.diaryNote = null;
+    // Pysähdyksen muoto: sama erikoismuoto ei toistu kahdesti peräkkäin.
+    this.lastForm = null;
+    this.eventCard = null;
     // Isoisän aikataulu: näytetty rivi ja jo nähtyjen avaimet.
     this.scheduleNote = null;
     this.scheduleShown = new Set();
@@ -629,12 +640,12 @@ export class Game {
   }
 
   /** Valitsee matkustustavan. Maksu peritään vasta kun siirto tehdään. */
-  actionTravel(mode) {
+  actionTravel(mode, opts = {}) {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
     if (!this.travelModes().includes(mode)) {
       return { ok: false, error: 'Tuo matkustustapa ei ole nyt käytettävissä' };
     }
-    if (mode === 'stay') return this.actionQuiz();
+    if (mode === 'stay') return this.actionQuiz(opts);
 
     const p = this.player;
     this.travelMode = mode;
@@ -719,11 +730,46 @@ export class Game {
   }
 
   /**
-   * Avaa tietovisakysymyksen: oikea vastaus kääntää laatan ilmaiseksi.
-   * `hard: true` arpoo vaikean kysymyksen, josta oikein vastattaessa saa
-   * laatan lisäksi HARD_BONUS puntaa.
+   * Käytettävissä olevat muodot painoineen. Muoto putoaa pois, jos laudalla
+   * ei ole sen sisältöä tai jos se oli edellinen erikoismuoto — sama
+   * erikoismuoto ei toistu kahdesti peräkkäin.
    */
-  actionQuiz({ hard = false } = {}) {
+  formWeights(cityId) {
+    const painot = { ...FORM_WEIGHTS };
+    if (!(this.pack.questions?.claims ?? []).length) painot.claim = 0;
+    if (!(this.pack.events ?? []).length) painot.event = 0;
+    // Karttakysymys tarvitsee tarpeeksi kaupunkeja ehdokkaiksi.
+    if (this.board.cities.length < MAP_CHOICES + 1) painot.map = 0;
+    if (this.lastForm && this.lastForm !== 'quiz') painot[this.lastForm] = 0;
+    // Kaupungin omissa kysymyksissä voi olla vaikeita, joita ei ole vielä
+    // kysytty; monivalinta on aina mahdollinen, joten se kerää loput.
+    const siirtyy = FORM_WEIGHTS.claim - painot.claim
+      + FORM_WEIGHTS.event - painot.event
+      + FORM_WEIGHTS.map - painot.map;
+    painot.quiz += siirtyy;
+    return painot;
+  }
+
+  /** Arpoo pysähdyksen muodon painotetusti pelin omalla satunnaisluvulla. */
+  pickForm(cityId) {
+    const painot = this.formWeights(cityId);
+    const summa = Object.values(painot).reduce((a, b) => a + b, 0);
+    let osuma = this.rng() * summa;
+    for (const [muoto, paino] of Object.entries(painot)) {
+      osuma -= paino;
+      if (osuma < 0) return muoto;
+    }
+    return 'quiz';
+  }
+
+  /**
+   * Avaa pysähdyksen: monivalinta, isoisän väittämä, karttakysymys tai
+   * tapahtumakortti. Oikea vastaus kääntää laatan ilmaiseksi.
+   * `hard: true` arpoo vaikean kysymyksen, josta oikein vastattaessa saa
+   * laatan lisäksi HARD_BONUS puntaa — vaikea kysymys on aina monivalinta,
+   * koska panos on suurempi.
+   */
+  actionQuiz({ hard = false, form = null } = {}) {
     if (this.phase !== 'offer' && this.phase !== 'action') {
       return { ok: false, error: 'Väärä vaihe' };
     }
@@ -732,6 +778,12 @@ export class Game {
     if (hard && !this.hardAvailable(city.id)) {
       return { ok: false, error: 'Täällä ei ole vaikeita kysymyksiä' };
     }
+
+    const muoto = hard ? 'quiz' : (form ?? this.pickForm(city.id));
+    this.lastForm = muoto;
+    if (muoto === 'claim') return this.openClaim(city);
+    if (muoto === 'map') return this.openMapQuestion(city);
+    if (muoto === 'event') return this.openEvent(city);
 
     const difficulty = hard ? 'hard' : this.player.quizLevel;
     const question = this.pickQuestion(city.id, difficulty);
@@ -754,6 +806,151 @@ export class Game {
     };
     this.phase = 'quiz';
     return { ok: true, quiz: this.quiz };
+  }
+
+  /**
+   * Isoisän väittämä: päiväkirjamerkintä, jonka pelaaja arvioi todeksi tai
+   * taruksi. Kaksi nappia neljän sijaan. Väittämä on sama quiz-olio kuin
+   * monivalinta, joten vastaaminen, aikakatkaisu ja sulkeminen toimivat
+   * ennallaan — vain vaihtoehtoja on kaksi ja `kind` kertoo muodon.
+   */
+  openClaim(city) {
+    const pool = this.pack.questions.claims ?? [];
+    const fresh = pool.filter((c) => !this.usedQuestions.has(c.q));
+    const deck = fresh.length ? fresh : pool;
+    const claim = deck[Math.floor(this.rng() * deck.length)];
+    this.usedQuestions.add(claim.q);
+
+    this.quiz = {
+      kind: 'claim',
+      cityId: city.id,
+      hard: false,
+      question: claim.q,
+      fact: claim.fact,
+      source: sourceList(claim.source),
+      options: ['Totta', 'Tarua'],
+      correct: claim.correct ? 0 : 1,
+      hint: null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
+  }
+
+  /**
+   * Karttakysymys: "Näytä kartalta: missä on X?" Ehdokkaat korostuvat
+   * laudalla ja vastaus annetaan napauttamalla. Kysymys johdetaan laudan
+   * omasta kaupunkidatasta, joten se toimii jokaisella laudalla ilman
+   * erillistä sisältöpankkia.
+   */
+  openMapQuestion(city) {
+    // Ehdokkaiksi kelpaavat kaikki paitsi kaupunki, jossa nyt seistään:
+    // sen sijainti on pelaajalle jo näkyvissä nappulan alla.
+    const pool = this.board.cities.filter((c) => c.id !== city.id);
+    const order = this.shuffledOrder(pool.length).slice(0, MAP_CHOICES);
+    const ehdokkaat = order.map((i) => pool[i]);
+    const kohde = ehdokkaat[Math.floor(this.rng() * ehdokkaat.length)];
+
+    const naapurit = [...(this.board.adj.get(kohde.id) ?? [])]
+      .map((eid) => this.board.edgeById.get(eid))
+      .map((e) => (e.a === kohde.id ? e.b : e.a))
+      .map((id) => this.board.cityById.get(id)?.name)
+      .filter(Boolean);
+
+    this.quiz = {
+      kind: 'map',
+      cityId: city.id,
+      hard: false,
+      question: `Näytä kartalta: missä on ${kohde.name}?`,
+      fact: naapurit.length
+        ? `${kohde.name} on laudalla tässä. Sieltä pääsee suoraan kaupunkeihin ${naapurit.join(', ')}.`
+        : `${kohde.name} on laudalla tässä.`,
+      source: [],
+      options: ehdokkaat.map((c) => c.name),
+      mapCities: ehdokkaat.map((c) => c.id),
+      correct: ehdokkaat.indexOf(kohde),
+      hint: null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
+  }
+
+  /**
+   * Tapahtumakortti: kysymyksen sijaan tapahtuu jotain. Vaikutus on aina
+   * pieni ja reilu — tapahtuma ei vie aarretta eikä isoa summaa, ja
+   * laatta jää kääntämättä, joten kaupunkiin voi palata.
+   */
+  openEvent(city) {
+    const pool = this.pack.events ?? [];
+    const fresh = pool.filter((e) => !this.usedQuestions.has(e.text));
+    const deck = fresh.length ? fresh : pool;
+    const kortti = deck[Math.floor(this.rng() * deck.length)];
+    this.usedQuestions.add(kortti.text);
+
+    this.eventCard = { cityId: city.id, text: kortti.text, effect: kortti.effect, done: null };
+    this.phase = 'event';
+    return { ok: true, event: this.eventCard };
+  }
+
+  /** Toteuttaa tapahtuman vaikutuksen ja päättää vuoron. */
+  closeEvent() {
+    if (this.phase !== 'event' || !this.eventCard) {
+      return { ok: false, error: 'Ei avointa tapahtumaa' };
+    }
+    const p = this.player;
+    const { effect } = this.eventCard;
+    this.eventCard = null;
+    this.phase = 'action';
+
+    if (effect?.kind === 'raha') {
+      // Kukkaro ei mene miinukselle: tapahtuma ei saa jättää matkaajaa
+      // velkaan, koska sillä ei ole pelissä mitään merkitystä.
+      const muutos = Math.max(effect.amount, -p.money);
+      p.money += muutos;
+      this.say(p.id, muutos >= 0
+        ? `${p.name} sai ${muutos} puntaa.`
+        : `${p.name} menetti ${-muutos} puntaa.`);
+    } else if (effect?.kind === 'kyyti') {
+      const kohde = this.rideTarget(p);
+      if (kohde) {
+        p.pos = { type: 'city', city: kohde.id };
+        this.lastPath = null;
+        this.visitCity(p);
+        this.say(p.id, `${p.name} sai ilmaisen kyydin kaupunkiin ${kohde.name}.`);
+      }
+    }
+
+    this.endTurn();
+    // Viive vie yhden ylimääräisen vuoron: matkaaja jää paikalleen ja
+    // matkapäivä kuluu silti.
+    if (effect?.kind === 'viive') {
+      this.say(p.id, `${p.name} jäi paikalleen yhdeksi vuoroksi.`);
+      this.endTurn();
+    }
+    return { ok: true };
+  }
+
+  /** Naapurikaupunki ilmaista kyytiä varten; null jos naapureita ei ole. */
+  rideTarget(player) {
+    if (player.pos.type !== 'city') return null;
+    const naapurit = [...(this.board.adj.get(player.pos.city) ?? [])]
+      .map((eid) => this.board.edgeById.get(eid))
+      .map((e) => (e.a === player.pos.city ? e.b : e.a))
+      .map((id) => this.board.cityById.get(id))
+      .filter(Boolean);
+    if (!naapurit.length) return null;
+    return naapurit[Math.floor(this.rng() * naapurit.length)];
   }
 
   /** Vastaa kysymykseen. Tulos jää näkyviin kunnes closeQuiz() kutsutaan. */
@@ -841,6 +1038,9 @@ export class Game {
     const quiz = this.quiz;
     if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
     if (quiz.hidden.length) return { ok: false, error: '50:50 on jo käytetty' };
+    // Väittämässä on kaksi vaihtoehtoa ja karttakysymyksessä vastataan
+    // kartalta — kummassakaan puolikkaan poistamisessa ei ole järkeä.
+    if (quiz.options.length < 4) return { ok: false, error: 'Tähän ei voi käyttää 50:50:tä' };
 
     const p = this.player;
     if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
@@ -1208,6 +1408,8 @@ export class Game {
       duel: this.duel,
       duelArmed: this.duelArmed,
       diaryNote: this.diaryNote,
+      lastForm: this.lastForm,
+      eventCard: this.eventCard,
       scheduleNote: this.scheduleNote,
       scheduleShown: [...this.scheduleShown],
       recordNoted: this.recordNoted,
@@ -1281,6 +1483,8 @@ export class Game {
     game.duel = data.duel ?? null;
     game.duelArmed = !!data.duelArmed;
     game.diaryNote = data.diaryNote ?? null;
+    game.lastForm = data.lastForm ?? null;
+    game.eventCard = data.eventCard ?? null;
     // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
     // yhtään isoisän aikataulurivistä.
     game.scheduleNote = data.scheduleNote ?? null;

@@ -1494,6 +1494,94 @@ export const AFRICA_QUESTIONS = {
       hint: 'Kokous pidettiin Saksan pääkaupungissa.',
     },
   ],
+
+  // Isoisän väittämät: päiväkirjamerkintä vuodelta 1873, jonka pelaaja
+  // arvioi todeksi tai taruksi. Tämä on tarinan ydin pelimekaniikkana —
+  // sama jännite, mikä muuttui ja mikä pysyi. Puolet on yhä totta.
+  // Jokainen "tarua" osoittaa isoisään, imperiumiin tai vanhaan karttaan,
+  // ei koskaan afrikkalaiseen paikkaan tai ihmiseen.
+  claims: [
+    {
+      q: 'Kanava kannaksen läpi on ollut auki neljä vuotta, ja kummastelin sitä koko läpiajon: siinä ei ole yhtäkään sulkua. Välimeri ja Punainenmeri makaavat samalla korkeudella, joten laiva purjehtii suoraan läpi kuin joen uomaa.',
+      correct: true,
+      fact: 'Suezin kanavassa ei ole yhäkään sulkuja: merenpinnat ovat käytännössä samalla tasolla, toisin kuin Panamassa. Väylää on levennetty useaan kertaan, ja Egypti kansallisti kanavan vuonna 1956.',
+    },
+    {
+      q: 'Seurasin jokea ylävirtaan enkä meinannut uskoa kompassiani: vesi tulee lounaasta ja jatkaa koilliseen, siis poispäin merestä. Etelään se kääntyy vasta paljon myöhemmin.',
+      correct: true,
+      fact: 'Niger saa alkunsa Guinean ylängöllä noin 240 kilometrin päässä Atlantista, kaartaa koilliseen Saharan reunalle ja kääntyy vasta siellä takaisin etelään. Mutkan arvellaan syntyneen siitä, että ylä- ja alajuoksu olivat alun perin kaksi eri jokea.',
+    },
+    {
+      q: 'Merkitsin muistiin Atbaran, viimeisen sivujoen joka Niiliin laskee. Sen jälkeen joki ei saa yhtäkään pisaraa lisää, vaan kulkee koko loppumatkan merelle sillä vedellä, joka sillä jo on.',
+      correct: true,
+      fact: 'Atbara on yhä Niilin viimeinen sivujoki. Siitä eteenpäin joki virtaa yli 2 000 kilometriä Välimereen ilman yhtään lisäjokea ja menettää matkalla vettä haihtumiseen ja kasteluun. Assuanissa ei sada käytännössä lainkaan: vuosisadanta on korkeintaan muutamia millimetrejä, useina vuosina nolla.',
+    },
+    {
+      q: 'Ylängöllä on kirkkoja, joita ei ole rakennettu vaan kaiverrettu: kalliosta on hakattu pois kaikki ylimääräinen, ja katto on tehty ensin. Niissä pidettiin jumalanpalvelusta aivan tavalliseen tapaan, eikä kukaan pitänyt asiaa ihmeenä.',
+      correct: true,
+      fact: 'Lalibelan yksitoista kalliokirkkoa louhittiin 1100–1200-luvuilla ylhäältä alaspäin yhdestä kivestä, eikä niitä ole koskaan poistettu käytöstä. Ne ovat yhä seurakuntien kirkkoja, ja tammikuun joulujuhlaan saapuu kymmeniätuhansia pyhiinvaeltajia. Unesco listasi ne maailmanperinnöksi 1978.',
+    },
+    {
+      q: 'Täällä suolaa ei tuoda mereltä vaan aavikon keskeltä: se hakataan maasta laattoina ja kannetaan etelään kamelien selässä. Kysyin kaivoksen etäisyyttä ja sain vastaukseksi päivien määrän, en mailien.',
+      correct: true,
+      fact: 'Taoudennin kaivoksilla Pohjois-Malissa suola hakataan yhä käsin laatoiksi, ja karavaani kulkee 700-800 kilometriä Timbuktuun kahdessa tai kolmessa viikossa. Kuorma-autot vievät nykyään suurimman osan kuormasta ja alueen levottomuudet ovat katkoneet reittiä, mutta kamelikaravaanit kulkevat yhä.',
+    },
+    {
+      q: 'Sademetsän keskellä on kuningaskunta, jolla on oma kuninkaansa ja tarkasti järjestetty hovinsa. Kirjasin hänen arvonimensä muistiin siltä varalta, että klubilla väitetään moista mahdottomaksi.',
+      correct: true,
+      fact: 'Ashantien kuningas eli Asantehene istuu yhä Kumasissa; nykyinen on Osei Tutu II, joka asetettiin virkaan 1999. Britannia poltti Kumasin 1874 ja karkotti kuninkaan maanpakoon 1896, mutta kuninkuus palautettiin 1935. Ghanan perustuslaki tunnustaa perinteiset hallitsijat: he sovittelevat riitoja ja hallinnoivat maita, mutta eivät johda valtiota.',
+    },
+    {
+      q: 'Kirjoitan tämän sateessa, ja on kesäkuu. Mantereen eteläkärjessä sade tulee talvella ja kesä on kuiva ja pölyinen — vuodenajat ovat siis nurin kahdella eri tavalla yhtä aikaa.',
+      correct: true,
+      fact: 'Kapkaupungissa on välimerellinen ilmasto: sateet tulevat talvella, runsaimmillaan kesä–elokuussa, ja kesä on kuiva. Juuri siksi kaupunki oli 2018 lähellä päivää, jona hanat olisi suljettu; asukkaita rajoitettiin viiteenkymmeneen litraan vuorokaudessa, ja tilanne helpotti vasta talvisateiden myötä.',
+    },
+    {
+      q: 'Ylätasangolla pesuvesi oli aamulla jäässä, ja idässä siinsivät lumiset harjanteet. Heinäkuu, ja minä palelen mantereella, jota kotona sanotaan kuumaksi.',
+      correct: true,
+      fact: 'Etelä-Afrikan sisämaan ylätasangolla on talvisin yöpakkasia, ja Draakonivuorilla sataa lunta lähes joka talvi. Lesothon ylängöllä toimii hiihtokeskus 3 050 metrin korkeudessa, ja sen kausi on kesäkuusta elokuuhun.',
+    },
+    {
+      q: 'Elokuussa seisoin rannalla ja katselin, kuinka joki nousi pelloille. Vetäytyessään se jättää mustan mudan, ja sen varassa tämä maa on syönyt faaraoiden ajoista — niin se tekee tästedeskin.',
+      correct: false,
+      fact: 'Vuotuinen tulva loppui, kun Assuanin suurpato valmistui 1970. Muta jää nyt Nasserjärven pohjaan ja pelloille ajetaan lannoitetta, mutta kastelu toimii ympäri vuoden, joten samasta pellosta korjataan useampi sato vuodessa.',
+    },
+    {
+      q: 'Ylängön pääkaupungissa minut vietiin kuningattaren hoviin, jossa tulkki käänsi tervehdykseni. Suuri saari on oma valtakuntansa, eikä yksikään Euroopan valta määrää siellä mitään.',
+      correct: false,
+      fact: 'Merinan kuningaskunta oli itsenäinen vielä 1873, mutta Ranska liitti saaren siirtomaakseen 1896 ja lähetti viimeisen kuningattaren maanpakoon seuraavana vuonna. Madagaskar itsenäistyi 1960 ja on tasavalta, jonka presidentti valitaan vaaleilla.',
+    },
+    {
+      q: 'Kirjasin muistiin kaiken, mitä tämä ylätasanko antaa: timantteja. Kultaa on etsitty eikä löydetty, joten luettelo on tässä ja pysyy tällaisena.',
+      correct: false,
+      fact: 'Kolmetoista vuotta myöhemmin, 1886, Witwatersrandin harjulta löytyi kultaa, ja löydön päälle perustettiin Johannesburg. Etelä-Afrikka oli maailman suurin kullantuottaja vuoteen 2007 asti, jolloin Kiina ohitti sen. Mponengin kaivos ulottuu noin neljän kilometrin syvyyteen — syvemmälle kuin mikään muu kaivos maailmassa.',
+    },
+    {
+      q: 'Aavikon yli ei pääse muuten kuin kamelilla: pyörä uppoaa hiekkaan, eikä vaunua saa vedetyksi viittäkymmentä mailia. Tämä ei muutu, sillä hiekka ei muutu.',
+      correct: false,
+      fact: 'Saharan halki kulkee nykyään päällystetty valtatie: Trans-Saharan tie vie Algerista Nigerin halki Nigerian Lagosiin, noin 4 500 kilometriä, ja se on lähes kokonaan asfaltoitu. Algerian oma 2 400 kilometrin osuus valmistui kokonaan 2020-luvulla, ja rekat ajavat reittiä rannikolta rannikolle.',
+    },
+    {
+      q: 'Nopein tapa saada sana Lontooseen on postihöyrylaiva, ja vastausta saa odottaa lähemmäs kaksi kuukautta. Nopeampaa keinoa ei tälle matkalle keksitä.',
+      correct: false,
+      fact: 'Merikaapeli ylsi Etelä-Afrikkaan jo 1879, kuusi vuotta tämän merkinnän jälkeen. Nykyään mannerta kiertää useita valokuitukaapeleita — 2Africa on niistä pisin, noin 45 000 kilometriä, ja sen runko valmistui 2025 — ja viesti kulkee Kapkaupungista Lontooseen sekunnin murto-osassa.',
+    },
+    {
+      q: 'Suurkaupunki tarvitsee sataman. Sisämaassa ei ole kauppaa eikä vettä, joka elättäisi miljoonan ihmisen, joten tämän mantereen suuret kaupungit ovat ja pysyvät rannikolla.',
+      correct: false,
+      fact: 'Kinshasassa asuu yli viisitoista miljoonaa ihmistä noin viidensadan kilometrin päässä joen suulta, eivätkä merilaivat pääse sinne lainkaan koskien takia. Johannesburgin seutu kasvoi keskelle ylätasankoa kaivosten päälle, satojen kilometrien päähän lähimmästä satamasta; myös Kairo ja Addis Abeba ovat sisämaassa.',
+    },
+    {
+      q: 'Tämän mantereen kartat piirretään Lontoossa ja Pariisissa, ja sieltä ne myös korjataan, kun uutta tietoa saapuu. Muunlaista järjestystä on vaikea kuvitella.',
+      correct: false,
+      fact: 'Vuoteen 2025 mennessä yhdeksäntoista Afrikan maata oli lähettänyt kiertoradalle lähes seitsemänkymmentä satelliittia: Egyptin Nilesat 101 vuonna 1998 ja Etelä-Afrikan itse rakentama SUNSAT 1999. Afrikan avaruusvirasto avattiin Kairossa 2025, ja Nairobissa toimiva kartoituskeskus RCMRD tuottaa aineistoa kahdellekymmenelle jäsenmaalleen.',
+    },
+    {
+      q: 'Maksoin satamamaksut punnissa, ja kauppias punnitsi kolikon kämmenellään tyytyväisenä. Rahaa ei tällä matkalla tarvitse vaihtaa, ainoastaan laskea.',
+      correct: false,
+      fact: 'Afrikassa on nykyään noin neljäkymmentä valuuttaa — muun muassa naira, cedi, randi, birr, shillinki ja dirhami — sekä CFA-frangi, joka on neljäntoista maan käytössä mutta tosiasiassa kaksi erillistä valuuttaa: läntinen ja keskinen eivät kelpaa toistensa alueella. Punnalla saa vaihtokonttorista paikallista rahaa aivan kuten millä tahansa ulkomaan setelillä.',
+    },
+  ],
 };
 
 /**

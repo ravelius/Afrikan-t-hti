@@ -36,6 +36,9 @@ function step(game) {
       else if (wantsDuelRelief(game)) game.actionDuelRelief();
       else game.answerDuel(chooseDuelAnswer(game));
       return;
+    case 'event':
+      game.closeEvent();
+      return;
     case 'offer':
       game.actionQuiz();
       return;

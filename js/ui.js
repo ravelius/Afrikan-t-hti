@@ -131,6 +131,16 @@ export class UI {
       this.doAction(() => this.game.actionSkipQuiz());
     });
 
+    this.eventDialog = document.getElementById('event-dialog');
+    this.eventText = document.getElementById('event-text');
+    this.eventEffect = document.getElementById('event-effect');
+    document.getElementById('event-ok').addEventListener('click', () => {
+      if (this.eventDialog.open) this.eventDialog.close();
+      this.eventShownFor = null;
+      sfx.play('paper');
+      this.doAction(() => this.game.closeEvent());
+    });
+
     this.factVoiceEl = document.getElementById('fact-voice');
     this.factPlace = document.getElementById('fact-place');
     this.factText = document.getElementById('fact-text');
@@ -651,6 +661,22 @@ export class UI {
       return;
     }
 
+    // Karttakysymys: ehdokaskaupungit ovat vastausvaihtoehtoja, ja vastaus
+    // annetaan napauttamalla lautaa. Renkaat ovat samat kuin lähtöpisteen
+    // valinnassa, koska tässäkin osoitetaan paikkaa eikä kehoteta liikkumaan.
+    const quiz = game.quiz;
+    if (game.phase === 'quiz' && quiz?.kind === 'map' && quiz.chosen === null) {
+      quiz.mapCities.forEach((cityId, i) => {
+        const c = game.board.cityById.get(cityId);
+        if (!c) return;
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
+        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring pick' }, g);
+        g.addEventListener('click', () => this.answerQuiz(i));
+      });
+      return;
+    }
+
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
@@ -788,6 +814,11 @@ export class UI {
       return;
     }
 
+    if (game.phase === 'event') {
+      this.turnStatus.textContent = 'Matkalla sattui jotain.';
+      this.hint.textContent = '';
+      return;
+    }
     if (game.phase === 'quiz') {
       this.turnStatus.textContent = 'Tietovisa käynnissä.';
       this.hint.textContent = '';
@@ -1312,8 +1343,38 @@ export class UI {
     });
   }
 
+  /**
+   * Tapahtumakortti: kysymyksen sijaan tapahtuu jotain. Vaikutus kerrotaan
+   * kortin lopussa omalla rivillään, jottei pelaajan tarvitse päätellä
+   * sääntöä tarinatekstistä.
+   */
+  renderEvent() {
+    const { game } = this;
+    const kortti = game.eventCard;
+    if (game.phase !== 'event' || !kortti) {
+      if (this.eventDialog.open) this.eventDialog.close();
+      this.eventShownFor = null;
+      return;
+    }
+    if (this.eventShownFor === kortti) return;
+    this.eventShownFor = kortti;
+
+    const selitteet = {
+      viive: 'Matka viivästyy yhdellä vuorolla.',
+      kyyti: 'Saat ilmaisen kyydin naapurikaupunkiin.',
+    };
+    const { effect } = kortti;
+    this.eventEffect.textContent = effect?.kind === 'raha'
+      ? (effect.amount >= 0 ? `Kukkaroon +${effect.amount} puntaa.` : `Kukkarosta ${effect.amount} puntaa.`)
+      : (selitteet[effect?.kind] ?? '');
+    this.eventText.textContent = '';
+    this.typeText(this.eventText, kortti.text, 'event');
+    if (!this.eventDialog.open) this.eventDialog.showModal();
+  }
+
   renderQuiz() {
     const { game } = this;
+    this.renderEvent();
     if (game.phase === 'duel' && game.duel) {
       this.renderDuel();
       return;
@@ -1325,11 +1386,27 @@ export class UI {
       return;
     }
 
+    // Karttakysymykseen vastataan napauttamalla lautaa, joten modaali pysyy
+    // kiinni siihen asti. Vastauksen jälkeen tulos näytetään normaalisti.
+    if (quiz.kind === 'map' && quiz.chosen === null) {
+      this.stopQuizTimer();
+      if (this.quizDialog.open) this.quizDialog.close();
+      this.hint.textContent = quiz.question;
+      return;
+    }
+
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
-    this.quizCity.textContent = quiz.gate
-      ? `${city.name} — portti: ${quiz.gate.label}`
-      : `${city.name} — ${game.player.name}${hardTag}`;
+    if (quiz.kind === 'claim') {
+      // Väittämässä puhuu isoisä, ei peli: otsikko kertoo äänen.
+      this.quizCity.textContent = `Isoisän päiväkirjasta, 1873 — totta vai tarua?`;
+    } else if (quiz.kind === 'map') {
+      this.quizCity.textContent = `${city.name} — kartalta`;
+    } else {
+      this.quizCity.textContent = quiz.gate
+        ? `${city.name} — portti: ${quiz.gate.label}`
+        : `${city.name} — ${game.player.name}${hardTag}`;
+    }
     // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
     if (this.typedQuizFor !== quiz) {
       this.typedQuizFor = quiz;
@@ -1345,7 +1422,9 @@ export class UI {
     // Apukeinot: 40 punnalla sanallinen vihje, 80 punnalla kaksi väärää pois.
     const p = game.player;
     const used = quiz.hidden.length > 0;
-    this.quizFifty.hidden = answered || p.isBot;
+    // Väittämässä on kaksi vaihtoehtoa ja karttakysymykseen vastataan
+    // kartalta, joten 50:50 ei kuulu niihin lainkaan.
+    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4;
     this.quizFifty.disabled = used || p.money < FIFTY_FIFTY_PRICE;
     this.quizFifty.textContent = used ? '50:50 käytetty' : `50:50 (${FIFTY_FIFTY_PRICE} p)`;
 
@@ -1900,6 +1979,10 @@ export class UI {
     const { game } = this;
     if (this.busy || game.phase === 'over' || !game.player.isBot) return;
 
+    if (game.phase === 'event') {
+      this.run(() => game.closeEvent());
+      return;
+    }
     if (game.phase === 'duel') {
       if (game.duel.chosen !== null) this.run(() => game.closeDuel());
       else if (wantsDuelBypass(game)) this.run(() => game.actionDuelBypass());
