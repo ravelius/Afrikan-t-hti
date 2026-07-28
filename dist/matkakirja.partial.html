@@ -529,13 +529,20 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * Saapumiskortti: kaupungin matkatarina keskellä ruutua. Kortti on kapeampi
  * kuin säännöt, jotta teksti pysyy luettavan mittaisena rivinä.
  */
-.arrival-card { max-width: 460px; }
+/*
+ * Saapumiskortti on kevyt: ohut yksinkertainen kehys ilman tuplaraamia,
+ * ei tekstiä eikä kultalaattaa — vain paikan nimi ja päätös.
+ */
+.arrival-card { max-width: 380px; border-width: 1.5px; }
+
+.arrival-card::before { display: none; }
 
 .arrival-card h2 {
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   letter-spacing: 0.06em;
 }
 
+/* Tapahtumakortin teksti (luokka jäi tapahtumille, kun saapumiskortti keveni). */
 .arrival-text {
   margin: 0.5rem 0 0.9rem;
   font-size: 0.95rem;
@@ -544,12 +551,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 .arrival-ask {
-  margin: 0 0 0.6rem;
+  margin: 0.2rem 0 1rem;
   font-family: var(--font-type);
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
   color: var(--accent-ink, inherit);
-  font-weight: 700;
+}
+
+.arrival-card .dialog-actions button {
+  background: none;
+  border-width: 1px;
+}
+
+.arrival-card .dialog-actions button.primary {
+  background: none;
+  border: 1.5px solid rgba(176, 138, 60, 0.9);
+  color: #7a5514;
+}
+
+.arrival-card .dialog-actions button.primary:hover:not(:disabled) {
+  background: rgba(234, 184, 78, 0.18);
 }
 
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */
@@ -1929,17 +1950,16 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 
   <!-- Aloitusruutu -->
 
-  <!-- Saapuminen aarrekaupunkiin -->
+  <!-- Saapuminen isoisän merkitsemään kaupunkiin. Kortti on kevyt ja
+       kertoo vain päätöksen: paikan tarina tulee kartan päiväkirjasta,
+       jottei sama tieto toistu kahdessa paikassa. -->
   <dialog id="arrival-dialog" class="dialog">
    <div class="dialog-card arrival-card">
     <h2 id="arrival-city"></h2>
-    <p id="arrival-voice" class="fact-place"></p>
-    <p id="arrival-text" class="arrival-text"></p>
-    <button id="arrival-wiki" class="ghost wiki-btn" type="button" hidden>Lue lisää</button>
-    <p class="arrival-ask">Kaupungissa on avaamaton aarre. Haluatko avata sen?</p>
+    <p class="arrival-ask">Isoisä on merkinnyt tämän paikan karttaansa.</p>
     <div class="dialog-actions">
-      <button id="arrival-yes" class="primary" type="button">Avaa — vastaa kysymykseen</button>
-      <button id="arrival-no" type="button">Ei nyt — jatka matkaa</button>
+      <button id="arrival-yes" class="primary" type="button">Tutki paikka</button>
+      <button id="arrival-no" type="button">Jatka matkaa</button>
     </div>
    </div>
   </dialog>
@@ -2017,11 +2037,12 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
       <p><b>Vuoron kulku.</b> 1) Valitse matkustustapa. Näkyvillä on kerrallaan vain
         muutama nappi: <b>Jalan</b> lähtee heti matkaan ja heittää nopan samalla
         painalluksella, <b>Laiva &amp; lento…</b> avaa loput vaihtoehdot (laiva 100 p,
-        lennot 300 p sekä portit toisille laudoille), ja aarrekaupungissa voi jäädä
-        <b>vastaamaan kysymykseen</b>. Jos vaihtoehtoja ei ole — esimerkiksi sisämaassa
-        tai kesken reittiä — noppa pyörähtää itsestään. 2) Valitse kohde kartalta.
-        3) Jos päädyit kaupunkiin, jossa on avaamaton aarre, voit vielä kokeilla
-        tietovisaa — sen jälkeen vuoro vaihtuu.</p>
+        lennot 300 p sekä portit toisille laudoille), ja isoisän merkitsemässä
+        kaupungissa voi jäädä <b>tutkimaan paikkaa</b>. Jos vaihtoehtoja ei ole —
+        esimerkiksi sisämaassa tai kesken reittiä — noppa pyörähtää itsestään.
+        2) Valitse kohde kartalta. 3) Jos päädyit kaupunkiin, jonka isoisä on
+        merkinnyt karttaansa, voit vielä tutkia paikan — sen jälkeen vuoro
+        vaihtuu.</p>
       <p><b>Liikkuminen.</b> Noppa kertoo, kuinka monta askelta voit enintään kulkea —
         tasalukua ei tarvita, vaan kaupunkiin saa pysähtyä jo matkan varrella. Matka
         kulkee valitulla tavalla: maitse vain maareittejä ja laivalla vain meriteitä.
@@ -25863,7 +25884,7 @@ class Game {
         break;
       case 'empty':
         this.say(p.id, `${p.name} käänsi tyhjän laatan kaupungissa ${city.name}.`);
-        this.emit('treasure', 'Tyhjä laatta', { token: type, sub: 'Ei aarretta täällä' });
+        this.emit('treasure', 'Tyhjä laatta', { token: type, sub: 'Isoisän merkintä oli vanhentunut' });
         break;
       default:
         p.money += token.value;
@@ -26300,7 +26321,7 @@ const REVEAL_SUB = {
   star: 'Vie tähti kotiin ja voitat pelin!',
   horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
   robber: 'Rosvo haastaa kaksintaisteluun!',
-  empty: 'Ei aarretta täällä',
+  empty: 'Isoisän merkintä oli vanhentunut — täältä ei löytynyt mitään',
 };
 
 function html(tag, className, text) {
@@ -26336,8 +26357,6 @@ class UI {
 
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
-    this.arrivalVoice = document.getElementById('arrival-voice');
-    this.arrivalText = document.getElementById('arrival-text');
     document.getElementById('arrival-yes').addEventListener('click', () => {
       this.closeArrival();
       sfx.play('paper');
@@ -26353,8 +26372,6 @@ class UI {
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
     this.wikiSource = document.getElementById('wiki-source');
-    this.arrivalWiki = document.getElementById('arrival-wiki');
-    this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
     this.factWiki = document.getElementById('fact-wiki');
     this.factWiki.addEventListener('click', () => this.openWiki(this.factWikiCity));
 
@@ -27132,7 +27149,7 @@ class UI {
       }
 
       if (modes.includes('stay')) {
-        const stayBtn = this.iconButton('❓', 'Vastaa kysymykseen', 'primary');
+        const stayBtn = this.iconButton('🔍', 'Tutki paikka', 'primary');
         stayBtn.addEventListener('click', () => {
           sfx.play('paper');
           this.doAction(() => game.actionTravel('stay'));
@@ -27439,18 +27456,10 @@ class UI {
     if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
     this.arrivalShownFor = city.id;
 
-    const facts = this.game.pack.placeFacts[city.id] ?? [];
-    const pick = Math.floor(hash01(`arrival:${city.id}:${this.game.turnCount}`) * facts.length);
-    const fact = facts[Math.min(pick, facts.length - 1)];
-
-    this.arrivalWiki.hidden = !city.wiki;
+    // Kortti kertoo vain päätöksen. Paikan tarina tulee kartan
+    // päiväkirjasta ja Lue lisää on vain karttanäkymässä, jottei sama
+    // tieto toistu kahdessa paikassa.
     this.arrivalCity.textContent = city.name;
-    this.arrivalVoice.textContent = fact ? voiceTitle(factVoice(fact)) : '';
-    this.arrivalText.textContent = '';
-    const source = fact ? this.sourceLine(factSource(fact)) : null;
-    this.typeText(this.arrivalText, factText(fact), 'arrival', () => {
-      if (source) this.arrivalText.appendChild(source);
-    });
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
   }
 
@@ -28313,7 +28322,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.15';
+const APP_VERSION = '2026-07-28.16';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
