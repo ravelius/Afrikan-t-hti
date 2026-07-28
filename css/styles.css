@@ -797,6 +797,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  /* Avausteksti häipyy pehmeästi, kun ensimmäinen lento lähtee. */
+  transition: opacity 0.9s ease;
   /* Kaistan ylälaidan ja korkeuden laskee js/ui.js placeIntro: se on se
      tyhjä pergamentti, joka jää laudan alle. Teksti keskittyy kaistaan. */
   display: flex;
@@ -817,6 +819,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   white-space: pre-line; /* omistajan teksti on kolmena kappaleena */
   text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9), 0 0 6px rgba(247, 237, 216, 0.75);
 }
+
+.intro.intro-fade { opacity: 0; }
 
 @media (max-width: 700px) {
   .intro { width: 90%; }
