@@ -72,21 +72,24 @@ export function stopPlaceStream() {
  * ja seuraava renderöinti yrittää striimiä uudelleen.
  */
 export function playPlaceAmbience(cityId, fallbackType) {
-  const entry = cityId ? STREAMS[cityId] : null;
-  if (!sfx.enabled || !entry) {
+  // Omistajan valinta (/aanet.html) ohittaa oletuksen: osoite soittaa
+  // sen, tyhjä merkkijono tarkoittaa syntetisoitua, null jättää
+  // STREAMS-oletuksen voimaan.
+  const valinta = cityId ? valittuAani(`kaupunki:${cityId}`) : null;
+  const url = valinta === '' ? null : valinta ?? (cityId ? STREAMS[cityId]?.url : null);
+  if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);
     return;
   }
-  if (nykyinen?.cityId === cityId) return;
+  if (nykyinen?.cityId === cityId && nykyinen?.url === url) return;
 
   stopPlaceStream();
-  // Omistajan valitsema äänite (/aanet.html) ohittaa oletuksen.
-  const audio = new Audio(valittuAani(`kaupunki:${cityId}`) ?? entry.url);
+  const audio = new Audio(url);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
-  const oma = { audio, cityId };
+  const oma = { audio, cityId, url };
   nykyinen = oma;
 
   const varalle = () => {
@@ -126,7 +129,9 @@ export function startQuizMusic() {
   // päällekkäin täydellä voimalla oli puuroa.
   if (nykyinen) haivyta(nykyinen.audio, VOIMA * 0.15);
   if (!sfx.enabled || musiikki) return;
-  const audio = new Audio(valittuAani('musiikki:tietovisa') ?? QUIZ_MUSIC.url);
+  const valinta = valittuAani('musiikki:tietovisa');
+  if (valinta === '') return; // musiikki valittu pois
+  const audio = new Audio(valinta ?? QUIZ_MUSIC.url);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
