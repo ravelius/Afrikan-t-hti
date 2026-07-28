@@ -1873,6 +1873,19 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    </div>
   </dialog>
 
+  <!-- Tapahtumakortti: kysymyksen sijaan tapahtuu jotain -->
+  <dialog id="event-dialog" class="dialog">
+   <div class="dialog-card arrival-card">
+    <h2>Matkalla sattui</h2>
+    <p id="event-voice" class="fact-place">Nuoren herran havainto</p>
+    <p id="event-text" class="arrival-text"></p>
+    <p id="event-effect" class="arrival-ask"></p>
+    <div class="dialog-actions">
+      <button id="event-ok" class="primary" type="button">Jatka matkaa</button>
+    </div>
+   </div>
+  </dialog>
+
   <!-- Vihreä passi -->
   <dialog id="passport-dialog" class="dialog">
    <div class="dialog-card passport-card">
@@ -5318,6 +5331,26 @@ const AFRICA = {
       correct: 0,
       fact: 'Urdua puhutaan Pakistanissa ja Intiassa — muut ovat Afrikan suuria kieliä.',
     },
+  ],
+
+  // Tapahtumakortit: välillä kysymyksen sijaan tapahtuu jotain. Vaikutus on
+  // aina pieni ja reilu — tapahtuma ei vie aarretta eikä isoa summaa, ja
+  // laatta jää kääntämättä, joten kaupunkiin voi palata. Viivästys johtuu
+  // säästä, luonnosta, kertojan omasta typeryydestä tai imperiumin
+  // jäänteistä, ei koskaan kohdemaasta tai sen ihmisistä.
+  events: [
+    { text: 'Sade alkoi iltapäivällä kuin kello olisi soinut, ja kadun poikki juoksi hetkessä ruskea puro. Istuin katoksen alla tunnin ja huomasin olevani ainoa, joka ei ollut osannut varata sitä tuntia valmiiksi.', effect: { kind: 'viive' } },
+    { text: 'Auto pysähtyi, koska tiellä seisoi norsulauma eikä sillä ollut kiire. Afrikannorsu on maailman suurin maaeläin, joten väistämisjärjestys oli selvä kaikille muille paitsi minulle, joka ehdotin äänitorvea.', effect: { kind: 'viive' } },
+    { text: 'Kartalla kaksi rataa melkein koskettavat toisiaan, mutta juna ei jatka: siirtomaavallat rakensivat kiskonsa satamasta sisämaahan päin, ei naapurin luo, eivätkä aina samalle raideleveydelle. Istun nyt odottamassa imperiumin mittavirhettä.', effect: { kind: 'viive' } },
+    { text: 'Huomasin vasta aamiaisella, että isoisän kartta oli jäänyt edelliseen majapaikkaan. Palasin hakemaan sen ja menetin päivän: kartta on vuodelta 1872 eikä kelpaa suunnistamiseen, mutta se on ainoa syy, miksi olen täällä.', effect: { kind: 'viive' } },
+    { text: 'Myin villatakkini lentokentällä matkalaiselle, joka oli lähdössä pohjoiseen. Olin raahannut sitä mukanani kolme viikkoa, koska pakkauslistani oli laadittu Lontoossa marraskuussa.', effect: { kind: 'raha', amount: 50 } },
+    { text: 'Etsin kolme päivää setelinippua, jonka olin varmuuden vuoksi ommellut takin vuoreen. Tänään se löytyi sieltä, minne olin sen itse pannut, ja olin siitä yhtä riemuissani kuin jos joku olisi antanut sen minulle.', effect: { kind: 'raha', amount: 80 } },
+    { text: 'Kanssamatkustaja tarjosi vetoa siitä, että Afrikan suurin maa on Sudan. Vanhassa kartassani se pitää yhä paikkansa, mutta Etelä-Sudanin itsenäistyttyä 2011 suurin on Algeria. Otin rahat vastaan hiljaa.', effect: { kind: 'raha', amount: 70 } },
+    { text: 'Vaaka näytti lähtöselvityksessä 27 kiloa, kun sallittu raja oli 23. Ylipainon maksoin käteisellä, ja kaikki ylimääräinen oli isoisän: messinkinen kaukoputki, kaksi karttakirjaa ja kompassi, jota en ole kertaakaan tarvinnut.', effect: { kind: 'raha', amount: -60 } },
+    { text: 'Rajalla viisumi maksoi enemmän kuin edellinen yöni majapaikassa. Isoisän vihreä passi avasi aikanaan portteja puolessa maailmassa; minun asiakirjani odottaa vuoroaan kuten kaikki muutkin, ja niin sen kuuluukin.', effect: { kind: 'raha', amount: -45 } },
+    { text: 'Kysyin huoltoaseman pihalla, mihin suuntaan kuorma-auto on menossa, ja se sattui olemaan minun suuntani. Matkustin appelsiinilaatikoiden päällä ja opin, että hyvä jousitus on ylellisyys, jota en ole koskaan osannut arvostaa.', effect: { kind: 'kyyti' } },
+    { text: 'Rannassa lastattiin venettä alavirtaan lähtevälle matkalle, ja kippari nyökkäsi kohti vapaata paikkaa keulassa. Vesi vei meidät nopeammin kuin tie olisi vienyt. Isoisä olisi mitannut virtaaman; minä nukahdin.', effect: { kind: 'kyyti' } },
+    { text: 'Kentän laidalla seisoi kuusipaikkainen potkurikone, joka vie postia samaan suuntaan kuin minä, ja kaksi penkkiä oli tyhjänä. Sain toisen. Ylhäältä näkyi, miten lyhyt oli se matka, jota olin pelännyt kolme päivää.', effect: { kind: 'kyyti' } },
   ],
 
   texts: {
@@ -24259,6 +24292,14 @@ const TURN_HOURS = 6;
 const RECORD_DAYS = 80; // isoisän ennätys
 const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
 
+// Pysähdyksen muoto arvotaan painotetusti, jottei joka kaupungissa ole sama
+// neljän vaihtoehdon tietovisa. Painot ovat vakioina, koska oikeat arvot
+// varmistuvat vasta pelitestissä. Jos laudalla ei ole väittämiä tai
+// tapahtumia, niiden paino siirtyy monivalinnalle — peli toimii jokaisella
+// laudalla ilman uutta sisältöä.
+const FORM_WEIGHTS = { quiz: 60, claim: 15, map: 10, event: 15 };
+const MAP_CHOICES = 4; // karttakysymyksen ehdokaskaupungit
+
 /** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
 function timeOfDayName(hour) {
   if (hour < 6) return 'aamu';
@@ -24353,6 +24394,9 @@ class Game {
     this.duel = null;
     this.duelArmed = false;
     this.diaryNote = null;
+    // Pysähdyksen muoto: sama erikoismuoto ei toistu kahdesti peräkkäin.
+    this.lastForm = null;
+    this.eventCard = null;
     // Isoisän aikataulu: näytetty rivi ja jo nähtyjen avaimet.
     this.scheduleNote = null;
     this.scheduleShown = new Set();
@@ -24865,12 +24909,12 @@ class Game {
   }
 
   /** Valitsee matkustustavan. Maksu peritään vasta kun siirto tehdään. */
-  actionTravel(mode) {
+  actionTravel(mode, opts = {}) {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
     if (!this.travelModes().includes(mode)) {
       return { ok: false, error: 'Tuo matkustustapa ei ole nyt käytettävissä' };
     }
-    if (mode === 'stay') return this.actionQuiz();
+    if (mode === 'stay') return this.actionQuiz(opts);
 
     const p = this.player;
     this.travelMode = mode;
@@ -24955,11 +24999,46 @@ class Game {
   }
 
   /**
-   * Avaa tietovisakysymyksen: oikea vastaus kääntää laatan ilmaiseksi.
-   * `hard: true` arpoo vaikean kysymyksen, josta oikein vastattaessa saa
-   * laatan lisäksi HARD_BONUS puntaa.
+   * Käytettävissä olevat muodot painoineen. Muoto putoaa pois, jos laudalla
+   * ei ole sen sisältöä tai jos se oli edellinen erikoismuoto — sama
+   * erikoismuoto ei toistu kahdesti peräkkäin.
    */
-  actionQuiz({ hard = false } = {}) {
+  formWeights(cityId) {
+    const painot = { ...FORM_WEIGHTS };
+    if (!(this.pack.questions?.claims ?? []).length) painot.claim = 0;
+    if (!(this.pack.events ?? []).length) painot.event = 0;
+    // Karttakysymys tarvitsee tarpeeksi kaupunkeja ehdokkaiksi.
+    if (this.board.cities.length < MAP_CHOICES + 1) painot.map = 0;
+    if (this.lastForm && this.lastForm !== 'quiz') painot[this.lastForm] = 0;
+    // Kaupungin omissa kysymyksissä voi olla vaikeita, joita ei ole vielä
+    // kysytty; monivalinta on aina mahdollinen, joten se kerää loput.
+    const siirtyy = FORM_WEIGHTS.claim - painot.claim
+      + FORM_WEIGHTS.event - painot.event
+      + FORM_WEIGHTS.map - painot.map;
+    painot.quiz += siirtyy;
+    return painot;
+  }
+
+  /** Arpoo pysähdyksen muodon painotetusti pelin omalla satunnaisluvulla. */
+  pickForm(cityId) {
+    const painot = this.formWeights(cityId);
+    const summa = Object.values(painot).reduce((a, b) => a + b, 0);
+    let osuma = this.rng() * summa;
+    for (const [muoto, paino] of Object.entries(painot)) {
+      osuma -= paino;
+      if (osuma < 0) return muoto;
+    }
+    return 'quiz';
+  }
+
+  /**
+   * Avaa pysähdyksen: monivalinta, isoisän väittämä, karttakysymys tai
+   * tapahtumakortti. Oikea vastaus kääntää laatan ilmaiseksi.
+   * `hard: true` arpoo vaikean kysymyksen, josta oikein vastattaessa saa
+   * laatan lisäksi HARD_BONUS puntaa — vaikea kysymys on aina monivalinta,
+   * koska panos on suurempi.
+   */
+  actionQuiz({ hard = false, form = null } = {}) {
     if (this.phase !== 'offer' && this.phase !== 'action') {
       return { ok: false, error: 'Väärä vaihe' };
     }
@@ -24968,6 +25047,12 @@ class Game {
     if (hard && !this.hardAvailable(city.id)) {
       return { ok: false, error: 'Täällä ei ole vaikeita kysymyksiä' };
     }
+
+    const muoto = hard ? 'quiz' : (form ?? this.pickForm(city.id));
+    this.lastForm = muoto;
+    if (muoto === 'claim') return this.openClaim(city);
+    if (muoto === 'map') return this.openMapQuestion(city);
+    if (muoto === 'event') return this.openEvent(city);
 
     const difficulty = hard ? 'hard' : this.player.quizLevel;
     const question = this.pickQuestion(city.id, difficulty);
@@ -24990,6 +25075,151 @@ class Game {
     };
     this.phase = 'quiz';
     return { ok: true, quiz: this.quiz };
+  }
+
+  /**
+   * Isoisän väittämä: päiväkirjamerkintä, jonka pelaaja arvioi todeksi tai
+   * taruksi. Kaksi nappia neljän sijaan. Väittämä on sama quiz-olio kuin
+   * monivalinta, joten vastaaminen, aikakatkaisu ja sulkeminen toimivat
+   * ennallaan — vain vaihtoehtoja on kaksi ja `kind` kertoo muodon.
+   */
+  openClaim(city) {
+    const pool = this.pack.questions.claims ?? [];
+    const fresh = pool.filter((c) => !this.usedQuestions.has(c.q));
+    const deck = fresh.length ? fresh : pool;
+    const claim = deck[Math.floor(this.rng() * deck.length)];
+    this.usedQuestions.add(claim.q);
+
+    this.quiz = {
+      kind: 'claim',
+      cityId: city.id,
+      hard: false,
+      question: claim.q,
+      fact: claim.fact,
+      source: sourceList(claim.source),
+      options: ['Totta', 'Tarua'],
+      correct: claim.correct ? 0 : 1,
+      hint: null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
+  }
+
+  /**
+   * Karttakysymys: "Näytä kartalta: missä on X?" Ehdokkaat korostuvat
+   * laudalla ja vastaus annetaan napauttamalla. Kysymys johdetaan laudan
+   * omasta kaupunkidatasta, joten se toimii jokaisella laudalla ilman
+   * erillistä sisältöpankkia.
+   */
+  openMapQuestion(city) {
+    // Ehdokkaiksi kelpaavat kaikki paitsi kaupunki, jossa nyt seistään:
+    // sen sijainti on pelaajalle jo näkyvissä nappulan alla.
+    const pool = this.board.cities.filter((c) => c.id !== city.id);
+    const order = this.shuffledOrder(pool.length).slice(0, MAP_CHOICES);
+    const ehdokkaat = order.map((i) => pool[i]);
+    const kohde = ehdokkaat[Math.floor(this.rng() * ehdokkaat.length)];
+
+    const naapurit = [...(this.board.adj.get(kohde.id) ?? [])]
+      .map((eid) => this.board.edgeById.get(eid))
+      .map((e) => (e.a === kohde.id ? e.b : e.a))
+      .map((id) => this.board.cityById.get(id)?.name)
+      .filter(Boolean);
+
+    this.quiz = {
+      kind: 'map',
+      cityId: city.id,
+      hard: false,
+      question: `Näytä kartalta: missä on ${kohde.name}?`,
+      fact: naapurit.length
+        ? `${kohde.name} on laudalla tässä. Sieltä pääsee suoraan kaupunkeihin ${naapurit.join(', ')}.`
+        : `${kohde.name} on laudalla tässä.`,
+      source: [],
+      options: ehdokkaat.map((c) => c.name),
+      mapCities: ehdokkaat.map((c) => c.id),
+      correct: ehdokkaat.indexOf(kohde),
+      hint: null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
+  }
+
+  /**
+   * Tapahtumakortti: kysymyksen sijaan tapahtuu jotain. Vaikutus on aina
+   * pieni ja reilu — tapahtuma ei vie aarretta eikä isoa summaa, ja
+   * laatta jää kääntämättä, joten kaupunkiin voi palata.
+   */
+  openEvent(city) {
+    const pool = this.pack.events ?? [];
+    const fresh = pool.filter((e) => !this.usedQuestions.has(e.text));
+    const deck = fresh.length ? fresh : pool;
+    const kortti = deck[Math.floor(this.rng() * deck.length)];
+    this.usedQuestions.add(kortti.text);
+
+    this.eventCard = { cityId: city.id, text: kortti.text, effect: kortti.effect, done: null };
+    this.phase = 'event';
+    return { ok: true, event: this.eventCard };
+  }
+
+  /** Toteuttaa tapahtuman vaikutuksen ja päättää vuoron. */
+  closeEvent() {
+    if (this.phase !== 'event' || !this.eventCard) {
+      return { ok: false, error: 'Ei avointa tapahtumaa' };
+    }
+    const p = this.player;
+    const { effect } = this.eventCard;
+    this.eventCard = null;
+    this.phase = 'action';
+
+    if (effect?.kind === 'raha') {
+      // Kukkaro ei mene miinukselle: tapahtuma ei saa jättää matkaajaa
+      // velkaan, koska sillä ei ole pelissä mitään merkitystä.
+      const muutos = Math.max(effect.amount, -p.money);
+      p.money += muutos;
+      this.say(p.id, muutos >= 0
+        ? `${p.name} sai ${muutos} puntaa.`
+        : `${p.name} menetti ${-muutos} puntaa.`);
+    } else if (effect?.kind === 'kyyti') {
+      const kohde = this.rideTarget(p);
+      if (kohde) {
+        p.pos = { type: 'city', city: kohde.id };
+        this.lastPath = null;
+        this.visitCity(p);
+        this.say(p.id, `${p.name} sai ilmaisen kyydin kaupunkiin ${kohde.name}.`);
+      }
+    }
+
+    this.endTurn();
+    // Viive vie yhden ylimääräisen vuoron: matkaaja jää paikalleen ja
+    // matkapäivä kuluu silti.
+    if (effect?.kind === 'viive') {
+      this.say(p.id, `${p.name} jäi paikalleen yhdeksi vuoroksi.`);
+      this.endTurn();
+    }
+    return { ok: true };
+  }
+
+  /** Naapurikaupunki ilmaista kyytiä varten; null jos naapureita ei ole. */
+  rideTarget(player) {
+    if (player.pos.type !== 'city') return null;
+    const naapurit = [...(this.board.adj.get(player.pos.city) ?? [])]
+      .map((eid) => this.board.edgeById.get(eid))
+      .map((e) => (e.a === player.pos.city ? e.b : e.a))
+      .map((id) => this.board.cityById.get(id))
+      .filter(Boolean);
+    if (!naapurit.length) return null;
+    return naapurit[Math.floor(this.rng() * naapurit.length)];
   }
 
   /** Vastaa kysymykseen. Tulos jää näkyviin kunnes closeQuiz() kutsutaan. */
@@ -25077,6 +25307,9 @@ class Game {
     const quiz = this.quiz;
     if (quiz.chosen !== null) return { ok: false, error: 'Kysymykseen on jo vastattu' };
     if (quiz.hidden.length) return { ok: false, error: '50:50 on jo käytetty' };
+    // Väittämässä on kaksi vaihtoehtoa ja karttakysymyksessä vastataan
+    // kartalta — kummassakaan puolikkaan poistamisessa ei ole järkeä.
+    if (quiz.options.length < 4) return { ok: false, error: 'Tähän ei voi käyttää 50:50:tä' };
 
     const p = this.player;
     if (p.money < FIFTY_FIFTY_PRICE) return { ok: false, error: 'Rahat eivät riitä' };
@@ -25444,6 +25677,8 @@ class Game {
       duel: this.duel,
       duelArmed: this.duelArmed,
       diaryNote: this.diaryNote,
+      lastForm: this.lastForm,
+      eventCard: this.eventCard,
       scheduleNote: this.scheduleNote,
       scheduleShown: [...this.scheduleShown],
       recordNoted: this.recordNoted,
@@ -25517,6 +25752,8 @@ class Game {
     game.duel = data.duel ?? null;
     game.duelArmed = !!data.duelArmed;
     game.diaryNote = data.diaryNote ?? null;
+    game.lastForm = data.lastForm ?? null;
+    game.eventCard = data.eventCard ?? null;
     // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
     // yhtään isoisän aikataulurivistä.
     game.scheduleNote = data.scheduleNote ?? null;
@@ -25861,6 +26098,16 @@ class UI {
     document.getElementById('arrival-no').addEventListener('click', () => {
       this.closeArrival();
       this.doAction(() => this.game.actionSkipQuiz());
+    });
+
+    this.eventDialog = document.getElementById('event-dialog');
+    this.eventText = document.getElementById('event-text');
+    this.eventEffect = document.getElementById('event-effect');
+    document.getElementById('event-ok').addEventListener('click', () => {
+      if (this.eventDialog.open) this.eventDialog.close();
+      this.eventShownFor = null;
+      sfx.play('paper');
+      this.doAction(() => this.game.closeEvent());
     });
 
     this.factVoiceEl = document.getElementById('fact-voice');
@@ -26383,6 +26630,22 @@ class UI {
       return;
     }
 
+    // Karttakysymys: ehdokaskaupungit ovat vastausvaihtoehtoja, ja vastaus
+    // annetaan napauttamalla lautaa. Renkaat ovat samat kuin lähtöpisteen
+    // valinnassa, koska tässäkin osoitetaan paikkaa eikä kehoteta liikkumaan.
+    const quiz = game.quiz;
+    if (game.phase === 'quiz' && quiz?.kind === 'map' && quiz.chosen === null) {
+      quiz.mapCities.forEach((cityId, i) => {
+        const c = game.board.cityById.get(cityId);
+        if (!c) return;
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
+        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring pick' }, g);
+        g.addEventListener('click', () => this.answerQuiz(i));
+      });
+      return;
+    }
+
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
@@ -26520,6 +26783,11 @@ class UI {
       return;
     }
 
+    if (game.phase === 'event') {
+      this.turnStatus.textContent = 'Matkalla sattui jotain.';
+      this.hint.textContent = '';
+      return;
+    }
     if (game.phase === 'quiz') {
       this.turnStatus.textContent = 'Tietovisa käynnissä.';
       this.hint.textContent = '';
@@ -27044,8 +27312,38 @@ class UI {
     });
   }
 
+  /**
+   * Tapahtumakortti: kysymyksen sijaan tapahtuu jotain. Vaikutus kerrotaan
+   * kortin lopussa omalla rivillään, jottei pelaajan tarvitse päätellä
+   * sääntöä tarinatekstistä.
+   */
+  renderEvent() {
+    const { game } = this;
+    const kortti = game.eventCard;
+    if (game.phase !== 'event' || !kortti) {
+      if (this.eventDialog.open) this.eventDialog.close();
+      this.eventShownFor = null;
+      return;
+    }
+    if (this.eventShownFor === kortti) return;
+    this.eventShownFor = kortti;
+
+    const selitteet = {
+      viive: 'Matka viivästyy yhdellä vuorolla.',
+      kyyti: 'Saat ilmaisen kyydin naapurikaupunkiin.',
+    };
+    const { effect } = kortti;
+    this.eventEffect.textContent = effect?.kind === 'raha'
+      ? (effect.amount >= 0 ? `Kukkaroon +${effect.amount} puntaa.` : `Kukkarosta ${effect.amount} puntaa.`)
+      : (selitteet[effect?.kind] ?? '');
+    this.eventText.textContent = '';
+    this.typeText(this.eventText, kortti.text, 'event');
+    if (!this.eventDialog.open) this.eventDialog.showModal();
+  }
+
   renderQuiz() {
     const { game } = this;
+    this.renderEvent();
     if (game.phase === 'duel' && game.duel) {
       this.renderDuel();
       return;
@@ -27057,11 +27355,27 @@ class UI {
       return;
     }
 
+    // Karttakysymykseen vastataan napauttamalla lautaa, joten modaali pysyy
+    // kiinni siihen asti. Vastauksen jälkeen tulos näytetään normaalisti.
+    if (quiz.kind === 'map' && quiz.chosen === null) {
+      this.stopQuizTimer();
+      if (this.quizDialog.open) this.quizDialog.close();
+      this.hint.textContent = quiz.question;
+      return;
+    }
+
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
-    this.quizCity.textContent = quiz.gate
-      ? `${city.name} — portti: ${quiz.gate.label}`
-      : `${city.name} — ${game.player.name}${hardTag}`;
+    if (quiz.kind === 'claim') {
+      // Väittämässä puhuu isoisä, ei peli: otsikko kertoo äänen.
+      this.quizCity.textContent = `Isoisän päiväkirjasta, 1873 — totta vai tarua?`;
+    } else if (quiz.kind === 'map') {
+      this.quizCity.textContent = `${city.name} — kartalta`;
+    } else {
+      this.quizCity.textContent = quiz.gate
+        ? `${city.name} — portti: ${quiz.gate.label}`
+        : `${city.name} — ${game.player.name}${hardTag}`;
+    }
     // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
     if (this.typedQuizFor !== quiz) {
       this.typedQuizFor = quiz;
@@ -27077,7 +27391,9 @@ class UI {
     // Apukeinot: 40 punnalla sanallinen vihje, 80 punnalla kaksi väärää pois.
     const p = game.player;
     const used = quiz.hidden.length > 0;
-    this.quizFifty.hidden = answered || p.isBot;
+    // Väittämässä on kaksi vaihtoehtoa ja karttakysymykseen vastataan
+    // kartalta, joten 50:50 ei kuulu niihin lainkaan.
+    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4;
     this.quizFifty.disabled = used || p.money < FIFTY_FIFTY_PRICE;
     this.quizFifty.textContent = used ? '50:50 käytetty' : `50:50 (${FIFTY_FIFTY_PRICE} p)`;
 
@@ -27632,6 +27948,10 @@ class UI {
     const { game } = this;
     if (this.busy || game.phase === 'over' || !game.player.isBot) return;
 
+    if (game.phase === 'event') {
+      this.run(() => game.closeEvent());
+      return;
+    }
     if (game.phase === 'duel') {
       if (game.duel.chosen !== null) this.run(() => game.closeDuel());
       else if (wantsDuelBypass(game)) this.run(() => game.actionDuelBypass());

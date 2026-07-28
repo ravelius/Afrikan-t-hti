@@ -29,6 +29,7 @@ import {
   QUIZ_SECONDS, SEA_FARE, HINT_EVERY_TURNS,
   XP_NEW_CITY, XP_NEW_BOARD, XP_HARD_ANSWER, XP_STAR,
   TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
+  FORM_WEIGHTS, MAP_CHOICES,
 } from '../js/game.js';
 import {
   chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
@@ -586,6 +587,10 @@ function playBotStep(game) {
     else game.answerDuel(chooseDuelAnswer(game));
     return;
   }
+  if (game.phase === 'event') {
+    game.closeEvent();
+    return;
+  }
   if (game.phase === 'move') {
     const key = chooseMove(game);
     if (key) game.actionMove(key);
@@ -596,7 +601,7 @@ function playBotStep(game) {
     else if (wantsFiftyFifty(game)) game.actionFiftyFifty();
     else game.answerQuiz(chooseQuizAnswer(game));
   } else if (game.phase === 'offer') {
-    game.actionQuiz();
+    game.actionQuiz({ form: 'quiz' });
   } else if (game.phase === 'roll') {
     game.actionRoll();
   } else {
@@ -622,7 +627,7 @@ test('oikea vastaus kääntää laatan, väärä ei', () => {
 
   const win = makeGame();
   win.phase = 'offer';
-  assert.ok(win.actionQuiz().ok);
+  assert.ok(win.actionQuiz({ form: 'quiz' }).ok);
   assert.equal(win.phase, 'quiz');
   assert.equal(win.quiz.options.length, 4);
   const rahaEnnen = win.player.money;
@@ -635,7 +640,7 @@ test('oikea vastaus kääntää laatan, väärä ei', () => {
 
   const lose = makeGame();
   lose.phase = 'offer';
-  lose.actionQuiz();
+  lose.actionQuiz({ form: 'quiz' });
   const vaara = (lose.quiz.correct + 1) % 4;
   lose.answerQuiz(vaara);
   assert.equal(lose.quiz.right, false);
@@ -657,7 +662,7 @@ test('helppojen kysymysten pelaaja saa tason 1 kysymyksen', () => {
   game.tokens.set('tripoli', 'topaz');
   for (let i = 0; i < 5; i++) {
     game.phase = 'offer';
-    game.actionQuiz();
+    game.actionQuiz({ form: 'quiz' });
     assert.equal(levelByText.get(game.quiz.question), 1, `"${game.quiz.question}" ei ole helppo`);
     game.quiz = null;
   }
@@ -730,7 +735,7 @@ test('tasovalinta laskeutuu pehmeästi, jos tason kysymyksiä ei ole', () => {
 
   // Helppoja ei ole, joten pelaaja saa tason 2 kysymyksen virheen sijaan.
   game.phase = 'offer';
-  assert.ok(game.actionQuiz().ok);
+  assert.ok(game.actionQuiz({ form: 'quiz' }).ok);
   assert.ok(['T1?', 'G1?'].includes(game.quiz.question));
   game.quiz = null;
 
@@ -747,7 +752,7 @@ test('rosvon kaksintaistelu: suora voitto tuo saaliin', () => {
   game.tokens.set('timbuktu', 'robber');
 
   // Rosvo paljastuu tietovisan kautta ja kaksintaistelu alkaa kysymyksen sulkeuduttua.
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   game.answerQuiz(game.quiz.correct);
   const closed = game.closeQuiz();
   assert.ok(closed.duel, 'kaksintaistelu alkaa');
@@ -767,7 +772,7 @@ test('rosvon kaksintaistelu: helpotus vie puolet ja piilottaa vaihtoehtoja', () 
   const p = game.player;
   p.pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'robber');
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   game.answerQuiz(game.quiz.correct);
   game.closeQuiz();
 
@@ -793,7 +798,7 @@ test('rosvon kaksintaistelu: väärä vastaus vie kaikki rahat', () => {
   const p = game.player;
   p.pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'robber');
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   game.answerQuiz(game.quiz.correct);
   game.closeQuiz();
 
@@ -812,7 +817,7 @@ test('rosvon voi ohittaa kolmella hevosenkengällä', () => {
   p.pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'robber');
   p.horseshoes = DUEL_BYPASS_SHOES;
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   game.answerQuiz(game.quiz.correct);
   game.closeQuiz();
 
@@ -827,7 +832,7 @@ test('rosvon voi ohittaa kolmella hevosenkengällä', () => {
   const toinen = newGame(65);
   toinen.player.pos = { type: 'city', city: 'timbuktu' };
   toinen.tokens.set('timbuktu', 'robber');
-  toinen.actionTravel('stay');
+  toinen.actionTravel('stay', { form: 'quiz' });
   toinen.answerQuiz(toinen.quiz.correct);
   toinen.closeQuiz();
   assert.equal(toinen.actionDuelBypass().ok, false);
@@ -1107,7 +1112,7 @@ test('peli tallentuu ja palautuu samaan tilanteeseen', () => {
   });
   game.players[0].pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'emerald');
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   game.answerQuiz(game.quiz.correct);
   game.closeQuiz();
   game.actionTravel('land');
@@ -1168,7 +1173,7 @@ test('50:50 poistaa kaksi väärää vaihtoehtoa ja maksaa 80', () => {
   });
   game.player.pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'topaz');
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
 
   const rahaEnnen = game.player.money;
   const tulos = game.actionFiftyFifty();
@@ -1197,7 +1202,7 @@ test('50:50 ei onnistu ilman rahaa', () => {
   });
   game.player.pos = { type: 'city', city: 'gao' };
   game.player.money = 20;
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   const tulos = game.actionFiftyFifty();
   assert.equal(tulos.ok, false);
   assert.equal(game.quiz.hidden.length, 0);
@@ -1213,7 +1218,7 @@ test('vihje maksaa 40 puntaa ja näkyy vain kerran ostettuna', () => {
   });
   game.player.pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'topaz');
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
 
   assert.equal(game.quiz.hintShown, false);
   const rahaEnnen = game.player.money;
@@ -1242,7 +1247,7 @@ test('vihjettä ei saa ilman rahaa', () => {
   });
   game.player.pos = { type: 'city', city: 'gao' };
   game.player.money = 10;
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   assert.equal(game.actionHint().ok, false);
   assert.equal(game.quiz.hintShown, false);
 });
@@ -1257,7 +1262,7 @@ test('aikarajan loppuminen lasketaan vääräksi vastaukseksi', () => {
   });
   game.player.pos = { type: 'city', city: 'kano' };
   game.tokens.set('kano', 'ruby');
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   assert.equal(game.quiz.seconds, QUIZ_SECONDS);
 
   const tulos = game.timeoutQuiz();
@@ -1286,7 +1291,7 @@ test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysy
   game.player.pos = { type: 'city', city: 'kano' };
   game.tokens.set('kano', 'ruby');
 
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   const eka = game.quiz.question;
   game.answerQuiz((game.quiz.correct + 1) % 4);
   game.closeQuiz();
@@ -1296,7 +1301,7 @@ test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysy
   // Takaisin ensimmäiselle pelaajalle: uusi kysymys samasta kaupungista.
   game.endTurn();
   assert.equal(game.current, 0);
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   assert.notEqual(game.quiz.question, eka);
   game.answerQuiz(game.quiz.correct);
   assert.equal(game.revealed.get('kano'), 'ruby');
@@ -1435,7 +1440,7 @@ test('kysymyksen lähde kulkeutuu tietovisaan ja kaksintaisteluun', () => {
   game.player.pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'topaz');
   game.phase = 'action';
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   assert.ok(Array.isArray(game.quiz.source));
 });
 
@@ -1558,7 +1563,7 @@ test('vaikea kysymys ja laudan pääaarre antavat kokemuspisteitä', () => {
   game.tokens.set('timbuktu', 'emerald');
   const ennen = p.xp;
 
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   game.quiz.hard = true; // pakotetaan vaikeaksi ilman erillistä pakkaa
   game.answerQuiz(game.quiz.correct);
   assert.equal(p.xp, ennen + XP_HARD_ANSWER);
@@ -1595,7 +1600,7 @@ test('vastatut kysymykset kirjautuvat myös oikeista pelitilanteista', () => {
   p.pos = { type: 'city', city: 'timbuktu' };
   game.tokens.set('timbuktu', 'emerald');
 
-  game.actionTravel('stay');
+  game.actionTravel('stay', { form: 'quiz' });
   const vaara = (game.quiz.correct + 1) % game.quiz.options.length;
   game.answerQuiz(vaara);
   assert.equal(p.quizAsked, 1);
@@ -1607,7 +1612,7 @@ test('vastatut kysymykset kirjautuvat myös oikeista pelitilanteista', () => {
   game.current = 0;
   game.phase = 'action';
   game.beginTurn();
-  assert.ok(game.actionTravel('stay').ok);
+  assert.ok(game.actionTravel('stay', { form: 'quiz' }).ok);
   assert.ok(game.timeoutQuiz().ok);
   assert.equal(p.quizAsked, 2);
   assert.equal(p.quizCorrect, 0);
@@ -1794,4 +1799,165 @@ test('Afrikan aikataulu on nouseva ja ulottuu ennätyksen yli', () => {
     assert.equal(typeof rivi.text, 'string');
     assert.ok(rivi.text.length > 40, `liian lyhyt merkintä päivälle ${rivi.day}`);
   }
+});
+
+// --- paketti 10: kysymysten vaihtelu ---------------------------------------
+
+test('pysähdyksen muoto arvotaan painojen mukaan', () => {
+  const game = newGame(301);
+  const lukumaarat = { quiz: 0, claim: 0, map: 0, event: 0 };
+  for (let i = 0; i < 6000; i++) {
+    game.lastForm = null; // ilman toistoestoa painot näkyvät sellaisinaan
+    lukumaarat[game.pickForm('timbuktu')]++;
+  }
+  const osuus = (k) => (lukumaarat[k] / 6000) * 100;
+  const summa = Object.values(FORM_WEIGHTS).reduce((a, b) => a + b, 0);
+  for (const [muoto, paino] of Object.entries(FORM_WEIGHTS)) {
+    const odotus = (paino / summa) * 100;
+    assert.ok(
+      Math.abs(osuus(muoto) - odotus) < 3,
+      `${muoto}: ${osuus(muoto).toFixed(1)} % kun odotus on ${odotus.toFixed(1)} %`,
+    );
+  }
+});
+
+test('sama erikoismuoto ei toistu kahdesti peräkkäin', () => {
+  const game = newGame(302);
+  for (const muoto of ['claim', 'map', 'event']) {
+    game.lastForm = muoto;
+    assert.equal(game.formWeights('timbuktu')[muoto], 0, `${muoto} sai painon heti perään`);
+  }
+  // Monivalinta saa toistua: se on peruspysähdys eikä erikoismuoto.
+  game.lastForm = 'quiz';
+  assert.ok(game.formWeights('timbuktu').quiz > 0);
+});
+
+test('lauta ilman väittämiä ja tapahtumia toimii silti', () => {
+  const game = newGame(303);
+  const pack = game.pack;
+  const claims = pack.questions.claims;
+  const events = pack.events;
+  try {
+    delete pack.questions.claims;
+    delete pack.events;
+    const painot = game.formWeights('timbuktu');
+    assert.equal(painot.claim, 0);
+    assert.equal(painot.event, 0);
+    assert.ok(painot.map > 0, 'karttakysymys toimii ilman sisältöä');
+    assert.equal(
+      Object.values(painot).reduce((a, b) => a + b, 0),
+      Object.values(FORM_WEIGHTS).reduce((a, b) => a + b, 0),
+      'puuttuvien muotojen paino siirtyy monivalinnalle',
+    );
+  } finally {
+    pack.questions.claims = claims;
+    pack.events = events;
+  }
+});
+
+test('vaikea kysymys ja tietoportti ovat aina monivalinta', () => {
+  const game = newGame(304);
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+  assert.ok(game.actionQuiz({ hard: true }).ok);
+  assert.equal(game.quiz.kind, undefined, 'vaikea kysymys ei ole erikoismuoto');
+  assert.equal(game.quiz.options.length, 4);
+});
+
+test('isoisän väittämä on kaksivaihtoehtoinen eikä salli apukeinoja', () => {
+  const game = newGame(305);
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+  assert.ok(game.actionQuiz({ form: 'claim' }).ok);
+  const quiz = game.quiz;
+  assert.equal(quiz.kind, 'claim');
+  assert.deepEqual(quiz.options, ['Totta', 'Tarua']);
+  assert.equal(game.actionFiftyFifty().ok, false, '50:50 ei kuulu väittämään');
+  assert.equal(game.actionHint().ok, false, 'väittämässä ei ole vihjettä');
+
+  // Oikea vastaus kääntää laatan kuten monivalinnassakin.
+  game.answerQuiz(quiz.correct);
+  assert.equal(quiz.right, true);
+  assert.ok(quiz.found, 'oikea vastaus kääntää laatan');
+});
+
+test('karttakysymys johdetaan laudan omasta datasta', () => {
+  const game = newGame(306);
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+  assert.ok(game.actionQuiz({ form: 'map' }).ok);
+  const quiz = game.quiz;
+  assert.equal(quiz.kind, 'map');
+  assert.equal(quiz.mapCities.length, MAP_CHOICES);
+  assert.equal(new Set(quiz.mapCities).size, MAP_CHOICES, 'ehdokkaat ovat eri kaupunkeja');
+  assert.ok(!quiz.mapCities.includes('timbuktu'), 'oma kaupunki ei ole ehdokas');
+  const kohde = game.board.cityById.get(quiz.mapCities[quiz.correct]);
+  assert.ok(quiz.question.includes(kohde.name), 'kysymys nimeää etsittävän kaupungin');
+
+  // Väärä napautus ei käännä laattaa.
+  game.answerQuiz((quiz.correct + 1) % MAP_CHOICES);
+  assert.equal(quiz.right, false);
+  assert.ok(!quiz.found);
+});
+
+/** Yksin pelattava Afrikan peli: vuorolaskuri kasvaa joka vuorolla. */
+function soloGame(seed) {
+  return new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
+    seed,
+  });
+}
+
+test('tapahtumakortti vie vuoron eikä käännä laattaa', () => {
+  const game = soloGame(307);
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+  const vuoroEnnen = game.turnCount;
+  assert.ok(game.actionQuiz({ form: 'event' }).ok);
+  assert.equal(game.phase, 'event');
+  game.eventCard.effect = { kind: 'viive' };
+  game.closeEvent();
+  assert.equal(game.phase, 'action');
+  assert.ok(game.tokens.has('timbuktu'), 'laatta jää kääntämättä');
+  assert.equal(game.turnCount - vuoroEnnen, 2, 'viive vie ylimääräisen vuoron');
+});
+
+test('tapahtuma ei jätä matkaajaa velkaan', () => {
+  const game = soloGame(308);
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+  game.player.money = 20;
+  game.actionQuiz({ form: 'event' });
+  game.eventCard.effect = { kind: 'raha', amount: -60 };
+  game.closeEvent();
+  assert.equal(game.player.money, 0);
+});
+
+test('kyyti siirtää naapurikaupunkiin ilmaiseksi', () => {
+  const game = soloGame(309);
+  game.player.pos = { type: 'city', city: 'timbuktu' };
+  game.tokens.set('timbuktu', 'emerald');
+  const rahaEnnen = game.player.money;
+  game.actionQuiz({ form: 'event' });
+  game.eventCard.effect = { kind: 'kyyti' };
+  game.closeEvent();
+  assert.notEqual(game.player.pos.city, 'timbuktu');
+  assert.equal(game.player.money, rahaEnnen, 'kyyti on ilmainen');
+});
+
+test('Afrikan tapahtumakortit ovat ehjiä ja reiluja', () => {
+  const events = packById('africa').events;
+  assert.ok(Array.isArray(events) && events.length >= 8, 'tapahtumia on liian vähän');
+  for (const e of events) {
+    assert.equal(typeof e.text, 'string');
+    assert.ok(e.text.length >= 100, `liian lyhyt tapahtuma: ${e.text}`);
+    assert.ok(['viive', 'raha', 'kyyti'].includes(e.effect?.kind), `tuntematon vaikutus: ${e.effect?.kind}`);
+    if (e.effect.kind === 'raha') {
+      assert.ok(Number.isInteger(e.effect.amount) && e.effect.amount !== 0);
+      // Tapahtuma ei saa koskaan viedä isoa summaa.
+      assert.ok(e.effect.amount >= -60 && e.effect.amount <= 120, `liian iso vaikutus: ${e.effect.amount}`);
+    }
+  }
+  const tekstit = events.map((e) => e.text);
+  assert.equal(new Set(tekstit).size, tekstit.length, 'sama tapahtuma kahdesti');
 });
