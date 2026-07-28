@@ -80,6 +80,13 @@ Myöhemmäksi sovitut (EI vielä työn alle):
   odottaa omistajan päätöstä siitä, milloin Afrikka-ensin-linjasta
   siirrytään eteenpäin. Keskeytetyn session luonnos on haarassa
   `claude/tyolista-p10`.
+- "Vastaus lukee kartalla" -siivous muille laudoille: kysymys, jonka
+  oikea vastaus on saman laudan toisen kaupungin nimi, on ilmainen.
+  Afrikka on siivottu ja testi vartioi sitä (rules.test.mjs,
+  VASTAUS_EI_KARTALLA). Tunnetut tapaukset muilla laudoilla: europe
+  general (Istanbul), middleeast/ankara (Istanbul), suomi general
+  (Helsinki), oceania general (Uluru). Korjataan kunkin laudan
+  sisältöpassissa ja lauta lisätään testin settiin.
 - Kysymysten vaihtelu: **paketti 10 alempana — seuraava työn alle
   otettava paketti.**
 - "Lue lisää" -Wikipedia-tiivistelmät: **paketti 11 alempana — otetaan

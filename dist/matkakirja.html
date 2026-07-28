@@ -1637,6 +1637,19 @@ body[data-mode] .fact-card {
     background: rgba(255, 248, 232, 0.95);
   }
 
+  /*
+   * Yleinen opacity 0.45 tekee napista pergamentin päällä lähes
+   * näkymättömän, joten estetty nappi pidetään ääriviivoiltaan näkyvänä
+   * ja vain teksti vaimennetaan.
+   */
+  body[data-mode] .actions button:disabled {
+    opacity: 1;
+    background: rgba(247, 237, 216, 0.55);
+    border-color: rgba(122, 85, 20, 0.35);
+    color: rgba(58, 42, 22, 0.6);
+    text-shadow: none;
+  }
+
   /* Ensisijainen valinta pysyy kultaisena — se erottuu pergamentiltakin. */
   body[data-mode] .actions button.primary {
     background: linear-gradient(180deg, #eab84e, #d09024);
@@ -3504,12 +3517,12 @@ const AFRICA_QUESTIONS = {
 
   murzuk: [
     {
-      q: 'Murzuk sijaitsee keskellä maailman suurinta kuumaa aavikkoa. Mikä se on?',
-      options: ['Kalahari', 'Namib', 'Gobi', 'Sahara'],
-      correct: 3,
+      q: 'Mitä arvokasta karavaanit kuljettivat Saharan halki etelään, missä siitä maksettiin jopa kullalla?',
+      options: ['suolaa', 'silkkiä', 'lasia', 'rautaa'],
+      correct: 0,
       level: 1,
-      fact: 'Sahara on pinta-alaltaan noin 9 miljoonaa neliökilometriä.',
-      hint: 'Se ulottuu Atlantilta Punaisellemerelle.',
+      fact: 'Suola oli Länsi-Afrikassa ajoittain kullan arvoista. Sitä louhittiin aavikon kaivoksista laattoina, jotka sidottiin kamelien kylkiin.',
+      hint: 'Sitä louhittiin aavikolta suurina laattoina, ja sitä tarvitaan ruoassa.',
     },
     {
       q: 'Murzukin ympäristö tunnetaan Fezzanina. Missä maassa se on?',
@@ -4856,12 +4869,11 @@ const AFRICA_QUESTIONS = {
       hint: 'Salmen eteläpuolella on Marokko.',
     },
     {
-      q: 'Mikä on Egyptin pääkaupunki?',
-      options: ['Kairo', 'Aleksandria', 'Luxor', 'Assuan'],
+      q: 'Mikä on Marokon pääkaupunki?',
+      options: ['Rabat', 'Casablanca', 'Marrakech', 'Fès'],
       correct: 0,
-      level: 1,
-      fact: 'Kairo on koko Afrikan suurimpia kaupunkeja: suurkaupunkialueella asuu yli 20 miljoonaa ihmistä.',
-      hint: 'Kaupunki sijaitsee Niilin varrella lähellä suistoa.',
+      fact: 'Moni veikkaa Casablancaa, mutta pääkaupunki on Rabat — kuninkaan ja hallinnon kaupunki Atlantin rannalla.',
+      hint: 'Se ei ole maan suurin eikä tunnetuin kaupunki.',
     },
     {
       q: 'Mikä Afrikan maa tuottaa eniten kaakaota maailmassa?',
@@ -26617,15 +26629,24 @@ class UI {
   }
 
   /**
-   * Nopan lepopaikka: kartan vasen alakulma on avomerta, joten noppa ei jää
-   * kenenkään nappulan tai kaupungin päälle. Paikka arpoutuu hieman joka
-   * heitolla, jotta noppa ei osu aina täsmälleen samaan kohtaan.
+   * Nopan lepopaikka: avomerta, jotta noppa ei jää kenenkään nappulan tai
+   * kaupungin päälle. Paikka arpoutuu hieman joka heitolla, jotta noppa ei
+   * osu aina täsmälleen samaan kohtaan. Päiväkirjakortti hakeutuu
+   * merellisimpään kulmaan — usein samaan, jonne nopan paikka on valittu —
+   * joten kortin kulmaa väistetään peilaamalla paikka vastakkaiselle
+   * sivulle (tai pakan omaan varapaikkaan decor.dieSpotAlt).
    */
   dieRestingSpot() {
     const pane = this.mapPane;
     const w = pane.clientWidth || 600;
     const h = pane.clientHeight || 600;
-    const spot = this.game.pack.decor.dieSpot;
+    const decor = this.game.pack.decor;
+    let spot = decor.dieSpot;
+    const corner = this.factCard?.hidden ? null : this.factCard?.dataset.corner;
+    if (corner) {
+      const spotCorner = (spot.y < 0.5 ? 't' : 'b') + (spot.x < 0.5 ? 'l' : 'r');
+      if (spotCorner === corner) spot = decor.dieSpotAlt ?? { x: 1 - spot.x, y: spot.y };
+    }
     const jitter = this.dieJitter ?? { x: 0, y: 0 };
     return {
       x: w * (spot.x + jitter.x),
@@ -28268,7 +28289,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.11';
+const APP_VERSION = '2026-07-28.12';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
