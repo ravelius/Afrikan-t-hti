@@ -2730,3 +2730,56 @@ test('lauta ilman lentorepliikkejä ei kaadu', () => {
     assert.equal(game.flightLine('helsinki'), null);
   }
 });
+
+// --- paketti 15: faktakorjaukset eivät saa palautua ------------------------
+//
+// Lentorepliikit kirjoitettiin uusiksi tunnelatausta varten (paketti 15).
+// Nämä neljä faktaa korjattiin verkkotarkistuksen jälkeen paketissa 14, ja
+// juuri sisällön uudelleenkirjoitus on se hetki, jossa ne voisivat livahtaa
+// takaisin. Testi vartioi väitettä, ei sanamuotoa.
+
+/** Kaikki laudan lentorepliikit yhtenä pötkönä pienaakkosin. */
+function flightText(packId) {
+  const pack = packById(packId);
+  return [
+    ...Object.values(pack.texts?.flightLines ?? {}).flat(),
+    ...(pack.texts?.flightDefault ?? []),
+  ].join(' \n ').toLowerCase();
+}
+
+test('Kapkaupungin rivi ei väitä valtamerten kohtaavan siellä', () => {
+  const teksti = flightText('maailma');
+  // Atlantin ja Intian valtameren raja on Agulhasniemellä, reilut 150 km
+  // kaakkoon, eikä näkyvää värirajaa ole — se on turistitarina.
+  const kaksiValtamerta = /(kaksi valtamerta|kaksi merta)[^.]*kohtaa|atlantti[^.]*intian valtameri[^.]*kohtaa/;
+  assert.ok(!kaksiValtamerta.test(teksti), 'rivi väittää valtamerten kohtaavan Kapkaupungin kohdalla');
+  assert.ok(
+    !/vesi vaihtaa väriä|väriraja/.test(teksti),
+    'rivi väittää veden vaihtavan väriä valtamerten rajalla',
+  );
+});
+
+test('Mumbain silta kaartaa eikä ole suora', () => {
+  const rivit = packById('maailma').texts.flightLines.mumbai.join(' ').toLowerCase();
+  if (rivit.includes('silta') || rivit.includes('sea link')) {
+    assert.ok(!/silta suorana|suorana valkoisena|suora silta/.test(rivit),
+      'Bandra–Worli Sea Link on kaartuva vinoköysisilta, ei suora');
+  }
+});
+
+test('isoisän Atlantin ylitys ei ole yhtätoista päivää', () => {
+  const teksti = flightText('maailma');
+  // 1870-luvun tyypillinen höyrylaivaylitys oli 8–9 vuorokautta.
+  assert.ok(
+    !/yhdessätoista päivässä|yksitoista päivää|11 päivä/.test(teksti),
+    'Atlantin ylitys 1870-luvulla kesti tyypillisesti 8–9 vrk, ei yhtätoista',
+  );
+});
+
+test('Fuji näkyy lounaassa eikä lännessä', () => {
+  const rivit = packById('maailma').texts.flightLines.tokio.join(' ').toLowerCase();
+  if (/kartio|fuji|lumihuippu/.test(rivit)) {
+    assert.ok(!/lännessä kohoaa|lännessä siintää/.test(rivit),
+      'Fuji on Tokiosta lounaaseen (suuntima n. 249°), ei länteen');
+  }
+});

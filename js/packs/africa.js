@@ -273,40 +273,40 @@ export const AFRICA = {
     // flightDefault-listasta, jos kohteelle ei ole omaa riviä.
     flightLines: {
       tanger: [
-        'Alla vaihtuu vihreä rinne valkoisiksi taloiksi, jotka nousevat kukkulaa kuin katsomo. Merta on molemmin puolin, ja ne ovat eri meret.',
-        'Päiväkirjan ensimmäinen Afrikan sivu alkaa keskeltä lausetta. Edellinen sivu on revitty irti, ja repimisjälki on suora — se on tehty harkiten.',
+        'Kaksi eri merta samassa ikkunassa, enkä ehdi katsoa molempia. Valkoiset talot kiipeävät rinnettä kuin katsomo, joka on jo täynnä.',
+        'Päiväkirjan ensimmäinen Afrikan sivu alkaa keskeltä lausetta, ja edellinen on revitty irti suoraan ja harkiten. Isoisä salaa minulta jotakin, ja se on hienoa.',
       ],
       kairo: [
-        'Ruskeaa tasaista hiekkaa riittää satoja kilometrejä, ja sitten tulee joki. Vihreää on täsmälleen sen verran kuin vesi ylettyy, ei metriäkään enempää.',
-        'Kirjaan on ommeltu kiinni kapea paperisuikale ja sen alle vuosiluku. Luku on niin suuri, että se on varmuuden vuoksi kirjattu kahdesti.',
+        'Satoja kilometrejä tasaista hiekkaa — ja sitten, aivan yhtäkkiä, joki. Vihreää on täsmälleen sen verran kuin vesi ylettyy, ja minä tuijotan sitä rajaa suu auki.',
+        'Kirjaan on ommeltu kapea suikale ja sen alle vuosiluku niin suuri, että isoisä kirjasi sen varmuuden vuoksi kahdesti. Sormeni tärisee sivun reunalla.',
       ],
       tripoli: [
-        'Välimeri loppuu alla kuin veitsellä leikattuna: heti rannan takana alkaa hiekka. Rannikolla erottuu suorakulmaisia raunioita meren rajassa.',
-        'Kirjassa on tällä kohdalla kolme kaupunkia lueteltuna allekkain ja kaksi niistä yliviivattu. Kolmas on se, jota kohti me juuri nyt laskeudumme.',
+        'Välimeri katkeaa alla kuin veitsellä leikattuna ja hiekka alkaa heti rannan takana. Vesirajassa erottuu suorakulmaisia raunioita, ja minä painan otsani lasiin.',
+        'Kolme kaupunkia allekkain, kaksi yliviivattu — ja kolmas on se, jota kohti me juuri nyt laskeudumme. En saa kirjaa suljettua.',
       ],
       dakar: [
-        'Manner loppuu alla ja Atlantti alkaa: tämä on läntisin kärki, eikä siitä eteenpäin ole muuta kuin vettä Amerikkaan asti.',
-        'Isoisä on piirtänyt tähän laivareitin katkoviivalla meren yli länteen. Katkoviiva tarkoittaa hänellä aina reittiä, jota hän ei itse kulkenut.',
+        'Manner päättyy alla, ja edessä on pelkkä Atlantti: läntisin kärki, eikä eteenpäin ole vettä kummempaa Amerikkaan asti. Minua huimaa jo ajatuksesta.',
+        'Tähän on merkitty katkoviiva meren yli länteen, ja katkoviiva merkitsee hänellä aina reittiä, jota hän ei itse kulkenut. Se viiva ei jätä minua rauhaan.',
       ],
       kano: [
-        'Ilma muuttuu alla keltaiseksi: harmattan tuo Saharasta pölyä, ja aurinko on keskipäivällä kalpea kiekko. Näkyvyys loppuu kilometriin.',
-        'Sivulle on piirretty savimuuri ja sen sisään pieniä ympyröitä riveissä. Isoisä on numeroinut ne huolella muttei kertonut, mitä ne ovat.',
+        'Ilma muuttuu alla keltaiseksi ja aurinko kalpeaksi kiekoksi keskellä päivää: harmattan tuo Saharasta pölyä, ja näkyvyys loppuu kilometriin. Tätä minä tulin katsomaan.',
+        'Savimuuri, ja sen sisällä pieniä ympyröitä riveissä, jokainen huolella numeroitu — mitä ne oikein ovat? Arvailen niitä koko laskeutumisen ajan.',
       ],
       kongo: [
-        'Metsä on alla yhtenäinen ja tumma, ja sen halki kaartaa joki niin leveänä, että keskellä virtaa on kokonaisia saaria.',
-        'Kartassa on tässä kohdassa tyhjä alue ja yksi sana, jota isoisä itse häpeää kaksi sivua myöhemmin. Päiväkirja oppi nopeammin kuin kartta.',
+        'Tummaa metsää riittää niin kauan, että lakkaan vilkuilemasta kelloa. Lopulta sen halki kaartaa joki, jonka keskivirrassa on kokonaisia saaria.',
+        'Kartassa on tässä kohtaa tyhjää ja yksi sana, jota isoisä häpeää jo kaksi sivua myöhemmin. Hyvä niin — päiväkirja oppi nopeammin kuin kartta, ja siitä pidän.',
       ],
       kapkaupunki: [
-        'Rannikko kaartuu alla eteläkärjeksi, ja kärjen takana ei ole enää mitään ennen jäätä. Pöytävuoren laki näkyy jo kaukaa suorana viivana.',
-        'Kirjan kannen sisäpuolelle on kirjoitettu päivämäärä ja sen viereen kysymysmerkki. Isoisä ei ollut varma, minä päivänä hän saapui tänne.',
+        'Rannikko kaartuu alla eteläkärjeksi, eikä sen takana ole enää mitään ennen jäätä. Pöytävuoren tasainen laki näkyy jo kaukaa, ja istun suorempana kuin koko matkalla.',
+        'Kannen sisäpuolella on päivämäärä ja sen vieressä kysymysmerkki: isoisä ei ollut varma saapumispäivästään. Minä tiedän omani tasan, ja se tuntuu pieneltä voitolta.',
       ],
       sansibar: [
-        'Riutan yli tultaessa vesi vaihtuu syvänsinisestä turkoosiin, ja ranta erottuu valkoisena viivana. Purjeita on merellä kymmeniä.',
-        'Tälle sivulle on kirjoitettu yhden ainoan mausteen nimi ja vedetty sen alle kaksi viivaa. Muuta sivulla ei ole, joten sen täytyy riittää.',
+        'Riutan yli tultaessa vesi vaihtuu syvänsinisestä turkoosiksi kuin valo käännettäisiin päälle. Purjeita on merellä kymmeniä, enkä tiennyt veden osaavan tuollaista.',
+        'Yhden ainoan mausteen nimi, ja sen alla kaksi paksua viivaa. Isoisällä kaksi viivaa merkitsee, ettei asiasta tingitä — ja minä nostan nenäni ilmaan jo koneessa.',
       ],
       addisabeba: [
-        'Laskukierros tehdään yli kahden kilometrin korkeudessa, koska maa on siellä. Alla aukeaa ylänkö, jonka laaksot putoavat pystysuorina.',
-        'Sivun laitaan on raapustettu kahvipapu ja kellotaulu vierekkäin. Isoisä on odottanut jotakin kokonaisen tunnin ja pitänyt sitä merkitsemisen arvoisena.',
+        'Laskukierros tehdään yli kahden kilometrin korkeudessa, koska maa on siellä. Maa, kahdessa kilometrissä — ja katson laaksoja, jotka putoavat pystysuorina.',
+        'Sivun laidassa on kahvipapu ja kellotaulu vierekkäin: isoisä odotti tunnin ja kirjasi sen ylös. Siitä tunnista minä maksaisin mitä tahansa.',
       ],
     },
     intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.',

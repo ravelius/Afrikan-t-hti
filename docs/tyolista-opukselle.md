@@ -63,6 +63,9 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Paketti 14 (lentoanimaatio): ✅ (28.7.2026) — kone liitää reittiä
   pitkin ja repliikki kirjoittuu kartalle. 70 lentorepliikkiä Maailmalle
   ja Afrikalle, joista puolet hehkuttaa isoisän päiväkirjaa.
+- Paketti 15 (lentorepliikkien tunnelataus): ✅ (28.7.2026) — kaikki 70
+  riviä kirjoitettu uusiksi innostuksella. Neljä testiä vartioi paketin
+  14 faktakorjauksia, jottei uudelleenkirjoitus palauta niitä.
 - Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
   tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
   tarkistettu artikkeliotsikko.
@@ -86,7 +89,7 @@ Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 läpikuultavaksi kalvoksi kartan päälle (ei zoomausta) ja perillä
 odottaa "astu ulos koneesta" -nappi. Seuraavaksi paketti 15 (alempana).
 
-## Paketti 15: lentorepliikkien tunnelataus (pieni paketti)
+## Paketti 15: lentorepliikkien tunnelataus (pieni paketti) — VALMIS
 
 Omistajan palaute: lentorepliikeistä puuttui innostunut hehkutus —
 moni rivi on toteava fakta ilman tunnetta. Käy `texts.flightLines` ja
