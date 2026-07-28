@@ -221,6 +221,17 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
   line-height: 1.4;
   padding: 0.5rem 1rem;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.35);
+  max-width: min(34rem, 92%);
+}
+
+/*
+ * Karttakysymyksen ajaksi päiväkirjakortti väistyy: se peitti kysymysrivin
+ * ja karttaa pitää nyt lukea koko ruudulta. Kortti palaa heti vastattua.
+ */
+body.map-ask .fact-card {
+  opacity: 0.12;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 /* --- laudalla lepäävä 3D-noppa --- */
@@ -27059,15 +27070,18 @@ class Game {
       return null;
     };
 
+    // Kaupungin naapurit reittiverkossa.
+    const naapuriIdt = (id) => new Set(
+      [...(this.board.adj.get(id) ?? [])]
+        .map((eid) => this.board.edgeById.get(eid))
+        .map((e) => (e.a === id ? e.b : e.a)),
+    );
+
     // Naapuruus: mihin ehdokkaista pääsee kohteesta suoraan yhtä reittiä?
     const naapuruus = () => {
       for (let yritys = 0; yritys < 8; yritys++) {
         const kohde = pool[Math.floor(this.rng() * pool.length)];
-        const naapurit = new Set(
-          [...(this.board.adj.get(kohde.id) ?? [])]
-            .map((eid) => this.board.edgeById.get(eid))
-            .map((e) => (e.a === kohde.id ? e.b : e.a)),
-        );
+        const naapurit = naapuriIdt(kohde.id);
         const oikeat = [...naapurit].filter((id) => id !== city.id);
         if (!oikeat.length) continue;
         const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
@@ -27084,8 +27098,70 @@ class Game {
       return null;
     };
 
+    // Linnuntie: mikä ehdokkaista on lähimpänä ankkurikaupunkia? Reittien
+    // mutkat pettävät silmää, joten etäisyys pitää katsoa suorana viivana.
+    // Lähimmän ja toiseksi lähimmän eron pitää olla selvä, ettei vastaus
+    // jää millimetrien mittailuksi.
+    const linnuntie = (raja) => {
+      for (let yritys = 0; yritys < 12; yritys++) {
+        const ankkuri = pool[Math.floor(this.rng() * pool.length)];
+        const muut = pool.filter((c) => c.id !== ankkuri.id);
+        if (muut.length < MAP_CHOICES) break;
+        const arvottu = this.shuffledOrder(muut.length).slice(0, MAP_CHOICES).map((i) => muut[i]);
+        const etaisyys = (c) => Math.hypot(c.x - ankkuri.x, c.y - ankkuri.y);
+        const jarjestys = [...arvottu].sort((a, b) => etaisyys(a) - etaisyys(b));
+        if (etaisyys(jarjestys[1]) - etaisyys(jarjestys[0]) < raja) continue;
+        return {
+          question: `Katso karttaa: mikä näistä on linnuntietä lähimpänä kaupunkia ${ankkuri.name}?`,
+          ehdokkaat: arvottu,
+          kohde: jarjestys[0],
+          fact: `${jarjestys[0].name} on linnuntietä lähimpänä kaupunkia ${ankkuri.name}. Reitit mutkittelevat, mutta linnuntie on suora viiva kaupungista toiseen.`,
+        };
+      }
+      return null;
+    };
+
+    // Välipysähdys: mihin ehdokkaista pääsee kohteesta kahdella reitillä,
+    // yhden välipysähdyksen kautta? Vaatii reittiverkon seuraamista.
+    // Väärät ehdokkaat eivät ole naapureita eivätkä kahden reitin päässä,
+    // jottei vastaus jää tulkinnasta kiinni.
+    const valipysahdys = () => {
+      for (let yritys = 0; yritys < 12; yritys++) {
+        const kohde = pool[Math.floor(this.rng() * pool.length)];
+        const naapurit = naapuriIdt(kohde.id);
+        const kahden = new Set();
+        for (const nid of naapurit) for (const mid of naapuriIdt(nid)) kahden.add(mid);
+        kahden.delete(kohde.id);
+        for (const nid of naapurit) kahden.delete(nid);
+        const oikeat = [...kahden].filter((id) => id !== city.id);
+        if (!oikeat.length) continue;
+        const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
+        const vaarat = pool.filter((c) => c.id !== kohde.id && c.id !== oikea.id
+          && !kahden.has(c.id) && !naapurit.has(c.id));
+        if (vaarat.length < MAP_CHOICES - 1) continue;
+        const arvottu = this.shuffledOrder(vaarat.length).slice(0, MAP_CHOICES - 1).map((i) => vaarat[i]);
+        return {
+          question: `Katso karttaa: mihin näistä pääsee kaupungista ${kohde.name} kahdella reitillä, yhden välipysähdyksen kautta?`,
+          ehdokkaat: [oikea, ...arvottu],
+          kohde: oikea,
+          fact: `Kaupungista ${kohde.name} pääsee kaupunkiin ${oikea.name} yhden välipysähdyksen kautta. Muihin ehdokkaisiin reittejä pitkin on pidempi matka.`,
+        };
+      }
+      return null;
+    };
+
     // Muoto arvotaan; varamuodot takaavat, että kysymys löytyy aina.
-    const tehtava = (this.rng() < 0.5 ? suunta(55) : null) ?? naapuruus() ?? suunta(1) ?? suunta(0);
+    // Normaalitasolla painotetaan vaikeampia muotoja (linnuntie ja
+    // välipysähdys) — pelkkä "mikä on pohjoisin" oli aikuiselle liian
+    // helppo. Lapsen tasolla vanhat muodot riittävät.
+    const arpa = this.rng();
+    const helppo = this.player.quizLevel === 'easy';
+    const tehtava = (helppo
+      ? ((arpa < 0.5 ? suunta(55) : null) ?? naapuruus())
+      : (arpa < 0.4 ? linnuntie(90)
+        : arpa < 0.75 ? valipysahdys()
+          : ((this.rng() < 0.5 ? suunta(55) : null) ?? naapuruus())))
+      ?? naapuruus() ?? suunta(1) ?? suunta(0);
 
     const jarj = this.shuffledOrder(tehtava.ehdokkaat.length);
     const vaihtoehdot = jarj.map((i) => tehtava.ehdokkaat[i]);
@@ -29644,6 +29720,11 @@ class UI {
   renderQuiz() {
     if (this.dead) return; // kesken jäänyt animaatioketju voi kutsua tätä vielä destroyn jälkeen
     const { game } = this;
+    // Karttakysymyksen erikoistila puretaan aina ensin; avoin karttakysymys
+    // laittaa sen takaisin alempana. Ilman tätä päiväkirja jäisi himmeäksi
+    // kysymyksen sulkeuduttua.
+    this.hint.classList.remove('ask');
+    document.body.classList.remove('map-ask');
     this.renderEvent();
     if (game.phase === 'duel' && game.duel) {
       this.renderDuel();
@@ -29660,12 +29741,14 @@ class UI {
     // kiinni siihen asti. Vastauksen jälkeen tulos näytetään normaalisti.
     // Ohjerivi kertoo suoraan miten vastataan — ilman kehotusta pelaaja jäi
     // odottamaan vastausvaihtoehtoja, joita ei koskaan tullut.
-    this.hint.classList.remove('ask');
     if (quiz.kind === 'map' && quiz.chosen === null) {
       this.stopQuizTimer();
       if (this.quizDialog.open) this.quizDialog.close();
       this.hint.textContent = `${quiz.question} Napauta vastausta kartalla.`;
       this.hint.classList.add('ask');
+      // Päiväkirja väistyy kysymyksen ajaksi: kysymysrivi jäi sen alle
+      // eikä karttaa voinut lukea kortin läpi.
+      document.body.classList.add('map-ask');
       return;
     }
 
@@ -30049,12 +30132,20 @@ class UI {
     // Dialogi on top layerissa, joten paljastus lisätään sen sisään.
     this.quizDialog.appendChild(overlay);
 
+    // Näyttöaika kasvaa selitteen mukana: "+300 puntaa" saa vilahtaa,
+    // mutta pitkä selite (esim. tyhjän laatan "merkintä oli vanhentunut")
+    // pitää ehtiä lukea. Napautus ohittaa odotuksen.
+    const seliteMs = (REVEAL_SUB[type] ?? '').length * 45;
+    const napautus = new Promise((resolve) => {
+      overlay.addEventListener('pointerdown', resolve, { once: true });
+    });
+
     if (this.reducedMotion) {
       disc.classList.add('flipped');
       rays.classList.add('shown');
       caption.classList.add('shown');
       sfx.play(treasureSound(type));
-      await this.wait(900);
+      await Promise.race([this.wait(900 + seliteMs), napautus]);
     } else {
       await this.wait(420);
       disc.classList.add('flipped');
@@ -30064,7 +30155,7 @@ class UI {
       sfx.play(treasureSound(type));
       rays.classList.add('shown');
       caption.classList.add('shown');
-      await this.wait(1250);
+      await Promise.race([this.wait(1250 + seliteMs), napautus]);
       overlay.classList.add('leaving');
       await this.wait(300);
     }
@@ -30508,7 +30599,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.33';
+const APP_VERSION = '2026-07-28.34';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

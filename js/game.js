@@ -893,15 +893,18 @@ export class Game {
       return null;
     };
 
+    // Kaupungin naapurit reittiverkossa.
+    const naapuriIdt = (id) => new Set(
+      [...(this.board.adj.get(id) ?? [])]
+        .map((eid) => this.board.edgeById.get(eid))
+        .map((e) => (e.a === id ? e.b : e.a)),
+    );
+
     // Naapuruus: mihin ehdokkaista pääsee kohteesta suoraan yhtä reittiä?
     const naapuruus = () => {
       for (let yritys = 0; yritys < 8; yritys++) {
         const kohde = pool[Math.floor(this.rng() * pool.length)];
-        const naapurit = new Set(
-          [...(this.board.adj.get(kohde.id) ?? [])]
-            .map((eid) => this.board.edgeById.get(eid))
-            .map((e) => (e.a === kohde.id ? e.b : e.a)),
-        );
+        const naapurit = naapuriIdt(kohde.id);
         const oikeat = [...naapurit].filter((id) => id !== city.id);
         if (!oikeat.length) continue;
         const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
@@ -918,8 +921,70 @@ export class Game {
       return null;
     };
 
+    // Linnuntie: mikä ehdokkaista on lähimpänä ankkurikaupunkia? Reittien
+    // mutkat pettävät silmää, joten etäisyys pitää katsoa suorana viivana.
+    // Lähimmän ja toiseksi lähimmän eron pitää olla selvä, ettei vastaus
+    // jää millimetrien mittailuksi.
+    const linnuntie = (raja) => {
+      for (let yritys = 0; yritys < 12; yritys++) {
+        const ankkuri = pool[Math.floor(this.rng() * pool.length)];
+        const muut = pool.filter((c) => c.id !== ankkuri.id);
+        if (muut.length < MAP_CHOICES) break;
+        const arvottu = this.shuffledOrder(muut.length).slice(0, MAP_CHOICES).map((i) => muut[i]);
+        const etaisyys = (c) => Math.hypot(c.x - ankkuri.x, c.y - ankkuri.y);
+        const jarjestys = [...arvottu].sort((a, b) => etaisyys(a) - etaisyys(b));
+        if (etaisyys(jarjestys[1]) - etaisyys(jarjestys[0]) < raja) continue;
+        return {
+          question: `Katso karttaa: mikä näistä on linnuntietä lähimpänä kaupunkia ${ankkuri.name}?`,
+          ehdokkaat: arvottu,
+          kohde: jarjestys[0],
+          fact: `${jarjestys[0].name} on linnuntietä lähimpänä kaupunkia ${ankkuri.name}. Reitit mutkittelevat, mutta linnuntie on suora viiva kaupungista toiseen.`,
+        };
+      }
+      return null;
+    };
+
+    // Välipysähdys: mihin ehdokkaista pääsee kohteesta kahdella reitillä,
+    // yhden välipysähdyksen kautta? Vaatii reittiverkon seuraamista.
+    // Väärät ehdokkaat eivät ole naapureita eivätkä kahden reitin päässä,
+    // jottei vastaus jää tulkinnasta kiinni.
+    const valipysahdys = () => {
+      for (let yritys = 0; yritys < 12; yritys++) {
+        const kohde = pool[Math.floor(this.rng() * pool.length)];
+        const naapurit = naapuriIdt(kohde.id);
+        const kahden = new Set();
+        for (const nid of naapurit) for (const mid of naapuriIdt(nid)) kahden.add(mid);
+        kahden.delete(kohde.id);
+        for (const nid of naapurit) kahden.delete(nid);
+        const oikeat = [...kahden].filter((id) => id !== city.id);
+        if (!oikeat.length) continue;
+        const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
+        const vaarat = pool.filter((c) => c.id !== kohde.id && c.id !== oikea.id
+          && !kahden.has(c.id) && !naapurit.has(c.id));
+        if (vaarat.length < MAP_CHOICES - 1) continue;
+        const arvottu = this.shuffledOrder(vaarat.length).slice(0, MAP_CHOICES - 1).map((i) => vaarat[i]);
+        return {
+          question: `Katso karttaa: mihin näistä pääsee kaupungista ${kohde.name} kahdella reitillä, yhden välipysähdyksen kautta?`,
+          ehdokkaat: [oikea, ...arvottu],
+          kohde: oikea,
+          fact: `Kaupungista ${kohde.name} pääsee kaupunkiin ${oikea.name} yhden välipysähdyksen kautta. Muihin ehdokkaisiin reittejä pitkin on pidempi matka.`,
+        };
+      }
+      return null;
+    };
+
     // Muoto arvotaan; varamuodot takaavat, että kysymys löytyy aina.
-    const tehtava = (this.rng() < 0.5 ? suunta(55) : null) ?? naapuruus() ?? suunta(1) ?? suunta(0);
+    // Normaalitasolla painotetaan vaikeampia muotoja (linnuntie ja
+    // välipysähdys) — pelkkä "mikä on pohjoisin" oli aikuiselle liian
+    // helppo. Lapsen tasolla vanhat muodot riittävät.
+    const arpa = this.rng();
+    const helppo = this.player.quizLevel === 'easy';
+    const tehtava = (helppo
+      ? ((arpa < 0.5 ? suunta(55) : null) ?? naapuruus())
+      : (arpa < 0.4 ? linnuntie(90)
+        : arpa < 0.75 ? valipysahdys()
+          : ((this.rng() < 0.5 ? suunta(55) : null) ?? naapuruus())))
+      ?? naapuruus() ?? suunta(1) ?? suunta(0);
 
     const jarj = this.shuffledOrder(tehtava.ehdokkaat.length);
     const vaihtoehdot = jarj.map((i) => tehtava.ehdokkaat[i]);

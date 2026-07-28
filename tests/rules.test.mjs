@@ -1973,9 +1973,14 @@ test('karttakysymys johdetaan laudan datasta ja vastaus on pääteltävissä kar
     läntisin: (c) => -c.x,
     itäisin: (c) => c.x,
   };
-  let suuntia = 0;
-  let naapureita = 0;
-  for (const seed of [301, 302, 303, 304, 305, 306, 307, 308, 309, 310]) {
+  const naapuriIdt = (board, id) => new Set(
+    [...board.adj.get(id)]
+      .map((eid) => board.edgeById.get(eid))
+      .map((e) => (e.a === id ? e.b : e.a)),
+  );
+  const muodot = { suunta: 0, naapuruus: 0, linnuntie: 0, valipysahdys: 0 };
+  for (const seed of [301, 302, 303, 304, 305, 306, 307, 308, 309, 310,
+    311, 312, 313, 314, 315, 316, 317, 318, 319, 320]) {
     const game = newGame(seed);
     game.player.pos = { type: 'city', city: 'timbuktu' };
     game.tokens.set('timbuktu', 'emerald');
@@ -1989,20 +1994,42 @@ test('karttakysymys johdetaan laudan datasta ja vastaus on pääteltävissä kar
     const kohde = game.board.cityById.get(quiz.mapCities[quiz.correct]);
     const suunta = Object.keys(akselit).find((s) => quiz.question.includes(s));
     if (suunta) {
-      suuntia++;
+      muodot.suunta++;
       const arvo = akselit[suunta];
       const paras = quiz.mapCities
         .map((id) => game.board.cityById.get(id))
         .sort((a, b) => arvo(b) - arvo(a))[0];
       assert.equal(paras.id, kohde.id, `${suunta}: oikea vastaus ei ole äärimmäisin`);
+    } else if (quiz.question.includes('linnuntietä lähimpänä')) {
+      muodot.linnuntie++;
+      const ankkuri = game.board.cities.find((c) => quiz.question.includes(`lähimpänä kaupunkia ${c.name}?`));
+      assert.ok(ankkuri, 'kysymys nimeää ankkurikaupungin');
+      const etaisyys = (id) => {
+        const c = game.board.cityById.get(id);
+        return Math.hypot(c.x - ankkuri.x, c.y - ankkuri.y);
+      };
+      const lahin = [...quiz.mapCities].sort((a, b) => etaisyys(a) - etaisyys(b))[0];
+      assert.equal(lahin, kohde.id, 'oikea vastaus ei ole lähimpänä ankkuria');
+    } else if (quiz.question.includes('välipysähdyksen kautta')) {
+      muodot.valipysahdys++;
+      const lahto = game.board.cities.find((c) => quiz.question.includes(`kaupungista ${c.name} kahdella`));
+      assert.ok(lahto, 'kysymys nimeää lähtökaupungin');
+      const naapurit = naapuriIdt(game.board, lahto.id);
+      const kahden = new Set();
+      for (const nid of naapurit) for (const mid of naapuriIdt(game.board, nid)) kahden.add(mid);
+      kahden.delete(lahto.id);
+      for (const nid of naapurit) kahden.delete(nid);
+      assert.ok(kahden.has(kohde.id), 'oikea vastaus ei ole kahden reitin päässä');
+      for (const id of quiz.mapCities) {
+        if (id === kohde.id) continue;
+        assert.ok(!kahden.has(id) && !naapurit.has(id),
+          `väärä ehdokas ${id} on liian lähellä lähtökaupunkia — vastaus jää tulkinnasta kiinni`);
+      }
     } else {
-      naapureita++;
+      muodot.naapuruus++;
       const lahto = game.board.cities.find((c) => quiz.question.includes(`kaupungista ${c.name} suoraan`));
       assert.ok(lahto, 'kysymys nimeää lähtökaupungin');
-      const naapurit = [...game.board.adj.get(lahto.id)]
-        .map((eid) => game.board.edgeById.get(eid))
-        .map((e) => (e.a === lahto.id ? e.b : e.a));
-      assert.ok(naapurit.includes(kohde.id), 'oikea vastaus ei ole lähtökaupungin naapuri');
+      assert.ok(naapuriIdt(game.board, lahto.id).has(kohde.id), 'oikea vastaus ei ole lähtökaupungin naapuri');
     }
 
     // Väärä vastaus ei käännä laattaa.
@@ -2010,7 +2037,12 @@ test('karttakysymys johdetaan laudan datasta ja vastaus on pääteltävissä kar
     assert.equal(quiz.right, false);
     assert.ok(!quiz.found);
   }
-  assert.ok(suuntia > 0 && naapureita > 0, 'molempien muotojen pitää esiintyä kymmenellä siemenellä');
+  // Normaalitasolla vaikeampia muotoja pitää tulla selvästi: pelkkä
+  // "mikä on pohjoisin" oli aikuiselle liian helppo.
+  assert.ok(muodot.linnuntie > 0, 'linnuntie-muodon pitää esiintyä');
+  assert.ok(muodot.valipysahdys > 0, 'välipysähdys-muodon pitää esiintyä');
+  assert.ok(muodot.linnuntie + muodot.valipysahdys >= 10,
+    `vaikeampien muotojen pitää olla enemmistö (${JSON.stringify(muodot)})`);
 });
 
 /** Yksin pelattava Afrikan peli: vuorolaskuri kasvaa joka vuorolla. */
