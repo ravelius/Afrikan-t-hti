@@ -15,6 +15,12 @@ lisäohjeita:
    kuittaa lauta kerrallaan).
 4. Aloita haara uusiksi tuoreen mainin päälle ja jatka seuraavaan, kunnes
    sessio on käytetty — kuittaa aina ennen lopettamista.
+5. **ÄLÄ keksi uusia paketteja itse.** Jos listalla ei ole seuraavaa
+   tekemätöntä pakettia, hae tuore main (`git fetch origin main`) ja lue
+   tämä tiedosto uudestaan — omistaja ja suunnittelusessio lisäävät
+   paketteja sitä mukaa kuin niistä on sovittu. Jos tuoreessakaan
+   mainissa ei ole seuraavaa pakettia, kirjoita TILANTEEN loppuun
+   havaintosi ja lopeta sessio siihen. Uudet paketit päättää omistaja.
 
 ## TILANNE
 
@@ -62,6 +68,12 @@ Myöhemmäksi sovitut (EI vielä työn alle):
   Reitti kiertäisi päivämäärärajan yli, mikä vaatisi tuen reitille, joka
   jatkuu kartan reunan yli. Odottaa omistajan päätöstä.
 - Yksittäiset maat mantereiden jälkeen (Suomen mallin mukaan).
+- Maailma-lauta samaan kuntoon kuin Afrikka: keskeytetyn session
+  mittauksen mukaan Maailman havainnot ovat keskimäärin 92 merkkiä
+  (Afrikka: 239) ja tietosanakirjamaisia. Perusteltu työ — mutta
+  odottaa omistajan päätöstä siitä, milloin Afrikka-ensin-linjasta
+  siirrytään eteenpäin. Keskeytetyn session luonnos on haarassa
+  `claude/tyolista-p10`.
 - Kysymysten vaihtelu: **paketti 10 alempana — seuraava työn alle
   otettava paketti.**
 - "Lue lisää" -Wikipedia-tiivistelmät: **paketti 11 alempana — otetaan
