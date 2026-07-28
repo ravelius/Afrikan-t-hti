@@ -2298,6 +2298,45 @@ test('pulmakaupungin ulkopuolella ei ole pulmaa', () => {
   assert.equal(game.pendingPuzzle(), null);
 });
 
+test('pulma aukeaa laudalle laskeuduttaessa: aloitus Kairoon maailmankartalta', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    seed: 403,
+  });
+  const kairo = game.pack.cities.find((c) => c.id === 'kairo');
+  const idx = kairo.links.findIndex((l) => l.pack === 'africa');
+  assert.ok(idx >= 0, 'maailman Kairosta pitäisi olla portti Afrikkaan');
+
+  const tulos = game.actionPickStart('kairo', idx);
+  assert.ok(tulos.ok);
+  assert.equal(game.pack.id, 'africa');
+  assert.equal(game.quiz?.kind, 'puzzle', 'pulman pitäisi avautua heti laskeuduttua');
+  assert.equal(game.quiz.cityId, 'kairo');
+
+  // Pulman jälkeen vuoro jatkuu normaalisti eikä pulma aukea uudelleen.
+  game.answerQuiz(game.quiz.correct);
+  game.closeQuiz();
+  assert.notEqual(game.phase, 'quiz');
+  assert.equal(game.pendingPuzzle(), null);
+});
+
+test('pulma aukeaa siirryttäessä pulmakaupunkiin jalan', () => {
+  const puzzle = packById('africa').puzzles[0];
+  const game = puzzleGame(404, puzzle.city);
+  // Siirretään pelaaja pois ja takaisin actionMove-polkua pitkin:
+  // rakennetaan siirto käsin samaan kaupunkiin viereisestä kaupungista.
+  const naapuri = game.board.adj.get(puzzle.city)[0];
+  game.player.pos = { type: 'city', city: naapuri.to ?? naapuri };
+  game.phase = 'move';
+  game.travelMode = 'land';
+  game.pendingFare = 0;
+  game.moves = new Map([[puzzle.city, { pos: { type: 'city', city: puzzle.city }, path: [] }]]);
+  const tulos = game.actionMove(puzzle.city);
+  assert.ok(tulos.ok);
+  assert.equal(game.quiz?.kind, 'puzzle', 'pulman pitäisi avautua saapuessa');
+});
+
 test('oikea pulma tuo kokemuspisteet, väärä ei rankaise', () => {
   const puzzle = packById('africa').puzzles[0];
 

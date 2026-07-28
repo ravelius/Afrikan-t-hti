@@ -185,6 +185,7 @@ export class Game {
     this.visitCity(p);
     this.phase = 'action';
     this.beginTurn();
+    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
@@ -564,6 +565,7 @@ export class Game {
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
     this.emit('flight', link.label, { icon: '🧭', sub: `−${FLIGHT_PRICE} puntaa` });
     this.endTurn();
+    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
@@ -713,8 +715,12 @@ export class Game {
     this.moves = null;
     this.die = null;
     if (this.checkWin()) return { ok: true, win: true };
-    if (this.offerQuiz()) return { ok: true, offer: true };
+    if (this.offerQuiz()) {
+      this.maybeOpenPuzzle();
+      return { ok: true, offer: true };
+    }
     this.endTurn();
+    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
@@ -971,6 +977,18 @@ export class Game {
   }
 
   /**
+   * Avaa pulman, jos nykyisessä kaupungissa odottaa näkemätön pulma.
+   * Kutsutaan jokaisen saapumisen päätteeksi — myös laudalle
+   * laskeuduttaessa (portit, lennot, pelin aloitus), sillä pulma ei ole
+   * sidottu laattaan vaan pelkkään saapumiseen.
+   */
+  maybeOpenPuzzle() {
+    if (this.phase === 'over' || this.quiz || this.duel) return false;
+    if (!this.pendingPuzzle()) return false;
+    return this.openPuzzle().ok;
+  }
+
+  /**
    * Avaa pulman. Pulma on monivalinta kuten muutkin, joten vastaaminen ja
    * tuloksen näyttö toimivat ennallaan — vain palkinto ja sulkeminen
    * poikkeavat: pulma ei käännä laattaa eikä päätä vuoroa.
@@ -1150,6 +1168,7 @@ export class Game {
       this.emit('flight', gate.label, { icon: '★', sub: 'Tieto avasi portin' });
       this.phase = 'action';
       this.endTurn();
+      this.maybeOpenPuzzle();
       return { ok: true, gated: true };
     }
     if (this.duelArmed) {
@@ -1371,8 +1390,12 @@ export class Game {
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
     this.emit('flight', `Lento kaupunkiin ${city.name}`, { icon: '✈', sub: `−${FLIGHT_PRICE} puntaa` });
     if (this.checkWin()) return { ok: true, win: true };
-    if (this.offerQuiz()) return { ok: true, offer: true };
+    if (this.offerQuiz()) {
+      this.maybeOpenPuzzle();
+      return { ok: true, offer: true };
+    }
     this.endTurn();
+    this.maybeOpenPuzzle();
     return { ok: true };
   }
 
