@@ -695,6 +695,21 @@ test('helppojen kysymysten pelaaja saa tason 1 kysymyksen', () => {
   }
 });
 
+test('kysymys liittyy paikkaan: omat kysymykset ennen yleispakkaa', () => {
+  const game = newGame(7);
+  const omat = new Set(AFRICA.questions.timbuktu.map((q) => q.q));
+  const normaalit = AFRICA.questions.timbuktu.filter((q) => questionLevel(q) !== 3).length;
+  // Kaikki kaupungin normaalitason kysymykset tulevat ennen yhtäkään
+  // yleispakan kysymystä — Egyptin pääkaupunkia ei kysytä Namibissa.
+  for (let i = 0; i < normaalit; i++) {
+    const q = game.pickQuestion('timbuktu');
+    assert.ok(omat.has(q.q), `yleispakan kysymys "${q.q}" tuli ennen paikan omia`);
+  }
+  // Kun omat on kysytty, yleispakka jatkaa tuoreilla kysymyksillä.
+  const seuraava = game.pickQuestion('timbuktu');
+  assert.ok(!omat.has(seuraava.q), 'käytetty kysymys toistui ennen yleispakkaa');
+});
+
 test('vaikea kysymys antaa bonuksen oikeasta vastauksesta', () => {
   const game = new Game({
     players: [
