@@ -70,36 +70,40 @@
 
     const rakenna = () => {
       valinnat.textContent = '';
-      for (const [slot, { otsikko, ehdokkaat }] of Object.entries(EHDOKKAAT)) {
+      for (const [slot, { otsikko, oletus, ehdokkaat }] of Object.entries(EHDOKKAAT)) {
         const os = document.createElement('div');
         os.className = 'osio';
         os.textContent = otsikko;
         valinnat.appendChild(os);
-        const valittu = valittuAani(slot) ?? ehdokkaat[0].url;
+        // Tallennettu valinta: osoite, '' (syntetisoitu) tai null (oletus).
+        const tallennettu = valittuAani(slot);
+        const kaytossa = tallennettu === null ? oletus : (tallennettu === '' ? null : tallennettu);
         for (const { url, nimi } of ehdokkaat) {
           const rivi = document.createElement('div');
           rivi.className = 'grid';
           rivi.style.margin = '0.3rem 0';
-          const soita = document.createElement('button');
-          soita.textContent = '▶';
-          soita.style.minWidth = '3rem';
-          soita.addEventListener('click', () => {
-            pysayta();
-            soiva = new Audio(url);
-            soiva.volume = 0.35;
-            soiva.play();
-          });
+          if (url) {
+            const soita = document.createElement('button');
+            soita.textContent = '▶';
+            soita.style.minWidth = '3rem';
+            soita.addEventListener('click', () => {
+              pysayta();
+              soiva = new Audio(url);
+              soiva.volume = 0.35;
+              soiva.play();
+            });
+            rivi.appendChild(soita);
+          }
           const valitse = document.createElement('button');
-          const kaytossa = url === valittu;
-          valitse.textContent = (kaytossa ? '✓ ' : '') + nimi;
-          if (kaytossa) valitse.style.borderColor = '#d9a13b';
+          const onValittu = (url ?? null) === (kaytossa ?? null);
+          valitse.textContent = (onValittu ? '✓ ' : '') + nimi;
+          if (onValittu) valitse.style.borderColor = '#d9a13b';
           valitse.style.minWidth = '0';
           valitse.style.textAlign = 'left';
           valitse.addEventListener('click', () => {
             valitseAani(slot, url);
             rakenna();
           });
-          rivi.appendChild(soita);
           rivi.appendChild(valitse);
           valinnat.appendChild(rivi);
         }
@@ -107,15 +111,20 @@
     };
     rakenna();
 
-    // Kopioi valinnat: teksti, jonka voi liittää Claudelle sellaisenaan.
+    // Kopioi valinnat: vain tehdyt valinnat — sen perusteella voittajat
+    // kovakoodataan oletuksiksi.
     document.getElementById('kopioi').addEventListener('click', () => {
       const kaikki = kaikkiValinnat();
-      const rivit = Object.entries(EHDOKKAAT).map(([slot, { otsikko, ehdokkaat }]) => {
-        const url = kaikki[slot] ?? ehdokkaat[0].url;
-        const nimi = ehdokkaat.find((e) => e.url === url)?.nimi ?? url;
-        return `${otsikko}: ${nimi}`;
+      const rivit = Object.entries(kaikki).map(([slot, url]) => {
+        const paikka = EHDOKKAAT[slot];
+        const nimi = url === ''
+          ? 'Syntetisoitu äänimaisema'
+          : paikka?.ehdokkaat.find((e) => e.url === url)?.nimi ?? url;
+        return `${paikka?.otsikko ?? slot}: ${nimi}`;
       });
-      const teksti = `Äänivalinnat:\n${rivit.join('\n')}`;
+      const teksti = rivit.length
+        ? `Äänivalinnat:\n${rivit.join('\n')}`
+        : 'Ei vielä valintoja — kaikki oletuksilla.';
       document.getElementById('valinnat-teksti').textContent = teksti;
       navigator.clipboard?.writeText(teksti).catch(() => {});
     });

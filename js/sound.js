@@ -524,8 +524,11 @@ class Sound {
     this.samples = {};
     this.sampleHits = {};
     for (const [name, { url }] of Object.entries(REAL_SAMPLES)) {
-      // Omistajan valitsema äänite (/aanet.html) ohittaa oletuksen.
-      fetch(valittuAani(`tehoste:${name}`) ?? url)
+      // Omistajan valitsema äänite (/aanet.html) ohittaa oletuksen;
+      // tyhjä valinta jättää synteesin voimaan.
+      const valinta = valittuAani(`tehoste:${name}`);
+      if (valinta === '') continue;
+      fetch(valinta ?? url)
         .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error('http'))))
         .then((data) => this.ctx.decodeAudioData(data))
         .then((buf) => {
@@ -605,11 +608,12 @@ const REAL_SAMPLES = {
     url: 'https://cdn.freesound.org/previews/94/94031_1554038-lq.mp3',
     credit: '"Dice Roll" — LoafDV, Freesound (CC0)',
   },
-  // Vuoden 1946 kirjoituskone: mustekynän raapaisu ei toiminut, joten
-  // avausteksti naksuu kuin matkakirjoituskoneella.
+  // Kirjoituskoneen yksittäinen näppäinlyönti: edellisessä äänityksessä
+  // naputus alkoi vasta ~20 sekunnin kohdalla, joten iskuntunnistus
+  // poimi rullan rahinaa. Tässä klipissä on pelkkiä lyöntejä.
   pen: {
-    url: 'https://cdn.freesound.org/previews/862/862556_12084000-lq.mp3',
-    credit: '"1946 L C Speed Typewriter" — ColinMWJones, Freesound (CC0)',
+    url: 'https://cdn.freesound.org/previews/856/856165_18901108-lq.mp3',
+    credit: '"Vintage Typewriter Key Press" — brktkrgll, Freesound (CC0)',
   },
   // Lentoonlähtö matkustamosta äänitettynä — lentokohtauksessa istutaan
   // koneessa isoisän kirja sylissä.
