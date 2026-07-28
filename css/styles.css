@@ -1933,6 +1933,11 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   display: block;
   width: 100%;
   max-width: 340px;
+  /* Korkeus on annettava erikseen: pelkkä viewBox ei anna svg:lle
+     luontaista korkeutta flex-asettelussa, jolloin piirros litistyy pois. */
+  aspect-ratio: 320 / 150;
+  height: auto;
+  flex: none;
   margin: 0 auto 0.8rem;
   color: #3b2a18;
 }

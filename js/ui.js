@@ -152,6 +152,7 @@ export class UI {
     });
 
     this.quizSketch = document.getElementById('quiz-sketch');
+    this.quizBadge = document.getElementById('quiz-badge');
 
     this.wikiDialog = document.getElementById('wiki-dialog');
     this.wikiTitle = document.getElementById('wiki-title');
@@ -1535,13 +1536,17 @@ export class UI {
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
     // Pulman piirros ensin, kysymysrivi alla — kortti on isoisän luonnos.
-    this.quizSketch.hidden = quiz.kind !== 'puzzle';
+    // HUOM: SVGElement ei peri HTMLElementiä, joten .hidden-ominaisuus ei
+    // heijastu attribuuttiin — se jäisi päälle ja [hidden]-sääntö piilottaisi
+    // piirroksen pysyvästi. Attribuuttia on siis käsiteltävä suoraan.
+    this.quizSketch.toggleAttribute('hidden', quiz.kind !== 'puzzle');
     if (quiz.kind === 'puzzle' && this.sketchFor !== quiz) {
       this.sketchFor = quiz;
       this.quizSketch.textContent = '';
       drawPuzzle(this.quizSketch, quiz.puzzleId, quiz.sketchData);
     }
 
+    this.quizBadge.textContent = quiz.kind === 'puzzle' ? 'Pulma' : 'Tietovisa';
     if (quiz.kind === 'puzzle') {
       this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
     } else if (quiz.kind === 'claim') {
@@ -1571,7 +1576,7 @@ export class UI {
     const used = quiz.hidden.length > 0;
     // Väittämässä on kaksi vaihtoehtoa ja karttakysymykseen vastataan
     // kartalta, joten 50:50 ei kuulu niihin lainkaan.
-    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4;
+    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4 || quiz.kind === 'puzzle';
     this.quizFifty.disabled = used || p.money < FIFTY_FIFTY_PRICE;
     this.quizFifty.textContent = used ? '50:50 käytetty' : `50:50 (${FIFTY_FIFTY_PRICE} p)`;
 

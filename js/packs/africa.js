@@ -6,6 +6,7 @@
 
 
 import { AFRICA_QUESTIONS, AFRICA_FACTS } from './africa-questions.js';
+import { AFRICA_PUZZLES } from './africa-puzzles.js';
 import { themedTokenTypes } from '../tokens.js';
 
 const AFRICA_MAP = {
@@ -249,6 +250,8 @@ export const AFRICA = {
   // laatta jää kääntämättä, joten kaupunkiin voi palata. Viivästys johtuu
   // säästä, luonnosta, kertojan omasta typeryydestä tai imperiumin
   // jäänteistä, ei koskaan kohdemaasta tai sen ihmisistä.
+  puzzles: AFRICA_PUZZLES,
+
   events: [
     { text: 'Sade alkoi iltapäivällä kuin kello olisi soinut, ja kadun poikki juoksi hetkessä ruskea puro. Istuin katoksen alla tunnin ja huomasin olevani ainoa, joka ei ollut osannut varata sitä tuntia valmiiksi.', effect: { kind: 'viive' } },
     { text: 'Auto pysähtyi, koska tiellä seisoi norsulauma eikä sillä ollut kiire. Afrikannorsu on maailman suurin maaeläin, joten väistämisjärjestys oli selvä kaikille muille paitsi minulle, joka ehdotin äänitorvea.', effect: { kind: 'viive' } },
