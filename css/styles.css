@@ -856,6 +856,37 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   fill: #3a2a16;
 }
 
+/* Käsin piirretyt vyöhykeviivat (kääntöpiirit) katkoviivalla. */
+.flight-zone {
+  fill: none;
+  stroke: rgba(70, 51, 31, 0.3);
+  stroke-width: 1.6;
+  stroke-dasharray: 10 8;
+}
+
+.flight-zone-name {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-style: italic;
+  font-size: 19px;
+  letter-spacing: 0.12em;
+  fill: rgba(70, 51, 31, 0.4);
+}
+
+/* Isoisän himmeät merkinnät ja piirrokset kalvon laidoilla. */
+.flight-note-text {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-style: italic;
+  font-size: 21px;
+  fill: rgba(70, 51, 31, 0.35);
+}
+
+.flight-doodle {
+  stroke: rgba(70, 51, 31, 0.3);
+  stroke-width: 1.6;
+}
+
+.flight-doodle-fill { fill: rgba(70, 51, 31, 0.28); }
+
 /* Perillä: matka jatkuu vasta kun pelaaja astuu ulos koneesta. */
 .flight-exit {
   position: absolute;

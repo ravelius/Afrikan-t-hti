@@ -853,37 +853,81 @@ export class Game {
   }
 
   /**
-   * Karttakysymys: "Näytä kartalta: missä on X?" Ehdokkaat korostuvat
-   * laudalla ja vastaus annetaan napauttamalla. Kysymys johdetaan laudan
-   * omasta kaupunkidatasta, joten se toimii jokaisella laudalla ilman
-   * erillistä sisältöpankkia.
+   * Karttakysymys: karttaa pitää oikeasti lukea. Muotoja on kaksi —
+   * ilmansuunta ("mikä näistä on pohjoisin?") ja naapuruus ("mihin pääsee
+   * suoraan yhtä reittiä?"). Vanha "missä on X?" -muoto oli kehäpäätelmä,
+   * koska kaupunkien nimet lukevat kartalla valmiiksi. Kysymys johdetaan
+   * laudan omasta datasta, joten se toimii jokaisella laudalla.
    */
   openMapQuestion(city) {
-    // Ehdokkaiksi kelpaavat kaikki paitsi kaupunki, jossa nyt seistään:
-    // sen sijainti on pelaajalle jo näkyvissä nappulan alla.
+    // Ehdokkaiksi kelpaavat kaikki paitsi kaupunki, jossa nyt seistään.
     const pool = this.board.cities.filter((c) => c.id !== city.id);
-    const order = this.shuffledOrder(pool.length).slice(0, MAP_CHOICES);
-    const ehdokkaat = order.map((i) => pool[i]);
-    const kohde = ehdokkaat[Math.floor(this.rng() * ehdokkaat.length)];
 
-    const naapurit = [...(this.board.adj.get(kohde.id) ?? [])]
-      .map((eid) => this.board.edgeById.get(eid))
-      .map((e) => (e.a === kohde.id ? e.b : e.a))
-      .map((id) => this.board.cityById.get(id)?.name)
-      .filter(Boolean);
+    // Ilmansuunta: neljästä arvotusta yhden pitää erottua selvästi, jottei
+    // vastaus jää mittailun varaan.
+    const suunta = (raja) => {
+      const akselit = [
+        ['pohjoisin', (c) => -c.y],
+        ['eteläisin', (c) => c.y],
+        ['läntisin', (c) => -c.x],
+        ['itäisin', (c) => c.x],
+      ];
+      for (let yritys = 0; yritys < 8; yritys++) {
+        const [nimi, arvo] = akselit[Math.floor(this.rng() * akselit.length)];
+        const arvottu = this.shuffledOrder(pool.length).slice(0, MAP_CHOICES).map((i) => pool[i]);
+        const jarjestys = [...arvottu].sort((a, b) => arvo(b) - arvo(a));
+        if (arvo(jarjestys[0]) - arvo(jarjestys[1]) < raja) continue;
+        return {
+          question: `Katso karttaa: mikä näistä on ${nimi}?`,
+          ehdokkaat: arvottu,
+          kohde: jarjestys[0],
+          fact: `${jarjestys[0].name} on näistä ${nimi}. Vanhassa kartassa pohjoinen on ylhäällä — kompassiruusu kartan kulmassa muistuttaa siitä.`,
+        };
+      }
+      return null;
+    };
+
+    // Naapuruus: mihin ehdokkaista pääsee kohteesta suoraan yhtä reittiä?
+    const naapuruus = () => {
+      for (let yritys = 0; yritys < 8; yritys++) {
+        const kohde = pool[Math.floor(this.rng() * pool.length)];
+        const naapurit = new Set(
+          [...(this.board.adj.get(kohde.id) ?? [])]
+            .map((eid) => this.board.edgeById.get(eid))
+            .map((e) => (e.a === kohde.id ? e.b : e.a)),
+        );
+        const oikeat = [...naapurit].filter((id) => id !== city.id);
+        if (!oikeat.length) continue;
+        const oikea = this.board.cityById.get(oikeat[Math.floor(this.rng() * oikeat.length)]);
+        const vaarat = pool.filter((c) => c.id !== kohde.id && c.id !== oikea.id && !naapurit.has(c.id));
+        if (vaarat.length < MAP_CHOICES - 1) continue;
+        const arvottu = this.shuffledOrder(vaarat.length).slice(0, MAP_CHOICES - 1).map((i) => vaarat[i]);
+        return {
+          question: `Katso karttaa: mihin näistä pääsee kaupungista ${kohde.name} suoraan yhtä reittiä pitkin?`,
+          ehdokkaat: [oikea, ...arvottu],
+          kohde: oikea,
+          fact: `Reitti ${kohde.name} – ${oikea.name} kulkee laudalla suoraan, ilman välipysähdyksiä.`,
+        };
+      }
+      return null;
+    };
+
+    // Muoto arvotaan; varamuodot takaavat, että kysymys löytyy aina.
+    const tehtava = (this.rng() < 0.5 ? suunta(55) : null) ?? naapuruus() ?? suunta(1) ?? suunta(0);
+
+    const jarj = this.shuffledOrder(tehtava.ehdokkaat.length);
+    const vaihtoehdot = jarj.map((i) => tehtava.ehdokkaat[i]);
 
     this.quiz = {
       kind: 'map',
       cityId: city.id,
       hard: false,
-      question: `Näytä kartalta: missä on ${kohde.name}?`,
-      fact: naapurit.length
-        ? `${kohde.name} on laudalla tässä. Sieltä pääsee suoraan kaupunkeihin ${naapurit.join(', ')}.`
-        : `${kohde.name} on laudalla tässä.`,
+      question: tehtava.question,
+      fact: tehtava.fact,
       source: [],
-      options: ehdokkaat.map((c) => c.name),
-      mapCities: ehdokkaat.map((c) => c.id),
-      correct: ehdokkaat.indexOf(kohde),
+      options: vaihtoehdot.map((c) => c.name),
+      mapCities: vaihtoehdot.map((c) => c.id),
+      correct: vaihtoehdot.indexOf(tehtava.kohde),
       hint: null,
       hintShown: false,
       hidden: [],

@@ -1965,23 +1965,51 @@ test('isoisän väittämä on kaksivaihtoehtoinen eikä salli apukeinoja', () =>
   assert.ok(quiz.found, 'oikea vastaus kääntää laatan');
 });
 
-test('karttakysymys johdetaan laudan omasta datasta', () => {
-  const game = newGame(306);
-  game.player.pos = { type: 'city', city: 'timbuktu' };
-  game.tokens.set('timbuktu', 'emerald');
-  assert.ok(game.actionQuiz({ form: 'map' }).ok);
-  const quiz = game.quiz;
-  assert.equal(quiz.kind, 'map');
-  assert.equal(quiz.mapCities.length, MAP_CHOICES);
-  assert.equal(new Set(quiz.mapCities).size, MAP_CHOICES, 'ehdokkaat ovat eri kaupunkeja');
-  assert.ok(!quiz.mapCities.includes('timbuktu'), 'oma kaupunki ei ole ehdokas');
-  const kohde = game.board.cityById.get(quiz.mapCities[quiz.correct]);
-  assert.ok(quiz.question.includes(kohde.name), 'kysymys nimeää etsittävän kaupungin');
+test('karttakysymys johdetaan laudan datasta ja vastaus on pääteltävissä kartalta', () => {
+  const akselit = {
+    pohjoisin: (c) => -c.y,
+    eteläisin: (c) => c.y,
+    läntisin: (c) => -c.x,
+    itäisin: (c) => c.x,
+  };
+  let suuntia = 0;
+  let naapureita = 0;
+  for (const seed of [301, 302, 303, 304, 305, 306, 307, 308, 309, 310]) {
+    const game = newGame(seed);
+    game.player.pos = { type: 'city', city: 'timbuktu' };
+    game.tokens.set('timbuktu', 'emerald');
+    assert.ok(game.actionQuiz({ form: 'map' }).ok);
+    const quiz = game.quiz;
+    assert.equal(quiz.kind, 'map');
+    assert.equal(quiz.mapCities.length, MAP_CHOICES);
+    assert.equal(new Set(quiz.mapCities).size, MAP_CHOICES, 'ehdokkaat ovat eri kaupunkeja');
+    assert.ok(!quiz.mapCities.includes('timbuktu'), 'oma kaupunki ei ole ehdokas');
 
-  // Väärä napautus ei käännä laattaa.
-  game.answerQuiz((quiz.correct + 1) % MAP_CHOICES);
-  assert.equal(quiz.right, false);
-  assert.ok(!quiz.found);
+    const kohde = game.board.cityById.get(quiz.mapCities[quiz.correct]);
+    const suunta = Object.keys(akselit).find((s) => quiz.question.includes(s));
+    if (suunta) {
+      suuntia++;
+      const arvo = akselit[suunta];
+      const paras = quiz.mapCities
+        .map((id) => game.board.cityById.get(id))
+        .sort((a, b) => arvo(b) - arvo(a))[0];
+      assert.equal(paras.id, kohde.id, `${suunta}: oikea vastaus ei ole äärimmäisin`);
+    } else {
+      naapureita++;
+      const lahto = game.board.cities.find((c) => quiz.question.includes(`kaupungista ${c.name} suoraan`));
+      assert.ok(lahto, 'kysymys nimeää lähtökaupungin');
+      const naapurit = [...game.board.adj.get(lahto.id)]
+        .map((eid) => game.board.edgeById.get(eid))
+        .map((e) => (e.a === lahto.id ? e.b : e.a));
+      assert.ok(naapurit.includes(kohde.id), 'oikea vastaus ei ole lähtökaupungin naapuri');
+    }
+
+    // Väärä vastaus ei käännä laattaa.
+    game.answerQuiz((quiz.correct + 1) % MAP_CHOICES);
+    assert.equal(quiz.right, false);
+    assert.ok(!quiz.found);
+  }
+  assert.ok(suuntia > 0 && naapureita > 0, 'molempien muotojen pitää esiintyä kymmenellä siemenellä');
 });
 
 /** Yksin pelattava Afrikan peli: vuorolaskuri kasvaa joka vuorolla. */

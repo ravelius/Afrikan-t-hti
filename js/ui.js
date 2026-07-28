@@ -69,7 +69,8 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 // Lentoanimaation kesto: sen verran, että repliikin ehtii lukea.
-const FLY_ANIM_MS = 2000;
+// Kalvolento saa kestää: matka on tarkoitus tuntea, ei ohittaa.
+const FLY_OVERLAY_MS = 4800;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 // Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
@@ -2109,11 +2110,43 @@ export class UI {
     if (this.reducedMotion) return;
 
     const overlay = html('div', 'flight-overlay');
-    const scene = el('svg', { viewBox: '0 0 1000 460', class: 'flight-scene' }, overlay);
+    const scene = el('svg', { viewBox: '0 0 1000 560', class: 'flight-scene' }, overlay);
     this.mapPane.appendChild(overlay);
 
-    const a = { x: 140, y: 310 };
-    const b = { x: 860, y: 260 };
+    // Isoisän karttalehti: käsin piirretyt vyöhykeviivat katkoviivalla
+    // (kääntöpiirit) ja himmeitä päiväkirjamerkintöjä piirroksineen.
+    const vyohyke = (y, nimi) => {
+      el('path', {
+        d: `M20,${y} q160,-8 330,-2 t320,8 t310,-6`,
+        class: 'flight-zone',
+      }, scene);
+      const t = el('text', { x: 962, y: y - 10, 'text-anchor': 'end', class: 'flight-zone-name' }, scene);
+      t.textContent = nimi;
+    };
+    vyohyke(120, 'Kravun kääntöpiiri');
+    vyohyke(300, 'päiväntasaaja');
+    vyohyke(470, 'Kauriin kääntöpiiri');
+    const muistiinpano = (x, y, rivit, kulma = -2) => {
+      const g = el('g', { transform: `translate(${x},${y}) rotate(${kulma})`, class: 'flight-note' }, scene);
+      rivit.forEach((rivi, i) => {
+        const t = el('text', { x: 0, y: i * 26, class: 'flight-note-text' }, g);
+        t.textContent = rivi;
+      });
+      return g;
+    };
+    muistiinpano(60, 80, ['pasaatituuli kantaa', 'lounaaseen — luota siihen'], -3);
+    muistiinpano(640, 90, ['N.B. monsuuni kääntyy', 'lokakuussa'], 2);
+    muistiinpano(90, 505, ['täällä kompassi', 'valehtelee hiukan'], -1);
+    // Pieni kompassiruusu ja aaltoja isoisän käden jälkeä.
+    const ruusu = el('g', { transform: 'translate(905,505)', class: 'flight-note' }, scene);
+    el('circle', { cx: 0, cy: 0, r: 26, fill: 'none', class: 'flight-doodle' }, ruusu);
+    el('path', { d: 'M0,-24 L5,0 L0,24 L-5,0 z M-24,0 L0,-5 L24,0 L0,5 z', class: 'flight-doodle-fill' }, ruusu);
+    el('path', { d: 'M330,520 q14,-10 28,0 q14,10 28,0', fill: 'none', class: 'flight-doodle' }, scene);
+    el('path', { d: 'M540,60 l14,-18 l12,18 l10,-12 l9,12', fill: 'none', class: 'flight-doodle' }, scene);
+
+    // Lento kulkee diagonaalisesti vasemmalta alhaalta oikealle ylös.
+    const a = { x: 130, y: 450 };
+    const b = { x: 870, y: 120 };
     el('circle', { cx: a.x, cy: a.y, r: 9, class: 'flight-dot' }, scene);
     el('circle', { cx: b.x, cy: b.y, r: 9, class: 'flight-dot' }, scene);
     const nimi = (p, teksti, anchor) => {
@@ -2124,7 +2157,7 @@ export class UI {
     if (toLabel) nimi(b, toLabel, 'end');
 
     // Kaari nousee kuin lentorata vanhan filmin kartalla.
-    const d = `M${a.x},${a.y} Q${(a.x + b.x) / 2},${Math.min(a.y, b.y) - 200} ${b.x},${b.y}`;
+    const d = `M${a.x},${a.y} Q${(a.x + b.x) / 2 - 60},${(a.y + b.y) / 2 - 150} ${b.x},${b.y}`;
     const reitti = el('path', { d, class: 'flight-trail' }, scene);
     const kokoPituus = reitti.getTotalLength();
     reitti.style.strokeDasharray = kokoPituus;
@@ -2144,7 +2177,7 @@ export class UI {
     await new Promise((resolve) => {
       const alku = performance.now();
       const askel = (nyt) => {
-        const t = Math.min(1, (nyt - alku) / FLY_ANIM_MS);
+        const t = Math.min(1, (nyt - alku) / FLY_OVERLAY_MS);
         // Pehmeä kiihdytys ja jarrutus, jottei kone nykäise liikkeelle.
         const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
         reitti.style.strokeDashoffset = kokoPituus * (1 - e);
