@@ -64,11 +64,12 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
-## Seuraavaksi: PAKETTI 13 (pulmien variointi)
+## Seuraavaksi: PAKETTI 13 (pulmien variointi), sitten PAKETTI 14
 
 **Paketit 1–12 ovat valmiit (28.7.2026).** Lisäksi korjattu: pulmien
-laukaisin puuttui kaikista saapumispoluista (#74). Seuraavaksi tehdään
-paketti 13 (alempana).
+laukaisin puuttui kaikista saapumispoluista (#74). Työjono: paketti 13
+(pulmien variointi), sen jälkeen paketti 14 (lentoanimaatio) — molemmat
+alempana.
 
 Toteuttajan havainnot seuraavaa pakettia varten:
 
@@ -260,7 +261,12 @@ tämä teksti (kirjoituskoneella naksuen, kolme kappaletta):
 >
 > Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.
 >
-> Ostin lipun samana iltana.
+> Ostin lipun samana iltana. Mistä aloittaisin?
+>
+> Napauta kaupunkia kartalla.
+
+(Päivitetty 28.7.2026: loppuun "Mistä aloittaisin?" ja selkeä kehote
+napauttaa — etusivulla ei ollut kutsua toimintaan.)
 
 (Päivitetty 27.7.2026 omistajan pyynnöstä: ei mainintaa Afrikasta, koska
 aloituspaikan saa valita vapaasti. Isoisän 80 päivän ennätys mainitaan —
@@ -687,6 +693,44 @@ jokainen generoitu pulma tuottaa 4 uniikkia vaihtoehtoa, correct-indeksi
 osuu oikeaan ja hieroglyfiluvut pysyvät piirtorajoissa; kymmenellä
 siemenellä syntyy vähintään kaksi erilaista tehtävää per pulma
 (variointi todella varioi). Versionostot, standalone, kuvakaappaus.
+
+## Paketti 14: Indiana Jones -lentoanimaatio (paketin 13 jälkeen)
+
+Omistajan toive: kun lennetään, pieni lentokone liitää punaista
+reittiviivaa pitkin kohteesta toiseen kuin vanhoissa seikkailufilmeissä,
+ja matkan aikana nuori herra sanoo jotain innostunutta ja jännitystä
+uhkuvaa kohteesta riippuen.
+
+**Animaatio (js/ui.js + css, EI kosketa js/game.js:ään):**
+
+- Lentokonesymboli kulkee reittiviivaa pitkin lähtökaupungista
+  kohteeseen ja punainen viiva piirtyy koneen perässä
+  (SVG: getPointAtLength + stroke-dashoffset, rAF; kesto ~2 s;
+  kone kääntyy kulkusuuntaan).
+- Koskee kolmea lentoa: kartan sisäiset lennot (`actionFly`),
+  porttilennot toiselle laudalle (`actionGateway` — animaatio ehtii
+  lähtölaudalla ennen laudan vaihtoa) ja **pelin aloitus** (pickstart:
+  kone lentää Lontoosta valittuun kohteeseen maailmankartalla ennen
+  mantereelle siirtymistä — tämä on se filmihetki, joka avaa pelin).
+- Puhtaasti kosmeettinen UI-kerros: pelitila päivittyy kuten ennenkin,
+  animaatio näytetään ennen näkymän vaihtoa. `prefers-reduced-motion`
+  ohittaa animaation kokonaan. Äänenä nykyinen 'flight'-ääni.
+- Animaation aikana kelluva rivi nuorelta herralta kirjoituskoneella.
+
+**Lentorepliikit (tarina.md:n säännöillä, innostunut ääni):**
+
+- Data: pakkaan `texts.flightLines = { cityId: [rivejä] }` +
+  `texts.flightDefault = [yleisiä rivejä]` — arvotaan pelin rng:llä.
+  1–2 virkettä, minä-muoto, saapumisen jännitys ja odotus. Esim.
+  tyyliin: "Siivet kallistuvat ja alla aukeaa Sahara — meri ilman
+  rantaa." tai "Kartanlukija sanoi kaksi sanaa: pidä kiinni."
+- Kirjoitetaan Maailma-laudalle (kaikki lentokohteet) ja Afrikalle
+  (porttikaupungit) — muut laudat saavat yleisrivit toistaiseksi.
+  HUOM: tämä on ainoa kohta, jossa Maailma-laudan tekstejä saa
+  muokata ennen sen omaa sisältöpassia — vain flightLines-lisäys.
+- Testit: flightLines-rivien eheys (pituus > 20, uniikkius,
+  kohdekaupunki on laudalla), arvonta siemenellä deterministinen.
+  Animaatiosta kuvakaappaus.
 
 ## Muistilista jokaiseen pakettiin
 
