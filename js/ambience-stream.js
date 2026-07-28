@@ -18,6 +18,10 @@ export const STREAMS = {
     url: 'https://cdn.freesound.org/previews/146/146745_832093-lq.mp3',
     credit: '"Sahara wind harp (lotar)" — omestreandre, Freesound (CC BY 4.0)',
   },
+  dakar: {
+    url: 'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3',
+    credit: '"Dakar Ouakam cour intérieure" — LaureC, Freesound (CC0)',
+  },
   kimberley: {
     url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3',
     credit: '"African savanna 2" — AugustSandberg, Freesound (CC0)',
