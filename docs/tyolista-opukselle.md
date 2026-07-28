@@ -477,6 +477,11 @@ monivalinta, 15 % väittämä, 10 % karttakysymys, 15 % tapahtuma — painot
 vakioina, jotta niitä voi säätää pelitestissä. Sama erikoismuoto ei
 toistu kahta kertaa peräkkäin. Tietoportit ja vaikean kysymyksen bonus
 pysyvät aina tavallisena monivalintana (niissä panos on suurempi).
+**Laudat ilman sisältöä:** jos laudalla ei ole `claims`- tai
+`events`-listaa (kaikki muut kuin Afrikka aluksi), sen muodon paino
+jaetaan monivalinnalle — peli toimii jokaisella laudalla ilman uutta
+sisältöä, ja karttakysymykset toimivat kaikkialla koska ne johdetaan
+laudan omasta kaupunkidatasta.
 
 Testit: claims/events-rakenteiden eheys (tyhjät tekstit, faktat,
 lähdemuoto), vuorottelun jakaumatesti siemenellä, karttakysymyksen
