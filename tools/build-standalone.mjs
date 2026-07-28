@@ -41,6 +41,7 @@ const MODULES = [
   'js/pack.js',
   'js/passport.js',
   'js/sound.js',
+  'js/ambience-stream.js',
   'js/die.js',
   'js/rules.js',
   'js/mapart.js',

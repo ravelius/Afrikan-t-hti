@@ -2038,6 +2038,32 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   border-radius: 0;
 }
 
+/*
+ * Havainnon kuvaikoni: pieni kehystetty maisema tekstin alla. Pelkkä
+ * ikoni tekstilinkin sijaan — kuva puhuu puolestaan.
+ */
+.fact-image-btn {
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  padding: 0.15rem;
+  min-height: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: #7a5514;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.fact-image-btn:hover:not(:disabled) {
+  background: none;
+  color: #9c6f1e;
+}
+
+@media (max-width: 700px) {
+  .fact-card .fact-image-btn { color: var(--accent); }
+}
+
 .wiki-card { max-width: 560px; }
 
 /* Kuvan napautus avaa katselimen — kursori kertoo sen hiirikäyttäjälle. */

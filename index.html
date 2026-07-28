@@ -66,7 +66,16 @@
           <h2 id="fact-voice">Matkapäiväkirjasta</h2>
           <p id="fact-place" class="fact-place"></p>
           <p id="fact-text" class="fact-text"></p>
-          <button id="fact-image" class="ghost wiki-btn" type="button" hidden>Katso kuva</button>
+          <!-- Pieni kuvaikoni: avaa havainnossa mainitun ilmiön kuvan. -->
+          <button id="fact-image" class="ghost fact-image-btn" type="button" hidden
+                  aria-label="Katso kuva" title="Katso kuva">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <rect x="2.4" y="4.4" width="19.2" height="15.2" rx="2.2"
+                    fill="none" stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="8.3" cy="9.3" r="1.6" fill="currentColor"/>
+              <path d="M4.6 17.4 L10 11.6 L13.4 15 L16.6 11.9 L19.4 17.4 Z" fill="currentColor"/>
+            </svg>
+          </button>
         </section>
 
         <section class="card turn-card">
@@ -227,6 +236,10 @@
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
       <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman
         laivalipun hintaa), hän saa vuoronsa alussa 100 puntaa pankilta.</p>
+      <p class="muted"><b>Äänitteet:</b> osassa paikoista soi oikea kenttä-äänitys
+        Freesound-palvelusta (CC-lisenssit): rucisko (Kairo, CC BY-NC),
+        omestreandre (Sahara, CC BY), AugustSandberg (savanni, CC0).
+        Kuvat ja artikkelit: Wikipedia (CC BY-SA).</p>
     </div>
     <menu>
       <button id="rules-close" class="primary" type="button">Sulje</button>
