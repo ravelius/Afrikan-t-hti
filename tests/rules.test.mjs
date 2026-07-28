@@ -5,7 +5,7 @@ import {
   PACKS, packById, allQuestions, factSource, factText, factVoice, isSourceUrl,
   sourceLabel, sourceList, voiceTitle,
 } from '../js/pack.js';
-import { hasSketch } from '../js/packs/africa-puzzles.js';
+import { arvoksi, hasSketch } from '../js/packs/africa-puzzles.js';
 
 /** Lähde on merkkijono tai lista merkkijonoja; verkko-osoite vain http(s). */
 function checkSources(source, where) {
@@ -2465,4 +2465,173 @@ test('kultapunnuspulmassa vain merkitty vastaus tasapainottaa vaa%an', () => {
     if (i === puzzle.correct) assert.ok(tasapaino, `merkitty vastaus ${teksti} ei tasapainota (tarvitaan ${vaje})`);
     else assert.ok(!tasapaino, `väärä vaihtoehto ${teksti} tasapainottaakin vaa'an`);
   });
+});
+
+// --- paketti 13: pulmien variointi -----------------------------------------
+
+/** Sama siemenrng kuin pelissä, jotta testit vastaavat todellista arvontaa. */
+function seedRng(seed) {
+  let a = seed;
+  return () => {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+test('arvonta on siemenellä deterministinen', () => {
+  for (const p of packById('africa').puzzles) {
+    const a = p.generate(seedRng(42));
+    const b = p.generate(seedRng(42));
+    assert.deepEqual(a, b, `${p.id}: sama siemen antoi eri pulman`);
+  }
+});
+
+test('arvonta tuottaa aina neljä uniikkia vaihtoehtoa ja kelvollisen indeksin', () => {
+  for (const p of packById('africa').puzzles) {
+    for (let seed = 1; seed <= 100; seed++) {
+      const r = p.generate(seedRng(seed));
+      assert.equal(r.options.length, 4, `${p.id} siemen ${seed}: väärä määrä vaihtoehtoja`);
+      assert.equal(new Set(r.options).size, 4, `${p.id} siemen ${seed}: kaksi samaa vaihtoehtoa`);
+      assert.ok(
+        Number.isInteger(r.correct) && r.correct >= 0 && r.correct < 4,
+        `${p.id} siemen ${seed}: correct-indeksi ${r.correct}`,
+      );
+      assert.ok(r.options.every((o) => typeof o === 'string' && o.length > 0));
+    }
+  }
+});
+
+test('variointi todella varioi', () => {
+  for (const p of packById('africa').puzzles) {
+    const nahdyt = new Set();
+    for (let seed = 1; seed <= 10; seed++) {
+      const r = p.generate(seedRng(seed));
+      nahdyt.add(JSON.stringify([r.sketch, r.options[r.correct]]));
+    }
+    assert.ok(nahdyt.size >= 2, `${p.id}: kymmenellä siemenellä vain ${nahdyt.size} erilaista`);
+  }
+});
+
+test('hieroglyfiluvut pysyvät piirtorajoissa ja vastaus on oikein', () => {
+  const p = packById('africa').puzzles.find((x) => x.id === 'hieroglyfit');
+  for (let seed = 1; seed <= 100; seed++) {
+    const { sketch, options, correct } = p.generate(seedRng(seed));
+    const rivit = [...sketch.esimerkit, sketch.kysytty];
+    for (const r of rivit) {
+      assert.equal(r.length, 3);
+      for (const n of r) {
+        assert.ok(Number.isInteger(n) && n >= 0 && n <= 3, `siemen ${seed}: numero ${n} rajojen ulkoa`);
+      }
+    }
+    // Oikea vastaus on kysytyn rivin lukuarvo.
+    assert.equal(
+      options[correct], String(arvoksi(sketch.kysytty)),
+      `siemen ${seed}: oikea vastaus ei vastaa piirrosta`,
+    );
+    // Kysytty luku ei saa olla sama kuin mikään esimerkki.
+    for (const e of sketch.esimerkit) {
+      assert.notEqual(arvoksi(e), arvoksi(sketch.kysytty), `siemen ${seed}: kysytty on esimerkki`);
+    }
+  }
+});
+
+test('vaaka on tasapainossa vain oikealla vastauksella', () => {
+  const p = packById('africa').puzzles.find((x) => x.id === 'punnukset');
+  for (let seed = 1; seed <= 100; seed++) {
+    const { sketch, options, correct } = p.generate(seedRng(seed));
+    const vasenPuoli = sketch.kulta + sketch.vasen;
+    const oikeaPuoli = sketch.oikea[0] + sketch.oikea[1];
+    // Täsmälleen yksi vaihtoehto tasapainottaa vaa'an.
+    const osuvat = options.filter((o) => oikeaPuoli + Number(o) === vasenPuoli);
+    assert.equal(osuvat.length, 1, `siemen ${seed}: ${osuvat.length} vaihtoehtoa tasapainottaa`);
+    assert.equal(options[correct], osuvat[0], `siemen ${seed}: väärä vaihtoehto merkitty oikeaksi`);
+  }
+});
+
+/**
+ * Simuloi leilipulman toimintosarjan. Palauttaa suurimman mitan, joka
+ * jompaankumpaan leiliin jää — sarja on oikein, jos tavoite löytyy.
+ */
+function ajaLeilit(sarja) {
+  let a = 0; // 3 mittaa
+  let b = 0; // 5 mittaa
+  const nahdyt = [];
+  for (const askel of sarja.split(',').map((s) => s.trim().toLowerCase())) {
+    if (askel === 'täytä 3') a = 3;
+    else if (askel === 'täytä 5') b = 5;
+    else if (askel === 'tyhjennä 3') a = 0;
+    else if (askel === 'tyhjennä 5' || askel === 'kaada 5 pois') b = 0;
+    else if (askel === 'kaada 5:een' || askel === 'kaada loput viitoseen'
+      || askel === 'kaada 3 viitoseen' || askel === 'kaada 5 täyteen') {
+      const siirto = Math.min(a, 5 - b);
+      a -= siirto; b += siirto;
+    } else if (askel === 'kaada 3 täyteen' || askel === 'kaada loput 3:een') {
+      const siirto = Math.min(b, 3 - a);
+      b -= siirto; a += siirto;
+    } else {
+      throw new Error(`tuntematon askel: "${askel}"`);
+    }
+    nahdyt.push([a, b]);
+  }
+  return { a, b, nahdyt };
+}
+
+test('leilipulman oikea sarja tuottaa tavoitteen eivätkä väärät', () => {
+  const p = packById('africa').puzzles.find((x) => x.id === 'vesileilit');
+  const testatut = new Set();
+  for (let seed = 1; seed <= 60; seed++) {
+    const { sketch, options, correct } = p.generate(seedRng(seed));
+    if (testatut.has(sketch.tavoite)) continue;
+    testatut.add(sketch.tavoite);
+
+    const oikea = ajaLeilit(options[correct]);
+    assert.ok(
+      oikea.a === sketch.tavoite || oikea.b === sketch.tavoite,
+      `tavoite ${sketch.tavoite}: oikea sarja päätyi (${oikea.a},${oikea.b})`,
+    );
+    for (const [i, o] of options.entries()) {
+      if (i === correct) continue;
+      const v = ajaLeilit(o);
+      assert.ok(
+        v.a !== sketch.tavoite && v.b !== sketch.tavoite,
+        `tavoite ${sketch.tavoite}: väärä sarja "${o}" tuottikin tavoitteen`,
+      );
+    }
+  }
+  assert.ok(testatut.size >= 2, 'leilipulmasta löytyi vain yksi tavoite');
+});
+
+test('kuunvaiheiden sarja jatkuu oikein', () => {
+  const p = packById('africa').puzzles.find((x) => x.id === 'kuunvaiheet');
+  for (let seed = 1; seed <= 100; seed++) {
+    const { sketch, options, correct } = p.generate(seedRng(seed));
+    assert.equal(sketch.sarja.length, 3);
+    for (const k of sketch.sarja) {
+      assert.ok(k.v >= 0 && k.v <= 1, `siemen ${seed}: valaistus ${k.v} rajojen ulkoa`);
+    }
+    // Sarja etenee aina eteenpäin kuun kierrossa, joten piirretyn sarjan ja
+    // oikean vastauksen on löydyttävä KUUT-taulukosta peräkkäisinä.
+    const nimet = [
+      'uusikuu', 'kasvava sirppi', 'ensimmäinen neljännes', 'kasvava kupera kuu',
+      'täysikuu', 'vähenevä kupera kuu', 'viimeinen neljännes', 'vähenevä sirppi',
+    ];
+    const vaiheet = [
+      { v: 0, peilaa: false }, { v: 0.18, peilaa: false }, { v: 0.5, peilaa: false },
+      { v: 0.82, peilaa: false }, { v: 1, peilaa: false }, { v: 0.82, peilaa: true },
+      { v: 0.5, peilaa: true }, { v: 0.18, peilaa: true },
+    ];
+    const alku = vaiheet.findIndex(
+      (x, i) => [0, 1, 2].every((j) => {
+        const odotus = vaiheet[(i + j) % 8];
+        return sketch.sarja[j].v === odotus.v && sketch.sarja[j].peilaa === odotus.peilaa;
+      }),
+    );
+    assert.ok(alku >= 0, `siemen ${seed}: sarja ei vastaa kuun kiertoa`);
+    assert.equal(
+      options[correct], nimet[(alku + 3) % 8],
+      `siemen ${seed}: vastaus ei jatka sarjaa`,
+    );
+  }
 });
