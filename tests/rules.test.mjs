@@ -191,6 +191,11 @@ for (const pack of PACKS) {
       for (const fact of facts) {
         assert.ok(factText(fact).trim().length > 20, `${city.id}: liian lyhyt tieto`);
         checkSources(typeof fact === 'string' ? undefined : fact.source, `tieto ${city.id}`);
+        // Katso kuva -linkki: wiki-kenttä on artikkelin otsikko.
+        if (typeof fact === 'object' && fact.wiki !== undefined) {
+          assert.ok(typeof fact.wiki === 'string' && fact.wiki.trim().length >= 3,
+            `${city.id}: wiki-kenttä ei ole kelvollinen otsikko`);
+        }
       }
       assert.equal(new Set(texts).size, texts.length, `${city.id}: sama tieto kahdesti`);
 

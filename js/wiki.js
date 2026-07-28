@@ -133,6 +133,49 @@ export function pickImage(items) {
   return null;
 }
 
+/** Kaikki kelvolliset valokuvat kuvalistasta, enintään max kappaletta. */
+export function pickImages(items, max = 12) {
+  const kuvat = [];
+  for (const item of items ?? []) {
+    if (item?.type !== 'image') continue;
+    if (BAD_IMAGE.test(item.title ?? '')) continue;
+    const srcset = item.srcset;
+    const src = srcset?.[srcset.length - 1]?.src ?? srcset?.[0]?.src;
+    if (!src) continue;
+    kuvat.push(src.startsWith('//') ? `https:${src}` : src);
+    if (kuvat.length >= max) break;
+  }
+  return kuvat;
+}
+
+/**
+ * Isompi versio Wikipedian pikkukuvasta: thumb-osoitteen leveys vaihdetaan
+ * (/320px- → /1200px-). Jos osoite ei ole thumb-muotoa, se palautuu
+ * sellaisenaan — ja jos alkuperäiskuva on pyydettyä pienempi, selain saa
+ * virheen, jonka varalta katselin palaa pienempään osoitteeseen.
+ */
+export function upsizeImage(url, width = 1200) {
+  return typeof url === 'string' ? url.replace(/\/(\d+)px-/, `/${width}px-`) : url;
+}
+
+/**
+ * Artikkelin kuvagalleria: kuvalistan kelvolliset valokuvat järjestyksessä.
+ * Ei koskaan heitä; ilman yhteyttä palautuu tiivistelmän kuva tai tyhjä.
+ */
+export async function fetchImages(summary, { fetchImpl = globalThis.fetch, max = 12 } = {}) {
+  if (!summary) return [];
+  try {
+    const res = await fetchImpl(mediaListUrl(summary.lang, summary.title));
+    if (res && res.ok) {
+      const kuvat = pickImages((await res.json()).items, max);
+      if (kuvat.length) return kuvat;
+    }
+  } catch {
+    /* ei yhteyttä — yksi kuva on parempi kuin ei yhtään */
+  }
+  return summary.image && !BAD_IMAGE.test(summary.image) ? [summary.image] : [];
+}
+
 /**
  * Paras kuva paikalle: tiivistelmän kuva sellaisenaan, jos se ei ole
  * montaasi; muuten artikkelin kuvalistasta ensimmäinen oikea valokuva.

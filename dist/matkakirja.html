@@ -2048,6 +2048,75 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 
 .wiki-card { max-width: 560px; }
 
+/* Kuvan napautus avaa katselimen — kursori kertoo sen hiirikäyttäjälle. */
+.arrival-image,
+.wiki-image { cursor: zoom-in; }
+
+/*
+ * Kuvakatselin: koko ruudun tumma kerros avoimen dialogin sisällä, iso kuva
+ * keskellä ja selailunuolet reunoilla. Suljetaan rastista tai taustasta.
+ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(15, 10, 5, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+}
+
+.lightbox-img {
+  max-width: 94vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border: 2px solid rgba(214, 188, 140, 0.5);
+  border-radius: 6px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 46px;
+  min-height: 64px;
+  font-size: 2rem;
+  line-height: 1;
+  background: rgba(28, 20, 12, 0.7);
+  border: 1px solid rgba(214, 188, 140, 0.45);
+  color: #f0e2c4;
+  border-radius: 10px;
+}
+
+.lightbox-nav.prev { left: 0.6rem; }
+.lightbox-nav.next { right: 0.6rem; }
+
+.lightbox-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1.2rem;
+  background: rgba(28, 20, 12, 0.7);
+  border: 1px solid rgba(214, 188, 140, 0.45);
+  color: #f0e2c4;
+  border-radius: 999px;
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #e8d9b5;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
 .wiki-image {
   display: block;
   max-width: 100%;
@@ -2230,6 +2299,7 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
           <h2 id="fact-voice">Matkapäiväkirjasta</h2>
           <p id="fact-place" class="fact-place"></p>
           <p id="fact-text" class="fact-text"></p>
+          <button id="fact-image" class="ghost wiki-btn" type="button" hidden>Katso kuva</button>
         </section>
 
         <section class="card turn-card">
@@ -2637,6 +2707,49 @@ function pickImage(items) {
     if (src) return src.startsWith('//') ? `https:${src}` : src;
   }
   return null;
+}
+
+/** Kaikki kelvolliset valokuvat kuvalistasta, enintään max kappaletta. */
+function pickImages(items, max = 12) {
+  const kuvat = [];
+  for (const item of items ?? []) {
+    if (item?.type !== 'image') continue;
+    if (BAD_IMAGE.test(item.title ?? '')) continue;
+    const srcset = item.srcset;
+    const src = srcset?.[srcset.length - 1]?.src ?? srcset?.[0]?.src;
+    if (!src) continue;
+    kuvat.push(src.startsWith('//') ? `https:${src}` : src);
+    if (kuvat.length >= max) break;
+  }
+  return kuvat;
+}
+
+/**
+ * Isompi versio Wikipedian pikkukuvasta: thumb-osoitteen leveys vaihdetaan
+ * (/320px- → /1200px-). Jos osoite ei ole thumb-muotoa, se palautuu
+ * sellaisenaan — ja jos alkuperäiskuva on pyydettyä pienempi, selain saa
+ * virheen, jonka varalta katselin palaa pienempään osoitteeseen.
+ */
+function upsizeImage(url, width = 1200) {
+  return typeof url === 'string' ? url.replace(/\/(\d+)px-/, `/${width}px-`) : url;
+}
+
+/**
+ * Artikkelin kuvagalleria: kuvalistan kelvolliset valokuvat järjestyksessä.
+ * Ei koskaan heitä; ilman yhteyttä palautuu tiivistelmän kuva tai tyhjä.
+ */
+async function fetchImages(summary, { fetchImpl = globalThis.fetch, max = 12 } = {}) {
+  if (!summary) return [];
+  try {
+    const res = await fetchImpl(mediaListUrl(summary.lang, summary.title));
+    if (res && res.ok) {
+      const kuvat = pickImages((await res.json()).items, max);
+      if (kuvat.length) return kuvat;
+    }
+  } catch {
+    /* ei yhteyttä — yksi kuva on parempi kuin ei yhtään */
+  }
+  return summary.image && !BAD_IMAGE.test(summary.image) ? [summary.image] : [];
 }
 
 /**
@@ -5614,7 +5727,10 @@ const AFRICA_FACTS = {
     },
   ],
   tripoli: [
-    'Rannikkotietä itään ajetaan pari tuntia, ja sitten aukeaa kokonainen roomalainen kaupunki: Leptis Magnan pääkatu, teatteri ja satama-allas meren rannalla. Tripolin nimi tarkoittaa kreikaksi kolmea kaupunkia — kaksi niistä on nykyään raunioina, ja kolmas on tämä, yhä pystyssä ja täynnä liikennettä.',
+    {
+      text: 'Rannikkotietä itään ajetaan pari tuntia, ja sitten aukeaa kokonainen roomalainen kaupunki: Leptis Magnan pääkatu, teatteri ja satama-allas meren rannalla. Tripolin nimi tarkoittaa kreikaksi kolmea kaupunkia — kaksi niistä on nykyään raunioina, ja kolmas on tämä, yhä pystyssä ja täynnä liikennettä.',
+      wiki: 'Leptis Magna',
+    },
     'Vanhankaupungin kujalta avautuu pieni aukio, ja sen keskellä seisoo roomalainen riemukaari vuodelta 165. Se on kuopassa, koska katu on noussut sen ympärillä neljä metriä kahdeksantoista vuosisadan aikana. Join sen varjossa pullosta vettä ja tajusin nojaavani keisari Marcus Aureliukseen.',
     {
       text: 'Rannikolla on satama, jonka läpi aavikon karavaanit purkavat lastinsa laivoihin. Kaupungin nimi tarkoittaa kreikaksi kolmea kaupunkia, mikä on tarkempaa kuin useimmat karttani nimet.',
@@ -5623,7 +5739,10 @@ const AFRICA_FACTS = {
   ],
   murzuk: [
     'Ei puuta, ei tolppaa, ei varjoa. Murzukin hiekkameri on yksi Saharan laajimmista dyynialueista, ja kaupunki sen laidalla oli aikoinaan koko Fezzanin pääkaupunki: keskellä tyhjyyttä, koska tyhjyyden halki kulki tie.',
-    '"Kirahveja", sanoi kuljettaja ja pyyhkäisi hiekkaa kallion pinnalta. Fezzanin kallioihin on hakattu kirahveja, norsuja ja krokotiileja tuhansia vuosia sitten, silloin kun täällä oli ruohoa ja vettä. Aavikko on nuorempi kuin sen omat kuvat.',
+    {
+      text: '"Kirahveja", sanoi kuljettaja ja pyyhkäisi hiekkaa kallion pinnalta. Fezzanin kallioihin on hakattu kirahveja, norsuja ja krokotiileja tuhansia vuosia sitten, silloin kun täällä oli ruohoa ja vettä. Aavikko on nuorempi kuin sen omat kuvat.',
+      wiki: 'Tadrart Acacus',
+    },
     {
       text: 'Tänne on rannikolta kuukausi kamelin selässä, ja jokainen päivä on samanlainen kuin edellinen. Oppaani tietää tien ilman karttaa; minulla on kartta ja en tiedä tietä.',
       voice: 'isoisa',
@@ -5646,7 +5765,10 @@ const AFRICA_FACTS = {
     },
   ],
   ahaggar: [
-    'Herätys oli kello neljä, koska kaikki muutkin heräsivät. Assekremin kalliolta katsotaan auringonnousua, ja kun valo tulee, Ahaggarin laavatapit nousevat hiekan yläpuolelle kuin mustat tornit: nämä ovat vanhojen tulivuorten kovat sisukset, ja pehmeämpi vuori on kulunut niiden ympäriltä pois.',
+    {
+      text: 'Herätys oli kello neljä, koska kaikki muutkin heräsivät. Assekremin kalliolta katsotaan auringonnousua, ja kun valo tulee, Ahaggarin laavatapit nousevat hiekan yläpuolelle kuin mustat tornit: nämä ovat vanhojen tulivuorten kovat sisukset, ja pehmeämpi vuori on kulunut niiden ympäriltä pois.',
+      wiki: 'Assekrem',
+    },
     'Kivien kylkiin on kirjoitettu pisteitä, ympyröitä ja viivoja — tifinagh, berberien kirjaimisto, jota tuaregit ovat käyttäneet katkeamatta. Se ei ole museotavaraa: samojen merkkien uudempi muoto näkyy Algerian tienviitoissa, ja sille on nykyään oma näppäimistönsä puhelimessa.',
     {
       text: 'Keskellä autiomaata kohoaa vuoristo, jonka huipuilla palelin kuin Skotlannissa. Tuaregit tuntevat nämä polut nimeltä; me nimesimme ne uudelleen ja luulimme sitä löytämiseksi.',
@@ -5814,15 +5936,24 @@ const AFRICA_FACTS = {
     },
   ],
   bahrelghazal: [
-    'Joki ei pääty mereen eikä järveen vaan ruohoon: se katoaa Suddin soille, yhdelle maailman laajimmista kosteikoista, joka tulvakaudella kasvaa moninkertaiseksi. Noin puolet näille soille saapuvasta vedestä ei jatka koskaan pohjoiseen — se haihtuu matkalla.',
-    'Ruohikossa seisoi yli metrin mittainen lintu, joka ei liikahtanut koko sinä aikana kun katsoin sitä. Kenkänokan nokka on leveä kuin puukenkä, ja juuri nämä suot ovat yksi lajin tärkeimmistä elinalueista maailmassa.',
+    {
+      text: 'Joki ei pääty mereen eikä järveen vaan ruohoon: se katoaa Suddin soille, yhdelle maailman laajimmista kosteikoista, joka tulvakaudella kasvaa moninkertaiseksi. Noin puolet näille soille saapuvasta vedestä ei jatka koskaan pohjoiseen — se haihtuu matkalla.',
+      wiki: 'Sudd',
+    },
+    {
+      text: 'Ruohikossa seisoi yli metrin mittainen lintu, joka ei liikahtanut koko sinä aikana kun katsoin sitä. Kenkänokan nokka on leveä kuin puukenkä, ja juuri nämä suot ovat yksi lajin tärkeimmistä elinalueista maailmassa.',
+      wiki: 'Kenkänokka',
+    },
     {
       text: 'Joki hajoaa ruohikkoon niin laajalti, ettei uomaa löydä. Veneemme jäi kiinni kolme kertaa päivässä, ja paikalliset kalastajat kulkivat ohitsemme vaivatta. Karttani sanoi tässä olevan "joki".',
       voice: 'isoisa',
     },
   ],
   darfur: [
-    'Puoliaavikon keskeltä nousee yli kolmen kilometrin korkuinen tulivuori, ja sen huipulla on kaksi kraatterijärveä. Rinteillä sataa niin paljon enemmän kuin ympärillä, että siellä kasvatetaan appelsiineja ja perunoita: vuori tekee itselleen oman ilmastonsa.',
+    {
+      text: 'Puoliaavikon keskeltä nousee yli kolmen kilometrin korkuinen tulivuori, ja sen huipulla on kaksi kraatterijärveä. Rinteillä sataa niin paljon enemmän kuin ympärillä, että siellä kasvatetaan appelsiineja ja perunoita: vuori tekee itselleen oman ilmastonsa.',
+      wiki: 'Deriba Caldera',
+    },
     'Täältä lähti kamelikaravaaneja Egyptiin reittiä pitkin, jonka nimi on Neljänkymmenen päivän tie. Nimi ei ollut runoutta vaan aikataulu. Darfur oli tuolloin oma sulttaanikuntansa: se kaatui vuonna 1874, nousi vielä kerran jaloilleen vuosisadan vaihteessa ja hävisi kartalta lopullisesti vasta 1916.',
     {
       text: 'Puoliaavikon keskellä kohoaa vuoristo, jonka rinteillä sataa ja kasvaa hedelmäpuita. Alueen nimi tarkoittaa yksinkertaisesti furien maata — eli sitä, kenen maa se on. Harvinaisen selkeä nimi kartalla.',
@@ -28171,6 +28302,15 @@ async function cachedImage(title) {
   return wikiImageCache.get(title);
 }
 
+const wikiGalleryCache = new Map();
+
+async function cachedGallery(title) {
+  if (!wikiGalleryCache.has(title)) {
+    wikiGalleryCache.set(title, cachedSummary(title).then((s) => fetchImages(s)));
+  }
+  return wikiGalleryCache.get(title);
+}
+
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
 const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavaksi
@@ -28277,6 +28417,10 @@ class UI {
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
     this.arrivalImage = document.getElementById('arrival-image');
+    this.arrivalImage.addEventListener('click', () => {
+      const city = this.game.board.cityById.get(this.arrivalShownFor);
+      if (city?.wiki) this.openLightbox(city.wiki, city.name);
+    });
     this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
@@ -28298,6 +28442,13 @@ class UI {
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
     this.wikiSource = document.getElementById('wiki-source');
+    this.wikiImage.addEventListener('click', () => {
+      if (this.wikiOpenFor) this.openLightbox(this.wikiOpenFor, this.wikiTitle.textContent);
+    });
+    this.factImage = document.getElementById('fact-image');
+    this.factImage.addEventListener('click', () => {
+      if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
+    });
 
     this.eventDialog = document.getElementById('event-dialog');
     this.eventText = document.getElementById('event-text');
@@ -29238,6 +29389,7 @@ class UI {
       this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
+      this.factImage.hidden = true;
       return;
     }
 
@@ -29250,6 +29402,7 @@ class UI {
       this.factKey = key;
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
+      this.factImage.hidden = true;
       this.typeText(this.factText, aikataulu.text);
       return;
     }
@@ -29263,6 +29416,7 @@ class UI {
       this.factKey = key;
       this.factVoiceEl.textContent = 'Matkapäiväkirjasta';
       this.factPlace.textContent = game.pack.boardLabel;
+      this.factImage.hidden = true;
       this.typeText(this.factText, note.text);
       return;
     }
@@ -29275,6 +29429,7 @@ class UI {
       this.factKey = key;
       this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
       this.factPlace.textContent = game.pack.boardLabel;
+      this.factImage.hidden = true;
       this.typeText(this.factText, hint);
       return;
     }
@@ -29295,6 +29450,9 @@ class UI {
     const onRoute = player.pos.type === 'edge';
     this.factVoiceEl.textContent = voiceTitle(factVoice(fact));
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
+    // Havaintoon voi liittyä kuva: pieni linkki avaa ilmiön Wikipedia-kuvan.
+    this.factImageTitle = typeof fact === 'string' ? null : fact.wiki ?? null;
+    this.factImage.hidden = !this.factImageTitle;
     const source = this.sourceLine(factSource(fact));
     this.typeText(this.factText, text, 'fact', () => {
       if (source) this.factText.appendChild(source);
@@ -29488,29 +29646,36 @@ class UI {
   async openWiki(cityId) {
     const city = this.game.board.cityById.get(cityId);
     if (!city?.wiki) return;
+    await this.openWikiArticle(city.wiki, city.name);
+  }
 
-    this.wikiOpenFor = cityId;
-    this.wikiTitle.textContent = city.name;
+  /**
+   * Sama dialogi mille tahansa artikkelille — esimerkiksi havainnossa
+   * mainitulle ilmiölle (Katso kuva), jolla ei ole omaa kaupunkia.
+   */
+  async openWikiArticle(title, label = title) {
+    this.wikiOpenFor = title;
+    this.wikiTitle.textContent = label;
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
     this.wikiExtract.textContent = 'Haetaan…';
     this.wikiSource.textContent = '';
     if (!this.wikiDialog.open) this.wikiDialog.showModal();
 
-    const summary = await cachedSummary(city.wiki);
+    const summary = await cachedSummary(title);
     // Pelaaja on voinut ehtiä sulkea dialogin tai avata toisen paikan.
-    if (!this.wikiDialog.open || this.wikiOpenFor !== cityId) return;
+    if (!this.wikiDialog.open || this.wikiOpenFor !== title) return;
 
     if (!summary) {
       this.wikiExtract.textContent = 'Tietoja ei saatu haettua. Matka jatkuu.';
       return;
     }
 
-    this.wikiTitle.textContent = summary.title || city.name;
-    cachedImage(city.wiki).then((image) => {
-      if (!this.wikiDialog.open || this.wikiOpenFor !== cityId || !image) return;
+    this.wikiTitle.textContent = summary.title || label;
+    cachedImage(title).then((image) => {
+      if (!this.wikiDialog.open || this.wikiOpenFor !== title || !image) return;
       this.wikiImage.src = image;
-      this.wikiImage.alt = summary.title || city.name;
+      this.wikiImage.alt = summary.title || label;
       this.wikiImage.hidden = false;
     });
     this.wikiExtract.textContent = summary.extract;
@@ -29518,7 +29683,7 @@ class UI {
     // Koko artikkeli ladataan tiivistelmän perään; tiivistelmä jää, jos
     // hakua ei saada tehtyä. Kysytään vain kerran per avaus.
     fetchArticle(summary.title, summary.lang).then((article) => {
-      if (!this.wikiDialog.open || this.wikiOpenFor !== cityId || !article) return;
+      if (!this.wikiDialog.open || this.wikiOpenFor !== title || !article) return;
       if (article.length <= summary.extract.length) return;
       this.renderArticle(this.wikiExtract, article);
     });
@@ -29530,6 +29695,76 @@ class UI {
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     this.wikiSource.appendChild(link);
+  }
+
+  /**
+   * Kuvakatselin: napautettu kuva aukeaa isona, ja jos artikkelissa on
+   * useampia kelvollisia kuvia, niitä voi selata nuolista tai pyyhkäisemällä.
+   * Katselin lisätään avoimen dialogin sisään, koska dialogi on selaimen
+   * top layerissa — muualle lisätty kerros jäisi sen alle.
+   */
+  async openLightbox(title, alt = '') {
+    if (!title) return;
+    const parent = [this.wikiDialog, this.arrivalDialog].find((d) => d.open) ?? document.body;
+    const overlay = html('div', 'lightbox');
+    const img = html('img', 'lightbox-img');
+    img.alt = alt;
+    const prev = html('button', 'lightbox-nav prev', '‹');
+    const next = html('button', 'lightbox-nav next', '›');
+    const counter = html('div', 'lightbox-counter');
+    const close = html('button', 'lightbox-close', '✕');
+    prev.hidden = next.hidden = true;
+    overlay.append(img, prev, next, counter, close);
+    parent.appendChild(overlay);
+
+    let kuvat = [];
+    let kohdalla = 0;
+    const nayta = () => {
+      if (!kuvat.length) return;
+      img.src = upsizeImage(kuvat[kohdalla]);
+      counter.textContent = kuvat.length > 1 ? `${kohdalla + 1} / ${kuvat.length}` : '';
+      prev.hidden = next.hidden = kuvat.length < 2;
+    };
+    // Jos suurennosta ei ole olemassa (alkuperäinen on pienempi), palataan
+    // kuvalistan omaan osoitteeseen.
+    img.addEventListener('error', () => {
+      if (kuvat.length && img.src !== kuvat[kohdalla]) img.src = kuvat[kohdalla];
+    });
+    const siirry = (askel) => {
+      if (kuvat.length < 2) return;
+      kohdalla = (kohdalla + askel + kuvat.length) % kuvat.length;
+      nayta();
+      sfx.play('swipe');
+    };
+    prev.addEventListener('click', (e) => { e.stopPropagation(); siirry(-1); });
+    next.addEventListener('click', (e) => { e.stopPropagation(); siirry(1); });
+    close.addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.remove();
+    });
+    // Pyyhkäisy vaihtaa kuvaa sormella.
+    let alkuX = null;
+    overlay.addEventListener('pointerdown', (e) => { alkuX = e.clientX; });
+    overlay.addEventListener('pointerup', (e) => {
+      if (alkuX === null) return;
+      const siirtyma = e.clientX - alkuX;
+      alkuX = null;
+      if (Math.abs(siirtyma) > 40) siirry(siirtyma < 0 ? 1 : -1);
+    });
+
+    // Ensimmäinen kuva heti ruutuun, koko galleria kun lista on haettu.
+    const eka = await cachedImage(title);
+    if (!overlay.isConnected) return;
+    if (eka) {
+      kuvat = [eka];
+      nayta();
+    }
+    const lista = await cachedGallery(title);
+    if (!overlay.isConnected || !lista.length) return;
+    const nykyinen = kuvat[0] ?? null;
+    kuvat = lista;
+    kohdalla = Math.max(0, lista.indexOf(nykyinen));
+    nayta();
   }
 
   closeArrival() {
@@ -30577,7 +30812,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.35';
+const APP_VERSION = '2026-07-28.36';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

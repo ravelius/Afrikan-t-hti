@@ -2040,6 +2040,75 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 
 .wiki-card { max-width: 560px; }
 
+/* Kuvan napautus avaa katselimen — kursori kertoo sen hiirikäyttäjälle. */
+.arrival-image,
+.wiki-image { cursor: zoom-in; }
+
+/*
+ * Kuvakatselin: koko ruudun tumma kerros avoimen dialogin sisällä, iso kuva
+ * keskellä ja selailunuolet reunoilla. Suljetaan rastista tai taustasta.
+ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(15, 10, 5, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+}
+
+.lightbox-img {
+  max-width: 94vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border: 2px solid rgba(214, 188, 140, 0.5);
+  border-radius: 6px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 46px;
+  min-height: 64px;
+  font-size: 2rem;
+  line-height: 1;
+  background: rgba(28, 20, 12, 0.7);
+  border: 1px solid rgba(214, 188, 140, 0.45);
+  color: #f0e2c4;
+  border-radius: 10px;
+}
+
+.lightbox-nav.prev { left: 0.6rem; }
+.lightbox-nav.next { right: 0.6rem; }
+
+.lightbox-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1.2rem;
+  background: rgba(28, 20, 12, 0.7);
+  border: 1px solid rgba(214, 188, 140, 0.45);
+  color: #f0e2c4;
+  border-radius: 999px;
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #e8d9b5;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
 .wiki-image {
   display: block;
   max-width: 100%;
