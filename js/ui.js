@@ -747,7 +747,9 @@ export class UI {
         if (!c) return;
         const g = el('g', { class: 'target' }, this.targetLayer);
         el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
-        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring pick' }, g);
+        // Sykkivä rengas erottuu siirtorenkaista: pelaajan pitää huomata,
+        // että juuri nämä kaupungit ovat vastausvaihtoehtoja.
+        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring pick quiz' }, g);
         g.addEventListener('click', () => this.answerQuiz(i));
       });
       return;
@@ -1585,10 +1587,14 @@ export class UI {
 
     // Karttakysymykseen vastataan napauttamalla lautaa, joten modaali pysyy
     // kiinni siihen asti. Vastauksen jälkeen tulos näytetään normaalisti.
+    // Ohjerivi kertoo suoraan miten vastataan — ilman kehotusta pelaaja jäi
+    // odottamaan vastausvaihtoehtoja, joita ei koskaan tullut.
+    this.hint.classList.remove('ask');
     if (quiz.kind === 'map' && quiz.chosen === null) {
       this.stopQuizTimer();
       if (this.quizDialog.open) this.quizDialog.close();
-      this.hint.textContent = quiz.question;
+      this.hint.textContent = `${quiz.question} Napauta vastausta kartalla.`;
+      this.hint.classList.add('ask');
       return;
     }
 
