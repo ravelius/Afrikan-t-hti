@@ -2041,6 +2041,32 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   border-radius: 0;
 }
 
+/*
+ * Havainnon kuvaikoni: pieni kehystetty maisema tekstin alla. Pelkkä
+ * ikoni tekstilinkin sijaan — kuva puhuu puolestaan.
+ */
+.fact-image-btn {
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  padding: 0.15rem;
+  min-height: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: #7a5514;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.fact-image-btn:hover:not(:disabled) {
+  background: none;
+  color: #9c6f1e;
+}
+
+@media (max-width: 700px) {
+  .fact-card .fact-image-btn { color: var(--accent); }
+}
+
 .wiki-card { max-width: 560px; }
 
 /* Kuvan napautus avaa katselimen — kursori kertoo sen hiirikäyttäjälle. */
@@ -2293,7 +2319,16 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
           <h2 id="fact-voice">Matkapäiväkirjasta</h2>
           <p id="fact-place" class="fact-place"></p>
           <p id="fact-text" class="fact-text"></p>
-          <button id="fact-image" class="ghost wiki-btn" type="button" hidden>Katso kuva</button>
+          <!-- Pieni kuvaikoni: avaa havainnossa mainitun ilmiön kuvan. -->
+          <button id="fact-image" class="ghost fact-image-btn" type="button" hidden
+                  aria-label="Katso kuva" title="Katso kuva">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <rect x="2.4" y="4.4" width="19.2" height="15.2" rx="2.2"
+                    fill="none" stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="8.3" cy="9.3" r="1.6" fill="currentColor"/>
+              <path d="M4.6 17.4 L10 11.6 L13.4 15 L16.6 11.9 L19.4 17.4 Z" fill="currentColor"/>
+            </svg>
+          </button>
         </section>
 
         <section class="card turn-card">
@@ -2454,6 +2489,10 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
       <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman
         laivalipun hintaa), hän saa vuoronsa alussa 100 puntaa pankilta.</p>
+      <p class="muted"><b>Äänitteet:</b> osassa paikoista soi oikea kenttä-äänitys
+        Freesound-palvelusta (CC-lisenssit): rucisko (Kairo, CC BY-NC),
+        omestreandre (Sahara, CC BY), AugustSandberg (savanni, CC0).
+        Kuvat ja artikkelit: Wikipedia (CC BY-SA).</p>
     </div>
     <menu>
       <button id="rules-close" class="primary" type="button">Sulje</button>
@@ -24658,26 +24697,65 @@ class Sound {
     g.gain.setValueAtTime(0.075, t0 + kesto - 0.8);
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
+    // Moottorin virtausääni potkurin alle: kohinaa kaistanpäästön läpi,
+    // taajuus nousee lähdössä ja laskee laskeutuessa. Tämä tekee lennosta
+    // koneen — pelkkä saha-aalto kuulosti hyttyseltä.
+    const virtaus = ctx.createBufferSource();
+    virtaus.buffer = this.noise;
+    virtaus.loop = true;
+    const vf = ctx.createBiquadFilter();
+    vf.type = 'bandpass';
+    vf.Q.value = 0.5;
+    vf.frequency.setValueAtTime(600, t0);
+    vf.frequency.exponentialRampToValueAtTime(1600, t0 + kesto * 0.4);
+    vf.frequency.exponentialRampToValueAtTime(500, t0 + kesto);
+    const vg = ctx.createGain();
+    vg.gain.setValueAtTime(0.0001, t0);
+    vg.gain.exponentialRampToValueAtTime(0.055, t0 + 0.7);
+    vg.gain.setValueAtTime(0.055, t0 + kesto - 0.9);
+    vg.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+
+    // Matala jyrinä pohjalle.
+    const runko = ctx.createBufferSource();
+    runko.buffer = this.noise;
+    runko.loop = true;
+    const rf = ctx.createBiquadFilter();
+    rf.type = 'lowpass';
+    rf.frequency.value = 180;
+    const rg = ctx.createGain();
+    rg.gain.setValueAtTime(0.0001, t0);
+    rg.gain.exponentialRampToValueAtTime(0.06, t0 + 0.6);
+    rg.gain.setValueAtTime(0.06, t0 + kesto - 0.9);
+    rg.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+
     osc.connect(lp).connect(depth).connect(g).connect(this.bus);
-    osc.start(t0); lfo.start(t0);
+    virtaus.connect(vf).connect(vg).connect(this.bus);
+    runko.connect(rf).connect(rg).connect(this.bus);
+    osc.start(t0); lfo.start(t0); virtaus.start(t0); runko.start(t0);
     osc.stop(t0 + kesto + 0.1); lfo.stop(t0 + kesto + 0.1);
-    this.flightNodes = { osc, lfo, g };
+    virtaus.stop(t0 + kesto + 0.1); runko.stop(t0 + kesto + 0.1);
+    this.flightNodes = { osc, lfo, g, virtaus, runko, vg, rg };
     // Siivotaan itsestään, jos stopFlight jää kutsumatta.
     osc.onended = () => { this.flightNodes = null; };
   }
 
-  /** Lopettaa potkurihurinan pehmeästi. */
+  /** Lopettaa moottoriäänen pehmeästi. */
   stopFlight() {
     const solmut = this.flightNodes;
     if (!solmut || !this.ctx) return;
     this.flightNodes = null;
     const t = this.ctx.currentTime;
     try {
-      solmut.g.gain.cancelScheduledValues(t);
-      solmut.g.gain.setValueAtTime(Math.max(solmut.g.gain.value, 0.0001), t);
-      solmut.g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+      for (const gain of [solmut.g, solmut.vg, solmut.rg]) {
+        if (!gain) continue;
+        gain.gain.cancelScheduledValues(t);
+        gain.gain.setValueAtTime(Math.max(gain.gain.value, 0.0001), t);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+      }
       solmut.osc.stop(t + 0.4);
       solmut.lfo.stop(t + 0.4);
+      solmut.virtaus?.stop(t + 0.4);
+      solmut.runko?.stop(t + 0.4);
     } catch {
       /* solmu oli jo pysäytetty */
     }
@@ -24925,6 +25003,9 @@ const SOUNDS = {
   // Käyttöliittymä
   click: (s) => s.knock({ freqs: [540, 880], dur: 0.045, gain: 0.06, q: 8 }),
   paper: (s) => s.hiss({ dur: 0.34, type: 'highpass', freq: 900, sweepTo: 2800, gain: 0.075 }),
+  // Kynän raapaisu pergamentilla — avaustekstin käsinkirjoitus. Hyvin
+  // hiljainen, koska se toistuu joka sanalla.
+  pen: (s) => s.hiss({ dur: 0.06, type: 'highpass', freq: 2600, sweepTo: 1500, gain: 0.02, q: 0.7 }),
   swipe: (s) => s.hiss({ dur: 0.24, freq: 700, sweepTo: 2600, gain: 0.09, q: 0.8 }),
 
   // Noppa
@@ -25029,6 +25110,107 @@ function treasureSound(type) {
   if (type === 'horseshoe') return 'horseshoe';
   if (type === 'empty') return 'empty';
   return 'gem';
+}
+
+// ===== js/ambience-stream.js =====
+// Oikeat kenttä-äänitykset paikoista. Äänite striimataan <audio>-
+// elementillä suoraan verkosta — peli ei silti ole striimin varassa:
+// ilman verkkoa, ennen ensimmäistä napautusta tai merkinnän puuttuessa
+// palataan syntetisoituun ambienssiin (js/sound.js), joka on varmistus.
+//
+// Osoitteet ovat Freesoundin esikuunteluversioita (mp3, vakaat osoitteet).
+// Uusi paikka lisätään STREAMS-taulukkoon: suora mp3-osoite ja
+// tekijämaininta lisensseineen. Vain CC-lisensoituja äänitteitä.
+
+const STREAMS = {
+  kairo: {
+    url: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3',
+    credit: '"cairo night out" — rucisko, Freesound (CC BY-NC 4.0)',
+  },
+  sahara: {
+    url: 'https://cdn.freesound.org/previews/146/146745_832093-lq.mp3',
+    credit: '"Sahara wind harp (lotar)" — omestreandre, Freesound (CC BY 4.0)',
+  },
+  kimberley: {
+    url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3',
+    credit: '"African savanna 2" — AugustSandberg, Freesound (CC0)',
+  },
+  angola: {
+    url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3',
+    credit: '"African savanna 2" — AugustSandberg, Freesound (CC0)',
+  },
+};
+
+// Striimi on taustaa, ei etualaa — hiljaisempi kuin tehosteäänet.
+const VOIMA = 0.14;
+const HAIVYTYS_MS = 1800;
+
+let nykyinen = null; // { audio, cityId }
+
+function haivyta(audio, kohde, done) {
+  const alku = audio.volume;
+  const t0 = performance.now();
+  const askel = (nyt) => {
+    const t = Math.min(1, (nyt - t0) / HAIVYTYS_MS);
+    audio.volume = alku + (kohde - alku) * t;
+    if (t < 1) requestAnimationFrame(askel);
+    else done?.();
+  };
+  requestAnimationFrame(askel);
+}
+
+function stopPlaceStream() {
+  const vanha = nykyinen;
+  nykyinen = null;
+  if (!vanha) return;
+  haivyta(vanha.audio, 0, () => {
+    vanha.audio.pause();
+    vanha.audio.removeAttribute('src');
+  });
+}
+
+/**
+ * Paikan äänimaisema: oikea äänite, jos kaupungille on merkitty sellainen,
+ * muuten syntetisoitu tyyppi. Striimin epäonnistuminen — offline, estetty
+ * automaattitoisto tai poistunut tiedosto — palauttaa synteesin itsestään,
+ * ja seuraava renderöinti yrittää striimiä uudelleen.
+ */
+function playPlaceAmbience(cityId, fallbackType) {
+  const entry = cityId ? STREAMS[cityId] : null;
+  if (!sfx.enabled || !entry) {
+    stopPlaceStream();
+    sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);
+    return;
+  }
+  if (nykyinen?.cityId === cityId) return;
+
+  stopPlaceStream();
+  const audio = new Audio(entry.url);
+  audio.loop = true;
+  audio.preload = 'auto';
+  audio.volume = 0;
+  const oma = { audio, cityId };
+  nykyinen = oma;
+
+  const varalle = () => {
+    if (nykyinen === oma) nykyinen = null;
+    audio.pause();
+    sfx.setAmbience(fallbackType ?? null);
+  };
+  audio.addEventListener('error', varalle);
+  audio.play().then(() => {
+    if (nykyinen !== oma) {
+      audio.pause();
+      return;
+    }
+    sfx.setAmbience(null); // synteesi väistyy, kun oikea äänite soi
+    haivyta(audio, VOIMA);
+  }).catch(varalle);
+}
+
+/** Tekijämaininta soivalle äänitteelle, tai null. */
+function placeStreamCredit(cityId) {
+  return STREAMS[cityId]?.credit ?? null;
 }
 
 // ===== js/die.js =====
@@ -28613,6 +28795,7 @@ class UI {
     // uuden pelin rinnalle, ja ilman lippua ne piirtäisivät vanhan pelin
     // tilaa uuden päälle (esim. edellisen pelin kysymyksen tekstin).
     this.dead = true;
+    stopPlaceStream();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -29482,23 +29665,30 @@ class UI {
   }
 
   /**
-   * Äänimaisema seuraa matkaajaa: kaupungin oma ambienssi, tai meri kun
-   * ollaan reitillä merellä. Ilman ambience-kenttää ei soiteta mitään, joten
-   * muut laudat pysyvät hiljaisina kunnes ne saavat omansa.
+   * Äänimaisema seuraa matkaajaa: paikan oikea äänite jos sellainen on
+   * merkitty, muuten kaupungin syntetisoitu ambienssi, tai meri kun ollaan
+   * reitillä merellä. Ilman ambience-kenttää ei soiteta mitään, joten muut
+   * laudat pysyvät hiljaisina kunnes ne saavat omansa.
    */
   syncAmbience() {
     const { game } = this;
-    if (game.phase === 'pickstart' || game.phase === 'over') {
-      sfx.setAmbience(null);
+    if (game.phase === 'over') {
+      playPlaceAmbience(null, null);
+      return;
+    }
+    // Etusivullakin on äänimaisema: satama ja meri odottavat lähtijää.
+    if (game.phase === 'pickstart') {
+      playPlaceAmbience(null, 'meri');
       return;
     }
     const pos = game.player.pos;
     if (pos.type === 'edge') {
       const edge = game.board.edgeById.get(pos.edge);
-      sfx.setAmbience(edge?.type === 'sea' ? 'meri' : null);
+      playPlaceAmbience(null, edge?.type === 'sea' ? 'meri' : null);
       return;
     }
-    sfx.setAmbience(game.board.cityById.get(pos.city)?.ambience ?? null);
+    const city = game.board.cityById.get(pos.city);
+    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null);
   }
 
   render() {
@@ -30417,6 +30607,8 @@ class UI {
     this.typeTimers[slot] = setInterval(() => {
       shown++;
       piirra();
+      // Avausteksti kirjoittuu käsin: kynä raapaisee joka sanalla.
+      if (slot === 'intro') sfx.play('pen');
       if (shown >= words.length) {
         clearInterval(this.typeTimers[slot]);
         // Lopuksi pelkkä teksti, jotta perään lisättävä lähderivi asettuu
@@ -30806,7 +30998,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-28.36';
+const APP_VERSION = '2026-07-28.37';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

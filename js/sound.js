@@ -272,26 +272,65 @@ class Sound {
     g.gain.setValueAtTime(0.075, t0 + kesto - 0.8);
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
+    // Moottorin virtausääni potkurin alle: kohinaa kaistanpäästön läpi,
+    // taajuus nousee lähdössä ja laskee laskeutuessa. Tämä tekee lennosta
+    // koneen — pelkkä saha-aalto kuulosti hyttyseltä.
+    const virtaus = ctx.createBufferSource();
+    virtaus.buffer = this.noise;
+    virtaus.loop = true;
+    const vf = ctx.createBiquadFilter();
+    vf.type = 'bandpass';
+    vf.Q.value = 0.5;
+    vf.frequency.setValueAtTime(600, t0);
+    vf.frequency.exponentialRampToValueAtTime(1600, t0 + kesto * 0.4);
+    vf.frequency.exponentialRampToValueAtTime(500, t0 + kesto);
+    const vg = ctx.createGain();
+    vg.gain.setValueAtTime(0.0001, t0);
+    vg.gain.exponentialRampToValueAtTime(0.055, t0 + 0.7);
+    vg.gain.setValueAtTime(0.055, t0 + kesto - 0.9);
+    vg.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+
+    // Matala jyrinä pohjalle.
+    const runko = ctx.createBufferSource();
+    runko.buffer = this.noise;
+    runko.loop = true;
+    const rf = ctx.createBiquadFilter();
+    rf.type = 'lowpass';
+    rf.frequency.value = 180;
+    const rg = ctx.createGain();
+    rg.gain.setValueAtTime(0.0001, t0);
+    rg.gain.exponentialRampToValueAtTime(0.06, t0 + 0.6);
+    rg.gain.setValueAtTime(0.06, t0 + kesto - 0.9);
+    rg.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+
     osc.connect(lp).connect(depth).connect(g).connect(this.bus);
-    osc.start(t0); lfo.start(t0);
+    virtaus.connect(vf).connect(vg).connect(this.bus);
+    runko.connect(rf).connect(rg).connect(this.bus);
+    osc.start(t0); lfo.start(t0); virtaus.start(t0); runko.start(t0);
     osc.stop(t0 + kesto + 0.1); lfo.stop(t0 + kesto + 0.1);
-    this.flightNodes = { osc, lfo, g };
+    virtaus.stop(t0 + kesto + 0.1); runko.stop(t0 + kesto + 0.1);
+    this.flightNodes = { osc, lfo, g, virtaus, runko, vg, rg };
     // Siivotaan itsestään, jos stopFlight jää kutsumatta.
     osc.onended = () => { this.flightNodes = null; };
   }
 
-  /** Lopettaa potkurihurinan pehmeästi. */
+  /** Lopettaa moottoriäänen pehmeästi. */
   stopFlight() {
     const solmut = this.flightNodes;
     if (!solmut || !this.ctx) return;
     this.flightNodes = null;
     const t = this.ctx.currentTime;
     try {
-      solmut.g.gain.cancelScheduledValues(t);
-      solmut.g.gain.setValueAtTime(Math.max(solmut.g.gain.value, 0.0001), t);
-      solmut.g.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+      for (const gain of [solmut.g, solmut.vg, solmut.rg]) {
+        if (!gain) continue;
+        gain.gain.cancelScheduledValues(t);
+        gain.gain.setValueAtTime(Math.max(gain.gain.value, 0.0001), t);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+      }
       solmut.osc.stop(t + 0.4);
       solmut.lfo.stop(t + 0.4);
+      solmut.virtaus?.stop(t + 0.4);
+      solmut.runko?.stop(t + 0.4);
     } catch {
       /* solmu oli jo pysäytetty */
     }
@@ -541,6 +580,9 @@ const SOUNDS = {
   // Käyttöliittymä
   click: (s) => s.knock({ freqs: [540, 880], dur: 0.045, gain: 0.06, q: 8 }),
   paper: (s) => s.hiss({ dur: 0.34, type: 'highpass', freq: 900, sweepTo: 2800, gain: 0.075 }),
+  // Kynän raapaisu pergamentilla — avaustekstin käsinkirjoitus. Hyvin
+  // hiljainen, koska se toistuu joka sanalla.
+  pen: (s) => s.hiss({ dur: 0.06, type: 'highpass', freq: 2600, sweepTo: 1500, gain: 0.02, q: 0.7 }),
   swipe: (s) => s.hiss({ dur: 0.24, freq: 700, sweepTo: 2600, gain: 0.09, q: 0.8 }),
 
   // Noppa

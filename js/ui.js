@@ -48,6 +48,7 @@ async function cachedGallery(title) {
   return wikiGalleryCache.get(title);
 }
 import { sfx, treasureSound } from './sound.js';
+import { playPlaceAmbience, stopPlaceStream } from './ambience-stream.js';
 import { BoardDie } from './die.js';
 import {
   el,
@@ -377,6 +378,7 @@ export class UI {
     // uuden pelin rinnalle, ja ilman lippua ne piirtäisivät vanhan pelin
     // tilaa uuden päälle (esim. edellisen pelin kysymyksen tekstin).
     this.dead = true;
+    stopPlaceStream();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -1247,23 +1249,30 @@ export class UI {
   }
 
   /**
-   * Äänimaisema seuraa matkaajaa: kaupungin oma ambienssi, tai meri kun
-   * ollaan reitillä merellä. Ilman ambience-kenttää ei soiteta mitään, joten
-   * muut laudat pysyvät hiljaisina kunnes ne saavat omansa.
+   * Äänimaisema seuraa matkaajaa: paikan oikea äänite jos sellainen on
+   * merkitty, muuten kaupungin syntetisoitu ambienssi, tai meri kun ollaan
+   * reitillä merellä. Ilman ambience-kenttää ei soiteta mitään, joten muut
+   * laudat pysyvät hiljaisina kunnes ne saavat omansa.
    */
   syncAmbience() {
     const { game } = this;
-    if (game.phase === 'pickstart' || game.phase === 'over') {
-      sfx.setAmbience(null);
+    if (game.phase === 'over') {
+      playPlaceAmbience(null, null);
+      return;
+    }
+    // Etusivullakin on äänimaisema: satama ja meri odottavat lähtijää.
+    if (game.phase === 'pickstart') {
+      playPlaceAmbience(null, 'meri');
       return;
     }
     const pos = game.player.pos;
     if (pos.type === 'edge') {
       const edge = game.board.edgeById.get(pos.edge);
-      sfx.setAmbience(edge?.type === 'sea' ? 'meri' : null);
+      playPlaceAmbience(null, edge?.type === 'sea' ? 'meri' : null);
       return;
     }
-    sfx.setAmbience(game.board.cityById.get(pos.city)?.ambience ?? null);
+    const city = game.board.cityById.get(pos.city);
+    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null);
   }
 
   render() {
@@ -2182,6 +2191,8 @@ export class UI {
     this.typeTimers[slot] = setInterval(() => {
       shown++;
       piirra();
+      // Avausteksti kirjoittuu käsin: kynä raapaisee joka sanalla.
+      if (slot === 'intro') sfx.play('pen');
       if (shown >= words.length) {
         clearInterval(this.typeTimers[slot]);
         // Lopuksi pelkkä teksti, jotta perään lisättävä lähderivi asettuu

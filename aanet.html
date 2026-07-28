@@ -33,10 +33,14 @@
     <button id="lento-alku">startFlight</button>
     <button id="lento-loppu">stopFlight</button>
   </div>
+  <div class="osio">Paikkojen äänitteet (striimi Freesoundista)</div>
+  <div id="striimit" class="grid"></div>
+  <p id="striimi-tieto"></p>
   <script type="module">
     import { sfx } from './js/sound.js';
+    import { STREAMS } from './js/ambience-stream.js';
     const nimet = [
-      'click', 'paper', 'swipe', 'dieTick', 'dieLand', 'step', 'arrive',
+      'click', 'paper', 'swipe', 'pen', 'dieTick', 'dieLand', 'step', 'arrive',
       'ferry', 'flight', 'correct', 'wrong', 'hint', 'tick', 'timeout',
       'flip', 'clack', 'star', 'gem', 'horseshoe', 'robber', 'empty',
       'coin', 'stuck', 'turn', 'win',
@@ -50,6 +54,27 @@
     }
     document.getElementById('lento-alku').addEventListener('click', () => sfx.startFlight());
     document.getElementById('lento-loppu').addEventListener('click', () => sfx.stopFlight());
+
+    // Striimattavat paikkaäänitteet: soita/pysäytä ja näytä tekijämaininta.
+    const striimit = document.getElementById('striimit');
+    const tieto = document.getElementById('striimi-tieto');
+    let soiva = null;
+    for (const [kaupunki, { url, credit }] of Object.entries(STREAMS)) {
+      const b = document.createElement('button');
+      b.textContent = kaupunki;
+      b.addEventListener('click', () => {
+        if (soiva) { soiva.pause(); soiva = null; }
+        soiva = new Audio(url);
+        soiva.volume = 0.3;
+        soiva.play();
+        tieto.textContent = credit;
+      });
+      striimit.appendChild(b);
+    }
+    const seis = document.createElement('button');
+    seis.textContent = '■ pysäytä';
+    seis.addEventListener('click', () => { if (soiva) { soiva.pause(); soiva = null; } });
+    striimit.appendChild(seis);
   </script>
 </body>
 </html>
