@@ -829,8 +829,10 @@ export class UI {
     }
 
     if (game.phase === 'move') {
+      // Tilarivi kertoo jo "valitse kohde kartalta" — erillinen kupla
+      // ylhäällä olisi sama kehotus kahdesti ja jäisi päiväkirjan päälle.
       this.turnStatus.textContent = `Heitit ${game.die} — valitse kohde kartalta.`;
-      this.hint.textContent = 'Napauta rengasta kartalla.';
+      this.hint.textContent = '';
       return;
     }
 

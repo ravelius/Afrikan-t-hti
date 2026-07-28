@@ -1232,33 +1232,40 @@ export class Game {
   }
 
   /**
-   * Arpoo kysymyksen: kaupungin omat ja yleiset kysymykset ovat samassa pakassa,
-   * ja arvonta osuu vain vielä kysymättömiin. Kun pakka on tyhjä, kaikki
-   * kysymykset palaavat mukaan.
+   * Arpoo kysymyksen. Kaupungin omat kysymykset ovat aina etusijalla ja
+   * yleispakka on vasta varapakka: kysymyksen kuuluu liittyä siihen
+   * paikkaan, jossa pelaaja seisoo, eikä Egyptin pääkaupunkia kysytä
+   * Namibin autiomaassa.
    *
-   * Vaikeustaso rajaa pakkaa: 'easy' suosii helppoja, 'normal' jättää vaikeat
-   * pois ja 'hard' poimii vaikeita. Jos sopivan tasoisia ei ole, pakka
-   * lavenee portaittain, jotta kysymys löytyy aina.
+   * Vaikeustaso rajaa pakkaa: 'easy' suosii helppoja, 'normal' jättää
+   * vaikeat pois ja 'hard' poimii vaikeita. Järjestys on vaikeustaso
+   * ensin, sitten tuoreus, sitten paikallisuus — näin tietoportin vaikea
+   * kysymys pysyy vaikeana, vaikka paikan omat olisi jo kysytty.
    */
   pickQuestion(cityId, difficulty = 'normal') {
-    const pool = [...(this.pack.questions[cityId] ?? []), ...this.pack.questions.general];
+    const own = this.pack.questions[cityId] ?? [];
+    const general = this.pack.questions.general;
     const steps = {
       easy: [[1], [1, 2]],
       normal: [[1, 2]],
       hard: [[3], [2, 3]],
     }[difficulty] ?? [[1, 2]];
 
-    let deck = pool;
     for (const levels of steps) {
-      const fit = pool.filter((q) => levels.includes(questionLevel(q)));
-      if (fit.length) {
-        deck = fit;
-        break;
+      for (const onlyFresh of [true, false]) {
+        for (const source of [own, general]) {
+          let deck = source.filter((q) => levels.includes(questionLevel(q)));
+          if (onlyFresh) deck = deck.filter((q) => !this.usedQuestions.has(q.q));
+          if (!deck.length) continue;
+          const question = deck[Math.floor(this.rng() * deck.length)];
+          this.usedQuestions.add(question.q);
+          return question;
+        }
       }
     }
-    const fresh = deck.filter((q) => !this.usedQuestions.has(q.q));
-    const usable = fresh.length ? fresh : deck;
-    const question = usable[Math.floor(this.rng() * usable.length)];
+    // Varmistus: jos mikään porras ei osunut, kelpaa mikä tahansa kysymys.
+    const pool = [...own, ...general];
+    const question = pool[Math.floor(this.rng() * pool.length)];
     this.usedQuestions.add(question.q);
     return question;
   }
