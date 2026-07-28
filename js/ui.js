@@ -17,7 +17,16 @@ import {
 } from './game.js';
 import { factSource, factText, factVoice, isSourceUrl, sourceLabel, voiceTitle } from './pack.js';
 import { stampBoard, stampDate, stampList } from './passport.js';
-import { fetchSummary } from './wiki.js';
+import { fetchArticle, fetchSummary } from './wiki.js';
+
+// Tiivistelmät haetaan kerran per artikkeli: sama kuva näkyy sekä
+// saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
+const wikiSummaryCache = new Map();
+
+async function cachedSummary(title) {
+  if (!wikiSummaryCache.has(title)) wikiSummaryCache.set(title, fetchSummary(title));
+  return wikiSummaryCache.get(title);
+}
 import { sfx, treasureSound } from './sound.js';
 import { BoardDie } from './die.js';
 import {
@@ -120,6 +129,9 @@ export class UI {
 
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
+    this.arrivalImage = document.getElementById('arrival-image');
+    this.arrivalWiki = document.getElementById('arrival-wiki');
+    this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
     document.getElementById('arrival-yes').addEventListener('click', () => {
       this.closeArrival();
       sfx.play('paper');
@@ -1219,23 +1231,70 @@ export class UI {
     if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
     this.arrivalShownFor = city.id;
 
-    // Kortti kertoo vain päätöksen. Paikan tarina tulee kartan
-    // päiväkirjasta ja Lue lisää on vain karttanäkymässä, jottei sama
-    // tieto toistu kahdessa paikassa.
+    // Kortti kertoo vain päätöksen — paikan tarina tulee kartan
+    // päiväkirjasta. Wikipedian kuva tuo paikan eläväksi, ja sen alla on
+    // Lue lisää; teksti itsessään ei toistu kahdessa paikassa.
     this.arrivalCity.textContent = city.name;
+    this.arrivalImage.hidden = true;
+    this.arrivalImage.removeAttribute('src');
+    this.arrivalWiki.hidden = true;
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+    if (!city.wiki) return;
+
+    cachedSummary(city.wiki).then((summary) => {
+      // Pelaaja on voinut ehtiä jatkaa matkaa haun aikana.
+      if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
+      if (!summary) return;
+      if (summary.image) {
+        this.arrivalImage.src = summary.image;
+        this.arrivalImage.alt = summary.title || city.name;
+        this.arrivalImage.hidden = false;
+      }
+      this.arrivalWiki.hidden = false;
+    });
   }
 
   /**
-   * "Lue lisää": Wikipedian tiivistelmä paikasta. Dialogi avautuu heti ja
-   * täyttyy kun haku valmistuu, jottei nappi tunnu jumittuneelta. Jos haku
-   * epäonnistuu — ei yhteyttä, 404 tai täsmennyssivu — dialogissa lukee
-   * kohteliaasti, ettei tietoja saatu, eikä peli jää siitä jumiin.
+   * Muotoilee koko artikkelin tekstin: MediaWiki extracts palauttaa
+   * väliotsikot muodossa "== Otsikko ==", ja ne muutetaan omiksi
+   * otsikkoriveiksi. Pelkkää tekstiä — HTML:ää ei upoteta.
+   */
+  renderArticle(container, text) {
+    container.textContent = '';
+    let para = [];
+    const flush = () => {
+      if (para.length) container.appendChild(html('p', 'wiki-p', para.join(' ')));
+      para = [];
+    };
+    for (const line of text.split('\n')) {
+      const t = line.trim();
+      if (!t) {
+        flush();
+        continue;
+      }
+      const m = t.match(/^(={2,6})\s*(.+?)\s*={2,6}$/);
+      if (m) {
+        flush();
+        container.appendChild(html('p', m[1].length <= 2 ? 'wiki-h2' : 'wiki-h3', m[2]));
+      } else {
+        para.push(t);
+      }
+    }
+    flush();
+  }
+
+  /**
+   * "Lue lisää": Wikipedian artikkeli paikasta. Dialogi avautuu heti,
+   * tiivistelmä täyttyy kun haku valmistuu, ja koko artikkeli ladataan
+   * perään samalta kieleltä. Jos haku epäonnistuu — ei yhteyttä, 404 tai
+   * täsmennyssivu — dialogissa lukee kohteliaasti, ettei tietoja saatu,
+   * eikä peli jää siitä jumiin.
    */
   async openWiki(cityId) {
     const city = this.game.board.cityById.get(cityId);
     if (!city?.wiki) return;
 
+    this.wikiOpenFor = cityId;
     this.wikiTitle.textContent = city.name;
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
@@ -1243,9 +1302,9 @@ export class UI {
     this.wikiSource.textContent = '';
     if (!this.wikiDialog.open) this.wikiDialog.showModal();
 
-    const summary = await fetchSummary(city.wiki);
-    // Pelaaja on voinut ehtiä sulkea dialogin haun aikana.
-    if (!this.wikiDialog.open) return;
+    const summary = await cachedSummary(city.wiki);
+    // Pelaaja on voinut ehtiä sulkea dialogin tai avata toisen paikan.
+    if (!this.wikiDialog.open || this.wikiOpenFor !== cityId) return;
 
     if (!summary) {
       this.wikiExtract.textContent = 'Tietoja ei saatu haettua. Matka jatkuu.';
@@ -1259,6 +1318,14 @@ export class UI {
       this.wikiImage.hidden = false;
     }
     this.wikiExtract.textContent = summary.extract;
+
+    // Koko artikkeli ladataan tiivistelmän perään; tiivistelmä jää, jos
+    // hakua ei saada tehtyä. Kysytään vain kerran per avaus.
+    fetchArticle(summary.title, summary.lang).then((article) => {
+      if (!this.wikiDialog.open || this.wikiOpenFor !== cityId || !article) return;
+      if (article.length <= summary.extract.length) return;
+      this.renderArticle(this.wikiExtract, article);
+    });
 
     // CC BY-SA vaatii maininnan ja linkin — myös kaupallisessa käytössä.
     this.wikiSource.textContent = 'Lähde: Wikipedia (CC BY-SA) — ';

@@ -570,6 +570,19 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   background: rgba(234, 184, 78, 0.18);
 }
 
+/* Wikipedian kuva saapumiskortissa; Lue lisää -linkki on heti sen alla. */
+.arrival-image {
+  display: block;
+  width: 100%;
+  max-height: 170px;
+  object-fit: cover;
+  margin: 0.15rem 0 0.3rem;
+  border-radius: 6px;
+  border: 1px solid rgba(70, 51, 31, 0.3);
+}
+
+.arrival-card .wiki-btn { margin: 0 0 0.7rem; }
+
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */
 .passport-finds {
   display: flex;
@@ -1056,6 +1069,11 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
   max-height: 92dvh;
   overflow-y: auto;
+  /* Vieritys vain pystysuuntaan: sivuttaisvieritys ei saa herätä koskaan. */
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  overflow-wrap: break-word;
   animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
 }
 
@@ -1850,6 +1868,14 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   color: #9c6f1e;
 }
 
+/* Dialogin sisälläkin Lue lisää on pelkkä tekstilinkki, ei nappi. */
+.dialog .wiki-btn,
+.dialog .wiki-btn:hover:not(:disabled) {
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+
 /* Kapealla näytöllä tietokortti on tumma, joten linkki vaalenee. */
 @media (max-width: 700px) {
   .fact-card .wiki-btn { color: var(--accent); }
@@ -1869,6 +1895,27 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   font-size: 0.92rem;
   line-height: 1.5;
   white-space: pre-wrap;
+}
+
+/* Koko artikkelin väliotsikot (renderArticle muotoilee tekstistä). */
+.wiki-p { margin: 0 0 0.65rem; }
+
+.wiki-h2 {
+  margin: 1.1rem 0 0.4rem;
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+  border-bottom: 1px dashed rgba(70, 51, 31, 0.35);
+  padding-bottom: 0.15rem;
+}
+
+.wiki-h3 {
+  margin: 0.8rem 0 0.3rem;
+  font-family: var(--font-type);
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.03em;
 }
 
 /* Lähdemaininta on lisenssiehto, ei koriste: se näkyy aina. */
