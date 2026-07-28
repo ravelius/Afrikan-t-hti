@@ -187,8 +187,6 @@ export class UI {
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
     this.wikiSource = document.getElementById('wiki-source');
-    this.factWiki = document.getElementById('fact-wiki');
-    this.factWiki.addEventListener('click', () => this.openWiki(this.factWikiCity));
 
     this.eventDialog = document.getElementById('event-dialog');
     this.eventText = document.getElementById('event-text');
@@ -1127,7 +1125,6 @@ export class UI {
       // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
       // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
-      this.factWiki.hidden = true;
       this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
@@ -1174,9 +1171,6 @@ export class UI {
 
     const player = game.player;
     const city = this.factCity(player.pos);
-    // "Lue lisää" koskee aina sitä paikkaa, jonka teksti ruudussa on.
-    this.factWikiCity = city.id;
-    this.factWiki.hidden = !city.wiki;
     const facts = game.pack.placeFacts[city.id];
     if (!facts || facts.length === 0) return;
 

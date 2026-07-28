@@ -2038,21 +2038,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   border-radius: 0;
 }
 
-/*
- * Kartan päällä kelluvassa tietokortissa linkki tarvitsee saman vaalean
- * hehkun kuin kortin muut tekstit — muuten se hukkuu kartan piirroksiin
- * (esim. Kairon kultarenkaaseen), kun kortti osuu vilkkaaseen kohtaan.
- */
-body[data-mode] .fact-card .wiki-btn {
-  font-weight: 700;
-  text-shadow: 0 1px 0 rgba(247, 237, 216, 0.95), 0 0 6px rgba(247, 237, 216, 0.85);
-}
-
-/* Kapealla näytöllä tietokortti on tumma, joten linkki vaalenee. */
-@media (max-width: 700px) {
-  .fact-card .wiki-btn { color: var(--accent); }
-}
-
 .wiki-card { max-width: 560px; }
 
 .wiki-image {
