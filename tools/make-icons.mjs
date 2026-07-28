@@ -52,6 +52,17 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE
   <rect x="52" y="52" width="${SIZE - 104}" height="${SIZE - 104}" rx="72"
         fill="none" stroke="#46331f" stroke-width="6" stroke-dasharray="22 16" opacity="0.45"/>
 
+  <!-- Napapallot: pieni pohjoinen ylhäällä ja eteläinen alhaalla,
+       kuten pelin maailmankartassa ja vanhoissa kaksoispallokartoissa. -->
+  <g stroke="#46331f">
+    <circle cx="256" cy="116" r="37" fill="#f1e2bd" stroke-width="5"/>
+    <path d="M232,110 q10,-12 26,-9 q16,3 20,13 q-6,10 -24,10 q-16,0 -22,-14 z"
+          fill="#c9ab7c" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="256" cy="414" r="37" fill="#f1e2bd" stroke-width="5"/>
+    <path d="M230,414 q10,-14 28,-12 q18,2 24,12 q-8,14 -28,14 q-18,0 -24,-14 z"
+          fill="#e9dcc0" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+
   <!-- Pallonpuoliskot -->
   <circle cx="164" cy="266" r="106" fill="#f1e2bd" stroke="#46331f" stroke-width="7"/>
   <circle cx="348" cy="266" r="106" fill="#f1e2bd" stroke="#46331f" stroke-width="7"/>
