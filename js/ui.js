@@ -85,7 +85,8 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
   + 'Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä." '
   + 'Viimeinen lause päättyy kesken.\n\n'
   + 'Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.\n\n'
-  + 'Ostin lipun samana iltana.';
+  + 'Ostin lipun samana iltana. Mistä aloittaisin?\n\n'
+  + 'Napauta kaupunkia kartalla.';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
