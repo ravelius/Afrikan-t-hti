@@ -62,11 +62,12 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
-## Seuraavaksi: omistajan toivelista (paketit 8 ja 9 ovat valmiit)
+## Seuraavaksi: PAKETTI 12 (luonnoskirjan pulmat ja maamerkit)
 
 Omistajan linjaus 27.7.2026: **työstetään pelkkää Afrikkaa, kunnes
 peruspeli on kunnossa.** Muihin lautoihin ei kosketa ennen kuin Afrikka on
-valmis. Paketit 8 ja 9 ovat valmiit; muut laudat odottavat yhä.
+valmis. Paketit 8–11 ovat valmiit; seuraavaksi tehdään paketti 12
+(alempana).
 
 Myöhemmäksi sovitut (EI vielä työn alle):
 
@@ -87,10 +88,8 @@ Myöhemmäksi sovitut (EI vielä työn alle):
   general (Istanbul), middleeast/ankara (Istanbul), suomi general
   (Helsinki), oceania general (Uluru). Korjataan kunkin laudan
   sisältöpassissa ja lauta lisätään testin settiin.
-- Kysymysten vaihtelu: **paketti 10 alempana — seuraava työn alle
-  otettava paketti.**
-- "Lue lisää" -Wikipedia-tiivistelmät: **paketti 11 alempana — otetaan
-  paketin 10 JÄLKEEN, ei rinnakkain** (molemmat muokkaavat js/ui.js:ää).
+- Kysymysten vaihtelu: paketti 10 ✅ ja "Lue lisää": paketti 11 ✅
+  (kuvaukset alempana; jätetty dokumentiksi).
 
 Tämä on omistajan ja suunnittelusession sopima työlista. Tee työpaketit
 järjestyksessä; jokainen paketti on oma commit/PR. Jokaisen paketin jälkeen:
@@ -551,6 +550,73 @@ Toteutus:
   kutsuta testeissä — fetch-logiikka eristetään omaan funktioonsa ja
   testataan virhepolut tekaistulla vastauksella.
 - Versionostot, standalone-buildi, kuvakaappaus dialogista.
+
+## Paketti 12: Isoisän luonnoskirjan pulmat ja kartan maamerkit (Afrikka)
+
+Omistajan idea: muutama erikoistehtävä, jossa **kauniisti piirretty
+yksinkertainen pulma** — Verne-ajan hengessä, kuin isoisän päiväkirjaan
+piirtämä kaavio. Nämä elävöittävät peliä ja tuovat päättelyä tietovisan
+rinnalle. Lue ensin docs/tarina.md.
+
+**Muoto — "Isoisän luonnoskirjasta":**
+
+- Uusi tehtävämuoto `puzzle`: kortissa piirros (inline-SVG kartan
+  mustetyylillä), isoisän käsin kirjoittama rivi ja NELJÄ
+  vastausvaihtoehtoa (moottorin monivalinta kelpaa sellaisenaan —
+  vastaus napautetaan, ei kirjoiteta).
+- Piirrokset tehdään koodina (SVG-polut, currentColor, ohut viiva,
+  viivavarjostus) tiedostoon `js/packs/africa-puzzles.js`. EI ulkoisia
+  kuvia eikä verkkohakuja — standalone ja offline toimivat.
+- Laukaisu: pulma avautuu KERRAN pelissä, kun pelaaja saapuu pulman
+  kaupunkiin ensimmäistä kertaa (myös aloituskaupunki Kairo — siksi ei
+  sidota laattaan eikä tutkimiseen). Ratkaistut pidetään pelitilassa
+  (tallennus toJSON/fromJSON).
+- Palkinto: oikeasta +25 XP ja isoisän tyytyväinen rivi; väärästä ei
+  rangaistusta, vaan oikea ratkaisu näytetään kauniisti. Pulma ei
+  koskaan estä etenemistä.
+- Ulkoasu: sama pergamenttikortti kuin tietovisassa, otsikko
+  "Isoisän luonnoskirjasta". Piirros ensin, kysymysrivi alla.
+
+**Afrikan viisi pulmaa (faktat tarkistetaan, lähteet talteen):**
+
+1. **Kairo — hieroglyfiluvut.** Egyptiläiset numerot: sauva = 1,
+   kantapääluu = 10, köysikiehkura = 100, lootus = 1000. Piirroksessa
+   kolme lukua hieroglyfeinä arvoineen ja neljäs ilman arvoa — pelaaja
+   päättelee järjestelmän. Vaihtoehdot numeroina.
+2. **Kumasi — kultapunnukset.** Ashantien messinkipunnukset ja
+   kaksivartinen vaaka: vasemmalla kultahiekkapussi ja punnus,
+   oikealla punnuksia — mikä punnus tasapainottaa vaa'an? Piirroksessa
+   punnusten arvot näkyvissä, yksinkertainen yhteenlasku.
+3. **Kapkaupunki — naksutuskielet.** Xhosan naksutusmerkit: c = kielen
+   kärki hampaista (kuin paheksuva "tsk"), x = kielen sivu poskesta,
+   q = kitalaesta (kuin korkin poksahdus). Piirroksessa kolme suun
+   profiilikuvaa nuolineen ja merkit — mikä merkki kuuluu kuvaan X?
+4. **Timbuktu — käsikirjoituksen kuunvaiheet.** Käsikirjoitussivu,
+   johon on piirretty kuunvaiheiden sarja (uusikuu → kasvava sirppi →
+   puolikuu → ?) — jatka sarjaa. Timbuktun käsikirjoituksissa on
+   oikeasti tähtitiedettä; fact-teksti kertoo sen.
+5. **Sahara — karavaanin vesileilit.** Kaksi piirrettyä leiliä, 3 ja
+   5 mittaa, ja isoisän kysymys: miten mittaan tasan 4? Vaihtoehdot
+   ovat lyhyitä toimintosarjoja ("Täytä 5, kaada 3:een, …").
+   Klassikko, joka sopii karavaanin arkeen.
+
+**Kartan maamerkit (js/packs/africa.js decor + js/mapart.js):**
+
+- Pienet viivapiirrokset vanhojen karttojen tapaan — samaa tyyliä kuin
+  nykyinen purjelaiva: **pyramidit** Kairon lounaispuolelle (Giza),
+  **Pöytävuoren profiili** Kapkaupungin viereen, **Kilimandžaron
+  lumihuippu** vuoren kohdalle ja **dhow-purjevene** Sansibarin
+  edustalle.
+- Maamerkit myös vihjaavat pulmista: pyramidit ↔ Kairon pulma,
+  Pöytävuori ↔ Kapkaupungin pulma. Ei tekstiä karttaan — pelkkä kuva.
+- Sijoitus ei saa törmätä nimiin, reitteihin eikä kaupunkeihin —
+  koristetestit (decor placement) vartioivat; aja `npm test` ja katso
+  kuvakaappaus.
+
+**Testit:** pulmadatan eheys (4 uniikkia vaihtoehtoa, correct-indeksi,
+fact, kaupunki on laudalla), kerran-per-peli-logiikka ja tallennus,
+maamerkkien sijoitus. Versionostot, standalone, kuvakaappaus pulmakortista
+ja kartasta.
 
 ## Muistilista jokaiseen pakettiin
 
