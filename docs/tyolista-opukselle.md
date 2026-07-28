@@ -55,6 +55,9 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   yläpalkissa päiväkirjan päivämäärä, isoisän aikataulu Afrikalle ja
   80 päivän ennätys passin kunniamerkintänä.
 - Yläpalkkiin pelkkä kukkaro, siirtorenkaat hillityiksi ja vaakalukko: ✅
+- Paketti 11 ("Lue lisää"): ✅ (28.7.2026) — Wikipedian tiivistelmä
+  tietoruudun ja saapumiskortin napista, kaikille 32 Afrikan kaupungille
+  tarkistettu artikkeliotsikko.
 - Paketti 10 (kysymysten vaihtelu): ✅ (28.7.2026) — isoisän väittämät,
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
@@ -503,7 +506,7 @@ lähdemuoto), vuorottelun jakaumatesti siemenellä, karttakysymyksen
 oikea/väärä-logiikka. Tallennus toJSON/fromJSON, versionostot,
 standalone.
 
-## Paketti 11: "Lue lisää" — Wikipedia-tiivistelmät (Afrikka ensin)
+## Paketti 11: "Lue lisää" — Wikipedia-tiivistelmät (Afrikka ensin) — VALMIS
 
 Pelaaja voi pyytää lisätietoa nykyisestä sijainnistaan: pieni
 **"Lue lisää"** -nappi tietoruudun kulmaan ja saapumiskorttiin (EI
