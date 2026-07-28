@@ -80,12 +80,23 @@ Mamma Haidara -kirjasto, Library of Congressin näyttely — opettaa
 laskemaan vuodenaikojen alut tähtien liikkeistä) täsmäävät lähteisiin.
 Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 
-## Seuraavaksi: EI PAKETTIA LISTALLA — omistaja päättää seuraavan
+## Seuraavaksi: PAKETTI 15 (lentorepliikkien tunnelataus)
 
-**Paketit 1–14 ovat valmiit (28.7.2026).** Lisäksi korjattu: pulmien
-laukaisin (#74) sekä aloituslennon zoomaus, repliikin kesto ja
-avaustekstin häivytys (#80). Vakiokäynnistyksen kohdan 5 mukaan uusi
-sessio lopettaa tähän, kunnes omistaja lisää seuraavan paketin.
+**Paketit 1–14 ovat valmiit (28.7.2026).** Lento on sittemmin muutettu
+läpikuultavaksi kalvoksi kartan päälle (ei zoomausta) ja perillä
+odottaa "astu ulos koneesta" -nappi. Seuraavaksi paketti 15 (alempana).
+
+## Paketti 15: lentorepliikkien tunnelataus (pieni paketti)
+
+Omistajan palaute: lentorepliikeistä puuttui innostunut hehkutus —
+moni rivi on toteava fakta ilman tunnetta. Käy `texts.flightLines` ja
+`texts.flightDefault` läpi (maailma + africa) ja lataa jokaiseen riviin
+aitoa innostusta tai jännitystä: nuori herra on ensimmäistä kertaa
+elämässään matkalla, ja jokainen lento on hänelle tapaus. Fakta saa
+jäädä, mutta se ei riitä yksin — rivin pitää hehkua. Keinoja: huudahdus,
+kiihtynyt rytmi, aistihavainto ikkunasta, isoisän kirjan sivun ääneen
+ihmettely. Tarina.md:n säännöt pätevät (1–2 virkettä, minä-muoto, ei
+kohdemaiden pilkkaa). Testit ja versionostot kuten aina.
 
 Toteuttajan havainnot seuraavaa pakettia varten:
 
