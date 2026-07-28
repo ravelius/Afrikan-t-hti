@@ -62,11 +62,32 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
-## Seuraavaksi: omistajan toivelista (paketit 8 ja 9 ovat valmiit)
+**Paketit 1-11 ovat valmiit (28.7.2026).** Haettu tuore main; siinä ei ole
+pakettia 12. Vakiokäynnistyksen kohdan 5 mukaan lopetan tähän enkä keksi
+uutta pakettia. Alla olevat kohdat odottavat omistajan päätöstä.
+
+Toteuttajan havainnot seuraavaa pakettia varten:
+
+- **Afrikka on nyt selvästi muita lautoja edellä.** Sen havainnot ovat
+  keskimäärin 239 merkkiä, muiden 76-115. Afrikalla on väittämät,
+  tapahtumakortit, isoisän aikataulu ja wiki-otsikot; muilla ei mitään
+  näistä. Peli toimii kaikilla laudoilla, mutta ero näkyy pelatessa.
+- **Kolme Afrikan sisältölajia odottaa laajennusta muille laudoille:**
+  `questions.claims`, `events` ja kaupunkien `wiki`-kentät. Kaikki kolme
+  ovat valinnaisia, joten laajennus voi edetä lauta kerrallaan.
+- **`texts.schedule` vaatii ensin päätöksen.** Afrikan aikataulu on
+  kokonainen 80 päivän kierros, joka päättyy isoisän kotiinpaluuseen.
+  Toinen kierros toiselle laudalle antaisi kaksi eri versiota samasta
+  matkasta, ja `docs/tarina.md`:n mukaan päiväkirjoja on yksi, vuodelta
+  1873. Kysymys omistajalle: onko 80 päivää lautakohtainen vertailuluku
+  vai yksi matka, jonka laudat näyttävät eri paloina?
+- **`TURN_HOURS = 6` on säädetty pelitestin varaan** eikä sitä ole vielä
+  pelitestattu. Se on yhden vakion muutos (js/game.js).
+
+## Seuraavaksi: omistajan päätös
 
 Omistajan linjaus 27.7.2026: **työstetään pelkkää Afrikkaa, kunnes
-peruspeli on kunnossa.** Muihin lautoihin ei kosketa ennen kuin Afrikka on
-valmis. Paketit 8 ja 9 ovat valmiit; muut laudat odottavat yhä.
+peruspeli on kunnossa.** Afrikka on nyt valmis pakettien 8-11 osalta.
 
 Myöhemmäksi sovitut (EI vielä työn alle):
 
