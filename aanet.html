@@ -43,7 +43,9 @@
     .kori-rivi { display: flex; align-items: center; gap: 0.5rem; padding: 0.12rem 0; }
     .kori-rivi .soita { min-width: 3rem; flex: 0 0 auto; }
     .kori-rivi label { display: flex; align-items: center; gap: 0.45rem; cursor: pointer;
-      color: var(--himmea); font-size: 0.9rem; }
+      color: var(--himmea); font-size: 0.9rem; flex: 1 1 12rem; min-width: 0; }
+    .kori-rivi input[type="number"] { width: 4.4rem; }
+    .kori-rivi .sek { color: var(--haalea); align-self: center; }
     .oma { margin: 0.3rem 0 0.1rem; }
     .oma input[type="url"] { flex: 2 1 14rem; }
     .oma input[type="text"] { flex: 1 1 9rem; }
@@ -595,30 +597,69 @@
             + 'saavuttaessa. Kaupungin oma valinta ohittaa korin, oletus väistyy korin tieltä.';
           kori.appendChild(seloste);
           for (const ehdokas of TYYPPI_EHDOKKAAT[koriTyyppi]) {
-            const arvo = ehdokas.alku ? `${ehdokas.url}#alku=${ehdokas.alku}` : ehdokas.url;
+            // Tallennettu arvo kantaa alkukohdan ja voiman; ilman
+            // tallennusta esitäyttönä on ehdokkaan oma alkukohta.
+            const tallennettu = koriNyt.find((k) => jaaAlku(k).url === ehdokas.url) ?? null;
+            const pohja = jaaAlku(tallennettu ?? (ehdokas.alku ? `${ehdokas.url}#alku=${ehdokas.alku}` : ehdokas.url));
             const koriRivi = document.createElement('div');
             koriRivi.className = 'kori-rivi';
             const soitto = document.createElement('button');
             soitto.type = 'button';
             soitto.className = 'soita';
             soitto.textContent = '▶';
-            soitto.addEventListener('click', () => soita({
-              url: ehdokas.url, nimi: ehdokas.nimi, alku: ehdokas.alku, slot: `kori:${koriTyyppi}`,
-            }));
             const nimio = document.createElement('label');
             const ruutu = document.createElement('input');
             ruutu.type = 'checkbox';
-            ruutu.checked = koriNyt.some((k) => jaaAlku(k).url === ehdokas.url);
-            ruutu.addEventListener('change', () => {
-              const nyt = tyyppiKori(koriTyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url);
-              if (ruutu.checked) nyt.push(arvo);
-              valitseTyyppiKori(koriTyyppi, nyt);
-              rakenna();
-            });
+            ruutu.checked = tallennettu !== null;
             nimio.appendChild(ruutu);
             nimio.appendChild(document.createTextNode(ehdokas.nimi));
+            // Alkukohta ja voima näkyvät ja tallentuvat suoraan rivillä.
+            const aika = document.createElement('input');
+            aika.type = 'number';
+            aika.min = '0';
+            aika.step = '1';
+            aika.value = String(pohja.alku || 0);
+            aika.title = 'aloituskohta sekunteina';
+            const sek = document.createElement('span');
+            sek.className = 'sek';
+            sek.textContent = 's';
+            const voimaKentta = document.createElement('input');
+            voimaKentta.type = 'number';
+            voimaKentta.min = '0.1';
+            voimaKentta.step = '0.1';
+            voimaKentta.value = String(pohja.voima || 1);
+            voimaKentta.title = 'voimakkuuskerroin';
+            const kertaa = document.createElement('span');
+            kertaa.className = 'sek';
+            kertaa.textContent = '×';
+            const arvoNyt = () => {
+              const osat = [];
+              const a = Math.max(0, Number(aika.value) || 0);
+              const v = Math.max(0.1, Number(voimaKentta.value) || 1);
+              if (a > 0) osat.push(`alku=${a}`);
+              if (v !== 1) osat.push(`voima=${v}`);
+              return osat.length ? `${ehdokas.url}#${osat.join('&')}` : ehdokas.url;
+            };
+            soitto.addEventListener('click', () => soita({
+              url: ehdokas.url, nimi: ehdokas.nimi,
+              alku: Math.max(0, Number(aika.value) || 0), slot: `kori:${koriTyyppi}`,
+            }));
+            const talleta = () => {
+              const nyt = tyyppiKori(koriTyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url);
+              if (ruutu.checked) nyt.push(arvoNyt());
+              valitseTyyppiKori(koriTyyppi, nyt);
+            };
+            ruutu.addEventListener('change', () => { talleta(); rakenna(); });
+            // Säädöt tallentuvat ilman uudelleenpiirtoa, ettei kenttä
+            // menetä kohdistusta kesken näppäilyn.
+            aika.addEventListener('change', talleta);
+            voimaKentta.addEventListener('change', talleta);
             koriRivi.appendChild(soitto);
             koriRivi.appendChild(nimio);
+            koriRivi.appendChild(aika);
+            koriRivi.appendChild(sek);
+            koriRivi.appendChild(voimaKentta);
+            koriRivi.appendChild(kertaa);
             kori.appendChild(koriRivi);
           }
           kotelo.appendChild(kori);
@@ -796,8 +837,12 @@
       // Arvontakorit omana lohkonaan.
       for (const [tyyppi, lista] of Object.entries(kaikkiKorit())) {
         const nimet = lista.map((k) => {
-          const { url } = jaaAlku(k);
-          return (TYYPPI_EHDOKKAAT[tyyppi] ?? []).find((e) => e.url === url)?.nimi ?? k;
+          const { url, alku, voima } = jaaAlku(k);
+          const nimi = (TYYPPI_EHDOKKAAT[tyyppi] ?? []).find((e) => e.url === url)?.nimi ?? k;
+          const osat = [];
+          if (alku > 0) osat.push(`alkaa ${alku} s`);
+          if (voima !== 1) osat.push(`voima ${voima}×`);
+          return osat.length ? `${nimi} (${osat.join(', ')})` : nimi;
         });
         rivit.push(`Arvontakori ${tyyppi}: ${nimet.join(' | ')}`);
       }
