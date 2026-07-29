@@ -85,10 +85,11 @@ export function playPlaceAmbience(cityId, fallbackType) {
   if (nykyinen?.cityId === cityId && nykyinen?.url === url) return;
 
   stopPlaceStream();
-  // Valinta voi kantaa aloituskohdan (#alku=20): hypätään äänitteen
-  // vaimean alun yli. Silmukka palaa selaimen tapaan alkuun asti, mikä
-  // on siedettävää — äänitteet ovat pitkiä.
-  const { url: osoite, alku } = jaaAlku(url);
+  // Valinta voi kantaa aloituskohdan ja voimakkuuden (#alku=20&voima=1.5):
+  // hypätään äänitteen vaimean alun yli ja soitetaan halutulla tasolla.
+  // Silmukka palaa selaimen tapaan alkuun asti, mikä on siedettävää —
+  // äänitteet ovat pitkiä.
+  const { url: osoite, alku, voima } = jaaAlku(url);
   const audio = new Audio(osoite);
   audio.loop = true;
   audio.preload = 'auto';
@@ -102,7 +103,7 @@ export function playPlaceAmbience(cityId, fallbackType) {
       }
     }, { once: true });
   }
-  const oma = { audio, cityId, url };
+  const oma = { audio, cityId, url, tavoite: Math.min(1, VOIMA * voima) };
   nykyinen = oma;
 
   const varalle = () => {
@@ -117,7 +118,7 @@ export function playPlaceAmbience(cityId, fallbackType) {
       return;
     }
     sfx.setAmbience(null); // synteesi väistyy, kun oikea äänite soi
-    haivyta(audio, VOIMA);
+    haivyta(audio, oma.tavoite);
   }).catch(varalle);
 }
 
@@ -140,21 +141,31 @@ let musiikki = null;
 export function startQuizMusic() {
   // Kaupungin ääni väistyy reilusti kysymyksen ajaksi — kaksi ääntä
   // päällekkäin täydellä voimalla oli puuroa.
-  if (nykyinen) haivyta(nykyinen.audio, VOIMA * 0.15);
+  if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
   if (!sfx.enabled || musiikki) return;
   const valinta = valittuAani('musiikki:tietovisa');
   if (valinta === '') return; // musiikki valittu pois
-  const audio = new Audio(valinta ?? QUIZ_MUSIC.url);
+  const asetus = jaaAlku(valinta);
+  const audio = new Audio(asetus.url ?? QUIZ_MUSIC.url);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
+  if (asetus.alku) {
+    audio.addEventListener('loadedmetadata', () => {
+      try {
+        audio.currentTime = asetus.alku;
+      } catch {
+        /* soi alusta */
+      }
+    }, { once: true });
+  }
   musiikki = audio;
   audio.play().then(() => {
     if (musiikki !== audio) {
       audio.pause();
       return;
     }
-    haivyta(audio, MUSIIKKI_VOIMA);
+    haivyta(audio, Math.min(1, MUSIIKKI_VOIMA * asetus.voima));
   }).catch(() => {
     if (musiikki === audio) musiikki = null;
   });
@@ -162,7 +173,7 @@ export function startQuizMusic() {
 
 export function stopQuizMusic() {
   // Kaupungin ääni palaa täyteen voimaansa.
-  if (nykyinen) haivyta(nykyinen.audio, VOIMA);
+  if (nykyinen) haivyta(nykyinen.audio, nykyinen.tavoite ?? VOIMA);
   const vanha = musiikki;
   musiikki = null;
   if (!vanha) return;

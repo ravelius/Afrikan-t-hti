@@ -787,10 +787,19 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   stroke-linejoin: round;
   opacity: 0.22;
 }
-/* Sen maan rajat, jossa pelaaja on, piirtyvät tummempina. */
-.border-active {
-  stroke-width: 1.4;
-  opacity: 0.55;
+/* Maa, jossa pelaaja on: alue aavistuksen tummempana ja nimi hennosti
+ * kaunokirjoituksella keskellä — sama käsiala kuin lentokalvon
+ * reunamerkinnöissä. */
+.country-tint {
+  fill: rgba(90, 70, 40, 0.13);
+  stroke: none;
+}
+.country-name {
+  font-family: "Snell Roundhand", "Savoye LET", "Bradley Hand",
+    "Segoe Script", "Comic Sans MS", cursive;
+  font-style: italic;
+  letter-spacing: 0.12em;
+  fill: rgba(70, 51, 31, 0.42);
 }
 
 .wave { fill: none; stroke: var(--sea-ink); stroke-width: 2; opacity: 0.45; stroke-linecap: round; }

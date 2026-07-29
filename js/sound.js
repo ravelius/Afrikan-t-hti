@@ -6,7 +6,7 @@
 
 const STORAGE_KEY = 'afrikan-tahti-sound';
 
-import { valittuAani } from './aani-ehdokkaat.js';
+import { valittuAani, jaaAlku } from './aani-ehdokkaat.js';
 
 // Ambienssin ristihäivytys ja tapahtumien väli. Väli on tarkoituksella pitkä
 // ja epäsäännöllinen: säännöllinen ääni alkaa kuulua kellona.
@@ -257,18 +257,21 @@ class Sound {
     // matkustamosta kuultuna. Ilman verkkoa soi syntetisoitu kone.
     const jet = this.samples?.jet;
     if (jet) {
+      // Viritysivun valinta voi säätää alkukohtaa ja voimakkuutta
+      // (#alku=40&voima=1.5); oletukset ovat omistajan hyväksymät.
+      const asetus = jaaAlku(valittuAani('tehoste:jet'));
       const src = ctx.createBufferSource();
       src.buffer = jet;
       src.loop = true; // lyhyempikin äänite kantaa koko kohtauksen yli
       const g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t0);
-      g.gain.exponentialRampToValueAtTime(0.5, t0 + 0.9);
+      g.gain.exponentialRampToValueAtTime(Math.min(1, 0.7 * asetus.voima), t0 + 0.9);
       // Ei ajastettua loppua: moottori soi, kunnes stopFlight häivyttää
       // sen — kalvo on auki niin kauan kuin pelaaja viipyy koneessa.
       src.connect(g).connect(this.bus);
       // Pitkissä äänityksissä alku on lähestymistä ja odottelua —
-      // hypätään suoraan lennon ytimeen (omistajan ohje: ~45 s kohdalta).
-      const alku = jet.duration > 60 ? 45 : 0;
+      // hypätään suoraan lennon ytimeen (omistajan ohje: ~40 s kohdalta).
+      const alku = asetus.alku || (jet.duration > 60 ? 40 : 0);
       // Jos kohtaus venyy äänitettä pidemmäksi, silmukka palaa samaan
       // kohtaan eikä äänitteen hiljaiseen alkuun.
       src.loopStart = alku;
