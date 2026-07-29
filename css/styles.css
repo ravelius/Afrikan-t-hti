@@ -2073,21 +2073,22 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 /* Kaiutin ankkuroituu korttiin myös silloin, kun kortti on staattinen. */
 .fact-card { position: relative; }
 
-/* Kaiutin kortin oikeassa yläkulmassa: lukee koko merkinnän. */
+/* Kaiutin kortin oikeassa yläkulmassa: hillitty viivapiirros samaan
+ * tapaan kuin kuvakuvake — jatkaa merkinnän luentaa. */
 .fact-kuuntele {
   position: absolute;
-  top: 0.35rem;
+  top: 0.4rem;
   right: 0.5rem;
-  padding: 0.1rem 0.3rem;
+  padding: 0.15rem;
   min-height: 0;
   background: none;
   border: 0;
   box-shadow: none;
-  font-size: 1rem;
+  color: #7a5514;
+  line-height: 0;
   cursor: pointer;
-  opacity: 0.75;
 }
-.fact-kuuntele:hover:not(:disabled) { background: none; opacity: 1; }
+.fact-kuuntele:hover:not(:disabled) { background: none; color: #9c6f1e; }
 
 .fact-image-btn {
   align-self: flex-start;
