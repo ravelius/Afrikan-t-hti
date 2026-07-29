@@ -45,6 +45,7 @@
     .kori-rivi label { display: flex; align-items: center; gap: 0.45rem; cursor: pointer;
       color: var(--himmea); font-size: 0.9rem; flex: 1 1 12rem; min-width: 0; }
     .kori-rivi input[type="range"] { width: 7.5rem; accent-color: var(--korostus); }
+    .kori-rivi input[type="range"].alku { width: auto; flex: 1 1 12rem; max-width: 24rem; }
     .kori-rivi .sek { min-width: 2.9rem; text-align: right; }
     .kori-rivi .sek { color: var(--haalea); align-self: center; }
     /* Paikan muut vaihtoehdot aukeavat nuolesta. */
@@ -93,9 +94,6 @@
       <input id="soitin-jana" class="aikajana" type="range" min="0" max="100" value="0" step="0.1" />
       <span class="aika" id="soitin-aika">0:00 / 0:00</span>
       <button id="soitin-merkitse" title="Aseta soittimen kohta klipin aloituskohdaksi">⌖ Alkukohta tästä</button>
-      <label class="laskuri">voim.
-        <input id="soitin-voima" type="range" min="0" max="1" step="0.05" value="0.35" style="width:5.5rem" />
-      </label>
       <label class="laskuri"><input id="soitin-luuppi" type="checkbox" /> luuppi</label>
     </div>
     <div class="suodattimet">
@@ -206,14 +204,15 @@
     const mika = document.getElementById('soitin-mika');
     const jana = document.getElementById('soitin-jana');
     const aika = document.getElementById('soitin-aika');
-    const voima = document.getElementById('soitin-voima');
+    // Esikuuntelun perustaso: rivin voimakerroin kuuluu tämän päälle,
+    // joten 1.0× soi mukavalla tasolla ja 3.0× yltää täyteen.
+    const PERUSTASO = 0.33;
     const luuppi = document.getElementById('soitin-luuppi');
     // Kokonaistaso = master-liuku × klipin oma voimakerroin.
     const asetaTaso = () => {
-      soitin.volume = Math.min(1, Number(voima.value) * (soiva?.voima ?? 1));
+      soitin.volume = Math.min(1, PERUSTASO * (soiva?.voima ?? 1));
     };
     asetaTaso();
-    voima.addEventListener('input', asetaTaso);
     luuppi.addEventListener('change', () => { soitin.loop = luuppi.checked; });
 
     const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -225,6 +224,14 @@
     jana.addEventListener('input', () => {
       if (soitin.duration) soitin.currentTime = (Number(jana.value) / 100) * soitin.duration;
     });
+
+    // Voimaliu'un vaikutus kuuluu heti, jos sama ääni soi esikuuntelussa.
+    function saadaEsikuunteluVoima(slot, url, arvo) {
+      if (soiva && soiva.slot === slot && soiva.url === url) {
+        soiva.voima = arvo;
+        asetaTaso();
+      }
+    }
 
     function soita(ehdokas) {
       if (soiva && soiva.url === ehdokas.url && soiva.slot === ehdokas.slot) {
@@ -623,9 +630,10 @@
             // (omistajan toive — iPadilla liu'utus on näppäilyä helpompi).
             const aika = document.createElement('input');
             aika.type = 'range';
+            aika.className = 'alku';
             aika.min = '0';
             aika.max = '120';
-            aika.step = '5';
+            aika.step = '1';
             aika.value = String(pohja.alku || 0);
             aika.title = 'aloituskohta sekunteina';
             const sek = document.createElement('span');
@@ -645,6 +653,7 @@
             aika.addEventListener('input', () => { sek.textContent = `${aika.value} s`; });
             voimaKentta.addEventListener('input', () => {
               kertaa.textContent = `${Number(voimaKentta.value).toFixed(1)}×`;
+              saadaEsikuunteluVoima(`kori:${koriTyyppi}`, ehdokas.url, Number(voimaKentta.value));
             });
             const arvoNyt = () => {
               const osat = [];
@@ -656,7 +665,9 @@
             };
             soitto.addEventListener('click', () => soita({
               url: ehdokas.url, nimi: ehdokas.nimi,
-              alku: Math.max(0, Number(aika.value) || 0), slot: `kori:${koriTyyppi}`,
+              alku: Math.max(0, Number(aika.value) || 0),
+              voima: Math.max(0.1, Number(voimaKentta.value) || 1),
+              slot: `kori:${koriTyyppi}`,
             }));
             const talleta = () => {
               const nyt = tyyppiKori(koriTyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url);
@@ -762,6 +773,7 @@
               const tallenna = () => {
                 esitaytot.set(`${slot}|${url}`, sekunnit());
                 voimaEsitaytot.set(`${slot}|${url}`, kerroin());
+                saadaEsikuunteluVoima(slot, url, kerroin());
                 if (onValittu) {
                   valitseAani(slot, arvoksi(url));
                   rakenna();
