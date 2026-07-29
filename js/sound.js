@@ -535,6 +535,9 @@ class Sound {
       // tyhjä valinta jättää synteesin voimaan.
       const valinta = valittuAani(`tehoste:${name}`);
       if (valinta === '') continue;
+      // Ilman oletusta (url null) ladataan vain, jos omistaja on valinnut
+      // äänen viritysivulta.
+      if (!(valinta ?? url)) continue;
       fetch(valinta ?? url)
         .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error('http'))))
         .then((data) => this.ctx.decodeAudioData(data))
@@ -633,6 +636,13 @@ const REAL_SAMPLES = {
     url: 'https://cdn.freesound.org/previews/842/842183_13307919-lq.mp3',
     credit: '"Page Turn Free" — AardsReal, Freesound (CC0)',
   },
+  // ElevenLabs-efektipilotit: ei oletusta (url: null) — syntetisoitu soi,
+  // kunnes omistaja valitsee äänen viritysivulta. Tiedostot ovat repossa.
+  click: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  paper: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  coin: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  correct: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  wrong: { url: null, credit: 'ElevenLabs SFX -pilotti' },
 };
 
 // Mitkä äänet soivat oikeasta äänitteestä ja miten siivu otetaan.
@@ -646,6 +656,12 @@ const REAL_PLAYERS = {
   pen: (s) => s.playSlice('pen', { dur: 0.24, gain: 0.35, isku: true, tasavire: true }),
   // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
   quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
+  // Generoidut yksittäisefektit soivat aina alusta kokonaisina.
+  click: (s) => s.playSlice('click', { dur: 0.5, gain: 0.35, alusta: true }),
+  paper: (s) => s.playSlice('paper', { dur: 1.2, gain: 0.35, alusta: true }),
+  coin: (s) => s.playSlice('coin', { dur: 1.3, gain: 0.4, alusta: true }),
+  correct: (s) => s.playSlice('correct', { dur: 1.5, gain: 0.4, alusta: true }),
+  wrong: (s) => s.playSlice('wrong', { dur: 1.1, gain: 0.4, alusta: true }),
 };
 
 

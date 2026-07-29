@@ -942,6 +942,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   animation: flight-overlay-in 0.5s ease;
 }
 
+/* Aloita seikkailu -portti: kartta himmeänä taustalla, nappi keskellä.
+ * Napautus avaa selaimen äänilukon, joten intro-puhe ja ambienssi
+ * pääsevät soimaan heti. */
+.start-gate {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(36, 26, 18, 0.55);
+  animation: flight-overlay-in 0.35s ease;
+}
+
+.start-btn {
+  font-size: 1.15rem;
+  padding: 0.9rem 2rem;
+  letter-spacing: 0.04em;
+}
+
 /* Lennon ajaksi alareunan kortit ja napit väistyvät: kalvon alla näkyy
  * vain kohteen kartta. Teksti ja lukuääni jatkuvat piilossa. */
 body.flight-active .turn-card,

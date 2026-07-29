@@ -397,6 +397,7 @@ export class UI {
     // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
     document.body.classList.remove('flight-active');
     for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
+    this.suljeAloitusportti();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     clearTimeout(this.lentoPuheAjastin);
@@ -1672,9 +1673,17 @@ export class UI {
       this.introShown = false;
       this.introText.textContent = '';
       this.stopIntroVoice();
+      this.suljeAloitusportti();
       return;
     }
     if (this.introShown) return;
+    // Seikkailu alkaa napista: selain sallii äänet vasta napautuksesta,
+    // joten lukuääni, kirjoituskone ja ambienssi käynnistyvät kaikki
+    // samasta Aloita seikkailu -painalluksesta. Tausta on himmeänä takana.
+    if (!this.aloitettu) {
+      this.showAloitusportti();
+      return;
+    }
     this.introShown = true;
     this.playIntroVoice();
     // Avausteksti kirjoittuu selvästi hitaammin kuin muut: se on matkan
@@ -1683,6 +1692,26 @@ export class UI {
     // Koko teksti on jo paikallaan, joten koon voi sovittaa heti — sen
     // jälkeen mikään ei enää liiku kirjoituksen aikana.
     this.fitIntro();
+  }
+
+  /** Aloita seikkailu -portti: keskellä ruutua, kartta himmeänä takana. */
+  showAloitusportti() {
+    if (this.aloitusportti) return;
+    const portti = html('div', 'start-gate');
+    const nappi = html('button', 'start-btn primary', 'Aloita seikkailu');
+    nappi.addEventListener('click', () => {
+      this.aloitettu = true;
+      this.suljeAloitusportti();
+      this.render();
+    });
+    portti.appendChild(nappi);
+    this.mapPane.appendChild(portti);
+    this.aloitusportti = portti;
+  }
+
+  suljeAloitusportti() {
+    this.aloitusportti?.remove();
+    this.aloitusportti = null;
   }
 
   /**
