@@ -21,6 +21,7 @@ const MODULES = [
   'js/packs/maailma.js',
   'js/packs/africa-questions.js',
   'js/packs/africa-puzzles.js',
+  'js/packs/africa-borders.js',
   'js/packs/africa.js',
   'js/packs/middleeast-questions.js',
   'js/packs/europe-questions.js',

@@ -1021,14 +1021,14 @@ export class UI {
       gwBtn.addEventListener('click', async () => {
         sfx.play('flight');
         // Lentokalvo kuuluu vain maailmankartalle — mantereella lento
-        // tapahtuu suoraan karttanäkymässä.
-        if (game.pack.id === 'maailma') {
-          await this.animateFlight(
-            game.cityOf()?.name ?? '', link.label,
-            game.flightLine(link.city, packById(link.pack)),
-          );
-        }
+        // tapahtuu suoraan karttanäkymässä. Siirto tehdään ennen kalvoa,
+        // jotta perillä odottava päiväkirjamerkintä alkaa puheineen jo
+        // lennon aikana.
+        const lahto = game.cityOf()?.name ?? '';
+        const kalvo = game.pack.id === 'maailma';
+        const line = kalvo ? game.flightLine(link.city, packById(link.pack)) : null;
         this.doAction(() => game.actionGateway(link.index));
+        if (kalvo) await this.animateFlight(lahto, link.label, line);
       });
       this.actionsEl.appendChild(gwBtn);
     }
@@ -1083,10 +1083,16 @@ export class UI {
       // Lukuääni väistyy, kun matka alkaa.
       this.stopIntroVoice();
       this.introEl.classList.add('intro-fade');
+      // Repliikki ennen siirtoa, jotta rng-kutsut osuvat samaan kohtaan.
+      const line = game.firstFlightLine(city.id);
+      // Siirto tehdään ennen lentokalvoa: perillä odottava päiväkirja-
+      // merkintä alkaa puheineen jo lennon aikana kalvon alla.
+      this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
       await this.animateFlight(
-        'Lontoo', city.name, game.firstFlightLine(city.id),
+        'Lontoo', city.name, line,
         { dx: city.x - lontoo.x, dy: city.y - lontoo.y },
       );
+      return;
     }
     this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
   }

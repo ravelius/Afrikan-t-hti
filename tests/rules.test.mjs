@@ -1133,10 +1133,10 @@ test('tietoportti: vaikea kysymys avaa maan laudan ilmaiseksi', () => {
   toinen.closeQuiz();
   assert.equal(toinen.player.packId, 'europe', 'väärällä vastauksella jäädään laudalle');
 
-  // Saapuminen tarjoaa Helsingin tutkimista; ohitus palauttaa vuoron.
-  assert.equal(game.phase, 'offer', 'laatattomankin kaupungin saa tutkia saapuessa');
-  game.actionSkipQuiz();
-  assert.equal(game.phase, 'action');
+  // Laatattomaan kaupunkiin saapuminen ei avaa korttia itsestään, mutta
+  // Tutki paikka odottaa alavalikossa.
+  assert.equal(game.phase, 'action', 'saapuminen ei avaa korttia laatattomassa kaupungissa');
+  assert.ok(game.travelModes().includes('stay'), 'Tutki paikka on alavalikossa');
 
   // Suomesta pois pääsee tavallisesta portista (manner ei ole maalauta).
   const takaisin = game.gatewayOptions();
@@ -1470,9 +1470,11 @@ test('matkustustavan valinnan voi perua ennen heittoa', () => {
 test('matkustustapa valitaan automaattisesti kun vaihtoehtoja ei ole', () => {
   const game = newGame(51);
 
-  // Sisämaan kaupungissa ilman aarretta maitse on ainoa tapa: vuoro alkaa heitosta.
+  // Sisämaan kaupungissa ilman aarretta ja tutkittavaa maitse on ainoa
+  // tapa: vuoro alkaa heitosta.
   game.player.pos = { type: 'city', city: 'murzuk' };
   game.tokens.delete('murzuk');
+  game.explored.add('africa:murzuk');
   game.phase = 'action';
   game.beginTurn();
   assert.equal(game.phase, 'roll');
@@ -2388,10 +2390,11 @@ test('pulma aukeaa Tutki paikka -napista, ei itsestään: aloitus Kairoon', () =
   const tulos = game.actionPickStart('kairo', idx);
   assert.ok(tulos.ok);
   assert.equal(game.pack.id, 'africa');
-  // Kysymys ei saa hypätä ruudulle heti laskeuduttua — saapumiskortti
-  // tarjoaa tutkimista, ja pulma aukeaa vasta Tutki paikka -napista.
+  // Mikään ei saa hypätä ruudulle heti laskeuduttua — Tutki paikka odottaa
+  // alavalikossa, ja pulma aukeaa vasta siitä.
   assert.equal(game.quiz, null, 'pulma ei saa avautua itsestään');
-  assert.equal(game.phase, 'offer', 'saapuminen tarjoaa tutkimista');
+  assert.equal(game.phase, 'action', 'saapuminen ei avaa korttia');
+  assert.ok(game.travelModes().includes('stay'), 'Tutki paikka on alavalikossa');
   assert.ok(game.actionQuiz().ok);
   assert.equal(game.quiz?.kind, 'puzzle', 'Tutki paikka avaa pulman');
   assert.equal(game.quiz.cityId, 'kairo');
@@ -2417,7 +2420,8 @@ test('jalan saapuminen pulmakaupunkiin tarjoaa tutkimista ja Tutki avaa pulman',
   const tulos = game.actionMove(puzzle.city);
   assert.ok(tulos.ok);
   assert.equal(game.quiz, null, 'pulma ei saa avautua itsestään');
-  assert.equal(game.phase, 'offer', 'saapuminen tarjoaa tutkimista');
+  assert.notEqual(game.phase, 'quiz', 'saapuminen ei avaa mitään itsestään');
+  assert.ok(game.travelModes().includes('stay'), 'Tutki paikka on alavalikossa');
   assert.ok(game.actionQuiz().ok);
   assert.equal(game.quiz?.kind, 'puzzle', 'Tutki paikka avaa pulman');
 });

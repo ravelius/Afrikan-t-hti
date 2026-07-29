@@ -771,6 +771,15 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .lake { fill: #ecd9ae; }
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
+/* Maiden rajat: hyvin hento katkoviiva vanhan kartan tapaan. */
+.border {
+  fill: none;
+  stroke: var(--map-ink);
+  stroke-width: 0.9;
+  stroke-dasharray: 5 4;
+  stroke-linejoin: round;
+  opacity: 0.22;
+}
 
 .wave { fill: none; stroke: var(--sea-ink); stroke-width: 2; opacity: 0.45; stroke-linecap: round; }
 
