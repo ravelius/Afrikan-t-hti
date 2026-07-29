@@ -690,7 +690,11 @@
             const onValittu = (url ?? null) === (kaytto.url ?? null);
             let aikaKentta = null;
             let voimaKentta = null;
-            const sekunnit = () => Math.max(0, Number(aikaKentta?.value) || 0);
+            // Ilman kenttiä valinta perii ehdokkaan oman alkukohdan
+            // (esim. Metris 20 s), jotta se ei katoa yksinkertaistuksessa.
+            const sekunnit = () => (aikaKentta
+              ? Math.max(0, Number(aikaKentta.value) || 0)
+              : (alku ?? 0));
             const kerroin = () => Math.max(0.1, Number(voimaKentta?.value) || 1);
             const arvoksi = (u) => {
               const osat = [];
@@ -714,9 +718,11 @@
               rakenna();
             });
             rivi.appendChild(valitse);
-            // Aloituskohta ja voimakerroin: striimeille ja lentoäänelle.
-            // Muut tehosteet siivutetaan, joten kentät eivät koske niitä.
-            const saadettava = url && (!slot.startsWith('tehoste:') || slot === 'tehoste:jet');
+            // Aloituskohta ja voimakerroin näkyvät vain musiikilla ja
+            // lentoäänellä: kaupunkien viritys tapahtuu arvontakorissa
+            // (omistajan toive — rivit pysyvät siisteinä), ja
+            // kaupunkikohtainen hienosäätö hoituu Miksaus-osiossa.
+            const saadettava = url && (slot.startsWith('musiikki:') || slot === 'tehoste:jet');
             if (saadettava) {
               aikaKentta = document.createElement('input');
               aikaKentta.type = 'number';
