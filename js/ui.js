@@ -2633,6 +2633,19 @@ export class UI {
       const nappi = html('button', 'flight-exit', 'Astu ulos');
       nappi.addEventListener('click', resolve, { once: true });
       overlay.appendChild(nappi);
+      // Nappi asettuu repliikin alle eikä sen päälle; jos alle ei mahdu
+      // (kapealla ruudulla repliikki on korkea), nappi nousee tekstin
+      // yläpuolelle. Repliikki elää kartan mittasuhteiden mukaan, joten
+      // paikka lasketaan siitä.
+      if (this.flightLine && !this.flightLine.hidden) {
+        const rivi = this.flightLine.getBoundingClientRect();
+        const kalvo = overlay.getBoundingClientRect();
+        const alle = rivi.bottom - kalvo.top + 14;
+        const paalle = rivi.top - kalvo.top - 62;
+        const ylhaalta = alle + 54 <= kalvo.height ? alle : Math.max(8, paalle);
+        nappi.style.top = `${Math.round(ylhaalta)}px`;
+        nappi.style.bottom = 'auto';
+      }
     });
 
     overlay.classList.add('flight-leaving');
