@@ -30,7 +30,7 @@ const KAUPUNKIKOHTAISET = {
 };
 
 // Tyyppiehdokkaat: käyvät kaikille saman maiseman kaupungeille.
-const TYYPPI_EHDOKKAAT = {
+export const TYYPPI_EHDOKKAAT = {
   basaari: [
     { url: 'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3', nimi: 'Basaarin hälinä (Khan el-Khalili) — 3bagbrew, CC0' },
     { url: 'https://cdn.freesound.org/previews/683/683118_8105512-lq.mp3', nimi: 'Katukauppiaat (Kairo) — AhmadAiuby, CC0' },
@@ -359,6 +359,8 @@ for (const city of KAUPUNGIT.values()) {
     otsikko: `${city.name} — ${TYYPPI_NIMET[tyyppi] ?? tyyppi}`,
     // Ryhmä äänistudion listaa varten: saman maiseman kaupungit yhdessä.
     ryhma: TYYPPI_NIMET[tyyppi] ?? tyyppi,
+    // Raaka tyyppiavain arvontakoria varten ('sademetsa', ei 'sademetsä').
+    tyyppi,
     oletus: STRIIMIOLETUKSET[city.id] ?? null,
     ehdokkaat: [
       // null-osoite tarkoittaa syntetisoitua ambienssia.
@@ -396,6 +398,33 @@ export function jaaAlku(arvo) {
 const POISTETUT = new Set([
   'https://cdn.freesound.org/previews/160/160461_1-lq.mp3',
 ]);
+
+// Kategoriakohtaiset arvontakorit: maisematyypille voi valita studiossa
+// useita ääniä, joista peli arpoo yhden joka käynnillä. Kaupungin oma
+// valinta ohittaa aina korin.
+const TYYPPIKORI_AVAIN = 'matkakirja-tyyppivalinnat';
+
+export function tyyppiKori(tyyppi) {
+  try {
+    const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
+    const lista = kaikki[tyyppi];
+    return Array.isArray(lista) ? lista.filter(Boolean) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Tallentaa tyypin arvontakorin; tyhjä lista poistaa korin. */
+export function valitseTyyppiKori(tyyppi, lista) {
+  try {
+    const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
+    if (!lista || !lista.length) delete kaikki[tyyppi];
+    else kaikki[tyyppi] = lista;
+    localStorage.setItem(TYYPPIKORI_AVAIN, JSON.stringify(kaikki));
+  } catch {
+    /* yksityinen selaustila — kori ei säily */
+  }
+}
 
 export function valittuAani(slot) {
   try {
