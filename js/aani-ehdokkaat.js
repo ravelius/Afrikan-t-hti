@@ -224,12 +224,23 @@ for (const city of KAUPUNGIT.values()) {
 }
 
 /**
- * Valinta voi sisältää aloituskohdan: 'osoite#alku=20' aloittaa äänitteen
- * 20 sekunnin kohdalta. Tämä purkaa muodon soittimia varten.
+ * Valinta voi sisältää säätöjä: 'osoite#alku=20&voima=1.5' aloittaa
+ * äänitteen 20 sekunnin kohdalta puolitoistakertaisella voimakkuudella.
+ * Tämä purkaa muodon soittimia varten. Vanha muoto ('#alku=20') toimii.
  */
 export function jaaAlku(arvo) {
-  const m = /^(.*)#alku=([0-9]+(?:\.[0-9]+)?)$/.exec(arvo ?? '');
-  return m ? { url: m[1], alku: Number(m[2]) } : { url: arvo ?? null, alku: 0 };
+  const teksti = arvo ?? '';
+  const risu = teksti.indexOf('#');
+  if (risu < 0) return { url: arvo ?? null, alku: 0, voima: 1 };
+  const url = teksti.slice(0, risu);
+  const osat = Object.fromEntries(
+    teksti.slice(risu + 1).split('&').map((p) => p.split('=')).filter((p) => p.length === 2),
+  );
+  return {
+    url,
+    alku: Math.max(0, Number(osat.alku) || 0),
+    voima: Math.max(0.1, Number(osat.voima) || 1),
+  };
 }
 
 /** Valittu osoite paikalle, tai null jos oletus kelpaa. */

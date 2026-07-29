@@ -595,9 +595,22 @@ export class UI {
     // Pallonpuoliskokartalla kehykset ja asteverkko piirtyvät maiden alle.
     drawHemisphereFrames(svg, pack.map);
     drawLand(svg, pack.map);
-    // Nykyisen maan rajojen korostus piirretään tähän kerrokseen pelin
-    // edetessä (drawCountryBorders) — maan alle, reittien ja nappuloiden alle.
-    this.countryLayer = el('g', { class: 'country-borders', filter: 'url(#rough)' }, root);
+    // Nykyisen maan korostus (hento sävy + nimi kaunolla) piirretään tähän
+    // kerrokseen pelin edetessä (drawCountryBorders). Sävy rajataan
+    // tyylitellyn rantaviivan sisään, ettei se valu mereen — maiden
+    // todelliset rannikot poikkeavat piirretystä.
+    if (pack.map.countryShapes) {
+      const clip = el('clipPath', { id: 'maa-rajaus' }, root);
+      for (const outline of pack.map.outlines) {
+        const d = `M${outline.map(([x, y]) => `${x},${y}`).join(' L')}Z`;
+        el('path', { d }, clip);
+      }
+    }
+    this.countryLayer = el('g', { class: 'country-borders', 'clip-path': 'url(#maa-rajaus)' }, root);
+    // Nimi piirretään leikkaamattomaan kerrokseen: maan todellinen
+    // keskipiste voi osua tyylitellyn rannikon ulkopuolelle, eikä
+    // kaunokirjoituksen saa katketa siihen.
+    this.countryNameLayer = el('g', { class: 'country-names' }, root);
     this.countryKey = null;
     drawWaves(svg, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
@@ -744,9 +757,10 @@ export class UI {
   }
 
   /**
-   * Korostaa sen maan rajat, jossa pelaaja on. Reitillä (kaupunkien
-   * välissä) edellinen korostus jää näkyviin, kunnes seuraava kaupunki
-   * vaihtaa maata — kartta ei vilku matkalla.
+   * Korostaa maan, jossa pelaaja on: alue sävytetään aavistuksen
+   * tummemmaksi ja maan nimi kirjoitetaan hennosti kaunokirjoituksella
+   * keskelle. Reitillä (kaupunkien välissä) edellinen korostus jää
+   * näkyviin, kunnes seuraava kaupunki vaihtaa maata — kartta ei vilku.
    */
   drawCountryBorders() {
     if (!this.countryLayer) return;
@@ -758,10 +772,23 @@ export class UI {
     if (this.countryKey === key) return;
     this.countryKey = key;
     this.countryLayer.textContent = '';
-    for (const line of map.countryBorders?.[iso] ?? []) {
-      const d = `M${line.map(([x, y]) => `${x},${y}`).join(' L')}`;
-      el('path', { d, class: 'border border-active' }, this.countryLayer);
-    }
+    this.countryNameLayer.textContent = '';
+    const maa = map.countryShapes?.[iso];
+    if (!maa) return;
+    const d = maa.renkaat
+      .map((r) => `M${r.map(([x, y]) => `${x},${y}`).join(' L')}Z`)
+      .join(' ');
+    el('path', { d, class: 'country-tint' }, this.countryLayer);
+    // Nimi sovitetaan maan leveyteen, ettei se pursua pienistä maista.
+    const koko = Math.max(15, Math.min(34, (maa.leveys * 0.9) / Math.max(4, maa.nimi.length)));
+    const nimi = el('text', {
+      x: maa.keskus[0],
+      y: maa.keskus[1],
+      class: 'country-name',
+      'text-anchor': 'middle',
+      'font-size': koko.toFixed(0),
+    }, this.countryNameLayer);
+    nimi.textContent = maa.nimi;
   }
 
   /** Kartalla näkyvät vain käännetyt laatat omina kuvakkeinaan. */

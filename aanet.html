@@ -155,13 +155,18 @@
     // Alkukohtien esitäytöt muistissa: ⌖ täyttää kentän myös riveille,
     // joita ei ole vielä valittu.
     const esitaytot = new Map(); // `${slot}|${url}` -> sekunnit
+    const voimaEsitaytot = new Map(); // `${slot}|${url}` -> voimakerroin
     const mika = document.getElementById('soitin-mika');
     const jana = document.getElementById('soitin-jana');
     const aika = document.getElementById('soitin-aika');
     const voima = document.getElementById('soitin-voima');
     const luuppi = document.getElementById('soitin-luuppi');
-    soitin.volume = Number(voima.value);
-    voima.addEventListener('input', () => { soitin.volume = Number(voima.value); });
+    // Kokonaistaso = master-liuku × klipin oma voimakerroin.
+    const asetaTaso = () => {
+      soitin.volume = Math.min(1, Number(voima.value) * (soiva?.voima ?? 1));
+    };
+    asetaTaso();
+    voima.addEventListener('input', asetaTaso);
     luuppi.addEventListener('change', () => { soitin.loop = luuppi.checked; });
 
     const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -182,6 +187,7 @@
       if (soiva) edellinen = { ...soiva, kohta: soitin.currentTime };
       soiva = ehdokas;
       soitin.src = ehdokas.url;
+      asetaTaso();
       mika.textContent = `▶ ${ehdokas.nimi}`;
       const kohta = ehdokas.kohta ?? ehdokas.alku ?? 0;
       if (kohta > 0) {
@@ -313,13 +319,20 @@
             rivi.className = 'rivi';
             const onValittu = (url ?? null) === (kaytto.url ?? null);
             let aikaKentta = null;
+            let voimaKentta = null;
             const sekunnit = () => Math.max(0, Number(aikaKentta?.value) || 0);
-            const arvoksi = (u) => (sekunnit() > 0 ? `${u}#alku=${sekunnit()}` : u);
+            const kerroin = () => Math.max(0.1, Number(voimaKentta?.value) || 1);
+            const arvoksi = (u) => {
+              const osat = [];
+              if (sekunnit() > 0) osat.push(`alku=${sekunnit()}`);
+              if (kerroin() !== 1) osat.push(`voima=${kerroin()}`);
+              return osat.length ? `${u}#${osat.join('&')}` : u;
+            };
             if (url) {
               const play = document.createElement('button');
               play.textContent = '▶';
               play.className = 'soita';
-              play.addEventListener('click', () => soita({ slot, url, nimi, alku: sekunnit() }));
+              play.addEventListener('click', () => soita({ slot, url, nimi, alku: sekunnit(), voima: kerroin() }));
               rivi.appendChild(play);
             }
             const valitse = document.createElement('button');
@@ -331,7 +344,10 @@
               rakenna();
             });
             rivi.appendChild(valitse);
-            if (url && !slot.startsWith('tehoste:')) {
+            // Aloituskohta ja voimakerroin: striimeille ja lentoäänelle.
+            // Muut tehosteet siivutetaan, joten kentät eivät koske niitä.
+            const saadettava = url && (!slot.startsWith('tehoste:') || slot === 'tehoste:jet');
+            if (saadettava) {
               aikaKentta = document.createElement('input');
               aikaKentta.type = 'number';
               aikaKentta.min = '0';
@@ -339,18 +355,34 @@
               aikaKentta.value = esitaytot.get(`${slot}|${url}`)
                 ?? (onValittu && kaytto.alku ? kaytto.alku : (alku ?? 0));
               aikaKentta.title = 'Aloituskohta sekunteina';
-              aikaKentta.addEventListener('change', () => {
+              const tallenna = () => {
                 esitaytot.set(`${slot}|${url}`, sekunnit());
+                voimaEsitaytot.set(`${slot}|${url}`, kerroin());
                 if (onValittu) {
                   valitseAani(slot, arvoksi(url));
                   rakenna();
                 }
-              });
+              };
+              aikaKentta.addEventListener('change', tallenna);
               rivi.appendChild(aikaKentta);
               const sek = document.createElement('span');
               sek.className = 'sek';
               sek.textContent = 's';
               rivi.appendChild(sek);
+              voimaKentta = document.createElement('input');
+              voimaKentta.type = 'number';
+              voimaKentta.min = '0.2';
+              voimaKentta.max = '3';
+              voimaKentta.step = '0.1';
+              voimaKentta.value = voimaEsitaytot.get(`${slot}|${url}`)
+                ?? (onValittu && kaytto.voima !== 1 ? kaytto.voima : 1);
+              voimaKentta.title = 'Voimakerroin (1 = normaali)';
+              voimaKentta.addEventListener('change', tallenna);
+              rivi.appendChild(voimaKentta);
+              const kert = document.createElement('span');
+              kert.className = 'sek';
+              kert.textContent = '×';
+              rivi.appendChild(kert);
             }
             if (oma) {
               const poista = document.createElement('button');
@@ -408,7 +440,11 @@
         const nimi = arvo === ''
           ? 'Syntetisoitu äänimaisema'
           : [...(paikka?.ehdokkaat ?? []), ...omat].find((e) => e.url === url)?.nimi ?? arvo;
-        const alkuosa = alku > 0 ? ` (alkaa ${alku} s)` : '';
+        const { voima } = jaaAlku(arvo);
+        const osat = [];
+        if (alku > 0) osat.push(`alkaa ${alku} s`);
+        if (voima !== 1) osat.push(`voima ${voima}×`);
+        const alkuosa = osat.length ? ` (${osat.join(', ')})` : '';
         return `${paikka?.otsikko ?? slot}: ${nimi}${alkuosa}`;
       });
       const teksti = rivit.length
