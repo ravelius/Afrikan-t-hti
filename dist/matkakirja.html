@@ -72,12 +72,13 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 /* --- sovelluskehys --- */
 
 .app {
-  position: relative;
-  height: 100dvh;
-  /* iPadin standalone-tilassa 100dvh voi jäädä todellista ruutua
-   * lyhyemmäksi ja alle jää tumma kaista — venytetään kehys aina
-   * vähintään rungon täyteen korkeuteen. */
-  min-height: 100%;
+  /* Kiinnitetään kehys suoraan ruudun reunoihin: iPadin standalone-
+   * tilassa sekä 100dvh että rungon 100 % jäivät todellista ruutua
+   * lyhyemmiksi ja alle jäi tumma kaista. Kiinteä asemointi kattaa
+   * koko näkymän joka selaimessa. */
+  position: fixed;
+  inset: 0;
+  height: auto;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   /* Kapealla ruudulla sisältö ei saa venyttää asettelua leveämmäksi. */
@@ -32610,7 +32611,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.35';
+const APP_VERSION = '2026-07-29.36';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
