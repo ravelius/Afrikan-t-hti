@@ -30,7 +30,7 @@ import {
   QUIZ_SECONDS, SEA_FARE, HINT_EVERY_TURNS,
   XP_NEW_CITY, XP_NEW_BOARD, XP_HARD_ANSWER, XP_STAR,
   TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
-  FORM_WEIGHTS, PHOTO_CHOICES, XP_PUZZLE,
+  FORM_WEIGHTS, PHOTO_CHOICES, XP_EXPLORE, XP_PUZZLE,
 } from '../js/game.js';
 import {
   articleUrl, BAD_IMAGE, fetchImage, fetchSummary, parseArticle, parseSummary,
@@ -1133,9 +1133,13 @@ test('tietoportti: vaikea kysymys avaa maan laudan ilmaiseksi', () => {
   toinen.closeQuiz();
   assert.equal(toinen.player.packId, 'europe', 'väärällä vastauksella jäädään laudalle');
 
+  // Saapuminen tarjoaa Helsingin tutkimista; ohitus palauttaa vuoron.
+  assert.equal(game.phase, 'offer', 'laatattomankin kaupungin saa tutkia saapuessa');
+  game.actionSkipQuiz();
+  assert.equal(game.phase, 'action');
+
   // Suomesta pois pääsee tavallisesta portista (manner ei ole maalauta).
   const takaisin = game.gatewayOptions();
-  assert.equal(game.phase, 'action');
   assert.deepEqual(takaisin.map((l) => l.pack), ['europe']);
 });
 
@@ -2318,6 +2322,33 @@ function puzzleGame(seed, city) {
   game.player.pos = { type: 'city', city };
   return game;
 }
+
+test('laatatonta kaupunkia voi tutkia kerran: kokemuspisteet, ei laattaa', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
+    seed: 411,
+  });
+  const p = game.player;
+  assert.ok(!game.tokens.has('tanger'), 'lähtökaupungissa ei ole laattaa');
+  assert.ok(game.canExplore(game.board.cityById.get('tanger')));
+
+  game.phase = 'offer';
+  assert.ok(game.actionQuiz().ok);
+  assert.equal(game.quiz.explore, true);
+  assert.ok(game.quiz.frame, 'tutkimisellakin on kysyjä');
+
+  const xpEnnen = p.xp ?? 0;
+  const rahaEnnen = p.money;
+  game.answerQuiz(game.quiz.correct);
+  assert.equal((p.xp ?? 0) - xpEnnen, XP_EXPLORE, 'oikeasta saa kokemuspisteitä');
+  assert.equal(p.money, rahaEnnen, 'tutkiminen ei liikuta rahaa');
+  assert.ok(!game.quiz.found, 'laattaa ei käänny');
+  game.closeQuiz();
+
+  // Sama kaupunki uudelleen: tutkittu, joten tarjousta ei tule.
+  p.pos = { type: 'city', city: 'tanger' };
+  assert.equal(game.offerQuiz(), false, 'tutkittu kaupunki ei tarjoa uudelleen');
+});
 
 test('pulma odottaa pulmakaupungissa ja avautuu kerran pelissä', () => {
   const puzzle = packById('africa').puzzles[0];
