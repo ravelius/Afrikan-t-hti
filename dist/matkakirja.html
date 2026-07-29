@@ -1750,28 +1750,10 @@ body[data-mode] .rail {
 
 body[data-mode] .rail > * { pointer-events: auto; }
 
-/* Pergamentti jatkuu ruudun alareunaan asti: alin väli ja alakulmien
- * pyöristys pois. Koti-indikaattorin kaista jää kartan päälle
- * (viewport-fit=cover), joten alas ei jää tyhjää tummaa raitaa — ja
- * manner keskittyy koko korkeuteen. */
-body[data-mode] .stage { padding-bottom: 0; }
-/* Myös sovelluskehyksen oma turva-alue pois alhaalta: kartta saa jatkua
- * koti-indikaattorin alle, ja kelluvat kortit väistävät sitä itse. */
-body[data-mode] .app { padding-bottom: 0; }
-body[data-mode] .map-pane {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: 0;
-}
-body[data-mode] .rail {
-  bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
-}
-
-@media (max-width: 700px) {
-  body[data-mode] .rail {
-    padding-bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
-  }
-}
+/* Kartta pidetään kehystettynä joka reunalta: tasainen väli ja
+ * pyöristetyt kulmat myös alhaalla. iPadOS varaa asennetuissa
+ * verkkosovelluksissa pohjimmaisen kaistan joka tapauksessa
+ * itselleen, joten reunaton alalaita ei koskaan näyttäisi siltä. */
 
 /*
  * Kartan oma ohjerivi nousee ylös keskelle: alhaalla keskellä on nyt kelluva
@@ -2091,11 +2073,12 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 .versio-kulma {
   position: fixed;
   left: max(0.55rem, env(safe-area-inset-left, 0px));
-  bottom: max(0.3rem, env(safe-area-inset-bottom, 0px));
+  bottom: max(0.15rem, env(safe-area-inset-bottom, 0px));
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  color: rgba(70, 51, 31, 0.55);
+  /* Numero istuu kehyksen tummalla reunuksella, joten väri on vaalea. */
+  color: rgba(240, 226, 196, 0.45);
   pointer-events: none;
 }
 
@@ -32611,7 +32594,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.36';
+const APP_VERSION = '2026-07-29.37';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
