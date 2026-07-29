@@ -1737,6 +1737,26 @@ body[data-mode] .rail {
 
 body[data-mode] .rail > * { pointer-events: auto; }
 
+/* Pergamentti jatkuu ruudun alareunaan asti: alin väli ja alakulmien
+ * pyöristys pois. Koti-indikaattorin kaista jää kartan päälle
+ * (viewport-fit=cover), joten alas ei jää tyhjää tummaa raitaa — ja
+ * manner keskittyy koko korkeuteen. */
+body[data-mode] .stage { padding-bottom: 0; }
+body[data-mode] .map-pane {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 0;
+}
+body[data-mode] .rail {
+  bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 700px) {
+  body[data-mode] .rail {
+    padding-bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /*
  * Kartan oma ohjerivi nousee ylös keskelle: alhaalla keskellä on nyt kelluva
  * toimintokortti, jonka alle rivi jäisi piiloon.
@@ -2044,6 +2064,28 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
  * Havainnon kuvaikoni: pieni kehystetty maisema tekstin alla. Pelkkä
  * ikoni tekstilinkin sijaan — kuva puhuu puolestaan.
  */
+/* Päiväkirjan ensimmäinen lause nousee esiin; loput luetaan silmillä. */
+.fact-text .fact-lead { font-weight: 700; }
+
+/* Kaiutin ankkuroituu korttiin myös silloin, kun kortti on staattinen. */
+.fact-card { position: relative; }
+
+/* Kaiutin kortin oikeassa yläkulmassa: lukee koko merkinnän. */
+.fact-kuuntele {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.5rem;
+  padding: 0.1rem 0.3rem;
+  min-height: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0.75;
+}
+.fact-kuuntele:hover:not(:disabled) { background: none; opacity: 1; }
+
 .fact-image-btn {
   align-self: flex-start;
   margin-top: 0.35rem;
