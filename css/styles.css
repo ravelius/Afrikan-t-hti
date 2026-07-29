@@ -1754,16 +1754,20 @@ body[data-mode] .rail {
 
 body[data-mode] .rail > * { pointer-events: auto; }
 
-/* Kartta ulottuu ruudun pohjaan asti: kehysväli ja pyöristetyt kulmat
- * jäävät ylös ja sivuille, mutta alhaalla pergamentti menee kiinni
- * reunaan — koti-indikaattori kelluu kartan päällä kuten peleissä
- * yleensä. Kelluvat kortit pysyvät silti turva-alueen yläpuolella. */
+/* Asennetussa sovelluksessa (iPad/iPhone-kokoruutu) kartta ulottuu
+ * ruudun pohjaan asti: kehysväli ja pyöristetyt kulmat jäävät ylös ja
+ * sivuille, alhaalla pergamentti menee kiinni reunaan ja koti-
+ * indikaattori kelluu kartan päällä kuten peleissä yleensä. Selaimen
+ * ikkunassa (esim. Mac) kehys ja pyöristys säilyvät joka reunalla.
+ * Kelluvat kortit pysyvät aina turva-alueen yläpuolella. */
 body[data-mode] .app { padding-bottom: 0; }
-body[data-mode] .stage { padding-bottom: 0; }
-body[data-mode] .map-pane {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: 0;
+@media (display-mode: standalone) {
+  body[data-mode] .stage { padding-bottom: 0; }
+  body[data-mode] .map-pane {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+  }
 }
 body[data-mode] .rail {
   bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
@@ -2052,15 +2056,22 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
  * huomaamaton, mutta riittää kertomaan mikä versio on käytössä. */
 .versio-kulma {
   position: fixed;
-  left: max(0.55rem, env(safe-area-inset-left, 0px));
-  bottom: max(0.15rem, env(safe-area-inset-bottom, 0px));
+  /* Selvästi sisempänä, ei kiinni vasemmassa reunassa. Selaimessa numero
+   * istuu alakehyksen kaistalla, asennetussa sovelluksessa pergamentilla. */
+  left: max(1.3rem, calc(env(safe-area-inset-left, 0px) + 0.9rem));
+  bottom: 0.12rem;
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  /* Kartta ulottuu pohjaan asti, joten numero lepää pergamentilla —
-   * väri on kartan mustetta, hyvin haaleana. */
-  color: rgba(70, 51, 31, 0.5);
+  /* Selaimessa numero lepää tumman kehyksen päällä. */
+  color: rgba(240, 226, 196, 0.5);
   pointer-events: none;
+}
+
+/* Asennetussa sovelluksessa kartta jatkuu pohjaan asti, joten numero
+ * lepää pergamentilla — väri on kartan mustetta, hyvin haaleana. */
+@media (display-mode: standalone) {
+  .versio-kulma { color: rgba(70, 51, 31, 0.5); bottom: 0.45rem; }
 }
 
 /* Kaiutin kortin oikeassa yläkulmassa: hillitty viivapiirros samaan

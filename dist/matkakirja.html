@@ -1762,16 +1762,20 @@ body[data-mode] .rail {
 
 body[data-mode] .rail > * { pointer-events: auto; }
 
-/* Kartta ulottuu ruudun pohjaan asti: kehysväli ja pyöristetyt kulmat
- * jäävät ylös ja sivuille, mutta alhaalla pergamentti menee kiinni
- * reunaan — koti-indikaattori kelluu kartan päällä kuten peleissä
- * yleensä. Kelluvat kortit pysyvät silti turva-alueen yläpuolella. */
+/* Asennetussa sovelluksessa (iPad/iPhone-kokoruutu) kartta ulottuu
+ * ruudun pohjaan asti: kehysväli ja pyöristetyt kulmat jäävät ylös ja
+ * sivuille, alhaalla pergamentti menee kiinni reunaan ja koti-
+ * indikaattori kelluu kartan päällä kuten peleissä yleensä. Selaimen
+ * ikkunassa (esim. Mac) kehys ja pyöristys säilyvät joka reunalla.
+ * Kelluvat kortit pysyvät aina turva-alueen yläpuolella. */
 body[data-mode] .app { padding-bottom: 0; }
-body[data-mode] .stage { padding-bottom: 0; }
-body[data-mode] .map-pane {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: 0;
+@media (display-mode: standalone) {
+  body[data-mode] .stage { padding-bottom: 0; }
+  body[data-mode] .map-pane {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+  }
 }
 body[data-mode] .rail {
   bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
@@ -2060,15 +2064,22 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
  * huomaamaton, mutta riittää kertomaan mikä versio on käytössä. */
 .versio-kulma {
   position: fixed;
-  left: max(0.55rem, env(safe-area-inset-left, 0px));
-  bottom: max(0.15rem, env(safe-area-inset-bottom, 0px));
+  /* Selvästi sisempänä, ei kiinni vasemmassa reunassa. Selaimessa numero
+   * istuu alakehyksen kaistalla, asennetussa sovelluksessa pergamentilla. */
+  left: max(1.3rem, calc(env(safe-area-inset-left, 0px) + 0.9rem));
+  bottom: 0.12rem;
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  /* Kartta ulottuu pohjaan asti, joten numero lepää pergamentilla —
-   * väri on kartan mustetta, hyvin haaleana. */
-  color: rgba(70, 51, 31, 0.5);
+  /* Selaimessa numero lepää tumman kehyksen päällä. */
+  color: rgba(240, 226, 196, 0.5);
   pointer-events: none;
+}
+
+/* Asennetussa sovelluksessa kartta jatkuu pohjaan asti, joten numero
+ * lepää pergamentilla — väri on kartan mustetta, hyvin haaleana. */
+@media (display-mode: standalone) {
+  .versio-kulma { color: rgba(70, 51, 31, 0.5); bottom: 0.45rem; }
 }
 
 /* Kaiutin kortin oikeassa yläkulmassa: hillitty viivapiirros samaan
@@ -2602,6 +2613,7 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         LaureC (Dakar, CC0). Tehosteissa: LoafDV (noppa), ColinMWJones
         (kirjoituskone), Hoscalegeek (lentokoneen moottori), AardsReal (sivunkääntö)
         ja DYEKHO (tietovisan musiikki) — kaikki CC0.
+        Tehosteäänet on tuotettu ElevenLabsin äänigeneraattorilla.
         Kuvat ja artikkelit: Wikipedia (CC BY-SA).</p>
     </div>
     <menu>
@@ -25095,7 +25107,6 @@ const EHDOKKAAT = {
     ehdokkaat: [
       { url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3', nimi: 'Arabialainen huilu — DYEKHO, CC0' },
       { url: 'https://cdn.freesound.org/previews/466/466570_197130-lq.mp3', nimi: 'Kalimba-luuppi — CarlosCarty, CC BY' },
-      { url: 'https://cdn.freesound.org/previews/160/160461_1-lq.mp3', nimi: 'Oud-improvisaatio — Freesound, CC0' },
       { url: 'https://cdn.freesound.org/previews/843/843466_15636277-lq.mp3', nimi: 'Rumpu ja kalimba -luuppi — bassimat, CC0' },
       { url: 'https://cdn.freesound.org/previews/666/666866_5737443-lq.mp3', nimi: 'Hang drum (Dancing Spirit) — MrJmix, CC BY' },
       { url: 'https://cdn.freesound.org/previews/557/557122_2282212-lq.mp3', nimi: 'Tumma ambient-pinta — szegvari, CC0' },
@@ -25145,42 +25156,186 @@ const EHDOKKAAT = {
   // vaihtoehto otetaan käyttöön valitsemalla se täältä.
   'tehoste:click': {
     otsikko: 'Napin klikkaus',
-    oletus: null,
+    oletus: 'assets/audio/efekti-klik.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-klik.mp3', nimi: 'Messinkisalvan naksaus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:paper': {
     otsikko: 'Paperin avaus (kortit)',
-    oletus: null,
+    oletus: 'assets/audio/efekti-paperi.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-paperi.mp3', nimi: 'Vanhan kirjan sivu — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:coin': {
     otsikko: 'Kolikot',
-    oletus: null,
+    oletus: 'assets/audio/efekti-kolikot.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-kolikot.mp3', nimi: 'Kolikot nahkakukkaroon — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:correct': {
     otsikko: 'Oikea vastaus',
-    oletus: null,
+    oletus: 'assets/audio/efekti-oikein.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-oikein.mp3', nimi: 'Messinkikellon helähdys — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:wrong': {
     otsikko: 'Väärä vastaus',
-    oletus: null,
+    oletus: 'assets/audio/efekti-vaarin.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-vaarin.mp3', nimi: 'Kirja tömähtää kiinni — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:swipe': {
+    otsikko: 'Kortin pyyhkäisy',
+    oletus: 'assets/audio/efekti-pyyhkaisy.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-pyyhkaisy.mp3', nimi: 'Paperin viuhaus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:step': {
+    otsikko: 'Askel kartalla',
+    oletus: 'assets/audio/efekti-askel.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-askel.mp3', nimi: 'Saappaan askel polulla — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:arrive': {
+    otsikko: 'Saapuminen kaupunkiin',
+    oletus: 'assets/audio/efekti-saapuminen.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-saapuminen.mp3', nimi: 'Marimban kaksi nousevaa säveltä — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:ferry': {
+    otsikko: 'Laivamatka',
+    oletus: 'assets/audio/efekti-laiva.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-laiva.mp3', nimi: 'Höyrylaivan törähdys — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:flight': {
+    otsikko: 'Lento (ilmoitus)',
+    oletus: 'assets/audio/efekti-lento.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-lento.mp3', nimi: 'Potkurikoneen ohilento — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:hint': {
+    otsikko: 'Vihjeen osto',
+    oletus: 'assets/audio/efekti-vihje.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-vihje.mp3', nimi: 'Sulkakynän rapsutus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:tick': {
+    otsikko: 'Tiimalasin tikitys',
+    oletus: 'assets/audio/efekti-tikitys.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-tikitys.mp3', nimi: 'Puukellon tikahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:timeout': {
+    otsikko: 'Aika loppui',
+    oletus: 'assets/audio/efekti-aikaloppui.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-aikaloppui.mp3', nimi: 'Hiekka valuu ja puinen kopsahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:flip': {
+    otsikko: 'Laatan kääntö',
+    oletus: 'assets/audio/efekti-kaanto.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-kaanto.mp3', nimi: 'Puulaatan käännähdys — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:clack': {
+    otsikko: 'Nappulan naksu',
+    oletus: 'assets/audio/efekti-naksu.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-naksu.mp3', nimi: 'Pelinappula puulaudalle — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:star': {
+    otsikko: 'Tähden paljastus',
+    oletus: 'assets/audio/efekti-tahti.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-tahti.mp3', nimi: 'Celestan nouseva kimallus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:gem': {
+    otsikko: 'Jalokiven paljastus',
+    oletus: 'assets/audio/efekti-jalokivi.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-jalokivi.mp3', nimi: 'Lasinen kimallushelähdys — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:horseshoe': {
+    otsikko: 'Hevosenkengän paljastus',
+    oletus: 'assets/audio/efekti-kenka.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-kenka.mp3', nimi: 'Metallinen kilahdus puuta vasten — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:robber': {
+    otsikko: 'Rosvon paljastus',
+    oletus: 'assets/audio/efekti-rosvo.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-rosvo.mp3', nimi: 'Matala rumpuisku ja kalina — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:empty': {
+    otsikko: 'Tyhjä laatta',
+    oletus: 'assets/audio/efekti-tyhja.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-tyhja.mp3', nimi: 'Pölähdys ja pettynyt kopsahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:stuck': {
+    otsikko: 'Ei pääse liikkumaan',
+    oletus: 'assets/audio/efekti-jumissa.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-jumissa.mp3', nimi: 'Tömähdys ja narahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:turn': {
+    otsikko: 'Vuoron vaihto',
+    oletus: 'assets/audio/efekti-vuoro.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-vuoro.mp3', nimi: 'Sivunkääntö ja kevyt kopsahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:win': {
+    otsikko: 'Voittofanfaari',
+    oletus: 'assets/audio/efekti-voitto.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-voitto.mp3', nimi: 'Lyhyt messinkifanfaari — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
 };
@@ -25237,9 +25392,18 @@ function jaaAlku(arvo) {
 }
 
 /** Valittu osoite paikalle, tai null jos oletus kelpaa. */
+// Poistetut ehdokkaat: väärin nimetty tai lisenssiä ei voi enää varmistaa
+// (esim. lataaja poistanut tilinsä). Vanha tallennettu valinta ohjataan
+// takaisin oletukseen, ettei peli jää soittamaan tuntematonta raitaa.
+const POISTETUT = new Set([
+  'https://cdn.freesound.org/previews/160/160461_1-lq.mp3',
+]);
+
 function valittuAani(slot) {
   try {
-    return JSON.parse(localStorage.getItem(AVAIN) ?? '{}')[slot] ?? null;
+    const arvo = JSON.parse(localStorage.getItem(AVAIN) ?? '{}')[slot] ?? null;
+    if (arvo && POISTETUT.has(jaaAlku(arvo).url ?? '')) return null;
+    return arvo;
   } catch {
     return null;
   }
@@ -25903,11 +26067,29 @@ const REAL_SAMPLES = {
   },
   // ElevenLabs-efektipilotit: ei oletusta (url: null) — syntetisoitu soi,
   // kunnes omistaja valitsee äänen viritysivulta. Tiedostot ovat repossa.
-  click: { url: null, credit: 'ElevenLabs SFX -pilotti' },
-  paper: { url: null, credit: 'ElevenLabs SFX -pilotti' },
-  coin: { url: null, credit: 'ElevenLabs SFX -pilotti' },
-  correct: { url: null, credit: 'ElevenLabs SFX -pilotti' },
-  wrong: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  click: { url: 'assets/audio/efekti-klik.mp3', credit: 'ElevenLabs SFX' },
+  paper: { url: 'assets/audio/efekti-paperi.mp3', credit: 'ElevenLabs SFX' },
+  coin: { url: 'assets/audio/efekti-kolikot.mp3', credit: 'ElevenLabs SFX' },
+  correct: { url: 'assets/audio/efekti-oikein.mp3', credit: 'ElevenLabs SFX' },
+  wrong: { url: 'assets/audio/efekti-vaarin.mp3', credit: 'ElevenLabs SFX' },
+  swipe: { url: 'assets/audio/efekti-pyyhkaisy.mp3', credit: 'ElevenLabs SFX' },
+  step: { url: 'assets/audio/efekti-askel.mp3', credit: 'ElevenLabs SFX' },
+  arrive: { url: 'assets/audio/efekti-saapuminen.mp3', credit: 'ElevenLabs SFX' },
+  ferry: { url: 'assets/audio/efekti-laiva.mp3', credit: 'ElevenLabs SFX' },
+  flight: { url: 'assets/audio/efekti-lento.mp3', credit: 'ElevenLabs SFX' },
+  hint: { url: 'assets/audio/efekti-vihje.mp3', credit: 'ElevenLabs SFX' },
+  tick: { url: 'assets/audio/efekti-tikitys.mp3', credit: 'ElevenLabs SFX' },
+  timeout: { url: 'assets/audio/efekti-aikaloppui.mp3', credit: 'ElevenLabs SFX' },
+  flip: { url: 'assets/audio/efekti-kaanto.mp3', credit: 'ElevenLabs SFX' },
+  clack: { url: 'assets/audio/efekti-naksu.mp3', credit: 'ElevenLabs SFX' },
+  star: { url: 'assets/audio/efekti-tahti.mp3', credit: 'ElevenLabs SFX' },
+  gem: { url: 'assets/audio/efekti-jalokivi.mp3', credit: 'ElevenLabs SFX' },
+  horseshoe: { url: 'assets/audio/efekti-kenka.mp3', credit: 'ElevenLabs SFX' },
+  robber: { url: 'assets/audio/efekti-rosvo.mp3', credit: 'ElevenLabs SFX' },
+  empty: { url: 'assets/audio/efekti-tyhja.mp3', credit: 'ElevenLabs SFX' },
+  stuck: { url: 'assets/audio/efekti-jumissa.mp3', credit: 'ElevenLabs SFX' },
+  turn: { url: 'assets/audio/efekti-vuoro.mp3', credit: 'ElevenLabs SFX' },
+  win: { url: 'assets/audio/efekti-voitto.mp3', credit: 'ElevenLabs SFX' },
 };
 
 // Mitkä äänet soivat oikeasta äänitteestä ja miten siivu otetaan.
@@ -25927,6 +26109,24 @@ const REAL_PLAYERS = {
   coin: (s) => s.playSlice('coin', { dur: 1.3, gain: 0.4, alusta: true }),
   correct: (s) => s.playSlice('correct', { dur: 1.5, gain: 0.4, alusta: true }),
   wrong: (s) => s.playSlice('wrong', { dur: 1.1, gain: 0.4, alusta: true }),
+  swipe: (s) => s.playSlice('swipe', { dur: 0.8, gain: 0.3, alusta: true }),
+  step: (s) => s.playSlice('step', { dur: 0.7, gain: 0.25, alusta: true }),
+  arrive: (s) => s.playSlice('arrive', { dur: 1.3, gain: 0.35, alusta: true }),
+  ferry: (s) => s.playSlice('ferry', { dur: 2.6, gain: 0.4, alusta: true }),
+  flight: (s) => s.playSlice('flight', { dur: 2.1, gain: 0.35, alusta: true }),
+  hint: (s) => s.playSlice('hint', { dur: 1.1, gain: 0.35, alusta: true }),
+  tick: (s) => s.playSlice('tick', { dur: 0.6, gain: 0.25, alusta: true }),
+  timeout: (s) => s.playSlice('timeout', { dur: 1.6, gain: 0.4, alusta: true }),
+  flip: (s) => s.playSlice('flip', { dur: 0.9, gain: 0.35, alusta: true }),
+  clack: (s) => s.playSlice('clack', { dur: 0.6, gain: 0.3, alusta: true }),
+  star: (s) => s.playSlice('star', { dur: 2.6, gain: 0.45, alusta: true }),
+  gem: (s) => s.playSlice('gem', { dur: 1.6, gain: 0.4, alusta: true }),
+  horseshoe: (s) => s.playSlice('horseshoe', { dur: 1.1, gain: 0.4, alusta: true }),
+  robber: (s) => s.playSlice('robber', { dur: 2.1, gain: 0.45, alusta: true }),
+  empty: (s) => s.playSlice('empty', { dur: 1.1, gain: 0.3, alusta: true }),
+  stuck: (s) => s.playSlice('stuck', { dur: 1.1, gain: 0.35, alusta: true }),
+  turn: (s) => s.playSlice('turn', { dur: 1.1, gain: 0.3, alusta: true }),
+  win: (s) => s.playSlice('win', { dur: 3.6, gain: 0.5, alusta: true }),
 };
 
 // --- äänimaisemat -----------------------------------------------------------
@@ -30119,11 +30319,28 @@ class UI {
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
-    // Aloitusnäkymässä lauta kiinnitetään yläreunaan: alapuolelle jäävä
-    // pergamentti on avaustekstiä varten, eikä sitä saa jakaa ylä- ja
-    // alareunan kesken. Muulloin sisältö keskitetään kuten ennen.
+    // Aloitusnäkymässä lauta ja avaustekstin kaista keskitetään pysty-
+    // suunnassa: yläreunaan naulattuna korkealle ruudulle (iPad ja iPhone
+    // pystyssä) jäi laudan alle valtava tyhjä pergamentti. Kaistalle
+    // taataan silti aina reilu kolmannes ruudusta, jotta avausteksti
+    // mahtuu — ahtaalla ruudulla lauta nousee takaisin ylemmäs.
     const alkuun = this.game.phase === 'pickstart';
-    const vy = alkuun ? box.y - box.h * INTRO_TOP : box.y + box.h / 2 - vh / 2;
+    let vy;
+    if (alkuun) {
+      // Keskitetään itse lauta (ilman tekstikaistaa), jolloin tyhjä tila
+      // jakautuu tasan ylä- ja alapuolelle silmälle oikein.
+      const laudanKorkeus = box.h / (1 + INTRO_SPACE);
+      const ylakiinnitys = box.y - box.h * INTRO_TOP;
+      const keskitetty = box.y + laudanKorkeus / 2 - vh / 2;
+      const laudanPohja = box.y + laudanKorkeus;
+      // Tekstille vähintään reilu neljännes ruudusta, matalilla ruuduilla
+      // kiinteä minimi — muuten avausteksti ei mahdu edes pienimmällään.
+      const kaistaMin = Math.max(h * 0.28, 270);
+      const alinSallittu = laudanPohja - (vh * (h - kaistaMin)) / h;
+      vy = Math.min(ylakiinnitys, Math.max(keskitetty, alinSallittu));
+    } else {
+      vy = box.y + box.h / 2 - vh / 2;
+    }
     this.svg.setAttribute(
       'viewBox',
       `${box.x + box.w / 2 - vw / 2} ${vy} ${vw} ${vh}`,
@@ -30161,8 +30378,8 @@ class UI {
     if (!kaista) return;
     let koko = INTRO_FONT_MAX;
     this.introText.style.fontSize = `${koko}rem`;
-    // Kolme askelta riittää: pienempää kuin INTRO_FONT_MIN ei mennä.
-    for (let i = 0; i < 3 && this.introText.scrollHeight > kaista; i++) {
+    // Viisi askelta: pienempää kuin INTRO_FONT_MIN ei silti mennä.
+    for (let i = 0; i < 5 && this.introText.scrollHeight > kaista; i++) {
       koko = Math.max(INTRO_FONT_MIN, koko - 0.09);
       this.introText.style.fontSize = `${koko}rem`;
     }
@@ -32700,7 +32917,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.39';
+const APP_VERSION = '2026-07-29.40';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

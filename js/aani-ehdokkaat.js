@@ -105,7 +105,6 @@ export const EHDOKKAAT = {
     ehdokkaat: [
       { url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3', nimi: 'Arabialainen huilu — DYEKHO, CC0' },
       { url: 'https://cdn.freesound.org/previews/466/466570_197130-lq.mp3', nimi: 'Kalimba-luuppi — CarlosCarty, CC BY' },
-      { url: 'https://cdn.freesound.org/previews/160/160461_1-lq.mp3', nimi: 'Oud-improvisaatio — Freesound, CC0' },
       { url: 'https://cdn.freesound.org/previews/843/843466_15636277-lq.mp3', nimi: 'Rumpu ja kalimba -luuppi — bassimat, CC0' },
       { url: 'https://cdn.freesound.org/previews/666/666866_5737443-lq.mp3', nimi: 'Hang drum (Dancing Spirit) — MrJmix, CC BY' },
       { url: 'https://cdn.freesound.org/previews/557/557122_2282212-lq.mp3', nimi: 'Tumma ambient-pinta — szegvari, CC0' },
@@ -155,42 +154,186 @@ export const EHDOKKAAT = {
   // vaihtoehto otetaan käyttöön valitsemalla se täältä.
   'tehoste:click': {
     otsikko: 'Napin klikkaus',
-    oletus: null,
+    oletus: 'assets/audio/efekti-klik.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-klik.mp3', nimi: 'Messinkisalvan naksaus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:paper': {
     otsikko: 'Paperin avaus (kortit)',
-    oletus: null,
+    oletus: 'assets/audio/efekti-paperi.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-paperi.mp3', nimi: 'Vanhan kirjan sivu — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:coin': {
     otsikko: 'Kolikot',
-    oletus: null,
+    oletus: 'assets/audio/efekti-kolikot.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-kolikot.mp3', nimi: 'Kolikot nahkakukkaroon — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:correct': {
     otsikko: 'Oikea vastaus',
-    oletus: null,
+    oletus: 'assets/audio/efekti-oikein.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-oikein.mp3', nimi: 'Messinkikellon helähdys — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:wrong': {
     otsikko: 'Väärä vastaus',
-    oletus: null,
+    oletus: 'assets/audio/efekti-vaarin.mp3',
     ehdokkaat: [
-      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
       { url: 'assets/audio/efekti-vaarin.mp3', nimi: 'Kirja tömähtää kiinni — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:swipe': {
+    otsikko: 'Kortin pyyhkäisy',
+    oletus: 'assets/audio/efekti-pyyhkaisy.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-pyyhkaisy.mp3', nimi: 'Paperin viuhaus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:step': {
+    otsikko: 'Askel kartalla',
+    oletus: 'assets/audio/efekti-askel.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-askel.mp3', nimi: 'Saappaan askel polulla — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:arrive': {
+    otsikko: 'Saapuminen kaupunkiin',
+    oletus: 'assets/audio/efekti-saapuminen.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-saapuminen.mp3', nimi: 'Marimban kaksi nousevaa säveltä — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:ferry': {
+    otsikko: 'Laivamatka',
+    oletus: 'assets/audio/efekti-laiva.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-laiva.mp3', nimi: 'Höyrylaivan törähdys — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:flight': {
+    otsikko: 'Lento (ilmoitus)',
+    oletus: 'assets/audio/efekti-lento.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-lento.mp3', nimi: 'Potkurikoneen ohilento — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:hint': {
+    otsikko: 'Vihjeen osto',
+    oletus: 'assets/audio/efekti-vihje.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-vihje.mp3', nimi: 'Sulkakynän rapsutus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:tick': {
+    otsikko: 'Tiimalasin tikitys',
+    oletus: 'assets/audio/efekti-tikitys.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-tikitys.mp3', nimi: 'Puukellon tikahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:timeout': {
+    otsikko: 'Aika loppui',
+    oletus: 'assets/audio/efekti-aikaloppui.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-aikaloppui.mp3', nimi: 'Hiekka valuu ja puinen kopsahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:flip': {
+    otsikko: 'Laatan kääntö',
+    oletus: 'assets/audio/efekti-kaanto.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-kaanto.mp3', nimi: 'Puulaatan käännähdys — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:clack': {
+    otsikko: 'Nappulan naksu',
+    oletus: 'assets/audio/efekti-naksu.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-naksu.mp3', nimi: 'Pelinappula puulaudalle — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:star': {
+    otsikko: 'Tähden paljastus',
+    oletus: 'assets/audio/efekti-tahti.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-tahti.mp3', nimi: 'Celestan nouseva kimallus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:gem': {
+    otsikko: 'Jalokiven paljastus',
+    oletus: 'assets/audio/efekti-jalokivi.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-jalokivi.mp3', nimi: 'Lasinen kimallushelähdys — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:horseshoe': {
+    otsikko: 'Hevosenkengän paljastus',
+    oletus: 'assets/audio/efekti-kenka.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-kenka.mp3', nimi: 'Metallinen kilahdus puuta vasten — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:robber': {
+    otsikko: 'Rosvon paljastus',
+    oletus: 'assets/audio/efekti-rosvo.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-rosvo.mp3', nimi: 'Matala rumpuisku ja kalina — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:empty': {
+    otsikko: 'Tyhjä laatta',
+    oletus: 'assets/audio/efekti-tyhja.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-tyhja.mp3', nimi: 'Pölähdys ja pettynyt kopsahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:stuck': {
+    otsikko: 'Ei pääse liikkumaan',
+    oletus: 'assets/audio/efekti-jumissa.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-jumissa.mp3', nimi: 'Tömähdys ja narahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:turn': {
+    otsikko: 'Vuoron vaihto',
+    oletus: 'assets/audio/efekti-vuoro.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-vuoro.mp3', nimi: 'Sivunkääntö ja kevyt kopsahdus — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
+    ],
+  },
+  'tehoste:win': {
+    otsikko: 'Voittofanfaari',
+    oletus: 'assets/audio/efekti-voitto.mp3',
+    ehdokkaat: [
+      { url: 'assets/audio/efekti-voitto.mp3', nimi: 'Lyhyt messinkifanfaari — ElevenLabs SFX' },
+      { url: null, nimi: 'Syntetisoitu' },
     ],
   },
 };
@@ -247,9 +390,18 @@ export function jaaAlku(arvo) {
 }
 
 /** Valittu osoite paikalle, tai null jos oletus kelpaa. */
+// Poistetut ehdokkaat: väärin nimetty tai lisenssiä ei voi enää varmistaa
+// (esim. lataaja poistanut tilinsä). Vanha tallennettu valinta ohjataan
+// takaisin oletukseen, ettei peli jää soittamaan tuntematonta raitaa.
+const POISTETUT = new Set([
+  'https://cdn.freesound.org/previews/160/160461_1-lq.mp3',
+]);
+
 export function valittuAani(slot) {
   try {
-    return JSON.parse(localStorage.getItem(AVAIN) ?? '{}')[slot] ?? null;
+    const arvo = JSON.parse(localStorage.getItem(AVAIN) ?? '{}')[slot] ?? null;
+    if (arvo && POISTETUT.has(jaaAlku(arvo).url ?? '')) return null;
+    return arvo;
   } catch {
     return null;
   }
