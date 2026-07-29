@@ -47,6 +47,10 @@
     .kori-rivi input[type="range"] { width: 7.5rem; accent-color: var(--korostus); }
     .kori-rivi .sek { min-width: 2.9rem; text-align: right; }
     .kori-rivi .sek { color: var(--haalea); align-self: center; }
+    /* Paikan muut vaihtoehdot aukeavat nuolesta. */
+    details.loput { margin: 0.1rem 0 0.7rem; }
+    details.loput > summary { cursor: pointer; color: var(--haalea);
+      font-size: 0.85rem; padding: 0.2rem 0; }
     .oma { margin: 0.3rem 0 0.1rem; }
     .oma input[type="url"] { flex: 2 1 14rem; }
     .oma input[type="text"] { flex: 1 1 9rem; }
@@ -527,6 +531,7 @@
     const valinnat = document.getElementById('valinnat');
     const laskuri = document.getElementById('laskuri');
     const aukiRyhmat = new Set(); // säilyy uudelleenpiirron yli
+    const aukiPaikat = new Set(); // paikat, joiden vaihtoehdot on avattu
 
     // Ryhmä: kaupungit maisematyypin mukaan, muut lohkoittain.
     const ryhmaNimi = (slot, tiedot) => {
@@ -692,6 +697,20 @@
           const kaytossa = valittu === null ? tiedot.oletus : (valittu === '' ? null : valittu);
           const kaytto = jaaAlku(kaytossa);
 
+          // Vain käytössä oleva ääni säätöineen näkyy oletuksena; loput
+          // vaihtoehdot, omat lisäykset ja Freesound-haku aukeavat
+          // nuolesta (omistajan toive — lista pysyy lyhyenä).
+          const loput = document.createElement('details');
+          loput.className = 'loput';
+          loput.open = haku ? true : aukiPaikat.has(slot);
+          loput.addEventListener('toggle', () => {
+            if (loput.open) aukiPaikat.add(slot);
+            else aukiPaikat.delete(slot);
+          });
+          const avaus = document.createElement('summary');
+          loput.appendChild(avaus);
+          let piilotettuja = 0;
+
           for (const ehdokas of kaikkiRivit) {
             const { url, nimi, alku, oma } = ehdokas;
             const rivi = document.createElement('div');
@@ -783,7 +802,11 @@
               });
               rivi.appendChild(poista);
             }
-            kotelo.appendChild(rivi);
+            if (onValittu) kotelo.appendChild(rivi);
+            else {
+              loput.appendChild(rivi);
+              piilotettuja += 1;
+            }
           }
 
           // Oma ehdokas: liitä mikä tahansa mp3-osoite tähän paikkaan.
@@ -808,7 +831,7 @@
           oma.appendChild(osoite);
           oma.appendChild(nimike);
           oma.appendChild(lisaa);
-          kotelo.appendChild(oma);
+          loput.appendChild(oma);
 
           // Konehaku: hae lisää ehdokkaita tähän paikkaan Freesoundista.
           const hakuRivi = document.createElement('div');
@@ -824,8 +847,10 @@
           hae.addEventListener('click', () => haeFreesound(slot, kysely.value.trim(), tulokset));
           hakuRivi.appendChild(kysely);
           hakuRivi.appendChild(hae);
-          kotelo.appendChild(hakuRivi);
-          kotelo.appendChild(tulokset);
+          loput.appendChild(hakuRivi);
+          loput.appendChild(tulokset);
+          avaus.textContent = `Muut vaihtoehdot (${piilotettuja}) · omat äänet · Freesound-haku`;
+          kotelo.appendChild(loput);
         }
         valinnat.appendChild(kotelo);
       }
