@@ -1066,6 +1066,9 @@ export class UI {
         const lahto = game.cityOf()?.name ?? '';
         const kalvo = game.pack.id === 'maailma';
         const line = kalvo ? game.flightLine(link.city, packById(link.pack)) : null;
+        // Lippu ennen siirtoa: kohteen äänimaisema ja päiväkirja odottavat
+        // kalvon alla, kunnes pelaaja astuu ulos.
+        if (kalvo && !this.reducedMotion) document.body.classList.add('flight-active');
         this.doAction(() => game.actionGateway(link.index));
         if (kalvo) await this.animateFlight(lahto, link.label, line);
       });
@@ -1318,6 +1321,12 @@ export class UI {
    */
   syncAmbience() {
     const { game } = this;
+    // Lennon aikana kuuluu vain moottori: kaupungin äänimaisema alkaa
+    // vasta, kun pelaaja astuu ulos koneesta (kalvon sulkeva render).
+    if (document.body.classList.contains('flight-active')) {
+      playPlaceAmbience(null, null);
+      return;
+    }
     if (game.phase === 'over') {
       playPlaceAmbience(null, null);
       return;
@@ -2450,6 +2459,11 @@ export class UI {
       const result = fn();
       if (result && result.ok === false) {
         this.showError(result.error);
+        // Peruuntunut lento ei saa jättää kalvolippua päälle mykistämään
+        // äänimaisemaa.
+        if (!document.querySelector('.flight-overlay')) {
+          document.body.classList.remove('flight-active');
+        }
         return;
       }
       if (after) await after(result);
@@ -2492,6 +2506,10 @@ export class UI {
     // riippumatta siitä, näytetäänkö animaatio.
     const line = game.flightLine(destination);
     sfx.play('flight');
+    // Kalvollisella lennolla kohteen äänimaisema odottaa kalvon loppuun.
+    if (game.pack.id === 'maailma' && !this.reducedMotion) {
+      document.body.classList.add('flight-active');
+    }
     this.run(() => game.actionFly(destination), {
       after: async () => {
         // Lentokalvo kuuluu vain maailmankartalle; mantereella nappula

@@ -45,7 +45,7 @@
   <pre id="valinnat-teksti" style="white-space:pre-wrap"></pre>
   <script type="module">
     import { sfx } from './js/sound.js';
-    import { EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani } from './js/aani-ehdokkaat.js';
+    import { EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani, jaaAlku } from './js/aani-ehdokkaat.js';
     const nimet = [
       'quizOpen', 'click', 'paper', 'swipe', 'pen', 'dieTick', 'dieLand', 'step', 'arrive',
       'ferry', 'flight', 'correct', 'wrong', 'hint', 'tick', 'timeout',
@@ -76,12 +76,20 @@
         os.textContent = otsikko;
         valinnat.appendChild(os);
         // Tallennettu valinta: osoite, '' (syntetisoitu) tai null (oletus).
+        // Osoitteessa voi olla aloituskohta (#alku=20).
         const tallennettu = valittuAani(slot);
         const kaytossa = tallennettu === null ? oletus : (tallennettu === '' ? null : tallennettu);
-        for (const { url, nimi } of ehdokkaat) {
+        const kaytto = jaaAlku(kaytossa);
+        for (const { url, nimi, alku } of ehdokkaat) {
           const rivi = document.createElement('div');
           rivi.className = 'grid';
           rivi.style.margin = '0.3rem 0';
+          const onValittu = (url ?? null) === (kaytto.url ?? null);
+          // Aloituskohta sekunteina: valitulla rivillä tallennettu arvo,
+          // muuten ehdokkaan esitäyttö. Ei tehosteille — ne siivutetaan.
+          let aika = null;
+          const sekunnit = () => Math.max(0, Number(aika?.value) || 0);
+          const arvoksi = (u) => (sekunnit() > 0 ? `${u}#alku=${sekunnit()}` : u);
           if (url) {
             const soita = document.createElement('button');
             soita.textContent = '▶';
@@ -90,21 +98,47 @@
               pysayta();
               soiva = new Audio(url);
               soiva.volume = 0.35;
+              const s = sekunnit();
+              if (s > 0) {
+                soiva.addEventListener('loadedmetadata', () => { soiva.currentTime = s; }, { once: true });
+              }
               soiva.play();
             });
             rivi.appendChild(soita);
           }
           const valitse = document.createElement('button');
-          const onValittu = (url ?? null) === (kaytossa ?? null);
           valitse.textContent = (onValittu ? '✓ ' : '') + nimi;
           if (onValittu) valitse.style.borderColor = '#d9a13b';
           valitse.style.minWidth = '0';
           valitse.style.textAlign = 'left';
           valitse.addEventListener('click', () => {
-            valitseAani(slot, url);
+            valitseAani(slot, url ? arvoksi(url) : url);
             rakenna();
           });
           rivi.appendChild(valitse);
+          if (url && !slot.startsWith('tehoste:')) {
+            aika = document.createElement('input');
+            aika.type = 'number';
+            aika.min = '0';
+            aika.step = '5';
+            aika.value = onValittu && kaytto.alku ? kaytto.alku : (alku ?? 0);
+            aika.title = 'Aloituskohta sekunteina';
+            aika.style.cssText = 'width:4rem;background:rgba(247,237,216,0.08);color:#f0e2c4;'
+              + 'border:1px solid rgba(214,188,140,0.45);border-radius:8px;'
+              + 'font-family:inherit;font-size:0.9rem;padding:0.6rem 0.4rem;';
+            // Muutos päivittää valinnan heti, jos tämä rivi on valittuna.
+            aika.addEventListener('change', () => {
+              if (onValittu) {
+                valitseAani(slot, arvoksi(url));
+                rakenna();
+              }
+            });
+            rivi.appendChild(aika);
+            const seloste = document.createElement('span');
+            seloste.textContent = 's';
+            seloste.style.cssText = 'align-self:center;color:#9c8661;';
+            rivi.appendChild(seloste);
+          }
           valinnat.appendChild(rivi);
         }
       }
@@ -115,12 +149,14 @@
     // kovakoodataan oletuksiksi.
     document.getElementById('kopioi').addEventListener('click', () => {
       const kaikki = kaikkiValinnat();
-      const rivit = Object.entries(kaikki).map(([slot, url]) => {
+      const rivit = Object.entries(kaikki).map(([slot, arvo]) => {
         const paikka = EHDOKKAAT[slot];
-        const nimi = url === ''
+        const { url, alku } = jaaAlku(arvo);
+        const nimi = arvo === ''
           ? 'Syntetisoitu äänimaisema'
-          : paikka?.ehdokkaat.find((e) => e.url === url)?.nimi ?? url;
-        return `${paikka?.otsikko ?? slot}: ${nimi}`;
+          : paikka?.ehdokkaat.find((e) => e.url === url)?.nimi ?? arvo;
+        const alkuosa = alku > 0 ? ` (alkaa ${alku} s)` : '';
+        return `${paikka?.otsikko ?? slot}: ${nimi}${alkuosa}`;
       });
       const teksti = rivit.length
         ? `Äänivalinnat:\n${rivit.join('\n')}`

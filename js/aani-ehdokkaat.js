@@ -65,7 +65,8 @@ const TYYPPI_EHDOKKAAT = {
   ],
   savanni: [
     { url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3', nimi: 'Savannin yösirkat — AugustSandberg, CC0' },
-    { url: 'https://cdn.freesound.org/previews/714/714271_14696146-lq.mp3', nimi: 'Kuiva tuulinen maisema — Metris, CC BY' },
+    // Omistajan huomio: klipin alku on vaimea — esitäytetty alkukohta 20 s.
+    { url: 'https://cdn.freesound.org/previews/714/714271_14696146-lq.mp3', nimi: 'Kuiva tuulinen maisema — Metris, CC BY', alku: 20 },
     { url: 'https://cdn.freesound.org/previews/277/277743_3808723-lq.mp3', nimi: 'Afrikan pensasmaa — CHRISFOPFILMS, CC0' },
     { url: 'https://cdn.freesound.org/previews/504/504694_778707-lq.mp3', nimi: 'Masai-leirin luontoäänet — selcukartut, CC0' },
     { url: 'https://cdn.freesound.org/previews/612/612318_13563349-lq.mp3', nimi: 'Virtahevot joella (Kruger) — noisymichael, CC BY' },
@@ -167,6 +168,15 @@ for (const city of AFRICA.cities) {
       ...yhteiset,
     ],
   };
+}
+
+/**
+ * Valinta voi sisältää aloituskohdan: 'osoite#alku=20' aloittaa äänitteen
+ * 20 sekunnin kohdalta. Tämä purkaa muodon soittimia varten.
+ */
+export function jaaAlku(arvo) {
+  const m = /^(.*)#alku=([0-9]+(?:\.[0-9]+)?)$/.exec(arvo ?? '');
+  return m ? { url: m[1], alku: Number(m[2]) } : { url: arvo ?? null, alku: 0 };
 }
 
 /** Valittu osoite paikalle, tai null jos oletus kelpaa. */

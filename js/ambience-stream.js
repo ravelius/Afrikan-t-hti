@@ -8,7 +8,7 @@
 // tekijämaininta lisensseineen. Vain CC-lisensoituja äänitteitä.
 
 import { sfx } from './sound.js';
-import { valittuAani } from './aani-ehdokkaat.js';
+import { valittuAani, jaaAlku } from './aani-ehdokkaat.js';
 
 export const STREAMS = {
   kairo: {
@@ -85,10 +85,23 @@ export function playPlaceAmbience(cityId, fallbackType) {
   if (nykyinen?.cityId === cityId && nykyinen?.url === url) return;
 
   stopPlaceStream();
-  const audio = new Audio(url);
+  // Valinta voi kantaa aloituskohdan (#alku=20): hypätään äänitteen
+  // vaimean alun yli. Silmukka palaa selaimen tapaan alkuun asti, mikä
+  // on siedettävää — äänitteet ovat pitkiä.
+  const { url: osoite, alku } = jaaAlku(url);
+  const audio = new Audio(osoite);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
+  if (alku) {
+    audio.addEventListener('loadedmetadata', () => {
+      try {
+        audio.currentTime = alku;
+      } catch {
+        /* selain ei salli hyppyä ennen dataa — soi alusta */
+      }
+    }, { once: true });
+  }
   const oma = { audio, cityId, url };
   nykyinen = oma;
 

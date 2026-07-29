@@ -2273,6 +2273,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   left: 50%;
   /* Pystysijainti lasketaan js:ssä kartan omasta korkeudesta. */
   transform: translate(-50%, -100%);
+  /* Pelkkää tekstiä: ei saa varastaa klikkauksia Astu ulos -napilta. */
+  pointer-events: none;
   max-width: 78%;
   margin: 0;
   padding: 0.5rem 0.9rem;
@@ -24876,7 +24878,8 @@ const TYYPPI_EHDOKKAAT = {
   ],
   savanni: [
     { url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3', nimi: 'Savannin yösirkat — AugustSandberg, CC0' },
-    { url: 'https://cdn.freesound.org/previews/714/714271_14696146-lq.mp3', nimi: 'Kuiva tuulinen maisema — Metris, CC BY' },
+    // Omistajan huomio: klipin alku on vaimea — esitäytetty alkukohta 20 s.
+    { url: 'https://cdn.freesound.org/previews/714/714271_14696146-lq.mp3', nimi: 'Kuiva tuulinen maisema — Metris, CC BY', alku: 20 },
     { url: 'https://cdn.freesound.org/previews/277/277743_3808723-lq.mp3', nimi: 'Afrikan pensasmaa — CHRISFOPFILMS, CC0' },
     { url: 'https://cdn.freesound.org/previews/504/504694_778707-lq.mp3', nimi: 'Masai-leirin luontoäänet — selcukartut, CC0' },
     { url: 'https://cdn.freesound.org/previews/612/612318_13563349-lq.mp3', nimi: 'Virtahevot joella (Kruger) — noisymichael, CC BY' },
@@ -24978,6 +24981,15 @@ for (const city of AFRICA.cities) {
       ...yhteiset,
     ],
   };
+}
+
+/**
+ * Valinta voi sisältää aloituskohdan: 'osoite#alku=20' aloittaa äänitteen
+ * 20 sekunnin kohdalta. Tämä purkaa muodon soittimia varten.
+ */
+function jaaAlku(arvo) {
+  const m = /^(.*)#alku=([0-9]+(?:\.[0-9]+)?)$/.exec(arvo ?? '');
+  return m ? { url: m[1], alku: Number(m[2]) } : { url: arvo ?? null, alku: 0 };
 }
 
 /** Valittu osoite paikalle, tai null jos oletus kelpaa. */
@@ -25952,10 +25964,23 @@ function playPlaceAmbience(cityId, fallbackType) {
   if (nykyinen?.cityId === cityId && nykyinen?.url === url) return;
 
   stopPlaceStream();
-  const audio = new Audio(url);
+  // Valinta voi kantaa aloituskohdan (#alku=20): hypätään äänitteen
+  // vaimean alun yli. Silmukka palaa selaimen tapaan alkuun asti, mikä
+  // on siedettävää — äänitteet ovat pitkiä.
+  const { url: osoite, alku } = jaaAlku(url);
+  const audio = new Audio(osoite);
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
+  if (alku) {
+    audio.addEventListener('loadedmetadata', () => {
+      try {
+        audio.currentTime = alku;
+      } catch {
+        /* selain ei salli hyppyä ennen dataa — soi alusta */
+      }
+    }, { once: true });
+  }
   const oma = { audio, cityId, url };
   nykyinen = oma;
 
@@ -30337,6 +30362,9 @@ class UI {
         const lahto = game.cityOf()?.name ?? '';
         const kalvo = game.pack.id === 'maailma';
         const line = kalvo ? game.flightLine(link.city, packById(link.pack)) : null;
+        // Lippu ennen siirtoa: kohteen äänimaisema ja päiväkirja odottavat
+        // kalvon alla, kunnes pelaaja astuu ulos.
+        if (kalvo && !this.reducedMotion) document.body.classList.add('flight-active');
         this.doAction(() => game.actionGateway(link.index));
         if (kalvo) await this.animateFlight(lahto, link.label, line);
       });
@@ -30588,6 +30616,12 @@ class UI {
    */
   syncAmbience() {
     const { game } = this;
+    // Lennon aikana kuuluu vain moottori: kaupungin äänimaisema alkaa
+    // vasta, kun pelaaja astuu ulos koneesta (kalvon sulkeva render).
+    if (document.body.classList.contains('flight-active')) {
+      playPlaceAmbience(null, null);
+      return;
+    }
     if (game.phase === 'over') {
       playPlaceAmbience(null, null);
       return;
@@ -31720,6 +31754,11 @@ class UI {
       const result = fn();
       if (result && result.ok === false) {
         this.showError(result.error);
+        // Peruuntunut lento ei saa jättää kalvolippua päälle mykistämään
+        // äänimaisemaa.
+        if (!document.querySelector('.flight-overlay')) {
+          document.body.classList.remove('flight-active');
+        }
         return;
       }
       if (after) await after(result);
@@ -31762,6 +31801,10 @@ class UI {
     // riippumatta siitä, näytetäänkö animaatio.
     const line = game.flightLine(destination);
     sfx.play('flight');
+    // Kalvollisella lennolla kohteen äänimaisema odottaa kalvon loppuun.
+    if (game.pack.id === 'maailma' && !this.reducedMotion) {
+      document.body.classList.add('flight-active');
+    }
     this.run(() => game.actionFly(destination), {
       after: async () => {
         // Lentokalvo kuuluu vain maailmankartalle; mantereella nappula
@@ -32099,7 +32142,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.23';
+const APP_VERSION = '2026-07-29.24';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
