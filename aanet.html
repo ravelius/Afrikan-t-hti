@@ -96,6 +96,23 @@
      <b>⌖ Alkukohta tästä</b>. Valinnat tallentuvat tähän selaimeen ja peli
      käyttää niitä heti seuraavasta latauksesta.</p>
 
+  <details class="pikatestit" id="mikseri" open>
+    <summary>Miksaus — kuuntele paikan raidat päällekkäin</summary>
+    <p>Valitse paikka, niin kannet latautuvat pelin käyttämillä äänillä ja
+       tasoilla. Säädä kunkin raidan alku ja voima, kokeile tietovisan
+       vaimennusta, ja tallenna säädöt suoraan valintoihin.</p>
+    <div class="grid" style="margin-bottom:0.5rem">
+      <select id="mikseri-paikka"></select>
+      <button id="mikseri-lataa">Lataa raidat</button>
+      <label class="laskuri"><input type="checkbox" id="mikseri-visa" /> tietovisa auki (kaupunki vaimenee)</label>
+      <label class="laskuri">master ×
+        <input id="mikseri-master" type="range" min="0.2" max="4" step="0.1" value="1" style="width:6rem" />
+        <span id="mikseri-master-arvo">1.0</span>
+      </label>
+    </div>
+    <div id="mikseri-kannet"></div>
+  </details>
+
   <details class="pikatestit">
     <summary>Pikatestit: pelin tehosteet ja lentokohtaus</summary>
     <div id="lista" class="grid" style="margin-top:0.6rem"></div>
@@ -121,6 +138,7 @@
   <script type="module">
     import { sfx } from './js/sound.js';
     import { EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani, jaaAlku } from './js/aani-ehdokkaat.js';
+    import { STRIIMI_VOIMA, MUSIIKKI_VOIMA } from './js/ambience-stream.js';
 
     // --- pikatestit ---------------------------------------------------------
     const nimet = [
@@ -222,6 +240,153 @@
       }
       mika.textContent = `⌖ Alkukohta ${sek} s — ${soiva.nimi}`;
       rakenna();
+    });
+
+    // --- mikseri: paikan raidat päällekkäin ---------------------------------
+    // Kannet soittavat pelin oikeilla perustasoilla (kaupunki 0.14,
+    // musiikki 0.09) kerrottuna raidan voimalla ja mikserin masterilla.
+    // Master on esikuuntelun apu — sitä EI tallenneta valintoihin.
+    const mikseriPaikka = document.getElementById('mikseri-paikka');
+    const mikseriKannet = document.getElementById('mikseri-kannet');
+    const mikseriVisa = document.getElementById('mikseri-visa');
+    const mikseriMaster = document.getElementById('mikseri-master');
+    const mikseriMasterArvo = document.getElementById('mikseri-master-arvo');
+    let kannet = []; // { slot, otsikko, url, alku, voima, base, kaupunki, audio, soi }
+    for (const [slot, { otsikko }] of Object.entries(EHDOKKAAT)) {
+      if (!slot.startsWith('kaupunki:')) continue;
+      const opt = document.createElement('option');
+      opt.value = slot;
+      opt.textContent = otsikko;
+      mikseriPaikka.appendChild(opt);
+    }
+
+    const kannenTaso = (kansi) => {
+      const vaimennus = kansi.kaupunki && mikseriVisa.checked ? 0.15 : 1;
+      return Math.min(1, kansi.base * kansi.voima * Number(mikseriMaster.value) * vaimennus);
+    };
+    const paivitaTasot = () => {
+      mikseriMasterArvo.textContent = Number(mikseriMaster.value).toFixed(1);
+      for (const kansi of kannet) {
+        if (kansi.audio) kansi.audio.volume = kannenTaso(kansi);
+      }
+    };
+    mikseriVisa.addEventListener('change', paivitaTasot);
+    mikseriMaster.addEventListener('input', paivitaTasot);
+
+    const pysaytaKannet = () => {
+      for (const kansi of kannet) {
+        kansi.audio?.pause();
+        kansi.audio?.removeAttribute('src');
+      }
+      kannet = [];
+      mikseriKannet.textContent = '';
+    };
+
+    // Paikalla käytössä oleva ääni: valinta tai oletus säätöineen.
+    const kaytossaOleva = (slot) => {
+      const valinta = valittuAani(slot);
+      const arvo = valinta === null ? EHDOKKAAT[slot]?.oletus : (valinta === '' ? null : valinta);
+      return { ...jaaAlku(arvo), arvo };
+    };
+
+    function rakennaKansi(kansi) {
+      const lohko = document.createElement('div');
+      lohko.className = 'rivi';
+      lohko.style.cssText = 'border:1px solid var(--reuna);border-radius:10px;padding:0.5rem 0.6rem;';
+      const otsikko = document.createElement('span');
+      otsikko.style.cssText = 'flex:1 1 100%;color:var(--himmea);font-size:0.85rem;';
+      otsikko.textContent = `${kansi.otsikko}: ${kansi.nimi}`;
+      lohko.appendChild(otsikko);
+      if (!kansi.url) {
+        const huom = document.createElement('span');
+        huom.className = 'sek';
+        huom.textContent = 'syntetisoitu ääni — ei striimattavaa raitaa';
+        lohko.appendChild(huom);
+        mikseriKannet.appendChild(lohko);
+        return;
+      }
+      const play = document.createElement('button');
+      play.textContent = '▶';
+      play.className = 'soita';
+      play.addEventListener('click', () => {
+        if (!kansi.audio) {
+          kansi.audio = new Audio(kansi.url);
+          kansi.audio.loop = true;
+          if (kansi.alku > 0) {
+            kansi.audio.addEventListener('loadedmetadata', () => {
+              kansi.audio.currentTime = kansi.alku;
+            }, { once: true });
+          }
+        }
+        if (kansi.audio.paused) {
+          kansi.audio.volume = kannenTaso(kansi);
+          kansi.audio.play().catch(() => { otsikko.textContent += ' (ei saatu soimaan)'; });
+          play.textContent = '⏸';
+        } else {
+          kansi.audio.pause();
+          play.textContent = '▶';
+        }
+      });
+      lohko.appendChild(play);
+      const tee = (arvo, min, max, step, otsake, avain) => {
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = min;
+        input.max = max;
+        input.step = step;
+        input.value = arvo;
+        input.title = otsake;
+        input.addEventListener('change', () => {
+          kansi[avain] = Math.max(Number(min), Number(input.value) || kansi[avain]);
+          if (avain === 'alku' && kansi.audio && kansi.audio.duration) {
+            kansi.audio.currentTime = kansi.alku;
+          }
+          paivitaTasot();
+        });
+        lohko.appendChild(input);
+        const merkki = document.createElement('span');
+        merkki.className = 'sek';
+        merkki.textContent = avain === 'alku' ? 's' : '×';
+        lohko.appendChild(merkki);
+      };
+      tee(kansi.alku, '0', '600', '5', 'Aloituskohta sekunteina', 'alku');
+      tee(kansi.voima, '0.2', '3', '0.1', 'Voimakerroin', 'voima');
+      const tallenna = document.createElement('button');
+      tallenna.textContent = 'Tallenna valintaan';
+      tallenna.addEventListener('click', () => {
+        const osat = [];
+        if (kansi.alku > 0) osat.push(`alku=${kansi.alku}`);
+        if (kansi.voima !== 1) osat.push(`voima=${kansi.voima}`);
+        valitseAani(kansi.slot, osat.length ? `${kansi.url}#${osat.join('&')}` : kansi.url);
+        tallenna.textContent = '✓ Tallennettu';
+        setTimeout(() => { tallenna.textContent = 'Tallenna valintaan'; }, 1500);
+        rakenna();
+      });
+      lohko.appendChild(tallenna);
+      mikseriKannet.appendChild(lohko);
+    }
+
+    document.getElementById('mikseri-lataa').addEventListener('click', () => {
+      pysaytaKannet();
+      const kaupunkiSlot = mikseriPaikka.value;
+      if (!kaupunkiSlot) return;
+      const kaupunki = kaytossaOleva(kaupunkiSlot);
+      const musiikki = kaytossaOleva('musiikki:tietovisa');
+      const nimeksi = (slot, tila) => {
+        const omat = omatEhdokkaat()[slot] ?? [];
+        return tila.arvo == null
+          ? 'syntetisoitu'
+          : [...(EHDOKKAAT[slot]?.ehdokkaat ?? []), ...omat].find((e) => e.url === tila.url)?.nimi ?? tila.url;
+      };
+      kannet = [
+        { slot: kaupunkiSlot, otsikko: 'Kaupunki', nimi: nimeksi(kaupunkiSlot, kaupunki),
+          url: kaupunki.url, alku: kaupunki.alku, voima: kaupunki.voima,
+          base: STRIIMI_VOIMA, kaupunki: true, audio: null },
+        { slot: 'musiikki:tietovisa', otsikko: 'Tietovisan musiikki', nimi: nimeksi('musiikki:tietovisa', musiikki),
+          url: musiikki.url, alku: musiikki.alku, voima: musiikki.voima,
+          base: MUSIIKKI_VOIMA, kaupunki: false, audio: null },
+      ];
+      for (const kansi of kannet) rakennaKansi(kansi);
     });
 
     // --- suodatus -----------------------------------------------------------
