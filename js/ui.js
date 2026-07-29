@@ -145,6 +145,28 @@ function html(tag, className, text) {
 }
 
 /**
+ * Toimintonappien viivaikonit: emoji erottui kartan mustepiirroksesta,
+ * joten ikonit piirretään samalla kynällä kuin kartta — pelkkä ääriviiva
+ * nykyisellä tekstivärillä. Nopan silmät ovat ainoa täytetty muoto.
+ */
+const VIIVA_IKONIT = {
+  saapas: '<path d="M7 3.5h4.4v8.2c0 .9.6 1.7 1.5 2l4.8 1.6c1.4.5 2.3 1.3 2.3 2.4 0 .8-.6 1.4-1.4 1.4H8.6c-.9 0-1.6-.7-1.6-1.6z"/><path d="M7 6h4.4M7 8.2h4.4M4 20.6h16.5"/>',
+  purje: '<path d="M11 5.4 6 13.6h5zM13 4.2l5.6 9.4H13z"/><path d="M4.6 16.2h14.8l-2 3.4H6.6zM12 13.6v2.6"/>',
+  suurennuslasi: '<circle cx="9.8" cy="9.8" r="5.6"/><path d="M13.9 13.9 20 20"/>',
+  noppa: '<rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.2"/><g class="taytto"><circle cx="8.2" cy="8.2" r="1.25"/><circle cx="15.8" cy="8.2" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="8.2" cy="15.8" r="1.25"/><circle cx="15.8" cy="15.8" r="1.25"/></g>',
+  kompassi: '<circle cx="12" cy="12" r="8.4"/><path d="M12 5.8 14.3 12 12 18.2 9.7 12z"/><circle class="taytto" cx="12" cy="12" r="1"/>',
+};
+
+/** Viivaikoni ikonin nimellä — tai null, jos nimi onkin tekstimerkki. */
+function viivaIkoni(nimi) {
+  const piirto = VIIVA_IKONIT[nimi];
+  if (!piirto) return null;
+  const span = html('span', 'icon-glyph viiva-ikoni');
+  span.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${piirto}</svg>`;
+  return span;
+}
+
+/**
  * Lyhentää Wikipedian tiivistelmän saapumiskortin parin lauseen esittelyksi.
  * Suomen järjestysluvut ("3. suurin") voivat katkaista lauseen liian
  * aikaisin — se on harvinaista ja lopputulos on silti luettava.
@@ -306,6 +328,26 @@ export class UI {
       this.game.phase === 'duel' ? this.game.closeDuel() : this.game.closeQuiz()
     )));
 
+    // Lappu sulkeutuu myös taustaa — siis karttaa — napauttamalla, ettei
+    // sulkunappia tarvitse etsiä; tietovisassa sellaista ei edes ole.
+    // Napautus vastaa lapun kevyintä poistumistietä (sulje / Jatka matkaa).
+    this.lappuTausta = (event) => {
+      if (event.target === event.currentTarget) this.suljeLappu(event.currentTarget);
+    };
+    // Esc kulkee samaa polkua: selaimen oletus sulkisi lapun päivittämättä
+    // pelitilaa, ja peli jäisi jumiin kysymys- tai tapahtumavaiheeseen.
+    this.lappuPeruutus = (event) => {
+      event.preventDefault();
+      this.suljeLappu(event.currentTarget);
+    };
+    this.taustaLaput = [
+      this.arrivalDialog, this.wikiDialog, this.eventDialog, this.passportDialog,
+      this.quizDialog, this.winnerDialog, document.getElementById('rules-dialog'),
+    ];
+    for (const lappu of this.taustaLaput) lappu.addEventListener('click', this.lappuTausta);
+    this.peruutusLaput = [this.quizDialog, this.eventDialog, this.arrivalDialog];
+    for (const lappu of this.peruutusLaput) lappu.addEventListener('cancel', this.lappuPeruutus);
+
     this.mapPane = this.svg.parentElement;
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
@@ -432,7 +474,48 @@ export class UI {
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
     for (const timer of Object.values(this.typeTimers ?? {})) clearTimeout(timer);
     this.stopQuizTimer();
+    for (const lappu of this.taustaLaput ?? []) lappu.removeEventListener('click', this.lappuTausta);
+    for (const lappu of this.peruutusLaput ?? []) lappu.removeEventListener('cancel', this.lappuPeruutus);
     this.observer?.disconnect();
+  }
+
+  /**
+   * Lapun kevyin poistumistie taustanapautukselle ja Esc:lle: takaisin
+   * karttanäkymään. Tietovisassa sulkeminen on kysymyksestä luopumista —
+   * pulma palaa taskuun, muu kysymys päättää vuoron vastaamatta.
+   * Rosvon kaksintaistelusta ei karata taustaa napauttamalla.
+   */
+  suljeLappu(lappu) {
+    const { game } = this;
+    if (lappu === this.quizDialog) {
+      if (this.busy) return;
+      if (game.phase === 'duel') {
+        const duel = game.duel;
+        if (duel && duel.chosen !== null && this.revealShownFor === duel) {
+          sfx.play('paper');
+          this.doAction(() => game.closeDuel());
+        }
+        return;
+      }
+      if (game.phase !== 'quiz' || !game.quiz) return;
+      // Tuomion paljastus on kesken — tulos ei saa jäädä näkemättä.
+      if (game.quiz.chosen !== null && this.revealShownFor !== game.quiz) return;
+      sfx.play('paper');
+      this.doAction(() => game.closeQuiz());
+      return;
+    }
+    // Saapumis- ja tapahtumalaput vievät pelitilaa eteenpäin, joten
+    // taustanapautus painaa niiden omaa jatkonappia.
+    if (lappu === this.eventDialog) {
+      document.getElementById('event-ok').click();
+      return;
+    }
+    if (lappu === this.arrivalDialog) {
+      document.getElementById('arrival-no').click();
+      return;
+    }
+    sfx.play('paper');
+    lappu.close();
   }
 
   /**
@@ -1031,7 +1114,7 @@ export class UI {
         return;
       }
       this.turnStatus.textContent = `${TRAVEL_LABEL[game.travelMode]} — heitä noppa.`;
-      const rollBtn = html('button', 'primary', '🎲 Heitä noppa');
+      const rollBtn = this.ikoniTekstiNappi('noppa', 'Heitä noppa', 'primary');
       rollBtn.addEventListener('click', () => this.doRoll());
       this.actionsEl.appendChild(rollBtn);
 
@@ -1066,13 +1149,13 @@ export class UI {
       this.actionsEl.dataset.rivi = 'yksi';
 
       if (modes.includes('land')) {
-        const landBtn = this.iconButton('🥾', 'Jalan', modes.includes('stay') ? '' : 'primary');
+        const landBtn = this.iconButton('saapas', 'Jalan', modes.includes('stay') ? '' : 'primary');
         landBtn.addEventListener('click', () => this.doWalk());
         this.actionsEl.appendChild(landBtn);
       }
 
       if (hasSlow) {
-        const moreBtn = this.iconButton('⛵', 'Laiva & lento');
+        const moreBtn = this.iconButton('purje', 'Laiva & lento');
         moreBtn.addEventListener('click', () => {
           this.travelExpanded = true;
           this.render();
@@ -1081,7 +1164,7 @@ export class UI {
       }
 
       if (modes.includes('stay')) {
-        const stayBtn = this.iconButton('🔍', 'Tutki', 'primary');
+        const stayBtn = this.iconButton('suurennuslasi', 'Tutki', 'primary');
         stayBtn.addEventListener('click', () => {
           sfx.play('paper');
           this.doAction(() => game.actionTravel('stay'));
@@ -1095,7 +1178,7 @@ export class UI {
     this.turnStatus.textContent = 'Laivalla, lentäen vai portin kautta?';
 
     if (modes.includes('sea')) {
-      const seaBtn = html('button', 'wide', `⛵ Laivalla (${SEA_FARE} p)`);
+      const seaBtn = this.ikoniTekstiNappi('purje', `Laivalla (${SEA_FARE} p)`, 'wide');
       seaBtn.addEventListener('click', () => {
         sfx.play('ferry');
         this.doAction(() => game.actionTravel('sea'));
@@ -1112,7 +1195,7 @@ export class UI {
 
     // Vaelluksessa porttikaupungeista jatketaan toisille laudoille.
     for (const link of gateways) {
-      const gwBtn = html('button', 'wide', `🧭 ${link.label}`);
+      const gwBtn = this.ikoniTekstiNappi('kompassi', link.label, 'wide');
       gwBtn.addEventListener('click', async () => {
         sfx.play('flight');
         // Lentokalvo kuuluu vain maailmankartalle — mantereella lento
@@ -1159,8 +1242,18 @@ export class UI {
     btn.type = 'button';
     btn.title = label;
     btn.setAttribute('aria-label', label);
-    btn.appendChild(html('span', 'icon-glyph', icon));
+    btn.appendChild(viivaIkoni(icon) ?? html('span', 'icon-glyph', icon));
     btn.appendChild(html('span', 'icon-label', label));
+    return btn;
+  }
+
+  /** Tekstinappi, jonka edessä on kartan kynällä piirretty viivaikoni. */
+  ikoniTekstiNappi(ikoni, teksti, luokka = '') {
+    const btn = html('button', `ikoni-teksti${luokka ? ` ${luokka}` : ''}`);
+    btn.type = 'button';
+    const kuva = viivaIkoni(ikoni);
+    if (kuva) btn.appendChild(kuva);
+    btn.appendChild(html('span', '', teksti));
     return btn;
   }
 
