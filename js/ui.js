@@ -399,6 +399,7 @@ export class UI {
     for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
+    clearTimeout(this.lentoPuheAjastin);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
     for (const timer of Object.values(this.typeTimers ?? {})) clearTimeout(timer);
     this.stopQuizTimer();
@@ -1128,14 +1129,17 @@ export class UI {
       if (!this.reducedMotion) document.body.classList.add('flight-active');
       this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
       if (!this.reducedMotion) {
-        // Avauslennon repliikki on lukittu ja luettu ääneen: puhe soi
-        // kalvon alla samaan tahtiin kuin teksti kirjoittuu ruutuun.
-        this.playDiaryVoice('assets/audio/puhe-lento-alku.mp3');
+        // Avauslennon repliikki on lukittu ja luettu ääneen: puhe alkaa
+        // pienellä viiveellä, kun moottori on jo ehtinyt nousta esiin.
+        this.lentoPuheAjastin = setTimeout(() => {
+          if (!this.dead) this.playDiaryVoice('assets/audio/puhe-lento-alku.mp3');
+        }, 1400);
       }
       await this.animateFlight(
         'Lontoo', city.name, line,
         { dx: city.x - lontoo.x, dy: city.y - lontoo.y },
       );
+      clearTimeout(this.lentoPuheAjastin);
       return;
     }
     this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));

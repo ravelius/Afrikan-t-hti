@@ -266,9 +266,13 @@ class Sound {
       g.gain.setValueAtTime(0.5, t0 + Math.max(1, kesto - 1));
       g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
       src.connect(g).connect(this.bus);
-      // Pitkissä äänityksissä alku on usein rullausta ja odottelua —
-      // hypätään suoraan lentoon (omistajan ohje: ~30 s kohdalta).
-      const alku = jet.duration > 45 ? 30 : 0;
+      // Pitkissä äänityksissä alku on lähestymistä ja odottelua —
+      // hypätään suoraan lennon ytimeen (omistajan ohje: ~25 s kohdalta).
+      const alku = jet.duration > 40 ? 25 : 0;
+      // Jos kohtaus venyy äänitettä pidemmäksi, silmukka palaa samaan
+      // kohtaan eikä äänitteen hiljaiseen alkuun.
+      src.loopStart = alku;
+      src.loopEnd = jet.duration;
       src.start(t0, alku);
       src.stop(t0 + kesto + 0.1);
       this.flightNodes = { lahteet: [src], vaimennukset: [g] };
@@ -618,11 +622,11 @@ const REAL_SAMPLES = {
     url: 'https://cdn.freesound.org/previews/856/856165_18901108-lq.mp3',
     credit: '"Vintage Typewriter Key Press" — brktkrgll, Freesound (CC0)',
   },
-  // Lentoonlähtö matkustamosta äänitettynä — lentokohtauksessa istutaan
-  // koneessa isoisän kirja sylissä.
+  // Potkurikoneen ylilento — omistajan viritysivulta valitsema
+  // lentokohtauksen moottoriääni.
   jet: {
-    url: 'https://cdn.freesound.org/previews/416/416891_2456794-lq.mp3',
-    credit: '"Airplane takeoff interior" — Apheo, Freesound (CC0)',
+    url: 'https://cdn.freesound.org/previews/315/315660_2506497-lq.mp3',
+    credit: '"ATR 72 flyover" — Hoscalegeek, Freesound (CC0)',
   },
   // Sivunkääntö: kysymyskortti avautuu kuin päiväkirjan sivu.
   quizOpen: {
