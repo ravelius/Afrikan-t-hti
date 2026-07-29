@@ -1209,6 +1209,10 @@ export class UI {
     // kun matkaaja lähtee saapumiskaupungista liikkeelle.
     const note = game.diaryNote;
     if (note && note.packId === game.pack.id && posKey(game.player.pos) === note.pos) {
+      // Lennon aikana ruudussa on lentorepliikki — päiväkirjan teksti ja
+      // luenta alkavat vasta, kun pelaaja astuu ulos koneesta. Muuten
+      // lukija lukisi eri tekstiä kuin ruudulla näkyy.
+      if (document.body.classList.contains('flight-active')) return;
       const key = `diary:${note.packId}:${note.text}`;
       if (this.factKey === key) return;
       this.factKey = key;
@@ -2594,6 +2598,9 @@ export class UI {
     overlay.remove();
     this.hideFlightLine();
     document.body.classList.remove('flight-active');
+    // Ulos astuttaessa päiväkirja pääsee ääneen: lennon ajaksi lykätty
+    // saapumismerkintä alkaa kirjoittua ja soida vasta nyt.
+    if (!this.dead) this.render();
   }
 
   /** Nuoren herran repliikki lennon ajaksi, kirjoituskoneella. */
