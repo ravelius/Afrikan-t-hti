@@ -2,7 +2,7 @@
 <html lang="fi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Matkakirja — äänistudio</title>
   <style>
     :root {
@@ -11,10 +11,10 @@
       --nappi: rgba(247, 237, 216, 0.08);
     }
     body {
-      margin: 0; padding: 1rem 1.2rem 7rem; background: var(--pohja);
+      margin: 0; padding: 0 1.2rem 3rem; background: var(--pohja);
       color: var(--teksti); font-family: 'Courier New', monospace;
     }
-    h1 { font-size: 1.1rem; letter-spacing: 0.08em; color: var(--korostus); margin: 0.2rem 0 0.6rem; }
+    h1 { font-size: 1.05rem; letter-spacing: 0.08em; color: var(--korostus); margin: 0.8rem 0 0.4rem; }
     p { max-width: 44rem; line-height: 1.5; color: var(--himmea); }
     button, input, select {
       background: var(--nappi); color: var(--teksti);
@@ -25,40 +25,43 @@
     button:active { background: rgba(247, 237, 216, 0.2); }
     button.paalla { border-color: var(--korostus); color: var(--korostus); }
     .grid { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-    .osio { margin-top: 1.3rem; font-size: 0.8rem; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--haalea); display: flex; gap: 0.6rem; align-items: baseline; }
+    .osio { margin-top: 1.1rem; font-size: 0.8rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--haalea); display: flex; gap: 0.6rem; align-items: baseline;
+      flex-wrap: wrap; }
     .osio .tila { text-transform: none; letter-spacing: 0; }
     .tila-valittu { color: var(--korostus); }
     .rivi { display: flex; gap: 0.45rem; margin: 0.3rem 0; align-items: stretch; flex-wrap: wrap; }
     .rivi .nimi { min-width: 0; text-align: left; flex: 1 1 14rem; }
     .rivi .soita { min-width: 3rem; flex: 0 0 auto; }
-    .rivi input[type="number"] { width: 4rem; }
+    .rivi input[type="number"] { width: 4.4rem; }
     .rivi .sek { align-self: center; color: var(--haalea); }
     .rivi .poista { min-width: 2.4rem; color: #d98b6b; }
     .oma { margin: 0.3rem 0 0.1rem; }
     .oma input[type="url"] { flex: 2 1 14rem; }
     .oma input[type="text"] { flex: 1 1 9rem; }
-    details { margin-top: 1rem; }
-    summary { cursor: pointer; color: var(--haalea); }
-    /* Yläpalkki: haku ja suodattimet pysyvät näkyvissä listaa selatessa. */
-    .tyokalut {
+    details.ryhma { border: 1px solid var(--reuna); border-radius: 10px;
+      margin: 0.6rem 0; padding: 0 0.8rem 0.4rem; max-width: 60rem; }
+    details.ryhma > summary { cursor: pointer; padding: 0.7rem 0; color: var(--teksti);
+      font-size: 0.95rem; letter-spacing: 0.04em; }
+    details.ryhma > summary .maara { color: var(--haalea); font-size: 0.82rem; }
+    details.pikatestit { margin-top: 1rem; }
+    details.pikatestit summary { cursor: pointer; color: var(--haalea); }
+    /* Yläpalkki: soitin ja suodattimet yhdessä, ylhäällä — iPadin alareunan
+     * eleet eivät osu säätimiin. */
+    .ylapalkki {
       position: sticky; top: 0; z-index: 3; background: var(--pohja);
-      padding: 0.6rem 0; border-bottom: 1px solid var(--reuna);
-      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+      padding: 0.55rem 0; border-bottom: 1px solid var(--reuna);
+      display: flex; flex-direction: column; gap: 0.45rem;
     }
-    .tyokalut input[type="search"] { flex: 1 1 12rem; }
-    .laskuri { color: var(--haalea); font-size: 0.85rem; white-space: nowrap; }
-    /* Soitinpalkki alhaalla: yksi soitin kaikille ehdokkaille. */
-    .soitin {
-      position: fixed; inset: auto 0 0 0; z-index: 4; background: #1b130c;
-      border-top: 1px solid var(--reuna); padding: 0.55rem 1.2rem;
-      display: flex; flex-wrap: wrap; gap: 0.5rem 0.8rem; align-items: center;
-    }
-    .soitin .mika { flex: 1 1 100%; color: var(--himmea); font-size: 0.85rem;
+    .soitin { display: flex; flex-wrap: wrap; gap: 0.4rem 0.7rem; align-items: center; }
+    .soitin .mika { flex: 1 1 100%; color: var(--himmea); font-size: 0.84rem;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .soitin input[type="range"] { accent-color: var(--korostus); }
-    .soitin .aikajana { flex: 1 1 10rem; }
-    .soitin .aika { color: var(--haalea); font-size: 0.85rem; min-width: 6.5rem; text-align: right; }
+    .soitin input[type="range"] { accent-color: var(--korostus); touch-action: none; }
+    .soitin .aikajana { flex: 1 1 9rem; min-width: 8rem; }
+    .soitin .aika { color: var(--haalea); font-size: 0.85rem; min-width: 6.4rem; text-align: right; }
+    .suodattimet { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+    .suodattimet input[type="search"] { flex: 1 1 10rem; }
+    .laskuri { color: var(--haalea); font-size: 0.85rem; white-space: nowrap; }
     #tuo-alue { width: 100%; max-width: 44rem; min-height: 5rem; background: var(--nappi);
       color: var(--teksti); border: 1px solid var(--reuna); border-radius: 8px;
       font-family: inherit; padding: 0.6rem; }
@@ -66,24 +69,34 @@
   </style>
 </head>
 <body>
-  <h1>Matkakirja — äänistudio</h1>
-  <p>Soita ehdokkaita, valitse paras ja säädä aloituskohta. Valinnat
-     tallentuvat tähän selaimeen ja peli käyttää niitä heti seuraavasta
-     latauksesta. Voit myös liittää omia Freesound-osoitteita ehdokkaiksi.
-     Lopuksi: Kopioi valinnat ja lähetä teksti Claudelle, niin voittajat
-     kovakoodataan kaikille.</p>
-
-  <div class="tyokalut">
-    <input id="haku" type="search" placeholder="Hae paikkaa tai ääntä…" />
-    <button data-lohko="" class="lohko paalla">Kaikki</button>
-    <button data-lohko="kaupunki" class="lohko">Kaupungit</button>
-    <button data-lohko="musiikki" class="lohko">Musiikki</button>
-    <button data-lohko="tehoste" class="lohko">Tehosteet</button>
-    <button id="vain-avoimet">Vain valitsemattomat</button>
-    <span class="laskuri" id="laskuri"></span>
+  <div class="ylapalkki">
+    <div class="soitin">
+      <span class="mika" id="soitin-mika">Ei ääntä valittuna — paina ▶ jostakin rivistä.</span>
+      <button id="soitin-tauko">⏯</button>
+      <button id="soitin-seis">■</button>
+      <button id="soitin-ab" title="Vaihda kahden viimeksi soitetun välillä">⇄</button>
+      <input id="soitin-jana" class="aikajana" type="range" min="0" max="100" value="0" step="0.1" />
+      <span class="aika" id="soitin-aika">0:00 / 0:00</span>
+      <button id="soitin-merkitse" title="Aseta soittimen kohta klipin aloituskohdaksi">⌖ Alkukohta tästä</button>
+      <label class="laskuri">voim.
+        <input id="soitin-voima" type="range" min="0" max="1" step="0.05" value="0.35" style="width:5.5rem" />
+      </label>
+      <label class="laskuri"><input id="soitin-luuppi" type="checkbox" /> luuppi</label>
+    </div>
+    <div class="suodattimet">
+      <input id="haku" type="search" placeholder="Hae paikkaa tai ääntä…" />
+      <button id="vain-avoimet">Vain valitsemattomat</button>
+      <span class="laskuri" id="laskuri"></span>
+    </div>
   </div>
 
-  <details>
+  <h1>Matkakirja — äänistudio</h1>
+  <p>Soita ehdokkaita, valitse paras ja säädä aloituskohta — helpoiten:
+     kuuntele, raahaa aikajana hyvään kohtaan ja paina
+     <b>⌖ Alkukohta tästä</b>. Valinnat tallentuvat tähän selaimeen ja peli
+     käyttää niitä heti seuraavasta latauksesta.</p>
+
+  <details class="pikatestit">
     <summary>Pikatestit: pelin tehosteet ja lentokohtaus</summary>
     <div id="lista" class="grid" style="margin-top:0.6rem"></div>
     <div class="grid" style="margin-top:0.6rem">
@@ -99,24 +112,11 @@
     <button id="kopioi-json">Kopioi JSON</button>
   </div>
   <pre id="valinnat-teksti"></pre>
-  <details>
+  <details class="pikatestit">
     <summary>Tuo valinnat toisesta selaimesta (JSON)</summary>
     <textarea id="tuo-alue" placeholder='{"kaupunki:kairo":"https://…"}'></textarea>
     <div class="grid" style="margin-top:0.5rem"><button id="tuo">Tuo</button></div>
   </details>
-
-  <div class="soitin">
-    <span class="mika" id="soitin-mika">Ei ääntä valittuna — paina ▶ jostakin rivistä.</span>
-    <button id="soitin-tauko">⏯</button>
-    <button id="soitin-seis">■</button>
-    <button id="soitin-ab" title="Vaihda kahden viimeksi soitetun välillä">⇄ A/B</button>
-    <input id="soitin-jana" class="aikajana" type="range" min="0" max="100" value="0" step="0.1" />
-    <span class="aika" id="soitin-aika">0:00 / 0:00</span>
-    <label class="laskuri">voim.
-      <input id="soitin-voima" type="range" min="0" max="1" step="0.05" value="0.35" style="width:6rem" />
-    </label>
-    <label class="laskuri"><input id="soitin-luuppi" type="checkbox" /> luuppi</label>
-  </div>
 
   <script type="module">
     import { sfx } from './js/sound.js';
@@ -140,8 +140,6 @@
     document.getElementById('lento-loppu').addEventListener('click', () => sfx.stopFlight());
 
     // --- omat ehdokkaat -----------------------------------------------------
-    // Omistajan liittämät osoitteet säilyvät selaimessa erillään
-    // valinnoista, jotta niitä voi kokeilla ennen valitsemista.
     const OMAT_AVAIN = 'matkakirja-omat-ehdokkaat';
     const omatEhdokkaat = () => {
       try { return JSON.parse(localStorage.getItem(OMAT_AVAIN) ?? '{}'); } catch { return {}; }
@@ -150,10 +148,13 @@
       try { localStorage.setItem(OMAT_AVAIN, JSON.stringify(kaikki)); } catch { /* ei säily */ }
     };
 
-    // --- yksi jaettu soitin -------------------------------------------------
+    // --- yksi jaettu soitin (yläpalkissa) ----------------------------------
     const soitin = new Audio();
-    let soiva = null;   // { url, alku, nimi }
-    let edellinen = null; // A/B-vaihtoa varten: { url, alku, nimi, kohta }
+    let soiva = null;   // { slot, url, alku, nimi }
+    let edellinen = null;
+    // Alkukohtien esitäytöt muistissa: ⌖ täyttää kentän myös riveille,
+    // joita ei ole vielä valittu.
+    const esitaytot = new Map(); // `${slot}|${url}` -> sekunnit
     const mika = document.getElementById('soitin-mika');
     const jana = document.getElementById('soitin-jana');
     const aika = document.getElementById('soitin-aika');
@@ -174,8 +175,7 @@
     });
 
     function soita(ehdokas) {
-      // Sama klippi uudestaan = tauko/jatka.
-      if (soiva && soiva.url === ehdokas.url && soiva.alku === ehdokas.alku) {
+      if (soiva && soiva.url === ehdokas.url && soiva.slot === ehdokas.slot) {
         if (soitin.paused) soitin.play(); else soitin.pause();
         return;
       }
@@ -199,24 +199,28 @@
       soiva = null;
       mika.textContent = 'Pysäytetty.';
     });
-    // A/B: hyppää kahden viimeksi soitetun välillä, kumpikin jatkaa
-    // omasta kohdastaan — helpottaa suoraa vertailua.
     document.getElementById('soitin-ab').addEventListener('click', () => {
       if (!edellinen) return;
       soita({ ...edellinen });
     });
+    // ⌖: soittimen nykyinen kohta klipin aloituskohdaksi. Jos klippi on
+    // valittuna, valinta tallentuu heti uudella kohdalla — muuten kohta
+    // jää kenttään odottamaan valintaa.
+    document.getElementById('soitin-merkitse').addEventListener('click', () => {
+      if (!soiva || !soitin.duration) return;
+      const sek = Math.round(soitin.currentTime);
+      esitaytot.set(`${soiva.slot}|${soiva.url}`, sek);
+      const valittu = jaaAlku(valittuAani(soiva.slot));
+      if (valittu.url === soiva.url) {
+        valitseAani(soiva.slot, sek > 0 ? `${soiva.url}#alku=${sek}` : soiva.url);
+      }
+      mika.textContent = `⌖ Alkukohta ${sek} s — ${soiva.nimi}`;
+      rakenna();
+    });
 
     // --- suodatus -----------------------------------------------------------
-    let lohko = '';
     let vainAvoimet = false;
     let haku = '';
-    for (const nappi of document.querySelectorAll('.lohko')) {
-      nappi.addEventListener('click', () => {
-        lohko = nappi.dataset.lohko;
-        for (const n of document.querySelectorAll('.lohko')) n.classList.toggle('paalla', n === nappi);
-        rakenna();
-      });
-    }
     document.getElementById('vain-avoimet').addEventListener('click', (e) => {
       vainAvoimet = !vainAvoimet;
       e.target.classList.toggle('paalla', vainAvoimet);
@@ -227,9 +231,22 @@
       rakenna();
     });
 
-    // --- valintalista -------------------------------------------------------
+    // --- valintalista ryhmiteltynä -----------------------------------------
     const valinnat = document.getElementById('valinnat');
     const laskuri = document.getElementById('laskuri');
+    const aukiRyhmat = new Set(); // säilyy uudelleenpiirron yli
+
+    // Ryhmä: kaupungit maisematyypin mukaan, muut lohkoittain.
+    const ryhmaNimi = (slot, tiedot) => {
+      if (slot.startsWith('musiikki:')) return 'Musiikki';
+      if (slot.startsWith('tehoste:')) {
+        return tiedot.oletus === null && tiedot.ehdokkaat.some((e) => (e.url ?? '').startsWith('assets/'))
+          ? 'Tehosteet — ElevenLabs-pilotit'
+          : 'Tehosteet — pelin äänet';
+      }
+      const nimi = tiedot.ryhma ?? 'muut';
+      return `Kaupungit — ${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
+    };
 
     const rakenna = () => {
       valinnat.textContent = '';
@@ -237,117 +254,146 @@
       const slotit = Object.keys(EHDOKKAAT);
       laskuri.textContent = `Valittu ${slotit.filter((s) => s in tehdyt).length} / ${slotit.length}`;
 
-      for (const [slot, { otsikko, oletus, ehdokkaat }] of Object.entries(EHDOKKAAT)) {
-        if (lohko && !slot.startsWith(`${lohko}:`)) continue;
+      // Kootaan ryhmät järjestyksessä.
+      const ryhmat = new Map();
+      for (const [slot, tiedot] of Object.entries(EHDOKKAAT)) {
         const omat = omatEhdokkaat()[slot] ?? [];
-        const kaikkiRivit = [...ehdokkaat, ...omat.map((e) => ({ ...e, oma: true }))];
-        if (haku && !otsikko.toLowerCase().includes(haku)
+        const kaikkiRivit = [...tiedot.ehdokkaat, ...omat.map((e) => ({ ...e, oma: true }))];
+        if (haku && !tiedot.otsikko.toLowerCase().includes(haku)
           && !kaikkiRivit.some((e) => e.nimi.toLowerCase().includes(haku))) continue;
         const valittu = valittuAani(slot);
         if (vainAvoimet && valittu !== null) continue;
+        const ryhma = ryhmaNimi(slot, tiedot);
+        if (!ryhmat.has(ryhma)) ryhmat.set(ryhma, []);
+        ryhmat.get(ryhma).push({ slot, tiedot, kaikkiRivit, valittu });
+      }
 
-        const os = document.createElement('div');
-        os.className = 'osio';
-        os.textContent = otsikko;
-        const tila = document.createElement('span');
-        tila.className = 'tila';
-        if (valittu !== null) {
-          tila.textContent = '✓ valittu';
-          tila.classList.add('tila-valittu');
-        } else {
-          tila.textContent = oletus ? 'oletus käytössä' : 'syntetisoitu (oletus)';
-        }
-        os.appendChild(tila);
-        valinnat.appendChild(os);
+      // Kaupungit ensin — niitä viritetään eniten — sitten musiikki ja
+      // tehosteet.
+      const jarjestys = [...ryhmat.keys()].sort((a, b) => {
+        const arvo = (r) => (r.startsWith('Kaupungit') ? 0 : r === 'Musiikki' ? 1 : 2);
+        return arvo(a) - arvo(b) || a.localeCompare(b, 'fi');
+      });
+      for (const ryhma of jarjestys) {
+        const jasenet = ryhmat.get(ryhma);
+        const kotelo = document.createElement('details');
+        kotelo.className = 'ryhma';
+        // Haku avaa osuvat ryhmät; muuten muistetaan käyttäjän avaamat.
+        kotelo.open = haku ? true : aukiRyhmat.has(ryhma);
+        kotelo.addEventListener('toggle', () => {
+          if (kotelo.open) aukiRyhmat.add(ryhma);
+          else aukiRyhmat.delete(ryhma);
+        });
+        const summary = document.createElement('summary');
+        const valittuja = jasenet.filter((j) => j.valittu !== null).length;
+        summary.innerHTML = `${ryhma} <span class="maara">· ${jasenet.length} paikkaa · valittu ${valittuja}</span>`;
+        kotelo.appendChild(summary);
 
-        // Tallennettu valinta: osoite, '' (syntetisoitu) tai null (oletus).
-        const kaytossa = valittu === null ? oletus : (valittu === '' ? null : valittu);
-        const kaytto = jaaAlku(kaytossa);
-
-        for (const ehdokas of kaikkiRivit) {
-          const { url, nimi, alku, oma } = ehdokas;
-          const rivi = document.createElement('div');
-          rivi.className = 'rivi';
-          const onValittu = (url ?? null) === (kaytto.url ?? null);
-          let aikaKentta = null;
-          const sekunnit = () => Math.max(0, Number(aikaKentta?.value) || 0);
-          const arvoksi = (u) => (sekunnit() > 0 ? `${u}#alku=${sekunnit()}` : u);
-          if (url) {
-            const play = document.createElement('button');
-            play.textContent = '▶';
-            play.className = 'soita';
-            play.addEventListener('click', () => soita({ url, nimi, alku: sekunnit() }));
-            rivi.appendChild(play);
+        for (const { slot, tiedot, kaikkiRivit, valittu } of jasenet) {
+          const os = document.createElement('div');
+          os.className = 'osio';
+          os.textContent = tiedot.otsikko;
+          const tila = document.createElement('span');
+          tila.className = 'tila';
+          if (valittu !== null) {
+            tila.textContent = '✓ valittu';
+            tila.classList.add('tila-valittu');
+          } else {
+            tila.textContent = tiedot.oletus ? 'oletus käytössä' : 'syntetisoitu (oletus)';
           }
-          const valitse = document.createElement('button');
-          valitse.className = 'nimi';
-          valitse.textContent = (onValittu ? '✓ ' : '') + nimi;
-          if (onValittu) valitse.style.borderColor = 'var(--korostus)';
-          valitse.addEventListener('click', () => {
-            valitseAani(slot, url ? arvoksi(url) : url);
-            rakenna();
-          });
-          rivi.appendChild(valitse);
-          if (url && !slot.startsWith('tehoste:')) {
-            aikaKentta = document.createElement('input');
-            aikaKentta.type = 'number';
-            aikaKentta.min = '0';
-            aikaKentta.step = '5';
-            aikaKentta.value = onValittu && kaytto.alku ? kaytto.alku : (alku ?? 0);
-            aikaKentta.title = 'Aloituskohta sekunteina';
-            aikaKentta.addEventListener('change', () => {
-              if (onValittu) {
-                valitseAani(slot, arvoksi(url));
-                rakenna();
-              }
-            });
-            rivi.appendChild(aikaKentta);
-            const sek = document.createElement('span');
-            sek.className = 'sek';
-            sek.textContent = 's';
-            rivi.appendChild(sek);
-          }
-          if (oma) {
-            const poista = document.createElement('button');
-            poista.textContent = '✕';
-            poista.className = 'poista';
-            poista.title = 'Poista oma ehdokas';
-            poista.addEventListener('click', () => {
-              const kaikki = omatEhdokkaat();
-              kaikki[slot] = (kaikki[slot] ?? []).filter((e) => e.url !== url);
-              if (!kaikki[slot].length) delete kaikki[slot];
-              tallennaOmat(kaikki);
+          os.appendChild(tila);
+          kotelo.appendChild(os);
+
+          const kaytossa = valittu === null ? tiedot.oletus : (valittu === '' ? null : valittu);
+          const kaytto = jaaAlku(kaytossa);
+
+          for (const ehdokas of kaikkiRivit) {
+            const { url, nimi, alku, oma } = ehdokas;
+            const rivi = document.createElement('div');
+            rivi.className = 'rivi';
+            const onValittu = (url ?? null) === (kaytto.url ?? null);
+            let aikaKentta = null;
+            const sekunnit = () => Math.max(0, Number(aikaKentta?.value) || 0);
+            const arvoksi = (u) => (sekunnit() > 0 ? `${u}#alku=${sekunnit()}` : u);
+            if (url) {
+              const play = document.createElement('button');
+              play.textContent = '▶';
+              play.className = 'soita';
+              play.addEventListener('click', () => soita({ slot, url, nimi, alku: sekunnit() }));
+              rivi.appendChild(play);
+            }
+            const valitse = document.createElement('button');
+            valitse.className = 'nimi';
+            valitse.textContent = (onValittu ? '✓ ' : '') + nimi;
+            if (onValittu) valitse.style.borderColor = 'var(--korostus)';
+            valitse.addEventListener('click', () => {
+              valitseAani(slot, url ? arvoksi(url) : url);
               rakenna();
             });
-            rivi.appendChild(poista);
+            rivi.appendChild(valitse);
+            if (url && !slot.startsWith('tehoste:')) {
+              aikaKentta = document.createElement('input');
+              aikaKentta.type = 'number';
+              aikaKentta.min = '0';
+              aikaKentta.step = '5';
+              aikaKentta.value = esitaytot.get(`${slot}|${url}`)
+                ?? (onValittu && kaytto.alku ? kaytto.alku : (alku ?? 0));
+              aikaKentta.title = 'Aloituskohta sekunteina';
+              aikaKentta.addEventListener('change', () => {
+                esitaytot.set(`${slot}|${url}`, sekunnit());
+                if (onValittu) {
+                  valitseAani(slot, arvoksi(url));
+                  rakenna();
+                }
+              });
+              rivi.appendChild(aikaKentta);
+              const sek = document.createElement('span');
+              sek.className = 'sek';
+              sek.textContent = 's';
+              rivi.appendChild(sek);
+            }
+            if (oma) {
+              const poista = document.createElement('button');
+              poista.textContent = '✕';
+              poista.className = 'poista';
+              poista.title = 'Poista oma ehdokas';
+              poista.addEventListener('click', () => {
+                const kaikki = omatEhdokkaat();
+                kaikki[slot] = (kaikki[slot] ?? []).filter((e) => e.url !== url);
+                if (!kaikki[slot].length) delete kaikki[slot];
+                tallennaOmat(kaikki);
+                rakenna();
+              });
+              rivi.appendChild(poista);
+            }
+            kotelo.appendChild(rivi);
           }
-          valinnat.appendChild(rivi);
-        }
 
-        // Oma ehdokas: liitä mikä tahansa mp3-osoite (esim. Freesoundin
-        // esikuuntelu) kokeiltavaksi tähän paikkaan.
-        const oma = document.createElement('div');
-        oma.className = 'rivi oma';
-        const osoite = document.createElement('input');
-        osoite.type = 'url';
-        osoite.placeholder = 'https://cdn.freesound.org/previews/…mp3';
-        const nimike = document.createElement('input');
-        nimike.type = 'text';
-        nimike.placeholder = 'nimi ja lisenssi';
-        const lisaa = document.createElement('button');
-        lisaa.textContent = '+ Lisää';
-        lisaa.addEventListener('click', () => {
-          const u = osoite.value.trim();
-          if (!u) return;
-          const kaikki = omatEhdokkaat();
-          kaikki[slot] = [...(kaikki[slot] ?? []), { url: u, nimi: nimike.value.trim() || u }];
-          tallennaOmat(kaikki);
-          rakenna();
-        });
-        oma.appendChild(osoite);
-        oma.appendChild(nimike);
-        oma.appendChild(lisaa);
-        valinnat.appendChild(oma);
+          // Oma ehdokas: liitä mikä tahansa mp3-osoite tähän paikkaan.
+          const oma = document.createElement('div');
+          oma.className = 'rivi oma';
+          const osoite = document.createElement('input');
+          osoite.type = 'url';
+          osoite.placeholder = 'https://cdn.freesound.org/previews/…mp3';
+          const nimike = document.createElement('input');
+          nimike.type = 'text';
+          nimike.placeholder = 'nimi ja lisenssi';
+          const lisaa = document.createElement('button');
+          lisaa.textContent = '+ Lisää';
+          lisaa.addEventListener('click', () => {
+            const u = osoite.value.trim();
+            if (!u) return;
+            const kaikki = omatEhdokkaat();
+            kaikki[slot] = [...(kaikki[slot] ?? []), { url: u, nimi: nimike.value.trim() || u }];
+            tallennaOmat(kaikki);
+            rakenna();
+          });
+          oma.appendChild(osoite);
+          oma.appendChild(nimike);
+          oma.appendChild(lisaa);
+          kotelo.appendChild(oma);
+        }
+        valinnat.appendChild(kotelo);
       }
     };
     rakenna();

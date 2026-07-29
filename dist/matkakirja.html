@@ -25050,6 +25050,8 @@ for (const city of KAUPUNGIT.values()) {
     .filter((e) => !omat.some((o) => o.url === e.url));
   EHDOKKAAT[`kaupunki:${city.id}`] = {
     otsikko: `${city.name} — ${TYYPPI_NIMET[tyyppi] ?? tyyppi}`,
+    // Ryhmä äänistudion listaa varten: saman maiseman kaupungit yhdessä.
+    ryhma: TYYPPI_NIMET[tyyppi] ?? tyyppi,
     oletus: STRIIMIOLETUKSET[city.id] ?? null,
     ehdokkaat: [
       // null-osoite tarkoittaa syntetisoitua ambienssia.
@@ -25370,8 +25372,8 @@ class Sound {
       // sen — kalvo on auki niin kauan kuin pelaaja viipyy koneessa.
       src.connect(g).connect(this.bus);
       // Pitkissä äänityksissä alku on lähestymistä ja odottelua —
-      // hypätään suoraan lennon ytimeen (omistajan ohje: ~25 s kohdalta).
-      const alku = jet.duration > 40 ? 25 : 0;
+      // hypätään suoraan lennon ytimeen (omistajan ohje: ~45 s kohdalta).
+      const alku = jet.duration > 60 ? 45 : 0;
       // Jos kohtaus venyy äänitettä pidemmäksi, silmukka palaa samaan
       // kohtaan eikä äänitteen hiljaiseen alkuun.
       src.loopStart = alku;
@@ -32260,7 +32262,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.27';
+const APP_VERSION = '2026-07-29.28';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

@@ -267,8 +267,8 @@ class Sound {
       // sen — kalvo on auki niin kauan kuin pelaaja viipyy koneessa.
       src.connect(g).connect(this.bus);
       // Pitkissä äänityksissä alku on lähestymistä ja odottelua —
-      // hypätään suoraan lennon ytimeen (omistajan ohje: ~25 s kohdalta).
-      const alku = jet.duration > 40 ? 25 : 0;
+      // hypätään suoraan lennon ytimeen (omistajan ohje: ~45 s kohdalta).
+      const alku = jet.duration > 60 ? 45 : 0;
       // Jos kohtaus venyy äänitettä pidemmäksi, silmukka palaa samaan
       // kohtaan eikä äänitteen hiljaiseen alkuun.
       src.loopStart = alku;
