@@ -12,8 +12,8 @@ import {
   wantsHint,
 } from './ai.js';
 import {
-  DUEL_BYPASS_SHOES, DUEL_PRIZE, FIFTY_FIFTY_PRICE, FLIGHT_PRICE, HARD_BONUS,
-  HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
+  DUEL_BYPASS_SHOES, DUEL_PRIZE, EXPLORE_REWARD, FIFTY_FIFTY_PRICE, FLIGHT_PRICE,
+  HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
 import {
   factSource, factText, factVoice, isSourceUrl, packById, sourceLabel, voiceTitle,
@@ -2058,6 +2058,8 @@ export class UI {
         } else if (quiz.right && found) {
           this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));
           body.appendChild(html('strong', '', `Löysit: ${found.name}`));
+        } else if (quiz.right && quiz.explore) {
+          body.appendChild(html('strong', '', `Oikein! Löytöpalkkio +${EXPLORE_REWARD} puntaa.`));
         } else if (quiz.right) {
           body.appendChild(html('strong', '', 'Oikein!'));
         } else {

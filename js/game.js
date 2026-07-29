@@ -88,6 +88,7 @@ export const XP_HARD_ANSWER = 25;
 export const XP_STAR = 100;
 export const XP_PUZZLE = 25; // isoisän luonnoskirjan pulma ratkaistu
 export const XP_EXPLORE = 15; // kaupungin tutkiminen ilman laattaa
+export const EXPLORE_REWARD = 50; // löytöpalkkio oikeasta tutkimisvastauksesta
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 export function questionLevel(question) {
@@ -1219,12 +1220,14 @@ export class Game {
       return { ok: true, right: this.quiz.right };
     }
 
-    // Tutkiminen ilman laattaa: oikeasta kokemuspisteitä, väärästä ei
-    // rangaistusta. Laattaa ei ole eikä tule.
+    // Tutkiminen ilman laattaa: oikeasta löytöpalkkio ja kokemuspisteitä,
+    // väärästä ei rangaistusta. Laattaa ei ole eikä tule.
     if (this.quiz.explore) {
       if (this.quiz.right) {
         this.awardXp(p, XP_EXPLORE);
-        this.say(p.id, `★ ${p.name} tutki paikkaa kaupungissa ${city.name} ja vastasi oikein (+${XP_EXPLORE} kp).`);
+        p.money += EXPLORE_REWARD;
+        this.say(p.id, `★ ${p.name} tutki paikkaa kaupungissa ${city.name} ja vastasi oikein (+${EXPLORE_REWARD} puntaa, +${XP_EXPLORE} kp).`);
+        this.emit('aid', `Löytöpalkkio +${EXPLORE_REWARD} puntaa`, { icon: '💰' });
       } else {
         const oikea = this.quiz.options[this.quiz.correct];
         this.say(p.id, `${p.name} vastasi väärin — oikea vastaus oli "${oikea}".`);
