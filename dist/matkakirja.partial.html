@@ -24962,7 +24962,10 @@ class Sound {
       g.gain.setValueAtTime(0.5, t0 + Math.max(1, kesto - 1));
       g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
       src.connect(g).connect(this.bus);
-      src.start(t0);
+      // Pitkissä äänityksissä alku on usein rullausta ja odottelua —
+      // hypätään suoraan lentoon (omistajan ohje: ~30 s kohdalta).
+      const alku = jet.duration > 45 ? 30 : 0;
+      src.start(t0, alku);
       src.stop(t0 + kesto + 0.1);
       this.flightNodes = { lahteet: [src], vaimennukset: [g] };
       src.onended = () => {
@@ -29249,6 +29252,7 @@ class UI {
     this.dead = true;
     stopPlaceStream();
     stopQuizMusic();
+    this.stopIntroVoice();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -29940,6 +29944,8 @@ class UI {
     // kalvona kartan päälle ennen kuin mantereen kartta aukeaa.
     const lontoo = game.board.cityById.get('lontoo');
     if (lontoo && lontoo.id !== city.id) {
+      // Lukuääni väistyy, kun matka alkaa.
+      this.stopIntroVoice();
       this.introEl.classList.add('intro-fade');
       await this.animateFlight(
         'Lontoo', city.name, game.firstFlightLine(city.id),
@@ -30452,16 +30458,48 @@ class UI {
     if (!nakyy) {
       this.introShown = false;
       this.introText.textContent = '';
+      this.stopIntroVoice();
       return;
     }
     if (this.introShown) return;
     this.introShown = true;
+    this.playIntroVoice();
     // Avausteksti kirjoittuu selvästi hitaammin kuin muut: se on matkan
     // ensimmäinen hetki eikä pelitilanteen ilmoitus.
     this.typeText(this.introText, INTRO_TEXT, 'intro', null, INTRO_TYPE_MS);
     // Koko teksti on jo paikallaan, joten koon voi sovittaa heti — sen
     // jälkeen mikään ei enää liiku kirjoituksen aikana.
     this.fitIntro();
+  }
+
+  /**
+   * Avausteksti luettuna: omistajan ElevenLabsilla tuottama lukuääni
+   * (assets/audio/intro-puhe.mp3). Selain ei salli ääntä ennen
+   * ensimmäistä kosketusta — silloin puhe alkaa vasta ensimmäisestä
+   * napautuksesta. Puuttuva tiedosto ei haittaa: virhe ohitetaan.
+   */
+  playIntroVoice() {
+    if (!sfx.enabled) return;
+    this.stopIntroVoice();
+    const audio = new Audio('assets/audio/intro-puhe.mp3');
+    audio.volume = 0.9;
+    this.introVoice = audio;
+    audio.play().catch(() => {
+      const aloita = () => {
+        if (this.introVoice === audio && this.game.phase === 'pickstart' && !this.dead) {
+          audio.play().catch(() => {});
+        }
+      };
+      window.addEventListener('pointerdown', aloita, { once: true });
+    });
+  }
+
+  stopIntroVoice() {
+    const vanha = this.introVoice;
+    this.introVoice = null;
+    if (!vanha) return;
+    vanha.pause();
+    vanha.removeAttribute('src');
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
@@ -31507,7 +31545,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.9';
+const APP_VERSION = '2026-07-29.10';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
