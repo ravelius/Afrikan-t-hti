@@ -2270,6 +2270,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   left: 50%;
   /* Pystysijainti lasketaan js:ssä kartan omasta korkeudesta. */
   transform: translate(-50%, -100%);
+  /* Pelkkää tekstiä: ei saa varastaa klikkauksia Astu ulos -napilta. */
+  pointer-events: none;
   max-width: 78%;
   margin: 0;
   padding: 0.5rem 0.9rem;
