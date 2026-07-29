@@ -1754,11 +1754,17 @@ body[data-mode] .rail {
 
 body[data-mode] .rail > * { pointer-events: auto; }
 
-/* Kartta pidetään kehystettynä joka reunalta: tasainen väli ja
- * pyöristetyt kulmat myös alhaalla. Kehyksen oma turva-aluetäyte
- * poistetaan alhaalta — kehysväli riittää, ja koti-indikaattori saa
- * kellua kehyksen päällä kuten peleissä yleensä. */
+/* Kartta ulottuu ruudun pohjaan asti: kehysväli ja pyöristetyt kulmat
+ * jäävät ylös ja sivuille, mutta alhaalla pergamentti menee kiinni
+ * reunaan — koti-indikaattori kelluu kartan päällä kuten peleissä
+ * yleensä. Kelluvat kortit pysyvät silti turva-alueen yläpuolella. */
 body[data-mode] .app { padding-bottom: 0; }
+body[data-mode] .stage { padding-bottom: 0; }
+body[data-mode] .map-pane {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 0;
+}
 body[data-mode] .rail {
   bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
 }
@@ -1894,9 +1900,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 @media (max-width: 560px) {
   :root { --gap: 0.45rem; }
 
-  .stage { grid-template-rows: minmax(150px, 1fr) auto; padding: 0.45rem; }
-  .rail { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
-  .turn-card { grid-row: auto; padding: 0.5rem 0.55rem; }
   .turn-row { margin-bottom: 0.35rem; }
   .turn-status { font-size: 0.82rem; }
 
@@ -2054,8 +2057,9 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  /* Numero istuu kehyksen tummalla reunuksella, joten väri on vaalea. */
-  color: rgba(240, 226, 196, 0.45);
+  /* Kartta ulottuu pohjaan asti, joten numero lepää pergamentilla —
+   * väri on kartan mustetta, hyvin haaleana. */
+  color: rgba(70, 51, 31, 0.5);
   pointer-events: none;
 }
 
