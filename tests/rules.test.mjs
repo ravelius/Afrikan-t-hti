@@ -1424,15 +1424,14 @@ test('vuoro etenee: matkustustapa, noppa, siirto ja vasta sitten tietovisa', () 
   assert.ok(roll.die >= 1 && roll.die <= 6);
   assert.equal(game.phase, 'move');
 
-  // Valitaan aarrekaupunki, jolloin tietovisa tarjotaan ennen vuoron vaihtoa.
+  // Aarrekaupunkiin saapuminen ei enää pysäytä vuoroa tarjousvaiheeseen:
+  // mikään ikkuna ei aukea, vaan laatta tutkitaan seuraavalla vuorolla
+  // alarivin Tutki-napista (omistajan ohje).
   const target = game.moveOptions().find((o) => o.hasToken);
   assert.ok(target, 'jonkin kohteen pitäisi olla aarrekaupunki');
   game.actionMove(target.key);
-  assert.equal(game.phase, 'offer');
-  assert.equal(game.current, 0, 'vuoro ei ole vielä vaihtunut');
-
-  game.actionSkipQuiz();
-  assert.equal(game.current, 1, 'ohittaminen päättää vuoron');
+  assert.equal(game.phase, 'action');
+  assert.equal(game.current, 1, 'vuoro vaihtui heti saapumisen jälkeen');
 });
 
 test('laivalippu maksetaan kerran vuorossa ja vain satamasta lähdettäessä', () => {

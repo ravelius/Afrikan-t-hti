@@ -783,10 +783,11 @@ export class Game {
    * odottaa alavalikossa (travelModes: stay).
    */
   offerQuiz() {
-    const city = this.cityOf();
-    if (!city || !this.tokens.has(city.id)) return false;
-    this.phase = 'offer';
-    return true;
+    // Saapuminen ei enää pysäytä vuoroa erilliseen tarjousvaiheeseen:
+    // mikään ikkuna ei aukea itsestään, vaan laattakaupunkiakin tutkitaan
+    // alarivin Tutki-napista (omistajan ohje). 'offer'-vaihe jää koodiin
+    // vanhojen tallennusten varalle.
+    return false;
   }
 
   /**
