@@ -924,6 +924,25 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   transition: opacity 0.28s ease;
 }
 
+/* Perillä: kalvo odottaa, kunnes pelaaja astuu ulos. */
+.flight-exit {
+  position: absolute;
+  bottom: 9%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.6rem 1.6rem;
+  font-size: 1.05rem;
+  animation: flight-overlay-in 0.5s ease;
+}
+
+/* Lennon ajaksi alareunan kortit ja napit väistyvät: kalvon alla näkyy
+ * vain kohteen kartta. Teksti ja lukuääni jatkuvat piilossa. */
+body.flight-active .turn-card,
+body.flight-active .fact-card {
+  opacity: 0;
+  pointer-events: none;
+}
+
 
 @media (max-width: 700px) {
   .intro { width: 90%; }
