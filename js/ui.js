@@ -388,6 +388,7 @@ export class UI {
     this.dead = true;
     stopPlaceStream();
     stopQuizMusic();
+    this.stopIntroVoice();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -1079,6 +1080,8 @@ export class UI {
     // kalvona kartan päälle ennen kuin mantereen kartta aukeaa.
     const lontoo = game.board.cityById.get('lontoo');
     if (lontoo && lontoo.id !== city.id) {
+      // Lukuääni väistyy, kun matka alkaa.
+      this.stopIntroVoice();
       this.introEl.classList.add('intro-fade');
       await this.animateFlight(
         'Lontoo', city.name, game.firstFlightLine(city.id),
@@ -1592,16 +1595,48 @@ export class UI {
     if (!nakyy) {
       this.introShown = false;
       this.introText.textContent = '';
+      this.stopIntroVoice();
       return;
     }
     if (this.introShown) return;
     this.introShown = true;
+    this.playIntroVoice();
     // Avausteksti kirjoittuu selvästi hitaammin kuin muut: se on matkan
     // ensimmäinen hetki eikä pelitilanteen ilmoitus.
     this.typeText(this.introText, INTRO_TEXT, 'intro', null, INTRO_TYPE_MS);
     // Koko teksti on jo paikallaan, joten koon voi sovittaa heti — sen
     // jälkeen mikään ei enää liiku kirjoituksen aikana.
     this.fitIntro();
+  }
+
+  /**
+   * Avausteksti luettuna: omistajan ElevenLabsilla tuottama lukuääni
+   * (assets/audio/intro-puhe.mp3). Selain ei salli ääntä ennen
+   * ensimmäistä kosketusta — silloin puhe alkaa vasta ensimmäisestä
+   * napautuksesta. Puuttuva tiedosto ei haittaa: virhe ohitetaan.
+   */
+  playIntroVoice() {
+    if (!sfx.enabled) return;
+    this.stopIntroVoice();
+    const audio = new Audio('assets/audio/intro-puhe.mp3');
+    audio.volume = 0.9;
+    this.introVoice = audio;
+    audio.play().catch(() => {
+      const aloita = () => {
+        if (this.introVoice === audio && this.game.phase === 'pickstart' && !this.dead) {
+          audio.play().catch(() => {});
+        }
+      };
+      window.addEventListener('pointerdown', aloita, { once: true });
+    });
+  }
+
+  stopIntroVoice() {
+    const vanha = this.introVoice;
+    this.introVoice = null;
+    if (!vanha) return;
+    vanha.pause();
+    vanha.removeAttribute('src');
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */

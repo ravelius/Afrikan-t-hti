@@ -266,7 +266,10 @@ class Sound {
       g.gain.setValueAtTime(0.5, t0 + Math.max(1, kesto - 1));
       g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
       src.connect(g).connect(this.bus);
-      src.start(t0);
+      // Pitkissä äänityksissä alku on usein rullausta ja odottelua —
+      // hypätään suoraan lentoon (omistajan ohje: ~30 s kohdalta).
+      const alku = jet.duration > 45 ? 30 : 0;
+      src.start(t0, alku);
       src.stop(t0 + kesto + 0.1);
       this.flightNodes = { lahteet: [src], vaimennukset: [g] };
       src.onended = () => {
