@@ -1335,6 +1335,11 @@ export class Game {
       this.puzzlePrevPhase = null;
       return { ok: true, puzzle: true };
     }
+    // Vastaamatta suljettu kysymys on siitä luopumista: ei rangaistusta,
+    // mutta vuoro päättyy — päivä kului kysyjän kuunteluun.
+    if (this.quiz.chosen === null) {
+      this.say(this.player.id, `${this.player.name} jätti kysymyksen väliin.`);
+    }
     const gate = this.quiz.right ? this.quiz.gate : null;
     this.quiz = null;
     if (this.phase === 'over') return { ok: true };

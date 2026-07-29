@@ -14,7 +14,7 @@
       margin: 0; padding: 1rem 1.2rem 3rem; background: var(--pohja);
       color: var(--teksti); font-family: 'Courier New', monospace;
     }
-    h1 { font-size: 1.15rem; letter-spacing: 0.08em; color: var(--korostus); margin: 0.2rem 0 0.2rem; }
+    h1 { font-size: 1.05rem; letter-spacing: 0.08em; color: var(--korostus); margin: 0; white-space: nowrap; }
     h2 { font-size: 0.95rem; letter-spacing: 0.06em; color: var(--korostus); margin: 1.4rem 0 0.4rem; }
     p, li { max-width: 46rem; line-height: 1.55; color: var(--himmea); }
     a { color: var(--korostus); }
@@ -26,12 +26,15 @@
     button { cursor: pointer; }
     button.paalla { border-color: var(--korostus); color: var(--korostus); }
     .grid { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-    /* Välilehtipalkki pysyy ylhäällä. */
-    nav {
+    /* Tiivis yläpalkki: otsikko ja välilehdet samalla rivillä, jotta
+     * sisällölle — etenkin upotetulle äänistudiolle — jää enemmän tilaa. */
+    header {
       position: sticky; top: 0; z-index: 3; background: var(--pohja);
-      display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.6rem 0;
-      border-bottom: 1px solid var(--reuna); margin-bottom: 0.8rem;
+      display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: center;
+      padding: 0.5rem 0; border-bottom: 1px solid var(--reuna); margin-bottom: 0.8rem;
     }
+    nav { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    nav button { padding: 0.3rem 0.6rem; font-size: 0.85rem; border-radius: 6px; }
     section[hidden] { display: none; }
     table { border-collapse: collapse; width: 100%; max-width: 60rem; font-size: 0.85rem; }
     th, td { border: 1px solid var(--reuna); padding: 0.4rem 0.55rem; text-align: left; }
@@ -51,23 +54,34 @@
     .moottori-kentat label { color: var(--haalea); font-size: 0.82rem; }
     blockquote { border-left: 2px solid var(--reuna); margin: 0.6rem 0; padding: 0.1rem 0 0.1rem 0.9rem;
       color: var(--himmea); max-width: 44rem; line-height: 1.55; }
+    /* Upotettu äänistudio täyttää näkymän yläpalkin alta. */
+    #aanet-kehys {
+      width: 100%; height: calc(100vh - 9rem); min-height: 26rem;
+      border: 1px solid var(--reuna); border-radius: 10px; background: var(--pohja);
+    }
+    /* Brändikirjan värimallit. */
+    .vari { display: inline-flex; align-items: center; gap: 0.4rem;
+      margin: 0.15rem 0.9rem 0.15rem 0; color: var(--himmea); font-size: 0.85rem; }
+    .vari i { width: 1.05rem; height: 1.05rem; border-radius: 4px;
+      border: 1px solid rgba(240, 226, 196, 0.4); display: inline-block; }
+    details.tiivis { max-width: 46rem; margin-top: 0.8rem; color: var(--himmea); }
+    details.tiivis summary { cursor: pointer; color: var(--korostus); }
   </style>
 </head>
 <body>
-  <h1>Matkakirja — työhuone</h1>
-  <p>Kehityksen kotipesä: äänet, lähteet, moottorit, maanosien edistyminen,
-     tarinan kaanon ja työkaluideat. Sivu ei ole linkitetty pelistä.</p>
-
-  <nav id="valilehdet">
-    <button data-tab="etusivu">Etusivu</button>
-    <button data-tab="aanet">Äänet</button>
-    <button data-tab="pelit">Peli-ideat</button>
-    <button data-tab="lahteet">Lähteet</button>
-    <button data-tab="moottorit">Moottorit</button>
-    <button data-tab="maanosat">Maanosat</button>
-    <button data-tab="tarina">Tarina</button>
-    <button data-tab="ideat">Työkalut</button>
-  </nav>
+  <header>
+    <h1>Matkakirja — työhuone</h1>
+    <nav id="valilehdet">
+      <button data-tab="etusivu">Etusivu</button>
+      <button data-tab="aanet">Äänet</button>
+      <button data-tab="pelit">Peli-ideat</button>
+      <button data-tab="lahteet">Lähteet</button>
+      <button data-tab="moottorit">Moottorit</button>
+      <button data-tab="maanosat">Maanosat</button>
+      <button data-tab="brandi">Brändikirja</button>
+      <button data-tab="ideat">Työkalut</button>
+    </nav>
+  </header>
 
   <!-- ETUSIVU -->
   <section id="tab-etusivu" hidden>
@@ -77,6 +91,8 @@
       <li>Efektipilottien kuuntelu (napin klikkaus, paperi, kolikot, oikein, väärin — studion Tehosteet-lohko).</li>
       <li>Uuden v3-intron ja avauslennon puheen arviointi (tempo, tunnelma).</li>
       <li>Maiden rajakokeilun arviointi: pidetäänkö, vahvistetaanko vai pois?</li>
+      <li>Uusien viivaikonien arviointi (alaosan napit: saapas, purje, suurennuslasi, noppa, kompassi).</li>
+      <li>Brändikirjan läpiluku ja täydennys omin sanoin (Brändikirja-välilehti).</li>
       <li>ElevenLabs-avaimen kierrätys, kun generoinnit ovat valmiit.</li>
     </ul>
     <h2>Työjonossa (Claude)</h2>
@@ -101,15 +117,20 @@
 
   <!-- ÄÄNET -->
   <section id="tab-aanet" hidden>
-    <p>Äänistudio on oma sivunsa: ehdokkaiden kuuntelu, valinnat,
-       aloituskohdat, omat osoitteet ja valintojen vienti.</p>
-    <p><a href="aanet.html"><button>Avaa äänistudio →</button></a></p>
-    <h2>Äänilähteet lyhyesti</h2>
-    <ul>
-      <li><b>Freesound</b> — kenttä-äänitykset ja tehosteet (CC0/CC BY, esikuunteluosoitteet toimivat suoraan).</li>
-      <li><b>xeno-canto</b> — lintujen äänet alueittain; valitse laji joka oikeasti pesii seudulla.</li>
-      <li><b>ElevenLabs</b> — puhe (v3/v2) ja efektigeneraattori; ks. Moottorit-välilehti.</li>
-    </ul>
+    <!-- Äänistudio pyörii suoraan tässä: sama sivu, sama selain, samat
+         tallennukset. Kehys ladataan vasta kun välilehti avataan. -->
+    <iframe id="aanet-kehys" title="Äänistudio"></iframe>
+    <p class="grid" style="margin:0.5rem 0 0">
+      <a href="aanet.html" target="_blank" rel="noopener"><button>Avaa äänistudio omaan ikkunaan ↗</button></a>
+    </p>
+    <details class="tiivis">
+      <summary>Äänilähteet lyhyesti</summary>
+      <ul>
+        <li><b>Freesound</b> — kenttä-äänitykset ja tehosteet (CC0/CC BY, esikuunteluosoitteet toimivat suoraan).</li>
+        <li><b>xeno-canto</b> — lintujen äänet alueittain; valitse laji joka oikeasti pesii seudulla.</li>
+        <li><b>ElevenLabs</b> — puhe (v3/v2) ja efektigeneraattori; ks. Moottorit-välilehti.</li>
+      </ul>
+    </details>
   </section>
 
   <!-- LÄHTEET -->
@@ -141,9 +162,39 @@
        päiväkirjamerkintöjä · lentorepliikkejä · maiden rajat kartalla.</p>
   </section>
 
-  <!-- TARINA -->
-  <section id="tab-tarina" hidden>
-    <h2>Kaanon</h2>
+  <!-- BRÄNDIKIRJA: tarina, karaktääri, tyyli ja arvot yksissä kansissa -->
+  <section id="tab-brandi" hidden>
+    <p>Pelin sydän yksissä kansissa: miksi peli on olemassa, kuka siinä puhuu,
+       miltä se näyttää ja kuulostaa. Kun uusi sisältö ei tunnu istuvan,
+       vastaus löytyy täältä. Pysyvä arvopohja on
+       <a href="docs/periaatteet.md">docs/periaatteet.md</a> — tämä sivu on
+       sen käytännön käsikirja.</p>
+
+    <h2>1 · Sydän: missio, arvot ja tavoitteet</h2>
+    <div class="kortti">
+      <h3>Missio</h3>
+      <p>Edistämme aikuisten ja lasten tietoa eri maiden elinoloista,
+         kulttuurista, maantieteestä ja geopolitiikasta — ja ymmärrystä siitä,
+         että maailma on suurempi kuin oma ympäristö. Väline on koukuttava
+         seikkailupeli, jonka kanssa pidetään hauskaa; oppiminen syntyy
+         sivutuotteena.</p>
+    </div>
+    <div class="kortti">
+      <h3>Viisi pilaria (perustuslaki)</h3>
+      <p>1. <b>Peli edellä</b> — seikkailupeli, ei oppikirja johon on liimattu noppa.</p>
+      <p>2. <b>Totuus ja lähteet</b> — jokainen väittämä on tarkistettavissa; epävarmaa ei väitetä.</p>
+      <p>3. <b>Kunnioitus ja tasapuolisuus</b> — jokainen paikka kuvataan asukkaidensa silmin, ei ulkopuolisen kummasteluna.</p>
+      <p>4. <b>Ikäsopivuus</b> — vaikeita aiheita ei kaunistella eikä kauhistella.</p>
+      <p>5. <b>Avoimuus</b> — vapaat lisenssit, julkiset päätökset, testit valvovat koneellisesti mitattavan.</p>
+    </div>
+    <div class="kortti">
+      <h3>Tavoitteet nyt</h3>
+      <p>Afrikka hiotaan valmiiksi ennen muita mantereita. Peli toimii
+         iPadilla ja puhelimella asennettuna ja ilman verkkoa. Kaikki sisältö
+         kestää sekä lapsen että aikuisen katseen.</p>
+    </div>
+
+    <h2>2 · Tarina ja kaanon</h2>
     <p>Nuori matkaaja löytää vintiltä isoisän matkalaukun: kartta vuodelta
        1872, kukkarollinen puntia ja kulunut päiväkirja. Ensimmäinen sivu:
        "Maailman ympäri kahdeksassakymmenessä päivässä." Viimeinen sivu on
@@ -165,6 +216,110 @@
           osa rahanarvoisia, osa jää muistoiksi, joilla voi olla käyttöä myöhemmin.</li>
       <li>Tanger on väliaikaisesti lukittu ensimmäiseen merkintään äänitestausta varten.</li>
     </ul>
+
+    <h2>3 · Hahmot ja karaktääri</h2>
+    <div class="kortti">
+      <h3>Matkaaja (pelaaja)</h3>
+      <p>Utelias ja ripeä, vähän hätäinenkin. Puhuu minä-muodossa omaan
+         matkakirjaansa. Ei tiedä kaikkea — ja juuri siksi kysyy, ihmettelee
+         ja oppii. Ei koskaan ylimielinen paikallisia kohtaan.</p>
+    </div>
+    <div class="kortti">
+      <h3>Isoisä</h3>
+      <p>Näkyy vain kirjansa rivien läpi: vuoden 1873 maailmankuva, ylpeä
+         mutta ajastaan sokea. Hänen karttansa tyhjät kohdat ja vanhentuneet
+         väittämät ovat pelin opetuksen moottori — "tyhjä kohta kartassa
+         kertoo piirtäjästä, ei maasta". Häntä ei pilkata: hän oli rohkea,
+         mutta aikansa vanki.</p>
+    </div>
+    <div class="kortti">
+      <h3>Kertojaääni</h3>
+      <p>"Viisas Kertoja" (ElevenLabs v3): lämmin, kiireetön, hieman
+         salaperäinen. Lukee avaustekstin, lennot ja päiväkirjat — ruudun
+         teksti ja puhe eivät koskaan eriä.</p>
+    </div>
+    <div class="kortti">
+      <h3>Paikalliset kysyjät</h3>
+      <p>Jokainen kysymys tulee ihmiseltä — kalastajalta, opettajalta,
+         kauppiaalta — ei "peliltä". Kysyjä on aina oman paikkansa asiantuntija
+         ja kohtelee matkaajaa vieraana, ei turistina.</p>
+    </div>
+
+    <h2>4 · Vaikutteet ja inspiraatio</h2>
+    <ul>
+      <li><b>Afrikan tähti</b> — laudan rytmi ja laattojen jännitys. Mutta oma
+          tarina: pääaarre ei ole tähti, eikä rikkaus ole päämäärä.</li>
+      <li><b>Jules Verne: Maailman ympäri 80 päivässä</b> — aikakausi, kehys
+          ja matkaajan nimi (herra Fogg).</li>
+      <li><b>1800-luvun tutkimusmatkaajien päiväkirjat ja vanhat kartat</b> —
+          visuaalinen kieli. Ja niiden kritiikki: peli näyttää myös sen, mitä
+          piirtäjät eivät nähneet.</li>
+      <li><b>Tietovisaperinne</b> — vihjeet, 50:50 ja aikapaine tuovat
+          television visailujen jännitteen lautapelin päälle.</li>
+    </ul>
+
+    <h2>5 · Visuaalinen tyyli</h2>
+    <div class="kortti">
+      <h3>Väripaletti</h3>
+      <p>
+        <span class="vari"><i style="background:#efdcb4"></i>pergamentti</span>
+        <span class="vari"><i style="background:#dcc08f"></i>tumma pergamentti</span>
+        <span class="vari"><i style="background:#46331f"></i>kartan muste</span>
+        <span class="vari"><i style="background:#8a6c46"></i>vaalea muste</span>
+        <span class="vari"><i style="background:#d9a13b"></i>kulta (korostus)</span>
+        <span class="vari"><i style="background:#7a5514"></i>tumma kulta (pergamentilla)</span>
+        <span class="vari"><i style="background:#2a1f16"></i>paneelin tausta</span>
+        <span class="vari"><i style="background:#d94f3d"></i>matkaajan punainen</span>
+      </p>
+      <p class="meta">Kirkas kulta toimii tummalla taustalla, pergamentilla
+         käytetään tummaa kultaa. Punainen on varattu pelaajan nappulalle ja
+         virheille.</p>
+    </div>
+    <div class="kortti">
+      <h3>Kartta on aina pääasia</h3>
+      <p>Kortit kelluvat kartan päällä ilman laatikoita: teksti kirjoitetaan
+         suoraan pergamentille kartan musteella, vaalea tekstivarjo pitää sen
+         luettavana. Kartta täyttää ruudun joka laitteella; kehyksessä
+         pyöristetyt kulmat ja tasainen väli joka reunalla.</p>
+    </div>
+    <div class="kortti">
+      <h3>Yksi kynä</h3>
+      <p>Kaikki piirretään samalla kynällä: ohut ääriviiva, ei täyttövärejä
+         (nopan silmät poikkeus). Nappien ikonit ovat viivaikoneita tekstin
+         värillä — emojia ei käytetä käyttöliittymässä. Maiden nimet kartalla
+         hennolla kaunokirjoituksella, aktiivinen maa aavistuksen tummempana.</p>
+    </div>
+    <div class="kortti">
+      <h3>Typografia</h3>
+      <p>Kirjoituskonefontti kaikessa (American Typewriter / Courier Prime):
+         peli on matkakirja, joka kirjoitetaan koneella. Otsikot harvennettuina
+         versaaleina. Teksti ilmestyy kirjoittautumalla, ei hyppäämällä.</p>
+    </div>
+
+    <h2>6 · Teksti ja kieli</h2>
+    <div class="kortti">
+      <h3>Sävy</h3>
+      <p>Utelias ja lämmin, ei opettajamainen. Huumori lempeää, ei ivaa.
+         Vaikeat aiheet todetaan ikätasoisesti — ei kaunistella, ei
+         kauhistella. Väärästäkin vastauksesta oppii: selite kertoo aina,
+         miksi oikea vastaus on oikea.</p>
+    </div>
+    <div class="kortti">
+      <h3>Kirjoitusasu</h3>
+      <p>Suomi, paikannimet suomalaisittain (Tanger, Kairo, Sansibar).
+         Aikakauden rekvisiitta: punnat, päivät, höyrylaivat. Päiväkirja
+         minä-muodossa; kysyjät puhuttelevat matkaajaa suoraan.</p>
+    </div>
+
+    <h2>7 · Ääni</h2>
+    <div class="kortti">
+      <h3>Äänimaailman säännöt</h3>
+      <p>Ambienssit ovat aitoja kenttä-äänityksiä (CC0/CC BY), eivät
+         synteettisiä matkailumainoksia. Taso pidetään hiljaisena — ambienssi
+         on tausta, ei tehoste. Tietovisan musiikki väistyy puheen alta.
+         Tehosteet lyhyitä ja vähäeleisiä. Jokaisen äänen alkuperä kirjataan
+         pelin hyvityksiin.</p>
+    </div>
   </section>
 
   <!-- IDEAT -->
@@ -179,9 +334,16 @@
     // --- välilehdet: #aihe-osoite toimii kirjanmerkkinä ---------------------
     const napit = [...document.querySelectorAll('#valilehdet button')];
     const nayta = (tab) => {
+      if (tab === 'tarina') tab = 'brandi'; // vanha kirjanmerkki ohjautuu brändikirjaan
       for (const nappi of napit) nappi.classList.toggle('paalla', nappi.dataset.tab === tab);
       for (const osio of document.querySelectorAll('section[id^="tab-"]')) {
         osio.hidden = osio.id !== `tab-${tab}`;
+      }
+      // Äänistudio ladataan vasta kun välilehti avataan ensi kertaa —
+      // muuten se hakisi äänitiedostoja jokaisella työhuonekäynnillä.
+      if (tab === 'aanet') {
+        const kehys = document.getElementById('aanet-kehys');
+        if (!kehys.src) kehys.src = 'aanet.html';
       }
       history.replaceState(null, '', `#${tab}`);
     };
