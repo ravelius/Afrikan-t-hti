@@ -29360,6 +29360,11 @@ const INTRO_TOP = 0.05;
 // Kirjoituskoneen tahti: avaus saa naksua rauhassa, muut tekstit ripeästi.
 const TYPE_MS = 50;
 const INTRO_TYPE_MS = 190;
+// Tehtäväkortti paljastuu vaiheittain: kehys, tauko, kysymys, tauko,
+// vaihtoehdot. Kirjoituskone on etusivua ripeämpi mutta rauhallisempi
+// kuin pelitilanneilmoitukset.
+const QUIZ_TYPE_MS = 95;
+const QUIZ_PAUSE_MS = 700;
 // Avaustekstin kirjasinkoko sovitetaan kaistaan näiden rajojen sisällä.
 const INTRO_FONT_MAX = 1.02;
 const INTRO_FONT_MIN = 0.72;
@@ -31166,37 +31171,63 @@ class UI {
     // on turha, kun kehys kertoo kuka kysymyksen esittää.
     this.quizBadge.hidden = quiz.kind !== 'puzzle' && quiz.kind !== 'photo';
     this.quizBadge.textContent = quiz.kind === 'photo' ? 'Valokuva' : 'Pulma';
+    let otsikko;
     if (quiz.kind === 'puzzle') {
-      this.quizCity.textContent = `Isoisän luonnoskirjasta — ${quiz.title}`;
+      otsikko = `Isoisän luonnoskirjasta — ${quiz.title}`;
     } else if (quiz.kind === 'claim') {
       // Väittämässä puhuu isoisä, ei peli: otsikko kertoo äänen ja paikan,
       // jota merkintä koskee — se on usein muu kuin pelaajan sijainti.
       const aihe = quiz.place ? ` · ${quiz.place}` : '';
-      this.quizCity.textContent = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
+      otsikko = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
     } else if (quiz.gate) {
-      this.quizCity.textContent = `${city.name} — portti: ${quiz.gate.label}`;
+      otsikko = `${city.name} — portti: ${quiz.gate.label}`;
     } else {
       // Kehystarina: paikallinen kysyjä. Vanhassa tallenteessa kehystä ei
       // ole, jolloin otsikkona on pelkkä kaupunki.
-      this.quizCity.textContent = quiz.frame
+      otsikko = quiz.frame
         ? `${city.name} — ${quiz.frame}:${hardTag}`
         : `${city.name}${hardTag}`;
     }
-    // Kysymys naksuu ruudulle kirjoituskoneella vain kerran avautuessaan.
+    // Kortti paljastuu vaiheittain kirjoituskoneella: ensin kehystarina,
+    // pieni tauko, sitten kysymys, tauko, ja vasta lopuksi vaihtoehdot.
     // Samalla kääntyy päiväkirjan sivu ja hiljainen mietintämusiikki alkaa.
     if (this.typedQuizFor !== quiz) {
       this.typedQuizFor = quiz;
+      this.quizStage = 0;
       sfx.play('quizOpen');
       startQuizMusic();
-      this.typeText(this.quizQuestion, quiz.question, 'quiz');
-    } else if (this.quizQuestion.textContent !== String(quiz.question)) {
-      // Itsekorjaus: jos jokin muu kirjoitus on ehtinyt sotkea tekstin
-      // (esim. edellisen pelin kesken jäänyt kirjoituskone), kysymys
-      // asetetaan kerralla kokonaan — muuten vaihtoehdot ja tulos
+      this.quizQuestion.textContent = '';
+      const vaihtoehdot = () => {
+        if (this.dead || this.typedQuizFor !== quiz) return;
+        this.quizStage = 2;
+        this.renderQuiz();
+      };
+      const kysymys = () => {
+        if (this.dead || this.typedQuizFor !== quiz) return;
+        this.quizStage = 1;
+        this.typeText(this.quizQuestion, quiz.question, 'quiz', () => {
+          this.typeTimers.quiz = setTimeout(vaihtoehdot, QUIZ_PAUSE_MS);
+        }, QUIZ_TYPE_MS);
+      };
+      this.typeText(this.quizCity, otsikko, 'quiz', () => {
+        this.typeTimers.quiz = setTimeout(kysymys, QUIZ_PAUSE_MS);
+      }, QUIZ_TYPE_MS);
+    } else if ((this.quizStage ?? 2) >= 2) {
+      // Itsekorjaus valmiille kortille: jos jokin muu kirjoitus on ehtinyt
+      // sotkea tekstit (esim. edellisen pelin kesken jäänyt kirjoituskone),
+      // ne asetetaan kerralla kokonaan — muuten vaihtoehdot ja tulos
       // näkyisivät väärän kysymyksen alla.
-      this.quizQuestion.textContent = quiz.question;
+      if (this.quizCity.textContent !== otsikko) this.quizCity.textContent = otsikko;
+      if (this.quizQuestion.textContent !== String(quiz.question)) {
+        this.quizQuestion.textContent = quiz.question;
+      }
     }
     this.syncOptions(quiz, (i) => this.answerQuiz(i));
+    // Vaihtoehdot ja apukeinot pysyvät piilossa, kunnes kysymys on
+    // kirjoitettu loppuun. Vanha tallenne (ei quizStage-arvoa) näyttää
+    // kaiken heti.
+    const esilla = (this.quizStage ?? 2) >= 2 || quiz.chosen !== null;
+    this.quizOptions.hidden = !esilla;
 
     const answered = quiz.chosen !== null;
     // Vastauksen jälkeen näytetään ensin pelkkä tuomio, ja vasta aarteen
@@ -31208,18 +31239,25 @@ class UI {
     const used = quiz.hidden.length > 0;
     // Väittämässä on kaksi vaihtoehtoa ja karttakysymykseen vastataan
     // kartalta, joten 50:50 ei kuulu niihin lainkaan.
-    this.quizFifty.hidden = answered || p.isBot || quiz.options.length < 4;
+    this.quizFifty.hidden = !esilla || answered || p.isBot || quiz.options.length < 4;
     this.quizFifty.disabled = used || p.money < FIFTY_FIFTY_PRICE;
     this.quizFifty.textContent = used ? '50:50 käytetty' : `50:50 (${FIFTY_FIFTY_PRICE} p)`;
 
-    this.quizHint.hidden = answered || p.isBot || !quiz.hint;
+    this.quizHint.hidden = !esilla || answered || p.isBot || !quiz.hint;
     this.quizHint.disabled = quiz.hintShown || p.money < HINT_PRICE;
     this.quizHint.textContent = quiz.hintShown ? 'Vihje ostettu' : `Vihje (${HINT_PRICE} p)`;
 
     this.quizHintText.hidden = !quiz.hintShown;
     if (quiz.hintShown) this.quizHintText.textContent = quiz.hint;
 
-    this.renderTimer(quiz);
+    // Tiimalasi käynnistyy vasta, kun vaihtoehdot ovat esillä — lukuaikaa
+    // ei kuluteta kirjoituskoneen naksutteluun.
+    if (esilla) {
+      this.renderTimer(quiz);
+    } else {
+      this.quizTimerEl.hidden = true;
+      this.stopQuizTimer();
+    }
 
     this.quizResult.hidden = !answered;
     if (answered) {
@@ -31268,6 +31306,10 @@ class UI {
 
     this.quizBadge.hidden = true;
     this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
+    // Kaksintaistelu ei käytä vaiheittaista paljastusta: vaihtoehdot ovat
+    // heti esillä, eikä edellisen kortin piilotus saa jäädä päälle.
+    this.quizStage = 2;
+    this.quizOptions.hidden = false;
     if (this.typedQuizFor !== duel) {
       this.typedQuizFor = duel;
       startQuizMusic();
@@ -32031,7 +32073,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.18';
+const APP_VERSION = '2026-07-29.19';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
