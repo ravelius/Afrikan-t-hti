@@ -7,7 +7,7 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.34';
+const APP_VERSION = '2026-07-29.35';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -124,6 +124,7 @@ updateBtn.addEventListener('click', async () => {
 });
 
 document.getElementById('app-version').textContent = APP_VERSION;
+document.getElementById('versio-kulma').textContent = APP_VERSION;
 document.getElementById('newgame-btn').addEventListener('click', startGame);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään

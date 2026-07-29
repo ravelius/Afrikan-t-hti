@@ -69,6 +69,10 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 .app {
   position: relative;
   height: 100dvh;
+  /* iPadin standalone-tilassa 100dvh voi jäädä todellista ruutua
+   * lyhyemmäksi ja alle jää tumma kaista — venytetään kehys aina
+   * vähintään rungon täyteen korkeuteen. */
+  min-height: 100%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   /* Kapealla ruudulla sisältö ei saa venyttää asettelua leveämmäksi. */
@@ -2076,6 +2080,19 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 /* Kaiutin ankkuroituu korttiin myös silloin, kun kortti on staattinen. */
 .fact-card { position: relative; }
 
+/* Versionumero aina näkyvissä vasemmassa alakulmassa — pieni ja
+ * huomaamaton, mutta riittää kertomaan mikä versio on käytössä. */
+.versio-kulma {
+  position: fixed;
+  left: max(0.55rem, env(safe-area-inset-left, 0px));
+  bottom: max(0.3rem, env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: rgba(70, 51, 31, 0.55);
+  pointer-events: none;
+}
+
 /* Kaiutin kortin oikeassa yläkulmassa: hillitty viivapiirros samaan
  * tapaan kuin kuvakuvake — jatkaa merkinnän luentaa. */
 .fact-kuuntele {
@@ -2380,6 +2397,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     <p>Matkakirja luetaan pystyssä.</p>
     <p class="muted">Käännä laite pystyasentoon.</p>
   </div>
+  <!-- Versionumero näkyy aina pienenä alakulmassa. -->
+  <div id="versio-kulma" class="versio-kulma" aria-hidden="true"></div>
   <div class="app">
     <header class="topbar">
       <h1 class="brand">Matkakirja</h1>
@@ -32585,7 +32604,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.34';
+const APP_VERSION = '2026-07-29.35';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -32702,6 +32721,7 @@ updateBtn.addEventListener('click', async () => {
 });
 
 document.getElementById('app-version').textContent = APP_VERSION;
+document.getElementById('versio-kulma').textContent = APP_VERSION;
 document.getElementById('newgame-btn').addEventListener('click', startGame);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään

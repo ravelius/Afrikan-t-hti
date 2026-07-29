@@ -66,6 +66,10 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 .app {
   position: relative;
   height: 100dvh;
+  /* iPadin standalone-tilassa 100dvh voi jäädä todellista ruutua
+   * lyhyemmäksi ja alle jää tumma kaista — venytetään kehys aina
+   * vähintään rungon täyteen korkeuteen. */
+  min-height: 100%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   /* Kapealla ruudulla sisältö ei saa venyttää asettelua leveämmäksi. */
@@ -2072,6 +2076,19 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 
 /* Kaiutin ankkuroituu korttiin myös silloin, kun kortti on staattinen. */
 .fact-card { position: relative; }
+
+/* Versionumero aina näkyvissä vasemmassa alakulmassa — pieni ja
+ * huomaamaton, mutta riittää kertomaan mikä versio on käytössä. */
+.versio-kulma {
+  position: fixed;
+  left: max(0.55rem, env(safe-area-inset-left, 0px));
+  bottom: max(0.3rem, env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: rgba(70, 51, 31, 0.55);
+  pointer-events: none;
+}
 
 /* Kaiutin kortin oikeassa yläkulmassa: hillitty viivapiirros samaan
  * tapaan kuin kuvakuvake — jatkaa merkinnän luentaa. */
