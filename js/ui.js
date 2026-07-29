@@ -102,7 +102,7 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
   + 'Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä." '
   + 'Viimeinen lause päättyy kesken.\n\n'
   + 'Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.\n\n'
-  + 'Ostin lipun samana iltana. Mistä aloittaisin?';
+  + 'Menen heti ostamaan liput, mutta mistä kaupungista aloittaisin?';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -584,6 +584,10 @@ export class UI {
     // Pallonpuoliskokartalla kehykset ja asteverkko piirtyvät maiden alle.
     drawHemisphereFrames(svg, pack.map);
     drawLand(svg, pack.map);
+    // Nykyisen maan rajojen korostus piirretään tähän kerrokseen pelin
+    // edetessä (drawCountryBorders) — maan alle, reittien ja nappuloiden alle.
+    this.countryLayer = el('g', { class: 'country-borders', filter: 'url(#rough)' }, root);
+    this.countryKey = null;
     drawWaves(svg, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
       ...decor.waveSkip,
@@ -726,6 +730,27 @@ export class UI {
     // Lentoanimaatio piirtyy kaiken päälle: kone ja sen perässä kulkeva viiva.
     this.flightLayer = el('g', { class: 'flight' }, root);
     drawPaperOverlay(svg);
+  }
+
+  /**
+   * Korostaa sen maan rajat, jossa pelaaja on. Reitillä (kaupunkien
+   * välissä) edellinen korostus jää näkyviin, kunnes seuraava kaupunki
+   * vaihtaa maata — kartta ei vilku matkalla.
+   */
+  drawCountryBorders() {
+    if (!this.countryLayer) return;
+    const map = this.game.pack.map;
+    const city = this.game.cityOf();
+    const iso = city ? map.cityCountry?.[city.id] : null;
+    if (!iso) return;
+    const key = `${this.game.pack.id}:${iso}`;
+    if (this.countryKey === key) return;
+    this.countryKey = key;
+    this.countryLayer.textContent = '';
+    for (const line of map.countryBorders?.[iso] ?? []) {
+      const d = `M${line.map(([x, y]) => `${x},${y}`).join(' L')}`;
+      el('path', { d, class: 'border border-active' }, this.countryLayer);
+    }
   }
 
   /** Kartalla näkyvät vain käännetyt laatat omina kuvakkeinaan. */
@@ -1333,6 +1358,7 @@ export class UI {
     this.stampPassport();
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
+    this.drawCountryBorders();
     this.drawTokens();
     this.drawTargets();
     this.drawPawns();

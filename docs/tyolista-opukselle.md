@@ -383,12 +383,11 @@ tämä teksti (kirjoituskoneella naksuen, kolme kappaletta):
 >
 > Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.
 >
-> Ostin lipun samana iltana. Mistä aloittaisin?
->
-> Napauta kaupunkia kartalla.
+> Menen heti ostamaan liput, mutta mistä kaupungista aloittaisin?
 
-(Päivitetty 28.7.2026: loppuun "Mistä aloittaisin?" ja selkeä kehote
-napauttaa — etusivulla ei ollut kutsua toimintaan.)
+(Päivitetty 29.7.2026 omistajan pyynnöstä: "Napauta kaupunkia kartalla"
+-rivi pois ja loppulause muotoon "Menen heti ostamaan liput, mutta mistä
+kaupungista aloittaisin?")
 
 (Päivitetty 27.7.2026 omistajan pyynnöstä: ei mainintaa Afrikasta, koska
 aloituspaikan saa valita vapaasti. Isoisän 80 päivän ennätys mainitaan —
