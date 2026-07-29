@@ -2770,7 +2770,9 @@ test('lentorepliikit ovat ehjiä ja kohdistuvat laudan kaupunkeihin', () => {
 
 test('ensimmäinen lento hehkuttaa aina matkakirjaa', () => {
   const rivit = packById('maailma').texts.flightFirst;
-  assert.ok(Array.isArray(rivit) && rivit.length >= 4, 'flightFirst-rivejä on liian vähän');
+  // Avausrepliikki on lukittu yhteen riviin, koska sille on tuotettu
+  // lukuääni — tekstin ja puheen on pysyttävä samana.
+  assert.ok(Array.isArray(rivit) && rivit.length === 1, 'avausrepliikkejä pitää olla täsmälleen yksi');
   for (const rivi of rivit) {
     assert.ok(rivi.length > 20, `liian lyhyt rivi "${rivi}"`);
     assert.ok(/kirja|sivu/i.test(rivi), `rivi ei puhu matkakirjasta: "${rivi}"`);

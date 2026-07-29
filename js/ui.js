@@ -1123,9 +1123,15 @@ export class UI {
       this.introEl.classList.add('intro-fade');
       // Repliikki ennen siirtoa, jotta rng-kutsut osuvat samaan kohtaan.
       const line = game.firstFlightLine(city.id);
-      // Siirto tehdään ennen lentokalvoa: perillä odottava päiväkirja-
-      // merkintä alkaa puheineen jo lennon aikana kalvon alla.
+      // Lippu ennen siirtoa, jotta saapumismerkintä ei ala kalvon alla —
+      // se odottaa Astu ulos -nappia. animateFlight poistaa lipun.
+      if (!this.reducedMotion) document.body.classList.add('flight-active');
       this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
+      if (!this.reducedMotion) {
+        // Avauslennon repliikki on lukittu ja luettu ääneen: puhe soi
+        // kalvon alla samaan tahtiin kuin teksti kirjoittuu ruutuun.
+        this.playDiaryVoice('assets/audio/puhe-lento-alku.mp3');
+      }
       await this.animateFlight(
         'Lontoo', city.name, line,
         { dx: city.x - lontoo.x, dy: city.y - lontoo.y },

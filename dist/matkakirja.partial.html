@@ -4105,12 +4105,11 @@ const MAAILMA = {
     ],
     // Ensimmäinen lento: matka alkaa, ja repliikki hehkuttaa aina
     // matkakirjaa — se on koko pelin lähtölaukaus.
+    // Avauslennon repliikki on lukittu yhteen riviin, koska sille on
+    // tuotettu lukuääni (assets/audio/puhe-lento-alku.mp3) — teksti ja
+    // puhe pysyvät aina samana. Rivi jatkaa avaustekstin revittyä sivua.
     flightFirst: [
-      'Kone nousee ja isoisän kirja on sylissäni auki ensimmäiseltä sivulta: kahdeksankymmentä päivää. Hyvä on, isoisä — katsotaan mihin minä pystyn.',
-      'Selasin kirjaa jo kiitotiellä: joka sivulla on paikka, jonka haluan nähdä omin silmin, ja nyt siivet vievät kohti ensimmäistä. Vihdoinkin!',
-      'Painan kämmeneni kirjan kannelle: sata viisikymmentä vuotta ja kesken jäänyt lause. Tästä hetkestä alkaen sitä kirjoitetaan loppuun.',
-      'Kirja hyppii polvillani koneen mukana, ja huomaan hymyileväni aivan itsekseni. Tämä on se sivu, jolla minun matkani alkaa.',
-      'Avaan kirjan sattumanvaraiselta kohdalta ja lupaan käydä joka paikassa, jonka isoisä alleviivasi. Lupaus on holtiton, ja juuri siksi teen sen.',
+      'Painan kämmeneni kirjan kannelle: sata viisikymmentä vuotta ja revitty sivu. Tästä hetkestä alkaen tarinaa kirjoitetaan loppuun.',
     ],
     intro: 'Peli alkaa! Etsikää Magellanin kompassi — maailmanympäripurjehtijan kadonnut aarre.',
     starFound: (name, city) => `★ ${name} löysi MAGELLANIN KOMPASSIN kaupungista ${city}!`,
@@ -30391,9 +30390,15 @@ class UI {
       this.introEl.classList.add('intro-fade');
       // Repliikki ennen siirtoa, jotta rng-kutsut osuvat samaan kohtaan.
       const line = game.firstFlightLine(city.id);
-      // Siirto tehdään ennen lentokalvoa: perillä odottava päiväkirja-
-      // merkintä alkaa puheineen jo lennon aikana kalvon alla.
+      // Lippu ennen siirtoa, jotta saapumismerkintä ei ala kalvon alla —
+      // se odottaa Astu ulos -nappia. animateFlight poistaa lipun.
+      if (!this.reducedMotion) document.body.classList.add('flight-active');
       this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
+      if (!this.reducedMotion) {
+        // Avauslennon repliikki on lukittu ja luettu ääneen: puhe soi
+        // kalvon alla samaan tahtiin kuin teksti kirjoittuu ruutuun.
+        this.playDiaryVoice('assets/audio/puhe-lento-alku.mp3');
+      }
       await this.animateFlight(
         'Lontoo', city.name, line,
         { dx: city.x - lontoo.x, dy: city.y - lontoo.y },
@@ -32086,7 +32091,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.21';
+const APP_VERSION = '2026-07-29.22';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
