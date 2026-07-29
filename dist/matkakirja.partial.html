@@ -1757,23 +1757,17 @@ body[data-mode] .rail {
 
 body[data-mode] .rail > * { pointer-events: auto; }
 
-/* Asennetussa sovelluksessa (iPad/iPhone-kokoruutu) kartta ulottuu
- * ruudun pohjaan asti: kehysväli ja pyöristetyt kulmat jäävät ylös ja
- * sivuille, alhaalla pergamentti menee kiinni reunaan ja koti-
- * indikaattori kelluu kartan päällä kuten peleissä yleensä. Selaimen
- * ikkunassa (esim. Mac) kehys ja pyöristys säilyvät joka reunalla.
- * Kelluvat kortit pysyvät aina turva-alueen yläpuolella. */
+/* Kehys ja pyöristys näkyvät joka reunalla myös asennetussa
+ * sovelluksessa (omistajan valinta): alakehys on täsmälleen
+ * turva-alueen eli kotipalkin korkuinen, joten pergamentin alle ei jää
+ * selittämätöntä mustaa reunaa — kotipalkki lepää tummalla kehyksellä.
+ * Selaimessa turva-alue on nolla ja kehys on sama joka reunalla. */
 body[data-mode] .app { padding-bottom: 0; }
-@media (display-mode: standalone) {
-  body[data-mode] .stage { padding-bottom: 0; }
-  body[data-mode] .map-pane {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom: 0;
-  }
+body[data-mode] .stage {
+  padding-bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
 }
 body[data-mode] .rail {
-  bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
+  bottom: max(calc(var(--gap) * 2), calc(env(safe-area-inset-bottom, 0px) + var(--gap)));
 }
 
 /*
@@ -2066,15 +2060,9 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  /* Selaimessa numero lepää tumman kehyksen päällä. */
+  /* Numero lepää tumman alakehyksen päällä kaikissa tiloissa. */
   color: rgba(240, 226, 196, 0.5);
   pointer-events: none;
-}
-
-/* Asennetussa sovelluksessa kartta jatkuu pohjaan asti, joten numero
- * lepää pergamentilla — väri on kartan mustetta, hyvin haaleana. */
-@media (display-mode: standalone) {
-  .versio-kulma { color: rgba(70, 51, 31, 0.5); bottom: 0.45rem; }
 }
 
 /* Kaiutin kortin oikeassa yläkulmassa: hillitty viivapiirros samaan
@@ -25355,6 +25343,8 @@ for (const city of KAUPUNGIT.values()) {
     otsikko: `${city.name} — ${TYYPPI_NIMET[tyyppi] ?? tyyppi}`,
     // Ryhmä äänistudion listaa varten: saman maiseman kaupungit yhdessä.
     ryhma: TYYPPI_NIMET[tyyppi] ?? tyyppi,
+    // Raaka tyyppiavain arvontakoria varten ('sademetsa', ei 'sademetsä').
+    tyyppi,
     oletus: STRIIMIOLETUKSET[city.id] ?? null,
     ehdokkaat: [
       // null-osoite tarkoittaa syntetisoitua ambienssia.
@@ -25392,6 +25382,33 @@ function jaaAlku(arvo) {
 const POISTETUT = new Set([
   'https://cdn.freesound.org/previews/160/160461_1-lq.mp3',
 ]);
+
+// Kategoriakohtaiset arvontakorit: maisematyypille voi valita studiossa
+// useita ääniä, joista peli arpoo yhden joka käynnillä. Kaupungin oma
+// valinta ohittaa aina korin.
+const TYYPPIKORI_AVAIN = 'matkakirja-tyyppivalinnat';
+
+function tyyppiKori(tyyppi) {
+  try {
+    const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
+    const lista = kaikki[tyyppi];
+    return Array.isArray(lista) ? lista.filter(Boolean) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Tallentaa tyypin arvontakorin; tyhjä lista poistaa korin. */
+function valitseTyyppiKori(tyyppi, lista) {
+  try {
+    const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
+    if (!lista || !lista.length) delete kaikki[tyyppi];
+    else kaikki[tyyppi] = lista;
+    localStorage.setItem(TYYPPIKORI_AVAIN, JSON.stringify(kaikki));
+  } catch {
+    /* yksityinen selaustila — kori ei säily */
+  }
+}
 
 function valittuAani(slot) {
   try {
@@ -26339,6 +26356,21 @@ function treasureSound(type) {
 // Uusi paikka lisätään STREAMS-taulukkoon: suora mp3-osoite ja
 // tekijämaininta lisensseineen. Vain CC-lisensoituja äänitteitä.
 
+// Maisematyypin arvontakorista arvottu ääni pysyy samana koko käynnin
+// ajan: syncAmbience kutsuu playPlaceAmbiencea jokaisella piirrolla,
+// eikä ääni saa vaihtua tai katkeilla kesken kaupungissa olon.
+let arvottu = null; // { cityId, url }
+
+function arvoTyypista(cityId, tyyppi) {
+  if (!cityId || !tyyppi) return null;
+  if (arvottu?.cityId === cityId) return arvottu.url;
+  const kori = tyyppiKori(tyyppi);
+  if (!kori.length) return null;
+  const url = kori[Math.floor(Math.random() * kori.length)];
+  arvottu = { cityId, url };
+  return url;
+}
+
 const STREAMS = {
   kairo: {
     url: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3',
@@ -26405,7 +26437,10 @@ function playPlaceAmbience(cityId, fallbackType) {
   // sen, tyhjä merkkijono tarkoittaa syntetisoitua, null jättää
   // STREAMS-oletuksen voimaan.
   const valinta = cityId ? valittuAani(`kaupunki:${cityId}`) : null;
-  const url = valinta === '' ? null : valinta ?? (cityId ? STREAMS[cityId]?.url : null);
+  // Järjestys: kaupungin oma valinta > tyypin arvontakori > oletus.
+  const url = valinta === ''
+    ? null
+    : valinta ?? arvoTyypista(cityId, fallbackType) ?? (cityId ? STREAMS[cityId]?.url : null);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);
@@ -32905,7 +32940,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.42';
+const APP_VERSION = '2026-07-29.43';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

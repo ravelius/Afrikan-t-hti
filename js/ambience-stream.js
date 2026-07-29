@@ -8,7 +8,22 @@
 // tekijämaininta lisensseineen. Vain CC-lisensoituja äänitteitä.
 
 import { sfx } from './sound.js';
-import { valittuAani, jaaAlku } from './aani-ehdokkaat.js';
+import { valittuAani, jaaAlku, tyyppiKori } from './aani-ehdokkaat.js';
+
+// Maisematyypin arvontakorista arvottu ääni pysyy samana koko käynnin
+// ajan: syncAmbience kutsuu playPlaceAmbiencea jokaisella piirrolla,
+// eikä ääni saa vaihtua tai katkeilla kesken kaupungissa olon.
+let arvottu = null; // { cityId, url }
+
+function arvoTyypista(cityId, tyyppi) {
+  if (!cityId || !tyyppi) return null;
+  if (arvottu?.cityId === cityId) return arvottu.url;
+  const kori = tyyppiKori(tyyppi);
+  if (!kori.length) return null;
+  const url = kori[Math.floor(Math.random() * kori.length)];
+  arvottu = { cityId, url };
+  return url;
+}
 
 export const STREAMS = {
   kairo: {
@@ -76,7 +91,10 @@ export function playPlaceAmbience(cityId, fallbackType) {
   // sen, tyhjä merkkijono tarkoittaa syntetisoitua, null jättää
   // STREAMS-oletuksen voimaan.
   const valinta = cityId ? valittuAani(`kaupunki:${cityId}`) : null;
-  const url = valinta === '' ? null : valinta ?? (cityId ? STREAMS[cityId]?.url : null);
+  // Järjestys: kaupungin oma valinta > tyypin arvontakori > oletus.
+  const url = valinta === ''
+    ? null
+    : valinta ?? arvoTyypista(cityId, fallbackType) ?? (cityId ? STREAMS[cityId]?.url : null);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);

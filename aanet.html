@@ -36,6 +36,14 @@
     .rivi input[type="number"] { width: 4.4rem; }
     .rivi .sek { align-self: center; color: var(--haalea); }
     .rivi .poista { min-width: 2.4rem; color: #d98b6b; }
+    /* Arvontakori: maisematyypin monivalinta ryhmän alussa. */
+    .kori { border: 1px dashed var(--reuna); border-radius: 8px; padding: 0.5rem 0.7rem; margin: 0.5rem 0 0.2rem; }
+    .kori-otsikko { color: var(--korostus); font-size: 0.85rem; margin-bottom: 0.35rem; }
+    .kori-seloste { color: var(--haalea); font-size: 0.8rem; margin-bottom: 0.4rem; }
+    .kori-rivi { display: flex; align-items: center; gap: 0.5rem; padding: 0.12rem 0; }
+    .kori-rivi .soita { min-width: 3rem; flex: 0 0 auto; }
+    .kori-rivi label { display: flex; align-items: center; gap: 0.45rem; cursor: pointer;
+      color: var(--himmea); font-size: 0.9rem; }
     .oma { margin: 0.3rem 0 0.1rem; }
     .oma input[type="url"] { flex: 2 1 14rem; }
     .oma input[type="text"] { flex: 1 1 9rem; }
@@ -148,7 +156,10 @@
 
   <script type="module">
     import { sfx } from './js/sound.js';
-    import { EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani, jaaAlku } from './js/aani-ehdokkaat.js';
+    import {
+      EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani, jaaAlku,
+      TYYPPI_EHDOKKAAT, tyyppiKori, valitseTyyppiKori,
+    } from './js/aani-ehdokkaat.js';
     import { STRIIMI_VOIMA, MUSIIKKI_VOIMA } from './js/ambience-stream.js';
 
     // --- pikatestit ---------------------------------------------------------
@@ -567,6 +578,52 @@
         summary.innerHTML = `${ryhma} <span class="maara">· ${jasenet.length} paikkaa · valittu ${valittuja}</span>`;
         kotelo.appendChild(summary);
 
+        // Arvontakori: tyypille voi valita useita ääniä, joista peli arpoo
+        // yhden joka käynnillä. Kaupungin oma valinta ohittaa korin.
+        const koriTyyppi = jasenet[0]?.tiedot.tyyppi;
+        if (koriTyyppi && TYYPPI_EHDOKKAAT[koriTyyppi]) {
+          const kori = document.createElement('div');
+          kori.className = 'kori';
+          const koriNyt = tyyppiKori(koriTyyppi);
+          const otsikko = document.createElement('div');
+          otsikko.className = 'kori-otsikko';
+          otsikko.textContent = `Arvontakori · ${koriNyt.length} valittu`;
+          kori.appendChild(otsikko);
+          const seloste = document.createElement('div');
+          seloste.className = 'kori-seloste';
+          seloste.textContent = 'Rastita muutama: peli arpoo näistä yhden aina kaupunkiin '
+            + 'saavuttaessa. Kaupungin oma valinta ohittaa korin, oletus väistyy korin tieltä.';
+          kori.appendChild(seloste);
+          for (const ehdokas of TYYPPI_EHDOKKAAT[koriTyyppi]) {
+            const arvo = ehdokas.alku ? `${ehdokas.url}#alku=${ehdokas.alku}` : ehdokas.url;
+            const koriRivi = document.createElement('div');
+            koriRivi.className = 'kori-rivi';
+            const soitto = document.createElement('button');
+            soitto.type = 'button';
+            soitto.className = 'soita';
+            soitto.textContent = '▶';
+            soitto.addEventListener('click', () => soita({
+              url: ehdokas.url, nimi: ehdokas.nimi, alku: ehdokas.alku, slot: `kori:${koriTyyppi}`,
+            }));
+            const nimio = document.createElement('label');
+            const ruutu = document.createElement('input');
+            ruutu.type = 'checkbox';
+            ruutu.checked = koriNyt.some((k) => jaaAlku(k).url === ehdokas.url);
+            ruutu.addEventListener('change', () => {
+              const nyt = tyyppiKori(koriTyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url);
+              if (ruutu.checked) nyt.push(arvo);
+              valitseTyyppiKori(koriTyyppi, nyt);
+              rakenna();
+            });
+            nimio.appendChild(ruutu);
+            nimio.appendChild(document.createTextNode(ehdokas.nimi));
+            koriRivi.appendChild(soitto);
+            koriRivi.appendChild(nimio);
+            kori.appendChild(koriRivi);
+          }
+          kotelo.appendChild(kori);
+        }
+
         for (const { slot, tiedot, kaikkiRivit, valittu } of jasenet) {
           const os = document.createElement('div');
           os.className = 'osio';
@@ -736,22 +793,44 @@
         const alkuosa = osat.length ? ` (${osat.join(', ')})` : '';
         return `${paikka?.otsikko ?? slot}: ${nimi}${alkuosa}`;
       });
+      // Arvontakorit omana lohkonaan.
+      for (const [tyyppi, lista] of Object.entries(kaikkiKorit())) {
+        const nimet = lista.map((k) => {
+          const { url } = jaaAlku(k);
+          return (TYYPPI_EHDOKKAAT[tyyppi] ?? []).find((e) => e.url === url)?.nimi ?? k;
+        });
+        rivit.push(`Arvontakori ${tyyppi}: ${nimet.join(' | ')}`);
+      }
       const teksti = rivit.length
         ? `Äänivalinnat:\n${rivit.join('\n')}`
         : 'Ei vielä valintoja — kaikki oletuksilla.';
       document.getElementById('valinnat-teksti').textContent = teksti;
       navigator.clipboard?.writeText(teksti).catch(() => {});
     });
+    // Kaikki tallennetut arvontakorit tyypeittäin.
+    const kaikkiKorit = () => {
+      const korit = {};
+      for (const tyyppi of Object.keys(TYYPPI_EHDOKKAAT)) {
+        const lista = tyyppiKori(tyyppi);
+        if (lista.length) korit[tyyppi] = lista;
+      }
+      return korit;
+    };
     document.getElementById('kopioi-json').addEventListener('click', () => {
-      const teksti = JSON.stringify(kaikkiValinnat(), null, 1);
+      const teksti = JSON.stringify({ valinnat: kaikkiValinnat(), korit: kaikkiKorit() }, null, 1);
       document.getElementById('valinnat-teksti').textContent = teksti;
       navigator.clipboard?.writeText(teksti).catch(() => {});
     });
     document.getElementById('tuo').addEventListener('click', () => {
       try {
         const tuotu = JSON.parse(document.getElementById('tuo-alue').value);
-        for (const [slot, arvo] of Object.entries(tuotu)) {
+        // Uusi muoto: { valinnat, korit }. Vanha muoto: pelkkä valinnat-kartta.
+        const valinnatOsa = tuotu.valinnat ?? tuotu;
+        for (const [slot, arvo] of Object.entries(valinnatOsa)) {
           valitseAani(slot, arvo === '' ? null : arvo);
+        }
+        for (const [tyyppi, lista] of Object.entries(tuotu.korit ?? {})) {
+          if (Array.isArray(lista)) valitseTyyppiKori(tyyppi, lista);
         }
         rakenna();
         document.getElementById('valinnat-teksti').textContent = 'Valinnat tuotu.';

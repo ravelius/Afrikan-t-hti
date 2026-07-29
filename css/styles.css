@@ -1754,23 +1754,17 @@ body[data-mode] .rail {
 
 body[data-mode] .rail > * { pointer-events: auto; }
 
-/* Asennetussa sovelluksessa (iPad/iPhone-kokoruutu) kartta ulottuu
- * ruudun pohjaan asti: kehysväli ja pyöristetyt kulmat jäävät ylös ja
- * sivuille, alhaalla pergamentti menee kiinni reunaan ja koti-
- * indikaattori kelluu kartan päällä kuten peleissä yleensä. Selaimen
- * ikkunassa (esim. Mac) kehys ja pyöristys säilyvät joka reunalla.
- * Kelluvat kortit pysyvät aina turva-alueen yläpuolella. */
+/* Kehys ja pyöristys näkyvät joka reunalla myös asennetussa
+ * sovelluksessa (omistajan valinta): alakehys on täsmälleen
+ * turva-alueen eli kotipalkin korkuinen, joten pergamentin alle ei jää
+ * selittämätöntä mustaa reunaa — kotipalkki lepää tummalla kehyksellä.
+ * Selaimessa turva-alue on nolla ja kehys on sama joka reunalla. */
 body[data-mode] .app { padding-bottom: 0; }
-@media (display-mode: standalone) {
-  body[data-mode] .stage { padding-bottom: 0; }
-  body[data-mode] .map-pane {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom: 0;
-  }
+body[data-mode] .stage {
+  padding-bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
 }
 body[data-mode] .rail {
-  bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
+  bottom: max(calc(var(--gap) * 2), calc(env(safe-area-inset-bottom, 0px) + var(--gap)));
 }
 
 /*
@@ -2063,15 +2057,9 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  /* Selaimessa numero lepää tumman kehyksen päällä. */
+  /* Numero lepää tumman alakehyksen päällä kaikissa tiloissa. */
   color: rgba(240, 226, 196, 0.5);
   pointer-events: none;
-}
-
-/* Asennetussa sovelluksessa kartta jatkuu pohjaan asti, joten numero
- * lepää pergamentilla — väri on kartan mustetta, hyvin haaleana. */
-@media (display-mode: standalone) {
-  .versio-kulma { color: rgba(70, 51, 31, 0.5); bottom: 0.45rem; }
 }
 
 /* Kaiutin kortin oikeassa yläkulmassa: hillitty viivapiirros samaan
