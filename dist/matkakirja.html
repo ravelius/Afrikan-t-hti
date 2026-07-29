@@ -979,12 +979,24 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   transition: opacity 0.28s ease;
 }
 
-/* Perillä: kalvo odottaa, kunnes pelaaja astuu ulos. */
-.flight-exit {
+/* Repliikki ja Astu mantereelle -nappi kelluvat samassa alaosassa:
+ * asettelu hoituu virtauksella, joten napin osumakohta on aina siinä
+ * missä nappi näkyy — myös kun alakehys elää turva-alueen mukana. */
+.flight-alaosa {
   position: absolute;
-  bottom: 9%;
   left: 50%;
+  bottom: max(calc(var(--gap) + 1rem), calc(env(safe-area-inset-bottom, 0px) + 1rem));
   transform: translateX(-50%);
+  width: min(680px, calc(100% - 1.6rem));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 5;
+}
+
+/* Perillä: kalvo odottaa, kunnes pelaaja astuu mantereelle. */
+.flight-exit {
   padding: 0.6rem 1.6rem;
   font-size: 1.05rem;
   animation: flight-overlay-in 0.5s ease;
@@ -2333,26 +2345,24 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 }
 
 /* Repliikki kelluu kartan alalaidassa, samaa kirjoituskonetyyliä kuin muut. */
+/* Nuoren herran repliikki: vanhan filmin tekstiplanssi kelluvassa
+ * alaosassa. Ei osumakohtaa — napautukset kuuluvat kalvolle ja napille. */
 .flight-line {
-  position: absolute;
-  left: 50%;
-  /* Pystysijainti lasketaan js:ssä kartan omasta korkeudesta. */
-  transform: translate(-50%, -100%);
-  /* Pelkkää tekstiä: ei saa varastaa klikkauksia Astu ulos -napilta. */
   pointer-events: none;
-  max-width: 78%;
   margin: 0;
-  padding: 0.5rem 0.9rem;
-  background: rgba(46, 33, 20, 0.88);
-  border: 1px solid rgba(214, 188, 140, 0.45);
-  border-radius: 4px;
+  max-width: 100%;
+  padding: 0.75rem 1.2rem;
+  background: rgba(36, 26, 18, 0.92);
+  border: 1px solid rgba(214, 188, 140, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 8px 26px rgba(20, 13, 6, 0.35);
   color: #f0e2c4;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  line-height: 1.45;
+  font-family: var(--font-type);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
   text-align: center;
-  pointer-events: none;
-  z-index: 5;
+  animation: flight-overlay-in 0.4s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -25191,17 +25201,19 @@ const EHDOKKAAT = {
     ],
   },
   'tehoste:step': {
-    otsikko: 'Askel kartalla',
-    oletus: 'assets/audio/efekti-askel.mp3',
+    otsikko: 'Askel kartalla (väliaskeleen kopina)',
+    oletus: 'assets/audio/efekti-naksu.mp3',
     ehdokkaat: [
+      { url: 'assets/audio/efekti-naksu.mp3', nimi: 'Nappulan kopina (matala tok) — ElevenLabs SFX' },
       { url: 'assets/audio/efekti-askel.mp3', nimi: 'Saappaan askel polulla — ElevenLabs SFX' },
       { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:arrive': {
-    otsikko: 'Saapuminen kaupunkiin',
-    oletus: 'assets/audio/efekti-saapuminen.mp3',
+    otsikko: 'Saapuminen kaupunkiin (viimeinen kolaus)',
+    oletus: 'assets/audio/efekti-naksu.mp3',
     ehdokkaat: [
+      { url: 'assets/audio/efekti-naksu.mp3', nimi: 'Nappulan kolaus (korkea tik) — ElevenLabs SFX' },
       { url: 'assets/audio/efekti-saapuminen.mp3', nimi: 'Marimban kaksi nousevaa säveltä — ElevenLabs SFX' },
       { url: null, nimi: 'Syntetisoitu' },
     ],
@@ -26026,6 +26038,7 @@ class Sound {
    */
   playSlice(name, {
     dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0, tasavire = false,
+    vire = null,
   } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
@@ -26033,8 +26046,9 @@ class Sound {
     const src = ctx.createBufferSource();
     src.buffer = buf;
     // Vireheitto elävöittää kolahduksia, mutta vääristää mekaanisia ääniä
-    // (kirjoituskone kuulosti sen kanssa oudolta).
-    src.playbackRate.value = tasavire ? 1 : this.jitter(1, 0.05);
+    // (kirjoituskone kuulosti sen kanssa oudolta). Nimetty vire soittaa
+    // saman äänitteen matalampana tai korkeampana (nappulan tok/tik).
+    src.playbackRate.value = vire ? this.jitter(vire, 0.02) : (tasavire ? 1 : this.jitter(1, 0.05));
     const kesto = tail ?? dur;
     const iskut = isku ? this.sampleHits?.[name] : null;
     const alku = tail != null
@@ -26090,8 +26104,10 @@ const REAL_SAMPLES = {
   correct: { url: 'assets/audio/efekti-oikein.mp3', credit: 'ElevenLabs SFX' },
   wrong: { url: 'assets/audio/efekti-vaarin.mp3', credit: 'ElevenLabs SFX' },
   swipe: { url: 'assets/audio/efekti-pyyhkaisy.mp3', credit: 'ElevenLabs SFX' },
-  step: { url: 'assets/audio/efekti-askel.mp3', credit: 'ElevenLabs SFX' },
-  arrive: { url: 'assets/audio/efekti-saapuminen.mp3', credit: 'ElevenLabs SFX' },
+  // Nappulan liike: sama puinen naksu, väliaskel matalampana ja
+  // perillinen kolaus korkeampana (omistajan "tok-tok-tik").
+  step: { url: 'assets/audio/efekti-naksu.mp3', credit: 'ElevenLabs SFX' },
+  arrive: { url: 'assets/audio/efekti-naksu.mp3', credit: 'ElevenLabs SFX' },
   ferry: { url: 'assets/audio/efekti-laiva.mp3', credit: 'ElevenLabs SFX' },
   flight: { url: 'assets/audio/efekti-lento.mp3', credit: 'ElevenLabs SFX' },
   hint: { url: 'assets/audio/efekti-vihje.mp3', credit: 'ElevenLabs SFX' },
@@ -26127,8 +26143,8 @@ const REAL_PLAYERS = {
   correct: (s) => s.playSlice('correct', { dur: 1.5, gain: 0.4, alusta: true }),
   wrong: (s) => s.playSlice('wrong', { dur: 1.1, gain: 0.4, alusta: true }),
   swipe: (s) => s.playSlice('swipe', { dur: 0.8, gain: 0.3, alusta: true }),
-  step: (s) => s.playSlice('step', { dur: 0.7, gain: 0.25, alusta: true }),
-  arrive: (s) => s.playSlice('arrive', { dur: 1.3, gain: 0.35, alusta: true }),
+  step: (s) => s.playSlice('step', { dur: 0.5, gain: 0.3, alusta: true, vire: 0.82 }),
+  arrive: (s) => s.playSlice('arrive', { dur: 0.6, gain: 0.42, alusta: true, vire: 1.18 }),
   ferry: (s) => s.playSlice('ferry', { dur: 2.6, gain: 0.4, alusta: true }),
   flight: (s) => s.playSlice('flight', { dur: 2.1, gain: 0.35, alusta: true }),
   hint: (s) => s.playSlice('hint', { dur: 1.1, gain: 0.35, alusta: true }),
@@ -29890,6 +29906,8 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
+// Mantereen sisäinen lento liukuu rauhallisemmin moottorin hurinalla.
+const MANNER_LENTO_MS = 2800;
 // Lentoanimaation kesto: sen verran, että repliikin ehtii lukea.
 // Kalvolento saa kestää: matka on tarkoitus tuntea, ei ohittaa.
 const FLY_OVERLAY_MS = 4800;
@@ -30977,6 +30995,11 @@ class UI {
     const hasSlow = modes.includes('sea') || flights.length > 0
       || gateways.length > 0 || countryGates.length > 0;
 
+    // Jos välivaiheeseen ei jää yhtään valintaa (esim. rahat eivät riitä
+    // lentoon eikä satamaa ole), palataan suoraan perusvalintoihin —
+    // pelkkä Takaisin-nappi ei ole näkymä.
+    if (this.travelExpanded && !hasSlow) this.travelExpanded = false;
+
     if (!this.travelExpanded) {
       this.turnStatus.textContent = 'Valitse matkustustapa.';
       // Kaikki vaiheen A napit mahtuvat aina yhteen riviin.
@@ -31016,6 +31039,7 @@ class UI {
     if (modes.includes('sea')) {
       const seaBtn = this.ikoniTekstiNappi('purje', `Laivalla (${SEA_FARE} p)`, 'wide');
       seaBtn.addEventListener('click', () => {
+        this.travelExpanded = false;
         sfx.play('ferry');
         this.doAction(() => game.actionTravel('sea'));
       });
@@ -31033,6 +31057,7 @@ class UI {
     for (const link of gateways) {
       const gwBtn = this.ikoniTekstiNappi('kompassi', link.label, 'wide');
       gwBtn.addEventListener('click', async () => {
+        this.travelExpanded = false;
         sfx.play('flight');
         // Lentokalvo kuuluu vain maailmankartalle — mantereella lento
         // tapahtuu suoraan karttanäkymässä. Siirto tehdään ennen kalvoa,
@@ -31054,6 +31079,7 @@ class UI {
     for (const gate of countryGates) {
       const gateBtn = this.ikoniTekstiNappi('tahti', `${gate.label} — vaikea kysymys`, 'wide');
       gateBtn.addEventListener('click', () => {
+        this.travelExpanded = false;
         sfx.play('paper');
         this.doAction(() => game.actionGateQuiz(gate.index));
       });
@@ -32597,6 +32623,8 @@ class UI {
 
   doFly(destination) {
     const { game } = this;
+    // Matkavalinnan välivaihe ei saa jäädä päälle seuraavaan vuoroon.
+    this.travelExpanded = false;
     const player = game.player;
     const from = player.pos;
     const lahto = from.type === 'city' ? game.board.cityById.get(from.city) : null;
@@ -32605,19 +32633,24 @@ class UI {
     // Repliikki arvotaan ennen siirtoa, jotta rng-kutsu osuu samaan kohtaan
     // riippumatta siitä, näytetäänkö animaatio.
     const line = game.flightLine(destination);
-    sfx.play('flight');
     // Kalvollisella lennolla kohteen äänimaisema odottaa kalvon loppuun.
-    if (game.pack.id === 'maailma' && !this.reducedMotion) {
-      document.body.classList.add('flight-active');
+    if (game.pack.id === 'maailma') {
+      sfx.play('flight');
+      if (!this.reducedMotion) document.body.classList.add('flight-active');
     }
     this.run(() => game.actionFly(destination), {
       after: async () => {
         // Lentokalvo kuuluu vain maailmankartalle; mantereella nappula
-        // lentää suoraan karttanäkymässä.
+        // lentää suoraan karttanäkymässä — rauhallisemmin ja moottorin
+        // hurinan saattelemana (omistajan toive).
         if (game.pack.id === 'maailma') {
           await this.animateFlight(lahto?.name ?? '', kohde?.name ?? '', line, suunta);
+          await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
+        } else {
+          sfx.startFlight(MANNER_LENTO_MS);
+          await this.animatePawn(player, from, [player.pos], MANNER_LENTO_MS);
+          sfx.stopFlight();
         }
-        await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
       },
     });
   }
@@ -32728,7 +32761,33 @@ class UI {
       transform: 'scale(1.7)',
     }, kone);
 
-    if (line) this.showFlightLine(line);
+    // Reitti näytteistetään kerran valmiiksi: getPointAtLength jokaisella
+    // ruudunpäivityksellä oli raskas (etenkin iPadin Safarissa) ja teki
+    // koneen liikkeestä nykivän. Taulukosta poiminta on ilmaista.
+    const NAYTTEITA = 240;
+    const naytteet = [];
+    for (let i = 0; i <= NAYTTEITA; i++) {
+      naytteet.push(reitti.getPointAtLength((kokoPituus * i) / NAYTTEITA));
+    }
+    const kohta = (osuus) => {
+      const f = Math.min(NAYTTEITA - 0.001, Math.max(0, osuus * NAYTTEITA));
+      const i = Math.floor(f);
+      const j = f - i;
+      const p1 = naytteet[i];
+      const p2 = naytteet[i + 1];
+      return {
+        x: p1.x + (p2.x - p1.x) * j,
+        y: p1.y + (p2.y - p1.y) * j,
+        kulma: (Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180) / Math.PI,
+      };
+    };
+
+    // Repliikki ja Astu mantereelle -nappi asuvat samassa kelluvassa
+    // alaosassa: asettelu hoituu itsestään eikä napin osumakohtaa
+    // tarvitse laskea käsin.
+    const alaosa = html('div', 'flight-alaosa');
+    overlay.appendChild(alaosa);
+    if (line) this.showFlightLine(line, alaosa);
     // Potkurihurina koko kohtauksen ajaksi: nousee ja laskee sen mukana.
     sfx.startFlight(FLY_OVERLAY_MS);
 
@@ -32741,11 +32800,8 @@ class UI {
         const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
         reitti.style.strokeDashoffset = kokoPituus * (1 - e);
 
-        const p = reitti.getPointAtLength(kokoPituus * e);
-        // Suunta katsotaan hieman edempää, jotta kone osoittaa menosuuntaan.
-        const eteen = reitti.getPointAtLength(Math.min(kokoPituus, kokoPituus * e + 1));
-        const kulma = Math.atan2(eteen.y - p.y, eteen.x - p.x) * 180 / Math.PI;
-        kone.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${kulma})`);
+        const p = kohta(e);
+        kone.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${p.kulma})`);
 
         if (t < 1) requestAnimationFrame(askel);
         else resolve();
@@ -32759,22 +32815,11 @@ class UI {
     // Perillä kalvo jää odottamaan: lukuääni saa puhua rauhassa, ja
     // pelaaja astuu ulos itse valitsemallaan hetkellä.
     await new Promise((resolve) => {
-      const nappi = html('button', 'flight-exit', 'Astu ulos');
+      const nappi = html('button', 'flight-exit', 'Astu mantereelle');
       nappi.addEventListener('click', resolve, { once: true });
-      overlay.appendChild(nappi);
-      // Nappi asettuu repliikin alle eikä sen päälle; jos alle ei mahdu
-      // (kapealla ruudulla repliikki on korkea), nappi nousee tekstin
-      // yläpuolelle. Repliikki elää kartan mittasuhteiden mukaan, joten
-      // paikka lasketaan siitä.
-      if (this.flightLine && !this.flightLine.hidden) {
-        const rivi = this.flightLine.getBoundingClientRect();
-        const kalvo = overlay.getBoundingClientRect();
-        const alle = rivi.bottom - kalvo.top + 14;
-        const paalle = rivi.top - kalvo.top - 62;
-        const ylhaalta = alle + 54 <= kalvo.height ? alle : Math.max(8, paalle);
-        nappi.style.top = `${Math.round(ylhaalta)}px`;
-        nappi.style.bottom = 'auto';
-      }
+      // Nappi virtaa repliikin alle samassa alaosassa — osumakohta on
+      // aina täsmälleen siinä missä nappi näkyy.
+      alaosa.appendChild(nappi);
     });
 
     sfx.stopFlight();
@@ -32788,25 +32833,20 @@ class UI {
     if (!this.dead) this.render();
   }
 
-  /** Nuoren herran repliikki lennon ajaksi, kirjoituskoneella. */
-  showFlightLine(line) {
-    if (!this.flightLine) {
-      this.flightLine = html('p', 'flight-line');
-      this.mapPane.appendChild(this.flightLine);
-    }
-    // Sijainti lasketaan näkyvästä viewBoxista: rivi asettuu kartan
-    // alaosaan riippumatta laudan mittasuhteista.
-    const vb = this.svg.viewBox.baseVal;
-    const kohta = this.mapToPane({ x: vb.x + vb.width / 2, y: vb.y + vb.height * 0.86 });
-    this.flightLine.style.top = `${Math.round(kohta.y)}px`;
-    this.flightLine.style.left = `${Math.round(kohta.x)}px`;
-    this.flightLine.hidden = false;
-    this.flightLine.textContent = '';
+  /**
+   * Nuoren herran repliikki lennon ajaksi, kirjoituskoneella. Rivi elää
+   * kalvon kelluvassa alaosassa ja poistuu kalvon mukana.
+   */
+  showFlightLine(line, kotelo) {
+    this.flightLine = html('p', 'flight-line');
+    kotelo.appendChild(this.flightLine);
     this.typeText(this.flightLine, line, 'flight');
   }
 
   hideFlightLine() {
-    if (this.flightLine) this.flightLine.hidden = true;
+    // Rivi poistuu kalvon mukana; viite siivotaan, ettei kirjoitus jatku
+    // irronneeseen elementtiin.
+    this.flightLine = null;
   }
 
   /** Siirtää nappulaa askel kerrallaan annettua polkua pitkin. */
@@ -32953,7 +32993,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.44';
+const APP_VERSION = '2026-07-29.45';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

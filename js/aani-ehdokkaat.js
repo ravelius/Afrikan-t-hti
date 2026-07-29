@@ -201,17 +201,19 @@ export const EHDOKKAAT = {
     ],
   },
   'tehoste:step': {
-    otsikko: 'Askel kartalla',
-    oletus: 'assets/audio/efekti-askel.mp3',
+    otsikko: 'Askel kartalla (väliaskeleen kopina)',
+    oletus: 'assets/audio/efekti-naksu.mp3',
     ehdokkaat: [
+      { url: 'assets/audio/efekti-naksu.mp3', nimi: 'Nappulan kopina (matala tok) — ElevenLabs SFX' },
       { url: 'assets/audio/efekti-askel.mp3', nimi: 'Saappaan askel polulla — ElevenLabs SFX' },
       { url: null, nimi: 'Syntetisoitu' },
     ],
   },
   'tehoste:arrive': {
-    otsikko: 'Saapuminen kaupunkiin',
-    oletus: 'assets/audio/efekti-saapuminen.mp3',
+    otsikko: 'Saapuminen kaupunkiin (viimeinen kolaus)',
+    oletus: 'assets/audio/efekti-naksu.mp3',
     ehdokkaat: [
+      { url: 'assets/audio/efekti-naksu.mp3', nimi: 'Nappulan kolaus (korkea tik) — ElevenLabs SFX' },
       { url: 'assets/audio/efekti-saapuminen.mp3', nimi: 'Marimban kaksi nousevaa säveltä — ElevenLabs SFX' },
       { url: null, nimi: 'Syntetisoitu' },
     ],

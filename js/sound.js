@@ -576,6 +576,7 @@ class Sound {
    */
   playSlice(name, {
     dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0, tasavire = false,
+    vire = null,
   } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
@@ -583,8 +584,9 @@ class Sound {
     const src = ctx.createBufferSource();
     src.buffer = buf;
     // Vireheitto elävöittää kolahduksia, mutta vääristää mekaanisia ääniä
-    // (kirjoituskone kuulosti sen kanssa oudolta).
-    src.playbackRate.value = tasavire ? 1 : this.jitter(1, 0.05);
+    // (kirjoituskone kuulosti sen kanssa oudolta). Nimetty vire soittaa
+    // saman äänitteen matalampana tai korkeampana (nappulan tok/tik).
+    src.playbackRate.value = vire ? this.jitter(vire, 0.02) : (tasavire ? 1 : this.jitter(1, 0.05));
     const kesto = tail ?? dur;
     const iskut = isku ? this.sampleHits?.[name] : null;
     const alku = tail != null
@@ -640,8 +642,10 @@ const REAL_SAMPLES = {
   correct: { url: 'assets/audio/efekti-oikein.mp3', credit: 'ElevenLabs SFX' },
   wrong: { url: 'assets/audio/efekti-vaarin.mp3', credit: 'ElevenLabs SFX' },
   swipe: { url: 'assets/audio/efekti-pyyhkaisy.mp3', credit: 'ElevenLabs SFX' },
-  step: { url: 'assets/audio/efekti-askel.mp3', credit: 'ElevenLabs SFX' },
-  arrive: { url: 'assets/audio/efekti-saapuminen.mp3', credit: 'ElevenLabs SFX' },
+  // Nappulan liike: sama puinen naksu, väliaskel matalampana ja
+  // perillinen kolaus korkeampana (omistajan "tok-tok-tik").
+  step: { url: 'assets/audio/efekti-naksu.mp3', credit: 'ElevenLabs SFX' },
+  arrive: { url: 'assets/audio/efekti-naksu.mp3', credit: 'ElevenLabs SFX' },
   ferry: { url: 'assets/audio/efekti-laiva.mp3', credit: 'ElevenLabs SFX' },
   flight: { url: 'assets/audio/efekti-lento.mp3', credit: 'ElevenLabs SFX' },
   hint: { url: 'assets/audio/efekti-vihje.mp3', credit: 'ElevenLabs SFX' },
@@ -677,8 +681,8 @@ const REAL_PLAYERS = {
   correct: (s) => s.playSlice('correct', { dur: 1.5, gain: 0.4, alusta: true }),
   wrong: (s) => s.playSlice('wrong', { dur: 1.1, gain: 0.4, alusta: true }),
   swipe: (s) => s.playSlice('swipe', { dur: 0.8, gain: 0.3, alusta: true }),
-  step: (s) => s.playSlice('step', { dur: 0.7, gain: 0.25, alusta: true }),
-  arrive: (s) => s.playSlice('arrive', { dur: 1.3, gain: 0.35, alusta: true }),
+  step: (s) => s.playSlice('step', { dur: 0.5, gain: 0.3, alusta: true, vire: 0.82 }),
+  arrive: (s) => s.playSlice('arrive', { dur: 0.6, gain: 0.42, alusta: true, vire: 1.18 }),
   ferry: (s) => s.playSlice('ferry', { dur: 2.6, gain: 0.4, alusta: true }),
   flight: (s) => s.playSlice('flight', { dur: 2.1, gain: 0.35, alusta: true }),
   hint: (s) => s.playSlice('hint', { dur: 1.1, gain: 0.35, alusta: true }),

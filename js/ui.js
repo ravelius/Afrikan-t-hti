@@ -80,6 +80,8 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 // Animaatioiden rytmi millisekunteina.
 const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
+// Mantereen sisäinen lento liukuu rauhallisemmin moottorin hurinalla.
+const MANNER_LENTO_MS = 2800;
 // Lentoanimaation kesto: sen verran, että repliikin ehtii lukea.
 // Kalvolento saa kestää: matka on tarkoitus tuntea, ei ohittaa.
 const FLY_OVERLAY_MS = 4800;
@@ -1167,6 +1169,11 @@ export class UI {
     const hasSlow = modes.includes('sea') || flights.length > 0
       || gateways.length > 0 || countryGates.length > 0;
 
+    // Jos välivaiheeseen ei jää yhtään valintaa (esim. rahat eivät riitä
+    // lentoon eikä satamaa ole), palataan suoraan perusvalintoihin —
+    // pelkkä Takaisin-nappi ei ole näkymä.
+    if (this.travelExpanded && !hasSlow) this.travelExpanded = false;
+
     if (!this.travelExpanded) {
       this.turnStatus.textContent = 'Valitse matkustustapa.';
       // Kaikki vaiheen A napit mahtuvat aina yhteen riviin.
@@ -1206,6 +1213,7 @@ export class UI {
     if (modes.includes('sea')) {
       const seaBtn = this.ikoniTekstiNappi('purje', `Laivalla (${SEA_FARE} p)`, 'wide');
       seaBtn.addEventListener('click', () => {
+        this.travelExpanded = false;
         sfx.play('ferry');
         this.doAction(() => game.actionTravel('sea'));
       });
@@ -1223,6 +1231,7 @@ export class UI {
     for (const link of gateways) {
       const gwBtn = this.ikoniTekstiNappi('kompassi', link.label, 'wide');
       gwBtn.addEventListener('click', async () => {
+        this.travelExpanded = false;
         sfx.play('flight');
         // Lentokalvo kuuluu vain maailmankartalle — mantereella lento
         // tapahtuu suoraan karttanäkymässä. Siirto tehdään ennen kalvoa,
@@ -1244,6 +1253,7 @@ export class UI {
     for (const gate of countryGates) {
       const gateBtn = this.ikoniTekstiNappi('tahti', `${gate.label} — vaikea kysymys`, 'wide');
       gateBtn.addEventListener('click', () => {
+        this.travelExpanded = false;
         sfx.play('paper');
         this.doAction(() => game.actionGateQuiz(gate.index));
       });
@@ -2788,6 +2798,8 @@ export class UI {
 
   doFly(destination) {
     const { game } = this;
+    // Matkavalinnan välivaihe ei saa jäädä päälle seuraavaan vuoroon.
+    this.travelExpanded = false;
     const player = game.player;
     const from = player.pos;
     const lahto = from.type === 'city' ? game.board.cityById.get(from.city) : null;
@@ -2796,19 +2808,24 @@ export class UI {
     // Repliikki arvotaan ennen siirtoa, jotta rng-kutsu osuu samaan kohtaan
     // riippumatta siitä, näytetäänkö animaatio.
     const line = game.flightLine(destination);
-    sfx.play('flight');
     // Kalvollisella lennolla kohteen äänimaisema odottaa kalvon loppuun.
-    if (game.pack.id === 'maailma' && !this.reducedMotion) {
-      document.body.classList.add('flight-active');
+    if (game.pack.id === 'maailma') {
+      sfx.play('flight');
+      if (!this.reducedMotion) document.body.classList.add('flight-active');
     }
     this.run(() => game.actionFly(destination), {
       after: async () => {
         // Lentokalvo kuuluu vain maailmankartalle; mantereella nappula
-        // lentää suoraan karttanäkymässä.
+        // lentää suoraan karttanäkymässä — rauhallisemmin ja moottorin
+        // hurinan saattelemana (omistajan toive).
         if (game.pack.id === 'maailma') {
           await this.animateFlight(lahto?.name ?? '', kohde?.name ?? '', line, suunta);
+          await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
+        } else {
+          sfx.startFlight(MANNER_LENTO_MS);
+          await this.animatePawn(player, from, [player.pos], MANNER_LENTO_MS);
+          sfx.stopFlight();
         }
-        await this.animatePawn(player, from, [player.pos], FLIGHT_MS);
       },
     });
   }
@@ -2919,7 +2936,33 @@ export class UI {
       transform: 'scale(1.7)',
     }, kone);
 
-    if (line) this.showFlightLine(line);
+    // Reitti näytteistetään kerran valmiiksi: getPointAtLength jokaisella
+    // ruudunpäivityksellä oli raskas (etenkin iPadin Safarissa) ja teki
+    // koneen liikkeestä nykivän. Taulukosta poiminta on ilmaista.
+    const NAYTTEITA = 240;
+    const naytteet = [];
+    for (let i = 0; i <= NAYTTEITA; i++) {
+      naytteet.push(reitti.getPointAtLength((kokoPituus * i) / NAYTTEITA));
+    }
+    const kohta = (osuus) => {
+      const f = Math.min(NAYTTEITA - 0.001, Math.max(0, osuus * NAYTTEITA));
+      const i = Math.floor(f);
+      const j = f - i;
+      const p1 = naytteet[i];
+      const p2 = naytteet[i + 1];
+      return {
+        x: p1.x + (p2.x - p1.x) * j,
+        y: p1.y + (p2.y - p1.y) * j,
+        kulma: (Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180) / Math.PI,
+      };
+    };
+
+    // Repliikki ja Astu mantereelle -nappi asuvat samassa kelluvassa
+    // alaosassa: asettelu hoituu itsestään eikä napin osumakohtaa
+    // tarvitse laskea käsin.
+    const alaosa = html('div', 'flight-alaosa');
+    overlay.appendChild(alaosa);
+    if (line) this.showFlightLine(line, alaosa);
     // Potkurihurina koko kohtauksen ajaksi: nousee ja laskee sen mukana.
     sfx.startFlight(FLY_OVERLAY_MS);
 
@@ -2932,11 +2975,8 @@ export class UI {
         const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
         reitti.style.strokeDashoffset = kokoPituus * (1 - e);
 
-        const p = reitti.getPointAtLength(kokoPituus * e);
-        // Suunta katsotaan hieman edempää, jotta kone osoittaa menosuuntaan.
-        const eteen = reitti.getPointAtLength(Math.min(kokoPituus, kokoPituus * e + 1));
-        const kulma = Math.atan2(eteen.y - p.y, eteen.x - p.x) * 180 / Math.PI;
-        kone.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${kulma})`);
+        const p = kohta(e);
+        kone.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${p.kulma})`);
 
         if (t < 1) requestAnimationFrame(askel);
         else resolve();
@@ -2950,22 +2990,11 @@ export class UI {
     // Perillä kalvo jää odottamaan: lukuääni saa puhua rauhassa, ja
     // pelaaja astuu ulos itse valitsemallaan hetkellä.
     await new Promise((resolve) => {
-      const nappi = html('button', 'flight-exit', 'Astu ulos');
+      const nappi = html('button', 'flight-exit', 'Astu mantereelle');
       nappi.addEventListener('click', resolve, { once: true });
-      overlay.appendChild(nappi);
-      // Nappi asettuu repliikin alle eikä sen päälle; jos alle ei mahdu
-      // (kapealla ruudulla repliikki on korkea), nappi nousee tekstin
-      // yläpuolelle. Repliikki elää kartan mittasuhteiden mukaan, joten
-      // paikka lasketaan siitä.
-      if (this.flightLine && !this.flightLine.hidden) {
-        const rivi = this.flightLine.getBoundingClientRect();
-        const kalvo = overlay.getBoundingClientRect();
-        const alle = rivi.bottom - kalvo.top + 14;
-        const paalle = rivi.top - kalvo.top - 62;
-        const ylhaalta = alle + 54 <= kalvo.height ? alle : Math.max(8, paalle);
-        nappi.style.top = `${Math.round(ylhaalta)}px`;
-        nappi.style.bottom = 'auto';
-      }
+      // Nappi virtaa repliikin alle samassa alaosassa — osumakohta on
+      // aina täsmälleen siinä missä nappi näkyy.
+      alaosa.appendChild(nappi);
     });
 
     sfx.stopFlight();
@@ -2979,25 +3008,20 @@ export class UI {
     if (!this.dead) this.render();
   }
 
-  /** Nuoren herran repliikki lennon ajaksi, kirjoituskoneella. */
-  showFlightLine(line) {
-    if (!this.flightLine) {
-      this.flightLine = html('p', 'flight-line');
-      this.mapPane.appendChild(this.flightLine);
-    }
-    // Sijainti lasketaan näkyvästä viewBoxista: rivi asettuu kartan
-    // alaosaan riippumatta laudan mittasuhteista.
-    const vb = this.svg.viewBox.baseVal;
-    const kohta = this.mapToPane({ x: vb.x + vb.width / 2, y: vb.y + vb.height * 0.86 });
-    this.flightLine.style.top = `${Math.round(kohta.y)}px`;
-    this.flightLine.style.left = `${Math.round(kohta.x)}px`;
-    this.flightLine.hidden = false;
-    this.flightLine.textContent = '';
+  /**
+   * Nuoren herran repliikki lennon ajaksi, kirjoituskoneella. Rivi elää
+   * kalvon kelluvassa alaosassa ja poistuu kalvon mukana.
+   */
+  showFlightLine(line, kotelo) {
+    this.flightLine = html('p', 'flight-line');
+    kotelo.appendChild(this.flightLine);
     this.typeText(this.flightLine, line, 'flight');
   }
 
   hideFlightLine() {
-    if (this.flightLine) this.flightLine.hidden = true;
+    // Rivi poistuu kalvon mukana; viite siivotaan, ettei kirjoitus jatku
+    // irronneeseen elementtiin.
+    this.flightLine = null;
   }
 
   /** Siirtää nappulaa askel kerrallaan annettua polkua pitkin. */
