@@ -399,6 +399,13 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 /* Toiminnot lepäävät, kun animaatio on käynnissä. */
 .actions[data-busy] { opacity: 0.45; pointer-events: none; }
 
+/* Matkustustavan ensimmäinen vaihe: napit aina yhdessä rivissä. */
+.actions[data-rivi='yksi'] {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
 button {
   font: inherit;
   padding: 0.5rem 0.8rem;

@@ -99,10 +99,10 @@ const INTRO_FONT_MIN = 0.72;
 // (docs/tyolista-opukselle.md, paketti 3).
 const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, '
   + 'kukkarollinen puntia ja kulunut päiväkirja.\n\n'
-  + 'Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä." '
-  + 'Viimeinen lause päättyy kesken.\n\n'
-  + 'Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.\n\n'
-  + 'Menen heti ostamaan liput, mutta mistä kaupungista aloittaisin?';
+  + 'Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä."\n\n'
+  + 'Viimeinen sivu on revitty melkein kokonaan: "…en tajunnut, että siellä olikin…"\n\n'
+  + 'Mitä? Mitä hän oli löytänyt? Tämä pitää selvittää.\n\n'
+  + 'Menen heti ostamaan liput — mutta mistä kaupungista aloitan etsinnän?';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -893,6 +893,9 @@ export class UI {
   renderActions() {
     const { game } = this;
     this.actionsEl.textContent = '';
+    // Matkustustavan ensimmäinen vaihe latoo nappinsa aina yhteen riviin;
+    // muut näkymät (vaihe B, kysymykset) käyttävät tavallista ruudukkoa.
+    delete this.actionsEl.dataset.rivi;
     this.errorEl.hidden = true;
 
     if (game.phase === 'over') {
@@ -997,6 +1000,8 @@ export class UI {
 
     if (!this.travelExpanded) {
       this.turnStatus.textContent = 'Valitse matkustustapa.';
+      // Kaikki vaiheen A napit mahtuvat aina yhteen riviin.
+      this.actionsEl.dataset.rivi = 'yksi';
 
       if (modes.includes('land')) {
         const landBtn = this.iconButton('🥾', 'Jalan', modes.includes('stay') ? '' : 'primary');
@@ -1014,7 +1019,7 @@ export class UI {
       }
 
       if (modes.includes('stay')) {
-        const stayBtn = this.iconButton('🔍', 'Tutki paikka', 'primary');
+        const stayBtn = this.iconButton('🔍', 'Tutki', 'primary');
         stayBtn.addEventListener('click', () => {
           sfx.play('paper');
           this.doAction(() => game.actionTravel('stay'));
@@ -2344,6 +2349,9 @@ export class UI {
     const viive = (sana) => {
       if (slot !== 'intro') return speed;
       const perus = speed * (0.7 + Math.random() * 0.6);
+      // Revennyt katkelma jättää lukijan tyhjän päälle: pitkä hiljaisuus
+      // ennen kuin seuraava ajatus naksahtaa ruutuun.
+      if (/…"?$/.test(sana)) return perus + 1200 + Math.random() * 500;
       if (/[.!?]$/.test(sana)) return perus + 620 + Math.random() * 320;
       if (/[,;:—–]$/.test(sana)) return perus + 300 + Math.random() * 160;
       // Kirjoittaja pysähtyy välillä miettimään kesken virkkeenkin.
