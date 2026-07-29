@@ -584,6 +584,13 @@ export class Game {
   setDiary(pack) {
     const notes = pack.texts.diaries ?? (pack.texts.diary ? [pack.texts.diary] : []);
     if (!notes.length) return;
+    // VÄLIAIKAINEN: Tangerissa merkintä on aina ensimmäinen, jotta luetun
+    // puheen ja kirjoituskoneen yhdistelmää on helppo testata samalla
+    // tekstillä. Poistetaan, kun äänet on hyväksytty.
+    if (pack.id === 'africa' && this.player.pos.city === 'tanger') {
+      this.diaryNote = { packId: pack.id, pos: posKey(this.player.pos), text: notes[0] };
+      return;
+    }
     // Merkintä arvotaan pelin omalla satunnaisluvulla, jotta sama peli
     // toistuu tallennuksesta samanlaisena.
     this.diaryNote = {

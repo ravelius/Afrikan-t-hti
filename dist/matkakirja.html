@@ -24567,14 +24567,27 @@ const TYYPPI_EHDOKKAAT = {
     { url: 'https://cdn.freesound.org/previews/635/635103_10065335-lq.mp3', nimi: 'Tyyni aallokko — Eatyourburger, CC0' },
     { url: 'https://cdn.freesound.org/previews/848/848927_17398983-lq.mp3', nimi: 'Rantatyrsky — Benson_Arizona, CC BY-NC' },
     { url: 'https://cdn.freesound.org/previews/392/392664_4043130-lq.mp3', nimi: 'Satama yöllä (Lissabon) — corkob, CC0' },
+    { url: 'https://cdn.freesound.org/previews/411/411509_1661766-lq.mp3', nimi: 'Aallot lyövät kallioihin — felix.blume, CC0' },
+    { url: 'https://cdn.freesound.org/previews/573/573187_97550-lq.mp3', nimi: 'Kirkas rantahyöky — TRP, CC0' },
+    { url: 'https://cdn.freesound.org/previews/543/543819_6667441-lq.mp3', nimi: 'Isot aallot kivikkorannalla — Profispiesser, CC0' },
+    { url: 'https://cdn.freesound.org/previews/570/570907_11519060-lq.mp3', nimi: 'Laivan kansi merellä — bruno.auzet, CC0' },
   ],
   sademetsa: [
     { url: 'https://cdn.freesound.org/previews/818/818589_15983207-lq.mp3', nimi: 'Viidakko ja apinat — AlaskanMariner, CC BY' },
     { url: 'https://cdn.freesound.org/previews/812/812609_2309965-lq.mp3', nimi: 'Linnut metsässä — Alex_hears_things, CC0' },
+    { url: 'https://cdn.freesound.org/previews/410/410078_1661766-lq.mp3', nimi: 'Yösade ja ukkonen sademetsässä — felix.blume, CC0' },
+    { url: 'https://cdn.freesound.org/previews/407/407583_1661766-lq.mp3', nimi: 'Sademetsän linnut — felix.blume, CC0' },
+    { url: 'https://cdn.freesound.org/previews/253/253301_2409224-lq.mp3', nimi: 'Viidakon yö (Borneo) — RTB45, CC BY' },
+    { url: 'https://cdn.freesound.org/previews/486/486437_7266967-lq.mp3', nimi: 'Yösirkat viidakossa — FreeToUseSounds, CC BY' },
   ],
   savanni: [
     { url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3', nimi: 'Savannin yösirkat — AugustSandberg, CC0' },
     { url: 'https://cdn.freesound.org/previews/714/714271_14696146-lq.mp3', nimi: 'Kuiva tuulinen maisema — Metris, CC BY' },
+    { url: 'https://cdn.freesound.org/previews/277/277743_3808723-lq.mp3', nimi: 'Afrikan pensasmaa — CHRISFOPFILMS, CC0' },
+    { url: 'https://cdn.freesound.org/previews/504/504694_778707-lq.mp3', nimi: 'Masai-leirin luontoäänet — selcukartut, CC0' },
+    { url: 'https://cdn.freesound.org/previews/612/612318_13563349-lq.mp3', nimi: 'Virtahevot joella (Kruger) — noisymichael, CC BY' },
+    { url: 'https://cdn.freesound.org/previews/764/764981_15688695-lq.mp3', nimi: 'Sirkat yöllä (Etelä-Afrikka) — Christian.Combrinck, CC0' },
+    { url: 'https://cdn.freesound.org/previews/411/411996_7037-lq.mp3', nimi: 'Ukkosmyrsky Etelä-Afrikassa — tim.kahn, CC BY-NC' },
   ],
   ylanko: [
     { url: 'https://cdn.freesound.org/previews/577/577263_9827221-lq.mp3', nimi: 'Vuoristomaisema — BotanicalVan, CC0' },
@@ -27554,6 +27567,13 @@ class Game {
   setDiary(pack) {
     const notes = pack.texts.diaries ?? (pack.texts.diary ? [pack.texts.diary] : []);
     if (!notes.length) return;
+    // VÄLIAIKAINEN: Tangerissa merkintä on aina ensimmäinen, jotta luetun
+    // puheen ja kirjoituskoneen yhdistelmää on helppo testata samalla
+    // tekstillä. Poistetaan, kun äänet on hyväksytty.
+    if (pack.id === 'africa' && this.player.pos.city === 'tanger') {
+      this.diaryNote = { packId: pack.id, pos: posKey(this.player.pos), text: notes[0] };
+      return;
+    }
     // Merkintä arvotaan pelin omalla satunnaisluvulla, jotta sama peli
     // toistuu tallennuksesta samanlaisena.
     this.diaryNote = {
@@ -29047,8 +29067,7 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
   + 'Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä." '
   + 'Viimeinen lause päättyy kesken.\n\n'
   + 'Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.\n\n'
-  + 'Ostin lipun samana iltana. Mistä aloittaisin?\n\n'
-  + 'Napauta kaupunkia kartalla.';
+  + 'Ostin lipun samana iltana. Mistä aloittaisin?';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -29334,6 +29353,7 @@ class UI {
     stopPlaceStream();
     stopQuizMusic();
     this.stopIntroVoice();
+    this.stopDiaryVoice();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -30091,6 +30111,7 @@ class UI {
       this.factPlace.textContent = '';
       this.factText.textContent = '';
       this.factImage.hidden = true;
+      this.stopDiaryVoice();
       return;
     }
 
@@ -30104,6 +30125,7 @@ class UI {
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
       this.factImage.hidden = true;
+      this.stopDiaryVoice();
       this.typeText(this.factText, aikataulu.text);
       return;
     }
@@ -30119,6 +30141,10 @@ class UI {
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
       this.typeText(this.factText, note.text);
+      // Saapumismerkintä luettuna, jos sille on tuotettu puhe (ElevenLabs).
+      const luvut = packById(note.packId)?.texts?.diaries ?? [];
+      const idx = luvut.indexOf(note.text);
+      this.playDiaryVoice(idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}.mp3` : null);
       return;
     }
 
@@ -30131,6 +30157,7 @@ class UI {
       this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
+      this.stopDiaryVoice();
       this.typeText(this.factText, hint);
       return;
     }
@@ -30146,6 +30173,7 @@ class UI {
     const key = `${city.id}:${text}`;
     if (key === this.factKey) return;
     this.factKey = key;
+    this.stopDiaryVoice();
 
     // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
     const onRoute = player.pos.type === 'edge';
@@ -30578,6 +30606,30 @@ class UI {
   stopIntroVoice() {
     const vanha = this.introVoice;
     this.introVoice = null;
+    if (!vanha) return;
+    vanha.pause();
+    vanha.removeAttribute('src');
+  }
+
+  /**
+   * Saapumismerkinnän lukuääni. Soi kerran kun merkintä ilmestyy ja
+   * vaikenee, kun tietoruutu vaihtaa aihetta. Puuttuva tiedosto (esim.
+   * lauta jolle puhetta ei ole tuotettu) ohitetaan hiljaa.
+   */
+  playDiaryVoice(url) {
+    this.stopDiaryVoice();
+    if (!url || !sfx.enabled) return;
+    const audio = new Audio(url);
+    audio.volume = 0.9;
+    this.diaryVoice = audio;
+    audio.play().catch(() => {
+      if (this.diaryVoice === audio) this.diaryVoice = null;
+    });
+  }
+
+  stopDiaryVoice() {
+    const vanha = this.diaryVoice;
+    this.diaryVoice = null;
     if (!vanha) return;
     vanha.pause();
     vanha.removeAttribute('src');
@@ -31626,7 +31678,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.12';
+const APP_VERSION = '2026-07-29.13';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
