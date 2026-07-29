@@ -7,7 +7,7 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.40';
+const APP_VERSION = '2026-07-29.41';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -144,6 +144,28 @@ if (hasManifest && 'serviceWorker' in navigator && location.protocol.startsWith(
     navigator.serviceWorker.register('sw.js').catch(() => {
       /* offline-tuki ei ole käytettävissä — peli toimii silti */
     });
+  });
+
+  // Kotivalikkoon asennettu sovellus voi herätä viikkojen takaa samaan
+  // sivuun, jolloin uusi versio ei koskaan pääse käyttöön itsestään.
+  // Kun uusi palvelutyöntekijä ottaa ohjat, sivu ladataan kerran
+  // uudelleen — kesken oleva peli jatkuu tallennuksesta. Ensiasennuksessa
+  // ohjaimen ilmestyminen ei ole päivitys, joten silloin ei ladata.
+  let oliOhjain = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!oliOhjain) {
+      oliOhjain = true;
+      return;
+    }
+    location.reload();
+  });
+
+  // Päivitystarkistus aina, kun sovellus palaa esiin taustalta.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    navigator.serviceWorker.getRegistration()
+      .then((reg) => reg?.update())
+      .catch(() => { /* tarkistus epäonnistui — yritetään taas seuraavalla kerralla */ });
   });
 }
 
