@@ -64,12 +64,13 @@ button, .brand, .turn-pill, .player-chip, .fact-card h2 {
 /* --- sovelluskehys --- */
 
 .app {
-  position: relative;
-  height: 100dvh;
-  /* iPadin standalone-tilassa 100dvh voi jäädä todellista ruutua
-   * lyhyemmäksi ja alle jää tumma kaista — venytetään kehys aina
-   * vähintään rungon täyteen korkeuteen. */
-  min-height: 100%;
+  /* Kiinnitetään kehys suoraan ruudun reunoihin: iPadin standalone-
+   * tilassa sekä 100dvh että rungon 100 % jäivät todellista ruutua
+   * lyhyemmiksi ja alle jäi tumma kaista. Kiinteä asemointi kattaa
+   * koko näkymän joka selaimessa. */
+  position: fixed;
+  inset: 0;
+  height: auto;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   /* Kapealla ruudulla sisältö ei saa venyttää asettelua leveämmäksi. */
