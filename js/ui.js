@@ -239,7 +239,11 @@ export class UI {
     });
     document.getElementById('arrival-no').addEventListener('click', () => {
       this.closeArrival();
-      this.doAction(() => this.game.actionSkipQuiz());
+      // Kortti avataan nykyään Tutki-napista kesken vuoron, jolloin
+      // sulkeminen on pelkkä paluu kartalle — päiväkirja pysyy ennallaan.
+      // Vanha tallennus voi silti herätä tarjousvaiheeseen, jossa
+      // sulkeminen päättää vuoron.
+      if (this.game.phase === 'offer') this.doAction(() => this.game.actionSkipQuiz());
     });
 
     this.quizSketch = document.getElementById('quiz-sketch');
@@ -1187,7 +1191,9 @@ export class UI {
         const stayBtn = this.iconButton('suurennuslasi', 'Tutki', 'primary');
         stayBtn.addEventListener('click', () => {
           sfx.play('paper');
-          this.doAction(() => game.actionTravel('stay'));
+          // Tutki avaa ensin saapumiskortin (esittely, kuva ja Lue lisää) —
+          // peliin siirrytään vasta kortin omasta Tutki paikka -napista.
+          this.openArrival(game.cityOf());
         });
         this.actionsEl.appendChild(stayBtn);
       }
