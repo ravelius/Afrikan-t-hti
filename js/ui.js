@@ -98,7 +98,7 @@ const INTRO_TYPE_MS = 190;
 const QUIZ_TYPE_MS = 95;
 const QUIZ_PAUSE_MS = 700;
 // Avaustekstin kirjasinkoko sovitetaan kaistaan näiden rajojen sisällä.
-const INTRO_FONT_MAX = 1.02;
+const INTRO_FONT_MAX = 1.32;
 const INTRO_FONT_MIN = 0.72;
 // Omistajan päättämä avausteksti. ÄLÄ muokkaa ilman omistajan lupaa
 // (docs/tyolista-opukselle.md, paketti 3).
@@ -545,28 +545,11 @@ export class UI {
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
-    // Aloitusnäkymässä lauta ja avaustekstin kaista keskitetään pysty-
-    // suunnassa: yläreunaan naulattuna korkealle ruudulle (iPad ja iPhone
-    // pystyssä) jäi laudan alle valtava tyhjä pergamentti. Kaistalle
-    // taataan silti aina reilu kolmannes ruudusta, jotta avausteksti
-    // mahtuu — ahtaalla ruudulla lauta nousee takaisin ylemmäs.
+    // Aloitusnäkymässä lauta nostetaan ylös (omistajan valinta): alle
+    // jäävä kaista annetaan kokonaan avaustekstille, joka saa näin
+    // suuremman fontin. Pelissä sisältö keskitetään.
     const alkuun = this.game.phase === 'pickstart';
-    let vy;
-    if (alkuun) {
-      // Keskitetään itse lauta (ilman tekstikaistaa), jolloin tyhjä tila
-      // jakautuu tasan ylä- ja alapuolelle silmälle oikein.
-      const laudanKorkeus = box.h / (1 + INTRO_SPACE);
-      const ylakiinnitys = box.y - box.h * INTRO_TOP;
-      const keskitetty = box.y + laudanKorkeus / 2 - vh / 2;
-      const laudanPohja = box.y + laudanKorkeus;
-      // Tekstille vähintään reilu neljännes ruudusta, matalilla ruuduilla
-      // kiinteä minimi — muuten avausteksti ei mahdu edes pienimmällään.
-      const kaistaMin = Math.max(h * 0.28, 270);
-      const alinSallittu = laudanPohja - (vh * (h - kaistaMin)) / h;
-      vy = Math.min(ylakiinnitys, Math.max(keskitetty, alinSallittu));
-    } else {
-      vy = box.y + box.h / 2 - vh / 2;
-    }
+    const vy = alkuun ? box.y - box.h * INTRO_TOP : box.y + box.h / 2 - vh / 2;
     this.svg.setAttribute(
       'viewBox',
       `${box.x + box.w / 2 - vw / 2} ${vy} ${vw} ${vh}`,
@@ -604,8 +587,8 @@ export class UI {
     if (!kaista) return;
     let koko = INTRO_FONT_MAX;
     this.introText.style.fontSize = `${koko}rem`;
-    // Viisi askelta: pienempää kuin INTRO_FONT_MIN ei silti mennä.
-    for (let i = 0; i < 5 && this.introText.scrollHeight > kaista; i++) {
+    // Askelia riittävästi koko haarukkaan; INTRO_FONT_MIN on lattia.
+    for (let i = 0; i < 8 && this.introText.scrollHeight > kaista; i++) {
       koko = Math.max(INTRO_FONT_MIN, koko - 0.09);
       this.introText.style.fontSize = `${koko}rem`;
     }
