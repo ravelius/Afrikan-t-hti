@@ -25050,6 +25050,8 @@ for (const city of KAUPUNGIT.values()) {
     .filter((e) => !omat.some((o) => o.url === e.url));
   EHDOKKAAT[`kaupunki:${city.id}`] = {
     otsikko: `${city.name} — ${TYYPPI_NIMET[tyyppi] ?? tyyppi}`,
+    // Ryhmä äänistudion listaa varten: saman maiseman kaupungit yhdessä.
+    ryhma: TYYPPI_NIMET[tyyppi] ?? tyyppi,
     oletus: STRIIMIOLETUKSET[city.id] ?? null,
     ehdokkaat: [
       // null-osoite tarkoittaa syntetisoitua ambienssia.
@@ -25370,8 +25372,8 @@ class Sound {
       // sen — kalvo on auki niin kauan kuin pelaaja viipyy koneessa.
       src.connect(g).connect(this.bus);
       // Pitkissä äänityksissä alku on lähestymistä ja odottelua —
-      // hypätään suoraan lennon ytimeen (omistajan ohje: ~25 s kohdalta).
-      const alku = jet.duration > 40 ? 25 : 0;
+      // hypätään suoraan lennon ytimeen (omistajan ohje: ~45 s kohdalta).
+      const alku = jet.duration > 60 ? 45 : 0;
       // Jos kohtaus venyy äänitettä pidemmäksi, silmukka palaa samaan
       // kohtaan eikä äänitteen hiljaiseen alkuun.
       src.loopStart = alku;
@@ -27487,6 +27489,7 @@ const XP_HARD_ANSWER = 25;
 const XP_STAR = 100;
 const XP_PUZZLE = 25; // isoisän luonnoskirjan pulma ratkaistu
 const XP_EXPLORE = 15; // kaupungin tutkiminen ilman laattaa
+const EXPLORE_REWARD = 50; // löytöpalkkio oikeasta tutkimisvastauksesta
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 function questionLevel(question) {
@@ -28617,12 +28620,14 @@ class Game {
       return { ok: true, right: this.quiz.right };
     }
 
-    // Tutkiminen ilman laattaa: oikeasta kokemuspisteitä, väärästä ei
-    // rangaistusta. Laattaa ei ole eikä tule.
+    // Tutkiminen ilman laattaa: oikeasta löytöpalkkio ja kokemuspisteitä,
+    // väärästä ei rangaistusta. Laattaa ei ole eikä tule.
     if (this.quiz.explore) {
       if (this.quiz.right) {
         this.awardXp(p, XP_EXPLORE);
-        this.say(p.id, `★ ${p.name} tutki paikkaa kaupungissa ${city.name} ja vastasi oikein (+${XP_EXPLORE} kp).`);
+        p.money += EXPLORE_REWARD;
+        this.say(p.id, `★ ${p.name} tutki paikkaa kaupungissa ${city.name} ja vastasi oikein (+${EXPLORE_REWARD} puntaa, +${XP_EXPLORE} kp).`);
+        this.emit('aid', `Löytöpalkkio +${EXPLORE_REWARD} puntaa`, { icon: '💰' });
       } else {
         const oikea = this.quiz.options[this.quiz.correct];
         this.say(p.id, `${p.name} vastasi väärin — oikea vastaus oli "${oikea}".`);
@@ -31439,6 +31444,8 @@ class UI {
         } else if (quiz.right && found) {
           this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));
           body.appendChild(html('strong', '', `Löysit: ${found.name}`));
+        } else if (quiz.right && quiz.explore) {
+          body.appendChild(html('strong', '', `Oikein! Löytöpalkkio +${EXPLORE_REWARD} puntaa.`));
         } else if (quiz.right) {
           body.appendChild(html('strong', '', 'Oikein!'));
         } else {
@@ -32260,7 +32267,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.27';
+const APP_VERSION = '2026-07-29.29';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

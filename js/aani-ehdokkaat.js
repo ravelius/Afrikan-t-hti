@@ -211,6 +211,8 @@ for (const city of KAUPUNGIT.values()) {
     .filter((e) => !omat.some((o) => o.url === e.url));
   EHDOKKAAT[`kaupunki:${city.id}`] = {
     otsikko: `${city.name} — ${TYYPPI_NIMET[tyyppi] ?? tyyppi}`,
+    // Ryhmä äänistudion listaa varten: saman maiseman kaupungit yhdessä.
+    ryhma: TYYPPI_NIMET[tyyppi] ?? tyyppi,
     oletus: STRIIMIOLETUKSET[city.id] ?? null,
     ehdokkaat: [
       // null-osoite tarkoittaa syntetisoitua ambienssia.

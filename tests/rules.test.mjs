@@ -30,7 +30,7 @@ import {
   QUIZ_SECONDS, SEA_FARE, HINT_EVERY_TURNS,
   XP_NEW_CITY, XP_NEW_BOARD, XP_HARD_ANSWER, XP_STAR,
   TURN_HOURS, RECORD_DAYS, XP_RECORD, timeOfDayName,
-  FORM_WEIGHTS, PHOTO_CHOICES, XP_EXPLORE, XP_PUZZLE,
+  FORM_WEIGHTS, PHOTO_CHOICES, XP_EXPLORE, XP_PUZZLE, EXPLORE_REWARD,
 } from '../js/game.js';
 import {
   articleUrl, BAD_IMAGE, fetchImage, fetchSummary, parseArticle, parseSummary,
@@ -2343,7 +2343,7 @@ test('laatatonta kaupunkia voi tutkia kerran: kokemuspisteet, ei laattaa', () =>
   const rahaEnnen = p.money;
   game.answerQuiz(game.quiz.correct);
   assert.equal((p.xp ?? 0) - xpEnnen, XP_EXPLORE, 'oikeasta saa kokemuspisteitä');
-  assert.equal(p.money, rahaEnnen, 'tutkiminen ei liikuta rahaa');
+  assert.equal(p.money - rahaEnnen, EXPLORE_REWARD, 'oikeasta saa löytöpalkkion');
   assert.ok(!game.quiz.found, 'laattaa ei käänny');
   game.closeQuiz();
 
