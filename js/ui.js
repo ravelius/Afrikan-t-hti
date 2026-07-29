@@ -545,11 +545,20 @@ export class UI {
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
-    // Aloitusnäkymässä lauta nostetaan ylös (omistajan valinta): alle
-    // jäävä kaista annetaan kokonaan avaustekstille, joka saa näin
-    // suuremman fontin. Pelissä sisältö keskitetään.
+    // Aloitusnäkymässä lauta on ennen Aloita seikkailu -nappia keskellä
+    // ruutua (pystyruudulla alaosa ammotti muuten tyhjänä), ja nousee
+    // portin auettua ylös, jolloin alle jäävä kaista annetaan kokonaan
+    // avaustekstille suurella fontilla. Pelissä sisältö keskitetään.
     const alkuun = this.game.phase === 'pickstart';
-    const vy = alkuun ? box.y - box.h * INTRO_TOP : box.y + box.h / 2 - vh / 2;
+    let vy;
+    if (alkuun && !this.aloitettu) {
+      const laudanKorkeus = box.h / (1 + INTRO_SPACE);
+      vy = box.y + laudanKorkeus / 2 - vh / 2;
+    } else if (alkuun) {
+      vy = box.y - box.h * INTRO_TOP;
+    } else {
+      vy = box.y + box.h / 2 - vh / 2;
+    }
     this.svg.setAttribute(
       'viewBox',
       `${box.x + box.w / 2 - vw / 2} ${vy} ${vw} ${vh}`,
@@ -1888,6 +1897,8 @@ export class UI {
     nappi.addEventListener('click', () => {
       this.aloitettu = true;
       this.suljeAloitusportti();
+      // Lauta siirtyy keskeltä ylös tekstin tieltä heti portin auettua.
+      this.fitViewBox();
       this.render();
     });
     portti.appendChild(nappi);
