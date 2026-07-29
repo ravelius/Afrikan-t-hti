@@ -27053,6 +27053,7 @@ const XP_NEW_BOARD = 50;
 const XP_HARD_ANSWER = 25;
 const XP_STAR = 100;
 const XP_PUZZLE = 25; // isoisän luonnoskirjan pulma ratkaistu
+const XP_EXPLORE = 15; // kaupungin tutkiminen ilman laattaa
 
 // Kysymyksen vaikeustaso: 1 = helppo, 2 = perus (oletus), 3 = vaikea.
 function questionLevel(question) {
@@ -27138,6 +27139,7 @@ class Game {
     this.eventCard = null;
     // Pulmat avautuvat kerran pelissä: avaimena 'pakka:kaupunki'.
     this.puzzlesSeen = new Set();
+    this.explored = new Set(); // tutkitut laatattomat kaupungit (pack:city)
     this.puzzlePrevPhase = null;
     // Isoisän aikataulu: näytetty rivi ja jo nähtyjen avaimet.
     this.scheduleNote = null;
@@ -27728,16 +27730,64 @@ class Game {
   }
 
   /**
-   * Saapumiskortti tarjotaan, kun kaupungissa on laatta TAI näkemätön
-   * pulma. Pulma ei enää hyppää ruudulle itsestään laskeuduttaessa —
-   * se aukeaa vasta Tutki paikka -napista.
+   * Saapumiskortti tarjotaan, kun kaupungissa on laatta, näkemätön pulma
+   * TAI tutkimatonta tutkittavaa. Pulma ei hyppää ruudulle itsestään —
+   * kaikki aukeaa vasta Tutki paikka -napista.
    */
   offerQuiz() {
     const city = this.cityOf();
     if (!city) return false;
-    if (!this.tokens.has(city.id) && !this.pendingPuzzle()) return false;
+    if (!this.tokens.has(city.id) && !this.pendingPuzzle() && !this.canExplore(city)) {
+      return false;
+    }
     this.phase = 'offer';
     return true;
+  }
+
+  /**
+   * Voiko kaupunkia tutkia ilman laattaa: kerran pelissä, jos kysyttävää
+   * on. Näin myös lähtökaupungit (Tanger, Kairo) ja jo tyhjennetyt
+   * kaupungit tarjoavat tutkimista — palkintona on tietoa ja
+   * kokemuspisteitä, ei laattaa.
+   */
+  canExplore(city) {
+    if (!city || this.tokens.has(city.id)) return false;
+    if (this.explored.has(`${this.pack.id}:${city.id}`)) return false;
+    const omat = this.pack.questions[city.id] ?? [];
+    const yleiset = this.pack.questions.general ?? [];
+    return omat.length + yleiset.length > 0;
+  }
+
+  /**
+   * Avaa tutkimiskysymyksen kaupungissa, jossa ei ole laattaa. Aina
+   * monivalinta: väittämät, tapahtumat ja valokuvat kuuluvat
+   * aarrepysähdyksiin. Merkitään tutkituksi heti, ettei samaa kaupunkia
+   * voi lypsää uudelleen yrittämällä.
+   */
+  openExplore(city) {
+    this.explored.add(`${this.pack.id}:${city.id}`);
+    const question = this.pickQuestion(city.id, this.player.quizLevel);
+    const order = this.shuffledOrder(question.options.length);
+    this.quiz = {
+      cityId: city.id,
+      hard: false,
+      explore: true,
+      frame: this.pickAsker(city),
+      question: question.q,
+      fact: question.fact,
+      source: sourceList(question.source),
+      options: order.map((i) => question.options[i]),
+      correct: order.indexOf(question.correct),
+      hint: question.hint ?? null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
   }
 
   /** Ohittaa tietovisan ja päättää vuoron. */
@@ -27800,7 +27850,12 @@ class Game {
     if (!hard && form === null && this.pendingPuzzle()) return this.openPuzzle();
 
     const city = this.tokenHere();
-    if (!city) return { ok: false, error: 'Täällä ei ole laattaa' };
+    if (!city) {
+      // Ilman laattaa kaupunkia voi silti tutkia kerran pelissä.
+      const nykyinen = this.cityOf();
+      if (!hard && nykyinen && this.canExplore(nykyinen)) return this.openExplore(nykyinen);
+      return { ok: false, error: 'Täällä ei ole laattaa' };
+    }
     if (hard && !this.hardAvailable(city.id)) {
       return { ok: false, error: 'Täällä ei ole vaikeita kysymyksiä' };
     }
@@ -28116,6 +28171,19 @@ class Game {
         this.say(p.id, `${p.name} ratkaisi isoisän pulman (+${XP_PUZZLE} kp).`);
       } else {
         this.say(p.id, `${p.name} ei ratkaissut isoisän pulmaa — isoisä olisi ollut armollinen.`);
+      }
+      return { ok: true, right: this.quiz.right };
+    }
+
+    // Tutkiminen ilman laattaa: oikeasta kokemuspisteitä, väärästä ei
+    // rangaistusta. Laattaa ei ole eikä tule.
+    if (this.quiz.explore) {
+      if (this.quiz.right) {
+        this.awardXp(p, XP_EXPLORE);
+        this.say(p.id, `★ ${p.name} tutki paikkaa kaupungissa ${city.name} ja vastasi oikein (+${XP_EXPLORE} kp).`);
+      } else {
+        const oikea = this.quiz.options[this.quiz.correct];
+        this.say(p.id, `${p.name} vastasi väärin — oikea vastaus oli "${oikea}".`);
       }
       return { ok: true, right: this.quiz.right };
     }
@@ -28586,6 +28654,7 @@ class Game {
       lastForm: this.lastForm,
       eventCard: this.eventCard,
       puzzlesSeen: [...this.puzzlesSeen],
+      explored: [...this.explored],
       scheduleNote: this.scheduleNote,
       scheduleShown: [...this.scheduleShown],
       recordNoted: this.recordNoted,
@@ -28662,6 +28731,7 @@ class Game {
     game.lastForm = data.lastForm ?? null;
     game.eventCard = data.eventCard ?? null;
     game.puzzlesSeen = new Set(data.puzzlesSeen ?? []);
+    game.explored = new Set(data.explored ?? []);
     // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
     // yhtään isoisän aikataulurivistä.
     game.scheduleNote = data.scheduleNote ?? null;
@@ -31551,7 +31621,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.10';
+const APP_VERSION = '2026-07-29.11';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
