@@ -1742,6 +1742,9 @@ body[data-mode] .rail > * { pointer-events: auto; }
  * (viewport-fit=cover), joten alas ei jää tyhjää tummaa raitaa — ja
  * manner keskittyy koko korkeuteen. */
 body[data-mode] .stage { padding-bottom: 0; }
+/* Myös sovelluskehyksen oma turva-alue pois alhaalta: kartta saa jatkua
+ * koti-indikaattorin alle, ja kelluvat kortit väistävät sitä itse. */
+body[data-mode] .app { padding-bottom: 0; }
 body[data-mode] .map-pane {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
