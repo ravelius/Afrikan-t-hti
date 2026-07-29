@@ -59,13 +59,45 @@
      tarinan kaanon ja työkaluideat. Sivu ei ole linkitetty pelistä.</p>
 
   <nav id="valilehdet">
+    <button data-tab="etusivu">Etusivu</button>
     <button data-tab="aanet">Äänet</button>
+    <button data-tab="pelit">Peli-ideat</button>
     <button data-tab="lahteet">Lähteet</button>
     <button data-tab="moottorit">Moottorit</button>
     <button data-tab="maanosat">Maanosat</button>
     <button data-tab="tarina">Tarina</button>
-    <button data-tab="ideat">Ideat</button>
+    <button data-tab="ideat">Työkalut</button>
   </nav>
+
+  <!-- ETUSIVU -->
+  <section id="tab-etusivu" hidden>
+    <h2>Odottaa omistajaa</h2>
+    <ul>
+      <li>Äänistudion valinnat loppuun ja "Kopioi valinnat" -tuloste Claudelle → voittajat kovakoodataan.</li>
+      <li>Efektipilottien kuuntelu (napin klikkaus, paperi, kolikot, oikein, väärin — studion Tehosteet-lohko).</li>
+      <li>Uuden v3-intron ja avauslennon puheen arviointi (tempo, tunnelma).</li>
+      <li>Maiden rajakokeilun arviointi: pidetäänkö, vahvistetaanko vai pois?</li>
+      <li>ElevenLabs-avaimen kierrätys, kun generoinnit ovat valmiit.</li>
+    </ul>
+    <h2>Työjonossa (Claude)</h2>
+    <ul>
+      <li>Tangerin päiväkirjan testilukon poisto, kun äänet on hyväksytty.</li>
+      <li>Seuraava työkalu: kartta-apuri tai kehityspaneeli (?dev=1) — ks. Työkalut-välilehti.</li>
+      <li>Aineistotutkimus-minipelin suunnittelu yhdessä (ks. Peli-ideat).</li>
+      <li>Opus-työlista: paketti 18 (Katso kuva -linkit) ja 19 (matkamuistot).</li>
+    </ul>
+    <h2>Omat muistiinpanot</h2>
+    <p>Vapaa kenttä ideoille — tallentuu tähän selaimeen itsestään.</p>
+    <textarea id="muistio" style="width:100%;max-width:46rem;min-height:8rem"></textarea>
+  </section>
+
+  <!-- PELI-IDEAT -->
+  <section id="tab-pelit" hidden>
+    <p>Minipelit löytöjen takana. Alkuperäinen idea lähti tietovisasta —
+       nyt muotoja on jo useita ja niitä kehitellään lisää. Tänne kirjataan
+       sekä käytössä olevat että ideat, joita mietitään yhdessä.</p>
+    <div id="peli-lista"></div>
+  </section>
 
   <!-- ÄÄNET -->
   <section id="tab-aanet" hidden>
@@ -154,7 +186,62 @@
       history.replaceState(null, '', `#${tab}`);
     };
     for (const nappi of napit) nappi.addEventListener('click', () => nayta(nappi.dataset.tab));
-    nayta(location.hash.slice(1) || 'aanet');
+    nayta(location.hash.slice(1) || 'etusivu');
+
+    // --- etusivun muistio ---------------------------------------------------
+    const muistio = document.getElementById('muistio');
+    try { muistio.value = localStorage.getItem('matkakirja-muistio') ?? ''; } catch { /* ei säily */ }
+    muistio.addEventListener('input', () => {
+      try { localStorage.setItem('matkakirja-muistio', muistio.value); } catch { /* ei säily */ }
+    });
+
+    // --- peli-ideat ---------------------------------------------------------
+    // tila: kaytossa | ideoitava (mietitään yhdessä) | idea
+    const PELIT = [
+      { nimi: 'Tietovisa (monivalinta)', tila: 'kaytossa',
+        kuvaus: 'Perusmuoto aarrekaupungeissa: paikallinen kysyjä esittää kysymyksen, neljä vaihtoehtoa, 30 s. Vihje ja 50:50 ostettavissa.' },
+      { nimi: 'Isoisän väittämä', tila: 'kaytossa',
+        kuvaus: 'Päiväkirjan väite vuodelta 1873 — pitääkö yhä paikkansa? Kaksi vaihtoehtoa; pelin ydinteema (vanha maailma vs. nykyaika) tiivistettynä.' },
+      { nimi: 'Valokuvakysymys', tila: 'kaytossa',
+        kuvaus: 'Matkavalokuvaajan vedos: mistä kaupungista kuva on? Kuvat haetaan Wikipediasta lennossa.' },
+      { nimi: 'Isoisän luonnoskirjan pulmat', tila: 'kaytossa',
+        kuvaus: 'Piirrospäättelyt (naksutuskieli, vesileilit ym.) ilman kelloa; selite ja ostettava vihje. Viisi pulmaa Afrikassa.' },
+      { nimi: 'Tapahtumakortti', tila: 'kaytossa',
+        kuvaus: 'Ei kysymys vaan käänne: kyyti, viivästys, rahalöytö. Rytmittää matkaa.' },
+      { nimi: 'Rosvon kaksintaistelu', tila: 'kaytossa',
+        kuvaus: 'Kahdeksan vaihtoehtoa, kova panos. Hevosenkengällä ohitus.' },
+      { nimi: 'Tietoportti', tila: 'kaytossa',
+        kuvaus: 'Vaikea kysymys avaa maan laudan (esim. Helsinki → Suomi) ilmaiseksi.' },
+      { nimi: 'Tutkiminen', tila: 'kaytossa',
+        kuvaus: 'Laatattomatkin kaupungit voi tutkia kerran: palkintona tietoa ja kokemuspisteitä.' },
+      { nimi: 'Aineistotutkimus', tila: 'ideoitava',
+        kuvaus: 'Omistajan idea: pelaaja saa ensin tutkia aineistoa (esim. museon kuvakokoelman poiminta, vanha kartta tai päiväkirjan aukeama) niin kauan kuin haluaa. Kun hän on valmis, alkaa kysymys- tai pulmasarja aineiston pohjalta. Lisämaksusta pääsee kurkkaamaan aineistoa kesken pelin, ja aikaraja on tavallista pidempi.',
+        huomiot: 'Sopii museo-API-lähteisiin (Met, Smithsonian) — aineisto voi olla aidosti eri joka kerralla. Palkinnoksi sopisi matkamuisto.' },
+      { nimi: 'Lähikuvatunnistus', tila: 'idea',
+        kuvaus: 'Zoomattu yksityiskohta esineestä, kartasta tai rakennuksesta — mikä se on tai missä se sijaitsee? Kuva laajenee vihje vihjeeltä.' },
+      { nimi: 'Aikajana', tila: 'idea',
+        kuvaus: 'Järjestä tapahtumat tai keksinnöt aikajärjestykseen (esim. 3–5 korttia raahaten).' },
+      { nimi: 'Äänitunnistus', tila: 'idea',
+        kuvaus: 'Kuuntele ääni — minkä eläimen tai paikan ääni on kyseessä? xeno-canton lintuäänet alueittain sopisivat suoraan.' },
+      { nimi: 'Yhdistelypeli', tila: 'idea',
+        kuvaus: 'Yhdistä parit: kieli ja maa, ruoka ja kaupunki, lippu ja valtio.' },
+      { nimi: 'Salakirjoitus', tila: 'idea',
+        kuvaus: 'Isoisän koodattu rivi puretaan yksinkertaisella avaimella — kytkeytyy revityn sivun mysteeriin.' },
+      { nimi: 'Basaaritinkiminen', tila: 'idea',
+        kuvaus: 'Neuvottelupeli kauppiaan kanssa: osta matkamuisto oikeaan hintaan. Rahapeli, ei tietopeli — vaihtelua rytmiin.' },
+      { nimi: 'Muistipeli', tila: 'idea',
+        kuvaus: 'Matkamuistojen tai laattojen parit lyhyenä muistipelinä — kevyt välipala nuoremmille pelaajille.' },
+    ];
+    const peliLista = document.getElementById('peli-lista');
+    const PELITILAT = { kaytossa: 'käytössä', ideoitava: 'ideoidaan yhdessä seuraavaksi', idea: 'idea' };
+    for (const peli of PELIT) {
+      const k = document.createElement('div');
+      k.className = 'kortti';
+      k.innerHTML = `
+        <h3>${peli.nimi} <span class="tila ${peli.tila === 'kaytossa' ? 'kaytossa' : ''}">${PELITILAT[peli.tila]}</span></h3>
+        <p>${peli.kuvaus}</p>${peli.huomiot ? `<p class="meta">${peli.huomiot}</p>` : ''}`;
+      peliLista.appendChild(k);
+    }
 
     // --- lähteet ------------------------------------------------------------
     // tila: kaytossa | kokeiltava | idea. Lisenssi on lähteen pääsääntö —
