@@ -379,15 +379,18 @@ tämä teksti (kirjoituskoneella naksuen, kolme kappaletta):
 > kukkarollinen puntia ja kulunut päiväkirja.
 >
 > Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä."
-> Viimeinen lause päättyy kesken.
 >
-> Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.
+> Viimeinen sivu on revitty melkein kokonaan: "…en tajunnut, että siellä olikin…"
 >
-> Menen heti ostamaan liput, mutta mistä kaupungista aloittaisin?
+> Mitä? Mitä hän oli löytänyt? Tämä pitää selvittää.
+>
+> Menen heti ostamaan liput — mutta mistä kaupungista aloitan etsinnän?
 
-(Päivitetty 29.7.2026 omistajan pyynnöstä: "Napauta kaupunkia kartalla"
--rivi pois ja loppulause muotoon "Menen heti ostamaan liput, mutta mistä
-kaupungista aloittaisin?")
+(Päivitetty 29.7.2026 omistajan kanssa yhdessä: revitty sivu näyttää
+katkoksen konkreettisesti, eikä pääaarretta nimetä — se on "jotain
+suurempaa", joka jää pelin selvitettäväksi. Irti revitty sivu on
+mahdollinen tuleva juonikoukku. "Napauta kaupunkia kartalla" -rivi
+poistettu.)
 
 (Päivitetty 27.7.2026 omistajan pyynnöstä: ei mainintaa Afrikasta, koska
 aloituspaikan saa valita vapaasti. Isoisän 80 päivän ennätys mainitaan —
