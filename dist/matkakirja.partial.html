@@ -25027,7 +25027,16 @@ const EHDOKKAAT = {
 
 // Jokainen Afrikan kaupunki listalle: paikkakohtaiset äänitykset ensin,
 // sitten maisematyypin yhteiset ehdokkaat.
-for (const city of AFRICA.cities) {
+// Kaikkien lautojen kaupungit, joilla on äänimaisematyyppi: uusi manner
+// ilmestyy viritysivulle heti, kun sen kaupungeille merkitään tyypit.
+// Sama kaupunki usealla laudalla (esim. Kairo) on yksi paikka.
+const KAUPUNGIT = new Map();
+for (const pack of PACKS) {
+  for (const city of pack.cities) {
+    if (city.ambience && !KAUPUNGIT.has(city.id)) KAUPUNGIT.set(city.id, city);
+  }
+}
+for (const city of KAUPUNGIT.values()) {
   const tyyppi = city.ambience;
   if (!tyyppi) continue;
   const omat = KAUPUNKIKOHTAISET[city.id] ?? [];
@@ -32249,7 +32258,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.25';
+const APP_VERSION = '2026-07-29.26';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

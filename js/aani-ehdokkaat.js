@@ -9,7 +9,7 @@
 // lisäksi juuri siitä paikasta tehtyjä äänityksiä. `oletus: null`
 // tarkoittaa, että ilman valintaa soi syntetisoitu ambienssi.
 
-import { AFRICA } from './packs/africa.js';
+import { PACKS } from './pack.js';
 
 const AVAIN = 'matkakirja-aanivalinnat';
 
@@ -194,7 +194,16 @@ export const EHDOKKAAT = {
 
 // Jokainen Afrikan kaupunki listalle: paikkakohtaiset äänitykset ensin,
 // sitten maisematyypin yhteiset ehdokkaat.
-for (const city of AFRICA.cities) {
+// Kaikkien lautojen kaupungit, joilla on äänimaisematyyppi: uusi manner
+// ilmestyy viritysivulle heti, kun sen kaupungeille merkitään tyypit.
+// Sama kaupunki usealla laudalla (esim. Kairo) on yksi paikka.
+const KAUPUNGIT = new Map();
+for (const pack of PACKS) {
+  for (const city of pack.cities) {
+    if (city.ambience && !KAUPUNGIT.has(city.id)) KAUPUNGIT.set(city.id, city);
+  }
+}
+for (const city of KAUPUNGIT.values()) {
   const tyyppi = city.ambience;
   if (!tyyppi) continue;
   const omat = KAUPUNKIKOHTAISET[city.id] ?? [];
