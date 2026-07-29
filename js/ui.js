@@ -230,10 +230,21 @@ export class UI {
     this.factImage.addEventListener('click', () => {
       if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
     });
-    // Kaiutin lukee koko merkinnän — oletuksena luetaan vain ensimmäinen
-    // lause, ettei ääntä tule joka saapumisella liikaa.
+    // Kaiutin jatkaa merkinnän luentaa siitä, mihin se pysähtyi
+    // ensimmäisen virkkeen jälkeen — ja toimii myös taukonappina.
     this.factKuuntele = document.getElementById('fact-kuuntele');
     this.factKuuntele.addEventListener('click', () => {
+      const audio = this.diaryVoice;
+      if (audio) {
+        if (audio.paused) {
+          audio.jatkettu = true; // automaattinen pysäytys ei enää koske
+          audio.play().catch(() => {});
+        } else {
+          audio.pause();
+        }
+        return;
+      }
+      // Ääni ehti sulkeutua (esim. korttien vaihto) — aloitetaan alusta.
       if (this.diaryFullUrl) this.playDiaryVoice(this.diaryFullUrl);
     });
 
@@ -1295,13 +1306,14 @@ export class UI {
       this.typeText(lihava, eka, 'fact', () => {
         if (loput) this.typeText(jatko, loput, 'fact');
       });
-      // Ääneen luetaan vain ensimmäinen lause — koko merkinnän saa
-      // kaiutinnapista. Näin ääntä ei tule liikaa joka saapumisella.
+      // Luenta pysähtyy ensimmäisen virkkeen jälkeiseen hengähdykseen —
+      // kaiutin jatkaa samasta kohdasta. Näin ääntä ei tule liikaa,
+      // mutta koko merkintä on yhden painalluksen päässä.
       const luvut = packById(note.packId)?.texts?.diaries ?? [];
       const idx = luvut.indexOf(note.text);
       this.diaryFullUrl = idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}.mp3` : null;
       this.factKuuntele.hidden = idx < 0;
-      this.playDiaryVoice(idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}-alku.mp3` : null);
+      this.playDiaryVoice(this.diaryFullUrl, { ekaLauseeseen: true });
       return;
     }
 
@@ -1809,16 +1821,74 @@ export class UI {
    * Saapumismerkinnän lukuääni. Soi kerran kun merkintä ilmestyy ja
    * vaikenee, kun tietoruutu vaihtaa aihetta. Puuttuva tiedosto (esim.
    * lauta jolle puhetta ei ole tuotettu) ohitetaan hiljaa.
+   * `ekaLauseeseen` pysäyttää toiston ensimmäisen virkkeen jälkeiseen
+   * hiljaisuuteen — kaiutinnappi jatkaa samasta kohdasta.
    */
-  playDiaryVoice(url) {
+  playDiaryVoice(url, { ekaLauseeseen = false } = {}) {
     this.stopDiaryVoice();
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
     audio.volume = 0.9;
     this.diaryVoice = audio;
+    if (ekaLauseeseen) {
+      this.lauseTauko(url).then((raja) => {
+        if (this.diaryVoice !== audio || raja == null) return;
+        const vahti = () => {
+          if (audio.jatkettu) {
+            audio.removeEventListener('timeupdate', vahti);
+            return;
+          }
+          if (audio.currentTime >= raja) {
+            audio.pause();
+            audio.removeEventListener('timeupdate', vahti);
+          }
+        };
+        audio.addEventListener('timeupdate', vahti);
+      });
+    }
     audio.play().catch(() => {
       if (this.diaryVoice === audio) this.diaryVoice = null;
     });
+  }
+
+  /**
+   * Ensimmäisen virkkeen jälkeisen hengähdyksen paikka äänitteessä:
+   * ensimmäinen vähintään 0,3 sekunnin hiljaisuus 1,2 sekunnin jälkeen.
+   * Lasketaan kerran per tiedosto ja muistetaan.
+   */
+  lauseTauko(url) {
+    this.lauseTauot ??= new Map();
+    if (!this.lauseTauot.has(url)) {
+      const lupaus = (async () => {
+        const ctx = sfx.ensureContext();
+        if (!ctx) return null;
+        const data = await fetch(url).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject()));
+        const buf = await ctx.decodeAudioData(data);
+        const kanava = buf.getChannelData(0);
+        const ikkuna = Math.floor(buf.sampleRate * 0.05);
+        let huippu = 0;
+        for (let i = 0; i < kanava.length; i += 16) huippu = Math.max(huippu, Math.abs(kanava[i]));
+        const raja = huippu * 0.04;
+        let hiljaisia = 0;
+        for (let i = Math.floor(buf.sampleRate * 1.2); i < kanava.length; i += ikkuna) {
+          let maksimi = 0;
+          const loppu = Math.min(i + ikkuna, kanava.length);
+          for (let j = i; j < loppu; j += 4) maksimi = Math.max(maksimi, Math.abs(kanava[j]));
+          if (maksimi < raja) {
+            hiljaisia += 1;
+            if (hiljaisia * 0.05 >= 0.3) {
+              // Tauon alku + pieni hengähdys, jotta sana ehtii loppuun.
+              return (i + ikkuna - hiljaisia * ikkuna) / buf.sampleRate + 0.15;
+            }
+          } else {
+            hiljaisia = 0;
+          }
+        }
+        return null; // yksivirkkeinen tai tasainen äänite — soi kokonaan
+      })().catch(() => null);
+      this.lauseTauot.set(url, lupaus);
+    }
+    return this.lauseTauot.get(url);
   }
 
   stopDiaryVoice() {
