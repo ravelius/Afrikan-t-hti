@@ -619,7 +619,7 @@ export class Game {
     this.setDiary(pack);
     this.lastPath = null;
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
-    this.emit('flight', link.label, { icon: '🧭', sub: `−${FLIGHT_PRICE} puntaa` });
+    this.emit('flight', link.label, { icon: 'kompassi', sub: `−${FLIGHT_PRICE} puntaa` });
     if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();
     return { ok: true };
@@ -654,7 +654,7 @@ export class Game {
     if (this.needsAid(p)) {
       p.money += STRANDED_AID;
       this.say(p.id, `${p.name} on jumissa ilman rahaa ja saa pankilta ${STRANDED_AID} puntaa.`);
-      this.emit('aid', `${p.name} sai pankilta ${STRANDED_AID} puntaa`, { icon: '💰' });
+      this.emit('aid', `${p.name} sai pankilta ${STRANDED_AID} puntaa`, { icon: 'kukkaro' });
     }
 
     // Kun vaihtoehtoja ei ole — esimerkiksi sisämaan kaupungissa tai kesken
@@ -737,7 +737,7 @@ export class Game {
     this.say(p.id, `${p.name} heitti ${die}.`);
     if (this.moves.size === 0) {
       this.say(p.id, `${p.name} ei pysty liikkumaan ja jää paikalleen.`);
-      this.emit('stuck', `${p.name} ei pysty liikkumaan`, { icon: '⛔' });
+      this.emit('stuck', `${p.name} ei pysty liikkumaan`, { icon: 'estetty' });
       this.endTurn();
       return { ok: true, moved: false, die };
     }
@@ -766,7 +766,7 @@ export class Game {
       ? `kaupunkiin ${city.name}`
       : `reitille ${this.routeName(move.pos.edge)}`;
     this.say(p.id, `${p.name} siirtyi ${where}${fareText}.`);
-    if (fare) this.emit('fare', `Laivamatka −${fare} puntaa`, { icon: '⚓' });
+    if (fare) this.emit('fare', `Laivamatka −${fare} puntaa`, { icon: 'ankkuri' });
 
     this.moves = null;
     this.die = null;
@@ -1227,7 +1227,7 @@ export class Game {
         this.awardXp(p, XP_EXPLORE);
         p.money += EXPLORE_REWARD;
         this.say(p.id, `★ ${p.name} tutki paikkaa kaupungissa ${city.name} ja vastasi oikein (+${EXPLORE_REWARD} puntaa, +${XP_EXPLORE} kp).`);
-        this.emit('aid', `Löytöpalkkio +${EXPLORE_REWARD} puntaa`, { icon: '💰' });
+        this.emit('aid', `Löytöpalkkio +${EXPLORE_REWARD} puntaa`, { icon: 'kukkaro' });
       } else {
         const oikea = this.quiz.options[this.quiz.correct];
         this.say(p.id, `${p.name} vastasi väärin — oikea vastaus oli "${oikea}".`);
@@ -1354,7 +1354,7 @@ export class Game {
       this.setDiary(pack);
       this.lastPath = null;
       this.say(p.id, `${p.name} astui portista: ${gate.label}.`);
-      this.emit('flight', gate.label, { icon: '★', sub: 'Tieto avasi portin' });
+      this.emit('flight', gate.label, { icon: 'tahti', sub: 'Tieto avasi portin' });
       this.phase = 'action';
       if (this.offerQuiz()) return { ok: true, gated: true, offer: true };
       this.endTurn();
@@ -1441,7 +1441,7 @@ export class Game {
     }
     p.horseshoes -= DUEL_BYPASS_SHOES;
     this.say(p.id, `Ω ${p.name} heitti rosvolle ${DUEL_BYPASS_SHOES} hevosenkenkää ja pääsi ohi.`);
-    this.emit('aid', 'Rosvo päästi ohi', { icon: 'Ω', sub: `−${DUEL_BYPASS_SHOES} hevosenkenkää` });
+    this.emit('aid', 'Rosvo päästi ohi', { icon: 'kenka', sub: `−${DUEL_BYPASS_SHOES} hevosenkenkää` });
     this.duel = null;
     this.phase = 'action';
     this.endTurn();
@@ -1583,7 +1583,7 @@ export class Game {
     this.lastPath = null;
     const city = this.board.cityById.get(destination);
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
-    this.emit('flight', `Lento kaupunkiin ${city.name}`, { icon: '✈', sub: `−${FLIGHT_PRICE} puntaa` });
+    this.emit('flight', `Lento kaupunkiin ${city.name}`, { icon: 'kone', sub: `−${FLIGHT_PRICE} puntaa` });
     if (this.checkWin()) return { ok: true, win: true };
     if (this.offerQuiz()) return { ok: true, offer: true };
     this.endTurn();

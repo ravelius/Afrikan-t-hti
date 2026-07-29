@@ -155,6 +155,17 @@ const VIIVA_IKONIT = {
   suurennuslasi: '<circle cx="9.8" cy="9.8" r="5.6"/><path d="M13.9 13.9 20 20"/>',
   noppa: '<rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.2"/><g class="taytto"><circle cx="8.2" cy="8.2" r="1.25"/><circle cx="15.8" cy="8.2" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="8.2" cy="15.8" r="1.25"/><circle cx="15.8" cy="15.8" r="1.25"/></g>',
   kompassi: '<circle cx="12" cy="12" r="8.4"/><path d="M12 5.8 14.3 12 12 18.2 9.7 12z"/><circle class="taytto" cx="12" cy="12" r="1"/>',
+  nuoli: '<path d="M9.5 6.2 5 10.6l4.5 4.4"/><path d="M5 10.6h9.2a4.6 4.6 0 1 1 0 9.2H9.5"/>',
+  kone: '<path d="M12 3.6v5.9l7.6 4.6v2.1L12 13.7v4.4l2.4 1.9v1.6L12 20.5l-2.4 1.1V20l2.4-1.9v-4.4L4.4 16.2v-2.1L12 9.5z"/>',
+  tahti: '<path d="m12 3.8 2.5 5.2 5.5.7-4 3.9 1 5.6-5-2.7-5 2.7 1-5.6-4-3.9 5.5-.7z"/>',
+  passi: '<rect x="5.5" y="3.5" width="13" height="17" rx="2"/><circle cx="12" cy="10.3" r="2.9"/><path d="M8.6 16.6h6.8"/>',
+  paivita: '<path d="M19.4 4.8v3.7h-3.7"/><path d="M19.2 8.4a7.4 7.4 0 1 0 1 5.4"/>',
+  kallo: '<path d="M12 3.8c-3.9 0-6.5 2.7-6.5 6.1 0 2 .9 3.3 2.1 4.2v2.5h8.8v-2.5c1.2-.9 2.1-2.2 2.1-4.2 0-3.4-2.6-6.1-6.5-6.1z"/><g class="taytto"><circle cx="9.6" cy="10.1" r="1.3"/><circle cx="14.4" cy="10.1" r="1.3"/></g><path d="M10.3 16.6v2.4M13.7 16.6v2.4"/>',
+  kenka: '<path d="M5.2 19.6h4.3v-3.2a5.7 5.7 0 1 1 5 0v3.2h4.3"/>',
+  kukkaro: '<path d="M9.6 6.9 8.3 4.2h7.4L14.4 6.9"/><path d="M9.6 6.9h4.8c2.5 1.6 4.1 4.2 4.1 7 0 3.3-2.5 5.4-6.5 5.4s-6.5-2.1-6.5-5.4c0-2.8 1.6-5.4 4.1-7z"/>',
+  estetty: '<circle cx="12" cy="12" r="8.4"/><path d="M6.3 6.3l11.4 11.4"/>',
+  ankkuri: '<circle cx="12" cy="5" r="1.8"/><path d="M12 6.8v12.6M8.7 9.6h6.6"/><path d="M5.2 13.8c.3 3.9 3.2 6.3 6.8 6.3s6.5-2.4 6.8-6.3"/><path d="M5.2 13.8 3.5 12.6M18.8 13.8l1.7-1.2"/>',
+  mitali: '<path d="M9.6 3.6 8.2 9.2M14.4 3.6l1.4 5.6"/><circle cx="12" cy="14.4" r="5.2"/><circle class="taytto" cx="12" cy="14.4" r="1.1"/>',
 };
 
 /** Viivaikoni ikonin nimellä — tai null, jos nimi onkin tekstimerkki. */
@@ -1003,7 +1014,7 @@ export class UI {
     const { game } = this;
     this.turnPill.textContent = '';
     if (game.phase === 'over') {
-      this.turnPill.appendChild(html('span', '', `🏆 ${game.winner.name} voitti`));
+      this.turnPill.appendChild(html('span', '', `${game.winner.name} voitti`));
       return;
     }
     // Yläpalkissa on kukkaro ja päiväkirjan päivämäärä. Sijainti, kokemus ja
@@ -1118,7 +1129,7 @@ export class UI {
       rollBtn.addEventListener('click', () => this.doRoll());
       this.actionsEl.appendChild(rollBtn);
 
-      const backBtn = html('button', '', '↩ Vaihda matkustustapa');
+      const backBtn = this.ikoniTekstiNappi('nuoli', 'Vaihda matkustustapa');
       backBtn.addEventListener('click', () => this.doAction(() => game.actionCancelTravel()));
       this.actionsEl.appendChild(backBtn);
       return;
@@ -1188,7 +1199,7 @@ export class UI {
 
     for (const dest of flights) {
       const city = game.board.cityById.get(dest);
-      const flyBtn = html('button', 'wide', `✈ ${city.name} (${FLIGHT_PRICE} p)`);
+      const flyBtn = this.ikoniTekstiNappi('kone', `${city.name} (${FLIGHT_PRICE} p)`, 'wide');
       flyBtn.addEventListener('click', () => this.doFly(dest));
       this.actionsEl.appendChild(flyBtn);
     }
@@ -1216,7 +1227,7 @@ export class UI {
 
     // Tietoportti: maan lauta aukeaa pääkaupungista vaikealla kysymyksellä.
     for (const gate of countryGates) {
-      const gateBtn = html('button', 'wide', `★ ${gate.label} — vaikea kysymys`);
+      const gateBtn = this.ikoniTekstiNappi('tahti', `${gate.label} — vaikea kysymys`, 'wide');
       gateBtn.addEventListener('click', () => {
         sfx.play('paper');
         this.doAction(() => game.actionGateQuiz(gate.index));
@@ -1224,7 +1235,7 @@ export class UI {
       this.actionsEl.appendChild(gateBtn);
     }
 
-    const backBtn = this.iconButton('↩', 'Takaisin');
+    const backBtn = this.iconButton('nuoli', 'Takaisin');
     backBtn.addEventListener('click', () => {
       this.travelExpanded = false;
       this.render();
@@ -1255,6 +1266,15 @@ export class UI {
     if (kuva) btn.appendChild(kuva);
     btn.appendChild(html('span', '', teksti));
     return btn;
+  }
+
+  /** Vaihtaa olemassa olevan napin sisällöksi viivaikonin ja tekstin. */
+  ikonoi(btn, ikoni, teksti) {
+    btn.classList.add('ikoni-teksti');
+    btn.textContent = '';
+    const kuva = viivaIkoni(ikoni);
+    if (kuva) btn.appendChild(kuva);
+    btn.appendChild(html('span', '', teksti));
   }
 
   /**
@@ -1588,7 +1608,7 @@ export class UI {
     if (stampBoard(game.pack.id, game.pack.boardLabel)) {
       const box = this.buildToast({
         kind: 'stamp',
-        icon: '🛂',
+        icon: 'passi',
         text: 'Passiin uusi leima',
         sub: game.pack.boardLabel,
       });
@@ -1602,7 +1622,7 @@ export class UI {
     if (mark && stampBoard(`kunnia:${mark.packId}`, `${game.pack.boardLabel} — ${mark.label}`)) {
       const box = this.buildToast({
         kind: 'stamp',
-        icon: '🏅',
+        icon: 'mitali',
         text: mark.label,
         sub: `Aarre löytyi päivänä ${mark.day}`,
       });
@@ -2049,7 +2069,7 @@ export class UI {
     clearTimeout(this.botTimer);
     if (!this.winnerDialog.open) sfx.play('win');
     const w = this.game.winner;
-    document.getElementById('winner-title').textContent = `🏆 ${w.name} voitti!`;
+    document.getElementById('winner-title').textContent = `${w.name} voitti!`;
     this.typeText(document.getElementById('winner-text'), w.hasStar
       ? this.game.pack.texts.winnerStar(w.name, w.money)
       : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`, 'winner');
@@ -2312,7 +2332,7 @@ export class UI {
     const p = game.player;
 
     this.quizBadge.hidden = true;
-    this.quizCity.textContent = `☠ Rosvon kaksintaistelu — ${p.name}`;
+    this.quizCity.textContent = `Rosvon kaksintaistelu — ${p.name}`;
     // Kaksintaistelu ei käytä vaiheittaista paljastusta: vaihtoehdot ovat
     // heti esillä, eikä edellisen kortin piilotus saa jäädä päälle.
     this.quizStage = 2;
@@ -2334,14 +2354,13 @@ export class UI {
     const toll = Math.floor(p.money / 2);
     this.quizFifty.hidden = answered || p.isBot;
     this.quizFifty.disabled = duel.reliefs >= 2 || toll <= 0;
-    this.quizFifty.textContent = duel.reliefs >= 2
-      ? 'Helpotukset käytetty'
-      : `☠ Helpotus (rosvo vie ${toll} p)`;
+    if (duel.reliefs >= 2) this.quizFifty.textContent = 'Helpotukset käytetty';
+    else this.ikonoi(this.quizFifty, 'kallo', `Helpotus (rosvo vie ${toll} p)`);
 
     // Kolmella hevosenkengällä pääsee ohi.
     this.quizHint.hidden = answered || p.isBot || p.horseshoes < DUEL_BYPASS_SHOES;
     this.quizHint.disabled = false;
-    this.quizHint.textContent = `Ω Ohita rosvo (${DUEL_BYPASS_SHOES} kenkää)`;
+    this.ikonoi(this.quizHint, 'kenka', `Ohita rosvo (${DUEL_BYPASS_SHOES} kenkää)`);
 
     this.quizHintText.hidden = duel.reliefs === 0;
     if (duel.reliefs > 0) {
@@ -3016,8 +3035,12 @@ export class UI {
 
   buildToast({ kind, text, sub, icon, token }) {
     const box = html('div', `event-toast ${kind === 'robber' ? 'bad' : kind}`);
+    // Ikoni voi olla viivaikonin nimi tai suora merkki — kuplat piirretään
+    // samalla kynällä kuin napit aina kun ikoni sarjasta löytyy.
+    const kuva = viivaIkoni(icon);
+    if (kuva) kuva.classList.add('toast-icon');
     if (token) box.appendChild(tokenIconSvg(token, kind === 'die' ? 30 : 34));
-    else box.appendChild(html('span', 'toast-icon', icon ?? '•'));
+    else box.appendChild(kuva ?? html('span', 'toast-icon', icon ?? '•'));
     const body = html('div');
     body.appendChild(html('span', 'toast-text', text));
     if (sub) body.appendChild(html('span', 'toast-sub', sub));
