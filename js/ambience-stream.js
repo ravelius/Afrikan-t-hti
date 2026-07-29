@@ -182,3 +182,7 @@ export function stopQuizMusic() {
     vanha.removeAttribute('src');
   });
 }
+
+// Perustasot äänistudion mikseriä varten: se esikuuntelee raidat samoilla
+// voimakkuuksilla kuin peli soittaa ne.
+export { VOIMA as STRIIMI_VOIMA, MUSIIKKI_VOIMA };
