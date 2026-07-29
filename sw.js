@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-07-29.39';
+const CACHE = 'matkakirja-2026-07-29.40';
 const SHELL = [
   './',
   './index.html',
@@ -50,6 +50,24 @@ const SHELL = [
   './assets/audio/efekti-kolikot.mp3',
   './assets/audio/efekti-oikein.mp3',
   './assets/audio/efekti-vaarin.mp3',
+  './assets/audio/efekti-pyyhkaisy.mp3',
+  './assets/audio/efekti-askel.mp3',
+  './assets/audio/efekti-saapuminen.mp3',
+  './assets/audio/efekti-laiva.mp3',
+  './assets/audio/efekti-lento.mp3',
+  './assets/audio/efekti-vihje.mp3',
+  './assets/audio/efekti-tikitys.mp3',
+  './assets/audio/efekti-aikaloppui.mp3',
+  './assets/audio/efekti-kaanto.mp3',
+  './assets/audio/efekti-naksu.mp3',
+  './assets/audio/efekti-tahti.mp3',
+  './assets/audio/efekti-jalokivi.mp3',
+  './assets/audio/efekti-kenka.mp3',
+  './assets/audio/efekti-rosvo.mp3',
+  './assets/audio/efekti-tyhja.mp3',
+  './assets/audio/efekti-jumissa.mp3',
+  './assets/audio/efekti-vuoro.mp3',
+  './assets/audio/efekti-voitto.mp3',
   './assets/audio/puhe-africa-paivakirja-0.mp3',
   './assets/audio/puhe-africa-paivakirja-1.mp3',
   './assets/audio/puhe-africa-paivakirja-2.mp3',
