@@ -102,8 +102,7 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
   + 'Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä." '
   + 'Viimeinen lause päättyy kesken.\n\n'
   + 'Jonkun on kirjoitettava se loppuun — ja mielellään nopeammin.\n\n'
-  + 'Ostin lipun samana iltana. Mistä aloittaisin?\n\n'
-  + 'Napauta kaupunkia kartalla.';
+  + 'Ostin lipun samana iltana. Mistä aloittaisin?';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -389,6 +388,7 @@ export class UI {
     stopPlaceStream();
     stopQuizMusic();
     this.stopIntroVoice();
+    this.stopDiaryVoice();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -1147,6 +1147,7 @@ export class UI {
       this.factPlace.textContent = '';
       this.factText.textContent = '';
       this.factImage.hidden = true;
+      this.stopDiaryVoice();
       return;
     }
 
@@ -1160,6 +1161,7 @@ export class UI {
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
       this.factImage.hidden = true;
+      this.stopDiaryVoice();
       this.typeText(this.factText, aikataulu.text);
       return;
     }
@@ -1175,6 +1177,10 @@ export class UI {
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
       this.typeText(this.factText, note.text);
+      // Saapumismerkintä luettuna, jos sille on tuotettu puhe (ElevenLabs).
+      const luvut = packById(note.packId)?.texts?.diaries ?? [];
+      const idx = luvut.indexOf(note.text);
+      this.playDiaryVoice(idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}.mp3` : null);
       return;
     }
 
@@ -1187,6 +1193,7 @@ export class UI {
       this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
+      this.stopDiaryVoice();
       this.typeText(this.factText, hint);
       return;
     }
@@ -1202,6 +1209,7 @@ export class UI {
     const key = `${city.id}:${text}`;
     if (key === this.factKey) return;
     this.factKey = key;
+    this.stopDiaryVoice();
 
     // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
     const onRoute = player.pos.type === 'edge';
@@ -1634,6 +1642,30 @@ export class UI {
   stopIntroVoice() {
     const vanha = this.introVoice;
     this.introVoice = null;
+    if (!vanha) return;
+    vanha.pause();
+    vanha.removeAttribute('src');
+  }
+
+  /**
+   * Saapumismerkinnän lukuääni. Soi kerran kun merkintä ilmestyy ja
+   * vaikenee, kun tietoruutu vaihtaa aihetta. Puuttuva tiedosto (esim.
+   * lauta jolle puhetta ei ole tuotettu) ohitetaan hiljaa.
+   */
+  playDiaryVoice(url) {
+    this.stopDiaryVoice();
+    if (!url || !sfx.enabled) return;
+    const audio = new Audio(url);
+    audio.volume = 0.9;
+    this.diaryVoice = audio;
+    audio.play().catch(() => {
+      if (this.diaryVoice === audio) this.diaryVoice = null;
+    });
+  }
+
+  stopDiaryVoice() {
+    const vanha = this.diaryVoice;
+    this.diaryVoice = null;
     if (!vanha) return;
     vanha.pause();
     vanha.removeAttribute('src');
