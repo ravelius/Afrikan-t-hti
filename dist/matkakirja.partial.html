@@ -1740,6 +1740,26 @@ body[data-mode] .rail {
 
 body[data-mode] .rail > * { pointer-events: auto; }
 
+/* Pergamentti jatkuu ruudun alareunaan asti: alin väli ja alakulmien
+ * pyöristys pois. Koti-indikaattorin kaista jää kartan päälle
+ * (viewport-fit=cover), joten alas ei jää tyhjää tummaa raitaa — ja
+ * manner keskittyy koko korkeuteen. */
+body[data-mode] .stage { padding-bottom: 0; }
+body[data-mode] .map-pane {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 0;
+}
+body[data-mode] .rail {
+  bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 700px) {
+  body[data-mode] .rail {
+    padding-bottom: max(var(--gap), env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /*
  * Kartan oma ohjerivi nousee ylös keskelle: alhaalla keskellä on nyt kelluva
  * toimintokortti, jonka alle rivi jäisi piiloon.
@@ -2047,6 +2067,28 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
  * Havainnon kuvaikoni: pieni kehystetty maisema tekstin alla. Pelkkä
  * ikoni tekstilinkin sijaan — kuva puhuu puolestaan.
  */
+/* Päiväkirjan ensimmäinen lause nousee esiin; loput luetaan silmillä. */
+.fact-text .fact-lead { font-weight: 700; }
+
+/* Kaiutin ankkuroituu korttiin myös silloin, kun kortti on staattinen. */
+.fact-card { position: relative; }
+
+/* Kaiutin kortin oikeassa yläkulmassa: lukee koko merkinnän. */
+.fact-kuuntele {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.5rem;
+  padding: 0.1rem 0.3rem;
+  min-height: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0.75;
+}
+.fact-kuuntele:hover:not(:disabled) { background: none; opacity: 1; }
+
 .fact-image-btn {
   align-self: flex-start;
   margin-top: 0.35rem;
@@ -2373,6 +2415,10 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         -->
         <section class="card fact-card" data-corner="bl">
           <h2 id="fact-voice">Matkapäiväkirjasta</h2>
+          <!-- Kaiutin: lukee koko merkinnän — oletuksena luetaan vain
+               ensimmäinen lause. -->
+          <button id="fact-kuuntele" class="ghost fact-kuuntele" type="button" hidden
+                  aria-label="Kuuntele koko merkintä" title="Kuuntele koko merkintä">🔊</button>
           <p id="fact-place" class="fact-place"></p>
           <p id="fact-text" class="fact-text"></p>
           <!-- Pieni kuvaikoni: avaa havainnossa mainitun ilmiön kuvan. -->
@@ -25045,6 +25091,9 @@ const EHDOKKAAT = {
       { url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3', nimi: 'Arabialainen huilu — DYEKHO, CC0' },
       { url: 'https://cdn.freesound.org/previews/466/466570_197130-lq.mp3', nimi: 'Kalimba-luuppi — CarlosCarty, CC BY' },
       { url: 'https://cdn.freesound.org/previews/160/160461_1-lq.mp3', nimi: 'Oud-improvisaatio — Freesound, CC0' },
+      { url: 'https://cdn.freesound.org/previews/843/843466_15636277-lq.mp3', nimi: 'Rumpu ja kalimba -luuppi — bassimat, CC0' },
+      { url: 'https://cdn.freesound.org/previews/666/666866_5737443-lq.mp3', nimi: 'Hang drum (Dancing Spirit) — MrJmix, CC BY' },
+      { url: 'https://cdn.freesound.org/previews/557/557122_2282212-lq.mp3', nimi: 'Tumma ambient-pinta — szegvari, CC0' },
     ],
   },
   'tehoste:dice': {
@@ -29642,6 +29691,16 @@ const REVEAL_SUB = {
   empty: 'Isoisän merkintä oli vanhentunut — täältä ei löytynyt mitään',
 };
 
+/**
+ * Ensimmäinen virke lainaus- ja päätösmerkkeineen; loput erikseen.
+ * Päiväkirjan luennassa ääneen luetaan vain tämä ja teksti lihavoidaan.
+ */
+function ekaLause(teksti) {
+  const m = /^[\s\S]*?[.!?…](?:["»”])?(?=\s|$)/.exec(teksti);
+  if (!m) return { eka: teksti, loput: '' };
+  return { eka: m[0], loput: teksti.slice(m[0].length).trimStart() };
+}
+
 function html(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -29734,6 +29793,12 @@ class UI {
     this.factImage = document.getElementById('fact-image');
     this.factImage.addEventListener('click', () => {
       if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
+    });
+    // Kaiutin lukee koko merkinnän — oletuksena luetaan vain ensimmäinen
+    // lause, ettei ääntä tule joka saapumisella liikaa.
+    this.factKuuntele = document.getElementById('fact-kuuntele');
+    this.factKuuntele.addEventListener('click', () => {
+      if (this.diaryFullUrl) this.playDiaryVoice(this.diaryFullUrl);
     });
 
     this.eventDialog = document.getElementById('event-dialog');
@@ -30747,6 +30812,7 @@ class UI {
       this.factPlace.textContent = '';
       this.factText.textContent = '';
       this.factImage.hidden = true;
+      this.factKuuntele.hidden = true;
       this.stopDiaryVoice();
       return;
     }
@@ -30761,6 +30827,7 @@ class UI {
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
       this.factImage.hidden = true;
+      this.factKuuntele.hidden = true;
       this.stopDiaryVoice();
       this.typeText(this.factText, aikataulu.text);
       return;
@@ -30780,11 +30847,24 @@ class UI {
       this.factVoiceEl.textContent = 'Matkapäiväkirjasta';
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
-      this.typeText(this.factText, note.text);
-      // Saapumismerkintä luettuna, jos sille on tuotettu puhe (ElevenLabs).
+      // Ensimmäinen lause lihavoituna, loput perään samalla koneella.
+      const { eka, loput } = ekaLause(note.text);
+      this.factText.textContent = '';
+      const lihava = html('b', 'fact-lead');
+      const jatko = html('span');
+      this.factText.appendChild(lihava);
+      this.factText.appendChild(document.createTextNode(' '));
+      this.factText.appendChild(jatko);
+      this.typeText(lihava, eka, 'fact', () => {
+        if (loput) this.typeText(jatko, loput, 'fact');
+      });
+      // Ääneen luetaan vain ensimmäinen lause — koko merkinnän saa
+      // kaiutinnapista. Näin ääntä ei tule liikaa joka saapumisella.
       const luvut = packById(note.packId)?.texts?.diaries ?? [];
       const idx = luvut.indexOf(note.text);
-      this.playDiaryVoice(idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}.mp3` : null);
+      this.diaryFullUrl = idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}.mp3` : null;
+      this.factKuuntele.hidden = idx < 0;
+      this.playDiaryVoice(idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}-alku.mp3` : null);
       return;
     }
 
@@ -30797,6 +30877,7 @@ class UI {
       this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
+      this.factKuuntele.hidden = true;
       this.stopDiaryVoice();
       this.typeText(this.factText, hint);
       return;
@@ -30813,6 +30894,7 @@ class UI {
     const key = `${city.id}:${text}`;
     if (key === this.factKey) return;
     this.factKey = key;
+    this.factKuuntele.hidden = true;
     this.stopDiaryVoice();
 
     // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
@@ -32422,7 +32504,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.31';
+const APP_VERSION = '2026-07-29.32';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

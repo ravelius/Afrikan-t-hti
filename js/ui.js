@@ -127,6 +127,16 @@ const REVEAL_SUB = {
   empty: 'Isoisän merkintä oli vanhentunut — täältä ei löytynyt mitään',
 };
 
+/**
+ * Ensimmäinen virke lainaus- ja päätösmerkkeineen; loput erikseen.
+ * Päiväkirjan luennassa ääneen luetaan vain tämä ja teksti lihavoidaan.
+ */
+function ekaLause(teksti) {
+  const m = /^[\s\S]*?[.!?…](?:["»”])?(?=\s|$)/.exec(teksti);
+  if (!m) return { eka: teksti, loput: '' };
+  return { eka: m[0], loput: teksti.slice(m[0].length).trimStart() };
+}
+
 function html(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -219,6 +229,12 @@ export class UI {
     this.factImage = document.getElementById('fact-image');
     this.factImage.addEventListener('click', () => {
       if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
+    });
+    // Kaiutin lukee koko merkinnän — oletuksena luetaan vain ensimmäinen
+    // lause, ettei ääntä tule joka saapumisella liikaa.
+    this.factKuuntele = document.getElementById('fact-kuuntele');
+    this.factKuuntele.addEventListener('click', () => {
+      if (this.diaryFullUrl) this.playDiaryVoice(this.diaryFullUrl);
     });
 
     this.eventDialog = document.getElementById('event-dialog');
@@ -1233,6 +1249,7 @@ export class UI {
       this.factPlace.textContent = '';
       this.factText.textContent = '';
       this.factImage.hidden = true;
+      this.factKuuntele.hidden = true;
       this.stopDiaryVoice();
       return;
     }
@@ -1247,6 +1264,7 @@ export class UI {
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
       this.factImage.hidden = true;
+      this.factKuuntele.hidden = true;
       this.stopDiaryVoice();
       this.typeText(this.factText, aikataulu.text);
       return;
@@ -1266,11 +1284,24 @@ export class UI {
       this.factVoiceEl.textContent = 'Matkapäiväkirjasta';
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
-      this.typeText(this.factText, note.text);
-      // Saapumismerkintä luettuna, jos sille on tuotettu puhe (ElevenLabs).
+      // Ensimmäinen lause lihavoituna, loput perään samalla koneella.
+      const { eka, loput } = ekaLause(note.text);
+      this.factText.textContent = '';
+      const lihava = html('b', 'fact-lead');
+      const jatko = html('span');
+      this.factText.appendChild(lihava);
+      this.factText.appendChild(document.createTextNode(' '));
+      this.factText.appendChild(jatko);
+      this.typeText(lihava, eka, 'fact', () => {
+        if (loput) this.typeText(jatko, loput, 'fact');
+      });
+      // Ääneen luetaan vain ensimmäinen lause — koko merkinnän saa
+      // kaiutinnapista. Näin ääntä ei tule liikaa joka saapumisella.
       const luvut = packById(note.packId)?.texts?.diaries ?? [];
       const idx = luvut.indexOf(note.text);
-      this.playDiaryVoice(idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}.mp3` : null);
+      this.diaryFullUrl = idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}.mp3` : null;
+      this.factKuuntele.hidden = idx < 0;
+      this.playDiaryVoice(idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}-alku.mp3` : null);
       return;
     }
 
@@ -1283,6 +1314,7 @@ export class UI {
       this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
+      this.factKuuntele.hidden = true;
       this.stopDiaryVoice();
       this.typeText(this.factText, hint);
       return;
@@ -1299,6 +1331,7 @@ export class UI {
     const key = `${city.id}:${text}`;
     if (key === this.factKey) return;
     this.factKey = key;
+    this.factKuuntele.hidden = true;
     this.stopDiaryVoice();
 
     // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.

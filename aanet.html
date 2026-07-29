@@ -96,6 +96,17 @@
      <b>⌖ Alkukohta tästä</b>. Valinnat tallentuvat tähän selaimeen ja peli
      käyttää niitä heti seuraavasta latauksesta.</p>
 
+  <details class="pikatestit">
+    <summary>Freesound-haku: API-avain</summary>
+    <p>"Hae Freesoundista" -napit käyttävät Freesoundin virallista hakua ja
+       tarvitsevat ilmaisen avaimen: kirjaudu Freesoundiin ja pyydä avain
+       osoitteessa <a href="https://freesound.org/apiv2/apply/" target="_blank"
+       rel="noopener">freesound.org/apiv2/apply</a>. Avain tallentuu vain
+       tähän selaimeen.</p>
+    <input id="fs-avain" type="text" placeholder="Freesound API-avain"
+           style="width:100%;max-width:26rem" />
+  </details>
+
   <details class="pikatestit" id="mikseri" open>
     <summary>Miksaus — kuuntele paikan raidat päällekkäin</summary>
     <p>Valitse paikka, niin kannet latautuvat pelin käyttämillä äänillä ja
@@ -389,6 +400,102 @@
       for (const kansi of kannet) rakennaKansi(kansi);
     });
 
+    // --- Freesound-haku: lisää ehdokkaita suoraan kategoriaan --------------
+    const FS_AVAIN = 'matkakirja-freesound-avain';
+    const fsAvain = document.getElementById('fs-avain');
+    try { fsAvain.value = localStorage.getItem(FS_AVAIN) ?? ''; } catch { /* ei säily */ }
+    fsAvain.addEventListener('change', () => {
+      try { localStorage.setItem(FS_AVAIN, fsAvain.value.trim()); } catch { /* ei säily */ }
+    });
+
+    // Hakusanaehdotus paikan mukaan; kenttää saa muokata vapaasti.
+    const HAKUEHDOTUKSET = {
+      'musiikki:tietovisa': 'calm kalimba loop',
+      'tehoste:dice': 'dice roll wooden table',
+      'tehoste:pen': 'typewriter single key',
+      'tehoste:jet': 'airplane cabin interior',
+      'tehoste:quizOpen': 'book page turn',
+      'tehoste:click': 'wooden click ui',
+      'tehoste:paper': 'paper page turn old book',
+      'tehoste:coin': 'coins leather pouch',
+      'tehoste:correct': 'brass bell chime success',
+      'tehoste:wrong': 'heavy book close thud',
+    };
+    const RYHMAHAUT = {
+      basaari: 'bazaar market street ambience',
+      aavikko: 'desert wind ambience',
+      meri: 'ocean waves shore ambience',
+      'sademetsä': 'rainforest jungle ambience',
+      savanni: 'african savanna ambience',
+      'ylänkö': 'mountain highland wind ambience',
+    };
+    const hakuEhdotus = (slot, tiedot) => HAKUEHDOTUKSET[slot]
+      ?? RYHMAHAUT[tiedot.ryhma] ?? tiedot.otsikko;
+
+    const lisenssiNimi = (url) => (/zero/.test(url) ? 'CC0'
+      : /by-nc/.test(url) ? 'CC BY-NC' : /by/.test(url) ? 'CC BY' : url);
+
+    async function haeFreesound(slot, kysely, kohde) {
+      const token = fsAvain.value.trim();
+      kohde.textContent = '';
+      if (!token) {
+        kohde.textContent = 'Lisää ensin Freesoundin API-avain (osio sivun yläosassa).';
+        return;
+      }
+      kohde.textContent = 'Haetaan…';
+      const params = new URLSearchParams({
+        query: kysely,
+        page_size: '8',
+        token,
+        fields: 'id,name,username,license,previews,duration',
+        // Vain CC0 ja CC BY: käytettävissä ilman erikoisehtoja.
+        filter: 'license:("Creative Commons 0" OR "Attribution")',
+        sort: 'rating_desc',
+      });
+      try {
+        const res = await fetch(`https://freesound.org/apiv2/search/text/?${params}`);
+        if (!res.ok) throw new Error(String(res.status));
+        const data = await res.json();
+        kohde.textContent = '';
+        if (!data.results?.length) {
+          kohde.textContent = 'Ei osumia — kokeile toista hakusanaa.';
+          return;
+        }
+        for (const osuma of data.results) {
+          const url = osuma.previews?.['preview-lq-mp3'] ?? osuma.previews?.['preview-hq-mp3'];
+          if (!url) continue;
+          const nimi = `${osuma.name} — ${osuma.username}, ${lisenssiNimi(osuma.license)}`;
+          const rivi = document.createElement('div');
+          rivi.className = 'rivi';
+          const play = document.createElement('button');
+          play.textContent = '▶';
+          play.className = 'soita';
+          play.addEventListener('click', () => soita({ slot, url, nimi, alku: 0 }));
+          rivi.appendChild(play);
+          const teksti = document.createElement('span');
+          teksti.style.cssText = 'flex:1 1 12rem;align-self:center;color:var(--himmea);font-size:0.86rem;';
+          teksti.textContent = `${nimi} · ${mmss(osuma.duration ?? 0)}`;
+          rivi.appendChild(teksti);
+          const lisaa = document.createElement('button');
+          lisaa.textContent = '+ ehdokkaaksi';
+          lisaa.addEventListener('click', () => {
+            const kaikki = omatEhdokkaat();
+            if (!(kaikki[slot] ?? []).some((e) => e.url === url)) {
+              kaikki[slot] = [...(kaikki[slot] ?? []), { url, nimi }];
+              tallennaOmat(kaikki);
+            }
+            rakenna();
+          });
+          rivi.appendChild(lisaa);
+          kohde.appendChild(rivi);
+        }
+      } catch (virhe) {
+        kohde.textContent = virhe.message === '401'
+          ? 'Avain ei kelpaa — tarkista se yläosan Freesound-haku-osiosta.'
+          : 'Haku epäonnistui — tarkista verkko ja avain.';
+      }
+    }
+
     // --- suodatus -----------------------------------------------------------
     let vainAvoimet = false;
     let haku = '';
@@ -589,6 +696,23 @@
           oma.appendChild(nimike);
           oma.appendChild(lisaa);
           kotelo.appendChild(oma);
+
+          // Konehaku: hae lisää ehdokkaita tähän paikkaan Freesoundista.
+          const hakuRivi = document.createElement('div');
+          hakuRivi.className = 'rivi oma';
+          const kysely = document.createElement('input');
+          kysely.type = 'text';
+          kysely.value = hakuEhdotus(slot, tiedot);
+          kysely.style.flex = '2 1 12rem';
+          kysely.title = 'Hakusana Freesoundiin';
+          const hae = document.createElement('button');
+          hae.textContent = 'Hae Freesoundista';
+          const tulokset = document.createElement('div');
+          hae.addEventListener('click', () => haeFreesound(slot, kysely.value.trim(), tulokset));
+          hakuRivi.appendChild(kysely);
+          hakuRivi.appendChild(hae);
+          kotelo.appendChild(hakuRivi);
+          kotelo.appendChild(tulokset);
         }
         valinnat.appendChild(kotelo);
       }
