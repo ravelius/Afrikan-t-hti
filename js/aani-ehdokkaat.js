@@ -148,6 +148,48 @@ export const EHDOKKAAT = {
       { url: 'https://cdn.freesound.org/previews/165/165464_1956076-lq.mp3', nimi: 'Harppukuvio — Puniho, CC BY' },
     ],
   },
+  // ElevenLabs-efektipilotit: oletus on syntetisoitu ääni, generoitu
+  // vaihtoehto otetaan käyttöön valitsemalla se täältä.
+  'tehoste:click': {
+    otsikko: 'Napin klikkaus',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-klik.mp3', nimi: 'Messinkisalvan naksaus — ElevenLabs SFX' },
+    ],
+  },
+  'tehoste:paper': {
+    otsikko: 'Paperin avaus (kortit)',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-paperi.mp3', nimi: 'Vanhan kirjan sivu — ElevenLabs SFX' },
+    ],
+  },
+  'tehoste:coin': {
+    otsikko: 'Kolikot',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-kolikot.mp3', nimi: 'Kolikot nahkakukkaroon — ElevenLabs SFX' },
+    ],
+  },
+  'tehoste:correct': {
+    otsikko: 'Oikea vastaus',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-oikein.mp3', nimi: 'Messinkikellon helähdys — ElevenLabs SFX' },
+    ],
+  },
+  'tehoste:wrong': {
+    otsikko: 'Väärä vastaus',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-vaarin.mp3', nimi: 'Kirja tömähtää kiinni — ElevenLabs SFX' },
+    ],
+  },
 };
 
 // Jokainen Afrikan kaupunki listalle: paikkakohtaiset äänitykset ensin,

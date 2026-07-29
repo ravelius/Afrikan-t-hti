@@ -945,6 +945,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   animation: flight-overlay-in 0.5s ease;
 }
 
+/* Aloita seikkailu -portti: kartta himmeänä taustalla, nappi keskellä.
+ * Napautus avaa selaimen äänilukon, joten intro-puhe ja ambienssi
+ * pääsevät soimaan heti. */
+.start-gate {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(36, 26, 18, 0.55);
+  animation: flight-overlay-in 0.35s ease;
+}
+
+.start-btn {
+  font-size: 1.15rem;
+  padding: 0.9rem 2rem;
+  letter-spacing: 0.04em;
+}
+
 /* Lennon ajaksi alareunan kortit ja napit väistyvät: kalvon alla näkyy
  * vain kohteen kartta. Teksti ja lukuääni jatkuvat piilossa. */
 body.flight-active .turn-card,
@@ -24961,6 +24981,48 @@ const EHDOKKAAT = {
       { url: 'https://cdn.freesound.org/previews/165/165464_1956076-lq.mp3', nimi: 'Harppukuvio — Puniho, CC BY' },
     ],
   },
+  // ElevenLabs-efektipilotit: oletus on syntetisoitu ääni, generoitu
+  // vaihtoehto otetaan käyttöön valitsemalla se täältä.
+  'tehoste:click': {
+    otsikko: 'Napin klikkaus',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-klik.mp3', nimi: 'Messinkisalvan naksaus — ElevenLabs SFX' },
+    ],
+  },
+  'tehoste:paper': {
+    otsikko: 'Paperin avaus (kortit)',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-paperi.mp3', nimi: 'Vanhan kirjan sivu — ElevenLabs SFX' },
+    ],
+  },
+  'tehoste:coin': {
+    otsikko: 'Kolikot',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-kolikot.mp3', nimi: 'Kolikot nahkakukkaroon — ElevenLabs SFX' },
+    ],
+  },
+  'tehoste:correct': {
+    otsikko: 'Oikea vastaus',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-oikein.mp3', nimi: 'Messinkikellon helähdys — ElevenLabs SFX' },
+    ],
+  },
+  'tehoste:wrong': {
+    otsikko: 'Väärä vastaus',
+    oletus: null,
+    ehdokkaat: [
+      { url: null, nimi: 'Syntetisoitu (nykyinen)' },
+      { url: 'assets/audio/efekti-vaarin.mp3', nimi: 'Kirja tömähtää kiinni — ElevenLabs SFX' },
+    ],
+  },
 };
 
 // Jokainen Afrikan kaupunki listalle: paikkakohtaiset äänitykset ensin,
@@ -25560,6 +25622,9 @@ class Sound {
       // tyhjä valinta jättää synteesin voimaan.
       const valinta = valittuAani(`tehoste:${name}`);
       if (valinta === '') continue;
+      // Ilman oletusta (url null) ladataan vain, jos omistaja on valinnut
+      // äänen viritysivulta.
+      if (!(valinta ?? url)) continue;
       fetch(valinta ?? url)
         .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error('http'))))
         .then((data) => this.ctx.decodeAudioData(data))
@@ -25658,6 +25723,13 @@ const REAL_SAMPLES = {
     url: 'https://cdn.freesound.org/previews/842/842183_13307919-lq.mp3',
     credit: '"Page Turn Free" — AardsReal, Freesound (CC0)',
   },
+  // ElevenLabs-efektipilotit: ei oletusta (url: null) — syntetisoitu soi,
+  // kunnes omistaja valitsee äänen viritysivulta. Tiedostot ovat repossa.
+  click: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  paper: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  coin: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  correct: { url: null, credit: 'ElevenLabs SFX -pilotti' },
+  wrong: { url: null, credit: 'ElevenLabs SFX -pilotti' },
 };
 
 // Mitkä äänet soivat oikeasta äänitteestä ja miten siivu otetaan.
@@ -25671,6 +25743,12 @@ const REAL_PLAYERS = {
   pen: (s) => s.playSlice('pen', { dur: 0.24, gain: 0.35, isku: true, tasavire: true }),
   // Sivunkääntö soi alusta, ei siivuna — se on yksi ele.
   quizOpen: (s) => s.playSlice('quizOpen', { dur: 1.1, gain: 0.4, alusta: true }),
+  // Generoidut yksittäisefektit soivat aina alusta kokonaisina.
+  click: (s) => s.playSlice('click', { dur: 0.5, gain: 0.35, alusta: true }),
+  paper: (s) => s.playSlice('paper', { dur: 1.2, gain: 0.35, alusta: true }),
+  coin: (s) => s.playSlice('coin', { dur: 1.3, gain: 0.4, alusta: true }),
+  correct: (s) => s.playSlice('correct', { dur: 1.5, gain: 0.4, alusta: true }),
+  wrong: (s) => s.playSlice('wrong', { dur: 1.1, gain: 0.4, alusta: true }),
 };
 
 // --- äänimaisemat -----------------------------------------------------------
@@ -29693,6 +29771,7 @@ class UI {
     // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
     document.body.classList.remove('flight-active');
     for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
+    this.suljeAloitusportti();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     clearTimeout(this.lentoPuheAjastin);
@@ -30967,9 +31046,17 @@ class UI {
       this.introShown = false;
       this.introText.textContent = '';
       this.stopIntroVoice();
+      this.suljeAloitusportti();
       return;
     }
     if (this.introShown) return;
+    // Seikkailu alkaa napista: selain sallii äänet vasta napautuksesta,
+    // joten lukuääni, kirjoituskone ja ambienssi käynnistyvät kaikki
+    // samasta Aloita seikkailu -painalluksesta. Tausta on himmeänä takana.
+    if (!this.aloitettu) {
+      this.showAloitusportti();
+      return;
+    }
     this.introShown = true;
     this.playIntroVoice();
     // Avausteksti kirjoittuu selvästi hitaammin kuin muut: se on matkan
@@ -30978,6 +31065,26 @@ class UI {
     // Koko teksti on jo paikallaan, joten koon voi sovittaa heti — sen
     // jälkeen mikään ei enää liiku kirjoituksen aikana.
     this.fitIntro();
+  }
+
+  /** Aloita seikkailu -portti: keskellä ruutua, kartta himmeänä takana. */
+  showAloitusportti() {
+    if (this.aloitusportti) return;
+    const portti = html('div', 'start-gate');
+    const nappi = html('button', 'start-btn primary', 'Aloita seikkailu');
+    nappi.addEventListener('click', () => {
+      this.aloitettu = true;
+      this.suljeAloitusportti();
+      this.render();
+    });
+    portti.appendChild(nappi);
+    this.mapPane.appendChild(portti);
+    this.aloitusportti = portti;
+  }
+
+  suljeAloitusportti() {
+    this.aloitusportti?.remove();
+    this.aloitusportti = null;
   }
 
   /**
@@ -32142,7 +32249,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.24';
+const APP_VERSION = '2026-07-29.25';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
