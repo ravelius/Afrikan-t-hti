@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matkakirja — työhuone</title>
+  <style>
+    :root {
+      --pohja: #241a12; --teksti: #f0e2c4; --himmea: #cbb691; --haalea: #9c8661;
+      --korostus: #d9a13b; --reuna: rgba(214, 188, 140, 0.45);
+      --nappi: rgba(247, 237, 216, 0.08);
+    }
+    body {
+      margin: 0; padding: 1rem 1.2rem 3rem; background: var(--pohja);
+      color: var(--teksti); font-family: 'Courier New', monospace;
+    }
+    h1 { font-size: 1.15rem; letter-spacing: 0.08em; color: var(--korostus); margin: 0.2rem 0 0.2rem; }
+    h2 { font-size: 0.95rem; letter-spacing: 0.06em; color: var(--korostus); margin: 1.4rem 0 0.4rem; }
+    p, li { max-width: 46rem; line-height: 1.55; color: var(--himmea); }
+    a { color: var(--korostus); }
+    button, input, select, textarea {
+      background: var(--nappi); color: var(--teksti);
+      border: 1px solid var(--reuna); border-radius: 8px;
+      font-family: inherit; font-size: 0.92rem; padding: 0.5rem 0.8rem;
+    }
+    button { cursor: pointer; }
+    button.paalla { border-color: var(--korostus); color: var(--korostus); }
+    .grid { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    /* Välilehtipalkki pysyy ylhäällä. */
+    nav {
+      position: sticky; top: 0; z-index: 3; background: var(--pohja);
+      display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.6rem 0;
+      border-bottom: 1px solid var(--reuna); margin-bottom: 0.8rem;
+    }
+    section[hidden] { display: none; }
+    table { border-collapse: collapse; width: 100%; max-width: 60rem; font-size: 0.85rem; }
+    th, td { border: 1px solid var(--reuna); padding: 0.4rem 0.55rem; text-align: left; }
+    th { color: var(--haalea); font-weight: normal; letter-spacing: 0.05em; }
+    td.num { text-align: right; }
+    .tila { font-size: 0.78rem; padding: 0.1rem 0.45rem; border: 1px solid var(--reuna);
+      border-radius: 999px; white-space: nowrap; }
+    .tila.kaytossa { border-color: var(--korostus); color: var(--korostus); }
+    .kortti { border: 1px solid var(--reuna); border-radius: 10px; padding: 0.7rem 0.9rem;
+      margin: 0.5rem 0; max-width: 46rem; }
+    .kortti h3 { margin: 0 0 0.25rem; font-size: 0.95rem; color: var(--teksti); }
+    .kortti .meta { color: var(--haalea); font-size: 0.8rem; margin-bottom: 0.3rem; }
+    .kortti p { margin: 0.2rem 0; }
+    pre { white-space: pre-wrap; color: var(--himmea); max-width: 46rem; line-height: 1.5; }
+    .moottori-kentat { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 0.6rem;
+      align-items: center; margin-top: 0.4rem; max-width: 30rem; }
+    .moottori-kentat label { color: var(--haalea); font-size: 0.82rem; }
+    blockquote { border-left: 2px solid var(--reuna); margin: 0.6rem 0; padding: 0.1rem 0 0.1rem 0.9rem;
+      color: var(--himmea); max-width: 44rem; line-height: 1.55; }
+  </style>
+</head>
+<body>
+  <h1>Matkakirja — työhuone</h1>
+  <p>Kehityksen kotipesä: äänet, lähteet, moottorit, maanosien edistyminen,
+     tarinan kaanon ja työkaluideat. Sivu ei ole linkitetty pelistä.</p>
+
+  <nav id="valilehdet">
+    <button data-tab="aanet">Äänet</button>
+    <button data-tab="lahteet">Lähteet</button>
+    <button data-tab="moottorit">Moottorit</button>
+    <button data-tab="maanosat">Maanosat</button>
+    <button data-tab="tarina">Tarina</button>
+    <button data-tab="ideat">Ideat</button>
+  </nav>
+
+  <!-- ÄÄNET -->
+  <section id="tab-aanet" hidden>
+    <p>Äänistudio on oma sivunsa: ehdokkaiden kuuntelu, valinnat,
+       aloituskohdat, omat osoitteet ja valintojen vienti.</p>
+    <p><a href="aanet.html"><button>Avaa äänistudio →</button></a></p>
+    <h2>Äänilähteet lyhyesti</h2>
+    <ul>
+      <li><b>Freesound</b> — kenttä-äänitykset ja tehosteet (CC0/CC BY, esikuunteluosoitteet toimivat suoraan).</li>
+      <li><b>xeno-canto</b> — lintujen äänet alueittain; valitse laji joka oikeasti pesii seudulla.</li>
+      <li><b>ElevenLabs</b> — puhe (v3/v2) ja efektigeneraattori; ks. Moottorit-välilehti.</li>
+    </ul>
+  </section>
+
+  <!-- LÄHTEET -->
+  <section id="tab-lahteet" hidden>
+    <p>Avoimia aineistolähteitä peliin: kuvia, karttoja, ääntä, dataa ja
+       live-ikkunoita maailmaan. Suodata tyypillä. <b>Tarkista lisenssi aina
+       aineistokohtaisesti</b> — merkintä on lähteen pääsääntö.</p>
+    <div class="grid" id="lahde-suodattimet"></div>
+    <div id="lahde-lista"></div>
+  </section>
+
+  <!-- MOOTTORIT -->
+  <section id="tab-moottorit" hidden>
+    <p>Generointi- ja palvelumoottorit: mikä on käytössä, mitä kannattaa
+       kokeilla, ja krediittien käsikirjanpito. Saldot tallentuvat vain tähän
+       selaimeen — päivitä ne palvelun omasta paneelista katsottuna.
+       <b>API-avaimia ei koskaan kirjata tänne eikä repoon.</b></p>
+    <div id="moottori-lista"></div>
+  </section>
+
+  <!-- MAANOSAT -->
+  <section id="tab-maanosat" hidden>
+    <p>Lautojen edistyminen — luvut lasketaan suoraan pelin paketeista,
+       joten taulukko on aina ajan tasalla. Sääntö: Afrikka hiotaan valmiiksi
+       ennen muita.</p>
+    <div id="maanosa-taulukko"></div>
+    <p style="margin-top:0.8rem">Sarakkeet: kaupungit · kaupunkeja joilla
+       äänimaisematyyppi · kysymyksiä (kaupunkien omat + yleiset) · pulmia ·
+       päiväkirjamerkintöjä · lentorepliikkejä · maiden rajat kartalla.</p>
+  </section>
+
+  <!-- TARINA -->
+  <section id="tab-tarina" hidden>
+    <h2>Kaanon</h2>
+    <p>Nuori matkaaja löytää vintiltä isoisän matkalaukun: kartta vuodelta
+       1872, kukkarollinen puntia ja kulunut päiväkirja. Ensimmäinen sivu:
+       "Maailman ympäri kahdeksassakymmenessä päivässä." Viimeinen sivu on
+       revitty melkein kokonaan — jäljellä vain katkelma <i>"…en tajunnut,
+       että siellä olikin…"</i>. Matkaaja lähtee selvittämään, mitä isoisä
+       löysi. Pääaarretta ei nimetä: se on "jotain suurempaa kuin yksikään
+       ennätys".</p>
+    <h2>Avausteksti (lukittu — ui.js INTRO_TEXT, muutokset vain omistajan luvalla)</h2>
+    <blockquote id="tarina-intro">Ladataan…</blockquote>
+    <h2>Avauslennon repliikki (lukittu, luettu ääneen)</h2>
+    <blockquote id="tarina-lento"></blockquote>
+    <h2>Päiväkirjamerkinnät laudoittain</h2>
+    <div id="tarina-paivakirjat"></div>
+    <h2>Avoimet juonikoukut</h2>
+    <ul>
+      <li>Irti revitty sivu — minne se joutui? Voi löytyä pelin lopussa.</li>
+      <li>Isoisän 80 päivän ennätys — pohjustaa tulevan aikaraja-vastustajan.</li>
+      <li>Matkamuistot palkintoina (sormus, pergamentti, voodoo-esine…) —
+          osa rahanarvoisia, osa jää muistoiksi, joilla voi olla käyttöä myöhemmin.</li>
+      <li>Tanger on väliaikaisesti lukittu ensimmäiseen merkintään äänitestausta varten.</li>
+    </ul>
+  </section>
+
+  <!-- IDEAT -->
+  <section id="tab-ideat" hidden>
+    <p>Kehitystyökalujen suunnitelma (docs/kehitysideat.md):</p>
+    <pre id="ideat-teksti">Ladataan…</pre>
+  </section>
+
+  <script type="module">
+    import { PACKS, packById } from './js/pack.js';
+
+    // --- välilehdet: #aihe-osoite toimii kirjanmerkkinä ---------------------
+    const napit = [...document.querySelectorAll('#valilehdet button')];
+    const nayta = (tab) => {
+      for (const nappi of napit) nappi.classList.toggle('paalla', nappi.dataset.tab === tab);
+      for (const osio of document.querySelectorAll('section[id^="tab-"]')) {
+        osio.hidden = osio.id !== `tab-${tab}`;
+      }
+      history.replaceState(null, '', `#${tab}`);
+    };
+    for (const nappi of napit) nappi.addEventListener('click', () => nayta(nappi.dataset.tab));
+    nayta(location.hash.slice(1) || 'aanet');
+
+    // --- lähteet ------------------------------------------------------------
+    // tila: kaytossa | kokeiltava | idea. Lisenssi on lähteen pääsääntö —
+    // yksittäinen aineisto tarkistetaan aina erikseen.
+    const LAHTEET = [
+      { nimi: 'Wikimedia Commons', tyyppi: 'kuvat', lisenssi: 'PD/CC', api: true, url: 'https://commons.wikimedia.org', tila: 'kaytossa',
+        idea: 'Pelin nykyiset kuvat tulevat Wikipedian kautta täältä. Suora API antaisi enemmän kuvia per paikka.' },
+      { nimi: 'The Met Open Access', tyyppi: 'kuvat', lisenssi: 'CC0', api: true, url: 'https://metmuseum.github.io', tila: 'kokeiltava',
+        idea: 'Yli 400 000 CC0-teosta ilman avainta. Egyptin, Afrikan ja Aasian kokoelmat: aarre-esineiden kuvat, taidekysymykset.' },
+      { nimi: 'Smithsonian Open Access', tyyppi: 'kuvat', lisenssi: 'CC0', api: true, url: 'https://www.si.edu/openaccess', tila: 'kokeiltava',
+        idea: 'Miljoonia CC0-kuvia: luonnontiede, kulttuurit, historia. Ilmainen api.data.gov-avain.' },
+      { nimi: 'Rijksmuseum (Rijksstudio)', tyyppi: 'kuvat', lisenssi: 'PD', api: true, url: 'https://www.rijksmuseum.nl/en/rijksstudio', tila: 'kokeiltava',
+        idea: 'Hollannin kulta-ajan taide suurina kuvina. Löytöretki- ja karttateemat sopivat pelin henkeen.' },
+      { nimi: 'Cleveland Museum of Art', tyyppi: 'kuvat', lisenssi: 'CC0', api: true, url: 'https://openaccess-api.clevelandart.org', tila: 'kokeiltava',
+        idea: 'Avoin API ilman avainta, CC0-teokset. Hyvä Afrikan taiteen kokoelma.' },
+      { nimi: 'Art Institute of Chicago', tyyppi: 'kuvat', lisenssi: 'CC0', api: true, url: 'https://api.artic.edu/docs/', tila: 'kokeiltava',
+        idea: 'Siisti julkinen API, IIIF-kuvat — tarkkoja rajauksia teoksista pulmiin ja kysymyksiin.' },
+      { nimi: 'Europeana', tyyppi: 'kuvat', lisenssi: 'vaihtelee', api: true, url: 'https://pro.europeana.eu/page/apis', tila: 'idea',
+        idea: 'Euroopan museoiden ja arkistojen yhteishaku — Euroopan laudan sisältöön aikanaan.' },
+      { nimi: 'Library of Congress', tyyppi: 'kuvat', lisenssi: 'PD (pääosin)', api: true, url: 'https://www.loc.gov/apis/', tila: 'idea',
+        idea: 'Historialliset valokuvat ja julisteet; 1800-luvun matkakuvaukset sopivat isoisän aikakauteen.' },
+      { nimi: 'Flickr Commons', tyyppi: 'kuvat', lisenssi: 'PD ("no known copyright")', api: true, url: 'https://www.flickr.com/commons', tila: 'idea',
+        idea: 'Kymmenien museoiden vanhat valokuvat yhdellä haulla — aikalaiskuvia kaupungeista.' },
+      { nimi: 'David Rumsey Map Collection', tyyppi: 'kartat', lisenssi: 'CC BY-NC-SA', api: false, url: 'https://www.davidrumsey.com', tila: 'kokeiltava',
+        idea: 'Valtava historiallisten karttojen kokoelma. 1870-luvun Afrikka-kartta "Katso kuva" -aiheeksi tai pulmien pohjaksi.' },
+      { nimi: 'Old Maps Online', tyyppi: 'kartat', lisenssi: 'vaihtelee', api: false, url: 'https://www.oldmapsonline.org', tila: 'idea',
+        idea: 'Hakukone vanhoihin karttoihin paikan mukaan — reitti alkuperäislähteille.' },
+      { nimi: 'Natural Earth', tyyppi: 'kartat', lisenssi: 'PD', api: false, url: 'https://www.naturalearthdata.com', tila: 'kaytossa',
+        idea: 'Rannikot ja maiden rajat tulevat jo täältä. Myös joet ja järvet saatavilla samasta aineistosta.' },
+      { nimi: 'Freesound', tyyppi: 'ääni', lisenssi: 'CC0/CC BY', api: true, url: 'https://freesound.org', tila: 'kaytossa',
+        idea: 'Kaikki pelin kenttä-äänitykset. API-avaimella haku suoraan äänistudioon olisi mahdollinen.' },
+      { nimi: 'xeno-canto', tyyppi: 'ääni', lisenssi: 'CC (vaihtelee)', api: true, url: 'https://xeno-canto.org', tila: 'kokeiltava',
+        idea: 'Lintuäänet lajilleen ja alueelleen: kaupungin ambienssiin juuri sillä seudulla pesivä laji (esim. kenkänokka Bahr el Ghazaliin).' },
+      { nimi: 'BBC Sound Effects', tyyppi: 'ääni', lisenssi: 'RemArc (ei-kaupallinen)', api: false, url: 'https://sound-effects.bbcrewind.co.uk', tila: 'idea',
+        idea: '33 000 arkistotehoste-ääntä; höyrylaivat, juna-asemat, torit. Lisenssi sallii harrastuskäytön.' },
+      { nimi: 'radio aporee', tyyppi: 'ääni', lisenssi: 'CC', api: false, url: 'https://aporee.org/maps/', tila: 'idea',
+        idea: 'Kenttä-äänityksiä kartalla ympäri maailmaa — paikkakohtaisia ambiensseja joita Freesoundista ei löydy.' },
+      { nimi: 'Musopen', tyyppi: 'musiikki', lisenssi: 'PD/CC', api: false, url: 'https://musopen.org', tila: 'idea',
+        idea: 'Vapaita klassisen musiikin äänityksiä — aikakauden salonkimusiikkia esim. voittoruutuun.' },
+      { nimi: 'Free Music Archive', tyyppi: 'musiikki', lisenssi: 'CC (vaihtelee)', api: false, url: 'https://freemusicarchive.org', tila: 'idea',
+        idea: 'CC-musiikkia tunnelmittain, jos tietovisamusiikille halutaan vaihtoehtoja.' },
+      { nimi: 'Internet Archive', tyyppi: 'kuvat', lisenssi: 'vaihtelee (paljon PD)', api: true, url: 'https://archive.org', tila: 'idea',
+        idea: '1800-luvun matkakirjojen skannaukset: aitoja sivuja, piirroksia ja karttoja isoisän kirjan kuvitukseksi.' },
+      { nimi: 'Wikidata', tyyppi: 'data', lisenssi: 'CC0', api: true, url: 'https://www.wikidata.org', tila: 'kokeiltava',
+        idea: 'Rakenteinen tieto (väkiluvut, korkeudet, vuodet) kysymysgeneroinnin ja faktantarkistuksen tueksi.' },
+      { nimi: 'Our World in Data', tyyppi: 'data', lisenssi: 'CC BY', api: false, url: 'https://ourworldindata.org', tila: 'idea',
+        idea: 'Nykypäivän tilastot kysymyksiin, joissa isoisän aikakäsitys törmää nykyaikaan — pelin ydinteema.' },
+      { nimi: 'REST Countries', tyyppi: 'data', lisenssi: 'avoin', api: true, url: 'https://restcountries.com', tila: 'idea',
+        idea: 'Liput, valuutat, kielet ja rajanaapurit koneluettavana — lippukysymykset ja tarkistukset.' },
+      { nimi: 'UNESCO World Heritage', tyyppi: 'data', lisenssi: 'avoin lista', api: false, url: 'https://whc.unesco.org/en/list/', tila: 'idea',
+        idea: 'Maailmanperintökohteet mantereittain — valmis runko uusien kaupunkien "aarrepaikoiksi".' },
+      { nimi: 'Open-Meteo', tyyppi: 'live', lisenssi: 'avoin API', api: true, url: 'https://open-meteo.com', tila: 'kokeiltava',
+        idea: 'Ilmainen sääAPI ilman avainta: saapumiskorttiin kaupungin sää juuri nyt — "Kairossa on tänään 34°C".' },
+      { nimi: 'explore.org', tyyppi: 'live', lisenssi: 'upotus sallittu', api: false, url: 'https://explore.org/livecams', tila: 'kokeiltava',
+        idea: 'Livekamerat Afrikan vesipaikoilta (Mpala, Tembe). "Ikkuna maailmaan" -nappi savannikaupungeissa.' },
+      { nimi: 'Windy Webcams', tyyppi: 'live', lisenssi: 'API (ilmainen taso)', api: true, url: 'https://api.windy.com/webcams', tila: 'idea',
+        idea: 'Kaupunkien webkamerat rajapinnan kautta — live-näkymä saapumiskorttiin missä kamera löytyy.' },
+      { nimi: 'Skyline Webcams', tyyppi: 'live', lisenssi: 'upotus', api: false, url: 'https://www.skylinewebcams.com', tila: 'idea',
+        idea: 'Paljon kaupunkikameroita (mm. Välimeri, Afrikka) — linkkeinä varovaisesti, upotusehdot tarkistettava.' },
+    ];
+    const TYYPIT = ['kaikki', 'kuvat', 'kartat', 'ääni', 'musiikki', 'data', 'live'];
+    const TILAT = { kaytossa: 'käytössä', kokeiltava: 'kokeiltava seuraavaksi', idea: 'idea' };
+    let lahdeTyyppi = 'kaikki';
+    const lahdeSuodattimet = document.getElementById('lahde-suodattimet');
+    for (const t of TYYPIT) {
+      const b = document.createElement('button');
+      b.textContent = t;
+      if (t === lahdeTyyppi) b.classList.add('paalla');
+      b.addEventListener('click', () => {
+        lahdeTyyppi = t;
+        for (const n of lahdeSuodattimet.children) n.classList.toggle('paalla', n === b);
+        piirraLahteet();
+      });
+      lahdeSuodattimet.appendChild(b);
+    }
+    const lahdeLista = document.getElementById('lahde-lista');
+    function piirraLahteet() {
+      lahdeLista.textContent = '';
+      for (const l of LAHTEET) {
+        if (lahdeTyyppi !== 'kaikki' && l.tyyppi !== lahdeTyyppi) continue;
+        const k = document.createElement('div');
+        k.className = 'kortti';
+        k.innerHTML = `
+          <h3>${l.nimi} <span class="tila ${l.tila === 'kaytossa' ? 'kaytossa' : ''}">${TILAT[l.tila]}</span></h3>
+          <div class="meta">${l.tyyppi} · ${l.lisenssi} · ${l.api ? 'API' : 'ei APIa'} ·
+            <a href="${l.url}" target="_blank" rel="noopener">${l.url.replace('https://', '')}</a></div>
+          <p>${l.idea}</p>`;
+        lahdeLista.appendChild(k);
+      }
+    }
+    piirraLahteet();
+
+    // --- moottorit ----------------------------------------------------------
+    const MOOTTORIT = [
+      { id: 'elevenlabs', nimi: 'ElevenLabs', tila: 'kaytossa',
+        mita: 'Puhe (eleven_v3 tunnetageilla, eleven_multilingual_v2 nopeussäädöllä) ja efektigeneraattori (/v1/sound-generation, myös luupit).',
+        huomiot: 'Käytössä: intro, lentorepliikki, 5 päiväkirjaa, 5 efektipilottia. Ääni: Viisas Kertoja. Krediitit kuluvat merkeistä; efektit halpoja, puhe kalliimpaa. Avain kierrätetään generointien jälkeen.' },
+      { id: 'piper', nimi: 'Piper TTS (avoin)', tila: 'kokeiltava',
+        mita: 'Ilmainen paikallinen puhesynteesi, suomenkielisiä ääniä. Ei krediittejä lainkaan.',
+        huomiot: 'Laatu selvästi ElevenLabsia heikompi, mutta ilmainen varakone jos krediitit loppuvat tai halutaan massatuotantoa (esim. joka kaupungin tervehdys).' },
+      { id: 'azure', nimi: 'Azure / Google TTS', tila: 'idea',
+        mita: 'Suuret pilvipuhepalvelut, ilmainen kuukausikiintiö, hyvä suomi.',
+        huomiot: 'Neutraalimpi luenta kuin ElevenLabs. Varteenotettava jos tarvitaan paljon puhetta halvalla.' },
+      { id: 'stableaudio', nimi: 'Stable Audio', tila: 'idea',
+        mita: 'Musiikin ja äänimaisemien generointi tekstistä.',
+        huomiot: 'Voisi tehdä tietovisamusiikin variaatioita. Lisenssiehdot luettava ennen käyttöä pelissä.' },
+      { id: 'musicgen', nimi: 'MusicGen (Meta, avoin)', tila: 'idea',
+        mita: 'Avoin musiikkigeneraattori, ajettavissa itse.',
+        huomiot: 'Ilmainen vaihtoehto taustamusiikin kokeiluihin; laatu vaihtelee.' },
+      { id: 'deepl', nimi: 'DeepL', tila: 'idea',
+        mita: 'Käännökset (ilmainen taso 500 000 merkkiä/kk).',
+        huomiot: 'Jos peli joskus käännetään ruotsiksi/englanniksi, tämä on työkalu siihen.' },
+    ];
+    const MOOTTORI_AVAIN = 'matkakirja-moottorit';
+    const moottoriMuistiot = () => {
+      try { return JSON.parse(localStorage.getItem(MOOTTORI_AVAIN) ?? '{}'); } catch { return {}; }
+    };
+    const moottoriLista = document.getElementById('moottori-lista');
+    function piirraMoottorit() {
+      moottoriLista.textContent = '';
+      const muistiot = moottoriMuistiot();
+      for (const m of MOOTTORIT) {
+        const tiedot = muistiot[m.id] ?? {};
+        const k = document.createElement('div');
+        k.className = 'kortti';
+        k.innerHTML = `
+          <h3>${m.nimi} <span class="tila ${m.tila === 'kaytossa' ? 'kaytossa' : ''}">${TILAT[m.tila] ?? m.tila}</span></h3>
+          <p>${m.mita}</p>
+          <p class="meta">${m.huomiot}</p>`;
+        const kentat = document.createElement('div');
+        kentat.className = 'moottori-kentat';
+        const tee = (nimi, avain, tyyppi = 'text', paikka = '') => {
+          const label = document.createElement('label');
+          label.textContent = nimi;
+          const input = document.createElement('input');
+          input.type = tyyppi;
+          input.value = tiedot[avain] ?? '';
+          input.placeholder = paikka;
+          input.addEventListener('change', () => {
+            const kaikki = moottoriMuistiot();
+            kaikki[m.id] = { ...(kaikki[m.id] ?? {}), [avain]: input.value };
+            try { localStorage.setItem(MOOTTORI_AVAIN, JSON.stringify(kaikki)); } catch { /* ei säily */ }
+          });
+          kentat.appendChild(label);
+          kentat.appendChild(input);
+        };
+        tee('krediittejä jäljellä', 'saldo', 'text', 'esim. 18 400 / 30 000');
+        tee('tarkistettu', 'pvm', 'date');
+        tee('muistiinpano', 'huomio', 'text', 'esim. uusi avain luotu 29.7.');
+        k.appendChild(kentat);
+        moottoriLista.appendChild(k);
+      }
+    }
+    piirraMoottorit();
+
+    // --- maanosat: luvut suoraan paketeista ---------------------------------
+    const TILA_MERKINNAT = {
+      maailma: 'perusta — lennot ja aloitus',
+      africa: 'AKTIIVINEN — hiotaan valmiiksi ensin',
+      europe: 'runko olemassa, odottaa',
+      middleeast: 'runko olemassa, odottaa',
+      asia: 'runko olemassa, odottaa',
+      oceania: 'runko olemassa, odottaa',
+      northamerica: 'runko olemassa, odottaa',
+      southamerica: 'runko olemassa, odottaa',
+      suomi: 'maakohtainen kokeilu',
+      istanbul: 'kaupunkilauta, kokeilu',
+    };
+    const taulu = document.getElementById('maanosa-taulukko');
+    const rivit = PACKS.map((p) => {
+      const kysymykset = Object.values(p.questions ?? {}).reduce((s, lista) => s + (lista?.length ?? 0), 0);
+      const tyypit = p.cities.filter((c) => c.ambience).length;
+      return {
+        nimi: p.boardLabel ?? p.name,
+        tila: TILA_MERKINNAT[p.id] ?? '',
+        kaupungit: p.cities.length,
+        tyypit,
+        kysymykset,
+        pulmat: p.puzzles?.length ?? 0,
+        paivakirjat: p.texts?.diaries?.length ?? 0,
+        repliikit: Object.values(p.texts?.flightLines ?? {}).reduce((s, l) => s + l.length, 0)
+          + (p.texts?.flightDefault?.length ?? 0) + (p.texts?.flightFirst?.length ?? 0),
+        rajat: p.map?.borders ? '✓' : '—',
+      };
+    });
+    const t = document.createElement('table');
+    t.innerHTML = `<tr><th>Lauta</th><th>Tila</th><th>Kaup.</th><th>Äänityypit</th>
+      <th>Kysym.</th><th>Pulmat</th><th>Päiväk.</th><th>Repliikit</th><th>Rajat</th></tr>`
+      + rivit.map((r) => `<tr><td>${r.nimi}</td><td>${r.tila}</td><td class="num">${r.kaupungit}</td>
+        <td class="num">${r.tyypit}</td><td class="num">${r.kysymykset}</td><td class="num">${r.pulmat}</td>
+        <td class="num">${r.paivakirjat}</td><td class="num">${r.repliikit}</td><td>${r.rajat}</td></tr>`).join('');
+    taulu.appendChild(t);
+
+    // --- tarina: lukitut tekstit suoraan lähteistä --------------------------
+    // Avausteksti on ui.js:ssä; haetaan tiedosto ja poimitaan vakio, jotta
+    // tämä sivu ei koskaan näytä vanhentunutta versiota.
+    fetch('js/ui.js').then((r) => r.text()).then((src) => {
+      const m = src.match(/const INTRO_TEXT = ([^;]+);/);
+      if (!m) return;
+      // eval on ok omalla dev-sivulla omalle tiedostolle.
+      const teksti = eval(m[1]); // eslint-disable-line no-eval
+      document.getElementById('tarina-intro').textContent = teksti;
+    }).catch(() => {
+      document.getElementById('tarina-intro').textContent = '(ei saatu luettua ui.js:stä)';
+    });
+    const maailma = packById('maailma');
+    document.getElementById('tarina-lento').textContent = maailma.texts?.flightFirst?.[0] ?? '';
+    const paivakirjat = document.getElementById('tarina-paivakirjat');
+    for (const p of PACKS) {
+      const luvut = p.texts?.diaries ?? [];
+      if (!luvut.length) continue;
+      const k = document.createElement('div');
+      k.className = 'kortti';
+      k.innerHTML = `<h3>${p.boardLabel ?? p.name} (${luvut.length})</h3>`
+        + luvut.map((d) => `<p>· ${d}</p>`).join('');
+      paivakirjat.appendChild(k);
+    }
+
+    // --- ideat: docs/kehitysideat.md ---------------------------------------
+    fetch('docs/kehitysideat.md').then((r) => (r.ok ? r.text() : Promise.reject()))
+      .then((md) => { document.getElementById('ideat-teksti').textContent = md; })
+      .catch(() => {
+        document.getElementById('ideat-teksti').textContent =
+          'Dokumenttia ei saatu ladattua — se on repossa: docs/kehitysideat.md';
+      });
+  </script>
+</body>
+</html>
