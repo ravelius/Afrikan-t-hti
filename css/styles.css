@@ -780,6 +780,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   stroke-linejoin: round;
   opacity: 0.22;
 }
+/* Sen maan rajat, jossa pelaaja on, piirtyvät tummempina. */
+.border-active {
+  stroke-width: 1.4;
+  opacity: 0.55;
+}
 
 .wave { fill: none; stroke: var(--sea-ink); stroke-width: 2; opacity: 0.45; stroke-linecap: round; }
 

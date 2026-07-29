@@ -8,6 +8,7 @@
 import { AFRICA_QUESTIONS, AFRICA_FACTS } from './africa-questions.js';
 import { AFRICA_PUZZLES } from './africa-puzzles.js';
 import { AFRICA_BORDERS } from './africa-borders.js';
+import { AFRICA_COUNTRY_BORDERS, AFRICA_CITY_COUNTRY } from './africa-countries.js';
 import { themedTokenTypes } from '../tokens.js';
 
 const AFRICA_MAP = {
@@ -195,6 +196,8 @@ export const AFRICA = {
     ...AFRICA_MAP,
     outlines: [AFRICA_MAP.africaPoints, AFRICA_MAP.madagascarPoints],
     borders: AFRICA_BORDERS,
+    countryBorders: AFRICA_COUNTRY_BORDERS,
+    cityCountry: AFRICA_CITY_COUNTRY,
   },
   cities: AFRICA_CITIES,
   edges: AFRICA_EDGES,
