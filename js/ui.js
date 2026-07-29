@@ -392,6 +392,7 @@ export class UI {
     this.dead = true;
     stopPlaceStream();
     stopQuizMusic();
+    sfx.stopFlight();
     this.stopIntroVoice();
     this.stopDiaryVoice();
     // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
@@ -2682,7 +2683,8 @@ export class UI {
       requestAnimationFrame(askel);
     });
 
-    sfx.stopFlight();
+    // Moottori jää käymään kalvon ajaksi — se hiljenee vasta, kun
+    // pelaaja astuu ulos koneesta.
 
     // Perillä kalvo jää odottamaan: lukuääni saa puhua rauhassa, ja
     // pelaaja astuu ulos itse valitsemallaan hetkellä.
@@ -2705,6 +2707,7 @@ export class UI {
       }
     });
 
+    sfx.stopFlight();
     overlay.classList.add('flight-leaving');
     await this.wait(280);
     overlay.remove();

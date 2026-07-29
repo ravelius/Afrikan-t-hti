@@ -263,8 +263,8 @@ class Sound {
       const g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t0);
       g.gain.exponentialRampToValueAtTime(0.5, t0 + 0.9);
-      g.gain.setValueAtTime(0.5, t0 + Math.max(1, kesto - 1));
-      g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+      // Ei ajastettua loppua: moottori soi, kunnes stopFlight häivyttää
+      // sen — kalvo on auki niin kauan kuin pelaaja viipyy koneessa.
       src.connect(g).connect(this.bus);
       // Pitkissä äänityksissä alku on lähestymistä ja odottelua —
       // hypätään suoraan lennon ytimeen (omistajan ohje: ~25 s kohdalta).
@@ -274,7 +274,6 @@ class Sound {
       src.loopStart = alku;
       src.loopEnd = jet.duration;
       src.start(t0, alku);
-      src.stop(t0 + kesto + 0.1);
       this.flightNodes = { lahteet: [src], vaimennukset: [g] };
       src.onended = () => {
         if (this.flightNodes?.lahteet?.includes(src)) this.flightNodes = null;
@@ -299,12 +298,10 @@ class Sound {
     depth.gain.value = 0.65;
     lfo.connect(lfoGain).connect(depth.gain);
 
-    // Nousee ja laskee kohtauksen mukana.
+    // Nousee lentoon ja jää soimaan; stopFlight häivyttää.
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t0);
     g.gain.exponentialRampToValueAtTime(0.075, t0 + 0.5);
-    g.gain.setValueAtTime(0.075, t0 + kesto - 0.8);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
     // Moottorin virtausääni potkurin alle: kohinaa kaistanpäästön läpi,
     // taajuus nousee lähdössä ja laskee laskeutuessa. Tämä tekee lennosta
@@ -321,8 +318,6 @@ class Sound {
     const vg = ctx.createGain();
     vg.gain.setValueAtTime(0.0001, t0);
     vg.gain.exponentialRampToValueAtTime(0.055, t0 + 0.7);
-    vg.gain.setValueAtTime(0.055, t0 + kesto - 0.9);
-    vg.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
     // Matala jyrinä pohjalle.
     const runko = ctx.createBufferSource();
@@ -334,15 +329,11 @@ class Sound {
     const rg = ctx.createGain();
     rg.gain.setValueAtTime(0.0001, t0);
     rg.gain.exponentialRampToValueAtTime(0.06, t0 + 0.6);
-    rg.gain.setValueAtTime(0.06, t0 + kesto - 0.9);
-    rg.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
     osc.connect(lp).connect(depth).connect(g).connect(this.bus);
     virtaus.connect(vf).connect(vg).connect(this.bus);
     runko.connect(rf).connect(rg).connect(this.bus);
     osc.start(t0); lfo.start(t0); virtaus.start(t0); runko.start(t0);
-    osc.stop(t0 + kesto + 0.1); lfo.stop(t0 + kesto + 0.1);
-    virtaus.stop(t0 + kesto + 0.1); runko.stop(t0 + kesto + 0.1);
     this.flightNodes = { lahteet: [osc, lfo, virtaus, runko], vaimennukset: [g, vg, rg] };
     // Siivotaan itsestään, jos stopFlight jää kutsumatta.
     osc.onended = () => {
@@ -357,12 +348,14 @@ class Sound {
     this.flightNodes = null;
     const t = this.ctx.currentTime;
     try {
+      // Moottori hiipuu rauhassa — pelaaja astuu ulos, kone ei sammu
+      // seinään.
       for (const gain of solmut.vaimennukset) {
         gain.gain.cancelScheduledValues(t);
         gain.gain.setValueAtTime(Math.max(gain.gain.value, 0.0001), t);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
       }
-      for (const src of solmut.lahteet) src.stop(t + 0.4);
+      for (const src of solmut.lahteet) src.stop(t + 1);
     } catch {
       /* solmu oli jo pysäytetty */
     }
