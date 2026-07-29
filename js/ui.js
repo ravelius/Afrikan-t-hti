@@ -389,6 +389,9 @@ export class UI {
     stopQuizMusic();
     this.stopIntroVoice();
     this.stopDiaryVoice();
+    // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
+    document.body.classList.remove('flight-active');
+    for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
@@ -2459,9 +2462,12 @@ export class UI {
     const overlay = html('div', 'flight-overlay');
     const scene = el('svg', { viewBox: '0 0 1000 560', class: 'flight-scene' }, overlay);
     this.mapPane.appendChild(overlay);
+    // Alareunan kortit ja napit piiloon lennon ajaksi: kalvon alla näkyy
+    // vain kohdemantereen kartta. Lukuääni jatkuu kalvon alla.
+    document.body.classList.add('flight-active');
 
-    // Napautus mihin tahansa ohittaa kohtauksen — lento hyppää perille
-    // ja kalvo häipyy saman tien.
+    // Napautus mihin tahansa hypäyttää koneen perille; kalvo pysyy
+    // kuitenkin esillä, kunnes pelaaja astuu ulos napista.
     let ohitettu = false;
     overlay.addEventListener('pointerdown', () => { ohitettu = true; }, { once: true });
 
@@ -2567,22 +2573,19 @@ export class UI {
 
     sfx.stopFlight();
 
-    // Kohtaus häipyy itsestään pienen lukutauon jälkeen — tai heti, kun
-    // pelaaja napauttaa mihin tahansa.
-    if (!ohitettu) {
-      await new Promise((resolve) => {
-        const ajastin = setTimeout(resolve, 1900);
-        overlay.addEventListener('pointerdown', () => {
-          clearTimeout(ajastin);
-          resolve();
-        }, { once: true });
-      });
-    }
+    // Perillä kalvo jää odottamaan: lukuääni saa puhua rauhassa, ja
+    // pelaaja astuu ulos itse valitsemallaan hetkellä.
+    await new Promise((resolve) => {
+      const nappi = html('button', 'flight-exit', 'Astu ulos');
+      nappi.addEventListener('click', resolve, { once: true });
+      overlay.appendChild(nappi);
+    });
 
     overlay.classList.add('flight-leaving');
     await this.wait(280);
     overlay.remove();
     this.hideFlightLine();
+    document.body.classList.remove('flight-active');
   }
 
   /** Nuoren herran repliikki lennon ajaksi, kirjoituskoneella. */
