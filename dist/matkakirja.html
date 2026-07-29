@@ -1750,6 +1750,9 @@ body[data-mode] .rail > * { pointer-events: auto; }
  * (viewport-fit=cover), joten alas ei jää tyhjää tummaa raitaa — ja
  * manner keskittyy koko korkeuteen. */
 body[data-mode] .stage { padding-bottom: 0; }
+/* Myös sovelluskehyksen oma turva-alue pois alhaalta: kartta saa jatkua
+ * koti-indikaattorin alle, ja kelluvat kortit väistävät sitä itse. */
+body[data-mode] .app { padding-bottom: 0; }
 body[data-mode] .map-pane {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -32510,7 +32513,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.32';
+const APP_VERSION = '2026-07-29.33';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
