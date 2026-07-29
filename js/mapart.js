@@ -168,6 +168,12 @@ export function drawLand(svg, map) {
     el('path', { d, class: 'lake' }, g);
     el('path', { d, class: 'coast' }, g);
   }
+  // Maiden rajat hyvin hennolla katkoviivalla — koriste, ei pelielementti.
+  // Sama rough-suodatin kuin rannikolla antaa käsin piirretyn vaikutelman.
+  for (const line of map.borders ?? []) {
+    const d = `M${line.map(([x, y]) => `${x},${y}`).join(' L')}`;
+    el('path', { d, class: 'border' }, g);
+  }
 }
 
 // --- geometria: missä on merta, missä tyhjää maata ------------------------

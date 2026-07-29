@@ -7,6 +7,7 @@
 
 import { AFRICA_QUESTIONS, AFRICA_FACTS } from './africa-questions.js';
 import { AFRICA_PUZZLES } from './africa-puzzles.js';
+import { AFRICA_BORDERS } from './africa-borders.js';
 import { themedTokenTypes } from '../tokens.js';
 
 const AFRICA_MAP = {
@@ -190,7 +191,11 @@ export const AFRICA = {
   tagline: 'Etsi tähti, vastaa kysymyksiin, palaa kotiin.',
   ariaLabel: 'Afrikan aarrekartta',
 
-  map: { ...AFRICA_MAP, outlines: [AFRICA_MAP.africaPoints, AFRICA_MAP.madagascarPoints] },
+  map: {
+    ...AFRICA_MAP,
+    outlines: [AFRICA_MAP.africaPoints, AFRICA_MAP.madagascarPoints],
+    borders: AFRICA_BORDERS,
+  },
   cities: AFRICA_CITIES,
   edges: AFRICA_EDGES,
   airRoutes: AFRICA_AIR_ROUTES,

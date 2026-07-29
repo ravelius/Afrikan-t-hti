@@ -366,7 +366,11 @@ export class Game {
     if (edges.some((e) => e.type === 'land')) modes.push('land');
     if (edges.some((e) => e.type === 'sea') && player.money >= SEA_FARE) modes.push('sea');
     if (this.airportDestinations(player).length) modes.push('fly');
-    if (this.tokens.has(city.id)) modes.push('stay');
+    // Tutki paikka: laatan lisäksi myös näkemätön pulma tai kertaalleen
+    // tutkimaton kaupunki — mikään niistä ei aukea itsestään, vaan napista.
+    if (this.tokens.has(city.id) || this.pendingPuzzle(player) || this.canExplore(city)) {
+      modes.push('stay');
+    }
     return modes;
   }
 
@@ -772,16 +776,14 @@ export class Game {
   }
 
   /**
-   * Saapumiskortti tarjotaan, kun kaupungissa on laatta, näkemätön pulma
-   * TAI tutkimatonta tutkittavaa. Pulma ei hyppää ruudulle itsestään —
-   * kaikki aukeaa vasta Tutki paikka -napista.
+   * Saapumiskortti tarjotaan vain, kun kaupungissa on laatta — se on
+   * aarrepysähdys ja pelin ydin. Laatattomissa kaupungeissa (pulmat ja
+   * tutkiminen) mikään ei hyppää ruudulle itsestään: Tutki paikka -nappi
+   * odottaa alavalikossa (travelModes: stay).
    */
   offerQuiz() {
     const city = this.cityOf();
-    if (!city) return false;
-    if (!this.tokens.has(city.id) && !this.pendingPuzzle() && !this.canExplore(city)) {
-      return false;
-    }
+    if (!city || !this.tokens.has(city.id)) return false;
     this.phase = 'offer';
     return true;
   }
