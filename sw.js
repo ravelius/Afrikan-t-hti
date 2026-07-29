@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-07-29.21';
+const CACHE = 'matkakirja-2026-07-29.22';
 const SHELL = [
   './',
   './index.html',
@@ -44,6 +44,7 @@ const SHELL = [
   './js/die.js',
   './assets/icon.svg',
   './assets/audio/intro-puhe.mp3',
+  './assets/audio/puhe-lento-alku.mp3',
   './assets/audio/puhe-africa-paivakirja-0.mp3',
   './assets/audio/puhe-africa-paivakirja-1.mp3',
   './assets/audio/puhe-africa-paivakirja-2.mp3',

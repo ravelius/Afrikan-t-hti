@@ -454,12 +454,11 @@ export const MAAILMA = {
     ],
     // Ensimmäinen lento: matka alkaa, ja repliikki hehkuttaa aina
     // matkakirjaa — se on koko pelin lähtölaukaus.
+    // Avauslennon repliikki on lukittu yhteen riviin, koska sille on
+    // tuotettu lukuääni (assets/audio/puhe-lento-alku.mp3) — teksti ja
+    // puhe pysyvät aina samana. Rivi jatkaa avaustekstin revittyä sivua.
     flightFirst: [
-      'Kone nousee ja isoisän kirja on sylissäni auki ensimmäiseltä sivulta: kahdeksankymmentä päivää. Hyvä on, isoisä — katsotaan mihin minä pystyn.',
-      'Selasin kirjaa jo kiitotiellä: joka sivulla on paikka, jonka haluan nähdä omin silmin, ja nyt siivet vievät kohti ensimmäistä. Vihdoinkin!',
-      'Painan kämmeneni kirjan kannelle: sata viisikymmentä vuotta ja kesken jäänyt lause. Tästä hetkestä alkaen sitä kirjoitetaan loppuun.',
-      'Kirja hyppii polvillani koneen mukana, ja huomaan hymyileväni aivan itsekseni. Tämä on se sivu, jolla minun matkani alkaa.',
-      'Avaan kirjan sattumanvaraiselta kohdalta ja lupaan käydä joka paikassa, jonka isoisä alleviivasi. Lupaus on holtiton, ja juuri siksi teen sen.',
+      'Painan kämmeneni kirjan kannelle: sata viisikymmentä vuotta ja revitty sivu. Tästä hetkestä alkaen tarinaa kirjoitetaan loppuun.',
     ],
     intro: 'Peli alkaa! Etsikää Magellanin kompassi — maailmanympäripurjehtijan kadonnut aarre.',
     starFound: (name, city) => `★ ${name} löysi MAGELLANIN KOMPASSIN kaupungista ${city}!`,
