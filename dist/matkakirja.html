@@ -32342,25 +32342,30 @@ class UI {
     // mittaamalla, koska symboli istuu tekstin vasemmalla puolella.
     const tunnus = LAUTA_TUNNUSLUVUT[pack.id];
     if (tunnus) {
-      const rivit = [
+      // Yksi rivi (omistajan toive): symbolit ja luvut ladotaan peräkkäin
+      // mitaten, ja koko rivi keskitetään lopuksi otsikon alle.
+      const osat = [
         { teksti: tunnus.ala, ikoni: '<rect x="1" y="1" width="12.6" height="12.6" rx="1.8"/><path d="M1 9.4l3.4-3 2.6 2.2 3.2-3.6 3.4 2.6"/>' },
         { teksti: tunnus.vaki, ikoni: '<circle cx="7.3" cy="4.1" r="2.7"/><path d="M2 13.4c.7-3.4 2.7-5.1 5.3-5.1s4.6 1.7 5.3 5.1"/>' },
       ];
-      rivit.forEach((rivi, i) => {
-        const g = el('g', { class: 'map-tunnus' }, root);
-        const y = decor.mapLabelPos.y + 40 + i * 23;
-        el('text', {
-          x: 20, y, class: 'map-legend', 'text-anchor': 'start',
-        }, g).textContent = rivi.teksti;
+      const g = el('g', { class: 'map-tunnus' }, root);
+      const y = decor.mapLabelPos.y + 44;
+      let x = 0;
+      for (const osa of osat) {
         const kuvake = el('g', {
           class: 'map-tunnus-ikoni',
-          transform: `translate(0, ${y - 12.5})`,
+          transform: `translate(${x.toFixed(1)}, ${y - 12.5})`,
         }, g);
-        kuvake.innerHTML = rivi.ikoni;
-        const bb = g.getBBox();
-        g.setAttribute('transform',
-          `translate(${(decor.mapLabelPos.x - bb.width / 2 - bb.x).toFixed(1)}, 0)`);
-      });
+        kuvake.innerHTML = osa.ikoni;
+        const teksti = el('text', {
+          x: x + 19, y, class: 'map-legend', 'text-anchor': 'start',
+        }, g);
+        teksti.textContent = osa.teksti;
+        x += 19 + teksti.getComputedTextLength() + 24;
+      }
+      const bb = g.getBBox();
+      g.setAttribute('transform',
+        `translate(${(decor.mapLabelPos.x - bb.width / 2 - bb.x).toFixed(1)}, 0)`);
     }
 
     // Kaupungit ja nimet.
@@ -35482,7 +35487,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.69';
+const APP_VERSION = '2026-07-30.70';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -35682,7 +35687,13 @@ updateBtn.addEventListener('click', async () => {
   } catch {
     /* päivitys onnistuu myös ilman välimuistin siivousta */
   }
-  location.reload();
+  // iOS:n kotivalikkosovellus välimuistittaa aloitussivun myös service
+  // workerin ohi: pelkkä reload voi palauttaa vanhan sivun. Muuttuva
+  // parametri tekee osoitteesta uuden, jolloin sivu haetaan oikeasti
+  // verkosta. Peli ohittaa tuntemattomat parametrit.
+  const osoite = new URL(location.href);
+  osoite.searchParams.set('paivitys', String(Date.now()));
+  location.replace(osoite.toString());
 });
 
 document.getElementById('app-version').textContent = APP_VERSION;

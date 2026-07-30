@@ -9,7 +9,7 @@ import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.69';
+const APP_VERSION = '2026-07-30.70';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -209,7 +209,13 @@ updateBtn.addEventListener('click', async () => {
   } catch {
     /* päivitys onnistuu myös ilman välimuistin siivousta */
   }
-  location.reload();
+  // iOS:n kotivalikkosovellus välimuistittaa aloitussivun myös service
+  // workerin ohi: pelkkä reload voi palauttaa vanhan sivun. Muuttuva
+  // parametri tekee osoitteesta uuden, jolloin sivu haetaan oikeasti
+  // verkosta. Peli ohittaa tuntemattomat parametrit.
+  const osoite = new URL(location.href);
+  osoite.searchParams.set('paivitys', String(Date.now()));
+  location.replace(osoite.toString());
 });
 
 document.getElementById('app-version').textContent = APP_VERSION;
