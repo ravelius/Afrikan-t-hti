@@ -1904,16 +1904,17 @@ export class UI {
         if (this.luettuSaapuminen !== luentaAvain) {
           this.luettuSaapuminen = luentaAvain;
           // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
-          // lyhyt vain nuoren herran osuuden (luenta pysähtyy kuvauksen ja
-          // noston väliseen hengähdykseen), ei kertojaa jättää luennan
-          // aloittamatta — kaiutinnappi yliajaa sen hetkellisesti.
+          // lyhyt vain ensimmäisen lauseen (omistajan tarkennus — luenta
+          // pysähtyy ensimmäisen virkkeen jälkeiseen hengähdykseen), ei
+          // kertojaa jättää luennan aloittamatta — kaiutinnappi yliajaa
+          // sen hetkellisesti.
           const tila = kertojaTila();
           if (tila === 'ei') {
             this.stopDiaryVoice();
           } else if (tila === 'lyhyt') {
             this.playDiaryVoice(this.diaryFullUrl, {
               ekaLauseeseen: true,
-              osuus: uusi.kuvaus.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
+              osuus: eka.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
             });
           } else {
             this.playDiaryVoice(this.diaryFullUrl);

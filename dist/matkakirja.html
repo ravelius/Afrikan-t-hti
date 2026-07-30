@@ -37247,16 +37247,17 @@ class UI {
         if (this.luettuSaapuminen !== luentaAvain) {
           this.luettuSaapuminen = luentaAvain;
           // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
-          // lyhyt vain nuoren herran osuuden (luenta pysähtyy kuvauksen ja
-          // noston väliseen hengähdykseen), ei kertojaa jättää luennan
-          // aloittamatta — kaiutinnappi yliajaa sen hetkellisesti.
+          // lyhyt vain ensimmäisen lauseen (omistajan tarkennus — luenta
+          // pysähtyy ensimmäisen virkkeen jälkeiseen hengähdykseen), ei
+          // kertojaa jättää luennan aloittamatta — kaiutinnappi yliajaa
+          // sen hetkellisesti.
           const tila = kertojaTila();
           if (tila === 'ei') {
             this.stopDiaryVoice();
           } else if (tila === 'lyhyt') {
             this.playDiaryVoice(this.diaryFullUrl, {
               ekaLauseeseen: true,
-              osuus: uusi.kuvaus.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
+              osuus: eka.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
             });
           } else {
             this.playDiaryVoice(this.diaryFullUrl);
@@ -39610,7 +39611,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.87';
+const APP_VERSION = '2026-07-30.88';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
