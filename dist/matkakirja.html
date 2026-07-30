@@ -37741,6 +37741,10 @@ class UI {
    */
   naytaFactValokuva(cityId, paikka) {
     const valokuva = cityId ? (VALOKUVAT[this.game.pack.id] ?? {})[cityId] ?? null : null;
+    // Kaupungin vaihtuessa edellisen kaupungin auki jäänyt kortti suljetaan
+    // aina — muuten vanha pino voi jäädä uuden kaupungin kortin alle.
+    if (cityId !== this.factValokuvaCityId) this.suljePostikortti();
+    this.factValokuvaCityId = cityId;
     this.factValokuvaTiedot = valokuva ? { ...valokuva, paikka } : null;
     if (!valokuva) {
       this.factValokuva.hidden = true;
@@ -37755,9 +37759,9 @@ class UI {
   }
 
   /**
-   * Valokuva aukeaa postikorttina hieman vinottain muistikirjan viereen:
-   * valkoiset reunukset, kuvateksti ja lähde. Napautus mihin tahansa
-   * sulkee kortin.
+   * Valokuva aukeaa postikorttina hieman vinottain keskelle ruutua:
+   * valkoiset reunukset, kuvateksti ja lähde. Kuvapinossa napautus kuvaan
+   * vaihtaa kortit; kortti suljetaan napauttamalla sen ulkopuolelle.
    */
   naytaPostikortti() {
     this.suljePostikortti();
@@ -37784,26 +37788,14 @@ class UI {
       kortti.appendChild(teeKortti({ ...tiedot.uusi, vuosi: tiedot.uusi.vuosi ?? 'nykypäivä' },
         'uusi alla', `Uusi valokuva: ${tiedot.paikka}`));
     }
-    // Kortti muistikirjan viereen: yläpuolelle kun muistikirja on ruudun
-    // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
-    const rect = this.factCard.getBoundingClientRect();
+    // Kortti keskelle ruutua — sama paikka yhdelle kuvalle ja pinolle,
+    // jotta avaus näyttää samalta joka laitteella (omistajan havainto:
+    // laidassa aukeava yksittäinen kortti näytti oudolta leveällä ruudulla).
     const leveys = Math.min(window.innerWidth * 0.78, 400);
-    if (tiedot.uusi) {
-      // Kuvapino keskemmälle ruutua (omistajan toive) — vara oikealle
-      // riittää alta pilkottavalle kortille.
-      kortti.style.left = `${Math.max(8, (window.innerWidth - leveys - 24) / 2)}px`;
-      document.body.appendChild(kortti);
-      const korkeus = kortti.offsetHeight;
-      kortti.style.top = `${Math.max(12, (window.innerHeight - korkeus) / 2 - 24)}px`;
-    } else {
-      kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - 8, rect.left))}px`;
-      if (rect.top > window.innerHeight / 2) {
-        kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
-      } else {
-        kortti.style.top = `${rect.bottom + 10}px`;
-      }
-      document.body.appendChild(kortti);
-    }
+    kortti.style.left = `${Math.max(8, (window.innerWidth - leveys - 24) / 2)}px`;
+    document.body.appendChild(kortti);
+    const korkeus = kortti.offsetHeight;
+    kortti.style.top = `${Math.max(12, (window.innerHeight - korkeus) / 2 - 24)}px`;
     this.postikortti = kortti;
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
     // sulkemista — napautus mihin tahansa sulkee kortin.
@@ -37814,8 +37806,12 @@ class UI {
 
   suljePostikortti() {
     document.removeEventListener('pointerdown', this.postikorttiSulkija, true);
-    this.postikortti?.remove();
     this.postikortti = null;
+    // Poistetaan seuratun kortin lisäksi mahdolliset orvoiksi jääneet
+    // kortit — kaksi päällekkäistä korttia eri kaupungeista näytti
+    // rikkinäiseltä (omistajan havainto). Kulttuurisuurennos ei ole
+    // bodyn alla, joten se ei osu tähän.
+    for (const kortti of document.querySelectorAll('body > .postikortti')) kortti.remove();
   }
 
   /**
@@ -40388,7 +40384,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.100';
+const APP_VERSION = '2026-07-30.101';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
