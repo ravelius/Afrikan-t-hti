@@ -711,21 +711,24 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   pointer-events: none;
 }
 
-/* Todella hennot selailunuolet: kuvia voi vaihtaa avaamatta isoksi.
-   Dialogin yleinen nappityyli (katkoviivakehys) kumotaan tässä. */
+/* Hennot selailunuolet: kuvia voi vaihtaa avaamatta isoksi. Koko kuvan
+   vasen ja oikea laita on klikattavaa nuolialuetta; keskeltä kuva aukeaa
+   suurennokseen. Dialogin yleinen nappityyli kumotaan tässä. */
 .dialog button.arrival-kuva-nuoli {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1.5rem;
-  height: 2.2rem;
+  top: 0;
+  bottom: 0;
+  width: 32%;
+  height: auto;
+  display: flex;
+  align-items: center;
   border: 0;
   border-radius: 6px;
   background: transparent;
   box-shadow: none;
-  color: rgba(255, 250, 240, 0.55);
-  text-shadow: 0 1px 3px rgba(20, 14, 6, 0.7);
-  font-size: 1.4rem;
+  color: rgba(255, 250, 240, 0.78);
+  text-shadow: 0 1px 3px rgba(20, 14, 6, 0.75);
+  font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
   padding: 0;
@@ -734,11 +737,20 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .dialog button.arrival-kuva-nuoli:hover:not(:disabled) {
   background: transparent;
-  color: rgba(255, 250, 240, 0.95);
+  color: rgba(255, 250, 240, 1);
 }
 
-.arrival-kuva-nuoli.edellinen { left: 0.15rem; }
-.arrival-kuva-nuoli.seuraava { right: 0.15rem; }
+.dialog button.arrival-kuva-nuoli.edellinen {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: 0.35rem;
+}
+
+.dialog button.arrival-kuva-nuoli.seuraava {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: 0.35rem;
+}
 
 .arrival-card .wiki-btn { margin: 0 0 0.7rem; }
 
