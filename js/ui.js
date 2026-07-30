@@ -1770,17 +1770,22 @@ export class UI {
     // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
     const rect = this.factCard.getBoundingClientRect();
     const leveys = Math.min(window.innerWidth * 0.78, 400);
-    // Pino tarvitsee tilaa myös alta pilkottavalle kortille — ilman
-    // varaa pilkotus leikkautui ruudun oikeaan reunaan (omistajan
-    // havainto iPadilla).
-    const vara = tiedot.uusi ? 44 : 8;
-    kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - vara, rect.left))}px`;
-    if (rect.top > window.innerHeight / 2) {
-      kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+    if (tiedot.uusi) {
+      // Kuvapino keskemmälle ruutua (omistajan toive) — vara oikealle
+      // riittää alta pilkottavalle kortille.
+      kortti.style.left = `${Math.max(8, (window.innerWidth - leveys - 24) / 2)}px`;
+      document.body.appendChild(kortti);
+      const korkeus = kortti.offsetHeight;
+      kortti.style.top = `${Math.max(12, (window.innerHeight - korkeus) / 2 - 24)}px`;
     } else {
-      kortti.style.top = `${rect.bottom + 10}px`;
+      kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - 8, rect.left))}px`;
+      if (rect.top > window.innerHeight / 2) {
+        kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+      } else {
+        kortti.style.top = `${rect.bottom + 10}px`;
+      }
+      document.body.appendChild(kortti);
     }
-    document.body.appendChild(kortti);
     this.postikortti = kortti;
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
     // sulkemista — napautus mihin tahansa sulkee kortin.
@@ -2349,12 +2354,14 @@ export class UI {
     kohta(rivi1, 'vaki', tiedot.vakiluku, 'Väkiluku');
     kohta(rivi1, 'ala', tiedot.pintaAla, 'Pinta-ala');
     if (tiedot.demokratia) {
-      const linkki = html('a', 'maa-demokratia', `${tiedot.demokratia.arvo} · V-Dem`);
-      linkki.href = tiedot.demokratia.linkki;
-      linkki.target = '_blank';
-      linkki.rel = 'noopener noreferrer';
-      kohta(rivi2, 'vaaka', [linkki, sija(tiedot.demokratia.sija)],
-        'Demokratiaindeksi (V-Dem, 0–1), suluissa sijoitus maailmassa — avaa maan kuvaajan');
+      // Klikkaus avaa ensin pienen infoikkunan, joka selittää miksi
+      // maan luku on se mikä on — varsinainen kuvaajalinkki on siellä
+      // (omistajan toive).
+      const nappi = html('button', 'maa-demokratia', `${tiedot.demokratia.arvo} · V-Dem`);
+      nappi.type = 'button';
+      nappi.addEventListener('click', () => this.naytaVdemInfo(tiedot.demokratia));
+      kohta(rivi2, 'vaaka', [nappi, sija(tiedot.demokratia.sija)],
+        'Demokratiaindeksi (V-Dem, 0–1), suluissa sijoitus maailmassa — avaa selityksen');
     }
     if (tiedot.keskitulo) {
       kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
@@ -2374,6 +2381,44 @@ export class UI {
       if (t.osuus) osa.appendChild(html('span', 'maa-sija', ` ${t.osuus}`));
       this.arrivalMaaTervehdykset.appendChild(osa);
     }
+  }
+
+  /**
+   * Pieni infoikkuna V-Dem-luvusta (omistajan toive): maakohtainen
+   * selitys siitä, miksi luku on se mikä on, lyhyt kuvaus V-Demistä ja
+   * vasta niiden alla varsinainen linkki maan kuvaajaan.
+   */
+  naytaVdemInfo(demokratia) {
+    const emo = this.arrivalDialog.open ? this.arrivalDialog : document.body;
+    const kerros = html('div', 'vdem-info');
+    const kortti = html('div', 'vdem-kortti');
+    const maaNimi = this.arrivalMaaNimi?.textContent || '';
+    kortti.appendChild(html('h3', 'vdem-otsikko', `Demokratia — ${maaNimi}`));
+    kortti.appendChild(html('p', 'vdem-arvo',
+      `V-Dem-indeksi ${demokratia.arvo}` + (demokratia.sija ? ` · sija ${demokratia.sija} maailmassa` : '')));
+    if (demokratia.selitys) {
+      kortti.appendChild(html('p', 'vdem-selitys', demokratia.selitys));
+    }
+    kortti.appendChild(html('p', 'vdem-yleis',
+      'V-Dem (Varieties of Democracy) on Göteborgin yliopiston tutkimus'
+      + 'laitos, jonka liberaalin demokratian indeksi (0–1) mittaa vaalien '
+      + 'vapautta, kansalaisoikeuksia ja vallankäytön valvontaa. Luku on '
+      + 'satojen tutkijoiden arvioiden yhdistelmä.'));
+    const linkki = html('a', 'vdem-linkki', 'Avaa maan kuvaaja — Our World in Data');
+    linkki.href = demokratia.linkki;
+    linkki.target = '_blank';
+    linkki.rel = 'noopener noreferrer';
+    kortti.appendChild(linkki);
+    kerros.appendChild(kortti);
+    // Napautus kortin ulkopuolelle sulkee.
+    kerros.addEventListener('click', (e) => {
+      if (e.target === kerros) kerros.remove();
+    });
+    const sulje = html('button', 'vdem-sulje', '✕');
+    sulje.type = 'button';
+    sulje.addEventListener('click', () => kerros.remove());
+    kortti.appendChild(sulje);
+    emo.appendChild(kerros);
   }
 
   /**

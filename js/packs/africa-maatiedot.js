@@ -23,6 +23,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,13',
       sija: '130./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MAR',
+      selitys: 'Marokossa järjestetään vaalit, mutta kuningas pitää lopullisen vallan: hallitus toimii hänen alaisuudessaan, ja arkaluontoisista aiheista kirjoittamista rajoitetaan.',
     },
     keskitulo: { arvo: '4 000 $/v', sija: '125./190' },
     // `osuus` on karkea arvio kielen puhujista maassa (moni puhuu
@@ -41,6 +42,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,10',
       sija: '145./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~LBY',
+      selitys: 'Libyan pitkä sisällissota jakoi maan kilpaileviin hallintoihin, ja luvattuja vaaleja on lykätty vuodesta toiseen.',
     },
     keskitulo: { arvo: '7 000 $/v', sija: '95./190' },
     tervehdykset: [
@@ -56,6 +58,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,07',
       sija: '160./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~EGY',
+      selitys: 'Egyptiä johtaa armeijan tukema hallinto: oppositio, media ja järjestöt ovat tiukassa valvonnassa, ja vaalien tulos on käytännössä ennalta selvä.',
     },
     keskitulo: { arvo: '4 000 $/v', sija: '125./190' },
     tervehdykset: [
@@ -70,6 +73,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,42',
       sija: '60./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SEN',
+      selitys: 'Senegalissa valta on vaihtunut vaaleilla ilman vallankaappauksia — Länsi-Afrikan pisimpiä perinteitä. Viime vuosien poliittiset jännitteet ovat hieman laskeneet lukua.',
     },
     keskitulo: { arvo: '1 600 $/v', sija: '155./190' },
     tervehdykset: [
@@ -85,6 +89,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,13',
       sija: '130./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MLI',
+      selitys: 'Malissa armeija kaappasi vallan kahdesti 2020–2021, ja paluuta vaaleihin on siirretty — siksi luku on pudonnut matalalle.',
     },
     keskitulo: { arvo: '900 $/v', sija: '175./190' },
     tervehdykset: [
@@ -100,6 +105,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,26',
       sija: '95./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~NGA',
+      selitys: 'Nigerian vaalit ovat aidosti kilpailtuja ja media äänekäs, mutta rahan valta, vaalihäiriöt ja levottomuudet painavat lukua.',
     },
     keskitulo: { arvo: '2 000 $/v', sija: '150./190' },
     tervehdykset: [
@@ -116,6 +122,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,61',
       sija: '35./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~GHA',
+      selitys: 'Ghana on Länsi-Afrikan vakaimpia demokratioita: valta on vaihtunut vaaleilla puolueelta toiselle monta kertaa, ja lehdistö on vapaa.',
     },
     keskitulo: { arvo: '2 300 $/v', sija: '145./190' },
     tervehdykset: [
@@ -131,6 +138,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,54',
       sija: '45./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ZAF',
+      selitys: 'Etelä-Afrikalla on apartheidin jälkeen vahva perustuslaki, vapaat vaalit ja riippumattomat tuomioistuimet; korruptioskandaalit nakertavat lukua.',
     },
     keskitulo: { arvo: '6 500 $/v', sija: '100./190' },
     tervehdykset: [
@@ -147,6 +155,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,26',
       sija: '95./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~TZA',
+      selitys: 'Tansaniassa sama puolue on hallinnut itsenäistymisestä asti, ja oppositio on ollut ahtaalla — otteet ovat viime vuosina hieman höllentyneet.',
     },
     keskitulo: { arvo: '1 200 $/v', sija: '165./190' },
     tervehdykset: [
@@ -161,6 +170,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,20',
       sija: '110./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ETH',
+      selitys: 'Etiopiassa vaaleja järjestetään, mutta sisällissota, poikkeustilat ja opposition ja median rajoitukset pitävät luvun matalana.',
     },
     keskitulo: { arvo: '1 100 $/v', sija: '170./190' },
     tervehdykset: [
@@ -176,6 +186,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,15',
       sija: '125./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~COD',
+      selitys: 'Kongon demokraattisessa tasavallassa vaalien tulokset ovat kiistanalaisia, idän levottomuudet jatkuvat ja instituutiot ovat hauraita.',
     },
     keskitulo: { arvo: '700 $/v', sija: '185./190' },
     tervehdykset: [
@@ -193,6 +204,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,30',
       sija: '85./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~TUN',
+      selitys: 'Tunisia nousi arabikevään jälkeen alueen demokraattisimmaksi maaksi, mutta vuodesta 2021 presidentti on keskittänyt valtaa itselleen — luku on laskenut nopeasti.',
     },
     keskitulo: { arvo: '4 000 $/v', sija: '125./190' },
     tervehdykset: [
@@ -207,6 +219,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,13',
       sija: '130./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~DZA',
+      selitys: 'Algeriassa armeijalla ja vallan sisäpiirillä on vahva ote: suuri protestiliike vaihtoi kasvot, mutta järjestelmä säilyi pitkälti ennallaan.',
     },
     keskitulo: { arvo: '4 500 $/v', sija: '120./190' },
     tervehdykset: [
@@ -222,6 +235,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,10',
       sija: '145./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~TCD',
+      selitys: 'Tšadissa valta siirtyi presidentiltä hänen pojalleen armeijan tuella — vaaleja järjestetään, mutta lopputulos ei ole aidosti auki.',
     },
     keskitulo: { arvo: '700 $/v', sija: '185./190' },
     tervehdykset: [
@@ -237,6 +251,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,32',
       sija: '80./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~KEN',
+      selitys: 'Kenian vaalit ovat kilpailtuja ja media äänekäs, mutta vaalikiistat, korruptio ja poliisin kovat otteet painavat lukua.',
     },
     keskitulo: { arvo: '2 100 $/v', sija: '150./190' },
     tervehdykset: [
@@ -252,6 +267,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,15',
       sija: '125./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ZWE',
+      selitys: 'Zimbabwessa sama puolue on hallinnut itsenäistymisestä 1980 asti, ja vaaleihin on liittynyt painostusta ja epäselvyyksiä.',
     },
     keskitulo: { arvo: '1 700 $/v', sija: '155./190' },
     tervehdykset: [
@@ -267,6 +283,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,07',
       sija: '165./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SDN',
+      selitys: 'Sudanin demokratiasiirtymä katkesi sotilaskaappaukseen 2021, ja 2023 alkanut sisällissota on pysäyttänyt kaiken — siksi luku on pohjalukemissa.',
     },
     keskitulo: { arvo: '800 $/v', sija: '180./190' },
     tervehdykset: [
@@ -281,6 +298,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,06',
       sija: '170./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SSD',
+      selitys: 'Etelä-Sudanissa ei ole itsenäistymisen jälkeen vielä pidetty vaaleja: sisällissota ja hauras rauha ovat siirtäneet niitä toistuvasti.',
     },
     keskitulo: { arvo: '500 $/v', sija: '189./190' },
     tervehdykset: [
@@ -296,6 +314,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,08',
       sija: '155./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SOM',
+      selitys: 'Somalian valtio on yhä hauras: vaalit ovat epäsuoria (valitsijamiehet valitsevat parlamentin), eikä hallinto ulotu koko maahan.',
     },
     keskitulo: { arvo: '600 $/v', sija: '188./190' },
     tervehdykset: [
@@ -310,6 +329,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,12',
       sija: '135./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~CMR',
+      selitys: 'Kamerunia on johtanut sama presidentti vuodesta 1982. Vaaleja järjestetään, mutta tulos ei juuri yllätä, ja englanninkielisten alueiden kriisi jatkuu.',
     },
     keskitulo: { arvo: '1 700 $/v', sija: '155./190' },
     tervehdykset: [
@@ -325,6 +345,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,38',
       sija: '70./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~LBR',
+      selitys: 'Liberiassa valta on sotien jälkeen vaihtunut vaaleilla rauhanomaisesti — nuori mutta toimiva demokratia, jota köyhyys koettelee.',
     },
     keskitulo: { arvo: '700 $/v', sija: '185./190' },
     tervehdykset: [
@@ -339,6 +360,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,35',
       sija: '75./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SLE',
+      selitys: 'Sierra Leonessa valta on sisällissodan jälkeen vaihtunut vaaleilla puolueelta toiselle rauhanomaisesti.',
     },
     keskitulo: { arvo: '600 $/v', sija: '188./190' },
     tervehdykset: [
@@ -354,6 +376,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,25',
       sija: '100./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MOZ',
+      selitys: 'Mosambikissa sama puolue on hallinnut itsenäistymisestä 1975 asti, ja vaalituloksiin on liittynyt toistuvia epäselvyyksiä.',
     },
     keskitulo: { arvo: '600 $/v', sija: '188./190' },
     tervehdykset: [
@@ -369,6 +392,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,17',
       sija: '120./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~AGO',
+      selitys: 'Angolassa sama puolue on hallinnut itsenäistymisestä 1975 asti, ja öljyvarallisuus on keskittynyt vallan lähipiirille.',
     },
     keskitulo: { arvo: '2 000 $/v', sija: '150./190' },
     tervehdykset: [
@@ -384,6 +408,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,55',
       sija: '42./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~NAM',
+      selitys: 'Namibia on ollut itsenäistymisestään 1990 asti vakaa monipuoluedemokratia, jossa on vapaa lehdistö ja riippumattomat tuomioistuimet.',
     },
     keskitulo: { arvo: '5 000 $/v', sija: '110./190' },
     tervehdykset: [
@@ -399,6 +424,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,25',
       sija: '100./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MDG',
+      selitys: 'Madagaskarin vaalit ovat kilpailtuja, mutta toistuvat poliittiset kriisit ja hauraat instituutiot pitävät luvun keskitason alapuolella.',
     },
     keskitulo: { arvo: '500 $/v', sija: '189./190' },
     tervehdykset: [
@@ -413,6 +439,7 @@ export const AFRICA_MAATIEDOT = {
       arvo: '0,20',
       sija: '110./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~UGA',
+      selitys: 'Ugandaa on johtanut sama presidentti vuodesta 1986: vaaleja järjestetään, mutta oppositiota painostetaan ja perustuslakia on muutettu vallan jatkamiseksi.',
     },
     keskitulo: { arvo: '1 000 $/v', sija: '175./190' },
     tervehdykset: [
