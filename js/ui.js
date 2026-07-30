@@ -2179,15 +2179,10 @@ export class UI {
     const { game } = this;
     if (game.phase === 'pickstart') return;
     if (stampBoard(game.pack.id, game.pack.boardLabel)) {
-      const box = this.buildToast({
-        kind: 'stamp',
-        icon: 'passi',
-        text: 'Passiin uusi leima',
-        sub: game.pack.boardLabel,
-      });
+      // Ei ilmoitusta kartan päälle: uusi leima näkyy vain pienenä
+      // laukun elävöitymisenä ja paperin rapinana (omistajan toive).
       sfx.play('paper');
       this.elavoitaLaukku();
-      setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
 
     // Kunniamerkintä: isoisän ennätys rikottiin tällä laudalla. Sekin on
