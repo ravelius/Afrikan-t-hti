@@ -615,18 +615,22 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  */
 .fact-teksti-rivi {
   /* Kääre rajaa tekstin korkeuden kortin pystyflexissä; itse vieritys
-   * tapahtuu tekstissä, jotta valokuva pysyy paikallaan kulmassa. */
+   * tapahtuu tekstissä, jotta valokuva pysyy paikallaan kulmassa.
+   * Kääre on itsekin flex-säiliö: prosenttikorkeus ei ratkea flexin
+   * laskemaa korkeutta vasten (teksti kasvoi sisällön mittaiseksi ja
+   * leikkautui ilman vieritystä), mutta flex-lapsi kutistuu oikein. */
   position: relative;
   min-height: 0;
   flex: 1 1 auto;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Vain teksti vierii — ilman kehyksiä ja ilman näkyvää palkkia, kuin
- * muistikirjan sivu liukuisi sormen alla. */
+ * muistikirjan sivu liukuisi sormen alla. Kutistuminen ja vieritys
+ * tulevat .fact-textin omista flex-säännöistä. */
 .fact-teksti-rivi .fact-text {
-  height: 100%;
-  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -815,6 +819,76 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   font-size: 0.7rem;
   font-family: var(--font-type);
   color: rgba(90, 74, 51, 0.85);
+}
+
+/* Otsikko ja ääninäytteen nappi samalla rivillä. */
+.kulttuuri-otsikkorivi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 0 0.15rem;
+}
+
+.kulttuuri-otsikkorivi .kulttuuri-otsikko { margin: 0; }
+
+/*
+ * Kuuntele näyte: oikea nappi kaiutinkuvakkeella — tekstilinkiksi
+ * puettuna se hukkui Lue lisää -rivien joukkoon (omistajan havainto).
+ * Soidessa nappi saa kultapohjan ja näyttää keston ja toistokohdan.
+ */
+.kulttuuri-kuuntele {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  padding: 0.32rem 0.7rem;
+  background: rgba(255, 250, 238, 0.9);
+  border: 1.5px dashed rgba(70, 51, 31, 0.8);
+  border-radius: 8px;
+  color: #46331f;
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.kulttuuri-kuuntele:hover { background: #fffdf6; }
+
+.kulttuuri-kuuntele.soi {
+  background: rgba(234, 184, 78, 0.28);
+  border-style: solid;
+}
+
+.kulttuuri-kuuntele .aika {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  color: rgba(70, 51, 31, 0.75);
+}
+
+/*
+ * Kulttuurivisan palaute: selkeä kehystetty ruutu, jota ei voi ohittaa
+ * katseella — oikea vastaus kultareunuksin, väärä mustereunuksin.
+ */
+.kulttuuri-tulos {
+  margin: 0.4rem 0 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1.5px solid rgba(70, 51, 31, 0.55);
+  background: rgba(255, 250, 238, 0.85);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #3a2a16;
+  animation: fact-in 0.3s ease-out;
+}
+
+.kulttuuri-tulos.oikein-tulos {
+  border-color: rgba(176, 138, 60, 0.95);
+  background: rgba(234, 184, 78, 0.22);
+}
+
+.kulttuuri-tulos.vaarin-tulos {
+  border-color: rgba(156, 47, 32, 0.6);
+  background: rgba(156, 47, 32, 0.07);
 }
 
 .kulttuuri-vaihtoehdot {
@@ -2107,8 +2181,14 @@ body[data-mode] .actions {
 body[data-mode] .fact-card {
   position: absolute;
   width: min(340px, 46%);
+  /* Korkeusraja ruutuyksiköissä: iPadin Safari ei soveltanut
+   * prosenttirajaa (kortti kasvoi koko tekstin mittaiseksi kartan
+   * päälle), dvh lasketaan aina ruudusta. Prosentti jää varalle
+   * vanhoille selaimille. */
   max-height: 38%;
-  overflow-y: auto;
+  max-height: 38dvh;
+  /* Kortti ei vieritä itseään — vain teksti vierii (.fact-text). */
+  overflow: hidden;
 }
 
 /*
@@ -2218,6 +2298,7 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   body[data-mode] .fact-card {
     width: min(340px, calc(100% - 0.8rem));
     max-height: 34%;
+    max-height: 30dvh;
   }
   .fact-card h2 { font-size: 0.68rem; margin-bottom: 0.2rem; }
   .fact-place { font-size: 0.7rem; margin-bottom: 0.15rem; }
@@ -2618,13 +2699,29 @@ body.katselu #newgame-btn { display: none; }
   stroke-linejoin: round;
 }
 
+/* Kone lentää selaimen omana muunnosanimaationa: origo koneen omassa
+ * pisteessä, jotta käännös vastaa SVG-attribuutin käytöstä, ja
+ * will-change nostaa koneen omalle kerrokselleen. */
+.flight-plane {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.flight-trail { will-change: stroke-dashoffset; }
+
 /* Repliikki kelluu kartan alalaidassa, samaa kirjoituskonetyyliä kuin muut. */
 /* Nuoren herran repliikki: vanhan filmin tekstiplanssi kelluvassa
  * alaosassa. Ei osumakohtaa — napautukset kuuluvat kalvolle ja napille. */
 .flight-line {
   pointer-events: none;
   margin: 0;
+  /* Kiinteä leveys ja rajattu asettelu: kirjoituskoneen naputus ei saa
+   * leventää planssia merkki kerrallaan — jokainen leveysmuutos pakotti
+   * koko kalvon asettelun uusiksi ja nyki lentoa. */
+  width: 100%;
   max-width: 100%;
+  contain: content;
   padding: 0.75rem 1.2rem;
   background: rgba(36, 26, 18, 0.92);
   border: 1px solid rgba(214, 188, 140, 0.4);
@@ -27704,6 +27801,19 @@ function startQuizMusic(lauta) {
   });
 }
 
+/**
+ * Taustaäänen väistö muun äänen (esim. kulttuurinoston ääninäytteen)
+ * ajaksi — sama kevennys kuin tietovisan aikana. Palautus nostaa
+ * taustan takaisin täyteen voimaansa.
+ */
+function vaimennaTausta() {
+  if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
+}
+
+function palautaTausta() {
+  if (nykyinen) haivyta(nykyinen.audio, nykyinen.tavoite ?? VOIMA);
+}
+
 function stopQuizMusic() {
   // Kaupungin ääni palaa täyteen voimaansa.
   if (nykyinen) haivyta(nykyinen.audio, nykyinen.tavoite ?? VOIMA);
@@ -32722,8 +32832,12 @@ class UI {
         this.factText.appendChild(lihava);
         this.factText.appendChild(document.createTextNode(' '));
         this.factText.appendChild(jatko);
-        this.typeText(lihava, uusi.kuvaus, 'fact', () => {
-          this.typeText(jatko, uusi.nosto, 'fact');
+        // Vain ensimmäinen lause lihavoituna (omistajan toive) — loppu
+        // kuvauksesta ja isoisän nosto jatkuvat tavallisella leikkauksella.
+        const { eka, loput } = ekaLause(uusi.kuvaus);
+        const jatkoTeksti = [loput, uusi.nosto].filter(Boolean).join(' ');
+        this.typeText(lihava, eka, 'fact', () => {
+          this.typeText(jatko, jatkoTeksti, 'fact');
         });
         this.diaryFullUrl = `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`;
         this.factKuuntele.hidden = false;
@@ -33069,7 +33183,21 @@ class UI {
     lista.textContent = '';
     for (const nosto of tiedot.nostot ?? []) {
       const lohko = html('div', 'kulttuuri-nosto');
-      lohko.appendChild(html('p', 'kulttuuri-otsikko', nosto.otsikko));
+      // Otsikko ja mahdollinen ääninäyte samalla rivillä: selkeä nappi
+      // kaiutinkuvakkeella erottuu tekstilinkeistä (omistajan toive).
+      const otsikkoRivi = html('div', 'kulttuuri-otsikkorivi');
+      otsikkoRivi.appendChild(html('p', 'kulttuuri-otsikko', nosto.otsikko));
+      if (nosto.aani) {
+        const nappi = html('button', 'kulttuuri-kuuntele');
+        nappi.type = 'button';
+        nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
+          + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+          + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+          + '</svg><span>Kuuntele näyte</span><span class="aika" hidden></span>';
+        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(nosto, nappi));
+        otsikkoRivi.appendChild(nappi);
+      }
+      lohko.appendChild(otsikkoRivi);
       if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
         const kuva = document.createElement('img');
         kuva.loading = 'lazy';
@@ -33089,14 +33217,6 @@ class UI {
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
-      // Ääninäyte: Kuuntele-nappi soittaa CC-lisensoidun äänitteen ja
-      // toinen painallus pysäyttää. Kortin sulkeminen pysäyttää myös.
-      if (nosto.aani) {
-        const nappi = html('button', 'wiki-btn kulttuuri-kuuntele', 'Kuuntele näyte');
-        nappi.type = 'button';
-        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(nosto, nappi));
-        lohko.appendChild(nappi);
-      }
       const lahteet = [nosto.lahde, nosto.aaniLahde].filter(Boolean).join(' · ');
       if (lahteet) lohko.appendChild(html('p', 'kulttuuri-lahde', lahteet));
       lista.appendChild(lohko);
@@ -33105,6 +33225,7 @@ class UI {
     const { kysymys } = tiedot;
     this.arrivalKulttuuriVisa.hidden = !kysymys;
     this.arrivalKulttuuriTulos.hidden = true;
+    this.arrivalKulttuuriTulos.className = 'arrival-intro';
     this.arrivalKulttuuriVaihtoehdot.textContent = '';
     if (!kysymys) return;
     const vastattu = this.game.kulttuuriVastatut?.has(`${this.game.pack.id}:${city.id}`);
@@ -33118,14 +33239,36 @@ class UI {
       nappi.addEventListener('click', () => {
         const oikein = i === kysymys.correct;
         const vastaus = this.game.actionKulttuuri(city.id, oikein, KULTTUURI_PALKKIO);
-        if (!vastaus.ok) return;
         this.arrivalKulttuuriVaihtoehdot.textContent = '';
         this.arrivalKulttuuriKysymys.textContent = kysymys.q;
         this.arrivalKulttuuriTulos.hidden = false;
+        // Hiljaista polkua ei ole: myös jo vastattu kysymys saa näkyvän
+        // vastauksen (omistajan havainto — palaute ei saa jäädä arvailuksi).
+        if (!vastaus.ok) {
+          this.arrivalKulttuuriTulos.className = 'kulttuuri-tulos';
+          this.arrivalKulttuuriTulos.textContent = 'Kysymykseen on jo vastattu tässä kaupungissa.';
+          return;
+        }
+        this.arrivalKulttuuriTulos.className = oikein
+          ? 'kulttuuri-tulos oikein-tulos'
+          : 'kulttuuri-tulos vaarin-tulos';
         this.arrivalKulttuuriTulos.textContent = (oikein
           ? `Oikein! +${KULTTUURI_PALKKIO} puntaa. `
           : `Oikea vastaus: ${kysymys.options[kysymys.correct]}. `) + (kysymys.fact ?? '');
+        // Palaute vieritetään näkyviin — kysymys elää dialogin alalaidassa.
+        this.arrivalKulttuuriTulos.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         sfx.play(oikein ? 'correct' : 'wrong');
+        // Palkkiosta myös toast kortin ulkopuolelle, jotta hyvitys näkyy
+        // varmasti vaikka katse olisi muualla.
+        if (oikein) {
+          const box = this.buildToast({
+            kind: 'stamp',
+            icon: 'kukkaro',
+            text: `+${KULTTUURI_PALKKIO} puntaa`,
+            sub: 'Tunsit paikallista kulttuuria',
+          });
+          setTimeout(() => this.removeToast(box), TOAST_MS.default);
+        }
         // Koko render() sulkisi Tutki-napista avatun kortin (kortti pysyy
         // auki vain offer-vaiheessa), jolloin palaute ei ehtisi näkyä.
         // Riittää tallentaa peli ja päivittää rahapilleri.
@@ -33184,7 +33327,23 @@ class UI {
       }, { once: true });
     }
     this.kulttuuriAani = { audio, nappi };
-    nappi.textContent = 'Pysäytä näyte';
+    // Vain tekstiosa vaihtuu — kaiutinkuvake säilyy napissa.
+    const nimio = nappi.querySelector('span');
+    if (nimio) nimio.textContent = 'Pysäytä näyte';
+    nappi.classList.add('soi');
+    // Kesto ja toistokohta näkyvät napissa näytteen soidessa
+    // (omistajan toive) — muodossa 0:12 / 3:10.
+    const aika = nappi.querySelector('.aika');
+    const muoto = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+    const naytaAika = () => {
+      if (!aika || !Number.isFinite(audio.duration)) return;
+      aika.hidden = false;
+      aika.textContent = `${muoto(audio.currentTime)} / ${muoto(audio.duration)}`;
+    };
+    audio.addEventListener('loadedmetadata', naytaAika);
+    audio.addEventListener('timeupdate', naytaAika);
+    // Paikan taustaääni väistyy näytteen ajaksi ja palaa pysäytettäessä.
+    vaimennaTausta();
     const nollaa = () => {
       if (this.kulttuuriAani?.audio === audio) this.pysaytaKulttuuriAani();
     };
@@ -33199,7 +33358,15 @@ class UI {
     if (!soiva) return;
     soiva.audio.pause();
     soiva.audio.removeAttribute('src');
-    soiva.nappi.textContent = 'Kuuntele näyte';
+    const nimio = soiva.nappi.querySelector('span');
+    if (nimio) nimio.textContent = 'Kuuntele näyte';
+    const aika = soiva.nappi.querySelector('.aika');
+    if (aika) {
+      aika.hidden = true;
+      aika.textContent = '';
+    }
+    soiva.nappi.classList.remove('soi');
+    palautaTausta();
   }
 
   /**
@@ -34479,9 +34646,12 @@ class UI {
     document.body.classList.add('flight-active');
 
     // Napautus mihin tahansa hypäyttää koneen perille; kalvo pysyy
-    // kuitenkin esillä, kunnes pelaaja astuu ulos napista.
-    let ohitettu = false;
-    overlay.addEventListener('pointerdown', () => { ohitettu = true; }, { once: true });
+    // kuitenkin esillä, kunnes pelaaja astuu ulos napista. Animaatiot
+    // kerätään talteen, jotta napautus voi viedä ne loppuun.
+    const lentoAnimaatiot = [];
+    overlay.addEventListener('pointerdown', () => {
+      for (const a of lentoAnimaatiot) a.finish();
+    }, { once: true });
 
     // Isoisän karttalehti: käsin piirretyt vyöhykeviivat katkoviivalla
     // (kääntöpiirit) ja himmeitä päiväkirjamerkintöjä piirroksineen.
@@ -34588,22 +34758,36 @@ class UI {
     // Potkurihurina koko kohtauksen ajaksi: nousee ja laskee sen mukana.
     sfx.startFlight(FLY_OVERLAY_MS);
 
-    await new Promise((resolve) => {
-      const alku = performance.now();
-      const askel = (nyt) => {
-        // Napautus hyppää suoraan perille.
-        const t = ohitettu ? 1 : Math.min(1, (nyt - alku) / FLY_OVERLAY_MS);
-        // Pehmeä kiihdytys ja jarrutus, jottei kone nykäise liikkeelle.
-        const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-        reitti.style.strokeDashoffset = kokoPituus * (1 - e);
-
-        const p = kohta(e);
-        kone.setAttribute('transform', `translate(${p.x},${p.y}) rotate(${p.kulma})`);
-
-        if (t < 1) requestAnimationFrame(askel);
-        else resolve();
-      };
-      requestAnimationFrame(askel);
+    // Kone ja reittiviiva lentävät selaimen omina WAAPI-animaatioina, ei
+    // rAF-silmukalla: pääsäikeessä naputtava kirjoituskone ja käynnistyvä
+    // lukuääni pudottivat rAF-ruutuja ja kone nykäisi (omistajan havainto).
+    // Avainruudut lasketaan valmiiksi pehmennys sisään leivottuna, ja
+    // selain interpoloi niiden välit tasaisesti omassa tahdissaan.
+    const RUUTUJA = 120;
+    const koneRuudut = [];
+    const reittiRuudut = [];
+    for (let i = 0; i <= RUUTUJA; i++) {
+      const t = i / RUUTUJA;
+      // Pehmeä kiihdytys ja jarrutus, jottei kone nykäise liikkeelle.
+      const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+      const p = kohta(e);
+      koneRuudut.push({
+        offset: t,
+        transform: `translate(${p.x.toFixed(2)}px, ${p.y.toFixed(2)}px) rotate(${p.kulma.toFixed(2)}deg)`,
+      });
+      reittiRuudut.push({ offset: t, strokeDashoffset: kokoPituus * (1 - e) });
+    }
+    // Lähtöasento ennen animaation alkua, ettei kone välähdä origossa.
+    kone.style.transform = koneRuudut[0].transform;
+    const koneAnim = kone.animate(koneRuudut, {
+      duration: FLY_OVERLAY_MS, easing: 'linear', fill: 'forwards',
+    });
+    const reittiAnim = reitti.animate(reittiRuudut, {
+      duration: FLY_OVERLAY_MS, easing: 'linear', fill: 'forwards',
+    });
+    lentoAnimaatiot.push(koneAnim, reittiAnim);
+    await Promise.all([koneAnim.finished, reittiAnim.finished]).catch(() => {
+      /* peruttu animaatio (esim. dialogin sulku) ei kaada lentoa */
     });
 
     // Moottori jää käymään kalvon ajaksi — se hiljenee vasta, kun
@@ -34790,7 +34974,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.62';
+const APP_VERSION = '2026-07-30.63';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

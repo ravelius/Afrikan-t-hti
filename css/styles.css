@@ -607,18 +607,22 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  */
 .fact-teksti-rivi {
   /* Kääre rajaa tekstin korkeuden kortin pystyflexissä; itse vieritys
-   * tapahtuu tekstissä, jotta valokuva pysyy paikallaan kulmassa. */
+   * tapahtuu tekstissä, jotta valokuva pysyy paikallaan kulmassa.
+   * Kääre on itsekin flex-säiliö: prosenttikorkeus ei ratkea flexin
+   * laskemaa korkeutta vasten (teksti kasvoi sisällön mittaiseksi ja
+   * leikkautui ilman vieritystä), mutta flex-lapsi kutistuu oikein. */
   position: relative;
   min-height: 0;
   flex: 1 1 auto;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Vain teksti vierii — ilman kehyksiä ja ilman näkyvää palkkia, kuin
- * muistikirjan sivu liukuisi sormen alla. */
+ * muistikirjan sivu liukuisi sormen alla. Kutistuminen ja vieritys
+ * tulevat .fact-textin omista flex-säännöistä. */
 .fact-teksti-rivi .fact-text {
-  height: 100%;
-  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -807,6 +811,76 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   font-size: 0.7rem;
   font-family: var(--font-type);
   color: rgba(90, 74, 51, 0.85);
+}
+
+/* Otsikko ja ääninäytteen nappi samalla rivillä. */
+.kulttuuri-otsikkorivi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 0 0.15rem;
+}
+
+.kulttuuri-otsikkorivi .kulttuuri-otsikko { margin: 0; }
+
+/*
+ * Kuuntele näyte: oikea nappi kaiutinkuvakkeella — tekstilinkiksi
+ * puettuna se hukkui Lue lisää -rivien joukkoon (omistajan havainto).
+ * Soidessa nappi saa kultapohjan ja näyttää keston ja toistokohdan.
+ */
+.kulttuuri-kuuntele {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  padding: 0.32rem 0.7rem;
+  background: rgba(255, 250, 238, 0.9);
+  border: 1.5px dashed rgba(70, 51, 31, 0.8);
+  border-radius: 8px;
+  color: #46331f;
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.kulttuuri-kuuntele:hover { background: #fffdf6; }
+
+.kulttuuri-kuuntele.soi {
+  background: rgba(234, 184, 78, 0.28);
+  border-style: solid;
+}
+
+.kulttuuri-kuuntele .aika {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  color: rgba(70, 51, 31, 0.75);
+}
+
+/*
+ * Kulttuurivisan palaute: selkeä kehystetty ruutu, jota ei voi ohittaa
+ * katseella — oikea vastaus kultareunuksin, väärä mustereunuksin.
+ */
+.kulttuuri-tulos {
+  margin: 0.4rem 0 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1.5px solid rgba(70, 51, 31, 0.55);
+  background: rgba(255, 250, 238, 0.85);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #3a2a16;
+  animation: fact-in 0.3s ease-out;
+}
+
+.kulttuuri-tulos.oikein-tulos {
+  border-color: rgba(176, 138, 60, 0.95);
+  background: rgba(234, 184, 78, 0.22);
+}
+
+.kulttuuri-tulos.vaarin-tulos {
+  border-color: rgba(156, 47, 32, 0.6);
+  background: rgba(156, 47, 32, 0.07);
 }
 
 .kulttuuri-vaihtoehdot {
@@ -2099,8 +2173,14 @@ body[data-mode] .actions {
 body[data-mode] .fact-card {
   position: absolute;
   width: min(340px, 46%);
+  /* Korkeusraja ruutuyksiköissä: iPadin Safari ei soveltanut
+   * prosenttirajaa (kortti kasvoi koko tekstin mittaiseksi kartan
+   * päälle), dvh lasketaan aina ruudusta. Prosentti jää varalle
+   * vanhoille selaimille. */
   max-height: 38%;
-  overflow-y: auto;
+  max-height: 38dvh;
+  /* Kortti ei vieritä itseään — vain teksti vierii (.fact-text). */
+  overflow: hidden;
 }
 
 /*
@@ -2210,6 +2290,7 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   body[data-mode] .fact-card {
     width: min(340px, calc(100% - 0.8rem));
     max-height: 34%;
+    max-height: 30dvh;
   }
   .fact-card h2 { font-size: 0.68rem; margin-bottom: 0.2rem; }
   .fact-place { font-size: 0.7rem; margin-bottom: 0.15rem; }
@@ -2610,13 +2691,29 @@ body.katselu #newgame-btn { display: none; }
   stroke-linejoin: round;
 }
 
+/* Kone lentää selaimen omana muunnosanimaationa: origo koneen omassa
+ * pisteessä, jotta käännös vastaa SVG-attribuutin käytöstä, ja
+ * will-change nostaa koneen omalle kerrokselleen. */
+.flight-plane {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.flight-trail { will-change: stroke-dashoffset; }
+
 /* Repliikki kelluu kartan alalaidassa, samaa kirjoituskonetyyliä kuin muut. */
 /* Nuoren herran repliikki: vanhan filmin tekstiplanssi kelluvassa
  * alaosassa. Ei osumakohtaa — napautukset kuuluvat kalvolle ja napille. */
 .flight-line {
   pointer-events: none;
   margin: 0;
+  /* Kiinteä leveys ja rajattu asettelu: kirjoituskoneen naputus ei saa
+   * leventää planssia merkki kerrallaan — jokainen leveysmuutos pakotti
+   * koko kalvon asettelun uusiksi ja nyki lentoa. */
+  width: 100%;
   max-width: 100%;
+  contain: content;
   padding: 0.75rem 1.2rem;
   background: rgba(36, 26, 18, 0.92);
   border: 1px solid rgba(214, 188, 140, 0.4);
