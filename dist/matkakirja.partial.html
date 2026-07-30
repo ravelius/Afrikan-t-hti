@@ -1207,6 +1207,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .maa-tunnusrivi + .maa-tunnusrivi { margin-top: 0.2rem; }
 
+/* Tulorivi kiinni V-Dem-riviin (omistajan toive). */
+.maa-tunnusrivi.tiivis { margin-top: 0; }
+
 /* Sijoitus maailmassa ja puhujaosuus: vaimeampi lisätieto. */
 .maa-sija {
   color: rgba(90, 74, 51, 0.7);
@@ -1345,8 +1348,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 0.75rem;
-  /* Pieni hengähdys tervehdysten ja esittelytekstin väliin. */
-  margin: 0.15rem 0 0.8rem;
+  /* Väli tulojen jälkeen ennen tervehdyksiä (omistajan toive) ja
+   * hengähdys tervehdysten ja esittelytekstin väliin. */
+  margin: 0.55rem 0 0.8rem;
   font-size: 0.78rem;
   color: #5a4a33;
 }
@@ -38073,8 +38077,12 @@ class UI {
     // demokratia ja tulot alempana sijoituksineen.
     const rivi1 = html('div', 'maa-tunnusrivi');
     const rivi2 = html('div', 'maa-tunnusrivi');
+    // Tulot heti V-Demin alla ilman väliä (omistajan toive) — väli on
+    // vasta tulojen jälkeen ennen tervehdyksiä.
+    const rivi3 = html('div', 'maa-tunnusrivi tiivis');
     this.arrivalMaaTunnusluvut.appendChild(rivi1);
     this.arrivalMaaTunnusluvut.appendChild(rivi2);
+    this.arrivalMaaTunnusluvut.appendChild(rivi3);
     const kohta = (emo, ikoni, sisalto, seloste) => {
       const osa = html('span', 'maa-tunnus');
       osa.title = seloste;
@@ -38120,7 +38128,7 @@ class UI {
       if (Number.isFinite(arvo)) palkki(osa, arvo);
     }
     if (tiedot.keskitulo) {
-      const osa = kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
+      const osa = kohta(rivi3, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
         'Bruttokansantulo asukasta kohden vuodessa, suluissa sijoitus maailmassa');
       // Maksimina maailman kärkitulo (noin 100 000 $/v).
       const tulo = parseInt(tiedot.keskitulo.arvo.replace(/[^0-9]/g, ''), 10);
@@ -40103,7 +40111,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.97';
+const APP_VERSION = '2026-07-30.98';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

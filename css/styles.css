@@ -1204,6 +1204,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .maa-tunnusrivi + .maa-tunnusrivi { margin-top: 0.2rem; }
 
+/* Tulorivi kiinni V-Dem-riviin (omistajan toive). */
+.maa-tunnusrivi.tiivis { margin-top: 0; }
+
 /* Sijoitus maailmassa ja puhujaosuus: vaimeampi lisätieto. */
 .maa-sija {
   color: rgba(90, 74, 51, 0.7);
@@ -1342,8 +1345,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 0.75rem;
-  /* Pieni hengähdys tervehdysten ja esittelytekstin väliin. */
-  margin: 0.15rem 0 0.8rem;
+  /* Väli tulojen jälkeen ennen tervehdyksiä (omistajan toive) ja
+   * hengähdys tervehdysten ja esittelytekstin väliin. */
+  margin: 0.55rem 0 0.8rem;
   font-size: 0.78rem;
   color: #5a4a33;
 }

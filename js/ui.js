@@ -2336,8 +2336,12 @@ export class UI {
     // demokratia ja tulot alempana sijoituksineen.
     const rivi1 = html('div', 'maa-tunnusrivi');
     const rivi2 = html('div', 'maa-tunnusrivi');
+    // Tulot heti V-Demin alla ilman väliä (omistajan toive) — väli on
+    // vasta tulojen jälkeen ennen tervehdyksiä.
+    const rivi3 = html('div', 'maa-tunnusrivi tiivis');
     this.arrivalMaaTunnusluvut.appendChild(rivi1);
     this.arrivalMaaTunnusluvut.appendChild(rivi2);
+    this.arrivalMaaTunnusluvut.appendChild(rivi3);
     const kohta = (emo, ikoni, sisalto, seloste) => {
       const osa = html('span', 'maa-tunnus');
       osa.title = seloste;
@@ -2383,7 +2387,7 @@ export class UI {
       if (Number.isFinite(arvo)) palkki(osa, arvo);
     }
     if (tiedot.keskitulo) {
-      const osa = kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
+      const osa = kohta(rivi3, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
         'Bruttokansantulo asukasta kohden vuodessa, suluissa sijoitus maailmassa');
       // Maksimina maailman kärkitulo (noin 100 000 $/v).
       const tulo = parseInt(tiedot.keskitulo.arvo.replace(/[^0-9]/g, ''), 10);
