@@ -313,10 +313,27 @@ export class UI {
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
     this.arrivalImage = document.getElementById('arrival-image');
+    // Kuvan galleria selattavana jo pikkukoossa: hento laskuri ja
+    // nuolet (omistajan toive). Suurennos aukeaa selatusta kohdasta.
+    this.arrivalKuvakotelo = document.getElementById('arrival-kuvakotelo');
+    this.arrivalKuvaLaskuri = document.getElementById('arrival-kuva-laskuri');
+    this.arrivalKuvat = [];
+    this.arrivalKuvaKohdalla = 0;
     this.arrivalImage.addEventListener('click', () => {
       const city = this.game.board.cityById.get(this.arrivalShownFor);
-      if (city?.wiki) this.openLightbox(city.wiki, city.name);
+      if (city?.wiki) this.openLightbox(city.wiki, city.name, this.arrivalImage.src || null);
     });
+    const selaaKuvaa = (askel) => {
+      if (this.arrivalKuvat.length < 2) return;
+      this.arrivalKuvaKohdalla = (this.arrivalKuvaKohdalla + askel
+        + this.arrivalKuvat.length) % this.arrivalKuvat.length;
+      this.arrivalImage.src = this.arrivalKuvat[this.arrivalKuvaKohdalla].src;
+      this.paivitaKuvaLaskuri();
+    };
+    document.getElementById('arrival-kuva-edellinen')
+      .addEventListener('click', (e) => { e.stopPropagation(); selaaKuvaa(-1); });
+    document.getElementById('arrival-kuva-seuraava')
+      .addEventListener('click', (e) => { e.stopPropagation(); selaaKuvaa(1); });
     this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
@@ -2139,6 +2156,10 @@ export class UI {
     this.arrivalCity.textContent = city.name;
     this.arrivalImage.hidden = true;
     this.arrivalImage.removeAttribute('src');
+    this.arrivalKuvakotelo.hidden = true;
+    this.arrivalKuvat = [];
+    this.arrivalKuvaKohdalla = 0;
+    this.paivitaKuvaLaskuri();
     this.arrivalIntro.textContent = 'Isoisä on merkinnyt tämän paikan karttaansa.';
     this.arrivalWiki.hidden = true;
     // Oma lyhytnosto (pilottikaupungit) näkyy heti ja toimii ilman
@@ -2204,6 +2225,15 @@ export class UI {
         this.arrivalImage.src = image;
         this.arrivalImage.alt = summary.title || city.name;
         this.arrivalImage.hidden = false;
+        this.arrivalKuvakotelo.hidden = false;
+        // Galleria taustalla: kun lista on saatu, pikkukuvaan tulevat
+        // hento laskuri ja selailunuolet.
+        cachedGallery(city.wiki).then((lista) => {
+          if (this.arrivalShownFor !== city.id || lista.length < 2) return;
+          this.arrivalKuvat = lista;
+          this.arrivalKuvaKohdalla = Math.max(0, lista.findIndex((k) => k.src === image));
+          this.paivitaKuvaLaskuri();
+        });
       }
       // Oma lyhytnosto voittaa wikin automaattikatkelman (pilottikaupungit).
       if (summary.extract && !omaIntro) this.arrivalIntro.textContent = shortIntro(summary.extract);
@@ -2623,7 +2653,17 @@ export class UI {
    * Katselin lisätään avoimen dialogin sisään, koska dialogi on selaimen
    * top layerissa — muualle lisätty kerros jäisi sen alle.
    */
-  async openLightbox(title, alt = '') {
+  /** Pikkukuvan laskuri ja nuolet näkyvät vain, kun galleriassa on selattavaa. */
+  paivitaKuvaLaskuri() {
+    const monta = this.arrivalKuvat.length > 1;
+    this.arrivalKuvaLaskuri.hidden = !monta;
+    this.arrivalKuvaLaskuri.textContent = monta
+      ? `${this.arrivalKuvaKohdalla + 1}/${this.arrivalKuvat.length}` : '';
+    document.getElementById('arrival-kuva-edellinen').hidden = !monta;
+    document.getElementById('arrival-kuva-seuraava').hidden = !monta;
+  }
+
+  async openLightbox(title, alt = '', aloitusSrc = null) {
     if (!title) return;
     const parent = [this.wikiDialog, this.arrivalDialog].find((d) => d.open) ?? document.body;
     const overlay = html('div', 'lightbox');
@@ -2688,7 +2728,8 @@ export class UI {
     });
 
     // Ensimmäinen kuva heti ruutuun, koko galleria kun lista on haettu.
-    const eka = await cachedImage(title);
+    // Jos suurennos avattiin selatusta pikkukuvasta, aloitetaan siitä.
+    const eka = aloitusSrc || await cachedImage(title);
     if (!overlay.isConnected) return;
     if (eka) {
       kuvat = [{ src: eka, caption: null }];
