@@ -191,11 +191,12 @@ const INTRO_FONT_MIN = 0.72;
 // Omistajan päättämä avausteksti. ÄLÄ muokkaa ilman omistajan lupaa
 // (docs/tyolista-opukselle.md, paketti 3).
 const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, '
-  + 'kukkarollinen puntia ja kulunut päiväkirja.\n\n'
-  + 'Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä."\n\n'
-  + 'Viimeinen sivu on revitty melkein kokonaan: "…en tajunnut, että siellä olikin…"\n\n'
-  + 'Mitä? Mitä hän oli löytänyt? Tämä pitää selvittää.\n\n'
-  + 'Menen heti ostamaan liput — mutta mistä kaupungista aloitan etsinnän?';
+  + 'kukkarollinen puntia ja kulunut matkakirja: '
+  + '"Maailman ympäri kahdeksassakymmenessä päivässä".\n\n'
+  + 'Viimeinen sivu oli revitty kesken lauseen: "…voinut uskoa, siellä olikin…"\n\n'
+  + 'Hetkinen… Mitä hän oli löytänyt?\n\n'
+  + 'Juoksin kentälle kirja kädessäni ja mietin enää yhtä asiaa:\n\n'
+  + 'mistä aloitan?';
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä

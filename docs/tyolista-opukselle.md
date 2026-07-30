@@ -376,15 +376,20 @@ selittelyä eikä ohjeita. Avauskortissa/tietoruudussa näytetään TÄSMÄLLEEN
 tämä teksti (kirjoituskoneella naksuen, kolme kappaletta):
 
 > Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872,
-> kukkarollinen puntia ja kulunut päiväkirja.
+> kukkarollinen puntia ja kulunut matkakirja:
+> "Maailman ympäri kahdeksassakymmenessä päivässä".
 >
-> Ensimmäinen sivu: "Maailman ympäri kahdeksassakymmenessä päivässä."
+> Viimeinen sivu oli revitty kesken lauseen: "…voinut uskoa, siellä olikin…"
 >
-> Viimeinen sivu on revitty melkein kokonaan: "…en tajunnut, että siellä olikin…"
+> Hetkinen… Mitä hän oli löytänyt?
 >
-> Mitä? Mitä hän oli löytänyt? Tämä pitää selvittää.
+> Juoksin kentälle kirja kädessäni ja mietin enää yhtä asiaa:
 >
-> Menen heti ostamaan liput — mutta mistä kaupungista aloitan etsinnän?
+> mistä aloitan?
+
+(Päivitetty 30.7.2026 omistajan uuteen muotoiluun: päiväkirjasta tuli
+matkakirja — sama esine kuin sovelluksen nimi — ja loppu tiivistyi
+juoksuksi kentälle. "Mistä aloitan?" johtaa suoraan laudan valintaan.)
 
 (Päivitetty 29.7.2026 omistajan kanssa yhdessä: revitty sivu näyttää
 katkoksen konkreettisesti, eikä pääaarretta nimetä — se on "jotain
