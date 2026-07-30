@@ -809,16 +809,18 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   mask-image: linear-gradient(180deg, #000 calc(100% - 1.2em), rgba(0, 0, 0, 0.25));
 }
 
+/* Isompi ja tummempi nuoli — hento versio näkyi huonosti
+ * (omistajan havainto). */
 .fact-teksti-rivi::after {
   content: '';
   position: absolute;
   left: 50%;
-  bottom: 0.05rem;
-  width: 0.55rem;
-  height: 0.55rem;
+  bottom: 0.1rem;
+  width: 0.8rem;
+  height: 0.8rem;
   transform: translateX(-50%) rotate(45deg);
-  border-right: 1.5px solid rgba(90, 74, 51, 0.6);
-  border-bottom: 1.5px solid rgba(90, 74, 51, 0.6);
+  border-right: 2.5px solid rgba(90, 74, 51, 0.95);
+  border-bottom: 2.5px solid rgba(90, 74, 51, 0.95);
   opacity: 0;
   transition: opacity 0.25s ease;
   pointer-events: none;
@@ -878,7 +880,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti {
   position: fixed;
   z-index: 70;
-  width: min(78vw, 400px);
+  /* Hieman entistä isompi (omistajan toive). */
+  width: min(84vw, 460px);
   animation: postikortti-esiin 0.24s ease-out;
 }
 
@@ -929,10 +932,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti img {
   display: block;
   width: 100%;
-  min-height: 60px;
-  /* Korkea pystykuva ei saa venyttää korttia ruutua korkeammaksi —
-   * kuva rajataan postikortin ikkunaan (omistajan havainto). */
-  max-height: 58vh;
+  /* Kiinteä kuvaikkuna: vaaka- ja pystykuvat näkyvät suurin piirtein
+   * samankokoisina, ja korkea kuva ei venytä korttia ruutua
+   * korkeammaksi (omistajan toive). Kuva rajataan ikkunaan. */
+  height: min(48vh, 330px);
   object-fit: cover;
   background: #ded5c2;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -943,9 +946,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti-kortti.uusi img { filter: none; }
 
 .postikortti .kuvateksti {
-  margin: 0.3rem 0.1rem 0.15rem;
+  margin: 0.35rem 0.1rem 0.15rem;
   font-family: var(--font-type);
-  font-size: 0.72rem;
+  /* Isompi selite (omistajan toive). */
+  font-size: 0.86rem;
+  line-height: 1.45;
   color: #5a4a33;
 }
 

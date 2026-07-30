@@ -81,4 +81,6 @@ export const VALOKUVAT_PAIKALLISET = new Map([
   ["Victoria Falls Bridge and Zambezi river.jpg", 'uusi-viktorianputoukset.jpg'],
   ["View-Kano city-1911.jpg", 'vanha-kano.jpg'],
   ["Waving fisherman on Lake Chad (detilt).jpg", 'uusi-tshadjarvi.jpg'],
+  ["Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg", 'vanha-venetsia.jpg'],
+  ["Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg", 'uusi-venetsia.jpg'],
 ]);

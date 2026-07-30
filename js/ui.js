@@ -27,16 +27,28 @@ import { AFRICA_MAATIEDOT } from './packs/africa-maatiedot.js';
 import { AFRICA_VALOKUVAT, valokuvaUrl } from './packs/africa-valokuvat.js';
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
 import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
+import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
+import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
+import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
+import { EUROPE_MAATIEDOT } from './packs/europe-maatiedot.js';
+import { EUROPE_ARTIKKELIT } from './packs/europe-artikkelit.js';
 
-// Uuden mallin saapumistekstit laudoittain (pilotti: Afrikka).
-const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET };
+// Uuden mallin saapumistekstit laudoittain (Afrikka valmis, Eurooppa
+// rakentuu kaupunki kerrallaan — pilotti: Venetsia).
+const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET, europe: EUROPE_SAAPUMISET };
 
-// Kaupungin elämää -nostot laudoittain (pilotti: Afrikka).
-const KULTTUURIT = { africa: AFRICA_KULTTUURI };
+// Kaupungin elämää -nostot laudoittain.
+const KULTTUURIT = { africa: AFRICA_KULTTUURI, europe: EUROPE_KULTTUURI };
 
-// Vanhat valokuvat muistikirjan kylkeen laudoittain — toistaiseksi vain
-// Afrikalla on kuvasto.
-const VALOKUVAT = { africa: AFRICA_VALOKUVAT };
+// Vanhat valokuvat muistikirjan kylkeen laudoittain.
+const VALOKUVAT = { africa: AFRICA_VALOKUVAT, europe: EUROPE_VALOKUVAT };
+
+// Maiden tunnusluvut laudoittain.
+const MAATIEDOT = { africa: AFRICA_MAATIEDOT, europe: EUROPE_MAATIEDOT };
+
+// Omat artikkelit: yhteinen hakemisto wiki-otsikolla (mantereet eivät
+// törmää, koska otsikot ovat eri).
+const ARTIKKELIT = { ...OMAT_ARTIKKELIT, ...EUROPE_ARTIKKELIT };
 
 // Tiivistelmät ja kuvat haetaan kerran per artikkeli: sama kuva näkyy
 // sekä saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
@@ -75,6 +87,7 @@ async function cachedImage(title) {
 // luennat generoidaan.
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
 const VIHJELUENNAT = new Set([
+  'europe:venetsia',
   'africa:karthago',
   'africa:nairobi',
   'africa:lagos',
@@ -165,9 +178,26 @@ const LAUTA_TUNNUSLUVUT = {
 
 const wikiGalleryCache = new Map();
 
+// Käsin valitut galleriat: kun artikkelin oma kuvalista on heikko (vain
+// kaavioita), Tutki-sivun galleria kootaan näistä Commonsin kuvista.
+// Lisenssit varmistettu tiedostokohtaisesti.
+const OMAT_GALLERIAT = {
+  'Victoria-järvi': [
+    { tiedosto: 'Sunset at Lake Victoria.jpg', caption: 'Auringonlasku Victorianjärvellä' },
+    { tiedosto: 'Boats by the Lake Victoria Shore.jpg', caption: 'Kalastajaveneitä järven rannassa' },
+    { tiedosto: 'Fishing boats on Lake Victoria.jpg', caption: 'Kalastajia aamulla' },
+    { tiedosto: 'Lake Victoria as visible from Kisumu City.jpg', caption: 'Järvi Kisumun kaupungista nähtynä' },
+    { tiedosto: 'Still Life with Stork and Fishing Boats - Along Shore of Lake Victoria - Entebbe - Uganda.jpg', caption: 'Marabu ja veneitä Entebben rannassa' },
+    { tiedosto: 'Sunset on lake Victoria in kisumu.jpg', caption: 'Ilta Kisumussa' },
+  ],
+};
+
 async function cachedGallery(title) {
   if (!wikiGalleryCache.has(title)) {
-    wikiGalleryCache.set(title, cachedSummary(title).then((s) => fetchImages(s)));
+    const oma = OMAT_GALLERIAT[title];
+    wikiGalleryCache.set(title, oma
+      ? Promise.resolve(oma.map((k) => ({ src: valokuvaUrl(k.tiedosto, 1200), caption: k.caption })))
+      : cachedSummary(title).then((s) => fetchImages(s)));
   }
   return wikiGalleryCache.get(title);
 }
@@ -2302,7 +2332,7 @@ export class UI {
     this.arrivalWiki.hidden = true;
     // Oma lyhytnosto (pilottikaupungit) näkyy heti ja toimii ilman
     // verkkoa; Lue lisää avaa oman artikkelin, joten nappi voi näkyä heti.
-    const omaIntro = OMAT_ARTIKKELIT[city.wiki]?.intro;
+    const omaIntro = ARTIKKELIT[city.wiki]?.intro;
     if (omaIntro) {
       this.arrivalIntro.textContent = omaIntro;
       this.arrivalWiki.hidden = false;
@@ -2335,7 +2365,7 @@ export class UI {
       this.naytaMaaTunnusluvut(iso);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
-      const omaMaaIntro = OMAT_ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
+      const omaMaaIntro = ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
       if (omaMaaIntro) {
         this.arrivalMaaIntro.textContent = omaMaaIntro;
         this.arrivalMaaWiki.hidden = false;
@@ -2387,7 +2417,7 @@ export class UI {
    * kunkin perässä kielen maan pikkulippu.
    */
   naytaMaaTunnusluvut(iso) {
-    const tiedot = AFRICA_MAATIEDOT[iso] ?? null;
+    const tiedot = (MAATIEDOT[this.game.pack.id] ?? {})[iso] ?? null;
     this.arrivalMaaTunnusluvut.hidden = !tiedot;
     this.arrivalMaaTervehdykset.hidden = !tiedot?.tervehdykset?.length;
     this.arrivalMaaTunnusluvut.textContent = '';
@@ -2825,7 +2855,7 @@ export class UI {
     // Oma artikkeli (pilottikaupungit): Wikipedia-tekstin sijaan näytetään
     // pelin tyyliin kirjoitettu lyhyempi artikkeli — Wikipedian pohjalta,
     // joten lähdemaininta säilyy. Kuva haetaan silti Wikipediasta.
-    const oma = OMAT_ARTIKKELIT[title];
+    const oma = ARTIKKELIT[title];
     if (oma) {
       this.renderArticle(this.wikiExtract, oma.artikkeli);
       this.wikiSource.textContent = 'Matkakirjan oma artikkeli, kirjoitettu Wikipedian pohjalta (CC BY-SA)';
