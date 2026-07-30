@@ -3098,7 +3098,9 @@ body.katselu #newgame-btn { display: none; }
      </div>
     </details>
     <div class="dialog-actions">
-      <button id="arrival-yes" class="primary" type="button">Tutki paikka</button>
+      <!-- "Etsi kätkö": isoisä on merkinnyt paikan karttaansa, ja nappi
+           käynnistää kätkön etsinnän (tarinallisempi kuin Tutki paikka). -->
+      <button id="arrival-yes" class="primary" type="button">Etsi kätkö</button>
       <button id="arrival-no" type="button">Jatka matkaa</button>
     </div>
    </div>
@@ -6266,6 +6268,207 @@ const AFRICA_QUESTIONS = {
   ],
 
   // Varapakka: käytetään jos kaupungin omat kysymykset on jo kysytty.
+  // Uudet paikat (omistajan laajennus 30.7.): viisi kysymystä kullekin.
+  karthago: [
+    {
+      q: 'Minkä nykyisen maan alueella Karthago sijaitsee?',
+      options: ['Tunisia', 'Libya', 'Marokko', 'Egypti'],
+      correct: 0,
+      level: 1,
+      fact: 'Karthagon rauniot ovat niemellä aivan Tunisian pääkaupungin Tunisin kupeessa — esikaupunkijuna kulkee raunioiden ohi.',
+      hint: 'Maa on Pohjois-Afrikan pienimpiä ja sen nimi muistuttaa pääkaupunkia.',
+    },
+    {
+      q: 'Mikä merenkulkijakansa perusti Karthagon lähes 2 900 vuotta sitten?',
+      options: ['foinikialaiset', 'roomalaiset', 'kreikkalaiset', 'egyptiläiset'],
+      correct: 0,
+      fact: 'Foinikialaiset kauppiaat Tyroksen kaupungista perustivat Karthagon, ja siitä kasvoi Välimeren mahtavin kauppakaupunki.',
+      hint: 'Sama kansa keksi aakkosten esimuodon ja purjehti koko Välimeren.',
+    },
+    {
+      q: 'Kuka karthagolainen sotapäällikkö ylitti Alpit sotanorsuineen?',
+      options: ['Hannibal', 'Julius Caesar', 'Aleksanteri Suuri', 'Leonidas'],
+      correct: 0,
+      fact: 'Hannibal vei armeijansa ja norsunsa Alppien yli hyökätäkseen Roomaan toisessa puunilaissodassa — temppu, jota pidettiin mahdottomana.',
+      hint: 'Hänen nimensä elää varoituksessa "… ad portas" — hän on porteilla.',
+    },
+    {
+      q: 'Millä nimellä Rooman ja Karthagon sodat tunnetaan?',
+      options: ['puunilaissodat', 'ristiretket', 'persialaissodat', 'ruusujen sodat'],
+      correct: 0,
+      level: 3,
+      fact: 'Kolme puunilaissotaa päättyivät Karthagon tuhoon vuonna 146 eaa. Nimi tulee latinan sanasta Punicus, foinikialainen.',
+      hint: 'Nimi tulee latinan foinikialaista tarkoittavasta sanasta.',
+    },
+    {
+      q: 'Mikä nykykaupunki on kasvanut lähes kiinni Karthagon raunioihin?',
+      options: ['Tunis', 'Alger', 'Tripoli', 'Kairo'],
+      correct: 0,
+      fact: 'Tunis on Tunisian pääkaupunki, ja sen huvilaesikaupungit ympäröivät Karthagon rauniokukkuloita.',
+      hint: 'Kaupunki on antanut nimensä koko maalle.',
+    },
+  ],
+
+  lagos: [
+    {
+      q: 'Missä maassa Lagos sijaitsee?',
+      options: ['Nigeria', 'Ghana', 'Kamerun', 'Senegal'],
+      correct: 0,
+      level: 1,
+      fact: 'Lagos on Nigerian suurin kaupunki ja koko Afrikan väkirikkaimpia — asukkaita on enemmän kuin monessa Euroopan maassa.',
+      hint: 'Maa on Afrikan väkirikkain.',
+    },
+    {
+      q: 'Minkä lahden rannalla Lagos sijaitsee?',
+      options: ['Guineanlahden', 'Adeninlahden', 'Suezinlahden', 'Biskajanlahden'],
+      correct: 0,
+      fact: 'Lagos rakentui laguunin ja Guineanlahden väliin: vanhin osa on saarella, ja kaupunginosia yhdistävät pitkät sillat.',
+      hint: 'Sama lahti kaartaa koko Länsi-Afrikan etelärannikon.',
+    },
+    {
+      q: 'Mikä on Nollywood?',
+      options: ['Nigerian elokuvateollisuus', 'Lagosin satama', 'kuuluisa tori', 'rautatieasema'],
+      correct: 0,
+      fact: 'Nigerian elokuvateollisuus Nollywood tekee enemmän elokuvia vuodessa kuin Hollywood — moni niistä syntyy Lagosissa.',
+      hint: 'Nimi on väännös kuuluisammasta elokuvakaupungista.',
+    },
+    {
+      q: 'Mikä kieli sitoo Nigerian yli 500 kielen maata yhteen?',
+      options: ['englanti', 'ranska', 'portugali', 'arabia'],
+      correct: 0,
+      fact: 'Siirtomaa-ajalta peritty englanti on Nigerian virallinen kieli; Lagosin kaduilla puhutaan sen rinnalla jorubaa ja pidgin-englantia.',
+      hint: 'Sama kieli kuin entisellä siirtomaaisännällä.',
+    },
+    {
+      q: 'Mistä Lagosin nimi tulee?',
+      options: ['portugalin sanasta laguunit', 'paikallisesta kuninkaasta', 'norsunluusta', 'auringonjumalasta'],
+      correct: 0,
+      level: 3,
+      fact: 'Portugalilaiset purjehtijat nimesivät paikan laguunien mukaan (lagos = järvet/laguunit) — sama nimi on satamakaupungilla Portugalissa.',
+      hint: 'Portugalilaiset nimesivät paikan vesien mukaan.',
+    },
+  ],
+
+  tshadjarvi: [
+    {
+      q: 'Mihin Tšad-järven vesi laskee?',
+      options: ['ei mihinkään mereen', 'Välimereen', 'Atlanttiin', 'Niiliin'],
+      correct: 0,
+      level: 1,
+      fact: 'Tšad-järvi on sisämaan allas: joet tuovat siihen vettä, mutta mikään joki ei vie sitä mereen — vesi haihtuu auringossa.',
+      hint: 'Järvi on umpiallas keskellä kuivaa seutua.',
+    },
+    {
+      q: 'Mitä Tšad-järvelle on tapahtunut viime vuosikymmeninä?',
+      options: ['se on kutistunut rajusti', 'se on kasvanut', 'se on jäätynyt', 'se on muuttunut suolaiseksi mereksi'],
+      correct: 0,
+      fact: 'Järvi on kutistunut murto-osaan 1960-luvun laajuudestaan kuivuuden ja kastelun vuoksi — rantakylät ovat jääneet kauas vedestä.',
+      hint: 'Sama kohtalo uhkaa monia kuivien seutujen järviä.',
+    },
+    {
+      q: 'Kuinka monen maan rajoilla Tšad-järvi lepää?',
+      options: ['neljän', 'kahden', 'yhden', 'kuuden'],
+      correct: 0,
+      level: 3,
+      fact: 'Järven rannat jakavat Tšad, Niger, Nigeria ja Kamerun — kalastajat ovat aina liikkuneet rajoista piittaamatta.',
+      hint: 'Yhtä monta kuin ilmansuuntia.',
+    },
+    {
+      q: 'Miksi karavaanit pysähtyivät Tšad-järvellä?',
+      options: ['makean veden vuoksi', 'kullan vuoksi', 'timanttien vuoksi', 'norsunluun vuoksi'],
+      correct: 0,
+      fact: 'Makea vesi keskellä kuivaa savannia teki järvestä karavaanireittien etappipaikan matkalla Saharan yli.',
+      hint: 'Aavikon laidalla arvokkainta ei ole kulta.',
+    },
+    {
+      q: 'Mitä sana "tšad" tarkoittaa kanurin kielellä?',
+      options: ['suurta vesialuetta', 'aurinkoa', 'hiekkaa', 'kamelia'],
+      correct: 0,
+      fact: 'Järven nimi tulee kanurin kielen sanasta, joka tarkoittaa suurta vesialuetta — järvi on siis "Järvi-järvi".',
+      hint: 'Nimi kuvaa sitä mitä silmä näkee.',
+    },
+  ],
+
+  viktorianputoukset: [
+    {
+      q: 'Minkä joen putoukset Viktorian putoukset ovat?',
+      options: ['Zambezin', 'Niilin', 'Kongon', 'Nigerin'],
+      correct: 0,
+      level: 1,
+      fact: 'Zambezi syöksyy putouksilla yli sadan metrin syvyiseen rotkoon — putousrintama on yli puolentoista kilometrin levyinen.',
+      hint: 'Joki laskee lopulta Intian valtamereen Mosambikin kohdalla.',
+    },
+    {
+      q: 'Mitä paikallinen nimi Mosi-oa-Tunya tarkoittaa?',
+      options: ['jylisevää savua', 'suurta vettä', 'sateenkaarta', 'kuninkaan jokea'],
+      correct: 0,
+      fact: 'Putousten vesisumu nousee niin korkealle, että se näkyy kilometrien päähän kuin savupatsas — siitä nimi "jylisevä savu".',
+      hint: 'Nimi kuvaa sitä, mikä näkyy kauas ja kuuluu kauemmas.',
+    },
+    {
+      q: 'Kuka tutkimusmatkailija antoi putouksille eurooppalaisen nimensä?',
+      options: ['David Livingstone', 'Henry Stanley', 'John Speke', 'Mungo Park'],
+      correct: 0,
+      fact: 'David Livingstone näki putoukset 1855 ja nimesi ne kuningattarensa mukaan. Hän kirjoitti, ettei mikään Englannissa vedä niille vertoja.',
+      hint: 'Sama mies, jonka Stanley löysi Tanganjikajärveltä.',
+    },
+    {
+      q: 'Minkä kahden maan rajalla putoukset sijaitsevat?',
+      options: ['Sambian ja Zimbabwen', 'Kenian ja Tansanian', 'Angolan ja Namibian', 'Malawin ja Mosambikin'],
+      correct: 0,
+      level: 3,
+      fact: 'Zambezi on tässä kohtaa rajajoki: putouksia voi katsella molemmilta rannoilta, ja rajasilta ylittää rotkon putousten vieressä.',
+      hint: 'Molempien maiden nimet alkavat aakkosten loppupään kirjaimilla.',
+    },
+    {
+      q: 'Mitä putouksilla voi nähdä kirkkaina kuutamoöinä?',
+      options: ['kuunvalosateenkaaren', 'revontulet', 'meteorisateen', 'tulivuoren hehkun'],
+      correct: 0,
+      fact: 'Vesisumu taittaa myös kuunvalon: täydenkuun öinä sumussa kaartuu haalea kuunvalosateenkaari, harvinaisuus koko maailmassa.',
+      hint: 'Sama ilmiö kuin päivällä, mutta himmeämpänä ja öisin.',
+    },
+  ],
+
+  nairobi: [
+    {
+      q: 'Minkä maan pääkaupunki Nairobi on?',
+      options: ['Kenia', 'Tansania', 'Etiopia', 'Uganda'],
+      correct: 0,
+      level: 1,
+      fact: 'Nairobi on Kenian pääkaupunki ja Itä-Afrikan tärkeimpiä kaupunkeja — sen nimi tulee maasaiden vettä tarkoittavasta sanasta.',
+      hint: 'Maa on saanut nimensä lumihuippuisesta vuorestaan.',
+    },
+    {
+      q: 'Mikä tekee Nairobin kansallispuistosta ainutlaatuisen?',
+      options: ['se alkaa heti suurkaupungin laidalta', 'se on maailman suurin', 'se on saarella', 'siellä ei ole eläimiä'],
+      correct: 0,
+      fact: 'Nairobin kansallispuisto alkaa kaupungin rajalta: kirahvit ja seeprat laiduntavat pilvenpiirtäjien siluettia vasten.',
+      hint: 'Missään muualla savannin eläimet eivät näy keskustan ikkunoista.',
+    },
+    {
+      q: 'Minkä rautatien rakentaminen synnytti Nairobin 1890-luvulla?',
+      options: ['Mombasan ja Ugandan välisen radan', 'Suezin radan', 'Kap–Kairo-radan', 'Benguelan radan'],
+      correct: 0,
+      level: 3,
+      fact: 'Nairobi perustettiin 1899 Ugandan radan varikoksi suon laitaan. Leiristä kasvoi muutamassa vuosikymmenessä pääkaupunki.',
+      hint: 'Rata alkoi Intian valtameren satamasta ja pyrki suurelle järvelle.',
+    },
+    {
+      q: 'Kuinka korkealla merenpinnasta Nairobi sijaitsee?',
+      options: ['noin 1 700 metrissä', 'merenpinnan tasolla', 'noin 500 metrissä', 'yli 4 000 metrissä'],
+      correct: 0,
+      fact: 'Ylängön korkeus tekee päiväntasaajan kaupungista raikkaan: illat ovat viileitä, ja juoksijat harjoittelevat täällä ohuessa ilmassa.',
+      hint: 'Suunnilleen sama korkeus kuin Ahaggarin vuorten rinteillä.',
+    },
+    {
+      q: 'Mitä kieltä sana "safari" on alkujaan?',
+      options: ['swahilia', 'zulua', 'ranskaa', 'portugalia'],
+      correct: 0,
+      fact: 'Swahilin safari tarkoittaa matkaa. Sana lainautui maailman kieliin juuri Itä-Afrikan retkikuntien mukana.',
+      hint: 'Itä-Afrikan rannikon kauppakieli, jota kuulee myös Sansibarilla.',
+    },
+  ],
+
   general: [
     {
       q: 'Mikä on Afrikan pisin joki?',
@@ -6502,6 +6705,43 @@ const AFRICA_QUESTIONS = {
  * sijainnista, joten jokaisella kaupungilla on useampi vaihtoehto.
  */
 const AFRICA_FACTS = {
+  // Uudet paikat (omistajan laajennus 30.7.): havainnot täydennetään
+  // pilottien tasolle sisältöerässä — nämä ovat ensimmäiset merkinnät.
+  karthago: [
+    'Raunioilla kävellessä meri näkyy joka suuntaan: Karthago hallitsi aikanaan Välimeren kauppaa juuri tältä niemeltä, ja satama-altaiden kehät erottuvat yhä maastossa.',
+    {
+      text: 'Rooma tuhosi Karthagon perusteellisesti vuonna 146 eaa., mutta rakensi sen sitten itse uudelleen — raunioissa on siis kahden eri suurvallan kerrokset päällekkäin.',
+      voice: 'isoisa',
+    },
+  ],
+  lagos: [
+    'Lagos on rakennettu laguunin saarille ja rannoille, ja kaupunginosia yhdistävät pitkät sillat. Ruuhkassa opas totesi: täällä ei kysytä montako kilometriä, vaan montako tuntia.',
+    {
+      text: 'Lagosin kauppa käy laguunin yli: kanootit tuovat aamulla kalaa ja hedelmiä saarilta, ja iltaan mennessä samat veneet vievät kankaita ja suolaa takaisin.',
+      voice: 'isoisa',
+    },
+  ],
+  tshadjarvi: [
+    'Tšad-järvi on matala kuin lautanen: kalastajat työntävät veneitään pitkillä sauvoilla, ja kelluvat papyruslautat toimivat saarina, joilla karja käy laitumella.',
+    {
+      text: 'Järvi kutistuu ja kasvaa vuodenaikojen mukaan, ja neljän maan kalastajat ovat aina jakaneet sen vedet — rajat kulkevat kartalla, eivät järvellä.',
+      voice: 'isoisa',
+    },
+  ],
+  viktorianputoukset: [
+    'Putousten jylinän kuulee kauan ennen kuin näkee mitään, ja vesisumu kastelee kuin sade. Paikallinen nimi Mosi-oa-Tunya, jylisevä savu, on tarkin kuvaus jonka olen kuullut.',
+    {
+      text: 'Sateenkaari seisoo rotkon yllä lähes koko päivän, ja täydenkuun öinä sumuun syttyy haalea kuunvalosateenkaari — harvinaisuus koko maailmassa.',
+      voice: 'isoisa',
+    },
+  ],
+  nairobi: [
+    'Nairobissa savanni alkaa kaupungin rajalta: kansallispuiston kirahvit laiduntavat pilvenpiirtäjien siluettia vasten, eikä vastaavaa näe missään muualla.',
+    {
+      text: 'Ylängön ilma on viileää ja kirkasta, ja rautatieasema muistuttaa yhä siitä, että koko kaupunki syntyi radanrakentajien leiristä muutamassa vuosikymmenessä.',
+      voice: 'isoisa',
+    },
+  ],
   tanger: [
     'Lautta Espanjasta kesti reilun puolituntisen, ja silti vaihtui manner ja kieli. Medinan kujilla eksyin sadan metrin matkalla kahdesti — molemmilla kerroilla samaan minttuteepöytään.',
     {
@@ -7819,6 +8059,10 @@ const AFRICA_CITY_COUNTRY = {
   kumasi: 'GHA',
   orjarannikko: 'NGA',
   kano: 'NGA',
+  lagos: 'NGA',
+  // Karthago (TUN), Nairobi (KEN), Tšad-järvi (TCD) ja Viktorian
+  // putoukset (ZWE/ZMB) saavat maakytkennän, kun rajat piirretään
+  // sisältöerässä.
   kamerun: 'CMR',
   kongo: 'COD',
   angola: 'AGO',
@@ -8744,6 +8988,8 @@ const AFRICA_CITIES = [
     ],
   },
 
+  // Karthago täyttää pohjoisrannikon pitkän välin (omistajan laajennus).
+  { id: 'karthago', name: 'Karthago', wiki: 'Karthago', ambience: 'meri', x: 375, y: 38, la: 'end', lx: -16, ly: 5 },
   { id: 'tripoli', name: 'Tripoli', wiki: 'Tripoli', ambience: 'basaari', x: 443, y: 89, airport: true },
   { id: 'murzuk', name: 'Murzuk', wiki: 'Murzuk', ambience: 'aavikko', x: 474, y: 196 },
   { id: 'alkufra', name: 'Al Kufra', wiki: 'Kufra', ambience: 'aavikko', x: 577, y: 197 },
@@ -8759,9 +9005,14 @@ const AFRICA_CITIES = [
   { id: 'sierraleone', name: 'Sierra Leone', wiki: 'Sierra Leone', ambience: 'sademetsa', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
   { id: 'kappalmas', name: 'Kap Palmas', wiki: 'Cape Palmas', ambience: 'meri', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
   { id: 'kumasi', name: 'Kumasi', wiki: 'Kumasi', ambience: 'sademetsa', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
-  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', ambience: 'meri', x: 330, y: 404 },
+  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', ambience: 'meri', x: 318, y: 396 },
   { id: 'kano', name: 'Kano', wiki: 'Kano', ambience: 'savanni', x: 394, y: 336, airport: true },
-  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', ambience: 'sademetsa', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
+  // Lagos ja Tšad-järvi (omistajan laajennus): Guineanlahden suurkaupunki
+  // ja karavaanireittien järvisolmu. Rannikko on ahdas, joten naapureita
+  // siirrettiin hieman ja laudan minimietäisyys kevennettiin.
+  { id: 'lagos', name: 'Lagos', wiki: 'Lagos', ambience: 'basaari', x: 360, y: 432, la: 'end', lx: -14, ly: 12 },
+  { id: 'tshadjarvi', name: 'Tšad-järvi', wiki: 'Tšadjärvi', ambience: 'savanni', x: 470, y: 330 },
+  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', ambience: 'sademetsa', x: 408, y: 468, la: 'start', lx: 16, ly: -8 },
   { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', ambience: 'sademetsa', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'angola', name: 'Angola', wiki: 'Angola', ambience: 'savanni', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
   { id: 'namib', name: 'Namib', wiki: 'Namib', ambience: 'aavikko', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
@@ -8769,10 +9020,14 @@ const AFRICA_CITIES = [
     id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
     links: [{ pack: 'maailma', city: 'kapkaupunki', label: 'Maailma-lauta' }],
   },
+  // Viktorian putoukset Zambezilla (omistajan laajennus).
+  { id: 'viktorianputoukset', name: 'Viktorian putoukset', wiki: 'Victorian putoukset', ambience: 'sademetsa', x: 600, y: 700, la: 'start', lx: 16, ly: 5 },
   { id: 'kimberley', name: 'Kimberley', wiki: 'Kimberley (Etelä-Afrikka)', ambience: 'savanni', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
   { id: 'mosambik', name: 'Mosambik', wiki: 'Mosambikin saari', ambience: 'meri', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
   { id: 'madagaskar', name: 'Madagaskar', wiki: 'Madagaskar', ambience: 'sademetsa', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
   { id: 'sansibar', name: 'Sansibar', wiki: 'Sansibar', ambience: 'meri', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
+  // Nairobi paikkaa idän Kenia-aukon (omistajan laajennus).
+  { id: 'nairobi', name: 'Nairobi', wiki: 'Nairobi', ambience: 'savanni', x: 768, y: 470, la: 'start', lx: 16, ly: 5 },
   { id: 'kilimandzaro', name: 'Kilimandžaro', wiki: 'Kilimanjaro', ambience: 'ylanko', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
   { id: 'viktoria', name: 'Viktoria Nyanza', wiki: 'Victoria-järvi', ambience: 'savanni', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
   { id: 'tanganjika', name: 'Tanganjika', wiki: 'Tanganjikajärvi', ambience: 'savanni', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
@@ -8786,8 +9041,9 @@ const AFRICA_CITIES = [
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
 // type 'sea' = laivareitti, jonne astuminen maksaa SEA_FEE.
 const AFRICA_EDGES = [
-  // Pohjois-Afrikka
-  { a: 'tanger', b: 'tripoli', steps: 4 },
+  // Pohjois-Afrikka: rannikkoreitti kulkee nyt Karthagon kautta.
+  { a: 'tanger', b: 'karthago', steps: 4 },
+  { a: 'karthago', b: 'tripoli', steps: 1 },
   { a: 'tanger', b: 'sahara', steps: 5 },
   { a: 'tanger', b: 'ahaggar', steps: 4 },
   { a: 'tripoli', b: 'kairo', steps: 4 },
@@ -8812,10 +9068,14 @@ const AFRICA_EDGES = [
   { a: 'kappalmas', b: 'kumasi', steps: 2 },
   { a: 'kumasi', b: 'orjarannikko', steps: 1 },
   { a: 'orjarannikko', b: 'kano', steps: 2 },
-  { a: 'orjarannikko', b: 'kamerun', steps: 2 },
+  // Rannikko jatkuu Lagosin kautta Kameruniin.
+  { a: 'orjarannikko', b: 'lagos', steps: 1 },
+  { a: 'lagos', b: 'kamerun', steps: 1 },
   { a: 'gao', b: 'kano', steps: 3 },
   { a: 'kano', b: 'kamerun', steps: 2 },
-  { a: 'kano', b: 'bahrelghazal', steps: 5 },
+  // Savannireitti itään kulkee Tšad-järven solmun kautta.
+  { a: 'kano', b: 'tshadjarvi', steps: 2 },
+  { a: 'tshadjarvi', b: 'bahrelghazal', steps: 3 },
 
   // Keski- ja Etelä-Afrikka
   { a: 'kamerun', b: 'kongo', steps: 3 },
@@ -8826,10 +9086,13 @@ const AFRICA_EDGES = [
   { a: 'namib', b: 'kapkaupunki', steps: 3 },
   { a: 'kapkaupunki', b: 'kimberley', steps: 2 },
   { a: 'kimberley', b: 'mosambik', steps: 4 },
-  { a: 'kimberley', b: 'tanganjika', steps: 5 },
+  // Sisämaan reitti pohjoiseen kulkee Zambezin putousten kautta.
+  { a: 'kimberley', b: 'viktorianputoukset', steps: 2 },
+  { a: 'viktorianputoukset', b: 'tanganjika', steps: 2 },
 
-  // Itä-Afrikka
-  { a: 'kilimandzaro', b: 'viktoria', steps: 2 },
+  // Itä-Afrikka: ylängön reitti kulkee Nairobin kautta.
+  { a: 'viktoria', b: 'nairobi', steps: 1 },
+  { a: 'nairobi', b: 'kilimandzaro', steps: 1 },
   { a: 'viktoria', b: 'tanganjika', steps: 2 },
   { a: 'viktoria', b: 'bahrelghazal', steps: 3 },
   { a: 'bahrelghazal', b: 'darfur', steps: 2 },
@@ -8886,11 +9149,14 @@ const AFRICA = {
   edges: AFRICA_EDGES,
   airRoutes: AFRICA_AIR_ROUTES,
   islands: ['sansibar'], // saarikaupungit: rannikon ulkopuolella, vain laivayhteys
-  minCityDistance: 75,
+  // Kevennetty 75 → 55, jotta Lagos mahtuu Guineanlahden ahtaaseen
+  // rannikkokulmaan (omistajan laajennus viidellä uudella paikalla).
+  minCityDistance: 55,
 
   tokens: {
     types: themedTokenTypes(),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 6, empty: 9 },
+    // 35 laattakaupunkia viiden uuden paikan jälkeen (omistajan laajennus).
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 7, empty: 11 },
   },
 
   questions: AFRICA_QUESTIONS,
@@ -9036,6 +9302,11 @@ const AFRICA = {
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
     // ei koskaan kaupungin nimeä.
     starHints: {
+      karthago: 'Etsi satama, jonka mahti haastoi kerran Rooman — rauniot lepäävät nykyisen pääkaupungin kupeessa niemellä.',
+      nairobi: 'Ylängön viileä rautatiekaupunki, jonka laidalla kirahvit käyskentelevät kansallispuistossa pilvenpiirtäjien katseen alla.',
+      lagos: 'Guineanlahden jättiläinen, mantereen väkirikkaimpia kaupunkeja, joka lepää saarten ja siltojen varassa laguunin suulla.',
+      viktorianputoukset: 'Jylisevä savu nousee suuren joen reunalta kahden maan rajalla — vesisumu näkyy kilometrien päähän.',
+      tshadjarvi: 'Matala sisämaan allas neljän maan rajalla; sen vesi ei koskaan löydä tietä mereen, ja rannat elävät kalasta.',
       tripoli: 'Välimeren eteläisellä rannalla, siellä missä aavikko tulee melkein mereen asti, on satamakaupunki jonka läpi karavaanit purkavat lastinsa laivoihin.',
       murzuk: 'Suoraan etelään Välimeren rannikolta, keskellä autiomaata, on keidaskaupunki joka oli karavaanireitin tärkein pysähdys. Sinne on rannikolta kuukausi kamelilla.',
       alkufra: 'Kaukana koillisessa autiomaassa, kaukana kaikista reiteistä, on keidasryhmä jonne pääsee vain sen tietäen. Kukaan tuntemani eurooppalainen ei ollut käynyt siellä.',
@@ -35558,7 +35829,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.72';
+const APP_VERSION = '2026-07-30.73';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

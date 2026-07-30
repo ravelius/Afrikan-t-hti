@@ -235,6 +235,10 @@ export const AFRICA_CITY_COUNTRY = {
   kumasi: 'GHA',
   orjarannikko: 'NGA',
   kano: 'NGA',
+  lagos: 'NGA',
+  // Karthago (TUN), Nairobi (KEN), Tšad-järvi (TCD) ja Viktorian
+  // putoukset (ZWE/ZMB) saavat maakytkennän, kun rajat piirretään
+  // sisältöerässä.
   kamerun: 'CMR',
   kongo: 'COD',
   angola: 'AGO',

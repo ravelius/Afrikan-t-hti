@@ -60,6 +60,8 @@ const AFRICA_CITIES = [
     ],
   },
 
+  // Karthago täyttää pohjoisrannikon pitkän välin (omistajan laajennus).
+  { id: 'karthago', name: 'Karthago', wiki: 'Karthago', ambience: 'meri', x: 375, y: 38, la: 'end', lx: -16, ly: 5 },
   { id: 'tripoli', name: 'Tripoli', wiki: 'Tripoli', ambience: 'basaari', x: 443, y: 89, airport: true },
   { id: 'murzuk', name: 'Murzuk', wiki: 'Murzuk', ambience: 'aavikko', x: 474, y: 196 },
   { id: 'alkufra', name: 'Al Kufra', wiki: 'Kufra', ambience: 'aavikko', x: 577, y: 197 },
@@ -75,9 +77,14 @@ const AFRICA_CITIES = [
   { id: 'sierraleone', name: 'Sierra Leone', wiki: 'Sierra Leone', ambience: 'sademetsa', x: 95, y: 392, la: 'start', lx: 16, ly: 5 },
   { id: 'kappalmas', name: 'Kap Palmas', wiki: 'Cape Palmas', ambience: 'meri', x: 174, y: 440, la: 'end', lx: -16, ly: 5 },
   { id: 'kumasi', name: 'Kumasi', wiki: 'Kumasi', ambience: 'sademetsa', x: 250, y: 430, la: 'end', lx: -16, ly: -14 },
-  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', ambience: 'meri', x: 330, y: 404 },
+  { id: 'orjarannikko', name: 'Orjarannikko', wiki: 'Ouidah', ambience: 'meri', x: 318, y: 396 },
   { id: 'kano', name: 'Kano', wiki: 'Kano', ambience: 'savanni', x: 394, y: 336, airport: true },
-  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', ambience: 'sademetsa', x: 395, y: 455, la: 'start', lx: 16, ly: -8 },
+  // Lagos ja Tšad-järvi (omistajan laajennus): Guineanlahden suurkaupunki
+  // ja karavaanireittien järvisolmu. Rannikko on ahdas, joten naapureita
+  // siirrettiin hieman ja laudan minimietäisyys kevennettiin.
+  { id: 'lagos', name: 'Lagos', wiki: 'Lagos', ambience: 'basaari', x: 360, y: 432, la: 'end', lx: -14, ly: 12 },
+  { id: 'tshadjarvi', name: 'Tšad-järvi', wiki: 'Tšadjärvi', ambience: 'savanni', x: 470, y: 330 },
+  { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', ambience: 'sademetsa', x: 408, y: 468, la: 'start', lx: 16, ly: -8 },
   { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', ambience: 'sademetsa', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'angola', name: 'Angola', wiki: 'Angola', ambience: 'savanni', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
   { id: 'namib', name: 'Namib', wiki: 'Namib', ambience: 'aavikko', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
@@ -85,10 +92,14 @@ const AFRICA_CITIES = [
     id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
     links: [{ pack: 'maailma', city: 'kapkaupunki', label: 'Maailma-lauta' }],
   },
+  // Viktorian putoukset Zambezilla (omistajan laajennus).
+  { id: 'viktorianputoukset', name: 'Viktorian putoukset', wiki: 'Victorian putoukset', ambience: 'sademetsa', x: 600, y: 700, la: 'start', lx: 16, ly: 5 },
   { id: 'kimberley', name: 'Kimberley', wiki: 'Kimberley (Etelä-Afrikka)', ambience: 'savanni', x: 597, y: 859, la: 'start', lx: 16, ly: 5 },
   { id: 'mosambik', name: 'Mosambik', wiki: 'Mosambikin saari', ambience: 'meri', x: 720, y: 730, la: 'end', lx: -16, ly: 5 },
   { id: 'madagaskar', name: 'Madagaskar', wiki: 'Madagaskar', ambience: 'sademetsa', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
   { id: 'sansibar', name: 'Sansibar', wiki: 'Sansibar', ambience: 'meri', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
+  // Nairobi paikkaa idän Kenia-aukon (omistajan laajennus).
+  { id: 'nairobi', name: 'Nairobi', wiki: 'Nairobi', ambience: 'savanni', x: 768, y: 470, la: 'start', lx: 16, ly: 5 },
   { id: 'kilimandzaro', name: 'Kilimandžaro', wiki: 'Kilimanjaro', ambience: 'ylanko', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
   { id: 'viktoria', name: 'Viktoria Nyanza', wiki: 'Victoria-järvi', ambience: 'savanni', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
   { id: 'tanganjika', name: 'Tanganjika', wiki: 'Tanganjikajärvi', ambience: 'savanni', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
@@ -103,8 +114,9 @@ const AFRICA_CITIES = [
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
 // type 'sea' = laivareitti, jonne astuminen maksaa SEA_FEE.
 const AFRICA_EDGES = [
-  // Pohjois-Afrikka
-  { a: 'tanger', b: 'tripoli', steps: 4 },
+  // Pohjois-Afrikka: rannikkoreitti kulkee nyt Karthagon kautta.
+  { a: 'tanger', b: 'karthago', steps: 4 },
+  { a: 'karthago', b: 'tripoli', steps: 1 },
   { a: 'tanger', b: 'sahara', steps: 5 },
   { a: 'tanger', b: 'ahaggar', steps: 4 },
   { a: 'tripoli', b: 'kairo', steps: 4 },
@@ -129,10 +141,14 @@ const AFRICA_EDGES = [
   { a: 'kappalmas', b: 'kumasi', steps: 2 },
   { a: 'kumasi', b: 'orjarannikko', steps: 1 },
   { a: 'orjarannikko', b: 'kano', steps: 2 },
-  { a: 'orjarannikko', b: 'kamerun', steps: 2 },
+  // Rannikko jatkuu Lagosin kautta Kameruniin.
+  { a: 'orjarannikko', b: 'lagos', steps: 1 },
+  { a: 'lagos', b: 'kamerun', steps: 1 },
   { a: 'gao', b: 'kano', steps: 3 },
   { a: 'kano', b: 'kamerun', steps: 2 },
-  { a: 'kano', b: 'bahrelghazal', steps: 5 },
+  // Savannireitti itään kulkee Tšad-järven solmun kautta.
+  { a: 'kano', b: 'tshadjarvi', steps: 2 },
+  { a: 'tshadjarvi', b: 'bahrelghazal', steps: 3 },
 
   // Keski- ja Etelä-Afrikka
   { a: 'kamerun', b: 'kongo', steps: 3 },
@@ -143,10 +159,13 @@ const AFRICA_EDGES = [
   { a: 'namib', b: 'kapkaupunki', steps: 3 },
   { a: 'kapkaupunki', b: 'kimberley', steps: 2 },
   { a: 'kimberley', b: 'mosambik', steps: 4 },
-  { a: 'kimberley', b: 'tanganjika', steps: 5 },
+  // Sisämaan reitti pohjoiseen kulkee Zambezin putousten kautta.
+  { a: 'kimberley', b: 'viktorianputoukset', steps: 2 },
+  { a: 'viktorianputoukset', b: 'tanganjika', steps: 2 },
 
-  // Itä-Afrikka
-  { a: 'kilimandzaro', b: 'viktoria', steps: 2 },
+  // Itä-Afrikka: ylängön reitti kulkee Nairobin kautta.
+  { a: 'viktoria', b: 'nairobi', steps: 1 },
+  { a: 'nairobi', b: 'kilimandzaro', steps: 1 },
   { a: 'viktoria', b: 'tanganjika', steps: 2 },
   { a: 'viktoria', b: 'bahrelghazal', steps: 3 },
   { a: 'bahrelghazal', b: 'darfur', steps: 2 },
@@ -203,11 +222,14 @@ export const AFRICA = {
   edges: AFRICA_EDGES,
   airRoutes: AFRICA_AIR_ROUTES,
   islands: ['sansibar'], // saarikaupungit: rannikon ulkopuolella, vain laivayhteys
-  minCityDistance: 75,
+  // Kevennetty 75 → 55, jotta Lagos mahtuu Guineanlahden ahtaaseen
+  // rannikkokulmaan (omistajan laajennus viidellä uudella paikalla).
+  minCityDistance: 55,
 
   tokens: {
     types: themedTokenTypes(),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 6, empty: 9 },
+    // 35 laattakaupunkia viiden uuden paikan jälkeen (omistajan laajennus).
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 7, empty: 11 },
   },
 
   questions: AFRICA_QUESTIONS,
@@ -353,6 +375,11 @@ export const AFRICA = {
     // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu,
     // ei koskaan kaupungin nimeä.
     starHints: {
+      karthago: 'Etsi satama, jonka mahti haastoi kerran Rooman — rauniot lepäävät nykyisen pääkaupungin kupeessa niemellä.',
+      nairobi: 'Ylängön viileä rautatiekaupunki, jonka laidalla kirahvit käyskentelevät kansallispuistossa pilvenpiirtäjien katseen alla.',
+      lagos: 'Guineanlahden jättiläinen, mantereen väkirikkaimpia kaupunkeja, joka lepää saarten ja siltojen varassa laguunin suulla.',
+      viktorianputoukset: 'Jylisevä savu nousee suuren joen reunalta kahden maan rajalla — vesisumu näkyy kilometrien päähän.',
+      tshadjarvi: 'Matala sisämaan allas neljän maan rajalla; sen vesi ei koskaan löydä tietä mereen, ja rannat elävät kalasta.',
       tripoli: 'Välimeren eteläisellä rannalla, siellä missä aavikko tulee melkein mereen asti, on satamakaupunki jonka läpi karavaanit purkavat lastinsa laivoihin.',
       murzuk: 'Suoraan etelään Välimeren rannikolta, keskellä autiomaata, on keidaskaupunki joka oli karavaanireitin tärkein pysähdys. Sinne on rannikolta kuukausi kamelilla.',
       alkufra: 'Kaukana koillisessa autiomaassa, kaukana kaikista reiteistä, on keidasryhmä jonne pääsee vain sen tietäen. Kukaan tuntemani eurooppalainen ei ollut käynyt siellä.',
