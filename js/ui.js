@@ -22,6 +22,7 @@ import { stampBoard, stampDate, stampList } from './passport.js';
 import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from './wiki.js';
 import { drawPuzzle } from './packs/africa-puzzles.js';
 import { OMAT_TIIVISTELMAT } from './packs/africa-tiivistelmat.js';
+import { OMAT_ARTIKKELIT } from './packs/africa-artikkelit.js';
 import { AFRICA_VALOKUVAT, valokuvaUrl } from './packs/africa-valokuvat.js';
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
 import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
@@ -106,6 +107,17 @@ const HAVAINTOLUENNAT = new Set([
   'africa:rashafun',
 ]);
 
+// Uuden mallin saapumisluennat: 'pakka:kaupunki' kertoo, että tiedosto
+// assets/audio/puhe-<pakka>-saapuminen-<kaupunki>.mp3 on olemassa. Uusi
+// matkakirjamalli (fiiliskuvaus + isoisän nosto) on käytössä vain näissä
+// kaupungeissa — muiden tekstit odottavat africa-saapumiset.js:ssä
+// omistajan lukukierrosta työhuoneessa, ja ne otetaan käyttöön kun
+// luennat on generoitu. Näin peli ei putoa mykäksi kesken siirtymän.
+const SAAPUMISLUENNAT = new Set([
+  'africa:tanger',
+  'africa:tripoli',
+]);
+
 const wikiGalleryCache = new Map();
 
 async function cachedGallery(title) {
@@ -118,7 +130,7 @@ import { sfx, treasureSound } from './sound.js';
 import {
   playPlaceAmbience, startQuizMusic, stopPlaceStream, stopQuizMusic,
 } from './ambience-stream.js';
-import { puheVoima } from './aani-ehdokkaat.js';
+import { puheVoima, jaaAlku } from './aani-ehdokkaat.js';
 import { BoardDie } from './die.js';
 import {
   el,
@@ -590,6 +602,8 @@ export class UI {
     this.stopIntroVoice();
     this.stopDiaryVoice();
     this.suljePostikortti();
+    this.suljeKulttuuriKuva();
+    this.pysaytaKulttuuriAani();
     // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
     document.body.classList.remove('flight-active');
     for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
@@ -1084,6 +1098,29 @@ export class UI {
       return;
     }
 
+    // Lentokohteet näkyvät kartalla lentovalinnan aikana: rengas ja pieni
+    // kone kohdekaupungin päällä, ja napautus ostaa lennon suoraan
+    // (omistajan toive). Porttilennot toisille laudoille pysyvät napeissa,
+    // koska niiden kohde ei ole tällä kartalla.
+    if (game.phase === 'action' && this.travelExpanded && !game.player.isBot) {
+      for (const dest of game.airportDestinations()) {
+        const city = game.board.cityById.get(dest);
+        if (!city) continue;
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: city.x, cy: city.y, r: 34, class: 'target-hit' }, g);
+        el('circle', { cx: city.x, cy: city.y, r: 25, class: 'target-ring lento' }, g);
+        const merkki = el('text', {
+          x: city.x,
+          y: city.y - 33,
+          class: 'lento-kohde-merkki',
+          'text-anchor': 'middle',
+        }, g);
+        merkki.textContent = '✈';
+        g.addEventListener('click', () => this.doFly(dest));
+      }
+      return;
+    }
+
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
@@ -1155,7 +1192,16 @@ export class UI {
     this.turnPill.appendChild(html('span', '', `£${game.player.money}`));
     // Mittari on päivämäärä, ei kello eikä palkki: aika on tarinaa, ei uhkaa,
     // joten se ei saa hälytysväriä eikä muutu punaiseksi ennätyksen jälkeen.
-    this.turnPill.appendChild(html('span', 'clock', game.clockLabel()));
+    const kello = game.clockLabel();
+    this.turnPill.appendChild(html('span', 'clock', kello));
+    // Ajan eteneminen välähtää kevyesti, jotta pelaaja huomaa vilkaista
+    // päivämäärää (omistajan toive). Ensimmäinen piirto ei väläytä.
+    if (this.kelloEdellinen !== undefined && this.kelloEdellinen !== kello) {
+      this.turnPill.classList.remove('aika-valahdys');
+      void this.turnPill.offsetWidth;
+      this.turnPill.classList.add('aika-valahdys');
+    }
+    this.kelloEdellinen = kello;
   }
 
   /** Matkan tiedot passiin: missä ollaan, paljonko kokemusta ja tietoa. */
@@ -1588,9 +1634,11 @@ export class UI {
     kuva.src = valokuvaUrl(tiedot.tiedosto, 1000);
     kuva.alt = `Vanha valokuva: ${tiedot.paikka}`;
     kortti.appendChild(kuva);
-    const teksti = html('p', 'kuvateksti',
-      [tiedot.paikka, tiedot.vuosi, tiedot.lahde].filter(Boolean).join(' · '));
-    kortti.appendChild(teksti);
+    // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
+    // jäävät omalle pienemmälle rivilleen (omistajan toive).
+    if (tiedot.selite) kortti.appendChild(html('p', 'kuvateksti', tiedot.selite));
+    kortti.appendChild(html('p', 'kuvalahde',
+      [tiedot.paikka, tiedot.vuosi, tiedot.lahde].filter(Boolean).join(' · ')));
     // Kortti muistikirjan viereen: yläpuolelle kun muistikirja on ruudun
     // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
     const rect = this.factCard.getBoundingClientRect();
@@ -1695,7 +1743,8 @@ export class UI {
       // perässä isoisän nosto, ja lukija lukee koko merkinnän tunteella.
       // Teksti ei vaihdu kaupungissa olon aikana.
       const uusi = (SAAPUMISTEKSTIT[saapuminen.packId] ?? {})[saapuminen.cityId];
-      if (uusi && kaupunki) {
+      const uusiLuettu = SAAPUMISLUENNAT.has(`${saapuminen.packId}:${saapuminen.cityId}`);
+      if (uusi && uusiLuettu && kaupunki) {
         const key = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
         if (this.factKey === key) return;
         this.factKey = key;
@@ -1981,6 +2030,13 @@ export class UI {
     this.arrivalImage.removeAttribute('src');
     this.arrivalIntro.textContent = 'Isoisä on merkinnyt tämän paikan karttaansa.';
     this.arrivalWiki.hidden = true;
+    // Oma lyhytnosto (pilottikaupungit) näkyy heti ja toimii ilman
+    // verkkoa; Lue lisää avaa oman artikkelin, joten nappi voi näkyä heti.
+    const omaIntro = OMAT_ARTIKKELIT[city.wiki]?.intro;
+    if (omaIntro) {
+      this.arrivalIntro.textContent = omaIntro;
+      this.arrivalWiki.hidden = false;
+    }
 
     // Maan tiedot kaupungin rinnalla (omistajan toive): nimi näkyy heti,
     // parin lauseen esittely täyttyy kun haku ehtii. Laudoilla, joilla
@@ -2029,7 +2085,8 @@ export class UI {
         this.arrivalImage.alt = summary.title || city.name;
         this.arrivalImage.hidden = false;
       }
-      if (summary.extract) this.arrivalIntro.textContent = shortIntro(summary.extract);
+      // Oma lyhytnosto voittaa wikin automaattikatkelman (pilottikaupungit).
+      if (summary.extract && !omaIntro) this.arrivalIntro.textContent = shortIntro(summary.extract);
       this.arrivalWiki.hidden = false;
     });
   }
@@ -2057,6 +2114,9 @@ export class UI {
         kuva.src = valokuvaUrl(nosto.tiedosto, 640);
         // Ilman verkkoa nosto jää pelkäksi tekstiksi.
         kuva.addEventListener('error', () => kuva.remove());
+        // Napautus avaa kuvan isompana (omistajan toive).
+        kuva.classList.add('kulttuuri-kuva-nappi');
+        kuva.addEventListener('click', () => this.naytaKulttuuriKuva(nosto));
         lohko.appendChild(kuva);
       }
       lohko.appendChild(html('p', 'arrival-intro', nosto.teksti));
@@ -2066,7 +2126,16 @@ export class UI {
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
-      if (nosto.lahde) lohko.appendChild(html('p', 'kulttuuri-lahde', nosto.lahde));
+      // Ääninäyte: Kuuntele-nappi soittaa CC-lisensoidun äänitteen ja
+      // toinen painallus pysäyttää. Kortin sulkeminen pysäyttää myös.
+      if (nosto.aani) {
+        const nappi = html('button', 'wiki-btn kulttuuri-kuuntele', 'Kuuntele näyte');
+        nappi.type = 'button';
+        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(nosto, nappi));
+        lohko.appendChild(nappi);
+      }
+      const lahteet = [nosto.lahde, nosto.aaniLahde].filter(Boolean).join(' · ');
+      if (lahteet) lohko.appendChild(html('p', 'kulttuuri-lahde', lahteet));
       lista.appendChild(lohko);
     }
 
@@ -2094,10 +2163,80 @@ export class UI {
           ? `Oikein! +${KULTTUURI_PALKKIO} puntaa. `
           : `Oikea vastaus: ${kysymys.options[kysymys.correct]}. `) + (kysymys.fact ?? '');
         sfx.play(oikein ? 'correct' : 'wrong');
-        this.render();
+        // Koko render() sulkisi Tutki-napista avatun kortin (kortti pysyy
+        // auki vain offer-vaiheessa), jolloin palaute ei ehtisi näkyä.
+        // Riittää tallentaa peli ja päivittää rahapilleri.
+        this.onChange?.(this.game);
+        this.renderTurnPill();
       });
       this.arrivalKulttuuriVaihtoehdot.appendChild(nappi);
     });
+  }
+
+  /**
+   * Kulttuurinoston kuva isompana: valokuvavedos keskellä ruutua valkoisin
+   * reunuksin. Katselin on saapumisikkunan sisällä, koska modaalin päälle
+   * ei muuten pääse. Napautus sulkee.
+   */
+  naytaKulttuuriKuva(nosto) {
+    this.suljeKulttuuriKuva();
+    const kortti = html('div', 'postikortti kulttuuri-suurennos');
+    const kuva = document.createElement('img');
+    kuva.src = valokuvaUrl(nosto.tiedosto, 1400);
+    kuva.alt = nosto.otsikko;
+    kortti.appendChild(kuva);
+    kortti.appendChild(html('p', 'kuvateksti',
+      [nosto.otsikko, nosto.lahde].filter(Boolean).join(' · ')));
+    kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
+    this.arrivalDialog.appendChild(kortti);
+    this.kulttuuriKuvaEl = kortti;
+  }
+
+  suljeKulttuuriKuva() {
+    this.kulttuuriKuvaEl?.remove();
+    this.kulttuuriKuvaEl = null;
+  }
+
+  /**
+   * Kuuntele näyte -napin vaihtokytkin: soitto alkaa pehmeällä nousulla ja
+   * toinen painallus tai kortin sulkeminen pysäyttää. Näyte on taustaa
+   * hiljaisempi luenta — ei täyttä voimaa.
+   */
+  kulttuuriAaniNapista(nosto, nappi) {
+    if (this.kulttuuriAani) {
+      this.pysaytaKulttuuriAani();
+      return;
+    }
+    const asetus = jaaAlku(nosto.aani);
+    const audio = new Audio(asetus.url);
+    audio.preload = 'auto';
+    audio.volume = Math.min(1, 0.55 * (asetus.voima ?? 1));
+    if (asetus.alku) {
+      audio.addEventListener('loadedmetadata', () => {
+        try {
+          audio.currentTime = asetus.alku;
+        } catch {
+          /* soi alusta */
+        }
+      }, { once: true });
+    }
+    this.kulttuuriAani = { audio, nappi };
+    nappi.textContent = 'Pysäytä näyte';
+    const nollaa = () => {
+      if (this.kulttuuriAani?.audio === audio) this.pysaytaKulttuuriAani();
+    };
+    audio.addEventListener('ended', nollaa);
+    audio.addEventListener('error', nollaa);
+    audio.play().catch(nollaa);
+  }
+
+  pysaytaKulttuuriAani() {
+    const soiva = this.kulttuuriAani;
+    this.kulttuuriAani = null;
+    if (!soiva) return;
+    soiva.audio.pause();
+    soiva.audio.removeAttribute('src');
+    soiva.nappi.textContent = 'Kuuntele näyte';
   }
 
   /**
@@ -2171,6 +2310,25 @@ export class UI {
       this.wikiImage.alt = summary.title || label;
       this.wikiImage.hidden = false;
     });
+
+    // Oma artikkeli (pilottikaupungit): Wikipedia-tekstin sijaan näytetään
+    // pelin tyyliin kirjoitettu lyhyempi artikkeli — Wikipedian pohjalta,
+    // joten lähdemaininta säilyy. Kuva haetaan silti Wikipediasta.
+    const oma = OMAT_ARTIKKELIT[title];
+    if (oma) {
+      this.renderArticle(this.wikiExtract, oma.artikkeli);
+      this.wikiSource.textContent = 'Matkakirjan oma artikkeli, kirjoitettu Wikipedian pohjalta (CC BY-SA)';
+      if (summary.url) {
+        this.wikiSource.appendChild(document.createTextNode(' — '));
+        const alkup = html('a', '', 'lue alkuperäinen');
+        alkup.href = summary.url;
+        alkup.target = '_blank';
+        alkup.rel = 'noopener noreferrer';
+        this.wikiSource.appendChild(alkup);
+      }
+      return;
+    }
+
     this.wikiExtract.textContent = summary.extract;
 
     // Koko artikkeli ladataan tiivistelmän perään; tiivistelmä jää, jos
@@ -2282,6 +2440,8 @@ export class UI {
 
   closeArrival() {
     this.arrivalShownFor = null;
+    this.suljeKulttuuriKuva();
+    this.pysaytaKulttuuriAani();
     if (this.arrivalDialog.open) this.arrivalDialog.close();
   }
 

@@ -35,6 +35,10 @@ export const AFRICA_KULTTUURI = {
           + 'guembri-luuttu vievät kuulijan transsiin asti — perinne on '
           + 'Unescon aineettoman kulttuuriperinnön listalla.',
         wiki: 'Gnawa',
+        // Kenttä-äänitys gnawa-soittajista Marrakechin torilta; lisenssi
+        // varmistettu archive.orgin metatiedoista (CC BY 3.0).
+        aani: 'https://archive.org/download/aporee_21876_25420/marrakeshCafeEpicesGnawa270214a.mp3',
+        aaniLahde: '"Rahba Kedima, Marrakech — Gnawa" — udo noll, radio aporee (CC BY 3.0)',
       },
     ],
     kysymys: {

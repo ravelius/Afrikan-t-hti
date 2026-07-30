@@ -142,6 +142,22 @@ button, .brand, .turn-pill, .fact-card h2 {
   margin-right: 0.45rem;
 }
 
+/* Ajan eteneminen välähtää kevyesti kullalla, jotta pelaaja huomaa
+ * vilkaista päivämäärää. Yksi rauhallinen hengähdys, ei vilkutusta. */
+.turn-pill.aika-valahdys .clock {
+  animation: aika-valahdys 1.4s ease-out;
+}
+
+@keyframes aika-valahdys {
+  0% { color: var(--muted); }
+  22% { color: var(--accent); text-shadow: 0 0 8px rgba(234, 184, 78, 0.55); }
+  100% { color: var(--muted); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turn-pill.aika-valahdys .clock { animation: none; }
+}
+
 .topbar-actions {
   margin-left: auto;
   display: flex;
@@ -254,6 +270,11 @@ button, .brand, .turn-pill, .fact-card h2 {
   -webkit-transform-style: preserve-3d;
 }
 
+/*
+ * Vanha luunoppa, ei kiillotettu muovinen (omistajan huomio): kulunut
+ * norsunluun sävy paperirakeella, kynämäinen ääriviiva ja käsin painetut
+ * musteiset silmät. Kiiltokerroksen tilalla on tummuva patina.
+ */
 .die-face {
   position: absolute;
   inset: 0;
@@ -263,42 +284,44 @@ button, .brand, .turn-pill, .fact-card h2 {
   padding: 12%;
   gap: 4%;
   border-radius: 18%;
-  background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.55), rgba(120, 86, 40, 0.16) 62%),
-    radial-gradient(circle at 30% 24%, #fffaf0 0%, #f5e7cb 48%, #dcc39a 100%);
-  border: 1px solid rgba(80, 58, 30, 0.5);
-  box-shadow:
-    inset -3px -4px 7px rgba(108, 76, 34, 0.42),
-    inset 3px 4px 6px rgba(255, 255, 255, 0.55);
+  background-image:
+    var(--paper-noise),
+    radial-gradient(circle at 36% 30%, #f0e5c8 0%, #e3d2ab 52%, #ccb488 100%);
+  background-blend-mode: multiply, normal;
+  border: 1.6px solid rgba(70, 51, 31, 0.78);
+  box-shadow: inset -2px -3px 6px rgba(108, 76, 34, 0.3);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
 /* Sivutahkot ovat aavistuksen tummempia, jolloin kuutio saa syvyyttä. */
-.die-face.face-3, .die-face.face-4 { filter: brightness(0.9); }
-.die-face.face-5, .die-face.face-6 { filter: brightness(0.82); }
+.die-face.face-3, .die-face.face-4 { filter: brightness(0.92); }
+.die-face.face-5, .die-face.face-6 { filter: brightness(0.85); }
 
 .die-face .pip {
   align-self: center;
   justify-self: center;
-  width: 74%;
+  width: 70%;
   aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 28%, #7a5c35 0%, #46331a 55%, #2b1e0d 100%);
-  box-shadow:
-    inset 0 -1.5px 1.5px rgba(255, 255, 255, 0.3),
-    inset 0 1.5px 2px rgba(0, 0, 0, 0.5);
+  /* Hieman epäpyöreä ja kallellaan — kuin musteella painettu. */
+  border-radius: 52% 48% 50% 55% / 48% 55% 45% 52%;
+  background: radial-gradient(circle at 44% 38%, #5a4023 0%, #46331f 58%, #362610 100%);
+  transform: rotate(7deg);
 }
 
-/* Valo tulee aina samasta suunnasta: kiilto ei pyöri nopan mukana. */
+.die-face span:nth-child(2n) .pip,
+.die-face span:nth-child(2n).pip { transform: rotate(-11deg) scale(0.96); }
+.die-face span:nth-child(5n).pip { transform: rotate(19deg) scale(1.04); }
+
+/* Valo tulee aina samasta suunnasta: patina ei pyöri nopan mukana. */
 .die-gloss {
   position: absolute;
   inset: -6%;
   border-radius: 24%;
   pointer-events: none;
   background:
-    radial-gradient(circle at 26% 20%, rgba(255, 252, 240, 0.5), rgba(255, 255, 255, 0) 46%),
-    radial-gradient(circle at 78% 84%, rgba(40, 24, 8, 0.24), rgba(0, 0, 0, 0) 52%);
+    radial-gradient(circle at 30% 24%, rgba(252, 244, 222, 0.2), rgba(255, 255, 255, 0) 42%),
+    radial-gradient(circle at 76% 84%, rgba(44, 27, 10, 0.28), rgba(0, 0, 0, 0) 56%);
   mix-blend-mode: soft-light;
 }
 
@@ -591,17 +614,42 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * koska kortti on pystyflex eikä kelluminen toimi suoraan sen lapsissa.
  */
 .fact-teksti-rivi {
-  /* Kääre perii tekstin vieritysroolin kortin pystyflexissä. */
+  /* Kääre rajaa tekstin korkeuden kortin pystyflexissä; itse vieritys
+   * tapahtuu tekstissä, jotta valokuva pysyy paikallaan kulmassa. */
+  position: relative;
   min-height: 0;
   flex: 1 1 auto;
+  overflow: hidden;
+}
+
+/* Vain teksti vierii — ilman kehyksiä ja ilman näkyvää palkkia, kuin
+ * muistikirjan sivu liukuisi sormen alla. */
+.fact-teksti-rivi .fact-text {
+  height: 100%;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
+
+/* Teksti kiertää kuvan alussa: näkymätön varaus kelluu kuvan kohdalla
+ * tekstin sisällä, ja vieritettäessä teksti liukuu paikallaan pysyvän
+ * vedoksen alta — kuin kuva makaisi sivun päällä. */
+.fact-teksti-rivi:has(.fact-valokuva:not([hidden])) .fact-text::before {
+  content: '';
+  float: right;
+  width: 72px;
+  height: 58px;
 }
 
 .fact-valokuva {
-  float: right;
+  position: absolute;
+  top: 0.15rem;
+  right: 0;
+  z-index: 2;
   width: auto;
-  margin: 0.15rem 0 0.35rem 0.55rem;
+  margin: 0;
   padding: 3px 3px 7px;
   background: #f8f3e6;
   border: 0;
@@ -654,6 +702,42 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   font-family: var(--font-type);
   font-size: 0.72rem;
   color: #5a4a33;
+}
+
+/* Lähde ja vuosi selitettä pienemmällä ja vaimeammalla. */
+.postikortti .kuvalahde {
+  margin: 0.15rem 0.1rem 0.1rem;
+  font-family: var(--font-type);
+  font-size: 0.6rem;
+  color: #8a7a60;
+}
+
+/* Kulttuurinoston kuva vihjaa suurennoksesta. */
+.kulttuuri-kuva-nappi { cursor: zoom-in; }
+
+/*
+ * Kulttuurinoston suurennos: sama postikorttivedos, mutta keskellä
+ * ruutua ja väreissä — taideteos tai valokuva näytetään sellaisenaan.
+ * Katselin elää saapumisikkunan sisällä (modaalin päällä).
+ */
+.postikortti.kulttuuri-suurennos {
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 720px);
+  transform: translate(-50%, -50%) rotate(-1.2deg);
+  cursor: zoom-out;
+  animation: kulttuuri-suurennos-esiin 0.2s ease-out;
+}
+
+@keyframes kulttuuri-suurennos-esiin {
+  from { opacity: 0; }
+}
+
+.postikortti.kulttuuri-suurennos img {
+  filter: none;
+  max-height: 76vh;
+  object-fit: contain;
+  background: #efe7d4;
 }
 
 /*
@@ -1370,6 +1454,23 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 
 .target:hover .target-ring { fill: rgba(176, 138, 60, 0.34); }
 .target:hover .target-ring.far { fill: rgba(176, 138, 60, 0.22); opacity: 1; }
+
+/* Lentokohde kartalla: rengas ja pieni kone kaupungin yllä. */
+.target-ring.lento {
+  fill: rgba(120, 148, 196, 0.16);
+  stroke: #4a5f86;
+  stroke-dasharray: 8 5;
+}
+
+.target:hover .target-ring.lento { fill: rgba(120, 148, 196, 0.3); }
+
+.lento-kohde-merkki {
+  font-size: 26px;
+  fill: #4a5f86;
+  paint-order: stroke;
+  stroke: rgba(247, 237, 216, 0.9);
+  stroke-width: 4px;
+}
 .target-cost { fill: var(--mark); font-size: 17px; font-weight: 700; }
 
 @keyframes target-spin {
@@ -2051,7 +2152,10 @@ body[data-mode] .error { color: #9c2f20; }
  * luettavana ruudukkoviivojen päällä, kuten muissakin karttateksteissä.
  */
 body[data-mode] .actions button {
-  background: none;
+  /* Kevyt pergamenttilevy pitää napin luettavana myös kaupunkinimien ja
+   * rantaviivan päällä (omistajan havainto lentovalinnasta) — pelkkä
+   * mustekehys hukkui karttaan. */
+  background: rgba(250, 243, 226, 0.72);
   border: 1px solid rgba(122, 85, 20, 0.35);
   color: var(--map-ink);
   text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9);
@@ -2060,7 +2164,7 @@ body[data-mode] .actions button {
 }
 
 body[data-mode] .actions button:hover:not(:disabled) {
-  background: rgba(255, 248, 232, 0.6);
+  background: rgba(255, 248, 232, 0.85);
 }
 
 /*
@@ -7486,29 +7590,170 @@ const OMAT_TIIVISTELMAT = {
 // lähde näytetään postikortin kuvatekstissä. Ilman verkkoa pikkukuva jää
 // siististi pois. Kaupungit, joille kelvollista vanhaa kuvaa ei vielä
 // löytynyt, puuttuvat listalta — niitä täydennetään kun hyvä löytyy.
+//
+// `selite` on postikortin alle kirjoitettava parin lauseen kuvaus siitä,
+// mitä kuvassa näkyy (omistajan toive). Lähde näytetään pienemmällä.
 const AFRICA_VALOKUVAT = {
-  tanger: { tiedosto: 'Tangier Grand Mosque 1900s.jpg', vuosi: '1900-luvun alku', lahde: 'Wikimedia Commons (PD)' },
-  kairo: { tiedosto: 'Kairo, marchands ambulants LCCN2017657437.jpg', vuosi: '1890-luku', lahde: 'Photoglob / Library of Congress (PD)' },
-  tripoli: { tiedosto: 'Arabs in Tripoli WDL2444.png', vuosi: '1910-luku', lahde: 'World Digital Library (PD)' },
-  murzuk: { tiedosto: 'Osmanisches Fort von Mursuk.jpg', vuosi: null, lahde: 'Wikimedia Commons (PD)' },
-  alkufra: { tiedosto: 'Kufra (aeroview).jpg', vuosi: 'noin 1930', lahde: 'Wikimedia Commons (PD)' },
-  gao: { tiedosto: 'ETH-BIB-Grabmal von Askia, Gao-Tschadseeflug 1930-31-LBS MH02-08-0548.tif', vuosi: '1930–31', lahde: 'Walter Mittelholzer / ETH-Bibliothek (PD)' },
-  dakar: { tiedosto: 'Dakar mosque circa 1900.jpg', vuosi: 'noin 1900', lahde: 'Edmond Fortier (PD)' },
-  sierraleone: { tiedosto: 'Cotton Tree Railway Station 3.30 p.m. Bungalow Train, Freetown.jpg', vuosi: '1910-luku', lahde: 'Lisk-Carew Brothers (PD)' },
-  kappalmas: { tiedosto: 'HEARD(1898) 50 Church of Harper, Cape Palmas.jpg', vuosi: '1898', lahde: 'W. H. Heard (PD)' },
-  kumasi: { tiedosto: 'Kumasi 28-03-1900 sx.jpg', vuosi: '1900', lahde: 'Wikimedia Commons (PD)' },
-  orjarannikko: { tiedosto: 'São João Baptista de Ajudá 1920s.jpg', vuosi: '1920-luku', lahde: 'Wikimedia Commons (PD)' },
-  kano: { tiedosto: 'View-Kano city-1911.jpg', vuosi: '1911', lahde: 'E. D. Morel (PD)' },
-  kongo: { tiedosto: 'Livingstone steamer, Congo, ca. 1902-1915 (IMP-CSCNWW33-OS10-73).jpg', vuosi: '1902–1915', lahde: 'Wikimedia Commons (PD)' },
-  angola: { tiedosto: "Saint-Paul de Luanda, port de (l')Angola dans le Portugal africain (vue générale) - btv1b6932475d.jpg", vuosi: '1914', lahde: 'Agence Rol / BnF (PD)' },
-  kapkaupunki: { tiedosto: 'Cape Town tram, Adderley Street - ca. 1900.jpg', vuosi: 'noin 1900', lahde: 'Wikimedia Commons (PD)' },
-  kimberley: { tiedosto: 'Twee gezichten op de mijn Die Groot Gat te Kimberley Diamond fields-Kimberley mine (titel op object) Diamond fields-Tramway, Kimberley mine (titel op object), RP-F-2001-7-425-25.jpg', vuosi: 'noin 1870', lahde: 'Rijksmuseum (CC0)' },
-  madagaskar: { tiedosto: "Tananarive-Temple d'Andohalo.jpg", vuosi: 'noin 1900', lahde: 'Wikimedia Commons (PD)' },
-  sansibar: { tiedosto: 'Panorama van de haven van Zanzibar Panorama of Zanzibar (titel op object) Zanzibar (titel op object), RP-F-F00999-DD.jpg', vuosi: 'noin 1900', lahde: 'Rijksmuseum (CC0)' },
-  kilimandzaro: { tiedosto: 'Bundesarchiv Bild 105-DOA0437, Deutsch-Ostafrika, Kilimandscharo, Gummiplantage.jpg', vuosi: '1906–1918', lahde: 'W. Dobbertin / Bundesarchiv (CC BY-SA 3.0 de)' },
-  tanganjika: { tiedosto: 'Memorial tablet marking the spot where Livingstone and Stanley met at Ujiji in 1871 ATLIB 305982.png', vuosi: '1903', lahde: 'A. P. Godber (PD)' },
-  addisabeba: { tiedosto: 'British delegation Addis Abeba.jpg', vuosi: '1930', lahde: 'Wikimedia Commons (PD)' },
-  rashafun: { tiedosto: 'Garesadihafun.jpg', vuosi: '1900-luvun alku', lahde: 'Wikimedia Commons (PD)' },
+  tanger: {
+    tiedosto: 'Tangier Grand Mosque 1900s.jpg',
+    vuosi: '1900-luvun alku',
+    lahde: 'Commons (PD)',
+    selite: 'Tangerin suurmoskeijan kulmalla kävi vilske jo isoisän aikaan: '
+      + 'kantajia, kauppiaita ja aaseja samalla kapealla kadulla.',
+  },
+  kairo: {
+    tiedosto: 'Kairo, marchands ambulants LCCN2017657437.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Kiertäviä kauppiaita Kairon kadulla. Vesimyyjä kantoi tavaransa '
+      + 'selässään ja huusi kaupan kilpaa muiden kanssa.',
+  },
+  tripoli: {
+    tiedosto: 'Arabs in Tripoli WDL2444.png',
+    vuosi: '1910-luku',
+    lahde: 'World Digital Library (PD)',
+    selite: 'Väkeä koolla Tripolin muurien kupeessa. Valkoiset viitat '
+      + 'suojasivat sekä auringolta että aavikon hiekalta.',
+  },
+  murzuk: {
+    tiedosto: 'Osmanisches Fort von Mursuk.jpg',
+    vuosi: null,
+    lahde: 'Commons (PD)',
+    selite: 'Murzukin linnoitus vartioi Saharan karavaanireittiä. Sen '
+      + 'savimuurien varjossa lepäsivät sekä kamelit että kauppiaat.',
+  },
+  alkufra: {
+    tiedosto: 'Kufra (aeroview).jpg',
+    vuosi: 'noin 1930',
+    lahde: 'Commons (PD)',
+    selite: 'Kufran keitaat ilmasta kuvattuna: palmulehtoja ja suolajärviä '
+      + 'keskellä hiekkamerta, päivien matkan päässä kaikesta.',
+  },
+  gao: {
+    tiedosto: 'ETH-BIB-Grabmal von Askia, Gao-Tschadseeflug 1930-31-LBS MH02-08-0548.tif',
+    vuosi: '1930–31',
+    lahde: 'ETH-Bibliothek (PD)',
+    selite: 'Askian hauta Gaossa — savesta muurattu pyramidi, jonka piikit '
+      + 'ovat rakennustelineiksi jätettyjä puunrunkoja. Songhain '
+      + 'suurvallan mahtavin muistomerkki.',
+  },
+  dakar: {
+    tiedosto: 'Dakar mosque circa 1900.jpg',
+    vuosi: 'noin 1900',
+    lahde: 'E. Fortier (PD)',
+    selite: 'Dakarin moskeija minareetteineen nuoren satamakaupungin '
+      + 'keskellä. Kuvan otti postikorteistaan tunnettu Edmond Fortier.',
+  },
+  sierraleone: {
+    tiedosto: 'Cotton Tree Railway Station 3.30 p.m. Bungalow Train, Freetown.jpg',
+    vuosi: '1910-luku',
+    lahde: 'Lisk-Carew Brothers (PD)',
+    selite: 'Iltapäiväjuna lähdössä Freetownin Cotton Tree -asemalta. '
+      + 'Kaupungin kuuluisa puuvillapuu kasvaa yhä samalla paikalla.',
+  },
+  kappalmas: {
+    tiedosto: 'HEARD(1898) 50 Church of Harper, Cape Palmas.jpg',
+    vuosi: '1898',
+    lahde: 'W. H. Heard (PD)',
+    selite: 'Harperin kirkko Kap Palmasin niemellä. Sen torni näkyi kauas '
+      + 'merelle ja toimi purjehtijoiden maamerkkinä.',
+  },
+  kumasi: {
+    tiedosto: 'Kumasi 28-03-1900 sx.jpg',
+    vuosi: '1900',
+    lahde: 'Commons (PD)',
+    selite: 'Kumasin kattoja vuonna 1900. Ashantien pääkaupunki oli tuolloin '
+      + 'yksi Länsi-Afrikan suurimpia kaupunkeja.',
+  },
+  orjarannikko: {
+    tiedosto: 'São João Baptista de Ajudá 1920s.jpg',
+    vuosi: '1920-luku',
+    lahde: 'Commons (PD)',
+    selite: 'Ouidahin vanha portugalilaislinnake, Orjarannikon synkän '
+      + 'historian vartiopaikka. Isoisän aikaan sen muurit olivat jo '
+      + 'rapistumassa.',
+  },
+  kano: {
+    tiedosto: 'View-Kano city-1911.jpg',
+    vuosi: '1911',
+    lahde: 'E. D. Morel (PD)',
+    selite: 'Kanon savitaloja ja muureja vuonna 1911. Koko vanha kaupunki '
+      + 'on rakennettu auringossa kuivatusta savesta.',
+  },
+  kongo: {
+    tiedosto: 'Livingstone steamer, Congo, ca. 1902-1915 (IMP-CSCNWW33-OS10-73).jpg',
+    vuosi: '1902–1915',
+    lahde: 'Commons (PD)',
+    selite: 'Höyrylaiva Livingstone Kongojoella. Joki oli sisämaan valtatie: '
+      + 'laivat kuljettivat kaiken kylistä kaupunkeihin ja takaisin.',
+  },
+  angola: {
+    tiedosto: "Saint-Paul de Luanda, port de (l')Angola dans le Portugal africain (vue générale) - btv1b6932475d.jpg",
+    vuosi: '1914',
+    lahde: 'Agence Rol / BnF (PD)',
+    selite: 'Luandan satama ja rantakatu vuonna 1914. Lahden suojissa '
+      + 'lepäsi purjelaivoja ja höyryaluksia rinnakkain.',
+  },
+  kapkaupunki: {
+    tiedosto: 'Cape Town tram, Adderley Street - ca. 1900.jpg',
+    vuosi: 'noin 1900',
+    lahde: 'Commons (PD)',
+    selite: 'Raitiovaunu Kapkaupungin Adderley Streetillä. Kadun päästä '
+      + 'alkoi satama, toisesta päästä kohosi Pöytävuori.',
+  },
+  kimberley: {
+    tiedosto: 'Twee gezichten op de mijn Die Groot Gat te Kimberley Diamond fields-Kimberley mine (titel op object) Diamond fields-Tramway, Kimberley mine (titel op object), RP-F-2001-7-425-25.jpg',
+    vuosi: 'noin 1870',
+    lahde: 'Rijksmuseum (CC0)',
+    selite: 'Kimberleyn timanttikaivos alkuaikoinaan: tuhannet kaivajat '
+      + 'louhivat kuoppaa käsin, köysiradat kuljettivat maata ylös. '
+      + 'Kuopasta kasvoi lopulta Iso Reikä.',
+  },
+  madagaskar: {
+    tiedosto: "Tananarive-Temple d'Andohalo.jpg",
+    vuosi: 'noin 1900',
+    lahde: 'Commons (PD)',
+    selite: 'Antananarivon kukkulakaupunkia Madagaskarilla. Talot '
+      + 'kipuavat rinnettä kohti Andohalon aukiota ja sen kirkkoa.',
+  },
+  sansibar: {
+    tiedosto: 'Panorama van de haven van Zanzibar Panorama of Zanzibar (titel op object) Zanzibar (titel op object), RP-F-F00999-DD.jpg',
+    vuosi: 'noin 1900',
+    lahde: 'Rijksmuseum (CC0)',
+    selite: 'Sansibarin satama purjealuksineen. Mausteiden tuoksu kantoi '
+      + 'kuulemma merelle asti, ennen kuin kaupunki edes näkyi.',
+  },
+  kilimandzaro: {
+    tiedosto: 'Bundesarchiv Bild 105-DOA0437, Deutsch-Ostafrika, Kilimandscharo, Gummiplantage.jpg',
+    vuosi: '1906–1918',
+    lahde: 'Bundesarchiv (CC BY-SA 3.0 de)',
+    selite: 'Viljelmiä Kilimandžaron juurella. Lumihuippu häämöttää pilvien '
+      + 'takana — keskellä Afrikkaa, lähes päiväntasaajalla.',
+  },
+  tanganjika: {
+    tiedosto: 'Memorial tablet marking the spot where Livingstone and Stanley met at Ujiji in 1871 ATLIB 305982.png',
+    vuosi: '1903',
+    lahde: 'A. P. Godber (PD)',
+    selite: 'Muistolaatta Ujijissa Tanganjikajärven rannalla — paikassa, '
+      + 'jossa Stanley löysi kadonneen Livingstonen vuonna 1871 ja '
+      + 'tervehti: "Tohtori Livingstone, otaksun?"',
+  },
+  addisabeba: {
+    tiedosto: 'British delegation Addis Abeba.jpg',
+    vuosi: '1930',
+    lahde: 'Commons (PD)',
+    selite: 'Juhlakulkue Addis Abebassa keisari Haile Selassien '
+      + 'kruunajaisvuonna 1930. Koko maailma lähetti edustajansa '
+      + 'vuoristopääkaupunkiin.',
+  },
+  rashafun: {
+    tiedosto: 'Garesadihafun.jpg',
+    vuosi: '1900-luvun alku',
+    lahde: 'Commons (PD)',
+    selite: 'Vanha garesa-linnoitus Hafunin niemellä, Afrikan itäisimmässä '
+      + 'kärjessä. Monsuunituulet toivat tänne purjehtijoita jo tuhat '
+      + 'vuotta sitten.',
+  },
 };
 
 /** Commonsin suora kuvaosoite haluttuun leveyteen skaalattuna. */
@@ -7517,17 +7762,20 @@ function valokuvaUrl(tiedosto, leveys) {
 }
 
 // ===== js/packs/africa-saapumiset.js =====
-// Matkakirjan saapumistekstit uudella mallilla (pilotti: Tanger ja
-// Tripoli — omistajan päätös, laajennetaan kaikkiin jos malli toimii):
+// Matkakirjan saapumistekstit uudella mallilla (kaikki Afrikan kaupungit):
 //
 //  - `kuvaus` on nuoren herran tuore fiilis paikasta. Se näkyy
 //    lihavoituna ja lukija lukee koko merkinnän ääneen tunteella.
 //  - `nosto` päättää merkinnän isoisän kirjan lainaukseen niin, että
 //    lähde käy ilmi tekstistä itsestään — erillistä otsikkoa ei ole.
 //
-// Teksti ei vaihdu kaupungissa olon aikana. Luenta on generoitu
+// Teksti ei vaihdu kaupungissa olon aikana. Luennat generoidaan
 // ElevenLabsilla (Viisas Kertoja, v3 tunnetageilla) tiedostoon
-// assets/audio/puhe-africa-saapuminen-<kaupunki>.mp3.
+// assets/audio/puhe-africa-saapuminen-<kaupunki>.mp3 — toistaiseksi
+// luenta on olemassa vain piloteille (Tanger, Tripoli), ja peli käyttää
+// uutta mallia vain niissä (ui.js SAAPUMISLUENNAT). Muut tekstit ovat
+// omistajan luettavina työhuoneen Tekstit-välilehdellä; äänet tehdään
+// vasta lukukierroksen jälkeen.
 const AFRICA_SAAPUMISET = {
   tanger: {
     kuvaus: 'Laiva kääntyi lahteen ja Tanger nousi vastaan kuin katsomo: '
@@ -7540,6 +7788,16 @@ const AFRICA_SAAPUMISET = {
       + 'Afrikka alkaa, ja täällä sitä on turha yrittää ymmärtää kiireellä." '
       + 'Ukko osasi sittenkin pysähtyä.',
   },
+  kairo: {
+    kuvaus: 'Kairo ei ala mistään eikä lopu mihinkään — se vain kasvaa '
+      + 'ympärille: torvet, kauppiaat, tomu ja kahdenkymmenen miljoonan '
+      + 'ihmisen puheensorina. Ja sitten, kadun päässä, ne seisovat: '
+      + 'pyramidit, rauhallisina kuin olisivat odottaneet juuri minua '
+      + 'neljä ja puoli tuhatta vuotta.',
+    nosto: 'Isoisä kirjoitti hävinneensä basaarissa tinkimisen kolmen '
+      + 'teekupin jälkeen ja lisäsi: "Pyramidit olivat vanhoja jo silloin, '
+      + 'kun Rooma oli kylä." Join oman teeni ja hävisin myös.',
+  },
   tripoli: {
     kuvaus: 'Tripoliin tullaan aavikon ja meren välistä: kaupunki makaa '
       + 'kalliolla kuin laivan keula, ja valkoiset muurit hehkuvat '
@@ -7549,6 +7807,317 @@ const AFRICA_SAAPUMISET = {
     nosto: 'Isoisä kirjoitti nähneensä täällä, kuinka aavikon karavaanit '
       + 'purkavat lastinsa suoraan laivoihin — "kaksi maailmaa kättelee '
       + 'laiturilla", hän merkitsi. Sama kädenpuristus näkyy satamassa yhä.',
+  },
+  murzuk: {
+    kuvaus: 'Viimeinen harju ylitettiin auringonlaskussa, ja siinä se oli: '
+      + 'Murzuk, kourallinen savitaloja hiekkameren laidalla. Hiljaisuus on '
+      + 'täällä niin täydellinen, että kuulin oman sykkeeni — ja silti '
+      + 'tämän tyhjyyden halki on kulkenut valtakuntien kauppatie. Pelkäsin '
+      + 'ja ihailin samaan aikaan, enkä hävennyt kumpaakaan.',
+    nosto: 'Isoisän kirjassa lukee: "Oppaani tietää tien ilman karttaa; '
+      + 'minulla on kartta, enkä tiedä tietä." Ymmärrän lauseen nyt '
+      + 'paremmin kuin kotona ymmärsin.',
+  },
+  alkufra: {
+    kuvaus: 'Päiväkausia pelkkää hiekkaa — ja sitten silmänkantamattoman '
+      + 'tyhjyyden keskeltä nousee vihreä saareke: palmuja, varjoa, veden '
+      + 'tuoksu. Al Kufran keidas ilmestyi eteen niin äkkiä, että hieroin '
+      + 'silmiäni kuin unesta herännyt. Vesi maistui täällä paremmalta '
+      + 'kuin mikään juoma Lontoossa ikinä.',
+    nosto: 'Isoisä merkitsi keitaasta: "Se ilmestyy hiekan keskelle kuin '
+      + 'virhe kartassa. Veden määrän tietävät vain ne, jotka ovat asuneet '
+      + 'täällä sukupolvia." Virhe kartassa — ja silti ainoa tosi paikka '
+      + 'päivien matkalla.',
+  },
+  sahara: {
+    kuvaus: 'Aavikko ei ole tyhjä — sen huomaa vasta täällä. Päivällä valo '
+      + 'lyö kuin vasara ja kivet väreilevät kuumuutta, mutta illalla '
+      + 'taivas syttyy niin täyteen tähtiä, että jouduin istumaan alas. '
+      + 'Opas kaatoi teetä kolmannen lasillisen ja hymyili kartalleni: '
+      + 'täällä tiet kulkevat muistissa, eivät paperilla.',
+    nosto: 'Isoisä kirjoitti palelleensa yöllä kahden peiton alla ja '
+      + 'ihmetelleensä kallioon piirrettyjä karjalaumoja: "Joku on siis '
+      + 'paimentanut lehmiä siellä, missä minä en löydä vettä." Sama '
+      + 'ihmetys valtasi minutkin.',
+  },
+  ahaggar: {
+    kuvaus: 'Aamuyöllä kiivettiin kylmässä pimeässä, ja sitten valo tuli: '
+      + 'Ahaggarin mustat kivitornit nousivat hiekasta yksi kerrallaan '
+      + 'kuin uponneen linnan huiput. Henkeäni salpasi — keskellä maailman '
+      + 'suurinta aavikkoa seison vuoristossa, jossa palelen, ja kivissä '
+      + 'kulkee kirjoitusta, jota tuaregit lukevat sujuvasti.',
+    nosto: 'Isoisän sivulla lukee: "Tuaregit tuntevat nämä polut nimeltä; '
+      + 'me nimesimme ne uudelleen ja luulimme sitä löytämiseksi." Se on '
+      + 'rehellisin lause, jonka ukko koskaan kirjoitti.',
+  },
+  timbuktu: {
+    kuvaus: 'Timbuktun kadut ovat hiekkaa, ja aamulla niistä voi lukea koko '
+      + 'yön tarinan: vuohien sorkat, lakaisijan viuhkan jäljet. Klubilla '
+      + 'tämän kaupungin nimellä tarkoitetaan paikkaa, jota ei ole — ja '
+      + 'kuitenkin täällä on kirjastoja, joiden käsikirjoitukset kertovat '
+      + 'tähdistä ja laista. Häpesin hetken sitä, mitä olin uskonut.',
+    nosto: 'Isoisä kirjoitti täältä: "Enemmän kirjoja kuin monessa '
+      + 'englantilaisessa pikkukaupungissa." Lauseen perään hän oli '
+      + 'piirtänyt huutomerkin — ukolla ei ollut tapana tuhlata niitä.',
+  },
+  gao: {
+    kuvaus: 'Tulin aavikon puolelta, ja joki tuli vastaan varoittamatta: '
+      + 'Niger, leveä ja hidas, ja vastarannalla hehkuu vaaleanpunainen '
+      + 'dyyni. Rannassa lastataan veneitä kuin satamassa ikään, ja '
+      + 'Askian savinen hautapyramidi kohoaa kattojen yllä. Täältä '
+      + 'hallittiin valtakuntaa, jonka valtatie oli tämä joki.',
+    nosto: 'Isoisän kirjassa lukee: "Joen rannalla oli valtakunnan '
+      + 'pääkaupunki silloin, kun Englannissa riideltiin ruusuista. '
+      + 'Savea kannattaa siis olla kunnioittavampi kuin olen ollut." '
+      + 'Katselin hautaa ja nyökkäsin ukolle.',
+  },
+  dakar: {
+    kuvaus: 'Dakarissa Atlantti on joka puolella: tuuli maistuu suolalta, '
+      + 'rantabulevardi vilisee elämää ja aallot lyövät mantereen '
+      + 'läntisimpään kärkeen. Tästä eteenpäin länteen on vain merta. '
+      + 'Goréen saarella hiljenin — sen kauniiden talojen takana on ovi, '
+      + 'joka avautuu suoraan merelle, eikä sen historia päästä otteestaan.',
+    nosto: 'Isoisä kirjoitti täällä lauseen, jota luen yhä uudelleen: '
+      + '"Sen laivauksen järjesti minun maanosani, ei tämä." Hän ei '
+      + 'selitellyt, eikä selittele nytkään.',
+  },
+  sierraleone: {
+    kuvaus: 'Vuoret nousevat täällä suoraan merestä, ja kun laiva kaartoi '
+      + 'lahteen, ymmärsin portugalilaisia: nämä ovat leijonan vuoret. '
+      + 'Freetownin satamassa kannettiin, huudettiin ja naurettiin, ja '
+      + 'kaupungin nimi kulki mielessäni koko päivän — vapaudenkaupunki, '
+      + 'jonka perustivat orjuudesta vapautetut. Nimi velvoittaa yhä.',
+    nosto: 'Isoisän kirjassa on tästä satamasta tarkka lause: "Nimi on '
+      + 'annettu siksi, että vapaus oli ensin otettu pois." Sitä ei '
+      + 'sanota juhlapuheissa, hän lisäsi — mutta hän kirjoitti sen.',
+  },
+  kappalmas: {
+    kuvaus: 'Kap Palmasin kohdalla koko rannikko kääntyy: viikkokausia '
+      + 'etelään, ja yhtäkkiä keula osoittaa itään. Palmut kaartuvat '
+      + 'rannalla tuulessa niin taajaan, että ne näkyvät kannelle asti — '
+      + 'kuin manner heiluttaisi vihreää lippua käännöksen merkiksi. '
+      + 'Seisoin keulassa ja tunsin matkan tekevän mutkan allani.',
+    nosto: 'Isoisä merkitsi tähän kohtaan: "Purjehtija tietää sijaintinsa '
+      + 'puista; minä tarvitsin siihen sekstantin ja kaksi tuntia." '
+      + 'Minä tarvitsin peräti kartan, jossa kulma on valmiiksi piirretty.',
+  },
+  kumasi: {
+    kuvaus: 'Kumasiin tullaan sademetsän läpi, ja kaupunki aukeaa kuin '
+      + 'tori, jolla ei ole reunoja: kankaita, kultaa, tomaatteja, '
+      + 'kenkiä, ja kaiken yllä puheensorina kuin mehiläispesässä. '
+      + 'Eksyin neljästi ja nautin joka kerrasta. Tämä on kuningaskunnan '
+      + 'pääkaupunki, ja sen hovin järjestys nöyryyttää vieraan iloisesti.',
+    nosto: 'Isoisä kirjoitti Ashantin hovista: "Järjestetty tarkemmin '
+      + 'kuin meidän. Kuninkaan istuinta ei lasketa maahan eikä kukaan '
+      + 'istu sillä." Perään hän lisäsi kuivasti: "Makuasia." Ukossa '
+      + 'oli huumorintajua, kun tarkkaan lukee.',
+  },
+  orjarannikko: {
+    kuvaus: 'Ouidahissa hiekkatie kulkee kaupungilta rannalle, ja mitä '
+      + 'pidemmälle kävelin, sitä hiljaisemmaksi tulin. Tien päässä on '
+      + 'vain meri ja portti, jonka läpi näkyy pelkkää vettä. Tämän '
+      + 'rannan kautta vietiin yli miljoona ihmistä. Seisoin kauan '
+      + 'paikallani ja annoin aaltojen puhua, koska itselläni ei ollut '
+      + 'sanoja.',
+    nosto: 'Isoisän kirjassa on tästä rannikosta ankarin lause, jonka hän '
+      + 'kirjoitti: "Nimi ei kerro alueesta mitään; se kertoo meistä '
+      + 'kaiken." Hän ei piirtänyt nimeä uudelleen — eikä piirrä tämä '
+      + 'kartta minunkaan kädessäni.',
+  },
+  kano: {
+    kuvaus: 'Kano ilmestyi harmattanin pölyn takaa vähitellen, kuin kuva '
+      + 'kehittyisi: ensin savimuurit, sitten portit, sitten kokonainen '
+      + 'kaupunki auringossa kuivatusta savesta. Värjäämökuoppien äärellä '
+      + 'miehet nostivat kankaita, jotka hehkuivat indigonsinisinä — ja '
+      + 'sama sini jäi omiin käsiini päiväkausiksi. Kannan sitä ylpeänä.',
+    nosto: 'Isoisä kirjoitti: "Värjäämöt ovat toimineet kauemmin kuin '
+      + 'yksikään tuntemani englantilainen tehdas." Hänenkin kätensä '
+      + 'olivat viikon siniset. Suku ei kehity.',
+  },
+  kamerun: {
+    kuvaus: 'Kamerunvuori nousee suoraan merestä pilviin, ja sen rinteillä '
+      + 'sade ei ole säätila vaan olotila. Sateenvarjoni kääntyi nurin '
+      + 'ensimmäisessä puuskassa, ja luovuin siitä nauraen — täällä '
+      + 'kastutaan arvokkaasti. Vuoren juurella kylät tuoksuvat märälle '
+      + 'mullalle ja savulle, ja kaikki mikä kasvaa, kasvaa täysillä.',
+    nosto: 'Isoisän kirjassa lukee: "Sateenvarjoni kesti kaksi minuuttia. '
+      + 'Vuori on ollut tässä kauemmin." Minun varjoni kesti yhden. '
+      + 'Kehitys kulkee suvussa taaksepäin.',
+  },
+  kongo: {
+    kuvaus: 'Kongo ei ole joki vaan sisämeri, joka liikkuu: ruskea vesi '
+      + 'kulkee ohi leveänä kuin salmi, ja metsä sen ympärillä ei ole '
+      + 'hetkeäkään hiljaa. Se sirisee, kopisee ja huutaa kerroksittain, '
+      + 'ja sade kuuluu tulevan jo minuutteja ennen ensimmäistä pisaraa. '
+      + 'Ylävirrasta kantautuu koskien jylinä — vesi kuuluu ennen kuin '
+      + 'näkyy.',
+    nosto: 'Isoisän kartassa tässä kohdassa luki "tuntematon". Hän lisäsi '
+      + 'perään: "Tuntematon meille, ei niille jotka siellä asuvat." Se '
+      + 'yksi lause on koko kirjan arvoinen.',
+  },
+  angola: {
+    kuvaus: 'Luandan lahti kaartuu kuin sirppi, ja satamassa purjeet ja '
+      + 'höyrypiiput seisovat rinnakkain kuin kaksi aikakautta samassa '
+      + 'kuvassa. Astuin mereen ja hätkähdin: vesi on kylmää keskellä '
+      + 'tropiikkia. Merivirta tuo sen etelästä asti — tämä rannikko ei '
+      + 'tee mitään puolivillaisesti.',
+    nosto: 'Isoisä kirjoitti satamasta lauseen, joka ei kaipaa jatkoa: '
+      + '"Laivat lähtivät Brasiliaan kolmensadan vuoden ajan, ja lastina '
+      + 'oli ihmisiä. Muusta ei kannata kiittää ketään." Kylmä vesi '
+      + 'tuntui sen jälkeen oikealta.',
+  },
+  namib: {
+    kuvaus: 'Aamulla dyynit nousivat sumusta kuin oranssit vuoret unesta. '
+      + 'Kiipesin harjalle auringonnousuun — joka askeleesta puolet valui '
+      + 'takaisin — ja ylhäältä näkyi vain lisää hiekkaa, kauniina niin '
+      + 'kauas kuin silmä kantoi. Rannalla törröttää laivanhylkyjä: meri '
+      + 'ja aavikko ottavat täällä mittaa toisistaan, eikä kumpikaan '
+      + 'anna periksi.',
+    nosto: 'Isoisä kirjoitti hylyistä: "Jokainen niistä oli jonkun '
+      + 'kapteenin varma laskelma. Pidän tämän sivun mielessäni, ennen '
+      + 'kuin taas sanon olevani varma." Luin lauseen dyynin harjalla '
+      + 'kahdesti.',
+  },
+  kapkaupunki: {
+    kuvaus: 'Pöytävuori näkyi merelle jo tuntikausia ennen satamaa: tasainen '
+      + 'kuin veistetty, ja pilvi valui sen laen yli hitaana vesiputouksena. '
+      + 'Kaupunki sen juurella tuoksuu merelle ja uudelle maalille, ja '
+      + 'kaduilla kuulee puolen maailman kielet. Täällä kaksi valtamerta '
+      + 'kohtaa — ja minä seison niiden saumalla.',
+    nosto: 'Isoisän kirjassa lukee: "Täydennämme vesitynnyrit vuoren '
+      + 'juurella, kuten kaikki Intiaan menevät ovat tehneet. Kaksi '
+      + 'valtamerta kohtaa tässä, eikä kumpikaan kysy meiltä lupaa." '
+      + 'Ne eivät kysyneet minultakaan.',
+  },
+  kimberley: {
+    kuvaus: 'Kimberleyssä kävelin suoraan maailman reunalle: Iso reikä '
+      + 'aukeaa keskellä kaupunkia, puoli kilometriä leveä ja kokonaan '
+      + 'lapioilla kaivettu. Pohjalla lepää vihreä vesi kuin salaisuus. '
+      + 'Katuvalot syttyivät täällä timanttirahalla ennen kuin monessa '
+      + 'Euroopan kaupungissa — ja jokainen valo on kaivettu käsin.',
+    nosto: 'Isoisä kirjoitti kuopan reunalta: "Voiton laskee joku, joka '
+      + 'ei ole koskaan seisonut reunalla. Kivet lähetetään Lontooseen." '
+      + 'Hän ei kirjoittanut, mitä reunalla seisominen maksoi. Sen näkee '
+      + 'täällä yhä.',
+  },
+  mosambik: {
+    kuvaus: 'Saari lepää salmessa kuin ankkuroitu laiva, ja lautturi lauloi '
+      + 'koko ylityksen. Vanha kaupunki on korallikiveä ja kalkkia, kujat '
+      + 'kapeita kuin käytävät, ja vesi ympärillä niin kirkasta, että '
+      + 'kalat näkyvät veneeseen asti. Intian valtameri tuo tänne '
+      + 'monsuunin, kauppiaat ja tarinat — ja vie ne taas mukanaan.',
+    nosto: 'Isoisä merkitsi: "Riutta on niin kirkas, että näen kalat '
+      + 'kannelta." Se on hänen kirjansa iloisin lause, ja se pitää '
+      + 'yhä paikkansa.',
+  },
+  madagaskar: {
+    kuvaus: 'Madagaskar ei ole Afrikkaa eikä Aasiaa — se on oma maailmansa. '
+      + 'Matka rannikolta ylängölle vaihtoi maiseman kolmesti: sademetsä, '
+      + 'punaiset kukkulat, riisiterassit. Metsässä katseli takaisin '
+      + 'silmäpareja, joita ei näe missään muualla maapallolla, ja kieli '
+      + 'kadulla soi kuin kaukaisten saarten laulu. Sitä se onkin.',
+    nosto: 'Isoisä päätteli kielestä väärin ja myönsi sen kirjassaan: '
+      + '"He purjehtivat tänne idästä." Ukko osasi olla väärässä '
+      + 'ääneen — taito, jota opettelen edelleen.',
+  },
+  sansibar: {
+    kuvaus: 'Sansibar tuoksui ennen kuin näkyi: neilikka kantoi merelle '
+      + 'asti, ja sitten valkoinen kivikaupunki nousi aalloista. Kujilla '
+      + 'veistetyt ovet kertovat tarinoita messinkipiikein ja kuvioin, '
+      + 'joita en osaa lukea mutta joita en lakkaa katselemasta. Tämä '
+      + 'saari on rakennettu korallista, mausteista ja monsuunituulista.',
+    nosto: 'Isoisän kirjassa lukee: "Tyyleissä näkyy Oman, Intia ja '
+      + 'swahilirannikko — ei Eurooppa." Hän alleviivasi viimeiset '
+      + 'kaksi sanaa. Ymmärrän täällä miksi.',
+  },
+  kilimandzaro: {
+    kuvaus: 'Pilvet raottuivat illalla, ja siinä se hohti: lumihuippu '
+      + 'keskellä Afrikkaa, lähes päiväntasaajalla. Katselin sitä kunnes '
+      + 'niska puutui. Alhaalla savannin ruoho lainehti lämpimänä, ja '
+      + 'ylhäällä valkoinen laki leijui taivaan ja maan välissä kuin ei '
+      + 'kuuluisi kumpaankaan. Ymmärrän, ettei kukaan kotona uskonut.',
+    nosto: 'Isoisä kirjoitti Lontooseen lumesta ja sai vastauksen neljän '
+      + 'kuukauden päästä: "Ei liene mahdollista." Kirjaansa hän merkitsi: '
+      + '"Lumi ei tiettävästi ole lukenut kirjettä." Se ei ole '
+      + 'vieläkään.',
+  },
+  viktoria: {
+    kuvaus: 'Sanoivat järveksi, mutta silmä sanoo mereksi: Viktoria Nyanza '
+      + 'jatkuu horisonttiin asti, eikä toista rantaa näy mistään. '
+      + 'Aallokko keinutti lauttaa niin, että kannella tartuttiin '
+      + 'kaiteeseen, ja kalastajaveneet lähtivät iltaan lyhtyineen kuin '
+      + 'tähdet vesille. Tästä altaasta lähtee liikkeelle itse Niili.',
+    nosto: 'Isoisä merkitsi rannalta: "Nimen antoi maanmieheni '
+      + 'kuningattaren mukaan, vaikka rannoilla oli ollut nimiä jo '
+      + 'pitkään." Kirjoitan tähän molemmat, kuten hänkin teki: '
+      + 'Viktoria — ja Nyanza, järvi.',
+  },
+  tanganjika: {
+    kuvaus: 'Tanganjika on kapea ja loputon: vuoret laskeutuvat veteen '
+      + 'molemmin puolin, ja järvi jatkuu etelään päivämatkojen päähän. '
+      + 'Vesi on niin kirkasta, että veneen varjo kulkee pohjassa syvällä '
+      + 'allamme, ja kalat välkkyvät värejä, joita en ole nähnyt missään '
+      + 'kirjassa. Rannalla Ujijin mangopuut varjostavat kuuluisaa '
+      + 'kohtaamispaikkaa.',
+    nosto: 'Isoisä kirjoitti: "Täällä kaksi maanmiestäni tapasi toisensa '
+      + 'ja kutsui sitä löytöretkeksi." Ukko valitsi sanansa tarkasti — '
+      + 'järvi oli löydetty kauan ennen heitä.',
+  },
+  bahrelghazal: {
+    kuvaus: 'Täällä joki lakkaa olemasta joki: Bahr el Ghazal hajoaa '
+      + 'ruohikkoon, ja vene kulkee käytävissä, joiden seinät ovat '
+      + 'kaislaa korkeammalta kuin mies. Suot jatkuvat silmänkantamatta, '
+      + 'linnut nousevat pilvinä, ja kenkänokka seisoi kaislikossa '
+      + 'liikkumatta kuin vartija. Jouduimme kiinni kolmesti — kalastajat '
+      + 'lipuivat ohi vaivatta ja tervehtivät kohteliaasti.',
+    nosto: 'Isoisän kirjassa lukee: "Karttani sanoi tässä olevan joki." '
+      + 'Lauseen kuivuus on ukon mittapuullakin ansiokas. Minun karttani '
+      + 'sanoo samaa, ja olemme molemmat yhtä väärässä.',
+  },
+  darfur: {
+    kuvaus: 'Puoliaavikon keskeltä nousee vuori, joka tekee oman säänsä: '
+      + 'Jebel Marran rinteillä tuoksuivat appelsiinipuut, kun alhaalla '
+      + 'tasangolla pöly peitti jäljet. Täältä lähtivät karavaanit '
+      + 'Egyptiin Neljänkymmenen päivän tietä — nimi ei ole runoutta '
+      + 'vaan aikataulu, ja se sanotaan täällä yhä samalla '
+      + 'itsestäänselvyydellä kuin junavuoro kotona.',
+    nosto: 'Isoisä piti tämän alueen nimestä: "Furien maa — eli sen, '
+      + 'kenen maa se on. Harvinaisen selkeä nimi kartalla." Toivoin '
+      + 'hänen kanssaan, että selkeys tarttuisi muihinkin karttoihin.',
+  },
+  suakin: {
+    kuvaus: 'Suakin on satama, joka on veistetty merestä: talot on '
+      + 'rakennettu korallikivestä, ja iltavalossa koko saari hehkuu '
+      + 'vaaleanpunaisena kuin simpukan sisus. Laiturilla lastattiin '
+      + 'pyhiinvaeltajien laivaa, ja kutsu kantautui veden yli. Istuin '
+      + 'kauppiastalon portailla ja kuuntelin kaupunkia, joka on nähnyt '
+      + 'tuhat vuotta laivoja.',
+    nosto: 'Isoisä kirjoitti korallitaloista: "Kekseliäämpää kuin mikään '
+      + 'Lontoon uudisrakennus." Meri antaa täällä rakennuskivetkin — '
+      + 'ukko arvosti sellaista taloudenpitoa.',
+  },
+  addisabeba: {
+    kuvaus: 'Addis Abebaan noustaan — kirjaimellisesti: ylänkö on lähes '
+      + 'kahden ja puolen kilometrin korkeudessa, ja portaissa huomasin '
+      + 'hengästyväni kuin vanhus, kunnes muistin missä olen. Ilma on '
+      + 'viileää ja kirkasta, eukalyptus tuoksuu, ja kahviseremonia '
+      + 'kesti tunnin, joka meni kuin siivillä. Nimi tarkoittaa uutta '
+      + 'kukkaa, ja kaupunki tuntuu nimeltään.',
+    nosto: 'Isoisä kirjoitti keisarikunnasta, joka säilytti '
+      + 'itsenäisyytensä: "Se hämmentää klubissani suuresti; minua se '
+      + 'ei enää hämmennä." Minua ei hämmentänyt hetkeäkään.',
+  },
+  rashafun: {
+    kuvaus: 'Kävelin kapeaa hiekkakannasta, jonka meri on itse rakentanut, '
+      + 'ja niemen kärjessä tuuli otti vastaan kuin vanha tuttu: tämä on '
+      + 'mantereen itäisin kohta, ja seuraava ranta idässä on Intia. '
+      + 'Hiekassa kimalsi ruukunsirpale — joku kauppias pudotti sen ehkä '
+      + 'kaksituhatta vuotta sitten. Monsuuni kääntyy täällä yhä '
+      + 'vuodenaikojen mukaan, kuten aina.',
+    nosto: 'Isoisä merkitsi: "Purjelaiva pääsee Intiaan ja takaisin saman '
+      + 'vuoden aikana — tämän tiesivät täällä kaikki ennen kuin '
+      + 'höyrykone keksittiin." Seisoin kärjessä ja annoin saman tuulen '
+      + 'kääntää lehteä.',
   },
 };
 
@@ -7590,6 +8159,10 @@ const AFRICA_KULTTUURI = {
           + 'guembri-luuttu vievät kuulijan transsiin asti — perinne on '
           + 'Unescon aineettoman kulttuuriperinnön listalla.',
         wiki: 'Gnawa',
+        // Kenttä-äänitys gnawa-soittajista Marrakechin torilta; lisenssi
+        // varmistettu archive.orgin metatiedoista (CC BY 3.0).
+        aani: 'https://archive.org/download/aporee_21876_25420/marrakeshCafeEpicesGnawa270214a.mp3',
+        aaniLahde: '"Rahba Kedima, Marrakech — Gnawa" — udo noll, radio aporee (CC BY 3.0)',
       },
     ],
     kysymys: {
@@ -7633,6 +8206,85 @@ const AFRICA_KULTTUURI = {
       fact: 'Malouf kulkeutui Libyaan Andalusiasta ja soi yhä häissä ja '
         + 'juhlissa — kuva yhtyeestä on nostossa yllä.',
     },
+  },
+};
+
+// ===== js/packs/africa-artikkelit.js =====
+// Matkakirjan omat artikkelit (pilotti: Tanger ja Tripoli — omistajan
+// päätös, laajennetaan jos malli toimii): Lue lisää -dialogin pitkä
+// teksti kirjoitettu itse Wikipedia-artikkelien pohjalta — vähän
+// lyhyempänä ja pelin tyyliin. Väliotsikot merkitään "== Otsikko ==",
+// jotka renderArticle muuttaa otsikkoriveiksi. Toimii myös ilman
+// verkkoa. `intro` on saman paikan parin lauseen nosto Tutki-kortille.
+//
+// Avaimena kaupungin wiki-otsikko (city.wiki), kuten tiivistelmissäkin.
+const OMAT_ARTIKKELIT = {
+  Tanger: {
+    intro: 'Tanger vartioi Gibraltarinsalmea Afrikan luoteiskulmassa: '
+      + 'Eurooppaan on merta vain neljätoista kilometriä, ja kaupungin '
+      + 'edustalla Atlantti ja Välimeri kohtaavat. Portti kahden meren '
+      + 'ja kahden mantereen välissä on tehnyt siitä satamakaupungin, '
+      + 'jota kaikki ovat aina halunneet.',
+    artikkeli: 'Tanger on satamakaupunki Marokon pohjoisrannikolla, '
+      + 'Gibraltarinsalmen suulla. Espanjan rannikko näkyy selkeällä '
+      + 'säällä paljain silmin: merta on välissä vain reilut kymmenen '
+      + 'kilometriä. Siksi Tanger on aina ollut portti — Afrikan ovi '
+      + 'Eurooppaan ja Euroopan ovi Afrikkaan.'
+      + '\n\n== Kahden meren kaupunki ==\n'
+      + 'Kaupungin edustalla kohtaavat Atlantin valtameri ja Välimeri. '
+      + 'Vanha kaupunki eli medina kiipeää rinnettä satamasta ylös '
+      + 'kapeina, mutkittelevina kujina, ja sen yläpuolella seisoo '
+      + 'kasbah, vanha linnoitusalue portteineen. Valkoiseksi kalkitut '
+      + 'talot hehkuvat auringossa niin, että kaupunki näkyy merelle '
+      + 'kauas.'
+      + '\n\n== Kaikkien haluama satama ==\n'
+      + 'Tangerin ovat vallanneet vuorollaan foinikialaiset, roomalaiset, '
+      + 'arabit, portugalilaiset ja englantilaiset. 1900-luvun alussa '
+      + 'keksittiin erikoinen ratkaisu: kaupunkia hallitsi vuosikymmenten '
+      + 'ajan monta maata yhdessä, ja tätä kansainvälistä kautta kesti '
+      + 'vuoteen 1956, jolloin Tanger liittyi itsenäistyneeseen '
+      + 'Marokkoon. Kansainvälisinä vuosina kaupunkiin muutti kauppiaita, '
+      + 'kirjailijoita ja taiteilijoita kaikkialta maailmasta, ja sen '
+      + 'kahviloissa puhuttiin puolta tusinaa kieltä samassa pöydässä.'
+      + '\n\n== Tanger tänään ==\n'
+      + 'Nykyään Tanger on Marokon suurimpia kaupunkeja ja sen satama '
+      + 'yksi Afrikan vilkkaimmista: lautat ja rahtilaivat kulkevat '
+      + 'salmen yli tauotta. Medinan torit, minttutee ja gnawa-musiikki '
+      + 'kuuluvat katukuvaan kuten sata vuotta sittenkin — kaupunki on '
+      + 'yhä paikka, jossa kaksi mannerta katsoo toisiaan silmiin.',
+  },
+  Tripoli: {
+    intro: 'Tripoli on Libyan pääkaupunki ja Välimeren rannan valkoinen '
+      + 'satamakaupunki, jota on kutsuttu meren morsiameksi. Sen '
+      + 'kauppapaikalla ovat kohdanneet meri ja Sahara: laivat toivat '
+      + 'tavaransa satamaan, karavaanit aavikon halki.',
+    artikkeli: 'Tripoli on Libyan pääkaupunki ja maan suurin kaupunki '
+      + 'Välimeren rannalla. Nimi tulee kreikan sanoista "kolme '
+      + 'kaupunkia": antiikin aikana rannikolla oli kolme '
+      + 'naapurikaupunkia, joista Tripoli on ainoana yhä pystyssä ja '
+      + 'täynnä elämää.'
+      + '\n\n== Antiikin perintö ==\n'
+      + 'Kaupungin perustivat foinikialaiset kauppiaat lähes kolme '
+      + 'tuhatta vuotta sitten, ja roomalaisten aikana seutu kukoisti. '
+      + 'Vanhassakaupungissa seisoo yhä keisari Marcus Aureliuksen '
+      + 'riemukaari 160-luvulta — se on jäänyt kuoppaan, koska katu on '
+      + 'noussut sen ympärillä metrikaupalla vuosisatojen kuluessa. '
+      + 'Idempänä rannikolla ovat Leptis Magnan rauniot, yksi maailman '
+      + 'parhaiten säilyneistä roomalaiskaupungeista.'
+      + '\n\n== Meren ja aavikon kauppapaikka ==\n'
+      + 'Tripolin rikkaus syntyi sijainnista: satamaan tulivat laivat '
+      + 'Välimereltä, ja etelästä saapuivat karavaanit Saharan halki. '
+      + 'Laiturilla kaksi maailmaa vaihtoi tavaransa — suolaa, kultaa, '
+      + 'kankaita ja taateleita. Vanhakaupunki eli medina rakentui '
+      + 'tämän kaupan ympärille toreineen ja käsityöläiskujineen, ja '
+      + 'sitä vartioi merenpuoleinen linnoitus, Punainen linna.'
+      + '\n\n== Tripoli tänään ==\n'
+      + 'Vuosisatojen varrella kaupunkia ovat hallinneet muun muassa '
+      + 'osmanit ja italialaiset, ja itsenäisen Libyan pääkaupunki '
+      + 'siitä tuli 1950-luvulla. Nykyisin Tripolissa asuu yli miljoona '
+      + 'ihmistä. Medinan kujilla juodaan yhä vahvaa, vaahtoavaa teetä, '
+      + 'juhlissa soi malouf-musiikki, ja valkoiset talot hehkuvat '
+      + 'auringossa kuten aina — meren morsian pitää nimestään kiinni.',
   },
 };
 
@@ -25543,8 +26195,10 @@ const EHDOKKAAT = {
   },
   'musiikki:tietovisa:africa': {
     otsikko: 'Afrikka',
-    // Ilman valintaa peritään yleinen — siksi ei omaa oletusta.
-    oletus: null,
+    // Omistajan valinta (30.7.) kirjattu oletukseksi: näin se soi myös
+    // kotivalikkoon asennetussa pelissä, jonka tallennustila on eri kuin
+    // Safarin, jossa studio pyörii.
+    oletus: 'assets/audio/musiikki-visa-afrikka-3.mp3',
     ehdokkaat: [
       { url: 'assets/audio/musiikki-visa-afrikka-1.mp3', nimi: 'Kalimba-mietiskely — ElevenLabs-luuppi' },
       { url: 'assets/audio/musiikki-visa-afrikka-2.mp3', nimi: 'Kora-harppu — ElevenLabs-luuppi' },
@@ -25927,6 +26581,19 @@ function valittuAani(slot) {
  * tallennetaan tyhjänä merkkijonona, jotta se eroaa poistetusta
  * valinnasta (oletus).
  */
+/**
+ * Valinta tai slotin oletus: selaimeen tallennettu valinta voittaa, mutta
+ * ilman sitä palataan EHDOKKAAT-oletukseen. Tärkeä erityisesti
+ * kotivalikkoon asennetussa pelissä, jonka tallennustila on eri kuin
+ * Safarin — sinne studio-valinnat eivät kulje, oletukset kulkevat.
+ * Tyhjä merkkijono ('' = ääni valittu pois) kunnioitetaan sellaisenaan.
+ */
+function valittuTaiOletus(slot) {
+  const arvo = valittuAani(slot);
+  if (arvo !== null) return arvo;
+  return EHDOKKAAT[slot]?.oletus ?? null;
+}
+
 function valitseAani(slot, url) {
   try {
     const valinnat = JSON.parse(localStorage.getItem(AVAIN) ?? '{}');
@@ -27005,9 +27672,11 @@ function startQuizMusic(lauta) {
   // päällekkäin täydellä voimalla oli puuroa.
   if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
   if (!sfx.enabled || musiikki) return;
-  // Maanosan oma valinta voittaa; ilman sitä soi yleinen valinta.
-  let valinta = lauta ? valittuAani(`musiikki:tietovisa:${lauta}`) : null;
-  if (valinta == null) valinta = valittuAani('musiikki:tietovisa');
+  // Maanosan oma valinta tai oletus voittaa; ilman kumpaakaan soi
+  // yleinen. Oletukset kulkevat koodin mukana, joten ne toimivat myös
+  // kotivalikkoon asennetussa pelissä, jonne selainvalinnat eivät yllä.
+  let valinta = lauta ? valittuTaiOletus(`musiikki:tietovisa:${lauta}`) : null;
+  if (valinta == null) valinta = valittuTaiOletus('musiikki:tietovisa');
   if (valinta === '') return; // musiikki valittu pois
   const asetus = jaaAlku(valinta);
   const audio = new Audio(asetus.url ?? QUIZ_MUSIC.url);
@@ -30427,6 +31096,17 @@ const HAVAINTOLUENNAT = new Set([
   'africa:rashafun',
 ]);
 
+// Uuden mallin saapumisluennat: 'pakka:kaupunki' kertoo, että tiedosto
+// assets/audio/puhe-<pakka>-saapuminen-<kaupunki>.mp3 on olemassa. Uusi
+// matkakirjamalli (fiiliskuvaus + isoisän nosto) on käytössä vain näissä
+// kaupungeissa — muiden tekstit odottavat africa-saapumiset.js:ssä
+// omistajan lukukierrosta työhuoneessa, ja ne otetaan käyttöön kun
+// luennat on generoitu. Näin peli ei putoa mykäksi kesken siirtymän.
+const SAAPUMISLUENNAT = new Set([
+  'africa:tanger',
+  'africa:tripoli',
+]);
+
 const wikiGalleryCache = new Map();
 
 async function cachedGallery(title) {
@@ -30886,6 +31566,8 @@ class UI {
     this.stopIntroVoice();
     this.stopDiaryVoice();
     this.suljePostikortti();
+    this.suljeKulttuuriKuva();
+    this.pysaytaKulttuuriAani();
     // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
     document.body.classList.remove('flight-active');
     for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
@@ -31380,6 +32062,29 @@ class UI {
       return;
     }
 
+    // Lentokohteet näkyvät kartalla lentovalinnan aikana: rengas ja pieni
+    // kone kohdekaupungin päällä, ja napautus ostaa lennon suoraan
+    // (omistajan toive). Porttilennot toisille laudoille pysyvät napeissa,
+    // koska niiden kohde ei ole tällä kartalla.
+    if (game.phase === 'action' && this.travelExpanded && !game.player.isBot) {
+      for (const dest of game.airportDestinations()) {
+        const city = game.board.cityById.get(dest);
+        if (!city) continue;
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: city.x, cy: city.y, r: 34, class: 'target-hit' }, g);
+        el('circle', { cx: city.x, cy: city.y, r: 25, class: 'target-ring lento' }, g);
+        const merkki = el('text', {
+          x: city.x,
+          y: city.y - 33,
+          class: 'lento-kohde-merkki',
+          'text-anchor': 'middle',
+        }, g);
+        merkki.textContent = '✈';
+        g.addEventListener('click', () => this.doFly(dest));
+      }
+      return;
+    }
+
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
@@ -31451,7 +32156,16 @@ class UI {
     this.turnPill.appendChild(html('span', '', `£${game.player.money}`));
     // Mittari on päivämäärä, ei kello eikä palkki: aika on tarinaa, ei uhkaa,
     // joten se ei saa hälytysväriä eikä muutu punaiseksi ennätyksen jälkeen.
-    this.turnPill.appendChild(html('span', 'clock', game.clockLabel()));
+    const kello = game.clockLabel();
+    this.turnPill.appendChild(html('span', 'clock', kello));
+    // Ajan eteneminen välähtää kevyesti, jotta pelaaja huomaa vilkaista
+    // päivämäärää (omistajan toive). Ensimmäinen piirto ei väläytä.
+    if (this.kelloEdellinen !== undefined && this.kelloEdellinen !== kello) {
+      this.turnPill.classList.remove('aika-valahdys');
+      void this.turnPill.offsetWidth;
+      this.turnPill.classList.add('aika-valahdys');
+    }
+    this.kelloEdellinen = kello;
   }
 
   /** Matkan tiedot passiin: missä ollaan, paljonko kokemusta ja tietoa. */
@@ -31883,9 +32597,11 @@ class UI {
     kuva.src = valokuvaUrl(tiedot.tiedosto, 1000);
     kuva.alt = `Vanha valokuva: ${tiedot.paikka}`;
     kortti.appendChild(kuva);
-    const teksti = html('p', 'kuvateksti',
-      [tiedot.paikka, tiedot.vuosi, tiedot.lahde].filter(Boolean).join(' · '));
-    kortti.appendChild(teksti);
+    // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
+    // jäävät omalle pienemmälle rivilleen (omistajan toive).
+    if (tiedot.selite) kortti.appendChild(html('p', 'kuvateksti', tiedot.selite));
+    kortti.appendChild(html('p', 'kuvalahde',
+      [tiedot.paikka, tiedot.vuosi, tiedot.lahde].filter(Boolean).join(' · ')));
     // Kortti muistikirjan viereen: yläpuolelle kun muistikirja on ruudun
     // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
     const rect = this.factCard.getBoundingClientRect();
@@ -31990,7 +32706,8 @@ class UI {
       // perässä isoisän nosto, ja lukija lukee koko merkinnän tunteella.
       // Teksti ei vaihdu kaupungissa olon aikana.
       const uusi = (SAAPUMISTEKSTIT[saapuminen.packId] ?? {})[saapuminen.cityId];
-      if (uusi && kaupunki) {
+      const uusiLuettu = SAAPUMISLUENNAT.has(`${saapuminen.packId}:${saapuminen.cityId}`);
+      if (uusi && uusiLuettu && kaupunki) {
         const key = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
         if (this.factKey === key) return;
         this.factKey = key;
@@ -32276,6 +32993,13 @@ class UI {
     this.arrivalImage.removeAttribute('src');
     this.arrivalIntro.textContent = 'Isoisä on merkinnyt tämän paikan karttaansa.';
     this.arrivalWiki.hidden = true;
+    // Oma lyhytnosto (pilottikaupungit) näkyy heti ja toimii ilman
+    // verkkoa; Lue lisää avaa oman artikkelin, joten nappi voi näkyä heti.
+    const omaIntro = OMAT_ARTIKKELIT[city.wiki]?.intro;
+    if (omaIntro) {
+      this.arrivalIntro.textContent = omaIntro;
+      this.arrivalWiki.hidden = false;
+    }
 
     // Maan tiedot kaupungin rinnalla (omistajan toive): nimi näkyy heti,
     // parin lauseen esittely täyttyy kun haku ehtii. Laudoilla, joilla
@@ -32324,7 +33048,8 @@ class UI {
         this.arrivalImage.alt = summary.title || city.name;
         this.arrivalImage.hidden = false;
       }
-      if (summary.extract) this.arrivalIntro.textContent = shortIntro(summary.extract);
+      // Oma lyhytnosto voittaa wikin automaattikatkelman (pilottikaupungit).
+      if (summary.extract && !omaIntro) this.arrivalIntro.textContent = shortIntro(summary.extract);
       this.arrivalWiki.hidden = false;
     });
   }
@@ -32352,6 +33077,9 @@ class UI {
         kuva.src = valokuvaUrl(nosto.tiedosto, 640);
         // Ilman verkkoa nosto jää pelkäksi tekstiksi.
         kuva.addEventListener('error', () => kuva.remove());
+        // Napautus avaa kuvan isompana (omistajan toive).
+        kuva.classList.add('kulttuuri-kuva-nappi');
+        kuva.addEventListener('click', () => this.naytaKulttuuriKuva(nosto));
         lohko.appendChild(kuva);
       }
       lohko.appendChild(html('p', 'arrival-intro', nosto.teksti));
@@ -32361,7 +33089,16 @@ class UI {
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
-      if (nosto.lahde) lohko.appendChild(html('p', 'kulttuuri-lahde', nosto.lahde));
+      // Ääninäyte: Kuuntele-nappi soittaa CC-lisensoidun äänitteen ja
+      // toinen painallus pysäyttää. Kortin sulkeminen pysäyttää myös.
+      if (nosto.aani) {
+        const nappi = html('button', 'wiki-btn kulttuuri-kuuntele', 'Kuuntele näyte');
+        nappi.type = 'button';
+        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(nosto, nappi));
+        lohko.appendChild(nappi);
+      }
+      const lahteet = [nosto.lahde, nosto.aaniLahde].filter(Boolean).join(' · ');
+      if (lahteet) lohko.appendChild(html('p', 'kulttuuri-lahde', lahteet));
       lista.appendChild(lohko);
     }
 
@@ -32389,10 +33126,80 @@ class UI {
           ? `Oikein! +${KULTTUURI_PALKKIO} puntaa. `
           : `Oikea vastaus: ${kysymys.options[kysymys.correct]}. `) + (kysymys.fact ?? '');
         sfx.play(oikein ? 'correct' : 'wrong');
-        this.render();
+        // Koko render() sulkisi Tutki-napista avatun kortin (kortti pysyy
+        // auki vain offer-vaiheessa), jolloin palaute ei ehtisi näkyä.
+        // Riittää tallentaa peli ja päivittää rahapilleri.
+        this.onChange?.(this.game);
+        this.renderTurnPill();
       });
       this.arrivalKulttuuriVaihtoehdot.appendChild(nappi);
     });
+  }
+
+  /**
+   * Kulttuurinoston kuva isompana: valokuvavedos keskellä ruutua valkoisin
+   * reunuksin. Katselin on saapumisikkunan sisällä, koska modaalin päälle
+   * ei muuten pääse. Napautus sulkee.
+   */
+  naytaKulttuuriKuva(nosto) {
+    this.suljeKulttuuriKuva();
+    const kortti = html('div', 'postikortti kulttuuri-suurennos');
+    const kuva = document.createElement('img');
+    kuva.src = valokuvaUrl(nosto.tiedosto, 1400);
+    kuva.alt = nosto.otsikko;
+    kortti.appendChild(kuva);
+    kortti.appendChild(html('p', 'kuvateksti',
+      [nosto.otsikko, nosto.lahde].filter(Boolean).join(' · ')));
+    kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
+    this.arrivalDialog.appendChild(kortti);
+    this.kulttuuriKuvaEl = kortti;
+  }
+
+  suljeKulttuuriKuva() {
+    this.kulttuuriKuvaEl?.remove();
+    this.kulttuuriKuvaEl = null;
+  }
+
+  /**
+   * Kuuntele näyte -napin vaihtokytkin: soitto alkaa pehmeällä nousulla ja
+   * toinen painallus tai kortin sulkeminen pysäyttää. Näyte on taustaa
+   * hiljaisempi luenta — ei täyttä voimaa.
+   */
+  kulttuuriAaniNapista(nosto, nappi) {
+    if (this.kulttuuriAani) {
+      this.pysaytaKulttuuriAani();
+      return;
+    }
+    const asetus = jaaAlku(nosto.aani);
+    const audio = new Audio(asetus.url);
+    audio.preload = 'auto';
+    audio.volume = Math.min(1, 0.55 * (asetus.voima ?? 1));
+    if (asetus.alku) {
+      audio.addEventListener('loadedmetadata', () => {
+        try {
+          audio.currentTime = asetus.alku;
+        } catch {
+          /* soi alusta */
+        }
+      }, { once: true });
+    }
+    this.kulttuuriAani = { audio, nappi };
+    nappi.textContent = 'Pysäytä näyte';
+    const nollaa = () => {
+      if (this.kulttuuriAani?.audio === audio) this.pysaytaKulttuuriAani();
+    };
+    audio.addEventListener('ended', nollaa);
+    audio.addEventListener('error', nollaa);
+    audio.play().catch(nollaa);
+  }
+
+  pysaytaKulttuuriAani() {
+    const soiva = this.kulttuuriAani;
+    this.kulttuuriAani = null;
+    if (!soiva) return;
+    soiva.audio.pause();
+    soiva.audio.removeAttribute('src');
+    soiva.nappi.textContent = 'Kuuntele näyte';
   }
 
   /**
@@ -32466,6 +33273,25 @@ class UI {
       this.wikiImage.alt = summary.title || label;
       this.wikiImage.hidden = false;
     });
+
+    // Oma artikkeli (pilottikaupungit): Wikipedia-tekstin sijaan näytetään
+    // pelin tyyliin kirjoitettu lyhyempi artikkeli — Wikipedian pohjalta,
+    // joten lähdemaininta säilyy. Kuva haetaan silti Wikipediasta.
+    const oma = OMAT_ARTIKKELIT[title];
+    if (oma) {
+      this.renderArticle(this.wikiExtract, oma.artikkeli);
+      this.wikiSource.textContent = 'Matkakirjan oma artikkeli, kirjoitettu Wikipedian pohjalta (CC BY-SA)';
+      if (summary.url) {
+        this.wikiSource.appendChild(document.createTextNode(' — '));
+        const alkup = html('a', '', 'lue alkuperäinen');
+        alkup.href = summary.url;
+        alkup.target = '_blank';
+        alkup.rel = 'noopener noreferrer';
+        this.wikiSource.appendChild(alkup);
+      }
+      return;
+    }
+
     this.wikiExtract.textContent = summary.extract;
 
     // Koko artikkeli ladataan tiivistelmän perään; tiivistelmä jää, jos
@@ -32577,6 +33403,8 @@ class UI {
 
   closeArrival() {
     this.arrivalShownFor = null;
+    this.suljeKulttuuriKuva();
+    this.pysaytaKulttuuriAani();
     if (this.arrivalDialog.open) this.arrivalDialog.close();
   }
 
@@ -33962,7 +34790,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.61';
+const APP_VERSION = '2026-07-30.62';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

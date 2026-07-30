@@ -134,6 +134,22 @@ button, .brand, .turn-pill, .fact-card h2 {
   margin-right: 0.45rem;
 }
 
+/* Ajan eteneminen välähtää kevyesti kullalla, jotta pelaaja huomaa
+ * vilkaista päivämäärää. Yksi rauhallinen hengähdys, ei vilkutusta. */
+.turn-pill.aika-valahdys .clock {
+  animation: aika-valahdys 1.4s ease-out;
+}
+
+@keyframes aika-valahdys {
+  0% { color: var(--muted); }
+  22% { color: var(--accent); text-shadow: 0 0 8px rgba(234, 184, 78, 0.55); }
+  100% { color: var(--muted); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turn-pill.aika-valahdys .clock { animation: none; }
+}
+
 .topbar-actions {
   margin-left: auto;
   display: flex;
@@ -246,6 +262,11 @@ button, .brand, .turn-pill, .fact-card h2 {
   -webkit-transform-style: preserve-3d;
 }
 
+/*
+ * Vanha luunoppa, ei kiillotettu muovinen (omistajan huomio): kulunut
+ * norsunluun sävy paperirakeella, kynämäinen ääriviiva ja käsin painetut
+ * musteiset silmät. Kiiltokerroksen tilalla on tummuva patina.
+ */
 .die-face {
   position: absolute;
   inset: 0;
@@ -255,42 +276,44 @@ button, .brand, .turn-pill, .fact-card h2 {
   padding: 12%;
   gap: 4%;
   border-radius: 18%;
-  background:
-    linear-gradient(150deg, rgba(255, 255, 255, 0.55), rgba(120, 86, 40, 0.16) 62%),
-    radial-gradient(circle at 30% 24%, #fffaf0 0%, #f5e7cb 48%, #dcc39a 100%);
-  border: 1px solid rgba(80, 58, 30, 0.5);
-  box-shadow:
-    inset -3px -4px 7px rgba(108, 76, 34, 0.42),
-    inset 3px 4px 6px rgba(255, 255, 255, 0.55);
+  background-image:
+    var(--paper-noise),
+    radial-gradient(circle at 36% 30%, #f0e5c8 0%, #e3d2ab 52%, #ccb488 100%);
+  background-blend-mode: multiply, normal;
+  border: 1.6px solid rgba(70, 51, 31, 0.78);
+  box-shadow: inset -2px -3px 6px rgba(108, 76, 34, 0.3);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
 /* Sivutahkot ovat aavistuksen tummempia, jolloin kuutio saa syvyyttä. */
-.die-face.face-3, .die-face.face-4 { filter: brightness(0.9); }
-.die-face.face-5, .die-face.face-6 { filter: brightness(0.82); }
+.die-face.face-3, .die-face.face-4 { filter: brightness(0.92); }
+.die-face.face-5, .die-face.face-6 { filter: brightness(0.85); }
 
 .die-face .pip {
   align-self: center;
   justify-self: center;
-  width: 74%;
+  width: 70%;
   aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 28%, #7a5c35 0%, #46331a 55%, #2b1e0d 100%);
-  box-shadow:
-    inset 0 -1.5px 1.5px rgba(255, 255, 255, 0.3),
-    inset 0 1.5px 2px rgba(0, 0, 0, 0.5);
+  /* Hieman epäpyöreä ja kallellaan — kuin musteella painettu. */
+  border-radius: 52% 48% 50% 55% / 48% 55% 45% 52%;
+  background: radial-gradient(circle at 44% 38%, #5a4023 0%, #46331f 58%, #362610 100%);
+  transform: rotate(7deg);
 }
 
-/* Valo tulee aina samasta suunnasta: kiilto ei pyöri nopan mukana. */
+.die-face span:nth-child(2n) .pip,
+.die-face span:nth-child(2n).pip { transform: rotate(-11deg) scale(0.96); }
+.die-face span:nth-child(5n).pip { transform: rotate(19deg) scale(1.04); }
+
+/* Valo tulee aina samasta suunnasta: patina ei pyöri nopan mukana. */
 .die-gloss {
   position: absolute;
   inset: -6%;
   border-radius: 24%;
   pointer-events: none;
   background:
-    radial-gradient(circle at 26% 20%, rgba(255, 252, 240, 0.5), rgba(255, 255, 255, 0) 46%),
-    radial-gradient(circle at 78% 84%, rgba(40, 24, 8, 0.24), rgba(0, 0, 0, 0) 52%);
+    radial-gradient(circle at 30% 24%, rgba(252, 244, 222, 0.2), rgba(255, 255, 255, 0) 42%),
+    radial-gradient(circle at 76% 84%, rgba(44, 27, 10, 0.28), rgba(0, 0, 0, 0) 56%);
   mix-blend-mode: soft-light;
 }
 
@@ -583,17 +606,42 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * koska kortti on pystyflex eikä kelluminen toimi suoraan sen lapsissa.
  */
 .fact-teksti-rivi {
-  /* Kääre perii tekstin vieritysroolin kortin pystyflexissä. */
+  /* Kääre rajaa tekstin korkeuden kortin pystyflexissä; itse vieritys
+   * tapahtuu tekstissä, jotta valokuva pysyy paikallaan kulmassa. */
+  position: relative;
   min-height: 0;
   flex: 1 1 auto;
+  overflow: hidden;
+}
+
+/* Vain teksti vierii — ilman kehyksiä ja ilman näkyvää palkkia, kuin
+ * muistikirjan sivu liukuisi sormen alla. */
+.fact-teksti-rivi .fact-text {
+  height: 100%;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
+
+/* Teksti kiertää kuvan alussa: näkymätön varaus kelluu kuvan kohdalla
+ * tekstin sisällä, ja vieritettäessä teksti liukuu paikallaan pysyvän
+ * vedoksen alta — kuin kuva makaisi sivun päällä. */
+.fact-teksti-rivi:has(.fact-valokuva:not([hidden])) .fact-text::before {
+  content: '';
+  float: right;
+  width: 72px;
+  height: 58px;
 }
 
 .fact-valokuva {
-  float: right;
+  position: absolute;
+  top: 0.15rem;
+  right: 0;
+  z-index: 2;
   width: auto;
-  margin: 0.15rem 0 0.35rem 0.55rem;
+  margin: 0;
   padding: 3px 3px 7px;
   background: #f8f3e6;
   border: 0;
@@ -646,6 +694,42 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   font-family: var(--font-type);
   font-size: 0.72rem;
   color: #5a4a33;
+}
+
+/* Lähde ja vuosi selitettä pienemmällä ja vaimeammalla. */
+.postikortti .kuvalahde {
+  margin: 0.15rem 0.1rem 0.1rem;
+  font-family: var(--font-type);
+  font-size: 0.6rem;
+  color: #8a7a60;
+}
+
+/* Kulttuurinoston kuva vihjaa suurennoksesta. */
+.kulttuuri-kuva-nappi { cursor: zoom-in; }
+
+/*
+ * Kulttuurinoston suurennos: sama postikorttivedos, mutta keskellä
+ * ruutua ja väreissä — taideteos tai valokuva näytetään sellaisenaan.
+ * Katselin elää saapumisikkunan sisällä (modaalin päällä).
+ */
+.postikortti.kulttuuri-suurennos {
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 720px);
+  transform: translate(-50%, -50%) rotate(-1.2deg);
+  cursor: zoom-out;
+  animation: kulttuuri-suurennos-esiin 0.2s ease-out;
+}
+
+@keyframes kulttuuri-suurennos-esiin {
+  from { opacity: 0; }
+}
+
+.postikortti.kulttuuri-suurennos img {
+  filter: none;
+  max-height: 76vh;
+  object-fit: contain;
+  background: #efe7d4;
 }
 
 /*
@@ -1362,6 +1446,23 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 
 .target:hover .target-ring { fill: rgba(176, 138, 60, 0.34); }
 .target:hover .target-ring.far { fill: rgba(176, 138, 60, 0.22); opacity: 1; }
+
+/* Lentokohde kartalla: rengas ja pieni kone kaupungin yllä. */
+.target-ring.lento {
+  fill: rgba(120, 148, 196, 0.16);
+  stroke: #4a5f86;
+  stroke-dasharray: 8 5;
+}
+
+.target:hover .target-ring.lento { fill: rgba(120, 148, 196, 0.3); }
+
+.lento-kohde-merkki {
+  font-size: 26px;
+  fill: #4a5f86;
+  paint-order: stroke;
+  stroke: rgba(247, 237, 216, 0.9);
+  stroke-width: 4px;
+}
 .target-cost { fill: var(--mark); font-size: 17px; font-weight: 700; }
 
 @keyframes target-spin {
@@ -2043,7 +2144,10 @@ body[data-mode] .error { color: #9c2f20; }
  * luettavana ruudukkoviivojen päällä, kuten muissakin karttateksteissä.
  */
 body[data-mode] .actions button {
-  background: none;
+  /* Kevyt pergamenttilevy pitää napin luettavana myös kaupunkinimien ja
+   * rantaviivan päällä (omistajan havainto lentovalinnasta) — pelkkä
+   * mustekehys hukkui karttaan. */
+  background: rgba(250, 243, 226, 0.72);
   border: 1px solid rgba(122, 85, 20, 0.35);
   color: var(--map-ink);
   text-shadow: 0 1px 0 rgba(247, 237, 216, 0.9);
@@ -2052,7 +2156,7 @@ body[data-mode] .actions button {
 }
 
 body[data-mode] .actions button:hover:not(:disabled) {
-  background: rgba(255, 248, 232, 0.6);
+  background: rgba(255, 248, 232, 0.85);
 }
 
 /*

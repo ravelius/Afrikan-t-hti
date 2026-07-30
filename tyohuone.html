@@ -412,6 +412,9 @@
   <script type="module">
     import { PACKS, packById } from './js/pack.js';
     import { AFRICA_VALOKUVAT, valokuvaUrl } from './js/packs/africa-valokuvat.js';
+    import { AFRICA_SAAPUMISET } from './js/packs/africa-saapumiset.js';
+    import { OMAT_ARTIKKELIT } from './js/packs/africa-artikkelit.js';
+    import { AFRICA_KULTTUURI } from './js/packs/africa-kulttuuri.js';
 
     // --- välilehdet: #aihe-osoite toimii kirjanmerkkinä ---------------------
     const napit = [...document.querySelectorAll('#valilehdet button')];
@@ -477,9 +480,11 @@
       { id: 'efektipilotit', teksti: 'Efektipilottien kuuntelu (napin klikkaus, paperi, kolikot, oikein, väärin — studion Tehosteet-lohko).' },
       { id: 'v3intro', teksti: 'Uuden v3-intron ja avauslennon puheen arviointi (tempo, tunnelma).' },
       { id: 'tehosteet23', teksti: 'Kaikkien 23 tehosteäänen kuuntelu pelissä — ElevenLabs-generoinnit ovat nyt oletuksina, synteesi on valittavissa studiosta takaisin.' },
-      { id: 'visamusiikki-afrikka', teksti: 'Kuuntele Afrikan uudet visamusiikkiehdokkaat (studio → Muut äänet → Tietovisat → Afrikka) ja valitse suosikki.' },
-      { id: 'saapumismalli', teksti: 'Testaa uusi matkakirjamalli Tangerissa ja Tripolissa (fiiliskuvaus + luenta tunteella + isoisän nosto) — jos hyvä, teen kaikkiin kaupunkeihin.' },
-      { id: 'kulttuurikokeilu', teksti: 'Testaa Kaupungin elämää -nostot ja tutustu ja vastaa -kysymys Tangerissa ja Tripolissa — mietitään sitten jatko.' },
+      { id: 'visamusiikki-afrikka', teksti: 'Afrikan visamusiikin valintasi (Mbira ja helistin) on nyt pelin oletus, joten se soi myös kotivalikon sovelluksessa — Safarin valinnat eivät sinne yllä. Tarkista että kuulostaa oikealta.' },
+      { id: 'saapumistekstit', teksti: 'Lue uudet saapumistekstit kaikkiin 32 kaupunkiin (Tekstit → Matkakirjan saapumiset) — luennat generoidaan vasta hyväksynnän jälkeen, pilotit Tanger ja Tripoli soivat jo.' },
+      { id: 'kulttuurikokeilu', teksti: 'Testaa Kaupungin elämää -nostot: kuva aukeaa nyt isommaksi ja gnawaan tuli Kuuntele näyte -nappi (Marrakechin kenttä-äänitys, CC BY). Maloufille ei vielä löytynyt kunnollisella lisenssillä olevaa äänitettä — etsintä jatkuu.' },
+      { id: 'artikkelipilotti', teksti: 'Lue lisää -artikkelit kirjoitettu itse pelin tyyliin Tangeriin ja Tripoliin (myös lyhytnostot) — jos hyvät, teen muihinkin kaupunkeihin.' },
+      { id: 'postikorttiselitteet', teksti: 'Postikortteihin tuli parin lauseen selitteet ja pienempi lähderivi — silmäile Kuvat-välilehdeltä tai pelissä.' },
       { id: 'brandikirja', teksti: 'Brändikirjan läpiluku ja täydennys omin sanoin (Brändikirja-välilehti).' },
       { id: 'tekstit', teksti: 'Tekstit-välilehden läpiluku: kaikki pelin tekstit yhdessä paikassa — merkitse korjattavat kommentilla.' },
       { id: 'saapumisluennat', teksti: 'Kuuntele saapumisluennat: joka kaupungissa havainto tai isoisän muistelu luetaan nyt ääneen saapuessa.' },
@@ -488,6 +493,9 @@
       { id: 'introteksti', teksti: 'Avausteksti: jos muutat sitä, generoin puheen uusiksi samalla kertaa — pyydä minulta.' },
     ];
     const TYOJONO = [
+      { id: 'saapumisluennat30', teksti: 'Saapumisluentojen generointi 30 kaupunkiin (ElevenLabs, Viisas Kertoja, tunteella) heti kun saapumistekstit on luettu ja hyväksytty.' },
+      { id: 'lentojouhevointi', teksti: 'Maailmankartan lentoanimaation jouhevointi: kone kulkee reittiä yhä nykien — tasoitetaan seuraavassa erässä (omistajan ohje: vasta tämän julkaisun jälkeen).' },
+      { id: 'maloufaani', teksti: 'Libyalaisen malouf-musiikin äänilähteen etsintä jatkuu — Commonsissa ja archive.orgissa ei toistaiseksi kunnollisella lisenssillä olevaa äänitettä.' },
       { id: 'intropuhe', teksti: 'Avaustekstin puheen uusinta ElevenLabsilla, kun uusi teksti on valmis. Nykyisen tiedoston kova loppureuna (töks) pehmennetään toistossa, joten uusintaa ei tarvita ennen tekstimuutosta.' },
       { id: 'tyokalu', teksti: 'Seuraava työkalu: kartta-apuri tai kehityspaneeli (?dev=1) — ks. Työkalut-välilehti.' },
       { id: 'aineistotutkimus', teksti: 'Aineistotutkimus-minipelin suunnittelu yhdessä (ks. Peli-ideat).' },
@@ -950,6 +958,7 @@
     // Ryhmävalinnat ja lauta muistetaan tässä selaimessa.
     const TEKSTIRYHMAT = [
       ['juoni', 'Avaus ja juoni'],
+      ['saapumiset', 'Matkakirjan saapumiset'],
       ['lennot', 'Lentorepliikit'],
       ['paivakirjat', 'Päiväkirja'],
       ['kysymykset', 'Kysymykset'],
@@ -957,6 +966,9 @@
       ['pulmat', 'Pulmat'],
       ['tapahtumat', 'Tapahtumakortit'],
       ['vihjeet', 'Tähtivihjeet'],
+      ['artikkelit', 'Omat artikkelit ja nostot'],
+      ['valokuvat', 'Valokuvien selitteet'],
+      ['kulttuuri', 'Kulttuurinostot'],
     ];
     // Osa teksteistä on funktioita (nimi ja summa täytetään pelissä):
     // ne näytetään esimerkkiarvoilla.
@@ -1031,6 +1043,53 @@
       for (const [cityId, vihje] of Object.entries(t.starHints ?? {})) {
         lisaa('vihjeet', `<b>[${kaupunki(cityId)}]</b> ${vihje}`);
       }
+
+      // Afrikan uudet sisällöt: saapumistekstit (lukukierros ennen äänien
+      // generointia), omat artikkelit ja nostot, valokuvien selitteet ja
+      // kulttuurinostot. Rivit tulevat suoraan paketeista, eivät kopioina.
+      if (p.id === 'africa') {
+        const luennat = new Set(['tanger', 'tripoli']);
+        for (const c of p.cities) {
+          const s = AFRICA_SAAPUMISET[c.id];
+          if (!s) continue;
+          const tila = luennat.has(c.id)
+            ? 'luenta valmis (pilotti)'
+            : 'odottaa lukukierrosta — luenta generoidaan hyväksynnän jälkeen';
+          lisaa('saapumiset', [
+            `<b>[${c.name}]</b> <span class="meta">${tila}</span>`,
+            `<b>${s.kuvaus}</b>`,
+            s.nosto,
+          ].join('<br>'));
+        }
+        for (const [otsikko, a] of Object.entries(OMAT_ARTIKKELIT)) {
+          lisaa('artikkelit', `<b>[${otsikko} — lyhytnosto]</b> ${a.intro}`);
+          lisaa('artikkelit', `<b>[${otsikko} — oma artikkeli]</b><br>`
+            + a.artikkeli
+              .replace(/== ([^=]+) ==/g, '<b>$1</b>')
+              .replaceAll('\n', '<br>'));
+        }
+        for (const c of p.cities) {
+          const v = AFRICA_VALOKUVAT[c.id];
+          if (!v?.selite) continue;
+          lisaa('valokuvat', `<b>[${c.name}]</b> ${v.selite}`
+            + `<br><span class="meta">${[v.vuosi, v.lahde].filter(Boolean).join(' · ')}</span>`);
+        }
+        for (const c of p.cities) {
+          const k = AFRICA_KULTTUURI[c.id];
+          if (!k) continue;
+          for (const nosto of k.nostot ?? []) {
+            lisaa('kulttuuri', `<b>[${c.name}] ${nosto.otsikko}:</b> ${nosto.teksti}`
+              + (nosto.lahde ? `<br><span class="meta">${nosto.lahde}</span>` : ''));
+          }
+          if (k.kysymys) {
+            lisaa('kulttuuri', [
+              `<b>[${c.name} — kulttuurivisa]</b> ${k.kysymys.q}`,
+              `→ ${optiot(k.kysymys)}`,
+              k.kysymys.fact ? `<span class="meta">fakta: ${k.kysymys.fact}</span>` : '',
+            ].filter(Boolean).join('<br>'));
+          }
+        }
+      }
       return rivit;
     }
 
@@ -1045,8 +1104,17 @@
     let tekstitTila = { lauta: 'africa', ryhmat: TEKSTIRYHMAT.map(([id]) => id) };
     try {
       const muisti = JSON.parse(localStorage.getItem(TEKSTIT_MUISTI) ?? 'null');
-      if (muisti && typeof muisti === 'object') tekstitTila = { ...tekstitTila, ...muisti };
+      if (muisti && typeof muisti === 'object') {
+        tekstitTila = { ...tekstitTila, ...muisti };
+        // Uudet ryhmät näkyvät heti, vaikka vanha valinta olisi muistissa:
+        // tallennettu lista kertoo vain silloin tunnetuista ryhmistä.
+        const tunnetut = new Set(muisti.tunnetut ?? muisti.ryhmat ?? []);
+        for (const [id] of TEKSTIRYHMAT) {
+          if (!tunnetut.has(id) && !tekstitTila.ryhmat.includes(id)) tekstitTila.ryhmat.push(id);
+        }
+      }
     } catch { /* oletukset kelpaavat */ }
+    tekstitTila.tunnetut = TEKSTIRYHMAT.map(([id]) => id);
     if (![...tekstitLauta.options].some((o) => o.value === tekstitTila.lauta)) {
       tekstitTila.lauta = 'africa';
     }
