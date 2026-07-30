@@ -589,6 +589,13 @@ export class Game {
     return this.pack.texts.starHints?.[cityId] ?? null;
   }
 
+  /** Vihjeen kohdekaupunki luentatiedoston valintaa varten (ei näytetä). */
+  starHintCity() {
+    const world = this.world;
+    if (!world || world.starFound) return null;
+    return this.starCityOf(world);
+  }
+
   /**
    * Kulttuurikysymys Tutki-kortissa (tutustu ja vastaa -kokeilu):
    * vastaus kirjataan kerran per kaupunki ja oikeasta saa pienen
