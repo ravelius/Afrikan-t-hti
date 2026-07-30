@@ -24,6 +24,7 @@ const MODULES = [
   'js/packs/africa-borders.js',
   'js/packs/africa-countries.js',
   'js/packs/africa-tiivistelmat.js',
+  'js/packs/africa-valokuvat.js',
   'js/packs/africa.js',
   'js/packs/middleeast-questions.js',
   'js/packs/europe-questions.js',

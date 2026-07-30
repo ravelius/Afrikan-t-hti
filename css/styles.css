@@ -578,6 +578,67 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .arrival-card .wiki-btn { margin: 0 0 0.7rem; }
 
 /*
+ * Vanha valokuva muistikirjan kyljessä: pieni vedos valkoisin reunuksin
+ * kellumassa tekstin oikealla puolella. Napautus avaa sen postikorttina.
+ */
+.fact-valokuva {
+  float: right;
+  margin: 0.1rem 0 0.3rem 0.55rem;
+  padding: 3px 3px 7px;
+  background: #f8f3e6;
+  border: 0;
+  border-radius: 1px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
+  transform: rotate(2.5deg);
+  cursor: pointer;
+}
+
+.fact-valokuva img {
+  display: block;
+  width: 54px;
+  height: 42px;
+  object-fit: cover;
+  filter: grayscale(1) sepia(0.12) contrast(1.04);
+}
+
+/*
+ * Postikorttikatselin: kuva aukeaa hieman vinottain muistikirjan viereen,
+ * valkoiset reunukset ja lähderivi kuten vanhassa vedoksessa. Napautus
+ * mihin tahansa sulkee.
+ */
+.postikortti {
+  position: fixed;
+  z-index: 70;
+  width: min(78vw, 400px);
+  background: #f8f3e6;
+  padding: 0.55rem 0.55rem 0.3rem;
+  border-radius: 2px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+  transform: rotate(-3deg);
+  animation: postikortti-esiin 0.24s ease-out;
+}
+
+@keyframes postikortti-esiin {
+  from { opacity: 0; transform: rotate(-3deg) translateY(12px); }
+}
+
+.postikortti img {
+  display: block;
+  width: 100%;
+  min-height: 60px;
+  background: #ded5c2;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  filter: grayscale(1) contrast(1.03);
+}
+
+.postikortti .kuvateksti {
+  margin: 0.3rem 0.1rem 0.15rem;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  color: #5a4a33;
+}
+
+/*
  * Maan tiedot kaupungin rinnalla saapumiskortissa (omistajan toive):
  * ohut jakoviiva ja pieni maaetiketti erottavat sen kaupungin
  * esittelystä samalla hillityllä tyylillä.
