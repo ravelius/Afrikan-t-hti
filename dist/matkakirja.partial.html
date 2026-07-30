@@ -857,20 +857,38 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * valkoiset reunukset ja lähderivi kuten vanhassa vedoksessa. Napautus
  * mihin tahansa sulkee.
  */
+/* Postikorttipino: kääre asemoi, kortit ovat sisällä. Kun kaupungilla on
+ * myös uusi kuva, se pilkottaa vanhan alta ja nousee napautuksesta
+ * päälle (omistajan kokeilu). */
 .postikortti {
   position: fixed;
   z-index: 70;
   width: min(78vw, 400px);
+  animation: postikortti-esiin 0.24s ease-out;
+}
+
+.postikortti-kortti {
+  position: relative;
+  z-index: 2;
   background: #f8f3e6;
   padding: 0.55rem 0.55rem 0.3rem;
   border-radius: 2px;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
   transform: rotate(-3deg);
-  animation: postikortti-esiin 0.24s ease-out;
+  transition: transform 0.22s ease, z-index 0s;
+}
+
+/* Alempi kortti pilkottaa oikeasta alakulmasta ja kutsuu napauttamaan. */
+.postikortti-kortti.alla {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transform: rotate(1.6deg) translate(16px, 20px);
+  cursor: pointer;
 }
 
 @keyframes postikortti-esiin {
-  from { opacity: 0; transform: rotate(-3deg) translateY(12px); }
+  from { opacity: 0; transform: translateY(12px); }
 }
 
 .postikortti img {
@@ -881,6 +899,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   border: 1px solid rgba(0, 0, 0, 0.12);
   filter: grayscale(1) contrast(1.03);
 }
+
+/* Uusi kuva on nykyaikaa — se saa pitää värinsä. */
+.postikortti-kortti.uusi img { filter: none; }
 
 .postikortti .kuvateksti {
   margin: 0.3rem 0.1rem 0.15rem;
@@ -1294,7 +1315,57 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 /* Matkan mittarit: kokemuspisteet ja tietoprosentti rahan alla. */
 
 /* Vihreä passi: leimat ruudukossa, kukin kuin painettu leimasimella. */
-.passport-card { max-width: 520px; }
+/* Matkalaukun kansi (omistajan toive: laukkufiilis): nahkakehys,
+ * hennot hihnat kannen yli ja messinkiset kulmaniitit. Hihnat ovat
+ * pelkkää pintaa — ne eivät ota napautuksia. */
+.passport-card {
+  max-width: 520px;
+  position: relative;
+  border: 10px solid #6d4a2a;
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 0 2px rgba(46, 30, 14, 0.35),
+    inset 0 0 26px rgba(88, 58, 28, 0.14),
+    0 12px 32px rgba(20, 12, 4, 0.4);
+  overflow: hidden;
+}
+
+.passport-card::before,
+.passport-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 22px;
+  background: linear-gradient(90deg, rgba(109, 74, 42, 0.16), rgba(109, 74, 42, 0.08));
+  border-left: 2px solid rgba(109, 74, 42, 0.32);
+  border-right: 2px solid rgba(109, 74, 42, 0.32);
+  pointer-events: none;
+}
+
+.passport-card::before { left: 9%; }
+.passport-card::after { right: 9%; }
+
+/* Sulje irti tavaroista (omistajan huomio). */
+.passport-card .dialog-actions { margin-top: 1.4rem; }
+
+/* Tavarat matkamuistoina: isompi kuva ja selite sen alla, rivit
+ * täyttyvät vasemmalta oikealle (omistajan toive). */
+#passport-finds {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.1rem;
+  align-items: flex-start;
+}
+
+#passport-finds .find {
+  flex-direction: column;
+  gap: 0.3rem;
+  width: 76px;
+  text-align: center;
+  font-size: 0.76rem;
+  line-height: 1.2;
+}
 
 .passport-count {
   margin: 0.6rem 0 0.4rem;
@@ -1768,22 +1839,23 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   opacity: 0.55;
 }
 
+/* Tunnusluvut samalla musteella kuin kartan otsikko (omistajan toive). */
 .map-legend {
-  fill: var(--sea-ink);
+  fill: var(--map-ink);
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: 16px;
   font-style: italic;
-  opacity: 0.75;
+  opacity: 0.55;
 }
 
-/* Tunnuslukujen viivasymbolit: sama vähäeleinen muste kuin selitteessä. */
+/* Tunnuslukujen viivasymbolit: sama muste kuin otsikossa. */
 .map-tunnus-ikoni {
   fill: none;
-  stroke: var(--sea-ink);
+  stroke: var(--map-ink);
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.75;
+  opacity: 0.55;
 }
 
 .compass { fill: none; stroke: var(--map-ink); stroke-width: 2; opacity: 0.65; }
@@ -2921,7 +2993,8 @@ body.katselu #newgame-btn { display: none; }
 .wiki-image {
   display: block;
   max-width: 100%;
-  max-height: 220px;
+  /* Isompi taitto Lue lisää -lehdillä (omistajan toive). */
+  max-height: 320px;
   margin: 0 auto 0.6rem;
   border-radius: 6px;
 }
@@ -8448,6 +8521,13 @@ const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Tangerin suurmoskeijan kulmalla kävi vilske jo isoisän aikaan: '
       + 'kantajia, kauppiaita ja aaseja samalla kapealla kadulla.',
+    // Uusi kuva pilkottaa vanhan alta (omistajan kokeilu).
+    uusi: {
+      tiedosto: 'Panorama Tanger Bay Tangier Marokko.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama kaupunki nykyään: valkoiset talot kiipeävät yhä '
+        + 'rinnettä, mutta lahden rantaan on kasvanut moderni satama.',
+    },
   },
   kairo: {
     tiedosto: 'Kairo, marchands ambulants LCCN2017657437.jpg',
@@ -8455,6 +8535,12 @@ const AFRICA_VALOKUVAT = {
     lahde: 'Library of Congress (PD)',
     selite: 'Kiertäviä kauppiaita Kairon kadulla. Vesimyyjä kantoi tavaransa '
       + 'selässään ja huusi kaupan kilpaa muiden kanssa.',
+    uusi: {
+      tiedosto: 'Cairo-Hilton-Skyline.jpg',
+      lahde: 'Commons (CC BY-SA 3.0)',
+      selite: 'Nykyinen Kairo nousee Niilin rannalla korkeuksiin — mutta '
+        + 'joki virtaa keskellä yhtä tyynenä kuin ennenkin.',
+    },
   },
   tripoli: {
     tiedosto: 'Arabs in Tripoli WDL2444.png',
@@ -8601,6 +8687,107 @@ const AFRICA_VALOKUVAT = {
     selite: 'Vanha garesa-linnoitus Hafunin niemellä, Afrikan itäisimmässä '
       + 'kärjessä. Monsuunituulet toivat tänne purjehtijoita jo tuhat '
       + 'vuotta sitten.',
+  },
+
+  // --- Täydennys (omistajan pyyntö: loput vanhat kuvat). Ahaggarille,
+  // Mosambikin saarelle, Viktorianjärvelle, Bahr el Ghazalille ja
+  // Saharalle ei vielä löytynyt kelvollista aikakauden kuvaa — Saharan
+  // 1907-kortti hylättiin, koska se on siirtomaanäyttelyssä esitellyn
+  // ihmisen kuva. Etsintä jatkuu.
+  karthago: {
+    tiedosto: 'Tunisie, Carthage, cathédrale et séminaire de St Louis - btv1b53114044m.jpg',
+    vuosi: '1800-luvun loppu',
+    lahde: 'BnF Gallica (PD)',
+    selite: 'Karthagon Byrsan kukkula isoisän aikaan: raunioiden keskelle '
+      + 'oli noussut katedraali, ja kaivaukset olivat vasta alussa.',
+  },
+  marrakech: {
+    tiedosto: 'Marrakech Minaret depuis la rue animée - sap04 10l01821 p.jpg',
+    vuosi: 'noin 1924',
+    lahde: 'Ministère de la Culture (CC BY-SA 4.0)',
+    selite: 'Vilkas katu Marrakechissa ja taustalla Koutoubian minareetti — '
+      + 'sama torni, jonka mukaan kaupungissa suunnistetaan yhä.',
+  },
+  timbuktu: {
+    tiedosto: 'Timbuktu, 1906.png',
+    vuosi: '1906',
+    lahde: 'Commons (PD)',
+    selite: 'Timbuktun savutaloja ja hiekkakatuja vuonna 1906. Kaupunki oli '
+      + 'juuri se salaperäinen aavikon satama, josta Euroopassa tarinoitiin.',
+  },
+  lagos: {
+    tiedosto: 'Lagos, 1929.jpg',
+    vuosi: '1929',
+    lahde: 'The National Archives UK (OGL)',
+    selite: 'Lagosin satamakatua vuonna 1929: kauppahuoneita ja laitureita '
+      + 'laguunin rannalla — kaupunki oli jo silloin Länsi-Afrikan '
+      + 'vilkkaimpia.',
+  },
+  tshadjarvi: {
+    tiedosto: 'ETH-BIB-Ufer des Tschadsee-Tschadseeflug 1930-31-LBS MH02-08-0976.tif',
+    vuosi: '1930–31',
+    lahde: 'ETH-Bibliothek, Mittelholzer (PD)',
+    selite: 'Tšad-järven rantaa ilmasta Walter Mittelholzerin kuuluisalla '
+      + 'Afrikan-lennolla — juuri sellaiselta matkalta, joista isoisäkin '
+      + 'luki lehdistä.',
+  },
+  kamerun: {
+    tiedosto: 'People gathered before a church, Cameroon, ca.1910-1920 (IMP-YDS-RG101-012-0000-0036).jpg',
+    vuosi: '1910-luku',
+    lahde: 'Yale Divinity School (PD)',
+    selite: 'Väkeä koolla kirkon edustalla Kamerunissa 1910-luvulla — '
+      + 'vuoren juurella kohtasivat tuolloin monet maailmat.',
+  },
+  namib: {
+    tiedosto: 'Lüderitzbucht, Deutsch-Südwestafrika. The newly finished pier with an Illing locomotive, February 1908, photograph by de Meillon.jpg',
+    vuosi: '1908',
+    lahde: 'Commons (PD)',
+    selite: 'Lüderitzin uusi laituri Namibin rannikolla 1908: veturi ja '
+      + 'nostokurjet keskellä maailman vanhinta aavikkoa.',
+  },
+  sthelena: {
+    tiedosto: 'The drama of Saint Helena (1910) (14777842132).jpg',
+    vuosi: '1910',
+    lahde: 'Internet Archive (PD)',
+    selite: 'Näkymä St. Helenalle 1910 julkaistun kirjan sivuilta — jyrkät '
+      + 'kalliot ottivat vastaan jokaisen saapujan, keisarista '
+      + 'matkalaiseen.',
+  },
+  viktorianputoukset: {
+    tiedosto: 'Victoria Falls Bridge 1905.jpg',
+    vuosi: '1905',
+    lahde: 'Commons (PD)',
+    selite: 'Putousten rautatiesilta juuri valmistuneena 1905. Se '
+      + 'rakennettiin niin lähelle, että vaunuihin sataa vesisumua — '
+      + 'suunnittelijan tarkoituksella.',
+  },
+  nairobi: {
+    tiedosto: 'Photograph of Kenyan Sikh pioneers in-front of Gurdwara Sahib Railway Landhies in Nairobi, Kenya, 1903.jpg',
+    vuosi: '1903',
+    lahde: 'Commons (PD)',
+    selite: 'Rautatien rakentajia Nairobissa 1903 — kaupunki oli tuolloin '
+      + 'vasta muutaman vuoden ikäinen ratatyöläisten leiri.',
+    uusi: {
+      tiedosto: 'A giraffe with a beautiful background of Nairobi City Skyline.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama kaupunki sata vuotta myöhemmin: kirahvi laiduntaa '
+        + 'kansallispuistossa keskustan tornien katseen alla.',
+    },
+  },
+  darfur: {
+    tiedosto: 'Sultan Ali Dinar.jpg',
+    vuosi: '1910-luku',
+    lahde: 'Commons (CC0)',
+    selite: 'Ali Dinar, Darfurin viimeinen sulttaani, virallisessa '
+      + 'muotokuvassaan. Hänen valtakautensa päättyi 1916 — vain '
+      + 'kymmenkunta vuotta ennen isoisän matkaa.',
+  },
+  suakin: {
+    tiedosto: 'TheLandingPlaceAtSuakim(Suakin)1871.jpg',
+    vuosi: '1871',
+    lahde: 'Commons (PD)',
+    selite: 'Suakinin laituripaikka 1871: dhow-veneitä ja korallitaloja '
+      + 'saaren rannassa, kun satama oli vielä täydessä kukassaan.',
   },
 };
 
@@ -35786,7 +35973,21 @@ class UI {
       event.stopPropagation();
       this.naytaPostikortti();
     });
-    this.postikorttiSulkija = () => this.suljePostikortti();
+    this.postikorttiSulkija = (e) => {
+      // Pinon alempi kortti nousee napautuksesta päälle; muu napautus
+      // sulkee kortin (omistajan kokeilu: uusi kuva vanhan alla).
+      const alla = this.postikortti?.querySelector('.postikortti-kortti.alla');
+      if (alla && e.composedPath?.().includes(alla)) {
+        e.preventDefault();
+        e.stopPropagation();
+        for (const kortti of this.postikortti.querySelectorAll('.postikortti-kortti')) {
+          kortti.classList.toggle('alla');
+        }
+        sfx.play('swipe');
+        return;
+      }
+      this.suljePostikortti();
+    };
 
     this.factKuuntele = document.getElementById('fact-kuuntele');
     this.factKuuntele.addEventListener('click', () => {
@@ -37069,15 +37270,26 @@ class UI {
     const tiedot = this.factValokuvaTiedot;
     if (!tiedot) return;
     const kortti = html('div', 'postikortti');
-    const kuva = document.createElement('img');
-    kuva.src = valokuvaUrl(tiedot.tiedosto, 1000);
-    kuva.alt = `Vanha valokuva: ${tiedot.paikka}`;
-    kortti.appendChild(kuva);
-    // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
-    // jäävät omalle pienemmälle rivilleen (omistajan toive).
-    if (tiedot.selite) kortti.appendChild(html('p', 'kuvateksti', tiedot.selite));
-    kortti.appendChild(html('p', 'kuvalahde',
-      [tiedot.paikka, tiedot.vuosi, tiedot.lahde].filter(Boolean).join(' · ')));
+    const teeKortti = (kuvaTiedot, luokka, altTeksti) => {
+      const osa = html('div', `postikortti-kortti${luokka ? ` ${luokka}` : ''}`);
+      const kuva = document.createElement('img');
+      kuva.src = valokuvaUrl(kuvaTiedot.tiedosto, 1000);
+      kuva.alt = altTeksti;
+      osa.appendChild(kuva);
+      // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
+      // jäävät omalle pienemmälle rivilleen (omistajan toive).
+      if (kuvaTiedot.selite) osa.appendChild(html('p', 'kuvateksti', kuvaTiedot.selite));
+      osa.appendChild(html('p', 'kuvalahde',
+        [tiedot.paikka, kuvaTiedot.vuosi, kuvaTiedot.lahde].filter(Boolean).join(' · ')));
+      return osa;
+    };
+    kortti.appendChild(teeKortti(tiedot, '', `Vanha valokuva: ${tiedot.paikka}`));
+    // Uusi kuva pilkottaa vanhan alta ja nousee napautuksesta päälle
+    // (omistajan kokeilu — pilottikaupungit).
+    if (tiedot.uusi) {
+      kortti.appendChild(teeKortti({ ...tiedot.uusi, vuosi: tiedot.uusi.vuosi ?? 'nykypäivä' },
+        'uusi alla', `Uusi valokuva: ${tiedot.paikka}`));
+    }
     // Kortti muistikirjan viereen: yläpuolelle kun muistikirja on ruudun
     // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
     const rect = this.factCard.getBoundingClientRect();
@@ -37093,7 +37305,7 @@ class UI {
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
     // sulkemista — napautus mihin tahansa sulkee kortin.
     setTimeout(() => {
-      document.addEventListener('pointerdown', this.postikorttiSulkija, { once: true, capture: true });
+      document.addEventListener('pointerdown', this.postikorttiSulkija, { capture: true });
     }, 0);
   }
 
@@ -38448,15 +38660,17 @@ class UI {
       this.passportFinds.appendChild(row);
     };
 
-    if (p.hasStar) rivi(tokenIconSvg('star', 20), game.pack.tokens.types.star.name);
-    if (p.horseshoes) rivi(tokenIconSvg('horseshoe', 20), `Hevosenkenkiä ${p.horseshoes}`);
+    // Isommat kuvat ja selite alla — tavarat kuin matkamuistohyllyllä
+    // (omistajan toive).
+    if (p.hasStar) rivi(tokenIconSvg('star', 44), game.pack.tokens.types.star.name);
+    if (p.horseshoes) rivi(tokenIconSvg('horseshoe', 44), `Hevosenkenkiä ${p.horseshoes}`);
 
     // Jalokivet tyypeittäin: sama laji voi toistua monelta laudalta.
     const gems = p.finds.filter((t) => (game.tokenTypes[t]?.value ?? 0) > 0);
     const counts = new Map();
     for (const type of gems) counts.set(type, (counts.get(type) ?? 0) + 1);
     for (const [type, n] of counts) {
-      rivi(tokenIconSvg(type, 20), `${game.tokenTypes[type].name}${n > 1 ? ` ×${n}` : ''}`);
+      rivi(tokenIconSvg(type, 44), `${game.tokenTypes[type].name}${n > 1 ? ` ×${n}` : ''}`);
     }
 
     if (!this.passportFinds.childElementCount) {
@@ -39605,7 +39819,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.88';
+const APP_VERSION = '2026-07-30.89';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

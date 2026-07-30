@@ -448,7 +448,21 @@ export class UI {
       event.stopPropagation();
       this.naytaPostikortti();
     });
-    this.postikorttiSulkija = () => this.suljePostikortti();
+    this.postikorttiSulkija = (e) => {
+      // Pinon alempi kortti nousee napautuksesta päälle; muu napautus
+      // sulkee kortin (omistajan kokeilu: uusi kuva vanhan alla).
+      const alla = this.postikortti?.querySelector('.postikortti-kortti.alla');
+      if (alla && e.composedPath?.().includes(alla)) {
+        e.preventDefault();
+        e.stopPropagation();
+        for (const kortti of this.postikortti.querySelectorAll('.postikortti-kortti')) {
+          kortti.classList.toggle('alla');
+        }
+        sfx.play('swipe');
+        return;
+      }
+      this.suljePostikortti();
+    };
 
     this.factKuuntele = document.getElementById('fact-kuuntele');
     this.factKuuntele.addEventListener('click', () => {
@@ -1732,15 +1746,26 @@ export class UI {
     const tiedot = this.factValokuvaTiedot;
     if (!tiedot) return;
     const kortti = html('div', 'postikortti');
-    const kuva = document.createElement('img');
-    kuva.src = valokuvaUrl(tiedot.tiedosto, 1000);
-    kuva.alt = `Vanha valokuva: ${tiedot.paikka}`;
-    kortti.appendChild(kuva);
-    // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
-    // jäävät omalle pienemmälle rivilleen (omistajan toive).
-    if (tiedot.selite) kortti.appendChild(html('p', 'kuvateksti', tiedot.selite));
-    kortti.appendChild(html('p', 'kuvalahde',
-      [tiedot.paikka, tiedot.vuosi, tiedot.lahde].filter(Boolean).join(' · ')));
+    const teeKortti = (kuvaTiedot, luokka, altTeksti) => {
+      const osa = html('div', `postikortti-kortti${luokka ? ` ${luokka}` : ''}`);
+      const kuva = document.createElement('img');
+      kuva.src = valokuvaUrl(kuvaTiedot.tiedosto, 1000);
+      kuva.alt = altTeksti;
+      osa.appendChild(kuva);
+      // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
+      // jäävät omalle pienemmälle rivilleen (omistajan toive).
+      if (kuvaTiedot.selite) osa.appendChild(html('p', 'kuvateksti', kuvaTiedot.selite));
+      osa.appendChild(html('p', 'kuvalahde',
+        [tiedot.paikka, kuvaTiedot.vuosi, kuvaTiedot.lahde].filter(Boolean).join(' · ')));
+      return osa;
+    };
+    kortti.appendChild(teeKortti(tiedot, '', `Vanha valokuva: ${tiedot.paikka}`));
+    // Uusi kuva pilkottaa vanhan alta ja nousee napautuksesta päälle
+    // (omistajan kokeilu — pilottikaupungit).
+    if (tiedot.uusi) {
+      kortti.appendChild(teeKortti({ ...tiedot.uusi, vuosi: tiedot.uusi.vuosi ?? 'nykypäivä' },
+        'uusi alla', `Uusi valokuva: ${tiedot.paikka}`));
+    }
     // Kortti muistikirjan viereen: yläpuolelle kun muistikirja on ruudun
     // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
     const rect = this.factCard.getBoundingClientRect();
@@ -1756,7 +1781,7 @@ export class UI {
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
     // sulkemista — napautus mihin tahansa sulkee kortin.
     setTimeout(() => {
-      document.addEventListener('pointerdown', this.postikorttiSulkija, { once: true, capture: true });
+      document.addEventListener('pointerdown', this.postikorttiSulkija, { capture: true });
     }, 0);
   }
 
@@ -3111,15 +3136,17 @@ export class UI {
       this.passportFinds.appendChild(row);
     };
 
-    if (p.hasStar) rivi(tokenIconSvg('star', 20), game.pack.tokens.types.star.name);
-    if (p.horseshoes) rivi(tokenIconSvg('horseshoe', 20), `Hevosenkenkiä ${p.horseshoes}`);
+    // Isommat kuvat ja selite alla — tavarat kuin matkamuistohyllyllä
+    // (omistajan toive).
+    if (p.hasStar) rivi(tokenIconSvg('star', 44), game.pack.tokens.types.star.name);
+    if (p.horseshoes) rivi(tokenIconSvg('horseshoe', 44), `Hevosenkenkiä ${p.horseshoes}`);
 
     // Jalokivet tyypeittäin: sama laji voi toistua monelta laudalta.
     const gems = p.finds.filter((t) => (game.tokenTypes[t]?.value ?? 0) > 0);
     const counts = new Map();
     for (const type of gems) counts.set(type, (counts.get(type) ?? 0) + 1);
     for (const [type, n] of counts) {
-      rivi(tokenIconSvg(type, 20), `${game.tokenTypes[type].name}${n > 1 ? ` ×${n}` : ''}`);
+      rivi(tokenIconSvg(type, 44), `${game.tokenTypes[type].name}${n > 1 ? ` ×${n}` : ''}`);
     }
 
     if (!this.passportFinds.childElementCount) {
