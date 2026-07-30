@@ -5,8 +5,62 @@
 // jotka renderArticle muuttaa otsikkoriveiksi. Toimii myös ilman
 // verkkoa. `intro` on saman paikan parin lauseen nosto Tutki-kortille.
 //
-// Avaimena kaupungin wiki-otsikko (city.wiki), kuten tiivistelmissäkin.
+// Avaimena wiki-otsikko: kaupungeilla city.wiki, mailla countryShapesin
+// wiki tai nimi — sama avain, jolla cachedSummary hakee.
 export const OMAT_ARTIKKELIT = {
+  Marokko: {
+    intro: 'Marokon kuningaskunta on Afrikan luoteiskulman maa, jossa '
+      + 'Atlasvuoret erottavat meren rannikot Saharasta. Eurooppaan on '
+      + 'matkaa vain salmen verran, ja se näkyy kaikessa — Marokko on '
+      + 'aina ollut kahden maailman naapuri.',
+    artikkeli: 'Marokko on kuningaskunta Afrikan luoteisosassa. Sillä on '
+      + 'rantaa kahdelle merelle, Atlantille ja Välimerelle, ja maan '
+      + 'halki kulkee Atlasvuoristo, jonka huiput nousevat yli neljään '
+      + 'kilometriin. Vuorten takana alkaa Sahara.'
+      + '\n\n== Historiaa lyhyesti ==\n'
+      + 'Maan vanhin väestö ovat berberit, joiden kieli ja kulttuuri '
+      + 'elävät yhä vahvoina. Arabit toivat 600-luvulta alkaen islamin '
+      + 'ja arabian kielen, ja vuosisatojen ajan Marokkoa hallitsivat '
+      + 'omat sulttaanit — maa ei koskaan kuulunut Osmanien '
+      + 'valtakuntaan. 1900-luvun alussa Ranska ja Espanja jakoivat '
+      + 'Marokon suojelualueikseen; itsenäiseksi kuningaskunnaksi maa '
+      + 'palasi vuonna 1956, ja samaa kuningassukua se on hallinnut '
+      + '1600-luvulta asti.'
+      + '\n\n== Elämää ==\n'
+      + 'Marokon kaupungeissa vanha ja uusi elävät rinnakkain: medinan '
+      + 'kujat, torit ja käsityöläiskorttelit kuuluvat arkeen siinä '
+      + 'missä uudet lähiöt. Vieraalle kaadetaan makeaa minttuteetä, '
+      + 'perjantaina tuoksuu kuskus, ja toreilla tingitään hyvällä '
+      + 'tuulella. Kuuluisimpia kaupunkeja ovat Marrakech, Fes ja '
+      + 'Casablanca — ja pohjoisessa Tanger, kahden meren portti.',
+  },
+  Libya: {
+    intro: 'Libya on Pohjois-Afrikan valtio, jossa kapean rannikkokaistan '
+      + 'takana aukeaa Saharan suuri hiekkameri. Lähes koko maa on '
+      + 'aavikkoa — siksi melkein kaikki libyalaiset asuvat meren '
+      + 'äärellä.',
+    artikkeli: 'Libya on suuri maa Välimeren rannalla Egyptin ja '
+      + 'Tunisian välissä. Pinta-alaltaan se on yli viisi kertaa Suomen '
+      + 'kokoinen, mutta valtaosa siitä on Saharan aavikkoa: hiekkaa, '
+      + 'kivikkoa ja hajallaan olevia keitaita. Siksi lähes kaikki '
+      + 'asutus on kapealla rannikkokaistalla.'
+      + '\n\n== Historiaa lyhyesti ==\n'
+      + 'Rannikolle rakensivat kaupunkeja jo foinikialaiset ja '
+      + 'kreikkalaiset, ja roomalaisten aikana seutu kukoisti — Leptis '
+      + 'Magnan rauniokaupunki on yhä yksi maailman hienoimpia. '
+      + 'Myöhemmin maata hallitsivat osmanit ja 1900-luvun alusta '
+      + 'Italia. Itsenäinen Libya syntyi vuonna 1951, ja pian sen '
+      + 'jälkeen aavikon alta löytyi öljyä, joka muutti köyhän maan '
+      + 'talouden.'
+      + '\n\n== Elämää ==\n'
+      + 'Libyalaisten elämä keskittyy rannikon kaupunkeihin, joista '
+      + 'suurin on pääkaupunki Tripoli. Tee juodaan vahvana ja '
+      + 'vaahtoavana useampi lasillinen, juhlapöydässä on bazin-pata, '
+      + 'ja häissä soi malouf. Aavikko on silti aina läsnä: karavaanien '
+      + 'vanhat reitit, keitaiden taatelitarhat ja Fezzanin '
+      + 'kalliopiirrokset kertovat, miten tässä maassa on aina osattu '
+      + 'elää hiekan ehdoilla.',
+  },
   Tanger: {
     intro: 'Tanger vartioi Gibraltarinsalmea Afrikan luoteiskulmassa: '
       + 'Eurooppaan on merta vain neljätoista kilometriä, ja kaupungin '

@@ -2066,10 +2066,17 @@ export class UI {
       this.arrivalMaaKartta.textContent = '';
       const kartta = this.piirraMaakartta(iso, city.id);
       if (kartta) this.arrivalMaaKartta.appendChild(kartta);
+      // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
+      // automaattikatkelman; Lue lisää avaa oman artikkelin.
+      const omaMaaIntro = OMAT_ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
+      if (omaMaaIntro) {
+        this.arrivalMaaIntro.textContent = omaMaaIntro;
+        this.arrivalMaaWiki.hidden = false;
+      }
       cachedSummary(maa.wiki ?? maa.nimi).then((summary) => {
         if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
         if (!summary?.extract) return;
-        this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
+        if (!omaMaaIntro) this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
         this.arrivalMaaWiki.hidden = false;
       });
     }
@@ -2219,7 +2226,10 @@ export class UI {
     kuva.src = valokuvaUrl(nosto.tiedosto, 1400);
     kuva.alt = nosto.otsikko;
     kortti.appendChild(kuva);
-    kortti.appendChild(html('p', 'kuvateksti',
+    // Parin lauseen selite teoksesta kuvan alla (omistajan toive);
+    // otsikko ja lähde jäävät pienemmälle riville.
+    if (nosto.selite) kortti.appendChild(html('p', 'kuvateksti', nosto.selite));
+    kortti.appendChild(html('p', 'kuvalahde',
       [nosto.otsikko, nosto.lahde].filter(Boolean).join(' · ')));
     kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
     this.arrivalDialog.appendChild(kortti);

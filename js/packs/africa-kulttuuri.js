@@ -19,6 +19,12 @@ export const AFRICA_KULTTUURI = {
           + '1912–1913 ja maalasi hotellihuoneensa ikkunasta näkymän yli '
           + 'kaupungin — sininen "Ikkuna Tangerissa" kuuluu nykyään Moskovan '
           + 'Pushkin-museon aarteisiin.',
+        // Suurennoksen alle kirjoitettava parin lauseen kuvaus itse
+        // teoksesta (omistajan toive).
+        selite: 'La Fenêtre à Tanger (1912): näkymä hotellihuoneen ikkunasta '
+          + 'yli medinan kohti englantilaista kirkkoa. Matisse maalasi koko '
+          + 'näkymän sinisen sävyillä — ikkunalaudalla on maljakko, ja '
+          + 'sateisen talven kaupunki hehkuu kuin iltahämärässä.',
         lahde: 'Wikimedia Commons (PD)',
       },
       {
@@ -58,6 +64,9 @@ export const AFRICA_KULTTUURI = {
         teksti: 'Malouf on Libyan perinnemusiikkia, jonka juuret ovat keskiajan '
           + 'Andalusiassa. Häissä ja juhlissa sitä esittää kokonainen yhtye '
           + 'lauluineen, luuttuineen ja rumpuineen.',
+        selite: 'Libyalainen malouf-yhtye soittimineen: laulajien rinnalla '
+          + 'soivat oud-luuttu, viulu ja darbuka-rumpu. Sama kokoonpano on '
+          + 'soittanut häissä ja juhlissa sukupolvien ajan.',
         lahde: 'Wikimedia Commons (CC BY 4.0)',
       },
       {

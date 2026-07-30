@@ -283,20 +283,24 @@ button, .brand, .turn-pill, .fact-card h2 {
   grid-template-rows: repeat(3, 1fr);
   padding: 12%;
   gap: 4%;
-  border-radius: 18%;
+  /* Maltillinen pyöristys: isompi pyöristys jätti kuution kulmiin raot,
+   * joista tausta vilkkui läpi (omistajan havainto). */
+  border-radius: 9%;
+  /* Vaaleampi luu ja tummempi mustereuna, jotta tahko irtoaa
+   * pergamentista eikä sävy paina tummaksi. */
   background-image:
     var(--paper-noise),
-    radial-gradient(circle at 36% 30%, #f0e5c8 0%, #e3d2ab 52%, #ccb488 100%);
+    radial-gradient(circle at 36% 30%, #f9f1da 0%, #efe0bd 55%, #ddc9a2 100%);
   background-blend-mode: multiply, normal;
-  border: 1.6px solid rgba(70, 51, 31, 0.78);
-  box-shadow: inset -2px -3px 6px rgba(108, 76, 34, 0.3);
+  border: 1.8px solid rgba(46, 32, 17, 0.92);
+  box-shadow: inset -2px -3px 6px rgba(108, 76, 34, 0.22);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
 /* Sivutahkot ovat aavistuksen tummempia, jolloin kuutio saa syvyyttä. */
-.die-face.face-3, .die-face.face-4 { filter: brightness(0.92); }
-.die-face.face-5, .die-face.face-6 { filter: brightness(0.85); }
+.die-face.face-3, .die-face.face-4 { filter: brightness(0.96); }
+.die-face.face-5, .die-face.face-6 { filter: brightness(0.9); }
 
 .die-face .pip {
   align-self: center;
@@ -320,10 +324,34 @@ button, .brand, .turn-pill, .fact-card h2 {
   border-radius: 24%;
   pointer-events: none;
   background:
-    radial-gradient(circle at 30% 24%, rgba(252, 244, 222, 0.2), rgba(255, 255, 255, 0) 42%),
-    radial-gradient(circle at 76% 84%, rgba(44, 27, 10, 0.28), rgba(0, 0, 0, 0) 56%);
+    radial-gradient(circle at 30% 24%, rgba(252, 244, 222, 0.22), rgba(255, 255, 255, 0) 42%),
+    radial-gradient(circle at 76% 84%, rgba(44, 27, 10, 0.2), rgba(0, 0, 0, 0) 56%);
   mix-blend-mode: soft-light;
 }
+
+/*
+ * Kynällä piirretty varjostus laudan pintaan: vinoviivoitus kuin
+ * lyijykynän jälki. Piirtyy esiin vasta kun noppa on pysähtynyt
+ * (die.js lisää levossa-luokan) — heiton aikana varjo on pelkkä
+ * pehmeä läiskä.
+ */
+.die-shadow::after {
+  content: '';
+  position: absolute;
+  inset: -8% -4%;
+  border-radius: 50%;
+  background: repeating-linear-gradient(
+    -38deg,
+    rgba(58, 40, 20, 0.55) 0 1.4px,
+    rgba(58, 40, 20, 0) 1.4px 4.6px
+  );
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 55% 57%, #000 48%, transparent 78%);
+  mask-image: radial-gradient(ellipse 50% 50% at 55% 57%, #000 48%, transparent 78%);
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.die-layer.levossa .die-shadow::after { opacity: 0.6; }
 
 /* --- tapahtumaikkuna kartan päällä --- */
 
@@ -629,10 +657,17 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /* Vain teksti vierii — ilman kehyksiä ja ilman näkyvää palkkia, kuin
  * muistikirjan sivu liukuisi sormen alla. Kutistuminen ja vieritys
- * tulevat .fact-textin omista flex-säännöistä. */
+ * tulevat .fact-textin omista flex-säännöistä. Suora dvh-katto on
+ * vyö ja henkselit -varmistus: se ei riipu flexin kutistumisesta
+ * missään selaimessa (iPadin Safari päästi tekstin kartan päälle). */
 .fact-teksti-rivi .fact-text {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  max-height: calc(38dvh - 3.4rem);
+}
+
+@media (max-width: 560px) {
+  .fact-teksti-rivi .fact-text { max-height: calc(30dvh - 3rem); }
 }
 
 .fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
@@ -921,11 +956,13 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 .arrival-maa-nimi {
-  font-family: var(--font-type);
-  font-size: 0.98rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #7a5514;
+  /* Sama kirjaintyyli kuin kaupungin otsikolla (omistajan toive):
+   * kirjan serif-antiikva, ei konekirjoitusta eikä kapiteeleja. */
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: inherit;
 }
 
 /* Maan lippu suht pienenä nimen vieressä (omistajan toive). */
@@ -7873,6 +7910,39 @@ function valokuvaUrl(tiedosto, leveys) {
 // uutta mallia vain niissä (ui.js SAAPUMISLUENNAT). Muut tekstit ovat
 // omistajan luettavina työhuoneen Tekstit-välilehdellä; äänet tehdään
 // vasta lukukierroksen jälkeen.
+// Vaihtoehtoiset B-versiot (pilotti: Tanger ja Tripoli): nuoren herran
+// osuudessa selvästi enemmän tunneilmaisua — huudahduksia, hengästystä
+// ja naurua — joka ohjaa myös lukijan ääntä. Luennat tiedostoissa
+// puhe-africa-saapuminen-<kaupunki>-b.mp3. Peli käyttää A-versioita,
+// kunnes omistaja on kuunnellut molemmat ja valinnut suunnan;
+// B-versiot ovat kuunneltavina työhuoneen Tekstit-välilehdellä.
+const AFRICA_SAAPUMISET_B = {
+  tanger: {
+    kuvaus: 'Voi että — Tanger! Laiva kääntyi lahteen ja minä unohdin '
+      + 'hengittää: valkoiset talot kiipeävät rinnettä kuin katsomo, '
+      + 'minareetti hehkuu niiden yllä, ja satamasta nousee sellainen '
+      + 'elämän pauhu, että nauroin ääneen ihan itsekseni. Seisoin '
+      + 'kannella suolainen tuuli kasvoilla ja sydän hakkasi kuin rummun '
+      + 'kalvo — kahden meren ja kahden mantereen portti avautui juuri '
+      + 'minulle!',
+    nosto: 'Isoisän kirjassa on tästä satamasta vain yksi lause: "Täältä '
+      + 'Afrikka alkaa, ja täällä sitä on turha yrittää ymmärtää '
+      + 'kiireellä." Nyt vasta tajuan, mitä ukko tarkoitti.',
+  },
+  tripoli: {
+    kuvaus: 'En ollut uskoa silmiäni, kun Tripoli nousi merestä: kaupunki '
+      + 'makaa kalliolla kuin laivan keula, ja muurit hohtavat auringossa '
+      + 'niin valkoisina, että jouduin siristämään silmiäni ja hymyilemään '
+      + 'samaan aikaan. Kujilta tuoksuu suola, savu ja jasmiini — ja kun '
+      + 'karavaanin kellot kilahtivat jossain muurien takana, sydämeni '
+      + 'hypähti: tuolta se alkaa, pitkä matka.',
+    nosto: 'Isoisä kirjoitti nähneensä täällä, kuinka aavikon karavaanit '
+      + 'purkavat lastinsa suoraan laivoihin — "kaksi maailmaa kättelee '
+      + 'laiturilla", hän merkitsi. Katselin laiturille, ja siellä se '
+      + 'kädenpuristus yhä oli.',
+  },
+};
+
 const AFRICA_SAAPUMISET = {
   tanger: {
     kuvaus: 'Laiva kääntyi lahteen ja Tanger nousi vastaan kuin katsomo: '
@@ -8240,6 +8310,12 @@ const AFRICA_KULTTUURI = {
           + '1912–1913 ja maalasi hotellihuoneensa ikkunasta näkymän yli '
           + 'kaupungin — sininen "Ikkuna Tangerissa" kuuluu nykyään Moskovan '
           + 'Pushkin-museon aarteisiin.',
+        // Suurennoksen alle kirjoitettava parin lauseen kuvaus itse
+        // teoksesta (omistajan toive).
+        selite: 'La Fenêtre à Tanger (1912): näkymä hotellihuoneen ikkunasta '
+          + 'yli medinan kohti englantilaista kirkkoa. Matisse maalasi koko '
+          + 'näkymän sinisen sävyillä — ikkunalaudalla on maljakko, ja '
+          + 'sateisen talven kaupunki hehkuu kuin iltahämärässä.',
         lahde: 'Wikimedia Commons (PD)',
       },
       {
@@ -8279,6 +8355,9 @@ const AFRICA_KULTTUURI = {
         teksti: 'Malouf on Libyan perinnemusiikkia, jonka juuret ovat keskiajan '
           + 'Andalusiassa. Häissä ja juhlissa sitä esittää kokonainen yhtye '
           + 'lauluineen, luuttuineen ja rumpuineen.',
+        selite: 'Libyalainen malouf-yhtye soittimineen: laulajien rinnalla '
+          + 'soivat oud-luuttu, viulu ja darbuka-rumpu. Sama kokoonpano on '
+          + 'soittanut häissä ja juhlissa sukupolvien ajan.',
         lahde: 'Wikimedia Commons (CC BY 4.0)',
       },
       {
@@ -8314,8 +8393,62 @@ const AFRICA_KULTTUURI = {
 // jotka renderArticle muuttaa otsikkoriveiksi. Toimii myös ilman
 // verkkoa. `intro` on saman paikan parin lauseen nosto Tutki-kortille.
 //
-// Avaimena kaupungin wiki-otsikko (city.wiki), kuten tiivistelmissäkin.
+// Avaimena wiki-otsikko: kaupungeilla city.wiki, mailla countryShapesin
+// wiki tai nimi — sama avain, jolla cachedSummary hakee.
 const OMAT_ARTIKKELIT = {
+  Marokko: {
+    intro: 'Marokon kuningaskunta on Afrikan luoteiskulman maa, jossa '
+      + 'Atlasvuoret erottavat meren rannikot Saharasta. Eurooppaan on '
+      + 'matkaa vain salmen verran, ja se näkyy kaikessa — Marokko on '
+      + 'aina ollut kahden maailman naapuri.',
+    artikkeli: 'Marokko on kuningaskunta Afrikan luoteisosassa. Sillä on '
+      + 'rantaa kahdelle merelle, Atlantille ja Välimerelle, ja maan '
+      + 'halki kulkee Atlasvuoristo, jonka huiput nousevat yli neljään '
+      + 'kilometriin. Vuorten takana alkaa Sahara.'
+      + '\n\n== Historiaa lyhyesti ==\n'
+      + 'Maan vanhin väestö ovat berberit, joiden kieli ja kulttuuri '
+      + 'elävät yhä vahvoina. Arabit toivat 600-luvulta alkaen islamin '
+      + 'ja arabian kielen, ja vuosisatojen ajan Marokkoa hallitsivat '
+      + 'omat sulttaanit — maa ei koskaan kuulunut Osmanien '
+      + 'valtakuntaan. 1900-luvun alussa Ranska ja Espanja jakoivat '
+      + 'Marokon suojelualueikseen; itsenäiseksi kuningaskunnaksi maa '
+      + 'palasi vuonna 1956, ja samaa kuningassukua se on hallinnut '
+      + '1600-luvulta asti.'
+      + '\n\n== Elämää ==\n'
+      + 'Marokon kaupungeissa vanha ja uusi elävät rinnakkain: medinan '
+      + 'kujat, torit ja käsityöläiskorttelit kuuluvat arkeen siinä '
+      + 'missä uudet lähiöt. Vieraalle kaadetaan makeaa minttuteetä, '
+      + 'perjantaina tuoksuu kuskus, ja toreilla tingitään hyvällä '
+      + 'tuulella. Kuuluisimpia kaupunkeja ovat Marrakech, Fes ja '
+      + 'Casablanca — ja pohjoisessa Tanger, kahden meren portti.',
+  },
+  Libya: {
+    intro: 'Libya on Pohjois-Afrikan valtio, jossa kapean rannikkokaistan '
+      + 'takana aukeaa Saharan suuri hiekkameri. Lähes koko maa on '
+      + 'aavikkoa — siksi melkein kaikki libyalaiset asuvat meren '
+      + 'äärellä.',
+    artikkeli: 'Libya on suuri maa Välimeren rannalla Egyptin ja '
+      + 'Tunisian välissä. Pinta-alaltaan se on yli viisi kertaa Suomen '
+      + 'kokoinen, mutta valtaosa siitä on Saharan aavikkoa: hiekkaa, '
+      + 'kivikkoa ja hajallaan olevia keitaita. Siksi lähes kaikki '
+      + 'asutus on kapealla rannikkokaistalla.'
+      + '\n\n== Historiaa lyhyesti ==\n'
+      + 'Rannikolle rakensivat kaupunkeja jo foinikialaiset ja '
+      + 'kreikkalaiset, ja roomalaisten aikana seutu kukoisti — Leptis '
+      + 'Magnan rauniokaupunki on yhä yksi maailman hienoimpia. '
+      + 'Myöhemmin maata hallitsivat osmanit ja 1900-luvun alusta '
+      + 'Italia. Itsenäinen Libya syntyi vuonna 1951, ja pian sen '
+      + 'jälkeen aavikon alta löytyi öljyä, joka muutti köyhän maan '
+      + 'talouden.'
+      + '\n\n== Elämää ==\n'
+      + 'Libyalaisten elämä keskittyy rannikon kaupunkeihin, joista '
+      + 'suurin on pääkaupunki Tripoli. Tee juodaan vahvana ja '
+      + 'vaahtoavana useampi lasillinen, juhlapöydässä on bazin-pata, '
+      + 'ja häissä soi malouf. Aavikko on silti aina läsnä: karavaanien '
+      + 'vanhat reitit, keitaiden taatelitarhat ja Fezzanin '
+      + 'kalliopiirrokset kertovat, miten tässä maassa on aina osattu '
+      + 'elää hiekan ehdoilla.',
+  },
   Tanger: {
     intro: 'Tanger vartioi Gibraltarinsalmea Afrikan luoteiskulmassa: '
       + 'Eurooppaan on merta vain neljätoista kilometriä, ja kaupungin '
@@ -27935,10 +28068,12 @@ class BoardDie {
       `translate3d(${x.toFixed(1)}px, ${(y - z * LIFT).toFixed(1)}px, 0) `
       + `translate(-50%, -50%) scale(${scale.toFixed(3)})`;
 
-    // Varjo levenee, haalistuu ja sumenee, kun noppa nousee.
+    // Varjo levenee, haalistuu ja sumenee, kun noppa nousee. Pieni vakio-
+    // siirtymä alaviistoon pitää varjon näkyvissä nopan alta myös levossa —
+    // valo tulee vasemmalta ylhäältä kuten patinassakin.
     const t = Math.min(1, z / 240);
     this.shadow.style.transform =
-      `translate3d(${(x + z * 0.07).toFixed(1)}px, ${(y + z * 0.03).toFixed(1)}px, 0) `
+      `translate3d(${(x + 7 + z * 0.07).toFixed(1)}px, ${(y + 6 + z * 0.03).toFixed(1)}px, 0) `
       + `translate(-50%, -50%) scale(${(1 + t * 0.9).toFixed(3)})`;
     this.shadow.style.opacity = (0.44 - t * 0.3).toFixed(3);
     this.shadow.style.filter = `blur(${(1.5 + t * 6).toFixed(1)}px)`;
@@ -27975,6 +28110,9 @@ class BoardDie {
   async roll(value, from, to, hooks = {}) {
     const { onTick, onLand, onBounce, reduced } = hooks;
     this.layer.hidden = false;
+    // Kynävarjostus piirtyy vasta kun noppa on pysähtynyt (omistajan
+    // toive) — heiton ajaksi se pyyhitään pois.
+    this.layer.classList.remove('levossa');
 
     const [faceX, faceY] = FACE_ROTATION[value] ?? [0, 0];
 
@@ -27982,6 +28120,7 @@ class BoardDie {
       this.rotation = { x: faceX - 8, y: faceY + 12, z: 0 };
       this.applyRotation(0);
       this.place(to);
+      this.layer.classList.add('levossa');
       onLand?.();
       return;
     }
@@ -28096,6 +28235,7 @@ class BoardDie {
 
     this.spot = { x: to.x, y: to.y };
     this.draw(0);
+    this.layer.classList.add('levossa');
     await wait(SETTLE_MS);
   }
 }
@@ -33138,10 +33278,17 @@ class UI {
       this.arrivalMaaKartta.textContent = '';
       const kartta = this.piirraMaakartta(iso, city.id);
       if (kartta) this.arrivalMaaKartta.appendChild(kartta);
+      // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
+      // automaattikatkelman; Lue lisää avaa oman artikkelin.
+      const omaMaaIntro = OMAT_ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
+      if (omaMaaIntro) {
+        this.arrivalMaaIntro.textContent = omaMaaIntro;
+        this.arrivalMaaWiki.hidden = false;
+      }
       cachedSummary(maa.wiki ?? maa.nimi).then((summary) => {
         if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
         if (!summary?.extract) return;
-        this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
+        if (!omaMaaIntro) this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
         this.arrivalMaaWiki.hidden = false;
       });
     }
@@ -33291,7 +33438,10 @@ class UI {
     kuva.src = valokuvaUrl(nosto.tiedosto, 1400);
     kuva.alt = nosto.otsikko;
     kortti.appendChild(kuva);
-    kortti.appendChild(html('p', 'kuvateksti',
+    // Parin lauseen selite teoksesta kuvan alla (omistajan toive);
+    // otsikko ja lähde jäävät pienemmälle riville.
+    if (nosto.selite) kortti.appendChild(html('p', 'kuvateksti', nosto.selite));
+    kortti.appendChild(html('p', 'kuvalahde',
       [nosto.otsikko, nosto.lahde].filter(Boolean).join(' · ')));
     kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
     this.arrivalDialog.appendChild(kortti);
@@ -34974,7 +35124,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.63';
+const APP_VERSION = '2026-07-30.64';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
