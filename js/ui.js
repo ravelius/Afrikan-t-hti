@@ -23,6 +23,10 @@ import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from
 import { drawPuzzle } from './packs/africa-puzzles.js';
 import { OMAT_TIIVISTELMAT } from './packs/africa-tiivistelmat.js';
 import { AFRICA_VALOKUVAT, valokuvaUrl } from './packs/africa-valokuvat.js';
+import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
+
+// Uuden mallin saapumistekstit laudoittain (pilotti: Afrikka).
+const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET };
 
 // Vanhat valokuvat muistikirjan kylkeen laudoittain — toistaiseksi vain
 // Afrikalla on kuvasto.
@@ -1674,6 +1678,41 @@ export class UI {
       // lukisi eri tekstiä kuin ruudulla näkyy.
       if (document.body.classList.contains('flight-active')) return;
       const kaupunki = game.board.cityById.get(saapuminen.cityId);
+
+      // Uusi malli (pilotti): nuoren herran fiiliskuvaus lihavoituna,
+      // perässä isoisän nosto, ja lukija lukee koko merkinnän tunteella.
+      // Teksti ei vaihdu kaupungissa olon aikana.
+      const uusi = (SAAPUMISTEKSTIT[saapuminen.packId] ?? {})[saapuminen.cityId];
+      if (uusi && kaupunki) {
+        const key = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
+        if (this.factKey === key) return;
+        this.factKey = key;
+        this.factVoiceEl.textContent = 'Matkakirjasta';
+        this.factPlace.textContent = kaupunki.name;
+        this.factImageTitle = null;
+        this.factImage.hidden = true;
+        this.naytaFactValokuva(saapuminen.cityId, kaupunki.name);
+        this.factText.textContent = '';
+        const lihava = html('b', 'fact-lead');
+        const jatko = html('span');
+        this.factText.appendChild(lihava);
+        this.factText.appendChild(document.createTextNode(' '));
+        this.factText.appendChild(jatko);
+        this.typeText(lihava, uusi.kuvaus, 'fact', () => {
+          this.typeText(jatko, uusi.nosto, 'fact');
+        });
+        this.diaryFullUrl = `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`;
+        this.factKuuntele.hidden = false;
+        if (this.luettuSaapuminen !== key) {
+          this.luettuSaapuminen = key;
+          // Koko merkintä luetaan — ei pysähdystä ensimmäiseen virkkeeseen.
+          this.playDiaryVoice(this.diaryFullUrl);
+        } else {
+          this.stopDiaryVoice();
+        }
+        return;
+      }
+
       const faktat = game.pack.placeFacts?.[saapuminen.cityId] ?? [];
       const isoisanIdx = faktat.findIndex((f) => factVoice(f) === 'isoisa');
       const fakta = faktat[isoisanIdx >= 0 ? isoisanIdx : 0];
