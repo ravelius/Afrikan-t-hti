@@ -73,6 +73,46 @@ async function cachedImage(title) {
 // (ElevenLabs, Viisas Kertoja). Kortin kaiutin ja luenta näkyvät vain
 // näille — muut kaupungit saavat tekstinsä ilman ääntä, kunnes niiden
 // luennat generoidaan.
+// Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
+const VIHJELUENNAT = new Set([
+  'africa:karthago',
+  'africa:nairobi',
+  'africa:lagos',
+  'africa:viktorianputoukset',
+  'africa:tshadjarvi',
+  'africa:marrakech',
+  'africa:sthelena',
+  'africa:tripoli',
+  'africa:murzuk',
+  'africa:alkufra',
+  'africa:sahara',
+  'africa:ahaggar',
+  'africa:timbuktu',
+  'africa:gao',
+  'africa:dakar',
+  'africa:sierraleone',
+  'africa:kappalmas',
+  'africa:kumasi',
+  'africa:orjarannikko',
+  'africa:kano',
+  'africa:kamerun',
+  'africa:kongo',
+  'africa:angola',
+  'africa:namib',
+  'africa:kimberley',
+  'africa:mosambik',
+  'africa:madagaskar',
+  'africa:sansibar',
+  'africa:kilimandzaro',
+  'africa:viktoria',
+  'africa:tanganjika',
+  'africa:bahrelghazal',
+  'africa:darfur',
+  'africa:suakin',
+  'africa:addisabeba',
+  'africa:rashafun',
+]);
+
 const HAVAINTOLUENNAT = new Set([
   'africa:tanger',
   'africa:kairo',
@@ -1892,10 +1932,20 @@ export class UI {
       this.factVoiceEl.textContent = '★ Isoisän vihje aarteesta';
       this.factPlace.textContent = 'Päiväkirjasta revitty sivu';
       this.factImage.hidden = true;
-      this.factKuuntele.hidden = true;
       this.naytaFactValokuva(null);
       this.stopDiaryVoice();
       sfx.play('paper');
+      // Kuiskattu luenta (omistajan tilaus): vihje luetaan hiljaa, jos
+      // luenta on generoitu — kaiutinnapista sen voi kuunnella uudelleen.
+      const vihjeKaupunki = game.starHintCity();
+      const luettava = VIHJELUENNAT.has(`${game.pack.id}:${vihjeKaupunki}`);
+      this.diaryFullUrl = luettava
+        ? `assets/audio/puhe-${game.pack.id}-vihje-${vihjeKaupunki}.mp3`
+        : null;
+      this.factKuuntele.hidden = !luettava;
+      if (luettava && kertojaTila() !== 'ei') {
+        this.playDiaryVoice(this.diaryFullUrl, { viive: 1200 });
+      }
       this.typeText(this.factText, hint);
       return;
     }
