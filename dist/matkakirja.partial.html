@@ -1432,16 +1432,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   overflow: hidden;
 }
 
+/* Hihnat näkyvät vain kannen ylä- ja alareunassa, kuin ne kulkisivat
+ * kortin takaa — koko matkan yli kulkeva hihna osui tekstin päälle
+ * (omistajan havainto). */
 .passport-card::before,
 .passport-card::after {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 22px;
-  background: linear-gradient(90deg, rgba(109, 74, 42, 0.16), rgba(109, 74, 42, 0.08));
-  border-left: 2px solid rgba(109, 74, 42, 0.32);
-  border-right: 2px solid rgba(109, 74, 42, 0.32);
+  width: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(109, 74, 42, 0.4) 0,
+    rgba(109, 74, 42, 0.22) 22px,
+    transparent 30px,
+    transparent calc(100% - 30px),
+    rgba(109, 74, 42, 0.22) calc(100% - 22px),
+    rgba(109, 74, 42, 0.4) 100%
+  );
+  border-radius: 3px;
   pointer-events: none;
 }
 
@@ -40053,7 +40063,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.94';
+const APP_VERSION = '2026-07-30.95';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
