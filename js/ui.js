@@ -1532,7 +1532,7 @@ export class UI {
         y: kaupunki.y - 0.04 * mitta,
         class: 'minimaa-nimi',
         'text-anchor': 'middle',
-        'font-size': (0.062 * mitta).toFixed(1),
+        'font-size': (0.07 * mitta).toFixed(1),
       }, svg);
       nimi.textContent = kaupunki.name;
     }
