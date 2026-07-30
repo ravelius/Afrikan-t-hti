@@ -93,7 +93,7 @@ const AFRICA_CITIES = [
   // Lagos ja Tšad-järvi (omistajan laajennus): Guineanlahden suurkaupunki
   // ja karavaanireittien järvisolmu. Rannikko on ahdas, joten naapureita
   // siirrettiin hieman ja laudan minimietäisyys kevennettiin.
-  { id: 'lagos', name: 'Lagos', wiki: 'Lagos', ambience: 'basaari', x: 360, y: 432, la: 'end', lx: -14, ly: 12 },
+  { id: 'lagos', name: 'Lagos', wiki: 'Lagos', ambience: 'basaari', x: 360, y: 432, airport: true, la: 'end', lx: -14, ly: 12 },
   { id: 'tshadjarvi', name: 'Tšad-järvi', wiki: 'Tšadjärvi', ambience: 'savanni', x: 470, y: 330 },
   { id: 'kamerun', name: 'Kamerun', wiki: 'Kamerunvuori', ambience: 'sademetsa', x: 408, y: 468, la: 'start', lx: 16, ly: -8 },
   { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', ambience: 'sademetsa', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
@@ -113,7 +113,7 @@ const AFRICA_CITIES = [
   { id: 'madagaskar', name: 'Madagaskar', wiki: 'Madagaskar', ambience: 'sademetsa', x: 890, y: 730, la: 'middle', lx: 0, ly: -22 },
   { id: 'sansibar', name: 'Sansibar', wiki: 'Sansibar', ambience: 'meri', x: 836, y: 616, airport: true, la: 'start', lx: 16, ly: 5 },
   // Nairobi paikkaa idän Kenia-aukon (omistajan laajennus).
-  { id: 'nairobi', name: 'Nairobi', wiki: 'Nairobi', ambience: 'savanni', x: 768, y: 470, la: 'start', lx: 16, ly: 5 },
+  { id: 'nairobi', name: 'Nairobi', wiki: 'Nairobi', ambience: 'savanni', x: 768, y: 470, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'kilimandzaro', name: 'Kilimandžaro', wiki: 'Kilimanjaro', ambience: 'ylanko', x: 778, y: 548, la: 'start', lx: 16, ly: -16 },
   { id: 'viktoria', name: 'Viktoria Nyanza', wiki: 'Victoria-järvi', ambience: 'savanni', x: 690, y: 500, la: 'end', lx: -18, ly: -8 },
   { id: 'tanganjika', name: 'Tanganjika', wiki: 'Tanganjikajärvi', ambience: 'savanni', x: 655, y: 592, la: 'end', lx: -16, ly: 5 },
@@ -210,17 +210,23 @@ const AFRICA_EDGES = [
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
+// Verkko seuraa 1920–30-lukujen oikeita linjoja: Aéropostalen rannikko-
+// reitti Tanger–Dakar, Imperial Airwaysin Kairo–Nairobi–Kapkaupunki-
+// runkolinja ja Sabenan Kongo-yhteydet. Sansibar–Kapkaupunki poistettu
+// ja Kano–Kongo kulkee nyt Lagosin kautta, ettei kartta ruuhkaudu.
 const AFRICA_AIR_ROUTES = [
   { a: 'tanger', b: 'tripoli' },
   { a: 'tripoli', b: 'kairo' },
   { a: 'tanger', b: 'dakar' },
   { a: 'dakar', b: 'kano' },
-  { a: 'kano', b: 'kongo' },
+  { a: 'kano', b: 'lagos' },
+  { a: 'lagos', b: 'kongo' },
   { a: 'kairo', b: 'addisabeba' },
+  { a: 'kairo', b: 'nairobi' },
+  { a: 'nairobi', b: 'kapkaupunki' },
   { a: 'addisabeba', b: 'sansibar' },
   { a: 'kongo', b: 'sansibar' },
   { a: 'kongo', b: 'kapkaupunki' },
-  { a: 'sansibar', b: 'kapkaupunki' },
 ];
 
 // Karttapaketti: kaikki mitä pelimoottori tarvitsee yhdestä laudasta.
@@ -342,6 +348,14 @@ export const AFRICA = {
       kano: [
         'Ilma muuttuu alla keltaiseksi ja aurinko kalpeaksi kiekoksi keskellä päivää: harmattan tuo Saharasta pölyä, ja näkyvyys loppuu kilometriin. Tätä minä tulin katsomaan.',
         'Savimuuri, ja sen sisällä pieniä ympyröitä riveissä, jokainen huolella numeroitu — mitä ne oikein ovat? Arvailen niitä koko laskeutumisen ajan.',
+      ],
+      lagos: [
+        'Laguuni pilkkoo kaupungin saariksi, ja sillat sitovat sen taas yhteen kuin langat. Veneitä on vedellä enemmän kuin autoja rannoilla — ja kaikki liikkuvat.',
+        'Isoisän kirjassa lukee tästä satamasta vain: "Kaupunki, joka ei koskaan nuku." Alhaalla palaa niin monta valoa, että uskon joka sanan.',
+      ],
+      nairobi: [
+        'Savanni jatkuu kaupungin rajalle asti, ja rajalla laiduntaa kirahveja — näin ne ikkunasta, ihan totta! Ylängön ilma on niin kirkasta, että näen koneen varjonkin ruohikossa.',
+        'Isoisä tuli tänne junalla, jonka rakentamista hän kutsui "uhkarohkeudeksi kiskoilla". Minä tulen ilmaa pitkin, enkä osaa sanoa, kumpi meistä on rohkeampi.',
       ],
       kongo: [
         'Tummaa metsää riittää niin kauan, että lakkaan vilkuilemasta kelloa. Lopulta sen halki kaartaa joki, jonka keskivirrassa on kokonaisia saaria.',
