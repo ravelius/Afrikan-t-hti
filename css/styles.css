@@ -875,14 +875,30 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   transition: transform 0.22s ease, z-index 0s;
 }
 
-/* Alempi kortti pilkottaa oikeasta alakulmasta ja kutsuu napauttamaan. */
+/* Alempi kortti pilkottaa alareunasta ja kutsuu napauttamaan. Kortti
+ * rajataan päällimmäisen kokoiseksi, ettei sen sisältö pursua näkyviin
+ * (omistajan havainto), ja kuva täyttää kortin — alta pilkottaa siisti
+ * kuvareuna valkoisine kehyksineen. */
 .postikortti-kortti.alla {
   position: absolute;
   inset: 0;
   z-index: 1;
-  transform: rotate(1.6deg) translate(16px, 20px);
+  overflow: hidden;
+  transform: rotate(-1.2deg) translate(12px, 26px);
   cursor: pointer;
 }
+
+.postikortti-kortti.alla img {
+  position: absolute;
+  inset: 0.55rem;
+  width: calc(100% - 1.1rem);
+  height: calc(100% - 1.1rem);
+  min-height: 0;
+  object-fit: cover;
+}
+
+.postikortti-kortti.alla .kuvateksti,
+.postikortti-kortti.alla .kuvalahde { visibility: hidden; }
 
 @keyframes postikortti-esiin {
   from { opacity: 0; transform: translateY(12px); }
