@@ -2931,6 +2931,16 @@ body.katselu #newgame-btn { display: none; }
   border-radius: 6px;
 }
 
+/* Lue lisää -lehden kuvakotelo kutistuu kuvan mittoihin, jotta laskuri
+ * ja nuolet asettuvat kuvan eivätkä koko palstan reunoille. */
+#wiki-kuvakotelo {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 0.6rem;
+}
+
+#wiki-kuvakotelo .wiki-image { margin: 0; }
+
 .wiki-extract {
   font-size: 0.92rem;
   line-height: 1.5;
@@ -3238,7 +3248,13 @@ body.katselu #newgame-btn { display: none; }
   <dialog id="wiki-dialog" class="dialog">
    <div class="dialog-card wiki-card">
     <h2 id="wiki-title">Lue lisää</h2>
-    <img id="wiki-image" class="wiki-image" alt="" loading="lazy" hidden />
+    <!-- Sama galleriaselaus kuin Tutki-kortin kuvassa: laskuri ja nuolet. -->
+    <div id="wiki-kuvakotelo" class="arrival-kuvakotelo" hidden>
+     <img id="wiki-image" class="wiki-image" alt="" loading="lazy" />
+     <button id="wiki-kuva-edellinen" class="arrival-kuva-nuoli edellinen" type="button" aria-label="Edellinen kuva" hidden>‹</button>
+     <button id="wiki-kuva-seuraava" class="arrival-kuva-nuoli seuraava" type="button" aria-label="Seuraava kuva" hidden>›</button>
+     <span id="wiki-kuva-laskuri" class="arrival-kuva-laskuri" hidden></span>
+    </div>
     <p id="wiki-extract" class="wiki-extract"></p>
     <p id="wiki-source" class="wiki-source"></p>
     <form method="dialog" class="dialog-actions">
@@ -35735,9 +35751,29 @@ class UI {
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
     this.wikiSource = document.getElementById('wiki-source');
+    // Sama galleriaselaus kuin Tutki-kortin kuvassa (omistajan toive):
+    // laskuri ja nuolet Lue lisää -lehden kuvaan, suurennos aukeaa
+    // selatusta kohdasta.
+    this.wikiKuvakotelo = document.getElementById('wiki-kuvakotelo');
+    this.wikiKuvaLaskuri = document.getElementById('wiki-kuva-laskuri');
+    this.wikiKuvat = [];
+    this.wikiKuvaKohdalla = 0;
     this.wikiImage.addEventListener('click', () => {
-      if (this.wikiOpenFor) this.openLightbox(this.wikiOpenFor, this.wikiTitle.textContent);
+      if (this.wikiOpenFor) {
+        this.openLightbox(this.wikiOpenFor, this.wikiTitle.textContent, this.wikiImage.src || null);
+      }
     });
+    const selaaWikiKuvaa = (askel) => {
+      if (this.wikiKuvat.length < 2) return;
+      this.wikiKuvaKohdalla = (this.wikiKuvaKohdalla + askel
+        + this.wikiKuvat.length) % this.wikiKuvat.length;
+      this.wikiImage.src = this.wikiKuvat[this.wikiKuvaKohdalla].src;
+      this.paivitaWikiKuvaLaskuri();
+    };
+    document.getElementById('wiki-kuva-edellinen')
+      .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(-1); });
+    document.getElementById('wiki-kuva-seuraava')
+      .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(1); });
     this.factImage = document.getElementById('fact-image');
     this.factImage.addEventListener('click', () => {
       if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
@@ -37211,16 +37247,17 @@ class UI {
         if (this.luettuSaapuminen !== luentaAvain) {
           this.luettuSaapuminen = luentaAvain;
           // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
-          // lyhyt vain nuoren herran osuuden (luenta pysähtyy kuvauksen ja
-          // noston väliseen hengähdykseen), ei kertojaa jättää luennan
-          // aloittamatta — kaiutinnappi yliajaa sen hetkellisesti.
+          // lyhyt vain ensimmäisen lauseen (omistajan tarkennus — luenta
+          // pysähtyy ensimmäisen virkkeen jälkeiseen hengähdykseen), ei
+          // kertojaa jättää luennan aloittamatta — kaiutinnappi yliajaa
+          // sen hetkellisesti.
           const tila = kertojaTila();
           if (tila === 'ei') {
             this.stopDiaryVoice();
           } else if (tila === 'lyhyt') {
             this.playDiaryVoice(this.diaryFullUrl, {
               ekaLauseeseen: true,
-              osuus: uusi.kuvaus.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
+              osuus: eka.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
             });
           } else {
             this.playDiaryVoice(this.diaryFullUrl);
@@ -37928,6 +37965,10 @@ class UI {
     this.wikiTitle.textContent = label;
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
+    this.wikiKuvakotelo.hidden = true;
+    this.wikiKuvat = [];
+    this.wikiKuvaKohdalla = 0;
+    this.paivitaWikiKuvaLaskuri();
     this.wikiExtract.textContent = 'Haetaan…';
     this.wikiSource.textContent = '';
     if (!this.wikiDialog.open) this.wikiDialog.showModal();
@@ -37947,6 +37988,14 @@ class UI {
       this.wikiImage.src = image;
       this.wikiImage.alt = summary.title || label;
       this.wikiImage.hidden = false;
+      this.wikiKuvakotelo.hidden = false;
+      // Galleria taustalla: laskuri ja nuolet, kun kuvia on useampi.
+      cachedGallery(title).then((lista) => {
+        if (this.wikiOpenFor !== title || lista.length < 2) return;
+        this.wikiKuvat = lista;
+        this.wikiKuvaKohdalla = Math.max(0, lista.findIndex((k) => k.src === image));
+        this.paivitaWikiKuvaLaskuri();
+      });
     });
 
     // Oma artikkeli (pilottikaupungit): Wikipedia-tekstin sijaan näytetään
@@ -37997,6 +38046,16 @@ class UI {
    * Katselin lisätään avoimen dialogin sisään, koska dialogi on selaimen
    * top layerissa — muualle lisätty kerros jäisi sen alle.
    */
+  /** Lue lisää -lehden kuvan laskuri ja nuolet — sama malli kuin Tutki-kortissa. */
+  paivitaWikiKuvaLaskuri() {
+    const monta = this.wikiKuvat.length > 1;
+    this.wikiKuvaLaskuri.hidden = !monta;
+    this.wikiKuvaLaskuri.textContent = monta
+      ? `${this.wikiKuvaKohdalla + 1}/${this.wikiKuvat.length}` : '';
+    document.getElementById('wiki-kuva-edellinen').hidden = !monta;
+    document.getElementById('wiki-kuva-seuraava').hidden = !monta;
+  }
+
   /** Pikkukuvan laskuri ja nuolet näkyvät vain, kun galleriassa on selattavaa. */
   paivitaKuvaLaskuri() {
     const monta = this.arrivalKuvat.length > 1;
@@ -39552,7 +39611,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.86';
+const APP_VERSION = '2026-07-30.88';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
