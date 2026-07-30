@@ -81,6 +81,8 @@
       <button data-tab="brandi">Brändikirja</button>
       <button data-tab="ideat">Työkalut</button>
     </nav>
+    <span id="tyohuone-versio" style="color:var(--haalea);font-size:0.8rem"></span>
+    <button id="tyohuone-paivita" title="Tyhjentää välimuistin ja lataa uusimman version">Päivitä</button>
   </header>
 
   <!-- ETUSIVU -->
@@ -354,6 +356,31 @@
     };
     for (const nappi of napit) nappi.addEventListener('click', () => nayta(nappi.dataset.tab));
     nayta(location.hash.slice(1) || 'etusivu');
+
+    // --- päivitys: sama kuin pelin Päivitä-nappi ----------------------------
+    // Palvelutyöntekijä välimuistittaa myös työhuoneen ja äänistudion,
+    // joten päivityksen voi tehdä suoraan täältä pelin puolelle menemättä.
+    const paivita = document.getElementById('tyohuone-paivita');
+    paivita.addEventListener('click', async () => {
+      paivita.disabled = true;
+      paivita.textContent = 'Päivitetään…';
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map((reg) => reg.unregister()));
+        }
+        if (window.caches) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map((key) => caches.delete(key)));
+        }
+      } catch { /* päivitys onnistuu ilman siivoustakin */ }
+      location.reload();
+    });
+    // Versionumero luetaan pelistä, jotta päivityksen onnistumisen näkee heti.
+    fetch('js/main.js').then((r) => r.text()).then((src) => {
+      const m = src.match(/APP_VERSION = '([^']+)'/);
+      if (m) document.getElementById('tyohuone-versio').textContent = `v${m[1].split('.').pop()}`;
+    }).catch(() => {});
 
     // --- etusivun muistio ---------------------------------------------------
     const muistio = document.getElementById('muistio');
