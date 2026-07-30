@@ -461,6 +461,18 @@ export class UI {
     this.factText = document.getElementById('fact-text');
     this.factCard = this.factText.closest('.fact-card');
     this.factKey = null;
+    // Jatkuu-vihje: nuoli ja häivytys näkyvät, kun tekstiä on näkymän
+    // alapuolella. Tarkkailija kattaa myös kirjoituskoneen etenemisen,
+    // joten vihje syttyy heti kun teksti kasvaa yli näkymän.
+    this.factTekstiRivi = this.factText.closest('.fact-teksti-rivi');
+    const jatkuuVihje = () => {
+      const el = this.factText;
+      const jatkuu = el.scrollHeight - el.clientHeight - el.scrollTop > 6;
+      this.factTekstiRivi?.classList.toggle('jatkuu', jatkuu);
+    };
+    this.factText.addEventListener('scroll', jatkuuVihje, { passive: true });
+    new MutationObserver(jatkuuVihje)
+      .observe(this.factText, { childList: true, characterData: true, subtree: true });
 
     this.winnerDialog = document.getElementById('winner-dialog');
     this.quizDialog = document.getElementById('quiz-dialog');

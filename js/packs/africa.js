@@ -196,7 +196,6 @@ const AFRICA_EDGES = [
   { a: 'tanger', b: 'dakar', steps: 3, type: 'sea', via: [[150, 110], [95, 178], [45, 252]] },
   { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
   { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
-  { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
   // St. Helenan yksinäinen saari: laivayhteys Atlantin reitiltä.
   { a: 'kappalmas', b: 'sthelena', steps: 4, type: 'sea', via: [[150, 516], [162, 598]] },
   { a: 'sthelena', b: 'namib', steps: 4, type: 'sea', via: [[330, 752]] },
