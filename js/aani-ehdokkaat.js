@@ -318,20 +318,38 @@ export const EHDOKKAAT = {
   },
 };
 
-// Jokainen Afrikan kaupunki listalle: paikkakohtaiset äänitykset ensin,
-// sitten maisematyypin yhteiset ehdokkaat.
-// Kaikkien lautojen kaupungit, joilla on äänimaisematyyppi: uusi manner
-// ilmestyy viritysivulle heti, kun sen kaupungeille merkitään tyypit.
-// Sama kaupunki usealla laudalla (esim. Kairo) on yksi paikka.
-// Kaupunkien äänet tulevat aina maisematyypin arvontakorista — kaupunki-
-// kohtaisia valintoja ei enää ole (omistajan päätös: ei poikkeamia).
-// Studio näyttää, mitä kaupunkeja kukin kori koskee.
+// Kaupungit tyypeittäin ja maanosittain: äänityyppi on yläkategoria,
+// sen alla maanosat (laudat) ja niiden alla kaupungit. Uusi maanosa
+// ilmestyy studioon heti, kun sen kaupungeille merkitään tyypit —
+// jokainen maanosa saa oman arvontakorinsa (omistajan päätös:
+// maanosia tulee lisää, eikä Aasian savanni soi Afrikan korista).
+// Kaupunkikohtaisia valintoja ei ole: äänet tulevat aina korista.
 export const KAUPUNGIT_TYYPEITTAIN = {};
 for (const pack of PACKS) {
   for (const city of pack.cities) {
     if (!city.ambience) continue;
-    const lista = KAUPUNGIT_TYYPEITTAIN[city.ambience] ??= [];
-    if (!lista.includes(city.name)) lista.push(city.name);
+    const laudat = KAUPUNGIT_TYYPEITTAIN[city.ambience] ??= [];
+    let lauta = laudat.find((l) => l.lauta === pack.id);
+    if (!lauta) {
+      lauta = { lauta: pack.id, maanosa: pack.boardLabel ?? pack.name, kaupungit: [] };
+      laudat.push(lauta);
+    }
+    if (!lauta.kaupungit.includes(city.name)) lauta.kaupungit.push(city.name);
+  }
+}
+
+// Virtuaalipaikat kuuluvat Maailma-laudalle: etusivun satama ja
+// maailmankartan merimatkat saavat meri-äänensä sen korista. Muilla
+// laudoilla merimatka käyttää oman maanosansa koria.
+{
+  const meri = KAUPUNGIT_TYYPEITTAIN.meri ??= [];
+  if (!meri.some((l) => l.lauta === 'maailma')) {
+    const maailma = PACKS.find((p) => p.id === 'maailma');
+    meri.unshift({
+      lauta: 'maailma',
+      maanosa: maailma?.boardLabel ?? 'Maailma',
+      kaupungit: ['Etusivun satama', 'Merimatkat maailmankartalla'],
+    });
   }
 }
 
@@ -363,13 +381,15 @@ const POISTETUT = new Set([
   'https://cdn.freesound.org/previews/160/160461_1-lq.mp3',
 ]);
 
-// Kategoriakohtaiset arvontakorit: maisematyypille voi valita studiossa
-// useita ääniä, joista peli arpoo yhden joka käynnillä. Kaupungin oma
-// valinta ohittaa aina korin.
+// Kategoriakohtaiset arvontakorit maanosittain: maisematyypille voi
+// valita studiossa jokaiselle maanosalle omat äänensä, joista peli arpoo
+// yhden joka käynnillä. Talletusmuoto on { tyyppi: { lauta: [urlit] } };
+// vanha muoto { tyyppi: [urlit] } koski kaikkia maanosia ja luetaan yhä.
 const TYYPPIKORI_AVAIN = 'matkakirja-tyyppivalinnat';
 
 // Oletuskori: yksi varmistettu ääni per maisematyyppi, kunnes omistaja
-// rastii omat valintansa. Tyhjäksi tallennettu kori tarkoittaa synteesiä.
+// rastii omat valintansa maanosalle. Tyhjäksi tallennettu kori
+// tarkoittaa synteesiä.
 const OLETUSKORIT = {
   basaari: ['https://cdn.freesound.org/previews/511/511005_571436-lq.mp3'],
   aavikko: ['https://cdn.freesound.org/previews/146/146745_832093-lq.mp3'],
@@ -379,10 +399,11 @@ const OLETUSKORIT = {
   ylanko: ['https://cdn.freesound.org/previews/577/577263_9827221-lq.mp3'],
 };
 
-export function tyyppiKori(tyyppi) {
+export function tyyppiKori(tyyppi, lauta) {
   try {
     const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
-    const lista = kaikki[tyyppi];
+    const merkinta = kaikki[tyyppi];
+    const lista = Array.isArray(merkinta) ? merkinta : merkinta?.[lauta];
     if (Array.isArray(lista)) return lista.filter(Boolean);
   } catch {
     /* yksityinen selaustila — oletuskori kelpaa */
@@ -390,13 +411,21 @@ export function tyyppiKori(tyyppi) {
   return OLETUSKORIT[tyyppi] ?? [];
 }
 
-/** Tallentaa tyypin arvontakorin; tyhjä lista poistaa korin. */
-export function valitseTyyppiKori(tyyppi, lista) {
+/** Tallentaa tyypin arvontakorin yhdelle maanosalle (laudalle). */
+export function valitseTyyppiKori(tyyppi, lauta, lista) {
   try {
     const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
+    const vanha = kaikki[tyyppi];
+    // Vanhan muodon lista koski kaikkia maanosia: se siirretään jokaiselle
+    // tyypin nykyiselle laudalle, ettei yhden maanosan muokkaus hukkaa
+    // muiden perimää valintaa.
+    const merkinta = Array.isArray(vanha)
+      ? Object.fromEntries((KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? []).map((l) => [l.lauta, vanha]))
+      : { ...(vanha ?? {}) };
     // Tyhjäkin lista tallennetaan: se tarkoittaa syntetisoitua ääntä,
     // eikä oletuskori saa palata sen tilalle.
-    kaikki[tyyppi] = lista ?? [];
+    merkinta[lauta] = lista ?? [];
+    kaikki[tyyppi] = merkinta;
     localStorage.setItem(TYYPPIKORI_AVAIN, JSON.stringify(kaikki));
   } catch {
     /* yksityinen selaustila — kori ei säily */

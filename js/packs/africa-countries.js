@@ -15,6 +15,9 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   COD: {
     nimi: 'Kongo',
+    // Fi-Wikipediassa "Kongo" on täsmennyssivu — tiedot haetaan valtion
+    // omalta sivulta.
+    wiki: 'Kongon demokraattinen tasavalta',
     keskus: [581.1, 535.6],
     leveys: 253,
     renkaat: [

@@ -234,6 +234,15 @@ export class UI {
     this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
+    // Maan tiedot kaupungin rinnalla: lohko täyttyy openArrivalissa.
+    this.arrivalMaa = document.getElementById('arrival-maa');
+    this.arrivalMaaNimi = document.getElementById('arrival-maa-nimi');
+    this.arrivalMaaIntro = document.getElementById('arrival-maa-intro');
+    this.arrivalMaaWiki = document.getElementById('arrival-maa-wiki');
+    this.arrivalMaaWiki.addEventListener('click', () => {
+      const maa = this.arrivalMaaTiedot;
+      if (maa) this.openWikiArticle(maa.wiki ?? maa.nimi, maa.nimi);
+    });
     document.getElementById('arrival-yes').addEventListener('click', () => {
       this.closeArrival();
       sfx.play('paper');
@@ -547,15 +556,24 @@ export class UI {
     const h = pane.clientHeight;
     if (!w || !h) return;
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
-    const scale = Math.min(w / box.w, h / box.h);
+    // Katselutila (?lauta=) näyttää laudan kuin pelissä: ei porttia eikä
+    // avaustekstiä, vaikka vaihe on pickstart.
+    const alkuun = this.game.phase === 'pickstart' && !this.katselu;
+    // Leveällä ikkunalla (Mac) lauta täyttäisi koko korkeuden ja alareunan
+    // kelluvat kortit ruuhkautuisivat kartan eteläosan päälle: kun korkeus
+    // on rajoittava mitta, laudalta varataan alakaista korteille. Kapealla
+    // ruudulla leveys rajoittaa, kaista jää nollaan eikä asettelu muutu.
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    const kaista = !alkuun && w / box.w > h / box.h ? Math.min(h * 0.2, rem * 7) : 0;
+    const scale = Math.min(w / box.w, (h - kaista) / box.h);
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
     // Aloitusnäkymässä lauta on ennen Aloita seikkailu -nappia keskellä
     // ruutua (pystyruudulla alaosa ammotti muuten tyhjänä), ja nousee
     // portin auettua ylös, jolloin alle jäävä kaista annetaan kokonaan
-    // avaustekstille suurella fontilla. Pelissä sisältö keskitetään.
-    const alkuun = this.game.phase === 'pickstart';
+    // avaustekstille suurella fontilla. Pelissä sisältö keskitetään
+    // kaistan yläpuoliseen osaan.
     let vy;
     if (alkuun && !this.aloitettu) {
       const laudanKorkeus = box.h / (1 + INTRO_SPACE);
@@ -563,7 +581,7 @@ export class UI {
     } else if (alkuun) {
       vy = box.y - box.h * INTRO_TOP;
     } else {
-      vy = box.y + box.h / 2 - vh / 2;
+      vy = box.y + box.h / 2 - (h - kaista) / (2 * scale);
     }
     this.svg.setAttribute(
       'viewBox',
@@ -1545,20 +1563,22 @@ export class UI {
     }
     // Etusivullakin on äänimaisema: satama ja meri odottavat lähtijää.
     // 'etusivu' ja 'merimatka' ovat virtuaalipaikkoja, joille voi valita
-    // äänen studiosta kuten kaupungeille.
+    // äänen studiosta kuten kaupungeille. Lauta kertoo maanosan, jonka
+    // korista ääni arvotaan.
+    const lauta = game.pack?.id;
     if (game.phase === 'pickstart') {
-      playPlaceAmbience('etusivu', 'meri');
+      playPlaceAmbience('etusivu', 'meri', lauta);
       return;
     }
     const pos = game.player.pos;
     if (pos.type === 'edge') {
       const edge = game.board.edgeById.get(pos.edge);
-      if (edge?.type === 'sea') playPlaceAmbience('merimatka', 'meri');
+      if (edge?.type === 'sea') playPlaceAmbience('merimatka', 'meri', lauta);
       else playPlaceAmbience(null, null);
       return;
     }
     const city = game.board.cityById.get(pos.city);
-    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null);
+    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null, lauta);
   }
 
   /**
@@ -1676,6 +1696,26 @@ export class UI {
     this.arrivalImage.removeAttribute('src');
     this.arrivalIntro.textContent = 'Isoisä on merkinnyt tämän paikan karttaansa.';
     this.arrivalWiki.hidden = true;
+
+    // Maan tiedot kaupungin rinnalla (omistajan toive): nimi näkyy heti,
+    // parin lauseen esittely täyttyy kun haku ehtii. Laudoilla, joilla
+    // kaupunki→maa-kytkentää ei ole, lohko pysyy piilossa.
+    const iso = this.game.pack.map?.cityCountry?.[city.id];
+    const maa = iso ? this.game.pack.map?.countryShapes?.[iso] : null;
+    this.arrivalMaaTiedot = maa ?? null;
+    this.arrivalMaa.hidden = !maa;
+    this.arrivalMaaWiki.hidden = true;
+    if (maa) {
+      this.arrivalMaaNimi.textContent = maa.nimi;
+      this.arrivalMaaIntro.textContent = '';
+      cachedSummary(maa.wiki ?? maa.nimi).then((summary) => {
+        if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
+        if (!summary?.extract) return;
+        this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
+        this.arrivalMaaWiki.hidden = false;
+      });
+    }
+
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
 
@@ -1879,7 +1919,9 @@ export class UI {
    * esiin kirjoituskoneen tapaan ja väistyy heti kun kohde on valittu.
    */
   renderIntro() {
-    const nakyy = this.game.phase === 'pickstart';
+    // Katselutilassa (?lauta=) porttia ja avaustekstiä ei näytetä: kartta
+    // on heti esillä täydessä koossaan.
+    const nakyy = this.game.phase === 'pickstart' && !this.katselu;
     this.introEl.hidden = !nakyy;
     // Uusi peli tuo tekstin takaisin täyteen näkyvyyteen häivytyksestä.
     if (nakyy) this.introEl.classList.remove('intro-fade');

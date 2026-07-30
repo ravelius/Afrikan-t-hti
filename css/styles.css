@@ -570,6 +570,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .arrival-card .wiki-btn { margin: 0 0 0.7rem; }
 
+/*
+ * Maan tiedot kaupungin rinnalla saapumiskortissa (omistajan toive):
+ * ohut jakoviiva ja pieni maaetiketti erottavat sen kaupungin
+ * esittelystä samalla hillityllä tyylillä.
+ */
+.arrival-maa {
+  border-top: 1px dashed rgba(70, 51, 31, 0.35);
+  margin: 0.15rem 0 0.3rem;
+  padding-top: 0.5rem;
+}
+
+.arrival-maa-nimi {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-type);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7a5514;
+}
+
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */
 .passport-finds {
   display: flex;
@@ -1938,6 +1958,16 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 
   .app { display: none; }
 }
+
+/*
+ * Katselutila (?lauta=): työhuoneen Maanosat-välilehden karttaikkuna.
+ * Kääntökehote ei koske kehystä — leveä ikkuna on siinä tarkoituksellinen
+ * myös iPadilla — ja Uusi peli on piilossa, ettei se tyhjentäisi oikean
+ * pelin tallennusta.
+ */
+body.katselu .rotate-guard { display: none; }
+body.katselu .app { display: grid; }
+body.katselu #newgame-btn { display: none; }
 
 /*
  * "Lue lisää": Wikipedian tiivistelmä paikasta. Ei kehystä eikä taustaa —

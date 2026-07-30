@@ -573,6 +573,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .arrival-card .wiki-btn { margin: 0 0 0.7rem; }
 
+/*
+ * Maan tiedot kaupungin rinnalla saapumiskortissa (omistajan toive):
+ * ohut jakoviiva ja pieni maaetiketti erottavat sen kaupungin
+ * esittelystä samalla hillityllä tyylillä.
+ */
+.arrival-maa {
+  border-top: 1px dashed rgba(70, 51, 31, 0.35);
+  margin: 0.15rem 0 0.3rem;
+  padding-top: 0.5rem;
+}
+
+.arrival-maa-nimi {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-type);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7a5514;
+}
+
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */
 .passport-finds {
   display: flex;
@@ -1943,6 +1963,16 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
 }
 
 /*
+ * Katselutila (?lauta=): työhuoneen Maanosat-välilehden karttaikkuna.
+ * Kääntökehote ei koske kehystä — leveä ikkuna on siinä tarkoituksellinen
+ * myös iPadilla — ja Uusi peli on piilossa, ettei se tyhjentäisi oikean
+ * pelin tallennusta.
+ */
+body.katselu .rotate-guard { display: none; }
+body.katselu .app { display: grid; }
+body.katselu #newgame-btn { display: none; }
+
+/*
  * "Lue lisää": Wikipedian tiivistelmä paikasta. Ei kehystä eikä taustaa —
  * pelkkä tekstilinkki pergamentilla, kuten omistaja päätti. Tumma kulta
  * erottuu pergamentilta; kapean näytön tumma kortti saa oman värin alla.
@@ -2388,6 +2418,11 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     <img id="arrival-image" class="arrival-image" alt="" hidden />
     <p id="arrival-intro" class="arrival-intro">Isoisä on merkinnyt tämän paikan karttaansa.</p>
     <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
+    <div id="arrival-maa" class="arrival-maa" hidden>
+     <p class="arrival-maa-nimi" id="arrival-maa-nimi"></p>
+     <p id="arrival-maa-intro" class="arrival-intro"></p>
+     <button id="arrival-maa-wiki" class="wiki-btn" type="button" hidden>Lue lisää maasta</button>
+    </div>
     <div class="dialog-actions">
       <button id="arrival-yes" class="primary" type="button">Tutki paikka</button>
       <button id="arrival-no" type="button">Jatka matkaa</button>
@@ -6890,6 +6925,9 @@ const AFRICA_COUNTRY_SHAPES = {
   },
   COD: {
     nimi: 'Kongo',
+    // Fi-Wikipediassa "Kongo" on täsmennyssivu — tiedot haetaan valtion
+    // omalta sivulta.
+    wiki: 'Kongon demokraattinen tasavalta',
     keskus: [581.1, 535.6],
     leveys: 253,
     renkaat: [
@@ -25234,20 +25272,38 @@ const EHDOKKAAT = {
   },
 };
 
-// Jokainen Afrikan kaupunki listalle: paikkakohtaiset äänitykset ensin,
-// sitten maisematyypin yhteiset ehdokkaat.
-// Kaikkien lautojen kaupungit, joilla on äänimaisematyyppi: uusi manner
-// ilmestyy viritysivulle heti, kun sen kaupungeille merkitään tyypit.
-// Sama kaupunki usealla laudalla (esim. Kairo) on yksi paikka.
-// Kaupunkien äänet tulevat aina maisematyypin arvontakorista — kaupunki-
-// kohtaisia valintoja ei enää ole (omistajan päätös: ei poikkeamia).
-// Studio näyttää, mitä kaupunkeja kukin kori koskee.
+// Kaupungit tyypeittäin ja maanosittain: äänityyppi on yläkategoria,
+// sen alla maanosat (laudat) ja niiden alla kaupungit. Uusi maanosa
+// ilmestyy studioon heti, kun sen kaupungeille merkitään tyypit —
+// jokainen maanosa saa oman arvontakorinsa (omistajan päätös:
+// maanosia tulee lisää, eikä Aasian savanni soi Afrikan korista).
+// Kaupunkikohtaisia valintoja ei ole: äänet tulevat aina korista.
 const KAUPUNGIT_TYYPEITTAIN = {};
 for (const pack of PACKS) {
   for (const city of pack.cities) {
     if (!city.ambience) continue;
-    const lista = KAUPUNGIT_TYYPEITTAIN[city.ambience] ??= [];
-    if (!lista.includes(city.name)) lista.push(city.name);
+    const laudat = KAUPUNGIT_TYYPEITTAIN[city.ambience] ??= [];
+    let lauta = laudat.find((l) => l.lauta === pack.id);
+    if (!lauta) {
+      lauta = { lauta: pack.id, maanosa: pack.boardLabel ?? pack.name, kaupungit: [] };
+      laudat.push(lauta);
+    }
+    if (!lauta.kaupungit.includes(city.name)) lauta.kaupungit.push(city.name);
+  }
+}
+
+// Virtuaalipaikat kuuluvat Maailma-laudalle: etusivun satama ja
+// maailmankartan merimatkat saavat meri-äänensä sen korista. Muilla
+// laudoilla merimatka käyttää oman maanosansa koria.
+{
+  const meri = KAUPUNGIT_TYYPEITTAIN.meri ??= [];
+  if (!meri.some((l) => l.lauta === 'maailma')) {
+    const maailma = PACKS.find((p) => p.id === 'maailma');
+    meri.unshift({
+      lauta: 'maailma',
+      maanosa: maailma?.boardLabel ?? 'Maailma',
+      kaupungit: ['Etusivun satama', 'Merimatkat maailmankartalla'],
+    });
   }
 }
 
@@ -25279,13 +25335,15 @@ const POISTETUT = new Set([
   'https://cdn.freesound.org/previews/160/160461_1-lq.mp3',
 ]);
 
-// Kategoriakohtaiset arvontakorit: maisematyypille voi valita studiossa
-// useita ääniä, joista peli arpoo yhden joka käynnillä. Kaupungin oma
-// valinta ohittaa aina korin.
+// Kategoriakohtaiset arvontakorit maanosittain: maisematyypille voi
+// valita studiossa jokaiselle maanosalle omat äänensä, joista peli arpoo
+// yhden joka käynnillä. Talletusmuoto on { tyyppi: { lauta: [urlit] } };
+// vanha muoto { tyyppi: [urlit] } koski kaikkia maanosia ja luetaan yhä.
 const TYYPPIKORI_AVAIN = 'matkakirja-tyyppivalinnat';
 
 // Oletuskori: yksi varmistettu ääni per maisematyyppi, kunnes omistaja
-// rastii omat valintansa. Tyhjäksi tallennettu kori tarkoittaa synteesiä.
+// rastii omat valintansa maanosalle. Tyhjäksi tallennettu kori
+// tarkoittaa synteesiä.
 const OLETUSKORIT = {
   basaari: ['https://cdn.freesound.org/previews/511/511005_571436-lq.mp3'],
   aavikko: ['https://cdn.freesound.org/previews/146/146745_832093-lq.mp3'],
@@ -25295,10 +25353,11 @@ const OLETUSKORIT = {
   ylanko: ['https://cdn.freesound.org/previews/577/577263_9827221-lq.mp3'],
 };
 
-function tyyppiKori(tyyppi) {
+function tyyppiKori(tyyppi, lauta) {
   try {
     const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
-    const lista = kaikki[tyyppi];
+    const merkinta = kaikki[tyyppi];
+    const lista = Array.isArray(merkinta) ? merkinta : merkinta?.[lauta];
     if (Array.isArray(lista)) return lista.filter(Boolean);
   } catch {
     /* yksityinen selaustila — oletuskori kelpaa */
@@ -25306,13 +25365,21 @@ function tyyppiKori(tyyppi) {
   return OLETUSKORIT[tyyppi] ?? [];
 }
 
-/** Tallentaa tyypin arvontakorin; tyhjä lista poistaa korin. */
-function valitseTyyppiKori(tyyppi, lista) {
+/** Tallentaa tyypin arvontakorin yhdelle maanosalle (laudalle). */
+function valitseTyyppiKori(tyyppi, lauta, lista) {
   try {
     const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
+    const vanha = kaikki[tyyppi];
+    // Vanhan muodon lista koski kaikkia maanosia: se siirretään jokaiselle
+    // tyypin nykyiselle laudalle, ettei yhden maanosan muokkaus hukkaa
+    // muiden perimää valintaa.
+    const merkinta = Array.isArray(vanha)
+      ? Object.fromEntries((KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? []).map((l) => [l.lauta, vanha]))
+      : { ...(vanha ?? {}) };
     // Tyhjäkin lista tallennetaan: se tarkoittaa syntetisoitua ääntä,
     // eikä oletuskori saa palata sen tilalle.
-    kaikki[tyyppi] = lista ?? [];
+    merkinta[lauta] = lista ?? [];
+    kaikki[tyyppi] = merkinta;
     localStorage.setItem(TYYPPIKORI_AVAIN, JSON.stringify(kaikki));
   } catch {
     /* yksityinen selaustila — kori ei säily */
@@ -26274,10 +26341,10 @@ function treasureSound(type) {
 // eikä ääni saa vaihtua tai katkeilla kesken kaupungissa olon.
 let arvottu = null; // { cityId, url }
 
-function arvoTyypista(cityId, tyyppi) {
+function arvoTyypista(cityId, tyyppi, lauta) {
   if (!cityId || !tyyppi) return null;
   if (arvottu?.cityId === cityId) return arvottu.url;
-  const kori = tyyppiKori(tyyppi);
+  const kori = tyyppiKori(tyyppi, lauta);
   if (!kori.length) return null;
   const url = kori[Math.floor(Math.random() * kori.length)];
   arvottu = { cityId, url };
@@ -26324,11 +26391,11 @@ function stopPlaceStream() {
  * automaattitoisto tai poistunut tiedosto — palauttaa synteesin itsestään,
  * ja seuraava renderöinti yrittää striimiä uudelleen.
  */
-function playPlaceAmbience(cityId, fallbackType) {
-  // Kaupunkien äänet tulevat aina maisematyypin arvontakorista —
-  // kaupunkikohtaisia valintoja tai oletuksia ei ole (omistajan päätös).
-  // Tyhjä kori tarkoittaa syntetisoitua ambienssia.
-  const url = arvoTyypista(cityId, fallbackType);
+function playPlaceAmbience(cityId, fallbackType, lauta) {
+  // Kaupunkien äänet tulevat aina maisematyypin maanosakohtaisesta
+  // arvontakorista — kaupunkikohtaisia valintoja tai oletuksia ei ole
+  // (omistajan päätös). Tyhjä kori tarkoittaa syntetisoitua ambienssia.
+  const url = arvoTyypista(cityId, fallbackType, lauta);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);
@@ -29918,6 +29985,15 @@ class UI {
     this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
+    // Maan tiedot kaupungin rinnalla: lohko täyttyy openArrivalissa.
+    this.arrivalMaa = document.getElementById('arrival-maa');
+    this.arrivalMaaNimi = document.getElementById('arrival-maa-nimi');
+    this.arrivalMaaIntro = document.getElementById('arrival-maa-intro');
+    this.arrivalMaaWiki = document.getElementById('arrival-maa-wiki');
+    this.arrivalMaaWiki.addEventListener('click', () => {
+      const maa = this.arrivalMaaTiedot;
+      if (maa) this.openWikiArticle(maa.wiki ?? maa.nimi, maa.nimi);
+    });
     document.getElementById('arrival-yes').addEventListener('click', () => {
       this.closeArrival();
       sfx.play('paper');
@@ -30231,15 +30307,24 @@ class UI {
     const h = pane.clientHeight;
     if (!w || !h) return;
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
-    const scale = Math.min(w / box.w, h / box.h);
+    // Katselutila (?lauta=) näyttää laudan kuin pelissä: ei porttia eikä
+    // avaustekstiä, vaikka vaihe on pickstart.
+    const alkuun = this.game.phase === 'pickstart' && !this.katselu;
+    // Leveällä ikkunalla (Mac) lauta täyttäisi koko korkeuden ja alareunan
+    // kelluvat kortit ruuhkautuisivat kartan eteläosan päälle: kun korkeus
+    // on rajoittava mitta, laudalta varataan alakaista korteille. Kapealla
+    // ruudulla leveys rajoittaa, kaista jää nollaan eikä asettelu muutu.
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    const kaista = !alkuun && w / box.w > h / box.h ? Math.min(h * 0.2, rem * 7) : 0;
+    const scale = Math.min(w / box.w, (h - kaista) / box.h);
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
     // Aloitusnäkymässä lauta on ennen Aloita seikkailu -nappia keskellä
     // ruutua (pystyruudulla alaosa ammotti muuten tyhjänä), ja nousee
     // portin auettua ylös, jolloin alle jäävä kaista annetaan kokonaan
-    // avaustekstille suurella fontilla. Pelissä sisältö keskitetään.
-    const alkuun = this.game.phase === 'pickstart';
+    // avaustekstille suurella fontilla. Pelissä sisältö keskitetään
+    // kaistan yläpuoliseen osaan.
     let vy;
     if (alkuun && !this.aloitettu) {
       const laudanKorkeus = box.h / (1 + INTRO_SPACE);
@@ -30247,7 +30332,7 @@ class UI {
     } else if (alkuun) {
       vy = box.y - box.h * INTRO_TOP;
     } else {
-      vy = box.y + box.h / 2 - vh / 2;
+      vy = box.y + box.h / 2 - (h - kaista) / (2 * scale);
     }
     this.svg.setAttribute(
       'viewBox',
@@ -31228,20 +31313,22 @@ class UI {
     }
     // Etusivullakin on äänimaisema: satama ja meri odottavat lähtijää.
     // 'etusivu' ja 'merimatka' ovat virtuaalipaikkoja, joille voi valita
-    // äänen studiosta kuten kaupungeille.
+    // äänen studiosta kuten kaupungeille. Lauta kertoo maanosan, jonka
+    // korista ääni arvotaan.
+    const lauta = game.pack?.id;
     if (game.phase === 'pickstart') {
-      playPlaceAmbience('etusivu', 'meri');
+      playPlaceAmbience('etusivu', 'meri', lauta);
       return;
     }
     const pos = game.player.pos;
     if (pos.type === 'edge') {
       const edge = game.board.edgeById.get(pos.edge);
-      if (edge?.type === 'sea') playPlaceAmbience('merimatka', 'meri');
+      if (edge?.type === 'sea') playPlaceAmbience('merimatka', 'meri', lauta);
       else playPlaceAmbience(null, null);
       return;
     }
     const city = game.board.cityById.get(pos.city);
-    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null);
+    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null, lauta);
   }
 
   /**
@@ -31359,6 +31446,26 @@ class UI {
     this.arrivalImage.removeAttribute('src');
     this.arrivalIntro.textContent = 'Isoisä on merkinnyt tämän paikan karttaansa.';
     this.arrivalWiki.hidden = true;
+
+    // Maan tiedot kaupungin rinnalla (omistajan toive): nimi näkyy heti,
+    // parin lauseen esittely täyttyy kun haku ehtii. Laudoilla, joilla
+    // kaupunki→maa-kytkentää ei ole, lohko pysyy piilossa.
+    const iso = this.game.pack.map?.cityCountry?.[city.id];
+    const maa = iso ? this.game.pack.map?.countryShapes?.[iso] : null;
+    this.arrivalMaaTiedot = maa ?? null;
+    this.arrivalMaa.hidden = !maa;
+    this.arrivalMaaWiki.hidden = true;
+    if (maa) {
+      this.arrivalMaaNimi.textContent = maa.nimi;
+      this.arrivalMaaIntro.textContent = '';
+      cachedSummary(maa.wiki ?? maa.nimi).then((summary) => {
+        if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
+        if (!summary?.extract) return;
+        this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
+        this.arrivalMaaWiki.hidden = false;
+      });
+    }
+
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
 
@@ -31562,7 +31669,9 @@ class UI {
    * esiin kirjoituskoneen tapaan ja väistyy heti kun kohde on valittu.
    */
   renderIntro() {
-    const nakyy = this.game.phase === 'pickstart';
+    // Katselutilassa (?lauta=) porttia ja avaustekstiä ei näytetä: kartta
+    // on heti esillä täydessä koossaan.
+    const nakyy = this.game.phase === 'pickstart' && !this.katselu;
     this.introEl.hidden = !nakyy;
     // Uusi peli tuo tekstin takaisin täyteen näkyvyyteen häivytyksestä.
     if (nakyy) this.introEl.classList.remove('intro-fade');
@@ -32854,7 +32963,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.52';
+const APP_VERSION = '2026-07-29.53';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -33016,8 +33125,36 @@ if (hasManifest && 'serviceWorker' in navigator && location.protocol.startsWith(
   });
 }
 
+// Katselutila: ?lauta=<id> avaa laudan kartan suoraan ilman porttia,
+// avaustekstiä ja tallennusta — työhuoneen Maanosat-välilehti näyttää
+// kartat tällä. Kaupunkia voi klikata ja lautaa kokeilla vapaasti:
+// mikään ei kirjoita tallennettua peliä yli, ja Uusi peli -nappi on
+// piilossa, ettei se tyhjentäisi oikeaa tallennusta.
+function avaaKatselu(pack) {
+  document.body.classList.add('katselu');
+  const game = new Game({ players: [newPlayer()], pack });
+  if (ui) ui.destroy();
+  ui = new UI(game, { onNewGame: () => {}, onChange: () => {} });
+  ui.katselu = true;
+  ui.aloitettu = true;
+  ui.mount();
+  window.afrikanTahti = { game, ui, sfx };
+}
+
+let katseluPack = null;
+try {
+  const lauta = new URLSearchParams(location.search).get('lauta');
+  katseluPack = lauta ? packById(lauta) ?? null : null;
+} catch {
+  katseluPack = null;
+}
+
 // Kesken jäänyt peli jatkuu automaattisesti, muuten kysytään pelaajat.
-const saved = loadGame();
-if (saved) attach(saved);
-else startGame();
+if (katseluPack) {
+  avaaKatselu(katseluPack);
+} else {
+  const saved = loadGame();
+  if (saved) attach(saved);
+  else startGame();
+}
 </script>

@@ -54,11 +54,25 @@
     .moottori-kentat label { color: var(--haalea); font-size: 0.82rem; }
     blockquote { border-left: 2px solid var(--reuna); margin: 0.6rem 0; padding: 0.1rem 0 0.1rem 0.9rem;
       color: var(--himmea); max-width: 44rem; line-height: 1.55; }
-    /* Upotettu äänistudio täyttää näkymän yläpalkin alta. */
-    #aanet-kehys {
+    /* Upotetut kehykset (äänistudio, laudan kartta) täyttävät näkymän
+       yläpalkin alta. */
+    #aanet-kehys, #kartta-kehys {
       width: 100%; height: calc(100vh - 9rem); min-height: 26rem;
       border: 1px solid var(--reuna); border-radius: 10px; background: var(--pohja);
     }
+    #kartta-kehys { margin-top: 0.5rem; }
+    /* Etusivun tehtävälistat: kommenttikenttä suoraan kohdan alla. */
+    .tehtavat li { margin-bottom: 0.45rem; }
+    .kommentti { width: 100%; max-width: 42rem; margin-top: 0.2rem;
+      padding: 0.3rem 0.55rem; font-size: 0.85rem; display: block; }
+    /* Tekstit-välilehti: tiiviit riviluettelot. */
+    .tekstirivi { border-top: 1px dotted var(--reuna); padding: 0.35rem 0;
+      max-width: 62rem; font-size: 0.86rem; color: var(--himmea); line-height: 1.5; }
+    .tekstirivi b { color: var(--teksti); font-weight: normal; }
+    .tekstirivi .oikea { color: var(--korostus); }
+    .tekstirivi .meta { color: var(--haalea); font-size: 0.78rem; }
+    #tekstit-ryhmat button { padding: 0.3rem 0.6rem; font-size: 0.85rem;
+      border-radius: 999px; }
     /* Brändikirjan värimallit. */
     .vari { display: inline-flex; align-items: center; gap: 0.4rem;
       margin: 0.15rem 0.9rem 0.15rem 0; color: var(--himmea); font-size: 0.85rem; }
@@ -74,6 +88,7 @@
     <nav id="valilehdet">
       <button data-tab="etusivu">Etusivu</button>
       <button data-tab="aanet">Äänet</button>
+      <button data-tab="tekstit">Tekstit</button>
       <button data-tab="pelit">Peli-ideat</button>
       <button data-tab="lahteet">Lähteet</button>
       <button data-tab="moottorit">Moottorit</button>
@@ -88,27 +103,17 @@
   <!-- ETUSIVU -->
   <section id="tab-etusivu" hidden>
     <h2>Odottaa omistajaa</h2>
-    <ul>
-      <li>Äänistudion valinnat loppuun ja "Kopioi valinnat" -tuloste Claudelle → voittajat kovakoodataan.</li>
-      <li>Efektipilottien kuuntelu (napin klikkaus, paperi, kolikot, oikein, väärin — studion Tehosteet-lohko).</li>
-      <li>Uuden v3-intron ja avauslennon puheen arviointi (tempo, tunnelma).</li>
-      <li>Kaikkien 23 tehosteäänen kuuntelu pelissä — ElevenLabs-generoinnit ovat
-          nyt oletuksina, synteesi on valittavissa studiosta takaisin.</li>
-      <li>Tietovisan musiikille uusi valinta: "Oud-improvisaatio" poistettiin —
-          lataaja oli poistanut tilinsä eikä lisenssiä voinut enää varmistaa,
-          ja raita ei ollut nimensä mukainen. Vanha valinta ohjautuu nyt oletukseen.</li>
-      <li>Maiden rajakokeilun arviointi: pidetäänkö, vahvistetaanko vai pois?</li>
-      <li>Uusien viivaikonien arviointi (alaosan napit: saapas, purje, suurennuslasi, noppa, kompassi).</li>
-      <li>Brändikirjan läpiluku ja täydennys omin sanoin (Brändikirja-välilehti).</li>
-      <li>ElevenLabs-avaimen kierrätys, kun generoinnit ovat valmiit.</li>
-    </ul>
+    <p>Kommentoi suoraan kohdan alle — kommentit tallentuvat tähän selaimeen
+       itsestään. <b>Kopioi kommentit</b> kokoaa ne yhdeksi viestiksi, jonka
+       voi liittää Claudelle.</p>
+    <ul class="tehtavat" id="odottaa-lista"></ul>
     <h2>Työjonossa (Claude)</h2>
-    <ul>
-      <li>Tangerin päiväkirjan testilukon poisto, kun äänet on hyväksytty.</li>
-      <li>Seuraava työkalu: kartta-apuri tai kehityspaneeli (?dev=1) — ks. Työkalut-välilehti.</li>
-      <li>Aineistotutkimus-minipelin suunnittelu yhdessä (ks. Peli-ideat).</li>
-      <li>Opus-työlista: paketti 18 (Katso kuva -linkit) ja 19 (matkamuistot).</li>
-    </ul>
+    <ul class="tehtavat" id="tyojono-lista"></ul>
+    <div class="grid" style="margin-top:0.6rem">
+      <button id="kopioi-kommentit">Kopioi kommentit</button>
+      <span id="kommentit-tila" style="color:var(--haalea);font-size:0.85rem"></span>
+    </div>
+    <pre id="kommentit-teksti"></pre>
     <h2>Omat muistiinpanot</h2>
     <p>Vapaa kenttä ideoille — tallentuu tähän selaimeen itsestään.</p>
     <textarea id="muistio" style="width:100%;max-width:46rem;min-height:8rem"></textarea>
@@ -140,6 +145,21 @@
     </details>
   </section>
 
+  <!-- TEKSTIT: pelin kaikki tekstit laudoittain -->
+  <section id="tab-tekstit" hidden>
+    <p>Kaikki pelin tekstit, repliikit ja pelimuotojen sisällöt suoraan
+       paketeista — sivu ei voi vanhentua. Valitse lauta, rastita näkyvät
+       ryhmät ja rajaa hakusanalla. Lukitut avaustekstit ovat Brändikirjassa.</p>
+    <div class="grid" style="margin-bottom:0.5rem">
+      <select id="tekstit-lauta"></select>
+      <input id="tekstit-haku" type="search" placeholder="Hae tekstiä…"
+             style="flex:1 1 12rem;max-width:20rem" />
+      <span id="tekstit-laskuri" style="color:var(--haalea);font-size:0.85rem"></span>
+    </div>
+    <div class="grid" id="tekstit-ryhmat" style="margin-bottom:0.4rem"></div>
+    <div id="tekstit-lista"></div>
+  </section>
+
   <!-- LÄHTEET -->
   <section id="tab-lahteet" hidden>
     <p>Avoimia aineistolähteitä peliin: kuvia, karttoja, ääntä, dataa ja
@@ -160,9 +180,18 @@
 
   <!-- MAANOSAT -->
   <section id="tab-maanosat" hidden>
-    <p>Lautojen edistyminen — luvut lasketaan suoraan pelin paketeista,
-       joten taulukko on aina ajan tasalla. Sääntö: Afrikka hiotaan valmiiksi
-       ennen muita.</p>
+    <p>Katsele lautojen karttoja isossa koossa yksi kerrallaan. Ikkunassa on
+       oikea peli katselutilassa: kaupunkeja voi klikata ja lautaa kokeilla
+       vapaasti — mikään ei tallennu eikä koske oikeaan peliin.</p>
+    <div class="grid">
+      <select id="kartta-lauta"></select>
+      <a id="kartta-uuteen" href="index.html?lauta=africa" target="_blank" rel="noopener">
+        <button>Avaa omaan ikkunaan ↗</button></a>
+    </div>
+    <iframe id="kartta-kehys" title="Laudan kartta"></iframe>
+    <h2>Lautojen edistyminen</h2>
+    <p>Luvut lasketaan suoraan pelin paketeista, joten taulukko on aina
+       ajan tasalla. Sääntö: Afrikka hiotaan valmiiksi ennen muita.</p>
     <div id="maanosa-taulukko"></div>
     <p style="margin-top:0.8rem">Sarakkeet: kaupungit · kaupunkeja joilla
        äänimaisematyyppi · kysymyksiä (kaupunkien omat + yleiset) · pulmia ·
@@ -346,16 +375,17 @@
       for (const osio of document.querySelectorAll('section[id^="tab-"]')) {
         osio.hidden = osio.id !== `tab-${tab}`;
       }
-      // Äänistudio ladataan vasta kun välilehti avataan ensi kertaa —
-      // muuten se hakisi äänitiedostoja jokaisella työhuonekäynnillä.
+      // Äänistudio ja laudan kartta ladataan vasta kun välilehti avataan
+      // ensi kertaa — muuten ne hakisivat tiedostoja joka käynnillä.
       if (tab === 'aanet') {
         const kehys = document.getElementById('aanet-kehys');
         if (!kehys.src) kehys.src = 'aanet.html';
       }
+      if (tab === 'maanosat') paivitaKartta();
       history.replaceState(null, '', `#${tab}`);
     };
     for (const nappi of napit) nappi.addEventListener('click', () => nayta(nappi.dataset.tab));
-    nayta(location.hash.slice(1) || 'etusivu');
+    // Avausvälilehti valitaan skriptin lopussa, kun kaikki osiot on rakennettu.
 
     // --- päivitys: sama kuin pelin Päivitä-nappi ----------------------------
     // Palvelutyöntekijä välimuistittaa myös työhuoneen ja äänistudion,
@@ -387,6 +417,77 @@
     try { muistio.value = localStorage.getItem('matkakirja-muistio') ?? ''; } catch { /* ei säily */ }
     muistio.addEventListener('input', () => {
       try { localStorage.setItem('matkakirja-muistio', muistio.value); } catch { /* ei säily */ }
+    });
+
+    // --- etusivun tehtävälistat ja kommentit --------------------------------
+    // Kohdilla on pysyvät tunnisteet: kommentti pysyy oikealla kohdalla,
+    // vaikka listan järjestys tai sanamuoto muuttuisi versiosta toiseen.
+    // Kommentit tallentuvat tähän selaimeen; Kopioi kommentit kokoaa ne
+    // yhdeksi viestiksi Claudelle liitettäväksi.
+    const ODOTTAA = [
+      { id: 'aanivalinnat', teksti: 'Äänistudion valinnat loppuun ja "Kopioi valinnat" -tuloste Claudelle → voittajat kovakoodataan.' },
+      { id: 'maanosakorit', teksti: 'Äänistudion uusi jako: äänityyppi → maanosa → kaupungit. Tarkista että Afrikan korit ovat kuten haluat.' },
+      { id: 'efektipilotit', teksti: 'Efektipilottien kuuntelu (napin klikkaus, paperi, kolikot, oikein, väärin — studion Tehosteet-lohko).' },
+      { id: 'v3intro', teksti: 'Uuden v3-intron ja avauslennon puheen arviointi (tempo, tunnelma).' },
+      { id: 'tehosteet23', teksti: 'Kaikkien 23 tehosteäänen kuuntelu pelissä — ElevenLabs-generoinnit ovat nyt oletuksina, synteesi on valittavissa studiosta takaisin.' },
+      { id: 'visamusiikki', teksti: 'Tietovisan musiikille uusi valinta: "Oud-improvisaatio" poistettiin — lataaja oli poistanut tilinsä eikä lisenssiä voinut enää varmistaa.' },
+      { id: 'rajakokeilu', teksti: 'Maiden rajakokeilun arviointi: pidetäänkö, vahvistetaanko vai pois? Maan tiedot näkyvät nyt myös saapumiskortissa.' },
+      { id: 'viivaikonit', teksti: 'Uusien viivaikonien arviointi (alaosan napit: saapas, purje, suurennuslasi, noppa, kompassi).' },
+      { id: 'brandikirja', teksti: 'Brändikirjan läpiluku ja täydennys omin sanoin (Brändikirja-välilehti).' },
+      { id: 'tekstit', teksti: 'Tekstit-välilehden läpiluku: kaikki pelin tekstit yhdessä paikassa — merkitse korjattavat kommentilla.' },
+      { id: 'elavain', teksti: 'ElevenLabs-avaimen kierrätys, kun generoinnit ovat valmiit.' },
+    ];
+    const TYOJONO = [
+      { id: 'tangerlukko', teksti: 'Tangerin päiväkirjan testilukon poisto, kun äänet on hyväksytty.' },
+      { id: 'tyokalu', teksti: 'Seuraava työkalu: kartta-apuri tai kehityspaneeli (?dev=1) — ks. Työkalut-välilehti.' },
+      { id: 'aineistotutkimus', teksti: 'Aineistotutkimus-minipelin suunnittelu yhdessä (ks. Peli-ideat).' },
+      { id: 'opuspaketit', teksti: 'Opus-työlista: paketti 18 (Katso kuva -linkit) ja 19 (matkamuistot).' },
+    ];
+    const KOMMENTIT_AVAIN = 'matkakirja-kommentit';
+    const kommentit = () => {
+      try { return JSON.parse(localStorage.getItem(KOMMENTIT_AVAIN) ?? '{}'); } catch { return {}; }
+    };
+    const tallennaKommentti = (id, teksti) => {
+      const kaikki = kommentit();
+      if (teksti.trim()) kaikki[id] = teksti;
+      else delete kaikki[id];
+      try { localStorage.setItem(KOMMENTIT_AVAIN, JSON.stringify(kaikki)); } catch { /* ei säily */ }
+    };
+    const teeTehtavat = (kohde, lista) => {
+      const nyt = kommentit();
+      for (const kohta of lista) {
+        const li = document.createElement('li');
+        li.appendChild(document.createTextNode(kohta.teksti));
+        const kentta = document.createElement('input');
+        kentta.type = 'text';
+        kentta.className = 'kommentti';
+        kentta.placeholder = 'kommentti…';
+        kentta.value = nyt[kohta.id] ?? '';
+        kentta.addEventListener('input', () => tallennaKommentti(kohta.id, kentta.value));
+        li.appendChild(kentta);
+        kohde.appendChild(li);
+      }
+    };
+    teeTehtavat(document.getElementById('odottaa-lista'), ODOTTAA);
+    teeTehtavat(document.getElementById('tyojono-lista'), TYOJONO);
+    document.getElementById('kopioi-kommentit').addEventListener('click', () => {
+      const nyt = kommentit();
+      const kohdat = [...ODOTTAA, ...TYOJONO];
+      const rivit = Object.entries(nyt).map(([id, teksti]) => {
+        // Poistuneen kohdan kommentti ei katoa hiljaa: se tulostuu
+        // tunnisteella, jotta siihen voi yhä viitata.
+        const otsikko = kohdat.find((k) => k.id === id)?.teksti ?? `(aiempi kohta: ${id})`;
+        return `• ${otsikko}\n  → ${teksti}`;
+      });
+      const pvm = new Date().toLocaleString('fi-FI', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
+      const teksti = rivit.length
+        ? `Työhuoneen kommentit (${pvm}):\n${rivit.join('\n')}`
+        : 'Ei kommentteja vielä.';
+      document.getElementById('kommentit-teksti').textContent = teksti;
+      navigator.clipboard?.writeText(teksti).then(
+        () => { document.getElementById('kommentit-tila').textContent = 'Kopioitu leikepöydälle.'; },
+        () => { document.getElementById('kommentit-tila').textContent = 'Teksti alla — kopioi käsin.'; },
+      );
     });
 
     // --- peli-ideat ---------------------------------------------------------
@@ -666,6 +767,28 @@
     }
     piirraMoottorit();
 
+    // --- maanosat: kartat isossa koossa --------------------------------------
+    // Kehyksessä on oikea peli katselutilassa (?lauta=): kartta ilman
+    // porttia, avaustekstiä ja tallennusta. Ladataan vasta kun välilehti
+    // on auki, ja vain valittu lauta kerrallaan.
+    const karttaValinta = document.getElementById('kartta-lauta');
+    for (const p of PACKS) {
+      const o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = `${p.boardLabel ?? p.name} — ${p.name}`;
+      karttaValinta.appendChild(o);
+    }
+    karttaValinta.value = 'africa';
+    const karttaKehys = document.getElementById('kartta-kehys');
+    const karttaLinkki = document.getElementById('kartta-uuteen');
+    function paivitaKartta() {
+      const osoite = `index.html?lauta=${karttaValinta.value}`;
+      karttaLinkki.href = osoite;
+      if (document.getElementById('tab-maanosat').hidden) return;
+      if (karttaKehys.src !== new URL(osoite, location.href).href) karttaKehys.src = osoite;
+    }
+    karttaValinta.addEventListener('change', paivitaKartta);
+
     // --- maanosat: luvut suoraan paketeista ---------------------------------
     const TILA_MERKINNAT = {
       maailma: 'perusta — lennot ja aloitus',
@@ -729,6 +852,182 @@
       paivakirjat.appendChild(k);
     }
 
+    // --- tekstit: kaikki pelin tekstit laudoittain ---------------------------
+    // Rivit kootaan suoraan paketeista, joten välilehti ei voi vanhentua.
+    // Ryhmävalinnat ja lauta muistetaan tässä selaimessa.
+    const TEKSTIRYHMAT = [
+      ['juoni', 'Avaus ja juoni'],
+      ['lennot', 'Lentorepliikit'],
+      ['paivakirjat', 'Päiväkirja'],
+      ['kysymykset', 'Kysymykset'],
+      ['vaittamat', 'Isoisän väittämät'],
+      ['pulmat', 'Pulmat'],
+      ['tapahtumat', 'Tapahtumakortit'],
+      ['vihjeet', 'Tähtivihjeet'],
+    ];
+    // Osa teksteistä on funktioita (nimi ja summa täytetään pelissä):
+    // ne näytetään esimerkkiarvoilla.
+    const esimerkilla = (arvo, ...args) => {
+      try { return typeof arvo === 'function' ? arvo(...args) : arvo; } catch { return null; }
+    };
+
+    function teeTekstiRivit(p) {
+      const rivit = []; // { ryhma, html, haku }
+      const lisaa = (ryhma, html) => rivit.push({
+        ryhma, html, haku: html.replace(/<[^>]*>/g, ' ').toLowerCase(),
+      });
+      const kaupunki = (id) => p.cities.find((c) => c.id === id)?.name ?? id;
+      const t = p.texts ?? {};
+
+      if (t.intro) lisaa('juoni', `<b>Aloitus:</b> ${t.intro}`);
+      if (t.starToast) lisaa('juoni', `<b>Tähti löytyi (ilmoitus):</b> ${t.starToast}`);
+      const loyto = esimerkilla(t.starFound, 'Herra Fogg', 'Kairo');
+      if (loyto) lisaa('juoni', `<b>Tähti löytyi:</b> ${loyto} <span class="meta">(esimerkkiarvoilla)</span>`);
+      if (t.starChase) lisaa('juoni', `<b>Loppukiri:</b> ${t.starChase}`);
+      if (t.winStar) lisaa('juoni', `<b>Voiton peruste:</b> ${t.winStar}`);
+      const voitto = esimerkilla(t.winnerStar, 'Herra Fogg', 600);
+      if (voitto) lisaa('juoni', `<b>Voittoteksti:</b> ${voitto} <span class="meta">(esimerkkiarvoilla)</span>`);
+
+      for (const rivi of t.flightFirst ?? []) lisaa('lennot', `<b>Avauslento:</b> ${rivi}`);
+      for (const rivi of t.flightDefault ?? []) lisaa('lennot', `<b>Yleinen:</b> ${rivi}`);
+      for (const [cityId, linjat] of Object.entries(t.flightLines ?? {})) {
+        for (const rivi of linjat) lisaa('lennot', `<b>${kaupunki(cityId)}:</b> ${rivi}`);
+      }
+
+      (t.diaries ?? []).forEach((d, i) => lisaa('paivakirjat', `<b>Merkintä ${i + 1}:</b> ${d}`));
+      for (const s of t.schedule ?? []) {
+        lisaa('paivakirjat', `<b>Isoisän reitti, päivä ${s.day}:</b> ${s.text}`);
+      }
+
+      const optiot = (k) => (k.options ?? [])
+        .map((o, i) => (i === k.correct ? `<span class="oikea">${o} ✓</span>` : o)).join(' / ');
+      const kysymysRivi = (otsikko, k) => {
+        const osat = [`<b>${otsikko}</b> ${k.q}`, `→ ${optiot(k)}`];
+        if (k.hint) osat.push(`<span class="meta">vihje: ${k.hint}</span>`);
+        if (k.fact) osat.push(`<span class="meta">fakta: ${k.fact}</span>`);
+        lisaa('kysymykset', osat.join('<br>'));
+      };
+      for (const c of p.cities) {
+        for (const k of p.questions?.[c.id] ?? []) kysymysRivi(`[${c.name}]`, k);
+      }
+      for (const k of p.questions?.general ?? []) kysymysRivi('[Yleinen]', k);
+
+      for (const v of p.questions?.claims ?? []) {
+        lisaa('vaittamat', [
+          `<b>[${v.place ?? '—'}]</b> ${v.q}`,
+          `→ <span class="oikea">${v.correct ? 'pitää yhä paikkansa' : 'ei pidä enää paikkaansa'}</span>`,
+          v.fact ? `<span class="meta">fakta: ${v.fact}</span>` : '',
+        ].filter(Boolean).join('<br>'));
+      }
+
+      for (const pulma of p.puzzles ?? []) {
+        lisaa('pulmat', [
+          `<b>${pulma.title}</b> <span class="meta">(${kaupunki(pulma.city)})</span>`,
+          pulma.q ?? '',
+          pulma.selite ? `<span class="meta">${pulma.selite}</span>` : '',
+          pulma.options ? `→ ${optiot(pulma)}` : '',
+          pulma.hint ? `<span class="meta">vihje: ${pulma.hint}</span>` : '',
+          pulma.fact ? `<span class="meta">fakta: ${pulma.fact}</span>` : '',
+        ].filter(Boolean).join('<br>'));
+      }
+
+      for (const e of p.events ?? []) {
+        lisaa('tapahtumat', `${e.text}<br><span class="meta">vaikutus: ${e.effect?.kind ?? '—'}</span>`);
+      }
+
+      for (const [cityId, vihje] of Object.entries(t.starHints ?? {})) {
+        lisaa('vihjeet', `<b>[${kaupunki(cityId)}]</b> ${vihje}`);
+      }
+      return rivit;
+    }
+
+    const tekstitLauta = document.getElementById('tekstit-lauta');
+    for (const p of PACKS) {
+      const o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = p.boardLabel ?? p.name;
+      tekstitLauta.appendChild(o);
+    }
+    const TEKSTIT_MUISTI = 'matkakirja-tekstit-nakyma';
+    let tekstitTila = { lauta: 'africa', ryhmat: TEKSTIRYHMAT.map(([id]) => id) };
+    try {
+      const muisti = JSON.parse(localStorage.getItem(TEKSTIT_MUISTI) ?? 'null');
+      if (muisti && typeof muisti === 'object') tekstitTila = { ...tekstitTila, ...muisti };
+    } catch { /* oletukset kelpaavat */ }
+    if (![...tekstitLauta.options].some((o) => o.value === tekstitTila.lauta)) {
+      tekstitTila.lauta = 'africa';
+    }
+    tekstitLauta.value = tekstitTila.lauta;
+    const tallennaTekstitTila = () => {
+      try { localStorage.setItem(TEKSTIT_MUISTI, JSON.stringify(tekstitTila)); } catch { /* ei säily */ }
+    };
+    let tekstitHaku = '';
+    document.getElementById('tekstit-haku').addEventListener('input', (e) => {
+      tekstitHaku = e.target.value.trim().toLowerCase();
+      piirraTekstit();
+    });
+    tekstitLauta.addEventListener('change', () => {
+      tekstitTila.lauta = tekstitLauta.value;
+      tallennaTekstitTila();
+      piirraTekstit();
+    });
+    const tekstitRyhmatEl = document.getElementById('tekstit-ryhmat');
+    const tekstitLista = document.getElementById('tekstit-lista');
+
+    function piirraTekstit() {
+      const p = packById(tekstitTila.lauta);
+      const rivit = teeTekstiRivit(p);
+
+      // Ryhmänapit: valinta kertoo näkyvyyden, luku ryhmän rivimäärän.
+      tekstitRyhmatEl.textContent = '';
+      for (const [id, nimi] of TEKSTIRYHMAT) {
+        const maara = rivit.filter((r) => r.ryhma === id).length;
+        const paalla = tekstitTila.ryhmat.includes(id);
+        const b = document.createElement('button');
+        b.textContent = `${nimi} (${maara})`;
+        b.classList.toggle('paalla', paalla);
+        b.addEventListener('click', () => {
+          tekstitTila.ryhmat = paalla
+            ? tekstitTila.ryhmat.filter((r) => r !== id)
+            : [...tekstitTila.ryhmat, id];
+          tallennaTekstitTila();
+          piirraTekstit();
+        });
+        tekstitRyhmatEl.appendChild(b);
+      }
+      const kaikkiNappi = document.createElement('button');
+      kaikkiNappi.textContent = tekstitTila.ryhmat.length ? 'Piilota kaikki' : 'Näytä kaikki';
+      kaikkiNappi.addEventListener('click', () => {
+        tekstitTila.ryhmat = tekstitTila.ryhmat.length ? [] : TEKSTIRYHMAT.map(([id]) => id);
+        tallennaTekstitTila();
+        piirraTekstit();
+      });
+      tekstitRyhmatEl.appendChild(kaikkiNappi);
+
+      tekstitLista.textContent = '';
+      let nakyvia = 0;
+      for (const [id, nimi] of TEKSTIRYHMAT) {
+        if (!tekstitTila.ryhmat.includes(id)) continue;
+        const ryhman = rivit.filter((r) => r.ryhma === id
+          && (!tekstitHaku || r.haku.includes(tekstitHaku)));
+        if (!ryhman.length) continue;
+        const osio = document.createElement('div');
+        const otsikko = document.createElement('h2');
+        otsikko.textContent = `${nimi} · ${ryhman.length}`;
+        osio.appendChild(otsikko);
+        for (const r of ryhman) {
+          const d = document.createElement('div');
+          d.className = 'tekstirivi';
+          d.innerHTML = r.html;
+          osio.appendChild(d);
+          nakyvia += 1;
+        }
+        tekstitLista.appendChild(osio);
+      }
+      document.getElementById('tekstit-laskuri').textContent = `${nakyvia} / ${rivit.length} riviä`;
+    }
+    piirraTekstit();
+
     // --- ideat: docs/kehitysideat.md ---------------------------------------
     fetch('docs/kehitysideat.md').then((r) => (r.ok ? r.text() : Promise.reject()))
       .then((md) => { document.getElementById('ideat-teksti').textContent = md; })
@@ -736,6 +1035,9 @@
         document.getElementById('ideat-teksti').textContent =
           'Dokumenttia ei saatu ladattua — se on repossa: docs/kehitysideat.md';
       });
+
+    // Avausvälilehti vasta nyt: kaikki osiot ja kehysten lataajat ovat valmiina.
+    nayta(location.hash.slice(1) || 'etusivu');
   </script>
 </body>
 </html>

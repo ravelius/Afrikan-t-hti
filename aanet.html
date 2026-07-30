@@ -36,10 +36,14 @@
     .rivi input[type="number"] { width: 4.4rem; }
     .rivi .sek { align-self: center; color: var(--haalea); }
     .rivi .poista { min-width: 2.4rem; color: #d98b6b; }
-    /* Arvontakori: maisematyypin monivalinta ryhmän alussa. */
-    .kori { border: 1px dashed var(--reuna); border-radius: 8px; padding: 0.5rem 0.7rem; margin: 0.5rem 0 0.2rem; }
-    .kori-otsikko { color: var(--korostus); font-size: 0.85rem; margin-bottom: 0.35rem; }
-    .kori-seloste { color: var(--haalea); font-size: 0.8rem; margin-bottom: 0.4rem; }
+    /* Arvontakorit: äänityyppi on yläkategoria, sen alla maanosat ja
+       niiden alla kaupungit — jokaisella maanosalla oma korinsa. */
+    details.manner { border: 1px dashed var(--reuna); border-radius: 8px;
+      padding: 0 0.7rem 0.45rem; margin: 0.5rem 0; }
+    details.manner > summary { cursor: pointer; padding: 0.5rem 0;
+      color: var(--korostus); font-size: 0.9rem; }
+    details.manner > summary .maara { color: var(--haalea); font-size: 0.8rem; }
+    .kori-seloste { color: var(--haalea); font-size: 0.8rem; margin: 0.1rem 0 0.4rem; }
     .kori-rivi { display: flex; align-items: center; gap: 0.5rem; padding: 0.12rem 0; }
     .kori-rivi .soita { min-width: 3rem; flex: 0 0 auto; }
     .kori-rivi label { display: flex; align-items: center; gap: 0.45rem; cursor: pointer;
@@ -137,7 +141,7 @@
   <pre id="valinnat-teksti"></pre>
   <details class="pikatestit">
     <summary>Tuo valinnat toisesta selaimesta (JSON)</summary>
-    <textarea id="tuo-alue" placeholder='{"valinnat":{"musiikki:tietovisa":"https://…"},"korit":{"meri":["https://…"]}}'></textarea>
+    <textarea id="tuo-alue" placeholder='{"valinnat":{"musiikki:tietovisa":"https://…"},"korit":{"meri":{"africa":["https://…"]}}}'></textarea>
     <div class="grid" style="margin-top:0.5rem"><button id="tuo">Tuo</button></div>
   </details>
 
@@ -251,10 +255,11 @@
     document.getElementById('soitin-merkitse').addEventListener('click', () => {
       if (!soiva || !soitin.duration) return;
       const sek = Math.round(soitin.currentTime);
-      // Korin ääni: kohta kirjoitetaan suoraan koriin, jos ääni on rastittu.
+      // Korin ääni: kohta kirjoitetaan suoraan maanosan koriin, jos ääni
+      // on rastittu. Lokero on muotoa kori:tyyppi:lauta.
       if (soiva.slot?.startsWith('kori:')) {
-        const tyyppi = soiva.slot.slice(5);
-        const nyt = tyyppiKori(tyyppi);
+        const [, tyyppi, lauta] = soiva.slot.split(':');
+        const nyt = tyyppiKori(tyyppi, lauta);
         const idx = nyt.findIndex((k) => jaaAlku(k).url === soiva.url);
         if (idx >= 0) {
           const { voima } = jaaAlku(nyt[idx]);
@@ -262,7 +267,7 @@
           if (sek > 0) osat.push(`alku=${sek}`);
           if (voima !== 1) osat.push(`voima=${voima}`);
           nyt[idx] = osat.length ? `${soiva.url}#${osat.join('&')}` : soiva.url;
-          valitseTyyppiKori(tyyppi, nyt);
+          valitseTyyppiKori(tyyppi, lauta, nyt);
         }
       } else {
         esitaytot.set(`${soiva.slot}|${soiva.url}`, sek);
@@ -416,40 +421,29 @@
       : 'Tehosteet — yleiset');
 
     /**
-     * Yhden maisematyypin arvontakori omana ryhmänään: rastit, liu'ut,
-     * omat äänet ja Freesound-haku. Jokainen kaupunki saa äänensä
-     * korista — kaupunkikohtaisia valintoja ei ole.
+     * Yhden maanosan kori maisematyypin alla: rastit ja liu'ut. Ehdokkaat
+     * ovat tyypin yhteiset, mutta rastit ja säädöt tallentuvat tälle
+     * maanosalle — Aasian savanni voi soida eri korista kuin Afrikan.
      */
-    function rakennaKoriRyhma(tyyppi) {
-      const nimi = TYYPPI_NIMET[tyyppi] ?? tyyppi;
-      const otsikko = `Kaupungit — ${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
-      const kaupungit = KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? [];
-      const koriSlot = `kori:${tyyppi}`;
-      const omat = (omatEhdokkaat()[koriSlot] ?? []).map((e) => ({ ...e, oma: true }));
-      const rivit = [...TYYPPI_EHDOKKAAT[tyyppi], ...omat];
-      if (haku && !otsikko.toLowerCase().includes(haku)
-        && !rivit.some((e) => e.nimi.toLowerCase().includes(haku))
-        && !kaupungit.some((k) => k.toLowerCase().includes(haku))) return null;
-      const koriNyt = tyyppiKori(tyyppi);
+    const kiinniMannet = new Set(); // maanosalohkot ovat oletuksena auki
 
+    function rakennaMaanosaKori(tyyppi, tiedot, rivit) {
+      const koriSlot = `kori:${tyyppi}:${tiedot.lauta}`;
+      const koriNyt = tyyppiKori(tyyppi, tiedot.lauta);
       const kotelo = document.createElement('details');
-      kotelo.className = 'ryhma';
-      kotelo.open = haku ? true : aukiRyhmat.has(otsikko);
+      kotelo.className = 'manner';
+      kotelo.open = haku ? true : !kiinniMannet.has(koriSlot);
       kotelo.addEventListener('toggle', () => {
-        if (kotelo.open) aukiRyhmat.add(otsikko);
-        else aukiRyhmat.delete(otsikko);
+        if (kotelo.open) kiinniMannet.delete(koriSlot);
+        else kiinniMannet.add(koriSlot);
       });
       const summary = document.createElement('summary');
-      summary.innerHTML = `${otsikko} <span class="maara">· ${kaupungit.length} kaupunkia · korissa ${koriNyt.length}</span>`;
+      summary.innerHTML = `${tiedot.maanosa} <span class="maara">· korissa ${koriNyt.length} · ${tiedot.kaupungit.length} paikkaa</span>`;
       kotelo.appendChild(summary);
-
-      const kori = document.createElement('div');
-      kori.className = 'kori';
       const seloste = document.createElement('div');
       seloste.className = 'kori-seloste';
-      seloste.textContent = 'Peli arpoo rastituista yhden aina kaupunkiin saavuttaessa. '
-        + `Koskee kaupunkeja: ${kaupungit.join(', ')}.`;
-      kori.appendChild(seloste);
+      seloste.textContent = `Koskee: ${tiedot.kaupungit.join(', ')}.`;
+      kotelo.appendChild(seloste);
 
       for (const ehdokas of rivit) {
         const tallennettu = koriNyt.find((k) => jaaAlku(k).url === ehdokas.url) ?? null;
@@ -507,9 +501,9 @@
           slot: koriSlot,
         }));
         const talleta = () => {
-          const nyt = tyyppiKori(tyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url);
+          const nyt = tyyppiKori(tyyppi, tiedot.lauta).filter((k) => jaaAlku(k).url !== ehdokas.url);
           if (ruutu.checked) nyt.push(arvoNyt());
-          valitseTyyppiKori(tyyppi, nyt);
+          valitseTyyppiKori(tyyppi, tiedot.lauta, nyt);
         };
         ruutu.addEventListener('change', () => { talleta(); rakenna(); });
         aika.addEventListener('change', talleta);
@@ -528,28 +522,75 @@
           poista.title = 'Poista oma ääni';
           poista.addEventListener('click', () => {
             const kaikki = omatEhdokkaat();
-            kaikki[koriSlot] = (kaikki[koriSlot] ?? []).filter((e) => e.url !== ehdokas.url);
-            if (!kaikki[koriSlot].length) delete kaikki[koriSlot];
+            const omaSlot = `kori:${tyyppi}`;
+            kaikki[omaSlot] = (kaikki[omaSlot] ?? []).filter((e) => e.url !== ehdokas.url);
+            if (!kaikki[omaSlot].length) delete kaikki[omaSlot];
             tallennaOmat(kaikki);
-            valitseTyyppiKori(tyyppi, tyyppiKori(tyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url));
+            // Ehdokas on tyypin yhteinen: poisto siivoaa sen joka maanosan korista.
+            for (const l of KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? []) {
+              valitseTyyppiKori(tyyppi, l.lauta,
+                tyyppiKori(tyyppi, l.lauta).filter((k) => jaaAlku(k).url !== ehdokas.url));
+            }
             rakenna();
           });
           koriRivi.appendChild(poista);
         }
-        kori.appendChild(koriRivi);
+        kotelo.appendChild(koriRivi);
       }
-      kotelo.appendChild(kori);
+      return kotelo;
+    }
 
-      // Lisää ääniä koriin: oma osoite tai Freesound-haku.
+    /**
+     * Yhden maisematyypin arvontakorit omana ryhmänään: yläkategoria on
+     * äänityyppi, sen alla maanosat koreineen. Omat äänet ja Freesound-haku
+     * ovat tyypin yhteiset — lisätty ääni ilmestyy kaikkien maanosien
+     * listoihin, rastit tehdään maanosittain.
+     */
+    function rakennaKoriRyhma(tyyppi) {
+      const nimi = TYYPPI_NIMET[tyyppi] ?? tyyppi;
+      const otsikko = `Kaupungit — ${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
+      const laudat = KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? [];
+      const omaSlot = `kori:${tyyppi}`;
+      const omat = (omatEhdokkaat()[omaSlot] ?? []).map((e) => ({ ...e, oma: true }));
+      const rivit = [...TYYPPI_EHDOKKAAT[tyyppi], ...omat];
+      if (haku && !otsikko.toLowerCase().includes(haku)
+        && !rivit.some((e) => e.nimi.toLowerCase().includes(haku))
+        && !laudat.some((l) => l.maanosa.toLowerCase().includes(haku)
+          || l.kaupungit.some((k) => k.toLowerCase().includes(haku)))) return null;
+
+      const kotelo = document.createElement('details');
+      kotelo.className = 'ryhma';
+      kotelo.open = haku ? true : aukiRyhmat.has(otsikko);
+      kotelo.addEventListener('toggle', () => {
+        if (kotelo.open) aukiRyhmat.add(otsikko);
+        else aukiRyhmat.delete(otsikko);
+      });
+      const summary = document.createElement('summary');
+      const osat = laudat.map((l) => `${l.maanosa} ${tyyppiKori(tyyppi, l.lauta).length}`).join(' · ');
+      summary.innerHTML = `${otsikko} <span class="maara">· korissa: ${osat || '—'}</span>`;
+      kotelo.appendChild(summary);
+
+      const seloste = document.createElement('p');
+      seloste.className = 'kori-seloste';
+      seloste.textContent = 'Jokaisella maanosalla on oma arvontakorinsa: peli arpoo '
+        + 'rastituista yhden aina paikkaan saavuttaessa. Uusi maanosa ilmestyy '
+        + 'tähän, kun sen kaupungeille merkitään äänimaisematyypit.';
+      kotelo.appendChild(seloste);
+
+      for (const tiedot of laudat) {
+        kotelo.appendChild(rakennaMaanosaKori(tyyppi, tiedot, rivit));
+      }
+
+      // Lisää ääniä: oma osoite tai Freesound-haku — tyypin yhteinen lista.
       const loput = document.createElement('details');
       loput.className = 'loput';
-      loput.open = haku ? true : aukiPaikat.has(koriSlot);
+      loput.open = haku ? true : aukiPaikat.has(omaSlot);
       loput.addEventListener('toggle', () => {
-        if (loput.open) aukiPaikat.add(koriSlot);
-        else aukiPaikat.delete(koriSlot);
+        if (loput.open) aukiPaikat.add(omaSlot);
+        else aukiPaikat.delete(omaSlot);
       });
       const avaus = document.createElement('summary');
-      avaus.textContent = 'Lisää ääniä koriin — oma osoite · Freesound-haku';
+      avaus.textContent = 'Lisää ääniä tyypin listaan — oma osoite · Freesound-haku';
       loput.appendChild(avaus);
       const oma = document.createElement('div');
       oma.className = 'rivi oma';
@@ -565,7 +606,7 @@
         const u = osoite.value.trim();
         if (!u) return;
         const kaikki = omatEhdokkaat();
-        kaikki[koriSlot] = [...(kaikki[koriSlot] ?? []), { url: u, nimi: nimike.value.trim() || u }];
+        kaikki[omaSlot] = [...(kaikki[omaSlot] ?? []), { url: u, nimi: nimike.value.trim() || u }];
         tallennaOmat(kaikki);
         rakenna();
       });
@@ -583,7 +624,7 @@
       const hae = document.createElement('button');
       hae.textContent = 'Hae Freesoundista';
       const tulokset = document.createElement('div');
-      hae.addEventListener('click', () => haeFreesound(koriSlot, kysely.value.trim(), tulokset));
+      hae.addEventListener('click', () => haeFreesound(omaSlot, kysely.value.trim(), tulokset));
       hakuRivi.appendChild(kysely);
       hakuRivi.appendChild(hae);
       loput.appendChild(hakuRivi);
@@ -834,17 +875,21 @@
         const alkuosa = osat.length ? ` (${osat.join(', ')})` : '';
         return `${paikka?.otsikko ?? slot}: ${nimi}${alkuosa}`;
       });
-      // Arvontakorit omana lohkonaan.
-      for (const [tyyppi, lista] of Object.entries(kaikkiKorit())) {
-        const nimet = lista.map((k) => {
-          const { url, alku, voima } = jaaAlku(k);
-          const nimi = (TYYPPI_EHDOKKAAT[tyyppi] ?? []).find((e) => e.url === url)?.nimi ?? k;
-          const osat = [];
-          if (alku > 0) osat.push(`alkaa ${alku} s`);
-          if (voima !== 1) osat.push(`voima ${voima}×`);
-          return osat.length ? `${nimi} (${osat.join(', ')})` : nimi;
-        });
-        rivit.push(`Arvontakori ${tyyppi}: ${nimet.join(' | ')}`);
+      // Arvontakorit omana lohkonaan maanosittain.
+      for (const [tyyppi, laudat] of Object.entries(kaikkiKorit())) {
+        for (const [lauta, lista] of Object.entries(laudat)) {
+          const maanosa = (KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? [])
+            .find((l) => l.lauta === lauta)?.maanosa ?? lauta;
+          const nimet = lista.map((k) => {
+            const { url, alku, voima } = jaaAlku(k);
+            const nimi = (TYYPPI_EHDOKKAAT[tyyppi] ?? []).find((e) => e.url === url)?.nimi ?? k;
+            const osat = [];
+            if (alku > 0) osat.push(`alkaa ${alku} s`);
+            if (voima !== 1) osat.push(`voima ${voima}×`);
+            return osat.length ? `${nimi} (${osat.join(', ')})` : nimi;
+          });
+          rivit.push(`Arvontakori ${tyyppi} (${maanosa}): ${nimet.join(' | ')}`);
+        }
       }
       const teksti = rivit.length
         ? `Äänivalinnat:\n${rivit.join('\n')}`
@@ -852,12 +897,14 @@
       document.getElementById('valinnat-teksti').textContent = teksti;
       navigator.clipboard?.writeText(teksti).catch(() => {});
     });
-    // Kaikki tallennetut arvontakorit tyypeittäin.
+    // Kaikki tallennetut arvontakorit tyypeittäin ja maanosittain.
     const kaikkiKorit = () => {
       const korit = {};
       for (const tyyppi of Object.keys(TYYPPI_EHDOKKAAT)) {
-        const lista = tyyppiKori(tyyppi);
-        if (lista.length) korit[tyyppi] = lista;
+        for (const { lauta } of KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? []) {
+          const lista = tyyppiKori(tyyppi, lauta);
+          if (lista.length) (korit[tyyppi] ??= {})[lauta] = lista;
+        }
       }
       return korit;
     };
@@ -880,8 +927,17 @@
           if (slot.startsWith('kaupunki:')) continue;
           valitseAani(slot, arvo === '' ? null : arvo);
         }
-        for (const [tyyppi, lista] of Object.entries(tuotu.korit ?? {})) {
-          if (Array.isArray(lista)) valitseTyyppiKori(tyyppi, lista);
+        for (const [tyyppi, arvo] of Object.entries(tuotu.korit ?? {})) {
+          // Vanha muoto (pelkkä lista) koski kaikkia maanosia.
+          if (Array.isArray(arvo)) {
+            for (const l of KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? []) {
+              valitseTyyppiKori(tyyppi, l.lauta, arvo);
+            }
+          } else if (arvo && typeof arvo === 'object') {
+            for (const [lauta, lista] of Object.entries(arvo)) {
+              if (Array.isArray(lista)) valitseTyyppiKori(tyyppi, lauta, lista);
+            }
+          }
         }
         rakenna();
         document.getElementById('valinnat-teksti').textContent = 'Valinnat tuotu.';
