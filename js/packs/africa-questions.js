@@ -1369,6 +1369,96 @@ export const AFRICA_QUESTIONS = {
 
   // Varapakka: käytetään jos kaupungin omat kysymykset on jo kysytty.
   // Uudet paikat (omistajan laajennus 30.7.): viisi kysymystä kullekin.
+  marrakech: [
+    {
+      q: 'Missä maassa Marrakech sijaitsee?',
+      options: ['Marokko', 'Algeria', 'Tunisia', 'Egypti'],
+      correct: 0,
+      level: 1,
+      fact: 'Marrakech oli pitkään Marokon pääkaupunki, ja monissa kielissä koko maan nimi tulee juuri Marrakechista.',
+      hint: 'Maan nimi muistuttaa kaupungin nimeä monissa kielissä.',
+    },
+    {
+      q: 'Mikä on Marrakechin kuuluisa tori, jonne tarinankertojat ja käärmeenlumoajat kokoontuvat iltaisin?',
+      options: ['Jemaa el-Fna', 'Tahririn aukio', 'Punainen tori', 'Suuri basaari'],
+      correct: 0,
+      fact: 'Jemaa el-Fna muuttuu joka ilta valtavaksi ulkoilmateatteriksi ja ruokatoriksi — Unesco on nimennyt sen perinteet suojeltavaksi kulttuuriperinnöksi.',
+      hint: 'Nimi on arabiaa; tori on medinan sydän.',
+    },
+    {
+      q: 'Minkä vuoriston lumihuiput näkyvät Marrakechiin kirkkaalla säällä?',
+      options: ['Atlasvuorten', 'Alppien', 'Ahaggarin', 'Kilimandžaron'],
+      correct: 0,
+      fact: 'Korkea Atlas kohoaa yli neljään kilometriin heti kaupungin eteläpuolella — lumihuippuja voi katsella palmujen katveesta.',
+      hint: 'Sama nimi kantaa taivasta kreikkalaisessa tarustossa.',
+    },
+    {
+      q: 'Miksi Marrakechia kutsutaan punaiseksi kaupungiksi?',
+      options: [
+        'Muurit ja talot on rakennettu punertavasta savesta',
+        'Kaupungissa kasvaa punaisia ruusuja',
+        'Katot on maalattu punaisiksi',
+        'Nimi tarkoittaa punaista',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Marrakechin vanhan kaupungin muurit ja talot on rakennettu paikallisesta punertavasta savesta, ja ilta-auringossa koko kaupunki hehkuu.',
+      hint: 'Vastaus näkyy jo kaukaa kaupunkia lähestyttäessä.',
+    },
+    {
+      q: 'Mikä musiikkiperinne elää vahvana Marrakechin toreilla?',
+      options: ['gnawa', 'samba', 'flamenco', 'tango'],
+      correct: 0,
+      fact: 'Gnawa-musiikki juontaa Saharan eteläpuolelta tuotujen ihmisten rituaaleista; sen hypnoottinen rytmi soi Jemaa el-Fnalla yhä joka ilta.',
+      hint: 'Sama perinne soi pelin kulttuurinostossa.',
+    },
+  ],
+
+  sthelena: [
+    {
+      q: 'Missä valtameressä St. Helenan saari sijaitsee?',
+      options: ['Atlantilla', 'Intian valtamerellä', 'Tyynellämerellä', 'Välimerellä'],
+      correct: 0,
+      level: 1,
+      fact: 'St. Helena on yksi maailman syrjäisimmistä saarista: lähin manner on lähes kahden tuhannen kilometrin päässä.',
+      hint: 'Saari on Afrikan länsipuolella, meressä joka erottaa sen Amerikasta.',
+    },
+    {
+      q: 'Kuka kuuluisa keisari vietiin vankina St. Helenalle vuonna 1815?',
+      options: ['Napoleon', 'Julius Caesar', 'Augustus', 'Kaarle Suuri'],
+      correct: 0,
+      fact: 'Waterloon tappion jälkeen Napoleon karkotettiin St. Helenalle, jotta hän ei enää pääsisi palaamaan valtaan. Hän kuoli saarella 1821.',
+      hint: 'Ranskan keisari, joka oli kerran jo paennut Elban saarelta.',
+    },
+    {
+      q: 'Mille valtiolle St. Helena kuuluu?',
+      options: ['Britannialle', 'Ranskalle', 'Portugalille', 'Etelä-Afrikalle'],
+      correct: 0,
+      level: 3,
+      fact: 'Saari on ollut brittien hallussa 1600-luvulta asti — juuri siksi Napoleonin vankila sijoitettiin sinne.',
+      hint: 'Sama valtio vartioi keisaria hänen viimeiset vuotensa.',
+    },
+    {
+      q: 'Miksi purjelaivat pysähtyivät St. Helenalla vuosisatojen ajan?',
+      options: [
+        'Hakemaan vettä ja tuoretta ruokaa pitkälle merimatkalle',
+        'Lastaamaan kultaa',
+        'Odottamaan monsuunituulta',
+        'Korjaamaan purjeita saaren tehtaassa',
+      ],
+      correct: 0,
+      fact: 'Saari oli Intian-reitin tärkeä huoltopysäkki: laivat täydensivät vesivarastonsa ja saivat tuoreita hedelmiä ja vihanneksia.',
+      hint: 'Keskellä valtamerta arvokkainta on se, mikä maalla on tavallisinta.',
+    },
+    {
+      q: 'Ketkä löysivät asumattoman St. Helenan saaren vuonna 1502?',
+      options: ['portugalilaiset', 'espanjalaiset', 'hollantilaiset', 'britit'],
+      correct: 0,
+      fact: 'Portugalilaiset merenkulkijat löysivät saaren Intian-reitillään ja pitivät sen sijainnin pitkään salassa muilta mailta.',
+      hint: 'Sama kansa purjehti ensimmäisenä Hyväntoivonniemen ympäri.',
+    },
+  ],
+
   karthago: [
     {
       q: 'Minkä nykyisen maan alueella Karthago sijaitsee?',
@@ -1807,6 +1897,20 @@ export const AFRICA_QUESTIONS = {
 export const AFRICA_FACTS = {
   // Uudet paikat (omistajan laajennus 30.7.): havainnot täydennetään
   // pilottien tasolle sisältöerässä — nämä ovat ensimmäiset merkinnät.
+  marrakech: [
+    'Jemaa el-Fnan torilla ilta on näytelmä: tarinankertojat, käärmeenlumoajat ja ruokakojujen savu. Aamulla sama aukio on melkein tyhjä — tori herää vasta auringon laskiessa.',
+    {
+      text: 'Kaupungin muurit on muurattu punertavasta savesta, ja ilta-auringossa koko kaupunki hehkuu. Atlasvuorten lumihuiput näkyvät basaarin katoilta — lunta ja aavikkoa samassa katseessa.',
+      voice: 'isoisa',
+    },
+  ],
+  sthelena: [
+    'Saari nousee merestä jyrkkinä kallioina, eikä satamalaituria ole — maihin tullaan veneellä köysien varassa aallokon tahtiin. Lähin manner on yli tuhannen kilometrin päässä.',
+    {
+      text: 'Napoleon eli täällä viimeiset vuotensa Longwoodin talossa sumuisella ylängöllä. Vartiolaivat kiersivät saarta turhaan: täältä ei paettu, eikä kukaan yrittänytkään.',
+      voice: 'isoisa',
+    },
+  ],
   karthago: [
     'Raunioilla kävellessä meri näkyy joka suuntaan: Karthago hallitsi aikanaan Välimeren kauppaa juuri tältä niemeltä, ja satama-altaiden kehät erottuvat yhä maastossa.',
     {
