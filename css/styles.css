@@ -1216,6 +1216,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   gap: 0.3rem;
 }
 
+/* Pieni vaakapalkki luvun alla: pituus suhteessa maksimiin ja väri sen
+ * mukaan, kuinka hyvä luku on (punaisesta vihreään) — omistajan toive. */
+.maa-tunnus.palkillinen {
+  flex-wrap: wrap;
+  row-gap: 0.15rem;
+}
+
+.maa-palkki {
+  flex-basis: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(90, 74, 51, 0.16);
+  overflow: hidden;
+}
+
+.maa-palkki-tayte {
+  height: 100%;
+  border-radius: 2px;
+}
+
 .maa-tunnus-ikoni svg {
   width: 13px;
   height: 13px;

@@ -1219,6 +1219,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   gap: 0.3rem;
 }
 
+/* Pieni vaakapalkki luvun alla: pituus suhteessa maksimiin ja väri sen
+ * mukaan, kuinka hyvä luku on (punaisesta vihreään) — omistajan toive. */
+.maa-tunnus.palkillinen {
+  flex-wrap: wrap;
+  row-gap: 0.15rem;
+}
+
+.maa-palkki {
+  flex-basis: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(90, 74, 51, 0.16);
+  overflow: hidden;
+}
+
+.maa-palkki-tayte {
+  height: 100%;
+  border-radius: 2px;
+}
+
 .maa-tunnus-ikoni svg {
   width: 13px;
   height: 13px;
@@ -38065,6 +38085,19 @@ class UI {
         osa.appendChild(typeof pala === 'string' ? document.createTextNode(pala) : pala);
       }
       emo.appendChild(osa);
+      return osa;
+    };
+    // Pieni vaakapalkki: pituus on osuus maksimista, väri kertoo kuinka
+    // hyvä luku on (punainen 0 → vihreä 1). Omistajan toive.
+    const palkki = (osa, osuus, hyvyys) => {
+      osa.classList.add('palkillinen');
+      const pohja = html('span', 'maa-palkki');
+      const tayte = html('span', 'maa-palkki-tayte');
+      tayte.style.width = `${Math.round(Math.min(1, Math.max(0.02, osuus)) * 100)}%`;
+      const sávy = Math.round(Math.min(1, Math.max(0, hyvyys)) * 120);
+      tayte.style.background = `hsl(${sávy}, 62%, 42%)`;
+      pohja.appendChild(tayte);
+      osa.appendChild(pohja);
     };
     // Suluissa sijoitus maailmassa (omistajan toive).
     const sija = (arvo) => (arvo ? html('span', 'maa-sija', ` (${arvo})`) : '');
@@ -38079,12 +38112,23 @@ class UI {
       const nappi = html('button', 'maa-demokratia', `${tiedot.demokratia.arvo} · V-Dem`);
       nappi.type = 'button';
       nappi.addEventListener('click', () => this.naytaVdemInfo(tiedot.demokratia));
-      kohta(rivi2, 'vaaka', [nappi, sija(tiedot.demokratia.sija)],
+      const osa = kohta(rivi2, 'vaaka', [nappi, sija(tiedot.demokratia.sija)],
         'Demokratiaindeksi (V-Dem, 0–1), suluissa sijoitus maailmassa — avaa selityksen');
+      // Indeksin maksimi on 1; parhaat demokratiat yltävät noin 0,9:ään,
+      // joten väri skaalataan siihen.
+      const arvo = parseFloat(tiedot.demokratia.arvo.replace(',', '.'));
+      if (Number.isFinite(arvo)) palkki(osa, arvo, arvo / 0.9);
     }
     if (tiedot.keskitulo) {
-      kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
+      const osa = kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
         'Bruttokansantulo asukasta kohden vuodessa, suluissa sijoitus maailmassa');
+      // Maksimina maailman kärki (noin 100 000 $/v); väri sijoituksesta,
+      // jotta pienetkin tulot saavat sävyeron.
+      const tulo = parseInt(tiedot.keskitulo.arvo.replace(/[^0-9]/g, ''), 10);
+      const sijaNum = parseInt(tiedot.keskitulo.sija, 10);
+      if (Number.isFinite(tulo)) {
+        palkki(osa, tulo / 100000, Number.isFinite(sijaNum) ? 1 - sijaNum / 190 : 0.2);
+      }
     }
     for (const t of tiedot.tervehdykset ?? []) {
       const osa = html('span', 'tervehdys');
@@ -40063,7 +40107,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.95';
+const APP_VERSION = '2026-07-30.96';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
