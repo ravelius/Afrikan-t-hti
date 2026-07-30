@@ -1,4 +1,6 @@
-// Maakohtaiset alueet ja kaupunkien maat Afrikan laudalle.
+// Maakohtaiset alueet, kaupunkien maat ja maiden liput Afrikan laudalle.
+// lippu on Wikimedia Commonsin tiedostonimi (Special:FilePath hakee sen
+// suoraan); valtioiden liput ovat vapaita valtiontunnuksia.
 // Tuotettu Natural Earthin 110m -maapolygoneista (public domain) samalla
 // projektiolla kuin africa.js. Käytetään korostamaan maa, jossa pelaaja
 // on: alue sävytetään hennosti ja nimi kirjoitetaan kaunolla keskelle.
@@ -7,6 +9,7 @@
 export const AFRICA_COUNTRY_SHAPES = {
   TZA: {
     nimi: 'Tansania',
+    lippu: 'Flag of Tanzania.svg',
     keskus: [730, 578.2],
     leveys: 146,
     renkaat: [
@@ -15,6 +18,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   COD: {
     nimi: 'Kongo',
+    lippu: 'Flag of the Democratic Republic of the Congo.svg',
     // Fi-Wikipediassa "Kongo" on täsmennyssivu — tiedot haetaan valtion
     // omalta sivulta.
     wiki: 'Kongon demokraattinen tasavalta',
@@ -26,6 +30,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   SOM: {
     nimi: 'Somalia',
+    lippu: 'Flag of Somalia.svg',
     keskus: [876.3, 440.6],
     leveys: 135,
     renkaat: [
@@ -34,6 +39,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   SDN: {
     nimi: 'Sudan',
+    lippu: 'Flag of Sudan.svg',
     keskus: [664.8, 300.1],
     leveys: 220,
     renkaat: [
@@ -42,6 +48,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   ZAF: {
     nimi: 'Etelä-Afrikka',
+    lippu: 'Flag of South Africa.svg',
     keskus: [601.6, 862],
     leveys: 220,
     renkaat: [
@@ -50,6 +57,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   NAM: {
     nimi: 'Namibia',
+    lippu: 'Flag of Namibia.svg',
     keskus: [495.4, 776.2],
     leveys: 178,
     renkaat: [
@@ -58,6 +66,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   SEN: {
     nimi: 'Senegal',
+    lippu: 'Flag of Senegal.svg',
     keskus: [73.2, 320.6],
     leveys: 82,
     renkaat: [
@@ -66,6 +75,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   MLI: {
     nimi: 'Mali',
+    lippu: 'Flag of Mali.svg',
     keskus: [219.4, 284.2],
     leveys: 219,
     renkaat: [
@@ -74,6 +84,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   NGA: {
     nimi: 'Nigeria',
+    lippu: 'Flag of Nigeria.svg',
     keskus: [373.3, 380.6],
     leveys: 158,
     renkaat: [
@@ -82,6 +93,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   CMR: {
     nimi: 'Kamerun',
+    lippu: 'Flag of Cameroon.svg',
     keskus: [434.8, 429.2],
     leveys: 100,
     renkaat: [
@@ -90,6 +102,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   GHA: {
     nimi: 'Ghana',
+    lippu: 'Flag of Ghana.svg',
     keskus: [250.2, 400.9],
     leveys: 57,
     renkaat: [
@@ -98,6 +111,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   LBR: {
     nimi: 'Liberia',
+    lippu: 'Flag of Liberia.svg',
     keskus: [141.2, 419.6],
     leveys: 52,
     renkaat: [
@@ -106,6 +120,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   SLE: {
     nimi: 'Sierra Leone',
+    lippu: 'Flag of Sierra Leone.svg',
     keskus: [109.4, 393.4],
     leveys: 40,
     renkaat: [
@@ -114,6 +129,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   MOZ: {
     nimi: 'Mosambik',
+    lippu: 'Flag of Mozambique.svg',
     keskus: [739.6, 715.4],
     leveys: 141,
     renkaat: [
@@ -122,6 +138,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   AGO: {
     nimi: 'Angola',
+    lippu: 'Flag of Angola.svg',
     keskus: [500, 653.6],
     leveys: 166,
     renkaat: [
@@ -131,6 +148,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   MDG: {
     nimi: 'Madagaskar',
+    lippu: 'Flag of Madagascar.svg',
     keskus: [889.2, 742],
     leveys: 96,
     renkaat: [
@@ -139,6 +157,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   DZA: {
     nimi: 'Algeria',
+    lippu: 'Flag of Algeria.svg',
     keskus: [301.3, 147.7],
     leveys: 276,
     renkaat: [
@@ -147,6 +166,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   MAR: {
     nimi: 'Marokko',
+    lippu: 'Flag of Morocco.svg',
     keskus: [154.4, 126.4],
     leveys: 212,
     renkaat: [
@@ -155,6 +175,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   EGY: {
     nimi: 'Egypti',
+    lippu: 'Flag of Egypt.svg',
     keskus: [664.6, 168.7],
     leveys: 162,
     renkaat: [
@@ -163,6 +184,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   LBY: {
     nimi: 'Libya',
+    lippu: 'Flag of Libya.svg',
     keskus: [506.3, 162.5],
     leveys: 211,
     renkaat: [
@@ -171,6 +193,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   ETH: {
     nimi: 'Etiopia',
+    lippu: 'Flag of Ethiopia.svg',
     keskus: [794, 391.8],
     leveys: 198,
     renkaat: [
@@ -179,6 +202,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   UGA: {
     nimi: 'Uganda',
+    lippu: 'Flag of Uganda.svg',
     keskus: [698.1, 483.8],
     leveys: 73,
     renkaat: [
@@ -187,6 +211,7 @@ export const AFRICA_COUNTRY_SHAPES = {
   },
   SDS: {
     nimi: 'Etelä-Sudan',
+    lippu: 'Flag of South Sudan.svg',
     keskus: [669.3, 408.8],
     leveys: 152,
     renkaat: [

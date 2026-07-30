@@ -511,7 +511,14 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  */
 .arrival-card { max-width: 380px; border-width: 1.5px; }
 
-.arrival-card::before { display: none; }
+/* Saapumiskortin toinen viiva on erityisen hento: kuin kynä olisi
+   käynyt reunan kahdesti, kevyemmin jälkimmäisellä kerralla. */
+.arrival-card::before {
+  inset: -5px;
+  border-width: 1px;
+  border-color: rgba(70, 51, 31, 0.22);
+  transform: rotate(0.4deg);
+}
 
 .arrival-card h2 {
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
@@ -581,13 +588,62 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   padding-top: 0.5rem;
 }
 
-.arrival-maa-nimi {
+.arrival-maa-rivi {
   margin: 0 0 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.arrival-maa-nimi {
   font-family: var(--font-type);
   font-size: 0.82rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #7a5514;
+}
+
+/* Maan lippu suht pienenä nimen vieressä (omistajan toive). */
+.arrival-lippu {
+  height: 0.95rem;
+  width: auto;
+  border: 1px solid rgba(70, 51, 31, 0.4);
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/*
+ * Maan minikartta pelin omasta rajadatasta: muoto, pelin kaupungit ja
+ * nykyinen kaupunki korostettuna — sama kynä kuin laudalla.
+ */
+.arrival-maa-kartta-svg {
+  display: block;
+  width: 100%;
+  max-height: 150px;
+  margin: 0.1rem auto 0.35rem;
+}
+
+.minimaa-pohja {
+  fill: rgba(138, 108, 70, 0.13);
+  stroke: rgba(70, 51, 31, 0.85);
+  stroke-width: 1.3px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.minimaa-piste {
+  fill: #f6e7c6;
+  stroke: rgba(70, 51, 31, 0.9);
+  stroke-width: 1.1px;
+  vector-effect: non-scaling-stroke;
+}
+
+.minimaa-piste.nykyinen { fill: #d94f3d; }
+
+.minimaa-nimi {
+  fill: #46331f;
+  font-family: var(--font-type);
+  letter-spacing: 0.04em;
 }
 
 /* Passin matkasaalis: laatta ja sen nimi allekkain. */
@@ -1229,7 +1285,8 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   position: relative;
   background-image: var(--paper-noise), var(--card-bg);
   background-blend-mode: multiply, normal;
-  border: 2.5px dashed var(--map-ink);
+  /* Herkkä, kynämäinen katkoviiva paksun raamin sijaan (omistajan toive). */
+  border: 1.5px dashed rgba(70, 51, 31, 0.8);
   border-radius: var(--sketch-radius);
   padding: 1.15rem 1.3rem;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
@@ -1247,10 +1304,10 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 .dialog-card::before {
   content: "";
   position: absolute;
-  inset: -7px;
-  border: 1.5px dashed rgba(70, 51, 31, 0.45);
+  inset: -6px;
+  border: 1px dashed rgba(70, 51, 31, 0.32);
   border-radius: var(--sketch-radius-alt);
-  transform: rotate(-0.5deg);
+  transform: rotate(-0.45deg);
   pointer-events: none;
 }
 

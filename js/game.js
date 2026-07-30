@@ -169,7 +169,10 @@ export class Game {
     this.quiz = null;
     this.duel = null;
     this.duelArmed = false;
-    this.diaryNote = null;
+    // Saapumishavainto: mistä kaupungista tietoruutu kertoo. Asetetaan
+    // jokaisesta saapumisesta ja pysyy, kunnes saavutaan seuraavaan —
+    // matkalla ollessa teksti ei vaihdu (omistajan päätös).
+    this.arrivalFact = null;
     // Pysähdyksen muoto: sama erikoismuoto ei toistu kahdesti peräkkäin.
     this.lastForm = null;
     this.eventCard = null;
@@ -219,12 +222,10 @@ export class Game {
       p.packId = target.id;
       p.pos = { type: 'city', city: link.city };
       p.start = link.city;
-      this.setDiary(target);
       this.say(p.id, `${p.name} aloittaa matkansa: ${link.label}.`);
     } else {
       p.pos = { type: 'city', city: city.id };
       p.start = city.id;
-      this.setDiary(this.pack);
       this.say(p.id, `${p.name} aloittaa matkansa kaupungista ${city.name}.`);
     }
     this.visitCity(p);
@@ -470,6 +471,9 @@ export class Game {
    */
   visitCity(player = this.player) {
     if (player.pos.type !== 'city') return 0;
+    // Tietoruudun saapumishavainto seuraa jokaista saapumista — myös
+    // kaupunkiin, jossa on käyty jo aiemmin.
+    this.arrivalFact = { packId: this.pack.id, cityId: player.pos.city };
     const world = this.worldOf(player);
     if (!world || world.visited.has(player.pos.city)) return 0;
 
@@ -582,29 +586,6 @@ export class Game {
     return this.pack.texts.starHints?.[cityId] ?? null;
   }
 
-  /**
-   * Herra Foggin päiväkirjamerkintä kirjataan laudalle saavuttaessa. Merkintä
-   * näkyy tietoruudussa, kunnes matkaaja liikkuu saapumiskaupungista.
-   */
-  setDiary(pack) {
-    const notes = pack.texts.diaries ?? (pack.texts.diary ? [pack.texts.diary] : []);
-    if (!notes.length) return;
-    // VÄLIAIKAINEN: Tangerissa merkintä on aina ensimmäinen, jotta luetun
-    // puheen ja kirjoituskoneen yhdistelmää on helppo testata samalla
-    // tekstillä. Poistetaan, kun äänet on hyväksytty.
-    if (pack.id === 'africa' && this.player.pos.city === 'tanger') {
-      this.diaryNote = { packId: pack.id, pos: posKey(this.player.pos), text: notes[0] };
-      return;
-    }
-    // Merkintä arvotaan pelin omalla satunnaisluvulla, jotta sama peli
-    // toistuu tallennuksesta samanlaisena.
-    this.diaryNote = {
-      packId: pack.id,
-      pos: posKey(this.player.pos),
-      text: notes[Math.floor(this.rng() * notes.length)],
-    };
-  }
-
   /** Lentää porttikaupungista toiselle laudalle. Vie koko vuoron. */
   actionGateway(index) {
     const link = this.gatewayOptions()[index];
@@ -616,7 +597,6 @@ export class Game {
     p.packId = pack.id;
     p.pos = { type: 'city', city: link.city };
     this.visitCity(p);
-    this.setDiary(pack);
     this.lastPath = null;
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla: ${link.label}.`);
     this.emit('flight', link.label, { icon: 'kompassi', sub: `−${FLIGHT_PRICE} puntaa` });
@@ -755,7 +735,6 @@ export class Game {
     const fare = this.pendingFare;
     p.money -= fare;
     p.pos = move.pos;
-    this.diaryNote = null; // liikkeelle lähtö sulkee päiväkirjan
     this.lastPath = move.path;
     this.pendingFare = 0;
 
@@ -1352,7 +1331,6 @@ export class Game {
       p.packId = pack.id;
       p.pos = { type: 'city', city: gate.city };
       this.visitCity(p);
-      this.setDiary(pack);
       this.lastPath = null;
       this.say(p.id, `${p.name} astui portista: ${gate.label}.`);
       this.emit('flight', gate.label, { icon: 'tahti', sub: 'Tieto avasi portin' });
@@ -1580,7 +1558,6 @@ export class Game {
     p.money -= FLIGHT_PRICE;
     p.pos = { type: 'city', city: destination };
     this.visitCity(p);
-    this.diaryNote = null;
     this.lastPath = null;
     const city = this.board.cityById.get(destination);
     this.say(p.id, `${p.name} lensi ${FLIGHT_PRICE} punnalla kaupunkiin ${city.name}.`);
@@ -1703,7 +1680,7 @@ export class Game {
       quiz: this.quiz,
       duel: this.duel,
       duelArmed: this.duelArmed,
-      diaryNote: this.diaryNote,
+      arrivalFact: this.arrivalFact,
       lastForm: this.lastForm,
       eventCard: this.eventCard,
       puzzlesSeen: [...this.puzzlesSeen],
@@ -1780,7 +1757,8 @@ export class Game {
     game.quiz = data.quiz ?? null;
     game.duel = data.duel ?? null;
     game.duelArmed = !!data.duelArmed;
-    game.diaryNote = data.diaryNote ?? null;
+    // Vanhassa tallennuksessa oli diaryNote — se ohitetaan hiljaa.
+    game.arrivalFact = data.arrivalFact ?? null;
     game.lastForm = data.lastForm ?? null;
     game.eventCard = data.eventCard ?? null;
     game.puzzlesSeen = new Set(data.puzzlesSeen ?? []);

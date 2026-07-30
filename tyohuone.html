@@ -15,6 +15,30 @@
       color: var(--teksti); font-family: 'Courier New', monospace;
     }
     h1 { font-size: 1.05rem; letter-spacing: 0.08em; color: var(--korostus); margin: 0; white-space: nowrap; }
+    h1 .lyhyt { display: none; }
+    /* iPadilla (ja kapeammilla) valikko mahtuu yhdelle riville: otsikko
+       lyhenee ja napit tiivistyvät. */
+    @media (max-width: 1180px) {
+      h1 { font-size: 0.95rem; }
+      h1 .pitka { display: none; }
+      h1 .lyhyt { display: inline; }
+      header { gap: 0.3rem 0.6rem; }
+      header nav { gap: 0.25rem; }
+      header nav button { padding: 0.26rem 0.45rem; font-size: 0.78rem; }
+      #tyohuone-paivita { padding: 0.26rem 0.5rem; font-size: 0.78rem; }
+    }
+    /* iPad pystyssä: otsikko ja versio väistyvät ja valikko pysyy aina
+       yhdellä rivillä — ylivuoto vierittyy sivusuunnassa, joten rivi
+       kestää myös tulevat välilehdet. */
+    @media (max-width: 900px) {
+      h1 { display: none; }
+      #tyohuone-versio { display: none; }
+      header { flex-wrap: nowrap; }
+      header nav { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap;
+        overflow-x: auto; scrollbar-width: none; }
+      header nav::-webkit-scrollbar { display: none; }
+      header nav button { padding: 0.24rem 0.4rem; font-size: 0.75rem; white-space: nowrap; }
+    }
     h2 { font-size: 0.95rem; letter-spacing: 0.06em; color: var(--korostus); margin: 1.4rem 0 0.4rem; }
     p, li { max-width: 46rem; line-height: 1.55; color: var(--himmea); }
     a { color: var(--korostus); }
@@ -84,7 +108,7 @@
 </head>
 <body>
   <header>
-    <h1>Matkakirja — työhuone</h1>
+    <h1><span class="pitka">Matkakirja — työhuone</span><span class="lyhyt">Työhuone</span></h1>
     <nav id="valilehdet">
       <button data-tab="etusivu">Etusivu</button>
       <button data-tab="aanet">Äänet</button>
@@ -250,7 +274,6 @@
       <li>Isoisän 80 päivän ennätys — pohjustaa tulevan aikaraja-vastustajan.</li>
       <li>Matkamuistot palkintoina (sormus, pergamentti, voodoo-esine…) —
           osa rahanarvoisia, osa jää muistoiksi, joilla voi olla käyttöä myöhemmin.</li>
-      <li>Tanger on väliaikaisesti lukittu ensimmäiseen merkintään äänitestausta varten.</li>
     </ul>
 
     <h2>3 · Hahmot ja karaktääri</h2>
@@ -435,10 +458,11 @@
       { id: 'viivaikonit', teksti: 'Uusien viivaikonien arviointi (alaosan napit: saapas, purje, suurennuslasi, noppa, kompassi).' },
       { id: 'brandikirja', teksti: 'Brändikirjan läpiluku ja täydennys omin sanoin (Brändikirja-välilehti).' },
       { id: 'tekstit', teksti: 'Tekstit-välilehden läpiluku: kaikki pelin tekstit yhdessä paikassa — merkitse korjattavat kommentilla.' },
+      { id: 'saapumisluennat', teksti: 'Kuuntele saapumisluennat: joka kaupungissa havainto tai isoisän muistelu luetaan nyt ääneen saapuessa.' },
+      { id: 'tutkikortti', teksti: 'Arvioi uusi Tutki-kortti: maan lippu, pelityylinen minikartta ja omat suomitiivistelmät (10 paikkaa joilta fi-wiki puuttui).' },
       { id: 'elavain', teksti: 'ElevenLabs-avaimen kierrätys, kun generoinnit ovat valmiit.' },
     ];
     const TYOJONO = [
-      { id: 'tangerlukko', teksti: 'Tangerin päiväkirjan testilukon poisto, kun äänet on hyväksytty.' },
       { id: 'tyokalu', teksti: 'Seuraava työkalu: kartta-apuri tai kehityspaneeli (?dev=1) — ks. Työkalut-välilehti.' },
       { id: 'aineistotutkimus', teksti: 'Aineistotutkimus-minipelin suunnittelu yhdessä (ks. Peli-ideat).' },
       { id: 'opuspaketit', teksti: 'Opus-työlista: paketti 18 (Katso kuva -linkit) ja 19 (matkamuistot).' },
@@ -633,7 +657,7 @@
     const MOOTTORIT = [
       { id: 'elevenlabs', nimi: 'ElevenLabs', tila: 'kaytossa',
         mita: 'Puhe (eleven_v3 tunnetageilla, eleven_multilingual_v2 nopeussäädöllä) ja efektigeneraattori (/v1/sound-generation, myös luupit).',
-        huomiot: 'Käytössä: intro, lentorepliikki, 5 päiväkirjaa, 5 efektipilottia. Ääni: Viisas Kertoja. Krediitit kuluvat merkeistä; efektit halpoja, puhe kalliimpaa. Avain kierrätetään generointien jälkeen.' },
+        huomiot: 'Käytössä: intro, lentorepliikki, 23 tehostetta ja 32 kaupunkien saapumisluentaa (ääni: Viisas Kertoja). Krediitit kuluvat merkeistä; efektit halpoja, puhe kalliimpaa. Avain kierrätetään generointien jälkeen.' },
       { id: 'piper', nimi: 'Piper TTS (avoin)', tila: 'kokeiltava',
         mita: 'Ilmainen paikallinen puhesynteesi, suomenkielisiä ääniä. Ei krediittejä lainkaan.',
         huomiot: 'Laatu selvästi ElevenLabsia heikompi, mutta ilmainen varakone jos krediitit loppuvat tai halutaan massatuotantoa (esim. joka kaupungin tervehdys).' },

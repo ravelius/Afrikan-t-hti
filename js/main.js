@@ -4,10 +4,11 @@ import { Game } from './game.js';
 import { UI } from './ui.js';
 import { sfx } from './sound.js';
 import { packById } from './pack.js';
+import { startQuizMusic, stopPlaceStream, stopQuizMusic } from './ambience-stream.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.53';
+const APP_VERSION = '2026-07-30.54';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -86,11 +87,31 @@ function startGame() {
 
 // --- äänet ------------------------------------------------------------------
 
-// Äänet ovat aina päällä: erillinen vaimennusnappi poistettiin yläpalkista,
-// ja laitteen oma äänenvoimakkuus riittää. Asetetaan lippu suoraan, jottei
-// setEnabled soita kuittausääntä heti sivun latauduttua — ja jotta aiemmin
-// vaimennettu peli ei jäisi mykäksi ilman nappia, jolla äänet saisi takaisin.
-sfx.enabled = true;
+// Mykistysnappi palasi yläpalkkiin (omistajan toive). Tila luetaan
+// sound.js:n omasta talletuksesta, joten valinta muistetaan käyntien yli.
+const muteBtn = document.getElementById('mute-btn');
+const naytaMykistys = () => {
+  document.getElementById('mute-on').hidden = !sfx.enabled;
+  document.getElementById('mute-off').hidden = sfx.enabled;
+  muteBtn.title = sfx.enabled ? 'Mykistä äänet' : 'Palauta äänet';
+  muteBtn.setAttribute('aria-pressed', String(!sfx.enabled));
+};
+muteBtn.addEventListener('click', () => {
+  sfx.setEnabled(!sfx.enabled); // palatessa kuuluu kuittausklikki
+  if (!sfx.enabled) {
+    // Kaikki soiva hiljenee heti: striimit, luennat ja lentomoottori.
+    stopPlaceStream();
+    stopQuizMusic();
+    sfx.stopFlight();
+    ui?.stopDiaryVoice();
+    ui?.stopIntroVoice();
+  } else {
+    ui?.syncAmbience();
+    if (ui?.game?.quiz) startQuizMusic();
+  }
+  naytaMykistys();
+});
+naytaMykistys();
 
 // Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
 document.addEventListener('pointerdown', (event) => {

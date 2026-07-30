@@ -438,11 +438,17 @@
         else kiinniMannet.add(koriSlot);
       });
       const summary = document.createElement('summary');
-      summary.innerHTML = `${tiedot.maanosa} <span class="maara">· korissa ${koriNyt.length} · ${tiedot.kaupungit.length} paikkaa</span>`;
+      const maita = (tiedot.maat ?? []).filter((m) => m.nimi).length;
+      const laajuus = maita
+        ? `${maita} maata` : `${tiedot.kaupungit.length} paikkaa`;
+      summary.innerHTML = `${tiedot.maanosa} <span class="maara">· korissa ${koriNyt.length} · ${laajuus}</span>`;
       kotelo.appendChild(summary);
+      // Maanosan alla paikat listataan maittain (tyyppi → maanosa → maat).
       const seloste = document.createElement('div');
       seloste.className = 'kori-seloste';
-      seloste.textContent = `Koskee: ${tiedot.kaupungit.join(', ')}.`;
+      seloste.textContent = (tiedot.maat ?? [])
+        .map((m) => (m.nimi ? `${m.nimi} (${m.kaupungit.join(', ')})` : m.kaupungit.join(', ')))
+        .join(' · ');
       kotelo.appendChild(seloste);
 
       for (const ehdokas of rivit) {
@@ -547,8 +553,9 @@
      * listoihin, rastit tehdään maanosittain.
      */
     function rakennaKoriRyhma(tyyppi) {
+      // Ylätaso on äänityyppi — sen alla maanosat ja niiden alla maat.
       const nimi = TYYPPI_NIMET[tyyppi] ?? tyyppi;
-      const otsikko = `Kaupungit — ${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
+      const otsikko = `${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
       const laudat = KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? [];
       const omaSlot = `kori:${tyyppi}`;
       const omat = (omatEhdokkaat()[omaSlot] ?? []).map((e) => ({ ...e, oma: true }));
@@ -556,7 +563,8 @@
       if (haku && !otsikko.toLowerCase().includes(haku)
         && !rivit.some((e) => e.nimi.toLowerCase().includes(haku))
         && !laudat.some((l) => l.maanosa.toLowerCase().includes(haku)
-          || l.kaupungit.some((k) => k.toLowerCase().includes(haku)))) return null;
+          || l.kaupungit.some((k) => k.toLowerCase().includes(haku))
+          || (l.maat ?? []).some((m) => m.nimi && m.nimi.toLowerCase().includes(haku)))) return null;
 
       const kotelo = document.createElement('details');
       kotelo.className = 'ryhma';

@@ -21,6 +21,7 @@ import {
 import { stampBoard, stampDate, stampList } from './passport.js';
 import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from './wiki.js';
 import { drawPuzzle } from './packs/africa-puzzles.js';
+import { OMAT_TIIVISTELMAT } from './packs/africa-tiivistelmat.js';
 
 // Tiivistelmät ja kuvat haetaan kerran per artikkeli: sama kuva näkyy
 // sekä saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
@@ -28,7 +29,20 @@ const wikiSummaryCache = new Map();
 const wikiImageCache = new Map();
 
 async function cachedSummary(title) {
-  if (!wikiSummaryCache.has(title)) wikiSummaryCache.set(title, fetchSummary(title));
+  if (!wikiSummaryCache.has(title)) {
+    // Oma suomenkielinen tiivistelmä paikkaa puuttuvan tai englannin-
+    // kielisen wikitekstin — ja toimii myös ilman verkkoa. Kunnollinen
+    // fi-artikkeli ohittaa oman tekstin itsestään. Wikihaun kuva
+    // säilytetään, otsikko pysyy pelin omana.
+    wikiSummaryCache.set(title, fetchSummary(title).then((summary) => {
+      const oma = OMAT_TIIVISTELMAT[title];
+      if (!oma || (summary && summary.lang === 'fi')) return summary;
+      return { ...(summary ?? {}), title, extract: oma, lang: 'fi', oma: true };
+    }).catch(() => {
+      const oma = OMAT_TIIVISTELMAT[title];
+      return oma ? { title, extract: oma, lang: 'fi', oma: true } : null;
+    }));
+  }
   return wikiSummaryCache.get(title);
 }
 
@@ -38,6 +52,46 @@ async function cachedImage(title) {
   }
   return wikiImageCache.get(title);
 }
+
+// Saapumishavaintojen luennat: 'pakka:kaupunki' kertoo, että tiedosto
+// assets/audio/puhe-<pakka>-havainto-<kaupunki>.mp3 on olemassa
+// (ElevenLabs, Viisas Kertoja). Kortin kaiutin ja luenta näkyvät vain
+// näille — muut kaupungit saavat tekstinsä ilman ääntä, kunnes niiden
+// luennat generoidaan.
+const HAVAINTOLUENNAT = new Set([
+  'africa:tanger',
+  'africa:kairo',
+  'africa:tripoli',
+  'africa:murzuk',
+  'africa:alkufra',
+  'africa:sahara',
+  'africa:ahaggar',
+  'africa:timbuktu',
+  'africa:gao',
+  'africa:dakar',
+  'africa:sierraleone',
+  'africa:kappalmas',
+  'africa:kumasi',
+  'africa:orjarannikko',
+  'africa:kano',
+  'africa:kamerun',
+  'africa:kongo',
+  'africa:angola',
+  'africa:namib',
+  'africa:kapkaupunki',
+  'africa:kimberley',
+  'africa:mosambik',
+  'africa:madagaskar',
+  'africa:sansibar',
+  'africa:kilimandzaro',
+  'africa:viktoria',
+  'africa:tanganjika',
+  'africa:bahrelghazal',
+  'africa:darfur',
+  'africa:suakin',
+  'africa:addisabeba',
+  'africa:rashafun',
+]);
 
 const wikiGalleryCache = new Map();
 
@@ -238,6 +292,16 @@ export class UI {
     this.arrivalMaa = document.getElementById('arrival-maa');
     this.arrivalMaaNimi = document.getElementById('arrival-maa-nimi');
     this.arrivalMaaIntro = document.getElementById('arrival-maa-intro');
+    this.arrivalMaaKartta = document.getElementById('arrival-maa-kartta');
+    // Lippu näytetään vasta kun se on oikeasti latautunut — ilman verkkoa
+    // riviltä ei jää rikkinäistä kuvaruutua.
+    this.arrivalMaaLippu = document.getElementById('arrival-maa-lippu');
+    this.arrivalMaaLippu.addEventListener('load', () => {
+      this.arrivalMaaLippu.hidden = false;
+    });
+    this.arrivalMaaLippu.addEventListener('error', () => {
+      this.arrivalMaaLippu.hidden = true;
+    });
     this.arrivalMaaWiki = document.getElementById('arrival-maa-wiki');
     this.arrivalMaaWiki.addEventListener('click', () => {
       const maa = this.arrivalMaaTiedot;
@@ -1399,6 +1463,63 @@ export class UI {
   }
 
   /**
+   * Maan minikartta saapumiskorttiin pelin omasta rajadatasta: maan
+   * muoto, pelin kaupungit pisteinä ja nykyinen kaupunki korostettuna.
+   * Sama kynä kuin laudalla — ja toimii ilman verkkoa, toisin kuin
+   * Wikipediasta haettu kartta.
+   */
+  piirraMaakartta(iso, nykyinenId) {
+    const map = this.game.pack.map;
+    const maa = map?.countryShapes?.[iso];
+    if (!maa?.renkaat?.length) return null;
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const rengas of maa.renkaat) {
+      for (const [x, y] of rengas) {
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      }
+    }
+    const mitta = Math.max(maxX - minX, maxY - minY);
+    // Nimilaput tarvitsevat reunoille hieman ilmaa muodon ympärille.
+    const vara = mitta * 0.16;
+    const svg = el('svg', {
+      class: 'arrival-maa-kartta-svg',
+      viewBox: `${minX - vara} ${minY - vara} ${maxX - minX + vara * 2} ${maxY - minY + vara * 2}`,
+      'aria-hidden': 'true',
+    });
+    const d = maa.renkaat
+      .map((r) => `M${r.map(([x, y]) => `${x},${y}`).join(' L')}Z`)
+      .join(' ');
+    el('path', { d, class: 'minimaa-pohja' }, svg);
+    for (const [cityId, maanIso] of Object.entries(map.cityCountry ?? {})) {
+      if (maanIso !== iso) continue;
+      const kaupunki = this.game.board.cityById.get(cityId);
+      if (!kaupunki) continue;
+      const oma = cityId === nykyinenId;
+      el('circle', {
+        cx: kaupunki.x,
+        cy: kaupunki.y,
+        r: ((oma ? 0.024 : 0.016) * mitta).toFixed(2),
+        class: oma ? 'minimaa-piste nykyinen' : 'minimaa-piste',
+      }, svg);
+      const nimi = el('text', {
+        x: kaupunki.x,
+        y: kaupunki.y - 0.04 * mitta,
+        class: 'minimaa-nimi',
+        'text-anchor': 'middle',
+        'font-size': (0.062 * mitta).toFixed(1),
+      }, svg);
+      nimi.textContent = kaupunki.name;
+    }
+    return svg;
+  }
+
+  /**
    * Tietoruutu pelaajan sijainnista. Siinä puhuu vuorotellen kaksi ääntä:
    * isoisän 1870-luvun päiväkirja ja nuoren herran nykyhavainto. Teksti
    * vaihtuu kierroksittain mutta pysyy samana saman vuoron ajan, jotta sen
@@ -1421,6 +1542,11 @@ export class UI {
       return;
     }
 
+    // Matkalla kortti ei päivity: sama merkintä pysyy näytöllä, kunnes
+    // saavutaan uuteen kaupunkiin — uusi nopanheitto reitillä ei vaihda
+    // tekstiä (omistajan päätös).
+    if (game.player.pos.type === 'edge' && this.factKey) return;
+
     // Isoisän aikataulu nousee esiin, kun matkapäivä ohittaa merkinnän. Rivi
     // menee saapumismerkinnän edelle, koska se näkyy vain yhden vuoron ajan.
     const aikataulu = game.scheduleNote;
@@ -1437,42 +1563,6 @@ export class UI {
       return;
     }
 
-    // Laudalle saavuttaessa tietoruudussa on saapumismerkintä. Se väistyy,
-    // kun matkaaja lähtee saapumiskaupungista liikkeelle.
-    const note = game.diaryNote;
-    if (note && note.packId === game.pack.id && posKey(game.player.pos) === note.pos) {
-      // Lennon aikana ruudussa on lentorepliikki — päiväkirjan teksti ja
-      // luenta alkavat vasta, kun pelaaja astuu ulos koneesta. Muuten
-      // lukija lukisi eri tekstiä kuin ruudulla näkyy.
-      if (document.body.classList.contains('flight-active')) return;
-      const key = `diary:${note.packId}:${note.text}`;
-      if (this.factKey === key) return;
-      this.factKey = key;
-      this.factVoiceEl.textContent = 'Matkapäiväkirjasta';
-      this.factPlace.textContent = game.pack.boardLabel;
-      this.factImage.hidden = true;
-      // Ensimmäinen lause lihavoituna, loput perään samalla koneella.
-      const { eka, loput } = ekaLause(note.text);
-      this.factText.textContent = '';
-      const lihava = html('b', 'fact-lead');
-      const jatko = html('span');
-      this.factText.appendChild(lihava);
-      this.factText.appendChild(document.createTextNode(' '));
-      this.factText.appendChild(jatko);
-      this.typeText(lihava, eka, 'fact', () => {
-        if (loput) this.typeText(jatko, loput, 'fact');
-      });
-      // Luenta pysähtyy ensimmäisen virkkeen jälkeiseen hengähdykseen —
-      // kaiutin jatkaa samasta kohdasta. Näin ääntä ei tule liikaa,
-      // mutta koko merkintä on yhden painalluksen päässä.
-      const luvut = packById(note.packId)?.texts?.diaries ?? [];
-      const idx = luvut.indexOf(note.text);
-      this.diaryFullUrl = idx >= 0 ? `assets/audio/puhe-${note.packId}-paivakirja-${idx}.mp3` : null;
-      this.factKuuntele.hidden = idx < 0;
-      this.playDiaryVoice(this.diaryFullUrl, { ekaLauseeseen: true });
-      return;
-    }
-
     // Isoisän vihje laudan pääaarteesta nousee esiin harvakseltaan.
     const hint = game.starHint();
     if (hint) {
@@ -1486,6 +1576,59 @@ export class UI {
       this.stopDiaryVoice();
       this.typeText(this.factText, hint);
       return;
+    }
+
+    // Saapumishavainto: kortti kertoo aina siitä kaupungista, jossa
+    // matkaaja on. Isoisän muistelu luetaan ääneen ensisijaisesti; ilman
+    // sitä käytetään kaupungin ensimmäistä havaintoa. Sama teksti pysyy
+    // koko käynnin ajan, ja luenta kuuluu vain kerran per saapuminen.
+    const saapuminen = game.arrivalFact;
+    if (saapuminen && saapuminen.packId === game.pack.id
+      && game.player.pos.type === 'city' && game.player.pos.city === saapuminen.cityId) {
+      // Lennon aikana ruudussa on lentorepliikki — havainto ja luenta
+      // alkavat vasta, kun pelaaja astuu ulos koneesta. Muuten lukija
+      // lukisi eri tekstiä kuin ruudulla näkyy.
+      if (document.body.classList.contains('flight-active')) return;
+      const kaupunki = game.board.cityById.get(saapuminen.cityId);
+      const faktat = game.pack.placeFacts?.[saapuminen.cityId] ?? [];
+      const isoisanIdx = faktat.findIndex((f) => factVoice(f) === 'isoisa');
+      const fakta = faktat[isoisanIdx >= 0 ? isoisanIdx : 0];
+      if (fakta && kaupunki) {
+        const key = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
+        if (this.factKey === key) return;
+        this.factKey = key;
+        this.factVoiceEl.textContent = voiceTitle(factVoice(fakta));
+        this.factPlace.textContent = kaupunki.name;
+        this.factImageTitle = typeof fakta === 'string' ? null : fakta.wiki ?? null;
+        this.factImage.hidden = !this.factImageTitle;
+        // Ensimmäinen lause lihavoituna, loput perään samalla koneella.
+        const teksti = factText(fakta);
+        const { eka, loput } = ekaLause(teksti);
+        this.factText.textContent = '';
+        const lihava = html('b', 'fact-lead');
+        const jatko = html('span');
+        this.factText.appendChild(lihava);
+        this.factText.appendChild(document.createTextNode(' '));
+        this.factText.appendChild(jatko);
+        this.typeText(lihava, eka, 'fact', () => {
+          if (loput) this.typeText(jatko, loput, 'fact');
+        });
+        // Luenta pysähtyy ensimmäisen virkkeen jälkeiseen hengähdykseen —
+        // kaiutin jatkaa samasta kohdasta. Vihjeen tai aikataulun väläys
+        // ei käynnistä luentaa uudelleen samassa kaupungissa.
+        const luettava = HAVAINTOLUENNAT.has(`${saapuminen.packId}:${saapuminen.cityId}`);
+        this.diaryFullUrl = luettava
+          ? `assets/audio/puhe-${saapuminen.packId}-havainto-${saapuminen.cityId}.mp3`
+          : null;
+        this.factKuuntele.hidden = !luettava;
+        if (luettava && this.luettuSaapuminen !== key) {
+          this.luettuSaapuminen = key;
+          this.playDiaryVoice(this.diaryFullUrl, { ekaLauseeseen: true });
+        } else {
+          this.stopDiaryVoice();
+        }
+        return;
+      }
     }
 
     const player = game.player;
@@ -1708,6 +1851,18 @@ export class UI {
     if (maa) {
       this.arrivalMaaNimi.textContent = maa.nimi;
       this.arrivalMaaIntro.textContent = '';
+      // Lippu suht pienenä nimen vieressä; puuttuva verkko piilottaa sen.
+      this.arrivalMaaLippu.hidden = true;
+      if (maa.lippu) {
+        this.arrivalMaaLippu.alt = `${maa.nimi} — lippu`;
+        this.arrivalMaaLippu.src = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(maa.lippu)}?width=96`;
+      } else {
+        this.arrivalMaaLippu.removeAttribute('src');
+      }
+      // Minikartta pelin omasta rajadatasta — toimii myös ilman verkkoa.
+      this.arrivalMaaKartta.textContent = '';
+      const kartta = this.piirraMaakartta(iso, city.id);
+      if (kartta) this.arrivalMaaKartta.appendChild(kartta);
       cachedSummary(maa.wiki ?? maa.nimi).then((summary) => {
         if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
         if (!summary?.extract) return;
@@ -1815,6 +1970,11 @@ export class UI {
     });
 
     // CC BY-SA vaatii maininnan ja linkin — myös kaupallisessa käytössä.
+    // Oma tiivistelmä ei ole Wikipediaa, joten sille kerrotaan oma lähde.
+    if (summary.oma) {
+      this.wikiSource.textContent = 'Matkakirjan oma tiivistelmä — fi-Wikipediassa ei vielä ole tästä artikkelia.';
+      return;
+    }
     this.wikiSource.textContent = 'Lähde: Wikipedia (CC BY-SA) — ';
     const link = html('a', '', 'lue artikkeli');
     link.href = summary.url;
