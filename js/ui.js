@@ -107,17 +107,6 @@ const HAVAINTOLUENNAT = new Set([
   'africa:rashafun',
 ]);
 
-// Uuden mallin saapumisluennat: 'pakka:kaupunki' kertoo, että tiedosto
-// assets/audio/puhe-<pakka>-saapuminen-<kaupunki>.mp3 on olemassa. Uusi
-// matkakirjamalli (fiiliskuvaus + isoisän nosto) on käytössä vain näissä
-// kaupungeissa — muiden tekstit odottavat africa-saapumiset.js:ssä
-// omistajan lukukierrosta työhuoneessa, ja ne otetaan käyttöön kun
-// luennat on generoitu. Näin peli ei putoa mykäksi kesken siirtymän.
-const SAAPUMISLUENNAT = new Set([
-  'africa:tanger',
-  'africa:tripoli',
-]);
-
 const wikiGalleryCache = new Map();
 
 async function cachedGallery(title) {
@@ -1744,8 +1733,7 @@ export class UI {
       // perässä isoisän nosto, ja lukija lukee koko merkinnän tunteella.
       // Teksti ei vaihdu kaupungissa olon aikana.
       const uusi = (SAAPUMISTEKSTIT[saapuminen.packId] ?? {})[saapuminen.cityId];
-      const uusiLuettu = SAAPUMISLUENNAT.has(`${saapuminen.packId}:${saapuminen.cityId}`);
-      if (uusi && uusiLuettu && kaupunki) {
+      if (uusi && kaupunki) {
         const key = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
         if (this.factKey === key) return;
         this.factKey = key;

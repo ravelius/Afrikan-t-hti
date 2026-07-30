@@ -655,11 +655,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .fact-teksti-rivi .fact-text {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  max-height: calc(38dvh - 3.4rem);
-}
-
-@media (max-width: 560px) {
-  .fact-teksti-rivi .fact-text { max-height: calc(30dvh - 3rem); }
+  /* Kova katto rivimääränä (omistajan mitta: noin 8 riviä otsikkoineen
+   * eli 6 tekstiriviä): em-mitta ei riipu viewport-yksiköiden tuesta,
+   * flexin kutistumisesta eikä laitteesta — iPadin Safari ohitti sekä
+   * prosentti- että dvh-katot. */
+  max-height: calc(6 * 1.45em);
 }
 
 .fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
@@ -2214,7 +2214,7 @@ body[data-mode] .fact-card {
    * prosenttirajaa (kortti kasvoi koko tekstin mittaiseksi kartan
    * päälle), dvh lasketaan aina ruudusta. Prosentti jää varalle
    * vanhoille selaimille. */
-  max-height: 38%;
+  max-height: 38vh;
   max-height: 38dvh;
   /* Kortti ei vieritä itseään — vain teksti vierii (.fact-text). */
   overflow: hidden;
@@ -2326,7 +2326,7 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    * olisi puhelimella liian kapea luettavaksi. */
   body[data-mode] .fact-card {
     width: min(340px, calc(100% - 0.8rem));
-    max-height: 34%;
+    max-height: 30vh;
     max-height: 30dvh;
   }
   .fact-card h2 { font-size: 0.68rem; margin-bottom: 0.2rem; }
