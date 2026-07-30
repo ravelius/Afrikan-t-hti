@@ -15,6 +15,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Tangerin suurmoskeijan kulmalla kävi vilske jo isoisän aikaan: '
       + 'kantajia, kauppiaita ja aaseja samalla kapealla kadulla.',
+    // Uusi kuva pilkottaa vanhan alta (omistajan kokeilu).
+    uusi: {
+      tiedosto: 'Panorama Tanger Bay Tangier Marokko.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama kaupunki nykyään: valkoiset talot kiipeävät yhä '
+        + 'rinnettä, mutta lahden rantaan on kasvanut moderni satama.',
+    },
   },
   kairo: {
     tiedosto: 'Kairo, marchands ambulants LCCN2017657437.jpg',
@@ -22,6 +29,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Library of Congress (PD)',
     selite: 'Kiertäviä kauppiaita Kairon kadulla. Vesimyyjä kantoi tavaransa '
       + 'selässään ja huusi kaupan kilpaa muiden kanssa.',
+    uusi: {
+      tiedosto: 'Cairo-Hilton-Skyline.jpg',
+      lahde: 'Commons (CC BY-SA 3.0)',
+      selite: 'Nykyinen Kairo nousee Niilin rannalla korkeuksiin — mutta '
+        + 'joki virtaa keskellä yhtä tyynenä kuin ennenkin.',
+    },
   },
   tripoli: {
     tiedosto: 'Arabs in Tripoli WDL2444.png',
@@ -168,6 +181,107 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Vanha garesa-linnoitus Hafunin niemellä, Afrikan itäisimmässä '
       + 'kärjessä. Monsuunituulet toivat tänne purjehtijoita jo tuhat '
       + 'vuotta sitten.',
+  },
+
+  // --- Täydennys (omistajan pyyntö: loput vanhat kuvat). Ahaggarille,
+  // Mosambikin saarelle, Viktorianjärvelle, Bahr el Ghazalille ja
+  // Saharalle ei vielä löytynyt kelvollista aikakauden kuvaa — Saharan
+  // 1907-kortti hylättiin, koska se on siirtomaanäyttelyssä esitellyn
+  // ihmisen kuva. Etsintä jatkuu.
+  karthago: {
+    tiedosto: 'Tunisie, Carthage, cathédrale et séminaire de St Louis - btv1b53114044m.jpg',
+    vuosi: '1800-luvun loppu',
+    lahde: 'BnF Gallica (PD)',
+    selite: 'Karthagon Byrsan kukkula isoisän aikaan: raunioiden keskelle '
+      + 'oli noussut katedraali, ja kaivaukset olivat vasta alussa.',
+  },
+  marrakech: {
+    tiedosto: 'Marrakech Minaret depuis la rue animée - sap04 10l01821 p.jpg',
+    vuosi: 'noin 1924',
+    lahde: 'Ministère de la Culture (CC BY-SA 4.0)',
+    selite: 'Vilkas katu Marrakechissa ja taustalla Koutoubian minareetti — '
+      + 'sama torni, jonka mukaan kaupungissa suunnistetaan yhä.',
+  },
+  timbuktu: {
+    tiedosto: 'Timbuktu, 1906.png',
+    vuosi: '1906',
+    lahde: 'Commons (PD)',
+    selite: 'Timbuktun savutaloja ja hiekkakatuja vuonna 1906. Kaupunki oli '
+      + 'juuri se salaperäinen aavikon satama, josta Euroopassa tarinoitiin.',
+  },
+  lagos: {
+    tiedosto: 'Lagos, 1929.jpg',
+    vuosi: '1929',
+    lahde: 'The National Archives UK (OGL)',
+    selite: 'Lagosin satamakatua vuonna 1929: kauppahuoneita ja laitureita '
+      + 'laguunin rannalla — kaupunki oli jo silloin Länsi-Afrikan '
+      + 'vilkkaimpia.',
+  },
+  tshadjarvi: {
+    tiedosto: 'ETH-BIB-Ufer des Tschadsee-Tschadseeflug 1930-31-LBS MH02-08-0976.tif',
+    vuosi: '1930–31',
+    lahde: 'ETH-Bibliothek, Mittelholzer (PD)',
+    selite: 'Tšad-järven rantaa ilmasta Walter Mittelholzerin kuuluisalla '
+      + 'Afrikan-lennolla — juuri sellaiselta matkalta, joista isoisäkin '
+      + 'luki lehdistä.',
+  },
+  kamerun: {
+    tiedosto: 'People gathered before a church, Cameroon, ca.1910-1920 (IMP-YDS-RG101-012-0000-0036).jpg',
+    vuosi: '1910-luku',
+    lahde: 'Yale Divinity School (PD)',
+    selite: 'Väkeä koolla kirkon edustalla Kamerunissa 1910-luvulla — '
+      + 'vuoren juurella kohtasivat tuolloin monet maailmat.',
+  },
+  namib: {
+    tiedosto: 'Lüderitzbucht, Deutsch-Südwestafrika. The newly finished pier with an Illing locomotive, February 1908, photograph by de Meillon.jpg',
+    vuosi: '1908',
+    lahde: 'Commons (PD)',
+    selite: 'Lüderitzin uusi laituri Namibin rannikolla 1908: veturi ja '
+      + 'nostokurjet keskellä maailman vanhinta aavikkoa.',
+  },
+  sthelena: {
+    tiedosto: 'The drama of Saint Helena (1910) (14777842132).jpg',
+    vuosi: '1910',
+    lahde: 'Internet Archive (PD)',
+    selite: 'Näkymä St. Helenalle 1910 julkaistun kirjan sivuilta — jyrkät '
+      + 'kalliot ottivat vastaan jokaisen saapujan, keisarista '
+      + 'matkalaiseen.',
+  },
+  viktorianputoukset: {
+    tiedosto: 'Victoria Falls Bridge 1905.jpg',
+    vuosi: '1905',
+    lahde: 'Commons (PD)',
+    selite: 'Putousten rautatiesilta juuri valmistuneena 1905. Se '
+      + 'rakennettiin niin lähelle, että vaunuihin sataa vesisumua — '
+      + 'suunnittelijan tarkoituksella.',
+  },
+  nairobi: {
+    tiedosto: 'Photograph of Kenyan Sikh pioneers in-front of Gurdwara Sahib Railway Landhies in Nairobi, Kenya, 1903.jpg',
+    vuosi: '1903',
+    lahde: 'Commons (PD)',
+    selite: 'Rautatien rakentajia Nairobissa 1903 — kaupunki oli tuolloin '
+      + 'vasta muutaman vuoden ikäinen ratatyöläisten leiri.',
+    uusi: {
+      tiedosto: 'A giraffe with a beautiful background of Nairobi City Skyline.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama kaupunki sata vuotta myöhemmin: kirahvi laiduntaa '
+        + 'kansallispuistossa keskustan tornien katseen alla.',
+    },
+  },
+  darfur: {
+    tiedosto: 'Sultan Ali Dinar.jpg',
+    vuosi: '1910-luku',
+    lahde: 'Commons (CC0)',
+    selite: 'Ali Dinar, Darfurin viimeinen sulttaani, virallisessa '
+      + 'muotokuvassaan. Hänen valtakautensa päättyi 1916 — vain '
+      + 'kymmenkunta vuotta ennen isoisän matkaa.',
+  },
+  suakin: {
+    tiedosto: 'TheLandingPlaceAtSuakim(Suakin)1871.jpg',
+    vuosi: '1871',
+    lahde: 'Commons (PD)',
+    selite: 'Suakinin laituripaikka 1871: dhow-veneitä ja korallitaloja '
+      + 'saaren rannassa, kun satama oli vielä täydessä kukassaan.',
   },
 };
 
