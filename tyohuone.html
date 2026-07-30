@@ -89,6 +89,17 @@
     .tehtavat li { margin-bottom: 0.45rem; }
     .kommentti { width: 100%; max-width: 42rem; margin-top: 0.2rem;
       padding: 0.3rem 0.55rem; font-size: 0.85rem; display: block; }
+    /* Kuvat-välilehti: vanhat valokuvat pieninä vedoksina. */
+    .kuvaruudukko { display: grid; gap: 0.7rem; max-width: 72rem;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+    .kuvakortti { background: #f8f3e6; color: #3c2f1e; padding: 5px 5px 7px;
+      border-radius: 2px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35); }
+    .kuvakortti img { display: block; width: 100%; height: 130px;
+      object-fit: cover; filter: grayscale(1) contrast(1.03);
+      background: #ded5c2; }
+    .kuvakortti .nimi { font-size: 0.85rem; margin: 0.3rem 0 0.1rem; }
+    .kuvakortti .nimi a { color: #5a4a33; }
+    .kuvakortti .meta { font-size: 0.72rem; color: #6d5a40; }
     /* Tekstit-välilehti: tiiviit riviluettelot. */
     .tekstirivi { border-top: 1px dotted var(--reuna); padding: 0.35rem 0;
       max-width: 62rem; font-size: 0.86rem; color: var(--himmea); line-height: 1.5; }
@@ -113,6 +124,7 @@
       <button data-tab="etusivu">Etusivu</button>
       <button data-tab="aanet">Äänet</button>
       <button data-tab="tekstit">Tekstit</button>
+      <button data-tab="kuvat">Kuvat</button>
       <button data-tab="pelit">Peli-ideat</button>
       <button data-tab="lahteet">Lähteet</button>
       <button data-tab="moottorit">Moottorit</button>
@@ -182,6 +194,16 @@
     </div>
     <div class="grid" id="tekstit-ryhmat" style="margin-bottom:0.4rem"></div>
     <div id="tekstit-lista"></div>
+  </section>
+
+  <!-- KUVAT: muistikirjan vanhat valokuvat -->
+  <section id="tab-kuvat" hidden>
+    <p>Muistikirjan vanhat valokuvat kaupungeittain — samat kuvat, jotka
+       aukeavat pelissä postikortteina. Nimi vie Commonsin tiedostosivulle,
+       jolta näkee alkuperän ja lisenssin. Merkitse vaihdettavat etusivun
+       kommenttikenttään.</p>
+    <div id="kuva-ruudukko" class="kuvaruudukko"></div>
+    <p id="kuvattomat" style="margin-top:0.8rem"></p>
   </section>
 
   <!-- LÄHTEET -->
@@ -389,6 +411,7 @@
 
   <script type="module">
     import { PACKS, packById } from './js/pack.js';
+    import { AFRICA_VALOKUVAT, valokuvaUrl } from './js/packs/africa-valokuvat.js';
 
     // --- välilehdet: #aihe-osoite toimii kirjanmerkkinä ---------------------
     const napit = [...document.querySelectorAll('#valilehdet button')];
@@ -405,6 +428,7 @@
         if (!kehys.src) kehys.src = 'aanet.html';
       }
       if (tab === 'maanosat') paivitaKartta();
+      if (tab === 'kuvat') piirraKuvat();
       history.replaceState(null, '', `#${tab}`);
     };
     for (const nappi of napit) nappi.addEventListener('click', () => nayta(nappi.dataset.tab));
@@ -460,9 +484,12 @@
       { id: 'tekstit', teksti: 'Tekstit-välilehden läpiluku: kaikki pelin tekstit yhdessä paikassa — merkitse korjattavat kommentilla.' },
       { id: 'saapumisluennat', teksti: 'Kuuntele saapumisluennat: joka kaupungissa havainto tai isoisän muistelu luetaan nyt ääneen saapuessa.' },
       { id: 'tutkikortti', teksti: 'Arvioi uusi Tutki-kortti: maan lippu, pelityylinen minikartta ja omat suomitiivistelmät (10 paikkaa joilta fi-wiki puuttui).' },
+      { id: 'valokuvat', teksti: 'Vanhojen valokuvien läpikäynti Kuvat-välilehdellä (22 kaupunkia) — merkitse vaihdettavat kommentilla.' },
+      { id: 'introteksti', teksti: 'Avausteksti: jos muutat sitä, generoin puheen uusiksi samalla kertaa — pyydä minulta.' },
       { id: 'elavain', teksti: 'ElevenLabs-avaimen kierrätys, kun generoinnit ovat valmiit.' },
     ];
     const TYOJONO = [
+      { id: 'intropuhe', teksti: 'Avaustekstin puheen uusinta ElevenLabsilla, kun uusi teksti on valmis. Nykyisen tiedoston kova loppureuna (töks) pehmennetään toistossa, joten uusintaa ei tarvita ennen tekstimuutosta.' },
       { id: 'tyokalu', teksti: 'Seuraava työkalu: kartta-apuri tai kehityspaneeli (?dev=1) — ks. Työkalut-välilehti.' },
       { id: 'aineistotutkimus', teksti: 'Aineistotutkimus-minipelin suunnittelu yhdessä (ks. Peli-ideat).' },
       { id: 'opuspaketit', teksti: 'Opus-työlista: paketti 18 (Katso kuva -linkit) ja 19 (matkamuistot).' },
@@ -812,6 +839,49 @@
       if (karttaKehys.src !== new URL(osoite, location.href).href) karttaKehys.src = osoite;
     }
     karttaValinta.addEventListener('change', paivitaKartta);
+
+    // --- kuvat: muistikirjan vanhat valokuvat --------------------------------
+    // Ruudukko rakennetaan vasta kun välilehti avataan, ettei työhuone
+    // hae parinkymmentä kuvaa Commonsista joka käynnillä.
+    let kuvatPiirretty = false;
+    function piirraKuvat() {
+      if (kuvatPiirretty) return;
+      kuvatPiirretty = true;
+      const afrikka = packById('africa');
+      const ruudukko = document.getElementById('kuva-ruudukko');
+      const ilman = [];
+      for (const city of afrikka.cities) {
+        const kuva = AFRICA_VALOKUVAT[city.id];
+        if (!kuva) {
+          ilman.push(city.name);
+          continue;
+        }
+        const kortti = document.createElement('div');
+        kortti.className = 'kuvakortti';
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = `${city.name} — vanha valokuva`;
+        img.src = valokuvaUrl(kuva.tiedosto, 320);
+        kortti.appendChild(img);
+        const nimi = document.createElement('p');
+        nimi.className = 'nimi';
+        const linkki = document.createElement('a');
+        linkki.href = `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(kuva.tiedosto)}`;
+        linkki.target = '_blank';
+        linkki.rel = 'noopener';
+        linkki.textContent = city.name;
+        nimi.appendChild(linkki);
+        kortti.appendChild(nimi);
+        const meta = document.createElement('p');
+        meta.className = 'meta';
+        meta.textContent = [kuva.vuosi, kuva.lahde].filter(Boolean).join(' · ');
+        kortti.appendChild(meta);
+        ruudukko.appendChild(kortti);
+      }
+      document.getElementById('kuvattomat').textContent = ilman.length
+        ? `Ilman kuvaa vielä (${ilman.length}): ${ilman.join(', ')}. Näille etsitään sopiva vanha kuva myöhemmin.`
+        : 'Jokaisella kaupungilla on kuva.';
+    }
 
     // --- maanosat: luvut suoraan paketeista ---------------------------------
     const TILA_MERKINNAT = {

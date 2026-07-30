@@ -582,11 +582,21 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /*
  * Vanha valokuva muistikirjan kyljessä: pieni vedos valkoisin reunuksin
- * kellumassa tekstin oikealla puolella. Napautus avaa sen postikorttina.
+ * tekstin oikeassa laidassa, ja teksti kiertää sen. Kääre tarvitaan,
+ * koska kortti on pystyflex eikä kelluminen toimi suoraan sen lapsissa.
  */
+.fact-teksti-rivi {
+  /* Kääre perii tekstin vieritysroolin kortin pystyflexissä. */
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .fact-valokuva {
   float: right;
-  margin: 0.1rem 0 0.3rem 0.55rem;
+  width: auto;
+  margin: 0.15rem 0 0.35rem 0.55rem;
   padding: 3px 3px 7px;
   background: #f8f3e6;
   border: 0;
@@ -646,10 +656,45 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * ohut jakoviiva ja pieni maaetiketti erottavat sen kaupungin
  * esittelystä samalla hillityllä tyylillä.
  */
+/*
+ * Kaupunki ja maa vierekkäin (omistajan toive): leveällä ruudulla kortti
+ * levenee kahteen palstaan, kapealla palstat putoavat allekkain. Ilman
+ * maaosiota (muut laudat) kortti pysyy kapeana yksipalstaisena.
+ */
+.arrival-card:has(#arrival-maa:not([hidden])) {
+  max-width: min(92vw, 700px);
+}
+
+.arrival-palstat {
+  display: flex;
+  gap: 1.1rem;
+  align-items: flex-start;
+}
+
+.arrival-palsta {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .arrival-maa {
-  border-top: 1px dashed rgba(70, 51, 31, 0.35);
-  margin: 0.15rem 0 0.3rem;
-  padding-top: 0.5rem;
+  flex: 1 1 0;
+  min-width: 0;
+  border-left: 1px dashed rgba(70, 51, 31, 0.35);
+  padding-left: 1.1rem;
+  margin: 0.1rem 0 0.3rem;
+}
+
+/* Kapealla ruudulla palstat allekkain ja jakoviiva takaisin vaakaan. */
+@media (max-width: 640px) {
+  .arrival-palstat { flex-direction: column; gap: 0; }
+  .arrival-palsta, .arrival-maa { flex: 0 0 auto; width: 100%; }
+  .arrival-maa {
+    border-left: 0;
+    border-top: 1px dashed rgba(70, 51, 31, 0.35);
+    padding-left: 0;
+    padding-top: 0.5rem;
+    margin-top: 0.15rem;
+  }
 }
 
 .arrival-maa-rivi {
@@ -2137,15 +2182,14 @@ body.katselu #newgame-btn { display: none; }
  * huomaamaton, mutta riittää kertomaan mikä versio on käytössä. */
 .versio-kulma {
   position: fixed;
-  /* Selvästi sisempänä, ei kiinni vasemmassa reunassa. Selaimessa numero
-   * istuu alakehyksen kaistalla, asennetussa sovelluksessa pergamentilla. */
+  /* Numero lepää kartan pergamentilla (omistajan toive) — ei kehyksen
+   * rajalla, jossa se jäi puoliksi piiloon. Väri on kartan mustetta. */
   left: max(1.3rem, calc(env(safe-area-inset-left, 0px) + 0.9rem));
-  bottom: 0.12rem;
+  bottom: max(0.95rem, calc(env(safe-area-inset-bottom, 0px) + 0.7rem));
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  /* Numero lepää tumman alakehyksen päällä kaikissa tiloissa. */
-  color: rgba(240, 226, 196, 0.5);
+  color: rgba(70, 51, 31, 0.55);
   pointer-events: none;
 }
 
@@ -2504,9 +2548,13 @@ body.katselu #newgame-btn { display: none; }
             </svg>
           </button>
           <p id="fact-place" class="fact-place"></p>
-          <button id="fact-valokuva" class="fact-valokuva" type="button" hidden
-                  title="Katso vanha valokuva"><img id="fact-valokuva-kuva" alt="Vanha valokuva" /></button>
-          <p id="fact-text" class="fact-text"></p>
+          <!-- Kuva ja teksti samassa lohkossa: kelluva pikkukuva istuu
+               tekstin oikeassa laidassa ja teksti kiertää sen. -->
+          <div class="fact-teksti-rivi">
+            <button id="fact-valokuva" class="fact-valokuva" type="button" hidden
+                    title="Katso vanha valokuva"><img id="fact-valokuva-kuva" alt="Vanha valokuva" /></button>
+            <p id="fact-text" class="fact-text"></p>
+          </div>
           <!-- Pieni kuvaikoni: avaa havainnossa mainitun ilmiön kuvan. -->
           <button id="fact-image" class="ghost fact-image-btn" type="button" hidden
                   aria-label="Katso kuva" title="Katso kuva">
@@ -2538,15 +2586,21 @@ body.katselu #newgame-btn { display: none; }
        tarina tulee kartan päiväkirjasta ja koko artikkeli Lue lisää -linkistä. -->
   <dialog id="arrival-dialog" class="dialog">
    <div class="dialog-card arrival-card">
-    <h2 id="arrival-city"></h2>
-    <img id="arrival-image" class="arrival-image" alt="" hidden />
-    <p id="arrival-intro" class="arrival-intro">Isoisä on merkinnyt tämän paikan karttaansa.</p>
-    <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
-    <div id="arrival-maa" class="arrival-maa" hidden>
-     <p class="arrival-maa-rivi"><img id="arrival-maa-lippu" class="arrival-lippu" alt="" hidden /><span class="arrival-maa-nimi" id="arrival-maa-nimi"></span></p>
-     <div id="arrival-maa-kartta" class="arrival-maa-kartta"></div>
-     <p id="arrival-maa-intro" class="arrival-intro"></p>
-     <button id="arrival-maa-wiki" class="wiki-btn" type="button" hidden>Lue lisää maasta</button>
+    <!-- Kaupunki ja maa vierekkäisinä palstoina leveällä ruudulla,
+         kapealla allekkain (omistajan toive). -->
+    <div class="arrival-palstat">
+     <div class="arrival-palsta">
+      <h2 id="arrival-city"></h2>
+      <img id="arrival-image" class="arrival-image" alt="" hidden />
+      <p id="arrival-intro" class="arrival-intro">Isoisä on merkinnyt tämän paikan karttaansa.</p>
+      <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
+     </div>
+     <div id="arrival-maa" class="arrival-maa" hidden>
+      <p class="arrival-maa-rivi"><img id="arrival-maa-lippu" class="arrival-lippu" alt="" hidden /><span class="arrival-maa-nimi" id="arrival-maa-nimi"></span></p>
+      <div id="arrival-maa-kartta" class="arrival-maa-kartta"></div>
+      <p id="arrival-maa-intro" class="arrival-intro"></p>
+      <button id="arrival-maa-wiki" class="wiki-btn" type="button" hidden>Lue lisää maasta</button>
+     </div>
     </div>
     <div class="dialog-actions">
       <button id="arrival-yes" class="primary" type="button">Tutki paikka</button>
@@ -32227,6 +32281,7 @@ class UI {
     this.stopIntroVoice();
     const audio = new Audio('assets/audio/intro-puhe.mp3');
     audio.volume = 0.9;
+    this.pehmeaLoppu(audio);
     this.introVoice = audio;
     audio.play().catch(() => {
       const aloita = () => {
@@ -32258,7 +32313,12 @@ class UI {
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
     audio.volume = 0.9;
+    this.pehmeaLoppu(audio);
     this.diaryVoice = audio;
+    // Kirjanpito kaikista luennoista: pysäytys hiljentää myös sellaisen
+    // äänen, joka ei enää ole diaryVoice mutta soi yhä.
+    (this.luennat ??= new Set()).add(audio);
+    audio.addEventListener('ended', () => this.luennat?.delete(audio));
     if (ekaLauseeseen) {
       this.lauseTauko(url, osuus).then((raja) => {
         if (this.diaryVoice !== audio || raja == null) return;
@@ -32275,7 +32335,12 @@ class UI {
         audio.addEventListener('timeupdate', vahti);
       });
     }
-    audio.play().catch(() => {
+    audio.play().then(() => {
+      // play() on asynkroninen: jos luenta ehti vaihtua tai pysähtyä
+      // käynnistyksen aikana, myöhässä herännyt ääni pysäytetään heti —
+      // muuten kaksi luentaa soi päällekkäin (omistajan havainto).
+      if (this.diaryVoice !== audio) audio.pause();
+    }).catch(() => {
       if (this.diaryVoice === audio) this.diaryVoice = null;
     });
   }
@@ -32350,12 +32415,53 @@ class UI {
     return this.lauseTauot.get(avain);
   }
 
+  /**
+   * Pehmeä loppu puhetiedostoille: viimeinen neljännessekunti häivytetään
+   * ja toisto pysäytetään juuri ennen tiedoston reunaa. ElevenLabsin
+   * tiedosto päättyy keskeltä signaalia, ja kova reuna kuului pienenä
+   * töksähdyksenä (omistajan havainto etusivulla) — pehmennys tehdään
+   * toistossa, joten tiedostoja ei tarvinnut generoida uusiksi.
+   */
+  pehmeaLoppu(audio) {
+    const perus = audio.volume;
+    let rampissa = false;
+    const rullaa = () => {
+      if (audio.paused || !audio.duration) {
+        rampissa = false;
+        audio.volume = perus;
+        return;
+      }
+      const jaljella = audio.duration - audio.currentTime;
+      if (jaljella <= 0.06) {
+        audio.pause();
+        rampissa = false;
+        return;
+      }
+      if (jaljella < 0.3) {
+        audio.volume = perus * Math.max(0, (jaljella - 0.05) / 0.25);
+      }
+      requestAnimationFrame(rullaa);
+    };
+    // timeupdate on liian harva häivytykseen (~4 krt/s): se vain
+    // käynnistää tiheän rampin, kun loppu lähestyy.
+    audio.addEventListener('timeupdate', () => {
+      if (rampissa || !audio.duration) return;
+      if (audio.duration - audio.currentTime < 1.2) {
+        rampissa = true;
+        requestAnimationFrame(rullaa);
+      }
+    });
+  }
+
   stopDiaryVoice() {
-    const vanha = this.diaryVoice;
     this.diaryVoice = null;
-    if (!vanha) return;
-    vanha.pause();
-    vanha.removeAttribute('src');
+    // Kaikki luennat kiinni — myös mahdollinen myöhästelijä, joka ei
+    // enää ollut diaryVoice mutta soi yhä.
+    for (const audio of this.luennat ?? []) {
+      audio.pause();
+      audio.removeAttribute('src');
+    }
+    this.luennat?.clear();
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
@@ -33487,7 +33593,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.55';
+const APP_VERSION = '2026-07-30.56';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

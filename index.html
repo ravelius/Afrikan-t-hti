@@ -82,9 +82,13 @@
             </svg>
           </button>
           <p id="fact-place" class="fact-place"></p>
-          <button id="fact-valokuva" class="fact-valokuva" type="button" hidden
-                  title="Katso vanha valokuva"><img id="fact-valokuva-kuva" alt="Vanha valokuva" /></button>
-          <p id="fact-text" class="fact-text"></p>
+          <!-- Kuva ja teksti samassa lohkossa: kelluva pikkukuva istuu
+               tekstin oikeassa laidassa ja teksti kiertää sen. -->
+          <div class="fact-teksti-rivi">
+            <button id="fact-valokuva" class="fact-valokuva" type="button" hidden
+                    title="Katso vanha valokuva"><img id="fact-valokuva-kuva" alt="Vanha valokuva" /></button>
+            <p id="fact-text" class="fact-text"></p>
+          </div>
           <!-- Pieni kuvaikoni: avaa havainnossa mainitun ilmiön kuvan. -->
           <button id="fact-image" class="ghost fact-image-btn" type="button" hidden
                   aria-label="Katso kuva" title="Katso kuva">
@@ -116,15 +120,21 @@
        tarina tulee kartan päiväkirjasta ja koko artikkeli Lue lisää -linkistä. -->
   <dialog id="arrival-dialog" class="dialog">
    <div class="dialog-card arrival-card">
-    <h2 id="arrival-city"></h2>
-    <img id="arrival-image" class="arrival-image" alt="" hidden />
-    <p id="arrival-intro" class="arrival-intro">Isoisä on merkinnyt tämän paikan karttaansa.</p>
-    <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
-    <div id="arrival-maa" class="arrival-maa" hidden>
-     <p class="arrival-maa-rivi"><img id="arrival-maa-lippu" class="arrival-lippu" alt="" hidden /><span class="arrival-maa-nimi" id="arrival-maa-nimi"></span></p>
-     <div id="arrival-maa-kartta" class="arrival-maa-kartta"></div>
-     <p id="arrival-maa-intro" class="arrival-intro"></p>
-     <button id="arrival-maa-wiki" class="wiki-btn" type="button" hidden>Lue lisää maasta</button>
+    <!-- Kaupunki ja maa vierekkäisinä palstoina leveällä ruudulla,
+         kapealla allekkain (omistajan toive). -->
+    <div class="arrival-palstat">
+     <div class="arrival-palsta">
+      <h2 id="arrival-city"></h2>
+      <img id="arrival-image" class="arrival-image" alt="" hidden />
+      <p id="arrival-intro" class="arrival-intro">Isoisä on merkinnyt tämän paikan karttaansa.</p>
+      <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
+     </div>
+     <div id="arrival-maa" class="arrival-maa" hidden>
+      <p class="arrival-maa-rivi"><img id="arrival-maa-lippu" class="arrival-lippu" alt="" hidden /><span class="arrival-maa-nimi" id="arrival-maa-nimi"></span></p>
+      <div id="arrival-maa-kartta" class="arrival-maa-kartta"></div>
+      <p id="arrival-maa-intro" class="arrival-intro"></p>
+      <button id="arrival-maa-wiki" class="wiki-btn" type="button" hidden>Lue lisää maasta</button>
+     </div>
     </div>
     <div class="dialog-actions">
       <button id="arrival-yes" class="primary" type="button">Tutki paikka</button>
