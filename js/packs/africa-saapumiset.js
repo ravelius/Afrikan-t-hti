@@ -34,6 +34,52 @@ export const AFRICA_SAAPUMISET = {
       + 'teekupin jälkeen ja lisäsi: "Pyramidit olivat vanhoja jo silloin, '
       + 'kun Rooma oli kylä." Join oman teeni ja hävisin myös.',
   },
+  karthago: {
+    kuvaus: 'Kävelin raunioille auringonlaskussa, ja meri välkkyi joka '
+      + 'suunnassa — Karthago! Astuin kivien yli, jotka olivat nähneet '
+      + 'Hannibalin norsut, ja jossain alla lepäävät vanhat satama-altaat. '
+      + 'Istuin pylvään juurelle enkä sanonut pitkään aikaan mitään.',
+    nosto: 'Isoisä kirjoitti: "Kaksi suurvaltaa rakensi tänne '
+      + 'päällekkäin, ja meri muistaa molemmat." Laskin sormeni kiveen ja '
+      + 'yritin tuntea, kumman aikaa se oli.',
+  },
+  tshadjarvi: {
+    kuvaus: 'Vesi! Päivien savannitaipaleen jälkeen edessä kimmelsi '
+      + 'järvi, niin matala ja laaja, ettei rantaa ja vettä erottanut '
+      + 'toisistaan. Kalastaja työnsi kaislaveneensä vesille ja vilkutti — '
+      + 'vilkutin takaisin kuin vanhalle tutulle.',
+    nosto: 'Isoisän kirjassa lukee: "Neljän maan kalastajat jakavat '
+      + 'tämän veden, eikä kukaan heistä kanna karttaa." Katselin veneitä '
+      + 'ja ymmärsin: järvellä rajat ovat vain rannalla.',
+  },
+  viktorianputoukset: {
+    kuvaus: 'Kuulin sen ennen kuin näin mitään — jylinä kulki maan läpi '
+      + 'suoraan rintaan, ja sitten sumu nousi puiden yli kuin savu! '
+      + 'Seisoin rotkon reunalla läpimärkänä ja nauroin, koska mitään '
+      + 'muuta ei voinut tehdä. Mosi-oa-Tunya, jylisevä savu — nimi on '
+      + 'täsmälleen oikea.',
+    nosto: 'Isoisä kirjoitti tästä paikasta vain kolme sanaa: "Ei sanoja. '
+      + 'Tulkaa." Nyt tiedän, miksi hän ei edes yrittänyt.',
+  },
+  nairobi: {
+    kuvaus: 'Ylängön ilma oli niin kirkasta, että henkeä veti syvempään '
+      + 'ihan huomaamattaan — ja sitten näin kirahvit kaupungin rajalla! '
+      + 'Rautatien kaupunki kasvaa vauhtia, jota kukaan ei ehdi mitata, '
+      + 'ja silti savanni alkaa siitä, mihin katu loppuu.',
+    nosto: 'Isoisän kirjassa lukee: "Nairobi on leiri, joka päätti jäädä." '
+      + 'Hän tuli junalla; minä katselin sen kiskoja ja mietin, kuinka '
+      + 'leiristä tuli kaupunki yhden eliniän aikana.',
+  },
+  sthelena: {
+    kuvaus: 'Viikko pelkkää merta — ja sitten aallokosta nousi kallio, '
+      + 'yksin keskellä kaikkea! Vene laskettiin maihin köysien varassa '
+      + 'aallokon tahtiin, ja polvet tutisivat, kun jalka osui viimein '
+      + 'kiveen. Saari tuoksui sateelta ja ruoholta keskellä valtamerta.',
+    nosto: 'Isoisä kirjoitti: "Täällä keisari oppi, että maailman voi '
+      + 'omistaa ja silti menettää horisontin." Kävelin Longwoodin '
+      + 'ylängölle ja katsoin merelle — horisonttia riitti joka suuntaan, '
+      + 'eikä yhtään laivaa näkynyt.',
+  },
   marrakech: {
     kuvaus: 'Marrakech hehkui vastaan jo kaukaa — kokonainen kaupunki '
       + 'punaista savea! Torilta kuului rumpuja ja sadan kojun melu, ja '
