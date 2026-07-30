@@ -874,7 +874,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   padding: 0.55rem 0.55rem 0.3rem;
   border-radius: 2px;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
-  transform: rotate(-3deg);
+  /* Reilummin vinoon — pinon kortit kallistuvat ristikkäin
+   * (omistajan toive). */
+  transform: rotate(-4.5deg);
   transition: transform 0.22s ease, z-index 0s;
 }
 
@@ -887,7 +889,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   inset: 0;
   z-index: 1;
   overflow: hidden;
-  transform: rotate(-1.2deg) translate(12px, 26px);
+  transform: rotate(4deg) translate(14px, 30px);
   cursor: pointer;
 }
 
@@ -1228,12 +1230,96 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   stroke-linejoin: round;
 }
 
-.maa-demokratia {
+/* Nappi puettuna tekstilinkiksi — dialogin nappityyli kumotaan. */
+.dialog button.maa-demokratia {
   color: inherit;
   text-decoration: underline dotted;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
 }
 
-.maa-demokratia:hover { color: var(--accent); }
+.dialog button.maa-demokratia:hover:not(:disabled) {
+  background: none;
+  color: var(--accent);
+}
+
+/* V-Dem-infoikkuna: kevyt kerros dialogin päällä, pergamenttikortti
+ * keskellä. Selitys ensin, linkki kuvaajaan vasta sen alla. */
+.vdem-info {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 10, 5, 0.45);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.vdem-kortti {
+  position: relative;
+  width: min(86vw, 380px);
+  padding: 0.9rem 1rem 0.8rem;
+  border-radius: 8px;
+  background: #f8f3e6;
+  color: #3a2a16;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+}
+
+.vdem-otsikko {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+}
+
+.vdem-arvo {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  color: #7a5514;
+}
+
+.vdem-selitys {
+  margin: 0 0 0.55rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.vdem-yleis {
+  margin: 0 0 0.6rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: rgba(90, 74, 51, 0.9);
+}
+
+.vdem-linkki {
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  color: #7a5514;
+}
+
+.dialog button.vdem-sulje {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0.3rem;
+  margin: 0;
+  color: rgba(90, 74, 51, 0.8);
+  cursor: pointer;
+}
+
+.dialog button.vdem-sulje:hover:not(:disabled) {
+  background: none;
+  color: #3a2a16;
+}
 
 .maa-tervehdykset {
   display: flex;
@@ -12360,6 +12446,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,13',
       sija: '130./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MAR',
+      selitys: 'Marokossa järjestetään vaalit, mutta kuningas pitää lopullisen vallan: hallitus toimii hänen alaisuudessaan, ja arkaluontoisista aiheista kirjoittamista rajoitetaan.',
     },
     keskitulo: { arvo: '4 000 $/v', sija: '125./190' },
     // `osuus` on karkea arvio kielen puhujista maassa (moni puhuu
@@ -12378,6 +12465,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,10',
       sija: '145./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~LBY',
+      selitys: 'Libyan pitkä sisällissota jakoi maan kilpaileviin hallintoihin, ja luvattuja vaaleja on lykätty vuodesta toiseen.',
     },
     keskitulo: { arvo: '7 000 $/v', sija: '95./190' },
     tervehdykset: [
@@ -12393,6 +12481,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,07',
       sija: '160./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~EGY',
+      selitys: 'Egyptiä johtaa armeijan tukema hallinto: oppositio, media ja järjestöt ovat tiukassa valvonnassa, ja vaalien tulos on käytännössä ennalta selvä.',
     },
     keskitulo: { arvo: '4 000 $/v', sija: '125./190' },
     tervehdykset: [
@@ -12407,6 +12496,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,42',
       sija: '60./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SEN',
+      selitys: 'Senegalissa valta on vaihtunut vaaleilla ilman vallankaappauksia — Länsi-Afrikan pisimpiä perinteitä. Viime vuosien poliittiset jännitteet ovat hieman laskeneet lukua.',
     },
     keskitulo: { arvo: '1 600 $/v', sija: '155./190' },
     tervehdykset: [
@@ -12422,6 +12512,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,13',
       sija: '130./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MLI',
+      selitys: 'Malissa armeija kaappasi vallan kahdesti 2020–2021, ja paluuta vaaleihin on siirretty — siksi luku on pudonnut matalalle.',
     },
     keskitulo: { arvo: '900 $/v', sija: '175./190' },
     tervehdykset: [
@@ -12437,6 +12528,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,26',
       sija: '95./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~NGA',
+      selitys: 'Nigerian vaalit ovat aidosti kilpailtuja ja media äänekäs, mutta rahan valta, vaalihäiriöt ja levottomuudet painavat lukua.',
     },
     keskitulo: { arvo: '2 000 $/v', sija: '150./190' },
     tervehdykset: [
@@ -12453,6 +12545,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,61',
       sija: '35./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~GHA',
+      selitys: 'Ghana on Länsi-Afrikan vakaimpia demokratioita: valta on vaihtunut vaaleilla puolueelta toiselle monta kertaa, ja lehdistö on vapaa.',
     },
     keskitulo: { arvo: '2 300 $/v', sija: '145./190' },
     tervehdykset: [
@@ -12468,6 +12561,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,54',
       sija: '45./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ZAF',
+      selitys: 'Etelä-Afrikalla on apartheidin jälkeen vahva perustuslaki, vapaat vaalit ja riippumattomat tuomioistuimet; korruptioskandaalit nakertavat lukua.',
     },
     keskitulo: { arvo: '6 500 $/v', sija: '100./190' },
     tervehdykset: [
@@ -12484,6 +12578,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,26',
       sija: '95./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~TZA',
+      selitys: 'Tansaniassa sama puolue on hallinnut itsenäistymisestä asti, ja oppositio on ollut ahtaalla — otteet ovat viime vuosina hieman höllentyneet.',
     },
     keskitulo: { arvo: '1 200 $/v', sija: '165./190' },
     tervehdykset: [
@@ -12498,6 +12593,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,20',
       sija: '110./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ETH',
+      selitys: 'Etiopiassa vaaleja järjestetään, mutta sisällissota, poikkeustilat ja opposition ja median rajoitukset pitävät luvun matalana.',
     },
     keskitulo: { arvo: '1 100 $/v', sija: '170./190' },
     tervehdykset: [
@@ -12513,6 +12609,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,15',
       sija: '125./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~COD',
+      selitys: 'Kongon demokraattisessa tasavallassa vaalien tulokset ovat kiistanalaisia, idän levottomuudet jatkuvat ja instituutiot ovat hauraita.',
     },
     keskitulo: { arvo: '700 $/v', sija: '185./190' },
     tervehdykset: [
@@ -12530,6 +12627,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,30',
       sija: '85./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~TUN',
+      selitys: 'Tunisia nousi arabikevään jälkeen alueen demokraattisimmaksi maaksi, mutta vuodesta 2021 presidentti on keskittänyt valtaa itselleen — luku on laskenut nopeasti.',
     },
     keskitulo: { arvo: '4 000 $/v', sija: '125./190' },
     tervehdykset: [
@@ -12544,6 +12642,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,13',
       sija: '130./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~DZA',
+      selitys: 'Algeriassa armeijalla ja vallan sisäpiirillä on vahva ote: suuri protestiliike vaihtoi kasvot, mutta järjestelmä säilyi pitkälti ennallaan.',
     },
     keskitulo: { arvo: '4 500 $/v', sija: '120./190' },
     tervehdykset: [
@@ -12559,6 +12658,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,10',
       sija: '145./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~TCD',
+      selitys: 'Tšadissa valta siirtyi presidentiltä hänen pojalleen armeijan tuella — vaaleja järjestetään, mutta lopputulos ei ole aidosti auki.',
     },
     keskitulo: { arvo: '700 $/v', sija: '185./190' },
     tervehdykset: [
@@ -12574,6 +12674,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,32',
       sija: '80./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~KEN',
+      selitys: 'Kenian vaalit ovat kilpailtuja ja media äänekäs, mutta vaalikiistat, korruptio ja poliisin kovat otteet painavat lukua.',
     },
     keskitulo: { arvo: '2 100 $/v', sija: '150./190' },
     tervehdykset: [
@@ -12589,6 +12690,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,15',
       sija: '125./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ZWE',
+      selitys: 'Zimbabwessa sama puolue on hallinnut itsenäistymisestä 1980 asti, ja vaaleihin on liittynyt painostusta ja epäselvyyksiä.',
     },
     keskitulo: { arvo: '1 700 $/v', sija: '155./190' },
     tervehdykset: [
@@ -12604,6 +12706,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,07',
       sija: '165./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SDN',
+      selitys: 'Sudanin demokratiasiirtymä katkesi sotilaskaappaukseen 2021, ja 2023 alkanut sisällissota on pysäyttänyt kaiken — siksi luku on pohjalukemissa.',
     },
     keskitulo: { arvo: '800 $/v', sija: '180./190' },
     tervehdykset: [
@@ -12618,6 +12721,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,06',
       sija: '170./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SSD',
+      selitys: 'Etelä-Sudanissa ei ole itsenäistymisen jälkeen vielä pidetty vaaleja: sisällissota ja hauras rauha ovat siirtäneet niitä toistuvasti.',
     },
     keskitulo: { arvo: '500 $/v', sija: '189./190' },
     tervehdykset: [
@@ -12633,6 +12737,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,08',
       sija: '155./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SOM',
+      selitys: 'Somalian valtio on yhä hauras: vaalit ovat epäsuoria (valitsijamiehet valitsevat parlamentin), eikä hallinto ulotu koko maahan.',
     },
     keskitulo: { arvo: '600 $/v', sija: '188./190' },
     tervehdykset: [
@@ -12647,6 +12752,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,12',
       sija: '135./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~CMR',
+      selitys: 'Kamerunia on johtanut sama presidentti vuodesta 1982. Vaaleja järjestetään, mutta tulos ei juuri yllätä, ja englanninkielisten alueiden kriisi jatkuu.',
     },
     keskitulo: { arvo: '1 700 $/v', sija: '155./190' },
     tervehdykset: [
@@ -12662,6 +12768,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,38',
       sija: '70./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~LBR',
+      selitys: 'Liberiassa valta on sotien jälkeen vaihtunut vaaleilla rauhanomaisesti — nuori mutta toimiva demokratia, jota köyhyys koettelee.',
     },
     keskitulo: { arvo: '700 $/v', sija: '185./190' },
     tervehdykset: [
@@ -12676,6 +12783,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,35',
       sija: '75./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SLE',
+      selitys: 'Sierra Leonessa valta on sisällissodan jälkeen vaihtunut vaaleilla puolueelta toiselle rauhanomaisesti.',
     },
     keskitulo: { arvo: '600 $/v', sija: '188./190' },
     tervehdykset: [
@@ -12691,6 +12799,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,25',
       sija: '100./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MOZ',
+      selitys: 'Mosambikissa sama puolue on hallinnut itsenäistymisestä 1975 asti, ja vaalituloksiin on liittynyt toistuvia epäselvyyksiä.',
     },
     keskitulo: { arvo: '600 $/v', sija: '188./190' },
     tervehdykset: [
@@ -12706,6 +12815,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,17',
       sija: '120./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~AGO',
+      selitys: 'Angolassa sama puolue on hallinnut itsenäistymisestä 1975 asti, ja öljyvarallisuus on keskittynyt vallan lähipiirille.',
     },
     keskitulo: { arvo: '2 000 $/v', sija: '150./190' },
     tervehdykset: [
@@ -12721,6 +12831,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,55',
       sija: '42./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~NAM',
+      selitys: 'Namibia on ollut itsenäistymisestään 1990 asti vakaa monipuoluedemokratia, jossa on vapaa lehdistö ja riippumattomat tuomioistuimet.',
     },
     keskitulo: { arvo: '5 000 $/v', sija: '110./190' },
     tervehdykset: [
@@ -12736,6 +12847,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,25',
       sija: '100./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MDG',
+      selitys: 'Madagaskarin vaalit ovat kilpailtuja, mutta toistuvat poliittiset kriisit ja hauraat instituutiot pitävät luvun keskitason alapuolella.',
     },
     keskitulo: { arvo: '500 $/v', sija: '189./190' },
     tervehdykset: [
@@ -12750,6 +12862,7 @@ const AFRICA_MAATIEDOT = {
       arvo: '0,20',
       sija: '110./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~UGA',
+      selitys: 'Ugandaa on johtanut sama presidentti vuodesta 1986: vaaleja järjestetään, mutta oppositiota painostetaan ja perustuslakia on muutettu vallan jatkamiseksi.',
     },
     keskitulo: { arvo: '1 000 $/v', sija: '175./190' },
     tervehdykset: [
@@ -37310,17 +37423,22 @@ class UI {
     // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
     const rect = this.factCard.getBoundingClientRect();
     const leveys = Math.min(window.innerWidth * 0.78, 400);
-    // Pino tarvitsee tilaa myös alta pilkottavalle kortille — ilman
-    // varaa pilkotus leikkautui ruudun oikeaan reunaan (omistajan
-    // havainto iPadilla).
-    const vara = tiedot.uusi ? 44 : 8;
-    kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - vara, rect.left))}px`;
-    if (rect.top > window.innerHeight / 2) {
-      kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+    if (tiedot.uusi) {
+      // Kuvapino keskemmälle ruutua (omistajan toive) — vara oikealle
+      // riittää alta pilkottavalle kortille.
+      kortti.style.left = `${Math.max(8, (window.innerWidth - leveys - 24) / 2)}px`;
+      document.body.appendChild(kortti);
+      const korkeus = kortti.offsetHeight;
+      kortti.style.top = `${Math.max(12, (window.innerHeight - korkeus) / 2 - 24)}px`;
     } else {
-      kortti.style.top = `${rect.bottom + 10}px`;
+      kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - 8, rect.left))}px`;
+      if (rect.top > window.innerHeight / 2) {
+        kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+      } else {
+        kortti.style.top = `${rect.bottom + 10}px`;
+      }
+      document.body.appendChild(kortti);
     }
-    document.body.appendChild(kortti);
     this.postikortti = kortti;
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
     // sulkemista — napautus mihin tahansa sulkee kortin.
@@ -37889,12 +38007,14 @@ class UI {
     kohta(rivi1, 'vaki', tiedot.vakiluku, 'Väkiluku');
     kohta(rivi1, 'ala', tiedot.pintaAla, 'Pinta-ala');
     if (tiedot.demokratia) {
-      const linkki = html('a', 'maa-demokratia', `${tiedot.demokratia.arvo} · V-Dem`);
-      linkki.href = tiedot.demokratia.linkki;
-      linkki.target = '_blank';
-      linkki.rel = 'noopener noreferrer';
-      kohta(rivi2, 'vaaka', [linkki, sija(tiedot.demokratia.sija)],
-        'Demokratiaindeksi (V-Dem, 0–1), suluissa sijoitus maailmassa — avaa maan kuvaajan');
+      // Klikkaus avaa ensin pienen infoikkunan, joka selittää miksi
+      // maan luku on se mikä on — varsinainen kuvaajalinkki on siellä
+      // (omistajan toive).
+      const nappi = html('button', 'maa-demokratia', `${tiedot.demokratia.arvo} · V-Dem`);
+      nappi.type = 'button';
+      nappi.addEventListener('click', () => this.naytaVdemInfo(tiedot.demokratia));
+      kohta(rivi2, 'vaaka', [nappi, sija(tiedot.demokratia.sija)],
+        'Demokratiaindeksi (V-Dem, 0–1), suluissa sijoitus maailmassa — avaa selityksen');
     }
     if (tiedot.keskitulo) {
       kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
@@ -37914,6 +38034,44 @@ class UI {
       if (t.osuus) osa.appendChild(html('span', 'maa-sija', ` ${t.osuus}`));
       this.arrivalMaaTervehdykset.appendChild(osa);
     }
+  }
+
+  /**
+   * Pieni infoikkuna V-Dem-luvusta (omistajan toive): maakohtainen
+   * selitys siitä, miksi luku on se mikä on, lyhyt kuvaus V-Demistä ja
+   * vasta niiden alla varsinainen linkki maan kuvaajaan.
+   */
+  naytaVdemInfo(demokratia) {
+    const emo = this.arrivalDialog.open ? this.arrivalDialog : document.body;
+    const kerros = html('div', 'vdem-info');
+    const kortti = html('div', 'vdem-kortti');
+    const maaNimi = this.arrivalMaaNimi?.textContent || '';
+    kortti.appendChild(html('h3', 'vdem-otsikko', `Demokratia — ${maaNimi}`));
+    kortti.appendChild(html('p', 'vdem-arvo',
+      `V-Dem-indeksi ${demokratia.arvo}` + (demokratia.sija ? ` · sija ${demokratia.sija} maailmassa` : '')));
+    if (demokratia.selitys) {
+      kortti.appendChild(html('p', 'vdem-selitys', demokratia.selitys));
+    }
+    kortti.appendChild(html('p', 'vdem-yleis',
+      'V-Dem (Varieties of Democracy) on Göteborgin yliopiston tutkimus'
+      + 'laitos, jonka liberaalin demokratian indeksi (0–1) mittaa vaalien '
+      + 'vapautta, kansalaisoikeuksia ja vallankäytön valvontaa. Luku on '
+      + 'satojen tutkijoiden arvioiden yhdistelmä.'));
+    const linkki = html('a', 'vdem-linkki', 'Avaa maan kuvaaja — Our World in Data');
+    linkki.href = demokratia.linkki;
+    linkki.target = '_blank';
+    linkki.rel = 'noopener noreferrer';
+    kortti.appendChild(linkki);
+    kerros.appendChild(kortti);
+    // Napautus kortin ulkopuolelle sulkee.
+    kerros.addEventListener('click', (e) => {
+      if (e.target === kerros) kerros.remove();
+    });
+    const sulje = html('button', 'vdem-sulje', '✕');
+    sulje.type = 'button';
+    sulje.addEventListener('click', () => kerros.remove());
+    kortti.appendChild(sulje);
+    emo.appendChild(kerros);
   }
 
   /**
@@ -39839,7 +39997,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.91';
+const APP_VERSION = '2026-07-30.92';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
