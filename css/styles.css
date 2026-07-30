@@ -899,7 +899,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .flight-overlay {
   position: absolute;
   inset: 0;
-  z-index: 4;
+  /* Kalvon on oltava kelluvan alarivin (z-index 4) yläpuolella, muuten
+   * rivin näkymättömät napit jäävät kalvon päälle nappaamaan napautuksia. */
+  z-index: 7;
   background: rgba(243, 231, 205, 0.68);
   display: flex;
   align-items: center;
@@ -1765,6 +1767,12 @@ body[data-mode] .rail {
 }
 
 body[data-mode] .rail > * { pointer-events: auto; }
+
+/* Lennon aikana koko alarivi on poissa pelistä: näkymättömät napit eivät
+ * saa ottaa napautuksia kalvon alla. Tämä voittaa yllä olevan auto-säännön
+ * tarkkuudellaan riippumatta sääntöjen järjestyksestä. */
+body[data-mode].flight-active .rail,
+body[data-mode].flight-active .rail > * { pointer-events: none; }
 
 /* Kehys ja pyöristys näkyvät joka reunalla myös asennetussa
  * sovelluksessa (omistajan valinta): alakehys on täsmälleen
