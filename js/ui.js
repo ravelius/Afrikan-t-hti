@@ -1512,6 +1512,8 @@ export class UI {
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
   doWalk() {
     const { game } = this;
+    // Nopanheitto keskeyttää tarinan: luenta häipyy pehmeästi pois.
+    this.haivytaLuenta();
     this.run(
       () => {
         const chosen = game.actionTravel('land');
@@ -3544,7 +3546,39 @@ export class UI {
 
   /** Nopanheitto: silmäluku pyörii kartan päällä ja jää hetkeksi näkyviin. */
   doRoll() {
+    // Nopanheitto keskeyttää tarinan: luenta häipyy pehmeästi pois.
+    this.haivytaLuenta();
     this.run(() => this.game.actionRoll(), { after: (result) => this.animateDie(result.die) });
+  }
+
+  /**
+   * Häivyttää käynnissä olevan luennan pehmeästi pois (nopanheitto
+   * keskeyttää tarinan — omistajan toive: ei töksähdystä). Tauolla
+   * oleva tai jo hiljainen luenta suljetaan suoraan.
+   */
+  haivytaLuenta(kestoMs = 700) {
+    const audio = this.diaryVoice;
+    if (!audio || audio.paused) {
+      this.stopDiaryVoice();
+      return;
+    }
+    // Irrotetaan heti, jotta seuraava luenta saa alkaa puhtaalta pöydältä.
+    this.diaryVoice = null;
+    this.luentaTauolla = null;
+    const alku = audio.volume;
+    const t0 = performance.now();
+    const askel = (nyt) => {
+      const t = Math.min(1, (nyt - t0) / kestoMs);
+      audio.volume = alku * (1 - t);
+      if (t < 1 && !audio.paused) {
+        requestAnimationFrame(askel);
+      } else {
+        audio.pause();
+        audio.removeAttribute('src');
+        this.luennat?.delete(audio);
+      }
+    };
+    requestAnimationFrame(askel);
   }
 
   /** Siirto: nappula hyppii reittiä pitkin piste kerrallaan. */
