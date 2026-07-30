@@ -1604,6 +1604,26 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   color: var(--accent);
 }
 
+/* Aarrevihje erottuu tavallisesta merkinnästä: kellertävä revitty sivu,
+ * isompi tähtiotsikko ja repaleinen yläreuna. Hiljaisuus on tarkoitus —
+ * vihjettä ei lueta ääneen, ja ilme kertoo sen. */
+.fact-card.vihjekortti {
+  background:
+    linear-gradient(rgba(214, 168, 66, 0.12), rgba(214, 168, 66, 0.05)),
+    var(--panel);
+  border-top: 2px dashed rgba(140, 100, 30, 0.55);
+}
+
+.fact-card.vihjekortti h2 {
+  font-size: 0.92rem;
+  letter-spacing: 0.1em;
+  color: #a5691f;
+}
+
+.fact-card.vihjekortti .fact-text {
+  font-style: italic;
+}
+
 .fact-place {
   margin: 0 0 0.25rem;
   font-size: 0.8rem;
@@ -38149,6 +38169,7 @@ class UI {
       // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
       // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
+      this.factCard.classList.remove('vihjekortti');
       this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
@@ -38179,6 +38200,7 @@ class UI {
       const key = `schedule:${aikataulu.packId}:${aikataulu.day}`;
       if (this.factKey === key) return;
       this.factKey = key;
+      this.factCard.classList.remove('vihjekortti');
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
       this.factImage.hidden = true;
@@ -38190,17 +38212,23 @@ class UI {
     }
 
     // Isoisän vihje laudan pääaarteesta nousee esiin harvakseltaan.
+    // Vihjekortti erottuu tavallisesta merkinnästä: tähtiotsikko, oma
+    // revityn sivun ilme ja paperin rapina — pelkkä otsikkorivi meni
+    // pelaajalta ohi ja hiljainen kortti tuntui virheeltä (omistajan
+    // havainto).
     const hint = game.starHint();
     if (hint) {
       const key = `hint:${game.pack.id}:${game.turnCount}`;
       if (this.factKey === key) return;
       this.factKey = key;
-      this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
-      this.factPlace.textContent = game.pack.boardLabel;
+      this.factCard.classList.add('vihjekortti');
+      this.factVoiceEl.textContent = '★ Isoisän vihje aarteesta';
+      this.factPlace.textContent = 'Päiväkirjasta revitty sivu';
       this.factImage.hidden = true;
       this.factKuuntele.hidden = true;
       this.naytaFactValokuva(null);
       this.stopDiaryVoice();
+      sfx.play('paper');
       this.typeText(this.factText, hint);
       return;
     }
@@ -38233,6 +38261,7 @@ class UI {
         const key = luentaAvain + aikatauluLisa;
         if (this.factKey === key) return;
         this.factKey = key;
+        this.factCard.classList.remove('vihjekortti');
         this.factVoiceEl.textContent = 'Matkakirjasta';
         this.factPlace.textContent = kaupunki.name;
         this.factImageTitle = null;
@@ -38289,6 +38318,7 @@ class UI {
         const key = luentaAvain + aikatauluLisa;
         if (this.factKey === key) return;
         this.factKey = key;
+        this.factCard.classList.remove('vihjekortti');
         this.factVoiceEl.textContent = voiceTitle(factVoice(fakta));
         this.factPlace.textContent = kaupunki.name;
         this.factImageTitle = typeof fakta === 'string' ? null : fakta.wiki ?? null;
@@ -38352,6 +38382,7 @@ class UI {
 
     // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
     const onRoute = player.pos.type === 'edge';
+      this.factCard.classList.remove('vihjekortti');
     this.factVoiceEl.textContent = voiceTitle(factVoice(fact));
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
     // Havaintoon voi liittyä kuva: pieni linkki avaa ilmiön Wikipedia-kuvan.
@@ -40701,7 +40732,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.105';
+const APP_VERSION = '2026-07-30.106';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
