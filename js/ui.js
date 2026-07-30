@@ -2351,8 +2351,10 @@ export class UI {
     };
     // Suluissa sijoitus maailmassa (omistajan toive).
     const sija = (arvo) => (arvo ? html('span', 'maa-sija', ` (${arvo})`) : '');
-    kohta(rivi1, 'vaki', tiedot.vakiluku, 'Väkiluku');
-    kohta(rivi1, 'ala', tiedot.pintaAla, 'Pinta-ala');
+    kohta(rivi1, 'vaki', [tiedot.vakiluku, sija(tiedot.vakilukuSija)],
+      'Väkiluku, suluissa sijoitus maailmassa');
+    kohta(rivi1, 'ala', [tiedot.pintaAla, sija(tiedot.pintaAlaSija)],
+      'Pinta-ala, suluissa sijoitus maailmassa');
     if (tiedot.demokratia) {
       // Klikkaus avaa ensin pienen infoikkunan, joka selittää miksi
       // maan luku on se mikä on — varsinainen kuvaajalinkki on siellä
