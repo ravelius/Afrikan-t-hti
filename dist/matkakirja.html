@@ -922,6 +922,28 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   color: rgba(90, 74, 51, 0.85);
 }
 
+/* Muusikkonoston linkki Apple Musiciin: pieni nuottipilleri. */
+.kulttuuri-musiikkilinkki {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: fit-content;
+  margin: 0.15rem 0 0;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgba(90, 74, 51, 0.45);
+  border-radius: 999px;
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  color: rgba(64, 51, 34, 0.95);
+  text-decoration: none;
+  background: rgba(255, 252, 245, 0.6);
+}
+
+.kulttuuri-musiikkilinkki:hover {
+  border-color: rgba(64, 51, 34, 0.75);
+  background: rgba(255, 252, 245, 0.95);
+}
+
 /* Otsikko ja ääninäytteen nappi samalla rivillä. */
 .kulttuuri-otsikkorivi {
   display: flex;
@@ -8474,6 +8496,25 @@ const AFRICA_SAAPUMISET = {
       + 'teekupin jälkeen ja lisäsi: "Pyramidit olivat vanhoja jo silloin, '
       + 'kun Rooma oli kylä." Join oman teeni ja hävisin myös.',
   },
+  marrakech: {
+    kuvaus: 'Marrakech hehkui vastaan jo kaukaa — kokonainen kaupunki '
+      + 'punaista savea! Torilta kuului rumpuja ja sadan kojun melu, ja '
+      + 'Atlasvuorten lumihuiput kimmelsivät basaarin kattojen yllä. '
+      + 'Seisoin keskellä Jemaa el-Fnaa ja pyörähdin ympäri kuin lapsi.',
+    nosto: 'Isoisä kirjoitti kirjaansa: "Tarinankertojan piirissä unohdin '
+      + 'laskea aikaa; hyvä kertoja lopettaa aina kesken." Istuin samaan '
+      + 'piiriin, enkä ymmärtänyt sanaakaan — ja jäin silti kuuntelemaan '
+      + 'loppuun asti.',
+  },
+  lagos: {
+    kuvaus: 'Mikä pauhu! Lagos ei kävele vaan juoksee: laguunin sillat '
+      + 'täynnä väkeä, torit täynnä musiikkia, ja joka kulmalta joku '
+      + 'nauraa tai huutaa tai myy jotain. Vene vei minut saarelta '
+      + 'toiselle, ja kaupunki vain jatkui ja jatkui.',
+    nosto: 'Isoisän kirjassa lukee: "Lagosin satamassa laskin kanootteja, '
+      + 'kunnes väsyin — kauppa ei lopu, se vain vaihtaa venettä." Laskin '
+      + 'minäkin, ja väsyin minäkin.',
+  },
   tripoli: {
     kuvaus: 'En ollut uskoa silmiäni: Tripoli makaa kalliolla kuin laivan '
       + 'keula, ja muurit hohtavat auringossa niin valkoisina, että '
@@ -8762,10 +8803,11 @@ const AFRICA_SAAPUMISET = {
 };
 
 // ===== js/packs/africa-kulttuuri.js =====
-// Kaupungin elämää: taide-, ruoka- ja musiikkinostot Tutki-kortille
-// (pilotti: Tanger ja Tripoli — omistajan päätös, laajennetaan jos malli
-// toimii). Jokainen väite on tarkistettavissa; kuvat ovat Wikimedia
-// Commonsista ja niiden lisenssi on varmistettu tiedostokohtaisesti.
+// Kaupungin elämää: taide-, ruoka- ja musiikkinostot Tutki-kortille.
+// Pilotit Tanger ja Tripoli; laajennettu kymmeneen kaupunkiin omistajan
+// hyväksyttyä mallin (30.7.). Jokainen väite on tarkistettavissa; kuvat
+// ovat Wikimedia Commonsista ja niiden lisenssi on varmistettu
+// tiedostokohtaisesti.
 //
 // `kysymys` on tutustu ja vastaa -kokeilu: nostoihin tutustumalla
 // kysymykseen osaa vastata, ja oikeasta vastauksesta saa pienen
@@ -8805,6 +8847,8 @@ const AFRICA_KULTTUURI = {
           + 'guembri-luuttu vievät kuulijan transsiin asti — perinne on '
           + 'Unescon aineettoman kulttuuriperinnön listalla.',
         wiki: 'Gnawa',
+        musiikki: 'https://music.apple.com/fi/artist/maalem-mahmoud-guinia/981105724',
+        musiikkiNimi: 'Maalem Mahmoud Guinia Apple Musicissa',
         // Kenttä-äänitys gnawa-soittajista Marrakechin torilta; lisenssi
         // varmistettu archive.orgin metatiedoista (CC BY 3.0).
         aani: 'https://archive.org/download/aporee_21876_25420/marrakeshCafeEpicesGnawa270214a.mp3',
@@ -8854,6 +8898,438 @@ const AFRICA_KULTTUURI = {
       correct: 0,
       fact: 'Malouf kulkeutui Libyaan Andalusiasta ja soi yhä häissä ja '
         + 'juhlissa — kuva yhtyeestä on nostossa yllä.',
+    },
+  },
+  kairo: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Umm Kulthum, Egyptin ääni',
+        tiedosto: 'Umm Kulthum4.jpg',
+        teksti: 'Laulajatar Umm Kulthum oli arabimaailman rakastetuin ääni: '
+          + 'kun hänen radiokonserttinsa alkoi kuun ensimmäisenä torstaina, '
+          + 'Kairon kadut hiljenivät ja kahvilat täyttyivät kuuntelijoista. '
+          + 'Yksi laulu saattoi kestää tunnin.',
+        selite: 'Umm Kulthum mikrofonin äärellä uransa alkupuolella. '
+          + 'Tunnusmerkit olivat aina samat: tumma lasit, nenäliina kädessä '
+          + 'ja orkesteri takana — ja ääni, jota kutsuttiin Egyptin '
+          + 'neljänneksi pyramidiksi.',
+        musiikki: 'https://music.apple.com/fi/artist/umm-kulthum/81179580',
+        musiikkiNimi: 'Umm Kulthum Apple Musicissa',
+        lahde: 'Wikimedia Commons (PD)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Ahwa eli kahvila',
+        teksti: 'Kairolainen kahvila eli ahwa on olohuone kadun varrella: '
+          + 'siellä juodaan paksua kahvia ja minttuteetä, pelataan '
+          + 'tavla-lautapeliä ja ratkotaan maailman asiat. Kiirettä '
+          + 'ahwassa ei tunneta.',
+      },
+      {
+        tyyppi: 'linkki',
+        otsikko: 'Naguib Mahfouz',
+        teksti: 'Kirjailija Naguib Mahfouz kirjoitti Kairon kujista ja '
+          + 'kahviloista niin elävästi, että hän sai Nobelin '
+          + 'kirjallisuuspalkinnon 1988 — ensimmäisenä arabiaksi '
+          + 'kirjoittavana kirjailijana.',
+        wiki: 'Naguib Mahfouz',
+      },
+    ],
+    kysymys: {
+      q: 'Kenen laulajan radiokonsertit hiljensivät Kairon kadut kerran kuussa?',
+      options: ['Umm Kulthumin', 'Edith Piafin', 'Maria Callasin', 'Miriam Makeban'],
+      correct: 0,
+      fact: 'Umm Kulthumin konsertit kokosivat koko arabimaailman radion '
+        + 'ääreen — hänen kuvansa on nostossa yllä.',
+    },
+  },
+  marrakech: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Jemaa el-Fnan tori',
+        tiedosto: 'ElFnarMarrakech2014.jpg',
+        teksti: 'Marrakechin suurtori Jemaa el-Fna muuttuu joka ilta '
+          + 'ulkoilmateatteriksi: tarinankertojat kokoavat yleisön piiriin, '
+          + 'ruokakojut savuavat ja gnawa-rummut jyskyttävät pimeään asti. '
+          + 'Unesco on ottanut torin perinteet suojeltavien listalleen.',
+        selite: 'Ilta Jemaa el-Fnalla: ruokakojujen savu nousee valojen '
+          + 'läpi ja väkijoukko kiertää kojulta toiselle. Taustalla kohoaa '
+          + 'Koutoubian moskeijan torni, jonka mukaan koko kaupunki '
+          + 'suunnistaa.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Halqa eli tarinapiiri',
+        teksti: 'Tarinankertojan ympärille syntyvää yleisörinkiä kutsutaan '
+          + 'nimellä halqa. Sama suullinen perinne on kulkenut torilla '
+          + 'sukupolvelta toiselle vuosisatojen ajan — hyvä kertoja '
+          + 'lopettaa aina jännittävään kohtaan, jotta yleisö palaa '
+          + 'huomenna.',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Tajine-pata',
+        teksti: 'Marokkolainen tajine on keraaminen pata, jonka '
+          + 'kartiomainen kansi kierrättää höyryn takaisin ruokaan. '
+          + 'Padassa haudutetaan lihaa, kasviksia, oliiveja ja '
+          + 'säilöttyä sitruunaa hiilloksella tuntikausia.',
+      },
+    ],
+    kysymys: {
+      q: 'Ketkä kokoavat yleisön piiriin Jemaa el-Fnan torilla iltaisin?',
+      options: ['tarinankertojat', 'postinkantajat', 'kellosepät', 'karttapiirtäjät'],
+      correct: 0,
+      fact: 'Tarinankertojien halqa-piirit ovat torin vanhin perinne — '
+        + 'kuva torin illasta on nostossa yllä.',
+    },
+  },
+  lagos: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Eyo-kulkue',
+        tiedosto: 'Eyo masquerades. Lagos State, Nigeria.jpg',
+        teksti: 'Lagosin oma juhla on Eyo: valkoisiin kaapuihin ja '
+          + 'leveälierisiin hattuihin pukeutuneet hahmot kulkevat kaupungin '
+          + 'halki sauvoineen. Kulkue järjestetään vain erityisinä päivinä, '
+          + 'ja sen sanotaan olevan Lagosin saaren henkien tervehdys.',
+        selite: 'Eyo-hahmoja Lagosin kaduilla: valkoinen kaapu peittää '
+          + 'kantajansa kokonaan, ja opa-sauva kohotetaan tervehdykseksi. '
+          + 'Jokainen hattu kertoo, mitä sukua hahmo edustaa.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+      },
+      {
+        tyyppi: 'linkki',
+        otsikko: 'Afrobeat',
+        teksti: 'Fela Kuti loi Lagosissa afrobeatin: jazzin, funkin ja '
+          + 'länsiafrikkalaisten rytmien seoksen, jossa yksi kappale voi '
+          + 'kestää puoli tuntia. Hänen klubinsa Afrika Shrine oli '
+          + 'kaupungin kuumin näyttämö, ja sama liike jatkuu yhä.',
+        wiki: 'Fela Kuti',
+        musiikki: 'https://music.apple.com/fi/artist/fela-kuti/55088',
+        musiikkiNimi: 'Fela Kuti Apple Musicissa',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Jollof-riisi',
+        teksti: 'Tomaatissa ja chilissä haudutettu jollof-riisi on koko '
+          + 'Länsi-Afrikan juhlaruoka — ja ikuisen leikkimielisen kiistan '
+          + 'aihe: Nigeria ja Ghana väittävät kumpikin tekevänsä sen '
+          + 'paremmin.',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä musiikkityyli syntyi Lagosissa Fela Kutin johdolla?',
+      options: ['afrobeat', 'flamenco', 'reggae', 'samba'],
+      correct: 0,
+      fact: 'Afrobeat syntyi Lagosissa 1960–70-luvuilla ja soi nykyään '
+        + 'kaikkialla maailmassa.',
+    },
+  },
+  dakar: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Goréen saari',
+        tiedosto: 'Island of Gorée, Senegal.jpg',
+        teksti: 'Dakarin edustalla on pieni Goréen saari, jonka kautta '
+          + 'orjakauppa kulki vuosisatojen ajan. Nykyään saari on Unescon '
+          + 'maailmanperintökohde ja muistopaikka, jossa "paluuttoman '
+          + 'oven" talo muistuttaa miljoonien kohtalosta.',
+        selite: 'Goréen satama ja punakattoiset talot mereltä nähtynä. '
+          + 'Rauhallinen saari on hiljainen muistomerkki: täältä laivat '
+          + 'veivät ihmisiä Atlantin yli, eikä kukaan heistä palannut.',
+        lahde: 'Wikimedia Commons (CC BY-SA 2.0)',
+      },
+      {
+        tyyppi: 'linkki',
+        otsikko: 'Youssou N\'Dour ja mbalax',
+        teksti: 'Senegalin oma tanssimusiikki on mbalax, jossa '
+          + 'sabar-rummut vievät tahtia. Sen tunnetuin ääni on Youssou '
+          + 'N\'Dour, dakarilainen laulaja, jonka äänen sanotaan '
+          + 'kantavan yli valtamerten.',
+        wiki: 'Youssou N\'Dour',
+        musiikki: 'https://music.apple.com/fi/artist/youssou-ndour/153580',
+        musiikkiNimi: 'Youssou N\'Dour Apple Musicissa',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Teranga',
+        teksti: 'Senegalilaiset kutsuvat maataan terangan maaksi — sana '
+          + 'tarkoittaa vieraanvaraisuutta. Vieras istutetaan aina '
+          + 'ruokavadin ääreen: kansallisruoka thiéboudienne on kalaa ja '
+          + 'riisiä, jota syödään yhdessä isolta vadilta.',
+      },
+    ],
+    kysymys: {
+      q: 'Mistä Dakarin edustalla oleva Goréen saari tunnetaan?',
+      options: ['Orjakaupan muistopaikkana', 'Timanttikaivoksista', 'Majakastaan', 'Karavaanien satamana'],
+      correct: 0,
+      fact: 'Gorée on Unescon maailmanperintökohde ja muistuttaa '
+        + 'orjakaupan uhreista — kuva saaresta on nostossa yllä.',
+    },
+  },
+  timbuktu: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Timbuktun käsikirjoitukset',
+        tiedosto: 'Timbuktu-manuscripts-astronomy-mathematics.jpg',
+        teksti: 'Timbuktu oli 1500-luvulla oppineiden kaupunki, jonka '
+          + 'kirjastoihin koottiin satojatuhansia käsikirjoituksia: '
+          + 'tähtitiedettä, matematiikkaa, lakia ja runoutta. Suvut ovat '
+          + 'varjelleet kirjoja aavikon hiekalta ja sodilta tähän päivään '
+          + 'asti.',
+        selite: 'Aukeama Timbuktun käsikirjoituksesta: tähtitiedettä ja '
+          + 'matematiikkaa arabiankielisin selityksin ja kaavioin. '
+          + 'Muste ja paperi ovat kestäneet aavikon kuivuudessa satoja '
+          + 'vuosia.',
+        lahde: 'Wikimedia Commons (PD)',
+      },
+      {
+        tyyppi: 'linkki',
+        otsikko: 'Aavikkoblues',
+        teksti: 'Malin suuren joen varrelta nousi 1900-luvun lopulla '
+          + 'aavikkoblues: kitara soi kuin ndjarka-viulu ja rytmi kulkee '
+          + 'kamelin askelissa. Tyylin isä Ali Farka Touré oli kotoisin '
+          + 'Niafunkésta, Timbuktun naapurista.',
+        wiki: 'Ali Farka Touré',
+        musiikki: 'https://music.apple.com/fi/artist/ali-farka-tour%C3%A9/7420807',
+        musiikkiNimi: 'Ali Farka Touré Apple Musicissa',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Suolakaravaanit',
+        teksti: 'Timbuktuun tuodaan yhä suolaa aavikon kaivoksilta kuten '
+          + 'tuhat vuotta sitten: laatat kulkevat kamelien selässä '
+          + 'satojen kilometrien matkan. Suola oli aikanaan niin '
+          + 'arvokasta, että sitä vaihdettiin kultaan.',
+      },
+    ],
+    kysymys: {
+      q: 'Mistä Timbuktun kirjastot ovat kuuluisia?',
+      options: ['Vanhoista käsikirjoituksista', 'Kultaharkoista', 'Maailman kartoista', 'Norsunluusta'],
+      correct: 0,
+      fact: 'Sadattuhannet käsikirjoitukset tekivät Timbuktusta oppineiden '
+        + 'kaupungin — aukeama yhdestä on nostossa yllä.',
+    },
+  },
+  kumasi: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Kente-kangas',
+        tiedosto: 'Kente cloth.jpg',
+        teksti: 'Asantejen juhlakangas kente kudotaan kapeista '
+          + 'silkkisuikaleista, jotka ommellaan yhteen leveäksi vaatteeksi. '
+          + 'Jokaisella kuviolla ja värillä on nimi ja merkitys — kangas '
+          + 'on viesti, jonka voi lukea.',
+        selite: 'Kente-kankaan kuvioita: kulta, vihreä ja punainen '
+          + 'vuorottelevat tarkkoina geometrisina raitoina. Kultainen väri '
+          + 'kertoo kuninkaallisuudesta ja vauraudesta — kente kuului '
+          + 'alkujaan vain Asanten hoville.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Adinkra-symbolit',
+        teksti: 'Ghanalaiset painavat kankaisiin adinkra-symboleja, joilla '
+          + 'jokaisella on oma sanomansa: Gye Nyame kertoo Jumalan '
+          + 'kaikkivaltiudesta ja sankofa-lintu muistuttaa, että '
+          + 'menneestä saa hakea opin mukaansa.',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Highlife',
+        teksti: 'Ghanan oma musiikki on highlife: kitarat soivat kuin '
+          + 'palmuviinin äärellä ennen vanhaan, ja puhaltimet tulivat '
+          + 'mukaan tanssiorkesterien kaudella. Nimi syntyi, kun tavallinen '
+          + 'väki kuunteli aidan takaa hienoston "korkeaa elämää".',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä on kente?',
+      options: ['Asantejen juhlakangas', 'Ghanalainen keitto', 'Rumpujen tanssi', 'Kuninkaan valtaistuin'],
+      correct: 0,
+      fact: 'Kente kudotaan suikaleista ja sen kuviot kantavat '
+        + 'merkityksiä — kuva kankaasta on nostossa yllä.',
+    },
+  },
+  kapkaupunki: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Bo-Kaapin värit',
+        tiedosto: 'Bo-Kaap colourful houses (30114819980).jpg',
+        teksti: 'Bo-Kaapin kaupunginosassa talot hehkuvat kaikissa '
+          + 'sateenkaaren väreissä. Korttelit rakensivat Kap-malaijit, '
+          + 'joiden esivanhemmat tuotiin Kaapille Kaakkois-Aasiasta — '
+          + 'värit olivat vapauden ja oman kodin merkki.',
+        selite: 'Bo-Kaapin jyrkkä katu: limetinvihreä, pinkki ja '
+          + 'turkoosi talo vierekkäin Signal-kukkulan rinteessä. '
+          + 'Kaupunginosa on yksi Kapkaupungin vanhimmista, ja sen '
+          + 'mukulakivet ovat alkuperäiset.',
+        lahde: 'Wikimedia Commons (CC BY-SA 2.0)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Cape jazz',
+        teksti: 'Kapkaupungilla on oma jazzinsa: pianisti Abdullah '
+          + 'Ibrahimin "Mannenberg" soi 1970-luvulla niin, että siitä '
+          + 'tuli hiljainen vastarintalaulu — ja kaupungin jazzklubit '
+          + 'soivat yhä viikon jokaisena iltana.',
+        musiikki: 'https://music.apple.com/fi/artist/abdullah-ibrahim/3924942',
+        musiikkiNimi: 'Abdullah Ibrahim Apple Musicissa',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Braai',
+        teksti: 'Eteläafrikkalainen grillijuhla braai on enemmän kuin '
+          + 'ateria: tuli sytytetään ajoissa, makkarat ja maissipuuro '
+          + 'jaetaan kaikkien kesken ja tulen ääressä istutaan pitkään. '
+          + 'Sana on afrikaansia ja tapa yhteinen koko maalle.',
+      },
+    ],
+    kysymys: {
+      q: 'Mistä Bo-Kaapin kaupunginosa tunnetaan?',
+      options: ['Värikkäistä taloistaan', 'Pilvenpiirtäjistään', 'Kultakaivoksistaan', 'Kanaaleistaan'],
+      correct: 0,
+      fact: 'Bo-Kaapin värikkäät talot ovat Kap-malaijien perintöä — '
+        + 'kuva kadulta on nostossa yllä.',
+    },
+  },
+  sansibar: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Taarab-musiikki',
+        tiedosto: 'Zanzibar Taarab Kidumbak Ensemble.jpg',
+        teksti: 'Sansibarin juhlissa soi taarab: orkesterissa viulut, '
+          + 'oud-luuttu ja qanun-kannel säestävät laulua, jossa '
+          + 'swahilinkieliset säkeet kiertävät kohteliaina '
+          + 'vihjailuina. Tyylissä kuuluu koko valtameren kauppareitti — '
+          + 'Arabiaa, Intiaa ja Afrikkaa samassa sävelessä.',
+        selite: 'Taarab-yhtye soittimineen Sansibarissa: viulut ja '
+          + 'käsirummut rinnakkain. Pienempää kokoonpanoa kutsutaan '
+          + 'kidumbakiksi — sama musiikki, mutta tanssittavampi.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Siti binti Saad',
+        teksti: 'Taarabin suuri ääni oli Siti binti Saad, joka lauloi '
+          + '1920-luvulla ensimmäisenä itäafrikkalaisena levylle — ja '
+          + 'ensimmäisenä swahiliksi. Kylänsä köyhistä lähtenyt laulaja '
+          + 'esiintyi sulttaanien hoveissa asti.',
+        musiikki: 'https://music.apple.com/fi/artist/siti-binti-saad/257420112',
+        musiikkiNimi: 'Siti binti Saad Apple Musicissa',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Neilikkasaaret',
+        teksti: 'Sansibaria kutsuttiin maustesaariksi: neilikan tuoksu '
+          + 'leijui koko saaren yllä, kun sato kuivui auringossa. '
+          + 'Maustetorilla myydään yhä neilikkaa, kanelia, muskottia ja '
+          + 'pippuria kasoittain.',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä musiikki soi Sansibarin häissä ja juhlissa?',
+      options: ['taarab', 'tango', 'polkka', 'ooppera'],
+      correct: 0,
+      fact: 'Taarab yhdistää valtameren kauppareitin kulttuurit — kuva '
+        + 'yhtyeestä on nostossa yllä.',
+    },
+  },
+  addisabeba: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Kahviseremonia',
+        tiedosto: 'Ethiopian coffee ceremony.jpg',
+        teksti: 'Kahvi on kotoisin Etiopiasta, ja siellä sen juominen on '
+          + 'seremonia: pavut paahdetaan hiilloksella vieraiden edessä, '
+          + 'jauhetaan huhmareessa ja keitetään jebena-savipannussa. '
+          + 'Kolme kierrosta kuuluu tapaan — lähteä ei sovi ennen '
+          + 'kolmatta kuppia.',
+        selite: 'Kahviseremonian välineet: pyöreäpohjainen jebena-pannu, '
+          + 'pienet kupit ja suitsuke. Lattialle levitetään tuoretta '
+          + 'ruohoa ja paahtuvien papujen savu kutsuu naapuritkin '
+          + 'paikalle.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Ethio-jazz',
+        teksti: 'Addis Abebassa syntyi 1960-luvulla ethio-jazz, kun '
+          + 'Mulatu Astatke yhdisti etiopialaiset viisisäveliset '
+          + 'asteikot jazziin ja latinalaisrytmeihin. Tulos ei kuulosta '
+          + 'miltään muulta maailmassa — ja sitä soitetaan taas '
+          + 'kaupungin klubeilla.',
+        musiikki: 'https://music.apple.com/fi/artist/mulatu-astatke/76533627',
+        musiikkiNimi: 'Mulatu Astatke Apple Musicissa',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Injera',
+        teksti: 'Etiopialainen ateria katetaan injeran päälle: suuren, '
+          + 'happaman lettuleivän, joka on lautanen, lusikka ja leipä '
+          + 'samassa. Padat kaadetaan sen päälle ja syödään käsin '
+          + 'yhdessä — oma pala revitään aina samasta leivästä.',
+      },
+    ],
+    kysymys: {
+      q: 'Mistä maasta kahvi on alun perin kotoisin?',
+      options: ['Etiopiasta', 'Brasiliasta', 'Kolumbiasta', 'Intiasta'],
+      correct: 0,
+      fact: 'Kahvipensas kasvaa villinä Etiopian ylängöillä, ja '
+        + 'kahviseremonia on maan vieraanvaraisuuden sydän.',
+    },
+  },
+  kongo: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Sanza, peukalopiano',
+        tiedosto: 'Sanza Boa-Zaïre-Musée royal de l\'Afrique centrale.jpg',
+        teksti: 'Kongon omiin soittimiin kuuluu sanza: puulaatikkoon '
+          + 'kiinnitetyt metallikielet, joita näppäillään peukaloilla. '
+          + 'Pieni soitin kulkee taskussa, ja sen helähtelevä ääni '
+          + 'säestää tarinoita ja pitkiä matkoja.',
+        selite: 'Sanza Keski-Afrikasta: metalliset kielet on taottu eri '
+          + 'mittaisiksi, jotta jokainen soi omalla korkeudellaan. '
+          + 'Soittimen sukulaisia tunnetaan eri nimillä ympäri '
+          + 'Afrikkaa.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Kongolainen rumba',
+        teksti: 'Kinshasan ja Brazzavillen tanssisalit synnyttivät '
+          + 'kongolaisen rumban, jonka kitarat helisevät kuin vesi. '
+          + 'Unesco otti rumban aineettoman kulttuuriperinnön listalle '
+          + '2021 — kahden Kongon yhteisenä aarteena.',
+        musiikki: 'https://music.apple.com/fi/artist/franco-luambo/387922243',
+        musiikkiNimi: 'Franco Luambo Apple Musicissa',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Sapeurit',
+        teksti: 'Kongon kaduilla kävelee sapeureita: tyylin mestareita, '
+          + 'jotka pukeutuvat räätälöityihin pukuihin kuin juhlaan '
+          + 'keskellä arkea. La Sape on leikki ja elämäntapa — '
+          + 'eleganssi on heille kansalaistaito.',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä kongolainen tanssimusiikki pääsi Unescon perintölistalle?',
+      options: ['rumba', 'valssi', 'sirtaki', 'kalinka'],
+      correct: 0,
+      fact: 'Kongolainen rumba soi molemmin puolin Kongojokea ja sai '
+        + 'Unescon tunnustuksen 2021.',
     },
   },
 };
@@ -8989,11 +9465,492 @@ const OMAT_ARTIKKELIT = {
       + 'juhlissa soi malouf-musiikki, ja valkoiset talot hehkuvat '
       + 'auringossa kuten aina — meren morsian pitää nimestään kiinni.',
   },
+
+  // --- Laajennus kymmeneen kaupunkiin ja niiden maihin (30.7.) ---------
+  Kairo: {
+    intro: 'Kairo on arabimaailman suurin kaupunki, jonka läpi Niili '
+      + 'virtaa tyynenä keskellä miljoonien pauhua. Kadun päästä näkyvät '
+      + 'pyramidit — neljä ja puoli tuhatta vuotta historiaa aivan '
+      + 'nykykaupungin laidalla.',
+    artikkeli: 'Kairo on Egyptin pääkaupunki ja Afrikan suurimpia '
+      + 'kaupunkeja: suurkaupunkialueella asuu yli kaksikymmentä '
+      + 'miljoonaa ihmistä. Kaupunki levittäytyy Niilin molemmin puolin '
+      + 'siinä, missä jokilaakso avautuu suistoksi.'
+      + '\n\n== Tuhannen minareetin kaupunki ==\n'
+      + 'Nykyisen Kairon perustivat arabihallitsijat vuonna 969, mutta '
+      + 'seudulla on asuttu paljon kauemmin: joen toisella rannalla '
+      + 'sijaitsi muinainen Memfis, ja Gizan pyramidit rakennettiin sen '
+      + 'hautakaupungiksi. Vanhassa Kairossa moskeijoiden minareetteja '
+      + 'on niin tiheässä, että kaupunkia kutsutaan tuhannen minareetin '
+      + 'kaupungiksi. Khan el-Khalilin basaarissa on käyty kauppaa '
+      + 'samoilla kujilla 1300-luvulta asti.'
+      + '\n\n== Elämää Niilin varrella ==\n'
+      + 'Kairo on äänekäs ja välitön: liikenteessä äänitorvi on '
+      + 'keskustelua, ja ahwa-kahviloissa maailma ratkotaan teelasin '
+      + 'ääressä. Kaupunki on arabimaailman elokuvan, musiikin ja '
+      + 'kirjallisuuden pääkaupunki — täällä lauloi Umm Kulthum ja '
+      + 'kirjoitti nobelisti Naguib Mahfouz. Ja kaiken keskellä virtaa '
+      + 'Niili, rauhallisena kuin ei olisi huomannut rannoilleen '
+      + 'kasvanutta jättiläistä.',
+  },
+  Marrakech: {
+    intro: 'Marrakech on punaisista savimuureistaan tunnettu '
+      + 'karavaanikaupunki Atlasvuorten juurella. Sen suurtorilla '
+      + 'tarinankertojat, käärmeenlumoajat ja ruokakojut ovat pitäneet '
+      + 'iltansa vuosisatojen ajan.',
+    artikkeli: 'Marrakech on kaupunki Marokon sisämaassa, palmulehtojen '
+      + 'keskellä Atlasvuorten juurella. Kirkkaalla säällä vuorten '
+      + 'lumihuiput näkyvät basaarin katoilta — lunta ja aavikkoa '
+      + 'samassa katseessa.'
+      + '\n\n== Punainen kaupunki ==\n'
+      + 'Kaupungin perustivat berberihallitsijat lähes tuhat vuotta '
+      + 'sitten karavaanireittien solmukohtaan: täältä lähdettiin '
+      + 'Saharan yli etelään kohti Timbuktua, ja tänne tuotiin kultaa, '
+      + 'suolaa ja kirjoja. Muurit ja talot muurattiin paikallisesta '
+      + 'punertavasta savesta, ja ilta-auringossa koko kaupunki hehkuu — '
+      + 'siksi Marrakechia kutsutaan punaiseksi kaupungiksi. Medinan '
+      + 'yllä kohoaa Koutoubian moskeijan torni, jonka mukaan koko '
+      + 'kaupunki suunnistaa.'
+      + '\n\n== Torin ympärillä ==\n'
+      + 'Kaupungin sydän on Jemaa el-Fnan suurtori, joka muuttuu joka '
+      + 'ilta ulkoilmateatteriksi: tarinankertojien piirit, gnawa-rummut '
+      + 'ja ruokakojujen savu täyttävät aukion pimeään asti. Torin '
+      + 'takana alkavat sukit, katetut basaarikujat, joissa värjärit, '
+      + 'kupari- ja nahkasepät tekevät työtään kuten ennenkin. Vieraalle '
+      + 'kaadetaan minttuteetä, ja tinkiminen hoidetaan hymyssä suin.',
+  },
+  Lagos: {
+    intro: 'Lagos on laguunin saarille ja rannoille rakennettu '
+      + 'jättiläinen, Afrikan väkirikkaimpia kaupunkeja. Se on Nigerian '
+      + 'talouden, musiikin ja elokuvan moottori, joka ei hiljene '
+      + 'koskaan.',
+    artikkeli: 'Lagos on Nigerian suurin kaupunki ja koko Afrikan '
+      + 'suurimpia: asukkaita on suurkaupunkialueella toistakymmentä '
+      + 'miljoonaa, eikä laskeminen ole helppoa, sillä kaupunki kasvaa '
+      + 'koko ajan. Nimi tulee portugalin sanasta "järvet" — kaupunki '
+      + 'on rakennettu laguunin saarille, ja kaupunginosia yhdistävät '
+      + 'pitkät sillat.'
+      + '\n\n== Kalastajakylästä suurkaupungiksi ==\n'
+      + 'Lagos alkoi jorubalaisena kalastajakaupunkina, kasvoi '
+      + 'satamakaupungiksi ja oli pitkään Nigerian pääkaupunki. '
+      + 'Pääkaupunki siirtyi sisämaahan Abujaan, mutta Lagos jäi maan '
+      + 'sydämeksi: sen satamien ja markkinoiden kautta kulkee '
+      + 'suuri osa koko maan kaupasta.'
+      + '\n\n== Musiikin ja elokuvan kaupunki ==\n'
+      + 'Lagosissa Fela Kuti loi afrobeatin, ja kaupungin studioista '
+      + 'nousee yhä uusia tähtiä maailmanlistoille. Nollywood, Nigerian '
+      + 'elokuvateollisuus, tekee enemmän elokuvia kuin Hollywood. '
+      + 'Kaduilla myydään jollof-riisiä ja paistettuja pontikkabanaaneja, '
+      + 'ja Eyo-juhlan valkoiset hahmot kulkevat kaupungin halki '
+      + 'erityisinä päivinä. Ruuhkassa paikalliset toteavat: täällä ei '
+      + 'kysytä montako kilometriä, vaan montako tuntia.',
+  },
+  Dakar: {
+    intro: 'Dakar seisoo Afrikan läntisimmällä niemellä keskellä '
+      + 'Atlantin tuulia. Senegalin pääkaupunki on värikäs satama- ja '
+      + 'musiikkikaupunki, jonka edustalla Goréen saari muistuttaa '
+      + 'raskaasta historiasta.',
+    artikkeli: 'Dakar on Senegalin pääkaupunki Kap Verden niemellä, '
+      + 'mantereen läntisimmässä kärjessä. Kolmelta suunnalta kaupunkia '
+      + 'ympäröi meri, ja Atlantin tuuli käy aina.'
+      + '\n\n== Niemen kaupunki ==\n'
+      + 'Dakar kasvoi 1800-luvulla satamakaupungiksi ja oli aikanaan '
+      + 'koko Ranskan Länsi-Afrikan pääkaupunki, jonka kautta hallinto '
+      + 'ja kauppa kulkivat. Sen edustalla on pieni Goréen saari, jonka '
+      + 'kautta orjakauppa kulki vuosisatojen ajan — nykyään saari on '
+      + 'Unescon maailmanperintökohde ja hiljainen muistopaikka.'
+      + '\n\n== Terangan maa ==\n'
+      + 'Senegalilaiset kutsuvat maataan terangan, vieraanvaraisuuden, '
+      + 'maaksi, ja Dakarissa sen huomaa: vieras istutetaan '
+      + 'ruokavadin ääreen, ja thiéboudienne — kala-riisipata — syödään '
+      + 'yhdessä isolta vadilta. Iltaisin kaupungissa jyskyttävät '
+      + 'sabar-rummut ja soi mbalax, jonka tunnetuin ääni Youssou '
+      + 'N\'Dour on kotoisin juuri täältä. Värikkäät car rapide '
+      + '-pikkubussit kiitävät kaduilla kuin maalatut arkut täynnä '
+      + 'elämää.',
+  },
+  Timbuktu: {
+    intro: 'Timbuktu oli aavikon reunan kulta- ja kirjakaupunki, jonka '
+      + 'kirjastot hämmästyttivät maailmaa. Karavaanit tuovat sinne yhä '
+      + 'suolaa kuten tuhat vuotta sitten.',
+    artikkeli: 'Timbuktu sijaitsee Malissa Saharan eteläreunalla, '
+      + 'muutaman kilometrin päässä Nigerjoen suuresta mutkasta. '
+      + 'Kaupunki syntyi siinä, missä kameli kohtaa kanootin: aavikon '
+      + 'karavaanit ja joen veneet vaihtoivat tavaransa juuri täällä.'
+      + '\n\n== Kullan ja suolan kauppapaikka ==\n'
+      + 'Keskiajalla Timbuktun kautta kulki suunnaton rikkaus: etelästä '
+      + 'kultaa, pohjoisesta Saharan suolaa, jota vaihdettiin '
+      + 'painonsa arvosta. Malin keisarikunnan hallitsija Mansa Musa '
+      + 'teki 1300-luvulla pyhiinvaellusmatkan, jonka kulta-almut '
+      + 'hämmästyttivät koko maailmaa — ja Timbuktun maine levisi '
+      + 'Eurooppaan asti tarunhohtoisena kultakaupunkina.'
+      + '\n\n== Oppineiden kaupunki ==\n'
+      + 'Timbuktu oli myös yliopistokaupunki: Sankoren moskeijan '
+      + 'ympärillä opiskeli parhaimmillaan tuhansia oppineita, ja '
+      + 'kaupungin kirjastoihin koottiin satojatuhansia '
+      + 'käsikirjoituksia tähtitieteestä runouteen. Suvut ovat '
+      + 'varjelleet kirjoja hiekalta ja sodilta tähän päivään asti. '
+      + 'Savesta rakennetut moskeijat rapataan yhä joka vuosi talkoilla '
+      + 'uuteen kuosiin — samalla tavalla kuin vuosisatoja sitten.',
+  },
+  Kumasi: {
+    intro: 'Kumasi on Asanten kuningaskunnan vanha pääkaupunki Ghanan '
+      + 'vihreällä ylängöllä. Kultainen valtaistuin, kente-kankaat ja '
+      + 'Länsi-Afrikan suurimpiin kuuluva tori pitävät perinteet '
+      + 'elävinä.',
+    artikkeli: 'Kumasi on Ghanan toiseksi suurin kaupunki ja Asanten '
+      + 'kansan sydän sademetsävyöhykkeen ylängöllä. Kaupunkia '
+      + 'kutsutaan puutarhakaupungiksi, ja sen keskustassa toimii '
+      + 'Kejetian tori, yksi Länsi-Afrikan suurimmista.'
+      + '\n\n== Asanten kuningaskunta ==\n'
+      + 'Kumasi perustettiin 1600-luvun lopulla Asanten kuningaskunnan '
+      + 'pääkaupungiksi, ja kuningas eli asantehene asuu kaupungissa '
+      + 'yhä. Valtakunnan pyhin esine on kultainen valtaistuin, jonka '
+      + 'uskotaan laskeutuneen taivaasta ja kantavan koko kansan '
+      + 'sielua. Kuningaskunta rikastui kullalla ja piti pintansa '
+      + 'brittejä vastaan pitkään — Asante kukistettiin vasta '
+      + '1900-luvun alussa, mutta kuninkuus ja perinteet jäivät.'
+      + '\n\n== Käsityön kaupunki ==\n'
+      + 'Kumasin ympäristön kylissä kudotaan kentea, Asanten '
+      + 'juhlakangasta, jonka jokaisella kuviolla on merkitys, ja '
+      + 'painetaan adinkra-symboleja kankaisiin. Toreilla myydään '
+      + 'fufua ja maapähkinäkeittoa, ja highlife-musiikki soi '
+      + 'radioista. Vanha sananlasku sopii kaupungille: kun hämähäkin '
+      + 'verkot yhdistyvät, ne sitovat leijonankin.',
+  },
+  Kapkaupunki: {
+    intro: 'Kapkaupunki lepää Pöytävuoren juurella kahden valtameren '
+      + 'tuntumassa. Satamakaupunki on Etelä-Afrikan vanhin ja '
+      + 'kauneimpana pidetty — ja sen historia kertoo koko maan '
+      + 'tarinan.',
+    artikkeli: 'Kapkaupunki sijaitsee Afrikan lounaiskärjessä, '
+      + 'tasahuippuisen Pöytävuoren ja meren välissä. Kaupungin ohi '
+      + 'kiertää Hyväntoivonniemi, jonka ympäri purjehtiminen avasi '
+      + 'aikanaan meritien Intiaan.'
+      + '\n\n== Kahden meren risteys ==\n'
+      + 'Hollantilaiset perustivat Kapkaupungin 1652 laivojen '
+      + 'huoltoasemaksi Intian-reitille, ja siitä kasvoi Etelä-Afrikan '
+      + 'vanhin kaupunki. Satamaan tultiin ja siitä lähdettiin: '
+      + 'Kaakkois-Aasiasta tuotujen Kap-malaijien värikkäät talot '
+      + 'nousivat Bo-Kaapin rinteeseen, ja kaupungissa sekoittuivat '
+      + 'kielet, uskonnot ja keittiöt.'
+      + '\n\n== Vuoren varjossa ==\n'
+      + 'Pöytävuori hallitsee kaikkea: kun pilvi valuu sen laelta, '
+      + 'paikalliset sanovat vuoren kattavan pöytäliinan. Kaupungin '
+      + 'edustalla on Robben Island, vankilasaari, jossa Nelson '
+      + 'Mandela istui vangittuna 18 vuotta — nykyään saari on '
+      + 'museo ja muistutus siitä, mistä Etelä-Afrikan vapaus '
+      + 'maksettiin. Rannoilla käyskentelevät pingviinit, braai-tulet '
+      + 'savuavat viikonloppuisin ja jazzklubit soivat iltaisin.',
+  },
+  Sansibar: {
+    intro: 'Sansibar on maustesaari Intian valtameressä: neilikan '
+      + 'tuoksu, korallikivinen kivikaupunki ja dhow-purjeet kertovat '
+      + 'valtameren vanhasta kauppareitistä.',
+    artikkeli: 'Sansibar on saariryhmä Tansanian rannikolla. Sen '
+      + 'pääsaaren vanha keskus, Kivikaupunki eli Stone Town, on '
+      + 'rakennettu korallikivestä kapeiden kujien sokkeloksi, jossa '
+      + 'veistetyt puuovet ovat talojen käyntikortteja.'
+      + '\n\n== Valtameren kauppareitillä ==\n'
+      + 'Monsuunituulet toivat Sansibariin purjehtijoita Arabiasta, '
+      + 'Persiasta ja Intiasta jo tuhat vuotta sitten, ja saaresta '
+      + 'kasvoi Itä-Afrikan kaupan keskus. 1800-luvulla Omanin '
+      + 'sulttaani siirsi hovinsa Sansibariin, ja saari rikastui '
+      + 'neilikalla — ja orjakaupalla, jonka muisto on Kivikaupungissa '
+      + 'yhä näkyvissä. Swahilin kieli ja kulttuuri syntyivät juuri '
+      + 'tällä rannikolla, afrikkalaisen ja arabialaisen maailman '
+      + 'kohdatessa.'
+      + '\n\n== Maustesaari ==\n'
+      + 'Sansibarin maustetiloilla kasvaa neilikkaa, muskottia, kanelia '
+      + 'ja pippuria, ja torilla tuoksut sekoittuvat kalansavuun. '
+      + 'Juhlissa soi taarab-orkesteri viuluineen ja luuttuineen. '
+      + 'Iltapäivisin dhow-veneet palaavat kalastamasta purjeet '
+      + 'punaisina auringonlaskua vasten — sama näky kuin sata ja '
+      + 'tuhat vuotta sitten.',
+  },
+  'Addis Abeba': {
+    intro: 'Addis Abeba on Etiopian pääkaupunki ylängöllä lähes '
+      + 'kahden ja puolen kilometrin korkeudessa. "Uusi kukka" on koko '
+      + 'Afrikan kokouspaikka — ja kahvin kotimaan pääkaupunki.',
+    artikkeli: 'Addis Abeba sijaitsee Etiopian ylängöllä noin 2 400 '
+      + 'metrin korkeudessa, ja ilma on siellä aina viileän kirkasta. '
+      + 'Nimi tarkoittaa amharaksi uutta kukkaa.'
+      + '\n\n== Keisarien kaupunki ==\n'
+      + 'Kaupungin perusti keisari Menelik II puolisoineen 1880-luvulla '
+      + 'lähteiden äärelle. Etiopia on Afrikan ainoa maa, jota ei '
+      + 'koskaan kunnolla kolonisoitu: Adwan taistelussa 1896 keisarin '
+      + 'armeija löi italialaiset, ja voiton muisto elää yhä. Siksi '
+      + 'Addis Abebasta tuli luonteva paikka Afrikan unionin '
+      + 'päämajalle — kaupunkia kutsutaan Afrikan poliittiseksi '
+      + 'pääkaupungiksi.'
+      + '\n\n== Kahvin ja injeran ylänkö ==\n'
+      + 'Kahvi on kotoisin Etiopiasta, ja Addis Abebassa se juodaan '
+      + 'seremoniassa: pavut paahdetaan vieraiden edessä ja keitetään '
+      + 'jebena-pannussa kolme kierrosta. Ateria katetaan injeran, '
+      + 'suuren happaman lettuleivän päälle, ja syödään käsin yhdessä. '
+      + 'Mercato-torilla, yhdellä Afrikan suurimmista, myydään kaikkea '
+      + 'mausteista kultaan — ja iltaisin klubeilla soi ethio-jazz, '
+      + 'jota ei kuule missään muualla maailmassa.',
+  },
+  'Kongo (joki)': {
+    intro: 'Kongojoki on Afrikan vesirikkain virta, joka kiertää '
+      + 'sademetsän halki päiväntasaajan yli kahdesti. Joki on tie, '
+      + 'ruokapöytä ja koti — sademetsän valtaväylä, jolla elämä '
+      + 'kulkee veneissä.',
+    artikkeli: 'Kongojoki on maailman toiseksi vesirikkain joki — vain '
+      + 'Amazon kuljettaa enemmän vettä. Se kaartaa Keski-Afrikan '
+      + 'sademetsän halki suuren kaaren ja ylittää päiväntasaajan '
+      + 'kahdesti, ainoana suurena jokena maailmassa. Syvimmillään '
+      + 'uoma painuu yli kahdensadan metrin syvyyteen.'
+      + '\n\n== Sademetsän valtatie ==\n'
+      + 'Tiettömässä sademetsässä joki on valtatie: pitkät puuveneet '
+      + 'ja työntöproomut kuljettavat ihmisiä, kalaa, maniokkia ja '
+      + 'kaikkea mahdollista kylästä toiseen. Suurimmat kaupungit '
+      + 'kasvoivat joen varteen — Kinshasa ja Brazzaville katsovat '
+      + 'toisiaan vastarannoilta, kahden eri maan pääkaupunkeina '
+      + 'lähempänä toisiaan kuin mitkään muut maailmassa.'
+      + '\n\n== Metsän ja joen elämä ==\n'
+      + 'Kongon sademetsä on maailman toiseksi suurin, ja sen suojissa '
+      + 'elävät muun muassa bonobot, metsänorsut ja okapit, joita ei '
+      + 'tapaa missään muualla. Joen äänimaisema on oma maailmansa: '
+      + 'kalastajien laulu, veden kohina koskissa ja iltaisin '
+      + 'rumpujen ääni rannalta. Kinshasassa sama syke muuttuu '
+      + 'kongolaiseksi rumbaksi, jonka kitarat helisevät kuin joki '
+      + 'itse.',
+  },
+
+  // --- Maat ------------------------------------------------------------
+  Egypti: {
+    intro: 'Egypti on Niilin lahja: kapea vihreä jokilaakso keskellä '
+      + 'aavikkoa on ruokkinut yhden maailman vanhimmista '
+      + 'sivilisaatioista jo viisi tuhatta vuotta.',
+    artikkeli: 'Egypti sijaitsee Afrikan koilliskulmassa, ja sillä on '
+      + 'rantaa sekä Välimerelle että Punaiselle merelle. Lähes koko '
+      + 'maa on aavikkoa — mutta sen halki virtaa Niili, jonka laakso '
+      + 'ja suisto ovat maailman hedelmällisimpiä seutuja. Siksi '
+      + 'egyptiläisistä lähes kaikki asuvat kapealla vihreällä '
+      + 'nauhalla joen varrella.'
+      + '\n\n== Faaraoiden perintö ==\n'
+      + 'Niilin varrella kukoisti muinainen Egypti, joka rakensi '
+      + 'pyramidit, temppelit ja hieroglyfikirjoituksen. Faaraoiden '
+      + 'valtakunta kesti kolme tuhatta vuotta — pidempään kuin mikään '
+      + 'muu suurvalta. Sen jälkeen maata ovat hallinneet kreikkalaiset, '
+      + 'roomalaiset, arabit, osmanit ja britit; arabien mukana maahan '
+      + 'tulivat islam ja arabian kieli. Itsenäinen tasavalta '
+      + 'Egyptistä tuli 1950-luvulla.'
+      + '\n\n== Elämää joen varrella ==\n'
+      + 'Nykyinen Egypti on arabimaailman väkirikkain maa. Suezin '
+      + 'kanava yhdistää Välimeren ja Punaisen meren, ja sen kautta '
+      + 'kulkee suuri osa maailman laivaliikenteestä. Pelloilla '
+      + 'kasvatetaan puuvillaa, riisiä ja taateleita kuten aina, '
+      + 'felukka-purjeveneet lipuvat joella, ja teelasi ja tavla-peli '
+      + 'kuuluvat kahvilan pöytään joka korttelissa.',
+  },
+  Senegal: {
+    intro: 'Senegal on Länsi-Afrikan vakaimpia maita Atlantin '
+      + 'rannalla — terangan eli vieraanvaraisuuden maa, jossa '
+      + 'sabar-rummut ja mbalax pitävät tahtia.',
+    artikkeli: 'Senegal sijaitsee Afrikan läntisimmässä kulmassa. '
+      + 'Maisema on enimmäkseen matalaa savannia, jonka halki '
+      + 'Senegaljoki virtaa pohjoisrajalla; ilmasto vaihettuu '
+      + 'pohjoisen kuivasta sahelista etelän vehreyteen.'
+      + '\n\n== Historiaa lyhyesti ==\n'
+      + 'Seudulla vaikuttivat keskiajalla Ghanan ja Malin '
+      + 'suurvaltakunnat, ja rannikolle tulivat ensin portugalilaiset, '
+      + 'sitten ranskalaiset, joiden Länsi-Afrikan hallinto keskittyi '
+      + 'Dakariin. Itsenäistyttyään 1960 Senegal on ollut Länsi-Afrikan '
+      + 'vakaimpia maita: valta on vaihtunut vaaleilla, ei '
+      + 'vallankaappauksilla. Ensimmäinen presidentti Léopold Senghor '
+      + 'oli myös runoilija.'
+      + '\n\n== Elämää ==\n'
+      + 'Senegalilaisia yhdistää teranga, vieraanvaraisuus: ateria '
+      + 'jaetaan aina, ja thiéboudienne-vadin ääreen mahtuu yksi '
+      + 'lisää. Uskonnolliset veljeskunnat ja niiden suuret '
+      + 'pyhiinvaellukset kuuluvat maan elämään, samoin laamb eli '
+      + 'senegalilainen paini, jonka ottelut täyttävät stadionit. '
+      + 'Ja kaikkialla soi musiikki — kora-harppu, sabar-rummut ja '
+      + 'mbalaxin tahti.',
+  },
+  Mali: {
+    intro: 'Mali on aavikon ja Nigerjoen maa, jonka keskiaikaiset '
+      + 'valtakunnat olivat aikansa rikkaimpia. Kulta, suola ja '
+      + 'kirjat kulkivat sen kaupunkien kautta.',
+    artikkeli: 'Mali on suuri sisämaavaltio Länsi-Afrikassa. Pohjoinen '
+      + 'puoli on Saharaa, etelä savannia — ja niiden välistä virtaa '
+      + 'Nigerjoki, jonka suuri mutka on aina ollut maan elämänlanka. '
+      + 'Joen tulvat kastelevat pellot ja kalastajien veneet täyttävät '
+      + 'sen rannat.'
+      + '\n\n== Suurten valtakuntien maa ==\n'
+      + 'Keskiajalla täällä hallitsivat Ghanan, Malin ja Songhain '
+      + 'suurvaltakunnat, jotka rikastuivat kullan ja suolan kaupalla. '
+      + 'Malin keisari Mansa Musa oli aikansa rikkaimpia ihmisiä, ja '
+      + 'Timbuktun ja Djennén kaupungit kasvoivat oppineiden '
+      + 'keskuksiksi. Ranskan siirtomaakauden jälkeen Mali itsenäistyi '
+      + '1960; viime vuosina maata ovat koetelleet levottomuudet ja '
+      + 'vallankaappaukset.'
+      + '\n\n== Elämää joen varrella ==\n'
+      + 'Malilaisten arki kulkee yhä joen tahdissa: pinasse-veneet '
+      + 'kuljettavat väkeä ja tavaraa, ja Djennén suuri savimoskeija — '
+      + 'maailman suurin savirakennus — rapataan joka vuosi talkoilla. '
+      + 'Malin musiikki tunnetaan kaikkialla: kora-harpun taiturit, '
+      + 'aavikkobluesin kitaristit ja griotit, laulavat '
+      + 'tarinankertojat, joiden suvut ovat muistaneet historian '
+      + 'sukupolvien ketjuna.',
+  },
+  Nigeria: {
+    intro: 'Nigeria on Afrikan väkirikkain maa — joka kuudes '
+      + 'afrikkalainen on nigerialainen. Sadat kansat, kielet ja '
+      + 'kaupungit tekevät siitä mantereen suurimman kulttuurimahdin.',
+    artikkeli: 'Nigeria sijaitsee Guineanlahden rannalla Länsi-'
+      + 'Afrikassa. Maan halki virtaavat Niger- ja Benuejoet, jotka '
+      + 'yhtyvät keskellä maata; etelässä on sademetsää ja '
+      + 'mangrovesoita, pohjoisessa savannia ja sahelin kuivuutta.'
+      + '\n\n== Monen kansan maa ==\n'
+      + 'Nigerian alueella on satoja kansoja ja kieliä — suurimpina '
+      + 'hausat pohjoisessa, jorubat lounaassa ja igbot kaakossa. '
+      + 'Ennen siirtomaakautta täällä kukoistivat muun muassa Beninin '
+      + 'kuningaskunta pronssitaiteineen ja pohjoisen hausakaupungit. '
+      + 'Britit kokosivat alueet yhdeksi siirtomaaksi, ja Nigeria '
+      + 'itsenäistyi 1960. Öljy toi rahaa ja riitoja; nykyään maa on '
+      + 'Afrikan suurimpia talouksia.'
+      + '\n\n== Kulttuurin suurvalta ==\n'
+      + 'Nigerian musiikki soi koko maailmassa: afrobeat syntyi '
+      + 'Lagosissa, ja sen perilliset täyttävät nyt listat kaikkialla. '
+      + 'Nollywood tekee enemmän elokuvia kuin Hollywood, ja '
+      + 'kirjailijat Chinua Achebesta Wole Soyinkaan — Afrikan '
+      + 'ensimmäiseen kirjallisuusnobelistiin — ovat kertoneet maan '
+      + 'tarinaa koko maailmalle. Toreilla tingitään jollof-riisin '
+      + 'tuoksussa sadalla kielellä.',
+  },
+  Ghana: {
+    intro: 'Ghana oli Mustan Afrikan ensimmäinen itsenäistynyt '
+      + 'siirtomaa ja on nykyään yksi mantereen vakaimmista maista. '
+      + 'Kulta, kaakao ja kente-kangas ovat sen tunnusmerkit.',
+    artikkeli: 'Ghana sijaitsee Guineanlahden rannalla. Rannikolla on '
+      + 'laguuneja ja kalastajakyliä, sisämaassa sademetsää ja '
+      + 'pohjoisessa savannia; maan itälaidalla on Voltajärvi, yksi '
+      + 'maailman suurimmista tekojärvistä.'
+      + '\n\n== Kultarannikosta Ghanaksi ==\n'
+      + 'Eurooppalaiset kutsuivat seutua Kultarannikoksi, ja rannikon '
+      + 'linnakkeet kertovat sekä kullan että orjakaupan ajasta. '
+      + 'Sisämaassa mahtava Asanten kuningaskunta piti pintansa '
+      + 'pitkään. Vuonna 1957 siirtomaa itsenäistyi ensimmäisenä '
+      + 'Saharan eteläpuolisessa Afrikassa ja otti nimekseen Ghana '
+      + 'keskiaikaisen suurvaltakunnan mukaan — Kwame Nkrumahin '
+      + 'johdolla siitä tuli koko mantereen vapauden symboli.'
+      + '\n\n== Elämää ==\n'
+      + 'Ghana on tunnettu rauhallisuudestaan: valta vaihtuu vaaleilla '
+      + 'ja naapureita autetaan. Kaakao on maan kulta — suklaan '
+      + 'raaka-aineesta iso osa kasvaa ghanalaisilla pientiloilla. '
+      + 'Juhlissa pukeudutaan kenteen, arkena syödään fufua ja '
+      + 'jollof-riisiä, ja highlife sekä sen perilliset soivat '
+      + 'kaikkialla. Tervetulotoivotus kuuluu joka ovella: akwaaba.',
+  },
+  'Etelä-Afrikka': {
+    intro: 'Etelä-Afrikka on sateenkaarikansan maa mantereen '
+      + 'eteläkärjessä: yksitoista virallista kieltä, kaksi valtamerta '
+      + 'ja historia, joka opetti maailmalle anteeksiannon voiman.',
+    artikkeli: 'Etelä-Afrikka täyttää mantereen eteläkärjen kahden '
+      + 'valtameren välissä. Maisemat vaihtuvat Kapin vuorista '
+      + 'Kalaharin puolikuivaan tasankoon ja itärannikon vehreyteen; '
+      + 'sisämaan ylänköä kutsutaan nimellä highveld.'
+      + '\n\n== Raskas historia, sovinnon maa ==\n'
+      + 'Maan alkuperäiskansoja ovat khoisanit, ja bantukansat ovat '
+      + 'asuneet seudulla vuosisatoja. Hollantilaiset ja britit '
+      + 'perustivat siirtokuntansa, ja kullan ja timanttien löytyminen '
+      + 'teki maasta rikkaan — mutta rikkaus jaettiin väärin. '
+      + 'Apartheid-järjestelmä erotteli ihmiset ihonvärin mukaan '
+      + 'vuosikymmeniksi, kunnes pitkä kamppailu ja Nelson Mandelan '
+      + 'johtama sovinto toivat demokratian 1994. Mandelan opetus — '
+      + 'vapaus ilman kostoa — teki maasta esimerkin koko maailmalle.'
+      + '\n\n== Sateenkaarikansa ==\n'
+      + 'Virallisia kieliä on yksitoista, ja arki on monen kulttuurin '
+      + 'sekoitus: braai-tulet savuavat, jazz ja kwaito soivat, ja '
+      + 'rugby yhdistää kansan. Luonto on omaa luokkaansa — Krugerin '
+      + 'puiston norsut ja leijonat, Kapin sinivalaat ja pingviinit ja '
+      + 'kukkien peittämä Namaqualand keväisin.',
+  },
+  Tansania: {
+    intro: 'Tansaniassa ovat Afrikan katto Kilimandžaro, Serengetin '
+      + 'suuret laumat ja Sansibarin maustesaaret. Swahilin kieli '
+      + 'yhdistää yli sadan kansan maan.',
+    artikkeli: 'Tansania sijaitsee Itä-Afrikassa Intian valtameren '
+      + 'rannalla. Maan rajojen sisään mahtuvat Afrikan korkein vuori '
+      + 'Kilimandžaro, mantereen suurin järvi Viktorianjärvi ja '
+      + 'syvin järvi Tanganjika — sekä Serengetin tasangot, joilla '
+      + 'miljoonapäiset gnu- ja seepralaumat vaeltavat vuodenkiertoaan.'
+      + '\n\n== Historiaa lyhyesti ==\n'
+      + 'Rannikolla kukoisti vuosisatoja swahilikulttuuri, joka syntyi '
+      + 'afrikkalaisen ja valtameren yli purjehtineen arabialaisen '
+      + 'maailman kohtaamisesta. Siirtomaakauden jälkeen Tanganjika ja '
+      + 'Sansibar itsenäistyivät ja yhdistyivät 1964 Tansaniaksi. '
+      + 'Ensimmäinen presidentti Julius Nyerere, opettajaksi '
+      + 'kouluttautunut "Mwalimu", rakensi maata yhteisöllisyyden '
+      + 'ajatukselle ja teki swahilista koko kansan yhteisen kielen.'
+      + '\n\n== Elämää ==\n'
+      + 'Tansaniassa elää yli sata kansaa, mutta swahili yhdistää: '
+      + '"pole pole" — hiljaa hyvä tulee — on koko maan elämänasenne. '
+      + 'Rannikolla kalastetaan dhow-veneillä ja juodaan '
+      + 'maustettua chai-teetä, sisämaassa masait paimentavat '
+      + 'karjaansa kuten ennenkin, ja Kilimandžaron rinteillä '
+      + 'kasvatetaan kahvia, joka kuuluu maailman parhaimpiin.',
+  },
+  Etiopia: {
+    intro: 'Etiopia on ylänköjen maa, jota ei koskaan kolonisoitu: '
+      + 'oma kirjaimisto, oma ajanlasku ja kahvin kotimaa tekevät '
+      + 'siitä Afrikan omaleimaisimman valtion.',
+    artikkeli: 'Etiopia on ylänköjen maa Afrikan sarvessa. Suuri osa '
+      + 'maasta on yli kahden kilometrin korkeudessa, ja ylängön halki '
+      + 'repeää Suuri hautavajoama; Sininen Niili saa alkunsa '
+      + 'Tanajärvestä Etiopian vuorilta.'
+      + '\n\n== Maa jota ei valloitettu ==\n'
+      + 'Etiopian historia on Afrikan pisimpiä: Aksumin valtakunta '
+      + 'kävi kauppaa Rooman kanssa, ja kristinusko tuli maahan jo '
+      + '300-luvulla. Lalibelan kirkot hakattiin kallioon '
+      + 'kokonaisina, ja maalla on oma kirjaimistonsa ja '
+      + 'ajanlaskunsa — kalenteri kulkee seitsemän vuotta '
+      + 'meidän jäljessämme. Kun Eurooppa jakoi Afrikkaa, Etiopia '
+      + 'löi hyökkääjät Adwan taistelussa 1896 ja säilytti '
+      + 'itsenäisyytensä ainoana Afrikassa.'
+      + '\n\n== Kahvin kotimaa ==\n'
+      + 'Kahvipensas kasvaa villinä Etiopian metsissä, ja tarinan '
+      + 'mukaan vuohipaimen Kaldi huomasi ensimmäisenä papujen '
+      + 'voiman. Kahviseremonia on vieraanvaraisuuden sydän, ateria '
+      + 'katetaan injera-leivän päälle, ja juhlissa tanssitaan '
+      + 'eskista-olkatanssia. Pitkän matkan juoksijat ovat maan '
+      + 'ylpeys — ylängön ohuessa ilmassa kasvaa maailmanmestareita '
+      + 'sukupolvi toisensa perään.',
+  },
+  'Kongon demokraattinen tasavalta': {
+    intro: 'Kongon demokraattinen tasavalta on Saharan eteläpuolisen '
+      + 'Afrikan suurin maa: sademetsien, suuren joen ja valtavien '
+      + 'luonnonrikkauksien jättiläinen.',
+    artikkeli: 'Kongon demokraattinen tasavalta on pinta-alaltaan '
+      + 'Saharan eteläpuolisen Afrikan suurin valtio — yli '
+      + 'kaksikymmentä kertaa Suomen kokoinen. Maan sydän on '
+      + 'Kongojoki sademetsineen; idässä kohoavat tulivuoret ja '
+      + 'suuret järvet hautavajoaman reunalla.'
+      + '\n\n== Historiaa lyhyesti ==\n'
+      + 'Joen suulla kukoisti aikanaan Kongon kuningaskunta, joka '
+      + 'kävi kirjeenvaihtoa Euroopan hovien kanssa. 1800-luvun '
+      + 'lopulla maa joutui Belgian kuninkaan yksityisomistukseen — '
+      + 'siirtomaakauden julmuudet kuuluvat historian synkimpiin. '
+      + 'Itsenäistyminen 1960 ei tuonut rauhaa: rikkauksista on '
+      + 'kamppailtu siitä asti, ja idän levottomuudet jatkuvat yhä.'
+      + '\n\n== Rikkauksien ristiriita ==\n'
+      + 'Maa on luonnonvaroiltaan maailman rikkaimpia: kuparia, '
+      + 'kobolttia, timantteja ja sademetsää — ja silti sen asukkaat '
+      + 'ovat maailman köyhimpiä. Arki kulkee joen ja torien '
+      + 'tahdissa, ja musiikki kantaa: kongolainen rumba soi koko '
+      + 'mantereella, ja Kinshasan sapeurit todistavat, että '
+      + 'eleganssi ei katso olosuhteita.',
+  },
 };
 
 // ===== js/packs/africa-maatiedot.js =====
-// Maiden tunnusluvut Tutki-kortin maapalstalle (pilotti: Marokko ja
-// Libya — omistajan päätös, laajennetaan jos malli toimii).
+// Maiden tunnusluvut Tutki-kortin maapalstalle. Pilotit Marokko ja
+// Libya; laajennettu kymmenen kaupungin maihin omistajan hyväksyttyä
+// mallin (30.7.).
 //
 //  - Luvut isoin pyöristyksin, samaan vähäeleiseen tapaan kuin
 //    karttaselitteessä (vain numerot ja symboli).
@@ -9040,6 +9997,141 @@ const AFRICA_MAATIEDOT = {
       { teksti: 'Salam alaikum', kieli: 'arabia', lippu: 'Flag of Saudi Arabia.svg', osuus: '95 %' },
       { teksti: 'Azul', kieli: 'tamazight', lippu: 'Berber flag.svg', osuus: '5 %' },
       { teksti: 'Buongiorno', kieli: 'italia', lippu: 'Flag of Italy.svg', osuus: '1 %' },
+    ],
+  },
+  EGY: {
+    vakiluku: '115 milj.',
+    pintaAla: '1 milj. km²',
+    demokratia: {
+      arvo: '0,07',
+      sija: '160./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~EGY',
+    },
+    keskitulo: { arvo: '4 000 $/v', sija: '125./190' },
+    tervehdykset: [
+      { teksti: 'Salam alaikum', kieli: 'arabia', lippu: 'Flag of Saudi Arabia.svg', osuus: '99 %' },
+      { teksti: 'Good day', kieli: 'englanti', lippu: 'Flag of the United Kingdom.svg', osuus: '10 %' },
+    ],
+  },
+  SEN: {
+    vakiluku: '18 milj.',
+    pintaAla: '200 000 km²',
+    demokratia: {
+      arvo: '0,42',
+      sija: '60./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SEN',
+    },
+    keskitulo: { arvo: '1 600 $/v', sija: '155./190' },
+    tervehdykset: [
+      { teksti: 'Na nga def', kieli: 'wolof', lippu: 'Flag of Senegal.svg', osuus: '80 %' },
+      { teksti: 'Bonjour', kieli: 'ranska', lippu: 'Flag of France.svg', osuus: '25 %' },
+      { teksti: 'Jam waali', kieli: 'pulaar', lippu: 'Flag of Senegal.svg', osuus: '20 %' },
+    ],
+  },
+  MLI: {
+    vakiluku: '23 milj.',
+    pintaAla: '1,2 milj. km²',
+    demokratia: {
+      arvo: '0,13',
+      sija: '130./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MLI',
+    },
+    keskitulo: { arvo: '900 $/v', sija: '175./190' },
+    tervehdykset: [
+      { teksti: 'I ni ce', kieli: 'bambara', lippu: 'Flag of Mali.svg', osuus: '80 %' },
+      { teksti: 'Bonjour', kieli: 'ranska', lippu: 'Flag of France.svg', osuus: '20 %' },
+      { teksti: 'Fofo', kieli: 'songhai', lippu: 'Flag of Mali.svg', osuus: '5 %' },
+    ],
+  },
+  NGA: {
+    vakiluku: '230 milj.',
+    pintaAla: '900 000 km²',
+    demokratia: {
+      arvo: '0,26',
+      sija: '95./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~NGA',
+    },
+    keskitulo: { arvo: '2 000 $/v', sija: '150./190' },
+    tervehdykset: [
+      { teksti: 'Good day', kieli: 'englanti', lippu: 'Flag of the United Kingdom.svg', osuus: '60 %' },
+      { teksti: 'Sannu', kieli: 'hausa', lippu: 'Flag of Nigeria.svg', osuus: '30 %' },
+      { teksti: 'Ẹ káàsán', kieli: 'joruba', lippu: 'Flag of Nigeria.svg', osuus: '20 %' },
+      { teksti: 'Ndeewo', kieli: 'igbo', lippu: 'Flag of Nigeria.svg', osuus: '15 %' },
+    ],
+  },
+  GHA: {
+    vakiluku: '34 milj.',
+    pintaAla: '240 000 km²',
+    demokratia: {
+      arvo: '0,61',
+      sija: '35./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~GHA',
+    },
+    keskitulo: { arvo: '2 300 $/v', sija: '145./190' },
+    tervehdykset: [
+      { teksti: 'Maakye', kieli: 'akan (twi)', lippu: 'Flag of Ghana.svg', osuus: '45 %' },
+      { teksti: 'Good day', kieli: 'englanti', lippu: 'Flag of the United Kingdom.svg', osuus: '65 %' },
+      { teksti: 'Sannu', kieli: 'hausa', lippu: 'Flag of Nigeria.svg', osuus: '5 %' },
+    ],
+  },
+  ZAF: {
+    vakiluku: '63 milj.',
+    pintaAla: '1,2 milj. km²',
+    demokratia: {
+      arvo: '0,54',
+      sija: '45./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ZAF',
+    },
+    keskitulo: { arvo: '6 500 $/v', sija: '100./190' },
+    tervehdykset: [
+      { teksti: 'Sawubona', kieli: 'zulu', lippu: 'Flag of South Africa.svg', osuus: '25 %' },
+      { teksti: 'Molo', kieli: 'xhosa', lippu: 'Flag of South Africa.svg', osuus: '16 %' },
+      { teksti: 'Goeie dag', kieli: 'afrikaans', lippu: 'Flag of South Africa.svg', osuus: '13 %' },
+      { teksti: 'Good day', kieli: 'englanti', lippu: 'Flag of the United Kingdom.svg', osuus: '10 %' },
+    ],
+  },
+  TZA: {
+    vakiluku: '68 milj.',
+    pintaAla: '950 000 km²',
+    demokratia: {
+      arvo: '0,26',
+      sija: '95./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~TZA',
+    },
+    keskitulo: { arvo: '1 200 $/v', sija: '165./190' },
+    tervehdykset: [
+      { teksti: 'Jambo', kieli: 'swahili', lippu: 'Flag of Tanzania.svg', osuus: '90 %' },
+      { teksti: 'Good day', kieli: 'englanti', lippu: 'Flag of the United Kingdom.svg', osuus: '10 %' },
+    ],
+  },
+  ETH: {
+    vakiluku: '130 milj.',
+    pintaAla: '1,1 milj. km²',
+    demokratia: {
+      arvo: '0,20',
+      sija: '110./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ETH',
+    },
+    keskitulo: { arvo: '1 100 $/v', sija: '170./190' },
+    tervehdykset: [
+      { teksti: 'Tena yistilign', kieli: 'amhara', lippu: 'Flag of Ethiopia.svg', osuus: '30 %' },
+      { teksti: 'Akkam', kieli: 'oromo', lippu: 'Flag of Ethiopia.svg', osuus: '35 %' },
+      { teksti: 'Selam', kieli: 'tigrinja', lippu: 'Flag of Ethiopia.svg', osuus: '6 %' },
+    ],
+  },
+  COD: {
+    vakiluku: '105 milj.',
+    pintaAla: '2,3 milj. km²',
+    demokratia: {
+      arvo: '0,15',
+      sija: '125./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~COD',
+    },
+    keskitulo: { arvo: '700 $/v', sija: '185./190' },
+    tervehdykset: [
+      { teksti: 'Mbote', kieli: 'lingala', lippu: 'Flag of the Democratic Republic of the Congo.svg', osuus: '40 %' },
+      { teksti: 'Bonjour', kieli: 'ranska', lippu: 'Flag of France.svg', osuus: '50 %' },
+      { teksti: 'Jambo', kieli: 'swahili', lippu: 'Flag of Tanzania.svg', osuus: '30 %' },
     ],
   },
 };
@@ -34140,6 +35232,20 @@ class UI {
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
+      // Muusikoista linkki Apple Musiciin (omistajan toive): aukeaa
+      // uuteen välilehteen, jotta peli jää taustalle odottamaan.
+      if (nosto.musiikki) {
+        const linkki = html('a', 'kulttuuri-musiikkilinkki');
+        linkki.href = nosto.musiikki;
+        linkki.target = '_blank';
+        linkki.rel = 'noopener';
+        linkki.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">'
+          + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+          + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
+          + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> '
+          + (nosto.musiikkiNimi ?? 'Kuuntele Apple Musicissa');
+        lohko.appendChild(linkki);
+      }
       const lahteet = [nosto.lahde, nosto.aaniLahde].filter(Boolean).join(' · ');
       if (lahteet) lohko.appendChild(html('p', 'kulttuuri-lahde', lahteet));
       lista.appendChild(lohko);
@@ -35964,7 +37070,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.74';
+const APP_VERSION = '2026-07-30.75';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

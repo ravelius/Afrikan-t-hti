@@ -914,6 +914,28 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   color: rgba(90, 74, 51, 0.85);
 }
 
+/* Muusikkonoston linkki Apple Musiciin: pieni nuottipilleri. */
+.kulttuuri-musiikkilinkki {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: fit-content;
+  margin: 0.15rem 0 0;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgba(90, 74, 51, 0.45);
+  border-radius: 999px;
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  color: rgba(64, 51, 34, 0.95);
+  text-decoration: none;
+  background: rgba(255, 252, 245, 0.6);
+}
+
+.kulttuuri-musiikkilinkki:hover {
+  border-color: rgba(64, 51, 34, 0.75);
+  background: rgba(255, 252, 245, 0.95);
+}
+
 /* Otsikko ja ääninäytteen nappi samalla rivillä. */
 .kulttuuri-otsikkorivi {
   display: flex;
