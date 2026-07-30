@@ -16,16 +16,21 @@ export const AFRICA_MAATIEDOT = {
   MAR: {
     vakiluku: '38 milj.',
     pintaAla: '450 000 km²',
+    // `sija` on sijoitus maailmassa (V-Dem vertailee 179 maata,
+    // tulovertailussa noin 190 maata) — arviot pyöristetty reilusti.
     demokratia: {
       arvo: '0,13',
+      sija: '130./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~MAR',
     },
-    keskitulo: '4 000 $/v',
+    keskitulo: { arvo: '4 000 $/v', sija: '125./190' },
+    // `osuus` on karkea arvio kielen puhujista maassa (moni puhuu
+    // useampaa, joten summa ylittää sata).
     tervehdykset: [
-      { teksti: 'Salam alaikum', kieli: 'arabia', lippu: 'Flag of Saudi Arabia.svg' },
-      { teksti: 'Azul', kieli: 'tamazight', lippu: 'Berber flag.svg' },
-      { teksti: 'Bonjour', kieli: 'ranska', lippu: 'Flag of France.svg' },
-      { teksti: 'Buenos días', kieli: 'espanja', lippu: 'Flag of Spain.svg' },
+      { teksti: 'Salam alaikum', kieli: 'arabia', lippu: 'Flag of Saudi Arabia.svg', osuus: '90 %' },
+      { teksti: 'Azul', kieli: 'tamazight', lippu: 'Berber flag.svg', osuus: '25 %' },
+      { teksti: 'Bonjour', kieli: 'ranska', lippu: 'Flag of France.svg', osuus: '35 %' },
+      { teksti: 'Buenos días', kieli: 'espanja', lippu: 'Flag of Spain.svg', osuus: '5 %' },
     ],
   },
   LBY: {
@@ -33,13 +38,14 @@ export const AFRICA_MAATIEDOT = {
     pintaAla: '1,8 milj. km²',
     demokratia: {
       arvo: '0,10',
+      sija: '145./179',
       linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~LBY',
     },
-    keskitulo: '7 000 $/v',
+    keskitulo: { arvo: '7 000 $/v', sija: '95./190' },
     tervehdykset: [
-      { teksti: 'Salam alaikum', kieli: 'arabia', lippu: 'Flag of Saudi Arabia.svg' },
-      { teksti: 'Azul', kieli: 'tamazight', lippu: 'Berber flag.svg' },
-      { teksti: 'Buongiorno', kieli: 'italia', lippu: 'Flag of Italy.svg' },
+      { teksti: 'Salam alaikum', kieli: 'arabia', lippu: 'Flag of Saudi Arabia.svg', osuus: '95 %' },
+      { teksti: 'Azul', kieli: 'tamazight', lippu: 'Berber flag.svg', osuus: '5 %' },
+      { teksti: 'Buongiorno', kieli: 'italia', lippu: 'Flag of Italy.svg', osuus: '1 %' },
     ],
   },
 };

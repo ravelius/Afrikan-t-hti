@@ -2226,28 +2226,42 @@ export class UI {
       vaaka: '<path d="M7.3 1.8v11.4M3.6 13.2h7.4M2.4 4.2h9.8"/><path d="M2.4 4.2 1 7.9a2.2 2.2 0 0 0 2.8 0zM12.2 4.2l-1.4 3.7a2.2 2.2 0 0 0 2.8 0z"/>',
       raha: '<circle cx="7.3" cy="7.5" r="5.9"/><path d="M7.3 4.3v6.4M5.5 6.2c0-.9.8-1.6 1.8-1.6s1.8.65 1.8 1.5c0 1.9-3.6 1.05-3.6 2.95 0 .85.8 1.5 1.8 1.5s1.8-.7 1.8-1.6"/>',
     };
-    const rivi = (ikoni, sisalto, seloste) => {
-      const kohta = html('span', 'maa-tunnus');
-      kohta.title = seloste;
+    // Kaksi riviä (omistajan toive): väkiluku ja pinta-ala ylhäällä,
+    // demokratia ja tulot alempana sijoituksineen.
+    const rivi1 = html('div', 'maa-tunnusrivi');
+    const rivi2 = html('div', 'maa-tunnusrivi');
+    this.arrivalMaaTunnusluvut.appendChild(rivi1);
+    this.arrivalMaaTunnusluvut.appendChild(rivi2);
+    const kohta = (emo, ikoni, sisalto, seloste) => {
+      const osa = html('span', 'maa-tunnus');
+      osa.title = seloste;
       const kuvake = html('span', 'maa-tunnus-ikoni');
       kuvake.innerHTML = `<svg viewBox="0 0 15 15" aria-hidden="true">${IKONIT[ikoni]}</svg>`;
-      kohta.appendChild(kuvake);
-      kohta.appendChild(typeof sisalto === 'string' ? document.createTextNode(sisalto) : sisalto);
-      this.arrivalMaaTunnusluvut.appendChild(kohta);
+      osa.appendChild(kuvake);
+      for (const pala of [].concat(sisalto)) {
+        osa.appendChild(typeof pala === 'string' ? document.createTextNode(pala) : pala);
+      }
+      emo.appendChild(osa);
     };
-    rivi('vaki', tiedot.vakiluku, 'Väkiluku');
-    rivi('ala', tiedot.pintaAla, 'Pinta-ala');
+    // Suluissa sijoitus maailmassa (omistajan toive).
+    const sija = (arvo) => (arvo ? html('span', 'maa-sija', ` (${arvo})`) : '');
+    kohta(rivi1, 'vaki', tiedot.vakiluku, 'Väkiluku');
+    kohta(rivi1, 'ala', tiedot.pintaAla, 'Pinta-ala');
     if (tiedot.demokratia) {
       const linkki = html('a', 'maa-demokratia', `${tiedot.demokratia.arvo} · V-Dem`);
       linkki.href = tiedot.demokratia.linkki;
       linkki.target = '_blank';
       linkki.rel = 'noopener noreferrer';
-      rivi('vaaka', linkki, 'Demokratiaindeksi (V-Dem, 0–1) — avaa maan kuvaajan');
+      kohta(rivi2, 'vaaka', [linkki, sija(tiedot.demokratia.sija)],
+        'Demokratiaindeksi (V-Dem, 0–1), suluissa sijoitus maailmassa — avaa maan kuvaajan');
     }
-    rivi('raha', tiedot.keskitulo, 'Bruttokansantulo asukasta kohden vuodessa');
+    if (tiedot.keskitulo) {
+      kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
+        'Bruttokansantulo asukasta kohden vuodessa, suluissa sijoitus maailmassa');
+    }
     for (const t of tiedot.tervehdykset ?? []) {
       const osa = html('span', 'tervehdys');
-      osa.title = `"Hyvää päivää" — ${t.kieli}`;
+      osa.title = `"Hyvää päivää" — ${t.kieli}${t.osuus ? `, noin ${t.osuus} puhuu` : ''}`;
       osa.appendChild(document.createTextNode(`${t.teksti} `));
       const lippu = document.createElement('img');
       lippu.alt = t.kieli;
@@ -2255,6 +2269,8 @@ export class UI {
       lippu.src = valokuvaUrl(t.lippu, 40);
       lippu.addEventListener('error', () => lippu.remove());
       osa.appendChild(lippu);
+      // Karkea puhujaosuus kielen perässä (omistajan kokeilu).
+      if (t.osuus) osa.appendChild(html('span', 'maa-sija', ` ${t.osuus}`));
       this.arrivalMaaTervehdykset.appendChild(osa);
     }
   }

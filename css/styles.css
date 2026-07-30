@@ -1020,13 +1020,24 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * alla tervehdykset kielilippuineen.
  */
 .maa-tunnusluvut {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.8rem;
   margin: 0.35rem 0 0.15rem;
   font-family: var(--font-type);
   font-size: 0.74rem;
   color: #5a4a33;
+}
+
+.maa-tunnusrivi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.8rem;
+}
+
+.maa-tunnusrivi + .maa-tunnusrivi { margin-top: 0.2rem; }
+
+/* Sijoitus maailmassa ja puhujaosuus: vaimeampi lisätieto. */
+.maa-sija {
+  color: rgba(90, 74, 51, 0.7);
+  font-size: 0.68rem;
 }
 
 .maa-tunnus {
