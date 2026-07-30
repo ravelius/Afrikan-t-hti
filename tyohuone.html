@@ -558,7 +558,7 @@
     // vain tähän selaimeen (kuten Freesound-avain äänistudiossa) —
     // repoon tai sivulle sitä ei koskaan kirjata.
     const EL_AVAIN = 'matkakirja-elevenlabs-avain';
-    function haeElSaldo(tulos) {
+    function haeElSaldo(tulos, kentat) {
       let avain = '';
       try { avain = localStorage.getItem(EL_AVAIN) ?? ''; } catch { /* ei säily */ }
       if (!avain) {
@@ -574,9 +574,17 @@
           const jaljella = Math.max(0, raja - kaytetty);
           const aika = new Date().toLocaleString('fi-FI', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
           tulos.innerHTML = `<b>Krediittejä jäljellä ${jaljella.toLocaleString('fi-FI')}</b> / ${raja.toLocaleString('fi-FI')} (käytetty ${kaytetty.toLocaleString('fi-FI')}) · haettu ${aika}`;
-          // Kirjataan myös käsikirjanpitoon, jotta lukema säilyy näkyvissä.
+          // Lukema kirjataan käsikirjanpitoon JA näkyviin kenttiin heti —
+          // pelkkä talletus ei päivittänyt jo piirrettyä kenttää.
+          const saldoTeksti = `${jaljella.toLocaleString('fi-FI')} / ${raja.toLocaleString('fi-FI')}`;
+          const tanaan = new Date().toISOString().slice(0, 10);
+          if (kentat) {
+            const [saldoKentta, pvmKentta] = kentat.querySelectorAll('input');
+            if (saldoKentta) saldoKentta.value = saldoTeksti;
+            if (pvmKentta) pvmKentta.value = tanaan;
+          }
           const kaikki = moottoriMuistiot();
-          kaikki.elevenlabs = { ...(kaikki.elevenlabs ?? {}), saldo: `${jaljella.toLocaleString('fi-FI')} / ${raja.toLocaleString('fi-FI')}` };
+          kaikki.elevenlabs = { ...(kaikki.elevenlabs ?? {}), saldo: saldoTeksti, pvm: tanaan };
           try { localStorage.setItem(MOOTTORI_AVAIN, JSON.stringify(kaikki)); } catch { /* ei säily */ }
         })
         .catch((e) => {
@@ -620,11 +628,14 @@
           });
           const hae = document.createElement('button');
           hae.textContent = 'Hae saldo';
-          hae.addEventListener('click', () => haeElSaldo(saldo));
           rivi.appendChild(avainKentta);
           rivi.appendChild(hae);
           k.appendChild(rivi);
-          haeElSaldo(saldo);
+          k.dataset.elSaldo = '1';
+          k.elSaldoKaynnistys = (kentat) => {
+            hae.addEventListener('click', () => haeElSaldo(saldo, kentat));
+            haeElSaldo(saldo, kentat);
+          };
         }
         const kentat = document.createElement('div');
         kentat.className = 'moottori-kentat';
@@ -647,6 +658,7 @@
         tee('tarkistettu', 'pvm', 'date');
         tee('muistiinpano', 'huomio', 'text', 'esim. uusi avain luotu 29.7.');
         k.appendChild(kentat);
+        if (k.elSaldoKaynnistys) k.elSaldoKaynnistys(kentat);
         if (m.id === 'elevenlabs') moottoriLista.appendChild(k);
         else muut.appendChild(k);
       }

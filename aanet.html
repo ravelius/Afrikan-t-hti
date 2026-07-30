@@ -119,23 +119,6 @@
            style="width:100%;max-width:26rem" />
   </details>
 
-  <details class="pikatestit" id="mikseri" open>
-    <summary>Miksaus — kuuntele paikan raidat päällekkäin</summary>
-    <p>Valitse paikka, niin kannet latautuvat pelin käyttämillä äänillä ja
-       tasoilla. Säädä kunkin raidan alku ja voima, kokeile tietovisan
-       vaimennusta, ja tallenna säädöt suoraan valintoihin.</p>
-    <div class="grid" style="margin-bottom:0.5rem">
-      <select id="mikseri-paikka"></select>
-      <button id="mikseri-lataa">Lataa raidat</button>
-      <label class="laskuri"><input type="checkbox" id="mikseri-visa" /> tietovisa auki (kaupunki vaimenee)</label>
-      <label class="laskuri">master ×
-        <input id="mikseri-master" type="range" min="0.2" max="4" step="0.1" value="1" style="width:6rem" />
-        <span id="mikseri-master-arvo">1.0</span>
-      </label>
-    </div>
-    <div id="mikseri-kannet"></div>
-  </details>
-
   <details class="pikatestit">
     <summary>Pikatestit: pelin tehosteet ja lentokohtaus</summary>
     <div id="lista" class="grid" style="margin-top:0.6rem"></div>
@@ -154,7 +137,7 @@
   <pre id="valinnat-teksti"></pre>
   <details class="pikatestit">
     <summary>Tuo valinnat toisesta selaimesta (JSON)</summary>
-    <textarea id="tuo-alue" placeholder='{"kaupunki:kairo":"https://…"}'></textarea>
+    <textarea id="tuo-alue" placeholder='{"valinnat":{"musiikki:tietovisa":"https://…"},"korit":{"meri":["https://…"]}}'></textarea>
     <div class="grid" style="margin-top:0.5rem"><button id="tuo">Tuo</button></div>
   </details>
 
@@ -162,9 +145,9 @@
     import { sfx } from './js/sound.js';
     import {
       EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani, jaaAlku,
-      TYYPPI_EHDOKKAAT, tyyppiKori, valitseTyyppiKori,
+      TYYPPI_EHDOKKAAT, TYYPPI_NIMET, KAUPUNGIT_TYYPEITTAIN,
+      tyyppiKori, valitseTyyppiKori,
     } from './js/aani-ehdokkaat.js';
-    import { STRIIMI_VOIMA, MUSIIKKI_VOIMA } from './js/ambience-stream.js';
 
     // --- pikatestit ---------------------------------------------------------
     const nimet = [
@@ -268,160 +251,28 @@
     document.getElementById('soitin-merkitse').addEventListener('click', () => {
       if (!soiva || !soitin.duration) return;
       const sek = Math.round(soitin.currentTime);
-      esitaytot.set(`${soiva.slot}|${soiva.url}`, sek);
-      const valittu = jaaAlku(valittuAani(soiva.slot));
-      if (valittu.url === soiva.url) {
-        valitseAani(soiva.slot, sek > 0 ? `${soiva.url}#alku=${sek}` : soiva.url);
+      // Korin ääni: kohta kirjoitetaan suoraan koriin, jos ääni on rastittu.
+      if (soiva.slot?.startsWith('kori:')) {
+        const tyyppi = soiva.slot.slice(5);
+        const nyt = tyyppiKori(tyyppi);
+        const idx = nyt.findIndex((k) => jaaAlku(k).url === soiva.url);
+        if (idx >= 0) {
+          const { voima } = jaaAlku(nyt[idx]);
+          const osat = [];
+          if (sek > 0) osat.push(`alku=${sek}`);
+          if (voima !== 1) osat.push(`voima=${voima}`);
+          nyt[idx] = osat.length ? `${soiva.url}#${osat.join('&')}` : soiva.url;
+          valitseTyyppiKori(tyyppi, nyt);
+        }
+      } else {
+        esitaytot.set(`${soiva.slot}|${soiva.url}`, sek);
+        const valittu = jaaAlku(valittuAani(soiva.slot));
+        if (valittu.url === soiva.url) {
+          valitseAani(soiva.slot, sek > 0 ? `${soiva.url}#alku=${sek}` : soiva.url);
+        }
       }
       mika.textContent = `⌖ Alkukohta ${sek} s — ${soiva.nimi}`;
       rakenna();
-    });
-
-    // --- mikseri: paikan raidat päällekkäin ---------------------------------
-    // Kannet soittavat pelin oikeilla perustasoilla (kaupunki 0.14,
-    // musiikki 0.09) kerrottuna raidan voimalla ja mikserin masterilla.
-    // Master on esikuuntelun apu — sitä EI tallenneta valintoihin.
-    const mikseriPaikka = document.getElementById('mikseri-paikka');
-    const mikseriKannet = document.getElementById('mikseri-kannet');
-    const mikseriVisa = document.getElementById('mikseri-visa');
-    const mikseriMaster = document.getElementById('mikseri-master');
-    const mikseriMasterArvo = document.getElementById('mikseri-master-arvo');
-    let kannet = []; // { slot, otsikko, url, alku, voima, base, kaupunki, audio, soi }
-    for (const [slot, { otsikko }] of Object.entries(EHDOKKAAT)) {
-      if (!slot.startsWith('kaupunki:')) continue;
-      const opt = document.createElement('option');
-      opt.value = slot;
-      opt.textContent = otsikko;
-      mikseriPaikka.appendChild(opt);
-    }
-
-    const kannenTaso = (kansi) => {
-      const vaimennus = kansi.kaupunki && mikseriVisa.checked ? 0.15 : 1;
-      return Math.min(1, kansi.base * kansi.voima * Number(mikseriMaster.value) * vaimennus);
-    };
-    const paivitaTasot = () => {
-      mikseriMasterArvo.textContent = Number(mikseriMaster.value).toFixed(1);
-      for (const kansi of kannet) {
-        if (kansi.audio) kansi.audio.volume = kannenTaso(kansi);
-      }
-    };
-    mikseriVisa.addEventListener('change', paivitaTasot);
-    mikseriMaster.addEventListener('input', paivitaTasot);
-
-    const pysaytaKannet = () => {
-      for (const kansi of kannet) {
-        kansi.audio?.pause();
-        kansi.audio?.removeAttribute('src');
-      }
-      kannet = [];
-      mikseriKannet.textContent = '';
-    };
-
-    // Paikalla käytössä oleva ääni: valinta tai oletus säätöineen.
-    const kaytossaOleva = (slot) => {
-      const valinta = valittuAani(slot);
-      const arvo = valinta === null ? EHDOKKAAT[slot]?.oletus : (valinta === '' ? null : valinta);
-      return { ...jaaAlku(arvo), arvo };
-    };
-
-    function rakennaKansi(kansi) {
-      const lohko = document.createElement('div');
-      lohko.className = 'rivi';
-      lohko.style.cssText = 'border:1px solid var(--reuna);border-radius:10px;padding:0.5rem 0.6rem;';
-      const otsikko = document.createElement('span');
-      otsikko.style.cssText = 'flex:1 1 100%;color:var(--himmea);font-size:0.85rem;';
-      otsikko.textContent = `${kansi.otsikko}: ${kansi.nimi}`;
-      lohko.appendChild(otsikko);
-      if (!kansi.url) {
-        const huom = document.createElement('span');
-        huom.className = 'sek';
-        huom.textContent = 'syntetisoitu ääni — ei striimattavaa raitaa';
-        lohko.appendChild(huom);
-        mikseriKannet.appendChild(lohko);
-        return;
-      }
-      const play = document.createElement('button');
-      play.textContent = '▶';
-      play.className = 'soita';
-      play.addEventListener('click', () => {
-        if (!kansi.audio) {
-          kansi.audio = new Audio(kansi.url);
-          kansi.audio.loop = true;
-          if (kansi.alku > 0) {
-            kansi.audio.addEventListener('loadedmetadata', () => {
-              kansi.audio.currentTime = kansi.alku;
-            }, { once: true });
-          }
-        }
-        if (kansi.audio.paused) {
-          kansi.audio.volume = kannenTaso(kansi);
-          kansi.audio.play().catch(() => { otsikko.textContent += ' (ei saatu soimaan)'; });
-          play.textContent = '⏸';
-        } else {
-          kansi.audio.pause();
-          play.textContent = '▶';
-        }
-      });
-      lohko.appendChild(play);
-      const tee = (arvo, min, max, step, otsake, avain) => {
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.min = min;
-        input.max = max;
-        input.step = step;
-        input.value = arvo;
-        input.title = otsake;
-        input.addEventListener('change', () => {
-          kansi[avain] = Math.max(Number(min), Number(input.value) || kansi[avain]);
-          if (avain === 'alku' && kansi.audio && kansi.audio.duration) {
-            kansi.audio.currentTime = kansi.alku;
-          }
-          paivitaTasot();
-        });
-        lohko.appendChild(input);
-        const merkki = document.createElement('span');
-        merkki.className = 'sek';
-        merkki.textContent = avain === 'alku' ? 's' : '×';
-        lohko.appendChild(merkki);
-      };
-      tee(kansi.alku, '0', '600', '5', 'Aloituskohta sekunteina', 'alku');
-      tee(kansi.voima, '0.2', '3', '0.1', 'Voimakerroin', 'voima');
-      const tallenna = document.createElement('button');
-      tallenna.textContent = 'Tallenna valintaan';
-      tallenna.addEventListener('click', () => {
-        const osat = [];
-        if (kansi.alku > 0) osat.push(`alku=${kansi.alku}`);
-        if (kansi.voima !== 1) osat.push(`voima=${kansi.voima}`);
-        valitseAani(kansi.slot, osat.length ? `${kansi.url}#${osat.join('&')}` : kansi.url);
-        tallenna.textContent = '✓ Tallennettu';
-        setTimeout(() => { tallenna.textContent = 'Tallenna valintaan'; }, 1500);
-        rakenna();
-      });
-      lohko.appendChild(tallenna);
-      mikseriKannet.appendChild(lohko);
-    }
-
-    document.getElementById('mikseri-lataa').addEventListener('click', () => {
-      pysaytaKannet();
-      const kaupunkiSlot = mikseriPaikka.value;
-      if (!kaupunkiSlot) return;
-      const kaupunki = kaytossaOleva(kaupunkiSlot);
-      const musiikki = kaytossaOleva('musiikki:tietovisa');
-      const nimeksi = (slot, tila) => {
-        const omat = omatEhdokkaat()[slot] ?? [];
-        return tila.arvo == null
-          ? 'syntetisoitu'
-          : [...(EHDOKKAAT[slot]?.ehdokkaat ?? []), ...omat].find((e) => e.url === tila.url)?.nimi ?? tila.url;
-      };
-      kannet = [
-        { slot: kaupunkiSlot, otsikko: 'Kaupunki', nimi: nimeksi(kaupunkiSlot, kaupunki),
-          url: kaupunki.url, alku: kaupunki.alku, voima: kaupunki.voima,
-          base: STRIIMI_VOIMA, kaupunki: true, audio: null },
-        { slot: 'musiikki:tietovisa', otsikko: 'Tietovisan musiikki', nimi: nimeksi('musiikki:tietovisa', musiikki),
-          url: musiikki.url, alku: musiikki.alku, voima: musiikki.voima,
-          base: MUSIIKKI_VOIMA, kaupunki: false, audio: null },
-      ];
-      for (const kansi of kannet) rakennaKansi(kansi);
     });
 
     // --- Freesound-haku: lisää ehdokkaita suoraan kategoriaan --------------
@@ -520,6 +371,19 @@
       }
     }
 
+    // Kertasiivous: vanhat kaupunkikohtaiset valinnat poistetaan
+    // talletuksesta — kaupungit saavat äänensä arvontakoreista.
+    try {
+      const AVAIN = 'matkakirja-aanivalinnat';
+      const vanhat = JSON.parse(localStorage.getItem(AVAIN) ?? '{}');
+      const siistit = Object.fromEntries(
+        Object.entries(vanhat).filter(([slot]) => !slot.startsWith('kaupunki:')),
+      );
+      if (Object.keys(siistit).length !== Object.keys(vanhat).length) {
+        localStorage.setItem(AVAIN, JSON.stringify(siistit));
+      }
+    } catch { /* yksityinen selaustila */ }
+
     // --- suodatus -----------------------------------------------------------
     let vainAvoimet = false;
     let haku = '';
@@ -539,23 +403,207 @@
     const aukiRyhmat = new Set(); // säilyy uudelleenpiirron yli
     const aukiPaikat = new Set(); // paikat, joiden vaihtoehdot on avattu
 
-    // Ryhmä: kaupungit maisematyypin mukaan, muut lohkoittain.
-    const ryhmaNimi = (slot, tiedot) => {
-      if (slot.startsWith('musiikki:')) return 'Musiikki';
-      if (slot.startsWith('tehoste:')) {
-        return tiedot.oletus === null && tiedot.ehdokkaat.some((e) => (e.url ?? '').startsWith('assets/'))
-          ? 'Tehosteet — ElevenLabs-pilotit'
-          : 'Tehosteet — pelin äänet';
+    // Ryhmät: tietovisan ja minipelien äänet omana osionaan, muut
+    // tehosteet yhdessä. Kaupungit hoituvat arvontakoreilla.
+    const MINIPELIT = new Set([
+      'musiikki:tietovisa', 'tehoste:quizOpen', 'tehoste:correct',
+      'tehoste:wrong', 'tehoste:hint', 'tehoste:tick', 'tehoste:timeout',
+      'tehoste:swipe', 'tehoste:robber', 'tehoste:star', 'tehoste:gem',
+      'tehoste:horseshoe', 'tehoste:empty',
+    ]);
+    const ryhmaNimi = (slot) => (MINIPELIT.has(slot)
+      ? 'Tietovisa ja minipelit'
+      : 'Tehosteet — yleiset');
+
+    /**
+     * Yhden maisematyypin arvontakori omana ryhmänään: rastit, liu'ut,
+     * omat äänet ja Freesound-haku. Jokainen kaupunki saa äänensä
+     * korista — kaupunkikohtaisia valintoja ei ole.
+     */
+    function rakennaKoriRyhma(tyyppi) {
+      const nimi = TYYPPI_NIMET[tyyppi] ?? tyyppi;
+      const otsikko = `Kaupungit — ${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
+      const kaupungit = KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? [];
+      const koriSlot = `kori:${tyyppi}`;
+      const omat = (omatEhdokkaat()[koriSlot] ?? []).map((e) => ({ ...e, oma: true }));
+      const rivit = [...TYYPPI_EHDOKKAAT[tyyppi], ...omat];
+      if (haku && !otsikko.toLowerCase().includes(haku)
+        && !rivit.some((e) => e.nimi.toLowerCase().includes(haku))
+        && !kaupungit.some((k) => k.toLowerCase().includes(haku))) return null;
+      const koriNyt = tyyppiKori(tyyppi);
+
+      const kotelo = document.createElement('details');
+      kotelo.className = 'ryhma';
+      kotelo.open = haku ? true : aukiRyhmat.has(otsikko);
+      kotelo.addEventListener('toggle', () => {
+        if (kotelo.open) aukiRyhmat.add(otsikko);
+        else aukiRyhmat.delete(otsikko);
+      });
+      const summary = document.createElement('summary');
+      summary.innerHTML = `${otsikko} <span class="maara">· ${kaupungit.length} kaupunkia · korissa ${koriNyt.length}</span>`;
+      kotelo.appendChild(summary);
+
+      const kori = document.createElement('div');
+      kori.className = 'kori';
+      const seloste = document.createElement('div');
+      seloste.className = 'kori-seloste';
+      seloste.textContent = 'Peli arpoo rastituista yhden aina kaupunkiin saavuttaessa. '
+        + `Koskee kaupunkeja: ${kaupungit.join(', ')}.`;
+      kori.appendChild(seloste);
+
+      for (const ehdokas of rivit) {
+        const tallennettu = koriNyt.find((k) => jaaAlku(k).url === ehdokas.url) ?? null;
+        const pohja = jaaAlku(tallennettu ?? (ehdokas.alku ? `${ehdokas.url}#alku=${ehdokas.alku}` : ehdokas.url));
+        const koriRivi = document.createElement('div');
+        koriRivi.className = 'kori-rivi';
+        const soitto = document.createElement('button');
+        soitto.type = 'button';
+        soitto.className = 'soita';
+        soitto.textContent = '▶';
+        const nimio = document.createElement('label');
+        const ruutu = document.createElement('input');
+        ruutu.type = 'checkbox';
+        ruutu.checked = tallennettu !== null;
+        nimio.appendChild(ruutu);
+        nimio.appendChild(document.createTextNode(ehdokas.nimi));
+        const aika = document.createElement('input');
+        aika.type = 'range';
+        aika.className = 'alku';
+        aika.min = '0';
+        aika.max = '120';
+        aika.step = '1';
+        aika.value = String(pohja.alku || 0);
+        aika.title = 'aloituskohta sekunteina';
+        const sek = document.createElement('span');
+        sek.className = 'sek';
+        sek.textContent = `${pohja.alku || 0} s`;
+        const voimaKentta = document.createElement('input');
+        voimaKentta.type = 'range';
+        voimaKentta.min = '0.2';
+        voimaKentta.max = '3';
+        voimaKentta.step = '0.1';
+        voimaKentta.value = String(pohja.voima || 1);
+        voimaKentta.title = 'voimakkuuskerroin';
+        const kertaa = document.createElement('span');
+        kertaa.className = 'sek';
+        kertaa.textContent = `${(pohja.voima || 1).toFixed(1)}×`;
+        aika.addEventListener('input', () => { sek.textContent = `${aika.value} s`; });
+        voimaKentta.addEventListener('input', () => {
+          kertaa.textContent = `${Number(voimaKentta.value).toFixed(1)}×`;
+          saadaEsikuunteluVoima(koriSlot, ehdokas.url, Number(voimaKentta.value));
+        });
+        const arvoNyt = () => {
+          const osat = [];
+          const a = Math.max(0, Number(aika.value) || 0);
+          const v = Math.max(0.1, Number(voimaKentta.value) || 1);
+          if (a > 0) osat.push(`alku=${a}`);
+          if (v !== 1) osat.push(`voima=${v}`);
+          return osat.length ? `${ehdokas.url}#${osat.join('&')}` : ehdokas.url;
+        };
+        soitto.addEventListener('click', () => soita({
+          url: ehdokas.url, nimi: ehdokas.nimi,
+          alku: Math.max(0, Number(aika.value) || 0),
+          voima: Math.max(0.1, Number(voimaKentta.value) || 1),
+          slot: koriSlot,
+        }));
+        const talleta = () => {
+          const nyt = tyyppiKori(tyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url);
+          if (ruutu.checked) nyt.push(arvoNyt());
+          valitseTyyppiKori(tyyppi, nyt);
+        };
+        ruutu.addEventListener('change', () => { talleta(); rakenna(); });
+        aika.addEventListener('change', talleta);
+        voimaKentta.addEventListener('change', talleta);
+        koriRivi.appendChild(soitto);
+        koriRivi.appendChild(nimio);
+        koriRivi.appendChild(aika);
+        koriRivi.appendChild(sek);
+        koriRivi.appendChild(voimaKentta);
+        koriRivi.appendChild(kertaa);
+        if (ehdokas.oma) {
+          const poista = document.createElement('button');
+          poista.type = 'button';
+          poista.textContent = '✕';
+          poista.className = 'poista';
+          poista.title = 'Poista oma ääni';
+          poista.addEventListener('click', () => {
+            const kaikki = omatEhdokkaat();
+            kaikki[koriSlot] = (kaikki[koriSlot] ?? []).filter((e) => e.url !== ehdokas.url);
+            if (!kaikki[koriSlot].length) delete kaikki[koriSlot];
+            tallennaOmat(kaikki);
+            valitseTyyppiKori(tyyppi, tyyppiKori(tyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url));
+            rakenna();
+          });
+          koriRivi.appendChild(poista);
+        }
+        kori.appendChild(koriRivi);
       }
-      const nimi = tiedot.ryhma ?? 'muut';
-      return `Kaupungit — ${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
-    };
+      kotelo.appendChild(kori);
+
+      // Lisää ääniä koriin: oma osoite tai Freesound-haku.
+      const loput = document.createElement('details');
+      loput.className = 'loput';
+      loput.open = haku ? true : aukiPaikat.has(koriSlot);
+      loput.addEventListener('toggle', () => {
+        if (loput.open) aukiPaikat.add(koriSlot);
+        else aukiPaikat.delete(koriSlot);
+      });
+      const avaus = document.createElement('summary');
+      avaus.textContent = 'Lisää ääniä koriin — oma osoite · Freesound-haku';
+      loput.appendChild(avaus);
+      const oma = document.createElement('div');
+      oma.className = 'rivi oma';
+      const osoite = document.createElement('input');
+      osoite.type = 'url';
+      osoite.placeholder = 'https://cdn.freesound.org/previews/…mp3';
+      const nimike = document.createElement('input');
+      nimike.type = 'text';
+      nimike.placeholder = 'nimi ja lisenssi';
+      const lisaa = document.createElement('button');
+      lisaa.textContent = '+ Lisää';
+      lisaa.addEventListener('click', () => {
+        const u = osoite.value.trim();
+        if (!u) return;
+        const kaikki = omatEhdokkaat();
+        kaikki[koriSlot] = [...(kaikki[koriSlot] ?? []), { url: u, nimi: nimike.value.trim() || u }];
+        tallennaOmat(kaikki);
+        rakenna();
+      });
+      oma.appendChild(osoite);
+      oma.appendChild(nimike);
+      oma.appendChild(lisaa);
+      loput.appendChild(oma);
+      const hakuRivi = document.createElement('div');
+      hakuRivi.className = 'rivi oma';
+      const kysely = document.createElement('input');
+      kysely.type = 'text';
+      kysely.value = RYHMAHAUT[nimi] ?? `${nimi} ambience`;
+      kysely.style.flex = '2 1 12rem';
+      kysely.title = 'Hakusana Freesoundiin';
+      const hae = document.createElement('button');
+      hae.textContent = 'Hae Freesoundista';
+      const tulokset = document.createElement('div');
+      hae.addEventListener('click', () => haeFreesound(koriSlot, kysely.value.trim(), tulokset));
+      hakuRivi.appendChild(kysely);
+      hakuRivi.appendChild(hae);
+      loput.appendChild(hakuRivi);
+      loput.appendChild(tulokset);
+      kotelo.appendChild(loput);
+      return kotelo;
+    }
 
     const rakenna = () => {
       valinnat.textContent = '';
       const tehdyt = kaikkiValinnat();
       const slotit = Object.keys(EHDOKKAAT);
       laskuri.textContent = `Valittu ${slotit.filter((s) => s in tehdyt).length} / ${slotit.length}`;
+
+      // Kaupunkien arvontakorit tyypeittäin ensin — kaikki kaupungit
+      // saavat äänensä näistä.
+      for (const tyyppi of Object.keys(TYYPPI_EHDOKKAAT)) {
+        const koriRyhma = rakennaKoriRyhma(tyyppi);
+        if (koriRyhma) valinnat.appendChild(koriRyhma);
+      }
 
       // Kootaan ryhmät järjestyksessä.
       const ryhmat = new Map();
@@ -566,15 +614,13 @@
           && !kaikkiRivit.some((e) => e.nimi.toLowerCase().includes(haku))) continue;
         const valittu = valittuAani(slot);
         if (vainAvoimet && valittu !== null) continue;
-        const ryhma = ryhmaNimi(slot, tiedot);
+        const ryhma = ryhmaNimi(slot);
         if (!ryhmat.has(ryhma)) ryhmat.set(ryhma, []);
         ryhmat.get(ryhma).push({ slot, tiedot, kaikkiRivit, valittu });
       }
 
-      // Kaupungit ensin — niitä viritetään eniten — sitten musiikki ja
-      // tehosteet.
       const jarjestys = [...ryhmat.keys()].sort((a, b) => {
-        const arvo = (r) => (r.startsWith('Kaupungit') ? 0 : r === 'Musiikki' ? 1 : 2);
+        const arvo = (r) => (r.startsWith('Tietovisa') ? 0 : 1);
         return arvo(a) - arvo(b) || a.localeCompare(b, 'fi');
       });
       for (const ryhma of jarjestys) {
@@ -591,103 +637,6 @@
         const valittuja = jasenet.filter((j) => j.valittu !== null).length;
         summary.innerHTML = `${ryhma} <span class="maara">· ${jasenet.length} paikkaa · valittu ${valittuja}</span>`;
         kotelo.appendChild(summary);
-
-        // Arvontakori: tyypille voi valita useita ääniä, joista peli arpoo
-        // yhden joka käynnillä. Kaupungin oma valinta ohittaa korin.
-        const koriTyyppi = jasenet[0]?.tiedot.tyyppi;
-        if (koriTyyppi && TYYPPI_EHDOKKAAT[koriTyyppi]) {
-          const kori = document.createElement('div');
-          kori.className = 'kori';
-          const koriNyt = tyyppiKori(koriTyyppi);
-          const otsikko = document.createElement('div');
-          otsikko.className = 'kori-otsikko';
-          otsikko.textContent = `Arvontakori · ${koriNyt.length} valittu`;
-          kori.appendChild(otsikko);
-          const seloste = document.createElement('div');
-          seloste.className = 'kori-seloste';
-          seloste.textContent = 'Rastita muutama: peli arpoo näistä yhden aina kaupunkiin '
-            + 'saavuttaessa. Kaupungin oma valinta ohittaa korin, oletus väistyy korin tieltä.';
-          kori.appendChild(seloste);
-          for (const ehdokas of TYYPPI_EHDOKKAAT[koriTyyppi]) {
-            // Tallennettu arvo kantaa alkukohdan ja voiman; ilman
-            // tallennusta esitäyttönä on ehdokkaan oma alkukohta.
-            const tallennettu = koriNyt.find((k) => jaaAlku(k).url === ehdokas.url) ?? null;
-            const pohja = jaaAlku(tallennettu ?? (ehdokas.alku ? `${ehdokas.url}#alku=${ehdokas.alku}` : ehdokas.url));
-            const koriRivi = document.createElement('div');
-            koriRivi.className = 'kori-rivi';
-            const soitto = document.createElement('button');
-            soitto.type = 'button';
-            soitto.className = 'soita';
-            soitto.textContent = '▶';
-            const nimio = document.createElement('label');
-            const ruutu = document.createElement('input');
-            ruutu.type = 'checkbox';
-            ruutu.checked = tallennettu !== null;
-            nimio.appendChild(ruutu);
-            nimio.appendChild(document.createTextNode(ehdokas.nimi));
-            // Alkukohta ja voima liukusäätiminä kuten yläsoittimessa
-            // (omistajan toive — iPadilla liu'utus on näppäilyä helpompi).
-            const aika = document.createElement('input');
-            aika.type = 'range';
-            aika.className = 'alku';
-            aika.min = '0';
-            aika.max = '120';
-            aika.step = '1';
-            aika.value = String(pohja.alku || 0);
-            aika.title = 'aloituskohta sekunteina';
-            const sek = document.createElement('span');
-            sek.className = 'sek';
-            sek.textContent = `${pohja.alku || 0} s`;
-            const voimaKentta = document.createElement('input');
-            voimaKentta.type = 'range';
-            voimaKentta.min = '0.2';
-            voimaKentta.max = '3';
-            voimaKentta.step = '0.1';
-            voimaKentta.value = String(pohja.voima || 1);
-            voimaKentta.title = 'voimakkuuskerroin';
-            const kertaa = document.createElement('span');
-            kertaa.className = 'sek';
-            kertaa.textContent = `${(pohja.voima || 1).toFixed(1)}×`;
-            // Arvot näkyvät liu'un vieressä ja päivittyvät liu'uttaessa.
-            aika.addEventListener('input', () => { sek.textContent = `${aika.value} s`; });
-            voimaKentta.addEventListener('input', () => {
-              kertaa.textContent = `${Number(voimaKentta.value).toFixed(1)}×`;
-              saadaEsikuunteluVoima(`kori:${koriTyyppi}`, ehdokas.url, Number(voimaKentta.value));
-            });
-            const arvoNyt = () => {
-              const osat = [];
-              const a = Math.max(0, Number(aika.value) || 0);
-              const v = Math.max(0.1, Number(voimaKentta.value) || 1);
-              if (a > 0) osat.push(`alku=${a}`);
-              if (v !== 1) osat.push(`voima=${v}`);
-              return osat.length ? `${ehdokas.url}#${osat.join('&')}` : ehdokas.url;
-            };
-            soitto.addEventListener('click', () => soita({
-              url: ehdokas.url, nimi: ehdokas.nimi,
-              alku: Math.max(0, Number(aika.value) || 0),
-              voima: Math.max(0.1, Number(voimaKentta.value) || 1),
-              slot: `kori:${koriTyyppi}`,
-            }));
-            const talleta = () => {
-              const nyt = tyyppiKori(koriTyyppi).filter((k) => jaaAlku(k).url !== ehdokas.url);
-              if (ruutu.checked) nyt.push(arvoNyt());
-              valitseTyyppiKori(koriTyyppi, nyt);
-            };
-            ruutu.addEventListener('change', () => { talleta(); rakenna(); });
-            // Säädöt tallentuvat ilman uudelleenpiirtoa, ettei kenttä
-            // menetä kohdistusta kesken näppäilyn.
-            aika.addEventListener('change', talleta);
-            voimaKentta.addEventListener('change', talleta);
-            koriRivi.appendChild(soitto);
-            koriRivi.appendChild(nimio);
-            koriRivi.appendChild(aika);
-            koriRivi.appendChild(sek);
-            koriRivi.appendChild(voimaKentta);
-            koriRivi.appendChild(kertaa);
-            kori.appendChild(koriRivi);
-          }
-          kotelo.appendChild(kori);
-        }
 
         for (const { slot, tiedot, kaikkiRivit, valittu } of jasenet) {
           const os = document.createElement('div');
@@ -871,7 +820,7 @@
     // --- vienti ja tuonti ---------------------------------------------------
     document.getElementById('kopioi').addEventListener('click', () => {
       const kaikki = kaikkiValinnat();
-      const rivit = Object.entries(kaikki).map(([slot, arvo]) => {
+      const rivit = Object.entries(kaikki).filter(([slot]) => EHDOKKAAT[slot]).map(([slot, arvo]) => {
         const paikka = EHDOKKAAT[slot];
         const { url, alku } = jaaAlku(arvo);
         const omat = omatEhdokkaat()[slot] ?? [];
@@ -913,7 +862,10 @@
       return korit;
     };
     document.getElementById('kopioi-json').addEventListener('click', () => {
-      const teksti = JSON.stringify({ valinnat: kaikkiValinnat(), korit: kaikkiKorit() }, null, 1);
+      const siistit = Object.fromEntries(
+        Object.entries(kaikkiValinnat()).filter(([slot]) => EHDOKKAAT[slot]),
+      );
+      const teksti = JSON.stringify({ valinnat: siistit, korit: kaikkiKorit() }, null, 1);
       document.getElementById('valinnat-teksti').textContent = teksti;
       navigator.clipboard?.writeText(teksti).catch(() => {});
     });
@@ -923,6 +875,9 @@
         // Uusi muoto: { valinnat, korit }. Vanha muoto: pelkkä valinnat-kartta.
         const valinnatOsa = tuotu.valinnat ?? tuotu;
         for (const [slot, arvo] of Object.entries(valinnatOsa)) {
+          // Vanhan muodon kaupunkikohtaiset valinnat ohitetaan: kaupungit
+          // saavat äänensä arvontakoreista.
+          if (slot.startsWith('kaupunki:')) continue;
           valitseAani(slot, arvo === '' ? null : arvo);
         }
         for (const [tyyppi, lista] of Object.entries(tuotu.korit ?? {})) {
