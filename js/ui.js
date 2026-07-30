@@ -1613,11 +1613,14 @@ export class UI {
       }
     }
     const mitta = Math.max(maxX - minX, maxY - minY);
-    // Nimilaput tarvitsevat reunoille hieman ilmaa muodon ympärille.
-    const vara = mitta * 0.16;
+    // Nimilaput tarvitsevat reunoille hieman ilmaa muodon ympärille —
+    // alareunaan vähemmän, jotta tunnusluvut istuvat lähelle karttaa
+    // (omistajan toive).
+    const vara = mitta * 0.14;
+    const varaAla = mitta * 0.05;
     const svg = el('svg', {
       class: 'arrival-maa-kartta-svg',
-      viewBox: `${minX - vara} ${minY - vara} ${maxX - minX + vara * 2} ${maxY - minY + vara * 2}`,
+      viewBox: `${minX - vara} ${minY - vara} ${maxX - minX + vara * 2} ${maxY - minY + vara + varaAla}`,
       'aria-hidden': 'true',
     });
     const d = maa.renkaat
@@ -2095,6 +2098,7 @@ export class UI {
         sub: game.pack.boardLabel,
       });
       sfx.play('paper');
+      this.elavoitaLaukku();
       setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
 
@@ -2109,6 +2113,7 @@ export class UI {
         sub: `Aarre löytyi päivänä ${mark.day}`,
       });
       sfx.play('paper');
+      this.elavoitaLaukku();
       setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
   }
@@ -3577,6 +3582,22 @@ export class UI {
       await this.wait(300);
     }
     overlay.remove();
+    // Löytö päätyy matkalaukkuun: yläreunan Laukku-nappi heilahtaa
+    // eloisasti merkiksi (omistajan toive). Tyhjä laatta ei tuo mitään.
+    if (type !== 'empty') this.elavoitaLaukku();
+  }
+
+  /**
+   * Laukku-nappi herää hetkeksi eloon, kun laukkuun tulee jotain uutta:
+   * passileima, kunniamerkintä tai löydetty aarre. Sama pieni heilahdus
+   * joka kerta — huomio kiinnittyy yläreunaan ilman uutta ilmoitusta.
+   */
+  elavoitaLaukku() {
+    const nappi = document.getElementById('passport-btn');
+    if (!nappi) return;
+    nappi.classList.remove('laukku-elo');
+    void nappi.offsetWidth;
+    nappi.classList.add('laukku-elo');
   }
 
   // --- toiminnot ja animaatiot ---------------------------------------------
