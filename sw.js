@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-07-30.66';
+const CACHE = 'matkakirja-2026-07-30.67';
 const SHELL = [
   './',
   './index.html',
@@ -112,7 +112,13 @@ const SHELL = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()),
+    caches.open(CACHE)
+      // cache: 'reload' ohittaa selaimen HTTP-välimuistin: ilman sitä
+      // iOS saattoi täyttää uuden välimuistiversion vanhoilla
+      // tiedostoilla, jolloin versionumero päivittyi mutta osa
+      // sisällöstä (esim. matkakirjan tekstit) jäi vanhaksi.
+      .then((cache) => cache.addAll(SHELL.map((osoite) => new Request(osoite, { cache: 'reload' }))))
+      .then(() => self.skipWaiting()),
   );
 });
 
