@@ -2350,15 +2350,16 @@ export class UI {
       emo.appendChild(osa);
       return osa;
     };
-    // Pieni vaakapalkki: pituus on osuus maksimista, väri kertoo kuinka
-    // hyvä luku on (punainen 0 → vihreä 1). Omistajan toive.
-    const palkki = (osa, osuus, hyvyys) => {
-      osa.classList.add('palkillinen');
+    // Todella pieni vakiomittainen palkki samalla rivillä (omistajan
+    // tarkennus): täyttyvä osa on toteutuva osuus maksimista, ja väri
+    // kertoo tason — punainen jos vähän, keltainen keskivaiheilla,
+    // vihreä jos hyvällä mallilla.
+    const palkki = (osa, osuus) => {
       const pohja = html('span', 'maa-palkki');
       const tayte = html('span', 'maa-palkki-tayte');
-      tayte.style.width = `${Math.round(Math.min(1, Math.max(0.02, osuus)) * 100)}%`;
-      const sávy = Math.round(Math.min(1, Math.max(0, hyvyys)) * 120);
-      tayte.style.background = `hsl(${sávy}, 62%, 42%)`;
+      const rajattu = Math.min(1, Math.max(0.03, osuus));
+      tayte.style.width = `${Math.round(rajattu * 100)}%`;
+      tayte.style.background = osuus < 1 / 3 ? '#bf3d2d' : osuus < 2 / 3 ? '#d9a41f' : '#3e8f4a';
       pohja.appendChild(tayte);
       osa.appendChild(pohja);
     };
@@ -2377,21 +2378,16 @@ export class UI {
       nappi.addEventListener('click', () => this.naytaVdemInfo(tiedot.demokratia));
       const osa = kohta(rivi2, 'vaaka', [nappi, sija(tiedot.demokratia.sija)],
         'Demokratiaindeksi (V-Dem, 0–1), suluissa sijoitus maailmassa — avaa selityksen');
-      // Indeksin maksimi on 1; parhaat demokratiat yltävät noin 0,9:ään,
-      // joten väri skaalataan siihen.
+      // Indeksin maksimi on 1.
       const arvo = parseFloat(tiedot.demokratia.arvo.replace(',', '.'));
-      if (Number.isFinite(arvo)) palkki(osa, arvo, arvo / 0.9);
+      if (Number.isFinite(arvo)) palkki(osa, arvo);
     }
     if (tiedot.keskitulo) {
       const osa = kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
         'Bruttokansantulo asukasta kohden vuodessa, suluissa sijoitus maailmassa');
-      // Maksimina maailman kärki (noin 100 000 $/v); väri sijoituksesta,
-      // jotta pienetkin tulot saavat sävyeron.
+      // Maksimina maailman kärkitulo (noin 100 000 $/v).
       const tulo = parseInt(tiedot.keskitulo.arvo.replace(/[^0-9]/g, ''), 10);
-      const sijaNum = parseInt(tiedot.keskitulo.sija, 10);
-      if (Number.isFinite(tulo)) {
-        palkki(osa, tulo / 100000, Number.isFinite(sijaNum) ? 1 - sijaNum / 190 : 0.2);
-      }
+      if (Number.isFinite(tulo)) palkki(osa, tulo / 100000);
     }
     for (const t of tiedot.tervehdykset ?? []) {
       const osa = html('span', 'tervehdys');
