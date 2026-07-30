@@ -507,6 +507,9 @@ export class UI {
       const el = this.factText;
       const jatkuu = el.scrollHeight - el.clientHeight - el.scrollTop > 6;
       this.factTekstiRivi?.classList.toggle('jatkuu', jatkuu);
+      // Vieritettäessä pikkukuva väistyy, ettei teksti katoa sen alle
+      // (omistajan havainto) — alkuun palatessa kuva palaa paikalleen.
+      this.factTekstiRivi?.classList.toggle('vieritetty', el.scrollTop > 4);
     };
     this.factText.addEventListener('scroll', jatkuuVihje, { passive: true });
     new MutationObserver(jatkuuVihje)
@@ -1777,13 +1780,16 @@ export class UI {
         'uusi alla', `Uusi valokuva: ${tiedot.paikka}`));
     }
     // Kortti keskelle ruutua — sama paikka yhdelle kuvalle ja pinolle,
-    // jotta avaus näyttää samalta joka laitteella (omistajan havainto:
-    // laidassa aukeava yksittäinen kortti näytti oudolta leveällä ruudulla).
+    // jotta avaus näyttää samalta joka laitteella. Pystykeskitys tehdään
+    // CSS:llä eikä mittaamalla: kortin korkeus ei ole tiedossa ennen kuin
+    // kuva on latautunut, ja mitattu keskitys valui alas (omistajan
+    // havainto iPadilla).
     const leveys = Math.min(window.innerWidth * 0.78, 400);
     kortti.style.left = `${Math.max(8, (window.innerWidth - leveys - 24) / 2)}px`;
+    kortti.style.top = '50%';
+    // Hienoinen nosto ylös: alta pilkottava kortti jatkuu alaspäin.
+    kortti.style.transform = 'translateY(-52%)';
     document.body.appendChild(kortti);
-    const korkeus = kortti.offsetHeight;
-    kortti.style.top = `${Math.max(12, (window.innerHeight - korkeus) / 2 - 24)}px`;
     this.postikortti = kortti;
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
     // sulkemista — napautus mihin tahansa sulkee kortin.
@@ -1951,9 +1957,10 @@ export class UI {
             this.playDiaryVoice(this.diaryFullUrl, {
               ekaLauseeseen: true,
               osuus: eka.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
+              viive: 1000,
             });
           } else {
-            this.playDiaryVoice(this.diaryFullUrl);
+            this.playDiaryVoice(this.diaryFullUrl, { viive: 1000 });
           }
         } else {
           this.stopDiaryVoice();
@@ -2006,6 +2013,7 @@ export class UI {
             ekaLauseeseen: true,
             // Ensimmäisen virkkeen osuus tekstistä ohjaa tauon valintaa.
             osuus: teksti.length ? eka.length / teksti.length : null,
+            viive: 1000,
           });
         } else {
           this.stopDiaryVoice();
@@ -3015,7 +3023,7 @@ export class UI {
    * `ekaLauseeseen` pysäyttää toiston ensimmäisen virkkeen jälkeiseen
    * hiljaisuuteen — kaiutinnappi jatkaa samasta kohdasta.
    */
-  playDiaryVoice(url, { ekaLauseeseen = false, osuus = null } = {}) {
+  playDiaryVoice(url, { ekaLauseeseen = false, osuus = null, viive = 0 } = {}) {
     this.stopDiaryVoice();
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
@@ -3042,14 +3050,26 @@ export class UI {
         audio.addEventListener('timeupdate', vahti);
       });
     }
-    audio.play().then(() => {
-      // play() on asynkroninen: jos luenta ehti vaihtua tai pysähtyä
-      // käynnistyksen aikana, myöhässä herännyt ääni pysäytetään heti —
-      // muuten kaksi luentaa soi päällekkäin (omistajan havainto).
-      if (this.diaryVoice !== audio) audio.pause();
-    }).catch(() => {
-      if (this.diaryVoice === audio) this.diaryVoice = null;
-    });
+    const aloita = () => {
+      audio.play().then(() => {
+        // play() on asynkroninen: jos luenta ehti vaihtua tai pysähtyä
+        // käynnistyksen aikana, myöhässä herännyt ääni pysäytetään heti —
+        // muuten kaksi luentaa soi päällekkäin (omistajan havainto).
+        if (this.diaryVoice !== audio) audio.pause();
+      }).catch(() => {
+        if (this.diaryVoice === audio) this.diaryVoice = null;
+      });
+    };
+    // Pieni hengähdys ennen luennan alkua (omistajan toive): kortti ehtii
+    // asettua ennen kuin lukija aloittaa. Pysäytys ohittaa odottavan
+    // luennan, koska diaryVoice ei enää osoita tähän ääneen.
+    if (viive > 0) {
+      setTimeout(() => {
+        if (this.diaryVoice === audio) aloita();
+      }, viive);
+    } else {
+      aloita();
+    }
   }
 
   /**

@@ -315,11 +315,12 @@ export const AFRICA_VALOKUVAT = {
     },
   },
 
-  // --- Täydennys (omistajan pyyntö: loput vanhat kuvat). Ahaggarille,
-  // Mosambikin saarelle, Viktorianjärvelle, Bahr el Ghazalille ja
-  // Saharalle ei vielä löytynyt kelvollista aikakauden kuvaa — Saharan
+  // --- Täydennys (omistajan pyyntö: loput vanhat kuvat). Saharan
   // 1907-kortti hylättiin, koska se on siirtomaanäyttelyssä esitellyn
-  // ihmisen kuva. Etsintä jatkuu.
+  // ihmisen kuva. Viimeiset viisi paikkaa saivat kuvansa v.105:ssä:
+  // aikakauden valokuvan puuttuessa käytetään vanhinta vapaata kuvaa
+  // (Ahaggar 1991) tai aikakauden piirrosta/karttaa (Mosambik 1655,
+  // Bahr el Ghazal 1903) — selite kertoo asian rehellisesti.
   karthago: {
     tiedosto: 'Tunisie, Carthage, cathédrale et séminaire de St Louis - btv1b53114044m.jpg',
     vuosi: '1800-luvun loppu',
@@ -488,6 +489,81 @@ export const AFRICA_VALOKUVAT = {
       selite: 'Suakinin korallitalot ovat nykyään rauniokaupunki, jota on '
       + 'alettu entisöidä. Punaisenmeren helmen kadut ovat hiljentyneet '
       + '— dhow-veneet käyvät yhä.',
+    },
+  },
+  sahara: {
+    tiedosto: 'ETH-BIB-Fokker in der Sahara-Tschadseeflug 1930-31-LBS MH02-08-0405.tif',
+    vuosi: '1930–31',
+    lahde: 'ETH-Bibliothek, Mittelholzer (PD)',
+    selite: 'Mittelholzerin Fokker aavikkokentällä Saharan ylityksellä — '
+      + 'juuri niitä lentoja, joista isoisän aikaan luettiin '
+      + 'sanomalehdistä.',
+    uusi: {
+      tiedosto: 'Erg Chebbi sunset.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Auringonlasku Saharan suurilla dyyneillä. Hiekka vaeltaa '
+        + 'tuulen mukana yhä — vain matkustajat ovat vaihtuneet.',
+    },
+  },
+  ahaggar: {
+    tiedosto: 'Eremitage Foucauld (1991).jpg',
+    vuosi: '1991',
+    lahde: 'Commons (CC BY-SA 3.0)',
+    selite: 'Charles de Foucauldin kivinen erakkomaja Assekremin laella, '
+      + 'rakennettu 1911. Aikakauden valokuvaa vuorilta ei ole vapaana '
+      + 'saatavilla — maja seisoo kuvassa samanlaisena kuin isoisän '
+      + 'aikaan.',
+    uusi: {
+      tiedosto: 'Assekrem Peaks at Sunset — Hoggar Mountains, Tamanrasset.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Ahaggarin kivipiikit auringonlaskussa. Huiput ovat vanhojen '
+        + 'tulivuorten sisuksia, joiden ympäriltä pehmeämpi kivi on '
+        + 'kulunut pois.',
+    },
+  },
+  mosambik: {
+    tiedosto: 'Planta da fortaleza da ilha de Moçambique, Leonardo de Ferrari, 1655.jpg',
+    vuosi: '1655',
+    lahde: 'Commons (PD)',
+    selite: 'São Sebastiãon linnoituksen piirros vuodelta 1655 — vanhin '
+      + 'kuva saarelta. Sama linnoitus vartioi satamaa isoisän aikaan ja '
+      + 'vartioi yhä.',
+    uusi: {
+      tiedosto: 'Ilha de Mocambique.jpg',
+      lahde: 'Commons (CC BY 2.0)',
+      selite: 'Mosambikin saari nykyään: linnoituksen muurit, valkoinen '
+        + 'hiekka ja dhow-purje. Koko saari on Unescon '
+        + 'maailmanperintökohde.',
+    },
+  },
+  viktoria: {
+    tiedosto: 'Jules Leclercq- Aux sources du Nil-1913-chutes Ripon.jpg',
+    vuosi: '1913',
+    lahde: 'Commons (PD)',
+    selite: 'Riponin putoukset, joista Niili lähti Viktoria Nyanzasta '
+      + 'pohjoiseen. Isoisän ajan kuuluisa nähtävyys upposi padon alle '
+      + '1954 — putousta ei enää ole.',
+    uusi: {
+      tiedosto: 'Boats by the Lake Victoria Shore.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Kalastajaveneitä Viktoria Nyanzan rannassa nykyään. Järvi '
+        + 'on Afrikan suurin, ja putouksen paikalla humisee nyt '
+        + 'voimalaitos.',
+    },
+  },
+  bahrelghazal: {
+    tiedosto: 'Mission Marchand Haut-Oubangui Bahr-el-Ghazal Nil (...)Marchand Jean-Baptiste btv1b53198373d 4.jpg',
+    vuosi: '1903',
+    lahde: 'BnF Gallica (PD)',
+    selite: 'Marchandin retkikunnan kartta: Ranska marssi Bahr el '
+      + 'Ghazalin halki Fashodaan 1898 ja oli ajaa Euroopan suursotaan '
+      + 'Britannian kanssa — suot ratkaisivat enemmän kuin armeijat.',
+    uusi: {
+      tiedosto: 'Cattle Wau Sudan.jpg',
+      lahde: 'Commons (CC BY-SA 3.0)',
+      selite: 'Pitkäsarvinen karja on Bahr el Ghazalin rikkaus '
+        + 'nykyäänkin: paimenten vuosi kiertää karjaleirien ja '
+        + 'tulvatasankojen mukana.',
     },
   },
 };

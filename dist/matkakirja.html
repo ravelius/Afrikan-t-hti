@@ -838,6 +838,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   top: 0.15rem;
   right: 0;
   z-index: 2;
+  transition: opacity 0.25s ease;
   width: auto;
   margin: 0;
   padding: 3px 3px 7px;
@@ -847,6 +848,12 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
   transform: rotate(2.5deg);
   cursor: pointer;
+}
+
+/* Vieritetty teksti kulkisi kuvan alle — vedos väistyy lukemisen ajaksi. */
+.fact-teksti-rivi.vieritetty .fact-valokuva {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .fact-valokuva img {
@@ -910,14 +917,20 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti-kortti.alla .kuvateksti,
 .postikortti-kortti.alla .kuvalahde { visibility: hidden; }
 
+/* Vain häivytys: kehyksen transformia käytetään pystykeskitykseen,
+ * joten animaatio ei saa koskea siihen. */
 @keyframes postikortti-esiin {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; }
 }
 
 .postikortti img {
   display: block;
   width: 100%;
   min-height: 60px;
+  /* Korkea pystykuva ei saa venyttää korttia ruutua korkeammaksi —
+   * kuva rajataan postikortin ikkunaan (omistajan havainto). */
+  max-height: 58vh;
+  object-fit: cover;
   background: #ded5c2;
   border: 1px solid rgba(0, 0, 0, 0.12);
   filter: grayscale(1) contrast(1.03);
@@ -8969,11 +8982,12 @@ const AFRICA_VALOKUVAT = {
     },
   },
 
-  // --- Täydennys (omistajan pyyntö: loput vanhat kuvat). Ahaggarille,
-  // Mosambikin saarelle, Viktorianjärvelle, Bahr el Ghazalille ja
-  // Saharalle ei vielä löytynyt kelvollista aikakauden kuvaa — Saharan
+  // --- Täydennys (omistajan pyyntö: loput vanhat kuvat). Saharan
   // 1907-kortti hylättiin, koska se on siirtomaanäyttelyssä esitellyn
-  // ihmisen kuva. Etsintä jatkuu.
+  // ihmisen kuva. Viimeiset viisi paikkaa saivat kuvansa v.105:ssä:
+  // aikakauden valokuvan puuttuessa käytetään vanhinta vapaata kuvaa
+  // (Ahaggar 1991) tai aikakauden piirrosta/karttaa (Mosambik 1655,
+  // Bahr el Ghazal 1903) — selite kertoo asian rehellisesti.
   karthago: {
     tiedosto: 'Tunisie, Carthage, cathédrale et séminaire de St Louis - btv1b53114044m.jpg',
     vuosi: '1800-luvun loppu',
@@ -9142,6 +9156,81 @@ const AFRICA_VALOKUVAT = {
       selite: 'Suakinin korallitalot ovat nykyään rauniokaupunki, jota on '
       + 'alettu entisöidä. Punaisenmeren helmen kadut ovat hiljentyneet '
       + '— dhow-veneet käyvät yhä.',
+    },
+  },
+  sahara: {
+    tiedosto: 'ETH-BIB-Fokker in der Sahara-Tschadseeflug 1930-31-LBS MH02-08-0405.tif',
+    vuosi: '1930–31',
+    lahde: 'ETH-Bibliothek, Mittelholzer (PD)',
+    selite: 'Mittelholzerin Fokker aavikkokentällä Saharan ylityksellä — '
+      + 'juuri niitä lentoja, joista isoisän aikaan luettiin '
+      + 'sanomalehdistä.',
+    uusi: {
+      tiedosto: 'Erg Chebbi sunset.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Auringonlasku Saharan suurilla dyyneillä. Hiekka vaeltaa '
+        + 'tuulen mukana yhä — vain matkustajat ovat vaihtuneet.',
+    },
+  },
+  ahaggar: {
+    tiedosto: 'Eremitage Foucauld (1991).jpg',
+    vuosi: '1991',
+    lahde: 'Commons (CC BY-SA 3.0)',
+    selite: 'Charles de Foucauldin kivinen erakkomaja Assekremin laella, '
+      + 'rakennettu 1911. Aikakauden valokuvaa vuorilta ei ole vapaana '
+      + 'saatavilla — maja seisoo kuvassa samanlaisena kuin isoisän '
+      + 'aikaan.',
+    uusi: {
+      tiedosto: 'Assekrem Peaks at Sunset — Hoggar Mountains, Tamanrasset.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Ahaggarin kivipiikit auringonlaskussa. Huiput ovat vanhojen '
+        + 'tulivuorten sisuksia, joiden ympäriltä pehmeämpi kivi on '
+        + 'kulunut pois.',
+    },
+  },
+  mosambik: {
+    tiedosto: 'Planta da fortaleza da ilha de Moçambique, Leonardo de Ferrari, 1655.jpg',
+    vuosi: '1655',
+    lahde: 'Commons (PD)',
+    selite: 'São Sebastiãon linnoituksen piirros vuodelta 1655 — vanhin '
+      + 'kuva saarelta. Sama linnoitus vartioi satamaa isoisän aikaan ja '
+      + 'vartioi yhä.',
+    uusi: {
+      tiedosto: 'Ilha de Mocambique.jpg',
+      lahde: 'Commons (CC BY 2.0)',
+      selite: 'Mosambikin saari nykyään: linnoituksen muurit, valkoinen '
+        + 'hiekka ja dhow-purje. Koko saari on Unescon '
+        + 'maailmanperintökohde.',
+    },
+  },
+  viktoria: {
+    tiedosto: 'Jules Leclercq- Aux sources du Nil-1913-chutes Ripon.jpg',
+    vuosi: '1913',
+    lahde: 'Commons (PD)',
+    selite: 'Riponin putoukset, joista Niili lähti Viktoria Nyanzasta '
+      + 'pohjoiseen. Isoisän ajan kuuluisa nähtävyys upposi padon alle '
+      + '1954 — putousta ei enää ole.',
+    uusi: {
+      tiedosto: 'Boats by the Lake Victoria Shore.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Kalastajaveneitä Viktoria Nyanzan rannassa nykyään. Järvi '
+        + 'on Afrikan suurin, ja putouksen paikalla humisee nyt '
+        + 'voimalaitos.',
+    },
+  },
+  bahrelghazal: {
+    tiedosto: 'Mission Marchand Haut-Oubangui Bahr-el-Ghazal Nil (...)Marchand Jean-Baptiste btv1b53198373d 4.jpg',
+    vuosi: '1903',
+    lahde: 'BnF Gallica (PD)',
+    selite: 'Marchandin retkikunnan kartta: Ranska marssi Bahr el '
+      + 'Ghazalin halki Fashodaan 1898 ja oli ajaa Euroopan suursotaan '
+      + 'Britannian kanssa — suot ratkaisivat enemmän kuin armeijat.',
+    uusi: {
+      tiedosto: 'Cattle Wau Sudan.jpg',
+      lahde: 'Commons (CC BY-SA 3.0)',
+      selite: 'Pitkäsarvinen karja on Bahr el Ghazalin rikkaus '
+        + 'nykyäänkin: paimenten vuosi kiertää karjaleirien ja '
+        + 'tulvatasankojen mukana.',
     },
   },
 };
@@ -36732,6 +36821,9 @@ class UI {
       const el = this.factText;
       const jatkuu = el.scrollHeight - el.clientHeight - el.scrollTop > 6;
       this.factTekstiRivi?.classList.toggle('jatkuu', jatkuu);
+      // Vieritettäessä pikkukuva väistyy, ettei teksti katoa sen alle
+      // (omistajan havainto) — alkuun palatessa kuva palaa paikalleen.
+      this.factTekstiRivi?.classList.toggle('vieritetty', el.scrollTop > 4);
     };
     this.factText.addEventListener('scroll', jatkuuVihje, { passive: true });
     new MutationObserver(jatkuuVihje)
@@ -38001,13 +38093,16 @@ class UI {
         'uusi alla', `Uusi valokuva: ${tiedot.paikka}`));
     }
     // Kortti keskelle ruutua — sama paikka yhdelle kuvalle ja pinolle,
-    // jotta avaus näyttää samalta joka laitteella (omistajan havainto:
-    // laidassa aukeava yksittäinen kortti näytti oudolta leveällä ruudulla).
+    // jotta avaus näyttää samalta joka laitteella. Pystykeskitys tehdään
+    // CSS:llä eikä mittaamalla: kortin korkeus ei ole tiedossa ennen kuin
+    // kuva on latautunut, ja mitattu keskitys valui alas (omistajan
+    // havainto iPadilla).
     const leveys = Math.min(window.innerWidth * 0.78, 400);
     kortti.style.left = `${Math.max(8, (window.innerWidth - leveys - 24) / 2)}px`;
+    kortti.style.top = '50%';
+    // Hienoinen nosto ylös: alta pilkottava kortti jatkuu alaspäin.
+    kortti.style.transform = 'translateY(-52%)';
     document.body.appendChild(kortti);
-    const korkeus = kortti.offsetHeight;
-    kortti.style.top = `${Math.max(12, (window.innerHeight - korkeus) / 2 - 24)}px`;
     this.postikortti = kortti;
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
     // sulkemista — napautus mihin tahansa sulkee kortin.
@@ -38175,9 +38270,10 @@ class UI {
             this.playDiaryVoice(this.diaryFullUrl, {
               ekaLauseeseen: true,
               osuus: eka.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
+              viive: 1000,
             });
           } else {
-            this.playDiaryVoice(this.diaryFullUrl);
+            this.playDiaryVoice(this.diaryFullUrl, { viive: 1000 });
           }
         } else {
           this.stopDiaryVoice();
@@ -38230,6 +38326,7 @@ class UI {
             ekaLauseeseen: true,
             // Ensimmäisen virkkeen osuus tekstistä ohjaa tauon valintaa.
             osuus: teksti.length ? eka.length / teksti.length : null,
+            viive: 1000,
           });
         } else {
           this.stopDiaryVoice();
@@ -39239,7 +39336,7 @@ class UI {
    * `ekaLauseeseen` pysäyttää toiston ensimmäisen virkkeen jälkeiseen
    * hiljaisuuteen — kaiutinnappi jatkaa samasta kohdasta.
    */
-  playDiaryVoice(url, { ekaLauseeseen = false, osuus = null } = {}) {
+  playDiaryVoice(url, { ekaLauseeseen = false, osuus = null, viive = 0 } = {}) {
     this.stopDiaryVoice();
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
@@ -39266,14 +39363,26 @@ class UI {
         audio.addEventListener('timeupdate', vahti);
       });
     }
-    audio.play().then(() => {
-      // play() on asynkroninen: jos luenta ehti vaihtua tai pysähtyä
-      // käynnistyksen aikana, myöhässä herännyt ääni pysäytetään heti —
-      // muuten kaksi luentaa soi päällekkäin (omistajan havainto).
-      if (this.diaryVoice !== audio) audio.pause();
-    }).catch(() => {
-      if (this.diaryVoice === audio) this.diaryVoice = null;
-    });
+    const aloita = () => {
+      audio.play().then(() => {
+        // play() on asynkroninen: jos luenta ehti vaihtua tai pysähtyä
+        // käynnistyksen aikana, myöhässä herännyt ääni pysäytetään heti —
+        // muuten kaksi luentaa soi päällekkäin (omistajan havainto).
+        if (this.diaryVoice !== audio) audio.pause();
+      }).catch(() => {
+        if (this.diaryVoice === audio) this.diaryVoice = null;
+      });
+    };
+    // Pieni hengähdys ennen luennan alkua (omistajan toive): kortti ehtii
+    // asettua ennen kuin lukija aloittaa. Pysäytys ohittaa odottavan
+    // luennan, koska diaryVoice ei enää osoita tähän ääneen.
+    if (viive > 0) {
+      setTimeout(() => {
+        if (this.diaryVoice === audio) aloita();
+      }, viive);
+    } else {
+      aloita();
+    }
   }
 
   /**
@@ -40592,7 +40701,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.104';
+const APP_VERSION = '2026-07-30.105';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
