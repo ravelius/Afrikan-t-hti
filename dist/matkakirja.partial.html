@@ -706,7 +706,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .arrival-maa-nimi {
   font-family: var(--font-type);
-  font-size: 0.82rem;
+  font-size: 0.98rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #7a5514;
@@ -714,7 +714,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /* Maan lippu suht pienenä nimen vieressä (omistajan toive). */
 .arrival-lippu {
-  height: 0.95rem;
+  height: 1.05rem;
   width: auto;
   border: 1px solid rgba(70, 51, 31, 0.4);
   border-radius: 2px;
@@ -728,8 +728,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .arrival-maa-kartta-svg {
   display: block;
   width: 100%;
-  max-height: 150px;
-  margin: 0.1rem auto 0.35rem;
+  max-height: 195px;
+  margin: 0.1rem auto 0.4rem;
 }
 
 .minimaa-pohja {
@@ -31580,7 +31580,7 @@ class UI {
         y: kaupunki.y - 0.04 * mitta,
         class: 'minimaa-nimi',
         'text-anchor': 'middle',
-        'font-size': (0.062 * mitta).toFixed(1),
+        'font-size': (0.07 * mitta).toFixed(1),
       }, svg);
       nimi.textContent = kaupunki.name;
     }
@@ -33594,7 +33594,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.57';
+const APP_VERSION = '2026-07-30.58';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

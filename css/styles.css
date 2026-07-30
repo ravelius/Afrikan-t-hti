@@ -703,7 +703,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .arrival-maa-nimi {
   font-family: var(--font-type);
-  font-size: 0.82rem;
+  font-size: 0.98rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #7a5514;
@@ -711,7 +711,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /* Maan lippu suht pienenä nimen vieressä (omistajan toive). */
 .arrival-lippu {
-  height: 0.95rem;
+  height: 1.05rem;
   width: auto;
   border: 1px solid rgba(70, 51, 31, 0.4);
   border-radius: 2px;
@@ -725,8 +725,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .arrival-maa-kartta-svg {
   display: block;
   width: 100%;
-  max-height: 150px;
-  margin: 0.1rem auto 0.35rem;
+  max-height: 195px;
+  margin: 0.1rem auto 0.4rem;
 }
 
 .minimaa-pohja {
