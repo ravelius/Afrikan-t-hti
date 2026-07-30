@@ -1836,6 +1836,7 @@ export class UI {
       // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
       // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
       this.factKey = null;
+      this.factCard.classList.remove('vihjekortti');
       this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
       this.factText.textContent = '';
@@ -1866,6 +1867,7 @@ export class UI {
       const key = `schedule:${aikataulu.packId}:${aikataulu.day}`;
       if (this.factKey === key) return;
       this.factKey = key;
+      this.factCard.classList.remove('vihjekortti');
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
       this.factImage.hidden = true;
@@ -1877,17 +1879,23 @@ export class UI {
     }
 
     // Isoisän vihje laudan pääaarteesta nousee esiin harvakseltaan.
+    // Vihjekortti erottuu tavallisesta merkinnästä: tähtiotsikko, oma
+    // revityn sivun ilme ja paperin rapina — pelkkä otsikkorivi meni
+    // pelaajalta ohi ja hiljainen kortti tuntui virheeltä (omistajan
+    // havainto).
     const hint = game.starHint();
     if (hint) {
       const key = `hint:${game.pack.id}:${game.turnCount}`;
       if (this.factKey === key) return;
       this.factKey = key;
-      this.factVoiceEl.textContent = 'Päiväkirjan taitettu sivu';
-      this.factPlace.textContent = game.pack.boardLabel;
+      this.factCard.classList.add('vihjekortti');
+      this.factVoiceEl.textContent = '★ Isoisän vihje aarteesta';
+      this.factPlace.textContent = 'Päiväkirjasta revitty sivu';
       this.factImage.hidden = true;
       this.factKuuntele.hidden = true;
       this.naytaFactValokuva(null);
       this.stopDiaryVoice();
+      sfx.play('paper');
       this.typeText(this.factText, hint);
       return;
     }
@@ -1920,6 +1928,7 @@ export class UI {
         const key = luentaAvain + aikatauluLisa;
         if (this.factKey === key) return;
         this.factKey = key;
+        this.factCard.classList.remove('vihjekortti');
         this.factVoiceEl.textContent = 'Matkakirjasta';
         this.factPlace.textContent = kaupunki.name;
         this.factImageTitle = null;
@@ -1976,6 +1985,7 @@ export class UI {
         const key = luentaAvain + aikatauluLisa;
         if (this.factKey === key) return;
         this.factKey = key;
+        this.factCard.classList.remove('vihjekortti');
         this.factVoiceEl.textContent = voiceTitle(factVoice(fakta));
         this.factPlace.textContent = kaupunki.name;
         this.factImageTitle = typeof fakta === 'string' ? null : fakta.wiki ?? null;
@@ -2039,6 +2049,7 @@ export class UI {
 
     // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
     const onRoute = player.pos.type === 'edge';
+      this.factCard.classList.remove('vihjekortti');
     this.factVoiceEl.textContent = voiceTitle(factVoice(fact));
     this.factPlace.textContent = onRoute ? `Matkalla — ${city.name}` : city.name;
     // Havaintoon voi liittyä kuva: pieni linkki avaa ilmiön Wikipedia-kuvan.
