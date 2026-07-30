@@ -126,12 +126,14 @@ const MUSIIKKI_VOIMA = 0.09;
 
 let musiikki = null;
 
-export function startQuizMusic() {
+export function startQuizMusic(lauta) {
   // Kaupungin ääni väistyy reilusti kysymyksen ajaksi — kaksi ääntä
   // päällekkäin täydellä voimalla oli puuroa.
   if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
   if (!sfx.enabled || musiikki) return;
-  const valinta = valittuAani('musiikki:tietovisa');
+  // Maanosan oma valinta voittaa; ilman sitä soi yleinen valinta.
+  let valinta = lauta ? valittuAani(`musiikki:tietovisa:${lauta}`) : null;
+  if (valinta == null) valinta = valittuAani('musiikki:tietovisa');
   if (valinta === '') return; // musiikki valittu pois
   const asetus = jaaAlku(valinta);
   const audio = new Audio(asetus.url ?? QUIZ_MUSIC.url);
