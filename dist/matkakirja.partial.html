@@ -1262,6 +1262,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   box-shadow: none;
   padding: 0;
   margin: 0;
+  /* Nappien yleinen 42 px minimikorkeus toisi tekstiriviin ison
+   * näkymättömän tyhjän ylä- ja alapuolelle. */
+  min-height: 0;
   font: inherit;
   cursor: pointer;
 }
@@ -15161,46 +15164,98 @@ const EUROPE_QUESTIONS = {
     },
   ],
 
-  bordeaux: [
+  marseille: [
     {
-      q: 'Mistä tuotteesta Bordeaux’n seutu on maailmankuulu?',
-      options: ['viinistä', 'juustosta', 'suklaasta', 'teestä'],
+      q: 'Minkä meren rannalla Marseille sijaitsee?',
+      options: ['Välimeren', 'Atlantin', 'Mustanmeren', 'Pohjanmeren'],
       correct: 0,
       level: 1,
-      fact: 'Bordeaux’n ympärillä on tuhansia viinitiloja, ja alue on yksi maailman tunnetuimmista viinialueista.',
-      hint: 'Tuote tehdään rypäleistä.',
-      source: 'https://fi.wikipedia.org/wiki/Bordeaux',
+      fact: 'Marseille on Ranskan suurin satamakaupunki ja maan vanhimpia kaupunkeja. Sen vanha satama on ollut käytössä yli 2 600 vuotta.',
+      hint: 'Sama meri erottaa Euroopan ja Afrikan.',
+      source: 'https://fi.wikipedia.org/wiki/Marseille',
     },
     {
-      q: 'Minkä valtameren rannikolla Bordeaux sijaitsee?',
-      options: ['Atlantin', 'Tyynenmeren', 'Intian valtameren', 'Jäämeren'],
+      q: 'Ketkä perustivat Marseillen noin 600-luvulla ennen ajanlaskua?',
+      options: ['kreikkalaiset', 'roomalaiset', 'viikingit', 'egyptiläiset'],
       correct: 0,
-      fact: 'Bordeaux on Garonne-joen varrella lähellä rannikkoa, Biskajanlahden pohjukassa.',
-      hint: 'Sama valtameri huuhtoo Amerikan itärannikkoa.',
+      fact: 'Kreikkalaiset purjehtijat Vähän-Aasian Fokaiasta perustivat Massalian sataman noin 600 eaa. Siksi Marseillea pidetään Ranskan vanhimpana kaupunkina.',
+      hint: 'Sama kansa rakensi Ateenan temppelit.',
+      source: 'https://fi.wikipedia.org/wiki/Marseille',
     },
     {
-      q: 'Mikä Euroopan korkein hiekkadyyni sijaitsee Bordeaux’n lähellä?',
-      options: ['Pilat', 'Sylt', 'Słowiński', 'Maspalomas'],
-      correct: 0,
-      level: 3,
-      fact: 'Dune du Pilat kohoaa yli sadan metrin korkeuteen Atlantin rannalla ja siirtyy tuulen mukana hiukan joka vuosi.',
-      hint: 'Dyynin nimi alkaa samalla kirjaimella kuin Pariisi.',
-      source: 'https://en.wikipedia.org/wiki/Dune_of_Pilat',
-    },
-    {
-      q: 'Mikä joki virtaa Bordeaux’n halki?',
-      options: ['Garonne', 'Loire', 'Rhône', 'Seine'],
-      correct: 0,
-      fact: 'Joki tuo vuorovedet kaupunkiin asti. Sen mutkaan rakennettu satama teki Bordeaux’sta kauppakaupungin, ja joki laskee Gironden suistoon.',
-      hint: 'Joki laskee Gironden suistoon Atlantille.',
-    },
-    {
-      q: 'Millainen maaperä tekee Bordeaux’n seudusta hyvän viinialueen?',
-      options: ['sora- ja kivikkomaa', 'suomaa', 'liejuinen savi', 'paljas kallio'],
+      q: 'Mikä laulu on saanut nimensä Marseillen mukaan?',
+      options: ['Marseljeesi', 'Internationale', 'Oodi ilolle', 'Maamme-laulu'],
       correct: 0,
       level: 3,
-      fact: 'Médocin maat päästävät veden läpi ja lämpenevät päivällä, mikä pakottaa köynnöksen juuret syvälle. Sama maaperä on kelvannut viljelyyn jo roomalaisajoista.',
-      hint: 'Maaperä ei pidätä vettä, ja se lämpenee nopeasti.',
+      fact: 'Ranskan kansallislaulu sai nimensä, kun marseillelaiset vapaaehtoiset lauloivat sitä marssiessaan Pariisiin vallankumouksen aikana 1792.',
+      hint: 'Se on Ranskan kansallislaulu.',
+    },
+    {
+      q: 'Mikä keitto on Marseillen kuuluisin ruoka?',
+      options: ['bouillabaisse', 'ratatouille', 'gazpacho', 'minestrone'],
+      correct: 0,
+      fact: 'Bouillabaisse syntyi kalastajien padasta: myymättä jääneet kalat keitettiin sahramilla maustetussa liemessä. Keitolle on nykyään virallinen valmistusohje.',
+      hint: 'Se keitetään kalasta ja maustetaan sahramilla.',
+    },
+    {
+      q: 'Millä linnoitussaarella Marseillen edustalla Monte-Criston kreivi istui vankina?',
+      options: ['Ifin saarella', 'Elballa', 'Korsikalla', 'Kreetalla'],
+      correct: 0,
+      level: 3,
+      fact: 'Ifin linnoitus rakennettiin 1500-luvulla pienelle saarelle sataman edustalle. Alexandre Dumas teki siitä kuuluisan vankilan romaanissaan Monte-Criston kreivi.',
+      hint: 'Saaren nimessä on vain kaksi kirjainta.',
+    },
+  ],
+
+  granada: [
+    {
+      q: 'Mikä kuuluisa maurien palatsilinna sijaitsee Granadassa?',
+      options: ['Alhambra', 'Louvre', 'Kreml', 'Versailles'],
+      correct: 0,
+      level: 1,
+      fact: 'Alhambra oli maurihallitsijoiden palatsi ja linnoitus. Sen nimi tulee arabian kielen sanoista, jotka tarkoittavat punaista linnaa.',
+      hint: 'Nimi tarkoittaa arabiaksi punaista linnaa.',
+      source: 'https://fi.wikipedia.org/wiki/Alhambra',
+    },
+    {
+      q: 'Mikä vuoristo kohoaa Granadan takana?',
+      options: ['Sierra Nevada', 'Pyreneet', 'Alpit', 'Atlasvuoret'],
+      correct: 0,
+      fact: 'Sierra Nevada tarkoittaa lumista vuoristoa. Sen huiput ovat manner-Espanjan korkeimmat, ja lunta riittää laskettelemiseen kevääseen asti, vaikka rannikolle on vain tunnin matka.',
+      hint: 'Vuoriston nimi tarkoittaa espanjaksi lumista.',
+    },
+    {
+      q: 'Minä vuonna viimeinen maurivaltakunta antautui Granadassa?',
+      options: ['1492', '1066', '1789', '1914'],
+      correct: 0,
+      level: 3,
+      fact: 'Granadan emiraatti antautui Kastilian ja Aragonian hallitsijoille tammikuussa 1492 — samana vuonna Kolumbus purjehti Amerikkaan.',
+      hint: 'Samana vuonna Kolumbus ylitti Atlantin.',
+      source: 'https://fi.wikipedia.org/wiki/Granada',
+    },
+    {
+      q: 'Millainen on Granadan vanha Albaicínin kaupunginosa?',
+      options: [
+        'kapeiden kujien mäkikortteli',
+        'suorien bulevardien ruutukaava',
+        'kanavien halkoma alanko',
+        'pilvenpiirtäjien keskusta',
+      ],
+      correct: 0,
+      fact: 'Albaicín on maurien ajalta säilynyt rinnekaupunginosa, jonka valkoiset talot ja mutkittelevat kujat ovat Unescon maailmanperintöä yhdessä Alhambran kanssa.',
+      hint: 'Kortteli rakentui maurien aikana jyrkkään rinteeseen.',
+    },
+    {
+      q: 'Mikä tapa Granadan tapasbaareissa ilahduttaa nälkäistä?',
+      options: [
+        'pikkuannos tulee juoman mukana kaupan päälle',
+        'jälkiruoka on aina talon tarjoama',
+        'keittoa saa hakea lisää itse',
+        'leipä tuodaan pöytään lämpimänä',
+      ],
+      correct: 0,
+      fact: 'Granada on Espanjan tunnetuin ilmaisten tapasten kaupunki: juoman tilaaja saa pienen ruoka-annoksen veloituksetta, ja moni kiertää illallisensa baarista toiseen.',
+      hint: 'Tapa liittyy juoman kylkiäisiin.',
     },
   ],
 
@@ -15631,6 +15686,53 @@ const EUROPE_QUESTIONS = {
     },
   ],
 
+  krakova: [
+    {
+      q: 'Minkä maan vanha kruunauskaupunki Krakova on?',
+      options: ['Puolan', 'Tšekin', 'Slovakian', 'Unkarin'],
+      correct: 0,
+      level: 1,
+      fact: 'Krakova oli Puolan pääkaupunki ja kuninkaiden kruunauskaupunki vuoteen 1596, jolloin hovi muutti Varsovaan.',
+      hint: 'Maan nykyinen pääkaupunki on Varsova.',
+      source: 'https://fi.wikipedia.org/wiki/Krakova',
+    },
+    {
+      q: 'Mikä joki virtaa Krakovan halki?',
+      options: ['Veiksel', 'Oder', 'Tonava', 'Elbe'],
+      correct: 0,
+      fact: 'Veiksel on Puolan pisin joki. Se kiertää Krakovan Wawel-kukkulan ja jatkaa Varsovan kautta Itämereen.',
+      hint: 'Sama joki virtaa myös Varsovan halki.',
+    },
+    {
+      q: 'Miksi Mariankirkon tornin torvisävelmä katkaistaan aina kesken?',
+      options: [
+        'muistona vartijasta, johon osui nuoli',
+        'soittajan pitää ehtiä alas portaita',
+        'kellonlyönnit peittäisivät lopun',
+        'sävelmän loppu on unohtunut',
+      ],
+      correct: 0,
+      level: 3,
+      fact: 'Tarinan mukaan vartija ehti varoittaa kaupunkia mongolien hyökkäyksestä vuonna 1241, mutta nuoli osui häneen kesken soiton. Hejnał-sävelmä katkaistaan samassa kohdassa yhä joka tunti.',
+      hint: 'Syy juontaa mongolien hyökkäykseen 1200-luvulla.',
+    },
+    {
+      q: 'Mikä pitkä rakennus seisoo keskellä Krakovan suurtoria?',
+      options: ['kangashalli', 'raatihuone', 'oopperatalo', 'rautatieasema'],
+      correct: 0,
+      fact: 'Sukiennice eli kangashalli rakennettiin keskiajalla kankaiden kauppapaikaksi keskelle Euroopan suurimpiin kuuluvaa toria. Sen holveissa myydään yhä käsitöitä.',
+      hint: 'Siellä käytiin kauppaa tekstiileillä.',
+    },
+    {
+      q: 'Mikä kuuluisa suolakaivos sijaitsee Krakovan naapurissa?',
+      options: ['Wieliczka', 'Kiiruna', 'Falun', 'Outokumpu'],
+      correct: 0,
+      fact: 'Wieliczkan kaivoksesta louhittiin suolaa seitsemänsataa vuotta. Maan alle on veistetty suolasta kokonaisia kappeleita kattokruunuja myöten.',
+      hint: 'Kaivoksen käytäviin on veistetty kirkkosali suolasta.',
+      source: 'https://fi.wikipedia.org/wiki/Wieliczkan_suolakaivos',
+    },
+  ],
+
   alpit: [
     {
       q: 'Mikä on Alppien korkein huippu?',
@@ -15688,43 +15790,55 @@ const EUROPE_QUESTIONS = {
     },
   ],
 
-  milano: [
+  venetsia: [
     {
-      q: 'Mistä Milano tunnetaan maailmalla?',
-      options: ['muodista', 'öljystä', 'kalastuksesta', 'timanteista'],
-      correct: 0,
-      fact: 'Milano on yksi maailman muotikaupungeista, ja sen muotiviikot ovat alan tärkeimpiä tapahtumia.',
-      hint: 'Ala liittyy vaatteisiin.',
-    },
-    {
-      q: 'Kuka maalasi Milanossa sijaitsevan Viimeinen ehtoollinen -teoksen?',
-      options: ['Leonardo da Vinci', 'Michelangelo', 'Rafael', 'Caravaggio'],
-      correct: 0,
-      fact: 'Leonardo maalasi teoksen luostarin ruokasalin seinään 1490-luvulla.',
-      hint: 'Sama taiteilija maalasi Mona Lisan.',
-    },
-    {
-      q: 'Millä alueella Milano sijaitsee?',
-      options: ['Po-joen tasangolla', 'Sisilian rannikolla', 'Alppien huipulla', 'Sardiniassa'],
-      correct: 0,
-      level: 3,
-      fact: 'Po-joen tasanko on Italian tärkein maatalous- ja teollisuusalue.',
-      hint: 'Alue on nimetty Italian pisimmän joen mukaan.',
-    },
-    {
-      q: 'Mikä on Milanon suuri marmorinen katedraali?',
-      options: ['Duomo', 'Sagrada Família', 'Hagia Sofia', 'Pyhän Marcuksen kirkko'],
+      q: 'Mitä Venetsian pääkaduilla liikkuu autojen sijaan?',
+      options: ['veneitä', 'raitiovaunuja', 'polkupyöriä', 'hevosvaunuja'],
       correct: 0,
       level: 1,
-      fact: 'Rakentaminen kesti lähes kuusi vuosisataa. Katolla voi kävellä marmoripiikkien ja patsaiden keskellä, ja ylimpänä on kultainen Madonna.',
-      hint: 'Sana tarkoittaa italiaksi tuomiokirkkoa.',
+      fact: 'Venetsia on rakennettu laguunin saarille: pääkadut ovat kanavia, ja tavaratkin kuljetetaan veneillä. Kaupungin vanhassa osassa ei ole lainkaan autoteitä.',
+      hint: 'Kadut ovat siellä vettä.',
+      source: 'https://fi.wikipedia.org/wiki/Venetsia',
     },
     {
-      q: 'Mikä Milanon oopperatalo on maailman tunnetuimpia?',
-      options: ['La Scala', 'Bolshoi', 'Metropolitan', 'Covent Garden'],
+      q: 'Mikä on Venetsian perinteinen kapea soutuvene?',
+      options: ['gondoli', 'kanootti', 'jolla', 'kajakki'],
       correct: 0,
-      fact: 'Talo avattiin 1778. Sen kausi alkaa perinteisesti 7. joulukuuta, Milanon suojeluspyhimyksen päivänä, ja lippujonot ovat pitkiä.',
-      hint: 'Nimi tarkoittaa italiaksi portaita.',
+      fact: 'Gondolit ovat kulkeneet kanavilla vuosisatoja. Vene on tahallaan vino, jotta yksi soutaja voi ohjata sitä perästä yhdellä airolla.',
+      hint: 'Sitä soutaa yksi soutaja veneen perästä seisten.',
+    },
+    {
+      q: 'Kuka venetsialainen kauppias matkasi Kiinaan asti 1200-luvulla?',
+      options: ['Marco Polo', 'Vasco da Gama', 'James Cook', 'Ibn Battuta'],
+      correct: 0,
+      level: 3,
+      fact: 'Marco Polo palveli suurkaani Kublain hovissa yli kaksikymmentä vuotta. Hänen matkakirjansa avasi eurooppalaisille idän ja innoitti myöhempiä löytöretkiä.',
+      hint: 'Hänen matkakirjaansa luettiin koko keskiajan.',
+      source: 'https://fi.wikipedia.org/wiki/Marco_Polo',
+    },
+    {
+      q: 'Mikä aukio on Venetsian sydän?',
+      options: [
+        'Pyhän Markuksen tori',
+        'Punainen tori',
+        'Trafalgarin aukio',
+        'Espanjalaiset portaat',
+      ],
+      correct: 0,
+      fact: 'Pyhän Markuksen torin varrella ovat basilika kultamosaiikkeineen ja korkea kellotorni. Nousuveden aikaan tori voi jäädä veden alle, jolloin kuljetaan lankkusiltoja pitkin.',
+      hint: 'Aukio on nimetty kaupungin suojeluspyhimyksen mukaan.',
+    },
+    {
+      q: 'Miksi Venetsia vajoaa hitaasti?',
+      options: [
+        'se on rakennettu laguunin pehmeälle pohjalle',
+        'maanjäristykset painavat sitä alemmas',
+        'kanavat kuluttavat kallion onttoksi',
+        'talot ovat liian raskaita kalliolle',
+      ],
+      correct: 0,
+      fact: 'Kaupunki seisoo miljoonien puupaalujen varassa laguunin liejussa. Paalut kestävät, mutta pehmeä maa painuu ja meri nousee — tulvia vastaan on rakennettu liikuteltavat padot.',
+      hint: 'Syy on maaperässä talojen alla.',
     },
   ],
 
@@ -15947,6 +16061,53 @@ const EUROPE_QUESTIONS = {
       level: 3,
       fact: 'Kaupunki neuvotteli sopimuksia ja maksoi veroa Osmanien valtakunnalle, jotta laivat saivat kulkea vapaasti. Sen kauppalaivasto oli Välimeren suurimpia.',
       hint: 'Ratkaisu löytyi neuvottelupöydästä ja rahakirstusta.',
+    },
+  ],
+
+  sarajevo: [
+    {
+      q: 'Minkä maan pääkaupunki Sarajevo on?',
+      options: ['Bosnia ja Hertsegovinan', 'Serbian', 'Kroatian', 'Albanian'],
+      correct: 0,
+      level: 1,
+      fact: 'Sarajevo on Bosnia ja Hertsegovinan pääkaupunki vuorten ympäröimässä jokilaaksossa.',
+      hint: 'Maan nimessä on kaksi osaa ja ja-sana välissä.',
+      source: 'https://fi.wikipedia.org/wiki/Sarajevo',
+    },
+    {
+      q: 'Mikä tapahtuma Sarajevossa sytytti ensimmäisen maailmansodan 1914?',
+      options: ['arkkiherttuan salamurha', 'pörssiromahdus', 'suuri kaupunkipalo', 'sotalaivan upotus'],
+      correct: 0,
+      fact: 'Itävalta-Unkarin kruununperijä Frans Ferdinand ammuttiin Latinalaisen sillan kupeessa kesäkuussa 1914. Kuukautta myöhemmin Eurooppa oli sodassa.',
+      hint: 'Uhri oli Itävalta-Unkarin kruununperijä.',
+      source: 'https://fi.wikipedia.org/wiki/Sarajevon_laukaukset',
+    },
+    {
+      q: 'Minä vuonna Sarajevossa pidettiin talviolympialaiset?',
+      options: ['1984', '1972', '1994', '2002'],
+      correct: 0,
+      level: 3,
+      fact: 'Sarajevon talvikisat olivat ensimmäiset sosialistisessa maassa pidetyt talviolympialaiset. Ympäröivien vuorten rinteillä lasketellaan yhä.',
+      hint: 'Kisat pidettiin 1980-luvun puolivälin tienoilla.',
+    },
+    {
+      q: 'Mikä on Sarajevon vanha basaarikortteli?',
+      options: ['Baščaršija', 'Suuri basaari', 'Khan el-Khalili', 'Medina'],
+      correct: 0,
+      fact: 'Baščaršija rakentui osmanien aikana 1400-luvulla. Kujilla taotaan yhä kuparia, ja keskellä on puinen Sebilj-suihkukaivo, jonka kyyhkyset ovat vallanneet.',
+      hint: 'Kortteli syntyi osmanien valtakaudella.',
+    },
+    {
+      q: 'Miksi Sarajevoa on kutsuttu Euroopan Jerusalemiksi?',
+      options: [
+        'neljän uskonnon pyhäköt ovat lähekkäin',
+        'se on rakennettu seitsemälle kukkulalle',
+        'sen läpi virtaa pyhänä pidetty joki',
+        'sinne tehdään pyhiinvaelluksia',
+      ],
+      correct: 0,
+      fact: 'Muutaman korttelin sisällä ovat moskeija, katolinen katedraali, ortodoksinen kirkko ja synagoga. Kaupungissa on eletty vuosisatoja neljän uskonnon naapuruudessa.',
+      hint: 'Syy liittyy uskontojen rinnakkaineloon.',
     },
   ],
 
@@ -16644,6 +16805,53 @@ const EUROPE_QUESTIONS = {
     },
   ],
 
+  islanti: [
+    {
+      q: 'Mikä on Islannin pääkaupunki?',
+      options: ['Reykjavík', 'Oslo', 'Nuuk', 'Tórshavn'],
+      correct: 0,
+      level: 1,
+      fact: 'Reykjavík on maailman pohjoisin pääkaupunki. Nimi tarkoittaa savulahtea — kuumien lähteiden höyry näytti asuttajista savulta.',
+      hint: 'Nimi tarkoittaa savulahtea.',
+      source: 'https://fi.wikipedia.org/wiki/Islanti',
+    },
+    {
+      q: 'Miksi Islannissa on paljon tulivuoria ja kuumia lähteitä?',
+      options: [
+        'saari on kahden mannerlaatan saumalla',
+        'auringonsäteily lämmittää maan läpi',
+        'saaren alla palaa hiilikerros',
+        'meri on saaren ympärillä matala',
+      ],
+      correct: 0,
+      fact: 'Islanti istuu Atlantin keskiselänteellä, jossa Pohjois-Amerikan ja Euraasian laatat erkanevat toisistaan. Saumakohdassa maa repeää ja sula kivi nousee pintaan.',
+      hint: 'Syy on syvällä maankuoressa.',
+    },
+    {
+      q: 'Mikä islantilainen paikannimi on antanut nimen kaikille purkauslähteille?',
+      options: ['Geysir', 'Hekla', 'Askja', 'Katla'],
+      correct: 0,
+      level: 3,
+      fact: 'Geysir on Islannin kuuluisin kuumavesilähde, ja sen nimestä tuli yleisnimi moniin kieliin. Naapurilähde Strokkur purkautuu yhä muutaman minuutin välein.',
+      hint: 'Sana tulee purskahtamista tarkoittavasta verbistä.',
+      source: 'https://fi.wikipedia.org/wiki/Geysir',
+    },
+    {
+      q: 'Mitä vanhoja kertomuksia Islannissa kirjoitettiin muistiin keskiajalla?',
+      options: ['saagoja', 'psalmeja', 'haikuja', 'oopperoita'],
+      correct: 0,
+      fact: 'Islannin saagat kertovat asuttajasuvuista, riidoista ja merimatkoista. Ne kirjoitettiin nahkakirjoihin 1200-luvulla, ja islantilaiset lukevat niitä yhä lähes nykykielenään.',
+      hint: 'Ne kertovat asuttajasuvuista ja merimatkoista.',
+    },
+    {
+      q: 'Millä islantilaiset lämmittävät talonsa?',
+      options: ['maan kuumalla vedellä', 'kivihiilellä', 'tuontiöljyllä', 'polttopuilla'],
+      correct: 0,
+      fact: 'Lähes kaikki talot lämpiävät maan alta pumpatulla kuumalla vedellä. Sama lämpö sulattaa Reykjavíkin jalkakäytäviä talvella ja lämmittää ulkouimaloita ympäri vuoden.',
+      hint: 'Lämpö tulee suoraan maaperästä.',
+    },
+  ],
+
   general: [
     {
       q: 'Mikä on pinta-alaltaan Euroopan suurin maa?',
@@ -16806,11 +17014,19 @@ const EUROPE_FACTS = {
       voice: 'isoisa',
     },
   ],
-  bordeaux: [
-    'Bordeaux’n satamasta on viety viiniä Englantiin 1100-luvulta asti, jolloin alue kuului Englannin kruunulle.',
-    'Kaupungin puolikuun muotoinen jokiranta on Unescon maailmanperintökohde: 1700-luvun julkisivut jatkuvat lähes taukoamatta kilometrien matkan.',
+  marseille: [
+    { text: 'Marseillen vanha satama on ollut käytössä yli 2 600 vuotta: kreikkalaiset purjehtijat perustivat kaupungin noin 600 eaa. ja antoivat sille nimen Massalia.', source: 'https://fi.wikipedia.org/wiki/Marseille' },
+    'Sataman yllä kohoaa Notre-Dame de la Garden basilika, jonka kullattu Madonna näkyy kauas merelle. Merimiehet ovat ripustaneet kirkon kattoon pienoisveneitä kiitoslahjoiksi.',
     {
-      text: 'Joki tuo vuoroveden kaupunkiin asti, ja soraiselta maalta tulee viini, jota klubissani pidetään melkein englantilaisena. Se ei ole englantilaista.',
+      text: 'Satama haisee tervalta, sahramilta ja kalalta, ja laiturilla kuulee kymmentä kieltä ennen aamiaista. Täältä laivat lähtevät Afrikkaan; minäkin lähden, kunhan keitto on syöty.',
+      voice: 'isoisa',
+    },
+  ],
+  granada: [
+    'Alhambran palatsin seinät on kaiverrettu täyteen arabiankielisiä runosäkeitä ja koristekuvioita, ja sen suihkulähteisiin vesi johdettiin vuorilta jo seitsemänsataa vuotta sitten.',
+    'Granadassa juoman tilaaja saa tapas-annoksen kaupan päälle — vanha tapa, joka on suuresta osasta Espanjaa jo hävinnyt.',
+    {
+      text: 'Punainen linna seisoo kukkulalla kuin väsynyt vartija, ja sen saleissa vesi puhuu hiljaa. Lumivuoret hohtavat selän takana, vaikka alhaalla kypsyvät appelsiinit.',
       voice: 'isoisa',
     },
   ],
@@ -16886,6 +17102,14 @@ const EUROPE_FACTS = {
       voice: 'isoisa',
     },
   ],
+  krakova: [
+    'Wawelin kukkulan luolassa asui tarun mukaan lohikäärme. Luolan suulla seisoo nykyään pronssinen lohikäärmepatsas, joka sylkee oikeaa tulta muutaman minuutin välein.',
+    { text: 'Mariankirkon tornista soitetaan hejnał-sävelmä joka tunti neljään ilmansuuntaan, ja se katkaistaan aina samassa kohdassa kesken.', source: 'https://fi.wikipedia.org/wiki/Krakova' },
+    {
+      text: 'Torin halli on täynnä kangasta ja meripihkaa, ja joka tunti torvi aloittaa sävelmän, jota se ei koskaan saa loppuun. Tämä kaupunki muistaa pitkään; se on sen suru ja sen ylpeys.',
+      voice: 'isoisa',
+    },
+  ],
   alpit: [
     { text: 'Alppien halki kulkee Gotthardin pohjatunneli, joka on yli 57 kilometriä pitkä — maailman pisin rautatietunneli.', source: 'https://fi.wikipedia.org/wiki/Gotthardin_pohjatunneli' },
     'Alppien jäätiköt ovat sulaneet nopeasti, ja niiden reunoilta on paljastunut esineitä, jotka ovat olleet jään alla tuhansia vuosia.',
@@ -16894,11 +17118,11 @@ const EUROPE_FACTS = {
       voice: 'isoisa',
     },
   ],
-  milano: [
-    { text: 'Milanon tuomiokirkon rakentaminen kesti lähes kuusi vuosisataa: se alkoi vuonna 1386 ja viimeiset yksityiskohdat valmistuivat 1965.', source: 'https://en.wikipedia.org/wiki/Milan_Cathedral' },
-    'Milano on Italian talouden keskus: siellä sijaitsevat maan pörssi ja suuri osa muoti- ja muotoilualan yrityksistä.',
+  venetsia: [
+    'Venetsia seisoo miljoonien puupaalujen varassa. Veden alla hapettomassa liejussa paalut eivät lahoa vaan kovettuvat lähes kiven kaltaisiksi.',
+    'Venetsian karnevaalin naamiot syntyivät, jotta säätyläiset ja palvelijat saattoivat juhlia yhdessä tuntemattomina. Naamioita valmistetaan yhä käsityönä paperimassasta.',
     {
-      text: 'Tuomiokirkkoa on rakennettu viisisataa vuotta eikä se ole valmis. Se on kärsivällisyyttä, jota en tunnista omasta maastani.',
+      text: 'Kaupungissa ei ole yhtään hevosta, mutta tuhat venettä. Kirjoitan tätä portailla, joiden alin askelma on ollut meressä sata vuotta, eikä kukaan tunnu olevan siitä huolissaan.',
       voice: 'isoisa',
     },
   ],
@@ -16939,6 +17163,14 @@ const EUROPE_FACTS = {
     'Ragusan tasavalta kielsi orjakaupan jo vuonna 1416, varhain Euroopan mittapuulla.',
     {
       text: 'Muurien sisällä on kaupunki, joka oli oma tasavaltansa vuosisatoja ja säilyi neuvottelemalla eikä sotimalla. Meidän laivastomme olisi ollut halvempi hoitaa samalla tavalla.',
+      voice: 'isoisa',
+    },
+  ],
+  sarajevo: [
+    'Baščaršijan basaarissa on taottu kuparia osmanien ajoista asti. Kahvi tarjoillaan pienestä kuparipannusta sokeripalan ja lokum-makeisen kanssa, ja sen ääressä istutaan pitkään.',
+    'Sarajevossa moskeija, katolinen katedraali, ortodoksinen kirkko ja synagoga ovat muutaman korttelin sisällä — siksi kaupunkia on kutsuttu Euroopan Jerusalemiksi.',
+    {
+      text: 'Idän basaari ja lännen kahvilat ovat tässä samalla kadulla, ja minareetit ja kirkontornit jakavat saman taivaan. Vuoret ympäröivät laaksoa niin, että ilta ehtii tänne tuntia aikaisemmin.',
       voice: 'isoisa',
     },
   ],
@@ -17062,6 +17294,14 @@ const EUROPE_FACTS = {
       voice: 'isoisa',
     },
   ],
+  islanti: [
+    { text: 'Islannin Alltinget kokoontui ensimmäisen kerran vuonna 930, ja se on maailman vanhimpia yhä toimivia kansanedustuslaitoksia. Kokouspaikka Þingvellir sijaitsee mannerlaattojen repeämässä.', source: 'https://fi.wikipedia.org/wiki/Islanti' },
+    'Islantilaisilla ei ole sukunimiä vaan vanhemman nimestä johdettu jälkiosa: Jónsdóttir on Jónin tytär ja Jónsson Jónin poika. Puhelinluettelo aakkostetaan etunimen mukaan.',
+    {
+      text: 'Maa savuaa kuin sammumaton nuotio, ja kuuma puro virtaa jäätikön vierestä. Laivamatka tänne oli pitkä ja kylmä; ymmärrän nyt, miksi saagat kirjoitettiin sisällä talven mittaan.',
+      voice: 'isoisa',
+    },
+  ],
 };
 
 // ===== js/packs/europe.js =====
@@ -17132,6 +17372,11 @@ const EU_MAP = {
     [662.4, 965.2], [677.8, 957.3], [693.1, 962.6], [716.2, 965.2], [712.3, 973.1],
     [685.4, 975.7], [664.3, 970.5],
   ],
+  // Islanti on todellisuudessa kartan ulkopuolella lännessä; saari on tuotu
+  // luoteisnurkkaan pitkien laivareittien päähän, kuten St. Helena Afrikassa.
+  icelandPoints: [
+    [22, 60], [38, 38], [70, 30], [100, 42], [105, 62], [88, 82], [52, 86], [30, 76],
+  ],
   maghrebPoints: [
     [-45, 960.0], [97.9, 952.1], [169.0, 970.5], [211.2, 949.4], [268.8, 925.8],
     [316.8, 923.1], [376.3, 917.9], [409.0, 915.2], [424.3, 923.1], [412.8, 957.3],
@@ -17156,7 +17401,7 @@ const EU_CITIES = [
   { id: 'dublin', name: 'Dublin', x: 91, y: 490, la: 'end', lx: -16, ly: 5 },
   { id: 'edinburgh', name: 'Edinburgh', x: 150, y: 422, la: 'end', lx: -16, ly: 5 },
   { id: 'pariisi', name: 'Pariisi', x: 256, y: 609 },
-  { id: 'bordeaux', name: 'Bordeaux', x: 200, y: 714, la: 'end', lx: -16, ly: 5 },
+  { id: 'marseille', name: 'Marseille', x: 312, y: 744, la: 'end', lx: -16, ly: 14 },
   { id: 'lissabon', name: 'Lissabon', x: 36, y: 875, la: 'start', lx: 16, ly: 5 },
   {
     id: 'madrid', name: 'Madrid', x: 140, y: 831, airport: true,
@@ -17164,14 +17409,17 @@ const EU_CITIES = [
     links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
   },
   { id: 'barcelona', name: 'Barcelona', x: 244, y: 800, la: 'start', lx: 16, ly: 5 },
+  { id: 'granada', name: 'Granada', x: 142, y: 916, la: 'end', lx: -16, ly: 5 },
   { id: 'amsterdam', name: 'Amsterdam', x: 305, y: 516, la: 'start', lx: 16, ly: 5 },
   { id: 'berliini', name: 'Berliini', x: 468, y: 512, airport: true },
   { id: 'praha', name: 'Praha', x: 488, y: 576, la: 'end', lx: -16, ly: 5 },
   { id: 'wien', name: 'Wien', x: 526, y: 626, la: 'start', lx: 16, ly: -6 },
   { id: 'budapest', name: 'Budapest', x: 591, y: 658, la: 'start', lx: 16, ly: 10 },
   { id: 'varsova', name: 'Varsova', x: 615, y: 520 },
+  { id: 'krakova', name: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
   { id: 'alpit', name: 'Alpit', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
-  { id: 'milano', name: 'Milano', x: 388, y: 698, la: 'start', lx: 16, ly: 5 },
+  // Venetsia on Adrianmeren pohjukassa Milanon tilalla (omistajan valinta).
+  { id: 'venetsia', name: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
   { id: 'rooma', name: 'Rooma', x: 451, y: 792, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sisilia', name: 'Sisilia', x: 468, y: 891, la: 'end', lx: -16, ly: 5 },
   {
@@ -17180,6 +17428,8 @@ const EU_CITIES = [
   },
   { id: 'kreeta', name: 'Kreeta', x: 694, y: 964, la: 'middle', lx: 0, ly: 26 },
   { id: 'dubrovnik', name: 'Dubrovnik', x: 560, y: 770, la: 'middle', lx: 0, ly: -22 },
+  // Sarajevoa on siirretty hieman itään, jotta nimet mahtuvat Balkanilla.
+  { id: 'sarajevo', name: 'Sarajevo', x: 600, y: 724, la: 'start', lx: 16, ly: 2 },
   { id: 'sofia', name: 'Sofia', x: 659, y: 771, la: 'start', lx: 16, ly: 5 },
   { id: 'bukarest', name: 'Bukarest', x: 712, y: 725, la: 'start', lx: 16, ly: 5 },
   { id: 'kiova', name: 'Kiova', x: 797, y: 567 },
@@ -17207,6 +17457,7 @@ const EU_CITIES = [
   { id: 'kobenhavn', name: 'Kööpenhamina', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
   { id: 'lappi', name: 'Lappi', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
   { id: 'tromssa', name: 'Tromssa', x: 577, y: 66, la: 'start', lx: 16, ly: 5 },
+  { id: 'islanti', name: 'Islanti', x: 62, y: 60, la: 'middle', lx: 0, ly: 42 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -17217,14 +17468,17 @@ const EU_EDGES = [
   // Kanaalitunneli on oikea maayhteys mantereelle.
   { a: 'lontoo', b: 'pariisi', steps: 3 },
 
-  // Länsi-Eurooppa
+  // Länsi-Eurooppa. Biskajan rannikon suora reitti on jätetty pois:
+  // Iberiaan kuljetaan Rhônen laaksoa ja rannikkoa pitkin (haaste).
   { a: 'pariisi', b: 'amsterdam', steps: 3 },
-  { a: 'pariisi', b: 'bordeaux', steps: 3 },
+  { a: 'pariisi', b: 'marseille', steps: 4 },
   { a: 'pariisi', b: 'alpit', steps: 3 },
-  { a: 'bordeaux', b: 'madrid', steps: 4 },
-  { a: 'bordeaux', b: 'barcelona', steps: 3 },
+  { a: 'marseille', b: 'barcelona', steps: 3 },
+  { a: 'marseille', b: 'alpit', steps: 3 },
   { a: 'madrid', b: 'lissabon', steps: 3 },
   { a: 'madrid', b: 'barcelona', steps: 3 },
+  { a: 'madrid', b: 'granada', steps: 3 },
+  { a: 'granada', b: 'lissabon', steps: 4 },
 
   // Keski-Eurooppa
   { a: 'amsterdam', b: 'berliini', steps: 4 },
@@ -17232,15 +17486,19 @@ const EU_EDGES = [
   { a: 'berliini', b: 'varsova', steps: 4 },
   { a: 'berliini', b: 'kobenhavn', steps: 2 },
   { a: 'praha', b: 'wien', steps: 2 },
-  { a: 'praha', b: 'varsova', steps: 3 },
+  { a: 'praha', b: 'krakova', steps: 3 },
+  { a: 'krakova', b: 'varsova', steps: 2 },
+  { a: 'krakova', b: 'budapest', steps: 3 },
   { a: 'wien', b: 'budapest', steps: 2 },
-  { a: 'wien', b: 'milano', steps: 4 },
-  { a: 'alpit', b: 'milano', steps: 2 },
+  { a: 'wien', b: 'venetsia', steps: 4 },
+  { a: 'alpit', b: 'venetsia', steps: 3 },
   { a: 'alpit', b: 'berliini', steps: 4 },
-  { a: 'milano', b: 'rooma', steps: 3 },
-  { a: 'budapest', b: 'dubrovnik', steps: 3 },
+  { a: 'venetsia', b: 'rooma', steps: 3 },
+  // Bosnian rata: Budapestista Sarajevoon ja vuorten yli rannikolle.
+  { a: 'budapest', b: 'sarajevo', steps: 2 },
+  { a: 'sarajevo', b: 'dubrovnik', steps: 2 },
+  { a: 'sarajevo', b: 'sofia', steps: 3 },
   { a: 'budapest', b: 'bukarest', steps: 4 },
-  { a: 'dubrovnik', b: 'sofia', steps: 3 },
   { a: 'sofia', b: 'ateena', steps: 4 },
   { a: 'sofia', b: 'istanbul', steps: 3 },
   { a: 'sofia', b: 'bukarest', steps: 2 },
@@ -17266,9 +17524,8 @@ const EU_EDGES = [
   { a: 'lontoo', b: 'dublin', steps: 3, type: 'sea',
     via: [[225, 570], [170, 576], [110, 600], [70, 592], [100, 540], [100, 505]] },
   { a: 'dublin', b: 'edinburgh', steps: 3, type: 'sea' },
-  { a: 'lissabon', b: 'bordeaux', steps: 4, type: 'sea',
-    via: [[10, 860], [0, 800], [8, 750], [60, 715], [140, 700]] },
   { a: 'barcelona', b: 'rooma', steps: 4, type: 'sea' },
+  { a: 'venetsia', b: 'dubrovnik', steps: 4, type: 'sea', via: [[505, 745]] },
   { a: 'rooma', b: 'sisilia', steps: 3, type: 'sea' },
   { a: 'sisilia', b: 'ateena', steps: 4, type: 'sea' },
   { a: 'ateena', b: 'kreeta', steps: 2, type: 'sea' },
@@ -17278,6 +17535,11 @@ const EU_EDGES = [
   { a: 'tukholma', b: 'helsinki', steps: 2, type: 'sea' },
   { a: 'helsinki', b: 'tallinna', steps: 1, type: 'sea', via: [[672, 340]] },
   { a: 'riika', b: 'tukholma', steps: 3, type: 'sea', via: [[610, 395], [580, 365]] },
+  // Islannin pitkät valtamerireitit: etelään Skotlantiin ja itään Jäämerelle.
+  // Eteläreitti kiertää EUROOPPA-otsikon itäpuolelta Pohjanmeren kautta.
+  { a: 'islanti', b: 'edinburgh', steps: 5, type: 'sea',
+    via: [[210, 80], [320, 110], [300, 240], [240, 340], [205, 385]] },
+  { a: 'islanti', b: 'tromssa', steps: 5, type: 'sea', via: [[290, 32], [450, 38]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -17304,13 +17566,14 @@ const EUROPE = {
     ...EU_MAP,
     outlines: [
       EU_MAP.mainlandPoints, EU_MAP.britainPoints, EU_MAP.irelandPoints,
-      EU_MAP.sicilyPoints, EU_MAP.cretePoints, EU_MAP.maghrebPoints,
+      EU_MAP.sicilyPoints, EU_MAP.cretePoints, EU_MAP.icelandPoints,
+      EU_MAP.maghrebPoints,
     ],
   },
   cities: EU_CITIES,
   edges: EU_EDGES,
   airRoutes: EU_AIR_ROUTES,
-  islands: ['dublin', 'sisilia', 'kreeta'],
+  islands: ['dublin', 'sisilia', 'kreeta', 'islanti'],
   minCityDistance: 60,
 
   tokens: {
@@ -17319,7 +17582,7 @@ const EUROPE = {
       star: { name: 'Meripihkahuoneen aarre' },
       topaz: { name: 'Meripihka', color: '#d98f2b' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 7, empty: 11 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 6, emerald: 6, topaz: 8, empty: 13 },
   },
 
   questions: EUROPE_QUESTIONS,
@@ -17385,23 +17648,26 @@ const EUROPE = {
       dublin: 'Läntisimmällä saarella, joen mutkassa jonka viikingit nimesivät mustaksi lammikoksi, on satamakaupunki jossa puhutaan kahta kieltä. Sinne pääsee vain laivalla.',
       edinburgh: 'Pohjoisen saaren itärannikolla, vanhan tulivuoren kannalle rakennetun linnan juurella, on kaupunki joka jakautuu vanhaan ja uuteen puoleen. Molemmat pitävät itseään oikeana.',
       pariisi: 'Suuren joen mutkassa keskellä läntistä mannerta on kaupunki, jonka leveät bulevardit korvasivat juuri vanhat kujat. Se pitää itseään maailman keskuksena, ja on siinä lähellä.',
-      bordeaux: 'Läntisellä rannikolla, siellä missä vuorovesi nousee jokea ylös soraisten viinitarhojen välissä, on satama josta lähetetään tynnyreitä Englantiin.',
+      marseille: 'Etelärannikolla, siellä missä suuri jokilaakso avautuu Välimereen, on maanosan vanhimpia satamia. Sen kaduilla kuulee kaikkien merien kielet, ja saippua kantaa kaupungin nimeä.',
       lissabon: 'Mantereen lounaisimmassa kärjessä, joen suulla jonka vartioksi rakennettiin torni, on kaupunki joka nousi maanjäristyksen raunioista suoriksi kortteleiksi.',
       madrid: 'Läntisen niemimaan keskellä, korkealla kuivalla ylätasangolla kaukana kaikista rannikoista, on pääkaupunki jonka kadut täyttyvät väestä vasta auringonlaskun jälkeen.',
       barcelona: 'Läntisen niemimaan koillisrannalla Välimeren äärellä on satamakaupunki, jonka uudet korttelit on piirretty ruutuun ja niiden kulmat viistetty.',
+      granada: 'Läntisen niemimaan eteläosassa, lumihuippuisen vuoriston juurella, on kaupunki jonka kukkulalla seisoo maurien punainen palatsi. Sen suihkulähteet solisevat yhä.',
       amsterdam: 'Alavalla luoteisrannikolla, kanavien ja puupaalujen päälle rakennetussa kaupungissa, talot nojaavat toisiinsa. Maa on siellä osin merenpinnan alapuolella.',
       berliini: 'Pohjoisen tasangon keskellä, kahden hidasvirtaisen joen välissä, on juuri perustetun valtakunnan pääkaupunki. Se rakentaa kuin kilpaa, koska sillä on kiire olla vanha.',
       praha: 'Keskisellä mantereella, jyrkän jokimutkan yllä kohoavan linna-alueen juurella, on kaupunki jonka sillan kaiteilla seisoo kolmekymmentä pyhimystä.',
       wien: 'Suuren itään virtaavan joen varrella on keisarikunnan pääkaupunki, jossa valssia tanssitaan arkenakin. Muurien paikalle on juuri valmistunut leveä kehäkatu.',
       budapest: 'Saman suuren joen varrella kauempana itään, siellä missä kaksi kaupunkia yhdistettiin yhdeksi, nousee kuumista lähteistä vesi kylpyaltaisiin.',
       varsova: 'Pohjoisella tasangolla idässä, Veiksel-joen varrella, on maakuntakaupunki jonka oma valtio on pyyhitty kartalta. Kadulla soitetaan silti sen omaa musiikkia.',
+      krakova: 'Saman joen yläjuoksulla etelässä, kuninkaiden vanhassa kruunauskaupungissa, torvensoittaja lopettaa sävelmänsä joka tunti kesken. Torin keskellä seisoo kangaskauppojen halli.',
       alpit: 'Keskisen mantereen vuoristossa, siellä missä laaksot ovat jään jäljiltä U:n muotoisia ja solat ylitetään muulin kanssa, on koko maanosan korkein huippu.',
-      milano: 'Etelän suuren tasangon pohjoislaidalla, vuorten juurella, on kaupunki jonka marmorikatedraalia on rakennettu viisisataa vuotta eikä se ole valmis.',
+      venetsia: 'Etelän niemimaan koillisrannalla, matalan laguunin saarille rakennetussa kaupungissa, kadut ovat vettä ja portaat laskevat suoraan mereen. Sen kauppiaat toivat idän tavarat maanosaan.',
       rooma: 'Etelän niemimaan keskellä, seitsemän kukkulan päällä joen varrella, on kaupunki josta tehtiin juuri uuden kuningaskunnan pääkaupunki. Sen akveduktit toimivat yhä.',
       sisilia: 'Etelän niemimaan kärjen takana, salmen toisella puolen, on saari jolla savuaa maanosan suurin tulivuori. Sen kirkoissa on arabialaisia kupoleita.',
       ateena: 'Kaakkoisen niemimaan kärjessä, kalliokukkulan juurella jolla seisoo kaksituhatta vuotta vanha temppeli, on nuoren kuningaskunnan tomuinen pääkaupunki.',
       kreeta: 'Kaikkein eteläisimmällä suurella saarella, sulttaanin valtakunnan laidalla, kukoisti maanosan varhaisin korkeakulttuuri. Oliiviöljyä käytetään siellä kaikkeen.',
       dubrovnik: 'Kaakkoisrannikolla, korkeiden kivimuurien sisällä, on satamakaupunki joka oli vuosisatoja oma tasavaltansa ja säilyi neuvottelemalla eikä sotimalla.',
+      sarajevo: 'Kaakkoisen mantereen vuorten välisessä laaksossa on kaupunki, jossa minareetit ja kirkontornit seisovat saman kadun varrella ja basaarissa taotaan kuparia kuin idässä.',
       sofia: 'Kaakkoisen mantereen sisämaassa, korkean vuoren juurella, on maakuntakaupunki jonka ympärille syntyy pian oma valtio. Ruusuöljyä myydään siellä pulloittain.',
       bukarest: 'Alavalla tasangolla Tonavan ja Karpaattien välissä on ruhtinaskunnan pääkaupunki, jossa puhutaan latinasta polveutuvaa kieltä slaavilaisten naapurien keskellä.',
       kiova: 'Idässä, Dnepr-joen jyrkällä rannalla, on tuhat vuotta pyhänä pidetty kaupunki, jonka luostarin käytävät kulkevat maan alla.',
@@ -17417,6 +17683,7 @@ const EUROPE = {
       kobenhavn: 'Pohjolan salmien varrella, siellä missä Itämerestä pääsee Pohjanmerelle, on kuningaskunnan pääkaupunki. Sen huvipuistossa palavat lyhdyt iltaan asti.',
       lappi: 'Kaikkein pohjoisimmassa sisämaassa, siellä missä aurinko ei kesällä laske eikä talvella nouse, paimennetaan poroja tuhansittain.',
       tromssa: 'Pohjoisimmalla rannikolla, saarella vuonon suojassa, on satama josta lähdetään jäämerelle. Lämmin merivirta pitää sen sulana keskellä talvea.',
+      islanti: 'Kaukana luoteisessa valtameressä on saari, jolla maa höyryää, tuli nousee jäätikön alta ja kuuma vesi purskahtaa ilmaan. Sinne pääsee vain pitkällä laivamatkalla.',
     },
   },
 
@@ -36191,10 +36458,13 @@ class UI {
       this.naytaPostikortti();
     });
     this.postikorttiSulkija = (e) => {
-      // Pinon alempi kortti nousee napautuksesta päälle; muu napautus
-      // sulkee kortin (omistajan kokeilu: uusi kuva vanhan alla).
+      // Kuvapinossa napautus mihin tahansa kuvaan vaihtaa kortit päikseen;
+      // pinosta pääsee pois napauttamalla karttaa eli pinon ulkopuolelle
+      // (omistajan toive). Yhden kuvan kortti sulkeutuu mistä napautuksesta
+      // tahansa, kuten ennenkin.
       const alla = this.postikortti?.querySelector('.postikortti-kortti.alla');
-      if (alla && e.composedPath?.().includes(alla)) {
+      const kortilla = this.postikortti && e.composedPath?.().includes(this.postikortti);
+      if (alla && kortilla) {
         e.preventDefault();
         e.stopPropagation();
         for (const kortti of this.postikortti.querySelectorAll('.postikortti-kortti')) {
@@ -40111,7 +40381,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.98';
+const APP_VERSION = '2026-07-30.99';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

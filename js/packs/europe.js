@@ -68,6 +68,11 @@ const EU_MAP = {
     [662.4, 965.2], [677.8, 957.3], [693.1, 962.6], [716.2, 965.2], [712.3, 973.1],
     [685.4, 975.7], [664.3, 970.5],
   ],
+  // Islanti on todellisuudessa kartan ulkopuolella lännessä; saari on tuotu
+  // luoteisnurkkaan pitkien laivareittien päähän, kuten St. Helena Afrikassa.
+  icelandPoints: [
+    [22, 60], [38, 38], [70, 30], [100, 42], [105, 62], [88, 82], [52, 86], [30, 76],
+  ],
   maghrebPoints: [
     [-45, 960.0], [97.9, 952.1], [169.0, 970.5], [211.2, 949.4], [268.8, 925.8],
     [316.8, 923.1], [376.3, 917.9], [409.0, 915.2], [424.3, 923.1], [412.8, 957.3],
@@ -92,7 +97,7 @@ const EU_CITIES = [
   { id: 'dublin', name: 'Dublin', x: 91, y: 490, la: 'end', lx: -16, ly: 5 },
   { id: 'edinburgh', name: 'Edinburgh', x: 150, y: 422, la: 'end', lx: -16, ly: 5 },
   { id: 'pariisi', name: 'Pariisi', x: 256, y: 609 },
-  { id: 'bordeaux', name: 'Bordeaux', x: 200, y: 714, la: 'end', lx: -16, ly: 5 },
+  { id: 'marseille', name: 'Marseille', x: 312, y: 744, la: 'end', lx: -16, ly: 14 },
   { id: 'lissabon', name: 'Lissabon', x: 36, y: 875, la: 'start', lx: 16, ly: 5 },
   {
     id: 'madrid', name: 'Madrid', x: 140, y: 831, airport: true,
@@ -100,14 +105,17 @@ const EU_CITIES = [
     links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
   },
   { id: 'barcelona', name: 'Barcelona', x: 244, y: 800, la: 'start', lx: 16, ly: 5 },
+  { id: 'granada', name: 'Granada', x: 142, y: 916, la: 'end', lx: -16, ly: 5 },
   { id: 'amsterdam', name: 'Amsterdam', x: 305, y: 516, la: 'start', lx: 16, ly: 5 },
   { id: 'berliini', name: 'Berliini', x: 468, y: 512, airport: true },
   { id: 'praha', name: 'Praha', x: 488, y: 576, la: 'end', lx: -16, ly: 5 },
   { id: 'wien', name: 'Wien', x: 526, y: 626, la: 'start', lx: 16, ly: -6 },
   { id: 'budapest', name: 'Budapest', x: 591, y: 658, la: 'start', lx: 16, ly: 10 },
   { id: 'varsova', name: 'Varsova', x: 615, y: 520 },
+  { id: 'krakova', name: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
   { id: 'alpit', name: 'Alpit', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
-  { id: 'milano', name: 'Milano', x: 388, y: 698, la: 'start', lx: 16, ly: 5 },
+  // Venetsia on Adrianmeren pohjukassa Milanon tilalla (omistajan valinta).
+  { id: 'venetsia', name: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
   { id: 'rooma', name: 'Rooma', x: 451, y: 792, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sisilia', name: 'Sisilia', x: 468, y: 891, la: 'end', lx: -16, ly: 5 },
   {
@@ -116,6 +124,8 @@ const EU_CITIES = [
   },
   { id: 'kreeta', name: 'Kreeta', x: 694, y: 964, la: 'middle', lx: 0, ly: 26 },
   { id: 'dubrovnik', name: 'Dubrovnik', x: 560, y: 770, la: 'middle', lx: 0, ly: -22 },
+  // Sarajevoa on siirretty hieman itään, jotta nimet mahtuvat Balkanilla.
+  { id: 'sarajevo', name: 'Sarajevo', x: 600, y: 724, la: 'start', lx: 16, ly: 2 },
   { id: 'sofia', name: 'Sofia', x: 659, y: 771, la: 'start', lx: 16, ly: 5 },
   { id: 'bukarest', name: 'Bukarest', x: 712, y: 725, la: 'start', lx: 16, ly: 5 },
   { id: 'kiova', name: 'Kiova', x: 797, y: 567 },
@@ -143,6 +153,7 @@ const EU_CITIES = [
   { id: 'kobenhavn', name: 'Kööpenhamina', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
   { id: 'lappi', name: 'Lappi', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
   { id: 'tromssa', name: 'Tromssa', x: 577, y: 66, la: 'start', lx: 16, ly: 5 },
+  { id: 'islanti', name: 'Islanti', x: 62, y: 60, la: 'middle', lx: 0, ly: 42 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -153,14 +164,17 @@ const EU_EDGES = [
   // Kanaalitunneli on oikea maayhteys mantereelle.
   { a: 'lontoo', b: 'pariisi', steps: 3 },
 
-  // Länsi-Eurooppa
+  // Länsi-Eurooppa. Biskajan rannikon suora reitti on jätetty pois:
+  // Iberiaan kuljetaan Rhônen laaksoa ja rannikkoa pitkin (haaste).
   { a: 'pariisi', b: 'amsterdam', steps: 3 },
-  { a: 'pariisi', b: 'bordeaux', steps: 3 },
+  { a: 'pariisi', b: 'marseille', steps: 4 },
   { a: 'pariisi', b: 'alpit', steps: 3 },
-  { a: 'bordeaux', b: 'madrid', steps: 4 },
-  { a: 'bordeaux', b: 'barcelona', steps: 3 },
+  { a: 'marseille', b: 'barcelona', steps: 3 },
+  { a: 'marseille', b: 'alpit', steps: 3 },
   { a: 'madrid', b: 'lissabon', steps: 3 },
   { a: 'madrid', b: 'barcelona', steps: 3 },
+  { a: 'madrid', b: 'granada', steps: 3 },
+  { a: 'granada', b: 'lissabon', steps: 4 },
 
   // Keski-Eurooppa
   { a: 'amsterdam', b: 'berliini', steps: 4 },
@@ -168,15 +182,19 @@ const EU_EDGES = [
   { a: 'berliini', b: 'varsova', steps: 4 },
   { a: 'berliini', b: 'kobenhavn', steps: 2 },
   { a: 'praha', b: 'wien', steps: 2 },
-  { a: 'praha', b: 'varsova', steps: 3 },
+  { a: 'praha', b: 'krakova', steps: 3 },
+  { a: 'krakova', b: 'varsova', steps: 2 },
+  { a: 'krakova', b: 'budapest', steps: 3 },
   { a: 'wien', b: 'budapest', steps: 2 },
-  { a: 'wien', b: 'milano', steps: 4 },
-  { a: 'alpit', b: 'milano', steps: 2 },
+  { a: 'wien', b: 'venetsia', steps: 4 },
+  { a: 'alpit', b: 'venetsia', steps: 3 },
   { a: 'alpit', b: 'berliini', steps: 4 },
-  { a: 'milano', b: 'rooma', steps: 3 },
-  { a: 'budapest', b: 'dubrovnik', steps: 3 },
+  { a: 'venetsia', b: 'rooma', steps: 3 },
+  // Bosnian rata: Budapestista Sarajevoon ja vuorten yli rannikolle.
+  { a: 'budapest', b: 'sarajevo', steps: 2 },
+  { a: 'sarajevo', b: 'dubrovnik', steps: 2 },
+  { a: 'sarajevo', b: 'sofia', steps: 3 },
   { a: 'budapest', b: 'bukarest', steps: 4 },
-  { a: 'dubrovnik', b: 'sofia', steps: 3 },
   { a: 'sofia', b: 'ateena', steps: 4 },
   { a: 'sofia', b: 'istanbul', steps: 3 },
   { a: 'sofia', b: 'bukarest', steps: 2 },
@@ -202,9 +220,8 @@ const EU_EDGES = [
   { a: 'lontoo', b: 'dublin', steps: 3, type: 'sea',
     via: [[225, 570], [170, 576], [110, 600], [70, 592], [100, 540], [100, 505]] },
   { a: 'dublin', b: 'edinburgh', steps: 3, type: 'sea' },
-  { a: 'lissabon', b: 'bordeaux', steps: 4, type: 'sea',
-    via: [[10, 860], [0, 800], [8, 750], [60, 715], [140, 700]] },
   { a: 'barcelona', b: 'rooma', steps: 4, type: 'sea' },
+  { a: 'venetsia', b: 'dubrovnik', steps: 4, type: 'sea', via: [[505, 745]] },
   { a: 'rooma', b: 'sisilia', steps: 3, type: 'sea' },
   { a: 'sisilia', b: 'ateena', steps: 4, type: 'sea' },
   { a: 'ateena', b: 'kreeta', steps: 2, type: 'sea' },
@@ -214,6 +231,11 @@ const EU_EDGES = [
   { a: 'tukholma', b: 'helsinki', steps: 2, type: 'sea' },
   { a: 'helsinki', b: 'tallinna', steps: 1, type: 'sea', via: [[672, 340]] },
   { a: 'riika', b: 'tukholma', steps: 3, type: 'sea', via: [[610, 395], [580, 365]] },
+  // Islannin pitkät valtamerireitit: etelään Skotlantiin ja itään Jäämerelle.
+  // Eteläreitti kiertää EUROOPPA-otsikon itäpuolelta Pohjanmeren kautta.
+  { a: 'islanti', b: 'edinburgh', steps: 5, type: 'sea',
+    via: [[210, 80], [320, 110], [300, 240], [240, 340], [205, 385]] },
+  { a: 'islanti', b: 'tromssa', steps: 5, type: 'sea', via: [[290, 32], [450, 38]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -240,13 +262,14 @@ export const EUROPE = {
     ...EU_MAP,
     outlines: [
       EU_MAP.mainlandPoints, EU_MAP.britainPoints, EU_MAP.irelandPoints,
-      EU_MAP.sicilyPoints, EU_MAP.cretePoints, EU_MAP.maghrebPoints,
+      EU_MAP.sicilyPoints, EU_MAP.cretePoints, EU_MAP.icelandPoints,
+      EU_MAP.maghrebPoints,
     ],
   },
   cities: EU_CITIES,
   edges: EU_EDGES,
   airRoutes: EU_AIR_ROUTES,
-  islands: ['dublin', 'sisilia', 'kreeta'],
+  islands: ['dublin', 'sisilia', 'kreeta', 'islanti'],
   minCityDistance: 60,
 
   tokens: {
@@ -255,7 +278,7 @@ export const EUROPE = {
       star: { name: 'Meripihkahuoneen aarre' },
       topaz: { name: 'Meripihka', color: '#d98f2b' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 7, empty: 11 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 6, emerald: 6, topaz: 8, empty: 13 },
   },
 
   questions: EUROPE_QUESTIONS,
@@ -321,23 +344,26 @@ export const EUROPE = {
       dublin: 'Läntisimmällä saarella, joen mutkassa jonka viikingit nimesivät mustaksi lammikoksi, on satamakaupunki jossa puhutaan kahta kieltä. Sinne pääsee vain laivalla.',
       edinburgh: 'Pohjoisen saaren itärannikolla, vanhan tulivuoren kannalle rakennetun linnan juurella, on kaupunki joka jakautuu vanhaan ja uuteen puoleen. Molemmat pitävät itseään oikeana.',
       pariisi: 'Suuren joen mutkassa keskellä läntistä mannerta on kaupunki, jonka leveät bulevardit korvasivat juuri vanhat kujat. Se pitää itseään maailman keskuksena, ja on siinä lähellä.',
-      bordeaux: 'Läntisellä rannikolla, siellä missä vuorovesi nousee jokea ylös soraisten viinitarhojen välissä, on satama josta lähetetään tynnyreitä Englantiin.',
+      marseille: 'Etelärannikolla, siellä missä suuri jokilaakso avautuu Välimereen, on maanosan vanhimpia satamia. Sen kaduilla kuulee kaikkien merien kielet, ja saippua kantaa kaupungin nimeä.',
       lissabon: 'Mantereen lounaisimmassa kärjessä, joen suulla jonka vartioksi rakennettiin torni, on kaupunki joka nousi maanjäristyksen raunioista suoriksi kortteleiksi.',
       madrid: 'Läntisen niemimaan keskellä, korkealla kuivalla ylätasangolla kaukana kaikista rannikoista, on pääkaupunki jonka kadut täyttyvät väestä vasta auringonlaskun jälkeen.',
       barcelona: 'Läntisen niemimaan koillisrannalla Välimeren äärellä on satamakaupunki, jonka uudet korttelit on piirretty ruutuun ja niiden kulmat viistetty.',
+      granada: 'Läntisen niemimaan eteläosassa, lumihuippuisen vuoriston juurella, on kaupunki jonka kukkulalla seisoo maurien punainen palatsi. Sen suihkulähteet solisevat yhä.',
       amsterdam: 'Alavalla luoteisrannikolla, kanavien ja puupaalujen päälle rakennetussa kaupungissa, talot nojaavat toisiinsa. Maa on siellä osin merenpinnan alapuolella.',
       berliini: 'Pohjoisen tasangon keskellä, kahden hidasvirtaisen joen välissä, on juuri perustetun valtakunnan pääkaupunki. Se rakentaa kuin kilpaa, koska sillä on kiire olla vanha.',
       praha: 'Keskisellä mantereella, jyrkän jokimutkan yllä kohoavan linna-alueen juurella, on kaupunki jonka sillan kaiteilla seisoo kolmekymmentä pyhimystä.',
       wien: 'Suuren itään virtaavan joen varrella on keisarikunnan pääkaupunki, jossa valssia tanssitaan arkenakin. Muurien paikalle on juuri valmistunut leveä kehäkatu.',
       budapest: 'Saman suuren joen varrella kauempana itään, siellä missä kaksi kaupunkia yhdistettiin yhdeksi, nousee kuumista lähteistä vesi kylpyaltaisiin.',
       varsova: 'Pohjoisella tasangolla idässä, Veiksel-joen varrella, on maakuntakaupunki jonka oma valtio on pyyhitty kartalta. Kadulla soitetaan silti sen omaa musiikkia.',
+      krakova: 'Saman joen yläjuoksulla etelässä, kuninkaiden vanhassa kruunauskaupungissa, torvensoittaja lopettaa sävelmänsä joka tunti kesken. Torin keskellä seisoo kangaskauppojen halli.',
       alpit: 'Keskisen mantereen vuoristossa, siellä missä laaksot ovat jään jäljiltä U:n muotoisia ja solat ylitetään muulin kanssa, on koko maanosan korkein huippu.',
-      milano: 'Etelän suuren tasangon pohjoislaidalla, vuorten juurella, on kaupunki jonka marmorikatedraalia on rakennettu viisisataa vuotta eikä se ole valmis.',
+      venetsia: 'Etelän niemimaan koillisrannalla, matalan laguunin saarille rakennetussa kaupungissa, kadut ovat vettä ja portaat laskevat suoraan mereen. Sen kauppiaat toivat idän tavarat maanosaan.',
       rooma: 'Etelän niemimaan keskellä, seitsemän kukkulan päällä joen varrella, on kaupunki josta tehtiin juuri uuden kuningaskunnan pääkaupunki. Sen akveduktit toimivat yhä.',
       sisilia: 'Etelän niemimaan kärjen takana, salmen toisella puolen, on saari jolla savuaa maanosan suurin tulivuori. Sen kirkoissa on arabialaisia kupoleita.',
       ateena: 'Kaakkoisen niemimaan kärjessä, kalliokukkulan juurella jolla seisoo kaksituhatta vuotta vanha temppeli, on nuoren kuningaskunnan tomuinen pääkaupunki.',
       kreeta: 'Kaikkein eteläisimmällä suurella saarella, sulttaanin valtakunnan laidalla, kukoisti maanosan varhaisin korkeakulttuuri. Oliiviöljyä käytetään siellä kaikkeen.',
       dubrovnik: 'Kaakkoisrannikolla, korkeiden kivimuurien sisällä, on satamakaupunki joka oli vuosisatoja oma tasavaltansa ja säilyi neuvottelemalla eikä sotimalla.',
+      sarajevo: 'Kaakkoisen mantereen vuorten välisessä laaksossa on kaupunki, jossa minareetit ja kirkontornit seisovat saman kadun varrella ja basaarissa taotaan kuparia kuin idässä.',
       sofia: 'Kaakkoisen mantereen sisämaassa, korkean vuoren juurella, on maakuntakaupunki jonka ympärille syntyy pian oma valtio. Ruusuöljyä myydään siellä pulloittain.',
       bukarest: 'Alavalla tasangolla Tonavan ja Karpaattien välissä on ruhtinaskunnan pääkaupunki, jossa puhutaan latinasta polveutuvaa kieltä slaavilaisten naapurien keskellä.',
       kiova: 'Idässä, Dnepr-joen jyrkällä rannalla, on tuhat vuotta pyhänä pidetty kaupunki, jonka luostarin käytävät kulkevat maan alla.',
@@ -353,6 +379,7 @@ export const EUROPE = {
       kobenhavn: 'Pohjolan salmien varrella, siellä missä Itämerestä pääsee Pohjanmerelle, on kuningaskunnan pääkaupunki. Sen huvipuistossa palavat lyhdyt iltaan asti.',
       lappi: 'Kaikkein pohjoisimmassa sisämaassa, siellä missä aurinko ei kesällä laske eikä talvella nouse, paimennetaan poroja tuhansittain.',
       tromssa: 'Pohjoisimmalla rannikolla, saarella vuonon suojassa, on satama josta lähdetään jäämerelle. Lämmin merivirta pitää sen sulana keskellä talvea.',
+      islanti: 'Kaukana luoteisessa valtameressä on saari, jolla maa höyryää, tuli nousee jäätikön alta ja kuuma vesi purskahtaa ilmaan. Sinne pääsee vain pitkällä laivamatkalla.',
     },
   },
 
