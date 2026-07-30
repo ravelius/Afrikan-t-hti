@@ -2827,7 +2827,12 @@ body.katselu #newgame-btn { display: none; }
   position: fixed;
   inset: 0;
   z-index: 20;
-  background: rgba(15, 10, 5, 0.92);
+  /* Tausta kuultaa läpi (omistajan toive): kevyempi tummennus ja
+   * pehmeä sumennus pitävät kuvan silti selkeästi erillään alta
+   * kuultavasta kortista. */
+  background: rgba(15, 10, 5, 0.62);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37226,7 +37231,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.84';
+const APP_VERSION = '2026-07-30.85';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
