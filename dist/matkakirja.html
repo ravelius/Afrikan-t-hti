@@ -3523,7 +3523,10 @@ body.katselu #newgame-btn { display: none; }
       <p><b>Portit.</b> Porttikaupungin tunnistaa katkoviivakehästä: siitä pääsee
         lennolla (300 p) toiselle laudalle — mantereelta toiselle, maailmankartalle
         tai vaikka kaupunkitason laudalle kuten Istanbuliin. Laudan aarteet ja
-        löydöt säilyvät, vaikka kävisit välillä muualla.</p>
+        löydöt säilyvät, vaikka kävisit välillä muualla. Keltaisella pohjalla ovat
+        laudan omat aloituskaupungit eli kotisatamat, joihin tähti tuodaan — ne
+        ovat eri asia kuin portit, ja maailmankartalta saatetaan laskeutua muuhunkin
+        porttikaupunkiin.</p>
       <p><b>Tietoportit.</b> Maan oma kartta (esim. Suomi) ei aukea rahalla vaan
         tiedolla: maan pääkaupungissa voi vastata vaikeaan kysymykseen, ja oikea
         vastaus avaa portin ilmaiseksi. Väärästä vastauksesta vuoro päättyy —
@@ -38193,15 +38196,10 @@ class UI {
     const { game } = this;
     if (game.phase === 'pickstart') return;
     if (stampBoard(game.pack.id, game.pack.boardLabel)) {
-      const box = this.buildToast({
-        kind: 'stamp',
-        icon: 'passi',
-        text: 'Passiin uusi leima',
-        sub: game.pack.boardLabel,
-      });
+      // Ei ilmoitusta kartan päälle: uusi leima näkyy vain pienenä
+      // laukun elävöitymisenä ja paperin rapinana (omistajan toive).
       sfx.play('paper');
       this.elavoitaLaukku();
-      setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
 
     // Kunniamerkintä: isoisän ennätys rikottiin tällä laudalla. Sekin on
@@ -40384,7 +40382,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.101';
+const APP_VERSION = '2026-07-30.102';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
