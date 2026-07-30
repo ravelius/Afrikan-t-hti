@@ -449,10 +449,13 @@ export class UI {
       this.naytaPostikortti();
     });
     this.postikorttiSulkija = (e) => {
-      // Pinon alempi kortti nousee napautuksesta päälle; muu napautus
-      // sulkee kortin (omistajan kokeilu: uusi kuva vanhan alla).
+      // Kuvapinossa napautus mihin tahansa kuvaan vaihtaa kortit päikseen;
+      // pinosta pääsee pois napauttamalla karttaa eli pinon ulkopuolelle
+      // (omistajan toive). Yhden kuvan kortti sulkeutuu mistä napautuksesta
+      // tahansa, kuten ennenkin.
       const alla = this.postikortti?.querySelector('.postikortti-kortti.alla');
-      if (alla && e.composedPath?.().includes(alla)) {
+      const kortilla = this.postikortti && e.composedPath?.().includes(this.postikortti);
+      if (alla && kortilla) {
         e.preventDefault();
         e.stopPropagation();
         for (const kortti of this.postikortti.querySelectorAll('.postikortti-kortti')) {
