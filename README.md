@@ -9,8 +9,8 @@ oppia ja opettaa maiden kulttuurista, arjesta ja maantieteestä kiinnostavasti.
 ## Tarina
 
 Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, kukkarollinen
-puntia ja kulunut päiväkirja. Ensimmäisellä sivulla lukee *"Maailman ympäri
-kahdeksassakymmenessä päivässä"* — viimeinen lause päättyy kesken.
+puntia ja kulunut matkakirja: *"Maailman ympäri kahdeksassakymmenessä
+päivässä"*. Viimeinen sivu oli revitty kesken lauseen.
 
 Nuori herra Fogg lähtee kirjoittamaan sen loppuun, mielellään nopeammin.
 Mukana matkustaa isoisän päiväkirja vuodelta 1873: sen merkinnät ovat
