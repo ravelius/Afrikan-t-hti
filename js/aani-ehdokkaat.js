@@ -373,6 +373,28 @@ for (const city of KAUPUNGIT.values()) {
   };
 }
 
+// Näkymät, jotka eivät ole kaupunkeja mutta joilla on äänimaisema:
+// etusivun maailmankartta ja merimatka reitillä. Sama valintamekanismi
+// kuin kaupungeilla — meri-tyypin arvontakori koskee myös näitä.
+EHDOKKAAT['kaupunki:etusivu'] = {
+  otsikko: 'Etusivu — maailmankartta',
+  ryhma: 'muut näkymät',
+  oletus: null,
+  ehdokkaat: [
+    { url: null, nimi: 'Syntetisoitu meri (nykyinen)' },
+    ...TYYPPI_EHDOKKAAT.meri,
+  ],
+};
+EHDOKKAAT['kaupunki:merimatka'] = {
+  otsikko: 'Merimatka — reitillä merellä',
+  ryhma: 'muut näkymät',
+  oletus: null,
+  ehdokkaat: [
+    { url: null, nimi: 'Syntetisoitu meri (nykyinen)' },
+    ...TYYPPI_EHDOKKAAT.meri,
+  ],
+};
+
 /**
  * Valinta voi sisältää säätöjä: 'osoite#alku=20&voima=1.5' aloittaa
  * äänitteen 20 sekunnin kohdalta puolitoistakertaisella voimakkuudella.

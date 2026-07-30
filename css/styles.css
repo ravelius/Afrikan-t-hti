@@ -56,7 +56,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-button, .brand, .turn-pill, .player-chip, .fact-card h2 {
+button, .brand, .turn-pill, .fact-card h2 {
   -webkit-user-select: none;
   user-select: none;
 }
@@ -450,66 +450,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /* --- pelaajat --- */
 
-.players {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 0.4rem;
-}
-
-.player-chip {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.4rem 0.55rem;
-  display: grid;
-  gap: 0.15rem;
-  min-width: 0;
-}
-
-.player-chip.current {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent) inset;
-}
-
-.chip-head {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-  min-width: 0;
-}
-
-.chip-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
-  border: 2px solid #1b1410;
-  flex: 0 0 auto;
-}
-
-.dot.small { width: 9px; height: 9px; }
-
-.chip-row {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.82rem;
-  color: var(--muted);
-  min-width: 0;
-}
-
-.money { color: var(--accent); font-variant-numeric: tabular-nums; }
-.chip-where { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.chip-marks { letter-spacing: 0.08em; }
-.chip-marks .star { color: var(--accent); }
+/* Moninpelin pelaajakortit poistettiin — matkaajan tiedot ovat passissa. */
 
 /*
  * Ikoninapit: kartalta viedään mahdollisimman vähän tilaa, joten
@@ -655,10 +596,6 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /* Matkan mittarit: kokemuspisteet ja tietoprosentti rahan alla. */
-.chip-stats { gap: 0.6rem; font-size: 0.76rem; }
-.chip-stats .xp,
-.chip-stats .knowledge { font-variant-numeric: tabular-nums; }
-.chip-stats .xp { color: #9ec48a; }
 
 /* Vihreä passi: leimat ruudukossa, kukin kuin painettu leimasimella. */
 .passport-card { max-width: 520px; }
@@ -1806,13 +1743,11 @@ body[data-mode] .board-hint {
 body[data-mode] .turn-card {
   position: absolute;
   left: 50%;
-  bottom: 0.4rem;
+  /* Ilman taustalaatikkoa napit osuivat kiinni kartan kehykseen. */
+  bottom: 0.9rem;
   transform: translateX(-50%);
   width: min(560px, calc(100% - 1.2rem));
 }
-
-/* Ilman taustalaatikkoa napit osuivat kiinni kartan kehykseen. */
-body[data-mode] .turn-card { bottom: 0.9rem; }
 
 body[data-mode] .actions {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1921,7 +1856,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .turn-row { margin-bottom: 0.35rem; }
   .turn-status { font-size: 0.82rem; }
 
-  .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem; }
   .actions button {
     font-size: 0.82rem;
     padding: 0.4rem 0.4rem;
@@ -1929,18 +1863,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     line-height: 1.15;
   }
 
-  /* Pelaajakortit yhdelle riville, tarvittaessa vieritettävänä. */
-  .players {
-    display: flex;
-    gap: 0.35rem;
-    overflow-x: auto;
-    padding-bottom: 0.1rem;
-    -webkit-overflow-scrolling: touch;
-  }
-  .player-chip { flex: 0 0 auto; min-width: 108px; padding: 0.3rem 0.45rem; }
-  .chip-head { font-size: 0.8rem; }
-  .chip-row { font-size: 0.72rem; }
-  .chip-where { max-width: 96px; }
 
   /* Kelluva päiväkirja levenee kaistaleeksi kartan ylle: 46 % leveydestä
    * olisi puhelimella liian kapea luettavaksi. */
@@ -1974,12 +1896,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .reveal-caption strong { font-size: 1.25rem; }
 }
 
-/* Matala vaakanäyttö (esim. puhelin kyljellään) */
-@media (max-height: 480px) and (orientation: landscape) {
-  .fact-card { display: none; }
-  .players { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
-  .actions button { min-height: 38px; font-size: 0.82rem; }
-}
 
 @media (pointer: coarse) {
   button { min-height: 46px; }

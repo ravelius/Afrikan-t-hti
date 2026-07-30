@@ -216,7 +216,7 @@ export class UI {
     this.errorEl = document.getElementById('error');
     this.passportDialog = document.getElementById('passport-dialog');
     this.passportGrid = document.getElementById('passport-grid');
-    this.passportCount = document.getElementById('passport-count');
+    this.passportCount = document.getElementById('passport-count-sisus');
     this.passportFinds = document.getElementById('passport-finds');
     this.passportProgress = document.getElementById('passport-progress');
 
@@ -1544,14 +1544,17 @@ export class UI {
       return;
     }
     // Etusivullakin on äänimaisema: satama ja meri odottavat lähtijää.
+    // 'etusivu' ja 'merimatka' ovat virtuaalipaikkoja, joille voi valita
+    // äänen studiosta kuten kaupungeille.
     if (game.phase === 'pickstart') {
-      playPlaceAmbience(null, 'meri');
+      playPlaceAmbience('etusivu', 'meri');
       return;
     }
     const pos = game.player.pos;
     if (pos.type === 'edge') {
       const edge = game.board.edgeById.get(pos.edge);
-      playPlaceAmbience(null, edge?.type === 'sea' ? 'meri' : null);
+      if (edge?.type === 'sea') playPlaceAmbience('merimatka', 'meri');
+      else playPlaceAmbience(null, null);
       return;
     }
     const city = game.board.cityById.get(pos.city);

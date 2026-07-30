@@ -59,7 +59,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-button, .brand, .turn-pill, .player-chip, .fact-card h2 {
+button, .brand, .turn-pill, .fact-card h2 {
   -webkit-user-select: none;
   user-select: none;
 }
@@ -453,66 +453,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /* --- pelaajat --- */
 
-.players {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 0.4rem;
-}
-
-.player-chip {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.4rem 0.55rem;
-  display: grid;
-  gap: 0.15rem;
-  min-width: 0;
-}
-
-.player-chip.current {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent) inset;
-}
-
-.chip-head {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-  min-width: 0;
-}
-
-.chip-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
-  border: 2px solid #1b1410;
-  flex: 0 0 auto;
-}
-
-.dot.small { width: 9px; height: 9px; }
-
-.chip-row {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.82rem;
-  color: var(--muted);
-  min-width: 0;
-}
-
-.money { color: var(--accent); font-variant-numeric: tabular-nums; }
-.chip-where { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.chip-marks { letter-spacing: 0.08em; }
-.chip-marks .star { color: var(--accent); }
+/* Moninpelin pelaajakortit poistettiin — matkaajan tiedot ovat passissa. */
 
 /*
  * Ikoninapit: kartalta viedään mahdollisimman vähän tilaa, joten
@@ -658,10 +599,6 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /* Matkan mittarit: kokemuspisteet ja tietoprosentti rahan alla. */
-.chip-stats { gap: 0.6rem; font-size: 0.76rem; }
-.chip-stats .xp,
-.chip-stats .knowledge { font-variant-numeric: tabular-nums; }
-.chip-stats .xp { color: #9ec48a; }
 
 /* Vihreä passi: leimat ruudukossa, kukin kuin painettu leimasimella. */
 .passport-card { max-width: 520px; }
@@ -1809,13 +1746,11 @@ body[data-mode] .board-hint {
 body[data-mode] .turn-card {
   position: absolute;
   left: 50%;
-  bottom: 0.4rem;
+  /* Ilman taustalaatikkoa napit osuivat kiinni kartan kehykseen. */
+  bottom: 0.9rem;
   transform: translateX(-50%);
   width: min(560px, calc(100% - 1.2rem));
 }
-
-/* Ilman taustalaatikkoa napit osuivat kiinni kartan kehykseen. */
-body[data-mode] .turn-card { bottom: 0.9rem; }
 
 body[data-mode] .actions {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1924,7 +1859,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .turn-row { margin-bottom: 0.35rem; }
   .turn-status { font-size: 0.82rem; }
 
-  .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem; }
   .actions button {
     font-size: 0.82rem;
     padding: 0.4rem 0.4rem;
@@ -1932,18 +1866,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     line-height: 1.15;
   }
 
-  /* Pelaajakortit yhdelle riville, tarvittaessa vieritettävänä. */
-  .players {
-    display: flex;
-    gap: 0.35rem;
-    overflow-x: auto;
-    padding-bottom: 0.1rem;
-    -webkit-overflow-scrolling: touch;
-  }
-  .player-chip { flex: 0 0 auto; min-width: 108px; padding: 0.3rem 0.45rem; }
-  .chip-head { font-size: 0.8rem; }
-  .chip-row { font-size: 0.72rem; }
-  .chip-where { max-width: 96px; }
 
   /* Kelluva päiväkirja levenee kaistaleeksi kartan ylle: 46 % leveydestä
    * olisi puhelimella liian kapea luettavaksi. */
@@ -1977,12 +1899,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .reveal-caption strong { font-size: 1.25rem; }
 }
 
-/* Matala vaakanäyttö (esim. puhelin kyljellään) */
-@media (max-height: 480px) and (orientation: landscape) {
-  .fact-card { display: none; }
-  .players { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
-  .actions button { min-height: 38px; font-size: 0.82rem; }
-}
 
 @media (pointer: coarse) {
   button { min-height: 46px; }
@@ -2393,8 +2309,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
           <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M19.4 4.8v3.7h-3.7"/><path d="M19.2 8.4a7.4 7.4 0 1 0 1 5.4"/></svg></span></span>
         </button>
-        <button id="passport-btn" class="ghost" type="button" title="Vihreä passi ja sen leimat">
-          <span class="wide-label">Passi</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><rect x="5.5" y="3.5" width="13" height="17" rx="2"/><circle cx="12" cy="10.3" r="2.9"/><path d="M8.6 16.6h6.8"/></svg></span></span>
+        <button id="passport-btn" class="ghost" type="button" title="Isoisän matkalaukku: passi, leimat ja tavarat">
+          <span class="wide-label">Laukku</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11.5" rx="2"/><path d="M9.3 8V6.3a1.7 1.7 0 0 1 1.7-1.7h2a1.7 1.7 0 0 1 1.7 1.7V8M8.6 8v11.5M15.4 8v11.5"/></svg></span></span>
         </button>
         <button id="rules-btn" class="ghost" type="button">Säännöt</button>
         <button id="newgame-btn" class="ghost" type="button">
@@ -2505,17 +2421,17 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    </div>
   </dialog>
 
-  <!-- Vihreä passi -->
+  <!-- Isoisän matkalaukku: sisällä passi leimoineen ja matkan tavarat -->
   <dialog id="passport-dialog" class="dialog">
    <div class="dialog-card passport-card">
-    <h2>Vihreä passi</h2>
-    <p class="muted">Isoisän passi kulkee mukana. Jokaisesta laudasta, jolla olet
-      käynyt, jää siihen leima — ne säilyvät myös uusiin peleihin.</p>
+    <h2>Isoisän matkalaukku</h2>
+    <p class="muted">Laukku kulkee mukana koko matkan: sisällä on isoisän
+      vihreä passi ja matkalta kertyneet tavarat.</p>
     <p class="passport-count">Matka</p>
     <div id="passport-progress" class="passport-finds"></div>
-    <p id="passport-count" class="passport-count"></p>
+    <p class="passport-count">Vihreä passi — <span id="passport-count-sisus"></span></p>
     <div id="passport-grid" class="passport-grid"></div>
-    <p class="passport-count">Matkasaalis</p>
+    <p class="passport-count">Tavarat</p>
     <div id="passport-finds" class="passport-finds"></div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
@@ -2598,11 +2514,11 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
         uudesta kaupungista 10, uudesta laudasta 50, tietoportin vaikeasta
         kysymyksestä 25 ja laudan pääaarteesta 100. Yläpalkin tietoprosentti kertoo,
         kuinka moneen kysymykseen olet vastannut oikein — kaksintaistelut mukaan
-        lukien. Rahat, pisteet ja sijainti näkyvät yläpalkissa; löydöt passissa.</p>
-      <p><b>Vihreä passi.</b> Yläpalkin <b>Passi</b> avaa isoisän passin. Siihen jää
-        leima jokaisesta laudasta, jolla olet käynyt, ja leimat säilyvät myös uusiin
-        peleihin. Samasta näkymästä näkee matkasaaliin: tähden, hevosenkengät ja
-        jalokivet.</p>
+        lukien. Rahat, pisteet ja sijainti näkyvät yläpalkissa; tavarat matkalaukussa.</p>
+      <p><b>Matkalaukku.</b> Yläpalkin <b>Laukku</b> avaa isoisän matkalaukun.
+        Sisällä on vihreä passi, johon jää leima jokaisesta laudasta — leimat
+        säilyvät myös uusiin peleihin — sekä matkan tavarat: tähti,
+        hevosenkengät ja jalokivet.</p>
       <p><b>Päivitys.</b> Yläpalkin <b>Päivitä</b> hakee uusimman version pelistä —
         kesken oleva peli säilyy. Versio: <span id="app-version">–</span>.</p>
       <p class="muted"><b>Kotisääntö:</b> jos pelaaja on jumissa (esim. Sansibarissa ilman
@@ -25375,6 +25291,28 @@ for (const city of KAUPUNGIT.values()) {
   };
 }
 
+// Näkymät, jotka eivät ole kaupunkeja mutta joilla on äänimaisema:
+// etusivun maailmankartta ja merimatka reitillä. Sama valintamekanismi
+// kuin kaupungeilla — meri-tyypin arvontakori koskee myös näitä.
+EHDOKKAAT['kaupunki:etusivu'] = {
+  otsikko: 'Etusivu — maailmankartta',
+  ryhma: 'muut näkymät',
+  oletus: null,
+  ehdokkaat: [
+    { url: null, nimi: 'Syntetisoitu meri (nykyinen)' },
+    ...TYYPPI_EHDOKKAAT.meri,
+  ],
+};
+EHDOKKAAT['kaupunki:merimatka'] = {
+  otsikko: 'Merimatka — reitillä merellä',
+  ryhma: 'muut näkymät',
+  oletus: null,
+  ehdokkaat: [
+    { url: null, nimi: 'Syntetisoitu meri (nykyinen)' },
+    ...TYYPPI_EHDOKKAAT.meri,
+  ],
+};
+
 /**
  * Valinta voi sisältää säätöjä: 'osoite#alku=20&voima=1.5' aloittaa
  * äänitteen 20 sekunnin kohdalta puolitoistakertaisella voimakkuudella.
@@ -30044,7 +29982,7 @@ class UI {
     this.errorEl = document.getElementById('error');
     this.passportDialog = document.getElementById('passport-dialog');
     this.passportGrid = document.getElementById('passport-grid');
-    this.passportCount = document.getElementById('passport-count');
+    this.passportCount = document.getElementById('passport-count-sisus');
     this.passportFinds = document.getElementById('passport-finds');
     this.passportProgress = document.getElementById('passport-progress');
 
@@ -31371,14 +31309,17 @@ class UI {
       return;
     }
     // Etusivullakin on äänimaisema: satama ja meri odottavat lähtijää.
+    // 'etusivu' ja 'merimatka' ovat virtuaalipaikkoja, joille voi valita
+    // äänen studiosta kuten kaupungeille.
     if (game.phase === 'pickstart') {
-      playPlaceAmbience(null, 'meri');
+      playPlaceAmbience('etusivu', 'meri');
       return;
     }
     const pos = game.player.pos;
     if (pos.type === 'edge') {
       const edge = game.board.edgeById.get(pos.edge);
-      playPlaceAmbience(null, edge?.type === 'sea' ? 'meri' : null);
+      if (edge?.type === 'sea') playPlaceAmbience('merimatka', 'meri');
+      else playPlaceAmbience(null, null);
       return;
     }
     const city = game.board.cityById.get(pos.city);
@@ -32995,7 +32936,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.50';
+const APP_VERSION = '2026-07-29.51';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
