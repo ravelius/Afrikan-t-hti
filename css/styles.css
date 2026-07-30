@@ -974,18 +974,20 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   color: rgba(90, 74, 51, 0.85);
 }
 
-/* Muusikkonoston linkki Apple Musiciin: pieni nuottipilleri. */
+/* Muusikkonoston linkki Apple Musiciin: pieni nuottipilleri otsikon
+   korkeudella oikeassa reunassa (auto-marginaali työntää oikealle). */
 .kulttuuri-musiikkilinkki {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  width: fit-content;
-  margin: 0.15rem 0 0;
-  padding: 0.2rem 0.6rem;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+  margin: 0 0 0 auto;
+  padding: 0.18rem 0.55rem;
   border: 1px solid rgba(90, 74, 51, 0.45);
   border-radius: 999px;
   font-family: var(--font-type);
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   color: rgba(64, 51, 34, 0.95);
   text-decoration: none;
   background: rgba(255, 252, 245, 0.6);
