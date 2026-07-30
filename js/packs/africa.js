@@ -38,6 +38,13 @@ const AFRICA_MAP = {
     [844.0, 775.0], [860.0, 748.8], [856.0, 727.5], [884.0, 696.2], [902.7, 681.2],
     [918.7, 666.2],
   ],
+  // St. Helena: todella pieni yksinäinen saari eteläisellä Atlantilla,
+  // kuten alkuperäisessä Afrikan tähdessä. Hieman oikeaa sijaintiaan
+  // koillisempana, jotta kompassiruusu mahtuu alle.
+  sthelenaPoints: [
+    [205, 661], [213, 664], [216, 672], [212, 679],
+    [204, 682], [197, 678], [195, 670], [199, 663],
+  ],
 };
 
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
@@ -67,6 +74,10 @@ const AFRICA_CITIES = [
   { id: 'alkufra', name: 'Al Kufra', wiki: 'Kufra', ambience: 'aavikko', x: 577, y: 197 },
   { id: 'sahara', name: 'Sahara', wiki: 'Sahara', ambience: 'aavikko', x: 380, y: 168, la: 'end', lx: -16, ly: 5 },
   { id: 'ahaggar', name: 'Ahaggar', wiki: 'Ahaggar', ambience: 'aavikko', x: 312, y: 232, la: 'end', lx: -16, ly: 5 },
+  // Marrakech täyttää Marokon tyhjän kulman (omistajan laajennus): karavaani-
+  // kaupan portti Saharaan. Oikea sijainti osuisi pelkistetyn rannikon
+  // ulkopuolelle, joten piste on hivenen sisämaahan päin.
+  { id: 'marrakech', name: 'Marrakech', wiki: 'Marrakech', ambience: 'basaari', x: 193, y: 122 },
   { id: 'timbuktu', name: 'Timbuktu', wiki: 'Timbuktu', ambience: 'aavikko', x: 212, y: 285, la: 'end', lx: -16, ly: 5 },
   { id: 'gao', name: 'Gao', wiki: 'Gao', ambience: 'aavikko', x: 306, y: 318, la: 'start', lx: 16, ly: 5 },
   {
@@ -88,6 +99,9 @@ const AFRICA_CITIES = [
   { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', ambience: 'sademetsa', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'angola', name: 'Angola', wiki: 'Angola', ambience: 'savanni', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
   { id: 'namib', name: 'Namib', wiki: 'Namib', ambience: 'aavikko', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
+  // St. Helena kuten alkuperäisessä pelissä: pieni saari avomerellä,
+  // jonne pääsee vain laivalla.
+  { id: 'sthelena', name: 'St. Helena', wiki: 'Saint Helena', ambience: 'meri', x: 205, y: 672 },
   {
     id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
     links: [{ pack: 'maailma', city: 'kapkaupunki', label: 'Maailma-lauta' }],
@@ -131,6 +145,10 @@ const AFRICA_EDGES = [
   { a: 'sahara', b: 'darfur', steps: 4 },
 
   // Länsi-Afrikka
+  // Marrakech: karavaanireitti etelään Timbuktuun ja polku Saharan halki.
+  { a: 'tanger', b: 'marrakech', steps: 2 },
+  { a: 'marrakech', b: 'timbuktu', steps: 4 },
+  { a: 'marrakech', b: 'sahara', steps: 4 },
   { a: 'ahaggar', b: 'timbuktu', steps: 3 },
   { a: 'ahaggar', b: 'gao', steps: 2 },
   { a: 'timbuktu', b: 'gao', steps: 1 },
@@ -179,6 +197,9 @@ const AFRICA_EDGES = [
   { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
   { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
   { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
+  // St. Helenan yksinäinen saari: laivayhteys Atlantin reitiltä.
+  { a: 'kappalmas', b: 'sthelena', steps: 4, type: 'sea', via: [[150, 516], [162, 598]] },
+  { a: 'sthelena', b: 'namib', steps: 4, type: 'sea', via: [[330, 752]] },
   { a: 'kapkaupunki', b: 'madagaskar', steps: 5, type: 'sea', via: [[600, 976], [782, 942], [902, 832]] },
   { a: 'madagaskar', b: 'mosambik', steps: 3, type: 'sea', via: [[812, 752]] },
   { a: 'madagaskar', b: 'sansibar', steps: 4, type: 'sea', via: [[862, 642]] },
@@ -213,7 +234,7 @@ export const AFRICA = {
 
   map: {
     ...AFRICA_MAP,
-    outlines: [AFRICA_MAP.africaPoints, AFRICA_MAP.madagascarPoints],
+    outlines: [AFRICA_MAP.africaPoints, AFRICA_MAP.madagascarPoints, AFRICA_MAP.sthelenaPoints],
     borders: AFRICA_BORDERS,
     countryShapes: AFRICA_COUNTRY_SHAPES,
     cityCountry: AFRICA_CITY_COUNTRY,
@@ -228,8 +249,8 @@ export const AFRICA = {
 
   tokens: {
     types: themedTokenTypes(),
-    // 35 laattakaupunkia viiden uuden paikan jälkeen (omistajan laajennus).
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 7, empty: 11 },
+    // 37 laattakaupunkia seitsemän uuden paikan jälkeen (omistajan laajennus).
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 8, empty: 12 },
   },
 
   questions: AFRICA_QUESTIONS,
@@ -380,6 +401,8 @@ export const AFRICA = {
       lagos: 'Guineanlahden jättiläinen, mantereen väkirikkaimpia kaupunkeja, joka lepää saarten ja siltojen varassa laguunin suulla.',
       viktorianputoukset: 'Jylisevä savu nousee suuren joen reunalta kahden maan rajalla — vesisumu näkyy kilometrien päähän.',
       tshadjarvi: 'Matala sisämaan allas neljän maan rajalla; sen vesi ei koskaan löydä tietä mereen, ja rannat elävät kalasta.',
+      marrakech: 'Punaisista savimuureista rakennettu kaupunki aavikon portilla: suurtorilla tarinankertojat aloittavat iltaisin, ja vuorten lumi näkyy basaarin katoilta.',
+      sthelena: 'Yksinäinen kalliosaari keskellä eteläistä valtamerta, jonne vietiin kerran vangittu keisari — sinne pääsee vain laivalla, eikä sieltä paeta.',
       tripoli: 'Välimeren eteläisellä rannalla, siellä missä aavikko tulee melkein mereen asti, on satamakaupunki jonka läpi karavaanit purkavat lastinsa laivoihin.',
       murzuk: 'Suoraan etelään Välimeren rannikolta, keskellä autiomaata, on keidaskaupunki joka oli karavaanireitin tärkein pysähdys. Sinne on rannikolta kuukausi kamelilla.',
       alkufra: 'Kaukana koillisessa autiomaassa, kaukana kaikista reiteistä, on keidasryhmä jonne pääsee vain sen tietäen. Kukaan tuntemani eurooppalainen ei ollut käynyt siellä.',
