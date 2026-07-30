@@ -1599,8 +1599,9 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   border: 2px dashed rgba(70, 51, 31, 0.5);
   border-radius: 80px 14px 86px 12px / 12px 86px 14px 80px;
   background: rgba(255, 255, 255, 0.42);
-  font-size: 0.95rem;
-  line-height: 1.4;
+  /* Selite hieman isommalla, jotta sen lukee vaivatta (omistajan toive). */
+  font-size: 1.02rem;
+  line-height: 1.45;
   color: var(--map-ink);
   animation: ink-in 0.35s ease-out both;
 }
@@ -33599,7 +33600,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.56';
+const APP_VERSION = '2026-07-30.57';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
