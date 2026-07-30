@@ -119,7 +119,7 @@ export function mediaListUrl(lang, title) {
  * kartat, logot ja svg-symbolit ohitetaan — yksi valokuva kertoo paikasta
  * enemmän kuin kuusi pientä.
  */
-export const BAD_IMAGE = /montage|collage|kollaasi|mosaic|banner|coat|vaakuna|flag|lippu|locator|\bmap\b|kartta|logo|seal|icon|\.svg$/i;
+export const BAD_IMAGE = /montage|collage|kollaasi|mosaic|banner|coat|vaakuna|flag|lippu|locator|\bmap\b|kartta|logo|seal|icon|graph|diagram|chart|topography|density|evolution|\.svg$/i;
 
 /** Poimii kuvalistasta ensimmäisen kelvollisen valokuvan osoitteen. */
 export function pickImage(items) {

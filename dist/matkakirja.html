@@ -817,16 +817,18 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   mask-image: linear-gradient(180deg, #000 calc(100% - 1.2em), rgba(0, 0, 0, 0.25));
 }
 
+/* Isompi ja tummempi nuoli — hento versio näkyi huonosti
+ * (omistajan havainto). */
 .fact-teksti-rivi::after {
   content: '';
   position: absolute;
   left: 50%;
-  bottom: 0.05rem;
-  width: 0.55rem;
-  height: 0.55rem;
+  bottom: 0.1rem;
+  width: 0.8rem;
+  height: 0.8rem;
   transform: translateX(-50%) rotate(45deg);
-  border-right: 1.5px solid rgba(90, 74, 51, 0.6);
-  border-bottom: 1.5px solid rgba(90, 74, 51, 0.6);
+  border-right: 2.5px solid rgba(90, 74, 51, 0.95);
+  border-bottom: 2.5px solid rgba(90, 74, 51, 0.95);
   opacity: 0;
   transition: opacity 0.25s ease;
   pointer-events: none;
@@ -886,7 +888,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti {
   position: fixed;
   z-index: 70;
-  width: min(78vw, 400px);
+  /* Hieman entistä isompi (omistajan toive). */
+  width: min(84vw, 460px);
   animation: postikortti-esiin 0.24s ease-out;
 }
 
@@ -937,10 +940,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti img {
   display: block;
   width: 100%;
-  min-height: 60px;
-  /* Korkea pystykuva ei saa venyttää korttia ruutua korkeammaksi —
-   * kuva rajataan postikortin ikkunaan (omistajan havainto). */
-  max-height: 58vh;
+  /* Kiinteä kuvaikkuna: vaaka- ja pystykuvat näkyvät suurin piirtein
+   * samankokoisina, ja korkea kuva ei venytä korttia ruutua
+   * korkeammaksi (omistajan toive). Kuva rajataan ikkunaan. */
+  height: min(48vh, 330px);
   object-fit: cover;
   background: #ded5c2;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -951,9 +954,11 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti-kortti.uusi img { filter: none; }
 
 .postikortti .kuvateksti {
-  margin: 0.3rem 0.1rem 0.15rem;
+  margin: 0.35rem 0.1rem 0.15rem;
   font-family: var(--font-type);
-  font-size: 0.72rem;
+  /* Isompi selite (omistajan toive). */
+  font-size: 0.86rem;
+  line-height: 1.45;
   color: #5a4a33;
 }
 
@@ -3884,7 +3889,7 @@ function mediaListUrl(lang, title) {
  * kartat, logot ja svg-symbolit ohitetaan — yksi valokuva kertoo paikasta
  * enemmän kuin kuusi pientä.
  */
-const BAD_IMAGE = /montage|collage|kollaasi|mosaic|banner|coat|vaakuna|flag|lippu|locator|\bmap\b|kartta|logo|seal|icon|\.svg$/i;
+const BAD_IMAGE = /montage|collage|kollaasi|mosaic|banner|coat|vaakuna|flag|lippu|locator|\bmap\b|kartta|logo|seal|icon|graph|diagram|chart|topography|density|evolution|\.svg$/i;
 
 /** Poimii kuvalistasta ensimmäisen kelvollisen valokuvan osoitteen. */
 function pickImage(items) {
@@ -8695,6 +8700,220 @@ const OMAT_TIIVISTELMAT = {
     + 'Monroen mukaan.',
 };
 
+// ===== js/packs/europe-countries.js =====
+// Euroopan maiden rajat pelin karttaprojektiossa (Natural Earth 110m,
+// x = (lon + 11) * 19.2, y = (72 - lat) * 26.3). Sama muoto kuin
+// Afrikan AFRICA_COUNTRY_SHAPES-rakenteessa: Tutki-kortin minikartta ja
+// maan korostus piirtyvät näistä. Maita lisätään sitä mukaa kuin
+// kaupunkeja rakennetaan Afrikan tasolle (pilotti: Venetsia/Italia).
+
+const EUROPE_COUNTRY_SHAPES = {
+  ITA: {
+    nimi: 'Italia',
+    wiki: 'Italia',
+    lippu: 'Flag of Italy.svg',
+    keskus: [453.4, 792.5],
+    leveys: 225,
+    renkaat: [
+      [[411.7, 660.3], [423.3, 664.0], [425.6, 659.0], [444.5, 654.5], [448.8, 663.6], [476.3, 670.4], [474.2, 683.4], [478.8, 694.6], [463.5, 690.7], [447.9, 700.1], [449.0, 713.1], [446.6, 720.6], [452.9, 734.0], [470.9, 747.2], [480.6, 769.0], [501.9, 790.2], [517.0, 790.0], [521.7, 795.8], [516.3, 801.1], [533.5, 810.6], [547.6, 818.5], [564.0, 832.2], [566.0, 837.2], [562.4, 846.6], [551.8, 834.3], [535.1, 830.0], [527.0, 847.0], [540.9, 856.7], [538.6, 870.5], [530.6, 872.0], [520.3, 894.6], [512.3, 896.6], [512.4, 888.6], [516.3, 874.5], [520.5, 868.8], [513.0, 853.6], [507.1, 840.3], [499.2, 837.1], [493.5, 825.7], [481.2, 820.9], [472.9, 810.3], [458.7, 808.6], [443.6, 796.8], [426.1, 779.7], [413.0, 764.5], [407.0, 738.5], [397.5, 735.4], [381.9, 726.8], [373.0, 730.3], [361.9, 742.5], [354.0, 744.5], [356.2, 733.0], [345.7, 729.7], [340.8, 709.3], [347.5, 701.3], [341.8, 691.5], [342.6, 684.0], [350.9, 689.7], [360.1, 688.4], [370.9, 679.5], [374.2, 683.7], [383.4, 682.8], [387.5, 672.2], [401.7, 675.5], [410.2, 671.1]],
+      [[494.6, 890.4], [509.2, 888.1], [502.3, 908.8], [505.2, 917.0], [501.1, 930.5], [486.4, 920.6], [476.7, 917.8], [449.9, 904.4], [452.6, 890.9], [475.0, 893.3]],
+      [[378.4, 817.9], [388.0, 809.8], [399.6, 828.4], [396.9, 863.2], [388.1, 861.6], [380.3, 870.4], [373.0, 863.4], [372.3, 831.7], [367.9, 816.6]],
+    ],
+  },
+};
+
+// Kaupunki → maa (ISO). Vain Afrikan tasolle rakennetut kaupungit
+// listataan: muut Euroopan kaupungit saavat maansa myöhemmin.
+const EUROPE_CITY_COUNTRY = {
+  venetsia: 'ITA',
+};
+
+// ===== js/packs/europe-saapumiset.js =====
+// Euroopan matkakirjamerkinnät: nuoren herran tunnepitoinen kuvaus ja
+// isoisän nosto, samaan malliin kuin Afrikassa. Rakentuu kaupunki
+// kerrallaan — pilotti: Venetsia. Luennat: puhe-europe-saapuminen-<id>.mp3.
+const EUROPE_SAAPUMISET = {
+  venetsia: {
+    kuvaus: 'Venetsia ei liioittele yhtään: kadut ovat oikeasti vettä! '
+      + 'Vaporetto kaartoi Canal Grandelle, palatsit nousivat suoraan '
+      + 'aallokosta, ja minä seisoin keulassa nauramassa ääneen — '
+      + 'kokonainen kaupunki, joka on päättänyt kellua, ja kellunut jo '
+      + 'tuhat vuotta.',
+    nosto: 'Isoisä kirjoitti täältä: "Kadut lainehtivat ja talot uivat. '
+      + 'Epäkäytännöllisintä ja kauneinta, mitä olen ikinä nähnyt." '
+      + 'Ukko oli oikeassa molemmissa.',
+  },
+};
+
+// ===== js/packs/europe-kulttuuri.js =====
+// Euroopan Kaupungin elämää -nostot (sama rakenne kuin AFRICA_KULTTUURI).
+// Rakentuu kaupunki kerrallaan — pilotti: Venetsia. Kuvien lisenssit
+// varmistettu Commonsin extmetadatasta (31.7.2026).
+const EUROPE_KULTTUURI = {
+  venetsia: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Canaletto maalasi kaupunkinsa',
+        tiedosto: 'Canal, Giovanni Antonio (Canaletto) - Return of the Bucentoro to the Molo on Ascension Day, c. 1733-4. Royal Collection Buckingham Palace.jpg',
+        teksti: 'Venetsialainen Canaletto maalasi 1700-luvulla kaupunkinsa '
+          + 'näkymiä niin tarkasti, että tutkijat käyttävät niitä yhä '
+          + 'lähteinä. Maalauksia ostivat etenkin englantilaiset '
+          + 'matkailijat muistoksi suurelta Euroopan-kiertueeltaan.',
+        selite: 'Bucintoron paluu Molon rantaan helatorstaina (n. 1733): '
+          + 'dogen kullattu juhlalaiva palaa seremoniasta, jossa Venetsia '
+          + '"vihittiin" merensä kanssa heittämällä sormus aaltoihin. '
+          + 'Taustalla dogen palatsi ja kellotorni — näkymä on sama '
+          + 'tänäänkin.',
+        lahde: 'Wikimedia Commons (PD)',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Cicchetti ja Rialton tori',
+        tiedosto: 'Pescaria Rialto Venice.jpg',
+        teksti: 'Venetsialaiset syövät cicchettejä — pieniä suupaloja — '
+          + 'seisten bacaro-baarien tiskillä, ja viinilasillista kutsutaan '
+          + 'nimellä ombra, varjo. Raaka-aineet tulevat Rialton torilta, '
+          + 'jossa laguunin kalaa on myyty satojen vuosien ajan.',
+        selite: 'Rialton kalatorin pylväshalli Canal Granden varrella. '
+          + 'Kauppa käy aamuisin: laguunin ja Adrianmeren kalat ja '
+          + 'äyriäiset tuodaan suoraan veneillä hallin laituriin.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Vivaldi, punainen pappi',
+        tiedosto: 'Antonio Vivaldi.jpg',
+        teksti: 'Antonio Vivaldi — punatukkainen pappi, il Prete Rosso — '
+          + 'opetti viulunsoittoa venetsialaisessa tyttöjen orpokodissa ja '
+          + 'sävelsi sen orkesterille satoja konserttoja. Kuuluisin on '
+          + 'Neljä vuodenaikaa, jossa musiikista voi kuulla linnunlaulun '
+          + 'ja ukkosmyrskyn.',
+        selite: 'Ainoa varma Vivaldin muotokuva: François Morellon la '
+          + 'Caven kaiverrus vuodelta 1725. Säveltäjä pitelee '
+          + 'nuottivihkoa — peruukin alla hehkui lempinimen antanut '
+          + 'punainen tukka.',
+        lahde: 'Wikimedia Commons (PD)',
+        wiki: 'Antonio Vivaldi',
+        musiikki: 'https://music.apple.com/fi/artist/antonio-vivaldi/242604',
+        musiikkiNimi: 'Antonio Vivaldi Apple Musicissa',
+      },
+    ],
+    kysymys: {
+      q: 'Minkä niminen on Vivaldin kuuluisa konserttosarja, jossa musiikki kuvaa kevättä, kesää, syksyä ja talvea?',
+      options: ['Neljä vuodenaikaa', 'Kaksitoista kuukautta', 'Meren laulu', 'Talviyön tarina'],
+      correct: 0,
+      fact: 'Neljä vuodenaikaa on neljän viulukonserton sarja — jokainen '
+        + 'kuvaa yhtä vuodenaikaa, ja musiikista voi kuulla linnunlaulua '
+        + 'ja ukkosen. Vivaldi sävelsi sen noin vuosina 1718–1723.',
+    },
+  },
+};
+
+// ===== js/packs/europe-valokuvat.js =====
+// Euroopan matkakirjavalokuvat (sama rakenne kuin AFRICA_VALOKUVAT).
+// Rakentuu kaupunki kerrallaan — pilotti: Venetsia. Lisenssit varmistettu
+// Commonsin extmetadatasta (31.7.2026).
+const EUROPE_VALOKUVAT = {
+  venetsia: {
+    tiedosto: 'Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Gondoliereja Piazzetta di San Marcon edustalla — '
+      + 'käsinväritetty photochrom-vedos, jollaisia myytiin matkailijoille '
+      + 'jo isoisän aikaan. Taustalla dogen palatsi ja Markuksen leijona '
+      + 'pylväänsä päässä.',
+    uusi: {
+      tiedosto: 'Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg',
+      lahde: 'Commons (CC BY-SA 3.0)',
+      selite: 'Canal Grande nykyään Accademian sillalta: gondolit ja '
+        + 'vesibussit risteilevät, ja Santa Maria della Saluten kupoli '
+        + 'vartioi kanavan suuta kuten 350 vuotta.',
+    },
+  },
+};
+
+// ===== js/packs/europe-maatiedot.js =====
+// Euroopan maiden tunnusluvut (sama rakenne kuin AFRICA_MAATIEDOT).
+// Rakentuu maa kerrallaan — pilotti: Italia. Luvut tarkistettu kahdesta
+// riippumattomasta lähteestä (Maailmanpankki + OWID/V-Dem, 31.7.2026).
+const EUROPE_MAATIEDOT = {
+  ITA: {
+    vakiluku: '59 milj.',
+    vakilukuSija: '25./195',
+    pintaAla: '302 000 km²',
+    pintaAlaSija: '71./195',
+    demokratia: {
+      arvo: '0,64',
+      sija: '37./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ITA',
+      selitys: 'Italia on vakiintunut demokratia, mutta sen luku on '
+        + 'laskenut viime vuosina selvästi: V-Demin mittareissa '
+        + 'erityisesti sananvapauden ja median tila on heikentynyt, '
+        + 'kun televisio ja lehdistö keskittyvät harvoihin käsiin.',
+    },
+    keskitulo: { arvo: '42 100 $/v', sija: '26./190' },
+    // `osuus` on karkea arvio kielen puhujista maassa.
+    tervehdykset: [
+      { teksti: 'Buongiorno', kieli: 'italia', lippu: 'Flag of Italy.svg', osuus: '95 %' },
+      { teksti: 'Bona die', kieli: 'sardi', lippu: 'Flag of Sardinia, Italy.svg', osuus: '2 %' },
+      { teksti: 'Guten Tag', kieli: 'saksa (Etelä-Tiroli)', lippu: 'Flag of Germany.svg', osuus: '0,5 %' },
+    ],
+  },
+};
+
+// ===== js/packs/europe-artikkelit.js =====
+// Euroopan omat Lue lisää -artikkelit pelin tyyliin (avain = wiki-otsikko,
+// sama rakenne kuin Afrikan OMAT_ARTIKKELIT). Rakentuu kaupunki
+// kerrallaan — pilotti: Venetsia ja Italia.
+const EUROPE_ARTIKKELIT = {
+  Venetsia: {
+    intro: 'Venetsia on rakennettu laguunin sadalle pienelle saarelle, ja '
+      + 'sen kadut ovat kanavia. Talot seisovat miljoonien puupaalujen '
+      + 'varassa, jotka hakattiin liejuun jo keskiajalla — veden alla, '
+      + 'hapettomassa mudassa, puu ei lahoa vaan kovettuu.',
+    teksti: 'Venetsia oli vuosisatojen ajan itsenäinen tasavalta ja '
+      + 'Välimeren mahtavin kauppakaupunki. Sen laivat toivat idästä '
+      + 'silkkiä, mausteita ja tarinoita — kuuluisin kertoja oli '
+      + 'kauppiaan poika Marco Polo, joka matkasi 1200-luvulla Kiinaan '
+      + 'asti ja palveli suurkaania yli kaksikymmentä vuotta.\n\n'
+      + 'Kaupungin sydän on Pyhän Markuksen tori: basilika '
+      + 'kultamosaiikkeineen, dogen palatsi ja korkea kellotorni. Dogi '
+      + 'oli tasavallan vaaleilla valittu ruhtinas, ja hänen palatsinsa '
+      + 'takaa kulkee Huokausten silta — vangit huokasivat sillä '
+      + 'viimeisen vilkaisunsa laguunille matkalla tyrmään.\n\n'
+      + 'Vesi antaa Venetsialle kaiken ja uhkaa sitä samalla: '
+      + 'nousuvesi eli acqua alta tulvii toreille syksyisin, ja '
+      + 'kaupunki painuu hitaasti pehmeään pohjaansa. Laguunin suulle '
+      + 'on rakennettu liikuteltavat MOSE-padot, jotka nostetaan '
+      + 'merestä tulvaa vastaan. Autoja kaupungissa ei ole lainkaan: '
+      + 'kaikki kulkee veneillä, roskakuljetuksista ambulanssiin.',
+  },
+  Italia: {
+    intro: 'Italia on saapasta muistuttava niemimaa keskellä Välimerta. '
+      + 'Nykyinen valtio on nuori — se yhdistyi kuningaskunnaksi vasta '
+      + '1861 — mutta sen mailla on kävelty pidempään kuin juuri '
+      + 'missään: Rooman valtakunta hallitsi täältä koko Välimerta.',
+    teksti: 'Italia oli vuosisatoja kaupunkivaltioiden tilkkutäkki: '
+      + 'Venetsia ja Genova hallitsivat meriä, Firenze rahaa ja '
+      + 'taidetta, Rooma kirkkoa. Siksi maa on yhä alueidensa summa — '
+      + 'murteet, ruoat ja tavat vaihtuvat laaksosta toiseen, ja moni '
+      + 'esittelee itsensä ensin kotiseutunsa, vasta sitten maansa '
+      + 'kautta.\n\n'
+      + 'Ruoka on Italiassa vakava asia ja paikallisylpeys: pasta '
+      + 'Napolista, risotto Pohjois-Italiasta, pizza Napolin '
+      + 'kaduilta — ja jokainen kylä on varma, että juuri sen '
+      + 'resepti on se oikea. Espresso juodaan seisten baaritiskillä, '
+      + 'ja illallinen voi kestää koko illan.\n\n'
+      + 'Unescon maailmanperintökohteita Italiassa on enemmän kuin '
+      + 'missään muussa maassa — antiikin raunioita, '
+      + 'renessanssikaupunkeja ja kokonaisia historiallisia keskustoja. '
+      + 'Rooman perintö näkyy arjessakin: Eurooppa kirjoittaa yhä '
+      + 'latinalaisilla kirjaimilla ja elää monin paikoin roomalaisten '
+      + 'teiden varsilla.',
+  },
+};
+
 // ===== js/packs/valokuvat-paikalliset.js =====
 // Matkakirjan valokuvien paikalliset kopiot (generoitu Commonsista,
 // leveys 1000 px). Peli käyttää näitä Commonsin sijaan: lataus on nopea
@@ -8779,6 +8998,8 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Victoria Falls Bridge and Zambezi river.jpg", 'uusi-viktorianputoukset.jpg'],
   ["View-Kano city-1911.jpg", 'vanha-kano.jpg'],
   ["Waving fisherman on Lake Chad (detilt).jpg", 'uusi-tshadjarvi.jpg'],
+  ["Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg", 'vanha-venetsia.jpg'],
+  ["Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg", 'uusi-venetsia.jpg'],
 ]);
 
 // ===== js/packs/africa-valokuvat.js =====
@@ -17850,7 +18071,7 @@ const EU_CITIES = [
   { id: 'krakova', name: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
   { id: 'alpit', name: 'Alpit', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
   // Venetsia on Adrianmeren pohjukassa Milanon tilalla (omistajan valinta).
-  { id: 'venetsia', name: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
+  { id: 'venetsia', name: 'Venetsia', wiki: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
   { id: 'rooma', name: 'Rooma', x: 451, y: 792, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sisilia', name: 'Sisilia', x: 468, y: 891, la: 'end', lx: -16, ly: 5 },
   {
@@ -17995,6 +18216,8 @@ const EUROPE = {
 
   map: {
     ...EU_MAP,
+    countryShapes: EUROPE_COUNTRY_SHAPES,
+    cityCountry: EUROPE_CITY_COUNTRY,
     outlines: [
       EU_MAP.mainlandPoints, EU_MAP.britainPoints, EU_MAP.irelandPoints,
       EU_MAP.sicilyPoints, EU_MAP.cretePoints, EU_MAP.icelandPoints,
@@ -36539,15 +36762,22 @@ function chooseDuelAnswer(game) {
 // ===== js/ui.js =====
 // Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
-// Uuden mallin saapumistekstit laudoittain (pilotti: Afrikka).
-const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET };
+// Uuden mallin saapumistekstit laudoittain (Afrikka valmis, Eurooppa
+// rakentuu kaupunki kerrallaan — pilotti: Venetsia).
+const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET, europe: EUROPE_SAAPUMISET };
 
-// Kaupungin elämää -nostot laudoittain (pilotti: Afrikka).
-const KULTTUURIT = { africa: AFRICA_KULTTUURI };
+// Kaupungin elämää -nostot laudoittain.
+const KULTTUURIT = { africa: AFRICA_KULTTUURI, europe: EUROPE_KULTTUURI };
 
-// Vanhat valokuvat muistikirjan kylkeen laudoittain — toistaiseksi vain
-// Afrikalla on kuvasto.
-const VALOKUVAT = { africa: AFRICA_VALOKUVAT };
+// Vanhat valokuvat muistikirjan kylkeen laudoittain.
+const VALOKUVAT = { africa: AFRICA_VALOKUVAT, europe: EUROPE_VALOKUVAT };
+
+// Maiden tunnusluvut laudoittain.
+const MAATIEDOT = { africa: AFRICA_MAATIEDOT, europe: EUROPE_MAATIEDOT };
+
+// Omat artikkelit: yhteinen hakemisto wiki-otsikolla (mantereet eivät
+// törmää, koska otsikot ovat eri).
+const ARTIKKELIT = { ...OMAT_ARTIKKELIT, ...EUROPE_ARTIKKELIT };
 
 // Tiivistelmät ja kuvat haetaan kerran per artikkeli: sama kuva näkyy
 // sekä saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
@@ -36586,6 +36816,7 @@ async function cachedImage(title) {
 // luennat generoidaan.
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
 const VIHJELUENNAT = new Set([
+  'europe:venetsia',
   'africa:karthago',
   'africa:nairobi',
   'africa:lagos',
@@ -36676,9 +36907,26 @@ const LAUTA_TUNNUSLUVUT = {
 
 const wikiGalleryCache = new Map();
 
+// Käsin valitut galleriat: kun artikkelin oma kuvalista on heikko (vain
+// kaavioita), Tutki-sivun galleria kootaan näistä Commonsin kuvista.
+// Lisenssit varmistettu tiedostokohtaisesti.
+const OMAT_GALLERIAT = {
+  'Victoria-järvi': [
+    { tiedosto: 'Sunset at Lake Victoria.jpg', caption: 'Auringonlasku Victorianjärvellä' },
+    { tiedosto: 'Boats by the Lake Victoria Shore.jpg', caption: 'Kalastajaveneitä järven rannassa' },
+    { tiedosto: 'Fishing boats on Lake Victoria.jpg', caption: 'Kalastajia aamulla' },
+    { tiedosto: 'Lake Victoria as visible from Kisumu City.jpg', caption: 'Järvi Kisumun kaupungista nähtynä' },
+    { tiedosto: 'Still Life with Stork and Fishing Boats - Along Shore of Lake Victoria - Entebbe - Uganda.jpg', caption: 'Marabu ja veneitä Entebben rannassa' },
+    { tiedosto: 'Sunset on lake Victoria in kisumu.jpg', caption: 'Ilta Kisumussa' },
+  ],
+};
+
 async function cachedGallery(title) {
   if (!wikiGalleryCache.has(title)) {
-    wikiGalleryCache.set(title, cachedSummary(title).then((s) => fetchImages(s)));
+    const oma = OMAT_GALLERIAT[title];
+    wikiGalleryCache.set(title, oma
+      ? Promise.resolve(oma.map((k) => ({ src: valokuvaUrl(k.tiedosto, 1200), caption: k.caption })))
+      : cachedSummary(title).then((s) => fetchImages(s)));
   }
   return wikiGalleryCache.get(title);
 }
@@ -38786,7 +39034,7 @@ class UI {
     this.arrivalWiki.hidden = true;
     // Oma lyhytnosto (pilottikaupungit) näkyy heti ja toimii ilman
     // verkkoa; Lue lisää avaa oman artikkelin, joten nappi voi näkyä heti.
-    const omaIntro = OMAT_ARTIKKELIT[city.wiki]?.intro;
+    const omaIntro = ARTIKKELIT[city.wiki]?.intro;
     if (omaIntro) {
       this.arrivalIntro.textContent = omaIntro;
       this.arrivalWiki.hidden = false;
@@ -38819,7 +39067,7 @@ class UI {
       this.naytaMaaTunnusluvut(iso);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
-      const omaMaaIntro = OMAT_ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
+      const omaMaaIntro = ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
       if (omaMaaIntro) {
         this.arrivalMaaIntro.textContent = omaMaaIntro;
         this.arrivalMaaWiki.hidden = false;
@@ -38871,7 +39119,7 @@ class UI {
    * kunkin perässä kielen maan pikkulippu.
    */
   naytaMaaTunnusluvut(iso) {
-    const tiedot = AFRICA_MAATIEDOT[iso] ?? null;
+    const tiedot = (MAATIEDOT[this.game.pack.id] ?? {})[iso] ?? null;
     this.arrivalMaaTunnusluvut.hidden = !tiedot;
     this.arrivalMaaTervehdykset.hidden = !tiedot?.tervehdykset?.length;
     this.arrivalMaaTunnusluvut.textContent = '';
@@ -39309,7 +39557,7 @@ class UI {
     // Oma artikkeli (pilottikaupungit): Wikipedia-tekstin sijaan näytetään
     // pelin tyyliin kirjoitettu lyhyempi artikkeli — Wikipedian pohjalta,
     // joten lähdemaininta säilyy. Kuva haetaan silti Wikipediasta.
-    const oma = OMAT_ARTIKKELIT[title];
+    const oma = ARTIKKELIT[title];
     if (oma) {
       this.renderArticle(this.wikiExtract, oma.artikkeli);
       this.wikiSource.textContent = 'Matkakirjan oma artikkeli, kirjoitettu Wikipedian pohjalta (CC BY-SA)';
@@ -40933,7 +41181,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.109';
+const APP_VERSION = '2026-07-30.110';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

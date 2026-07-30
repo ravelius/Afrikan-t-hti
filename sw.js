@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-07-30.109';
+const CACHE = 'matkakirja-2026-07-30.110';
 const SHELL = [
   './',
   './index.html',
@@ -114,6 +114,8 @@ const SHELL = [
   './assets/audio/puhe-africa-vihje-tshadjarvi.mp3',
   './assets/audio/puhe-africa-vihje-viktoria.mp3',
   './assets/audio/puhe-africa-vihje-viktorianputoukset.mp3',
+  './assets/audio/puhe-europe-saapuminen-venetsia.mp3',
+  './assets/audio/puhe-europe-vihje-venetsia.mp3',
   './assets/valokuvat/uusi-addisabeba.jpg',
   './assets/valokuvat/uusi-ahaggar.jpg',
   './assets/valokuvat/uusi-alkufra.jpg',
@@ -154,6 +156,8 @@ const SHELL = [
   './assets/valokuvat/uusi-viktoria.jpg',
   './assets/valokuvat/uusi-viktorianputoukset.jpg',
   './assets/valokuvat/vanha-addisabeba.jpg',
+  './assets/valokuvat/uusi-venetsia.jpg',
+  './assets/valokuvat/vanha-venetsia.jpg',
   './assets/valokuvat/vanha-ahaggar.jpg',
   './assets/valokuvat/vanha-alkufra.jpg',
   './assets/valokuvat/vanha-angola.jpg',

@@ -11,6 +11,7 @@
 // Budapestia ja Alppeja on siirretty muutama yksikkö, jotta nimet mahtuvat.
 
 import { EUROPE_QUESTIONS, EUROPE_FACTS } from './europe-questions.js';
+import { EUROPE_COUNTRY_SHAPES, EUROPE_CITY_COUNTRY } from './europe-countries.js';
 import { themedTokenTypes } from '../tokens.js';
 
 const EU_MAP = {
@@ -115,7 +116,7 @@ const EU_CITIES = [
   { id: 'krakova', name: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
   { id: 'alpit', name: 'Alpit', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
   // Venetsia on Adrianmeren pohjukassa Milanon tilalla (omistajan valinta).
-  { id: 'venetsia', name: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
+  { id: 'venetsia', name: 'Venetsia', wiki: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
   { id: 'rooma', name: 'Rooma', x: 451, y: 792, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sisilia', name: 'Sisilia', x: 468, y: 891, la: 'end', lx: -16, ly: 5 },
   {
@@ -260,6 +261,8 @@ export const EUROPE = {
 
   map: {
     ...EU_MAP,
+    countryShapes: EUROPE_COUNTRY_SHAPES,
+    cityCountry: EUROPE_CITY_COUNTRY,
     outlines: [
       EU_MAP.mainlandPoints, EU_MAP.britainPoints, EU_MAP.irelandPoints,
       EU_MAP.sicilyPoints, EU_MAP.cretePoints, EU_MAP.icelandPoints,
