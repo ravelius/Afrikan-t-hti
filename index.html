@@ -131,7 +131,14 @@
     <div class="arrival-palstat">
      <div class="arrival-palsta">
       <h2 id="arrival-city"></h2>
-      <img id="arrival-image" class="arrival-image" alt="" hidden />
+      <!-- Kaupungin kuva: hento laskuri ja selailunuolet houkuttavat
+           selaamaan galleriaa avaamatta suurennosta (omistajan toive). -->
+      <div id="arrival-kuvakotelo" class="arrival-kuvakotelo" hidden>
+       <img id="arrival-image" class="arrival-image" alt="" />
+       <button id="arrival-kuva-edellinen" class="arrival-kuva-nuoli edellinen" type="button" aria-label="Edellinen kuva" hidden>‹</button>
+       <button id="arrival-kuva-seuraava" class="arrival-kuva-nuoli seuraava" type="button" aria-label="Seuraava kuva" hidden>›</button>
+       <span id="arrival-kuva-laskuri" class="arrival-kuva-laskuri" hidden></span>
+      </div>
       <p id="arrival-intro" class="arrival-intro">Isoisä on merkinnyt tämän paikan karttaansa.</p>
       <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
      </div>

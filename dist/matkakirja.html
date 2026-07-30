@@ -690,15 +690,63 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /* Wikipedian kuva saapumiskortissa; Lue lisää -linkki on esittelyn alla. */
+.arrival-kuvakotelo {
+  position: relative;
+  margin: 0.15rem 0 0.3rem;
+}
+
 .arrival-image {
   display: block;
   width: 100%;
   max-height: 170px;
   object-fit: cover;
-  margin: 0.15rem 0 0.3rem;
   border-radius: 6px;
   border: 1px solid rgba(70, 51, 31, 0.3);
 }
+
+/* Hento kuvalaskuri kulmassa houkuttaa avaamaan gallerian. */
+.arrival-kuva-laskuri {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.35rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(30, 22, 12, 0.38);
+  color: rgba(255, 250, 240, 0.85);
+  font-family: var(--font-type);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+/* Todella hennot selailunuolet: kuvia voi vaihtaa avaamatta isoksi.
+   Dialogin yleinen nappityyli (katkoviivakehys) kumotaan tässä. */
+.dialog button.arrival-kuva-nuoli {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 2.2rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(255, 250, 240, 0.55);
+  text-shadow: 0 1px 3px rgba(20, 14, 6, 0.7);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.dialog button.arrival-kuva-nuoli:hover:not(:disabled) {
+  background: transparent;
+  color: rgba(255, 250, 240, 0.95);
+}
+
+.arrival-kuva-nuoli.edellinen { left: 0.15rem; }
+.arrival-kuva-nuoli.seuraava { right: 0.15rem; }
 
 .arrival-card .wiki-btn { margin: 0 0 0.7rem; }
 
@@ -1120,7 +1168,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 0.75rem;
-  margin: 0.15rem 0 0.35rem;
+  /* Pieni hengähdys tervehdysten ja esittelytekstin väliin. */
+  margin: 0.15rem 0 0.8rem;
   font-size: 0.78rem;
   color: #5a4a33;
 }
@@ -3093,7 +3142,14 @@ body.katselu #newgame-btn { display: none; }
     <div class="arrival-palstat">
      <div class="arrival-palsta">
       <h2 id="arrival-city"></h2>
-      <img id="arrival-image" class="arrival-image" alt="" hidden />
+      <!-- Kaupungin kuva: hento laskuri ja selailunuolet houkuttavat
+           selaamaan galleriaa avaamatta suurennosta (omistajan toive). -->
+      <div id="arrival-kuvakotelo" class="arrival-kuvakotelo" hidden>
+       <img id="arrival-image" class="arrival-image" alt="" />
+       <button id="arrival-kuva-edellinen" class="arrival-kuva-nuoli edellinen" type="button" aria-label="Edellinen kuva" hidden>‹</button>
+       <button id="arrival-kuva-seuraava" class="arrival-kuva-nuoli seuraava" type="button" aria-label="Seuraava kuva" hidden>›</button>
+       <span id="arrival-kuva-laskuri" class="arrival-kuva-laskuri" hidden></span>
+      </div>
       <p id="arrival-intro" class="arrival-intro">Isoisä on merkinnyt tämän paikan karttaansa.</p>
       <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
      </div>
@@ -33231,10 +33287,27 @@ class UI {
     this.arrivalDialog = document.getElementById('arrival-dialog');
     this.arrivalCity = document.getElementById('arrival-city');
     this.arrivalImage = document.getElementById('arrival-image');
+    // Kuvan galleria selattavana jo pikkukoossa: hento laskuri ja
+    // nuolet (omistajan toive). Suurennos aukeaa selatusta kohdasta.
+    this.arrivalKuvakotelo = document.getElementById('arrival-kuvakotelo');
+    this.arrivalKuvaLaskuri = document.getElementById('arrival-kuva-laskuri');
+    this.arrivalKuvat = [];
+    this.arrivalKuvaKohdalla = 0;
     this.arrivalImage.addEventListener('click', () => {
       const city = this.game.board.cityById.get(this.arrivalShownFor);
-      if (city?.wiki) this.openLightbox(city.wiki, city.name);
+      if (city?.wiki) this.openLightbox(city.wiki, city.name, this.arrivalImage.src || null);
     });
+    const selaaKuvaa = (askel) => {
+      if (this.arrivalKuvat.length < 2) return;
+      this.arrivalKuvaKohdalla = (this.arrivalKuvaKohdalla + askel
+        + this.arrivalKuvat.length) % this.arrivalKuvat.length;
+      this.arrivalImage.src = this.arrivalKuvat[this.arrivalKuvaKohdalla].src;
+      this.paivitaKuvaLaskuri();
+    };
+    document.getElementById('arrival-kuva-edellinen')
+      .addEventListener('click', (e) => { e.stopPropagation(); selaaKuvaa(-1); });
+    document.getElementById('arrival-kuva-seuraava')
+      .addEventListener('click', (e) => { e.stopPropagation(); selaaKuvaa(1); });
     this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
@@ -35056,6 +35129,10 @@ class UI {
     this.arrivalCity.textContent = city.name;
     this.arrivalImage.hidden = true;
     this.arrivalImage.removeAttribute('src');
+    this.arrivalKuvakotelo.hidden = true;
+    this.arrivalKuvat = [];
+    this.arrivalKuvaKohdalla = 0;
+    this.paivitaKuvaLaskuri();
     this.arrivalIntro.textContent = 'Isoisä on merkinnyt tämän paikan karttaansa.';
     this.arrivalWiki.hidden = true;
     // Oma lyhytnosto (pilottikaupungit) näkyy heti ja toimii ilman
@@ -35121,6 +35198,15 @@ class UI {
         this.arrivalImage.src = image;
         this.arrivalImage.alt = summary.title || city.name;
         this.arrivalImage.hidden = false;
+        this.arrivalKuvakotelo.hidden = false;
+        // Galleria taustalla: kun lista on saatu, pikkukuvaan tulevat
+        // hento laskuri ja selailunuolet.
+        cachedGallery(city.wiki).then((lista) => {
+          if (this.arrivalShownFor !== city.id || lista.length < 2) return;
+          this.arrivalKuvat = lista;
+          this.arrivalKuvaKohdalla = Math.max(0, lista.findIndex((k) => k.src === image));
+          this.paivitaKuvaLaskuri();
+        });
       }
       // Oma lyhytnosto voittaa wikin automaattikatkelman (pilottikaupungit).
       if (summary.extract && !omaIntro) this.arrivalIntro.textContent = shortIntro(summary.extract);
@@ -35540,7 +35626,17 @@ class UI {
    * Katselin lisätään avoimen dialogin sisään, koska dialogi on selaimen
    * top layerissa — muualle lisätty kerros jäisi sen alle.
    */
-  async openLightbox(title, alt = '') {
+  /** Pikkukuvan laskuri ja nuolet näkyvät vain, kun galleriassa on selattavaa. */
+  paivitaKuvaLaskuri() {
+    const monta = this.arrivalKuvat.length > 1;
+    this.arrivalKuvaLaskuri.hidden = !monta;
+    this.arrivalKuvaLaskuri.textContent = monta
+      ? `${this.arrivalKuvaKohdalla + 1}/${this.arrivalKuvat.length}` : '';
+    document.getElementById('arrival-kuva-edellinen').hidden = !monta;
+    document.getElementById('arrival-kuva-seuraava').hidden = !monta;
+  }
+
+  async openLightbox(title, alt = '', aloitusSrc = null) {
     if (!title) return;
     const parent = [this.wikiDialog, this.arrivalDialog].find((d) => d.open) ?? document.body;
     const overlay = html('div', 'lightbox');
@@ -35605,7 +35701,8 @@ class UI {
     });
 
     // Ensimmäinen kuva heti ruutuun, koko galleria kun lista on haettu.
-    const eka = await cachedImage(title);
+    // Jos suurennos avattiin selatusta pikkukuvasta, aloitetaan siitä.
+    const eka = aloitusSrc || await cachedImage(title);
     if (!overlay.isConnected) return;
     if (eka) {
       kuvat = [{ src: eka, caption: null }];
@@ -37084,7 +37181,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.76';
+const APP_VERSION = '2026-07-30.77';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
