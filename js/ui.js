@@ -107,6 +107,21 @@ const HAVAINTOLUENNAT = new Set([
   'africa:rashafun',
 ]);
 
+// Lautojen tunnusluvut karttaselitteeseen: pinta-ala ja väkiluku isoin
+// pyöristyksin (omistajan toive — vähäeleinen, vain numerot ja symboli).
+const LAUTA_TUNNUSLUVUT = {
+  maailma: { ala: '150 milj. km²', vaki: '8 mrd' },
+  africa: { ala: '30 milj. km²', vaki: '1,5 mrd' },
+  europe: { ala: '10 milj. km²', vaki: '750 milj.' },
+  asia: { ala: '45 milj. km²', vaki: '4,8 mrd' },
+  oceania: { ala: '8,5 milj. km²', vaki: '45 milj.' },
+  northamerica: { ala: '24 milj. km²', vaki: '600 milj.' },
+  southamerica: { ala: '18 milj. km²', vaki: '440 milj.' },
+  middleeast: { ala: '7 milj. km²', vaki: '500 milj.' },
+  suomi: { ala: '340 000 km²', vaki: '5,6 milj.' },
+  istanbul: { ala: '5 500 km²', vaki: '16 milj.' },
+};
+
 const wikiGalleryCache = new Map();
 
 async function cachedGallery(title) {
@@ -340,6 +355,11 @@ export class UI {
     this.arrivalKulttuuriVaihtoehdot = document.getElementById('arrival-kulttuuri-vaihtoehdot');
     this.arrivalKulttuuriTulos = document.getElementById('arrival-kulttuuri-tulos');
     document.getElementById('arrival-yes').addEventListener('click', () => {
+      // Tutki paikka vie tietovisaan: tauolle jäänyt luenta ei saa
+      // jatkua kysymyksen alle. Ehto closeArrivalissa ei riitä, koska
+      // visa syntyy vasta actionQuizissa — sulku ehtii ensin
+      // (omistajan havainto Tangerissa).
+      this.luentaTauolla = null;
       this.closeArrival();
       sfx.play('paper');
       this.doAction(() => this.game.actionQuiz());
@@ -941,17 +961,31 @@ export class UI {
       }, fares).textContent = `⚓${e.fee}`;
     }
 
-    // Selite kartan otsikon alle: mitä matkustaminen maksaa tällä laudalla.
-    const legendParts = [];
-    if (board.edges.some((e) => e.type === 'sea')) legendParts.push(`⚓ laiva ${SEA_FARE} p`);
-    if (pack.airRoutes.length) legendParts.push(`✈ lento ${FLIGHT_PRICE} p`);
-    if (legendParts.length) {
-      el('text', {
-        x: decor.mapLabelPos.x,
-        y: decor.mapLabelPos.y + 44,
-        class: 'map-legend',
-        'text-anchor': 'middle',
-      }, root).textContent = legendParts.join('  ·  ');
+    // Selite kartan otsikon alle: alueen pinta-ala ja väkiluku isoin
+    // pyöristyksin — pelkät numerot ja viivasymbolit (omistajan toive;
+    // matkustushinnat poistuivat selitteestä). Rivit keskitetään
+    // mittaamalla, koska symboli istuu tekstin vasemmalla puolella.
+    const tunnus = LAUTA_TUNNUSLUVUT[pack.id];
+    if (tunnus) {
+      const rivit = [
+        { teksti: tunnus.ala, ikoni: '<rect x="1" y="1" width="12.6" height="12.6" rx="1.8"/><path d="M1 9.4l3.4-3 2.6 2.2 3.2-3.6 3.4 2.6"/>' },
+        { teksti: tunnus.vaki, ikoni: '<circle cx="7.3" cy="4.1" r="2.7"/><path d="M2 13.4c.7-3.4 2.7-5.1 5.3-5.1s4.6 1.7 5.3 5.1"/>' },
+      ];
+      rivit.forEach((rivi, i) => {
+        const g = el('g', { class: 'map-tunnus' }, root);
+        const y = decor.mapLabelPos.y + 40 + i * 23;
+        el('text', {
+          x: 20, y, class: 'map-legend', 'text-anchor': 'start',
+        }, g).textContent = rivi.teksti;
+        const kuvake = el('g', {
+          class: 'map-tunnus-ikoni',
+          transform: `translate(0, ${y - 12.5})`,
+        }, g);
+        kuvake.innerHTML = rivi.ikoni;
+        const bb = g.getBBox();
+        g.setAttribute('transform',
+          `translate(${(decor.mapLabelPos.x - bb.width / 2 - bb.x).toFixed(1)}, 0)`);
+      });
     }
 
     // Kaupungit ja nimet.
@@ -1674,6 +1708,20 @@ export class UI {
    * vaihtuu kierroksittain mutta pysyy samana saman vuoron ajan, jotta sen
    * ehtii lukea.
    */
+  /**
+   * Isoisän aikataulurivi matkakirjamerkinnän perään: pieni oma rivinsä,
+   * joka ei peitä merkintää (omistajan havainto Gaossa — aikataulukortti
+   * ajoi uuden saapumistekstin ohi koko käynnin ajaksi).
+   */
+  aikatauluRivi() {
+    const aikataulu = this.game.scheduleNote;
+    if (!aikataulu || aikataulu.packId !== this.game.pack.id) return null;
+    const rivi = html('span', 'aikataulu-rivi');
+    rivi.appendChild(html('b', '', `Isoisän aikataulusta, päivä ${aikataulu.day}: `));
+    rivi.appendChild(document.createTextNode(aikataulu.text));
+    return rivi;
+  }
+
   renderFact() {
     const { game } = this;
     // Aloitusnäkymässä kartta saa puhua puolestaan: tietoruutu on piilossa.
@@ -1697,10 +1745,18 @@ export class UI {
     // tekstiä (omistajan päätös).
     if (game.player.pos.type === 'edge' && this.factKey) return;
 
-    // Isoisän aikataulu nousee esiin, kun matkapäivä ohittaa merkinnän. Rivi
-    // menee saapumismerkinnän edelle, koska se näkyy vain yhden vuoron ajan.
+    // Matkakirjan merkintä voittaa aina (omistajan havainto Gaossa:
+    // aikataulurivi peitti uuden saapumistekstin koko käynnin ajaksi).
+    // Kaupungissa ollessa aikataulu liitetään merkinnän perään omana
+    // rivinään; oma korttinsa siitä tulee vain ilman saapumismerkintää.
+    const saapuvilla = game.arrivalFact
+      && game.arrivalFact.packId === game.pack.id
+      && game.player.pos.type === 'city'
+      && game.player.pos.city === game.arrivalFact.cityId;
+
+    // Isoisän aikataulu nousee esiin, kun matkapäivä ohittaa merkinnän.
     const aikataulu = game.scheduleNote;
-    if (aikataulu && aikataulu.packId === game.pack.id) {
+    if (aikataulu && aikataulu.packId === game.pack.id && !saapuvilla) {
       const key = `schedule:${aikataulu.packId}:${aikataulu.day}`;
       if (this.factKey === key) return;
       this.factKey = key;
@@ -1746,9 +1802,16 @@ export class UI {
       // Uusi malli (pilotti): nuoren herran fiiliskuvaus lihavoituna,
       // perässä isoisän nosto, ja lukija lukee koko merkinnän tunteella.
       // Teksti ei vaihdu kaupungissa olon aikana.
+      // Aikataulurivi elää merkinnän perässä: sen ilmestyminen muuttaa
+      // kortin avainta (teksti piirtyy uusiksi), mutta luenta ei ala
+      // alusta — luentaa seurataan perusavaimella.
+      const aikatauluLisa = aikataulu && aikataulu.packId === game.pack.id
+        ? `:a${aikataulu.day}` : '';
+
       const uusi = (SAAPUMISTEKSTIT[saapuminen.packId] ?? {})[saapuminen.cityId];
       if (uusi && kaupunki) {
-        const key = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
+        const luentaAvain = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
+        const key = luentaAvain + aikatauluLisa;
         if (this.factKey === key) return;
         this.factKey = key;
         this.factVoiceEl.textContent = 'Matkakirjasta';
@@ -1767,12 +1830,15 @@ export class UI {
         const { eka, loput } = ekaLause(uusi.kuvaus);
         const jatkoTeksti = [loput, uusi.nosto].filter(Boolean).join(' ');
         this.typeText(lihava, eka, 'fact', () => {
-          this.typeText(jatko, jatkoTeksti, 'fact');
+          this.typeText(jatko, jatkoTeksti, 'fact', () => {
+            const rivi = this.aikatauluRivi();
+            if (rivi) this.factText.appendChild(rivi);
+          });
         });
         this.diaryFullUrl = `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`;
         this.factKuuntele.hidden = false;
-        if (this.luettuSaapuminen !== key) {
-          this.luettuSaapuminen = key;
+        if (this.luettuSaapuminen !== luentaAvain) {
+          this.luettuSaapuminen = luentaAvain;
           // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
           // lyhyt vain nuoren herran osuuden (luenta pysähtyy kuvauksen ja
           // noston väliseen hengähdykseen), ei kertojaa jättää luennan
@@ -1798,7 +1864,8 @@ export class UI {
       const isoisanIdx = faktat.findIndex((f) => factVoice(f) === 'isoisa');
       const fakta = faktat[isoisanIdx >= 0 ? isoisanIdx : 0];
       if (fakta && kaupunki) {
-        const key = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
+        const luentaAvain = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
+        const key = luentaAvain + aikatauluLisa;
         if (this.factKey === key) return;
         this.factKey = key;
         this.factVoiceEl.textContent = voiceTitle(factVoice(fakta));
@@ -1817,7 +1884,12 @@ export class UI {
         this.factText.appendChild(document.createTextNode(' '));
         this.factText.appendChild(jatko);
         this.typeText(lihava, eka, 'fact', () => {
-          if (loput) this.typeText(jatko, loput, 'fact');
+          const loppuun = () => {
+            const rivi = this.aikatauluRivi();
+            if (rivi) this.factText.appendChild(rivi);
+          };
+          if (loput) this.typeText(jatko, loput, 'fact', loppuun);
+          else loppuun();
         });
         // Luenta pysähtyy ensimmäisen virkkeen jälkeiseen hengähdykseen —
         // kaiutin jatkaa samasta kohdasta. Vihjeen tai aikataulun väläys
@@ -1827,8 +1899,8 @@ export class UI {
           ? `assets/audio/puhe-${saapuminen.packId}-havainto-${saapuminen.cityId}.mp3`
           : null;
         this.factKuuntele.hidden = !luettava;
-        if (luettava && this.luettuSaapuminen !== key && kertojaTila() !== 'ei') {
-          this.luettuSaapuminen = key;
+        if (luettava && this.luettuSaapuminen !== luentaAvain && kertojaTila() !== 'ei') {
+          this.luettuSaapuminen = luentaAvain;
           this.playDiaryVoice(this.diaryFullUrl, {
             ekaLauseeseen: true,
             // Ensimmäisen virkkeen osuus tekstistä ohjaa tauon valintaa.
