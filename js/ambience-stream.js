@@ -3,9 +3,9 @@
 // ilman verkkoa, ennen ensimmäistä napautusta tai merkinnän puuttuessa
 // palataan syntetisoituun ambienssiin (js/sound.js), joka on varmistus.
 //
-// Osoitteet ovat Freesoundin esikuunteluversioita (mp3, vakaat osoitteet).
-// Uusi paikka lisätään STREAMS-taulukkoon: suora mp3-osoite ja
-// tekijämaininta lisensseineen. Vain CC-lisensoituja äänitteitä.
+// Osoitteet ovat Freesoundin esikuunteluversioita (mp3, vakaat osoitteet)
+// ja ne arvotaan maisematyypin korista (aani-ehdokkaat.js). Vain
+// CC-lisensoituja äänitteitä.
 
 import { sfx } from './sound.js';
 import { valittuAani, jaaAlku, tyyppiKori } from './aani-ehdokkaat.js';
@@ -25,29 +25,6 @@ function arvoTyypista(cityId, tyyppi) {
   return url;
 }
 
-export const STREAMS = {
-  kairo: {
-    url: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3',
-    credit: '"cairo night out" — rucisko, Freesound (CC BY-NC 4.0)',
-  },
-  sahara: {
-    url: 'https://cdn.freesound.org/previews/146/146745_832093-lq.mp3',
-    credit: '"Sahara wind harp (lotar)" — omestreandre, Freesound (CC BY 4.0)',
-  },
-  dakar: {
-    url: 'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3',
-    credit: '"Dakar Ouakam cour intérieure" — LaureC, Freesound (CC0)',
-  },
-  kimberley: {
-    url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3',
-    credit: '"African savanna 2" — AugustSandberg, Freesound (CC0)',
-  },
-  angola: {
-    url: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3',
-    credit: '"African savanna 2" — AugustSandberg, Freesound (CC0)',
-  },
-};
-
 // Striimi on taustaa, ei etualaa — hiljaisempi kuin tehosteäänet.
 const VOIMA = 0.14;
 const HAIVYTYS_MS = 1800;
@@ -62,7 +39,9 @@ function haivyta(audio, kohde, done) {
   const t0 = performance.now();
   const askel = (nyt) => {
     if (audio.haivytysId !== oma) return;
-    const t = Math.min(1, (nyt - t0) / HAIVYTYS_MS);
+    // rAF:n aikaleima voi olla ennen t0:aa — ilman alarajaa volume
+    // painui negatiiviseksi ja koko ääniketju kaatui poikkeukseen.
+    const t = Math.min(1, Math.max(0, (nyt - t0) / HAIVYTYS_MS));
     audio.volume = alku + (kohde - alku) * t;
     if (t < 1) requestAnimationFrame(askel);
     else done?.();
@@ -87,14 +66,10 @@ export function stopPlaceStream() {
  * ja seuraava renderöinti yrittää striimiä uudelleen.
  */
 export function playPlaceAmbience(cityId, fallbackType) {
-  // Omistajan valinta (/aanet.html) ohittaa oletuksen: osoite soittaa
-  // sen, tyhjä merkkijono tarkoittaa syntetisoitua, null jättää
-  // STREAMS-oletuksen voimaan.
-  const valinta = cityId ? valittuAani(`kaupunki:${cityId}`) : null;
-  // Järjestys: kaupungin oma valinta > tyypin arvontakori > oletus.
-  const url = valinta === ''
-    ? null
-    : valinta ?? arvoTyypista(cityId, fallbackType) ?? (cityId ? STREAMS[cityId]?.url : null);
+  // Kaupunkien äänet tulevat aina maisematyypin arvontakorista —
+  // kaupunkikohtaisia valintoja tai oletuksia ei ole (omistajan päätös).
+  // Tyhjä kori tarkoittaa syntetisoitua ambienssia.
+  const url = arvoTyypista(cityId, fallbackType);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);
@@ -138,11 +113,6 @@ export function playPlaceAmbience(cityId, fallbackType) {
     sfx.setAmbience(null); // synteesi väistyy, kun oikea äänite soi
     haivyta(audio, oma.tavoite);
   }).catch(varalle);
-}
-
-/** Tekijämaininta soivalle äänitteelle, tai null. */
-export function placeStreamCredit(cityId) {
-  return STREAMS[cityId]?.credit ?? null;
 }
 
 // Tietovisan taustamusiikki: hiljainen huililuuppi kysymyksen ajaksi.
@@ -201,6 +171,3 @@ export function stopQuizMusic() {
   });
 }
 
-// Perustasot äänistudion mikseriä varten: se esikuuntelee raidat samoilla
-// voimakkuuksilla kuin peli soittaa ne.
-export { VOIMA as STRIIMI_VOIMA, MUSIIKKI_VOIMA };

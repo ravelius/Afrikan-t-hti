@@ -13,26 +13,13 @@ import { PACKS } from './pack.js';
 
 const AVAIN = 'matkakirja-aanivalinnat';
 
-// Paikkakohtaiset äänitykset — juuri tästä kaupungista tai alueelta.
-const KAUPUNKIKOHTAISET = {
-  kairo: [
-    { url: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3', nimi: 'Kairon yöhälinä — rucisko, CC BY-NC' },
-    { url: 'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3', nimi: 'Khan el-Khalilin basaari — 3bagbrew, CC0' },
-    { url: 'https://cdn.freesound.org/previews/683/683118_8105512-lq.mp3', nimi: 'Attaban katukauppiaat — AhmadAiuby, CC0' },
-  ],
-  sahara: [
-    { url: 'https://cdn.freesound.org/previews/146/146745_832093-lq.mp3', nimi: 'Saharan tuuli soittaa lotaria — omestreandre, CC BY' },
-  ],
-  dakar: [
-    { url: 'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3', nimi: 'Ouakamin piha illalla — LaureC, CC0' },
-    { url: 'https://cdn.freesound.org/previews/677/677252_9756914-lq.mp3', nimi: 'Ouakamin piha aamulla — LaureC, CC0' },
-  ],
-};
 
 // Tyyppiehdokkaat: käyvät kaikille saman maiseman kaupungeille.
 export const TYYPPI_EHDOKKAAT = {
   basaari: [
     { url: 'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3', nimi: 'Basaarin hälinä (Khan el-Khalili) — 3bagbrew, CC0' },
+    { url: 'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3', nimi: 'Ouakamin piha illalla (Dakar) — LaureC, CC0' },
+    { url: 'https://cdn.freesound.org/previews/677/677252_9756914-lq.mp3', nimi: 'Ouakamin piha aamulla (Dakar) — LaureC, CC0' },
     { url: 'https://cdn.freesound.org/previews/683/683118_8105512-lq.mp3', nimi: 'Katukauppiaat (Kairo) — AhmadAiuby, CC0' },
     { url: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3', nimi: 'Kaupungin yö (Kairo) — rucisko, CC BY-NC' },
   ],
@@ -79,7 +66,7 @@ export const TYYPPI_EHDOKKAAT = {
   ],
 };
 
-const TYYPPI_NIMET = {
+export const TYYPPI_NIMET = {
   basaari: 'basaari',
   aavikko: 'aavikko',
   meri: 'meri',
@@ -88,15 +75,6 @@ const TYYPPI_NIMET = {
   ylanko: 'ylänkö',
 };
 
-// Kaupungit, joilla oikea äänite soi oletuksena (ambience-stream.js:n
-// STREAMS). Muilla oletus on syntetisoitu, kunnes valinta tehdään.
-const STRIIMIOLETUKSET = {
-  kairo: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3',
-  sahara: 'https://cdn.freesound.org/previews/146/146745_832093-lq.mp3',
-  dakar: 'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3',
-  kimberley: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3',
-  angola: 'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3',
-};
 
 export const EHDOKKAAT = {
   'musiikki:tietovisa': {
@@ -345,55 +323,17 @@ export const EHDOKKAAT = {
 // Kaikkien lautojen kaupungit, joilla on äänimaisematyyppi: uusi manner
 // ilmestyy viritysivulle heti, kun sen kaupungeille merkitään tyypit.
 // Sama kaupunki usealla laudalla (esim. Kairo) on yksi paikka.
-const KAUPUNGIT = new Map();
+// Kaupunkien äänet tulevat aina maisematyypin arvontakorista — kaupunki-
+// kohtaisia valintoja ei enää ole (omistajan päätös: ei poikkeamia).
+// Studio näyttää, mitä kaupunkeja kukin kori koskee.
+export const KAUPUNGIT_TYYPEITTAIN = {};
 for (const pack of PACKS) {
   for (const city of pack.cities) {
-    if (city.ambience && !KAUPUNGIT.has(city.id)) KAUPUNGIT.set(city.id, city);
+    if (!city.ambience) continue;
+    const lista = KAUPUNGIT_TYYPEITTAIN[city.ambience] ??= [];
+    if (!lista.includes(city.name)) lista.push(city.name);
   }
 }
-for (const city of KAUPUNGIT.values()) {
-  const tyyppi = city.ambience;
-  if (!tyyppi) continue;
-  const omat = KAUPUNKIKOHTAISET[city.id] ?? [];
-  const yhteiset = (TYYPPI_EHDOKKAAT[tyyppi] ?? [])
-    .filter((e) => !omat.some((o) => o.url === e.url));
-  EHDOKKAAT[`kaupunki:${city.id}`] = {
-    otsikko: `${city.name} — ${TYYPPI_NIMET[tyyppi] ?? tyyppi}`,
-    // Ryhmä äänistudion listaa varten: saman maiseman kaupungit yhdessä.
-    ryhma: TYYPPI_NIMET[tyyppi] ?? tyyppi,
-    // Raaka tyyppiavain arvontakoria varten ('sademetsa', ei 'sademetsä').
-    tyyppi,
-    oletus: STRIIMIOLETUKSET[city.id] ?? null,
-    ehdokkaat: [
-      // null-osoite tarkoittaa syntetisoitua ambienssia.
-      { url: null, nimi: 'Syntetisoitu äänimaisema' },
-      ...omat,
-      ...yhteiset,
-    ],
-  };
-}
-
-// Näkymät, jotka eivät ole kaupunkeja mutta joilla on äänimaisema:
-// etusivun maailmankartta ja merimatka reitillä. Sama valintamekanismi
-// kuin kaupungeilla — meri-tyypin arvontakori koskee myös näitä.
-EHDOKKAAT['kaupunki:etusivu'] = {
-  otsikko: 'Etusivu — maailmankartta',
-  ryhma: 'muut näkymät',
-  oletus: null,
-  ehdokkaat: [
-    { url: null, nimi: 'Syntetisoitu meri (nykyinen)' },
-    ...TYYPPI_EHDOKKAAT.meri,
-  ],
-};
-EHDOKKAAT['kaupunki:merimatka'] = {
-  otsikko: 'Merimatka — reitillä merellä',
-  ryhma: 'muut näkymät',
-  oletus: null,
-  ehdokkaat: [
-    { url: null, nimi: 'Syntetisoitu meri (nykyinen)' },
-    ...TYYPPI_EHDOKKAAT.meri,
-  ],
-};
 
 /**
  * Valinta voi sisältää säätöjä: 'osoite#alku=20&voima=1.5' aloittaa
@@ -428,22 +368,35 @@ const POISTETUT = new Set([
 // valinta ohittaa aina korin.
 const TYYPPIKORI_AVAIN = 'matkakirja-tyyppivalinnat';
 
+// Oletuskori: yksi varmistettu ääni per maisematyyppi, kunnes omistaja
+// rastii omat valintansa. Tyhjäksi tallennettu kori tarkoittaa synteesiä.
+const OLETUSKORIT = {
+  basaari: ['https://cdn.freesound.org/previews/511/511005_571436-lq.mp3'],
+  aavikko: ['https://cdn.freesound.org/previews/146/146745_832093-lq.mp3'],
+  meri: ['https://cdn.freesound.org/previews/635/635103_10065335-lq.mp3'],
+  sademetsa: ['https://cdn.freesound.org/previews/812/812609_2309965-lq.mp3'],
+  savanni: ['https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3'],
+  ylanko: ['https://cdn.freesound.org/previews/577/577263_9827221-lq.mp3'],
+};
+
 export function tyyppiKori(tyyppi) {
   try {
     const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
     const lista = kaikki[tyyppi];
-    return Array.isArray(lista) ? lista.filter(Boolean) : [];
+    if (Array.isArray(lista)) return lista.filter(Boolean);
   } catch {
-    return [];
+    /* yksityinen selaustila — oletuskori kelpaa */
   }
+  return OLETUSKORIT[tyyppi] ?? [];
 }
 
 /** Tallentaa tyypin arvontakorin; tyhjä lista poistaa korin. */
 export function valitseTyyppiKori(tyyppi, lista) {
   try {
     const kaikki = JSON.parse(localStorage.getItem(TYYPPIKORI_AVAIN) ?? '{}');
-    if (!lista || !lista.length) delete kaikki[tyyppi];
-    else kaikki[tyyppi] = lista;
+    // Tyhjäkin lista tallennetaan: se tarkoittaa syntetisoitua ääntä,
+    // eikä oletuskori saa palata sen tilalle.
+    kaikki[tyyppi] = lista ?? [];
     localStorage.setItem(TYYPPIKORI_AVAIN, JSON.stringify(kaikki));
   } catch {
     /* yksityinen selaustila — kori ei säily */
