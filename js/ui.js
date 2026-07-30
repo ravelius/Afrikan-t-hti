@@ -833,6 +833,10 @@ export class UI {
     for (const n of nurkat) {
       n.meri = meriosuus(n.kx, n.ky);
       if (!mahtuu && n.id[0] === 'b') n.meri -= 1; // alanurkat viimeisiksi
+      // Yläreuna voittaa tasaväkisen vertailun (omistajan havainto:
+      // leveällä iPadilla kortti hyppäsi alanurkkaan toimintonappien
+      // viereen, vaikka ylhäällä oli tilaa).
+      if (n.id[0] === 't') n.meri += 0.15;
     }
     nurkat.sort((a, b) => b.meri - a.meri);
     this.factCard.dataset.corner = nurkat[0].id;
