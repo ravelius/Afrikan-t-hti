@@ -202,6 +202,28 @@ button, .brand, .turn-pill, .fact-card h2 {
 
 .kertoja-valikko button.valittu .tappa { visibility: visible; }
 
+/*
+ * Laukku herää eloon, kun sinne tulee jotain uutta: passileima,
+ * kunniamerkintä tai löydetty aarre. Pieni heilahdus ja lämmin
+ * kultahehku — kuin laukku tömähtäisi pöydälle.
+ */
+#passport-btn.laukku-elo {
+  animation: laukku-elo 0.9s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+@keyframes laukku-elo {
+  0% { transform: none; }
+  14% { transform: rotate(-7deg) scale(1.14); }
+  32% { transform: rotate(6deg) scale(1.1); box-shadow: 0 0 12px rgba(234, 184, 78, 0.55); }
+  52% { transform: rotate(-4deg) scale(1.06); }
+  72% { transform: rotate(2.5deg) scale(1.03); }
+  100% { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #passport-btn.laukku-elo { animation: none; }
+}
+
 .topbar-actions {
   margin-left: auto;
   display: flex;
@@ -1028,7 +1050,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * alla tervehdykset kielilippuineen.
  */
 .maa-tunnusluvut {
-  margin: 0.35rem 0 0.15rem;
+  margin: 0.05rem 0 0.15rem;
   font-family: var(--font-type);
   font-size: 0.74rem;
   color: #5a4a33;
@@ -1112,7 +1134,8 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   display: block;
   width: 100%;
   max-height: 195px;
-  margin: 0.1rem auto 0.4rem;
+  /* Tunnusluvut istuvat heti kartan alle (omistajan toive). */
+  margin: 0.1rem auto 0;
 }
 
 .minimaa-pohja {
@@ -33001,11 +33024,14 @@ class UI {
       }
     }
     const mitta = Math.max(maxX - minX, maxY - minY);
-    // Nimilaput tarvitsevat reunoille hieman ilmaa muodon ympärille.
-    const vara = mitta * 0.16;
+    // Nimilaput tarvitsevat reunoille hieman ilmaa muodon ympärille —
+    // alareunaan vähemmän, jotta tunnusluvut istuvat lähelle karttaa
+    // (omistajan toive).
+    const vara = mitta * 0.14;
+    const varaAla = mitta * 0.05;
     const svg = el('svg', {
       class: 'arrival-maa-kartta-svg',
-      viewBox: `${minX - vara} ${minY - vara} ${maxX - minX + vara * 2} ${maxY - minY + vara * 2}`,
+      viewBox: `${minX - vara} ${minY - vara} ${maxX - minX + vara * 2} ${maxY - minY + vara + varaAla}`,
       'aria-hidden': 'true',
     });
     const d = maa.renkaat
@@ -33483,6 +33509,7 @@ class UI {
         sub: game.pack.boardLabel,
       });
       sfx.play('paper');
+      this.elavoitaLaukku();
       setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
 
@@ -33497,6 +33524,7 @@ class UI {
         sub: `Aarre löytyi päivänä ${mark.day}`,
       });
       sfx.play('paper');
+      this.elavoitaLaukku();
       setTimeout(() => this.removeToast(box), TOAST_MS.default);
     }
   }
@@ -34965,6 +34993,22 @@ class UI {
       await this.wait(300);
     }
     overlay.remove();
+    // Löytö päätyy matkalaukkuun: yläreunan Laukku-nappi heilahtaa
+    // eloisasti merkiksi (omistajan toive). Tyhjä laatta ei tuo mitään.
+    if (type !== 'empty') this.elavoitaLaukku();
+  }
+
+  /**
+   * Laukku-nappi herää hetkeksi eloon, kun laukkuun tulee jotain uutta:
+   * passileima, kunniamerkintä tai löydetty aarre. Sama pieni heilahdus
+   * joka kerta — huomio kiinnittyy yläreunaan ilman uutta ilmoitusta.
+   */
+  elavoitaLaukku() {
+    const nappi = document.getElementById('passport-btn');
+    if (!nappi) return;
+    nappi.classList.remove('laukku-elo');
+    void nappi.offsetWidth;
+    nappi.classList.add('laukku-elo');
   }
 
   // --- toiminnot ja animaatiot ---------------------------------------------
@@ -35520,7 +35564,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.71';
+const APP_VERSION = '2026-07-30.72';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
