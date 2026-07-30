@@ -784,14 +784,39 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .fact-teksti-rivi .fact-text {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  /* Kova katto rivimääränä (omistajan mitta: noin 8 riviä otsikkoineen
-   * eli 6 tekstiriviä): em-mitta ei riipu viewport-yksiköiden tuesta,
-   * flexin kutistumisesta eikä laitteesta — iPadin Safari ohitti sekä
-   * prosentti- että dvh-katot. */
-  max-height: calc(6 * 1.45em);
+  /* Kova katto rivimääränä (omistajan mitta, kiristetty kuuteen ja
+   * edelleen viiteen riviin — jatkosta kertoo vihjenuoli): em-mitta ei
+   * riipu viewport-yksiköiden tuesta, flexin kutistumisesta eikä
+   * laitteesta — iPadin Safari ohitti sekä prosentti- että dvh-katot. */
+  max-height: calc(5 * 1.45em);
 }
 
 .fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
+
+/* Jatkuu-vihje: kun tekstiä on näkymän alapuolella, viimeinen rivi
+ * häipyy hennosti ja alle ilmestyy pieni nuoli — molemmat katoavat,
+ * kun teksti on vieritetty loppuun (.jatkuu-luokkaa ohjaa ui.js). */
+.fact-teksti-rivi.jatkuu .fact-text {
+  -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 1.2em), rgba(0, 0, 0, 0.25));
+  mask-image: linear-gradient(180deg, #000 calc(100% - 1.2em), rgba(0, 0, 0, 0.25));
+}
+
+.fact-teksti-rivi::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0.05rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 1.5px solid rgba(90, 74, 51, 0.6);
+  border-bottom: 1.5px solid rgba(90, 74, 51, 0.6);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.fact-teksti-rivi.jatkuu::after { opacity: 1; }
 
 /* Teksti kiertää kuvan alussa: näkymätön varaus kelluu kuvan kohdalla
  * tekstin sisällä, ja vieritettäessä teksti liukuu paikallaan pysyvän
@@ -10391,7 +10416,6 @@ const AFRICA_EDGES = [
   { a: 'tanger', b: 'dakar', steps: 3, type: 'sea', via: [[150, 110], [95, 178], [45, 252]] },
   { a: 'dakar', b: 'kappalmas', steps: 3, type: 'sea', via: [[26, 382], [78, 442]] },
   { a: 'kappalmas', b: 'kamerun', steps: 4, type: 'sea', via: [[250, 480], [352, 492]] },
-  { a: 'kongo', b: 'namib', steps: 4, type: 'sea', via: [[398, 602], [376, 692], [418, 782]] },
   // St. Helenan yksinäinen saari: laivayhteys Atlantin reitiltä.
   { a: 'kappalmas', b: 'sthelena', steps: 4, type: 'sea', via: [[150, 516], [162, 598]] },
   { a: 'sthelena', b: 'namib', steps: 4, type: 'sea', via: [[330, 752]] },
@@ -33443,6 +33467,18 @@ class UI {
     this.factText = document.getElementById('fact-text');
     this.factCard = this.factText.closest('.fact-card');
     this.factKey = null;
+    // Jatkuu-vihje: nuoli ja häivytys näkyvät, kun tekstiä on näkymän
+    // alapuolella. Tarkkailija kattaa myös kirjoituskoneen etenemisen,
+    // joten vihje syttyy heti kun teksti kasvaa yli näkymän.
+    this.factTekstiRivi = this.factText.closest('.fact-teksti-rivi');
+    const jatkuuVihje = () => {
+      const el = this.factText;
+      const jatkuu = el.scrollHeight - el.clientHeight - el.scrollTop > 6;
+      this.factTekstiRivi?.classList.toggle('jatkuu', jatkuu);
+    };
+    this.factText.addEventListener('scroll', jatkuuVihje, { passive: true });
+    new MutationObserver(jatkuuVihje)
+      .observe(this.factText, { childList: true, characterData: true, subtree: true });
 
     this.winnerDialog = document.getElementById('winner-dialog');
     this.quizDialog = document.getElementById('quiz-dialog');
@@ -37190,7 +37226,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.83';
+const APP_VERSION = '2026-07-30.84';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
