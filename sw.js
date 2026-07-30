@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-07-30.108';
+const CACHE = 'matkakirja-2026-07-30.109';
 const SHELL = [
   './',
   './index.html',
@@ -114,6 +114,84 @@ const SHELL = [
   './assets/audio/puhe-africa-vihje-tshadjarvi.mp3',
   './assets/audio/puhe-africa-vihje-viktoria.mp3',
   './assets/audio/puhe-africa-vihje-viktorianputoukset.mp3',
+  './assets/valokuvat/uusi-addisabeba.jpg',
+  './assets/valokuvat/uusi-ahaggar.jpg',
+  './assets/valokuvat/uusi-alkufra.jpg',
+  './assets/valokuvat/uusi-angola.jpg',
+  './assets/valokuvat/uusi-bahrelghazal.jpg',
+  './assets/valokuvat/uusi-dakar.jpg',
+  './assets/valokuvat/uusi-darfur.jpg',
+  './assets/valokuvat/uusi-gao.jpg',
+  './assets/valokuvat/uusi-kairo.jpg',
+  './assets/valokuvat/uusi-kamerun.jpg',
+  './assets/valokuvat/uusi-kano.jpg',
+  './assets/valokuvat/uusi-kapkaupunki.jpg',
+  './assets/valokuvat/uusi-kappalmas.jpg',
+  './assets/valokuvat/uusi-karthago.jpg',
+  './assets/valokuvat/uusi-kilimandzaro.jpg',
+  './assets/valokuvat/uusi-kimberley.jpg',
+  './assets/valokuvat/uusi-kongo.jpg',
+  './assets/valokuvat/uusi-kumasi.jpg',
+  './assets/valokuvat/uusi-lagos.jpg',
+  './assets/valokuvat/uusi-madagaskar.jpg',
+  './assets/valokuvat/uusi-marrakech.jpg',
+  './assets/valokuvat/uusi-mosambik.jpg',
+  './assets/valokuvat/uusi-murzuk.jpg',
+  './assets/valokuvat/uusi-nairobi.jpg',
+  './assets/valokuvat/uusi-namib.jpg',
+  './assets/valokuvat/uusi-orjarannikko.jpg',
+  './assets/valokuvat/uusi-rashafun.jpg',
+  './assets/valokuvat/uusi-sahara.jpg',
+  './assets/valokuvat/uusi-sansibar.jpg',
+  './assets/valokuvat/uusi-sierraleone.jpg',
+  './assets/valokuvat/uusi-sthelena.jpg',
+  './assets/valokuvat/uusi-suakin.jpg',
+  './assets/valokuvat/uusi-tanganjika.jpg',
+  './assets/valokuvat/uusi-tanger.jpg',
+  './assets/valokuvat/uusi-timbuktu.jpg',
+  './assets/valokuvat/uusi-tripoli.jpg',
+  './assets/valokuvat/uusi-tshadjarvi.jpg',
+  './assets/valokuvat/uusi-viktoria.jpg',
+  './assets/valokuvat/uusi-viktorianputoukset.jpg',
+  './assets/valokuvat/vanha-addisabeba.jpg',
+  './assets/valokuvat/vanha-ahaggar.jpg',
+  './assets/valokuvat/vanha-alkufra.jpg',
+  './assets/valokuvat/vanha-angola.jpg',
+  './assets/valokuvat/vanha-bahrelghazal.jpg',
+  './assets/valokuvat/vanha-dakar.jpg',
+  './assets/valokuvat/vanha-darfur.jpg',
+  './assets/valokuvat/vanha-gao.jpg',
+  './assets/valokuvat/vanha-kairo.jpg',
+  './assets/valokuvat/vanha-kamerun.jpg',
+  './assets/valokuvat/vanha-kano.jpg',
+  './assets/valokuvat/vanha-kapkaupunki.jpg',
+  './assets/valokuvat/vanha-kappalmas.jpg',
+  './assets/valokuvat/vanha-karthago.jpg',
+  './assets/valokuvat/vanha-kilimandzaro.jpg',
+  './assets/valokuvat/vanha-kimberley.jpg',
+  './assets/valokuvat/vanha-kongo.jpg',
+  './assets/valokuvat/vanha-kumasi.jpg',
+  './assets/valokuvat/vanha-lagos.jpg',
+  './assets/valokuvat/vanha-madagaskar.jpg',
+  './assets/valokuvat/vanha-marrakech.jpg',
+  './assets/valokuvat/vanha-mosambik.jpg',
+  './assets/valokuvat/vanha-murzuk.jpg',
+  './assets/valokuvat/vanha-nairobi.jpg',
+  './assets/valokuvat/vanha-namib.jpg',
+  './assets/valokuvat/vanha-orjarannikko.jpg',
+  './assets/valokuvat/vanha-rashafun.jpg',
+  './assets/valokuvat/vanha-sahara.jpg',
+  './assets/valokuvat/vanha-sansibar.jpg',
+  './assets/valokuvat/vanha-sierraleone.jpg',
+  './assets/valokuvat/vanha-sthelena.jpg',
+  './assets/valokuvat/vanha-suakin.jpg',
+  './assets/valokuvat/vanha-tanganjika.png',
+  './assets/valokuvat/vanha-tanger.jpg',
+  './assets/valokuvat/vanha-timbuktu.png',
+  './assets/valokuvat/vanha-tripoli.png',
+  './assets/valokuvat/vanha-tshadjarvi.jpg',
+  './assets/valokuvat/vanha-viktoria.jpg',
+  './assets/valokuvat/vanha-viktorianputoukset.jpg',
   './assets/audio/puhe-africa-saapuminen-kairo.mp3',
   './assets/audio/puhe-africa-saapuminen-marrakech.mp3',
   './assets/audio/puhe-africa-saapuminen-lagos.mp3',
@@ -166,11 +244,17 @@ self.addEventListener('install', (event) => {
   );
 });
 
+// Wikipedian ja Commonsin kuvien ajonaikainen välimuisti: kerran nähty
+// kuva latautuu jatkossa heti ja toimii offline. Oma kori, jota version
+// vaihto ei tyhjennä — kuvat eivät vanhene version mukana.
+const KUVACACHE = 'matkakirja-wikikuvat-v1';
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(
+        keys.filter((k) => k !== CACHE && k !== KUVACACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });
@@ -180,10 +264,29 @@ self.addEventListener('activate', (event) => {
 // Yläpalkin Päivitä-nappi tyhjentää välimuistin, jolloin uusin versio tulee heti.
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  // Vain oma alkuperä. Ulkoiset kutsut (Wikipedian tiivistelmät) menevät
-  // suoraan verkkoon: niitä ei välimuistiteta, ja ennen kaikkea alla oleva
-  // index.html-varapolku palauttaisi niille HTML-sivun JSONin sijaan.
-  if (new URL(event.request.url).origin !== self.location.origin) return;
+  const osoite = new URL(event.request.url);
+  // Ulkoisista kutsuista välimuistitetaan vain wikikuvat (kuva kerran
+  // nähtynä latautuu heti ja toimii offline). Muut ulkoiset kutsut
+  // (esim. Wikipedian tiivistelmä-JSON) menevät suoraan verkkoon.
+  if (osoite.origin !== self.location.origin) {
+    const wikikuva = event.request.destination === 'image'
+      && (osoite.hostname === 'upload.wikimedia.org'
+        || (osoite.hostname === 'commons.wikimedia.org'
+          && osoite.pathname.startsWith('/wiki/Special:FilePath/')));
+    if (!wikikuva) return;
+    event.respondWith(
+      caches.open(KUVACACHE).then(async (kuvat) => {
+        const osuma = await kuvat.match(event.request.url);
+        if (osuma) return osuma;
+        // CORS-nouto: upload.wikimedia.org sallii sen, ja vastaus on
+        // silloin tavallinen (ei opaakki), joten se ei paisuta kiintiötä.
+        const vastaus = await fetch(event.request.url, { mode: 'cors' }).catch(() => null);
+        if (vastaus && vastaus.ok) kuvat.put(event.request.url, vastaus.clone());
+        return vastaus ?? Response.error();
+      }),
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((hit) => {
       const network = fetch(event.request)
