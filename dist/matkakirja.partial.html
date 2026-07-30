@@ -684,6 +684,59 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   margin: 0.1rem 0 0.3rem;
 }
 
+/*
+ * Kaupungin elämää -lohko: kulttuurinostot ja tutustu ja vastaa -kysymys
+ * palstojen alla koko kortin leveydellä.
+ */
+.arrival-kulttuuri {
+  border-top: 1px dashed rgba(70, 51, 31, 0.35);
+  margin-top: 0.25rem;
+  padding-top: 0.4rem;
+}
+
+.arrival-kulttuuri > summary {
+  cursor: pointer;
+  font-family: var(--font-type);
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+  color: #7a5514;
+  padding: 0.1rem 0 0.35rem;
+}
+
+.kulttuuri-nosto { margin-bottom: 0.6rem; }
+
+.kulttuuri-otsikko {
+  margin: 0 0 0.15rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.kulttuuri-nosto img {
+  display: block;
+  width: 100%;
+  max-height: 230px;
+  object-fit: cover;
+  border: 1px solid rgba(70, 51, 31, 0.3);
+  border-radius: 6px;
+  margin: 0.25rem 0;
+}
+
+.kulttuuri-lahde {
+  margin: 0.05rem 0 0;
+  font-size: 0.7rem;
+  font-family: var(--font-type);
+  color: rgba(90, 74, 51, 0.85);
+}
+
+.kulttuuri-vaihtoehdot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0.4rem;
+}
+
+.kulttuuri-vaihtoehdot button { font-size: 0.85rem; }
+
 /* Kapealla ruudulla palstat allekkain ja jakoviiva takaisin vaakaan. */
 @media (max-width: 640px) {
   .arrival-palstat { flex-direction: column; gap: 0; }
@@ -2603,6 +2656,17 @@ body.katselu #newgame-btn { display: none; }
       <button id="arrival-maa-wiki" class="wiki-btn" type="button" hidden>Lue lisää maasta</button>
      </div>
     </div>
+    <!-- Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja tutustu ja
+         vastaa -kysymys (pilotti). -->
+    <details id="arrival-kulttuuri" class="arrival-kulttuuri" hidden>
+     <summary>Kaupungin elämää — taide, ruoka ja musiikki</summary>
+     <div id="arrival-kulttuuri-lista"></div>
+     <div id="arrival-kulttuuri-visa" hidden>
+      <p class="kulttuuri-otsikko" id="arrival-kulttuuri-kysymys"></p>
+      <div class="kulttuuri-vaihtoehdot" id="arrival-kulttuuri-vaihtoehdot"></div>
+      <p id="arrival-kulttuuri-tulos" class="arrival-intro" hidden></p>
+     </div>
+    </details>
     <div class="dialog-actions">
       <button id="arrival-yes" class="primary" type="button">Tutki paikka</button>
       <button id="arrival-no" type="button">Jatka matkaa</button>
@@ -7479,6 +7543,90 @@ const AFRICA_SAAPUMISET = {
     nosto: 'Isoisä kirjoitti nähneensä täällä, kuinka aavikon karavaanit '
       + 'purkavat lastinsa suoraan laivoihin — "kaksi maailmaa kättelee '
       + 'laiturilla", hän merkitsi. Sama kädenpuristus näkyy satamassa yhä.',
+  },
+};
+
+// ===== js/packs/africa-kulttuuri.js =====
+// Kaupungin elämää: taide-, ruoka- ja musiikkinostot Tutki-kortille
+// (pilotti: Tanger ja Tripoli — omistajan päätös, laajennetaan jos malli
+// toimii). Jokainen väite on tarkistettavissa; kuvat ovat Wikimedia
+// Commonsista ja niiden lisenssi on varmistettu tiedostokohtaisesti.
+//
+// `kysymys` on tutustu ja vastaa -kokeilu: nostoihin tutustumalla
+// kysymykseen osaa vastata, ja oikeasta vastauksesta saa pienen
+// palkkion kerran per kaupunki (game.actionKulttuuri).
+const KULTTUURI_PALKKIO = 25;
+
+const AFRICA_KULTTUURI = {
+  tanger: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Matisse maalasi Tangerissa',
+        tiedosto: 'Henri Matisse, 1911-12, La Fenêtre à Tanger (Paysage vu d\'une fenêtre Landscape viewed from a window, Tangiers), oil on canvas, 115 x 80 cm, Pushkin Museum.jpg',
+        teksti: 'Ranskalainen taidemaalari Henri Matisse asui Tangerissa talvina '
+          + '1912–1913 ja maalasi hotellihuoneensa ikkunasta näkymän yli '
+          + 'kaupungin — sininen "Ikkuna Tangerissa" kuuluu nykyään Moskovan '
+          + 'Pushkin-museon aarteisiin.',
+        lahde: 'Wikimedia Commons (PD)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Minttutee',
+        teksti: 'Vieraalle kaadetaan Marokossa lähes aina lasillinen makeaa '
+          + 'minttuteetä. Tee kaadetaan korkealta, jotta pintaan syntyy '
+          + 'vaahto — ja kieltäytymistä pidetään epäkohteliaana.',
+      },
+      {
+        tyyppi: 'linkki',
+        otsikko: 'Gnawa-musiikki',
+        teksti: 'Marokon gnawa-perinteessä rautakastanjetit ja kolmikielinen '
+          + 'guembri-luuttu vievät kuulijan transsiin asti — perinne on '
+          + 'Unescon aineettoman kulttuuriperinnön listalla.',
+        wiki: 'Gnawa',
+      },
+    ],
+    kysymys: {
+      q: 'Kuka kuuluisa taidemaalari työskenteli Tangerissa talvina 1912–1913?',
+      options: ['Henri Matisse', 'Claude Monet', 'Pablo Picasso', 'Vincent van Gogh'],
+      correct: 0,
+      fact: 'Matisse maalasi Tangerissa kahtena talvena. Hotelli-ikkunan näkymä '
+        + '"La Fenêtre à Tanger" on nähtävissä nostossa yllä.',
+    },
+  },
+  tripoli: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Malouf-musiikki',
+        tiedosto: 'Libyan Malouf.jpg',
+        teksti: 'Malouf on Libyan perinnemusiikkia, jonka juuret ovat keskiajan '
+          + 'Andalusiassa. Häissä ja juhlissa sitä esittää kokonainen yhtye '
+          + 'lauluineen, luuttuineen ja rumpuineen.',
+        lahde: 'Wikimedia Commons (CC BY 4.0)',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Tee ja paahdetut pähkinät',
+        teksti: 'Libyalainen tee keitetään vahvaksi ja vaahtoavaksi ja juodaan '
+          + 'pienistä laseista useampi kierros — viimeiseen lasiin lisätään '
+          + 'usein paahdettuja maapähkinöitä tai manteleita.',
+      },
+      {
+        tyyppi: 'teksti',
+        otsikko: 'Bazin-pata',
+        teksti: 'Juhlapöydän kunniaruoka on bazin: ohrataikinasta keitetty '
+          + 'kiinteä kakku, jonka ympärille kaadetaan tulista lammas- ja '
+          + 'tomaattikastiketta ja jota syödään yhdessä isolta vadilta.',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä on malouf?',
+      options: ['Libyan perinnemusiikkia', 'Aavikkotuulen nimi', 'Libyalainen teelaatu', 'Vanha karavaanireitti'],
+      correct: 0,
+      fact: 'Malouf kulkeutui Libyaan Andalusiasta ja soi yhä häissä ja '
+        + 'juhlissa — kuva yhtyeestä on nostossa yllä.',
+    },
   },
 };
 
@@ -28292,6 +28440,9 @@ class Game {
     // Pysähdyksen muoto: sama erikoismuoto ei toistu kahdesti peräkkäin.
     this.lastForm = null;
     this.eventCard = null;
+    // Kulttuurikysymykset (tutustu ja vastaa): vastattu kerran per
+    // kaupunki, avaimena 'pakka:kaupunki'.
+    this.kulttuuriVastatut = new Set();
     // Pulmat avautuvat kerran pelissä: avaimena 'pakka:kaupunki'.
     this.puzzlesSeen = new Set();
     this.explored = new Set(); // tutkitut laatattomat kaupungit (pack:city)
@@ -28700,6 +28851,23 @@ class Game {
     if (this.turnCount % HINT_EVERY_TURNS !== 0) return null;
     const cityId = this.starCityOf(world);
     return this.pack.texts.starHints?.[cityId] ?? null;
+  }
+
+  /**
+   * Kulttuurikysymys Tutki-kortissa (tutustu ja vastaa -kokeilu):
+   * vastaus kirjataan kerran per kaupunki ja oikeasta saa pienen
+   * palkkion. Väärä ei maksa mitään, mutta uutta yritystä samaan
+   * kaupunkiin ei saa — palkkiota ei voi kalastella.
+   */
+  actionKulttuuri(cityId, oikein, palkkio = 25) {
+    const avain = `${this.pack.id}:${cityId}`;
+    if (this.kulttuuriVastatut.has(avain)) return { ok: false, error: 'Jo vastattu' };
+    this.kulttuuriVastatut.add(avain);
+    if (oikein) {
+      this.player.money += palkkio;
+      this.say(this.player.id, `${this.player.name} tunsi paikallista kulttuuria (+${palkkio} puntaa).`);
+    }
+    return { ok: true, palkittu: !!oikein };
   }
 
   /** Lentää porttikaupungista toiselle laudalle. Vie koko vuoron. */
@@ -29800,6 +29968,7 @@ class Game {
       lastForm: this.lastForm,
       eventCard: this.eventCard,
       puzzlesSeen: [...this.puzzlesSeen],
+      kulttuuriVastatut: [...this.kulttuuriVastatut],
       explored: [...this.explored],
       scheduleNote: this.scheduleNote,
       scheduleShown: [...this.scheduleShown],
@@ -29878,6 +30047,7 @@ class Game {
     game.lastForm = data.lastForm ?? null;
     game.eventCard = data.eventCard ?? null;
     game.puzzlesSeen = new Set(data.puzzlesSeen ?? []);
+    game.kulttuuriVastatut = new Set(data.kulttuuriVastatut ?? []);
     game.explored = new Set(data.explored ?? []);
     // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
     // yhtään isoisän aikataulurivistä.
@@ -30135,6 +30305,9 @@ function chooseDuelAnswer(game) {
 
 // Uuden mallin saapumistekstit laudoittain (pilotti: Afrikka).
 const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET };
+
+// Kaupungin elämää -nostot laudoittain (pilotti: Afrikka).
+const KULTTUURIT = { africa: AFRICA_KULTTUURI };
 
 // Vanhat valokuvat muistikirjan kylkeen laudoittain — toistaiseksi vain
 // Afrikalla on kuvasto.
@@ -30400,6 +30573,13 @@ class UI {
       const maa = this.arrivalMaaTiedot;
       if (maa) this.openWikiArticle(maa.wiki ?? maa.nimi, maa.nimi);
     });
+    // Kaupungin elämää -lohko täytetään openArrivalissa.
+    this.arrivalKulttuuri = document.getElementById('arrival-kulttuuri');
+    this.arrivalKulttuuriLista = document.getElementById('arrival-kulttuuri-lista');
+    this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
+    this.arrivalKulttuuriKysymys = document.getElementById('arrival-kulttuuri-kysymys');
+    this.arrivalKulttuuriVaihtoehdot = document.getElementById('arrival-kulttuuri-vaihtoehdot');
+    this.arrivalKulttuuriTulos = document.getElementById('arrival-kulttuuri-tulos');
     document.getElementById('arrival-yes').addEventListener('click', () => {
       this.closeArrival();
       sfx.play('paper');
@@ -32084,6 +32264,10 @@ class UI {
       });
     }
 
+    // Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja niihin
+    // liittyvä tutustu ja vastaa -kysymys (pilottikaupungit).
+    this.naytaKulttuuri(city);
+
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
 
@@ -32098,6 +32282,72 @@ class UI {
       }
       if (summary.extract) this.arrivalIntro.textContent = shortIntro(summary.extract);
       this.arrivalWiki.hidden = false;
+    });
+  }
+
+  /**
+   * Kaupungin elämää -lohko: nostot (kuva, teksti tai linkki lähteineen)
+   * ja niiden perässä tutustu ja vastaa -kysymys. Oikeasta vastauksesta
+   * pieni palkkio kerran per kaupunki — väärästä ei rangaista, mutta
+   * uutta yritystä ei saa.
+   */
+  naytaKulttuuri(city) {
+    const tiedot = (KULTTUURIT[this.game.pack.id] ?? {})[city.id] ?? null;
+    this.arrivalKulttuuri.hidden = !tiedot;
+    this.arrivalKulttuuri.open = false;
+    if (!tiedot) return;
+    const lista = this.arrivalKulttuuriLista;
+    lista.textContent = '';
+    for (const nosto of tiedot.nostot ?? []) {
+      const lohko = html('div', 'kulttuuri-nosto');
+      lohko.appendChild(html('p', 'kulttuuri-otsikko', nosto.otsikko));
+      if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
+        const kuva = document.createElement('img');
+        kuva.loading = 'lazy';
+        kuva.alt = nosto.otsikko;
+        kuva.src = valokuvaUrl(nosto.tiedosto, 640);
+        // Ilman verkkoa nosto jää pelkäksi tekstiksi.
+        kuva.addEventListener('error', () => kuva.remove());
+        lohko.appendChild(kuva);
+      }
+      lohko.appendChild(html('p', 'arrival-intro', nosto.teksti));
+      if (nosto.wiki) {
+        const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
+        nappi.type = 'button';
+        nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
+        lohko.appendChild(nappi);
+      }
+      if (nosto.lahde) lohko.appendChild(html('p', 'kulttuuri-lahde', nosto.lahde));
+      lista.appendChild(lohko);
+    }
+
+    const { kysymys } = tiedot;
+    this.arrivalKulttuuriVisa.hidden = !kysymys;
+    this.arrivalKulttuuriTulos.hidden = true;
+    this.arrivalKulttuuriVaihtoehdot.textContent = '';
+    if (!kysymys) return;
+    const vastattu = this.game.kulttuuriVastatut?.has(`${this.game.pack.id}:${city.id}`);
+    this.arrivalKulttuuriKysymys.textContent = vastattu
+      ? 'Kulttuurikysymykseen on jo vastattu tässä kaupungissa.'
+      : `Tutustuitko? ${kysymys.q}`;
+    if (vastattu) return;
+    kysymys.options.forEach((vaihtoehto, i) => {
+      const nappi = html('button', '', vaihtoehto);
+      nappi.type = 'button';
+      nappi.addEventListener('click', () => {
+        const oikein = i === kysymys.correct;
+        const vastaus = this.game.actionKulttuuri(city.id, oikein, KULTTUURI_PALKKIO);
+        if (!vastaus.ok) return;
+        this.arrivalKulttuuriVaihtoehdot.textContent = '';
+        this.arrivalKulttuuriKysymys.textContent = kysymys.q;
+        this.arrivalKulttuuriTulos.hidden = false;
+        this.arrivalKulttuuriTulos.textContent = (oikein
+          ? `Oikein! +${KULTTUURI_PALKKIO} puntaa. `
+          : `Oikea vastaus: ${kysymys.options[kysymys.correct]}. `) + (kysymys.fact ?? '');
+        sfx.play(oikein ? 'correct' : 'wrong');
+        this.render();
+      });
+      this.arrivalKulttuuriVaihtoehdot.appendChild(nappi);
     });
   }
 
@@ -33668,7 +33918,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.59';
+const APP_VERSION = '2026-07-30.60';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

@@ -24,9 +24,13 @@ import { drawPuzzle } from './packs/africa-puzzles.js';
 import { OMAT_TIIVISTELMAT } from './packs/africa-tiivistelmat.js';
 import { AFRICA_VALOKUVAT, valokuvaUrl } from './packs/africa-valokuvat.js';
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
+import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
 
 // Uuden mallin saapumistekstit laudoittain (pilotti: Afrikka).
 const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET };
+
+// Kaupungin elämää -nostot laudoittain (pilotti: Afrikka).
+const KULTTUURIT = { africa: AFRICA_KULTTUURI };
 
 // Vanhat valokuvat muistikirjan kylkeen laudoittain — toistaiseksi vain
 // Afrikalla on kuvasto.
@@ -316,6 +320,13 @@ export class UI {
       const maa = this.arrivalMaaTiedot;
       if (maa) this.openWikiArticle(maa.wiki ?? maa.nimi, maa.nimi);
     });
+    // Kaupungin elämää -lohko täytetään openArrivalissa.
+    this.arrivalKulttuuri = document.getElementById('arrival-kulttuuri');
+    this.arrivalKulttuuriLista = document.getElementById('arrival-kulttuuri-lista');
+    this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
+    this.arrivalKulttuuriKysymys = document.getElementById('arrival-kulttuuri-kysymys');
+    this.arrivalKulttuuriVaihtoehdot = document.getElementById('arrival-kulttuuri-vaihtoehdot');
+    this.arrivalKulttuuriTulos = document.getElementById('arrival-kulttuuri-tulos');
     document.getElementById('arrival-yes').addEventListener('click', () => {
       this.closeArrival();
       sfx.play('paper');
@@ -2001,6 +2012,10 @@ export class UI {
       });
     }
 
+    // Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja niihin
+    // liittyvä tutustu ja vastaa -kysymys (pilottikaupungit).
+    this.naytaKulttuuri(city);
+
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
 
@@ -2015,6 +2030,72 @@ export class UI {
       }
       if (summary.extract) this.arrivalIntro.textContent = shortIntro(summary.extract);
       this.arrivalWiki.hidden = false;
+    });
+  }
+
+  /**
+   * Kaupungin elämää -lohko: nostot (kuva, teksti tai linkki lähteineen)
+   * ja niiden perässä tutustu ja vastaa -kysymys. Oikeasta vastauksesta
+   * pieni palkkio kerran per kaupunki — väärästä ei rangaista, mutta
+   * uutta yritystä ei saa.
+   */
+  naytaKulttuuri(city) {
+    const tiedot = (KULTTUURIT[this.game.pack.id] ?? {})[city.id] ?? null;
+    this.arrivalKulttuuri.hidden = !tiedot;
+    this.arrivalKulttuuri.open = false;
+    if (!tiedot) return;
+    const lista = this.arrivalKulttuuriLista;
+    lista.textContent = '';
+    for (const nosto of tiedot.nostot ?? []) {
+      const lohko = html('div', 'kulttuuri-nosto');
+      lohko.appendChild(html('p', 'kulttuuri-otsikko', nosto.otsikko));
+      if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
+        const kuva = document.createElement('img');
+        kuva.loading = 'lazy';
+        kuva.alt = nosto.otsikko;
+        kuva.src = valokuvaUrl(nosto.tiedosto, 640);
+        // Ilman verkkoa nosto jää pelkäksi tekstiksi.
+        kuva.addEventListener('error', () => kuva.remove());
+        lohko.appendChild(kuva);
+      }
+      lohko.appendChild(html('p', 'arrival-intro', nosto.teksti));
+      if (nosto.wiki) {
+        const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
+        nappi.type = 'button';
+        nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
+        lohko.appendChild(nappi);
+      }
+      if (nosto.lahde) lohko.appendChild(html('p', 'kulttuuri-lahde', nosto.lahde));
+      lista.appendChild(lohko);
+    }
+
+    const { kysymys } = tiedot;
+    this.arrivalKulttuuriVisa.hidden = !kysymys;
+    this.arrivalKulttuuriTulos.hidden = true;
+    this.arrivalKulttuuriVaihtoehdot.textContent = '';
+    if (!kysymys) return;
+    const vastattu = this.game.kulttuuriVastatut?.has(`${this.game.pack.id}:${city.id}`);
+    this.arrivalKulttuuriKysymys.textContent = vastattu
+      ? 'Kulttuurikysymykseen on jo vastattu tässä kaupungissa.'
+      : `Tutustuitko? ${kysymys.q}`;
+    if (vastattu) return;
+    kysymys.options.forEach((vaihtoehto, i) => {
+      const nappi = html('button', '', vaihtoehto);
+      nappi.type = 'button';
+      nappi.addEventListener('click', () => {
+        const oikein = i === kysymys.correct;
+        const vastaus = this.game.actionKulttuuri(city.id, oikein, KULTTUURI_PALKKIO);
+        if (!vastaus.ok) return;
+        this.arrivalKulttuuriVaihtoehdot.textContent = '';
+        this.arrivalKulttuuriKysymys.textContent = kysymys.q;
+        this.arrivalKulttuuriTulos.hidden = false;
+        this.arrivalKulttuuriTulos.textContent = (oikein
+          ? `Oikein! +${KULTTUURI_PALKKIO} puntaa. `
+          : `Oikea vastaus: ${kysymys.options[kysymys.correct]}. `) + (kysymys.fact ?? '');
+        sfx.play(oikein ? 'correct' : 'wrong');
+        this.render();
+      });
+      this.arrivalKulttuuriVaihtoehdot.appendChild(nappi);
     });
   }
 

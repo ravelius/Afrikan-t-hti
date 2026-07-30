@@ -176,6 +176,9 @@ export class Game {
     // Pysähdyksen muoto: sama erikoismuoto ei toistu kahdesti peräkkäin.
     this.lastForm = null;
     this.eventCard = null;
+    // Kulttuurikysymykset (tutustu ja vastaa): vastattu kerran per
+    // kaupunki, avaimena 'pakka:kaupunki'.
+    this.kulttuuriVastatut = new Set();
     // Pulmat avautuvat kerran pelissä: avaimena 'pakka:kaupunki'.
     this.puzzlesSeen = new Set();
     this.explored = new Set(); // tutkitut laatattomat kaupungit (pack:city)
@@ -584,6 +587,23 @@ export class Game {
     if (this.turnCount % HINT_EVERY_TURNS !== 0) return null;
     const cityId = this.starCityOf(world);
     return this.pack.texts.starHints?.[cityId] ?? null;
+  }
+
+  /**
+   * Kulttuurikysymys Tutki-kortissa (tutustu ja vastaa -kokeilu):
+   * vastaus kirjataan kerran per kaupunki ja oikeasta saa pienen
+   * palkkion. Väärä ei maksa mitään, mutta uutta yritystä samaan
+   * kaupunkiin ei saa — palkkiota ei voi kalastella.
+   */
+  actionKulttuuri(cityId, oikein, palkkio = 25) {
+    const avain = `${this.pack.id}:${cityId}`;
+    if (this.kulttuuriVastatut.has(avain)) return { ok: false, error: 'Jo vastattu' };
+    this.kulttuuriVastatut.add(avain);
+    if (oikein) {
+      this.player.money += palkkio;
+      this.say(this.player.id, `${this.player.name} tunsi paikallista kulttuuria (+${palkkio} puntaa).`);
+    }
+    return { ok: true, palkittu: !!oikein };
   }
 
   /** Lentää porttikaupungista toiselle laudalle. Vie koko vuoron. */
@@ -1684,6 +1704,7 @@ export class Game {
       lastForm: this.lastForm,
       eventCard: this.eventCard,
       puzzlesSeen: [...this.puzzlesSeen],
+      kulttuuriVastatut: [...this.kulttuuriVastatut],
       explored: [...this.explored],
       scheduleNote: this.scheduleNote,
       scheduleShown: [...this.scheduleShown],
@@ -1762,6 +1783,7 @@ export class Game {
     game.lastForm = data.lastForm ?? null;
     game.eventCard = data.eventCard ?? null;
     game.puzzlesSeen = new Set(data.puzzlesSeen ?? []);
+    game.kulttuuriVastatut = new Set(data.kulttuuriVastatut ?? []);
     game.explored = new Set(data.explored ?? []);
     // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
     // yhtään isoisän aikataulurivistä.
