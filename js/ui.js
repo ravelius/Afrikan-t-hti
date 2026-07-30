@@ -22,6 +22,11 @@ import { stampBoard, stampDate, stampList } from './passport.js';
 import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from './wiki.js';
 import { drawPuzzle } from './packs/africa-puzzles.js';
 import { OMAT_TIIVISTELMAT } from './packs/africa-tiivistelmat.js';
+import { AFRICA_VALOKUVAT, valokuvaUrl } from './packs/africa-valokuvat.js';
+
+// Vanhat valokuvat muistikirjan kylkeen laudoittain — toistaiseksi vain
+// Afrikalla on kuvasto.
+const VALOKUVAT = { africa: AFRICA_VALOKUVAT };
 
 // Tiivistelmät ja kuvat haetaan kerran per artikkeli: sama kuva näkyy
 // sekä saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
@@ -344,6 +349,20 @@ export class UI {
     });
     // Kaiutin jatkaa merkinnän luentaa siitä, mihin se pysähtyi
     // ensimmäisen virkkeen jälkeen — ja toimii myös taukonappina.
+    // Vanha valokuva muistikirjan kyljessä: pikkukuva aukeaa napautuksesta
+    // postikortiksi kortin viereen. Latausvirhe (esim. ei verkkoa)
+    // piilottaa pikkukuvan siististi.
+    this.factValokuva = document.getElementById('fact-valokuva');
+    this.factValokuvaKuva = document.getElementById('fact-valokuva-kuva');
+    this.factValokuvaKuva.addEventListener('error', () => {
+      this.factValokuva.hidden = true;
+    });
+    this.factValokuva.addEventListener('click', (event) => {
+      event.stopPropagation();
+      this.naytaPostikortti();
+    });
+    this.postikorttiSulkija = () => this.suljePostikortti();
+
     this.factKuuntele = document.getElementById('fact-kuuntele');
     this.factKuuntele.addEventListener('click', () => {
       const audio = this.diaryVoice;
@@ -554,6 +573,7 @@ export class UI {
     sfx.stopFlight();
     this.stopIntroVoice();
     this.stopDiaryVoice();
+    this.suljePostikortti();
     // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
     document.body.classList.remove('flight-active');
     for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
@@ -1520,6 +1540,67 @@ export class UI {
   }
 
   /**
+   * Vanhan valokuvan pikkukuva muistikirjan kylkeen, jos kaupungille on
+   * kuva kuvastossa. Null piilottaa kuvan ja sulkee auki jääneen kortin.
+   */
+  naytaFactValokuva(cityId, paikka) {
+    const valokuva = cityId ? (VALOKUVAT[this.game.pack.id] ?? {})[cityId] ?? null : null;
+    this.factValokuvaTiedot = valokuva ? { ...valokuva, paikka } : null;
+    if (!valokuva) {
+      this.factValokuva.hidden = true;
+      this.suljePostikortti();
+      return;
+    }
+    const osoite = valokuvaUrl(valokuva.tiedosto, 160);
+    if (this.factValokuvaKuva.getAttribute('src') !== osoite) {
+      this.factValokuvaKuva.src = osoite;
+    }
+    this.factValokuva.hidden = false;
+  }
+
+  /**
+   * Valokuva aukeaa postikorttina hieman vinottain muistikirjan viereen:
+   * valkoiset reunukset, kuvateksti ja lähde. Napautus mihin tahansa
+   * sulkee kortin.
+   */
+  naytaPostikortti() {
+    this.suljePostikortti();
+    const tiedot = this.factValokuvaTiedot;
+    if (!tiedot) return;
+    const kortti = html('div', 'postikortti');
+    const kuva = document.createElement('img');
+    kuva.src = valokuvaUrl(tiedot.tiedosto, 1000);
+    kuva.alt = `Vanha valokuva: ${tiedot.paikka}`;
+    kortti.appendChild(kuva);
+    const teksti = html('p', 'kuvateksti',
+      [tiedot.paikka, tiedot.vuosi, tiedot.lahde].filter(Boolean).join(' · '));
+    kortti.appendChild(teksti);
+    // Kortti muistikirjan viereen: yläpuolelle kun muistikirja on ruudun
+    // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
+    const rect = this.factCard.getBoundingClientRect();
+    const leveys = Math.min(window.innerWidth * 0.78, 400);
+    kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - 8, rect.left))}px`;
+    if (rect.top > window.innerHeight / 2) {
+      kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+    } else {
+      kortti.style.top = `${rect.bottom + 10}px`;
+    }
+    document.body.appendChild(kortti);
+    this.postikortti = kortti;
+    // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
+    // sulkemista — napautus mihin tahansa sulkee kortin.
+    setTimeout(() => {
+      document.addEventListener('pointerdown', this.postikorttiSulkija, { once: true, capture: true });
+    }, 0);
+  }
+
+  suljePostikortti() {
+    document.removeEventListener('pointerdown', this.postikorttiSulkija, true);
+    this.postikortti?.remove();
+    this.postikortti = null;
+  }
+
+  /**
    * Tietoruutu pelaajan sijainnista. Siinä puhuu vuorotellen kaksi ääntä:
    * isoisän 1870-luvun päiväkirja ja nuoren herran nykyhavainto. Teksti
    * vaihtuu kierroksittain mutta pysyy samana saman vuoron ajan, jotta sen
@@ -1538,6 +1619,7 @@ export class UI {
       this.factText.textContent = '';
       this.factImage.hidden = true;
       this.factKuuntele.hidden = true;
+      this.naytaFactValokuva(null);
       this.stopDiaryVoice();
       return;
     }
@@ -1558,6 +1640,7 @@ export class UI {
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
       this.factImage.hidden = true;
       this.factKuuntele.hidden = true;
+      this.naytaFactValokuva(null);
       this.stopDiaryVoice();
       this.typeText(this.factText, aikataulu.text);
       return;
@@ -1573,6 +1656,7 @@ export class UI {
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
       this.factKuuntele.hidden = true;
+      this.naytaFactValokuva(null);
       this.stopDiaryVoice();
       this.typeText(this.factText, hint);
       return;
@@ -1601,6 +1685,8 @@ export class UI {
         this.factPlace.textContent = kaupunki.name;
         this.factImageTitle = typeof fakta === 'string' ? null : fakta.wiki ?? null;
         this.factImage.hidden = !this.factImageTitle;
+        // Vanha valokuva kaupungista pikkukuvana tekstin kylkeen.
+        this.naytaFactValokuva(saapuminen.cityId, kaupunki.name);
         // Ensimmäinen lause lihavoituna, loput perään samalla koneella.
         const teksti = factText(fakta);
         const { eka, loput } = ekaLause(teksti);
@@ -1623,7 +1709,11 @@ export class UI {
         this.factKuuntele.hidden = !luettava;
         if (luettava && this.luettuSaapuminen !== key) {
           this.luettuSaapuminen = key;
-          this.playDiaryVoice(this.diaryFullUrl, { ekaLauseeseen: true });
+          this.playDiaryVoice(this.diaryFullUrl, {
+            ekaLauseeseen: true,
+            // Ensimmäisen virkkeen osuus tekstistä ohjaa tauon valintaa.
+            osuus: teksti.length ? eka.length / teksti.length : null,
+          });
         } else {
           this.stopDiaryVoice();
         }
@@ -1643,6 +1733,7 @@ export class UI {
     if (key === this.factKey) return;
     this.factKey = key;
     this.factKuuntele.hidden = true;
+    this.naytaFactValokuva(player.pos.type === 'city' ? city.id : null, city.name);
     this.stopDiaryVoice();
 
     // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
@@ -2169,14 +2260,14 @@ export class UI {
    * `ekaLauseeseen` pysäyttää toiston ensimmäisen virkkeen jälkeiseen
    * hiljaisuuteen — kaiutinnappi jatkaa samasta kohdasta.
    */
-  playDiaryVoice(url, { ekaLauseeseen = false } = {}) {
+  playDiaryVoice(url, { ekaLauseeseen = false, osuus = null } = {}) {
     this.stopDiaryVoice();
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
     audio.volume = 0.9;
     this.diaryVoice = audio;
     if (ekaLauseeseen) {
-      this.lauseTauko(url).then((raja) => {
+      this.lauseTauko(url, osuus).then((raja) => {
         if (this.diaryVoice !== audio || raja == null) return;
         const vahti = () => {
           if (audio.jatkettu) {
@@ -2197,13 +2288,18 @@ export class UI {
   }
 
   /**
-   * Ensimmäisen virkkeen jälkeisen hengähdyksen paikka äänitteessä:
-   * ensimmäinen vähintään 0,3 sekunnin hiljaisuus 1,2 sekunnin jälkeen.
+   * Ensimmäisen virkkeen jälkeisen hengähdyksen paikka äänitteessä.
+   * Pelkkä "ensimmäinen hiljaisuus" osui lukijan hengitykseen ja katkaisi
+   * virkkeen kesken (omistajan havainto), joten raja valitaan nyt
+   * tekstistä lasketun arvion läheltä: ensimmäisen virkkeen osuus koko
+   * tekstistä kertoo, missä kohdassa puhetta virkkeen loppu suunnilleen
+   * on, ja sitä lähin vähintään 0,3 sekunnin hiljaisuus voittaa.
    * Lasketaan kerran per tiedosto ja muistetaan.
    */
-  lauseTauko(url) {
+  lauseTauko(url, osuus = null) {
     this.lauseTauot ??= new Map();
-    if (!this.lauseTauot.has(url)) {
+    const avain = `${url}|${osuus == null ? '' : osuus.toFixed(3)}`;
+    if (!this.lauseTauot.has(avain)) {
       const lupaus = (async () => {
         const ctx = sfx.ensureContext();
         if (!ctx) return null;
@@ -2214,26 +2310,51 @@ export class UI {
         let huippu = 0;
         for (let i = 0; i < kanava.length; i += 16) huippu = Math.max(huippu, Math.abs(kanava[i]));
         const raja = huippu * 0.04;
-        let hiljaisia = 0;
-        for (let i = Math.floor(buf.sampleRate * 1.2); i < kanava.length; i += ikkuna) {
+        // Ikkunoittainen äänekkyys: siitä puheen alku ja loppu sekä
+        // puheen sisään jäävät hiljaisuudet.
+        const aanekas = [];
+        for (let i = 0; i < kanava.length; i += ikkuna) {
           let maksimi = 0;
           const loppu = Math.min(i + ikkuna, kanava.length);
           for (let j = i; j < loppu; j += 4) maksimi = Math.max(maksimi, Math.abs(kanava[j]));
-          if (maksimi < raja) {
-            hiljaisia += 1;
-            if (hiljaisia * 0.05 >= 0.3) {
-              // Tauon alku + pieni hengähdys, jotta sana ehtii loppuun.
-              return (i + ikkuna - hiljaisia * ikkuna) / buf.sampleRate + 0.15;
-            }
+          aanekas.push(maksimi >= raja);
+        }
+        const eka = aanekas.indexOf(true);
+        const vika = aanekas.lastIndexOf(true);
+        if (eka < 0) return null;
+        const s = 0.05; // yhden ikkunan kesto sekunteina
+        const tauot = []; // vähintään 0,3 s hiljaisuuksien alkukohdat
+        let alkoi = -1;
+        for (let i = eka; i <= vika + 1; i++) {
+          if (i <= vika && !aanekas[i]) {
+            if (alkoi < 0) alkoi = i;
           } else {
-            hiljaisia = 0;
+            if (alkoi >= 0 && (i - alkoi) * s >= 0.3) tauot.push(alkoi * s);
+            alkoi = -1;
           }
         }
-        return null; // yksivirkkeinen tai tasainen äänite — soi kokonaan
+        if (!tauot.length) return null; // yksivirkkeinen — soi kokonaan
+        const puheAlku = eka * s;
+        const puheLoppu = (vika + 1) * s;
+        let valinta = null;
+        if (osuus == null) {
+          // Ilman tekstiarviota kelpaa ensimmäinen tauko 1,2 s jälkeen.
+          valinta = tauot.find((t) => t >= 1.2) ?? null;
+        } else {
+          // Arvio virkkeen lopusta puheen kestoon sovitettuna — lähin
+          // tauko voittaa, jolloin hengitystauko kesken virkkeen häviää
+          // aina oikealle virkerajalle.
+          const arvio = puheAlku + (puheLoppu - puheAlku) * osuus;
+          for (const t of tauot) {
+            if (valinta == null || Math.abs(t - arvio) < Math.abs(valinta - arvio)) valinta = t;
+          }
+        }
+        // Tauon alku + pieni hengähdys, jotta sana ehtii loppuun.
+        return valinta == null ? null : valinta + 0.15;
       })().catch(() => null);
-      this.lauseTauot.set(url, lupaus);
+      this.lauseTauot.set(avain, lupaus);
     }
-    return this.lauseTauot.get(url);
+    return this.lauseTauot.get(avain);
   }
 
   stopDiaryVoice() {

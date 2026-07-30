@@ -586,6 +586,67 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .arrival-card .wiki-btn { margin: 0 0 0.7rem; }
 
 /*
+ * Vanha valokuva muistikirjan kyljessä: pieni vedos valkoisin reunuksin
+ * kellumassa tekstin oikealla puolella. Napautus avaa sen postikorttina.
+ */
+.fact-valokuva {
+  float: right;
+  margin: 0.1rem 0 0.3rem 0.55rem;
+  padding: 3px 3px 7px;
+  background: #f8f3e6;
+  border: 0;
+  border-radius: 1px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
+  transform: rotate(2.5deg);
+  cursor: pointer;
+}
+
+.fact-valokuva img {
+  display: block;
+  width: 54px;
+  height: 42px;
+  object-fit: cover;
+  filter: grayscale(1) sepia(0.12) contrast(1.04);
+}
+
+/*
+ * Postikorttikatselin: kuva aukeaa hieman vinottain muistikirjan viereen,
+ * valkoiset reunukset ja lähderivi kuten vanhassa vedoksessa. Napautus
+ * mihin tahansa sulkee.
+ */
+.postikortti {
+  position: fixed;
+  z-index: 70;
+  width: min(78vw, 400px);
+  background: #f8f3e6;
+  padding: 0.55rem 0.55rem 0.3rem;
+  border-radius: 2px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+  transform: rotate(-3deg);
+  animation: postikortti-esiin 0.24s ease-out;
+}
+
+@keyframes postikortti-esiin {
+  from { opacity: 0; transform: rotate(-3deg) translateY(12px); }
+}
+
+.postikortti img {
+  display: block;
+  width: 100%;
+  min-height: 60px;
+  background: #ded5c2;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  filter: grayscale(1) contrast(1.03);
+}
+
+.postikortti .kuvateksti {
+  margin: 0.3rem 0.1rem 0.15rem;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  color: #5a4a33;
+}
+
+/*
  * Maan tiedot kaupungin rinnalla saapumiskortissa (omistajan toive):
  * ohut jakoviiva ja pieni maaetiketti erottavat sen kaupungin
  * esittelystä samalla hillityllä tyylillä.
@@ -2449,6 +2510,8 @@ body.katselu #newgame-btn { display: none; }
             </svg>
           </button>
           <p id="fact-place" class="fact-place"></p>
+          <button id="fact-valokuva" class="fact-valokuva" type="button" hidden
+                  title="Katso vanha valokuva"><img id="fact-valokuva-kuva" alt="Vanha valokuva" /></button>
           <p id="fact-text" class="fact-text"></p>
           <!-- Pieni kuvaikoni: avaa havainnossa mainitun ilmiön kuvan. -->
           <button id="fact-image" class="ghost fact-image-btn" type="button" hidden
@@ -7295,6 +7358,44 @@ const OMAT_TIIVISTELMAT = {
     + 'ja pääkaupunki Monrovia on nimetty Yhdysvaltain presidentin James '
     + 'Monroen mukaan.',
 };
+
+// ===== js/packs/africa-valokuvat.js =====
+// Vanhat valokuvat muistikirjan tueksi: yksi aikakauden mustavalkokuva
+// per kaupunki sieltä, mistä sellainen löytyi vapaalla lisenssillä.
+// Kuvat haetaan Wikimedia Commonsista (Special:FilePath skaalaa suoraan),
+// lisenssi on varmistettu tiedostokohtaisesti (PD / CC0 / CC BY-SA) ja
+// lähde näytetään postikortin kuvatekstissä. Ilman verkkoa pikkukuva jää
+// siististi pois. Kaupungit, joille kelvollista vanhaa kuvaa ei vielä
+// löytynyt, puuttuvat listalta — niitä täydennetään kun hyvä löytyy.
+const AFRICA_VALOKUVAT = {
+  tanger: { tiedosto: 'Tangier Grand Mosque 1900s.jpg', vuosi: '1900-luvun alku', lahde: 'Wikimedia Commons (PD)' },
+  kairo: { tiedosto: 'Kairo, marchands ambulants LCCN2017657437.jpg', vuosi: '1890-luku', lahde: 'Photoglob / Library of Congress (PD)' },
+  tripoli: { tiedosto: 'Arabs in Tripoli WDL2444.png', vuosi: '1910-luku', lahde: 'World Digital Library (PD)' },
+  murzuk: { tiedosto: 'Osmanisches Fort von Mursuk.jpg', vuosi: null, lahde: 'Wikimedia Commons (PD)' },
+  alkufra: { tiedosto: 'Kufra (aeroview).jpg', vuosi: 'noin 1930', lahde: 'Wikimedia Commons (PD)' },
+  gao: { tiedosto: 'ETH-BIB-Grabmal von Askia, Gao-Tschadseeflug 1930-31-LBS MH02-08-0548.tif', vuosi: '1930–31', lahde: 'Walter Mittelholzer / ETH-Bibliothek (PD)' },
+  dakar: { tiedosto: 'Dakar mosque circa 1900.jpg', vuosi: 'noin 1900', lahde: 'Edmond Fortier (PD)' },
+  sierraleone: { tiedosto: 'Cotton Tree Railway Station 3.30 p.m. Bungalow Train, Freetown.jpg', vuosi: '1910-luku', lahde: 'Lisk-Carew Brothers (PD)' },
+  kappalmas: { tiedosto: 'HEARD(1898) 50 Church of Harper, Cape Palmas.jpg', vuosi: '1898', lahde: 'W. H. Heard (PD)' },
+  kumasi: { tiedosto: 'Kumasi 28-03-1900 sx.jpg', vuosi: '1900', lahde: 'Wikimedia Commons (PD)' },
+  orjarannikko: { tiedosto: 'São João Baptista de Ajudá 1920s.jpg', vuosi: '1920-luku', lahde: 'Wikimedia Commons (PD)' },
+  kano: { tiedosto: 'View-Kano city-1911.jpg', vuosi: '1911', lahde: 'E. D. Morel (PD)' },
+  kongo: { tiedosto: 'Livingstone steamer, Congo, ca. 1902-1915 (IMP-CSCNWW33-OS10-73).jpg', vuosi: '1902–1915', lahde: 'Wikimedia Commons (PD)' },
+  angola: { tiedosto: "Saint-Paul de Luanda, port de (l')Angola dans le Portugal africain (vue générale) - btv1b6932475d.jpg", vuosi: '1914', lahde: 'Agence Rol / BnF (PD)' },
+  kapkaupunki: { tiedosto: 'Cape Town tram, Adderley Street - ca. 1900.jpg', vuosi: 'noin 1900', lahde: 'Wikimedia Commons (PD)' },
+  kimberley: { tiedosto: 'Twee gezichten op de mijn Die Groot Gat te Kimberley Diamond fields-Kimberley mine (titel op object) Diamond fields-Tramway, Kimberley mine (titel op object), RP-F-2001-7-425-25.jpg', vuosi: 'noin 1870', lahde: 'Rijksmuseum (CC0)' },
+  madagaskar: { tiedosto: "Tananarive-Temple d'Andohalo.jpg", vuosi: 'noin 1900', lahde: 'Wikimedia Commons (PD)' },
+  sansibar: { tiedosto: 'Panorama van de haven van Zanzibar Panorama of Zanzibar (titel op object) Zanzibar (titel op object), RP-F-F00999-DD.jpg', vuosi: 'noin 1900', lahde: 'Rijksmuseum (CC0)' },
+  kilimandzaro: { tiedosto: 'Bundesarchiv Bild 105-DOA0437, Deutsch-Ostafrika, Kilimandscharo, Gummiplantage.jpg', vuosi: '1906–1918', lahde: 'W. Dobbertin / Bundesarchiv (CC BY-SA 3.0 de)' },
+  tanganjika: { tiedosto: 'Memorial tablet marking the spot where Livingstone and Stanley met at Ujiji in 1871 ATLIB 305982.png', vuosi: '1903', lahde: 'A. P. Godber (PD)' },
+  addisabeba: { tiedosto: 'British delegation Addis Abeba.jpg', vuosi: '1930', lahde: 'Wikimedia Commons (PD)' },
+  rashafun: { tiedosto: 'Garesadihafun.jpg', vuosi: '1900-luvun alku', lahde: 'Wikimedia Commons (PD)' },
+};
+
+/** Commonsin suora kuvaosoite haluttuun leveyteen skaalattuna. */
+function valokuvaUrl(tiedosto, leveys) {
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
+}
 
 // ===== js/packs/africa.js =====
 // Afrikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
@@ -29947,6 +30048,10 @@ function chooseDuelAnswer(game) {
 // ===== js/ui.js =====
 // Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
+// Vanhat valokuvat muistikirjan kylkeen laudoittain — toistaiseksi vain
+// Afrikalla on kuvasto.
+const VALOKUVAT = { africa: AFRICA_VALOKUVAT };
+
 // Tiivistelmät ja kuvat haetaan kerran per artikkeli: sama kuva näkyy
 // sekä saapumiskortissa että Lue lisää -dialogissa ilman uutta hakua.
 const wikiSummaryCache = new Map();
@@ -30244,6 +30349,20 @@ class UI {
     });
     // Kaiutin jatkaa merkinnän luentaa siitä, mihin se pysähtyi
     // ensimmäisen virkkeen jälkeen — ja toimii myös taukonappina.
+    // Vanha valokuva muistikirjan kyljessä: pikkukuva aukeaa napautuksesta
+    // postikortiksi kortin viereen. Latausvirhe (esim. ei verkkoa)
+    // piilottaa pikkukuvan siististi.
+    this.factValokuva = document.getElementById('fact-valokuva');
+    this.factValokuvaKuva = document.getElementById('fact-valokuva-kuva');
+    this.factValokuvaKuva.addEventListener('error', () => {
+      this.factValokuva.hidden = true;
+    });
+    this.factValokuva.addEventListener('click', (event) => {
+      event.stopPropagation();
+      this.naytaPostikortti();
+    });
+    this.postikorttiSulkija = () => this.suljePostikortti();
+
     this.factKuuntele = document.getElementById('fact-kuuntele');
     this.factKuuntele.addEventListener('click', () => {
       const audio = this.diaryVoice;
@@ -30454,6 +30573,7 @@ class UI {
     sfx.stopFlight();
     this.stopIntroVoice();
     this.stopDiaryVoice();
+    this.suljePostikortti();
     // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
     document.body.classList.remove('flight-active');
     for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
@@ -31419,6 +31539,67 @@ class UI {
   }
 
   /**
+   * Vanhan valokuvan pikkukuva muistikirjan kylkeen, jos kaupungille on
+   * kuva kuvastossa. Null piilottaa kuvan ja sulkee auki jääneen kortin.
+   */
+  naytaFactValokuva(cityId, paikka) {
+    const valokuva = cityId ? (VALOKUVAT[this.game.pack.id] ?? {})[cityId] ?? null : null;
+    this.factValokuvaTiedot = valokuva ? { ...valokuva, paikka } : null;
+    if (!valokuva) {
+      this.factValokuva.hidden = true;
+      this.suljePostikortti();
+      return;
+    }
+    const osoite = valokuvaUrl(valokuva.tiedosto, 160);
+    if (this.factValokuvaKuva.getAttribute('src') !== osoite) {
+      this.factValokuvaKuva.src = osoite;
+    }
+    this.factValokuva.hidden = false;
+  }
+
+  /**
+   * Valokuva aukeaa postikorttina hieman vinottain muistikirjan viereen:
+   * valkoiset reunukset, kuvateksti ja lähde. Napautus mihin tahansa
+   * sulkee kortin.
+   */
+  naytaPostikortti() {
+    this.suljePostikortti();
+    const tiedot = this.factValokuvaTiedot;
+    if (!tiedot) return;
+    const kortti = html('div', 'postikortti');
+    const kuva = document.createElement('img');
+    kuva.src = valokuvaUrl(tiedot.tiedosto, 1000);
+    kuva.alt = `Vanha valokuva: ${tiedot.paikka}`;
+    kortti.appendChild(kuva);
+    const teksti = html('p', 'kuvateksti',
+      [tiedot.paikka, tiedot.vuosi, tiedot.lahde].filter(Boolean).join(' · '));
+    kortti.appendChild(teksti);
+    // Kortti muistikirjan viereen: yläpuolelle kun muistikirja on ruudun
+    // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
+    const rect = this.factCard.getBoundingClientRect();
+    const leveys = Math.min(window.innerWidth * 0.78, 400);
+    kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - 8, rect.left))}px`;
+    if (rect.top > window.innerHeight / 2) {
+      kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
+    } else {
+      kortti.style.top = `${rect.bottom + 10}px`;
+    }
+    document.body.appendChild(kortti);
+    this.postikortti = kortti;
+    // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
+    // sulkemista — napautus mihin tahansa sulkee kortin.
+    setTimeout(() => {
+      document.addEventListener('pointerdown', this.postikorttiSulkija, { once: true, capture: true });
+    }, 0);
+  }
+
+  suljePostikortti() {
+    document.removeEventListener('pointerdown', this.postikorttiSulkija, true);
+    this.postikortti?.remove();
+    this.postikortti = null;
+  }
+
+  /**
    * Tietoruutu pelaajan sijainnista. Siinä puhuu vuorotellen kaksi ääntä:
    * isoisän 1870-luvun päiväkirja ja nuoren herran nykyhavainto. Teksti
    * vaihtuu kierroksittain mutta pysyy samana saman vuoron ajan, jotta sen
@@ -31437,6 +31618,7 @@ class UI {
       this.factText.textContent = '';
       this.factImage.hidden = true;
       this.factKuuntele.hidden = true;
+      this.naytaFactValokuva(null);
       this.stopDiaryVoice();
       return;
     }
@@ -31457,6 +31639,7 @@ class UI {
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
       this.factImage.hidden = true;
       this.factKuuntele.hidden = true;
+      this.naytaFactValokuva(null);
       this.stopDiaryVoice();
       this.typeText(this.factText, aikataulu.text);
       return;
@@ -31472,6 +31655,7 @@ class UI {
       this.factPlace.textContent = game.pack.boardLabel;
       this.factImage.hidden = true;
       this.factKuuntele.hidden = true;
+      this.naytaFactValokuva(null);
       this.stopDiaryVoice();
       this.typeText(this.factText, hint);
       return;
@@ -31500,6 +31684,8 @@ class UI {
         this.factPlace.textContent = kaupunki.name;
         this.factImageTitle = typeof fakta === 'string' ? null : fakta.wiki ?? null;
         this.factImage.hidden = !this.factImageTitle;
+        // Vanha valokuva kaupungista pikkukuvana tekstin kylkeen.
+        this.naytaFactValokuva(saapuminen.cityId, kaupunki.name);
         // Ensimmäinen lause lihavoituna, loput perään samalla koneella.
         const teksti = factText(fakta);
         const { eka, loput } = ekaLause(teksti);
@@ -31522,7 +31708,11 @@ class UI {
         this.factKuuntele.hidden = !luettava;
         if (luettava && this.luettuSaapuminen !== key) {
           this.luettuSaapuminen = key;
-          this.playDiaryVoice(this.diaryFullUrl, { ekaLauseeseen: true });
+          this.playDiaryVoice(this.diaryFullUrl, {
+            ekaLauseeseen: true,
+            // Ensimmäisen virkkeen osuus tekstistä ohjaa tauon valintaa.
+            osuus: teksti.length ? eka.length / teksti.length : null,
+          });
         } else {
           this.stopDiaryVoice();
         }
@@ -31542,6 +31732,7 @@ class UI {
     if (key === this.factKey) return;
     this.factKey = key;
     this.factKuuntele.hidden = true;
+    this.naytaFactValokuva(player.pos.type === 'city' ? city.id : null, city.name);
     this.stopDiaryVoice();
 
     // Otsikko kertoo kumpi ääni puhuu, alarivi paikan.
@@ -32068,14 +32259,14 @@ class UI {
    * `ekaLauseeseen` pysäyttää toiston ensimmäisen virkkeen jälkeiseen
    * hiljaisuuteen — kaiutinnappi jatkaa samasta kohdasta.
    */
-  playDiaryVoice(url, { ekaLauseeseen = false } = {}) {
+  playDiaryVoice(url, { ekaLauseeseen = false, osuus = null } = {}) {
     this.stopDiaryVoice();
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
     audio.volume = 0.9;
     this.diaryVoice = audio;
     if (ekaLauseeseen) {
-      this.lauseTauko(url).then((raja) => {
+      this.lauseTauko(url, osuus).then((raja) => {
         if (this.diaryVoice !== audio || raja == null) return;
         const vahti = () => {
           if (audio.jatkettu) {
@@ -32096,13 +32287,18 @@ class UI {
   }
 
   /**
-   * Ensimmäisen virkkeen jälkeisen hengähdyksen paikka äänitteessä:
-   * ensimmäinen vähintään 0,3 sekunnin hiljaisuus 1,2 sekunnin jälkeen.
+   * Ensimmäisen virkkeen jälkeisen hengähdyksen paikka äänitteessä.
+   * Pelkkä "ensimmäinen hiljaisuus" osui lukijan hengitykseen ja katkaisi
+   * virkkeen kesken (omistajan havainto), joten raja valitaan nyt
+   * tekstistä lasketun arvion läheltä: ensimmäisen virkkeen osuus koko
+   * tekstistä kertoo, missä kohdassa puhetta virkkeen loppu suunnilleen
+   * on, ja sitä lähin vähintään 0,3 sekunnin hiljaisuus voittaa.
    * Lasketaan kerran per tiedosto ja muistetaan.
    */
-  lauseTauko(url) {
+  lauseTauko(url, osuus = null) {
     this.lauseTauot ??= new Map();
-    if (!this.lauseTauot.has(url)) {
+    const avain = `${url}|${osuus == null ? '' : osuus.toFixed(3)}`;
+    if (!this.lauseTauot.has(avain)) {
       const lupaus = (async () => {
         const ctx = sfx.ensureContext();
         if (!ctx) return null;
@@ -32113,26 +32309,51 @@ class UI {
         let huippu = 0;
         for (let i = 0; i < kanava.length; i += 16) huippu = Math.max(huippu, Math.abs(kanava[i]));
         const raja = huippu * 0.04;
-        let hiljaisia = 0;
-        for (let i = Math.floor(buf.sampleRate * 1.2); i < kanava.length; i += ikkuna) {
+        // Ikkunoittainen äänekkyys: siitä puheen alku ja loppu sekä
+        // puheen sisään jäävät hiljaisuudet.
+        const aanekas = [];
+        for (let i = 0; i < kanava.length; i += ikkuna) {
           let maksimi = 0;
           const loppu = Math.min(i + ikkuna, kanava.length);
           for (let j = i; j < loppu; j += 4) maksimi = Math.max(maksimi, Math.abs(kanava[j]));
-          if (maksimi < raja) {
-            hiljaisia += 1;
-            if (hiljaisia * 0.05 >= 0.3) {
-              // Tauon alku + pieni hengähdys, jotta sana ehtii loppuun.
-              return (i + ikkuna - hiljaisia * ikkuna) / buf.sampleRate + 0.15;
-            }
+          aanekas.push(maksimi >= raja);
+        }
+        const eka = aanekas.indexOf(true);
+        const vika = aanekas.lastIndexOf(true);
+        if (eka < 0) return null;
+        const s = 0.05; // yhden ikkunan kesto sekunteina
+        const tauot = []; // vähintään 0,3 s hiljaisuuksien alkukohdat
+        let alkoi = -1;
+        for (let i = eka; i <= vika + 1; i++) {
+          if (i <= vika && !aanekas[i]) {
+            if (alkoi < 0) alkoi = i;
           } else {
-            hiljaisia = 0;
+            if (alkoi >= 0 && (i - alkoi) * s >= 0.3) tauot.push(alkoi * s);
+            alkoi = -1;
           }
         }
-        return null; // yksivirkkeinen tai tasainen äänite — soi kokonaan
+        if (!tauot.length) return null; // yksivirkkeinen — soi kokonaan
+        const puheAlku = eka * s;
+        const puheLoppu = (vika + 1) * s;
+        let valinta = null;
+        if (osuus == null) {
+          // Ilman tekstiarviota kelpaa ensimmäinen tauko 1,2 s jälkeen.
+          valinta = tauot.find((t) => t >= 1.2) ?? null;
+        } else {
+          // Arvio virkkeen lopusta puheen kestoon sovitettuna — lähin
+          // tauko voittaa, jolloin hengitystauko kesken virkkeen häviää
+          // aina oikealle virkerajalle.
+          const arvio = puheAlku + (puheLoppu - puheAlku) * osuus;
+          for (const t of tauot) {
+            if (valinta == null || Math.abs(t - arvio) < Math.abs(valinta - arvio)) valinta = t;
+          }
+        }
+        // Tauon alku + pieni hengähdys, jotta sana ehtii loppuun.
+        return valinta == null ? null : valinta + 0.15;
       })().catch(() => null);
-      this.lauseTauot.set(url, lupaus);
+      this.lauseTauot.set(avain, lupaus);
     }
-    return this.lauseTauot.get(url);
+    return this.lauseTauot.get(avain);
   }
 
   stopDiaryVoice() {
@@ -33272,7 +33493,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.54';
+const APP_VERSION = '2026-07-30.55';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
