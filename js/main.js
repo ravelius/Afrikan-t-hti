@@ -5,10 +5,11 @@ import { UI } from './ui.js';
 import { sfx } from './sound.js';
 import { packById } from './pack.js';
 import { startQuizMusic, stopPlaceStream, stopQuizMusic } from './ambience-stream.js';
+import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.65';
+const APP_VERSION = '2026-07-30.66';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -87,18 +88,53 @@ function startGame() {
 
 // --- äänet ------------------------------------------------------------------
 
-// Mykistysnappi palasi yläpalkkiin (omistajan toive). Tila luetaan
-// sound.js:n omasta talletuksesta, joten valinta muistetaan käyntien yli.
+// Kertojavalikko yläpalkissa (omistajan toive): mykistys, ei kertojaa,
+// lyhyt kertoja (vain nuoren herran osuus) ja pitkä kertoja. Pelkät
+// kuvakkeet ja täppä — kirja kertoo lukijasta, kaaret puheen määrästä.
+// Mykistys on sound.js:n enabled-tila (muistetaan käyntien yli),
+// kertojan tila oma talletuksensa (aani-ehdokkaat.js).
+const KERTOJA_KIRJA = '<path d="M4.5 11c2.3-1.1 4.6-1.1 7.5 0 2.9-1.1 5.2-1.1 7.5 0v8.2c-2.3-1.1-4.6-1.1-7.5 0-2.9-1.1-5.2-1.1-7.5 0z"/><path d="M12 11v8.2"/>';
+const KERTOJA_TILAT = [
+  {
+    tila: 'mykistys',
+    seloste: 'Mykistä kaikki äänet',
+    ikoni: '<path d="M4.5 9.4h2.8l4.2-3.4v12l-4.2-3.4H4.5z"/><path d="M15.4 9.6l4.8 4.8M20.2 9.6l-4.8 4.8"/>',
+  },
+  {
+    tila: 'ei',
+    seloste: 'Ei kertojaa — muut äänet soivat, kaiutinnappi lukee pyydettäessä',
+    ikoni: `${KERTOJA_KIRJA}<path d="M5.4 5.4l13.2 13.2"/>`,
+  },
+  {
+    tila: 'lyhyt',
+    seloste: 'Lyhyt kertoja — vain nuoren herran osuus matkakirjasta',
+    ikoni: `${KERTOJA_KIRJA}<path d="M10.2 6.8a2.9 2.9 0 0 1 3.6 0"/>`,
+  },
+  {
+    tila: 'pitka',
+    seloste: 'Pitkä kertoja — koko merkintä ja avaustekstit',
+    ikoni: `${KERTOJA_KIRJA}<path d="M10.2 6.8a2.9 2.9 0 0 1 3.6 0"/><path d="M8.6 4.2a5.6 5.6 0 0 1 6.8 0"/>`,
+  },
+];
 const muteBtn = document.getElementById('mute-btn');
-const naytaMykistys = () => {
-  document.getElementById('mute-on').hidden = !sfx.enabled;
-  document.getElementById('mute-off').hidden = sfx.enabled;
-  muteBtn.title = sfx.enabled ? 'Mykistä äänet' : 'Palauta äänet';
-  muteBtn.setAttribute('aria-pressed', String(!sfx.enabled));
+const kertojaValikko = document.getElementById('kertoja-valikko');
+const kertojaIkoni = document.getElementById('kertoja-ikoni');
+const svg = (piirto) => `<svg viewBox="0 0 24 24">${piirto}</svg>`;
+const nykyinenKertoja = () => (sfx.enabled ? kertojaTila() : 'mykistys');
+
+const naytaKertoja = () => {
+  const nyt = nykyinenKertoja();
+  const tiedot = KERTOJA_TILAT.find((t) => t.tila === nyt);
+  kertojaIkoni.innerHTML = svg(tiedot.ikoni);
+  muteBtn.title = `Kertojan äänet — ${tiedot.seloste}`;
+  for (const rivi of kertojaValikko.querySelectorAll('button')) {
+    rivi.classList.toggle('valittu', rivi.dataset.tila === nyt);
+  }
 };
-muteBtn.addEventListener('click', () => {
-  sfx.setEnabled(!sfx.enabled); // palatessa kuuluu kuittausklikki
-  if (!sfx.enabled) {
+
+const valitseKertoja = (tila) => {
+  if (tila === 'mykistys') {
+    sfx.setEnabled(false);
     // Kaikki soiva hiljenee heti: striimit, luennat ja lentomoottori.
     stopPlaceStream();
     stopQuizMusic();
@@ -106,12 +142,44 @@ muteBtn.addEventListener('click', () => {
     ui?.stopDiaryVoice();
     ui?.stopIntroVoice();
   } else {
-    ui?.syncAmbience();
-    if (ui?.game?.quiz) startQuizMusic(ui.game.pack.id);
+    const oliMykistys = !sfx.enabled;
+    sfx.setEnabled(true); // palatessa kuuluu kuittausklikki
+    asetaKertojaTila(tila);
+    if (oliMykistys) {
+      ui?.syncAmbience();
+      if (ui?.game?.quiz) startQuizMusic(ui.game.pack.id);
+    }
+    // Kertojan vaihto hiljentää käynnissä olevan luennan; seuraava
+    // saapuminen luetaan uuden tilan mukaan.
+    if (tila === 'ei') ui?.stopDiaryVoice();
   }
-  naytaMykistys();
+  naytaKertoja();
+  kertojaValikko.hidden = true;
+  muteBtn.setAttribute('aria-expanded', 'false');
+};
+
+for (const tiedot of KERTOJA_TILAT) {
+  const rivi = document.createElement('button');
+  rivi.type = 'button';
+  rivi.dataset.tila = tiedot.tila;
+  rivi.title = tiedot.seloste;
+  rivi.setAttribute('aria-label', tiedot.seloste);
+  rivi.innerHTML = `<span class="viiva-ikoni">${svg(tiedot.ikoni)}</span><span class="tappa">✓</span>`;
+  rivi.addEventListener('click', () => valitseKertoja(tiedot.tila));
+  kertojaValikko.appendChild(rivi);
+}
+muteBtn.addEventListener('click', () => {
+  kertojaValikko.hidden = !kertojaValikko.hidden;
+  muteBtn.setAttribute('aria-expanded', String(!kertojaValikko.hidden));
 });
-naytaMykistys();
+// Napautus muualle sulkee valikon.
+document.addEventListener('pointerdown', (event) => {
+  if (!kertojaValikko.hidden && !event.target.closest?.('.kertoja-kotelo')) {
+    kertojaValikko.hidden = true;
+    muteBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+naytaKertoja();
 
 // Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
 document.addEventListener('pointerdown', (event) => {

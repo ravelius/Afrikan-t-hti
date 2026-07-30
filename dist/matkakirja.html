@@ -158,6 +158,50 @@ button, .brand, .turn-pill, .fact-card h2 {
   .turn-pill.aika-valahdys .clock { animation: none; }
 }
 
+/* Kertojavalikko: nappi näyttää nykyisen tilan kuvakkeen ja avaa alleen
+ * pienen paneelin, jossa neljä kuvakeriviä täppineen. */
+.kertoja-kotelo { position: relative; }
+
+.kertoja-valikko {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.3rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(15, 10, 5, 0.45);
+}
+
+.kertoja-valikko button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.55rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.kertoja-valikko button:hover { background: rgba(234, 184, 78, 0.12); }
+
+.kertoja-valikko .tappa {
+  width: 1em;
+  color: var(--accent);
+  font-weight: 700;
+  visibility: hidden;
+}
+
+.kertoja-valikko button.valittu {
+  border-color: rgba(176, 138, 60, 0.55);
+}
+
+.kertoja-valikko button.valittu .tappa { visibility: visible; }
+
 .topbar-actions {
   margin-left: auto;
   display: flex;
@@ -898,6 +942,19 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   font-variant-numeric: tabular-nums;
   font-size: 0.72rem;
   color: rgba(70, 51, 31, 0.75);
+}
+
+/* Kulttuurivisan avausnappi: sama mustekynän nappityyli kuin näytteellä. */
+.kulttuuri-visa-avaa { margin: 0.55rem 0 0.2rem; }
+
+/*
+ * Tutki paikka ja Jatka matkaa erilleen sisällöstä: napit hengittävät
+ * alempana oman jakoviivansa alla (omistajan toive).
+ */
+.arrival-card .dialog-actions {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(70, 51, 31, 0.35);
 }
 
 /*
@@ -2796,10 +2853,16 @@ body.katselu #newgame-btn { display: none; }
       <h1 class="brand">Matkakirja</h1>
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
-        <button id="mute-btn" class="ghost" type="button" title="Mykistä äänet" aria-pressed="false">
-          <span class="viiva-ikoni" id="mute-on"><svg viewBox="0 0 24 24"><path d="M4.5 9.4h2.8l4.2-3.4v12l-4.2-3.4H4.5z"/><path d="M15 9.2a4 4 0 0 1 0 5.6"/><path d="M17.3 6.9a7.2 7.2 0 0 1 0 10.2"/></svg></span>
-          <span class="viiva-ikoni" id="mute-off" hidden><svg viewBox="0 0 24 24"><path d="M4.5 9.4h2.8l4.2-3.4v12l-4.2-3.4H4.5z"/><path d="M15.4 9.6l4.8 4.8M20.2 9.6l-4.8 4.8"/></svg></span>
-        </button>
+        <!-- Kertojavalikko: mykistys / ei kertojaa / lyhyt / pitkä kertoja.
+             Kuvakkeet ja valikko rakennetaan main.js:ssä; nappi näyttää
+             aina nykyisen tilan kuvakkeen. -->
+        <div class="kertoja-kotelo">
+          <button id="mute-btn" class="ghost" type="button" title="Kertojan äänet"
+                  aria-haspopup="true" aria-expanded="false">
+            <span class="viiva-ikoni" id="kertoja-ikoni"></span>
+          </button>
+          <div id="kertoja-valikko" class="kertoja-valikko" hidden></div>
+        </div>
         <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
           <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M19.4 4.8v3.7h-3.7"/><path d="M19.2 8.4a7.4 7.4 0 1 0 1 5.4"/></svg></span></span>
         </button>
@@ -2906,8 +2969,15 @@ body.katselu #newgame-btn { display: none; }
      <summary>Kaupungin elämää — taide, ruoka ja musiikki</summary>
      <div id="arrival-kulttuuri-lista"></div>
      <div id="arrival-kulttuuri-visa" hidden>
-      <p class="kulttuuri-otsikko" id="arrival-kulttuuri-kysymys"></p>
-      <div class="kulttuuri-vaihtoehdot" id="arrival-kulttuuri-vaihtoehdot"></div>
+      <!-- Visa aukeaa omasta napistaan samaan näkymään (omistajan toive). -->
+      <button id="arrival-kulttuuri-avaa" class="kulttuuri-kuuntele kulttuuri-visa-avaa" type="button" hidden>
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="m12 3.8 2.5 5.2 5.5.7-4 3.9 1 5.6-5-2.7-5 2.7 1-5.6-4-3.9 5.5-.7z"
+                fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg><span>Kulttuurivisa — tutustuitko?</span>
+      </button>
+      <p class="kulttuuri-otsikko" id="arrival-kulttuuri-kysymys" hidden></p>
+      <div class="kulttuuri-vaihtoehdot" id="arrival-kulttuuri-vaihtoehdot" hidden></div>
       <p id="arrival-kulttuuri-tulos" class="arrival-intro" hidden></p>
      </div>
     </details>
@@ -26766,6 +26836,30 @@ function valitseAani(slot, url) {
   }
 }
 
+// Kertojan tila (omistajan toive, yläpalkin valikko): 'pitka' lukee
+// kaiken kuten ennenkin, 'lyhyt' vain matkakirjan nuoren herran
+// osuuden, 'ei' mykistää kertojan mutta jättää muut äänet soimaan
+// (matkakirjan kaiutinnappi yliajaa hetkellisesti). Täysi mykistys on
+// erikseen sound.js:n enabled-tilassa.
+const KERTOJA_AVAIN = 'matkakirja-kertoja';
+
+function kertojaTila() {
+  try {
+    const t = localStorage.getItem(KERTOJA_AVAIN);
+    return ['ei', 'lyhyt', 'pitka'].includes(t) ? t : 'pitka';
+  } catch {
+    return 'pitka';
+  }
+}
+
+function asetaKertojaTila(tila) {
+  try {
+    localStorage.setItem(KERTOJA_AVAIN, tila);
+  } catch {
+    /* yksityinen selaustila — valinta ei säily */
+  }
+}
+
 // Puheen voimakkuus: yksi yleinen säätö kaikkiin luentoihin (intro,
 // saapumiset, kuuntele-napit) — luentoja ei eritellä (omistajan päätös).
 const PUHEVOIMA_AVAIN = 'matkakirja-puhevoima';
@@ -31471,6 +31565,15 @@ class UI {
     this.arrivalKulttuuri = document.getElementById('arrival-kulttuuri');
     this.arrivalKulttuuriLista = document.getElementById('arrival-kulttuuri-lista');
     this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
+    // Visa aukeaa omasta napistaan samaan näkymään (omistajan toive):
+    // nappi väistyy ja kysymys vaihtoehtoineen tulee tilalle.
+    this.arrivalKulttuuriAvaa = document.getElementById('arrival-kulttuuri-avaa');
+    this.arrivalKulttuuriAvaa.addEventListener('click', () => {
+      this.arrivalKulttuuriAvaa.hidden = true;
+      this.arrivalKulttuuriKysymys.hidden = false;
+      this.arrivalKulttuuriVaihtoehdot.hidden = false;
+      sfx.play('paper');
+    });
     this.arrivalKulttuuriKysymys = document.getElementById('arrival-kulttuuri-kysymys');
     this.arrivalKulttuuriVaihtoehdot = document.getElementById('arrival-kulttuuri-vaihtoehdot');
     this.arrivalKulttuuriTulos = document.getElementById('arrival-kulttuuri-tulos');
@@ -32627,7 +32730,10 @@ class UI {
         // Avauslennon repliikki on lukittu ja luettu ääneen: puhe alkaa
         // pienellä viiveellä, kun moottori on jo ehtinyt nousta esiin.
         this.lentoPuheAjastin = setTimeout(() => {
-          if (!this.dead) this.playDiaryVoice('assets/audio/puhe-lento-alku.mp3');
+          // Lentorepliikin lukee vain pitkä kertoja.
+          if (!this.dead && kertojaTila() === 'pitka') {
+            this.playDiaryVoice('assets/audio/puhe-lento-alku.mp3');
+          }
         }, 1400);
       }
       await this.animateFlight(
@@ -32902,8 +33008,21 @@ class UI {
         this.factKuuntele.hidden = false;
         if (this.luettuSaapuminen !== key) {
           this.luettuSaapuminen = key;
-          // Koko merkintä luetaan — ei pysähdystä ensimmäiseen virkkeeseen.
-          this.playDiaryVoice(this.diaryFullUrl);
+          // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
+          // lyhyt vain nuoren herran osuuden (luenta pysähtyy kuvauksen ja
+          // noston väliseen hengähdykseen), ei kertojaa jättää luennan
+          // aloittamatta — kaiutinnappi yliajaa sen hetkellisesti.
+          const tila = kertojaTila();
+          if (tila === 'ei') {
+            this.stopDiaryVoice();
+          } else if (tila === 'lyhyt') {
+            this.playDiaryVoice(this.diaryFullUrl, {
+              ekaLauseeseen: true,
+              osuus: uusi.kuvaus.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
+            });
+          } else {
+            this.playDiaryVoice(this.diaryFullUrl);
+          }
         } else {
           this.stopDiaryVoice();
         }
@@ -32943,7 +33062,7 @@ class UI {
           ? `assets/audio/puhe-${saapuminen.packId}-havainto-${saapuminen.cityId}.mp3`
           : null;
         this.factKuuntele.hidden = !luettava;
-        if (luettava && this.luettuSaapuminen !== key) {
+        if (luettava && this.luettuSaapuminen !== key && kertojaTila() !== 'ei') {
           this.luettuSaapuminen = key;
           this.playDiaryVoice(this.diaryFullUrl, {
             ekaLauseeseen: true,
@@ -33157,6 +33276,12 @@ class UI {
   openArrival(city) {
     if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
     this.arrivalShownFor = city.id;
+    // Matkakirjan luenta tauolle Tutki-näkymän ajaksi: se jatkaa samasta
+    // kohdasta, kun pelaaja palaa karttanäkymään (omistajan toive).
+    if (this.diaryVoice && !this.diaryVoice.paused) {
+      this.diaryVoice.pause();
+      this.luentaTauolla = this.diaryVoice;
+    }
 
     // Kortissa on kuva, parin lauseen esittely ja päätös. Esittely tulee
     // Wikipedian tiivistelmästä; kunnes haku valmistuu — tai jos paikalla
@@ -33296,8 +33421,13 @@ class UI {
     if (!kysymys) return;
     const vastattu = this.game.kulttuuriVastatut?.has(`${this.game.pack.id}:${city.id}`);
     this.arrivalKulttuuriKysymys.textContent = vastattu
-      ? 'Kulttuurikysymykseen on jo vastattu tässä kaupungissa.'
+      ? 'Kulttuurivisaan on jo vastattu tässä kaupungissa.'
       : `Tutustuitko? ${kysymys.q}`;
+    // Visa aukeaa omasta napistaan; vastattu tila näkyy suoraan tekstinä.
+    // Vaihtoehdot ovat piilossa kunnes nappi avaa ne.
+    this.arrivalKulttuuriAvaa.hidden = vastattu;
+    this.arrivalKulttuuriKysymys.hidden = !vastattu;
+    this.arrivalKulttuuriVaihtoehdot.hidden = true;
     if (vastattu) return;
     kysymys.options.forEach((vaihtoehto, i) => {
       const nappi = html('button', '', vaihtoehto);
@@ -33642,6 +33772,13 @@ class UI {
     this.suljeKulttuuriKuva();
     this.pysaytaKulttuuriAani();
     if (this.arrivalDialog.open) this.arrivalDialog.close();
+    // Tauolle jäänyt luenta jatkuu, kun palataan karttanäkymään — mutta
+    // ei tietovisan tai kaksintaistelun päälle (Tutki paikka -polku).
+    const kesken = this.luentaTauolla;
+    this.luentaTauolla = null;
+    if (kesken && kesken === this.diaryVoice && !this.game.quiz && !this.game.duel) {
+      kesken.play().catch(() => {});
+    }
   }
 
   /**
@@ -33711,6 +33848,9 @@ class UI {
    */
   playIntroVoice() {
     if (!sfx.enabled) return;
+    // Vain pitkä kertoja lukee avaustekstin: lyhyt lukee pelkän
+    // matkakirjan kuvauksen ja ei kertojaa -tila ei mitään.
+    if (kertojaTila() !== 'pitka') return;
     this.stopIntroVoice();
     const audio = new Audio('assets/audio/intro-puhe.mp3');
     audio.volume = puheVoima();
@@ -33888,6 +34028,7 @@ class UI {
 
   stopDiaryVoice() {
     this.diaryVoice = null;
+    this.luentaTauolla = null;
     // Kaikki luennat kiinni — myös mahdollinen myöhästelijä, joka ei
     // enää ollut diaryVoice mutta soi yhä.
     for (const audio of this.luennat ?? []) {
@@ -35043,7 +35184,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.65';
+const APP_VERSION = '2026-07-30.66';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -35122,18 +35263,53 @@ function startGame() {
 
 // --- äänet ------------------------------------------------------------------
 
-// Mykistysnappi palasi yläpalkkiin (omistajan toive). Tila luetaan
-// sound.js:n omasta talletuksesta, joten valinta muistetaan käyntien yli.
+// Kertojavalikko yläpalkissa (omistajan toive): mykistys, ei kertojaa,
+// lyhyt kertoja (vain nuoren herran osuus) ja pitkä kertoja. Pelkät
+// kuvakkeet ja täppä — kirja kertoo lukijasta, kaaret puheen määrästä.
+// Mykistys on sound.js:n enabled-tila (muistetaan käyntien yli),
+// kertojan tila oma talletuksensa (aani-ehdokkaat.js).
+const KERTOJA_KIRJA = '<path d="M4.5 11c2.3-1.1 4.6-1.1 7.5 0 2.9-1.1 5.2-1.1 7.5 0v8.2c-2.3-1.1-4.6-1.1-7.5 0-2.9-1.1-5.2-1.1-7.5 0z"/><path d="M12 11v8.2"/>';
+const KERTOJA_TILAT = [
+  {
+    tila: 'mykistys',
+    seloste: 'Mykistä kaikki äänet',
+    ikoni: '<path d="M4.5 9.4h2.8l4.2-3.4v12l-4.2-3.4H4.5z"/><path d="M15.4 9.6l4.8 4.8M20.2 9.6l-4.8 4.8"/>',
+  },
+  {
+    tila: 'ei',
+    seloste: 'Ei kertojaa — muut äänet soivat, kaiutinnappi lukee pyydettäessä',
+    ikoni: `${KERTOJA_KIRJA}<path d="M5.4 5.4l13.2 13.2"/>`,
+  },
+  {
+    tila: 'lyhyt',
+    seloste: 'Lyhyt kertoja — vain nuoren herran osuus matkakirjasta',
+    ikoni: `${KERTOJA_KIRJA}<path d="M10.2 6.8a2.9 2.9 0 0 1 3.6 0"/>`,
+  },
+  {
+    tila: 'pitka',
+    seloste: 'Pitkä kertoja — koko merkintä ja avaustekstit',
+    ikoni: `${KERTOJA_KIRJA}<path d="M10.2 6.8a2.9 2.9 0 0 1 3.6 0"/><path d="M8.6 4.2a5.6 5.6 0 0 1 6.8 0"/>`,
+  },
+];
 const muteBtn = document.getElementById('mute-btn');
-const naytaMykistys = () => {
-  document.getElementById('mute-on').hidden = !sfx.enabled;
-  document.getElementById('mute-off').hidden = sfx.enabled;
-  muteBtn.title = sfx.enabled ? 'Mykistä äänet' : 'Palauta äänet';
-  muteBtn.setAttribute('aria-pressed', String(!sfx.enabled));
+const kertojaValikko = document.getElementById('kertoja-valikko');
+const kertojaIkoni = document.getElementById('kertoja-ikoni');
+const svg = (piirto) => `<svg viewBox="0 0 24 24">${piirto}</svg>`;
+const nykyinenKertoja = () => (sfx.enabled ? kertojaTila() : 'mykistys');
+
+const naytaKertoja = () => {
+  const nyt = nykyinenKertoja();
+  const tiedot = KERTOJA_TILAT.find((t) => t.tila === nyt);
+  kertojaIkoni.innerHTML = svg(tiedot.ikoni);
+  muteBtn.title = `Kertojan äänet — ${tiedot.seloste}`;
+  for (const rivi of kertojaValikko.querySelectorAll('button')) {
+    rivi.classList.toggle('valittu', rivi.dataset.tila === nyt);
+  }
 };
-muteBtn.addEventListener('click', () => {
-  sfx.setEnabled(!sfx.enabled); // palatessa kuuluu kuittausklikki
-  if (!sfx.enabled) {
+
+const valitseKertoja = (tila) => {
+  if (tila === 'mykistys') {
+    sfx.setEnabled(false);
     // Kaikki soiva hiljenee heti: striimit, luennat ja lentomoottori.
     stopPlaceStream();
     stopQuizMusic();
@@ -35141,12 +35317,44 @@ muteBtn.addEventListener('click', () => {
     ui?.stopDiaryVoice();
     ui?.stopIntroVoice();
   } else {
-    ui?.syncAmbience();
-    if (ui?.game?.quiz) startQuizMusic(ui.game.pack.id);
+    const oliMykistys = !sfx.enabled;
+    sfx.setEnabled(true); // palatessa kuuluu kuittausklikki
+    asetaKertojaTila(tila);
+    if (oliMykistys) {
+      ui?.syncAmbience();
+      if (ui?.game?.quiz) startQuizMusic(ui.game.pack.id);
+    }
+    // Kertojan vaihto hiljentää käynnissä olevan luennan; seuraava
+    // saapuminen luetaan uuden tilan mukaan.
+    if (tila === 'ei') ui?.stopDiaryVoice();
   }
-  naytaMykistys();
+  naytaKertoja();
+  kertojaValikko.hidden = true;
+  muteBtn.setAttribute('aria-expanded', 'false');
+};
+
+for (const tiedot of KERTOJA_TILAT) {
+  const rivi = document.createElement('button');
+  rivi.type = 'button';
+  rivi.dataset.tila = tiedot.tila;
+  rivi.title = tiedot.seloste;
+  rivi.setAttribute('aria-label', tiedot.seloste);
+  rivi.innerHTML = `<span class="viiva-ikoni">${svg(tiedot.ikoni)}</span><span class="tappa">✓</span>`;
+  rivi.addEventListener('click', () => valitseKertoja(tiedot.tila));
+  kertojaValikko.appendChild(rivi);
+}
+muteBtn.addEventListener('click', () => {
+  kertojaValikko.hidden = !kertojaValikko.hidden;
+  muteBtn.setAttribute('aria-expanded', String(!kertojaValikko.hidden));
 });
-naytaMykistys();
+// Napautus muualle sulkee valikon.
+document.addEventListener('pointerdown', (event) => {
+  if (!kertojaValikko.hidden && !event.target.closest?.('.kertoja-kotelo')) {
+    kertojaValikko.hidden = true;
+    muteBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+naytaKertoja();
 
 // Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
 document.addEventListener('pointerdown', (event) => {

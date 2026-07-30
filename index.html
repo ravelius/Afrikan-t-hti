@@ -32,10 +32,16 @@
       <h1 class="brand">Matkakirja</h1>
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
-        <button id="mute-btn" class="ghost" type="button" title="Mykistä äänet" aria-pressed="false">
-          <span class="viiva-ikoni" id="mute-on"><svg viewBox="0 0 24 24"><path d="M4.5 9.4h2.8l4.2-3.4v12l-4.2-3.4H4.5z"/><path d="M15 9.2a4 4 0 0 1 0 5.6"/><path d="M17.3 6.9a7.2 7.2 0 0 1 0 10.2"/></svg></span>
-          <span class="viiva-ikoni" id="mute-off" hidden><svg viewBox="0 0 24 24"><path d="M4.5 9.4h2.8l4.2-3.4v12l-4.2-3.4H4.5z"/><path d="M15.4 9.6l4.8 4.8M20.2 9.6l-4.8 4.8"/></svg></span>
-        </button>
+        <!-- Kertojavalikko: mykistys / ei kertojaa / lyhyt / pitkä kertoja.
+             Kuvakkeet ja valikko rakennetaan main.js:ssä; nappi näyttää
+             aina nykyisen tilan kuvakkeen. -->
+        <div class="kertoja-kotelo">
+          <button id="mute-btn" class="ghost" type="button" title="Kertojan äänet"
+                  aria-haspopup="true" aria-expanded="false">
+            <span class="viiva-ikoni" id="kertoja-ikoni"></span>
+          </button>
+          <div id="kertoja-valikko" class="kertoja-valikko" hidden></div>
+        </div>
         <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
           <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M19.4 4.8v3.7h-3.7"/><path d="M19.2 8.4a7.4 7.4 0 1 0 1 5.4"/></svg></span></span>
         </button>
@@ -142,8 +148,15 @@
      <summary>Kaupungin elämää — taide, ruoka ja musiikki</summary>
      <div id="arrival-kulttuuri-lista"></div>
      <div id="arrival-kulttuuri-visa" hidden>
-      <p class="kulttuuri-otsikko" id="arrival-kulttuuri-kysymys"></p>
-      <div class="kulttuuri-vaihtoehdot" id="arrival-kulttuuri-vaihtoehdot"></div>
+      <!-- Visa aukeaa omasta napistaan samaan näkymään (omistajan toive). -->
+      <button id="arrival-kulttuuri-avaa" class="kulttuuri-kuuntele kulttuuri-visa-avaa" type="button" hidden>
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="m12 3.8 2.5 5.2 5.5.7-4 3.9 1 5.6-5-2.7-5 2.7 1-5.6-4-3.9 5.5-.7z"
+                fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg><span>Kulttuurivisa — tutustuitko?</span>
+      </button>
+      <p class="kulttuuri-otsikko" id="arrival-kulttuuri-kysymys" hidden></p>
+      <div class="kulttuuri-vaihtoehdot" id="arrival-kulttuuri-vaihtoehdot" hidden></div>
       <p id="arrival-kulttuuri-tulos" class="arrival-intro" hidden></p>
      </div>
     </details>
