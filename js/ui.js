@@ -2348,6 +2348,19 @@ export class UI {
         osa.appendChild(typeof pala === 'string' ? document.createTextNode(pala) : pala);
       }
       emo.appendChild(osa);
+      return osa;
+    };
+    // Pieni vaakapalkki: pituus on osuus maksimista, väri kertoo kuinka
+    // hyvä luku on (punainen 0 → vihreä 1). Omistajan toive.
+    const palkki = (osa, osuus, hyvyys) => {
+      osa.classList.add('palkillinen');
+      const pohja = html('span', 'maa-palkki');
+      const tayte = html('span', 'maa-palkki-tayte');
+      tayte.style.width = `${Math.round(Math.min(1, Math.max(0.02, osuus)) * 100)}%`;
+      const sávy = Math.round(Math.min(1, Math.max(0, hyvyys)) * 120);
+      tayte.style.background = `hsl(${sávy}, 62%, 42%)`;
+      pohja.appendChild(tayte);
+      osa.appendChild(pohja);
     };
     // Suluissa sijoitus maailmassa (omistajan toive).
     const sija = (arvo) => (arvo ? html('span', 'maa-sija', ` (${arvo})`) : '');
@@ -2362,12 +2375,23 @@ export class UI {
       const nappi = html('button', 'maa-demokratia', `${tiedot.demokratia.arvo} · V-Dem`);
       nappi.type = 'button';
       nappi.addEventListener('click', () => this.naytaVdemInfo(tiedot.demokratia));
-      kohta(rivi2, 'vaaka', [nappi, sija(tiedot.demokratia.sija)],
+      const osa = kohta(rivi2, 'vaaka', [nappi, sija(tiedot.demokratia.sija)],
         'Demokratiaindeksi (V-Dem, 0–1), suluissa sijoitus maailmassa — avaa selityksen');
+      // Indeksin maksimi on 1; parhaat demokratiat yltävät noin 0,9:ään,
+      // joten väri skaalataan siihen.
+      const arvo = parseFloat(tiedot.demokratia.arvo.replace(',', '.'));
+      if (Number.isFinite(arvo)) palkki(osa, arvo, arvo / 0.9);
     }
     if (tiedot.keskitulo) {
-      kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
+      const osa = kohta(rivi2, 'raha', [tiedot.keskitulo.arvo, sija(tiedot.keskitulo.sija)],
         'Bruttokansantulo asukasta kohden vuodessa, suluissa sijoitus maailmassa');
+      // Maksimina maailman kärki (noin 100 000 $/v); väri sijoituksesta,
+      // jotta pienetkin tulot saavat sävyeron.
+      const tulo = parseInt(tiedot.keskitulo.arvo.replace(/[^0-9]/g, ''), 10);
+      const sijaNum = parseInt(tiedot.keskitulo.sija, 10);
+      if (Number.isFinite(tulo)) {
+        palkki(osa, tulo / 100000, Number.isFinite(sijaNum) ? 1 - sijaNum / 190 : 0.2);
+      }
     }
     for (const t of tiedot.tervehdykset ?? []) {
       const osa = html('span', 'tervehdys');
