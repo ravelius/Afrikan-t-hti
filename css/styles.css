@@ -681,6 +681,59 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   margin: 0.1rem 0 0.3rem;
 }
 
+/*
+ * Kaupungin elämää -lohko: kulttuurinostot ja tutustu ja vastaa -kysymys
+ * palstojen alla koko kortin leveydellä.
+ */
+.arrival-kulttuuri {
+  border-top: 1px dashed rgba(70, 51, 31, 0.35);
+  margin-top: 0.25rem;
+  padding-top: 0.4rem;
+}
+
+.arrival-kulttuuri > summary {
+  cursor: pointer;
+  font-family: var(--font-type);
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+  color: #7a5514;
+  padding: 0.1rem 0 0.35rem;
+}
+
+.kulttuuri-nosto { margin-bottom: 0.6rem; }
+
+.kulttuuri-otsikko {
+  margin: 0 0 0.15rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.kulttuuri-nosto img {
+  display: block;
+  width: 100%;
+  max-height: 230px;
+  object-fit: cover;
+  border: 1px solid rgba(70, 51, 31, 0.3);
+  border-radius: 6px;
+  margin: 0.25rem 0;
+}
+
+.kulttuuri-lahde {
+  margin: 0.05rem 0 0;
+  font-size: 0.7rem;
+  font-family: var(--font-type);
+  color: rgba(90, 74, 51, 0.85);
+}
+
+.kulttuuri-vaihtoehdot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.3rem 0 0.4rem;
+}
+
+.kulttuuri-vaihtoehdot button { font-size: 0.85rem; }
+
 /* Kapealla ruudulla palstat allekkain ja jakoviiva takaisin vaakaan. */
 @media (max-width: 640px) {
   .arrival-palstat { flex-direction: column; gap: 0; }
