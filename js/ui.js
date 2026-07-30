@@ -23,6 +23,7 @@ import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from
 import { drawPuzzle } from './packs/africa-puzzles.js';
 import { OMAT_TIIVISTELMAT } from './packs/africa-tiivistelmat.js';
 import { OMAT_ARTIKKELIT } from './packs/africa-artikkelit.js';
+import { AFRICA_MAATIEDOT } from './packs/africa-maatiedot.js';
 import { AFRICA_VALOKUVAT, valokuvaUrl } from './packs/africa-valokuvat.js';
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
 import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
@@ -324,6 +325,8 @@ export class UI {
     this.arrivalMaaNimi = document.getElementById('arrival-maa-nimi');
     this.arrivalMaaIntro = document.getElementById('arrival-maa-intro');
     this.arrivalMaaKartta = document.getElementById('arrival-maa-kartta');
+    this.arrivalMaaTunnusluvut = document.getElementById('arrival-maa-tunnusluvut');
+    this.arrivalMaaTervehdykset = document.getElementById('arrival-maa-tervehdykset');
     // Lippu näytetään vasta kun se on oikeasti latautunut — ilman verkkoa
     // riviltä ei jää rikkinäistä kuvaruutua.
     this.arrivalMaaLippu = document.getElementById('arrival-maa-lippu');
@@ -2159,6 +2162,8 @@ export class UI {
       this.arrivalMaaKartta.textContent = '';
       const kartta = this.piirraMaakartta(iso, city.id);
       if (kartta) this.arrivalMaaKartta.appendChild(kartta);
+      // Tunnusluvut ja tervehdykset kartan alle (pilottimaat).
+      this.naytaMaaTunnusluvut(iso);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
       const omaMaaIntro = OMAT_ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
@@ -2194,6 +2199,59 @@ export class UI {
       if (summary.extract && !omaIntro) this.arrivalIntro.textContent = shortIntro(summary.extract);
       this.arrivalWiki.hidden = false;
     });
+  }
+
+  /**
+   * Maan tunnusluvut ja tervehdykset kartan alle (pilottimaat, omistajan
+   * toive): väkiluku, pinta-ala, demokratiaindeksi (V-Dem — klikkaus
+   * avaa maan kuvaajan Our World in Datassa) ja keskitulo pieninä
+   * symboliriveinä; alla "hyvää päivää" maan merkittävillä kielillä ja
+   * kunkin perässä kielen maan pikkulippu.
+   */
+  naytaMaaTunnusluvut(iso) {
+    const tiedot = AFRICA_MAATIEDOT[iso] ?? null;
+    this.arrivalMaaTunnusluvut.hidden = !tiedot;
+    this.arrivalMaaTervehdykset.hidden = !tiedot?.tervehdykset?.length;
+    this.arrivalMaaTunnusluvut.textContent = '';
+    this.arrivalMaaTervehdykset.textContent = '';
+    if (!tiedot) return;
+    const IKONIT = {
+      vaki: '<circle cx="7.3" cy="4.1" r="2.7"/><path d="M2 13.4c.7-3.4 2.7-5.1 5.3-5.1s4.6 1.7 5.3 5.1"/>',
+      ala: '<rect x="1" y="1" width="12.6" height="12.6" rx="1.8"/><path d="M1 9.4l3.4-3 2.6 2.2 3.2-3.6 3.4 2.6"/>',
+      vaaka: '<path d="M7.3 1.8v11.4M3.6 13.2h7.4M2.4 4.2h9.8"/><path d="M2.4 4.2 1 7.9a2.2 2.2 0 0 0 2.8 0zM12.2 4.2l-1.4 3.7a2.2 2.2 0 0 0 2.8 0z"/>',
+      raha: '<circle cx="7.3" cy="7.5" r="5.9"/><path d="M7.3 4.3v6.4M5.5 6.2c0-.9.8-1.6 1.8-1.6s1.8.65 1.8 1.5c0 1.9-3.6 1.05-3.6 2.95 0 .85.8 1.5 1.8 1.5s1.8-.7 1.8-1.6"/>',
+    };
+    const rivi = (ikoni, sisalto, seloste) => {
+      const kohta = html('span', 'maa-tunnus');
+      kohta.title = seloste;
+      const kuvake = html('span', 'maa-tunnus-ikoni');
+      kuvake.innerHTML = `<svg viewBox="0 0 15 15" aria-hidden="true">${IKONIT[ikoni]}</svg>`;
+      kohta.appendChild(kuvake);
+      kohta.appendChild(typeof sisalto === 'string' ? document.createTextNode(sisalto) : sisalto);
+      this.arrivalMaaTunnusluvut.appendChild(kohta);
+    };
+    rivi('vaki', tiedot.vakiluku, 'Väkiluku');
+    rivi('ala', tiedot.pintaAla, 'Pinta-ala');
+    if (tiedot.demokratia) {
+      const linkki = html('a', 'maa-demokratia', `${tiedot.demokratia.arvo} · V-Dem`);
+      linkki.href = tiedot.demokratia.linkki;
+      linkki.target = '_blank';
+      linkki.rel = 'noopener noreferrer';
+      rivi('vaaka', linkki, 'Demokratiaindeksi (V-Dem, 0–1) — avaa maan kuvaajan');
+    }
+    rivi('raha', tiedot.keskitulo, 'Bruttokansantulo asukasta kohden vuodessa');
+    for (const t of tiedot.tervehdykset ?? []) {
+      const osa = html('span', 'tervehdys');
+      osa.title = `"Hyvää päivää" — ${t.kieli}`;
+      osa.appendChild(document.createTextNode(`${t.teksti} `));
+      const lippu = document.createElement('img');
+      lippu.alt = t.kieli;
+      lippu.loading = 'lazy';
+      lippu.src = valokuvaUrl(t.lippu, 40);
+      lippu.addEventListener('error', () => lippu.remove());
+      osa.appendChild(lippu);
+      this.arrivalMaaTervehdykset.appendChild(osa);
+    }
   }
 
   /**

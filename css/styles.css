@@ -1014,6 +1014,68 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   color: inherit;
 }
 
+/*
+ * Maan tunnusluvut kartan alla (pilottimaat): pienet symbolirivit
+ * samalla vähäeleisellä otteella kuin karttaselitteessä, ja niiden
+ * alla tervehdykset kielilippuineen.
+ */
+.maa-tunnusluvut {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.8rem;
+  margin: 0.35rem 0 0.15rem;
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  color: #5a4a33;
+}
+
+.maa-tunnus {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.maa-tunnus-ikoni svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+  fill: none;
+  stroke: rgba(90, 74, 51, 0.9);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.maa-demokratia {
+  color: inherit;
+  text-decoration: underline dotted;
+}
+
+.maa-demokratia:hover { color: var(--accent); }
+
+.maa-tervehdykset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin: 0.15rem 0 0.35rem;
+  font-size: 0.78rem;
+  color: #5a4a33;
+}
+
+.tervehdys {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-style: italic;
+}
+
+.tervehdys img {
+  height: 0.8rem;
+  width: auto;
+  border: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 2px;
+}
+
 /* Maan lippu suht pienenä nimen vieressä (omistajan toive). */
 .arrival-lippu {
   height: 1.05rem;
