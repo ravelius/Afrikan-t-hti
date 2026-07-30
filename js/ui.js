@@ -118,6 +118,7 @@ import { sfx, treasureSound } from './sound.js';
 import {
   playPlaceAmbience, startQuizMusic, stopPlaceStream, stopQuizMusic,
 } from './ambience-stream.js';
+import { puheVoima } from './aani-ehdokkaat.js';
 import { BoardDie } from './die.js';
 import {
   el,
@@ -2353,7 +2354,7 @@ export class UI {
     if (!sfx.enabled) return;
     this.stopIntroVoice();
     const audio = new Audio('assets/audio/intro-puhe.mp3');
-    audio.volume = 0.9;
+    audio.volume = puheVoima();
     this.pehmeaLoppu(audio);
     this.introVoice = audio;
     audio.play().catch(() => {
@@ -2385,7 +2386,7 @@ export class UI {
     this.stopDiaryVoice();
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
-    audio.volume = 0.9;
+    audio.volume = puheVoima();
     this.pehmeaLoppu(audio);
     this.diaryVoice = audio;
     // Kirjanpito kaikista luennoista: pysäytys hiljentää myös sellaisen
@@ -2745,7 +2746,7 @@ export class UI {
       this.typedQuizFor = quiz;
       this.quizStage = 0;
       sfx.play('quizOpen');
-      startQuizMusic();
+      startQuizMusic(this.game.pack.id);
       this.quizQuestion.textContent = '';
       const vaihtoehdot = () => {
         if (this.dead || this.typedQuizFor !== quiz) return;
@@ -2864,7 +2865,7 @@ export class UI {
     this.quizOptions.hidden = false;
     if (this.typedQuizFor !== duel) {
       this.typedQuizFor = duel;
-      startQuizMusic();
+      startQuizMusic(this.game.pack.id);
       this.typeText(this.quizQuestion, duel.question, 'quiz');
     } else if (this.quizQuestion.textContent !== String(duel.question)) {
       // Sama itsekorjaus kuin tietovisassa: teksti ei saa jäädä eriämään.

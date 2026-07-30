@@ -43,6 +43,9 @@
     details.manner > summary { cursor: pointer; padding: 0.5rem 0;
       color: var(--korostus); font-size: 0.9rem; }
     details.manner > summary .maara { color: var(--haalea); font-size: 0.8rem; }
+    /* Sisäkkäinen lohko (maisematyyppi maanosan alla) erottuu kevyemmin. */
+    details.manner details.manner { border-style: solid;
+      border-color: rgba(214, 188, 140, 0.28); margin: 0.4rem 0; }
     .kori-seloste { color: var(--haalea); font-size: 0.8rem; margin: 0.1rem 0 0.4rem; }
     .kori-rivi { display: flex; align-items: center; gap: 0.5rem; padding: 0.12rem 0; }
     .kori-rivi .soita { min-width: 3rem; flex: 0 0 auto; }
@@ -150,7 +153,7 @@
     import {
       EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani, jaaAlku,
       TYYPPI_EHDOKKAAT, TYYPPI_NIMET, KAUPUNGIT_TYYPEITTAIN,
-      tyyppiKori, valitseTyyppiKori,
+      tyyppiKori, valitseTyyppiKori, puheVoima, asetaPuheVoima,
     } from './js/aani-ehdokkaat.js';
 
     // --- pikatestit ---------------------------------------------------------
@@ -291,6 +294,7 @@
     // Hakusanaehdotus paikan mukaan; kenttää saa muokata vapaasti.
     const HAKUEHDOTUKSET = {
       'musiikki:tietovisa': 'calm kalimba loop',
+      'musiikki:tietovisa:africa': 'calm african kalimba kora loop',
       'tehoste:dice': 'dice roll wooden table',
       'tehoste:pen': 'typewriter single key',
       'tehoste:jet': 'airplane cabin interior',
@@ -408,17 +412,14 @@
     const aukiRyhmat = new Set(); // säilyy uudelleenpiirron yli
     const aukiPaikat = new Set(); // paikat, joiden vaihtoehdot on avattu
 
-    // Ryhmät: tietovisan ja minipelien äänet omana osionaan, muut
-    // tehosteet yhdessä. Kaupungit hoituvat arvontakoreilla.
+    // Minipelien tehosteet Efektit-tason omana lohkonaan; tietovisan
+    // musiikki kuuluu Muihin ääniin ja jaotellaan maanosittain.
     const MINIPELIT = new Set([
-      'musiikki:tietovisa', 'tehoste:quizOpen', 'tehoste:correct',
+      'tehoste:quizOpen', 'tehoste:correct',
       'tehoste:wrong', 'tehoste:hint', 'tehoste:tick', 'tehoste:timeout',
       'tehoste:swipe', 'tehoste:robber', 'tehoste:star', 'tehoste:gem',
       'tehoste:horseshoe', 'tehoste:empty',
     ]);
-    const ryhmaNimi = (slot) => (MINIPELIT.has(slot)
-      ? 'Tietovisa ja minipelit'
-      : 'Tehosteet — yleiset');
 
     /**
      * Yhden maanosan kori maisematyypin alla: rastit ja liu'ut. Ehdokkaat
@@ -438,10 +439,12 @@
         else kiinniMannet.add(koriSlot);
       });
       const summary = document.createElement('summary');
+      const nimi = TYYPPI_NIMET[tyyppi] ?? tyyppi;
+      const tyyppiOtsikko = `${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
       const maita = (tiedot.maat ?? []).filter((m) => m.nimi).length;
       const laajuus = maita
         ? `${maita} maata` : `${tiedot.kaupungit.length} paikkaa`;
-      summary.innerHTML = `${tiedot.maanosa} <span class="maara">· korissa ${koriNyt.length} · ${laajuus}</span>`;
+      summary.innerHTML = `${tyyppiOtsikko} <span class="maara">· korissa ${koriNyt.length} · ${laajuus}</span>`;
       kotelo.appendChild(summary);
       // Maanosan alla paikat listataan maittain (tyyppi → maanosa → maat).
       const seloste = document.createElement('div');
@@ -543,53 +546,17 @@
         }
         kotelo.appendChild(koriRivi);
       }
+      kotelo.appendChild(rakennaLisaaAania(tyyppi));
       return kotelo;
     }
 
     /**
-     * Yhden maisematyypin arvontakorit omana ryhmänään: yläkategoria on
-     * äänityyppi, sen alla maanosat koreineen. Omat äänet ja Freesound-haku
-     * ovat tyypin yhteiset — lisätty ääni ilmestyy kaikkien maanosien
-     * listoihin, rastit tehdään maanosittain.
+     * Tyypin yhteinen "lisää ääniä" -lohko: oma osoite ja Freesound-haku.
+     * Lisätty ääni ilmestyy tyypin listaan kaikissa maanosissa.
      */
-    function rakennaKoriRyhma(tyyppi) {
-      // Ylätaso on äänityyppi — sen alla maanosat ja niiden alla maat.
+    function rakennaLisaaAania(tyyppi) {
       const nimi = TYYPPI_NIMET[tyyppi] ?? tyyppi;
-      const otsikko = `${nimi.charAt(0).toUpperCase()}${nimi.slice(1)}`;
-      const laudat = KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? [];
       const omaSlot = `kori:${tyyppi}`;
-      const omat = (omatEhdokkaat()[omaSlot] ?? []).map((e) => ({ ...e, oma: true }));
-      const rivit = [...TYYPPI_EHDOKKAAT[tyyppi], ...omat];
-      if (haku && !otsikko.toLowerCase().includes(haku)
-        && !rivit.some((e) => e.nimi.toLowerCase().includes(haku))
-        && !laudat.some((l) => l.maanosa.toLowerCase().includes(haku)
-          || l.kaupungit.some((k) => k.toLowerCase().includes(haku))
-          || (l.maat ?? []).some((m) => m.nimi && m.nimi.toLowerCase().includes(haku)))) return null;
-
-      const kotelo = document.createElement('details');
-      kotelo.className = 'ryhma';
-      kotelo.open = haku ? true : aukiRyhmat.has(otsikko);
-      kotelo.addEventListener('toggle', () => {
-        if (kotelo.open) aukiRyhmat.add(otsikko);
-        else aukiRyhmat.delete(otsikko);
-      });
-      const summary = document.createElement('summary');
-      const osat = laudat.map((l) => `${l.maanosa} ${tyyppiKori(tyyppi, l.lauta).length}`).join(' · ');
-      summary.innerHTML = `${otsikko} <span class="maara">· korissa: ${osat || '—'}</span>`;
-      kotelo.appendChild(summary);
-
-      const seloste = document.createElement('p');
-      seloste.className = 'kori-seloste';
-      seloste.textContent = 'Jokaisella maanosalla on oma arvontakorinsa: peli arpoo '
-        + 'rastituista yhden aina paikkaan saavuttaessa. Uusi maanosa ilmestyy '
-        + 'tähän, kun sen kaupungeille merkitään äänimaisematyypit.';
-      kotelo.appendChild(seloste);
-
-      for (const tiedot of laudat) {
-        kotelo.appendChild(rakennaMaanosaKori(tyyppi, tiedot, rivit));
-      }
-
-      // Lisää ääniä: oma osoite tai Freesound-haku — tyypin yhteinen lista.
       const loput = document.createElement('details');
       loput.className = 'loput';
       loput.open = haku ? true : aukiPaikat.has(omaSlot);
@@ -637,7 +604,127 @@
       hakuRivi.appendChild(hae);
       loput.appendChild(hakuRivi);
       loput.appendChild(tulokset);
-      kotelo.appendChild(loput);
+      return loput;
+    }
+
+    /** Ylätason lohko (Taustaäänet, Efektit, Puhe, Muut äänet). */
+    function ylaRyhma(nimi, maaraTeksti) {
+      const kotelo = document.createElement('details');
+      kotelo.className = 'ryhma';
+      kotelo.open = haku ? true : aukiRyhmat.has(nimi);
+      kotelo.addEventListener('toggle', () => {
+        if (kotelo.open) aukiRyhmat.add(nimi);
+        else aukiRyhmat.delete(nimi);
+      });
+      const summary = document.createElement('summary');
+      summary.innerHTML = `${nimi} <span class="maara">· ${maaraTeksti}</span>`;
+      kotelo.appendChild(summary);
+      return kotelo;
+    }
+
+    /**
+     * Taustaäänet: ylätaso, jonka alla maanosat (Maailma, Afrikka, …) ja
+     * niiden alla maisematyyppien arvontakorit maittain listattuine
+     * kaupunkeineen. Myöhemmin jaottelu tarkentuu maihin ja kaupunkeihin
+     * (omistajan linjaus).
+     */
+    function rakennaTaustaRyhma() {
+      const laudat = new Map(); // lauta -> { maanosa, tyypit }
+      for (const tyyppi of Object.keys(TYYPPI_EHDOKKAAT)) {
+        const nimi = TYYPPI_NIMET[tyyppi] ?? tyyppi;
+        const omat = (omatEhdokkaat()[`kori:${tyyppi}`] ?? []).map((e) => ({ ...e, oma: true }));
+        const rivit = [...TYYPPI_EHDOKKAAT[tyyppi], ...omat];
+        for (const tiedot of KAUPUNGIT_TYYPEITTAIN[tyyppi] ?? []) {
+          if (haku && !nimi.toLowerCase().includes(haku)
+            && !tiedot.maanosa.toLowerCase().includes(haku)
+            && !'taustaäänet'.includes(haku)
+            && !rivit.some((e) => e.nimi.toLowerCase().includes(haku))
+            && !tiedot.kaupungit.some((k) => k.toLowerCase().includes(haku))
+            && !(tiedot.maat ?? []).some((m) => m.nimi && m.nimi.toLowerCase().includes(haku))) continue;
+          if (!laudat.has(tiedot.lauta)) laudat.set(tiedot.lauta, { maanosa: tiedot.maanosa, tyypit: [] });
+          laudat.get(tiedot.lauta).tyypit.push({ tyyppi, tiedot, rivit });
+        }
+      }
+      if (!laudat.size) return null;
+      // Maailma ensin, sitten maanosat siinä järjestyksessä kuin ne
+      // ilmestyvät sisältöön.
+      const jarjestetty = [...laudat.entries()]
+        .sort((a, b) => (a[0] === 'maailma' ? -1 : b[0] === 'maailma' ? 1 : 0));
+
+      const kotelo = ylaRyhma('Taustaäänet',
+        jarjestetty.map(([, l]) => l.maanosa).join(' · '));
+      const seloste = document.createElement('p');
+      seloste.className = 'kori-seloste';
+      seloste.textContent = 'Paikkojen äänimaisemat maanosittain: jokaisella maanosalla '
+        + 'on maisematyyppien arvontakorit, joista peli arpoo äänen saapuessa. '
+        + 'Myöhemmin jaottelu tarkentuu maihin ja kaupunkeihin.';
+      kotelo.appendChild(seloste);
+
+      for (const [lauta, t] of jarjestetty) {
+        const lohko = document.createElement('details');
+        lohko.className = 'manner';
+        lohko.open = haku ? true : !kiinniMannet.has(`lauta:${lauta}`);
+        lohko.addEventListener('toggle', () => {
+          if (lohko.open) kiinniMannet.delete(`lauta:${lauta}`);
+          else kiinniMannet.add(`lauta:${lauta}`);
+        });
+        const ots = document.createElement('summary');
+        ots.innerHTML = `${t.maanosa} <span class="maara">· ${t.tyypit.length} maisematyyppiä</span>`;
+        lohko.appendChild(ots);
+        for (const { tyyppi, tiedot, rivit } of t.tyypit) {
+          lohko.appendChild(rakennaMaanosaKori(tyyppi, tiedot, rivit));
+        }
+        kotelo.appendChild(lohko);
+      }
+      return kotelo;
+    }
+
+    // Puheen esikuuntelu omalla soittimella tarkalleen valitulla tasolla.
+    let puheEsikuuntelu = null;
+
+    /** Puhe: yksi voimakkuussäätö kaikkiin luentoihin. */
+    function rakennaPuheRyhma() {
+      const kotelo = ylaRyhma('Puhe', 'yksi säätö kaikkiin luentoihin');
+      const seloste = document.createElement('p');
+      seloste.className = 'kori-seloste';
+      seloste.textContent = 'Koskee kaikkia luentoja: alkuteksti, saapumiset ja '
+        + 'kuuntele-napit. Luentoja ei eritellä. Esikuuntelu soittaa '
+        + 'alkutekstin luentaa valitulla tasolla.';
+      kotelo.appendChild(seloste);
+      const rivi = document.createElement('div');
+      rivi.className = 'kori-rivi';
+      const soitto = document.createElement('button');
+      soitto.type = 'button';
+      soitto.className = 'soita';
+      soitto.textContent = '▶';
+      const liuku = document.createElement('input');
+      liuku.type = 'range';
+      liuku.className = 'alku';
+      liuku.min = '0.1';
+      liuku.max = '1';
+      liuku.step = '0.05';
+      liuku.value = String(puheVoima());
+      const lukema = document.createElement('span');
+      lukema.className = 'sek';
+      lukema.textContent = `${Math.round(puheVoima() * 100)} %`;
+      liuku.addEventListener('input', () => {
+        lukema.textContent = `${Math.round(Number(liuku.value) * 100)} %`;
+        if (puheEsikuuntelu) puheEsikuuntelu.volume = Number(liuku.value);
+      });
+      liuku.addEventListener('change', () => asetaPuheVoima(Number(liuku.value)));
+      soitto.addEventListener('click', () => {
+        if (puheEsikuuntelu && !puheEsikuuntelu.paused) {
+          puheEsikuuntelu.pause();
+          return;
+        }
+        puheEsikuuntelu ??= new Audio('assets/audio/intro-puhe.mp3');
+        puheEsikuuntelu.volume = Number(liuku.value);
+        puheEsikuuntelu.play().catch(() => {});
+      });
+      rivi.appendChild(soitto);
+      rivi.appendChild(liuku);
+      rivi.appendChild(lukema);
+      kotelo.appendChild(rivi);
       return kotelo;
     }
 
@@ -647,15 +734,15 @@
       const slotit = Object.keys(EHDOKKAAT);
       laskuri.textContent = `Valittu ${slotit.filter((s) => s in tehdyt).length} / ${slotit.length}`;
 
-      // Kaupunkien arvontakorit tyypeittäin ensin — kaikki kaupungit
-      // saavat äänensä näistä.
-      for (const tyyppi of Object.keys(TYYPPI_EHDOKKAAT)) {
-        const koriRyhma = rakennaKoriRyhma(tyyppi);
-        if (koriRyhma) valinnat.appendChild(koriRyhma);
-      }
+      // 1) Taustaäänet: maanosat ja niiden maisematyyppien korit.
+      const tausta = rakennaTaustaRyhma();
+      if (tausta) valinnat.appendChild(tausta);
 
-      // Kootaan ryhmät järjestyksessä.
-      const ryhmat = new Map();
+      // 2) Slotit ylätasoihin: tietovisan musiikki (maanosittain) kuuluu
+      // Muihin ääniin; minipelien ja yleiset tehosteet Efekteihin.
+      const minipelit = [];
+      const yleiset = [];
+      const tietovisat = [];
       for (const [slot, tiedot] of Object.entries(EHDOKKAAT)) {
         const omat = omatEhdokkaat()[slot] ?? [];
         const kaikkiRivit = [...tiedot.ehdokkaat, ...omat.map((e) => ({ ...e, oma: true }))];
@@ -663,28 +750,58 @@
           && !kaikkiRivit.some((e) => e.nimi.toLowerCase().includes(haku))) continue;
         const valittu = valittuAani(slot);
         if (vainAvoimet && valittu !== null) continue;
-        const ryhma = ryhmaNimi(slot);
-        if (!ryhmat.has(ryhma)) ryhmat.set(ryhma, []);
-        ryhmat.get(ryhma).push({ slot, tiedot, kaikkiRivit, valittu });
+        const jasen = { slot, tiedot, kaikkiRivit, valittu };
+        if (slot.startsWith('musiikki:tietovisa')) tietovisat.push(jasen);
+        else if (MINIPELIT.has(slot)) minipelit.push(jasen);
+        else yleiset.push(jasen);
       }
 
-      const jarjestys = [...ryhmat.keys()].sort((a, b) => {
-        const arvo = (r) => (r.startsWith('Tietovisa') ? 0 : 1);
-        return arvo(a) - arvo(b) || a.localeCompare(b, 'fi');
-      });
-      for (const ryhma of jarjestys) {
-        const jasenet = ryhmat.get(ryhma);
+      // Ylätasot omistajan jaottelulla: Efektit, Puhe ja Muut äänet
+      // (Taustaäänet on jo yllä).
+      const paketit = [];
+      if (minipelit.length || yleiset.length) {
+        paketit.push({
+          nimi: 'Efektit',
+          seloste: 'Tehosteet ovat samat kaikissa paikoissa — paikkajaottelua ei tarvita.',
+          lapset: [['Tietovisa ja minipelit', minipelit], ['Yleiset', yleiset]]
+            .filter(([, joukko]) => joukko.length),
+        });
+      }
+      paketit.push({ puhe: true });
+      if (tietovisat.length) {
+        paketit.push({
+          nimi: 'Muut äänet',
+          seloste: 'Tietovisan musiikki valitaan maanosittain — ilman omaa valintaa '
+            + 'soi yleinen. Tulevat paikkaäänet (esimerkiksi esitykset '
+            + 'Tutki-sivulla) jaotellaan tänne paikkahierarkian mukaan.',
+          lapset: [['Tietovisat — musiikki maanosittain', tietovisat]],
+        });
+      }
+
+      for (const paketti of paketit) {
+        if (paketti.puhe) {
+          if (!haku || 'puhe luenta voimakkuus'.includes(haku)) {
+            valinnat.appendChild(rakennaPuheRyhma());
+          }
+          continue;
+        }
+        const emo = ylaRyhma(paketti.nimi,
+          `${paketti.lapset.reduce((summa, [, joukko]) => summa + joukko.length, 0)} paikkaa`);
+        const emoSeloste = document.createElement('p');
+        emoSeloste.className = 'kori-seloste';
+        emoSeloste.textContent = paketti.seloste;
+        emo.appendChild(emoSeloste);
+        for (const [lohkoNimi, jasenet] of paketti.lapset) {
         const kotelo = document.createElement('details');
-        kotelo.className = 'ryhma';
-        // Haku avaa osuvat ryhmät; muuten muistetaan käyttäjän avaamat.
-        kotelo.open = haku ? true : aukiRyhmat.has(ryhma);
+        kotelo.className = 'manner';
+        kotelo.open = haku ? true : !kiinniMannet.has(`lohko:${lohkoNimi}`);
         kotelo.addEventListener('toggle', () => {
-          if (kotelo.open) aukiRyhmat.add(ryhma);
-          else aukiRyhmat.delete(ryhma);
+          if (kotelo.open) kiinniMannet.delete(`lohko:${lohkoNimi}`);
+          else kiinniMannet.add(`lohko:${lohkoNimi}`);
         });
         const summary = document.createElement('summary');
         const valittuja = jasenet.filter((j) => j.valittu !== null).length;
-        summary.innerHTML = `${ryhma} <span class="maara">· ${jasenet.length} paikkaa · valittu ${valittuja}</span>`;
+        summary.innerHTML = `${lohkoNimi} <span class="maara">· ${jasenet.length} paikkaa · valittu ${valittuja}</span>`;
         kotelo.appendChild(summary);
 
         for (const { slot, tiedot, kaikkiRivit, valittu } of jasenet) {
@@ -861,7 +978,9 @@
           avaus.textContent = `Muut vaihtoehdot (${piilotettuja}) · omat äänet · Freesound-haku`;
           kotelo.appendChild(loput);
         }
-        valinnat.appendChild(kotelo);
+        emo.appendChild(kotelo);
+        }
+        valinnat.appendChild(emo);
       }
     };
     rakenna();

@@ -25528,8 +25528,10 @@ const TYYPPI_NIMET = {
 };
 
 const EHDOKKAAT = {
+  // Tietovisan musiikki jaotellaan maanosittain (Muut äänet → Tietovisat):
+  // yleinen valinta soi kaikkialla, ellei maanosalla ole omaansa.
   'musiikki:tietovisa': {
-    otsikko: 'Tietovisan taustamusiikki',
+    otsikko: 'Yleinen — soi ellei maanosalla ole omaa valintaa',
     oletus: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3',
     ehdokkaat: [
       { url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3', nimi: 'Arabialainen huilu — DYEKHO, CC0' },
@@ -25537,6 +25539,18 @@ const EHDOKKAAT = {
       { url: 'https://cdn.freesound.org/previews/843/843466_15636277-lq.mp3', nimi: 'Rumpu ja kalimba -luuppi — bassimat, CC0' },
       { url: 'https://cdn.freesound.org/previews/666/666866_5737443-lq.mp3', nimi: 'Hang drum (Dancing Spirit) — MrJmix, CC BY' },
       { url: 'https://cdn.freesound.org/previews/557/557122_2282212-lq.mp3', nimi: 'Tumma ambient-pinta — szegvari, CC0' },
+    ],
+  },
+  'musiikki:tietovisa:africa': {
+    otsikko: 'Afrikka',
+    // Ilman valintaa peritään yleinen — siksi ei omaa oletusta.
+    oletus: null,
+    ehdokkaat: [
+      { url: 'assets/audio/musiikki-visa-afrikka-1.mp3', nimi: 'Kalimba-mietiskely — ElevenLabs-luuppi' },
+      { url: 'assets/audio/musiikki-visa-afrikka-2.mp3', nimi: 'Kora-harppu — ElevenLabs-luuppi' },
+      { url: 'assets/audio/musiikki-visa-afrikka-3.mp3', nimi: 'Mbira ja helistin — ElevenLabs-luuppi' },
+      { url: 'https://cdn.freesound.org/previews/466/466570_197130-lq.mp3', nimi: 'Kalimba-luuppi — CarlosCarty, CC BY' },
+      { url: 'https://cdn.freesound.org/previews/843/843466_15636277-lq.mp3', nimi: 'Rumpu ja kalimba -luuppi — bassimat, CC0' },
     ],
   },
   'tehoste:dice': {
@@ -25921,6 +25935,28 @@ function valitseAani(slot, url) {
     localStorage.setItem(AVAIN, JSON.stringify(valinnat));
   } catch {
     /* yksityinen selaustila — valinta ei säily */
+  }
+}
+
+// Puheen voimakkuus: yksi yleinen säätö kaikkiin luentoihin (intro,
+// saapumiset, kuuntele-napit) — luentoja ei eritellä (omistajan päätös).
+const PUHEVOIMA_AVAIN = 'matkakirja-puhevoima';
+
+function puheVoima() {
+  try {
+    const arvo = Number(localStorage.getItem(PUHEVOIMA_AVAIN));
+    if (Number.isFinite(arvo) && arvo > 0) return Math.min(1, Math.max(0.1, arvo));
+  } catch {
+    /* yksityinen selaustila — oletus kelpaa */
+  }
+  return 0.9;
+}
+
+function asetaPuheVoima(arvo) {
+  try {
+    localStorage.setItem(PUHEVOIMA_AVAIN, String(arvo));
+  } catch {
+    /* ei säily */
   }
 }
 
@@ -26964,12 +27000,14 @@ const MUSIIKKI_VOIMA = 0.09;
 
 let musiikki = null;
 
-function startQuizMusic() {
+function startQuizMusic(lauta) {
   // Kaupungin ääni väistyy reilusti kysymyksen ajaksi — kaksi ääntä
   // päällekkäin täydellä voimalla oli puuroa.
   if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
   if (!sfx.enabled || musiikki) return;
-  const valinta = valittuAani('musiikki:tietovisa');
+  // Maanosan oma valinta voittaa; ilman sitä soi yleinen valinta.
+  let valinta = lauta ? valittuAani(`musiikki:tietovisa:${lauta}`) : null;
+  if (valinta == null) valinta = valittuAani('musiikki:tietovisa');
   if (valinta === '') return; // musiikki valittu pois
   const asetus = jaaAlku(valinta);
   const audio = new Audio(asetus.url ?? QUIZ_MUSIC.url);
@@ -32611,7 +32649,7 @@ class UI {
     if (!sfx.enabled) return;
     this.stopIntroVoice();
     const audio = new Audio('assets/audio/intro-puhe.mp3');
-    audio.volume = 0.9;
+    audio.volume = puheVoima();
     this.pehmeaLoppu(audio);
     this.introVoice = audio;
     audio.play().catch(() => {
@@ -32643,7 +32681,7 @@ class UI {
     this.stopDiaryVoice();
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
-    audio.volume = 0.9;
+    audio.volume = puheVoima();
     this.pehmeaLoppu(audio);
     this.diaryVoice = audio;
     // Kirjanpito kaikista luennoista: pysäytys hiljentää myös sellaisen
@@ -33003,7 +33041,7 @@ class UI {
       this.typedQuizFor = quiz;
       this.quizStage = 0;
       sfx.play('quizOpen');
-      startQuizMusic();
+      startQuizMusic(this.game.pack.id);
       this.quizQuestion.textContent = '';
       const vaihtoehdot = () => {
         if (this.dead || this.typedQuizFor !== quiz) return;
@@ -33122,7 +33160,7 @@ class UI {
     this.quizOptions.hidden = false;
     if (this.typedQuizFor !== duel) {
       this.typedQuizFor = duel;
-      startQuizMusic();
+      startQuizMusic(this.game.pack.id);
       this.typeText(this.quizQuestion, duel.question, 'quiz');
     } else if (this.quizQuestion.textContent !== String(duel.question)) {
       // Sama itsekorjaus kuin tietovisassa: teksti ei saa jäädä eriämään.
@@ -33924,7 +33962,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.60';
+const APP_VERSION = '2026-07-30.61';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -34023,7 +34061,7 @@ muteBtn.addEventListener('click', () => {
     ui?.stopIntroVoice();
   } else {
     ui?.syncAmbience();
-    if (ui?.game?.quiz) startQuizMusic();
+    if (ui?.game?.quiz) startQuizMusic(ui.game.pack.id);
   }
   naytaMykistys();
 });

@@ -77,8 +77,10 @@ export const TYYPPI_NIMET = {
 
 
 export const EHDOKKAAT = {
+  // Tietovisan musiikki jaotellaan maanosittain (Muut äänet → Tietovisat):
+  // yleinen valinta soi kaikkialla, ellei maanosalla ole omaansa.
   'musiikki:tietovisa': {
-    otsikko: 'Tietovisan taustamusiikki',
+    otsikko: 'Yleinen — soi ellei maanosalla ole omaa valintaa',
     oletus: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3',
     ehdokkaat: [
       { url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3', nimi: 'Arabialainen huilu — DYEKHO, CC0' },
@@ -86,6 +88,18 @@ export const EHDOKKAAT = {
       { url: 'https://cdn.freesound.org/previews/843/843466_15636277-lq.mp3', nimi: 'Rumpu ja kalimba -luuppi — bassimat, CC0' },
       { url: 'https://cdn.freesound.org/previews/666/666866_5737443-lq.mp3', nimi: 'Hang drum (Dancing Spirit) — MrJmix, CC BY' },
       { url: 'https://cdn.freesound.org/previews/557/557122_2282212-lq.mp3', nimi: 'Tumma ambient-pinta — szegvari, CC0' },
+    ],
+  },
+  'musiikki:tietovisa:africa': {
+    otsikko: 'Afrikka',
+    // Ilman valintaa peritään yleinen — siksi ei omaa oletusta.
+    oletus: null,
+    ehdokkaat: [
+      { url: 'assets/audio/musiikki-visa-afrikka-1.mp3', nimi: 'Kalimba-mietiskely — ElevenLabs-luuppi' },
+      { url: 'assets/audio/musiikki-visa-afrikka-2.mp3', nimi: 'Kora-harppu — ElevenLabs-luuppi' },
+      { url: 'assets/audio/musiikki-visa-afrikka-3.mp3', nimi: 'Mbira ja helistin — ElevenLabs-luuppi' },
+      { url: 'https://cdn.freesound.org/previews/466/466570_197130-lq.mp3', nimi: 'Kalimba-luuppi — CarlosCarty, CC BY' },
+      { url: 'https://cdn.freesound.org/previews/843/843466_15636277-lq.mp3', nimi: 'Rumpu ja kalimba -luuppi — bassimat, CC0' },
     ],
   },
   'tehoste:dice': {
@@ -470,6 +484,28 @@ export function valitseAani(slot, url) {
     localStorage.setItem(AVAIN, JSON.stringify(valinnat));
   } catch {
     /* yksityinen selaustila — valinta ei säily */
+  }
+}
+
+// Puheen voimakkuus: yksi yleinen säätö kaikkiin luentoihin (intro,
+// saapumiset, kuuntele-napit) — luentoja ei eritellä (omistajan päätös).
+const PUHEVOIMA_AVAIN = 'matkakirja-puhevoima';
+
+export function puheVoima() {
+  try {
+    const arvo = Number(localStorage.getItem(PUHEVOIMA_AVAIN));
+    if (Number.isFinite(arvo) && arvo > 0) return Math.min(1, Math.max(0.1, arvo));
+  } catch {
+    /* yksityinen selaustila — oletus kelpaa */
+  }
+  return 0.9;
+}
+
+export function asetaPuheVoima(arvo) {
+  try {
+    localStorage.setItem(PUHEVOIMA_AVAIN, String(arvo));
+  } catch {
+    /* ei säily */
   }
 }
 
