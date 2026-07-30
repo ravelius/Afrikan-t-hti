@@ -407,9 +407,29 @@ export class UI {
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
     this.wikiSource = document.getElementById('wiki-source');
+    // Sama galleriaselaus kuin Tutki-kortin kuvassa (omistajan toive):
+    // laskuri ja nuolet Lue lisää -lehden kuvaan, suurennos aukeaa
+    // selatusta kohdasta.
+    this.wikiKuvakotelo = document.getElementById('wiki-kuvakotelo');
+    this.wikiKuvaLaskuri = document.getElementById('wiki-kuva-laskuri');
+    this.wikiKuvat = [];
+    this.wikiKuvaKohdalla = 0;
     this.wikiImage.addEventListener('click', () => {
-      if (this.wikiOpenFor) this.openLightbox(this.wikiOpenFor, this.wikiTitle.textContent);
+      if (this.wikiOpenFor) {
+        this.openLightbox(this.wikiOpenFor, this.wikiTitle.textContent, this.wikiImage.src || null);
+      }
     });
+    const selaaWikiKuvaa = (askel) => {
+      if (this.wikiKuvat.length < 2) return;
+      this.wikiKuvaKohdalla = (this.wikiKuvaKohdalla + askel
+        + this.wikiKuvat.length) % this.wikiKuvat.length;
+      this.wikiImage.src = this.wikiKuvat[this.wikiKuvaKohdalla].src;
+      this.paivitaWikiKuvaLaskuri();
+    };
+    document.getElementById('wiki-kuva-edellinen')
+      .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(-1); });
+    document.getElementById('wiki-kuva-seuraava')
+      .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(1); });
     this.factImage = document.getElementById('fact-image');
     this.factImage.addEventListener('click', () => {
       if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
@@ -2601,6 +2621,10 @@ export class UI {
     this.wikiTitle.textContent = label;
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
+    this.wikiKuvakotelo.hidden = true;
+    this.wikiKuvat = [];
+    this.wikiKuvaKohdalla = 0;
+    this.paivitaWikiKuvaLaskuri();
     this.wikiExtract.textContent = 'Haetaan…';
     this.wikiSource.textContent = '';
     if (!this.wikiDialog.open) this.wikiDialog.showModal();
@@ -2620,6 +2644,14 @@ export class UI {
       this.wikiImage.src = image;
       this.wikiImage.alt = summary.title || label;
       this.wikiImage.hidden = false;
+      this.wikiKuvakotelo.hidden = false;
+      // Galleria taustalla: laskuri ja nuolet, kun kuvia on useampi.
+      cachedGallery(title).then((lista) => {
+        if (this.wikiOpenFor !== title || lista.length < 2) return;
+        this.wikiKuvat = lista;
+        this.wikiKuvaKohdalla = Math.max(0, lista.findIndex((k) => k.src === image));
+        this.paivitaWikiKuvaLaskuri();
+      });
     });
 
     // Oma artikkeli (pilottikaupungit): Wikipedia-tekstin sijaan näytetään
@@ -2670,6 +2702,16 @@ export class UI {
    * Katselin lisätään avoimen dialogin sisään, koska dialogi on selaimen
    * top layerissa — muualle lisätty kerros jäisi sen alle.
    */
+  /** Lue lisää -lehden kuvan laskuri ja nuolet — sama malli kuin Tutki-kortissa. */
+  paivitaWikiKuvaLaskuri() {
+    const monta = this.wikiKuvat.length > 1;
+    this.wikiKuvaLaskuri.hidden = !monta;
+    this.wikiKuvaLaskuri.textContent = monta
+      ? `${this.wikiKuvaKohdalla + 1}/${this.wikiKuvat.length}` : '';
+    document.getElementById('wiki-kuva-edellinen').hidden = !monta;
+    document.getElementById('wiki-kuva-seuraava').hidden = !monta;
+  }
+
   /** Pikkukuvan laskuri ja nuolet näkyvät vain, kun galleriassa on selattavaa. */
   paivitaKuvaLaskuri() {
     const monta = this.arrivalKuvat.length > 1;

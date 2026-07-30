@@ -2923,6 +2923,16 @@ body.katselu #newgame-btn { display: none; }
   border-radius: 6px;
 }
 
+/* Lue lisää -lehden kuvakotelo kutistuu kuvan mittoihin, jotta laskuri
+ * ja nuolet asettuvat kuvan eivätkä koko palstan reunoille. */
+#wiki-kuvakotelo {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 0.6rem;
+}
+
+#wiki-kuvakotelo .wiki-image { margin: 0; }
+
 .wiki-extract {
   font-size: 0.92rem;
   line-height: 1.5;

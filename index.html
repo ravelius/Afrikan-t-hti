@@ -183,7 +183,13 @@
   <dialog id="wiki-dialog" class="dialog">
    <div class="dialog-card wiki-card">
     <h2 id="wiki-title">Lue lisää</h2>
-    <img id="wiki-image" class="wiki-image" alt="" loading="lazy" hidden />
+    <!-- Sama galleriaselaus kuin Tutki-kortin kuvassa: laskuri ja nuolet. -->
+    <div id="wiki-kuvakotelo" class="arrival-kuvakotelo" hidden>
+     <img id="wiki-image" class="wiki-image" alt="" loading="lazy" />
+     <button id="wiki-kuva-edellinen" class="arrival-kuva-nuoli edellinen" type="button" aria-label="Edellinen kuva" hidden>‹</button>
+     <button id="wiki-kuva-seuraava" class="arrival-kuva-nuoli seuraava" type="button" aria-label="Seuraava kuva" hidden>›</button>
+     <span id="wiki-kuva-laskuri" class="arrival-kuva-laskuri" hidden></span>
+    </div>
     <p id="wiki-extract" class="wiki-extract"></p>
     <p id="wiki-source" class="wiki-source"></p>
     <form method="dialog" class="dialog-actions">
