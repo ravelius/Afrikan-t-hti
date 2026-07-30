@@ -830,6 +830,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   top: 0.15rem;
   right: 0;
   z-index: 2;
+  transition: opacity 0.25s ease;
   width: auto;
   margin: 0;
   padding: 3px 3px 7px;
@@ -839,6 +840,12 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
   transform: rotate(2.5deg);
   cursor: pointer;
+}
+
+/* Vieritetty teksti kulkisi kuvan alle — vedos väistyy lukemisen ajaksi. */
+.fact-teksti-rivi.vieritetty .fact-valokuva {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .fact-valokuva img {
@@ -902,14 +909,20 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti-kortti.alla .kuvateksti,
 .postikortti-kortti.alla .kuvalahde { visibility: hidden; }
 
+/* Vain häivytys: kehyksen transformia käytetään pystykeskitykseen,
+ * joten animaatio ei saa koskea siihen. */
 @keyframes postikortti-esiin {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; }
 }
 
 .postikortti img {
   display: block;
   width: 100%;
   min-height: 60px;
+  /* Korkea pystykuva ei saa venyttää korttia ruutua korkeammaksi —
+   * kuva rajataan postikortin ikkunaan (omistajan havainto). */
+  max-height: 58vh;
+  object-fit: cover;
   background: #ded5c2;
   border: 1px solid rgba(0, 0, 0, 0.12);
   filter: grayscale(1) contrast(1.03);
