@@ -34,6 +34,25 @@ export const AFRICA_SAAPUMISET = {
       + 'teekupin jälkeen ja lisäsi: "Pyramidit olivat vanhoja jo silloin, '
       + 'kun Rooma oli kylä." Join oman teeni ja hävisin myös.',
   },
+  marrakech: {
+    kuvaus: 'Marrakech hehkui vastaan jo kaukaa — kokonainen kaupunki '
+      + 'punaista savea! Torilta kuului rumpuja ja sadan kojun melu, ja '
+      + 'Atlasvuorten lumihuiput kimmelsivät basaarin kattojen yllä. '
+      + 'Seisoin keskellä Jemaa el-Fnaa ja pyörähdin ympäri kuin lapsi.',
+    nosto: 'Isoisä kirjoitti kirjaansa: "Tarinankertojan piirissä unohdin '
+      + 'laskea aikaa; hyvä kertoja lopettaa aina kesken." Istuin samaan '
+      + 'piiriin, enkä ymmärtänyt sanaakaan — ja jäin silti kuuntelemaan '
+      + 'loppuun asti.',
+  },
+  lagos: {
+    kuvaus: 'Mikä pauhu! Lagos ei kävele vaan juoksee: laguunin sillat '
+      + 'täynnä väkeä, torit täynnä musiikkia, ja joka kulmalta joku '
+      + 'nauraa tai huutaa tai myy jotain. Vene vei minut saarelta '
+      + 'toiselle, ja kaupunki vain jatkui ja jatkui.',
+    nosto: 'Isoisän kirjassa lukee: "Lagosin satamassa laskin kanootteja, '
+      + 'kunnes väsyin — kauppa ei lopu, se vain vaihtaa venettä." Laskin '
+      + 'minäkin, ja väsyin minäkin.',
+  },
   tripoli: {
     kuvaus: 'En ollut uskoa silmiäni: Tripoli makaa kalliolla kuin laivan '
       + 'keula, ja muurit hohtavat auringossa niin valkoisina, että '

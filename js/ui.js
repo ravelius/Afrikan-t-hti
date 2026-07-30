@@ -2329,6 +2329,20 @@ export class UI {
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
+      // Muusikoista linkki Apple Musiciin (omistajan toive): aukeaa
+      // uuteen välilehteen, jotta peli jää taustalle odottamaan.
+      if (nosto.musiikki) {
+        const linkki = html('a', 'kulttuuri-musiikkilinkki');
+        linkki.href = nosto.musiikki;
+        linkki.target = '_blank';
+        linkki.rel = 'noopener';
+        linkki.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">'
+          + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+          + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
+          + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> '
+          + (nosto.musiikkiNimi ?? 'Kuuntele Apple Musicissa');
+        lohko.appendChild(linkki);
+      }
       const lahteet = [nosto.lahde, nosto.aaniLahde].filter(Boolean).join(' · ');
       if (lahteet) lohko.appendChild(html('p', 'kulttuuri-lahde', lahteet));
       lista.appendChild(lohko);
