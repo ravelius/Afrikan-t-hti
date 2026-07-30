@@ -120,7 +120,7 @@ import {
   playPlaceAmbience, startQuizMusic, stopPlaceStream, stopQuizMusic,
   vaimennaTausta, palautaTausta,
 } from './ambience-stream.js';
-import { puheVoima, jaaAlku } from './aani-ehdokkaat.js';
+import { puheVoima, jaaAlku, kertojaTila } from './aani-ehdokkaat.js';
 import { BoardDie } from './die.js';
 import {
   el,
@@ -327,6 +327,15 @@ export class UI {
     this.arrivalKulttuuri = document.getElementById('arrival-kulttuuri');
     this.arrivalKulttuuriLista = document.getElementById('arrival-kulttuuri-lista');
     this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
+    // Visa aukeaa omasta napistaan samaan näkymään (omistajan toive):
+    // nappi väistyy ja kysymys vaihtoehtoineen tulee tilalle.
+    this.arrivalKulttuuriAvaa = document.getElementById('arrival-kulttuuri-avaa');
+    this.arrivalKulttuuriAvaa.addEventListener('click', () => {
+      this.arrivalKulttuuriAvaa.hidden = true;
+      this.arrivalKulttuuriKysymys.hidden = false;
+      this.arrivalKulttuuriVaihtoehdot.hidden = false;
+      sfx.play('paper');
+    });
     this.arrivalKulttuuriKysymys = document.getElementById('arrival-kulttuuri-kysymys');
     this.arrivalKulttuuriVaihtoehdot = document.getElementById('arrival-kulttuuri-vaihtoehdot');
     this.arrivalKulttuuriTulos = document.getElementById('arrival-kulttuuri-tulos');
@@ -1483,7 +1492,10 @@ export class UI {
         // Avauslennon repliikki on lukittu ja luettu ääneen: puhe alkaa
         // pienellä viiveellä, kun moottori on jo ehtinyt nousta esiin.
         this.lentoPuheAjastin = setTimeout(() => {
-          if (!this.dead) this.playDiaryVoice('assets/audio/puhe-lento-alku.mp3');
+          // Lentorepliikin lukee vain pitkä kertoja.
+          if (!this.dead && kertojaTila() === 'pitka') {
+            this.playDiaryVoice('assets/audio/puhe-lento-alku.mp3');
+          }
         }, 1400);
       }
       await this.animateFlight(
@@ -1759,8 +1771,21 @@ export class UI {
         this.factKuuntele.hidden = false;
         if (this.luettuSaapuminen !== key) {
           this.luettuSaapuminen = key;
-          // Koko merkintä luetaan — ei pysähdystä ensimmäiseen virkkeeseen.
-          this.playDiaryVoice(this.diaryFullUrl);
+          // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
+          // lyhyt vain nuoren herran osuuden (luenta pysähtyy kuvauksen ja
+          // noston väliseen hengähdykseen), ei kertojaa jättää luennan
+          // aloittamatta — kaiutinnappi yliajaa sen hetkellisesti.
+          const tila = kertojaTila();
+          if (tila === 'ei') {
+            this.stopDiaryVoice();
+          } else if (tila === 'lyhyt') {
+            this.playDiaryVoice(this.diaryFullUrl, {
+              ekaLauseeseen: true,
+              osuus: uusi.kuvaus.length / (uusi.kuvaus.length + 1 + uusi.nosto.length),
+            });
+          } else {
+            this.playDiaryVoice(this.diaryFullUrl);
+          }
         } else {
           this.stopDiaryVoice();
         }
@@ -1800,7 +1825,7 @@ export class UI {
           ? `assets/audio/puhe-${saapuminen.packId}-havainto-${saapuminen.cityId}.mp3`
           : null;
         this.factKuuntele.hidden = !luettava;
-        if (luettava && this.luettuSaapuminen !== key) {
+        if (luettava && this.luettuSaapuminen !== key && kertojaTila() !== 'ei') {
           this.luettuSaapuminen = key;
           this.playDiaryVoice(this.diaryFullUrl, {
             ekaLauseeseen: true,
@@ -2014,6 +2039,12 @@ export class UI {
   openArrival(city) {
     if (this.arrivalShownFor === city.id && this.arrivalDialog.open) return;
     this.arrivalShownFor = city.id;
+    // Matkakirjan luenta tauolle Tutki-näkymän ajaksi: se jatkaa samasta
+    // kohdasta, kun pelaaja palaa karttanäkymään (omistajan toive).
+    if (this.diaryVoice && !this.diaryVoice.paused) {
+      this.diaryVoice.pause();
+      this.luentaTauolla = this.diaryVoice;
+    }
 
     // Kortissa on kuva, parin lauseen esittely ja päätös. Esittely tulee
     // Wikipedian tiivistelmästä; kunnes haku valmistuu — tai jos paikalla
@@ -2153,8 +2184,13 @@ export class UI {
     if (!kysymys) return;
     const vastattu = this.game.kulttuuriVastatut?.has(`${this.game.pack.id}:${city.id}`);
     this.arrivalKulttuuriKysymys.textContent = vastattu
-      ? 'Kulttuurikysymykseen on jo vastattu tässä kaupungissa.'
+      ? 'Kulttuurivisaan on jo vastattu tässä kaupungissa.'
       : `Tutustuitko? ${kysymys.q}`;
+    // Visa aukeaa omasta napistaan; vastattu tila näkyy suoraan tekstinä.
+    // Vaihtoehdot ovat piilossa kunnes nappi avaa ne.
+    this.arrivalKulttuuriAvaa.hidden = vastattu;
+    this.arrivalKulttuuriKysymys.hidden = !vastattu;
+    this.arrivalKulttuuriVaihtoehdot.hidden = true;
     if (vastattu) return;
     kysymys.options.forEach((vaihtoehto, i) => {
       const nappi = html('button', '', vaihtoehto);
@@ -2499,6 +2535,13 @@ export class UI {
     this.suljeKulttuuriKuva();
     this.pysaytaKulttuuriAani();
     if (this.arrivalDialog.open) this.arrivalDialog.close();
+    // Tauolle jäänyt luenta jatkuu, kun palataan karttanäkymään — mutta
+    // ei tietovisan tai kaksintaistelun päälle (Tutki paikka -polku).
+    const kesken = this.luentaTauolla;
+    this.luentaTauolla = null;
+    if (kesken && kesken === this.diaryVoice && !this.game.quiz && !this.game.duel) {
+      kesken.play().catch(() => {});
+    }
   }
 
   /**
@@ -2568,6 +2611,9 @@ export class UI {
    */
   playIntroVoice() {
     if (!sfx.enabled) return;
+    // Vain pitkä kertoja lukee avaustekstin: lyhyt lukee pelkän
+    // matkakirjan kuvauksen ja ei kertojaa -tila ei mitään.
+    if (kertojaTila() !== 'pitka') return;
     this.stopIntroVoice();
     const audio = new Audio('assets/audio/intro-puhe.mp3');
     audio.volume = puheVoima();
@@ -2745,6 +2791,7 @@ export class UI {
 
   stopDiaryVoice() {
     this.diaryVoice = null;
+    this.luentaTauolla = null;
     // Kaikki luennat kiinni — myös mahdollinen myöhästelijä, joka ei
     // enää ollut diaryVoice mutta soi yhä.
     for (const audio of this.luennat ?? []) {

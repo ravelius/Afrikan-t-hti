@@ -502,6 +502,30 @@ export function valitseAani(slot, url) {
   }
 }
 
+// Kertojan tila (omistajan toive, yläpalkin valikko): 'pitka' lukee
+// kaiken kuten ennenkin, 'lyhyt' vain matkakirjan nuoren herran
+// osuuden, 'ei' mykistää kertojan mutta jättää muut äänet soimaan
+// (matkakirjan kaiutinnappi yliajaa hetkellisesti). Täysi mykistys on
+// erikseen sound.js:n enabled-tilassa.
+const KERTOJA_AVAIN = 'matkakirja-kertoja';
+
+export function kertojaTila() {
+  try {
+    const t = localStorage.getItem(KERTOJA_AVAIN);
+    return ['ei', 'lyhyt', 'pitka'].includes(t) ? t : 'pitka';
+  } catch {
+    return 'pitka';
+  }
+}
+
+export function asetaKertojaTila(tila) {
+  try {
+    localStorage.setItem(KERTOJA_AVAIN, tila);
+  } catch {
+    /* yksityinen selaustila — valinta ei säily */
+  }
+}
+
 // Puheen voimakkuus: yksi yleinen säätö kaikkiin luentoihin (intro,
 // saapumiset, kuuntele-napit) — luentoja ei eritellä (omistajan päätös).
 const PUHEVOIMA_AVAIN = 'matkakirja-puhevoima';

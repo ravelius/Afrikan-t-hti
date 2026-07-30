@@ -150,6 +150,50 @@ button, .brand, .turn-pill, .fact-card h2 {
   .turn-pill.aika-valahdys .clock { animation: none; }
 }
 
+/* Kertojavalikko: nappi näyttää nykyisen tilan kuvakkeen ja avaa alleen
+ * pienen paneelin, jossa neljä kuvakeriviä täppineen. */
+.kertoja-kotelo { position: relative; }
+
+.kertoja-valikko {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.3rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(15, 10, 5, 0.45);
+}
+
+.kertoja-valikko button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.55rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.kertoja-valikko button:hover { background: rgba(234, 184, 78, 0.12); }
+
+.kertoja-valikko .tappa {
+  width: 1em;
+  color: var(--accent);
+  font-weight: 700;
+  visibility: hidden;
+}
+
+.kertoja-valikko button.valittu {
+  border-color: rgba(176, 138, 60, 0.55);
+}
+
+.kertoja-valikko button.valittu .tappa { visibility: visible; }
+
 .topbar-actions {
   margin-left: auto;
   display: flex;
@@ -890,6 +934,19 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   font-variant-numeric: tabular-nums;
   font-size: 0.72rem;
   color: rgba(70, 51, 31, 0.75);
+}
+
+/* Kulttuurivisan avausnappi: sama mustekynän nappityyli kuin näytteellä. */
+.kulttuuri-visa-avaa { margin: 0.55rem 0 0.2rem; }
+
+/*
+ * Tutki paikka ja Jatka matkaa erilleen sisällöstä: napit hengittävät
+ * alempana oman jakoviivansa alla (omistajan toive).
+ */
+.arrival-card .dialog-actions {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(70, 51, 31, 0.35);
 }
 
 /*
