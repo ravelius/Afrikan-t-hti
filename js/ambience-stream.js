@@ -163,6 +163,19 @@ export function startQuizMusic(lauta) {
   });
 }
 
+/**
+ * Taustaäänen väistö muun äänen (esim. kulttuurinoston ääninäytteen)
+ * ajaksi — sama kevennys kuin tietovisan aikana. Palautus nostaa
+ * taustan takaisin täyteen voimaansa.
+ */
+export function vaimennaTausta() {
+  if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
+}
+
+export function palautaTausta() {
+  if (nykyinen) haivyta(nykyinen.audio, nykyinen.tavoite ?? VOIMA);
+}
+
 export function stopQuizMusic() {
   // Kaupungin ääni palaa täyteen voimaansa.
   if (nykyinen) haivyta(nykyinen.audio, nykyinen.tavoite ?? VOIMA);
