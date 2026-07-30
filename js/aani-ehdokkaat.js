@@ -81,8 +81,11 @@ export const EHDOKKAAT = {
   // yleinen valinta soi kaikkialla, ellei maanosalla ole omaansa.
   'musiikki:tietovisa': {
     otsikko: 'Yleinen — soi ellei maanosalla ole omaa valintaa',
-    oletus: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3',
+    // Omistajan valinta (31.7.) kirjattu oletukseksi kaksinkertaisella
+    // voimalla — näin se soi myös kotivalikon sovelluksessa.
+    oletus: 'https://cdn.freesound.org/previews/176/176134_334810-lq.mp3#voima=2',
     ehdokkaat: [
+      { url: 'https://cdn.freesound.org/previews/176/176134_334810-lq.mp3', nimi: '6_drums_luangprabang.WAV — LukeIRL, CC BY' },
       { url: 'https://cdn.freesound.org/previews/713/713120_14632469-lq.mp3', nimi: 'Arabialainen huilu — DYEKHO, CC0' },
       { url: 'https://cdn.freesound.org/previews/466/466570_197130-lq.mp3', nimi: 'Kalimba-luuppi — CarlosCarty, CC BY' },
       { url: 'https://cdn.freesound.org/previews/843/843466_15636277-lq.mp3', nimi: 'Rumpu ja kalimba -luuppi — bassimat, CC0' },
@@ -126,7 +129,8 @@ export const EHDOKKAAT = {
   },
   'tehoste:jet': {
     otsikko: 'Lentokohtauksen moottori',
-    oletus: 'https://cdn.freesound.org/previews/416/416891_2456794-lq.mp3',
+    // Omistajan valinta (31.7.): sama kuin sound.js:n REAL_SAMPLES.jet.
+    oletus: 'https://cdn.freesound.org/previews/315/315660_2506497-lq.mp3',
     ehdokkaat: [
       { url: 'https://cdn.freesound.org/previews/416/416891_2456794-lq.mp3', nimi: 'Lentoonlähtö matkustamosta — Apheo, CC0' },
       { url: 'https://cdn.freesound.org/previews/845/845957_14269391-lq.mp3', nimi: 'Nousu, matkustamo — ElevatorFan2020, CC0' },
@@ -421,13 +425,47 @@ const TYYPPIKORI_AVAIN = 'matkakirja-tyyppivalinnat';
 // Oletuskori: yksi varmistettu ääni per maisematyyppi, kunnes omistaja
 // rastii omat valintansa maanosalle. Tyhjäksi tallennettu kori
 // tarkoittaa synteesiä.
+// Omistajan studiovalinnat (31.7.) kirjattu oletuskoreiksi säätöineen:
+// näin sama arvonta soi myös kotivalikon sovelluksessa. Uusi maanosa
+// perii nämä, kunnes omistaja rastii sille omat äänensä.
 const OLETUSKORIT = {
-  basaari: ['https://cdn.freesound.org/previews/511/511005_571436-lq.mp3'],
-  aavikko: ['https://cdn.freesound.org/previews/146/146745_832093-lq.mp3'],
-  meri: ['https://cdn.freesound.org/previews/635/635103_10065335-lq.mp3'],
-  sademetsa: ['https://cdn.freesound.org/previews/812/812609_2309965-lq.mp3'],
-  savanni: ['https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3'],
-  ylanko: ['https://cdn.freesound.org/previews/577/577263_9827221-lq.mp3'],
+  basaari: [
+    'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3',
+    'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3',
+  ],
+  aavikko: [
+    'https://cdn.freesound.org/previews/714/714271_14696146-lq.mp3#voima=2.3',
+    'https://cdn.freesound.org/previews/411/411774_1910728-lq.mp3#voima=3',
+    'https://cdn.freesound.org/previews/565/565015_12186594-lq.mp3#voima=0.3',
+    'https://cdn.freesound.org/previews/635/635912_2247456-lq.mp3',
+    'https://cdn.freesound.org/previews/579/579250_2977885-lq.mp3#voima=0.6',
+  ],
+  meri: [
+    'https://cdn.freesound.org/previews/848/848927_17398983-lq.mp3',
+    'https://cdn.freesound.org/previews/635/635103_10065335-lq.mp3',
+    'https://cdn.freesound.org/previews/411/411509_1661766-lq.mp3#voima=0.6',
+    'https://cdn.freesound.org/previews/573/573187_97550-lq.mp3',
+    'https://cdn.freesound.org/previews/543/543819_6667441-lq.mp3#alku=22',
+    'https://cdn.freesound.org/previews/570/570907_11519060-lq.mp3#voima=1.6',
+  ],
+  sademetsa: [
+    'https://cdn.freesound.org/previews/818/818589_15983207-lq.mp3',
+    'https://cdn.freesound.org/previews/812/812609_2309965-lq.mp3#voima=2.3',
+    'https://cdn.freesound.org/previews/410/410078_1661766-lq.mp3',
+    'https://cdn.freesound.org/previews/407/407583_1661766-lq.mp3#voima=0.6',
+    'https://cdn.freesound.org/previews/253/253301_2409224-lq.mp3#voima=0.8',
+  ],
+  savanni: [
+    'https://cdn.freesound.org/previews/202/202876_1934171-lq.mp3#voima=2',
+    'https://cdn.freesound.org/previews/714/714271_14696146-lq.mp3#alku=20',
+    'https://cdn.freesound.org/previews/504/504694_778707-lq.mp3#voima=1.6',
+    'https://cdn.freesound.org/previews/612/612318_13563349-lq.mp3#voima=0.6',
+    'https://cdn.freesound.org/previews/764/764981_15688695-lq.mp3#voima=0.8',
+    'https://cdn.freesound.org/previews/411/411996_7037-lq.mp3#alku=52',
+  ],
+  ylanko: [
+    'https://cdn.freesound.org/previews/543/543449_3377875-lq.mp3#voima=0.5',
+  ],
 };
 
 export function tyyppiKori(tyyppi, lauta) {

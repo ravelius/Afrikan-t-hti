@@ -568,7 +568,18 @@ export const AFRICA_VALOKUVAT = {
   },
 };
 
-/** Commonsin suora kuvaosoite haluttuun leveyteen skaalattuna. */
+import { VALOKUVAT_PAIKALLISET } from './valokuvat-paikalliset.js';
+
+/**
+ * Kuvaosoite: matkakirjan valokuvista on paikalliset kopiot repossa
+ * (nopea lataus, toimii offline), muut haetaan Commonsista skaalattuna.
+ * Standalone-tiedosto (file:) käyttää aina Commonsia, koska sen vieressä
+ * ei ole assets-kansiota.
+ */
 export function valokuvaUrl(tiedosto, leveys) {
+  const paikallinen = VALOKUVAT_PAIKALLISET.get(tiedosto);
+  if (paikallinen && typeof location !== 'undefined' && location.protocol !== 'file:') {
+    return `assets/valokuvat/${paikallinen}`;
+  }
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
 }
