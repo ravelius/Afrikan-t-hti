@@ -275,20 +275,24 @@ button, .brand, .turn-pill, .fact-card h2 {
   grid-template-rows: repeat(3, 1fr);
   padding: 12%;
   gap: 4%;
-  border-radius: 18%;
+  /* Maltillinen pyöristys: isompi pyöristys jätti kuution kulmiin raot,
+   * joista tausta vilkkui läpi (omistajan havainto). */
+  border-radius: 9%;
+  /* Vaaleampi luu ja tummempi mustereuna, jotta tahko irtoaa
+   * pergamentista eikä sävy paina tummaksi. */
   background-image:
     var(--paper-noise),
-    radial-gradient(circle at 36% 30%, #f0e5c8 0%, #e3d2ab 52%, #ccb488 100%);
+    radial-gradient(circle at 36% 30%, #f9f1da 0%, #efe0bd 55%, #ddc9a2 100%);
   background-blend-mode: multiply, normal;
-  border: 1.6px solid rgba(70, 51, 31, 0.78);
-  box-shadow: inset -2px -3px 6px rgba(108, 76, 34, 0.3);
+  border: 1.8px solid rgba(46, 32, 17, 0.92);
+  box-shadow: inset -2px -3px 6px rgba(108, 76, 34, 0.22);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
 /* Sivutahkot ovat aavistuksen tummempia, jolloin kuutio saa syvyyttä. */
-.die-face.face-3, .die-face.face-4 { filter: brightness(0.92); }
-.die-face.face-5, .die-face.face-6 { filter: brightness(0.85); }
+.die-face.face-3, .die-face.face-4 { filter: brightness(0.96); }
+.die-face.face-5, .die-face.face-6 { filter: brightness(0.9); }
 
 .die-face .pip {
   align-self: center;
@@ -312,10 +316,34 @@ button, .brand, .turn-pill, .fact-card h2 {
   border-radius: 24%;
   pointer-events: none;
   background:
-    radial-gradient(circle at 30% 24%, rgba(252, 244, 222, 0.2), rgba(255, 255, 255, 0) 42%),
-    radial-gradient(circle at 76% 84%, rgba(44, 27, 10, 0.28), rgba(0, 0, 0, 0) 56%);
+    radial-gradient(circle at 30% 24%, rgba(252, 244, 222, 0.22), rgba(255, 255, 255, 0) 42%),
+    radial-gradient(circle at 76% 84%, rgba(44, 27, 10, 0.2), rgba(0, 0, 0, 0) 56%);
   mix-blend-mode: soft-light;
 }
+
+/*
+ * Kynällä piirretty varjostus laudan pintaan: vinoviivoitus kuin
+ * lyijykynän jälki. Piirtyy esiin vasta kun noppa on pysähtynyt
+ * (die.js lisää levossa-luokan) — heiton aikana varjo on pelkkä
+ * pehmeä läiskä.
+ */
+.die-shadow::after {
+  content: '';
+  position: absolute;
+  inset: -8% -4%;
+  border-radius: 50%;
+  background: repeating-linear-gradient(
+    -38deg,
+    rgba(58, 40, 20, 0.55) 0 1.4px,
+    rgba(58, 40, 20, 0) 1.4px 4.6px
+  );
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 55% 57%, #000 48%, transparent 78%);
+  mask-image: radial-gradient(ellipse 50% 50% at 55% 57%, #000 48%, transparent 78%);
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.die-layer.levossa .die-shadow::after { opacity: 0.6; }
 
 /* --- tapahtumaikkuna kartan päällä --- */
 
@@ -621,10 +649,17 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /* Vain teksti vierii — ilman kehyksiä ja ilman näkyvää palkkia, kuin
  * muistikirjan sivu liukuisi sormen alla. Kutistuminen ja vieritys
- * tulevat .fact-textin omista flex-säännöistä. */
+ * tulevat .fact-textin omista flex-säännöistä. Suora dvh-katto on
+ * vyö ja henkselit -varmistus: se ei riipu flexin kutistumisesta
+ * missään selaimessa (iPadin Safari päästi tekstin kartan päälle). */
 .fact-teksti-rivi .fact-text {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  max-height: calc(38dvh - 3.4rem);
+}
+
+@media (max-width: 560px) {
+  .fact-teksti-rivi .fact-text { max-height: calc(30dvh - 3rem); }
 }
 
 .fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
@@ -913,11 +948,13 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 .arrival-maa-nimi {
-  font-family: var(--font-type);
-  font-size: 0.98rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #7a5514;
+  /* Sama kirjaintyyli kuin kaupungin otsikolla (omistajan toive):
+   * kirjan serif-antiikva, ei konekirjoitusta eikä kapiteeleja. */
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: inherit;
 }
 
 /* Maan lippu suht pienenä nimen vieressä (omistajan toive). */

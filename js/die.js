@@ -106,10 +106,12 @@ export class BoardDie {
       `translate3d(${x.toFixed(1)}px, ${(y - z * LIFT).toFixed(1)}px, 0) `
       + `translate(-50%, -50%) scale(${scale.toFixed(3)})`;
 
-    // Varjo levenee, haalistuu ja sumenee, kun noppa nousee.
+    // Varjo levenee, haalistuu ja sumenee, kun noppa nousee. Pieni vakio-
+    // siirtymä alaviistoon pitää varjon näkyvissä nopan alta myös levossa —
+    // valo tulee vasemmalta ylhäältä kuten patinassakin.
     const t = Math.min(1, z / 240);
     this.shadow.style.transform =
-      `translate3d(${(x + z * 0.07).toFixed(1)}px, ${(y + z * 0.03).toFixed(1)}px, 0) `
+      `translate3d(${(x + 7 + z * 0.07).toFixed(1)}px, ${(y + 6 + z * 0.03).toFixed(1)}px, 0) `
       + `translate(-50%, -50%) scale(${(1 + t * 0.9).toFixed(3)})`;
     this.shadow.style.opacity = (0.44 - t * 0.3).toFixed(3);
     this.shadow.style.filter = `blur(${(1.5 + t * 6).toFixed(1)}px)`;
@@ -146,6 +148,9 @@ export class BoardDie {
   async roll(value, from, to, hooks = {}) {
     const { onTick, onLand, onBounce, reduced } = hooks;
     this.layer.hidden = false;
+    // Kynävarjostus piirtyy vasta kun noppa on pysähtynyt (omistajan
+    // toive) — heiton ajaksi se pyyhitään pois.
+    this.layer.classList.remove('levossa');
 
     const [faceX, faceY] = FACE_ROTATION[value] ?? [0, 0];
 
@@ -153,6 +158,7 @@ export class BoardDie {
       this.rotation = { x: faceX - 8, y: faceY + 12, z: 0 };
       this.applyRotation(0);
       this.place(to);
+      this.layer.classList.add('levossa');
       onLand?.();
       return;
     }
@@ -267,6 +273,7 @@ export class BoardDie {
 
     this.spot = { x: to.x, y: to.y };
     this.draw(0);
+    this.layer.classList.add('levossa');
     await wait(SETTLE_MS);
   }
 }

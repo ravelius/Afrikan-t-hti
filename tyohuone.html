@@ -412,7 +412,7 @@
   <script type="module">
     import { PACKS, packById } from './js/pack.js';
     import { AFRICA_VALOKUVAT, valokuvaUrl } from './js/packs/africa-valokuvat.js';
-    import { AFRICA_SAAPUMISET } from './js/packs/africa-saapumiset.js';
+    import { AFRICA_SAAPUMISET, AFRICA_SAAPUMISET_B } from './js/packs/africa-saapumiset.js';
     import { OMAT_ARTIKKELIT } from './js/packs/africa-artikkelit.js';
     import { AFRICA_KULTTUURI } from './js/packs/africa-kulttuuri.js';
 
@@ -482,6 +482,7 @@
       { id: 'tehosteet23', teksti: 'Kaikkien 23 tehosteäänen kuuntelu pelissä — ElevenLabs-generoinnit ovat nyt oletuksina, synteesi on valittavissa studiosta takaisin.' },
       { id: 'visamusiikki-afrikka', teksti: 'Afrikan visamusiikin valintasi (Mbira ja helistin) on nyt pelin oletus, joten se soi myös kotivalikon sovelluksessa — Safarin valinnat eivät sinne yllä. Tarkista että kuulostaa oikealta.' },
       { id: 'saapumistekstit', teksti: 'Lue uudet saapumistekstit kaikkiin 32 kaupunkiin (Tekstit → Matkakirjan saapumiset) — luennat generoidaan vasta hyväksynnän jälkeen, pilotit Tanger ja Tripoli soivat jo.' },
+      { id: 'saapumis-ab', teksti: 'Vertaile Tangerin ja Tripolin A- ja B-saapumiset (Tekstit → Matkakirjan saapumiset): B:ssä nuoren herran osuudessa enemmän tunneilmaisua ja luenta ohjattu tunnetageilla. Kumpi suunta kaikkiin kaupunkeihin?' },
       { id: 'kulttuurikokeilu', teksti: 'Testaa Kaupungin elämää -nostot: kuva aukeaa nyt isommaksi ja gnawaan tuli Kuuntele näyte -nappi (Marrakechin kenttä-äänitys, CC BY). Maloufille ei vielä löytynyt kunnollisella lisenssillä olevaa äänitettä — etsintä jatkuu.' },
       { id: 'artikkelipilotti', teksti: 'Lue lisää -artikkelit kirjoitettu itse pelin tyyliin Tangeriin ja Tripoliin (myös lyhytnostot) — jos hyvät, teen muihinkin kaupunkeihin.' },
       { id: 'postikorttiselitteet', teksti: 'Postikortteihin tuli parin lauseen selitteet ja pienempi lähderivi — silmäile Kuvat-välilehdeltä tai pelissä.' },
@@ -1049,17 +1050,34 @@
       // kulttuurinostot. Rivit tulevat suoraan paketeista, eivät kopioina.
       if (p.id === 'africa') {
         const luennat = new Set(['tanger', 'tripoli']);
+        const soitin = (osoite, nimio) => `<span class="meta">${nimio}</span> `
+          + `<audio controls preload="none" src="${osoite}" style="vertical-align: middle; height: 28px; max-width: 100%;"></audio>`;
         for (const c of p.cities) {
           const s = AFRICA_SAAPUMISET[c.id];
           if (!s) continue;
           const tila = luennat.has(c.id)
             ? 'luenta valmis (pilotti)'
             : 'odottaa lukukierrosta — luenta generoidaan hyväksynnän jälkeen';
-          lisaa('saapumiset', [
+          const rivi = [
             `<b>[${c.name}]</b> <span class="meta">${tila}</span>`,
             `<b>${s.kuvaus}</b>`,
             s.nosto,
-          ].join('<br>'));
+          ];
+          if (luennat.has(c.id)) {
+            rivi.push(soitin(`assets/audio/puhe-africa-saapuminen-${c.id}.mp3`, 'Luenta A:'));
+          }
+          lisaa('saapumiset', rivi.join('<br>'));
+          // B-versio: sama saapuminen enemmällä tunneilmaisulla — omistaja
+          // vertailee A:ta ja B:tä ja valitsee suunnan kaikille kaupungeille.
+          const b = AFRICA_SAAPUMISET_B[c.id];
+          if (b) {
+            lisaa('saapumiset', [
+              `<b>[${c.name} — vaihtoehto B]</b> <span class="meta">enemmän tunneilmaisua, ohjaa myös lukijan ääntä</span>`,
+              `<b>${b.kuvaus}</b>`,
+              b.nosto,
+              soitin(`assets/audio/puhe-africa-saapuminen-${c.id}-b.mp3`, 'Luenta B:'),
+            ].join('<br>'));
+          }
         }
         for (const [otsikko, a] of Object.entries(OMAT_ARTIKKELIT)) {
           lisaa('artikkelit', `<b>[${otsikko} — lyhytnosto]</b> ${a.intro}`);

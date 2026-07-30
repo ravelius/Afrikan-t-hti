@@ -12,6 +12,39 @@
 // uutta mallia vain niissä (ui.js SAAPUMISLUENNAT). Muut tekstit ovat
 // omistajan luettavina työhuoneen Tekstit-välilehdellä; äänet tehdään
 // vasta lukukierroksen jälkeen.
+// Vaihtoehtoiset B-versiot (pilotti: Tanger ja Tripoli): nuoren herran
+// osuudessa selvästi enemmän tunneilmaisua — huudahduksia, hengästystä
+// ja naurua — joka ohjaa myös lukijan ääntä. Luennat tiedostoissa
+// puhe-africa-saapuminen-<kaupunki>-b.mp3. Peli käyttää A-versioita,
+// kunnes omistaja on kuunnellut molemmat ja valinnut suunnan;
+// B-versiot ovat kuunneltavina työhuoneen Tekstit-välilehdellä.
+export const AFRICA_SAAPUMISET_B = {
+  tanger: {
+    kuvaus: 'Voi että — Tanger! Laiva kääntyi lahteen ja minä unohdin '
+      + 'hengittää: valkoiset talot kiipeävät rinnettä kuin katsomo, '
+      + 'minareetti hehkuu niiden yllä, ja satamasta nousee sellainen '
+      + 'elämän pauhu, että nauroin ääneen ihan itsekseni. Seisoin '
+      + 'kannella suolainen tuuli kasvoilla ja sydän hakkasi kuin rummun '
+      + 'kalvo — kahden meren ja kahden mantereen portti avautui juuri '
+      + 'minulle!',
+    nosto: 'Isoisän kirjassa on tästä satamasta vain yksi lause: "Täältä '
+      + 'Afrikka alkaa, ja täällä sitä on turha yrittää ymmärtää '
+      + 'kiireellä." Nyt vasta tajuan, mitä ukko tarkoitti.',
+  },
+  tripoli: {
+    kuvaus: 'En ollut uskoa silmiäni, kun Tripoli nousi merestä: kaupunki '
+      + 'makaa kalliolla kuin laivan keula, ja muurit hohtavat auringossa '
+      + 'niin valkoisina, että jouduin siristämään silmiäni ja hymyilemään '
+      + 'samaan aikaan. Kujilta tuoksuu suola, savu ja jasmiini — ja kun '
+      + 'karavaanin kellot kilahtivat jossain muurien takana, sydämeni '
+      + 'hypähti: tuolta se alkaa, pitkä matka.',
+    nosto: 'Isoisä kirjoitti nähneensä täällä, kuinka aavikon karavaanit '
+      + 'purkavat lastinsa suoraan laivoihin — "kaksi maailmaa kättelee '
+      + 'laiturilla", hän merkitsi. Katselin laiturille, ja siellä se '
+      + 'kädenpuristus yhä oli.',
+  },
+};
+
 export const AFRICA_SAAPUMISET = {
   tanger: {
     kuvaus: 'Laiva kääntyi lahteen ja Tanger nousi vastaan kuin katsomo: '
