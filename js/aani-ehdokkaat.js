@@ -331,10 +331,23 @@ for (const pack of PACKS) {
     const laudat = KAUPUNGIT_TYYPEITTAIN[city.ambience] ??= [];
     let lauta = laudat.find((l) => l.lauta === pack.id);
     if (!lauta) {
-      lauta = { lauta: pack.id, maanosa: pack.boardLabel ?? pack.name, kaupungit: [] };
+      lauta = {
+        lauta: pack.id, maanosa: pack.boardLabel ?? pack.name, kaupungit: [], maat: [],
+      };
       laudat.push(lauta);
     }
     if (!lauta.kaupungit.includes(city.name)) lauta.kaupungit.push(city.name);
+    // Kaupungit ryhmitellään maittain (omistajan päätös: tyyppi →
+    // maanosa → maat). Ilman maakytkentää kaupunki jää nimettömään
+    // ryhmään, joka listataan pelkin kaupunkinimin.
+    const iso = pack.map?.cityCountry?.[city.id] ?? null;
+    const maaNimi = iso ? pack.map?.countryShapes?.[iso]?.nimi ?? iso : null;
+    let maa = lauta.maat.find((m) => m.nimi === maaNimi);
+    if (!maa) {
+      maa = { nimi: maaNimi, kaupungit: [] };
+      lauta.maat.push(maa);
+    }
+    if (!maa.kaupungit.includes(city.name)) maa.kaupungit.push(city.name);
   }
 }
 
@@ -345,10 +358,12 @@ for (const pack of PACKS) {
   const meri = KAUPUNGIT_TYYPEITTAIN.meri ??= [];
   if (!meri.some((l) => l.lauta === 'maailma')) {
     const maailma = PACKS.find((p) => p.id === 'maailma');
+    const paikat = ['Etusivun satama', 'Merimatkat maailmankartalla'];
     meri.unshift({
       lauta: 'maailma',
       maanosa: maailma?.boardLabel ?? 'Maailma',
-      kaupungit: ['Etusivun satama', 'Merimatkat maailmankartalla'],
+      kaupungit: paikat,
+      maat: [{ nimi: null, kaupungit: paikat }],
     });
   }
 }

@@ -1013,7 +1013,8 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   assert.ok(game.actionGateway(0).ok);
   assert.equal(p.money, rahaEnnen - FLIGHT_PRICE, 'pitkä lento maksaa lennon hinnan');
   assert.equal(p.packId, 'middleeast');
-  assert.equal(game.diaryNote?.packId, 'middleeast', 'saapuminen kirjaa päiväkirjamerkinnän');
+  assert.equal(game.arrivalFact?.packId, 'middleeast', 'saapuminen kirjaa havainnon laudalle');
+  assert.equal(game.arrivalFact?.cityId, 'kairo', 'havainto kertoo saapumiskaupungista');
   assert.equal(p.pos.city, 'kairo');
   assert.equal(game.pack.id, 'middleeast', 'aktiivinen lauta seuraa pelaajaa');
   assert.ok(game.tokens.size > 0, 'uudella laudalla on omat laatat');
@@ -1560,32 +1561,28 @@ test('merkitsemätön tieto on nuoren herran havainto, merkitty isoisän', () =>
   assert.equal(voiceTitle(undefined), voiceTitle('nuori'));
 });
 
-test('saapumismerkintä arvotaan listasta pelin omalla arvonnalla', () => {
-  const seen = new Set();
-  for (let seed = 1; seed <= 40; seed++) {
-    const game = new Game({
-      players: [{ name: 'Yksin', color: '#f00', start: null }],
-      pack: packById('maailma'),
-      rng: mulberry32(seed),
-    });
-    game.actionPickStart('kairo', 0); // portti Afrikan laudalle
-    assert.equal(game.diaryNote.packId, 'africa');
-    assert.ok(packById('africa').texts.diaries.includes(game.diaryNote.text));
-    seen.add(game.diaryNote.text);
-  }
-  assert.ok(seen.size >= 2, 'sama merkintä joka pelissä — arvonta ei toimi');
+test('saapumishavainto seuraa matkaajaa kaupungista kaupunkiin', () => {
+  const game = new Game({
+    players: [{ name: 'Yksin', color: '#f00', start: null }],
+    pack: packById('maailma'),
+    rng: mulberry32(7),
+  });
+  game.actionPickStart('kairo', 0); // portti Afrikan laudalle
+  assert.equal(game.arrivalFact?.packId, 'africa', 'laudalle astuminen kirjaa havainnon');
+  assert.equal(game.arrivalFact?.cityId, 'kairo');
 
-  // Sama siemen antaa saman merkinnän, jotta tallennus toistuu oikein.
-  const toista = () => {
-    const g = new Game({
-      players: [{ name: 'Yksin', color: '#f00', start: null }],
-      pack: packById('maailma'),
-      rng: mulberry32(7),
-    });
-    g.actionPickStart('kairo', 0);
-    return g.diaryNote.text;
-  };
-  assert.equal(toista(), toista());
+  // Jokaisella Afrikan kaupungilla on havaintoja, ja isoisän ääni
+  // löytyy tekstien joukosta luentaa varten ainakin osasta.
+  const facts = packById('africa').placeFacts;
+  for (const city of packById('africa').cities) {
+    assert.ok((facts[city.id] ?? []).length > 0, `${city.id} ilman havaintoja`);
+  }
+
+  // Havainto ei tyhjene liikkeelle lähdettäessä: matkalla kortti pitää
+  // edellisen kaupungin tekstin, kunnes uusi saapuminen korvaa sen.
+  game.phase = 'move';
+  game.moves = new Map([['x', { pos: { type: 'edge', edge: Object.keys(game.board.edgeById?.entries?.() ?? {})[0] ?? 'e', at: 1 }, path: [] }]]);
+  assert.equal(game.arrivalFact?.cityId, 'kairo', 'havainto säilyy nopanheittojen yli');
 });
 
 test('isoisän vihje osoittaa tähtikaupunkiin ja vaikenee kun aarre on löytynyt', () => {
