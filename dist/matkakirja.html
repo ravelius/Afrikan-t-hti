@@ -704,17 +704,18 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   border: 1px solid rgba(70, 51, 31, 0.3);
 }
 
-/* Hento kuvalaskuri kulmassa houkuttaa avaamaan gallerian. */
+/* Kuvalaskuri kulmassa houkuttaa avaamaan gallerian — riittävän
+   tumma pilleri erottuakseen vaaleistakin kuvista (omistajan toive). */
 .arrival-kuva-laskuri {
   position: absolute;
   right: 0.4rem;
   bottom: 0.35rem;
-  padding: 0.05rem 0.35rem;
+  padding: 0.1rem 0.45rem;
   border-radius: 999px;
-  background: rgba(30, 22, 12, 0.38);
-  color: rgba(255, 250, 240, 0.85);
+  background: rgba(30, 22, 12, 0.6);
+  color: rgba(255, 250, 240, 0.98);
   font-family: var(--font-type);
-  font-size: 0.62rem;
+  font-size: 0.74rem;
   letter-spacing: 0.04em;
   pointer-events: none;
 }
@@ -734,9 +735,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   border-radius: 6px;
   background: transparent;
   box-shadow: none;
-  color: rgba(255, 250, 240, 0.78);
-  text-shadow: 0 1px 3px rgba(20, 14, 6, 0.75);
-  font-size: 1.5rem;
+  color: rgba(255, 250, 240, 0.95);
+  text-shadow: 0 1px 4px rgba(20, 14, 6, 0.9);
+  font-size: 1.9rem;
   line-height: 1;
   cursor: pointer;
   padding: 0;
@@ -744,20 +745,30 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 .dialog button.arrival-kuva-nuoli:hover:not(:disabled) {
-  background: transparent;
   color: rgba(255, 250, 240, 1);
+}
+
+.dialog button.arrival-kuva-nuoli.edellinen:hover:not(:disabled) {
+  background: linear-gradient(90deg, rgba(20, 14, 6, 0.38), transparent 55%);
+}
+
+.dialog button.arrival-kuva-nuoli.seuraava:hover:not(:disabled) {
+  background: linear-gradient(270deg, rgba(20, 14, 6, 0.38), transparent 55%);
 }
 
 .dialog button.arrival-kuva-nuoli.edellinen {
   left: 0;
   justify-content: flex-start;
   padding-left: 0.35rem;
+  /* Hento tummennus kuvan laidassa kertoo, että laita on selailualue. */
+  background: linear-gradient(90deg, rgba(20, 14, 6, 0.28), transparent 55%);
 }
 
 .dialog button.arrival-kuva-nuoli.seuraava {
   right: 0;
   justify-content: flex-end;
   padding-right: 0.35rem;
+  background: linear-gradient(270deg, rgba(20, 14, 6, 0.28), transparent 55%);
 }
 
 .arrival-card .wiki-btn { margin: 0 0 0.7rem; }
@@ -40732,7 +40743,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.106';
+const APP_VERSION = '2026-07-30.107';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
