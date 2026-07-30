@@ -881,10 +881,14 @@
             // kaupunkikohtainen hienosäätö hoituu Miksaus-osiossa.
             const saadettava = url && (slot.startsWith('musiikki:') || slot === 'tehoste:jet');
             if (saadettava) {
+              // Samat liukusäätimet kuin Taustaäänten koreissa
+              // (omistajan huomio: numerokentät eivät riittäneet).
               aikaKentta = document.createElement('input');
-              aikaKentta.type = 'number';
+              aikaKentta.type = 'range';
+              aikaKentta.className = 'alku';
               aikaKentta.min = '0';
-              aikaKentta.step = '5';
+              aikaKentta.max = '120';
+              aikaKentta.step = '1';
               aikaKentta.value = esitaytot.get(`${slot}|${url}`)
                 ?? (onValittu && kaytto.alku ? kaytto.alku : (alku ?? 0));
               aikaKentta.title = 'Aloituskohta sekunteina';
@@ -897,25 +901,30 @@
                   rakenna();
                 }
               };
-              aikaKentta.addEventListener('change', tallenna);
-              rivi.appendChild(aikaKentta);
               const sek = document.createElement('span');
               sek.className = 'sek';
-              sek.textContent = 's';
+              sek.textContent = `${Number(aikaKentta.value)} s`;
+              aikaKentta.addEventListener('input', () => { sek.textContent = `${aikaKentta.value} s`; });
+              aikaKentta.addEventListener('change', tallenna);
+              rivi.appendChild(aikaKentta);
               rivi.appendChild(sek);
               voimaKentta = document.createElement('input');
-              voimaKentta.type = 'number';
+              voimaKentta.type = 'range';
               voimaKentta.min = '0.2';
               voimaKentta.max = '3';
               voimaKentta.step = '0.1';
               voimaKentta.value = voimaEsitaytot.get(`${slot}|${url}`)
                 ?? (onValittu && kaytto.voima !== 1 ? kaytto.voima : 1);
               voimaKentta.title = 'Voimakerroin (1 = normaali)';
-              voimaKentta.addEventListener('change', tallenna);
-              rivi.appendChild(voimaKentta);
               const kert = document.createElement('span');
               kert.className = 'sek';
-              kert.textContent = '×';
+              kert.textContent = `${Number(voimaKentta.value).toFixed(1)}×`;
+              voimaKentta.addEventListener('input', () => {
+                kert.textContent = `${Number(voimaKentta.value).toFixed(1)}×`;
+                saadaEsikuunteluVoima(slot, url, kerroin());
+              });
+              voimaKentta.addEventListener('change', tallenna);
+              rivi.appendChild(voimaKentta);
               rivi.appendChild(kert);
             }
             if (oma) {
