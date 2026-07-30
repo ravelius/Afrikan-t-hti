@@ -16,7 +16,9 @@
 export const AFRICA_MAATIEDOT = {
   MAR: {
     vakiluku: '38 milj.',
+    vakilukuSija: '39./195',
     pintaAla: '450 000 km²',
+    pintaAlaSija: '57./195',
     // `sija` on sijoitus maailmassa (V-Dem vertailee 179 maata,
     // tulovertailussa noin 190 maata) — arviot pyöristetty reilusti.
     demokratia: {
@@ -37,7 +39,9 @@ export const AFRICA_MAATIEDOT = {
   },
   LBY: {
     vakiluku: '7 milj.',
+    vakilukuSija: '105./195',
     pintaAla: '1,8 milj. km²',
+    pintaAlaSija: '16./195',
     demokratia: {
       arvo: '0,10',
       sija: '145./179',
@@ -53,7 +57,9 @@ export const AFRICA_MAATIEDOT = {
   },
   EGY: {
     vakiluku: '115 milj.',
+    vakilukuSija: '14./195',
     pintaAla: '1 milj. km²',
+    pintaAlaSija: '29./195',
     demokratia: {
       arvo: '0,07',
       sija: '160./179',
@@ -68,7 +74,9 @@ export const AFRICA_MAATIEDOT = {
   },
   SEN: {
     vakiluku: '18 milj.',
+    vakilukuSija: '71./195',
     pintaAla: '200 000 km²',
+    pintaAlaSija: '86./195',
     demokratia: {
       arvo: '0,42',
       sija: '60./179',
@@ -84,7 +92,9 @@ export const AFRICA_MAATIEDOT = {
   },
   MLI: {
     vakiluku: '23 milj.',
+    vakilukuSija: '60./195',
     pintaAla: '1,2 milj. km²',
+    pintaAlaSija: '23./195',
     demokratia: {
       arvo: '0,13',
       sija: '130./179',
@@ -100,7 +110,9 @@ export const AFRICA_MAATIEDOT = {
   },
   NGA: {
     vakiluku: '230 milj.',
+    vakilukuSija: '6./195',
     pintaAla: '900 000 km²',
+    pintaAlaSija: '31./195',
     demokratia: {
       arvo: '0,26',
       sija: '95./179',
@@ -117,7 +129,9 @@ export const AFRICA_MAATIEDOT = {
   },
   GHA: {
     vakiluku: '34 milj.',
+    vakilukuSija: '47./195',
     pintaAla: '240 000 km²',
+    pintaAlaSija: '80./195',
     demokratia: {
       arvo: '0,61',
       sija: '35./179',
@@ -133,7 +147,9 @@ export const AFRICA_MAATIEDOT = {
   },
   ZAF: {
     vakiluku: '63 milj.',
+    vakilukuSija: '24./195',
     pintaAla: '1,2 milj. km²',
+    pintaAlaSija: '24./195',
     demokratia: {
       arvo: '0,54',
       sija: '45./179',
@@ -150,7 +166,9 @@ export const AFRICA_MAATIEDOT = {
   },
   TZA: {
     vakiluku: '68 milj.',
+    vakilukuSija: '22./195',
     pintaAla: '950 000 km²',
+    pintaAlaSija: '30./195',
     demokratia: {
       arvo: '0,26',
       sija: '95./179',
@@ -165,7 +183,9 @@ export const AFRICA_MAATIEDOT = {
   },
   ETH: {
     vakiluku: '130 milj.',
+    vakilukuSija: '10./195',
     pintaAla: '1,1 milj. km²',
+    pintaAlaSija: '26./195',
     demokratia: {
       arvo: '0,20',
       sija: '110./179',
@@ -181,7 +201,9 @@ export const AFRICA_MAATIEDOT = {
   },
   COD: {
     vakiluku: '105 milj.',
+    vakilukuSija: '15./195',
     pintaAla: '2,3 milj. km²',
+    pintaAlaSija: '11./195',
     demokratia: {
       arvo: '0,15',
       sija: '125./179',
@@ -199,7 +221,9 @@ export const AFRICA_MAATIEDOT = {
   // --- Loput maat (omistajan pyyntö: koko lauta valmiiksi) -------------
   TUN: {
     vakiluku: '12 milj.',
+    vakilukuSija: '79./195',
     pintaAla: '160 000 km²',
+    pintaAlaSija: '91./195',
     demokratia: {
       arvo: '0,30',
       sija: '85./179',
@@ -214,7 +238,9 @@ export const AFRICA_MAATIEDOT = {
   },
   DZA: {
     vakiluku: '46 milj.',
+    vakilukuSija: '33./195',
     pintaAla: '2,4 milj. km²',
+    pintaAlaSija: '10./195',
     demokratia: {
       arvo: '0,13',
       sija: '130./179',
@@ -230,7 +256,9 @@ export const AFRICA_MAATIEDOT = {
   },
   TCD: {
     vakiluku: '18 milj.',
+    vakilukuSija: '69./195',
     pintaAla: '1,3 milj. km²',
+    pintaAlaSija: '20./195',
     demokratia: {
       arvo: '0,10',
       sija: '145./179',
@@ -246,7 +274,9 @@ export const AFRICA_MAATIEDOT = {
   },
   KEN: {
     vakiluku: '55 milj.',
+    vakilukuSija: '27./195',
     pintaAla: '580 000 km²',
+    pintaAlaSija: '48./195',
     demokratia: {
       arvo: '0,32',
       sija: '80./179',
@@ -262,7 +292,9 @@ export const AFRICA_MAATIEDOT = {
   },
   ZWE: {
     vakiluku: '16 milj.',
+    vakilukuSija: '74./195',
     pintaAla: '390 000 km²',
+    pintaAlaSija: '60./195',
     demokratia: {
       arvo: '0,15',
       sija: '125./179',
@@ -278,7 +310,9 @@ export const AFRICA_MAATIEDOT = {
   },
   SDN: {
     vakiluku: '48 milj.',
+    vakilukuSija: '30./195',
     pintaAla: '1,9 milj. km²',
+    pintaAlaSija: '15./195',
     demokratia: {
       arvo: '0,07',
       sija: '165./179',
@@ -293,7 +327,9 @@ export const AFRICA_MAATIEDOT = {
   },
   SDS: {
     vakiluku: '12 milj.',
+    vakilukuSija: '85./195',
     pintaAla: '620 000 km²',
+    pintaAlaSija: '44./195',
     demokratia: {
       arvo: '0,06',
       sija: '170./179',
@@ -309,7 +345,9 @@ export const AFRICA_MAATIEDOT = {
   },
   SOM: {
     vakiluku: '18 milj.',
+    vakilukuSija: '70./195',
     pintaAla: '640 000 km²',
+    pintaAlaSija: '43./195',
     demokratia: {
       arvo: '0,08',
       sija: '155./179',
@@ -324,7 +362,9 @@ export const AFRICA_MAATIEDOT = {
   },
   CMR: {
     vakiluku: '29 milj.',
+    vakilukuSija: '53./195',
     pintaAla: '480 000 km²',
+    pintaAlaSija: '53./195',
     demokratia: {
       arvo: '0,12',
       sija: '135./179',
@@ -340,7 +380,9 @@ export const AFRICA_MAATIEDOT = {
   },
   LBR: {
     vakiluku: '5,5 milj.',
+    vakilukuSija: '124./195',
     pintaAla: '110 000 km²',
+    pintaAlaSija: '102./195',
     demokratia: {
       arvo: '0,38',
       sija: '70./179',
@@ -355,7 +397,9 @@ export const AFRICA_MAATIEDOT = {
   },
   SLE: {
     vakiluku: '8,5 milj.',
+    vakilukuSija: '103./195',
     pintaAla: '72 000 km²',
+    pintaAlaSija: '117./195',
     demokratia: {
       arvo: '0,35',
       sija: '75./179',
@@ -371,7 +415,9 @@ export const AFRICA_MAATIEDOT = {
   },
   MOZ: {
     vakiluku: '34 milj.',
+    vakilukuSija: '46./195',
     pintaAla: '800 000 km²',
+    pintaAlaSija: '35./195',
     demokratia: {
       arvo: '0,25',
       sija: '100./179',
@@ -387,7 +433,9 @@ export const AFRICA_MAATIEDOT = {
   },
   AGO: {
     vakiluku: '37 milj.',
+    vakilukuSija: '42./195',
     pintaAla: '1,2 milj. km²',
+    pintaAlaSija: '22./195',
     demokratia: {
       arvo: '0,17',
       sija: '120./179',
@@ -403,7 +451,9 @@ export const AFRICA_MAATIEDOT = {
   },
   NAM: {
     vakiluku: '3 milj.',
+    vakilukuSija: '141./195',
     pintaAla: '820 000 km²',
+    pintaAlaSija: '34./195',
     demokratia: {
       arvo: '0,55',
       sija: '42./179',
@@ -419,7 +469,9 @@ export const AFRICA_MAATIEDOT = {
   },
   MDG: {
     vakiluku: '31 milj.',
+    vakilukuSija: '50./195',
     pintaAla: '590 000 km²',
+    pintaAlaSija: '47./195',
     demokratia: {
       arvo: '0,25',
       sija: '100./179',
@@ -434,7 +486,9 @@ export const AFRICA_MAATIEDOT = {
   },
   UGA: {
     vakiluku: '48 milj.',
+    vakilukuSija: '31./195',
     pintaAla: '240 000 km²',
+    pintaAlaSija: '79./195',
     demokratia: {
       arvo: '0,20',
       sija: '110./179',
