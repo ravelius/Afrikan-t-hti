@@ -147,7 +147,7 @@ const AS_CITIES = [
   { id: 'vladivostok', name: 'Vladivostok', x: 843, y: 370, la: 'start', lx: 16, ly: 5 },
   { id: 'ulanbator', name: 'Ulan Bator', x: 665, y: 364, la: 'middle', lx: 0, ly: 24 },
   {
-    id: 'peking', name: 'Peking', x: 740, y: 429, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'peking', name: 'Peking', x: 740, y: 429, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'peking', label: 'Maailma-lauta' }],
   },
@@ -161,7 +161,7 @@ const AS_CITIES = [
   { id: 'bangkok', name: 'Bangkok', x: 603, y: 708, airport: true, la: 'end', lx: -16, ly: 24 },
   { id: 'yangon', name: 'Yangon', x: 559, y: 671, la: 'end', lx: -16, ly: 5 },
   {
-    id: 'singapore', name: 'Singapore', x: 634, y: 851, airport: true, la: 'middle', lx: 0, ly: 30,
+    id: 'singapore', name: 'Singapore', x: 634, y: 851, start: true, airport: true, la: 'middle', lx: 0, ly: 30,
     links: [{ pack: 'maailma', city: 'singapore', label: 'Maailma-lauta' }],
   },
   { id: 'sumatra', name: 'Sumatra', x: 562, y: 817, la: 'start', lx: 16, ly: 5 },
@@ -176,7 +176,7 @@ const AS_CITIES = [
   { id: 'delhi', name: 'Delhi', x: 398, y: 509, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'kolkata', name: 'Kolkata', x: 490, y: 598, la: 'end', lx: -16, ly: 5 },
   {
-    id: 'mumbai', name: 'Mumbai', x: 331, y: 591, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'mumbai', name: 'Mumbai', x: 331, y: 591, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'mumbai', label: 'Maailma-lauta' }],
   },
@@ -302,7 +302,7 @@ export const ASIA = {
       star: { name: 'Keisarin jadesinetti' },
       topaz: { name: 'Jade', color: '#5fa87a' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 10 },
   },
 
   questions: ASIA_QUESTIONS,
@@ -354,7 +354,7 @@ export const ASIA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Keisarin jadesinetti ja palatkaa Teheraniin tai Tokioon.',
+    intro: 'Peli alkaa! Etsikää Keisarin jadesinetti ja palatkaa kotisatamaan: Teheraniin, Tokioon, Pekingiin, Singaporeen tai Mumbaihin.',
     starFound: (name, city) => `★ ${name} löysi KEISARIN JADESINETIN kaupungista ${city}!`,
     starToast: 'KEISARIN JADESINETTI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',

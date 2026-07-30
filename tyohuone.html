@@ -130,7 +130,6 @@
       <button data-tab="moottorit">Moottorit</button>
       <button data-tab="maanosat">Maanosat</button>
       <button data-tab="brandi">Brändikirja</button>
-      <button data-tab="ideat">Työkalut</button>
     </nav>
     <span id="tyohuone-versio" style="color:var(--haalea);font-size:0.8rem"></span>
     <button id="tyohuone-paivita" title="Tyhjentää välimuistin ja lataa uusimman version">Päivitä</button>
@@ -150,6 +149,10 @@
       <span id="kommentit-tila" style="color:var(--haalea);font-size:0.85rem"></span>
     </div>
     <pre id="kommentit-teksti"></pre>
+    <h2>Tilastot</h2>
+    <p>Yhteenveto pelin koosta — luvut lasketaan suoraan paketeista, joten
+       ne eivät voi vanhentua.</p>
+    <div id="tilastot" class="taulu"></div>
     <h2>Omat muistiinpanot</h2>
     <p>Vapaa kenttä ideoille — tallentuu tähän selaimeen itsestään.</p>
     <textarea id="muistio" style="width:100%;max-width:46rem;min-height:8rem"></textarea>
@@ -198,9 +201,10 @@
 
   <!-- KUVAT: muistikirjan vanhat valokuvat -->
   <section id="tab-kuvat" hidden>
-    <p>Muistikirjan vanhat valokuvat kaupungeittain — samat kuvat, jotka
-       aukeavat pelissä postikortteina. Nimi vie Commonsin tiedostosivulle,
-       jolta näkee alkuperän ja lisenssin. Merkitse vaihdettavat etusivun
+    <p>Muistikirjan valokuvat kaupungeittain — samat kuvat, jotka
+       aukeavat pelissä postikorttipinona: vanha kuva päällä ja nykypäivän
+       kuva sen alla. Nimi vie Commonsin tiedostosivulle, jolta näkee
+       alkuperän ja lisenssin. Merkitse vaihdettavat etusivun
        kommenttikenttään.</p>
     <div id="kuva-ruudukko" class="kuvaruudukko"></div>
     <p id="kuvattomat" style="margin-top:0.8rem"></p>
@@ -403,11 +407,6 @@
     </div>
   </section>
 
-  <!-- IDEAT -->
-  <section id="tab-ideat" hidden>
-    <p>Kehitystyökalujen suunnitelma (docs/kehitysideat.md):</p>
-    <pre id="ideat-teksti">Ladataan…</pre>
-  </section>
 
   <script type="module">
     import { PACKS, packById } from './js/pack.js';
@@ -475,35 +474,11 @@
     // Kommentit tallentuvat tähän selaimeen; Kopioi kommentit kokoaa ne
     // yhdeksi viestiksi Claudelle liitettäväksi.
     const ODOTTAA = [
-      { id: 'kokolautavalmis', teksti: 'KOKO AFRIKAN LAUTA ON NYT VALMIS: kaikilla 39 paikalla on kulttuurinostot + visa, oma Lue lisää -artikkeli ja lyhytnosto, ja kaikilla mailla (27 maata) tunnusluvut tervehdyksineen ja omat artikkelit. Uudet maarajat: Tunisia, Kenia, Tšad ja Zimbabwe. Viidelle uudelle paikalle (Karthago, Tšad-järvi, Viktorian putoukset, Nairobi, St. Helena) matkakirjamerkinnät luentoineen. Pistokokeile Tutki-kortteja eri puolilta lautaa — merkitse korjattavat kommentilla.' },
-      { id: 'kymmenenvalmista', teksti: 'Kymmenen kaupunkia rakennettu pilottien tasolle: Kairo, Marrakech, Lagos, Dakar, Timbuktu, Kumasi, Kapkaupunki, Sansibar, Addis Abeba ja Kongo. Jokaisella kulttuurinostot + visa, oma Lue lisää -artikkeli ja lyhytnosto (myös maille), maan tunnusluvut tervehdyksineen — ja Marrakechiin ja Lagosiin uudet matkakirjamerkinnät luentoineen. Tsekataan yhdessä: Tutki-kortti ja Etsi kätkö näissä kaupungeissa.' },
-      { id: 'uusikartta', teksti: 'Afrikan kartalla on nyt seitsemän uutta paikkaa: Karthago, Lagos, Tšad-järvi, Viktorian putoukset, Nairobi, Marrakech ja St. Helenan saari laivareitteineen (kuten alkuperäisessä pelissä). Katso miltä kartta näyttää — kun hyväksyt, teen niihin kaiken saman sisällön kuin piloteissa.' },
-      { id: 'aanivalinnat', teksti: 'Äänistudion valinnat loppuun ja "Kopioi valinnat" -tuloste Claudelle → voittajat kovakoodataan.' },
-      { id: 'maanosakorit', teksti: 'Äänistudion uusi jako: äänityyppi → maanosa → kaupungit. Tarkista että Afrikan korit ovat kuten haluat.' },
-      { id: 'efektipilotit', teksti: 'Efektipilottien kuuntelu (napin klikkaus, paperi, kolikot, oikein, väärin — studion Tehosteet-lohko).' },
-      { id: 'v3intro', teksti: 'Uuden v3-intron ja avauslennon puheen arviointi (tempo, tunnelma).' },
-      { id: 'tehosteet23', teksti: 'Kaikkien 23 tehosteäänen kuuntelu pelissä — ElevenLabs-generoinnit ovat nyt oletuksina, synteesi on valittavissa studiosta takaisin.' },
-      { id: 'visamusiikki-afrikka', teksti: 'Afrikan visamusiikin valintasi (Mbira ja helistin) on nyt pelin oletus, joten se soi myös kotivalikon sovelluksessa — Safarin valinnat eivät sinne yllä. Tarkista että kuulostaa oikealta.' },
-      { id: 'saapumiset-valmiit', teksti: 'Uusi matkakirjamalli on nyt kaikissa 32 kaupungissa: tiivis tunteellinen kuvaus + isoisän nosto, luennat tunnetageilla. Kuuntele pelissä tai Tekstit → Matkakirjan saapumiset — merkitse korjattavat kommentilla.' },
-      { id: 'kertojavalikko', teksti: 'Testaa yläpalkin uusi kertojavalikko (mykistys / ei kertojaa / lyhyt / pitkä — pelkät kuvakkeet ja täppä) sekä luennan tauko Tutki-näkymässä ja jatko kartalle palattaessa.' },
-      { id: 'kulttuurivisan-nappi', teksti: 'Kulttuurivisa aukeaa nyt omasta napistaan samaan näkymään, ja Tutki paikka / Jatka matkaa erottuvat jakoviivan alla — tarkista Tangerissa tai Tripolissa.' },
-      { id: 'maatunnusluvut', teksti: 'Maan kartan alla (pilotti: Marokko, Libya): väkiluku, pinta-ala, V-Dem-demokratiaindeksi (klikkaus avaa maan kuvaajan) ja keskitulo + "hyvää päivää" maan kielillä kielilippuineen — jos hyvä, teen kaikkiin Afrikan maihin.' },
-      { id: 'kulttuurikokeilu', teksti: 'Testaa Kaupungin elämää -nostot: kuva aukeaa nyt isommaksi ja gnawaan tuli Kuuntele näyte -nappi (Marrakechin kenttä-äänitys, CC BY). Maloufille ei vielä löytynyt kunnollisella lisenssillä olevaa äänitettä — etsintä jatkuu.' },
-      { id: 'artikkelipilotti', teksti: 'Lue lisää -artikkelit kirjoitettu itse pelin tyyliin Tangeriin ja Tripoliin (myös lyhytnostot) — jos hyvät, teen muihinkin kaupunkeihin.' },
-      { id: 'postikorttiselitteet', teksti: 'Postikortteihin tuli parin lauseen selitteet ja pienempi lähderivi — silmäile Kuvat-välilehdeltä tai pelissä.' },
       { id: 'brandikirja', teksti: 'Brändikirjan läpiluku ja täydennys omin sanoin (Brändikirja-välilehti).' },
-      { id: 'tekstit', teksti: 'Tekstit-välilehden läpiluku: kaikki pelin tekstit yhdessä paikassa — merkitse korjattavat kommentilla.' },
-      { id: 'tutkikortti', teksti: 'Arvioi uusi Tutki-kortti: maan lippu, pelityylinen minikartta ja omat suomitiivistelmät (10 paikkaa joilta fi-wiki puuttui).' },
-      { id: 'valokuvat', teksti: 'Vanhojen valokuvien läpikäynti Kuvat-välilehdellä (22 kaupunkia) — merkitse vaihdettavat kommentilla.' },
-      { id: 'introteksti', teksti: 'Avausteksti: jos muutat sitä, generoin puheen uusiksi samalla kertaa — pyydä minulta.' },
     ];
-    const TYOJONO = [
-      { id: 'maloufaani', teksti: 'Libyalaisen malouf-musiikin äänilähteen etsintä jatkuu — Commonsissa ja archive.orgissa ei toistaiseksi kunnollisella lisenssillä olevaa äänitettä.' },
-      { id: 'intropuhe', teksti: 'Avaustekstin puheen uusinta ElevenLabsilla, kun uusi teksti on valmis. Nykyisen tiedoston kova loppureuna (töks) pehmennetään toistossa, joten uusintaa ei tarvita ennen tekstimuutosta.' },
-      { id: 'tyokalu', teksti: 'Seuraava työkalu: kartta-apuri tai kehityspaneeli (?dev=1) — ks. Työkalut-välilehti.' },
-      { id: 'aineistotutkimus', teksti: 'Aineistotutkimus-minipelin suunnittelu yhdessä (ks. Peli-ideat).' },
-      { id: 'opuspaketit', teksti: 'Opus-työlista: paketti 18 (Katso kuva -linkit) ja 19 (matkamuistot).' },
-    ];
+    // Työjonoa käytetään säästeliäästi (omistajan toive) — vain
+    // aidosti odottavat asiat listataan.
+    const TYOJONO = [];
     const KOMMENTIT_AVAIN = 'matkakirja-kommentit';
     const kommentit = () => {
       try { return JSON.parse(localStorage.getItem(KOMMENTIT_AVAIN) ?? '{}'); } catch { return {}; }
@@ -850,6 +825,59 @@
     }
     karttaValinta.addEventListener('change', paivitaKartta);
 
+    // --- etusivun tilastot: lasketaan suoraan paketeista -------------------
+    (async () => {
+      const kohde = document.getElementById('tilastot');
+      const rivit = [];
+      const num = (n) => n.toLocaleString('fi-FI');
+      let kaupungit = 0;
+      let reitit = 0;
+      let lennot = 0;
+      let kysymykset = 0;
+      let tiedot = 0;
+      let vihjeet = 0;
+      for (const p of PACKS) {
+        kaupungit += p.cities.length;
+        reitit += p.edges.length;
+        lennot += (p.airRoutes ?? []).length;
+        for (const qs of Object.values(p.questions ?? {})) {
+          if (Array.isArray(qs)) kysymykset += qs.filter((q) => q.options).length;
+        }
+        for (const fs of Object.values(p.placeFacts ?? {})) tiedot += fs.length;
+        vihjeet += Object.keys(p.texts?.starHints ?? {}).length;
+      }
+      const vanhat = Object.keys(AFRICA_VALOKUVAT).length;
+      const uudet = Object.values(AFRICA_VALOKUVAT).filter((k) => k.uusi).length;
+      const nostot = Object.values(AFRICA_KULTTUURI)
+        .reduce((s, k) => s + (k.nostot?.length ?? 0), 0);
+      rivit.push(['Lautoja', num(PACKS.length)]);
+      rivit.push(['Kaupunkeja ja paikkoja', num(kaupungit)]);
+      rivit.push(['Reittejä (+ lentoreittejä)', `${num(reitit)} (+ ${num(lennot)})`]);
+      rivit.push(['Visakysymyksiä', num(kysymykset)]);
+      rivit.push(['Tiesitkö-tietoja', num(tiedot)]);
+      rivit.push(['Aarrevihjeitä', num(vihjeet)]);
+      rivit.push(['Matkakirjan saapumisia (Afrikka)', num(Object.keys(AFRICA_SAAPUMISET).length)]);
+      rivit.push(['Omia artikkeleita (Afrikka)', num(Object.keys(OMAT_ARTIKKELIT).length)]);
+      rivit.push(['Kulttuurinostoja (Afrikka)', num(nostot)]);
+      rivit.push(['Valokuvia (vanha + nykypäivä)', `${num(vanhat)} + ${num(uudet)}`]);
+      // Äänet ja koko luetaan sovelluksen omista tiedostoista.
+      try {
+        const sw = await (await fetch('sw.js')).text();
+        const aanet = (sw.match(/\.mp3/g) ?? []).length;
+        rivit.push(['Äänitiedostoja', num(aanet)]);
+      } catch { /* ilman verkkoa jää pois */ }
+      try {
+        const vastaus = await fetch('dist/matkakirja.html', { method: 'HEAD' });
+        const koko = Number(vastaus.headers.get('content-length'));
+        if (koko) rivit.push(['Standalone-paketin koko', `${Math.round(koko / 1024)} kt`]);
+      } catch { /* ilman verkkoa jää pois */ }
+      const taulu = document.createElement('table');
+      taulu.innerHTML = rivit
+        .map(([nimi, arvo]) => `<tr><td>${nimi}</td><td class="num">${arvo}</td></tr>`)
+        .join('');
+      kohde.appendChild(taulu);
+    })();
+
     // --- kuvat: muistikirjan vanhat valokuvat --------------------------------
     // Ruudukko rakennetaan vasta kun välilehti avataan, ettei työhuone
     // hae parinkymmentä kuvaa Commonsista joka käynnillä.
@@ -887,6 +915,30 @@
         meta.textContent = [kuva.vuosi, kuva.lahde].filter(Boolean).join(' · ');
         kortti.appendChild(meta);
         ruudukko.appendChild(kortti);
+        // Nykypäivän pari heti vanhan viereen, jos kaupungille on kuvapino.
+        if (kuva.uusi) {
+          const pari = document.createElement('div');
+          pari.className = 'kuvakortti';
+          const kuva2 = document.createElement('img');
+          kuva2.loading = 'lazy';
+          kuva2.alt = `${city.name} — nykypäivän kuva`;
+          kuva2.src = valokuvaUrl(kuva.uusi.tiedosto, 320);
+          pari.appendChild(kuva2);
+          const nimi2 = document.createElement('p');
+          nimi2.className = 'nimi';
+          const linkki2 = document.createElement('a');
+          linkki2.href = `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(kuva.uusi.tiedosto)}`;
+          linkki2.target = '_blank';
+          linkki2.rel = 'noopener';
+          linkki2.textContent = `${city.name} · nykyään`;
+          nimi2.appendChild(linkki2);
+          pari.appendChild(nimi2);
+          const meta2 = document.createElement('p');
+          meta2.className = 'meta';
+          meta2.textContent = [kuva.uusi.vuosi ?? 'nykypäivä', kuva.uusi.lahde].filter(Boolean).join(' · ');
+          pari.appendChild(meta2);
+          ruudukko.appendChild(pari);
+        }
       }
       document.getElementById('kuvattomat').textContent = ilman.length
         ? `Ilman kuvaa vielä (${ilman.length}): ${ilman.join(', ')}. Näille etsitään sopiva vanha kuva myöhemmin.`
@@ -1193,13 +1245,6 @@
     }
     piirraTekstit();
 
-    // --- ideat: docs/kehitysideat.md ---------------------------------------
-    fetch('docs/kehitysideat.md').then((r) => (r.ok ? r.text() : Promise.reject()))
-      .then((md) => { document.getElementById('ideat-teksti').textContent = md; })
-      .catch(() => {
-        document.getElementById('ideat-teksti').textContent =
-          'Dokumenttia ei saatu ladattua — se on repossa: docs/kehitysideat.md';
-      });
 
     // Avausvälilehti vasta nyt: kaikki osiot ja kehysten lataajat ovat valmiina.
     nayta(location.hash.slice(1) || 'etusivu');

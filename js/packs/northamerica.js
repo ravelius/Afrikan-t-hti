@@ -117,7 +117,7 @@ const NA_CITIES = [
   { id: 'santafe', name: 'Santa Fe', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
   { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'maailma', city: 'losangeles', label: 'Maailma-lauta' }],
   },
   { id: 'hawaii', name: 'Havaiji', x: 185, y: 628, la: 'middle', lx: 0, ly: 34 },
@@ -253,7 +253,7 @@ export const NORTHAMERICA = {
       star: { name: 'Montezuman aarre' },
       topaz: { name: 'Klondiken kulta', color: '#e0b02a' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 12 },
   },
 
   questions: NORTHAMERICA_QUESTIONS,
@@ -302,7 +302,7 @@ export const NORTHAMERICA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Montezuman aarre ja palatkaa New Yorkiin tai San Franciscoon.',
+    intro: 'Peli alkaa! Etsikää Montezuman aarre ja palatkaa New Yorkiin, San Franciscoon tai Los Angelesiin.',
     starFound: (name, city) => `★ ${name} löysi MONTEZUMAN AARTEEN kaupungista ${city}!`,
     starToast: 'MONTEZUMAN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',

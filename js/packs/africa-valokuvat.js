@@ -42,6 +42,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'World Digital Library (PD)',
     selite: 'Väkeä koolla Tripolin muurien kupeessa. Valkoiset viitat '
       + 'suojasivat sekä auringolta että aavikon hiekalta.',
+    uusi: {
+      tiedosto: 'The Green Square at Tripoli, Libya - panoramio.jpg',
+      lahde: 'Commons (CC BY 3.0)',
+      selite: 'Sama aukio muurien kupeessa nykyään: Marttyyrien aukio on yhä '
+      + 'kaupungin sydän, ja vanha linnoitus vartioi sen laitaa.',
+    },
   },
   murzuk: {
     tiedosto: 'Osmanisches Fort von Mursuk.jpg',
@@ -49,6 +55,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Murzukin linnoitus vartioi Saharan karavaanireittiä. Sen '
       + 'savimuurien varjossa lepäsivät sekä kamelit että kauppiaat.',
+    uusi: {
+      tiedosto: 'Murzuq - Festung Qala at Turk über dem Ort.jpg',
+      lahde: 'Commons (CC BY-SA 3.0)',
+      selite: 'Sama savilinnoitus kohoaa Murzukin kattojen yllä yhä — '
+      + 'karavaanit ovat vaihtuneet autoihin, mutta aavikko alkaa '
+      + 'entisestä paikasta.',
+    },
   },
   alkufra: {
     tiedosto: 'Kufra (aeroview).jpg',
@@ -56,6 +69,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Kufran keitaat ilmasta kuvattuna: palmulehtoja ja suolajärviä '
       + 'keskellä hiekkamerta, päivien matkan päässä kaikesta.',
+    uusi: {
+      tiedosto: 'ISS-50 Al-Jawf Oasis in Eastern Libya.jpg',
+      lahde: 'NASA (PD)',
+      selite: 'Kufran keitaat nykyään avaruudesta: vihreät kastelupellot '
+      + 'piirtyvät täysinä ympyröinä keskelle hiekkamerta.',
+    },
   },
   gao: {
     tiedosto: 'ETH-BIB-Grabmal von Askia, Gao-Tschadseeflug 1930-31-LBS MH02-08-0548.tif',
@@ -64,6 +83,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Askian hauta Gaossa — savesta muurattu pyramidi, jonka piikit '
       + 'ovat rakennustelineiksi jätettyjä puunrunkoja. Songhain '
       + 'suurvallan mahtavin muistomerkki.',
+    uusi: {
+      tiedosto: '2014.11.29 - Tombeau des Askia.jpg',
+      lahde: 'Commons (CC0)',
+      selite: 'Askian hauta seisoo yhä — puupiikit törröttävät savesta kuten '
+      + 'viisisataa vuotta sitten, ja muuraus uusitaan käsin joka '
+      + 'vuosi.',
+    },
   },
   dakar: {
     tiedosto: 'Dakar mosque circa 1900.jpg',
@@ -71,6 +97,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'E. Fortier (PD)',
     selite: 'Dakarin moskeija minareetteineen nuoren satamakaupungin '
       + 'keskellä. Kuvan otti postikorteistaan tunnettu Edmond Fortier.',
+    uusi: {
+      tiedosto: 'Gorée 2024 - Vue de Dakar - 17.jpg',
+      lahde: 'Commons (CC BY 4.0)',
+      selite: 'Dakar mereltä nähtynä nykyään: nuoresta satamakaupungista on '
+      + 'kasvanut miljoonien asukkaiden pääkaupunki, jonka tornit '
+      + 'nousevat niemen kärkeen.',
+    },
   },
   sierraleone: {
     tiedosto: 'Cotton Tree Railway Station 3.30 p.m. Bungalow Train, Freetown.jpg',
@@ -78,6 +111,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Lisk-Carew Brothers (PD)',
     selite: 'Iltapäiväjuna lähdössä Freetownin Cotton Tree -asemalta. '
       + 'Kaupungin kuuluisa puuvillapuu kasvaa yhä samalla paikalla.',
+    uusi: {
+      tiedosto: 'Cotton tree in Freetown, SL - Mapillary (yIBZ74r6IsUFOaWtAPwhWw).jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama puuvillapuu sata vuotta myöhemmin keskellä '
+      + 'liikenneympyrää. Vanhus kaatui lopulta myrskyssä 2023, ja sen '
+      + 'taimista kasvatetaan seuraajaa.',
+    },
   },
   kappalmas: {
     tiedosto: 'HEARD(1898) 50 Church of Harper, Cape Palmas.jpg',
@@ -85,6 +125,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'W. H. Heard (PD)',
     selite: 'Harperin kirkko Kap Palmasin niemellä. Sen torni näkyi kauas '
       + 'merelle ja toimi purjehtijoiden maamerkkinä.',
+    uusi: {
+      tiedosto: 'Harper, Liberia - panoramio (1).jpg',
+      lahde: 'Commons (CC BY 3.0)',
+      selite: 'Harperin kaupunki Kap Palmasin niemellä nykyään: palmut, '
+      + 'peltikatot ja Atlantin ranta samassa kuvassa.',
+    },
   },
   kumasi: {
     tiedosto: 'Kumasi 28-03-1900 sx.jpg',
@@ -92,6 +138,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Kumasin kattoja vuonna 1900. Ashantien pääkaupunki oli tuolloin '
       + 'yksi Länsi-Afrikan suurimpia kaupunkeja.',
+    uusi: {
+      tiedosto: 'Modern market hall of Kejetia market.jpg',
+      lahde: 'Commons (CC0)',
+      selite: 'Kumasin Kejetia-tori sai 2010-luvulla katon: uusi halli on '
+      + 'Länsi-Afrikan suurimpia kauppapaikkoja, ja tungos on sama kuin '
+      + 'ennenkin.',
+    },
   },
   orjarannikko: {
     tiedosto: 'São João Baptista de Ajudá 1920s.jpg',
@@ -100,6 +153,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Ouidahin vanha portugalilaislinnake, Orjarannikon synkän '
       + 'historian vartiopaikka. Isoisän aikaan sen muurit olivat jo '
       + 'rapistumassa.',
+    uusi: {
+      tiedosto: 'Porte du non-retour au Benin.jpg',
+      lahde: 'Commons (CC0)',
+      selite: 'Ouidahin rannalla seisoo nykyään Paluuttomuuden portti — '
+      + 'muistomerkki niille, jotka vietiin täältä laivoihin eivätkä '
+      + 'koskaan palanneet.',
+    },
   },
   kano: {
     tiedosto: 'View-Kano city-1911.jpg',
@@ -107,6 +167,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'E. D. Morel (PD)',
     selite: 'Kanon savitaloja ja muureja vuonna 1911. Koko vanha kaupunki '
       + 'on rakennettu auringossa kuivatusta savesta.',
+    uusi: {
+      tiedosto: 'Ganuwa or Badala - Kano City Wall - Outside Sabuwar Kofa.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Kanon vanhoja savimuureja on jäljellä yhä, ja portit kantavat '
+      + 'vanhoja nimiään. Muurien sisällä värjätään kangasta samoissa '
+      + 'kuopissa kuin 500 vuotta sitten.',
+    },
   },
   kongo: {
     tiedosto: 'Livingstone steamer, Congo, ca. 1902-1915 (IMP-CSCNWW33-OS10-73).jpg',
@@ -114,6 +181,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Höyrylaiva Livingstone Kongojoella. Joki oli sisämaan valtatie: '
       + 'laivat kuljettivat kaiken kylistä kaupunkeihin ja takaisin.',
+    uusi: {
+      tiedosto: 'Congo River from Kinshasa in Democratic Republic of the Congo (DRC).jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Kongojoki Kinshasan rannasta nykyään. Höyrylaivojen tilalla '
+      + 'puksuttavat proomut, mutta joki on yhä sisämaan valtatie.',
+    },
   },
   angola: {
     tiedosto: "Saint-Paul de Luanda, port de (l')Angola dans le Portugal africain (vue générale) - btv1b6932475d.jpg",
@@ -121,6 +194,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Agence Rol / BnF (PD)',
     selite: 'Luandan satama ja rantakatu vuonna 1914. Lahden suojissa '
       + 'lepäsi purjelaivoja ja höyryaluksia rinnakkain.',
+    uusi: {
+      tiedosto: 'Marginal de Luanda HD Dji Mavic 3 Classic - By Délcio Geovany Borges.jpg',
+      lahde: 'Commons (CC BY 4.0)',
+      selite: 'Luandan lahti nykyään: purjelaivojen rantakadusta on kasvanut '
+      + 'tornien reunustama rantabulevardi, Marginal.',
+    },
   },
   kapkaupunki: {
     tiedosto: 'Cape Town tram, Adderley Street - ca. 1900.jpg',
@@ -128,6 +207,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Raitiovaunu Kapkaupungin Adderley Streetillä. Kadun päästä '
       + 'alkoi satama, toisesta päästä kohosi Pöytävuori.',
+    uusi: {
+      tiedosto: 'Adderley Street.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama Adderley Street nykyään: raitiovaunut ovat poissa, mutta '
+      + 'katu johtaa yhä satamasta kohti Pöytävuorta.',
+    },
   },
   kimberley: {
     tiedosto: 'Twee gezichten op de mijn Die Groot Gat te Kimberley Diamond fields-Kimberley mine (titel op object) Diamond fields-Tramway, Kimberley mine (titel op object), RP-F-2001-7-425-25.jpg',
@@ -136,6 +221,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Kimberleyn timanttikaivos alkuaikoinaan: tuhannet kaivajat '
       + 'louhivat kuoppaa käsin, köysiradat kuljettivat maata ylös. '
       + 'Kuopasta kasvoi lopulta Iso Reikä.',
+    uusi: {
+      tiedosto: 'Big Hole Kimberley.jpg',
+      lahde: 'Commons (CC BY-SA 3.0)',
+      selite: 'Käsin kaivettu kuoppa on nykyään Iso Reikä: puoli kilometriä '
+      + 'leveä ja pohjalla vihreä järvi. Se on suurimpia ihmisen '
+      + 'lapiolla kaivamia kuoppia maailmassa.',
+    },
   },
   madagaskar: {
     tiedosto: "Tananarive-Temple d'Andohalo.jpg",
@@ -143,6 +235,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Antananarivon kukkulakaupunkia Madagaskarilla. Talot '
       + 'kipuavat rinnettä kohti Andohalon aukiota ja sen kirkkoa.',
+    uusi: {
+      tiedosto: "Analakely vu d'en haut, Madagascar.jpg",
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Antananarivon keskusta nykyään ylhäältä: Analakelyn '
+      + 'torikatokset ja pastellitalot täyttävät laakson, ja kukkulat '
+      + 'reunustavat kaupunkia kuten ennenkin.',
+    },
   },
   sansibar: {
     tiedosto: 'Panorama van de haven van Zanzibar Panorama of Zanzibar (titel op object) Zanzibar (titel op object), RP-F-F00999-DD.jpg',
@@ -150,6 +249,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Rijksmuseum (CC0)',
     selite: 'Sansibarin satama purjealuksineen. Mausteiden tuoksu kantoi '
       + 'kuulemma merelle asti, ennen kuin kaupunki edes näkyi.',
+    uusi: {
+      tiedosto: 'Harbour at the picturesque Stone Town.jpg',
+      lahde: 'Commons (CC BY 4.0)',
+      selite: 'Sansibarin satama nykyään: dhow-purjeet ovat harvinaistuneet, '
+      + 'mutta Kivikaupungin rantaviiva on tunnistettavasti sama.',
+    },
   },
   kilimandzaro: {
     tiedosto: 'Bundesarchiv Bild 105-DOA0437, Deutsch-Ostafrika, Kilimandscharo, Gummiplantage.jpg',
@@ -157,6 +262,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Bundesarchiv (CC BY-SA 3.0 de)',
     selite: 'Viljelmiä Kilimandžaron juurella. Lumihuippu häämöttää pilvien '
       + 'takana — keskellä Afrikkaa, lähes päiväntasaajalla.',
+    uusi: {
+      tiedosto: 'The view of mountain Kilimanjaro from Moshi town in Tanzania.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Kilimandžaro Moshin kaupungin yltä nykyään. Lumihuippu on '
+      + 'kutistunut isoisän ajoista, mutta kohoaa yhä yksin savannin '
+      + 'yllä.',
+    },
   },
   tanganjika: {
     tiedosto: 'Memorial tablet marking the spot where Livingstone and Stanley met at Ujiji in 1871 ATLIB 305982.png',
@@ -165,6 +277,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Muistolaatta Ujijissa Tanganjikajärven rannalla — paikassa, '
       + 'jossa Stanley löysi kadonneen Livingstonen vuonna 1871 ja '
       + 'tervehti: "Tohtori Livingstone, otaksun?"',
+    uusi: {
+      tiedosto: 'Lake Tanganyika ,Kigoma port.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Kigoman satama Tanganjikajärvellä nykyään — Ujijin naapurissa, '
+      + 'jossa Stanley ja Livingstone kohtasivat. Järvellä liikennöi '
+      + 'yhä yli satavuotias höyrylaiva Liemba.',
+    },
   },
   addisabeba: {
     tiedosto: 'British delegation Addis Abeba.jpg',
@@ -173,6 +292,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Juhlakulkue Addis Abebassa keisari Haile Selassien '
       + 'kruunajaisvuonna 1930. Koko maailma lähetti edustajansa '
       + 'vuoristopääkaupunkiin.',
+    uusi: {
+      tiedosto: 'AddisView.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Addis Abeba nykyään: kruunajaiskulkueiden kaupunki on Afrikan '
+      + 'diplomatian pääkaupunki, jonka ylle nousee tornitalo toisensa '
+      + 'perään.',
+    },
   },
   rashafun: {
     tiedosto: 'Garesadihafun.jpg',
@@ -181,6 +307,12 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Vanha garesa-linnoitus Hafunin niemellä, Afrikan itäisimmässä '
       + 'kärjessä. Monsuunituulet toivat tänne purjehtijoita jo tuhat '
       + 'vuotta sitten.',
+    uusi: {
+      tiedosto: 'Hafun from space.jpg',
+      lahde: 'NASA (PD)',
+      selite: 'Hafunin niemi avaruudesta: Afrikan itäisin kärki työntyy '
+      + 'Intian valtamereen kapean hiekkakannaksen päässä.',
+    },
   },
 
   // --- Täydennys (omistajan pyyntö: loput vanhat kuvat). Ahaggarille,
@@ -194,6 +326,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'BnF Gallica (PD)',
     selite: 'Karthagon Byrsan kukkula isoisän aikaan: raunioiden keskelle '
       + 'oli noussut katedraali, ja kaivaukset olivat vasta alussa.',
+    uusi: {
+      tiedosto: '01996 01434 Ruins of Antonine Baths at Carthage.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Karthagon kaivaukset valmistuivat kertomaan tarinansa: '
+      + 'Antoninuksen termien rauniot ovat nykyään maailmanperintökohde '
+      + 'meren äärellä.',
+    },
   },
   marrakech: {
     tiedosto: 'Marrakech Minaret depuis la rue animée - sap04 10l01821 p.jpg',
@@ -201,6 +340,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Ministère de la Culture (CC BY-SA 4.0)',
     selite: 'Vilkas katu Marrakechissa ja taustalla Koutoubian minareetti — '
       + 'sama torni, jonka mukaan kaupungissa suunnistetaan yhä.',
+    uusi: {
+      tiedosto: 'Kutubiyya Mosque, Marrakesh, Morocco, 20250124 1834 7027.jpg',
+      lahde: 'Commons (CC BY 4.0)',
+      selite: 'Sama Koutoubian minareetti nykyään. Sen yli ei saa '
+      + 'Marrakechissa yhä rakentaa, joten torni hallitsee kaupunkia '
+      + 'kuten 800 vuotta sitten.',
+    },
   },
   timbuktu: {
     tiedosto: 'Timbuktu, 1906.png',
@@ -208,6 +354,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Timbuktun savutaloja ja hiekkakatuja vuonna 1906. Kaupunki oli '
       + 'juuri se salaperäinen aavikon satama, josta Euroopassa tarinoitiin.',
+    uusi: {
+      tiedosto: 'Sankore Mosque in Timbuktu.jpg',
+      lahde: 'Commons (CC BY 2.0)',
+      selite: 'Sankoren moskeija nykyään — savesta muurattu yliopisto, jossa '
+      + 'opiskeltiin jo 1400-luvulla. Seinät rapataan talkoilla '
+      + 'uudelleen joka vuosi.',
+    },
   },
   lagos: {
     tiedosto: 'Lagos, 1929.jpg',
@@ -216,6 +369,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Lagosin satamakatua vuonna 1929: kauppahuoneita ja laitureita '
       + 'laguunin rannalla — kaupunki oli jo silloin Länsi-Afrikan '
       + 'vilkkaimpia.',
+    uusi: {
+      tiedosto: 'Lagos Island City Scape.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Lagosin saari nykyään: laguunikaupungista on kasvanut Afrikan '
+      + 'suurimpia metropoleja, jonka tornit nousevat samalta rannalta '
+      + 'kuin kauppahuoneet ennen.',
+    },
   },
   tshadjarvi: {
     tiedosto: 'ETH-BIB-Ufer des Tschadsee-Tschadseeflug 1930-31-LBS MH02-08-0976.tif',
@@ -224,6 +384,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Tšad-järven rantaa ilmasta Walter Mittelholzerin kuuluisalla '
       + 'Afrikan-lennolla — juuri sellaiselta matkalta, joista isoisäkin '
       + 'luki lehdistä.',
+    uusi: {
+      tiedosto: 'Waving fisherman on Lake Chad (detilt).jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Kalastaja Tšad-järvellä nykyään. Järvi on kutistunut '
+      + 'murto-osaan isoisän ajoista, mutta ruokkii yhä miljoonia '
+      + 'ihmisiä neljässä maassa.',
+    },
   },
   kamerun: {
     tiedosto: 'People gathered before a church, Cameroon, ca.1910-1920 (IMP-YDS-RG101-012-0000-0036).jpg',
@@ -231,6 +398,12 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Yale Divinity School (PD)',
     selite: 'Väkeä koolla kirkon edustalla Kamerunissa 1910-luvulla — '
       + 'vuoren juurella kohtasivat tuolloin monet maailmat.',
+    uusi: {
+      tiedosto: 'Mount Cameroon view from Buea (Soppo).jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Kamerunvuori Buean kaupungin yltä nykyään. Tulivuori on yhä '
+      + 'toiminnassa — viimeksi se purkautui vuonna 2000.',
+    },
   },
   namib: {
     tiedosto: 'Lüderitzbucht, Deutsch-Südwestafrika. The newly finished pier with an Illing locomotive, February 1908, photograph by de Meillon.jpg',
@@ -238,6 +411,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Lüderitzin uusi laituri Namibin rannikolla 1908: veturi ja '
       + 'nostokurjet keskellä maailman vanhinta aavikkoa.',
+    uusi: {
+      tiedosto: 'Lüderitz.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Lüderitz nykyään: saksalaisajan jugendtalot seisovat '
+      + 'värikkäinä aavikon ja Atlantin välissä, ja laituri on edelleen '
+      + 'paikallaan.',
+    },
   },
   sthelena: {
     tiedosto: 'The drama of Saint Helena (1910) (14777842132).jpg',
@@ -246,6 +426,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Näkymä St. Helenalle 1910 julkaistun kirjan sivuilta — jyrkät '
       + 'kalliot ottivat vastaan jokaisen saapujan, keisarista '
       + 'matkalaiseen.',
+    uusi: {
+      tiedosto: "Jacob's Ladder near St. James Cathedral in Jamestown Saint Helena.jpg",
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Jamestown nykyään: Jaakobin portaat — 699 askelmaa — nousevat '
+      + 'laakson pohjalta jyrkänteelle. Saarelle pääsee nykyisin myös '
+      + 'lentäen.',
+    },
   },
   viktorianputoukset: {
     tiedosto: 'Victoria Falls Bridge 1905.jpg',
@@ -254,6 +441,13 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Putousten rautatiesilta juuri valmistuneena 1905. Se '
       + 'rakennettiin niin lähelle, että vaunuihin sataa vesisumua — '
       + 'suunnittelijan tarkoituksella.',
+    uusi: {
+      tiedosto: 'Victoria Falls Bridge and Zambezi river.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama silta nykyään Sambian ja Zimbabwen rajalla. Junien '
+      + 'rinnalle ovat tulleet benjihyppääjät — vesisumu kastelee yhä '
+      + 'molemmat.',
+    },
   },
   nairobi: {
     tiedosto: 'Photograph of Kenyan Sikh pioneers in-front of Gurdwara Sahib Railway Landhies in Nairobi, Kenya, 1903.jpg',
@@ -275,6 +469,12 @@ export const AFRICA_VALOKUVAT = {
     selite: 'Ali Dinar, Darfurin viimeinen sulttaani, virallisessa '
       + 'muotokuvassaan. Hänen valtakautensa päättyi 1916 — vain '
       + 'kymmenkunta vuotta ennen isoisän matkaa.',
+    uusi: {
+      tiedosto: 'ElFasherDarfurSudan RomanDeckert18022015.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'El Fasher, Darfurin vanha sulttaanien kaupunki, savitalojen ja '
+      + 'hiekkakatujen laajana mattona ennen nykyistä sotaa.',
+    },
   },
   suakin: {
     tiedosto: 'TheLandingPlaceAtSuakim(Suakin)1871.jpg',
@@ -282,6 +482,13 @@ export const AFRICA_VALOKUVAT = {
     lahde: 'Commons (PD)',
     selite: 'Suakinin laituripaikka 1871: dhow-veneitä ja korallitaloja '
       + 'saaren rannassa, kun satama oli vielä täydessä kukassaan.',
+    uusi: {
+      tiedosto: 'Suakin,custom office.jpg',
+      lahde: 'Commons (CC BY 3.0)',
+      selite: 'Suakinin korallitalot ovat nykyään rauniokaupunki, jota on '
+      + 'alettu entisöidä. Punaisenmeren helmen kadut ovat hiljentyneet '
+      + '— dhow-veneet käyvät yhä.',
+    },
   },
 };
 

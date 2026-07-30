@@ -103,7 +103,7 @@ const AFRICA_CITIES = [
   // jonne pääsee vain laivalla.
   { id: 'sthelena', name: 'St. Helena', wiki: 'Saint Helena', ambience: 'meri', x: 205, y: 672 },
   {
-    id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, airport: true, la: 'end', lx: -22, ly: 6,
+    id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, start: true, airport: true, la: 'end', lx: -22, ly: 6,
     links: [{ pack: 'maailma', city: 'kapkaupunki', label: 'Maailma-lauta' }],
   },
   // Viktorian putoukset Zambezilla (omistajan laajennus).
@@ -255,7 +255,7 @@ export const AFRICA = {
   tokens: {
     types: themedTokenTypes(),
     // 37 laattakaupunkia seitsemän uuden paikan jälkeen (omistajan laajennus).
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 8, empty: 12 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 8, empty: 11 },
   },
 
   questions: AFRICA_QUESTIONS,
@@ -373,7 +373,7 @@ export const AFRICA = {
         'Sivun laidassa on kahvipapu ja kellotaulu vierekkäin: isoisä odotti tunnin ja kirjasi sen ylös. Siitä tunnista minä maksaisin mitä tahansa.',
       ],
     },
-    intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin tai Kairoon.',
+    intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin, Kairoon tai Kapkaupunkiin.',
     starFound: (name, city) => `★ ${name} löysi AFRIKAN TÄHDEN kaupungista ${city}!`,
     starToast: 'AFRIKAN TÄHTI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
