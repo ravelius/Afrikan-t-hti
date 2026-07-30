@@ -554,9 +554,47 @@
       try { return JSON.parse(localStorage.getItem(MOOTTORI_AVAIN) ?? '{}'); } catch { return {}; }
     };
     const moottoriLista = document.getElementById('moottori-lista');
+    // ElevenLabsin saldo haetaan suoraan rajapinnasta. Avain tallentuu
+    // vain tähän selaimeen (kuten Freesound-avain äänistudiossa) —
+    // repoon tai sivulle sitä ei koskaan kirjata.
+    const EL_AVAIN = 'matkakirja-elevenlabs-avain';
+    function haeElSaldo(tulos) {
+      let avain = '';
+      try { avain = localStorage.getItem(EL_AVAIN) ?? ''; } catch { /* ei säily */ }
+      if (!avain) {
+        tulos.textContent = 'Liitä API-avain, niin saldo haetaan tähän.';
+        return;
+      }
+      tulos.textContent = 'Haetaan saldoa…';
+      fetch('https://api.elevenlabs.io/v1/user/subscription', { headers: { 'xi-api-key': avain } })
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+        .then((d) => {
+          const raja = d.character_limit ?? 0;
+          const kaytetty = d.character_count ?? 0;
+          const jaljella = Math.max(0, raja - kaytetty);
+          const aika = new Date().toLocaleString('fi-FI', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
+          tulos.innerHTML = `<b>Krediittejä jäljellä ${jaljella.toLocaleString('fi-FI')}</b> / ${raja.toLocaleString('fi-FI')} (käytetty ${kaytetty.toLocaleString('fi-FI')}) · haettu ${aika}`;
+          // Kirjataan myös käsikirjanpitoon, jotta lukema säilyy näkyvissä.
+          const kaikki = moottoriMuistiot();
+          kaikki.elevenlabs = { ...(kaikki.elevenlabs ?? {}), saldo: `${jaljella.toLocaleString('fi-FI')} / ${raja.toLocaleString('fi-FI')}` };
+          try { localStorage.setItem(MOOTTORI_AVAIN, JSON.stringify(kaikki)); } catch { /* ei säily */ }
+        })
+        .catch((e) => {
+          tulos.textContent = e.message === '401'
+            ? 'Avain ei kelvannut (401) — tarkista tai luo uusi.'
+            : `Saldoa ei saatu haettua (${e.message}).`;
+        });
+    }
+
     function piirraMoottorit() {
       moottoriLista.textContent = '';
       const muistiot = moottoriMuistiot();
+      // ElevenLabs näkyy suoraan; muut moottorit aukeavat nuolesta.
+      const muut = document.createElement('details');
+      muut.className = 'tiivis';
+      const muutOtsikko = document.createElement('summary');
+      muutOtsikko.textContent = `Muut moottorit (${MOOTTORIT.length - 1})`;
+      muut.appendChild(muutOtsikko);
       for (const m of MOOTTORIT) {
         const tiedot = muistiot[m.id] ?? {};
         const k = document.createElement('div');
@@ -565,6 +603,29 @@
           <h3>${m.nimi} <span class="tila ${m.tila === 'kaytossa' ? 'kaytossa' : ''}">${TILAT[m.tila] ?? m.tila}</span></h3>
           <p>${m.mita}</p>
           <p class="meta">${m.huomiot}</p>`;
+        // Ajantasainen saldo suoraan ElevenLabsin rajapinnasta.
+        if (m.id === 'elevenlabs') {
+          const saldo = document.createElement('p');
+          saldo.style.margin = '0.4rem 0';
+          k.appendChild(saldo);
+          const rivi = document.createElement('div');
+          rivi.className = 'grid';
+          const avainKentta = document.createElement('input');
+          avainKentta.type = 'password';
+          avainKentta.placeholder = 'ElevenLabs API-avain (vain tämä selain)';
+          avainKentta.style.flex = '1 1 16rem';
+          try { avainKentta.value = localStorage.getItem(EL_AVAIN) ?? ''; } catch { /* ei säily */ }
+          avainKentta.addEventListener('change', () => {
+            try { localStorage.setItem(EL_AVAIN, avainKentta.value.trim()); } catch { /* ei säily */ }
+          });
+          const hae = document.createElement('button');
+          hae.textContent = 'Hae saldo';
+          hae.addEventListener('click', () => haeElSaldo(saldo));
+          rivi.appendChild(avainKentta);
+          rivi.appendChild(hae);
+          k.appendChild(rivi);
+          haeElSaldo(saldo);
+        }
         const kentat = document.createElement('div');
         kentat.className = 'moottori-kentat';
         const tee = (nimi, avain, tyyppi = 'text', paikka = '') => {
@@ -586,8 +647,10 @@
         tee('tarkistettu', 'pvm', 'date');
         tee('muistiinpano', 'huomio', 'text', 'esim. uusi avain luotu 29.7.');
         k.appendChild(kentat);
-        moottoriLista.appendChild(k);
+        if (m.id === 'elevenlabs') moottoriLista.appendChild(k);
+        else muut.appendChild(k);
       }
+      moottoriLista.appendChild(muut);
     }
     piirraMoottorit();
 
