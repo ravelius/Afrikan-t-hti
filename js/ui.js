@@ -675,7 +675,9 @@ export class UI {
    * nostaa laudan ruudun ylälaitaan ja jättää tekstille tyhjän alaosan.
    */
   withIntroSpace(box) {
-    if (this.game.phase !== 'pickstart') return box;
+    // Katselutila (?lauta=) ei näytä avaustekstiä, joten pergamenttia ei
+    // jatketa — muuten lauta kutistuu ja jää yläreunaan (omistajan havainto).
+    if (this.game.phase !== 'pickstart' || this.katselu) return box;
     return { ...box, h: box.h * (1 + INTRO_SPACE) };
   }
 
@@ -2143,7 +2145,8 @@ export class UI {
     this.onChange?.(this.game);
     // Aloituskartalla asettelu on kahdessa palstassa; pelin käynnistyttyä
     // kartta täyttää koko ruudun ja paneelit kelluvat sen päällä.
-    document.body.dataset.mode = this.game.phase === 'pickstart' ? 'start' : 'play';
+    // Katselutila käyttäytyy kuin peli olisi jo käynnissä.
+    document.body.dataset.mode = this.game.phase === 'pickstart' && !this.katselu ? 'start' : 'play';
     // Matkavalinnan toinen vaihe koskee vain käsillä olevaa valintaa: heti
     // kun vaihe vaihtuu, ollaan taas seuraavan vuoron ensimmäisessä vaiheessa.
     if (this.game.phase !== 'action') this.travelExpanded = false;

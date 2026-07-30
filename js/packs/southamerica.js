@@ -107,12 +107,12 @@ const SA_CITIES = [
   { id: 'santacruz', name: 'Santa Cruz', x: 497, y: 455 },
   { id: 'campogrande', name: 'Campo Grande', x: 604, y: 492, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'rio', name: 'Rio de Janeiro', x: 738, y: 533, airport: true,
+    id: 'rio', name: 'Rio de Janeiro', x: 738, y: 533, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'rio', label: 'Maailma-lauta' }],
   },
-  { id: 'saopaulo', name: 'São Paulo', x: 682, y: 525, la: 'start', lx: 16, ly: -6 },
+  { id: 'saopaulo', name: 'São Paulo', x: 682, y: 525, la: 'end', lx: -6, ly: 20 },
   { id: 'iguazu', name: 'Iguazú', x: 603, y: 561, la: 'end', lx: -16, ly: 5 },
   { id: 'portoalegre', name: 'Porto Alegre', x: 633, y: 616, la: 'start', lx: 16, ly: 5 },
   { id: 'antofagasta', name: 'Antofagasta', x: 417, y: 536, la: 'end', lx: -16, ly: 5 },
@@ -252,7 +252,7 @@ export const SOUTHAMERICA = {
       star: { name: 'El Doradon aarre' },
       topaz: { name: 'Potosín hopea', color: '#c9ccd4' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 13 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 4, emerald: 5, topaz: 7, empty: 12 },
   },
 
   questions: SOUTHAMERICA_QUESTIONS,
@@ -305,7 +305,7 @@ export const SOUTHAMERICA = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää El Doradon aarre ja palatkaa Panamaan tai Buenos Airesiin.',
+    intro: 'Peli alkaa! Etsikää El Doradon aarre ja palatkaa Panamaan, Buenos Airesiin tai Rioon.',
     starFound: (name, city) => `★ ${name} löysi EL DORADON AARTEEN kaupungista ${city}!`,
     starToast: 'EL DORADON AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',

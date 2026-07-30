@@ -85,7 +85,7 @@ const ME_CITIES = [
   { id: 'salalah', name: 'Salalah', x: 752, y: 794 },
   { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'dubai', name: 'Dubai', x: 782, y: 565, airport: true, la: 'middle', lx: 0, ly: 26,
+    id: 'dubai', name: 'Dubai', x: 782, y: 565, start: true, airport: true, la: 'middle', lx: 0, ly: 26,
     // Persianlahden vaihtoasema: täältä lähtee pitkä lento itään.
     links: [{ pack: 'maailma', city: 'mumbai', label: 'Maailma-lauta' }],
   },
@@ -191,7 +191,7 @@ export const MIDDLE_EAST = {
       star: { name: 'Sheban kuningattaren aarre' },
       topaz: { name: 'Turkoosi', color: '#3aaea6' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 3, emerald: 4, topaz: 6, empty: 8 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 3, emerald: 4, topaz: 6, empty: 7 },
   },
 
   questions: MIDDLEEAST_QUESTIONS,
@@ -238,7 +238,7 @@ export const MIDDLE_EAST = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää Sheban kuningattaren aarre ja palatkaa Istanbuliin tai Kairoon.',
+    intro: 'Peli alkaa! Etsikää Sheban kuningattaren aarre ja palatkaa Istanbuliin, Kairoon tai Dubaihin.',
     starFound: (name, city) => `★ ${name} löysi SHEBAN KUNINGATTAREN AARTEEN kaupungista ${city}!`,
     starToast: 'SHEBAN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',

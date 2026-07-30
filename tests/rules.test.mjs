@@ -475,6 +475,15 @@ for (const pack of PACKS) {
           `${city.id}: linkin kohdetta ${link.city} ei ole laudalla ${link.pack}`,
         );
         assert.ok(link.label, `${city.id}: linkiltä puuttuu nimi`);
+        // Maailmankartan lento vie aina laudan aloituskaupunkiin, jotta
+        // laskeutumispaikka on kartalla keltaisella (omistajan päätös).
+        if (pack.id === 'maailma') {
+          const kohde = target.cities.find((c) => c.id === link.city);
+          assert.ok(
+            kohde.start,
+            `${city.id}: maailman portin kohde ${link.city} ei ole aloituskaupunki laudalla ${link.pack}`,
+          );
+        }
       }
     }
   });

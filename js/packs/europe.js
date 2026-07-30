@@ -119,7 +119,7 @@ const EU_CITIES = [
   { id: 'rooma', name: 'Rooma', x: 451, y: 792, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'sisilia', name: 'Sisilia', x: 468, y: 891, la: 'end', lx: -16, ly: 5 },
   {
-    id: 'ateena', name: 'Ateena', x: 667, y: 895, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'ateena', name: 'Ateena', x: 667, y: 895, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'maailma', city: 'ateena', label: 'Maailma-lauta' }],
   },
   { id: 'kreeta', name: 'Kreeta', x: 694, y: 964, la: 'middle', lx: 0, ly: 26 },
@@ -131,7 +131,7 @@ const EU_CITIES = [
   { id: 'kiova', name: 'Kiova', x: 797, y: 567 },
   { id: 'odessa', name: 'Odessa', x: 800, y: 669, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'moskova', name: 'Moskova', x: 934, y: 427, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'moskova', name: 'Moskova', x: 934, y: 427, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla, josta Siperian rata jatkuu itään.
     links: [{ pack: 'maailma', city: 'moskova', label: 'Maailma-lauta' }],
   },
@@ -278,7 +278,7 @@ export const EUROPE = {
       star: { name: 'Meripihkahuoneen aarre' },
       topaz: { name: 'Meripihka', color: '#d98f2b' },
     }),
-    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 6, emerald: 6, topaz: 8, empty: 13 },
+    counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 8, empty: 12 },
   },
 
   questions: EUROPE_QUESTIONS,
@@ -324,7 +324,7 @@ export const EUROPE = {
   ],
 
   texts: {
-    intro: 'Peli alkaa! Etsikää kadonneen Meripihkahuoneen aarre ja palatkaa Lontooseen tai Istanbuliin.',
+    intro: 'Peli alkaa! Etsikää kadonneen Meripihkahuoneen aarre ja palatkaa kotisatamaan: Lontooseen, Istanbuliin, Moskovaan tai Ateenaan.',
     starFound: (name, city) => `★ ${name} löysi MERIPIHKAHUONEEN AARTEEN kaupungista ${city}!`,
     starToast: 'MERIPIHKAHUONEEN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
