@@ -37316,7 +37316,11 @@ class UI {
     // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
     const rect = this.factCard.getBoundingClientRect();
     const leveys = Math.min(window.innerWidth * 0.78, 400);
-    kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - 8, rect.left))}px`;
+    // Pino tarvitsee tilaa myös alta pilkottavalle kortille — ilman
+    // varaa pilkotus leikkautui ruudun oikeaan reunaan (omistajan
+    // havainto iPadilla).
+    const vara = tiedot.uusi ? 44 : 8;
+    kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - vara, rect.left))}px`;
     if (rect.top > window.innerHeight / 2) {
       kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
     } else {
@@ -39841,7 +39845,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.90';
+const APP_VERSION = '2026-07-30.91';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

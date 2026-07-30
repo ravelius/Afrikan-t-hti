@@ -1770,7 +1770,11 @@ export class UI {
     // alaosassa, muuten alle. Vaakasuunnassa pysytään ruudussa.
     const rect = this.factCard.getBoundingClientRect();
     const leveys = Math.min(window.innerWidth * 0.78, 400);
-    kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - 8, rect.left))}px`;
+    // Pino tarvitsee tilaa myös alta pilkottavalle kortille — ilman
+    // varaa pilkotus leikkautui ruudun oikeaan reunaan (omistajan
+    // havainto iPadilla).
+    const vara = tiedot.uusi ? 44 : 8;
+    kortti.style.left = `${Math.max(8, Math.min(window.innerWidth - leveys - vara, rect.left))}px`;
     if (rect.top > window.innerHeight / 2) {
       kortti.style.bottom = `${window.innerHeight - rect.top + 10}px`;
     } else {
