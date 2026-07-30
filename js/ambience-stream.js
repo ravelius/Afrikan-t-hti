@@ -15,10 +15,10 @@ import { valittuAani, jaaAlku, tyyppiKori } from './aani-ehdokkaat.js';
 // eikä ääni saa vaihtua tai katkeilla kesken kaupungissa olon.
 let arvottu = null; // { cityId, url }
 
-function arvoTyypista(cityId, tyyppi) {
+function arvoTyypista(cityId, tyyppi, lauta) {
   if (!cityId || !tyyppi) return null;
   if (arvottu?.cityId === cityId) return arvottu.url;
-  const kori = tyyppiKori(tyyppi);
+  const kori = tyyppiKori(tyyppi, lauta);
   if (!kori.length) return null;
   const url = kori[Math.floor(Math.random() * kori.length)];
   arvottu = { cityId, url };
@@ -65,11 +65,11 @@ export function stopPlaceStream() {
  * automaattitoisto tai poistunut tiedosto — palauttaa synteesin itsestään,
  * ja seuraava renderöinti yrittää striimiä uudelleen.
  */
-export function playPlaceAmbience(cityId, fallbackType) {
-  // Kaupunkien äänet tulevat aina maisematyypin arvontakorista —
-  // kaupunkikohtaisia valintoja tai oletuksia ei ole (omistajan päätös).
-  // Tyhjä kori tarkoittaa syntetisoitua ambienssia.
-  const url = arvoTyypista(cityId, fallbackType);
+export function playPlaceAmbience(cityId, fallbackType, lauta) {
+  // Kaupunkien äänet tulevat aina maisematyypin maanosakohtaisesta
+  // arvontakorista — kaupunkikohtaisia valintoja tai oletuksia ei ole
+  // (omistajan päätös). Tyhjä kori tarkoittaa syntetisoitua ambienssia.
+  const url = arvoTyypista(cityId, fallbackType, lauta);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);

@@ -7,7 +7,7 @@ import { packById } from './pack.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-29.52';
+const APP_VERSION = '2026-07-29.53';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -169,7 +169,35 @@ if (hasManifest && 'serviceWorker' in navigator && location.protocol.startsWith(
   });
 }
 
+// Katselutila: ?lauta=<id> avaa laudan kartan suoraan ilman porttia,
+// avaustekstiä ja tallennusta — työhuoneen Maanosat-välilehti näyttää
+// kartat tällä. Kaupunkia voi klikata ja lautaa kokeilla vapaasti:
+// mikään ei kirjoita tallennettua peliä yli, ja Uusi peli -nappi on
+// piilossa, ettei se tyhjentäisi oikeaa tallennusta.
+function avaaKatselu(pack) {
+  document.body.classList.add('katselu');
+  const game = new Game({ players: [newPlayer()], pack });
+  if (ui) ui.destroy();
+  ui = new UI(game, { onNewGame: () => {}, onChange: () => {} });
+  ui.katselu = true;
+  ui.aloitettu = true;
+  ui.mount();
+  window.afrikanTahti = { game, ui, sfx };
+}
+
+let katseluPack = null;
+try {
+  const lauta = new URLSearchParams(location.search).get('lauta');
+  katseluPack = lauta ? packById(lauta) ?? null : null;
+} catch {
+  katseluPack = null;
+}
+
 // Kesken jäänyt peli jatkuu automaattisesti, muuten kysytään pelaajat.
-const saved = loadGame();
-if (saved) attach(saved);
-else startGame();
+if (katseluPack) {
+  avaaKatselu(katseluPack);
+} else {
+  const saved = loadGame();
+  if (saved) attach(saved);
+  else startGame();
+}
