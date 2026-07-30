@@ -162,10 +162,9 @@ const AFRICA_EDGES = [
   { a: 'orjarannikko', b: 'lagos', steps: 1 },
   { a: 'lagos', b: 'kamerun', steps: 1 },
   { a: 'gao', b: 'kano', steps: 3 },
-  // Sisämaasta rannikolle vain historiallista Lagosin rautatietä (1912)
-  // pitkin — Kano–Orjarannikko ja Kano–Kamerun poistettu haasteen
-  // vuoksi (omistajan päätös).
-  { a: 'kano', b: 'lagos', steps: 3 },
+  // Kanosta ei ole maareittiä rannikolle (omistajan päätös haasteen
+  // vuoksi): etelään pääsee vain lentäen Lagosiin — kuten oikeastikin
+  // rautatien tilalle tuli lentoyhteys.
   // Savannireitti itään kulkee Tšad-järven solmun kautta.
   { a: 'kano', b: 'tshadjarvi', steps: 2 },
   { a: 'tshadjarvi', b: 'bahrelghazal', steps: 3 },
