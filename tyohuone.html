@@ -412,7 +412,7 @@
   <script type="module">
     import { PACKS, packById } from './js/pack.js';
     import { AFRICA_VALOKUVAT, valokuvaUrl } from './js/packs/africa-valokuvat.js';
-    import { AFRICA_SAAPUMISET, AFRICA_SAAPUMISET_B } from './js/packs/africa-saapumiset.js';
+    import { AFRICA_SAAPUMISET } from './js/packs/africa-saapumiset.js';
     import { OMAT_ARTIKKELIT } from './js/packs/africa-artikkelit.js';
     import { AFRICA_KULTTUURI } from './js/packs/africa-kulttuuri.js';
 
@@ -481,21 +481,17 @@
       { id: 'v3intro', teksti: 'Uuden v3-intron ja avauslennon puheen arviointi (tempo, tunnelma).' },
       { id: 'tehosteet23', teksti: 'Kaikkien 23 tehosteäänen kuuntelu pelissä — ElevenLabs-generoinnit ovat nyt oletuksina, synteesi on valittavissa studiosta takaisin.' },
       { id: 'visamusiikki-afrikka', teksti: 'Afrikan visamusiikin valintasi (Mbira ja helistin) on nyt pelin oletus, joten se soi myös kotivalikon sovelluksessa — Safarin valinnat eivät sinne yllä. Tarkista että kuulostaa oikealta.' },
-      { id: 'saapumistekstit', teksti: 'Lue uudet saapumistekstit kaikkiin 32 kaupunkiin (Tekstit → Matkakirjan saapumiset) — luennat generoidaan vasta hyväksynnän jälkeen, pilotit Tanger ja Tripoli soivat jo.' },
-      { id: 'saapumis-ab', teksti: 'Vertaile Tangerin ja Tripolin A- ja B-saapumiset (Tekstit → Matkakirjan saapumiset): B:ssä nuoren herran osuudessa enemmän tunneilmaisua ja luenta ohjattu tunnetageilla. Kumpi suunta kaikkiin kaupunkeihin?' },
+      { id: 'saapumiset-valmiit', teksti: 'Uusi matkakirjamalli on nyt kaikissa 32 kaupungissa: tiivis tunteellinen kuvaus + isoisän nosto, luennat tunnetageilla. Kuuntele pelissä tai Tekstit → Matkakirjan saapumiset — merkitse korjattavat kommentilla.' },
       { id: 'kulttuurikokeilu', teksti: 'Testaa Kaupungin elämää -nostot: kuva aukeaa nyt isommaksi ja gnawaan tuli Kuuntele näyte -nappi (Marrakechin kenttä-äänitys, CC BY). Maloufille ei vielä löytynyt kunnollisella lisenssillä olevaa äänitettä — etsintä jatkuu.' },
       { id: 'artikkelipilotti', teksti: 'Lue lisää -artikkelit kirjoitettu itse pelin tyyliin Tangeriin ja Tripoliin (myös lyhytnostot) — jos hyvät, teen muihinkin kaupunkeihin.' },
       { id: 'postikorttiselitteet', teksti: 'Postikortteihin tuli parin lauseen selitteet ja pienempi lähderivi — silmäile Kuvat-välilehdeltä tai pelissä.' },
       { id: 'brandikirja', teksti: 'Brändikirjan läpiluku ja täydennys omin sanoin (Brändikirja-välilehti).' },
       { id: 'tekstit', teksti: 'Tekstit-välilehden läpiluku: kaikki pelin tekstit yhdessä paikassa — merkitse korjattavat kommentilla.' },
-      { id: 'saapumisluennat', teksti: 'Kuuntele saapumisluennat: joka kaupungissa havainto tai isoisän muistelu luetaan nyt ääneen saapuessa.' },
       { id: 'tutkikortti', teksti: 'Arvioi uusi Tutki-kortti: maan lippu, pelityylinen minikartta ja omat suomitiivistelmät (10 paikkaa joilta fi-wiki puuttui).' },
       { id: 'valokuvat', teksti: 'Vanhojen valokuvien läpikäynti Kuvat-välilehdellä (22 kaupunkia) — merkitse vaihdettavat kommentilla.' },
       { id: 'introteksti', teksti: 'Avausteksti: jos muutat sitä, generoin puheen uusiksi samalla kertaa — pyydä minulta.' },
     ];
     const TYOJONO = [
-      { id: 'saapumisluennat30', teksti: 'Saapumisluentojen generointi 30 kaupunkiin (ElevenLabs, Viisas Kertoja, tunteella) heti kun saapumistekstit on luettu ja hyväksytty.' },
-      { id: 'lentojouhevointi', teksti: 'Maailmankartan lentoanimaation jouhevointi: kone kulkee reittiä yhä nykien — tasoitetaan seuraavassa erässä (omistajan ohje: vasta tämän julkaisun jälkeen).' },
       { id: 'maloufaani', teksti: 'Libyalaisen malouf-musiikin äänilähteen etsintä jatkuu — Commonsissa ja archive.orgissa ei toistaiseksi kunnollisella lisenssillä olevaa äänitettä.' },
       { id: 'intropuhe', teksti: 'Avaustekstin puheen uusinta ElevenLabsilla, kun uusi teksti on valmis. Nykyisen tiedoston kova loppureuna (töks) pehmennetään toistossa, joten uusintaa ei tarvita ennen tekstimuutosta.' },
       { id: 'tyokalu', teksti: 'Seuraava työkalu: kartta-apuri tai kehityspaneeli (?dev=1) — ks. Työkalut-välilehti.' },
@@ -1049,35 +1045,19 @@
       // generointia), omat artikkelit ja nostot, valokuvien selitteet ja
       // kulttuurinostot. Rivit tulevat suoraan paketeista, eivät kopioina.
       if (p.id === 'africa') {
-        const luennat = new Set(['tanger', 'tripoli']);
-        const soitin = (osoite, nimio) => `<span class="meta">${nimio}</span> `
+        // Lopullinen tyyli (30.7. A/B-vertailun jälkeen): tiivis tunteellinen
+        // kuvaus + isoisän nosto, luenta tunnetageilla joka kaupungissa.
+        const soitin = (osoite) => '<span class="meta">Luenta:</span> '
           + `<audio controls preload="none" src="${osoite}" style="vertical-align: middle; height: 28px; max-width: 100%;"></audio>`;
         for (const c of p.cities) {
           const s = AFRICA_SAAPUMISET[c.id];
           if (!s) continue;
-          const tila = luennat.has(c.id)
-            ? 'luenta valmis (pilotti)'
-            : 'odottaa lukukierrosta — luenta generoidaan hyväksynnän jälkeen';
-          const rivi = [
-            `<b>[${c.name}]</b> <span class="meta">${tila}</span>`,
+          lisaa('saapumiset', [
+            `<b>[${c.name}]</b>`,
             `<b>${s.kuvaus}</b>`,
             s.nosto,
-          ];
-          if (luennat.has(c.id)) {
-            rivi.push(soitin(`assets/audio/puhe-africa-saapuminen-${c.id}.mp3`, 'Luenta A:'));
-          }
-          lisaa('saapumiset', rivi.join('<br>'));
-          // B-versio: sama saapuminen enemmällä tunneilmaisulla — omistaja
-          // vertailee A:ta ja B:tä ja valitsee suunnan kaikille kaupungeille.
-          const b = AFRICA_SAAPUMISET_B[c.id];
-          if (b) {
-            lisaa('saapumiset', [
-              `<b>[${c.name} — vaihtoehto B]</b> <span class="meta">enemmän tunneilmaisua, ohjaa myös lukijan ääntä</span>`,
-              `<b>${b.kuvaus}</b>`,
-              b.nosto,
-              soitin(`assets/audio/puhe-africa-saapuminen-${c.id}-b.mp3`, 'Luenta B:'),
-            ].join('<br>'));
-          }
+            soitin(`assets/audio/puhe-africa-saapuminen-${c.id}.mp3`),
+          ].join('<br>'));
         }
         for (const [otsikko, a] of Object.entries(OMAT_ARTIKKELIT)) {
           lisaa('artikkelit', `<b>[${otsikko} — lyhytnosto]</b> ${a.intro}`);
