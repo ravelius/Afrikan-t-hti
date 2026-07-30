@@ -92,8 +92,10 @@ export const EHDOKKAAT = {
   },
   'musiikki:tietovisa:africa': {
     otsikko: 'Afrikka',
-    // Ilman valintaa peritään yleinen — siksi ei omaa oletusta.
-    oletus: null,
+    // Omistajan valinta (30.7.) kirjattu oletukseksi: näin se soi myös
+    // kotivalikkoon asennetussa pelissä, jonka tallennustila on eri kuin
+    // Safarin, jossa studio pyörii.
+    oletus: 'assets/audio/musiikki-visa-afrikka-3.mp3',
     ehdokkaat: [
       { url: 'assets/audio/musiikki-visa-afrikka-1.mp3', nimi: 'Kalimba-mietiskely — ElevenLabs-luuppi' },
       { url: 'assets/audio/musiikki-visa-afrikka-2.mp3', nimi: 'Kora-harppu — ElevenLabs-luuppi' },
@@ -476,6 +478,19 @@ export function valittuAani(slot) {
  * tallennetaan tyhjänä merkkijonona, jotta se eroaa poistetusta
  * valinnasta (oletus).
  */
+/**
+ * Valinta tai slotin oletus: selaimeen tallennettu valinta voittaa, mutta
+ * ilman sitä palataan EHDOKKAAT-oletukseen. Tärkeä erityisesti
+ * kotivalikkoon asennetussa pelissä, jonka tallennustila on eri kuin
+ * Safarin — sinne studio-valinnat eivät kulje, oletukset kulkevat.
+ * Tyhjä merkkijono ('' = ääni valittu pois) kunnioitetaan sellaisenaan.
+ */
+export function valittuTaiOletus(slot) {
+  const arvo = valittuAani(slot);
+  if (arvo !== null) return arvo;
+  return EHDOKKAAT[slot]?.oletus ?? null;
+}
+
 export function valitseAani(slot, url) {
   try {
     const valinnat = JSON.parse(localStorage.getItem(AVAIN) ?? '{}');

@@ -8,7 +8,7 @@
 // CC-lisensoituja äänitteitä.
 
 import { sfx } from './sound.js';
-import { valittuAani, jaaAlku, tyyppiKori } from './aani-ehdokkaat.js';
+import { valittuTaiOletus, jaaAlku, tyyppiKori } from './aani-ehdokkaat.js';
 
 // Maisematyypin arvontakorista arvottu ääni pysyy samana koko käynnin
 // ajan: syncAmbience kutsuu playPlaceAmbiencea jokaisella piirrolla,
@@ -131,9 +131,11 @@ export function startQuizMusic(lauta) {
   // päällekkäin täydellä voimalla oli puuroa.
   if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
   if (!sfx.enabled || musiikki) return;
-  // Maanosan oma valinta voittaa; ilman sitä soi yleinen valinta.
-  let valinta = lauta ? valittuAani(`musiikki:tietovisa:${lauta}`) : null;
-  if (valinta == null) valinta = valittuAani('musiikki:tietovisa');
+  // Maanosan oma valinta tai oletus voittaa; ilman kumpaakaan soi
+  // yleinen. Oletukset kulkevat koodin mukana, joten ne toimivat myös
+  // kotivalikkoon asennetussa pelissä, jonne selainvalinnat eivät yllä.
+  let valinta = lauta ? valittuTaiOletus(`musiikki:tietovisa:${lauta}`) : null;
+  if (valinta == null) valinta = valittuTaiOletus('musiikki:tietovisa');
   if (valinta === '') return; // musiikki valittu pois
   const asetus = jaaAlku(valinta);
   const audio = new Audio(asetus.url ?? QUIZ_MUSIC.url);
