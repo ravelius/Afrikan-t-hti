@@ -7452,6 +7452,42 @@ function valokuvaUrl(tiedosto, leveys) {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
 }
 
+// ===== js/packs/africa-saapumiset.js =====
+// Matkakirjan saapumistekstit uudella mallilla (pilotti: Tanger ja
+// Tripoli — omistajan päätös, laajennetaan kaikkiin jos malli toimii):
+//
+//  - `kuvaus` on nuoren herran tuore fiilis paikasta. Se näkyy
+//    lihavoituna ja lukija lukee koko merkinnän ääneen tunteella.
+//  - `nosto` päättää merkinnän isoisän kirjan lainaukseen niin, että
+//    lähde käy ilmi tekstistä itsestään — erillistä otsikkoa ei ole.
+//
+// Teksti ei vaihdu kaupungissa olon aikana. Luenta on generoitu
+// ElevenLabsilla (Viisas Kertoja, v3 tunnetageilla) tiedostoon
+// assets/audio/puhe-africa-saapuminen-<kaupunki>.mp3.
+const AFRICA_SAAPUMISET = {
+  tanger: {
+    kuvaus: 'Laiva kääntyi lahteen ja Tanger nousi vastaan kuin katsomo: '
+      + 'valkoiset talot kiipeävät rinnettä, minareetti niiden yllä, ja '
+      + 'satamassa sellainen huuto ja touhu, että sydän löi tahtia perässä. '
+      + 'Seisoin kannella suolainen tuuli kasvoilla enkä olisi halunnut '
+      + 'kiirehtiä mihinkään — kahden meren ja kahden mantereen portti '
+      + 'avautui juuri minulle.',
+    nosto: 'Isoisän kirjassa on tästä satamasta vain yksi lause: "Täältä '
+      + 'Afrikka alkaa, ja täällä sitä on turha yrittää ymmärtää kiireellä." '
+      + 'Ukko osasi sittenkin pysähtyä.',
+  },
+  tripoli: {
+    kuvaus: 'Tripoliin tullaan aavikon ja meren välistä: kaupunki makaa '
+      + 'kalliolla kuin laivan keula, ja valkoiset muurit hehkuvat '
+      + 'auringossa niin, että silmiä täytyy siristää. Kujilta tuoksuu '
+      + 'suola, savu ja jasmiini, ja jossain muurien takana kilahtavat '
+      + 'karavaanin kellot kuin lupaus pitkästä matkasta.',
+    nosto: 'Isoisä kirjoitti nähneensä täällä, kuinka aavikon karavaanit '
+      + 'purkavat lastinsa suoraan laivoihin — "kaksi maailmaa kättelee '
+      + 'laiturilla", hän merkitsi. Sama kädenpuristus näkyy satamassa yhä.',
+  },
+};
+
 // ===== js/packs/africa.js =====
 // Afrikka-lauta: kaupungit, reitit, kartan piirtotiedot ja teema.
 //
@@ -30103,6 +30139,9 @@ function chooseDuelAnswer(game) {
 // ===== js/ui.js =====
 // Käyttöliittymä: aarrekartan piirto, ohjauspaneeli, tietovisa ja bottien ohjaus.
 
+// Uuden mallin saapumistekstit laudoittain (pilotti: Afrikka).
+const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET };
+
 // Vanhat valokuvat muistikirjan kylkeen laudoittain — toistaiseksi vain
 // Afrikalla on kuvasto.
 const VALOKUVAT = { africa: AFRICA_VALOKUVAT };
@@ -31728,6 +31767,41 @@ class UI {
       // lukisi eri tekstiä kuin ruudulla näkyy.
       if (document.body.classList.contains('flight-active')) return;
       const kaupunki = game.board.cityById.get(saapuminen.cityId);
+
+      // Uusi malli (pilotti): nuoren herran fiiliskuvaus lihavoituna,
+      // perässä isoisän nosto, ja lukija lukee koko merkinnän tunteella.
+      // Teksti ei vaihdu kaupungissa olon aikana.
+      const uusi = (SAAPUMISTEKSTIT[saapuminen.packId] ?? {})[saapuminen.cityId];
+      if (uusi && kaupunki) {
+        const key = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
+        if (this.factKey === key) return;
+        this.factKey = key;
+        this.factVoiceEl.textContent = 'Matkakirjasta';
+        this.factPlace.textContent = kaupunki.name;
+        this.factImageTitle = null;
+        this.factImage.hidden = true;
+        this.naytaFactValokuva(saapuminen.cityId, kaupunki.name);
+        this.factText.textContent = '';
+        const lihava = html('b', 'fact-lead');
+        const jatko = html('span');
+        this.factText.appendChild(lihava);
+        this.factText.appendChild(document.createTextNode(' '));
+        this.factText.appendChild(jatko);
+        this.typeText(lihava, uusi.kuvaus, 'fact', () => {
+          this.typeText(jatko, uusi.nosto, 'fact');
+        });
+        this.diaryFullUrl = `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`;
+        this.factKuuntele.hidden = false;
+        if (this.luettuSaapuminen !== key) {
+          this.luettuSaapuminen = key;
+          // Koko merkintä luetaan — ei pysähdystä ensimmäiseen virkkeeseen.
+          this.playDiaryVoice(this.diaryFullUrl);
+        } else {
+          this.stopDiaryVoice();
+        }
+        return;
+      }
+
       const faktat = game.pack.placeFacts?.[saapuminen.cityId] ?? [];
       const isoisanIdx = faktat.findIndex((f) => factVoice(f) === 'isoisa');
       const fakta = faktat[isoisanIdx >= 0 ? isoisanIdx : 0];
@@ -33600,7 +33674,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.58';
+const APP_VERSION = '2026-07-30.59';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
