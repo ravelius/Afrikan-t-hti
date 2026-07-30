@@ -517,11 +517,11 @@ test('kaupunkiin pääsee ilman tasalukua, reitille vain täydellä heitolla', (
     }
   }
 
-  // Tripoli on neljän askelen päässä: sinne pääsee myös viitosella ja kuutosella.
+  // Karthago on neljän askelen päässä: sinne pääsee myös viitosella ja kuutosella.
   for (const die of [4, 5, 6]) {
-    assert.ok(findMoves(board, start, die, { mode: 'land' }).has('c:tripoli'), `heitto ${die}`);
+    assert.ok(findMoves(board, start, die, { mode: 'land' }).has('c:karthago'), `heitto ${die}`);
   }
-  assert.ok(!findMoves(board, start, 3, { mode: 'land' }).has('c:tripoli'));
+  assert.ok(!findMoves(board, start, 3, { mode: 'land' }).has('c:karthago'));
 });
 
 test('matkustustapa rajaa käytettävät reitit', () => {
@@ -540,13 +540,13 @@ test('matkustustapa rajaa käytettävät reitit', () => {
 });
 
 test('kesken reitin ei saa kääntyä takaisin', () => {
-  const pos = { type: 'edge', edge: 'tanger|tripoli', idx: 2 };
+  const pos = { type: 'edge', edge: 'tanger|karthago', idx: 2 };
   const moves = findMoves(board, pos, 2, { mode: 'land' });
   const keys = [...moves.keys()].sort();
-  assert.deepEqual(keys, ['c:tanger', 'c:tripoli']);
+  assert.deepEqual(keys, ['c:karthago', 'c:tanger']);
   assert.ok(!moves.has(posKey(pos)), 'lähtöruutuun ei jäädä');
   // Kahdella askeleella molempiin päihin: kumpikaan ei vaadi peruutusta.
-  assert.equal(moves.get('c:tripoli').path.length, 2);
+  assert.equal(moves.get('c:karthago').path.length, 2);
 });
 
 // Käyttöliittymän "Jalan"-nappi tekee molemmat askeleet yhdellä painalluksella
@@ -567,7 +567,7 @@ test('maavalinnan ja nopanheiton saa ketjuttaa yhdellä painalluksella', () => {
 
 test('kesken reittiä matkustustapa lukittuu ja valitaan automaattisesti', () => {
   const game = newGame(11);
-  game.player.pos = { type: 'edge', edge: 'tanger|tripoli', idx: 2, from: 'tanger' };
+  game.player.pos = { type: 'edge', edge: 'tanger|karthago', idx: 2, from: 'tanger' };
   assert.deepEqual(game.travelModes(), ['land'], 'reitin varrella ei ole valinnanvaraa');
 
   game.beginTurn();
@@ -1411,8 +1411,8 @@ test('väärä vastaus päättää vuoron ja seuraavalla vuorolla saa uuden kysy
 
 test('vuoro etenee: matkustustapa, noppa, siirto ja vasta sitten tietovisa', () => {
   const game = newGame(31);
-  // Pelaaja on askeleen päässä Tripolista, joten aarrekaupunki on varmasti tarjolla.
-  game.player.pos = { type: 'edge', edge: 'tanger|tripoli', idx: 3 };
+  // Pelaaja on askeleen päässä Karthagosta, joten aarrekaupunki on varmasti tarjolla.
+  game.player.pos = { type: 'edge', edge: 'tanger|karthago', idx: 3 };
   assert.equal(game.phase, 'action');
   assert.deepEqual(game.travelModes(), ['land'], 'reitillä matka jatkuu maitse');
 
@@ -1483,7 +1483,7 @@ test('matkustustapa valitaan automaattisesti kun vaihtoehtoja ei ole', () => {
   assert.equal(game.actionCancelTravel().ok, false, 'peruutettavaa ei ole');
 
   // Kesken reittiä matka jatkuu samalla tavalla ilman kysymistä.
-  game.player.pos = { type: 'edge', edge: 'tanger|tripoli', idx: 1 };
+  game.player.pos = { type: 'edge', edge: 'tanger|karthago', idx: 1 };
   game.phase = 'action';
   game.beginTurn();
   assert.equal(game.phase, 'roll');
@@ -1651,7 +1651,7 @@ test('kokemuspisteitä kertyy uusista paikoista, ei uudelleen käynneistä', () 
   assert.equal(p.xp, ennen + XP_NEW_CITY);
 
   // Reitin varrella ei olla missään kaupungissa.
-  p.pos = { type: 'edge', edge: 'tanger|tripoli', idx: 2 };
+  p.pos = { type: 'edge', edge: 'tanger|karthago', idx: 2 };
   assert.equal(game.visitCity(p), 0);
 });
 
