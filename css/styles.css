@@ -579,11 +579,21 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /*
  * Vanha valokuva muistikirjan kyljessä: pieni vedos valkoisin reunuksin
- * kellumassa tekstin oikealla puolella. Napautus avaa sen postikorttina.
+ * tekstin oikeassa laidassa, ja teksti kiertää sen. Kääre tarvitaan,
+ * koska kortti on pystyflex eikä kelluminen toimi suoraan sen lapsissa.
  */
+.fact-teksti-rivi {
+  /* Kääre perii tekstin vieritysroolin kortin pystyflexissä. */
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .fact-valokuva {
   float: right;
-  margin: 0.1rem 0 0.3rem 0.55rem;
+  width: auto;
+  margin: 0.15rem 0 0.35rem 0.55rem;
   padding: 3px 3px 7px;
   background: #f8f3e6;
   border: 0;
@@ -643,10 +653,45 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * ohut jakoviiva ja pieni maaetiketti erottavat sen kaupungin
  * esittelystä samalla hillityllä tyylillä.
  */
+/*
+ * Kaupunki ja maa vierekkäin (omistajan toive): leveällä ruudulla kortti
+ * levenee kahteen palstaan, kapealla palstat putoavat allekkain. Ilman
+ * maaosiota (muut laudat) kortti pysyy kapeana yksipalstaisena.
+ */
+.arrival-card:has(#arrival-maa:not([hidden])) {
+  max-width: min(92vw, 700px);
+}
+
+.arrival-palstat {
+  display: flex;
+  gap: 1.1rem;
+  align-items: flex-start;
+}
+
+.arrival-palsta {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .arrival-maa {
-  border-top: 1px dashed rgba(70, 51, 31, 0.35);
-  margin: 0.15rem 0 0.3rem;
-  padding-top: 0.5rem;
+  flex: 1 1 0;
+  min-width: 0;
+  border-left: 1px dashed rgba(70, 51, 31, 0.35);
+  padding-left: 1.1rem;
+  margin: 0.1rem 0 0.3rem;
+}
+
+/* Kapealla ruudulla palstat allekkain ja jakoviiva takaisin vaakaan. */
+@media (max-width: 640px) {
+  .arrival-palstat { flex-direction: column; gap: 0; }
+  .arrival-palsta, .arrival-maa { flex: 0 0 auto; width: 100%; }
+  .arrival-maa {
+    border-left: 0;
+    border-top: 1px dashed rgba(70, 51, 31, 0.35);
+    padding-left: 0;
+    padding-top: 0.5rem;
+    margin-top: 0.15rem;
+  }
 }
 
 .arrival-maa-rivi {
@@ -2134,15 +2179,14 @@ body.katselu #newgame-btn { display: none; }
  * huomaamaton, mutta riittää kertomaan mikä versio on käytössä. */
 .versio-kulma {
   position: fixed;
-  /* Selvästi sisempänä, ei kiinni vasemmassa reunassa. Selaimessa numero
-   * istuu alakehyksen kaistalla, asennetussa sovelluksessa pergamentilla. */
+  /* Numero lepää kartan pergamentilla (omistajan toive) — ei kehyksen
+   * rajalla, jossa se jäi puoliksi piiloon. Väri on kartan mustetta. */
   left: max(1.3rem, calc(env(safe-area-inset-left, 0px) + 0.9rem));
-  bottom: 0.12rem;
+  bottom: max(0.95rem, calc(env(safe-area-inset-bottom, 0px) + 0.7rem));
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
-  /* Numero lepää tumman alakehyksen päällä kaikissa tiloissa. */
-  color: rgba(240, 226, 196, 0.5);
+  color: rgba(70, 51, 31, 0.55);
   pointer-events: none;
 }
 

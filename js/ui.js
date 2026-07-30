@@ -2234,6 +2234,7 @@ export class UI {
     this.stopIntroVoice();
     const audio = new Audio('assets/audio/intro-puhe.mp3');
     audio.volume = 0.9;
+    this.pehmeaLoppu(audio);
     this.introVoice = audio;
     audio.play().catch(() => {
       const aloita = () => {
@@ -2265,7 +2266,12 @@ export class UI {
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
     audio.volume = 0.9;
+    this.pehmeaLoppu(audio);
     this.diaryVoice = audio;
+    // Kirjanpito kaikista luennoista: pysäytys hiljentää myös sellaisen
+    // äänen, joka ei enää ole diaryVoice mutta soi yhä.
+    (this.luennat ??= new Set()).add(audio);
+    audio.addEventListener('ended', () => this.luennat?.delete(audio));
     if (ekaLauseeseen) {
       this.lauseTauko(url, osuus).then((raja) => {
         if (this.diaryVoice !== audio || raja == null) return;
@@ -2282,7 +2288,12 @@ export class UI {
         audio.addEventListener('timeupdate', vahti);
       });
     }
-    audio.play().catch(() => {
+    audio.play().then(() => {
+      // play() on asynkroninen: jos luenta ehti vaihtua tai pysähtyä
+      // käynnistyksen aikana, myöhässä herännyt ääni pysäytetään heti —
+      // muuten kaksi luentaa soi päällekkäin (omistajan havainto).
+      if (this.diaryVoice !== audio) audio.pause();
+    }).catch(() => {
       if (this.diaryVoice === audio) this.diaryVoice = null;
     });
   }
@@ -2357,12 +2368,53 @@ export class UI {
     return this.lauseTauot.get(avain);
   }
 
+  /**
+   * Pehmeä loppu puhetiedostoille: viimeinen neljännessekunti häivytetään
+   * ja toisto pysäytetään juuri ennen tiedoston reunaa. ElevenLabsin
+   * tiedosto päättyy keskeltä signaalia, ja kova reuna kuului pienenä
+   * töksähdyksenä (omistajan havainto etusivulla) — pehmennys tehdään
+   * toistossa, joten tiedostoja ei tarvinnut generoida uusiksi.
+   */
+  pehmeaLoppu(audio) {
+    const perus = audio.volume;
+    let rampissa = false;
+    const rullaa = () => {
+      if (audio.paused || !audio.duration) {
+        rampissa = false;
+        audio.volume = perus;
+        return;
+      }
+      const jaljella = audio.duration - audio.currentTime;
+      if (jaljella <= 0.06) {
+        audio.pause();
+        rampissa = false;
+        return;
+      }
+      if (jaljella < 0.3) {
+        audio.volume = perus * Math.max(0, (jaljella - 0.05) / 0.25);
+      }
+      requestAnimationFrame(rullaa);
+    };
+    // timeupdate on liian harva häivytykseen (~4 krt/s): se vain
+    // käynnistää tiheän rampin, kun loppu lähestyy.
+    audio.addEventListener('timeupdate', () => {
+      if (rampissa || !audio.duration) return;
+      if (audio.duration - audio.currentTime < 1.2) {
+        rampissa = true;
+        requestAnimationFrame(rullaa);
+      }
+    });
+  }
+
   stopDiaryVoice() {
-    const vanha = this.diaryVoice;
     this.diaryVoice = null;
-    if (!vanha) return;
-    vanha.pause();
-    vanha.removeAttribute('src');
+    // Kaikki luennat kiinni — myös mahdollinen myöhästelijä, joka ei
+    // enää ollut diaryVoice mutta soi yhä.
+    for (const audio of this.luennat ?? []) {
+      audio.pause();
+      audio.removeAttribute('src');
+    }
+    this.luennat?.clear();
   }
 
   /** Passidialogi: leimat ruudukossa, vanhin ensin. */
