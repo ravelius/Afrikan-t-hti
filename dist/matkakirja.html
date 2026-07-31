@@ -317,6 +317,7 @@ button, .brand, .turn-pill, .fact-card h2 {
 }
 
 /* Varjo jää laudan pintaan, kun noppa nousee ilmaan. */
+/* Sumennus on vakio: die.js animoi vain skaalaa ja peittoa. */
 .die-shadow {
   position: absolute;
   left: 0;
@@ -326,6 +327,7 @@ button, .brand, .turn-pill, .fact-card h2 {
   border-radius: 50%;
   background: radial-gradient(ellipse at 42% 42%, rgba(44, 27, 10, 0.85), rgba(44, 27, 10, 0) 70%);
   opacity: 0.44;
+  filter: blur(4px);
   will-change: transform, opacity;
 }
 
@@ -1705,7 +1707,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 /* --- kartta --- */
 
 .paper { fill: url(#paper-grad); }
-.grain { filter: url(#grain); opacity: 0.5; mix-blend-mode: multiply; pointer-events: none; }
+/* Rakeisuus on nyt valmiiksi piirretty laatta (js/mapart.js grainTile),
+   ei elävä suodatin. Sekoitustila saa jäädä: pelkkä multiply ilman
+   suodatinta on halpa. */
+.grain { opacity: 0.5; mix-blend-mode: multiply; pointer-events: none; }
 .vignette { fill: url(#vignette-grad); pointer-events: none; }
 
 .graticule { stroke: #9d8253; stroke-width: 1; opacity: 0.28; fill: none; }
@@ -2079,6 +2084,12 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   stroke: #b08a3c;
   stroke-width: 2;
   animation: none;
+  /*
+   * Ei hehkusuodatinta lähtöpisteen valinnassa: siellä rengas piirretään
+   * joka kaupungille, eli Afrikassa lähes neljäkymmentä suodatinpintaa
+   * yhtä aikaa. Kullanruskea rengas erottuu pergamentilta ilmankin.
+   */
+  filter: none;
 }
 
 .target:hover .target-ring.pick { fill: rgba(176, 138, 60, 0.18); }
@@ -2152,6 +2163,13 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   stroke-width: 3;
   transform-box: fill-box;
   transform-origin: center;
+  /*
+   * Sykähdys osoittaa, missä matkaaja on. Se on kartan SVG:n sisällä,
+   * joten jokainen sykähdys pakottaa koko suodatetun kartan piirtymään
+   * uudelleen — mitattuna 15 fps vastaan 60 fps. Siksi se vaikenee
+   * isojen animaatioiden ajaksi (ks. .animaatio-kaynnissa alla):
+   * silloin katse on nopassa tai koneessa, ei nappulassa.
+   */
   animation: pawn-pulse 1.8s ease-out infinite;
 }
 
@@ -2160,6 +2178,14 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   70% { transform: scale(1.5); opacity: 0; }
   100% { transform: scale(1.5); opacity: 0; }
 }
+
+/*
+ * Isojen animaatioiden ajaksi kartan päällä ei saa olla mitään jatkuvaa:
+ * yksikin sykkivä elementti suodatetun kartan päällä pudottaa
+ * ruudunpäivityksen 15 fps:ään. js/ui.js lisää tämän luokan nopanheiton,
+ * lentoanimaation ja nappulan siirron ajaksi.
+ */
+.animaatio-kaynnissa .pawn-pulse { animation: none; opacity: 0; }
 
 .pawn-moving { transition: transform 0.19s cubic-bezier(0.34, 1.3, 0.64, 1); }
 
@@ -33565,7 +33591,10 @@ class BoardDie {
       `translate3d(${(x + 7 + z * 0.07).toFixed(1)}px, ${(y + 6 + z * 0.03).toFixed(1)}px, 0) `
       + `translate(-50%, -50%) scale(${(1 + t * 0.9).toFixed(3)})`;
     this.shadow.style.opacity = (0.44 - t * 0.3).toFixed(3);
-    this.shadow.style.filter = `blur(${(1.5 + t * 6).toFixed(1)}px)`;
+    // Sumennus on vakio (css .die-shadow). Aiemmin säde kasvoi korkeuden
+    // mukaan joka kehyksellä, jolloin selain ei voinut käyttää valmista
+    // rasteria vaan sumensi varjon uudelleen jokaisella ruudulla. Skaala ja
+    // peitto yllä antavat saman vaikutelman kompositorin läpi.
   }
 
   /** Siirtää nopan lepopaikalleen ilman animaatiota (esim. ikkunan koon muuttuessa). */
@@ -34078,6 +34107,67 @@ function outlinePaths(map) {
 }
 
 /** Suodattimet ja liukuvärit, joilla paperi ja mustejälki saavat elävän pinnan. */
+// Rakeisuuslaatan koko laudan koordinaateissa. Riittävän suuri, ettei
+// toisto erotu, ja riittävän pieni, että laatta pysyy kevyenä.
+const GRAIN_TILE = 160;
+let grainTileUrl = null;
+
+/**
+ * Piirtää paperin kuituhäiriön kerran canvakselle ja palauttaa sen
+ * data-osoitteena. Sävy ja voimakkuus vastaavat vanhaa feTurbulence-
+ * suodatinta: ruskea (0.45, 0.36, 0.22) ja alfa 0.3 kohinan mukaan.
+ *
+ * Kohina lasketaan kolmella oktaavilla, jotta pinta on samalla tavalla
+ * pehmeän epätasainen kuin fractalNoise eikä pelkkää valkoista kohinaa.
+ */
+function grainTile() {
+  if (grainTileUrl) return grainTileUrl;
+  const koko = 256; // laatan tarkkuus pikseleinä
+  const canvas = document.createElement('canvas');
+  canvas.width = koko;
+  canvas.height = koko;
+  const ctx = canvas.getContext('2d');
+  const kuva = ctx.createImageData(koko, koko);
+
+  // Toistuva kohina: arvo lasketaan hilasta, joka kiertää laatan reunan yli,
+  // jotta saumaa ei näy.
+  const oktaavi = (x, y, jako, siemen) => {
+    const gx = Math.floor(x / jako);
+    const gy = Math.floor(y / jako);
+    const fx = (x / jako) - gx;
+    const fy = (y / jako) - gy;
+    const solmu = (ix, iy) => {
+      const kx = ((ix % (koko / jako)) + (koko / jako)) % (koko / jako);
+      const ky = ((iy % (koko / jako)) + (koko / jako)) % (koko / jako);
+      return hash01(`grain:${siemen}:${kx}:${ky}`);
+    };
+    // Pehmennyskäyrä, jotta hilan solmut eivät näy ruudukkona.
+    const u = fx * fx * (3 - 2 * fx);
+    const v = fy * fy * (3 - 2 * fy);
+    const a = solmu(gx, gy);
+    const b = solmu(gx + 1, gy);
+    const c = solmu(gx, gy + 1);
+    const d = solmu(gx + 1, gy + 1);
+    return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
+  };
+
+  for (let y = 0; y < koko; y++) {
+    for (let x = 0; x < koko; x++) {
+      const n = oktaavi(x, y, 2, 'a') * 0.55
+        + oktaavi(x, y, 4, 'b') * 0.3
+        + oktaavi(x, y, 8, 'c') * 0.15;
+      const i = (y * koko + x) * 4;
+      kuva.data[i] = 115;      // 0.45 * 255
+      kuva.data[i + 1] = 92;   // 0.36 * 255
+      kuva.data[i + 2] = 56;   // 0.22 * 255
+      kuva.data[i + 3] = Math.round(n * 0.3 * 255);
+    }
+  }
+  ctx.putImageData(kuva, 0, 0);
+  grainTileUrl = canvas.toDataURL('image/png');
+  return grainTileUrl;
+}
+
 function drawDefs(svg) {
   const defs = el('defs', {}, svg);
 
@@ -34102,15 +34192,26 @@ function drawDefs(svg) {
     xChannelSelector: 'R', yChannelSelector: 'G',
   }, roughSoft);
 
-  // Paperin kuitupinta.
-  const grain = el('filter', { id: 'grain' }, defs);
-  el('feTurbulence', {
-    type: 'fractalNoise', baseFrequency: '0.8', numOctaves: 4, seed: 3, result: 'grain',
-  }, grain);
-  el('feColorMatrix', {
-    type: 'matrix',
-    values: '0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 0.3 0',
-  }, grain);
+  // Paperin kuitupinta laattana. Aiemmin tämä oli feTurbulence-suodatin,
+  // joka peitti koko ruudun ja sekoittui multiplyllä kaiken päälle. Se
+  // maksoi mittausten mukaan koko pelin ruudunpäivityksen: selain joutui
+  // laskemaan kohinan ja sekoituksen uudelleen joka kerta kun mikä tahansa
+  // sen alla liikkui — 15 fps pysyvästi, myös silloin kun mitään ei
+  // tapahtunut. Kohina on staattista, joten se piirretään kerran laataksi
+  // ja toistetaan kuviona. Ulkonäkö on sama, hinta nolla.
+  const kuvio = el('pattern', {
+    id: 'grain-kuvio',
+    patternUnits: 'userSpaceOnUse',
+    width: GRAIN_TILE,
+    height: GRAIN_TILE,
+  }, defs);
+  el('image', {
+    href: grainTile(),
+    x: 0,
+    y: 0,
+    width: GRAIN_TILE,
+    height: GRAIN_TILE,
+  }, kuvio);
 
   const paper = el('radialGradient', { id: 'paper-grad', cx: '50%', cy: '46%', r: '62%' }, defs);
   el('stop', { offset: '0%', 'stop-color': '#f6e7c6' }, paper);
@@ -34152,7 +34253,10 @@ function drawParchment(svg) {
 
 /** Paperin rakeisuus ja tummuvat reunat piirretään päällimmäiseksi. */
 function drawPaperOverlay(svg) {
-  el('rect', { x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'grain' }, svg);
+  el('rect', {
+    x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h,
+    class: 'grain', fill: 'url(#grain-kuvio)',
+  }, svg);
   el('rect', {
     x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'vignette',
   }, svg);
@@ -37906,12 +38010,19 @@ class UI {
       label.textContent = c.name;
     }
 
+    // Paperin rakeisuus ja tummuvat reunat piirretään kartan päälle mutta
+    // liikkuvien kerrosten ALLE. Aiemmin tämä oli päällimmäisenä, ja koska
+    // rakeisuus sekoittuu multiply-tilassa, selain joutui lukemaan taustan
+    // takaisin ja sekoittamaan uudelleen joka kerta kun nappula, laatta tai
+    // lentokone liikkui sen alla. Kartta näyttää samalta, mutta liikkuvat
+    // osat eivät enää maksa koko ruudun sekoitusta.
+    drawPaperOverlay(svg);
+
     this.tokenLayer = el('g', { class: 'tokens' }, root);
     this.targetLayer = el('g', { class: 'targets' }, root);
     this.pawnLayer = el('g', { class: 'pawns' }, root);
     // Lentoanimaatio piirtyy kaiken päälle: kone ja sen perässä kulkeva viiva.
     this.flightLayer = el('g', { class: 'flight' }, root);
-    drawPaperOverlay(svg);
   }
 
   /**
@@ -40844,6 +40955,11 @@ class UI {
    */
   async animateFlight(fromLabel, toLabel, line = null, dir = null) {
     if (this.reducedMotion) return;
+    return this.isoAnimaatio(() => this.animateFlightSisalla(fromLabel, toLabel, line, dir));
+  }
+
+  /** Lennon varsinainen piirto; kääre yllä hiljentää kartan animaatiot. */
+  async animateFlightSisalla(fromLabel, toLabel, line = null, dir = null) {
 
     const overlay = html('div', 'flight-overlay');
     const scene = el('svg', { viewBox: '0 0 1000 560', class: 'flight-scene' }, overlay);
@@ -41039,6 +41155,11 @@ class UI {
 
   /** Siirtää nappulaa askel kerrallaan annettua polkua pitkin. */
   async animatePawn(player, from, path, stepMs = STEP_MS) {
+    return this.isoAnimaatio(() => this.animatePawnSisalla(player, from, path, stepMs));
+  }
+
+  /** Nappulan varsinainen siirto; kääre yllä hiljentää kartan animaatiot. */
+  async animatePawnSisalla(player, from, path, stepMs = STEP_MS) {
     if (!path || path.length === 0) return;
     const { board } = this.game;
 
@@ -41066,6 +41187,29 @@ class UI {
   }
 
   /** Nopanheitto: noppa lentää nappulan vierestä laudalle ja jää siihen. */
+  /**
+   * Ajaa isoja animaatioita: kartan päällä ei saa sinä aikana olla mitään
+   * jatkuvaa. Yksikin sykkivä elementti suodatetun kartan päällä pakottaa
+   * kartan piirtymään uudelleen joka kehyksellä (mitattu 15 fps vastaan
+   * 60 fps), ja juuri isot animaatiot ovat ne, joissa se näkyy nykimisenä.
+   *
+   * Laskuri eikä lippu, koska animaatiot voivat mennä sisäkkäin: lento
+   * kutsuu nappulan siirtoa omansa sisällä.
+   */
+  async isoAnimaatio(tehtava) {
+    this.isojaAnimaatioita = (this.isojaAnimaatioita ?? 0) + 1;
+    document.body.classList.add('animaatio-kaynnissa');
+    try {
+      return await tehtava();
+    } finally {
+      this.isojaAnimaatioita -= 1;
+      if (this.isojaAnimaatioita <= 0) {
+        this.isojaAnimaatioita = 0;
+        document.body.classList.remove('animaatio-kaynnissa');
+      }
+    }
+  }
+
   async animateDie(value) {
     if (!value) return;
     this.dieEl.hidden = true;
@@ -41077,12 +41221,12 @@ class UI {
     const to = this.dieRestingSpot();
     this.dieThrown = true;
 
-    await this.boardDie.roll(value, from, to, {
+    await this.isoAnimaatio(() => this.boardDie.roll(value, from, to, {
       reduced: this.reducedMotion,
       onTick: () => sfx.play('dieTick'),
       onLand: () => sfx.play('dieLand'),
       onBounce: () => sfx.play('clack'),
-    });
+    }));
     this.turnStatus.textContent = `Heitit ${value} — valitse kohde kartalta.`;
     await this.wait(this.reducedMotion ? 0 : 260);
   }
@@ -41181,7 +41325,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.110';
+const APP_VERSION = '2026-07-30.111';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

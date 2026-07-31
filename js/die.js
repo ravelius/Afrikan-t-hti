@@ -114,7 +114,10 @@ export class BoardDie {
       `translate3d(${(x + 7 + z * 0.07).toFixed(1)}px, ${(y + 6 + z * 0.03).toFixed(1)}px, 0) `
       + `translate(-50%, -50%) scale(${(1 + t * 0.9).toFixed(3)})`;
     this.shadow.style.opacity = (0.44 - t * 0.3).toFixed(3);
-    this.shadow.style.filter = `blur(${(1.5 + t * 6).toFixed(1)}px)`;
+    // Sumennus on vakio (css .die-shadow). Aiemmin säde kasvoi korkeuden
+    // mukaan joka kehyksellä, jolloin selain ei voinut käyttää valmista
+    // rasteria vaan sumensi varjon uudelleen jokaisella ruudulla. Skaala ja
+    // peitto yllä antavat saman vaikutelman kompositorin läpi.
   }
 
   /** Siirtää nopan lepopaikalleen ilman animaatiota (esim. ikkunan koon muuttuessa). */

@@ -1203,12 +1203,19 @@ export class UI {
       label.textContent = c.name;
     }
 
+    // Paperin rakeisuus ja tummuvat reunat piirretään kartan päälle mutta
+    // liikkuvien kerrosten ALLE. Aiemmin tämä oli päällimmäisenä, ja koska
+    // rakeisuus sekoittuu multiply-tilassa, selain joutui lukemaan taustan
+    // takaisin ja sekoittamaan uudelleen joka kerta kun nappula, laatta tai
+    // lentokone liikkui sen alla. Kartta näyttää samalta, mutta liikkuvat
+    // osat eivät enää maksa koko ruudun sekoitusta.
+    drawPaperOverlay(svg);
+
     this.tokenLayer = el('g', { class: 'tokens' }, root);
     this.targetLayer = el('g', { class: 'targets' }, root);
     this.pawnLayer = el('g', { class: 'pawns' }, root);
     // Lentoanimaatio piirtyy kaiken päälle: kone ja sen perässä kulkeva viiva.
     this.flightLayer = el('g', { class: 'flight' }, root);
-    drawPaperOverlay(svg);
   }
 
   /**
@@ -4142,6 +4149,11 @@ export class UI {
    */
   async animateFlight(fromLabel, toLabel, line = null, dir = null) {
     if (this.reducedMotion) return;
+    return this.isoAnimaatio(() => this.animateFlightSisalla(fromLabel, toLabel, line, dir));
+  }
+
+  /** Lennon varsinainen piirto; kääre yllä hiljentää kartan animaatiot. */
+  async animateFlightSisalla(fromLabel, toLabel, line = null, dir = null) {
 
     const overlay = html('div', 'flight-overlay');
     const scene = el('svg', { viewBox: '0 0 1000 560', class: 'flight-scene' }, overlay);
@@ -4337,6 +4349,11 @@ export class UI {
 
   /** Siirtää nappulaa askel kerrallaan annettua polkua pitkin. */
   async animatePawn(player, from, path, stepMs = STEP_MS) {
+    return this.isoAnimaatio(() => this.animatePawnSisalla(player, from, path, stepMs));
+  }
+
+  /** Nappulan varsinainen siirto; kääre yllä hiljentää kartan animaatiot. */
+  async animatePawnSisalla(player, from, path, stepMs = STEP_MS) {
     if (!path || path.length === 0) return;
     const { board } = this.game;
 
@@ -4364,6 +4381,29 @@ export class UI {
   }
 
   /** Nopanheitto: noppa lentää nappulan vierestä laudalle ja jää siihen. */
+  /**
+   * Ajaa isoja animaatioita: kartan päällä ei saa sinä aikana olla mitään
+   * jatkuvaa. Yksikin sykkivä elementti suodatetun kartan päällä pakottaa
+   * kartan piirtymään uudelleen joka kehyksellä (mitattu 15 fps vastaan
+   * 60 fps), ja juuri isot animaatiot ovat ne, joissa se näkyy nykimisenä.
+   *
+   * Laskuri eikä lippu, koska animaatiot voivat mennä sisäkkäin: lento
+   * kutsuu nappulan siirtoa omansa sisällä.
+   */
+  async isoAnimaatio(tehtava) {
+    this.isojaAnimaatioita = (this.isojaAnimaatioita ?? 0) + 1;
+    document.body.classList.add('animaatio-kaynnissa');
+    try {
+      return await tehtava();
+    } finally {
+      this.isojaAnimaatioita -= 1;
+      if (this.isojaAnimaatioita <= 0) {
+        this.isojaAnimaatioita = 0;
+        document.body.classList.remove('animaatio-kaynnissa');
+      }
+    }
+  }
+
   async animateDie(value) {
     if (!value) return;
     this.dieEl.hidden = true;
@@ -4375,12 +4415,12 @@ export class UI {
     const to = this.dieRestingSpot();
     this.dieThrown = true;
 
-    await this.boardDie.roll(value, from, to, {
+    await this.isoAnimaatio(() => this.boardDie.roll(value, from, to, {
       reduced: this.reducedMotion,
       onTick: () => sfx.play('dieTick'),
       onLand: () => sfx.play('dieLand'),
       onBounce: () => sfx.play('clack'),
-    });
+    }));
     this.turnStatus.textContent = `Heitit ${value} — valitse kohde kartalta.`;
     await this.wait(this.reducedMotion ? 0 : 260);
   }
