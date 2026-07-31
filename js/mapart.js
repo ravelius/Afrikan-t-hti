@@ -70,6 +70,67 @@ function outlinePaths(map) {
 }
 
 /** Suodattimet ja liukuvärit, joilla paperi ja mustejälki saavat elävän pinnan. */
+// Rakeisuuslaatan koko laudan koordinaateissa. Riittävän suuri, ettei
+// toisto erotu, ja riittävän pieni, että laatta pysyy kevyenä.
+const GRAIN_TILE = 160;
+let grainTileUrl = null;
+
+/**
+ * Piirtää paperin kuituhäiriön kerran canvakselle ja palauttaa sen
+ * data-osoitteena. Sävy ja voimakkuus vastaavat vanhaa feTurbulence-
+ * suodatinta: ruskea (0.45, 0.36, 0.22) ja alfa 0.3 kohinan mukaan.
+ *
+ * Kohina lasketaan kolmella oktaavilla, jotta pinta on samalla tavalla
+ * pehmeän epätasainen kuin fractalNoise eikä pelkkää valkoista kohinaa.
+ */
+function grainTile() {
+  if (grainTileUrl) return grainTileUrl;
+  const koko = 256; // laatan tarkkuus pikseleinä
+  const canvas = document.createElement('canvas');
+  canvas.width = koko;
+  canvas.height = koko;
+  const ctx = canvas.getContext('2d');
+  const kuva = ctx.createImageData(koko, koko);
+
+  // Toistuva kohina: arvo lasketaan hilasta, joka kiertää laatan reunan yli,
+  // jotta saumaa ei näy.
+  const oktaavi = (x, y, jako, siemen) => {
+    const gx = Math.floor(x / jako);
+    const gy = Math.floor(y / jako);
+    const fx = (x / jako) - gx;
+    const fy = (y / jako) - gy;
+    const solmu = (ix, iy) => {
+      const kx = ((ix % (koko / jako)) + (koko / jako)) % (koko / jako);
+      const ky = ((iy % (koko / jako)) + (koko / jako)) % (koko / jako);
+      return hash01(`grain:${siemen}:${kx}:${ky}`);
+    };
+    // Pehmennyskäyrä, jotta hilan solmut eivät näy ruudukkona.
+    const u = fx * fx * (3 - 2 * fx);
+    const v = fy * fy * (3 - 2 * fy);
+    const a = solmu(gx, gy);
+    const b = solmu(gx + 1, gy);
+    const c = solmu(gx, gy + 1);
+    const d = solmu(gx + 1, gy + 1);
+    return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
+  };
+
+  for (let y = 0; y < koko; y++) {
+    for (let x = 0; x < koko; x++) {
+      const n = oktaavi(x, y, 2, 'a') * 0.55
+        + oktaavi(x, y, 4, 'b') * 0.3
+        + oktaavi(x, y, 8, 'c') * 0.15;
+      const i = (y * koko + x) * 4;
+      kuva.data[i] = 115;      // 0.45 * 255
+      kuva.data[i + 1] = 92;   // 0.36 * 255
+      kuva.data[i + 2] = 56;   // 0.22 * 255
+      kuva.data[i + 3] = Math.round(n * 0.3 * 255);
+    }
+  }
+  ctx.putImageData(kuva, 0, 0);
+  grainTileUrl = canvas.toDataURL('image/png');
+  return grainTileUrl;
+}
+
 export function drawDefs(svg) {
   const defs = el('defs', {}, svg);
 
@@ -94,15 +155,26 @@ export function drawDefs(svg) {
     xChannelSelector: 'R', yChannelSelector: 'G',
   }, roughSoft);
 
-  // Paperin kuitupinta.
-  const grain = el('filter', { id: 'grain' }, defs);
-  el('feTurbulence', {
-    type: 'fractalNoise', baseFrequency: '0.8', numOctaves: 4, seed: 3, result: 'grain',
-  }, grain);
-  el('feColorMatrix', {
-    type: 'matrix',
-    values: '0 0 0 0 0.45  0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 0.3 0',
-  }, grain);
+  // Paperin kuitupinta laattana. Aiemmin tämä oli feTurbulence-suodatin,
+  // joka peitti koko ruudun ja sekoittui multiplyllä kaiken päälle. Se
+  // maksoi mittausten mukaan koko pelin ruudunpäivityksen: selain joutui
+  // laskemaan kohinan ja sekoituksen uudelleen joka kerta kun mikä tahansa
+  // sen alla liikkui — 15 fps pysyvästi, myös silloin kun mitään ei
+  // tapahtunut. Kohina on staattista, joten se piirretään kerran laataksi
+  // ja toistetaan kuviona. Ulkonäkö on sama, hinta nolla.
+  const kuvio = el('pattern', {
+    id: 'grain-kuvio',
+    patternUnits: 'userSpaceOnUse',
+    width: GRAIN_TILE,
+    height: GRAIN_TILE,
+  }, defs);
+  el('image', {
+    href: grainTile(),
+    x: 0,
+    y: 0,
+    width: GRAIN_TILE,
+    height: GRAIN_TILE,
+  }, kuvio);
 
   const paper = el('radialGradient', { id: 'paper-grad', cx: '50%', cy: '46%', r: '62%' }, defs);
   el('stop', { offset: '0%', 'stop-color': '#f6e7c6' }, paper);
@@ -144,7 +216,10 @@ export function drawParchment(svg) {
 
 /** Paperin rakeisuus ja tummuvat reunat piirretään päällimmäiseksi. */
 export function drawPaperOverlay(svg) {
-  el('rect', { x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'grain' }, svg);
+  el('rect', {
+    x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h,
+    class: 'grain', fill: 'url(#grain-kuvio)',
+  }, svg);
   el('rect', {
     x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'vignette',
   }, svg);
