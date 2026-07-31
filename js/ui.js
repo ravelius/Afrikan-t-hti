@@ -24,7 +24,7 @@ import { drawPuzzle } from './packs/africa-puzzles.js';
 import { OMAT_TIIVISTELMAT } from './packs/africa-tiivistelmat.js';
 import { OMAT_ARTIKKELIT } from './packs/africa-artikkelit.js';
 import { AFRICA_MAATIEDOT } from './packs/africa-maatiedot.js';
-import { AFRICA_VALOKUVAT, valokuvaUrl } from './packs/africa-valokuvat.js';
+import { AFRICA_VALOKUVAT, lippuUrl, valokuvaUrl } from './packs/africa-valokuvat.js';
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
 import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
 import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
@@ -185,7 +185,7 @@ const OMAT_GALLERIAT = {
   'Victoria-järvi': [
     { tiedosto: 'Sunset at Lake Victoria.jpg', caption: 'Auringonlasku Victorianjärvellä' },
     { tiedosto: 'Boats by the Lake Victoria Shore.jpg', caption: 'Kalastajaveneitä järven rannassa' },
-    { tiedosto: 'Fishing boats on Lake Victoria.jpg', caption: 'Kalastajia aamulla' },
+    { tiedosto: 'Fishing on lake Victoria 01.jpg', caption: 'Kalastajia aamulla' },
     { tiedosto: 'Lake Victoria as visible from Kisumu City.jpg', caption: 'Järvi Kisumun kaupungista nähtynä' },
     { tiedosto: 'Still Life with Stork and Fishing Boats - Along Shore of Lake Victoria - Entebbe - Uganda.jpg', caption: 'Marabu ja veneitä Entebben rannassa' },
     { tiedosto: 'Sunset on lake Victoria in kisumu.jpg', caption: 'Ilta Kisumussa' },
@@ -405,6 +405,9 @@ export class UI {
       .addEventListener('click', (e) => { e.stopPropagation(); selaaKuvaa(-1); });
     document.getElementById('arrival-kuva-seuraava')
       .addEventListener('click', (e) => { e.stopPropagation(); selaaKuvaa(1); });
+    this.arrivalImage.addEventListener('error', () => {
+      this.pudotaRikkiKuva(this.arrivalKuvat, this.arrivalImage, 'arrival');
+    });
     this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
@@ -501,6 +504,9 @@ export class UI {
       .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(-1); });
     document.getElementById('wiki-kuva-seuraava')
       .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(1); });
+    this.wikiImage.addEventListener('error', () => {
+      this.pudotaRikkiKuva(this.wikiKuvat, this.wikiImage, 'wiki');
+    });
     this.factImage = document.getElementById('fact-image');
     this.factImage.addEventListener('click', () => {
       if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
@@ -2360,7 +2366,7 @@ export class UI {
       this.arrivalMaaLippu.hidden = true;
       if (maa.lippu) {
         this.arrivalMaaLippu.alt = `${maa.nimi} — lippu`;
-        this.arrivalMaaLippu.src = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(maa.lippu)}?width=96`;
+        this.arrivalMaaLippu.src = lippuUrl(maa.lippu, 96);
       } else {
         this.arrivalMaaLippu.removeAttribute('src');
       }
@@ -2503,8 +2509,9 @@ export class UI {
       osa.appendChild(document.createTextNode(`${t.teksti} `));
       const lippu = document.createElement('img');
       lippu.alt = t.kieli;
-      lippu.loading = 'lazy';
-      lippu.src = valokuvaUrl(t.lippu, 40);
+      // Ei loading="lazy": liput ovat repossa ja pikkuruisia, ja laiska
+      // lataus jätti ne dialogin sisällä toisinaan kokonaan lataamatta.
+      lippu.src = lippuUrl(t.lippu, 40);
       lippu.addEventListener('error', () => lippu.remove());
       osa.appendChild(lippu);
       // Karkea puhujaosuus kielen perässä (omistajan kokeilu).
@@ -2915,6 +2922,37 @@ export class UI {
       ? `${this.wikiKuvaKohdalla + 1}/${this.wikiKuvat.length}` : '';
     document.getElementById('wiki-kuva-edellinen').hidden = !monta;
     document.getElementById('wiki-kuva-seuraava').hidden = !monta;
+  }
+
+  /**
+   * Latausvirhe ei saa jättää rikkinäisen kuvan merkkiä galleriaan:
+   * Commonsista voi kadota tiedosto (uudelleennimeäminen tai poisto), ja
+   * silloin kelaus vain jää jumiin kysymysmerkkiin. Pudotetaan kuva
+   * listalta ja näytetään seuraava; jos kuvia ei jää yhtään, koko kotelo
+   * piilotetaan. Lista lyhenee joka virheellä, joten ketju päättyy.
+   */
+  pudotaRikkiKuva(lista, kuva, mika) {
+    const nyt = kuva.getAttribute('src');
+    if (!nyt) return;
+    const sama = (s) => new URL(s, location.href).href === new URL(nyt, location.href).href;
+    const kohta = lista.findIndex((k) => sama(k.src));
+    if (kohta < 0) return;
+    lista.splice(kohta, 1);
+    const kotelo = mika === 'wiki' ? this.wikiKuvakotelo : this.arrivalKuvakotelo;
+    if (!lista.length) {
+      kuva.removeAttribute('src');
+      kotelo.hidden = true;
+      return;
+    }
+    if (mika === 'wiki') {
+      this.wikiKuvaKohdalla %= lista.length;
+      kuva.src = lista[this.wikiKuvaKohdalla].src;
+      this.paivitaWikiKuvaLaskuri();
+    } else {
+      this.arrivalKuvaKohdalla %= lista.length;
+      kuva.src = lista[this.arrivalKuvaKohdalla].src;
+      this.paivitaKuvaLaskuri();
+    }
   }
 
   /** Pikkukuvan laskuri ja nuolet näkyvät vain, kun galleriassa on selattavaa. */

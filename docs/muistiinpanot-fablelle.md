@@ -154,7 +154,180 @@ jokidataa (kartalla on jo järviä) ja yölasit kaupunkien kokoluokat.
 
 ---
 
-## 3. Muuta kirjattavaa
+## 3. Ruudunpäivitys — korjattu Afrikalla, AVOIN muilla laudoilla
+
+**[Opus]** Omistaja huomasi, että lento- ja noppa-animaatiot tökkivät.
+Mittasin syyn Playwrightilla (PR #211): kartan päällä oli jatkuvia
+elementtejä, jotka pakottivat suodatetun kartan piirtymään uudelleen joka
+kehyksellä. Peli pyöri **15 fps:llä koko ajan**, myös kun mitään ei
+tapahtunut.
+
+Neljä korjausta tehty: rakeisuus laataksi ja liikkuvien kerrosten alle,
+sykähdys vaikenee isojen animaatioiden ajaksi, nopan varjon sumennus
+vakioksi, kohderenkaiden hehku pois. **Nopanheitto 15 fps → 60 fps.**
+
+**AVOIN: korjaus ei päde kaikkiin lautoihin.** Mittasin nopanheiton
+jokaisella laudalla neljästi, mittausjärjestys sekoitettuna. Tulokset ovat
+täysin toistettavia — sama lauta antaa saman luvun joka kerta:
+
+| Lauta | Nopanheitto |
+|---|---|
+| Afrikka, Oseania, Maailma, Istanbul, Lähi-itä | **60 fps** |
+| Pohjois-Amerikka | 15 fps |
+| Suomi, Etelä-Amerikka, Aasia, Eurooppa | 12 fps |
+
+**Syy ei ole tiedossa.** Se EI ole:
+
+- kartan monimutkaisuus — Oseania (12 ääriviivaa, 199 pistettä) on nopea,
+  Etelä-Amerikka (6 ääriviivaa, 156 pistettä) hidas
+- solmumäärä — kaikilla 366–667 solmua, ei korrelaatiota
+- maiden rajat tai `countryShapes` — Afrikalla on molemmat ja se on nopea,
+  Euroopalla `countryShapes` ja se on hidas
+- kohina mittauksessa — luvut toistuvat neljästi identtisinä
+
+En arvaa syytä. Seuraava askel olisi ottaa yksi hidas lauta (Suomi on
+pienin, 2 ääriviivaa ja 50 pistettä) ja poistaa siitä kerroksia yksi
+kerrallaan, kunnes fps hyppää — sama menetelmä, jolla `.grain` löytyi.
+
+**Huom.** Omistajan mukaan vain Afrikka on sisällöltään ja toiminnoiltaan
+valmis, ja Eurooppa on seuraavana työn alla. Hitaat laudat ovat siis
+kaikki keskeneräisiä, joten korjaus ei ole kiireinen — mutta se kannattaa
+tehdä ennen kuin Eurooppa viimeistellään, ettei sama vika jää sinne.
+
+### 3b. Lentokohtaus on yhä hidas — AVOIN
+
+**[Omistaja]** "Esim yksinkertainen lento animaatio tökkii. Kone ei mene
+tasaisesti vaikka on yksinkertainen juttu."
+
+**[Opus]** Mittasin lentokalvon Afrikalla (sama lauta, jolla noppa pyörii
+60 fps:llä), viisi toistoa per rivi:
+
+| Kokoonpano | fps |
+|---|---|
+| ennen: ei sumennusta, rakeisuus päällä | 15 |
+| **nyt: sumennus + rakeisuus piilossa** | **15** |
+| ei sumennusta, rakeisuus piilossa | 20 |
+| sumennus + rakeisuus päällä | 12 |
+
+Eli lento pyörii **15–20 fps:llä eikä sitä ole korjattu.** Sumennus
+maksaa 5 fps, rakeisuuden piilotus tuo 3 takaisin; verkkoon meni siis
+sumennus ilman että nopeus huononi entisestään.
+
+**Mikä EI ole syy** (jokainen mitattu erikseen, ei vaikutusta):
+
+- kone (`display:none` koneelle → yhä 12 fps)
+- reittiviivan `stroke-dashoffset`-animaatio
+- kartan piilottaminen kalvon alta kokonaan
+- potkuriääni
+
+Kone ja reittiviiva lentävät jo WAAPI-animaatioina eivätkä rAF-silmukalla,
+ja reitti on esilaskettu taulukkoon — nekään eivät auttaneet. Jäljelle jää
+sama selittämätön 12–20 fps:n katto kuin hitailla laudoilla (kohta 3
+yllä). **Veikkaan että kyse on samasta viasta**, ja jos se löytyy, se
+korjaa molemmat. Sen etsiminen on oma pakettinsa.
+
+## 4. Tutki-ikkuna: rakenne yhteinen, sisältö lautakohtainen
+
+**[Opus]** Omistaja kysyi, päivittyvätkö Tutki-ikkunan muutokset kaikkiin
+lautoihin. Vastaus on kaksijakoinen:
+
+**Rakenne on yhteinen.** Yksi `<dialog id="arrival-dialog">`
+(`index.html`) ja yksi `openArrival` (`js/ui.js`). Asettelun, tyylin,
+nappien ja logiikan muutokset näkyvät kaikilla laudoilla heti.
+
+**Sisältö on lautakohtaista, ja siinä on vain kaksi lautaa.** `js/ui.js`
+rivit 38–47:
+
+```js
+const SAAPUMISTEKSTIT = { africa, europe };
+const KULTTUURIT      = { africa, europe };
+const VALOKUVAT       = { africa, europe };
+const MAATIEDOT       = { africa, europe };
+```
+
+Muut kahdeksan lautaa saavat tyhjän kortin: ei maatietoja, ei
+kulttuurilohkoa, ei vanhaa ja uutta valokuvaa. Tiivistelmät
+(`OMAT_TIIVISTELMAT`) ja artikkelit ovat vielä kapeampia — vain Afrikalle.
+
+Käytännössä: ulkonäkömuutos riittää tehdä kerran, sisältölaajennus on
+lauta kerrallaan (rivi noihin neljään tauluun plus oma datatiedosto).
+
+## 5. Commonsin kuvat eivät ole luotettavia — korjattu 1.8.2026
+
+**[Omistaja]** Kaksi havaintoa pelatessa: osa Tutki-ikkunan kuvista ei
+lataudu, eikä kielinäytteiden perässä näy lippua.
+
+**[Opus]** Kaksi eri syytä, molemmat korjattu versiossa 112.
+
+**Liput jäivät pois, koska Commons rajoittaa pyyntösarjoja.** Liput
+haettiin suoraan Commonsista (`Special:FilePath/...?width=40`).
+Saapumiskortti näyttää niitä neljä kerralla, ja mittauksissa Commons
+alkoi vastata **429 (liikaa pyyntöjä)** heti muutaman peräkkäisen
+haun jälkeen. Latausvirhe poisti lipun kortilta kokonaan, joten
+puuttuminen näytti sisältöpuutteelta vaikka oli verkkoasia.
+
+Korjaus: kaikki 36 lippua ovat nyt repossa (`assets/liput/`, yhteensä
+148 kt), haettu `tools/fetch-flags.mjs`:llä, ja niitä käytetään uuden
+`lippuUrl`-funktion kautta samaan tapaan kuin valokuvia. Samalla
+poistettiin `loading="lazy"` — se jätti liput dialogin sisällä
+toisinaan lataamatta kokonaan.
+
+**Yksi galleriakuva oli kuollut Commons-tiedosto.**
+`Fishing boats on Lake Victoria.jpg` (käsin valittu Victoria-järven
+galleria) palauttaa 404 — tiedosto on nimetty uudelleen tai poistettu.
+Korvattu toimivalla (`Fishing on lake Victoria 01.jpg`).
+
+**Yleisempi opetus.** Käsin valitut Commons-tiedostonimet vanhenevat
+ilman varoitusta. Siksi karuselli pudottaa nyt latausvirheen saaneen
+kuvan listalta ja näyttää seuraavan (`pudotaRikkiKuva` `js/ui.js`:ssä)
+sen sijaan että jäisi rikkinäisen kuvan merkkiin.
+
+**Kaikki kiinteät kuvat siirrettiin repoon.** Omistaja kysyi, voisiko
+wikikuvat ladata talteen. Kyllä — ja se tehtiin: pelissä on 117
+kiinteää kuvaviittausta, joista 80 oli jo repossa; loput 41 haettiin
+(`tools/fetch-photos.mjs`, 13 Mt). Nyt `assets/valokuvat` on 38 Mt ja
+kattaa kaikki kiinteät viittaukset. Yksikään niistä ei enää voi hajota
+Commonsin muutoksista.
+
+**Mikä jäi Commonsin varaan.** Tutki-ikkunan "Lue lisää" -galleria hakee
+kuvalistan Wikipedian rajapinnasta ajossa: lista riippuu artikkelista ja
+muuttuu kun Wikipedia muuttuu, joten sitä ei voi ladata etukäteen
+kattavasti. Service worker tallettaa ne omaan koriinsa ensimmäisen
+katselun jälkeen. Jos ne halutaan lukita, se on oma päätöksensä: peli
+lakkaisi seuraamasta Wikipediaa.
+
+**Service workerin asennus tehtiin kestäväksi.** `cache.addAll` on
+kaikki-tai-ei-mitään, ja välimuistiin menee nyt yli 80 Mt (äänet 41 Mt,
+kuvat 38 Mt). Yksikin katkennut lataus olisi kaatanut koko asennuksen.
+Nyt koodi ja tekstit haetaan yhtenä eränä ja media yksitellen niin, että
+yksi virhe ohitetaan.
+
+## 6. Nopan varjo — lyijykynää, ei valokuvaa
+
+**[Omistaja]** "Saisiko nopalle voimakkaamman varjon kun se on laudan
+päällä. Nyt näyttää kelluvalta." Ja heti perään: "Saisiko nopan varjosta
+lyijykynällä tehdyn näköisen kuin sarjakuvissa? Sopisi tyyliin. Sitä ei
+tarvitse animoida, riittää kun tulee kun noppa on pysähtynyt."
+
+**[Opus]** Kelluminen johtui geometriasta, ei väristä: varjoellipsi oli
+tasan nopan kokoinen ja vain 5 px siirtynyt, joten kuutio peitti sen
+kokonaan. Varjo on nyt leveämpi, matalampi ja `margin-top`illa nopan
+alareunan alle, jolloin se kurkistaa esiin.
+
+Lepovarjo on valmiiksi piirretty SVG-viivoitus
+(`tools/make-die-shadow.mjs` → data-URI CSS:ssä). Kolme asiaa, jotka
+kannattaa tietää jos sitä säätää:
+
+- **Viivoja on vähän ja ne ovat paksuja.** Kuvio piirtyy 45–75 pikselin
+  levyisenä; ensimmäinen versio 35 ohuella viivalla näytti harmaalta
+  udulta, ei kynänjäljeltä.
+- **Tummuus painottuu keskelle**, koska noppa peittää yläosan ja
+  näkyviin jää alareunan kaari.
+- **Blur-suodin poistui varjosta kokonaan.** Pehmeys tulee nyt
+  liukuvärjäyksestä. Suodin olisi sumentanut myös kynäviivoituksen,
+  koska `::after` on suodatetun elementin sisällä.
+
+## 7. Muuta kirjattavaa
 
 *(Tähän lisätään sitä mukaa kuin omistaja huomaa asioita pelatessa.)*
 

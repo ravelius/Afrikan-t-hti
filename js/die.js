@@ -111,13 +111,15 @@ export class BoardDie {
     // valo tulee vasemmalta ylhäältä kuten patinassakin.
     const t = Math.min(1, z / 240);
     this.shadow.style.transform =
-      `translate3d(${(x + 7 + z * 0.07).toFixed(1)}px, ${(y + 6 + z * 0.03).toFixed(1)}px, 0) `
+      `translate3d(${(x + 5 + z * 0.08).toFixed(1)}px, ${(y + 5 + z * 0.035).toFixed(1)}px, 0) `
       + `translate(-50%, -50%) scale(${(1 + t * 0.9).toFixed(3)})`;
-    this.shadow.style.opacity = (0.44 - t * 0.3).toFixed(3);
-    // Sumennus on vakio (css .die-shadow). Aiemmin säde kasvoi korkeuden
-    // mukaan joka kehyksellä, jolloin selain ei voinut käyttää valmista
-    // rasteria vaan sumensi varjon uudelleen jokaisella ruudulla. Skaala ja
-    // peitto yllä antavat saman vaikutelman kompositorin läpi.
+    // Laudalla varjo on vahva ja tiivis, ilmassa haalea ja levinnyt.
+    this.shadow.style.opacity = (0.82 - t * 0.62).toFixed(3);
+    // Varjossa ei ole blur-suodinta lainkaan: pehmeys tulee liukuvärjäyksestä
+    // (css .die-shadow). Aiemmin sumennussäde kasvoi korkeuden mukaan joka
+    // kehyksellä, jolloin selain ei voinut käyttää valmista rasteria vaan
+    // sumensi varjon uudelleen jokaisella ruudulla. Skaala ja peitto yllä
+    // antavat saman vaikutelman kompositorin läpi.
   }
 
   /** Siirtää nopan lepopaikalleen ilman animaatiota (esim. ikkunan koon muuttuessa). */

@@ -312,18 +312,30 @@ button, .brand, .turn-pill, .fact-card h2 {
 }
 
 /* Varjo jää laudan pintaan, kun noppa nousee ilmaan. */
-/* Sumennus on vakio: die.js animoi vain skaalaa ja peittoa. */
+/*
+ * Lennon aikana varjo on pelkkä pehmeä läiskä (radial-gradient on jo
+ * itsessään pehmeä, joten blur-suodinta ei tarvita — se maksaisi joka
+ * kehyksellä). Kun noppa pysähtyy, ::after piirtää päälle lyijykynällä
+ * vedetyn viivoituksen ja läiskä vaimenee taustalle.
+ */
 .die-shadow {
   position: absolute;
   left: 0;
   top: 0;
-  width: calc(var(--die-size) * 1.16);
-  height: calc(var(--die-size) * 0.72);
+  width: calc(var(--die-size) * 1.3);
+  height: calc(var(--die-size) * 0.58);
+  /* Varjo kurkistaa nopan alareunan alta: muuten kuutio peittää sen
+   * kokonaan ja noppa näyttää kelluvan laudan yllä. */
+  margin-top: calc(var(--die-size) * 0.32);
   border-radius: 50%;
-  background: radial-gradient(ellipse at 42% 42%, rgba(44, 27, 10, 0.85), rgba(44, 27, 10, 0) 70%);
+  background: radial-gradient(ellipse at 46% 42%, rgba(44, 27, 10, 0.8) 0 16%, rgba(44, 27, 10, 0) 74%);
   opacity: 0.44;
-  filter: blur(4px);
   will-change: transform, opacity;
+}
+
+/* Levossa kynävarjo on pääosassa, joten pehmeä läiskä väistyy taustalle. */
+.die-layer.levossa .die-shadow {
+  background: radial-gradient(ellipse at 46% 42%, rgba(44, 27, 10, 0.34) 0 22%, rgba(44, 27, 10, 0) 76%);
 }
 
 .die-cube {
@@ -393,28 +405,22 @@ button, .brand, .turn-pill, .fact-card h2 {
 }
 
 /*
- * Kynällä piirretty varjostus laudan pintaan: vinoviivoitus kuin
- * lyijykynän jälki. Piirtyy esiin vasta kun noppa on pysähtynyt
- * (die.js lisää levossa-luokan) — heiton aikana varjo on pelkkä
- * pehmeä läiskä.
+ * Lepovarjo on lyijykynällä vedetty vinoviivoitus kuin sarjakuvassa
+ * (omistajan toive). Kuvio on valmiiksi piirretty SVG, ei suodin eikä
+ * animaatio: se vain häivähtää esiin kun noppa on pysähtynyt (die.js
+ * lisää levossa-luokan). Kuvio on tuotettu komennolla
+ * `node tools/make-die-shadow.mjs` — muokkaa siellä, älä käsin.
  */
 .die-shadow::after {
   content: '';
   position: absolute;
-  inset: -8% -4%;
-  border-radius: 50%;
-  background: repeating-linear-gradient(
-    -38deg,
-    rgba(58, 40, 20, 0.55) 0 1.4px,
-    rgba(58, 40, 20, 0) 1.4px 4.6px
-  );
-  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 55% 57%, #000 48%, transparent 78%);
-  mask-image: radial-gradient(ellipse 50% 50% at 55% 57%, #000 48%, transparent 78%);
+  inset: -16% -9%;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20132%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%232c1e0e%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M7.9%2024.0Q16.3%2018.4%2028.0%2010.4%22%20stroke-width%3D%223.94%22%20opacity%3D%220.31%22%2F%3E%3Cpath%20d%3D%22M8.4%2030.8Q24.9%2020.2%2042.2%208.9%22%20stroke-width%3D%222.85%22%20opacity%3D%220.45%22%2F%3E%3Cpath%20d%3D%22M6.1%2036.5Q31.5%2020.5%2058.8%203.8%22%20stroke-width%3D%223.96%22%20opacity%3D%220.48%22%2F%3E%3Cpath%20d%3D%22M10.0%2040.7Q36.1%2024.5%2059.6%207.9%22%20stroke-width%3D%223.06%22%20opacity%3D%220.50%22%2F%3E%3Cpath%20d%3D%22M15.6%2042.8Q46.6%2024.4%2075.0%206.3%22%20stroke-width%3D%223.90%22%20opacity%3D%220.57%22%2F%3E%3Cpath%20d%3D%22M18.9%2047.0Q49.8%2028.8%2082.7%208.8%22%20stroke-width%3D%222.42%22%20opacity%3D%220.72%22%2F%3E%3Cpath%20d%3D%22M28.2%2047.5Q56.0%2028.9%2083.2%2012.4%22%20stroke-width%3D%222.57%22%20opacity%3D%220.74%22%2F%3E%3Cpath%20d%3D%22M34.5%2050.6Q64.5%2032.5%2090.6%2015.1%22%20stroke-width%3D%222.37%22%20opacity%3D%220.78%22%2F%3E%3Cpath%20d%3D%22M42.3%2050.6Q75.2%2032.0%20106.0%2011.6%22%20stroke-width%3D%224.19%22%20opacity%3D%220.82%22%2F%3E%3Cpath%20d%3D%22M43.6%2057.7Q76.2%2038.9%20106.9%2017.8%22%20stroke-width%3D%223.92%22%20opacity%3D%220.86%22%2F%3E%3Cpath%20d%3D%22M54.6%2054.9Q87.2%2036.6%20116.1%2018.1%22%20stroke-width%3D%223.57%22%20opacity%3D%220.69%22%2F%3E%3Cpath%20d%3D%22M60.4%2056.6Q90.2%2039.9%20118.2%2022.2%22%20stroke-width%3D%224.07%22%20opacity%3D%220.67%22%2F%3E%3Cpath%20d%3D%22M71.1%2057.7Q98.5%2040.4%20125.1%2023.9%22%20stroke-width%3D%222.49%22%20opacity%3D%220.61%22%2F%3E%3Cpath%20d%3D%22M85.5%2057.0Q105.8%2044.1%20127.1%2030.1%22%20stroke-width%3D%222.74%22%20opacity%3D%220.55%22%2F%3E%3Cpath%20d%3D%22M94.0%2057.3Q108.2%2048.2%20125.2%2037.0%22%20stroke-width%3D%223.13%22%20opacity%3D%220.50%22%2F%3E%3Cpath%20d%3D%22M44.3%2039.1Q60.8%2027.1%2080.8%2016.1%22%20stroke-width%3D%222.93%22%20opacity%3D%220.55%22%2F%3E%3Cpath%20d%3D%22M44.8%2043.7Q66.7%2029.7%2087.6%2017.7%22%20stroke-width%3D%223.20%22%20opacity%3D%220.47%22%2F%3E%3Cpath%20d%3D%22M63.3%2043.1Q81.0%2032.8%2099.8%2021.0%22%20stroke-width%3D%223.12%22%20opacity%3D%220.61%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / 100% 100% no-repeat;
   opacity: 0;
   transition: opacity 0.3s ease-out;
 }
 
-.die-layer.levossa .die-shadow::after { opacity: 0.6; }
+.die-layer.levossa .die-shadow::after { opacity: 0.88; }
 
 /* --- tapahtumaikkuna kartan päällä --- */
 
@@ -1812,12 +1818,31 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   /* Kalvon on oltava kelluvan alarivin (z-index 4) yläpuolella, muuten
    * rivin näkymättömät napit jäävät kalvon päälle nappaamaan napautuksia. */
   z-index: 7;
-  background: rgba(243, 231, 205, 0.68);
+  /*
+   * Kartta sumenee kalvon alla, jotta lentoreitti ja teksti erottuvat
+   * (omistajan toive). Ilman sumennusta kaupunkien nimet kilpailevat
+   * kortin kanssa ja silmä hakeutuu niihin.
+   *
+   * Sumennus maksaa mitatusti noin 5 fps lennon aikana (20 -> 15).
+   * Kokeilin myös staattista blur-suodinta itse kartalle backdropin
+   * sijaan: se maksoi saman verran, joten yksinkertaisempi jää.
+   */
+  background: rgba(243, 231, 205, 0.62);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
   display: flex;
   align-items: center;
   justify-content: center;
   animation: flight-overlay-in 0.35s ease;
 }
+
+/*
+ * Paperin rakeisuus pois lennon ajaksi. Se on mix-blend-mode-kerros koko
+ * ruudun kokoisena, ja jokainen koneen liike pakotti sen sekoittumaan
+ * uudelleen: mitattuna 12 -> 15 fps. Kalvon alla rakeisuus ei näy,
+ * koska päällä on läpikuultava pergamentti ja sumennus.
+ */
+body.flight-active .grain { display: none; }
 
 @keyframes flight-overlay-in { from { opacity: 0; } }
 
@@ -8935,27 +8960,36 @@ const EUROPE_ARTIKKELIT = {
 };
 
 // ===== js/packs/valokuvat-paikalliset.js =====
-// Matkakirjan valokuvien paikalliset kopiot (generoitu Commonsista,
-// leveys 1000 px). Peli käyttää näitä Commonsin sijaan: lataus on nopea
-// ja kuvat toimivat offline. Lähde ja lisenssi näkyvät selitteissä, ja
-// alkuperäinen tiedostonimi toimii yhä avaimena ja Commons-linkkinä.
+// Matkakirjan valokuvien paikalliset kopiot (generoitu: node tools/fetch-photos.mjs,
+// leveys 1000 px). Peli käyttää näitä Commonsin sijaan: lataus on nopea, kuvat
+// toimivat offline eivätkä hajoa jos Commonsista poistetaan tiedosto. Lähde ja
+// lisenssi näkyvät selitteissä, ja alkuperäinen tiedostonimi toimii yhä avaimena
+// ja Commons-linkkinä. Älä muokkaa käsin.
 const VALOKUVAT_PAIKALLISET = new Map([
+  ["006 Dune 45 in Sossusvlei at sunrise Photo by Giles Laurent.jpg", '006-dune-45-in-sossusvlei-at-sunrise-photo-by-giles-laurent.jpg'],
   ["01996 01434 Ruins of Antonine Baths at Carthage.jpg", 'uusi-karthago.jpg'],
   ["2014.11.29 - Tombeau des Askia.jpg", 'uusi-gao.jpg'],
   ["A giraffe with a beautiful background of Nairobi City Skyline.jpg", 'uusi-nairobi.jpg'],
+  ["Adansonia grandidieri04.jpg", 'adansonia-grandidieri04.jpg'],
   ["Adderley Street.jpg", 'uusi-kapkaupunki.jpg'],
   ["AddisView.jpg", 'uusi-addisabeba.jpg'],
   ["Analakely vu d'en haut, Madagascar.jpg", 'uusi-madagaskar.jpg'],
+  ["Antonio Vivaldi.jpg", 'antonio-vivaldi.jpg'],
   ["Arabs in Tripoli WDL2444.png", 'vanha-tripoli.png'],
   ["Assekrem Peaks at Sunset — Hoggar Mountains, Tamanrasset.jpg", 'uusi-ahaggar.jpg'],
   ["Big Hole Kimberley.jpg", 'uusi-kimberley.jpg'],
+  ["Bo-Kaap colourful houses (30114819980).jpg", 'bo-kaap-colourful-houses-30114819980.jpg'],
   ["Boats by the Lake Victoria Shore.jpg", 'uusi-viktoria.jpg'],
   ["British delegation Addis Abeba.jpg", 'vanha-addisabeba.jpg'],
   ["Bundesarchiv Bild 105-DOA0437, Deutsch-Ostafrika, Kilimandscharo, Gummiplantage.jpg", 'vanha-kilimandzaro.jpg'],
   ["Cairo-Hilton-Skyline.jpg", 'uusi-kairo.jpg'],
+  ["Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg", 'uusi-venetsia.jpg'],
+  ["Canal, Giovanni Antonio (Canaletto) - Return of the Bucentoro to the Molo on Ascension Day, c. 1733-4. Royal Collection Buckingham Palace.jpg", 'canal-giovanni-antonio-canaletto-return-of-the-bucentoro-to-.jpg'],
   ["Cape Town tram, Adderley Street - ca. 1900.jpg", 'vanha-kapkaupunki.jpg'],
   ["Cattle Wau Sudan.jpg", 'uusi-bahrelghazal.jpg'],
+  ["Cattle of the Dinka people, Juba, South Sudan - 20101230-05.jpg", 'cattle-of-the-dinka-people-juba-south-sudan-20101230-05.jpg'],
   ["Congo River from Kinshasa in Democratic Republic of the Congo (DRC).jpg", 'uusi-kongo.jpg'],
+  ["Cotton Tree (Sierra Leone).jpg", 'cotton-tree-sierra-leone.jpg'],
   ["Cotton Tree Railway Station 3.30 p.m. Bungalow Train, Freetown.jpg", 'vanha-sierraleone.jpg'],
   ["Cotton tree in Freetown, SL - Mapillary (yIBZ74r6IsUFOaWtAPwhWw).jpg", 'uusi-sierraleone.jpg'],
   ["Dakar mosque circa 1900.jpg", 'vanha-dakar.jpg'],
@@ -8963,47 +8997,77 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["ETH-BIB-Grabmal von Askia, Gao-Tschadseeflug 1930-31-LBS MH02-08-0548.tif", 'vanha-gao.jpg'],
   ["ETH-BIB-Ufer des Tschadsee-Tschadseeflug 1930-31-LBS MH02-08-0976.tif", 'vanha-tshadjarvi.jpg'],
   ["ElFasherDarfurSudan RomanDeckert18022015.jpg", 'uusi-darfur.jpg'],
+  ["ElFnarMarrakech2014.jpg", 'elfnarmarrakech2014.jpg'],
   ["Eremitage Foucauld (1991).jpg", 'vanha-ahaggar.jpg'],
   ["Erg Chebbi sunset.jpg", 'uusi-sahara.jpg'],
+  ["Ethiopian coffee ceremony.jpg", 'ethiopian-coffee-ceremony.jpg'],
+  ["Eyo masquerades. Lagos State, Nigeria.jpg", 'eyo-masquerades-lagos-state-nigeria.jpg'],
+  ["Fishermen on the shores of Lake Victoria.jpg", 'fishermen-on-the-shores-of-lake-victoria.jpg'],
+  ["Fishing on lake Victoria 01.jpg", 'fishing-on-lake-victoria-01.jpg'],
+  ["Frankincense 2005-12-31.jpg", 'frankincense-2005-12-31.jpg'],
   ["Ganuwa or Badala - Kano City Wall - Outside Sabuwar Kofa.jpg", 'uusi-kano.jpg'],
   ["Garesadihafun.jpg", 'vanha-rashafun.jpg'],
+  ["Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg", 'vanha-venetsia.jpg'],
   ["Gorée 2024 - Vue de Dakar - 17.jpg", 'uusi-dakar.jpg'],
   ["HEARD(1898) 50 Church of Harper, Cape Palmas.jpg", 'vanha-kappalmas.jpg'],
   ["Hafun from space.jpg", 'uusi-rashafun.jpg'],
   ["Harbour at the picturesque Stone Town.jpg", 'uusi-sansibar.jpg'],
   ["Harper, Liberia - panoramio (1).jpg", 'uusi-kappalmas.jpg'],
+  ["Henri Matisse, 1911-12, La Fenêtre à Tanger (Paysage vu d'une fenêtre Landscape viewed from a window, Tangiers), oil on canvas, 115 x 80 cm, Pushkin Museum.jpg", 'henri-matisse-1911-12-la-fenetre-a-tanger-paysage-vu-d-une-f.jpg'],
   ["ISS-50 Al-Jawf Oasis in Eastern Libya.jpg", 'uusi-alkufra.jpg'],
   ["Ilha de Mocambique.jpg", 'uusi-mosambik.jpg'],
+  ["Island of Gorée, Senegal.jpg", 'island-of-goree-senegal.jpg'],
   ["Jacob's Ladder near St. James Cathedral in Jamestown Saint Helena.jpg", 'uusi-sthelena.jpg'],
   ["Jules Leclercq- Aux sources du Nil-1913-chutes Ripon.jpg", 'vanha-viktoria.jpg'],
   ["Kairo, marchands ambulants LCCN2017657437.jpg", 'vanha-kairo.jpg'],
+  ["Kente cloth.jpg", 'kente-cloth.jpg'],
+  ["Kofar Mata Dye Pit, Kano.jpg", 'kofar-mata-dye-pit-kano.jpg'],
   ["Kufra (aeroview).jpg", 'vanha-alkufra.jpg'],
+  ["Kufra Oasis.jpg", 'kufra-oasis.jpg'],
   ["Kumasi 28-03-1900 sx.jpg", 'vanha-kumasi.jpg'],
   ["Kutubiyya Mosque, Marrakesh, Morocco, 20250124 1834 7027.jpg", 'uusi-marrakech.jpg'],
+  ["Lady of Carthage Mosaic (Bardo).jpg", 'lady-of-carthage-mosaic-bardo.jpg'],
   ["Lagos Island City Scape.jpg", 'uusi-lagos.jpg'],
   ["Lagos, 1929.jpg", 'vanha-lagos.jpg'],
   ["Lake Tanganyika ,Kigoma port.jpg", 'uusi-tanganjika.jpg'],
+  ["Lake Victoria as visible from Kisumu City.jpg", 'lake-victoria-as-visible-from-kisumu-city.jpg'],
+  ["LesEscales2019ManuDibango 03 (cropped).jpg", 'lesescales2019manudibango-03-cropped.jpg'],
+  ["Liberia, dan, maschera, xx sec. 01.JPG", 'liberia-dan-maschera-xx-sec-01.jpg'],
+  ["Libya 4924 Pictograms Tadrart Acacus Luca Galuzzi 2007.jpg", 'libya-4924-pictograms-tadrart-acacus-luca-galuzzi-2007.jpg'],
+  ["Libyan Malouf.jpg", 'libyan-malouf.jpg'],
   ["Livingstone steamer, Congo, ca. 1902-1915 (IMP-CSCNWW33-OS10-73).jpg", 'vanha-kongo.jpg'],
+  ["Longwood House le 12 janvier 2008.jpg", 'longwood-house-le-12-janvier-2008.jpg'],
+  ["Lunar Rainbow at Victoria Falls HP L2778e2.jpg", 'lunar-rainbow-at-victoria-falls-hp-l2778e2.jpg'],
   ["Lüderitz.jpg", 'uusi-namib.jpg'],
   ["Lüderitzbucht, Deutsch-Südwestafrika. The newly finished pier with an Illing locomotive, February 1908, photograph by de Meillon.jpg", 'vanha-namib.jpg'],
+  ["MV.Liemba.jpg", 'mv-liemba.jpg'],
   ["Marginal de Luanda HD Dji Mavic 3 Classic - By Délcio Geovany Borges.jpg", 'uusi-angola.jpg'],
   ["Marrakech Minaret depuis la rue animée - sap04 10l01821 p.jpg", 'vanha-marrakech.jpg'],
+  ["Masks of Africa of Chokwe people freigestellt.jpg", 'masks-of-africa-of-chokwe-people-freigestellt.jpg'],
   ["Memorial tablet marking the spot where Livingstone and Stanley met at Ujiji in 1871 ATLIB 305982.png", 'vanha-tanganjika.png'],
   ["Mission Marchand Haut-Oubangui Bahr-el-Ghazal Nil (...)Marchand Jean-Baptiste btv1b53198373d 4.jpg", 'vanha-bahrelghazal.jpg'],
   ["Modern market hall of Kejetia market.jpg", 'uusi-kumasi.jpg'],
   ["Mount Cameroon view from Buea (Soppo).jpg", 'uusi-kamerun.jpg'],
+  ["Mount Kilimanjaro.jpg", 'mount-kilimanjaro.jpg'],
   ["Murzuq - Festung Qala at Turk über dem Ort.jpg", 'uusi-murzuk.jpg'],
   ["Osmanisches Fort von Mursuk.jpg", 'vanha-murzuk.jpg'],
   ["Panorama Tanger Bay Tangier Marokko.jpg", 'uusi-tanger.jpg'],
   ["Panorama van de haven van Zanzibar Panorama of Zanzibar (titel op object) Zanzibar (titel op object), RP-F-F00999-DD.jpg", 'vanha-sansibar.jpg'],
   ["People gathered before a church, Cameroon, ca.1910-1920 (IMP-YDS-RG101-012-0000-0036).jpg", 'vanha-kamerun.jpg'],
+  ["Pescaria Rialto Venice.jpg", 'pescaria-rialto-venice.jpg'],
   ["Photograph of Kenyan Sikh pioneers in-front of Gurdwara Sahib Railway Landhies in Nairobi, Kenya, 1903.jpg", 'vanha-nairobi.jpg'],
   ["Planta da fortaleza da ilha de Moçambique, Leonardo de Ferrari, 1655.jpg", 'vanha-mosambik.jpg'],
   ["Porte du non-retour au Benin.jpg", 'uusi-orjarannikko.jpg'],
   ["Saint-Paul de Luanda, port de (l')Angola dans le Portugal africain (vue générale) - btv1b6932475d.jpg", 'vanha-angola.jpg'],
   ["Sankore Mosque in Timbuktu.jpg", 'uusi-timbuktu.jpg'],
+  ["Sanza Boa-Zaïre-Musée royal de l'Afrique centrale.jpg", 'sanza-boa-zaire-musee-royal-de-l-afrique-centrale.jpg'],
+  ["Still Life with Stork and Fishing Boats - Along Shore of Lake Victoria - Entebbe - Uganda.jpg", 'still-life-with-stork-and-fishing-boats-along-shore-of-lake-.jpg'],
   ["Suakin,custom office.jpg", 'uusi-suakin.jpg'],
+  ["Suakin,el-Geyf mosque.jpg", 'suakin-el-geyf-mosque.jpg'],
+  ["Sudan Jebel Marra Deriba Lakes edited.jpg", 'sudan-jebel-marra-deriba-lakes-edited.jpg'],
   ["Sultan Ali Dinar.jpg", 'vanha-darfur.jpg'],
+  ["Sunset at Lake Victoria.jpg", 'sunset-at-lake-victoria.jpg'],
+  ["Sunset on lake Victoria in kisumu.jpg", 'sunset-on-lake-victoria-in-kisumu.jpg'],
   ["São João Baptista de Ajudá 1920s.jpg", 'vanha-orjarannikko.jpg'],
   ["Tananarive-Temple d'Andohalo.jpg", 'vanha-madagaskar.jpg'],
   ["Tangier Grand Mosque 1900s.jpg", 'vanha-tanger.jpg'],
@@ -9012,14 +9076,60 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["The view of mountain Kilimanjaro from Moshi town in Tanzania.jpg", 'uusi-kilimandzaro.jpg'],
   ["TheLandingPlaceAtSuakim(Suakin)1871.jpg", 'vanha-suakin.jpg'],
   ["Timbuktu, 1906.png", 'vanha-timbuktu.png'],
+  ["Timbuktu-manuscripts-astronomy-mathematics.jpg", 'timbuktu-manuscripts-astronomy-mathematics.jpg'],
+  ["Tombeau askia.jpg", 'tombeau-askia.jpg'],
+  ["Tuareg z wielbłądem – widać miecz TAKOUBA - Sahara - 001165s.jpg", 'tuareg-z-wielb-adem-widac-miecz-takouba-sahara-001165s.jpg'],
   ["Tunisie, Carthage, cathédrale et séminaire de St Louis - btv1b53114044m.jpg", 'vanha-karthago.jpg'],
   ["Twee gezichten op de mijn Die Groot Gat te Kimberley Diamond fields-Kimberley mine (titel op object) Diamond fields-Tramway, Kimberley mine (titel op object), RP-F-2001-7-425-25.jpg", 'vanha-kimberley.jpg'],
+  ["Umm Kulthum4.jpg", 'umm-kulthum4.jpg'],
   ["Victoria Falls Bridge 1905.jpg", 'vanha-viktorianputoukset.jpg'],
   ["Victoria Falls Bridge and Zambezi river.jpg", 'uusi-viktorianputoukset.jpg'],
   ["View-Kano city-1911.jpg", 'vanha-kano.jpg'],
   ["Waving fisherman on Lake Chad (detilt).jpg", 'uusi-tshadjarvi.jpg'],
-  ["Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg", 'vanha-venetsia.jpg'],
-  ["Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg", 'uusi-venetsia.jpg'],
+  ["Zanzibar Taarab Kidumbak Ensemble.jpg", 'zanzibar-taarab-kidumbak-ensemble.jpg'],
+]);
+
+// ===== js/packs/liput-paikalliset.js =====
+// Lippujen paikalliset kopiot (generoitu: node tools/fetch-flags.mjs).
+// Avain on Commonsin tiedostonimi, arvo tiedosto kansiossa assets/liput.
+// Älä muokkaa käsin.
+const LIPUT_PAIKALLISET = new Map([
+  ["Berber flag.svg", 'berber-flag.png'],
+  ["Flag of Algeria.svg", 'algeria.png'],
+  ["Flag of Angola.svg", 'angola.png'],
+  ["Flag of Cameroon.svg", 'cameroon.png'],
+  ["Flag of Chad.svg", 'chad.png'],
+  ["Flag of Egypt.svg", 'egypt.png'],
+  ["Flag of Ethiopia.svg", 'ethiopia.png'],
+  ["Flag of France.svg", 'france.png'],
+  ["Flag of Germany.svg", 'germany.png'],
+  ["Flag of Ghana.svg", 'ghana.png'],
+  ["Flag of Italy.svg", 'italy.png'],
+  ["Flag of Kenya.svg", 'kenya.png'],
+  ["Flag of Liberia.svg", 'liberia.png'],
+  ["Flag of Libya.svg", 'libya.png'],
+  ["Flag of Madagascar.svg", 'madagascar.png'],
+  ["Flag of Mali.svg", 'mali.png'],
+  ["Flag of Morocco.svg", 'morocco.png'],
+  ["Flag of Mozambique.svg", 'mozambique.png'],
+  ["Flag of Namibia.svg", 'namibia.png'],
+  ["Flag of Nigeria.svg", 'nigeria.png'],
+  ["Flag of Portugal.svg", 'portugal.png'],
+  ["Flag of Sardinia, Italy.svg", 'sardinia-italy.png'],
+  ["Flag of Saudi Arabia.svg", 'saudi-arabia.png'],
+  ["Flag of Senegal.svg", 'senegal.png'],
+  ["Flag of Sierra Leone.svg", 'sierra-leone.png'],
+  ["Flag of Somalia.svg", 'somalia.png'],
+  ["Flag of South Africa.svg", 'south-africa.png'],
+  ["Flag of South Sudan.svg", 'south-sudan.png'],
+  ["Flag of Spain.svg", 'spain.png'],
+  ["Flag of Sudan.svg", 'sudan.png'],
+  ["Flag of Tanzania.svg", 'tanzania.png'],
+  ["Flag of Tunisia.svg", 'tunisia.png'],
+  ["Flag of Uganda.svg", 'uganda.png'],
+  ["Flag of Zimbabwe.svg", 'zimbabwe.png'],
+  ["Flag of the Democratic Republic of the Congo.svg", 'democratic-republic-of-the-congo.png'],
+  ["Flag of the United Kingdom.svg", 'united-kingdom.png'],
 ]);
 
 // ===== js/packs/africa-valokuvat.js =====
@@ -9603,6 +9713,20 @@ function valokuvaUrl(tiedosto, leveys) {
   const paikallinen = VALOKUVAT_PAIKALLISET.get(tiedosto);
   if (paikallinen && typeof location !== 'undefined' && location.protocol !== 'file:') {
     return `assets/valokuvat/${paikallinen}`;
+  }
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
+}
+
+/**
+ * Lipun osoite. Liput ovat repossa (tools/fetch-flags.mjs), koska
+ * saapumiskortti näyttää niitä useita kerralla ja Commons alkoi
+ * rajoittaa peräkkäisiä pyyntöjä — silloin liput jäivät pois kokonaan.
+ * Standalone-tiedosto (file:) palaa Commonsiin kuten valokuvissakin.
+ */
+function lippuUrl(tiedosto, leveys) {
+  const paikallinen = LIPUT_PAIKALLISET.get(tiedosto);
+  if (paikallinen && typeof location !== 'undefined' && location.protocol !== 'file:') {
+    return `assets/liput/${paikallinen}`;
   }
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
 }
@@ -33582,13 +33706,15 @@ class BoardDie {
     // valo tulee vasemmalta ylhäältä kuten patinassakin.
     const t = Math.min(1, z / 240);
     this.shadow.style.transform =
-      `translate3d(${(x + 7 + z * 0.07).toFixed(1)}px, ${(y + 6 + z * 0.03).toFixed(1)}px, 0) `
+      `translate3d(${(x + 5 + z * 0.08).toFixed(1)}px, ${(y + 5 + z * 0.035).toFixed(1)}px, 0) `
       + `translate(-50%, -50%) scale(${(1 + t * 0.9).toFixed(3)})`;
-    this.shadow.style.opacity = (0.44 - t * 0.3).toFixed(3);
-    // Sumennus on vakio (css .die-shadow). Aiemmin säde kasvoi korkeuden
-    // mukaan joka kehyksellä, jolloin selain ei voinut käyttää valmista
-    // rasteria vaan sumensi varjon uudelleen jokaisella ruudulla. Skaala ja
-    // peitto yllä antavat saman vaikutelman kompositorin läpi.
+    // Laudalla varjo on vahva ja tiivis, ilmassa haalea ja levinnyt.
+    this.shadow.style.opacity = (0.82 - t * 0.62).toFixed(3);
+    // Varjossa ei ole blur-suodinta lainkaan: pehmeys tulee liukuvärjäyksestä
+    // (css .die-shadow). Aiemmin sumennussäde kasvoi korkeuden mukaan joka
+    // kehyksellä, jolloin selain ei voinut käyttää valmista rasteria vaan
+    // sumensi varjon uudelleen jokaisella ruudulla. Skaala ja peitto yllä
+    // antavat saman vaikutelman kompositorin läpi.
   }
 
   /** Siirtää nopan lepopaikalleen ilman animaatiota (esim. ikkunan koon muuttuessa). */
@@ -37012,7 +37138,7 @@ const OMAT_GALLERIAT = {
   'Victoria-järvi': [
     { tiedosto: 'Sunset at Lake Victoria.jpg', caption: 'Auringonlasku Victorianjärvellä' },
     { tiedosto: 'Boats by the Lake Victoria Shore.jpg', caption: 'Kalastajaveneitä järven rannassa' },
-    { tiedosto: 'Fishing boats on Lake Victoria.jpg', caption: 'Kalastajia aamulla' },
+    { tiedosto: 'Fishing on lake Victoria 01.jpg', caption: 'Kalastajia aamulla' },
     { tiedosto: 'Lake Victoria as visible from Kisumu City.jpg', caption: 'Järvi Kisumun kaupungista nähtynä' },
     { tiedosto: 'Still Life with Stork and Fishing Boats - Along Shore of Lake Victoria - Entebbe - Uganda.jpg', caption: 'Marabu ja veneitä Entebben rannassa' },
     { tiedosto: 'Sunset on lake Victoria in kisumu.jpg', caption: 'Ilta Kisumussa' },
@@ -37206,6 +37332,9 @@ class UI {
       .addEventListener('click', (e) => { e.stopPropagation(); selaaKuvaa(-1); });
     document.getElementById('arrival-kuva-seuraava')
       .addEventListener('click', (e) => { e.stopPropagation(); selaaKuvaa(1); });
+    this.arrivalImage.addEventListener('error', () => {
+      this.pudotaRikkiKuva(this.arrivalKuvat, this.arrivalImage, 'arrival');
+    });
     this.arrivalIntro = document.getElementById('arrival-intro');
     this.arrivalWiki = document.getElementById('arrival-wiki');
     this.arrivalWiki.addEventListener('click', () => this.openWiki(this.arrivalShownFor));
@@ -37302,6 +37431,9 @@ class UI {
       .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(-1); });
     document.getElementById('wiki-kuva-seuraava')
       .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(1); });
+    this.wikiImage.addEventListener('error', () => {
+      this.pudotaRikkiKuva(this.wikiKuvat, this.wikiImage, 'wiki');
+    });
     this.factImage = document.getElementById('fact-image');
     this.factImage.addEventListener('click', () => {
       if (this.factImageTitle) this.openWikiArticle(this.factImageTitle);
@@ -39160,7 +39292,7 @@ class UI {
       this.arrivalMaaLippu.hidden = true;
       if (maa.lippu) {
         this.arrivalMaaLippu.alt = `${maa.nimi} — lippu`;
-        this.arrivalMaaLippu.src = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(maa.lippu)}?width=96`;
+        this.arrivalMaaLippu.src = lippuUrl(maa.lippu, 96);
       } else {
         this.arrivalMaaLippu.removeAttribute('src');
       }
@@ -39303,8 +39435,9 @@ class UI {
       osa.appendChild(document.createTextNode(`${t.teksti} `));
       const lippu = document.createElement('img');
       lippu.alt = t.kieli;
-      lippu.loading = 'lazy';
-      lippu.src = valokuvaUrl(t.lippu, 40);
+      // Ei loading="lazy": liput ovat repossa ja pikkuruisia, ja laiska
+      // lataus jätti ne dialogin sisällä toisinaan kokonaan lataamatta.
+      lippu.src = lippuUrl(t.lippu, 40);
       lippu.addEventListener('error', () => lippu.remove());
       osa.appendChild(lippu);
       // Karkea puhujaosuus kielen perässä (omistajan kokeilu).
@@ -39715,6 +39848,37 @@ class UI {
       ? `${this.wikiKuvaKohdalla + 1}/${this.wikiKuvat.length}` : '';
     document.getElementById('wiki-kuva-edellinen').hidden = !monta;
     document.getElementById('wiki-kuva-seuraava').hidden = !monta;
+  }
+
+  /**
+   * Latausvirhe ei saa jättää rikkinäisen kuvan merkkiä galleriaan:
+   * Commonsista voi kadota tiedosto (uudelleennimeäminen tai poisto), ja
+   * silloin kelaus vain jää jumiin kysymysmerkkiin. Pudotetaan kuva
+   * listalta ja näytetään seuraava; jos kuvia ei jää yhtään, koko kotelo
+   * piilotetaan. Lista lyhenee joka virheellä, joten ketju päättyy.
+   */
+  pudotaRikkiKuva(lista, kuva, mika) {
+    const nyt = kuva.getAttribute('src');
+    if (!nyt) return;
+    const sama = (s) => new URL(s, location.href).href === new URL(nyt, location.href).href;
+    const kohta = lista.findIndex((k) => sama(k.src));
+    if (kohta < 0) return;
+    lista.splice(kohta, 1);
+    const kotelo = mika === 'wiki' ? this.wikiKuvakotelo : this.arrivalKuvakotelo;
+    if (!lista.length) {
+      kuva.removeAttribute('src');
+      kotelo.hidden = true;
+      return;
+    }
+    if (mika === 'wiki') {
+      this.wikiKuvaKohdalla %= lista.length;
+      kuva.src = lista[this.wikiKuvaKohdalla].src;
+      this.paivitaWikiKuvaLaskuri();
+    } else {
+      this.arrivalKuvaKohdalla %= lista.length;
+      kuva.src = lista[this.arrivalKuvaKohdalla].src;
+      this.paivitaKuvaLaskuri();
+    }
   }
 
   /** Pikkukuvan laskuri ja nuolet näkyvät vain, kun galleriassa on selattavaa. */
@@ -41319,7 +41483,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-07-30.111';
+const APP_VERSION = '2026-08-01.112';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

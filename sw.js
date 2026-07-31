@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-07-30.111';
+const CACHE = 'matkakirja-2026-08-01.112';
 const SHELL = [
   './',
   './index.html',
@@ -21,6 +21,7 @@ const SHELL = [
   './js/packs/africa-borders.js',
   './js/packs/africa-countries.js',
   './js/packs/africa-tiivistelmat.js',
+  './js/packs/liput-paikalliset.js',
   './js/packs/africa-valokuvat.js',
   './js/packs/africa-saapumiset.js',
   './js/packs/africa-kulttuuri.js',
@@ -116,6 +117,46 @@ const SHELL = [
   './assets/audio/puhe-africa-vihje-viktorianputoukset.mp3',
   './assets/audio/puhe-europe-saapuminen-venetsia.mp3',
   './assets/audio/puhe-europe-vihje-venetsia.mp3',
+  './assets/valokuvat/006-dune-45-in-sossusvlei-at-sunrise-photo-by-giles-laurent.jpg',
+  './assets/valokuvat/adansonia-grandidieri04.jpg',
+  './assets/valokuvat/antonio-vivaldi.jpg',
+  './assets/valokuvat/bo-kaap-colourful-houses-30114819980.jpg',
+  './assets/valokuvat/canal-giovanni-antonio-canaletto-return-of-the-bucentoro-to-.jpg',
+  './assets/valokuvat/cattle-of-the-dinka-people-juba-south-sudan-20101230-05.jpg',
+  './assets/valokuvat/cotton-tree-sierra-leone.jpg',
+  './assets/valokuvat/elfnarmarrakech2014.jpg',
+  './assets/valokuvat/ethiopian-coffee-ceremony.jpg',
+  './assets/valokuvat/eyo-masquerades-lagos-state-nigeria.jpg',
+  './assets/valokuvat/fishermen-on-the-shores-of-lake-victoria.jpg',
+  './assets/valokuvat/fishing-on-lake-victoria-01.jpg',
+  './assets/valokuvat/frankincense-2005-12-31.jpg',
+  './assets/valokuvat/henri-matisse-1911-12-la-fenetre-a-tanger-paysage-vu-d-une-f.jpg',
+  './assets/valokuvat/island-of-goree-senegal.jpg',
+  './assets/valokuvat/kente-cloth.jpg',
+  './assets/valokuvat/kofar-mata-dye-pit-kano.jpg',
+  './assets/valokuvat/kufra-oasis.jpg',
+  './assets/valokuvat/lady-of-carthage-mosaic-bardo.jpg',
+  './assets/valokuvat/lake-victoria-as-visible-from-kisumu-city.jpg',
+  './assets/valokuvat/lesescales2019manudibango-03-cropped.jpg',
+  './assets/valokuvat/liberia-dan-maschera-xx-sec-01.jpg',
+  './assets/valokuvat/libya-4924-pictograms-tadrart-acacus-luca-galuzzi-2007.jpg',
+  './assets/valokuvat/libyan-malouf.jpg',
+  './assets/valokuvat/longwood-house-le-12-janvier-2008.jpg',
+  './assets/valokuvat/lunar-rainbow-at-victoria-falls-hp-l2778e2.jpg',
+  './assets/valokuvat/masks-of-africa-of-chokwe-people-freigestellt.jpg',
+  './assets/valokuvat/mount-kilimanjaro.jpg',
+  './assets/valokuvat/mv-liemba.jpg',
+  './assets/valokuvat/pescaria-rialto-venice.jpg',
+  './assets/valokuvat/sanza-boa-zaire-musee-royal-de-l-afrique-centrale.jpg',
+  './assets/valokuvat/still-life-with-stork-and-fishing-boats-along-shore-of-lake-.jpg',
+  './assets/valokuvat/suakin-el-geyf-mosque.jpg',
+  './assets/valokuvat/sudan-jebel-marra-deriba-lakes-edited.jpg',
+  './assets/valokuvat/sunset-at-lake-victoria.jpg',
+  './assets/valokuvat/sunset-on-lake-victoria-in-kisumu.jpg',
+  './assets/valokuvat/timbuktu-manuscripts-astronomy-mathematics.jpg',
+  './assets/valokuvat/tombeau-askia.jpg',
+  './assets/valokuvat/tuareg-z-wielb-adem-widac-miecz-takouba-sahara-001165s.jpg',
+  './assets/valokuvat/umm-kulthum4.jpg',
   './assets/valokuvat/uusi-addisabeba.jpg',
   './assets/valokuvat/uusi-ahaggar.jpg',
   './assets/valokuvat/uusi-alkufra.jpg',
@@ -153,11 +194,10 @@ const SHELL = [
   './assets/valokuvat/uusi-timbuktu.jpg',
   './assets/valokuvat/uusi-tripoli.jpg',
   './assets/valokuvat/uusi-tshadjarvi.jpg',
+  './assets/valokuvat/uusi-venetsia.jpg',
   './assets/valokuvat/uusi-viktoria.jpg',
   './assets/valokuvat/uusi-viktorianputoukset.jpg',
   './assets/valokuvat/vanha-addisabeba.jpg',
-  './assets/valokuvat/uusi-venetsia.jpg',
-  './assets/valokuvat/vanha-venetsia.jpg',
   './assets/valokuvat/vanha-ahaggar.jpg',
   './assets/valokuvat/vanha-alkufra.jpg',
   './assets/valokuvat/vanha-angola.jpg',
@@ -194,8 +234,47 @@ const SHELL = [
   './assets/valokuvat/vanha-timbuktu.png',
   './assets/valokuvat/vanha-tripoli.png',
   './assets/valokuvat/vanha-tshadjarvi.jpg',
+  './assets/valokuvat/vanha-venetsia.jpg',
   './assets/valokuvat/vanha-viktoria.jpg',
   './assets/valokuvat/vanha-viktorianputoukset.jpg',
+  './assets/valokuvat/zanzibar-taarab-kidumbak-ensemble.jpg',
+  // Liput (tools/fetch-flags.mjs) — pieniä ja tarvitaan heti saapumiskortilla.
+  './assets/liput/algeria.png',
+  './assets/liput/angola.png',
+  './assets/liput/berber-flag.png',
+  './assets/liput/cameroon.png',
+  './assets/liput/chad.png',
+  './assets/liput/democratic-republic-of-the-congo.png',
+  './assets/liput/egypt.png',
+  './assets/liput/ethiopia.png',
+  './assets/liput/france.png',
+  './assets/liput/germany.png',
+  './assets/liput/ghana.png',
+  './assets/liput/italy.png',
+  './assets/liput/kenya.png',
+  './assets/liput/liberia.png',
+  './assets/liput/libya.png',
+  './assets/liput/madagascar.png',
+  './assets/liput/mali.png',
+  './assets/liput/morocco.png',
+  './assets/liput/mozambique.png',
+  './assets/liput/namibia.png',
+  './assets/liput/nigeria.png',
+  './assets/liput/portugal.png',
+  './assets/liput/sardinia-italy.png',
+  './assets/liput/saudi-arabia.png',
+  './assets/liput/senegal.png',
+  './assets/liput/sierra-leone.png',
+  './assets/liput/somalia.png',
+  './assets/liput/south-africa.png',
+  './assets/liput/south-sudan.png',
+  './assets/liput/spain.png',
+  './assets/liput/sudan.png',
+  './assets/liput/tanzania.png',
+  './assets/liput/tunisia.png',
+  './assets/liput/uganda.png',
+  './assets/liput/united-kingdom.png',
+  './assets/liput/zimbabwe.png',
   './assets/audio/puhe-africa-saapuminen-kairo.mp3',
   './assets/audio/puhe-africa-saapuminen-marrakech.mp3',
   './assets/audio/puhe-africa-saapuminen-lagos.mp3',
@@ -236,6 +315,18 @@ const SHELL = [
   './assets/audio/puhe-africa-saapuminen-rashafun.mp3',
 ];
 
+/*
+ * Media (valokuvat ja äänet) on kymmeniä megatavuja, ja `addAll` on
+ * kaikki-tai-ei-mitään: yksikin katkennut lataus kaatoi koko
+ * asennuksen, jolloin peli jäi ilman välimuistia. Siksi koodi ja
+ * tekstit haetaan yhtenä eränä (ne ovat pieniä ja niiden on oltava
+ * ehjä kokonaisuus) ja media yksitellen niin, että yksi virhe
+ * ohitetaan — puuttuva kuva haetaan sitten verkosta.
+ */
+const MEDIAA = (osoite) => /\/assets\/(valokuvat|liput|audio)\//.test(osoite);
+const YDIN = SHELL.filter((o) => !MEDIAA(o));
+const MEDIA = SHELL.filter(MEDIAA);
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE)
@@ -243,7 +334,12 @@ self.addEventListener('install', (event) => {
       // iOS saattoi täyttää uuden välimuistiversion vanhoilla
       // tiedostoilla, jolloin versionumero päivittyi mutta osa
       // sisällöstä (esim. matkakirjan tekstit) jäi vanhaksi.
-      .then((cache) => cache.addAll(SHELL.map((osoite) => new Request(osoite, { cache: 'reload' }))))
+      .then(async (cache) => {
+        await cache.addAll(YDIN.map((osoite) => new Request(osoite, { cache: 'reload' })));
+        await Promise.all(MEDIA.map((osoite) => cache
+          .add(new Request(osoite, { cache: 'reload' }))
+          .catch(() => {})));
+      })
       .then(() => self.skipWaiting()),
   );
 });
