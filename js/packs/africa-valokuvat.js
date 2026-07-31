@@ -569,6 +569,7 @@ export const AFRICA_VALOKUVAT = {
 };
 
 import { VALOKUVAT_PAIKALLISET } from './valokuvat-paikalliset.js';
+import { LIPUT_PAIKALLISET } from './liput-paikalliset.js';
 
 /**
  * Kuvaosoite: matkakirjan valokuvista on paikalliset kopiot repossa
@@ -580,6 +581,20 @@ export function valokuvaUrl(tiedosto, leveys) {
   const paikallinen = VALOKUVAT_PAIKALLISET.get(tiedosto);
   if (paikallinen && typeof location !== 'undefined' && location.protocol !== 'file:') {
     return `assets/valokuvat/${paikallinen}`;
+  }
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
+}
+
+/**
+ * Lipun osoite. Liput ovat repossa (tools/fetch-flags.mjs), koska
+ * saapumiskortti näyttää niitä useita kerralla ja Commons alkoi
+ * rajoittaa peräkkäisiä pyyntöjä — silloin liput jäivät pois kokonaan.
+ * Standalone-tiedosto (file:) palaa Commonsiin kuten valokuvissakin.
+ */
+export function lippuUrl(tiedosto, leveys) {
+  const paikallinen = LIPUT_PAIKALLISET.get(tiedosto);
+  if (paikallinen && typeof location !== 'undefined' && location.protocol !== 'file:') {
+    return `assets/liput/${paikallinen}`;
   }
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
 }
