@@ -109,6 +109,40 @@ Halvemmat esitystavat, jotka toimivat nykyisellä datalla heti:
 Kielilasit vaativat uuden datan: `maatiedot`-tiedostoissa ei ole
 kielitietoa. Se on sisältöpaketti, ei koodipaketti.
 
+**[Opus] Miksi lasit ovat enemmän kuin tietoruutu.** Kolme perustetta,
+jotka kannattaa pitää mielessä toteutusta suunniteltaessa:
+
+- **Ne siirtävät oppimista kartalle.** Nyt kaikki tieto on korteissa ja
+  dialogeissa; kartta kertoo vain missä paikat ovat. Lasit tekisivät
+  kartasta itsestään tietolähteen.
+- **Ne antavat syyn palata laudalle.** Kun tähti on löytynyt, laudalla
+  ei ole enää mitään. Myöhemmin löytyvät lasit antaisivat aiheen katsoa
+  vanha lauta uusiksi.
+- **Yksi laseista on pelin oma teema.** Ks. isoisän lasit alla.
+
+**[Opus] Lisää lasi-ideoita** (keskusteltu omistajan kanssa 31.7.2026;
+omistaja piti näitä hyvinä, mutta valinta on yhä tekemättä):
+
+- **Isoisän lasit** — kartta sellaisena kuin se oli 1873: vanhat nimet,
+  siirtomaarajat, silloiset reitit. Tämä on koko pelin jännite (mikä
+  muuttui, mikä pysyi) käännettynä karttakerrokseksi. Tähän asti se on
+  elänyt vain teksteissä, joissa isoisä väittää ja nuori herra korjaa.
+  Vahvin ehdokas ensimmäiseksi lasiksi.
+- **Vesilasit** — joet, järvet ja se, missä vettä on ja missä ei.
+  Afrikassa tämä selittää melkein kaiken muun: asutuksen, karavaanit ja
+  Niilin vihreän viivan keskellä hiekkaa.
+- **Yölasit** — kartta pimeänä ja valot päällä. Näyttää yhdellä
+  silmäyksellä, missä on kaupunkeja ja missä ei.
+- **Kauppalasit** — mitä mistäkin liikkui: suola etelään, kulta
+  pohjoiseen. Sopii isoisän aikaan ja selittää, miksi kaupungit ovat
+  siellä missä ovat.
+- **Korkeuslasit** — vuoret ja tasangot. Selittää Addis Abeban kahden
+  kilometrin korkeuden ja lumen päiväntasaajalla.
+
+Näistä isoisän lasit, kauppalasit ja korkeuslasit tulevat toimeen
+nykyisellä datalla tai pienellä sisältölisäyksellä. Vesilasit vaativat
+jokidataa (kartalla on jo järviä) ja yölasit kaupunkien kokoluokat.
+
 **[Opus] Kaksi kysymystä, jotka kannattaa päättää ennen toteutusta:**
 
 1. Ovatko lasit löytö vai ostos? Jos ne löytyvät laatan alta, ne
