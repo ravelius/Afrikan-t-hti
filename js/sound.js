@@ -717,6 +717,11 @@ const REAL_SAMPLES = {
   // Wikimedia Commonsin "Pocket camera start and shut down" (public
   // domain), josta on otettu linssin sisäänvedon tasainen surina ja
   // toistettu ristihäivytyksellä zoomausliu'un mittaiseksi.
+  // Kartan zoomaus: aito kompaktikameran zoomimoottori. Lähteestä on
+  // eristetty tasaisin 82 ms:n pätkä (mitattu: 8 %:n vaihtelu, kun
+  // koko sisäänvedossa sitä on 21 %) ja silmukoitu kokonaisin
+  // perusjaksoin, vuorotellen eteen- ja taaksepäin. Lopuksi
+  // voimakkuus on tasattu, joten ääni ei nouse eikä laske.
   zoom: {
     url: 'assets/audio/efekti-zoom.mp3',
     credit: '"Pocket camera start and shut down" — stephan, pdsounds.org '
@@ -765,10 +770,10 @@ const REAL_PLAYERS = {
   // moottori kiihtyy ja hidastuu samassa tahdissa kartan kanssa.
   // Kesto tulee kutsujalta: etusivu 2,8 s, mantereet 2,0 s.
   zoom: (s, { kesto = 3.6 } = {}) => s.playSlice('zoom', {
-    // Voimakkuus on selvästi pienempi kuin ennen: äänite koostuu nyt
-    // pelkästä tasaisesta moottorista ilman naksahduksia, jolloin
-    // normalisointi nosti sen keskitason yli kaksinkertaiseksi.
-    dur: kesto, gain: 0.24, alusta: true, tasavire: true, nopeusKayra: ZOOM_VAUHTI,
+    // Voimakkuus on selvästi pienempi kuin naksahduksellisessa
+    // versiossa: tasattu moottori on keskitasoltaan paljon kovempi
+    // vaikka huippu on sama.
+    dur: kesto, gain: 0.21, alusta: true, tasavire: true, nopeusKayra: ZOOM_VAUHTI,
   }),
   star: (s) => s.playSlice('star', { dur: 2.6, gain: 0.45, alusta: true }),
   gem: (s) => s.playSlice('gem', { dur: 1.6, gain: 0.4, alusta: true }),
