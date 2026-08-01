@@ -3789,7 +3789,7 @@ export class UI {
 
     // Alareunan linkki pelin periaatteisiin.
     const alaosa = html('div', 'start-gate-alaosa');
-    const linkki = html('button', 'start-linkki', 'Oppiminen on hauskaa — mistä tässä on kyse?');
+    const linkki = html('button', 'start-linkki', 'Oppiminen on hauskaa');
     linkki.type = 'button';
     linkki.addEventListener('click', () => this.naytaPeriaatteet());
     alaosa.appendChild(linkki);
