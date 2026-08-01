@@ -2938,12 +2938,17 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .fact-place { font-size: 0.7rem; margin-bottom: 0.15rem; }
   .fact-text { font-size: 0.78rem; line-height: 1.35; }
 
-  .topbar { padding: 0.3rem 0.5rem; gap: 0.4rem; }
-  .brand { font-size: 0.92rem; letter-spacing: 0.04em; }
-  /* Pilleri on nyt pelkkä kukkaro ja päivämäärä, joten se mahtuu kapeallekin. */
+  /*
+   * Kapea ruutu (puhelin): yläpalkin kaikki napit ovat pelkkiä kuvakkeita
+   * ja pelin nimi kutistuu yhteen kirjaimeen. Näin kukkaro ja päiväkirjan
+   * päivämäärä mahtuvat samalle riville — aiemmin ne katkesivat
+   * kolmella pisteellä (omistajan havainto iPhonella).
+   */
+  .topbar { padding: 0.3rem 0.45rem; gap: 0.35rem; }
+  .brand { font-size: 1.05rem; letter-spacing: 0.02em; flex: 0 0 auto; }
   .turn-pill { font-size: 0.78rem; padding: 0.2rem 0.5rem; gap: 0.3rem; }
-  .topbar-actions button { font-size: 0.78rem; padding: 0.3rem 0.5rem; min-height: 32px; }
-  /* Kapealla ruudulla napit lyhenevät, jotta pelin nimi mahtuu kokonaan. */
+  .topbar-actions { gap: 0.15rem; }
+  .topbar-actions button { font-size: 0.78rem; padding: 0.3rem 0.4rem; min-height: 32px; }
   .wide-label { display: none; }
   .narrow-label { display: inline; }
 
@@ -3406,7 +3411,10 @@ body.katselu #newgame-btn { display: none; }
   <div id="versio-kulma" class="versio-kulma" aria-hidden="true"></div>
   <div class="app">
     <header class="topbar">
-      <h1 class="brand">Matkakirja</h1>
+      <!-- Kapealla ruudulla nimi kutistuu yhteen kirjaimeen, jotta kukkaro
+           ja päiväkirjan päivämäärä mahtuvat samalle riville (omistajan
+           toive). aria-label pitää koko nimen ruudunlukijalle. -->
+      <h1 class="brand" aria-label="Matkakirja"><span class="wide-label">Matkakirja</span><span class="narrow-label" aria-hidden="true">M</span></h1>
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
         <!-- Kertojavalikko: mykistys / ei kertojaa / lyhyt / pitkä kertoja.
@@ -3425,9 +3433,11 @@ body.katselu #newgame-btn { display: none; }
         <button id="passport-btn" class="ghost" type="button" title="Isoisän matkalaukku: passi, leimat ja tavarat">
           <span class="wide-label">Laukku</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11.5" rx="2"/><path d="M9.3 8V6.3a1.7 1.7 0 0 1 1.7-1.7h2a1.7 1.7 0 0 1 1.7 1.7V8M8.6 8v11.5M15.4 8v11.5"/></svg></span></span>
         </button>
-        <button id="rules-btn" class="ghost" type="button">Säännöt</button>
-        <button id="newgame-btn" class="ghost" type="button">
-          <span class="wide-label">Uusi peli</span><span class="narrow-label" aria-hidden="true">Uusi</span>
+        <button id="rules-btn" class="ghost" type="button" title="Säännöt">
+          <span class="wide-label">Säännöt</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span></span>
+        </button>
+        <button id="newgame-btn" class="ghost" type="button" title="Uusi peli">
+          <span class="wide-label">Uusi peli</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span></span>
         </button>
       </div>
     </header>
@@ -41489,7 +41499,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.112';
+const APP_VERSION = '2026-08-01.113';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
