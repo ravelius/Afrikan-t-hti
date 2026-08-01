@@ -9,7 +9,7 @@ import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.123';
+const APP_VERSION = '2026-08-01.124';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -226,6 +226,9 @@ document.getElementById('rules-btn').addEventListener('click', () => rulesDialog
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään
 // kerran täällä eikä käyttöliittymän mukana joka uudessa pelissä.
 document.getElementById('passport-btn').addEventListener('click', () => ui?.openPassport());
+// Alakulman huutomerkki: palaute juuri siitä kohdasta peliä, jossa
+// pelaaja on. Kytketään kerran, koska nappi elää pelin ulkopuolella.
+document.getElementById('palaute-kulma').addEventListener('click', () => ui?.naytaPalauteKulmasta());
 document.getElementById('rules-close').addEventListener('click', () => rulesDialog.close());
 document.getElementById('winner-close').addEventListener('click', startGame);
 

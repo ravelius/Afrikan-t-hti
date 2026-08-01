@@ -694,7 +694,7 @@ const REAL_PLAYERS = {
   timeout: (s) => s.playSlice('timeout', { dur: 1.6, gain: 0.4, alusta: true }),
   flip: (s) => s.playSlice('flip', { dur: 0.9, gain: 0.35, alusta: true }),
   clack: (s) => s.playSlice('clack', { dur: 0.6, gain: 0.3, alusta: true }),
-  zoom: (s) => s.playSlice('zoom', { dur: 1.2, gain: 0.5, alusta: true }),
+  zoom: (s) => s.playSlice('zoom', { dur: 2.0, gain: 0.5, alusta: true }),
   star: (s) => s.playSlice('star', { dur: 2.6, gain: 0.45, alusta: true }),
   gem: (s) => s.playSlice('gem', { dur: 1.6, gain: 0.4, alusta: true }),
   horseshoe: (s) => s.playSlice('horseshoe', { dur: 1.1, gain: 0.4, alusta: true }),
@@ -809,60 +809,87 @@ const SOUNDS = {
   swipe: (s) => s.hiss({ dur: 0.24, freq: 700, sweepTo: 2600, gain: 0.09, q: 0.8 }),
 
   /*
-   * Kartan zoomaus: vanhemman digikameran zoomimoottori (omistajan
-   * toive). Kolme osaa, jotka yhdessä tekevät koneiston:
-   *  1. saha-aalto alipäästön läpi = pieni sähkömoottori, jonka kierrokset
-   *     nousevat hieman matkan aikana,
-   *  2. nopea neliöaalto-LFO voimakkuuden päällä = hammaspyörän sörinä,
-   *  3. lopuksi naksahdus, kun linssi pysähtyy paikalleen.
-   * Kesto on sama kuin zoomausliu'un (js/ui.js liukuZoomiin).
+   * Kartan zoomaus: kompaktikameran zoomimoottori (omistajan toive —
+   * ensimmäinen versio kuulosti liikaa möyriseltä jyrinältä). Oikeassa
+   * kamerassa kuuluu pieni sähkömoottori vaihteiston läpi:
+   *  1. naksahdus, kun linssi lähtee liikkeelle,
+   *  2. purevan sörisevä kanttiaalto ~220 Hz kaistanpäästön läpi —
+   *     moottorin oma sävel, joka kiihtyy alussa ja hidastuu lopussa,
+   *  3. hammaspyörän ohut vinkuna noin viisinkertaisella taajuudella,
+   *  4. nopea aaltoilu voimakkuudessa = kommutaattorin sörinä,
+   *  5. kuiva muovinen kohina ja lopetusnaksahdus, kun linssi pysähtyy.
+   * Kesto on sama kuin zoomausliu'un (js/ui.js ZOOM_MS).
    */
   zoom: (s) => {
     const ctx = s.ensureContext();
     if (!ctx) return;
     const t0 = ctx.currentTime;
-    const kesto = 1.05;
+    const kesto = 1.9;
+    const kiihdytys = 0.14;         // moottorin käynnistyminen
+    const hidastus = kesto - 0.13;  // hetki, jolloin kierrokset laskevat
 
+    // Moottorin sävel: kanttiaalto on paljon puremampi kuin saha-aalto
+    // alipäästön takana, ja juuri sitä pieni zoomimoottori kuulostaa.
     const osc = ctx.createOscillator();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(88, t0);
-    osc.frequency.linearRampToValueAtTime(142, t0 + kesto);
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(120, t0);
+    osc.frequency.linearRampToValueAtTime(224, t0 + kiihdytys);
+    osc.frequency.linearRampToValueAtTime(238, t0 + hidastus);
+    osc.frequency.linearRampToValueAtTime(150, t0 + kesto);
 
-    // Alipäästö pitää sahasta vain matalan surinan: ilman sitä ääni on
-    // sirisevä eikä kuulosta koneistolta.
-    const lp = ctx.createBiquadFilter();
-    lp.type = 'lowpass';
-    lp.Q.value = 3;
-    lp.frequency.setValueAtTime(680, t0);
-    lp.frequency.linearRampToValueAtTime(1150, t0 + kesto);
+    // Kaistanpäästö jättää jäljelle keskialueen sörinän: matalat jyrinät
+    // pois, jotta ääni tulee koneistosta eikä kellarista.
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.Q.value = 1.1;
+    bp.frequency.setValueAtTime(900, t0);
+    bp.frequency.linearRampToValueAtTime(1250, t0 + kiihdytys);
+    bp.frequency.setValueAtTime(1250, t0 + hidastus);
+    bp.frequency.linearRampToValueAtTime(820, t0 + kesto);
 
-    // Sörinä omana kertoimenaan, jotta LFO ei pääse viemään
+    // Hammaspyörän vinkuna: ohut sävel moottorin yläpuolella.
+    const vinku = ctx.createOscillator();
+    vinku.type = 'triangle';
+    vinku.frequency.setValueAtTime(600, t0);
+    vinku.frequency.linearRampToValueAtTime(1120, t0 + kiihdytys);
+    vinku.frequency.linearRampToValueAtTime(1190, t0 + hidastus);
+    vinku.frequency.linearRampToValueAtTime(750, t0 + kesto);
+    const vinkuTaso = ctx.createGain();
+    vinkuTaso.gain.value = 0.055;
+
+    // Kommutaattorin sörinä omana kertoimenaan, jottei LFO vie
     // voimakkuutta negatiiviseksi.
     const sorina = ctx.createGain();
-    sorina.gain.value = 0.62;
+    sorina.gain.value = 0.78;
     const lfo = ctx.createOscillator();
     lfo.type = 'square';
-    lfo.frequency.setValueAtTime(54, t0);
-    lfo.frequency.linearRampToValueAtTime(78, t0 + kesto);
+    lfo.frequency.setValueAtTime(62, t0);
+    lfo.frequency.linearRampToValueAtTime(104, t0 + kiihdytys);
+    lfo.frequency.setValueAtTime(104, t0 + hidastus);
+    lfo.frequency.linearRampToValueAtTime(64, t0 + kesto);
     const lfoTaso = ctx.createGain();
-    lfoTaso.gain.value = 0.34;
+    lfoTaso.gain.value = 0.2;
     lfo.connect(lfoTaso).connect(sorina.gain);
 
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(0.19, t0 + 0.06);
-    g.gain.setValueAtTime(0.19, t0 + kesto - 0.12);
+    g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.05);
+    g.gain.setValueAtTime(0.16, t0 + hidastus);
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
-    osc.connect(lp).connect(sorina).connect(g).connect(s.bus);
-    osc.start(t0);
-    osc.stop(t0 + kesto + 0.05);
-    lfo.start(t0);
-    lfo.stop(t0 + kesto + 0.05);
+    osc.connect(bp).connect(sorina);
+    vinku.connect(vinkuTaso).connect(sorina);
+    sorina.connect(g).connect(s.bus);
+    for (const o of [osc, vinku, lfo]) {
+      o.start(t0);
+      o.stop(t0 + kesto + 0.05);
+    }
 
-    // Koneiston kuiva kohina taustalle ja linssin naksahdus loppuun.
-    s.hiss({ dur: kesto, type: 'bandpass', freq: 1800, sweepTo: 2500, gain: 0.05, q: 0.9 });
-    s.knock({ freqs: [520, 900], dur: 0.06, gain: 0.14, q: 8, delay: kesto - 0.02 });
+    // Muovinen kuiva kohina koneiston taustalla sekä naksahdukset, kun
+    // linssi lähtee liikkeelle ja kun se pysähtyy.
+    s.hiss({ dur: kesto, type: 'bandpass', freq: 2200, sweepTo: 2900, gain: 0.035, q: 0.8 });
+    s.knock({ freqs: [700, 1250], dur: 0.045, gain: 0.11, q: 9 });
+    s.knock({ freqs: [520, 900], dur: 0.06, gain: 0.13, q: 8, delay: kesto - 0.03 });
   },
 
   // Noppa
