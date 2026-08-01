@@ -2950,7 +2950,10 @@ export class UI {
     this.arrivalWiki.hidden = true;
     // Oma lyhytnosto (pilottikaupungit) näkyy heti ja toimii ilman
     // verkkoa; Lue lisää avaa oman artikkelin, joten nappi voi näkyä heti.
-    const omaIntro = ARTIKKELIT[city.wiki]?.intro;
+    // Avain on wiki-otsikko, mutta useimmilla kaupungeilla se on sama
+    // kuin nimi. Ilman varasuunnitelmaa oma nosto katosi hiljaa
+    // kaupungeilta, joilta wiki-kenttä puuttui.
+    const omaIntro = ARTIKKELIT[city.wiki ?? city.name]?.intro;
     if (omaIntro) {
       this.arrivalIntro.textContent = omaIntro;
       this.arrivalWiki.hidden = false;
