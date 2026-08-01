@@ -8762,37 +8762,107 @@ const OMAT_TIIVISTELMAT = {
 };
 
 // ===== js/packs/europe-countries.js =====
-// Euroopan maiden rajat pelin karttaprojektiossa (Natural Earth 110m,
+// Euroopan maiden rajat pelin karttaprojektiossa (Natural Earth 50m,
 // x = (lon + 11) * 19.2, y = (72 - lat) * 26.3). Sama muoto kuin
 // Afrikan AFRICA_COUNTRY_SHAPES-rakenteessa: Tutki-kortin minikartta ja
 // maan korostus piirtyvät näistä. Maita lisätään sitä mukaa kuin
-// kaupunkeja rakennetaan Afrikan tasolle (pilotti: Venetsia/Italia).
+// kaupunkeja rakennetaan Afrikan tasolle.
+//
+// Renkaat on tuotettu komennolla
+//   node tools/europe-countries.mjs ITA FRA ESP POL BIH
+// Älä muokkaa pistelistoja käsin.
 
 const EUROPE_COUNTRY_SHAPES = {
+  // Kolme rengasta: manner, Sisilia ja Sardinia.
   ITA: {
     nimi: 'Italia',
     wiki: 'Italia',
     lippu: 'Flag of Italy.svg',
-    keskus: [453.4, 792.5],
-    leveys: 225,
+    keskus: [452.1, 792.0],
+    leveys: 227,
     renkaat: [
-      [[411.7, 660.3], [423.3, 664.0], [425.6, 659.0], [444.5, 654.5], [448.8, 663.6], [476.3, 670.4], [474.2, 683.4], [478.8, 694.6], [463.5, 690.7], [447.9, 700.1], [449.0, 713.1], [446.6, 720.6], [452.9, 734.0], [470.9, 747.2], [480.6, 769.0], [501.9, 790.2], [517.0, 790.0], [521.7, 795.8], [516.3, 801.1], [533.5, 810.6], [547.6, 818.5], [564.0, 832.2], [566.0, 837.2], [562.4, 846.6], [551.8, 834.3], [535.1, 830.0], [527.0, 847.0], [540.9, 856.7], [538.6, 870.5], [530.6, 872.0], [520.3, 894.6], [512.3, 896.6], [512.4, 888.6], [516.3, 874.5], [520.5, 868.8], [513.0, 853.6], [507.1, 840.3], [499.2, 837.1], [493.5, 825.7], [481.2, 820.9], [472.9, 810.3], [458.7, 808.6], [443.6, 796.8], [426.1, 779.7], [413.0, 764.5], [407.0, 738.5], [397.5, 735.4], [381.9, 726.8], [373.0, 730.3], [361.9, 742.5], [354.0, 744.5], [356.2, 733.0], [345.7, 729.7], [340.8, 709.3], [347.5, 701.3], [341.8, 691.5], [342.6, 684.0], [350.9, 689.7], [360.1, 688.4], [370.9, 679.5], [374.2, 683.7], [383.4, 682.8], [387.5, 672.2], [401.7, 675.5], [410.2, 671.1]],
-      [[494.6, 890.4], [509.2, 888.1], [502.3, 908.8], [505.2, 917.0], [501.1, 930.5], [486.4, 920.6], [476.7, 917.8], [449.9, 904.4], [452.6, 890.9], [475.0, 893.3]],
-      [[378.4, 817.9], [388.0, 809.8], [399.6, 828.4], [396.9, 863.2], [388.1, 861.6], [380.3, 870.4], [373.0, 863.4], [372.3, 831.7], [367.9, 816.6]],
+      [[346.0, 685.8], [360.7, 685.9], [372.9, 672.1], [373.6, 677.3], [384.5, 687.9], [389.8, 670.8], [394.2, 675.7], [402.0, 674.3], [404.7, 677.8], [404.9, 668.0], [411.5, 669.3], [411.9, 661.1], [422.3, 663.4], [427.1, 658.1], [444.9, 655.3], [449.1, 665.3], [474.2, 670.1], [468.1, 676.9], [472.9, 679.1], [470.2, 684.1], [477.6, 693.9], [474.6, 694.6], [472.9, 689.8], [464.8, 689.8], [446.9, 698.4], [445.9, 703.7], [451.7, 710.9], [446.4, 717.4], [449.2, 730.5], [471.6, 747.7], [480.2, 770.9], [490.4, 782.6], [502.4, 790.7], [521.6, 791.7], [516.5, 801.8], [555.9, 824.4], [565.6, 835.8], [563.4, 846.3], [558.3, 843.3], [554.2, 834.2], [545.2, 832.7], [541.1, 828.4], [536.2, 829.6], [528.4, 848.2], [539.8, 857.9], [541.0, 868.0], [530.2, 873.2], [528.9, 883.4], [519.5, 895.7], [511.6, 893.3], [516.1, 878.1], [522.2, 874.2], [522.4, 869.4], [512.5, 841.9], [498.3, 835.3], [494.7, 824.0], [486.5, 825.9], [488.8, 822.4], [480.9, 820.2], [474.9, 809.1], [462.5, 808.9], [434.6, 781.4], [424.4, 778.0], [425.6, 774.9], [413.1, 763.6], [407.9, 740.3], [404.1, 735.9], [379.5, 725.3], [364.9, 739.6], [355.1, 742.5], [357.8, 732.1], [351.7, 732.8], [343.7, 727.6], [345.5, 714.6], [338.6, 708.3], [348.4, 700.1], [341.6, 690.6], [344.5, 687.3]],
+      [[396.1, 818.4], [399.5, 828.5], [396.3, 834.5], [397.6, 841.2], [394.8, 863.5], [393.3, 864.2], [389.1, 862.2], [386.9, 862.7], [385.1, 861.6], [384.4, 866.8], [383.4, 868.9], [381.7, 870.2], [377.3, 869.8], [372.8, 862.5], [372.5, 855.2], [373.4, 853.1], [373.5, 848.9], [373.8, 848.2], [375.2, 848.7], [375.3, 845.8], [374.3, 844.3], [372.6, 843.8], [373.8, 833.9], [371.6, 828.4], [368.4, 824.5], [368.7, 818.7], [369.1, 817.6], [370.8, 819.0], [373.8, 819.7], [378.2, 818.1], [380.6, 816.6], [384.0, 812.4], [386.1, 811.5], [388.4, 808.5], [389.4, 810.0], [392.7, 811.4], [395.8, 814.8], [395.0, 817.5]],
+      [[510.3, 888.4], [503.7, 899.9], [501.1, 908.4], [501.4, 911.7], [503.6, 914.1], [502.5, 915.0], [504.9, 919.0], [501.4, 924.7], [501.4, 928.7], [494.9, 928.1], [490.7, 926.4], [487.1, 921.2], [482.7, 917.8], [478.2, 917.9], [467.7, 911.3], [464.1, 907.9], [459.3, 905.5], [453.9, 904.9], [451.7, 902.9], [450.0, 898.9], [452.1, 892.8], [455.7, 889.4], [458.9, 893.3], [461.7, 892.0], [461.9, 890.8], [463.9, 889.2], [466.4, 889.2], [473.9, 894.2], [475.9, 894.7], [481.0, 893.1], [485.5, 893.8], [489.7, 893.0], [495.2, 889.8], [501.5, 890.2], [508.8, 886.6], [511.4, 887.2]],
+    ],
+  },
+  // Kaksi rengasta: Manner-Ranska ja Korsika. Merentakaiset
+  // departementit eivät ole Euroopan laudalla.
+  FRA: {
+    nimi: 'Ranska',
+    wiki: 'Ranska',
+    lippu: 'Flag of France.svg',
+    keskus: [257.6, 677.5],
+    leveys: 274,
+    renkaat: [
+      [[357.4, 641.9], [352.2, 646.1], [345.0, 645.6], [345.6, 649.0], [335.2, 658.9], [325.8, 678.2], [330.2, 678.7], [334.6, 672.5], [341.3, 673.1], [341.2, 679.5], [346.0, 685.8], [341.6, 690.6], [348.5, 699.6], [347.1, 703.8], [338.5, 707.0], [346.2, 717.6], [343.2, 726.1], [358.6, 734.2], [355.1, 742.5], [337.3, 757.5], [322.7, 760.1], [308.3, 751.0], [301.7, 752.9], [286.3, 747.9], [269.8, 764.9], [272.9, 777.7], [262.1, 780.0], [249.3, 779.6], [244.0, 773.1], [225.9, 767.0], [221.1, 771.0], [199.9, 768.0], [186.2, 760.0], [183.2, 761.3], [184.1, 756.4], [176.8, 752.9], [182.7, 747.9], [187.3, 721.7], [190.5, 718.3], [187.3, 718.9], [190.4, 696.1], [200.7, 710.1], [196.0, 697.8], [188.2, 691.3], [191.4, 690.6], [189.2, 675.6], [176.9, 670.3], [171.0, 661.0], [169.9, 651.6], [177.7, 651.8], [163.1, 649.3], [164.6, 645.1], [158.0, 644.0], [157.7, 641.0], [128.4, 635.9], [121.4, 630.2], [128.1, 626.7], [123.3, 623.6], [129.8, 623.2], [120.6, 621.6], [120.6, 617.0], [149.2, 609.1], [159.5, 617.1], [164.2, 614.1], [172.7, 615.9], [174.6, 612.9], [184.8, 614.0], [175.6, 586.9], [187.0, 587.0], [189.3, 594.7], [208.1, 597.1], [219.2, 593.1], [213.7, 591.5], [214.8, 586.4], [235.1, 578.6], [241.8, 572.0], [243.3, 555.3], [259.7, 549.7], [264.2, 558.9], [270.9, 558.1], [282.0, 570.6], [291.4, 572.1], [291.4, 579.6], [298.5, 579.6], [303.7, 574.6], [304.7, 584.2], [316.9, 591.5], [331.1, 591.9], [340.5, 600.7], [354.3, 600.9], [367.4, 605.6], [357.4, 627.1], [356.5, 641.5]],
+      [[393.2, 767.8], [392.7, 771.7], [394.1, 774.5], [394.6, 785.6], [391.7, 790.9], [391.2, 797.4], [387.6, 805.2], [382.0, 801.7], [380.3, 799.8], [381.8, 796.9], [378.6, 795.3], [379.0, 791.0], [376.7, 790.8], [376.6, 790.1], [378.3, 787.9], [378.3, 786.5], [376.1, 784.8], [375.7, 783.2], [377.8, 781.5], [376.8, 780.0], [375.7, 779.6], [378.5, 774.5], [380.4, 773.0], [384.8, 771.6], [386.6, 769.7], [389.5, 770.7], [390.0, 770.2], [391.0, 762.2], [392.0, 762.1], [392.9, 763.2], [393.2, 766.4]],
+    ],
+  },
+  ESP: {
+    nimi: 'Espanja',
+    wiki: 'Espanja',
+    lippu: 'Flag of Spain.svg',
+    keskus: [153.7, 844.2],
+    leveys: 240,
+    renkaat: [
+      [[176.8, 752.0], [184.1, 756.4], [183.8, 761.7], [186.2, 760.0], [210.4, 770.9], [223.3, 770.9], [224.6, 766.8], [237.1, 770.8], [239.0, 777.5], [244.0, 775.8], [249.3, 779.6], [262.1, 780.0], [272.9, 777.7], [273.6, 790.5], [251.2, 807.7], [231.0, 813.7], [224.9, 820.0], [228.3, 822.6], [222.6, 825.4], [204.9, 854.2], [207.3, 866.3], [215.1, 874.2], [201.2, 885.9], [196.4, 904.8], [185.7, 905.7], [179.7, 910.3], [169.2, 927.2], [164.1, 924.9], [157.7, 928.0], [127.4, 927.9], [121.5, 933.5], [111.9, 935.7], [104.6, 945.8], [92.7, 938.0], [88.1, 927.6], [91.8, 922.8], [88.4, 924.9], [79.4, 913.2], [69.0, 915.8], [67.3, 906.7], [77.6, 889.3], [70.2, 882.2], [76.8, 866.4], [66.5, 850.5], [77.3, 846.9], [76.2, 837.2], [80.4, 832.6], [78.2, 815.1], [91.7, 800.6], [85.6, 797.6], [84.1, 790.5], [54.7, 793.9], [52.5, 785.4], [41.2, 790.9], [44.3, 781.8], [41.9, 781.5], [42.0, 772.2], [37.8, 773.4], [39.8, 768.0], [33.9, 763.3], [35.0, 758.1], [50.8, 752.3], [52.7, 747.4], [63.4, 742.6], [75.6, 748.1], [98.9, 745.7], [124.4, 751.8], [142.0, 749.0], [152.7, 752.9], [176.1, 752.2]],
+    ],
+  },
+  POL: {
+    nimi: 'Puola',
+    wiki: 'Puola',
+    lippu: 'Flag of Poland.svg',
+    keskus: [578.2, 527.9],
+    leveys: 191,
+    renkaat: [
+      [[664.4, 538.7], [673.8, 555.6], [671.6, 557.9], [673.7, 564.6], [666.5, 568.7], [647.2, 589.0], [649.1, 604.4], [621.1, 593.6], [613.4, 596.6], [602.2, 594.8], [596.3, 600.1], [591.4, 599.8], [590.9, 595.1], [584.5, 589.2], [575.4, 594.5], [567.6, 581.8], [557.3, 577.7], [553.6, 579.0], [549.0, 574.9], [551.1, 570.5], [545.6, 571.9], [535.3, 567.4], [537.4, 572.4], [530.7, 575.9], [522.4, 567.5], [526.5, 563.5], [523.8, 561.4], [518.5, 562.5], [499.1, 551.9], [498.9, 555.3], [495.5, 556.0], [499.5, 545.7], [491.6, 530.4], [494.4, 523.8], [490.6, 516.5], [491.9, 512.1], [482.5, 502.9], [487.9, 494.5], [485.0, 480.5], [491.2, 482.9], [490.7, 478.1], [484.1, 476.8], [484.1, 474.7], [522.0, 465.8], [529.1, 458.8], [553.8, 451.9], [563.0, 451.4], [571.4, 455.4], [565.2, 453.8], [569.7, 462.1], [575.5, 464.2], [587.6, 461.3], [649.4, 463.0], [659.9, 468.1], [670.4, 504.5], [669.0, 508.5], [660.7, 512.4], [656.3, 517.9], [665.3, 524.9], [663.2, 536.0]],
+    ],
+  },
+  BIH: {
+    nimi: 'Bosnia ja Hertsegovina',
+    wiki: 'Bosnia ja Hertsegovina',
+    lippu: 'Flag of Bosnia and Herzegovina.svg',
+    keskus: [550.3, 738.6],
+    leveys: 74,
+    renkaat: [
+      [[582.7, 713.2], [581.6, 718.1], [578.9, 722.5], [578.3, 726.9], [587.2, 735.3], [586.6, 736.7], [580.7, 737.3], [585.4, 744.2], [585.2, 747.0], [584.7, 747.9], [581.8, 747.1], [579.7, 748.7], [575.1, 748.8], [576.5, 755.0], [573.1, 753.6], [569.7, 756.6], [568.8, 762.0], [566.2, 762.4], [565.3, 763.5], [567.1, 772.7], [565.2, 774.3], [562.6, 773.2], [553.8, 766.8], [553.0, 765.3], [550.4, 765.4], [548.8, 764.3], [550.1, 762.5], [543.2, 754.7], [542.4, 750.3], [539.2, 749.1], [524.2, 733.1], [522.5, 730.7], [520.4, 722.7], [513.3, 716.3], [514.3, 705.4], [516.3, 704.4], [518.9, 705.1], [524.0, 709.9], [528.6, 704.4], [533.6, 704.9], [536.0, 702.8], [540.0, 705.6], [547.3, 706.9], [550.1, 705.8], [553.2, 708.0], [556.7, 706.4], [569.5, 708.1], [571.1, 709.4], [571.9, 712.3], [574.9, 713.6], [582.0, 712.8]],
+    ],
+  },
+  // Islanti on kartan ulkopuolella lännessä, joten saari on tuotu
+  // luoteisnurkkaan laudan icelandPoints-saaren kohdalle: muoto on
+  // Natural Earthin oikea ääriviiva samaan laatikkoon sovitettuna.
+  // Näin maan korostus ja minikartta osuvat siihen saareen, joka
+  // laudalla näkyy.
+  ISL: {
+    nimi: 'Islanti',
+    wiki: 'Islanti',
+    lippu: 'Flag of Iceland.svg',
+    keskus: [63.5, 58.0],
+    leveys: 83,
+    renkaat: [
+      [[89.9, 35.3], [97.1, 32.5], [93.2, 37.1], [96.3, 39.0], [95.4, 43.6], [98.7, 43.2], [98.1, 47.0], [100.4, 45.8], [104.5, 48.0], [103.1, 51.0], [104.9, 56.1], [101.3, 62.0], [98.7, 61.9], [96.9, 67.9], [87.7, 72.2], [81.6, 77.8], [72.7, 80.5], [71.7, 83.7], [66.3, 86.0], [54.6, 83.3], [52.9, 78.8], [51.1, 80.1], [47.7, 76.4], [35.9, 78.4], [35.6, 73.8], [39.5, 74.6], [45.0, 68.5], [40.5, 69.7], [44.0, 64.1], [40.1, 65.8], [37.3, 61.1], [27.1, 62.1], [25.5, 59.8], [41.7, 56.5], [42.6, 54.0], [37.0, 53.8], [42.1, 49.3], [34.0, 46.9], [26.5, 50.0], [22.1, 47.9], [23.8, 46.3], [26.8, 47.7], [25.0, 43.4], [28.6, 45.2], [31.1, 43.9], [27.0, 42.1], [29.3, 41.6], [27.4, 39.1], [30.0, 39.0], [29.9, 36.1], [37.5, 41.0], [37.5, 38.1], [33.7, 35.6], [37.2, 34.6], [32.4, 33.3], [33.7, 31.7], [37.7, 31.7], [45.4, 38.9], [45.6, 44.0], [43.5, 44.4], [47.5, 52.6], [50.0, 45.9], [52.6, 47.1], [54.5, 37.6], [60.0, 43.6], [60.8, 38.0], [64.8, 36.1], [70.2, 44.2], [69.0, 36.6], [74.7, 40.0], [77.7, 35.8], [82.8, 35.9], [82.4, 31.4], [84.6, 30.0], [89.1, 34.7]],
     ],
   },
 };
 
 // Kaupunki → maa (ISO). Vain Afrikan tasolle rakennetut kaupungit
 // listataan: muut Euroopan kaupungit saavat maansa myöhemmin.
+// Islanti on samalla kaupunki ja maa, kuten St. Helena Afrikassa.
 const EUROPE_CITY_COUNTRY = {
   venetsia: 'ITA',
+  marseille: 'FRA',
+  granada: 'ESP',
+  krakova: 'POL',
+  sarajevo: 'BIH',
+  islanti: 'ISL',
 };
 
 // ===== js/packs/europe-saapumiset.js =====
 // Euroopan matkakirjamerkinnät: nuoren herran tunnepitoinen kuvaus ja
 // isoisän nosto, samaan malliin kuin Afrikassa. Rakentuu kaupunki
-// kerrallaan — pilotti: Venetsia. Luennat: puhe-europe-saapuminen-<id>.mp3.
+// kerrallaan. Luennat: puhe-europe-saapuminen-<id>.mp3 — luenta on
+// toistaiseksi vain Venetsialla (ks. SAAPUMISLUENNAT js/ui.js:ssä).
 const EUROPE_SAAPUMISET = {
   venetsia: {
     kuvaus: 'Venetsia ei liioittele yhtään: kadut ovat oikeasti vettä! '
@@ -8804,12 +8874,69 @@ const EUROPE_SAAPUMISET = {
       + 'Epäkäytännöllisintä ja kauneinta, mitä olen ikinä nähnyt." '
       + 'Ukko oli oikeassa molemmissa.',
   },
+
+  marseille: {
+    kuvaus: 'Vanha satama avautuu suoraan kaupungin keskelle, ja aamun '
+      + 'saalis myydään laiturilla laatikoista. Join kahvin seisaaltaan '
+      + 'ja katselin sataman heräämistä — samaa satamaa, jonka '
+      + 'kreikkalaiset merenkulkijat perustivat noin 600 vuotta ennen '
+      + 'ajanlaskun alkua. Marseille oli olemassa kauan ennen Pariisia, '
+      + 'eikä se ole unohtanut sitä hetkeksikään.',
+    nosto: 'Isoisä kirjoitti: "Marseille on Ranskan takaovi, josta koko '
+      + 'Välimeri astuu sisään." Ovi on yhä auki — mutta nykyään siitä '
+      + 'kuljetaan molempiin suuntiin.',
+  },
+
+  granada: {
+    kuvaus: 'Alhambra ei näytä kaukaa linnalta vaan siltä, että vuoreen '
+      + 'olisi kasvanut torneja. Kiipesin Albaicínin kujia ylös '
+      + 'hengästyneenä, ja kun käännyin, koko palatsi oli siinä — ja sen '
+      + 'takana Sierra Nevadan huiput, joilla oli lunta vielä kesäkuussa.',
+    nosto: 'Isoisä oli merkinnyt sivun reunaan: "Maurien viimeinen '
+      + 'kaupunki Euroopassa. Sen sisustuksen edessä englantilainen '
+      + 'arkkitehti vaikenee." Vaikenin minäkin.',
+  },
+
+  krakova: {
+    kuvaus: 'Rynek Główny on niin avara, että sen yli katsoessa näkyy '
+      + 'kuin oma horisontti: Euroopan suurin keskiaikainen tori, noin '
+      + 'kaksisataa metriä joka suuntaan. Keskellä seisoo Sukiennice, '
+      + 'keskiaikainen kauppahalli, jossa yhä myydään tavaraa tiskin '
+      + 'takaa. Krakova oli Puolan pääkaupunki yli viisisataa vuotta, ja '
+      + 'kuninkaat lepäävät edelleen Wawelin kukkulalla joen mutkassa.',
+    nosto: 'Isoisä kirjoitti Krakovasta yhden rivin: "Kaupunki, jota ei '
+      + 'ole poltettu — harvinaista näillä main." Hän ei voinut tietää, '
+      + 'että se pitäisi paikkansa vielä seuraavan vuosisadankin jälkeen.',
+  },
+
+  sarajevo: {
+    kuvaus: 'Kävelykadulle on merkitty jalkakäytävään raja: toisella '
+      + 'puolella ottomaanien basaari puukattoineen, toisella wieniläiset '
+      + 'julkisivut. Astuin sen yli edestakaisin kuin lapsi. Kahvi '
+      + 'tuotiin kuparipannussa ja sitä juodaan hitaasti — täällä kahvi '
+      + 'on keskustelun mitta, ei virvoke.',
+    nosto: 'Isoisä ei ehtinyt Sarajevoon. Sivun reunaan on kirjoitettu '
+      + 'vain: "Bosniaan, jos aika riittää." Aika ei riittänyt, joten '
+      + 'olen täällä hänen puolestaan.',
+  },
+
+  islanti: {
+    kuvaus: 'Maasta nousi höyryä ilman että missään paloi mitään. Menin '
+      + 'Þingvellirin rotkoon, jossa kaksi mannerlaattaa erkanee '
+      + 'toisistaan pari senttiä vuodessa — ja jossa islantilaiset '
+      + 'kokoontuivat käräjille jo vuonna 930. Seisoin kahden '
+      + 'mannerlaatan välissä ja luin kylttiä ääneen.',
+    nosto: 'Isoisä oli merkinnyt: "Saari, jossa on tulivuoria ja '
+      + 'parlamentti. Kumpi on vanhempi, en tiedä." Parlamentti on '
+      + 'vanhempi kuin Englannin — ja tulivuoret vanhempia kuin molemmat.',
+  },
 };
 
 // ===== js/packs/europe-kulttuuri.js =====
 // Euroopan Kaupungin elämää -nostot (sama rakenne kuin AFRICA_KULTTUURI).
-// Rakentuu kaupunki kerrallaan — pilotti: Venetsia. Kuvien lisenssit
-// varmistettu Commonsin extmetadatasta (31.7.2026).
+// Rakentuu kaupunki kerrallaan. Kuvien lisenssit varmistettu Commonsin
+// extmetadatasta (Venetsia 31.7.2026, muut 1.8.2026), ja kuvista on
+// paikalliset kopiot kansiossa assets/valokuvat.
 const EUROPE_KULTTUURI = {
   venetsia: {
     nostot: [
@@ -8869,12 +8996,346 @@ const EUROPE_KULTTUURI = {
         + 'ja ukkosen. Vivaldi sävelsi sen noin vuosina 1718–1723.',
     },
   },
+
+  marseille: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Monte Criston linnasaari',
+        tiedosto: "Château d'If @ Baie de Marseille 01.jpg",
+        teksti: 'Sataman edustalla olevalle pikkusaarelle rakennettiin '
+          + '1500-luvulla linnoitus, josta tuli pian vankila. Alexandre '
+          + 'Dumas sijoitti sinne Monte Criston kreivin — kirja on niin '
+          + 'tunnettu, että saarelle rakennettiin myöhemmin turisteja '
+          + 'varten "Faria-isän selli", vaikka koko mies on keksitty.',
+        selite: 'Château d\'If Marseillen lahdella. Linnoitus valmistui '
+          + '1531 puolustamaan satamaa; vankilana se toimi yli kolmesataa '
+          + 'vuotta. Saarelta ei tiettävästi ole koskaan paennut kukaan.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: "Château d'If",
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Bouillabaisse alkoi jätekalasta',
+        tiedosto: 'Marseille Filets sur le quai Saint-Jean.jpg',
+        teksti: 'Marseillen kuuluisin ruoka oli alun perin kalastajien '
+          + 'omaa kotiruokaa: kattilaan meni se osa saaliista, jota '
+          + 'kukaan ei ostanut — kivikalat ja muut ruman näköiset. '
+          + 'Nykyään bouillabaisse on kallista, ja kaupungin ravintolat '
+          + 'ovat allekirjoittaneet oman peruskirjansa siitä, mitä '
+          + 'aitoon annokseen kuuluu.',
+        selite: 'Kalastajien verkkoja kuivumassa Marseillen laiturilla '
+          + '1900-luvun alussa. Vanha satama on ollut kaupungin '
+          + 'kalatori keskeytyksettä yli kahdentuhannen vuoden ajan.',
+        lahde: 'Wikimedia Commons (PD)',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Hymni sai nimensä matkalla',
+        tiedosto: 'Pils - Rouget de Lisle chantant la Marseillaise.jpg',
+        teksti: 'Ranskan kansallislaulun sävelsi Rouget de Lisle '
+          + 'Strasbourgissa vuonna 1792 — ei Marseillessa. Nimi tarttui '
+          + 'siihen, koska marseillelaiset vapaaehtoiset lauloivat sitä '
+          + 'marssiessaan Pariisiin, ja pariisilaiset alkoivat kutsua '
+          + 'sitä "sikseen marseillelaisten lauluksi".',
+        selite: 'Isidore Pilsin maalaus (1849): Rouget de Lisle laulaa '
+          + 'juuri säveltämäänsä sotalaulua Strasbourgin pormestarin '
+          + 'salongissa huhtikuussa 1792.',
+        lahde: 'Wikimedia Commons (PD)',
+        wiki: 'La Marseillaise',
+        musiikki: 'https://music.apple.com/fi/search?term=La%20Marseillaise',
+        musiikkiNimi: 'La Marseillaise Apple Musicissa',
+      },
+    ],
+    kysymys: {
+      q: 'Miksi Ranskan kansallislaulua kutsutaan Marseillaisiksi, vaikka se sävellettiin Strasbourgissa?',
+      options: [
+        'Marseillelaiset vapaaehtoiset lauloivat sitä marssiessaan Pariisiin',
+        'Säveltäjä syntyi Marseillessa',
+        'Se esitettiin ensi kerran Marseillen satamassa',
+        'Marseillen kaupunki maksoi sen säveltämisen',
+      ],
+      correct: 0,
+      fact: 'Rouget de Lisle sävelsi laulun Strasbourgissa 1792. Kun '
+        + 'marseillelaiset vapaaehtoiset marssivat sen tahtiin '
+        + 'Pariisiin, pariisilaiset alkoivat kutsua sävelmää heidän '
+        + 'mukaansa — ja nimi jäi.',
+    },
+  },
+
+  granada: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Palatsi, jota ei purettu',
+        tiedosto: 'View of the Alhambra and Sierra Nevada - Granada - Spain.jpg',
+        teksti: 'Alhambra oli Granadan emiirikunnan hallintokeskus ja '
+          + 'viimeinen muslimivaltio Iberian niemimaalla. Kun se '
+          + 'luovutettiin vuonna 1492, uudet hallitsijat eivät purkaneet '
+          + 'palatsia vaan muuttivat siihen — siksi sen kipsikoristelu ja '
+          + 'arabiankieliset kirjoitukset ovat yhä paikoillaan.',
+        selite: 'Alhambra kukkulallaan ja takana Sierra Nevada, jonka '
+          + 'huipuilla on lunta vielä kesäkuussa. Vuoret ovat myös syy '
+          + 'palatsin puutarhoihin: sulamisvesi tuotiin kanavaa pitkin '
+          + 'suoraan suihkulähteisiin.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        wiki: 'Alhambra',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Säveltäjä, joka muutti Alhambran kylkeen',
+        tiedosto: 'Manuel de Falla.jpg',
+        teksti: 'Manuel de Falla asui vuosia pienessä talossa aivan '
+          + 'Alhambran vieressä ja sävelsi siellä teoksen "Öitä Espanjan '
+          + 'puutarhoissa", jonka ensimmäinen osa on nimeltään '
+          + '"Generalifessa" — se on juuri se puutarha kukkulan päällä. '
+          + 'Hän myös järjesti Granadassa 1922 kilpailun, '
+          + 'jolla pelastettiin vanha cante jondo -flamencolaulu '
+          + 'unohdukselta.',
+        selite: 'Manuel de Falla (1876–1946), Espanjan tunnetuin '
+          + '1900-luvun säveltäjä. Hän oli kotoisin Cádizista mutta '
+          + 'asui Granadassa lähes kaksikymmentä vuotta.',
+        lahde: 'Wikimedia Commons (PD)',
+        wiki: 'Manuel de Falla',
+        musiikki: 'https://music.apple.com/fi/artist/manuel-de-falla/319270',
+        musiikkiNimi: 'Manuel de Falla Apple Musicissa',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Tapas kuuluu hintaan',
+        tiedosto: 'Cerveza y pulpo seco motrileño.jpg',
+        teksti: 'Granadassa juoman mukana tulee tapas ilman eri maksua — '
+          + 'tapa, joka on Espanjassa nykyään harvinainen ja jota '
+          + 'granadalaiset puolustavat kiivaasti. Sanan alkuperä on '
+          + 'kansanselityksen mukaan "kansi": lautanen asetettiin '
+          + 'lasin päälle pitämään kärpäset poissa.',
+        selite: 'Olut ja tapas Granadan seudulla — tässä kuivattua '
+          + 'mustekalaa. Annos vaihtuu joka kierroksella, eikä sitä saa '
+          + 'valita: se on baarin valinta, ei asiakkaan.',
+        lahde: 'Wikimedia Commons (CC BY-SA 2.0)',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä oli Alhambra ennen kuin siitä tuli museo?',
+      options: [
+        'Granadan emiirikunnan hallitsijan palatsi ja linnoitus',
+        'Roomalainen kylpylä',
+        'Luostari',
+        'Kuninkaallinen ratsutalli',
+      ],
+      correct: 0,
+      fact: 'Alhambra rakennettiin 1200–1300-luvuilla Nasridi-suvun '
+        + 'hallitsijoiden palatsiksi ja linnoitukseksi. Se oli Iberian '
+        + 'viimeisen muslimivaltion keskus, ja se luovutettiin '
+        + 'Kastilian ja Aragonian hallitsijoille vuonna 1492.',
+    },
+  },
+
+  krakova: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Lohikäärme puhaltaa yhä tulta',
+        tiedosto: 'Smok Wawelski, Kraków.jpg',
+        teksti: 'Wawelin kukkulan juurella on luola ja luolan edessä '
+          + 'pronssinen lohikäärme, joka puhaltaa oikeaa tulta muutaman '
+          + 'minuutin välein. Tarina kertoo suutarinoppipojasta, joka '
+          + 'voitti pedon tarjoamalla sille rikillä täytetyn lampaan — '
+          + 'lohikäärme joi järven tyhjäksi ja halkesi.',
+        selite: 'Bronisław Chromyn veistämä Smok Wawelski (1972) '
+          + 'Veiksel-joen rannassa lohikäärmeen luolan suulla. Tulen '
+          + 'saa nykyään puhallettua myös tekstiviestillä.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Wawel',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Torvisoitto, joka katkeaa kesken',
+        tiedosto: 'Hejnalista krakowski.jpg',
+        teksti: 'Marian kirkon tornista soitetaan joka tunti torvella '
+          + 'hejnał — ja se katkeaa aina kesken sävelen. Perimätiedon '
+          + 'mukaan nuoli osui torvensoittajaan hänen varoittaessaan '
+          + 'kaupunkia hyökkäyksestä. Katkos toistetaan uskollisesti '
+          + 'joka tunti, myös radiossa keskipäivän aikaan.',
+        selite: 'Torvensoittaja Marian kirkon tornissa. Soitto '
+          + 'toistetaan neljään ilmansuuntaan, ja tornissa päivystetään '
+          + 'ympäri vuorokauden.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        wiki: 'Hejnał mariacki',
+        musiikki: 'https://commons.wikimedia.org/wiki/File:Cracow_trumpet_signal.ogg',
+        musiikkiNimi: 'Kuuntele hejnał (Wikimedia Commons)',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Kauppahalli keskellä toria',
+        tiedosto: 'Kraków Cloth Hall, 3 Main Market square, Old Town, Krakow, Poland.jpg',
+        teksti: 'Sukiennice eli kangashalli on seissyt torin keskellä '
+          + 'keskiajalta asti, ja siellä myydään yhä tavaraa. Krakova oli '
+          + 'Hansan ja idän karavaanireittien risteyskohta: tänne tuotiin '
+          + 'suolaa läheisestä Wieliczkan kaivoksesta ja vietiin kangasta, '
+          + 'lyijyä ja kuparia.',
+        selite: 'Sukiennice Rynek Głównyn keskellä. Nykyinen '
+          + 'renessanssiasu on 1500-luvulta; yläkerrassa on Puolan '
+          + '1800-luvun maalaustaiteen kokoelma.',
+        lahde: 'Wikimedia Commons (CC BY 4.0)',
+        wiki: 'Sukiennice',
+      },
+    ],
+    kysymys: {
+      q: 'Miksi Krakovan Marian kirkon torvisoitto katkeaa aina kesken sävelen?',
+      options: [
+        'Perimätiedon mukaan nuoli osui soittajaan kesken varoituksen',
+        'Torvi on rikki eikä sitä ole korjattu',
+        'Soittajalla loppuu ilma samassa kohdassa',
+        'Sävelmä on jäänyt säveltäjältä kesken',
+      ],
+      correct: 0,
+      fact: 'Tarinan mukaan torvensoittaja varoitti kaupunkia '
+        + 'hyökkäyksestä, kun nuoli osui häneen kesken soiton. Katkos '
+        + 'toistetaan joka tunti — ja keskipäivällä se kuullaan koko '
+        + 'Puolassa radiossa.',
+    },
+  },
+
+  sarajevo: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Kahvi on aikayksikkö',
+        tiedosto: 'Baščaršija.jpg',
+        teksti: 'Baščaršijan basaari on 1400-luvulta, ja sen keskellä '
+          + 'seisoo Sebilj, puinen vesikioski. Bosnialainen kahvi '
+          + 'keitetään kuparisessa džezvassa ja tarjoillaan pienen '
+          + 'kuparitarjottimen kanssa: mukana tulee vesilasi ja pala '
+          + 'rahat-lokumia. Kahvia ei juoda janoon vaan seuraksi.',
+        selite: 'Sebiljin kioski Baščaršijan aukiolla. Nykyinen kioski '
+          + 'on vuodelta 1891, ja kyyhkyjen määrästä aukio on saanut '
+          + 'lempinimensä "kyyhkytori".',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Baščaršija',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Sevdalinka — kaupunkilaulu kaipuusta',
+        tiedosto: 'Stevan Kragujevic, Nada Mamula, Tv emisija Sjelo na vrelu Bosne, 1962.jpg',
+        teksti: 'Sevdalinka on Bosnian oma laulutyyli: hidas, koristeltu '
+          + 'ja aina kaipuusta. Nimi tulee turkin sanasta sevda, '
+          + 'rakkaudenkaipuu. Laulut ovat vanhoja kaupunkilauluja, ja ne '
+          + 'säilyivät suullisesti sukupolvelta toiselle ennen kuin '
+          + 'radio alkoi levittää niitä 1900-luvulla.',
+        selite: 'Nada Mamula (1927–2001) esiintymässä televisiossa '
+          + 'vuonna 1962. Hän oli sevdalinkan tunnetuimpia tulkitsijoita, '
+          + 'ja hänen levytyksensä ovat yhä mittapuu.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Sevdalinka',
+        musiikki: 'https://music.apple.com/fi/artist/nada-mamula/289134144',
+        musiikkiNimi: 'Nada Mamula Apple Musicissa',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Silta, jolta maailma muuttui',
+        tiedosto: 'Latin Bridge Sarajevo summer 2010.JPG',
+        teksti: 'Miljackan yli kulkevan Latinalaissillan kulmassa '
+          + 'ammuttiin kesäkuussa 1914 Itävalta-Unkarin kruununprinssi '
+          + 'Frans Ferdinand. Kuukautta myöhemmin Eurooppa oli sodassa. '
+          + 'Sillan vieressä on nykyään museo, jonka ikkunasta näkee '
+          + 'täsmälleen sen kadunkulman.',
+        selite: 'Latinalaissilta Sarajevossa. Paikalla on ollut silta '
+          + '1500-luvulta asti, ja nykyinen kiviholvi on 1790-luvulta — '
+          + 'se on seissyt paikallaan kaikkien vaiheiden läpi.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Latinalaissilta',
+      },
+    ],
+    kysymys: {
+      q: 'Mistä sana sevdalinka on peräisin?',
+      options: [
+        'Turkin sanasta sevda, joka tarkoittaa rakkaudenkaipuuta',
+        'Erään säveltäjän sukunimestä',
+        'Bosnialaisesta soittimesta',
+        'Sarajevon kaupunginosan nimestä',
+      ],
+      correct: 0,
+      fact: 'Sevdalinka on Bosnian oma laulutyyli, ja sen nimi tulee '
+        + 'turkin sanasta sevda — rakkaudenkaipuu. Laulut ovat vanhoja '
+        + 'kaupunkilauluja, jotka siirtyivät suullisesti sukupolvelta '
+        + 'toiselle.',
+    },
+  },
+
+  islanti: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Käräjät kahden mantereen välissä',
+        tiedosto: 'Almannagjá Gorge, Þingvellir National Park, Iceland.jpg',
+        teksti: 'Þingvellirissä islantilaiset kokoontuivat käräjille '
+          + 'vuodesta 930 alkaen: lait luettiin ääneen kalliolta, koska '
+          + 'niitä ei ollut kirjoitettu mihinkään. Paikka sattuu olemaan '
+          + 'kohdassa, jossa Pohjois-Amerikan ja Euraasian mannerlaatat '
+          + 'erkanevat — rotko levenee pari senttiä vuodessa.',
+        selite: 'Almannagjá, Þingvellirin suurin repeämä. Kalliolta '
+          + 'lainlukija esitti kolmasosan laeista joka vuosi, jotta '
+          + 'koko lakikokoelma tuli luetuksi kolmen vuoden välein.',
+        lahde: 'Wikimedia Commons (CC BY 4.0)',
+        wiki: 'Þingvellir',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Kieli, joka ei liikkunut',
+        tiedosto: 'GKS 1005 fol., 0005v - 15 (cropped).jpg',
+        teksti: 'Islannin kieli on muuttunut niin vähän, että koululainen '
+          + 'voi lukea 1200-luvun saagoja alkukielellä. Uusille asioille '
+          + 'ei lainata sanoja vaan tehdään omat: tietokone on tölva, '
+          + '"lukujen ennustaja", ja kaikille islantilaisille tuttu '
+          + 'sana yhtä lailla.',
+        selite: 'Aukeama Flateyjarbókista, Islannin suurimmasta '
+          + 'keskiaikaisesta käsikirjoituksesta (1387–1394). Se sisältää '
+          + 'Norjan kuninkaiden saagoja ja kertomuksen Vinlandin '
+          + 'löytämisestä.',
+        lahde: 'Wikimedia Commons (PD)',
+        wiki: 'Flateyjarbók',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Björk ja pieni maa, joka soi',
+        tiedosto: 'BjörkCoachella.jpg',
+        teksti: 'Islannissa asuu vähemmän ihmisiä kuin monessa '
+          + 'suomalaisessa maakunnassa, mutta musiikkia tulee ulos kuin '
+          + 'suurmaasta. Björk aloitti kotimaassaan jo lapsitähtenä ja '
+          + 'löi läpi maailmalla 1990-luvulla; hänen jälkeensä tulivat '
+          + 'muun muassa Sigur Rós ja Of Monsters and Men.',
+        selite: 'Björk esiintymässä. Hän on levyttänyt sekä islanniksi '
+          + 'että englanniksi ja tehnyt yhteistyötä muusikoiden ja '
+          + 'kuvataiteilijoiden kanssa ympäri maailman.',
+        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        wiki: 'Björk',
+        musiikki: 'https://music.apple.com/fi/artist/bjork/295015',
+        musiikkiNimi: 'Björk Apple Musicissa',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä on Þingvellirin erikoisuus maantieteellisesti?',
+      options: [
+        'Se on kohdassa, jossa kaksi mannerlaattaa erkanee toisistaan',
+        'Se on Islannin korkein vuori',
+        'Se on maailman pohjoisin kaupunki',
+        'Se on saaren ainoa metsä',
+      ],
+      correct: 0,
+      fact: 'Þingvellir sijaitsee Pohjois-Amerikan ja Euraasian '
+        + 'mannerlaattojen saumassa: laatat erkanevat toisistaan noin '
+        + 'kaksi senttiä vuodessa, ja maasto repeää kallionrotkoiksi. '
+        + 'Samassa paikassa kokoontui Alþingi vuodesta 930.',
+    },
+  },
 };
 
 // ===== js/packs/europe-valokuvat.js =====
-// Euroopan matkakirjavalokuvat (sama rakenne kuin AFRICA_VALOKUVAT).
-// Rakentuu kaupunki kerrallaan — pilotti: Venetsia. Lisenssit varmistettu
-// Commonsin extmetadatasta (31.7.2026).
+// Euroopan matkakirjavalokuvat (sama rakenne kuin AFRICA_VALOKUVAT):
+// vanha vedos isoisän ajoilta ja sama paikka nykyään. Rakentuu kaupunki
+// kerrallaan. Lisenssit varmistettu Commonsin extmetadatasta (Venetsia
+// 31.7.2026, muut 1.8.2026), kuvista paikalliset kopiot assets-kansiossa.
 const EUROPE_VALOKUVAT = {
   venetsia: {
     tiedosto: 'Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg',
@@ -8892,12 +9353,106 @@ const EUROPE_VALOKUVAT = {
         + 'vartioi kanavan suuta kuten 350 vuotta.',
     },
   },
+
+  marseille: {
+    tiedosto: 'Old Harbor (Vieux-Port), Marseille, France-LCCN2002715100.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Vanha satama purjelaivojen aikaan — käsinväritetty '
+      + 'photochrom-vedos. Laivat makasivat kylki kyljessä laiturissa, ja '
+      + 'lastit purettiin käsivoimin suoraan kadulle.',
+    uusi: {
+      tiedosto: 'Vieux-Port de Marseille, France.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama satama nykyään: rahtiliikenne muutti pohjoisemmas, ja '
+        + 'altaassa on huviveneitä. Laiturilla myydään yhä aamun kala, ja '
+        + 'aukion yllä on Norman Fosterin peilikatos.',
+    },
+  },
+
+  granada: {
+    tiedosto: 'Court of the Lions, Alhambra by Juan Laurent.jpg',
+    vuosi: '1870-luku',
+    lahde: 'Wikimedia Commons (PD)',
+    selite: 'Leijonapiha Juan Laurentin valokuvaamana isoisän aikaan. '
+      + 'Laurent kiersi Espanjaa suurella kamerallaan ja myi vedoksia '
+      + 'matkailijoille — moni eurooppalainen näki Alhambran '
+      + 'ensimmäisen kerran juuri hänen kuvinaan.',
+    uusi: {
+      tiedosto: 'Court of the Lions, Alhambra de Granada (Spain).jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama piha tänään. Kaksitoista leijonaa kannattelevat yhä '
+        + 'allasta keskellä; ne puhdistettiin ja korjattiin perusteellisesti '
+        + '2000-luvulla, ja suihkulähde toimii taas.',
+    },
+  },
+
+  krakova: {
+    tiedosto: 'Krakow - Kosciol Maryacki i Sukiennice. 1910 (69699690).jpg',
+    vuosi: '1910',
+    lahde: 'Wikimedia Commons (PD)',
+    selite: 'Marian kirkko ja Sukiennice torin laidalla vuonna 1910, '
+      + 'jolloin Krakova kuului Itävalta-Unkariin. Torilla seisoo '
+      + 'hevosvaunuja — niitä on aukiolla vieläkin, joskin turisteja varten.',
+    uusi: {
+      tiedosto: 'Kraków - Rynek Główny (2).jpg',
+      lahde: 'Commons (CC BY 2.0)',
+      selite: 'Rynek Główny nykyään. Rakennukset ovat samat: Krakovan '
+        + 'vanhakaupunki säilyi toisessa maailmansodassa lähes ehjänä, '
+        + 'toisin kuin Varsova.',
+    },
+  },
+
+  sarajevo: {
+    tiedosto: 'Sarajevo Sebilj and Bascarsija, ca. 1930.jpg',
+    vuosi: '1930-luku',
+    lahde: 'Wikimedia Commons (PD)',
+    selite: 'Sebiljin vesikioski ja Baščaršijan basaari 1930-luvulla. '
+      + 'Nykyinen kioski rakennettiin 1891 palaneen tilalle, ja aukio '
+      + 'on ollut kauppapaikkana 1400-luvulta asti.',
+    uusi: {
+      tiedosto: 'Sarajevo Bascarsija from Trebevic.JPG',
+      lahde: 'Commons (CC BY-SA 3.0)',
+      selite: 'Sarajevo Trebevićin rinteeltä nähtynä. Kaupunki on '
+        + 'kapeassa laaksossa, ja talot kiipeävät rinteille joka '
+        + 'suunnassa — siksi sitä kutsutaan joskus Balkanin Jerusalemiksi.',
+    },
+  },
+
+  islanti: {
+    tiedosto: 'Reykjavík. Fish drying and shark oil station. (4558216609).jpg',
+    vuosi: '1900-luvun alku',
+    lahde: 'Cornell University Library (ei käyttörajoituksia)',
+    selite: 'Kalankuivauskenttä ja hainmaksaöljyn keittämö Reykjavíkin '
+      + 'laidalla. Kuivattu turska oli vuosisatojen ajan Islannin '
+      + 'tärkein vientitavara, ja hainmaksaöljyä poltettiin lampuissa '
+      + 'ympäri Eurooppaa.',
+    uusi: {
+      tiedosto: 'City View of Reykjavik from Hallgrímskirkja - 2013.08 - panoramio.jpg',
+      lahde: 'Commons (CC BY 3.0)',
+      selite: 'Reykjavík Hallgrímskirkjan tornista. Kaikki talot '
+        + 'lämpiävät maan omalla kuumalla vedellä, ja katot on '
+        + 'perinteisesti maalattu kirkkaiksi — pimeä vuodenaika on pitkä.',
+    },
+  },
 };
 
 // ===== js/packs/europe-maatiedot.js =====
 // Euroopan maiden tunnusluvut (sama rakenne kuin AFRICA_MAATIEDOT).
-// Rakentuu maa kerrallaan — pilotti: Italia. Luvut tarkistettu kahdesta
-// riippumattomasta lähteestä (Maailmanpankki + OWID/V-Dem, 31.7.2026).
+// Rakentuu maa kerrallaan.
+//
+// Lähteet ja menetelmä (Ranska, Espanja, Puola, Bosnia ja Islanti,
+// haettu 1.8.2026):
+//  - väkiluku SP.POP.TOTL (2024), pinta-ala AG.SRF.TOTL.K2 (2022) ja
+//    keskitulo NY.GNP.PCAP.CD eli BKTL/asukas Atlas-menetelmällä (2024),
+//    kaikki Maailmanpankin rajapinnasta;
+//  - demokratia = V-Demin liberaalin demokratian indeksi (2025) Our
+//    World in Datan aineistosta.
+// Sijoitus on laskettu suvereenien valtioiden kesken (Maailmanpankin
+// maalista ilman merentakaisia alueita), ja nimittäjä on pyöristetty
+// samaan tapaan kuin Afrikan tiedoissa. Menetelmä tarkistettiin
+// toistamalla Italian ja Marokon valmiit luvut: sijoitukset osuivat
+// ±1 tarkkuudella.
 const EUROPE_MAATIEDOT = {
   ITA: {
     vakiluku: '59 milj.',
@@ -8919,6 +9474,126 @@ const EUROPE_MAATIEDOT = {
       { teksti: 'Buongiorno', kieli: 'italia', lippu: 'Flag of Italy.svg', osuus: '95 %' },
       { teksti: 'Bona die', kieli: 'sardi', lippu: 'Flag of Sardinia, Italy.svg', osuus: '2 %' },
       { teksti: 'Guten Tag', kieli: 'saksa (Etelä-Tiroli)', lippu: 'Flag of Germany.svg', osuus: '0,5 %' },
+    ],
+  },
+
+  FRA: {
+    vakiluku: '69 milj.',
+    vakilukuSija: '23./195',
+    // Maailmanpankin luku sisältää merentakaiset departementit; pelkkä
+    // Manner-Ranska on noin 550 000 km².
+    pintaAla: '610 000 km²',
+    pintaAlaSija: '45./195',
+    demokratia: {
+      arvo: '0,80',
+      sija: '9./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~FRA',
+      selitys: 'Ranska on yksi maailman korkeimmalle arvioiduista '
+        + 'demokratioista: vaalit ovat vapaat, tuomioistuimet '
+        + 'riippumattomia ja lehdistö moniääninen. Presidentin valta on '
+        + 'eurooppalaisittain poikkeuksellisen suuri, mutta parlamentti '
+        + 'ja perustuslakineuvosto rajaavat sitä.',
+    },
+    keskitulo: { arvo: '45 000 $/v', sija: '23./190' },
+    tervehdykset: [
+      { teksti: 'Bonjour', kieli: 'ranska', lippu: 'Flag of France.svg', osuus: '100 %' },
+      { teksti: 'Salam alaikum', kieli: 'arabia', lippu: 'Flag of Saudi Arabia.svg', osuus: '5 %' },
+      { teksti: 'Bonjorn', kieli: 'oksitaani', lippu: 'Flag of Occitania.svg', osuus: '1 %' },
+    ],
+  },
+
+  ESP: {
+    vakiluku: '49 milj.',
+    vakilukuSija: '32./195',
+    pintaAla: '510 000 km²',
+    pintaAlaSija: '53./195',
+    demokratia: {
+      arvo: '0,74',
+      sija: '21./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ESP',
+      selitys: 'Espanja siirtyi diktatuurista demokratiaan vasta 1970-'
+        + 'luvun lopulla, ja se näkyy yhä: alueiden itsehallinto ja '
+        + 'keskusvallan suhde on kestoaihe, ja tuomarien nimityksistä '
+        + 'kiistellään puolueiden kesken. Vaalit, lehdistö ja '
+        + 'kansalaisoikeudet arvioidaan vahvoiksi.',
+    },
+    keskitulo: { arvo: '34 000 $/v', sija: '32./190' },
+    tervehdykset: [
+      { teksti: 'Buenos días', kieli: 'espanja', lippu: 'Flag of Spain.svg', osuus: '99 %' },
+      { teksti: 'Bon dia', kieli: 'katalaani', lippu: 'Flag of Catalonia.svg', osuus: '17 %' },
+      { teksti: 'Bo día', kieli: 'galicia', lippu: 'Flag of Galicia.svg', osuus: '5 %' },
+      { teksti: 'Egun on', kieli: 'baski', lippu: 'Flag of the Basque Country.svg', osuus: '2 %' },
+    ],
+  },
+
+  POL: {
+    vakiluku: '37 milj.',
+    vakilukuSija: '42./195',
+    pintaAla: '310 000 km²',
+    pintaAlaSija: '69./195',
+    demokratia: {
+      arvo: '0,65',
+      sija: '36./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~POL',
+      selitys: 'Puolan luku on käynyt kokonaisen kierroksen: se romahti '
+        + '2015–2021, kun hallitus otti tuomioistuinten nimitykset ja '
+        + 'valtion television ohjaukseensa, ja on sen jälkeen noussut '
+        + 'takaisin vuoden 2023 vaalien myötä. Harva maa on laskenut ja '
+        + 'noussut näin nopeasti.',
+    },
+    keskitulo: { arvo: '22 000 $/v', sija: '48./190' },
+    tervehdykset: [
+      { teksti: 'Dzień dobry', kieli: 'puola', lippu: 'Flag of Poland.svg', osuus: '98 %' },
+      { teksti: 'Dzyń dobry', kieli: 'sleesia', lippu: 'Flag of Upper Silesia.svg', osuus: '1,5 %' },
+      { teksti: 'Guten Tag', kieli: 'saksa (Opolen seutu)', lippu: 'Flag of Germany.svg', osuus: '0,3 %' },
+    ],
+  },
+
+  BIH: {
+    vakiluku: '3,2 milj.',
+    vakilukuSija: '132./195',
+    pintaAla: '51 000 km²',
+    pintaAlaSija: '126./195',
+    demokratia: {
+      arvo: '0,34',
+      sija: '96./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~BIH',
+      selitys: 'Bosnian hallinto rakennettiin vuoden 1995 rauhansopimuksessa '
+        + 'kolmen kansan — bosniakkien, serbien ja kroaattien — varaan: '
+        + 'maalla on kolme presidenttiä ja kaksi puoliksi itsenäistä '
+        + 'osaa. Järjestelmä lopetti sodan, mutta tekee päätöksenteosta '
+        + 'hidasta, ja moni virka täytetään kansallisuuden perusteella.',
+    },
+    keskitulo: { arvo: '8 800 $/v', sija: '79./190' },
+    // Bosnia, kroatia ja serbia ovat sama kieli kolmella nimellä, ja
+    // tervehdys on niissä kaikissa sama — lippu kertoo, minkä nimen alla.
+    tervehdykset: [
+      { teksti: 'Dobar dan', kieli: 'bosnia', lippu: 'Flag of Bosnia and Herzegovina.svg', osuus: '50 %' },
+      { teksti: 'Dobar dan', kieli: 'serbia', lippu: 'Flag of Serbia.svg', osuus: '31 %' },
+      { teksti: 'Dobar dan', kieli: 'kroatia', lippu: 'Flag of Croatia.svg', osuus: '15 %' },
+    ],
+  },
+
+  ISL: {
+    vakiluku: '390 000',
+    vakilukuSija: '171./195',
+    pintaAla: '103 000 km²',
+    pintaAlaSija: '107./195',
+    demokratia: {
+      arvo: '0,72',
+      sija: '25./179',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ISL',
+      selitys: 'Islannin parlamentti Alþingi on maailman vanhin yhä '
+        + 'toimiva — perustettu vuonna 930. Vaalit ja kansalaisoikeudet '
+        + 'arvioidaan erittäin vahvoiksi; V-Demin liberaali osaindeksi '
+        + 'jää naapureita alemmas lähinnä siksi, että pienessä maassa '
+        + 'valvontaelimet ja hallitus ovat lähellä toisiaan.',
+    },
+    keskitulo: { arvo: '81 000 $/v', sija: '5./190' },
+    tervehdykset: [
+      { teksti: 'Góðan daginn', kieli: 'islanti', lippu: 'Flag of Iceland.svg', osuus: '97 %' },
+      { teksti: 'Good day', kieli: 'englanti (vieras kieli)', lippu: 'Flag of the United Kingdom.svg', osuus: '80 %' },
+      { teksti: 'Dzień dobry', kieli: 'puola', lippu: 'Flag of Poland.svg', osuus: '5 %' },
     ],
   },
 };
@@ -8973,6 +9648,214 @@ const EUROPE_ARTIKKELIT = {
       + 'latinalaisilla kirjaimilla ja elää monin paikoin roomalaisten '
       + 'teiden varsilla.',
   },
+
+  Marseille: {
+    intro: 'Marseille on Ranskan vanhin kaupunki ja sen suurin satama. '
+      + 'Kreikkalaiset merenkulkijat perustivat sen noin 600 eaa. nimellä '
+      + 'Massalia — Pariisi oli silloin vielä suo. Kaupunki on aina '
+      + 'katsonut merelle päin, ei pääkaupunkiin.',
+    teksti: 'Vanha satama Vieux-Port on kaupungin sydän ja alkupiste: '
+      + 'kreikkalaisten laivat laskivat juuri tähän lahteen, ja samassa '
+      + 'altaassa myydään aamun kala vieläkin. Sataman suulla kohoaa '
+      + 'Notre-Dame de la Garde, jonka kullattu Neitsyt Maria näkyy '
+      + 'merelle kilometrien päähän — merimiehet kutsuvat sitä nimellä '
+      + 'la Bonne Mère, hyvä äiti.\n\n'
+      + 'Marseille on ollut kauppasatama kaikkien Välimeren valtakuntien '
+      + 'aikaan, ja se näkyy väestössä: kaupungissa on suuria yhteisöjä '
+      + 'Algeriasta, Marokosta, Tunisiasta, Italiasta, Armeniasta ja '
+      + 'Komoreilta. Torilla puhutaan ranskaa, arabiaa ja komorea, ja '
+      + 'ruokakulttuuri on sekoitus niitä kaikkia. Kaupungin oma ruoka '
+      + 'bouillabaisse alkoi kalastajien kotiruokana siitä osasta '
+      + 'saalista, jota kukaan ei ostanut.\n\n'
+      + 'Marseillesta tuli 1990-luvulla myös ranskalaisen rapin '
+      + 'kotikaupunki: yhtye IAM ja monet muut tekivät siitä musiikin '
+      + 'keskuksen, joka ei ollut Pariisi. Kaupungin jalkapalloseura '
+      + 'Olympique de Marseille on osa samaa identiteettiä — Vélodrome-'
+      + 'stadionilla ollaan ensin marseillelaisia ja vasta sitten '
+      + 'ranskalaisia.',
+  },
+  Ranska: {
+    intro: 'Ranska on Länsi-Euroopan suurin maa pinta-alaltaan ja yksi '
+      + 'sen väkirikkaimmista. Se ulottuu Pohjanmereltä Välimerelle ja '
+      + 'Alpeilta Atlantille — ja lisäksi merentakaisiin osiin Etelä-'
+      + 'Amerikassa, Karibialla ja Intian valtamerellä.',
+    teksti: 'Ranskan vallankumous 1789 ja sen jälkeen syntyneet '
+      + 'ajatukset — kansalaisuus, tasavalta, ihmisoikeuksien julistus — '
+      + 'muuttivat koko Euroopan. Tunnuslause vapaus, veljeys ja tasa-'
+      + 'arvo on yhä kirjoitettuna joka kunnantalon seinään. Valtio on '
+      + 'perinteisesti keskitetty: Pariisi päättää paljon, ja se '
+      + 'ärsyttää muuta maata säännöllisin väliajoin.\n\n'
+      + 'Ranska oli 1900-luvun puoliväliin asti laaja siirtomaavalta '
+      + 'Afrikassa ja Aasiassa. Sen jäljet näkyvät kielessä — ranska on '
+      + 'virallinen kieli lähes kolmessakymmenessä maassa — ja siinä, '
+      + 'keitä ranskalaiset nykyään ovat: iso osa väestöstä juontaa '
+      + 'juurensa entisiin siirtomaihin.\n\n'
+      + 'Ruoka ja maatalous ovat Ranskassa vakava asia. Maa on Euroopan '
+      + 'suurin ruoantuottaja, ja juustoja on satoja lajeja — Charles de '
+      + 'Gaullen kuuluisan kysymyksen mukaan on mahdotonta hallita maata, '
+      + 'jossa on 246 juustoa. Sähköstä valtaosa tuotetaan ydinvoimalla, '
+      + 'mikä on Euroopassa poikkeuksellista.',
+  },
+
+  Granada: {
+    intro: 'Granada on Etelä-Espanjassa Sierra Nevadan juurella. Se oli '
+      + 'Iberian niemimaan viimeinen muslimivaltio: Granadan emiirikunta '
+      + 'säilyi vuoteen 1492, lähes 250 vuotta pidempään kuin muut.',
+    teksti: 'Alhambra on kaupungin ja koko Espanjan tunnetuin '
+      + 'rakennusryhmä: linnoitus, palatsi ja puutarhat samalla '
+      + 'kukkulalla. Nasridi-hallitsijat rakensivat sen 1200–1300-'
+      + 'luvuilla, ja sen kipsikoristelu, kaakelit ja vesialtaat ovat '
+      + 'islamilaisen arkkitehtuurin kuuluisimpia. Kun kaupunki '
+      + 'luovutettiin Kastilian ja Aragonian hallitsijoille, palatsia ei '
+      + 'purettu vaan siihen muutettiin — siksi se on yhä pystyssä.\n\n'
+      + 'Alhambran alapuolella laaksossa on Albaicín, vanha maurilainen '
+      + 'kaupunginosa kapeine kujineen, ja sen takana Sacromonten rinne, '
+      + 'jossa asuu romaniyhteisö. Sacromonten luola-asunnoissa '
+      + 'kehittyi zambra, oma flamencon muoto, ja siellä sitä esitetään '
+      + 'edelleen.\n\n'
+      + 'Granada on myös yliopistokaupunki: opiskelijoita on kymmeniä '
+      + 'tuhansia, ja se näkyy hinnoissa ja yöelämässä. Kaupungille '
+      + 'ominainen tapa on tarjota juoman mukana ilmainen tapas — muualla '
+      + 'Espanjassa harvinaista, ja granadalaisille kunnia-asia.',
+  },
+  Espanja: {
+    intro: 'Espanja täyttää suurimman osan Iberian niemimaasta ja on '
+      + 'Länsi-Euroopan toiseksi suurin maa. Se on myös monikielinen: '
+      + 'espanjan lisäksi katalaani, galego ja baski ovat virallisia '
+      + 'omilla alueillaan.',
+    teksti: 'Espanjaa hallitsivat lähes 800 vuoden ajan osittain '
+      + 'muslimivaltiot, ja se näkyy yhä kielessä, arkkitehtuurissa ja '
+      + 'ruoassa: sanat kuten aceite (öljy) ja almohada (tyyny) ovat '
+      + 'arabiasta. Vuonna 1492 viimeinen muslimivaltio Granada kaatui, '
+      + 'ja samana vuonna Kolumbus purjehti Atlantin yli — Espanjasta '
+      + 'tuli maailmanvalta, jonka jäljiltä espanja on nykyään '
+      + 'äidinkieli lähes puolelle miljardille ihmiselle.\n\n'
+      + 'Espanja oli diktatuuri vuoteen 1975, ja siirtymä demokratiaan '
+      + 'tehtiin nopeasti ja sovinnollisesti. Nykyinen valtio on '
+      + 'itsehallintoalueiden liitto: Katalonialla, Baskimaalla ja '
+      + 'muilla alueilla on omat parlamenttinsa, poliisinsa ja '
+      + 'koulukielensä. Alueiden ja keskusvallan suhde on maan '
+      + 'kestoaihe.\n\n'
+      + 'Arki poikkeaa muusta Euroopasta: lounas syödään kahden ja '
+      + 'kolmen välillä, illallinen yhdeksän jälkeen, ja kaupungeissa '
+      + 'ollaan ulkona myöhään. Espanja on myös maailman toiseksi '
+      + 'suosituin matkailumaa ja Euroopan suurin oliiviöljyn tuottaja.',
+  },
+
+  Krakova: {
+    intro: 'Krakova oli Puolan pääkaupunki yli viisisataa vuotta, ja '
+      + 'kuninkaat kruunattiin ja haudattiin Wawelin kukkulan '
+      + 'katedraaliin. Pääkaupunki siirtyi Varsovaan 1596, mutta '
+      + 'kuninkaat jäivät.',
+    teksti: 'Kaupungin keskellä on Rynek Główny, Euroopan suurin '
+      + 'keskiaikainen tori: noin kaksisataa metriä joka suuntaan. '
+      + 'Torin keskellä seisoo Sukiennice, keskiaikainen kauppahalli, ja '
+      + 'laidalla Marian kirkko, jonka tornista soitetaan joka tunti '
+      + 'torvella hejnał — sävelmä, joka katkeaa aina kesken.\n\n'
+      + 'Krakovan vanhakaupunki säilyi toisessa maailmansodassa lähes '
+      + 'vaurioitta, toisin kuin Varsova, joka tuhottiin lähes '
+      + 'kokonaan. Siksi Krakovassa kävellään oikeissa keskiaikaisissa '
+      + 'kaduissa. Kaupungin Kazimierzin kaupunginosa oli vuosisatoja '
+      + 'juutalaisen kulttuurin keskus Puolassa; yhteisö tuhoutui '
+      + 'holokaustissa, ja korttelit ovat sittemmin heränneet uudelleen '
+      + 'kahviloiksi, synagogiksi ja museoiksi.\n\n'
+      + 'Lähellä on kaksi maailmanperintökohdetta lisää: Wieliczkan '
+      + 'suolakaivos, jonka käytäviin on veistetty kappeleita ja '
+      + 'kattokruunuja suolasta, sekä Auschwitzin muistopaikka. '
+      + 'Krakovassa on myös Puolan vanhin yliopisto, perustettu 1364 — '
+      + 'siellä opiskeli muun muassa Nikolaus Kopernikus.',
+  },
+  Puola: {
+    intro: 'Puola on Itämeren ja Karpaattien välinen tasankomaa Keski-'
+      + 'Euroopassa. Se on väkiluvultaan EU:n viidenneksi suurin, ja '
+      + 'sen talous on kasvanut nopeasti 1990-luvulta lähtien.',
+    teksti: 'Puolan historia on rajojen historiaa. Maa oli 1500-luvulla '
+      + 'Euroopan suurimpia valtioita, katosi sitten kartalta kokonaan '
+      + 'yli sadaksi vuodeksi, kun naapurit jakoivat sen keskenään '
+      + '1795, ja palasi itsenäiseksi 1918. Toisessa maailmansodassa '
+      + 'Puola menetti suhteellisesti enemmän väestöään kuin mikään muu '
+      + 'maa, ja sen rajat siirrettiin sodan jälkeen satoja kilometrejä '
+      + 'länteen.\n\n'
+      + 'Kommunistivalta päättyi Puolassa ensimmäisenä itäblokissa: '
+      + 'Gdańskin telakalla syntynyt Solidaarisuus-ammattiliitto '
+      + 'kymmenen miljoonan jäsenen voimin pakotti hallituksen vapaisiin '
+      + 'vaaleihin 1989. Puolalainen paavi Johannes Paavali II oli '
+      + 'liikkeelle tärkeä tuki.\n\n'
+      + 'Nykypäivän Puola on EU:n ja Naton jäsen ja yksi Euroopan '
+      + 'nopeimmin vaurastuneista maista. Katolinen kirkko on yhä '
+      + 'vahva, mutta nuorten kaupunkilaisten ja maaseudun näkemykset '
+      + 'eroavat toisistaan selvästi — se näkyy jokaisissa vaaleissa.',
+  },
+
+  Sarajevo: {
+    intro: 'Sarajevo on Bosnia ja Hertsegovinan pääkaupunki, kapeassa '
+      + 'vuoristolaaksossa Miljacka-joen varrella. Samalla kadulla '
+      + 'seisovat ottomaanien basaari, itävaltalaiset julkisivut, '
+      + 'moskeija, katedraali, ortodoksikirkko ja synagoga.',
+    teksti: 'Kaupungin perusti ottomaanihallinto 1400-luvulla, ja '
+      + 'basaarialue Baščaršija on siltä ajalta. Vuonna 1878 alue '
+      + 'siirtyi Itävalta-Unkarille, joka rakensi kaupungin länsipuolen '
+      + 'kokonaan uuteen tyyliin — siksi Sarajevossa voi ylittää '
+      + 'vuosisatoja yhdellä askeleella. Jalkakäytävään on merkitty '
+      + 'kohta, jossa kaksi maailmaa kohtaavat.\n\n'
+      + 'Latinalaissillan kulmassa ammuttiin kesäkuussa 1914 Itävalta-'
+      + 'Unkarin kruununprinssi Frans Ferdinand. Tapahtuma johti '
+      + 'ensimmäisen maailmansodan syttymiseen. Vuonna 1984 Sarajevo '
+      + 'isännöi talviolympialaisia, ja vuosina 1992–1996 kaupunki oli '
+      + 'piiritettynä Bosnian sodassa — piiritys oli nykyaikaisen '
+      + 'sodankäynnin pisin. Kadulle jääneitä kranaatinjälkiä on '
+      + 'täytetty punaisella hartsilla; niitä kutsutaan Sarajevon '
+      + 'ruusuiksi.\n\n'
+      + 'Nykyään Sarajevo on jälleen opiskelija- ja kahvilakaupunki. '
+      + 'Bosnialainen kahvi keitetään kuparipannussa ja juodaan '
+      + 'hitaasti; se on täällä sosiaalinen tapahtuma eikä virvoke. '
+      + 'Kaupungin elokuvafestivaali on Kaakkois-Euroopan suurin.',
+  },
+  'Bosnia ja Hertsegovina': {
+    intro: 'Bosnia ja Hertsegovina on vuoristoinen maa Balkanin '
+      + 'niemimaalla. Se on kooltaan noin kuudesosa Suomesta, ja '
+      + 'väkeä on runsaat kolme miljoonaa.',
+    teksti: 'Maassa asuu kolme valtaväestöä: bosniakit, serbit ja '
+      + 'kroaatit. He puhuvat samaa kieltä kolmella nimellä ja eroavat '
+      + 'lähinnä uskonnollisen perinteen mukaan — bosniakit ovat '
+      + 'perinteisesti muslimeja, serbit ortodokseja ja kroaatit '
+      + 'katolisia. Vuosisatojen ajan he elivät samoissa kylissä ja '
+      + 'kaupungeissa.\n\n'
+      + 'Jugoslavian hajotessa 1990-luvun alussa maassa käytiin sota, '
+      + 'joka päättyi vuoden 1995 Daytonin rauhansopimukseen. Sopimus '
+      + 'rakensi hallinnon kolmen kansan varaan: maalla on kolme '
+      + 'presidenttiä vuorotellen ja kaksi puoliksi itsenäistä osaa, '
+      + 'Bosnia ja Hertsegovinan federaatio sekä Serbitasavalta. '
+      + 'Järjestelmä lopetti sodan mutta tekee päätöksenteosta hidasta.\n\n'
+      + 'Luonto on maan vahvuus: vuoristoa, koskia ja jokia, joissa '
+      + 'melotaan ja kalastetaan. Mostarin kaupungissa on kuuluisa '
+      + '1500-luvun kaarisilta, joka tuhoutui sodassa ja rakennettiin '
+      + 'uudelleen samoista kivistä — siltä hypätään jokeen yhä '
+      + 'perinteisessä kilpailussa joka kesä.',
+  },
+
+  Islanti: {
+    intro: 'Islanti on tulivuorisaari Pohjois-Atlantilla, aivan '
+      + 'napapiirin eteläpuolella. Asukkaita on noin 390 000 — vähemmän '
+      + 'kuin Turussa ja Tampereella yhteensä — ja saari on Suomen '
+      + 'kolmasosan kokoinen.',
+    teksti: 'Saari sijaitsee Keski-Atlantin harjanteella, jossa '
+      + 'Pohjois-Amerikan ja Euraasian mannerlaatat erkanevat '
+      + 'toisistaan. Siksi Islannissa on toistasataa tulivuorta, '
+      + 'kuumia lähteitä ja geysirejä — sana geysir on islantia. '
+      + 'Maanalainen lämpö lämmittää lähes kaikki talot, ja sähkö '
+      + 'tuotetaan vesivoimalla ja maalämmöllä.\n\n'
+      + 'Þingvellirin rotkossa kokoontui Alþingi jo vuonna 930: se on '
+      + 'maailman vanhin yhä toimiva parlamentti. Islannin kieli on '
+      + 'muuttunut niin vähän, että keskiaikaisia saagoja voi lukea '
+      + 'alkukielellä ilman käännöstä. Uusille asioille keksitään omat '
+      + 'sanat lainaamisen sijaan.\n\n'
+      + 'Kalastus oli vuosisatoja saaren elinkeino, ja kuivattu turska '
+      + 'sen vientitavara. Nykyään suurimmat tulonlähteet ovat '
+      + 'matkailu, kalastus ja energia. Islannissa ei ole armeijaa '
+      + 'lainkaan, ja väkilukuun suhteutettuna maa julkaisee enemmän '
+      + 'kirjoja kuin juuri mikään muu.',
+  },
 };
 
 // ===== js/packs/valokuvat-paikalliset.js =====
@@ -8989,11 +9872,14 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Adansonia grandidieri04.jpg", 'adansonia-grandidieri04.jpg'],
   ["Adderley Street.jpg", 'uusi-kapkaupunki.jpg'],
   ["AddisView.jpg", 'uusi-addisabeba.jpg'],
+  ["Almannagjá Gorge, Þingvellir National Park, Iceland.jpg", 'islanti-kulttuuri-1.jpg'],
   ["Analakely vu d'en haut, Madagascar.jpg", 'uusi-madagaskar.jpg'],
   ["Antonio Vivaldi.jpg", 'antonio-vivaldi.jpg'],
   ["Arabs in Tripoli WDL2444.png", 'vanha-tripoli.png'],
   ["Assekrem Peaks at Sunset — Hoggar Mountains, Tamanrasset.jpg", 'uusi-ahaggar.jpg'],
+  ["Baščaršija.jpg", 'sarajevo-kulttuuri-1.jpg'],
   ["Big Hole Kimberley.jpg", 'uusi-kimberley.jpg'],
+  ["BjörkCoachella.jpg", 'islanti-kulttuuri-3.jpg'],
   ["Bo-Kaap colourful houses (30114819980).jpg", 'bo-kaap-colourful-houses-30114819980.jpg'],
   ["Boats by the Lake Victoria Shore.jpg", 'uusi-viktoria.jpg'],
   ["British delegation Addis Abeba.jpg", 'vanha-addisabeba.jpg'],
@@ -9004,10 +9890,15 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Cape Town tram, Adderley Street - ca. 1900.jpg", 'vanha-kapkaupunki.jpg'],
   ["Cattle Wau Sudan.jpg", 'uusi-bahrelghazal.jpg'],
   ["Cattle of the Dinka people, Juba, South Sudan - 20101230-05.jpg", 'cattle-of-the-dinka-people-juba-south-sudan-20101230-05.jpg'],
+  ["Cerveza y pulpo seco motrileño.jpg", 'granada-kulttuuri-3.jpg'],
+  ["Château d'If @ Baie de Marseille 01.jpg", 'marseille-kulttuuri-1.jpg'],
+  ["City View of Reykjavik from Hallgrímskirkja - 2013.08 - panoramio.jpg", 'uusi-islanti.jpg'],
   ["Congo River from Kinshasa in Democratic Republic of the Congo (DRC).jpg", 'uusi-kongo.jpg'],
   ["Cotton Tree (Sierra Leone).jpg", 'cotton-tree-sierra-leone.jpg'],
   ["Cotton Tree Railway Station 3.30 p.m. Bungalow Train, Freetown.jpg", 'vanha-sierraleone.jpg'],
   ["Cotton tree in Freetown, SL - Mapillary (yIBZ74r6IsUFOaWtAPwhWw).jpg", 'uusi-sierraleone.jpg'],
+  ["Court of the Lions, Alhambra by Juan Laurent.jpg", 'vanha-granada.jpg'],
+  ["Court of the Lions, Alhambra de Granada (Spain).jpg", 'uusi-granada.jpg'],
   ["Dakar mosque circa 1900.jpg", 'vanha-dakar.jpg'],
   ["ETH-BIB-Fokker in der Sahara-Tschadseeflug 1930-31-LBS MH02-08-0405.tif", 'vanha-sahara.jpg'],
   ["ETH-BIB-Grabmal von Askia, Gao-Tschadseeflug 1930-31-LBS MH02-08-0548.tif", 'vanha-gao.jpg'],
@@ -9021,6 +9912,7 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Fishermen on the shores of Lake Victoria.jpg", 'fishermen-on-the-shores-of-lake-victoria.jpg'],
   ["Fishing on lake Victoria 01.jpg", 'fishing-on-lake-victoria-01.jpg'],
   ["Frankincense 2005-12-31.jpg", 'frankincense-2005-12-31.jpg'],
+  ["GKS 1005 fol., 0005v - 15 (cropped).jpg", 'islanti-kulttuuri-2.jpg'],
   ["Ganuwa or Badala - Kano City Wall - Outside Sabuwar Kofa.jpg", 'uusi-kano.jpg'],
   ["Garesadihafun.jpg", 'vanha-rashafun.jpg'],
   ["Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg", 'vanha-venetsia.jpg'],
@@ -9029,6 +9921,7 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Hafun from space.jpg", 'uusi-rashafun.jpg'],
   ["Harbour at the picturesque Stone Town.jpg", 'uusi-sansibar.jpg'],
   ["Harper, Liberia - panoramio (1).jpg", 'uusi-kappalmas.jpg'],
+  ["Hejnalista krakowski.jpg", 'krakova-kulttuuri-2.jpg'],
   ["Henri Matisse, 1911-12, La Fenêtre à Tanger (Paysage vu d'une fenêtre Landscape viewed from a window, Tangiers), oil on canvas, 115 x 80 cm, Pushkin Museum.jpg", 'henri-matisse-1911-12-la-fenetre-a-tanger-paysage-vu-d-une-f.jpg'],
   ["ISS-50 Al-Jawf Oasis in Eastern Libya.jpg", 'uusi-alkufra.jpg'],
   ["Ilha de Mocambique.jpg", 'uusi-mosambik.jpg'],
@@ -9038,6 +9931,9 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Kairo, marchands ambulants LCCN2017657437.jpg", 'vanha-kairo.jpg'],
   ["Kente cloth.jpg", 'kente-cloth.jpg'],
   ["Kofar Mata Dye Pit, Kano.jpg", 'kofar-mata-dye-pit-kano.jpg'],
+  ["Krakow - Kosciol Maryacki i Sukiennice. 1910 (69699690).jpg", 'vanha-krakova.jpg'],
+  ["Kraków - Rynek Główny (2).jpg", 'uusi-krakova.jpg'],
+  ["Kraków Cloth Hall, 3 Main Market square, Old Town, Krakow, Poland.jpg", 'krakova-kulttuuri-3.jpg'],
   ["Kufra (aeroview).jpg", 'vanha-alkufra.jpg'],
   ["Kufra Oasis.jpg", 'kufra-oasis.jpg'],
   ["Kumasi 28-03-1900 sx.jpg", 'vanha-kumasi.jpg'],
@@ -9047,6 +9943,7 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Lagos, 1929.jpg", 'vanha-lagos.jpg'],
   ["Lake Tanganyika ,Kigoma port.jpg", 'uusi-tanganjika.jpg'],
   ["Lake Victoria as visible from Kisumu City.jpg", 'lake-victoria-as-visible-from-kisumu-city.jpg'],
+  ["Latin Bridge Sarajevo summer 2010.JPG", 'sarajevo-kulttuuri-3.jpg'],
   ["LesEscales2019ManuDibango 03 (cropped).jpg", 'lesescales2019manudibango-03-cropped.jpg'],
   ["Liberia, dan, maschera, xx sec. 01.JPG", 'liberia-dan-maschera-xx-sec-01.jpg'],
   ["Libya 4924 Pictograms Tadrart Acacus Luca Galuzzi 2007.jpg", 'libya-4924-pictograms-tadrart-acacus-luca-galuzzi-2007.jpg'],
@@ -9057,8 +9954,10 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Lüderitz.jpg", 'uusi-namib.jpg'],
   ["Lüderitzbucht, Deutsch-Südwestafrika. The newly finished pier with an Illing locomotive, February 1908, photograph by de Meillon.jpg", 'vanha-namib.jpg'],
   ["MV.Liemba.jpg", 'mv-liemba.jpg'],
+  ["Manuel de Falla.jpg", 'granada-kulttuuri-2.jpg'],
   ["Marginal de Luanda HD Dji Mavic 3 Classic - By Délcio Geovany Borges.jpg", 'uusi-angola.jpg'],
   ["Marrakech Minaret depuis la rue animée - sap04 10l01821 p.jpg", 'vanha-marrakech.jpg'],
+  ["Marseille Filets sur le quai Saint-Jean.jpg", 'marseille-kulttuuri-2.jpg'],
   ["Masks of Africa of Chokwe people freigestellt.jpg", 'masks-of-africa-of-chokwe-people-freigestellt.jpg'],
   ["Memorial tablet marking the spot where Livingstone and Stanley met at Ujiji in 1871 ATLIB 305982.png", 'vanha-tanganjika.png'],
   ["Mission Marchand Haut-Oubangui Bahr-el-Ghazal Nil (...)Marchand Jean-Baptiste btv1b53198373d 4.jpg", 'vanha-bahrelghazal.jpg'],
@@ -9066,17 +9965,24 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Mount Cameroon view from Buea (Soppo).jpg", 'uusi-kamerun.jpg'],
   ["Mount Kilimanjaro.jpg", 'mount-kilimanjaro.jpg'],
   ["Murzuq - Festung Qala at Turk über dem Ort.jpg", 'uusi-murzuk.jpg'],
+  ["Old Harbor (Vieux-Port), Marseille, France-LCCN2002715100.jpg", 'vanha-marseille.jpg'],
   ["Osmanisches Fort von Mursuk.jpg", 'vanha-murzuk.jpg'],
   ["Panorama Tanger Bay Tangier Marokko.jpg", 'uusi-tanger.jpg'],
   ["Panorama van de haven van Zanzibar Panorama of Zanzibar (titel op object) Zanzibar (titel op object), RP-F-F00999-DD.jpg", 'vanha-sansibar.jpg'],
   ["People gathered before a church, Cameroon, ca.1910-1920 (IMP-YDS-RG101-012-0000-0036).jpg", 'vanha-kamerun.jpg'],
   ["Pescaria Rialto Venice.jpg", 'pescaria-rialto-venice.jpg'],
   ["Photograph of Kenyan Sikh pioneers in-front of Gurdwara Sahib Railway Landhies in Nairobi, Kenya, 1903.jpg", 'vanha-nairobi.jpg'],
+  ["Pils - Rouget de Lisle chantant la Marseillaise.jpg", 'marseille-kulttuuri-3.jpg'],
   ["Planta da fortaleza da ilha de Moçambique, Leonardo de Ferrari, 1655.jpg", 'vanha-mosambik.jpg'],
   ["Porte du non-retour au Benin.jpg", 'uusi-orjarannikko.jpg'],
+  ["Reykjavík. Fish drying and shark oil station. (4558216609).jpg", 'vanha-islanti.jpg'],
   ["Saint-Paul de Luanda, port de (l')Angola dans le Portugal africain (vue générale) - btv1b6932475d.jpg", 'vanha-angola.jpg'],
   ["Sankore Mosque in Timbuktu.jpg", 'uusi-timbuktu.jpg'],
   ["Sanza Boa-Zaïre-Musée royal de l'Afrique centrale.jpg", 'sanza-boa-zaire-musee-royal-de-l-afrique-centrale.jpg'],
+  ["Sarajevo Bascarsija from Trebevic.JPG", 'uusi-sarajevo.jpg'],
+  ["Sarajevo Sebilj and Bascarsija, ca. 1930.jpg", 'vanha-sarajevo.jpg'],
+  ["Smok Wawelski, Kraków.jpg", 'krakova-kulttuuri-1.jpg'],
+  ["Stevan Kragujevic, Nada Mamula, Tv emisija Sjelo na vrelu Bosne, 1962.jpg", 'sarajevo-kulttuuri-2.jpg'],
   ["Still Life with Stork and Fishing Boats - Along Shore of Lake Victoria - Entebbe - Uganda.jpg", 'still-life-with-stork-and-fishing-boats-along-shore-of-lake-.jpg'],
   ["Suakin,custom office.jpg", 'uusi-suakin.jpg'],
   ["Suakin,el-Geyf mosque.jpg", 'suakin-el-geyf-mosque.jpg'],
@@ -9100,6 +10006,8 @@ const VALOKUVAT_PAIKALLISET = new Map([
   ["Umm Kulthum4.jpg", 'umm-kulthum4.jpg'],
   ["Victoria Falls Bridge 1905.jpg", 'vanha-viktorianputoukset.jpg'],
   ["Victoria Falls Bridge and Zambezi river.jpg", 'uusi-viktorianputoukset.jpg'],
+  ["Vieux-Port de Marseille, France.jpg", 'uusi-marseille.jpg'],
+  ["View of the Alhambra and Sierra Nevada - Granada - Spain.jpg", 'granada-kulttuuri-1.jpg'],
   ["View-Kano city-1911.jpg", 'vanha-kano.jpg'],
   ["Waving fisherman on Lake Chad (detilt).jpg", 'uusi-tshadjarvi.jpg'],
   ["Zanzibar Taarab Kidumbak Ensemble.jpg", 'zanzibar-taarab-kidumbak-ensemble.jpg'],
@@ -9113,13 +10021,18 @@ const LIPUT_PAIKALLISET = new Map([
   ["Berber flag.svg", 'berber-flag.png'],
   ["Flag of Algeria.svg", 'algeria.png'],
   ["Flag of Angola.svg", 'angola.png'],
+  ["Flag of Bosnia and Herzegovina.svg", 'bosnia-and-herzegovina.png'],
   ["Flag of Cameroon.svg", 'cameroon.png'],
+  ["Flag of Catalonia.svg", 'catalonia.png'],
   ["Flag of Chad.svg", 'chad.png'],
+  ["Flag of Croatia.svg", 'croatia.png'],
   ["Flag of Egypt.svg", 'egypt.png'],
   ["Flag of Ethiopia.svg", 'ethiopia.png'],
   ["Flag of France.svg", 'france.png'],
+  ["Flag of Galicia.svg", 'galicia.png'],
   ["Flag of Germany.svg", 'germany.png'],
   ["Flag of Ghana.svg", 'ghana.png'],
+  ["Flag of Iceland.svg", 'iceland.png'],
   ["Flag of Italy.svg", 'italy.png'],
   ["Flag of Kenya.svg", 'kenya.png'],
   ["Flag of Liberia.svg", 'liberia.png'],
@@ -9130,10 +10043,13 @@ const LIPUT_PAIKALLISET = new Map([
   ["Flag of Mozambique.svg", 'mozambique.png'],
   ["Flag of Namibia.svg", 'namibia.png'],
   ["Flag of Nigeria.svg", 'nigeria.png'],
+  ["Flag of Occitania.svg", 'occitania.png'],
+  ["Flag of Poland.svg", 'poland.png'],
   ["Flag of Portugal.svg", 'portugal.png'],
   ["Flag of Sardinia, Italy.svg", 'sardinia-italy.png'],
   ["Flag of Saudi Arabia.svg", 'saudi-arabia.png'],
   ["Flag of Senegal.svg", 'senegal.png'],
+  ["Flag of Serbia.svg", 'serbia.png'],
   ["Flag of Sierra Leone.svg", 'sierra-leone.png'],
   ["Flag of Somalia.svg", 'somalia.png'],
   ["Flag of South Africa.svg", 'south-africa.png'],
@@ -9143,7 +10059,9 @@ const LIPUT_PAIKALLISET = new Map([
   ["Flag of Tanzania.svg", 'tanzania.png'],
   ["Flag of Tunisia.svg", 'tunisia.png'],
   ["Flag of Uganda.svg", 'uganda.png'],
+  ["Flag of Upper Silesia.svg", 'upper-silesia.png'],
   ["Flag of Zimbabwe.svg", 'zimbabwe.png'],
+  ["Flag of the Basque Country.svg", 'basque-country.png'],
   ["Flag of the Democratic Republic of the Congo.svg", 'democratic-republic-of-the-congo.png'],
   ["Flag of the United Kingdom.svg", 'united-kingdom.png'],
 ]);
@@ -18186,8 +19104,23 @@ const EU_MAP = {
   ],
   // Islanti on todellisuudessa kartan ulkopuolella lännessä; saari on tuotu
   // luoteisnurkkaan pitkien laivareittien päähän, kuten St. Helena Afrikassa.
+  // Ääriviiva on Natural Earthin oikea Islanti (50m) sovitettuna tähän
+  // laatikkoon, jotta maan korostus ja Tutki-kortin minikartta osuvat
+  // täsmälleen siihen saareen, joka laudalla näkyy.
   icelandPoints: [
-    [22, 60], [38, 38], [70, 30], [100, 42], [105, 62], [88, 82], [52, 86], [30, 76],
+    [89.9, 35.3], [97.1, 32.5], [93.2, 37.1], [96.3, 39.0], [95.4, 43.6], [98.7, 43.2],
+    [98.1, 47.0], [100.4, 45.8], [104.5, 48.0], [103.1, 51.0], [104.9, 56.1], [101.3, 62.0],
+    [98.7, 61.9], [96.9, 67.9], [87.7, 72.2], [81.6, 77.8], [72.7, 80.5], [71.7, 83.7],
+    [66.3, 86.0], [54.6, 83.3], [52.9, 78.8], [51.1, 80.1], [47.7, 76.4], [35.9, 78.4],
+    [35.6, 73.8], [39.5, 74.6], [45.0, 68.5], [40.5, 69.7], [44.0, 64.1], [40.1, 65.8],
+    [37.3, 61.1], [27.1, 62.1], [25.5, 59.8], [41.7, 56.5], [42.6, 54.0], [37.0, 53.8],
+    [42.1, 49.3], [34.0, 46.9], [26.5, 50.0], [22.1, 47.9], [23.8, 46.3], [26.8, 47.7],
+    [25.0, 43.4], [28.6, 45.2], [31.1, 43.9], [27.0, 42.1], [29.3, 41.6], [27.4, 39.1],
+    [30.0, 39.0], [29.9, 36.1], [37.5, 41.0], [37.5, 38.1], [33.7, 35.6], [37.2, 34.6],
+    [32.4, 33.3], [33.7, 31.7], [37.7, 31.7], [45.4, 38.9], [45.6, 44.0], [43.5, 44.4],
+    [47.5, 52.6], [50.0, 45.9], [52.6, 47.1], [54.5, 37.6], [60.0, 43.6], [60.8, 38.0],
+    [64.8, 36.1], [70.2, 44.2], [69.0, 36.6], [74.7, 40.0], [77.7, 35.8], [82.8, 35.9],
+    [82.4, 31.4], [84.6, 30.0], [89.1, 34.7],
   ],
   maghrebPoints: [
     [-45, 960.0], [97.9, 952.1], [169.0, 970.5], [211.2, 949.4], [268.8, 925.8],
@@ -18213,7 +19146,7 @@ const EU_CITIES = [
   { id: 'dublin', name: 'Dublin', x: 91, y: 490, la: 'end', lx: -16, ly: 5 },
   { id: 'edinburgh', name: 'Edinburgh', x: 150, y: 422, la: 'end', lx: -16, ly: 5 },
   { id: 'pariisi', name: 'Pariisi', x: 256, y: 609 },
-  { id: 'marseille', name: 'Marseille', x: 312, y: 744, la: 'end', lx: -16, ly: 14 },
+  { id: 'marseille', name: 'Marseille', wiki: 'Marseille', x: 312, y: 744, la: 'end', lx: -16, ly: 14 },
   { id: 'lissabon', name: 'Lissabon', x: 36, y: 875, la: 'start', lx: 16, ly: 5 },
   {
     id: 'madrid', name: 'Madrid', x: 140, y: 831, airport: true,
@@ -18221,14 +19154,14 @@ const EU_CITIES = [
     links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
   },
   { id: 'barcelona', name: 'Barcelona', x: 244, y: 800, la: 'start', lx: 16, ly: 5 },
-  { id: 'granada', name: 'Granada', x: 142, y: 916, la: 'end', lx: -16, ly: 5 },
+  { id: 'granada', name: 'Granada', wiki: 'Granada', x: 142, y: 916, la: 'end', lx: -16, ly: 5 },
   { id: 'amsterdam', name: 'Amsterdam', x: 305, y: 516, la: 'start', lx: 16, ly: 5 },
   { id: 'berliini', name: 'Berliini', x: 468, y: 512, airport: true },
   { id: 'praha', name: 'Praha', x: 488, y: 576, la: 'end', lx: -16, ly: 5 },
   { id: 'wien', name: 'Wien', x: 526, y: 626, la: 'start', lx: 16, ly: -6 },
   { id: 'budapest', name: 'Budapest', x: 591, y: 658, la: 'start', lx: 16, ly: 10 },
   { id: 'varsova', name: 'Varsova', x: 615, y: 520 },
-  { id: 'krakova', name: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
+  { id: 'krakova', name: 'Krakova', wiki: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
   { id: 'alpit', name: 'Alpit', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
   // Venetsia on Adrianmeren pohjukassa Milanon tilalla (omistajan valinta).
   { id: 'venetsia', name: 'Venetsia', wiki: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
@@ -18241,7 +19174,7 @@ const EU_CITIES = [
   { id: 'kreeta', name: 'Kreeta', x: 694, y: 964, la: 'middle', lx: 0, ly: 26 },
   { id: 'dubrovnik', name: 'Dubrovnik', x: 560, y: 770, la: 'middle', lx: 0, ly: -22 },
   // Sarajevoa on siirretty hieman itään, jotta nimet mahtuvat Balkanilla.
-  { id: 'sarajevo', name: 'Sarajevo', x: 600, y: 724, la: 'start', lx: 16, ly: 2 },
+  { id: 'sarajevo', name: 'Sarajevo', wiki: 'Sarajevo', x: 600, y: 724, la: 'start', lx: 16, ly: 2 },
   { id: 'sofia', name: 'Sofia', x: 659, y: 771, la: 'start', lx: 16, ly: 5 },
   { id: 'bukarest', name: 'Bukarest', x: 712, y: 725, la: 'start', lx: 16, ly: 5 },
   { id: 'kiova', name: 'Kiova', x: 797, y: 567 },
@@ -18269,7 +19202,7 @@ const EU_CITIES = [
   { id: 'kobenhavn', name: 'Kööpenhamina', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
   { id: 'lappi', name: 'Lappi', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
   { id: 'tromssa', name: 'Tromssa', x: 577, y: 66, la: 'start', lx: 16, ly: 5 },
-  { id: 'islanti', name: 'Islanti', x: 62, y: 60, la: 'middle', lx: 0, ly: 42 },
+  { id: 'islanti', name: 'Islanti', wiki: 'Islanti', x: 62, y: 60, la: 'middle', lx: 0, ly: 42 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -37054,6 +37987,55 @@ async function cachedImage(title) {
 // (ElevenLabs, Viisas Kertoja). Kortin kaiutin ja luenta näkyvät vain
 // näille — muut kaupungit saavat tekstinsä ilman ääntä, kunnes niiden
 // luennat generoidaan.
+/*
+ * Saapumismerkintöjen luennat: 'pakka:kaupunki' kertoo, että tiedosto
+ * assets/audio/puhe-<pakka>-saapuminen-<kaupunki>.mp3 on olemassa.
+ * Kortin kaiutin ja luenta näkyvät vain näille; muut kaupungit saavat
+ * merkintänsä ilman ääntä, kunnes luennat generoidaan.
+ */
+const SAAPUMISLUENNAT = new Set([
+  'africa:addisabeba',
+  'africa:ahaggar',
+  'africa:alkufra',
+  'africa:angola',
+  'africa:bahrelghazal',
+  'africa:dakar',
+  'africa:darfur',
+  'africa:gao',
+  'africa:kairo',
+  'africa:kamerun',
+  'africa:kano',
+  'africa:kapkaupunki',
+  'africa:kappalmas',
+  'africa:karthago',
+  'africa:kilimandzaro',
+  'africa:kimberley',
+  'africa:kongo',
+  'africa:kumasi',
+  'africa:lagos',
+  'africa:madagaskar',
+  'africa:marrakech',
+  'africa:mosambik',
+  'africa:murzuk',
+  'africa:nairobi',
+  'africa:namib',
+  'africa:orjarannikko',
+  'africa:rashafun',
+  'africa:sahara',
+  'africa:sansibar',
+  'africa:sierraleone',
+  'africa:sthelena',
+  'africa:suakin',
+  'africa:tanganjika',
+  'africa:tanger',
+  'africa:timbuktu',
+  'africa:tripoli',
+  'africa:tshadjarvi',
+  'africa:viktoria',
+  'africa:viktorianputoukset',
+  'europe:venetsia',
+]);
+
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
 const VIHJELUENNAT = new Set([
   'europe:venetsia',
@@ -38985,9 +39967,14 @@ class UI {
             if (rivi) this.factText.appendChild(rivi);
           });
         });
-        this.diaryFullUrl = `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`;
-        this.factKuuntele.hidden = false;
-        if (this.luettuSaapuminen !== luentaAvain) {
+        // Kaiutin ja luenta vain kaupungeille, joille luenta on generoitu.
+        // Ilman tätä nappi näkyi kaikilla ja tuotti hiljaisuutta.
+        const luettava = SAAPUMISLUENNAT.has(luentaAvain.replace('saapui:', ''));
+        this.diaryFullUrl = luettava
+          ? `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`
+          : null;
+        this.factKuuntele.hidden = !luettava;
+        if (luettava && this.luettuSaapuminen !== luentaAvain) {
           this.luettuSaapuminen = luentaAvain;
           // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
           // lyhyt vain ensimmäisen lauseen (omistajan tarkennus — luenta
@@ -39320,17 +40307,29 @@ class UI {
       this.naytaMaaTunnusluvut(iso);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
-      const omaMaaIntro = ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
+      //
+      // Kun kaupunki ja maa ovat sama paikka (Islanti, samoin kuin
+      // St. Helena Afrikassa), sama teksti osuisi kortille kahdesti
+      // vierekkäin. Silloin maapalstan esittely jätetään pois — kartta,
+      // tunnusluvut ja tervehdykset kertovat maasta jo omansa.
+      const maanAvain = maa.wiki ?? maa.nimi;
+      const omaMaaIntro = maanAvain === (city.wiki ?? city.name)
+        ? null
+        : ARTIKKELIT[maanAvain]?.intro;
       if (omaMaaIntro) {
         this.arrivalMaaIntro.textContent = omaMaaIntro;
         this.arrivalMaaWiki.hidden = false;
       }
-      cachedSummary(maa.wiki ?? maa.nimi).then((summary) => {
-        if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
-        if (!summary?.extract) return;
-        if (!omaMaaIntro) this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
-        this.arrivalMaaWiki.hidden = false;
-      });
+      // Sama poikkeus kuin yllä: samasta artikkelista ei haeta katkelmaa
+      // maapalstalle, jos kaupunkipalsta näyttää sen jo.
+      if (maanAvain !== (city.wiki ?? city.name)) {
+        cachedSummary(maanAvain).then((summary) => {
+          if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
+          if (!summary?.extract) return;
+          if (!omaMaaIntro) this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
+          this.arrivalMaaWiki.hidden = false;
+        });
+      }
     }
 
     // Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja niihin
@@ -41499,7 +42498,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.113';
+const APP_VERSION = '2026-08-01.114';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

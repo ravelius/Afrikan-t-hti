@@ -29,12 +29,18 @@ const KANSIO = 'assets/valokuvat';
 const KARTTA = 'js/packs/valokuvat-paikalliset.js';
 const UA = 'AfrikanTahti-kuvahaku/1.0 (opetuspeli; https://github.com/ravelius/afrikan-tahti)';
 
-/** Kaikki `tiedosto: '...'` -viittaukset; myös ne, joissa on kenoviivalla suojattu heittomerkki. */
+/*
+ * Kaikki `tiedosto: '...'` -viittaukset. Molemmat lainausmerkit käyvät:
+ * heittomerkin sisältävä nimi (Château d'If) on lähteessä helpompi
+ * kirjoittaa kaksinkertaisilla lainausmerkeillä. Kenoviivalla suojatut
+ * merkit puretaan.
+ */
 function kaikkiViittaukset() {
   const nimet = new Set();
   const poimi = (sisalto) => {
-    for (const osuma of sisalto.matchAll(/tiedosto: '((?:[^'\\]|\\.)+)'/g)) {
-      nimet.add(osuma[1].replace(/\\'/g, "'").replace(/\\\\/g, '\\'));
+    for (const osuma of sisalto.matchAll(/tiedosto: (?:'((?:[^'\\]|\\.)+)'|"((?:[^"\\]|\\.)+)")/g)) {
+      const raaka = osuma[1] ?? osuma[2];
+      nimet.add(raaka.replace(/\\(['"\\])/g, '$1'));
     }
   };
   for (const tiedosto of fs.readdirSync('js/packs')) {

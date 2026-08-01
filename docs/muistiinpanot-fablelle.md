@@ -327,7 +327,57 @@ kannattaa tietää jos sitä säätää:
   liukuvärjäyksestä. Suodin olisi sumentanut myös kynäviivoituksen,
   koska `::after` on suodatetun elementin sisällä.
 
-## 7. Muuta kirjattavaa
+## 7. Euroopan viisi kaupunkia valmiiksi — 1.8.2026
+
+**[Omistaja]** "Pystyisitkö jatkamaan ne viisi kaupunkia Euroopassa
+loppuun mitkä jäivät fablen sessiossa kesken? Älä kuitenkaan generoi
+puhe ääniä."
+
+**[Opus]** PR #199 lisäsi Eurooppaan kuusi uutta kaupunkia (Venetsia,
+Marseille, Granada, Krakova, Sarajevo, Islanti) ja PR #210 vei niistä
+vain Venetsian täydelle tasolle. Loput viisi ovat nyt samalla tasolla.
+
+**Mitä jokainen kaupunki sai:** saapumisteksti + isoisän nosto, kolme
+kulttuurinostoa kuvineen ja kulttuurivisa, vanha/uusi valokuvapari,
+maan tunnusluvut, maan rajat ja minikartta, omat artikkelit
+kaupungista ja maasta sekä `wiki`-kenttä.
+
+**Puheluennat jätettiin generoimatta** omistajan ohjeen mukaan. Se
+vaati pienen korjauksen: saapumiskortti näytti kaiutinnapin aina,
+myös kun ääntä ei ollut. Nyt `SAAPUMISLUENNAT` (js/ui.js) kertoo,
+mille kaupungeille luenta on olemassa — sama tapa kuin
+`VIHJELUENNAT` ja `HAVAINTOLUENNAT`. **Kun luennat generoidaan, lisää
+avaimet siihen settiin**, muuten nappi ei ilmesty.
+
+**Kaksi työkalua syntyi matkalla:**
+
+- `tools/europe-countries.mjs` — Natural Earthin 50m-polygonit Euroopan
+  projektioon. Harvennus skaalautuu maan kokoon: kiinteä sietoraja söi
+  Bosnian muodon läiskäksi (14 pistettä), nyt se on 51 pistettä.
+  Samalla Italian rajat uusittiin, joten Sisilia ja Sardinia ovat
+  vihdoin mukana.
+- `tools/fetch-photos.mjs` — hakee kaikki kiinteät Commons-kuvat repoon
+  (ks. kohta 5).
+
+**Kaksi asiaa, jotka kannattaa tietää seuraavia kaupunkeja varten:**
+
+1. **Islanti on samalla kaupunki ja maa.** Sen takia sama esittely
+   näkyi kortilla kahdesti vierekkäin. `openArrival` jättää nyt
+   maapalstan esittelyn pois, jos kaupungin ja maan artikkeliavain on
+   sama. Sama koskisi St. Helenaa, jos Afrikkaan lisätään maatiedot.
+2. **Islanti on kartalla väärässä paikassa tarkoituksella** (oikeasti
+   lännempänä kuin lauta ulottuu). Siksi maan rajaa ei voi projisoida
+   suoraan: `icelandPoints` ja `EUROPE_COUNTRY_SHAPES.ISL` ovat sama
+   oikea ääriviiva sovitettuna siihen laatikkoon, jossa saari laudalla
+   on. Jos saarta siirretään, molemmat pitää siirtää yhdessä.
+
+**Avoinna:** Euroopassa on 34 kaupunkia, joista kuudella on nyt täysi
+sisältö. Loput 28 odottavat. Yhden kaupungin työ on karkeasti: viisi
+kuvaa (haku + lisenssitarkistus on hitain vaihe), maan tunnusluvut
+kolmesta lähteestä, maan rajat työkalulla ja noin 3 000 merkkiä
+kirjoitettua tekstiä.
+
+## 8. Muuta kirjattavaa
 
 *(Tähän lisätään sitä mukaa kuin omistaja huomaa asioita pelatessa.)*
 
