@@ -376,7 +376,21 @@ kuvaa (haku + lisenssitarkistus on hitain vaihe), maan tunnusluvut
 kolmesta lähteestä, maan rajat työkalulla ja noin 3 000 merkkiä
 kirjoitettua tekstiä.
 
-## 8. Muuta kirjattavaa
+## 8. Muutosloki (lyhyt)
+
+Omistajan pyyntö 1.8.2026: kirjaa muutokset lyhyesti sitä mukaa kuin
+niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
+
+| v | Muutos |
+|---|---|
+| 116 | Aloituskartta puhelimella: 1. napautus zoomaa (ei valitse), vaakapanorointi, avaustekstin viimeinen rivi lihavoitu, kohderenkaat sykkivät ja vaikenevat raahauksen ajaksi. Sarajevo siirretty Bosnian sisään. |
+| 115 | Nopan varjo takaisin tavalliseksi (kynäviivoitus pois). |
+| 114 | Euroopan viisi kaupunkia Afrikan tasolle (ks. kohta 7). |
+| 113 | Yläpalkki puhelimella pelkiksi kuvakkeiksi, nimi "M". |
+| 112 | Liput ja loput Commons-kuvat repoon, kynävarjo, lentokalvon sumennus. |
+| 111 | Ruudunpäivitys: nopanheitto 15 → 60 fps. |
+
+## 9. Muuta kirjattavaa
 
 *(Tähän lisätään sitä mukaa kuin omistaja huomaa asioita pelatessa.)*
 

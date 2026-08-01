@@ -70,7 +70,10 @@
           pergamenttiin, jotta kohteen voi napauttaa heti luettuaan.
         -->
         <section id="intro" class="intro" hidden>
-          <p id="intro-text" class="intro-text"></p>
+          <!-- Avausteksti kahtena osana: runko ja viimeinen rivi
+               ("mistä aloitan?"), joka lihavoidaan omistajan toiveesta.
+               Teksti itse on lukittu js/ui.js:n INTRO_TEXT-vakioon. -->
+          <p id="intro-text" class="intro-text"><span id="intro-runko"></span><b id="intro-lopetus" class="intro-lopetus"></b></p>
         </section>
       </section>
 

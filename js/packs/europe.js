@@ -139,9 +139,16 @@ const EU_CITIES = [
     links: [{ pack: 'maailma', city: 'ateena', label: 'Maailma-lauta' }],
   },
   { id: 'kreeta', name: 'Kreeta', x: 694, y: 964, la: 'middle', lx: 0, ly: 26 },
-  { id: 'dubrovnik', name: 'Dubrovnik', x: 560, y: 770, la: 'middle', lx: 0, ly: -22 },
+  // Nimi alapuolelle: Sarajevo on nyt suoraan yläpuolella.
+  { id: 'dubrovnik', name: 'Dubrovnik', x: 560, y: 770, la: 'middle', lx: 0, ly: 30 },
   // Sarajevoa on siirretty hieman itään, jotta nimet mahtuvat Balkanilla.
-  { id: 'sarajevo', name: 'Sarajevo', wiki: 'Sarajevo', x: 600, y: 724, la: 'start', lx: 16, ly: 2 },
+  // Sarajevo ei mahdu tarkalleen oikealle paikalleen (565, 740): se on
+  // vain 30 yksikön päässä Dubrovnikista, ja lauta vaatii kaupunkien
+  // väliksi 60. Aiemmin kaupunkia oli siirretty itään, jolloin piste
+  // jäi Bosnian rajojen ULKOPUOLELLE Tutki-kortin minikartalla
+  // (omistajan havainto). Nyt siirto on pohjoiseen: tämä on lähin
+  // sallittu paikka, joka on maan sisällä.
+  { id: 'sarajevo', name: 'Sarajevo', wiki: 'Sarajevo', x: 561, y: 710, la: 'start', lx: 16, ly: -6 },
   { id: 'sofia', name: 'Sofia', x: 659, y: 771, la: 'start', lx: 16, ly: 5 },
   { id: 'bukarest', name: 'Bukarest', x: 712, y: 725, la: 'start', lx: 16, ly: 5 },
   { id: 'kiova', name: 'Kiova', x: 797, y: 567 },
