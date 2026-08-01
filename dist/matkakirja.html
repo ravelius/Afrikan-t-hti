@@ -323,6 +323,20 @@ body.manner-zoom .turn-card::before {
     rgba(247, 238, 214, 0) 78%);
 }
 
+/*
+ * Mantereelle saavuttaessa matkakirja ja toimintonapit odottavat, että
+ * zoomaus on ohi (omistajan toive). Näin pelaaja näkee ensin mantereen
+ * kokonaan ja vasta sitten kortit. Häivytys on sama kuin kiikarilla,
+ * jotta ne tulevat esiin samaan tahtiin.
+ */
+body[data-mode] .rail { transition: opacity 700ms ease; }
+
+body.manner-odottaa .rail {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
 /* Raahauksen ajaksi kartan sykähdykset vaikenevat (omistajan toive):
    liikkuva kartta on jo tarpeeksi työtä ruudunpäivitykselle. */
 body.kartta-raahaus .target-ring,
@@ -10698,12 +10712,12 @@ const EUROPE_VALOKUVAT = {
   },
 
   ateena: {
-    tiedosto: 'Athènes. LʹAcropole Avec Temple de Jupiter Olympien LCCN2017656399.jpg',
+    tiedosto: "Athènes. L' Acropole et le Temple de Thesée LCCN2017658103.jpg",
     vuosi: '1890-luku',
     lahde: 'Library of Congress (PD)',
-    selite: 'Akropolis ja Olympian Zeuksen temppelin pylväät '
+    selite: 'Akropolis ja etualalla Hefaistoksen temppeli '
       + 'käsinvärittynä photochrom-vedoksena. Kaupunki oli tuolloin '
-      + 'pieni: Ateenassa asui noin 100 000 ihmistä, ja temppelin '
+      + 'pieni: Ateenassa asui noin 100 000 ihmistä, ja temppelien '
       + 'ympärillä oli peltoa.',
     uusi: {
       tiedosto: 'The Acropolis of Athens with the Parthenon, the Erecththeion and the Mycenean Fountain from Monastiraki Square on March 11, 2020.jpg',
@@ -41201,9 +41215,10 @@ class UI {
     clearTimeout(this.mannerAjastin);
     clearTimeout(this.kiikariAjastin);
     clearTimeout(this.zoomAjastin);
+    clearTimeout(this.korttiAjastin);
     document.body.classList.remove(
       'aloitus-zoom', 'manner-zoom', 'kartta-raahaus', 'kiikari-paalla',
-      'zoom-kaynnissa',
+      'zoom-kaynnissa', 'manner-odottaa',
     );
   }
 
@@ -41275,7 +41290,14 @@ class UI {
    */
   ajastaMannerZoom() {
     clearTimeout(this.mannerAjastin);
-    if (!this.mannerZoomTarpeen() || this.mannerZoom) return;
+    if (!this.mannerZoomTarpeen() || this.mannerZoom) {
+      document.body.classList.remove('manner-odottaa');
+      return;
+    }
+    // Matkakirja ja toimintonapit odottavat zoomauksen loppuun (omistajan
+    // toive): pelaaja näkee ensin mantereen kokonaan ja saa sen jälkeen
+    // vasta kortit eteensä.
+    document.body.classList.add('manner-odottaa');
     this.mannerAjastin = setTimeout(() => {
       if (this.dead || !this.mannerZoomTarpeen() || this.mannerZoom) return;
       this.zoomaaMantereelle();
@@ -41436,6 +41458,11 @@ class UI {
       document.body.classList.remove('zoom-kaynnissa');
     }, kesto + 60);
     clearTimeout(this.kiikariAjastin);
+    // Kortit takaisin näkyviin, kun liuku on ohi.
+    clearTimeout(this.korttiAjastin);
+    this.korttiAjastin = setTimeout(() => {
+      if (!this.dead) document.body.classList.remove('manner-odottaa');
+    }, kesto);
     // Kiikari kuuluu toistaiseksi vain maailmankarttaan (omistajan
     // toive koski etusivua).
     if (!this.aloitusZoom) return;
@@ -41555,7 +41582,10 @@ class UI {
         return;
       }
       if (this.aloitusZoom || !this.zoomTarpeen()) return;
-      if (this.game.phase !== 'pickstart' || !this.aloitettu) return;
+      // Sama napautuszoomaus toimii myös silloin, kun maailmankartalle
+      // palataan kesken matkan (omistajan havainto): kartta on yhtä pieni
+      // kummallakin kerralla. Aloitusportin takana zoomausta ei tarjota.
+      if (!this.aloitettu || this.aloitusportti) return;
       e.stopPropagation();
       e.preventDefault();
       this.zoomaaAloituskartta(this.kartanKohta(e.clientX, e.clientY));

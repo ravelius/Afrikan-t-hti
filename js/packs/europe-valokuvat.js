@@ -109,12 +109,12 @@ export const EUROPE_VALOKUVAT = {
   },
 
   ateena: {
-    tiedosto: 'Athènes. LʹAcropole Avec Temple de Jupiter Olympien LCCN2017656399.jpg',
+    tiedosto: "Athènes. L' Acropole et le Temple de Thesée LCCN2017658103.jpg",
     vuosi: '1890-luku',
     lahde: 'Library of Congress (PD)',
-    selite: 'Akropolis ja Olympian Zeuksen temppelin pylväät '
+    selite: 'Akropolis ja etualalla Hefaistoksen temppeli '
       + 'käsinvärittynä photochrom-vedoksena. Kaupunki oli tuolloin '
-      + 'pieni: Ateenassa asui noin 100 000 ihmistä, ja temppelin '
+      + 'pieni: Ateenassa asui noin 100 000 ihmistä, ja temppelien '
       + 'ympärillä oli peltoa.',
     uusi: {
       tiedosto: 'The Acropolis of Athens with the Parthenon, the Erecththeion and the Mycenean Fountain from Monastiraki Square on March 11, 2020.jpg',

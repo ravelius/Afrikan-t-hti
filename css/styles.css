@@ -315,6 +315,20 @@ body.manner-zoom .turn-card::before {
     rgba(247, 238, 214, 0) 78%);
 }
 
+/*
+ * Mantereelle saavuttaessa matkakirja ja toimintonapit odottavat, että
+ * zoomaus on ohi (omistajan toive). Näin pelaaja näkee ensin mantereen
+ * kokonaan ja vasta sitten kortit. Häivytys on sama kuin kiikarilla,
+ * jotta ne tulevat esiin samaan tahtiin.
+ */
+body[data-mode] .rail { transition: opacity 700ms ease; }
+
+body.manner-odottaa .rail {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
 /* Raahauksen ajaksi kartan sykähdykset vaikenevat (omistajan toive):
    liikkuva kartta on jo tarpeeksi työtä ruudunpäivitykselle. */
 body.kartta-raahaus .target-ring,

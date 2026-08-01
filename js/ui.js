@@ -1118,9 +1118,10 @@ export class UI {
     clearTimeout(this.mannerAjastin);
     clearTimeout(this.kiikariAjastin);
     clearTimeout(this.zoomAjastin);
+    clearTimeout(this.korttiAjastin);
     document.body.classList.remove(
       'aloitus-zoom', 'manner-zoom', 'kartta-raahaus', 'kiikari-paalla',
-      'zoom-kaynnissa',
+      'zoom-kaynnissa', 'manner-odottaa',
     );
   }
 
@@ -1192,7 +1193,14 @@ export class UI {
    */
   ajastaMannerZoom() {
     clearTimeout(this.mannerAjastin);
-    if (!this.mannerZoomTarpeen() || this.mannerZoom) return;
+    if (!this.mannerZoomTarpeen() || this.mannerZoom) {
+      document.body.classList.remove('manner-odottaa');
+      return;
+    }
+    // Matkakirja ja toimintonapit odottavat zoomauksen loppuun (omistajan
+    // toive): pelaaja näkee ensin mantereen kokonaan ja saa sen jälkeen
+    // vasta kortit eteensä.
+    document.body.classList.add('manner-odottaa');
     this.mannerAjastin = setTimeout(() => {
       if (this.dead || !this.mannerZoomTarpeen() || this.mannerZoom) return;
       this.zoomaaMantereelle();
@@ -1353,6 +1361,11 @@ export class UI {
       document.body.classList.remove('zoom-kaynnissa');
     }, kesto + 60);
     clearTimeout(this.kiikariAjastin);
+    // Kortit takaisin näkyviin, kun liuku on ohi.
+    clearTimeout(this.korttiAjastin);
+    this.korttiAjastin = setTimeout(() => {
+      if (!this.dead) document.body.classList.remove('manner-odottaa');
+    }, kesto);
     // Kiikari kuuluu toistaiseksi vain maailmankarttaan (omistajan
     // toive koski etusivua).
     if (!this.aloitusZoom) return;
@@ -1472,7 +1485,10 @@ export class UI {
         return;
       }
       if (this.aloitusZoom || !this.zoomTarpeen()) return;
-      if (this.game.phase !== 'pickstart' || !this.aloitettu) return;
+      // Sama napautuszoomaus toimii myös silloin, kun maailmankartalle
+      // palataan kesken matkan (omistajan havainto): kartta on yhtä pieni
+      // kummallakin kerralla. Aloitusportin takana zoomausta ei tarjota.
+      if (!this.aloitettu || this.aloitusportti) return;
       e.stopPropagation();
       e.preventDefault();
       this.zoomaaAloituskartta(this.kartanKohta(e.clientX, e.clientY));
