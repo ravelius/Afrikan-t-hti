@@ -382,6 +382,8 @@ const VIIVA_IKONIT = {
   estetty: '<circle cx="12" cy="12" r="8.4"/><path d="M6.3 6.3l11.4 11.4"/>',
   ankkuri: '<circle cx="12" cy="5" r="1.8"/><path d="M12 6.8v12.6M8.7 9.6h6.6"/><path d="M5.2 13.8c.3 3.9 3.2 6.3 6.8 6.3s6.5-2.4 6.8-6.3"/><path d="M5.2 13.8 3.5 12.6M18.8 13.8l1.7-1.2"/>',
   mitali: '<path d="M9.6 3.6 8.2 9.2M14.4 3.6l1.4 5.6"/><circle cx="12" cy="14.4" r="5.2"/><circle class="taytto" cx="12" cy="14.4" r="1.1"/>',
+  // Kaiutin ääniaaltoineen — aloitussivun ääniviihje.
+  kaiutin: '<path d="M4.2 9.3h3.2l4.4-3.6v12.6l-4.4-3.6H4.2z"/><path d="M14.8 9.4a3.7 3.7 0 0 1 0 5.2"/><path d="M17.4 6.9a7.3 7.3 0 0 1 0 10.2"/>',
 };
 
 /** Viivaikoni ikonin nimellä — tai null, jos nimi onkin tekstimerkki. */
@@ -3520,6 +3522,16 @@ export class UI {
   showAloitusportti() {
     if (this.aloitusportti) return;
     const portti = html('div', 'start-gate');
+    const keskus = html('div', 'start-gate-keskus');
+
+    // Ääniviihje napin yläpuolelle (omistajan toive): peli on tehty
+    // kuunneltavaksi, ja selain sallii äänet vasta napautuksesta.
+    const aanet = html('p', 'start-aanet');
+    aanet.appendChild(document.createTextNode('Laita äänet päälle '));
+    const kaiutin = viivaIkoni('kaiutin');
+    if (kaiutin) aanet.appendChild(kaiutin);
+    keskus.appendChild(aanet);
+
     const nappi = html('button', 'start-btn primary', 'Aloita seikkailu');
     nappi.addEventListener('click', () => {
       this.aloitettu = true;
@@ -3528,9 +3540,97 @@ export class UI {
       this.fitViewBox();
       this.render();
     });
-    portti.appendChild(nappi);
+    keskus.appendChild(nappi);
+    portti.appendChild(keskus);
+
+    // Alareunan linkki pelin periaatteisiin.
+    const alaosa = html('div', 'start-gate-alaosa');
+    const linkki = html('button', 'start-linkki', 'Oppiminen on hauskaa — mistä tässä on kyse?');
+    linkki.type = 'button';
+    linkki.addEventListener('click', () => this.naytaPeriaatteet());
+    alaosa.appendChild(linkki);
+    portti.appendChild(alaosa);
+
     this.mapPane.appendChild(portti);
     this.aloitusportti = portti;
+  }
+
+  /**
+   * Pelin periaatteet omana ikkunanaan aloitussivulta (omistajan toive).
+   * Sisältö on tiivistys README:stä ja docs/periaatteet.md:stä: miksi peli
+   * on olemassa ja millä säännöillä sisältöä siihen tehdään.
+   */
+  naytaPeriaatteet() {
+    sfx.play('paper');
+    const lappu = html('dialog', 'dialog periaate-lappu');
+    const kortti = html('div', 'dialog-card');
+    lappu.appendChild(kortti);
+
+    const otsikko = html('h2', 'periaate-otsikko', 'Oppiminen on hauskaa');
+    kortti.appendChild(otsikko);
+
+    const kappale = (teksti, luokka = '') => {
+      const p = html('p', `periaate-teksti ${luokka}`.trim());
+      p.textContent = teksti;
+      kortti.appendChild(p);
+    };
+    const valiotsikko = (teksti) => {
+      const h = html('h3', 'periaate-valiotsikko');
+      h.textContent = teksti;
+      kortti.appendChild(h);
+    };
+
+    kappale('Matkakirja on seikkailupeli, jonka sivutuotteena opitaan — '
+      + 'ei oppikirja, johon on liimattu noppa. Pelin pitää olla '
+      + 'koukuttava ensin; tieto tarttuu matkassa.', 'kärki');
+
+    valiotsikko('Mitä pelissä opitaan');
+    kappale('Maiden arkea ja kulttuuria, maantiedettä ja historiaa, '
+      + 'geopolitiikkaa ja poliittista tilannetta — ja ennen kaikkea sitä, '
+      + 'että maailma on suurempi kuin oma ympäristö. Jokaisella '
+      + 'pysähdyksellä on jotain katsottavaa: valokuva silloin ja nyt, '
+      + 'maan tunnusluvut, kaupungin musiikkia ja ruokaa.');
+
+    valiotsikko('Kaksi ääntä');
+    kappale('Isoisän päiväkirja vuodelta 1873 ja nuoren herran havainto '
+      + 'tänään. Vanha ääni loistaa siinä, mikä ei ole muuttunut, ja on '
+      + 'toivottoman vanhentunut nimissä ja rajoissa. Juuri siitä '
+      + 'jännitteestä tarina syntyy — ja piikki osuu aina Foggiin ja '
+      + 'imperiumiin, ei koskaan maihin ja ihmisiin, joita matkalla '
+      + 'kohdataan.');
+
+    valiotsikko('Totuus ja lähteet');
+    kappale('Jokainen väittämä on tarkistettavissa. Epävarmaa ei väitetä '
+      + 'eikä kiistanalaista esitetä varmana. Politiikka ja historia '
+      + 'kuvataan, ei tuomita: kerrotaan mitä on ja miksi.');
+
+    valiotsikko('Kunnioitus');
+    kappale('Jokainen maa kuvataan asukkaidensa silmin — ei stereotypioita, '
+      + 'ei pilkkaa eikä säälittelyä, ei pelkkiä turistikliseitä. '
+      + 'Vaikeita aiheita ei kaunistella eikä kauhistella.');
+
+    valiotsikko('Avoin ja ilmainen');
+    kappale('Peli on avoin harrastusprojekti. Koodi ja sisältö ovat '
+      + 'vapaasti saatavilla, ja kuvat sekä tiedot tulevat avoimista '
+      + 'lähteistä lähdemainintoineen.');
+
+    const linkit = html('p', 'periaate-linkit');
+    const gh = html('a', 'periaate-linkki', 'Pelin GitHub-sivu');
+    gh.href = 'https://github.com/ravelius/Matkakirja';
+    gh.target = '_blank';
+    gh.rel = 'noopener';
+    linkit.appendChild(gh);
+    kortti.appendChild(linkit);
+
+    const sulje = html('button', 'ghost periaate-sulje', 'Takaisin');
+    sulje.type = 'button';
+    sulje.addEventListener('click', () => lappu.close());
+    kortti.appendChild(sulje);
+
+    lappu.addEventListener('close', () => lappu.remove());
+    lappu.addEventListener('click', (e) => { if (e.target === lappu) lappu.close(); });
+    document.body.appendChild(lappu);
+    lappu.showModal();
   }
 
   suljeAloitusportti() {
