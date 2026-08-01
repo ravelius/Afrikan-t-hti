@@ -2101,6 +2101,56 @@ body.flight-active .grain { display: none; }
   text-underline-offset: 4px;
 }
 
+/* Palautelohko: kenttä ja nappi erottuvat tekstistä ohuella viivalla. */
+.periaate-palaute {
+  margin-top: 1.3rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed rgba(122, 85, 20, 0.35);
+}
+
+.periaate-palaute .periaate-valiotsikko { margin-top: 0; }
+
+.periaate-kentta {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid rgba(122, 85, 20, 0.45);
+  border-radius: 8px;
+  background: rgba(255, 252, 240, 0.7);
+  color: var(--map-ink);
+  font-family: var(--font-type);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.periaate-kentta:focus {
+  outline: 2px solid rgba(176, 138, 60, 0.7);
+  outline-offset: 1px;
+}
+
+.periaate-laheta {
+  margin-top: 0.6rem;
+  width: 100%;
+}
+
+.periaate-huomio {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #6d5a3c;
+}
+
+.periaate-oikeudet {
+  margin: 1.2rem 0 0;
+  text-align: center;
+  font-family: var(--font-type);
+  font-size: 0.82rem;
+  color: #6d5a3c;
+}
+
+.periaate-otsikko:focus { outline: none; }
+
 .periaate-sulje {
   margin-top: 1rem;
   width: 100%;
@@ -41804,10 +41854,7 @@ class UI {
     valiotsikko('Kaksi ääntä');
     kappale('Isoisän päiväkirja vuodelta 1873 ja nuoren herran havainto '
       + 'tänään. Vanha ääni loistaa siinä, mikä ei ole muuttunut, ja on '
-      + 'toivottoman vanhentunut nimissä ja rajoissa. Juuri siitä '
-      + 'jännitteestä tarina syntyy — ja piikki osuu aina Foggiin ja '
-      + 'imperiumiin, ei koskaan maihin ja ihmisiin, joita matkalla '
-      + 'kohdataan.');
+      + 'toivottoman vanhentunut nimissä ja rajoissa.');
 
     valiotsikko('Totuus ja lähteet');
     kappale('Jokainen väittämä on tarkistettavissa. Epävarmaa ei väitetä '
@@ -41832,6 +41879,11 @@ class UI {
     linkit.appendChild(gh);
     kortti.appendChild(linkit);
 
+    kortti.appendChild(this.periaatePalaute());
+
+    const oikeudet = html('p', 'periaate-oikeudet', '© Sami Reivinen');
+    kortti.appendChild(oikeudet);
+
     const sulje = html('button', 'ghost periaate-sulje', 'Takaisin');
     sulje.type = 'button';
     sulje.addEventListener('click', () => lappu.close());
@@ -41841,6 +41893,54 @@ class UI {
     lappu.addEventListener('click', (e) => { if (e.target === lappu) lappu.close(); });
     document.body.appendChild(lappu);
     lappu.showModal();
+    // showModal siirtää kohdistuksen ensimmäiseen napautettavaan
+    // elementtiin, joka on kortin lopussa — selain vieritti ikkunan
+    // valmiiksi alas (omistajan havainto). Kohdistus otsikkoon ja
+    // vieritys alkuun.
+    kortti.scrollTop = 0;
+    otsikko.setAttribute('tabindex', '-1');
+    otsikko.focus({ preventScroll: true });
+  }
+
+  /**
+   * Palautelohko periaateikkunan loppuun (omistajan toive). Peli on
+   * staattinen sivu ilman palvelinta, joten lomake ei lähetä itse mitään
+   * vaan kokoaa viestin ja avaa sen käyttäjän omaan sähköpostiohjelmaan.
+   * Osoite kootaan vasta ajossa, jottei se ole roskapostirobottien
+   * poimittavissa suoraan sivun lähdekoodista.
+   */
+  periaatePalaute() {
+    const lohko = html('div', 'periaate-palaute');
+    const otsikko = html('h3', 'periaate-valiotsikko', 'Palaute ja mukaan');
+    lohko.appendChild(otsikko);
+
+    const johdanto = html('p', 'periaate-teksti');
+    johdanto.textContent = 'Jos tämä peli kiinnostaa, lähetä palautetta. '
+      + 'Voit myös osallistua pelin kehittämiseen — sisältöä, kuvia, '
+      + 'kysymyksiä tai koodia.';
+    lohko.appendChild(johdanto);
+
+    const kentta = html('textarea', 'periaate-kentta');
+    kentta.rows = 4;
+    kentta.placeholder = 'Kirjoita viestisi tähän…';
+    kentta.setAttribute('aria-label', 'Viesti pelin tekijälle');
+    lohko.appendChild(kentta);
+
+    const nappi = html('button', 'primary periaate-laheta', 'Lähetä palautetta');
+    nappi.type = 'button';
+    nappi.addEventListener('click', () => {
+      const osoite = ['samireivinen', 'gmail.com'].join('@');
+      const aihe = encodeURIComponent('Matkakirja — palaute');
+      const viesti = encodeURIComponent(kentta.value.trim());
+      window.location.href = `mailto:${osoite}?subject=${aihe}&body=${viesti}`;
+    });
+    lohko.appendChild(nappi);
+
+    const huomio = html('p', 'periaate-huomio');
+    huomio.textContent = 'Nappi avaa viestin sähköpostiohjelmaasi — '
+      + 'voit vielä muokata sitä ennen lähetystä.';
+    lohko.appendChild(huomio);
+    return lohko;
   }
 
   suljeAloitusportti() {
@@ -43287,7 +43387,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.122';
+const APP_VERSION = '2026-08-01.123';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
