@@ -369,13 +369,13 @@ body.aloitus-zoom.kiikari-paalla.kartta-raahaus .kiikari {
 .kiikari::after {
   -webkit-mask-image: radial-gradient(
     ellipse 84% 75% at 50% 50%,
-    rgba(0, 0, 0, 0) 56%,
-    rgba(0, 0, 0, 1) 82%
+    rgba(0, 0, 0, 0) 42%,
+    rgba(0, 0, 0, 1) 74%
   );
   mask-image: radial-gradient(
     ellipse 84% 75% at 50% 50%,
-    rgba(0, 0, 0, 0) 56%,
-    rgba(0, 0, 0, 1) 82%
+    rgba(0, 0, 0, 0) 42%,
+    rgba(0, 0, 0, 1) 74%
   );
 }
 
@@ -409,8 +409,8 @@ body.aloitus-zoom .kiikari {
 .kiikari::before {
   background: radial-gradient(
     ellipse 84% 75% at 50% 50%,
-    rgba(255, 126, 90, 0) 84%,
-    rgba(255, 126, 90, 0.22) 93%,
+    rgba(255, 126, 90, 0) 74%,
+    rgba(255, 126, 90, 0.22) 90%,
     rgba(255, 126, 90, 0.22) 100%
   );
 }
@@ -419,9 +419,9 @@ body.aloitus-zoom .kiikari {
 .kiikari::after {
   background: radial-gradient(
     ellipse 84% 75% at 50% 50%,
-    rgba(120, 200, 255, 0) 74%,
-    rgba(120, 200, 255, 0.13) 84%,
-    rgba(120, 200, 255, 0) 93%
+    rgba(120, 200, 255, 0) 60%,
+    rgba(120, 200, 255, 0.13) 76%,
+    rgba(120, 200, 255, 0) 90%
   );
 }
 
@@ -1954,16 +1954,23 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /*
  * Zoomatessa avausteksti työntyy alas pois näkyvistä samaa tahtia kuin
- * kartta suurenee (omistajan toive): sama kesto ja sama pehmennys kuin
- * zoomausliu'ulla (js/ui.js ZOOM_MS). Pelkkä häivytys jätti tekstin
- * paikalleen haamuksi kartan päälle.
+ * kartta suurenee (omistajan toive). Matka, kesto ja pehmennys tulevat
+ * js/ui.js:n tyonnaAvausteksti-metodista, joka mittaa kartan alareunan
+ * todellisen siirtymän — niin teksti liikkuu kartan kanssa koko matkan
+ * eikä vain lähtee ja saavu samaan aikaan. Oletukset ovat varalta.
+ *
+ * Häivytys loppuu ennen liikettä, jotta teksti on jo poissa silmistä
+ * kun se painuu ruudun alle; pelkkä häivytys jätti sen paikalleen
+ * haamuksi kartan päälle.
  */
 .intro.intro-pois {
   opacity: 0;
-  transform: translate(-50%, 85%);
+  transform: translate(-50%, var(--intro-tyonto, 85%));
+  will-change: transform, opacity;
   transition:
-    transform 1.2s cubic-bezier(0.25, 0.6, 0.2, 1),
-    opacity 1s ease-in;
+    transform var(--intro-kesto, 1.2s)
+      var(--intro-pehmennys, cubic-bezier(0.25, 0.6, 0.2, 1)),
+    opacity calc(var(--intro-kesto, 1.2s) * 0.7) ease-in;
 }
 
 /*

@@ -664,7 +664,7 @@ function vauhtiKayra(pehmennys, matalin = 0.86, korkein = 1.16, pisteita = 28) {
 
 // Sama pehmennys kuin kartan liu'ulla (js/ui.js ZOOM_PEHMENNYS). Jos se
 // muuttuu siellä, muuta myös tässä — ääni ja kuva seuraavat toisiaan.
-const ZOOM_PEHMENNYS = [0.45, 0, 0.28, 1];
+const ZOOM_PEHMENNYS = [0.68, 0, 0.3, 1];
 const ZOOM_VAUHTI = vauhtiKayra(ZOOM_PEHMENNYS);
 const ZOOM_VAUHTI_MIN = Math.min(...ZOOM_VAUHTI);
 const ZOOM_VAUHTI_MAX = Math.max(...ZOOM_VAUHTI);
@@ -764,8 +764,11 @@ const REAL_PLAYERS = {
   // toistonopeus seuraa zoomausliu'un vauhtia (omistajan toive), joten
   // moottori kiihtyy ja hidastuu samassa tahdissa kartan kanssa.
   // Kesto tulee kutsujalta: etusivu 2,8 s, mantereet 2,0 s.
-  zoom: (s, { kesto = 2.85 } = {}) => s.playSlice('zoom', {
-    dur: kesto, gain: 0.55, alusta: true, tasavire: true, nopeusKayra: ZOOM_VAUHTI,
+  zoom: (s, { kesto = 3.6 } = {}) => s.playSlice('zoom', {
+    // Voimakkuus on selvästi pienempi kuin ennen: äänite koostuu nyt
+    // pelkästä tasaisesta moottorista ilman naksahduksia, jolloin
+    // normalisointi nosti sen keskitason yli kaksinkertaiseksi.
+    dur: kesto, gain: 0.24, alusta: true, tasavire: true, nopeusKayra: ZOOM_VAUHTI,
   }),
   star: (s) => s.playSlice('star', { dur: 2.6, gain: 0.45, alusta: true }),
   gem: (s) => s.playSlice('gem', { dur: 1.6, gain: 0.4, alusta: true }),
@@ -895,7 +898,7 @@ const SOUNDS = {
    * pehmennyskäyrä kuin kartalla, joten moottori kiihtyy ja hidastuu
    * täsmälleen kuvan mukana. Kesto tulee kutsujalta.
    */
-  zoom: (s, { kesto = 2.85 } = {}) => {
+  zoom: (s, { kesto = 3.6 } = {}) => {
     const ctx = s.ensureContext();
     if (!ctx) return;
     const t0 = ctx.currentTime;
@@ -953,11 +956,9 @@ const SOUNDS = {
       o.stop(t0 + kesto + 0.05);
     }
 
-    // Muovinen kuiva kohina koneiston taustalla sekä naksahdukset, kun
-    // linssi lähtee liikkeelle ja kun se pysähtyy.
+    // Muovinen kuiva kohina koneiston taustalla. Naksahdukset otettu
+    // pois (omistajan toive): kuuluu vain moottori.
     s.hiss({ dur: kesto, type: 'bandpass', freq: 2200, sweepTo: 2900, gain: 0.035, q: 0.8 });
-    s.knock({ freqs: [700, 1250], dur: 0.045, gain: 0.11, q: 9 });
-    s.knock({ freqs: [520, 900], dur: 0.06, gain: 0.13, q: 8, delay: kesto - 0.03 });
   },
 
   // Noppa

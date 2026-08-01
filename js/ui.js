@@ -331,15 +331,19 @@ const ALAKAISTA = 0.3;
 // pohjoisimmat kaupungit (Tromssa, Lappi, Islanti) tarvitsevat tilaa,
 // johon panoroida (omistajan havainto).
 const YLAKAISTA = 0.26;
-// Zoomausliu'un kesto. Omistajan palaute: 600 ms oli liian nopea,
-// 1200 ms yhä liian nopea — kaikki zoomaukset hitaammiksi.
-const ZOOM_MS = 2000;
+// Zoomausliu'un kesto. Omistajan palaute on vienyt tätä pidemmäksi
+// kerta kerralta: 600 ms → 1200 → 2000 → 2400.
+const ZOOM_MS = 2400;
 // Etusivun zoomaus vielä tätäkin hitaammin (omistajan toive): se on
 // pelin avaus, ja koko maailmankartta on iso matka lähikuvaan.
-const ALOITUS_ZOOM_MS = 2800;
+const ALOITUS_ZOOM_MS = 3600;
 // Kiihdytys ja jarrutus molemmissa päissä (omistajan toive): kartta
-// lähtee liikkeelle pehmeästi, kiitää keskellä ja pysähtyy rauhassa.
-const ZOOM_PEHMENNYS = 'cubic-bezier(0.45, 0, 0.28, 1)';
+// lähtee liikkeelle hyvin hitaasti, kiihtyy vähitellen täyteen
+// vauhtiin ja jarruttaa pitkään. Ensimmäinen ohjauspiste on kaukana
+// oikealla juuri siksi, että alku on tarpeeksi verkkainen.
+// HUOM: sama arvo on js/sound.js:ssä, jotta äänen korkeus seuraa
+// samaa kaarta. Jos muutat toisen, muuta myös toinen.
+const ZOOM_PEHMENNYS = 'cubic-bezier(0.68, 0, 0.3, 1)';
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
 const ZOOM_TAUKO_MS = 260;
 // Aloituskartan lähikuvan suurennos yleiskuvaan nähden.
@@ -1228,9 +1232,6 @@ export class UI {
     this.panX = null;
     this.zoomAnkkuri = fokus.x;
     document.body.classList.add('aloitus-zoom');
-    // Avausteksti työntyy alas pois näkyvistä samaa tahtia kuin kartta
-    // suurenee (omistajan toive) — ei erillistä häivytystä.
-    this.introEl.classList.add('intro-pois');
     this.fitViewBox();
     // Renkaat piirretään uudelleen, jotta napautus valitsee kaupungin
     // eikä enää zoomaa.
@@ -1323,6 +1324,8 @@ export class UI {
     // joten liu'un alussa se ei täytä paneelia — häivytys piirtyi
     // paljaalle taustalle ja näkyi ruudun laidoissa tummina kaarina.
     document.body.classList.add('zoom-kaynnissa');
+    // Avausteksti lähtee liikkeelle samalla hetkellä kuin kartta.
+    this.tyonnaAvausteksti(kesto);
     this.asetaPan(this.panX, this.panY);
     clearTimeout(this.zoomAjastin);
     this.zoomAjastin = setTimeout(() => {
@@ -1336,6 +1339,38 @@ export class UI {
     this.kiikariAjastin = setTimeout(() => {
       if (!this.dead) document.body.classList.add('kiikari-paalla');
     }, kesto);
+  }
+
+  /**
+   * Avausteksti työntyy alas täsmälleen sen verran kuin kartan alareuna
+   * liikkuu (omistajan toive): teksti ei häivy erikseen vaan kasvava
+   * kartta työntää sen ruudun alle.
+   *
+   * Matka mitataan geometriasta eikä arvata prosenttina. Alkuasento on
+   * jo asetettu (asetaZoomAlku), joten kartan alareunan voi lukea
+   * suoraan; loppuasento lasketaan lähikuvan mitoista. Kesto ja
+   * pehmennys ovat samat kuin kartalla, joten liike on samaa tahtia
+   * koko matkan eikä vain päätepisteissä.
+   *
+   * Tekstistä ei tarvitse tehdä kuvaa: siirto on pelkkä transform,
+   * jonka selain hoitaa kompositorissa ilman uudelleenlatomista tai
+   * -piirtoa. will-change varmistaa oman kerroksen, joka on juuri se
+   * hyöty, jonka kuva antaisi.
+   */
+  tyonnaAvausteksti(kesto) {
+    const teksti = this.introEl;
+    if (!teksti || teksti.hidden || !this.aloitusZoom) return;
+    const pane = this.mapPane.getBoundingClientRect();
+    const alkuAla = this.svg.getBoundingClientRect().bottom;
+    const korkeus = parseFloat(this.svg.style.height) || pane.height;
+    const loppuAla = pane.top + (this.panY ?? 0) + korkeus;
+    // Vähintään paneelin verran, jottei teksti jää näkyviin silloinkaan
+    // kun kartta sattuu kasvamaan odotettua vähemmän.
+    const siirto = Math.max(pane.height - teksti.offsetTop, loppuAla - alkuAla);
+    teksti.style.setProperty('--intro-tyonto', `${Math.round(siirto)}px`);
+    teksti.style.setProperty('--intro-kesto', `${kesto}ms`);
+    teksti.style.setProperty('--intro-pehmennys', ZOOM_PEHMENNYS);
+    teksti.classList.add('intro-pois');
   }
 
   /**
