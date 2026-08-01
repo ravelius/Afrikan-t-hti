@@ -64,10 +64,49 @@ export const TYYPPI_EHDOKKAAT = {
     { url: 'https://cdn.freesound.org/previews/577/577263_9827221-lq.mp3', nimi: 'Vuoristomaisema — BotanicalVan, CC0' },
     { url: 'https://cdn.freesound.org/previews/543/543449_3377875-lq.mp3', nimi: 'Ulvova tuuli — Kostas17, CC BY' },
   ],
+
+  /*
+   * Euroopan maisemat. Nämä korit on koottu jo varmennetuista
+   * äänitteistä, koska Freesoundin haku vaatii avaimen eikä sitä ole
+   * käytettävissä. Ne toimivat ja ovat oikeaa maisemaa, mutta ovat
+   * väliaikaisia: omistaja voi vaihtaa parempia tilalle /aanet.html
+   * -studiossa, ja voittajat kovakoodataan tänne.
+   *
+   * TEKEMÄTTÄ: kaupunkikohtaiset eurooppalaiset äänitykset — etenkin
+   * raitiovaunu, kirkonkellot ja katumuusikko puuttuvat vielä.
+   */
+  kaupunki: [
+    { url: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3', nimi: 'Kaupungin yö — rucisko, CC BY-NC' },
+    { url: 'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3', nimi: 'Piha illalla — LaureC, CC0' },
+    { url: 'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3', nimi: 'Kaupungin hälinä — 3bagbrew, CC0' },
+  ],
+  satama: [
+    { url: 'https://cdn.freesound.org/previews/392/392664_4043130-lq.mp3', nimi: 'Satama yöllä (Lissabon) — corkob, CC0' },
+    { url: 'https://cdn.freesound.org/previews/570/570907_11519060-lq.mp3', nimi: 'Laivan kansi merellä — bruno.auzet, CC0' },
+    { url: 'https://cdn.freesound.org/previews/635/635103_10065335-lq.mp3', nimi: 'Tyyni aallokko — Eatyourburger, CC0' },
+  ],
+  vuoristo: [
+    { url: 'https://cdn.freesound.org/previews/577/577263_9827221-lq.mp3', nimi: 'Vuoristomaisema — BotanicalVan, CC0' },
+    { url: 'https://cdn.freesound.org/previews/543/543449_3377875-lq.mp3', nimi: 'Ulvova tuuli — Kostas17, CC BY' },
+  ],
+  metsa: [
+    { url: 'https://cdn.freesound.org/previews/812/812609_2309965-lq.mp3', nimi: 'Linnut metsässä — Alex_hears_things, CC0' },
+    { url: 'https://cdn.freesound.org/previews/579/579250_2977885-lq.mp3', nimi: 'Tuuli puissa — Danjocross, CC0' },
+  ],
+  pohjoinen: [
+    { url: 'https://cdn.freesound.org/previews/543/543449_3377875-lq.mp3', nimi: 'Ulvova tuuli — Kostas17, CC BY' },
+    { url: 'https://cdn.freesound.org/previews/579/579250_2977885-lq.mp3', nimi: 'Tuuli puissa — Danjocross, CC0' },
+    { url: 'https://cdn.freesound.org/previews/411/411509_1661766-lq.mp3', nimi: 'Aallot lyövät kallioihin — felix.blume, CC0' },
+  ],
 };
 
 export const TYYPPI_NIMET = {
   basaari: 'basaari',
+  kaupunki: 'kaupunki',
+  satama: 'satama',
+  vuoristo: 'vuoristo',
+  metsa: 'metsä',
+  pohjoinen: 'pohjoinen',
   aavikko: 'aavikko',
   meri: 'meri',
   sademetsa: 'sademetsä',
@@ -465,6 +504,29 @@ const OLETUSKORIT = {
   ],
   ylanko: [
     'https://cdn.freesound.org/previews/543/543449_3377875-lq.mp3#voima=0.5',
+  ],
+  kaupunki: [
+    'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3',
+    'https://cdn.freesound.org/previews/677/677253_9756914-lq.mp3',
+    'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3#voima=0.7',
+  ],
+  satama: [
+    'https://cdn.freesound.org/previews/392/392664_4043130-lq.mp3',
+    'https://cdn.freesound.org/previews/570/570907_11519060-lq.mp3#voima=1.6',
+    'https://cdn.freesound.org/previews/635/635103_10065335-lq.mp3',
+  ],
+  vuoristo: [
+    'https://cdn.freesound.org/previews/577/577263_9827221-lq.mp3',
+    'https://cdn.freesound.org/previews/543/543449_3377875-lq.mp3#voima=0.5',
+  ],
+  metsa: [
+    'https://cdn.freesound.org/previews/812/812609_2309965-lq.mp3#voima=2.3',
+    'https://cdn.freesound.org/previews/579/579250_2977885-lq.mp3#voima=0.6',
+  ],
+  pohjoinen: [
+    'https://cdn.freesound.org/previews/543/543449_3377875-lq.mp3#voima=0.5',
+    'https://cdn.freesound.org/previews/579/579250_2977885-lq.mp3#voima=0.6',
+    'https://cdn.freesound.org/previews/411/411509_1661766-lq.mp3#voima=0.6',
   ],
 };
 
