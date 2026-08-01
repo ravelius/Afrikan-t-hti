@@ -29,7 +29,10 @@
   <div id="versio-kulma" class="versio-kulma" aria-hidden="true"></div>
   <div class="app">
     <header class="topbar">
-      <h1 class="brand">Matkakirja</h1>
+      <!-- Kapealla ruudulla nimi kutistuu yhteen kirjaimeen, jotta kukkaro
+           ja päiväkirjan päivämäärä mahtuvat samalle riville (omistajan
+           toive). aria-label pitää koko nimen ruudunlukijalle. -->
+      <h1 class="brand" aria-label="Matkakirja"><span class="wide-label">Matkakirja</span><span class="narrow-label" aria-hidden="true">M</span></h1>
       <div id="turn-pill" class="turn-pill"></div>
       <div class="topbar-actions">
         <!-- Kertojavalikko: mykistys / ei kertojaa / lyhyt / pitkä kertoja.
@@ -48,9 +51,11 @@
         <button id="passport-btn" class="ghost" type="button" title="Isoisän matkalaukku: passi, leimat ja tavarat">
           <span class="wide-label">Laukku</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11.5" rx="2"/><path d="M9.3 8V6.3a1.7 1.7 0 0 1 1.7-1.7h2a1.7 1.7 0 0 1 1.7 1.7V8M8.6 8v11.5M15.4 8v11.5"/></svg></span></span>
         </button>
-        <button id="rules-btn" class="ghost" type="button">Säännöt</button>
-        <button id="newgame-btn" class="ghost" type="button">
-          <span class="wide-label">Uusi peli</span><span class="narrow-label" aria-hidden="true">Uusi</span>
+        <button id="rules-btn" class="ghost" type="button" title="Säännöt">
+          <span class="wide-label">Säännöt</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span></span>
+        </button>
+        <button id="newgame-btn" class="ghost" type="button" title="Uusi peli">
+          <span class="wide-label">Uusi peli</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span></span>
         </button>
       </div>
     </header>
