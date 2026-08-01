@@ -508,13 +508,13 @@ class Sound {
 
   // --- pelin äänet --------------------------------------------------------
 
-  play(name) {
+  play(name, asetukset = undefined) {
     if (!this.enabled) return;
     // Oikea äänite ensin, jos se on ladattu; muuten syntetisoitu versio.
     const real = REAL_PLAYERS[name];
-    if (real && real(this)) return;
+    if (real && real(this, asetukset)) return;
     const sound = SOUNDS[name];
-    if (sound) sound(this);
+    if (sound) sound(this, asetukset);
   }
 
   /**
@@ -576,7 +576,7 @@ class Sound {
    */
   playSlice(name, {
     dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0, tasavire = false,
-    vire = null,
+    vire = null, nopeusKayra = null,
   } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
@@ -603,11 +603,71 @@ class Sound {
     g.gain.exponentialRampToValueAtTime(gain, t0 + 0.01);
     g.gain.setValueAtTime(gain, t0 + Math.max(0.02, kesto - 0.04));
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+    // Toistonopeuden käyrä: äänen korkeus seuraa animaation vauhtia
+    // (omistajan toive). Zoomauksessa moottori kiihtyy ja hidastuu
+    // samaan tahtiin kuin kartta.
+    if (nopeusKayra?.length > 1) {
+      try {
+        src.playbackRate.setValueCurveAtTime(Float32Array.from(nopeusKayra), t0, kesto);
+      } catch {
+        /* jos selain ei kelpuuta käyrää, tasainen nopeus kelpaa */
+      }
+    }
     src.connect(g).connect(this.bus);
     src.start(t0, alku, kesto + 0.03);
     return true;
   }
 }
+
+/**
+ * Cubic-bezier-pehmennyksen etenemä hetkellä t (0…1). Sama kaava kuin
+ * css:llä; ratkaistaan x Newtonin menetelmällä ja luetaan siitä y.
+ */
+function bezierEtenema(x1, y1, x2, y2, t) {
+  const kayra = (a, b, u) => {
+    const v = 1 - u;
+    return 3 * v * v * u * a + 3 * v * u * u * b + u * u * u;
+  };
+  const derivaatta = (a, b, u) => {
+    const v = 1 - u;
+    return 3 * v * v * a + 6 * v * u * (b - a) + 3 * u * u * (1 - b);
+  };
+  let u = t;
+  for (let i = 0; i < 8; i++) {
+    const d = derivaatta(x1, x2, u);
+    if (Math.abs(d) < 1e-6) break;
+    u -= (kayra(x1, x2, u) - t) / d;
+    u = Math.min(1, Math.max(0, u));
+  }
+  return kayra(y1, y2, u);
+}
+
+/**
+ * Toistonopeuden käyrä pehmennyksen vauhdista. Zoomausliuku on hidas
+ * alussa, nopea keskellä ja hidas lopussa; moottorin korkeus seuraa
+ * samaa kaarta. Nopeus ei laske nollaan — pysähtynyt moottori olisi
+ * hiljainen, ja tässä on kyse sävyn elämisestä.
+ */
+function vauhtiKayra(pehmennys, matalin = 0.86, korkein = 1.16, pisteita = 28) {
+  const [x1, y1, x2, y2] = pehmennys;
+  const vauhdit = [];
+  for (let i = 0; i < pisteita; i++) {
+    const t = i / (pisteita - 1);
+    const h = 1 / (pisteita * 2);
+    const a = bezierEtenema(x1, y1, x2, y2, Math.max(0, t - h));
+    const b = bezierEtenema(x1, y1, x2, y2, Math.min(1, t + h));
+    vauhdit.push((b - a) / (Math.min(1, t + h) - Math.max(0, t - h)));
+  }
+  const huippu = Math.max(...vauhdit) || 1;
+  return vauhdit.map((v) => matalin + (korkein - matalin) * (v / huippu));
+}
+
+// Sama pehmennys kuin kartan liu'ulla (js/ui.js ZOOM_PEHMENNYS). Jos se
+// muuttuu siellä, muuta myös tässä — ääni ja kuva seuraavat toisiaan.
+const ZOOM_PEHMENNYS = [0.45, 0, 0.28, 1];
+const ZOOM_VAUHTI = vauhtiKayra(ZOOM_PEHMENNYS);
+const ZOOM_VAUHTI_MIN = Math.min(...ZOOM_VAUHTI);
+const ZOOM_VAUHTI_MAX = Math.max(...ZOOM_VAUHTI);
 
 // Oikeat äänitteet Freesoundista (CC0). Ladataan verkosta puskuriin;
 // ilman verkkoa vastaava syntetisoitu ääni soi entiseen tapaan.
@@ -653,10 +713,15 @@ const REAL_SAMPLES = {
   timeout: { url: 'assets/audio/efekti-aikaloppui.mp3', credit: 'ElevenLabs SFX' },
   flip: { url: 'assets/audio/efekti-kaanto.mp3', credit: 'ElevenLabs SFX' },
   clack: { url: 'assets/audio/efekti-naksu.mp3', credit: 'ElevenLabs SFX' },
-  // Kartan zoomaus. Tiedostoa ei ole vielä generoitu — kunnes se on,
-  // soi alla oleva syntetisoitu moottori. Puuttuva tiedosto ei haittaa:
-  // lataus epäonnistuu hiljaa ja SOUNDS.zoom ottaa vuoron.
-  zoom: { url: 'assets/audio/efekti-zoom.mp3', credit: 'ElevenLabs SFX' },
+  // Kartan zoomaus: aito kompaktikameran zoomimoottori. Lähde on
+  // Wikimedia Commonsin "Pocket camera start and shut down" (public
+  // domain), josta on otettu linssin sisäänvedon tasainen surina ja
+  // toistettu ristihäivytyksellä zoomausliu'un mittaiseksi.
+  zoom: {
+    url: 'assets/audio/efekti-zoom.mp3',
+    credit: '"Pocket camera start and shut down" — stephan, pdsounds.org '
+      + 'Wikimedia Commonsin kautta (public domain)',
+  },
   star: { url: 'assets/audio/efekti-tahti.mp3', credit: 'ElevenLabs SFX' },
   gem: { url: 'assets/audio/efekti-jalokivi.mp3', credit: 'ElevenLabs SFX' },
   horseshoe: { url: 'assets/audio/efekti-kenka.mp3', credit: 'ElevenLabs SFX' },
@@ -694,7 +759,14 @@ const REAL_PLAYERS = {
   timeout: (s) => s.playSlice('timeout', { dur: 1.6, gain: 0.4, alusta: true }),
   flip: (s) => s.playSlice('flip', { dur: 0.9, gain: 0.35, alusta: true }),
   clack: (s) => s.playSlice('clack', { dur: 0.6, gain: 0.3, alusta: true }),
-  zoom: (s) => s.playSlice('zoom', { dur: 2.0, gain: 0.5, alusta: true }),
+  // Koko äänite alusta loppuun, ilman satunnaista vireheittoa: moottori
+  // kuulostaa oudolta jos sitä siirretään umpimähkään. Sen sijaan
+  // toistonopeus seuraa zoomausliu'un vauhtia (omistajan toive), joten
+  // moottori kiihtyy ja hidastuu samassa tahdissa kartan kanssa.
+  // Kesto tulee kutsujalta: etusivu 2,8 s, mantereet 2,0 s.
+  zoom: (s, { kesto = 2.85 } = {}) => s.playSlice('zoom', {
+    dur: kesto, gain: 0.55, alusta: true, tasavire: true, nopeusKayra: ZOOM_VAUHTI,
+  }),
   star: (s) => s.playSlice('star', { dur: 2.6, gain: 0.45, alusta: true }),
   gem: (s) => s.playSlice('gem', { dur: 1.6, gain: 0.4, alusta: true }),
   horseshoe: (s) => s.playSlice('horseshoe', { dur: 1.1, gain: 0.4, alusta: true }),
@@ -818,42 +890,41 @@ const SOUNDS = {
    *  3. hammaspyörän ohut vinkuna noin viisinkertaisella taajuudella,
    *  4. nopea aaltoilu voimakkuudessa = kommutaattorin sörinä,
    *  5. kuiva muovinen kohina ja lopetusnaksahdus, kun linssi pysähtyy.
-   * Kesto on sama kuin zoomausliu'un (js/ui.js ZOOM_MS).
+   *
+   * Kierrokset seuraavat zoomausliu'un vauhtia (omistajan toive): sama
+   * pehmennyskäyrä kuin kartalla, joten moottori kiihtyy ja hidastuu
+   * täsmälleen kuvan mukana. Kesto tulee kutsujalta.
    */
-  zoom: (s) => {
+  zoom: (s, { kesto = 2.85 } = {}) => {
     const ctx = s.ensureContext();
     if (!ctx) return;
     const t0 = ctx.currentTime;
-    const kesto = 1.9;
-    const kiihdytys = 0.14;         // moottorin käynnistyminen
-    const hidastus = kesto - 0.13;  // hetki, jolloin kierrokset laskevat
+    // Vauhtikäyrä taajuudeksi: matalin arvo joutokäynti, korkein täysi
+    // vauhti. setValueCurveAtTime piirtää saman kaaren kuin liuku.
+    const kaari = (matala, korkea) => Float32Array.from(
+      ZOOM_VAUHTI, (v) => {
+        const k = (v - ZOOM_VAUHTI_MIN) / (ZOOM_VAUHTI_MAX - ZOOM_VAUHTI_MIN || 1);
+        return matala + (korkea - matala) * k;
+      },
+    );
 
     // Moottorin sävel: kanttiaalto on paljon puremampi kuin saha-aalto
     // alipäästön takana, ja juuri sitä pieni zoomimoottori kuulostaa.
     const osc = ctx.createOscillator();
     osc.type = 'square';
-    osc.frequency.setValueAtTime(120, t0);
-    osc.frequency.linearRampToValueAtTime(224, t0 + kiihdytys);
-    osc.frequency.linearRampToValueAtTime(238, t0 + hidastus);
-    osc.frequency.linearRampToValueAtTime(150, t0 + kesto);
+    osc.frequency.setValueCurveAtTime(kaari(128, 242), t0, kesto);
 
     // Kaistanpäästö jättää jäljelle keskialueen sörinän: matalat jyrinät
     // pois, jotta ääni tulee koneistosta eikä kellarista.
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
     bp.Q.value = 1.1;
-    bp.frequency.setValueAtTime(900, t0);
-    bp.frequency.linearRampToValueAtTime(1250, t0 + kiihdytys);
-    bp.frequency.setValueAtTime(1250, t0 + hidastus);
-    bp.frequency.linearRampToValueAtTime(820, t0 + kesto);
+    bp.frequency.setValueCurveAtTime(kaari(880, 1280), t0, kesto);
 
     // Hammaspyörän vinkuna: ohut sävel moottorin yläpuolella.
     const vinku = ctx.createOscillator();
     vinku.type = 'triangle';
-    vinku.frequency.setValueAtTime(600, t0);
-    vinku.frequency.linearRampToValueAtTime(1120, t0 + kiihdytys);
-    vinku.frequency.linearRampToValueAtTime(1190, t0 + hidastus);
-    vinku.frequency.linearRampToValueAtTime(750, t0 + kesto);
+    vinku.frequency.setValueCurveAtTime(kaari(640, 1210), t0, kesto);
     const vinkuTaso = ctx.createGain();
     vinkuTaso.gain.value = 0.055;
 
@@ -863,10 +934,7 @@ const SOUNDS = {
     sorina.gain.value = 0.78;
     const lfo = ctx.createOscillator();
     lfo.type = 'square';
-    lfo.frequency.setValueAtTime(62, t0);
-    lfo.frequency.linearRampToValueAtTime(104, t0 + kiihdytys);
-    lfo.frequency.setValueAtTime(104, t0 + hidastus);
-    lfo.frequency.linearRampToValueAtTime(64, t0 + kesto);
+    lfo.frequency.setValueCurveAtTime(kaari(60, 106), t0, kesto);
     const lfoTaso = ctx.createGain();
     lfoTaso.gain.value = 0.2;
     lfo.connect(lfoTaso).connect(sorina.gain);
@@ -874,7 +942,7 @@ const SOUNDS = {
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t0);
     g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.05);
-    g.gain.setValueAtTime(0.16, t0 + hidastus);
+    g.gain.setValueAtTime(0.16, t0 + Math.max(0.1, kesto - 0.13));
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
     osc.connect(bp).connect(sorina);

@@ -263,6 +263,9 @@ body.aloitus-zoom #board,
 body.manner-zoom #board {
   /* Selain ei saa napata vaakaeleitä omaan käyttöönsä. */
   touch-action: none;
+  /* Raahaus ei saa maalata kartan tekstejä valituiksi. */
+  user-select: none;
+  -webkit-user-select: none;
   will-change: transform;
   /* Siirto ja zoomausliuku lasketaan elementin vasemmasta yläkulmasta
      (js/ui.js liukuZoomiin), joten origo ei saa olla keskellä. */
@@ -302,29 +305,51 @@ body.kartta-raahaus .pawn-pulse { animation: none; }
 
 /*
  * Vanhan kiikarin vääristymä (omistajan toive): maailmankartan
- * lähikuvassa ruudun reunat sumenevat ja saavat vihertävän linssin
- * sävyn. Maski jättää keskustan koskematta, joten terävä alue on
- * täsmälleen se, mitä pelaaja katsoo.
+ * lähikuvassa ruudun reunat sumenevat, saavat vihertävän linssin sävyn
+ * ja ohuen värikehän — halvan linssin kromaattinen aberraatio.
+ *
+ * Kolme kerrosta samasta elementistä:
+ *   .kiikari         sumennus + vihreä sävy
+ *   .kiikari::before  lämmin (punainen) kehä uloimpana
+ *   .kiikari::after   kylmä (syaani) kehä hieman sisempänä
+ * Aito linssi taittaa pitkät ja lyhyet aallonpituudet eri kohtaan, ja
+ * juuri se näkyy kuvakentän laidalla värillisenä reunuksena.
+ *
+ * Sumennus alkaa syvemmältä kuin vihreä sävy (omistajan toive:
+ * epätarkkuus nykyisellä paikallaan, väri enemmän reunoille). Siksi
+ * maski ja taustaväri eivät jaa samoja rajoja.
  *
  * Kerros asuu z-tasolla 2: kartan päällä mutta nopan (3), avaustekstin
- * (3) ja alarivin korttien (4) alla. Raahauksen ajaksi se katoaa
- * nopeasti — sumennus liikkuvan kartan päällä on puhelimelle liikaa —
- * ja palaa rauhassa feidaten, kun sormi irtoaa.
+ * (3) ja alarivin korttien (4) alla. Se nousee esiin vasta kun zoomaus
+ * on valmis (js/ui.js lisää kiikari-paalla), ja katoaa raahauksen
+ * ajaksi — sumennus liikkuvan kartan päällä on puhelimelle liikaa.
  */
-body.aloitus-zoom .map-pane::before {
-  content: '';
+.kiikari {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  -webkit-backdrop-filter: blur(7px) saturate(0.8);
-  backdrop-filter: blur(7px) saturate(0.8);
-  background: radial-gradient(
-    ellipse 72% 64% at 50% 50%,
-    rgba(78, 122, 86, 0) 52%,
-    rgba(68, 112, 78, 0.24) 76%,
-    rgba(36, 68, 46, 0.5) 100%
-  );
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 700ms ease, visibility 0s linear 700ms;
+}
+
+body.aloitus-zoom.kiikari-paalla .kiikari {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 700ms ease, visibility 0s;
+}
+
+/* Sama tarkkuus kuin esiin nostavassa säännössä, muuten raahaus ei
+   voittaisi sitä. */
+body.aloitus-zoom.kiikari-paalla.kartta-raahaus .kiikari {
+  opacity: 0;
+  transition: opacity 110ms ease;
+}
+
+.kiikari,
+.kiikari::before,
+.kiikari::after {
   -webkit-mask-image: radial-gradient(
     ellipse 72% 64% at 50% 50%,
     rgba(0, 0, 0, 0) 48%,
@@ -335,13 +360,52 @@ body.aloitus-zoom .map-pane::before {
     rgba(0, 0, 0, 0) 48%,
     rgba(0, 0, 0, 1) 84%
   );
-  opacity: 1;
-  transition: opacity 560ms ease;
 }
 
-body.aloitus-zoom.kartta-raahaus .map-pane::before {
-  opacity: 0;
-  transition-duration: 110ms;
+body.aloitus-zoom .kiikari {
+  -webkit-backdrop-filter: blur(7px) saturate(0.8);
+  backdrop-filter: blur(7px) saturate(0.8);
+  /* Vihreä alkaa vasta 66 %:n kohdalla — kartan päälle sitä tulee
+     selvästi vähemmän kuin sumennusta. */
+  background: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(84, 128, 92, 0) 62%,
+    rgba(64, 112, 76, 0.36) 82%,
+    rgba(26, 60, 38, 0.7) 100%
+  );
+}
+
+.kiikari::before,
+.kiikari::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Multiply, ei screen: kartta on vaalea pergamentti, jolloin
+     kirkastava sekoitus vain pesee värin pois. Kertova sekoitus
+     päästää läpi sen värin, jonka kehä edustaa, ja vaimentaa muut —
+     juuri niin kuin linssin taittovirhe näkyy vaaleaa taustaa
+     vasten. */
+  mix-blend-mode: multiply;
+}
+
+/* Lämmin kehä uloimpana: pitkät aallonpituudet taittuvat vähemmän. */
+.kiikari::before {
+  background: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(255, 126, 90, 0) 90%,
+    rgba(255, 126, 90, 0.22) 99%,
+    rgba(255, 126, 90, 0.22) 100%
+  );
+}
+
+/* Kylmä kehä sisempänä: lyhyet aallonpituudet taittuvat enemmän. */
+.kiikari::after {
+  background: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(120, 200, 255, 0) 78%,
+    rgba(120, 200, 255, 0.13) 88%,
+    rgba(120, 200, 255, 0) 97%
+  );
 }
 
 /* Vanhan filmin vaalea vinjetti: kartan reunat haalistuvat kuin

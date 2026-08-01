@@ -271,6 +271,9 @@ body.aloitus-zoom #board,
 body.manner-zoom #board {
   /* Selain ei saa napata vaakaeleitä omaan käyttöönsä. */
   touch-action: none;
+  /* Raahaus ei saa maalata kartan tekstejä valituiksi. */
+  user-select: none;
+  -webkit-user-select: none;
   will-change: transform;
   /* Siirto ja zoomausliuku lasketaan elementin vasemmasta yläkulmasta
      (js/ui.js liukuZoomiin), joten origo ei saa olla keskellä. */
@@ -310,29 +313,51 @@ body.kartta-raahaus .pawn-pulse { animation: none; }
 
 /*
  * Vanhan kiikarin vääristymä (omistajan toive): maailmankartan
- * lähikuvassa ruudun reunat sumenevat ja saavat vihertävän linssin
- * sävyn. Maski jättää keskustan koskematta, joten terävä alue on
- * täsmälleen se, mitä pelaaja katsoo.
+ * lähikuvassa ruudun reunat sumenevat, saavat vihertävän linssin sävyn
+ * ja ohuen värikehän — halvan linssin kromaattinen aberraatio.
+ *
+ * Kolme kerrosta samasta elementistä:
+ *   .kiikari         sumennus + vihreä sävy
+ *   .kiikari::before  lämmin (punainen) kehä uloimpana
+ *   .kiikari::after   kylmä (syaani) kehä hieman sisempänä
+ * Aito linssi taittaa pitkät ja lyhyet aallonpituudet eri kohtaan, ja
+ * juuri se näkyy kuvakentän laidalla värillisenä reunuksena.
+ *
+ * Sumennus alkaa syvemmältä kuin vihreä sävy (omistajan toive:
+ * epätarkkuus nykyisellä paikallaan, väri enemmän reunoille). Siksi
+ * maski ja taustaväri eivät jaa samoja rajoja.
  *
  * Kerros asuu z-tasolla 2: kartan päällä mutta nopan (3), avaustekstin
- * (3) ja alarivin korttien (4) alla. Raahauksen ajaksi se katoaa
- * nopeasti — sumennus liikkuvan kartan päällä on puhelimelle liikaa —
- * ja palaa rauhassa feidaten, kun sormi irtoaa.
+ * (3) ja alarivin korttien (4) alla. Se nousee esiin vasta kun zoomaus
+ * on valmis (js/ui.js lisää kiikari-paalla), ja katoaa raahauksen
+ * ajaksi — sumennus liikkuvan kartan päällä on puhelimelle liikaa.
  */
-body.aloitus-zoom .map-pane::before {
-  content: '';
+.kiikari {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  -webkit-backdrop-filter: blur(7px) saturate(0.8);
-  backdrop-filter: blur(7px) saturate(0.8);
-  background: radial-gradient(
-    ellipse 72% 64% at 50% 50%,
-    rgba(78, 122, 86, 0) 52%,
-    rgba(68, 112, 78, 0.24) 76%,
-    rgba(36, 68, 46, 0.5) 100%
-  );
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 700ms ease, visibility 0s linear 700ms;
+}
+
+body.aloitus-zoom.kiikari-paalla .kiikari {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 700ms ease, visibility 0s;
+}
+
+/* Sama tarkkuus kuin esiin nostavassa säännössä, muuten raahaus ei
+   voittaisi sitä. */
+body.aloitus-zoom.kiikari-paalla.kartta-raahaus .kiikari {
+  opacity: 0;
+  transition: opacity 110ms ease;
+}
+
+.kiikari,
+.kiikari::before,
+.kiikari::after {
   -webkit-mask-image: radial-gradient(
     ellipse 72% 64% at 50% 50%,
     rgba(0, 0, 0, 0) 48%,
@@ -343,13 +368,52 @@ body.aloitus-zoom .map-pane::before {
     rgba(0, 0, 0, 0) 48%,
     rgba(0, 0, 0, 1) 84%
   );
-  opacity: 1;
-  transition: opacity 560ms ease;
 }
 
-body.aloitus-zoom.kartta-raahaus .map-pane::before {
-  opacity: 0;
-  transition-duration: 110ms;
+body.aloitus-zoom .kiikari {
+  -webkit-backdrop-filter: blur(7px) saturate(0.8);
+  backdrop-filter: blur(7px) saturate(0.8);
+  /* Vihreä alkaa vasta 66 %:n kohdalla — kartan päälle sitä tulee
+     selvästi vähemmän kuin sumennusta. */
+  background: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(84, 128, 92, 0) 62%,
+    rgba(64, 112, 76, 0.36) 82%,
+    rgba(26, 60, 38, 0.7) 100%
+  );
+}
+
+.kiikari::before,
+.kiikari::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Multiply, ei screen: kartta on vaalea pergamentti, jolloin
+     kirkastava sekoitus vain pesee värin pois. Kertova sekoitus
+     päästää läpi sen värin, jonka kehä edustaa, ja vaimentaa muut —
+     juuri niin kuin linssin taittovirhe näkyy vaaleaa taustaa
+     vasten. */
+  mix-blend-mode: multiply;
+}
+
+/* Lämmin kehä uloimpana: pitkät aallonpituudet taittuvat vähemmän. */
+.kiikari::before {
+  background: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(255, 126, 90, 0) 90%,
+    rgba(255, 126, 90, 0.22) 99%,
+    rgba(255, 126, 90, 0.22) 100%
+  );
+}
+
+/* Kylmä kehä sisempänä: lyhyet aallonpituudet taittuvat enemmän. */
+.kiikari::after {
+  background: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(120, 200, 255, 0) 78%,
+    rgba(120, 200, 255, 0.13) 88%,
+    rgba(120, 200, 255, 0) 97%
+  );
 }
 
 /* Vanhan filmin vaalea vinjetti: kartan reunat haalistuvat kuin
@@ -3760,6 +3824,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
         <svg id="board" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"
              role="img" aria-label="Afrikan aarrekartta"></svg>
         <div id="board-hint" class="board-hint"></div>
+        <!-- Vanhan kiikarin linssi: sumennus, vihreä sävy ja värikehät
+             reunoilla. Nousee esiin vasta zoomauksen jälkeen. -->
+        <div class="kiikari" aria-hidden="true"></div>
         <!--
           Aloitusteksti kirjoittuu kartan alapuolelle jäävään tyhjään
           pergamenttiin, jotta kohteen voi napauttaa heti luettuaan.
@@ -34284,13 +34351,13 @@ class Sound {
 
   // --- pelin äänet --------------------------------------------------------
 
-  play(name) {
+  play(name, asetukset = undefined) {
     if (!this.enabled) return;
     // Oikea äänite ensin, jos se on ladattu; muuten syntetisoitu versio.
     const real = REAL_PLAYERS[name];
-    if (real && real(this)) return;
+    if (real && real(this, asetukset)) return;
     const sound = SOUNDS[name];
-    if (sound) sound(this);
+    if (sound) sound(this, asetukset);
   }
 
   /**
@@ -34352,7 +34419,7 @@ class Sound {
    */
   playSlice(name, {
     dur = 0.1, gain = 0.3, tail = null, alusta = false, isku = false, delay = 0, tasavire = false,
-    vire = null,
+    vire = null, nopeusKayra = null,
   } = {}) {
     const ctx = this.ensureContext();
     const buf = this.samples?.[name];
@@ -34379,11 +34446,71 @@ class Sound {
     g.gain.exponentialRampToValueAtTime(gain, t0 + 0.01);
     g.gain.setValueAtTime(gain, t0 + Math.max(0.02, kesto - 0.04));
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+    // Toistonopeuden käyrä: äänen korkeus seuraa animaation vauhtia
+    // (omistajan toive). Zoomauksessa moottori kiihtyy ja hidastuu
+    // samaan tahtiin kuin kartta.
+    if (nopeusKayra?.length > 1) {
+      try {
+        src.playbackRate.setValueCurveAtTime(Float32Array.from(nopeusKayra), t0, kesto);
+      } catch {
+        /* jos selain ei kelpuuta käyrää, tasainen nopeus kelpaa */
+      }
+    }
     src.connect(g).connect(this.bus);
     src.start(t0, alku, kesto + 0.03);
     return true;
   }
 }
+
+/**
+ * Cubic-bezier-pehmennyksen etenemä hetkellä t (0…1). Sama kaava kuin
+ * css:llä; ratkaistaan x Newtonin menetelmällä ja luetaan siitä y.
+ */
+function bezierEtenema(x1, y1, x2, y2, t) {
+  const kayra = (a, b, u) => {
+    const v = 1 - u;
+    return 3 * v * v * u * a + 3 * v * u * u * b + u * u * u;
+  };
+  const derivaatta = (a, b, u) => {
+    const v = 1 - u;
+    return 3 * v * v * a + 6 * v * u * (b - a) + 3 * u * u * (1 - b);
+  };
+  let u = t;
+  for (let i = 0; i < 8; i++) {
+    const d = derivaatta(x1, x2, u);
+    if (Math.abs(d) < 1e-6) break;
+    u -= (kayra(x1, x2, u) - t) / d;
+    u = Math.min(1, Math.max(0, u));
+  }
+  return kayra(y1, y2, u);
+}
+
+/**
+ * Toistonopeuden käyrä pehmennyksen vauhdista. Zoomausliuku on hidas
+ * alussa, nopea keskellä ja hidas lopussa; moottorin korkeus seuraa
+ * samaa kaarta. Nopeus ei laske nollaan — pysähtynyt moottori olisi
+ * hiljainen, ja tässä on kyse sävyn elämisestä.
+ */
+function vauhtiKayra(pehmennys, matalin = 0.86, korkein = 1.16, pisteita = 28) {
+  const [x1, y1, x2, y2] = pehmennys;
+  const vauhdit = [];
+  for (let i = 0; i < pisteita; i++) {
+    const t = i / (pisteita - 1);
+    const h = 1 / (pisteita * 2);
+    const a = bezierEtenema(x1, y1, x2, y2, Math.max(0, t - h));
+    const b = bezierEtenema(x1, y1, x2, y2, Math.min(1, t + h));
+    vauhdit.push((b - a) / (Math.min(1, t + h) - Math.max(0, t - h)));
+  }
+  const huippu = Math.max(...vauhdit) || 1;
+  return vauhdit.map((v) => matalin + (korkein - matalin) * (v / huippu));
+}
+
+// Sama pehmennys kuin kartan liu'ulla (js/ui.js ZOOM_PEHMENNYS). Jos se
+// muuttuu siellä, muuta myös tässä — ääni ja kuva seuraavat toisiaan.
+const ZOOM_PEHMENNYS = [0.45, 0, 0.28, 1];
+const ZOOM_VAUHTI = vauhtiKayra(ZOOM_PEHMENNYS);
+const ZOOM_VAUHTI_MIN = Math.min(...ZOOM_VAUHTI);
+const ZOOM_VAUHTI_MAX = Math.max(...ZOOM_VAUHTI);
 
 // Oikeat äänitteet Freesoundista (CC0). Ladataan verkosta puskuriin;
 // ilman verkkoa vastaava syntetisoitu ääni soi entiseen tapaan.
@@ -34429,10 +34556,15 @@ const REAL_SAMPLES = {
   timeout: { url: 'assets/audio/efekti-aikaloppui.mp3', credit: 'ElevenLabs SFX' },
   flip: { url: 'assets/audio/efekti-kaanto.mp3', credit: 'ElevenLabs SFX' },
   clack: { url: 'assets/audio/efekti-naksu.mp3', credit: 'ElevenLabs SFX' },
-  // Kartan zoomaus. Tiedostoa ei ole vielä generoitu — kunnes se on,
-  // soi alla oleva syntetisoitu moottori. Puuttuva tiedosto ei haittaa:
-  // lataus epäonnistuu hiljaa ja SOUNDS.zoom ottaa vuoron.
-  zoom: { url: 'assets/audio/efekti-zoom.mp3', credit: 'ElevenLabs SFX' },
+  // Kartan zoomaus: aito kompaktikameran zoomimoottori. Lähde on
+  // Wikimedia Commonsin "Pocket camera start and shut down" (public
+  // domain), josta on otettu linssin sisäänvedon tasainen surina ja
+  // toistettu ristihäivytyksellä zoomausliu'un mittaiseksi.
+  zoom: {
+    url: 'assets/audio/efekti-zoom.mp3',
+    credit: '"Pocket camera start and shut down" — stephan, pdsounds.org '
+      + 'Wikimedia Commonsin kautta (public domain)',
+  },
   star: { url: 'assets/audio/efekti-tahti.mp3', credit: 'ElevenLabs SFX' },
   gem: { url: 'assets/audio/efekti-jalokivi.mp3', credit: 'ElevenLabs SFX' },
   horseshoe: { url: 'assets/audio/efekti-kenka.mp3', credit: 'ElevenLabs SFX' },
@@ -34470,7 +34602,14 @@ const REAL_PLAYERS = {
   timeout: (s) => s.playSlice('timeout', { dur: 1.6, gain: 0.4, alusta: true }),
   flip: (s) => s.playSlice('flip', { dur: 0.9, gain: 0.35, alusta: true }),
   clack: (s) => s.playSlice('clack', { dur: 0.6, gain: 0.3, alusta: true }),
-  zoom: (s) => s.playSlice('zoom', { dur: 2.0, gain: 0.5, alusta: true }),
+  // Koko äänite alusta loppuun, ilman satunnaista vireheittoa: moottori
+  // kuulostaa oudolta jos sitä siirretään umpimähkään. Sen sijaan
+  // toistonopeus seuraa zoomausliu'un vauhtia (omistajan toive), joten
+  // moottori kiihtyy ja hidastuu samassa tahdissa kartan kanssa.
+  // Kesto tulee kutsujalta: etusivu 2,8 s, mantereet 2,0 s.
+  zoom: (s, { kesto = 2.85 } = {}) => s.playSlice('zoom', {
+    dur: kesto, gain: 0.55, alusta: true, tasavire: true, nopeusKayra: ZOOM_VAUHTI,
+  }),
   star: (s) => s.playSlice('star', { dur: 2.6, gain: 0.45, alusta: true }),
   gem: (s) => s.playSlice('gem', { dur: 1.6, gain: 0.4, alusta: true }),
   horseshoe: (s) => s.playSlice('horseshoe', { dur: 1.1, gain: 0.4, alusta: true }),
@@ -34593,42 +34732,41 @@ const SOUNDS = {
    *  3. hammaspyörän ohut vinkuna noin viisinkertaisella taajuudella,
    *  4. nopea aaltoilu voimakkuudessa = kommutaattorin sörinä,
    *  5. kuiva muovinen kohina ja lopetusnaksahdus, kun linssi pysähtyy.
-   * Kesto on sama kuin zoomausliu'un (js/ui.js ZOOM_MS).
+   *
+   * Kierrokset seuraavat zoomausliu'un vauhtia (omistajan toive): sama
+   * pehmennyskäyrä kuin kartalla, joten moottori kiihtyy ja hidastuu
+   * täsmälleen kuvan mukana. Kesto tulee kutsujalta.
    */
-  zoom: (s) => {
+  zoom: (s, { kesto = 2.85 } = {}) => {
     const ctx = s.ensureContext();
     if (!ctx) return;
     const t0 = ctx.currentTime;
-    const kesto = 1.9;
-    const kiihdytys = 0.14;         // moottorin käynnistyminen
-    const hidastus = kesto - 0.13;  // hetki, jolloin kierrokset laskevat
+    // Vauhtikäyrä taajuudeksi: matalin arvo joutokäynti, korkein täysi
+    // vauhti. setValueCurveAtTime piirtää saman kaaren kuin liuku.
+    const kaari = (matala, korkea) => Float32Array.from(
+      ZOOM_VAUHTI, (v) => {
+        const k = (v - ZOOM_VAUHTI_MIN) / (ZOOM_VAUHTI_MAX - ZOOM_VAUHTI_MIN || 1);
+        return matala + (korkea - matala) * k;
+      },
+    );
 
     // Moottorin sävel: kanttiaalto on paljon puremampi kuin saha-aalto
     // alipäästön takana, ja juuri sitä pieni zoomimoottori kuulostaa.
     const osc = ctx.createOscillator();
     osc.type = 'square';
-    osc.frequency.setValueAtTime(120, t0);
-    osc.frequency.linearRampToValueAtTime(224, t0 + kiihdytys);
-    osc.frequency.linearRampToValueAtTime(238, t0 + hidastus);
-    osc.frequency.linearRampToValueAtTime(150, t0 + kesto);
+    osc.frequency.setValueCurveAtTime(kaari(128, 242), t0, kesto);
 
     // Kaistanpäästö jättää jäljelle keskialueen sörinän: matalat jyrinät
     // pois, jotta ääni tulee koneistosta eikä kellarista.
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
     bp.Q.value = 1.1;
-    bp.frequency.setValueAtTime(900, t0);
-    bp.frequency.linearRampToValueAtTime(1250, t0 + kiihdytys);
-    bp.frequency.setValueAtTime(1250, t0 + hidastus);
-    bp.frequency.linearRampToValueAtTime(820, t0 + kesto);
+    bp.frequency.setValueCurveAtTime(kaari(880, 1280), t0, kesto);
 
     // Hammaspyörän vinkuna: ohut sävel moottorin yläpuolella.
     const vinku = ctx.createOscillator();
     vinku.type = 'triangle';
-    vinku.frequency.setValueAtTime(600, t0);
-    vinku.frequency.linearRampToValueAtTime(1120, t0 + kiihdytys);
-    vinku.frequency.linearRampToValueAtTime(1190, t0 + hidastus);
-    vinku.frequency.linearRampToValueAtTime(750, t0 + kesto);
+    vinku.frequency.setValueCurveAtTime(kaari(640, 1210), t0, kesto);
     const vinkuTaso = ctx.createGain();
     vinkuTaso.gain.value = 0.055;
 
@@ -34638,10 +34776,7 @@ const SOUNDS = {
     sorina.gain.value = 0.78;
     const lfo = ctx.createOscillator();
     lfo.type = 'square';
-    lfo.frequency.setValueAtTime(62, t0);
-    lfo.frequency.linearRampToValueAtTime(104, t0 + kiihdytys);
-    lfo.frequency.setValueAtTime(104, t0 + hidastus);
-    lfo.frequency.linearRampToValueAtTime(64, t0 + kesto);
+    lfo.frequency.setValueCurveAtTime(kaari(60, 106), t0, kesto);
     const lfoTaso = ctx.createGain();
     lfoTaso.gain.value = 0.2;
     lfo.connect(lfoTaso).connect(sorina.gain);
@@ -34649,7 +34784,7 @@ const SOUNDS = {
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t0);
     g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.05);
-    g.gain.setValueAtTime(0.16, t0 + hidastus);
+    g.gain.setValueAtTime(0.16, t0 + Math.max(0.1, kesto - 0.13));
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
     osc.connect(bp).connect(sorina);
@@ -38624,9 +38759,19 @@ const MANNER_ZOOM_VIIVE = 1400; // kokonäkymä näkyy tämän verran ennen zoom
 // Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
 // alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
 const ALAKAISTA = 0.3;
+// Sama pohjoiseen: matkakirjan kortti peittää laudan yläreunan, joten
+// pohjoisimmat kaupungit (Tromssa, Lappi, Islanti) tarvitsevat tilaa,
+// johon panoroida (omistajan havainto).
+const YLAKAISTA = 0.26;
 // Zoomausliu'un kesto. Omistajan palaute: 600 ms oli liian nopea,
 // 1200 ms yhä liian nopea — kaikki zoomaukset hitaammiksi.
 const ZOOM_MS = 2000;
+// Etusivun zoomaus vielä tätäkin hitaammin (omistajan toive): se on
+// pelin avaus, ja koko maailmankartta on iso matka lähikuvaan.
+const ALOITUS_ZOOM_MS = 2800;
+// Kiihdytys ja jarrutus molemmissa päissä (omistajan toive): kartta
+// lähtee liikkeelle pehmeästi, kiitää keskellä ja pysähtyy rauhassa.
+const ZOOM_PEHMENNYS = 'cubic-bezier(0.45, 0, 0.28, 1)';
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
 const ZOOM_TAUKO_MS = 260;
 // Aloituskartan lähikuvan suurennos yleiskuvaan nähden.
@@ -39379,7 +39524,10 @@ class UI {
     this.svg.style.flex = '';
     this.svg.style.alignSelf = '';
     clearTimeout(this.mannerAjastin);
-    document.body.classList.remove('aloitus-zoom', 'manner-zoom', 'kartta-raahaus');
+    clearTimeout(this.kiikariAjastin);
+    document.body.classList.remove(
+      'aloitus-zoom', 'manner-zoom', 'kartta-raahaus', 'kiikari-paalla',
+    );
   }
 
   /**
@@ -39412,23 +39560,31 @@ class UI {
     // zoomaustasoa — se vain jatkaa panoroitavaa aluetta, ja siihen
     // osuu kartan oma Pohjois-Afrikan kaistale.
     const etelaJatko = (paneH * ALAKAISTA) / skaala;
-    const korkeusYks = box.h + etelaJatko;
+    // Sama tila laudan pohjoispuolelle (omistajan havainto: myös
+    // pohjoisesta hukkui kaupunkeja). Ylhäällä tilan vievät matkakirjan
+    // kortti ja kartan yläreuna, joten Tromssa ja Lappi jäivät piiloon
+    // eikä niiden yläpuolella ollut mitään, mihin panoroida. Kartan
+    // pergamentti jatkuu rajauksen yli joka suuntaan (mapart.js PAPER),
+    // joten kaista näyttää kartalta eikä tyhjältä.
+    const pohjoisJatko = (paneH * YLAKAISTA) / skaala;
+    const ylaReuna = box.y - pohjoisJatko;
+    const korkeusYks = box.h + pohjoisJatko + etelaJatko;
     const leveys = Math.round(box.w * skaala);
     const korkeus = Math.round(korkeusYks * skaala);
-    this.svg.setAttribute('viewBox', `${box.x} ${box.y} ${box.w} ${korkeusYks}`);
+    this.svg.setAttribute('viewBox', `${box.x} ${ylaReuna} ${box.w} ${korkeusYks}`);
     this.svg.style.width = `${leveys}px`;
     this.svg.style.height = `${korkeus}px`;
     this.svg.style.flex = '0 0 auto';
     this.svg.style.alignSelf = 'flex-start';
     this.viewBoxSize = { vw: box.w, vh: korkeusYks };
     this.zoomSkaala = skaala;
-    this.zoomYlaReuna = box.y;
+    this.zoomYlaReuna = ylaReuna;
     this.panVara = Math.max(0, leveys - paneW);
     this.panVaraY = Math.max(0, korkeus - paneH);
     if (this.panX == null || this.panY == null) {
       const kohde = this.zoomKohde ?? { x: box.x + box.w / 2, y: box.y + box.h / 2 };
       this.panX = paneW / 2 - (kohde.x - box.x) * skaala;
-      this.panY = paneH / 2 - (kohde.y - box.y) * skaala;
+      this.panY = paneH / 2 - (kohde.y - ylaReuna) * skaala;
     }
     this.asetaPan(this.panX, this.panY);
     this.placeFactCard(paneW, paneH);
@@ -39512,7 +39668,9 @@ class UI {
     // Alkuasento heti: muuten kartta näyttäisi hyppäävän lähikuvaan jo
     // ennen kuin liuku ehtii alkaa hiljaisen hetken jälkeen.
     this.asetaZoomAlku(fokus, sx, sy, yleisSkaala);
-    this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
+    this.zoomAanellaJaViiveella(
+      () => this.kaynnistaZoomLiuku(ALOITUS_ZOOM_MS), ALOITUS_ZOOM_MS,
+    );
   }
 
   /**
@@ -39521,20 +39679,22 @@ class UI {
    * vasta pienen viiveen jälkeen zoomausääni ja liuku käynnistyvät.
    * Ilman taukoa moottori hukkui puheen ja meren alle.
    */
-  zoomAanellaJaViiveella(liuku) {
+  zoomAanellaJaViiveella(liuku, kesto = ZOOM_MS) {
     this.stopIntroVoice();
     this.stopDiaryVoice();
     vaimennaTausta();
     clearTimeout(this.zoomAlkuAjastin);
     this.zoomAlkuAjastin = setTimeout(() => {
       if (this.dead) return;
-      sfx.play('zoom');
+      // Moottori soi täsmälleen liu'un mittaisena, ja sen korkeus
+      // seuraa liu'un vauhtia (js/sound.js ZOOM_VAUHTI).
+      sfx.play('zoom', { kesto: kesto / 1000 });
       liuku();
       // Taustamaisema palaa vasta kun moottori on vaiennut.
       clearTimeout(this.zoomTaustaAjastin);
       this.zoomTaustaAjastin = setTimeout(() => {
         if (!this.dead) palautaTausta();
-      }, ZOOM_MS + 300);
+      }, kesto + 300);
     }, ZOOM_TAUKO_MS);
   }
 
@@ -39578,13 +39738,26 @@ class UI {
     void this.svg.getBoundingClientRect();
   }
 
-  /** Käynnistää liu'un alkuasennosta lähikuvaan. */
-  kaynnistaZoomLiuku() {
+  /**
+   * Käynnistää liu'un alkuasennosta lähikuvaan.
+   *
+   * Kiikariefekti nostetaan esiin vasta, kun liuku on valmis (omistajan
+   * toive) — liikkuvan kuvan päällä sumennus on sekä rumaa että
+   * puhelimelle raskasta. Feidauksen hoitaa css.
+   */
+  kaynnistaZoomLiuku(kesto = ZOOM_MS) {
     if (this.reducedMotion) return;
-    this.svg.style.transition = `transform ${ZOOM_MS}ms cubic-bezier(0.25, 0.6, 0.2, 1)`;
+    this.svg.style.transition = `transform ${kesto}ms ${ZOOM_PEHMENNYS}`;
     this.asetaPan(this.panX, this.panY);
     clearTimeout(this.zoomAjastin);
-    this.zoomAjastin = setTimeout(() => { this.svg.style.transition = ''; }, ZOOM_MS + 60);
+    this.zoomAjastin = setTimeout(() => { this.svg.style.transition = ''; }, kesto + 60);
+    clearTimeout(this.kiikariAjastin);
+    // Kiikari kuuluu toistaiseksi vain maailmankarttaan (omistajan
+    // toive koski etusivua).
+    if (!this.aloitusZoom) return;
+    this.kiikariAjastin = setTimeout(() => {
+      if (!this.dead) document.body.classList.add('kiikari-paalla');
+    }, kesto);
   }
 
   /**
@@ -43700,7 +43873,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.124';
+const APP_VERSION = '2026-08-01.125';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
