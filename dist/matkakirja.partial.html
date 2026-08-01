@@ -1245,6 +1245,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   background: rgba(255, 252, 245, 0.6);
 }
 
+/* Ilmainen kuuntelupaikka Apple Musicin vieressä: kun molemmat ovat
+   rivillä, vain ensimmäinen työntyy oikeaan reunaan. */
+.kulttuuri-musiikkilinkki-vapaa { margin-left: 0.3rem; }
+
 .kulttuuri-musiikkilinkki:hover {
   border-color: rgba(64, 51, 34, 0.75);
   background: rgba(255, 252, 245, 0.95);
@@ -9879,13 +9883,407 @@ const EUROPE_KULTTUURI = {
         + 'Samassa paikassa kokoontui Alþingi vuodesta 930.',
     },
   },
+
+  ateena: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Rebetiko — sataman blues',
+        tiedosto: 'The Famous Quartet of Pireaus about 1934.jpg',
+        teksti: 'Pireuksen satamakortteleissa syntyi 1920-luvulla '
+          + 'rebetiko: pakolaisten ja köyhien laulu, jota soitettiin '
+          + 'bouzoukilla ja jota valtio yritti aikanaan kieltää. Nykyään '
+          + 'se on Unescon suojelemaa kulttuuriperintöä ja soi taas '
+          + 'kaupungin tavernoissa.',
+        selite: 'Pireuksen kuuluisa kvartetti noin 1934: Markos '
+          + 'Vamvakaris ja hänen soittokumppaninsa bouzoukeineen. '
+          + 'Yhtye teki rebetikosta koko Kreikan musiikkia.',
+        lahde: 'Wikimedia Commons (PD)',
+        wiki: 'Rebetiko',
+        musiikki: 'https://music.apple.com/fi/search?term=rebetiko',
+        musiikkiNimi: 'Rebetiko Apple Musicissa',
+        musiikkiVapaa: 'https://webradio.ert.gr/',
+        musiikkiVapaaNimi: 'ERT — Kreikan yleisradion verkkoradiot',
+        musiikkiVapaaLyhyt: 'ERT',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Souvlaki syödään seisaaltaan',
+        tiedosto: 'Souvlaki in Athens.JPG',
+        teksti: 'Souvlaki on grillattua lihaa vartaassa, ja pita '
+          + 'kääritään sen ympärille tomaatin, sipulin ja tzatzikin '
+          + 'kanssa. Ateenassa se ostetaan luukulta ja syödään kadulla '
+          + 'kävellen — halvin kunnon ateria kaupungissa.',
+        selite: 'Souvlaki-annos ateenalaisessa kojussa: vartaat, pita ja '
+          + 'ranskalaiset samassa käärössä, kuten paikallinen tapa vaatii.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Souvlaki',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Evzonit ja tupsukengät',
+        tiedosto: 'Evzones marching, Athens, Greece.jpg',
+        teksti: 'Tuntemattoman sotilaan haudalla vartioivat evzonit '
+          + 'kävelevät hitaasti kuin unessa. Puvussa on 400 laskosta — '
+          + 'yksi jokaista Kreikan ottomaanivallan vuotta kohti — ja '
+          + 'kengät painavat kolme kiloa kappale, sillä niiden pohjissa '
+          + 'on 60 naulaa.',
+        selite: 'Evzonit vaihtavat vartiota parlamenttitalon edessä. '
+          + 'Tupsukenkien nimi on tsarouhia, ja tupsut ovat mustaa villaa.',
+        lahde: 'Wikimedia Commons (CC0)',
+        wiki: 'Evzonit',
+      },
+    ],
+    kysymys: {
+      q: 'Mitä evzonin puvun 400 laskosta esittävät?',
+      options: [
+        'Ottomaanivallan vuosia',
+        'Kreikan saarten määrää',
+        'Antiikin kaupunkivaltioita',
+        'Marathonin juoksun metrejä',
+      ],
+      correct: 0,
+      fact: 'Kreikka oli ottomaanien vallan alla lähes neljäsataa vuotta, '
+        + 'ja vapaussota alkoi 1821. Laskosten määrä on muistutus siitä.',
+    },
+  },
+
+  rooma: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Kolikko olan yli',
+        tiedosto: 'Trevi Fountain - Roma.jpg',
+        teksti: 'Trevin lähteeseen heitetään kolikko oikealla kädellä '
+          + 'vasemman olan yli: tarinan mukaan se takaa paluun Roomaan. '
+          + 'Lähteestä kerätään noin puolitoista miljoonaa euroa vuodessa, '
+          + 'ja rahat menevät hyväntekeväisyyteen — ruoka-apuun kaupungin '
+          + 'vähävaraisille.',
+        selite: 'Fontana di Trevi valmistui 1762. Keskellä on meren '
+          + 'jumala Oceanus simpukkavaunuissaan, ja vesi tulee yhä '
+          + 'antiikin akveduktia pitkin.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Trevin suihkulähde',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Carbonarassa ei ole kermaa',
+        tiedosto: 'Pasta carbonara.jpg',
+        teksti: 'Roomalaisessa carbonarassa on vain neljä ainesta: '
+          + 'munankeltuainen, pecorino-juusto, pippuri ja guanciale eli '
+          + 'suolattu posken liha. Kermaa ei ole — sen lisääminen on '
+          + 'roomalaiselle sama kuin ketsuppi kalakeitossa. Ruoka on '
+          + 'yllättävän nuori: se keksittiin vasta toisen maailmansodan '
+          + 'jälkeen.',
+        selite: 'Carbonara-annos. Kastike syntyy, kun kuuma pasta '
+          + 'sekoitetaan keltuaisen ja juuston kanssa liedeltä pois '
+          + 'otettuna — jos pannu on liian kuuma, muna kypsyy munakkaaksi.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        wiki: 'Carbonara',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Vesi kulkee yhä',
+        tiedosto: 'Parco degli Acquedotti 02.jpg',
+        teksti: 'Roomaan rakennettiin yksitoista akveduktia, jotka '
+          + 'toivat vuorilta vettä yli sadan kilometrin päästä. Ne '
+          + 'toimivat pelkällä painovoimalla: kaltevuus oli paikoin vain '
+          + 'kolmekymmentä senttiä kilometriä kohti. Yksi niistä, Aqua '
+          + 'Virgo, syöttää yhä Trevin lähdettä.',
+        selite: 'Akveduktipuisto kaupungin laidalla: Aqua Claudian kaaret '
+          + 'jatkuvat peltojen yli. Rakennettu vuosina 38–52 jKr.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Rooman akveduktit',
+      },
+    ],
+    kysymys: {
+      q: 'Miten Rooman akveduktit saivat veden liikkeelle?',
+      options: [
+        'Painovoimalla — putki laskee koko matkan',
+        'Orjien pyörittämillä pumpuilla',
+        'Tuulivoimalla',
+        'Vesi nostettiin ämpäreillä porras kerrallaan',
+      ],
+      correct: 0,
+      fact: 'Kaltevuus oli paikoin vain 30 senttiä kilometrillä. Kaaret '
+        + 'rakennettiin juuri siksi: laakson yli piti pitää putki '
+        + 'täsmälleen oikeassa kulmassa.',
+    },
+  },
+
+  kreeta: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Härän yli hypättiin',
+        tiedosto: 'Bull leaping minoan fresco archmus Heraklion.jpg',
+        teksti: 'Knossoksen seinämaalauksissa nuoret tarttuvat juoksevan '
+          + 'härän sarviin ja heittävät kuperkeikan sen selän yli. '
+          + 'Tutkijat kiistelevät yhä siitä, oliko se urheilua, uskonnon '
+          + 'meno vai molempia — eikä kukaan tiedä, onnistuiko se '
+          + 'oikeasti koskaan.',
+        selite: 'Härkähyppyfreskon jäänteet Herakleionin arkeologisessa '
+          + 'museossa, maalattu noin 1500 eaa. Vaaleat hahmot ovat '
+          + 'naisia, tumma mies — minolainen tapa merkitä sukupuoli '
+          + 'värillä.',
+        lahde: 'Wikimedia Commons (CC0)',
+        wiki: 'Knossos',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Lyyra soi polvella',
+        tiedosto: 'Cretan lyra.jpg',
+        teksti: 'Kreetalainen lyyra on kolmikielinen jousisoitin, jota '
+          + 'pidetään pystyssä polvella eikä leuan alla. Sitä soitetaan '
+          + 'häissä ja kylän juhlissa, usein läpi yön: tanssi kestää niin '
+          + 'kauan kuin soittajaa jaksaa.',
+        selite: 'Kreetalainen lyyra. Kieliä painetaan kynsien kyljellä, '
+          + 'ei sormenpäillä — siitä tulee soittimen erikoinen liukuva '
+          + 'ääni.',
+        lahde: 'Wikimedia Commons (CC BY 3.0)',
+        wiki: 'Kreetalainen lyyra',
+        musiikki: 'https://music.apple.com/fi/search?term=cretan%20lyra',
+        musiikkiNimi: 'Kreetalaista lyyramusiikkia Apple Musicissa',
+        musiikkiVapaa: 'https://webradio.ert.gr/',
+        musiikkiVapaaNimi: 'ERT — Kreikan yleisradion verkkoradiot',
+        musiikkiVapaaLyhyt: 'ERT',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Öljypuita enemmän kuin ihmisiä',
+        tiedosto: 'Olive-Harvest-Sitia-Lasithi-Crete-Greece.jpg',
+        teksti: 'Kreetalla kasvaa noin 30 miljoonaa oliivipuuta ja asuu '
+          + 'reilut 600 000 ihmistä — puita on siis viisikymmentä kertaa '
+          + 'enemmän. Osa puista on tuhansia vuosia vanhoja ja tuottaa '
+          + 'yhä satoa. Sato korjataan talvella, usein koko suvun voimin.',
+        selite: 'Oliivinkorjuuta Sitiassa Itä-Kreetalla. Verkot '
+          + 'levitetään puun alle ja oksat ravistellaan tai kammataan '
+          + 'tyhjiksi.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Oliivi',
+      },
+    ],
+    kysymys: {
+      q: 'Kuinka vanha Knossoksen palatsikulttuuri on?',
+      options: [
+        'Noin 4 000 vuotta — Euroopan vanhin kaupunkikulttuuri',
+        'Noin 1 000 vuotta',
+        'Noin 500 vuotta',
+        'Se rakennettiin roomalaisten aikaan',
+      ],
+      correct: 0,
+      fact: 'Minolainen kulttuuri kukoisti noin 2000–1450 eaa. Palatsissa '
+        + 'oli juokseva vesi ja viemärit aikana, jolloin muualla '
+        + 'Euroopassa asuttiin puumajoissa.',
+    },
+  },
+
+  sisilia: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Ritarit narujen varassa',
+        tiedosto: 'Sicilian puppets.JPG',
+        teksti: 'Opera dei pupi on sisilialainen nukketeatteri, jossa '
+          + 'metrin mittaiset haarniskoidut ritarit taistelevat '
+          + 'Kaarle Suuren tarinoissa. Sama tarina jatkui iltaa toisensa '
+          + 'jälkeen kuukausia, ja yleisö tuli katsomaan kuin '
+          + 'televisiosarjaa. Unesco suojeli perinteen 2001.',
+        selite: 'Sisilialaisia pupi-nukkeja haarniskoissaan. Nuket '
+          + 'painavat jopa kymmenen kiloa, ja niitä ohjataan '
+          + 'rautatangoilla ylhäältä.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Opera dei pupi',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Cannolo täytetään vasta tilauksesta',
+        tiedosto: 'Cannoli siciliani.jpg',
+        teksti: 'Cannolo on paistettu taikinaputki, joka täytetään '
+          + 'makeutetulla ricotta-juustolla. Kunnon leipomossa se '
+          + 'täytetään vasta kun asiakas tilaa — muuten kuori pehmenee. '
+          + 'Ricotta tehdään lampaanmaidosta, ja arabit toivat '
+          + 'sokeriruo’on saarelle 800-luvulla.',
+        selite: 'Cannoli siciliani tarjolla. Päihin painetaan usein '
+          + 'pistaasirouhetta tai kandeerattua hedelmää.',
+        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        wiki: 'Cannolo',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Torilla huudetaan laulaen',
+        tiedosto: 'Ballarò, gente en el mercado, Palermo, Sicilia, Italia, 2015.JPG',
+        teksti: 'Palermon Ballarò on toiminut samalla paikalla yli '
+          + 'tuhat vuotta, arabivallan ajoista asti. Myyjien huuto on '
+          + 'oma taiteenlajinsa nimeltä abbanniata: hinta ja tavara '
+          + 'lauletaan venytetyllä melodialla, joka kuuluu korttelin '
+          + 'päähän.',
+        selite: 'Ballarò-tori Palermossa. Kojujen välissä myydään kalaa, '
+          + 'vihanneksia ja katuruokaa; markkina alkaa aamuvarhain ja '
+          + 'jatkuu iltaan.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Palermo',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä on abbanniata?',
+      options: [
+        'Torikauppiaan laulava myyntihuuto',
+        'Sisilialainen jälkiruoka',
+        'Etnan purkaustyyppi',
+        'Nukketeatterin päähenkilö',
+      ],
+      correct: 0,
+      fact: 'Abbanniata on Palermon torien oma huutolaulu. Jokaisella '
+        + 'myyjällä on oma melodiansa, ja vakioasiakkaat tunnistavat '
+        + 'kauppiaan pelkästä äänestä.',
+    },
+  },
+
+  dubrovnik: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Klapa lauletaan ilman soittimia',
+        tiedosto: 'Klapa Cambi, Orebić.2012.JPG',
+        teksti: 'Klapa on dalmatialainen mieskuorolaulu ilman soittimia: '
+          + 'viidestä kymmeneen laulajaa seisoo tiiviissä puolikaaressa '
+          + 'ja sovittaa äänet toisiinsa. Perinne syntyi kirkoissa ja '
+          + 'satamissa, ja Unesco suojeli sen 2012.',
+        selite: 'Klapa-yhtye laulamassa Orebićissä. Laulajat asettuvat '
+          + 'lähelle toisiaan, jotta kukin kuulee muut ilman '
+          + 'vahvistusta.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        wiki: 'Klapa',
+        musiikki: 'https://music.apple.com/fi/search?term=klapa',
+        musiikkiNimi: 'Klapa-lauluja Apple Musicissa',
+        musiikkiVapaa: 'https://radio.hrt.hr/',
+        musiikkiVapaaNimi: 'HRT — Kroatian yleisradion verkkoradiot',
+        musiikkiVapaaLyhyt: 'HRT',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Euroopan vanhin apteekki',
+        tiedosto: 'Old pharmacy in the Franciscan Monastery in Dubrovnik 01.jpg',
+        teksti: 'Fransiskaaniluostarin apteekki avattiin vuonna 1317 ja '
+          + 'palvelee yhä asiakkaita — se on Euroopan vanhin '
+          + 'yhtäjaksoisesti toiminut apteekki. Munkit valmistivat '
+          + 'voiteita yrteistä, ja osa resepteistä on yhä käytössä.',
+        selite: 'Vanhan apteekin purkkeja luostarin museossa. '
+          + 'Fajanssiruukuissa säilytettiin yrttejä ja voiteita; '
+          + 'jokaisen kyljessä lukee sisältö latinaksi.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Dubrovnik',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Suola teki kaupungista rikkaan',
+        tiedosto: 'Salt pans Ston (4065531015).jpg',
+        teksti: 'Stonin suola-altaat ovat toimineet 1300-luvulta asti, ja '
+          + 'suola oli Dubrovnikin tasavallan tärkein tulonlähde. Sitä '
+          + 'suojaamaan rakennettiin viiden kilometrin muuri — Euroopan '
+          + 'pisin linnoitusmuuri Kiinan muurin jälkeen. Suola kerätään '
+          + 'yhä käsin puulastoilla.',
+        selite: 'Stonin suola-altaat. Merivesi johdetaan matalille '
+          + 'kentille ja haihdutetaan auringossa; jäljelle jää suola.',
+        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        wiki: 'Ston',
+      },
+    ],
+    kysymys: {
+      q: 'Millä Dubrovnikin tasavalta pysyi vuosisatoja itsenäisenä?',
+      options: [
+        'Kaupankäynnillä ja neuvottelemalla, ei sotimalla',
+        'Euroopan suurimmalla laivastolla',
+        'Vuoristo esti hyökkäykset kokonaan',
+        'Se ei ollut koskaan itsenäinen',
+      ],
+      correct: 0,
+      fact: 'Ragusa maksoi veroa milloin ottomaaneille, milloin '
+        + 'Unkarille, ja piti kaikkiin välit kunnossa. Se kielsi '
+        + 'orjakaupan jo 1416 — yhtenä ensimmäisistä Euroopassa.',
+    },
+  },
+
+  sofia: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Gaida — säkkipilli Balkanilla',
+        tiedosto: 'Kostadin Varimezov playing the gaida.jpg',
+        teksti: 'Gaida on vuohennahasta tehty säkkipilli, jota soitetaan '
+          + 'Bulgarian häissä ja tansseissa. Rodopeilta kotoisin oleva '
+          + 'iso kaba gaida soi matalasti ja käheästi. Bulgarialainen '
+          + 'kansanmusiikki tunnetaan oudoista tahtilajeista: yleisiä '
+          + 'ovat 7/8 ja 11/16.',
+        selite: 'Kostadin Varimezov, yksi Bulgarian tunnetuimmista '
+          + 'gaida-soittajista. Puhallusputki on suussa, sormet '
+          + 'melodiapillillä ja säkki kainalossa.',
+        lahde: 'Wikimedia Commons (CC BY 4.0)',
+        wiki: 'Gaida',
+        musiikki: 'https://music.apple.com/fi/search?term=bulgarian%20folk%20gaida',
+        musiikkiNimi: 'Bulgarialaista kansanmusiikkia Apple Musicissa',
+        musiikkiVapaa: 'https://bnr.bg/en/live',
+        musiikkiVapaaNimi: 'BNR — Bulgarian yleisradion suorat lähetykset',
+        musiikkiVapaaLyhyt: 'BNR',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Banitsassa on onnenviesti',
+        tiedosto: 'Banitsa in Sofia Bulgaria 20090404 001.JPG',
+        teksti: 'Banitsa on filotaikinasta ja juustosta kierretty '
+          + 'piirakka, jota syödään aamiaiseksi jogurttijuoman kanssa. '
+          + 'Uudenvuoden banitsan sisään kätketään paperilappuja, joihin '
+          + 'on kirjoitettu toivotuksia — se, minkä lapun saa, kertoo '
+          + 'tulevasta vuodesta.',
+        selite: 'Banitsa Sofiassa. Taikina kierretään kierteelle ja '
+          + 'paistetaan pellillä; täytteenä on sirene-juustoa ja munaa.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        wiki: 'Banitsa',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Ruusulaakson aamut',
+        tiedosto: 'Rose-picking in Bulgaria 1870ies.jpg',
+        teksti: 'Kazanlakin Ruusulaaksossa kasvatetaan damaskonruusua '
+          + 'hajuvesiöljyä varten. Bulgaria tuottaa siitä suuren osan '
+          + 'koko maailman tarpeesta. Kukat poimitaan käsin auringon '
+          + 'noustessa: päivän lämmössä tuoksuöljy haihtuu, joten '
+          + 'työ tehdään aamuviideltä.',
+        selite: 'Ruusunpoimintaa Bulgariassa 1870-luvulla — Felix '
+          + 'Kanitzin piirros isoisän matkan ajoilta. Työtapa on '
+          + 'sama vielä tänäänkin.',
+        lahde: 'Wikimedia Commons (PD)',
+        wiki: 'Ruusulaakso',
+      },
+    ],
+    kysymys: {
+      q: 'Miksi Bulgarian ruusut poimitaan aamuviideltä?',
+      options: [
+        'Päivän lämmössä tuoksuöljy haihtuu',
+        'Ruusut kukkivat vain aamulla',
+        'Mehiläiset häiritsevät myöhemmin',
+        'Se on vanha uskonnollinen tapa',
+      ],
+      correct: 0,
+      fact: 'Öljypitoisuus on korkeimmillaan ennen auringonnousua. '
+        + 'Yhteen grammaan ruusuöljyä tarvitaan noin kolme kiloa '
+        + 'terälehtiä.',
+    },
+  },
 };
 
 // ===== js/packs/europe-valokuvat.js =====
 // Euroopan matkakirjavalokuvat (sama rakenne kuin AFRICA_VALOKUVAT):
 // vanha vedos isoisän ajoilta ja sama paikka nykyään. Rakentuu kaupunki
 // kerrallaan. Lisenssit varmistettu Commonsin extmetadatasta (Venetsia
-// 31.7.2026, muut 1.8.2026), kuvista paikalliset kopiot assets-kansiossa.
+// 31.7.2026, muut 1.8.2026).
+//
+// Ateenan seudusta alkaen kuvista EI enää tehdä paikallisia kopioita
+// (omistajan päätös): ne haetaan suoraan Commonsista sitä mukaa kuin
+// pelaaja ne näkee, ja palvelutyöntekijä tallentaa kerran nähdyn kuvan
+// omaan pitkäikäiseen koriinsa. Commons on siis se repon ulkopuolinen
+// tallennuspaikka — se on ilmainen, pysyvä ja jo valmiiksi kytketty.
 const EUROPE_VALOKUVAT = {
   venetsia: {
     tiedosto: 'Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg',
@@ -9983,6 +10381,107 @@ const EUROPE_VALOKUVAT = {
       selite: 'Reykjavík Hallgrímskirkjan tornista. Kaikki talot '
         + 'lämpiävät maan omalla kuumalla vedellä, ja katot on '
         + 'perinteisesti maalattu kirkkaiksi — pimeä vuodenaika on pitkä.',
+    },
+  },
+
+  ateena: {
+    tiedosto: 'Athènes. LʹAcropole Avec Temple de Jupiter Olympien LCCN2017656399.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Akropolis ja Olympian Zeuksen temppelin pylväät '
+      + 'käsinvärittynä photochrom-vedoksena. Kaupunki oli tuolloin '
+      + 'pieni: Ateenassa asui noin 100 000 ihmistä, ja temppelin '
+      + 'ympärillä oli peltoa.',
+    uusi: {
+      tiedosto: 'The Acropolis of Athens with the Parthenon, the Erecththeion and the Mycenean Fountain from Monastiraki Square on March 11, 2020.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama kallio tänään Monastirakin aukiolta: alla kolmen '
+        + 'miljoonan asukkaan kaupunki, päällä Parthenon telineineen. '
+        + 'Temppeliä on korjattu yhtäjaksoisesti vuodesta 1975 — '
+        + 'hitaasti, koska jokainen marmoripala palautetaan omalle '
+        + 'paikalleen.',
+    },
+  },
+
+  rooma: {
+    tiedosto: 'The Colisuem and Meta Sudans, Rome, Italy-LCCN2001700939.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Colosseum ja sen edessä Meta Sudans, antiikin '
+      + 'suihkulähteen tyngä. Lähde purettiin 1936 kadun tieltä, joten '
+      + 'tässä kuvassa näkyy jotain, mitä ei enää ole.',
+    uusi: {
+      tiedosto: 'Rome Colosseum exterior 1.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama amfiteatteri nykyään. Ulkokehästä on jäljellä vain '
+        + 'osa: keskiajalla Colosseumia käytettiin kivilouhoksena, ja '
+        + 'sen marmoria on monissa Rooman kirkoissa.',
+    },
+  },
+
+  kreeta: {
+    tiedosto: 'Cnossus - room of (?), columns - north entrance - DPLA - 156faa906e3d69e9b9c71702853f1b8a.jpg',
+    vuosi: '1900-luvun alku',
+    lahde: 'Digital Public Library of America (PD)',
+    selite: 'Knossoksen pohjoinen sisäänkäynti kaivausten aikaan. Arthur '
+      + 'Evans alkoi kaivaa palatsia 1900 ja rakensi osan siitä '
+      + 'uudelleen betonista — tapa, jota arkeologit yhä kiistelevät.',
+    uusi: {
+      tiedosto: 'Ruins of the Minoan Palace in Knossos.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Palatsin rauniot tänään. Punaiset pylväät ovat Evansin '
+        + 'rekonstruktiota: minolaiset pylväät levenivät ylöspäin, '
+        + 'toisin kuin kreikkalaiset.',
+    },
+  },
+
+  sisilia: {
+    tiedosto: 'Crupi, Giovanni (1861-1925) - n. 0030 B - Teatro Greco - Taormina - DPLA - 51ed756181740204aed046a9302cef1b (page 8).jpg',
+    vuosi: '1890-luku',
+    lahde: 'Digital Public Library of America (PD)',
+    selite: 'Taorminan kreikkalainen teatteri Giovanni Crupin kuvaamana. '
+      + 'Crupi piti Taorminassa valokuvaamoa ja myi näkymiä '
+      + 'matkailijoille — juuri sellaisia, joita isoisä olisi voinut '
+      + 'ostaa muistoksi.',
+    uusi: {
+      tiedosto: 'Sicily Taormina Teatro Greco Etna.jpg',
+      lahde: 'Commons (CC0)',
+      selite: 'Sama teatteri tänään, Etna taustalla. Rakennettu '
+        + 'kreikkalaisten aikaan 200-luvulla eaa. ja laajennettu '
+        + 'roomalaisten toimesta; siellä pidetään yhä konsertteja.',
+    },
+  },
+
+  dubrovnik: {
+    tiedosto: 'Ragusa, general view, Dalmatia, Austro-Hungary-LCCN2002710782.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Ragusa — Dubrovnikin vanha nimi — Itävalta-Unkarin aikaan. '
+      + 'Kaupunki oli menettänyt itsenäisyytensä 1808, ja vedoksen '
+      + 'kyljessä lukee siksi "Austro-Hungary".',
+    uusi: {
+      tiedosto: 'Steep coast near the city wall in the Old Town of Dubrovnik, Croatia (48613191222).jpg',
+      lahde: 'Commons (CC BY 2.0)',
+      selite: 'Vanhankaupungin muuri ja kattotiilet nykyään. Osa '
+        + 'katoista on kirkkaan oransseja: ne uusittiin 1990-luvun sodan '
+        + 'jälkeen, kun kaupunkia pommitettiin.',
+    },
+  },
+
+  sofia: {
+    tiedosto: 'Banya Bashi 1900.jpg',
+    vuosi: 'noin 1900',
+    lahde: 'Wikimedia Commons (PD)',
+    selite: 'Banya Bashin moskeija noin vuonna 1900. Se rakennettiin '
+      + '1566 kuumien lähteiden päälle — nimi tarkoittaa "monta kylpyä". '
+      + 'Bulgaria oli vasta itsenäistynyt, ja Sofiasta tehtiin '
+      + 'pääkaupunki 1879.',
+    uusi: {
+      tiedosto: 'Banya Bashi Mosque.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama moskeija tänään. Sen ympärillä on korttelin matkalla '
+        + 'myös synagoga ja kaksi kirkkoa, ja kuumat lähteet pulppuavat '
+        + 'yhä viereisessä puistossa julkisiin hanoihin.',
     },
   },
 };
@@ -10227,7 +10726,7 @@ const EUROPE_MAATIEDOT = {
 // ===== js/packs/europe-artikkelit.js =====
 // Euroopan omat Lue lisää -artikkelit pelin tyyliin (avain = wiki-otsikko,
 // sama rakenne kuin Afrikan OMAT_ARTIKKELIT). Rakentuu kaupunki
-// kerrallaan — pilotti: Venetsia ja Italia.
+// kerrallaan.
 const EUROPE_ARTIKKELIT = {
   Venetsia: {
     intro: 'Venetsia on rakennettu laguunin sadalle pienelle saarelle, ja '
@@ -10481,6 +10980,222 @@ const EUROPE_ARTIKKELIT = {
       + 'matkailu, kalastus ja energia. Islannissa ei ole armeijaa '
       + 'lainkaan, ja väkilukuun suhteutettuna maa julkaisee enemmän '
       + 'kirjoja kuin juuri mikään muu.',
+  },
+
+  Ateena: {
+    intro: 'Ateena on Euroopan vanhimpia yhtäjaksoisesti asuttuja '
+      + 'kaupunkeja: samalla paikalla on eletty yli 3 000 vuotta. Sen '
+      + 'yllä kohoaa Akropolis, kalliokukkula, jonka päällä seisoo '
+      + 'Parthenon — temppeli, joka valmistui 432 eaa.',
+    teksti: 'Antiikin Ateenassa keksittiin demokratia. Se ei ollut '
+      + 'nykyisen kaltainen: äänioikeus oli vain vapailla ateenalaisilla '
+      + 'miehillä, eli noin kymmenesosalla asukkaista. Mutta idea oli '
+      + 'uusi ja mullistava — kaupunkia johdettiin keskustelemalla, ja '
+      + 'päätökset tehtiin kansankokouksessa kukkulan rinteellä.\n\n'
+      + 'Samaan aikaan kaupungissa kirjoitettiin ensimmäiset näytelmät, '
+      + 'perustettiin filosofian koulut ja opeteltiin kysymään "miksi". '
+      + 'Sokrates käveli torilla ja kyseli ohikulkijoilta niin '
+      + 'hankalia kysymyksiä, että hänet lopulta tuomittiin kuolemaan.\n\n'
+      + 'Sitten kaupunki hiipui. Roomalaiset, bysanttilaiset ja '
+      + 'ottomaanit hallitsivat vuorollaan, ja Parthenonista tehtiin '
+      + 'ensin kirkko, sitten moskeija ja lopulta ruutivarasto — joka '
+      + 'räjähti 1687 venetsialaisen tykinkuulan osuttua. Siitä on '
+      + 'peräisin temppelin nykyinen aukko.\n\n'
+      + 'Kun Kreikka itsenäistyi 1830-luvulla, Ateena oli kutistunut '
+      + 'muutaman tuhannen asukkaan kyläksi. Se valittiin silti '
+      + 'pääkaupungiksi historiansa takia. Nykyään seudulla asuu noin '
+      + 'kolme ja puoli miljoonaa ihmistä.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Kreeta: {
+    intro: 'Kreeta on Kreikan suurin saari ja Välimeren viidenneksi '
+      + 'suurin. Sen pohjoisrannalla, Knossoksessa, kukoisti neljä '
+      + 'tuhatta vuotta sitten minolainen kulttuuri — Euroopan vanhin '
+      + 'kaupunkikulttuuri.',
+    teksti: 'Minolaiset rakensivat palatseja, joissa oli monikerroksisia '
+      + 'siipiä, valokuiluja, juokseva vesi ja viemärit. He kirjoittivat '
+      + 'kahdella kirjoitusjärjestelmällä, joista toista — lineaari '
+      + 'A:ta — ei ole vieläkään pystytty lukemaan. Kulttuuri katosi '
+      + 'noin 1450 eaa., ehkä Santorinin tulivuorenpurkauksen ja sitä '
+      + 'seuranneiden tsunamien takia.\n\n'
+      + 'Kreikkalainen taru kertoo Kreetan kuninkaasta Minoksesta, joka '
+      + 'rakennutti labyrintin puoliksi härkänä olevalle Minotaurokselle. '
+      + 'Kun Arthur Evans kaivoi Knossoksen esiin 1900-luvun alussa, hän '
+      + 'nimesi kulttuurin tarun mukaan minolaiseksi — ja palatsin '
+      + 'sokkeloiset käytävät saivat monen uskomaan, että labyrintti oli '
+      + 'juuri se.\n\n'
+      + 'Kreeta on ollut vuorollaan roomalaisten, bysanttilaisten, '
+      + 'venetsialaisten ja ottomaanien hallussa, ja liittyi Kreikkaan '
+      + 'vasta 1913. Saari elää maataloudesta ja matkailusta: oliiveja, '
+      + 'viiniä ja vuohia. Kreetalainen ruokavalio — oliiviöljyä, '
+      + 'vihanneksia, kalaa ja vähän lihaa — on tutkimuksissa yhdistetty '
+      + 'poikkeuksellisen pitkään elinikään.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Sisilia: {
+    intro: 'Sisilia on Välimeren suurin saari ja Italian eteläkärjessä '
+      + 'salmen takana. Sen yllä kohoaa Etna, Euroopan korkein aktiivinen '
+      + 'tulivuori — yli 3 300 metriä, ja se kasvaa yhä.',
+    teksti: 'Sisilia on ollut kaikkien maa. Foinikialaiset ja '
+      + 'kreikkalaiset perustivat sinne siirtokuntia, roomalaiset tekivät '
+      + 'siitä valtakunnan viljavaraston, arabit toivat sitrushedelmät, '
+      + 'riisin ja sokeriruo’on, ja normannit rakensivat kirkkoja, '
+      + 'joissa on arabialaisia kupoleita ja bysanttilaisia mosaiikkeja '
+      + 'samassa rakennuksessa.\n\n'
+      + 'Jokainen valloittaja jätti jälkensä kieleen, ruokaan ja '
+      + 'kaupunkeihin. Palermon kadunnimissä on arabiaa, Agrigenton '
+      + 'temppelit ovat kreikkalaisia, ja Monrealen katedraali on '
+      + 'normannien tilaama mutta bysanttilaisten mestareiden '
+      + 'koristelema.\n\n'
+      + 'Etna purkautuu lähes joka vuosi. Purkaukset ovat useimmiten '
+      + 'rauhallisia — laava valuu hitaasti eikä yleensä uhkaa kyliä — '
+      + 'ja tuhka tekee maaperästä poikkeuksellisen hedelmällistä. Siksi '
+      + 'vuoren rinteillä kasvaa viiniä, sitruunoita ja pistaasia aivan '
+      + 'kraaterin läheisyydessä.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Rooma: {
+    intro: 'Rooma on Italian pääkaupunki ja rakennettu seitsemälle '
+      + 'kukkulalle Tiber-joen varrelle. Se oli aikoinaan maailman '
+      + 'suurimman valtakunnan keskus, ja sen keskustassa kävelee yhä '
+      + 'kahdentuhannen vuoden takaisilla katukivillä.',
+    teksti: 'Tarun mukaan Rooma perustettiin 753 eaa., ja sen perustivat '
+      + 'susiemon kasvattamat veljekset Romulus ja Remus. Todellisuudessa '
+      + 'kaupunki kasvoi vähitellen kukkuloiden kylistä. Se oli ensin '
+      + 'kuningaskunta, sitten tasavalta ja lopulta keisarikunta, jonka '
+      + 'raja ulottui Skotlannista Egyptiin.\n\n'
+      + 'Roomalaiset olivat ennen kaikkea insinöörejä. He rakensivat '
+      + 'teitä, siltoja, akvedukteja ja viemäreitä, joista osa on yhä '
+      + 'käytössä. He keksivät betonin, joka kovettuu myös veden alla — '
+      + 'Pantheonin betonikupoli on maailman suurin raudoittamaton kupoli '
+      + 'yhä tänään, lähes 1 900 vuotta valmistumisensa jälkeen.\n\n'
+      + 'Valtakunnan hajottua Rooma kutistui: 1300-luvulla kaupungissa '
+      + 'asui vain noin 20 000 ihmistä, ja karja laidunsi Forumilla. '
+      + 'Paavit rakensivat sen uudelleen, ja renessanssin ja barokin '
+      + 'aikana syntyivät Pietarinkirkko, Trevin lähde ja Espanjalaiset '
+      + 'portaat.\n\n'
+      + 'Roomasta tuli yhdistyneen Italian pääkaupunki vasta 1871 — '
+      + 'kymmenen vuotta valtion syntymisen jälkeen ja juuri ennen '
+      + 'isoisän matkaa. Kaupungin sisällä on oma valtionsa, Vatikaani, '
+      + 'joka on maailman pienin: pinta-alaltaan puoli neliökilometriä.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Dubrovnik: {
+    intro: 'Dubrovnik on muurien ympäröimä satamakaupunki Kroatian '
+      + 'eteläkärjessä Adrianmeren rannalla. Vanhaa kaupunkia kiertää '
+      + 'lähes kaksi kilometriä muuria, jonka päällä voi kävellä koko '
+      + 'kierroksen.',
+    teksti: 'Kaupunki tunnettiin vuosisatoja nimellä Ragusa, ja se oli '
+      + 'oma itsenäinen tasavaltansa 1300-luvulta vuoteen 1808. Se pysyi '
+      + 'hengissä kaupalla ja diplomatialla: Ragusa maksoi veroa milloin '
+      + 'ottomaaneille, milloin Unkarille, ja piti välit kunnossa '
+      + 'kaikkiin suuntiin. Sen laivasto oli aikanaan Välimeren '
+      + 'kolmanneksi suurin.\n\n'
+      + 'Tasavalta oli edellä aikaansa. Se perusti Euroopan vanhimman yhä '
+      + 'toimivan apteekin 1317, avasi orpokodin 1432 ja kielsi '
+      + 'orjakaupan jo 1416 — satoja vuosia ennen useimpia muita. '
+      + 'Kaupungissa oli myös karanteenijärjestelmä ruttoa vastaan: '
+      + 'saapujat eristettiin 40 päiväksi, ja sanamme karanteeni tulee '
+      + 'juuri siitä luvusta.\n\n'
+      + 'Vuoden 1667 maanjäristys tuhosi suuren osan kaupungista, ja se '
+      + 'rakennettiin uudelleen yhtenäiseen barokkityyliin — siksi '
+      + 'vanhakaupunki näyttää yhdestä palasta tehdyltä. Vuosien '
+      + '1991–1992 piirityksessä kaupunkia pommitettiin, mutta se on '
+      + 'sittemmin korjattu; kirkkaan oranssit kattotiilet ovat uusia.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Sofia: {
+    intro: 'Sofia on Bulgarian pääkaupunki ja yksi Euroopan vanhimmista '
+      + 'kaupungeista: paikalla on asuttu yli 7 000 vuotta. Se sijaitsee '
+      + 'laaksossa Vitosha-vuoren juurella, ja vuorelle pääsee '
+      + 'keskustasta bussilla.',
+    teksti: 'Roomalaiset perustivat tänne kaupungin nimeltä Serdica '
+      + 'kuumien lähteiden takia. Keisari Konstantinus Suuri viihtyi '
+      + 'siellä niin hyvin, että sanoi: "Serdica on minun Roomani." '
+      + 'Metroa rakennettaessa 2010-luvulla kaivettiin esiin kokonainen '
+      + 'roomalainen katu, joka jätettiin näkyviin lasin alle keskelle '
+      + 'kaupunkia.\n\n'
+      + 'Sofian erikoisuus on uskontojen läheisyys. Yhden korttelin '
+      + 'matkalla ovat ortodoksinen kirkko, katolinen katedraali, '
+      + 'moskeija ja Balkanin suurin synagoga. Paikalliset kutsuvat '
+      + 'aluetta suvaitsevaisuuden neliöksi.\n\n'
+      + 'Kaupunki oli ottomaanien hallussa lähes viisi vuosisataa. '
+      + 'Bulgaria itsenäistyi 1878, ja Sofiasta tehtiin pääkaupunki '
+      + 'seuraavana vuonna — juuri isoisän matkan jälkeen. Silloin siellä '
+      + 'asui noin 20 000 ihmistä; nykyään yli miljoona.\n\n'
+      + 'Bulgarialaiset nyökkäävät päätään kieltäessään ja pudistavat '
+      + 'myöntäessään — päinvastoin kuin useimmat muut. Tapa hämmentää '
+      + 'matkailijoita yhä.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Kreikka: {
+    intro: 'Kreikka on vuoristoinen maa Balkanin niemimaan eteläkärjessä. '
+      + 'Sillä on yli 6 000 saarta, joista vain parisataa on asuttuja, ja '
+      + 'rannikkoa on enemmän kuin useimmilla paljon suuremmilla mailla.',
+    teksti: 'Antiikin Kreikka ei ollut yksi valtio vaan satoja '
+      + 'kaupunkivaltioita, jotka kilpailivat ja sotivat keskenään mutta '
+      + 'puhuivat samaa kieltä ja palvoivat samoja jumalia. Neljän vuoden '
+      + 'välein ne pitivät aselevon ja kokoontuivat Olympiaan kisoihin — '
+      + 'siitä ovat nykyiset olympialaiset peräisin.\n\n'
+      + 'Kreikan kieltä on kirjoitettu yhtäjaksoisesti kolme tuhatta '
+      + 'vuotta, pidempään kuin mitään muuta elävää eurooppalaista '
+      + 'kieltä. Sen aakkosista kehittyivät sekä latinalaiset että '
+      + 'kyrilliset kirjaimet, ja tieteen sanastossa kreikka näkyy yhä: '
+      + 'biologia, demokratia ja fysiikka ovat kreikkaa.\n\n'
+      + 'Kreikka oli ottomaanien vallan alla lähes neljäsataa vuotta ja '
+      + 'itsenäistyi vaiheittain vuodesta 1821 alkaen. Nykyinen maa on '
+      + 'siis nuori valtio, jolla on hyvin vanha historia. Se elää '
+      + 'merenkulusta — kreikkalaiset omistavat maailman suurimman '
+      + 'kauppalaivaston — sekä matkailusta ja maataloudesta.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Kroatia: {
+    intro: 'Kroatia on hevosenkengän muotoinen maa Adrianmeren rannalla. '
+      + 'Sen rannikolla on yli tuhat saarta, ja sisämaassa levittäytyvät '
+      + 'tasangot ja metsät. Maa itsenäistyi 1991 ja liittyi EU:hun 2013.',
+    teksti: 'Kroatian rannikko oli vuosisatoja Venetsian ja Itävallan '
+      + 'vaikutuspiirissä, sisämaa taas Unkarin. Siksi maan kaksi puolta '
+      + 'näyttävät erilaisilta: rannikolla on kivitaloja ja kellotorneja '
+      + 'kuten Italiassa, sisämaassa keskieurooppalaisia kaupunkeja.\n\n'
+      + 'Kroatia oli osa Jugoslaviaa toisen maailmansodan jälkeen. Kun se '
+      + 'julistautui itsenäiseksi 1991, seurasi neljä vuotta sotaa. '
+      + 'Sodan jäljet näkyvät yhä joissakin kaupungeissa, mutta maa on '
+      + 'nykyään yksi Euroopan suosituimmista matkailukohteista.\n\n'
+      + 'Kroatiasta on peräisin muutama yllättävä keksintö: solmio '
+      + '(ranskaksi cravate, kroaattien kaulahuivista), ja Nikola Tesla, '
+      + 'vaihtovirran kehittäjä, syntyi kroatialaisessa kylässä. '
+      + 'Plitvicen järvien kansallispuistossa kuusitoista järveä laskee '
+      + 'toisiinsa satojen putousten kautta.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Bulgaria: {
+    intro: 'Bulgaria on Balkanin niemimaalla Mustanmeren rannalla. Maa on '
+      + 'vuoristoinen: Balkanvuoret kulkevat sen halki idästä länteen ja '
+      + 'antavat nimensä koko niemimaalle.',
+    teksti: 'Bulgaria on Euroopan vanhimpia valtioita: se perustettiin '
+      + 'vuonna 681 eikä ole vaihtanut nimeään sen jälkeen. Kaksi '
+      + 'bulgarialaista munkkia, Kyrillos ja Methodios sekä heidän '
+      + 'oppilaansa, kehittivät 800-luvulla kyrilliset aakkoset — samat, '
+      + 'joilla kirjoitetaan yhä venäjää, serbiaa ja monta muuta '
+      + 'kieltä.\n\n'
+      + 'Maa oli ottomaanien vallan alla lähes viisi vuosisataa ja '
+      + 'itsenäistyi 1878. Kommunistisen ajan jälkeen 1989 se siirtyi '
+      + 'demokratiaan ja liittyi EU:hun 2007.\n\n'
+      + 'Bulgaria tuottaa suuren osan maailman ruusuöljystä: Kazanlakin '
+      + 'Ruusulaaksossa poimitaan damaskonruusuja hajuvesiteollisuudelle. '
+      + 'Maa tunnetaan myös jogurtistaan — siinä elävä bakteeri on '
+      + 'nimetty maan mukaan Lactobacillus bulgaricus — ja '
+      + 'kansanmusiikistaan, jonka epäsäännölliset tahtilajit ja '
+      + 'naiskuorojen sointi ovat tehneet siitä maailmankuulua.',
+    lahde: 'Wikipedia (CC BY-SA)',
   },
 };
 
@@ -41969,6 +42684,22 @@ class UI {
           + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> Apple Music';
         otsikkoRivi.appendChild(linkki);
       }
+      // Ilmainen kuuntelupaikka Apple Musicin rinnalle (omistajan
+      // toive): kansalliset yleisradiot, Commons ja muut avoimet
+      // arkistot. Kaikilla ei ole tällaista, joten kenttä on
+      // vapaaehtoinen ja linkki näkyy vain kun se on merkitty.
+      if (nosto.musiikkiVapaa) {
+        const vapaa = html('a', 'kulttuuri-musiikkilinkki kulttuuri-musiikkilinkki-vapaa');
+        vapaa.href = nosto.musiikkiVapaa;
+        vapaa.target = '_blank';
+        vapaa.rel = 'noopener';
+        vapaa.title = nosto.musiikkiVapaaNimi ?? 'Ilmainen kuuntelupaikka';
+        vapaa.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'
+          + '<path d="M12 4.5v15M8 8v8M16 8v8M4.5 10.5v3M19.5 10.5v3" fill="none" '
+          + 'stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg> '
+          + (nosto.musiikkiVapaaLyhyt ?? 'Ilmainen');
+        otsikkoRivi.appendChild(vapaa);
+      }
       lohko.appendChild(otsikkoRivi);
       if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
         const kuva = document.createElement('img');
@@ -44247,7 +44978,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.131';
+const APP_VERSION = '2026-08-01.132';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

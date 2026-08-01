@@ -1,6 +1,6 @@
 // Euroopan omat Lue lisää -artikkelit pelin tyyliin (avain = wiki-otsikko,
 // sama rakenne kuin Afrikan OMAT_ARTIKKELIT). Rakentuu kaupunki
-// kerrallaan — pilotti: Venetsia ja Italia.
+// kerrallaan.
 export const EUROPE_ARTIKKELIT = {
   Venetsia: {
     intro: 'Venetsia on rakennettu laguunin sadalle pienelle saarelle, ja '
@@ -254,5 +254,221 @@ export const EUROPE_ARTIKKELIT = {
       + 'matkailu, kalastus ja energia. Islannissa ei ole armeijaa '
       + 'lainkaan, ja väkilukuun suhteutettuna maa julkaisee enemmän '
       + 'kirjoja kuin juuri mikään muu.',
+  },
+
+  Ateena: {
+    intro: 'Ateena on Euroopan vanhimpia yhtäjaksoisesti asuttuja '
+      + 'kaupunkeja: samalla paikalla on eletty yli 3 000 vuotta. Sen '
+      + 'yllä kohoaa Akropolis, kalliokukkula, jonka päällä seisoo '
+      + 'Parthenon — temppeli, joka valmistui 432 eaa.',
+    teksti: 'Antiikin Ateenassa keksittiin demokratia. Se ei ollut '
+      + 'nykyisen kaltainen: äänioikeus oli vain vapailla ateenalaisilla '
+      + 'miehillä, eli noin kymmenesosalla asukkaista. Mutta idea oli '
+      + 'uusi ja mullistava — kaupunkia johdettiin keskustelemalla, ja '
+      + 'päätökset tehtiin kansankokouksessa kukkulan rinteellä.\n\n'
+      + 'Samaan aikaan kaupungissa kirjoitettiin ensimmäiset näytelmät, '
+      + 'perustettiin filosofian koulut ja opeteltiin kysymään "miksi". '
+      + 'Sokrates käveli torilla ja kyseli ohikulkijoilta niin '
+      + 'hankalia kysymyksiä, että hänet lopulta tuomittiin kuolemaan.\n\n'
+      + 'Sitten kaupunki hiipui. Roomalaiset, bysanttilaiset ja '
+      + 'ottomaanit hallitsivat vuorollaan, ja Parthenonista tehtiin '
+      + 'ensin kirkko, sitten moskeija ja lopulta ruutivarasto — joka '
+      + 'räjähti 1687 venetsialaisen tykinkuulan osuttua. Siitä on '
+      + 'peräisin temppelin nykyinen aukko.\n\n'
+      + 'Kun Kreikka itsenäistyi 1830-luvulla, Ateena oli kutistunut '
+      + 'muutaman tuhannen asukkaan kyläksi. Se valittiin silti '
+      + 'pääkaupungiksi historiansa takia. Nykyään seudulla asuu noin '
+      + 'kolme ja puoli miljoonaa ihmistä.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Kreeta: {
+    intro: 'Kreeta on Kreikan suurin saari ja Välimeren viidenneksi '
+      + 'suurin. Sen pohjoisrannalla, Knossoksessa, kukoisti neljä '
+      + 'tuhatta vuotta sitten minolainen kulttuuri — Euroopan vanhin '
+      + 'kaupunkikulttuuri.',
+    teksti: 'Minolaiset rakensivat palatseja, joissa oli monikerroksisia '
+      + 'siipiä, valokuiluja, juokseva vesi ja viemärit. He kirjoittivat '
+      + 'kahdella kirjoitusjärjestelmällä, joista toista — lineaari '
+      + 'A:ta — ei ole vieläkään pystytty lukemaan. Kulttuuri katosi '
+      + 'noin 1450 eaa., ehkä Santorinin tulivuorenpurkauksen ja sitä '
+      + 'seuranneiden tsunamien takia.\n\n'
+      + 'Kreikkalainen taru kertoo Kreetan kuninkaasta Minoksesta, joka '
+      + 'rakennutti labyrintin puoliksi härkänä olevalle Minotaurokselle. '
+      + 'Kun Arthur Evans kaivoi Knossoksen esiin 1900-luvun alussa, hän '
+      + 'nimesi kulttuurin tarun mukaan minolaiseksi — ja palatsin '
+      + 'sokkeloiset käytävät saivat monen uskomaan, että labyrintti oli '
+      + 'juuri se.\n\n'
+      + 'Kreeta on ollut vuorollaan roomalaisten, bysanttilaisten, '
+      + 'venetsialaisten ja ottomaanien hallussa, ja liittyi Kreikkaan '
+      + 'vasta 1913. Saari elää maataloudesta ja matkailusta: oliiveja, '
+      + 'viiniä ja vuohia. Kreetalainen ruokavalio — oliiviöljyä, '
+      + 'vihanneksia, kalaa ja vähän lihaa — on tutkimuksissa yhdistetty '
+      + 'poikkeuksellisen pitkään elinikään.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Sisilia: {
+    intro: 'Sisilia on Välimeren suurin saari ja Italian eteläkärjessä '
+      + 'salmen takana. Sen yllä kohoaa Etna, Euroopan korkein aktiivinen '
+      + 'tulivuori — yli 3 300 metriä, ja se kasvaa yhä.',
+    teksti: 'Sisilia on ollut kaikkien maa. Foinikialaiset ja '
+      + 'kreikkalaiset perustivat sinne siirtokuntia, roomalaiset tekivät '
+      + 'siitä valtakunnan viljavaraston, arabit toivat sitrushedelmät, '
+      + 'riisin ja sokeriruo’on, ja normannit rakensivat kirkkoja, '
+      + 'joissa on arabialaisia kupoleita ja bysanttilaisia mosaiikkeja '
+      + 'samassa rakennuksessa.\n\n'
+      + 'Jokainen valloittaja jätti jälkensä kieleen, ruokaan ja '
+      + 'kaupunkeihin. Palermon kadunnimissä on arabiaa, Agrigenton '
+      + 'temppelit ovat kreikkalaisia, ja Monrealen katedraali on '
+      + 'normannien tilaama mutta bysanttilaisten mestareiden '
+      + 'koristelema.\n\n'
+      + 'Etna purkautuu lähes joka vuosi. Purkaukset ovat useimmiten '
+      + 'rauhallisia — laava valuu hitaasti eikä yleensä uhkaa kyliä — '
+      + 'ja tuhka tekee maaperästä poikkeuksellisen hedelmällistä. Siksi '
+      + 'vuoren rinteillä kasvaa viiniä, sitruunoita ja pistaasia aivan '
+      + 'kraaterin läheisyydessä.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Rooma: {
+    intro: 'Rooma on Italian pääkaupunki ja rakennettu seitsemälle '
+      + 'kukkulalle Tiber-joen varrelle. Se oli aikoinaan maailman '
+      + 'suurimman valtakunnan keskus, ja sen keskustassa kävelee yhä '
+      + 'kahdentuhannen vuoden takaisilla katukivillä.',
+    teksti: 'Tarun mukaan Rooma perustettiin 753 eaa., ja sen perustivat '
+      + 'susiemon kasvattamat veljekset Romulus ja Remus. Todellisuudessa '
+      + 'kaupunki kasvoi vähitellen kukkuloiden kylistä. Se oli ensin '
+      + 'kuningaskunta, sitten tasavalta ja lopulta keisarikunta, jonka '
+      + 'raja ulottui Skotlannista Egyptiin.\n\n'
+      + 'Roomalaiset olivat ennen kaikkea insinöörejä. He rakensivat '
+      + 'teitä, siltoja, akvedukteja ja viemäreitä, joista osa on yhä '
+      + 'käytössä. He keksivät betonin, joka kovettuu myös veden alla — '
+      + 'Pantheonin betonikupoli on maailman suurin raudoittamaton kupoli '
+      + 'yhä tänään, lähes 1 900 vuotta valmistumisensa jälkeen.\n\n'
+      + 'Valtakunnan hajottua Rooma kutistui: 1300-luvulla kaupungissa '
+      + 'asui vain noin 20 000 ihmistä, ja karja laidunsi Forumilla. '
+      + 'Paavit rakensivat sen uudelleen, ja renessanssin ja barokin '
+      + 'aikana syntyivät Pietarinkirkko, Trevin lähde ja Espanjalaiset '
+      + 'portaat.\n\n'
+      + 'Roomasta tuli yhdistyneen Italian pääkaupunki vasta 1871 — '
+      + 'kymmenen vuotta valtion syntymisen jälkeen ja juuri ennen '
+      + 'isoisän matkaa. Kaupungin sisällä on oma valtionsa, Vatikaani, '
+      + 'joka on maailman pienin: pinta-alaltaan puoli neliökilometriä.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Dubrovnik: {
+    intro: 'Dubrovnik on muurien ympäröimä satamakaupunki Kroatian '
+      + 'eteläkärjessä Adrianmeren rannalla. Vanhaa kaupunkia kiertää '
+      + 'lähes kaksi kilometriä muuria, jonka päällä voi kävellä koko '
+      + 'kierroksen.',
+    teksti: 'Kaupunki tunnettiin vuosisatoja nimellä Ragusa, ja se oli '
+      + 'oma itsenäinen tasavaltansa 1300-luvulta vuoteen 1808. Se pysyi '
+      + 'hengissä kaupalla ja diplomatialla: Ragusa maksoi veroa milloin '
+      + 'ottomaaneille, milloin Unkarille, ja piti välit kunnossa '
+      + 'kaikkiin suuntiin. Sen laivasto oli aikanaan Välimeren '
+      + 'kolmanneksi suurin.\n\n'
+      + 'Tasavalta oli edellä aikaansa. Se perusti Euroopan vanhimman yhä '
+      + 'toimivan apteekin 1317, avasi orpokodin 1432 ja kielsi '
+      + 'orjakaupan jo 1416 — satoja vuosia ennen useimpia muita. '
+      + 'Kaupungissa oli myös karanteenijärjestelmä ruttoa vastaan: '
+      + 'saapujat eristettiin 40 päiväksi, ja sanamme karanteeni tulee '
+      + 'juuri siitä luvusta.\n\n'
+      + 'Vuoden 1667 maanjäristys tuhosi suuren osan kaupungista, ja se '
+      + 'rakennettiin uudelleen yhtenäiseen barokkityyliin — siksi '
+      + 'vanhakaupunki näyttää yhdestä palasta tehdyltä. Vuosien '
+      + '1991–1992 piirityksessä kaupunkia pommitettiin, mutta se on '
+      + 'sittemmin korjattu; kirkkaan oranssit kattotiilet ovat uusia.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Sofia: {
+    intro: 'Sofia on Bulgarian pääkaupunki ja yksi Euroopan vanhimmista '
+      + 'kaupungeista: paikalla on asuttu yli 7 000 vuotta. Se sijaitsee '
+      + 'laaksossa Vitosha-vuoren juurella, ja vuorelle pääsee '
+      + 'keskustasta bussilla.',
+    teksti: 'Roomalaiset perustivat tänne kaupungin nimeltä Serdica '
+      + 'kuumien lähteiden takia. Keisari Konstantinus Suuri viihtyi '
+      + 'siellä niin hyvin, että sanoi: "Serdica on minun Roomani." '
+      + 'Metroa rakennettaessa 2010-luvulla kaivettiin esiin kokonainen '
+      + 'roomalainen katu, joka jätettiin näkyviin lasin alle keskelle '
+      + 'kaupunkia.\n\n'
+      + 'Sofian erikoisuus on uskontojen läheisyys. Yhden korttelin '
+      + 'matkalla ovat ortodoksinen kirkko, katolinen katedraali, '
+      + 'moskeija ja Balkanin suurin synagoga. Paikalliset kutsuvat '
+      + 'aluetta suvaitsevaisuuden neliöksi.\n\n'
+      + 'Kaupunki oli ottomaanien hallussa lähes viisi vuosisataa. '
+      + 'Bulgaria itsenäistyi 1878, ja Sofiasta tehtiin pääkaupunki '
+      + 'seuraavana vuonna — juuri isoisän matkan jälkeen. Silloin siellä '
+      + 'asui noin 20 000 ihmistä; nykyään yli miljoona.\n\n'
+      + 'Bulgarialaiset nyökkäävät päätään kieltäessään ja pudistavat '
+      + 'myöntäessään — päinvastoin kuin useimmat muut. Tapa hämmentää '
+      + 'matkailijoita yhä.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Kreikka: {
+    intro: 'Kreikka on vuoristoinen maa Balkanin niemimaan eteläkärjessä. '
+      + 'Sillä on yli 6 000 saarta, joista vain parisataa on asuttuja, ja '
+      + 'rannikkoa on enemmän kuin useimmilla paljon suuremmilla mailla.',
+    teksti: 'Antiikin Kreikka ei ollut yksi valtio vaan satoja '
+      + 'kaupunkivaltioita, jotka kilpailivat ja sotivat keskenään mutta '
+      + 'puhuivat samaa kieltä ja palvoivat samoja jumalia. Neljän vuoden '
+      + 'välein ne pitivät aselevon ja kokoontuivat Olympiaan kisoihin — '
+      + 'siitä ovat nykyiset olympialaiset peräisin.\n\n'
+      + 'Kreikan kieltä on kirjoitettu yhtäjaksoisesti kolme tuhatta '
+      + 'vuotta, pidempään kuin mitään muuta elävää eurooppalaista '
+      + 'kieltä. Sen aakkosista kehittyivät sekä latinalaiset että '
+      + 'kyrilliset kirjaimet, ja tieteen sanastossa kreikka näkyy yhä: '
+      + 'biologia, demokratia ja fysiikka ovat kreikkaa.\n\n'
+      + 'Kreikka oli ottomaanien vallan alla lähes neljäsataa vuotta ja '
+      + 'itsenäistyi vaiheittain vuodesta 1821 alkaen. Nykyinen maa on '
+      + 'siis nuori valtio, jolla on hyvin vanha historia. Se elää '
+      + 'merenkulusta — kreikkalaiset omistavat maailman suurimman '
+      + 'kauppalaivaston — sekä matkailusta ja maataloudesta.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Kroatia: {
+    intro: 'Kroatia on hevosenkengän muotoinen maa Adrianmeren rannalla. '
+      + 'Sen rannikolla on yli tuhat saarta, ja sisämaassa levittäytyvät '
+      + 'tasangot ja metsät. Maa itsenäistyi 1991 ja liittyi EU:hun 2013.',
+    teksti: 'Kroatian rannikko oli vuosisatoja Venetsian ja Itävallan '
+      + 'vaikutuspiirissä, sisämaa taas Unkarin. Siksi maan kaksi puolta '
+      + 'näyttävät erilaisilta: rannikolla on kivitaloja ja kellotorneja '
+      + 'kuten Italiassa, sisämaassa keskieurooppalaisia kaupunkeja.\n\n'
+      + 'Kroatia oli osa Jugoslaviaa toisen maailmansodan jälkeen. Kun se '
+      + 'julistautui itsenäiseksi 1991, seurasi neljä vuotta sotaa. '
+      + 'Sodan jäljet näkyvät yhä joissakin kaupungeissa, mutta maa on '
+      + 'nykyään yksi Euroopan suosituimmista matkailukohteista.\n\n'
+      + 'Kroatiasta on peräisin muutama yllättävä keksintö: solmio '
+      + '(ranskaksi cravate, kroaattien kaulahuivista), ja Nikola Tesla, '
+      + 'vaihtovirran kehittäjä, syntyi kroatialaisessa kylässä. '
+      + 'Plitvicen järvien kansallispuistossa kuusitoista järveä laskee '
+      + 'toisiinsa satojen putousten kautta.',
+    lahde: 'Wikipedia (CC BY-SA)',
+  },
+
+  Bulgaria: {
+    intro: 'Bulgaria on Balkanin niemimaalla Mustanmeren rannalla. Maa on '
+      + 'vuoristoinen: Balkanvuoret kulkevat sen halki idästä länteen ja '
+      + 'antavat nimensä koko niemimaalle.',
+    teksti: 'Bulgaria on Euroopan vanhimpia valtioita: se perustettiin '
+      + 'vuonna 681 eikä ole vaihtanut nimeään sen jälkeen. Kaksi '
+      + 'bulgarialaista munkkia, Kyrillos ja Methodios sekä heidän '
+      + 'oppilaansa, kehittivät 800-luvulla kyrilliset aakkoset — samat, '
+      + 'joilla kirjoitetaan yhä venäjää, serbiaa ja monta muuta '
+      + 'kieltä.\n\n'
+      + 'Maa oli ottomaanien vallan alla lähes viisi vuosisataa ja '
+      + 'itsenäistyi 1878. Kommunistisen ajan jälkeen 1989 se siirtyi '
+      + 'demokratiaan ja liittyi EU:hun 2007.\n\n'
+      + 'Bulgaria tuottaa suuren osan maailman ruusuöljystä: Kazanlakin '
+      + 'Ruusulaaksossa poimitaan damaskonruusuja hajuvesiteollisuudelle. '
+      + 'Maa tunnetaan myös jogurtistaan — siinä elävä bakteeri on '
+      + 'nimetty maan mukaan Lactobacillus bulgaricus — ja '
+      + 'kansanmusiikistaan, jonka epäsäännölliset tahtilajit ja '
+      + 'naiskuorojen sointi ovat tehneet siitä maailmankuulua.',
+    lahde: 'Wikipedia (CC BY-SA)',
   },
 };

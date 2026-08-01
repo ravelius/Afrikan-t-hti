@@ -394,4 +394,392 @@ export const EUROPE_KULTTUURI = {
         + 'Samassa paikassa kokoontui Alþingi vuodesta 930.',
     },
   },
+
+  ateena: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Rebetiko — sataman blues',
+        tiedosto: 'The Famous Quartet of Pireaus about 1934.jpg',
+        teksti: 'Pireuksen satamakortteleissa syntyi 1920-luvulla '
+          + 'rebetiko: pakolaisten ja köyhien laulu, jota soitettiin '
+          + 'bouzoukilla ja jota valtio yritti aikanaan kieltää. Nykyään '
+          + 'se on Unescon suojelemaa kulttuuriperintöä ja soi taas '
+          + 'kaupungin tavernoissa.',
+        selite: 'Pireuksen kuuluisa kvartetti noin 1934: Markos '
+          + 'Vamvakaris ja hänen soittokumppaninsa bouzoukeineen. '
+          + 'Yhtye teki rebetikosta koko Kreikan musiikkia.',
+        lahde: 'Wikimedia Commons (PD)',
+        wiki: 'Rebetiko',
+        musiikki: 'https://music.apple.com/fi/search?term=rebetiko',
+        musiikkiNimi: 'Rebetiko Apple Musicissa',
+        musiikkiVapaa: 'https://webradio.ert.gr/',
+        musiikkiVapaaNimi: 'ERT — Kreikan yleisradion verkkoradiot',
+        musiikkiVapaaLyhyt: 'ERT',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Souvlaki syödään seisaaltaan',
+        tiedosto: 'Souvlaki in Athens.JPG',
+        teksti: 'Souvlaki on grillattua lihaa vartaassa, ja pita '
+          + 'kääritään sen ympärille tomaatin, sipulin ja tzatzikin '
+          + 'kanssa. Ateenassa se ostetaan luukulta ja syödään kadulla '
+          + 'kävellen — halvin kunnon ateria kaupungissa.',
+        selite: 'Souvlaki-annos ateenalaisessa kojussa: vartaat, pita ja '
+          + 'ranskalaiset samassa käärössä, kuten paikallinen tapa vaatii.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Souvlaki',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Evzonit ja tupsukengät',
+        tiedosto: 'Evzones marching, Athens, Greece.jpg',
+        teksti: 'Tuntemattoman sotilaan haudalla vartioivat evzonit '
+          + 'kävelevät hitaasti kuin unessa. Puvussa on 400 laskosta — '
+          + 'yksi jokaista Kreikan ottomaanivallan vuotta kohti — ja '
+          + 'kengät painavat kolme kiloa kappale, sillä niiden pohjissa '
+          + 'on 60 naulaa.',
+        selite: 'Evzonit vaihtavat vartiota parlamenttitalon edessä. '
+          + 'Tupsukenkien nimi on tsarouhia, ja tupsut ovat mustaa villaa.',
+        lahde: 'Wikimedia Commons (CC0)',
+        wiki: 'Evzonit',
+      },
+    ],
+    kysymys: {
+      q: 'Mitä evzonin puvun 400 laskosta esittävät?',
+      options: [
+        'Ottomaanivallan vuosia',
+        'Kreikan saarten määrää',
+        'Antiikin kaupunkivaltioita',
+        'Marathonin juoksun metrejä',
+      ],
+      correct: 0,
+      fact: 'Kreikka oli ottomaanien vallan alla lähes neljäsataa vuotta, '
+        + 'ja vapaussota alkoi 1821. Laskosten määrä on muistutus siitä.',
+    },
+  },
+
+  rooma: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Kolikko olan yli',
+        tiedosto: 'Trevi Fountain - Roma.jpg',
+        teksti: 'Trevin lähteeseen heitetään kolikko oikealla kädellä '
+          + 'vasemman olan yli: tarinan mukaan se takaa paluun Roomaan. '
+          + 'Lähteestä kerätään noin puolitoista miljoonaa euroa vuodessa, '
+          + 'ja rahat menevät hyväntekeväisyyteen — ruoka-apuun kaupungin '
+          + 'vähävaraisille.',
+        selite: 'Fontana di Trevi valmistui 1762. Keskellä on meren '
+          + 'jumala Oceanus simpukkavaunuissaan, ja vesi tulee yhä '
+          + 'antiikin akveduktia pitkin.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Trevin suihkulähde',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Carbonarassa ei ole kermaa',
+        tiedosto: 'Pasta carbonara.jpg',
+        teksti: 'Roomalaisessa carbonarassa on vain neljä ainesta: '
+          + 'munankeltuainen, pecorino-juusto, pippuri ja guanciale eli '
+          + 'suolattu posken liha. Kermaa ei ole — sen lisääminen on '
+          + 'roomalaiselle sama kuin ketsuppi kalakeitossa. Ruoka on '
+          + 'yllättävän nuori: se keksittiin vasta toisen maailmansodan '
+          + 'jälkeen.',
+        selite: 'Carbonara-annos. Kastike syntyy, kun kuuma pasta '
+          + 'sekoitetaan keltuaisen ja juuston kanssa liedeltä pois '
+          + 'otettuna — jos pannu on liian kuuma, muna kypsyy munakkaaksi.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        wiki: 'Carbonara',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Vesi kulkee yhä',
+        tiedosto: 'Parco degli Acquedotti 02.jpg',
+        teksti: 'Roomaan rakennettiin yksitoista akveduktia, jotka '
+          + 'toivat vuorilta vettä yli sadan kilometrin päästä. Ne '
+          + 'toimivat pelkällä painovoimalla: kaltevuus oli paikoin vain '
+          + 'kolmekymmentä senttiä kilometriä kohti. Yksi niistä, Aqua '
+          + 'Virgo, syöttää yhä Trevin lähdettä.',
+        selite: 'Akveduktipuisto kaupungin laidalla: Aqua Claudian kaaret '
+          + 'jatkuvat peltojen yli. Rakennettu vuosina 38–52 jKr.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Rooman akveduktit',
+      },
+    ],
+    kysymys: {
+      q: 'Miten Rooman akveduktit saivat veden liikkeelle?',
+      options: [
+        'Painovoimalla — putki laskee koko matkan',
+        'Orjien pyörittämillä pumpuilla',
+        'Tuulivoimalla',
+        'Vesi nostettiin ämpäreillä porras kerrallaan',
+      ],
+      correct: 0,
+      fact: 'Kaltevuus oli paikoin vain 30 senttiä kilometrillä. Kaaret '
+        + 'rakennettiin juuri siksi: laakson yli piti pitää putki '
+        + 'täsmälleen oikeassa kulmassa.',
+    },
+  },
+
+  kreeta: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Härän yli hypättiin',
+        tiedosto: 'Bull leaping minoan fresco archmus Heraklion.jpg',
+        teksti: 'Knossoksen seinämaalauksissa nuoret tarttuvat juoksevan '
+          + 'härän sarviin ja heittävät kuperkeikan sen selän yli. '
+          + 'Tutkijat kiistelevät yhä siitä, oliko se urheilua, uskonnon '
+          + 'meno vai molempia — eikä kukaan tiedä, onnistuiko se '
+          + 'oikeasti koskaan.',
+        selite: 'Härkähyppyfreskon jäänteet Herakleionin arkeologisessa '
+          + 'museossa, maalattu noin 1500 eaa. Vaaleat hahmot ovat '
+          + 'naisia, tumma mies — minolainen tapa merkitä sukupuoli '
+          + 'värillä.',
+        lahde: 'Wikimedia Commons (CC0)',
+        wiki: 'Knossos',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Lyyra soi polvella',
+        tiedosto: 'Cretan lyra.jpg',
+        teksti: 'Kreetalainen lyyra on kolmikielinen jousisoitin, jota '
+          + 'pidetään pystyssä polvella eikä leuan alla. Sitä soitetaan '
+          + 'häissä ja kylän juhlissa, usein läpi yön: tanssi kestää niin '
+          + 'kauan kuin soittajaa jaksaa.',
+        selite: 'Kreetalainen lyyra. Kieliä painetaan kynsien kyljellä, '
+          + 'ei sormenpäillä — siitä tulee soittimen erikoinen liukuva '
+          + 'ääni.',
+        lahde: 'Wikimedia Commons (CC BY 3.0)',
+        wiki: 'Kreetalainen lyyra',
+        musiikki: 'https://music.apple.com/fi/search?term=cretan%20lyra',
+        musiikkiNimi: 'Kreetalaista lyyramusiikkia Apple Musicissa',
+        musiikkiVapaa: 'https://webradio.ert.gr/',
+        musiikkiVapaaNimi: 'ERT — Kreikan yleisradion verkkoradiot',
+        musiikkiVapaaLyhyt: 'ERT',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Öljypuita enemmän kuin ihmisiä',
+        tiedosto: 'Olive-Harvest-Sitia-Lasithi-Crete-Greece.jpg',
+        teksti: 'Kreetalla kasvaa noin 30 miljoonaa oliivipuuta ja asuu '
+          + 'reilut 600 000 ihmistä — puita on siis viisikymmentä kertaa '
+          + 'enemmän. Osa puista on tuhansia vuosia vanhoja ja tuottaa '
+          + 'yhä satoa. Sato korjataan talvella, usein koko suvun voimin.',
+        selite: 'Oliivinkorjuuta Sitiassa Itä-Kreetalla. Verkot '
+          + 'levitetään puun alle ja oksat ravistellaan tai kammataan '
+          + 'tyhjiksi.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Oliivi',
+      },
+    ],
+    kysymys: {
+      q: 'Kuinka vanha Knossoksen palatsikulttuuri on?',
+      options: [
+        'Noin 4 000 vuotta — Euroopan vanhin kaupunkikulttuuri',
+        'Noin 1 000 vuotta',
+        'Noin 500 vuotta',
+        'Se rakennettiin roomalaisten aikaan',
+      ],
+      correct: 0,
+      fact: 'Minolainen kulttuuri kukoisti noin 2000–1450 eaa. Palatsissa '
+        + 'oli juokseva vesi ja viemärit aikana, jolloin muualla '
+        + 'Euroopassa asuttiin puumajoissa.',
+    },
+  },
+
+  sisilia: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Ritarit narujen varassa',
+        tiedosto: 'Sicilian puppets.JPG',
+        teksti: 'Opera dei pupi on sisilialainen nukketeatteri, jossa '
+          + 'metrin mittaiset haarniskoidut ritarit taistelevat '
+          + 'Kaarle Suuren tarinoissa. Sama tarina jatkui iltaa toisensa '
+          + 'jälkeen kuukausia, ja yleisö tuli katsomaan kuin '
+          + 'televisiosarjaa. Unesco suojeli perinteen 2001.',
+        selite: 'Sisilialaisia pupi-nukkeja haarniskoissaan. Nuket '
+          + 'painavat jopa kymmenen kiloa, ja niitä ohjataan '
+          + 'rautatangoilla ylhäältä.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Opera dei pupi',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Cannolo täytetään vasta tilauksesta',
+        tiedosto: 'Cannoli siciliani.jpg',
+        teksti: 'Cannolo on paistettu taikinaputki, joka täytetään '
+          + 'makeutetulla ricotta-juustolla. Kunnon leipomossa se '
+          + 'täytetään vasta kun asiakas tilaa — muuten kuori pehmenee. '
+          + 'Ricotta tehdään lampaanmaidosta, ja arabit toivat '
+          + 'sokeriruo’on saarelle 800-luvulla.',
+        selite: 'Cannoli siciliani tarjolla. Päihin painetaan usein '
+          + 'pistaasirouhetta tai kandeerattua hedelmää.',
+        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        wiki: 'Cannolo',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Torilla huudetaan laulaen',
+        tiedosto: 'Ballarò, gente en el mercado, Palermo, Sicilia, Italia, 2015.JPG',
+        teksti: 'Palermon Ballarò on toiminut samalla paikalla yli '
+          + 'tuhat vuotta, arabivallan ajoista asti. Myyjien huuto on '
+          + 'oma taiteenlajinsa nimeltä abbanniata: hinta ja tavara '
+          + 'lauletaan venytetyllä melodialla, joka kuuluu korttelin '
+          + 'päähän.',
+        selite: 'Ballarò-tori Palermossa. Kojujen välissä myydään kalaa, '
+          + 'vihanneksia ja katuruokaa; markkina alkaa aamuvarhain ja '
+          + 'jatkuu iltaan.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Palermo',
+      },
+    ],
+    kysymys: {
+      q: 'Mikä on abbanniata?',
+      options: [
+        'Torikauppiaan laulava myyntihuuto',
+        'Sisilialainen jälkiruoka',
+        'Etnan purkaustyyppi',
+        'Nukketeatterin päähenkilö',
+      ],
+      correct: 0,
+      fact: 'Abbanniata on Palermon torien oma huutolaulu. Jokaisella '
+        + 'myyjällä on oma melodiansa, ja vakioasiakkaat tunnistavat '
+        + 'kauppiaan pelkästä äänestä.',
+    },
+  },
+
+  dubrovnik: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Klapa lauletaan ilman soittimia',
+        tiedosto: 'Klapa Cambi, Orebić.2012.JPG',
+        teksti: 'Klapa on dalmatialainen mieskuorolaulu ilman soittimia: '
+          + 'viidestä kymmeneen laulajaa seisoo tiiviissä puolikaaressa '
+          + 'ja sovittaa äänet toisiinsa. Perinne syntyi kirkoissa ja '
+          + 'satamissa, ja Unesco suojeli sen 2012.',
+        selite: 'Klapa-yhtye laulamassa Orebićissä. Laulajat asettuvat '
+          + 'lähelle toisiaan, jotta kukin kuulee muut ilman '
+          + 'vahvistusta.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        wiki: 'Klapa',
+        musiikki: 'https://music.apple.com/fi/search?term=klapa',
+        musiikkiNimi: 'Klapa-lauluja Apple Musicissa',
+        musiikkiVapaa: 'https://radio.hrt.hr/',
+        musiikkiVapaaNimi: 'HRT — Kroatian yleisradion verkkoradiot',
+        musiikkiVapaaLyhyt: 'HRT',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Euroopan vanhin apteekki',
+        tiedosto: 'Old pharmacy in the Franciscan Monastery in Dubrovnik 01.jpg',
+        teksti: 'Fransiskaaniluostarin apteekki avattiin vuonna 1317 ja '
+          + 'palvelee yhä asiakkaita — se on Euroopan vanhin '
+          + 'yhtäjaksoisesti toiminut apteekki. Munkit valmistivat '
+          + 'voiteita yrteistä, ja osa resepteistä on yhä käytössä.',
+        selite: 'Vanhan apteekin purkkeja luostarin museossa. '
+          + 'Fajanssiruukuissa säilytettiin yrttejä ja voiteita; '
+          + 'jokaisen kyljessä lukee sisältö latinaksi.',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        wiki: 'Dubrovnik',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Suola teki kaupungista rikkaan',
+        tiedosto: 'Salt pans Ston (4065531015).jpg',
+        teksti: 'Stonin suola-altaat ovat toimineet 1300-luvulta asti, ja '
+          + 'suola oli Dubrovnikin tasavallan tärkein tulonlähde. Sitä '
+          + 'suojaamaan rakennettiin viiden kilometrin muuri — Euroopan '
+          + 'pisin linnoitusmuuri Kiinan muurin jälkeen. Suola kerätään '
+          + 'yhä käsin puulastoilla.',
+        selite: 'Stonin suola-altaat. Merivesi johdetaan matalille '
+          + 'kentille ja haihdutetaan auringossa; jäljelle jää suola.',
+        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        wiki: 'Ston',
+      },
+    ],
+    kysymys: {
+      q: 'Millä Dubrovnikin tasavalta pysyi vuosisatoja itsenäisenä?',
+      options: [
+        'Kaupankäynnillä ja neuvottelemalla, ei sotimalla',
+        'Euroopan suurimmalla laivastolla',
+        'Vuoristo esti hyökkäykset kokonaan',
+        'Se ei ollut koskaan itsenäinen',
+      ],
+      correct: 0,
+      fact: 'Ragusa maksoi veroa milloin ottomaaneille, milloin '
+        + 'Unkarille, ja piti kaikkiin välit kunnossa. Se kielsi '
+        + 'orjakaupan jo 1416 — yhtenä ensimmäisistä Euroopassa.',
+    },
+  },
+
+  sofia: {
+    nostot: [
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Gaida — säkkipilli Balkanilla',
+        tiedosto: 'Kostadin Varimezov playing the gaida.jpg',
+        teksti: 'Gaida on vuohennahasta tehty säkkipilli, jota soitetaan '
+          + 'Bulgarian häissä ja tansseissa. Rodopeilta kotoisin oleva '
+          + 'iso kaba gaida soi matalasti ja käheästi. Bulgarialainen '
+          + 'kansanmusiikki tunnetaan oudoista tahtilajeista: yleisiä '
+          + 'ovat 7/8 ja 11/16.',
+        selite: 'Kostadin Varimezov, yksi Bulgarian tunnetuimmista '
+          + 'gaida-soittajista. Puhallusputki on suussa, sormet '
+          + 'melodiapillillä ja säkki kainalossa.',
+        lahde: 'Wikimedia Commons (CC BY 4.0)',
+        wiki: 'Gaida',
+        musiikki: 'https://music.apple.com/fi/search?term=bulgarian%20folk%20gaida',
+        musiikkiNimi: 'Bulgarialaista kansanmusiikkia Apple Musicissa',
+        musiikkiVapaa: 'https://bnr.bg/en/live',
+        musiikkiVapaaNimi: 'BNR — Bulgarian yleisradion suorat lähetykset',
+        musiikkiVapaaLyhyt: 'BNR',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Banitsassa on onnenviesti',
+        tiedosto: 'Banitsa in Sofia Bulgaria 20090404 001.JPG',
+        teksti: 'Banitsa on filotaikinasta ja juustosta kierretty '
+          + 'piirakka, jota syödään aamiaiseksi jogurttijuoman kanssa. '
+          + 'Uudenvuoden banitsan sisään kätketään paperilappuja, joihin '
+          + 'on kirjoitettu toivotuksia — se, minkä lapun saa, kertoo '
+          + 'tulevasta vuodesta.',
+        selite: 'Banitsa Sofiassa. Taikina kierretään kierteelle ja '
+          + 'paistetaan pellillä; täytteenä on sirene-juustoa ja munaa.',
+        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        wiki: 'Banitsa',
+      },
+      {
+        tyyppi: 'kuva',
+        otsikko: 'Ruusulaakson aamut',
+        tiedosto: 'Rose-picking in Bulgaria 1870ies.jpg',
+        teksti: 'Kazanlakin Ruusulaaksossa kasvatetaan damaskonruusua '
+          + 'hajuvesiöljyä varten. Bulgaria tuottaa siitä suuren osan '
+          + 'koko maailman tarpeesta. Kukat poimitaan käsin auringon '
+          + 'noustessa: päivän lämmössä tuoksuöljy haihtuu, joten '
+          + 'työ tehdään aamuviideltä.',
+        selite: 'Ruusunpoimintaa Bulgariassa 1870-luvulla — Felix '
+          + 'Kanitzin piirros isoisän matkan ajoilta. Työtapa on '
+          + 'sama vielä tänäänkin.',
+        lahde: 'Wikimedia Commons (PD)',
+        wiki: 'Ruusulaakso',
+      },
+    ],
+    kysymys: {
+      q: 'Miksi Bulgarian ruusut poimitaan aamuviideltä?',
+      options: [
+        'Päivän lämmössä tuoksuöljy haihtuu',
+        'Ruusut kukkivat vain aamulla',
+        'Mehiläiset häiritsevät myöhemmin',
+        'Se on vanha uskonnollinen tapa',
+      ],
+      correct: 0,
+      fact: 'Öljypitoisuus on korkeimmillaan ennen auringonnousua. '
+        + 'Yhteen grammaan ruusuöljyä tarvitaan noin kolme kiloa '
+        + 'terälehtiä.',
+    },
+  },
 };
