@@ -422,7 +422,10 @@ Kansiot:
 
 - \`kuvat/\` — Wikimedia Commonsin valokuvat ja kulttuurikuvat
 - \`liput/\` — lippukuvat
-- \`aanet/\` — äänimaisemat (Freesound) ja kenttä-äänitykset (radio aporee)
+- \`aanet/\` — äänimaisemat (Freesound) ja kenttä-äänitykset (radio aporee).
+  Taustaäänet on leikattu kolmeen minuuttiin kehysrajalta koodaamatta
+  uudelleen, joten ne ovat alkuperäistä lyhyempiä mutta äänenlaadultaan
+  samoja. Manifestin \`leikattu\`-kenttä kertoo keston sekunteina.
 Pelin tekstit eivät ole täällä: ne kirjoitetaan itse pelin tyyliin ja
 asuvat pelirepossa.
 

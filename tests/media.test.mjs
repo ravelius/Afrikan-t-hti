@@ -158,9 +158,13 @@ test('peilaustyökalu käyttää samaa turvanimi-sääntöä', () => {
 
 // Manifesti on peilin repossa eikä pelin mukana. Jos se on koneella,
 // tarkistetaan koko aineisto; muuten testi ohitetaan.
+// Kansion nimi vaihtelee sen mukaan, miten repo on kloonattu. Linuxissa
+// polku on kirjainkoolle herkkä, ja ilman isoa alkukirjainta testi
+// ohittui hiljaisesti juuri siellä, missä media-repo oli levyllä.
 const MANIFESTIT = [
   join(JUURI, '../matkakirja-media-repo/manifesti.json'),
   join(JUURI, '../matkakirja-media/manifesti.json'),
+  join(JUURI, '../Matkakirja-media/manifesti.json'),
 ];
 const manifestiPolku = MANIFESTIT.find((p) => existsSync(p));
 
