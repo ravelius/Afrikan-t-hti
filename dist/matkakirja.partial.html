@@ -311,12 +311,10 @@ button, .brand, .turn-pill, .fact-card h2 {
   will-change: transform;
 }
 
-/* Varjo jää laudan pintaan, kun noppa nousee ilmaan. */
 /*
- * Lennon aikana varjo on pelkkä pehmeä läiskä (radial-gradient on jo
- * itsessään pehmeä, joten blur-suodinta ei tarvita — se maksaisi joka
- * kehyksellä). Kun noppa pysähtyy, ::after piirtää päälle lyijykynällä
- * vedetyn viivoituksen ja läiskä vaimenee taustalle.
+ * Varjo jää laudan pintaan, kun noppa nousee ilmaan. Tavallinen pehmeä
+ * varjo (omistajan valinta): liukuvärjäys on jo itsessään pehmeä, joten
+ * blur-suodinta ei tarvita — se maksaisi joka kehyksellä.
  */
 .die-shadow {
   position: absolute;
@@ -331,11 +329,6 @@ button, .brand, .turn-pill, .fact-card h2 {
   background: radial-gradient(ellipse at 46% 42%, rgba(44, 27, 10, 0.8) 0 16%, rgba(44, 27, 10, 0) 74%);
   opacity: 0.44;
   will-change: transform, opacity;
-}
-
-/* Levossa kynävarjo on pääosassa, joten pehmeä läiskä väistyy taustalle. */
-.die-layer.levossa .die-shadow {
-  background: radial-gradient(ellipse at 46% 42%, rgba(44, 27, 10, 0.34) 0 22%, rgba(44, 27, 10, 0) 76%);
 }
 
 .die-cube {
@@ -403,24 +396,6 @@ button, .brand, .turn-pill, .fact-card h2 {
     radial-gradient(circle at 76% 84%, rgba(44, 27, 10, 0.2), rgba(0, 0, 0, 0) 56%);
   mix-blend-mode: soft-light;
 }
-
-/*
- * Lepovarjo on lyijykynällä vedetty vinoviivoitus kuin sarjakuvassa
- * (omistajan toive). Kuvio on valmiiksi piirretty SVG, ei suodin eikä
- * animaatio: se vain häivähtää esiin kun noppa on pysähtynyt (die.js
- * lisää levossa-luokan). Kuvio on tuotettu komennolla
- * `node tools/make-die-shadow.mjs` — muokkaa siellä, älä käsin.
- */
-.die-shadow::after {
-  content: '';
-  position: absolute;
-  inset: -16% -9%;
-  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20132%2064%22%20preserveAspectRatio%3D%22none%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%232c1e0e%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M7.9%2024.0Q16.3%2018.4%2028.0%2010.4%22%20stroke-width%3D%223.94%22%20opacity%3D%220.31%22%2F%3E%3Cpath%20d%3D%22M8.4%2030.8Q24.9%2020.2%2042.2%208.9%22%20stroke-width%3D%222.85%22%20opacity%3D%220.45%22%2F%3E%3Cpath%20d%3D%22M6.1%2036.5Q31.5%2020.5%2058.8%203.8%22%20stroke-width%3D%223.96%22%20opacity%3D%220.48%22%2F%3E%3Cpath%20d%3D%22M10.0%2040.7Q36.1%2024.5%2059.6%207.9%22%20stroke-width%3D%223.06%22%20opacity%3D%220.50%22%2F%3E%3Cpath%20d%3D%22M15.6%2042.8Q46.6%2024.4%2075.0%206.3%22%20stroke-width%3D%223.90%22%20opacity%3D%220.57%22%2F%3E%3Cpath%20d%3D%22M18.9%2047.0Q49.8%2028.8%2082.7%208.8%22%20stroke-width%3D%222.42%22%20opacity%3D%220.72%22%2F%3E%3Cpath%20d%3D%22M28.2%2047.5Q56.0%2028.9%2083.2%2012.4%22%20stroke-width%3D%222.57%22%20opacity%3D%220.74%22%2F%3E%3Cpath%20d%3D%22M34.5%2050.6Q64.5%2032.5%2090.6%2015.1%22%20stroke-width%3D%222.37%22%20opacity%3D%220.78%22%2F%3E%3Cpath%20d%3D%22M42.3%2050.6Q75.2%2032.0%20106.0%2011.6%22%20stroke-width%3D%224.19%22%20opacity%3D%220.82%22%2F%3E%3Cpath%20d%3D%22M43.6%2057.7Q76.2%2038.9%20106.9%2017.8%22%20stroke-width%3D%223.92%22%20opacity%3D%220.86%22%2F%3E%3Cpath%20d%3D%22M54.6%2054.9Q87.2%2036.6%20116.1%2018.1%22%20stroke-width%3D%223.57%22%20opacity%3D%220.69%22%2F%3E%3Cpath%20d%3D%22M60.4%2056.6Q90.2%2039.9%20118.2%2022.2%22%20stroke-width%3D%224.07%22%20opacity%3D%220.67%22%2F%3E%3Cpath%20d%3D%22M71.1%2057.7Q98.5%2040.4%20125.1%2023.9%22%20stroke-width%3D%222.49%22%20opacity%3D%220.61%22%2F%3E%3Cpath%20d%3D%22M85.5%2057.0Q105.8%2044.1%20127.1%2030.1%22%20stroke-width%3D%222.74%22%20opacity%3D%220.55%22%2F%3E%3Cpath%20d%3D%22M94.0%2057.3Q108.2%2048.2%20125.2%2037.0%22%20stroke-width%3D%223.13%22%20opacity%3D%220.50%22%2F%3E%3Cpath%20d%3D%22M44.3%2039.1Q60.8%2027.1%2080.8%2016.1%22%20stroke-width%3D%222.93%22%20opacity%3D%220.55%22%2F%3E%3Cpath%20d%3D%22M44.8%2043.7Q66.7%2029.7%2087.6%2017.7%22%20stroke-width%3D%223.20%22%20opacity%3D%220.47%22%2F%3E%3Cpath%20d%3D%22M63.3%2043.1Q81.0%2032.8%2099.8%2021.0%22%20stroke-width%3D%223.12%22%20opacity%3D%220.61%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / 100% 100% no-repeat;
-  opacity: 0;
-  transition: opacity 0.3s ease-out;
-}
-
-.die-layer.levossa .die-shadow::after { opacity: 0.88; }
 
 /* --- tapahtumaikkuna kartan päällä --- */
 
@@ -34691,17 +34666,12 @@ class BoardDie {
   async roll(value, from, to, hooks = {}) {
     const { onTick, onLand, onBounce, reduced } = hooks;
     this.layer.hidden = false;
-    // Kynävarjostus piirtyy vasta kun noppa on pysähtynyt (omistajan
-    // toive) — heiton ajaksi se pyyhitään pois.
-    this.layer.classList.remove('levossa');
-
     const [faceX, faceY] = FACE_ROTATION[value] ?? [0, 0];
 
     if (reduced) {
       this.rotation = { x: faceX - 8, y: faceY + 12, z: 0 };
       this.applyRotation(0);
       this.place(to);
-      this.layer.classList.add('levossa');
       onLand?.();
       return;
     }
@@ -34816,7 +34786,6 @@ class BoardDie {
 
     this.spot = { x: to.x, y: to.y };
     this.draw(0);
-    this.layer.classList.add('levossa');
     await wait(SETTLE_MS);
   }
 }
@@ -42492,7 +42461,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.114';
+const APP_VERSION = '2026-08-01.115';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

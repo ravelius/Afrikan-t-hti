@@ -153,17 +153,12 @@ export class BoardDie {
   async roll(value, from, to, hooks = {}) {
     const { onTick, onLand, onBounce, reduced } = hooks;
     this.layer.hidden = false;
-    // Kynävarjostus piirtyy vasta kun noppa on pysähtynyt (omistajan
-    // toive) — heiton ajaksi se pyyhitään pois.
-    this.layer.classList.remove('levossa');
-
     const [faceX, faceY] = FACE_ROTATION[value] ?? [0, 0];
 
     if (reduced) {
       this.rotation = { x: faceX - 8, y: faceY + 12, z: 0 };
       this.applyRotation(0);
       this.place(to);
-      this.layer.classList.add('levossa');
       onLand?.();
       return;
     }
@@ -278,7 +273,6 @@ export class BoardDie {
 
     this.spot = { x: to.x, y: to.y };
     this.draw(0);
-    this.layer.classList.add('levossa');
     await wait(SETTLE_MS);
   }
 }
