@@ -383,6 +383,7 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 
 | v | Muutos |
 |---|---|
+| 133 | **Korjaus vertailusta Afrikkaan:** Ateenan seudun kuudelta kaupungilta puuttui `wiki`-kenttä, jolloin saapumiskortti jäi ilman Wikipedia-kuvaa, kuvagalleriaa ja omaa nostoa (`js/ui.js` palaa `if (!city.wiki) return;`). Afrikan 39 kaupungista kaikilla kenttä on, Euroopan 41:stä oli vain 6:lla. Kenttä lisätty kuudelle, ja `ARTIKKELIT[city.wiki]` → `ARTIKKELIT[city.wiki ?? city.name]`, jottei sama katoa hiljaa uudestaan. **Euroopan 29 keskeneräiseltä kaupungilta kenttä puuttuu yhä.** |
 | 132 | Ateenan seutu valmis: Ateena, Rooma, Kreeta, Sisilia, Dubrovnik ja Sofia saivat kolme kulttuurikorttia, tietovisakysymyksen, silloin–nyt-valokuvaparin ja oman artikkelin; lisäksi maa-artikkelit Kreikalle, Kroatialle ja Bulgarialle. 30 uutta kuvaa, kaikki lisenssit varmennettu Commonsin extmetadatasta. **Kuvista ei enää tehdä paikallisia kopioita** — Commons on se repon ulkopuolinen tallennuspaikka, ja palvelutyöntekijä tallentaa kerran nähdyn kuvan omaan pitkäikäiseen koriinsa. Kulttuurikorttiin lisätty `musiikkiVapaa`-kenttä: ilmainen kuuntelupaikka (kansalliset yleisradiot ERT, HRT, BNR) Apple Musicin rinnalle. |
 | 131 | Ateenan seutu aloitettu (omistajan päätös: alue kerrallaan täyteen syvyyteen). **Kertojan luennat kahdeksalle Euroopan kaupungille**: Lontoo, Pariisi, Rooma ja Ateena palautettiin ElevenLabsin historiasta — Fable oli generoinut ne, mutta tiedostot eivät päätyneet repoon; Kreeta, Sisilia, Dubrovnik ja Sofia generoitiin nyt samalla äänellä (Viisas Kertoja `Sz0tRTEpybtDJ9ru2kgD`, malli `eleven_v3`, text-to-dialogue, stability 0.5, mp3_44100_128). Tekstit myös `europe-saapumiset.js`:ään sanatarkasti. Uudet maat: Kreikka, Kroatia ja Bulgaria (rajat, liput, tunnusluvut, kaupunki→maa). **Valokuvia ei enää haeta asennuksessa** vaan vasta kun pelaaja näkee ne (sw.js): asennus olisi kasvanut 150 megatavuun. Kaikille 41 Euroopan kaupungille maisematyyppi ja Euroopalle omat korit (kaupunki, satama, vuoristo, metsä, pohjoinen). |
 | 130 | Zoomausääni kauttaaltaan matalammaksi (omistajan toive: kuulostaa vanhemmalta laitteelta). Toistonopeuden haarukka 0,86–1,16 → 0,76–1,02, keskiarvo 0,84 eli kolme puolisävelaskelta alempana. Syntetisoidun varaversion taajuudet laskettu samalla kertoimella. Astu mantereelle -nappi messinginväriseksi: se näytti samalta laatikolta kuin yläpuolen repliikki, vaikka on kalvon ainoa napautettava kohta (omistajan havainto). |
@@ -409,6 +410,50 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 ## 9. Muuta kirjattavaa
 
 *(Tähän lisätään sitä mukaa kuin omistaja huomaa asioita pelatessa.)*
+
+### Eurooppa vs. Afrikka — mitattu ero (1.8.2026)
+
+**[Opus]** Omistaja pyysi vertaamaan. Mitattu koodista:
+
+| | Afrikka | Eurooppa |
+|---|---|---|
+| kaupunkeja | 39 | 41 |
+| saapumismerkintä | 39/39 | 14/41 |
+| kulttuurikortit | 39/39 | 12/41 |
+| silloin–nyt-kuvat | 39/39 | 12/41 |
+| kysymyksiä | 216 (5,0/kaupunki) | 210 (5,0/kaupunki) |
+| maatietoja | 27 maata | 9 maata |
+| **`wiki`-kenttä** | **39/39** | **12/41** |
+| maamerkkejä kartalla | 19 | 3 |
+| pulmia (luonnoskirja) | 13 | 0 |
+| omia tiivistelmiä | 6 | 0 |
+| ääninäytteitä kulttuurissa | 1 | 0 |
+| ilmaisia musiikkilinkkejä | 0 | 4 |
+
+Valmiiden kaupunkien **tekstimäärä on Euroopassa suurempi**: kuuden
+Ateenan seudun kaupungin keskiarvo 2 770 merkkiä (saapuminen +
+kulttuuri + valokuvat) vastaan Afrikan kuuden otoksen 2 008. Ero tulee
+kulttuurikorteista (1 798 vs. 1 207): Euroopan nostoissa on pidemmät
+selitteet.
+
+**Erot, jotka kannattaa kuroa umpeen:**
+
+1. **Maamerkit kartalla.** Afrikassa 19, Euroopassa 3. Nämä ovat
+   `kind:`-merkintöjä `europe.js`:n `decor`-osiossa (piirtofunktiot
+   `mapart.js` LANDMARKS). Halpa lisätä ja näkyy heti.
+2. **Pulmat.** `africa-puzzles.js` on 13 kuvapulmaa; Euroopalla ei ole
+   tiedostoa lainkaan. Huom: pulmat ovat myös kohdan 1 avoin ongelma
+   (liian kryptisiä), joten ne kannattaa korjata ennen kopiointia.
+3. **Ääninäytteet kulttuurikorteissa.** `aani`-kenttä soittaa oikean
+   kenttä-äänityksen kortissa. Afrikassa käytössä yhdellä
+   (Marrakechin kahvila, aporee/archive.org). Euroopassa ei yhtään —
+   tähän sopisi Europeana tai archive.org.
+4. **Omat tiivistelmät.** `africa-tiivistelmat.js` on nimestään
+   huolimatta **globaali** (ui.js tuo sen sellaisenaan). Sitä tarvitaan,
+   kun fi-Wikipedian tiivistelmä on alle 200 merkkiä — silloin peli
+   näyttää englantia. Ateena (101 merkkiä), Rooma (135) ja Sofia (105)
+   ovat rajan alla, mutta ne pelastuvat omalla artikkelilla; ilman sitä
+   olisivat näyttäneet englantia.
 
 ### Euroopan kaupungit: mikä on tehty ja mikä kesken
 
