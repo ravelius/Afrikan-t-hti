@@ -37,7 +37,15 @@ function arvoTyypista(cityId, tyyppi, lauta) {
 
 // Striimi on taustaa, ei etualaa — hiljaisempi kuin tehosteäänet.
 const VOIMA = 0.14;
+// Etusivu on pelin ensimmäinen vaikutelma, ja siinä ääni soi ilman
+// mitään muuta: sama taso kuin matkalla kuulosti liian kovalta
+// (omistajan havainto). Puolet siitä riittää tunnelmaksi.
+const ETUSIVUN_VOIMA = 0.5;
 const HAIVYTYS_MS = 1800;
+// Sama äänite alkaa joka kerta eri kohdasta, jottei paikka kuulosta
+// itseään toistavalta kun sinne palaa. Loppuun jätetään varaa, ettei
+// silmukka pyörähdy heti alkuun.
+const LOPPUVARA_S = 45;
 
 let nykyinen = null; // { audio, cityId }
 
@@ -97,16 +105,36 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
-  if (alku) {
-    audio.addEventListener('loadedmetadata', () => {
-      try {
-        audio.currentTime = alku;
-      } catch {
-        /* selain ei salli hyppyä ennen dataa — soi alusta */
-      }
-    }, { once: true });
-  }
-  const oma = { audio, cityId, url, tavoite: Math.min(1, VOIMA * voima) };
+  // Aloituskohta arvotaan äänitteen mitasta. `alku` on äänitteen vaimean
+  // alun ylitys, eli aikaisin sallittu kohta; sitä myöhemmästä valitaan
+  // satunnainen. Etusivu alkaa aina samasta kohdasta, koska sen kuuluu
+  // kuulostaa joka avauksella samalta.
+  const arvoAlku = !VAKIOPAIKAT.has(cityId);
+  let hypatty = false;
+  const hyppaa = () => {
+    if (hypatty) return;
+    const pohja = alku ?? 0;
+    // Kesto ei ole aina tiedossa vielä loadedmetadata-hetkellä: osalla
+    // äänitteistä se selviää vasta myöhemmin. Siksi kuunnellaan myös
+    // durationchange — muuten arvonta jäisi tekemättä hiljaisesti.
+    if (!Number.isFinite(audio.duration)) return;
+    const yla = audio.duration - LOPPUVARA_S;
+    const kohta = arvoAlku && yla > pohja + 5
+      ? pohja + Math.random() * (yla - pohja)
+      : pohja;
+    hypatty = true;
+    if (!kohta) return;
+    try {
+      audio.currentTime = kohta;
+    } catch {
+      /* selain ei salli hyppyä ennen dataa — soi alusta */
+    }
+  };
+  audio.addEventListener('loadedmetadata', hyppaa);
+  audio.addEventListener('durationchange', hyppaa);
+  audio.addEventListener('canplay', hyppaa);
+  const paikanVoima = VAKIOPAIKAT.has(cityId) ? ETUSIVUN_VOIMA : 1;
+  const oma = { audio, cityId, url, tavoite: Math.min(1, VOIMA * voima * paikanVoima) };
   nykyinen = oma;
 
   // Kaksi porrasta ennen synteesiä: jos peili ei vastaa, sama äänite
