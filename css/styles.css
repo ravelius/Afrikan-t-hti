@@ -268,8 +268,13 @@ body.manner-zoom .map-pane {
 }
 
 /* Liu'un ajaksi kartan reunahäivytys pois (omistajan havainto): se
-   piirtyi kasvavan kartan ulkopuolelle ja näkyi tummina kaarina. */
-body.zoom-kaynnissa .map-pane::after { opacity: 0; }
+   piirtyi kasvavan kartan ulkopuolelle ja näkyi tummina kaarina.
+   Etusivun lähikuvassa se ei enää palaa lainkaan: siellä reunan hoitaa
+   kiikari (omistajan päätös). Muilla kartoilla vaalea häivytys jää
+   entiselleen. Sama 700 ms kuin kiikarin esiintulossa, jolloin efektit
+   sulavat toisikseen eikä kumpikaan pompahda. */
+body.zoom-kaynnissa .map-pane::after,
+body.kiikari-paalla .map-pane::after { opacity: 0; }
 
 body.aloitus-zoom #board,
 body.manner-zoom #board {
@@ -434,6 +439,7 @@ body.aloitus-zoom .kiikari {
     rgba(250, 242, 219, 0.26) 80%,
     rgba(252, 246, 228, 0.6) 100%
   );
+  transition: opacity 700ms ease;
 }
 
 .board-hint {

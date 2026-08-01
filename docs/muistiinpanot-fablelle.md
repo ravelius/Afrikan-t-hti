@@ -383,6 +383,7 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 
 | v | Muutos |
 |---|---|
+| 127 | Etusivun lähikuvassa vaalea filmivinjetti ei enää palaa zoomauksen jälkeen: siellä reunan hoitaa yksin kiikari (omistajan päätös). Muilla kartoilla vinjetti ennallaan. Vaihto tapahtuu samalla 700 ms:n feidauksella kuin kiikarin esiintulo. Kirjattu myös taikalasi-idea (kohta 9). |
 | 126 | Zoomausliu'un ajaksi kartan oma reunahäivytys (`.map-pane::after`) sammutetaan (`body.zoom-kaynnissa`): lähikuva on rajattu kaupunkien korkeuteen, joten liu'un alussa kartta ei täytä paneelia ja häivytys piirtyi paljaalle taustalle tummina kaarina (omistajan havainto). Samalla paneelin tausta on lähikuvassa pergamentin väriliuku eikä tummaa. Kiikari vetäytynyt reunemmas: ellipsi 72 %×64 % → 84 %×75 %, ja pysäkit siirretty sisemmäs (maski 56→82 %, vihreä 62/78/89 %), jolloin nurkat pysyvät entisen vahvuisina mutta reunojen keskikohdat vapautuvat. |
 | 125 | Euroopan lähikuvaan pohjoiskaista (`YLAKAISTA = 0.26`), jotta Tromssa, Lappi ja Islanti saa panoroitua matkakirjan kortin alta. Zoomausääni vaihdettu aitoon: Commonsin "Pocket camera start and shut down" (public domain), josta linssin sisäänvedon tasainen surina toistettu ristihäivytyksellä 2,9 s:iin — `assets/audio/efekti-zoom.mp3` on nyt olemassa, syntetisoitu versio jää varalle. Etusivun zoomaus 2,0 → 2,8 s (`ALOITUS_ZOOM_MS`), pehmennys ease-in-out (`ZOOM_PEHMENNYS`). Kiikariefekti siirretty omaksi elementikseen `.kiikari` (index.html): nousee esiin vasta zoomauksen jälkeen feidaten, vihreä sävy vetäytynyt reunemmas (alku 52 % → 62 %), sumennus ennallaan, ja reunoille lisätty kromaattinen aberraatio kahtena kertovana värikehänä (lämmin uloimpana, kylmä sisempänä). Kartta ei enää maalaudu valituksi raahatessa. Zoomausäänen korkeus seuraa liu'un vauhtia: `js/sound.js vauhtiKayra` johtaa toistonopeuskäyrän (0,86–1,16) samasta bezier-pehmennyksestä, ja sekä äänite (`setValueCurveAtTime` playbackRatelle) että syntetisoitu varaversio käyttävät sitä. Kesto tulee kutsujalta, joten mantereen 2,0 s ja etusivun 2,8 s zoomaus soivat kumpikin oikean mittaisina. **Huom: jos `ZOOM_PEHMENNYS` muuttuu js/ui.js:ssä, sama arvo on muutettava js/sound.js:ään.** |
 | 124 | Palaute ulkopuoliselle lomakkeelle: mailto ja omistajan sähköposti poistettu koko koodista, tilalla `PALAUTE_LOMAKE`-vakio (js/ui.js) + yhteydenottokenttä; tyhjänä varareittinä GitHub-linkki. Uusi huutomerkkinappi oikeassa alakulmassa lähettää palautteen siitä kohdasta peliä, jossa pelaaja on (lauta + kaupunki + vaihe + versio kulkevat mukana). Mantereen zoomaus odottaa nyt Astu mantereelle -napin (ei enää animoidu lentokalvon takana). Kaikki zoomaukset hitaammiksi (ZOOM_MS 1200 → 2000, kokonäkymä 1100 → 1400 ms). Maailmankartan lähikuvaan vanhan kiikarin vääristymä: vihertävä sumennus reunoille, pois raahauksen ajaksi ja feidaten takaisin. Zoomausääni tehty uusiksi (kanttiaalto + kaistanpäästö + hammaspyörävinkuna = kameran moottori; ennen liian möyrisevä). Avaustekstin lopetus varaa tilansa ennen kirjoitusta, joten teksti mahtuu taas kokonaan ruudulle. |
@@ -403,6 +404,27 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 ## 9. Muuta kirjattavaa
 
 *(Tähän lisätään sitä mukaa kuin omistaja huomaa asioita pelatessa.)*
+
+### Kaksi reunaefektiä — kumpi kuuluu minne
+
+- **Vaalea filmivinjetti** (`.map-pane::after`) on kartan alkuperäinen
+  ilme ja jää kaikille laudoille. Se sammuu vain kahdessa tilanteessa:
+  zoomausliu'un ajaksi (`body.zoom-kaynnissa`, muuten se piirtyisi
+  kasvavan kartan ulkopuolelle) ja etusivun lähikuvassa
+  (`body.kiikari-paalla`), jossa kiikari hoitaa reunan.
+- **Kiikari** (`.kiikari`, index.html + css `body.aloitus-zoom`) on
+  toistaiseksi vain etusivun maailmankartalla. Se on tarkoituksella
+  pieni näyte efektistä.
+
+**[Omistaja]** Kiikari on varattu myöhemmin **taikalaseille**
+(kohta 2): kun pelaaja löytää lasit, joilla kartasta näkee muutakin
+kuin tavallinen silmä, sama efekti kytketään päälle niiden ajaksi.
+Etusivu on tarkoituksella pieni näyte siitä, miltä lasit tuntuvat.
+
+**[Opus]** Tekniikka on jo paikallaan: efekti on yksi elementti ja
+kaksi tilaluokkaa. Lasien kytkeminen on käytännössä oman luokan
+lisääminen `body.aloitus-zoom`in rinnalle css:ssä ja sen kytkeminen
+esineen käytöstä — ei uutta piirtokoodia.
 
 ---
 
