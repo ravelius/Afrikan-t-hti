@@ -89,10 +89,16 @@ const EU_MAP = {
     [64.8, 36.1], [70.2, 44.2], [69.0, 36.6], [74.7, 40.0], [77.7, 35.8], [82.8, 35.9],
     [82.4, 31.4], [84.6, 30.0], [89.1, 34.7],
   ],
+  // Pohjois-Afrikan kaistale. Ulottuu selvästi laudan alareunan yli
+  // (y 1160), jotta puhelimen lähikuvassa karttaa voi panoroida
+  // etelämmäs: muuten Kreeta ja Ateena jäisivät alarivin nappien alle
+  // eikä niiden alapuolella olisi mitään, mihin panoroida (omistajan
+  // havainto). Rannikkoviivaa itsessään ei ole muutettu — vain
+  // mantereen syvyyttä etelään.
   maghrebPoints: [
     [-45, 960.0], [97.9, 952.1], [169.0, 970.5], [211.2, 949.4], [268.8, 925.8],
     [316.8, 923.1], [376.3, 917.9], [409.0, 915.2], [424.3, 923.1], [412.8, 957.3],
-    [432.0, 1045], [-45, 1045],
+    [438.0, 1010.0], [455.0, 1062.0], [470.0, 1160], [-45, 1160],
   ],
 };
 
