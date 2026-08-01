@@ -383,6 +383,7 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 
 | v | Muutos |
 |---|---|
+| 123 | Periaateikkuna: avautuu alusta (ei enää lopusta), "Kaksi ääntä" lyhennetty, loppuun © Sami Reivinen ja palautelohko (mailto-lomake). |
 | 122 | Aloituskartan zoom 2,2× → 3,1× ja rajaus kaupunkien korkeudelle (navat pois). Zoomausääni kuuluvammaksi + tauko ja muiden äänten vaimennus ennen sitä. Etusivun tausta-ääni ei enää arvo (aina korin ensimmäinen). **TEKEMÄTTÄ: assets/audio/efekti-zoom.mp3 ElevenLabsilla** — paikka on varattu, tiedosto ottaa vuoron heti kun se ilmestyy. |
 | 121 | Aloita seikkailu -nappi täsmälleen ruudun keskelle: alareunan linkki ja ääniviihje irrotettu virrasta. |
 | 120 | Zoomausliuku 600 → 1200 ms, avausteksti työntyy alas samaa tahtia, ja zoomaus lähtee mistä tahansa napautetusta kohdasta (ei enää vaadi osumaa kaupunkiin). Zoomausääni pidennetty vastaavasti. |

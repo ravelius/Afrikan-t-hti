@@ -3682,10 +3682,7 @@ export class UI {
     valiotsikko('Kaksi ääntä');
     kappale('Isoisän päiväkirja vuodelta 1873 ja nuoren herran havainto '
       + 'tänään. Vanha ääni loistaa siinä, mikä ei ole muuttunut, ja on '
-      + 'toivottoman vanhentunut nimissä ja rajoissa. Juuri siitä '
-      + 'jännitteestä tarina syntyy — ja piikki osuu aina Foggiin ja '
-      + 'imperiumiin, ei koskaan maihin ja ihmisiin, joita matkalla '
-      + 'kohdataan.');
+      + 'toivottoman vanhentunut nimissä ja rajoissa.');
 
     valiotsikko('Totuus ja lähteet');
     kappale('Jokainen väittämä on tarkistettavissa. Epävarmaa ei väitetä '
@@ -3710,6 +3707,11 @@ export class UI {
     linkit.appendChild(gh);
     kortti.appendChild(linkit);
 
+    kortti.appendChild(this.periaatePalaute());
+
+    const oikeudet = html('p', 'periaate-oikeudet', '© Sami Reivinen');
+    kortti.appendChild(oikeudet);
+
     const sulje = html('button', 'ghost periaate-sulje', 'Takaisin');
     sulje.type = 'button';
     sulje.addEventListener('click', () => lappu.close());
@@ -3719,6 +3721,54 @@ export class UI {
     lappu.addEventListener('click', (e) => { if (e.target === lappu) lappu.close(); });
     document.body.appendChild(lappu);
     lappu.showModal();
+    // showModal siirtää kohdistuksen ensimmäiseen napautettavaan
+    // elementtiin, joka on kortin lopussa — selain vieritti ikkunan
+    // valmiiksi alas (omistajan havainto). Kohdistus otsikkoon ja
+    // vieritys alkuun.
+    kortti.scrollTop = 0;
+    otsikko.setAttribute('tabindex', '-1');
+    otsikko.focus({ preventScroll: true });
+  }
+
+  /**
+   * Palautelohko periaateikkunan loppuun (omistajan toive). Peli on
+   * staattinen sivu ilman palvelinta, joten lomake ei lähetä itse mitään
+   * vaan kokoaa viestin ja avaa sen käyttäjän omaan sähköpostiohjelmaan.
+   * Osoite kootaan vasta ajossa, jottei se ole roskapostirobottien
+   * poimittavissa suoraan sivun lähdekoodista.
+   */
+  periaatePalaute() {
+    const lohko = html('div', 'periaate-palaute');
+    const otsikko = html('h3', 'periaate-valiotsikko', 'Palaute ja mukaan');
+    lohko.appendChild(otsikko);
+
+    const johdanto = html('p', 'periaate-teksti');
+    johdanto.textContent = 'Jos tämä peli kiinnostaa, lähetä palautetta. '
+      + 'Voit myös osallistua pelin kehittämiseen — sisältöä, kuvia, '
+      + 'kysymyksiä tai koodia.';
+    lohko.appendChild(johdanto);
+
+    const kentta = html('textarea', 'periaate-kentta');
+    kentta.rows = 4;
+    kentta.placeholder = 'Kirjoita viestisi tähän…';
+    kentta.setAttribute('aria-label', 'Viesti pelin tekijälle');
+    lohko.appendChild(kentta);
+
+    const nappi = html('button', 'primary periaate-laheta', 'Lähetä palautetta');
+    nappi.type = 'button';
+    nappi.addEventListener('click', () => {
+      const osoite = ['samireivinen', 'gmail.com'].join('@');
+      const aihe = encodeURIComponent('Matkakirja — palaute');
+      const viesti = encodeURIComponent(kentta.value.trim());
+      window.location.href = `mailto:${osoite}?subject=${aihe}&body=${viesti}`;
+    });
+    lohko.appendChild(nappi);
+
+    const huomio = html('p', 'periaate-huomio');
+    huomio.textContent = 'Nappi avaa viestin sähköpostiohjelmaasi — '
+      + 'voit vielä muokata sitä ennen lähetystä.';
+    lohko.appendChild(huomio);
+    return lohko;
   }
 
   suljeAloitusportti() {
