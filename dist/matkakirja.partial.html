@@ -1983,17 +1983,23 @@ body.flight-active .grain { display: none; }
   padding: 1rem;
 }
 
+/* Vain nappi on virrassa, joten se keskittyy täsmälleen ruudun keskelle.
+   Ääniviihje kelluu sen yläpuolella eikä siirrä nappia. */
 .start-gate-keskus {
-  margin: auto 0;
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.9rem;
+  justify-content: center;
 }
 
 /* Ääniviihje napin yläpuolella: peli on tehty kuunneltavaksi, ja selain
    sallii äänet vasta ensimmäisestä napautuksesta. */
 .start-aanet {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.8rem);
+  transform: translateX(-50%);
+  white-space: nowrap;
   margin: 0;
   display: inline-flex;
   align-items: center;
@@ -2013,10 +2019,16 @@ body.flight-active .grain { display: none; }
   letter-spacing: 0.04em;
 }
 
-/* Alareunan linkki pelin periaatteisiin. */
+/*
+ * Alareunan linkki pelin periaatteisiin. Irti virrasta, jotta se ei
+ * työnnä Aloita seikkailu -nappia ylös: nappi kuuluu ruudun keskelle
+ * (omistajan havainto).
+ */
 .start-gate-alaosa {
-  margin-top: auto;
-  padding-bottom: 0.4rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.4rem;
   text-align: center;
 }
 
@@ -43213,7 +43225,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.120';
+const APP_VERSION = '2026-08-01.121';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

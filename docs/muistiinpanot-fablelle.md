@@ -383,6 +383,7 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 
 | v | Muutos |
 |---|---|
+| 121 | Aloita seikkailu -nappi täsmälleen ruudun keskelle: alareunan linkki ja ääniviihje irrotettu virrasta. |
 | 120 | Zoomausliuku 600 → 1200 ms, avausteksti työntyy alas samaa tahtia, ja zoomaus lähtee mistä tahansa napautetusta kohdasta (ei enää vaadi osumaa kaupunkiin). Zoomausääni pidennetty vastaavasti. |
 | 119 | Euroopan karttaa jatkettu etelään (Pohjois-Afrikka y 1045 → 1160) ja lähikuvaan varattu alakaista, jotta Kreeta ja Ateena saa panoroitua nappien alta pois. |
 | 118 | Aloitussivu: ääniviihje kaiutinikonilla napin yläpuolelle, alareunaan linkki periaateikkunaan (README-tiivistys + GitHub-linkki). |
