@@ -259,6 +259,18 @@ button, .brand, .turn-pill, .fact-card h2 {
  * käyttää valmista rasteria eikä piirrä karttaa uudelleen joka kehyksellä.
  * Mitat asettaa js/ui.js sovitaAloitusZoom.
  */
+/* Lähikuvassa kartta ei aina peitä paneelia kokonaan (liu'un alussa se
+   on vasta kasvamassa). Paneelin oma tumma tausta paistoi tällöin
+   reunoilta; sama pergamentin väriliuku kuin kartalla peittää sen. */
+body.aloitus-zoom .map-pane,
+body.manner-zoom .map-pane {
+  background: radial-gradient(circle at 50% 46%, #f6e7c6 0%, #ecd8ae 55%, #cfae79 100%);
+}
+
+/* Liu'un ajaksi kartan reunahäivytys pois (omistajan havainto): se
+   piirtyi kasvavan kartan ulkopuolelle ja näkyi tummina kaarina. */
+body.zoom-kaynnissa .map-pane::after { opacity: 0; }
+
 body.aloitus-zoom #board,
 body.manner-zoom #board {
   /* Selain ei saa napata vaakaeleitä omaan käyttöönsä. */
@@ -351,14 +363,14 @@ body.aloitus-zoom.kiikari-paalla.kartta-raahaus .kiikari {
 .kiikari::before,
 .kiikari::after {
   -webkit-mask-image: radial-gradient(
-    ellipse 72% 64% at 50% 50%,
-    rgba(0, 0, 0, 0) 48%,
-    rgba(0, 0, 0, 1) 84%
+    ellipse 84% 75% at 50% 50%,
+    rgba(0, 0, 0, 0) 56%,
+    rgba(0, 0, 0, 1) 82%
   );
   mask-image: radial-gradient(
-    ellipse 72% 64% at 50% 50%,
-    rgba(0, 0, 0, 0) 48%,
-    rgba(0, 0, 0, 1) 84%
+    ellipse 84% 75% at 50% 50%,
+    rgba(0, 0, 0, 0) 56%,
+    rgba(0, 0, 0, 1) 82%
   );
 }
 
@@ -368,10 +380,10 @@ body.aloitus-zoom .kiikari {
   /* Vihreä alkaa vasta 66 %:n kohdalla — kartan päälle sitä tulee
      selvästi vähemmän kuin sumennusta. */
   background: radial-gradient(
-    ellipse 72% 64% at 50% 50%,
+    ellipse 84% 75% at 50% 50%,
     rgba(84, 128, 92, 0) 62%,
-    rgba(64, 112, 76, 0.36) 82%,
-    rgba(26, 60, 38, 0.7) 100%
+    rgba(64, 112, 76, 0.36) 78%,
+    rgba(26, 60, 38, 0.7) 89%
   );
 }
 
@@ -391,9 +403,9 @@ body.aloitus-zoom .kiikari {
 /* Lämmin kehä uloimpana: pitkät aallonpituudet taittuvat vähemmän. */
 .kiikari::before {
   background: radial-gradient(
-    ellipse 72% 64% at 50% 50%,
-    rgba(255, 126, 90, 0) 90%,
-    rgba(255, 126, 90, 0.22) 99%,
+    ellipse 84% 75% at 50% 50%,
+    rgba(255, 126, 90, 0) 84%,
+    rgba(255, 126, 90, 0.22) 93%,
     rgba(255, 126, 90, 0.22) 100%
   );
 }
@@ -401,10 +413,10 @@ body.aloitus-zoom .kiikari {
 /* Kylmä kehä sisempänä: lyhyet aallonpituudet taittuvat enemmän. */
 .kiikari::after {
   background: radial-gradient(
-    ellipse 72% 64% at 50% 50%,
-    rgba(120, 200, 255, 0) 78%,
-    rgba(120, 200, 255, 0.13) 88%,
-    rgba(120, 200, 255, 0) 97%
+    ellipse 84% 75% at 50% 50%,
+    rgba(120, 200, 255, 0) 74%,
+    rgba(120, 200, 255, 0.13) 84%,
+    rgba(120, 200, 255, 0) 93%
   );
 }
 

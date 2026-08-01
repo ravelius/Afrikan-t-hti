@@ -1093,8 +1093,10 @@ export class UI {
     this.svg.style.alignSelf = '';
     clearTimeout(this.mannerAjastin);
     clearTimeout(this.kiikariAjastin);
+    clearTimeout(this.zoomAjastin);
     document.body.classList.remove(
       'aloitus-zoom', 'manner-zoom', 'kartta-raahaus', 'kiikari-paalla',
+      'zoom-kaynnissa',
     );
   }
 
@@ -1316,9 +1318,17 @@ export class UI {
   kaynnistaZoomLiuku(kesto = ZOOM_MS) {
     if (this.reducedMotion) return;
     this.svg.style.transition = `transform ${kesto}ms ${ZOOM_PEHMENNYS}`;
+    // Liu'un ajaksi kartan oma reunahäivytys sammuu (omistajan
+    // havainto). Lähikuvan kartta on rajattu kaupunkien korkeuteen,
+    // joten liu'un alussa se ei täytä paneelia — häivytys piirtyi
+    // paljaalle taustalle ja näkyi ruudun laidoissa tummina kaarina.
+    document.body.classList.add('zoom-kaynnissa');
     this.asetaPan(this.panX, this.panY);
     clearTimeout(this.zoomAjastin);
-    this.zoomAjastin = setTimeout(() => { this.svg.style.transition = ''; }, kesto + 60);
+    this.zoomAjastin = setTimeout(() => {
+      this.svg.style.transition = '';
+      document.body.classList.remove('zoom-kaynnissa');
+    }, kesto + 60);
     clearTimeout(this.kiikariAjastin);
     // Kiikari kuuluu toistaiseksi vain maailmankarttaan (omistajan
     // toive koski etusivua).
