@@ -116,18 +116,25 @@ function arvoPylvaat(rng) {
 const piirraPylvaat = (svg, data) => {
   const jarjestys = data?.jarjestys ?? PYLVAAT;
   const kysytty = data?.kysytty ?? PYLVAAT[1];
-  svg.setAttribute('viewBox', '0 0 260 160');
-  text(130, 16, 'PYLVÄIDEN PÄÄT — NIMET ALLA', svg, 11);
+  // Nimet ovat pitkiä ("korinttilainen" on neljätoista merkkiä), ja
+  // aiemmassa 58 pikselin välissä ne piirtyivät toistensa päälle
+  // lukukelvottomaksi puuroksi. Väli on nyt nimen levyinen ja kuva
+  // vastaavasti leveämpi.
+  const VALI = 82;
+  const ALKU = 52;
+  svg.setAttribute('viewBox', '0 0 360 160');
+  text(180, 16, 'PYLVÄIDEN PÄÄT — NIMET ALLA', svg, 11);
   jarjestys.forEach((tyyli, i) => {
-    const x = 44 + i * 58;
+    const x = ALKU + i * VALI;
     piirraPaa(x, 46, tyyli, svg);
     text(x, 108, tyyli, svg, 9);
   });
   // Neljäs: sama tyyli kuin kysytty, mutta nimen tilalla kysymysmerkki.
-  ink('M226,24 L226,120', svg);
-  piirraPaa(243, 46, kysytty, svg);
-  text(243, 108, '?', svg, 15);
-  text(130, 140, 'Mikä on neljännen pylvään nimi?', svg, 11);
+  const viiva = ALKU + 2 * VALI + VALI / 2;
+  ink(`M${viiva},24 L${viiva},120`, svg);
+  piirraPaa(viiva + 34, 46, kysytty, svg);
+  text(viiva + 34, 108, '?', svg, 15);
+  text(180, 140, 'Mikä on neljännen pylvään nimi?', svg, 11);
 };
 
 // --- 3. Suola-altaat --------------------------------------------------------
