@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-01.134';
+const CACHE = 'matkakirja-2026-08-01.135';
 const SHELL = [
   './',
   './index.html',
@@ -137,6 +137,22 @@ const SHELL = [
   './assets/audio/puhe-europe-vihje-venetsia.mp3',
   // Liput (tools/fetch-flags.mjs) — pieniä ja tarvitaan heti saapumiskortilla.
   './assets/liput/algeria.png',
+  './assets/liput/austria.png',
+  './assets/liput/czech-republic.png',
+  './assets/liput/denmark.png',
+  './assets/liput/estonia.png',
+  './assets/liput/finland.png',
+  './assets/liput/hungary.png',
+  './assets/liput/ireland.png',
+  './assets/liput/latvia.png',
+  './assets/liput/lithuania.png',
+  './assets/liput/norway.png',
+  './assets/liput/romania.png',
+  './assets/liput/russia.png',
+  './assets/liput/sweden.png',
+  './assets/liput/switzerland.png',
+  './assets/liput/ukraine.png',
+  './assets/liput/netherlands.png',
   './assets/liput/angola.png',
   './assets/liput/basque-country.png',
   './assets/liput/berber-flag.png',

@@ -2,6 +2,22 @@
 // Avain on Commonsin tiedostonimi, arvo tiedosto kansiossa assets/liput.
 // Älä muokkaa käsin.
 export const LIPUT_PAIKALLISET = new Map([
+  ["Flag of Austria.svg", 'austria.png'],
+  ["Flag of the Czech Republic.svg", 'czech-republic.png'],
+  ["Flag of Denmark.svg", 'denmark.png'],
+  ["Flag of Estonia.svg", 'estonia.png'],
+  ["Flag of Finland.svg", 'finland.png'],
+  ["Flag of Hungary.svg", 'hungary.png'],
+  ["Flag of Ireland.svg", 'ireland.png'],
+  ["Flag of Latvia.svg", 'latvia.png'],
+  ["Flag of Lithuania.svg", 'lithuania.png'],
+  ["Flag of Norway.svg", 'norway.png'],
+  ["Flag of Romania.svg", 'romania.png'],
+  ["Flag of Russia.svg", 'russia.png'],
+  ["Flag of Sweden.svg", 'sweden.png'],
+  ["Flag of Switzerland.svg", 'switzerland.png'],
+  ["Flag of Ukraine.svg", 'ukraine.png'],
+  ["Flag of the Netherlands.svg", 'netherlands.png'],
   ["Berber flag.svg", 'berber-flag.png'],
   ["Flag of Algeria.svg", 'algeria.png'],
   ["Flag of Angola.svg", 'angola.png'],

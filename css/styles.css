@@ -315,6 +315,20 @@ body.manner-zoom .turn-card::before {
     rgba(247, 238, 214, 0) 78%);
 }
 
+/*
+ * Mantereelle saavuttaessa matkakirja ja toimintonapit odottavat, että
+ * zoomaus on ohi (omistajan toive). Näin pelaaja näkee ensin mantereen
+ * kokonaan ja vasta sitten kortit. Häivytys on sama kuin kiikarilla,
+ * jotta ne tulevat esiin samaan tahtiin.
+ */
+body[data-mode] .rail { transition: opacity 700ms ease; }
+
+body.manner-odottaa .rail {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
 /* Raahauksen ajaksi kartan sykähdykset vaikenevat (omistajan toive):
    liikkuva kartta on jo tarpeeksi työtä ruudunpäivitykselle. */
 body.kartta-raahaus .target-ring,
@@ -2170,11 +2184,14 @@ body.flight-active .grain { display: none; }
  * työnnä Aloita seikkailu -nappia ylös: nappi kuuluu ruudun keskelle
  * (omistajan havainto).
  */
+/* Alareunassa on jo kaksi asukasta: versionumero vasemmalla ja
+   palautehuutomerkki oikealla. Linkki nostetaan niiden yläpuolelle ja
+   sen sivuille jätetään tilaa, ettei rivi ahtaudu (omistajan havainto). */
 .start-gate-alaosa {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.4rem;
+  left: 3.2rem;
+  right: 3.2rem;
+  bottom: max(2.6rem, calc(env(safe-area-inset-bottom, 0px) + 2.4rem));
   text-align: center;
 }
 
