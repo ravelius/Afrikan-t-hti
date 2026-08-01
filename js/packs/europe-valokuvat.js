@@ -1,7 +1,13 @@
 // Euroopan matkakirjavalokuvat (sama rakenne kuin AFRICA_VALOKUVAT):
 // vanha vedos isoisän ajoilta ja sama paikka nykyään. Rakentuu kaupunki
 // kerrallaan. Lisenssit varmistettu Commonsin extmetadatasta (Venetsia
-// 31.7.2026, muut 1.8.2026), kuvista paikalliset kopiot assets-kansiossa.
+// 31.7.2026, muut 1.8.2026).
+//
+// Ateenan seudusta alkaen kuvista EI enää tehdä paikallisia kopioita
+// (omistajan päätös): ne haetaan suoraan Commonsista sitä mukaa kuin
+// pelaaja ne näkee, ja palvelutyöntekijä tallentaa kerran nähdyn kuvan
+// omaan pitkäikäiseen koriinsa. Commons on siis se repon ulkopuolinen
+// tallennuspaikka — se on ilmainen, pysyvä ja jo valmiiksi kytketty.
 export const EUROPE_VALOKUVAT = {
   venetsia: {
     tiedosto: 'Gondolas and Piazzetta di San Marco, Venice, Italy-LCCN2001701072.jpg',
@@ -99,6 +105,107 @@ export const EUROPE_VALOKUVAT = {
       selite: 'Reykjavík Hallgrímskirkjan tornista. Kaikki talot '
         + 'lämpiävät maan omalla kuumalla vedellä, ja katot on '
         + 'perinteisesti maalattu kirkkaiksi — pimeä vuodenaika on pitkä.',
+    },
+  },
+
+  ateena: {
+    tiedosto: 'Athènes. LʹAcropole Avec Temple de Jupiter Olympien LCCN2017656399.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Akropolis ja Olympian Zeuksen temppelin pylväät '
+      + 'käsinvärittynä photochrom-vedoksena. Kaupunki oli tuolloin '
+      + 'pieni: Ateenassa asui noin 100 000 ihmistä, ja temppelin '
+      + 'ympärillä oli peltoa.',
+    uusi: {
+      tiedosto: 'The Acropolis of Athens with the Parthenon, the Erecththeion and the Mycenean Fountain from Monastiraki Square on March 11, 2020.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama kallio tänään Monastirakin aukiolta: alla kolmen '
+        + 'miljoonan asukkaan kaupunki, päällä Parthenon telineineen. '
+        + 'Temppeliä on korjattu yhtäjaksoisesti vuodesta 1975 — '
+        + 'hitaasti, koska jokainen marmoripala palautetaan omalle '
+        + 'paikalleen.',
+    },
+  },
+
+  rooma: {
+    tiedosto: 'The Colisuem and Meta Sudans, Rome, Italy-LCCN2001700939.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Colosseum ja sen edessä Meta Sudans, antiikin '
+      + 'suihkulähteen tyngä. Lähde purettiin 1936 kadun tieltä, joten '
+      + 'tässä kuvassa näkyy jotain, mitä ei enää ole.',
+    uusi: {
+      tiedosto: 'Rome Colosseum exterior 1.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama amfiteatteri nykyään. Ulkokehästä on jäljellä vain '
+        + 'osa: keskiajalla Colosseumia käytettiin kivilouhoksena, ja '
+        + 'sen marmoria on monissa Rooman kirkoissa.',
+    },
+  },
+
+  kreeta: {
+    tiedosto: 'Cnossus - room of (?), columns - north entrance - DPLA - 156faa906e3d69e9b9c71702853f1b8a.jpg',
+    vuosi: '1900-luvun alku',
+    lahde: 'Digital Public Library of America (PD)',
+    selite: 'Knossoksen pohjoinen sisäänkäynti kaivausten aikaan. Arthur '
+      + 'Evans alkoi kaivaa palatsia 1900 ja rakensi osan siitä '
+      + 'uudelleen betonista — tapa, jota arkeologit yhä kiistelevät.',
+    uusi: {
+      tiedosto: 'Ruins of the Minoan Palace in Knossos.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Palatsin rauniot tänään. Punaiset pylväät ovat Evansin '
+        + 'rekonstruktiota: minolaiset pylväät levenivät ylöspäin, '
+        + 'toisin kuin kreikkalaiset.',
+    },
+  },
+
+  sisilia: {
+    tiedosto: 'Crupi, Giovanni (1861-1925) - n. 0030 B - Teatro Greco - Taormina - DPLA - 51ed756181740204aed046a9302cef1b (page 8).jpg',
+    vuosi: '1890-luku',
+    lahde: 'Digital Public Library of America (PD)',
+    selite: 'Taorminan kreikkalainen teatteri Giovanni Crupin kuvaamana. '
+      + 'Crupi piti Taorminassa valokuvaamoa ja myi näkymiä '
+      + 'matkailijoille — juuri sellaisia, joita isoisä olisi voinut '
+      + 'ostaa muistoksi.',
+    uusi: {
+      tiedosto: 'Sicily Taormina Teatro Greco Etna.jpg',
+      lahde: 'Commons (CC0)',
+      selite: 'Sama teatteri tänään, Etna taustalla. Rakennettu '
+        + 'kreikkalaisten aikaan 200-luvulla eaa. ja laajennettu '
+        + 'roomalaisten toimesta; siellä pidetään yhä konsertteja.',
+    },
+  },
+
+  dubrovnik: {
+    tiedosto: 'Ragusa, general view, Dalmatia, Austro-Hungary-LCCN2002710782.jpg',
+    vuosi: '1890-luku',
+    lahde: 'Library of Congress (PD)',
+    selite: 'Ragusa — Dubrovnikin vanha nimi — Itävalta-Unkarin aikaan. '
+      + 'Kaupunki oli menettänyt itsenäisyytensä 1808, ja vedoksen '
+      + 'kyljessä lukee siksi "Austro-Hungary".',
+    uusi: {
+      tiedosto: 'Steep coast near the city wall in the Old Town of Dubrovnik, Croatia (48613191222).jpg',
+      lahde: 'Commons (CC BY 2.0)',
+      selite: 'Vanhankaupungin muuri ja kattotiilet nykyään. Osa '
+        + 'katoista on kirkkaan oransseja: ne uusittiin 1990-luvun sodan '
+        + 'jälkeen, kun kaupunkia pommitettiin.',
+    },
+  },
+
+  sofia: {
+    tiedosto: 'Banya Bashi 1900.jpg',
+    vuosi: 'noin 1900',
+    lahde: 'Wikimedia Commons (PD)',
+    selite: 'Banya Bashin moskeija noin vuonna 1900. Se rakennettiin '
+      + '1566 kuumien lähteiden päälle — nimi tarkoittaa "monta kylpyä". '
+      + 'Bulgaria oli vasta itsenäistynyt, ja Sofiasta tehtiin '
+      + 'pääkaupunki 1879.',
+    uusi: {
+      tiedosto: 'Banya Bashi Mosque.jpg',
+      lahde: 'Commons (CC BY-SA 4.0)',
+      selite: 'Sama moskeija tänään. Sen ympärillä on korttelin matkalla '
+        + 'myös synagoga ja kaksi kirkkoa, ja kuumat lähteet pulppuavat '
+        + 'yhä viereisessä puistossa julkisiin hanoihin.',
     },
   },
 };

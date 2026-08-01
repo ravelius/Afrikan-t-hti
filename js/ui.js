@@ -3219,6 +3219,22 @@ export class UI {
           + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> Apple Music';
         otsikkoRivi.appendChild(linkki);
       }
+      // Ilmainen kuuntelupaikka Apple Musicin rinnalle (omistajan
+      // toive): kansalliset yleisradiot, Commons ja muut avoimet
+      // arkistot. Kaikilla ei ole tällaista, joten kenttä on
+      // vapaaehtoinen ja linkki näkyy vain kun se on merkitty.
+      if (nosto.musiikkiVapaa) {
+        const vapaa = html('a', 'kulttuuri-musiikkilinkki kulttuuri-musiikkilinkki-vapaa');
+        vapaa.href = nosto.musiikkiVapaa;
+        vapaa.target = '_blank';
+        vapaa.rel = 'noopener';
+        vapaa.title = nosto.musiikkiVapaaNimi ?? 'Ilmainen kuuntelupaikka';
+        vapaa.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'
+          + '<path d="M12 4.5v15M8 8v8M16 8v8M4.5 10.5v3M19.5 10.5v3" fill="none" '
+          + 'stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg> '
+          + (nosto.musiikkiVapaaLyhyt ?? 'Ilmainen');
+        otsikkoRivi.appendChild(vapaa);
+      }
       lohko.appendChild(otsikkoRivi);
       if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
         const kuva = document.createElement('img');

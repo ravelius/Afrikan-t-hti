@@ -1242,6 +1242,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   background: rgba(255, 252, 245, 0.6);
 }
 
+/* Ilmainen kuuntelupaikka Apple Musicin vieressä: kun molemmat ovat
+   rivillä, vain ensimmäinen työntyy oikeaan reunaan. */
+.kulttuuri-musiikkilinkki-vapaa { margin-left: 0.3rem; }
+
 .kulttuuri-musiikkilinkki:hover {
   border-color: rgba(64, 51, 34, 0.75);
   background: rgba(255, 252, 245, 0.95);

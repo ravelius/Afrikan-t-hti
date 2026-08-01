@@ -383,6 +383,7 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 
 | v | Muutos |
 |---|---|
+| 132 | Ateenan seutu valmis: Ateena, Rooma, Kreeta, Sisilia, Dubrovnik ja Sofia saivat kolme kulttuurikorttia, tietovisakysymyksen, silloin–nyt-valokuvaparin ja oman artikkelin; lisäksi maa-artikkelit Kreikalle, Kroatialle ja Bulgarialle. 30 uutta kuvaa, kaikki lisenssit varmennettu Commonsin extmetadatasta. **Kuvista ei enää tehdä paikallisia kopioita** — Commons on se repon ulkopuolinen tallennuspaikka, ja palvelutyöntekijä tallentaa kerran nähdyn kuvan omaan pitkäikäiseen koriinsa. Kulttuurikorttiin lisätty `musiikkiVapaa`-kenttä: ilmainen kuuntelupaikka (kansalliset yleisradiot ERT, HRT, BNR) Apple Musicin rinnalle. |
 | 131 | Ateenan seutu aloitettu (omistajan päätös: alue kerrallaan täyteen syvyyteen). **Kertojan luennat kahdeksalle Euroopan kaupungille**: Lontoo, Pariisi, Rooma ja Ateena palautettiin ElevenLabsin historiasta — Fable oli generoinut ne, mutta tiedostot eivät päätyneet repoon; Kreeta, Sisilia, Dubrovnik ja Sofia generoitiin nyt samalla äänellä (Viisas Kertoja `Sz0tRTEpybtDJ9ru2kgD`, malli `eleven_v3`, text-to-dialogue, stability 0.5, mp3_44100_128). Tekstit myös `europe-saapumiset.js`:ään sanatarkasti. Uudet maat: Kreikka, Kroatia ja Bulgaria (rajat, liput, tunnusluvut, kaupunki→maa). **Valokuvia ei enää haeta asennuksessa** vaan vasta kun pelaaja näkee ne (sw.js): asennus olisi kasvanut 150 megatavuun. Kaikille 41 Euroopan kaupungille maisematyyppi ja Euroopalle omat korit (kaupunki, satama, vuoristo, metsä, pohjoinen). |
 | 130 | Zoomausääni kauttaaltaan matalammaksi (omistajan toive: kuulostaa vanhemmalta laitteelta). Toistonopeuden haarukka 0,86–1,16 → 0,76–1,02, keskiarvo 0,84 eli kolme puolisävelaskelta alempana. Syntetisoidun varaversion taajuudet laskettu samalla kertoimella. Astu mantereelle -nappi messinginväriseksi: se näytti samalta laatikolta kuin yläpuolen repliikki, vaikka on kalvon ainoa napautettava kohta (omistajan havainto). |
 | 129 | Zoomausääni tasattu (omistajan havainto: "nousee ja laskee itsessään" — mitattu 340 ms:n jaksosta 21 %:n vaihtelu). Uusi kokoamistapa `tools`-kansion ulkopuolella tehdyssä skriptissä: lähteestä eristetty tasaisin 82 ms:n pätkä (alkaa 4,397 s), pituus pyöristetty kokonaisiin perusjaksoihin (294 Hz, 150 näytettä), silmukoitu vuorotellen eteen- ja taaksepäin tasatehoisella ristihäivytyksellä, ja lopuksi voimakkuus jaettu omalla pehmennetyllä verhokäyrällään. Tulos: 100 ms:n ikkunassa vaihtelu 11,6 % → 1,1 %. Voimakkuus 0,24 → 0,21. |
@@ -433,16 +434,43 @@ ElevenLabsin historiasta — ne oli generoitu 31.7. mutta ne eivät olleet
 missään tiedostossa. Historia (`GET /v1/history`) säilyttää sekä tekstin
 että äänen, joten mitään ei menetetty, mutta se oli tuuria.
 
-### Ilmaiset musiikkilähteet — TEKEMÄTTÄ
+### Ilmaiset musiikkilähteet — ALOITETTU v.132
 
 **[Omistaja]** Kaupunkien ääninäytteet saisivat tulla Apple Musicin
 lisäksi myös ilmaisista lähteistä. Valtioiden omat yleisradiot ovat
 todennäköisesti hyvä lähde.
 
-**[Opus]** Ei vielä toteutettu. Lupaavia lähteitä selvitettäväksi:
-kansallisten yleisradioiden avoimet arkistot, Wikimedia Commonsin
-musiikkitallenteet, Europeana ja IMSLP (nuotit ja vanhat levytykset).
-Tämä koskee kulttuurikorttien musiikkinostoja, ei tausta-ääniä.
+**[Opus]** Toteutettu kenttänä `musiikkiVapaa` (+ `musiikkiVapaaNimi`
+ja `musiikkiVapaaLyhyt`) kulttuurinostossa. Linkki näkyy Apple Musicin
+vieressä omalla napillaan, ja kenttä on vapaaehtoinen — nostot ilman
+sitä näyttävät vain Apple Musicin. Käytössä Ateenan seudulla:
+
+| maa | lähde | osoite |
+|---|---|---|
+| Kreikka | ERT | `https://webradio.ert.gr/` |
+| Kroatia | HRT | `https://radio.hrt.hr/` |
+| Bulgaria | BNR | `https://bnr.bg/en/live` |
+
+Vielä selvittämättä: Europeana, IMSLP ja Commonsin omat
+musiikkitallenteet, joista saisi suoraan soivan näytteen linkin sijaan.
+
+### Kuvien tallennuspaikka — ratkaistu
+
+**[Omistaja]** "Mietitään niille repon ulkopuolinen tallennuspaikka
+mistä lazy load ladataan."
+
+**[Opus]** Uutta palvelua ei tarvita: **Wikimedia Commons on jo se
+paikka**, ja koodi on valmiiksi kytketty. `valokuvaUrl` (ja `lippuUrl`)
+palauttaa Commons-osoitteen aina kun tiedostoa ei ole
+`VALOKUVAT_PAIKALLISET`-taulukossa, ja `sw.js` tallentaa
+`commons.wikimedia.org/wiki/Special:FilePath/` -vastaukset omaan
+pitkäikäiseen koriinsa. Lazy load tulee `<img loading="lazy">`:stä.
+
+Käytännössä siis: **uusille kaupungeille ei ladata kuvia repoon
+lainkaan** — riittää että `tiedosto`-kenttään kirjoitetaan Commonsin
+tiedostonimi. Commons on ilmainen, pysyvä, ei rajoita liikennettä
+kohtuukäytössä eikä kasvata repoa. Vanhat paikalliset kopiot voi jättää
+paikalleen; ne toimivat edelleen.
 
 ### Kaksi reunaefektiä — kumpi kuuluu minne
 
