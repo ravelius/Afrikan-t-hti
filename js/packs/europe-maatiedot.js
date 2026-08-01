@@ -156,4 +156,80 @@ export const EUROPE_MAATIEDOT = {
       { teksti: 'Dzień dobry', kieli: 'puola', lippu: 'Flag of Poland.svg', osuus: '5 %' },
     ],
   },
+
+  // Kreikka, Kroatia ja Bulgaria (haettu 1.8.2026). Sama menetelmä kuin
+  // yllä, mutta suvereenien valtioiden suodatin on nyt sama kaikissa
+  // luvuissa — myös demokratiaindeksissä, jonka nimittäjä on siksi 172
+  // aiempien merkintöjen 179:n sijaan. Italian luvut toistettiin
+  // tarkistukseksi: väkiluku ja pinta-ala osuivat täsmälleen, demokratia
+  // ±1.
+  GRC: {
+    vakiluku: '10 milj.',
+    vakilukuSija: '93./195',
+    pintaAla: '132 000 km²',
+    pintaAlaSija: '96./195',
+    demokratia: {
+      arvo: '0,57',
+      sija: '51./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~GRC',
+      selitys: 'Demokratia keksittiin Ateenassa, mutta nykyinen luku on '
+        + 'eurooppalaisittain keskitasoa. V-Demin arvio laski selvästi '
+        + '2020-luvulla: syinä ovat lehdistönvapauden heikkeneminen ja '
+        + 'toimittajien puhelinten vakoiluohjelmakohu. Vaalit ja '
+        + 'vallanvaihdot toimivat moitteetta.',
+    },
+    keskitulo: { arvo: '25 400 $/v', sija: '47./190' },
+    tervehdykset: [
+      { teksti: 'Γεια σας', kieli: 'kreikka', lippu: 'Flag of Greece.svg', osuus: '99 %' },
+      { teksti: 'Merhaba', kieli: 'turkki (Länsi-Traakia)', lippu: 'Flag of Turkey.svg', osuus: '1 %' },
+    ],
+  },
+
+  HRV: {
+    vakiluku: '3,9 milj.',
+    vakilukuSija: '129./195',
+    // Maailmanpankin "pinta-ala" on Kroatialle 88 070 km², koska siihen
+    // lasketaan aluevedet. Tässä käytetään maapinta-alaa 56 594 km²,
+    // ja sija on laskettu samalla luvulla.
+    pintaAla: '56 600 km²',
+    pintaAlaSija: '125./195',
+    demokratia: {
+      arvo: '0,59',
+      sija: '45./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~HRV',
+      selitys: 'Kroatia itsenäistyi 1991 ja liittyi EU:hun 2013. '
+        + 'Vaalit ja tuomioistuimet toimivat, mutta V-Demin arviota '
+        + 'painaa korruptio ja se, että osa mediasta on lähellä '
+        + 'puolueita. Sodan jäljet näkyvät yhä politiikassa.',
+    },
+    keskitulo: { arvo: '25 400 $/v', sija: '46./190' },
+    tervehdykset: [
+      { teksti: 'Dobar dan', kieli: 'kroaatti', lippu: 'Flag of Croatia.svg', osuus: '96 %' },
+      { teksti: 'Добар дан', kieli: 'serbia', lippu: 'Flag of Serbia.svg', osuus: '4 %' },
+      { teksti: 'Buon giorno', kieli: 'italia (Istria)', lippu: 'Flag of Italy.svg', osuus: '1 %' },
+    ],
+  },
+
+  BGR: {
+    vakiluku: '6,4 milj.',
+    vakilukuSija: '110./195',
+    pintaAla: '111 000 km²',
+    pintaAlaSija: '104./195',
+    demokratia: {
+      arvo: '0,50',
+      sija: '66./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~BGR',
+      selitys: 'Bulgaria on EU:n jäsen, jossa vaalit ovat vapaat mutta '
+        + 'hallitukset kaatuvat tiuhaan: maassa käytiin seitsemät vaalit '
+        + 'kolmessa vuodessa 2021–2024. V-Demin arviota painavat '
+        + 'korruptio ja oikeuslaitoksen riippumattomuuden puutteet, '
+        + 'joista EU on huomauttanut toistuvasti.',
+    },
+    keskitulo: { arvo: '17 800 $/v', sija: '61./190' },
+    tervehdykset: [
+      { teksti: 'Добър ден', kieli: 'bulgaria', lippu: 'Flag of Bulgaria.svg', osuus: '85 %' },
+      { teksti: 'Merhaba', kieli: 'turkki', lippu: 'Flag of Turkey.svg', osuus: '9 %' },
+      { teksti: 'Lachho dives', kieli: 'romani', lippu: 'Flag of the Romani people.svg', osuus: '4 %' },
+    ],
+  },
 };

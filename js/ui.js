@@ -131,11 +131,21 @@ const SAAPUMISLUENNAT = new Set([
   'africa:tshadjarvi',
   'africa:viktoria',
   'africa:viktorianputoukset',
+  'europe:ateena',
+  'europe:dubrovnik',
+  'europe:kreeta',
+  'europe:lontoo',
+  'europe:pariisi',
+  'europe:rooma',
+  'europe:sisilia',
+  'europe:sofia',
   'europe:venetsia',
 ]);
 
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
 const VIHJELUENNAT = new Set([
+  'europe:pariisi',
+  'europe:rooma',
   'europe:venetsia',
   'africa:karthago',
   'africa:nairobi',

@@ -383,6 +383,7 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 
 | v | Muutos |
 |---|---|
+| 131 | Ateenan seutu aloitettu (omistajan päätös: alue kerrallaan täyteen syvyyteen). **Kertojan luennat kahdeksalle Euroopan kaupungille**: Lontoo, Pariisi, Rooma ja Ateena palautettiin ElevenLabsin historiasta — Fable oli generoinut ne, mutta tiedostot eivät päätyneet repoon; Kreeta, Sisilia, Dubrovnik ja Sofia generoitiin nyt samalla äänellä (Viisas Kertoja `Sz0tRTEpybtDJ9ru2kgD`, malli `eleven_v3`, text-to-dialogue, stability 0.5, mp3_44100_128). Tekstit myös `europe-saapumiset.js`:ään sanatarkasti. Uudet maat: Kreikka, Kroatia ja Bulgaria (rajat, liput, tunnusluvut, kaupunki→maa). **Valokuvia ei enää haeta asennuksessa** vaan vasta kun pelaaja näkee ne (sw.js): asennus olisi kasvanut 150 megatavuun. Kaikille 41 Euroopan kaupungille maisematyyppi ja Euroopalle omat korit (kaupunki, satama, vuoristo, metsä, pohjoinen). |
 | 130 | Zoomausääni kauttaaltaan matalammaksi (omistajan toive: kuulostaa vanhemmalta laitteelta). Toistonopeuden haarukka 0,86–1,16 → 0,76–1,02, keskiarvo 0,84 eli kolme puolisävelaskelta alempana. Syntetisoidun varaversion taajuudet laskettu samalla kertoimella. Astu mantereelle -nappi messinginväriseksi: se näytti samalta laatikolta kuin yläpuolen repliikki, vaikka on kalvon ainoa napautettava kohta (omistajan havainto). |
 | 129 | Zoomausääni tasattu (omistajan havainto: "nousee ja laskee itsessään" — mitattu 340 ms:n jaksosta 21 %:n vaihtelu). Uusi kokoamistapa `tools`-kansion ulkopuolella tehdyssä skriptissä: lähteestä eristetty tasaisin 82 ms:n pätkä (alkaa 4,397 s), pituus pyöristetty kokonaisiin perusjaksoihin (294 Hz, 150 näytettä), silmukoitu vuorotellen eteen- ja taaksepäin tasatehoisella ristihäivytyksellä, ja lopuksi voimakkuus jaettu omalla pehmennetyllä verhokäyrällään. Tulos: 100 ms:n ikkunassa vaihtelu 11,6 % → 1,1 %. Voimakkuus 0,24 → 0,21. |
 | 128 | Avausteksti työntyy alas täsmälleen kartan alareunan mukana: `tyonnaAvausteksti` (js/ui.js) mittaa siirtymän geometriasta ja antaa css:lle matkan, keston ja pehmennyksen muuttujina. Mitattu väli kartan alareunan ja tekstin välillä pysyy 34–35 px koko liu'un ajan. Tekstistä ei tarvitse kuvaa: siirto on pelkkä transform (kompositorin työtä), ja `will-change` antaa saman kerroshyödyn. Zoomausäänestä poistettu kameran naksahdukset: äänite kootaan nyt vain tasaisesta jaksosta 4,24–4,58 s, ja syntetisoidun version knock-kutsut poistettu. Voimakkuus 0,55 → 0,24, koska normalisointi nosti tasaisen jakson keskitason yli kaksinkertaiseksi. Zoomaus hitaammaksi: etusivu 2,8 → 3,6 s, mantereet 2,0 → 2,4 s, pehmennys `cubic-bezier(0.68, 0, 0.3, 1)` (30 %:n kohdalla vasta 11 % matkasta). Sumennus ja kromaattinen aberraatio ulottuvat syvemmälle (maski 56 → 42 %, kylmä kehä 74 → 60 %, lämmin 84 → 74 %); vihreän raja jätetty ennalleen omistajan hyväksymänä. |
@@ -407,6 +408,41 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 ## 9. Muuta kirjattavaa
 
 *(Tähän lisätään sitä mukaa kuin omistaja huomaa asioita pelatessa.)*
+
+### Euroopan kaupungit: mikä on tehty ja mikä kesken
+
+**[Opus 1.8.2026]** Omistajan päätös: alue kerrallaan täyteen
+syvyyteen. Ensimmäinen alue on Ateenan seutu (Ateena, Kreeta, Sisilia,
+Rooma, Dubrovnik, Sofia).
+
+Valmiina 41 kaupungista: Venetsia, Marseille, Granada, Krakova,
+Sarajevo, Islanti. Version 131 jälkeen Ateenan seudun kuudella on
+saapumismerkintä, luenta, maa ja tunnusluvut — mutta **ei vielä
+kulttuurikortteja eikä silloin–nyt-valokuvia**. Ne ovat seuraava työ.
+
+**Luentojen tekninen resepti** (jotta uudet kuulostavat samalta):
+ääni `Sz0tRTEpybtDJ9ru2kgD` "Viisas Kertoja", malli `eleven_v3`,
+päätepiste `/v1/text-to-dialogue`, `stability: 0.5`, ulostulo
+`mp3_44100_128`. Teksti kirjoitetaan äänitageilla: nuoren herran osuus
+`[amazed]`/`[excited]`/`[warmly]`, isoisän sitaatti `[softly]`, ja
+lopetus `[warmly]`. Aarrevihjeet luetaan `[whispers]`-tagilla.
+
+**Huom Fablelle:** generoidut tiedostot pitää muistaa siirtää repoon.
+Neljä valmista luentaa (Lontoo, Pariisi, Rooma, Ateena) löytyi vain
+ElevenLabsin historiasta — ne oli generoitu 31.7. mutta ne eivät olleet
+missään tiedostossa. Historia (`GET /v1/history`) säilyttää sekä tekstin
+että äänen, joten mitään ei menetetty, mutta se oli tuuria.
+
+### Ilmaiset musiikkilähteet — TEKEMÄTTÄ
+
+**[Omistaja]** Kaupunkien ääninäytteet saisivat tulla Apple Musicin
+lisäksi myös ilmaisista lähteistä. Valtioiden omat yleisradiot ovat
+todennäköisesti hyvä lähde.
+
+**[Opus]** Ei vielä toteutettu. Lupaavia lähteitä selvitettäväksi:
+kansallisten yleisradioiden avoimet arkistot, Wikimedia Commonsin
+musiikkitallenteet, Europeana ja IMSLP (nuotit ja vanhat levytykset).
+Tämä koskee kulttuurikorttien musiikkinostoja, ei tausta-ääniä.
 
 ### Kaksi reunaefektiä — kumpi kuuluu minne
 

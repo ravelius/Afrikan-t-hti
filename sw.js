@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-01.130';
+const CACHE = 'matkakirja-2026-08-01.131';
 const SHELL = [
   './',
   './index.html',
@@ -122,160 +122,25 @@ const SHELL = [
   './assets/audio/puhe-africa-vihje-tshadjarvi.mp3',
   './assets/audio/puhe-africa-vihje-viktoria.mp3',
   './assets/audio/puhe-africa-vihje-viktorianputoukset.mp3',
+  './assets/audio/puhe-europe-saapuminen-ateena.mp3',
+  './assets/audio/puhe-europe-saapuminen-dubrovnik.mp3',
+  './assets/audio/puhe-europe-saapuminen-kreeta.mp3',
+  './assets/audio/puhe-europe-saapuminen-lontoo.mp3',
+  './assets/audio/puhe-europe-saapuminen-pariisi.mp3',
+  './assets/audio/puhe-europe-saapuminen-rooma.mp3',
+  './assets/audio/puhe-europe-saapuminen-sisilia.mp3',
+  './assets/audio/puhe-europe-saapuminen-sofia.mp3',
   './assets/audio/puhe-europe-saapuminen-venetsia.mp3',
+  './assets/audio/puhe-europe-vihje-pariisi.mp3',
+  './assets/audio/puhe-europe-vihje-rooma.mp3',
   './assets/audio/puhe-europe-vihje-venetsia.mp3',
-  './assets/valokuvat/006-dune-45-in-sossusvlei-at-sunrise-photo-by-giles-laurent.jpg',
-  './assets/valokuvat/adansonia-grandidieri04.jpg',
-  './assets/valokuvat/antonio-vivaldi.jpg',
-  './assets/valokuvat/bo-kaap-colourful-houses-30114819980.jpg',
-  './assets/valokuvat/canal-giovanni-antonio-canaletto-return-of-the-bucentoro-to-.jpg',
-  './assets/valokuvat/cattle-of-the-dinka-people-juba-south-sudan-20101230-05.jpg',
-  './assets/valokuvat/cotton-tree-sierra-leone.jpg',
-  './assets/valokuvat/elfnarmarrakech2014.jpg',
-  './assets/valokuvat/ethiopian-coffee-ceremony.jpg',
-  './assets/valokuvat/eyo-masquerades-lagos-state-nigeria.jpg',
-  './assets/valokuvat/fishermen-on-the-shores-of-lake-victoria.jpg',
-  './assets/valokuvat/fishing-on-lake-victoria-01.jpg',
-  './assets/valokuvat/frankincense-2005-12-31.jpg',
-  './assets/valokuvat/granada-kulttuuri-1.jpg',
-  './assets/valokuvat/granada-kulttuuri-2.jpg',
-  './assets/valokuvat/granada-kulttuuri-3.jpg',
-  './assets/valokuvat/henri-matisse-1911-12-la-fenetre-a-tanger-paysage-vu-d-une-f.jpg',
-  './assets/valokuvat/island-of-goree-senegal.jpg',
-  './assets/valokuvat/islanti-kulttuuri-1.jpg',
-  './assets/valokuvat/islanti-kulttuuri-2.jpg',
-  './assets/valokuvat/islanti-kulttuuri-3.jpg',
-  './assets/valokuvat/kente-cloth.jpg',
-  './assets/valokuvat/kofar-mata-dye-pit-kano.jpg',
-  './assets/valokuvat/krakova-kulttuuri-1.jpg',
-  './assets/valokuvat/krakova-kulttuuri-2.jpg',
-  './assets/valokuvat/krakova-kulttuuri-3.jpg',
-  './assets/valokuvat/kufra-oasis.jpg',
-  './assets/valokuvat/lady-of-carthage-mosaic-bardo.jpg',
-  './assets/valokuvat/lake-victoria-as-visible-from-kisumu-city.jpg',
-  './assets/valokuvat/lesescales2019manudibango-03-cropped.jpg',
-  './assets/valokuvat/liberia-dan-maschera-xx-sec-01.jpg',
-  './assets/valokuvat/libya-4924-pictograms-tadrart-acacus-luca-galuzzi-2007.jpg',
-  './assets/valokuvat/libyan-malouf.jpg',
-  './assets/valokuvat/longwood-house-le-12-janvier-2008.jpg',
-  './assets/valokuvat/lunar-rainbow-at-victoria-falls-hp-l2778e2.jpg',
-  './assets/valokuvat/marseille-kulttuuri-1.jpg',
-  './assets/valokuvat/marseille-kulttuuri-2.jpg',
-  './assets/valokuvat/marseille-kulttuuri-3.jpg',
-  './assets/valokuvat/masks-of-africa-of-chokwe-people-freigestellt.jpg',
-  './assets/valokuvat/mount-kilimanjaro.jpg',
-  './assets/valokuvat/mv-liemba.jpg',
-  './assets/valokuvat/pescaria-rialto-venice.jpg',
-  './assets/valokuvat/sanza-boa-zaire-musee-royal-de-l-afrique-centrale.jpg',
-  './assets/valokuvat/sarajevo-kulttuuri-1.jpg',
-  './assets/valokuvat/sarajevo-kulttuuri-2.jpg',
-  './assets/valokuvat/sarajevo-kulttuuri-3.jpg',
-  './assets/valokuvat/still-life-with-stork-and-fishing-boats-along-shore-of-lake-.jpg',
-  './assets/valokuvat/suakin-el-geyf-mosque.jpg',
-  './assets/valokuvat/sudan-jebel-marra-deriba-lakes-edited.jpg',
-  './assets/valokuvat/sunset-at-lake-victoria.jpg',
-  './assets/valokuvat/sunset-on-lake-victoria-in-kisumu.jpg',
-  './assets/valokuvat/timbuktu-manuscripts-astronomy-mathematics.jpg',
-  './assets/valokuvat/tombeau-askia.jpg',
-  './assets/valokuvat/tuareg-z-wielb-adem-widac-miecz-takouba-sahara-001165s.jpg',
-  './assets/valokuvat/umm-kulthum4.jpg',
-  './assets/valokuvat/uusi-addisabeba.jpg',
-  './assets/valokuvat/uusi-ahaggar.jpg',
-  './assets/valokuvat/uusi-alkufra.jpg',
-  './assets/valokuvat/uusi-angola.jpg',
-  './assets/valokuvat/uusi-bahrelghazal.jpg',
-  './assets/valokuvat/uusi-dakar.jpg',
-  './assets/valokuvat/uusi-darfur.jpg',
-  './assets/valokuvat/uusi-gao.jpg',
-  './assets/valokuvat/uusi-granada.jpg',
-  './assets/valokuvat/uusi-islanti.jpg',
-  './assets/valokuvat/uusi-kairo.jpg',
-  './assets/valokuvat/uusi-kamerun.jpg',
-  './assets/valokuvat/uusi-kano.jpg',
-  './assets/valokuvat/uusi-kapkaupunki.jpg',
-  './assets/valokuvat/uusi-kappalmas.jpg',
-  './assets/valokuvat/uusi-karthago.jpg',
-  './assets/valokuvat/uusi-kilimandzaro.jpg',
-  './assets/valokuvat/uusi-kimberley.jpg',
-  './assets/valokuvat/uusi-kongo.jpg',
-  './assets/valokuvat/uusi-krakova.jpg',
-  './assets/valokuvat/uusi-kumasi.jpg',
-  './assets/valokuvat/uusi-lagos.jpg',
-  './assets/valokuvat/uusi-madagaskar.jpg',
-  './assets/valokuvat/uusi-marrakech.jpg',
-  './assets/valokuvat/uusi-marseille.jpg',
-  './assets/valokuvat/uusi-mosambik.jpg',
-  './assets/valokuvat/uusi-murzuk.jpg',
-  './assets/valokuvat/uusi-nairobi.jpg',
-  './assets/valokuvat/uusi-namib.jpg',
-  './assets/valokuvat/uusi-orjarannikko.jpg',
-  './assets/valokuvat/uusi-rashafun.jpg',
-  './assets/valokuvat/uusi-sahara.jpg',
-  './assets/valokuvat/uusi-sansibar.jpg',
-  './assets/valokuvat/uusi-sarajevo.jpg',
-  './assets/valokuvat/uusi-sierraleone.jpg',
-  './assets/valokuvat/uusi-sthelena.jpg',
-  './assets/valokuvat/uusi-suakin.jpg',
-  './assets/valokuvat/uusi-tanganjika.jpg',
-  './assets/valokuvat/uusi-tanger.jpg',
-  './assets/valokuvat/uusi-timbuktu.jpg',
-  './assets/valokuvat/uusi-tripoli.jpg',
-  './assets/valokuvat/uusi-tshadjarvi.jpg',
-  './assets/valokuvat/uusi-venetsia.jpg',
-  './assets/valokuvat/uusi-viktoria.jpg',
-  './assets/valokuvat/uusi-viktorianputoukset.jpg',
-  './assets/valokuvat/vanha-addisabeba.jpg',
-  './assets/valokuvat/vanha-ahaggar.jpg',
-  './assets/valokuvat/vanha-alkufra.jpg',
-  './assets/valokuvat/vanha-angola.jpg',
-  './assets/valokuvat/vanha-bahrelghazal.jpg',
-  './assets/valokuvat/vanha-dakar.jpg',
-  './assets/valokuvat/vanha-darfur.jpg',
-  './assets/valokuvat/vanha-gao.jpg',
-  './assets/valokuvat/vanha-granada.jpg',
-  './assets/valokuvat/vanha-islanti.jpg',
-  './assets/valokuvat/vanha-kairo.jpg',
-  './assets/valokuvat/vanha-kamerun.jpg',
-  './assets/valokuvat/vanha-kano.jpg',
-  './assets/valokuvat/vanha-kapkaupunki.jpg',
-  './assets/valokuvat/vanha-kappalmas.jpg',
-  './assets/valokuvat/vanha-karthago.jpg',
-  './assets/valokuvat/vanha-kilimandzaro.jpg',
-  './assets/valokuvat/vanha-kimberley.jpg',
-  './assets/valokuvat/vanha-kongo.jpg',
-  './assets/valokuvat/vanha-krakova.jpg',
-  './assets/valokuvat/vanha-kumasi.jpg',
-  './assets/valokuvat/vanha-lagos.jpg',
-  './assets/valokuvat/vanha-madagaskar.jpg',
-  './assets/valokuvat/vanha-marrakech.jpg',
-  './assets/valokuvat/vanha-marseille.jpg',
-  './assets/valokuvat/vanha-mosambik.jpg',
-  './assets/valokuvat/vanha-murzuk.jpg',
-  './assets/valokuvat/vanha-nairobi.jpg',
-  './assets/valokuvat/vanha-namib.jpg',
-  './assets/valokuvat/vanha-orjarannikko.jpg',
-  './assets/valokuvat/vanha-rashafun.jpg',
-  './assets/valokuvat/vanha-sahara.jpg',
-  './assets/valokuvat/vanha-sansibar.jpg',
-  './assets/valokuvat/vanha-sarajevo.jpg',
-  './assets/valokuvat/vanha-sierraleone.jpg',
-  './assets/valokuvat/vanha-sthelena.jpg',
-  './assets/valokuvat/vanha-suakin.jpg',
-  './assets/valokuvat/vanha-tanganjika.png',
-  './assets/valokuvat/vanha-tanger.jpg',
-  './assets/valokuvat/vanha-timbuktu.png',
-  './assets/valokuvat/vanha-tripoli.png',
-  './assets/valokuvat/vanha-tshadjarvi.jpg',
-  './assets/valokuvat/vanha-venetsia.jpg',
-  './assets/valokuvat/vanha-viktoria.jpg',
-  './assets/valokuvat/vanha-viktorianputoukset.jpg',
-  './assets/valokuvat/zanzibar-taarab-kidumbak-ensemble.jpg',
   // Liput (tools/fetch-flags.mjs) — pieniä ja tarvitaan heti saapumiskortilla.
   './assets/liput/algeria.png',
   './assets/liput/angola.png',
   './assets/liput/basque-country.png',
   './assets/liput/berber-flag.png',
   './assets/liput/bosnia-and-herzegovina.png',
+  './assets/liput/bulgaria.png',
   './assets/liput/cameroon.png',
   './assets/liput/catalonia.png',
   './assets/liput/chad.png',
@@ -287,6 +152,7 @@ const SHELL = [
   './assets/liput/galicia.png',
   './assets/liput/germany.png',
   './assets/liput/ghana.png',
+  './assets/liput/greece.png',
   './assets/liput/iceland.png',
   './assets/liput/italy.png',
   './assets/liput/kenya.png',
@@ -312,6 +178,8 @@ const SHELL = [
   './assets/liput/spain.png',
   './assets/liput/sudan.png',
   './assets/liput/tanzania.png',
+  './assets/liput/turkey.png',
+  './assets/liput/flag-of-the-romani-people.png',
   './assets/liput/tunisia.png',
   './assets/liput/uganda.png',
   './assets/liput/united-kingdom.png',
@@ -358,14 +226,21 @@ const SHELL = [
 ];
 
 /*
- * Media (valokuvat ja äänet) on kymmeniä megatavuja, ja `addAll` on
+ * Media (liput ja äänet) on kymmeniä megatavuja, ja `addAll` on
  * kaikki-tai-ei-mitään: yksikin katkennut lataus kaatoi koko
  * asennuksen, jolloin peli jäi ilman välimuistia. Siksi koodi ja
  * tekstit haetaan yhtenä eränä (ne ovat pieniä ja niiden on oltava
  * ehjä kokonaisuus) ja media yksitellen niin, että yksi virhe
- * ohitetaan — puuttuva kuva haetaan sitten verkosta.
+ * ohitetaan.
+ *
+ * Valokuvia EI enää haeta asennuksessa (omistajan päätös). Niitä on
+ * satoja ja kymmeniä megatavuja, ja määrä kasvaa jokaisen uuden
+ * kaupungin myötä — asennus olisi kasvanut kohtuuttomaksi. Sen sijaan
+ * kuva tallentuu välimuistiin sinä hetkenä kun pelaaja sen ensi kerran
+ * näkee (ks. KUVACACHE alempana), joten kerran nähty kaupunki toimii
+ * offline. Peli itse, äänet ja kartat haetaan yhä etukäteen.
  */
-const MEDIAA = (osoite) => /\/assets\/(valokuvat|liput|audio)\//.test(osoite);
+const MEDIAA = (osoite) => /\/assets\/(liput|audio)\//.test(osoite);
 const YDIN = SHELL.filter((o) => !MEDIAA(o));
 const MEDIA = SHELL.filter(MEDIAA);
 
@@ -386,10 +261,18 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Wikipedian ja Commonsin kuvien ajonaikainen välimuisti: kerran nähty
-// kuva latautuu jatkossa heti ja toimii offline. Oma kori, jota version
-// vaihto ei tyhjennä — kuvat eivät vanhene version mukana.
+// Kuvien ajonaikainen välimuisti: kerran nähty kuva latautuu jatkossa
+// heti ja toimii offline. Oma kori, jota version vaihto ei tyhjennä —
+// kuvat eivät vanhene version mukana, eikä pelaaja joudu lataamaan
+// samoja kuvia uudelleen joka päivityksellä.
+//
+// Korissa on kahdenlaisia kuvia: Wikipedian ja Commonsin verkkokuvat
+// sekä repon omat valokuvat (assets/valokuvat), joita ei enää haeta
+// asennuksessa.
 const KUVACACHE = 'matkakirja-wikikuvat-v1';
+
+/** Repon oma valokuva, joka haetaan vasta kun se ensi kerran näytetään. */
+const OMA_VALOKUVA = (osoite) => osoite.pathname.includes('/assets/valokuvat/');
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
@@ -423,6 +306,21 @@ self.addEventListener('fetch', (event) => {
         // CORS-nouto: upload.wikimedia.org sallii sen, ja vastaus on
         // silloin tavallinen (ei opaakki), joten se ei paisuta kiintiötä.
         const vastaus = await fetch(event.request.url, { mode: 'cors' }).catch(() => null);
+        if (vastaus && vastaus.ok) kuvat.put(event.request.url, vastaus.clone());
+        return vastaus ?? Response.error();
+      }),
+    );
+    return;
+  }
+  // Repon omat valokuvat: sama kori kuin wikikuvilla, jotta ne eivät
+  // katoa versiopäivityksessä. Välimuisti ensin, verkko vasta jos kuvaa
+  // ei ole vielä nähty.
+  if (OMA_VALOKUVA(osoite)) {
+    event.respondWith(
+      caches.open(KUVACACHE).then(async (kuvat) => {
+        const osuma = await kuvat.match(event.request.url);
+        if (osuma) return osuma;
+        const vastaus = await fetch(event.request).catch(() => null);
         if (vastaus && vastaus.ok) kuvat.put(event.request.url, vastaus.clone());
         return vastaus ?? Response.error();
       }),

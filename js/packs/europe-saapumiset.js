@@ -1,8 +1,102 @@
 // Euroopan matkakirjamerkinnät: nuoren herran tunnepitoinen kuvaus ja
 // isoisän nosto, samaan malliin kuin Afrikassa. Rakentuu kaupunki
-// kerrallaan. Luennat: puhe-europe-saapuminen-<id>.mp3 — luenta on
-// toistaiseksi vain Venetsialla (ks. SAAPUMISLUENNAT js/ui.js:ssä).
+// kerrallaan. Luennat: puhe-europe-saapuminen-<id>.mp3 (ks.
+// SAAPUMISLUENNAT js/ui.js:ssä — vain siellä listatuilla kaupungeilla
+// kaiutinnappi syttyy).
+//
+// Lontoon, Pariisin, Rooman ja Ateenan tekstit ovat Fablen kirjoittamia:
+// hän ehti generoida niistä luennat, mutta tekstit eivät päätyneet
+// repoon. Ne on palautettu ElevenLabsin historiasta sanatarkasti, jotta
+// ruudulla lukee täsmälleen se, mitä kertoja lukee.
 export const EUROPE_SAAPUMISET = {
+  lontoo: {
+    kuvaus: 'Kotikaupunki — ja silti sydän hakkasi kuin vieraassa! Sumu '
+      + 'nousi Thamesilta, Tower Bridge avasi kitansa laivalle, ja metro '
+      + 'jyrisi jalkojeni alla kuin maanalainen ukkonen. Tästä '
+      + 'kaupungista lähdetään maailmalle — ja tänne se aina jotenkin '
+      + 'palataan.',
+    nosto: 'Matkakirjan ensimmäisellä sivulla lukee: "Lontoosta pääsee '
+      + 'kaikkialle, mutta mikään ei valmista siihen, mitä sieltä '
+      + 'löytää." Nyt minä lähden tarkistamaan.',
+  },
+
+  pariisi: {
+    kuvaus: 'Pariisi tuoksui sateelta ja tuoreelta leivältä. Kävelin '
+      + 'bulevardia, jonka päässä Eiffel-torni seisoi kuin rautainen '
+      + 'jättiläinen suorassa asennossa — ja kahvilan pöydästä näki koko '
+      + 'maailman kulkevan ohi, kiireettä, kuin sillä olisi ikuisesti '
+      + 'aikaa.',
+    nosto: 'Isoisä kirjoitti: "Pariisissa istuin kolme tuntia samassa '
+      + 'kahvilassa enkä hävennyt hetkeäkään. Se on tämän kaupungin '
+      + 'suurin keksintö." Tilasin toisen kaakaon hänen kunniakseen.',
+  },
+
+  ateena: {
+    kuvaus: 'Ateenassa nostin katseeni kadulta — ja siellä se oli, '
+      + 'Akropolis, kelluen kaupungin yllä iltavalossa! Alhaalla Plakan '
+      + 'kujilla tuoksui oliiviöljy ja grillattu liha, ja joku soitti '
+      + 'bouzoukia niin iloisesti, että vieraatkin alkoivat taputtaa.',
+    nosto: 'Isoisä kirjoitti temppelin juurella: "Täällä keksittiin, '
+      + 'että kaupunkia voi johtaa keskustelemalla. Kaikkea ei ole vielä '
+      + 'kokeiltu loppuun." Ukolla oli tapana olla oikeassa.',
+  },
+
+  rooma: {
+    kuvaus: 'Roomassa kävelin kulman taakse ja melkein törmäsin '
+      + 'Colosseumiin! Se vain seisoo siinä, keskellä liikennettä, '
+      + 'kaksituhatta vuotta vanhana. Täällä jokainen katukivi on nähnyt '
+      + 'keisareita, ja suihkulähteet solisevat kuin mitään ei olisi '
+      + 'tapahtunut.',
+    nosto: 'Isoisän merkintä: "Heitin kolikon Trevin lähteeseen, kuten '
+      + 'tapa vaatii. Jos tarina pitää paikkansa, palaan vielä — ja '
+      + 'minulla on paha aavistus, että se pitää." Heitin omani samaan '
+      + 'kohtaan.',
+  },
+
+  kreeta: {
+    kuvaus: 'Knossoksen raunioilla on portaita, jotka johtavat ylös ja '
+      + 'alas yhtä aikaa, ja seinillä hyppää härän yli nuoria, jotka '
+      + 'maalattiin sinne kolme ja puoli tuhatta vuotta sitten. Tämä on '
+      + 'Euroopan vanhin kaupunkikulttuuri, ja se osasi jo tehdä '
+      + 'viemärit. Ulkona tuoksui timjami ja meri oli joka suunnassa.',
+    nosto: 'Isoisä kirjoitti: "Sanotaan että täällä asui hirviö '
+      + 'labyrintissa. Minä näin vain palatsin, jossa on liikaa '
+      + 'käytäviä." Eksyin itsekin kahdesti — ja aloin ymmärtää tarinan.',
+  },
+
+  sisilia: {
+    kuvaus: 'Etna savusi horisontissa kuin se olisi juuri herännyt, ja '
+      + 'sen juurella kasvoi sitruunatarhoja mustassa laavamullassa. '
+      + 'Torilla huudettiin kalaa laulaen — oikeasti laulaen. Saarella on '
+      + 'kreikkalaisia temppeleitä, arabien kupoleita ja normannien '
+      + 'kirkkoja, usein samassa korttelissa.',
+    nosto: 'Isoisä merkitsi: "Sisilia on ollut kaikkien maa eikä kenenkään. '
+      + 'Siksi sen keittiö on paras Välimerellä." En kiistele ruoasta '
+      + 'kenenkään kanssa, mutta hän saattoi olla oikeassa.',
+  },
+
+  dubrovnik: {
+    kuvaus: 'Kävelin kaupunginmuurin päällä koko kierroksen: alla '
+      + 'oranssit kattotiilet tiiviisti vieri vieressä, ulkopuolella '
+      + 'Adrianmeri niin kirkkaana että pohja näkyi. Dubrovnik oli '
+      + 'vuosisatoja oma pieni tasavaltansa, joka pysyi hengissä '
+      + 'kauppaamalla ja neuvottelemalla — ei sotimalla.',
+    nosto: 'Isoisä kirjoitti: "Ragusa osti rauhansa joka vuosi uudestaan. '
+      + 'Halvempaa kuin sota, ja kauniimpaa." Muurit ovat yhä pystyssä, '
+      + 'joten kauppa taisi kannattaa.',
+  },
+
+  sofia: {
+    kuvaus: 'Sofiassa kävelin korttelin matkan ja ohitin moskeijan, '
+      + 'synagogan ja kaksi kirkkoa. Keskellä katua on lasin alla '
+      + 'roomalainen katu, jota kaivettiin esiin metroa tehdessä — '
+      + 'kaupunki on rakennettu itsensä päälle monta kertaa. Vitosha-vuori '
+      + 'seisoo kadun päässä niin lähellä, että sinne pääsee bussilla.',
+    nosto: 'Isoisä kirjoitti: "Uusi pääkaupunki vanhalla paikalla. '
+      + 'Roomalaiset tulivat tänne lähteiden takia." Lähteet ovat yhä '
+      + 'käytössä: näin ihmisten hakevan niistä vettä kanistereihin.',
+  },
+
   venetsia: {
     kuvaus: 'Venetsia ei liioittele yhtään: kadut ovat oikeasti vettä! '
       + 'Vaporetto kaartoi Canal Grandelle, palatsit nousivat suoraan '
