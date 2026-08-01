@@ -1,6 +1,11 @@
 // Omat suomenkieliset tiivistelmät paikoille, joista fi-Wikipediassa ei
 // ole artikkelia tai se on vain parin rivin tynkä (alle pelin 200 merkin
-// rajan) — ilman näitä Tutki-kortti näytti englantia tai jäi tyhjäksi.
+// rajan, js/wiki.js MIN_EXTRACT) — ilman näitä Tutki-kortti näytti
+// englantia tai jäi tyhjäksi.
+//
+// Tiedosto koskee kaikkia lautoja, ei vain Afrikkaa (ui.js tuo sen
+// sellaisenaan). Nimi oli aiemmin africa-tiivistelmat.js, mikä
+// harhautti — sisältö on aina ollut yhteinen.
 // Avain on paikan wiki-otsikko. Tekstit on kirjoitettu pelin sävyllä,
 // mutta jokainen väite on tarkistettavissa (periaate 2): pohjana
 // en-Wikipedian artikkelit heinäkuussa 2026.
@@ -59,4 +64,30 @@ export const OMAT_TIIVISTELMAT = {
     + 'tasavalta eikä ollut koskaan siirtomaa. Virallinen kieli on englanti, '
     + 'ja pääkaupunki Monrovia on nimetty Yhdysvaltain presidentin James '
     + 'Monroen mukaan.',
+
+  // Eurooppa. Näiden kaupunkien fi-artikkeli on tynkä: Ateena 101,
+  // Rooma 135 ja Sofia 105 merkkiä (mitattu 1.8.2026). Ilman omaa
+  // tiivistelmää peli näyttäisi englanninkielisen tekstin.
+  Ateena: 'Ateena on Kreikan pääkaupunki ja maan suurin kaupunki: '
+    + 'seudulla asuu noin kolme ja puoli miljoonaa ihmistä. Kaupungin '
+    + 'yllä kohoaa Akropolis, kalliokukkula, jonka päällä seisoo '
+    + 'Parthenon-temppeli vuodelta 432 eaa. Ateena on Euroopan '
+    + 'vanhimpia yhtäjaksoisesti asuttuja kaupunkeja — samalla paikalla '
+    + 'on eletty yli kolme tuhatta vuotta — ja siellä kehitettiin '
+    + 'antiikin aikana demokratia, teatteri ja länsimainen filosofia.',
+
+  Rooma: 'Rooma on Italian pääkaupunki ja maan suurin kaupunki, '
+    + 'rakennettu seitsemälle kukkulalle Tiber-joen varrelle. Se oli '
+    + 'antiikin aikana maailman suurimman valtakunnan keskus, ja sen '
+    + 'keskustassa seisovat yhä Colosseum, Forum Romanum ja Pantheon. '
+    + 'Kaupungin sisällä on oma valtionsa Vatikaani, maailman pienin. '
+    + 'Roomasta tuli yhdistyneen Italian pääkaupunki vasta 1871.',
+
+  Sofia: 'Sofia on Bulgarian pääkaupunki ja maan suurin kaupunki, '
+    + 'runsaan miljoonan asukkaan koti. Se sijaitsee laaksossa '
+    + 'Vitosha-vuoren juurella, ja paikalla on asuttu yli seitsemän '
+    + 'tuhatta vuotta. Roomalaiset perustivat tänne kuumien lähteiden '
+    + 'takia kaupungin nimeltä Serdica, jonka katuja kaivettiin esiin '
+    + 'metroa rakennettaessa. Sofiasta tuli pääkaupunki 1879, vuosi '
+    + 'Bulgarian itsenäistymisen jälkeen.',
 };

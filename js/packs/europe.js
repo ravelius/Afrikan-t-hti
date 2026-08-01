@@ -12,6 +12,7 @@
 
 import { EUROPE_QUESTIONS, EUROPE_FACTS } from './europe-questions.js';
 import { EUROPE_COUNTRY_SHAPES, EUROPE_CITY_COUNTRY } from './europe-countries.js';
+import { EUROPE_PUZZLES } from './europe-puzzles.js';
 import { themedTokenTypes } from '../tokens.js';
 
 const EU_MAP = {
@@ -414,6 +415,7 @@ export const EUROPE = {
     },
   },
 
+  puzzles: EUROPE_PUZZLES,
   decor: {
     mapLabel: 'EUROOPPA',
     mapLabelPos: { x: 175, y: 150 },
@@ -423,6 +425,15 @@ export const EUROPE = {
       { x: 118, y: 330, r: 100 },
       { x: 575, y: 975, r: 110 },
       { x: 60, y: 640, r: 95 },
+    ],
+    // Maamerkit kartalla, samaan tapaan kuin Afrikassa. Sijoitettu
+    // kaupunkien viereen tyhjään tilaan, ei niiden päälle.
+    landmarks: [
+      { kind: 'acropolis', x: 712, y: 895 },  // Akropolis Ateenan itäpuolella
+      { kind: 'colosseum', x: 494, y: 804 },  // Colosseum Rooman kaakkoispuolella
+      { kind: 'volcano', x: 498, y: 924 },    // Etna Sisilian kaakkoispuolella
+      { kind: 'geyser', x: 103, y: 42 },      // geysir Islannin koillispuolella
+      { kind: 'aurora', x: 602, y: 103 },     // revontulet Tromssan kaakkoispuolella
     ],
     ship: { x: 60, y: 640 },
     serpent: { x: 575, y: 975 },
