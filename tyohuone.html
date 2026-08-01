@@ -416,6 +416,36 @@
     import { AFRICA_SAAPUMISET } from './js/packs/africa-saapumiset.js';
     import { OMAT_ARTIKKELIT } from './js/packs/africa-artikkelit.js';
     import { AFRICA_KULTTUURI } from './js/packs/africa-kulttuuri.js';
+    import { EUROPE_SAAPUMISET } from './js/packs/europe-saapumiset.js';
+    import { EUROPE_KULTTUURI } from './js/packs/europe-kulttuuri.js';
+    import { EUROPE_VALOKUVAT } from './js/packs/europe-valokuvat.js';
+    import { EUROPE_ARTIKKELIT } from './js/packs/europe-artikkelit.js';
+    import { SAAPUMISLUENNAT } from './js/ui.js';
+
+    /*
+     * Maanosien sisältö samassa muodossa, jotta tekstivälilehti näyttää
+     * ne kaikki. Työhuone tehtiin aikana, jolloin sisältöä oli vain
+     * Afrikassa, ja Euroopan 41 kaupunkia jäivät siksi näkymättömiin.
+     *
+     * Artikkelin runko on Afrikassa kentässä `artikkeli` ja Euroopassa
+     * kentässä `teksti` — pakettien oma historia, ei tarkoitus.
+     */
+    const SISALTO = {
+      africa: {
+        saapumiset: AFRICA_SAAPUMISET,
+        kulttuuri: AFRICA_KULTTUURI,
+        valokuvat: AFRICA_VALOKUVAT,
+        artikkelit: OMAT_ARTIKKELIT,
+        runko: 'artikkeli',
+      },
+      europe: {
+        saapumiset: EUROPE_SAAPUMISET,
+        kulttuuri: EUROPE_KULTTUURI,
+        valokuvat: EUROPE_VALOKUVAT,
+        artikkelit: EUROPE_ARTIKKELIT,
+        runko: 'teksti',
+      },
+    };
 
     // --- välilehdet: #aihe-osoite toimii kirjanmerkkinä ---------------------
     const napit = [...document.querySelectorAll('#valilehdet button')];
@@ -1104,36 +1134,46 @@
       // Afrikan uudet sisällöt: saapumistekstit (lukukierros ennen äänien
       // generointia), omat artikkelit ja nostot, valokuvien selitteet ja
       // kulttuurinostot. Rivit tulevat suoraan paketeista, eivät kopioina.
-      if (p.id === 'africa') {
-        // Lopullinen tyyli (30.7. A/B-vertailun jälkeen): tiivis tunteellinen
-        // kuvaus + isoisän nosto, luenta tunnetageilla joka kaupungissa.
+      const sisalto = SISALTO[p.id];
+      if (sisalto) {
+        // Tiivis tunteellinen kuvaus + isoisän nosto. Luenta näytetään
+        // vain niille kaupungeille, joille se on generoitu — muuten
+        // soitin näyttäisi rikkinäiseltä.
         const soitin = (osoite) => '<span class="meta">Luenta:</span> '
           + `<audio controls preload="none" src="${osoite}" style="vertical-align: middle; height: 28px; max-width: 100%;"></audio>`;
         for (const c of p.cities) {
-          const s = AFRICA_SAAPUMISET[c.id];
+          const s = sisalto.saapumiset[c.id];
           if (!s) continue;
+          const onLuenta = SAAPUMISLUENNAT.has(`${p.id}:${c.id}`);
           lisaa('saapumiset', [
             `<b>[${c.name}]</b>`,
             `<b>${s.kuvaus}</b>`,
             s.nosto,
-            soitin(`assets/audio/puhe-africa-saapuminen-${c.id}.mp3`),
+            onLuenta ? soitin(`assets/audio/puhe-${p.id}-saapuminen-${c.id}.mp3`)
+              : '<span class="meta">Luentaa ei ole vielä generoitu.</span>',
           ].join('<br>'));
         }
-        for (const [otsikko, a] of Object.entries(OMAT_ARTIKKELIT)) {
+        for (const [otsikko, a] of Object.entries(sisalto.artikkelit)) {
+          const runko = a[sisalto.runko];
+          if (!runko) continue;
           lisaa('artikkelit', `<b>[${otsikko} — lyhytnosto]</b> ${a.intro}`);
           lisaa('artikkelit', `<b>[${otsikko} — oma artikkeli]</b><br>`
-            + a.artikkeli
+            + runko
               .replace(/== ([^=]+) ==/g, '<b>$1</b>')
               .replaceAll('\n', '<br>'));
         }
         for (const c of p.cities) {
-          const v = AFRICA_VALOKUVAT[c.id];
+          const v = sisalto.valokuvat[c.id];
           if (!v?.selite) continue;
           lisaa('valokuvat', `<b>[${c.name}]</b> ${v.selite}`
             + `<br><span class="meta">${[v.vuosi, v.lahde].filter(Boolean).join(' · ')}</span>`);
+          if (v.uusi?.selite) {
+            lisaa('valokuvat', `<b>[${c.name} — nykyään]</b> ${v.uusi.selite}`
+              + `<br><span class="meta">${v.uusi.lahde ?? ''}</span>`);
+          }
         }
         for (const c of p.cities) {
-          const k = AFRICA_KULTTUURI[c.id];
+          const k = sisalto.kulttuuri[c.id];
           if (!k) continue;
           for (const nosto of k.nostot ?? []) {
             lisaa('kulttuuri', `<b>[${c.name}] ${nosto.otsikko}:</b> ${nosto.teksti}`

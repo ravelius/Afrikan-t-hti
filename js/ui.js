@@ -107,7 +107,7 @@ async function cachedImage(title) {
  * Kortin kaiutin ja luenta näkyvät vain näille; muut kaupungit saavat
  * merkintänsä ilman ääntä, kunnes luennat generoidaan.
  */
-const SAAPUMISLUENNAT = new Set([
+export const SAAPUMISLUENNAT = new Set([
   'africa:addisabeba',
   'africa:ahaggar',
   'africa:alkufra',
@@ -159,7 +159,7 @@ const SAAPUMISLUENNAT = new Set([
 ]);
 
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
-const VIHJELUENNAT = new Set([
+export const VIHJELUENNAT = new Set([
   'europe:pariisi',
   'europe:rooma',
   'europe:venetsia',
