@@ -327,9 +327,19 @@ const MANNER_ZOOM_VIIVE = 1400; // kokonäkymä näkyy tämän verran ennen zoom
 // Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
 // alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
 const ALAKAISTA = 0.3;
+// Sama pohjoiseen: matkakirjan kortti peittää laudan yläreunan, joten
+// pohjoisimmat kaupungit (Tromssa, Lappi, Islanti) tarvitsevat tilaa,
+// johon panoroida (omistajan havainto).
+const YLAKAISTA = 0.26;
 // Zoomausliu'un kesto. Omistajan palaute: 600 ms oli liian nopea,
 // 1200 ms yhä liian nopea — kaikki zoomaukset hitaammiksi.
 const ZOOM_MS = 2000;
+// Etusivun zoomaus vielä tätäkin hitaammin (omistajan toive): se on
+// pelin avaus, ja koko maailmankartta on iso matka lähikuvaan.
+const ALOITUS_ZOOM_MS = 2800;
+// Kiihdytys ja jarrutus molemmissa päissä (omistajan toive): kartta
+// lähtee liikkeelle pehmeästi, kiitää keskellä ja pysähtyy rauhassa.
+const ZOOM_PEHMENNYS = 'cubic-bezier(0.45, 0, 0.28, 1)';
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
 const ZOOM_TAUKO_MS = 260;
 // Aloituskartan lähikuvan suurennos yleiskuvaan nähden.
@@ -1082,7 +1092,10 @@ export class UI {
     this.svg.style.flex = '';
     this.svg.style.alignSelf = '';
     clearTimeout(this.mannerAjastin);
-    document.body.classList.remove('aloitus-zoom', 'manner-zoom', 'kartta-raahaus');
+    clearTimeout(this.kiikariAjastin);
+    document.body.classList.remove(
+      'aloitus-zoom', 'manner-zoom', 'kartta-raahaus', 'kiikari-paalla',
+    );
   }
 
   /**
@@ -1115,23 +1128,31 @@ export class UI {
     // zoomaustasoa — se vain jatkaa panoroitavaa aluetta, ja siihen
     // osuu kartan oma Pohjois-Afrikan kaistale.
     const etelaJatko = (paneH * ALAKAISTA) / skaala;
-    const korkeusYks = box.h + etelaJatko;
+    // Sama tila laudan pohjoispuolelle (omistajan havainto: myös
+    // pohjoisesta hukkui kaupunkeja). Ylhäällä tilan vievät matkakirjan
+    // kortti ja kartan yläreuna, joten Tromssa ja Lappi jäivät piiloon
+    // eikä niiden yläpuolella ollut mitään, mihin panoroida. Kartan
+    // pergamentti jatkuu rajauksen yli joka suuntaan (mapart.js PAPER),
+    // joten kaista näyttää kartalta eikä tyhjältä.
+    const pohjoisJatko = (paneH * YLAKAISTA) / skaala;
+    const ylaReuna = box.y - pohjoisJatko;
+    const korkeusYks = box.h + pohjoisJatko + etelaJatko;
     const leveys = Math.round(box.w * skaala);
     const korkeus = Math.round(korkeusYks * skaala);
-    this.svg.setAttribute('viewBox', `${box.x} ${box.y} ${box.w} ${korkeusYks}`);
+    this.svg.setAttribute('viewBox', `${box.x} ${ylaReuna} ${box.w} ${korkeusYks}`);
     this.svg.style.width = `${leveys}px`;
     this.svg.style.height = `${korkeus}px`;
     this.svg.style.flex = '0 0 auto';
     this.svg.style.alignSelf = 'flex-start';
     this.viewBoxSize = { vw: box.w, vh: korkeusYks };
     this.zoomSkaala = skaala;
-    this.zoomYlaReuna = box.y;
+    this.zoomYlaReuna = ylaReuna;
     this.panVara = Math.max(0, leveys - paneW);
     this.panVaraY = Math.max(0, korkeus - paneH);
     if (this.panX == null || this.panY == null) {
       const kohde = this.zoomKohde ?? { x: box.x + box.w / 2, y: box.y + box.h / 2 };
       this.panX = paneW / 2 - (kohde.x - box.x) * skaala;
-      this.panY = paneH / 2 - (kohde.y - box.y) * skaala;
+      this.panY = paneH / 2 - (kohde.y - ylaReuna) * skaala;
     }
     this.asetaPan(this.panX, this.panY);
     this.placeFactCard(paneW, paneH);
@@ -1215,7 +1236,9 @@ export class UI {
     // Alkuasento heti: muuten kartta näyttäisi hyppäävän lähikuvaan jo
     // ennen kuin liuku ehtii alkaa hiljaisen hetken jälkeen.
     this.asetaZoomAlku(fokus, sx, sy, yleisSkaala);
-    this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
+    this.zoomAanellaJaViiveella(
+      () => this.kaynnistaZoomLiuku(ALOITUS_ZOOM_MS), ALOITUS_ZOOM_MS,
+    );
   }
 
   /**
@@ -1224,20 +1247,22 @@ export class UI {
    * vasta pienen viiveen jälkeen zoomausääni ja liuku käynnistyvät.
    * Ilman taukoa moottori hukkui puheen ja meren alle.
    */
-  zoomAanellaJaViiveella(liuku) {
+  zoomAanellaJaViiveella(liuku, kesto = ZOOM_MS) {
     this.stopIntroVoice();
     this.stopDiaryVoice();
     vaimennaTausta();
     clearTimeout(this.zoomAlkuAjastin);
     this.zoomAlkuAjastin = setTimeout(() => {
       if (this.dead) return;
-      sfx.play('zoom');
+      // Moottori soi täsmälleen liu'un mittaisena, ja sen korkeus
+      // seuraa liu'un vauhtia (js/sound.js ZOOM_VAUHTI).
+      sfx.play('zoom', { kesto: kesto / 1000 });
       liuku();
       // Taustamaisema palaa vasta kun moottori on vaiennut.
       clearTimeout(this.zoomTaustaAjastin);
       this.zoomTaustaAjastin = setTimeout(() => {
         if (!this.dead) palautaTausta();
-      }, ZOOM_MS + 300);
+      }, kesto + 300);
     }, ZOOM_TAUKO_MS);
   }
 
@@ -1281,13 +1306,26 @@ export class UI {
     void this.svg.getBoundingClientRect();
   }
 
-  /** Käynnistää liu'un alkuasennosta lähikuvaan. */
-  kaynnistaZoomLiuku() {
+  /**
+   * Käynnistää liu'un alkuasennosta lähikuvaan.
+   *
+   * Kiikariefekti nostetaan esiin vasta, kun liuku on valmis (omistajan
+   * toive) — liikkuvan kuvan päällä sumennus on sekä rumaa että
+   * puhelimelle raskasta. Feidauksen hoitaa css.
+   */
+  kaynnistaZoomLiuku(kesto = ZOOM_MS) {
     if (this.reducedMotion) return;
-    this.svg.style.transition = `transform ${ZOOM_MS}ms cubic-bezier(0.25, 0.6, 0.2, 1)`;
+    this.svg.style.transition = `transform ${kesto}ms ${ZOOM_PEHMENNYS}`;
     this.asetaPan(this.panX, this.panY);
     clearTimeout(this.zoomAjastin);
-    this.zoomAjastin = setTimeout(() => { this.svg.style.transition = ''; }, ZOOM_MS + 60);
+    this.zoomAjastin = setTimeout(() => { this.svg.style.transition = ''; }, kesto + 60);
+    clearTimeout(this.kiikariAjastin);
+    // Kiikari kuuluu toistaiseksi vain maailmankarttaan (omistajan
+    // toive koski etusivua).
+    if (!this.aloitusZoom) return;
+    this.kiikariAjastin = setTimeout(() => {
+      if (!this.dead) document.body.classList.add('kiikari-paalla');
+    }, kesto);
   }
 
   /**
