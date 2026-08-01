@@ -1071,7 +1071,8 @@ export const EUROPE_ARTIKKELIT = {
     lahde: 'Wikipedia (CC BY-SA)',
   },
 
-  Pietari: {
+  // Avain on kaupungin wiki-otsikko: fi-wikin 'Pietari' on täsmennyssivu.
+  'Pietari (kaupunki)': {
     intro: 'Pietari on Venäjän toiseksi suurin kaupunki, ja siellä asuu '
              + 'noin 5,6 miljoonaa ihmistä. Pietari Suuri perusti sen vuonna '
              + '1703 Nevan suistoon valloitetun ruotsalaislinnoituksen '

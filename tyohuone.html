@@ -179,9 +179,15 @@
     <details class="tiivis">
       <summary>Äänilähteet lyhyesti</summary>
       <ul>
-        <li><b>Freesound</b> — kenttä-äänitykset ja tehosteet (CC0/CC BY, esikuunteluosoitteet toimivat suoraan).</li>
+        <li><b>radio aporee</b> — kaupunkien omat kenttä-äänitykset. Haetaan
+            koordinaateilla (<code>tools/hae-kaupunkiaanet.mjs</code>), joten äänite on
+            varmasti siitä kaupungista. Kaikilla 41 Euroopan kaupungilla on oma;
+            se soi maisematyypin arvontakorin edellä.</li>
+        <li><b>Freesound</b> — maisematyyppien korit ja tehosteet (CC0/CC BY, esikuunteluosoitteet toimivat suoraan).</li>
         <li><b>xeno-canto</b> — lintujen äänet alueittain; valitse laji joka oikeasti pesii seudulla.</li>
         <li><b>ElevenLabs</b> — puhe (v3/v2) ja efektigeneraattori; ks. Moottorit-välilehti.</li>
+        <li>Peiliin menevät äänet leikataan <b>kolmeen minuuttiin</b> kehysrajalta
+            (<code>tools/leikkaa-mp3.mjs</code>) — ääntä ei koodata uudelleen.</li>
       </ul>
     </details>
   </section>
@@ -640,8 +646,8 @@
         idea: 'Lintuäänet lajilleen ja alueelleen: kaupungin ambienssiin juuri sillä seudulla pesivä laji (esim. kenkänokka Bahr el Ghazaliin).' },
       { nimi: 'BBC Sound Effects', tyyppi: 'ääni', lisenssi: 'RemArc (ei-kaupallinen)', api: false, url: 'https://sound-effects.bbcrewind.co.uk', tila: 'idea',
         idea: '33 000 arkistotehoste-ääntä; höyrylaivat, juna-asemat, torit. Lisenssi sallii harrastuskäytön.' },
-      { nimi: 'radio aporee', tyyppi: 'ääni', lisenssi: 'CC', api: false, url: 'https://aporee.org/maps/', tila: 'idea',
-        idea: 'Kenttä-äänityksiä kartalla ympäri maailmaa — paikkakohtaisia ambiensseja joita Freesoundista ei löydy.' },
+      { nimi: 'radio aporee', tyyppi: 'ääni', lisenssi: 'CC', api: true, url: 'https://aporee.org/maps/', tila: 'kaytossa',
+        idea: 'Kenttä-äänityksiä kartalla ympäri maailmaa. Haku archive.orgin rajapinnasta koordinaateilla, ei nimellä: jokaisen 41 Euroopan kaupungin oma taustaääni tulee täältä. Huom: hakemisto pudottaa koordinaateista miinusmerkin, joten kysely tehdään itseisarvoilla.' },
       { nimi: 'Musopen', tyyppi: 'musiikki', lisenssi: 'PD/CC', api: false, url: 'https://musopen.org', tila: 'idea',
         idea: 'Vapaita klassisen musiikin äänityksiä — aikakauden salonkimusiikkia esim. voittoruutuun.' },
       { nimi: 'Free Music Archive', tyyppi: 'musiikki', lisenssi: 'CC (vaihtelee)', api: false, url: 'https://freemusicarchive.org', tila: 'idea',

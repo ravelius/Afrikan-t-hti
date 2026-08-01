@@ -91,14 +91,21 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Kuvien tekijämerkinnät lisenssin vaatimalla tavalla: ✅ (1.8.2026)
 - Astu mantereelle -napin korjaus, ylävalikko hampurilaiseksi,
   ambienssin aloituskohta ja etusivun taso: ✅ (1.8.2026, v139)
-- Paketti 20 (kaupunkien omat ambienssiäänet): kesken, ks. alempaa
+- Paketti 20 (kaupunkien omat ambienssiäänet): ✅ (1.8.2026, v140) —
+  Eurooppa valmis. Kaikilla 41 kaupungilla oma kenttä-äänitys, yhteensä
+  69 äänitettä radio aporeesta. Työkalun molemmat viat korjattu (ks.
+  alempaa: kumpikin oli diagnosoitu väärin). Afrikka on vielä tekemättä.
 
 ## Avoimet asiat
 
-**Media-repon PR #1 pitää yhdistää**, muuten peili ei toimi. Peli ei
-siitä hajoa: se hakee aineiston alkuperäisistä lähteistä kuten ennenkin,
-ja kolmen epäonnistuneen haun jälkeen peili jätetään väliin koko
-istunnoksi.
+**Media-repon PR #1 on yhdistetty** (1.8.2026), joten peili on käytössä.
+
+**Peilin koko kannattaa katsoa ennen Afrikkaa.** Euroopan kaupunkiäänet
+kasvattavat peiliä noin 280 megatavulla (kuvat 111 Mt + vanhat äänet
+181 Mt + uudet 280 Mt ≈ 570 Mt). Afrikan 39 kaupunkia toisivat saman
+verran lisää, jolloin GitHub Pagesin suositusraja (1 Gt) alkaa tulla
+vastaan. Vaihtoehtoja: yksi äänite kaupunkia kohti kahden sijaan, tai
+lyhyempi kuin kolmen minuutin katko. **Omistajan päätös.**
 
 **Venäjänkielisten vähemmistöjen liput** (Ukraina, Viro, Latvia,
 Liettua) jätettiin pois omistajan päätöksellä 1.8.2026. Muilla
@@ -112,11 +119,13 @@ Mamma Haidara -kirjasto, Library of Congressin näyttely — opettaa
 laskemaan vuodenaikojen alut tähtien liikkeistä) täsmäävät lähteisiin.
 Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 
-## Seuraavaksi: PAKETTI 20 (kaupunkien omat ambienssiäänet)
+## Seuraavaksi: PAKETTI 20 AFRIKALLE
 
-**Paketit 1–19 ovat valmiit.** Seuraava tekemätön on paketti 20
-alempana. Lue ensin osio "Tilanne 1.8.2026", jossa on kaikki mitä
-tarvitset kummankin repon jatkamiseen.
+**Paketit 1–20 ovat valmiit Euroopan osalta.** Paketin 20 kohta 9
+("tee sama Afrikalle") on jäljellä: työkalu ja pelin puoli ovat valmiit,
+joten Afrikka on pelkkä ajo, karsinta ja peilaus — mutta lue ensin
+peilin kokoa koskeva avoin asia yltä. Lue myös osio "Tilanne 1.8.2026",
+jossa on kaikki mitä tarvitset kummankin repon jatkamiseen.
 
 Äänistä: omistaja käy äänet läpi viritysivulla `/aanet.html` ja antaa
 äänikohtaisen palautteen — älä tee uutta äänten yleisremonttia ennen
@@ -216,37 +225,57 @@ arvaten. Kaupungin koordinaatit haetaan Wikipediasta.
 
 Ensimmäinen ajo löysi ehdokkaat **24 kaupungille 41:stä**.
 
-### Kaksi tiedossa olevaa vikaa työkalussa — korjaa nämä ensin
+### Työkalun kaksi vikaa — KORJATTU 1.8.2026
 
-1. **Negatiivinen pituusaste rikkoo haun.** Lontoo, Dublin, Edinburgh,
-   Lissabon, Madrid ja Granada saivat nolla osumaa, mikä on mahdotonta.
-   Kaikki ovat nollameridiaanin länsipuolella. Lucene tulkitsee
-   `longitude:[-0.2 TO 0.2]` -kyselyn miinusmerkin kieltona; arvot on
-   suojattava tai lainausmerkitettävä.
-2. **Koordinaatteja ei löydy 11 kaupungille**: Istanbul, Marseille,
-   Krakova, Venetsia, Sisilia, Kreeta, Odessa, Pietari, Lappi, Alpit,
-   Islanti. Työkalu kokeilee samaa otsikkoa fi- ja en-Wikipediassa,
-   mutta esimerkiksi "Venetsia" ei ole en-wikin otsikko. Ratkaise
-   kielilinkkien kautta (`prop=langlinks`) tai Wikidatasta.
+Molemmat oli tässä listassa diagnosoitu väärin. Oikeat syyt löytyivät
+kokeilemalla, ja ne on kirjattu koodiin kommentteina. Älä palauta
+vanhoja selityksiä.
 
-### Sitten
+1. **Ei ollut Lucenen kieltooperaattori vaan hakemisto, joka ei tunne
+   etumerkkiä.** Suojaamaton miinusmerkki kaataa kyselyn, se on totta,
+   mutta lainausmerkeissäkään negatiivinen väli ei löydä mitään:
+   archive.org tallentaa koordinaatit merkkijonoina ja jäsennin pudottaa
+   miinusmerkin pois. Brixtonin äänite (longitude −0,1119) löytyy
+   väliltä `["0.0" TO "0.9"]`. Kysely tehdään nyt itseisarvoilla ja
+   etumerkki tarkistetaan vasta tuloksista. Sama koski latitudea, joten
+   **koko eteläinen pallonpuolisko olisi jäänyt löytymättä Afrikassa.**
+   Lisäksi vertailu on aakkosellinen, ei numeerinen (`["9.8" TO "10.2"]`
+   jää tyhjäksi), joten väli pilkotaan kokonaisosan numeromäärän mukaan.
+2. **Ei ollut otsikoissa vaan rajapinnan oletusrajassa.** Wikipedian
+   `prop=coordinates` palauttaa oletuksena vain **kymmenen** sivun
+   koordinaatit pyyntöä kohti, vaikka `titles` ottaa viisikymmentä —
+   loput näyttivät koordinaatittomilta. `colimit=max` korjaa sen.
+   Seuduilla ja saarilla (Alpit, Kreeta, Lappi, Sisilia, Islanti) ei ole
+   artikkelissa koordinaattia lainkaan; ne haetaan Wikidatan
+   P625-ominaisuudesta sivun wikibase_item-tunnuksella.
 
-3. Aja haku uudestaan ja tarkista, että jokainen ehdokas on oikeasti
-   siitä kaupungista: etäisyys keskustasta on tuloksessa mukana.
-4. Karsi käsin: peli tarvitsee paikan **yleisen äänimaiseman**, ei
-   tapahtumaa. Konsertit, haastattelut ja sisätilat eivät kelpaa.
-   Työkalussa on jo karkea suodatin, mutta se ei korvaa kuuntelua.
-5. Tarkista jokaisen mp3-osoitteen toimivuus ja lisenssi (aporee on
-   CC BY, CC BY-SA, CC BY-NC tai public domain).
-6. Lisää ehdokkaat `js/aani-ehdokkaat.js`:ään kaupunkikohtaisina, jotta
-   omistaja voi valita äänistudiossa.
-7. **Palauta kaupunkikohtainen ambienssi** `js/ambience-stream.js`:ään.
-   Nyt siellä lukee: "Kaupunkien äänet tulevat aina maisematyypin
-   maanosakohtaisesta arvontakorista — kaupunkikohtaisia valintoja tai
-   oletuksia ei ole (omistajan päätös)." Tämä päätös on nyt kumottu:
-   kaupungin oma äänitys menee ensin, tyyppikori jää varalle.
-8. Peilaa uudet äänet media-repoon (`--vain aanet`) ja aja mediatestit.
-9. Tee sama Afrikalle, jos aikaa jää.
+Tulos: ehdokkaita löytyi **41/41 kaupungille** (ennen 24/41).
+
+### Loppu tehty samalla — Eurooppa on valmis
+
+3. ✅ Haku ajettu uudestaan; etäisyys keskustasta on tuloksessa mukana ja
+   tarkistettu.
+4. ✅ Karsittu käsin 328 osumasta 69:ään. Suodatinta myös terävöitetty:
+   se hylkää nyt sisätilat ja asemahallit, kertaluonteiset tapahtumat
+   (joulutorit, mielenosoitukset, karnevaalit) ja koneet. Ensimmäisellä
+   ajolla Budapestin kuusi parasta olivat kaksi joulutoria ja neljä
+   metroasemaa. Samanniminen äänite kelpaa enää kerran.
+5. ✅ Jokaisen osoitteen toimivuus tarkistettu (yksi vastasi 500 ja
+   jätettiin pois) ja lisenssi luettu kohteen omasta metadatasta.
+6. ✅ `js/aani-ehdokkaat.js`: `KAUPUNKI_EHDOKKAAT` ja kori-rajapinta
+   (`kaupunkiKori`, `valitseKaupunkiKori`). Studioon oma lohko
+   "Kaupunkien omat äänitykset" maanosan alle; valinnat kulkevat myös
+   Kopioi- ja Tuo-napeissa.
+7. ✅ `js/ambience-stream.js`: kaupungin oma äänitys ensin, tyyppikori
+   varalle. Vanha "kaupunkikohtaisia valintoja ei ole" -päätös kumottu.
+8. ✅ Peilattu. Peiliin menevät äänet leikataan kolmeen minuuttiin
+   (omistajan linjaus): `tools/leikkaa-mp3.mjs` katkaisee kehysrajalta
+   koodaamatta uudelleen, joten ffmpegiä ei tarvita eikä laatu muutu.
+   Manifestiin jää `leikattu`-merkintä, jotta uusintajo ei luule
+   lyhennettyä tiedostoa katkenneeksi.
+9. **TEKEMÄTTÄ: sama Afrikalle.** Työkalu ja pelin puoli ovat valmiit,
+   joten jäljellä on ajo (`--maanosa africa`), karsinta ja peilaus.
+   Katso ensin peilin kokoa koskeva avoin asia ylempää.
 
 ### Reunaehdot
 
@@ -254,6 +283,9 @@ Ensimmäinen ajo löysi ehdokkaat **24 kaupungille 41:stä**.
 - Etusivun ääni on tarkoituksella vakio ja puolet hiljaisempi.
 - Äänet ovat isoja: peilaus kestää, ja aikaraja on 20 min tiedostoa
   kohti syystä.
+- Kolmen minuutin katko ja ambienssin 45 sekunnin loppuvara kuuluvat
+  yhteen: aloituskohta arvotaan väliltä 0–135 s. Jos katkoa lyhennetään,
+  tarkista `LOPPUVARA_S` (js/ambience-stream.js).
 
 
 ## Paketti 18: Katso kuva -linkit Afrikan havaintoihin — VALMIS

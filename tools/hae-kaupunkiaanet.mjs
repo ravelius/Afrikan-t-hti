@@ -14,7 +14,7 @@
 // kuunnellaan äänistudiossa.
 
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,9 +41,23 @@ const kaupungit = pack.cities.map((c) => ({
 }));
 console.log(`${kaupungit.length} kaupunkia paketissa ${MAANOSA}`);
 
-/** Kaupungin oikeat koordinaatit Wikipediasta. */
+/**
+ * Kaupunkien koordinaatit Wikipediasta, puuttuvat Wikidatasta.
+ *
+ * Kaksi sudenkuoppaa, joihin ensimmäinen ajo kaatui:
+ *
+ * 1. `prop=coordinates` palauttaa oletuksena vain kymmenen sivun
+ *    koordinaatit pyyntöä kohti, vaikka `titles` ottaa viisikymmentä.
+ *    Loput sivut näyttivät koordinaatittomilta. `colimit=max` korjaa.
+ * 2. Seuduilla ja saarilla (Alpit, Kreeta, Lapin maakunta) ei ole
+ *    artikkelissa koordinaattia lainkaan. Ne haetaan Wikidatan
+ *    P625-ominaisuudesta sivun wikibase_item-tunnuksella — sama tunnus
+ *    kulkee kieliversiosta toiseen, joten otsikoita ei tarvitse
+ *    kääntää käsin.
+ */
 function koordinaatit(otsikot) {
   const ulos = new Map();
+  const qidt = new Map(); // otsikko → Wikidata-tunnus
   for (const kieli of ['fi', 'en']) {
     const puuttuu = otsikot.filter((t) => !ulos.has(t));
     if (!puuttuu.length) break;
@@ -52,7 +66,8 @@ function koordinaatit(otsikot) {
       let d;
       try {
         d = hae(`https://${kieli}.wikipedia.org/w/api.php?format=json&action=query`
-          + '&prop=coordinates&redirects=1&titles=' + encodeURIComponent(era.join('|')));
+          + '&prop=coordinates|pageprops&colimit=max&ppprop=wikibase_item&redirects=1'
+          + '&titles=' + encodeURIComponent(era.join('|')));
       } catch { nuku(5); continue; }
       const alkuun = new Map([
         ...(d.query?.normalized ?? []).map((n) => [n.to, n.from]),
@@ -64,11 +79,29 @@ function koordinaatit(otsikot) {
         return n;
       };
       for (const sivu of Object.values(d.query?.pages ?? {})) {
+        const otsikko = juurelle(sivu.title);
         const co = sivu.coordinates?.[0];
-        if (co) ulos.set(juurelle(sivu.title), { lat: co.lat, lon: co.lon });
+        if (co) ulos.set(otsikko, { lat: co.lat, lon: co.lon });
+        const qid = sivu.pageprops?.wikibase_item;
+        if (qid && !qidt.has(otsikko)) qidt.set(otsikko, qid);
       }
       nuku(2);
     }
+  }
+  // Wikidata-varareitti niille, joiden artikkelissa ei ole koordinaattia.
+  const vajaat = [...qidt].filter(([otsikko]) => !ulos.has(otsikko));
+  for (let i = 0; i < vajaat.length; i += 25) {
+    const era = vajaat.slice(i, i + 25);
+    let d;
+    try {
+      d = hae('https://www.wikidata.org/w/api.php?format=json&action=wbgetentities'
+        + '&props=claims&ids=' + encodeURIComponent(era.map(([, q]) => q).join('|')));
+    } catch { nuku(5); continue; }
+    for (const [otsikko, qid] of era) {
+      const arvo = d.entities?.[qid]?.claims?.P625?.[0]?.mainsnak?.datavalue?.value;
+      if (arvo) ulos.set(otsikko, { lat: arvo.latitude, lon: arvo.longitude });
+    }
+    nuku(2);
   }
   return ulos;
 }
@@ -78,34 +111,145 @@ console.log(`koordinaatit löytyi ${paikat.size}/${kaupungit.length}`);
 
 // --- aporee-haku -------------------------------------------------------------
 
+/*
+ * Koordinaattihaun kaksi ansaa. Molemmat kaatoivat ensimmäisen ajon.
+ *
+ * 1. Hakemisto ei tunne etumerkkiä. Latitude ja longitude ovat
+ *    merkkijonokenttiä, ja jäsennin pudottaa miinusmerkin pois:
+ *    kohde, jonka longitude on "-0.1119" (Brixton, Lontoo), löytyy
+ *    välillä ["0.0" TO "0.9"] eikä miltään negatiiviselta väliltä.
+ *    Kysely tehdään siis itseisarvoilla ja etumerkki tarkistetaan
+ *    vasta tuloksista. Suojaamaton miinusmerkki kaataisi kyselyn
+ *    muutenkin: Lucene lukee sen kieltooperaattoriksi ja vastaa
+ *    "a reserved character appears at an unexpected position".
+ *    Tähän jäivät nollaosumille Lontoo, Dublin, Edinburgh, Lissabon,
+ *    Madrid ja Granada — ja samasta syystä koko eteläinen
+ *    pallonpuolisko olisi jäänyt löytymättä Afrikan kierroksella.
+ *
+ * 2. Vertailu on aakkosellinen, ei numeerinen. Väli ["9.8" TO "10.2"]
+ *    jää tyhjäksi, koska "10.2" on aakkosissa ennen merkkijonoa "9.8".
+ *    Aakkosjärjestys vastaa lukujärjestystä vain, kun kokonaisosassa
+ *    on yhtä monta numeroa, joten väli pilkotaan sen mukaan. Ylärajat
+ *    on nipistetty nelidesimaalisen esityksen sisälle.
+ *
+ * Aakkoshaku päästää läpi myös vääriä osumia (väli "0.0000"–"9.9999"
+ * kelpuuttaa merkkijonon "10.5"), joten tulokset suodatetaan vielä
+ * numeerisesti alla.
+ */
+const RYHMAT = [[0, 9.9999], [10, 99.9999], [100, 180]];
+
+function vali(kentta, ala, yla) {
+  // Nollan yli menevä väli kattaa molemmat etumerkit, joten sen
+  // itseisarvoväli alkaa nollasta.
+  const ylitys = ala < 0 && yla > 0;
+  const a = Math.min(180, Math.max(0, ylitys ? 0 : Math.min(Math.abs(ala), Math.abs(yla))));
+  const b = Math.min(180, Math.max(Math.abs(ala), Math.abs(yla)));
+  const palat = [];
+  for (const [ryhmaAla, ryhmaYla] of RYHMAT) {
+    const x = Math.max(a, ryhmaAla);
+    const y = Math.min(b, ryhmaYla);
+    if (x > y) continue;
+    palat.push(`${kentta}:["${x.toFixed(4)}" TO "${y.toFixed(4)}"]`);
+  }
+  return palat.length === 1 ? palat[0] : `(${palat.join(' OR ')})`;
+}
+
 /**
  * Äänitykset annetun pisteen ympäriltä. Säde asteina: 0,08° on noin
  * yhdeksän kilometriä pohjois–eteläsuunnassa, eli kaupungin kokoinen.
  * Seutukohteille (Lappi, Alpit) tarvitaan väljempi haku.
  */
 function aanitykset(lat, lon, sade) {
-  const q = `collection:(radio-aporee-maps)`
-    + ` AND latitude:[${(lat - sade).toFixed(4)} TO ${(lat + sade).toFixed(4)}]`
-    + ` AND longitude:[${(lon - sade / Math.cos(lat * Math.PI / 180)).toFixed(4)}`
-    + ` TO ${(lon + sade / Math.cos(lat * Math.PI / 180)).toFixed(4)}]`;
+  const lonSade = sade / Math.max(0.05, Math.cos(lat * Math.PI / 180));
+  const q = 'collection:(radio-aporee-maps)'
+    + ` AND ${vali('latitude', lat - sade, lat + sade)}`
+    + ` AND ${vali('longitude', lon - lonSade, lon + lonSade)}`;
   const url = 'https://archive.org/advancedsearch.php?q=' + encodeURIComponent(q)
     + '&fl[]=identifier&fl[]=title&fl[]=latitude&fl[]=longitude&fl[]=licenseurl'
-    + '&fl[]=creator&fl[]=date&rows=60&output=json';
+    + '&fl[]=creator&fl[]=date&rows=100&output=json';
+  let docs;
   try {
-    return hae(url).response?.docs ?? [];
+    docs = hae(url).response?.docs ?? [];
   } catch {
     return [];
   }
+  // Aakkoshaun väärät osumat pois: väli tarkistetaan vielä lukuina.
+  return docs.filter((d) => {
+    const dLat = Number(d.latitude);
+    const dLon = Number(d.longitude);
+    return Number.isFinite(dLat) && Number.isFinite(dLon)
+      && Math.abs(dLat - lat) <= sade && Math.abs(dLon - lon) <= lonSade;
+  });
 }
 
 /** Vapaa lisenssi? Aporeessa on CC BY, CC BY-SA, CC BY-NC ja public domain. */
 const vapaa = (url) => !url || /creativecommons\.org|publicdomain/.test(url);
 
-// Sisätilat, konsertit ja puhe eivät kelpaa taustaääneksi: peli tarvitsee
-// paikan yleisen äänimaiseman, ei tapahtumaa.
-const EI_KELPAA = /(concert|konzert|rehearsal|interview|radio show|lecture|church service|mass |museum|inside|indoor|studio|test |mic test)/i;
-// Nämä kertovat juuri siitä, mitä haetaan.
-const HYVA = /(street|square|market|plaza|piazza|platz|plein|torg|tori|harbour|harbor|port|quay|station|tram|bridge|park|old town|centre|center|city|downtown|avenue|boulevard|promenade)/i;
+/*
+ * Peli tarvitsee paikan yleisen äänimaiseman, ei tapahtumaa. Karsittavat
+ * jakautuvat kolmeen: sisätilat (jotka kuulostavat kaikkialla samalta ja
+ * rikkovat "olen ulkona kaupungissa" -tunnun), kertaluonteiset tapahtumat
+ * (joulutori, mielenosoitus, uudenvuoden ilotulitus) ja koneet, joiden
+ * jyrinä peittää muun. Ensimmäinen ajo nosti kärkeen juuri näitä:
+ * Budapestin kuusi parasta olivat kaksi joulutoria ja neljä metroasemaa.
+ *
+ * Suodatin on karkea eikä korvaa kuuntelua — se vain nostaa kuunneltavat
+ * kärkeen.
+ */
+const EI_KELPAA = new RegExp([
+  // sisätilat ja liikenteen hallit
+  'concert|konzert|rehearsal|interview|radio show|lecture|church service|mass ',
+  'museum|inside|indoor|studio|test |mic test|library|bibliothek|biennale',
+  'exhibition|gallery|shopping|mall|parking|garage|waiting room|escalator',
+  'station|bahnhof|n[áa]dra[žz]|metro|subway|u-bahn|underground|t-bana|platform',
+  // tapahtumat
+  'christmas|weihnacht|new year|demonstration|protest|occupy|carnival|parade',
+  'siege|bombard|bombing',
+  // koneet ja rakennustyöt
+  'construction|bulldozer|power station|ventilation|drain|road 4|traffic light',
+].join('|'), 'i');
+// Nämä kertovat juuri siitä, mitä haetaan. 'station' kuului tähän ensin,
+// mutta se nosti asemahallit kärkeen — ne ovat sisätiloja.
+const HYVA = /(street|square|market|plaza|piazza|platz|plein|torg|tori|harbour|harbor|port|quay|tram|bridge|park|old town|centre|center|city|downtown|avenue|boulevard|promenade|ambien|soundscape)/i;
+
+/*
+ * Peli soittaa ambienssia silmukassa ja arpoo aloituskohdan äänitteen
+ * mitasta (ambience-stream.js jättää loppuun 45 s varaa). Alle kahden
+ * minuutin klippi alkaisi siis aina samasta kohdasta ja toistaisi
+ * itseään kuuluvasti, joten kesto on osa valintaa — ja se selviää vasta
+ * kohteen omasta metadatasta, ei hakutuloksesta.
+ */
+const LYHIN_S = 120;
+const metatiedot = new Map();
+
+function aanitiedosto(tunnus) {
+  if (metatiedot.has(tunnus)) return metatiedot.get(tunnus);
+  let tulos = null;
+  try {
+    const d = hae(`https://archive.org/metadata/${encodeURIComponent(tunnus)}`);
+    const mp3 = (d.files ?? [])
+      .filter((f) => /\.mp3$/i.test(f.name ?? ''))
+      .sort((a, b) => Number(b.size ?? 0) - Number(a.size ?? 0))[0];
+    if (mp3) {
+      // Kesto puuttuu osalta mp3-merkinnöistä, mutta saman äänitteen
+      // ogg-versiossa se on. Ilman tätä puolet ehdokkaista näytti
+      // kestottomilta eikä liian lyhyitä olisi voinut karsia.
+      const kestot = (d.files ?? [])
+        .map((f) => Number(f.length ?? 0))
+        .filter((n) => Number.isFinite(n) && n > 0);
+      tulos = {
+        url: `https://archive.org/download/${tunnus}/${encodeURIComponent(mp3.name)}`,
+        kesto: kestot.length ? Math.round(Math.max(...kestot)) : null,
+        lisenssi: d.metadata?.licenseurl ?? null,
+        tekija: d.metadata?.creator ?? null,
+      };
+    }
+  } catch {
+    tulos = null;
+  }
+  metatiedot.set(tunnus, tulos);
+  return tulos;
+}
 
 const tulos = [];
 for (const c of kaupungit) {
@@ -123,33 +267,51 @@ for (const c of kaupungit) {
     if (osumat.length) break;
     nuku(2);
   }
+  const etaisyys = (d) => Math.round(Math.hypot(
+    (Number(d.latitude) - paikka.lat) * 111,
+    (Number(d.longitude) - paikka.lon) * 111 * Math.cos(paikka.lat * Math.PI / 180),
+  ) * 10) / 10;
   const pisteet = (d) => {
     const t = String(d.title ?? '');
     if (EI_KELPAA.test(t)) return -1;
     return HYVA.test(t) ? 2 : 1;
   };
-  const parhaat = osumat
-    .map((d) => ({ ...d, pisteet: pisteet(d) }))
+  // Sama äänite on aporeessa toisinaan kahteen kertaan (Marseillen
+  // haitarinsoittaja, Granadan aukiot): samanniminen kelpaa vain kerran.
+  const nahdyt = new Set();
+  const ehdolla = osumat
+    .map((d) => ({ ...d, pisteet: pisteet(d), etaisyysKm: etaisyys(d) }))
     .filter((d) => d.pisteet > 0)
-    .sort((a, b) => b.pisteet - a.pisteet)
-    .slice(0, 6);
-  tulos.push({
-    ...c,
-    lat: paikka.lat,
-    lon: paikka.lon,
-    loytyi: osumat.length,
-    ehdokkaat: parhaat.map((d) => ({
+    .filter((d) => {
+      const avain = String(d.title ?? '').toLowerCase().trim();
+      if (nahdyt.has(avain)) return false;
+      nahdyt.add(avain);
+      return true;
+    })
+    .sort((a, b) => b.pisteet - a.pisteet || a.etaisyysKm - b.etaisyysKm);
+
+  // Metadata haetaan vasta karsituille — se on yksi pyyntö kohdetta kohti.
+  const ehdokkaat = [];
+  for (const d of ehdolla) {
+    if (ehdokkaat.length >= 8) break;
+    const tiedosto = aanitiedosto(d.identifier);
+    nuku(1);
+    if (!tiedosto?.url || !vapaa(tiedosto.lisenssi)) continue;
+    if (tiedosto.kesto && tiedosto.kesto < LYHIN_S) continue;
+    ehdokkaat.push({
       tunnus: d.identifier,
       otsikko: String(d.title ?? '').slice(0, 90),
-      tekija: d.creator ?? null,
-      lisenssi: d.licenseurl ?? null,
-      etaisyysKm: Math.round(Math.hypot(
-        (Number(d.latitude) - paikka.lat) * 111,
-        (Number(d.longitude) - paikka.lon) * 111 * Math.cos(paikka.lat * Math.PI / 180),
-      ) * 10) / 10,
-    })),
+      url: tiedosto.url,
+      kesto: tiedosto.kesto,
+      tekija: tiedosto.tekija ?? d.creator ?? null,
+      lisenssi: tiedosto.lisenssi ?? d.licenseurl ?? null,
+      etaisyysKm: d.etaisyysKm,
+    });
+  }
+  tulos.push({
+    ...c, lat: paikka.lat, lon: paikka.lon, loytyi: osumat.length, ehdokkaat,
   });
-  console.log(`  ${c.nimi.padEnd(14)} ${String(osumat.length).padStart(3)} osumaa → ${parhaat.length} ehdokasta`);
+  console.log(`  ${c.nimi.padEnd(14)} ${String(osumat.length).padStart(3)} osumaa → ${ehdokkaat.length} ehdokasta`);
   nuku(2);
 }
 

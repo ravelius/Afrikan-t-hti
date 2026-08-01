@@ -8,25 +8,39 @@
 // CC-lisensoituja äänitteitä.
 
 import { sfx } from './sound.js';
-import { valittuTaiOletus, jaaAlku, tyyppiKori } from './aani-ehdokkaat.js';
+import {
+  valittuTaiOletus, jaaAlku, tyyppiKori, kaupunkiKori,
+} from './aani-ehdokkaat.js';
 import { aaniOsoite, onPeilista, peiliPetti } from './media.js';
 
-// Maisematyypin arvontakorista arvottu ääni pysyy samana koko käynnin
-// ajan: syncAmbience kutsuu playPlaceAmbiencea jokaisella piirrolla,
-// eikä ääni saa vaihtua tai katkeilla kesken kaupungissa olon.
+// Arvottu ääni pysyy samana koko käynnin ajan: syncAmbience kutsuu
+// playPlaceAmbiencea jokaisella piirrolla, eikä ääni saa vaihtua tai
+// katkeilla kesken kaupungissa olon.
 let arvottu = null; // { cityId, url }
 
 /*
  * Paikat, joiden ääni ei saa arpoutua: etusivu on pelin ensimmäinen
  * vaikutelma ja sen kuuluu kuulostaa aina samalta (omistajan toive).
- * Muille paikoille ääni arvotaan maisematyypin korista.
+ * Muille paikoille ääni arvotaan korista.
  */
 const VAKIOPAIKAT = new Set(['etusivu']);
 
-function arvoTyypista(cityId, tyyppi, lauta) {
-  if (!cityId || !tyyppi) return null;
+/**
+ * Kaupungin äänimaisema: oma kenttä-äänitys ensin, maisematyypin
+ * arvontakori varalle.
+ *
+ * Aiemmin ääni tuli aina tyyppikorista, jolloin 22 Euroopan kaupunkia
+ * jakoi kolme "kaupunki"-ääntä ja Praha kuulosti Lissabonilta.
+ * Kaupungille kerätyt äänitykset on haettu koordinaattien perusteella
+ * (tools/hae-kaupunkiaanet.mjs), joten ne ovat varmasti siitä
+ * kaupungista — ne menevät korin edelle (omistajan toive). Ilman omaa
+ * äänitystä tyyppikori toimii kuten ennen.
+ */
+function arvoAani(cityId, tyyppi, lauta) {
+  if (!cityId) return null;
   if (arvottu?.cityId === cityId) return arvottu.url;
-  const kori = tyyppiKori(tyyppi, lauta);
+  const oma = kaupunkiKori(lauta, cityId);
+  const kori = oma.length ? oma : (tyyppi ? tyyppiKori(tyyppi, lauta) : []);
   if (!kori.length) return null;
   const url = VAKIOPAIKAT.has(cityId)
     ? kori[0]
@@ -84,10 +98,9 @@ export function stopPlaceStream() {
  * ja seuraava renderöinti yrittää striimiä uudelleen.
  */
 export function playPlaceAmbience(cityId, fallbackType, lauta) {
-  // Kaupunkien äänet tulevat aina maisematyypin maanosakohtaisesta
-  // arvontakorista — kaupunkikohtaisia valintoja tai oletuksia ei ole
-  // (omistajan päätös). Tyhjä kori tarkoittaa syntetisoitua ambienssia.
-  const url = arvoTyypista(cityId, fallbackType, lauta);
+  // Kaupungin oma äänitys ensin, maisematyypin maanosakohtainen
+  // arvontakori varalle. Tyhjä kori tarkoittaa syntetisoitua ambienssia.
+  const url = arvoAani(cityId, fallbackType, lauta);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);

@@ -28,6 +28,16 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync
 import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { leikkaaMp3 } from './leikkaa-mp3.mjs';
+
+/*
+ * Taustaäänen enimmäispituus (omistajan linjaus 1.8.2026). Kenttä-
+ * äänitykset ovat usein 10–30 minuuttia, ja peli soittaa niitä
+ * silmukassa muutaman minuutin kerrallaan: loppuosa on painolastia
+ * peilissä. Leikkaus tehdään kehysrajalta koodaamatta uudelleen, joten
+ * ääni on bitilleen sama kuin alkuperäinen.
+ */
+const AANI_MAX_S = 180;
 
 const JUURI = join(dirname(fileURLToPath(import.meta.url)), '..');
 const argv = process.argv.slice(2);
@@ -274,6 +284,7 @@ function lataaAanet(urlit) {
       : `aporee-${url.match(/download\/([^/]+)/)?.[1] ?? i}`;
     const kohde = turvanimi(tunnus, pate === 'mp3' ? 'mp3' : pate);
     const polku = join(kansio, kohde);
+    const vanha = manifesti.aanet[url] ?? {};
     manifesti.aanet[url] = { tiedosto: `aanet/${kohde}`, alkuperainen: url };
 
     // Äänitteet ovat kymmeniä megatavuja ja latautuvat hitaasti, joten
@@ -283,9 +294,13 @@ function lataaAanet(urlit) {
     // pysyvästi: seuraava ajo näki sen olemassa olevana ja ohitti.
     const odotettu = etakoko(url);
     if (existsSync(polku)) {
-      const vika = kelpaa(polku, odotettu);
+      // Leikattu tiedosto on tarkoituksella palvelimen ilmoittamaa
+      // pienempi, joten sitä verrataan manifestiin kirjattuun kokoon.
+      // Ilman tätä jokainen ajo hakisi leikatut uudestaan.
+      const mitta = vanha.leikattu ? vanha.koko ?? null : odotettu;
+      const vika = kelpaa(polku, mitta);
       if (!vika) {
-        manifesti.aanet[url].koko = statSync(polku).size;
+        Object.assign(manifesti.aanet[url], vanha, { koko: statSync(polku).size });
         nuku(200);
         continue;
       }
@@ -303,6 +318,16 @@ function lataaAanet(urlit) {
         rmSync(polku, { force: true });
         virheet.push(`aanet: ${url} → ${vika}`);
       } else {
+        // Eheys on tarkistettu koko tiedostoa vasten — vasta sen jälkeen
+        // ylipitkä äänite lyhennetään.
+        if (pate === 'mp3') {
+          const leikattu = leikkaaMp3(readFileSync(polku), AANI_MAX_S);
+          if (leikattu) {
+            writeFileSync(polku, leikattu.puskuri);
+            manifesti.aanet[url].leikattu = leikattu.kesto;
+            manifesti.aanet[url].alkuperainenKoko = odotettu ?? null;
+          }
+        }
         manifesti.aanet[url].koko = statSync(polku).size;
         kokoYhteensa += statSync(polku).size;
       }

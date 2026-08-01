@@ -15932,7 +15932,8 @@ const EUROPE_ARTIKKELIT = {
     lahde: 'Wikipedia (CC BY-SA)',
   },
 
-  Pietari: {
+  // Avain on kaupungin wiki-otsikko: fi-wikin 'Pietari' on täsmennyssivu.
+  'Pietari (kaupunki)': {
     intro: 'Pietari on Venäjän toiseksi suurin kaupunki, ja siellä asuu '
              + 'noin 5,6 miljoonaa ihmistä. Pietari Suuri perusti sen vuonna '
              + '1703 Nevan suistoon valloitetun ruotsalaislinnoituksen '
@@ -26539,7 +26540,9 @@ const EU_CITIES = [
     // Sama kaupunki on myös Maailma-laudalla, josta Siperian rata jatkuu itään.
     links: [{ pack: 'maailma', city: 'moskova', label: 'Maailma-lauta' }],
   },
-  { id: 'pietari', name: 'Pietari', wiki: 'Pietari', ambience: 'kaupunki', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
+  // 'Pietari' on fi-wikissä täsmennyssivu (apostoli, kaupunki, etunimi):
+  // ilman tarkennetta Lue lisää, kuvat ja peilaus jäivät tyhjiksi.
+  { id: 'pietari', name: 'Pietari', wiki: 'Pietari (kaupunki)', ambience: 'kaupunki', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
   {
     id: 'helsinki', name: 'Helsinki', wiki: 'Helsinki', ambience: 'metsa', x: 688, y: 303, airport: true, la: 'end', lx: -16, ly: -12,
     // Suomen oma lauta avautuu Helsingistä.
@@ -40291,8 +40294,9 @@ const TYYPPI_EHDOKKAAT = {
    * väliaikaisia: omistaja voi vaihtaa parempia tilalle /aanet.html
    * -studiossa, ja voittajat kovakoodataan tänne.
    *
-   * TEKEMÄTTÄ: kaupunkikohtaiset eurooppalaiset äänitykset — etenkin
-   * raitiovaunu, kirkonkellot ja katumuusikko puuttuvat vielä.
+   * Nämä ovat nyt varareitti: kaikilla 41 Euroopan kaupungilla on oma
+   * kenttä-äänitys (KAUPUNKI_EHDOKKAAT alempana), ja siellä ovat myös
+   * aiemmin puuttuneet raitiovaunu, kirkonkellot ja katusoittaja.
    */
   kaupunki: [
     { url: 'https://cdn.freesound.org/previews/723/723081_2978883-lq.mp3', nimi: 'Kaupungin yö — rucisko, CC BY-NC' },
@@ -40600,7 +40604,8 @@ const EHDOKKAAT = {
 // ilmestyy studioon heti, kun sen kaupungeille merkitään tyypit —
 // jokainen maanosa saa oman arvontakorinsa (omistajan päätös:
 // maanosia tulee lisää, eikä Aasian savanni soi Afrikan korista).
-// Kaupunkikohtaisia valintoja ei ole: äänet tulevat aina korista.
+// Tyyppikori on nykyään varareitti: kaupungin oma kenttä-äänitys
+// (KAUPUNKI_EHDOKKAAT alempana) soi sen edellä, jos sellainen on.
 const KAUPUNGIT_TYYPEITTAIN = {};
 for (const pack of PACKS) {
   for (const city of pack.cities) {
@@ -40776,6 +40781,286 @@ function valitseTyyppiKori(tyyppi, lauta, lista) {
     merkinta[lauta] = lista ?? [];
     kaikki[tyyppi] = merkinta;
     localStorage.setItem(TYYPPIKORI_AVAIN, JSON.stringify(kaikki));
+  } catch {
+    /* yksityinen selaustila — kori ei säily */
+  }
+}
+
+/*
+ * Kaupunkien omat kenttä-äänitykset.
+ *
+ * Tyyppikori antaa saman äänen kaikille saman maiseman kaupungeille:
+ * Euroopassa 22 kaupunkia jakoi kolme "kaupunki"-ääntä, joten Praha ja
+ * Lissabon kuulostivat samalta. Nämä äänitteet on tehty juuri siinä
+ * kaupungissa. Ne on haettu radio aporeesta koordinaattien perusteella
+ * (tools/hae-kaupunkiaanet.mjs), ei nimen perusteella arvaten, ja
+ * jokainen on kuunneltu läpi: yleinen äänimaisema kelpaa, tapahtuma tai
+ * sisätila ei.
+ *
+ * Muoto on sama kuin tyyppikorilla — lista osoitteita, joista peli arpoo
+ * yhden kaupunkiin saavuttaessa. Osoite voi kantaa aloituskohdan ja
+ * voimakkuuden (#alku=20&voima=1.5). Ilman merkintää kaupunki putoaa
+ * tyyppikoriin kuten ennen.
+ */
+const KAUPUNKI_EHDOKKAAT = {
+  europe: {
+    lontoo: [
+      { url: 'https://archive.org/download/aporee_5304_6751/AutumnDayStJamesparkLondon.mp3',
+        nimi: 'St James\'s Parkin syysiltapäivä — john grzinich, CC BY-SA' },
+      { url: 'https://archive.org/download/aporee_37194_42604/20170721StJamessParkOpprearofDowningSt.mp3',
+        nimi: 'St James\'s Park Downing Streetin takana — Toby Cottrell, public domain' },
+    ],
+    istanbul: [
+      { url: 'https://archive.org/download/aporee_8127_9900/tierebeiyenicami.mp3',
+        nimi: 'Lintutori — Adi W, CC BY-SA' },
+      { url: 'https://archive.org/download/aporee_6217_7744/SundaysoundscapeTunel1640.mp3',
+        nimi: 'Tünelin äänimaisema sunnuntaina — john grzinich, CC BY-SA' },
+    ],
+    dublin: [
+      { url: 'https://archive.org/download/aporee_18838_21851/StStephensGreenWorldListeningDay180713.mp3',
+        nimi: 'Kesäiltapäivä St Stephen\'s Greenissä — billy k, public domain' },
+      { url: 'https://archive.org/download/aporee_11063_13080/18thJuly2011WorldListeningDayMiddayBellsEarlStreetSouth.MP3',
+        nimi: 'Keskipäivän kellot Earl Streetillä — billy k, CC BY-SA' },
+    ],
+    edinburgh: [
+      { url: 'https://archive.org/download/aporee_31551_36245/22032016104pmhartstreetgardenschogarth.mp3',
+        nimi: 'Puutarhojen kastelua Hart Streetin takana — Felicity Ford, CC BY-SA' },
+      { url: 'https://archive.org/download/aporee_31550_36244/220320161210pmgeorgeivparkblackbird.mp3',
+        nimi: 'Mustarastas George IV -puistossa — Felicity Ford, CC BY-SA' },
+    ],
+    pariisi: [
+      { url: 'https://archive.org/download/aporee_8974_10822/parisruemontorgueil.mp3',
+        nimi: 'Rue Montorgueil — Adi W, CC BY-SA' },
+    ],
+    marseille: [
+      { url: 'https://archive.org/download/aporee_40436_46176/201855QuaiduPortseafluxboatmurmur1737.mp3',
+        nimi: 'Vanha satama: veneiden narinaa ja puheensorinaa — OR poiesis, CC BY-NC-ND' },
+    ],
+    lissabon: [
+      { url: 'https://archive.org/download/aporee_60580_69616/20160705004glisedeSantaLuisaPCMD100.mp3',
+        nimi: 'Praça Júlio de Castilho — Flavien Gillié, public domain' },
+    ],
+    madrid: [
+      { url: 'https://archive.org/download/aporee_23518_27342/2014052405CentroCvicoTallerBrandonLabellePlazaCorralaPaseosonoroporinstalacinsillasdiariosoutwav.mp3',
+        nimi: 'Plaza de la Corrala, Lavapiés — Kamen Nedev, public domain' },
+    ],
+    barcelona: [
+      { url: 'https://archive.org/download/aporee_41792_47644/MD220006RD01.mp3',
+        nimi: 'La Rambla ja lintutori — Andrzej Maciejewski, CC BY-NC-SA' },
+    ],
+    granada: [
+      { url: 'https://archive.org/download/aporee_61524_70763/230214020BPlazaNuevaPilardelToro.mp3',
+        nimi: 'Plaza de Santa Ana — Paz Tornero, CC BY-NC-ND' },
+      { url: 'https://archive.org/download/aporee_61541_70780/230516002CatedralfrentealtarmasvolumenFadeAadido.mp3',
+        nimi: 'Plaza de las Pasiegas tuomiokirkon vieressä — Paz Tornero, CC BY-NC-ND' },
+    ],
+    amsterdam: [
+      { url: 'https://archive.org/download/aporee_9337_11221/BInterieurtramAdam.mp3',
+        nimi: 'Raitiovaunu linjalla 1 — Thijs Geritz, CC BY-SA' },
+      { url: 'https://archive.org/download/aporee_70257_81862/AmsterdamMarkenpleinWaterloopleinlopendBinaural.mp3',
+        nimi: 'Sadepäivä Waterloopleinille — Jillis Molenaar, public domain' },
+    ],
+    berliini: [
+      { url: 'https://archive.org/download/aporee_54966_62839/Gitschnerstr.mp3',
+        nimi: 'Arkea Gitschiner Straßella — sam auinger, CC BY-SA' },
+      { url: 'https://archive.org/download/aporee_2104_67340/berlinBuerkner9Hhof29102022.mp3',
+        nimi: 'Aamu takapihan ikkunasta, Bürknerstraße — udo noll, CC BY-SA' },
+    ],
+    praha: [
+      { url: 'https://archive.org/download/aporee_5354_6805/karluvmost.mp3',
+        nimi: 'Kaarlensilta — milos, CC BY-SA' },
+      { url: 'https://archive.org/download/aporee_14029_16351/svantonin.mp3',
+        nimi: 'Pyhän Antoniuksen kirkko Strossmayerin aukiolla — milos, public domain' },
+    ],
+    wien: [
+      { url: 'https://archive.org/download/aporee_60623_69666/WienJosefStraussParkAmbient.mp3',
+        nimi: 'Josef-Straußin puiston ambienssi — chr_friess, public domain' },
+      { url: 'https://archive.org/download/aporee_34815_40020/17012201Vienna1830.mp3',
+        nimi: 'Katusoittajia Stefaninkirkon edessä — damir.kustic, public domain' },
+    ],
+    budapest: [
+      { url: 'https://archive.org/download/aporee_54374_62197/81BIBUDAPESZTTramtripFromArenatoKonyvesKalmankorut170122163550.mp3',
+        nimi: 'Raitiovaunumatka — Piotrek Zyla, public domain' },
+    ],
+    varsova: [
+      { url: 'https://archive.org/download/aporee_71588_83518/2503101259.mp3',
+        nimi: 'Plac Zbawiciela, raitiovaunut ohittavat — Andrzej Maciejewski, CC BY-NC' },
+      { url: 'https://archive.org/download/aporee_71577_83505/2503081558.mp3',
+        nimi: 'Leikkipuisto ja katu — Andrzej Maciejewski, CC BY-NC' },
+    ],
+    krakova: [
+      { url: 'https://archive.org/download/aporee_71560_83484/2502221312.mp3',
+        nimi: 'Kahvila vanhassakaupungissa — Andrzej Maciejewski, CC BY-NC' },
+      { url: 'https://archive.org/download/aporee_11573_13626/hejnal.mp3',
+        nimi: 'Suuri tori (Rynek Główny) — Anna Nacher, CC BY-SA' },
+    ],
+    alpit: [
+      { url: 'https://archive.org/download/aporee_38136_43618/GlockenderKircheSanMaternoOrasso.mp3',
+        nimi: 'Orasson kirkonkellot — Fido, public domain' },
+      { url: 'https://archive.org/download/aporee_10342_12318/06caviano.mp3',
+        nimi: 'Cavianon kujat, Ticino — maboart ja ursula bohren, CC BY-SA' },
+    ],
+    venetsia: [
+      { url: 'https://archive.org/download/aporee_52547_60044/20180524PlaceSazintMarcr1session20210316.mp3',
+        nimi: 'Piazza San Marco: väkeä ja kelloja — Flavien Gillié, CC BY-NC-SA' },
+      { url: 'https://archive.org/download/aporee_27844_32090/201556veniceNightWalk2246.mp3',
+        nimi: 'Yökävely Venetsian kujilla — OR poiesis, CC BY-SA' },
+    ],
+    rooma: [
+      { url: 'https://archive.org/download/aporee_60994_70119/AMBUrbnStereoTreviFountainTuristsdifferentlangauagesaccordion.mp3',
+        nimi: 'Trevin lähde — Josue Amador, public domain' },
+    ],
+    sisilia: [
+      { url: 'https://archive.org/download/aporee_13977_16297/bambino.mp3',
+        nimi: 'Vuohilauma ja paimenten huudot, Geraci Siculo — hatoriyumi, public domain' },
+      { url: 'https://archive.org/download/aporee_61268_70466/AMBRoccazzelleSicilybeachpeoplewavesaugust.mp3',
+        nimi: 'Roccazzellen ranta — Andrea Gianessi, CC BY-NC-SA' },
+    ],
+    ateena: [
+      { url: 'https://archive.org/download/aporee_30592_35195/hackny.mp3',
+        nimi: 'Lapsia ja hevosvaunu Dionysiou Areopagitoulla — maciej janasik, CC BY' },
+      { url: 'https://archive.org/download/aporee_52826_60346/515ORTFATHENScityambientwithmusicfromFilopappouhillwestside190308001.mp3',
+        nimi: 'Kaupungin ääni Filopappoksen kukkulalta — Piotrek Zyla, public domain' },
+    ],
+    kreeta: [
+      { url: 'https://archive.org/download/aporee_14962_17435/back.mp3',
+        nimi: 'Iraklionin sivukatu turistireitin ulkopuolella — maciej janasik, public domain' },
+      { url: 'https://archive.org/download/aporee_14954_17425/wav.mp3',
+        nimi: 'Aallot Iraklionin venesataman laiturilla — maciej janasik, public domain' },
+    ],
+    dubrovnik: [
+      { url: 'https://archive.org/download/aporee_69938_81439/AMBextclosecavewaterseamerwavemouvementbasseauCroatieDubrovnikdancebeachMAUMUS.mp3',
+        nimi: 'Aallot luolassa — maumus.nico, public domain' },
+      { url: 'https://archive.org/download/aporee_59836_68692/wallsofdubrovnik.mp3',
+        nimi: 'Dubrovnikin muurit — Roberto Vodanović Čopor, public domain' },
+    ],
+    sarajevo: [
+      { url: 'https://archive.org/download/aporee_72320_84455/stjosephchurchsarajevo.mp3',
+        nimi: 'Baščaršijan äänimaisema — Haris Sahačić, public domain' },
+    ],
+    sofia: [
+      { url: 'https://archive.org/download/aporee_15487_18036/LS111000kopor.mp3',
+        nimi: 'Naistentori — Jüang Ren, public domain' },
+      { url: 'https://archive.org/download/aporee_15484_18033/LS110795.mp3',
+        nimi: 'Bitakan kirpputori — Jüang Ren, public domain' },
+    ],
+    bukarest: [
+      { url: 'https://archive.org/download/aporee_63552_73145/992BIBUCHARESTchildrenplayinginIcoaneipark230505at1055.mp3',
+        nimi: 'Lapsia Icoanein puistossa — Piotrek Zyla, public domain' },
+    ],
+    kiova: [
+      { url: 'https://archive.org/download/aporee_41361_47183/upload20180928140034.mp3',
+        nimi: 'Lintuja ja katua puistossa — soundkovalsky, public domain' },
+      { url: 'https://archive.org/download/aporee_41362_47184/upload20180928142313.mp3',
+        nimi: 'Olena Telihan katu: linnut ja liikenne — soundkovalsky, public domain' },
+    ],
+    odessa: [
+      { url: 'https://archive.org/download/aporee_33457_38490/LS112245.mp3',
+        nimi: 'Raitiovaunumatka kaupungin halki — Jüang Ren, public domain' },
+    ],
+    moskova: [
+      { url: 'https://archive.org/download/aporee_2952_4003/RoterPlatz.mp3',
+        nimi: 'Punainen tori — botsch, CC BY-SA' },
+      { url: 'https://archive.org/download/aporee_47375_53831/200127004.mp3',
+        nimi: 'Donskajan aukio — val.trubin, public domain' },
+    ],
+    pietari: [
+      { url: 'https://archive.org/download/aporee_69929_81429/ambienceatmosphereofeveningcitystreetnearnoisyavenue.mp3',
+        nimi: 'Iltakatu keskustassa — albert.mail, public domain' },
+      { url: 'https://archive.org/download/aporee_39420_45057/B1.mp3',
+        nimi: 'Sennajan aukio — yakovlurie, public domain' },
+    ],
+    helsinki: [
+      { url: 'https://archive.org/download/aporee_13153_15385/11081005HelsinkiKauppatori171216bit224.mp3',
+        nimi: 'Kauppatori — damir.kustic, public domain' },
+    ],
+    tallinna: [
+      { url: 'https://archive.org/download/aporee_46851_53197/AsonicwalkanddeeplisteningtoKalamaja1.mp3',
+        nimi: 'Kalamajan puisto, hidas kävely — bruno.quast, public domain' },
+      { url: 'https://archive.org/download/aporee_10868_12873/tallinnKopliMaratiPark110707b.mp3',
+        nimi: 'Koplin puisto — udo noll, CC BY-SA' },
+    ],
+    riika: [
+      { url: 'https://archive.org/download/aporee_57929_66350/rigachanelunderwater.mp3',
+        nimi: 'Kanaali — alas23/sala, public domain' },
+      { url: 'https://archive.org/download/aporee_57927_66348/rigacenterwalk2030.mp3',
+        nimi: 'Iltakävely — alas23/sala, public domain' },
+    ],
+    vilna: [
+      { url: 'https://archive.org/download/aporee_53389_61000/SokantisFontanas.mp3',
+        nimi: 'Tanssiva suihkulähde puistossa — Marius Paulikas, public domain' },
+      { url: 'https://archive.org/download/aporee_9230_11102/vilnius1.mp3',
+        nimi: 'Linnut kaupungin melussa — alas23/sala, CC BY-SA' },
+    ],
+    tukholma: [
+      { url: 'https://archive.org/download/aporee_33112_38049/StockholmdesdepontKlarastrandsleden.mp3',
+        nimi: 'Junat, autot ja vesi Norrmalmissa — Albert Murillo, CC BY' },
+      { url: 'https://archive.org/download/aporee_33214_38190/StockholmplaaHtorgetmercatdeflors.mp3',
+        nimi: 'Kukkatori Norrmalmissa — Albert Murillo, CC BY' },
+    ],
+    oslo: [
+      { url: 'https://archive.org/download/aporee_45891_52120/carillondiOslo.mp3',
+        nimi: 'Kaupungintalon kellopeli — saveriodecian, public domain' },
+      { url: 'https://archive.org/download/aporee_19365_22488/LS111550park.mp3',
+        nimi: 'Kävely Vigelandin puistossa — alas23/sala, public domain' },
+    ],
+    kobenhavn: [
+      { url: 'https://archive.org/download/aporee_6346_7890/verkehrboulevard.MP3',
+        nimi: 'Åboulevardin liikenne myöhään illalla — Adi W, CC BY-SA' },
+    ],
+    lappi: [
+      { url: 'https://archive.org/download/aporee_32161_36945/patrickmcginley20160505kemijokibridge.mp3',
+        nimi: 'Kemijoen ranta sillan alla, Rovaniemi — patrick mcginley, CC BY-NC-SA' },
+    ],
+    tromssa: [
+      { url: 'https://archive.org/download/aporee_65563_75724/Harbour20241014174716.mp3',
+        nimi: 'Sataman ponttoni narisee — anguscarlyle, public domain' },
+      { url: 'https://archive.org/download/aporee_65153_75248/AmundsenPark.mp3',
+        nimi: 'Roald Amundsenin aukion puisto — anguscarlyle, public domain' },
+    ],
+    islanti: [
+      { url: 'https://archive.org/download/aporee_1475_2022/neoscenes0924074birdstreet2is.mp3',
+        nimi: 'Lintu kadun varrella — John Hopkins, CC BY-SA' },
+      { url: 'https://archive.org/download/aporee_61946_71274/231021Trollafoss.mp3',
+        nimi: 'Tröllafossin vesiputous — john grzinich, CC BY-NC-ND' },
+    ],
+  },
+};
+
+/** Omat äänitykset saaneet kaupungit laudoittain — äänistudiota varten. */
+const KAUPUNKI_LISTA = PACKS
+  .map((pack) => ({
+    lauta: pack.id,
+    maanosa: pack.boardLabel ?? pack.name,
+    kaupungit: pack.cities
+      .filter((c) => (KAUPUNKI_EHDOKKAAT[pack.id] ?? {})[c.id]?.length)
+      .map((c) => ({
+        id: c.id, nimi: c.name, ehdokkaat: KAUPUNKI_EHDOKKAAT[pack.id][c.id],
+      })),
+  }))
+  .filter((l) => l.kaupungit.length);
+
+const KAUPUNKIKORI_AVAIN = 'matkakirja-kaupunkivalinnat';
+
+/** Kaupungin arvontakori: studiovalinta, muuten kaikki sen äänitykset. */
+function kaupunkiKori(lauta, cityId) {
+  try {
+    const kaikki = JSON.parse(localStorage.getItem(KAUPUNKIKORI_AVAIN) ?? '{}');
+    const lista = kaikki[lauta]?.[cityId];
+    if (Array.isArray(lista)) return lista.filter(Boolean);
+  } catch {
+    /* yksityinen selaustila — oletus kelpaa */
+  }
+  return (KAUPUNKI_EHDOKKAAT[lauta]?.[cityId] ?? [])
+    .map((e) => (e.alku ? `${e.url}#alku=${e.alku}` : e.url));
+}
+
+/** Tallentaa yhden kaupungin arvontakorin. Tyhjä lista = tyyppikoriin. */
+function valitseKaupunkiKori(lauta, cityId, lista) {
+  try {
+    const kaikki = JSON.parse(localStorage.getItem(KAUPUNKIKORI_AVAIN) ?? '{}');
+    kaikki[lauta] = { ...(kaikki[lauta] ?? {}), [cityId]: lista ?? [] };
+    localStorage.setItem(KAUPUNKIKORI_AVAIN, JSON.stringify(kaikki));
   } catch {
     /* yksityinen selaustila — kori ei säily */
   }
@@ -41958,22 +42243,34 @@ function treasureSound(type) {
 // ja ne arvotaan maisematyypin korista (aani-ehdokkaat.js). Vain
 // CC-lisensoituja äänitteitä.
 
-// Maisematyypin arvontakorista arvottu ääni pysyy samana koko käynnin
-// ajan: syncAmbience kutsuu playPlaceAmbiencea jokaisella piirrolla,
-// eikä ääni saa vaihtua tai katkeilla kesken kaupungissa olon.
+// Arvottu ääni pysyy samana koko käynnin ajan: syncAmbience kutsuu
+// playPlaceAmbiencea jokaisella piirrolla, eikä ääni saa vaihtua tai
+// katkeilla kesken kaupungissa olon.
 let arvottu = null; // { cityId, url }
 
 /*
  * Paikat, joiden ääni ei saa arpoutua: etusivu on pelin ensimmäinen
  * vaikutelma ja sen kuuluu kuulostaa aina samalta (omistajan toive).
- * Muille paikoille ääni arvotaan maisematyypin korista.
+ * Muille paikoille ääni arvotaan korista.
  */
 const VAKIOPAIKAT = new Set(['etusivu']);
 
-function arvoTyypista(cityId, tyyppi, lauta) {
-  if (!cityId || !tyyppi) return null;
+/**
+ * Kaupungin äänimaisema: oma kenttä-äänitys ensin, maisematyypin
+ * arvontakori varalle.
+ *
+ * Aiemmin ääni tuli aina tyyppikorista, jolloin 22 Euroopan kaupunkia
+ * jakoi kolme "kaupunki"-ääntä ja Praha kuulosti Lissabonilta.
+ * Kaupungille kerätyt äänitykset on haettu koordinaattien perusteella
+ * (tools/hae-kaupunkiaanet.mjs), joten ne ovat varmasti siitä
+ * kaupungista — ne menevät korin edelle (omistajan toive). Ilman omaa
+ * äänitystä tyyppikori toimii kuten ennen.
+ */
+function arvoAani(cityId, tyyppi, lauta) {
+  if (!cityId) return null;
   if (arvottu?.cityId === cityId) return arvottu.url;
-  const kori = tyyppiKori(tyyppi, lauta);
+  const oma = kaupunkiKori(lauta, cityId);
+  const kori = oma.length ? oma : (tyyppi ? tyyppiKori(tyyppi, lauta) : []);
   if (!kori.length) return null;
   const url = VAKIOPAIKAT.has(cityId)
     ? kori[0]
@@ -42031,10 +42328,9 @@ function stopPlaceStream() {
  * ja seuraava renderöinti yrittää striimiä uudelleen.
  */
 function playPlaceAmbience(cityId, fallbackType, lauta) {
-  // Kaupunkien äänet tulevat aina maisematyypin maanosakohtaisesta
-  // arvontakorista — kaupunkikohtaisia valintoja tai oletuksia ei ole
-  // (omistajan päätös). Tyhjä kori tarkoittaa syntetisoitua ambienssia.
-  const url = arvoTyypista(cityId, fallbackType, lauta);
+  // Kaupungin oma äänitys ensin, maisematyypin maanosakohtainen
+  // arvontakori varalle. Tyhjä kori tarkoittaa syntetisoitua ambienssia.
+  const url = arvoAani(cityId, fallbackType, lauta);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);
@@ -51187,7 +51483,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.139';
+const APP_VERSION = '2026-08-01.140';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

@@ -158,6 +158,7 @@
       EHDOKKAAT, kaikkiValinnat, valitseAani, valittuAani, jaaAlku,
       TYYPPI_EHDOKKAAT, TYYPPI_NIMET, KAUPUNGIT_TYYPEITTAIN,
       tyyppiKori, valitseTyyppiKori, puheVoima, asetaPuheVoima,
+      KAUPUNKI_LISTA, kaupunkiKori, valitseKaupunkiKori,
     } from './js/aani-ehdokkaat.js';
 
     // --- pikatestit ---------------------------------------------------------
@@ -555,6 +556,106 @@
     }
 
     /**
+     * Yhden kaupungin omat kenttä-äänitykset. Sama rakenne kuin
+     * tyyppikorilla — rastit, aloituskohta ja voimakkuus — mutta kori on
+     * vain tälle kaupungille. Kun korissa on yksikin ääni, se soi
+     * maisematyypin korin sijaan; kaikkien rastien poisto palauttaa
+     * kaupungin tyyppikoriin.
+     */
+    function rakennaKaupunkiKori(lauta, kaupunki) {
+      const koriSlot = `kaupunki:${lauta}:${kaupunki.id}`;
+      const koriNyt = kaupunkiKori(lauta, kaupunki.id);
+      const kotelo = document.createElement('details');
+      kotelo.className = 'manner';
+      kotelo.open = haku ? true : !kiinniMannet.has(koriSlot);
+      kotelo.addEventListener('toggle', () => {
+        if (kotelo.open) kiinniMannet.delete(koriSlot);
+        else kiinniMannet.add(koriSlot);
+      });
+      const summary = document.createElement('summary');
+      const tila = koriNyt.length ? `korissa ${koriNyt.length}` : 'tyyppikorista';
+      summary.innerHTML = `${kaupunki.nimi} <span class="maara">· ${tila}`
+        + ` · ${kaupunki.ehdokkaat.length} äänitystä</span>`;
+      kotelo.appendChild(summary);
+
+      for (const ehdokas of kaupunki.ehdokkaat) {
+        const tallennettu = koriNyt.find((k) => jaaAlku(k).url === ehdokas.url) ?? null;
+        const pohja = jaaAlku(tallennettu
+          ?? (ehdokas.alku ? `${ehdokas.url}#alku=${ehdokas.alku}` : ehdokas.url));
+        const rivi = document.createElement('div');
+        rivi.className = 'kori-rivi';
+        const soitto = document.createElement('button');
+        soitto.type = 'button';
+        soitto.className = 'soita';
+        soitto.textContent = '▶';
+        const nimio = document.createElement('label');
+        const ruutu = document.createElement('input');
+        ruutu.type = 'checkbox';
+        ruutu.checked = tallennettu !== null;
+        nimio.appendChild(ruutu);
+        nimio.appendChild(document.createTextNode(ehdokas.nimi));
+        const aika = document.createElement('input');
+        aika.type = 'range';
+        aika.className = 'alku';
+        aika.min = '0';
+        aika.max = '120';
+        aika.step = '1';
+        aika.value = String(pohja.alku || 0);
+        aika.title = 'aloituskohta sekunteina';
+        const sek = document.createElement('span');
+        sek.className = 'sek';
+        sek.textContent = `${pohja.alku || 0} s`;
+        const voimaKentta = document.createElement('input');
+        voimaKentta.type = 'range';
+        voimaKentta.min = '0.2';
+        voimaKentta.max = '3';
+        voimaKentta.step = '0.1';
+        voimaKentta.value = String(pohja.voima || 1);
+        voimaKentta.title = 'voimakkuuskerroin';
+        const kertaa = document.createElement('span');
+        kertaa.className = 'sek';
+        kertaa.textContent = `${(pohja.voima || 1).toFixed(1)}×`;
+        aika.addEventListener('input', () => { sek.textContent = `${aika.value} s`; });
+        voimaKentta.addEventListener('input', () => {
+          kertaa.textContent = `${Number(voimaKentta.value).toFixed(1)}×`;
+          saadaEsikuunteluVoima(koriSlot, ehdokas.url, Number(voimaKentta.value));
+        });
+        const arvoNyt = () => {
+          const osat = [];
+          const a = Math.max(0, Number(aika.value) || 0);
+          const v = Math.max(0.1, Number(voimaKentta.value) || 1);
+          if (a > 0) osat.push(`alku=${a}`);
+          if (v !== 1) osat.push(`voima=${v}`);
+          return osat.length ? `${ehdokas.url}#${osat.join('&')}` : ehdokas.url;
+        };
+        soitto.addEventListener('click', () => soita({
+          url: ehdokas.url,
+          nimi: `${kaupunki.nimi}: ${ehdokas.nimi}`,
+          alku: Math.max(0, Number(aika.value) || 0),
+          voima: Math.max(0.1, Number(voimaKentta.value) || 1),
+          slot: koriSlot,
+        }));
+        const talleta = () => {
+          const nyt = kaupunkiKori(lauta, kaupunki.id)
+            .filter((k) => jaaAlku(k).url !== ehdokas.url);
+          if (ruutu.checked) nyt.push(arvoNyt());
+          valitseKaupunkiKori(lauta, kaupunki.id, nyt);
+        };
+        ruutu.addEventListener('change', () => { talleta(); rakenna(); });
+        aika.addEventListener('change', talleta);
+        voimaKentta.addEventListener('change', talleta);
+        rivi.appendChild(soitto);
+        rivi.appendChild(nimio);
+        rivi.appendChild(aika);
+        rivi.appendChild(sek);
+        rivi.appendChild(voimaKentta);
+        rivi.appendChild(kertaa);
+        kotelo.appendChild(rivi);
+      }
+      return kotelo;
+    }
+
+    /**
      * Tyypin yhteinen "lisää ääniä" -lohko: oma osoite ja Freesound-haku.
      * Lisätty ääni ilmestyy tyypin listaan kaikissa maanosissa.
      */
@@ -659,9 +760,9 @@
         jarjestetty.map(([, l]) => l.maanosa).join(' · '));
       const seloste = document.createElement('p');
       seloste.className = 'kori-seloste';
-      seloste.textContent = 'Paikkojen äänimaisemat maanosittain: jokaisella maanosalla '
-        + 'on maisematyyppien arvontakorit, joista peli arpoo äänen saapuessa. '
-        + 'Myöhemmin jaottelu tarkentuu maihin ja kaupunkeihin.';
+      seloste.textContent = 'Paikkojen äänimaisemat maanosittain. Kaupungin oma '
+        + 'kenttä-äänitys soi ensin; ilman sitä peli arpoo äänen maisematyypin '
+        + 'korista. Kun kaupungin kaikki rastit ottaa pois, se palaa tyyppikoriin.';
       kotelo.appendChild(seloste);
 
       for (const [lauta, t] of jarjestetty) {
@@ -672,9 +773,31 @@
           if (lohko.open) kiinniMannet.delete(`lauta:${lauta}`);
           else kiinniMannet.add(`lauta:${lauta}`);
         });
+        const omat = (KAUPUNKI_LISTA.find((l) => l.lauta === lauta)?.kaupungit ?? [])
+          .filter((k) => !haku || k.nimi.toLowerCase().includes(haku)
+            || k.ehdokkaat.some((e) => e.nimi.toLowerCase().includes(haku)));
         const ots = document.createElement('summary');
-        ots.innerHTML = `${t.maanosa} <span class="maara">· ${t.tyypit.length} maisematyyppiä</span>`;
+        ots.innerHTML = `${t.maanosa} <span class="maara">· ${t.tyypit.length} maisematyyppiä`
+          + `${omat.length ? ` · ${omat.length} kaupungilla oma äänitys` : ''}</span>`;
         lohko.appendChild(ots);
+        // Kaupunkien omat äänitykset ensin: ne soivat tyyppikorin edellä.
+        if (omat.length) {
+          const omaKotelo = document.createElement('details');
+          omaKotelo.className = 'manner';
+          omaKotelo.open = haku ? true : !kiinniMannet.has(`omat:${lauta}`);
+          omaKotelo.addEventListener('toggle', () => {
+            if (omaKotelo.open) kiinniMannet.delete(`omat:${lauta}`);
+            else kiinniMannet.add(`omat:${lauta}`);
+          });
+          const omaOts = document.createElement('summary');
+          omaOts.innerHTML = 'Kaupunkien omat äänitykset '
+            + `<span class="maara">· ${omat.length} kaupunkia · radio aporee</span>`;
+          omaKotelo.appendChild(omaOts);
+          for (const kaupunki of omat) {
+            omaKotelo.appendChild(rakennaKaupunkiKori(lauta, kaupunki));
+          }
+          lohko.appendChild(omaKotelo);
+        }
         for (const { tyyppi, tiedot, rivit } of t.tyypit) {
           lohko.appendChild(rakennaMaanosaKori(tyyppi, tiedot, rivit));
         }
@@ -1031,6 +1154,23 @@
           rivit.push(`Arvontakori ${tyyppi} (${maanosa}): ${nimet.join(' | ')}`);
         }
       }
+      // Kaupunkien omat äänitykset omana lohkonaan.
+      for (const [lauta, kaupungit] of Object.entries(kaikkiKaupunkiKorit())) {
+        const tiedot = KAUPUNKI_LISTA.find((l) => l.lauta === lauta);
+        for (const [cityId, lista] of Object.entries(kaupungit)) {
+          const kaupunki = tiedot?.kaupungit.find((k) => k.id === cityId);
+          const nimet = lista.map((k) => {
+            const { url, alku, voima } = jaaAlku(k);
+            const nimi = kaupunki?.ehdokkaat.find((e) => e.url === url)?.nimi ?? k;
+            const osat = [];
+            if (alku > 0) osat.push(`alkaa ${alku} s`);
+            if (voima !== 1) osat.push(`voima ${voima}×`);
+            return osat.length ? `${nimi} (${osat.join(', ')})` : nimi;
+          });
+          rivit.push(`Kaupungin ääni ${kaupunki?.nimi ?? cityId} (${tiedot?.maanosa ?? lauta}): `
+            + (nimet.length ? nimet.join(' | ') : 'tyyppikorista'));
+        }
+      }
       const teksti = rivit.length
         ? `Äänivalinnat:\n${rivit.join('\n')}`
         : 'Ei vielä valintoja — kaikki oletuksilla.';
@@ -1048,11 +1188,29 @@
       }
       return korit;
     };
+    // Kaupunkien omat korit: vain ne, joita on studiossa muokattu.
+    // Muokkaamaton kaupunki soittaa koodin oletusäänitykset.
+    const kaikkiKaupunkiKorit = () => {
+      const korit = {};
+      try {
+        const tallennetut = JSON.parse(localStorage.getItem('matkakirja-kaupunkivalinnat') ?? '{}');
+        for (const [lauta, kaupungit] of Object.entries(tallennetut)) {
+          for (const [cityId, lista] of Object.entries(kaupungit ?? {})) {
+            if (Array.isArray(lista)) (korit[lauta] ??= {})[cityId] = lista;
+          }
+        }
+      } catch {
+        /* yksityinen selaustila — ei vietävää */
+      }
+      return korit;
+    };
     document.getElementById('kopioi-json').addEventListener('click', () => {
       const siistit = Object.fromEntries(
         Object.entries(kaikkiValinnat()).filter(([slot]) => EHDOKKAAT[slot]),
       );
-      const teksti = JSON.stringify({ valinnat: siistit, korit: kaikkiKorit() }, null, 1);
+      const teksti = JSON.stringify({
+        valinnat: siistit, korit: kaikkiKorit(), kaupungit: kaikkiKaupunkiKorit(),
+      }, null, 1);
       document.getElementById('valinnat-teksti').textContent = teksti;
       navigator.clipboard?.writeText(teksti).catch(() => {});
     });
@@ -1062,8 +1220,9 @@
         // Uusi muoto: { valinnat, korit }. Vanha muoto: pelkkä valinnat-kartta.
         const valinnatOsa = tuotu.valinnat ?? tuotu;
         for (const [slot, arvo] of Object.entries(valinnatOsa)) {
-          // Vanhan muodon kaupunkikohtaiset valinnat ohitetaan: kaupungit
-          // saavat äänensä arvontakoreista.
+          // Vanhan muodon kaupunkivalinta oli yksi osoite paikkaa kohti.
+          // Nyt kaupungilla on kori, joka tuodaan omasta kaupungit-
+          // lohkostaan, joten vanhat rivit ohitetaan.
           if (slot.startsWith('kaupunki:')) continue;
           valitseAani(slot, arvo === '' ? null : arvo);
         }
@@ -1077,6 +1236,11 @@
             for (const [lauta, lista] of Object.entries(arvo)) {
               if (Array.isArray(lista)) valitseTyyppiKori(tyyppi, lauta, lista);
             }
+          }
+        }
+        for (const [lauta, kaupungit] of Object.entries(tuotu.kaupungit ?? {})) {
+          for (const [cityId, lista] of Object.entries(kaupungit ?? {})) {
+            if (Array.isArray(lista)) valitseKaupunkiKori(lauta, cityId, lista);
           }
         }
         rakenna();
