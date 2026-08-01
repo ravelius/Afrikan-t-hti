@@ -20,8 +20,18 @@ import {
 } from './pack.js';
 import { stampBoard, stampDate, stampList } from './passport.js';
 import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from './wiki.js';
-import { drawPuzzle } from './packs/africa-puzzles.js';
-import { OMAT_TIIVISTELMAT } from './packs/africa-tiivistelmat.js';
+import { drawPuzzle as piirraAfrikanPulma, hasSketch as afrikanPulma } from './packs/africa-puzzles.js';
+import { drawPuzzle as piirraEuroopanPulma } from './packs/europe-puzzles.js';
+
+/**
+ * Pulman piirros oikeasta laudasta. Tunnisteet ovat yksilöllisiä yli
+ * lautojen, joten oikea piirtäjä löytyy kysymällä.
+ */
+function drawPuzzle(svg, id, data) {
+  if (afrikanPulma(id)) piirraAfrikanPulma(svg, id, data);
+  else piirraEuroopanPulma(svg, id, data);
+}
+import { OMAT_TIIVISTELMAT } from './packs/omat-tiivistelmat.js';
 import { OMAT_ARTIKKELIT } from './packs/africa-artikkelit.js';
 import { AFRICA_MAATIEDOT } from './packs/africa-maatiedot.js';
 import { AFRICA_VALOKUVAT, lippuUrl, valokuvaUrl } from './packs/africa-valokuvat.js';

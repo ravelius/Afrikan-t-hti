@@ -728,6 +728,58 @@ const LANDMARKS = {
     el('path', { d: 'M-12,-6 L0,-20 L12,-6 q-12,5 -24,0 z', class: 'doodle-fill' }, g);
     el('path', { d: 'M-30,16 q30,5 60,0', class: 'doodle' }, g);
   },
+  // Akropolis: pylväsrivi ja päätykolmio kalliokukkulan päällä.
+  acropolis: (g) => {
+    el('path', { d: 'M-34,18 q34,-9 68,0', class: 'doodle' }, g);
+    el('path', { d: 'M-26,4 L0,-14 L26,4 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-26,4 L26,4', class: 'doodle' }, g);
+    for (const x of [-20, -10, 0, 10, 20]) {
+      el('path', { d: `M${x},6 L${x},16`, class: 'doodle' }, g);
+    }
+    el('path', { d: 'M-24,16 L24,16', class: 'doodle' }, g);
+  },
+  // Colosseum: soikea kehä kahdessa kaarikerroksessa, toinen laita murtunut.
+  colosseum: (g) => {
+    // Ääriviivat täytön sijaan: umpinaisena muoto jäi tummaksi läiskäksi
+    // eivätkä kaaret erottuneet.
+    el('path', { d: 'M-26,8 q26,10 52,0', class: 'doodle' }, g);
+    el('path', { d: 'M-26,8 L-26,-8 q26,-12 52,0 L26,8', class: 'doodle' }, g);
+    el('path', { d: 'M-26,-2 q26,10 52,0', class: 'doodle' }, g);
+    for (const x of [-17, -6, 5, 16]) {
+      el('path', { d: `M${x},2 q0,-7 5,-7 q5,0 5,7`, class: 'doodle' }, g);
+      el('path', { d: `M${x},-8 q0,-6 5,-6 q5,0 5,6`, class: 'doodle' }, g);
+    }
+    // Murtunut kohta oikealla: keskiajalla kivi vietiin kirkkoihin.
+    el('path', { d: 'M20,-12 L26,-6', class: 'doodle' }, g);
+  },
+  // Tulivuori: kartio, jonka laelta nousee savu.
+  volcano: (g) => {
+    // Kartio ääriviivana; vain kraaterin lakiosa täytetään, jotta
+    // savu erottuu eikä vuoresta tule tummaa kolmiota.
+    el('path', { d: 'M-28,16 L-9,-14 L9,-14 L28,16', class: 'doodle' }, g);
+    el('path', { d: 'M-9,-14 q9,5 18,0 L13,-8 q-13,5 -26,0 Z', class: 'doodle-fill' }, g);
+    el('path', { d: 'M-4,-19 q-7,-9 2,-14 q9,-5 3,-13', class: 'doodle' }, g);
+    el('path', { d: 'M7,-19 q7,-8 -1,-13', class: 'doodle' }, g);
+    el('path', { d: 'M-14,-4 q6,10 2,20 M12,-2 q-5,9 -1,18', class: 'doodle' }, g);
+    el('path', { d: 'M-28,18 q28,5 56,0', class: 'doodle' }, g);
+  },
+  // Geysir: maasta purkautuva vesipatsas ja höyryä.
+  geyser: (g) => {
+    el('path', { d: 'M-22,16 q22,-6 44,0', class: 'doodle' }, g);
+    el('path', { d: 'M-8,14 q8,-16 0,-30 q-3,-8 3,-12', class: 'doodle' }, g);
+    el('path', { d: 'M6,14 q-6,-14 1,-26', class: 'doodle' }, g);
+    el('path', { d: 'M-14,-16 q6,-6 3,-12 M12,-14 q-5,-7 1,-12', class: 'doodle' }, g);
+    el('ellipse', { cx: -1, cy: 15, rx: 13, ry: 4, class: 'doodle-fill' }, g);
+  },
+  // Revontulet: kaksi aaltoilevaa verhoa ja muutama tähti.
+  aurora: (g) => {
+    el('path', { d: 'M-32,2 q12,-20 26,-8 q14,12 30,-10', class: 'doodle' }, g);
+    el('path', { d: 'M-30,12 q12,-19 26,-8 q14,12 30,-10', class: 'doodle' }, g);
+    el('path', { d: 'M-26,20 q12,-17 24,-7 q13,11 27,-9', class: 'doodle' }, g);
+    for (const [x, y] of [[-24, -14], [4, -18], [26, -8]]) {
+      el('path', { d: `M${x - 3},${y} L${x + 3},${y} M${x},${y - 3} L${x},${y + 3}`, class: 'doodle' }, g);
+    }
+  },
   // Dhow: kolmiomainen latinalaispurje, joka on Intian valtameren tuntomerkki.
   dhow: (g) => {
     el('path', { d: 'M-20,10 L22,10 L14,20 L-14,20 Z', class: 'doodle-fill' }, g);

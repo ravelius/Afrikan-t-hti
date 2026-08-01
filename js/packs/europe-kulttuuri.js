@@ -475,6 +475,11 @@ export const EUROPE_KULTTUURI = {
           + 'antiikin akveduktia pitkin.',
         lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Trevin suihkulähde',
+        // Kenttä-äänitys Rooman kadulta suihkulähteelle käveltäessä —
+        // ei Trevin vaan Pantheonin aukiolta, mutta sama ääni: askelia
+        // katukivillä ja veden solinaa.
+        aani: 'https://archive.org/download/aporee_15080_17587/WalkingtoPantheonFountainRome.mp3',
+        aaniLahde: '"Walking to Pantheon Fountain, Rome" — Rolf Yngve, radio aporee (public domain)',
       },
       {
         tyyppi: 'kuva',
@@ -634,6 +639,9 @@ export const EUROPE_KULTTUURI = {
           + 'jatkuu iltaan.',
         lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Palermo',
+        // Kenttä-äänitys juuri tältä torilta maaliskuussa 2009.
+        aani: 'https://archive.org/download/aporee_6826_8498/palermoballarmarzo2009.MP3',
+        aaniLahde: '"ballarò" — Attilio Migliorati, radio aporee (CC BY-SA 3.0)',
       },
     ],
     kysymys: {
@@ -737,6 +745,10 @@ export const EUROPE_KULTTUURI = {
         musiikkiVapaa: 'https://bnr.bg/en/live',
         musiikkiVapaaNimi: 'BNR — Bulgarian yleisradion suorat lähetykset',
         musiikkiVapaaLyhyt: 'BNR',
+        // Kenttä-äänitys Sofian keskustasta: laulua, gaidaa ja rumpua
+        // kadulla. Lisenssi varmistettu archive.orgin metatiedoista.
+        aani: 'https://archive.org/download/aporee_34245_39372/streetmusicianssofia.mp3',
+        aaniLahde: '"Sofia Center — street musicians: voice, gaida and drum" — dohfoh, radio aporee (public domain)',
       },
       {
         tyyppi: 'kuva',
