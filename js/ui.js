@@ -3866,10 +3866,13 @@ export class UI {
       + 'ei pilkkaa eikä säälittelyä, ei pelkkiä turistikliseitä. '
       + 'Vaikeita aiheita ei kaunistella eikä kauhistella.');
 
-    valiotsikko('Avoin ja ilmainen');
-    kappale('Peli on avoin harrastusprojekti. Koodi ja sisältö ovat '
-      + 'vapaasti saatavilla, ja kuvat sekä tiedot tulevat avoimista '
-      + 'lähteistä lähdemainintoineen.');
+    valiotsikko('Avointa ja ilmaista');
+    kappale('Peli on ilmainen harrastusprojekti, ja sen lähdekoodi on '
+      + 'kaikkien luettavissa. Kuvat, äänet ja tiedot tulevat avoimista '
+      + 'lähteistä, ja jokaisen kohdalla lukee mistä se on ja kuka sen '
+      + 'on tehnyt. Peli itse on tekijänsä omaisuutta: sitä saa pelata '
+      + 'ja lähdekoodia lukea vapaasti, mutta julkaisuun tai omaan '
+      + 'tuotteeseen tarvitaan lupa.');
 
     const linkit = html('p', 'periaate-linkit');
     const gh = html('a', 'periaate-linkki', 'Pelin GitHub-sivu');

@@ -1,7 +1,7 @@
 # Matkakirja ★
 
 Selaimessa pelattava seikkailupeli, jonka innoittajana on klassinen Afrikan tähti
--lautapeli. Matkakirja on itsenäinen, avoin harrastusprojekti, jolla ei ole
+-lautapeli. Matkakirja on itsenäinen harrastusprojekti, jolla ei ole
 yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei
 käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana on
 oppia ja opettaa maiden kulttuurista, arjesta ja maantieteestä kiinnostavasti.
@@ -236,3 +236,17 @@ node tools/make-icons.mjs --png <polku/playwright/index.mjs>  # myös PNG:t
 ```
 
 Valmiit tiedostot ovat repossa, joten skriptiä tarvitaan vain kuvakkeen muuttuessa.
+
+## Lisenssi
+
+Copyright © 2026 Sami Reivinen. Kaikki oikeudet pidätetään — ks.
+[LICENSE](LICENSE).
+
+Peliä saa pelata ja lähdekoodia lukea vapaasti. Julkaisuun, levitykseen
+tai omaan tuotteeseen tarvitaan lupa.
+
+Pelin näyttämät valokuvat, äänet ja tiedot eivät ole tekijän omaisuutta:
+ne tulevat Wikimedia Commonsista, Freesoundista, radio aporeesta,
+Wikipediasta, Maailmanpankilta ja V-Demiltä omilla avoimilla
+lisensseillään. Jokaisen lähde, tekijä ja lisenssi on merkitty pelin
+sisältötiedostoihin.
