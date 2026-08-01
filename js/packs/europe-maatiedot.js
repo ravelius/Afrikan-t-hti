@@ -529,7 +529,7 @@ export const EUROPE_MAATIEDOT = {
     keskitulo: { arvo: '5 510 $/v', sija: '113./190' },
     tervehdykset: [
       { teksti: 'Доброго дня', kieli: 'ukraina', lippu: 'Flag of Ukraine.svg', osuus: '78 %' },
-      { teksti: 'Добрый день', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '30 %' },
+      { teksti: 'Добрый день', kieli: 'venäjä', osuus: '30 %' },
       { teksti: 'Selâm aleyküm', kieli: 'krimintataari', lippu: 'Flag of the Crimean Tatar people.svg', osuus: '0,5 %' },
     ],
   },
@@ -578,7 +578,7 @@ export const EUROPE_MAATIEDOT = {
     keskitulo: { arvo: '32 310 $/v', sija: '38./190' },
     tervehdykset: [
       { teksti: 'Tere', kieli: 'viro', lippu: 'Flag of Estonia.svg', osuus: '84 %' },
-      { teksti: 'Здравствуйте', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '27 %' },
+      { teksti: 'Здравствуйте', kieli: 'venäjä', osuus: '27 %' },
       { teksti: 'Tereq', kieli: 'võro', lippu: 'Flag of et-Võru.svg', osuus: '5 %' },
     ],
   },
@@ -602,7 +602,7 @@ export const EUROPE_MAATIEDOT = {
     keskitulo: { arvo: '24 980 $/v', sija: '48./190' },
     tervehdykset: [
       { teksti: 'Labdien', kieli: 'latvia', lippu: 'Flag of Latvia.svg', osuus: '62 %' },
-      { teksti: 'Здравствуйте', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '37 %' },
+      { teksti: 'Здравствуйте', kieli: 'venäjä', osuus: '37 %' },
       { teksti: 'Vasals', kieli: 'latgali', lippu: 'Flag of Latgale.svg', osuus: '9 %' },
     ],
   },
@@ -627,7 +627,7 @@ export const EUROPE_MAATIEDOT = {
     tervehdykset: [
       { teksti: 'Laba diena', kieli: 'liettua', lippu: 'Flag of Lithuania.svg', osuus: '85 %' },
       { teksti: 'Dzień dobry', kieli: 'puola', lippu: 'Flag of Poland.svg', osuus: '6 %' },
-      { teksti: 'Здравствуйте', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '5 %' },
+      { teksti: 'Здравствуйте', kieli: 'venäjä', osuus: '5 %' },
     ],
   },
 
