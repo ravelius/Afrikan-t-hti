@@ -323,16 +323,37 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
  */
 const ZOOMATTAVAT = new Set(['europe']);
 const MANNER_ZOOM = 2.3;        // kuinka moninkertainen lähikuva on yleiskuvaan
-const MANNER_ZOOM_VIIVE = 1100; // kokonäkymä näkyy tämän verran ennen zoomausta
+const MANNER_ZOOM_VIIVE = 1400; // kokonäkymä näkyy tämän verran ennen zoomausta
 // Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
 // alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
 const ALAKAISTA = 0.3;
-// Zoomausliu'un kesto. Omistajan palaute: 600 ms oli liian nopea.
-const ZOOM_MS = 1200;
+// Zoomausliu'un kesto. Omistajan palaute: 600 ms oli liian nopea,
+// 1200 ms yhä liian nopea — kaikki zoomaukset hitaammiksi.
+const ZOOM_MS = 2000;
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
 const ZOOM_TAUKO_MS = 260;
 // Aloituskartan lähikuvan suurennos yleiskuvaan nähden.
 const ALOITUS_ZOOM = 3.1;
+/*
+ * Palautelomakkeen vastaanottava ulkopuolinen palvelu. Tyhjänä lomakkeen
+ * tilalla näkyy GitHub-linkki, joten palaute toimii ilman asetuksia.
+ *
+ * Käyttöönotto: luo lomake esim. Formspreessa (formspree.io) tai
+ * Web3Formsissa ja liitä palvelun antama osoite tähän, esimerkiksi
+ * 'https://formspree.io/f/xxxxxxxx'. Osoite ei paljasta sähköpostia:
+ * palvelu tietää sen, sivun lähdekoodi ei.
+ */
+const PALAUTE_LOMAKE = '';
+
+/**
+ * Versionumero palauteviestiin. Luetaan sivulta (js/main.js kirjoittaa
+ * sen asetuksiin), jottei ui.js tarvitse tuontia main.js:stä — se olisi
+ * kehämäinen riippuvuus.
+ */
+function peliVersio() {
+  return document.getElementById('app-version')?.textContent?.trim() ?? '?';
+}
+
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -1076,6 +1097,10 @@ export class UI {
     if (this.katselu || this.reducedMotion) return false;
     if (this.game.phase === 'pickstart') return false;
     if (!ZOOMATTAVAT.has(this.game.pack.id)) return false;
+    // Lentokalvon aikana lauta piirtyy jo taustalle, mutta pelaaja ei näe
+    // sitä. Zoomaus odottaa Astu mantereelle -napin painallusta
+    // (omistajan havainto: zoomaus ehti tapahtua lennon aikana).
+    if (document.body.classList.contains('flight-active')) return false;
     return (this.svg.parentElement?.clientWidth ?? 0) < 700;
   }
 
@@ -3597,7 +3622,16 @@ export class UI {
     const raja = INTRO_TEXT.lastIndexOf('\n\n');
     const runko = raja < 0 ? INTRO_TEXT : INTRO_TEXT.slice(0, raja);
     const lopetus = raja < 0 ? '' : INTRO_TEXT.slice(raja);
+    // Lopetus varaa tilansa jo ennen kirjoitusta samalla näkymättömällä
+    // varjotekstillä kuin typeText. Ilman sitä fitIntro mittaisi tekstin
+    // ilman viimeistä riviä, ja lihavoitu "mistä aloitan?" jäisi ruudun
+    // alapuolelle (omistajan havainto).
     this.introLopetus.textContent = '';
+    if (lopetus) {
+      const varaus = html('span', 'pending');
+      varaus.textContent = lopetus;
+      this.introLopetus.appendChild(varaus);
+    }
     this.typeText(this.introRunko, runko, 'intro', () => {
       if (lopetus) this.typeText(this.introLopetus, lopetus, 'intro-loppu', null, INTRO_TYPE_MS);
     }, INTRO_TYPE_MS);
@@ -3731,11 +3765,13 @@ export class UI {
   }
 
   /**
-   * Palautelohko periaateikkunan loppuun (omistajan toive). Peli on
-   * staattinen sivu ilman palvelinta, joten lomake ei lähetä itse mitään
-   * vaan kokoaa viestin ja avaa sen käyttäjän omaan sähköpostiohjelmaan.
-   * Osoite kootaan vasta ajossa, jottei se ole roskapostirobottien
-   * poimittavissa suoraan sivun lähdekoodista.
+   * Palautelohko periaateikkunan loppuun (omistajan toive). Viesti menee
+   * ulkopuoliselle lomakepalvelulle, joka välittää sen tekijälle —
+   * sähköpostiosoitetta ei ole sivulla eikä lähdekoodissa, joten
+   * roskapostirobotit eivät saa sitä käsiinsä.
+   *
+   * Jos PALAUTE_LOMAKE on tyhjä, lohko tarjoaa GitHub-linkin, jolloin
+   * palaute toimii ilman mitään asetuksia.
    */
   periaatePalaute() {
     const lohko = html('div', 'periaate-palaute');
@@ -3748,27 +3784,177 @@ export class UI {
       + 'kysymyksiä tai koodia.';
     lohko.appendChild(johdanto);
 
+    const vihje = html('p', 'periaate-teksti');
+    vihje.textContent = 'Pelin oikeassa alakulmassa on huutomerkki. Sitä '
+      + 'napauttamalla voit lähettää palautetta juuri siitä kohdasta, '
+      + 'jossa olet — kätevää etenkin, jos jokin näyttää menneen vikaan.';
+    lohko.appendChild(vihje);
+
+    lohko.appendChild(this.palauteKentat());
+    return lohko;
+  }
+
+  /**
+   * Palautteen kentät ja lähetys. Sama lohko palvelee sekä periaate-
+   * ikkunaa että alakulman huutomerkkiä; tilanne-teksti kulkee viestin
+   * mukana, jotta virheilmoitus osuu oikeaan kohtaan peliä.
+   *
+   * Jos PALAUTE_LOMAKE on tyhjä, tarjolla on GitHub-linkki, jolloin
+   * palaute toimii ilman mitään asetuksia.
+   */
+  palauteKentat(tilanne = '') {
+    const lohko = html('div', 'periaate-lomake');
+    if (!PALAUTE_LOMAKE) {
+      lohko.appendChild(this.palauteGithub(tilanne));
+      return lohko;
+    }
+
     const kentta = html('textarea', 'periaate-kentta');
     kentta.rows = 4;
     kentta.placeholder = 'Kirjoita viestisi tähän…';
     kentta.setAttribute('aria-label', 'Viesti pelin tekijälle');
     lohko.appendChild(kentta);
 
+    // Yhteydenottokenttä (omistajan toive): ilman sitä palautteeseen ei
+    // voi vastata. Vapaaehtoinen — nimettömän viestin saa lähettää.
+    const paluu = html('input', 'periaate-kentta periaate-paluu');
+    paluu.type = 'email';
+    paluu.placeholder = 'Sähköpostisi, jos haluat vastauksen';
+    paluu.setAttribute('aria-label', 'Sähköpostiosoitteesi, vapaaehtoinen');
+    lohko.appendChild(paluu);
+
     const nappi = html('button', 'primary periaate-laheta', 'Lähetä palautetta');
     nappi.type = 'button';
-    nappi.addEventListener('click', () => {
-      const osoite = ['samireivinen', 'gmail.com'].join('@');
-      const aihe = encodeURIComponent('Matkakirja — palaute');
-      const viesti = encodeURIComponent(kentta.value.trim());
-      window.location.href = `mailto:${osoite}?subject=${aihe}&body=${viesti}`;
-    });
     lohko.appendChild(nappi);
 
     const huomio = html('p', 'periaate-huomio');
-    huomio.textContent = 'Nappi avaa viestin sähköpostiohjelmaasi — '
-      + 'voit vielä muokata sitä ennen lähetystä.';
+    huomio.setAttribute('role', 'status');
+    huomio.textContent = 'Viesti menee suoraan pelin tekijälle.';
     lohko.appendChild(huomio);
+
+    nappi.addEventListener('click', async () => {
+      const viesti = kentta.value.trim();
+      if (!viesti) {
+        huomio.textContent = 'Kirjoita ensin viesti.';
+        kentta.focus();
+        return;
+      }
+      nappi.disabled = true;
+      huomio.textContent = 'Lähetetään…';
+      try {
+        const vastaus = await fetch(PALAUTE_LOMAKE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            viesti,
+            email: paluu.value.trim(),
+            tilanne,
+            // Vaihe on kehittäjän tieto eikä näy pelaajalle: se kertoo
+            // virheraportissa, mitä peli oli juuri tekemässä.
+            vaihe: this.game?.phase ?? '',
+            versio: peliVersio(),
+            _subject: tilanne
+              ? `Matkakirja — palaute: ${tilanne}`
+              : 'Matkakirja — palaute',
+          }),
+        });
+        if (!vastaus.ok) throw new Error(`HTTP ${vastaus.status}`);
+        kentta.value = '';
+        paluu.value = '';
+        huomio.textContent = 'Kiitos! Viesti lähti perille.';
+        nappi.textContent = 'Lähetetty';
+      } catch (err) {
+        console.warn('Palautteen lähetys ei onnistunut:', err);
+        nappi.disabled = false;
+        huomio.textContent = 'Lähetys ei onnistunut. Kokeile hetken päästä uudelleen.';
+      }
+    });
     return lohko;
+  }
+
+  /**
+   * Varareitti, kun lomakepalvelua ei ole vielä asetettu: palaute
+   * GitHubin kautta. Julkinen kanava, ei sähköpostiosoitetta.
+   */
+  palauteGithub(tilanne = '') {
+    const laatikko = html('p', 'periaate-huomio');
+    const linkki = html('a', 'periaate-linkki', 'Lähetä palautetta GitHubissa');
+    const otsikko = tilanne
+      ? `Palautetta: ${tilanne}`
+      : 'Palautetta Matkakirjasta';
+    const runko = `\n\n---\nMatkakirja v${peliVersio()}`
+      + (tilanne ? `\nKohta pelissä: ${tilanne}` : '');
+    linkki.href = 'https://github.com/ravelius/Matkakirja/issues/new'
+      + `?title=${encodeURIComponent(otsikko)}`
+      + `&body=${encodeURIComponent(runko)}`;
+    linkki.target = '_blank';
+    linkki.rel = 'noopener';
+    laatikko.appendChild(linkki);
+    return laatikko;
+  }
+
+  /**
+   * Alakulman huutomerkki (omistajan toive): palaute juuri siitä
+   * kohdasta peliä, jossa pelaaja on. Ikkuna kertoo lyhyesti mistä on
+   * kyse ja näyttää, mikä tilanne kulkee viestin mukana.
+   */
+  naytaPalauteKulmasta() {
+    if (document.querySelector('.palaute-lappu')) return;
+    sfx.play('paper');
+    const tilanne = this.palauteTilanne();
+    const lappu = html('dialog', 'dialog periaate-lappu palaute-lappu');
+    const kortti = html('div', 'dialog-card periaate-kortti');
+    lappu.appendChild(kortti);
+
+    const otsikko = html('h2', 'periaate-otsikko', 'Kerro mitä huomasit');
+    kortti.appendChild(otsikko);
+
+    const selitys = html('p', 'periaate-teksti');
+    selitys.textContent = 'Tätä kautta voit lähettää palautetta '
+      + 'mahdollisista virheistä tai kehitysehdotuksista juuri tässä '
+      + 'kohdassa peliä. Kerro lyhyesti mitä näet ja mitä odotit.';
+    kortti.appendChild(selitys);
+
+    if (tilanne) {
+      const rivi = html('p', 'palaute-tilanne');
+      rivi.textContent = `Viestin mukana lähtee: ${tilanne}`;
+      kortti.appendChild(rivi);
+    }
+
+    kortti.appendChild(this.palauteKentat(tilanne));
+
+    const sulje = html('button', 'ghost periaate-sulje', 'Takaisin peliin');
+    sulje.type = 'button';
+    sulje.addEventListener('click', () => lappu.close());
+    kortti.appendChild(sulje);
+
+    lappu.addEventListener('close', () => lappu.remove());
+    lappu.addEventListener('click', (e) => { if (e.target === lappu) lappu.close(); });
+    document.body.appendChild(lappu);
+    lappu.showModal();
+    kortti.scrollTop = 0;
+    otsikko.setAttribute('tabindex', '-1');
+    otsikko.focus({ preventScroll: true });
+  }
+
+  /**
+   * Lyhyt kuvaus pelin nykytilasta palauteviestin liitteeksi. Näkyy myös
+   * pelaajalle, joten teksti on selkokieltä eikä koodin sisäisiä
+   * tunnisteita: lauta ja kaupunki riittävät paikantamaan kohdan.
+   */
+  palauteTilanne() {
+    const osat = [];
+    try {
+      // ariaLabel on pakan ainoa ihmisluettava nimi ("Euroopan
+      // aarrekartta"); pelkkä id olisi "europe".
+      const lauta = this.game?.pack?.ariaLabel;
+      if (lauta) osat.push(lauta);
+      const kaupunki = this.game?.cityOf?.();
+      if (kaupunki?.name) osat.push(kaupunki.name);
+    } catch (err) {
+      console.warn('Pelitilanteen luku palautetta varten ei onnistunut:', err);
+    }
+    return osat.join(' · ');
   }
 
   suljeAloitusportti() {
@@ -5025,6 +5211,9 @@ export class UI {
     // Ulos astuttaessa päiväkirja pääsee ääneen: lennon ajaksi lykätty
     // saapumismerkintä alkaa kirjoittua ja soida vasta nyt.
     if (!this.dead) this.render();
+    // Vasta nyt kartta on oikeasti näkyvissä: mantereen kokonäkymä saa
+    // hetken aikaa olla esillä, ja sen jälkeen zoomataan lähelle.
+    this.ajastaMannerZoom();
   }
 
   /**

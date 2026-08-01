@@ -300,6 +300,50 @@ body.manner-zoom .turn-card::before {
 body.kartta-raahaus .target-ring,
 body.kartta-raahaus .pawn-pulse { animation: none; }
 
+/*
+ * Vanhan kiikarin vääristymä (omistajan toive): maailmankartan
+ * lähikuvassa ruudun reunat sumenevat ja saavat vihertävän linssin
+ * sävyn. Maski jättää keskustan koskematta, joten terävä alue on
+ * täsmälleen se, mitä pelaaja katsoo.
+ *
+ * Kerros asuu z-tasolla 2: kartan päällä mutta nopan (3), avaustekstin
+ * (3) ja alarivin korttien (4) alla. Raahauksen ajaksi se katoaa
+ * nopeasti — sumennus liikkuvan kartan päällä on puhelimelle liikaa —
+ * ja palaa rauhassa feidaten, kun sormi irtoaa.
+ */
+body.aloitus-zoom .map-pane::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(7px) saturate(0.8);
+  backdrop-filter: blur(7px) saturate(0.8);
+  background: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(78, 122, 86, 0) 52%,
+    rgba(68, 112, 78, 0.24) 76%,
+    rgba(36, 68, 46, 0.5) 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(0, 0, 0, 0) 48%,
+    rgba(0, 0, 0, 1) 84%
+  );
+  mask-image: radial-gradient(
+    ellipse 72% 64% at 50% 50%,
+    rgba(0, 0, 0, 0) 48%,
+    rgba(0, 0, 0, 1) 84%
+  );
+  opacity: 1;
+  transition: opacity 560ms ease;
+}
+
+body.aloitus-zoom.kartta-raahaus .map-pane::before {
+  opacity: 0;
+  transition-duration: 110ms;
+}
+
 /* Vanhan filmin vaalea vinjetti: kartan reunat haalistuvat kuin
    ikääntyneessä filmiruudussa. Piirretään ruudun päälle, joten se
    myötäilee aina näkyvää aluetta laudan rajauksesta riippumatta. */
@@ -3282,6 +3326,54 @@ body.katselu #newgame-btn { display: none; }
   letter-spacing: 0.04em;
   color: rgba(70, 51, 31, 0.55);
   pointer-events: none;
+}
+
+/* Palautehuutomerkki oikeassa alakulmassa (omistajan toive): pieni ja
+ * hillitty, mutta aina saatavilla — pelaaja voi kertoa virheestä juuri
+ * siinä kohdassa peliä, jossa se osui silmään. Versionumeron peilikuva
+ * vastakkaisessa kulmassa. */
+.palaute-kulma {
+  position: fixed;
+  right: max(1.1rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
+  bottom: max(0.8rem, calc(env(safe-area-inset-bottom, 0px) + 0.55rem));
+  z-index: 6;
+  width: 1.55rem;
+  height: 1.55rem;
+  min-height: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(70, 51, 31, 0.35);
+  background: rgba(250, 242, 219, 0.55);
+  color: rgba(70, 51, 31, 0.7);
+  font-family: var(--font-hand, inherit);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.palaute-kulma:hover,
+.palaute-kulma:focus-visible {
+  background: rgba(250, 242, 219, 0.9);
+  color: rgba(70, 51, 31, 0.95);
+  transform: scale(1.08);
+}
+
+/* Lennon ja muiden kalvojen aikana huutomerkki väistyy pois tieltä. */
+body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
+
+/* Palauteikkuna: sama pergamentti-ilme kuin periaateikkunassa, mutta
+ * pienempi — yksi selitys, yksi kenttä ja lähetys. */
+.palaute-lappu .periaate-kortti { max-width: 30rem; }
+
+.palaute-tilanne {
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+  color: rgba(70, 51, 31, 0.7);
+  font-style: italic;
 }
 
 /* Kaiutin kortin oikeassa yläkulmassa: hillitty viivapiirros samaan

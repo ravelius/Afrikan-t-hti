@@ -383,6 +383,7 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 
 | v | Muutos |
 |---|---|
+| 124 | Palaute ulkopuoliselle lomakkeelle: mailto ja omistajan sähköposti poistettu koko koodista, tilalla `PALAUTE_LOMAKE`-vakio (js/ui.js) + yhteydenottokenttä; tyhjänä varareittinä GitHub-linkki. Uusi huutomerkkinappi oikeassa alakulmassa lähettää palautteen siitä kohdasta peliä, jossa pelaaja on (lauta + kaupunki + vaihe + versio kulkevat mukana). Mantereen zoomaus odottaa nyt Astu mantereelle -napin (ei enää animoidu lentokalvon takana). Kaikki zoomaukset hitaammiksi (ZOOM_MS 1200 → 2000, kokonäkymä 1100 → 1400 ms). Maailmankartan lähikuvaan vanhan kiikarin vääristymä: vihertävä sumennus reunoille, pois raahauksen ajaksi ja feidaten takaisin. Zoomausääni tehty uusiksi (kanttiaalto + kaistanpäästö + hammaspyörävinkuna = kameran moottori; ennen liian möyrisevä). Avaustekstin lopetus varaa tilansa ennen kirjoitusta, joten teksti mahtuu taas kokonaan ruudulle. |
 | 123 | Periaateikkuna: avautuu alusta (ei enää lopusta), "Kaksi ääntä" lyhennetty, loppuun © Sami Reivinen ja palautelohko (mailto-lomake). |
 | 122 | Aloituskartan zoom 2,2× → 3,1× ja rajaus kaupunkien korkeudelle (navat pois). Zoomausääni kuuluvammaksi + tauko ja muiden äänten vaimennus ennen sitä. Etusivun tausta-ääni ei enää arvo (aina korin ensimmäinen). **TEKEMÄTTÄ: assets/audio/efekti-zoom.mp3 ElevenLabsilla** — paikka on varattu, tiedosto ottaa vuoron heti kun se ilmestyy. |
 | 121 | Aloita seikkailu -nappi täsmälleen ruudun keskelle: alareunan linkki ja ääniviihje irrotettu virrasta. |
