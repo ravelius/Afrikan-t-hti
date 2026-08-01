@@ -1827,6 +1827,20 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .intro.intro-fade { opacity: 0; }
 
 /*
+ * Zoomatessa avausteksti työntyy alas pois näkyvistä samaa tahtia kuin
+ * kartta suurenee (omistajan toive): sama kesto ja sama pehmennys kuin
+ * zoomausliu'ulla (js/ui.js ZOOM_MS). Pelkkä häivytys jätti tekstin
+ * paikalleen haamuksi kartan päälle.
+ */
+.intro.intro-pois {
+  opacity: 0;
+  transform: translate(-50%, 85%);
+  transition:
+    transform 1.2s cubic-bezier(0.25, 0.6, 0.2, 1),
+    opacity 1s ease-in;
+}
+
+/*
  * Lento piirretään läpikuultavana kalvona kartan päälle: karttaa ei
  * zoomata (raskasta ja suurennettuna rumaa), vaan kohtaus on oma
  * yksinkertainen piirroksensa, jonka läpi maailmankartta kuultaa.
