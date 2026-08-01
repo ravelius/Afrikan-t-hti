@@ -106,37 +106,37 @@ const EU_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const EU_CITIES = [
   {
-    id: 'lontoo', name: 'Lontoo', ambience: 'kaupunki', x: 209, y: 539, start: true, airport: true,
+    id: 'lontoo', name: 'Lontoo', wiki: 'Lontoo', ambience: 'kaupunki', x: 209, y: 539, start: true, airport: true,
     links: [{ pack: 'maailma', city: 'lontoo', label: 'Maailma-lauta' }],
   },
   {
-    id: 'istanbul', name: 'Istanbul', ambience: 'basaari', x: 768, y: 815, start: true, airport: true,
+    id: 'istanbul', name: 'Istanbul', wiki: 'Istanbul', ambience: 'basaari', x: 768, y: 815, start: true, airport: true,
     // Sama kaupunki on myös Lähi-idän laudalla ja sillä on oma kaupunkilautansa.
     links: [
       { pack: 'middleeast', city: 'istanbul', label: 'Lähi-idän lauta' },
       { pack: 'istanbul', city: 'lentoasema', label: 'Istanbulin kaupunkilauta' },
     ],
   },
-  { id: 'dublin', name: 'Dublin', ambience: 'kaupunki', x: 91, y: 490, la: 'end', lx: -16, ly: 5 },
-  { id: 'edinburgh', name: 'Edinburgh', ambience: 'kaupunki', x: 150, y: 422, la: 'end', lx: -16, ly: 5 },
-  { id: 'pariisi', name: 'Pariisi', ambience: 'kaupunki', x: 256, y: 609 },
+  { id: 'dublin', name: 'Dublin', wiki: 'Dublin', ambience: 'kaupunki', x: 91, y: 490, la: 'end', lx: -16, ly: 5 },
+  { id: 'edinburgh', name: 'Edinburgh', wiki: 'Edinburgh', ambience: 'kaupunki', x: 150, y: 422, la: 'end', lx: -16, ly: 5 },
+  { id: 'pariisi', name: 'Pariisi', wiki: 'Pariisi', ambience: 'kaupunki', x: 256, y: 609 },
   { id: 'marseille', name: 'Marseille', ambience: 'satama', wiki: 'Marseille', x: 312, y: 744, la: 'end', lx: -16, ly: 14 },
-  { id: 'lissabon', name: 'Lissabon', ambience: 'satama', x: 36, y: 875, la: 'start', lx: 16, ly: 5 },
+  { id: 'lissabon', name: 'Lissabon', wiki: 'Lissabon', ambience: 'satama', x: 36, y: 875, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'madrid', name: 'Madrid', ambience: 'kaupunki', x: 140, y: 831, airport: true,
+    id: 'madrid', name: 'Madrid', wiki: 'Madrid', ambience: 'kaupunki', x: 140, y: 831, airport: true,
     // Gibraltarin salmen yli Afrikkaan.
     links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
   },
-  { id: 'barcelona', name: 'Barcelona', ambience: 'satama', x: 244, y: 800, la: 'start', lx: 16, ly: 5 },
+  { id: 'barcelona', name: 'Barcelona', wiki: 'Barcelona', ambience: 'satama', x: 244, y: 800, la: 'start', lx: 16, ly: 5 },
   { id: 'granada', name: 'Granada', ambience: 'kaupunki', wiki: 'Granada', x: 142, y: 916, la: 'end', lx: -16, ly: 5 },
-  { id: 'amsterdam', name: 'Amsterdam', ambience: 'satama', x: 305, y: 516, la: 'start', lx: 16, ly: 5 },
-  { id: 'berliini', name: 'Berliini', ambience: 'kaupunki', x: 468, y: 512, airport: true },
-  { id: 'praha', name: 'Praha', ambience: 'kaupunki', x: 488, y: 576, la: 'end', lx: -16, ly: 5 },
-  { id: 'wien', name: 'Wien', ambience: 'kaupunki', x: 526, y: 626, la: 'start', lx: 16, ly: -6 },
-  { id: 'budapest', name: 'Budapest', ambience: 'kaupunki', x: 591, y: 658, la: 'start', lx: 16, ly: 10 },
-  { id: 'varsova', name: 'Varsova', ambience: 'kaupunki', x: 615, y: 520 },
+  { id: 'amsterdam', name: 'Amsterdam', wiki: 'Amsterdam', ambience: 'satama', x: 305, y: 516, la: 'start', lx: 16, ly: 5 },
+  { id: 'berliini', name: 'Berliini', wiki: 'Berliini', ambience: 'kaupunki', x: 468, y: 512, airport: true },
+  { id: 'praha', name: 'Praha', wiki: 'Praha', ambience: 'kaupunki', x: 488, y: 576, la: 'end', lx: -16, ly: 5 },
+  { id: 'wien', name: 'Wien', wiki: 'Wien', ambience: 'kaupunki', x: 526, y: 626, la: 'start', lx: 16, ly: -6 },
+  { id: 'budapest', name: 'Budapest', wiki: 'Budapest', ambience: 'kaupunki', x: 591, y: 658, la: 'start', lx: 16, ly: 10 },
+  { id: 'varsova', name: 'Varsova', wiki: 'Varsova', ambience: 'kaupunki', x: 615, y: 520 },
   { id: 'krakova', name: 'Krakova', ambience: 'kaupunki', wiki: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
-  { id: 'alpit', name: 'Alpit', ambience: 'vuoristo', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
+  { id: 'alpit', name: 'Alpit', wiki: 'Alpit', ambience: 'vuoristo', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
   // Venetsia on Adrianmeren pohjukassa Milanon tilalla (omistajan valinta).
   { id: 'venetsia', name: 'Venetsia', ambience: 'satama', wiki: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
   { id: 'rooma', name: 'Rooma', wiki: 'Rooma', ambience: 'kaupunki', x: 451, y: 792, airport: true, la: 'end', lx: -16, ly: 5 },
@@ -157,32 +157,32 @@ const EU_CITIES = [
   // sallittu paikka, joka on maan sisällä.
   { id: 'sarajevo', name: 'Sarajevo', ambience: 'basaari', wiki: 'Sarajevo', x: 561, y: 710, la: 'start', lx: 16, ly: -6 },
   { id: 'sofia', name: 'Sofia', wiki: 'Sofia', ambience: 'kaupunki', x: 659, y: 771, la: 'start', lx: 16, ly: 5 },
-  { id: 'bukarest', name: 'Bukarest', ambience: 'kaupunki', x: 712, y: 725, la: 'start', lx: 16, ly: 5 },
-  { id: 'kiova', name: 'Kiova', ambience: 'kaupunki', x: 797, y: 567 },
-  { id: 'odessa', name: 'Odessa', ambience: 'satama', x: 800, y: 669, la: 'start', lx: 16, ly: 5 },
+  { id: 'bukarest', name: 'Bukarest', wiki: 'Bukarest', ambience: 'kaupunki', x: 712, y: 725, la: 'start', lx: 16, ly: 5 },
+  { id: 'kiova', name: 'Kiova', wiki: 'Kiova', ambience: 'kaupunki', x: 797, y: 567 },
+  { id: 'odessa', name: 'Odessa', wiki: 'Odessa', ambience: 'satama', x: 800, y: 669, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'moskova', name: 'Moskova', ambience: 'kaupunki', x: 934, y: 427, start: true, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'moskova', name: 'Moskova', wiki: 'Moskova', ambience: 'kaupunki', x: 934, y: 427, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla, josta Siperian rata jatkuu itään.
     links: [{ pack: 'maailma', city: 'moskova', label: 'Maailma-lauta' }],
   },
-  { id: 'pietari', name: 'Pietari', ambience: 'kaupunki', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
+  { id: 'pietari', name: 'Pietari', wiki: 'Pietari', ambience: 'kaupunki', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'helsinki', name: 'Helsinki', ambience: 'metsa', x: 688, y: 303, airport: true, la: 'end', lx: -16, ly: -12,
+    id: 'helsinki', name: 'Helsinki', wiki: 'Helsinki', ambience: 'metsa', x: 688, y: 303, airport: true, la: 'end', lx: -16, ly: -12,
     // Suomen oma lauta avautuu Helsingistä.
     links: [{ pack: 'suomi', city: 'helsinki', label: 'Suomen lauta' }],
   },
-  { id: 'tallinna', name: 'Tallinna', ambience: 'kaupunki', x: 684, y: 374, la: 'start', lx: 14, ly: 12 },
-  { id: 'riika', name: 'Riika', ambience: 'kaupunki', x: 648, y: 434, la: 'end', lx: -14, ly: 14 },
-  { id: 'vilna', name: 'Vilna', ambience: 'kaupunki', x: 703, y: 470, la: 'start', lx: 16, ly: 5 },
+  { id: 'tallinna', name: 'Tallinna', wiki: 'Tallinna', ambience: 'kaupunki', x: 684, y: 374, la: 'start', lx: 14, ly: 12 },
+  { id: 'riika', name: 'Riika', wiki: 'Riika', ambience: 'kaupunki', x: 648, y: 434, la: 'end', lx: -14, ly: 14 },
+  { id: 'vilna', name: 'Vilna', wiki: 'Vilna', ambience: 'kaupunki', x: 703, y: 470, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'tukholma', name: 'Tukholma', ambience: 'satama', x: 558, y: 333, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'tukholma', name: 'Tukholma', wiki: 'Tukholma', ambience: 'satama', x: 558, y: 333, airport: true, la: 'end', lx: -16, ly: 5,
     // Ruotsinlaiva Ahvenanmaalle — Suomen laudalle.
     links: [{ pack: 'suomi', city: 'maarianhamina', label: 'Suomen lauta (laiva Ahvenanmaalle)' }],
   },
-  { id: 'oslo', name: 'Oslo', ambience: 'metsa', x: 418, y: 318, la: 'end', lx: -16, ly: 5 },
-  { id: 'kobenhavn', name: 'Kööpenhamina', ambience: 'satama', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
-  { id: 'lappi', name: 'Lappi', ambience: 'pohjoinen', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
-  { id: 'tromssa', name: 'Tromssa', ambience: 'pohjoinen', x: 577, y: 66, la: 'start', lx: 16, ly: 5 },
+  { id: 'oslo', name: 'Oslo', wiki: 'Oslo', ambience: 'metsa', x: 418, y: 318, la: 'end', lx: -16, ly: 5 },
+  { id: 'kobenhavn', name: 'Kööpenhamina', wiki: 'Kööpenhamina', ambience: 'satama', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
+  { id: 'lappi', name: 'Lappi', wiki: 'Lapin maakunta', ambience: 'pohjoinen', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
+  { id: 'tromssa', name: 'Tromssa', wiki: 'Tromssa', ambience: 'pohjoinen', x: 577, y: 66, la: 'start', lx: 16, ly: 5 },
   { id: 'islanti', name: 'Islanti', ambience: 'pohjoinen', wiki: 'Islanti', x: 62, y: 60, la: 'middle', lx: 0, ly: 42 },
 ];
 

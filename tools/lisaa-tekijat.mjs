@@ -85,6 +85,11 @@ function siisti(arvo) {
   s = s.replace(/,?\s*(https?:\/\/|www\.)\S*/gi, '');
   s = s.replace(/[,;.]\s*$/, '').replace(/\s+\.$/, '').trim();
 
+  // Attribution voi olla kokonainen lause: "Kuvan nimi by Tekijä"
+  // (geograph.org.uk) tai "Photo: Tekijä". Nimi on jälkimmäinen osa.
+  const bySijainti = s.match(/^(.+?)\s+by\s+(.{2,40})$/i);
+  if (bySijainti) s = bySijainti[2].trim();
+
   // Useita tekijöitä: nimetään ensimmäinen ja todetaan muut. Nimien
   // katkaiseminen kesken olisi väärin juuri sitä kohtaan, jota
   // lisenssi käskee nimetä.
@@ -104,8 +109,18 @@ function siisti(arvo) {
  */
 function parit(sisalto) {
   const merkit = [];
-  for (const m of sisalto.matchAll(/(tiedosto|lahde): '((?:[^'\\]|\\.)*)'/g)) {
-    merkit.push({ laji: m[1], arvo: m[2].replace(/\\(['"\\])/g, '$1'), kohta: m.index, koko: m[0] });
+  // Heittomerkillinen nimi ("Château d'If") kirjoitetaan kaksois-
+  // lainausmerkkeihin, joten kumpikin muoto on luettava — muuten juuri
+  // ne kuvat jäävät ilman tekijämerkintää.
+  const kuvio = /(tiedosto|lahde): (?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")/g;
+  for (const m of sisalto.matchAll(kuvio)) {
+    merkit.push({
+      laji: m[1],
+      arvo: (m[2] ?? m[3]).replace(/\\(['"\\])/g, '$1'),
+      kohta: m.index,
+      koko: m[0],
+      lainaus: m[2] !== undefined ? "'" : '"',
+    });
   }
   const ulos = [];
   for (let i = 0; i < merkit.length; i += 1) {
@@ -123,6 +138,7 @@ function parit(sisalto) {
       // esiintymään — eli väärän kuvan kohdalle.
       kohta: seuraava.kohta,
       pituus: seuraava.koko.length,
+      lainaus: seuraava.lainaus,
     });
   }
   return ulos;
@@ -156,7 +172,8 @@ for (let i = 0; i < nimet.length; i += 25) {
   let d;
   try {
     d = hae('https://commons.wikimedia.org/w/api.php?format=json&action=query'
-      + '&prop=imageinfo&iiprop=extmetadata&iiextmetadatafilter=Artist|LicenseShortName'
+      + '&prop=imageinfo&iiprop=user|extmetadata'
+      + '&iiextmetadatafilter=Artist|Attribution|LicenseShortName'
       + '&titles=' + encodeURIComponent(era.map((t) => `File:${t}`).join('|')));
   } catch (e) {
     console.log(`  haku epäonnistui erässä ${i}: ${e.message.slice(0, 50)}`);
@@ -166,9 +183,14 @@ for (let i = 0; i < nimet.length; i += 25) {
   const alkuun = new Map((d.query?.normalized ?? []).map((n) => [n.to, n.from]));
   for (const sivu of Object.values(d.query?.pages ?? {})) {
     const nimi = (alkuun.get(sivu.title) ?? sivu.title).replace(/^File:/, '');
-    const m = sivu.imageinfo?.[0]?.extmetadata;
+    const tiedot = sivu.imageinfo?.[0];
+    const m = tiedot?.extmetadata;
     if (!m) continue;
-    const tekija = siisti(m.Artist?.value);
+    // Attribution on kuvaajan itse toivoma merkintä ja siksi Artistia
+    // parempi silloin kun se on. Artist voi olla pelkkä verkko-osoite.
+    // Jos kumpaakaan ei ole, jäljelle jää lataaja: Commonsissa se on
+    // näissä tapauksissa myös teoksen tekijä.
+    const tekija = siisti(m.Attribution?.value) || siisti(m.Artist?.value) || (tiedot.user ?? '');
     if (tekija) tekijat.set(nimi, tekija);
     commonsLisenssi.set(nimi, siisti(m.LicenseShortName?.value));
   }
@@ -196,10 +218,13 @@ for (const [f, alkuperainen] of paketit) {
     }
     if (!tekija) { ilmanTekijaa.push(p.tiedosto); continue; }
     const uusi = `${tekija}, ${p.lahde}`;
+    // Sama lainausmerkki takaisin kuin alkuperäisessä.
+    const q = p.lainaus ?? "'";
+    const sisus = uusi.replace(new RegExp(q, 'g'), `\\${q}`);
     korvaukset.push({
       kohta: p.kohta,
       pituus: p.pituus,
-      teksti: `lahde: '${uusi.replace(/'/g, "\\'")}'`,
+      teksti: `lahde: ${q}${sisus}${q}`,
     });
   }
   if (!korvaukset.length) continue;

@@ -31,7 +31,7 @@ export const AFRICA_VALOKUVAT = {
       + 'selässään ja huusi kaupan kilpaa muiden kanssa.',
     uusi: {
       tiedosto: 'Cairo-Hilton-Skyline.jpg',
-      lahde: 'Commons (CC BY-SA 3.0)',
+      lahde: 'Bluemask, Commons (CC BY-SA 3.0)',
       selite: 'Nykyinen Kairo nousee Niilin rannalla korkeuksiin — mutta '
         + 'joki virtaa keskellä yhtä tyynenä kuin ennenkin.',
     },
@@ -237,7 +237,7 @@ export const AFRICA_VALOKUVAT = {
       + 'kipuavat rinnettä kohti Andohalon aukiota ja sen kirkkoa.',
     uusi: {
       tiedosto: "Analakely vu d'en haut, Madagascar.jpg",
-      lahde: 'Commons (CC BY-SA 4.0)',
+      lahde: 'Cactus0625, Commons (CC BY-SA 4.0)',
       selite: 'Antananarivon keskusta nykyään ylhäältä: Analakelyn '
       + 'torikatokset ja pastellitalot täyttävät laakson, ja kukkulat '
       + 'reunustavat kaupunkia kuten ennenkin.',
@@ -429,7 +429,7 @@ export const AFRICA_VALOKUVAT = {
       + 'matkalaiseen.',
     uusi: {
       tiedosto: "Jacob's Ladder near St. James Cathedral in Jamestown Saint Helena.jpg",
-      lahde: 'Commons (CC BY-SA 4.0)',
+      lahde: 'Kevstan, Commons (CC BY-SA 4.0)',
       selite: 'Jamestown nykyään: Jaakobin portaat — 699 askelmaa — nousevat '
       + 'laakson pohjalta jyrkänteelle. Saarelle pääsee nykyisin myös '
       + 'lentäen.',

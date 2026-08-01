@@ -232,4 +232,505 @@ export const EUROPE_MAATIEDOT = {
       { teksti: 'Lachho dives', kieli: 'romani', lippu: 'Flag of the Romani people.svg', osuus: '4 %' },
     ],
   },
+
+  GBR: {
+    vakiluku: '69 milj.',
+    vakilukuSija: '22./195',
+    pintaAla: '244 000 km²',
+    pintaAlaSija: '78./195',
+    demokratia: {
+      arvo: '0,69',
+      sija: '29./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~GBR',
+      selitys: 'Vaalit ovat vapaat ja tuomioistuimet riippumattomia, mutta '
+                 + 'luku on laskenut 2010-luvulta. Enemmistövaalitapa venyttää '
+                 + 'tulosta: vuonna 2024 voittajapuolue sai 34 prosenttia '
+                 + 'äänistä ja 63 prosenttia paikoista. Ylähuonetta ei valita '
+                 + 'vaaleilla, kirjoitettua perustuslakia ei ole yhtenä '
+                 + 'asiakirjana, ja tuoreet lait kavensivat '
+                 + 'mielenosoitusoikeutta ja vaativat äänestäjiltä kuvallisen '
+                 + 'henkilöpaperin.',
+    },
+    keskitulo: { arvo: '54 550 $/v', sija: '20./190' },
+    tervehdykset: [
+      { teksti: 'Good morning', kieli: 'englanti', lippu: 'Flag of the United Kingdom.svg', osuus: '98 %' },
+      { teksti: 'Bore da', kieli: 'kymri (Wales)', lippu: 'Flag of Wales.svg', osuus: '0,9 %' },
+      { teksti: 'Latha math', kieli: 'skottigaeli', lippu: 'Flag of Scotland.svg', osuus: '0,1 %' },
+    ],
+  },
+
+  IRL: {
+    vakiluku: '5,5 milj.',
+    vakilukuSija: '120./195',
+    pintaAla: '70 000 km²',
+    pintaAlaSija: '119./195',
+    demokratia: {
+      arvo: '0,82',
+      sija: '6./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~IRL',
+      selitys: 'Perustuslakia ei voi muuttaa ilman kansanäänestystä, ja '
+                 + 'irlantilaiset ovat käyttäneet sitä: avioero sallittiin '
+                 + '1995, samaa sukupuolta olevien avioliitto 2015 ja abortti '
+                 + '2018 — jokainen kansan äänellä. Vaalitapa on suhteellinen '
+                 + 'siirtoäänivaali, joten pienetkin puolueet pääsevät '
+                 + 'parlamenttiin ja hallitukset ovat liittohallituksia. '
+                 + 'Tuomioistuimet ovat riippumattomia ja lehdistö vapaa.',
+    },
+    keskitulo: { arvo: '87 360 $/v', sija: '7./190' },
+    tervehdykset: [
+      { teksti: 'Hello', kieli: 'englanti', lippu: 'Flag of the United Kingdom.svg', osuus: '99 %' },
+      { teksti: 'Dia dhuit', kieli: 'iiri (osaa; päivittäin 2 %)', lippu: 'Flag of Ireland.svg', osuus: '40 %' },
+      { teksti: 'Dzień dobry', kieli: 'puola', lippu: 'Flag of Poland.svg', osuus: '2 %' },
+    ],
+  },
+
+  PRT: {
+    vakiluku: '11 milj.',
+    vakilukuSija: '89./195',
+    pintaAla: '92 000 km²',
+    pintaAlaSija: '111./195',
+    demokratia: {
+      arvo: '0,72',
+      sija: '26./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~PRT',
+      selitys: 'Portugali oli diktatuuri vuoteen 1974, ja sen jälkeen '
+                 + 'demokratia on ollut vakaa: vaalit ovat vapaat, valta '
+                 + 'vaihtuu rauhassa ja lehdistönvapaus arvioidaan Euroopan '
+                 + 'kärkeen. Kärkimaista luku jää siksi, että oikeuslaitos on '
+                 + 'hidas — tavallinen oikeudenkäynti kestää vuosia — ja '
+                 + 'korruptioepäilyt yltävät huipulle asti: pääministeri erosi '
+                 + 'marraskuussa 2023 tutkinnan takia.',
+    },
+    keskitulo: { arvo: '29 930 $/v', sija: '40./190' },
+    tervehdykset: [
+      { teksti: 'Bom dia', kieli: 'portugali', lippu: 'Flag of Portugal.svg', osuus: '100 %' },
+      { teksti: 'Good morning', kieli: 'englanti (vieras kieli)', lippu: 'Flag of the United Kingdom.svg', osuus: '27 %' },
+      { teksti: 'Buonos dies', kieli: 'mirandeesi (Miranda do Douro)', lippu: 'Bandeira-de-Miranda-do-Douro.png', osuus: '0,1 %' },
+    ],
+  },
+
+  NLD: {
+    vakiluku: '18 milj.',
+    vakilukuSija: '71./195',
+    pintaAla: '42 000 km²',
+    pintaAlaSija: '131./195',
+    demokratia: {
+      arvo: '0,77',
+      sija: '18./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~NLD',
+      selitys: 'Vaalit ovat poikkeuksellisen suhteelliset: 150 paikkaa '
+                 + 'jaetaan ilman äänikynnystä, joten yksi paikka irtoaa 0,67 '
+                 + 'prosentilla äänistä ja parlamentissa istuu toistakymmentä '
+                 + 'puoluetta. Hallitus on aina liittohallitus. Kärkimaita '
+                 + 'alempi luku selittyy pitkälti sillä, että tuomioistuin ei '
+                 + 'perustuslain 120. pykälän mukaan saa arvioida lakien '
+                 + 'perustuslainmukaisuutta.',
+    },
+    keskitulo: { arvo: '68 530 $/v', sija: '11./190' },
+    tervehdykset: [
+      { teksti: 'Goedendag', kieli: 'hollanti', lippu: 'Flag of the Netherlands.svg', osuus: '100 %' },
+      { teksti: 'Good morning', kieli: 'englanti (vieras kieli)', lippu: 'Flag of the United Kingdom.svg', osuus: '90 %' },
+      { teksti: 'Goeiemoarn', kieli: 'friisi (Fryslân)', lippu: 'Flag of Friesland.svg', osuus: '2,5 %' },
+    ],
+  },
+
+  DEU: {
+    vakiluku: '83 milj.',
+    vakilukuSija: '19./195',
+    pintaAla: '358 000 km²',
+    pintaAlaSija: '63./195',
+    demokratia: {
+      arvo: '0,78',
+      sija: '15./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~DEU',
+      selitys: 'Saksan perustuslaki kirjoitettiin 1949 natsidiktatuurin '
+                 + 'jälkeen niin, ettei valta enää voisi keskittyä yksiin '
+                 + 'käsiin. Karlsruhen perustuslakituomioistuin voi kumota '
+                 + 'lakeja, ja kuka tahansa asukas saa valittaa sille itse. '
+                 + 'Kuusitoista osavaltiota valitsevat omat parlamenttinsa, ja '
+                 + 'yleisradio rahoitetaan kotitalousmaksulla hallituksen '
+                 + 'budjetin ulkopuolelta.',
+    },
+    keskitulo: { arvo: '60 200 $/v', sija: '15./190' },
+    tervehdykset: [
+      { teksti: 'Guten Tag', kieli: 'saksa', lippu: 'Flag of Germany.svg', osuus: '95 %' },
+      { teksti: 'Merhaba', kieli: 'turkki', lippu: 'Flag of Turkey.svg', osuus: '2 %' },
+      { teksti: 'Dobry dźeń', kieli: 'yläsorbi (Lausitz)', lippu: 'Flag of Sorbs.svg', osuus: '0,05 %' },
+    ],
+  },
+
+  AUT: {
+    vakiluku: '9,2 milj.',
+    vakilukuSija: '97./195',
+    pintaAla: '84 000 km²',
+    pintaAlaSija: '115./195',
+    demokratia: {
+      arvo: '0,76',
+      sija: '19./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~AUT',
+      selitys: 'Itävalta on vakaa liittovaltio, jossa saa äänestää '
+                 + '16-vuotiaana — ensimmäisenä EU-maana. Valvonta näkyy: '
+                 + 'perustuslakituomioistuin kumosi vuoden 2016 '
+                 + 'presidentinvaalin toisen kierroksen, koska postiäänet oli '
+                 + 'laskettu sääntöjen vastaisesti, ja vaali uusittiin. Arviota '
+                 + 'painavat toistuvat korruptiotutkinnat ja hallituksen suuret '
+                 + 'mainosostot lehdiltä.',
+    },
+    keskitulo: { arvo: '60 360 $/v', sija: '14./190' },
+    tervehdykset: [
+      { teksti: 'Grüß Gott', kieli: 'saksa', lippu: 'Flag of Austria.svg', osuus: '98 %' },
+      { teksti: 'Merhaba', kieli: 'turkki', lippu: 'Flag of Turkey.svg', osuus: '2 %' },
+      { teksti: 'Dober dan', kieli: 'sloveeni (Kärnten)', lippu: 'Flag of Slovenia.svg', osuus: '0,3 %' },
+    ],
+  },
+
+  CHE: {
+    vakiluku: '9,1 milj.',
+    vakilukuSija: '98./195',
+    pintaAla: '41 000 km²',
+    pintaAlaSija: '132./195',
+    demokratia: {
+      arvo: '0,84',
+      sija: '4./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~CHE',
+      selitys: 'Sveitsissä kansa äänestää laeista itse noin neljä kertaa '
+                 + 'vuodessa: 100 000 nimeä riittää perustuslakialoitteeseen, '
+                 + '50 000 uuden lain torjumiseen. Valtaa pitää seitsenhenkinen '
+                 + 'liittoneuvosto, jonka puheenjohtajuus kiertää vuosittain. '
+                 + 'Sama järjestelmä on myös hidas: naiset saivat äänioikeuden '
+                 + 'liittovaltion vaaleissa vasta 1971.',
+    },
+    keskitulo: { arvo: '110 330 $/v', sija: '2./190' },
+    tervehdykset: [
+      { teksti: 'Grüezi', kieli: 'saksa', lippu: 'Flag of Switzerland.svg', osuus: '62 %' },
+      { teksti: 'Bonjour', kieli: 'ranska', lippu: 'Flag of France.svg', osuus: '23 %' },
+      { teksti: 'Buongiorno', kieli: 'italia', lippu: 'Flag of Italy.svg', osuus: '8 %' },
+    ],
+  },
+
+  CZE: {
+    vakiluku: '11 milj.',
+    vakilukuSija: '88./195',
+    pintaAla: '79 000 km²',
+    pintaAlaSija: '116./195',
+    demokratia: {
+      arvo: '0,79',
+      sija: '11./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~CZE',
+      selitys: 'Tšekki siirtyi yksipuoluevallasta demokratiaan vuoden 1989 '
+                 + 'samettivallankumouksessa, ja vaihdos on pitänyt: '
+                 + 'hallitukset vaihtuvat vaaleilla rauhassa ja Brnon '
+                 + 'perustuslakituomioistuin kumoaa lakeja. Media on vapaa '
+                 + 'mutta harvoissa käsissä — pääministeri Andrej Babiš omisti '
+                 + 'maan suurimmat sanomalehdet, kunnes laki pakotti siirtämään '
+                 + 'ne rahastoon 2017.',
+    },
+    keskitulo: { arvo: '32 960 $/v', sija: '37./190' },
+    tervehdykset: [
+      { teksti: 'Dobrý den', kieli: 'tšekki', lippu: 'Flag of the Czech Republic.svg', osuus: '96 %' },
+      { teksti: 'Добрий день', kieli: 'ukraina', lippu: 'Flag of Ukraine.svg', osuus: '4 %' },
+      { teksti: 'Dobrý deň', kieli: 'slovakki', lippu: 'Flag of Slovakia.svg', osuus: '2 %' },
+    ],
+  },
+
+  HUN: {
+    vakiluku: '9,5 milj.',
+    vakilukuSija: '96./195',
+    pintaAla: '93 000 km²',
+    pintaAlaSija: '110./195',
+    demokratia: {
+      arvo: '0,32',
+      sija: '92./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~HUN',
+      selitys: 'Unkarissa äänestetään vapaasti, mutta pelikenttä on '
+                 + 'kallellaan. Vuodesta 2010 hallinnut Fidesz kirjoitti maalle '
+                 + 'uuden perustuslain ja muutti vaalilakia, ja lähes 500 '
+                 + 'lehteä, radiota ja verkkosivustoa siirtyi vuonna 2018 yhden '
+                 + 'hallitusta lähellä olevan säätiön alle. V-Dem luokittelee '
+                 + 'Unkarin vaalilliseksi autokratiaksi — ensimmäisenä '
+                 + 'EU-maana.',
+    },
+    keskitulo: { arvo: '23 850 $/v', sija: '51./190' },
+    tervehdykset: [
+      { teksti: 'Jó napot', kieli: 'unkari', lippu: 'Flag of Hungary.svg', osuus: '99 %' },
+      { teksti: 'Lachho dives', kieli: 'romani', lippu: 'Flag of the Romani people.svg', osuus: '2 %' },
+      { teksti: 'Guten Tag', kieli: 'saksa (unkarinsaksalaiset)', lippu: 'Flag of Germany.svg', osuus: '1 %' },
+    ],
+  },
+
+  ROU: {
+    vakiluku: '19 milj.',
+    vakilukuSija: '67./195',
+    pintaAla: '238 000 km²',
+    pintaAlaSija: '81./195',
+    demokratia: {
+      arvo: '0,46',
+      sija: '68./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~ROU',
+      selitys: 'Romaniassa valta vaihtuu vaaleilla ja lehdistö on '
+                 + 'moniääninen, mutta korruptio ja median omistajien kytkökset '
+                 + 'politiikkaan painavat arviota. Joulukuussa 2024 '
+                 + 'perustuslakituomioistuin mitätöi presidentinvaalien '
+                 + 'ensimmäisen kierroksen, kun tiedustelutietojen mukaan '
+                 + 'kampanjaa oli tuettu salaa ulkomailta; vaalit uusittiin '
+                 + 'toukokuussa 2025.',
+    },
+    keskitulo: { arvo: '20 190 $/v', sija: '54./190' },
+    tervehdykset: [
+      { teksti: 'Bună ziua', kieli: 'romania', lippu: 'Flag of Romania.svg', osuus: '91 %' },
+      { teksti: 'Jó napot', kieli: 'unkari (Transilvania)', lippu: 'Flag of Hungary.svg', osuus: '6 %' },
+      { teksti: 'Lachho dives', kieli: 'romani', lippu: 'Flag of the Romani people.svg', osuus: '3 %' },
+    ],
+  },
+
+  TUR: {
+    vakiluku: '86 milj.',
+    vakilukuSija: '18./195',
+    pintaAla: '785 000 km²',
+    pintaAlaSija: '36./195',
+    demokratia: {
+      arvo: '0,11',
+      sija: '134./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~TUR',
+      selitys: 'Turkissa äänestetään innokkaasti — vuoden 2023 vaaleissa '
+                 + 'äänesti lähes 88 prosenttia — mutta V-Dem laskee maan '
+                 + 'vaalilliseksi autokratiaksi. Vuoden 2016 '
+                 + 'vallankaappausyrityksen jälkeen yli 125 000 virkamiestä ja '
+                 + 'tuomaria erotettiin asetuksilla, valtaosa mediasta on '
+                 + 'hallituksen liittolaisten omistuksessa, ja Turkki on vuosia '
+                 + 'ollut maailman kärkimaita vangittujen toimittajien '
+                 + 'määrässä.',
+    },
+    keskitulo: { arvo: '16 300 $/v', sija: '63./190' },
+    tervehdykset: [
+      { teksti: 'Merhaba', kieli: 'turkki', lippu: 'Flag of Turkey.svg', osuus: '88 %' },
+      { teksti: 'Rojbaş', kieli: 'kurdi', lippu: 'Flag of Kurdistan.svg', osuus: '12 %' },
+      { teksti: 'Marhaba', kieli: 'arabia (Hatay)', lippu: 'Flag of Turkey.svg', osuus: '2 %' },
+    ],
+  },
+
+  UKR: {
+    vakiluku: '39 milj.',
+    vakilukuSija: '40./195',
+    pintaAla: '604 000 km²',
+    pintaAlaSija: '45./195',
+    demokratia: {
+      arvo: '0,24',
+      sija: '104./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~UKR',
+      selitys: 'Ukrainassa on ollut sotatila helmikuusta 2022, ja '
+                 + 'perustuslaki kieltää vaalit sotatilan aikana — presidentin- '
+                 + 'ja parlamenttivaalit on siksi lykätty, ja suurten '
+                 + 'tv-kanavien uutiset yhdistettiin yhdeksi '
+                 + 'yhteislähetykseksi. Ennen hyökkäystä valta vaihtui '
+                 + 'vaaleilla: vuonna 2019 istuva presidentti hävisi selvästi. '
+                 + 'Luku kuvaa poikkeusoloja.',
+    },
+    keskitulo: { arvo: '5 510 $/v', sija: '113./190' },
+    tervehdykset: [
+      { teksti: 'Доброго дня', kieli: 'ukraina', lippu: 'Flag of Ukraine.svg', osuus: '78 %' },
+      { teksti: 'Добрый день', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '30 %' },
+      { teksti: 'Selâm aleyküm', kieli: 'krimintataari', lippu: 'Flag of the Crimean Tatar people.svg', osuus: '0,5 %' },
+    ],
+  },
+
+  RUS: {
+    vakiluku: '144 milj.',
+    vakilukuSija: '9./195',
+    pintaAla: '17 125 000 km²',
+    pintaAlaSija: '1./195',
+    demokratia: {
+      arvo: '0,06',
+      sija: '155./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~RUS',
+      selitys: 'Vaalit järjestetään, mutta kilpailua niissä ei ole: '
+                 + 'tunnetuimmat haastajat suljetaan ehdokaslistoilta, ja '
+                 + 'oppositiojohtaja Aleksei Navalnyi kuoli vankileirillä 2024. '
+                 + 'Riippumattomat lehdet ja tv-kanavat on lakkautettu tai '
+                 + 'leimattu ulkomaisiksi agenteiksi, ja sodan arvostelusta voi '
+                 + 'saada vankeutta. Vladimir Putin on johtanut maata vuodesta '
+                 + '1999.',
+    },
+    keskitulo: { arvo: '15 960 $/v', sija: '64./190' },
+    tervehdykset: [
+      { teksti: 'Здравствуйте', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '99 %' },
+      { teksti: 'Исәнмесез', kieli: 'tataari', lippu: 'Flag of Tatarstan.svg', osuus: '3 %' },
+      { teksti: 'Һаумыһығыҙ', kieli: 'baškiiri', lippu: 'Flag of Bashkortostan.svg', osuus: '1 %' },
+    ],
+  },
+
+  EST: {
+    vakiluku: '1,4 milj.',
+    vakilukuSija: '154./195',
+    pintaAla: '45 000 km²',
+    pintaAlaSija: '129./195',
+    demokratia: {
+      arvo: '0,84',
+      sija: '5./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~EST',
+      selitys: 'Viro kuuluu V-Demin mittauksissa maailman kärkeen: vaalit '
+                 + 'ovat vapaat, hallitukset vaihtuvat rauhassa, tuomioistuimet '
+                 + 'ovat riippumattomia ja lehdistönvapaudessa maa on ollut '
+                 + 'aivan kärkisijoilla. Yksi särö on äänioikeus: noin neljällä '
+                 + 'prosentilla asukkaista on yhä määrittelemätön kansalaisuus, '
+                 + 'eivätkä he saa äänestää parlamenttivaaleissa.',
+    },
+    keskitulo: { arvo: '32 310 $/v', sija: '38./190' },
+    tervehdykset: [
+      { teksti: 'Tere', kieli: 'viro', lippu: 'Flag of Estonia.svg', osuus: '84 %' },
+      { teksti: 'Здравствуйте', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '27 %' },
+      { teksti: 'Tereq', kieli: 'võro', lippu: 'Flag of et-Võru.svg', osuus: '5 %' },
+    ],
+  },
+
+  LVA: {
+    vakiluku: '1,8 milj.',
+    vakilukuSija: '148./195',
+    pintaAla: '65 000 km²',
+    pintaAlaSija: '123./195',
+    demokratia: {
+      arvo: '0,75',
+      sija: '20./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~LVA',
+      selitys: 'Latvia on vakaa demokratia: vaaleissa kilpailee kymmenkunta '
+                 + 'puoluetta, hallitukset kaatuvat ja syntyvät parlamentin '
+                 + 'äänestyksissä, ja lehdistö on vapaa. Lukua painaa '
+                 + 'kansalaisuuskysymys — 8,9 prosenttia asukkaista on yhä '
+                 + '"ei-kansalaisia", joilla ei ole äänioikeutta valtiollisissa '
+                 + 'vaaleissa. Osuus pienenee vuosi vuodelta.',
+    },
+    keskitulo: { arvo: '24 980 $/v', sija: '48./190' },
+    tervehdykset: [
+      { teksti: 'Labdien', kieli: 'latvia', lippu: 'Flag of Latvia.svg', osuus: '62 %' },
+      { teksti: 'Здравствуйте', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '37 %' },
+      { teksti: 'Vasals', kieli: 'latgali', lippu: 'Flag of Latgale.svg', osuus: '9 %' },
+    ],
+  },
+
+  LTU: {
+    vakiluku: '2,9 milj.',
+    vakilukuSija: '137./195',
+    pintaAla: '65 000 km²',
+    pintaAlaSija: '122./195',
+    demokratia: {
+      arvo: '0,71',
+      sija: '27./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~LTU',
+      selitys: 'Liettuassa vaalit ovat vapaat ja valta on vaihtunut '
+                 + 'rauhanomaisesti kerta toisensa jälkeen vuodesta 1990. Media '
+                 + 'on moniäänistä. Luku jää silti hieman naapureiden alle: '
+                 + 'oikeuslaitoksen luottamusta koetteli vuoden 2019 '
+                 + 'lahjusvyyhti, jossa pidätettiin 26 ihmistä, heidän '
+                 + 'joukossaan kahdeksan tuomaria.',
+    },
+    keskitulo: { arvo: '30 500 $/v', sija: '39./190' },
+    tervehdykset: [
+      { teksti: 'Laba diena', kieli: 'liettua', lippu: 'Flag of Lithuania.svg', osuus: '85 %' },
+      { teksti: 'Dzień dobry', kieli: 'puola', lippu: 'Flag of Poland.svg', osuus: '6 %' },
+      { teksti: 'Здравствуйте', kieli: 'venäjä', lippu: 'Flag of Russia.svg', osuus: '5 %' },
+    ],
+  },
+
+  FIN: {
+    vakiluku: '5,6 milj.',
+    vakilukuSija: '116./195',
+    pintaAla: '338 000 km²',
+    pintaAlaSija: '65./195',
+    demokratia: {
+      arvo: '0,81',
+      sija: '8./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~FIN',
+      selitys: 'Suomea kannattelevat riippumattomat tuomioistuimet, vapaa '
+                 + 'lehdistö ja julkisuusperiaate: viranomaisen asiakirja on '
+                 + 'lähtökohtaisesti julkinen, ellei laissa toisin sanota. '
+                 + 'Erillistä perustuslakituomioistuinta ei kuitenkaan ole — '
+                 + 'lakien perustuslainmukaisuuden arvioi etukäteen eduskunnan '
+                 + 'perustuslakivaliokunta, siis poliitikot itse, ja se painaa '
+                 + 'V-Demin arviota hieman.',
+    },
+    keskitulo: { arvo: '55 250 $/v', sija: '19./190' },
+    tervehdykset: [
+      { teksti: 'Hei', kieli: 'suomi', lippu: 'Flag of Finland.svg', osuus: '86 %' },
+      { teksti: 'Hej', kieli: 'ruotsi', lippu: 'Flag of Sweden.svg', osuus: '5 %' },
+      { teksti: 'Bures', kieli: 'pohjoissaame', lippu: 'Sami flag.svg', osuus: '0,04 %' },
+    ],
+  },
+
+  SWE: {
+    vakiluku: '11 milj.',
+    vakilukuSija: '92./195',
+    // Maailmanpankin luku sisältää aluevedet; tässä on
+    // vakiintunut kokonaispinta-ala, ja sija on laskettu sillä.
+    pintaAla: '450 000 km²',
+    pintaAlaSija: '55./195',
+    demokratia: {
+      arvo: '0,85',
+      sija: '2./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~SWE',
+      selitys: 'Ruotsi on V-Demin mittauksissa maailman kärkeä. '
+                 + 'Painovapausasetus vuodelta 1766 oli maailman ensimmäinen '
+                 + 'laatuaan ja teki viranomaisten papereista julkisia. '
+                 + 'Ministerihallinto on kielletty: ministeri ei saa puuttua '
+                 + 'yksittäisen viraston päätökseen. Vaalit ovat suhteelliset, '
+                 + 'ja vähemmistöhallitukset joutuvat neuvottelemaan opposition '
+                 + 'kanssa.',
+    },
+    keskitulo: { arvo: '63 010 $/v', sija: '13./190' },
+    tervehdykset: [
+      { teksti: 'Hej', kieli: 'ruotsi', lippu: 'Flag of Sweden.svg', osuus: '95 %' },
+      { teksti: 'Hei', kieli: 'suomi', lippu: 'Flag of Finland.svg', osuus: '2 %' },
+      { teksti: 'Bures', kieli: 'pohjoissaame', lippu: 'Sami flag.svg', osuus: '0,2 %' },
+    ],
+  },
+
+  NOR: {
+    vakiluku: '5,6 milj.',
+    vakilukuSija: '117./195',
+    // Maailmanpankin luku sisältää aluevedet; tässä on
+    // vakiintunut kokonaispinta-ala, ja sija on laskettu sillä.
+    pintaAla: '385 000 km²',
+    pintaAlaSija: '61./195',
+    demokratia: {
+      arvo: '0,85',
+      sija: '3./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~NOR',
+      selitys: 'Norjan perustuslaki vuodelta 1814 on yhä voimassa, ja '
+                 + 'korkein oikeus on kumonnut sen vastaisia lakeja jo '
+                 + '1800-luvulta lähtien. Lehdistö on vapaa, ja avoimuus menee '
+                 + 'pitkälle: jokaisen verotiedot ovat julkisia. Suurkäräjät '
+                 + 'valitaan suhteellisilla vaaleilla, ja saamelaiskäräjät on '
+                 + 'toiminut vuodesta 1989.',
+    },
+    keskitulo: { arvo: '97 310 $/v', sija: '3./190' },
+    tervehdykset: [
+      { teksti: 'Hei', kieli: 'norja', lippu: 'Flag of Norway.svg', osuus: '95 %' },
+      { teksti: 'Bures', kieli: 'pohjoissaame', lippu: 'Sami flag.svg', osuus: '0,5 %' },
+      { teksti: 'Terve', kieli: 'kveeni', lippu: 'Flag of the Kven people.svg', osuus: '0,1 %' },
+    ],
+  },
+
+  DNK: {
+    vakiluku: '6,0 milj.',
+    vakilukuSija: '113./195',
+    pintaAla: '43 000 km²',
+    pintaAlaSija: '130./195',
+    demokratia: {
+      arvo: '0,88',
+      sija: '1./172',
+      linkki: 'https://ourworldindata.org/grapher/liberal-democracy-index?country=~DNK',
+      selitys: 'Tanska on V-Demin listan kärjessä. Vaalit ovat '
+                 + 'suhteelliset, ja lähes kaikki hallitukset vuoden 1909 '
+                 + 'jälkeen ovat olleet vähemmistöhallituksia — laki syntyy '
+                 + 'neuvottelemalla opposition kanssa. Lehdistö on vapaa ja '
+                 + 'korruptio vähäistä. Tuomioistuimet ovat riippumattomia '
+                 + 'mutta puuttuvat lakeihin harvoin: korkein oikeus kumosi '
+                 + 'lain perustuslain vastaisena ensi kerran vasta 1999.',
+    },
+    keskitulo: { arvo: '77 190 $/v', sija: '9./190' },
+    tervehdykset: [
+      { teksti: 'Goddag', kieli: 'tanska', lippu: 'Flag of Denmark.svg', osuus: '100 %' },
+      { teksti: 'Aluu', kieli: 'grönlanti (Grönlanti)', lippu: 'Flag of Greenland.svg', osuus: '1 %' },
+      { teksti: 'Góðan dag', kieli: 'fääri (Färsaaret)', lippu: 'Flag of the Faroe Islands.svg', osuus: '1 %' },
+    ],
+  },
 };
