@@ -83,9 +83,28 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   karttakysymykset ja tapahtumakortit vuorottelevat monivalinnan kanssa.
   Sisältö Afrikalle: 16 väittämää ja 12 tapahtumakorttia.
 
+- Paketti 18 (Katso kuva -linkit): ✅
+- Paketti 19 (matkamuistot aarrepalkinnoiksi): ✅
+- Eurooppa valmiiksi, 29 kaupunkia ja 20 maata: ✅ (1.8.2026, v138)
+- Peilikerros ja media-repo: ✅ (1.8.2026, v137) — media-repon PR #1
+  odottaa yhdistämistä
+- Kuvien tekijämerkinnät lisenssin vaatimalla tavalla: ✅ (1.8.2026)
+- Astu mantereelle -napin korjaus, ylävalikko hampurilaiseksi,
+  ambienssin aloituskohta ja etusivun taso: ✅ (1.8.2026, v139)
+- Paketti 20 (kaupunkien omat ambienssiäänet): kesken, ks. alempaa
+
 ## Avoimet asiat
 
-Ei avoimia asioita. Paketin 12 pulmien verkkotarkistus tehtiin
+**Media-repon PR #1 pitää yhdistää**, muuten peili ei toimi. Peli ei
+siitä hajoa: se hakee aineiston alkuperäisistä lähteistä kuten ennenkin,
+ja kolmen epäonnistuneen haun jälkeen peili jätetään väliin koko
+istunnoksi.
+
+**Venäjänkielisten vähemmistöjen liput** (Ukraina, Viro, Latvia,
+Liettua) jätettiin pois omistajan päätöksellä 1.8.2026. Muilla
+vähemmistökielillä lippu on. Älä palauta niitä.
+
+Aiemmat: ei avoimia asioita. Paketin 12 pulmien verkkotarkistus tehtiin
 28.7.2026 (suunnittelusessio): xhosan naksutuskuvaukset (c dentaalinen,
 x lateraalinen "hevosen hoputus", q "korkin poksahdus") ja Timbuktun
 käsikirjoitusviite (Kashf al-Ghummah fi Nafa al-Ummah, al-Ghalawi 1733,
@@ -93,12 +112,149 @@ Mamma Haidara -kirjasto, Library of Congressin näyttely — opettaa
 laskemaan vuodenaikojen alut tähtien liikkeistä) täsmäävät lähteisiin.
 Ashantien 3 %:n tarkkuusväitettä ei ole julkaistussa tekstissä.
 
-## Seuraavaksi: PAKETTI 18 (Katso kuva -linkit havaintoihin)
+## Seuraavaksi: PAKETTI 20 (kaupunkien omat ambienssiäänet)
 
-**Paketit 1–17 ovat valmiit (28.7.2026).** Äänistä: omistaja käy äänet
-läpi viritysivulla `/aanet.html` ja antaa äänikohtaisen palautteen —
-älä tee uutta äänten yleisremonttia ennen sitä palautetta.
-Seuraavaksi tehdään paketti 18, ja sen jälkeen paketti 19 (alempana).
+**Paketit 1–19 ovat valmiit.** Seuraava tekemätön on paketti 20
+alempana. Lue ensin osio "Tilanne 1.8.2026", jossa on kaikki mitä
+tarvitset kummankin repon jatkamiseen.
+
+Äänistä: omistaja käy äänet läpi viritysivulla `/aanet.html` ja antaa
+äänikohtaisen palautteen — älä tee uutta äänten yleisremonttia ennen
+sitä palautetta. Paketti 20 on eri asia: se ei muuta olemassa olevia
+ääniä vaan hakee kaupungeille omat.
+
+## Tilanne 1.8.2026 — lue tämä ensin
+
+Kaksi sessiota teki töitä rinnakkain: toinen pelirepossa, toinen
+media-repossa. Tähän on koottu kummankin tilanne, jotta yksi sessio voi
+jatkaa molempia.
+
+### Pelirepo (ravelius/Matkakirja)
+
+Main on ajan tasalla, versio **2026-08-01.139**. Kaikki alla oleva on
+jo mainissa — älä tee uudestaan.
+
+- **Eurooppa on valmis.** Kaikilla 41 kaupungilla on saapumismerkintä,
+  kolme kulttuurinostoa kuvineen, monivalintakysymys, vanha ja uusi
+  valokuva sekä oma artikkeli. Maatietoja 29.
+- **Peilikerros** (`js/media.js`): kuvat ja äänet haetaan kolmessa
+  portaassa — paikallinen kopio → peili → alkuperäinen lähde. Peilin
+  polku lasketaan samalla säännöllä kuin `tools/peilaa-media.mjs`,
+  ja `tests/media.test.mjs` vartioi ettei sääntö eriydy.
+  `PEILI_JUURI` = `https://ravelius.github.io/Matkakirja-media/`.
+- **Tekijämerkinnät**: kaikilla CC BY / CC BY-SA -kuvilla on tekijän
+  nimi (`tools/lisaa-tekijat.mjs`). Lippujen tekijät ovat
+  `js/packs/lippu-tekijat.js`:ssä ja näkyvät periaatelapussa.
+- **Työhuone** (`tyohuone.html`) näyttää nyt myös Euroopan tekstit.
+- Ambienssin aloituskohta arpoutuu; etusivun taso on puolitettu.
+
+Tarkistustyökalut, aja nämä kun sisältö muuttuu:
+
+    node tools/tarkista-wikit.mjs      # wiki-linkit, 0 kuollutta
+    node tools/lisaa-tekijat.mjs       # kuvien tekijämerkinnät
+    node tools/build-standalone.mjs    # yhden tiedoston versio
+    npm test                           # 311 testiä
+
+### Media-repo (ravelius/Matkakirja-media)
+
+- **PR #1 on auki** haarasta
+  `claude/kloonaa-matkakirja-peilaa-media-xzw23f`. Se sisältää peilatun
+  aineiston. **Se pitää yhdistää mainiin** — GitHub Pages tarjoilee
+  mainia, joten peili alkaa toimia vasta yhdistämisen jälkeen. Pages on
+  jo päällä ja palauttaa `access-control-allow-origin: *`.
+- Peilaus ajetaan pelirepossa:
+  `node tools/peilaa-media.mjs --ulos <media-repo>`
+- Työkalu ohittaa jo ladatut tiedostot, joten uusintajo on nopea.
+  **Aja se aina, kun peliin tulee uusia kuvia tai ääniä.**
+
+Peilaustyökalusta korjattiin 1.8. kolme vikaa. Älä palauta vanhaa
+käytöstä:
+
+- Heittomerkilliset tiedostonimet (`Château d'If`) katkesivat
+  ensimmäiseen hipsuun. Nyt luetaan kumpikin lainausmerkkityyppi.
+- Aikaraja oli 5 min, mikä katkaisi yli 25 megatavun äänitteet kesken.
+  Katkennut tiedosto jäi levylle pysyvästi, koska olemassa oleva
+  tiedosto ohitettiin kokoa tarkistamatta. Aikaraja on nyt 20 min ja
+  koko tarkistetaan palvelimen ilmoittamaa vasten.
+- Pelkkä HTTP 200 ei erota kuvaa virhesivusta. Nyt katsotaan tiedoston
+  alkutunniste. **Kokoraja ei kelpaa mittapuuksi** — yksivärinen lippu
+  pakkautuu 320 pikselin levyisenä muutamaan sataan tavuun.
+
+Huom: Commons vastaa olemattomaan tiedostoon **404**, ei 200. Jos
+näet vastakkaisen väitteen vanhassa raportissa, se on virheellinen.
+
+### Lähdeaineisto
+
+`tools/peilaa-media.mjs --vain tekstit` hakee 168 wikitekstiä
+kansioon `lahteet/`. Ne ovat raaka-ainetta pelin omien tekstien
+kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
+media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
+
+
+## Paketti 20: kaupunkien omat ambienssiäänet
+
+**Omistajan toive:** "Olisi tärkeää löytää jokaiseen kaupunkiin
+aidosti siinä kaupungissa nauhoitettu ambienssi ääni."
+
+### Miksi
+
+Taustaäänet tulevat nyt maisematyypin arvontakorista, ja Euroopassa
+**22 kaupunkia jakaa kolme "kaupunki"-ääntä**. Praha ja Lissabon
+kuulostavat siis samalta. Afrikassa yleisimmillä tyypeillä on 6–8
+ehdokasta, Euroopassa kolme.
+
+    kaupunki   22 kaupunkia ·  3 ehdokasta
+    satama      9 kaupunkia ·  3 ehdokasta
+    pohjoinen   3 kaupunkia ·  3 ehdokasta
+
+### Mitä on jo tehty
+
+`tools/hae-kaupunkiaanet.mjs` on kirjoitettu ja ajettu kerran. Se hakee
+radio aporeen äänitteet **koordinaattien** perusteella (aporee-kohteilla
+on latitude/longitude archive.orgin metadatassa), ei nimen perusteella
+arvaten. Kaupungin koordinaatit haetaan Wikipediasta.
+
+Ensimmäinen ajo löysi ehdokkaat **24 kaupungille 41:stä**.
+
+### Kaksi tiedossa olevaa vikaa työkalussa — korjaa nämä ensin
+
+1. **Negatiivinen pituusaste rikkoo haun.** Lontoo, Dublin, Edinburgh,
+   Lissabon, Madrid ja Granada saivat nolla osumaa, mikä on mahdotonta.
+   Kaikki ovat nollameridiaanin länsipuolella. Lucene tulkitsee
+   `longitude:[-0.2 TO 0.2]` -kyselyn miinusmerkin kieltona; arvot on
+   suojattava tai lainausmerkitettävä.
+2. **Koordinaatteja ei löydy 11 kaupungille**: Istanbul, Marseille,
+   Krakova, Venetsia, Sisilia, Kreeta, Odessa, Pietari, Lappi, Alpit,
+   Islanti. Työkalu kokeilee samaa otsikkoa fi- ja en-Wikipediassa,
+   mutta esimerkiksi "Venetsia" ei ole en-wikin otsikko. Ratkaise
+   kielilinkkien kautta (`prop=langlinks`) tai Wikidatasta.
+
+### Sitten
+
+3. Aja haku uudestaan ja tarkista, että jokainen ehdokas on oikeasti
+   siitä kaupungista: etäisyys keskustasta on tuloksessa mukana.
+4. Karsi käsin: peli tarvitsee paikan **yleisen äänimaiseman**, ei
+   tapahtumaa. Konsertit, haastattelut ja sisätilat eivät kelpaa.
+   Työkalussa on jo karkea suodatin, mutta se ei korvaa kuuntelua.
+5. Tarkista jokaisen mp3-osoitteen toimivuus ja lisenssi (aporee on
+   CC BY, CC BY-SA, CC BY-NC tai public domain).
+6. Lisää ehdokkaat `js/aani-ehdokkaat.js`:ään kaupunkikohtaisina, jotta
+   omistaja voi valita äänistudiossa.
+7. **Palauta kaupunkikohtainen ambienssi** `js/ambience-stream.js`:ään.
+   Nyt siellä lukee: "Kaupunkien äänet tulevat aina maisematyypin
+   maanosakohtaisesta arvontakorista — kaupunkikohtaisia valintoja tai
+   oletuksia ei ole (omistajan päätös)." Tämä päätös on nyt kumottu:
+   kaupungin oma äänitys menee ensin, tyyppikori jää varalle.
+8. Peilaa uudet äänet media-repoon (`--vain aanet`) ja aja mediatestit.
+9. Tee sama Afrikalle, jos aikaa jää.
+
+### Reunaehdot
+
+- Aloituskohdan arvonta on jo tehty — älä koske siihen.
+- Etusivun ääni on tarkoituksella vakio ja puolet hiljaisempi.
+- Äänet ovat isoja: peilaus kestää, ja aikaraja on 20 min tiedostoa
+  kohti syystä.
+
 
 ## Paketti 18: Katso kuva -linkit Afrikan havaintoihin — VALMIS
 
