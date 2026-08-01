@@ -112,7 +112,25 @@ function kohteet() {
 
 // --- lataus ------------------------------------------------------------------
 
-const manifesti = { luotu: null, kuvat: {}, liput: {}, aanet: {}, tekstit: {} };
+/**
+ * Manifesti täydentyy, se ei korvaudu. Kun ajetaan vain yksi laji
+ * (`--vain kuvat`), muiden lajien merkinnät on säilytettävä: muuten
+ * ääni- ja lippurivit katoaisivat, vaikka tiedostot ovat levyllä.
+ */
+function lueManifesti() {
+  const pohja = { luotu: null, kuvat: {}, liput: {}, aanet: {}, tekstit: {} };
+  const polku = join(ULOS, 'manifesti.json');
+  if (!existsSync(polku)) return pohja;
+  try {
+    const vanha = JSON.parse(readFileSync(polku, 'utf8'));
+    for (const laji of ['kuvat', 'liput', 'aanet', 'tekstit']) {
+      Object.assign(pohja[laji], vanha[laji] ?? {});
+    }
+  } catch { /* rikkinäinen manifesti kirjoitetaan yli */ }
+  return pohja;
+}
+
+const manifesti = lueManifesti();
 const virheet = [];
 
 function commonsMeta(nimet) {
@@ -156,7 +174,14 @@ async function lataaKuvat(nimet, alikansio, leveys) {
       if (existsSync(polku)) continue;
       const url = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(nimi)}?width=${leveys}`;
       const koodi = hae(url, polku);
-      if (koodi !== '200') { virheet.push(`${alikansio}: ${nimi} → HTTP ${koodi}`); }
+      if (koodi !== '200') {
+        // curl kirjoittaa myös virhesivun kohteeseen. Se näyttäisi
+        // seuraavalla ajolla valmiilta tiedostolta, joten se poistetaan.
+        rmSync(polku, { force: true });
+        virheet.push(`${alikansio}: ${nimi} → HTTP ${koodi}`);
+      } else {
+        kokoYhteensa += statSync(polku).size;
+      }
       nuku(350);
     }
     console.log(`  ${alikansio}: ${Math.min(i + 20, nimet.length)}/${nimet.length}`);
