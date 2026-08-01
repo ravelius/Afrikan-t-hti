@@ -377,13 +377,13 @@ body.aloitus-zoom.kiikari-paalla.kartta-raahaus .kiikari {
 .kiikari::after {
   -webkit-mask-image: radial-gradient(
     ellipse 84% 75% at 50% 50%,
-    rgba(0, 0, 0, 0) 56%,
-    rgba(0, 0, 0, 1) 82%
+    rgba(0, 0, 0, 0) 42%,
+    rgba(0, 0, 0, 1) 74%
   );
   mask-image: radial-gradient(
     ellipse 84% 75% at 50% 50%,
-    rgba(0, 0, 0, 0) 56%,
-    rgba(0, 0, 0, 1) 82%
+    rgba(0, 0, 0, 0) 42%,
+    rgba(0, 0, 0, 1) 74%
   );
 }
 
@@ -417,8 +417,8 @@ body.aloitus-zoom .kiikari {
 .kiikari::before {
   background: radial-gradient(
     ellipse 84% 75% at 50% 50%,
-    rgba(255, 126, 90, 0) 84%,
-    rgba(255, 126, 90, 0.22) 93%,
+    rgba(255, 126, 90, 0) 74%,
+    rgba(255, 126, 90, 0.22) 90%,
     rgba(255, 126, 90, 0.22) 100%
   );
 }
@@ -427,9 +427,9 @@ body.aloitus-zoom .kiikari {
 .kiikari::after {
   background: radial-gradient(
     ellipse 84% 75% at 50% 50%,
-    rgba(120, 200, 255, 0) 74%,
-    rgba(120, 200, 255, 0.13) 84%,
-    rgba(120, 200, 255, 0) 93%
+    rgba(120, 200, 255, 0) 60%,
+    rgba(120, 200, 255, 0.13) 76%,
+    rgba(120, 200, 255, 0) 90%
   );
 }
 
@@ -1962,16 +1962,23 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 /*
  * Zoomatessa avausteksti työntyy alas pois näkyvistä samaa tahtia kuin
- * kartta suurenee (omistajan toive): sama kesto ja sama pehmennys kuin
- * zoomausliu'ulla (js/ui.js ZOOM_MS). Pelkkä häivytys jätti tekstin
- * paikalleen haamuksi kartan päälle.
+ * kartta suurenee (omistajan toive). Matka, kesto ja pehmennys tulevat
+ * js/ui.js:n tyonnaAvausteksti-metodista, joka mittaa kartan alareunan
+ * todellisen siirtymän — niin teksti liikkuu kartan kanssa koko matkan
+ * eikä vain lähtee ja saavu samaan aikaan. Oletukset ovat varalta.
+ *
+ * Häivytys loppuu ennen liikettä, jotta teksti on jo poissa silmistä
+ * kun se painuu ruudun alle; pelkkä häivytys jätti sen paikalleen
+ * haamuksi kartan päälle.
  */
 .intro.intro-pois {
   opacity: 0;
-  transform: translate(-50%, 85%);
+  transform: translate(-50%, var(--intro-tyonto, 85%));
+  will-change: transform, opacity;
   transition:
-    transform 1.2s cubic-bezier(0.25, 0.6, 0.2, 1),
-    opacity 1s ease-in;
+    transform var(--intro-kesto, 1.2s)
+      var(--intro-pehmennys, cubic-bezier(0.25, 0.6, 0.2, 1)),
+    opacity calc(var(--intro-kesto, 1.2s) * 0.7) ease-in;
 }
 
 /*
@@ -34525,7 +34532,7 @@ function vauhtiKayra(pehmennys, matalin = 0.86, korkein = 1.16, pisteita = 28) {
 
 // Sama pehmennys kuin kartan liu'ulla (js/ui.js ZOOM_PEHMENNYS). Jos se
 // muuttuu siellä, muuta myös tässä — ääni ja kuva seuraavat toisiaan.
-const ZOOM_PEHMENNYS = [0.45, 0, 0.28, 1];
+const ZOOM_PEHMENNYS = [0.68, 0, 0.3, 1];
 const ZOOM_VAUHTI = vauhtiKayra(ZOOM_PEHMENNYS);
 const ZOOM_VAUHTI_MIN = Math.min(...ZOOM_VAUHTI);
 const ZOOM_VAUHTI_MAX = Math.max(...ZOOM_VAUHTI);
@@ -34625,8 +34632,11 @@ const REAL_PLAYERS = {
   // toistonopeus seuraa zoomausliu'un vauhtia (omistajan toive), joten
   // moottori kiihtyy ja hidastuu samassa tahdissa kartan kanssa.
   // Kesto tulee kutsujalta: etusivu 2,8 s, mantereet 2,0 s.
-  zoom: (s, { kesto = 2.85 } = {}) => s.playSlice('zoom', {
-    dur: kesto, gain: 0.55, alusta: true, tasavire: true, nopeusKayra: ZOOM_VAUHTI,
+  zoom: (s, { kesto = 3.6 } = {}) => s.playSlice('zoom', {
+    // Voimakkuus on selvästi pienempi kuin ennen: äänite koostuu nyt
+    // pelkästä tasaisesta moottorista ilman naksahduksia, jolloin
+    // normalisointi nosti sen keskitason yli kaksinkertaiseksi.
+    dur: kesto, gain: 0.24, alusta: true, tasavire: true, nopeusKayra: ZOOM_VAUHTI,
   }),
   star: (s) => s.playSlice('star', { dur: 2.6, gain: 0.45, alusta: true }),
   gem: (s) => s.playSlice('gem', { dur: 1.6, gain: 0.4, alusta: true }),
@@ -34755,7 +34765,7 @@ const SOUNDS = {
    * pehmennyskäyrä kuin kartalla, joten moottori kiihtyy ja hidastuu
    * täsmälleen kuvan mukana. Kesto tulee kutsujalta.
    */
-  zoom: (s, { kesto = 2.85 } = {}) => {
+  zoom: (s, { kesto = 3.6 } = {}) => {
     const ctx = s.ensureContext();
     if (!ctx) return;
     const t0 = ctx.currentTime;
@@ -34813,11 +34823,9 @@ const SOUNDS = {
       o.stop(t0 + kesto + 0.05);
     }
 
-    // Muovinen kuiva kohina koneiston taustalla sekä naksahdukset, kun
-    // linssi lähtee liikkeelle ja kun se pysähtyy.
+    // Muovinen kuiva kohina koneiston taustalla. Naksahdukset otettu
+    // pois (omistajan toive): kuuluu vain moottori.
     s.hiss({ dur: kesto, type: 'bandpass', freq: 2200, sweepTo: 2900, gain: 0.035, q: 0.8 });
-    s.knock({ freqs: [700, 1250], dur: 0.045, gain: 0.11, q: 9 });
-    s.knock({ freqs: [520, 900], dur: 0.06, gain: 0.13, q: 8, delay: kesto - 0.03 });
   },
 
   // Noppa
@@ -38781,15 +38789,19 @@ const ALAKAISTA = 0.3;
 // pohjoisimmat kaupungit (Tromssa, Lappi, Islanti) tarvitsevat tilaa,
 // johon panoroida (omistajan havainto).
 const YLAKAISTA = 0.26;
-// Zoomausliu'un kesto. Omistajan palaute: 600 ms oli liian nopea,
-// 1200 ms yhä liian nopea — kaikki zoomaukset hitaammiksi.
-const ZOOM_MS = 2000;
+// Zoomausliu'un kesto. Omistajan palaute on vienyt tätä pidemmäksi
+// kerta kerralta: 600 ms → 1200 → 2000 → 2400.
+const ZOOM_MS = 2400;
 // Etusivun zoomaus vielä tätäkin hitaammin (omistajan toive): se on
 // pelin avaus, ja koko maailmankartta on iso matka lähikuvaan.
-const ALOITUS_ZOOM_MS = 2800;
+const ALOITUS_ZOOM_MS = 3600;
 // Kiihdytys ja jarrutus molemmissa päissä (omistajan toive): kartta
-// lähtee liikkeelle pehmeästi, kiitää keskellä ja pysähtyy rauhassa.
-const ZOOM_PEHMENNYS = 'cubic-bezier(0.45, 0, 0.28, 1)';
+// lähtee liikkeelle hyvin hitaasti, kiihtyy vähitellen täyteen
+// vauhtiin ja jarruttaa pitkään. Ensimmäinen ohjauspiste on kaukana
+// oikealla juuri siksi, että alku on tarpeeksi verkkainen.
+// HUOM: sama arvo on js/sound.js:ssä, jotta äänen korkeus seuraa
+// samaa kaarta. Jos muutat toisen, muuta myös toinen.
+const ZOOM_PEHMENNYS = 'cubic-bezier(0.68, 0, 0.3, 1)';
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
 const ZOOM_TAUKO_MS = 260;
 // Aloituskartan lähikuvan suurennos yleiskuvaan nähden.
@@ -39678,9 +39690,6 @@ class UI {
     this.panX = null;
     this.zoomAnkkuri = fokus.x;
     document.body.classList.add('aloitus-zoom');
-    // Avausteksti työntyy alas pois näkyvistä samaa tahtia kuin kartta
-    // suurenee (omistajan toive) — ei erillistä häivytystä.
-    this.introEl.classList.add('intro-pois');
     this.fitViewBox();
     // Renkaat piirretään uudelleen, jotta napautus valitsee kaupungin
     // eikä enää zoomaa.
@@ -39773,6 +39782,8 @@ class UI {
     // joten liu'un alussa se ei täytä paneelia — häivytys piirtyi
     // paljaalle taustalle ja näkyi ruudun laidoissa tummina kaarina.
     document.body.classList.add('zoom-kaynnissa');
+    // Avausteksti lähtee liikkeelle samalla hetkellä kuin kartta.
+    this.tyonnaAvausteksti(kesto);
     this.asetaPan(this.panX, this.panY);
     clearTimeout(this.zoomAjastin);
     this.zoomAjastin = setTimeout(() => {
@@ -39786,6 +39797,38 @@ class UI {
     this.kiikariAjastin = setTimeout(() => {
       if (!this.dead) document.body.classList.add('kiikari-paalla');
     }, kesto);
+  }
+
+  /**
+   * Avausteksti työntyy alas täsmälleen sen verran kuin kartan alareuna
+   * liikkuu (omistajan toive): teksti ei häivy erikseen vaan kasvava
+   * kartta työntää sen ruudun alle.
+   *
+   * Matka mitataan geometriasta eikä arvata prosenttina. Alkuasento on
+   * jo asetettu (asetaZoomAlku), joten kartan alareunan voi lukea
+   * suoraan; loppuasento lasketaan lähikuvan mitoista. Kesto ja
+   * pehmennys ovat samat kuin kartalla, joten liike on samaa tahtia
+   * koko matkan eikä vain päätepisteissä.
+   *
+   * Tekstistä ei tarvitse tehdä kuvaa: siirto on pelkkä transform,
+   * jonka selain hoitaa kompositorissa ilman uudelleenlatomista tai
+   * -piirtoa. will-change varmistaa oman kerroksen, joka on juuri se
+   * hyöty, jonka kuva antaisi.
+   */
+  tyonnaAvausteksti(kesto) {
+    const teksti = this.introEl;
+    if (!teksti || teksti.hidden || !this.aloitusZoom) return;
+    const pane = this.mapPane.getBoundingClientRect();
+    const alkuAla = this.svg.getBoundingClientRect().bottom;
+    const korkeus = parseFloat(this.svg.style.height) || pane.height;
+    const loppuAla = pane.top + (this.panY ?? 0) + korkeus;
+    // Vähintään paneelin verran, jottei teksti jää näkyviin silloinkaan
+    // kun kartta sattuu kasvamaan odotettua vähemmän.
+    const siirto = Math.max(pane.height - teksti.offsetTop, loppuAla - alkuAla);
+    teksti.style.setProperty('--intro-tyonto', `${Math.round(siirto)}px`);
+    teksti.style.setProperty('--intro-kesto', `${kesto}ms`);
+    teksti.style.setProperty('--intro-pehmennys', ZOOM_PEHMENNYS);
+    teksti.classList.add('intro-pois');
   }
 
   /**
@@ -43901,7 +43944,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.127';
+const APP_VERSION = '2026-08-01.128';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
