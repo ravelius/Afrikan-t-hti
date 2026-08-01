@@ -316,6 +316,14 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
   + 'Hetkinen… Mitä hän oli löytänyt?\n\n'
   + 'Juoksin kentälle kirja kädessäni ja mietin enää yhtä asiaa:\n\n'
   + 'mistä aloitan?';
+/*
+ * Mantereiden lähikuva puhelimella. Ilme hiotaan ensin Euroopalla
+ * (omistajan päätös); muut laudat lisätään tähän settiin sitä mukaa kuin
+ * ne on käyty läpi.
+ */
+const ZOOMATTAVAT = new Set(['europe']);
+const MANNER_ZOOM = 2.3;        // kuinka moninkertainen lähikuva on yleiskuvaan
+const MANNER_ZOOM_VIIVE = 1100; // kokonäkymä näkyy tämän verran ennen zoomausta
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -739,8 +747,12 @@ export class UI {
     this.svg.setAttribute('aria-label', pack.ariaLabel);
     this.svg.dataset.style = pack.style ?? 'map';
     document.body.dataset.pack = pack.id;
+    // Lauta vaihtui: mahdollinen edellinen lähikuva puretaan, ja uudelle
+    // mantereelle ajastetaan oma zoomaus kokonäkymän jälkeen.
+    this.nollaaAloitusZoom();
     this.drawBoard();
     this.fitViewBox();
+    this.ajastaMannerZoom();
   }
 
   /**
@@ -935,9 +947,13 @@ export class UI {
       this.sovitaAloitusZoom(w, h);
       return;
     }
+    if (this.mannerZoom && !alkuun) {
+      this.sovitaMannerZoom(w, h);
+      return;
+    }
     // Lähikuvasta poistuttaessa (kaupunki valittu, uusi peli) kartta
     // palaa paneelin kokoiseksi: inline-mitat ja siirto pois.
-    if (this.aloitusZoom || this.svg.style.width) this.nollaaAloitusZoom();
+    if (this.aloitusZoom || this.mannerZoom || this.svg.style.width) this.nollaaAloitusZoom();
     if (alkuun) this.placeIntro(box, vy, vh, h);
     this.placeFactCard(w, h);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
@@ -999,22 +1015,114 @@ export class UI {
     this.placeFactCard(paneW, paneH);
   }
 
-  /** Siirtää kartan vaakasuunnassa; rajat pitävät kartan ruudulla. */
-  asetaPan(x) {
+  /**
+   * Siirtää karttaa; rajat pitävät kartan ruudulla. Aloituskartalla
+   * liikutaan vain vaakasuunnassa (panVaraY = 0), mantereella molempiin.
+   */
+  asetaPan(x, y = this.panY ?? 0) {
     this.panX = Math.min(0, Math.max(-(this.panVara ?? 0), x));
-    this.svg.style.transform = `translate3d(${this.panX.toFixed(1)}px, 0, 0)`;
+    this.panY = Math.min(0, Math.max(-(this.panVaraY ?? 0), y));
+    this.svg.style.transform =
+      `translate3d(${this.panX.toFixed(1)}px, ${this.panY.toFixed(1)}px, 0)`;
   }
 
   /** Palauttaa kartan tavalliseen kokoonsa (uusi peli, laudan vaihto). */
   nollaaAloitusZoom() {
     this.aloitusZoom = false;
+    this.mannerZoom = false;
     this.panX = null;
+    this.panY = null;
     this.panVara = 0;
+    this.panVaraY = 0;
+    this.svg.style.transition = '';
     this.svg.style.transform = '';
     this.svg.style.width = '';
     this.svg.style.height = '';
     this.svg.style.flex = '';
-    document.body.classList.remove('aloitus-zoom', 'kartta-raahaus');
+    this.svg.style.alignSelf = '';
+    clearTimeout(this.mannerAjastin);
+    document.body.classList.remove('aloitus-zoom', 'manner-zoom', 'kartta-raahaus');
+  }
+
+  /**
+   * Mantereen lähikuva puhelimella (omistajan toive). Sama idea kuin
+   * aloituskartalla, mutta kartta on panoroitavissa kaikkiin neljään
+   * suuntaan — manner on isompi kuin ruutu joka suuntaan.
+   *
+   * Toistaiseksi vain Euroopalla: ilme hiotaan siellä kuntoon ennen kuin
+   * sama tuodaan muille laudoille (lisää laudan id ZOOMATTAVAT-settiin).
+   */
+  mannerZoomTarpeen() {
+    if (this.katselu || this.reducedMotion) return false;
+    if (this.game.phase === 'pickstart') return false;
+    if (!ZOOMATTAVAT.has(this.game.pack.id)) return false;
+    return (this.svg.parentElement?.clientWidth ?? 0) < 700;
+  }
+
+  /** Mantereen lähikuvan mitat ja rajat. */
+  sovitaMannerZoom(paneW, paneH) {
+    const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
+    const yleiskuva = Math.min(paneW / box.w, paneH / box.h);
+    const skaala = yleiskuva * MANNER_ZOOM;
+    const leveys = Math.round(box.w * skaala);
+    const korkeus = Math.round(box.h * skaala);
+    this.svg.setAttribute('viewBox', `${box.x} ${box.y} ${box.w} ${box.h}`);
+    this.svg.style.width = `${leveys}px`;
+    this.svg.style.height = `${korkeus}px`;
+    this.svg.style.flex = '0 0 auto';
+    this.svg.style.alignSelf = 'flex-start';
+    this.viewBoxSize = { vw: box.w, vh: box.h };
+    this.zoomSkaala = skaala;
+    this.zoomYlaReuna = box.y;
+    this.panVara = Math.max(0, leveys - paneW);
+    this.panVaraY = Math.max(0, korkeus - paneH);
+    if (this.panX == null || this.panY == null) {
+      const kohde = this.zoomKohde ?? { x: box.x + box.w / 2, y: box.y + box.h / 2 };
+      this.panX = paneW / 2 - (kohde.x - box.x) * skaala;
+      this.panY = paneH / 2 - (kohde.y - box.y) * skaala;
+    }
+    this.asetaPan(this.panX, this.panY);
+    this.placeFactCard(paneW, paneH);
+    if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
+  }
+
+  /**
+   * Mantereelle saavuttaessa näytetään ensin kokonäkymä ja vasta sen
+   * jälkeen zoomataan pelinappulan kohdalle (omistajan toive): pelaaja
+   * ehtii nähdä, minne on tullut, ennen kuin kartta menee lähelle.
+   */
+  ajastaMannerZoom() {
+    clearTimeout(this.mannerAjastin);
+    if (!this.mannerZoomTarpeen() || this.mannerZoom) return;
+    this.mannerAjastin = setTimeout(() => {
+      if (this.dead || !this.mannerZoomTarpeen() || this.mannerZoom) return;
+      this.zoomaaMantereelle();
+    }, MANNER_ZOOM_VIIVE);
+  }
+
+  /** Zoomaa mantereen kartan nappulan kohdalle pehmeästi liukuen. */
+  zoomaaMantereelle() {
+    if (this.mannerZoom) return;
+    const pane = this.svg.parentElement;
+    const paneW = pane.clientWidth;
+    const paneH = pane.clientHeight;
+    const [vx, vy, vw, vh] = (this.svg.getAttribute('viewBox') ?? '0 0 1000 1000')
+      .split(/\s+/).map(Number);
+    const yleisSkaala = paneW / vw;
+    // Kohde: pelaajan nappula, tai näkymän keskus jos sitä ei löydy.
+    const oma = this.game.cityOf?.();
+    const kohde = oma && Number.isFinite(oma.x)
+      ? { x: oma.x, y: oma.y }
+      : { x: vx + vw / 2, y: vy + vh / 2 };
+
+    this.mannerZoom = true;
+    this.panX = null;
+    this.panY = null;
+    this.zoomKohde = kohde;
+    document.body.classList.add('manner-zoom');
+    sfx.play('zoom');
+    this.fitViewBox();
+    this.liukuZoomiin(paneW, paneH, vx + vw / 2, vy + vh / 2, yleisSkaala);
   }
 
   /**
@@ -1039,7 +1147,8 @@ export class UI {
     this.zoomAnkkuri = keskiX;
     document.body.classList.add('aloitus-zoom');
     this.introEl.classList.add('intro-fade');
-    sfx.play('paper');
+    // Kameran zoomimoottori kestää saman ajan kuin liuku.
+    sfx.play('zoom');
     this.fitViewBox();
     // Renkaat piirretään uudelleen, jotta napautus valitsee kaupungin
     // eikä enää zoomaa.
@@ -1098,8 +1207,11 @@ export class UI {
     let liikkui = false;
 
     pane.addEventListener('pointerdown', (e) => {
-      if (!this.aloitusZoom || !this.panVara) return;
-      alku = { x: e.clientX, pan: this.panX ?? 0, id: e.pointerId };
+      if (!this.aloitusZoom && !this.mannerZoom) return;
+      if (!this.panVara && !this.panVaraY) return;
+      alku = {
+        x: e.clientX, y: e.clientY, pan: this.panX ?? 0, panY: this.panY ?? 0, id: e.pointerId,
+      };
       liikkui = false;
       // Kesken oleva zoomausliuku ei saa jarruttaa raahausta.
       clearTimeout(this.zoomAjastin);
@@ -1112,16 +1224,19 @@ export class UI {
 
     pane.addEventListener('pointermove', (e) => {
       if (!alku || e.pointerId !== alku.id) return;
-      const siirto = e.clientX - alku.x;
+      const dx = e.clientX - alku.x;
+      // Mantereella liikutaan molempiin suuntiin, aloituskartalla vain
+      // vaakaan (panVaraY on siellä nolla).
+      const dy = this.panVaraY ? e.clientY - alku.y : 0;
       // Pieni kynnys: pelkkä napautus ei saa laskea raahaukseksi eikä
       // sammuttaa sykähdyksiä turhaan.
-      if (!liikkui && Math.abs(siirto) < 6) return;
+      if (!liikkui && Math.hypot(dx, dy) < 6) return;
       if (!liikkui) {
         liikkui = true;
         document.body.classList.add('kartta-raahaus');
         pane.setPointerCapture?.(e.pointerId);
       }
-      this.asetaPan(alku.pan + siirto);
+      this.asetaPan(alku.pan + dx, alku.panY + dy);
     });
 
     const paata = (e) => {

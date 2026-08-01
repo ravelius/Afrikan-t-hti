@@ -803,6 +803,63 @@ const SOUNDS = {
   pen: (s) => s.hiss({ dur: 0.06, type: 'highpass', freq: 2600, sweepTo: 1500, gain: 0.02, q: 0.7 }),
   swipe: (s) => s.hiss({ dur: 0.24, freq: 700, sweepTo: 2600, gain: 0.09, q: 0.8 }),
 
+  /*
+   * Kartan zoomaus: vanhemman digikameran zoomimoottori (omistajan
+   * toive). Kolme osaa, jotka yhdessä tekevät koneiston:
+   *  1. saha-aalto alipäästön läpi = pieni sähkömoottori, jonka kierrokset
+   *     nousevat hieman matkan aikana,
+   *  2. nopea neliöaalto-LFO voimakkuuden päällä = hammaspyörän sörinä,
+   *  3. lopuksi naksahdus, kun linssi pysähtyy paikalleen.
+   * Kesto on sama kuin zoomausliu'un (js/ui.js liukuZoomiin).
+   */
+  zoom: (s) => {
+    const ctx = s.ensureContext();
+    if (!ctx) return;
+    const t0 = ctx.currentTime;
+    const kesto = 0.55;
+
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(92, t0);
+    osc.frequency.linearRampToValueAtTime(148, t0 + kesto);
+
+    // Alipäästö pitää sahasta vain matalan surinan: ilman sitä ääni on
+    // sirisevä eikä kuulosta koneistolta.
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.Q.value = 3;
+    lp.frequency.setValueAtTime(680, t0);
+    lp.frequency.linearRampToValueAtTime(1150, t0 + kesto);
+
+    // Sörinä omana kertoimenaan, jotta LFO ei pääse viemään
+    // voimakkuutta negatiiviseksi.
+    const sorina = ctx.createGain();
+    sorina.gain.value = 0.62;
+    const lfo = ctx.createOscillator();
+    lfo.type = 'square';
+    lfo.frequency.setValueAtTime(54, t0);
+    lfo.frequency.linearRampToValueAtTime(78, t0 + kesto);
+    const lfoTaso = ctx.createGain();
+    lfoTaso.gain.value = 0.34;
+    lfo.connect(lfoTaso).connect(sorina.gain);
+
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.05, t0 + 0.05);
+    g.gain.setValueAtTime(0.05, t0 + kesto - 0.1);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
+
+    osc.connect(lp).connect(sorina).connect(g).connect(s.bus);
+    osc.start(t0);
+    osc.stop(t0 + kesto + 0.05);
+    lfo.start(t0);
+    lfo.stop(t0 + kesto + 0.05);
+
+    // Koneiston kuiva kohina taustalle ja linssin naksahdus loppuun.
+    s.hiss({ dur: kesto, type: 'bandpass', freq: 1800, sweepTo: 2500, gain: 0.014, q: 0.9 });
+    s.knock({ freqs: [520, 900], dur: 0.05, gain: 0.045, q: 8, delay: kesto - 0.02 });
+  },
+
   // Noppa
   dieTick: (s) => s.knock({ freqs: [420, 680], dur: 0.05, gain: 0.09, q: 12 }),
   dieLand: (s) => {

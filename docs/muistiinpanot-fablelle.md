@@ -383,6 +383,7 @@ niitä tulee. Yksi rivi per muutos, uusin ylimpänä.
 
 | v | Muutos |
 |---|---|
+| 117 | Mantereen zoomaus (VAIN Eurooppa): saapuessa kokonäkymä → automaattinen zoom nappulaan, panorointi kaikkiin suuntiin, vinjettihäivytys tekstien alle. Zoomausääni (digikameran moottori). Laajennus muille laudoille: lisää id ZOOMATTAVAT-settiin js/ui.js. |
 | 116 | Aloituskartta puhelimella: 1. napautus zoomaa (ei valitse), vaakapanorointi, avaustekstin viimeinen rivi lihavoitu, kohderenkaat sykkivät ja vaikenevat raahauksen ajaksi. Sarajevo siirretty Bosnian sisään. |
 | 115 | Nopan varjo takaisin tavalliseksi (kynäviivoitus pois). |
 | 114 | Euroopan viisi kaupunkia Afrikan tasolle (ks. kohta 7). |

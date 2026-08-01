@@ -259,13 +259,40 @@ button, .brand, .turn-pill, .fact-card h2 {
  * käyttää valmista rasteria eikä piirrä karttaa uudelleen joka kehyksellä.
  * Mitat asettaa js/ui.js sovitaAloitusZoom.
  */
-body.aloitus-zoom #board {
+body.aloitus-zoom #board,
+body.manner-zoom #board {
   /* Selain ei saa napata vaakaeleitä omaan käyttöönsä. */
   touch-action: none;
   will-change: transform;
   /* Siirto ja zoomausliuku lasketaan elementin vasemmasta yläkulmasta
      (js/ui.js liukuZoomiin), joten origo ei saa olla keskellä. */
   transform-origin: 0 0;
+}
+
+/*
+ * Lähikuvassa matkakirjan ja toimintojen teksti osuu väkisin kartan
+ * päälle. Tekstin alle tulee pehmeä vaalennus (omistajan toive): ei
+ * laatikkoa vaan reunoiltaan häivähtävä pergamenttivalo, joka nostaa
+ * kirjaimet esiin ilman että kartta katoaa.
+ */
+body.manner-zoom .fact-card,
+body.manner-zoom .turn-card { isolation: isolate; }
+
+body.manner-zoom .fact-card::before,
+body.manner-zoom .turn-card::before {
+  content: '';
+  position: absolute;
+  /* Reilu ylitys joka suuntaan, jotta häivytys ehtii sulaa karttaan
+     eikä jätä suoraa reunaa. */
+  inset: -46% -22%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(247, 238, 214, 0.9) 0 30%,
+    rgba(247, 238, 214, 0.62) 46%,
+    rgba(247, 238, 214, 0.28) 62%,
+    rgba(247, 238, 214, 0) 78%);
 }
 
 /* Raahauksen ajaksi kartan sykähdykset vaikenevat (omistajan toive):
