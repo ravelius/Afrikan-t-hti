@@ -1835,6 +1835,20 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .intro.intro-fade { opacity: 0; }
 
 /*
+ * Zoomatessa avausteksti työntyy alas pois näkyvistä samaa tahtia kuin
+ * kartta suurenee (omistajan toive): sama kesto ja sama pehmennys kuin
+ * zoomausliu'ulla (js/ui.js ZOOM_MS). Pelkkä häivytys jätti tekstin
+ * paikalleen haamuksi kartan päälle.
+ */
+.intro.intro-pois {
+  opacity: 0;
+  transform: translate(-50%, 85%);
+  transition:
+    transform 1.2s cubic-bezier(0.25, 0.6, 0.2, 1),
+    opacity 1s ease-in;
+}
+
+/*
  * Lento piirretään läpikuultavana kalvona kartan päälle: karttaa ei
  * zoomata (raskasta ja suurennettuna rumaa), vaan kohtaus on oma
  * yksinkertainen piirroksensa, jonka läpi maailmankartta kuultaa.
@@ -34418,12 +34432,12 @@ const SOUNDS = {
     const ctx = s.ensureContext();
     if (!ctx) return;
     const t0 = ctx.currentTime;
-    const kesto = 0.55;
+    const kesto = 1.05;
 
     const osc = ctx.createOscillator();
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(92, t0);
-    osc.frequency.linearRampToValueAtTime(148, t0 + kesto);
+    osc.frequency.setValueAtTime(88, t0);
+    osc.frequency.linearRampToValueAtTime(142, t0 + kesto);
 
     // Alipäästö pitää sahasta vain matalan surinan: ilman sitä ääni on
     // sirisevä eikä kuulosta koneistolta.
@@ -38410,6 +38424,8 @@ const MANNER_ZOOM_VIIVE = 1100; // kokonäkymä näkyy tämän verran ennen zoom
 // Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
 // alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
 const ALAKAISTA = 0.3;
+// Zoomausliu'un kesto. Omistajan palaute: 600 ms oli liian nopea.
+const ZOOM_MS = 1200;
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -39210,6 +39226,9 @@ class UI {
       ? { x: oma.x, y: oma.y }
       : { x: vx + vw / 2, y: vy + vh / 2 };
 
+    // Nappulan paikka ruudulla ennen zoomausta: liuku lähtee siitä.
+    const sx = (kohde.x - vx) * yleisSkaala;
+    const sy = (kohde.y - vy) * yleisSkaala;
     this.mannerZoom = true;
     this.panX = null;
     this.panY = null;
@@ -39217,38 +39236,56 @@ class UI {
     document.body.classList.add('manner-zoom');
     sfx.play('zoom');
     this.fitViewBox();
-    this.liukuZoomiin(paneW, paneH, vx + vw / 2, vy + vh / 2, yleisSkaala);
+    this.liukuZoomiin(paneW, paneH, kohde, sx, sy, yleisSkaala);
   }
 
   /**
    * Zoomaa aloituskartan lähikuvaan. Avausteksti häivytetään ensin pois,
    * jotta lauta saa koko ruudun. Kutsutaan ensimmäisestä napautuksesta.
    */
-  zoomaaAloituskartta() {
+  zoomaaAloituskartta(kohta = null) {
     if (this.aloitusZoom) return;
     const pane = this.svg.parentElement;
     const paneW = pane.clientWidth;
     const paneH = pane.clientHeight;
-    // Yleiskuvan rajaus talteen: sen keskikohta pysyy paikallaan, ja
-    // liu'un alkuasento lasketaan siitä.
+    // Yleiskuvan rajaus talteen: liu'un alkuasento lasketaan siitä.
     const [vx, vy, vw, vh] = (this.svg.getAttribute('viewBox') ?? '0 0 1000 1000')
       .split(/\s+/).map(Number);
-    const keskiX = vx + vw / 2;
-    const keskiY = vy + vh / 2;
     const yleisSkaala = paneW / vw;
+    // Tarkennuspiste: se kohta karttaa, johon käyttäjä napautti — ei
+    // näkymän keskus (omistajan toive: zoomaus keskittyy napautettuun
+    // kohtaan riippumatta siitä, osuiko se kaupunkiin).
+    const fokus = kohta ?? { x: vx + vw / 2, y: vy + vh / 2 };
+    // Napautuskohta ruudulla ennen zoomausta: siitä liuku lähtee.
+    const sx = (fokus.x - vx) * yleisSkaala;
+    const sy = (fokus.y - vy) * yleisSkaala;
 
     this.aloitusZoom = true;
     this.panX = null;
-    this.zoomAnkkuri = keskiX;
+    this.zoomAnkkuri = fokus.x;
     document.body.classList.add('aloitus-zoom');
-    this.introEl.classList.add('intro-fade');
+    // Avausteksti työntyy alas pois näkyvistä samaa tahtia kuin kartta
+    // suurenee (omistajan toive) — ei erillistä häivytystä.
+    this.introEl.classList.add('intro-pois');
     // Kameran zoomimoottori kestää saman ajan kuin liuku.
     sfx.play('zoom');
     this.fitViewBox();
     // Renkaat piirretään uudelleen, jotta napautus valitsee kaupungin
     // eikä enää zoomaa.
     this.drawTargets();
-    this.liukuZoomiin(paneW, paneH, keskiX, keskiY, yleisSkaala);
+    this.liukuZoomiin(paneW, paneH, fokus, sx, sy, yleisSkaala);
+  }
+
+  /** Napautuskohta ruudulla kartan omiksi koordinaateiksi. */
+  kartanKohta(clientX, clientY) {
+    const r = this.svg.getBoundingClientRect();
+    const [vx, vy, vw, vh] = (this.svg.getAttribute('viewBox') ?? '0 0 1000 1000')
+      .split(/\s+/).map(Number);
+    if (!r.width || !r.height) return null;
+    return {
+      x: vx + ((clientX - r.left) / r.width) * vw,
+      y: vy + ((clientY - r.top) / r.height) * vh,
+    };
   }
 
   /**
@@ -39261,24 +39298,26 @@ class UI {
    * mutta ilman erillistä kuvaa — eikä lopputulos sumene, koska
    * animaation päättyessä ruudulla on täysi tarkkuus.
    */
-  liukuZoomiin(paneW, paneH, keskiX, keskiY, yleisSkaala) {
+  liukuZoomiin(paneW, paneH, fokus, sx, sy, yleisSkaala) {
     if (this.reducedMotion) return;
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
     const s = yleisSkaala / this.zoomSkaala;
-    // Piste, joka oli yleiskuvan keskellä, elementin omissa pikseleissä.
-    const ex = (keskiX - box.x) * this.zoomSkaala;
-    const ey = (keskiY - (this.zoomYlaReuna ?? box.y)) * this.zoomSkaala;
-    const tx = paneW / 2 - s * ex;
-    const ty = paneH / 2 - s * ey;
+    // Tarkennuspiste elementin omissa pikseleissä lähikuvan mitoilla.
+    const ex = (fokus.x - box.x) * this.zoomSkaala;
+    const ey = (fokus.y - (this.zoomYlaReuna ?? box.y)) * this.zoomSkaala;
+    // Alkuasento: sama piste pysyy siinä kohdassa ruutua, jossa se oli
+    // napautushetkellä — kuva laajenee napautetusta kohdasta ulospäin.
+    const tx = sx - s * ex;
+    const ty = sy - s * ey;
     this.svg.style.transition = 'none';
     this.svg.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
     // Pakotettu asettelu, jotta selain näkee alkuasennon omana tilanaan
     // eikä hyppää suoraan loppuun.
     void this.svg.getBoundingClientRect();
-    this.svg.style.transition = 'transform 0.6s cubic-bezier(0.22, 0.75, 0.25, 1)';
-    this.asetaPan(this.panX);
+    this.svg.style.transition = `transform ${ZOOM_MS}ms cubic-bezier(0.25, 0.6, 0.2, 1)`;
+    this.asetaPan(this.panX, this.panY);
     clearTimeout(this.zoomAjastin);
-    this.zoomAjastin = setTimeout(() => { this.svg.style.transition = ''; }, 650);
+    this.zoomAjastin = setTimeout(() => { this.svg.style.transition = ''; }, ZOOM_MS + 60);
   }
 
   /**
@@ -39349,11 +39388,21 @@ class UI {
     pane.addEventListener('pointercancel', paata);
 
     // Raahauksen jälkeinen click ei saa mennä kaupungille asti.
+    // Sama kuuntelija hoitaa aloituskartan ensimmäisen napautuksen:
+    // zoomaus lähtee mistä tahansa kohdasta karttaa eikä vaadi osumaa
+    // kaupunkiin (omistajan toive). Kaappausvaiheessa, jotta kaupungin
+    // oma napautus ei ehdi valita lähtöpaikkaa.
     pane.addEventListener('click', (e) => {
       if (this.raahattiin) {
         e.stopPropagation();
         e.preventDefault();
+        return;
       }
+      if (this.aloitusZoom || !this.zoomTarpeen()) return;
+      if (this.game.phase !== 'pickstart' || !this.aloitettu) return;
+      e.stopPropagation();
+      e.preventDefault();
+      this.zoomaaAloituskartta(this.kartanKohta(e.clientX, e.clientY));
     }, true);
   }
 
@@ -39766,7 +39815,9 @@ class UI {
     if (game.phase === 'pickstart') {
       // Puhelimella ensimmäinen napautus zoomaa kartan lähemmäs sen
       // sijaan että valitsisi kaupungin — kaukaa katsottuna kaupungit
-      // ovat liian pieniä osuttaviksi (omistajan havainto).
+      // ovat liian pieniä osuttaviksi (omistajan havainto). Zoomauksen
+      // hoitaa paneelin oma kuuntelija (asennaPanorointi), joten tässä
+      // riittää olla valitsematta kaupunkia.
       const zoomaa = this.zoomTarpeen() && !this.aloitusZoom;
       for (const c of game.board.cities) {
         const g = el('g', { class: 'target' }, this.targetLayer);
@@ -39778,8 +39829,7 @@ class UI {
           class: 'target-ring pick',
         }, g);
         g.addEventListener('click', () => {
-          if (zoomaa) this.zoomaaAloituskartta();
-          else this.doPickStart(c);
+          if (!zoomaa) this.doPickStart(c);
         });
       }
       return;
@@ -41575,7 +41625,7 @@ class UI {
     // Uusi peli tuo tekstin takaisin täyteen näkyvyyteen häivytyksestä —
     // mutta lähikuvassa teksti on väistynyt tarkoituksella, joten sitä ei
     // palauteta joka renderöinnillä.
-    if (nakyy && !this.aloitusZoom) this.introEl.classList.remove('intro-fade');
+    if (nakyy && !this.aloitusZoom) this.introEl.classList.remove('intro-fade', 'intro-pois');
     if (!nakyy) {
       this.introShown = false;
       this.introRunko.textContent = '';
@@ -43169,7 +43219,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-01.119';
+const APP_VERSION = '2026-08-01.120';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

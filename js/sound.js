@@ -816,12 +816,12 @@ const SOUNDS = {
     const ctx = s.ensureContext();
     if (!ctx) return;
     const t0 = ctx.currentTime;
-    const kesto = 0.55;
+    const kesto = 1.05;
 
     const osc = ctx.createOscillator();
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(92, t0);
-    osc.frequency.linearRampToValueAtTime(148, t0 + kesto);
+    osc.frequency.setValueAtTime(88, t0);
+    osc.frequency.linearRampToValueAtTime(142, t0 + kesto);
 
     // Alipäästö pitää sahasta vain matalan surinan: ilman sitä ääni on
     // sirisevä eikä kuulosta koneistolta.
