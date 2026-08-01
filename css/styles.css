@@ -253,6 +253,26 @@ button, .brand, .turn-pill, .fact-card h2 {
   touch-action: manipulation;
 }
 
+/*
+ * Aloituskartan lähikuva puhelimella: kartta on paneelia leveämpi ja sitä
+ * selataan sivusuunnassa. Siirto tehdään transformilla, jolloin selain
+ * käyttää valmista rasteria eikä piirrä karttaa uudelleen joka kehyksellä.
+ * Mitat asettaa js/ui.js sovitaAloitusZoom.
+ */
+body.aloitus-zoom #board {
+  /* Selain ei saa napata vaakaeleitä omaan käyttöönsä. */
+  touch-action: none;
+  will-change: transform;
+  /* Siirto ja zoomausliuku lasketaan elementin vasemmasta yläkulmasta
+     (js/ui.js liukuZoomiin), joten origo ei saa olla keskellä. */
+  transform-origin: 0 0;
+}
+
+/* Raahauksen ajaksi kartan sykähdykset vaikenevat (omistajan toive):
+   liikkuva kartta on jo tarpeeksi työtä ruudunpäivitykselle. */
+body.kartta-raahaus .target-ring,
+body.kartta-raahaus .pawn-pulse { animation: none; }
+
 /* Vanhan filmin vaalea vinjetti: kartan reunat haalistuvat kuin
    ikääntyneessä filmiruudussa. Piirretään ruudun päälle, joten se
    myötäilee aina näkyvää aluetta laudan rajauksesta riippumatta. */
@@ -2075,13 +2095,26 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   fill: none;
   stroke: #b08a3c;
   stroke-width: 2;
-  animation: none;
   /*
    * Ei hehkusuodatinta lähtöpisteen valinnassa: siellä rengas piirretään
    * joka kaupungille, eli Afrikassa lähes neljäkymmentä suodatinpintaa
    * yhtä aikaa. Kullanruskea rengas erottuu pergamentilta ilmankin.
    */
   filter: none;
+  /* Hento sykähdys kertoo, mihin voi napauttaa. Vain peittoa —
+     ei suodinta eikä muotoa, jotta selain ei laske viivoja uusiksi. */
+  animation: kohde-syke 2.6s ease-in-out infinite;
+}
+
+/*
+ * Valittavien kohteiden sykähdys (omistajan toive: "hienoisesti
+ * sykkisivät"). Pelkkä peiton vaihtelu on kevein tapa: viivan geometria
+ * ja väri pysyvät samoina, joten selain ei piirrä rengasta uusiksi.
+ * Raahauksen aikana sykähdys sammuu (ks. body.kartta-raahaus).
+ */
+@keyframes kohde-syke {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
 }
 
 .target:hover .target-ring.pick { fill: rgba(176, 138, 60, 0.18); }
@@ -2120,6 +2153,9 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
   fill: rgba(120, 148, 196, 0.16);
   stroke: #4a5f86;
   stroke-dasharray: 8 5;
+  /* Sama hento sykähdys kuin lähtöpisteissä: lentokohteet erottuvat
+     muusta kartasta ilman että mikään liikkuu. */
+  animation: kohde-syke 2.6s ease-in-out infinite;
 }
 
 .target:hover .target-ring.lento { fill: rgba(120, 148, 196, 0.3); }
