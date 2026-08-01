@@ -181,6 +181,44 @@ document.addEventListener('pointerdown', (event) => {
 });
 naytaKertoja();
 
+// --- päävalikko --------------------------------------------------------------
+//
+// Ylärivillä on vain kertojan ääninappi; päivitys, laukku, säännöt ja
+// uusi peli asuvat hampurilaisen alla (omistajan toive). Valikko
+// sulkeutuu valinnasta, napautuksesta muualle ja Esc-näppäimestä.
+
+const menuBtn = document.getElementById('menu-btn');
+const paavalikko = document.getElementById('paavalikko');
+
+const suljeValikko = () => {
+  if (paavalikko.hidden) return;
+  paavalikko.hidden = true;
+  menuBtn.setAttribute('aria-expanded', 'false');
+};
+
+menuBtn.addEventListener('click', () => {
+  paavalikko.hidden = !paavalikko.hidden;
+  menuBtn.setAttribute('aria-expanded', String(!paavalikko.hidden));
+  // Kaksi valikkoa ei ole auki yhtä aikaa.
+  if (!paavalikko.hidden) {
+    kertojaValikko.hidden = true;
+    muteBtn.setAttribute('aria-expanded', 'false');
+  }
+});
+
+// Valinta sulkee valikon. Kuuntelija on valikossa itsessään, joten
+// nappien omat toiminnot pysyvät siellä missä ne on määritelty.
+paavalikko.addEventListener('click', (event) => {
+  if (event.target.closest('button')) suljeValikko();
+});
+
+document.addEventListener('pointerdown', (event) => {
+  if (!event.target.closest?.('.valikko-kotelo')) suljeValikko();
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') suljeValikko();
+});
+
 // Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
 document.addEventListener('pointerdown', (event) => {
   const button = event.target.closest?.('button');

@@ -3173,8 +3173,9 @@ export class UI {
       lippu.alt = t.kieli;
       // Ei loading="lazy": liput ovat repossa ja pikkuruisia, ja laiska
       // lataus jätti ne dialogin sisällä toisinaan kokonaan lataamatta.
-      asetaKuva(lippu, lippuUrl(t.lippu, 40), lippuVara(t.lippu, 40));
-      lippu.addEventListener('error', () => lippu.remove());
+      // Poisto vasta kun kumpikin osoite on pettänyt — oma virhekuuntelija
+      // olisi vienyt lipun jo peilin ensimmäisestä virheestä.
+      asetaKuva(lippu, lippuUrl(t.lippu, 40), lippuVara(t.lippu, 40), () => lippu.remove());
       osa.appendChild(lippu);
       // Karkea puhujaosuus kielen perässä (omistajan kokeilu).
       if (t.osuus) osa.appendChild(html('span', 'maa-sija', ` ${t.osuus}`));
