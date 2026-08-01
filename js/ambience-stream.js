@@ -9,6 +9,7 @@
 
 import { sfx } from './sound.js';
 import { valittuTaiOletus, jaaAlku, tyyppiKori } from './aani-ehdokkaat.js';
+import { aaniOsoite, onPeilista, peiliPetti } from './media.js';
 
 // Maisematyypin arvontakorista arvottu ääni pysyy samana koko käynnin
 // ajan: syncAmbience kutsuu playPlaceAmbiencea jokaisella piirrolla,
@@ -92,7 +93,7 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
   // Silmukka palaa selaimen tapaan alkuun asti, mikä on siedettävää —
   // äänitteet ovat pitkiä.
   const { url: osoite, alku, voima } = jaaAlku(url);
-  const audio = new Audio(osoite);
+  const audio = new Audio(aaniOsoite(osoite));
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
@@ -108,12 +109,28 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
   const oma = { audio, cityId, url, tavoite: Math.min(1, VOIMA * voima) };
   nykyinen = oma;
 
+  // Kaksi porrasta ennen synteesiä: jos peili ei vastaa, sama äänite
+  // löytyy yhä alkuperäisestä lähteestä. Vasta kun sekin pettää,
+  // palataan syntetisoituun ambienssiin.
+  let varareittiKokeiltu = false;
   const varalle = () => {
     if (nykyinen === oma) nykyinen = null;
     audio.pause();
     sfx.setAmbience(fallbackType ?? null);
   };
-  audio.addEventListener('error', varalle);
+  const petti = () => {
+    if (!varareittiKokeiltu && onPeilista(audio.getAttribute('src'))) {
+      varareittiKokeiltu = true;
+      peiliPetti();
+      if (nykyinen !== oma) return;
+      audio.src = osoite;
+      audio.load();
+      audio.play().catch(varalle);
+      return;
+    }
+    varalle();
+  };
+  audio.addEventListener('error', petti);
   audio.play().then(() => {
     if (nykyinen !== oma) {
       audio.pause();
@@ -121,7 +138,7 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
     }
     sfx.setAmbience(null); // synteesi väistyy, kun oikea äänite soi
     haivyta(audio, oma.tavoite);
-  }).catch(varalle);
+  }).catch(petti);
 }
 
 // Tietovisan taustamusiikki: hiljainen huililuuppi kysymyksen ajaksi.
@@ -147,7 +164,8 @@ export function startQuizMusic(lauta) {
   if (valinta == null) valinta = valittuTaiOletus('musiikki:tietovisa');
   if (valinta === '') return; // musiikki valittu pois
   const asetus = jaaAlku(valinta);
-  const audio = new Audio(asetus.url ?? QUIZ_MUSIC.url);
+  const alkuperainen = asetus.url ?? QUIZ_MUSIC.url;
+  const audio = new Audio(aaniOsoite(alkuperainen));
   audio.loop = true;
   audio.preload = 'auto';
   audio.volume = 0;
@@ -161,15 +179,29 @@ export function startQuizMusic(lauta) {
     }, { once: true });
   }
   musiikki = audio;
-  audio.play().then(() => {
+  // Sama kahden portaan varareitti kuin paikan ambienssilla: peilin
+  // pettäessä kokeillaan alkuperäistä lähdettä, ja vasta sitten
+  // kysymys jää hiljaiseksi.
+  let varareittiKokeiltu = false;
+  const luovuta = () => { if (musiikki === audio) musiikki = null; };
+  const soi = () => audio.play().then(() => {
     if (musiikki !== audio) {
       audio.pause();
       return;
     }
     haivyta(audio, Math.min(1, MUSIIKKI_VOIMA * asetus.voima));
-  }).catch(() => {
-    if (musiikki === audio) musiikki = null;
-  });
+  }).catch(petti);
+  const petti = () => {
+    if (varareittiKokeiltu || !onPeilista(audio.getAttribute('src'))) { luovuta(); return; }
+    varareittiKokeiltu = true;
+    peiliPetti();
+    if (musiikki !== audio) return;
+    audio.src = alkuperainen;
+    audio.load();
+    soi();
+  };
+  audio.addEventListener('error', petti);
+  soi();
 }
 
 /**

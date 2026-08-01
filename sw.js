@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-01.136';
+const CACHE = 'matkakirja-2026-08-01.137';
 const SHELL = [
   './',
   './index.html',
@@ -13,6 +13,7 @@ const SHELL = [
   './js/pack.js',
   './js/passport.js',
   './js/wiki.js',
+  './js/media.js',
   './js/packs/maailma.js',
   './js/packs/maailma-questions.js',
   './js/packs/africa.js',
@@ -22,6 +23,7 @@ const SHELL = [
   './js/packs/africa-countries.js',
   './js/packs/omat-tiivistelmat.js',
   './js/packs/liput-paikalliset.js',
+  './js/packs/valokuvat-paikalliset.js',
   './js/packs/africa-valokuvat.js',
   './js/packs/africa-saapumiset.js',
   './js/packs/africa-kulttuuri.js',
@@ -311,11 +313,20 @@ self.addEventListener('fetch', (event) => {
   // nähtynä latautuu heti ja toimii offline). Muut ulkoiset kutsut
   // (esim. Wikipedian tiivistelmä-JSON) menevät suoraan verkkoon.
   if (osoite.origin !== self.location.origin) {
-    const wikikuva = event.request.destination === 'image'
+    // Peili (Matkakirja-media) on ensisijainen kuvalähde, Commons ja
+    // upload.wikimedia.org varareittejä. Kaikki kolme kuuluvat samaan
+    // koriin, jotta kerran nähty kuva toimii offline riippumatta siitä,
+    // kummasta se sillä kertaa tuli.
+    //
+    // Peilin äänet jäävät tarkoituksella pois: ne ovat yhteensä yli
+    // sata megatavua, ja selaimen oma välimuisti riittää niille.
+    const kuvalahde = event.request.destination === 'image'
       && (osoite.hostname === 'upload.wikimedia.org'
         || (osoite.hostname === 'commons.wikimedia.org'
-          && osoite.pathname.startsWith('/wiki/Special:FilePath/')));
-    if (!wikikuva) return;
+          && osoite.pathname.startsWith('/wiki/Special:FilePath/'))
+        || (osoite.hostname === 'ravelius.github.io'
+          && osoite.pathname.startsWith('/Matkakirja-media/')));
+    if (!kuvalahde) return;
     event.respondWith(
       caches.open(KUVACACHE).then(async (kuvat) => {
         const osuma = await kuvat.match(event.request.url);

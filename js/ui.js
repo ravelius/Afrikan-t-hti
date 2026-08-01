@@ -34,7 +34,12 @@ function drawPuzzle(svg, id, data) {
 import { OMAT_TIIVISTELMAT } from './packs/omat-tiivistelmat.js';
 import { OMAT_ARTIKKELIT } from './packs/africa-artikkelit.js';
 import { AFRICA_MAATIEDOT } from './packs/africa-maatiedot.js';
-import { AFRICA_VALOKUVAT, lippuUrl, valokuvaUrl } from './packs/africa-valokuvat.js';
+import {
+  AFRICA_VALOKUVAT, lippuUrl, lippuVara, valokuvaUrl, valokuvaVara,
+} from './packs/africa-valokuvat.js';
+import {
+  asetaKuva, peiliPetti, aaniOsoite, onPeilista,
+} from './media.js';
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
 import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
 import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
@@ -265,7 +270,11 @@ async function cachedGallery(title) {
   if (!wikiGalleryCache.has(title)) {
     const oma = OMAT_GALLERIAT[title];
     wikiGalleryCache.set(title, oma
-      ? Promise.resolve(oma.map((k) => ({ src: valokuvaUrl(k.tiedosto, 1200), caption: k.caption })))
+      ? Promise.resolve(oma.map((k) => ({
+        src: valokuvaUrl(k.tiedosto, 1200),
+        vara: valokuvaVara(k.tiedosto, 1200),
+        caption: k.caption,
+      })))
       : cachedSummary(title).then((s) => fetchImages(s)));
   }
   return wikiGalleryCache.get(title);
@@ -2451,10 +2460,8 @@ export class UI {
       this.suljePostikortti();
       return;
     }
-    const osoite = valokuvaUrl(valokuva.tiedosto, 160);
-    if (this.factValokuvaKuva.getAttribute('src') !== osoite) {
-      this.factValokuvaKuva.src = osoite;
-    }
+    asetaKuva(this.factValokuvaKuva,
+      valokuvaUrl(valokuva.tiedosto, 160), valokuvaVara(valokuva.tiedosto, 160));
     this.factValokuva.hidden = false;
   }
 
@@ -2471,7 +2478,8 @@ export class UI {
     const teeKortti = (kuvaTiedot, luokka, altTeksti) => {
       const osa = html('div', `postikortti-kortti${luokka ? ` ${luokka}` : ''}`);
       const kuva = document.createElement('img');
-      kuva.src = valokuvaUrl(kuvaTiedot.tiedosto, 1000);
+      asetaKuva(kuva,
+        valokuvaUrl(kuvaTiedot.tiedosto, 1000), valokuvaVara(kuvaTiedot.tiedosto, 1000));
       kuva.alt = altTeksti;
       osa.appendChild(kuva);
       // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
@@ -3000,7 +3008,7 @@ export class UI {
       this.arrivalMaaLippu.hidden = true;
       if (maa.lippu) {
         this.arrivalMaaLippu.alt = `${maa.nimi} — lippu`;
-        this.arrivalMaaLippu.src = lippuUrl(maa.lippu, 96);
+        asetaKuva(this.arrivalMaaLippu, lippuUrl(maa.lippu, 96), lippuVara(maa.lippu, 96));
       } else {
         this.arrivalMaaLippu.removeAttribute('src');
       }
@@ -3157,7 +3165,7 @@ export class UI {
       lippu.alt = t.kieli;
       // Ei loading="lazy": liput ovat repossa ja pikkuruisia, ja laiska
       // lataus jätti ne dialogin sisällä toisinaan kokonaan lataamatta.
-      lippu.src = lippuUrl(t.lippu, 40);
+      asetaKuva(lippu, lippuUrl(t.lippu, 40), lippuVara(t.lippu, 40));
       lippu.addEventListener('error', () => lippu.remove());
       osa.appendChild(lippu);
       // Karkea puhujaosuus kielen perässä (omistajan kokeilu).
@@ -3269,9 +3277,10 @@ export class UI {
         const kuva = document.createElement('img');
         kuva.loading = 'lazy';
         kuva.alt = nosto.otsikko;
-        kuva.src = valokuvaUrl(nosto.tiedosto, 640);
-        // Ilman verkkoa nosto jää pelkäksi tekstiksi.
-        kuva.addEventListener('error', () => kuva.remove());
+        // Ilman verkkoa nosto jää pelkäksi tekstiksi — mutta vasta kun
+        // sekä peili että alkuperäinen lähde ovat pettäneet.
+        asetaKuva(kuva, valokuvaUrl(nosto.tiedosto, 640),
+          valokuvaVara(nosto.tiedosto, 640), () => kuva.remove());
         // Napautus avaa kuvan isompana (omistajan toive).
         kuva.classList.add('kulttuuri-kuva-nappi');
         kuva.addEventListener('click', () => this.naytaKulttuuriKuva(nosto));
@@ -3360,7 +3369,7 @@ export class UI {
     this.suljeKulttuuriKuva();
     const kortti = html('div', 'postikortti kulttuuri-suurennos');
     const kuva = document.createElement('img');
-    kuva.src = valokuvaUrl(nosto.tiedosto, 1400);
+    asetaKuva(kuva, valokuvaUrl(nosto.tiedosto, 1400), valokuvaVara(nosto.tiedosto, 1400));
     kuva.alt = nosto.otsikko;
     kortti.appendChild(kuva);
     // Parin lauseen selite teoksesta kuvan alla (omistajan toive);
@@ -3389,7 +3398,7 @@ export class UI {
       return;
     }
     const asetus = jaaAlku(nosto.aani);
-    const audio = new Audio(asetus.url);
+    const audio = new Audio(aaniOsoite(asetus.url));
     audio.preload = 'auto';
     audio.volume = Math.min(1, 0.55 * (asetus.voima ?? 1));
     if (asetus.alku) {
@@ -3422,9 +3431,21 @@ export class UI {
     const nollaa = () => {
       if (this.kulttuuriAani?.audio === audio) this.pysaytaKulttuuriAani();
     };
+    // Peilin pettäessä sama äänite haetaan alkuperäisestä lähteestä
+    // ennen kuin näyte luovuttaa (ks. js/media.js).
+    let varareittiKokeiltu = false;
+    const petti = () => {
+      if (varareittiKokeiltu || !onPeilista(audio.getAttribute('src'))) { nollaa(); return; }
+      varareittiKokeiltu = true;
+      peiliPetti();
+      if (this.kulttuuriAani?.audio !== audio) return;
+      audio.src = asetus.url;
+      audio.load();
+      audio.play().catch(nollaa);
+    };
     audio.addEventListener('ended', nollaa);
-    audio.addEventListener('error', nollaa);
-    audio.play().catch(nollaa);
+    audio.addEventListener('error', petti);
+    audio.play().catch(petti);
   }
 
   pysaytaKulttuuriAani() {
@@ -3588,17 +3609,28 @@ export class UI {
 
   /**
    * Latausvirhe ei saa jättää rikkinäisen kuvan merkkiä galleriaan:
-   * Commonsista voi kadota tiedosto (uudelleennimeäminen tai poisto), ja
-   * silloin kelaus vain jää jumiin kysymysmerkkiin. Pudotetaan kuva
+   * lähteestä voi kadota tiedosto (uudelleennimeäminen tai poisto), ja
+   * silloin kelaus vain jää jumiin kysymysmerkkiin.
+   *
+   * Ensin kokeillaan varareittiä: jos peili ei vastaa, sama kuva löytyy
+   * yhä alkuperäisestä lähteestä. Vasta kun sekin pettää, kuva pudotetaan
    * listalta ja näytetään seuraava; jos kuvia ei jää yhtään, koko kotelo
    * piilotetaan. Lista lyhenee joka virheellä, joten ketju päättyy.
    */
   pudotaRikkiKuva(lista, kuva, mika) {
     const nyt = kuva.getAttribute('src');
     if (!nyt) return;
-    const sama = (s) => new URL(s, location.href).href === new URL(nyt, location.href).href;
+    const sama = (s) => Boolean(s)
+      && new URL(s, location.href).href === new URL(nyt, location.href).href;
     const kohta = lista.findIndex((k) => sama(k.src));
     if (kohta < 0) return;
+    const merkinta = lista[kohta];
+    if (merkinta.vara && merkinta.vara !== merkinta.src) {
+      peiliPetti();
+      merkinta.src = merkinta.vara;
+      kuva.src = merkinta.vara;
+      return;
+    }
     lista.splice(kohta, 1);
     const kotelo = mika === 'wiki' ? this.wikiKuvakotelo : this.arrivalKuvakotelo;
     if (!lista.length) {

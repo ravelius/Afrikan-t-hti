@@ -7,6 +7,7 @@
 const STORAGE_KEY = 'afrikan-tahti-sound';
 
 import { valittuAani, jaaAlku } from './aani-ehdokkaat.js';
+import { haeAani } from './media.js';
 
 // Ambienssin ristihäivytys ja tapahtumien väli. Väli on tarkoituksella pitkä
 // ja epäsäännöllinen: säännöllinen ääni alkaa kuulua kellona.
@@ -534,7 +535,8 @@ class Sound {
       // Ilman oletusta (url null) ladataan vain, jos omistaja on valinnut
       // äänen viritysivulta.
       if (!(valinta ?? url)) continue;
-      fetch(valinta ?? url)
+      // Peili ensin, alkuperäinen lähde varareittinä (js/media.js).
+      haeAani(valinta ?? url)
         .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error('http'))))
         .then((data) => this.ctx.decodeAudioData(data))
         .then((buf) => {

@@ -570,31 +570,54 @@ export const AFRICA_VALOKUVAT = {
 
 import { VALOKUVAT_PAIKALLISET } from './valokuvat-paikalliset.js';
 import { LIPUT_PAIKALLISET } from './liput-paikalliset.js';
+import { PEILI_JUURI, peiliKuvaPolku, peiliKaytossa } from '../media.js';
 
-/**
- * Kuvaosoite: matkakirjan valokuvista on paikalliset kopiot repossa
- * (nopea lataus, toimii offline), muut haetaan Commonsista skaalattuna.
- * Standalone-tiedosto (file:) käyttää aina Commonsia, koska sen vieressä
- * ei ole assets-kansiota.
- */
-export function valokuvaUrl(tiedosto, leveys) {
-  const paikallinen = VALOKUVAT_PAIKALLISET.get(tiedosto);
-  if (paikallinen && typeof location !== 'undefined' && location.protocol !== 'file:') {
-    return `assets/valokuvat/${paikallinen}`;
-  }
+/** Alkuperäinen lähde Commonsissa. Tämä on aina viimeinen varareitti. */
+function commonsUrl(tiedosto, leveys) {
   return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
 }
 
+const omaKansio = () => typeof location !== 'undefined' && location.protocol !== 'file:';
+
 /**
- * Lipun osoite. Liput ovat repossa (tools/fetch-flags.mjs), koska
- * saapumiskortti näyttää niitä useita kerralla ja Commons alkoi
- * rajoittaa peräkkäisiä pyyntöjä — silloin liput jäivät pois kokonaan.
- * Standalone-tiedosto (file:) palaa Commonsiin kuten valokuvissakin.
+ * Kuvaosoite kolmessa portaassa:
+ *   1. paikallinen kopio repossa (nopein, toimii offline)
+ *   2. peili — pelin oma kopio kaikesta ulkopuolisesta aineistosta
+ *   3. Commons, alkuperäinen lähde
+ *
+ * Peili on ennen Commonsia siksi, että Commonsista voi kadota tiedosto
+ * uudelleennimeämisen tai poiston takia. Jos peili ei vastaa, kuvan
+ * asettaja (media.js: asetaKuva) siirtyy varareitille automaattisesti.
+ *
+ * Standalone-tiedosto (file:) ohittaa assets-kansion, koska sen vieressä
+ * ei ole sellaista — peili ja Commons toimivat silti.
+ */
+export function valokuvaUrl(tiedosto, leveys) {
+  const paikallinen = VALOKUVAT_PAIKALLISET.get(tiedosto);
+  if (paikallinen && omaKansio()) return `assets/valokuvat/${paikallinen}`;
+  if (peiliKaytossa()) return `${PEILI_JUURI}${peiliKuvaPolku(tiedosto, 'kuvat')}`;
+  return commonsUrl(tiedosto, leveys);
+}
+
+/** Valokuvan varareitti, kun ensisijainen osoite ei vastaa. */
+export function valokuvaVara(tiedosto, leveys) {
+  return commonsUrl(tiedosto, leveys);
+}
+
+/**
+ * Lipun osoite samoissa portaissa. Liput ovat repossa
+ * (tools/fetch-flags.mjs), koska saapumiskortti näyttää niitä useita
+ * kerralla ja Commons alkoi rajoittaa peräkkäisiä pyyntöjä — silloin
+ * liput jäivät pois kokonaan.
  */
 export function lippuUrl(tiedosto, leveys) {
   const paikallinen = LIPUT_PAIKALLISET.get(tiedosto);
-  if (paikallinen && typeof location !== 'undefined' && location.protocol !== 'file:') {
-    return `assets/liput/${paikallinen}`;
-  }
-  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(tiedosto)}?width=${leveys}`;
+  if (paikallinen && omaKansio()) return `assets/liput/${paikallinen}`;
+  if (peiliKaytossa()) return `${PEILI_JUURI}${peiliKuvaPolku(tiedosto, 'liput')}`;
+  return commonsUrl(tiedosto, leveys);
+}
+
+/** Lipun varareitti. */
+export function lippuVara(tiedosto, leveys) {
+  return commonsUrl(tiedosto, leveys);
 }
