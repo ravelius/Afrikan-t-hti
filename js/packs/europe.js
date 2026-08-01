@@ -71,8 +71,23 @@ const EU_MAP = {
   ],
   // Islanti on todellisuudessa kartan ulkopuolella lännessä; saari on tuotu
   // luoteisnurkkaan pitkien laivareittien päähän, kuten St. Helena Afrikassa.
+  // Ääriviiva on Natural Earthin oikea Islanti (50m) sovitettuna tähän
+  // laatikkoon, jotta maan korostus ja Tutki-kortin minikartta osuvat
+  // täsmälleen siihen saareen, joka laudalla näkyy.
   icelandPoints: [
-    [22, 60], [38, 38], [70, 30], [100, 42], [105, 62], [88, 82], [52, 86], [30, 76],
+    [89.9, 35.3], [97.1, 32.5], [93.2, 37.1], [96.3, 39.0], [95.4, 43.6], [98.7, 43.2],
+    [98.1, 47.0], [100.4, 45.8], [104.5, 48.0], [103.1, 51.0], [104.9, 56.1], [101.3, 62.0],
+    [98.7, 61.9], [96.9, 67.9], [87.7, 72.2], [81.6, 77.8], [72.7, 80.5], [71.7, 83.7],
+    [66.3, 86.0], [54.6, 83.3], [52.9, 78.8], [51.1, 80.1], [47.7, 76.4], [35.9, 78.4],
+    [35.6, 73.8], [39.5, 74.6], [45.0, 68.5], [40.5, 69.7], [44.0, 64.1], [40.1, 65.8],
+    [37.3, 61.1], [27.1, 62.1], [25.5, 59.8], [41.7, 56.5], [42.6, 54.0], [37.0, 53.8],
+    [42.1, 49.3], [34.0, 46.9], [26.5, 50.0], [22.1, 47.9], [23.8, 46.3], [26.8, 47.7],
+    [25.0, 43.4], [28.6, 45.2], [31.1, 43.9], [27.0, 42.1], [29.3, 41.6], [27.4, 39.1],
+    [30.0, 39.0], [29.9, 36.1], [37.5, 41.0], [37.5, 38.1], [33.7, 35.6], [37.2, 34.6],
+    [32.4, 33.3], [33.7, 31.7], [37.7, 31.7], [45.4, 38.9], [45.6, 44.0], [43.5, 44.4],
+    [47.5, 52.6], [50.0, 45.9], [52.6, 47.1], [54.5, 37.6], [60.0, 43.6], [60.8, 38.0],
+    [64.8, 36.1], [70.2, 44.2], [69.0, 36.6], [74.7, 40.0], [77.7, 35.8], [82.8, 35.9],
+    [82.4, 31.4], [84.6, 30.0], [89.1, 34.7],
   ],
   maghrebPoints: [
     [-45, 960.0], [97.9, 952.1], [169.0, 970.5], [211.2, 949.4], [268.8, 925.8],
@@ -98,7 +113,7 @@ const EU_CITIES = [
   { id: 'dublin', name: 'Dublin', x: 91, y: 490, la: 'end', lx: -16, ly: 5 },
   { id: 'edinburgh', name: 'Edinburgh', x: 150, y: 422, la: 'end', lx: -16, ly: 5 },
   { id: 'pariisi', name: 'Pariisi', x: 256, y: 609 },
-  { id: 'marseille', name: 'Marseille', x: 312, y: 744, la: 'end', lx: -16, ly: 14 },
+  { id: 'marseille', name: 'Marseille', wiki: 'Marseille', x: 312, y: 744, la: 'end', lx: -16, ly: 14 },
   { id: 'lissabon', name: 'Lissabon', x: 36, y: 875, la: 'start', lx: 16, ly: 5 },
   {
     id: 'madrid', name: 'Madrid', x: 140, y: 831, airport: true,
@@ -106,14 +121,14 @@ const EU_CITIES = [
     links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
   },
   { id: 'barcelona', name: 'Barcelona', x: 244, y: 800, la: 'start', lx: 16, ly: 5 },
-  { id: 'granada', name: 'Granada', x: 142, y: 916, la: 'end', lx: -16, ly: 5 },
+  { id: 'granada', name: 'Granada', wiki: 'Granada', x: 142, y: 916, la: 'end', lx: -16, ly: 5 },
   { id: 'amsterdam', name: 'Amsterdam', x: 305, y: 516, la: 'start', lx: 16, ly: 5 },
   { id: 'berliini', name: 'Berliini', x: 468, y: 512, airport: true },
   { id: 'praha', name: 'Praha', x: 488, y: 576, la: 'end', lx: -16, ly: 5 },
   { id: 'wien', name: 'Wien', x: 526, y: 626, la: 'start', lx: 16, ly: -6 },
   { id: 'budapest', name: 'Budapest', x: 591, y: 658, la: 'start', lx: 16, ly: 10 },
   { id: 'varsova', name: 'Varsova', x: 615, y: 520 },
-  { id: 'krakova', name: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
+  { id: 'krakova', name: 'Krakova', wiki: 'Krakova', x: 594, y: 577, la: 'start', lx: 16, ly: 8 },
   { id: 'alpit', name: 'Alpit', x: 352, y: 640, la: 'end', lx: -16, ly: 5 },
   // Venetsia on Adrianmeren pohjukassa Milanon tilalla (omistajan valinta).
   { id: 'venetsia', name: 'Venetsia', wiki: 'Venetsia', x: 448, y: 698, la: 'start', lx: 16, ly: -6 },
@@ -126,7 +141,7 @@ const EU_CITIES = [
   { id: 'kreeta', name: 'Kreeta', x: 694, y: 964, la: 'middle', lx: 0, ly: 26 },
   { id: 'dubrovnik', name: 'Dubrovnik', x: 560, y: 770, la: 'middle', lx: 0, ly: -22 },
   // Sarajevoa on siirretty hieman itään, jotta nimet mahtuvat Balkanilla.
-  { id: 'sarajevo', name: 'Sarajevo', x: 600, y: 724, la: 'start', lx: 16, ly: 2 },
+  { id: 'sarajevo', name: 'Sarajevo', wiki: 'Sarajevo', x: 600, y: 724, la: 'start', lx: 16, ly: 2 },
   { id: 'sofia', name: 'Sofia', x: 659, y: 771, la: 'start', lx: 16, ly: 5 },
   { id: 'bukarest', name: 'Bukarest', x: 712, y: 725, la: 'start', lx: 16, ly: 5 },
   { id: 'kiova', name: 'Kiova', x: 797, y: 567 },
@@ -154,7 +169,7 @@ const EU_CITIES = [
   { id: 'kobenhavn', name: 'Kööpenhamina', x: 457, y: 429, la: 'start', lx: 16, ly: 5 },
   { id: 'lappi', name: 'Lappi', x: 705, y: 145, la: 'end', lx: -16, ly: 5 },
   { id: 'tromssa', name: 'Tromssa', x: 577, y: 66, la: 'start', lx: 16, ly: 5 },
-  { id: 'islanti', name: 'Islanti', x: 62, y: 60, la: 'middle', lx: 0, ly: 42 },
+  { id: 'islanti', name: 'Islanti', wiki: 'Islanti', x: 62, y: 60, la: 'middle', lx: 0, ly: 42 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.

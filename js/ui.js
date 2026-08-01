@@ -85,6 +85,55 @@ async function cachedImage(title) {
 // (ElevenLabs, Viisas Kertoja). Kortin kaiutin ja luenta näkyvät vain
 // näille — muut kaupungit saavat tekstinsä ilman ääntä, kunnes niiden
 // luennat generoidaan.
+/*
+ * Saapumismerkintöjen luennat: 'pakka:kaupunki' kertoo, että tiedosto
+ * assets/audio/puhe-<pakka>-saapuminen-<kaupunki>.mp3 on olemassa.
+ * Kortin kaiutin ja luenta näkyvät vain näille; muut kaupungit saavat
+ * merkintänsä ilman ääntä, kunnes luennat generoidaan.
+ */
+const SAAPUMISLUENNAT = new Set([
+  'africa:addisabeba',
+  'africa:ahaggar',
+  'africa:alkufra',
+  'africa:angola',
+  'africa:bahrelghazal',
+  'africa:dakar',
+  'africa:darfur',
+  'africa:gao',
+  'africa:kairo',
+  'africa:kamerun',
+  'africa:kano',
+  'africa:kapkaupunki',
+  'africa:kappalmas',
+  'africa:karthago',
+  'africa:kilimandzaro',
+  'africa:kimberley',
+  'africa:kongo',
+  'africa:kumasi',
+  'africa:lagos',
+  'africa:madagaskar',
+  'africa:marrakech',
+  'africa:mosambik',
+  'africa:murzuk',
+  'africa:nairobi',
+  'africa:namib',
+  'africa:orjarannikko',
+  'africa:rashafun',
+  'africa:sahara',
+  'africa:sansibar',
+  'africa:sierraleone',
+  'africa:sthelena',
+  'africa:suakin',
+  'africa:tanganjika',
+  'africa:tanger',
+  'africa:timbuktu',
+  'africa:tripoli',
+  'africa:tshadjarvi',
+  'africa:viktoria',
+  'africa:viktorianputoukset',
+  'europe:venetsia',
+]);
+
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
 const VIHJELUENNAT = new Set([
   'europe:venetsia',
@@ -2043,9 +2092,14 @@ export class UI {
             if (rivi) this.factText.appendChild(rivi);
           });
         });
-        this.diaryFullUrl = `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`;
-        this.factKuuntele.hidden = false;
-        if (this.luettuSaapuminen !== luentaAvain) {
+        // Kaiutin ja luenta vain kaupungeille, joille luenta on generoitu.
+        // Ilman tätä nappi näkyi kaikilla ja tuotti hiljaisuutta.
+        const luettava = SAAPUMISLUENNAT.has(luentaAvain.replace('saapui:', ''));
+        this.diaryFullUrl = luettava
+          ? `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`
+          : null;
+        this.factKuuntele.hidden = !luettava;
+        if (luettava && this.luettuSaapuminen !== luentaAvain) {
           this.luettuSaapuminen = luentaAvain;
           // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
           // lyhyt vain ensimmäisen lauseen (omistajan tarkennus — luenta
@@ -2378,17 +2432,29 @@ export class UI {
       this.naytaMaaTunnusluvut(iso);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
-      const omaMaaIntro = ARTIKKELIT[maa.wiki ?? maa.nimi]?.intro;
+      //
+      // Kun kaupunki ja maa ovat sama paikka (Islanti, samoin kuin
+      // St. Helena Afrikassa), sama teksti osuisi kortille kahdesti
+      // vierekkäin. Silloin maapalstan esittely jätetään pois — kartta,
+      // tunnusluvut ja tervehdykset kertovat maasta jo omansa.
+      const maanAvain = maa.wiki ?? maa.nimi;
+      const omaMaaIntro = maanAvain === (city.wiki ?? city.name)
+        ? null
+        : ARTIKKELIT[maanAvain]?.intro;
       if (omaMaaIntro) {
         this.arrivalMaaIntro.textContent = omaMaaIntro;
         this.arrivalMaaWiki.hidden = false;
       }
-      cachedSummary(maa.wiki ?? maa.nimi).then((summary) => {
-        if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
-        if (!summary?.extract) return;
-        if (!omaMaaIntro) this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
-        this.arrivalMaaWiki.hidden = false;
-      });
+      // Sama poikkeus kuin yllä: samasta artikkelista ei haeta katkelmaa
+      // maapalstalle, jos kaupunkipalsta näyttää sen jo.
+      if (maanAvain !== (city.wiki ?? city.name)) {
+        cachedSummary(maanAvain).then((summary) => {
+          if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
+          if (!summary?.extract) return;
+          if (!omaMaaIntro) this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
+          this.arrivalMaaWiki.hidden = false;
+        });
+      }
     }
 
     // Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja niihin
