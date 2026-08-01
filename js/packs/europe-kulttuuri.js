@@ -309,7 +309,7 @@ export const EUROPE_KULTTUURI = {
           + '1500-luvulta asti, ja nykyinen kiviholvi on 1790-luvulta — '
           + 'se on seissyt paikallaan kaikkien vaiheiden läpi.',
         lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Latinalaissilta',
+        wiki: 'Stari most',
       },
     ],
     kysymys: {
@@ -442,7 +442,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Evzonit vaihtavat vartiota parlamenttitalon edessä. '
           + 'Tupsukenkien nimi on tsarouhia, ja tupsut ovat mustaa villaa.',
         lahde: 'Wikimedia Commons (CC0)',
-        wiki: 'Evzonit',
+        wiki: 'Eusonit',
       },
     ],
     kysymys: {
@@ -557,7 +557,7 @@ export const EUROPE_KULTTUURI = {
           + 'ei sormenpäillä — siitä tulee soittimen erikoinen liukuva '
           + 'ääni.',
         lahde: 'Wikimedia Commons (CC BY 3.0)',
-        wiki: 'Kreetalainen lyyra',
+        wiki: 'Psarantónis',
         musiikki: 'https://music.apple.com/fi/search?term=cretan%20lyra',
         musiikkiNimi: 'Kreetalaista lyyramusiikkia Apple Musicissa',
         musiikkiVapaa: 'https://webradio.ert.gr/',

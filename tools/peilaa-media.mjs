@@ -100,7 +100,9 @@ function kohteet() {
     [...kaikki.matchAll(/https?:\/\/(?:cdn\.freesound\.org|archive\.org)\/[^'"\s)#]+/g)]
       .map((m) => m[0]),
   );
-  const wikit = new Set([...paketit.matchAll(/\n\s+wiki: '([^']+)'/g)].map((m) => m[1]));
+  // Heittomerkki katkaisi myös artikkelin otsikon ("Youssou N'Dour"),
+  // joten sama poimija kuin kuvilla.
+  const wikit = poimi('wiki');
   for (const nimi of ['africa-artikkelit', 'europe-artikkelit']) {
     const s = readFileSync(join(JUURI, `js/packs/${nimi}.js`), 'utf8');
     for (const m of s.matchAll(/^ {2}('?)([A-ZÅÄÖ][^:']*)\1: \{/gm)) wikit.add(m[2]);
