@@ -39,29 +39,90 @@ const ULOS = arvo('--ulos', join(JUURI, '..', 'matkakirja-media'));
 const VAIN = arvo('--vain', null);
 const AGENTTI = 'Matkakirja/1.0 (https://github.com/ravelius/Matkakirja)';
 
+// Freesoundin esikuuntelut latautuvat hitaasti — mitattu noin 75 kt/s —
+// ja suurimmat ovat yli 25 megatavua. Aiempi viiden minuutin raja katkaisi
+// juuri ne kesken: yksi äänite jäi peiliin 4,3 megatavun mittaisena, kun
+// sen oikea koko on 25,2. Kaksikymmentä minuuttia riittää kaksinkertaisella
+// varmuudella.
+const AIKARAJA_S = 1200;
+
 /**
  * Yksi HTTP-haku curlilla. node:n fetch ei pääse hiekkalaatikon läpi.
  *
- * Yksittäinen epäonnistuminen ei saa kaataa koko ajoa: isoja
- * äänitiedostoja on kymmeniä megatavuja, ja ensimmäinen versio kuoli
- * aikakatkaisuun kesken 13 megatavun latauksen. Siksi aikaraja on
- * väljä ja virhe palautetaan koodina.
+ * Yksittäinen epäonnistuminen ei saa kaataa koko ajoa, joten virhe
+ * palautetaan koodina. Tiedostoa haettaessa palautetaan myös ladattu
+ * koko ja palvelimen ilmoittama koko, jotta katkennut lataus voidaan
+ * tunnistaa — pelkkä HTTP 200 ei kerro, tuliko tiedosto kokonaan.
  */
 function hae(url, tiedosto = null) {
-  const args = ['-sSL', '--max-time', '300', '--retry', '2', '--retry-delay', '3',
+  const args = ['-sSL', '--max-time', String(AIKARAJA_S), '--retry', '2', '--retry-delay', '3',
     '-A', AGENTTI, url];
-  if (tiedosto) args.push('-o', tiedosto, '-w', '%{http_code}');
+  if (tiedosto) args.push('-o', tiedosto, '-w', '%{http_code} %{size_download} %{size_header}');
   try {
-    const ulos = execFileSync('curl', args, { maxBuffer: 3e8, timeout: 330000 });
-    return tiedosto ? ulos.toString().trim() : ulos;
+    const ulos = execFileSync('curl', args, { maxBuffer: 3e8, timeout: (AIKARAJA_S + 30) * 1000 });
+    if (!tiedosto) return ulos;
+    const [koodi, ladattu] = ulos.toString().trim().split(/\s+/);
+    return { koodi, ladattu: Number(ladattu) || 0 };
   } catch (e) {
     if (tiedosto) {
       // Keskeneräinen tiedosto pois, jottei sitä pidetä valmiina.
       try { rmSync(tiedosto, { force: true }); } catch { /* ei ollut */ }
-      return 'virhe';
+      return { koodi: 'virhe', ladattu: 0 };
     }
     throw e;
   }
+}
+
+/** Palvelimen ilmoittama koko tavuina, tai null jos sitä ei saada. */
+function etakoko(url) {
+  try {
+    const ulos = execFileSync('curl', ['-sSIL', '--max-time', '45', '-A', AGENTTI, url],
+      { maxBuffer: 1e7 }).toString();
+    const osumat = [...ulos.matchAll(/^content-length:\s*(\d+)/gim)].map((m) => Number(m[1]));
+    return osumat.length ? osumat.at(-1) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Kelpaako ladattu tiedosto? Pelkkä HTTP 200 ei riitä: virhesivu on
+ * myös 200-vastaus jollakin välipalvelimella, ja katkennut lataus
+ * näyttää levyllä tavalliselta tiedostolta.
+ */
+function kelpaa(polku, odotettu) {
+  if (!existsSync(polku)) return 'tiedostoa ei syntynyt';
+  const koko = statSync(polku).size;
+  // Kokoraja ei kelpaa mittapuuksi: yksivärinen lippu pakkautuu 320
+  // pikselin levyisenä muutamaan sataan tavuun, ja se on ihan kelvollinen
+  // kuva. Ratkaisee tiedoston oma alkutunniste.
+  if (koko < 64) return `tyhjä (${koko} tavua)`;
+  if (odotettu && koko !== odotettu) return `katkennut (${koko}/${odotettu} tavua)`;
+
+  const alku = readFileSync(polku).subarray(0, 16);
+  const teksti = alku.toString('latin1').trimStart().toLowerCase();
+  if (teksti.startsWith('<!doctype') || teksti.startsWith('<html') || teksti.startsWith('<?xml')) {
+    return 'vastaus oli HTML-sivu';
+  }
+  const tunnisteet = [
+    [[0x89, 0x50, 0x4e, 0x47], 'png'],
+    [[0xff, 0xd8, 0xff], 'jpeg'],
+    [[0x47, 0x49, 0x46, 0x38], 'gif'],
+    [[0x49, 0x49, 0x2a, 0x00], 'tiff'],
+    [[0x4d, 0x4d, 0x00, 0x2a], 'tiff'],
+    [[0x49, 0x44, 0x33], 'mp3'],
+    [[0xff, 0xfb], 'mp3'],
+    [[0xff, 0xf3], 'mp3'],
+    [[0xff, 0xf2], 'mp3'],
+    [[0x4f, 0x67, 0x67, 0x53], 'ogg'],
+    [[0x52, 0x49, 0x46, 0x46], 'riff'],
+  ];
+  const tunnistettu = tunnisteet.some(([tavut]) => tavut.every((t, k) => alku[k] === t));
+  // WebP ja jotkin mp3:t alkavat muuten; riittää ettei alku ole tekstiä.
+  if (!tunnistettu && /^[\x09\x0a\x0d\x20-\x7e]{16}$/.test(alku.toString('latin1'))) {
+    return 'vastaus näyttää tekstiltä, ei medialta';
+  }
+  return null;
 }
 
 const nuku = (ms) => execFileSync('sleep', [String(ms / 1000)]);
@@ -173,16 +234,26 @@ async function lataaKuvat(nimet, alikansio, leveys) {
         alkuperainen: `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(nimi)}`,
         ...(meta[nimi] ?? {}),
       };
-      if (existsSync(polku)) continue;
       const url = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(nimi)}?width=${leveys}`;
-      const koodi = hae(url, polku);
+      if (existsSync(polku) && !kelpaa(polku, null)) {
+        manifesti[alikansio][nimi].koko = statSync(polku).size;
+        continue;
+      }
+      const { koodi } = hae(url, polku);
       if (koodi !== '200') {
         // curl kirjoittaa myös virhesivun kohteeseen. Se näyttäisi
         // seuraavalla ajolla valmiilta tiedostolta, joten se poistetaan.
         rmSync(polku, { force: true });
         virheet.push(`${alikansio}: ${nimi} → HTTP ${koodi}`);
       } else {
-        kokoYhteensa += statSync(polku).size;
+        const vika = kelpaa(polku, null);
+        if (vika) {
+          rmSync(polku, { force: true });
+          virheet.push(`${alikansio}: ${nimi} → ${vika}`);
+        } else {
+          manifesti[alikansio][nimi].koko = statSync(polku).size;
+          kokoYhteensa += statSync(polku).size;
+        }
       }
       nuku(350);
     }
@@ -204,10 +275,38 @@ function lataaAanet(urlit) {
     const kohde = turvanimi(tunnus, pate === 'mp3' ? 'mp3' : pate);
     const polku = join(kansio, kohde);
     manifesti.aanet[url] = { tiedosto: `aanet/${kohde}`, alkuperainen: url };
-    if (existsSync(polku)) continue;
-    const koodi = hae(url, polku);
-    if (koodi !== '200') virheet.push(`aanet: ${url} → ${koodi}`);
-    else kokoYhteensa += statSync(polku).size;
+
+    // Äänitteet ovat kymmeniä megatavuja ja latautuvat hitaasti, joten
+    // juuri ne katkeavat. Palvelimen ilmoittamaa kokoa vasten näkee sekä
+    // sen, onko levyllä oleva tiedosto kokonainen, että sen, tuliko uusi
+    // lataus loppuun asti. Ilman tätä katkennut tiedosto jäi peiliin
+    // pysyvästi: seuraava ajo näki sen olemassa olevana ja ohitti.
+    const odotettu = etakoko(url);
+    if (existsSync(polku)) {
+      const vika = kelpaa(polku, odotettu);
+      if (!vika) {
+        manifesti.aanet[url].koko = statSync(polku).size;
+        nuku(200);
+        continue;
+      }
+      console.log(`  aanet: haetaan uudestaan — ${kohde}: ${vika}`);
+      rmSync(polku, { force: true });
+    }
+
+    const { koodi } = hae(url, polku);
+    if (koodi !== '200') {
+      rmSync(polku, { force: true });
+      virheet.push(`aanet: ${url} → ${koodi}`);
+    } else {
+      const vika = kelpaa(polku, odotettu);
+      if (vika) {
+        rmSync(polku, { force: true });
+        virheet.push(`aanet: ${url} → ${vika}`);
+      } else {
+        manifesti.aanet[url].koko = statSync(polku).size;
+        kokoYhteensa += statSync(polku).size;
+      }
+    }
     nuku(400);
     if ((i + 1) % 10 === 0) console.log(`  aanet: ${i + 1}/${urlit.length}`);
   }
@@ -276,8 +375,14 @@ if (!VAIN || VAIN === 'tekstit') lataaTekstit(k.wikit);
 manifesti.luotu = new Date().toISOString().slice(0, 10);
 writeFileSync(join(ULOS, 'manifesti.json'), JSON.stringify(manifesti, null, 1));
 
-if (!existsSync(join(ULOS, 'README.md'))) {
-  writeFileSync(join(ULOS, 'README.md'), `# Matkakirja — media
+// GitHubin luoma repo saa valmiiksi yhden rivin README:n. Pelkkä
+// "onko tiedostoa" jätti sen paikalleen, eikä kukaan saanut tietää
+// mitä repo sisältää. Ohitetaan vain oikea, jo kirjoitettu README.
+const readmePolku = join(ULOS, 'README.md');
+const omaReadme = existsSync(readmePolku)
+  && readFileSync(readmePolku, 'utf8').includes('peilaa-media.mjs');
+if (!omaReadme) {
+  writeFileSync(readmePolku, `# Matkakirja — media
 
 Tämä repo on [Matkakirja](https://github.com/ravelius/Matkakirja)-pelin
 kuvien, äänien ja tekstien kopio yhdessä paikassa. Peli hakee aineiston
