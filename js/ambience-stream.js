@@ -15,12 +15,21 @@ import { valittuTaiOletus, jaaAlku, tyyppiKori } from './aani-ehdokkaat.js';
 // eikä ääni saa vaihtua tai katkeilla kesken kaupungissa olon.
 let arvottu = null; // { cityId, url }
 
+/*
+ * Paikat, joiden ääni ei saa arpoutua: etusivu on pelin ensimmäinen
+ * vaikutelma ja sen kuuluu kuulostaa aina samalta (omistajan toive).
+ * Muille paikoille ääni arvotaan maisematyypin korista.
+ */
+const VAKIOPAIKAT = new Set(['etusivu']);
+
 function arvoTyypista(cityId, tyyppi, lauta) {
   if (!cityId || !tyyppi) return null;
   if (arvottu?.cityId === cityId) return arvottu.url;
   const kori = tyyppiKori(tyyppi, lauta);
   if (!kori.length) return null;
-  const url = kori[Math.floor(Math.random() * kori.length)];
+  const url = VAKIOPAIKAT.has(cityId)
+    ? kori[0]
+    : kori[Math.floor(Math.random() * kori.length)];
   arvottu = { cityId, url };
   return url;
 }

@@ -329,6 +329,10 @@ const MANNER_ZOOM_VIIVE = 1100; // kokonäkymä näkyy tämän verran ennen zoom
 const ALAKAISTA = 0.3;
 // Zoomausliu'un kesto. Omistajan palaute: 600 ms oli liian nopea.
 const ZOOM_MS = 1200;
+// Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
+const ZOOM_TAUKO_MS = 260;
+// Aloituskartan lähikuvan suurennos yleiskuvaan nähden.
+const ALOITUS_ZOOM = 3.1;
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -859,6 +863,8 @@ export class UI {
     clearTimeout(this.botTimer);
     clearTimeout(this.autoRollTimer);
     clearTimeout(this.lentoPuheAjastin);
+    clearTimeout(this.zoomAlkuAjastin);
+    clearTimeout(this.zoomTaustaAjastin);
     if (this.previewFrame) cancelAnimationFrame(this.previewFrame);
     for (const timer of Object.values(this.typeTimers ?? {})) clearTimeout(timer);
     this.stopQuizTimer();
@@ -985,24 +991,31 @@ export class UI {
    * käytännössä sama kuin kartan muuttaminen kuvaksi, mutta kartta
    * pysyy tarkkana ja napautukset osuvat oikeisiin kohtiin itsestään.
    */
+  /**
+   * Kaupunkien pystysuunnan keskikohta laudalla. Aloituskartan lähikuva
+   * rajataan tähän eikä laudan keskelle: maailmankartan navat ovat
+   * tyhjää merta, ja niiden näyttäminen veisi tilan kaupungeilta.
+   */
+  kaupunkienKeskiY(box, laudanKorkeus) {
+    const ys = (this.game.board?.cities ?? []).map((c) => c.y);
+    if (!ys.length) return box.y + laudanKorkeus / 2;
+    return (Math.min(...ys) + Math.max(...ys)) / 2;
+  }
+
   sovitaAloitusZoom(paneW, paneH) {
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
     // Rajauslaatikko ilman avaustekstin varaamaa alaosaa: lähikuvassa
     // teksti on jo väistynyt, joten koko korkeus on laudan käytössä.
     const laudanKorkeus = box.h / (1 + INTRO_SPACE);
-    // Suurin mahdollinen: laudan korkeus täyttää paneelin. Maailmankartta
-    // on kuitenkin pystysuuntainen (kaksi pallonpuoliskoa päällekkäin),
-    // jolloin pelkkä korkeuden täyttö suurentaisi sen kolminkertaiseksi.
-    // Siksi katto: enintään 2,2-kertainen yleiskuvaan nähden.
     const yleiskuva = Math.min(paneW / box.w, paneH / box.h);
-    const skaala = Math.min(paneH / laudanKorkeus, yleiskuva * 2.2);
+    const skaala = yleiskuva * ALOITUS_ZOOM;
     const leveys = Math.round(box.w * skaala);
-    // Kartta täyttää paneelin myös pystysuunnassa. Kun kattoraja pitää
-    // laudan paneelia matalampana, näkymää jatketaan laudan ylä- ja
-    // alapuolelle: pergamentti on piirretty reilusti laudan yli, joten
-    // tilalle tulee merta eikä mustia palkkeja.
+    // Kartta täyttää paneelin myös pystysuunnassa. Näkymä rajataan
+    // kaupunkien korkeudelle eikä laudan keskelle: maailmankartan ylä-
+    // ja alalaidassa ovat pallonpuoliskojen napa-alueet, joissa ei ole
+    // yhtään napautettavaa kohdetta eikä mannerta (omistajan havainto).
     const nakyvaKorkeus = paneH / skaala;
-    const vy = box.y + (laudanKorkeus - nakyvaKorkeus) / 2;
+    const vy = this.kaupunkienKeskiY(box, laudanKorkeus) - nakyvaKorkeus / 2;
     this.svg.setAttribute('viewBox', `${box.x} ${vy} ${box.w} ${nakyvaKorkeus}`);
     this.svg.style.width = `${leveys}px`;
     this.svg.style.height = `${Math.round(nakyvaKorkeus * skaala)}px`;
@@ -1137,9 +1150,9 @@ export class UI {
     this.panY = null;
     this.zoomKohde = kohde;
     document.body.classList.add('manner-zoom');
-    sfx.play('zoom');
     this.fitViewBox();
-    this.liukuZoomiin(paneW, paneH, kohde, sx, sy, yleisSkaala);
+    this.asetaZoomAlku(kohde, sx, sy, yleisSkaala);
+    this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
   }
 
   /**
@@ -1170,13 +1183,37 @@ export class UI {
     // Avausteksti työntyy alas pois näkyvistä samaa tahtia kuin kartta
     // suurenee (omistajan toive) — ei erillistä häivytystä.
     this.introEl.classList.add('intro-pois');
-    // Kameran zoomimoottori kestää saman ajan kuin liuku.
-    sfx.play('zoom');
     this.fitViewBox();
     // Renkaat piirretään uudelleen, jotta napautus valitsee kaupungin
     // eikä enää zoomaa.
     this.drawTargets();
-    this.liukuZoomiin(paneW, paneH, fokus, sx, sy, yleisSkaala);
+    // Alkuasento heti: muuten kartta näyttäisi hyppäävän lähikuvaan jo
+    // ennen kuin liuku ehtii alkaa hiljaisen hetken jälkeen.
+    this.asetaZoomAlku(fokus, sx, sy, yleisSkaala);
+    this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
+  }
+
+  /**
+   * Zoomausäänen tieltä raivataan hetki hiljaisuutta (omistajan toive):
+   * lukuääni lopetetaan kokonaan ja taustaäänimaisema vaimennetaan, ja
+   * vasta pienen viiveen jälkeen zoomausääni ja liuku käynnistyvät.
+   * Ilman taukoa moottori hukkui puheen ja meren alle.
+   */
+  zoomAanellaJaViiveella(liuku) {
+    this.stopIntroVoice();
+    this.stopDiaryVoice();
+    vaimennaTausta();
+    clearTimeout(this.zoomAlkuAjastin);
+    this.zoomAlkuAjastin = setTimeout(() => {
+      if (this.dead) return;
+      sfx.play('zoom');
+      liuku();
+      // Taustamaisema palaa vasta kun moottori on vaiennut.
+      clearTimeout(this.zoomTaustaAjastin);
+      this.zoomTaustaAjastin = setTimeout(() => {
+        if (!this.dead) palautaTausta();
+      }, ZOOM_MS + 300);
+    }, ZOOM_TAUKO_MS);
   }
 
   /** Napautuskohta ruudulla kartan omiksi koordinaateiksi. */
@@ -1201,7 +1238,7 @@ export class UI {
    * mutta ilman erillistä kuvaa — eikä lopputulos sumene, koska
    * animaation päättyessä ruudulla on täysi tarkkuus.
    */
-  liukuZoomiin(paneW, paneH, fokus, sx, sy, yleisSkaala) {
+  asetaZoomAlku(fokus, sx, sy, yleisSkaala) {
     if (this.reducedMotion) return;
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
     const s = yleisSkaala / this.zoomSkaala;
@@ -1217,6 +1254,11 @@ export class UI {
     // Pakotettu asettelu, jotta selain näkee alkuasennon omana tilanaan
     // eikä hyppää suoraan loppuun.
     void this.svg.getBoundingClientRect();
+  }
+
+  /** Käynnistää liu'un alkuasennosta lähikuvaan. */
+  kaynnistaZoomLiuku() {
+    if (this.reducedMotion) return;
     this.svg.style.transition = `transform ${ZOOM_MS}ms cubic-bezier(0.25, 0.6, 0.2, 1)`;
     this.asetaPan(this.panX, this.panY);
     clearTimeout(this.zoomAjastin);
