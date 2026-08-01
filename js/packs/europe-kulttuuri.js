@@ -31,7 +31,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Rialton kalatorin pylväshalli Canal Granden varrella. '
           + 'Kauppa käy aamuisin: laguunin ja Adrianmeren kalat ja '
           + 'äyriäiset tuodaan suoraan veneillä hallin laituriin.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Wolfgang Moroder, Wikimedia Commons (CC BY-SA 3.0)',
       },
       {
         tyyppi: 'kuva',
@@ -76,7 +76,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Château d\'If Marseillen lahdella. Linnoitus valmistui '
           + '1531 puolustamaan satamaa; vankilana se toimi yli kolmesataa '
           + 'vuotta. Saarelta ei tiettävästi ole koskaan paennut kukaan.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Milena Bielecka-Sujak, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: "Château d'If",
       },
       {
@@ -143,7 +143,7 @@ export const EUROPE_KULTTUURI = {
           + 'huipuilla on lunta vielä kesäkuussa. Vuoret ovat myös syy '
           + 'palatsin puutarhoihin: sulamisvesi tuotiin kanavaa pitkin '
           + 'suoraan suihkulähteisiin.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Adam Jones, Ph.D, Wikimedia Commons (CC BY-SA 3.0)',
         wiki: 'Alhambra',
       },
       {
@@ -177,7 +177,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Olut ja tapas Granadan seudulla — tässä kuivattua '
           + 'mustekalaa. Annos vaihtuu joka kierroksella, eikä sitä saa '
           + 'valita: se on baarin valinta, ei asiakkaan.',
-        lahde: 'Wikimedia Commons (CC BY-SA 2.0)',
+        lahde: 'Arkangel, Wikimedia Commons (CC BY-SA 2.0)',
       },
     ],
     kysymys: {
@@ -210,7 +210,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Bronisław Chromyn veistämä Smok Wawelski (1972) '
           + 'Veiksel-joen rannassa lohikäärmeen luolan suulla. Tulen '
           + 'saa nykyään puhallettua myös tekstiviestillä.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Yukof, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Wawel',
       },
       {
@@ -225,7 +225,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Torvensoittaja Marian kirkon tornissa. Soitto '
           + 'toistetaan neljään ilmansuuntaan, ja tornissa päivystetään '
           + 'ympäri vuorokauden.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Jadwiga, Wikimedia Commons (CC BY-SA 3.0)',
         wiki: 'Hejnał mariacki',
         musiikki: 'https://commons.wikimedia.org/wiki/File:Cracow_trumpet_signal.ogg',
         musiikkiNimi: 'Kuuntele hejnał (Wikimedia Commons)',
@@ -242,7 +242,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Sukiennice Rynek Głównyn keskellä. Nykyinen '
           + 'renessanssiasu on 1500-luvulta; yläkerrassa on Puolan '
           + '1800-luvun maalaustaiteen kokoelma.',
-        lahde: 'Wikimedia Commons (CC BY 4.0)',
+        lahde: 'Igor123121, Wikimedia Commons (CC BY 4.0)',
         wiki: 'Sukiennice',
       },
     ],
@@ -276,7 +276,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Sebiljin kioski Baščaršijan aukiolla. Nykyinen kioski '
           + 'on vuodelta 1891, ja kyyhkyjen määrästä aukio on saanut '
           + 'lempinimensä "kyyhkytori".',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Stevan Kragujević, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Baščaršija',
       },
       {
@@ -291,7 +291,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Nada Mamula (1927–2001) esiintymässä televisiossa '
           + 'vuonna 1962. Hän oli sevdalinkan tunnetuimpia tulkitsijoita, '
           + 'ja hänen levytyksensä ovat yhä mittapuu.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'BiHVolim, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Sevdalinka',
         musiikki: 'https://music.apple.com/fi/artist/nada-mamula/289134144',
         musiikkiNimi: 'Nada Mamula Apple Musicissa',
@@ -308,7 +308,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Latinalaissilta Sarajevossa. Paikalla on ollut silta '
           + '1500-luvulta asti, ja nykyinen kiviholvi on 1790-luvulta — '
           + 'se on seissyt paikallaan kaikkien vaiheiden läpi.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Miyagawa, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Stari most',
       },
     ],
@@ -342,7 +342,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Almannagjá, Þingvellirin suurin repeämä. Kalliolta '
           + 'lainlukija esitti kolmasosan laeista joka vuosi, jotta '
           + 'koko lakikokoelma tuli luetuksi kolmen vuoden välein.',
-        lahde: 'Wikimedia Commons (CC BY 4.0)',
+        lahde: 'Marine SABRES, Wikimedia Commons (CC BY 4.0)',
         wiki: 'Þingvellir',
       },
       {
@@ -373,7 +373,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Björk esiintymässä. Hän on levyttänyt sekä islanniksi '
           + 'että englanniksi ja tehnyt yhteistyötä muusikoiden ja '
           + 'kuvataiteilijoiden kanssa ympäri maailman.',
-        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        lahde: 'Paul Familetti, Wikimedia Commons (CC BY 2.0)',
         wiki: 'Björk',
         musiikki: 'https://music.apple.com/fi/artist/bjork/295015',
         musiikkiNimi: 'Björk Apple Musicissa',
@@ -427,7 +427,7 @@ export const EUROPE_KULTTUURI = {
           + 'kävellen — halvin kunnon ateria kaupungissa.',
         selite: 'Souvlaki-annos ateenalaisessa kojussa: vartaat, pita ja '
           + 'ranskalaiset samassa käärössä, kuten paikallinen tapa vaatii.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'NikonZ7II, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Souvlaki',
       },
       {
@@ -473,7 +473,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Fontana di Trevi valmistui 1762. Keskellä on meren '
           + 'jumala Oceanus simpukkavaunuissaan, ja vesi tulee yhä '
           + 'antiikin akveduktia pitkin.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Saverio.G, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Trevin suihkulähde',
         // Kenttä-äänitys Rooman kadulta suihkulähteelle käveltäessä —
         // ei Trevin vaan Pantheonin aukiolta, mutta sama ääni: askelia
@@ -494,7 +494,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Carbonara-annos. Kastike syntyy, kun kuuma pasta '
           + 'sekoitetaan keltuaisen ja juuston kanssa liedeltä pois '
           + 'otettuna — jos pannu on liian kuuma, muna kypsyy munakkaaksi.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Dandy1022, Wikimedia Commons (CC BY-SA 3.0)',
         wiki: 'Carbonara',
       },
       {
@@ -508,7 +508,7 @@ export const EUROPE_KULTTUURI = {
           + 'Virgo, syöttää yhä Trevin lähdettä.',
         selite: 'Akveduktipuisto kaupungin laidalla: Aqua Claudian kaaret '
           + 'jatkuvat peltojen yli. Rakennettu vuosina 38–52 jKr.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Petro Stelte, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Rooman akveduktit',
       },
     ],
@@ -556,7 +556,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Kreetalainen lyyra. Kieliä painetaan kynsien kyljellä, '
           + 'ei sormenpäillä — siitä tulee soittimen erikoinen liukuva '
           + 'ääni.',
-        lahde: 'Wikimedia Commons (CC BY 3.0)',
+        lahde: 'Lemur12, Wikimedia Commons (CC BY 3.0)',
         wiki: 'Psarantónis',
         musiikki: 'https://music.apple.com/fi/search?term=cretan%20lyra',
         musiikkiNimi: 'Kreetalaista lyyramusiikkia Apple Musicissa',
@@ -575,7 +575,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Oliivinkorjuuta Sitiassa Itä-Kreetalla. Verkot '
           + 'levitetään puun alle ja oksat ravistellaan tai kammataan '
           + 'tyhjiksi.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Lookandlike, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Oliivi',
       },
     ],
@@ -608,7 +608,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Sisilialaisia pupi-nukkeja haarniskoissaan. Nuket '
           + 'painavat jopa kymmenen kiloa, ja niitä ohjataan '
           + 'rautatangoilla ylhäältä.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Benjamín Núñez González, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Opera dei pupi',
       },
       {
@@ -622,7 +622,7 @@ export const EUROPE_KULTTUURI = {
           + 'sokeriruo’on saarelle 800-luvulla.',
         selite: 'Cannoli siciliani tarjolla. Päihin painetaan usein '
           + 'pistaasirouhetta tai kandeerattua hedelmää.',
-        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        lahde: 'Stefano Mortellaro, Wikimedia Commons (CC BY 2.0)',
         wiki: 'Cannolo',
       },
       {
@@ -637,7 +637,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Ballarò-tori Palermossa. Kojujen välissä myydään kalaa, '
           + 'vihanneksia ja katuruokaa; markkina alkaa aamuvarhain ja '
           + 'jatkuu iltaan.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Bernard Gagnon, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Palermo',
         // Kenttä-äänitys juuri tältä torilta maaliskuussa 2009.
         aani: 'https://archive.org/download/aporee_6826_8498/palermoballarmarzo2009.MP3',
@@ -672,7 +672,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Klapa-yhtye laulamassa Orebićissä. Laulajat asettuvat '
           + 'lähelle toisiaan, jotta kukin kuulee muut ilman '
           + 'vahvistusta.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Quahadi Añtó, Wikimedia Commons (CC BY-SA 3.0)',
         wiki: 'Klapa',
         musiikki: 'https://music.apple.com/fi/search?term=klapa',
         musiikkiNimi: 'Klapa-lauluja Apple Musicissa',
@@ -691,7 +691,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Vanhan apteekin purkkeja luostarin museossa. '
           + 'Fajanssiruukuissa säilytettiin yrttejä ja voiteita; '
           + 'jokaisen kyljessä lukee sisältö latinaksi.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Bernard Gagnon, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Dubrovnik',
       },
       {
@@ -705,7 +705,7 @@ export const EUROPE_KULTTUURI = {
           + 'yhä käsin puulastoilla.',
         selite: 'Stonin suola-altaat. Merivesi johdetaan matalille '
           + 'kentille ja haihdutetaan auringossa; jäljelle jää suola.',
-        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        lahde: 'Tony Hisgett, Wikimedia Commons (CC BY 2.0)',
         wiki: 'Ston',
       },
     ],
@@ -738,7 +738,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Kostadin Varimezov, yksi Bulgarian tunnetuimmista '
           + 'gaida-soittajista. Puhallusputki on suussa, sormet '
           + 'melodiapillillä ja säkki kainalossa.',
-        lahde: 'Wikimedia Commons (CC BY 4.0)',
+        lahde: 'Martha Forsyth, Wikimedia Commons (CC BY 4.0)',
         wiki: 'Gaida',
         musiikki: 'https://music.apple.com/fi/search?term=bulgarian%20folk%20gaida',
         musiikkiNimi: 'Bulgarialaista kansanmusiikkia Apple Musicissa',
@@ -761,7 +761,7 @@ export const EUROPE_KULTTUURI = {
           + 'tulevasta vuodesta.',
         selite: 'Banitsa Sofiassa. Taikina kierretään kierteelle ja '
           + 'paistetaan pellillä; täytteenä on sirene-juustoa ja munaa.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Apostoloff, Wikimedia Commons (CC BY-SA 3.0)',
         wiki: 'Banitsa',
       },
       {

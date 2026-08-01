@@ -19,7 +19,7 @@ export const EUROPE_VALOKUVAT = {
       + 'pylväänsä päässä.',
     uusi: {
       tiedosto: 'Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg',
-      lahde: 'Commons (CC BY-SA 3.0)',
+      lahde: 'Wolfgang Moroder, Commons (CC BY-SA 3.0)',
       selite: 'Canal Grande nykyään Accademian sillalta: gondolit ja '
         + 'vesibussit risteilevät, ja Santa Maria della Saluten kupoli '
         + 'vartioi kanavan suuta kuten 350 vuotta.',
@@ -35,7 +35,7 @@ export const EUROPE_VALOKUVAT = {
       + 'lastit purettiin käsivoimin suoraan kadulle.',
     uusi: {
       tiedosto: 'Vieux-Port de Marseille, France.jpg',
-      lahde: 'Commons (CC BY-SA 4.0)',
+      lahde: 'Clément Bardot, Commons (CC BY-SA 4.0)',
       selite: 'Sama satama nykyään: rahtiliikenne muutti pohjoisemmas, ja '
         + 'altaassa on huviveneitä. Laiturilla myydään yhä aamun kala, ja '
         + 'aukion yllä on Norman Fosterin peilikatos.',
@@ -52,7 +52,7 @@ export const EUROPE_VALOKUVAT = {
       + 'ensimmäisen kerran juuri hänen kuvinaan.',
     uusi: {
       tiedosto: 'Court of the Lions, Alhambra de Granada (Spain).jpg',
-      lahde: 'Commons (CC BY-SA 4.0)',
+      lahde: 'Heparina1985, Commons (CC BY-SA 4.0)',
       selite: 'Sama piha tänään. Kaksitoista leijonaa kannattelevat yhä '
         + 'allasta keskellä; ne puhdistettiin ja korjattiin perusteellisesti '
         + '2000-luvulla, ja suihkulähde toimii taas.',
@@ -68,7 +68,7 @@ export const EUROPE_VALOKUVAT = {
       + 'hevosvaunuja — niitä on aukiolla vieläkin, joskin turisteja varten.',
     uusi: {
       tiedosto: 'Kraków - Rynek Główny (2).jpg',
-      lahde: 'Commons (CC BY 2.0)',
+      lahde: 'Fred Romero, Commons (CC BY 2.0)',
       selite: 'Rynek Główny nykyään. Rakennukset ovat samat: Krakovan '
         + 'vanhakaupunki säilyi toisessa maailmansodassa lähes ehjänä, '
         + 'toisin kuin Varsova.',
@@ -84,7 +84,7 @@ export const EUROPE_VALOKUVAT = {
       + 'on ollut kauppapaikkana 1400-luvulta asti.',
     uusi: {
       tiedosto: 'Sarajevo Bascarsija from Trebevic.JPG',
-      lahde: 'Commons (CC BY-SA 3.0)',
+      lahde: 'Julian Nyča, Commons (CC BY-SA 3.0)',
       selite: 'Sarajevo Trebevićin rinteeltä nähtynä. Kaupunki on '
         + 'kapeassa laaksossa, ja talot kiipeävät rinteille joka '
         + 'suunnassa — siksi sitä kutsutaan joskus Balkanin Jerusalemiksi.',
@@ -101,7 +101,7 @@ export const EUROPE_VALOKUVAT = {
       + 'ympäri Eurooppaa.',
     uusi: {
       tiedosto: 'City View of Reykjavik from Hallgrímskirkja - 2013.08 - panoramio.jpg',
-      lahde: 'Commons (CC BY 3.0)',
+      lahde: 'rheins, Commons (CC BY 3.0)',
       selite: 'Reykjavík Hallgrímskirkjan tornista. Kaikki talot '
         + 'lämpiävät maan omalla kuumalla vedellä, ja katot on '
         + 'perinteisesti maalattu kirkkaiksi — pimeä vuodenaika on pitkä.',
@@ -118,7 +118,7 @@ export const EUROPE_VALOKUVAT = {
       + 'ympärillä oli peltoa.',
     uusi: {
       tiedosto: 'The Acropolis of Athens with the Parthenon, the Erecththeion and the Mycenean Fountain from Monastiraki Square on March 11, 2020.jpg',
-      lahde: 'Commons (CC BY-SA 4.0)',
+      lahde: 'George E, Commons (CC BY-SA 4.0)',
       selite: 'Sama kallio tänään Monastirakin aukiolta: alla kolmen '
         + 'miljoonan asukkaan kaupunki, päällä Parthenon telineineen. '
         + 'Temppeliä on korjattu yhtäjaksoisesti vuodesta 1975 — '
@@ -136,7 +136,7 @@ export const EUROPE_VALOKUVAT = {
       + 'tässä kuvassa näkyy jotain, mitä ei enää ole.',
     uusi: {
       tiedosto: 'Rome Colosseum exterior 1.jpg',
-      lahde: 'Commons (CC BY-SA 4.0)',
+      lahde: 'Nicholas Hartmann, Commons (CC BY-SA 4.0)',
       selite: 'Sama amfiteatteri nykyään. Ulkokehästä on jäljellä vain '
         + 'osa: keskiajalla Colosseumia käytettiin kivilouhoksena, ja '
         + 'sen marmoria on monissa Rooman kirkoissa.',
@@ -152,7 +152,7 @@ export const EUROPE_VALOKUVAT = {
       + 'uudelleen betonista — tapa, jota arkeologit yhä kiistelevät.',
     uusi: {
       tiedosto: 'Ruins of the Minoan Palace in Knossos.jpg',
-      lahde: 'Commons (CC BY-SA 4.0)',
+      lahde: 'Annatsach, Commons (CC BY-SA 4.0)',
       selite: 'Palatsin rauniot tänään. Punaiset pylväät ovat Evansin '
         + 'rekonstruktiota: minolaiset pylväät levenivät ylöspäin, '
         + 'toisin kuin kreikkalaiset.',
@@ -185,7 +185,7 @@ export const EUROPE_VALOKUVAT = {
       + 'kyljessä lukee siksi "Austro-Hungary".',
     uusi: {
       tiedosto: 'Steep coast near the city wall in the Old Town of Dubrovnik, Croatia (48613191222).jpg',
-      lahde: 'Commons (CC BY 2.0)',
+      lahde: 'dronepicr, Commons (CC BY 2.0)',
       selite: 'Vanhankaupungin muuri ja kattotiilet nykyään. Osa '
         + 'katoista on kirkkaan oransseja: ne uusittiin 1990-luvun sodan '
         + 'jälkeen, kun kaupunkia pommitettiin.',
@@ -202,7 +202,7 @@ export const EUROPE_VALOKUVAT = {
       + 'pääkaupunki 1879.',
     uusi: {
       tiedosto: 'Banya Bashi Mosque.jpg',
-      lahde: 'Commons (CC BY-SA 4.0)',
+      lahde: 'Apokats, Commons (CC BY-SA 4.0)',
       selite: 'Sama moskeija tänään. Sen ympärillä on korttelin matkalla '
         + 'myös synagoga ja kaksi kirkkoa, ja kuumat lähteet pulppuavat '
         + 'yhä viereisessä puistossa julkisiin hanoihin.',

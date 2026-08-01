@@ -70,7 +70,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Libyalainen malouf-yhtye soittimineen: laulajien rinnalla '
           + 'soivat oud-luuttu, viulu ja darbuka-rumpu. Sama kokoonpano on '
           + 'soittanut häissä ja juhlissa sukupolvien ajan.',
-        lahde: 'Wikimedia Commons (CC BY 4.0)',
+        lahde: 'Bizain, Wikimedia Commons (CC BY 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -153,7 +153,7 @@ export const AFRICA_KULTTUURI = {
           + 'läpi ja väkijoukko kiertää kojulta toiselle. Taustalla kohoaa '
           + 'Koutoubian moskeijan torni, jonka mukaan koko kaupunki '
           + 'suunnistaa.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Elgaard, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -194,7 +194,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Eyo-hahmoja Lagosin kaduilla: valkoinen kaapu peittää '
           + 'kantajansa kokonaan, ja opa-sauva kohotetaan tervehdykseksi. '
           + 'Jokainen hattu kertoo, mitä sukua hahmo edustaa.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Gogeafrica, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'linkki',
@@ -237,7 +237,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Goréen satama ja punakattoiset talot mereltä nähtynä. '
           + 'Rauhallinen saari on hiljainen muistomerkki: täältä laivat '
           + 'veivät ihmisiä Atlantin yli, eikä kukaan heistä palannut.',
-        lahde: 'Wikimedia Commons (CC BY-SA 2.0)',
+        lahde: 'Nextdrop, Wikimedia Commons (CC BY-SA 2.0)',
       },
       {
         tyyppi: 'linkki',
@@ -326,7 +326,7 @@ export const AFRICA_KULTTUURI = {
           + 'vuorottelevat tarkkoina geometrisina raitoina. Kultainen väri '
           + 'kertoo kuninkaallisuudesta ja vauraudesta — kente kuului '
           + 'alkujaan vain Asanten hoville.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: '1000 thoughts, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -367,7 +367,7 @@ export const AFRICA_KULTTUURI = {
           + 'turkoosi talo vierekkäin Signal-kukkulan rinteessä. '
           + 'Kaupunginosa on yksi Kapkaupungin vanhimmista, ja sen '
           + 'mukulakivet ovat alkuperäiset.',
-        lahde: 'Wikimedia Commons (CC BY-SA 2.0)',
+        lahde: 'Bernard DUPONT, Wikimedia Commons (CC BY-SA 2.0)',
       },
       {
         tyyppi: 'teksti',
@@ -410,7 +410,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Taarab-yhtye soittimineen Sansibarissa: viulut ja '
           + 'käsirummut rinnakkain. Pienempää kokoonpanoa kutsutaan '
           + 'kidumbakiksi — sama musiikki, mutta tanssittavampi.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Nicholas Calvin, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -454,7 +454,7 @@ export const AFRICA_KULTTUURI = {
           + 'pienet kupit ja suitsuke. Lattialle levitetään tuoretta '
           + 'ruohoa ja paahtuvien papujen savu kutsuu naapuritkin '
           + 'paikalle.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Adanech Mamo, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -498,7 +498,7 @@ export const AFRICA_KULTTUURI = {
           + 'mittaisiksi, jotta jokainen soi omalla korkeudellaan. '
           + 'Soittimen sukulaisia tunnetaan eri nimillä ympäri '
           + 'Afrikkaa.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Ji-Elle, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -543,7 +543,7 @@ export const AFRICA_KULTTUURI = {
           + 'niin pienistä paloista, että ilme elää kuin maalauksessa. '
           + 'Teosta pidetään yhtenä myöhäisantiikin taidokkaimmista '
           + 'muotokuvista.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'G41rn8, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -583,7 +583,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Tadrart Acacusin kalliomaalauksia Fezzanissa: ihmishahmoja '
           + 'ja karjaa ajalta, jolloin aavikon paikalla oli järviä ja '
           + 'laidunmaita. Alue on Unescon maailmanperintökohde.',
-        lahde: 'Wikimedia Commons (CC BY-SA 2.5)',
+        lahde: 'Luca Galuzzi ( Lucag ), Wikimedia Commons (CC BY-SA 2.5)',
       },
       {
         tyyppi: 'teksti',
@@ -662,7 +662,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Tuareg kamelinsa kanssa: vyöllä takoba-miekka ja kasvoilla '
           + 'tagelmust-huntu, joka suojaa hiekalta ja auringolta. Kamelin '
           + 'satula on tuaregien oma malli, jossa istutaan sään edessä.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Ryszard Vorbrich, Wikimedia Commons (CC BY-SA 3.0)',
       },
       {
         tyyppi: 'teksti',
@@ -707,7 +707,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Assekremin basalttihuiput iltavalossa: vanhan tulivuoren '
           + 'jäänteet nousevat aavikosta kuin kivinen kaupunki. Yöllä '
           + 'lämpötila voi pudota pakkasen puolelle.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Rachid Hamatou, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -748,7 +748,7 @@ export const AFRICA_KULTTUURI = {
           + 'mahdollistavat vuosittaisen uudelleenrappauksen. Keisari '
           + 'Askia Muhammad teki pyhiinvaellusmatkan Mekkaan ja toi '
           + 'mukanaan rakennustaidon.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Gio53, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -788,7 +788,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Cotton Tree Freetownin keskustassa: satoja vuosia vanha '
           + 'kapokkipuu, jonka juurella kaupungin historia alkoi. Myrsky '
           + 'kaatoi puun 2023, mutta sen taimia kasvatetaan jatkoksi.',
-        lahde: 'Wikimedia Commons (CC BY-SA 2.0)',
+        lahde: 'Christian Trede, Wikimedia Commons (CC BY-SA 2.0)',
       },
       {
         tyyppi: 'teksti',
@@ -829,7 +829,7 @@ export const AFRICA_KULTTUURI = {
           + 'suljetut kasvot. Naamiot tanssivat juhlissa, sovittelevat '
           + 'riitoja ja valvovat tapoja — jokaisella on oma roolinsa '
           + 'kylän elämässä.',
-        lahde: 'Wikimedia Commons (CC BY 3.0)',
+        lahde: 'Sailko, Wikimedia Commons (CC BY 3.0)',
       },
       {
         tyyppi: 'teksti',
@@ -910,7 +910,7 @@ export const AFRICA_KULTTUURI = {
           + 'maakuopissa viikkokausia ennen kuin väri on valmis. '
           + 'Tummimmat kankaat kastetaan kymmeniä kertoja — ne olivat '
           + 'aikanaan tuaregien himotuinta kauppatavaraa.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Solasly, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -951,7 +951,7 @@ export const AFRICA_KULTTUURI = {
           + 'kelluvat saaret ovat neljän maan kalastajien yhteistä '
           + 'työmaata. Saalis kuivataan auringossa ja kulkee '
           + 'markkinoille satojen kilometrien päähän.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Coolthoom1 Removed tilt: Hike395, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -993,7 +993,7 @@ export const AFRICA_KULTTUURI = {
           + 'tummat lasit ja leveä hymy olivat tavaramerkki. Hän soitti '
           + 'yli kuusikymmentä vuotta ja yhdisti jazzin, funkin ja '
           + 'Kamerunin rytmit.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Selbymay, Wikimedia Commons (CC BY-SA 4.0)',
         musiikki: 'https://music.apple.com/fi/artist/manu-dibango/5361622',
         musiikkiNimi: 'Manu Dibango Apple Musicissa',
       },
@@ -1077,7 +1077,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Dyyni 45 auringonnousussa: rautapitoinen hiekka värjää '
           + 'dyynit punaisiksi, ja harjanne piirtää veitsenterävän rajan '
           + 'valon ja varjon välille. Dyyni on satoja metrejä korkea.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Giles Laurent, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1198,7 +1198,7 @@ export const AFRICA_KULTTUURI = {
           + 'vihreä järvi, ja reunalla vanha kaivoskaupunki on '
           + 'museona. Kuopasta nostettiin lähes kolme tonnia '
           + 'timantteja.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Rudolph Botha, Wikimedia Commons (CC BY-SA 3.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1239,7 +1239,7 @@ export const AFRICA_KULTTUURI = {
           + 'kivitaloineen. Saaren pohjoispää on rakennettu kivestä ja '
           + 'eteläpää makuti-palmunlehväkatoista — kaksi maailmaa '
           + 'samalla saarella.',
-        lahde: 'Wikimedia Commons (CC BY 2.0)',
+        lahde: 'Stig Nygaard, Wikimedia Commons (CC BY 2.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1280,7 +1280,7 @@ export const AFRICA_KULTTUURI = {
           + 'nousevat kuin pylväät ja latvat levittäytyvät vasta '
           + 'huipulla. Tarun mukaan jumalat istuttivat puun väärinpäin, '
           + 'juuret taivasta kohti.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Bernard Gagnon, Wikimedia Commons (CC BY-SA 3.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1371,7 +1371,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Kalastajia Viktorianjärven rannalla: puuveneet '
           + 'työnnetään vesille käsin, ja saalis lajitellaan rannassa. '
           + 'Järvellä on omat säänsä ja aallokkonsa kuin merellä.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Africraigs, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1412,7 +1412,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'MV Liemba laiturissa: satavuotias runko kantaa yhä '
           + 'matkustajia, säkkejä ja pyöriä järven kylien välillä. '
           + 'Monelle rantakylälle laiva on ainoa yhteys maailmalle.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Erasmus Kamugisha, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1457,7 +1457,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Dinkojen karjaa leirissä: valtavat sarvet ja vaaleat '
           + 'kyljet. Nuoret hoitavat leiriä kuukausia laidunten mukaan '
           + 'siirtyen, ja iltaisin savu suojaa laumaa hyönteisiltä.',
-        lahde: 'Wikimedia Commons (CC BY-SA 2.0)',
+        lahde: 'Ranjit Bhaskar, via Al Jazeera English, Wikimedia Commons (CC BY-SA 2.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1499,7 +1499,7 @@ export const AFRICA_KULTTUURI = {
           + 'tumma järvi sisäkkäisissä kraattereissa. Vuori on Sudanin '
           + 'korkein, ja sen rinteillä viljellään appelsiineja keskellä '
           + 'Saharan reunaa.',
-        lahde: 'Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'J Williams, Wikimedia Commons (CC BY-SA 3.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1540,7 +1540,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'El-Geyfin moskeija Suakinissa: korallikiviset seinät '
           + 'ja veistetyt puuparvekkeet kertovat ajasta, jolloin saaren '
           + 'kaupunki oli Punaisenmeren tärkeimpiä satamia.',
-        lahde: 'Wikimedia Commons (CC BY 3.0)',
+        lahde: 'Bertramz, Wikimedia Commons (CC BY 3.0)',
       },
       {
         tyyppi: 'teksti',
@@ -1623,7 +1623,7 @@ export const AFRICA_KULTTUURI = {
           + 'kaupungin siluetti. Puisto perustettiin 1946, ja se on '
           + 'ollut kaupunkilaisten ylpeys siitä asti — safari alkaa '
           + 'bussipysäkiltä.',
-        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Alexmbogo, Wikimedia Commons (CC BY-SA 4.0)',
       },
       {
         tyyppi: 'teksti',
