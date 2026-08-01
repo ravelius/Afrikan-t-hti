@@ -31,7 +31,7 @@ export const AFRICA_VALOKUVAT = {
       + 'selässään ja huusi kaupan kilpaa muiden kanssa.',
     uusi: {
       tiedosto: 'Cairo-Hilton-Skyline.jpg',
-      lahde: 'Franzfoto, Commons (CC BY-SA 3.0)',
+      lahde: 'Commons (CC BY-SA 3.0)',
       selite: 'Nykyinen Kairo nousee Niilin rannalla korkeuksiin — mutta '
         + 'joki virtaa keskellä yhtä tyynenä kuin ennenkin.',
     },
@@ -57,7 +57,7 @@ export const AFRICA_VALOKUVAT = {
       + 'savimuurien varjossa lepäsivät sekä kamelit että kauppiaat.',
     uusi: {
       tiedosto: 'Murzuq - Festung Qala at Turk über dem Ort.jpg',
-      lahde: 'Rudolph Botha, Commons (CC BY-SA 3.0)',
+      lahde: 'Franzfoto, Commons (CC BY-SA 3.0)',
       selite: 'Sama savilinnoitus kohoaa Murzukin kattojen yllä yhä — '
       + 'karavaanit ovat vaihtuneet autoihin, mutta aavikko alkaa '
       + 'entisestä paikasta.',
@@ -223,7 +223,7 @@ export const AFRICA_VALOKUVAT = {
       + 'Kuopasta kasvoi lopulta Iso Reikä.',
     uusi: {
       tiedosto: 'Big Hole Kimberley.jpg',
-      lahde: 'Albert Backer, Commons (CC BY-SA 3.0)',
+      lahde: 'Rudolph Botha, Commons (CC BY-SA 3.0)',
       selite: 'Käsin kaivettu kuoppa on nykyään Iso Reikä: puoli kilometriä '
       + 'leveä ja pohjalla vihreä järvi. Se on suurimpia ihmisen '
       + 'lapiolla kaivamia kuoppia maailmassa.',
@@ -237,7 +237,7 @@ export const AFRICA_VALOKUVAT = {
       + 'kipuavat rinnettä kohti Andohalon aukiota ja sen kirkkoa.',
     uusi: {
       tiedosto: "Analakely vu d'en haut, Madagascar.jpg",
-      lahde: 'Prosper Phissoo, Commons (CC BY-SA 4.0)',
+      lahde: 'Commons (CC BY-SA 4.0)',
       selite: 'Antananarivon keskusta nykyään ylhäältä: Analakelyn '
       + 'torikatokset ja pastellitalot täyttävät laakson, ja kukkulat '
       + 'reunustavat kaupunkia kuten ennenkin.',
@@ -264,7 +264,7 @@ export const AFRICA_VALOKUVAT = {
       + 'takana — keskellä Afrikkaa, lähes päiväntasaajalla.',
     uusi: {
       tiedosto: 'The view of mountain Kilimanjaro from Moshi town in Tanzania.jpg',
-      lahde: 'Erasmus Kamugisha, Commons (CC BY-SA 4.0)',
+      lahde: 'Prosper Phissoo, Commons (CC BY-SA 4.0)',
       selite: 'Kilimandžaro Moshin kaupungin yltä nykyään. Lumihuippu on '
       + 'kutistunut isoisän ajoista, mutta kohoaa yhä yksin savannin '
       + 'yllä.',
@@ -279,7 +279,7 @@ export const AFRICA_VALOKUVAT = {
       + 'tervehti: "Tohtori Livingstone, otaksun?"',
     uusi: {
       tiedosto: 'Lake Tanganyika ,Kigoma port.jpg',
-      lahde: 'DaneyWiki, Commons (CC BY-SA 4.0)',
+      lahde: 'Erasmus Kamugisha, Commons (CC BY-SA 4.0)',
       selite: 'Kigoman satama Tanganjikajärvellä nykyään — Ujijin naapurissa, '
       + 'jossa Stanley ja Livingstone kohtasivat. Järvellä liikennöi '
       + 'yhä yli satavuotias höyrylaiva Liemba.',
@@ -294,7 +294,7 @@ export const AFRICA_VALOKUVAT = {
       + 'vuoristopääkaupunkiin.',
     uusi: {
       tiedosto: 'AddisView.jpg',
-      lahde: 'Silar, Commons (CC BY-SA 4.0)',
+      lahde: 'DaneyWiki, Commons (CC BY-SA 4.0)',
       selite: 'Addis Abeba nykyään: kruunajaiskulkueiden kaupunki on Afrikan '
       + 'diplomatian pääkaupunki, jonka ylle nousee tornitalo toisensa '
       + 'perään.',
@@ -329,7 +329,7 @@ export const AFRICA_VALOKUVAT = {
       + 'oli noussut katedraali, ja kaivaukset olivat vasta alussa.',
     uusi: {
       tiedosto: '01996 01434 Ruins of Antonine Baths at Carthage.jpg',
-      lahde: 'Jamie Tubers, Commons (CC BY-SA 4.0)',
+      lahde: 'Silar, Commons (CC BY-SA 4.0)',
       selite: 'Karthagon kaivaukset valmistuivat kertomaan tarinansa: '
       + 'Antoninuksen termien rauniot ovat nykyään maailmanperintökohde '
       + 'meren äärellä.',
@@ -338,7 +338,7 @@ export const AFRICA_VALOKUVAT = {
   marrakech: {
     tiedosto: 'Marrakech Minaret depuis la rue animée - sap04 10l01821 p.jpg',
     vuosi: 'noin 1924',
-    lahde: 'Ministère de la Culture (CC BY-SA 4.0)',
+    lahde: 'Lucien Roy, Ministère de la Culture (CC BY-SA 4.0)',
     selite: 'Vilkas katu Marrakechissa ja taustalla Koutoubian minareetti — '
       + 'sama torni, jonka mukaan kaupungissa suunnistetaan yhä.',
     uusi: {
@@ -372,7 +372,7 @@ export const AFRICA_VALOKUVAT = {
       + 'vilkkaimpia.',
     uusi: {
       tiedosto: 'Lagos Island City Scape.jpg',
-      lahde: 'Coolthoom1 Removed tilt: Hike395, Commons (CC BY-SA 4.0)',
+      lahde: 'Jamie Tubers, Commons (CC BY-SA 4.0)',
       selite: 'Lagosin saari nykyään: laguunikaupungista on kasvanut Afrikan '
       + 'suurimpia metropoleja, jonka tornit nousevat samalta rannalta '
       + 'kuin kauppahuoneet ennen.',
@@ -387,7 +387,7 @@ export const AFRICA_VALOKUVAT = {
       + 'luki lehdistä.',
     uusi: {
       tiedosto: 'Waving fisherman on Lake Chad (detilt).jpg',
-      lahde: 'Yona Tientcheu, Commons (CC BY-SA 4.0)',
+      lahde: 'Coolthoom1 Removed tilt: Hike395, Commons (CC BY-SA 4.0)',
       selite: 'Kalastaja Tšad-järvellä nykyään. Järvi on kutistunut '
       + 'murto-osaan isoisän ajoista, mutta ruokkii yhä miljoonia '
       + 'ihmisiä neljässä maassa.',
@@ -401,7 +401,7 @@ export const AFRICA_VALOKUVAT = {
       + 'vuoren juurella kohtasivat tuolloin monet maailmat.',
     uusi: {
       tiedosto: 'Mount Cameroon view from Buea (Soppo).jpg',
-      lahde: 'SkyPixels, Commons (CC BY-SA 4.0)',
+      lahde: 'Yona Tientcheu, Commons (CC BY-SA 4.0)',
       selite: 'Kamerunvuori Buean kaupungin yltä nykyään. Tulivuori on yhä '
       + 'toiminnassa — viimeksi se purkautui vuonna 2000.',
     },
@@ -414,7 +414,7 @@ export const AFRICA_VALOKUVAT = {
       + 'nostokurjet keskellä maailman vanhinta aavikkoa.',
     uusi: {
       tiedosto: 'Lüderitz.jpg',
-      lahde: 'Ninaras, Commons (CC BY-SA 4.0)',
+      lahde: 'SkyPixels, Commons (CC BY-SA 4.0)',
       selite: 'Lüderitz nykyään: saksalaisajan jugendtalot seisovat '
       + 'värikkäinä aavikon ja Atlantin välissä, ja laituri on edelleen '
       + 'paikallaan.',
@@ -429,7 +429,7 @@ export const AFRICA_VALOKUVAT = {
       + 'matkalaiseen.',
     uusi: {
       tiedosto: "Jacob's Ladder near St. James Cathedral in Jamestown Saint Helena.jpg",
-      lahde: 'Alexmbogo, Commons (CC BY-SA 4.0)',
+      lahde: 'Commons (CC BY-SA 4.0)',
       selite: 'Jamestown nykyään: Jaakobin portaat — 699 askelmaa — nousevat '
       + 'laakson pohjalta jyrkänteelle. Saarelle pääsee nykyisin myös '
       + 'lentäen.',
@@ -444,7 +444,7 @@ export const AFRICA_VALOKUVAT = {
       + 'suunnittelijan tarkoituksella.',
     uusi: {
       tiedosto: 'Victoria Falls Bridge and Zambezi river.jpg',
-      lahde: 'RomanDeckert, Commons (CC BY-SA 4.0)',
+      lahde: 'Ninaras, Commons (CC BY-SA 4.0)',
       selite: 'Sama silta nykyään Sambian ja Zimbabwen rajalla. Junien '
       + 'rinnalle ovat tulleet benjihyppääjät — vesisumu kastelee yhä '
       + 'molemmat.',
@@ -458,7 +458,7 @@ export const AFRICA_VALOKUVAT = {
       + 'vasta muutaman vuoden ikäinen ratatyöläisten leiri.',
     uusi: {
       tiedosto: 'A giraffe with a beautiful background of Nairobi City Skyline.jpg',
-      lahde: 'Thomas Fuhrmann, Commons (CC BY-SA 4.0)',
+      lahde: 'Alexmbogo, Commons (CC BY-SA 4.0)',
       selite: 'Sama kaupunki sata vuotta myöhemmin: kirahvi laiduntaa '
         + 'kansallispuistossa keskustan tornien katseen alla.',
     },
@@ -472,7 +472,7 @@ export const AFRICA_VALOKUVAT = {
       + 'kymmenkunta vuotta ennen isoisän matkaa.',
     uusi: {
       tiedosto: 'ElFasherDarfurSudan RomanDeckert18022015.jpg',
-      lahde: 'Rachid Hamatou, Commons (CC BY-SA 4.0)',
+      lahde: 'RomanDeckert, Commons (CC BY-SA 4.0)',
       selite: 'El Fasher, Darfurin vanha sulttaanien kaupunki, savitalojen ja '
       + 'hiekkakatujen laajana mattona ennen nykyistä sotaa.',
     },
@@ -500,7 +500,7 @@ export const AFRICA_VALOKUVAT = {
       + 'sanomalehdistä.',
     uusi: {
       tiedosto: 'Erg Chebbi sunset.jpg',
-      lahde: 'Laura Awino, Commons (CC BY-SA 4.0)',
+      lahde: 'Thomas Fuhrmann, Commons (CC BY-SA 4.0)',
       selite: 'Auringonlasku Saharan suurilla dyyneillä. Hiekka vaeltaa '
         + 'tuulen mukana yhä — vain matkustajat ovat vaihtuneet.',
     },
@@ -508,7 +508,7 @@ export const AFRICA_VALOKUVAT = {
   ahaggar: {
     tiedosto: 'Eremitage Foucauld (1991).jpg',
     vuosi: '1991',
-    lahde: 'Bertramz, Commons (CC BY-SA 3.0)',
+    lahde: 'Albert Backer, Commons (CC BY-SA 3.0)',
     selite: 'Charles de Foucauldin kivinen erakkomaja Assekremin laella, '
       + 'rakennettu 1911. Aikakauden valokuvaa vuorilta ei ole vapaana '
       + 'saatavilla — maja seisoo kuvassa samanlaisena kuin isoisän '

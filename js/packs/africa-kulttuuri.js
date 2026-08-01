@@ -583,7 +583,7 @@ export const AFRICA_KULTTUURI = {
         selite: 'Tadrart Acacusin kalliomaalauksia Fezzanissa: ihmishahmoja '
           + 'ja karjaa ajalta, jolloin aavikon paikalla oli järviä ja '
           + 'laidunmaita. Alue on Unescon maailmanperintökohde.',
-        lahde: 'Luca Galuzzi ( Lucag ), Wikimedia Commons (CC BY-SA 2.5)',
+        lahde: 'Luca Galuzzi (Lucag), Wikimedia Commons (CC BY-SA 2.5)',
       },
       {
         tyyppi: 'teksti',

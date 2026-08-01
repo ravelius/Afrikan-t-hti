@@ -23,6 +23,7 @@ const SHELL = [
   './js/packs/africa-countries.js',
   './js/packs/omat-tiivistelmat.js',
   './js/packs/liput-paikalliset.js',
+  './js/packs/lippu-tekijat.js',
   './js/packs/valokuvat-paikalliset.js',
   './js/packs/africa-valokuvat.js',
   './js/packs/africa-saapumiset.js',

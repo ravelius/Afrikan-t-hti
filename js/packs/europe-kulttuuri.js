@@ -76,7 +76,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Château d\'If Marseillen lahdella. Linnoitus valmistui '
           + '1531 puolustamaan satamaa; vankilana se toimi yli kolmesataa '
           + 'vuotta. Saarelta ei tiettävästi ole koskaan paennut kukaan.',
-        lahde: 'Milena Bielecka-Sujak, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Wikimedia Commons (CC BY-SA 4.0)',
         wiki: "Château d'If",
       },
       {
@@ -210,7 +210,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Bronisław Chromyn veistämä Smok Wawelski (1972) '
           + 'Veiksel-joen rannassa lohikäärmeen luolan suulla. Tulen '
           + 'saa nykyään puhallettua myös tekstiviestillä.',
-        lahde: 'Yukof, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Milena Bielecka-Sujak, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Wawel',
       },
       {
@@ -276,7 +276,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Sebiljin kioski Baščaršijan aukiolla. Nykyinen kioski '
           + 'on vuodelta 1891, ja kyyhkyjen määrästä aukio on saanut '
           + 'lempinimensä "kyyhkytori".',
-        lahde: 'Stevan Kragujević, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Yukof, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Baščaršija',
       },
       {
@@ -291,7 +291,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Nada Mamula (1927–2001) esiintymässä televisiossa '
           + 'vuonna 1962. Hän oli sevdalinkan tunnetuimpia tulkitsijoita, '
           + 'ja hänen levytyksensä ovat yhä mittapuu.',
-        lahde: 'BiHVolim, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Stevan Kragujević, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Sevdalinka',
         musiikki: 'https://music.apple.com/fi/artist/nada-mamula/289134144',
         musiikkiNimi: 'Nada Mamula Apple Musicissa',
@@ -308,7 +308,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Latinalaissilta Sarajevossa. Paikalla on ollut silta '
           + '1500-luvulta asti, ja nykyinen kiviholvi on 1790-luvulta — '
           + 'se on seissyt paikallaan kaikkien vaiheiden läpi.',
-        lahde: 'Miyagawa, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'BiHVolim, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Stari most',
       },
     ],
@@ -427,7 +427,7 @@ export const EUROPE_KULTTUURI = {
           + 'kävellen — halvin kunnon ateria kaupungissa.',
         selite: 'Souvlaki-annos ateenalaisessa kojussa: vartaat, pita ja '
           + 'ranskalaiset samassa käärössä, kuten paikallinen tapa vaatii.',
-        lahde: 'NikonZ7II, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Miyagawa, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Souvlaki',
       },
       {
@@ -473,7 +473,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Fontana di Trevi valmistui 1762. Keskellä on meren '
           + 'jumala Oceanus simpukkavaunuissaan, ja vesi tulee yhä '
           + 'antiikin akveduktia pitkin.',
-        lahde: 'Saverio.G, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'NikonZ7II, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Trevin suihkulähde',
         // Kenttä-äänitys Rooman kadulta suihkulähteelle käveltäessä —
         // ei Trevin vaan Pantheonin aukiolta, mutta sama ääni: askelia
@@ -508,7 +508,7 @@ export const EUROPE_KULTTUURI = {
           + 'Virgo, syöttää yhä Trevin lähdettä.',
         selite: 'Akveduktipuisto kaupungin laidalla: Aqua Claudian kaaret '
           + 'jatkuvat peltojen yli. Rakennettu vuosina 38–52 jKr.',
-        lahde: 'Petro Stelte, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Saverio.G, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Rooman akveduktit',
       },
     ],
@@ -575,7 +575,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Oliivinkorjuuta Sitiassa Itä-Kreetalla. Verkot '
           + 'levitetään puun alle ja oksat ravistellaan tai kammataan '
           + 'tyhjiksi.',
-        lahde: 'Lookandlike, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Petro Stelte, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Oliivi',
       },
     ],
@@ -608,7 +608,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Sisilialaisia pupi-nukkeja haarniskoissaan. Nuket '
           + 'painavat jopa kymmenen kiloa, ja niitä ohjataan '
           + 'rautatangoilla ylhäältä.',
-        lahde: 'Benjamín Núñez González, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Lookandlike, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Opera dei pupi',
       },
       {
@@ -637,7 +637,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Ballarò-tori Palermossa. Kojujen välissä myydään kalaa, '
           + 'vihanneksia ja katuruokaa; markkina alkaa aamuvarhain ja '
           + 'jatkuu iltaan.',
-        lahde: 'Bernard Gagnon, Wikimedia Commons (CC BY-SA 4.0)',
+        lahde: 'Benjamín Núñez González, Wikimedia Commons (CC BY-SA 4.0)',
         wiki: 'Palermo',
         // Kenttä-äänitys juuri tältä torilta maaliskuussa 2009.
         aani: 'https://archive.org/download/aporee_6826_8498/palermoballarmarzo2009.MP3',
@@ -672,7 +672,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Klapa-yhtye laulamassa Orebićissä. Laulajat asettuvat '
           + 'lähelle toisiaan, jotta kukin kuulee muut ilman '
           + 'vahvistusta.',
-        lahde: 'Quahadi Añtó, Wikimedia Commons (CC BY-SA 3.0)',
+        lahde: 'Quahadi, Añtó, Wikimedia Commons (CC BY-SA 3.0)',
         wiki: 'Klapa',
         musiikki: 'https://music.apple.com/fi/search?term=klapa',
         musiikkiNimi: 'Klapa-lauluja Apple Musicissa',

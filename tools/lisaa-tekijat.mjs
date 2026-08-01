@@ -53,8 +53,14 @@ function onJoTekija(lahde) {
  * lukukelvottoman ja katkeaisi kesken.
  */
 function siisti(arvo) {
+  // Tagit poistetaan ilman välilyöntiä: nimi voi olla pilkottu useaan
+  // span-elementtiin kirjainten värittämiseksi ("A"+"ngelus"), ja
+  // välilyönti tekisi siitä "A ngelus". Rivinvaihdot ja peräkkäiset
+  // linkit erotetaan erikseen, ettei nimiä liimaudu yhteen.
   let s = (arvo ?? '')
-    .replace(/<[^>]*>/g, ' ')
+    .replace(/<br\s*\/?>|<\/(p|div|li|tr)>/gi, ' ')
+    .replace(/<\/a>\s*<a\b[^>]*>/gi, ', ')
+    .replace(/<[^>]*>/g, '')
     .replace(/&nbsp;/gi, ' ')
     .replace(/&amp;/gi, '&')
     .replace(/&[a-z]+;/gi, ' ')
@@ -73,6 +79,8 @@ function siisti(arvo) {
   s = s.replace(/\s+from\s+.*$/i, '');
   // Wikipedia-tunnus suluissa ("J Williams (= Hammy07 at en.wikipedia)")
   s = s.replace(/\s*\((=\s*)?[^)]*\b(at|wikipedia|wikimedia)\b[^)]*\)/i, '');
+  // Elinvuodet eivät kuulu lähdemerkintään ("Lucien Roy (d. 1941)")
+  s = s.replace(/\s*\((k\.|d\.|s\.|b\.|\d{4})[^)]*\)\s*$/i, '');
   // Verkko-osoite ei ole nimi
   s = s.replace(/,?\s*(https?:\/\/|www\.)\S*/gi, '');
   s = s.replace(/[,;.]\s*$/, '').replace(/\s+\.$/, '').trim();
@@ -106,7 +114,16 @@ function parit(sisalto) {
     const seuraavaTiedosto = merkit.slice(i + 1).find((x) => x.laji === 'tiedosto');
     if (!seuraava) continue;
     if (seuraavaTiedosto && seuraavaTiedosto.kohta < seuraava.kohta) continue;
-    ulos.push({ tiedosto: merkit[i].arvo, lahde: seuraava.arvo, lahdeKoko: seuraava.koko });
+    ulos.push({
+      tiedosto: merkit[i].arvo,
+      lahde: seuraava.arvo,
+      // Kohta ja pituus, ei merkkijono: sama lähdeteksti ("Commons
+      // (CC BY-SA 3.0)") toistuu kymmenillä kuvilla, ja merkkijonoon
+      // osuva replace kirjoittaisi tekijän aina tiedoston ensimmäiseen
+      // esiintymään — eli väärän kuvan kohdalle.
+      kohta: seuraava.kohta,
+      pituus: seuraava.koko.length,
+    });
   }
   return ulos;
 }
@@ -128,7 +145,6 @@ const tarvitsevat = [...kaikki.entries()]
 
 console.log(`Kuvia paketeissa: ${kaikki.size}`);
 console.log(`Näistä CC BY / CC BY-SA ilman tekijää: ${tarvitsevat.length}\n`);
-if (!tarvitsevat.length) process.exit(0);
 
 // --- haetaan tekijät Commonsista --------------------------------------------
 
@@ -168,7 +184,9 @@ const ristiriidat = [];
 const ilmanTekijaa = [];
 
 for (const [f, alkuperainen] of paketit) {
-  let s = alkuperainen;
+  // Kerätään korvaukset ja tehdään ne lopusta alkuun, jotta aiemmat
+  // kohdat eivät siirry.
+  const korvaukset = [];
   for (const p of parit(alkuperainen)) {
     if (!vaatiiTekijan(p.lahde) || onJoTekija(p.lahde)) continue;
     const tekija = tekijat.get(p.tiedosto);
@@ -178,13 +196,19 @@ for (const [f, alkuperainen] of paketit) {
     }
     if (!tekija) { ilmanTekijaa.push(p.tiedosto); continue; }
     const uusi = `${tekija}, ${p.lahde}`;
-    const vanhaKoko = p.lahdeKoko;
-    const uusiKoko = `lahde: '${uusi.replace(/'/g, "\\'")}'`;
-    if (!s.includes(vanhaKoko)) continue;
-    s = s.replace(vanhaKoko, uusiKoko);
+    korvaukset.push({
+      kohta: p.kohta,
+      pituus: p.pituus,
+      teksti: `lahde: '${uusi.replace(/'/g, "\\'")}'`,
+    });
+  }
+  if (!korvaukset.length) continue;
+  let s = alkuperainen;
+  for (const k of korvaukset.sort((a, b) => b.kohta - a.kohta)) {
+    s = s.slice(0, k.kohta) + k.teksti + s.slice(k.kohta + k.pituus);
     muutettu += 1;
   }
-  if (s !== alkuperainen && KIRJOITA) writeFileSync(join(JUURI, 'js/packs', f), s);
+  if (KIRJOITA) writeFileSync(join(JUURI, 'js/packs', f), s);
 }
 
 console.log(`Lähdemerkintöjä täydennetty: ${muutettu}`);
@@ -198,4 +222,62 @@ if (ristiriidat.length) {
     console.log(`  ✗ ${n}\n      paketissa: ${oma}\n      Commons:   ${commons}`);
   }
 }
+// --- liput ------------------------------------------------------------------
+//
+// Lippukuvilla ei ole lähdekenttää: ne näytetään pieninä tervehdysten
+// vieressä, eikä jokaisen alle mahdu tekijäriviä. Valtaosa on public
+// domainia, mutta muutama on CC BY-SA ja vaatii nimeämisen. Ne kerätään
+// omaan tiedostoonsa, jonka peli näyttää periaatelapun lopussa.
+
+const liput = new Set();
+for (const s of paketit.values()) {
+  for (const m of s.matchAll(/lippu: '((?:[^'\\]|\\.)*)'/g)) {
+    liput.add(m[1].replace(/\\(['"\\])/g, '$1'));
+  }
+}
+
+const lippuTekijat = [];
+const lippuLista = [...liput];
+for (let i = 0; i < lippuLista.length; i += 25) {
+  const era = lippuLista.slice(i, i + 25);
+  let d;
+  try {
+    d = hae('https://commons.wikimedia.org/w/api.php?format=json&action=query'
+      + '&prop=imageinfo&iiprop=extmetadata&iiextmetadatafilter=Artist|LicenseShortName'
+      + '&titles=' + encodeURIComponent(era.map((t) => `File:${t}`).join('|')));
+  } catch { nuku(5); continue; }
+  const alkuun = new Map((d.query?.normalized ?? []).map((n) => [n.to, n.from]));
+  for (const sivu of Object.values(d.query?.pages ?? {})) {
+    const nimi = (alkuun.get(sivu.title) ?? sivu.title).replace(/^File:/, '');
+    const m = sivu.imageinfo?.[0]?.extmetadata;
+    if (!m) continue;
+    const lisenssi = siisti(m.LicenseShortName?.value);
+    if (!vaatiiTekijan(lisenssi)) continue;
+    lippuTekijat.push({ tiedosto: nimi, tekija: siisti(m.Artist?.value), lisenssi });
+  }
+  nuku(2);
+}
+
+lippuTekijat.sort((a, b) => a.tiedosto.localeCompare(b.tiedosto, 'fi'));
+console.log(`\nLippuja: ${liput.size}, näistä nimeämistä vaativia: ${lippuTekijat.length}`);
+for (const l of lippuTekijat) console.log(`  ${l.lisenssi} — ${l.tekija} — ${l.tiedosto}`);
+
+if (KIRJOITA) {
+  const rivit = lippuTekijat.map((l) => `  { tiedosto: '${l.tiedosto.replace(/'/g, "\\'")}', `
+    + `tekija: '${l.tekija.replace(/'/g, "\\'")}', lisenssi: '${l.lisenssi}' },`).join('\n');
+  writeFileSync(join(JUURI, 'js/packs/lippu-tekijat.js'),
+    `// Lippukuvien tekijät, jotka lisenssi vaatii nimeämään.\n`
+    + `//\n`
+    + `// Liput näytetään pieninä tervehdysten vieressä, eikä jokaisen alle\n`
+    + `// mahdu omaa lähderiviä. Valtaosa lipuista on public domainia, joten\n`
+    + `// tässä ovat vain ne muutama, joiden lisenssi (CC BY / CC BY-SA)\n`
+    + `// edellyttää tekijän nimeämistä. Peli näyttää listan periaatelapun\n`
+    + `// lopussa.\n`
+    + `//\n`
+    + `// Tuotettu komennolla tools/lisaa-tekijat.mjs --kirjoita.\n`
+    + `// Älä muokkaa käsin: uusi lippu ilmestyy tänne ajamalla työkalu.\n`
+    + `export const LIPPU_TEKIJAT = [\n${rivit}\n];\n`);
+  console.log('  → js/packs/lippu-tekijat.js kirjoitettu');
+}
+
 console.log(KIRJOITA ? '\nKirjoitettu.' : '\nKuivaharjoitus — aja --kirjoita tehdäksesi muutokset.');

@@ -47,6 +47,7 @@ import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
 import { EUROPE_MAATIEDOT } from './packs/europe-maatiedot.js';
 import { EUROPE_ARTIKKELIT } from './packs/europe-artikkelit.js';
+import { LIPPU_TEKIJAT } from './packs/lippu-tekijat.js';
 
 // Uuden mallin saapumistekstit laudoittain (Afrikka valmis, Eurooppa
 // rakentuu kaupunki kerrallaan — pilotti: Venetsia).
@@ -3912,6 +3913,18 @@ export class UI {
       + 'on tehnyt. Peli itse on tekijänsä omaisuutta: sitä saa pelata '
       + 'ja lähdekoodia lukea vapaasti, mutta julkaisuun tai omaan '
       + 'tuotteeseen tarvitaan lupa.');
+
+    // Lippukuvat näkyvät pieninä tervehdysten vieressä, eikä niiden alle
+    // mahdu omaa lähderiviä. Valtaosa on public domainia, mutta muutaman
+    // lisenssi vaatii tekijän nimeämisen — se tehdään tässä, jotta
+    // "jokaisen kohdalla lukee kuka sen on tehnyt" pitää paikkansa.
+    if (LIPPU_TEKIJAT.length) {
+      const lippurivi = html('p', 'periaate-teksti periaate-liput');
+      lippurivi.textContent = `Lippukuvat ovat Wikimedia Commonsista. `
+        + `Näiden tekijät lisenssi käskee nimetä: `
+        + `${LIPPU_TEKIJAT.map((l) => `${l.tekija} (${l.lisenssi})`).join(', ')}.`;
+      kortti.appendChild(lippurivi);
+    }
 
     const linkit = html('p', 'periaate-linkit');
     const gh = html('a', 'periaate-linkki', 'Pelin GitHub-sivu');
