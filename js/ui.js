@@ -1494,6 +1494,13 @@ export class UI {
         return;
       }
       if (this.aloitusZoom || !this.zoomTarpeen()) return;
+      // Zoomaus lähtee vain itse kartalta. Kartan päällä kelluu muutakin
+      // — lentokalvo "Astu mantereelle" -nappeineen, aloitusportti,
+      // matkakirjan kortti — ja koska tämä kuuntelija on kaappaus-
+      // vaiheessa, se söi niiden napautukset ennen kuin ne ehtivät
+      // nappiin asti. Lentokalvo jäi silloin ruudulle eikä Euroopan
+      // kartta auennut lainkaan.
+      if (!e.target.closest('svg')) return;
       // Sama napautuszoomaus toimii myös silloin, kun maailmankartalle
       // palataan kesken matkan (omistajan havainto): kartta on yhtä pieni
       // kummallakin kerralla. Aloitusportin takana zoomausta ei tarjota.
