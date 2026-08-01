@@ -302,30 +302,29 @@ kuvat 38 Mt). Yksikin katkennut lataus olisi kaatanut koko asennuksen.
 Nyt koodi ja tekstit haetaan yhtenä eränä ja media yksitellen niin, että
 yksi virhe ohitetaan.
 
-## 6. Nopan varjo — lyijykynää, ei valokuvaa
+## 6. Nopan varjo — kokeiltiin kynää, jäätiin tavalliseen
 
 **[Omistaja]** "Saisiko nopalle voimakkaamman varjon kun se on laudan
-päällä. Nyt näyttää kelluvalta." Ja heti perään: "Saisiko nopan varjosta
-lyijykynällä tehdyn näköisen kuin sarjakuvissa? Sopisi tyyliin. Sitä ei
-tarvitse animoida, riittää kun tulee kun noppa on pysähtynyt."
+päällä. Nyt näyttää kelluvalta." Sitten: "Saisiko nopan varjosta
+lyijykynällä tehdyn näköisen kuin sarjakuvissa?" Ja lopulta: "Vaihda
+nopan varjo normaaliksi, eli ei käsin piirretyksi."
 
 **[Opus]** Kelluminen johtui geometriasta, ei väristä: varjoellipsi oli
 tasan nopan kokoinen ja vain 5 px siirtynyt, joten kuutio peitti sen
 kokonaan. Varjo on nyt leveämpi, matalampi ja `margin-top`illa nopan
-alareunan alle, jolloin se kurkistaa esiin.
+alareunan alle, jolloin se kurkistaa esiin. **Tämä korjaus jäi voimaan —
+se oli varsinainen vika**, ja pelkkä värin tummentaminen ei olisi
+auttanut lainkaan.
 
-Lepovarjo on valmiiksi piirretty SVG-viivoitus
-(`tools/make-die-shadow.mjs` → data-URI CSS:ssä). Kolme asiaa, jotka
-kannattaa tietää jos sitä säätää:
+Kynäviivoitus tehtiin ja poistettiin omistajan pyynnöstä (v.112 → v.115).
+Jos joku palaa siihen: viivoja pitää olla vähän ja ne paksuja, koska
+kuvio piirtyy vain 45–75 pikselin levyisenä — ensimmäinen versio 35
+ohuella viivalla näytti harmaalta udulta, ei kynänjäljeltä. Toteutus ja
+generaattori löytyvät PR:stä #212 (`tools/make-die-shadow.mjs`).
 
-- **Viivoja on vähän ja ne ovat paksuja.** Kuvio piirtyy 45–75 pikselin
-  levyisenä; ensimmäinen versio 35 ohuella viivalla näytti harmaalta
-  udulta, ei kynänjäljeltä.
-- **Tummuus painottuu keskelle**, koska noppa peittää yläosan ja
-  näkyviin jää alareunan kaari.
-- **Blur-suodin poistui varjosta kokonaan.** Pehmeys tulee nyt
-  liukuvärjäyksestä. Suodin olisi sumentanut myös kynäviivoituksen,
-  koska `::after` on suodatetun elementin sisällä.
+**Yksi asia jäi voimaan pysyvästi:** varjossa ei ole blur-suodinta
+lainkaan. Pehmeys tulee liukuvärjäyksestä, ja suodin maksoi joka
+kehyksellä — se oli osa nopanheiton 15 → 60 fps -korjausta.
 
 ## 7. Euroopan viisi kaupunkia valmiiksi — 1.8.2026
 
