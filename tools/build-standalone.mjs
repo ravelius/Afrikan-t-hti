@@ -17,6 +17,7 @@ const read = (p) => readFileSync(join(root, p), 'utf8');
 const MODULES = [
   'js/tokens.js',
   'js/wiki.js',
+  'js/media.js',
   'js/packs/maailma-questions.js',
   'js/packs/maailma.js',
   'js/packs/africa-questions.js',
@@ -32,6 +33,7 @@ const MODULES = [
   'js/packs/europe-artikkelit.js',
   'js/packs/valokuvat-paikalliset.js',
   'js/packs/liput-paikalliset.js',
+  'js/packs/lippu-tekijat.js',
   'js/packs/africa-valokuvat.js',
   'js/packs/africa-saapumiset.js',
   'js/packs/africa-kulttuuri.js',
