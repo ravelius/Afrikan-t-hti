@@ -88,8 +88,21 @@ function etakoko(url) {
   try {
     const ulos = execFileSync('curl', ['-sSIL', '--max-time', '45', '-A', AGENTTI, url],
       { maxBuffer: 1e7 }).toString();
-    const osumat = [...ulos.matchAll(/^content-length:\s*(\d+)/gim)].map((m) => Number(m[1]));
-    return osumat.length ? osumat.at(-1) : null;
+    // Uudelleenohjausketjussa on monta vastausta, ja niiden joukkoon
+    // eksyy myös välipalvelimen virhesivuja. Aiemmin otettiin ketjun
+    // viimeinen content-length sellaisenaan, jolloin hetkellinen
+    // virhevastaus antoi odotetuksi kooksi 170 tavua ja täysin ehjä
+    // lataus tuomittiin katkenneeksi. Kelpuutetaan vain onnistuneen
+    // vastauksen ilmoittama koko.
+    let onnistui = false;
+    let koko = null;
+    for (const rivi of ulos.split(/\r?\n/)) {
+      const tila = rivi.match(/^HTTP\/[\d.]+\s+(\d{3})/i);
+      if (tila) onnistui = tila[1] === '200';
+      const pituus = rivi.match(/^content-length:\s*(\d+)/i);
+      if (pituus && onnistui) koko = Number(pituus[1]);
+    }
+    return koko;
   } catch {
     return null;
   }

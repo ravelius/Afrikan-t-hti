@@ -100,12 +100,13 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 
 **Media-repon PR #1 on yhdistetty** (1.8.2026), joten peili on käytössä.
 
-**Peilin koko kannattaa katsoa ennen Afrikkaa.** Euroopan kaupunkiäänet
-kasvattavat peiliä noin 280 megatavulla (kuvat 111 Mt + vanhat äänet
-181 Mt + uudet 280 Mt ≈ 570 Mt). Afrikan 39 kaupunkia toisivat saman
-verran lisää, jolloin GitHub Pagesin suositusraja (1 Gt) alkaa tulla
-vastaan. Vaihtoehtoja: yksi äänite kaupunkia kohti kahden sijaan, tai
-lyhyempi kuin kolmen minuutin katko. **Omistajan päätös.**
+**Peilin koko ei ole enää ongelma, mutta pidä sitä silmällä.** Kolmen
+minuutin katko kutisti peilin **580 → 399 megatavuun**, vaikka samalla
+tuli 69 uutta äänitettä: 22 vanhaa äänitettä oli täysmittaisena, ja
+niistä kolme oli 25–30 megatavua. Afrikan 39 kaupunkia toisivat noin
+150 Mt lisää, joten GitHub Pagesin suositusrajaan (1 Gt) on hyvin
+matkaa. Jos raja joskus lähestyy, keinot ovat yksi äänite kaupunkia
+kohti kahden sijaan tai lyhyempi katko.
 
 **Venäjänkielisten vähemmistöjen liput** (Ukraina, Viro, Latvia,
 Liettua) jätettiin pois omistajan päätöksellä 1.8.2026. Muilla
@@ -175,6 +176,11 @@ Tarkistustyökalut, aja nämä kun sisältö muuttuu:
   `node tools/peilaa-media.mjs --ulos <media-repo>`
 - Työkalu ohittaa jo ladatut tiedostot, joten uusintajo on nopea.
   **Aja se aina, kun peliin tulee uusia kuvia tai ääniä.**
+- Peiliin menevät mp3:t leikataan kolmeen minuuttiin latauksen
+  yhteydessä. Ennen 1.8. peilatut ovat yhä täysmittaisia; ne saa
+  lyhennettyä ilman uutta latausta komennolla
+  `node tools/leikkaa-peilin-aanet.mjs --ulos <media-repo>`
+  (`--kuiva` näyttää mitä tapahtuisi).
 
 Peilaustyökalusta korjattiin 1.8. kolme vikaa. Älä palauta vanhaa
 käytöstä:
@@ -188,6 +194,12 @@ käytöstä:
 - Pelkkä HTTP 200 ei erota kuvaa virhesivusta. Nyt katsotaan tiedoston
   alkutunniste. **Kokoraja ei kelpaa mittapuuksi** — yksivärinen lippu
   pakkautuu 320 pikselin levyisenä muutamaan sataan tavuun.
+
+Neljäs vika löytyi 1.8. illalla: odotettu koko luettiin uudelleen-
+ohjausketjun **viimeisestä** content-length-otsakkeesta, jolloin
+välipalvelimen hetkellinen virhevastaus antoi odotetuksi kooksi 170
+tavua ja täysin ehjä lataus tuomittiin katkenneeksi. Nyt kelpuutetaan
+vain onnistuneen (200) vastauksen ilmoittama koko.
 
 Huom: Commons vastaa olemattomaan tiedostoon **404**, ei 200. Jos
 näet vastakkaisen väitteen vanhassa raportissa, se on virheellinen.
