@@ -24,7 +24,7 @@
  * julkaistaan GitHub Pagesissa. Osoite kirjoitetaan js/media.js:n
  * MEDIA_PEILI-vakioon.
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -39,12 +39,29 @@ const ULOS = arvo('--ulos', join(JUURI, '..', 'matkakirja-media'));
 const VAIN = arvo('--vain', null);
 const AGENTTI = 'Matkakirja/1.0 (https://github.com/ravelius/Matkakirja)';
 
-/** Yksi HTTP-haku curlilla. node:n fetch ei pääse hiekkalaatikon läpi. */
+/**
+ * Yksi HTTP-haku curlilla. node:n fetch ei pääse hiekkalaatikon läpi.
+ *
+ * Yksittäinen epäonnistuminen ei saa kaataa koko ajoa: isoja
+ * äänitiedostoja on kymmeniä megatavuja, ja ensimmäinen versio kuoli
+ * aikakatkaisuun kesken 13 megatavun latauksen. Siksi aikaraja on
+ * väljä ja virhe palautetaan koodina.
+ */
 function hae(url, tiedosto = null) {
-  const args = ['-sSL', '--max-time', '60', '-A', AGENTTI, url];
+  const args = ['-sSL', '--max-time', '300', '--retry', '2', '--retry-delay', '3',
+    '-A', AGENTTI, url];
   if (tiedosto) args.push('-o', tiedosto, '-w', '%{http_code}');
-  const ulos = execFileSync('curl', args, { maxBuffer: 2e8 });
-  return tiedosto ? ulos.toString().trim() : ulos;
+  try {
+    const ulos = execFileSync('curl', args, { maxBuffer: 3e8, timeout: 330000 });
+    return tiedosto ? ulos.toString().trim() : ulos;
+  } catch (e) {
+    if (tiedosto) {
+      // Keskeneräinen tiedosto pois, jottei sitä pidetä valmiina.
+      try { rmSync(tiedosto, { force: true }); } catch { /* ei ollut */ }
+      return 'virhe';
+    }
+    throw e;
+  }
 }
 
 const nuku = (ms) => execFileSync('sleep', [String(ms / 1000)]);
@@ -138,6 +155,8 @@ async function lataaKuvat(nimet, alikansio, leveys) {
   }
 }
 
+let kokoYhteensa = 0;
+
 function lataaAanet(urlit) {
   const kansio = join(ULOS, 'aanet');
   mkdirSync(kansio, { recursive: true });
@@ -152,7 +171,8 @@ function lataaAanet(urlit) {
     manifesti.aanet[url] = { tiedosto: `aanet/${kohde}`, alkuperainen: url };
     if (existsSync(polku)) continue;
     const koodi = hae(url, polku);
-    if (koodi !== '200') virheet.push(`aanet: ${url} → HTTP ${koodi}`);
+    if (koodi !== '200') virheet.push(`aanet: ${url} → ${koodi}`);
+    else kokoYhteensa += statSync(polku).size;
     nuku(400);
     if ((i + 1) % 10 === 0) console.log(`  aanet: ${i + 1}/${urlit.length}`);
   }
@@ -246,5 +266,5 @@ pelin repossa.
 `);
 }
 
-console.log(`\nValmis. Virheitä: ${virheet.length}`);
+console.log(`\nValmis. Ladattu ${(kokoYhteensa / 1e6).toFixed(1)} Mt. Virheitä: ${virheet.length}`);
 for (const v of virheet.slice(0, 30)) console.log('  ', v);
