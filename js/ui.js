@@ -324,6 +324,9 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
 const ZOOMATTAVAT = new Set(['europe']);
 const MANNER_ZOOM = 2.3;        // kuinka moninkertainen lähikuva on yleiskuvaan
 const MANNER_ZOOM_VIIVE = 1100; // kokonäkymä näkyy tämän verran ennen zoomausta
+// Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
+// alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
+const ALAKAISTA = 0.3;
 // Päiväkirjakortin nurkkahaku: kuinka suuri osa kartasta on "nurkka".
 const FACT_CORNER = 0.34;
 const FACT_WIDTH = 340; // pidettävä samana kuin .fact-card css:ssä
@@ -1066,14 +1069,21 @@ export class UI {
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
     const yleiskuva = Math.min(paneW / box.w, paneH / box.h);
     const skaala = yleiskuva * MANNER_ZOOM;
+    // Laudan eteläpuolelle varataan tilaa alarivin nappien verran, jotta
+    // eteläisimmät kaupungit saa panoroitua niiden alta pois (omistajan
+    // havainto: Kreeta ja Ateena jäivät nappien alle). Tila ei muuta
+    // zoomaustasoa — se vain jatkaa panoroitavaa aluetta, ja siihen
+    // osuu kartan oma Pohjois-Afrikan kaistale.
+    const etelaJatko = (paneH * ALAKAISTA) / skaala;
+    const korkeusYks = box.h + etelaJatko;
     const leveys = Math.round(box.w * skaala);
-    const korkeus = Math.round(box.h * skaala);
-    this.svg.setAttribute('viewBox', `${box.x} ${box.y} ${box.w} ${box.h}`);
+    const korkeus = Math.round(korkeusYks * skaala);
+    this.svg.setAttribute('viewBox', `${box.x} ${box.y} ${box.w} ${korkeusYks}`);
     this.svg.style.width = `${leveys}px`;
     this.svg.style.height = `${korkeus}px`;
     this.svg.style.flex = '0 0 auto';
     this.svg.style.alignSelf = 'flex-start';
-    this.viewBoxSize = { vw: box.w, vh: box.h };
+    this.viewBoxSize = { vw: box.w, vh: korkeusYks };
     this.zoomSkaala = skaala;
     this.zoomYlaReuna = box.y;
     this.panVara = Math.max(0, leveys - paneW);
