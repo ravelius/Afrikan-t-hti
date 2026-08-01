@@ -653,6 +653,10 @@ const REAL_SAMPLES = {
   timeout: { url: 'assets/audio/efekti-aikaloppui.mp3', credit: 'ElevenLabs SFX' },
   flip: { url: 'assets/audio/efekti-kaanto.mp3', credit: 'ElevenLabs SFX' },
   clack: { url: 'assets/audio/efekti-naksu.mp3', credit: 'ElevenLabs SFX' },
+  // Kartan zoomaus. Tiedostoa ei ole vielä generoitu — kunnes se on,
+  // soi alla oleva syntetisoitu moottori. Puuttuva tiedosto ei haittaa:
+  // lataus epäonnistuu hiljaa ja SOUNDS.zoom ottaa vuoron.
+  zoom: { url: 'assets/audio/efekti-zoom.mp3', credit: 'ElevenLabs SFX' },
   star: { url: 'assets/audio/efekti-tahti.mp3', credit: 'ElevenLabs SFX' },
   gem: { url: 'assets/audio/efekti-jalokivi.mp3', credit: 'ElevenLabs SFX' },
   horseshoe: { url: 'assets/audio/efekti-kenka.mp3', credit: 'ElevenLabs SFX' },
@@ -690,6 +694,7 @@ const REAL_PLAYERS = {
   timeout: (s) => s.playSlice('timeout', { dur: 1.6, gain: 0.4, alusta: true }),
   flip: (s) => s.playSlice('flip', { dur: 0.9, gain: 0.35, alusta: true }),
   clack: (s) => s.playSlice('clack', { dur: 0.6, gain: 0.3, alusta: true }),
+  zoom: (s) => s.playSlice('zoom', { dur: 1.2, gain: 0.5, alusta: true }),
   star: (s) => s.playSlice('star', { dur: 2.6, gain: 0.45, alusta: true }),
   gem: (s) => s.playSlice('gem', { dur: 1.6, gain: 0.4, alusta: true }),
   horseshoe: (s) => s.playSlice('horseshoe', { dur: 1.1, gain: 0.4, alusta: true }),
@@ -845,8 +850,8 @@ const SOUNDS = {
 
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(0.05, t0 + 0.05);
-    g.gain.setValueAtTime(0.05, t0 + kesto - 0.1);
+    g.gain.exponentialRampToValueAtTime(0.19, t0 + 0.06);
+    g.gain.setValueAtTime(0.19, t0 + kesto - 0.12);
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + kesto);
 
     osc.connect(lp).connect(sorina).connect(g).connect(s.bus);
@@ -856,8 +861,8 @@ const SOUNDS = {
     lfo.stop(t0 + kesto + 0.05);
 
     // Koneiston kuiva kohina taustalle ja linssin naksahdus loppuun.
-    s.hiss({ dur: kesto, type: 'bandpass', freq: 1800, sweepTo: 2500, gain: 0.014, q: 0.9 });
-    s.knock({ freqs: [520, 900], dur: 0.05, gain: 0.045, q: 8, delay: kesto - 0.02 });
+    s.hiss({ dur: kesto, type: 'bandpass', freq: 1800, sweepTo: 2500, gain: 0.05, q: 0.9 });
+    s.knock({ freqs: [520, 900], dur: 0.06, gain: 0.14, q: 8, delay: kesto - 0.02 });
   },
 
   // Noppa
