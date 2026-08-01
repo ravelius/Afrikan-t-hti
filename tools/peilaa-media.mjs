@@ -86,8 +86,16 @@ function kohteet() {
     .map((f) => readFileSync(join(JUURI, f), 'utf8')).join('\n');
   const kaikki = `${paketit}\n${muut}`;
 
-  const kuvat = new Set([...paketit.matchAll(/tiedosto: ['"]([^'"]+)['"]/g)].map((m) => m[1]));
-  const liput = new Set([...paketit.matchAll(/lippu: '([^']+)'/g)].map((m) => m[1]));
+  // Heittomerkilliset nimet ("Château d\'If") katkesivat yksinkertaisella
+  // hakukuviolla ensimmäiseen hipsuun ja päätyivät 404:ään. Siksi
+  // kelpuutetaan myös suojatut merkit ja puretaan suojaus.
+  const pura = (t) => t.replace(/\\(['"\\])/g, '$1');
+  const poimi = (kentta) => new Set([
+    ...[...paketit.matchAll(new RegExp(`${kentta}: '((?:[^'\\\\]|\\\\.)*)'`, 'g'))].map((m) => pura(m[1])),
+    ...[...paketit.matchAll(new RegExp(`${kentta}: "((?:[^"\\\\]|\\\\.)*)"`, 'g'))].map((m) => pura(m[1])),
+  ]);
+  const kuvat = poimi('tiedosto');
+  const liput = poimi('lippu');
   const aanet = new Set(
     [...kaikki.matchAll(/https?:\/\/(?:cdn\.freesound\.org|archive\.org)\/[^'"\s)#]+/g)]
       .map((m) => m[0]),
