@@ -118,20 +118,10 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
     audio.pause();
     sfx.setAmbience(fallbackType ?? null);
   };
-  const petti = () => {
-    if (!varareittiKokeiltu && onPeilista(audio.getAttribute('src'))) {
-      varareittiKokeiltu = true;
-      peiliPetti();
-      if (nykyinen !== oma) return;
-      audio.src = osoite;
-      audio.load();
-      audio.play().catch(varalle);
-      return;
-    }
-    varalle();
-  };
-  audio.addEventListener('error', petti);
-  audio.play().then(() => {
+  // Soitto ja onnistumisen käsittely ovat omassa funktiossaan, jotta
+  // varareitti käy täsmälleen saman polun: ilman sitä äänite jäisi
+  // vaihdon jälkeen soimaan nollavoimakkuudella.
+  const soi = () => audio.play().then(() => {
     if (nykyinen !== oma) {
       audio.pause();
       return;
@@ -139,6 +129,20 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
     sfx.setAmbience(null); // synteesi väistyy, kun oikea äänite soi
     haivyta(audio, oma.tavoite);
   }).catch(petti);
+  const petti = () => {
+    if (!varareittiKokeiltu && onPeilista(audio.getAttribute('src'))) {
+      varareittiKokeiltu = true;
+      peiliPetti();
+      if (nykyinen !== oma) return;
+      audio.src = osoite;
+      audio.load();
+      soi();
+      return;
+    }
+    varalle();
+  };
+  audio.addEventListener('error', petti);
+  soi();
 }
 
 // Tietovisan taustamusiikki: hiljainen huililuuppi kysymyksen ajaksi.
