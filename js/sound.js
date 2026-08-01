@@ -647,8 +647,12 @@ function bezierEtenema(x1, y1, x2, y2, t) {
  * alussa, nopea keskellä ja hidas lopussa; moottorin korkeus seuraa
  * samaa kaarta. Nopeus ei laske nollaan — pysähtynyt moottori olisi
  * hiljainen, ja tässä on kyse sävyn elämisestä.
+ *
+ * Koko haarukka on alle yhden: äänite soi hitaampana ja siis
+ * matalampana kuin alkuperäinen, jolloin koneisto kuulostaa
+ * vanhemmalta ja isommalta (omistajan toive).
  */
-function vauhtiKayra(pehmennys, matalin = 0.86, korkein = 1.16, pisteita = 28) {
+function vauhtiKayra(pehmennys, matalin = 0.76, korkein = 1.02, pisteita = 28) {
   const [x1, y1, x2, y2] = pehmennys;
   const vauhdit = [];
   for (let i = 0; i < pisteita; i++) {
@@ -920,19 +924,19 @@ const SOUNDS = {
     // alipäästön takana, ja juuri sitä pieni zoomimoottori kuulostaa.
     const osc = ctx.createOscillator();
     osc.type = 'square';
-    osc.frequency.setValueCurveAtTime(kaari(128, 242), t0, kesto);
+    osc.frequency.setValueCurveAtTime(kaari(106, 201), t0, kesto);
 
     // Kaistanpäästö jättää jäljelle keskialueen sörinän: matalat jyrinät
     // pois, jotta ääni tulee koneistosta eikä kellarista.
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
     bp.Q.value = 1.1;
-    bp.frequency.setValueCurveAtTime(kaari(880, 1280), t0, kesto);
+    bp.frequency.setValueCurveAtTime(kaari(730, 1062), t0, kesto);
 
     // Hammaspyörän vinkuna: ohut sävel moottorin yläpuolella.
     const vinku = ctx.createOscillator();
     vinku.type = 'triangle';
-    vinku.frequency.setValueCurveAtTime(kaari(640, 1210), t0, kesto);
+    vinku.frequency.setValueCurveAtTime(kaari(531, 1004), t0, kesto);
     const vinkuTaso = ctx.createGain();
     vinkuTaso.gain.value = 0.055;
 
@@ -942,7 +946,7 @@ const SOUNDS = {
     sorina.gain.value = 0.78;
     const lfo = ctx.createOscillator();
     lfo.type = 'square';
-    lfo.frequency.setValueCurveAtTime(kaari(60, 106), t0, kesto);
+    lfo.frequency.setValueCurveAtTime(kaari(50, 88), t0, kesto);
     const lfoTaso = ctx.createGain();
     lfoTaso.gain.value = 0.2;
     lfo.connect(lfoTaso).connect(sorina.gain);
