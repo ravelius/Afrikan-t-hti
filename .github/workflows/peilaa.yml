@@ -11,10 +11,24 @@
 # aineistoa ei siis säilytetä missään repossa, mutta työkalu ja lista
 # siitä mitä peilataan ovat täällä pelin oman sisällön vieressä.
 #
-# Ajetaan käsin Actions-välilehdeltä aina kun peliin on lisätty uusia
-# kuvia tai ääniä. Ei automaattisesti pushista: ajo kestää kymmeniä
-# minuutteja, koska jokaisen tiedoston eheys tarkistetaan lähdettä
-# vasten.
+# Ajo käynnistyy itsestään (omistajan toive) eikä sitä tarvitse muistaa
+# ajaa käsin. Kolme tapaa:
+#
+#   1. Push mainiin, joka koskee pakettitiedostoja tai peilaustyökalua.
+#      Juuri silloin peiliin on voinut tulla uutta aineistoa; muut
+#      muutokset (tyylit, dokumentit, pelilogiikka) eivät käynnistä ajoa.
+#   2. Kerran viikossa. Jos jokin lähde oli poikki peilaushetkellä, tiedosto
+#      jäi puuttumaan hiljaa — viikkoajo poimii sen kun lähde palaa.
+#   3. Käsin Actions-välilehdeltä, jolloin voi valita yhden lajin.
+#
+# Aiempi kommentti varoitti, ettei tätä saa ajaa pushista, koska ajo kestää
+# kymmeniä minuutteja. Se pätee vain ensimmäiseen ajoon: kun ämpärissä on jo
+# kaikki, ajo vertaa tilanteen ja lopettaa. Mitattu 2.8.2026: koko kierros
+# 56 sekuntia, josta noudon osuus 37 s. Pitkä ajo tulee vain silloin, kun
+# uutta aineistoa on oikeasti paljon — ja silloin sitä pitääkin odottaa.
+#
+# Rinnakkaiset ajot eivät ole vaara: concurrency-ryhmä pitää ne jonossa
+# (alempana), eikä vienti käytä --deleteä.
 #
 # Salaisuudet ovat tämän repon Actions-asetuksissa eivätkä koskaan
 # täällä:
@@ -23,6 +37,22 @@
 name: Peilaa media R2:een
 
 on:
+  push:
+    branches: [main]
+    paths:
+      # Kaikki peilattava on määritelty paketeissa: kuvien ja äänten
+      # osoitteet ovat korttien tiedoissa.
+      - 'js/packs/**'
+      # Työkalu päättää mitä ja miten peilataan.
+      - 'tools/peilaa-media.mjs'
+      - 'tools/leikkaa-mp3.mjs'
+      # Ajo itse: näin sen muutokset tulevat kokeilluiksi heti eivätkä
+      # jää piiloon seuraavaan kertaan asti.
+      - '.github/workflows/peilaa.yml'
+  schedule:
+    # Sunnuntaisin 04:15 UTC. Vartin yli, koska tasatunnit ovat GitHubilla
+    # ruuhkaisimmat ja ajo voi silloin jäädä odottamaan konetta.
+    - cron: '15 4 * * 0'
   workflow_dispatch:
     inputs:
       lajit:
@@ -110,19 +140,31 @@ jobs:
 
       - name: Peilaa puuttuvat
         env:
-          LAJIT: ${{ inputs.lajit }}
+          # Lajivalinta on olemassa vain käsin käynnistettäessä. Pushista ja
+          # ajastuksesta inputs.lajit on tyhjä merkkijono, jolloin alla oleva
+          # vertailu ohittaisi kaikki lajit ja ajo menisi läpi vihreänä
+          # peilaamatta mitään. Oletus on siksi pakko antaa tässä.
+          LAJIT: ${{ inputs.lajit || 'kaikki' }}
         run: |
           set -euo pipefail
           # Työkalu ajetaan laji kerrallaan, jotta tekstihaku
           # (--vain tekstit) jää pois: se lataa satoja wikiartikkeleita
           # kirjoittamisen raaka-aineeksi eikä kuulu ämpäriin.
           # Osittainen ajo säilyttää muiden lajien merkinnät manifestissa.
+          ajettu=0
           for laji in kuvat liput aanet; do
             if [ "$LAJIT" != "kaikki" ] && [ "$LAJIT" != "$laji" ]; then continue; fi
             echo "::group::$laji"
             node tools/peilaa-media.mjs --ulos media --vain "$laji"
             echo "::endgroup::"
+            ajettu=$((ajettu + 1))
           done
+          # Vihreä ajo, joka ei peilannut mitään, on pahempi kuin punainen:
+          # se näyttää siltä että aineisto on kunnossa.
+          if [ "$ajettu" -eq 0 ]; then
+            echo "::error::Yhtään lajia ei peilattu (LAJIT='$LAJIT')."
+            exit 1
+          fi
 
       - name: Vie ämpäriin
         run: |
