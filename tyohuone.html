@@ -127,6 +127,7 @@
       <button data-tab="aanet">Äänet</button>
       <button data-tab="tekstit">Tekstit</button>
       <button data-tab="kuvat">Kuvat</button>
+      <button data-tab="juoni">Juoni</button>
       <button data-tab="pelit">Peli-ideat</button>
       <button data-tab="lahteet">Lähteet</button>
       <button data-tab="moottorit">Moottorit</button>
@@ -144,6 +145,32 @@
        paketeista, joten ne eivät voi vanhentua; peilin luvut luetaan
        media-repon manifestista, joten ne kertovat mitä siellä juuri nyt on.</p>
     <div id="tilastot" class="taulu"></div>
+  </section>
+
+  <!-- PELI-IDEAT -->
+  <!-- JUONI -->
+  <section id="tab-juoni" hidden>
+    <h2>Pelin tavoite</h2>
+    <p id="juoni-tavoite"></p>
+    <div id="juoni-palkinto" class="kortti"></div>
+
+    <h2 style="margin-top:1.4rem">Aarteet</h2>
+    <p>Yksi jokaisesta maanosasta. Nykyiset aarteet säilyvät tarinoineen.</p>
+    <div id="aarre-lista"></div>
+
+    <h2 style="margin-top:1.4rem">Kaupunkikartat</h2>
+    <p>Kaupungin sisällä välimatkat ovat pieniä, joten <b>aika kuluu
+       hitaammin</b> kuin mantereella. Näin kaupunkiin pysähtyminen ei ole
+       pois kahdeksankymmenestä päivästä samalla tavalla — se kannattaa,
+       ja juuri siellä ehtii oppia.</p>
+    <div id="kaupunki-lista"></div>
+
+    <h2 style="margin-top:1.4rem">Varusteet</h2>
+    <p>Matkailijan varusteita, jotka helpottavat matkaa ja oppimista —
+       eivät jalokiviä, jotka ovat pelkkää rahaa. Jokainen tarttuu pelin
+       omaan järjestelmään. Rahaa ja varusteita saa eri paikoista
+       riippumatta siitä, missä maanosassa ollaan.</p>
+    <div id="varuste-lista"></div>
   </section>
 
   <!-- PELI-IDEAT -->
@@ -525,6 +552,110 @@
       { nimi: 'Muistipeli', tila: 'idea',
         kuvaus: 'Matkamuistojen tai laattojen parit lyhyenä muistipelinä — kevyt välipala nuoremmille pelaajille.' },
     ];
+    // --- juoni: tavoite, aarteet ja varusteet -------------------------------
+    //
+    // Omistajan linjaus 2.8.2026. Tavoite on PÄÄTETTY; varusteiden tilat
+    // kertovat mikä on sovittu ja mikä vielä idea.
+    //
+    // Tämä vastasi samalla työlistan pitkään auki olleeseen kysymykseen:
+    // 80 päivää ei ole lautakohtainen vertailuluku vaan YKSI matka koko
+    // maailman ympäri — kuten isoisän päiväkirjassa 1873.
+    const JUONI = {
+      tavoite: 'Löydä aarre jokaisesta maanosasta ja palaa Lontooseen — '
+        + 'kaikki alle kahdeksassakymmenessä päivässä.',
+      palkinto: 'Suurin palkinto ja löytö on se, että pelaaja on oppinut '
+        + 'ymmärtämään maailmaa paremmin: sen ihmisiä, kulttuureja ja '
+        + 'politiikkaa. Kaikki kokemukset ja työvälineet matkan varrella '
+        + 'palvelevat sitä — eivät pisteitä.',
+    };
+
+    const AARTEET = [
+      { maanosa: 'Eurooppa', aarre: 'Meripihkahuone', tila: 'kaytossa' },
+      { maanosa: 'Afrikka', aarre: 'Tähti', tila: 'kaytossa' },
+      { maanosa: 'Lähi-itä', aarre: 'laudan oma aarre', tila: 'kaytossa' },
+      { maanosa: 'Aasia', aarre: 'laudan oma aarre', tila: 'kaytossa' },
+    ];
+
+    // tila: kaytossa | sovittu | idea
+    const VARUSTEET = [
+      { nimi: 'Erikoissilmälasit', tila: 'sovittu',
+        vaikutus: 'Karsii tietovisassa kaksi väärää vaihtoehtoa ilmaiseksi.',
+        huomiot: 'Omistajan oma esimerkki. Halpa toteuttaa: mekaniikka on jo '
+          + 'olemassa maksullisena (50:50 maksaa 80 puntaa) — varuste tekee '
+          + 'siitä ilmaisen kerran.' },
+      { nimi: 'Suosituskirje', tila: 'idea',
+        vaikutus: 'Yksi ilmainen laiva- tai lentomatka.',
+        huomiot: 'Toinen halvoista: maksumekaniikka on jo olemassa. Sopii '
+          + 'kahdeksankymmenen päivän kiireeseen.' },
+      { nimi: 'Kiikari', tila: 'idea',
+        vaikutus: 'Näet naapurikaupunkien laatat käymättä siellä.',
+        huomiot: 'Kiikaritehoste on jo piirretty peliin (etusivun linssi), '
+          + 'joten ulkoasu on valmiina.' },
+      { nimi: 'Kompassi', tila: 'idea',
+        vaikutus: 'Saat valita nopan tuloksen kerran.',
+        huomiot: 'Vahvin näistä — kannattaa olla harvinainen.' },
+      { nimi: 'Isoisän muistikirja', tila: 'idea',
+        vaikutus: 'Yksi uusi yritys väärin menneeseen kysymykseen.',
+        huomiot: 'Sopii tarinaan: peli perustuu isoisän päiväkirjaan.' },
+      { nimi: 'Kiniini', tila: 'idea',
+        vaikutus: 'Estää sairastumisen, joka veisi päiviä.',
+        huomiot: 'Vaatisi uuden sairastumismekaniikan. 1873 matkustamisen '
+          + 'todellisuutta, ja puree suoraan aikarajaan.' },
+      { nimi: 'Valokuvauskamera', tila: 'idea',
+        vaikutus: 'Kuva kaupungissa: passiin leima kuvan kanssa ja kokemuspisteitä.',
+        huomiot: 'Kauimpana Afrikan tähdestä: ei auta voittamaan lainkaan, '
+          + 'vaan palkitsee uteliaisuudesta. Istuu suoraan siihen, että '
+          + 'suurin palkinto on ymmärrys.' },
+    ];
+
+    document.getElementById('juoni-tavoite').textContent = JUONI.tavoite;
+    document.getElementById('juoni-palkinto').innerHTML =
+      `<h3>Todellinen palkinto</h3><p>${JUONI.palkinto}</p>`;
+
+    const aarreLista = document.getElementById('aarre-lista');
+    for (const a of AARTEET) {
+      const k = document.createElement('div');
+      k.className = 'kortti';
+      k.innerHTML = `<h3>${a.maanosa} <span class="tila kaytossa">${a.aarre}</span></h3>`;
+      aarreLista.appendChild(k);
+    }
+
+    // Kaupunkitason laudat. Istanbul on jo pelissä, joten pohja on
+    // todistettu — uutta olisi hitaampi kello.
+    const KAUPUNKIKARTAT = [
+      { nimi: 'Istanbul', tila: 'kaytossa',
+        kuvaus: 'Ensimmäinen kaupunkitason lauta. Bosporin lautat ovat '
+          + 'laivareittejä ja kaupunginosat kaupunkeja.',
+        huomiot: 'Kello käy täällä yhä samaa vauhtia kuin mantereella — '
+          + 'hitaampi kello on vielä tekemättä (js/game.js TURN_HOURS).' },
+      { nimi: 'Lisää kaupunkeja', tila: 'idea',
+        kuvaus: 'Kaupungin sisältä voi löytyä lisää asioita: varusteita, '
+          + 'rahaa ja kohtaamisia.',
+        huomiot: 'Omistajan linjaus: aika kuluu kaupungissa hitaammin, '
+          + 'koska välimatkat ovat pieniä. Se tekee pysähtymisestä '
+          + 'kannattavaa aikarajasta huolimatta.' },
+    ];
+    const kaupunkiLista = document.getElementById('kaupunki-lista');
+    for (const k of KAUPUNKIKARTAT) {
+      const el = document.createElement('div');
+      el.className = 'kortti';
+      el.innerHTML = `
+        <h3>${k.nimi} <span class="tila ${k.tila === 'kaytossa' ? 'kaytossa' : ''}">${k.tila === 'kaytossa' ? 'käytössä' : 'idea'}</span></h3>
+        <p>${k.kuvaus}</p><p class="meta">${k.huomiot}</p>`;
+      kaupunkiLista.appendChild(el);
+    }
+
+    const VARUSTETILAT = { kaytossa: 'käytössä', sovittu: 'sovittu, ei tehty', idea: 'idea' };
+    const varusteLista = document.getElementById('varuste-lista');
+    for (const v of VARUSTEET) {
+      const k = document.createElement('div');
+      k.className = 'kortti';
+      k.innerHTML = `
+        <h3>${v.nimi} <span class="tila ${v.tila === 'kaytossa' ? 'kaytossa' : ''}">${VARUSTETILAT[v.tila]}</span></h3>
+        <p>${v.vaikutus}</p><p class="meta">${v.huomiot}</p>`;
+      varusteLista.appendChild(k);
+    }
+
     const peliLista = document.getElementById('peli-lista');
     const PELITILAT = { kaytossa: 'käytössä', ideoitava: 'ideoidaan yhdessä seuraavaksi', idea: 'idea' };
     for (const peli of PELIT) {

@@ -1509,13 +1509,20 @@ Toteuttajan havainnot seuraavaa pakettia varten:
   LANDMARKS-kokoelma on lautariippumaton, joten uusi maamerkki on yksi
   piirtofunktio ja yksi rivi pakan decor-osiossa. Koristetesti vartioi
   sijoitusta automaattisesti kaikilla laudoilla.
-- **`texts.schedule` vaatii yhä päätöksen** (kirjattu paketissa 10): onko
-  isoisän 80 päivää lautakohtainen vertailuluku vai yksi matka, jonka eri
-  laudat näyttävät eri paloina? Afrikan aikataulu on kokonainen kierros,
-  joka päättyy kotiinpaluuseen, eikä `docs/tarina.md`:n mukaan
-  päiväkirjoja ole kuin yksi.
+- **`texts.schedule` — PÄÄTETTY 2.8.2026.** Kysymys oli: onko isoisän 80
+  päivää lautakohtainen vertailuluku vai yksi matka? Omistajan vastaus:
+  **yksi matka.** Pelin tavoite on löytää aarre jokaisesta maanosasta ja
+  palata Lontooseen alle kahdeksassakymmenessä päivässä. Aikataulu on siis
+  yksi koko maailman kierros, kuten `docs/tarina.md`:n ainoa päiväkirja
+  vuodelta 1873 — ja kuten pelaajahahmon nimi (Fogg) on aina vihjannut.
+  Aikataulutekstit pitää käydä läpi tämän mukaan.
 - **`TURN_HOURS = 6` odottaa yhä pelitestiä.** Yhden vakion muutos
-  (js/game.js).
+  (js/game.js). **Uusi vaatimus 2.8.2026:** kaupunkitason laudoilla ajan
+  pitää kulua HITAAMMIN kuin mantereella, koska kaupungin sisällä
+  välimatkat ovat pieniä. Silloin vakio ei voi olla yksi luku vaan
+  lautakohtainen — kaupunkilaudalla esimerkiksi tunti vuorossa kuuden
+  sijaan. Näin kaupunkiin pysähtyminen kannattaa aikarajasta huolimatta,
+  ja juuri siellä ehtii oppia.
 
 Omistajan linjaus 27.7.2026: **työstetään pelkkää Afrikkaa, kunnes
 peruspeli on kunnossa.** Muihin lautoihin ei kosketa ennen kuin Afrikka on
