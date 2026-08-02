@@ -240,54 +240,52 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
-## Paketti 24: äänet omaan ämpäriin (R2) — KESKEN, odottaa CORSia
+## Paketti 24: äänet omaan ämpäriin (R2) — VALMIS 2.8.2026
 
-**Miksi:** kuvat ja äänet ovat samassa GitHub Pages -sivustossa. Äänet
+**Miksi:** kuvat ja äänet olivat samassa GitHub Pages -sivustossa. Äänet
 ovat isoja — pelkkä Eurooppa vei 569 Mt, ja Pagesin suositusraja on
-1 Gt sivustoa kohti. Koko maailma ei mahtuisi. Omistaja valitsi
+1 Gt sivustoa kohti. Koko maailma ei olisi mahtunut. Omistaja valitsi
 Cloudflare R2:n.
 
-**Tehty 2.8.2026:**
+**Miten se toimii nyt.** Media-repon `.github/workflows/r2-aanet.yml`
+vie `aanet/`-kansion ämpäriin aina kun kansio muuttuu mainissa (tai
+käsin Actions-välilehdeltä). Peli hakee äänet ämpäristä: `js/media.js`
+`AANI_JUURI`. Kuvat tulevat edelleen Pagesista `PEILI_JUURI`:sta.
+Polku lasketaan kummankin juuren perään samalla säännöllä, joten
+osoitteen vaihto oli ainoa muutos pelin puolella.
 
-- Media-repoon `.github/workflows/r2-aanet.yml`, joka vie `aanet/`-kansion
-  ämpäriin. Ajetaan automaattisesti kun kansio muuttuu mainissa, tai
-  käsin Actions-välilehdeltä.
-- Avaimet ovat repon Actions-salaisuuksina (`R2_ACCOUNT_ID`,
-  `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`). Ne eivät ole
-  missään tiedostossa eivätkä keskusteluissa.
-- Ensimmäinen ajo meni läpi: kaikki 173 ääntä ovat ämpärissä ja
-  vastaavat julkisesta osoitteesta 200 ja `Content-Type: audio/mpeg`.
+Avaimet ovat media-repon Actions-salaisuuksina (`R2_ACCOUNT_ID`,
+`R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`). Ne eivät ole
+missään tiedostossa.
 
-**Miksi osoitetta ei vielä vaihdettu.** `pub-….r2.dev` ei palauta
-`access-control-allow-origin`-otsaketta millään kokeillulla lähtöpaikalla
-— ei myöskään sen jälkeen kun omistaja oli asettanut CORS-säännön.
-Se on tärkeää, koska pelissä on yksi kohta, joka lukee äänen tavut
-itse: `js/sound.js` `loadRealSamples` hakee tehosteet `fetch`illä ja
-purkaa ne `decodeAudioData`lla. Ilman CORSia se epäonnistuisi, ja
-`js/media.js`:n katkaisija sammuttaisi äänipeilin koko istunnon ajaksi
-— jolloin *kaikki* äänet haettaisiin alkuperäisistä lähteistä ja siirto
-olisi tehnyt tilanteesta huonomman kuin ennen.
+**Kolme asiaa, joita ei kannata purkaa:**
 
-Tavallinen `<audio>`-toisto (ambienssi, kulttuurinäytteet, kieli,
-musiikki) ei tarvitse CORSia lainkaan. Siksi ämpäri toimisi jo nyt
-kaikelle muulle paitsi tehosteille.
+- `AWS_REQUEST_CHECKSUM_CALCULATION=when_required`. R2 ei hyväksy AWS:n
+  uudempia tarkistussummaotsakkeita, jotka aws-cli 2.23:sta alkaen
+  lähtevät oletuksena mukaan. Ilman tätä jokainen lähetys epäonnistuu.
+- `--delete` on pois. Vanha ääni ämpärissä ei haittaa ketään, mutta
+  vahingossa tyhjentynyt ämpäri rikkoisi pelin kaikilta kerralla.
+- CORS-tarkistus tehdään **GET**-pyynnöllä. R2 vertaa pyynnön metodia
+  säännön `AllowedMethods`-listaan, ja koska siinä on vain GET,
+  HEAD-pyyntöön ei tule otsaketta lainkaan. Ensimmäisellä kerralla
+  tarkistin CORSin `curl -I`:llä ja päättelin siitä virheellisesti,
+  ettei sääntöä ole — se oli koko ajan kunnossa.
 
-**Seuraava askel — yksi näistä:**
+**CORSia tarvitaan vain yhteen kohtaan.** `js/sound.js`
+`loadRealSamples` hakee tehosteet `fetch`illä ja purkaa ne
+`decodeAudioData`lla, eli lukee tavut itse. Tavallinen
+`<audio>`-toisto — ambienssi, kulttuurinäytteet, kieli, musiikki — ei
+tarvitse CORSia lainkaan. Sääntö sallii GETin osoitteesta
+`https://ravelius.github.io`. Muualta avattuna (esimerkiksi yhden
+tiedoston versio levyltä) tehosteet putoavat alkuperäiseen lähteeseen,
+eikä peli siitä kärsi.
 
-1. Cloudflaren CORS-sääntö kuntoon. `AllowedOrigins` ei saa sisältää
-   polkua eikä loppukauttaviivaa: `https://ravelius.github.io` kelpaa,
-   `https://ravelius.github.io/Matkakirja/` ei. Kun otsake tulee,
-   vaihda `AANI_JUURI` ämpärin osoitteeseen — se on ainoa muutos.
-2. Jos r2.dev ei taivu, ämpärin eteen oma verkkotunnus. Cloudflaren
-   dokumentaatio lupaa CORS-otsakkeet nimenomaan omalle verkkotunnukselle
-   ja sanoo r2.dev:n olevan vain kehityskäyttöön ja nopeusrajoitettu.
-3. Tai jaetaan reitit: `<audio>` ämpäristä, tehosteet Pagesista. Tämä
-   ei vaadi omistajalta mitään, mutta jättää `aanet/`-kansion Pagesiin
-   tehosteiden takia.
-
-Kun osoite vaihtuu, muista myös että Pages tarjoilee yhä koko
-`aanet/`-kansion. Varsinainen tilansäästö syntyy vasta kun Pages
-julkaisee pelkät `kuvat/` ja `liput/`.
+**Vielä tekemättä: Pagesin siivous.** Äänet ovat nyt kahdessa paikassa.
+Varsinainen tilansäästö syntyy vasta kun media-repon Pages julkaisee
+pelkät `kuvat/` ja `liput/` — tiedostot saavat jäädä repoon, koska
+synkronointi lukee ne sieltä. Tee tämä vasta kun ämpäri on ollut
+käytössä jonkin aikaa: jos jotain menee pieleen, Pages on yhä
+toimiva varareitti.
 
 
 ## Paketti 23: päiväkirja aukeaa napauttamalla — VALMIS 2.8.2026

@@ -52,7 +52,9 @@ test('äänen polku tunnistaa Freesoundin ja archive.orgin', () => {
 test('aaniOsoite koskee vain peilattuja lähteitä', () => {
   nollaaPeili();
   const freesound = 'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3';
-  assert.ok(aaniOsoite(freesound).startsWith(PEILI_JUURI));
+  // Äänet tulevat omasta ämpäristään, eivät kuvien kanssa samasta
+  // Pages-sivustosta.
+  assert.ok(aaniOsoite(freesound).startsWith(AANI_JUURI));
   assert.ok(onPeilista(aaniOsoite(freesound)));
   // Repon omat tiedostot eivät kulje peilin kautta.
   assert.equal(aaniOsoite('assets/audio/efekti-klik.mp3'), 'assets/audio/efekti-klik.mp3');
@@ -214,4 +216,18 @@ test('peilin polut täsmäävät manifestiin', { skip: !manifestiPolku && 'manif
   const yhteensa = Object.keys(m.kuvat).length + Object.keys(m.liput).length
     + Object.keys(m.aanet).length;
   assert.ok(yhteensa > 250, `peilissä pitäisi olla koko aineisto, nyt ${yhteensa}`);
+});
+
+test('äänet ja kuvat ovat eri palvelimilla', () => {
+  // Siirron koko pointti: Pagesin suositusraja on 1 Gt sivustoa kohti,
+  // ja pelkkä Euroopan äänipuoli vei jo 569 Mt. Jos juuret palautuvat
+  // samaksi, raja tulee taas vastaan eikä sitä huomaa mistään.
+  assert.notEqual(AANI_JUURI, PEILI_JUURI,
+    'äänten juuri on vahingossa sama kuin kuvien');
+  assert.match(AANI_JUURI, /^https:\/\//);
+  assert.ok(AANI_JUURI.endsWith('/'), 'juuren perään liitetään polku sellaisenaan');
+  // Katkaisija on lähdekohtainen, ja se erottaa lajit osoitteen
+  // perusteella. Erillisillä juurilla kummankin pitää tunnistua omakseen.
+  assert.equal(peilinLaji(`${AANI_JUURI}aanet/freesound-511005.mp3`), 'aanet');
+  assert.equal(peilinLaji(`${PEILI_JUURI}kuvat/souvlaki-in-athens.jpg`), 'kuvat');
 });

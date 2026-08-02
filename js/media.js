@@ -23,17 +23,17 @@
  *
  * Alkuperäinen lähde (archive.org, Freesound, Commons) jää yhä
  * varareitiksi, jos ämpäri ei vastaa.
+ *
+ * Ämpärillä on CORS-sääntö, joka sallii GETin osoitteesta
+ * https://ravelius.github.io. Sitä tarvitaan vain yhteen kohtaan:
+ * js/sound.js loadRealSamples hakee tehosteet fetchillä ja purkaa ne
+ * decodeAudioDatalla, eli lukee tavut itse. Tavallinen <audio>-toisto
+ * (ambienssi, kulttuurinäytteet, kieli, musiikki) ei CORSia tarvitse.
+ * Muualta avattuna — esimerkiksi yhden tiedoston versio levyltä —
+ * tehosteet putoavat alkuperäiseen lähteeseen eikä peli siitä kärsi.
  */
 export const PEILI_JUURI = 'https://ravelius.github.io/Matkakirja-media/';
-// Ämpäri on pystyssä ja kaikki 173 ääntä on viety sinne, mutta osoite
-// on yhä Pagesissa: r2.dev ei toistaiseksi palauta CORS-otsaketta.
-// Ilman sitä tehosteiden lataus (fetch + decodeAudioData, js/sound.js)
-// epäonnistuisi ja katkaisija sammuttaisi koko äänipeilin istunnon
-// ajaksi — silloin kaikki äänet haettaisiin alkuperäisistä lähteistä
-// ja siirto olisi tehnyt tilanteesta huonomman kuin ennen.
-// Vaihdetaan tähän heti kun ämpäri vastaa CORS-otsakkeella:
-//   'https://pub-7bc0ed2083a74a68bd7115618bca4709.r2.dev/'
-export const AANI_JUURI = PEILI_JUURI;
+export const AANI_JUURI = 'https://pub-7bc0ed2083a74a68bd7115618bca4709.r2.dev/';
 
 /**
  * Turvallinen tiedostonimi mistä tahansa merkkijonosta.
