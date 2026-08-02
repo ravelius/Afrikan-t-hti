@@ -342,7 +342,39 @@ export function drawLand(svg, map) {
 
 // --- geometria: missä on merta, missä tyhjää maata ------------------------
 
+/*
+ * Ääriviivan rajauslaatikko muistissa.
+ *
+ * Piste, joka on laatikon ulkopuolella, on varmasti myös ääriviivan
+ * ulkopuolella — ja laatikon tarkistus on neljä vertailua, kun koko
+ * ääriviivan läpikäynti on tuhansia. Yhdistetyllä kartalla on 38
+ * ääriviivaa ja niissä yhteensä tuhansia pisteitä, joten ilman tätä
+ * jokainen "onko tämä maalla" -kysymys maksoi noin millisekunnin.
+ * Kartan piirto kysyy sitä tuhansia kertoja.
+ *
+ * WeakMap eikä kenttä ääriviivaan: pakettien data on jaettua, eikä
+ * siihen pidä kirjoittaa mitään.
+ */
+const rajaukset = new WeakMap();
+
+function rajaus(poly) {
+  let laatikko = rajaukset.get(poly);
+  if (laatikko) return laatikko;
+  let x0 = Infinity; let y0 = Infinity; let x1 = -Infinity; let y1 = -Infinity;
+  for (const [x, y] of poly) {
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+  }
+  laatikko = { x0, y0, x1, y1 };
+  rajaukset.set(poly, laatikko);
+  return laatikko;
+}
+
 function pointInPolygon([px, py], poly) {
+  const r = rajaus(poly);
+  if (px < r.x0 || px > r.x1 || py < r.y0 || py > r.y1) return false;
   let inside = false;
   for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
     const [xi, yi] = poly[i];

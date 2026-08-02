@@ -120,6 +120,35 @@ const kaikkiPisteet = kaup.map((c) => {
 });
 
 /*
+ * Satama ei saa jäädä sisämaahan.
+ *
+ * Peli sallii kaupungin ja sataman väliin 55 yksikön pätkän, joka saa
+ * kulkea maalla. Sitä kauempana vedestä olevan kaupungin merireitti ei
+ * voi KOSKAAN kelvata — ei tiheämmällä ruudukolla eikä millään
+ * reitinhaulla. Madagaskar osui saaren sisäosaan 72 yksikön päähän
+ * rannasta, ja se kaatoi kaikki kolme sen merireittiä.
+ *
+ * Tämä tarkistetaan erikseen, koska vika ei näy reittityökalussa
+ * mitenkään: se raportoi vain "polku löytyi mutta viiva kulkee maalla",
+ * ja syytä etsii ruudukosta väärästä paikasta. Korjaus ajetaan
+ * työkalulla tools/satamat-rannalle.mjs.
+ */
+const RANNASTA_ENINTAAN = 46;
+
+/** Kuinka kaukana lähin vesi on annetusta pisteestä? */
+function vedenEtaisyys(x, y) {
+  if (!isOnLand([x, y], ALKUKARTTA)) return 0;
+  for (let r = 4; r <= 220; r += 4) {
+    for (let a = 0; a < 48; a++) {
+      const kulma = (a / 48) * Math.PI * 2;
+      if (!isOnLand([x + Math.cos(kulma) * r, y + Math.sin(kulma) * r], ALKUKARTTA)) return r;
+    }
+  }
+  return Infinity;
+}
+
+
+/*
  * Liian lähekkäiset kaupungit.
  *
  * Vanhoilla laudoilla mittakaavat olivat eri, joten Istanbul (Euroopan
@@ -182,6 +211,16 @@ const { paikat: nimiPaikat, pulmat } = sijoita(pisteet, new Map(Object.entries(m
  * raja ja neljä aarretta — se on pelilogiikkaa, ei karttaa. Siihen asti
  * lauta on pelattavissa nykyisillä säännöillä.
  */
+/*
+ * Kaupungit, joihin maailmankartalta laskeudutaan. Lista on sama kuin
+ * maailma.js:n porteissa, ja se koskee vain vanhan maailman aluetta —
+ * New York, Rio, Sydney ja Los Angeles vievät yhä omille laudoilleen.
+ */
+const MAAILMAN_PORTIT = new Set([
+  'lontoo', 'kairo', 'mumbai', 'peking', 'tokio', 'singapore',
+  'moskova', 'ateena', 'kapkaupunki', 'tanger',
+]);
+
 const cities = pisteet.map((c) => {
   const lahde = lahdeKaupunki.get(c.id) ?? {};
   const p = nimiPaikat.get(c.id);
@@ -193,9 +232,11 @@ const cities = pisteet.map((c) => {
     x: c.x,
     y: c.y,
     ...(lahde.start ? { start: true } : {}),
-    // Portti maailmankartalle, jotta laudalle pääsee muualta pelistä.
-    ...(c.id === 'lontoo'
-      ? { links: [{ pack: 'maailma', city: 'lontoo', label: 'Maailma-lauta' }] } : {}),
+    // Portit maailmankartalle. Linkin pitää olla vastavuoroinen: jos
+    // maailmankartalta pääsee tänne, tästä pitää päästä takaisin. Testi
+    // vartioi sitä, ja ilman paluulinkkiä pelaaja jäisi laudalle.
+    ...(MAAILMAN_PORTIT.has(c.id)
+      ? { links: [{ pack: 'maailma', city: c.id, label: 'Maailmankartta' }] } : {}),
     ...(lahde.airport || lahde.start ? { airport: true } : {}),
     la: p.la,
     lx: p.lx,

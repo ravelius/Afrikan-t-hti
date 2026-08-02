@@ -305,6 +305,126 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 43: vanha maailma peliin, merireitit kuntoon — VALMIS v166 2.8.2026
+
+Omistajan linjaukset: "Julkaise kartta sitten suoraan peliin kun saat nuo
+valmiiksi", "aina voi peruuttaa jos ei toimi", "pelillä ei ole vielä
+pelaajia niin voidaan edetä rohkeasti."
+
+### Vika ei ollut ruudukossa vaan mittatikussa
+
+Kirjasin v165:ssa, että 13 reittiä kulkee maalla ja syy on liian karkea
+ruudukko. **Syy oli väärä.** Uusi `tools/tutki-merireitit.mjs` kysyi
+asiaa pelin omalta reittiviivalta, ja jokaisessa maalla kulkevassa
+reitissä **kaikki välipisteet olivat vedessä**. Ruudukko oli siis tehnyt
+työnsä.
+
+Vika oli kelpuutuksessa. Työkalu tarkisti reitin suorina pätkinä
+välipisteestä toiseen, mutta peli ei piirrä suoria: `edgePolyline`
+pehmentää välipisteet Catmull-Rom-käyräksi, ja käyrä kaartaa jyrkissä
+mutkissa välipisteiden **ulkopuolelle**.
+
+**Nyt kelpuutus rakentaa saman viivan kuin peli** ja ottaa näytteitä sitä
+pitkin neljän yksikön välein. Se on ainoa tapa tietää, mitä pelaaja
+näkee — ja se on tiukempi mitta kuin mikään aiempi luku: pelin oma testi
+tutkii viivaa 2 %:n välein, mikä pitkällä reitillä tarkoittaa kymmenien
+yksiköiden hyppyjä.
+
+### Oma ansa matkan varrella
+
+Ensimmäinen korjattu versio ilmoitti kaikki kuusi korjatuiksi ja pudotti
+välipisteet nollaan. Se oli väärin: uusi kelpuutus katsoi vain viivan
+kulmapisteitä, ja välipisteettömällä suoralla niitä on kaksi, molemmat
+satamassa — yhtään näytettä ei jäänyt tarkastettavaksi, joten kaikki
+kelpasi. Nyt näytteet otetaan viivaa pitkin neljän yksikön välein.
+
+### Oikea syy kolmeen viimeiseen: satama sisämaassa
+
+Madagaskarin kolme merireittiä eivät ratkenneet millään ruudukolla, ja
+työkalu toisti "polku löytyi mutta pehmennetty viiva kulkee maalla".
+Syytä ei ollut reitissä lainkaan: **Madagaskar oli 72 yksikön päässä
+rannasta.** Peli sallii kaupungin ja sataman väliin 55 yksikköä, joten
+yksikään reitti sen päästä ei voi koskaan kelvata — ei tiheämmällä
+ruudukolla eikä millään haulla.
+
+Kaupunki on saaren nimikkopiste, ei sisämaan pääkaupunki, joten
+siirtäminen rannalle on myös sisällöllisesti oikein. Uusi
+`tools/satamat-rannalle.mjs` siirsi kaksi kaupunkia: Madagaskarin
+(72 → 4 yksikköä rannasta) ja Mosambikin (52 → 4).
+
+**Kynnys ja tavoite ovat eri luvut tahallaan.** Ensimmäinen versio
+siirsi kahdeksan kaupunkia, mukaan lukien Kairon ja Aleppon, jotka ovat
+omilla paikoillaan syystä. Siirretään vain ne, joiden merireitti on
+mahdoton (yli 46 yksikköä), ja niille tavoitellaan 26:ta.
+
+### Näytteenotto astui satamavyöhykkeen ohi
+
+Neljän yksikön näyteväli riitti melkein. Helsingin ja Tallinnan väli on
+112 yksikköä, eli kahden satamavyöhykkeen (55 + 55) väliin jää **2,2
+yksikköä** tarkastettavaa — ja neljän yksikön askel hyppäsi sen yli.
+Reitti näytti työkalussa kelvolliselta ja jäi pelin omaan testiin
+kiinni. Askel on nyt yksi yksikkö. Kapeimmat tarkastettavat kohdat ovat
+aina lyhyillä reiteillä, eivät pitkillä.
+
+### Nopeus: rasteri riveittäin
+
+Tarkennus tarvitsee tiheämmän ruudukon, ja se paljasti kaksi
+pullonkaulaa:
+
+1. **A*:n avoin lista** etsi pienimmän arvon lineaarisesti. Karkealla
+   ruudukolla se ei haittaa, mutta satojentuhansien ruutujen haussa se
+   tekee hausta neliöllisen. Tilalle keko.
+2. **"Onko tämä maalla" maksoi noin millisekunnin.** Se kysyttiin joka
+   ruudulta erikseen, ja jokainen kysymys kävi läpi 38 ääriviivaa.
+   Nyt rasteri lasketaan riveittäin: lasketaan mistä kohdista ääriviivat
+   leikkaavat rivin, ja luetaan jokaisen ruudun puoli siitä. **6700
+   ruutua: 5,1 s → 0,33 s.**
+
+Rivilasku on oma toteutus, joten se voisi eriytyä pelin säännöstä
+huomaamatta. Siksi jokainen rasteri **tarkistetaan otoksella pelin omaa
+`isOnLand`-funktiota vasten** ja työkalu kaatuu heti, jos ne eroavat.
+
+Pelin puolelle jäi tästä pysyvä parannus: jokaisen ääriviivan
+rajauslaatikko muistetaan (`js/mapart.js`), ja laatikon ulkopuolinen
+piste hylätään neljällä vertailulla. Se nopeuttaa myös kartan piirtoa
+isolla laudalla — sama huoli oli listalla iPadin kohdalla.
+
+### Kartta on nyt peliin kytketty
+
+Maailmankartan portit vievät ensisijaisesti yhdistetylle laudalle:
+Lontoo, Kairo, Mumbai, Peking, Tokio, Singapore, Moskova, Ateena,
+Kapkaupunki ja Tanger. Neljä alkuperäistä lautaa jäävät rinnalle
+("Eurooppa erikseen" ja niin edelleen), koska niillä on kullakin oma
+aarteensa ja yhdistetyllä on toistaiseksi yksi.
+
+Portit ovat vastavuoroisia molempiin suuntiin — ilman paluulinkkiä
+pelaaja jäisi laudalle, ja testi vartioi sitä.
+
+**Testeistä korjattiin oma heikkous:** ne valitsivat portin kiinteällä
+indeksillä 0, eli "ensimmäinen vaihtoehto". Kun yhdistetty lauta nousi
+kärkeen, neljä testiä hajosi. Nyt testi sanoo minkä laudan se haluaa
+(`porttiIndeksi(game, 'kairo', 'africa')`), eikä järjestys enää sido.
+
+### Tulos
+
+**54 merireittiä 54:stä kulkee vettä pitkin**, tiukalla mitalla
+(pehmennetty viiva, näyte yhden yksikön välein). `MERIREITIT_KESKEN` on
+tyhjä ja testi ajetaan ilman ohitusta: 369 testiä läpi, 0 ohitettua.
+
+Yksi rumuus jäi: Ras Hafunista Suakiniin tarvitaan 237 välipistettä.
+Reitti kiertää Afrikan sarven ja nousee koko Punaisenmeren, joka on
+niin kapea, ettei yksikään pelkistys kestä tarkistusta. Se on noin 3 kt
+229 kilotavun tiedostossa, joten hinta on pieni — mutta se on siellä.
+
+### Jäljellä
+
+1. **Aarrelogiikka: yksi aarre per maanosa.** Vasta sen jälkeen neljä
+   alkuperäistä lautaa voi jättää pois.
+2. Paluu Lontooseen ja 80 päivän raja.
+3. Porttikaupunkien sisällöt (Istanbul, Kairo, Teheran).
+4. Suorituskyky iPadilla — rajauslaatikot auttoivat, mitattava silti.
+
+
 ## Paketti 42: vanha maailma pelattavaksi laudaksi — VALMIS v165 2.8.2026
 
 Omistajan toive: "Kartta loppuun." Kolme ensimmäistä vaihetta olivat

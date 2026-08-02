@@ -76,25 +76,15 @@ const SISALTO_VALMIS = new Set([
 /*
  * Laudat, joiden merireitit ovat vielä laskematta loppuun.
  *
- * Vanha maailma on koneen kokoama yhdistelmä neljästä laudasta. Sen
- * merireitit lasketaan A*-haulla vesiruudukon läpi
- * (tools/merireitit.mjs), koska vanhat suorat viivat oikaisevat tarkan
- * rannikon yli. 41 reittiä 54:stä kulkee jo oikein; 13 ei.
+ * Tyhjä, ja niin sen pitää pysyä. Vanha maailma oli tässä hetken:
+ * yhdistetyllä kartalla rannikko on Natural Earthin tarkkaa aineistoa,
+ * ja vanhat suorat viivat oikaisivat sen yli. Reitit lasketaan nyt
+ * A*-haulla vesiruudukon läpi (tools/merireitit.mjs), ja kelpuutus
+ * rakentaa saman pehmennetyn viivan kuin peli piirtää.
  *
- * Nämä 13 ovat kapeita salmia ja saaristoja, joissa 12 yksikön ruudukko
- * sulkee kanavan rannikon levityksen jälkeen:
- *
- *   lontoo-dublin, dublin-edinburgh, dubrovnik-rooma, tukholma-helsinki,
- *   helsinki-tallinna, riika-tukholma, madagaskar-mosambik,
- *   madagaskar-sansibar, sansibar-mosambik, sansibar-rashafun,
- *   rashafun-suakin, mekka-aden, mumbai-karachi
- *
- * Seuraava askel on paikallisesti tiheämpi ruudukko näille väleille.
- * Lauta ei ole vielä pelattava (aarre- ja aikalogiikka puuttuu), joten
- * tämä ei estä ketään — mutta se on korjattava ennen kuin lauta
- * otetaan käyttöön.
+ * Jos joudut lisäämään laudan tähän, kirjaa myös reitit nimeltä ja syy.
  */
-const MERIREITIT_KESKEN = new Set(['vanhamaailma']);
+const MERIREITIT_KESKEN = new Set();
 
 const MIN_CITY_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 5 : 2);
 const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10);
@@ -1081,6 +1071,20 @@ test('vaellus: porttikaupungista siirrytään toiselle laudalle ja takaisin', ()
   assert.equal(game.tokens.size, afrikanLaatat, 'Afrikan laatat säilyivät');
 });
 
+/**
+ * Maailmankartan portin indeksi laudan tunnuksella.
+ *
+ * Kiinteä 0 kertoi vain "ensimmäinen portti", ja se meni rikki kun
+ * yhdistetty vanha maailma nousi porttien kärkeen. Testin pitää sanoa
+ * mille laudalle se aikoo, ei monesko vaihtoehto se sattuu olemaan.
+ */
+function porttiIndeksi(game, kaupunki, packId) {
+  const city = game.pack.cities.find((c) => c.id === kaupunki);
+  const idx = (city?.links ?? []).findIndex((l) => l.pack === packId);
+  assert.ok(idx >= 0, `${kaupunki}: ei porttia laudalle ${packId}`);
+  return idx;
+}
+
 test('vaellus: lähtöpiste valitaan maailmankartalta ja portti vie mantereelle', () => {
   const game = new Game({
     players: [{ name: 'Yksin', color: '#f00', start: null }],
@@ -1093,7 +1097,7 @@ test('vaellus: lähtöpiste valitaan maailmankartalta ja portti vie mantereelle'
 
   // Kairon portista astutaan suoraan Afrikan laudalle — ilmaiseksi.
   const rahaEnnen = game.player.money;
-  assert.ok(game.actionPickStart('kairo', 0).ok);
+  assert.ok(game.actionPickStart('kairo', porttiIndeksi(game, 'kairo', 'africa')).ok);
   assert.equal(game.player.money, rahaEnnen, 'lähtöpisteen valinta on ilmainen');
   assert.equal(game.player.packId, 'africa');
   assert.deepEqual(game.player.pos, { type: 'city', city: 'kairo' });
@@ -1121,7 +1125,7 @@ test('vaellus: valitsematon lähtöpiste tallentuu ja palautuu', () => {
   const restored = Game.fromJSON(JSON.parse(JSON.stringify(game.toJSON())));
   assert.ok(restored);
   assert.equal(restored.phase, 'pickstart');
-  assert.ok(restored.actionPickStart('rio', 0).ok);
+  assert.ok(restored.actionPickStart('rio', porttiIndeksi(restored, 'rio', 'southamerica')).ok);
   assert.equal(restored.player.packId, 'southamerica');
 });
 
@@ -1131,7 +1135,7 @@ test('tietoportti: vaikea kysymys avaa maan laudan ilmaiseksi', () => {
     pack: packById('maailma'),
     rng: mulberry32(71),
   });
-  game.actionPickStart('lontoo', 0); // Euroopan laudalle
+  game.actionPickStart('lontoo', porttiIndeksi(game, 'lontoo', 'europe'));
   const p = game.player;
   p.pos = { type: 'city', city: 'helsinki' };
   game.phase = 'action';
@@ -1161,7 +1165,7 @@ test('tietoportti: vaikea kysymys avaa maan laudan ilmaiseksi', () => {
     pack: packById('maailma'),
     rng: mulberry32(72),
   });
-  toinen.actionPickStart('lontoo', 0);
+  toinen.actionPickStart('lontoo', porttiIndeksi(toinen, 'lontoo', 'europe'));
   toinen.player.pos = { type: 'city', city: 'helsinki' };
   toinen.phase = 'action';
   toinen.actionGateQuiz(0);
@@ -1602,7 +1606,7 @@ test('saapumishavainto seuraa matkaajaa kaupungista kaupunkiin', () => {
     pack: packById('maailma'),
     rng: mulberry32(7),
   });
-  game.actionPickStart('kairo', 0); // portti Afrikan laudalle
+  game.actionPickStart('kairo', porttiIndeksi(game, 'kairo', 'africa')); // portti Afrikan laudalle
   assert.equal(game.arrivalFact?.packId, 'africa', 'laudalle astuminen kirjaa havainnon');
   assert.equal(game.arrivalFact?.cityId, 'kairo');
 
@@ -1670,7 +1674,7 @@ test('kokemuspisteitä kertyy uusista paikoista, ei uudelleen käynneistä', () 
   assert.equal(p.xp, 0, 'lähtöruudussa ei vielä pisteitä');
 
   // Lähtöpisteen valinta vie Afrikan laudalle: uusi lauta + uusi kaupunki.
-  game.actionPickStart('kairo', 0);
+  game.actionPickStart('kairo', porttiIndeksi(game, 'kairo', 'africa'));
   assert.equal(p.packId, 'africa');
   assert.equal(p.xp, XP_NEW_BOARD + XP_NEW_CITY);
   assert.ok(game.world.visited.has('kairo'));
@@ -1758,7 +1762,7 @@ test('kokemuspisteet, laskurit ja käydyt kaupungit säilyvät tallennuksessa', 
     pack: packById('maailma'),
     rng: mulberry32(77),
   });
-  game.actionPickStart('kairo', 0);
+  game.actionPickStart('kairo', porttiIndeksi(game, 'kairo', 'africa'));
   game.countAnswer(game.player, true);
   game.countAnswer(game.player, false);
 

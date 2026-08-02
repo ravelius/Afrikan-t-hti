@@ -130,11 +130,10 @@ const WORLD_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const WORLD_CITIES = [
   { id: 'lontoo', name: 'Lontoo', x: 731.7, y: 225.9, start: true, airport: true, la: 'end', lx: -16, ly: 5,
-    // Vanha maailma on Euroopan, Afrikan, Lähi-idän ja Aasian yhdistetty
-    // kartta. Se ei korvaa niitä vielä, joten Lontoosta pääsee molempiin.
+    // Lontoo on matkan alku ja loppu: vanhan maailman lauta on ensimmäisenä.
     links: [
-      { pack: 'europe', city: 'lontoo', label: 'Euroopan lauta' },
-      { pack: 'vanhamaailma', city: 'lontoo', label: 'Vanha maailma (yhdistetty)' },
+      { pack: 'vanhamaailma', city: 'lontoo', label: 'Vanha maailma' },
+      { pack: 'europe', city: 'lontoo', label: 'Eurooppa erikseen' },
     ] },
   {
     id: 'newyork', name: 'New York', x: 359, y: 293.2, start: true, airport: true,
@@ -146,8 +145,9 @@ const WORLD_CITIES = [
     id: 'kairo', name: 'Kairo', x: 772.5, y: 322.1, airport: true, la: 'start', lx: 16, ly: 5,
     // Kairosta laskeudutaan tarkemmille laudoille.
     links: [
-      { pack: 'africa', city: 'kairo', label: 'Afrikan lauta' },
-      { pack: 'middleeast', city: 'kairo', label: 'Lähi-idän lauta' },
+      { pack: 'vanhamaailma', city: 'kairo', label: 'Vanha maailma' },
+      { pack: 'africa', city: 'kairo', label: 'Afrikka erikseen' },
+      { pack: 'middleeast', city: 'kairo', label: 'Lähi-itä erikseen' },
     ],
   },
   {
@@ -158,13 +158,17 @@ const WORLD_CITIES = [
   {
     id: 'mumbai', name: 'Mumbai', x: 871.5, y: 353.5, airport: true, la: 'start', lx: 16, ly: 5,
     links: [
-      { pack: 'asia', city: 'mumbai', label: 'Aasian lauta' },
-      { pack: 'middleeast', city: 'dubai', label: 'Lähi-idän lauta' },
+      { pack: 'vanhamaailma', city: 'mumbai', label: 'Vanha maailma' },
+      { pack: 'asia', city: 'mumbai', label: 'Aasia erikseen' },
+      { pack: 'middleeast', city: 'dubai', label: 'Lähi-itä erikseen' },
     ],
   },
   {
     id: 'peking', name: 'Peking', x: 959.8, y: 286.6, airport: true, la: 'end', lx: -16, ly: 5,
-    links: [{ pack: 'asia', city: 'peking', label: 'Aasian lauta' }],
+    links: [
+      { pack: 'vanhamaailma', city: 'peking', label: 'Vanha maailma' },
+      { pack: 'asia', city: 'peking', label: 'Aasia erikseen' },
+    ],
   },
   {
     id: 'sydney', name: 'Sydney', x: 1051.9, y: 527.7, airport: true, la: 'end', lx: -16, ly: -10,
@@ -172,19 +176,31 @@ const WORLD_CITIES = [
   },
   {
     id: 'moskova', name: 'Moskova', x: 806.6, y: 248.6, airport: true, la: 'start', lx: 16, ly: 5,
-    links: [{ pack: 'europe', city: 'moskova', label: 'Euroopan lauta' }],
+    links: [
+      { pack: 'vanhamaailma', city: 'moskova', label: 'Vanha maailma' },
+      { pack: 'europe', city: 'moskova', label: 'Eurooppa erikseen' },
+    ],
   },
   {
     id: 'tokio', name: 'Tokio', x: 1029.6, y: 279.5, airport: true, la: 'start', lx: 18, ly: 5,
-    links: [{ pack: 'asia', city: 'tokio', label: 'Aasian lauta' }],
+    links: [
+      { pack: 'vanhamaailma', city: 'tokio', label: 'Vanha maailma' },
+      { pack: 'asia', city: 'tokio', label: 'Aasia erikseen' },
+    ],
   },
   {
     id: 'singapore', name: 'Singapore', x: 948.4, y: 402.6, airport: true, la: 'start', lx: 18, ly: -12,
-    links: [{ pack: 'asia', city: 'singapore', label: 'Aasian lauta' }],
+    links: [
+      { pack: 'vanhamaailma', city: 'singapore', label: 'Vanha maailma' },
+      { pack: 'asia', city: 'singapore', label: 'Aasia erikseen' },
+    ],
   },
   {
     id: 'kapkaupunki', name: 'Kapkaupunki', x: 750.3, y: 483, airport: true, la: 'end', lx: -18, ly: 10,
-    links: [{ pack: 'africa', city: 'kapkaupunki', label: 'Afrikan lauta' }],
+    links: [
+      { pack: 'vanhamaailma', city: 'kapkaupunki', label: 'Vanha maailma' },
+      { pack: 'africa', city: 'kapkaupunki', label: 'Afrikka erikseen' },
+    ],
   },
   {
     id: 'losangeles', name: 'Los Angeles', x: 286.5, y: 322.3, airport: true, la: 'end', lx: -16, ly: 12,
@@ -196,7 +212,10 @@ const WORLD_CITIES = [
     // kuin lieriöprojektiossa.
     la: 'middle', lx: 0, ly: 26,
     // Etelä-Euroopan portti: Eurooppaan pääsee myös Välimeren suunnasta.
-    links: [{ pack: 'europe', city: 'ateena', label: 'Euroopan lauta' }],
+    links: [
+      { pack: 'vanhamaailma', city: 'ateena', label: 'Vanha maailma' },
+      { pack: 'europe', city: 'ateena', label: 'Eurooppa erikseen' },
+    ],
   },
   {
     // Afrikan luoteiskulma. Ilman tätä mantereella oli maailmankartalla vain
@@ -204,7 +223,10 @@ const WORLD_CITIES = [
     // purjehtien piti kiertää Rion tai Sydneyn kautta. Tanger on Afrikan
     // laudan aloituskaupunki, joten portti vie sinne suoraan.
     id: 'tanger', name: 'Tanger', x: 679.8, y: 278.7, airport: true, la: 'end', lx: -16, ly: 10,
-    links: [{ pack: 'africa', city: 'tanger', label: 'Afrikan lauta' }],
+    links: [
+      { pack: 'vanhamaailma', city: 'tanger', label: 'Vanha maailma' },
+      { pack: 'africa', city: 'tanger', label: 'Afrikka erikseen' },
+    ],
   },
 ];
 
