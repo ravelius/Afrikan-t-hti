@@ -11,16 +11,28 @@
 // paketeissa mainitun tiedoston peilin manifestia vasten.
 
 /*
- * Peilillä on kaksi juurta, koska aineisto on kasvamassa yli sen mitä
- * GitHub Pages on tarkoitettu tarjoilemaan (suositusraja 1 Gt sivustoa
- * kohti). Kuvat pysyvät Pagesissa; äänet siirtyvät omaan ämpäriinsä,
- * kun se on pystyssä. Kunnes niin käy, AANI_JUURI osoittaa samaan
- * paikkaan kuin ennenkin, joten mikään ei muutu.
+ * Peilillä on kaksi juurta, koska aineisto kasvoi yli sen mitä GitHub
+ * Pages on tarkoitettu tarjoilemaan (suositusraja 1 Gt sivustoa kohti).
+ * Kuvat pysyvät Pagesissa. Äänet ovat omassa ämpärissään: pelkkä
+ * Eurooppa vei jo 569 Mt, eikä koko maailma olisi mahtunut.
  *
- * Osoitteen vaihtaminen on ainoa tarvittava muutos pelin puolella:
- * polku lasketaan juuren perään samalla säännöllä kuin ennen.
+ * Polku lasketaan kummankin juuren perään samalla säännöllä, joten
+ * juuren vaihtaminen oli ainoa muutos pelin puolella. Äänet viedään
+ * ämpäriin media-repon omalla automaatilla (.github/workflows/
+ * r2-aanet.yml), joka ajetaan aina kun aanet-kansio muuttuu.
+ *
+ * Alkuperäinen lähde (archive.org, Freesound, Commons) jää yhä
+ * varareitiksi, jos ämpäri ei vastaa.
  */
 export const PEILI_JUURI = 'https://ravelius.github.io/Matkakirja-media/';
+// Ämpäri on pystyssä ja kaikki 173 ääntä on viety sinne, mutta osoite
+// on yhä Pagesissa: r2.dev ei toistaiseksi palauta CORS-otsaketta.
+// Ilman sitä tehosteiden lataus (fetch + decodeAudioData, js/sound.js)
+// epäonnistuisi ja katkaisija sammuttaisi koko äänipeilin istunnon
+// ajaksi — silloin kaikki äänet haettaisiin alkuperäisistä lähteistä
+// ja siirto olisi tehnyt tilanteesta huonomman kuin ennen.
+// Vaihdetaan tähän heti kun ämpäri vastaa CORS-otsakkeella:
+//   'https://pub-7bc0ed2083a74a68bd7115618bca4709.r2.dev/'
 export const AANI_JUURI = PEILI_JUURI;
 
 /**

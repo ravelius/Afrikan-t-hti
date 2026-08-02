@@ -240,6 +240,56 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 24: äänet omaan ämpäriin (R2) — KESKEN, odottaa CORSia
+
+**Miksi:** kuvat ja äänet ovat samassa GitHub Pages -sivustossa. Äänet
+ovat isoja — pelkkä Eurooppa vei 569 Mt, ja Pagesin suositusraja on
+1 Gt sivustoa kohti. Koko maailma ei mahtuisi. Omistaja valitsi
+Cloudflare R2:n.
+
+**Tehty 2.8.2026:**
+
+- Media-repoon `.github/workflows/r2-aanet.yml`, joka vie `aanet/`-kansion
+  ämpäriin. Ajetaan automaattisesti kun kansio muuttuu mainissa, tai
+  käsin Actions-välilehdeltä.
+- Avaimet ovat repon Actions-salaisuuksina (`R2_ACCOUNT_ID`,
+  `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`). Ne eivät ole
+  missään tiedostossa eivätkä keskusteluissa.
+- Ensimmäinen ajo meni läpi: kaikki 173 ääntä ovat ämpärissä ja
+  vastaavat julkisesta osoitteesta 200 ja `Content-Type: audio/mpeg`.
+
+**Miksi osoitetta ei vielä vaihdettu.** `pub-….r2.dev` ei palauta
+`access-control-allow-origin`-otsaketta millään kokeillulla lähtöpaikalla
+— ei myöskään sen jälkeen kun omistaja oli asettanut CORS-säännön.
+Se on tärkeää, koska pelissä on yksi kohta, joka lukee äänen tavut
+itse: `js/sound.js` `loadRealSamples` hakee tehosteet `fetch`illä ja
+purkaa ne `decodeAudioData`lla. Ilman CORSia se epäonnistuisi, ja
+`js/media.js`:n katkaisija sammuttaisi äänipeilin koko istunnon ajaksi
+— jolloin *kaikki* äänet haettaisiin alkuperäisistä lähteistä ja siirto
+olisi tehnyt tilanteesta huonomman kuin ennen.
+
+Tavallinen `<audio>`-toisto (ambienssi, kulttuurinäytteet, kieli,
+musiikki) ei tarvitse CORSia lainkaan. Siksi ämpäri toimisi jo nyt
+kaikelle muulle paitsi tehosteille.
+
+**Seuraava askel — yksi näistä:**
+
+1. Cloudflaren CORS-sääntö kuntoon. `AllowedOrigins` ei saa sisältää
+   polkua eikä loppukauttaviivaa: `https://ravelius.github.io` kelpaa,
+   `https://ravelius.github.io/Matkakirja/` ei. Kun otsake tulee,
+   vaihda `AANI_JUURI` ämpärin osoitteeseen — se on ainoa muutos.
+2. Jos r2.dev ei taivu, ämpärin eteen oma verkkotunnus. Cloudflaren
+   dokumentaatio lupaa CORS-otsakkeet nimenomaan omalle verkkotunnukselle
+   ja sanoo r2.dev:n olevan vain kehityskäyttöön ja nopeusrajoitettu.
+3. Tai jaetaan reitit: `<audio>` ämpäristä, tehosteet Pagesista. Tämä
+   ei vaadi omistajalta mitään, mutta jättää `aanet/`-kansion Pagesiin
+   tehosteiden takia.
+
+Kun osoite vaihtuu, muista myös että Pages tarjoilee yhä koko
+`aanet/`-kansion. Varsinainen tilansäästö syntyy vasta kun Pages
+julkaisee pelkät `kuvat/` ja `liput/`.
+
+
 ## Paketti 23: päiväkirja aukeaa napauttamalla — VALMIS 2.8.2026
 
 **Omistajan toive:** "Skrollauksen sijaan Matkakirja voisi laajentua
