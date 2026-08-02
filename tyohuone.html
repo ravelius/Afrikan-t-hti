@@ -412,6 +412,8 @@
     import { EUROPE_KULTTUURI } from './js/packs/europe-kulttuuri.js';
     import { EUROPE_VALOKUVAT } from './js/packs/europe-valokuvat.js';
     import { EUROPE_ARTIKKELIT } from './js/packs/europe-artikkelit.js';
+    import { EUROPE_KIELET } from './js/packs/europe-kielet.js';
+    import { KAUPUNKI_EHDOKKAAT } from './js/aani-ehdokkaat.js';
     import { SAAPUMISLUENNAT } from './js/ui.js';
     import { PEILI_JUURI } from './js/media.js';
 
@@ -828,6 +830,16 @@
       rivit.push(['Omia artikkeleita (Afrikka)', num(Object.keys(OMAT_ARTIKKELIT).length)]);
       rivit.push(['Kulttuurinostoja (Afrikka)', num(nostot)]);
       rivit.push(['Valokuvia (vanha + nykypäivä)', `${num(vanhat)} + ${num(uudet)}`]);
+      // Kenttä-äänitykset: kaupungin oma taustaääni ja puhenäyte ovat eri
+      // asioita, joten ne myös lasketaan erikseen.
+      const omatAanet = Object.values(KAUPUNKI_EHDOKKAAT)
+        .reduce((s, lista) => s + lista.length, 0);
+      const kieliKaupungit = Object.keys(EUROPE_KIELET).length;
+      const europe = PACKS.find((p) => p.id === 'europe');
+      rivit.push(['Kaupunkien omia äänityksiä',
+        `${num(omatAanet)} (${num(Object.keys(KAUPUNKI_EHDOKKAAT).length)} kaupunkia)`]);
+      rivit.push(['Kielinäytteitä (Eurooppa)',
+        `${num(kieliKaupungit)} / ${num(europe?.cities.length ?? 0)} kaupunkia`]);
       // Äänet ja koko luetaan sovelluksen omista tiedostoista.
       try {
         const sw = await (await fetch('sw.js')).text();

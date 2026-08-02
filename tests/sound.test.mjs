@@ -490,3 +490,31 @@ test('väistö säilyy silmukan sauman yli', async () => {
   assert.ok(toka.volume < taysi, `uusi kierros ohitti väistön (${toka.volume} vs ${taysi})`);
   mod.stopPlaceStream();
 });
+
+test('kielinäytteet ovat oikeista kaupungeista ja muodoltaan kelvollisia', async () => {
+  const { EUROPE_KIELET } = await import('../js/packs/europe-kielet.js');
+  const { PACKS } = await import('../js/pack.js');
+  const { peiliAaniPolku } = await import('../js/media.js');
+  const europe = PACKS.find((p) => p.id === 'europe');
+  const polut = new Set();
+  for (const [cityId, n] of Object.entries(EUROPE_KIELET)) {
+    assert.ok(europe.cities.some((c) => c.id === cityId),
+      `tuntematon kaupunki ${cityId}`);
+    assert.match(n.url, /^https:\/\/archive\.org\/download\/[^/]+\/.+\.mp3$/i,
+      `${cityId}: kelvoton osoite ${n.url}`);
+    // Nimi näkyy napin selitteenä ja on samalla lähdemaininta.
+    assert.match(n.nimi, /(CC BY|CC0|PD|public domain)/i,
+      `${cityId}: nimestä puuttuu lisenssi — ${n.nimi}`);
+    // ND kieltää muokkaamisen, ja peiliin menevät äänet leikataan
+    // kolmeen minuuttiin — siksi ND-lisenssiä ei saa päätyä listaan.
+    assert.doesNotMatch(n.nimi, /-ND\b/,
+      `${cityId}: ND-lisenssi ei sovi leikattavaksi — ${n.nimi}`);
+    assert.ok(n.kesto > 0 && n.kesto <= 180,
+      `${cityId}: kesto ${n.kesto} s ei ole leikatun näytteen mittainen`);
+    const polku = peiliAaniPolku(n.url);
+    assert.ok(polku && !polut.has(polku), `${cityId}: peilipolku puuttuu tai toistuu`);
+    polut.add(polku);
+  }
+  assert.ok(Object.keys(EUROPE_KIELET).length >= 25,
+    'kielinäytteitä on liian vähän — nappi jäisi useimmilta näkymättä');
+});
