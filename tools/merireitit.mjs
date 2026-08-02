@@ -349,7 +349,16 @@ export function kulkeeVedessa(a, b, valit, onMaalla, map) {
    * Työkalu ilmoitti kuusi reittiä korjatuiksi, vaikka se oli vain
    * poistanut niiden välipisteet ja vetänyt suoran mantereen yli.
    */
-  const ASKEL = 4;
+  /*
+   * Yhden yksikön askel, vaikka se on hidas.
+   *
+   * Neljä yksikköä riitti melkein: Helsingin ja Tallinnan väli on 112
+   * yksikköä, eli satamavyöhykkeiden (55 + 55) väliin jää vain 2,2
+   * yksikköä tarkastettavaa. Neljän yksikön askel hyppäsi sen yli, ja
+   * reitti näytti kelvolliselta vaikka se kulkee maalla juuri siinä.
+   * Kapeimmat tarkastettavat kohdat ovat aina lyhyillä reiteillä.
+   */
+  const ASKEL = 1;
   for (let i = 1; i < poly.length; i++) {
     const [x0, y0] = poly[i - 1];
     const [x1, y1] = poly[i];

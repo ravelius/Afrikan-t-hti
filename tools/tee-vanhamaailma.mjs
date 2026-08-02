@@ -120,6 +120,35 @@ const kaikkiPisteet = kaup.map((c) => {
 });
 
 /*
+ * Satama ei saa jäädä sisämaahan.
+ *
+ * Peli sallii kaupungin ja sataman väliin 55 yksikön pätkän, joka saa
+ * kulkea maalla. Sitä kauempana vedestä olevan kaupungin merireitti ei
+ * voi KOSKAAN kelvata — ei tiheämmällä ruudukolla eikä millään
+ * reitinhaulla. Madagaskar osui saaren sisäosaan 72 yksikön päähän
+ * rannasta, ja se kaatoi kaikki kolme sen merireittiä.
+ *
+ * Tämä tarkistetaan erikseen, koska vika ei näy reittityökalussa
+ * mitenkään: se raportoi vain "polku löytyi mutta viiva kulkee maalla",
+ * ja syytä etsii ruudukosta väärästä paikasta. Korjaus ajetaan
+ * työkalulla tools/satamat-rannalle.mjs.
+ */
+const RANNASTA_ENINTAAN = 46;
+
+/** Kuinka kaukana lähin vesi on annetusta pisteestä? */
+function vedenEtaisyys(x, y) {
+  if (!isOnLand([x, y], ALKUKARTTA)) return 0;
+  for (let r = 4; r <= 220; r += 4) {
+    for (let a = 0; a < 48; a++) {
+      const kulma = (a / 48) * Math.PI * 2;
+      if (!isOnLand([x + Math.cos(kulma) * r, y + Math.sin(kulma) * r], ALKUKARTTA)) return r;
+    }
+  }
+  return Infinity;
+}
+
+
+/*
  * Liian lähekkäiset kaupungit.
  *
  * Vanhoilla laudoilla mittakaavat olivat eri, joten Istanbul (Euroopan

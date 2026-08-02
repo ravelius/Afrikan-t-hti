@@ -76,25 +76,15 @@ const SISALTO_VALMIS = new Set([
 /*
  * Laudat, joiden merireitit ovat vielä laskematta loppuun.
  *
- * Vanha maailma on koneen kokoama yhdistelmä neljästä laudasta. Sen
- * merireitit lasketaan A*-haulla vesiruudukon läpi
- * (tools/merireitit.mjs), koska vanhat suorat viivat oikaisevat tarkan
- * rannikon yli. 41 reittiä 54:stä kulkee jo oikein; 13 ei.
+ * Tyhjä, ja niin sen pitää pysyä. Vanha maailma oli tässä hetken:
+ * yhdistetyllä kartalla rannikko on Natural Earthin tarkkaa aineistoa,
+ * ja vanhat suorat viivat oikaisivat sen yli. Reitit lasketaan nyt
+ * A*-haulla vesiruudukon läpi (tools/merireitit.mjs), ja kelpuutus
+ * rakentaa saman pehmennetyn viivan kuin peli piirtää.
  *
- * Nämä 13 ovat kapeita salmia ja saaristoja, joissa 12 yksikön ruudukko
- * sulkee kanavan rannikon levityksen jälkeen:
- *
- *   lontoo-dublin, dublin-edinburgh, dubrovnik-rooma, tukholma-helsinki,
- *   helsinki-tallinna, riika-tukholma, madagaskar-mosambik,
- *   madagaskar-sansibar, sansibar-mosambik, sansibar-rashafun,
- *   rashafun-suakin, mekka-aden, mumbai-karachi
- *
- * Seuraava askel on paikallisesti tiheämpi ruudukko näille väleille.
- * Lauta ei ole vielä pelattava (aarre- ja aikalogiikka puuttuu), joten
- * tämä ei estä ketään — mutta se on korjattava ennen kuin lauta
- * otetaan käyttöön.
+ * Jos joudut lisäämään laudan tähän, kirjaa myös reitit nimeltä ja syy.
  */
-const MERIREITIT_KESKEN = new Set(['vanhamaailma']);
+const MERIREITIT_KESKEN = new Set();
 
 const MIN_CITY_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 5 : 2);
 const MIN_GENERAL_QUESTIONS = (packId) => (SISALTO_VALMIS.has(packId) ? 15 : 10);

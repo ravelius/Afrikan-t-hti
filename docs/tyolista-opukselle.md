@@ -338,6 +338,34 @@ kulmapisteitä, ja välipisteettömällä suoralla niitä on kaksi, molemmat
 satamassa — yhtään näytettä ei jäänyt tarkastettavaksi, joten kaikki
 kelpasi. Nyt näytteet otetaan viivaa pitkin neljän yksikön välein.
 
+### Oikea syy kolmeen viimeiseen: satama sisämaassa
+
+Madagaskarin kolme merireittiä eivät ratkenneet millään ruudukolla, ja
+työkalu toisti "polku löytyi mutta pehmennetty viiva kulkee maalla".
+Syytä ei ollut reitissä lainkaan: **Madagaskar oli 72 yksikön päässä
+rannasta.** Peli sallii kaupungin ja sataman väliin 55 yksikköä, joten
+yksikään reitti sen päästä ei voi koskaan kelvata — ei tiheämmällä
+ruudukolla eikä millään haulla.
+
+Kaupunki on saaren nimikkopiste, ei sisämaan pääkaupunki, joten
+siirtäminen rannalle on myös sisällöllisesti oikein. Uusi
+`tools/satamat-rannalle.mjs` siirsi kaksi kaupunkia: Madagaskarin
+(72 → 4 yksikköä rannasta) ja Mosambikin (52 → 4).
+
+**Kynnys ja tavoite ovat eri luvut tahallaan.** Ensimmäinen versio
+siirsi kahdeksan kaupunkia, mukaan lukien Kairon ja Aleppon, jotka ovat
+omilla paikoillaan syystä. Siirretään vain ne, joiden merireitti on
+mahdoton (yli 46 yksikköä), ja niille tavoitellaan 26:ta.
+
+### Näytteenotto astui satamavyöhykkeen ohi
+
+Neljän yksikön näyteväli riitti melkein. Helsingin ja Tallinnan väli on
+112 yksikköä, eli kahden satamavyöhykkeen (55 + 55) väliin jää **2,2
+yksikköä** tarkastettavaa — ja neljän yksikön askel hyppäsi sen yli.
+Reitti näytti työkalussa kelvolliselta ja jäi pelin omaan testiin
+kiinni. Askel on nyt yksi yksikkö. Kapeimmat tarkastettavat kohdat ovat
+aina lyhyillä reiteillä, eivät pitkillä.
+
 ### Nopeus: rasteri riveittäin
 
 Tarkennus tarvitsee tiheämmän ruudukon, ja se paljasti kaksi
@@ -376,6 +404,17 @@ pelaaja jäisi laudalle, ja testi vartioi sitä.
 indeksillä 0, eli "ensimmäinen vaihtoehto". Kun yhdistetty lauta nousi
 kärkeen, neljä testiä hajosi. Nyt testi sanoo minkä laudan se haluaa
 (`porttiIndeksi(game, 'kairo', 'africa')`), eikä järjestys enää sido.
+
+### Tulos
+
+**54 merireittiä 54:stä kulkee vettä pitkin**, tiukalla mitalla
+(pehmennetty viiva, näyte yhden yksikön välein). `MERIREITIT_KESKEN` on
+tyhjä ja testi ajetaan ilman ohitusta: 369 testiä läpi, 0 ohitettua.
+
+Yksi rumuus jäi: Ras Hafunista Suakiniin tarvitaan 237 välipistettä.
+Reitti kiertää Afrikan sarven ja nousee koko Punaisenmeren, joka on
+niin kapea, ettei yksikään pelkistys kestä tarkistusta. Se on noin 3 kt
+229 kilotavun tiedostossa, joten hinta on pieni — mutta se on siellä.
 
 ### Jäljellä
 
