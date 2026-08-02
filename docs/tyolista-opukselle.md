@@ -240,6 +240,60 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 37: vanha maailma yhdeksi kartaksi — VAIHE 1 VALMIS 2.8.2026
+
+**Omistajan päätös:** "Kokeillaan ensin vaihtoehto b kartoissa" eli
+Eurooppa, Afrikka, Lähi-itä ja Aasia yhdeksi saumattomaksi kartaksi.
+
+**Tässä vaiheessa ei muuteta peliä lainkaan** — ei versionostoa. Tämä on
+työkalu ja todiste siitä, että yhdistäminen onnistuu.
+
+**Miksi tarvitaan uusi projektio.** Jokainen lauta on litistetty pallolta
+omalla tavallaan: Eurooppa, Afrikka ja Lähi-itä yksinkertaisella lieriöllä
+kukin omalla mittakaavallaan, Aasia Lambertin kartiolla keskimeridiaanina
+105°E. Kahta eri tavalla litistettyä karttaa ei voi asettaa vierekkäin —
+rannikot eivät kohtaa saumassa vaan menevät ristiin.
+
+**Miller valittiin.** Alue ulottuu Kapkaupungista (-34°) Tromssaan (+70°)
+ja Lissabonista Beringinsalmelle. Kartio ei kata kumpaakin
+pallonpuoliskoa, joten valinta oli lieriöiden väliltä:
+
+| projektio | ongelma |
+|---|---|
+| plate carrée | venyttää pohjoisen leveäksi, Skandinavia levähtää |
+| Mercator | aikakauden oma (1873!), mutta 78°:ssa pystymittakaava lähes 5× — Lappi paisuisi mahdottomaksi |
+| **Miller** | kesytetty Mercator: muodot järkeviä ~70°:een, napa ei karkaa |
+
+Miller on ainoa, jolla sekä Kapkaupunki että Tromssa näyttävät itseltään
+samalla kartalla.
+
+**Koordinaatteja ei tarvinnut arvata.** Nykyisten lautojen x/y on
+käännettävissä takaisin: kaavat ovat pakettitiedostojen alkukommenteissa.
+Aasialla on lisäksi alkuperäinen lon/lat-aineisto
+`tools/mapdata/asia.json`:ssa, joten sitä ei käännetä lainkaan.
+
+**Rannikot piirretään uudestaan Natural Earthista** (10m, public domain).
+Omistaja arvasi tarpeen oikein: Afrikassa oli 93 pistettä koko
+mantereelle ja Lähi-idässä 129, kun Euroopassa on 1340. Uudessa kartassa
+on 3743 pistettä 33 rannikolla — Ramer–Douglas–Peucker karsii 443 000
+pisteestä niin, että niemet ja lahdet säilyvät.
+
+**Tulos.** 4000 × 2620 yksikön lauta, 143 kaupunkia. Päällekkäisiä
+porttikaupunkeja löytyi kolme — **Istanbul, Kairo ja Teheran** — ja ne
+ovat yhdistetyllä kartalla yksi kappale kukin. Esikatselukuvassa jokainen
+kaupunki osuu oikealle paikalleen ja mantereet liittyvät saumatta.
+
+**Mitä on vielä tekemättä** (arvio Paketti 32:n analyysistä):
+
+1. Reitit: 222 reittiä neljältä laudalta, ja rajat ylittävät reitit
+   pitää päättää (nyt niitä ei ole — laudat liittyivät porttikaupungeista)
+2. Nimien paikat: 143 kaupunkia, jokaisen nimen paikka katsottava
+   silmällä uudessa mittakaavassa — tämä on työn suurin yksittäinen erä
+3. Päällekkäisten kaupunkien sisällöt yhdistettävä (kysymykset, kuvat)
+4. Pelilogiikka: aarrejahdit, passin leimat, tallennus
+5. Suorituskyky iPadilla — kartta on nyt neljä kertaa isompi
+
+
 ## Paketti 36: zoomipainikkeet kartalle — VALMIS v160 2.8.2026
 
 **Omistajan toive:** "Siihen voisi tehdä universaalit zoomipainikkeet
