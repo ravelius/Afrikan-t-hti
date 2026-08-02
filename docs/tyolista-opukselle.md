@@ -305,6 +305,62 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 46: tiet takaisin kartalle ja oikea bittikartta — VALMIS v169 2.8.2026
+
+Omistajan kuvakaappaus iPadilta: "Lataa edelleen liian laajan näkymän
+alkuun. Tiet eivät näy vaikka zoomaan lähemmäs ja skrollaus tökkii."
+Kuvassa näkyivät kaupungit, nimet, maasto ja lentoreitit — mutta ei
+yhtään tietä.
+
+### Tiet katosivat samasta syystä kuin meri v159:ssä
+
+Reittikerros oli kartan **viimeinen suodatettu kerros**. v159:ssä
+poistettiin `#rough` mantereilta, aalloilta ja maastolta, koska iOS:n
+webapp-tila palautti suodatetun kerroksen tyhjänä eikä saanut sen
+piirtopuskuria enää varattua. Reitit saivat pitää suodattimensa, ja
+perustelu oli tuolloin oikea: kerros oli pieni ja näkyi omistajan
+kuvassa oikein.
+
+**Yhdistetyllä laudalla se ei ole pieni.** Reittikerros ulottuu
+Lissabonista Tokioon, ja sama oire palasi täsmälleen samalla tavalla.
+
+Reittien heilunta piirretään nyt pisteisiin (`kasinPiirretty`) kuten
+rannikoillakin. `#rough-soft` on poistettu, ja **kartalla ei ole enää
+yhtään suodatinta**. Testi vartioi sitä: kartan kerroksella ei saa olla
+`filter`-määrettä lainkaan.
+
+### SVG-kuva ei ole bittikartta
+
+v167:n rasterointi antoi `<image>`-elementille SVG-blobin osoitteen.
+Elementtien määrä laski, ja mittari näytti hyvää 26 ms — mutta kun
+reitit lisättiin samaan kuvaan, panorointi hidastui **128
+millisekuntiin**. Syy: SVG-kuva on yhä vektoria, ja selain piirsi sen
+uudelleen aina kun muunnos muuttui. Kuva oli vain siirtänyt työn toiseen
+paikkaan.
+
+Nyt kuva piirretään canvakselle ja käytetään PNG:nä. Se on oikea
+bittikartta, jonka siirtäminen on kompositorin työtä.
+
+| vaihe | elementtejä | panorointi |
+|---|---|---|
+| alkuperäinen | 7192 | 236 ms |
+| v167, SVG-kuva | 1611 | 26 ms |
+| v167 + reitit kuvassa | 805 | 128 ms |
+| **v169, canvas-PNG** | **805** | **17 ms** |
+
+17 millisekuntia on täysi ruudunpäivitys.
+
+### Puskuri pienemmäksi, aloitusnäkymä kapeammaksi
+
+Puskuri oli kokonainen ruudullinen joka suuntaan, jolloin kuva on kolme
+kertaa ruudun levyinen — iPadilla yli 3000 pikseliä eli päälle 40
+megatavua canvasta. 0,6 ruudullista riittää: sormi ei ehdi yhdellä
+pyyhkäisyllä yli, ja uusi kuva tilataan jo puolivälissä.
+
+Saapumisnäkymän yläraja 2400 → 1500 yksikköä. Se osuu portaalle 1422,
+noin kolmekymmentä pituusastetta — Lontoosta Varsovaan.
+
+
 ## Paketti 45: saapumiszoom mantereeseen, ei kaupunkiin — VALMIS v168 2.8.2026
 
 Omistajan havainto iPadilta: "Vanha maailma näkyy kokonaan ja zoomautuu

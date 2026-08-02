@@ -3138,7 +3138,9 @@ test('zoomiportaat lasketaan laudan koosta eikä kiinteinä kertoimina', () => {
   // Saapumistaso: pienellä laudalla noin kolmannes lautaa kuten ennenkin,
   // isolla laudalla mannerta eikä koko vanhaa maailmaa.
   assert.ok(saapuminen(1000) > 380 && saapuminen(1000) < 500, 'pieni lauta saapuu väärälle tasolle');
-  assert.ok(saapuminen(7200) > 1500 && saapuminen(7200) < 3000, 'iso lauta saapuu väärälle tasolle');
+  // Iso lauta: manner, ei koko vanha maailma eikä yksi kaupunki.
+  // Omistajan kuvakaappaus iPadilta: 1930 yksikköä näytti yhä liikaa.
+  assert.ok(saapuminen(7200) > 900 && saapuminen(7200) < 1800, 'iso lauta saapuu väärälle tasolle');
 });
 
 test('zoomipainikkeet toimivat kaikilla laudoilla ja ruuduilla', () => {
@@ -3175,24 +3177,37 @@ test('kartan isot kerrokset eivät käytä suodatinta', () => {
   assert.match(art, /smoothClosedPath\(kasinPiirretty\(/);
 });
 
-test('jokaiselle suodatinviittaukselle löytyy määrittely', () => {
-  // Ansa, johon jäätiin kiinni korjausta tehdessä: #rough-soft poistettiin
-  // defseistä, mutta reittikerros js/ui.js:ssä viittasi siihen yhä. SVG:ssä
-  // puuttuvaan suodattimeen viittaava ryhmä ei piirry LAINKAAN, joten
-  // pelkkä määrittelyn poisto olisi vienyt kaikki reitit kartalta.
+test('kartan kerroksilla ei ole suodattimia, ja viittaukset osuvat', () => {
   const art = readFileSync(new URL('../js/mapart.js', import.meta.url), 'utf8');
   const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+
+  /*
+   * Suodatin tarvitsee oman piirtopuskurin, jonka koko seuraa kerroksen
+   * rajauslaatikkoa ja zoomia. iOS vapauttaa taustalle jääneen
+   * sovelluksen puskurit eikä saa isointa enää varattua, jolloin kerros
+   * palaa TYHJÄNÄ. v159:ssä katosi meri; v169:ssä katosivat tiet, koska
+   * reittikerros sai pitää suodattimensa ja yhdistetyllä laudalla se
+   * ulottuu Lissabonista Tokioon.
+   *
+   * Kartan kerroksissa ei siksi saa olla suodattimia lainkaan. Heilunta
+   * piirretään pisteisiin (kohina, kasinPiirretty).
+   */
+  const kerrokset = [...ui.matchAll(/el\('g',\s*\{([^}]*)\}/g)].map((m) => m[1]);
+  for (const kerros of kerrokset) {
+    assert.ok(!/filter:/.test(kerros), `kartan kerroksella on suodatin: ${kerros.trim().slice(0, 60)}`);
+  }
+
+  // Jos suodattimeen kuitenkin viitataan, määrittelyn pitää löytyä:
+  // puuttuvaan suodattimeen viittaava ryhmä ei piirry LAINKAAN.
   const maaritellyt = new Set(
     [...art.matchAll(/el\('filter',\s*\{\s*id:\s*'([^']+)'/g)].map((m) => m[1]),
   );
   // Paljastusanimaatio rakentaa suodattimensa nimen lennossa.
   maaritellyt.add('reveal-rough-back');
   maaritellyt.add('reveal-rough-front');
-  const viitatut = [...`${art}\n${ui}`.matchAll(/url\(#([a-z0-9-]+)\)/g)]
-    .map((m) => m[1])
-    .filter((id) => id.includes('rough'));
-  assert.ok(viitatut.length, 'testi ei löytänyt yhtään viittausta — tarkista hakuehto');
+  const viitatut = [...`${art}\n${ui}`.matchAll(/url\(#([a-z0-9-]+)\)/g)].map((m) => m[1]);
   for (const id of new Set(viitatut)) {
+    if (!id.includes('rough')) continue;
     assert.ok(maaritellyt.has(id), `#${id}: viitataan mutta ei määritellä — kerros ei piirry`);
   }
 });

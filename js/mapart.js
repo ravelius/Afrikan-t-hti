@@ -221,26 +221,13 @@ export function drawDefs(svg) {
    * kasinPiirretty ylempänä), jolloin piirtopuskuria ei tarvita
    * lainkaan eikä ole mitään mitä menettää.
    *
-   * #rough-soft jää, koska reittikerros (js/ui.js) käyttää sitä yhä.
-   * Reitit näkyivät omistajan kuvassa oikein silloinkin kun maa oli
-   * kadonnut, eikä toimivaa kannata rikkoa: reittiviivat kulkevat
-   * kaupungista kaupunkiin usein suorana, ja ilman suodatinta niistä
-   * tulisi viivoittimella vedettyjä.
-   *
-   * HUOM: jos tämän joskus poistaa, poista samalla viittaus ui.js:stä.
-   * Puuttuvaan suodattimeen viittaava ryhmä ei piirry lainkaan, joten
-   * pelkkä määrittelyn poisto veisi kaikki reitit kartalta.
+   * #rough-soft on nyt myös poissa. Se jäi v159:ssä, koska reittikerros
+   * käytti sitä ja näkyi omistajan kuvassa oikein — se oli silloin
+   * pieni kerros. Yhdistetyllä laudalla se ulottuu Lissabonista
+   * Tokioon, ja sama oire palasi: iPadilla kaupungit ja nimet näkyivät
+   * mutta tiet eivät. Reittien heilunta piirretään nyt pisteisiin
+   * (kasinPiirretty), joten kartalla ei ole enää yhtään suodatinta.
    */
-  const roughSoft = el('filter', {
-    id: 'rough-soft', x: '-8%', y: '-8%', width: '116%', height: '116%',
-  }, defs);
-  el('feTurbulence', {
-    type: 'turbulence', baseFrequency: '0.03', numOctaves: 2, seed: 19, result: 'noise',
-  }, roughSoft);
-  el('feDisplacementMap', {
-    in: 'SourceGraphic', in2: 'noise', scale: 3.5,
-    xChannelSelector: 'R', yChannelSelector: 'G',
-  }, roughSoft);
 
   // Paperin kuitupinta laattana. Aiemmin tämä oli feTurbulence-suodatin,
   // joka peitti koko ruudun ja sekoittui multiplyllä kaiken päälle. Se
@@ -1058,13 +1045,14 @@ export function tyylitSisaan(ryhma) {
  * Kuvan enimmäisleveys pikseleinä.
  *
  * Ilman kattoa lähikuvan ikkuna kasvaisi rajatta: 36-kertaisella
- * zoomilla puhelimen levyinen näkymä on jo 15 000 pikseliä leveä, ja
- * selaimet kieltäytyvät sitä isommista rasteroinneista.
+ * zoomilla puhelimen levyinen näkymä on jo 15 000 pikseliä leveä.
+ * Katto rajaa myös muistin: 2600 x 2600 pikselin canvas vie noin 27
+ * megatavua, ja se on tabletille sopiva yläraja.
  */
-const KUVA_MAX = 3000;
+const KUVA_MAX = 2600;
 
 /**
- * Rasteroi lähderyhmästä yhden ikkunan kuvaksi.
+ * Rasteroi lähderyhmästä yhden ikkunan OIKEAKSI bittikartaksi.
  *
  * IKKUNA EIKÄ KOKO KARTTA. Ensimmäinen versio teki koko pergamentista
  * yhden kuvan. Se toimi yleiskuvassa mutta on väärin lähikuvassa:
@@ -1073,8 +1061,12 @@ const KUVA_MAX = 3000;
  * pikseleitä joka suuntaan. Omistajan huomio: "ei kannata laskea koko
  * valtavaa karttaa bittikartaksi heti, vaan vain osa alueesta."
  *
- * Ikkunaa laajennetaan pyyhkäisyjen välissä, koska sormi ehtii siirtää
- * karttaa vain rajallisen matkan kerrallaan.
+ * CANVAS EIKÄ SVG-KUVA. Toinen versio antoi <image>-elementille
+ * SVG-blobin osoitteen. Elementtien määrä laski, mutta panorointi
+ * hidastui 26 millisekunnista 128:aan sitä mukaa kuin kuvaan lisättiin
+ * sisältöä — koska SVG-kuva on yhä vektoria, ja selain piirsi sen
+ * uudelleen joka kerta kun muunnos muuttui. Vasta canvakselle piirretty
+ * PNG on bittikartta, jonka siirtäminen on kompositorin työtä.
  *
  * Palauttaa <image>-elementin tai null, jos rasterointi ei onnistunut.
  * Epäonnistuminen ei ole virhe: kutsuja jättää silloin vektorit
@@ -1084,35 +1076,50 @@ export async function rasteroiIkkuna(lahde, maarittelyt, ikkuna, skaala) {
   if (!lahde || typeof XMLSerializer === 'undefined') return null;
   if (!window.Blob || !URL.createObjectURL) return null;
   try {
+    const leveysPx = Math.min(KUVA_MAX, Math.max(64, Math.round(ikkuna.w * skaala)));
+    const korkeusPx = Math.max(1, Math.round((leveysPx * ikkuna.h) / ikkuna.w));
+
     const irrallinen = document.createElementNS(NS, 'svg');
     irrallinen.setAttribute('xmlns', NS);
     irrallinen.setAttribute('viewBox', `${ikkuna.x} ${ikkuna.y} ${ikkuna.w} ${ikkuna.h}`);
-    const leveysPx = Math.min(KUVA_MAX, Math.max(64, Math.round(ikkuna.w * skaala)));
     irrallinen.setAttribute('width', leveysPx);
-    irrallinen.setAttribute('height', Math.max(1, Math.round((leveysPx * ikkuna.h) / ikkuna.w)));
-
+    irrallinen.setAttribute('height', korkeusPx);
     if (maarittelyt) irrallinen.appendChild(maarittelyt.cloneNode(true));
     irrallinen.appendChild(lahde.cloneNode(true));
 
     const xml = new XMLSerializer().serializeToString(irrallinen);
-    const osoite = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
+    const lahdeOsoite = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
+    let kuvalahde;
     try {
-      await new Promise((valmis, virhe) => {
+      kuvalahde = await new Promise((valmis, virhe) => {
         const koe = new Image();
-        koe.onload = valmis;
+        koe.onload = () => valmis(koe);
         koe.onerror = () => virhe(new Error('kuvaa ei voitu ladata'));
-        koe.src = osoite;
+        koe.src = lahdeOsoite;
       });
     } catch {
-      URL.revokeObjectURL(osoite);
+      URL.revokeObjectURL(lahdeOsoite);
       return null;
     }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = leveysPx;
+    canvas.height = korkeusPx;
+    canvas.getContext('2d').drawImage(kuvalahde, 0, 0, leveysPx, korkeusPx);
+    URL.revokeObjectURL(lahdeOsoite);
+
+    const png = await new Promise((valmis) => {
+      if (canvas.toBlob) canvas.toBlob((b) => valmis(b), 'image/png');
+      else valmis(null);
+    });
+    const osoite = png ? URL.createObjectURL(png) : canvas.toDataURL('image/png');
+
     const kuva = el('image', {
       x: ikkuna.x, y: ikkuna.y, width: ikkuna.w, height: ikkuna.h,
       href: osoite, preserveAspectRatio: 'none',
     });
     // Osoite talteen, jotta kutsuja voi vapauttaa sen kun kuva vaihtuu.
-    kuva.dataset.osoite = osoite;
+    if (png) kuva.dataset.osoite = osoite;
     return kuva;
   } catch {
     return null;

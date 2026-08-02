@@ -338,6 +338,7 @@ import {
   revealRaysSvg,
   tokenIconSvg,
   paperi,
+  kasinPiirretty,
   rasteroiIkkuna,
   tyylitSisaan,
 } from './mapart.js';
@@ -453,7 +454,13 @@ const ZOOMI_LAHIN = 88;
  * näkyy Eurooppa eikä koko vanha maailma.
  */
 const SAAPUMIS_OSUUS = 0.43;
-const SAAPUMIS_LEVEIN = 2400;
+/*
+ * 2400 yksikköä oli yhä liian laaja: iPadilla näkyi Marseillesta
+ * Jerusalemiin (omistajan kuvakaappaus). 1500 osuu portaalle 1422, joka
+ * on noin kolmekymmentä pituusastetta — Lontoosta Varsovaan, eli
+ * Eurooppa siinä mielessä kuin omistaja sen tarkoitti.
+ */
+const SAAPUMIS_LEVEIN = 1500;
 const MANNER_ZOOM_VIIVE = 1400; // kokonäkymä näkyy tämän verran ennen zoomausta
 // Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
 // alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
@@ -1500,7 +1507,15 @@ export class UI {
     const nakyva = this.nakyvaAlue();
     if (!nakyva) return;
 
-    const PUSKURI = 1;      // ruudullista joka suuntaan
+    /*
+     * Puskuri on 0,6 ruudullista joka suuntaan, ei kokonainen.
+     *
+     * Koko ruudullinen tekisi kuvasta kolme kertaa ruudun levyisen, ja
+     * iPadin leveydellä se on jo yli 3000 pikseliä eli päälle 40
+     * megatavua canvasta. 0,6 riittää: sormi ei ehdi yhdellä
+     * pyyhkäisyllä yli, ja uusi kuva tilataan jo puolivälissä.
+     */
+    const PUSKURI = 0.6;
     const VARARAJA = 0.45;  // näin lähelle reunaa saa tulla ennen uutta
 
     /*
@@ -2244,13 +2259,9 @@ export class UI {
     drawTerrain(taide, pack.map, this.mapObstacles(), decor.terrainBands);
     drawCompass(taide, decor.compass.x, decor.compass.y, decor.compass.r);
     drawDoodles(taide, decor);
-    // Kuvaksi muuttaminen on hidasta vain kerran, ja se saa tapahtua
-    // piirron jälkeen: kartta näkyy heti vektoreina ja vaihtuu kuvaksi
-    // huomaamatta. Epäonnistuessaan vektorit jäävät paikalleen.
-    this.rasteroiTaide(staattinen);
 
     // Lentoreitit kaarina.
-    const air = el('g', { class: 'air-routes' }, root);
+    const air = el('g', { class: 'air-routes' }, staattinen);
     for (const route of this.game.airRoutes) {
       const a = board.cityById.get(route.a);
       const b = board.cityById.get(route.b);
@@ -2260,9 +2271,30 @@ export class UI {
     }
 
     // Reitit ja askelpisteet. Merireitit kaartavat rannikon ympäri.
-    const routes = el('g', { class: 'routes', filter: 'url(#rough-soft)' }, root);
+    /*
+     * Reitit ilman suodatinta ja osana kartan kuvaa.
+     *
+     * SUODATIN POIS. Tämä oli v159:n vian viimeinen jäänne. Silloin
+     * poistettiin #rough mantereilta, aalloilta ja maastolta, koska
+     * iOS:n webapp-tila palautti suodatetun kerroksen TYHJÄNÄ eikä
+     * saanut sen piirtopuskuria enää varattua. Reittikerros sai pitää
+     * suodattimensa, koska se oli pieni. Yhdistetyllä laudalla se ei
+     * ole pieni: kerros ulottuu Lissabonista Tokioon, ja omistajan
+     * kuvakaappaus iPadilta näyttää saman oireen — kaupungit, nimet ja
+     * lentoreitit näkyvät, tiet eivät.
+     *
+     * Heilunta piirretään nyt pisteisiin kuten rannikoillakin, jolloin
+     * puskuria ei tarvita lainkaan.
+     *
+     * KARTAN KUVAAN. Reitit eivät muutu pelin aikana — mikään ei
+     * muokkaa niitä piirron jälkeen — joten ne kuuluvat samaan kuvaan
+     * kuin muu muuttumaton taide. Se poistaa ne myös panoroinnin
+     * tieltä: niitä on askelpisteineen noin tuhat elementtiä.
+     */
+    const routes = el('g', { class: 'routes' }, staattinen);
     for (const e of board.edges) {
-      const d = e.poly.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+      const d = kasinPiirretty(e.poly, 2)
+        .map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
       el('path', {
         d,
         class: `route route-${e.type}`,
@@ -2289,7 +2321,7 @@ export class UI {
 
     // Vakiohinta kerrotaan kerran kartan selitteessä; reitille merkitään
     // hinta vain, jos se poikkeaa vakiosta. Näin meri pysyy siistinä.
-    const fares = el('g', { class: 'fares' }, root);
+    const fares = el('g', { class: 'fares' }, staattinen);
     for (const e of board.edges) {
       if (e.type !== 'sea' || e.fee === SEA_FARE) continue;
       const mid = pointAlong(e.poly, 0.5);
@@ -2302,6 +2334,14 @@ export class UI {
         opacity: (0.85 + hash01(`fare:o:${e.id}`) * 0.3).toFixed(2),
       }, fares).textContent = `⚓${e.fee}`;
     }
+
+    /*
+     * Nyt kaikki muuttumaton on piirretty: pergamentti, mantereet,
+     * aallot, maasto, koristeet, lento- ja matkareitit askelpisteineen.
+     * Ne muuttuvat yhdeksi kuvaksi, ja elävään puuhun jäävät vain
+     * kaupungit, nimet, laatat, kohderenkaat ja nappulat.
+     */
+    this.rasteroiTaide(staattinen);
 
     // Selite kartan otsikon alle: alueen pinta-ala ja väkiluku isoin
     // pyöristyksin — pelkät numerot ja viivasymbolit (omistajan toive;
