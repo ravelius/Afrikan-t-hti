@@ -460,6 +460,15 @@ export const VANHA_MAAILMA = {
     compass: { x: 420, y: ${Math.round(korkeus * 0.82)}, r: 90 },
     waveSkip: [{ x: 520, y: 220, r: 260 }, { x: 420, y: ${Math.round(korkeus * 0.82)}, r: 150 }],
     landmarks: [],
+    /*
+     * Nopan lepopaikka. Ilman tätä \`dieRestingSpot\` kaatuu eikä noppa
+     * näy lainkaan — omistajan havainto: "noppa-animaatio puuttuu
+     * kokonaan". Vasen laita puolivälissä on vapaata merta joka
+     * ruudulla, ja \`dieSpotAlt\` siirtää nopan toiselle laidalle, jos
+     * matkakirja sattuu samaan nurkkaan.
+     */
+    dieSpot: { x: 0.06, y: 0.5 },
+    dieSpotAlt: { x: 0.94, y: 0.5 },
     terrainBands: [
       { maxY: ${Math.round(korkeus * 0.34)}, kind: 'trees' },
       { maxY: ${Math.round(korkeus * 0.52)}, kind: 'mountains' },

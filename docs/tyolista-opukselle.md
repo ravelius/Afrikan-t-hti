@@ -354,6 +354,34 @@ kysytty" -tapauksia, valehtelee onnistumisesta.**
   ne ovat itse valtio tai erityishallintoalue. Tunnus annetaan käsin.
 
 
+## PÄÄTETTY: kaikki tekstit kirjoitetaan itse
+
+Omistajan linjaus: "Kirjoitathan wiki-artikkelit itse vielä uudestaan.
+Ovat yleensä liian pitkiä ja tyyli vaihtelee." Ja tarkennus: **ne
+artikkelit, joita ei ole aiemmin kirjoitettu.**
+
+Wikipedian tiivistelmä kelpaa **raaka-aineeksi mutta ei sisällöksi**:
+
+- se on liian pitkä pelin korttiin
+- tyyli vaihtelee artikkelista toiseen — yksi alkaa väkiluvulla, toinen
+  perustamisvuodella, kolmas hallinnollisella asemalla
+- se on kirjoitettu tietosanakirjaksi, ei matkakertomukseksi
+
+Sama koskee kuvatekstejä: Commonsin kuvaus on englanniksi ja kömpelö.
+
+**Missä tämä on jo tehty:** Euroopan ja Afrikan kaupungeilla on omat
+kirjoitetut tekstit (`OMAT_ARTIKKELIT`, `EUROPE_ARTIKKELIT`). Ne
+pysyvät ennallaan — omistaja pyysi kirjoittamaan vain ne, joita ei ole
+vielä kirjoitettu.
+
+**Mitä puuttuu:** Aasian ja Lähi-idän 63 kaupunkia. Niillä kortin
+teksti tulee suoraan Wikipediasta, ja juuri se näkyy pituutena ja
+tyylin vaihteluna.
+
+**Sääntö:** faktoja ei keksitä. Teksti kirjoitetaan tiivistelmän
+pohjalta, ja jos jokin asia ei ole varmaa, sitä ei sanota — periaate 2.
+
+
 ## PÄÄTETTY, EI VIELÄ TEHTY: Kuuntele kieltä suorana radiona
 
 Omistajan havainto: "Kuuntele kieltä toimii mutta sisältö on heikko,
