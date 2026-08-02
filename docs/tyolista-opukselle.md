@@ -240,6 +240,7 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+<<<<<<< HEAD
 ## Paketti 31: kiikari ilmestyi kesken pelin — KORJATTU 2.8.2026
 
 **Omistajan havainto:** "Valitsin laivamatkan Ateenassa ja peli zoomasi
@@ -275,6 +276,8 @@ Toistettu ennen korjausta: napautus → `aloitus-zoom` heti, `kiikari-paalla`
 syty kahdeksassa sekunnissa.
 
 
+=======
+>>>>>>> origin/main
 ## Paketti 30: vinjetti pois lähikuvasta — VALMIS 2.8.2026
 
 **Omistajan toive:** "Zoomatussa mannernäkymässä vaalean vinjetin voi
