@@ -384,6 +384,47 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 59: kuvakortti keskelle ruutua — VALMIS v184 3.8.2026
+
+Omistajan havainto edellisen version jälkeen: "Ei keskellä." Kortti
+valui oikealle yli ruudun reunan.
+
+**Vaakakeskitys laskettiin JavaScriptissä oletuksella, että kortti on
+korkeintaan 400 pikseliä leveä.** Kun kortti kasvoi isolla ruudulla 720
+pikseliin (paketti 57), laskelma jäi vanhaksi.
+
+Sama virhe oli aiemmin pystysuunnassa, ja se korjattiin silloin
+siirtämällä keskitys CSS:ään — leveys ja korkeus eivät ole tiedossa
+ennen kuin tyylit on laskettu. **Nyt myös vaakakeskitys on CSS:ssä.**
+
+Opetus: kun mitta muuttuu tyylitiedostossa, jokainen JavaScriptissä
+oleva oletus samasta mitasta on rikki. Oikea korjaus ei ole päivittää
+lukua vaan poistaa oletus.
+
+
+## Paketti 58: kuvapino kestää useamman kuin kaksi — VALMIS v183 3.8.2026
+
+Omistajan toive: "Matkakirjassa mainitut näkymät ja asiat olisi kiva
+saada kuvin matkakirjan kuviin, joita voi siis olla enemmän kuin kaksi."
+
+Päiväkirja mainitsee Suakinissa korallitalot, sataman ja dhow-veneet.
+Kortissa oli tilaa kahdelle kuvalle: vanhalle ja uudelle. Nyt pinossa
+voi olla mikä tahansa määrä.
+
+**Järjestys kertoo saman tarinan kuin teksti:** vanha valokuva ensin,
+sitten päiväkirjan mainitsemat näkymät, viimeisenä nykypäivä. Pino
+päättyy siihen, mitä paikasta on jäljellä.
+
+**Napautus kiertää eteenpäin, ei vaihda päikseen.** Kahdella kuvalla
+vaihto riitti; useammalla se olisi jättänyt loput näkymättömiin.
+
+**Laskuri kertoo, montako kuvia on.** Kahden kuvan pinossa alta
+pilkottava reuna riitti vihjeeksi, useamman kuvan pinossa ei.
+
+Uusi kenttä `lisat` valokuvatietueessa: lista samanmuotoisia kuvia
+vanhan ja uuden väliin. Vanhat tietueet toimivat ennallaan.
+
+
 ## Paketti 57: kuvakortti isommaksi isolla ruudulla — VALMIS v182 3.8.2026
 
 Omistajan toive iPadilta: "Nämä kuvat voisi näkyä isompana."

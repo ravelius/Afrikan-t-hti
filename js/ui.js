@@ -861,14 +861,22 @@ export class UI {
       // pinosta pääsee pois napauttamalla karttaa eli pinon ulkopuolelle
       // (omistajan toive). Yhden kuvan kortti sulkeutuu mistä napautuksesta
       // tahansa, kuten ennenkin.
-      const alla = this.postikortti?.querySelector('.postikortti-kortti.alla');
+      /*
+       * Pino kiertää eteenpäin, ei vaihda päikseen.
+       *
+       * Kahdella kuvalla vaihto riitti, mutta pinossa voi nyt olla
+       * useampi (omistajan toive). Napautus nostaa seuraavan
+       * päällimmäiseksi ja kiertää lopusta alkuun; pinosta pääsee pois
+       * napauttamalla sen ulkopuolelle.
+       */
+      const kortit = this.postikortti
+        ? [...this.postikortti.querySelectorAll('.postikortti-kortti')] : [];
       const kortilla = this.postikortti && e.composedPath?.().includes(this.postikortti);
-      if (alla && kortilla) {
+      if (kortit.length > 1 && kortilla) {
         e.preventDefault();
         e.stopPropagation();
-        for (const kortti of this.postikortti.querySelectorAll('.postikortti-kortti')) {
-          kortti.classList.toggle('alla');
-        }
+        this.postikorttiIndeksi = ((this.postikorttiIndeksi ?? 0) + 1) % kortit.length;
+        kortit.forEach((k, i) => k.classList.toggle('alla', i !== this.postikorttiIndeksi));
         sfx.play('swipe');
         return;
       }
@@ -3271,23 +3279,67 @@ export class UI {
         [tiedot.paikka, kuvaTiedot.vuosi, kuvaTiedot.lahde].filter(Boolean).join(' · ')));
       return osa;
     };
-    kortti.appendChild(teeKortti(tiedot, '', `Vanha valokuva: ${tiedot.paikka}`));
-    // Uusi kuva pilkottaa vanhan alta ja nousee napautuksesta päälle
-    // (omistajan kokeilu — pilottikaupungit).
-    if (tiedot.uusi) {
-      kortti.appendChild(teeKortti({ ...tiedot.uusi, vuosi: tiedot.uusi.vuosi ?? 'nykypäivä' },
-        'uusi alla', `Uusi valokuva: ${tiedot.paikka}`));
-    }
+    /*
+     * Pinossa voi olla enemmän kuin kaksi kuvaa.
+     *
+     * Omistajan toive 3.8.2026: "Matkakirjassa mainitut näkymät ja asiat
+     * olisi kiva saada kuvin matkakirjan kuviin, joita voi siis olla
+     * enemmän kuin kaksi." Päiväkirja mainitsee Suakinissa korallitalot,
+     * sataman ja dhow-veneet — jokaisesta voi olla oma kuvansa.
+     *
+     * Järjestys: vanha valokuva ensin, sitten päiväkirjan mainitsemat
+     * näkymät, viimeisenä nykypäivä. Näin pino kertoo saman tarinan kuin
+     * teksti ja päättyy siihen, mitä paikasta on jäljellä.
+     */
+    const pino = [
+      { ...tiedot, alt: `Vanha valokuva: ${tiedot.paikka}` },
+      ...(tiedot.lisat ?? []).map((k) => ({
+        ...k,
+        alt: `${k.selite ? k.selite.slice(0, 60) : tiedot.paikka}`,
+      })),
+      ...(tiedot.uusi
+        ? [{
+          ...tiedot.uusi,
+          vuosi: tiedot.uusi.vuosi ?? 'nykypäivä',
+          alt: `Uusi valokuva: ${tiedot.paikka}`,
+        }]
+        : []),
+    ];
+    this.postikorttiPino = pino.length;
+    this.postikorttiIndeksi = 0;
+    pino.forEach((kuvaTiedot, i) => {
+      const luokat = [
+        kuvaTiedot === pino[pino.length - 1] && tiedot.uusi ? 'uusi' : '',
+        i === 0 ? '' : 'alla',
+      ].filter(Boolean).join(' ');
+      const osa = teeKortti(kuvaTiedot, luokat, kuvaTiedot.alt);
+      // Laskuri kertoo, että kuvia on lisää — muuten pinon alta
+      // pilkottava reuna jää helposti huomaamatta.
+      if (pino.length > 1) {
+        osa.appendChild(html('p', 'postikortti-laskuri', `${i + 1}/${pino.length}`));
+      }
+      kortti.appendChild(osa);
+    });
     // Kortti keskelle ruutua — sama paikka yhdelle kuvalle ja pinolle,
     // jotta avaus näyttää samalta joka laitteella. Pystykeskitys tehdään
     // CSS:llä eikä mittaamalla: kortin korkeus ei ole tiedossa ennen kuin
     // kuva on latautunut, ja mitattu keskitys valui alas (omistajan
     // havainto iPadilla).
-    const leveys = Math.min(window.innerWidth * 0.78, 400);
-    kortti.style.left = `${Math.max(8, (window.innerWidth - leveys - 24) / 2)}px`;
+    /*
+     * Keskitys tehdään CSS:llä molempiin suuntiin.
+     *
+     * Vaakakeskitys laskettiin ennen JavaScriptissä oletuksella, että
+     * kortti on korkeintaan 400 pikseliä leveä. Kun kortti kasvoi
+     * isolla ruudulla 720 pikseliin, laskelma jäi vanhaksi ja kortti
+     * valui oikealle yli ruudun reunan (omistajan havainto iPadilla:
+     * "ei keskellä"). Sama virhe oli aiemmin pystysuunnassa, ja se
+     * korjattiin silloin samalla tavalla — leveys ei ole tiedossa
+     * ennen kuin tyylit on laskettu.
+     */
+    kortti.style.left = '50%';
     kortti.style.top = '50%';
     // Hienoinen nosto ylös: alta pilkottava kortti jatkuu alaspäin.
-    kortti.style.transform = 'translateY(-52%)';
+    kortti.style.transform = 'translate(-50%, -52%)';
     document.body.appendChild(kortti);
     this.postikortti = kortti;
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä
