@@ -305,6 +305,92 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 44: kartta bittikartaksi ja zoomi laudan mukaan — VALMIS v167 2.8.2026
+
+Omistajan havainto: "Kartan scrollaus on hidas eikä zoomaa tarpeeksi
+lähelle."
+
+### Mitattiin ensin
+
+| lauta | elementtejä | panorointi |
+|---|---|---|
+| Eurooppa | 741 | 30 ms/kehys |
+| vanha maailma | 7192 | **236 ms/kehys** |
+
+236 millisekuntia on noin neljä kuvaa sekunnissa. Uusi
+`tools/mittaa-kartta.mjs` laskee luvut selaimessa.
+
+### "Onhan se bittikarttana kun scrollataan?" — ei ollut
+
+Koodin oma kommentti lupasi, että CSS-muunnoksella panoroitaessa selain
+käyttää valmista rasteria. Mittaus osoitti lupauksen vääräksi: selain
+piirsi 7192 vektorielementtiä uudelleen joka kehyksellä. Omistaja arvasi
+tämän itse ennen kuin ehdin kertoa.
+
+**Nyt kartan muuttumaton taide — pergamentti, mantereet, aallot, maasto,
+koristeet — on yksi kuva.** Elävään puuhun jää vain se, mikä muuttuu:
+reitit, kaupungit, nimet, laatat ja nappulat. 7192 → 1611 elementtiä,
+**236 → 25 ms/kehys**, eli sama kuin pienellä laudalla.
+
+### Ikkuna, ei koko kartta
+
+Omistajan tarkennus: "ei kannata laskea koko valtavaa karttaa
+bittikartaksi heti, vaan vain osa alueesta." Tämä on oikein ja välttämätöntä:
+yhdistetyn laudan pergamentti on noin 26 000 yksikköä leveä, ja sen
+rasterointi lähikuvan tarkkuudella olisi kymmeniä tuhansia pikseleitä.
+
+Kuva tehdään siksi ikkunasta, joka on yhden ruudullisen verran
+näkyvää aluetta suurempi joka suuntaan. Uusi ikkuna tilataan jo silloin,
+kun näkyvä alue tulee puolen ruudun päähän reunasta — ei vasta reunalla.
+Vanha kuva pysyy paikallaan kunnes uusi on ladattu, joten tyhjää ei näy
+missään vaiheessa (omistajan vaatimus).
+
+### Kolme omaa virhettä, kaikki kiinni tarkistuksesta
+
+1. **Tyylit eivät periydy.** Ensin upotin sivun tyylitiedoston kuvaan.
+   Säännöt on kirjoitettu sivun rakennetta vasten (`#board`, `body...`),
+   eikä irrallisessa SVG:ssä ole bodya — yksikään sääntö ei osunut ja
+   kartasta tuli musta paperi mustine mantereineen. Nyt jokaiselta
+   elävältä elementiltä kysytään sen **laskettu** tyyli ja se
+   kirjoitetaan kloonin omaksi tyyliksi.
+2. **Ikuinen silmukka.** Ikkuna rajataan paperin sisään, joten kartan
+   laidalla se ei voi ulottua puskurin verran ulommas — ja ehto jäi
+   ikuisesti täyttymättä. Nyt paperin reuna kelpaa reunaksi.
+3. **Kuva syntyi liian aikaisin.** Ensimmäinen kuva piirtyi laudan
+   luonnin yhteydessä, jolloin viewBox oli vielä oletusarvoinen
+   1000 × 1000, ja ikkunaksi tuli 3000 yksikköä. Yleiskuvassa ei
+   panoroida, joten mikään ei pyytänyt parempaa, ja kartta jäi
+   kaistaleeksi. Nyt ensimmäinen kuva odottaa seuraavaa kehystä ja
+   näkymän asettuminen pyytää aina uuden.
+
+**Kaikki kolme näkyivät vain kuvakaappauksessa**, eivät testeissä
+eivätkä mittarissa — mittari näytti koko ajan hyvää 26 millisekuntia,
+koska tyhjää karttaa on nopea piirtää. Vertailukuva ennen/jälkeen on
+ainoa tapa nähdä tällainen.
+
+### Zoomi laudan mukaan
+
+Portaat olivat kertoimia kokonäkymään: `[1, 1.5, 2.3, 3.4, 5]`. Tuhannen
+yksikön laudalla suurin porras näytti 200 yksikköä eli kaupungin
+ympäristön, mutta 7200 yksikön laudalla sama kerroin näytti 1440
+yksikköä — koko Euroopan. Sama nappi tarkoitti eri asiaa eri laudalla.
+
+Nyt portaat ovat **näkyviä leveyksiä**: `[667, 435, 294, 200, 132, 88]`.
+Luvut ovat samat kuin vanhat kertoimet tuhannen yksikön laudalla, joten
+pienet laudat käyttäytyvät täsmälleen kuten ennen, ja kaksi uutta
+porrasta jatkavat lähemmäs.
+
+### Lennettäessä suoraan lähikuvaan
+
+Omistajan toive: "Lennettäessä aloitusnäytöltä kartta voisi olla
+zoomautuneena saman verran kuin aikaisemmissa versioissa." Kokonäkymä on
+olemassa siksi, että pelaaja näkee minne on tullut — vanhalla maailmalla
+se ei kerro sitä, koska koko manner mahtuu ruudulle niin pienenä ettei
+kaupunkeja erota. Isolla laudalla (yli 2000 yksikköä leveä) laskeudutaan
+siksi suoraan lähikuvaan, ja loput näkyvät vasta jos pelaaja itse
+loitontaa.
+
+
 ## Paketti 43: vanha maailma peliin, merireitit kuntoon — VALMIS v166 2.8.2026
 
 Omistajan linjaukset: "Julkaise kartta sitten suoraan peliin kun saat nuo

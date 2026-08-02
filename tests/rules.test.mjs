@@ -3088,23 +3088,33 @@ test('uusi peli tyhjentää muistit vasta varmistuksen jälkeen', () => {
     'localStorage.clear veisi muidenkin sovellusten tiedot');
 });
 
-test('zoomiportaat ovat nousevat ja alkavat kokonäkymästä', () => {
+test('zoomiportaat ovat laskevia näkyviä leveyksiä', () => {
   const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
-  const rivi = ui.match(/const ZOOMI_TASOT = \[([^\]]+)\]/);
-  assert.ok(rivi, 'ZOOMI_TASOT-portaita ei löytynyt');
-  const tasot = rivi[1].split(',').map((s) => {
-    const t = s.trim();
-    return t === 'MANNER_ZOOM' ? Number(ui.match(/const MANNER_ZOOM = ([\d.]+)/)[1]) : Number(t);
-  });
-  // Ensimmäinen porras on kokonäkymä: siitä loitonnettaessa poistutaan
-  // lähikuvasta kokonaan eikä karttaa panoroida.
-  assert.equal(tasot[0], 1, 'ensimmäisen portaan pitää olla kokonäkymä');
-  for (let i = 1; i < tasot.length; i++) {
-    assert.ok(tasot[i] > tasot[i - 1], `porras ${i} ei ole edellistä suurempi`);
+  const rivi = ui.match(/const ZOOMI_LEVEYDET = \[([^\]]+)\]/);
+  assert.ok(rivi, 'ZOOMI_LEVEYDET-portaita ei löytynyt');
+  const leveydet = rivi[1].split(',').map((s) => Number(s.trim()));
+
+  /*
+   * Portaat kertovat, kuinka LEVEÄ pala lautaa näkyy — eivät sitä,
+   * moninkertainen lähikuva on yleiskuvaan.
+   *
+   * Ero on olennainen: kertoimina sama nappi tarkoitti eri asiaa eri
+   * laudalla. Tuhannen yksikön laudalla kerroin 5 näytti 200 yksikköä
+   * eli kaupungin ympäristön, mutta 7200 yksikön yhdistetyllä laudalla
+   * sama kerroin näytti 1440 yksikköä eli koko Euroopan, eikä lähelle
+   * päässyt lainkaan.
+   */
+  for (let i = 1; i < leveydet.length; i++) {
+    assert.ok(leveydet[i] < leveydet[i - 1], `porras ${i} ei näytä edellistä pienempää alaa`);
   }
-  // Saapumiszoom käyttää yhtä portaista, jotta painikkeet jatkavat siitä
-  // eivätkä hyppää ensin johonkin väliin.
-  assert.match(ui, /const ZOOMI_OLETUS = ZOOMI_TASOT\.indexOf\(MANNER_ZOOM\)/);
+  // Kokonäkymä on porras 0 ja se lisätään erikseen, joten listassa
+  // itsessään ei saa olla laudan levyistä porrasta.
+  assert.ok(leveydet[0] < 1000, 'ensimmäisen portaan pitää olla jo lähikuva');
+  // Lähin porras riittää yhden kaupungin ympäristöön millä tahansa laudalla.
+  assert.ok(leveydet[leveydet.length - 1] <= 100, 'lähin porras ei pääse tarpeeksi lähelle');
+  // Kertoimet lasketaan laudan leveydestä, jotta sama nappi tuo yhtä
+  // lähelle kaikilla laudoilla.
+  assert.match(ui, /zoomiTasot\(\)\s*\{[\s\S]*?leveys \/ nakyva/);
 });
 
 test('zoomipainikkeet toimivat kaikilla laudoilla ja ruuduilla', () => {
