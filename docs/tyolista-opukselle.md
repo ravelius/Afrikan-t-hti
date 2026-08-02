@@ -240,6 +240,46 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 26: alalaidan kaistan arvoitus ja napit — VALMIS 2.8.2026
+
+**Omistajan toive:** "Siellä napit alemmas ja pienennä niitä ainakin
+vaakasuunnassa."
+
+**Ensin arvoitus ratkesi.** Kehittäjätilan mittarivi asennetusta
+sovelluksesta:
+
+    ruutu   402 × 812     ← tämän selain saa käyttöönsä
+    näyttö  402 × 874     ← tämän kokoinen puhelimen ruutu on
+    turva   ylä 62px  ala 34px
+    app     0 → 812
+    stage   119 → 812
+    kartta  126 → 805
+
+Selaimen näkymä on **812 pistettä 874:n ruudulla**. Alimmat 62 pistettä
+eivät kuulu sovellukselle lainkaan, eikä niihin yllä mikään css. Kartta
+päättyy 805:een eli 7 pisteen päähän sovelluksen alarajasta — paketti 23
+teki jo kaiken minkä pystyi. **Älä siis yritä venyttää karttaa
+alemmas.** Ainoa tapa saada lisää tilaa olisi saada iOS antamaan koko
+874, ja se on asennuksen eikä koodin asia.
+
+**Sivutuote: `env(safe-area-inset-bottom)` on väärä mitta kelluville
+korteille.** Se raportoi 34 pikseliä alueesta, joka ei ole näkymässä
+lainkaan, joten varaus laski saman tilan kahdesti ja söi napeilta 27
+pistettä. `.rail`, `#versio-kulma` ja `.palaute-kulma` käyttävät nyt
+kiinteää rakoa. Jos jollain laitteella kotipalkki ylettyy näkymän
+päälle, se on ohut läpikuultava viiva ja napit jäävät sen yläpuolelle.
+
+**Napit kapeammiksi.** Matkustustavan napit ovat puhelimella pelkkiä
+kuvakkeita, mutta venyivät silti ruudun levyisiksi. Nyt 77 pikseliä
+leveitä ja keskellä; korkeus pysyy 44 pikselissä, jotta sormi osuu.
+Rajaus koskee vain yhden rivin matkustusvalintaa
+(`[data-rivi='yksi']`) — tekstinapit kuten "Astu mantereelle"
+tarvitsevat tilansa.
+
+**Yksi testi käännettiin päinvastaiseksi.** Paketin 23 testi vaati
+`.rail`-säännöltä turva-aluetta. Se oli oletus, jonka mittaus kumosi.
+
+
 ## Paketti 25: kehittäjätila — VALMIS 2.8.2026
 
 **Omistajan toive:** "Tee hampurilaiseen kehittäjä toggle, salasana
@@ -267,7 +307,7 @@ lukko eikä tietoturvaa: tehtävä on estää tilan avautuminen vahingossa
 lapsen kädessä, ei suojata mitään salaista.
 
 **Ikkunassa on myös ruudun mitat.** Ne ovat siellä syystä: asennetussa
-sovelluksessa kartan alle jää yhä selittämätön kaista (ks. paketti 23),
+sovelluksessa kartan alle jäi selittämätön kaista (ratkaistu, ks. paketti 26),
 eikä iOS:n turva-alueita voi mitata muualta kuin laitteelta itseltään.
 CSS kirjoittaa `env()`-arvot `:root`-muuttujiin `--turva-yla` ja
 `--turva-ala`, joista JavaScript ne lukee.

@@ -3249,9 +3249,20 @@ body[data-mode].flight-active .rail > * { pointer-events: none; }
  * versionumero #versio-kulma). */
 body[data-mode] .app { padding-bottom: 0; }
 body[data-mode] .stage { padding-bottom: var(--gap); }
-body[data-mode] .rail {
-  bottom: max(calc(var(--gap) * 2), calc(env(safe-area-inset-bottom, 0px) + var(--gap)));
-}
+
+/*
+ * Kelluvat kortit varasivat alalaidasta turva-alueen verran tilaa
+ * kotipalkille. Kehittäjätilan mittarivi paljasti, ettei sitä tarvita:
+ * asennetussa sovelluksessa selain sai käyttöönsä 812 pistettä, vaikka
+ * ruutu on 874 — kotipalkin kaista jää kokonaan sovelluksen alueen
+ * ulkopuolelle. Varaus oli siis saman tilan laskemista kahdesti, ja se
+ * söi napeilta 27 pistettä.
+ *
+ * Kiinteä rako riittää myös siellä, missä kotipalkki oikeasti yltää
+ * näkymän päälle: se on ohut läpikuultava viiva, ja napit jäävät sen
+ * yläpuolelle.
+ */
+body[data-mode] .rail { bottom: calc(var(--gap) * 2); }
 
 /*
  * Kartan oma ohjerivi nousee ylös keskelle: alhaalla keskellä on nyt kelluva
@@ -3417,6 +3428,19 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     line-height: 1.15;
   }
 
+  /* Matkustustavan napit ovat puhelimella pelkkiä kuvakkeita, mutta ne
+   * venyivät silti ruudun levyisiksi ja peittivät kartalta kaistan,
+   * jota ne eivät tarvitse (omistajan toive). Nyt ne ovat kuvakkeen
+   * kokoisia ja keskellä. Korkeus pysyy 44 pikselissä, jotta sormi osuu.
+   *
+   * Rajaus koskee vain yhden rivin matkustusvalintaa: leveämmät napit
+   * (Astu mantereelle, Takaisin) tarvitsevat tekstitilansa. */
+  body[data-mode] .actions[data-rivi='yksi'] {
+    grid-auto-columns: minmax(0, 4.8rem);
+    justify-content: center;
+    gap: 0.55rem;
+  }
+
 
   /* Kelluva päiväkirja levenee kaistaleeksi kartan ylle: 46 % leveydestä
    * olisi puhelimella liian kapea luettavaksi. */
@@ -3567,7 +3591,9 @@ body.katselu #newgame-btn { display: none; }
   /* Numero lepää kartan pergamentilla (omistajan toive) — ei kehyksen
    * rajalla, jossa se jäi puoliksi piiloon. Väri on kartan mustetta. */
   left: max(1.3rem, calc(env(safe-area-inset-left, 0px) + 0.9rem));
-  bottom: max(0.95rem, calc(env(safe-area-inset-bottom, 0px) + 0.7rem));
+  /* Sama syy kuin .railissa: turva-alue jää sovelluksen alueen
+   * ulkopuolelle, joten sen varaaminen vain nostaisi numeron turhan ylös. */
+  bottom: 0.95rem;
   z-index: 5;
   font-size: 0.62rem;
   letter-spacing: 0.04em;
@@ -3582,7 +3608,7 @@ body.katselu #newgame-btn { display: none; }
 .palaute-kulma {
   position: fixed;
   right: max(1.1rem, calc(env(safe-area-inset-right, 0px) + 0.75rem));
-  bottom: max(0.8rem, calc(env(safe-area-inset-bottom, 0px) + 0.55rem));
+  bottom: 0.8rem;
   z-index: 6;
   width: 1.55rem;
   height: 1.55rem;
@@ -52394,7 +52420,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.150';
+const APP_VERSION = '2026-08-02.151';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
