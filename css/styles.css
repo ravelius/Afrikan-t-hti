@@ -555,6 +555,61 @@ body.aloitus-zoom .kiikari {
   transition: opacity 700ms ease;
 }
 
+/*
+ * Zoomipainikkeet kartan oikeassa reunassa (omistajan toive: sama
+ * zoomaus joka alustalle, ei pelkkiä sormieleitä).
+ *
+ * Pystyssä oikeassa reunassa, keskikorkeudella. Alalaita on
+ * matkustusnappien ja päiväkirjan käytössä, ylälaidassa on kortti —
+ * oikea reuna on ainoa kohta, joka on vapaa kaikissa vaiheissa.
+ *
+ * Pergamentin väreissä kuten kartan muutkin merkinnät, jotta napit
+ * kuuluvat karttaan eivätkä leiju sen päällä käyttöliittymänä.
+ */
+.zoomi {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  z-index: 3;
+}
+
+.zoomi[hidden] { display: none; }
+
+.zoomi-nappi {
+  width: 2.15rem;
+  height: 2.15rem;
+  /* Sormelle riittävä osumapinta, vaikka nappi näyttää pieneltä. */
+  min-width: 40px;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(239, 220, 180, 0.9);
+  color: var(--map-ink);
+  font-size: 1.35rem;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(28, 20, 12, 0.35);
+  /* Kaksoisnapautus ei saa zoomata selainta itseään. */
+  touch-action: manipulation;
+}
+
+.zoomi-nappi:hover:not(:disabled) { background: var(--paper); }
+.zoomi-nappi:active:not(:disabled) { transform: scale(0.94); }
+
+/* Päässä oleva nappi himmenee mutta jää paikalleen: katoava nappi
+   saisi sormen etsimään sitä joka painalluksen jälkeen. */
+.zoomi-nappi:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 .board-hint {
   position: absolute;
   left: 50%;

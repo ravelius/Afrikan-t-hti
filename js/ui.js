@@ -396,6 +396,21 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
  */
 const ZOOMATTAVAT = new Set(['europe']);
 const MANNER_ZOOM = 2.3;        // kuinka moninkertainen lähikuva on yleiskuvaan
+
+/*
+ * Zoomiportaat (omistajan toive: painikkeet kaikille alustoille).
+ *
+ * Ensimmäinen porras on 1 eli kokonäkymä — silloin lähikuvasta poistutaan
+ * kokonaan eikä karttaa panoroida. MANNER_ZOOM (2.3) on portaissa mukana,
+ * koska mantereelle saavuttaessa zoomataan yhä automaattisesti juuri
+ * siihen; painikkeet jatkavat siitä eteen- ja taaksepäin.
+ *
+ * Portaat eivät ole tasavälein: alapäässä ero on pieni, jotta yleiskuvan
+ * ja ensimmäisen lähikuvan välillä ei hypätä liikaa, ja yläpäässä
+ * suurempi, koska lähellä pieni muutos ei enää tunnu miltään.
+ */
+const ZOOMI_TASOT = [1, 1.5, MANNER_ZOOM, 3.4, 5];
+const ZOOMI_OLETUS = ZOOMI_TASOT.indexOf(MANNER_ZOOM);
 const MANNER_ZOOM_VIIVE = 1400; // kokonäkymä näkyy tämän verran ennen zoomausta
 // Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
 // alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
@@ -859,6 +874,21 @@ export class UI {
     // kelluvat, joten kortin oma napautus ei osu tähän.
     this.mapPane.addEventListener('click', () => this.kutistaPaivakirja());
 
+    // Zoomipainikkeet. Napautus ei saa vuotaa kartalle asti: mapPanen
+    // oma kuuntelija kutistaisi päiväkirjan ja maailmankartalla
+    // napautuszoomaus veisi näkymän muualle.
+    this.zoomiKuuntelijat = [];
+    for (const [id, suunta] of [['zoom-in', 1], ['zoom-out', -1]]) {
+      const nappi = document.getElementById(id);
+      if (!nappi) continue;
+      const kasittele = (e) => {
+        e.stopPropagation();
+        this.zoomaaPainikkeella(suunta);
+      };
+      nappi.addEventListener('click', kasittele);
+      this.zoomiKuuntelijat.push([nappi, kasittele]);
+    }
+
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
     this.travelExpanded = false; // matkavalinnan toinen vaihe auki
@@ -1016,6 +1046,9 @@ export class UI {
     this.stopQuizTimer();
     for (const lappu of this.taustaLaput ?? []) lappu.removeEventListener('click', this.lappuTausta);
     for (const lappu of this.peruutusLaput ?? []) lappu.removeEventListener('cancel', this.lappuPeruutus);
+    for (const [nappi, kasittele] of this.zoomiKuuntelijat ?? []) {
+      nappi.removeEventListener('click', kasittele);
+    }
     this.observer?.disconnect();
   }
 
@@ -1192,10 +1225,133 @@ export class UI {
       `translate3d(${this.panX.toFixed(1)}px, ${this.panY.toFixed(1)}px, 0)`;
   }
 
+  /*
+   * --- zoomipainikkeet ------------------------------------------------
+   *
+   * Omistajan toive: "universaalit zoomipainikkeet kartalle kaikille
+   * alustoille". Aiemmin lähikuvaan pääsi vain automaattisesti ja vain
+   * kapealla ruudulla; tietokoneella karttaa ei voinut lähentää lainkaan.
+   *
+   * Painikkeet käyttävät samaa lähikuvakoneistoa kuin automaattinen
+   * mannerzoom — vain zoomitaso vaihtuu. mannerZoomTarpeen() rajaa
+   * ainoastaan AUTOMAATTISEN zoomauksen (Eurooppa, kapea ruutu), ja
+   * fitViewBox katsoo pelkkää this.mannerZoom-lippua, joten painikkeilla
+   * lähikuva aukeaa millä tahansa laudalla ja millä tahansa ruudulla.
+   */
+
+  /**
+   * Ollaanko avausnäkymässä, jossa kartalla on oma lähikuvansa ja
+   * avausteksti? Katselutila (?lauta=) on vaiheeltaan pickstart mutta
+   * näyttää laudan kuin pelissä. Sama ehto on fitViewBoxissa.
+   */
+  avausNakymassa() {
+    return this.game.phase === 'pickstart' && !this.katselu;
+  }
+
+  /** Nykyinen zoomiporras; kokonäkymässä 0. */
+  get zoomiIndeksi() {
+    if (!this.mannerZoom) return 0;
+    return this.zoomiPorras ?? ZOOMI_OLETUS;
+  }
+
+  /** Zoomikerroin, jolla sovitaMannerZoom laskee lähikuvan mitat. */
+  get zoomiKerroin() {
+    return ZOOMI_TASOT[this.zoomiIndeksi] ?? MANNER_ZOOM;
+  }
+
+  /**
+   * Kartan piste, joka on juuri nyt paneelin keskellä. Zoomatessa tämä
+   * pidetään paikallaan — muuten kartta karkaisi käsistä joka
+   * painalluksella, koska lähikuva keskitettäisiin aina laudan keskelle.
+   *
+   * Käänteisluku sovitaMannerZoomin sijoituksesta:
+   *   panX = paneW / 2 - (kohde.x - box.x) * skaala
+   */
+  nykyinenKeskipiste() {
+    const pane = this.svg.parentElement;
+    if (!pane || !this.zoomSkaala || !this.mannerZoom) return null;
+    const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
+    return {
+      x: box.x + (pane.clientWidth / 2 - (this.panX ?? 0)) / this.zoomSkaala,
+      y: (this.zoomYlaReuna ?? box.y)
+        + (pane.clientHeight / 2 - (this.panY ?? 0)) / this.zoomSkaala,
+    };
+  }
+
+  /**
+   * Siirtyy zoomiportaissa. suunta on +1 (lähemmäs) tai -1 (kauemmas).
+   * Palauttaa true, jos taso muuttui.
+   */
+  zoomaaPainikkeella(suunta) {
+    if (this.dead || !this.svg) return false;
+    // Avausnäkymässä kartalla on oma lähikuvansa ja avausteksti; sinne
+    // painikkeet eivät kuulu. Katselutila (?lauta=) näyttää laudan kuin
+    // pelissä, joten siellä ne kuuluvat — sama ehto kuin fitViewBoxissa.
+    if (this.avausNakymassa()) return false;
+
+    const nykyinen = this.zoomiIndeksi;
+    const uusi = Math.min(ZOOMI_TASOT.length - 1, Math.max(0, nykyinen + suunta));
+    if (uusi === nykyinen) return false;
+
+    // Keskipiste luetaan ENNEN tason vaihtoa, vanhalla mittakaavalla.
+    const keskipiste = this.nykyinenKeskipiste();
+
+    if (uusi === 0) {
+      // Takaisin kokonäkymään: lähikuvan mitat ja siirto pois.
+      this.nollaaAloitusZoom();
+      this.fitViewBox();
+      this.paivitaZoomiNapit();
+      return true;
+    }
+
+    this.zoomiPorras = uusi;
+    if (!this.mannerZoom) {
+      // Kokonäkymästä lähikuvaan. Ilman aiempaa keskipistettä
+      // kohdistetaan pelaajan nappulaan, jotta lähennys vie sinne missä
+      // peli on menossa eikä laudan geometriseen keskipisteeseen.
+      this.mannerZoom = true;
+      document.body.classList.add('manner-zoom');
+      this.zoomKohde = this.pelaajanKohta() ?? null;
+    } else {
+      this.zoomKohde = keskipiste;
+    }
+    // panX/panY nolliksi, jotta sovitaMannerZoom keskittää zoomKohteeseen.
+    this.panX = null;
+    this.panY = null;
+    this.fitViewBox();
+    this.paivitaZoomiNapit();
+    return true;
+  }
+
+  /** Vuorossa olevan pelaajan nappulan kohta laudan koordinaateissa. */
+  pelaajanKohta() {
+    const pelaaja = this.game.players?.[this.game.turn];
+    const kaupunki = pelaaja && this.game.board?.cityById?.get(pelaaja.pos?.city);
+    return kaupunki ? { x: kaupunki.x, y: kaupunki.y } : null;
+  }
+
+  /**
+   * Painikkeiden tila: kumpikin himmenee kun porras on päässä. Nappi ei
+   * katoa vaan menee pois käytöstä — katoava nappi saa sormen etsimään
+   * sitä, ja kartan reunassa se olisi erityisen ärsyttävää.
+   */
+  paivitaZoomiNapit() {
+    const sisaan = document.getElementById('zoom-in');
+    const ulos = document.getElementById('zoom-out');
+    if (!sisaan || !ulos) return;
+    const piilossa = this.avausNakymassa();
+    const ryhma = sisaan.parentElement;
+    if (ryhma) ryhma.hidden = piilossa;
+    sisaan.disabled = this.zoomiIndeksi >= ZOOMI_TASOT.length - 1;
+    ulos.disabled = this.zoomiIndeksi <= 0;
+  }
+
   /** Palauttaa kartan tavalliseen kokoonsa (uusi peli, laudan vaihto). */
   nollaaAloitusZoom() {
     this.aloitusZoom = false;
     this.mannerZoom = false;
+    // Porras oletukselle: seuraava lähikuva alkaa taas saapumistasolta.
+    this.zoomiPorras = null;
     this.panX = null;
     this.panY = null;
     this.panVara = 0;
@@ -1239,7 +1395,9 @@ export class UI {
   sovitaMannerZoom(paneW, paneH) {
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
     const yleiskuva = Math.min(paneW / box.w, paneH / box.h);
-    const skaala = yleiskuva * MANNER_ZOOM;
+    // Zoomitaso tulee portaikosta: automaattinen saapumiszoom käyttää
+    // oletusporrasta, painikkeet siirtävät sitä.
+    const skaala = yleiskuva * this.zoomiKerroin;
     // Laudan eteläpuolelle varataan tilaa alarivin nappien verran, jotta
     // eteläisimmät kaupungit saa panoroitua niiden alta pois (omistajan
     // havainto: Kreeta ja Ateena jäivät nappien alle). Tila ei muuta
@@ -3103,6 +3261,9 @@ export class UI {
     this.stampPassport();
     // Vuorossa oleva pelaaja voi olla eri laudalla kuin edellinen.
     if (this.game.pack.id !== this.drawnPackId) this.drawBoardFor(this.game.pack);
+    // Zoomiportaan päät ja näkyvyys tarkistetaan joka piirrossa: vaihe
+    // vaihtuu, lauta vaihtuu ja automaattinen saapumiszoom muuttaa tasoa.
+    this.paivitaZoomiNapit();
     this.drawCountryBorders();
     this.drawTokens();
     this.drawTargets();

@@ -240,6 +240,61 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 36: zoomipainikkeet kartalle — VALMIS v160 2.8.2026
+
+**Omistajan toive:** "Siihen voisi tehdä universaalit zoomipainikkeet
+kartalle kaikille alustoille."
+
+**Mikä oli vialla.** Lähikuvaan pääsi vain automaattisesti, vain
+Euroopassa ja vain alle 700 pikselin ruudulla. Tietokoneella karttaa ei
+voinut lähentää lainkaan, eikä tasoa voinut säätää millään laitteella —
+`MANNER_ZOOM` oli kiinteä vakio 2.3.
+
+**Ratkaisu: portaikko vakion tilalle.**
+
+    const ZOOMI_TASOT = [1, 1.5, MANNER_ZOOM, 3.4, 5];
+
+Ensimmäinen porras on kokonäkymä: siihen loitonnettaessa lähikuvasta
+poistutaan kokonaan. `MANNER_ZOOM` on portaissa mukana, jotta
+automaattinen saapumiszoom osuu portaalle ja painikkeet jatkavat siitä
+eivätkä hyppää ensin johonkin väliin. Portaat eivät ole tasavälein:
+alapäässä ero on pieni, ettei yleiskuvan ja ensimmäisen lähikuvan
+välillä hypätä liikaa, yläpäässä suurempi, koska lähellä pieni muutos ei
+enää tunnu miltään.
+
+**Tärkein yksityiskohta: keskipiste pysyy paikallaan.** Ilman sitä kartta
+karkaisi käsistä joka painalluksella, koska `sovitaMannerZoom` keskittää
+lähikuvan `zoomKohde`-pisteeseen. `nykyinenKeskipiste()` laskee
+käänteisluvulla, mikä kartan piste on juuri nyt paneelin keskellä, ja se
+luetaan **ennen** tason vaihtoa vanhalla mittakaavalla. Mitattu: keskipiste
+pysyi 483,515–516:ssa kaikkien portaiden läpi molempiin suuntiin.
+
+Kokonäkymästä lähennettäessä ei ole aiempaa keskipistettä, joten
+kohdistetaan pelaajan nappulaan — siellä peli on menossa, ei laudan
+geometrisessa keskipisteessä.
+
+**Miksi painikkeet toimivat kaikkialla.** `mannerZoomTarpeen()` rajaa vain
+AUTOMAATTISEN zoomauksen; `fitViewBox` katsoo pelkkää `this.mannerZoom`
+-lippua. Painike asettaa lipun suoraan, joten lähikuva aukeaa millä
+tahansa laudalla ja millä tahansa ruudulla. Testi vartioi, ettei
+painikefunktio ala kysyä automaattizoomin ehtoja.
+
+**Paikka.** Kartan oikea reuna pystyssä, keskikorkeudella. Alalaita on
+matkustusnappien käytössä ja pidetty tarkoituksella väljänä (omistajan
+aiemmat toiveet), ylälaidassa on matkakirjan kortti. Napit ovat
+pergamentin väreissä kuten kartan muutkin merkinnät. Päässä oleva nappi
+himmenee mutta ei katoa — katoava nappi saisi sormen etsimään sitä.
+
+**Todennettu selaimessa** molemmilla ruutukoilla (402×874 ja 1280×800):
+portaat ylös ja alas, paluu tarkalleen lähtökokoon, painikkeiden päät
+oikein. Tietokoneella zoomia ei ollut ennen lainkaan.
+
+**Katselutila korjautui samalla.** Ehto oli aluksi pelkkä
+`phase === 'pickstart'`, mikä olisi piilottanut napit myös `?lauta=`
+-katselutilassa. Nyt ehto on sama kuin `fitViewBox`illa
+(`avausNakymassa()`), eli katselu näyttää laudan kuin pelissä.
+
+
 ## Paketti 35: meri katoaa kartalta — SYY LÖYTYI, KORJATTU v159 2.8.2026
 
 **v158:n arvaus oli väärä.** Omistaja: "Meri katoaa heti kun käyn toisessa
