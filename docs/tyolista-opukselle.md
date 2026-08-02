@@ -1516,6 +1516,12 @@ Toteuttajan havainnot seuraavaa pakettia varten:
   yksi koko maailman kierros, kuten `docs/tarina.md`:n ainoa päiväkirja
   vuodelta 1873 — ja kuten pelaajahahmon nimi (Fogg) on aina vihjannut.
   Aikataulutekstit pitää käydä läpi tämän mukaan.
+- **Kaupunkiin pääsee vasta kaupungin avaimilla.** Omistajan sääntö
+  2.8.2026: avaimet on löydettävä ennen kuin kaupunkikartan voi avata.
+  Näin kaupunki on palkinto eikä oikotie — sinne ansaitaan pääsy.
+  Avaimet ovat kaupunkikohtaiset, joten niitä on yhtä monta kuin
+  kaupunkikarttoja. Nimi on myös historiallisesti oikea: kaupungit ovat
+  antaneet avaimensa arvovieraille.
 - **Kaupunkien sisällöt yhteiskehitykseen — myöhemmin.** Omistajan
   linjaus 2.8.2026: joku, joka tuntee kaupungin oikein hyvin (vaikka on
   sieltä kotoisin), voisi ehdottaa tai itse rakentaa kaupungin kartan ja
