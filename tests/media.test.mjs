@@ -191,12 +191,20 @@ test('peilaustyökalu käyttää samaa turvanimi-sääntöä', () => {
     'js/media.js ja tools/peilaa-media.mjs ovat eriytyneet — korjaa molemmat');
 });
 
-// Manifesti on peilin repossa eikä pelin mukana. Jos se on koneella,
+// Manifesti on ämpärissä eikä pelin mukana. Jos se on koneella,
 // tarkistetaan koko aineisto; muuten testi ohitetaan.
-// Kansion nimi vaihtelee sen mukaan, miten repo on kloonattu. Linuxissa
-// polku on kirjainkoolle herkkä, ja ilman isoa alkukirjainta testi
-// ohittui hiljaisesti juuri siellä, missä media-repo oli levyllä.
+//
+// Ensisijainen paikka on media/ repon sisällä: sinne peilaustyökalu
+// kirjoittaa, ja sinne peilausajo (.github/workflows/peilaa.yml) noutaa
+// ämpärin sisällön ennen kuin ajaa nämä testit. Niin tämä tarkistus
+// oikeasti ajetaan jokaisella peilauksella eikä vain sattumalta.
+//
+// Perässä ovat vanhat sijainnit media-repon ajalta, jottei testi ohitu
+// keneltäkään jolla se on yhä levyllä. Linuxissa polku on kirjainkoolle
+// herkkä, ja ilman isoa alkukirjainta testi ohittui hiljaisesti juuri
+// siellä, missä repo oli.
 const MANIFESTIT = [
+  join(JUURI, 'media/manifesti.json'),
   join(JUURI, '../matkakirja-media-repo/manifesti.json'),
   join(JUURI, '../matkakirja-media/manifesti.json'),
   join(JUURI, '../Matkakirja-media/manifesti.json'),

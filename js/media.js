@@ -1,5 +1,5 @@
 // Peili: pelin kaikista repon ulkopuolelta ladattavista kuvista ja
-// äänistä on oma kopio yhdessä paikassa (github.com/ravelius/Matkakirja-media).
+// äänistä on oma kopio yhdessä paikassa (ämpäri, ks. R2_JUURI alla).
 // Peli hakee aineiston ensisijaisesti sieltä, jottei yksi kaatunut
 // palvelin tai poistettu tiedosto riko peliä kesken matkan. Alkuperäinen
 // osoite jää varareitiksi.

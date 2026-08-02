@@ -240,7 +240,69 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
-<<<<<<< HEAD
+## Paketti 33: peilausajo kuntoon ennen media-repon poistoa — VALMIS 2.8.2026
+
+Ei versionostoa: peliin ei tullut yhtään toiminnallista muutosta.
+`dist/` rakennettiin silti uudelleen, koska `js/media.js`:n
+alkukommentti muuttui.
+
+**Salaisuudet eivät seuranneet työnkulun mukana.** Omistaja ilmoitti
+lisänneensä R2-avaimet, joten ajoin `peilaa.yml`:n ensimmäistä kertaa
+pelirepossa (`lajit: liput`, pienin mahdollinen todiste). Kaatui 16
+sekunnissa:
+
+    aws: [ERROR]: Invalid endpoint: https://.r2.cloudflarestorage.com
+
+Osoitteen keskeltä puuttuu tilitunnus, eli `secrets.R2_ACCOUNT_ID` oli
+tyhjä. Lokissa myös `AWS_ACCESS_KEY_ID` ja `AWS_SECRET_ACCESS_KEY`
+olivat tyhjiä, kun samassa lohkossa `token: ***` — **GitHub peittää
+olemassa olevan salaisuuden tähdillä, joten tyhjä tarkoittaa ettei sitä
+ole olemassa**. Avaimet olivat media-repossa, jonka `r2-media.yml` oli
+ajettu onnistuneesti samana aamuna (08:35). Salaisuudet ovat
+repokohtaisia eivätkä siirry työnkulun mukana.
+
+**Opetus, joka kannattaa muistaa.** Siirretty työnkulku ei ole valmis
+ennen kuin se on ajettu kerran uudessa kodissaan. Tiedosto näyttää
+oikealta molemmissa päissä, ja `total_count: 0` ajoja on helppo lukea
+"ei ole vielä tarvinnut ajaa" eikä "ei ole koskaan toiminut".
+
+**Ajo kertoo nyt itse mikä puuttuu.** Ensimmäinen askel tarkistaa
+kaikki neljä nimeä, tulostaa vain onko ne asetettu (ei arvoja) ja
+neuvoo mistä ne lisätään. Aiempi virhe vaati aws-clin osoitesyntaksin
+tuntemista.
+
+**Manifestitesti ajetaan vihdoin oikeasti.** `tests/media.test.mjs`
+vertaa `js/media.js`:n polkusäännön koko peilin manifestiin, mutta
+ohitti itsensä hiljaa jos manifestia ei ollut koneella — eli aina,
+paitsi jos media-repo sattui olemaan levyllä vieressä. Repon poiston
+jälkeen se ei olisi ajettu enää koskaan, ja eriytynyt nimeäminen olisi
+paljastunut vasta pelaajalle puuttuvana kuvana.
+
+- Manifesti etsitään ensisijaisesti kansiosta `media/`, johon
+  peilausajo noutaa ämpärin sisällön. Vanhat sijainnit jäivät perään.
+- Ajossa on askel, joka ajaa testin heti noudon jälkeen — ennen kuin
+  mitään kirjoitetaan ämpäriin.
+- Todennettu oikealla manifestilla (576 tiedostoa): 13/13 läpi,
+  **0 ohitettua**. Koko sarja 333/333.
+
+**Peilikansio siirtyi repon sisään.** `--ulos` oletti ennen
+`../Matkakirja-media`; nyt `media/`, sama kansio jota ajo käyttää.
+Repossa ei ollut lainkaan `.gitignore`-tiedostoa, joten se luotiin:
+`media/` ja `lahteet/` (kummassakin satoja megatavuja tai satoja
+wikiartikkeleita). `dist/` jätettiin tarkoituksella pois — yhden
+tiedoston versio kuuluu repoon.
+
+**Yhdistämismerkit siivottiin.** v158:n käsin selvitetystä
+ristiriidasta jäi kumpaankin dokumenttiin `<<<<<<< HEAD`, `=======` ja
+`>>>>>>> origin/main` tekstin sekaan. Sisältöä ei kadonnut.
+
+**Ämpärin kunto tarkistettiin samalla.** Manifesti on 2.8.2026 ja
+sisältää 320 kuvaa, 83 lippua, 173 ääntä ja 276 tekstiä. Yhdeksän
+näytettä (alku, keskeltä, loppu kustakin lajista) vastasi
+206-koodilla ja CORS-otsakkeella. **Aineisto on siis ämpärissä
+tallessa riippumatta siitä, mitä media-repolle tehdään.**
+
+
 ## Paketti 32: kartan herätys ja muistien tyhjennys — VALMIS 2.8.2026
 
 **Omistajan havainto:** "Välillä myös meri häviää kartalta" ja
@@ -313,8 +375,6 @@ Toistettu ennen korjausta: napautus → `aloitus-zoom` heti, `kiikari-paalla`
 syty kahdeksassa sekunnissa.
 
 
-=======
->>>>>>> origin/main
 ## Paketti 30: vinjetti pois lähikuvasta — VALMIS 2.8.2026
 
 **Omistajan toive:** "Zoomatussa mannernäkymässä vaalean vinjetin voi

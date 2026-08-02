@@ -62,6 +62,32 @@ jobs:
         with:
           node-version: '22'
 
+      # Puuttuva salaisuus tulee muuten vastaan vasta aws-clin virheenä
+      # "Invalid endpoint: https://.r2.cloudflarestorage.com", josta ei
+      # arvaa mistä on kyse. Näin ajo kertoo heti mikä nimi puuttuu.
+      # Arvoja ei tulosteta, vain onko ne asetettu.
+      - name: Tarkista että salaisuudet ovat tallessa
+        env:
+          TILI: ${{ secrets.R2_ACCOUNT_ID }}
+          AVAIN: ${{ secrets.R2_ACCESS_KEY_ID }}
+          SALAISUUS: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AMPARI: ${{ secrets.R2_BUCKET }}
+        run: |
+          set -euo pipefail
+          puuttuu=""
+          [ -n "$TILI" ]      || puuttuu="$puuttuu R2_ACCOUNT_ID"
+          [ -n "$AVAIN" ]     || puuttuu="$puuttuu R2_ACCESS_KEY_ID"
+          [ -n "$SALAISUUS" ] || puuttuu="$puuttuu R2_SECRET_ACCESS_KEY"
+          [ -n "$AMPARI" ]    || puuttuu="$puuttuu R2_BUCKET"
+          if [ -n "$puuttuu" ]; then
+            echo "::error::Näitä salaisuuksia ei löydy tästä reposta:$puuttuu"
+            echo "Lisää ne osoitteessa Settings > Secrets and variables >"
+            echo "Actions > Repository secrets. Huomaa: salaisuudet ovat"
+            echo "repokohtaisia — toiseen repoon lisätyt eivät näy täällä."
+            exit 1
+          fi
+          echo "Kaikki neljä salaisuutta löytyvät."
+
       - name: Nouda nykyinen peili ämpäristä
         run: |
           set -euo pipefail
@@ -73,6 +99,14 @@ jobs:
           for kansio in kuvat liput aanet; do
             echo "$kansio: $(ls media/$kansio 2>/dev/null | wc -l) tiedostoa"
           done
+
+      # tests/media.test.mjs vertaa pelin polkusäännön manifestiin, mutta
+      # ohittaa itsensä hiljaa jos manifestia ei ole koneella. Nyt se on:
+      # äsken noudettu media/manifesti.json. Tämä on ainoa paikka missä
+      # tarkistus oikeasti ajetaan koko aineistoa vasten — ilman sitä
+      # eriytynyt nimeäminen huomattaisiin vasta pelissä puuttuvana kuvana.
+      - name: Tarkista polkusäännöt manifestia vasten
+        run: node --test tests/media.test.mjs
 
       - name: Peilaa puuttuvat
         env:

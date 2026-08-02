@@ -5,7 +5,7 @@
 // taisena. Tämä käy sen läpi paikallisesti: mitään ei ladata uudestaan,
 // koska leikkaus tehdään kehysrajalta olemassa olevasta tiedostosta.
 //
-//   node tools/leikkaa-peilin-aanet.mjs [--ulos <media-repo>] [--kuiva]
+//   node tools/leikkaa-peilin-aanet.mjs [--ulos <peilikansio>] [--kuiva]
 
 import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -18,7 +18,8 @@ const arvo = (lippu, oletus) => {
   const i = argv.indexOf(lippu);
   return i >= 0 ? argv[i + 1] : oletus;
 };
-const ULOS = arvo('--ulos', join(JUURI, '..', 'matkakirja-media'));
+// Sama oletuskansio kuin peilaustyökalulla — media/ repon sisällä.
+const ULOS = arvo('--ulos', join(JUURI, 'media'));
 const KUIVA = argv.includes('--kuiva');
 const MAX_S = 180;
 
