@@ -10,7 +10,18 @@
 // vartioi, etteivät säännöt pääse eriytymään: se tarkistaa jokaisen
 // paketeissa mainitun tiedoston peilin manifestia vasten.
 
+/*
+ * Peilillä on kaksi juurta, koska aineisto on kasvamassa yli sen mitä
+ * GitHub Pages on tarkoitettu tarjoilemaan (suositusraja 1 Gt sivustoa
+ * kohti). Kuvat pysyvät Pagesissa; äänet siirtyvät omaan ämpäriinsä,
+ * kun se on pystyssä. Kunnes niin käy, AANI_JUURI osoittaa samaan
+ * paikkaan kuin ennenkin, joten mikään ei muutu.
+ *
+ * Osoitteen vaihtaminen on ainoa tarvittava muutos pelin puolella:
+ * polku lasketaan juuren perään samalla säännöllä kuin ennen.
+ */
 export const PEILI_JUURI = 'https://ravelius.github.io/Matkakirja-media/';
+export const AANI_JUURI = PEILI_JUURI;
 
 /**
  * Turvallinen tiedostonimi mistä tahansa merkkijonosta.
@@ -52,37 +63,49 @@ export function peiliAaniPolku(url) {
 // pyynnön. Muutaman virheen jälkeen peili jätetään väliin koko istunnon
 // ajaksi ja aineisto haetaan suoraan alkuperäisestä lähteestä. Seuraava
 // välilehti kokeilee taas.
+//
+// Katkaisija on lähdekohtainen. Kuvat ja äänet ovat eri palvelimilla,
+// eikä toisen kaatuminen kerro toisesta mitään: yhteinen laskuri sammutti
+// kuvapeilin kolmen ääniongelman jälkeen, vaikka kuvapalvelin olisi ollut
+// koko ajan kunnossa. Sama koskee tilannetta, jossa osa äänistä
+// tarkoituksella jätetään peilaamatta — niiden 404:t eivät saa viedä
+// kuvia mukanaan.
 
-const POIS_AVAIN = 'matkakirja-peili-pois';
 const VIRHERAJA = 3;
+const LAJIT = ['kuvat', 'aanet'];
+const poisAvain = (laji) => `matkakirja-peili-pois-${laji}`;
 
-let virheita = 0;
-let peiliPois = false;
-try {
-  peiliPois = globalThis.sessionStorage?.getItem(POIS_AVAIN) === '1';
-} catch { /* selain voi kieltää tallennuksen — mennään oletuksella */ }
-
-/** Onko peili tässä istunnossa käytössä? */
-export function peiliKaytossa() {
-  // Paikallisesti avattu tiedosto (file:) ei saa verkkoyhteyttä samalla
-  // tavalla, mutta peili on tavallinen https-osoite ja toimii silti.
-  return !peiliPois;
+const virheita = { kuvat: 0, aanet: 0 };
+const pois = { kuvat: false, aanet: false };
+for (const laji of LAJIT) {
+  try {
+    pois[laji] = globalThis.sessionStorage?.getItem(poisAvain(laji)) === '1';
+  } catch { /* selain voi kieltää tallennuksen — mennään oletuksella */ }
 }
 
-/** Peili petti: kolmannen virheen jälkeen se jätetään väliin. */
-export function peiliPetti() {
-  if (peiliPois) return;
-  virheita += 1;
-  if (virheita < VIRHERAJA) return;
-  peiliPois = true;
-  try { globalThis.sessionStorage?.setItem(POIS_AVAIN, '1'); } catch { /* ks. yllä */ }
+/** Onko peili tässä istunnossa käytössä tälle lajille? */
+export function peiliKaytossa(laji = 'kuvat') {
+  // Paikallisesti avattu tiedosto (file:) ei saa verkkoyhteyttä samalla
+  // tavalla, mutta peili on tavallinen https-osoite ja toimii silti.
+  return !pois[laji];
+}
+
+/** Peili petti: kolmannen virheen jälkeen se laji jätetään väliin. */
+export function peiliPetti(laji = 'kuvat') {
+  if (!LAJIT.includes(laji) || pois[laji]) return;
+  virheita[laji] += 1;
+  if (virheita[laji] < VIRHERAJA) return;
+  pois[laji] = true;
+  try { globalThis.sessionStorage?.setItem(poisAvain(laji), '1'); } catch { /* ks. yllä */ }
 }
 
 /** Vain testejä varten: nollaa katkaisijan tila. */
 export function nollaaPeili() {
-  virheita = 0;
-  peiliPois = false;
-  try { globalThis.sessionStorage?.removeItem(POIS_AVAIN); } catch { /* ks. yllä */ }
+  for (const laji of LAJIT) {
+    virheita[laji] = 0;
+    pois[laji] = false;
+    try { globalThis.sessionStorage?.removeItem(poisAvain(laji)); } catch { /* ks. yllä */ }
+  }
 }
 
 // --- äänet --------------------------------------------------------------------
@@ -93,12 +116,12 @@ export function nollaaPeili() {
  * tiedostot) palautuvat sellaisenaan.
  */
 export function aaniOsoite(url) {
-  if (!url || !peiliKaytossa()) return url;
+  if (!url || !peiliKaytossa('aanet')) return url;
   if (!/cdn\.freesound\.org|archive\.org/.test(url)) return url;
   // Valinta voi kantaa aloituskohdan (#alku=20&voima=1.5). Peilattu
   // nimi on laskettu ilman sitä, joten tunniste otetaan katkaistusta.
   const polku = peiliAaniPolku(url.split('#')[0]);
-  return polku ? `${PEILI_JUURI}${polku}` : url;
+  return polku ? `${AANI_JUURI}${polku}` : url;
 }
 
 /**
@@ -110,14 +133,26 @@ export async function haeAani(url) {
   if (peili !== url) {
     const vastaus = await fetch(peili).catch(() => null);
     if (vastaus?.ok) return vastaus;
-    peiliPetti();
+    peiliPetti('aanet');
   }
   return fetch(url);
 }
 
+/**
+ * Onko osoite peilistä, ja mistä lajista? Kertoo sekä sen, kannattaako
+ * varareittiä yrittää, että sen kummalle katkaisijalle virhe kuuluu.
+ * Palauttaa 'kuvat', 'aanet' tai null.
+ */
+export function peilinLaji(osoite) {
+  if (typeof osoite !== 'string') return null;
+  if (osoite.startsWith(AANI_JUURI) && /\/aanet\//.test(osoite)) return 'aanet';
+  if (osoite.startsWith(PEILI_JUURI)) return 'kuvat';
+  return null;
+}
+
 /** Onko osoite peilistä? Kertoo, kannattaako varareittiä yrittää. */
 export function onPeilista(osoite) {
-  return typeof osoite === 'string' && osoite.startsWith(PEILI_JUURI);
+  return peilinLaji(osoite) !== null;
 }
 
 // --- kuvan asettaminen --------------------------------------------------------
@@ -144,7 +179,7 @@ export function asetaKuva(kuva, osoite, vara, onVirhe = null) {
   kuva.addEventListener('error', () => {
     if (!yha(kohde)) return;
     if (!varalla) { onVirhe?.(); return; }
-    peiliPetti();
+    peiliPetti(peilinLaji(kohde) ?? 'kuvat');
     kuva.addEventListener('error', () => { if (yha(vara)) onVirhe?.(); }, { once: true });
     kuva.src = vara;
   }, { once: true });

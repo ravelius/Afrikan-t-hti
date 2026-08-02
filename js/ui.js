@@ -38,7 +38,7 @@ import {
   AFRICA_VALOKUVAT, lippuUrl, lippuVara, valokuvaUrl, valokuvaVara,
 } from './packs/africa-valokuvat.js';
 import {
-  asetaKuva, peiliPetti, aaniOsoite, onPeilista,
+  asetaKuva, peiliPetti, peilinLaji, aaniOsoite, onPeilista,
 } from './media.js';
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
 import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
@@ -3483,7 +3483,7 @@ export class UI {
     const petti = () => {
       if (varareittiKokeiltu || !onPeilista(audio.getAttribute('src'))) { nollaa(); return; }
       varareittiKokeiltu = true;
-      peiliPetti();
+      peiliPetti('aanet');
       if (this.kulttuuriAani?.audio !== audio) return;
       audio.src = asetus.url;
       audio.load();
@@ -3672,7 +3672,7 @@ export class UI {
     if (kohta < 0) return;
     const merkinta = lista[kohta];
     if (merkinta.vara && merkinta.vara !== merkinta.src) {
-      peiliPetti();
+      peiliPetti(peilinLaji(merkinta.src) ?? 'kuvat');
       merkinta.src = merkinta.vara;
       kuva.src = merkinta.vara;
       return;

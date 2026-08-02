@@ -12,8 +12,9 @@ import { join } from 'node:path';
 
 import {
   PEILI_JUURI, peiliKuvaPolku, peiliAaniPolku, aaniOsoite, onPeilista,
-  asetaKuva, peiliPetti, peiliKaytossa, nollaaPeili,
+  asetaKuva, peiliPetti, peiliKaytossa, nollaaPeili, peilinLaji, AANI_JUURI,
 } from '../js/media.js';
+import { valokuvaUrl } from '../js/packs/africa-valokuvat.js';
 
 test('peilin juuri on https ja päättyy kauttaviivaan', () => {
   assert.match(PEILI_JUURI, /^https:\/\//);
@@ -60,18 +61,50 @@ test('aaniOsoite koskee vain peilattuja lähteitä', () => {
 
 test('katkaisija sammuttaa peilin kolmen virheen jälkeen', () => {
   nollaaPeili();
-  assert.equal(peiliKaytossa(), true);
-  peiliPetti();
-  peiliPetti();
-  assert.equal(peiliKaytossa(), true, 'kaksi virhettä voi olla sattumaa');
-  peiliPetti();
-  assert.equal(peiliKaytossa(), false, 'kolmas virhe sammuttaa peilin istunnoksi');
+  assert.equal(peiliKaytossa('aanet'), true);
+  peiliPetti('aanet');
+  peiliPetti('aanet');
+  assert.equal(peiliKaytossa('aanet'), true, 'kaksi virhettä voi olla sattumaa');
+  peiliPetti('aanet');
+  assert.equal(peiliKaytossa('aanet'), false, 'kolmas virhe sammuttaa peilin istunnoksi');
   // Sammutettuna osoitteet menevät suoraan alkuperäiseen lähteeseen.
   assert.equal(
     aaniOsoite('https://cdn.freesound.org/previews/511/511005_571436-lq.mp3'),
     'https://cdn.freesound.org/previews/511/511005_571436-lq.mp3',
   );
   nollaaPeili();
+});
+
+test('äänipeilin kaatuminen ei vie kuvapeiliä mukanaan', () => {
+  // Kuvat ja äänet ovat eri palvelimilla, eikä toisen kaatuminen kerro
+  // toisesta mitään. Yhteinen laskuri sammutti kuvapeilin kolmen
+  // ääniongelman jälkeen — ja sama olisi toistunut heti, jos osa äänistä
+  // päätetään jättää peilaamatta.
+  nollaaPeili();
+  for (let i = 0; i < 5; i += 1) peiliPetti('aanet');
+  assert.equal(peiliKaytossa('aanet'), false, 'äänipeilin piti sammua');
+  assert.equal(peiliKaytossa('kuvat'), true, 'kuvapeili sammui äänivirheistä');
+  assert.ok(
+    valokuvaUrl('Souvlaki in Athens.JPG', 640).startsWith(PEILI_JUURI),
+    'kuvat eivät enää tulleet peilistä',
+  );
+  nollaaPeili();
+  for (let i = 0; i < 5; i += 1) peiliPetti('kuvat');
+  assert.equal(peiliKaytossa('kuvat'), false, 'kuvapeilin piti sammua');
+  assert.equal(peiliKaytossa('aanet'), true, 'äänipeili sammui kuvavirheistä');
+  nollaaPeili();
+});
+
+test('peilin laji tunnistetaan osoitteesta', () => {
+  // Katkaisija tarvitsee tiedon siitä, kumman palvelimen virheestä on
+  // kyse. Ilman tätä varareitille siirtyvä ääni merkittäisiin
+  // kuvavirheeksi.
+  const aani = aaniOsoite('https://cdn.freesound.org/previews/511/511005_571436-lq.mp3');
+  assert.equal(peilinLaji(aani), 'aanet');
+  assert.equal(peilinLaji(`${PEILI_JUURI}kuvat/souvlaki-in-athens.jpg`), 'kuvat');
+  assert.equal(peilinLaji(`${PEILI_JUURI}liput/flag-of-greece.png`), 'kuvat');
+  assert.equal(peilinLaji('assets/audio/efekti-klik.mp3'), null);
+  assert.equal(peilinLaji(null), null);
 });
 
 /** Kevyt <img>-jäljitelmä: riittää asetaKuvan ketjun tarkistamiseen. */

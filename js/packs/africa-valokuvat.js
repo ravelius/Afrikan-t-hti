@@ -595,7 +595,7 @@ const omaKansio = () => typeof location !== 'undefined' && location.protocol !==
 export function valokuvaUrl(tiedosto, leveys) {
   const paikallinen = VALOKUVAT_PAIKALLISET.get(tiedosto);
   if (paikallinen && omaKansio()) return `assets/valokuvat/${paikallinen}`;
-  if (peiliKaytossa()) return `${PEILI_JUURI}${peiliKuvaPolku(tiedosto, 'kuvat')}`;
+  if (peiliKaytossa('kuvat')) return `${PEILI_JUURI}${peiliKuvaPolku(tiedosto, 'kuvat')}`;
   return commonsUrl(tiedosto, leveys);
 }
 
@@ -613,7 +613,7 @@ export function valokuvaVara(tiedosto, leveys) {
 export function lippuUrl(tiedosto, leveys) {
   const paikallinen = LIPUT_PAIKALLISET.get(tiedosto);
   if (paikallinen && omaKansio()) return `assets/liput/${paikallinen}`;
-  if (peiliKaytossa()) return `${PEILI_JUURI}${peiliKuvaPolku(tiedosto, 'liput')}`;
+  if (peiliKaytossa('kuvat')) return `${PEILI_JUURI}${peiliKuvaPolku(tiedosto, 'liput')}`;
   return commonsUrl(tiedosto, leveys);
 }
 

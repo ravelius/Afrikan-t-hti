@@ -213,7 +213,7 @@ function luoSoitin(oma, { arvottuAlku, nouse }) {
   const petti = () => {
     if (!varareittiKokeiltu && onPeilista(audio.getAttribute('src'))) {
       varareittiKokeiltu = true;
-      peiliPetti();
+      peiliPetti('aanet');
       if (nykyinen !== oma) return;
       audio.src = oma.osoite;
       audio.load();
@@ -311,7 +311,7 @@ export function startQuizMusic(lauta) {
   const petti = () => {
     if (varareittiKokeiltu || !onPeilista(audio.getAttribute('src'))) { luovuta(); return; }
     varareittiKokeiltu = true;
-    peiliPetti();
+    peiliPetti('aanet');
     if (musiikki !== audio) return;
     audio.src = alkuperainen;
     audio.load();
