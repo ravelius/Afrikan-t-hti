@@ -240,6 +240,62 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 35: meri katoaa kartalta — SYY LÖYTYI, KORJATTU v159 2.8.2026
+
+**v158:n arvaus oli väärä.** Omistaja: "Meri katoaa heti kun käyn toisessa
+apissa ja palaan takaisin" — eli vika toistuu joka kerta, ja v158:n herätys
+ei auttanut lainkaan.
+
+**Kuvakaappaus ratkaisi asian.** Kuvassa oli tallella ruudukko, reitit,
+kaupungit, nimet, koristeet ja maan korostus. Puuttui maa, rannikko, meren
+kaiut ja aallot — **täsmälleen ne kerrokset, joilla oli suodatin.**
+
+| kerros | suodatin | kuvassa |
+|---|---|---|
+| `landmass` | `#rough` | poissa |
+| `waves` | `#rough-soft` | poissa |
+| `terrain` | `#rough-soft` | poissa |
+| `routes` | `#rough-soft` | **näkyy** |
+| ruudukko, kaupungit, koristeet | — | näkyy |
+
+**Miksi reitit selvisivät.** Suodatin tarvitsee oman piirtopuskurin, jonka
+koko seuraa kerroksen rajauslaatikkoa ja zoomia. Mannerkerros on kartan
+suurin — Euroopan rannikko jatkuu laudan reunojen yli — ja lähikuvassa sen
+puskuri on moninkertainen. Reittikerros mahtuu kaupunkien väliin. iOS
+vapauttaa taustalle jääneen sovelluksen puskurit eikä saa suurinta enää
+varattua, joten se kerros palaa tyhjänä.
+
+**Omistaja arvasi itse oikein:** "peli webapin puolella, veikkaan että
+liittyy jotenkin siihen". Juuri webapp-tila on se, jossa iOS vapauttaa
+puskurit aggressiivisimmin.
+
+**Korjaus: heilunta piirretään, ei lasketa.** `kohina(x, y, siemen)` antaa
+pehmeän pseudokohinan paikan mukaan, ja `kasinPiirretty` siirtää pisteitä
+sen verran ennen pehmennystä. Arvot vastaavat vanhaa suodatinta: solu 58
+yksikköä ≈ `baseFrequency 0.017`, amplitudi ±4 = `scale 8`. Kohina
+lasketaan kerran piirrossa, joten puskuria ei tarvita eikä ole mitään mitä
+menettää.
+
+Sama käsittely sai rannikot, järvet, maiden rajat ja pallonpuoliskokartan
+asteverkon. Kehäympyrät piirretään `wobblyCircle`illa, jotta 1600-luvun
+kartasta ei tulisi harpilla vedettyä.
+
+**Todennettu vertailukuvalla** (Chromium, 402×874, `reducedMotion:
+no-preference`): rannikko heiluu käytännössä samalla tavalla kuin ennen.
+Kartalla on nyt yksi suodatettu kerros neljän sijaan, eikä yhtään orpoa
+viittausta.
+
+**Ansa, johon jäätiin kiinni.** Poistin ensin myös `#rough-soft`
+-määrittelyn, vaikka reittikerros `js/ui.js`:ssä viittasi siihen yhä.
+SVG:ssä **puuttuvaan suodattimeen viittaava ryhmä ei piirry lainkaan** —
+se olisi vienyt kaikki reitit kartalta. Määrittely jäi paikalleen, ja uusi
+testi tarkistaa, että jokaiselle viittaukselle löytyy määrittely.
+
+**Jos meri vielä katoaa,** seuraava askel on poistaa suodatin myös
+reiteiltä. Silloin reittiviivat pitää pilkkoa ja heiluttaa samalla
+kohinalla — päätepisteet paikallaan, jottei viiva irtoa kaupungista.
+
+
 ## Paketti 34: peilaus käynnistyy itsestään — VALMIS 2.8.2026
 
 **Omistajan toive:** "Tee sinä peilaus aina automaattisesti."

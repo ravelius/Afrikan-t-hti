@@ -3059,15 +3059,40 @@ test('uusi peli tyhjentää muistit vasta varmistuksen jälkeen', () => {
     'localStorage.clear veisi muidenkin sovellusten tiedot');
 });
 
-test('kartta herätetään, kun sovellus palaa taustalta', () => {
-  // Omistajan havainto: meri katoaa kartalta useimmiten sen jälkeen kun
-  // välissä on käyty toisessa ohjelmassa. Karttaa ei piirretä uudelleen
-  // kesken pelin, joten kyse on jo piirretyn kerroksen katoamisesta.
+test('kartan isot kerrokset eivät käytä suodatinta', () => {
+  // Omistajan kuvakaappaus 2.8.2026: iOS:n webapp-tilassa maa, rannikko,
+  // meren kaiut ja aallot katosivat kartalta heti kun sovellus kävi
+  // taustalla — kaikki juuri ne kerrokset, joilla oli suodatin. Suodatin
+  // tarvitsee oman piirtopuskurin, jonka iOS vapauttaa taustalla eikä saa
+  // enää varattua. Heilunta piirretään nyt pisteisiin.
+  const art = readFileSync(new URL('../js/mapart.js', import.meta.url), 'utf8');
+  for (const kerros of ['landmass', 'waves', 'terrain', 'hemi-frames']) {
+    const rivi = new RegExp(`class: '${kerros}'[^}]*filter`);
+    assert.doesNotMatch(art, rivi, `${kerros} palasi suodattimeen — meri katoaa iOS:llä`);
+  }
+  // Heilunta tulee kohinasta, ei suodattimesta.
+  assert.match(art, /export function kohina\(/);
+  assert.match(art, /smoothClosedPath\(kasinPiirretty\(/);
+});
+
+test('jokaiselle suodatinviittaukselle löytyy määrittely', () => {
+  // Ansa, johon jäätiin kiinni korjausta tehdessä: #rough-soft poistettiin
+  // defseistä, mutta reittikerros js/ui.js:ssä viittasi siihen yhä. SVG:ssä
+  // puuttuvaan suodattimeen viittaava ryhmä ei piirry LAINKAAN, joten
+  // pelkkä määrittelyn poisto olisi vienyt kaikki reitit kartalta.
+  const art = readFileSync(new URL('../js/mapart.js', import.meta.url), 'utf8');
   const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
-  assert.match(ui, /addEventListener\('visibilitychange', this\.herataPiirto\)/);
-  assert.match(ui, /addEventListener\('pageshow', this\.herataPiirto\)/);
-  // Kuuntelijat myös irti, ettei kuollut instanssi herättele uuden pelin
-  // karttaa.
-  assert.match(ui, /removeEventListener\('visibilitychange', this\.herataPiirto\)/);
-  assert.match(ui, /removeEventListener\('pageshow', this\.herataPiirto\)/);
+  const maaritellyt = new Set(
+    [...art.matchAll(/el\('filter',\s*\{\s*id:\s*'([^']+)'/g)].map((m) => m[1]),
+  );
+  // Paljastusanimaatio rakentaa suodattimensa nimen lennossa.
+  maaritellyt.add('reveal-rough-back');
+  maaritellyt.add('reveal-rough-front');
+  const viitatut = [...`${art}\n${ui}`.matchAll(/url\(#([a-z0-9-]+)\)/g)]
+    .map((m) => m[1])
+    .filter((id) => id.includes('rough'));
+  assert.ok(viitatut.length, 'testi ei löytänyt yhtään viittausta — tarkista hakuehto');
+  for (const id of new Set(viitatut)) {
+    assert.ok(maaritellyt.has(id), `#${id}: viitataan mutta ei määritellä — kerros ei piirry`);
+  }
 });

@@ -38,6 +38,65 @@ export function el(tag, attrs = {}, parent = null) {
   return node;
 }
 
+/*
+ * KÄSIN PIIRRETTY HEILUNTA ILMAN SUODATINTA
+ *
+ * Rannikko, aallot ja maasto heiluivat ennen feTurbulence +
+ * feDisplacementMap -suodattimella (#rough ja #rough-soft). Se näytti
+ * hyvältä mutta hajosi iOS:n webapp-tilassa: kun sovellus kävi taustalla
+ * ja palasi, juuri suodatetut kerrokset tulivat takaisin TYHJINÄ — maa,
+ * rannikko, meren kaiut ja aallot katosivat, ja jäljelle jäi paljas
+ * paperi. Omistajalla vika toistui joka kerta (kuvakaappaus 2.8.2026).
+ *
+ * Suodatin tarvitsee oman piirtopuskurin, jonka koko seuraa kerroksen
+ * rajauslaatikkoa ja zoomia. Mannerkerros on kartan suurin, ja
+ * lähikuvassa sen puskuri kasvaa moninkertaiseksi; iOS vapauttaa
+ * taustalle jääneen sovelluksen puskurit eikä ilmeisesti saa tuota
+ * kokoa enää varattua. v158 yritti herättää kerrokset irrottamalla ja
+ * liittämällä suodatinviitteen takaisin — se ei auttanut, koska ongelma
+ * ei ole vanhentunut viite vaan puuttuva puskuri.
+ *
+ * Sama jälki syntyy siirtämällä pisteitä itse. Kohina lasketaan kerran
+ * piirrossa eikä joka ruudunpäivityksellä, joten puskuria ei tarvita
+ * lainkaan — eikä ole mitään mitä menettää.
+ */
+
+/**
+ * Pehmeä pseudokohina paikan mukaan, -1…1. Sama piste saa aina saman
+ * arvon ja lähekkäiset pisteet lähes saman, joten viiva aaltoilee
+ * loivasti kuin käsi olisi vapissut — ei tärise pisteestä toiseen.
+ *
+ * Solun koko vastaa vanhan suodattimen aallonpituutta: baseFrequency
+ * 0.017 tarkoittaa noin 59 yksikön jaksoa.
+ */
+const KOHINA_SOLU = 58;
+
+export function kohina(x, y, siemen) {
+  const gx = Math.floor(x / KOHINA_SOLU);
+  const gy = Math.floor(y / KOHINA_SOLU);
+  const fx = x / KOHINA_SOLU - gx;
+  const fy = y / KOHINA_SOLU - gy;
+  // Kuutiollinen pehmennys, jottei solujen raja näy viivassa taitteena.
+  const s = (t) => t * t * (3 - 2 * t);
+  const ux = s(fx);
+  const uy = s(fy);
+  const n = (ix, iy) => hash01(`${siemen}:${ix}:${iy}`) - 0.5;
+  const ylä = n(gx, gy) * (1 - ux) + n(gx + 1, gy) * ux;
+  const ala = n(gx, gy + 1) * (1 - ux) + n(gx + 1, gy + 1) * ux;
+  return (ylä * (1 - uy) + ala * uy) * 2;
+}
+
+/**
+ * Siirtää pistejonon pisteitä kohinan verran. Vanha suodatin siirsi
+ * scale 8:lla eli enintään ±4 yksikköä; sama määrä tässä.
+ */
+export function kasinPiirretty(points, maara = 4) {
+  return points.map(([x, y]) => [
+    Number((x + kohina(x, y, 'kasi-x') * maara).toFixed(1)),
+    Number((y + kohina(x, y, 'kasi-y') * maara).toFixed(1)),
+  ]);
+}
+
 /** Catmull–Rom-pehmennys: pisteistä sulava suljettu käyrä. */
 function smoothClosedPath(points) {
   const n = points.length;
@@ -63,7 +122,9 @@ const outlineCache = new WeakMap();
 function outlinePaths(map) {
   let paths = outlineCache.get(map);
   if (!paths) {
-    paths = map.outlines.map(smoothClosedPath);
+    // Heilunta lasketaan pisteisiin ennen pehmennystä, jolloin käyrä
+    // kaartaa siirtyneiden pisteiden kautta eikä vain väpätä paikallaan.
+    paths = map.outlines.map((o) => smoothClosedPath(kasinPiirretty(o)));
     outlineCache.set(map, paths);
   }
   return paths;
@@ -134,16 +195,24 @@ function grainTile() {
 export function drawDefs(svg) {
   const defs = el('defs', {}, svg);
 
-  // Käsin piirretty vapina: kohina siirtää viivoja hieman.
-  const rough = el('filter', { id: 'rough', x: '-8%', y: '-8%', width: '116%', height: '116%' }, defs);
-  el('feTurbulence', {
-    type: 'turbulence', baseFrequency: '0.017', numOctaves: 3, seed: 7, result: 'noise',
-  }, rough);
-  el('feDisplacementMap', {
-    in: 'SourceGraphic', in2: 'noise', scale: 8,
-    xChannelSelector: 'R', yChannelSelector: 'G',
-  }, rough);
-
+  /*
+   * Tässä oli myös #rough, joka antoi rannikolle käsin piirretyn
+   * vapinan. Se on poistettu: iOS:n webapp-tilassa suodatettu kerros
+   * palasi taustalta TYHJÄNÄ ja koko meri katosi kartalta. Rannikon,
+   * aaltojen ja maaston heilunta piirretään nyt pisteisiin (kohina ja
+   * kasinPiirretty ylempänä), jolloin piirtopuskuria ei tarvita
+   * lainkaan eikä ole mitään mitä menettää.
+   *
+   * #rough-soft jää, koska reittikerros (js/ui.js) käyttää sitä yhä.
+   * Reitit näkyivät omistajan kuvassa oikein silloinkin kun maa oli
+   * kadonnut, eikä toimivaa kannata rikkoa: reittiviivat kulkevat
+   * kaupungista kaupunkiin usein suorana, ja ilman suodatinta niistä
+   * tulisi viivoittimella vedettyjä.
+   *
+   * HUOM: jos tämän joskus poistaa, poista samalla viittaus ui.js:stä.
+   * Puuttuvaan suodattimeen viittaava ryhmä ei piirry lainkaan, joten
+   * pelkkä määrittelyn poisto veisi kaikki reitit kartalta.
+   */
   const roughSoft = el('filter', {
     id: 'rough-soft', x: '-8%', y: '-8%', width: '116%', height: '116%',
   }, defs);
@@ -228,7 +297,7 @@ export function drawPaperOverlay(svg) {
 /** Manner: rannikon kaikuviivat, täyttö ja mustepiirto. */
 export function drawLand(svg, map) {
   const paths = outlinePaths(map);
-  const g = el('g', { class: 'landmass', filter: 'url(#rough)' }, svg);
+  const g = el('g', { class: 'landmass' }, svg);
   for (const d of paths) {
     el('path', { d, class: 'sea-echo sea-echo-1' }, g);
     el('path', { d, class: 'sea-echo sea-echo-2' }, g);
@@ -239,14 +308,14 @@ export function drawLand(svg, map) {
     el('path', { d, class: 'coast' }, g);
   }
   for (const lake of map.lakes ?? []) {
-    const d = smoothClosedPath(lake);
+    const d = smoothClosedPath(kasinPiirretty(lake));
     el('path', { d, class: 'lake' }, g);
     el('path', { d, class: 'coast' }, g);
   }
   // Maiden rajat hyvin hennolla katkoviivalla — koriste, ei pelielementti.
-  // Sama rough-suodatin kuin rannikolla antaa käsin piirretyn vaikutelman.
+  // Sama heilunta kuin rannikolla antaa käsin piirretyn vaikutelman.
   for (const line of map.borders ?? []) {
-    const d = `M${line.map(([x, y]) => `${x},${y}`).join(' L')}`;
+    const d = `M${kasinPiirretty(line).map(([x, y]) => `${x},${y}`).join(' L')}`;
     el('path', { d, class: 'border' }, g);
   }
 }
@@ -322,7 +391,10 @@ function blocked(p, zones) {
 
 /** Merelle piirretyt kaksoiskaaret, jotka merkitsevät aaltoja. */
 export function drawWaves(svg, map, skipZones = []) {
-  const g = el('g', { class: 'waves', filter: 'url(#rough-soft)' }, svg);
+  // Ei suodatinta: aaltomerkit vaihtelevat jo paikaltaan, kooltaan,
+  // kallistukseltaan ja tummuudeltaan, joten suodattimen lisäämä ±1,75
+  // yksikön väre ei niissä juuri näkynyt — mutta sen puskuri katosi.
+  const g = el('g', { class: 'waves' }, svg);
   seaPoints(map).forEach((p, i) => {
     if (i % 2 === 1 || blocked(p, skipZones)) return;
     const key = `wave:${p[0]}:${p[1]}`;
@@ -386,7 +458,8 @@ const TERRAIN_MARKS = {
  * joissa ei ole reittejä tai nimiä.
  */
 export function drawTerrain(svg, map, obstacles, bands) {
-  const g = el('g', { class: 'terrain', filter: 'url(#rough-soft)' }, svg);
+  // Ei suodatinta, ks. drawWaves: merkeillä on jo oma vaihtelunsa.
+  const g = el('g', { class: 'terrain' }, svg);
   landPoints(map, obstacles).forEach((p, i) => {
     if (i % 2 === 1) return;
     const key = `terrain:${p[0]}:${p[1]}`;
@@ -422,7 +495,11 @@ export function drawHemisphereFrames(svg, map) {
   const kehat = map.hemispheres ?? [];
   const navat = map.polars ?? [];
   if (!kehat.length && !navat.length) return;
-  const g = el('g', { class: 'hemi-frames', filter: 'url(#rough-soft)' }, svg);
+  // Ei suodatinta. Kehykset ovat laskettuja ympyröitä ja kaaria, joten
+  // heilunta piirretään niihin itseensä — muuten 1600-luvun kartasta
+  // tulisi harpilla vedetty.
+  const g = el('g', { class: 'hemi-frames' }, svg);
+  const kehaPolku = (r, siemen) => wobblyCircle(r, siemen, 2.2, 72);
 
   const RAD = Math.PI / 180;
   // Sama kaava kuin tools/hemispheres.mjs — pidettävä yhtenäisenä.
@@ -447,21 +524,29 @@ export function drawHemisphereFrames(svg, map) {
         if (Math.abs(d) > 89.5) continue;
         pts.push(f(lon, lat));
       }
-      if (pts.length > 1) el('path', { d: linePath(pts), class: 'graticule-line' }, verkko);
+      if (pts.length > 1) {
+        el('path', { d: linePath(kasinPiirretty(pts, 1.8)), class: 'graticule-line' }, verkko);
+      }
     }
     for (let lat = -60; lat <= 60; lat += 30) {
       const pts = [];
       for (let d = -89.5; d <= 89.5; d += 3) pts.push(f(kehä.lon0 + d, lat));
-      el('path', { d: linePath(pts), class: 'graticule-line' }, verkko);
+      el('path', { d: linePath(kasinPiirretty(pts, 1.8)), class: 'graticule-line' }, verkko);
     }
     // Päiväntasaaja hieman vahvempana.
     const eq = [];
     for (let d = -89.5; d <= 89.5; d += 3) eq.push(f(kehä.lon0 + d, 0));
-    el('path', { d: linePath(eq), class: 'graticule-line strong' }, verkko);
+    el('path', { d: linePath(kasinPiirretty(eq, 1.8)), class: 'graticule-line strong' }, verkko);
 
     // Kaksoiskehä ja astepykälät väliin.
-    el('circle', { cx, cy, r: r + 13, class: 'hemi-ring outer' }, g);
-    el('circle', { cx, cy, r, class: 'hemi-ring' }, g);
+    el('path', {
+      d: kehaPolku(r + 13, `hemi:${cx}:ulko`), transform: `translate(${cx},${cy})`,
+      class: 'hemi-ring outer',
+    }, g);
+    el('path', {
+      d: kehaPolku(r, `hemi:${cx}:sisa`), transform: `translate(${cx},${cy})`,
+      class: 'hemi-ring',
+    }, g);
     const ticks = el('g', { class: 'hemi-ticks' }, g);
     for (let a = 0; a < 360; a += 5) {
       const rad = a * RAD;
@@ -488,10 +573,19 @@ export function drawHemisphereFrames(svg, map) {
       }, verkko);
     }
     for (const osa of [0.34, 0.67]) {
-      el('circle', { cx, cy, r: (r * osa).toFixed(1), class: 'graticule-line', fill: 'none' }, verkko);
+      el('path', {
+        d: kehaPolku(r * osa, `napa:${cx}:${osa}`), transform: `translate(${cx},${cy})`,
+        class: 'graticule-line', fill: 'none',
+      }, verkko);
     }
-    el('circle', { cx, cy, r: r + 9, class: 'hemi-ring outer' }, g);
-    el('circle', { cx, cy, r, class: 'hemi-ring' }, g);
+    el('path', {
+      d: kehaPolku(r + 9, `napa:${cx}:ulko`), transform: `translate(${cx},${cy})`,
+      class: 'hemi-ring outer',
+    }, g);
+    el('path', {
+      d: kehaPolku(r, `napa:${cx}:sisa`), transform: `translate(${cx},${cy})`,
+      class: 'hemi-ring',
+    }, g);
   }
 }
 
