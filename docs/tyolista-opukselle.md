@@ -305,6 +305,33 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 51: matkakertoja takaisin yhdistetylle laudalle — VALMIS v174 2.8.2026
+
+Omistajan havainto: "Matkakirjan lukija ääni puuttuu kaikkialta. Myös
+äänen symboli puuttuu matkakirjasta."
+
+**Sama juurisyy kuin Tutki-ikkunassa, eri paikassa.** Luennat on
+avainnettu `lauta:kaupunki`, ja tiedoston nimessä on sama laudan tunnus
+(`puhe-europe-saapuminen-dubrovnik.mp3`). Yhdistetyllä laudalla tunnus
+on `vanhamaailma`, jolle ei ole yhtään luentaa — eikä tulekaan, koska
+kyse on samoista kaupungeista ja samoista nauhoituksista.
+
+Kaiutinnappi näytetään vain kun luenta löytyy, joten myös symboli
+katosi. Se oli oikea käytös väärästä tiedosta.
+
+**Korjaus:** `luentaLauta()` käy lähdelaudat läpi ja palauttaa sen,
+jolta luenta löytyy. Palautettua tunnusta käytetään sekä listahaussa
+että tiedoston nimessä. Kaikki kolme luentalajia — saapuminen, havainto
+ja aarrevihje — kulkevat saman haun kautta.
+
+**Opetus, jonka kirjaan ylös:** yhdistetty lauta perii sisältönsä
+neljältä laudalta, mutta **jokainen laudan tunnuksella tehty haku on
+oma erillinen kohtansa**. Niitä oli viisi sisältötaulua (v173), kaksi
+karttakenttää (v173) ja kolme luentalistaa (tämä). Seuraava, joka
+lisää tällaisen haun, lisää samalla uuden vian — siksi haku on nyt
+yhdessä funktiossa eikä kolmessa kohdassa.
+
+
 ## Paketti 50: Tutki-ikkuna täydeksi yhdistetyllä laudalla — VALMIS v173 2.8.2026
 
 Omistajan havainto: "iPadilla tutki ikkuna on vajaa" — ja tarkennus:
