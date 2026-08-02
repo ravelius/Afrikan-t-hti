@@ -288,12 +288,19 @@ function pelkista(polku, ruudukko, kelpaa, maxPisteita = 8) {
    * Siksi jokainen pelkistys tarkistetaan, ja karkein hyväksytään vasta
    * kun se kulkee yhä vettä pitkin.
    */
+  /*
+   * Kaikki toleranssit kokeillaan, ei vain kasvavaa sarjaa ensimmäiseen
+   * epäonnistumiseen. Karsinta ei ole yksitoikkoinen: pieni toleranssi
+   * voi oikaista juuri niemen kohdalta ja iso jättää sen mutkan
+   * ennalleen. Ensimmäinen versio pysähtyi ensimmäiseen hylkäykseen ja
+   * palautti pelkistämättömän polun — Punaisellamerellä 237 välipistettä
+   * siinä missä 8 riitti.
+   */
   let paras = pisteet;
   let toleranssi = ruudukko.ruutu;
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < 16; i++) {
     const ehdokas = karsiPolku(pisteet, toleranssi);
-    if (!kelpaa(ehdokas.slice(1, -1))) break;
-    paras = ehdokas;
+    if (ehdokas.length < paras.length && kelpaa(ehdokas.slice(1, -1))) paras = ehdokas;
     if (paras.length <= maxPisteita + 2) break;
     toleranssi *= 1.5;
   }
@@ -405,20 +412,29 @@ const PORTAAT = [
  * ympärille rajattu on pieni ja nopea.
  */
 export function tarkennaMeripolku(map, a, b, onMaalla, leveys, korkeus) {
-  // Rajaus: kaupunkien ympärille reilusti tilaa, jotta reitti mahtuu
-  // kiertämään niemen. Liian tiukka rajaus estäisi kierron kokonaan.
-  const vara = Math.max(140, Math.hypot(b.x - a.x, b.y - a.y) * 0.55);
-  const alue = {
-    x0: Math.min(a.x, b.x) - vara,
-    y0: Math.min(a.y, b.y) - vara,
-    x1: Math.max(a.x, b.x) + vara,
-    y1: Math.max(a.y, b.y) + vara,
-  };
+  /*
+   * Rajaus laajenee portaittain.
+   *
+   * Tiukka rajaus on nopea, mutta se estää pitkän kierron: Dubrovnikista
+   * Roomaan ei pääse Adrianmeren yli vaan saappaan ympäri Sisilian
+   * kautta, eikä se mahdu kaupunkien väliseen laatikkoon. Aloitetaan
+   * tiukasta ja laajennetaan vasta jos vesitietä ei löydy.
+   */
+  const perusvara = Math.max(140, Math.hypot(b.x - a.x, b.y - a.y) * 0.55);
   const syyt = [];
-  for (const porras of PORTAAT) {
-    const ruudukko = vesiruudukko(map, leveys, korkeus, onMaalla, { ...porras, alue });
-    const polku = meripolku(ruudukko, a, b, onMaalla, map, syyt);
-    if (polku) return { via: polku, porras };
+  for (const kerroin of [1, 2.5, 6]) {
+    const vara = perusvara * kerroin;
+    const alue = {
+      x0: Math.min(a.x, b.x) - vara,
+      y0: Math.min(a.y, b.y) - vara,
+      x1: Math.max(a.x, b.x) + vara,
+      y1: Math.max(a.y, b.y) + vara,
+    };
+    for (const porras of PORTAAT) {
+      const ruudukko = vesiruudukko(map, leveys, korkeus, onMaalla, { ...porras, alue });
+      const polku = meripolku(ruudukko, a, b, onMaalla, map, syyt);
+      if (polku) return { via: polku, porras, vara: Math.round(vara) };
+    }
   }
   return { via: null, syy: syyt[syyt.length - 1] ?? 'tuntematon' };
 }

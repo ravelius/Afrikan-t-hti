@@ -76,7 +76,11 @@ for (let i = 0; i < rivit.length; i++) {
   const via = korjatut.get(`${e.a}|${e.b}`);
   if (!via) continue;
   const sisennys = rivi.slice(0, rivi.length - rivi.trimStart().length);
-  rivit[i] = `${sisennys}${JSON.stringify({ ...e, via })},`;
+  // Tyhjä via poistetaan kokonaan: suora viiva riittää, ja tyhjä lista
+  // olisi pelille eri asia kuin puuttuva kenttä.
+  const uusi = { ...e };
+  if (via.length) uusi.via = via; else delete uusi.via;
+  rivit[i] = `${sisennys}${JSON.stringify(uusi)},`;
   osumia += 1;
 }
 
