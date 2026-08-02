@@ -50,7 +50,7 @@ const ME_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const ME_CITIES = [
   {
-    id: 'istanbul', name: 'Istanbul', x: 125, y: 88, start: true, airport: true,
+    id: 'istanbul', name: 'Istanbul', wiki: 'Istanbul', ambience: 'basaari', x: 125, y: 88, start: true, airport: true,
     // Vaelluksessa Istanbulista voi laskeutua kaupunkitason laudalle.
     links: [
       { pack: 'istanbul', city: 'lentoasema', label: 'Istanbulin kaupunkilauta' },
@@ -58,7 +58,7 @@ const ME_CITIES = [
     ],
   },
   {
-    id: 'kairo', name: 'Kairo', x: 181, y: 410, start: true, airport: true,
+    id: 'kairo', name: 'Kairo', wiki: 'Kairo', ambience: 'basaari', x: 181, y: 410, start: true, airport: true,
     // Sama kaupunki on myös Afrikan laudalla.
     links: [
       { pack: 'africa', city: 'kairo', label: 'Afrikan lauta' },
@@ -66,41 +66,41 @@ const ME_CITIES = [
     ],
   },
 
-  { id: 'izmir', name: 'Izmir', x: 78, y: 164, la: 'start', lx: 16, ly: 5 },
-  { id: 'ankara', name: 'Ankara', x: 221, y: 120 },
-  { id: 'kapadokia', name: 'Kappadokia', x: 276, y: 166, la: 'start', lx: 16, ly: 5 },
-  { id: 'nikosia', name: 'Nikosia', x: 234, y: 260, la: 'middle', lx: 0, ly: -22 },
-  { id: 'halab', name: 'Aleppo', x: 329, y: 229, la: 'start', lx: 16, ly: 5 },
-  { id: 'damaskos', name: 'Damaskos', x: 308, y: 309, la: 'start', lx: 16, ly: 5 },
-  { id: 'jerusalem', name: 'Jerusalem', x: 268, y: 364, la: 'start', lx: 16, ly: 5 },
-  { id: 'petra', name: 'Petra', x: 302, y: 418, la: 'start', lx: 16, ly: 5 },
-  { id: 'siinai', name: 'Siinai', x: 249, y: 454, la: 'end', lx: -16, ly: 22 },
-  { id: 'luxor', name: 'Luxor', x: 216, y: 538, la: 'end', lx: -16, ly: 5 },
-  { id: 'medina', name: 'Medina', x: 390, y: 574, la: 'start', lx: 16, ly: 5 },
-  { id: 'mekka', name: 'Mekka', x: 395, y: 664, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'riad', name: 'Riad', x: 568, y: 570, airport: true },
-  { id: 'rubalkhali', name: 'Rub al-Khali', x: 675, y: 691, la: 'middle', lx: 0, ly: -22 },
-  { id: 'sana', name: 'Sana', x: 505, y: 842, la: 'start', lx: 16, ly: 5 },
-  { id: 'aden', name: 'Aden', x: 526, y: 917 },
-  { id: 'salalah', name: 'Salalah', x: 752, y: 794 },
-  { id: 'masqat', name: 'Masqat', x: 864, y: 600, la: 'start', lx: 16, ly: 5 },
+  { id: 'izmir', name: 'Izmir', wiki: 'İzmir', ambience: 'satama', x: 78, y: 164, la: 'start', lx: 16, ly: 5 },
+  { id: 'ankara', name: 'Ankara', wiki: 'Ankara', ambience: 'kaupunki', x: 221, y: 120 },
+  { id: 'kapadokia', name: 'Kappadokia', wiki: 'Kappadokia', ambience: 'ylanko', x: 276, y: 166, la: 'start', lx: 16, ly: 5 },
+  { id: 'nikosia', name: 'Nikosia', wiki: 'Nikosia', ambience: 'kaupunki', x: 234, y: 260, la: 'middle', lx: 0, ly: -22 },
+  { id: 'halab', name: 'Aleppo', wiki: 'Aleppo', ambience: 'basaari', x: 329, y: 229, la: 'start', lx: 16, ly: 5 },
+  { id: 'damaskos', name: 'Damaskos', wiki: 'Damaskos', ambience: 'basaari', x: 308, y: 309, la: 'start', lx: 16, ly: 5 },
+  { id: 'jerusalem', name: 'Jerusalem', wiki: 'Jerusalem', ambience: 'kaupunki', x: 268, y: 364, la: 'start', lx: 16, ly: 5 },
+  { id: 'petra', name: 'Petra', wiki: 'Petra (kaupunki)', ambience: 'aavikko', x: 302, y: 418, la: 'start', lx: 16, ly: 5 },
+  { id: 'siinai', name: 'Siinai', wiki: 'Siinai', ambience: 'aavikko', x: 249, y: 454, la: 'end', lx: -16, ly: 22 },
+  { id: 'luxor', name: 'Luxor', wiki: 'Luxor', ambience: 'aavikko', x: 216, y: 538, la: 'end', lx: -16, ly: 5 },
+  { id: 'medina', name: 'Medina', wiki: 'Medina', ambience: 'aavikko', x: 390, y: 574, la: 'start', lx: 16, ly: 5 },
+  { id: 'mekka', name: 'Mekka', wiki: 'Mekka', ambience: 'basaari', x: 395, y: 664, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'riad', name: 'Riad', wiki: 'Riad', ambience: 'aavikko', x: 568, y: 570, airport: true },
+  { id: 'rubalkhali', name: 'Rub al-Khali', wiki: 'Rub al-Khali', ambience: 'aavikko', x: 675, y: 691, la: 'middle', lx: 0, ly: -22 },
+  { id: 'sana', name: 'Sana', wiki: 'Sanaa', ambience: 'basaari', x: 505, y: 842, la: 'start', lx: 16, ly: 5 },
+  { id: 'aden', name: 'Aden', wiki: 'Aden', ambience: 'satama', x: 526, y: 917 },
+  { id: 'salalah', name: 'Salalah', wiki: 'Salala', ambience: 'meri', x: 752, y: 794 },
+  { id: 'masqat', name: 'Masqat', wiki: 'Masqat', ambience: 'satama', x: 864, y: 600, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'dubai', name: 'Dubai', x: 782, y: 565, start: true, airport: true, la: 'middle', lx: 0, ly: 26,
+    id: 'dubai', name: 'Dubai', wiki: 'Dubai', ambience: 'satama', x: 782, y: 565, start: true, airport: true, la: 'middle', lx: 0, ly: 26,
     // Persianlahden vaihtoasema: täältä lähtee pitkä lento itään.
     links: [{ pack: 'maailma', city: 'mumbai', label: 'Maailma-lauta' }],
   },
-  { id: 'doha', name: 'Doha', x: 688, y: 550, la: 'middle', lx: 0, ly: 26 },
-  { id: 'kuwait', name: 'Kuwait', x: 600, y: 430, la: 'end', lx: -16, ly: 5 },
-  { id: 'bagdad', name: 'Bagdad', x: 509, y: 314, airport: true },
-  { id: 'mosul', name: 'Mosul', x: 478, y: 225 },
-  { id: 'tabriz', name: 'Tabriz', x: 558, y: 174 },
+  { id: 'doha', name: 'Doha', wiki: 'Doha', ambience: 'satama', x: 688, y: 550, la: 'middle', lx: 0, ly: 26 },
+  { id: 'kuwait', name: 'Kuwait', wiki: 'Kuwait (kaupunki)', ambience: 'satama', x: 600, y: 430, la: 'end', lx: -16, ly: 5 },
+  { id: 'bagdad', name: 'Bagdad', wiki: 'Bagdad', ambience: 'basaari', x: 509, y: 314, airport: true },
+  { id: 'mosul', name: 'Mosul', wiki: 'Mosul', ambience: 'kaupunki', x: 478, y: 225 },
+  { id: 'tabriz', name: 'Tabriz', wiki: 'Tabriz', ambience: 'basaari', x: 558, y: 174 },
   {
-    id: 'teheran', name: 'Teheran', x: 685, y: 244, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'teheran', name: 'Teheran', wiki: 'Teheran', ambience: 'kaupunki', x: 685, y: 244, airport: true, la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Aasian laudalla.
     links: [{ pack: 'asia', city: 'teheran', label: 'Aasian lauta' }],
   },
-  { id: 'isfahan', name: 'Isfahan', x: 692, y: 334, la: 'start', lx: 16, ly: 5 },
-  { id: 'persepolis', name: 'Persepolis', x: 722, y: 414, la: 'start', lx: 16, ly: 5 },
+  { id: 'isfahan', name: 'Isfahan', wiki: 'Isfahan', ambience: 'basaari', x: 692, y: 334, la: 'start', lx: 16, ly: 5 },
+  { id: 'persepolis', name: 'Persepolis', wiki: 'Persepolis', ambience: 'aavikko', x: 722, y: 414, la: 'start', lx: 16, ly: 5 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
