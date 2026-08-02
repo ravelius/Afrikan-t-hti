@@ -128,6 +128,7 @@
       <button data-tab="tekstit">Tekstit</button>
       <button data-tab="kuvat">Kuvat</button>
       <button data-tab="juoni">Juoni</button>
+      <button data-tab="lasit">Lasit</button>
       <button data-tab="pelit">Peli-ideat</button>
       <button data-tab="lahteet">Lähteet</button>
       <button data-tab="moottorit">Moottorit</button>
@@ -145,6 +146,16 @@
        paketeista, joten ne eivät voi vanhentua; peilin luvut luetaan
        media-repon manifestista, joten ne kertovat mitä siellä juuri nyt on.</p>
     <div id="tilastot" class="taulu"></div>
+  </section>
+
+  <!-- LASIT: mitä erikoislasien läpi näkee -->
+  <section id="tab-lasit" hidden>
+    <p>Aarteina löytyvien erikoislasien toiminnallisuudet. Nämä eivät ole
+       minipelejä vaan <strong>kerroksia kartan päällä</strong>: kartta
+       pysyy paikallaan ja lasien läpi katsottaessa sen päälle piirtyy
+       jotain, mitä paljaalla silmällä ei näe. Omistajan havainto
+       3.8.2026: nämä olivat väärässä listassa.</p>
+    <div id="lasi-lista"></div>
   </section>
 
   <!-- PELI-IDEAT -->
@@ -540,18 +551,6 @@
         kuvaus: 'Vaikea kysymys avaa maan laudan (esim. Helsinki → Suomi) ilmaiseksi.' },
       { nimi: 'Tutkiminen', tila: 'kaytossa',
         kuvaus: 'Laatattomatkin kaupungit voi tutkia kerran: palkintona tietoa ja kokemuspisteitä.' },
-      { nimi: 'Animoitu historiakartta', tila: 'ideoitava',
-        kuvaus: 'Omistajan idea 2.8.2026: kartta pysyy paikallaan ja sen päällä oleva kerros elää vuosilukujen mukana. Ensimmäinen aihe: Silkkitie. Taikalasit voisivat olla juuri se väline, jolla historialliset kartat näkee.',
-        huomiot: 'Tämä on rakennettavissa nykyisillä välineillä. Kartta on jo vektoria, ja pelin oma projektio kääntää leveys- ja pituuspiirit laudan koordinaateiksi — sama kaava, jolla neljä lautaa yhdistettiin. Kerros on siis lista pisteitä ja vuosilukuja, ja aikajana valitsee mitkä niistä näkyvät. Työläin osa ei ole tekniikka vaan AINEISTO: reitit ja rajat pitää saada luotettavasta lähteestä ja vuosiluvut tarkistaa. Yksi tärkeä varaus: mitä kauemmas ajassa mennään, sitä epävarmempia rajat ovat, ja se pitää sanoa pelaajalle ääneen — muuten peli opettaa arvauksia faktoina.' },
-      { nimi: 'Ihmisen leviäminen Afrikasta', tila: 'ideoitava',
-        kuvaus: 'Omistajan idea: animoitu kerros, joka näyttää ihmisen leviämisen maapallolle Afrikasta alkaen.',
-        huomiot: 'Sama koneisto kuin historiakartassa, mutta aikaskaala on kymmeniä tuhansia vuosia eikä vuosisatoja, joten aikajanan pitää olla logaritminen. Sopii pelin ytimeen erinomaisesti: se kertoo yhdellä kuvalla, että kaikki matkalla kohdatut kansat ovat samaa sukua.' },
-      { nimi: 'Lämpökartat: onnellisuus ja muut luvut', tila: 'ideoitava',
-        kuvaus: 'Omistajan idea: onnellisuusindeksi lämpökarttana ja sen muunnelmat — asukasluku, bruttokansantuote, odotettu elinikä, veroprosentti ja niin edelleen.',
-        huomiot: 'Tämä on näistä kolmesta helpoin: aineisto on nykyaikaista, avointa ja maakohtaista (World Happiness Report, Maailmanpankki, YK). Peli tuntee jo maiden rajat maakerroksessa, joten kerros on maa ja väri. Opetuksellisesti vahvin kohta on vertailu: kaksi lukua rinnakkain kertoo enemmän kuin kumpikaan yksin — esimerkiksi bruttokansantuote ja onnellisuus.' },
-      { nimi: 'Museokuva kaupungista', tila: 'ideoitava',
-        kuvaus: 'Omistajan linjaus 2.8.2026: "Paras idea on käyttää museoiden yms kuvia tehtävissä. Olisi kiva että tehtävä liittyy kyseiseen kaupunkiin jossa ollaan." Tehtävä rakennetaan siis oikean museoesineen ympärille, ja esine on sieltä missä pelaaja juuri on: Istanbulissa osmanikäsityötä, Kairossa egyptiläistä, Lissabonissa löytöretkien aineistoa.',
-        huomiot: 'Tämä on minipelien tärkein suunta. Lähteet ovat avoimia ja ilmaisia: Met Museum (avoin API, CC0), Smithsonian, Rijksmuseum, Europeana ja Wikimedia Commons. Kuvat menevät saman peilin läpi kuin muutkin, joten ne toimivat myös offline. Kaupunkiin sidonta tehdään esineen alkuperämaan tai -kaupungin perusteella, ja aineisto haetaan etukäteen pelipaketteihin — ei lennossa, ettei tehtävä jää tulematta yhteydettömänä.' },
       { nimi: 'Aineistotutkimus', tila: 'ideoitava',
         kuvaus: 'Omistajan idea: pelaaja saa ensin tutkia aineistoa (esim. museon kuvakokoelman poiminta, vanha kartta tai päiväkirjan aukeama) niin kauan kuin haluaa. Kun hän on valmis, alkaa kysymys- tai pulmasarja aineiston pohjalta. Lisämaksusta pääsee kurkkaamaan aineistoa kesken pelin, ja aikaraja on tavallista pidempi.',
         huomiot: 'Sopii museo-API-lähteisiin (Met, Smithsonian) — aineisto voi olla aidosti eri joka kerralla. Palkinnoksi sopisi matkamuisto.' },
@@ -738,8 +737,46 @@
       varusteLista.appendChild(k);
     }
 
-    const peliLista = document.getElementById('peli-lista');
+    /*
+     * Erikoislasien toiminnallisuudet.
+     *
+     * Nämä olivat ensin peli-ideoissa, ja se oli väärä paikka: ne eivät
+     * ole minipelejä vaan kerroksia kartan päällä. Omistajan havainto
+     * 3.8.2026: "Neljä ylintä tässä ovat aarteiden (erikoislasit)
+     * toiminnallisuuksia, ei peli-ideoita."
+     *
+     * Yhteinen piirre: kartta pysyy paikallaan ja lasien läpi
+     * katsottaessa sen päälle piirtyy jotain, mitä paljaalla silmällä ei
+     * näe. Siksi ne jakavat saman koneiston keskenään mutta eivät
+     * minkään minipelin kanssa.
+     */
     const PELITILAT = { kaytossa: 'käytössä', ideoitava: 'ideoidaan yhdessä seuraavaksi', idea: 'idea' };
+
+    const LASIT = [
+      { nimi: 'Animoitu historiakartta', tila: 'ideoitava',
+        kuvaus: 'Omistajan idea 2.8.2026: kartta pysyy paikallaan ja sen päällä oleva kerros elää vuosilukujen mukana. Ensimmäinen aihe: Silkkitie. Taikalasit voisivat olla juuri se väline, jolla historialliset kartat näkee.',
+        huomiot: 'Tämä on rakennettavissa nykyisillä välineillä. Kartta on jo vektoria, ja pelin oma projektio kääntää leveys- ja pituuspiirit laudan koordinaateiksi — sama kaava, jolla neljä lautaa yhdistettiin. Kerros on siis lista pisteitä ja vuosilukuja, ja aikajana valitsee mitkä niistä näkyvät. Työläin osa ei ole tekniikka vaan AINEISTO: reitit ja rajat pitää saada luotettavasta lähteestä ja vuosiluvut tarkistaa. Yksi tärkeä varaus: mitä kauemmas ajassa mennään, sitä epävarmempia rajat ovat, ja se pitää sanoa pelaajalle ääneen — muuten peli opettaa arvauksia faktoina.' },
+      { nimi: 'Ihmisen leviäminen Afrikasta', tila: 'ideoitava',
+        kuvaus: 'Omistajan idea: animoitu kerros, joka näyttää ihmisen leviämisen maapallolle Afrikasta alkaen.',
+        huomiot: 'Sama koneisto kuin historiakartassa, mutta aikaskaala on kymmeniä tuhansia vuosia eikä vuosisatoja, joten aikajanan pitää olla logaritminen. Sopii pelin ytimeen erinomaisesti: se kertoo yhdellä kuvalla, että kaikki matkalla kohdatut kansat ovat samaa sukua.' },
+      { nimi: 'Lämpökartat: onnellisuus ja muut luvut', tila: 'ideoitava',
+        kuvaus: 'Omistajan idea: onnellisuusindeksi lämpökarttana ja sen muunnelmat — asukasluku, bruttokansantuote, odotettu elinikä, veroprosentti ja niin edelleen.',
+        huomiot: 'Tämä on näistä kolmesta helpoin: aineisto on nykyaikaista, avointa ja maakohtaista (World Happiness Report, Maailmanpankki, YK). Peli tuntee jo maiden rajat maakerroksessa, joten kerros on maa ja väri. Opetuksellisesti vahvin kohta on vertailu: kaksi lukua rinnakkain kertoo enemmän kuin kumpikaan yksin — esimerkiksi bruttokansantuote ja onnellisuus.' },
+      { nimi: 'Museokuva kaupungista', tila: 'ideoitava',
+        kuvaus: 'Omistajan linjaus 2.8.2026: "Paras idea on käyttää museoiden yms kuvia tehtävissä. Olisi kiva että tehtävä liittyy kyseiseen kaupunkiin jossa ollaan." Tehtävä rakennetaan siis oikean museoesineen ympärille, ja esine on sieltä missä pelaaja juuri on: Istanbulissa osmanikäsityötä, Kairossa egyptiläistä, Lissabonissa löytöretkien aineistoa.',
+        huomiot: 'Tämä on minipelien tärkein suunta. Lähteet ovat avoimia ja ilmaisia: Met Museum (avoin API, CC0), Smithsonian, Rijksmuseum, Europeana ja Wikimedia Commons. Kuvat menevät saman peilin läpi kuin muutkin, joten ne toimivat myös offline. Kaupunkiin sidonta tehdään esineen alkuperämaan tai -kaupungin perusteella, ja aineisto haetaan etukäteen pelipaketteihin — ei lennossa, ettei tehtävä jää tulematta yhteydettömänä.' },
+    ];
+    const lasiLista = document.getElementById('lasi-lista');
+    for (const l of LASIT) {
+      const k = document.createElement('div');
+      k.className = 'kortti';
+      k.innerHTML = `
+        <h3>${l.nimi} <span class="tila">${PELITILAT[l.tila] ?? 'idea'}</span></h3>
+        <p>${l.kuvaus}</p>${l.huomiot ? `<p class="meta">${l.huomiot}</p>` : ''}`;
+      lasiLista.appendChild(k);
+    }
+
+    const peliLista = document.getElementById('peli-lista');
     for (const peli of PELIT) {
       const k = document.createElement('div');
       k.className = 'kortti';
