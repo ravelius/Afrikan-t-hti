@@ -339,7 +339,10 @@ import {
   tokenIconSvg,
   paperi,
   kasinPiirretty,
-  rasteroiIkkuna,
+  rasteroiRuutu,
+  piirtotarkkuus,
+  ruudunKoko,
+  valmisteleTaide,
   tyylitSisaan,
 } from './mapart.js';
 
@@ -1187,12 +1190,12 @@ export class UI {
     // Aloituskartan lähikuva hoitaa oman rajauksensa ja kokonsa.
     if (this.aloitusZoom && alkuun) {
       this.sovitaAloitusZoom(w, h);
-      this.paivitaTaideKuva?.();
+      this.taydennaTaide?.();
       return;
     }
     if (this.mannerZoom && !alkuun) {
       this.sovitaMannerZoom(w, h);
-      this.paivitaTaideKuva?.();
+      this.taydennaTaide?.();
       return;
     }
     // Lähikuvasta poistuttaessa (kaupunki valittu, uusi peli) kartta
@@ -1211,7 +1214,7 @@ export class UI {
      * jälkeen asettui 6379 yksikön levyiseksi, mikään ei pyytänyt uutta
      * kuvaa — yleiskuvassa ei panoroida — ja kartta jäi kaistaleeksi.
      */
-    this.paivitaTaideKuva?.();
+    this.taydennaTaide?.();
   }
 
   /**
@@ -1285,10 +1288,16 @@ export class UI {
     this.panY = Math.min(0, Math.max(-(this.panVaraY ?? 0), y));
     this.svg.style.transform =
       `translate3d(${this.panX.toFixed(1)}px, ${this.panY.toFixed(1)}px, 0)`;
-    // Piirretty ikkuna laajenee liikkeen mukana. Tarkistus on muutama
-    // vertailu, joten sen voi tehdä joka siirrolla; varsinainen piirto
-    // alkaa vasta kun reuna lähestyy.
-    this.paivitaTaideKuva?.();
+    /*
+     * Siirron aikana EI piirretä bittikarttaa.
+     *
+     * Aiemmin tässä tilattiin uusi kuva heti kun reuna lähestyi, ja
+     * juuri se tökki: rasterointi vie satoja millisekunteja
+     * pääsäikeessä, ja sormen alla se tuntuu nykäyksenä. Puskuria on
+     * ruudullisen verran joka suuntaan, eli koko sen matkan minkä yksi
+     * pyyhkäisy voi karttaa siirtää, joten kesken eleen ei tarvitse
+     * piirtää mitään (omistajan linjaus).
+     */
   }
 
   /*
@@ -1440,43 +1449,40 @@ export class UI {
    * kuvaksi kun se on valmis; jos vaihto ei onnistu, vektorit jäävät.
    */
   rasteroiTaide(ryhma) {
-    // Lähde talteen irralleen: kuva piirretään aina siitä uudestaan, kun
-    // ikkuna tai zoomitaso vaihtuu. Tyylit kirjoitetaan samalla kiinni
-    // elementteihin, koska irrallinen SVG ei peri sivun tyylitiedostoa.
-    this.taideLahde = tyylitSisaan(ryhma);
-    this.taideRyhma = ryhma;
-    this.taideIkkuna = null;
-    this.taideSkaala = 0;
-    this.taideKierros = 0;
     /*
-     * Ensimmäinen kuva vasta seuraavalla kehyksellä.
+     * Taide sarjallistetaan KERRAN ja tyylit kirjoitetaan elementteihin.
      *
-     * Laudan piirtohetkellä viewBox on vielä oletusarvoinen 1000 x 1000,
-     * eikä paneelin koko ole tiedossa. Jos kuva tehdään heti, siitä
-     * tulee 3000 yksikön kaistale keskelle karttaa — ja koska
-     * yleiskuvassa ei panoroida, mikään ei pyydä parempaa.
+     * Irrallinen SVG ei peri sivun tyylitiedostoa: säännöt on kirjoitettu
+     * sivun rakennetta vasten (`#board`, `body...`), eikä kuvassa ole
+     * bodya. Ilman tätä kartasta tulisi musta paperi mustine
+     * mantereineen.
+     *
+     * Sarjallistus kerran on nopeuden kannalta olennaista: jokainen
+     * ruutu tehdään samasta tekstistä, ja 6500 elementin läpikäynti
+     * ruutua kohti maksaisi enemmän kuin itse piirto.
      */
-    requestAnimationFrame(() => this.paivitaTaideKuva());
+    this.taideRyhma = ryhma;
+    this.taide = valmisteleTaide(tyylitSisaan(ryhma), this.svg.querySelector('defs'));
+    this.taideRuudut = new Map();
+    this.taideSkaala = 0;
+    this.taideRuutu = 0;
+    this.taideVektorit = ryhma.firstElementChild ? [...ryhma.children] : [];
+    // Ensimmäinen piirto vasta seuraavalla kehyksellä: laudan
+    // luontihetkellä viewBox on vielä oletusarvoinen eikä paneelin koko
+    // ole tiedossa.
+    requestAnimationFrame(() => this.taydennaTaide());
   }
 
   /**
    * Näkyvä alue laudan koordinaatteina.
    *
-   * Tästä ei ole olemassa valmista lukua: viewBox kattaa koko laudan ja
-   * varsinainen rajaus tehdään panoroinnilla ja elementin koolla.
+   * Luvut luetaan ruudulta eikä zoomimuuttujista: this.zoomSkaala on
+   * olemassa vain lähikuvassa, ja yleiskuvassa se on nolla. viewBox ja
+   * elementin oma koko ovat olemassa aina.
    */
   nakyvaAlue() {
     const pane = this.svg?.parentElement;
     if (!pane) return null;
-    /*
-     * Luvut luetaan ruudulta eikä zoomimuuttujista.
-     *
-     * Ensimmäinen versio laski alueen this.zoomSkaalasta, joka on
-     * olemassa vain lähikuvassa. Yleiskuvassa se on nolla, jolloin
-     * funktio palautti nullin eikä kuvaa syntynyt lainkaan — mittaus
-     * näytti yhä 7192 elementtiä ja 218 millisekunnin kehyksen.
-     * viewBox ja elementin oma koko ovat olemassa aina.
-     */
     const vb = this.svg.viewBox?.baseVal;
     const laatikko = this.svg.getBoundingClientRect();
     const paneeli = pane.getBoundingClientRect();
@@ -1492,102 +1498,110 @@ export class UI {
   }
 
   /**
-   * Piirtää kartan taiteen kuvaksi näkyvän alueen ympäriltä.
+   * Täydentää kartan bittikartan puuttuvilla ruuduilla.
    *
-   * Puskuri on yksi ruudullinen joka suuntaan, eli kuva on kolme kertaa
-   * ruudun levyinen ja korkuinen. Uusi kuva tilataan jo silloin, kun
-   * näkyvä alue lähestyy reunaa puolen ruudun päähän — ei vasta reunalla.
-   * Näin sormi ei ehdi ohittaa piirrettyä aluetta, eikä tyhjää näy
-   * missään vaiheessa (omistajan vaatimus).
+   * KOLME SÄÄNTÖÄ, JOTKA OMISTAJA ANTOI:
    *
-   * Vanha kuva jää paikalleen siihen asti, kunnes uusi on ladattu.
+   * 1. Kesken eleen ei ladata. Piirto vie satoja millisekunteja
+   *    pääsäikeessä, ja se tökkii sormen alla riippumatta siitä kuinka
+   *    pieni pala on. Aiemmin lataus alkoi heti kun reuna lähestyi, ja
+   *    juuri se tökki.
+   * 2. Puskuria on niin paljon, ettei kesken eleen TARVITSE ladata.
+   *    Yksi pyyhkäisy siirtää karttaa korkeintaan ruudullisen, koska
+   *    sormi ei mahdu kulkemaan ruutua pidemmälle. Ruutuja piirretään
+   *    siksi ruudullisen verran näkyvän alueen ympärille.
+   * 3. Ladataan vain uusi osa. Ruudukko pysyy paikallaan, ja jo
+   *    piirretyt ruudut jäävät sellaisinaan — uutta työtä on vain se
+   *    kaistale, joka tuli näkyviin.
    */
-  paivitaTaideKuva() {
-    if (!this.taideLahde || !this.taideRyhma || this.dead) return;
+  taydennaTaide({ heti = false } = {}) {
+    if (!this.taide || !this.taideRyhma || this.dead) return;
+    // Kesken eleen ei ladata. Merkitään vain, että päättyessä pitää.
+    if (this.kartanRaahaus && !heti) { this.taideOdottaa = true; return; }
+    if (this.taidePiirtyy) { this.taideOdottaa = true; return; }
     const nakyva = this.nakyvaAlue();
     if (!nakyva) return;
 
-    /*
-     * Puskuri on 0,6 ruudullista joka suuntaan, ei kokonainen.
-     *
-     * Koko ruudullinen tekisi kuvasta kolme kertaa ruudun levyisen, ja
-     * iPadin leveydellä se on jo yli 3000 pikseliä eli päälle 40
-     * megatavua canvasta. 0,6 riittää: sormi ei ehdi yhdellä
-     * pyyhkäisyllä yli, ja uusi kuva tilataan jo puolivälissä.
-     */
-    const PUSKURI = 0.6;
-    const VARARAJA = 0.45;  // näin lähelle reunaa saa tulla ennen uutta
+    // Mittakaavan vaihtuessa vanhat ruudut ovat väärän tarkkuisia.
+    if (!this.taideSkaala || nakyva.skaala > this.taideSkaala * 1.2
+        || nakyva.skaala < this.taideSkaala * 0.8) {
+      this.taideSkaala = nakyva.skaala;
+      const pane = this.svg.parentElement;
+      this.taideTarkkuus = piirtotarkkuus(pane?.clientWidth ?? 400, pane?.clientHeight ?? 800);
+      this.taideRuutu = ruudunKoko(nakyva.skaala, this.taideTarkkuus);
+      this.taideVanhat = [...this.taideRuudut.values()];
+      this.taideRuudut = new Map();
+    }
 
-    /*
-     * Riittääkö nykyinen kuva?
-     *
-     * Reunan lähestyminen ei riitä ehdoksi yksinään: ikkuna rajataan
-     * paperin sisään, joten kartan laidalla se EI voi ulottua puskurin
-     * verran ulommas. Ensimmäinen versio ei ottanut sitä huomioon, ja
-     * laidalla ehto jäi ikuisesti täyttymättä — työkalu jumittui, koska
-     * kuvaa piirrettiin uudestaan ilman loppua.
-     */
+    const koko = this.taideRuutu;
     const arkki = paperi(this.game.pack.map);
-    const ikkunaRiittaa = (i) => {
-      if (!i) return false;
-      const vasen = i.x <= arkki.x + 0.5 || nakyva.x - i.x >= nakyva.w * VARARAJA;
-      const yla = i.y <= arkki.y + 0.5 || nakyva.y - i.y >= nakyva.h * VARARAJA;
-      const oikea = i.x + i.w >= arkki.x + arkki.w - 0.5
-        || (i.x + i.w) - (nakyva.x + nakyva.w) >= nakyva.w * VARARAJA;
-      const ala = i.y + i.h >= arkki.y + arkki.h - 0.5
-        || (i.y + i.h) - (nakyva.y + nakyva.h) >= nakyva.h * VARARAJA;
-      return vasen && yla && oikea && ala;
-    };
-    const riittaa = this.taideSkaala >= nakyva.skaala * 0.85 && ikkunaRiittaa(this.taideIkkuna);
-    if (riittaa) { this.taideKierros = 0; return; }
-    if (this.taidePiirtyy) return;
-
+    const PUSKURI = 1; // ruudullista joka suuntaan: koko pyyhkäisyn matka
     const x0 = Math.max(arkki.x, nakyva.x - nakyva.w * PUSKURI);
     const y0 = Math.max(arkki.y, nakyva.y - nakyva.h * PUSKURI);
     const x1 = Math.min(arkki.x + arkki.w, nakyva.x + nakyva.w * (1 + PUSKURI));
     const y1 = Math.min(arkki.y + arkki.h, nakyva.y + nakyva.h * (1 + PUSKURI));
-    const ikkuna = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
-    if (!(ikkuna.w > 0 && ikkuna.h > 0)) return;
+
+    const puuttuvat = [];
+    for (let ry = Math.floor(y0 / koko); ry <= Math.floor((y1 - 0.001) / koko); ry++) {
+      for (let rx = Math.floor(x0 / koko); rx <= Math.floor((x1 - 0.001) / koko); rx++) {
+        const avain = `${rx},${ry}`;
+        if (this.taideRuudut.has(avain)) continue;
+        puuttuvat.push({ avain, rx, ry });
+      }
+    }
+    if (!puuttuvat.length) {
+      this.poistaVanhatRuudut();
+      return;
+    }
+
+    // Lähimmät ensin: keskeltä ruutua reunoja kohti.
+    const kx = nakyva.x + nakyva.w / 2;
+    const ky = nakyva.y + nakyva.h / 2;
+    puuttuvat.sort((a, b) => (
+      Math.hypot((a.rx + 0.5) * koko - kx, (a.ry + 0.5) * koko - ky)
+      - Math.hypot((b.rx + 0.5) * koko - kx, (b.ry + 0.5) * koko - ky)
+    ));
 
     this.taidePiirtyy = true;
-    const skaala = nakyva.skaala;
-    rasteroiIkkuna(this.taideLahde, this.svg.querySelector('defs'), ikkuna, skaala)
-      .then((kuva) => {
-        this.taidePiirtyy = false;
-        if (!kuva || this.dead || !this.taideRyhma) return;
-        /*
-         * Uusi kuva ALLE, vanha pois vasta seuraavalla kehyksellä.
-         *
-         * Suora vaihto (replaceChildren) jätti yhden kehyksen, jossa
-         * uusi ei ollut vielä piirtynyt — kartta välkkyi kesken siirron.
-         * Kun uusi menee vanhan alle, ruudulla on koko ajan jompikumpi,
-         * ja ne ovat sama kuva samasta taiteesta: vaihdos ei näy.
-         */
-        const vanhat = [...this.taideRyhma.children];
+    this.taideOdottaa = false;
+    const skaala = this.taideSkaala;
+    (async () => {
+      for (const { avain, rx, ry } of puuttuvat) {
+        if (this.dead || skaala !== this.taideSkaala) break;
+        // Uusi ele kesken piirron: keskeytetään ja jatketaan sen jälkeen.
+        if (this.kartanRaahaus) { this.taideOdottaa = true; break; }
+        const ikkuna = { x: rx * koko, y: ry * koko, w: koko, h: koko };
+        const kuva = await rasteroiRuutu(this.taide, ikkuna, skaala, this.taideTarkkuus);
+        if (!kuva || this.dead || skaala !== this.taideSkaala) continue;
+        this.taideRuudut.set(avain, kuva);
+        // Uusi ruutu alimmaiseksi: vanhan mittakaavan ruudut jäävät
+        // päälle siihen asti, kunnes koko näkymä on katettu.
         this.taideRyhma.insertBefore(kuva, this.taideRyhma.firstChild);
-        requestAnimationFrame(() => {
-          for (const solmu of vanhat) {
-            solmu.remove();
-            if (solmu.dataset?.osoite) URL.revokeObjectURL(solmu.dataset.osoite);
-          }
-        });
-        this.taideIkkuna = ikkuna;
-        this.taideSkaala = skaala;
-        /*
-         * Tarkistus heti uudestaan: sormi on voinut liikkua piirron
-         * aikana, ja silloin juuri valmistunut kuva on jo väärässä
-         * kohdassa. Kierrokset rajataan, ettei mahdollinen
-         * erimielisyys ehdon ja rajauksen välillä jää pyörimään
-         * ikuisesti — se virhe sattui jo kerran. Laskuri nollautuu
-         * aina kun ikkuna riittää tai kun ele päättyy, joten raja ei
-         * voi kulua umpeen pitkässä selauksessa.
-         */
-        if (this.taideKierros < 3) {
-          this.taideKierros += 1;
-          this.paivitaTaideKuva();
-        }
-      })
-      .catch(() => { this.taidePiirtyy = false; });
+      }
+      this.taidePiirtyy = false;
+      this.poistaVanhatRuudut();
+      if (this.taideOdottaa && !this.kartanRaahaus) this.taydennaTaide({ heti: true });
+    })();
+  }
+
+  /**
+   * Poistaa edellisen mittakaavan ruudut ja alkuperäiset vektorit.
+   *
+   * Vasta täällä, ei heti uuden ruudun tullessa: vanha kuva saa jäädä
+   * ruudulle siihen asti kunnes uusi kattaa saman alueen. Muuten
+   * kartalla vilahtaisi tyhjää joka kerta kun zoomataan.
+   */
+  poistaVanhatRuudut() {
+    if (this.taidePiirtyy) return;
+    for (const solmu of this.taideVanhat ?? []) {
+      solmu.remove();
+      if (solmu.dataset?.osoite) URL.revokeObjectURL(solmu.dataset.osoite);
+    }
+    this.taideVanhat = [];
+    if (this.taideRuudut?.size) {
+      for (const solmu of this.taideVektorit ?? []) solmu.remove();
+      this.taideVektorit = [];
+    }
   }
 
   /** Vuorossa olevan pelaajan nappulan kohta laudan koordinaateissa. */
@@ -2011,6 +2025,7 @@ export class UI {
       if (!liikkui && Math.hypot(dx, dy) < 6) return;
       if (!liikkui) {
         liikkui = true;
+        this.kartanRaahaus = true;
         document.body.classList.add('kartta-raahaus');
         pane.setPointerCapture?.(e.pointerId);
       }
@@ -2028,19 +2043,14 @@ export class UI {
       this.raahattiin = liikkui;
       if (liikkui) setTimeout(() => { this.raahattiin = false; }, 0);
       /*
-       * Kartan kuva täydennetään heti kun sormi irtoaa.
+       * Bittikartta täydennetään VAIN tässä: heti kun sormi irtoaa.
        *
-       * Kuvaa pyydetään jo kesken pyyhkäisyn (asetaPan tarkistaa joka
-       * liikkeellä), mutta se ei riitä yksinään: jos piirto oli kesken
-       * juuri kun sormi nousi, seuraava tarkistus tulisi vasta
-       * seuraavasta eleestä — ja silloin kuva olisi jo väärässä
-       * kohdassa siinä välissä. Eleen päättyminen on oma hetkensä, ja
-       * se ansaitsee oman tarkistuksensa.
+       * Omistajan linjaus: "lataus siis aina vain juuri kun sormi
+       * irtoaa, ei muulloin." Ele saa kulkea täysin valmiin kuvan
+       * päällä, ja työ tehdään vasta kun ruutu on paikallaan.
        */
-      if (liikkui) {
-        this.taideKierros = 0;
-        this.paivitaTaideKuva?.();
-      }
+      this.kartanRaahaus = false;
+      if (liikkui) this.taydennaTaide({ heti: true });
     };
     pane.addEventListener('pointerup', paata);
     pane.addEventListener('pointercancel', paata);

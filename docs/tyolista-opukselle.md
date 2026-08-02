@@ -305,6 +305,62 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 48: bittikartta ruuduiksi, lataus vain sormen irrotessa — VALMIS v171 2.8.2026
+
+Omistajan linjaus: "Pitää olla sen verran bufferia että kesken eleen ei
+tarvitse ladata. Mutta heti kun sormi irtoaa ladataan lisää ja silloinkin
+vain uusi osa jotta itse lataus mahd. nopea." Ja tarkennus: "Lataus siis
+aina vain juuri kun sormi irtoaa, ei muulloin."
+
+### Miksi edellinen versio tökki
+
+Kuva piirrettiin **kokonaan uudestaan** aina kun näkyvä alue lähestyi
+piirretyn reunaa — ja lataus alkoi kesken eleen. Rasterointi vie satoja
+millisekunteja pääsäikeessä, joten se tuntui nykäyksenä sormen alla
+riippumatta siitä, kuinka pieni pala oli oikeasti uutta.
+
+### Kolme sääntöä
+
+1. **Kesken eleen ei ladata.** `asetaPan` ei enää tilaa mitään.
+2. **Puskuria on ruudullisen verran joka suuntaan.** Yksi pyyhkäisy
+   siirtää karttaa korkeintaan ruudullisen, koska sormi ei mahdu
+   kulkemaan ruutua pidemmälle — puskuri kattaa siis koko eleen.
+3. **Vain uusi osa.** Kuva on nyt **ruudukko**: jo piirretyt ruudut
+   jäävät sellaisinaan, ja uutta työtä on vain se kaistale, joka tuli
+   näkyviin.
+
+Lataus tapahtuu `pointerup`- ja `pointercancel`-hetkellä sekä silloin
+kun näkymä asettuu (zoom ja koon muutos siirtävät aluetta ilman yhtään
+sormen liikettä).
+
+### Taide sarjallistetaan kerran
+
+Nopeuden kannalta olennaisin yksityiskohta. Jokainen ruutu tehdään
+samasta taiteesta, ja jos taide sarjallistettaisiin joka ruudulle
+uudestaan, 6500 elementin läpikäynti maksaisi enemmän kuin itse piirto.
+Nyt teksti syntyy kerran ja ruutu vaihtaa siitä vain näkymäikkunan ja
+koon.
+
+### Tarkkuus budjetista
+
+iPadin näyttö on kaksinkertainen, joten logiikkapikseleillä piirretty
+kuva venyy näytöllä ja näyttää pehmeältä — ohuet rantaviivat katoavat.
+Tarkkuus maksaa kuitenkin muistia neliöllisesti, ja puskuroitua aluetta
+on yhdeksän ruudullista. Tarkkuus valitaan siksi muistibudjetista (48
+Mt): niin tarkka kuin mahtuu, enintään näytön oma tarkkuus.
+
+### Vinjetti pois kaikkialta
+
+Omistajan päätös: "Voit ottaa vinjetoinnin vaaleampaan pois kaikkialta
+nyt kun kartta on liikuteltava" — ja kaikilla laitteilla.
+
+Reunahäivytys rajasi lautaa kuin vanhan filmin ruudun silloin, kun
+kartta oli kiinteä kokonäkymä. Nyt karttaa panoroidaan ja zoomataan joka
+laudalla, joten reuna ei rajaa mitään: se vain haalistaa sitä osaa
+karttaa, jota katsotaan. Poistettu sekä CSS:stä (`.map-pane::after`)
+että kartan omasta piirrosta (`vignette`-suorakulmio ja sen liukuväri).
+
+
 ## Paketti 47: kuva ei välky eikä jää jälkeen — VALMIS v170 2.8.2026
 
 Omistajan kaksi kysymystä: "Lasketaanhan uusi bittikartta heti kun sormi
