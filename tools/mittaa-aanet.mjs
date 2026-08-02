@@ -53,13 +53,14 @@ const SELAIN = process.env.CHROMIUM ?? '/opt/pw-browsers/chromium';
  * Tavoitetaso (LUFS). Taustaäänen kuuluu jäädä selvästi kertojan alle:
  * se on tunnelmaa, ei sisältöä.
  *
- * -33 LUFS on noin 10 dB tavallisen puhemiksauksen (-23) alapuolella.
- * Ensin kokeiltiin -30:tä, mutta omistaja kuunteli ja pyysi hieman
- * hiljemmalle. Tämä on koko taustakerroksen ainoa säädin: yksi luku
+ * -36 LUFS on noin 13 dB tavallisen puhemiksauksen (-23) alapuolella.
+ * Portaat: -30 (ensimmäinen arvio), -33 (omistaja pyysi hiljemmalle),
+ * -36 (omistaja: "taustaäänet saavat olla joka tapauksessa
+ * hiljaisemmalla, olisivat liian häiritseviä muuten"). Tämä on koko taustakerroksen ainoa säädin: yksi luku
  * tässä ja mittaus uudestaan, niin kaikki 124 äänitettä siirtyvät
  * yhdessä eivätkä keskinäiset suhteet muutu.
  */
-const TAVOITE = Number(arvo('--tavoite', -33));
+const TAVOITE = Number(arvo('--tavoite', -36));
 
 /*
  * Kertoimen ylärajan sanelee soitinketju, ei maku. Taustaääni soi

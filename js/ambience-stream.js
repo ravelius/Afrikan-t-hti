@@ -74,18 +74,91 @@ let nykyinen = null; // { audio, cityId, url, tavoite, vaimennus }
 /** Soiva taso: kohdevoimakkuus kerrottuna mahdollisella väistöllä. */
 const taso = (oma) => (oma ? oma.tavoite * (oma.vaimennus ?? 1) : 0);
 
+/*
+ * --- kompressointi (omistajan toive) ---
+ *
+ * Omistaja: "Eihän näihin voi tehdä kompressointia?" — voi, ja se on
+ * oikea työkalu. Äänitteiden VÄLINEN tasaus (tools/mittaa-aanet.mjs)
+ * korjasi sen, että toiset olivat kauttaaltaan kovempia kuin toiset.
+ * Se ei korjaa SISÄISTÄ vaihtelua: mitattuna 1,6…18,7 dB, eli osa
+ * äänitteistä hyppää lähes 19 dB yli omien hiljaisten kohtiensa. Juuri
+ * se peittää puheen, vaikka keskitaso on oikea.
+ *
+ * KOMPRESSORI ON ENNEN VOIMAKKUUSSÄÄTÖÄ. Jos se olisi jälkeen, kynnys
+ * osuisi eri kohtaan joka äänitteellä: kertoimet vaihtelevat 0,15:n ja
+ * 6:n välillä eli 32 dB, ja kiinteä kynnys puristaisi toisia rajusti ja
+ * toisia ei lainkaan. Siksi soittimen oma volume jätetään ykköseen ja
+ * taso hoidetaan vahvistinsolmulla kompressorin jälkeen.
+ *
+ * Sivuhyöty: vahvistinsolmu voi ylittää ykkösen, toisin kuin
+ * HTML-soittimen volume. Kertoimen katto ei siis enää leikkaa.
+ *
+ * VARAREITTI ON PAKOLLINEN. Web Audioon reititetty elementti ei enää soi
+ * suoraan kaiuttimeen: jos konteksti ei ole käynnissä (iOS ennen
+ * kosketusta) tai lähde ei salli CORSia, tuloksena olisi täysi
+ * hiljaisuus — eikä siitä tule virhettä, jonka voisi napata. Siksi
+ * reititys tehdään VAIN kun konteksti on varmasti käynnissä, ja
+ * crossOrigin asetetaan niin että CORS-ongelma näkyy latausvirheenä
+ * (jonka olemassa oleva varareitti jo hoitaa).
+ */
+const KOMPRESSORI = {
+  threshold: -24, // äänitteet ovat täydellä tasollaan tässä kohtaa ketjua
+  knee: 18,       // pehmeä polvi: puristus ei kuulu kytkeytyvän päälle
+  ratio: 4,
+  attack: 0.01,
+  release: 0.35,
+};
+
+/**
+ * Reitittää soittimen kompressorin läpi ja palauttaa vahvistinsolmun,
+ * jolla taso säädetään. Palauttaa null, jos reititys ei ole turvallista
+ * — silloin soitin jää tavalliseksi <audio>-elementiksi.
+ */
+function liitaKompressori(audio) {
+  const ctx = sfx.ensureContext?.();
+  // Suspended-tilassa reititys veisi äänen kokonaan: elementti ei enää
+  // soi suoraan, eikä pysähtynyt konteksti soita mitään.
+  if (!ctx || ctx.state !== 'running' || !ctx.createMediaElementSource) return null;
+  try {
+    const lahde = ctx.createMediaElementSource(audio);
+    const komp = ctx.createDynamicsCompressor();
+    for (const [avain, arvo] of Object.entries(KOMPRESSORI)) komp[avain].value = arvo;
+    const vahvistin = ctx.createGain();
+    vahvistin.gain.value = 0;
+    lahde.connect(komp).connect(vahvistin).connect(ctx.destination);
+    return vahvistin;
+  } catch {
+    // createMediaElementSource heittää, jos elementti on jo reititetty.
+    return null;
+  }
+}
+
+/** Soittimen nykyinen taso riippumatta siitä, kumpi reitti on käytössä. */
+const lueTaso = (audio) => (audio.aaniVahvistin
+  ? audio.aaniVahvistin.gain.value
+  : audio.volume);
+
+/** Asettaa tason oikeaan paikkaan. Vahvistin sallii yli ykkösen. */
+function asetaTaso(audio, arvo) {
+  if (audio.aaniVahvistin) {
+    audio.aaniVahvistin.gain.value = Math.max(0, arvo);
+  } else {
+    audio.volume = Math.min(1, Math.max(0, arvo));
+  }
+}
+
 function haivyta(audio, kohde, done, kesto = HAIVYTYS_MS) {
   // Uusi häivytys keskeyttää saman äänen edellisen, etteivät kaksi
   // silmukkaa vedä voimakkuutta eri suuntiin.
   const oma = (audio.haivytysId = (audio.haivytysId ?? 0) + 1);
-  const alku = audio.volume;
+  const alku = lueTaso(audio);
   const t0 = performance.now();
   const askel = (nyt) => {
     if (audio.haivytysId !== oma) return;
     // rAF:n aikaleima voi olla ennen t0:aa — ilman alarajaa volume
     // painui negatiiviseksi ja koko ääniketju kaatui poikkeukseen.
     const t = Math.min(1, Math.max(0, (nyt - t0) / kesto));
-    audio.volume = Math.min(1, Math.max(0, alku + (kohde - alku) * t));
+    asetaTaso(audio, alku + (kohde - alku) * t);
     if (t < 1) requestAnimationFrame(askel);
     else done?.();
   };
@@ -157,12 +230,23 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
  * jotta varareitti ja aloituskohta käyttäytyvät molemmissa samoin.
  */
 function luoSoitin(oma, { arvottuAlku, nouse }) {
-  const audio = new Audio(aaniOsoite(oma.osoite));
+  const audio = new Audio();
+  // crossOrigin ENNEN srciä: Web Audio lukee elementin ääntä, ja ilman
+  // CORS-lupaa tuloksena olisi hiljaisuus ilman virhettä. Näin puuttuva
+  // lupa näkyy latausvirheenä, jonka varareitti alempana hoitaa.
+  // Molemmat lähteet sallivat GETin (ämpäri pelin osoitteelle,
+  // archive.org kaikille), joten tämä ei normaalisti laukea.
+  if (!oma.ilmanKompressoria) audio.crossOrigin = 'anonymous';
+  audio.src = aaniOsoite(oma.osoite);
   // Selaimen oma silmukka katkaistaisiin veitsellä; kierrokset
   // ristihäivytetään itse (ks. vahdiSilmukka).
   audio.loop = false;
   audio.preload = 'auto';
-  audio.volume = 0;
+  audio.volume = 1;
+  audio.aaniVahvistin = oma.ilmanKompressoria ? null : liitaKompressori(audio);
+  // Ilman reititystä taso on elementin omassa volumessa, ja sen pitää
+  // alkaa nollasta kuten ennenkin.
+  if (!audio.aaniVahvistin) audio.volume = 0;
   let hypatty = false;
   const hyppaa = () => {
     if (hypatty) return;
@@ -218,6 +302,19 @@ function luoSoitin(oma, { arvottuAlku, nouse }) {
       audio.src = oma.osoite;
       audio.load();
       soi();
+      return;
+    }
+    // Viimeinen porras ennen synteesiä: sama äänite ilman CORS-vaatimusta
+    // ja ilman kompressoria. Jos lähde ei jostain syystä salli CORSia,
+    // tausta soi silti — vain puristamattomana. Tämä on parempi kuin
+    // pudota synteesiin, ja crossOrigin on ainoa asia, jonka tämä
+    // yritys muuttaa.
+    if (!oma.ilmanKompressoria && audio.crossOrigin) {
+      oma.ilmanKompressoria = true;
+      if (nykyinen !== oma) return;
+      audio.pause();
+      const uusi = luoSoitin(oma, { arvottuAlku: oma.arvoAlku, nouse });
+      oma.audio = uusi;
       return;
     }
     varalle();
@@ -330,12 +427,52 @@ export function startQuizMusic(lauta) {
  * väistön alkava silmukan kierros nousisi muuten täyteen voimaan ja
  * puhe hukkuisi sen alle.
  */
-export function vaimennaTausta() {
-  saadaVaistoa(0.15);
+/*
+ * Väistön syvyys riippuu siitä, mikä väistää.
+ *
+ * Ääninäyte ja zoomausääni ovat lyhyitä: tausta voi mennä lähes pois,
+ * ja se kuulostaa tarkoitukselliselta. Kertoja sen sijaan lukee minuutteja
+ * kerrallaan, ja jos tausta katoaa koko ajaksi, tunnelma katoaa mukana.
+ * Siksi kertojan alla tausta jää kuuluviin mutta selvästi puheen alle.
+ */
+const VAISTO_NAYTE = 0.15;
+const VAISTO_PUHE = 0.25;
+
+export function vaimennaTausta(kerroin = VAISTO_NAYTE) {
+  saadaVaistoa(kerroin);
 }
 
 export function palautaTausta() {
   saadaVaistoa(1);
+}
+
+/*
+ * Kertojan väistö erikseen, laskurilla.
+ *
+ * Omistajan havainto: "Vieläkin on vaikea kuulla puhetta." Syy oli, ettei
+ * KERTOJA väistänyt taustaa lainkaan — vain ääninäyte ja zoomausääni
+ * tekivät niin. Tausta soi siis täydellä voimalla juuri silloin kun sen
+ * pitäisi väistyä eniten.
+ *
+ * Laskuri tarvitaan, koska luentoja voi olla päällekkäin (saapumisteksti
+ * ja päiväkirja). Ilman sitä ensimmäisen loppuminen palauttaisi taustan
+ * täyteen voimaan kesken toisen.
+ */
+let puhujia = 0;
+
+export function puheAlkoi() {
+  puhujia += 1;
+  if (puhujia === 1) saadaVaistoa(VAISTO_PUHE);
+}
+
+export function puheLoppui() {
+  puhujia = Math.max(0, puhujia - 1);
+  if (puhujia === 0) saadaVaistoa(1);
+}
+
+/** Vain testejä varten: nollaa puhujalaskurin. */
+export function nollaaPuhujat() {
+  puhujia = 0;
 }
 
 /** Asettaa väistökertoimen ja ajaa kaikki soivat kierrokset sen mukaiseksi. */

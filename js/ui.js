@@ -315,7 +315,7 @@ async function cachedGallery(title) {
 import { sfx, treasureSound } from './sound.js';
 import {
   playPlaceAmbience, startQuizMusic, stopPlaceStream, stopQuizMusic,
-  vaimennaTausta, palautaTausta,
+  vaimennaTausta, palautaTausta, puheAlkoi, puheLoppui,
 } from './ambience-stream.js';
 import { puheVoima, jaaAlku, kertojaTila } from './aani-ehdokkaat.js';
 import { BoardDie } from './die.js';
@@ -4641,6 +4641,7 @@ export class UI {
     audio.volume = puheVoima();
     this.pehmeaLoppu(audio);
     this.introVoice = audio;
+    this.merkitsePuhuja(audio);
     audio.play().catch(() => {
       const aloita = () => {
         if (this.introVoice === audio && this.game.phase === 'pickstart' && !this.dead) {
@@ -4657,6 +4658,30 @@ export class UI {
     if (!vanha) return;
     vanha.pause();
     vanha.removeAttribute('src');
+    this.vapautaPuhuja(vanha);
+  }
+
+  /**
+   * Merkitsee äänen puhujaksi: tausta väistyy niin kauan kuin yksikin
+   * puhuu. Vapautus tapahtuu kerran ja vain kerran — 'ended' ja
+   * 'error' voivat molemmat laueta, ja kaksinkertainen vapautus
+   * nostaisi taustan kesken toisen luennan.
+   */
+  merkitsePuhuja(audio) {
+    if (!audio || audio.puhujaMerkitty) return;
+    audio.puhujaMerkitty = true;
+    puheAlkoi();
+    const lopeta = () => this.vapautaPuhuja(audio);
+    audio.addEventListener('ended', lopeta);
+    audio.addEventListener('error', lopeta);
+  }
+
+  /** Vapauttaa äänen puhujan roolista; turvallista kutsua monta kertaa. */
+  vapautaPuhuja(audio) {
+    if (!audio?.puhujaMerkitty) return;
+    audio.puhujaMerkitty = false;
+    this.luennat?.delete(audio);
+    puheLoppui();
   }
 
   /**
@@ -4676,7 +4701,11 @@ export class UI {
     // Kirjanpito kaikista luennoista: pysäytys hiljentää myös sellaisen
     // äänen, joka ei enää ole diaryVoice mutta soi yhä.
     (this.luennat ??= new Set()).add(audio);
-    audio.addEventListener('ended', () => this.luennat?.delete(audio));
+    // Tausta väistyy puheen ajaksi (omistajan havainto: puhetta oli
+    // vaikea kuulla). Merkintä tehdään tähän eikä play():n jälkeen,
+    // jotta se pariutuu varmasti vapautuksen kanssa myös silloin kun
+    // soitto ei koskaan käynnisty.
+    this.merkitsePuhuja(audio);
     if (ekaLauseeseen) {
       this.lauseTauko(url, osuus).then((raja) => {
         if (this.diaryVoice !== audio || raja == null) return;
@@ -4849,9 +4878,12 @@ export class UI {
     this.luentaTauolla = null;
     // Kaikki luennat kiinni — myös mahdollinen myöhästelijä, joka ei
     // enää ollut diaryVoice mutta soi yhä.
-    for (const audio of this.luennat ?? []) {
+    for (const audio of [...(this.luennat ?? [])]) {
       audio.pause();
       audio.removeAttribute('src');
+      // Vapautus ennen tyhjennystä: muuten laskuri jäisi plussalle eikä
+      // tausta palaisi enää koskaan täyteen voimaan.
+      this.vapautaPuhuja(audio);
     }
     this.luennat?.clear();
   }
