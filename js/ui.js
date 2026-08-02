@@ -3325,11 +3325,21 @@ export class UI {
     // CSS:llä eikä mittaamalla: kortin korkeus ei ole tiedossa ennen kuin
     // kuva on latautunut, ja mitattu keskitys valui alas (omistajan
     // havainto iPadilla).
-    const leveys = Math.min(window.innerWidth * 0.78, 400);
-    kortti.style.left = `${Math.max(8, (window.innerWidth - leveys - 24) / 2)}px`;
+    /*
+     * Keskitys tehdään CSS:llä molempiin suuntiin.
+     *
+     * Vaakakeskitys laskettiin ennen JavaScriptissä oletuksella, että
+     * kortti on korkeintaan 400 pikseliä leveä. Kun kortti kasvoi
+     * isolla ruudulla 720 pikseliin, laskelma jäi vanhaksi ja kortti
+     * valui oikealle yli ruudun reunan (omistajan havainto iPadilla:
+     * "ei keskellä"). Sama virhe oli aiemmin pystysuunnassa, ja se
+     * korjattiin silloin samalla tavalla — leveys ei ole tiedossa
+     * ennen kuin tyylit on laskettu.
+     */
+    kortti.style.left = '50%';
     kortti.style.top = '50%';
     // Hienoinen nosto ylös: alta pilkottava kortti jatkuu alaspäin.
-    kortti.style.transform = 'translateY(-52%)';
+    kortti.style.transform = 'translate(-50%, -52%)';
     document.body.appendChild(kortti);
     this.postikortti = kortti;
     // Sieppausvaiheessa, jotta kartan omat käsittelijät eivät estä

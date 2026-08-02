@@ -1284,7 +1284,6 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /*
-<<<<<<< HEAD
  * Pinon laskuri: monesko kuva ja montako niitä on.
  *
  * Kahden kuvan pinossa alta pilkottava reuna riitti vihjeeksi, mutta
@@ -1304,8 +1303,6 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti-kortti.alla .postikortti-laskuri { visibility: hidden; }
 
 /*
-=======
->>>>>>> origin/main
  * Leveä ruutu: kortti ja kuva isommiksi. Raja 700 px on sama kuin
  * muuallakin pelissä (mannerzoomin automatiikka), joten "kapea ruutu"
  * tarkoittaa kaikkialla samaa.

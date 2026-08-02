@@ -384,6 +384,24 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 59: kuvakortti keskelle ruutua — VALMIS v184 3.8.2026
+
+Omistajan havainto edellisen version jälkeen: "Ei keskellä." Kortti
+valui oikealle yli ruudun reunan.
+
+**Vaakakeskitys laskettiin JavaScriptissä oletuksella, että kortti on
+korkeintaan 400 pikseliä leveä.** Kun kortti kasvoi isolla ruudulla 720
+pikseliin (paketti 57), laskelma jäi vanhaksi.
+
+Sama virhe oli aiemmin pystysuunnassa, ja se korjattiin silloin
+siirtämällä keskitys CSS:ään — leveys ja korkeus eivät ole tiedossa
+ennen kuin tyylit on laskettu. **Nyt myös vaakakeskitys on CSS:ssä.**
+
+Opetus: kun mitta muuttuu tyylitiedostossa, jokainen JavaScriptissä
+oleva oletus samasta mitasta on rikki. Oikea korjaus ei ole päivittää
+lukua vaan poistaa oletus.
+
+
 ## Paketti 58: kuvapino kestää useamman kuin kaksi — VALMIS v183 3.8.2026
 
 Omistajan toive: "Matkakirjassa mainitut näkymät ja asiat olisi kiva
