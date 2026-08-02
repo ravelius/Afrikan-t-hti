@@ -2968,6 +2968,12 @@ test('päiväkirjan vinjetti ei haalista kartan alalaitaa', () => {
   for (const suunta of ['to bottom', 'to right', 'to left']) {
     assert.ok(vinjetti.includes(suunta), `reunaliuku puuttuu: ${suunta}`);
   }
+  // Mantereen lähikuvassa häivytys on pois joka sivulta (omistajan
+  // toive): siellä kartta jatkuu panoroitavaksi, joten vaalea reuna ei
+  // rajaa mitään — se vain haalistaa katsottavaa.
+  const sammutus = css.match(/[^}]*\.map-pane::after \{ opacity: 0; \}/)?.[0] ?? '';
+  assert.match(sammutus, /body\.manner-zoom \.map-pane::after/,
+    'vinjetti näkyy taas mantereen lähikuvassa');
 });
 
 test('kehittäjän siirto vie kaupunkiin kuluttamatta peliä', () => {
