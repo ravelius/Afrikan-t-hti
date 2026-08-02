@@ -9,7 +9,7 @@ import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.154';
+const APP_VERSION = '2026-08-02.155';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -257,8 +257,20 @@ updateBtn.addEventListener('click', async () => {
 });
 
 document.getElementById('app-version').textContent = APP_VERSION;
-// Kulmaan lyhyt muoto ("v39") — koko päivämäärä on sääntöjen alalaidassa.
-document.getElementById('versio-kulma').textContent = `v${APP_VERSION.split('.').pop()}`;
+
+/*
+ * Kulmaan lyhyt muoto ("v39") — koko päivämäärä on sääntöjen
+ * alalaidassa. Kehittäjätila kerrotaan saman rivin perässä
+ * ("v154 : kehittäjä", omistajan toive). Ensin siitä kertoi oma merkki
+ * kartan yläreunassa, mutta se oli liian iso ele pienelle asetukselle:
+ * nurkan numero on jo se paikka, josta pelin tila luetaan.
+ */
+const versioKulma = document.getElementById('versio-kulma');
+function paivitaVersioKulma() {
+  const numero = `v${APP_VERSION.split('.').pop()}`;
+  versioKulma.textContent = kehittajaTilaPaalla() ? `${numero} : kehittäjä` : numero;
+}
+paivitaVersioKulma();
 document.getElementById('newgame-btn').addEventListener('click', startGame);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään
@@ -409,6 +421,7 @@ function kytkeKehittaja() {
   if (kehittajaTilaPaalla()) {
     asetaKehittajaTila(false);
     ui?.paivitaKehittajaTila();
+    paivitaVersioKulma();
     kehittajaDialog.close();
     return;
   }
@@ -420,6 +433,7 @@ function kytkeKehittaja() {
   }
   asetaKehittajaTila(true);
   ui?.paivitaKehittajaTila();
+  paivitaVersioKulma();
   kehittajaDialog.close();
 }
 

@@ -3475,9 +3475,15 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    * olisi puhelimella liian kapea luettavaksi. */
   body[data-mode] .fact-card {
     width: min(340px, calc(100% - 0.8rem));
-    max-height: 30vh;
-    max-height: 30dvh;
+    max-height: 22vh;
+    max-height: 22dvh;
   }
+
+  /* Matalampi ikkuna puhelimella (omistajan toive): viisi riviä vei
+   * kartalta liian ison palan. Kolme riviä riittää vihjeeksi siitä,
+   * mitä kortissa lukee — koko merkinnän saa auki napauttamalla, ja
+   * juuri se on nyt tapa lukea pitkä teksti. */
+  .fact-teksti-rivi .fact-text { max-height: calc(3 * 1.35em); }
   /* Teksti oli hetken isompaa (v148), mutta omistaja palautti sen:
    * isolla fontilla kortti peitti kartasta liian ison kaistan. Koko
    * merkinnän saa auki napauttamalla, joten pieni ikkuna riittää. */
@@ -4063,29 +4069,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   margin-top: 0.4rem;
 }
 
-/* Kehittäjätilan merkki: kartalla näkyy, että laattoja voi napauttaa.
-   Ilman merkkiä tila unohtuisi päälle ja peli tuntuisi rikkinäiseltä. */
-.kehittaja-merkki {
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 6;
-  padding: 0.2rem 0.7rem;
-  border-radius: 999px;
-  font-family: var(--font-type);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #46331f;
-  background: rgba(234, 184, 78, 0.85);
-  border: 1px solid rgba(70, 51, 31, 0.6);
-  pointer-events: none;
-}
-
 /* Kehittäjätilassa kohteita ei piirretä lainkaan (omistajan toive):
    41 rengasta kerralla peitti kartan. Napautusalue (.target-hit) on
-   näkymätön, ja yläreunan merkki kertoo tilan olevan päällä. */
+   näkymätön, ja versionumeron perässä lukee ": kehittäjä". */
 
 </style>
 </head>
@@ -47402,29 +47388,20 @@ class UI {
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
-    this.paivitaKehittajaMerkki();
     this.render();
   }
 
   /**
-   * Kehittäjätilan kytkin. Merkki kartan yläreunassa kertoo tilan
-   * olevan päällä: ilman sitä se unohtuisi, ja peli tuntuisi
-   * rikkinäiseltä kun laattojen napautus vie minne tahansa.
+   * Kehittäjätilan kytkin.
+   *
+   * Tila näkyy versionumeron perässä ("v154 : kehittäjä", js/main.js).
+   * Ensin siitä kertoi oma merkki kartan yläreunassa, mutta se oli
+   * omistajan mielestä liian iso ele pienelle asetukselle — nurkan
+   * numero on jo se paikka, josta pelin tila luetaan.
    */
   paivitaKehittajaTila() {
     this.kehittajaTila = kehittajaTilaPaalla();
-    this.paivitaKehittajaMerkki();
     this.render();
-  }
-
-  paivitaKehittajaMerkki() {
-    const vanha = this.mapPane?.querySelector('.kehittaja-merkki');
-    if (!this.kehittajaTila) {
-      vanha?.remove();
-      return;
-    }
-    if (vanha || !this.mapPane) return;
-    this.mapPane.appendChild(html('div', 'kehittaja-merkki', 'Kehittäjätila'));
   }
 
   /** Piirtää annetun laudan; vaelluksessa lauta vaihtuu porttien kautta. */
@@ -52447,7 +52424,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.154';
+const APP_VERSION = '2026-08-02.155';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -52695,8 +52672,20 @@ updateBtn.addEventListener('click', async () => {
 });
 
 document.getElementById('app-version').textContent = APP_VERSION;
-// Kulmaan lyhyt muoto ("v39") — koko päivämäärä on sääntöjen alalaidassa.
-document.getElementById('versio-kulma').textContent = `v${APP_VERSION.split('.').pop()}`;
+
+/*
+ * Kulmaan lyhyt muoto ("v39") — koko päivämäärä on sääntöjen
+ * alalaidassa. Kehittäjätila kerrotaan saman rivin perässä
+ * ("v154 : kehittäjä", omistajan toive). Ensin siitä kertoi oma merkki
+ * kartan yläreunassa, mutta se oli liian iso ele pienelle asetukselle:
+ * nurkan numero on jo se paikka, josta pelin tila luetaan.
+ */
+const versioKulma = document.getElementById('versio-kulma');
+function paivitaVersioKulma() {
+  const numero = `v${APP_VERSION.split('.').pop()}`;
+  versioKulma.textContent = kehittajaTilaPaalla() ? `${numero} : kehittäjä` : numero;
+}
+paivitaVersioKulma();
 document.getElementById('newgame-btn').addEventListener('click', startGame);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään
@@ -52847,6 +52836,7 @@ function kytkeKehittaja() {
   if (kehittajaTilaPaalla()) {
     asetaKehittajaTila(false);
     ui?.paivitaKehittajaTila();
+    paivitaVersioKulma();
     kehittajaDialog.close();
     return;
   }
@@ -52858,6 +52848,7 @@ function kytkeKehittaja() {
   }
   asetaKehittajaTila(true);
   ui?.paivitaKehittajaTila();
+  paivitaVersioKulma();
   kehittajaDialog.close();
 }
 

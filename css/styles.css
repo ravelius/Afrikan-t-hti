@@ -3467,9 +3467,15 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    * olisi puhelimella liian kapea luettavaksi. */
   body[data-mode] .fact-card {
     width: min(340px, calc(100% - 0.8rem));
-    max-height: 30vh;
-    max-height: 30dvh;
+    max-height: 22vh;
+    max-height: 22dvh;
   }
+
+  /* Matalampi ikkuna puhelimella (omistajan toive): viisi riviä vei
+   * kartalta liian ison palan. Kolme riviä riittää vihjeeksi siitä,
+   * mitä kortissa lukee — koko merkinnän saa auki napauttamalla, ja
+   * juuri se on nyt tapa lukea pitkä teksti. */
+  .fact-teksti-rivi .fact-text { max-height: calc(3 * 1.35em); }
   /* Teksti oli hetken isompaa (v148), mutta omistaja palautti sen:
    * isolla fontilla kortti peitti kartasta liian ison kaistan. Koko
    * merkinnän saa auki napauttamalla, joten pieni ikkuna riittää. */
@@ -4055,26 +4061,6 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   margin-top: 0.4rem;
 }
 
-/* Kehittäjätilan merkki: kartalla näkyy, että laattoja voi napauttaa.
-   Ilman merkkiä tila unohtuisi päälle ja peli tuntuisi rikkinäiseltä. */
-.kehittaja-merkki {
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 6;
-  padding: 0.2rem 0.7rem;
-  border-radius: 999px;
-  font-family: var(--font-type);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #46331f;
-  background: rgba(234, 184, 78, 0.85);
-  border: 1px solid rgba(70, 51, 31, 0.6);
-  pointer-events: none;
-}
-
 /* Kehittäjätilassa kohteita ei piirretä lainkaan (omistajan toive):
    41 rengasta kerralla peitti kartan. Napautusalue (.target-hit) on
-   näkymätön, ja yläreunan merkki kertoo tilan olevan päällä. */
+   näkymätön, ja versionumeron perässä lukee ": kehittäjä". */

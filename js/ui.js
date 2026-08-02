@@ -881,29 +881,20 @@ export class UI {
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
-    this.paivitaKehittajaMerkki();
     this.render();
   }
 
   /**
-   * Kehittäjätilan kytkin. Merkki kartan yläreunassa kertoo tilan
-   * olevan päällä: ilman sitä se unohtuisi, ja peli tuntuisi
-   * rikkinäiseltä kun laattojen napautus vie minne tahansa.
+   * Kehittäjätilan kytkin.
+   *
+   * Tila näkyy versionumeron perässä ("v154 : kehittäjä", js/main.js).
+   * Ensin siitä kertoi oma merkki kartan yläreunassa, mutta se oli
+   * omistajan mielestä liian iso ele pienelle asetukselle — nurkan
+   * numero on jo se paikka, josta pelin tila luetaan.
    */
   paivitaKehittajaTila() {
     this.kehittajaTila = kehittajaTilaPaalla();
-    this.paivitaKehittajaMerkki();
     this.render();
-  }
-
-  paivitaKehittajaMerkki() {
-    const vanha = this.mapPane?.querySelector('.kehittaja-merkki');
-    if (!this.kehittajaTila) {
-      vanha?.remove();
-      return;
-    }
-    if (vanha || !this.mapPane) return;
-    this.mapPane.appendChild(html('div', 'kehittaja-merkki', 'Kehittäjätila'));
   }
 
   /** Piirtää annetun laudan; vaelluksessa lauta vaihtuu porttien kautta. */
