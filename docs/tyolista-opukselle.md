@@ -305,6 +305,52 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 52: puuttuvat saaret ja Tutki-napin luettavuus — VALMIS v175 2.8.2026
+
+Omistajan havainnot: "Korsika puuttuu" ja "Tutki nappi näkyy huonosti".
+
+### Neljä saarta oli pudonnut
+
+Rannikot karsitaan Ramer–Douglas–Peuckerilla, ja liian pienet renkaat
+pudotetaan. Poikkeuksena säilyvät ne, joiden sisällä on kaupunki —
+Sisilia, Kreeta, Kypros ja Sansibar jäivät siksi kartalle.
+
+**Kaupungittomuus on väärä mittapuu saaren olemassaololle.** Pudonneet:
+
+| saari | huomio |
+|---|---|
+| Islanti | **kaupunki kellui merellä ilman saarta** |
+| Sardinia | |
+| Korsika | omistajan havainto |
+| Saint Helena | kaupunki kellui samoin |
+
+Islannin ja Saint Helenan kohdalla vika oli näkyvämpi kuin omistaja
+ehti mainita: laatta oli aavalla merellä.
+
+**Miksi ei laskettu rannikoita uudelleen?** Se vaatisi Natural Earthin
+aineiston. Sama tieto on jo pelissä: vanhojen lautojen omat rannikot.
+Uusi `tools/puuttuvat-saaret.mjs` kääntää ne takaisin leveys- ja
+pituusasteiksi ja projisoi Milleriin, kuten maiden rajatkin. Lisätään
+vain se, mitä laudalta puuttuu: jos jokin olemassa oleva ääriviiva jo
+peittää saaren paikan, sitä ei kosketa.
+
+**Kaksi merireittiä piti laskea uudelleen** — Barcelona–Rooma kulki
+Sardinian yli ja Islanti–Tromssa Islannin yli, koska maata ei ennen
+ollut siinä. Molemmat ratkesivat.
+
+### Tutki-nappi näkyi kartan läpi
+
+Ensisijaisen napin tyylissä luki `background: none`, joten kartta näkyi
+napin läpi ja teksti hukkui kaupunkinimiin ja rantaviivaan. Ajatus oli
+oikea — ensisijainen valinta erottuu kullalla eikä kultalaatalla — mutta
+se vei myös pergamenttilevyn, jonka muut napit saivat juuri
+luettavuuden vuoksi.
+
+Nyt levy on ensisijaisellakin, hitusen lämpimämpänä ja peittävämpänä.
+Nappi erottuu kahdesti: kullanvärisestä kehyksestä ja tekstistä sekä
+kirkkaammasta pohjasta.
+
+
 ## Paketti 51: matkakertoja takaisin yhdistetylle laudalle — VALMIS v174 2.8.2026
 
 Omistajan havainto: "Matkakirjan lukija ääni puuttuu kaikkialta. Myös
