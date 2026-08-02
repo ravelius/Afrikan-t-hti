@@ -354,6 +354,55 @@ kysytty" -tapauksia, valehtelee onnistumisesta.**
   ne ovat itse valtio tai erityishallintoalue. Tunnus annetaan käsin.
 
 
+## PÄÄTETTY, EI VIELÄ TEHTY: minipelit rakenteilla oleviin kaupunkeihin
+
+Omistajan linjaus 3.8.2026: "Näistä ja muista tässä listassa voisi tehdä
+minipelejä rakenteilla oleviin kaupunkeihin. Käytä apuna museoiden kuvia
+yms uusia lähteitä mitä mietittiin."
+
+Eli: peli-ideat eivät jää listaksi, vaan ne toteutetaan **niihin
+kaupunkeihin, jotka ovat nyt työn alla** — Aasia ja Lähi-itä. Lähteinä
+museokokoelmat ja muut aiemmin sovitut avoimet lähteet.
+
+**Kevyimmät ensin, koska aineisto on jo pelissä:**
+
+| minipeli | aineisto | tila |
+|---|---|---|
+| Kielitunnistus | 31 nauhoitettua kielinäytettä | valmiina |
+| Lipputunnistus | 83 lippua peilissä | valmiina |
+| Valokuvan paikannus | kaupunkien valokuvat | valmiina |
+| Lähikuvatunnistus | museoesineet, kaupunkikuvat | uusi haku |
+| Aikajana | kaupunkien historiatiedot | kirjoitettava |
+| Äänitunnistus | xeno-canto, ambienssit | uusi haku |
+
+**Museokuva kaupungista** on omistajan mukaan tärkein suunta, ja se
+siirtyi Lasit-välilehdelle vasta siksi, että se oli neljän ylimmän
+joukossa — sisällöllisesti se kuuluu myös tänne.
+
+**Sääntö kaikille:** aineisto haetaan etukäteen pelipaketteihin, ei
+lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
+pelataan — yhteydettömänä.
+
+
+## Paketti 56: Lasit omalle välilehdelleen — VALMIS v181 3.8.2026
+
+Omistajan havainto: "Neljä ylintä tässä ovat aarteiden (erikoislasit)
+toiminnallisuuksia, ei peli-ideoita. Näille voisi tehdä oman
+välilehden."
+
+Havainto on oikea, ja ero on olennainen. Animoitu historiakartta,
+ihmisen leviäminen, lämpökartat ja museokuva **eivät ole minipelejä**:
+niissä ei ole kysymystä, vastausta eikä palkintoa. Ne ovat kerroksia
+kartan päällä — kartta pysyy paikallaan, ja lasien läpi katsottaessa sen
+päälle piirtyy jotain, mitä paljaalla silmällä ei näe.
+
+Siksi ne jakavat saman koneiston keskenään mutta eivät minkään
+minipelin kanssa, ja väärässä listassa ne olisivat vieneet suunnittelun
+väärille urille.
+
+Uusi **Lasit**-välilehti työhuoneessa. Peli-ideoita jäi 23.
+
+
 ## PÄÄTETTY: kaikki tekstit kirjoitetaan itse
 
 Omistajan linjaus: "Kirjoitathan wiki-artikkelit itse vielä uudestaan.
