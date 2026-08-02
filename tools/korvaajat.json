@@ -1,0 +1,92 @@
+{
+  "savanni": [
+    {
+      "url": "https://archive.org/download/aporee_44134_50203/cutcafeprestigewindjoek0501191217PM14.mp3",
+      "kesto": 128.4,
+      "lisenssi": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "tekija": "Josef (Seppo) Gruendler",
+      "otsikko": "1990 Freedom Plaza Store 2, Rev Michael Scott Street, Windhoek, Namibia - Balcony of Cafe Prestige",
+      "lufs": -27.14,
+      "dynamiikka": 7.2,
+      "huippuDb": -9.62,
+      "voima": 0.72
+    },
+    {
+      "url": "https://archive.org/download/aporee_24514_28448/04JosiahMuhinda.mp3",
+      "kesto": 348.6,
+      "lisenssi": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "tekija": "radio continental drift",
+      "otsikko": "Office of Maria Fisch, Swakopmund, Namibia - A picture of Josiah Muhinda...",
+      "lufs": -27.31,
+      "dynamiikka": 13.6,
+      "huippuDb": -2.9,
+      "voima": 0.73
+    },
+    {
+      "url": "https://archive.org/download/aporee_24517_28452/08Zooparktalk21.mp3",
+      "kesto": 150.6,
+      "lisenssi": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "tekija": "radio continental drift",
+      "otsikko": "Zoo-Park, Windhoek, Namibia - A story of Katutura...",
+      "lufs": -24.36,
+      "dynamiikka": 12.6,
+      "huippuDb": -1.22,
+      "voima": 0.52
+    },
+    {
+      "url": "https://archive.org/download/aporee_24517_28451/07Zooparktalk1.mp3",
+      "kesto": 277.3,
+      "lisenssi": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "tekija": "radio continental drift",
+      "otsikko": "Zoo-Park, Windhoek, Namibia - The genocide...",
+      "lufs": -23.91,
+      "dynamiikka": 13,
+      "huippuDb": -1.69,
+      "voima": 0.5
+    },
+    {
+      "url": "https://archive.org/download/aporee_24516_28450/10SunsetAtSwakop.mp3",
+      "kesto": 1028.4,
+      "lisenssi": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "tekija": "radio continental drift",
+      "otsikko": "Vineta, Swakopmund, Namibia - Sunset at Swakop...",
+      "lufs": -21.09,
+      "dynamiikka": 9.2,
+      "huippuDb": 0.07,
+      "voima": 0.36
+    },
+    {
+      "url": "https://archive.org/download/aporee_24515_28449/06DieDeutscheKOlonialzeit.mp3",
+      "kesto": 257.9,
+      "lisenssi": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "tekija": "radio continental drift",
+      "otsikko": "Museum, Swakopmund, Namibia - Die Deutsche Kolonialzeit....",
+      "lufs": -30.21,
+      "dynamiikka": 11.9,
+      "huippuDb": -3.22,
+      "voima": 1.02
+    },
+    {
+      "url": "https://archive.org/download/aporee_20182_23493/Hmbaencounter.mp3",
+      "kesto": 2228.1,
+      "lisenssi": "http://creativecommons.org/publicdomain/mark/1.0/",
+      "tekija": "barbara@sbroc...",
+      "otsikko": "Kunene, Namibia - Himba chief long interwiew",
+      "lufs": -27.64,
+      "dynamiikka": 16.4,
+      "huippuDb": 0.65,
+      "voima": 0.76
+    },
+    {
+      "url": "https://archive.org/download/aporee_49101_55944/fandancewithMukaMoonga.mp3",
+      "kesto": 203.4,
+      "lisenssi": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "tekija": "radio continental drift",
+      "otsikko": "Football pitch, Sinazongwe, Zambia - a dance with Muka-Moonga among the fans...",
+      "lufs": -28.38,
+      "dynamiikka": 11.3,
+      "huippuDb": 0.1,
+      "voima": 0.83
+    }
+  ]
+}

@@ -240,6 +240,82 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 39: liian hiljaiset korvattu, taustataso alas — VALMIS v162 2.8.2026
+
+**Omistaja:** "Joo, etsi niille seitsemälle korvaava." ja "Tausta-ääniä voi
+hieman hiljentää."
+
+### Korvaus vai poisto — laji kerrallaan
+
+Ratkaisu ei ollut sama kaikille. Ratkaiseva kysymys oli, **montako
+kelvollista vaihtoehtoa lajiin jää**, jos hiljainen vain poistetaan:
+
+| laji | jäisi | ratkaisu |
+|---|---|---|
+| vuoristo, ylänkö | 1 | korvattu — Alppilaidun (Reit im Winkl, CC BY-SA) |
+| satama | 2 | korvattu — Kalasatama (Sassnitz, CC BY-SA) |
+| metsä | 1 | korvattu — Linnut metsässä (Thuin, CC BY) |
+| savanni | 6 | poistettu |
+| aavikko | 6 | poistettu (kaksi) |
+| noppa | 2 | poistettu |
+
+Yhden vaihtoehdon laji ei kelpaa: sama ääni joka käynnillä kuulostaa
+siltä että peli on rikki.
+
+**Alppilaitumen dynamiikka on vain 2,1 dB** — se on poikkeuksellisen
+tasainen ja siksi erinomainen taustaksi.
+
+### Haku mittaa heti
+
+`tools/etsi-korvaajat.mjs` hakee aporeesta, tarkistaa lisenssin (ND pois,
+koska peilattu ääni leikataan 180 sekuntiin) ja **mittaa ehdokkaan
+saman tien**. Ilman sitä toistaisimme saman virheen: valitsisimme
+korvalta ja huomaisimme vasta pelissä, että uusikin on liian hiljainen.
+
+**Hakuansa, joka kannattaa muistaa.** Aporeen otsikot ovat paikannimiä,
+joten `savanna` osuu Illinois'n Savannaan ja `alpine` Tennesseen Alpine
+Driveen. Savannihaku piti tehdä nimenomaisilla Afrikan seuduilla — ja
+silloinkin osumat olivat haastatteluja ja tarinoita, eivät luontoääntä.
+Puhetta ei voi laittaa kertojan alle, joten savanni jäi poistoon.
+
+### Taustataso alas
+
+Tavoite **-30 → -33 LUFS** omistajan pyynnöstä. Tämä on koko
+taustakerroksen ainoa säädin: yksi luku `tools/mittaa-aanet.mjs`:ssä ja
+mittaus uudestaan, niin kaikki 120 äänitettä siirtyvät yhdessä eivätkä
+keskinäiset suhteet muutu.
+
+**Hajonta 49,8 → 3,8 dB.**
+
+### Mittari yhteiseksi
+
+Mittaus erotettiin `tools/mittaa-selaimessa.mjs`:ään, jotta tasaus ja
+haku käyttävät varmasti samaa mittaria. Jos ne eriytyisivät, uudet
+ehdokkaat valittaisiin eri asteikolla kuin millä vanhat on tasattu.
+
+Mittari laskee nyt myös **sisäisen dynamiikan**: kuinka paljon kovimmat
+kohdat nousevat yli hiljaisten. Otoksessa 1,6…18,7 dB. Tämä on eri asia
+kuin äänitteiden välinen tasaus, ja se vastaa omistajan
+kompressointikysymykseen — juuri iso sisäinen vaihtelu saa äänitteen
+hyppäämään kertojan päälle, vaikka keskitaso olisi oikea.
+
+### Kompressointi: mahdollista, mutta yksi este
+
+Web Audiossa on `DynamicsCompressorNode`, ja se on oikea työkalu tähän.
+Este on, että **nauhoitettu tausta soi `<audio>`-elementillä**, ei Web
+Audion läpi — samasta syystä kerroin ei voi ylittää ykköstä. Kompressori
+vaatisi reitityksen `MediaElementAudioSourceNode`in kautta.
+
+Se on tehtävissä, mutta iOS:llä on riskinsä: kerran Web Audioon
+reititetty elementti ei enää soi ilman toimivaa kontekstia, ja juuri
+iPad on pelin pääalusta. Jos tehdään, tarvitaan varareitti: jos
+reititys ei onnistu, palataan tavalliseen `<audio>`-soittoon.
+
+Vaihtoehto ilman riskiä olisi kompressoida tiedostot peilausvaiheessa,
+mutta se vaatisi mp3-enkooderin — Playwrightin ffmpeg on riisuttu eikä
+osaa edes purkaa mp3:a.
+
+
 ## Paketti 38: taustaäänet tasattua mittaamalla — VALMIS v161 2.8.2026
 
 Omistajan kaksi havaintoa samasta aiheesta.
