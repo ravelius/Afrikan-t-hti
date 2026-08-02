@@ -305,6 +305,53 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 45: saapumiszoom mantereeseen, ei kaupunkiin — VALMIS v168 2.8.2026
+
+Omistajan havainto iPadilta: "Vanha maailma näkyy kokonaan ja zoomautuu
+sen jälkeen aivan liian lähelle Ateenaa. Pitäisi näkyä vain Eurooppa ja
+sitten jäädä siihen."
+
+### Kiinteä lista leveyksiä oli väärä ratkaisu
+
+v167 vaihtoi zoomiportaat kertoimista näkyviksi leveyksiksi
+`[667, 435, 294, 200, 132, 88]`. Se korjasi lähimmän portaan mutta
+rikkoi toisen pään: tihein porras 667 yksikköä on tuhannen yksikön
+laudalla sopiva ensiaskel, mutta 7200 yksikön laudalla se on jo
+kaupungin ympäristö. **Kokonäkymän ja ensimmäisen portaan väliin jäi
+yli kymmenkertainen hyppy**, ja saapuminen osui sen jälkeiselle
+portaalle eli suoraan kaupungin päälle.
+
+**Nyt portaat ovat suhteellisia:** laudan leveydestä puolitoista-
+kertaisin askelin lähimpään portaaseen (88 yksikköä).
+
+| lauta | portaat, näkyvä leveys |
+|---|---|
+| 1000 | 1000, 667, 444, 296, 198, 132, 88 |
+| 7200 | 7200, 4800, 3200, 2133, 1422, 948, 632, 421, 281, 187, 125, 88 |
+
+Pienen laudan portaat ovat käytännössä samat kuin alkuperäiset kertoimet
+`[1, 1.5, 2.3, 3.4, 5]`. Isolla laudalla väliin syntyy portaita sitä
+mukaa kuin lautaa on enemmän — sitä kiinteä lista ei osannut.
+
+### Saapumistaso lasketaan, ei numeroida
+
+Kiinteä porrasnumero ei kelpaa, koska portaiden määrä riippuu laudan
+koosta: sama numero on pienellä laudalla lähikuva ja isolla yleisnäkymä.
+Nyt valitaan porras, joka on lähimpänä tavoiteltua leveyttä — 43 %
+laudasta (sama osuus kuin vanha `MANNER_ZOOM = 2.3`), enintään 2400
+yksikköä.
+
+Tuloksena pieni lauta saapuu 444 yksikköön kuten ennenkin, ja
+yhdistetty lauta 2133 yksikköön eli suunnilleen Lissabonista Moskovaan.
+
+### Kokonäkymää ei näytetä isolla laudalla lainkaan
+
+Saapumisliuku alkaa kokonäkymästä, ja juuri se oli omistajan havainnon
+ensimmäinen puolisko. Pienellä laudalla liuku on hyvä — kokonäkymä
+kertoo minne on tultu. Vanhalla maailmalla se ei kerro sitä, joten
+isolla laudalla mennään suoraan perille ilman liukua.
+
+
 ## Paketti 44: kartta bittikartaksi ja zoomi laudan mukaan — VALMIS v167 2.8.2026
 
 Omistajan havainto: "Kartan scrollaus on hidas eikä zoomaa tarpeeksi
