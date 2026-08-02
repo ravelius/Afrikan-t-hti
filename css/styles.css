@@ -1038,6 +1038,15 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   max-height: calc(5 * 1.45em);
 }
 
+/* Auki levitettynä koko merkintä näkyy kerralla: rivikatto pois ja
+ * kortin oma korkeusraja ylös. Vieritys jää varalle, jos merkintä ei
+ * mahdu edes tähän. */
+.fact-card.laajennettu .fact-teksti-rivi .fact-text { max-height: none; }
+
+/* Napautettava alue näkyy osoittimena isolla ruudulla; kosketuksessa
+ * sen kertoo jatkuu-nuoli. */
+.fact-teksti-rivi { cursor: pointer; }
+
 .fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
 
 /* Jatkuu-vihje: kun tekstiä on näkymän alapuolella, viimeinen rivi
@@ -3274,6 +3283,22 @@ body[data-mode] .fact-card {
   max-height: 38dvh;
   /* Kortti ei vieritä itseään — vain teksti vierii (.fact-text). */
   overflow: hidden;
+  transition: max-height 260ms ease;
+}
+
+/*
+ * Napautettu päiväkirja laajenee, ettei pitkää merkintää tarvitse
+ * vierittää viiden rivin ikkunassa (omistajan toive). Kartan napautus
+ * palauttaa sen pieneksi.
+ *
+ * Kortti kasvaa siitä reunasta, johon se on kiinnitetty: ylänurkassa
+ * alaspäin, alanurkassa ylöspäin. Kolme neljäsosaa ruudusta on katto,
+ * jotta kartasta jää aina osa näkyviin — muuten pelaaja ei näkisi
+ * mihin napauttaa kutistaakseen sen takaisin.
+ */
+body[data-mode] .fact-card.laajennettu {
+  max-height: 74vh;
+  max-height: 74dvh;
 }
 
 /*

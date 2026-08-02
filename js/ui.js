@@ -739,9 +739,28 @@ export class UI {
       // (omistajan havainto) — alkuun palatessa kuva palaa paikalleen.
       this.factTekstiRivi?.classList.toggle('vieritetty', el.scrollTop > 4);
     };
+    this.paivitaJatkuuVihje = jatkuuVihje;
     this.factText.addEventListener('scroll', jatkuuVihje, { passive: true });
     new MutationObserver(jatkuuVihje)
       .observe(this.factText, { childList: true, characterData: true, subtree: true });
+
+    /*
+     * Päiväkirja aukeaa napauttamalla, ei vierittämällä (omistajan
+     * toive). Merkintä on kartan nurkalla viiden rivin ikkunassa, ja
+     * loput piti ennen vierittää sormella pienen tekstin sisällä.
+     * Napautus kasvattaa kortin niin, että koko merkintä näkyy
+     * kerralla; kartan napautus palauttaa sen pieneksi.
+     *
+     * Vieritys jää varalle: jos merkintä on niin pitkä, ettei se mahdu
+     * auki levitettynäkään, teksti vierii kuten ennen.
+     */
+    this.factTekstiRivi?.addEventListener('click', (e) => {
+      // Kortin omat napit (kuuntele, valokuva, kuva) hoitavat itse oman
+      // napautuksensa — ne eivät saa myös avata korttia.
+      if (e.target.closest('button')) return;
+      if (this.factCard.classList.toggle('laajennettu')) jatkuuVihje();
+      else this.kutistaPaivakirja();
+    });
 
     this.winnerDialog = document.getElementById('winner-dialog');
     this.quizDialog = document.getElementById('quiz-dialog');
@@ -806,6 +825,10 @@ export class UI {
     for (const lappu of this.peruutusLaput) lappu.addEventListener('cancel', this.lappuPeruutus);
 
     this.mapPane = this.svg.parentElement;
+    // Kartan napautus kutistaa auki levitetyn päiväkirjan (omistajan
+    // toive). Kuuntelija on kartta-alueella, jonka päällä kortit vain
+    // kelluvat, joten kortin oma napautus ei osu tähän.
+    this.mapPane.addEventListener('click', () => this.kutistaPaivakirja());
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
     this.travelExpanded = false; // matkavalinnan toinen vaihe auki
@@ -2575,6 +2598,28 @@ export class UI {
     return rivi;
   }
 
+  /**
+   * Uusi päiväkirjamerkintä alkaa aina pienestä ikkunasta. Ilman tätä
+   * yhden merkinnän auki levittäminen olisi jäänyt päälle, ja
+   * seuraavassa kaupungissa kortti olisi peittänyt kartan itsestään.
+   */
+  uusiFactKey(key) {
+    this.factKey = key;
+    this.kutistaPaivakirja();
+  }
+
+  /**
+   * Päiväkirja takaisin pieneen ikkunaansa. Teksti palaa samalla
+   * alkuun: jos merkintä oli auki levitettynä vieritetty, kutistuminen
+   * jättäisi muuten näkyviin keskeltä alkavan katkelman.
+   */
+  kutistaPaivakirja() {
+    if (!this.factCard) return;
+    this.factCard.classList.remove('laajennettu');
+    if (this.factText) this.factText.scrollTop = 0;
+    this.paivitaJatkuuVihje?.();
+  }
+
   renderFact() {
     const { game } = this;
     // Aloitusnäkymässä kartta saa puhua puolestaan: tietoruutu on piilossa.
@@ -2582,7 +2627,7 @@ export class UI {
     if (game.phase === 'pickstart') {
       // Piilotuksen lisäksi sisältö tyhjennetään: muuten edellisen pelin
       // teksti voi välähtää ruudulla ennen kuin kortti ehtii piiloon.
-      this.factKey = null;
+      this.uusiFactKey(null);
       this.factCard.classList.remove('vihjekortti');
       this.factVoiceEl.textContent = '';
       this.factPlace.textContent = '';
@@ -2613,7 +2658,7 @@ export class UI {
     if (aikataulu && aikataulu.packId === game.pack.id && !saapuvilla) {
       const key = `schedule:${aikataulu.packId}:${aikataulu.day}`;
       if (this.factKey === key) return;
-      this.factKey = key;
+      this.uusiFactKey(key);
       this.factCard.classList.remove('vihjekortti');
       this.factVoiceEl.textContent = 'Isoisän aikataulusta';
       this.factPlace.textContent = `Päivä ${aikataulu.day}`;
@@ -2634,7 +2679,7 @@ export class UI {
     if (hint) {
       const key = `hint:${game.pack.id}:${game.turnCount}`;
       if (this.factKey === key) return;
-      this.factKey = key;
+      this.uusiFactKey(key);
       this.factCard.classList.add('vihjekortti');
       this.factVoiceEl.textContent = '★ Isoisän vihje aarteesta';
       this.factPlace.textContent = 'Päiväkirjasta revitty sivu';
@@ -2684,7 +2729,7 @@ export class UI {
         const luentaAvain = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
         const key = luentaAvain + aikatauluLisa;
         if (this.factKey === key) return;
-        this.factKey = key;
+        this.uusiFactKey(key);
         this.factCard.classList.remove('vihjekortti');
         this.factVoiceEl.textContent = 'Matkakirjasta';
         this.factPlace.textContent = kaupunki.name;
@@ -2746,7 +2791,7 @@ export class UI {
         const luentaAvain = `saapui:${saapuminen.packId}:${saapuminen.cityId}`;
         const key = luentaAvain + aikatauluLisa;
         if (this.factKey === key) return;
-        this.factKey = key;
+        this.uusiFactKey(key);
         this.factCard.classList.remove('vihjekortti');
         this.factVoiceEl.textContent = voiceTitle(factVoice(fakta));
         this.factPlace.textContent = kaupunki.name;
@@ -2804,7 +2849,7 @@ export class UI {
     const text = factText(fact);
     const key = `${city.id}:${text}`;
     if (key === this.factKey) return;
-    this.factKey = key;
+    this.uusiFactKey(key);
     this.factKuuntele.hidden = true;
     this.naytaFactValokuva(player.pos.type === 'city' ? city.id : null, city.name);
     this.stopDiaryVoice();

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import {
   PACKS, packById, allQuestions, factSource, factText, factVoice, isSourceUrl,
@@ -2886,4 +2887,26 @@ test('Fuji näkyy lounaassa eikä lännessä', () => {
     assert.ok(!/lännessä kohoaa|lännessä siintää/.test(rivit),
       'Fuji on Tokiosta lounaaseen (suuntima n. 249°), ei länteen');
   }
+});
+
+test('päiväkirja aukeaa napauttamalla ja kutistuu kartan napautuksesta', () => {
+  // Toteutus on kolmessa paikassa: napautus kortissa, kutistus kartalla
+  // ja tyyli. Jos yksikin katoaa, merkintä jää joko auki kartan päälle
+  // tai takaisin viiden rivin vierityslaatikoksi.
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
+  assert.match(ui, /factTekstiRivi\?\.addEventListener\('click'/,
+    'päiväkirjan napautus puuttuu');
+  assert.match(ui, /mapPane\.addEventListener\('click', \(\) => this\.kutistaPaivakirja\(\)\)/,
+    'kartan napautus ei kutista päiväkirjaa');
+  // Uusi merkintä alkaa aina pienestä ikkunasta: avain vaihdetaan vain
+  // uusiFactKey-metodissa, joka kutistaa kortin samalla.
+  assert.equal((ui.match(/this\.factKey = key;/g) ?? []).length, 1,
+    'factKey asetetaan uusiFactKeyn ohi, jolloin kortti jäisi auki');
+  assert.match(css, /\.fact-card\.laajennettu[\s\S]{0,200}max-height/,
+    'laajennetun kortin korkeusrajaa ei ole');
+  // Katto on oltava: ilman sitä pitkä merkintä peittäisi koko kartan,
+  // eikä pelaaja näkisi mihin napauttaa kutistaakseen sen.
+  const katto = css.match(/body\[data-mode\] \.fact-card\.laajennettu \{[^}]*\}/)?.[0] ?? '';
+  assert.match(katto, /max-height: 7\d(vh|dvh)/, `katto puuttuu: ${katto}`);
 });
