@@ -1287,6 +1287,25 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /*
+ * Pinon laskuri: monesko kuva ja montako niitä on.
+ *
+ * Kahden kuvan pinossa alta pilkottava reuna riitti vihjeeksi, mutta
+ * useamman kuvan pinossa pelaaja ei näe montako niitä vielä on.
+ * Laskuri on hillitty ja istuu kuvatekstin viereen.
+ */
+.postikortti-laskuri {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.45rem;
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: rgba(74, 55, 26, 0.62);
+}
+
+.postikortti-kortti.alla .postikortti-laskuri { visibility: hidden; }
+
+/*
  * Leveä ruutu: kortti ja kuva isommiksi. Raja 700 px on sama kuin
  * muuallakin pelissä (mannerzoomin automatiikka), joten "kapea ruutu"
  * tarkoittaa kaikkialla samaa.
@@ -50508,14 +50527,22 @@ class UI {
       // pinosta pääsee pois napauttamalla karttaa eli pinon ulkopuolelle
       // (omistajan toive). Yhden kuvan kortti sulkeutuu mistä napautuksesta
       // tahansa, kuten ennenkin.
-      const alla = this.postikortti?.querySelector('.postikortti-kortti.alla');
+      /*
+       * Pino kiertää eteenpäin, ei vaihda päikseen.
+       *
+       * Kahdella kuvalla vaihto riitti, mutta pinossa voi nyt olla
+       * useampi (omistajan toive). Napautus nostaa seuraavan
+       * päällimmäiseksi ja kiertää lopusta alkuun; pinosta pääsee pois
+       * napauttamalla sen ulkopuolelle.
+       */
+      const kortit = this.postikortti
+        ? [...this.postikortti.querySelectorAll('.postikortti-kortti')] : [];
       const kortilla = this.postikortti && e.composedPath?.().includes(this.postikortti);
-      if (alla && kortilla) {
+      if (kortit.length > 1 && kortilla) {
         e.preventDefault();
         e.stopPropagation();
-        for (const kortti of this.postikortti.querySelectorAll('.postikortti-kortti')) {
-          kortti.classList.toggle('alla');
-        }
+        this.postikorttiIndeksi = ((this.postikorttiIndeksi ?? 0) + 1) % kortit.length;
+        kortit.forEach((k, i) => k.classList.toggle('alla', i !== this.postikorttiIndeksi));
         sfx.play('swipe');
         return;
       }
@@ -52917,13 +52944,47 @@ class UI {
         [tiedot.paikka, kuvaTiedot.vuosi, kuvaTiedot.lahde].filter(Boolean).join(' · ')));
       return osa;
     };
-    kortti.appendChild(teeKortti(tiedot, '', `Vanha valokuva: ${tiedot.paikka}`));
-    // Uusi kuva pilkottaa vanhan alta ja nousee napautuksesta päälle
-    // (omistajan kokeilu — pilottikaupungit).
-    if (tiedot.uusi) {
-      kortti.appendChild(teeKortti({ ...tiedot.uusi, vuosi: tiedot.uusi.vuosi ?? 'nykypäivä' },
-        'uusi alla', `Uusi valokuva: ${tiedot.paikka}`));
-    }
+    /*
+     * Pinossa voi olla enemmän kuin kaksi kuvaa.
+     *
+     * Omistajan toive 3.8.2026: "Matkakirjassa mainitut näkymät ja asiat
+     * olisi kiva saada kuvin matkakirjan kuviin, joita voi siis olla
+     * enemmän kuin kaksi." Päiväkirja mainitsee Suakinissa korallitalot,
+     * sataman ja dhow-veneet — jokaisesta voi olla oma kuvansa.
+     *
+     * Järjestys: vanha valokuva ensin, sitten päiväkirjan mainitsemat
+     * näkymät, viimeisenä nykypäivä. Näin pino kertoo saman tarinan kuin
+     * teksti ja päättyy siihen, mitä paikasta on jäljellä.
+     */
+    const pino = [
+      { ...tiedot, alt: `Vanha valokuva: ${tiedot.paikka}` },
+      ...(tiedot.lisat ?? []).map((k) => ({
+        ...k,
+        alt: `${k.selite ? k.selite.slice(0, 60) : tiedot.paikka}`,
+      })),
+      ...(tiedot.uusi
+        ? [{
+          ...tiedot.uusi,
+          vuosi: tiedot.uusi.vuosi ?? 'nykypäivä',
+          alt: `Uusi valokuva: ${tiedot.paikka}`,
+        }]
+        : []),
+    ];
+    this.postikorttiPino = pino.length;
+    this.postikorttiIndeksi = 0;
+    pino.forEach((kuvaTiedot, i) => {
+      const luokat = [
+        kuvaTiedot === pino[pino.length - 1] && tiedot.uusi ? 'uusi' : '',
+        i === 0 ? '' : 'alla',
+      ].filter(Boolean).join(' ');
+      const osa = teeKortti(kuvaTiedot, luokat, kuvaTiedot.alt);
+      // Laskuri kertoo, että kuvia on lisää — muuten pinon alta
+      // pilkottava reuna jää helposti huomaamatta.
+      if (pino.length > 1) {
+        osa.appendChild(html('p', 'postikortti-laskuri', `${i + 1}/${pino.length}`));
+      }
+      kortti.appendChild(osa);
+    });
     // Kortti keskelle ruutua — sama paikka yhdelle kuvalle ja pinolle,
     // jotta avaus näyttää samalta joka laitteella. Pystykeskitys tehdään
     // CSS:llä eikä mittaamalla: kortin korkeus ei ole tiedossa ennen kuin
@@ -56266,7 +56327,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.182';
+const APP_VERSION = '2026-08-03.183';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

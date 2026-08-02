@@ -1284,6 +1284,25 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /*
+ * Pinon laskuri: monesko kuva ja montako niitä on.
+ *
+ * Kahden kuvan pinossa alta pilkottava reuna riitti vihjeeksi, mutta
+ * useamman kuvan pinossa pelaaja ei näe montako niitä vielä on.
+ * Laskuri on hillitty ja istuu kuvatekstin viereen.
+ */
+.postikortti-laskuri {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.45rem;
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: rgba(74, 55, 26, 0.62);
+}
+
+.postikortti-kortti.alla .postikortti-laskuri { visibility: hidden; }
+
+/*
  * Leveä ruutu: kortti ja kuva isommiksi. Raja 700 px on sama kuin
  * muuallakin pelissä (mannerzoomin automatiikka), joten "kapea ruutu"
  * tarkoittaa kaikkialla samaa.

@@ -384,6 +384,29 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 58: kuvapino kestää useamman kuin kaksi — VALMIS v183 3.8.2026
+
+Omistajan toive: "Matkakirjassa mainitut näkymät ja asiat olisi kiva
+saada kuvin matkakirjan kuviin, joita voi siis olla enemmän kuin kaksi."
+
+Päiväkirja mainitsee Suakinissa korallitalot, sataman ja dhow-veneet.
+Kortissa oli tilaa kahdelle kuvalle: vanhalle ja uudelle. Nyt pinossa
+voi olla mikä tahansa määrä.
+
+**Järjestys kertoo saman tarinan kuin teksti:** vanha valokuva ensin,
+sitten päiväkirjan mainitsemat näkymät, viimeisenä nykypäivä. Pino
+päättyy siihen, mitä paikasta on jäljellä.
+
+**Napautus kiertää eteenpäin, ei vaihda päikseen.** Kahdella kuvalla
+vaihto riitti; useammalla se olisi jättänyt loput näkymättömiin.
+
+**Laskuri kertoo, montako kuvia on.** Kahden kuvan pinossa alta
+pilkottava reuna riitti vihjeeksi, useamman kuvan pinossa ei.
+
+Uusi kenttä `lisat` valokuvatietueessa: lista samanmuotoisia kuvia
+vanhan ja uuden väliin. Vanhat tietueet toimivat ennallaan.
+
+
 ## Paketti 57: kuvakortti isommaksi isolla ruudulla — VALMIS v182 3.8.2026
 
 Omistajan toive iPadilta: "Nämä kuvat voisi näkyä isompana."
