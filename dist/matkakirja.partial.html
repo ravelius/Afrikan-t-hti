@@ -50006,6 +50006,19 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
  * viimeinen sana hukkuu, koska käyrä on aluksi loiva.
  */
 const LUENNAN_HAIPYMA_S = 1.5;
+/*
+ * Nauhoituksen LUONNOLLISEN lopun häivytys on eri asia.
+ *
+ * Yllä oleva puolitoista sekuntia on oikea silloin, kun luenta
+ * katkaistaan kesken tiedoston lauserajalla: siinä häivytys korvaa
+ * töksähtävän katkon keskellä puhetta. Nauhoituksen omassa lopussa se
+ * on väärin — se alkaa jo puolitoista sekuntia ennen loppua ja nielee
+ * viimeisen sanan (omistajan havainto).
+ *
+ * Lopussa tarvitaan vain sen verran, ettei soittimen pysäytys napsahda:
+ * viisikymmentä millisekuntia riittää eikä kuulu häivytyksenä.
+ */
+const LOPUN_HAIPYMA_S = 0.05;
 /** Pehmennyskäyrä: alkaa hitaasti, jyrkkenee lopussa (ease-in). */
 const pehmene = (t) => Math.max(0, Math.min(1, t)) ** 1.8;
 
@@ -54873,21 +54886,30 @@ class UI {
         return;
       }
       const jaljella = audio.duration - audio.currentTime;
-      if (jaljella <= 0.05) {
-        audio.pause();
+      /*
+       * Ääntä EI pysäytetä ennen aikojaan.
+       *
+       * Aiemmin soitin pysäytettiin, kun loppuun oli 50 millisekuntia —
+       * ja sitä ennen ääni oli jo häivytetty puolentoista sekunnin ajan.
+       * Yhdessä ne söivät viimeisen sanan. Nyt nauhoitus soi loppuun
+       * asti ja vain aivan viimeinen hetki vaimenee, jottei pysäytys
+       * napsahda.
+       */
+      if (jaljella <= 0) {
         rampissa = false;
         return;
       }
-      if (jaljella < LUENNAN_HAIPYMA_S) {
-        audio.volume = perus * pehmene(jaljella / LUENNAN_HAIPYMA_S);
+      if (jaljella < LOPUN_HAIPYMA_S) {
+        audio.volume = perus * (jaljella / LOPUN_HAIPYMA_S);
       }
       requestAnimationFrame(rullaa);
     };
     // timeupdate on liian harva häivytykseen (~4 krt/s): se vain
-    // käynnistää tiheän rampin, kun loppu lähestyy.
+    // käynnistää tiheän rampin, kun loppu lähestyy. Puoli sekuntia
+    // ennen loppua on riittävä varoaika 50 millisekunnin häivytykselle.
     audio.addEventListener('timeupdate', () => {
       if (rampissa || !audio.duration) return;
-      if (audio.duration - audio.currentTime < LUENNAN_HAIPYMA_S + 0.9) {
+      if (audio.duration - audio.currentTime < LOPUN_HAIPYMA_S + 0.5) {
         rampissa = true;
         requestAnimationFrame(rullaa);
       }
@@ -56170,7 +56192,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.175';
+const APP_VERSION = '2026-08-02.176';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
