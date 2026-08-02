@@ -139,25 +139,11 @@
 
   <!-- ETUSIVU -->
   <section id="tab-etusivu" hidden>
-    <h2>Odottaa omistajaa</h2>
-    <p>Kommentoi suoraan kohdan alle — kommentit tallentuvat tähän selaimeen
-       itsestään. <b>Kopioi kommentit</b> kokoaa ne yhdeksi viestiksi, jonka
-       voi liittää Claudelle.</p>
-    <ul class="tehtavat" id="odottaa-lista"></ul>
-    <h2>Työjonossa (Claude)</h2>
-    <ul class="tehtavat" id="tyojono-lista"></ul>
-    <div class="grid" style="margin-top:0.6rem">
-      <button id="kopioi-kommentit">Kopioi kommentit</button>
-      <span id="kommentit-tila" style="color:var(--haalea);font-size:0.85rem"></span>
-    </div>
-    <pre id="kommentit-teksti"></pre>
     <h2>Tilastot</h2>
-    <p>Yhteenveto pelin koosta — luvut lasketaan suoraan paketeista, joten
-       ne eivät voi vanhentua.</p>
+    <p>Yhteenveto pelin koosta. Pelin omat luvut lasketaan suoraan
+       paketeista, joten ne eivät voi vanhentua; peilin luvut luetaan
+       media-repon manifestista, joten ne kertovat mitä siellä juuri nyt on.</p>
     <div id="tilastot" class="taulu"></div>
-    <h2>Omat muistiinpanot</h2>
-    <p>Vapaa kenttä ideoille — tallentuu tähän selaimeen itsestään.</p>
-    <textarea id="muistio" style="width:100%;max-width:46rem;min-height:8rem"></textarea>
   </section>
 
   <!-- PELI-IDEAT -->
@@ -427,6 +413,7 @@
     import { EUROPE_VALOKUVAT } from './js/packs/europe-valokuvat.js';
     import { EUROPE_ARTIKKELIT } from './js/packs/europe-artikkelit.js';
     import { SAAPUMISLUENNAT } from './js/ui.js';
+    import { PEILI_JUURI } from './js/media.js';
 
     /*
      * Maanosien sisältö samassa muodossa, jotta tekstivälilehti näyttää
@@ -498,71 +485,6 @@
       const m = src.match(/APP_VERSION = '([^']+)'/);
       if (m) document.getElementById('tyohuone-versio').textContent = `v${m[1].split('.').pop()}`;
     }).catch(() => {});
-
-    // --- etusivun muistio ---------------------------------------------------
-    const muistio = document.getElementById('muistio');
-    try { muistio.value = localStorage.getItem('matkakirja-muistio') ?? ''; } catch { /* ei säily */ }
-    muistio.addEventListener('input', () => {
-      try { localStorage.setItem('matkakirja-muistio', muistio.value); } catch { /* ei säily */ }
-    });
-
-    // --- etusivun tehtävälistat ja kommentit --------------------------------
-    // Kohdilla on pysyvät tunnisteet: kommentti pysyy oikealla kohdalla,
-    // vaikka listan järjestys tai sanamuoto muuttuisi versiosta toiseen.
-    // Kommentit tallentuvat tähän selaimeen; Kopioi kommentit kokoaa ne
-    // yhdeksi viestiksi Claudelle liitettäväksi.
-    const ODOTTAA = [
-      { id: 'brandikirja', teksti: 'Brändikirjan läpiluku ja täydennys omin sanoin (Brändikirja-välilehti).' },
-    ];
-    // Työjonoa käytetään säästeliäästi (omistajan toive) — vain
-    // aidosti odottavat asiat listataan.
-    const TYOJONO = [];
-    const KOMMENTIT_AVAIN = 'matkakirja-kommentit';
-    const kommentit = () => {
-      try { return JSON.parse(localStorage.getItem(KOMMENTIT_AVAIN) ?? '{}'); } catch { return {}; }
-    };
-    const tallennaKommentti = (id, teksti) => {
-      const kaikki = kommentit();
-      if (teksti.trim()) kaikki[id] = teksti;
-      else delete kaikki[id];
-      try { localStorage.setItem(KOMMENTIT_AVAIN, JSON.stringify(kaikki)); } catch { /* ei säily */ }
-    };
-    const teeTehtavat = (kohde, lista) => {
-      const nyt = kommentit();
-      for (const kohta of lista) {
-        const li = document.createElement('li');
-        li.appendChild(document.createTextNode(kohta.teksti));
-        const kentta = document.createElement('input');
-        kentta.type = 'text';
-        kentta.className = 'kommentti';
-        kentta.placeholder = 'kommentti…';
-        kentta.value = nyt[kohta.id] ?? '';
-        kentta.addEventListener('input', () => tallennaKommentti(kohta.id, kentta.value));
-        li.appendChild(kentta);
-        kohde.appendChild(li);
-      }
-    };
-    teeTehtavat(document.getElementById('odottaa-lista'), ODOTTAA);
-    teeTehtavat(document.getElementById('tyojono-lista'), TYOJONO);
-    document.getElementById('kopioi-kommentit').addEventListener('click', () => {
-      const nyt = kommentit();
-      const kohdat = [...ODOTTAA, ...TYOJONO];
-      const rivit = Object.entries(nyt).map(([id, teksti]) => {
-        // Poistuneen kohdan kommentti ei katoa hiljaa: se tulostuu
-        // tunnisteella, jotta siihen voi yhä viitata.
-        const otsikko = kohdat.find((k) => k.id === id)?.teksti ?? `(aiempi kohta: ${id})`;
-        return `• ${otsikko}\n  → ${teksti}`;
-      });
-      const pvm = new Date().toLocaleString('fi-FI', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
-      const teksti = rivit.length
-        ? `Työhuoneen kommentit (${pvm}):\n${rivit.join('\n')}`
-        : 'Ei kommentteja vielä.';
-      document.getElementById('kommentit-teksti').textContent = teksti;
-      navigator.clipboard?.writeText(teksti).then(
-        () => { document.getElementById('kommentit-tila').textContent = 'Kopioitu leikepöydälle.'; },
-        () => { document.getElementById('kommentit-tila').textContent = 'Teksti alla — kopioi käsin.'; },
-      );
-    });
 
     // --- peli-ideat ---------------------------------------------------------
     // tila: kaytossa | ideoitava (mietitään yhdessä) | idea
@@ -909,11 +831,57 @@
         const koko = Number(vastaus.headers.get('content-length'));
         if (koko) rivit.push(['Standalone-paketin koko', `${Math.round(koko / 1024)} kt`]);
       } catch { /* ilman verkkoa jää pois */ }
+
       const taulu = document.createElement('table');
-      taulu.innerHTML = rivit
-        .map(([nimi, arvo]) => `<tr><td>${nimi}</td><td class="num">${arvo}</td></tr>`)
-        .join('');
+      const piirra = (lista) => {
+        taulu.innerHTML = lista
+          .map(([nimi, arvo]) => `<tr><td>${nimi}</td><td class="num">${arvo}</td></tr>`)
+          .join('');
+      };
+      piirra([...rivit, ['Peili (media-repo)', 'luetaan…']]);
       kohde.appendChild(taulu);
+
+      /*
+       * Peilin luvut media-repon manifestista. Manifesti on ainoa paikka,
+       * josta kopioiden määrän ja koon näkee ilman repon kloonaamista, ja
+       * se päivittyy jokaisella peilausajolla.
+       *
+       * Haku tehdään vasta taulukon piirtämisen jälkeen ja aikarajan
+       * kanssa: pelin omat luvut eivät saa jäädä odottamaan verkkoa.
+       * Ilman aikarajaa koko taulukko jäi tyhjäksi, jos peiliin ei ollut
+       * yhteyttä — fetch ei kaadu itsestään, se vain jää roikkumaan.
+       */
+      // Alle megatavun erät (liput) näyttivät nollalta pelkkinä megatavuina.
+      const mt = (tavuja) => (tavuja < 1048576
+        ? `${Math.round(tavuja / 1024)} kt`
+        : `${Math.round(tavuja / 1048576)} Mt`);
+      const peilinRivit = async () => {
+        const katkaisin = AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined;
+        const manifesti = await (await fetch(`${PEILI_JUURI}manifesti.json`,
+          { signal: katkaisin })).json();
+        const laske = (laji) => {
+          const merkinnat = Object.values(manifesti[laji] ?? {});
+          return {
+            kpl: merkinnat.length,
+            koko: merkinnat.reduce((s, m) => s + (m.koko ?? 0), 0),
+          };
+        };
+        const kuvat = laske('kuvat');
+        const liput = laske('liput');
+        const aanet = laske('aanet');
+        const leikatut = Object.values(manifesti.aanet ?? {}).filter((m) => m.leikattu).length;
+        return [
+          ['Peili: kuvia', `${num(kuvat.kpl)} · ${mt(kuvat.koko)}`],
+          ['Peili: lippuja', `${num(liput.kpl)} · ${mt(liput.koko)}`],
+          ['Peili: ääniä', `${num(aanet.kpl)} · ${mt(aanet.koko)}`],
+          ['Peili: ääniä leikattu 3 min', `${num(leikatut)} / ${num(aanet.kpl)}`],
+          ['Peili yhteensä', mt(kuvat.koko + liput.koko + aanet.koko)],
+        ];
+      };
+      peilinRivit().then(
+        (lisa) => piirra([...rivit, ...lisa]),
+        () => piirra([...rivit, ['Peili (media-repo)', 'ei saatu yhteyttä']]),
+      );
     })();
 
     // --- kuvat: muistikirjan vanhat valokuvat --------------------------------

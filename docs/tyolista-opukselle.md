@@ -109,13 +109,29 @@ peilistä, ja kolmen epäonnistuneen haun jälkeen peili ohitetaan koko
 istunnoksi — myös kuvien osalta. Väärä järjestys ei riko peliä, mutta
 tekee siitä hitaan siihen asti kun välilehti suljetaan.
 
-**Peilin koko ei ole enää ongelma, mutta pidä sitä silmällä.** Kolmen
-minuutin katko kutisti peilin **580 → 399 megatavuun**, vaikka samalla
-tuli 69 uutta äänitettä: 22 vanhaa äänitettä oli täysmittaisena, ja
-niistä kolme oli 25–30 megatavua. Afrikan 39 kaupunkia toisivat noin
-150 Mt lisää, joten GitHub Pagesin suositusrajaan (1 Gt) on hyvin
-matkaa. Jos raja joskus lähestyy, keinot ovat yksi äänite kaupunkia
-kohti kahden sijaan tai lyhyempi katko.
+**Peilin koko kannattaa katsoa ennen Afrikkaa.** Mitattu manifestista
+1.8.2026 illalla (`du --exclude=.git` antaa saman luvun):
+
+    ennen pakettia 20   kuvat 111 + liput 0,3 + äänet 181  =  292 Mt
+    nyt             kuvat 110 + liput 0,3 + äänet 352  =  463 Mt
+    ilman 3 min katkoa                                  ≈  638 Mt
+
+Kolmen minuutin katko siis säästi noin 175 megatavua, mutta peili
+**kasvoi silti 292 → 463 megatavuun** — 69 uutta äänitettä on iso erä.
+(Aiemmin tähän oli kirjattu "peili pieneni 580 → 399 Mt". Se oli väärin:
+580 oli mitattu .git-hakemisto mukaan lukien ja 399 oli suoranainen
+mittausvirhe. Älä käytä niitä lukuja.)
+
+Afrikan 39 kaupunkia toisivat samalla mitoituksella noin **320 Mt**
+lisää, jolloin peili olisi ~780 Mt. GitHub Pagesin suositusraja on 1 Gt,
+joten tila riittää mutta ei enää väljästi. Keinot, jos halutaan
+pienemmäksi: yksi äänite kaupunkia kohti kahden sijaan (puolittaa),
+lyhyempi katko kuin kolme minuuttia, tai äänitteiden uudelleenkoodaus
+matalammalle bittinopeudelle (nykyiset ovat 128–320 kb/s, ja moni on
+kaksikanavaista kohinaa jolle mono riittäisi).
+
+Työhuoneen etusivun tilastot lukevat nämä luvut suoraan peilin
+manifestista, joten ne eivät voi vanhentua tämän dokumentin mukana.
 
 **Venäjänkielisten vähemmistöjen liput** (Ukraina, Viro, Latvia,
 Liettua) jätettiin pois omistajan päätöksellä 1.8.2026. Muilla
