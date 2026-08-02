@@ -182,6 +182,16 @@ const { paikat: nimiPaikat, pulmat } = sijoita(pisteet, new Map(Object.entries(m
  * raja ja neljä aarretta — se on pelilogiikkaa, ei karttaa. Siihen asti
  * lauta on pelattavissa nykyisillä säännöillä.
  */
+/*
+ * Kaupungit, joihin maailmankartalta laskeudutaan. Lista on sama kuin
+ * maailma.js:n porteissa, ja se koskee vain vanhan maailman aluetta —
+ * New York, Rio, Sydney ja Los Angeles vievät yhä omille laudoilleen.
+ */
+const MAAILMAN_PORTIT = new Set([
+  'lontoo', 'kairo', 'mumbai', 'peking', 'tokio', 'singapore',
+  'moskova', 'ateena', 'kapkaupunki', 'tanger',
+]);
+
 const cities = pisteet.map((c) => {
   const lahde = lahdeKaupunki.get(c.id) ?? {};
   const p = nimiPaikat.get(c.id);
@@ -193,9 +203,11 @@ const cities = pisteet.map((c) => {
     x: c.x,
     y: c.y,
     ...(lahde.start ? { start: true } : {}),
-    // Portti maailmankartalle, jotta laudalle pääsee muualta pelistä.
-    ...(c.id === 'lontoo'
-      ? { links: [{ pack: 'maailma', city: 'lontoo', label: 'Maailma-lauta' }] } : {}),
+    // Portit maailmankartalle. Linkin pitää olla vastavuoroinen: jos
+    // maailmankartalta pääsee tänne, tästä pitää päästä takaisin. Testi
+    // vartioi sitä, ja ilman paluulinkkiä pelaaja jäisi laudalle.
+    ...(MAAILMAN_PORTIT.has(c.id)
+      ? { links: [{ pack: 'maailma', city: c.id, label: 'Maailmankartta' }] } : {}),
     ...(lahde.airport || lahde.start ? { airport: true } : {}),
     la: p.la,
     lx: p.lx,
