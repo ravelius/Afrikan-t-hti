@@ -2921,10 +2921,17 @@ test('kartta ulottuu ruudun alareunaan asti', () => {
   assert.ok(stage, 'stagen alareunan sääntöä ei löytynyt');
   assert.doesNotMatch(stage, /safe-area-inset-bottom/,
     `kartan alle varataan taas turva-alue: ${stage}`);
-  // Kortit sen sijaan tarvitsevat turva-alueen: niitä napautetaan.
+  // Myöskään kelluvat kortit eivät varaa turva-aluetta. Kehittäjätilan
+  // mittarivi paljasti asennetusta sovelluksesta, että selain saa
+  // käyttöönsä 812 pistettä 874:n ruudulla: kotipalkin kaista jää
+  // kokonaan sovelluksen alueen ulkopuolelle, joten varaus oli saman
+  // tilan laskemista kahdesti. Kiinteä rako jää silti aina.
   const rail = css.match(/body\[data-mode\] \.rail \{\s*bottom:[^}]*\}/)?.[0] ?? '';
-  assert.match(rail, /safe-area-inset-bottom/,
-    'kelluvat kortit jäisivät kotipalkin alle');
+  assert.ok(rail, 'kelluvien korttien alareunan sääntöä ei löytynyt');
+  assert.doesNotMatch(rail, /safe-area-inset-bottom/,
+    `kortit varaavat taas turva-alueen: ${rail}`);
+  assert.match(rail, /calc\(var\(--gap\)/,
+    'korttien ja alareunan väliin pitää jäädä rako');
 });
 
 test('päiväkirjan teksti on puhelimella luettavan kokoista', () => {
