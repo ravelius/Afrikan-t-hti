@@ -58,6 +58,22 @@ const arvo = (lippu, oletus) => {
   return i >= 0 ? argv[i + 1] : oletus;
 };
 
+/**
+ * Neljä lähdepakettia. Tuodaan tiedostoittain eikä js/pack.js:n kautta,
+ * koska rekisteri lataa myös yhdistetyn paketin — ja se on näiden
+ * työkalujen tuotos. Riippuvuus omaan tuotokseen tekisi työkalusta
+ * käyttökelvottoman juuri silloin kun sitä eniten tarvitaan.
+ */
+export async function lahdepaketit() {
+  const [{ EUROPE }, { AFRICA }, { MIDDLE_EAST }, { ASIA }] = await Promise.all([
+    import('../js/packs/europe.js'),
+    import('../js/packs/africa.js'),
+    import('../js/packs/middleeast.js'),
+    import('../js/packs/asia.js'),
+  ]);
+  return [EUROPE, AFRICA, MIDDLE_EAST, ASIA];
+}
+
 // --- projektio ---------------------------------------------------------------
 
 /** Millerin lieriöprojektio. Palauttaa yksiköttömät x/y. */
@@ -142,7 +158,9 @@ function alueenUlkona(rengas, alue) {
  * Pienimmät saaret jätetään pois: ne olisivat kartalla yhden pisteen
  * täpliä eikä niihin pääse pelissä mihinkään.
  */
-export function rannikot(geojson, alue, { toleranssi = 0.004, minPisteet = 12 } = {}) {
+export function rannikot(geojson, alue, {
+  toleranssi = 0.004, minPisteet = 12, pakolliset = [],
+} = {}) {
   const ulos = [];
   for (const f of geojson.features) {
     const muodot = f.geometry.type === 'Polygon'
@@ -150,14 +168,32 @@ export function rannikot(geojson, alue, { toleranssi = 0.004, minPisteet = 12 } 
       : f.geometry.coordinates;
     for (const muoto of muodot) {
       const rengas = muoto[0]; // ulkokehä; reiät (järvet) eivät kiinnosta
-      if (!rengas || rengas.length < minPisteet) continue;
+      if (!rengas || rengas.length < 4) continue;
       if (alueenUlkona(rengas, alue)) continue;
+      // Saari, jolla on kaupunki, säilyy vaikka olisi kuinka pieni:
+      // muuten kaupunki jäisi seisomaan tyhjän meren päälle. Näin kävi
+      // ensimmäisellä ajolla St. Helenalle, Sansibarille ja Sisilialle.
+      const onPakollinen = pakolliset.some(([lon, lat]) => pisteRenkaassa([lon, lat], rengas));
+      if (!onPakollinen && rengas.length < minPisteet) continue;
       const projisoitu = rengas.map(([lon, lat]) => miller.eteen(lon, lat));
-      const karsittu = karsi(projisoitu, toleranssi);
-      if (karsittu.length >= minPisteet) ulos.push(karsittu);
+      const karsittu = karsi(projisoitu, onPakollinen ? toleranssi / 4 : toleranssi);
+      if (onPakollinen || karsittu.length >= minPisteet) ulos.push(karsittu);
     }
   }
   return ulos;
+}
+
+/** Onko piste renkaan sisällä? Säteenheitto lon/lat-tasossa. */
+function pisteRenkaassa([px, py], rengas) {
+  let sisalla = false;
+  for (let i = 0, j = rengas.length - 1; i < rengas.length; j = i++) {
+    const [xi, yi] = rengas[i];
+    const [xj, yj] = rengas[j];
+    if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi) {
+      sisalla = !sisalla;
+    }
+  }
+  return sisalla;
 }
 
 // --- sovitus laudalle --------------------------------------------------------
@@ -189,7 +225,10 @@ export function sovita(ryhmat, { leveys = 4000, marginaali = 40 } = {}) {
  * ensimmäinen esiintymä voittaa ja loput kirjataan päällekkäisiksi.
  */
 export async function kaupungit() {
-  const { PACKS } = await import('../js/pack.js');
+  // Lähdepaketit suoraan, EI js/pack.js:n rekisteriä: rekisteri lataa
+  // myös vanhamaailma.js:n, joka on tämän työkalun oma tuotos. Jos se
+  // on rikki tai puuttuu, työkalu ei käynnistyisi korjaamaan sitä.
+  const PACKS = await lahdepaketit();
   const asia = JSON.parse(readFileSync(join(JUURI, 'tools/mapdata/asia.json'), 'utf8'));
   const ulos = new Map();
   const paallekkaiset = [];
@@ -226,7 +265,10 @@ export async function kaupungit() {
  * kartalla ne osuisivat muuten maalle.
  */
 export async function reitit() {
-  const { PACKS } = await import('../js/pack.js');
+  // Lähdepaketit suoraan, EI js/pack.js:n rekisteriä: rekisteri lataa
+  // myös vanhamaailma.js:n, joka on tämän työkalun oma tuotos. Jos se
+  // on rikki tai puuttuu, työkalu ei käynnistyisi korjaamaan sitä.
+  const PACKS = await lahdepaketit();
   const asia = JSON.parse(readFileSync(join(JUURI, 'tools/mapdata/asia.json'), 'utf8'));
   const ulos = [];
   const nahdyt = new Set();

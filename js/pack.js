@@ -12,10 +12,16 @@ import { NORTHAMERICA } from './packs/northamerica.js';
 import { ASIA } from './packs/asia.js';
 import { OCEANIA } from './packs/oceania.js';
 import { SUOMI } from './packs/suomi.js';
+import { VANHA_MAAILMA } from './packs/vanhamaailma.js';
 
 export const PACKS = [
   MAAILMA, AFRICA, EUROPE, ASIA, OCEANIA, NORTHAMERICA, SOUTHAMERICA, MIDDLE_EAST,
   SUOMI, ISTANBUL,
+  // Vanha maailma yhdistää neljä ensimmäistä yhdeksi kartaksi. Se on
+  // listan lopussa, koska se ei vielä korvaa niitä: aarre- ja
+  // aikalogiikka puuttuu, ja lauta on toistaiseksi katseltavissa
+  // osoitteella ?lauta=vanhamaailma.
+  VANHA_MAAILMA,
 ];
 
 export function packById(id) {

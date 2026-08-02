@@ -1923,7 +1923,7 @@ export class UI {
     const svg = { appendChild: (node) => root.appendChild(node) };
     this.boardRoot = root;
 
-    drawParchment(svg);
+    drawParchment(svg, this.game.pack.map);
     // Pallonpuoliskokartalla kehykset ja asteverkko piirtyvät maiden alle.
     drawHemisphereFrames(svg, pack.map);
     drawLand(svg, pack.map);
@@ -2105,7 +2105,7 @@ export class UI {
     // takaisin ja sekoittamaan uudelleen joka kerta kun nappula, laatta tai
     // lentokone liikkui sen alla. Kartta näyttää samalta, mutta liikkuvat
     // osat eivät enää maksa koko ruudun sekoitusta.
-    drawPaperOverlay(svg);
+    drawPaperOverlay(svg, this.game.pack.map);
 
     this.tokenLayer = el('g', { class: 'tokens' }, root);
     this.targetLayer = el('g', { class: 'targets' }, root);

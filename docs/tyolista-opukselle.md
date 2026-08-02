@@ -305,6 +305,68 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 42: vanha maailma pelattavaksi laudaksi — VALMIS v165 2.8.2026
+
+Omistajan toive: "Kartta loppuun." Kolme ensimmäistä vaihetta olivat
+työkaluja; tässä niistä tehtiin lauta, jonka peli osaa piirtää.
+
+**Tulos.** `js/packs/vanhamaailma.js` (229 kt): 7200 × 2620 yksikköä,
+143 kaupunkia, 222 reittiä, 38 rannikkoa, 17 saarta. Nähtävissä
+osoitteella `?lauta=vanhamaailma`. Maailmankartalla Lontoosta on nyt
+linkki sekä Eurooppaan että vanhaan maailmaan — vanha lauta ei siis
+korvaa neljää nykyistä, vaan on niiden rinnalla kunnes pelilogiikka on
+valmis.
+
+**Lauta levenee 4000 → 7200.** Ensimmäinen ajo pudotti 18 kaupunkia,
+koska ne olivat pelin minimietäisyyttä lähempänä toisiaan — mukana
+Praha, Budapest, Mekka ja Riika. Kaupunkien poistaminen on väärä
+korjaus: leveämpi lauta pitää kaikki 143. Zoomi tekee koosta
+merkityksettömän (omistajan linjaus paketissa 41).
+
+**Merireitit lasketaan uudelleen** (`tools/merireitit.mjs`). Vanhoilla
+laudoilla suora viiva kaupungista kaupunkiin riitti, koska rannikko oli
+karkea. Natural Earthin tarkalla rannikolla 50 merireittiä 54:stä
+kulki maan yli. Nyt A* etsii polun vesiruudukon läpi (ruutu 12
+yksikköä; 22 umpeutti Englannin kanaalin, kun rannikon viereiset ruudut
+merkitään maaksi).
+
+**Pelkistys pilasi ensin lähes kaikki lasketut reitit.** A* löysi
+kunnollisen polun, ja Douglas–Peucker oikaisi sen takaisin mantereen
+läpi juuri siellä missä reitti kiertää niemen. Siksi jokainen
+pelkistys tarkistetaan, ja karkein hyväksytään vasta kun se yhä kulkee
+vettä pitkin.
+
+**13 merireittiä 54:stä kulkee yhä maan yli.** Ne ovat kapeita salmia
+ja saaristoja, joissa 12 yksikön ruudukko sulkeutuu maan levityksen
+jälkeen: Lontoo–Dublin, Dublin–Edinburgh, Dubrovnik–Rooma,
+Tukholma–Helsinki, Helsinki–Tallinna, Riika–Tukholma,
+Madagaskar–Mosambik, Madagaskar–Sansibar, Sansibar–Mosambik,
+Sansibar–Rashafun, Rashafun–Suakin, Mekka–Aden, Mumbai–Karachi.
+`tests/rules.test.mjs` ohittaa merireittitestin tältä laudalta
+(`MERIREITIT_KESKEN`) ja luettelee reitit nimeltä. Korjaus: paikallisesti
+tiheämpi ruudukko näille väleille.
+
+**Pergamentti oli kiinteän kokoinen.** `PAPER` oli vakio
+`{ x: -1200, y: -1200, w: 3600, h: 3600 }`, joten 7200 leveällä laudalla
+meri jäi mustaksi laudan puolivälistä eteenpäin. Nyt `paperi(map)`
+laskee koon laudasta, ja `drawParchment`/`drawPaperOverlay` saavat
+laudan parametrina. Vanhat laudat tarkistettiin erikseen: Eurooppa
+piirtyy ennallaan.
+
+**Sisältöä ei kopioitu.** Generaattori tuo kysymykset, kuvat ja tekstit
+suoraan neljästä lähdepaketista. Kysymykset kootaan yhteen ja
+kaksoiskappaleet karsitaan koko laudan tasolla niin, että kaupungin oma
+kori voittaa yleiskorin.
+
+**Mitä puuttuu yhä.**
+
+1. 13 merireittiä (yllä)
+2. Pelilogiikka: neljä aarretta (yksi per maanosa), paluu Lontooseen,
+   80 päivän raja — nämä ovat pelisääntöjä, eivät karttaa
+3. Porttikaupunkien sisällöt yhdistettävä (Istanbul, Kairo, Teheran)
+4. Suorituskyky iPadilla
+
+
 ## Paketti 41: vanha maailma, vaiheet 2–3 — VALMIS 2.8.2026
 
 Omistajan linjaus: "Pidä vain mittasuhteet realistisena. Pelissähän
