@@ -514,7 +514,13 @@ body.aloitus-zoom .kiikari {
 
 /* Vanhan filmin vaalea vinjetti: kartan reunat haalistuvat kuin
    ikääntyneessä filmiruudussa. Piirretään ruudun päälle, joten se
-   myötäilee aina näkyvää aluetta laudan rajauksesta riippumatta. */
+   myötäilee aina näkyvää aluetta laudan rajauksesta riippumatta.
+
+   Alareunasta vinjetti on poistettu (omistajan toive). Siellä se ei
+   näyttänyt filmiltä vaan haalistumalta: alalaidassa on eniten
+   kaupunkeja ja nimiä, ja kelluvat napit istuvat juuri sen päällä.
+   Peite häivytetään pois alaneljänneksessä, joten muut reunat säilyvät
+   ennallaan eikä rajaa näy. */
 .map-pane::after {
   content: '';
   position: absolute;
@@ -526,6 +532,8 @@ body.aloitus-zoom .kiikari {
     rgba(250, 242, 219, 0.26) 80%,
     rgba(252, 246, 228, 0.6) 100%
   );
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 26%);
+  mask-image: linear-gradient(to top, transparent 0, #000 26%);
   transition: opacity 700ms ease;
 }
 
@@ -1909,9 +1917,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   overflow-y: auto;
   min-height: 0;
   flex: 1 1 auto;
-  /* Merkintä on pelin pisin luettava teksti eikä kuvateksti — omistajan
-   * havainto puhelimelta, mutta sama koskee isompaakin ruutua. */
-  font-size: 1rem;
+  font-size: 0.9rem;
   line-height: 1.45;
   color: var(--ink-light);
   -webkit-overflow-scrolling: touch;
@@ -3195,9 +3201,7 @@ body[data-pack='suomi'] .gem-topaz { fill: #4a6fb3; }
 
 @media (max-width: 900px), (orientation: portrait) {
   .actions button { font-size: 0.92rem; padding: 0.5rem 0.55rem; }
-  /* Sama korotus kuin puhelimella: merkintä on luettavaa tekstiä, ei
-   * kuvateksti. */
-  .fact-text { font-size: 0.98rem; }
+  .fact-text { font-size: 0.84rem; }
 }
 
 /* --- kartta täyttää ruudun, paneelit kelluvat sen päällä --- */
@@ -3446,15 +3450,12 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
     max-height: 30vh;
     max-height: 30dvh;
   }
-  /* Päiväkirjan teksti oli puhelimella liian pientä luettavaksi
-   * (omistajan havainto). Merkintä on pelin kaunein osa eikä sitä lueta
-   * vilkaisulla, joten se saa olla lähes samankokoista kuin muukin
-   * teksti. Rivikorkeus nousee samassa suhteessa: viiden rivin ikkuna
-   * lasketaan em-mittana, joten kortti kasvaa mukana eikä tekstiä katoa
-   * — ja loput saa auki napauttamalla. */
-  .fact-card h2 { font-size: 0.76rem; margin-bottom: 0.2rem; }
-  .fact-place { font-size: 0.8rem; margin-bottom: 0.15rem; }
-  .fact-text { font-size: 0.98rem; line-height: 1.45; }
+  /* Teksti oli hetken isompaa (v148), mutta omistaja palautti sen:
+   * isolla fontilla kortti peitti kartasta liian ison kaistan. Koko
+   * merkinnän saa auki napauttamalla, joten pieni ikkuna riittää. */
+  .fact-card h2 { font-size: 0.68rem; margin-bottom: 0.2rem; }
+  .fact-place { font-size: 0.7rem; margin-bottom: 0.15rem; }
+  .fact-text { font-size: 0.78rem; line-height: 1.35; }
 
   /*
    * Kapea ruutu (puhelin): yläpalkin kaikki napit ovat pelkkiä kuvakkeita

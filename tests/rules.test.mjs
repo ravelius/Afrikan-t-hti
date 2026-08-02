@@ -2934,16 +2934,21 @@ test('kartta ulottuu ruudun alareunaan asti', () => {
     'korttien ja alareunan väliin pitää jäädä rako');
 });
 
-test('päiväkirjan teksti on puhelimella luettavan kokoista', () => {
-  // Omistajan havainto: 0.78rem oli liian pientä. Merkintä on pelin
-  // pisin luettava teksti, joten se ei saa kutistua kuvatekstiksi.
+test('päiväkirjan vinjetti ei haalista kartan alalaitaa', () => {
+  // Alalaidassa on eniten kaupunkeja ja nimiä, ja kelluvat napit
+  // istuvat juuri sen päällä: siellä vaalea vinjetti näytti
+  // haalistumalta eikä filmiltä (omistajan toive). Muut reunat
+  // säilyvät, joten peite häivytetään pois vain alhaalta.
   const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
-  const koot = [...css.matchAll(/\.fact-text \{[^}]*font-size:\s*([\d.]+)rem/g)]
-    .map((m) => Number(m[1]));
-  assert.ok(koot.length >= 2, 'fact-textin kokosääntöjä ei löytynyt');
-  for (const koko of koot) {
-    assert.ok(koko >= 0.95, `päiväkirjan teksti kutistui kokoon ${koko}rem`);
-  }
+  // Rivin alkuun ankkuroitu: zoomauksen aikainen sammutussääntö
+  // (body.kiikari-paalla .map-pane::after) osuisi muuten ensin.
+  const vinjetti = css.match(/^\.map-pane::after \{[^}]*\}/m)?.[0] ?? '';
+  assert.ok(vinjetti, 'vinjetin sääntöä ei löytynyt');
+  assert.match(vinjetti, /mask-image:\s*linear-gradient\(to top, transparent/,
+    'vinjetti peittää taas kartan alalaidan');
+  // Sekä webkit-etuliitteellinen että vakiomuoto: iOS:n Safari tarvitsee
+  // edellisen, eikä puuttuva etuliite näy muualla kuin puhelimella.
+  assert.match(vinjetti, /-webkit-mask-image:/, 'webkit-muoto puuttuu');
 });
 
 test('kehittäjän siirto vie kaupunkiin kuluttamatta peliä', () => {
