@@ -2910,3 +2910,31 @@ test('päiväkirja aukeaa napauttamalla ja kutistuu kartan napautuksesta', () =>
   const katto = css.match(/body\[data-mode\] \.fact-card\.laajennettu \{[^}]*\}/)?.[0] ?? '';
   assert.match(katto, /max-height: 7\d(vh|dvh)/, `katto puuttuu: ${katto}`);
 });
+
+test('kartta ulottuu ruudun alareunaan asti', () => {
+  // iPhonella alakehys varasi turva-alueen verran tilaa, ja kartta
+  // loppui 85 pistettä ennen ruudun alareunaa (mitattu omistajan
+  // kuvakaappauksesta). Kartta jatkuu nyt kotipalkin alle; kelluvat
+  // kortit pysyvät turva-alueen yläpuolella omilla säännöillään.
+  const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
+  const stage = css.match(/body\[data-mode\] \.stage \{[^}]*padding-bottom[^}]*\}/)?.[0] ?? '';
+  assert.ok(stage, 'stagen alareunan sääntöä ei löytynyt');
+  assert.doesNotMatch(stage, /safe-area-inset-bottom/,
+    `kartan alle varataan taas turva-alue: ${stage}`);
+  // Kortit sen sijaan tarvitsevat turva-alueen: niitä napautetaan.
+  const rail = css.match(/body\[data-mode\] \.rail \{\s*bottom:[^}]*\}/)?.[0] ?? '';
+  assert.match(rail, /safe-area-inset-bottom/,
+    'kelluvat kortit jäisivät kotipalkin alle');
+});
+
+test('päiväkirjan teksti on puhelimella luettavan kokoista', () => {
+  // Omistajan havainto: 0.78rem oli liian pientä. Merkintä on pelin
+  // pisin luettava teksti, joten se ei saa kutistua kuvatekstiksi.
+  const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
+  const koot = [...css.matchAll(/\.fact-text \{[^}]*font-size:\s*([\d.]+)rem/g)]
+    .map((m) => Number(m[1]));
+  assert.ok(koot.length >= 2, 'fact-textin kokosääntöjä ei löytynyt');
+  for (const koko of koot) {
+    assert.ok(koko >= 0.95, `päiväkirjan teksti kutistui kokoon ${koko}rem`);
+  }
+});
