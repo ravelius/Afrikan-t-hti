@@ -1,0 +1,717 @@
+{
+  "nikosia": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "bukarest": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "damaskos": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "istanbul": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "praha": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "wien": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "budapest": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "venetsia": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "dubrovnik": {
+    "la": "middle",
+    "lx": 0,
+    "ly": 32
+  },
+  "sarajevo": {
+    "la": "end",
+    "lx": -17,
+    "ly": 26
+  },
+  "sofia": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "varsova": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "krakova": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "alpit": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "rooma": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "izmir": {
+    "la": "start",
+    "lx": 17,
+    "ly": 26
+  },
+  "ankara": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "kapadokia": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "halab": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "jerusalem": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "petra": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "berliini": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "kairo": {
+    "la": "end",
+    "lx": -17,
+    "ly": -16
+  },
+  "siinai": {
+    "la": "start",
+    "lx": 17,
+    "ly": 26
+  },
+  "luxor": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "riad": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "dubai": {
+    "la": "middle",
+    "lx": 0,
+    "ly": 32
+  },
+  "doha": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "kuwait": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "bagdad": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "persepolis": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "marseille": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "ateena": {
+    "la": "end",
+    "lx": -17,
+    "ly": -16
+  },
+  "kreeta": {
+    "la": "middle",
+    "lx": 0,
+    "ly": 32
+  },
+  "tallinna": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "riika": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "medina": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "rubalkhali": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "sana": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "masqat": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "mosul": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "teheran": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "isfahan": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "lontoo": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "pariisi": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "barcelona": {
+    "la": "end",
+    "lx": -17,
+    "ly": -16
+  },
+  "granada": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "amsterdam": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "sisilia": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "odessa": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "vilna": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "tukholma": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "kobenhavn": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "karthago": {
+    "la": "end",
+    "lx": -17,
+    "ly": 26
+  },
+  "orjarannikko": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "mekka": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "madrid": {
+    "la": "end",
+    "lx": -17,
+    "ly": -16
+  },
+  "helsinki": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "tanger": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "gao": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "kano": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "lagos": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "suakin": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "salalah": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "tabriz": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "lissabon": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "kiova": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "tripoli": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "sahara": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "ahaggar": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "kumasi": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "kamerun": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "nairobi": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "kilimandzaro": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "viktoria": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "addisabeba": {
+    "la": "end",
+    "lx": -17,
+    "ly": -16
+  },
+  "rashafun": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "aden": {
+    "la": "middle",
+    "lx": 0,
+    "ly": 32
+  },
+  "taipei": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "singapore": {
+    "la": "end",
+    "lx": -17,
+    "ly": 26
+  },
+  "kathmandu": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "dublin": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "edinburgh": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "pietari": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "oslo": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "murzuk": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "marrakech": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "timbuktu": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "sierraleone": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "kappalmas": {
+    "la": "end",
+    "lx": -17,
+    "ly": 26
+  },
+  "tshadjarvi": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "kongo": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "darfur": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "hongkong": {
+    "la": "end",
+    "lx": -17,
+    "ly": -16
+  },
+  "borneo": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "jakarta": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "karachi": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "kabul": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "samarkand": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "kashgar": {
+    "la": "start",
+    "lx": 17,
+    "ly": -16
+  },
+  "lappi": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "tromssa": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "alkufra": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "dakar": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "angola": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "kapkaupunki": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "kimberley": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "sansibar": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "tanganjika": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "bahrelghazal": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "irkutsk": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "vladivostok": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "ulanbator": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "soul": {
+    "la": "middle",
+    "lx": 0,
+    "ly": 32
+  },
+  "shanghai": {
+    "la": "start",
+    "lx": 17,
+    "ly": 26
+  },
+  "manila": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "hanoi": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "bangkok": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "yangon": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "sumatra": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "lhasa": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "delhi": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "kolkata": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "mumbai": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "chennai": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "colombo": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "moskova": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "islanti": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "namib": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "sthelena": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "viktorianputoukset": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "mosambik": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "madagaskar": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "tokio": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "jekaterinburg": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "astana": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "novosibirsk": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  },
+  "jakutsk": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "magadan": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "kamtsatka": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "sahalin": {
+    "la": "start",
+    "lx": 20,
+    "ly": 5
+  },
+  "peking": {
+    "la": "end",
+    "lx": -20,
+    "ly": 5
+  },
+  "xian": {
+    "la": "middle",
+    "lx": 0,
+    "ly": -24
+  }
+}

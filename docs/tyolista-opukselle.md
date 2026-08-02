@@ -240,6 +240,62 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 41: vanha maailma, vaiheet 2–3 — VALMIS 2.8.2026
+
+Omistajan linjaus: "Pidä vain mittasuhteet realistisena. Pelissähän
+pystyy nyt zoomaamaan, niin koko ei ole ongelma." Millerin projektio jää
+siis sellaisenaan — Afrikka on iso ja Eurooppa pieni, kuten oikeasti.
+
+### Vaihe 2: reitit
+
+**Reittejä ei tarvinnut keksiä uusiksi.** Tämä oli listan suurin
+epävarmuus, ja se ratkesi itsestään: samat kaupunkiparit ovat yhä
+naapureita. Ja koska porttikaupungit sulautuvat yhdeksi, neljä verkkoa
+liittyy niiden kohdalla automaattisesti.
+
+**143 kaupunkia ja 222 reittiä = yksi yhtenäinen verkko.** Lissabonista
+pääsee Tokioon ja Kapkaupunkiin ilman lautasiirtymiä.
+
+| portti | laudat | reittejä |
+|---|---|---|
+| Istanbul | Eurooppa + Lähi-itä | 4 |
+| Kairo | Afrikka + Lähi-itä | 7 |
+| Teheran | Lähi-itä + Aasia | 3 |
+
+27 merireittiä kaartaa välipisteillä; ne projisoitiin uudelleen, koska
+vanhoilla luvuilla ne kulkisivat maan yli.
+
+### Vaihe 3: nimien paikat
+
+Arvioin tämän "työn suurimmaksi eräksi, joka vaatii silmää eikä
+laskentaa". **Arvio oli väärä.** Tämä on kartografian vakio-ongelma
+(point-feature label placement), ja se ratkesi hakemalla.
+
+`tools/nimien-paikat.mjs` kokeilee jokaiselle nimelle 12 paikkaa
+nimikkopisteensä ympäriltä ja pisteyttää törmäykset: toinen nimi 100,
+kaupunkiympyrä 40, reitti 6, ja lisäksi pieni sakko sitä mukaa mitä
+kauempana paikka on ihanteesta (oikea puoli on luettavin).
+
+**Järjestys ratkaisee.** Ahtaimmalla olevat sijoitetaan ensin. Jos
+väljällä seudulla olevat menisivät ensin, ne veisivät parhaat paikat
+naapureiltaan — sama ilmiö kuin istumajärjestyksessä.
+
+**Tekstien leveydet mitataan selaimessa** pelin omalla fontilla.
+Merkkien laskeminen antaisi väärän tuloksen: "Kilimandžaro" ja
+"Lissabon" ovat eri levyisiä samalla merkkimäärällä.
+
+**Tulos: 143 nimeä, 0 päällekkäisyyttä.** Käsin katsottavaksi ei jäänyt
+yhtään. Tarkistettu myös silmällä ahtaimmalta seudulta (Itämeri):
+Helsinki, Tukholma, Pietari, Tallinna, Riika ja Oslo asettuivat kukin
+omaan suuntaansa ja ovat luettavia.
+
+### Jäljellä
+
+1. Päällekkäisten kaupunkien sisällöt (Istanbul, Kairo, Teheran)
+2. Pelilogiikka: aarrejahdit, passi, tallennus
+3. Suorituskyky iPadilla — kartta on neljä kertaa isompi
+
+
 ## Paketti 40: kertojan väistö ja kompressointi — VALMIS v163 2.8.2026
 
 **Omistaja:** "Hiljennä taustaääniä lisää. Vieläkin on vaikea kuulla
