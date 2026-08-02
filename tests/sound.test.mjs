@@ -258,8 +258,21 @@ test('kaupunkien omat äänitykset ovat muodoltaan kelvollisia', async () => {
         // Äänitykset ovat radio aporeesta, ja osoitteen pitää olla
         // suora tiedosto — kohdesivu ei soi <audio>-elementissä.
         // Pääte voi olla kummalla tahansa kirjainkoolla (…EarlStreetSouth.MP3).
-        assert.match(e.url, /^https:\/\/archive\.org\/download\/[^/]+\/.+\.mp3$/i,
+        //
+        // Perässä voi olla säätöjä (#alku=20&voima=1.5), jotka jaaAlku
+        // purkaa. Voimakkuudet ovat mitattuja eivätkä käsin arvattuja:
+        // tools/mittaa-aanet.mjs kirjoittaa ne, jotta taustaäänet soivat
+        // keskenään samalla tasolla (omistajan havainto siitä, että
+        // toiset hukkuvat ja toiset peittävät kertojan).
+        assert.match(e.url, /^https:\/\/archive\.org\/download\/[^/]+\/[^#]+\.mp3(#\S*)?$/i,
           `${lauta}/${cityId}: kelvoton osoite ${e.url}`);
+        const risu = e.url.indexOf('#');
+        if (risu >= 0) {
+          for (const osa of e.url.slice(risu + 1).split('&')) {
+            assert.match(osa, /^(alku|voima)=\d+(\.\d+)?$/,
+              `${lauta}/${cityId}: tuntematon säätö "${osa}"`);
+          }
+        }
         // Nimi näkyy studiossa ja kertoo tekijän ja lisenssin: aporee on
         // CC BY, CC BY-SA, CC BY-NC(-ND) tai public domain.
         assert.ok(typeof e.nimi === 'string' && e.nimi.length > 5,

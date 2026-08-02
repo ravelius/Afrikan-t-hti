@@ -340,6 +340,13 @@ export function palautaTausta() {
 
 /** Asettaa väistökertoimen ja ajaa kaikki soivat kierrokset sen mukaiseksi. */
 function saadaVaistoa(kerroin) {
+  // Syntetisoitu äänimaisema väistyy samalla. Aiemmin väistö koski vain
+  // nauhoitettua taustaa, ja pelin oma maisema jäi soimaan täydellä
+  // voimalla näytteen ja kertojan päälle (omistajan havainto).
+  sfx.vaimennaAmbienssi?.(kerroin);
+  // Tietovisan musiikki on oma raitansa: se ei saa jäädä jyräämään
+  // ääninäytettä, mutta ei myöskään kokonaan vaieta kysymyksen ajaksi.
+  if (musiikki && kerroin < 1) haivyta(musiikki, MUSIIKKI_VOIMA * kerroin);
   if (!nykyinen) return;
   nykyinen.vaimennus = kerroin;
   const kohde = taso(nykyinen);
