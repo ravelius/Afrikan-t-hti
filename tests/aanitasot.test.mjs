@@ -75,3 +75,42 @@ test('voimaTasolle laskee oikean suunnan', () => {
   assert.equal(pyorista(99), 6);
   assert.equal(pyorista(0.001), 0.15);
 });
+
+test('kertoja väistää taustan ja laskuri palautuu', async () => {
+  // Omistaja: "Vieläkin on vaikea kuulla puhetta." Syy oli, ettei
+  // kertoja väistänyt taustaa lainkaan — vain näyte ja zoomausääni.
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  assert.match(ui, /puheAlkoi\(\)/, 'kertoja ei ilmoita väistöstä');
+  assert.match(ui, /puheLoppui\(\)/, 'väistöä ei vapauteta');
+  // Molemmat kertojat: avausteksti ja päiväkirja.
+  const kutsut = [...ui.matchAll(/this\.merkitsePuhuja\(/g)].length;
+  assert.ok(kutsut >= 2, `vain ${kutsut} kertojaa merkitty — molemmat tarvitaan`);
+  // Pysäytys vapauttaa, muuten laskuri jäisi plussalle eikä tausta
+  // palaisi enää koskaan täyteen voimaan.
+  assert.match(ui, /vapautaPuhuja\(audio\)/);
+
+  const { puheAlkoi, puheLoppui, nollaaPuhujat } = await import('../js/ambience-stream.js');
+  nollaaPuhujat();
+  // Päällekkäiset luennat: ensimmäisen loppuminen ei saa palauttaa taustaa.
+  assert.doesNotThrow(() => { puheAlkoi(); puheAlkoi(); puheLoppui(); puheLoppui(); });
+  // Ylimääräinen vapautus ei saa viedä laskuria pakkaselle.
+  assert.doesNotThrow(() => { puheLoppui(); puheAlkoi(); puheLoppui(); });
+});
+
+test('kompressointi on ennen voimakkuussäätöä ja varareitti on olemassa', () => {
+  const virta = readFileSync(new URL('../js/ambience-stream.js', import.meta.url), 'utf8');
+  // Kompressori ennen vahvistinta: kertoimet vaihtelevat 32 dB, joten
+  // säädön jälkeen kiinteä kynnys osuisi eri kohtaan joka äänitteellä.
+  assert.match(virta, /lahde\.connect\(komp\)\.connect\(vahvistin\)/,
+    'ketjun järjestys väärin — kompressorin pitää olla ennen vahvistinta');
+  // Reititys vain käynnissä olevaan kontekstiin: pysähtyneessä
+  // elementti ei enää soi suoraan eikä konteksti soita mitään.
+  assert.match(virta, /ctx\.state !== 'running'/,
+    'reititys ilman tilatarkistusta veisi äänen iOS:llä kokonaan');
+  // CORS-lupa pyydetään, jotta puuttuva lupa näkyy latausvirheenä eikä
+  // hiljaisuutena.
+  assert.match(virta, /audio\.crossOrigin = 'anonymous'/);
+  // Varareitti ilman kompressoria.
+  assert.match(virta, /ilmanKompressoria = true/,
+    'ilman varareittiä CORS-ongelma veisi taustan kokonaan');
+});

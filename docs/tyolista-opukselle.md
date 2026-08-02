@@ -240,6 +240,73 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 40: kertojan väistö ja kompressointi — VALMIS v163 2.8.2026
+
+**Omistaja:** "Hiljennä taustaääniä lisää. Vieläkin on vaikea kuulla
+puhetta." — ja perään "lisää vain myös kompressointi, jos se on
+mahdollista".
+
+### Oikea syy löytyi ennen nupin kääntämistä
+
+`vaimennaTausta()` laukesi vain ääninäytteestä ja zoomausäänestä.
+**Kertoja ei väistänyt taustaa lainkaan.** Tausta soi siis täydellä
+voimalla juuri silloin, kun sen pitäisi väistyä eniten. Pelkkä tason
+lasku olisi tehnyt taustasta kuulumattoman kaikkialla vain puhehetkien
+takia.
+
+`puheAlkoi()` / `puheLoppui()` **laskurilla**: luentoja voi olla
+päällekkäin (saapumisteksti ja päiväkirja), eikä ensimmäisen loppuminen
+saa palauttaa taustaa kesken toisen. Vapautus tapahtuu kerran ja vain
+kerran — `ended` ja `error` voivat molemmat laueta.
+
+Väistön syvyys eriytettiin:
+
+| väistäjä | kerroin | miksi |
+|---|---|---|
+| näyte, zoomausääni | 0,15 | lyhyitä, saavat kadota lähes kokonaan |
+| kertoja | 0,25 | lukee minuutteja — tunnelma katoaisi mukana |
+
+### Taso -33 → -36 LUFS
+
+Omistaja: "taustaäänet saavat olla joka tapauksessa hiljaisemmalla,
+olisivat liian häiritseviä muuten". Portaat tähän mennessä: -30, -33,
+-36.
+
+### Kompressointi
+
+`DynamicsCompressorNode` taustavirtaan. Tämä korjaa eri asian kuin
+tasaus: tasaus hoiti äänitteiden VÄLISET erot, kompressointi hoitaa
+SISÄISEN vaihtelun (mitattuna 1,6…18,7 dB).
+
+**Kompressori on ENNEN voimakkuussäätöä.** Jos se olisi jälkeen, kiinteä
+kynnys osuisi eri kohtaan joka äänitteellä: kertoimet vaihtelevat
+0,15…6 eli 32 dB. Siksi soittimen oma `volume` jää ykköseen ja taso
+hoidetaan vahvistinsolmulla kompressorin jälkeen. **Sivuhyöty:**
+vahvistin voi ylittää ykkösen, toisin kuin HTML-soittimen volume — eli
+kertoimen katto ei enää leikkaa.
+
+**Vaarallisin kohta, joka piti hoitaa.** Web Audioon reititetty elementti
+ei enää soi suoraan kaiuttimeen. Jos konteksti on pysähtynyt (iOS ennen
+kosketusta) tai lähde ei salli CORSia, tuloksena on **täysi hiljaisuus
+ilman virhettä** — sitä ei voi napata try/catchilla. Kaksi suojaa:
+
+1. Reititys vain kun `ctx.state === 'running'`.
+2. `crossOrigin = 'anonymous'` **ennen** srciä, jolloin puuttuva lupa
+   näkyy latausvirheenä. Sille on oma varareittinsä: sama äänite
+   uudestaan ilman CORS-vaatimusta ja ilman kompressoria — tausta soi
+   silti, vain puristamattomana.
+
+Molemmat lähteet tarkistettu: ämpäri sallii pelin osoitteen,
+archive.org kaikki. Varareitti ei siis normaalisti laukea.
+
+**Todennettu selaimessa:** 23,5 dB:n hyppy kesyyntyi 13,9:ään (−9,7 dB),
+ja **ääntä tulee** — ei hiljaisuutta.
+
+**Mitä ei voi todentaa täältä:** iOS:n oma käyttäytyminen. Jos tausta
+vaikenee iPadilla kokonaan, syy on tässä reitityksessä ja varareitti on
+pakotettava päälle.
+
+
 ## Paketti 39: liian hiljaiset korvattu, taustataso alas — VALMIS v162 2.8.2026
 
 **Omistaja:** "Joo, etsi niille seitsemälle korvaava." ja "Tausta-ääniä voi
