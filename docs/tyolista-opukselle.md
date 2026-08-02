@@ -240,6 +240,31 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 29: kehittäjätila nurkkaan, matkakirja matalammaksi — VALMIS 2.8.2026
+
+**Omistajan toiveet:** "Kirjoita kehittäjätila ennemmin versionumeron
+perään. Pelkkä `: kehittäjä`" ja "Madalla Matkakirja-ikkunaa".
+
+**Kehittäjätila nurkkaan.** Tilasta kertoi oma merkki kartan
+yläreunassa. Se oli liian iso ele pienelle asetukselle: nurkan
+versionumero on jo se paikka, josta pelin tila luetaan. Nyt siinä
+lukee `v155 : kehittäjä`, ja merkki tyyleineen on poistettu.
+
+Nurkan teksti päivittyy `paivitaVersioKulma()`:lla käynnistyksessä ja
+kytkimen molemmissa haaroissa. **Jotain merkkiä tarvitaan silti** —
+ilman sitä tila unohtuisi päälle, ja peli tuntuisi rikkinäiseltä kun
+laattojen napautus vie minne tahansa. Testi vartioi, ettei merkintä
+katoa kokonaan.
+
+**Matkakirjan ikkuna matalammaksi.** Viisi riviä vei kartalta liian
+ison palan puhelimella. Näkyviä rivejä on nyt kolme ja kortin katto
+30 → 22 dvh. Kortti 126 → 86 pikseliä kiinni; auki levitettynä 221
+pikseliä ja koko merkintä näkyvissä kuten ennen.
+
+Rivikatto on em-mittana (`calc(3 * 1.35em)`), joten se seuraa
+fonttikokoa eikä hajoa, jos fontti joskus muuttuu.
+
+
 ## Paketti 28: alalaidan haalistuma — oikea syy löytyi — VALMIS 2.8.2026
 
 **Omistaja jouduttiin korjaamaan kahdesti:** "Korjaatkohan nyt väärää

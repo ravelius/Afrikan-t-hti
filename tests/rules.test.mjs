@@ -3010,4 +3010,10 @@ test('kehittäjätila on salasanan takana ja pois päältä oletuksena', () => {
   // tallennettu — puuttuva arvo ei saa tarkoittaa päällä.
   assert.match(ui, /localStorage\.getItem\(KEHITTAJA_AVAIN\) === '1'/,
     'kehittäjätilan oletus ei ole pois päältä');
+  // Tila luetaan versionumeron perästä (omistajan toive), ei omasta
+  // merkistä kartalla. Ilman mitään merkkiä tila unohtuisi päälle ja
+  // peli tuntuisi rikkinäiseltä, kun laattojen napautus vie minne vain.
+  assert.match(main, /: kehittäjä/, 'kehittäjätila ei näy versionumeron perässä');
+  assert.doesNotMatch(ui, /kehittaja-merkki/,
+    'kartalle piirretään taas erillinen merkki');
 });
