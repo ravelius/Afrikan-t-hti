@@ -25,7 +25,10 @@ const arg = (nimi, oletus) => {
   return i > 0 ? process.argv[i + 1] : oletus;
 };
 const MAANOSA = arg('--maanosa', 'europe');
+// Puhehaku: kieli kuuluviin oman napin taakse, ei taustaääneksi.
+const PUHE = process.argv.includes('--puhe');
 const ULOS = arg('--ulos', join(JUURI, `../kaupunkiaanet-${MAANOSA}.json`));
+const LYHIN_PUHE_S = 60; // kieli kuuluu lyhyemmästäkin näytteestä
 
 const nuku = (s) => execFileSync('sleep', [String(s)]);
 const hae = (url) => JSON.parse(execFileSync('curl',
@@ -213,6 +216,27 @@ const EI_KELPAA = new RegExp([
 const HYVA = /(street|square|market|plaza|piazza|platz|plein|torg|tori|harbour|harbor|port|quay|tram|bridge|park|old town|centre|center|city|downtown|avenue|boulevard|promenade|ambien|soundscape)/i;
 
 /*
+ * Puhehaku (--puhe): erillinen tila, jolla etsitään äänitteitä, joissa
+ * kuuluu ihmisten puhetta ja paikallista kieltä.
+ *
+ * Tämä on tarkoituksella eri asia kuin taustaääni. Taustaääni soi
+ * silmukassa minuutteja, ja selvä puhe alkaa toistuessaan kiinnittää
+ * huomion — pelaaja tunnistaa samat lauseet ja tausta muuttuu
+ * häiriöksi. Siksi taustaan haetaan puheetonta maisemaa ja kieli
+ * omaan nappiinsa, joka soi kerran painalluksesta.
+ *
+ * Tori, kahvila ja katusoittaja ovat parhaita: ihmisiä on monta,
+ * puhe on luontevaa eikä äänite ole kenenkään yksityinen keskustelu.
+ */
+const HYVA_PUHE = new RegExp([
+  'market|markt|march[ée]|mercado|mercato|bazaar|bazar|souk|tori|torg',
+  'cafe|caf[ée]|caff[eè]|taverna|osteria|pub|terrace|terrasse',
+  'conversation|talking|voices|voci|voces|stimmen|people|crowd|chatter',
+  'vendor|peddler|seller|hawker|multilingual|street music|musician',
+  'singer|chant|song|busker',
+].join('|'), 'i');
+
+/*
  * Peli soittaa ambienssia silmukassa ja arpoo aloituskohdan äänitteen
  * mitasta (ambience-stream.js jättää loppuun 45 s varaa). Alle kahden
  * minuutin klippi alkaisi siis aina samasta kohdasta ja toistaisi
@@ -274,6 +298,10 @@ for (const c of kaupungit) {
   const pisteet = (d) => {
     const t = String(d.title ?? '');
     if (EI_KELPAA.test(t)) return -1;
+    // Puhehaussa kelpaavat vain ne, joissa nimen perusteella on ihmisiä
+    // äänessä: muuten listalle nousisi hiljaisia puistoja, joista ei
+    // kuule kieltä lainkaan.
+    if (PUHE) return HYVA_PUHE.test(t) ? 2 : -1;
     return HYVA.test(t) ? 2 : 1;
   };
   // Sama äänite on aporeessa toisinaan kahteen kertaan (Marseillen
@@ -297,7 +325,7 @@ for (const c of kaupungit) {
     const tiedosto = aanitiedosto(d.identifier);
     nuku(1);
     if (!tiedosto?.url || !vapaa(tiedosto.lisenssi)) continue;
-    if (tiedosto.kesto && tiedosto.kesto < LYHIN_S) continue;
+    if (tiedosto.kesto && tiedosto.kesto < (PUHE ? LYHIN_PUHE_S : LYHIN_S)) continue;
     ehdokkaat.push({
       tunnus: d.identifier,
       otsikko: String(d.title ?? '').slice(0, 90),

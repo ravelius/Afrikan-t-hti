@@ -3891,6 +3891,14 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   .flight-trail, .flight-plane-body, .flight-line { display: none; }
 }
 
+/* Kuuntele kieltä: sama nappi kuin kulttuurinostojen näytteellä, mutta
+   se asuu tervehdysrivin perässä eikä otsikkorivillä, joten se saa oman
+   ylämarginaalinsa eikä veny palstan levyiseksi. */
+.kieli-kuuntele {
+  margin-top: 0.45rem;
+  align-self: flex-start;
+}
+
 </style>
 
 <!--
@@ -14174,6 +14182,32 @@ const EUROPE_VALOKUVAT = {
     },
   },
 };
+
+// ===== js/packs/europe-kielet.js =====
+/*
+ * Kieli kuuluviin: kaupungissa nauhoitettu näyte, jossa ihmiset puhuvat.
+ *
+ * Tämä on tarkoituksella eri asia kuin kaupungin taustaääni
+ * (js/aani-ehdokkaat.js KAUPUNKI_EHDOKKAAT). Taustaääni soi silmukassa
+ * minuutteja, ja selvä puhe alkaa toistuessaan kiinnittää huomion:
+ * pelaaja tunnistaa samat lauseet ja tausta muuttuu häiriöksi. Siksi
+ * taustaan haetaan puheetonta maisemaa, ja kieli soi omasta napistaan
+ * kerran painalluksesta — silloin selvä puhe on vahvuus.
+ *
+ * Nappi on saapumiskortissa tervehdysrivin perässä: teksti kertoo mitä
+ * "hyvää päivää" on kyseisellä kielellä, näyte kertoo miltä se
+ * kuulostaa oikeassa kadunkulmassa.
+ *
+ * Äänitteet ovat radio aporeesta ja haettu koordinaattien perusteella
+ * (tools/hae-kaupunkiaanet.mjs --puhe), joten ne ovat varmasti siitä
+ * kaupungista. Parhaita ovat tori, kahvila ja katusoittaja: ihmisiä on
+ * monta, puhe on luontevaa eikä äänite ole kenenkään yksityinen
+ * keskustelu.
+ *
+ * Muoto: { url, nimi, kesto } — nimi kertoo paikan, tekijän ja
+ * lisenssin, ja se näkyy sellaisenaan lähdemainintana.
+ */
+const EUROPE_KIELET = {};
 
 // ===== js/packs/europe-maatiedot.js =====
 // Euroopan maiden tunnusluvut (sama rakenne kuin AFRICA_MAATIEDOT).
@@ -46343,6 +46377,8 @@ const KULTTUURIT = { africa: AFRICA_KULTTUURI, europe: EUROPE_KULTTUURI };
 
 // Vanhat valokuvat muistikirjan kylkeen laudoittain.
 const VALOKUVAT = { africa: AFRICA_VALOKUVAT, europe: EUROPE_VALOKUVAT };
+// Kaupungissa nauhoitettu puhenäyte: kieli kuuluviin omasta napistaan.
+const KIELET = { europe: EUROPE_KIELET };
 
 // Maiden tunnusluvut laudoittain.
 const MAATIEDOT = { africa: AFRICA_MAATIEDOT, europe: EUROPE_MAATIEDOT };
@@ -49321,6 +49357,7 @@ class UI {
       if (kartta) this.arrivalMaaKartta.appendChild(kartta);
       // Tunnusluvut ja tervehdykset kartan alle (pilottimaat).
       this.naytaMaaTunnusluvut(iso);
+      this.naytaKieliNappi(city);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
       //
@@ -49554,6 +49591,35 @@ class UI {
       if (t.osuus) osa.appendChild(html('span', 'maa-sija', ` ${t.osuus}`));
       this.arrivalMaaTervehdykset.appendChild(osa);
     }
+  }
+
+  /**
+   * Kuuntele kieltä: kaupungissa nauhoitettu näyte, jossa ihmiset
+   * puhuvat (omistajan toive). Nappi on tervehdysrivin perässä, koska
+   * teksti kertoo mitä sanotaan ja näyte miltä se kuulostaa.
+   *
+   * Näyte on eri asia kuin kaupungin taustaääni: se soi kerran
+   * painalluksesta, joten selvä puhe on siinä vahvuus eikä toistuva
+   * häiriö. Tausta väistyy näytteen ajaksi kuten kulttuurinostoissa.
+   */
+  naytaKieliNappi(city) {
+    const kohde = this.arrivalMaaTervehdykset;
+    const nayte = (KIELET[this.game.pack.id] ?? {})[city.id];
+    if (!nayte?.url) return;
+    kohde.hidden = false;
+    const nappi = html('button', 'kulttuuri-kuuntele kieli-kuuntele');
+    nappi.type = 'button';
+    nappi.title = nayte.nimi ?? 'Kaupungissa nauhoitettu näyte';
+    nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
+      + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+      + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+      + '</svg><span>Kuuntele kieltä</span><span class="aika" hidden></span>';
+    // Sama soitin kuin kulttuurinostojen näytteillä: peilin varareitti,
+    // taustan väistö ja aikanäyttö tulevat siitä valmiina.
+    nappi.addEventListener('click', () => this.kulttuuriAaniNapista(
+      { aani: nayte.url, otsikko: 'Kuuntele kieltä' }, nappi,
+    ));
+    kohde.appendChild(nappi);
   }
 
   /**
