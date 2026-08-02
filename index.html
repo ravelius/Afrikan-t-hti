@@ -262,6 +262,24 @@
   </dialog>
 
   <!--
+    Uusi peli tyhjentää kaiken (omistajan toive). Varmistus on tässä
+    syystä: passin leimat ja laukun tavarat ovat pelin ainoa pysyvä
+    kertymä, eikä niitä saa takaisin.
+  -->
+  <dialog id="nollaa-dialog" class="dialog">
+   <div class="dialog-card">
+    <h2>Uusi peli</h2>
+    <p class="dialog-teksti">Matka alkaa alusta ja <b>kaikki muistit tyhjennetään</b>:
+      tallennettu peli, passin leimat, laukun tavarat, ääniasetukset ja välimuisti.
+      Tätä ei voi perua.</p>
+    <div class="dialog-actions">
+      <button id="nollaa-peru" class="ghost" type="button">Peruuta</button>
+      <button id="nollaa-ok" class="primary" type="button">Aloita alusta</button>
+    </div>
+   </div>
+  </dialog>
+
+  <!--
     Kehittäjätila. Salasana on tarkoituksella kevyt lukko eikä
     tietoturvaa: se estää vahingossa avaamisen, ei tahallista.
   -->

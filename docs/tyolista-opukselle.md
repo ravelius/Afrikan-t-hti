@@ -241,6 +241,43 @@ media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
 <<<<<<< HEAD
+## Paketti 32: kartan herätys ja muistien tyhjennys — VALMIS 2.8.2026
+
+**Omistajan havainto:** "Välillä myös meri häviää kartalta" ja
+"veikkaan että bugi tulee välimuistista, koska se tulee yleensä jos
+avaan toisen ohjelman välissä tai Matkakirja päivittyy uuteen
+versioon".
+
+**Päättely.** Karttaa ei piirretä uudelleen kesken pelin — `drawBoard`
+ajetaan vain laudan vaihtuessa. Kyse ei siis voi olla piirrosta vaan
+siitä, että jo piirretty kerros lakkaa näkymästä. Meren tuntu syntyy
+suodatetuista kerroksista (rannikon kaiut, aallot, maasto), ja iOS voi
+palauttaa juuri ne tyhjinä vapautettuaan taustalle jääneen sovelluksen
+piirtopuskurit.
+
+**Korjausyritys.** `visibilitychange` ja `pageshow` herättävät kartan:
+suodatinviite irrotetaan ja liitetään takaisin, mikä mitätöi selaimen
+tallettaman tuloksen. Pelkkä uudelleenpiirron pyytäminen ei riitä,
+koska selaimen mielestä mikään ei ole muuttunut.
+
+**Tätä ei ole voitu todentaa.** Vikaa ei saa toistettua täältä, joten
+tiedossa on vain että herätys ajetaan oikeaan aikaan, ei kaada mitään
+eikä muuta kerrosten määrää. Jos meri katoaa vielä, seuraava askel on
+luopua suodattimista kartan isoimmissa kerroksissa — ne ovat kalliita
+muutenkin.
+
+**Uusi peli tyhjentää kaikki muistit** (omistajan toive): talletukset,
+välimuistit ja palvelutyöntekijän, ja hakee sivun uutena.
+
+- **Varmistus on pakollinen.** Passin leimat ja laukun tavarat ovat
+  pelin ainoa pysyvä kertymä, eikä niitä saa takaisin.
+- **Avaimet poistetaan etuliitteellä** (`matkakirja`, `afrikan-tahti`)
+  eikä `localStorage.clear()`:llä, joka veisi muidenkin sovellusten
+  tiedot samasta selaimesta.
+- **Voittoikkunan Uusi peli aloittaa kuten ennen** eikä tyhjennä
+  mitään: siinä kohtaa pelaaja on juuri ansainnut kertymänsä.
+
+
 ## Paketti 31: kiikari ilmestyi kesken pelin — KORJATTU 2.8.2026
 
 **Omistajan havainto:** "Valitsin laivamatkan Ateenassa ja peli zoomasi

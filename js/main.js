@@ -9,7 +9,7 @@ import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.157';
+const APP_VERSION = '2026-08-02.158';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -271,7 +271,62 @@ function paivitaVersioKulma() {
   versioKulma.textContent = kehittajaTilaPaalla() ? `${numero} : kehittäjä` : numero;
 }
 paivitaVersioKulma();
-document.getElementById('newgame-btn').addEventListener('click', startGame);
+/*
+ * Uusi peli tyhjentää kaiken (omistajan toive). Sitä ennen kysytään
+ * kerran: passin leimat ja laukun tavarat ovat pelin ainoa pysyvä
+ * kertymä, eikä niitä saa takaisin. Voittoikkunan Uusi peli aloittaa
+ * kuten ennenkin eikä tyhjennä mitään — siinä kohtaa pelaaja on juuri
+ * ansainnut kertymänsä.
+ */
+const nollaaDialog = document.getElementById('nollaa-dialog');
+
+/**
+ * Kaikki pelin muistit pois: talletukset, välimuistit ja
+ * palvelutyöntekijä. Sen jälkeen sivu haetaan uutena.
+ *
+ * Avaimet poistetaan etuliitteen perusteella eikä listana, jotta uusi
+ * asetus ei jää siivouksen ulkopuolelle sitä mukaa kun niitä lisätään.
+ */
+async function tyhjennaMuistit() {
+  try {
+    const poistettavat = [];
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const avain = localStorage.key(i);
+      if (avain && (avain.startsWith('matkakirja') || avain.startsWith('afrikan-tahti'))) {
+        poistettavat.push(avain);
+      }
+    }
+    for (const avain of poistettavat) localStorage.removeItem(avain);
+  } catch {
+    /* yksityinen selaus: ei talletuksia poistettavaksi */
+  }
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+    }
+    if (window.caches) {
+      const avaimet = await caches.keys();
+      await Promise.all(avaimet.map((avain) => caches.delete(avain)));
+    }
+  } catch {
+    /* tyhjennys onnistuu myös ilman välimuistin siivousta */
+  }
+  // Sama kikka kuin Päivitä-napissa: iOS välimuistittaa aloitussivun
+  // myös palvelutyöntekijän ohi, joten osoitteesta tehdään uusi.
+  const osoite = new URL(location.href);
+  osoite.searchParams.set('paivitys', String(Date.now()));
+  location.replace(osoite.toString());
+}
+
+document.getElementById('newgame-btn').addEventListener('click', () => nollaaDialog.showModal());
+document.getElementById('nollaa-peru').addEventListener('click', () => nollaaDialog.close());
+document.getElementById('nollaa-ok').addEventListener('click', () => {
+  const nappi = document.getElementById('nollaa-ok');
+  nappi.disabled = true;
+  nappi.textContent = 'Tyhjennetään…';
+  tyhjennaMuistit();
+});
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään
 // kerran täällä eikä käyttöliittymän mukana joka uudessa pelissä.
