@@ -3177,6 +3177,38 @@ test('kartan isot kerrokset eivät käytä suodatinta', () => {
   assert.match(art, /smoothClosedPath\(kasinPiirretty\(/);
 });
 
+test('kartan bittikartta täydentyy liikkeen aikana ja eleen päättyessä', () => {
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+
+  /*
+   * Kolme hetkeä, joina kuva pitää tarkistaa. Yksikään ei riitä yksin:
+   *
+   * - liikkeen aikana (asetaPan), jotta uusi ikkuna ehtii valmistua
+   *   ennen kuin sormi ohittaa piirretyn alueen;
+   * - eleen päättyessä, koska piirto on voinut olla kesken juuri kun
+   *   sormi nousi — silloin seuraava tarkistus tulisi vasta seuraavasta
+   *   eleestä ja kuva jäisi väärään kohtaan siinä välissä;
+   * - näkymän asettuessa (fitViewBox), koska zoom ja koon muutos
+   *   siirtävät aluetta ilman yhtään sormen liikettä.
+   */
+  const asetaPan = ui.slice(ui.indexOf('  asetaPan('), ui.indexOf('  asetaPan(') + 900);
+  assert.match(asetaPan, /paivitaTaideKuva/, 'liike ei täydennä kuvaa');
+
+  const paata = ui.slice(ui.indexOf('    const paata = '), ui.indexOf('    pane.addEventListener(\'pointerup\''));
+  assert.match(paata, /paivitaTaideKuva/, 'eleen päättyminen ei täydennä kuvaa');
+
+  const fit = ui.slice(ui.indexOf('  fitViewBox('), ui.indexOf('  fitViewBox(') + 4000);
+  assert.match(fit, /paivitaTaideKuva/, 'näkymän asettuminen ei täydennä kuvaa');
+
+  // Puskurin pitää olla selvästi suurempi kuin kynnys, jolla uusi kuva
+  // tilataan: erotus on se matka, jonka sormi saa kulkea piirron aikana
+  // ilman että tyhjää näkyy.
+  const puskuri = Number(ui.match(/const PUSKURI = ([\d.]+)/)?.[1]);
+  const vararaja = Number(ui.match(/const VARARAJA = ([\d.]+)/)?.[1]);
+  assert.ok(puskuri > 0 && vararaja > 0, 'puskuria tai kynnystä ei löytynyt');
+  assert.ok(vararaja >= puskuri * 0.6, 'kynnys on liian myöhäinen: piirto ei ehdi valmistua');
+});
+
 test('kartan kerroksilla ei ole suodattimia, ja viittaukset osuvat', () => {
   const art = readFileSync(new URL('../js/mapart.js', import.meta.url), 'utf8');
   const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');

@@ -305,6 +305,48 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 47: kuva ei välky eikä jää jälkeen — VALMIS v170 2.8.2026
+
+Omistajan kaksi kysymystä: "Lasketaanhan uusi bittikartta heti kun sormi
+irtoaa eikä vasta kun uusi sormiele alkaa?" ja "Kuva välkkyy kun se
+tekee uuden latauksen siirron aikana."
+
+### Milloin kuva tarkistetaan
+
+Uusi kuva pyydetään **jo kesken pyyhkäisyn**: jokainen sormen liike
+tarkistaa, onko näkyvä alue tullut puolen ruudun päähän piirretyn
+reunasta. Se on aikaisemmin kuin sormen irrotessa.
+
+Yksi aukko silti oli. **Jos piirto oli kesken juuri kun sormi nousi,
+seuraava tarkistus tuli vasta seuraavasta eleestä** — ja siinä välissä
+kuva oli jo väärässä kohdassa. Eleen päättyminen on oma hetkensä, ja se
+saa nyt oman tarkistuksensa.
+
+Kolme hetkeä, joina kuva tarkistetaan, eikä yksikään riitä yksin:
+
+1. liikkeen aikana (`asetaPan`)
+2. eleen päättyessä (`pointerup`, `pointercancel`)
+3. näkymän asettuessa (`fitViewBox`) — zoom ja koon muutos siirtävät
+   aluetta ilman yhtään sormen liikettä
+
+Testi vartioi kaikkia kolmea ja lisäksi sitä, että puskuri on selvästi
+suurempi kuin kynnys, jolla uusi kuva tilataan: erotus on se matka,
+jonka sormi saa kulkea piirron aikana ilman että tyhjää näkyy.
+
+### Välkkyminen: kaksi syytä, molemmat korjattu
+
+**1. Kuvaa ei ollut purettu.** SVG:n `<image>` viittaa blob-osoitteeseen,
+jonka selain hakee ja purkaa vasta kun elementti on puussa — siinä
+välissä ehtii yksi tyhjä kehys. PNG puretaan nyt valmiiksi (`decode()`)
+ennen kuin se pannaan karttaan.
+
+**2. Vaihto jätti aukon.** `replaceChildren` poistaa vanhan ja lisää
+uuden samalla kertaa, eikä uusi ole vielä piirtynyt. Nyt uusi menee
+**vanhan alle** ja vanha poistetaan vasta seuraavalla kehyksellä.
+Ruudulla on koko ajan jompikumpi, ja koska ne ovat sama kuva samasta
+taiteesta, vaihdos ei näy.
+
+
 ## Paketti 46: tiet takaisin kartalle ja oikea bittikartta — VALMIS v169 2.8.2026
 
 Omistajan kuvakaappaus iPadilta: "Lataa edelleen liian laajan näkymän
