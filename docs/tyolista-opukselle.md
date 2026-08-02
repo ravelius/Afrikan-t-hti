@@ -305,6 +305,30 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 54: napsahdus lopusta pois — VALMIS v177 2.8.2026
+
+Omistajan havainto v176:n jälkeen: "Joissain kuuluu napsahdus vielä
+lopussa mutta ei kaikissa."
+
+**"Ei kaikissa" oli ratkaiseva vihje.** Se sulkee pois sen, ettei
+häivytystä ajettaisi lainkaan — silloin napsahtaisi joka kerta.
+
+Voimakkuutta säädetään ruudunpäivityksen tahdissa eli noin 16
+millisekunnin välein. Kun häivytys päättyi vasta tiedoston lopussa,
+viimeinen säätö osui pahimmillaan **kolmasosaan täydestä
+voimakkuudesta** — ja siitä syntyi napsahdus. Äänitteet, jotka loppuvat
+jo valmiiksi hiljaisuuteen, eivät napsahtaneet, koska niissä ei ole
+mitään mikä napsahtaisi. Siitä ero.
+
+**Korjaus: häivytys saavuttaa nollan ennen tiedoston loppua.** Se
+kestää nyt 120 millisekuntia ja on vaiennut jo 25 millisekuntia ennen
+loppua; pysäytys osuu hiljaisuuteen. 25 millisekuntiin ei mahdu tavua,
+joten viimeinen sana kuuluu yhä kokonaan.
+
+Testi vaatii, että hiljaisuus kattaa vähintään yhden ruudunpäivityksen
+(20 ms) mutta jää alle 60 millisekunnin.
+
+
 ## Paketti 53: lukijan viimeinen sana kuuluu — VALMIS v176 2.8.2026
 
 Omistajan havainto: "Lukijan ääni feidautuu pois ja nielee viimeisen
