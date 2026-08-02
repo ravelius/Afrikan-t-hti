@@ -240,6 +240,37 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 23: päiväkirja aukeaa napauttamalla — VALMIS 2.8.2026
+
+**Omistajan toive:** "Skrollauksen sijaan Matkakirja voisi laajentua
+alaspäin klikatessa ja pienenisi takaisin karttaa klikattaessa."
+
+Päiväkirjamerkintä oli kartan nurkalla viiden rivin ikkunassa, ja loput
+piti vierittää sormella pienen tekstin sisällä. Nyt merkinnän napautus
+kasvattaa kortin niin, että koko teksti näkyy kerralla, ja kartan
+napautus palauttaa sen pieneksi.
+
+**Kolme yksityiskohtaa, joita ei kannata purkaa:**
+
+- **Katto 74 % ruudun korkeudesta.** Ilman sitä pitkä merkintä peittäisi
+  koko kartan, eikä pelaaja näkisi mihin napauttaa kutistaakseen sen.
+  Jos merkintä ei mahdu siihenkään, teksti vierii kuten ennen — vieritys
+  ei siis kadonnut, se vain ei ole enää ainoa keino.
+- **Uusi merkintä alkaa aina pienestä ikkunasta** (`uusiFactKey`).
+  Muuten yhden merkinnän avaaminen olisi jäänyt päälle ja seuraava
+  kaupunki olisi peittänyt kartan itsestään.
+- **Kutistuessa teksti palaa alkuun.** Jos auki levitettyä merkintää oli
+  vieritetty, kutistuminen jättäisi muuten näkyviin keskeltä alkavan
+  katkelman.
+
+Kortti kasvaa siitä reunasta, johon se on kiinnitetty: ylänurkassa
+alaspäin, alanurkassa ylöspäin. Nurkan valitsee `placeFactCard`
+merenpinnan mukaan, ja se suosii jo valmiiksi ylänurkkia.
+
+Kortin omat napit (kuuntele, valokuva, kuva) hoitavat oman
+napautuksensa eivätkä avaa korttia.
+
+
 ## Paketti 22: musiikki soimaan napista — VALMIS 2.8.2026
 
 **Omistajan huomio:** "Tutki sivuilla on musiikki osiossa linkki aina
