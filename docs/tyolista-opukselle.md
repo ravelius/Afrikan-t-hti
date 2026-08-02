@@ -240,6 +240,83 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 38: taustaäänet tasattua mittaamalla — VALMIS v161 2.8.2026
+
+Omistajan kaksi havaintoa samasta aiheesta.
+
+### 1. Väistö oli vajaa
+
+**Omistaja:** "Kuuntele kieltä kohdassa muut äänet voisi vaimentaa
+taustalta."
+
+`vaimennaTausta()` vaimensi vain **nauhoitetun** taustan
+(`js/ambience-stream.js`). Pelin oma **syntetisoitu** äänimaisema
+(`js/sound.js` AMBIENCES) jäi soimaan täydellä voimalla näytteen ja
+kertojan päälle. Sitä ei ollut kytketty väistöön lainkaan.
+
+Nyt `sfx.vaimennaAmbienssi(kerroin)` väistää senkin. Kerroin **jää
+talteen** `this.ambienssiVaisto`-kenttään, koska maisema voi vaihtua
+väistön aikana: ilman sitä `setAmbience` nostaisi uuden maiseman täyteen
+voimaan keskellä puhetta. Tietovisan musiikki väistyy samoin.
+
+### 2. Tasaus mitattiin, ei arvattu
+
+**Omistaja:** "Osaisitko itse säätää tausta-äänien tasot keskenään
+tasaisemmiksi? Toiset ovat aika hiljaisia ja toiset häiritsevät liikaa
+puhetta."
+
+Kyllä — tämä on mitattavissa. Kertoimet oli asetettu korvakuulolta yksi
+kerrallaan, eikä korva muista edellistä äänitettä.
+
+**Mitattu hajonta oli 49,8 dB** eli noin 300-kertainen ero hiljaisimman
+ja kovimman äänitteen välillä. Havainto selittyy sillä täysin.
+
+`tools/mittaa-aanet.mjs` purkaa jokaisen äänitteen **Chromiumissa**
+`decodeAudioDatalla`. Se on sama polku, jolla peli äänen soittaa, joten
+mitattu luku vastaa kuultua. (Playwrightin ffmpeg on riisuttu build,
+jossa ei ole mp3-dekooderia eikä loudness-suodattimia lainkaan.)
+
+**K-painotus, ei pelkkä RMS.** Korva ei kuule bassoa yhtä voimakkaana
+kuin keskiääniä. Taustaäänissä on sekä matalaa jyminää (meri, tuuli,
+juna) että kirkasta hälyä (tori, linnut, basaari). Pelkkä RMS antaisi
+merelle ja tuulelle liian ison lukeman ja ne jäisivät pelissä liian
+hiljaisiksi — **juuri se vika, jota korjataan.** Siksi BS.1770:n tapaan:
+ylähyllykorotus 1500 Hz, ylipäästö 38 Hz, sitten portitettu tehollisarvo
+400 ms:n lohkoissa.
+
+| | |
+|---|---|
+| äänitteitä | 124 (183 kohtaa tiedostossa) |
+| hajonta ennen | 49,8 dB |
+| hajonta jälkeen | 17,8 dB |
+| tavoite | -30 LUFS |
+
+**Ylärajan sanelee soitinketju, ei maku.** Tausta soi tasolla
+`VOIMA (0.14) * voima`, ja HTML-soittimen `volume` ei voi ylittää
+ykköstä. Yli 7,1:n kerroin siis vain leikkautuisi, jolloin tasaus
+valehtelisi: kaksi eri kerrointa soisi samalla tasolla. Katoksi 6.
+
+**Seitsemän äänitettä (-47…-63 LUFS) ei yllä tavoitteeseen
+ylärajallakaan.** Ne on parempi **vaihtaa kuin vahvistaa**: niiden oma
+kohina nousisi kuuluviin ennen sisältöä. Lista on
+`tools/aanitasot.json`:ssa, ja ne kannattaa korvata kun ehtii.
+
+### Ansat, jotka kannattaa muistaa
+
+- **Playwrightin ffmpeg on riisuttu:** ei mp3-dekooderia, ei
+  `ebur128`/`loudnorm`/`volumedetect`. Vain 24 suodatinta. Siksi selain.
+- **Ämpärin CORS sallii vain pelin oman osoitteen,** joten mittaussivu ei
+  saa haettua tiedostoa. Tavut haetaan Nodessa (jota CORS ei koske) ja
+  välitetään selaimeen base64:nä.
+- **`page.evaluate` ei välitä argumenttia,** jos funktio annetaan
+  merkkijonona — se vain evaluoi lausekkeen. Funktio pitää antaa
+  funktiona.
+- **Testi `sound.test.mjs` vaati osoitteen päättyvän `.mp3`:een.**
+  Kaupunkiäänitykset saivat nyt säätöjä perään, joten ehto laajennettiin
+  sallimaan `#alku=`/`#voima=` — ja tarkistamaan että säädöt ovat
+  tunnettuja.
+
+
 ## Paketti 37: vanha maailma yhdeksi kartaksi — VAIHE 1 VALMIS 2.8.2026
 
 **Omistajan päätös:** "Kokeillaan ensin vaihtoehto b kartoissa" eli

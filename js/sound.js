@@ -22,6 +22,12 @@ class Sound {
     this.noise = null;
     this.ambience = null;
     this.ambienceType = null;
+    // Väistökerroin syntetisoidulle äänimaisemalle. Nauhoitetulla
+    // taustalla on oma vastaava (js/ambience-stream.js), ja ne ajetaan
+    // yhdessä: aiemmin vain nauhoitettu väistyi, ja syntetisoitu jäi
+    // soimaan täydellä voimalla näytteen ja kertojan päälle (omistajan
+    // havainto: "Kuuntele kieltä kohdassa muut äänet voisi vaimentaa").
+    this.ambienssiVaisto = 1;
     this.enabled = this.loadSetting();
   }
 
@@ -393,13 +399,42 @@ class Sound {
 
     const out = ctx.createGain();
     out.gain.setValueAtTime(0.0001, ctx.currentTime);
-    out.gain.exponentialRampToValueAtTime(1, ctx.currentTime + AMBIENCE_FADE);
+    // Väistö on voimassa myös uudelle maisemalle: ilman tätä kesken
+    // näytteen vaihtuva maisema nousisi täyteen voimaan puheen päälle.
+    out.gain.exponentialRampToValueAtTime(
+      Math.max(0.0001, this.ambienssiVaisto), ctx.currentTime + AMBIENCE_FADE,
+    );
     out.connect(this.bus);
 
     const maisema = { out, nodes: [], timer: null, type };
     this.ambience = maisema;
     AMBIENCES[type](this, maisema);
     this.scheduleAmbienceEvent(maisema);
+  }
+
+  /**
+   * Väistää syntetisoidun äänimaiseman muun äänen tieltä (ääninäyte,
+   * kertoja, tietovisa). Kerroin 1 on täysi voima.
+   *
+   * Kerroin jää talteen, koska maisema voi vaihtua väistön aikana:
+   * setAmbience nostaa uuden maiseman tähän eikä täyteen voimaan.
+   * Häivytys on nopeampi kuin maiseman oma vaihto — väistön pitää ehtiä
+   * ennen puheen ensimmäistä tavua, ei sen jälkeen.
+   */
+  vaimennaAmbienssi(kerroin) {
+    this.ambienssiVaisto = Math.max(0, Math.min(1, kerroin));
+    const maisema = this.ambience;
+    if (!this.ctx || !maisema || maisema.loppuu) return;
+    const t = this.ctx.currentTime;
+    try {
+      maisema.out.gain.cancelScheduledValues(t);
+      maisema.out.gain.setValueAtTime(Math.max(maisema.out.gain.value, 0.0001), t);
+      maisema.out.gain.exponentialRampToValueAtTime(
+        Math.max(0.0001, this.ambienssiVaisto), t + 0.35,
+      );
+    } catch {
+      /* solmu oli jo purettu */
+    }
   }
 
   /** Häivyttää ja purkaa yhden maiseman. */
