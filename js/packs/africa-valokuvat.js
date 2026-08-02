@@ -49,12 +49,20 @@ export const AFRICA_VALOKUVAT = {
       + 'kaupungin sydän, ja vanha linnoitus vartioi sen laitaa.',
     },
   },
+  /*
+   * Kortissa oli aiemmin tiedosto 'Osmanisches Fort von Mursuk.jpg',
+   * joka on toisen maailmansodan jälkeinen postimerkki eikä kuva
+   * paikalta. Tilalla on Élisée Reclus'n Afrikka-teoksen kuvalaatta
+   * vuodelta 1891 — piirros, mutta aikakauden oma ja sellaiseksi
+   * kuvatekstissä sanottu.
+   */
   murzuk: {
-    tiedosto: 'Osmanisches Fort von Mursuk.jpg',
-    vuosi: null,
+    tiedosto: 'AFR V2 D101 General view of Murzuk.jpg',
+    vuosi: '1891',
     lahde: 'Commons (PD)',
-    selite: 'Murzukin linnoitus vartioi Saharan karavaanireittiä. Sen '
-      + 'savimuurien varjossa lepäsivät sekä kamelit että kauppiaat.',
+    selite: 'Yleisnäkymä Murzukiin maantieteellisessä teoksessa vuodelta '
+      + '1891. Savilinnoitus vartioi Saharan karavaanireittiä, ja sen '
+      + 'muurien varjossa lepäsivät sekä kamelit että kauppiaat.',
     uusi: {
       tiedosto: 'Murzuq - Festung Qala at Turk über dem Ort.jpg',
       lahde: 'Franzfoto, Commons (CC BY-SA 3.0)',
@@ -136,8 +144,13 @@ export const AFRICA_VALOKUVAT = {
     tiedosto: 'Kumasi 28-03-1900 sx.jpg',
     vuosi: '1900',
     lahde: 'Commons (PD)',
-    selite: 'Kumasin kattoja vuonna 1900. Ashantien pääkaupunki oli tuolloin '
-      + 'yksi Länsi-Afrikan suurimpia kaupunkeja.',
+    // Kuvateksti kertoi aiemmin kaupungin katoista. Kuvassa on
+    // kokous, ja se on kuvan koko sisältö — teksti korjattiin sen
+    // mukaiseksi.
+    selite: 'Ashantien päälliköt kokoontuivat brittikuvernöörin eteen '
+      + 'Kumasissa 28. maaliskuuta 1900. Kuvernööri luki listan siitä, '
+      + 'paljonko kunkin alueen tuli maksaa vuosittain — muutamaa '
+      + 'kuukautta myöhemmin syttyi sota.',
     uusi: {
       tiedosto: 'Modern market hall of Kejetia market.jpg',
       lahde: 'Commons (CC0)',
@@ -463,13 +476,27 @@ export const AFRICA_VALOKUVAT = {
         + 'kansallispuistossa keskustan tornien katseen alla.',
     },
   },
+  /*
+   * Kortissa oli tiedosto nimeltä 'Sultan Ali Dinar.jpg', ja kuvateksti
+   * kertoi sulttaanista, joka kuoli 1916. Kuvassa oli mies rannekello
+   * ranteessa: Commonsin tiedoissa vuosi 2016 ja kuvaus "The Official
+   * Portrait of the 30TH Sultan of Darfur" — nykyinen arvonimen
+   * haltija. Tiedostonimi ei kerro kuvan ikää; siitä syntyi
+   * tools/tarkista-kuvaiat.mjs.
+   *
+   * Ali Dinarista on olemassa vain yksi valokuva, brittiarmeijan
+   * ottama hänen kuolemansa jälkeen taistelukentällä. Sitä ei panna
+   * lastenpelin korttiin. Tilalla on Jebel Marra, sama vuori josta
+   * päiväkirjamerkintä kertoo.
+   */
   darfur: {
-    tiedosto: 'Sultan Ali Dinar.jpg',
-    vuosi: '1910-luku',
-    lahde: 'Commons (CC0)',
-    selite: 'Ali Dinar, Darfurin viimeinen sulttaani, virallisessa '
-      + 'muotokuvassaan. Hänen valtakautensa päättyi 1916 — vain '
-      + 'kymmenkunta vuotta ennen isoisän matkaa.',
+    tiedosto: 'ASC Leiden - NSAG - van Dis 4 - 048 - Conical thatched huts - Marrah Mountains, Darfur, Sudan - 27 December 1961.tif',
+    vuosi: '1961',
+    lahde: 'Maarten van Dis, ASC Leiden, Commons (CC BY-SA 4.0)',
+    selite: 'Kartiokattoisia majoja pengerretyllä rinteellä Jebel Marran '
+      + 'juurella. Vuori nousee puoliaavikosta yli kolmeen kilometriin ja '
+      + 'kerää oman sateensa — siksi sen rinteillä kasvaa se, mitä '
+      + 'alhaalla ei kasva.',
     uusi: {
       tiedosto: 'ElFasherDarfurSudan RomanDeckert18022015.jpg',
       lahde: 'RomanDeckert, Commons (CC BY-SA 4.0)',
