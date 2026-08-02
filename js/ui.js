@@ -52,18 +52,50 @@ import { LIPPU_TEKIJAT } from './packs/lippu-tekijat.js';
 
 // Uuden mallin saapumistekstit laudoittain (Afrikka valmis, Eurooppa
 // rakentuu kaupunki kerrallaan — pilotti: Venetsia).
-const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET, europe: EUROPE_SAAPUMISET };
+/*
+ * Sisältötaulut laudoittain.
+ *
+ * VANHA MAAILMA PERII NELJÄN LAUDAN SISÄLLÖN. Yhdistetty lauta on
+ * kokoelma samoja kaupunkeja, ja sen kaupunkitunnukset ovat samat kuin
+ * lähdelaudoilla. Ilman näitä rivejä Tutki-ikkuna jäi vajaaksi:
+ * kaupungin kuva ja tiivistelmä näkyivät, mutta maan palsta, kaupungin
+ * elämää -osio, vanha valokuva ja kielinäyte jäivät piiloon, koska ne
+ * haetaan laudan tunnuksella eikä yhdistetylle laudalle ollut mitään.
+ * Omistajan havainto: "iPadilla tutki ikkuna on vajaa" — ja sama
+ * iPhonella, eli kyse ei ollut ruudun koosta lainkaan.
+ *
+ * Yhdistäminen on turvallista, koska avaimet ovat kaupunkitunnuksia ja
+ * porttikaupungit (Istanbul, Kairo, Teheran) ovat yhdistetyllä laudalla
+ * yksi kappale kukin.
+ */
+const SAAPUMISTEKSTIT = {
+  africa: AFRICA_SAAPUMISET,
+  europe: EUROPE_SAAPUMISET,
+  vanhamaailma: { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET },
+};
 
 // Kaupungin elämää -nostot laudoittain.
-const KULTTUURIT = { africa: AFRICA_KULTTUURI, europe: EUROPE_KULTTUURI };
+const KULTTUURIT = {
+  africa: AFRICA_KULTTUURI,
+  europe: EUROPE_KULTTUURI,
+  vanhamaailma: { ...AFRICA_KULTTUURI, ...EUROPE_KULTTUURI },
+};
 
 // Vanhat valokuvat muistikirjan kylkeen laudoittain.
-const VALOKUVAT = { africa: AFRICA_VALOKUVAT, europe: EUROPE_VALOKUVAT };
+const VALOKUVAT = {
+  africa: AFRICA_VALOKUVAT,
+  europe: EUROPE_VALOKUVAT,
+  vanhamaailma: { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT },
+};
 // Kaupungissa nauhoitettu puhenäyte: kieli kuuluviin omasta napistaan.
-const KIELET = { europe: EUROPE_KIELET };
+const KIELET = { europe: EUROPE_KIELET, vanhamaailma: EUROPE_KIELET };
 
 // Maiden tunnusluvut laudoittain.
-const MAATIEDOT = { africa: AFRICA_MAATIEDOT, europe: EUROPE_MAATIEDOT };
+const MAATIEDOT = {
+  africa: AFRICA_MAATIEDOT,
+  europe: EUROPE_MAATIEDOT,
+  vanhamaailma: { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT },
+};
 
 /*
  * Kehittäjätila (omistajan toive): kaupunkiin pääsee napauttamalla sen
@@ -1516,6 +1548,19 @@ export class UI {
    */
   taydennaTaide({ heti = false } = {}) {
     if (!this.taide || !this.taideRyhma || this.dead) return;
+    /*
+     * Lennon aikana ei rasteroida.
+     *
+     * Lauta piirretään kalvon taakse jo lennon aikana, ja rasterointi vie
+     * satoja millisekunteja pääsäikeessä. Omistajan havainto: "lento
+     * tökki, mutta kartta toimii" — eli hitaus oli siirtynyt juuri tähän
+     * kohtaan. Sama jumi selittää todennäköisesti myös sen, ettei
+     * matkakertojan ääni käynnistynyt: puhe alkaa ajastimella lennon
+     * aikana, ja ajastin ei pääse ajoon jumin läpi.
+     *
+     * Kuva täydennetään heti kun kalvo väistyy.
+     */
+    if (document.body.classList.contains('flight-active')) { this.taideOdottaa = true; return; }
     // Kesken eleen ei ladata. Merkitään vain, että päättyessä pitää.
     if (this.kartanRaahaus && !heti) { this.taideOdottaa = true; return; }
     if (this.taidePiirtyy) { this.taideOdottaa = true; return; }
@@ -5105,7 +5150,14 @@ export class UI {
         // käynnistyksen aikana, myöhässä herännyt ääni pysäytetään heti —
         // muuten kaksi luentaa soi päällekkäin (omistajan havainto).
         if (this.diaryVoice !== audio) audio.pause();
-      }).catch(() => {
+      }).catch((virhe) => {
+        /*
+         * Virhe näkyviin. Aiemmin se niellettiin kokonaan, ja silloin
+         * "ääni ei kuulu" -vika ei jätä mitään jälkeä mihinkään.
+         * iOS hylkää play():n NotAllowedError-virheellä, jos kutsu ei
+         * enää liity käyttäjän eleeseen — sen erottaa nyt latausvirheestä.
+         */
+        console.warn('luenta ei käynnistynyt:', virhe?.name ?? virhe, url);
         if (this.diaryVoice === audio) this.diaryVoice = null;
       });
     };
@@ -6308,6 +6360,9 @@ export class UI {
     // Vasta nyt kartta on oikeasti näkyvissä: mantereen kokonäkymä saa
     // hetken aikaa olla esillä, ja sen jälkeen zoomataan lähelle.
     this.ajastaMannerZoom();
+    // Kartan bittikartta täydennetään vasta tässä: lennon aikana
+    // rasterointi olisi jumittanut kalvon animaation ja puheen ajastimen.
+    this.taydennaTaide?.({ heti: true });
   }
 
   /**
