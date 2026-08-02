@@ -33,6 +33,10 @@
 
   --radius: 12px;
   --gap: 0.6rem;
+  /* iOS:n turva-alueet myös muuttujina: JavaScript ei näe env()-arvoja
+   * suoraan, ja kehittäjätilan mittarivi tarvitsee ne. */
+  --turva-yla: env(safe-area-inset-top, 0px);
+  --turva-ala: env(safe-area-inset-bottom, 0px);
   /* Kartan päällä kelluvat kortit: läpikuultava pergamentti kuten .event-toast. */
   --overlay-card: rgba(46, 33, 20, 0.88);
   --overlay-line: rgba(217, 161, 59, 0.45);
@@ -3946,6 +3950,95 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   align-self: flex-start;
 }
 
+/*
+ * Kehittäjätila (omistajan toive). Ulkoasu on tarkoituksella sama
+ * pergamentti kuin muissa ikkunoissa: tämä ei ole erillinen työkalu
+ * vaan pelin oma piilotettu asetus.
+ */
+.kehittaja-lomake {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0.2rem 0 0.6rem;
+}
+
+.kehittaja-label {
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.kehittaja-kentta {
+  font-family: var(--font-type);
+  font-size: 1.4rem;
+  letter-spacing: 0.35em;
+  text-align: center;
+  padding: 0.45rem 0.6rem;
+  color: var(--map-ink);
+  background: rgba(255, 255, 255, 0.45);
+  border: 2px dashed var(--map-ink);
+  border-radius: 90px 12px 84px 14px / 14px 84px 12px 90px;
+}
+
+.kehittaja-virhe {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #8c2f1d;
+}
+
+/* Ruudun mitat: kartan alareunan arvoitusta varten (ks. muistiinpanot).
+   Pieni tasalevyinen teksti, jonka voi lukea kuvakaappauksesta. */
+.kehittaja-mitat {
+  margin: 0 0 0.6rem;
+  padding: 0.5rem 0.6rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #5a4326;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px dashed rgba(70, 51, 31, 0.5);
+  border-radius: 8px;
+}
+
+.dialog-teksti { margin: 0 0 0.6rem; }
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+/* Kehittäjätilan merkki: kartalla näkyy, että laattoja voi napauttaa.
+   Ilman merkkiä tila unohtuisi päälle ja peli tuntuisi rikkinäiseltä. */
+.kehittaja-merkki {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #46331f;
+  background: rgba(234, 184, 78, 0.85);
+  border: 1px solid rgba(70, 51, 31, 0.6);
+  pointer-events: none;
+}
+
+/* Kehittäjätilan kohderengas erottuu tavallisista siirroista: se ei ole
+   laillinen siirto vaan oikotie, ja sen pitää näyttää siltä. */
+.target-ring.kehittaja {
+  stroke: rgba(120, 90, 200, 0.85);
+  stroke-dasharray: 5 4;
+  fill: rgba(150, 120, 220, 0.12);
+}
+
 </style>
 
 <!--
@@ -4001,6 +4094,12 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
         </button>
         <button id="newgame-btn" class="ghost" type="button" title="Uusi peli">
           <span class="wide-label">Uusi peli</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span></span>
+        </button>
+        <!-- Kehittäjätila (omistajan toive): kaupunkiin pääsee napauttamalla
+             sen laattaa, jolloin sisältöä voi tarkastella ilman pelaamista.
+             Salasanan takana, ettei se aukea vahingossa lapsen kädessä. -->
+        <button id="kehittaja-btn" class="ghost" type="button" title="Kehittäjätila">
+          <span class="wide-label">Kehittäjä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M9.4 7.4 4.8 12l4.6 4.6M14.6 7.4 19.2 12l-4.6 4.6"/></svg></span></span>
         </button>
           </div>
         </div>
@@ -4184,6 +4283,28 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
     </form>
+   </div>
+  </dialog>
+
+  <!--
+    Kehittäjätila. Salasana on tarkoituksella kevyt lukko eikä
+    tietoturvaa: se estää vahingossa avaamisen, ei tahallista.
+  -->
+  <dialog id="kehittaja-dialog" class="dialog">
+   <div class="dialog-card">
+    <h2>Kehittäjätila</h2>
+    <p id="kehittaja-selite" class="dialog-teksti"></p>
+    <form id="kehittaja-lomake" class="kehittaja-lomake">
+      <label for="kehittaja-salasana" class="kehittaja-label">Salasana</label>
+      <input id="kehittaja-salasana" class="kehittaja-kentta" type="password"
+             inputmode="numeric" autocomplete="off" enterkeyhint="go" />
+      <p id="kehittaja-virhe" class="kehittaja-virhe" hidden>Väärä salasana.</p>
+    </form>
+    <pre id="kehittaja-mitat" class="kehittaja-mitat" hidden></pre>
+    <div class="dialog-actions">
+      <button id="kehittaja-peru" class="ghost" type="button">Sulje</button>
+      <button id="kehittaja-ok" class="primary" type="button">Kytke päälle</button>
+    </div>
    </div>
   </dialog>
 
@@ -45045,6 +45166,36 @@ class Game {
     this.beginTurn();
   }
 
+  /**
+   * Kehittäjän oikotie: nappula suoraan valittuun kaupunkiin (omistajan
+   * toive). Tarkoitus on päästä katsomaan minkä tahansa kaupungin
+   * sisältöä ilman että sinne pitää pelata.
+   *
+   * Tämä ei ole siirto vaan siirron ohitus, ja siksi se on tahallisen
+   * laiska: päivä ei kulu, rahaa ei mene, noppaa ei heitetä eikä vuoro
+   * vaihdu. Voittotarkistusta ei tehdä — tähtikaupunkiin hyppääminen ei
+   * saa lopettaa peliä vahingossa kesken tarkastelun.
+   *
+   * `visitCity` kutsutaan silti, koska juuri se tuottaa saapumisen
+   * havainnon päiväkirjaan ja merkitsee kaupungin nähdyksi. Ilman sitä
+   * kortti näyttäisi edellisen kaupungin tekstiä.
+   */
+  actionKehittajaSiirto(cityId) {
+    const city = this.board.cityById.get(cityId);
+    if (!city) return { ok: false, error: 'Tuntematon kaupunki' };
+    const p = this.player;
+    p.pos = { type: 'city', city: cityId };
+    this.lastPath = [p.pos];
+    this.visitCity(p);
+    this.moves = null;
+    this.die = null;
+    this.travelMode = null;
+    this.pendingFare = 0;
+    this.phase = 'action';
+    this.say(p.id, `${p.name} siirtyi kehittäjätilassa kaupunkiin ${city.name}.`);
+    return { ok: true };
+  }
+
   /** Valitsee matkustustavan. Maksu peritään vasta kun siirto tehdään. */
   actionTravel(mode, opts = {}) {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
@@ -46407,6 +46558,35 @@ const KIELET = { europe: EUROPE_KIELET };
 // Maiden tunnusluvut laudoittain.
 const MAATIEDOT = { africa: AFRICA_MAATIEDOT, europe: EUROPE_MAATIEDOT };
 
+/*
+ * Kehittäjätila (omistajan toive): kaupunkiin pääsee napauttamalla sen
+ * laattaa, jolloin minkä tahansa kaupungin sisältöä voi katsoa ilman
+ * että sinne pitää pelata.
+ *
+ * Tila säilyy selaimessa, koska sisällön tarkastelu jatkuu yleensä
+ * seuraavallakin avauksella. Se ei kuulu pelin tallennukseen: tila on
+ * laitteen asetus eikä pelitilanteen osa, eikä sen pidä matkustaa
+ * tallennuksen mukana.
+ */
+const KEHITTAJA_AVAIN = 'matkakirja-kehittaja';
+
+function kehittajaTilaPaalla() {
+  try {
+    return localStorage.getItem(KEHITTAJA_AVAIN) === '1';
+  } catch {
+    return false; // yksityinen selaus
+  }
+}
+
+function asetaKehittajaTila(paalla) {
+  try {
+    if (paalla) localStorage.setItem(KEHITTAJA_AVAIN, '1');
+    else localStorage.removeItem(KEHITTAJA_AVAIN);
+  } catch {
+    /* yksityinen selaus: tila jää vain tälle istunnolle */
+  }
+}
+
 // Omat artikkelit: yhteinen hakemisto wiki-otsikolla (mantereet eivät
 // törmää, koska otsikot ovat eri).
 const ARTIKKELIT = { ...OMAT_ARTIKKELIT, ...EUROPE_ARTIKKELIT };
@@ -47148,6 +47328,7 @@ class UI {
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
     this.travelExpanded = false; // matkavalinnan toinen vaihe auki
+    this.kehittajaTila = kehittajaTilaPaalla();
     this.autoRollTimer = null;
     this.movingPlayerId = null;
     this.revealShownFor = null;
@@ -47167,7 +47348,29 @@ class UI {
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
+    this.paivitaKehittajaMerkki();
     this.render();
+  }
+
+  /**
+   * Kehittäjätilan kytkin. Merkki kartan yläreunassa kertoo tilan
+   * olevan päällä: ilman sitä se unohtuisi, ja peli tuntuisi
+   * rikkinäiseltä kun laattojen napautus vie minne tahansa.
+   */
+  paivitaKehittajaTila() {
+    this.kehittajaTila = kehittajaTilaPaalla();
+    this.paivitaKehittajaMerkki();
+    this.render();
+  }
+
+  paivitaKehittajaMerkki() {
+    const vanha = this.mapPane?.querySelector('.kehittaja-merkki');
+    if (!this.kehittajaTila) {
+      vanha?.remove();
+      return;
+    }
+    if (vanha || !this.mapPane) return;
+    this.mapPane.appendChild(html('div', 'kehittaja-merkki', 'Kehittäjätila'));
   }
 
   /** Piirtää annetun laudan; vaelluksessa lauta vaihtuu porttien kautta. */
@@ -48270,6 +48473,26 @@ class UI {
     const { game } = this;
     this.targetLayer.textContent = '';
 
+    /*
+     * Kehittäjätila (omistajan toive): jokainen kaupunki on napautettava
+     * ja napautus vie sinne suoraan. Tämä ohittaa kaikki muut kohteet,
+     * myös lähtöpisteen valinnan — muuten tilaa ei pääsisi käyttämään
+     * pelin alussa lainkaan.
+     *
+     * Lähtöpaikkaa ei ole vielä valittu ennen ensimmäistä napautusta,
+     * joten pickstart-vaiheessa käytetään pelin omaa aloitusta ja
+     * hypätään vasta sen jälkeen.
+     */
+    if (this.kehittajaTila && !game.player?.isBot && game.phase !== 'over') {
+      for (const c of game.board.cities) {
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
+        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring kehittaja' }, g);
+        g.addEventListener('click', () => this.doKehittajaSiirto(c));
+      }
+      return;
+    }
+
     // Lähtöpisteen valinta: kaikki kaupungit ovat napautettavia.
     if (game.phase === 'pickstart') {
       // Puhelimella ensimmäinen napautus zoomaa kartan lähemmäs sen
@@ -48711,6 +48934,24 @@ class UI {
       return;
     }
     this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
+  }
+
+  /**
+   * Kehittäjätilan hyppy kaupunkiin. Pelin alussa lähtöpaikka pitää
+   * valita pelin omilla säännöillä (se avaa portin mantereelle), joten
+   * ensimmäinen napautus menee tavallista tietä ja vasta seuraavat
+   * hyppäävät.
+   */
+  doKehittajaSiirto(city) {
+    const { game } = this;
+    if (game.phase === 'pickstart') {
+      this.doPickStart(city);
+      return;
+    }
+    // Nappula siirtyy ilman animaatiota: oikotie saa näyttää oikotieltä.
+    this.haivytaLuenta();
+    this.travelExpanded = false;
+    this.doAction(() => game.actionKehittajaSiirto(city.id));
   }
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
@@ -52148,7 +52389,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.148';
+const APP_VERSION = '2026-08-02.149';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -52477,4 +52718,97 @@ if (katseluPack) {
   if (saved) attach(saved);
   else startGame();
 }
+
+/*
+ * Kehittäjätila (omistajan toive). Valikosta aukeaa salasanaikkuna, ja
+ * kytkennän jälkeen minkä tahansa kaupungin laatan napautus vie sinne
+ * suoraan — sisällön tarkasteluun ei tarvitse pelata.
+ *
+ * Salasana on koodissa selkokielisenä tarkoituksella: se on kevyt lukko
+ * eikä tietoturvaa. Tehtävä on estää tilan avautuminen vahingossa
+ * lapsen kädessä, ei suojata mitään salaista — pelissä ei ole mitään
+ * suojattavaa.
+ */
+const KEHITTAJA_SALASANA = '5545';
+const kehittajaDialog = document.getElementById('kehittaja-dialog');
+const kehittajaSalasana = document.getElementById('kehittaja-salasana');
+const kehittajaVirhe = document.getElementById('kehittaja-virhe');
+const kehittajaSelite = document.getElementById('kehittaja-selite');
+const kehittajaOk = document.getElementById('kehittaja-ok');
+const kehittajaMitat = document.getElementById('kehittaja-mitat');
+const kehittajaLomake = document.getElementById('kehittaja-lomake');
+
+/**
+ * Ruudun mitat luettavassa muodossa. iOS:n turva-alueet eivät näy
+ * JavaScriptille suoraan, joten ne luetaan :root-muuttujista, joihin
+ * css kirjoittaa env()-arvot.
+ *
+ * Tämä on täällä syystä: asennetussa sovelluksessa kartan alle jäi
+ * selittämätön kaista, eikä sen mittoja voi mitata muualta kuin
+ * laitteelta itseltään.
+ */
+function kehittajaMittarivit() {
+  const juuri = getComputedStyle(document.documentElement);
+  const turva = (nimi) => juuri.getPropertyValue(nimi).trim() || '0px';
+  const laatikko = (valitsin) => {
+    const el = document.querySelector(valitsin);
+    if (!el) return 'ei näkyvissä';
+    const r = el.getBoundingClientRect();
+    return `${Math.round(r.top)} → ${Math.round(r.bottom)} (${Math.round(r.height)})`;
+  };
+  const asennettu = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+  return [
+    `ruutu     ${window.innerWidth} × ${window.innerHeight}`,
+    `näyttö    ${window.screen?.width ?? '?'} × ${window.screen?.height ?? '?'}`,
+    `turva     ylä ${turva('--turva-yla')}  ala ${turva('--turva-ala')}`,
+    `app       ${laatikko('.app')}`,
+    `stage     ${laatikko('.stage')}`,
+    `kartta    ${laatikko('.map-pane')}`,
+    `asennettu ${asennettu ? 'kyllä' : 'ei'}`,
+    `versio    ${APP_VERSION}`,
+  ].join('\n');
+}
+
+function avaaKehittajaIkkuna() {
+  const paalla = kehittajaTilaPaalla();
+  kehittajaVirhe.hidden = true;
+  kehittajaSalasana.value = '';
+  kehittajaLomake.hidden = paalla;
+  kehittajaSelite.textContent = paalla
+    ? 'Kehittäjätila on päällä: kaupunkiin pääsee napauttamalla sen laattaa.'
+    : 'Kytkettynä kaupunkiin pääsee napauttamalla sen laattaa.';
+  kehittajaOk.textContent = paalla ? 'Kytke pois' : 'Kytke päälle';
+  kehittajaMitat.textContent = kehittajaMittarivit();
+  kehittajaMitat.hidden = false;
+  kehittajaDialog.showModal();
+  if (!paalla) kehittajaSalasana.focus();
+}
+
+function kytkeKehittaja() {
+  if (kehittajaTilaPaalla()) {
+    asetaKehittajaTila(false);
+    ui?.paivitaKehittajaTila();
+    kehittajaDialog.close();
+    return;
+  }
+  if (kehittajaSalasana.value.trim() !== KEHITTAJA_SALASANA) {
+    kehittajaVirhe.hidden = false;
+    kehittajaSalasana.value = '';
+    kehittajaSalasana.focus();
+    return;
+  }
+  asetaKehittajaTila(true);
+  ui?.paivitaKehittajaTila();
+  kehittajaDialog.close();
+}
+
+document.getElementById('kehittaja-btn').addEventListener('click', avaaKehittajaIkkuna);
+kehittajaOk.addEventListener('click', kytkeKehittaja);
+document.getElementById('kehittaja-peru').addEventListener('click', () => kehittajaDialog.close());
+// Enter kentässä kytkee: puhelimen näppäimistössä on "mene"-nappi.
+kehittajaLomake.addEventListener('submit', (e) => {
+  e.preventDefault();
+  kytkeKehittaja();
+});
 </script>
