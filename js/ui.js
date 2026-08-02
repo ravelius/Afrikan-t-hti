@@ -171,6 +171,31 @@ async function cachedImage(title) {
  * Kortin kaiutin ja luenta näkyvät vain näille; muut kaupungit saavat
  * merkintänsä ilman ääntä, kunnes luennat generoidaan.
  */
+/*
+ * Luentojen laudat.
+ *
+ * Luennat on avainnettu `lauta:kaupunki`, ja tiedoston nimessä on sama
+ * laudan tunnus. Yhdistetyllä laudalla tunnus on `vanhamaailma`, jolle
+ * ei ole yhtään luentaa — eikä tulekaan, koska ne ovat samat kaupungit
+ * ja samat nauhoitukset. Ilman tätä kaiutinnappi katosi kortista ja
+ * matkakertoja vaikeni koko laudalla (omistajan havainto: "matkakirjan
+ * lukija ääni puuttuu kaikkialta, myös äänen symboli puuttuu").
+ *
+ * Haku käy lähdelaudat läpi ja palauttaa sen, jolta luenta löytyy.
+ * Palautettua tunnusta käytetään myös tiedoston nimessä.
+ */
+const LUENTA_LAUDAT = ['europe', 'africa', 'middleeast', 'asia'];
+
+function luentaLauta(joukko, packId, cityId) {
+  if (!cityId) return null;
+  if (joukko.has(`${packId}:${cityId}`)) return packId;
+  if (packId !== 'vanhamaailma') return null;
+  for (const lauta of LUENTA_LAUDAT) {
+    if (joukko.has(`${lauta}:${cityId}`)) return lauta;
+  }
+  return null;
+}
+
 export const SAAPUMISLUENNAT = new Set([
   'africa:addisabeba',
   'africa:ahaggar',
@@ -3369,12 +3394,12 @@ export class UI {
       // Kuiskattu luenta (omistajan tilaus): vihje luetaan hiljaa, jos
       // luenta on generoitu — kaiutinnapista sen voi kuunnella uudelleen.
       const vihjeKaupunki = game.starHintCity();
-      const luettava = VIHJELUENNAT.has(`${game.pack.id}:${vihjeKaupunki}`);
-      this.diaryFullUrl = luettava
-        ? `assets/audio/puhe-${game.pack.id}-vihje-${vihjeKaupunki}.mp3`
+      const vihjeLauta = luentaLauta(VIHJELUENNAT, game.pack.id, vihjeKaupunki);
+      this.diaryFullUrl = vihjeLauta
+        ? `assets/audio/puhe-${vihjeLauta}-vihje-${vihjeKaupunki}.mp3`
         : null;
-      this.factKuuntele.hidden = !luettava;
-      if (luettava && kertojaTila() !== 'ei') {
+      this.factKuuntele.hidden = !vihjeLauta;
+      if (vihjeLauta && kertojaTila() !== 'ei') {
         this.playDiaryVoice(this.diaryFullUrl, { viive: 1200 });
       }
       this.typeText(this.factText, hint);
@@ -3433,12 +3458,12 @@ export class UI {
         });
         // Kaiutin ja luenta vain kaupungeille, joille luenta on generoitu.
         // Ilman tätä nappi näkyi kaikilla ja tuotti hiljaisuutta.
-        const luettava = SAAPUMISLUENNAT.has(luentaAvain.replace('saapui:', ''));
-        this.diaryFullUrl = luettava
-          ? `assets/audio/puhe-${saapuminen.packId}-saapuminen-${saapuminen.cityId}.mp3`
+        const saapumisLauta = luentaLauta(SAAPUMISLUENNAT, saapuminen.packId, saapuminen.cityId);
+        this.diaryFullUrl = saapumisLauta
+          ? `assets/audio/puhe-${saapumisLauta}-saapuminen-${saapuminen.cityId}.mp3`
           : null;
-        this.factKuuntele.hidden = !luettava;
-        if (luettava && this.luettuSaapuminen !== luentaAvain) {
+        this.factKuuntele.hidden = !saapumisLauta;
+        if (saapumisLauta && this.luettuSaapuminen !== luentaAvain) {
           this.luettuSaapuminen = luentaAvain;
           // Kertojan tila (yläpalkin valikko): pitkä lukee koko merkinnän,
           // lyhyt vain ensimmäisen lauseen (omistajan tarkennus — luenta
@@ -3498,12 +3523,12 @@ export class UI {
         // Luenta pysähtyy ensimmäisen virkkeen jälkeiseen hengähdykseen —
         // kaiutin jatkaa samasta kohdasta. Vihjeen tai aikataulun väläys
         // ei käynnistä luentaa uudelleen samassa kaupungissa.
-        const luettava = HAVAINTOLUENNAT.has(`${saapuminen.packId}:${saapuminen.cityId}`);
-        this.diaryFullUrl = luettava
-          ? `assets/audio/puhe-${saapuminen.packId}-havainto-${saapuminen.cityId}.mp3`
+        const havaintoLauta = luentaLauta(HAVAINTOLUENNAT, saapuminen.packId, saapuminen.cityId);
+        this.diaryFullUrl = havaintoLauta
+          ? `assets/audio/puhe-${havaintoLauta}-havainto-${saapuminen.cityId}.mp3`
           : null;
-        this.factKuuntele.hidden = !luettava;
-        if (luettava && this.luettuSaapuminen !== luentaAvain && kertojaTila() !== 'ei') {
+        this.factKuuntele.hidden = !havaintoLauta;
+        if (havaintoLauta && this.luettuSaapuminen !== luentaAvain && kertojaTila() !== 'ei') {
           this.luettuSaapuminen = luentaAvain;
           this.playDiaryVoice(this.diaryFullUrl, {
             ekaLauseeseen: true,
