@@ -305,6 +305,61 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 50: Tutki-ikkuna täydeksi yhdistetyllä laudalla — VALMIS v173 2.8.2026
+
+Omistajan havainto: "iPadilla tutki ikkuna on vajaa" — ja tarkennus:
+"Tutki ei näy oikein iPhonellakaan."
+
+**Se ei ollut ruudun koko.** Tarkennus ratkaisi asian: kun sama vika on
+molemmilla laitteilla, syy ei ole näytössä vaan sisällössä.
+
+Tutki-ikkunan oikea palsta (maan nimi, lippu, minikartta, tunnusluvut,
+tervehdykset) ja Kaupungin elämää -osio haetaan **laudan tunnuksella**.
+Yhdistetylle laudalle ei ollut mitään: viisi sisältötaulua tunsivat vain
+`africa` ja `europe`, ja `map.cityCountry` ja `map.countryShapes`
+puuttuivat paketista kokonaan. Kaupungin kuva ja tiivistelmä tulivat
+Wikipediasta ja näkyivät, joten ikkuna avautui — vajaana.
+
+### Sisältötaulut perivät neljän laudan sisällön
+
+`SAAPUMISTEKSTIT`, `KULTTUURIT`, `VALOKUVAT`, `KIELET` ja `MAATIEDOT`
+saivat `vanhamaailma`-rivin, joka yhdistää lähdelautojen taulut.
+Yhdistäminen on turvallista, koska avaimet ovat kaupunkitunnuksia ja
+porttikaupungit ovat yhdistetyllä laudalla yksi kappale kukin.
+
+### Maiden rajat projisoitiin uudelleen
+
+Uusi `tools/maat-vanhaanmaailmaan.mjs` kääntää Euroopan ja Afrikan
+laudan maiden rajat takaisin leveys- ja pituusasteiksi (samat
+`KAANTEISET`-kaavat kuin kaupungeilla) ja projisoi ne Milleriin.
+Tulos: 79 kaupunkia, 56 maata, 74 rengasta.
+
+**Millerin sovitus luetaan laudalta itseltään** eikä lasketa uudestaan.
+Jokaiselle kaupungille tiedetään sekä lon/lat että valmis x/y, joten
+skaalan ja siirron saa pienimmän neliösumman sovituksella — työkalu ei
+siis tarvitse Natural Earthin aineistoa eikä voi ajautua eri
+mittakaavaan kuin lauta.
+
+**Sovitus piti tehdä kolmesti.** Kaupunkien paikat eivät ole puhdasta
+projektiota: rannikkokaupungit on siirretty lähimpään maakohtaan, ettei
+laatta kellu vedessä, ja kaksi satamaa siirrettiin erikseen rannalle.
+Suora sovitus kaikkiin kaupunkeihin kaatui juuri siihen. Nyt huonoin
+viidennes pudotetaan joka kierroksella; mediaanipoikkeama on 0,0
+yksikköä ja pahin 68 — ja pahin on nimenomaan siirretty kaupunki, ei
+virhe.
+
+**Leveys lasketaan projisoiduista renkaista** eikä skaalata vanhasta
+luvusta: lähdelaudoilla on eri mittakaavat (Eurooppa 19,2 ja Afrikka
+13,3 yksikköä astetta kohti), joten yksi kerroin olisi oikea vain
+toiselle.
+
+### Jäljellä
+
+Aasialla ja Lähi-idällä ei ole maarajoja omilla laudoillaankaan, joten
+niiden kaupungeissa palsta on yhä suppea. Se on sisältötyötä eikä
+projektiota.
+
+
 ## Paketti 49: lento ei tökkää, ja puheen virhe näkyviin — VALMIS v172 2.8.2026
 
 Omistajan havainto: "Lento tökki, mutta kartta toimii. Matkakirjan ääni

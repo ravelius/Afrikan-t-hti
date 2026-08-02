@@ -52,18 +52,50 @@ import { LIPPU_TEKIJAT } from './packs/lippu-tekijat.js';
 
 // Uuden mallin saapumistekstit laudoittain (Afrikka valmis, Eurooppa
 // rakentuu kaupunki kerrallaan — pilotti: Venetsia).
-const SAAPUMISTEKSTIT = { africa: AFRICA_SAAPUMISET, europe: EUROPE_SAAPUMISET };
+/*
+ * Sisältötaulut laudoittain.
+ *
+ * VANHA MAAILMA PERII NELJÄN LAUDAN SISÄLLÖN. Yhdistetty lauta on
+ * kokoelma samoja kaupunkeja, ja sen kaupunkitunnukset ovat samat kuin
+ * lähdelaudoilla. Ilman näitä rivejä Tutki-ikkuna jäi vajaaksi:
+ * kaupungin kuva ja tiivistelmä näkyivät, mutta maan palsta, kaupungin
+ * elämää -osio, vanha valokuva ja kielinäyte jäivät piiloon, koska ne
+ * haetaan laudan tunnuksella eikä yhdistetylle laudalle ollut mitään.
+ * Omistajan havainto: "iPadilla tutki ikkuna on vajaa" — ja sama
+ * iPhonella, eli kyse ei ollut ruudun koosta lainkaan.
+ *
+ * Yhdistäminen on turvallista, koska avaimet ovat kaupunkitunnuksia ja
+ * porttikaupungit (Istanbul, Kairo, Teheran) ovat yhdistetyllä laudalla
+ * yksi kappale kukin.
+ */
+const SAAPUMISTEKSTIT = {
+  africa: AFRICA_SAAPUMISET,
+  europe: EUROPE_SAAPUMISET,
+  vanhamaailma: { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET },
+};
 
 // Kaupungin elämää -nostot laudoittain.
-const KULTTUURIT = { africa: AFRICA_KULTTUURI, europe: EUROPE_KULTTUURI };
+const KULTTUURIT = {
+  africa: AFRICA_KULTTUURI,
+  europe: EUROPE_KULTTUURI,
+  vanhamaailma: { ...AFRICA_KULTTUURI, ...EUROPE_KULTTUURI },
+};
 
 // Vanhat valokuvat muistikirjan kylkeen laudoittain.
-const VALOKUVAT = { africa: AFRICA_VALOKUVAT, europe: EUROPE_VALOKUVAT };
+const VALOKUVAT = {
+  africa: AFRICA_VALOKUVAT,
+  europe: EUROPE_VALOKUVAT,
+  vanhamaailma: { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT },
+};
 // Kaupungissa nauhoitettu puhenäyte: kieli kuuluviin omasta napistaan.
-const KIELET = { europe: EUROPE_KIELET };
+const KIELET = { europe: EUROPE_KIELET, vanhamaailma: EUROPE_KIELET };
 
 // Maiden tunnusluvut laudoittain.
-const MAATIEDOT = { africa: AFRICA_MAATIEDOT, europe: EUROPE_MAATIEDOT };
+const MAATIEDOT = {
+  africa: AFRICA_MAATIEDOT,
+  europe: EUROPE_MAATIEDOT,
+  vanhamaailma: { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT },
+};
 
 /*
  * Kehittäjätila (omistajan toive): kaupunkiin pääsee napauttamalla sen
