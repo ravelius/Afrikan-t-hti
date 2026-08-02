@@ -240,6 +240,35 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 27: vinjetti pois alalaidasta, fontti takaisin — VALMIS 2.8.2026
+
+**Omistajan toiveet:** "Poista vinjetti alareunasta" ja "Pienennä
+matkakirjan fontti takaisin".
+
+**Vinjetti.** Kartan päällä on vaalea vinjetti (`.map-pane::after`),
+joka haalistaa reunat kuin vanhassa filmiruudussa. Alalaidassa se ei
+näyttänyt filmiltä vaan haalistumalta: siellä on eniten kaupunkeja ja
+nimiä, ja kelluvat napit istuvat juuri sen päällä. Peite häivytetään
+nyt pois alaneljänneksessä `mask-image`illa, joten muut reunat
+säilyvät ennallaan eikä rajaa näy. Mitattu kartan pinnasta ennen ja
+jälkeen: alakulmat 185 → 172, yläkulmat ja keskusta muuttumattomat.
+
+Sekä `-webkit-mask-image` että vakiomuoto tarvitaan: iOS:n Safari
+lukee edellistä, eikä puuttuva etuliite näkyisi muualla kuin
+puhelimella.
+
+**Fontti takaisin.** Paketissa 23 päiväkirjan teksti suurennettiin
+(0,78 → 0,98 rem puhelimella). Omistaja palautti sen: isolla fontilla
+kortti peitti kartasta liian ison kaistan. Koot ovat taas 0,78 rem
+puhelimella, 0,84 kapealla ruudulla ja 0,9 muualla. Merkintäkortti
+155 → 126 pikseliä kiinni, ja koko merkinnän saa yhä auki
+napauttamalla — se on nyt se tapa lukea pitkä teksti, ei iso fontti.
+
+**Älä siis suurenna sitä uudestaan** ilman että omistaja pyytää.
+Paketin 23 testi vaati fontilta vähintään 0,95 remiä; se on korvattu
+vinjettitestillä.
+
+
 ## Paketti 26: alalaidan kaistan arvoitus ja napit — VALMIS 2.8.2026
 
 **Omistajan toive:** "Siellä napit alemmas ja pienennä niitä ainakin
