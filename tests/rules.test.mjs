@@ -2996,11 +2996,26 @@ test('luennan loppuhäivytys ei niele viimeistä sanaa', () => {
   assert.ok(lause >= 0.5, 'lauserajan häivytys on liian lyhyt — katko töksähtää');
   assert.ok(loppu > 0 && loppu <= 0.15, 'lopun häivytys nielee viimeisen sanan');
 
-  // Ääntä ei myöskään saa pysäyttää ennen tiedoston loppua: aiemmin
-  // soitin pysäytettiin 50 ms etuajassa, ja se söi lopun häivytyksen
-  // päälle.
+  /*
+   * Häivytyksen pitää ehtiä NOLLAAN ennen tiedoston loppua.
+   *
+   * Voimakkuutta säädetään ruudunpäivityksen tahdissa eli noin 16
+   * millisekunnin välein. Jos häivytys päättyy vasta tiedoston lopussa,
+   * viimeinen säätö osuu pahimmillaan kolmasosaan täydestä
+   * voimakkuudesta ja siitä syntyy napsahdus — se kuului osassa
+   * äänitteitä, ei kaikissa (omistajan havainto), koska osa loppuu jo
+   * valmiiksi hiljaisuuteen.
+   *
+   * Hiljaisuuden pitää olla selvästi yhtä ruudunpäivitystä pidempi ja
+   * silti niin lyhyt, ettei siihen mahdu tavua.
+   */
+  const hiljaisuus = Number(ui.match(/const LOPUN_HILJAISUUS_S = ([\d.]+)/)?.[1]);
+  assert.ok(hiljaisuus >= 0.02, 'hiljaisuus ei kata yhtä ruudunpäivitystä');
+  assert.ok(hiljaisuus <= 0.06, 'hiljaisuus on niin pitkä että siihen mahtuu tavu');
+  assert.ok(loppu > hiljaisuus * 2, 'häivytykselle ei jää matkaa hiljaisuuden päälle');
+
   const pehmea = ui.slice(ui.indexOf('  pehmeaLoppu('), ui.indexOf('  pehmeaLoppu(') + 2000);
-  assert.doesNotMatch(pehmea, /jaljella <= 0\.\d/, 'ääni pysäytetään ennen loppua');
+  assert.match(pehmea, /LOPUN_HILJAISUUS_S/, 'pysäytys ei odota hiljaisuutta');
   assert.match(pehmea, /LOPUN_HAIPYMA_S/, 'loppu käyttää väärää häivytystä');
 });
 

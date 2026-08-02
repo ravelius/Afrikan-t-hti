@@ -50015,10 +50015,22 @@ const LUENNAN_HAIPYMA_S = 1.5;
  * on väärin — se alkaa jo puolitoista sekuntia ennen loppua ja nielee
  * viimeisen sanan (omistajan havainto).
  *
- * Lopussa tarvitaan vain sen verran, ettei soittimen pysäytys napsahda:
- * viisikymmentä millisekuntia riittää eikä kuulu häivytyksenä.
+ * Lopussa tarvitaan vain sen verran, ettei soittimen pysäytys napsahda.
+ *
+ * VIISIKYMMENTÄ MILLISEKUNTIA EI RIITTÄNYT. Voimakkuutta säädetään
+ * ruudunpäivityksen tahdissa eli noin 16 millisekunnin välein, joten
+ * viimeinen säätö osui pahimmillaan kolmasosaan täydestä
+ * voimakkuudesta — ja siitä syntyi napsahdus. Se kuului vain osassa
+ * äänitteitä (omistajan havainto), koska osa loppuu jo valmiiksi
+ * hiljaisuuteen eikä niissä ole mitä napsahtaa.
+ *
+ * Nyt häivytys on hitusen pidempi ja saavuttaa NOLLAN selvästi ennen
+ * tiedoston loppua. Viimeiset parikymmentä millisekuntia ovat
+ * hiljaisuutta, ja vasta siinä soitin pysäytetään.
  */
-const LOPUN_HAIPYMA_S = 0.05;
+const LOPUN_HAIPYMA_S = 0.12;
+/** Kuinka kauan ennen loppua ääni on jo täysin vaiennut. */
+const LOPUN_HILJAISUUS_S = 0.025;
 /** Pehmennyskäyrä: alkaa hitaasti, jyrkkenee lopussa (ease-in). */
 const pehmene = (t) => Math.max(0, Math.min(1, t)) ** 1.8;
 
@@ -54895,12 +54907,16 @@ class UI {
        * asti ja vain aivan viimeinen hetki vaimenee, jottei pysäytys
        * napsahda.
        */
-      if (jaljella <= 0) {
+      if (jaljella <= LOPUN_HILJAISUUS_S) {
+        // Pysäytys osuu jo vaienneeseen ääneen eikä voi napsahtaa.
+        audio.volume = 0;
+        audio.pause();
         rampissa = false;
         return;
       }
       if (jaljella < LOPUN_HAIPYMA_S) {
-        audio.volume = perus * (jaljella / LOPUN_HAIPYMA_S);
+        const matka = (jaljella - LOPUN_HILJAISUUS_S) / (LOPUN_HAIPYMA_S - LOPUN_HILJAISUUS_S);
+        audio.volume = perus * Math.max(0, Math.min(1, matka));
       }
       requestAnimationFrame(rullaa);
     };
@@ -56192,7 +56208,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.176';
+const APP_VERSION = '2026-08-02.177';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
