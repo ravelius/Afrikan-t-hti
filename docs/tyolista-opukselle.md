@@ -305,6 +305,30 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 49: lento ei tökkää, ja puheen virhe näkyviin — VALMIS v172 2.8.2026
+
+Omistajan havainto: "Lento tökki, mutta kartta toimii. Matkakirjan ääni
+ei kuulu iPadilla."
+
+**Hitaus oli siirtynyt lennon kohdalle.** Lauta piirretään kalvon taakse
+jo lennon aikana, ja bittikartan rasterointi vie satoja millisekunteja
+pääsäikeessä. Kartta itse oli nopea, koska sen työ oli tehty — se
+tehtiin väärään aikaan.
+
+Rasterointi odottaa nyt kalvon väistymistä.
+
+**Sama jumi selittää todennäköisesti myös puheen.** Lennon puhe alkaa
+1400 millisekunnin ajastimella, eikä ajastin pääse ajoon jumin läpi.
+iOS hylkää `play()`-kutsun, joka ei enää liity käyttäjän eleeseen — ja
+mitä myöhemmäksi kutsu venyy, sitä varmemmin se hylätään.
+
+**Tämä on arvaus, ja se on sanottava ääneen:** en voi toistaa iPadin
+käyttäytymistä täällä. Siksi `play()`-kutsun virhe kirjoitetaan nyt
+konsoliin virhenimineen sen sijaan että se nieltäisiin vaieten. Jos
+ääni ei vieläkään kuulu, konsoli kertoo kumpi on kyseessä —
+`NotAllowedError` (ele) vai latausvirhe (tiedosto).
+
+
 ## Paketti 48: bittikartta ruuduiksi, lataus vain sormen irrotessa — VALMIS v171 2.8.2026
 
 Omistajan linjaus: "Pitää olla sen verran bufferia että kesken eleen ei

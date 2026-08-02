@@ -1516,6 +1516,19 @@ export class UI {
    */
   taydennaTaide({ heti = false } = {}) {
     if (!this.taide || !this.taideRyhma || this.dead) return;
+    /*
+     * Lennon aikana ei rasteroida.
+     *
+     * Lauta piirretään kalvon taakse jo lennon aikana, ja rasterointi vie
+     * satoja millisekunteja pääsäikeessä. Omistajan havainto: "lento
+     * tökki, mutta kartta toimii" — eli hitaus oli siirtynyt juuri tähän
+     * kohtaan. Sama jumi selittää todennäköisesti myös sen, ettei
+     * matkakertojan ääni käynnistynyt: puhe alkaa ajastimella lennon
+     * aikana, ja ajastin ei pääse ajoon jumin läpi.
+     *
+     * Kuva täydennetään heti kun kalvo väistyy.
+     */
+    if (document.body.classList.contains('flight-active')) { this.taideOdottaa = true; return; }
     // Kesken eleen ei ladata. Merkitään vain, että päättyessä pitää.
     if (this.kartanRaahaus && !heti) { this.taideOdottaa = true; return; }
     if (this.taidePiirtyy) { this.taideOdottaa = true; return; }
@@ -5105,7 +5118,14 @@ export class UI {
         // käynnistyksen aikana, myöhässä herännyt ääni pysäytetään heti —
         // muuten kaksi luentaa soi päällekkäin (omistajan havainto).
         if (this.diaryVoice !== audio) audio.pause();
-      }).catch(() => {
+      }).catch((virhe) => {
+        /*
+         * Virhe näkyviin. Aiemmin se niellettiin kokonaan, ja silloin
+         * "ääni ei kuulu" -vika ei jätä mitään jälkeä mihinkään.
+         * iOS hylkää play():n NotAllowedError-virheellä, jos kutsu ei
+         * enää liity käyttäjän eleeseen — sen erottaa nyt latausvirheestä.
+         */
+        console.warn('luenta ei käynnistynyt:', virhe?.name ?? virhe, url);
         if (this.diaryVoice === audio) this.diaryVoice = null;
       });
     };
@@ -6308,6 +6328,9 @@ export class UI {
     // Vasta nyt kartta on oikeasti näkyvissä: mantereen kokonäkymä saa
     // hetken aikaa olla esillä, ja sen jälkeen zoomataan lähelle.
     this.ajastaMannerZoom();
+    // Kartan bittikartta täydennetään vasta tässä: lennon aikana
+    // rasterointi olisi jumittanut kalvon animaation ja puheen ajastimen.
+    this.taydennaTaide?.({ heti: true });
   }
 
   /**
