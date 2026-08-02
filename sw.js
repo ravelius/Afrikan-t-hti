@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-02.149';
+const CACHE = 'matkakirja-2026-08-02.150';
 const SHELL = [
   './',
   './index.html',
@@ -315,19 +315,24 @@ self.addEventListener('fetch', (event) => {
   // nähtynä latautuu heti ja toimii offline). Muut ulkoiset kutsut
   // (esim. Wikipedian tiivistelmä-JSON) menevät suoraan verkkoon.
   if (osoite.origin !== self.location.origin) {
-    // Peili (Matkakirja-media) on ensisijainen kuvalähde, Commons ja
-    // upload.wikimedia.org varareittejä. Kaikki kolme kuuluvat samaan
+    // Peili (Cloudflare R2 -ämpäri) on ensisijainen kuvalähde, Commons
+    // ja upload.wikimedia.org varareittejä. Kaikki kolme kuuluvat samaan
     // koriin, jotta kerran nähty kuva toimii offline riippumatta siitä,
     // kummasta se sillä kertaa tuli.
     //
-    // Peilin äänet jäävät tarkoituksella pois: ne ovat yhteensä yli
-    // sata megatavua, ja selaimen oma välimuisti riittää niille.
+    // Ämpärin osoite tunnistetaan päätteestä eikä koko nimestä: sama
+    // sääntö kestää sen, että ämpärin eteen laitetaan joskus oma
+    // verkkotunnus. Ehto on silti tiukka, koska destination === 'image'
+    // rajaa jo valmiiksi vain kuviin.
+    //
+    // Peilin äänet jäävät tarkoituksella pois: ne ovat satoja
+    // megatavuja, ja selaimen oma välimuisti riittää niille.
     const kuvalahde = event.request.destination === 'image'
       && (osoite.hostname === 'upload.wikimedia.org'
         || (osoite.hostname === 'commons.wikimedia.org'
           && osoite.pathname.startsWith('/wiki/Special:FilePath/'))
-        || (osoite.hostname === 'ravelius.github.io'
-          && osoite.pathname.startsWith('/Matkakirja-media/')));
+        || (osoite.hostname.endsWith('.r2.dev')
+          && /^\/(kuvat|liput)\//.test(osoite.pathname)));
     if (!kuvalahde) return;
     event.respondWith(
       caches.open(KUVACACHE).then(async (kuvat) => {

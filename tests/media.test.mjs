@@ -218,16 +218,18 @@ test('peilin polut täsmäävät manifestiin', { skip: !manifestiPolku && 'manif
   assert.ok(yhteensa > 250, `peilissä pitäisi olla koko aineisto, nyt ${yhteensa}`);
 });
 
-test('äänet ja kuvat ovat eri palvelimilla', () => {
-  // Siirron koko pointti: Pagesin suositusraja on 1 Gt sivustoa kohti,
-  // ja pelkkä Euroopan äänipuoli vei jo 569 Mt. Jos juuret palautuvat
-  // samaksi, raja tulee taas vastaan eikä sitä huomaa mistään.
-  assert.notEqual(AANI_JUURI, PEILI_JUURI,
-    'äänten juuri on vahingossa sama kuin kuvien');
+test('katkaisija erottaa kuvat ja äänet polusta, ei palvelimesta', () => {
+  // Koko peili on nyt samassa ämpärissä, joten juuret osoittavat samaan
+  // paikkaan. Lähdekohtainen katkaisija ei silti saa sekoittaa lajeja:
+  // jos äänet putoavat, kuvien pitää yhä tulla peilistä.
   assert.match(AANI_JUURI, /^https:\/\//);
   assert.ok(AANI_JUURI.endsWith('/'), 'juuren perään liitetään polku sellaisenaan');
-  // Katkaisija on lähdekohtainen, ja se erottaa lajit osoitteen
-  // perusteella. Erillisillä juurilla kummankin pitää tunnistua omakseen.
   assert.equal(peilinLaji(`${AANI_JUURI}aanet/freesound-511005.mp3`), 'aanet');
   assert.equal(peilinLaji(`${PEILI_JUURI}kuvat/souvlaki-in-athens.jpg`), 'kuvat');
+  assert.equal(peilinLaji(`${PEILI_JUURI}liput/flag-of-greece.png`), 'kuvat');
+  // Aineisto ei ole enää GitHub Pagesissa: sen suositusraja (1 Gt) tuli
+  // vastaan, ja juuri siksi kaikki siirrettiin ämpäriin.
+  assert.doesNotMatch(PEILI_JUURI, /github\.io/,
+    'peili palasi Pagesiin, jonka kokoraja tuli vastaan');
+  assert.doesNotMatch(AANI_JUURI, /github\.io/);
 });

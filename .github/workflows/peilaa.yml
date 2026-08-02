@@ -1,0 +1,129 @@
+# Peilaa pelin kuvat, liput ja äänet omaan ämpäriin (Cloudflare R2).
+#
+# Ennen tätä peilattu aineisto asui omassa repossaan
+# (ravelius/Matkakirja-media): työkalu kirjoitti sinne, repo julkaistiin
+# GitHub Pagesissa ja peli haki tiedostot sieltä. Aineisto kasvoi yli
+# Pagesin suositusrajan (1 Gt sivustoa kohti), joten kaikki siirtyi
+# ämpäriin — ja silloin erillinen repo jäi tarpeettomaksi.
+#
+# Nyt ämpäri itse on varasto: ajo noutaa sieltä nykyisen aineiston,
+# peilaa vain puuttuvat tiedostot ja vie tuloksen takaisin. Peilattua
+# aineistoa ei siis säilytetä missään repossa, mutta työkalu ja lista
+# siitä mitä peilataan ovat täällä pelin oman sisällön vieressä.
+#
+# Ajetaan käsin Actions-välilehdeltä aina kun peliin on lisätty uusia
+# kuvia tai ääniä. Ei automaattisesti pushista: ajo kestää kymmeniä
+# minuutteja, koska jokaisen tiedoston eheys tarkistetaan lähdettä
+# vasten.
+#
+# Salaisuudet ovat tämän repon Actions-asetuksissa eivätkä koskaan
+# täällä:
+#   R2_ACCOUNT_ID  R2_ACCESS_KEY_ID  R2_SECRET_ACCESS_KEY  R2_BUCKET
+
+name: Peilaa media R2:een
+
+on:
+  workflow_dispatch:
+    inputs:
+      lajit:
+        description: 'Mitkä lajit peilataan'
+        type: choice
+        default: 'kaikki'
+        options: ['kaikki', 'kuvat', 'liput', 'aanet']
+
+permissions:
+  contents: read
+
+# Yksi ajo kerrallaan: kaksi rinnakkaista kirjoittaisi ämpäriin
+# päällekkäin ja manifesti menisi sekaisin.
+concurrency:
+  group: peilaa-media
+  cancel-in-progress: false
+
+jobs:
+  peilaa:
+    runs-on: ubuntu-latest
+    # Täysi ajo kestää tunnin luokkaa: jokaisesta tiedostosta
+    # tarkistetaan koko lähteestä, ja lähteet ovat hitaita.
+    timeout-minutes: 300
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+      # R2 ei hyväksy AWS:n uudempia tarkistussummaotsakkeita, jotka
+      # aws-cli 2.23:sta alkaen lähtevät oletuksena mukaan.
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_supported
+      JULKINEN: https://pub-7bc0ed2083a74a68bd7115618bca4709.r2.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Nouda nykyinen peili ämpäristä
+        run: |
+          set -euo pipefail
+          mkdir -p media
+          aws s3 sync "s3://${{ secrets.R2_BUCKET }}" media \
+            --endpoint-url "https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com" \
+            --no-progress
+          du -sh media
+          for kansio in kuvat liput aanet; do
+            echo "$kansio: $(ls media/$kansio 2>/dev/null | wc -l) tiedostoa"
+          done
+
+      - name: Peilaa puuttuvat
+        env:
+          LAJIT: ${{ inputs.lajit }}
+        run: |
+          set -euo pipefail
+          # Työkalu ajetaan laji kerrallaan, jotta tekstihaku
+          # (--vain tekstit) jää pois: se lataa satoja wikiartikkeleita
+          # kirjoittamisen raaka-aineeksi eikä kuulu ämpäriin.
+          # Osittainen ajo säilyttää muiden lajien merkinnät manifestissa.
+          for laji in kuvat liput aanet; do
+            if [ "$LAJIT" != "kaikki" ] && [ "$LAJIT" != "$laji" ]; then continue; fi
+            echo "::group::$laji"
+            node tools/peilaa-media.mjs --ulos media --vain "$laji"
+            echo "::endgroup::"
+          done
+
+      - name: Vie ämpäriin
+        run: |
+          set -euo pipefail
+          paate="--endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com"
+          ampari="s3://${{ secrets.R2_BUCKET }}"
+          for kansio in kuvat liput aanet; do
+            [ -d "media/$kansio" ] || continue
+            aws s3 sync "media/$kansio" "$ampari/$kansio" $paate \
+              --size-only --no-progress --cache-control "public, max-age=2592000"
+          done
+          # Manifesti muuttuu joka ajolla ja työhuone lukee sen: lyhyt
+          # välimuisti, ettei tilastoihin jää eilistä lukemaa.
+          aws s3 cp media/manifesti.json "$ampari/manifesti.json" $paate \
+            --content-type application/json --cache-control "public, max-age=300"
+          # --delete on tarkoituksella pois: vanha tiedosto ämpärissä ei
+          # haittaa ketään, mutta vahingossa tyhjentynyt ämpäri rikkoisi
+          # pelin kaikilta kerralla.
+
+      - name: Tarkista että aineisto vastaa ja CORS on kunnossa
+        run: |
+          set -euo pipefail
+          # GET-pyynnöllä: R2 vertaa metodia CORS-säännön
+          # AllowedMethods-listaan, eikä HEADiin tule otsaketta lainkaan
+          # kun sääntö sallii vain GETin.
+          tarkista() {
+            vastaus=$(curl -sS -D- -o /dev/null --max-time 30 -r 0-99 \
+              -H 'Origin: https://ravelius.github.io' "$JULKINEN/$1")
+            koodi=$(printf '%s' "$vastaus" | grep -m1 -oE 'HTTP/[0-9.]+ [0-9]+' | tail -1 | awk '{print $2}')
+            cors=$(printf '%s' "$vastaus" | grep -ic '^access-control-allow-origin' || true)
+            echo "$1 -> $koodi, CORS $cors"
+            case "$koodi" in 200|206) ;; *) exit 1 ;; esac
+            test "$cors" != "0"
+          }
+          for kansio in kuvat liput aanet; do
+            [ -d "media/$kansio" ] && tarkista "$kansio/$(ls media/$kansio | head -1)"
+          done
+          tarkista "manifesti.json"

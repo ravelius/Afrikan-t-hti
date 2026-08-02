@@ -11,29 +11,34 @@
 // paketeissa mainitun tiedoston peilin manifestia vasten.
 
 /*
- * Peilillä on kaksi juurta, koska aineisto kasvoi yli sen mitä GitHub
- * Pages on tarkoitettu tarjoilemaan (suositusraja 1 Gt sivustoa kohti).
- * Kuvat pysyvät Pagesissa. Äänet ovat omassa ämpärissään: pelkkä
- * Eurooppa vei jo 569 Mt, eikä koko maailma olisi mahtunut.
+ * Koko peili on omassa ämpärissään (Cloudflare R2).
  *
- * Polku lasketaan kummankin juuren perään samalla säännöllä, joten
- * juuren vaihtaminen oli ainoa muutos pelin puolella. Äänet viedään
- * ämpäriin media-repon omalla automaatilla (.github/workflows/
- * r2-aanet.yml), joka ajetaan aina kun aanet-kansio muuttuu.
+ * Aineisto oli GitHub Pagesissa, jonka suositusraja on 1 Gt sivustoa
+ * kohti. Pelkkä Euroopan äänipuoli vei 569 Mt, eikä koko maailma olisi
+ * mahtunut. Äänet siirtyivät ensin, kuvat ja liput perässä — nyt
+ * media-repoa ei enää tarvita lainkaan.
  *
- * Alkuperäinen lähde (archive.org, Freesound, Commons) jää yhä
- * varareitiksi, jos ämpäri ei vastaa.
+ * Juuria on kaksi vakiota, vaikka ne osoittavat samaan paikkaan. Ne
+ * ovat eri asioita: kuvat ja äänet voi tarvittaessa erottaa taas eri
+ * palvelimille vaihtamalla toisen. Katkaisija erottaa lajit polusta
+ * (peilinLaji alla), ei juuresta, joten yhteinen osoite ei sekoita
+ * niitä keskenään.
+ *
+ * Alkuperäinen lähde (Wikimedia Commons, archive.org, Freesound) jää
+ * yhä varareitiksi, jos ämpäri ei vastaa.
  *
  * Ämpärillä on CORS-sääntö, joka sallii GETin osoitteesta
- * https://ravelius.github.io. Sitä tarvitaan vain yhteen kohtaan:
+ * https://ravelius.github.io. Sitä tarvitaan kahteen kohtaan:
  * js/sound.js loadRealSamples hakee tehosteet fetchillä ja purkaa ne
- * decodeAudioDatalla, eli lukee tavut itse. Tavallinen <audio>-toisto
- * (ambienssi, kulttuurinäytteet, kieli, musiikki) ei CORSia tarvitse.
- * Muualta avattuna — esimerkiksi yhden tiedoston versio levyltä —
- * tehosteet putoavat alkuperäiseen lähteeseen eikä peli siitä kärsi.
+ * decodeAudioDatalla, ja sw.js noutaa kuvat omaan pitkäikäiseen
+ * koriinsa mode: 'cors' -pyynnöllä. Tavallinen <audio>- ja
+ * <img>-lataus ei CORSia tarvitse, joten muualta avattuna — esimerkiksi
+ * yhden tiedoston versio levyltä — peli toimii silti: nuo kaksi kohtaa
+ * putoavat alkuperäiseen lähteeseen.
  */
-export const PEILI_JUURI = 'https://ravelius.github.io/Matkakirja-media/';
-export const AANI_JUURI = 'https://pub-7bc0ed2083a74a68bd7115618bca4709.r2.dev/';
+const R2_JUURI = 'https://pub-7bc0ed2083a74a68bd7115618bca4709.r2.dev/';
+export const PEILI_JUURI = R2_JUURI;
+export const AANI_JUURI = R2_JUURI;
 
 /**
  * Turvallinen tiedostonimi mistä tahansa merkkijonosta.

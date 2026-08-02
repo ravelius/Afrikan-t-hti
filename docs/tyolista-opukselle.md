@@ -276,21 +276,26 @@ Tila säilyy selaimessa omassa avaimessaan (`matkakirja-kehittaja`) eikä
 kuulu pelin tallennukseen: se on laitteen asetus, ei pelitilanteen osa.
 
 
-## Paketti 24: äänet omaan ämpäriin (R2) — VALMIS 2.8.2026
+## Paketti 24: koko peili omaan ämpäriin (R2) — VALMIS 2.8.2026
 
-**Miksi:** kuvat ja äänet olivat samassa GitHub Pages -sivustossa. Äänet
-ovat isoja — pelkkä Eurooppa vei 569 Mt, ja Pagesin suositusraja on
-1 Gt sivustoa kohti. Koko maailma ei olisi mahtunut. Omistaja valitsi
-Cloudflare R2:n.
+**Miksi:** kuvat ja äänet olivat GitHub Pagesissa, jonka suositusraja on
+1 Gt sivustoa kohti. Pelkkä Euroopan äänipuoli vei 569 Mt. Omistaja
+valitsi Cloudflare R2:n, ja päätti sitten siirtää kaiken, jotta
+media-repo voidaan poistaa kokonaan.
 
-**Miten se toimii nyt.** Media-repon `.github/workflows/r2-aanet.yml`
-vie `aanet/`-kansion ämpäriin aina kun kansio muuttuu mainissa (tai
-käsin Actions-välilehdeltä). Peli hakee äänet ämpäristä: `js/media.js`
-`AANI_JUURI`. Kuvat tulevat edelleen Pagesista `PEILI_JUURI`:sta.
-Polku lasketaan kummankin juuren perään samalla säännöllä, joten
-osoitteen vaihto oli ainoa muutos pelin puolella.
+**Miten se toimii nyt.** Ämpäri on varasto, ei kopio: peli hakee sieltä
+kuvat, liput ja äänet (`js/media.js` `PEILI_JUURI` ja `AANI_JUURI`
+osoittavat samaan juureen). Alkuperäinen lähde — Commons, archive.org,
+Freesound — jää yhä varareitiksi.
 
-Avaimet ovat media-repon Actions-salaisuuksina (`R2_ACCOUNT_ID`,
+`.github/workflows/peilaa.yml` tässä repossa hoitaa peilauksen:
+noutaa ämpäristä nykyisen aineiston, ajaa `tools/peilaa-media.mjs`
+lajeittain ja vie tuloksen takaisin. Peilattua aineistoa ei säilytetä
+missään repossa. Ajo tehdään käsin Actions-välilehdeltä, koska se
+kestää kymmeniä minuutteja: jokaisen tiedoston eheys tarkistetaan
+lähdettä vasten.
+
+Avaimet ovat tämän repon Actions-salaisuuksina (`R2_ACCOUNT_ID`,
 `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`). Ne eivät ole
 missään tiedostossa.
 
@@ -299,7 +304,7 @@ missään tiedostossa.
 - `AWS_REQUEST_CHECKSUM_CALCULATION=when_required`. R2 ei hyväksy AWS:n
   uudempia tarkistussummaotsakkeita, jotka aws-cli 2.23:sta alkaen
   lähtevät oletuksena mukaan. Ilman tätä jokainen lähetys epäonnistuu.
-- `--delete` on pois. Vanha ääni ämpärissä ei haittaa ketään, mutta
+- `--delete` on pois. Vanha tiedosto ämpärissä ei haittaa ketään, mutta
   vahingossa tyhjentynyt ämpäri rikkoisi pelin kaikilta kerralla.
 - CORS-tarkistus tehdään **GET**-pyynnöllä. R2 vertaa pyynnön metodia
   säännön `AllowedMethods`-listaan, ja koska siinä on vain GET,
@@ -307,29 +312,25 @@ missään tiedostossa.
   tarkistin CORSin `curl -I`:llä ja päättelin siitä virheellisesti,
   ettei sääntöä ole — se oli koko ajan kunnossa.
 
-**CORSia tarvitaan vain yhteen kohtaan.** `js/sound.js`
-`loadRealSamples` hakee tehosteet `fetch`illä ja purkaa ne
-`decodeAudioData`lla, eli lukee tavut itse. Tavallinen
-`<audio>`-toisto — ambienssi, kulttuurinäytteet, kieli, musiikki — ei
-tarvitse CORSia lainkaan. Sääntö sallii GETin osoitteesta
-`https://ravelius.github.io`. Muualta avattuna (esimerkiksi yhden
-tiedoston versio levyltä) tehosteet putoavat alkuperäiseen lähteeseen,
-eikä peli siitä kärsi.
+**CORSia tarvitaan kahteen kohtaan.** `js/sound.js` `loadRealSamples`
+hakee tehosteet `fetch`illä ja purkaa ne `decodeAudioData`lla, ja
+`sw.js` noutaa kuvat omaan pitkäikäiseen koriinsa `mode: 'cors'`
+-pyynnöllä. Tavallinen `<audio>`- ja `<img>`-lataus ei sitä tarvitse,
+joten muualta avattuna peli toimii silti — nuo kaksi kohtaa putoavat
+alkuperäiseen lähteeseen.
+
+**Peilaustyökalun oletushakemisto** osoittaa yhä repon viereiseen
+`Matkakirja-media`-kansioon. Se on tarkoituksella: paikallinen ajo on
+kätevä, ja työnkulku vie kansion sisällön ämpäriin. Kansion ei tarvitse
+olla git-repo.
 
 **Tiedossa oleva rajoite: `pub-….r2.dev` on kehitysosoite.**
-Cloudflaren oma dokumentaatio sanoo sen olevan nopeusrajoitettu ja
-tarkoitettu kehityskäyttöön; välimuisti, palomuurisäännöt ja pääsynhallinta
-ovat käytettävissä vasta oman verkkotunnuksen takana. Perheen pelille
-tämä riittää hyvin, mutta jos äänet alkavat joskus takkuilla, syy on
-todennäköisesti tässä eikä pelissä. Korjaus on oma verkkotunnus ämpärin
-eteen — silloin muuttuu vain `AANI_JUURI`.
-
-**Vielä tekemättä: Pagesin siivous.** Äänet ovat nyt kahdessa paikassa.
-Varsinainen tilansäästö syntyy vasta kun media-repon Pages julkaisee
-pelkät `kuvat/` ja `liput/` — tiedostot saavat jäädä repoon, koska
-synkronointi lukee ne sieltä. Tee tämä vasta kun ämpäri on ollut
-käytössä jonkin aikaa: jos jotain menee pieleen, Pages on yhä
-toimiva varareitti.
+Cloudflaren dokumentaatio sanoo sen olevan nopeusrajoitettu ja
+tarkoitettu kehityskäyttöön; välimuisti, palomuurisäännöt ja
+pääsynhallinta ovat käytettävissä vasta oman verkkotunnuksen takana.
+Nyt koko peliaineisto kulkee sen kautta, joten jos kuvat tai äänet
+alkavat takkuilla, syy on todennäköisesti tässä. Korjaus on oma
+verkkotunnus ämpärin eteen — silloin muuttuu vain `R2_JUURI`.
 
 
 ## Paketti 23: päiväkirja aukeaa napauttamalla — VALMIS 2.8.2026
