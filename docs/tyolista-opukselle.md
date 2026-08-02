@@ -305,6 +305,74 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## KESKEN: vanhan maailman kaupungit valmiiksi (aloitettu 2.8.2026)
+
+Omistajan toimeksianto: "Tee kaikki loput kaupungit vanhassa maailmassa
+kaikin puolin valmiiksi. Tee kaikki mahdollisimman itsenäisesti. Älä jää
+odottamaan minulta vastausta vaan tee itse päätökset. Korjataan
+myöhemmin mikäli tarpeen."
+
+**Yksi poikkeus, omistajan tarkennus: puheääniä EI generoida.** Se on
+ainoa osa, joka jätetään tekemättä.
+
+### Mikä puuttuu ja keneltä
+
+Mittaus 143 kaupungista:
+
+| sisältö | on | puuttuu |
+|---|---|---|
+| saapumisteksti | 80 | **63** |
+| kulttuurinostot | 80 | 63 |
+| vanha valokuva | 80 | 63 |
+| maatunnus | 79 | 64 |
+| wiki-artikkeli | 80 | 63 |
+| ambienssi | 80 | 63 |
+| kielinäyte | 31 | 112 |
+
+Puuttuvat ovat **koko Aasia ja koko Lähi-itä**. Ne puuttuvat myös
+alkuperäisiltä laudoilta — `asia.js`:ssä ja `middleeast.js`:ssä ei ole
+yhdelläkään kaupungilla wiki-kenttää eikä ambienssia — joten korjaus
+hyödyttää kumpaakin.
+
+Kysymykset ja tiedot sen sijaan ovat kunnossa: vain neljällä
+aloituskaupungilla on alle kaksi kysymystä, ja se on oikein — niissä ei
+ole laattaa.
+
+### Työjärjestys
+
+1. **Wiki, ambienssi ja maa** (`tools/taydenna-kaupungit.mjs`) — ilman
+   näitä kuvia ei voi hakea eikä kaupungin ääni soi.
+2. **Saapumistekstit kahdella äänellä** — isoisän merkintä 1873 ja
+   nuoren herran havainto, Wikipedian tiivistelmän pohjalta.
+3. **Kuvat ja kuvatekstit** kaikkiin 143 kaupunkiin.
+4. **Kulttuurinostot** ja loput.
+
+### Kuvien lähteet — omistajan päätökset
+
+- **Wikimedia Commons -kategoriat**, ei artikkelin kuvia. Artikkelissa
+  on 3–10 kuvaa, kategoriassa satoja (Dubrovnik: yli 500).
+- **Library of Congress** matkakirjan kuviin nykyisten lisäksi
+  (omistajan päätös). Photochrom-kokoelma on vuosilta 1890–1910 eli
+  juuri isoisän aikaa, public domain, ei vaadi avainta.
+- **Europeana** kolmantena; vaatii avaimen, joka menee GitHubin
+  salaisuuksiin nimellä `EUROPEANA_AVAIN`.
+- Kartat, vaakunat ja liput karsitaan pois.
+- Kuvatekstit kirjoitetaan kuvauksen pohjalta suomeksi, ei kopioida.
+
+**Tarkkuus 1200 pikseliä.** Arvioin ensin 800 ja perustelin sen
+peilin koolla — se oli väärin: peili ei ole enää media-repo vaan R2-
+ämpäri, jossa gigatavun raja ei päde. Omistaja huomautti siitä.
+
+### Ansa, johon jäin heti kiinni
+
+Ensimmäinen hakuajo ilmoitti, ettei 46 kaupungille löydy artikkelia —
+mukana Tokio, Delhi ja Bangkok. Ne kaikki ovat olemassa. Wikipedia
+vastasi 429 "too many requests", ja työkalu nieli virheen ja tulosti
+sen puuttuvana artikkelina. **Sama virhe kuin äänipuolella aiemmin:
+hiljainen nieleminen tekee verkkovirheestä sisältövirheen.** Nyt haku
+odottaa, yrittää uudelleen ja kertoo koodin.
+
+
 ## Paketti 54: napsahdus lopusta pois — VALMIS v177 2.8.2026
 
 Omistajan havainto v176:n jälkeen: "Joissain kuuluu napsahdus vielä
