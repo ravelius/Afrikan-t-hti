@@ -30,6 +30,10 @@
 
   --radius: 12px;
   --gap: 0.6rem;
+  /* iOS:n turva-alueet myös muuttujina: JavaScript ei näe env()-arvoja
+   * suoraan, ja kehittäjätilan mittarivi tarvitsee ne. */
+  --turva-yla: env(safe-area-inset-top, 0px);
+  --turva-ala: env(safe-area-inset-bottom, 0px);
   /* Kartan päällä kelluvat kortit: läpikuultava pergamentti kuten .event-toast. */
   --overlay-card: rgba(46, 33, 20, 0.88);
   --overlay-line: rgba(217, 161, 59, 0.45);
@@ -3941,4 +3945,93 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 .kieli-kuuntele {
   margin-top: 0.45rem;
   align-self: flex-start;
+}
+
+/*
+ * Kehittäjätila (omistajan toive). Ulkoasu on tarkoituksella sama
+ * pergamentti kuin muissa ikkunoissa: tämä ei ole erillinen työkalu
+ * vaan pelin oma piilotettu asetus.
+ */
+.kehittaja-lomake {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0.2rem 0 0.6rem;
+}
+
+.kehittaja-label {
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.kehittaja-kentta {
+  font-family: var(--font-type);
+  font-size: 1.4rem;
+  letter-spacing: 0.35em;
+  text-align: center;
+  padding: 0.45rem 0.6rem;
+  color: var(--map-ink);
+  background: rgba(255, 255, 255, 0.45);
+  border: 2px dashed var(--map-ink);
+  border-radius: 90px 12px 84px 14px / 14px 84px 12px 90px;
+}
+
+.kehittaja-virhe {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #8c2f1d;
+}
+
+/* Ruudun mitat: kartan alareunan arvoitusta varten (ks. muistiinpanot).
+   Pieni tasalevyinen teksti, jonka voi lukea kuvakaappauksesta. */
+.kehittaja-mitat {
+  margin: 0 0 0.6rem;
+  padding: 0.5rem 0.6rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #5a4326;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px dashed rgba(70, 51, 31, 0.5);
+  border-radius: 8px;
+}
+
+.dialog-teksti { margin: 0 0 0.6rem; }
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+/* Kehittäjätilan merkki: kartalla näkyy, että laattoja voi napauttaa.
+   Ilman merkkiä tila unohtuisi päälle ja peli tuntuisi rikkinäiseltä. */
+.kehittaja-merkki {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #46331f;
+  background: rgba(234, 184, 78, 0.85);
+  border: 1px solid rgba(70, 51, 31, 0.6);
+  pointer-events: none;
+}
+
+/* Kehittäjätilan kohderengas erottuu tavallisista siirroista: se ei ole
+   laillinen siirto vaan oikotie, ja sen pitää näyttää siltä. */
+.target-ring.kehittaja {
+  stroke: rgba(120, 90, 200, 0.85);
+  stroke-dasharray: 5 4;
+  fill: rgba(150, 120, 220, 0.12);
 }

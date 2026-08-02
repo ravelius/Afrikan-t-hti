@@ -70,6 +70,12 @@
         <button id="newgame-btn" class="ghost" type="button" title="Uusi peli">
           <span class="wide-label">Uusi peli</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span></span>
         </button>
+        <!-- Kehittäjätila (omistajan toive): kaupunkiin pääsee napauttamalla
+             sen laattaa, jolloin sisältöä voi tarkastella ilman pelaamista.
+             Salasanan takana, ettei se aukea vahingossa lapsen kädessä. -->
+        <button id="kehittaja-btn" class="ghost" type="button" title="Kehittäjätila">
+          <span class="wide-label">Kehittäjä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M9.4 7.4 4.8 12l4.6 4.6M14.6 7.4 19.2 12l-4.6 4.6"/></svg></span></span>
+        </button>
           </div>
         </div>
       </div>
@@ -252,6 +258,28 @@
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
     </form>
+   </div>
+  </dialog>
+
+  <!--
+    Kehittäjätila. Salasana on tarkoituksella kevyt lukko eikä
+    tietoturvaa: se estää vahingossa avaamisen, ei tahallista.
+  -->
+  <dialog id="kehittaja-dialog" class="dialog">
+   <div class="dialog-card">
+    <h2>Kehittäjätila</h2>
+    <p id="kehittaja-selite" class="dialog-teksti"></p>
+    <form id="kehittaja-lomake" class="kehittaja-lomake">
+      <label for="kehittaja-salasana" class="kehittaja-label">Salasana</label>
+      <input id="kehittaja-salasana" class="kehittaja-kentta" type="password"
+             inputmode="numeric" autocomplete="off" enterkeyhint="go" />
+      <p id="kehittaja-virhe" class="kehittaja-virhe" hidden>Väärä salasana.</p>
+    </form>
+    <pre id="kehittaja-mitat" class="kehittaja-mitat" hidden></pre>
+    <div class="dialog-actions">
+      <button id="kehittaja-peru" class="ghost" type="button">Sulje</button>
+      <button id="kehittaja-ok" class="primary" type="button">Kytke päälle</button>
+    </div>
    </div>
   </dialog>
 

@@ -1,7 +1,7 @@
 // Käynnistys: aloitusruutu, pelin luonti, tallennus ja dialogit.
 
 import { Game } from './game.js';
-import { UI } from './ui.js';
+import { UI, kehittajaTilaPaalla, asetaKehittajaTila } from './ui.js';
 import { sfx } from './sound.js';
 import { packById } from './pack.js';
 import { startQuizMusic, stopPlaceStream, stopQuizMusic } from './ambience-stream.js';
@@ -9,7 +9,7 @@ import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.148';
+const APP_VERSION = '2026-08-02.149';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -338,3 +338,96 @@ if (katseluPack) {
   if (saved) attach(saved);
   else startGame();
 }
+
+/*
+ * Kehittäjätila (omistajan toive). Valikosta aukeaa salasanaikkuna, ja
+ * kytkennän jälkeen minkä tahansa kaupungin laatan napautus vie sinne
+ * suoraan — sisällön tarkasteluun ei tarvitse pelata.
+ *
+ * Salasana on koodissa selkokielisenä tarkoituksella: se on kevyt lukko
+ * eikä tietoturvaa. Tehtävä on estää tilan avautuminen vahingossa
+ * lapsen kädessä, ei suojata mitään salaista — pelissä ei ole mitään
+ * suojattavaa.
+ */
+const KEHITTAJA_SALASANA = '5545';
+const kehittajaDialog = document.getElementById('kehittaja-dialog');
+const kehittajaSalasana = document.getElementById('kehittaja-salasana');
+const kehittajaVirhe = document.getElementById('kehittaja-virhe');
+const kehittajaSelite = document.getElementById('kehittaja-selite');
+const kehittajaOk = document.getElementById('kehittaja-ok');
+const kehittajaMitat = document.getElementById('kehittaja-mitat');
+const kehittajaLomake = document.getElementById('kehittaja-lomake');
+
+/**
+ * Ruudun mitat luettavassa muodossa. iOS:n turva-alueet eivät näy
+ * JavaScriptille suoraan, joten ne luetaan :root-muuttujista, joihin
+ * css kirjoittaa env()-arvot.
+ *
+ * Tämä on täällä syystä: asennetussa sovelluksessa kartan alle jäi
+ * selittämätön kaista, eikä sen mittoja voi mitata muualta kuin
+ * laitteelta itseltään.
+ */
+function kehittajaMittarivit() {
+  const juuri = getComputedStyle(document.documentElement);
+  const turva = (nimi) => juuri.getPropertyValue(nimi).trim() || '0px';
+  const laatikko = (valitsin) => {
+    const el = document.querySelector(valitsin);
+    if (!el) return 'ei näkyvissä';
+    const r = el.getBoundingClientRect();
+    return `${Math.round(r.top)} → ${Math.round(r.bottom)} (${Math.round(r.height)})`;
+  };
+  const asennettu = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+  return [
+    `ruutu     ${window.innerWidth} × ${window.innerHeight}`,
+    `näyttö    ${window.screen?.width ?? '?'} × ${window.screen?.height ?? '?'}`,
+    `turva     ylä ${turva('--turva-yla')}  ala ${turva('--turva-ala')}`,
+    `app       ${laatikko('.app')}`,
+    `stage     ${laatikko('.stage')}`,
+    `kartta    ${laatikko('.map-pane')}`,
+    `asennettu ${asennettu ? 'kyllä' : 'ei'}`,
+    `versio    ${APP_VERSION}`,
+  ].join('\n');
+}
+
+function avaaKehittajaIkkuna() {
+  const paalla = kehittajaTilaPaalla();
+  kehittajaVirhe.hidden = true;
+  kehittajaSalasana.value = '';
+  kehittajaLomake.hidden = paalla;
+  kehittajaSelite.textContent = paalla
+    ? 'Kehittäjätila on päällä: kaupunkiin pääsee napauttamalla sen laattaa.'
+    : 'Kytkettynä kaupunkiin pääsee napauttamalla sen laattaa.';
+  kehittajaOk.textContent = paalla ? 'Kytke pois' : 'Kytke päälle';
+  kehittajaMitat.textContent = kehittajaMittarivit();
+  kehittajaMitat.hidden = false;
+  kehittajaDialog.showModal();
+  if (!paalla) kehittajaSalasana.focus();
+}
+
+function kytkeKehittaja() {
+  if (kehittajaTilaPaalla()) {
+    asetaKehittajaTila(false);
+    ui?.paivitaKehittajaTila();
+    kehittajaDialog.close();
+    return;
+  }
+  if (kehittajaSalasana.value.trim() !== KEHITTAJA_SALASANA) {
+    kehittajaVirhe.hidden = false;
+    kehittajaSalasana.value = '';
+    kehittajaSalasana.focus();
+    return;
+  }
+  asetaKehittajaTila(true);
+  ui?.paivitaKehittajaTila();
+  kehittajaDialog.close();
+}
+
+document.getElementById('kehittaja-btn').addEventListener('click', avaaKehittajaIkkuna);
+kehittajaOk.addEventListener('click', kytkeKehittaja);
+document.getElementById('kehittaja-peru').addEventListener('click', () => kehittajaDialog.close());
+// Enter kentässä kytkee: puhelimen näppäimistössä on "mene"-nappi.
+kehittajaLomake.addEventListener('submit', (e) => {
+  e.preventDefault();
+  kytkeKehittaja();
+});

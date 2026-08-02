@@ -2938,3 +2938,45 @@ test('päiväkirjan teksti on puhelimella luettavan kokoista', () => {
     assert.ok(koko >= 0.95, `päiväkirjan teksti kutistui kokoon ${koko}rem`);
   }
 });
+
+test('kehittäjän siirto vie kaupunkiin kuluttamatta peliä', () => {
+  // Omistajan toive: sisältöä pitää päästä katsomaan ilman pelaamista.
+  // Oikotie ei siksi saa syödä rahaa, päiviä eikä vuoroja — muuten sillä
+  // ei voisi selata kaupunkeja peräkkäin.
+  const game = newGame();
+  const pelaaja = game.player;
+  const rahaEnnen = pelaaja.money;
+  const vuoroEnnen = game.current;
+  const paivaEnnen = game.turnCount;
+
+  const tulos = game.actionKehittajaSiirto('kumasi');
+  assert.equal(tulos.ok, true);
+  assert.deepEqual(pelaaja.pos, { type: 'city', city: 'kumasi' });
+  assert.equal(pelaaja.money, rahaEnnen, 'oikotie ei saa maksaa');
+  assert.equal(game.current, vuoroEnnen, 'vuoro ei saa vaihtua');
+  assert.equal(game.turnCount, paivaEnnen, 'päivä ei saa kulua');
+  assert.equal(game.phase, 'action', 'kaupungissa pitää voida heti toimia');
+  assert.equal(game.die, null, 'vanha noppa ei saa jäädä voimaan');
+  // Saapumishavainto ohjaa päiväkirjakortin: ilman sitä kortti näyttäisi
+  // edellisen kaupungin tekstiä.
+  assert.equal(game.arrivalFact?.cityId, 'kumasi');
+
+  // Peräkkäiset hypyt toimivat.
+  game.actionKehittajaSiirto('tanger');
+  assert.equal(pelaaja.pos.city, 'tanger');
+  assert.equal(game.actionKehittajaSiirto('ei-olemassa').ok, false);
+});
+
+test('kehittäjätila on salasanan takana ja pois päältä oletuksena', () => {
+  const main = readFileSync(new URL('../js/main.js', import.meta.url), 'utf8');
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  // Salasana on kevyt lukko: se estää vahingossa avaamisen. Jos tarkistus
+  // katoaa, tila aukeaa yhdellä napautuksella kenen tahansa käsissä.
+  assert.match(main, /KEHITTAJA_SALASANA = '5545'/, 'salasana puuttuu');
+  assert.match(main, /kehittajaSalasana\.value\.trim\(\) !== KEHITTAJA_SALASANA/,
+    'salasanaa ei tarkisteta');
+  // Oletus on pois päältä: tila kytkeytyy vain, kun se on nimenomaan
+  // tallennettu — puuttuva arvo ei saa tarkoittaa päällä.
+  assert.match(ui, /localStorage\.getItem\(KEHITTAJA_AVAIN\) === '1'/,
+    'kehittäjätilan oletus ei ole pois päältä');
+});

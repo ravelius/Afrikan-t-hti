@@ -240,6 +240,42 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 25: kehittäjätila — VALMIS 2.8.2026
+
+**Omistajan toive:** "Tee hampurilaiseen kehittäjä toggle, salasana
+5545, minkä avulla voi siirtyä mihin tahansa kaupunkiin pelkästään
+painamalla kaupungin laattaa."
+
+Valikosta aukeaa salasanaikkuna. Kytkettynä jokainen kaupunki on
+napautettava, ja napautus vie sinne suoraan. Kartan yläreunassa on
+merkki "Kehittäjätila", ettei tila unohdu päälle — muuten peli
+tuntuisi rikkinäiseltä.
+
+**Oikotie ei kuluta peliä.** `game.actionKehittajaSiirto` ei ota rahaa,
+ei kuluta päivää, ei heitä noppaa eikä vaihda vuoroa, ja se jättää
+voittotarkistuksen väliin — tähtikaupunkiin hyppääminen ei saa lopettaa
+peliä kesken tarkastelun. `visitCity` kutsutaan silti, koska juuri se
+tuottaa saapumisen havainnon päiväkirjaan; ilman sitä kortti näyttäisi
+edellisen kaupungin tekstiä.
+
+**Pelin alussa ensimmäinen napautus menee tavallista tietä**
+(`actionPickStart`), koska lähtöpaikan valinta avaa portin mantereelle.
+Vasta sen jälkeen hypätään.
+
+**Salasana on koodissa selkokielisenä tarkoituksella.** Se on kevyt
+lukko eikä tietoturvaa: tehtävä on estää tilan avautuminen vahingossa
+lapsen kädessä, ei suojata mitään salaista.
+
+**Ikkunassa on myös ruudun mitat.** Ne ovat siellä syystä: asennetussa
+sovelluksessa kartan alle jää yhä selittämätön kaista (ks. paketti 23),
+eikä iOS:n turva-alueita voi mitata muualta kuin laitteelta itseltään.
+CSS kirjoittaa `env()`-arvot `:root`-muuttujiin `--turva-yla` ja
+`--turva-ala`, joista JavaScript ne lukee.
+
+Tila säilyy selaimessa omassa avaimessaan (`matkakirja-kehittaja`) eikä
+kuulu pelin tallennukseen: se on laitteen asetus, ei pelitilanteen osa.
+
+
 ## Paketti 24: äänet omaan ämpäriin (R2) — VALMIS 2.8.2026
 
 **Miksi:** kuvat ja äänet olivat samassa GitHub Pages -sivustossa. Äänet

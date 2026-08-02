@@ -65,6 +65,35 @@ const KIELET = { europe: EUROPE_KIELET };
 // Maiden tunnusluvut laudoittain.
 const MAATIEDOT = { africa: AFRICA_MAATIEDOT, europe: EUROPE_MAATIEDOT };
 
+/*
+ * Kehittäjätila (omistajan toive): kaupunkiin pääsee napauttamalla sen
+ * laattaa, jolloin minkä tahansa kaupungin sisältöä voi katsoa ilman
+ * että sinne pitää pelata.
+ *
+ * Tila säilyy selaimessa, koska sisällön tarkastelu jatkuu yleensä
+ * seuraavallakin avauksella. Se ei kuulu pelin tallennukseen: tila on
+ * laitteen asetus eikä pelitilanteen osa, eikä sen pidä matkustaa
+ * tallennuksen mukana.
+ */
+const KEHITTAJA_AVAIN = 'matkakirja-kehittaja';
+
+export function kehittajaTilaPaalla() {
+  try {
+    return localStorage.getItem(KEHITTAJA_AVAIN) === '1';
+  } catch {
+    return false; // yksityinen selaus
+  }
+}
+
+export function asetaKehittajaTila(paalla) {
+  try {
+    if (paalla) localStorage.setItem(KEHITTAJA_AVAIN, '1');
+    else localStorage.removeItem(KEHITTAJA_AVAIN);
+  } catch {
+    /* yksityinen selaus: tila jää vain tälle istunnolle */
+  }
+}
+
 // Omat artikkelit: yhteinen hakemisto wiki-otsikolla (mantereet eivät
 // törmää, koska otsikot ovat eri).
 const ARTIKKELIT = { ...OMAT_ARTIKKELIT, ...EUROPE_ARTIKKELIT };
@@ -832,6 +861,7 @@ export class UI {
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
     this.travelExpanded = false; // matkavalinnan toinen vaihe auki
+    this.kehittajaTila = kehittajaTilaPaalla();
     this.autoRollTimer = null;
     this.movingPlayerId = null;
     this.revealShownFor = null;
@@ -851,7 +881,29 @@ export class UI {
     this.fitViewBox();
     this.observer = new ResizeObserver(() => this.fitViewBox());
     this.observer.observe(this.svg.parentElement);
+    this.paivitaKehittajaMerkki();
     this.render();
+  }
+
+  /**
+   * Kehittäjätilan kytkin. Merkki kartan yläreunassa kertoo tilan
+   * olevan päällä: ilman sitä se unohtuisi, ja peli tuntuisi
+   * rikkinäiseltä kun laattojen napautus vie minne tahansa.
+   */
+  paivitaKehittajaTila() {
+    this.kehittajaTila = kehittajaTilaPaalla();
+    this.paivitaKehittajaMerkki();
+    this.render();
+  }
+
+  paivitaKehittajaMerkki() {
+    const vanha = this.mapPane?.querySelector('.kehittaja-merkki');
+    if (!this.kehittajaTila) {
+      vanha?.remove();
+      return;
+    }
+    if (vanha || !this.mapPane) return;
+    this.mapPane.appendChild(html('div', 'kehittaja-merkki', 'Kehittäjätila'));
   }
 
   /** Piirtää annetun laudan; vaelluksessa lauta vaihtuu porttien kautta. */
@@ -1954,6 +2006,26 @@ export class UI {
     const { game } = this;
     this.targetLayer.textContent = '';
 
+    /*
+     * Kehittäjätila (omistajan toive): jokainen kaupunki on napautettava
+     * ja napautus vie sinne suoraan. Tämä ohittaa kaikki muut kohteet,
+     * myös lähtöpisteen valinnan — muuten tilaa ei pääsisi käyttämään
+     * pelin alussa lainkaan.
+     *
+     * Lähtöpaikkaa ei ole vielä valittu ennen ensimmäistä napautusta,
+     * joten pickstart-vaiheessa käytetään pelin omaa aloitusta ja
+     * hypätään vasta sen jälkeen.
+     */
+    if (this.kehittajaTila && !game.player?.isBot && game.phase !== 'over') {
+      for (const c of game.board.cities) {
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
+        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring kehittaja' }, g);
+        g.addEventListener('click', () => this.doKehittajaSiirto(c));
+      }
+      return;
+    }
+
     // Lähtöpisteen valinta: kaikki kaupungit ovat napautettavia.
     if (game.phase === 'pickstart') {
       // Puhelimella ensimmäinen napautus zoomaa kartan lähemmäs sen
@@ -2397,6 +2469,24 @@ export class UI {
     this.doAction(() => game.actionPickStart(city.id, portti ? 0 : null));
   }
 
+
+  /**
+   * Kehittäjätilan hyppy kaupunkiin. Pelin alussa lähtöpaikka pitää
+   * valita pelin omilla säännöillä (se avaa portin mantereelle), joten
+   * ensimmäinen napautus menee tavallista tietä ja vasta seuraavat
+   * hyppäävät.
+   */
+  doKehittajaSiirto(city) {
+    const { game } = this;
+    if (game.phase === 'pickstart') {
+      this.doPickStart(city);
+      return;
+    }
+    // Nappula siirtyy ilman animaatiota: oikotie saa näyttää oikotieltä.
+    this.haivytaLuenta();
+    this.travelExpanded = false;
+    this.doAction(() => game.actionKehittajaSiirto(city.id));
+  }
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
   doWalk() {

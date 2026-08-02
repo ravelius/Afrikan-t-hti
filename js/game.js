@@ -708,6 +708,36 @@ export class Game {
     this.beginTurn();
   }
 
+  /**
+   * Kehittäjän oikotie: nappula suoraan valittuun kaupunkiin (omistajan
+   * toive). Tarkoitus on päästä katsomaan minkä tahansa kaupungin
+   * sisältöä ilman että sinne pitää pelata.
+   *
+   * Tämä ei ole siirto vaan siirron ohitus, ja siksi se on tahallisen
+   * laiska: päivä ei kulu, rahaa ei mene, noppaa ei heitetä eikä vuoro
+   * vaihdu. Voittotarkistusta ei tehdä — tähtikaupunkiin hyppääminen ei
+   * saa lopettaa peliä vahingossa kesken tarkastelun.
+   *
+   * `visitCity` kutsutaan silti, koska juuri se tuottaa saapumisen
+   * havainnon päiväkirjaan ja merkitsee kaupungin nähdyksi. Ilman sitä
+   * kortti näyttäisi edellisen kaupungin tekstiä.
+   */
+  actionKehittajaSiirto(cityId) {
+    const city = this.board.cityById.get(cityId);
+    if (!city) return { ok: false, error: 'Tuntematon kaupunki' };
+    const p = this.player;
+    p.pos = { type: 'city', city: cityId };
+    this.lastPath = [p.pos];
+    this.visitCity(p);
+    this.moves = null;
+    this.die = null;
+    this.travelMode = null;
+    this.pendingFare = 0;
+    this.phase = 'action';
+    this.say(p.id, `${p.name} siirtyi kehittäjätilassa kaupunkiin ${city.name}.`);
+    return { ok: true };
+  }
+
   /** Valitsee matkustustavan. Maksu peritään vasta kun siirto tehdään. */
   actionTravel(mode, opts = {}) {
     if (this.phase !== 'action') return { ok: false, error: 'Väärä vaihe' };
