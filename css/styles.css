@@ -352,9 +352,6 @@ body.manner-zoom .map-pane {
    vaalea reuna ei rajaa mitään, se vain haalistaa sen osan karttaa,
    jota ollaan katsomassa. Kokonäkymässä häivytys palaa itsestään, kun
    luokka poistuu. */
-body.zoom-kaynnissa .map-pane::after,
-body.manner-zoom .map-pane::after,
-body.kiikari-paalla .map-pane::after { opacity: 0; }
 
 body.aloitus-zoom #board,
 body.manner-zoom #board {
@@ -543,17 +540,17 @@ body.aloitus-zoom .kiikari {
    tarvitse maskia toimiakseen, joten tulos on sama joka selaimessa.
    Kulmat saavat kahden liu'un summan ja pysyvät tummimpina kuten
    ennenkin. */
-.map-pane::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, rgba(252, 246, 228, 0.55) 0, rgba(250, 242, 219, 0) 18%),
-    linear-gradient(to right, rgba(252, 246, 228, 0.5) 0, rgba(250, 242, 219, 0) 13%),
-    linear-gradient(to left, rgba(252, 246, 228, 0.5) 0, rgba(250, 242, 219, 0) 13%);
-  transition: opacity 700ms ease;
-}
+/* Reunahäivytys on poistettu (omistajan päätös 2.8.2026: "voit ottaa
+   vinjetoinnin vaaleampaan pois kaikkialta nyt kun kartta on
+   liikuteltava" — ja kaikilla laitteilla).
+
+   Se rajasi lautaa kuin vanhan filmin ruudun silloin, kun kartta oli
+   kiinteä kokonäkymä. Nyt karttaa panoroidaan ja zoomataan joka
+   laudalla, joten reuna ei rajaa mitään: se vain haalistaa sitä osaa
+   karttaa, jota ollaan katsomassa. Aiemmin häivytys sammutettiin
+   lähikuvassa omalla luokkasäännöllä; kun kaikki on lähikuvaa, sääntöä
+   ei tarvita lainkaan. */
+.map-pane::after { content: none; }
 
 /*
  * Zoomipainikkeet kartan oikeassa reunassa (omistajan toive: sama
@@ -2046,7 +2043,6 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
    ei elävä suodatin. Sekoitustila saa jäädä: pelkkä multiply ilman
    suodatinta on halpa. */
 .grain { opacity: 0.5; mix-blend-mode: multiply; pointer-events: none; }
-.vignette { fill: url(#vignette-grad); pointer-events: none; }
 
 .graticule { stroke: #9d8253; stroke-width: 1; opacity: 0.28; fill: none; }
 

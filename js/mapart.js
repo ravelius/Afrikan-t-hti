@@ -259,10 +259,6 @@ export function drawDefs(svg) {
   el('stop', { offset: '0%', 'stop-color': '#e7d2a4' }, land);
   el('stop', { offset: '100%', 'stop-color': '#d2b47e' }, land);
 
-  const vignette = el('radialGradient', { id: 'vignette-grad', cx: '50%', cy: '50%', r: '62%' }, defs);
-  el('stop', { offset: '52%', 'stop-color': 'rgba(90,60,25,0)' }, vignette);
-  el('stop', { offset: '84%', 'stop-color': 'rgba(88,58,24,0.07)' }, vignette);
-  el('stop', { offset: '100%', 'stop-color': 'rgba(66,41,15,0.16)' }, vignette);
 
   return defs;
 }
@@ -296,9 +292,10 @@ export function drawPaperOverlay(svg, map = null) {
     x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h,
     class: 'grain', fill: 'url(#grain-kuvio)',
   }, svg);
-  el('rect', {
-    x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'vignette',
-  }, svg);
+  /* Vinjetti (tummuvat reunat) on poistettu omistajan päätöksellä:
+     kartta on liikuteltava joka laudalla, eikä reunan tummennus rajaa
+     mitään — se vain tummentaa sitä osaa karttaa, jota katsotaan.
+     Rakeisuus jää. */
 }
 
 /** Manner: rannikon kaikuviivat, täyttö ja mustepiirto. */
@@ -1042,52 +1039,60 @@ export function tyylitSisaan(ryhma) {
 }
 
 /*
- * Kuvan enimmäisleveys pikseleinä.
+ * Ruudun enimmäiskoko pikseleinä.
  *
- * Ilman kattoa lähikuvan ikkuna kasvaisi rajatta: 36-kertaisella
- * zoomilla puhelimen levyinen näkymä on jo 15 000 pikseliä leveä.
- * Katto rajaa myös muistin: 2600 x 2600 pikselin canvas vie noin 27
- * megatavua, ja se on tabletille sopiva yläraja.
+ * Yksi ruutu on noin tuhat pikseliä sivultaan. Isompi olisi hitaampi
+ * piirtää eikä auttaisi: ruutuja lisätään vain sen verran kuin näkyvä
+ * alue tarvitsee.
  */
-const KUVA_MAX = 2600;
+const RUUDUN_PIKSELIT = 1100;
 
 /**
- * Rasteroi lähderyhmästä yhden ikkunan OIKEAKSI bittikartaksi.
+ * Valmistelee kartan taiteen rasterointia varten KERRAN.
  *
- * IKKUNA EIKÄ KOKO KARTTA. Ensimmäinen versio teki koko pergamentista
- * yhden kuvan. Se toimi yleiskuvassa mutta on väärin lähikuvassa:
- * yhdistetyn laudan paperi on noin 26 000 yksikköä leveä, ja sen
- * rasterointi lähietäisyyden tarkkuudella olisi kymmeniä tuhansia
- * pikseleitä joka suuntaan. Omistajan huomio: "ei kannata laskea koko
- * valtavaa karttaa bittikartaksi heti, vaan vain osa alueesta."
- *
- * CANVAS EIKÄ SVG-KUVA. Toinen versio antoi <image>-elementille
- * SVG-blobin osoitteen. Elementtien määrä laski, mutta panorointi
- * hidastui 26 millisekunnista 128:aan sitä mukaa kuin kuvaan lisättiin
- * sisältöä — koska SVG-kuva on yhä vektoria, ja selain piirsi sen
- * uudelleen joka kerta kun muunnos muuttui. Vasta canvakselle piirretty
- * PNG on bittikartta, jonka siirtäminen on kompositorin työtä.
- *
- * Palauttaa <image>-elementin tai null, jos rasterointi ei onnistunut.
- * Epäonnistuminen ei ole virhe: kutsuja jättää silloin vektorit
- * paikalleen, ja kartta näyttää samalta mutta piirtyy hitaammin.
+ * Tämä on nopeuden kannalta olennaisin kohta. Jokainen ruutu tehdään
+ * samasta taiteesta, ja jos taide sarjallistettaisiin joka ruudulle
+ * uudestaan, 6500 elementin läpikäynti maksaisi enemmän kuin itse
+ * piirto. Nyt teksti syntyy kerran ja ruutu vaihtaa siitä vain
+ * näkymäikkunan ja koon.
  */
-export async function rasteroiIkkuna(lahde, maarittelyt, ikkuna, skaala) {
-  if (!lahde || typeof XMLSerializer === 'undefined') return null;
-  if (!window.Blob || !URL.createObjectURL) return null;
+export function valmisteleTaide(ryhma, maarittelyt) {
+  if (typeof XMLSerializer === 'undefined') return null;
+  const sarjallistin = new XMLSerializer();
+  const osat = [];
+  if (maarittelyt) osat.push(sarjallistin.serializeToString(maarittelyt));
+  osat.push(sarjallistin.serializeToString(ryhma));
+  return osat.join('');
+}
+
+/**
+ * Rasteroi yhden ruudun oikeaksi bittikartaksi.
+ *
+ * RUUTU EIKÄ IKKUNA. Aiemmin koko näkyvä alue puskureineen piirrettiin
+ * kerralla uudestaan aina kun reuna lähestyi. Se tökki, koska työtä
+ * tehtiin joka kerta yhtä paljon riippumatta siitä, kuinka pieni pala
+ * oli oikeasti uutta. Omistajan linjaus: "heti kun sormi irtoaa
+ * ladataan lisää ja silloinkin vain uusi osa jotta itse lataus mahd.
+ * nopea."
+ *
+ * CANVAS EIKÄ SVG-KUVA. Ensimmäinen rasterointi antoi <image>-
+ * elementille SVG-blobin osoitteen. Elementtien määrä laski, mutta
+ * panorointi hidastui sitä mukaa kuin kuvaan lisättiin sisältöä —
+ * SVG-kuva on yhä vektoria, ja selain piirtää sen uudelleen aina kun
+ * muunnos muuttuu. Vasta canvakselle piirretty PNG on bittikartta.
+ *
+ * Palauttaa <image>-elementin tai null. Epäonnistuminen ei ole virhe:
+ * kutsuja jättää silloin vektorit paikalleen.
+ */
+export async function rasteroiRuutu(taide, ikkuna, skaala, tarkkuus = 1) {
+  if (!taide || !window.Blob || !URL.createObjectURL) return null;
   try {
-    const leveysPx = Math.min(KUVA_MAX, Math.max(64, Math.round(ikkuna.w * skaala)));
-    const korkeusPx = Math.max(1, Math.round((leveysPx * ikkuna.h) / ikkuna.w));
+    const teho = skaala * tarkkuus;
+    const leveysPx = Math.min(RUUDUN_PIKSELIT, Math.max(32, Math.round(ikkuna.w * teho)));
+    const korkeusPx = Math.min(RUUDUN_PIKSELIT, Math.max(32, Math.round(ikkuna.h * teho)));
+    const xml = `<svg xmlns="${NS}" viewBox="${ikkuna.x} ${ikkuna.y} ${ikkuna.w} ${ikkuna.h}"`
+      + ` width="${leveysPx}" height="${korkeusPx}">${taide}</svg>`;
 
-    const irrallinen = document.createElementNS(NS, 'svg');
-    irrallinen.setAttribute('xmlns', NS);
-    irrallinen.setAttribute('viewBox', `${ikkuna.x} ${ikkuna.y} ${ikkuna.w} ${ikkuna.h}`);
-    irrallinen.setAttribute('width', leveysPx);
-    irrallinen.setAttribute('height', korkeusPx);
-    if (maarittelyt) irrallinen.appendChild(maarittelyt.cloneNode(true));
-    irrallinen.appendChild(lahde.cloneNode(true));
-
-    const xml = new XMLSerializer().serializeToString(irrallinen);
     const lahdeOsoite = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
     let kuvalahde;
     try {
@@ -1115,13 +1120,9 @@ export async function rasteroiIkkuna(lahde, maarittelyt, ikkuna, skaala) {
     const osoite = png ? URL.createObjectURL(png) : canvas.toDataURL('image/png');
 
     /*
-     * PNG puretaan valmiiksi ennen kuin se pannaan karttaan.
-     *
-     * Ilman tätä kuva välkkyi vaihtuessaan kesken siirron (omistajan
-     * havainto): SVG:n <image> viittaa blob-osoitteeseen, jonka selain
-     * hakee ja purkaa vasta kun elementti on puussa, ja siinä välissä
-     * ehtii yksi tyhjä kehys. Kun purku on tehty etukäteen, elementti
-     * piirtyy heti ensimmäisellä kehyksellä.
+     * PNG puretaan valmiiksi ennen kuin se pannaan karttaan. Ilman tätä
+     * kuva välkkyi vaihtuessaan: <image> hakee ja purkaa blobin vasta
+     * kun elementti on puussa, ja siinä välissä ehtii tyhjä kehys.
      */
     try {
       const valmis = new Image();
@@ -1134,10 +1135,37 @@ export async function rasteroiIkkuna(lahde, maarittelyt, ikkuna, skaala) {
       x: ikkuna.x, y: ikkuna.y, width: ikkuna.w, height: ikkuna.h,
       href: osoite, preserveAspectRatio: 'none',
     });
-    // Osoite talteen, jotta kutsuja voi vapauttaa sen kun kuva vaihtuu.
     if (png) kuva.dataset.osoite = osoite;
     return kuva;
   } catch {
     return null;
   }
+}
+
+/*
+ * Kuinka monta laitepikseliä yhtä logiikkapikseliä kohti piirretään.
+ *
+ * iPadin näyttö on kaksinkertainen, joten logiikkapikseleillä piirretty
+ * kuva venytetään näytöllä kaksinkertaiseksi ja näyttää pehmeältä —
+ * ohuet rantaviivat katoavat kokonaan. Tarkkuus maksaa kuitenkin
+ * muistia neliöllisesti, ja puskuroitua aluetta on yhdeksän ruudullista
+ * (ruudullinen joka suuntaan), joten kaksinkertainen tarkkuus veisi
+ * tabletilla toista sataa megatavua.
+ *
+ * Tarkkuus valitaan siksi budjetista: otetaan niin tarkka kuin annettuun
+ * muistiin mahtuu, enintään näytön oma tarkkuus.
+ */
+const MUISTIBUDJETTI = 48 * 1024 * 1024; // tavua, 4 tavua per pikseli
+
+export function piirtotarkkuus(paneW, paneH) {
+  const laite = Math.min(window.devicePixelRatio || 1, 2);
+  // Puskuroitu alue on kolme ruudullista molempaan suuntaan.
+  const pikseleita = Math.max(1, paneW * 3 * paneH * 3);
+  const mahtuu = Math.sqrt(MUISTIBUDJETTI / 4 / pikseleita);
+  return Math.max(1, Math.min(laite, mahtuu));
+}
+
+/** Ruudun koko laudan yksiköissä annetulla mittakaavalla ja tarkkuudella. */
+export function ruudunKoko(skaala, tarkkuus = 1) {
+  return Math.max(1, RUUDUN_PIKSELIT / Math.max(skaala * tarkkuus, 1e-6));
 }
