@@ -240,6 +240,26 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 30: vinjetti pois lähikuvasta — VALMIS 2.8.2026
+
+**Omistajan toive:** "Zoomatussa mannernäkymässä vaalean vinjetin voi
+jättää joka sivulta pois."
+
+Kokonäkymässä häivytys rajaa laudan kuin vanhan filmin ruudun. Mantereen
+lähikuvassa kartta jatkuu joka suuntaan panoroitavaksi, joten vaalea
+reuna ei rajaa mitään — se vain haalistaa sitä osaa karttaa, jota
+ollaan katsomassa.
+
+`body.manner-zoom .map-pane::after` liitettiin samaan `opacity: 0`
+-sääntöön kuin zoomausliuku ja kiikari, joten häivytys palaa itsestään
+kokonäkymään eikä sitä tarvitse erikseen sytyttää.
+
+Mitattu lähikuvassa: vasen reuna 203 → 180, oikea 202 → 178, keskusta
+muuttumaton (177). Ylä- ja alakaista muuttuvat vain vähän, koska
+niissä ovat päiväkirjakortin taustavalo ja nappien omat levyt — ne
+kuuluvatkin näkyä.
+
+
 ## Paketti 29: kehittäjätila nurkkaan, matkakirja matalammaksi — VALMIS 2.8.2026
 
 **Omistajan toiveet:** "Kirjoita kehittäjätila ennemmin versionumeron

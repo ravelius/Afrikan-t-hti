@@ -351,10 +351,17 @@ body.manner-zoom .map-pane {
 /* Liu'un ajaksi kartan reunahäivytys pois (omistajan havainto): se
    piirtyi kasvavan kartan ulkopuolelle ja näkyi tummina kaarina.
    Etusivun lähikuvassa se ei enää palaa lainkaan: siellä reunan hoitaa
-   kiikari (omistajan päätös). Muilla kartoilla vaalea häivytys jää
-   entiselleen. Sama 700 ms kuin kiikarin esiintulossa, jolloin efektit
-   sulavat toisikseen eikä kumpikaan pompahda. */
+   kiikari (omistajan päätös). Sama 700 ms kuin kiikarin esiintulossa,
+   jolloin efektit sulavat toisikseen eikä kumpikaan pompahda.
+
+   Mantereen lähikuvassa häivytys jää pois joka sivulta (omistajan
+   toive). Kokonäkymässä se rajaa laudan kuin vanhan filmin ruudun,
+   mutta lähikuvassa kartta jatkuu joka suuntaan panoroitavaksi — silloin
+   vaalea reuna ei rajaa mitään, se vain haalistaa sen osan karttaa,
+   jota ollaan katsomassa. Kokonäkymässä häivytys palaa itsestään, kun
+   luokka poistuu. */
 body.zoom-kaynnissa .map-pane::after,
+body.manner-zoom .map-pane::after,
 body.kiikari-paalla .map-pane::after { opacity: 0; }
 
 body.aloitus-zoom #board,
@@ -52424,7 +52431,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.155';
+const APP_VERSION = '2026-08-02.156';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
