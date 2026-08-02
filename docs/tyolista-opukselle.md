@@ -240,6 +240,50 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 34: peilaus käynnistyy itsestään — VALMIS 2.8.2026
+
+**Omistajan toive:** "Tee sinä peilaus aina automaattisesti."
+
+Ei versionostoa: peliin ei tullut muutosta, vain ajoon.
+
+**Kolme käynnistintä.**
+
+1. **Push mainiin**, kun muutos koskee `js/packs/**`, `tools/peilaa-media.mjs`,
+   `tools/leikkaa-mp3.mjs` tai ajoa itseään. Juuri silloin peiliin on voinut
+   tulla uutta; tyyli-, dokumentti- ja pelilogiikkamuutokset eivät käynnistä
+   mitään. Ajo itse on listalla tarkoituksella — niin sen muutokset tulevat
+   kokeilluiksi heti eivätkä jää piiloon seuraavaan kertaan.
+2. **Viikoittain** (su 04:15 UTC). Jos jokin lähde oli poikki peilaushetkellä,
+   tiedosto jäi puuttumaan hiljaa; viikkoajo poimii sen kun lähde palaa.
+   Vartin yli tasatunnin, koska tasatunnit ovat GitHubilla ruuhkaisimmat.
+3. **Käsin**, jolloin voi yhä valita yhden lajin.
+
+**Vanha varoitus kumottiin mittaamalla.** Tiedoston kommentti kielsi
+pushista ajamisen, koska "ajo kestää kymmeniä minuutteja". Se pätee vain
+ensimmäiseen ajoon. Kun ämpärissä on jo kaikki, ajo vertaa tilanteen ja
+lopettaa: mitattu koko kierros **56 s**, josta noudon osuus 37 s. Pitkä ajo
+tulee vain kun uutta aineistoa on oikeasti paljon — ja silloin sitä pitääkin
+odottaa. Rinnakkaisuus ei ole vaara: `concurrency`-ryhmä pitää ajot jonossa
+eikä vienti käytä `--deleteä`.
+
+**Automatisointi paljasti piilevän vian.** Lajivalinta on olemassa vain
+käsin käynnistettäessä. Pushista ja ajastuksesta `inputs.lajit` on tyhjä
+merkkijono, ja askeleen vertailu
+
+    if [ "$LAJIT" != "kaikki" ] && [ "$LAJIT" != "$laji" ]; then continue; fi
+
+olisi silloin ohittanut **kaikki** lajit. Ajo olisi mennyt läpi vihreänä
+peilaamatta mitään — pahin mahdollinen lopputulos, koska se näyttää siltä
+että aineisto on kunnossa. Kaksi korjausta:
+
+- oletus annetaan ajossa: `LAJIT: ${{ inputs.lajit || 'kaikki' }}`
+- askel laskee montako lajia se ajoi ja **kaatuu jos luku on nolla**, jottei
+  sama virhe voi enää mennä läpi hiljaa
+
+Testattu neljä tapausta paikallisesti: `kaikki` → kolme lajia, `liput` →
+yksi, `aanet` → yksi, tyhjä → virhe.
+
+
 ## Paketti 33: peilausajo kuntoon ennen media-repon poistoa — VALMIS 2.8.2026
 
 Ei versionostoa: peliin ei tullut yhtään toiminnallista muutosta.
