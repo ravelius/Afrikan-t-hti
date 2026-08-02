@@ -2944,11 +2944,16 @@ test('päiväkirjan vinjetti ei haalista kartan alalaitaa', () => {
   // (body.kiikari-paalla .map-pane::after) osuisi muuten ensin.
   const vinjetti = css.match(/^\.map-pane::after \{[^}]*\}/m)?.[0] ?? '';
   assert.ok(vinjetti, 'vinjetin sääntöä ei löytynyt');
-  assert.match(vinjetti, /mask-image:\s*linear-gradient\(to top, transparent/,
-    'vinjetti peittää taas kartan alalaidan');
-  // Sekä webkit-etuliitteellinen että vakiomuoto: iOS:n Safari tarvitsee
-  // edellisen, eikä puuttuva etuliite näy muualla kuin puhelimella.
-  assert.match(vinjetti, /-webkit-mask-image:/, 'webkit-muoto puuttuu');
+  // Reunaliu'ut eivät piirrä alalaitaan mitään. Soikio piirtäisi, ja
+  // sen peittäminen maskilla näytti oikealta Chromiumissa mutta jätti
+  // alalaidan vaaleaksi iPhonella.
+  assert.doesNotMatch(vinjetti, /radial-gradient/,
+    'soikea vinjetti haalistaisi taas alalaidan');
+  assert.doesNotMatch(vinjetti, /to top/,
+    'alhaalta ylös nouseva liuku osuisi juuri alalaitaan');
+  for (const suunta of ['to bottom', 'to right', 'to left']) {
+    assert.ok(vinjetti.includes(suunta), `reunaliuku puuttuu: ${suunta}`);
+  }
 });
 
 test('kehittäjän siirto vie kaupunkiin kuluttamatta peliä', () => {
