@@ -384,6 +384,28 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 57: kuvakortti isommaksi isolla ruudulla — VALMIS v182 3.8.2026
+
+Omistajan toive iPadilta: "Nämä kuvat voisi näkyä isompana."
+
+Kortin leveyskatto 460 px oli mitoitettu puhelimelle. Tabletilla se jäi
+ruudun keskelle pieneksi lapuksi, vaikka tilaa oli runsaasti.
+
+**Kasvatus tehdään vain leveille ruuduille.** Puhelimella korttiin ei
+mahdu enempää: kuvan lisäksi siinä on kuvateksti, ja pelkkä korkeuden
+kasvattaminen tekisi vaakakuvasta pystykortin. Ensimmäinen yritys teki
+juuri niin — puhelimella kuva olisi ollut korkeampi kuin kortti leveä.
+
+| ruutu | kortti ennen | kortti nyt | kuva ennen | kuva nyt |
+|---|---|---|---|---|
+| puhelin | 336 | 336 | 330 | 330 |
+| iPad | 460 | **720** | 330 | **554** |
+| työpöytä | 460 | **684** | 330 | **519** |
+
+Raja on 700 px, sama kuin muuallakin pelissä — "kapea ruutu" tarkoittaa
+kaikkialla samaa.
+
+
 ## Paketti 56: Lasit omalle välilehdelleen — VALMIS v181 3.8.2026
 
 Omistajan havainto: "Neljä ylintä tässä ovat aarteiden (erikoislasit)
