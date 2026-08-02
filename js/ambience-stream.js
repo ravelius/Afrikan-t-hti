@@ -60,10 +60,21 @@ const HAIVYTYS_MS = 1800;
 // itseään toistavalta kun sinne palaa. Loppuun jätetään varaa, ettei
 // silmukka pyörähdy heti alkuun.
 const LOPPUVARA_S = 45;
+/*
+ * Silmukan sauma ristihäivytyksellä (omistajan toive). Selaimen oma
+ * `loop` katkaisee nauhan pään alkuun kuin veitsellä, ja kolmen minuutin
+ * äänitteessä sen kuulee. Siksi uusi kierros käynnistetään omana
+ * soittimenaan hieman ennen kuin edellinen ehtii loppua, ja ne
+ * ristihäivytetään: vanha vaimenee samaa tahtia kuin uusi voimistuu.
+ */
+const SILMUKKA_RISTI_MS = 2600;
 
-let nykyinen = null; // { audio, cityId }
+let nykyinen = null; // { audio, cityId, url, tavoite, vaimennus }
 
-function haivyta(audio, kohde, done) {
+/** Soiva taso: kohdevoimakkuus kerrottuna mahdollisella väistöllä. */
+const taso = (oma) => (oma ? oma.tavoite * (oma.vaimennus ?? 1) : 0);
+
+function haivyta(audio, kohde, done, kesto = HAIVYTYS_MS) {
   // Uusi häivytys keskeyttää saman äänen edellisen, etteivät kaksi
   // silmukkaa vedä voimakkuutta eri suuntiin.
   const oma = (audio.haivytysId = (audio.haivytysId ?? 0) + 1);
@@ -73,22 +84,30 @@ function haivyta(audio, kohde, done) {
     if (audio.haivytysId !== oma) return;
     // rAF:n aikaleima voi olla ennen t0:aa — ilman alarajaa volume
     // painui negatiiviseksi ja koko ääniketju kaatui poikkeukseen.
-    const t = Math.min(1, Math.max(0, (nyt - t0) / HAIVYTYS_MS));
-    audio.volume = alku + (kohde - alku) * t;
+    const t = Math.min(1, Math.max(0, (nyt - t0) / kesto));
+    audio.volume = Math.min(1, Math.max(0, alku + (kohde - alku) * t));
     if (t < 1) requestAnimationFrame(askel);
     else done?.();
   };
   requestAnimationFrame(askel);
 }
 
+/** Sammuttaa yhden soittimen pehmeästi ja vapauttaa sen. */
+function paasta(audio, kesto = HAIVYTYS_MS) {
+  haivyta(audio, 0, () => {
+    audio.pause();
+    audio.removeAttribute('src');
+  }, kesto);
+}
+
 export function stopPlaceStream() {
   const vanha = nykyinen;
   nykyinen = null;
   if (!vanha) return;
-  haivyta(vanha.audio, 0, () => {
-    vanha.audio.pause();
-    vanha.audio.removeAttribute('src');
-  });
+  // Myös kesken olevan ristihäivytyksen väistyvä puoli pitää sammuttaa,
+  // muuten se jäisi soimaan omilleen kaupungin vaihtuessa.
+  if (vanha.vaistyva) paasta(vanha.vaistyva);
+  paasta(vanha.audio);
 }
 
 /**
@@ -111,28 +130,49 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
   stopPlaceStream();
   // Valinta voi kantaa aloituskohdan ja voimakkuuden (#alku=20&voima=1.5):
   // hypätään äänitteen vaimean alun yli ja soitetaan halutulla tasolla.
-  // Silmukka palaa selaimen tapaan alkuun asti, mikä on siedettävää —
-  // äänitteet ovat pitkiä.
   const { url: osoite, alku, voima } = jaaAlku(url);
-  const audio = new Audio(aaniOsoite(osoite));
-  audio.loop = true;
+  const paikanVoima = VAKIOPAIKAT.has(cityId) ? ETUSIVUN_VOIMA : 1;
+  const oma = {
+    cityId,
+    url,
+    osoite,
+    alku: alku ?? 0,
+    audio: null,
+    vaistyva: null,
+    vaimennus: 1,
+    tavoite: Math.min(1, VOIMA * voima * paikanVoima),
+    // Etusivu alkaa aina samasta kohdasta, koska sen kuuluu kuulostaa
+    // joka avauksella samalta.
+    arvoAlku: !VAKIOPAIKAT.has(cityId),
+    fallbackType: fallbackType ?? null,
+  };
+  nykyinen = oma;
+  oma.audio = luoSoitin(oma, { arvottuAlku: oma.arvoAlku, nouse: HAIVYTYS_MS });
+}
+
+/**
+ * Yksi soitin äänimaisemalle: hakee äänitteen peilistä, hyppää oikeaan
+ * kohtaan ja nousee kuuluviin. Sama funktio luo sekä paikkaan
+ * saavuttaessa alkavan soittimen että silmukan seuraavan kierroksen,
+ * jotta varareitti ja aloituskohta käyttäytyvät molemmissa samoin.
+ */
+function luoSoitin(oma, { arvottuAlku, nouse }) {
+  const audio = new Audio(aaniOsoite(oma.osoite));
+  // Selaimen oma silmukka katkaistaisiin veitsellä; kierrokset
+  // ristihäivytetään itse (ks. vahdiSilmukka).
+  audio.loop = false;
   audio.preload = 'auto';
   audio.volume = 0;
-  // Aloituskohta arvotaan äänitteen mitasta. `alku` on äänitteen vaimean
-  // alun ylitys, eli aikaisin sallittu kohta; sitä myöhemmästä valitaan
-  // satunnainen. Etusivu alkaa aina samasta kohdasta, koska sen kuuluu
-  // kuulostaa joka avauksella samalta.
-  const arvoAlku = !VAKIOPAIKAT.has(cityId);
   let hypatty = false;
   const hyppaa = () => {
     if (hypatty) return;
-    const pohja = alku ?? 0;
+    const pohja = oma.alku;
     // Kesto ei ole aina tiedossa vielä loadedmetadata-hetkellä: osalla
     // äänitteistä se selviää vasta myöhemmin. Siksi kuunnellaan myös
     // durationchange — muuten arvonta jäisi tekemättä hiljaisesti.
     if (!Number.isFinite(audio.duration)) return;
     const yla = audio.duration - LOPPUVARA_S;
-    const kohta = arvoAlku && yla > pohja + 5
+    const kohta = arvottuAlku && yla > pohja + 5
       ? pohja + Math.random() * (yla - pohja)
       : pohja;
     hypatty = true;
@@ -146,18 +186,17 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
   audio.addEventListener('loadedmetadata', hyppaa);
   audio.addEventListener('durationchange', hyppaa);
   audio.addEventListener('canplay', hyppaa);
-  const paikanVoima = VAKIOPAIKAT.has(cityId) ? ETUSIVUN_VOIMA : 1;
-  const oma = { audio, cityId, url, tavoite: Math.min(1, VOIMA * voima * paikanVoima) };
-  nykyinen = oma;
 
   // Kaksi porrasta ennen synteesiä: jos peili ei vastaa, sama äänite
   // löytyy yhä alkuperäisestä lähteestä. Vasta kun sekin pettää,
   // palataan syntetisoituun ambienssiin.
   let varareittiKokeiltu = false;
   const varalle = () => {
-    if (nykyinen === oma) nykyinen = null;
+    if (nykyinen === oma && oma.audio === audio) {
+      nykyinen = null;
+      sfx.setAmbience(oma.fallbackType);
+    }
     audio.pause();
-    sfx.setAmbience(fallbackType ?? null);
   };
   // Soitto ja onnistumisen käsittely ovat omassa funktiossaan, jotta
   // varareitti käy täsmälleen saman polun: ilman sitä äänite jäisi
@@ -168,14 +207,15 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
       return;
     }
     sfx.setAmbience(null); // synteesi väistyy, kun oikea äänite soi
-    haivyta(audio, oma.tavoite);
+    haivyta(audio, taso(oma), null, nouse);
+    vahdiSilmukka(oma, audio);
   }).catch(petti);
   const petti = () => {
     if (!varareittiKokeiltu && onPeilista(audio.getAttribute('src'))) {
       varareittiKokeiltu = true;
-      peiliPetti();
+      peiliPetti('aanet');
       if (nykyinen !== oma) return;
-      audio.src = osoite;
+      audio.src = oma.osoite;
       audio.load();
       soi();
       return;
@@ -184,6 +224,38 @@ export function playPlaceAmbience(cityId, fallbackType, lauta) {
   };
   audio.addEventListener('error', petti);
   soi();
+  return audio;
+}
+
+/**
+ * Käynnistää seuraavan kierroksen hieman ennen kuin nauha loppuu ja
+ * ristihäivyttää kierrokset päällekkäin. Ilman tätä silmukan sauma
+ * kuuluu naksahduksena keskellä äänimaisemaa.
+ */
+function vahdiSilmukka(oma, audio) {
+  const risti = SILMUKKA_RISTI_MS / 1000;
+  const vaihda = () => {
+    if (nykyinen !== oma || oma.audio !== audio) return;
+    // Uusi kierros alkaa aina äänitteen alusta (`alku` on vain vaimean
+    // alun ylitys) — sauma kuuluu sitä vähemmän, mitä samankaltaisempi
+    // kohta on, ja alku on ainoa kohta joka on varmasti käytettävissä.
+    oma.vaistyva = audio;
+    oma.audio = luoSoitin(oma, { arvottuAlku: false, nouse: SILMUKKA_RISTI_MS });
+    haivyta(audio, 0, () => {
+      audio.pause();
+      audio.removeAttribute('src');
+      if (oma.vaistyva === audio) oma.vaistyva = null;
+    }, SILMUKKA_RISTI_MS);
+  };
+  audio.addEventListener('timeupdate', () => {
+    if (nykyinen !== oma || oma.audio !== audio) return;
+    if (!Number.isFinite(audio.duration)) return;
+    if (audio.duration - audio.currentTime > risti) return;
+    vaihda();
+  });
+  // Varareitti: jos timeupdate ei ehtinyt laukaista vaihtoa (hidas
+  // laite, taustavälilehti), kierros alkaa heti nauhan loputtua.
+  audio.addEventListener('ended', vaihda);
 }
 
 // Tietovisan taustamusiikki: hiljainen huililuuppi kysymyksen ajaksi.
@@ -200,7 +272,7 @@ let musiikki = null;
 export function startQuizMusic(lauta) {
   // Kaupungin ääni väistyy reilusti kysymyksen ajaksi — kaksi ääntä
   // päällekkäin täydellä voimalla oli puuroa.
-  if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
+  saadaVaistoa(0.15);
   if (!sfx.enabled || musiikki) return;
   // Maanosan oma valinta tai oletus voittaa; ilman kumpaakaan soi
   // yleinen. Oletukset kulkevat koodin mukana, joten ne toimivat myös
@@ -239,7 +311,7 @@ export function startQuizMusic(lauta) {
   const petti = () => {
     if (varareittiKokeiltu || !onPeilista(audio.getAttribute('src'))) { luovuta(); return; }
     varareittiKokeiltu = true;
-    peiliPetti();
+    peiliPetti('aanet');
     if (musiikki !== audio) return;
     audio.src = alkuperainen;
     audio.load();
@@ -253,18 +325,33 @@ export function startQuizMusic(lauta) {
  * Taustaäänen väistö muun äänen (esim. kulttuurinoston ääninäytteen)
  * ajaksi — sama kevennys kuin tietovisan aikana. Palautus nostaa
  * taustan takaisin täyteen voimaansa.
+ *
+ * Väistö talletetaan kertoimena, ei pelkkänä häivytyksenä: kesken
+ * väistön alkava silmukan kierros nousisi muuten täyteen voimaan ja
+ * puhe hukkuisi sen alle.
  */
 export function vaimennaTausta() {
-  if (nykyinen) haivyta(nykyinen.audio, (nykyinen.tavoite ?? VOIMA) * 0.15);
+  saadaVaistoa(0.15);
 }
 
 export function palautaTausta() {
-  if (nykyinen) haivyta(nykyinen.audio, nykyinen.tavoite ?? VOIMA);
+  saadaVaistoa(1);
+}
+
+/** Asettaa väistökertoimen ja ajaa kaikki soivat kierrokset sen mukaiseksi. */
+function saadaVaistoa(kerroin) {
+  if (!nykyinen) return;
+  nykyinen.vaimennus = kerroin;
+  const kohde = taso(nykyinen);
+  if (nykyinen.audio) haivyta(nykyinen.audio, kohde);
+  // Ristihäivytyksen väistyvä puoli on jo matkalla nollaan — sitä ei
+  // nosteta takaisin, muuten sauma kuuluisi uudestaan.
+  if (nykyinen.vaistyva && kerroin < 1) haivyta(nykyinen.vaistyva, 0);
 }
 
 export function stopQuizMusic() {
   // Kaupungin ääni palaa täyteen voimaansa.
-  if (nykyinen) haivyta(nykyinen.audio, nykyinen.tavoite ?? VOIMA);
+  saadaVaistoa(1);
   const vanha = musiikki;
   musiikki = null;
   if (!vanha) return;
