@@ -122,3 +122,48 @@ test('yhdistetty kartta löytää päällekkäiset porttikaupungit', async () =>
   assert.deepEqual(paallekkaisetIdt, ['istanbul', 'kairo', 'teheran']);
   assert.ok(lista.length > 130, `kaupunkeja pitäisi olla yli 130, nyt ${lista.length}`);
 });
+
+test('yhdistetty reittiverkko on yhtenäinen', async () => {
+  // Tämä on koko yhdistämisen tärkein rakenteellinen tulos: reittejä ei
+  // tarvitse keksiä uusiksi. Samat kaupunkiparit ovat yhä naapureita, ja
+  // koska porttikaupungit (Istanbul, Kairo, Teheran) sulautuvat yhdeksi,
+  // neljä erillistä verkkoa liittyy niiden kohdalla itsestään.
+  //
+  // Jos tämä testi punastuu, joku on poistanut porttikaupungin tai sen
+  // reitin, ja kartta on hajonnut osiin — pelaaja jäisi jumiin
+  // mantereelle, josta ei pääse pois.
+  const { reitit, kaupungit } = await import('../tools/vanha-maailma.mjs');
+  const { kaupungit: kaup } = await kaupungit();
+  const tiet = await reitit();
+
+  const naapurit = new Map(kaup.map((c) => [c.id, []]));
+  for (const t of tiet) {
+    naapurit.get(t.a)?.push(t.b);
+    naapurit.get(t.b)?.push(t.a);
+  }
+
+  const nahty = new Set([kaup[0].id]);
+  const jono = [kaup[0].id];
+  while (jono.length) {
+    const x = jono.pop();
+    for (const n of naapurit.get(x) ?? []) {
+      if (!nahty.has(n)) { nahty.add(n); jono.push(n); }
+    }
+  }
+
+  const saavuttamattomat = kaup.filter((c) => !nahty.has(c.id)).map((c) => c.id);
+  assert.deepEqual(saavuttamattomat, [],
+    `kartta hajosi osiin — näihin ei pääse: ${saavuttamattomat.join(', ')}`);
+  assert.ok(tiet.length > 200, `reittejä pitäisi olla yli 200, nyt ${tiet.length}`);
+});
+
+test('porttikaupungit yhdistävät mantereet', async () => {
+  const { reitit } = await import('../tools/vanha-maailma.mjs');
+  const tiet = await reitit();
+  // Jokaisella portilla pitää olla reittejä molemmilta puolilta: ilman
+  // niitä sauma aukeaisi ja verkko hajoaisi osiin.
+  for (const portti of ['istanbul', 'kairo', 'teheran']) {
+    const naapureita = tiet.filter((t) => t.a === portti || t.b === portti).length;
+    assert.ok(naapureita >= 2, `${portti}: vain ${naapureita} reittiä — sauma ei kanna`);
+  }
+});

@@ -211,6 +211,48 @@ export async function kaupungit() {
   return { kaupungit: [...ulos.values()], paallekkaiset };
 }
 
+/*
+ * Reitit neljältä laudalta yhtenä verkkona.
+ *
+ * Reittejä EI tarvitse keksiä uusiksi: samat kaupunkiparit ovat yhä
+ * naapureita yhdistetyllä kartalla. Ja koska porttikaupungit (Istanbul,
+ * Kairo, Teheran) sulautuvat yhdeksi, neljä erillistä verkkoa liittyy
+ * niiden kohdalla itsestään toisiinsa — tarkistettu: 143 kaupunkia ja
+ * 222 reittiä muodostavat YHDEN yhtenäisen verkon, josta pääsee
+ * jokaisesta kaupungista jokaiseen.
+ *
+ * Merireittien välipisteet (via) sen sijaan on projisoitava uudelleen:
+ * ne kaartavat rannikon ympäri vanhan laudan koordinaateissa, ja uudella
+ * kartalla ne osuisivat muuten maalle.
+ */
+export async function reitit() {
+  const { PACKS } = await import('../js/pack.js');
+  const asia = JSON.parse(readFileSync(join(JUURI, 'tools/mapdata/asia.json'), 'utf8'));
+  const ulos = [];
+  const nahdyt = new Set();
+  for (const id of ['europe', 'africa', 'middleeast', 'asia']) {
+    const pack = PACKS.find((p) => p.id === id);
+    for (const e of pack.edges) {
+      // Sama kaupunkipari voi olla kahdella laudalla (porttikaupunkien
+      // ympärillä); reitti tarvitaan kerran.
+      const avain = [e.a, e.b].sort().join('~');
+      if (nahdyt.has(avain)) continue;
+      nahdyt.add(avain);
+      let via = null;
+      if (e.via?.length) {
+        if (id === 'asia') {
+          // Aasialla välipisteet ovat alkuperäisinä lon/lat-pareina.
+          via = (asia.routes?.[avain] ?? asia.routes?.[`${e.a}_${e.b}`] ?? null);
+        } else {
+          via = e.via.map(([x, y]) => KAANTEISET[id](x, y));
+        }
+      }
+      ulos.push({ a: e.a, b: e.b, tyyppi: e.type ?? 'land', askeleet: e.steps, via });
+    }
+  }
+  return ulos;
+}
+
 // --- ajo ---------------------------------------------------------------------
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -227,15 +269,18 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     lat0: Math.min(...latit) - 10, lat1: Math.max(...latit) + 10,
   };
 
+  const tiet = await reitit();
   const viivat = rannikot(geo, alue);
   const kaupPisteet = kaup.map((c) => miller.eteen(c.lon, c.lat));
   const { muunna, korkeus } = sovita([...viivat, kaupPisteet]);
+  const paikka = new Map(kaup.map((c) => [c.id, muunna(miller.eteen(c.lon, c.lat))]));
 
   console.log(`alue: ${alue.lon0.toFixed(0)}…${alue.lon1.toFixed(0)}° pituutta, `
     + `${alue.lat0.toFixed(0)}…${alue.lat1.toFixed(0)}° leveyttä`);
   console.log(`rannikkoja: ${viivat.length}, pisteitä ${viivat.reduce((s, v) => s + v.length, 0)}`);
   console.log(`kaupunkeja: ${kaup.length} (päällekkäisiä ${paallekkaiset.length}: `
     + `${paallekkaiset.map(([id, l]) => `${id}/${l}`).join(', ')})`);
+  console.log(`reittejä: ${tiet.length}, joista ${tiet.filter((t) => t.via?.length).length} kaartaa`);
   console.log(`lauta: 4000 x ${korkeus}`);
 
   const esikatselu = arvo('--esikatselu', null);
@@ -248,6 +293,17 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4000 ${korkeus}" width="2000">`,
       `<rect width="4000" height="${korkeus}" fill="#ecd8ae"/>`,
       ...viivat.map((v) => `<path d="${polku(v)}" fill="#ddc394" stroke="#46331f" stroke-width="2"/>`),
+      // Reitit kaupunkien alle: merireitit katkoviivalla kuten pelissä.
+      ...tiet.map((t) => {
+        const a = paikka.get(t.a);
+        const b = paikka.get(t.b);
+        if (!a || !b) return '';
+        const kohdat = [a, ...(t.via ?? []).map((p) => muunna(miller.eteen(p[0], p[1]))), b];
+        const d = `M${kohdat.map(([x, y]) => `${x},${y}`).join(' L')}`;
+        const meri = t.tyyppi === 'sea';
+        return `<path d="${d}" fill="none" stroke="${meri ? '#3f6d94' : '#8a6c46'}"`
+          + ` stroke-width="${meri ? 3 : 4}"${meri ? ' stroke-dasharray="14 12"' : ''} opacity="0.75"/>`;
+      }),
       ...kaup.map((c) => {
         const [x, y] = muunna(miller.eteen(c.lon, c.lat));
         return `<circle cx="${x}" cy="${y}" r="11" fill="${varit[c.lauta]}" stroke="#2b1d0e" stroke-width="2"/>`
