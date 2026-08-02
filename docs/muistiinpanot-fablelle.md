@@ -388,6 +388,7 @@ tekijämerkinnät, Astu mantereelle -napin korjaus ja ylävalikon siivous.
 
 | v | Muutos |
 |---|---|
+| 145 | **Musiikki soimaan napista.** Omistajan huomio: Tutki-sivun musiikkiosiossa oli linkki jollekin sivulle eikä musiikkia. `musiikkiVapaa` osoitti kansallisen yleisradion etusivulle (ERT, BBC, HRT) — sivulle päätyminen ei ole musiikin kuulemista. Kentät poistettu, tilalla `musiikkiNayte`: suora mp3, joka soi napista samalla soittimella kuin muutkin näytteet. Apple Music -linkki säilyy vieressä. Näytteitä 20 kortissa 33:sta; ilman jäävät ne, joille vapaasti lisensoitua äänitystä ei ole tai joiden ainoa osuma on ND-lisenssillä (ei muokkausta), joka ei sovi peiliin leikattavaksi — mm. ABBA, Röyksopp ja Šostakovitšin 7. sinfonia. Uusi `tools/hae-musiikkinaytteet.mjs` hakee ehdokkaat Commonsista ja archive.orgista. **Kaksi rajausta, joita ei saa poistaa:** vain mp3 (Safari ei soita oggia eikä flacia, ja peliä pelataan iPadilla), ja archive.orgista vain kohteet joilla on `licenseurl` — Great 78 Project osuu hakusanoihin parhaiten mutta sen kohteissa ei ole lisenssitietoa lainkaan. Commons-näytteitä ei peilata; peilaustyökalu poimii vain freesound- ja archive.org-osoitteet, ja Commons on muutenkin pysyvä lähde. Korjattu myös soittimen napinteksti: se palautui pysäytettäessä aina muotoon "Kuuntele näyte", vaikka nappi olisi ollut "Kuuntele kieltä". |
 | 144 | **Kuuntele kieltä -nappi.** Saapumiskortin tervehdysrivin perässä on nappi, joka soittaa siitä kaupungista tehdyn äänityksen, jossa ihmiset puhuvat. Teksti kertoo mitä "hyvää päivää" on kyseisellä kielellä, näyte miltä se kuulostaa oikeassa kadunkulmassa. Näyte on tarkoituksella eri asia kuin taustaääni: tausta soi silmukassa minuutteja, ja selvä puhe alkaa toistuessaan kiinnittää huomion — pelaaja tunnistaa samat lauseet ja tausta muuttuu häiriöksi. Siksi taustaan haetaan edelleen puheetonta maisemaa ja kieli soi kerran painalluksesta. Hakutyökaluun tuli `--puhe`-tila, joka etsii toreja, kahviloita, asemia ja katusoittajia — paikkoja joissa on monta ihmistä äänessä eikä äänite ole kenenkään yksityinen keskustelu. 41 kaupungista 36 sai ehdokkaita; niistä valittiin käsin 31. Ilman nappia jäävät Alpit, Dubrovnik, Sarajevo, Odessa ja Lappi (ei ehdokkaita) sekä Edinburgh, Wien, Granada, Tromssa ja Islanti (ehdokkaina kutomakone, lintuja, kirkonkelloja, supermarketti). Nappia ei siis näy, ellei näytettä ole — parempi kuin nappi joka lupaa kieltä eikä anna sitä. **Rehellisyyden vuoksi:** valinta on tehty äänitysten omien kuvausten perusteella, ei kuuntelemalla; aporeen kuvaukset ovat poikkeuksellisen tarkkoja, mutta huono osuma on mahdollinen ja vaihtoehdot saa työkalulla uudestaan. ND-lisenssit jätettiin pois, koska peiliin menevät äänet leikataan kolmeen minuuttiin. Peilaustyökalusta korjattiin sama kirjainkokovika kuin mediatestistä aiemmin: oletushakemisto oli `matkakirja-media` pienellä, joten Linuxilla se loi repon viereen toisen tyhjän hakemiston ja peilasi joka kerta tyhjästä. |
 | 143 | **Matkalaukku aukeaa kukkaropilleristä** (omistajan toive): erillinen passinappi pois ylävalikosta, ja punta–päivä-pilleri on nyt itse nappi, jonka päässä on laukun kuvake. **Kaupungin kuvat ja äänet ladataan valmiiksi saapuessa** (omistajan toive): karuselli latasi kuvat vasta nuolta painettaessa, kulttuurinostot vasta lohkon avautuessa ja ääninäyte vasta napista. Nyt saapuminen käynnistää haun taustalla kolmen ryhmissä, ettei saapumishetki tuki yhteyttä juuri kun kortti piirtyy. Kaikki menee selaimen omaan välimuistiin, joten näyttö käyttää samoja osoitteita eikä lataa mitään toiseen kertaan; epäonnistuminen ei näy pelaajalle. Työhuoneen tilastoihin versionumero. |
 | 142 | **Euroopan rannikot piirretty oikeasta aineistosta** (omistajan huomio: "Sardinia ei edes näy"). Ääriviivat tulevat nyt Natural Earthin 10 m maapolygoneista: manner 620 pistettä ja 12 saarta, yhteensä 1340 pistettä käsin arvattujen tilalle. Yksinkertaistus on Visvalingam–Whyatt eikä Ramer–Douglas–Peucker, koska RDP jätti Norjan vuonoihin neulamaisia piikkejä — Visvalingam poistaa pienimmän kolmion kerrallaan ja säilyttää muodon paremmin samalla pistemäärällä. Suljetun renkaan yksinkertaistus kaatui aluksi yhteen pisteeseen: alku- ja loppupiste ovat samat, joten perusviiva on nollan mittainen ja kaikki etäisyydet nollia — rengas kierretään nyt ääripisteeseen ja käsitellään avoimena viivana. Kaupunkien paikkoja siirretty rannikon mukaan (Istanbul, Kreeta, Kööpenhamina) ja Barcelona–Rooma-merireitille annettu välipisteet, ettei se leikkaa Sardinian läpi. **Peilin katkaisija lähdekohtaiseksi:** yhteinen laskuri sammutti kuvapeilin kolmen ääniongelman jälkeen, vaikka kuvapalvelin olisi ollut kunnossa. |
@@ -507,8 +508,21 @@ sitä näyttävät vain Apple Musicin. Käytössä Ateenan seudulla:
 | Kroatia | HRT | `https://radio.hrt.hr/` |
 | Bulgaria | BNR | `https://bnr.bg/en/live` |
 
-Vielä selvittämättä: Europeana, IMSLP ja Commonsin omat
-musiikkitallenteet, joista saisi suoraan soivan näytteen linkin sijaan.
+**Tämä ratkaisu kumottiin 2.8.2026.** Omistajan huomio: "Tutki
+sivuilla on musiikki osiossa linkki aina jollekin sivulle. Sen tilalla
+saisi olla linkki ääninäytteeseen suoraan, eli musiikki pitäisi lähteä
+soimaan suoraan kun sitä painaa." Yleisradion etusivu ei ole musiikkia
+— se on paikka, josta musiikkia ehkä löytää. `musiikkiVapaa`-kentät
+poistettiin ja tilalle tuli `musiikkiNayte`: suora mp3, joka soi
+napista samalla soittimella kuin muutkin näytteet. Lähteet ovat
+Wikimedia Commons ja archive.org (`tools/hae-musiikkinaytteet.mjs`).
+
+Kaksi rajausta lähteissä. Vain **mp3** kelpaa, koska Safari ei soita
+oggia eikä flacia — ja peliä pelataan iPadilla, joten ogg-näyte olisi
+juuri siellä hiljainen. Ja archive.orgista vain kohteet, joilla on
+`licenseurl`: Great 78 Project (`collection:georgeblood`) osuu
+hakusanoihin ylivoimaisesti parhaiten, mutta sen kohteissa ei ole
+lisenssitietoa lainkaan, joten ne jätettiin kokonaan pois.
 
 ### Kuvien tallennuspaikka — ratkaistu
 

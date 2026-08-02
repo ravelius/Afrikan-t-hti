@@ -840,6 +840,10 @@
         `${num(omatAanet)} (${num(Object.keys(KAUPUNKI_EHDOKKAAT).length)} kaupunkia)`]);
       rivit.push(['Kielinäytteitä (Eurooppa)',
         `${num(kieliKaupungit)} / ${num(europe?.cities.length ?? 0)} kaupunkia`]);
+      const musiikkiKortit = Object.values(EUROPE_KULTTUURI)
+        .flatMap((k) => k.nostot ?? []).filter((n) => n.musiikki);
+      rivit.push(['Musiikkinäytteitä (Eurooppa)',
+        `${num(musiikkiKortit.filter((n) => n.musiikkiNayte).length)} / ${num(musiikkiKortit.length)} korttia`]);
       // Äänet ja koko luetaan sovelluksen omista tiedostoista.
       try {
         const sw = await (await fetch('sw.js')).text();

@@ -413,9 +413,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Rebetiko',
         musiikki: 'https://music.apple.com/fi/search?term=rebetiko',
         musiikkiNimi: 'Rebetiko Apple Musicissa',
-        musiikkiVapaa: 'https://webradio.ert.gr/',
-        musiikkiVapaaNimi: 'ERT — Kreikan yleisradion verkkoradiot',
-        musiikkiVapaaLyhyt: 'ERT',
       },
       {
         tyyppi: 'kuva',
@@ -560,9 +557,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Psarantónis',
         musiikki: 'https://music.apple.com/fi/search?term=cretan%20lyra',
         musiikkiNimi: 'Kreetalaista lyyramusiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://webradio.ert.gr/',
-        musiikkiVapaaNimi: 'ERT — Kreikan yleisradion verkkoradiot',
-        musiikkiVapaaLyhyt: 'ERT',
+        musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/Cretan_Lyra_-_Sample.mp3',
+        musiikkiNayteNimi: 'Kreetalainen lyyra — Aerakis, CC BY',
       },
       {
         tyyppi: 'kuva',
@@ -676,9 +672,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Klapa',
         musiikki: 'https://music.apple.com/fi/search?term=klapa',
         musiikkiNimi: 'Klapa-lauluja Apple Musicissa',
-        musiikkiVapaa: 'https://radio.hrt.hr/',
-        musiikkiVapaaNimi: 'HRT — Kroatian yleisradion verkkoradiot',
-        musiikkiVapaaLyhyt: 'HRT',
       },
       {
         tyyppi: 'kuva',
@@ -742,9 +735,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Gaida',
         musiikki: 'https://music.apple.com/fi/search?term=bulgarian%20folk%20gaida',
         musiikkiNimi: 'Bulgarialaista kansanmusiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://bnr.bg/en/live',
-        musiikkiVapaaNimi: 'BNR — Bulgarian yleisradion suorat lähetykset',
-        musiikkiVapaaLyhyt: 'BNR',
         // Kenttä-äänitys Sofian keskustasta: laulua, gaidaa ja rumpua
         // kadulla. Lisenssi varmistettu archive.orgin metatiedoista.
         aani: 'https://archive.org/download/aporee_34245_39372/streetmusicianssofia.mp3',
@@ -814,10 +804,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'BBC Proms',
         musiikki: 'https://music.apple.com/fi/search?term=bbc%20proms',
         musiikkiNimi: 'Proms-konsertteja Apple Musicissa',
-        musiikkiVapaa: 'https://www.bbc.co.uk/sounds',
-        musiikkiVapaaNimi: 'BBC Sounds — Britannian yleisradion radiot ja '
-                             + 'tallenteet',
-        musiikkiVapaaLyhyt: 'BBC',
+        musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/2/28/ELGAR_Pomp_and_Circumstance_in_D%2C_Opus_39%2C_No._1_-_United_States_Marine_Band.mp3',
+        musiikkiNayteNimi: 'Elgar: Pomp and Circumstance nro 1 — United States Marine Band, PD',
       },
       {
         tyyppi: 'kuva',
@@ -886,10 +874,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Säkkipilli',
         musiikki: 'https://music.apple.com/fi/search?term=highland%20bagpipe',
         musiikkiNimi: 'Skotlantilaista säkkipillimusiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://www.bbc.co.uk/sounds',
-        musiikkiVapaaNimi: 'BBC Sounds — Britannian yleisradion radiot ja '
-                             + 'tallenteet',
-        musiikkiVapaaLyhyt: 'BBC',
+        musiikkiNayte: 'https://archive.org/download/raretunes_364_beating-retreat-edinburgh-castle/raretunesedretreat.mp3',
+        musiikkiNayteNimi: 'Pipe band, Edinburgh Castle — CC BY-NC-SA',
       },
       {
         tyyppi: 'kuva',
@@ -959,9 +945,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Irlantilainen kansanmusiikki',
         musiikki: 'https://music.apple.com/fi/search?term=uilleann%20pipes',
         musiikkiNimi: 'Uilleann-pillimusiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://www.rte.ie/radio/',
-        musiikkiVapaaNimi: 'RTÉ — Irlannin yleisradion radiokanavat',
-        musiikkiVapaaLyhyt: 'RTÉ',
+        musiikkiNayte: 'https://archive.org/download/TheKerryJigTheMugOfBrownAle/01_kerry_mug_of_brown_ale_jigs.mp3',
+        musiikkiNayteNimi: 'Irlantilainen jigi ja reel — Tradschool, CC BY-NC-SA',
       },
       {
         tyyppi: 'kuva',
@@ -1031,9 +1016,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Édith Piaf',
         musiikki: 'https://music.apple.com/fi/search?term=edith%20piaf',
         musiikkiNimi: 'Édith Piaf Apple Musicissa',
-        musiikkiVapaa: 'https://www.radiofrance.fr/',
-        musiikkiVapaaNimi: 'Radio France — Ranskan yleisradion verkkoradiot',
-        musiikkiVapaaLyhyt: 'Radio France',
       },
       {
         tyyppi: 'kuva',
@@ -1109,9 +1091,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Amália Rodrigues',
         musiikki: 'https://music.apple.com/fi/search?term=am%C3%A1lia%20rodrigues',
         musiikkiNimi: 'Amália Rodrigues Apple Musicissa',
-        musiikkiVapaa: 'https://www.rtp.pt/antena1/',
-        musiikkiVapaaNimi: 'RTP Antena 1 — Portugalin yleisradion kanava',
-        musiikkiVapaaLyhyt: 'RTP',
+        musiikkiNayte: 'https://archive.org/download/Fado2017/003-don-bosco-students.mp3',
+        musiikkiNayteNimi: 'Fadokilpailu 2017 — Aren Noronha, CC BY-SA',
       },
       {
         tyyppi: 'kuva',
@@ -1184,9 +1165,8 @@ export const EUROPE_KULTTUURI = {
         lahde: 'Javier Perez Montes, Wikimedia Commons (CC BY-SA 4.0)',
         musiikki: 'https://music.apple.com/fi/search?term=chotis%20madrile%C3%B1o',
         musiikkiNimi: 'Chotis-musiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://www.rtve.es/play/radio/',
-        musiikkiVapaaNimi: 'RTVE — Espanjan yleisradion verkkoradiot',
-        musiikkiVapaaLyhyt: 'RTVE',
+        musiikkiNayte: 'https://archive.org/download/granvi30g/AE2784.mp3',
+        musiikkiNayteNimi: 'La Gran Vía -zarzuela — Emilio Sagi-Barba, PD',
       },
       {
         tyyppi: 'kuva',
@@ -1257,10 +1237,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Sardana',
         musiikki: 'https://music.apple.com/fi/search?term=sardana%20cobla',
         musiikkiNimi: 'Sardana-musiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://www.ccma.cat/3cat/directes/catalunya-radio/',
-        musiikkiVapaaNimi: 'Catalunya Ràdio — Katalonian oman yleisradion '
-                             + 'suora lähetys',
-        musiikkiVapaaLyhyt: 'CCMA',
+        musiikkiNayte: 'https://archive.org/download/TarannCobla-OdaAlFolklore/01RquiemDeCooper.mp3',
+        musiikkiNayteNimi: 'Cobla soittaa — Tarannà + Cobla, CC BY-NC',
       },
       {
         tyyppi: 'kuva',
@@ -1332,10 +1310,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Posetiivi',
         musiikki: 'https://music.apple.com/fi/search?term=draaiorgel',
         musiikkiNimi: 'Katu-urkumusiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://www.nporadio5.nl/',
-        musiikkiVapaaNimi: 'NPO Radio 5 — Alankomaiden yleisradion '
-                             + 'hollanninkielinen kanava',
-        musiikkiVapaaLyhyt: 'NPO',
+        musiikkiNayte: 'https://archive.org/download/VPROreisnaarheteinde-draaiorgel/draaiorgel.mp3',
+        musiikkiNayteNimi: 'Katu-urut — VPRO / lolaradio, CC BY-SA',
       },
       {
         tyyppi: 'kuva',
@@ -1406,10 +1382,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Love Parade',
         musiikki: 'https://music.apple.com/fi/search?term=berlin%20techno',
         musiikkiNimi: 'Berliiniläistä teknoa Apple Musicissa',
-        musiikkiVapaa: 'https://www.ardaudiothek.de/',
-        musiikkiVapaaNimi: 'ARD Audiothek — Saksan yleisradion '
-                             + 'ohjelma-arkisto',
-        musiikkiVapaaLyhyt: 'ARD',
       },
       {
         tyyppi: 'kuva',
@@ -1479,9 +1451,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Johann Strauss nuorempi',
         musiikki: 'https://music.apple.com/fi/search?term=Johann%20Strauss%20Donauwalzer',
         musiikkiNimi: 'Tonava kaunoinen Apple Musicissa',
-        musiikkiVapaa: 'https://sound.orf.at/',
-        musiikkiVapaaNimi: 'ORF Sound — Itävallan yleisradion radiokanavat',
-        musiikkiVapaaLyhyt: 'ORF',
+        musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/d/de/%22An_der_sch%C3%B6nen%2C_blauen_Donau%22%2C_performed_by_the_US_Marine_Band.mp3',
+        musiikkiNayteNimi: 'Strauss: Tonava kaunoinen — United States Marine Band, PD',
       },
       {
         tyyppi: 'kuva',
@@ -1551,9 +1522,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Alppitorvi',
         musiikki: 'https://music.apple.com/fi/search?term=alphorn',
         musiikkiNimi: 'Alppitorvimusiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://www.srf.ch/audio',
-        musiikkiVapaaNimi: 'SRF Audio — Sveitsin yleisradion radiokanavat',
-        musiikkiVapaaLyhyt: 'SRF',
       },
       {
         tyyppi: 'kuva',
@@ -1625,9 +1593,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Bedřich Smetana',
         musiikki: 'https://music.apple.com/fi/search?term=smetana%20vltava',
         musiikkiNimi: 'Smetanan Vltava Apple Musicissa',
-        musiikkiVapaa: 'https://www.rozhlas.cz/',
-        musiikkiVapaaNimi: 'Český rozhlas — Tšekin yleisradion verkkoradiot',
-        musiikkiVapaaLyhyt: 'ČRo',
+        musiikkiNayte: 'https://archive.org/download/Friedrich_Smetana_-_Die_Moldau/Smetana-Moldau.mp3',
+        musiikkiNayteNimi: 'Smetana: Vltava — CC0',
       },
       {
         tyyppi: 'kuva',
@@ -1702,9 +1669,6 @@ export const EUROPE_KULTTUURI = {
         lahde: 'FORTEPAN / Urbán Tamás, Wikimedia Commons (CC BY-SA 3.0)',
         musiikki: 'https://music.apple.com/fi/search?term=muzsikas',
         musiikkiNimi: 'Muzsikás Apple Musicissa',
-        musiikkiVapaa: 'https://mediaklikk.hu/',
-        musiikkiVapaaNimi: 'Mediaklikk — Unkarin yleisradion radiokanavat',
-        musiikkiVapaaLyhyt: 'MTVA',
       },
       {
         tyyppi: 'kuva',
@@ -1777,10 +1741,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Fryderyk Chopin',
         musiikki: 'https://music.apple.com/fi/search?term=chopin',
         musiikkiNimi: 'Fryderyk Chopin Apple Musicissa',
-        musiikkiVapaa: 'https://chopin.polskieradio.pl/',
-        musiikkiVapaaNimi: 'Polskie Radio Chopin — Puolan yleisradion '
-                             + 'Chopin-kanava',
-        musiikkiVapaaLyhyt: 'PR',
+        musiikkiNayte: 'https://archive.org/download/ChopinAsDurPolonaise1/Chopin%20As%20Dur%20Polonaise%201.mp3',
+        musiikkiNayteNimi: 'Chopin: Polonaise As-duuri — Ignaz Friedman, PD',
       },
       {
         tyyppi: 'kuva',
@@ -1858,10 +1820,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Panhuilu',
         musiikki: 'https://music.apple.com/fi/search?term=lautari%20romania',
         musiikkiNimi: 'Romanialaista lăutari-musiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://www.romania-actualitati.ro/',
-        musiikkiVapaaNimi: 'Radio România Actualități — Romanian '
-                             + 'yleisradion pääkanava',
-        musiikkiVapaaLyhyt: 'SRR',
       },
       {
         tyyppi: 'kuva',
@@ -1937,9 +1895,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Bandura',
         musiikki: 'https://music.apple.com/fi/search?term=bandura%20kobzar',
         musiikkiNimi: 'Bandura-musiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://suspilne.media/',
-        musiikkiVapaaNimi: 'Suspilne — Ukrainan yleisradio',
-        musiikkiVapaaLyhyt: 'Suspilne',
+        musiikkiNayte: 'https://archive.org/download/jamendo-369605/01-1720225-Nataliya%20Bermas-Ukrainian%20Melody%20Ivanko.mp3',
+        musiikkiNayteNimi: 'Ukrainalainen sävelmä "Ivanko" — Nataliya Bermas, CC BY-NC',
       },
       {
         tyyppi: 'kuva',
@@ -2011,9 +1968,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Jazz',
         musiikki: 'https://music.apple.com/fi/search?term=leonid%20utesov',
         musiikkiNimi: 'Leonid Utjosov Apple Musicissa',
-        musiikkiVapaa: 'https://suspilne.media/',
-        musiikkiVapaaNimi: 'Suspilne — Ukrainan yleisradio',
-        musiikkiVapaaLyhyt: 'Suspilne',
+        musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/5/55/Der_Terk_in_America.mp3',
+        musiikkiNayteNimi: 'Klezmeria: Der Terk in America — PD',
       },
       {
         tyyppi: 'kuva',
@@ -2084,9 +2040,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Bolshoi-teatteri',
         musiikki: 'https://music.apple.com/fi/search?term=bolshoi%20ballet',
         musiikkiNimi: 'Bolshoi-baletin musiikkia Apple Musicissa',
-        musiikkiVapaa: 'https://orpheusradio.ru/',
-        musiikkiVapaaNimi: 'Orfei — Venäjän valtionradion klassinen kanava',
-        musiikkiVapaaLyhyt: 'Orfei',
+        musiikkiNayte: 'https://archive.org/download/TchaikovskyTheNutcrackerSuite/Tchaikovsky_nutcrackerSuitePartTwo.mp3',
+        musiikkiNayteNimi: 'Tšaikovski: Pähkinänsärkijä — CC BY',
       },
       {
         tyyppi: 'kuva',
@@ -2158,9 +2113,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Dmitri Šostakovitš',
         musiikki: 'https://music.apple.com/fi/search?term=shostakovich%20symphony%207',
         musiikkiNimi: 'Šostakovitšin 7. sinfonia Apple Musicissa',
-        musiikkiVapaa: 'https://orpheusradio.ru/',
-        musiikkiVapaaNimi: 'Orfei — Venäjän valtionradion klassinen kanava',
-        musiikkiVapaaLyhyt: 'Orfei',
+        musiikkiNayte: 'https://archive.org/download/ShostakovichSymphonyNo.5-Stokowski/02.Ii.Allegretto.mp3',
+        musiikkiNayteNimi: 'Šostakovitš: 5. sinfonia — Leopold Stokowski, CC BY-NC-SA',
       },
       {
         tyyppi: 'kuva',
@@ -2229,9 +2183,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Tallinnan laulujuhlat',
         musiikki: 'https://music.apple.com/fi/search?term=estonian%20choir',
         musiikkiNimi: 'Virolaista kuorolaulua Apple Musicissa',
-        musiikkiVapaa: 'https://klassikaraadio.err.ee/',
-        musiikkiVapaaNimi: 'ERR — Viron yleisradion Klassikaraadio',
-        musiikkiVapaaLyhyt: 'ERR',
+        musiikkiNayte: 'https://archive.org/download/aporee_19813_23018/20130704Estland07Tartu07MannerchorimParkgegenuberLossi3Donnerstag1707Uhr.mp3',
+        musiikkiNayteNimi: 'Virolainen mieskuoro Tartossa — Fritz Schlüter, CC BY',
       },
       {
         tyyppi: 'kuva',
@@ -2300,9 +2253,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Daina',
         musiikki: 'https://music.apple.com/fi/search?term=latvian%20folk%20songs',
         musiikkiNimi: 'Latvialaisia kansanlauluja Apple Musicissa',
-        musiikkiVapaa: 'https://klasika.lsm.lv/',
-        musiikkiVapaaNimi: 'LSM — Latvian yleisradion Klasika-kanava',
-        musiikkiVapaaLyhyt: 'LSM',
       },
       {
         tyyppi: 'kuva',
@@ -2370,9 +2320,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Liettua',
         musiikki: 'https://music.apple.com/fi/search?term=sutartines',
         musiikkiNimi: 'Sutartinės-lauluja Apple Musicissa',
-        musiikkiVapaa: 'https://www.lrt.lt/radioteka',
-        musiikkiVapaaNimi: 'LRT — Liettuan yleisradion radioteka',
-        musiikkiVapaaLyhyt: 'LRT',
+        musiikkiNayte: 'https://archive.org/download/EDIS-SRP-0197-03/EDIS-SRP-0197-03.mp3',
+        musiikkiNayteNimi: 'Liettualainen kansanlaulu kanteleilla — CC0',
       },
       {
         tyyppi: 'kuva',
@@ -2441,9 +2390,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Mehter',
         musiikki: 'https://music.apple.com/fi/search?term=mehter',
         musiikkiNimi: 'Mehter-marsseja Apple Musicissa',
-        musiikkiVapaa: 'https://www.trtdinle.com/',
-        musiikkiVapaaNimi: 'TRT Dinle — Turkin yleisradion kuuntelupalvelu',
-        musiikkiVapaaLyhyt: 'TRT',
+        musiikkiNayte: 'https://archive.org/download/ceddin-deden/06-Ceddin%20Deden%20%5B1080p%5D.mp3',
+        musiikkiNayteNimi: 'Mehter-marssi "Ceddin Deden" — CC0',
       },
       {
         tyyppi: 'kuva',
@@ -2512,10 +2460,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Jean Sibelius',
         musiikki: 'https://music.apple.com/fi/search?term=sibelius%20finlandia',
         musiikkiNimi: 'Sibeliuksen Finlandia Apple Musicissa',
-        musiikkiVapaa: 'https://areena.yle.fi/',
-        musiikkiVapaaNimi: 'Yle Areena — Suomen yleisradion ohjelmat ja '
-                             + 'musiikki',
-        musiikkiVapaaLyhyt: 'YLE',
+        musiikkiNayte: 'https://archive.org/download/SIBELIUSFinlandia-NEWTRANSFER/Sibelius-FinlandiaOp.26.mp3',
+        musiikkiNayteNimi: 'Sibelius: Finlandia — Artur Rodzinski, CC BY-NC-SA',
       },
       {
         tyyppi: 'kuva',
@@ -2590,9 +2536,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Abba',
         musiikki: 'https://music.apple.com/fi/search?term=ABBA%20Waterloo',
         musiikkiNimi: 'ABBA Apple Musicissa',
-        musiikkiVapaa: 'https://www.sverigesradio.se/',
-        musiikkiVapaaNimi: 'Sveriges Radio — Ruotsin yleisradion kanavat',
-        musiikkiVapaaLyhyt: 'SR',
       },
       {
         tyyppi: 'kuva',
@@ -2665,9 +2608,8 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Peer Gynt',
         musiikki: 'https://music.apple.com/fi/search?term=Grieg%20Peer%20Gynt',
         musiikkiNimi: 'Griegin Peer Gynt Apple Musicissa',
-        musiikkiVapaa: 'https://radio.nrk.no/',
-        musiikkiVapaaNimi: 'NRK Radio — Norjan yleisradion kanavat',
-        musiikkiVapaaLyhyt: 'NRK',
+        musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/8/84/Hall_of_the_Mountain_King_%28ISRC_USUAN1200072%29.mp3',
+        musiikkiNayteNimi: 'Grieg: Vuorenkuninkaan luolassa — Kevin MacLeod, CC BY',
       },
       {
         tyyppi: 'kuva',
@@ -2742,9 +2684,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Carl Nielsen',
         musiikki: 'https://music.apple.com/fi/search?term=Carl%20Nielsen',
         musiikkiNimi: 'Carl Nielsen Apple Musicissa',
-        musiikkiVapaa: 'https://www.dr.dk/lyd',
-        musiikkiVapaaNimi: 'DR Lyd — Tanskan yleisradion radiokanavat',
-        musiikkiVapaaLyhyt: 'DR',
       },
       {
         tyyppi: 'kuva',
@@ -2818,9 +2757,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Joiku',
         musiikki: 'https://music.apple.com/fi/search?term=joiku',
         musiikkiNimi: 'Joikua Apple Musicissa',
-        musiikkiVapaa: 'https://areena.yle.fi/',
-        musiikkiVapaaNimi: 'Yle Areena — muun muassa Yle Sápmin ohjelmat',
-        musiikkiVapaaLyhyt: 'YLE',
       },
       {
         tyyppi: 'kuva',
@@ -2893,9 +2829,6 @@ export const EUROPE_KULTTUURI = {
         wiki: 'Röyksopp',
         musiikki: 'https://music.apple.com/fi/search?term=royksopp',
         musiikkiNimi: 'Röyksopp Apple Musicissa',
-        musiikkiVapaa: 'https://radio.nrk.no/',
-        musiikkiVapaaNimi: 'NRK Radio — Norjan yleisradion kanavat',
-        musiikkiVapaaLyhyt: 'NRK',
       },
       {
         tyyppi: 'kuva',
