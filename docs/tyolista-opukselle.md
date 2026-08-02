@@ -188,7 +188,7 @@ Tarkistustyökalut, aja nämä kun sisältö muuttuu:
     node tools/tarkista-wikit.mjs      # wiki-linkit, 0 kuollutta
     node tools/lisaa-tekijat.mjs       # kuvien tekijämerkinnät
     node tools/build-standalone.mjs    # yhden tiedoston versio
-    npm test                           # 311 testiä
+    npm test                           # 322 testiä
 
 ### Media-repo (ravelius/Matkakirja-media)
 
@@ -197,8 +197,11 @@ Tarkistustyökalut, aja nämä kun sisältö muuttuu:
   aineiston. **Se pitää yhdistää mainiin** — GitHub Pages tarjoilee
   mainia, joten peili alkaa toimia vasta yhdistämisen jälkeen. Pages on
   jo päällä ja palauttaa `access-control-allow-origin: *`.
-- Peilaus ajetaan pelirepossa:
-  `node tools/peilaa-media.mjs --ulos <media-repo>`
+- Peilaus ajetaan pelirepossa: `node tools/peilaa-media.mjs`
+  (oletushakemisto on repon vieressä oleva `Matkakirja-media`; muualle
+  `--ulos <polku>`). Nimi on isolla alkukirjaimella syystä: 2.8. asti
+  oletus oli pienellä, ja Linux teki siitä toisen tyhjän hakemiston,
+  jolloin peilaus alkoi joka kerta nollasta.
 - Työkalu ohittaa jo ladatut tiedostot, joten uusintajo on nopea.
   **Aja se aina, kun peliin tulee uusia kuvia tai ääniä.**
 - Peiliin menevät mp3:t leikataan kolmeen minuuttiin latauksen
@@ -235,6 +238,50 @@ näet vastakkaisen väitteen vanhassa raportissa, se on virheellinen.
 kansioon `lahteet/`. Ne ovat raaka-ainetta pelin omien tekstien
 kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
+
+
+## Paketti 21: Kuuntele kieltä -nappi — VALMIS 2.8.2026
+
+**Omistajan toive:** "Puheääntä voisi tosiaan lisätä oman napin taakse
+tutki sivuille."
+
+Saapumiskortilla on jo rivi "hyvää päivää" maan kielillä. Nyt rivin
+perässä on nappi, joka soittaa siitä kaupungista tehdyn äänityksen,
+jossa ihmiset puhuvat: teksti kertoo mitä sanotaan, näyte miltä se
+kuulostaa oikeassa kadunkulmassa.
+
+**Miksi oma nappi eikä taustaääni.** Taustaääni soi silmukassa
+minuutteja. Selvä puhe alkaa toistuessaan kiinnittää huomion — pelaaja
+tunnistaa samat lauseet ja tausta muuttuu häiriöksi. Siksi taustaan
+haetaan edelleen puheetonta maisemaa, ja kieli soi kerran
+painalluksesta.
+
+**Miten näytteet haettiin.** Sama työkalu kuin paketissa 20, uudella
+`--puhe`-kytkimellä: se etsii koordinaattien perusteella toreja,
+kahviloita ja katusoittajia ja hylkää muut. 41 kaupungista 36 sai
+ehdokkaita, ja niistä valittiin käsin 31.
+
+**Näyte on aina tori, kahvila, asema tai katu** — paikka jossa ihmisiä
+on monta eikä äänite ole kenenkään yksityinen keskustelu.
+
+**Ilman näytettä jäivät** Alpit, Dubrovnik, Sarajevo, Odessa ja Lappi
+(ei yhtään ehdokasta) sekä Edinburgh, Wien, Granada, Tromssa ja
+Islanti (ehdokkaat olivat kutomakone, lintuja, kirkonkelloja tai
+supermarketti — ei puhetta). Näissä nappia ei näy lainkaan, mikä on
+parempi kuin nappi joka lupaa kieltä eikä anna sitä. Nämä kymmenen
+kannattaa hakea uudestaan, jos aporeehen tulee lisää äänityksiä.
+
+**Yksi rajoite rehellisyyden vuoksi:** valinta on tehty äänitysten
+omien kuvausten perusteella, ei kuuntelemalla. Kuvaukset ovat
+aporeessa poikkeuksellisen tarkkoja ("cafe, old ladies, venetian
+dialect, murmur, words"), mutta jos jokin näyte osoittautuu
+kuunneltuna huonoksi, tilalle on valmiit vaihtoehdot: haun koko tulos
+on tallessa ja saman kaupungin muut ehdokkaat saa työkalulla uudestaan.
+
+**Lisenssit:** 24 näytettä on public domain, loput CC BY-, BY-SA-,
+BY-NC- tai BY-NC-SA-lisensoituja. ND-lisenssit (ei muokkausta) jätettiin
+kokonaan pois, koska peiliin menevät äänet leikataan kolmeen
+minuuttiin. Tekijä ja lisenssi näkyvät napin selitteessä.
 
 
 ## Paketti 20: kaupunkien omat ambienssiäänet

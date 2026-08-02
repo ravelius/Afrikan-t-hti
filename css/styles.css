@@ -3887,3 +3887,11 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
   .flight-trail, .flight-plane-body, .flight-line { display: none; }
 }
+
+/* Kuuntele kieltä: sama nappi kuin kulttuurinostojen näytteellä, mutta
+   se asuu tervehdysrivin perässä eikä otsikkorivillä, joten se saa oman
+   ylämarginaalinsa eikä veny palstan levyiseksi. */
+.kieli-kuuntele {
+  margin-top: 0.45rem;
+  align-self: flex-start;
+}

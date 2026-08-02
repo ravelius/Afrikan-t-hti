@@ -45,7 +45,10 @@ const arvo = (lippu, oletus) => {
   const i = argv.indexOf(lippu);
   return i >= 0 ? argv[i + 1] : oletus;
 };
-const ULOS = arvo('--ulos', join(JUURI, '..', 'matkakirja-media'));
+// Repon nimi on isolla alkukirjaimella (ravelius/Matkakirja-media).
+// Linux erottaa kirjainkoon, joten pieni m loi vieressä toisen, tyhjän
+// hakemiston ja peilaus alkoi tyhjästä joka kerta.
+const ULOS = arvo('--ulos', join(JUURI, '..', 'Matkakirja-media'));
 const VAIN = arvo('--vain', null);
 const AGENTTI = 'Matkakirja/1.0 (https://github.com/ravelius/Matkakirja)';
 

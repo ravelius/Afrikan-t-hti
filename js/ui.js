@@ -45,6 +45,7 @@ import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js
 import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
+import { EUROPE_KIELET } from './packs/europe-kielet.js';
 import { EUROPE_MAATIEDOT } from './packs/europe-maatiedot.js';
 import { EUROPE_ARTIKKELIT } from './packs/europe-artikkelit.js';
 import { LIPPU_TEKIJAT } from './packs/lippu-tekijat.js';
@@ -58,6 +59,8 @@ const KULTTUURIT = { africa: AFRICA_KULTTUURI, europe: EUROPE_KULTTUURI };
 
 // Vanhat valokuvat muistikirjan kylkeen laudoittain.
 const VALOKUVAT = { africa: AFRICA_VALOKUVAT, europe: EUROPE_VALOKUVAT };
+// Kaupungissa nauhoitettu puhenäyte: kieli kuuluviin omasta napistaan.
+const KIELET = { europe: EUROPE_KIELET };
 
 // Maiden tunnusluvut laudoittain.
 const MAATIEDOT = { africa: AFRICA_MAATIEDOT, europe: EUROPE_MAATIEDOT };
@@ -3063,6 +3066,7 @@ export class UI {
       if (kartta) this.arrivalMaaKartta.appendChild(kartta);
       // Tunnusluvut ja tervehdykset kartan alle (pilottimaat).
       this.naytaMaaTunnusluvut(iso);
+      this.naytaKieliNappi(city);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
       //
@@ -3296,6 +3300,35 @@ export class UI {
       if (t.osuus) osa.appendChild(html('span', 'maa-sija', ` ${t.osuus}`));
       this.arrivalMaaTervehdykset.appendChild(osa);
     }
+  }
+
+  /**
+   * Kuuntele kieltä: kaupungissa nauhoitettu näyte, jossa ihmiset
+   * puhuvat (omistajan toive). Nappi on tervehdysrivin perässä, koska
+   * teksti kertoo mitä sanotaan ja näyte miltä se kuulostaa.
+   *
+   * Näyte on eri asia kuin kaupungin taustaääni: se soi kerran
+   * painalluksesta, joten selvä puhe on siinä vahvuus eikä toistuva
+   * häiriö. Tausta väistyy näytteen ajaksi kuten kulttuurinostoissa.
+   */
+  naytaKieliNappi(city) {
+    const kohde = this.arrivalMaaTervehdykset;
+    const nayte = (KIELET[this.game.pack.id] ?? {})[city.id];
+    if (!nayte?.url) return;
+    kohde.hidden = false;
+    const nappi = html('button', 'kulttuuri-kuuntele kieli-kuuntele');
+    nappi.type = 'button';
+    nappi.title = nayte.nimi ?? 'Kaupungissa nauhoitettu näyte';
+    nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
+      + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+      + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+      + '</svg><span>Kuuntele kieltä</span><span class="aika" hidden></span>';
+    // Sama soitin kuin kulttuurinostojen näytteillä: peilin varareitti,
+    // taustan väistö ja aikanäyttö tulevat siitä valmiina.
+    nappi.addEventListener('click', () => this.kulttuuriAaniNapista(
+      { aani: nayte.url, otsikko: 'Kuuntele kieltä' }, nappi,
+    ));
+    kohde.appendChild(nappi);
   }
 
   /**
