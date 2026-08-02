@@ -37,7 +37,11 @@
       <!-- Koko nimi näkyy myös puhelimella (omistajan toive): tilaa
            vapautui, kun ylävalikon napit siirtyivät hampurilaisen alle. -->
       <h1 class="brand">Matkakirja</h1>
-      <div id="turn-pill" class="turn-pill"></div>
+      <!-- Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan
+           toive): rahat ja tavarat ovat samassa laukussa, joten pilleriä
+           napauttamalla se aukeaa. -->
+      <button id="turn-pill" class="turn-pill" type="button"
+              title="Isoisän matkalaukku: passi, leimat ja tavarat"></button>
       <div class="topbar-actions">
         <!-- Kertojavalikko: mykistys / ei kertojaa / lyhyt / pitkä kertoja.
              Kuvakkeet ja valikko rakennetaan main.js:ssä; nappi näyttää
@@ -59,9 +63,6 @@
           <div id="paavalikko" class="paavalikko" hidden>
         <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
           <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M19.4 4.8v3.7h-3.7"/><path d="M19.2 8.4a7.4 7.4 0 1 0 1 5.4"/></svg></span></span>
-        </button>
-        <button id="passport-btn" class="ghost" type="button" title="Isoisän matkalaukku: passi, leimat ja tavarat">
-          <span class="wide-label">Laukku</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11.5" rx="2"/><path d="M9.3 8V6.3a1.7 1.7 0 0 1 1.7-1.7h2a1.7 1.7 0 0 1 1.7 1.7V8M8.6 8v11.5M15.4 8v11.5"/></svg></span></span>
         </button>
         <button id="rules-btn" class="ghost" type="button" title="Säännöt">
           <span class="wide-label">Säännöt</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span></span>
@@ -333,7 +334,7 @@
         kysymyksestä 25 ja laudan pääaarteesta 100. Yläpalkin tietoprosentti kertoo,
         kuinka moneen kysymykseen olet vastannut oikein — kaksintaistelut mukaan
         lukien. Rahat, pisteet ja sijainti näkyvät yläpalkissa; tavarat matkalaukussa.</p>
-      <p><b>Matkalaukku.</b> Yläpalkin <b>Laukku</b> avaa isoisän matkalaukun.
+      <p><b>Matkalaukku.</b> Yläpalkin kukkaropilleriä napauttamalla aukeaa isoisän matkalaukku.
         Sisällä on vihreä passi, johon jää leima jokaisesta laudasta — leimat
         säilyvät myös uusiin peleihin — sekä matkan tavarat: tähti,
         hevosenkengät ja jalokivet.</p>

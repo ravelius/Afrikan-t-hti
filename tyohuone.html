@@ -790,6 +790,14 @@
       const kohde = document.getElementById('tilastot');
       const rivit = [];
       const num = (n) => n.toLocaleString('fi-FI');
+      // Versio myös tilastoriville: yläpalkin versionumero piilotetaan
+      // kapealla näytöllä, jotta välilehtirivi mahtuu — ja juuri siellä
+      // sitä eniten kaipaa (omistajan havainto).
+      try {
+        const src = await (await fetch('js/main.js')).text();
+        const v = src.match(/APP_VERSION = '([^']+)'/);
+        if (v) rivit.push(['Versio', v[1]]);
+      } catch { /* ilman verkkoa jää pois */ }
       let kaupungit = 0;
       let reitit = 0;
       let lennot = 0;

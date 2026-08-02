@@ -111,6 +111,12 @@ button, .brand, .turn-pill, .fact-card h2 {
   white-space: nowrap;
 }
 
+/*
+ * Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan toive):
+ * rahat ja tavarat ovat samassa laukussa. Ulkoasu on yhä pilleri, ei
+ * nappi — se ei saa kilpailla kartan kanssa, mutta sen pitää tuntua
+ * napautettavalta.
+ */
 .turn-pill {
   flex: 0 1 auto;
   display: flex;
@@ -125,6 +131,25 @@ button, .brand, .turn-pill, .fact-card h2 {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.turn-pill:hover,
+.turn-pill:focus-visible {
+  border-color: var(--kulta, #eab84e);
+}
+.turn-pill .laukku-ikoni {
+  display: inline-flex;
+  color: var(--muted);
+}
+.turn-pill .laukku-ikoni svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
 }
 
 /*
@@ -207,7 +232,7 @@ button, .brand, .turn-pill, .fact-card h2 {
  * kunniamerkintä tai löydetty aarre. Pieni heilahdus ja lämmin
  * kultahehku — kuin laukku tömähtäisi pöydälle.
  */
-#passport-btn.laukku-elo {
+.turn-pill.laukku-elo {
   animation: laukku-elo 0.9s cubic-bezier(0.34, 1.4, 0.5, 1);
 }
 
@@ -221,7 +246,7 @@ button, .brand, .turn-pill, .fact-card h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #passport-btn.laukku-elo { animation: none; }
+  .turn-pill.laukku-elo { animation: none; }
 }
 
 .topbar-actions {
@@ -3895,7 +3920,11 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
       <!-- Koko nimi näkyy myös puhelimella (omistajan toive): tilaa
            vapautui, kun ylävalikon napit siirtyivät hampurilaisen alle. -->
       <h1 class="brand">Matkakirja</h1>
-      <div id="turn-pill" class="turn-pill"></div>
+      <!-- Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan
+           toive): rahat ja tavarat ovat samassa laukussa, joten pilleriä
+           napauttamalla se aukeaa. -->
+      <button id="turn-pill" class="turn-pill" type="button"
+              title="Isoisän matkalaukku: passi, leimat ja tavarat"></button>
       <div class="topbar-actions">
         <!-- Kertojavalikko: mykistys / ei kertojaa / lyhyt / pitkä kertoja.
              Kuvakkeet ja valikko rakennetaan main.js:ssä; nappi näyttää
@@ -3917,9 +3946,6 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
           <div id="paavalikko" class="paavalikko" hidden>
         <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
           <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M19.4 4.8v3.7h-3.7"/><path d="M19.2 8.4a7.4 7.4 0 1 0 1 5.4"/></svg></span></span>
-        </button>
-        <button id="passport-btn" class="ghost" type="button" title="Isoisän matkalaukku: passi, leimat ja tavarat">
-          <span class="wide-label">Laukku</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11.5" rx="2"/><path d="M9.3 8V6.3a1.7 1.7 0 0 1 1.7-1.7h2a1.7 1.7 0 0 1 1.7 1.7V8M8.6 8v11.5M15.4 8v11.5"/></svg></span></span>
         </button>
         <button id="rules-btn" class="ghost" type="button" title="Säännöt">
           <span class="wide-label">Säännöt</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span></span>
@@ -4191,7 +4217,7 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
         kysymyksestä 25 ja laudan pääaarteesta 100. Yläpalkin tietoprosentti kertoo,
         kuinka moneen kysymykseen olet vastannut oikein — kaksintaistelut mukaan
         lukien. Rahat, pisteet ja sijainti näkyvät yläpalkissa; tavarat matkalaukussa.</p>
-      <p><b>Matkalaukku.</b> Yläpalkin <b>Laukku</b> avaa isoisän matkalaukun.
+      <p><b>Matkalaukku.</b> Yläpalkin kukkaropilleriä napauttamalla aukeaa isoisän matkalaukku.
         Sisällä on vihreä passi, johon jää leima jokaisesta laudasta — leimat
         säilyvät myös uusiin peleihin — sekä matkan tavarat: tähti,
         hevosenkengät ja jalokivet.</p>
@@ -48276,6 +48302,14 @@ class UI {
   renderTurnPill() {
     const { game } = this;
     this.turnPill.textContent = '';
+    // Laukun kahva pillerin edessä: pilleri on samalla matkalaukun nappi,
+    // ja ilman kuvaketta mikään ei kertoisi sen aukeavan (omistajan toive).
+    const laukku = html('span', 'laukku-ikoni');
+    laukku.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+      + '<rect x="4" y="8" width="16" height="11.5" rx="2"/>'
+      + '<path d="M9.3 8V6.3a1.7 1.7 0 0 1 1.7-1.7h2a1.7 1.7 0 0 1 1.7 1.7V8'
+      + 'M8.6 8v11.5M15.4 8v11.5"/></svg>';
+    this.turnPill.appendChild(laukku);
     if (game.phase === 'over') {
       this.turnPill.appendChild(html('span', '', `${game.winner.name} voitti`));
       return;
@@ -49323,6 +49357,7 @@ class UI {
     // Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja niihin
     // liittyvä tutustu ja vastaa -kysymys (pilottikaupungit).
     this.naytaKulttuuri(city);
+    this.esilataaKaupunki(city);
 
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
@@ -49349,6 +49384,75 @@ class UI {
       if (summary.extract && !omaIntro) this.arrivalIntro.textContent = shortIntro(summary.extract);
       this.arrivalWiki.hidden = false;
     });
+  }
+
+  /**
+   * Hakee kaupungin kuvat ja ääninäytteet valmiiksi selaimen välimuistiin
+   * heti saapuessa (omistajan toive): kuvakarusellin selaaminen ja
+   * Kuuntele näyte -nappi toimivat silloin heti eivätkä odota latausta.
+   *
+   * Kaikki menee selaimen omaan välimuistiin, joten varsinainen näyttö
+   * käyttää samoja osoitteita eikä lataa mitään toiseen kertaan. Haut
+   * porrastetaan, ettei saapumishetki tuki yhteyttä juuri silloin kun
+   * kortti piirtyy ja kertoja alkaa puhua.
+   *
+   * Esilataus on pelkkää nopeutta: jos se epäonnistuu, kaikki toimii
+   * kuten ennenkin. Siksi virheet niellään hiljaa.
+   */
+  esilataaKaupunki(city) {
+    if (!city || this.esilatattu === city.id) return;
+    this.esilatattu = city.id;
+    const kuvat = [];
+    const aanet = [];
+
+    // Kulttuurinostojen kuvat ja ääninäytteet. Kuvat ovat lazy-tilassa
+    // eivätkä lataudu ennen kuin lohko avataan; ääninäyte alkaisi ladata
+    // vasta napin painalluksesta.
+    const kulttuuri = (KULTTUURIT[this.game.pack.id] ?? {})[city.id];
+    for (const nosto of kulttuuri?.nostot ?? []) {
+      if (nosto.tiedosto) kuvat.push(valokuvaUrl(nosto.tiedosto, 640));
+      if (nosto.aani) aanet.push(aaniOsoite(jaaAlku(nosto.aani).url));
+    }
+    // Silloin ja nyt -valokuvapari.
+    const valokuva = (VALOKUVAT[this.game.pack.id] ?? {})[city.id];
+    // `uusi` on oma merkintänsä selitteineen, ei pelkkä tiedostonimi.
+    if (valokuva?.tiedosto) kuvat.push(valokuvaUrl(valokuva.tiedosto, 640));
+    if (valokuva?.uusi?.tiedosto) kuvat.push(valokuvaUrl(valokuva.uusi.tiedosto, 640));
+
+    // Wikipedian kuvagalleria: juuri sitä pelaaja selaa nuolilla.
+    if (city.wiki) {
+      cachedGallery(city.wiki).then((lista) => {
+        if (this.esilatattu !== city.id) return;
+        this.esilataaOsoitteet(lista.map((k) => k.src), city.id);
+      }).catch(() => { /* galleriaa ei saatu — selaus toimii silti */ });
+    }
+
+    this.esilataaOsoitteet(kuvat, city.id);
+    for (const url of aanet) {
+      if (!url) continue;
+      const audio = new Audio(url);
+      audio.preload = 'auto';
+      // Elementti pidetään hengissä latauksen ajan; selain säilyttää
+      // tavut omassa välimuistissaan senkin jälkeen.
+      (this.esiladatutAanet ??= []).push(audio);
+      audio.addEventListener('error', () => { /* soitto hoitaa varareitin */ });
+    }
+    if ((this.esiladatutAanet?.length ?? 0) > 6) this.esiladatutAanet.splice(0, 3);
+  }
+
+  /** Lataa kuvat taustalla muutama kerrallaan, jottei yhteys tuki. */
+  esilataaOsoitteet(osoitteet, cityId, kerralla = 3) {
+    const jono = osoitteet.filter(Boolean);
+    const seuraava = () => {
+      if (this.dead || this.esilatattu !== cityId) return;
+      const url = jono.shift();
+      if (!url) return;
+      const kuva = new Image();
+      kuva.addEventListener('load', seuraava, { once: true });
+      kuva.addEventListener('error', seuraava, { once: true });
+      kuva.src = url;
+    };
+    for (let i = 0; i < kerralla; i += 1) seuraava();
   }
 
   /**
@@ -51298,7 +51402,7 @@ class UI {
    * joka kerta — huomio kiinnittyy yläreunaan ilman uutta ilmoitusta.
    */
   elavoitaLaukku() {
-    const nappi = document.getElementById('passport-btn');
+    const nappi = document.getElementById('turn-pill');
     if (!nappi) return;
     nappi.classList.remove('laukku-elo');
     void nappi.offsetWidth;
@@ -51902,7 +52006,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.142';
+const APP_VERSION = '2026-08-02.143';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -52156,7 +52260,8 @@ document.getElementById('newgame-btn').addEventListener('click', startGame);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään
 // kerran täällä eikä käyttöliittymän mukana joka uudessa pelissä.
-document.getElementById('passport-btn').addEventListener('click', () => ui?.openPassport());
+// Kukkaropilleri on samalla matkalaukun nappi (omistajan toive).
+document.getElementById('turn-pill').addEventListener('click', () => ui?.openPassport());
 // Alakulman huutomerkki: palaute juuri siitä kohdasta peliä, jossa
 // pelaaja on. Kytketään kerran, koska nappi elää pelin ulkopuolella.
 document.getElementById('palaute-kulma').addEventListener('click', () => ui?.naytaPalauteKulmasta());
