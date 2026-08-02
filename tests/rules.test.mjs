@@ -2934,6 +2934,20 @@ test('kartta ulottuu ruudun alareunaan asti', () => {
     'korttien ja alareunan väliin pitää jäädä rako');
 });
 
+test('toimintonappien alta ei vaalenneta karttaa', () => {
+  // Lähikuvassa korttien alle piirrettiin pehmeä pergamenttivalo, jotta
+  // teksti erottuu kartalta. Nappien kohdalla se haalisti alalaidan,
+  // jossa on eniten katsottavaa (omistajan havainto). Napeilla on oma
+  // levynsä ja tekstillä sama vaalea varjo kuin kartan nimissä.
+  const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
+  assert.doesNotMatch(css, /body\.manner-zoom \.turn-card::before/,
+    'nappien alle piirretään taas vaalennus');
+  // Päiväkirjakortti pitää omansa: pitkä leipäteksti ei olisi luettavaa
+  // pelkän varjon turvin.
+  assert.match(css, /body\.manner-zoom \.fact-card::before/,
+    'päiväkirjan taustavalo katosi');
+});
+
 test('päiväkirjan vinjetti ei haalista kartan alalaitaa', () => {
   // Alalaidassa on eniten kaupunkeja ja nimiä, ja kelluvat napit
   // istuvat juuri sen päällä: siellä vaalea vinjetti näytti

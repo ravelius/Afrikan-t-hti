@@ -240,6 +240,40 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 28: alalaidan haalistuma — oikea syy löytyi — VALMIS 2.8.2026
+
+**Omistaja jouduttiin korjaamaan kahdesti:** "Korjaatkohan nyt väärää
+asiaa. Tarkoitan tuota kuvassa näkyvää alalaitaa nappien takana."
+
+Etsin haalistumaa kartan vinjetistä (`.map-pane::after`) ja korjasin
+sen — mutta syy oli toisaalla:
+
+    body.manner-zoom .turn-card::before
+
+Lähikuvassa korttien alle piirretään pehmeä pergamenttivalo, jotta
+teksti erottuu kartalta. Nappien kohdalla se haalisti kartan
+alalaidan, jossa on eniten katsottavaa. Valo on nyt poistettu
+nappien alta. Napeilla on oma pergamenttilevynsä ja
+"Valitse matkustustapa" -rivillä sama vaalea tekstivarjo kuin kartan
+omissa nimissä, joten kumpikin pysyy luettavana.
+
+**Päiväkirjakortti pitää omansa.** Siinä on pitkä leipäteksti, joka ei
+olisi luettavaa pelkän varjon turvin.
+
+Mitattu lähikuvassa: alakaistat 187 → 175 ja 222 → 187, eli kartan
+oman sävyn (176–180) tasolle.
+
+**Miksi en nähnyt sitä itse.** Omat renderöintini eivät olleet
+lähikuvassa, joten valoa ei ollut piirretty lainkaan — omistaja
+pelaa aina lähikuvassa, koska mantereelle saapuminen zoomaa kartan.
+Näin vian vasta pakotettuani `zoomaaMantereelle()`:n päälle.
+
+**Opetus:** kun omistaja sanoo ettei korjaus purrut, tarkista ensin
+että testiympäristö on samassa tilassa kuin hänen — älä sitä, onko
+korjaus teknisesti oikea. Paketin 27 vinjettikorjaus oli oikea mutta
+väärään asiaan.
+
+
 ## Paketti 27: vinjetti pois alalaidasta, fontti takaisin — VALMIS 2.8.2026
 
 **Omistajan toiveet:** "Poista vinjetti alareunasta" ja "Pienennä

@@ -371,11 +371,19 @@ body.manner-zoom #board {
  * laatikkoa vaan reunoiltaan häivähtävä pergamenttivalo, joka nostaa
  * kirjaimet esiin ilman että kartta katoaa.
  */
-body.manner-zoom .fact-card,
-body.manner-zoom .turn-card { isolation: isolate; }
+body.manner-zoom .fact-card { isolation: isolate; }
 
-body.manner-zoom .fact-card::before,
-body.manner-zoom .turn-card::before {
+/*
+ * Toimintonappien alta vaalennus on poistettu (omistajan toive): se
+ * haalisti kartan alalaidan, ja siellä juuri on eniten katsottavaa.
+ * Napeilla on oma pergamenttilevynsä ja "Valitse matkustustapa"
+ * -rivillä sama vaalea tekstivarjo kuin kartan omissa nimissä, joten
+ * kumpikin pysyy luettavana ilman erillistä valoa.
+ *
+ * Päiväkirjakortti pitää omansa: siinä on pitkä leipäteksti, joka ei
+ * mahtuisi luettavaksi pelkän varjon turvin.
+ */
+body.manner-zoom .fact-card::before {
   content: '';
   position: absolute;
   /* Reilu ylitys joka suuntaan, jotta häivytys ehtii sulaa karttaan
@@ -52433,7 +52441,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.153';
+const APP_VERSION = '2026-08-02.154';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
