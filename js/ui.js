@@ -1555,19 +1555,32 @@ export class UI {
       .then((kuva) => {
         this.taidePiirtyy = false;
         if (!kuva || this.dead || !this.taideRyhma) return;
-        // Koko sisältö kerralla: ensimmäisellä kerralla ryhmässä ovat
-        // vielä alkuperäiset vektorit, myöhemmin edellinen kuva. Vaihto
-        // yhdellä kutsulla, jottei välissä ole hetkeä ilman karttaa.
-        const vanhaOsoite = this.taideRyhma.firstElementChild?.dataset?.osoite;
-        this.taideRyhma.replaceChildren(kuva);
-        if (vanhaOsoite) URL.revokeObjectURL(vanhaOsoite);
+        /*
+         * Uusi kuva ALLE, vanha pois vasta seuraavalla kehyksellä.
+         *
+         * Suora vaihto (replaceChildren) jätti yhden kehyksen, jossa
+         * uusi ei ollut vielä piirtynyt — kartta välkkyi kesken siirron.
+         * Kun uusi menee vanhan alle, ruudulla on koko ajan jompikumpi,
+         * ja ne ovat sama kuva samasta taiteesta: vaihdos ei näy.
+         */
+        const vanhat = [...this.taideRyhma.children];
+        this.taideRyhma.insertBefore(kuva, this.taideRyhma.firstChild);
+        requestAnimationFrame(() => {
+          for (const solmu of vanhat) {
+            solmu.remove();
+            if (solmu.dataset?.osoite) URL.revokeObjectURL(solmu.dataset.osoite);
+          }
+        });
         this.taideIkkuna = ikkuna;
         this.taideSkaala = skaala;
         /*
-         * Tarkistus heti uudestaan: näkymä on voinut muuttua piirron
-         * aikana (zoom, koon muutos). Kierrokset rajataan, ettei
-         * mahdollinen erimielisyys ehdon ja rajauksen välillä jää
-         * pyörimään ikuisesti — se virhe sattui jo kerran.
+         * Tarkistus heti uudestaan: sormi on voinut liikkua piirron
+         * aikana, ja silloin juuri valmistunut kuva on jo väärässä
+         * kohdassa. Kierrokset rajataan, ettei mahdollinen
+         * erimielisyys ehdon ja rajauksen välillä jää pyörimään
+         * ikuisesti — se virhe sattui jo kerran. Laskuri nollautuu
+         * aina kun ikkuna riittää tai kun ele päättyy, joten raja ei
+         * voi kulua umpeen pitkässä selauksessa.
          */
         if (this.taideKierros < 3) {
           this.taideKierros += 1;
@@ -2014,6 +2027,20 @@ export class UI {
       // luetaan click-vaiheessa (alla) ja nollataan vasta sen jälkeen.
       this.raahattiin = liikkui;
       if (liikkui) setTimeout(() => { this.raahattiin = false; }, 0);
+      /*
+       * Kartan kuva täydennetään heti kun sormi irtoaa.
+       *
+       * Kuvaa pyydetään jo kesken pyyhkäisyn (asetaPan tarkistaa joka
+       * liikkeellä), mutta se ei riitä yksinään: jos piirto oli kesken
+       * juuri kun sormi nousi, seuraava tarkistus tulisi vasta
+       * seuraavasta eleestä — ja silloin kuva olisi jo väärässä
+       * kohdassa siinä välissä. Eleen päättyminen on oma hetkensä, ja
+       * se ansaitsee oman tarkistuksensa.
+       */
+      if (liikkui) {
+        this.taideKierros = 0;
+        this.paivitaTaideKuva?.();
+      }
     };
     pane.addEventListener('pointerup', paata);
     pane.addEventListener('pointercancel', paata);

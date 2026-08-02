@@ -1114,6 +1114,22 @@ export async function rasteroiIkkuna(lahde, maarittelyt, ikkuna, skaala) {
     });
     const osoite = png ? URL.createObjectURL(png) : canvas.toDataURL('image/png');
 
+    /*
+     * PNG puretaan valmiiksi ennen kuin se pannaan karttaan.
+     *
+     * Ilman tätä kuva välkkyi vaihtuessaan kesken siirron (omistajan
+     * havainto): SVG:n <image> viittaa blob-osoitteeseen, jonka selain
+     * hakee ja purkaa vasta kun elementti on puussa, ja siinä välissä
+     * ehtii yksi tyhjä kehys. Kun purku on tehty etukäteen, elementti
+     * piirtyy heti ensimmäisellä kehyksellä.
+     */
+    try {
+      const valmis = new Image();
+      valmis.src = osoite;
+      if (valmis.decode) await valmis.decode();
+      else await new Promise((r) => { valmis.onload = r; valmis.onerror = r; });
+    } catch { /* purku ei onnistunut; kuva piirtyy silti, vain hitaammin */ }
+
     const kuva = el('image', {
       x: ikkuna.x, y: ikkuna.y, width: ikkuna.w, height: ikkuna.h,
       href: osoite, preserveAspectRatio: 'none',
