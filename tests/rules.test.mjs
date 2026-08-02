@@ -3059,6 +3059,43 @@ test('uusi peli tyhjentää muistit vasta varmistuksen jälkeen', () => {
     'localStorage.clear veisi muidenkin sovellusten tiedot');
 });
 
+test('zoomiportaat ovat nousevat ja alkavat kokonäkymästä', () => {
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  const rivi = ui.match(/const ZOOMI_TASOT = \[([^\]]+)\]/);
+  assert.ok(rivi, 'ZOOMI_TASOT-portaita ei löytynyt');
+  const tasot = rivi[1].split(',').map((s) => {
+    const t = s.trim();
+    return t === 'MANNER_ZOOM' ? Number(ui.match(/const MANNER_ZOOM = ([\d.]+)/)[1]) : Number(t);
+  });
+  // Ensimmäinen porras on kokonäkymä: siitä loitonnettaessa poistutaan
+  // lähikuvasta kokonaan eikä karttaa panoroida.
+  assert.equal(tasot[0], 1, 'ensimmäisen portaan pitää olla kokonäkymä');
+  for (let i = 1; i < tasot.length; i++) {
+    assert.ok(tasot[i] > tasot[i - 1], `porras ${i} ei ole edellistä suurempi`);
+  }
+  // Saapumiszoom käyttää yhtä portaista, jotta painikkeet jatkavat siitä
+  // eivätkä hyppää ensin johonkin väliin.
+  assert.match(ui, /const ZOOMI_OLETUS = ZOOMI_TASOT\.indexOf\(MANNER_ZOOM\)/);
+});
+
+test('zoomipainikkeet toimivat kaikilla laudoilla ja ruuduilla', () => {
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /id="zoom-in"/);
+  assert.match(html, /id="zoom-out"/);
+  // mannerZoomTarpeen rajaa vain AUTOMAATTISEN zoomauksen (Eurooppa,
+  // kapea ruutu). Jos painikkeet alkaisivat kysyä sitä, tietokoneella ja
+  // muilla laudoilla ne eivät tekisi mitään — juuri se oli korjattava.
+  const funktio = ui.match(/zoomaaPainikkeella\(suunta\) \{[\s\S]*?\n  \}/)[0];
+  assert.doesNotMatch(funktio, /mannerZoomTarpeen|ZOOMATTAVAT|clientWidth/,
+    'painike ei saa riippua automaattizoomin ehdoista');
+  // Zoomatessa keskipiste luetaan ennen tason vaihtoa, muuten kartta
+  // hyppäisi laudan keskelle joka painalluksella.
+  assert.match(funktio, /nykyinenKeskipiste\(\)/);
+  // Skaala tulee portaikosta eikä kiinteästä vakiosta.
+  assert.match(ui, /const skaala = yleiskuva \* this\.zoomiKerroin/);
+});
+
 test('kartan isot kerrokset eivät käytä suodatinta', () => {
   // Omistajan kuvakaappaus 2.8.2026: iOS:n webapp-tilassa maa, rannikko,
   // meren kaiut ja aallot katosivat kartalta heti kun sovellus kävi
