@@ -1516,6 +1516,13 @@ Toteuttajan havainnot seuraavaa pakettia varten:
   yksi koko maailman kierros, kuten `docs/tarina.md`:n ainoa päiväkirja
   vuodelta 1873 — ja kuten pelaajahahmon nimi (Fogg) on aina vihjannut.
   Aikataulutekstit pitää käydä läpi tämän mukaan.
+- **Kaupunkien sisällöt yhteiskehitykseen — myöhemmin.** Omistajan
+  linjaus 2.8.2026: joku, joka tuntee kaupungin oikein hyvin (vaikka on
+  sieltä kotoisin), voisi ehdottaa tai itse rakentaa kaupungin kartan ja
+  kirjoittaa ylös sen erityispiirteet. **Vasta sitten kun koko
+  maailmankartta on rakennettu.** Omistaja lisää todennäköisesti itse
+  ensimmäisenä yhden kaupungin Suomeen. Tämä sopii pelin tavoitteeseen:
+  paikallinen tieto on juuri sitä ymmärrystä, jota peli tavoittelee.
 - **`TURN_HOURS = 6` odottaa yhä pelitestiä.** Yhden vakion muutos
   (js/game.js). **Uusi vaatimus 2.8.2026:** kaupunkitason laudoilla ajan
   pitää kulua HITAAMMIN kuin mantereella, koska kaupungin sisällä
