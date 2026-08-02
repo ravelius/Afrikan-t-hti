@@ -3466,9 +3466,19 @@ body[data-mode] .actions button:disabled {
   text-shadow: none;
 }
 
-/* Ensisijainen valinta erottuu tummalla kullalla, ei kultalaatalla. */
+/*
+ * Ensisijainen valinta erottuu tummalla kullalla, ei kultalaatalla —
+ * mutta se tarvitsee saman pergamenttilevyn kuin muutkin napit.
+ *
+ * Aiemmin tässä luki `background: none`, jolloin kartta näkyi napin
+ * läpi ja teksti hukkui kaupunkinimiin ja rantaviivaan. Omistajan
+ * havainto: "Tutki nappi näkyy huonosti." Levy on hitusen lämpimämpi ja
+ * peittävämpi kuin tavallisilla napeilla, joten nappi erottuu kahdesti:
+ * kullanvärisestä kehyksestä ja tekstistä sekä hieman kirkkaammasta
+ * pohjasta.
+ */
 body[data-mode] .actions button.primary {
-  background: none;
+  background: rgba(252, 241, 212, 0.88);
   border-color: rgba(176, 138, 60, 0.85);
   color: #7a5514;
   font-weight: 700;
