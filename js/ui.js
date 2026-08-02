@@ -2015,12 +2015,16 @@ export class UI {
      * Lähtöpaikkaa ei ole vielä valittu ennen ensimmäistä napautusta,
      * joten pickstart-vaiheessa käytetään pelin omaa aloitusta ja
      * hypätään vasta sen jälkeen.
+     *
+     * Kohdealueet ovat näkymättömiä (omistajan toive): 41 rengasta
+     * kerralla peitti kartan eikä kartan katselusta tullut mitään.
+     * Napautus toimii silti, ja yläreunan merkki kertoo tilan olevan
+     * päällä.
      */
     if (this.kehittajaTila && !game.player?.isBot && game.phase !== 'over') {
       for (const c of game.board.cities) {
         const g = el('g', { class: 'target' }, this.targetLayer);
         el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
-        el('circle', { cx: c.x, cy: c.y, r: 24, class: 'target-ring kehittaja' }, g);
         g.addEventListener('click', () => this.doKehittajaSiirto(c));
       }
       return;

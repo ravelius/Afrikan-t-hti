@@ -248,14 +248,23 @@ matkakirjan fontti takaisin".
 **Vinjetti.** Kartan päällä on vaalea vinjetti (`.map-pane::after`),
 joka haalistaa reunat kuin vanhassa filmiruudussa. Alalaidassa se ei
 näyttänyt filmiltä vaan haalistumalta: siellä on eniten kaupunkeja ja
-nimiä, ja kelluvat napit istuvat juuri sen päällä. Peite häivytetään
-nyt pois alaneljänneksessä `mask-image`illa, joten muut reunat
-säilyvät ennallaan eikä rajaa näy. Mitattu kartan pinnasta ennen ja
-jälkeen: alakulmat 185 → 172, yläkulmat ja keskusta muuttumattomat.
+nimiä, ja kelluvat napit istuvat juuri sen päällä.
 
-Sekä `-webkit-mask-image` että vakiomuoto tarvitaan: iOS:n Safari
-lukee edellistä, eikä puuttuva etuliite näkyisi muualla kuin
-puhelimella.
+**Ensimmäinen yritys epäonnistui, ja se kannattaa muistaa.** Soikea
+vinjetti jätettiin paikalleen ja peitettiin alhaalta `mask-image`illa.
+Chromiumissa tulos oli oikea ja mittasin sen — mutta iPhonella
+alalaita jäi silti vaaleaksi. Vinjetti rakennetaan nyt **kolmesta
+reunaliu'usta** (ylä, vasen, oikea): alalaitaan ei piirretä mitään
+eikä maskia tarvita, joten tulos on sama joka selaimessa. Kulmat
+saavat kahden liu'un summan ja pysyvät tummimpina kuten ennen.
+
+Opetus: älä korjaa piirtoa maskilla, jos saman voi tehdä itse
+piirrolla. Maskituki vaihtelee selaimittain, eikä Chromium paljasta
+sitä.
+
+Mitattu kartan pinnasta: alakaista 176 → 169, kun keskusta on 171 —
+alalaita on siis nyt keskustan tasolla. Yläkaista 198 → 210, eli
+filmimäisyys säilyi.
 
 **Fontti takaisin.** Paketissa 23 päiväkirjan teksti suurennettiin
 (0,78 → 0,98 rem puhelimella). Omistaja palautti sen: isolla fontilla
@@ -299,8 +308,11 @@ kiinteää rakoa. Jos jollain laitteella kotipalkki ylettyy näkymän
 päälle, se on ohut läpikuultava viiva ja napit jäävät sen yläpuolelle.
 
 **Napit kapeammiksi.** Matkustustavan napit ovat puhelimella pelkkiä
-kuvakkeita, mutta venyivät silti ruudun levyisiksi. Nyt 77 pikseliä
-leveitä ja keskellä; korkeus pysyy 44 pikselissä, jotta sormi osuu.
+kuvakkeita, mutta venyivät silti ruudun levyisiksi. Omistaja pienensi
+niitä kahdesti: nyt **58 × 40 pikseliä** ja keskellä. Korkeus on alle
+Applen 44 pisteen suosituksen, mutta napit ovat erillään toisistaan
+eikä vieressä ole muuta napautettavaa, joten ohi osuminen ei tee
+vahinkoa.
 Rajaus koskee vain yhden rivin matkustusvalintaa
 (`[data-rivi='yksi']`) — tekstinapit kuten "Astu mantereelle"
 tarvitsevat tilansa.
@@ -334,6 +346,11 @@ Vasta sen jälkeen hypätään.
 **Salasana on koodissa selkokielisenä tarkoituksella.** Se on kevyt
 lukko eikä tietoturvaa: tehtävä on estää tilan avautuminen vahingossa
 lapsen kädessä, ei suojata mitään salaista.
+
+**Kohderenkaita ei piirretä.** Ensimmäisessä versiossa jokainen
+kaupunki sai violetin renkaan. 41 rengasta kerralla peitti kartan,
+joten omistaja otti ne pois: napautusalue on näkymätön ja yläreunan
+merkki kertoo tilan olevan päällä.
 
 **Ikkunassa on myös ruudun mitat.** Ne ovat siellä syystä: asennetussa
 sovelluksessa kartan alle jäi selittämätön kaista (ratkaistu, ks. paketti 26),
