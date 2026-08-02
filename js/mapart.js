@@ -11,7 +11,25 @@ const NS = 'http://www.w3.org/2000/svg';
 // Pergamentti ulottuu selvästi laudan ulkopuolelle: kapealla pystyruudulla
 // näkymä on paljon lautaa korkeampi, ja liian pieni arkki jätti alalaitaan
 // tumman kaistan.
-export const PAPER = { x: -1200, y: -1200, w: 3600, h: 3600 };
+/*
+ * Pergamentin koko. Se on tarkoituksella laudan reunojen yli joka
+ * suuntaan: lähikuvassa karttaa panoroidaan, eikä paperi saa loppua
+ * kesken.
+ *
+ * Mitat olivat kiinteät (3600 x 3600) ja riittivät, kun jokainen lauta
+ * oli 1000 x 1000. Vanha maailma on 7200 x 2620, ja kiinteä paperi
+ * jätti meren mustaksi kaikkialta muualta paitsi vasemmasta
+ * yläkulmasta. Nyt paperi lasketaan laudan mukaan.
+ */
+export function paperi(map) {
+  const w = map?.width ?? 1000;
+  const h = map?.height ?? 1000;
+  const vara = Math.max(w, h) * 1.3;
+  return { x: -vara, y: -vara, w: w + vara * 2, h: h + vara * 2 };
+}
+
+/** Yhteensopivuus: oletuslauta 1000 x 1000. */
+export const PAPER = paperi({ width: 1000, height: 1000 });
 
 /**
  * Deterministinen 0–1 -arvo merkkijonosta (FNV-1a). Sama piirre saa aina saman
@@ -263,18 +281,19 @@ export function drawDefs(svg) {
 }
 
 /** Paperipohja ja hennot pituus- ja leveyspiirit. */
-export function drawParchment(svg) {
+export function drawParchment(svg, map = null) {
+  const PAPER = paperi(map);
   el('rect', { x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h, class: 'paper' }, svg);
 
   const grid = el('g', { class: 'graticule' }, svg);
-  for (let x = -1200; x < 2400; x += 125) {
+  for (let x = PAPER.x; x < PAPER.x + PAPER.w; x += 125) {
     el('line', {
       x1: x + vary(`grid:v:${x}`, 2), y1: PAPER.y,
       x2: x + vary(`grid:v2:${x}`, 2), y2: PAPER.y + PAPER.h,
       opacity: (0.7 + hash01(`grid:vo:${x}`) * 0.6).toFixed(2),
     }, grid);
   }
-  for (let y = -1200; y < 2400; y += 125) {
+  for (let y = PAPER.y; y < PAPER.y + PAPER.h; y += 125) {
     el('line', {
       x1: PAPER.x, y1: y + vary(`grid:h:${y}`, 2),
       x2: PAPER.x + PAPER.w, y2: y + vary(`grid:h2:${y}`, 2),
@@ -284,7 +303,8 @@ export function drawParchment(svg) {
 }
 
 /** Paperin rakeisuus ja tummuvat reunat piirretään päällimmäiseksi. */
-export function drawPaperOverlay(svg) {
+export function drawPaperOverlay(svg, map = null) {
+  const PAPER = paperi(map);
   el('rect', {
     x: PAPER.x, y: PAPER.y, width: PAPER.w, height: PAPER.h,
     class: 'grain', fill: 'url(#grain-kuvio)',

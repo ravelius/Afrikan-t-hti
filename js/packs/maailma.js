@@ -130,7 +130,12 @@ const WORLD_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const WORLD_CITIES = [
   { id: 'lontoo', name: 'Lontoo', x: 731.7, y: 225.9, start: true, airport: true, la: 'end', lx: -16, ly: 5,
-    links: [{ pack: 'europe', city: 'lontoo', label: 'Euroopan lauta' }] },
+    // Vanha maailma on Euroopan, Afrikan, Lähi-idän ja Aasian yhdistetty
+    // kartta. Se ei korvaa niitä vielä, joten Lontoosta pääsee molempiin.
+    links: [
+      { pack: 'europe', city: 'lontoo', label: 'Euroopan lauta' },
+      { pack: 'vanhamaailma', city: 'lontoo', label: 'Vanha maailma (yhdistetty)' },
+    ] },
   {
     id: 'newyork', name: 'New York', x: 359, y: 293.2, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
