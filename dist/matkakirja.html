@@ -50021,6 +50021,7 @@ const LUENNAN_HAIPYMA_S = 1.5;
  * on väärin — se alkaa jo puolitoista sekuntia ennen loppua ja nielee
  * viimeisen sanan (omistajan havainto).
  *
+<<<<<<< HEAD
  * Lopussa tarvitaan vain sen verran, ettei soittimen pysäytys napsahda.
  *
  * VIISIKYMMENTÄ MILLISEKUNTIA EI RIITTÄNYT. Voimakkuutta säädetään
@@ -50037,6 +50038,12 @@ const LUENNAN_HAIPYMA_S = 1.5;
 const LOPUN_HAIPYMA_S = 0.12;
 /** Kuinka kauan ennen loppua ääni on jo täysin vaiennut. */
 const LOPUN_HILJAISUUS_S = 0.025;
+=======
+ * Lopussa tarvitaan vain sen verran, ettei soittimen pysäytys napsahda:
+ * viisikymmentä millisekuntia riittää eikä kuulu häivytyksenä.
+ */
+const LOPUN_HAIPYMA_S = 0.05;
+>>>>>>> origin/main
 /** Pehmennyskäyrä: alkaa hitaasti, jyrkkenee lopussa (ease-in). */
 const pehmene = (t) => Math.max(0, Math.min(1, t)) ** 1.8;
 
@@ -54913,16 +54920,24 @@ class UI {
        * asti ja vain aivan viimeinen hetki vaimenee, jottei pysäytys
        * napsahda.
        */
+<<<<<<< HEAD
       if (jaljella <= LOPUN_HILJAISUUS_S) {
         // Pysäytys osuu jo vaienneeseen ääneen eikä voi napsahtaa.
         audio.volume = 0;
         audio.pause();
+=======
+      if (jaljella <= 0) {
+>>>>>>> origin/main
         rampissa = false;
         return;
       }
       if (jaljella < LOPUN_HAIPYMA_S) {
+<<<<<<< HEAD
         const matka = (jaljella - LOPUN_HILJAISUUS_S) / (LOPUN_HAIPYMA_S - LOPUN_HILJAISUUS_S);
         audio.volume = perus * Math.max(0, Math.min(1, matka));
+=======
+        audio.volume = perus * (jaljella / LOPUN_HAIPYMA_S);
+>>>>>>> origin/main
       }
       requestAnimationFrame(rullaa);
     };

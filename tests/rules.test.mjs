@@ -2996,6 +2996,7 @@ test('luennan loppuhäivytys ei niele viimeistä sanaa', () => {
   assert.ok(lause >= 0.5, 'lauserajan häivytys on liian lyhyt — katko töksähtää');
   assert.ok(loppu > 0 && loppu <= 0.15, 'lopun häivytys nielee viimeisen sanan');
 
+<<<<<<< HEAD
   /*
    * Häivytyksen pitää ehtiä NOLLAAN ennen tiedoston loppua.
    *
@@ -3016,6 +3017,13 @@ test('luennan loppuhäivytys ei niele viimeistä sanaa', () => {
 
   const pehmea = ui.slice(ui.indexOf('  pehmeaLoppu('), ui.indexOf('  pehmeaLoppu(') + 2000);
   assert.match(pehmea, /LOPUN_HILJAISUUS_S/, 'pysäytys ei odota hiljaisuutta');
+=======
+  // Ääntä ei myöskään saa pysäyttää ennen tiedoston loppua: aiemmin
+  // soitin pysäytettiin 50 ms etuajassa, ja se söi lopun häivytyksen
+  // päälle.
+  const pehmea = ui.slice(ui.indexOf('  pehmeaLoppu('), ui.indexOf('  pehmeaLoppu(') + 2000);
+  assert.doesNotMatch(pehmea, /jaljella <= 0\.\d/, 'ääni pysäytetään ennen loppua');
+>>>>>>> origin/main
   assert.match(pehmea, /LOPUN_HAIPYMA_S/, 'loppu käyttää väärää häivytystä');
 });
 
