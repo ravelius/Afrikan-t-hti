@@ -305,6 +305,32 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 53: lukijan viimeinen sana kuuluu — VALMIS v176 2.8.2026
+
+Omistajan havainto: "Lukijan ääni feidautuu pois ja nielee viimeisen
+sanan. Feidi saisi olla ihan viimeinen millisekunti jotta napsahdus
+lopusta vain jää pois."
+
+**Sama luku palveli kahta eri tarkoitusta.** Puolitoista sekuntia on
+oikea silloin, kun luenta katkaistaan **kesken tiedoston** lauserajalla:
+siellä häivytys korvaa töksähtävän katkon keskellä puhetta, ja se
+lisättiin aikanaan juuri omistajan havainnon perusteella.
+
+Nauhoituksen **omassa lopussa** sama pituus on väärin. Häivytys alkoi
+puolitoista sekuntia ennen loppua — eli keskellä viimeistä sanaa.
+
+Pahensi asiaa vielä toinen kohta: soitin pysäytettiin, kun loppuun oli
+50 millisekuntia. Yhdessä nämä söivät lopun kahdesti.
+
+**Nyt lukuja on kaksi.** Lauserajan häivytys pysyy puolessatoista
+sekunnissa; lopun häivytys on 50 millisekuntia, eikä ääntä pysäytetä
+ennen tiedoston loppua. Se riittää poistamaan napsahduksen eikä kuulu
+häivytyksenä.
+
+Testi vartioi molempia: lauserajan häivytys ei saa lyhentyä alle puolen
+sekunnin eikä lopun kasvaa yli 0,15 sekunnin.
+
+
 ## Paketti 52: puuttuvat saaret ja Tutki-napin luettavuus — VALMIS v175 2.8.2026
 
 Omistajan havainnot: "Korsika puuttuu" ja "Tutki nappi näkyy huonosti".

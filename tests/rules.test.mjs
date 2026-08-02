@@ -2977,6 +2977,33 @@ test('toimintonappien alta ei vaalenneta karttaa', () => {
     'päiväkirjan taustavalo katosi');
 });
 
+test('luennan loppuhäivytys ei niele viimeistä sanaa', () => {
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+
+  /*
+   * Kaksi eri häivytystä, ja ero on olennainen.
+   *
+   * Lauserajalla luenta katkaistaan KESKEN tiedoston, ja siellä pitkä
+   * häivytys korvaa töksähtävän katkon keskellä puhetta.
+   *
+   * Nauhoituksen omassa lopussa sama pituus on väärin: se alkaa jo
+   * puolitoista sekuntia ennen loppua ja nielee viimeisen sanan
+   * (omistajan havainto). Lopussa tarvitaan vain sen verran, ettei
+   * pysäytys napsahda.
+   */
+  const lause = Number(ui.match(/const LUENNAN_HAIPYMA_S = ([\d.]+)/)?.[1]);
+  const loppu = Number(ui.match(/const LOPUN_HAIPYMA_S = ([\d.]+)/)?.[1]);
+  assert.ok(lause >= 0.5, 'lauserajan häivytys on liian lyhyt — katko töksähtää');
+  assert.ok(loppu > 0 && loppu <= 0.15, 'lopun häivytys nielee viimeisen sanan');
+
+  // Ääntä ei myöskään saa pysäyttää ennen tiedoston loppua: aiemmin
+  // soitin pysäytettiin 50 ms etuajassa, ja se söi lopun häivytyksen
+  // päälle.
+  const pehmea = ui.slice(ui.indexOf('  pehmeaLoppu('), ui.indexOf('  pehmeaLoppu(') + 2000);
+  assert.doesNotMatch(pehmea, /jaljella <= 0\.\d/, 'ääni pysäytetään ennen loppua');
+  assert.match(pehmea, /LOPUN_HAIPYMA_S/, 'loppu käyttää väärää häivytystä');
+});
+
 test('kartalla ei ole vinjettiä millään laitteella', () => {
   const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
   const art = readFileSync(new URL('../js/mapart.js', import.meta.url), 'utf8');
