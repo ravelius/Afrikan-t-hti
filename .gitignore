@@ -1,0 +1,14 @@
+# Peilikansio. Tänne noudetaan ämpärin sisältö peilausta varten ja
+# tänne peilaustyökalu kirjoittaa. Satoja megatavuja kuvia ja ääniä —
+# varasto on ämpäri, ei repo.
+media/
+
+# Wikipedian raaka-aineet, joista kortit kirjoitetaan käsin. Työkalu
+# lataa nämä avuksi (--vain tekstit); valmis teksti menee paketteihin.
+lahteet/
+
+# dist/ EI ole täällä: yhden tiedoston versio on tarkoituksella repossa,
+# jotta pelin voi ottaa mukaan levyllä ilman verkkoa.
+
+node_modules/
+.DS_Store

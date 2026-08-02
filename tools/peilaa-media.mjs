@@ -13,16 +13,18 @@
  * Wikipediasta haetaan lisäaineistoa tarvittaessa. Siksi --vain tekstit
  * lataa raaka-aineen kansioon lahteet/, josta tekstit kirjoitetaan
  * paketteihin (ARTIKKELIT ja OMAT_TIIVISTELMAT). Sitä kansiota ei viedä
- * media-repoon eikä peli lue sitä.
+ * ämpäriin eikä peli lue sitä.
  *
  * Työkalu on turvallinen ajaa uudestaan: valmiit tiedostot ohitetaan.
  * Lopuksi kirjoitetaan manifesti.json, jossa on jokaisen tiedoston
  * alkuperäinen osoite, lisenssi ja tekijä — lähdemaininnat eivät katoa
  * peilatessa.
  *
- * Tulos viedään omaan media-repoon (ravelius/matkakirja-media) ja
- * julkaistaan GitHub Pagesissa. Osoite kirjoitetaan js/media.js:n
- * MEDIA_PEILI-vakioon.
+ * Tulos viedään ämpäriin (Cloudflare R2), josta peli hakee sen.
+ * Osoite on js/media.js:n PEILI_JUURI-vakiossa, ja viennin tekee
+ * .github/workflows/peilaa.yml. Aiemmin tulos asui omassa repossaan
+ * (ravelius/Matkakirja-media) GitHub Pagesissa, mutta aineisto ylitti
+ * Pagesin suositusrajan (1 Gt) ja repo jäi tarpeettomaksi.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -45,10 +47,13 @@ const arvo = (lippu, oletus) => {
   const i = argv.indexOf(lippu);
   return i >= 0 ? argv[i + 1] : oletus;
 };
-// Repon nimi on isolla alkukirjaimella (ravelius/Matkakirja-media).
-// Linux erottaa kirjainkoon, joten pieni m loi vieressä toisen, tyhjän
-// hakemiston ja peilaus alkoi tyhjästä joka kerta.
-const ULOS = arvo('--ulos', join(JUURI, '..', 'Matkakirja-media'));
+// Peilikansio on repon sisällä (media/, .gitignoressa). Se ei ole
+// varasto vaan välivaihe: ajo noutaa ämpärin sisällön tänne, täydentää
+// puuttuvat ja vie tuloksen takaisin. Ennen kansio oli repon vieressä
+// (../Matkakirja-media), ja koska Linux erottaa kirjainkoon, väärä
+// alkukirjain loi vieressä toisen tyhjän hakemiston ja peilaus alkoi
+// alusta joka kerta.
+const ULOS = arvo('--ulos', join(JUURI, 'media'));
 const VAIN = arvo('--vain', null);
 const AGENTTI = 'Matkakirja/1.0 (https://github.com/ravelius/Matkakirja)';
 
