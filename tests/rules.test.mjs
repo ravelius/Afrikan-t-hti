@@ -3023,3 +3023,22 @@ test('kehittäjätila on salasanan takana ja pois päältä oletuksena', () => {
   assert.doesNotMatch(ui, /kehittaja-merkki/,
     'kartalle piirretään taas erillinen merkki');
 });
+
+test('aloituskartan napautuszoomaus koskee vain maailmankarttaa', () => {
+  // Mantereella napautus lisäsi bodyyn aloitus-zoom-luokan, kartta
+  // zoomasi uudelleen ja perään syttyi kiikari — joka kuuluu vain
+  // etusivulle (omistajan havainto: laivamatkan valinta Ateenassa).
+  // Sama ehto estää toisenkin haitan: kuuntelija on kaappausvaiheessa
+  // ja pysäyttää tapahtuman, joten se söi kartan kohderenkaiden
+  // napautukset mantereella.
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  const kuuntelija = ui.match(/pane\.addEventListener\('click',[\s\S]*?\}, true\);/)?.[0] ?? '';
+  assert.ok(kuuntelija, 'kartan napautuskuuntelijaa ei löytynyt');
+  assert.match(kuuntelija, /this\.game\.pack\.id !== 'maailma'/,
+    'napautuszoomaus on taas käytössä muillakin laudoilla');
+  // Kiikari nousee vain aloituskartan zoomauksen perään: molemmat
+  // luokat vaaditaan, joten yksi ei riitä.
+  const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /body\.aloitus-zoom\.kiikari-paalla \.kiikari/,
+    'kiikari voi nousta ilman aloituskartan zoomausta');
+});

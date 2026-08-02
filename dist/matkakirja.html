@@ -48100,6 +48100,22 @@ class UI {
       // palataan kesken matkan (omistajan havainto): kartta on yhtä pieni
       // kummallakin kerralla. Aloitusportin takana zoomausta ei tarjota.
       if (!this.aloitettu || this.aloitusportti) return;
+      /*
+       * Vain maailmankartalla. Mantereilla on oma lähikuvansa
+       * (zoomaaMantereelle), eikä aloituskartan napautuszoomaus kuulu
+       * niille lainkaan.
+       *
+       * Ilman tätä ehtoa napautus lisäsi bodyyn aloitus-zoom-luokan.
+       * Euroopassa fitViewBox palaa sen jälkeen mannerzoomin haarasta
+       * eikä ehdi nollata lippua, joten kartta zoomasi uudelleen ja
+       * perään syttyi kiikari — joka kuuluu vain etusivulle (omistajan
+       * havainto: laivamatkan valinta Ateenassa).
+       *
+       * Sama ehto lopettaa toisenkin haitan: kuuntelija on
+       * kaappausvaiheessa ja pysäyttää tapahtuman, joten mantereella se
+       * söi kartalla olevien kohderenkaiden napautukset.
+       */
+      if (this.game.pack.id !== 'maailma') return;
       e.stopPropagation();
       e.preventDefault();
       this.zoomaaAloituskartta(this.kartanKohta(e.clientX, e.clientY));
@@ -52431,7 +52447,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.156';
+const APP_VERSION = '2026-08-02.157';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
