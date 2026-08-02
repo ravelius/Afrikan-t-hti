@@ -9,7 +9,7 @@ import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.142';
+const APP_VERSION = '2026-08-02.143';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -263,7 +263,8 @@ document.getElementById('newgame-btn').addEventListener('click', startGame);
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään
 // kerran täällä eikä käyttöliittymän mukana joka uudessa pelissä.
-document.getElementById('passport-btn').addEventListener('click', () => ui?.openPassport());
+// Kukkaropilleri on samalla matkalaukun nappi (omistajan toive).
+document.getElementById('turn-pill').addEventListener('click', () => ui?.openPassport());
 // Alakulman huutomerkki: palaute juuri siitä kohdasta peliä, jossa
 // pelaaja on. Kytketään kerran, koska nappi elää pelin ulkopuolella.
 document.getElementById('palaute-kulma').addEventListener('click', () => ui?.naytaPalauteKulmasta());

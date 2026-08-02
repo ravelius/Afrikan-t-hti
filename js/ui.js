@@ -2037,6 +2037,14 @@ export class UI {
   renderTurnPill() {
     const { game } = this;
     this.turnPill.textContent = '';
+    // Laukun kahva pillerin edessä: pilleri on samalla matkalaukun nappi,
+    // ja ilman kuvaketta mikään ei kertoisi sen aukeavan (omistajan toive).
+    const laukku = html('span', 'laukku-ikoni');
+    laukku.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+      + '<rect x="4" y="8" width="16" height="11.5" rx="2"/>'
+      + '<path d="M9.3 8V6.3a1.7 1.7 0 0 1 1.7-1.7h2a1.7 1.7 0 0 1 1.7 1.7V8'
+      + 'M8.6 8v11.5M15.4 8v11.5"/></svg>';
+    this.turnPill.appendChild(laukku);
     if (game.phase === 'over') {
       this.turnPill.appendChild(html('span', '', `${game.winner.name} voitti`));
       return;
@@ -5060,7 +5068,7 @@ export class UI {
    * joka kerta — huomio kiinnittyy yläreunaan ilman uutta ilmoitusta.
    */
   elavoitaLaukku() {
-    const nappi = document.getElementById('passport-btn');
+    const nappi = document.getElementById('turn-pill');
     if (!nappi) return;
     nappi.classList.remove('laukku-elo');
     void nappi.offsetWidth;

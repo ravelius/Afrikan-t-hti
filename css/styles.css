@@ -103,6 +103,12 @@ button, .brand, .turn-pill, .fact-card h2 {
   white-space: nowrap;
 }
 
+/*
+ * Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan toive):
+ * rahat ja tavarat ovat samassa laukussa. Ulkoasu on yhä pilleri, ei
+ * nappi — se ei saa kilpailla kartan kanssa, mutta sen pitää tuntua
+ * napautettavalta.
+ */
 .turn-pill {
   flex: 0 1 auto;
   display: flex;
@@ -117,6 +123,25 @@ button, .brand, .turn-pill, .fact-card h2 {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.turn-pill:hover,
+.turn-pill:focus-visible {
+  border-color: var(--kulta, #eab84e);
+}
+.turn-pill .laukku-ikoni {
+  display: inline-flex;
+  color: var(--muted);
+}
+.turn-pill .laukku-ikoni svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
 }
 
 /*
@@ -199,7 +224,7 @@ button, .brand, .turn-pill, .fact-card h2 {
  * kunniamerkintä tai löydetty aarre. Pieni heilahdus ja lämmin
  * kultahehku — kuin laukku tömähtäisi pöydälle.
  */
-#passport-btn.laukku-elo {
+.turn-pill.laukku-elo {
   animation: laukku-elo 0.9s cubic-bezier(0.34, 1.4, 0.5, 1);
 }
 
@@ -213,7 +238,7 @@ button, .brand, .turn-pill, .fact-card h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #passport-btn.laukku-elo { animation: none; }
+  .turn-pill.laukku-elo { animation: none; }
 }
 
 .topbar-actions {
