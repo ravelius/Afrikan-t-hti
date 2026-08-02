@@ -3413,21 +3413,30 @@ export class UI {
           + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> Apple Music';
         otsikkoRivi.appendChild(linkki);
       }
-      // Ilmainen kuuntelupaikka Apple Musicin rinnalle (omistajan
-      // toive): kansalliset yleisradiot, Commons ja muut avoimet
-      // arkistot. Kaikilla ei ole tällaista, joten kenttä on
-      // vapaaehtoinen ja linkki näkyy vain kun se on merkitty.
-      if (nosto.musiikkiVapaa) {
-        const vapaa = html('a', 'kulttuuri-musiikkilinkki kulttuuri-musiikkilinkki-vapaa');
-        vapaa.href = nosto.musiikkiVapaa;
-        vapaa.target = '_blank';
-        vapaa.rel = 'noopener';
-        vapaa.title = nosto.musiikkiVapaaNimi ?? 'Ilmainen kuuntelupaikka';
-        vapaa.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'
-          + '<path d="M12 4.5v15M8 8v8M16 8v8M4.5 10.5v3M19.5 10.5v3" fill="none" '
-          + 'stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg> '
-          + (nosto.musiikkiVapaaLyhyt ?? 'Ilmainen');
-        otsikkoRivi.appendChild(vapaa);
+      // Ilmainen ääninäyte Apple Music -linkin rinnalle (omistajan
+      // toive): "musiikin pitäisi lähteä soimaan suoraan kun sitä
+      // painaa". Ennen tässä oli linkki kansallisen yleisradion
+      // etusivulle, mistä musiikkia ei kuulunut — sivulle päätyminen
+      // on eri asia kuin musiikin kuuleminen.
+      //
+      // Näyte on vapaasti lisensoitu äänite (Wikimedia Commons tai
+      // archive.org). Kaikelle ei ole sellaista: ABBAlta, Röyksoppilta
+      // ja Šostakovitšilta ei ole ilmaista levytystä, ja silloin
+      // korttiin jää pelkkä Apple Music -linkki. Tyhjä nappi lupaisi
+      // enemmän kuin antaa.
+      if (nosto.musiikkiNayte) {
+        const nappi = html('button', 'kulttuuri-kuuntele kulttuuri-musiikkinayte');
+        nappi.type = 'button';
+        nappi.title = nosto.musiikkiNayteNimi ?? 'Vapaasti lisensoitu ääninäyte';
+        nappi.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
+          + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+          + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
+          + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg>'
+          + '<span>Kuuntele musiikkia</span><span class="aika" hidden></span>';
+        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(
+          { aani: nosto.musiikkiNayte, otsikko: nosto.otsikko }, nappi,
+        ));
+        otsikkoRivi.appendChild(nappi);
       }
       lohko.appendChild(otsikkoRivi);
       if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
@@ -3567,9 +3576,13 @@ export class UI {
         }
       }, { once: true });
     }
-    this.kulttuuriAani = { audio, nappi };
     // Vain tekstiosa vaihtuu — kaiutinkuvake säilyy napissa.
     const nimio = nappi.querySelector('span');
+    // Napin oma teksti talteen: samaa soitinta käyttävät myös
+    // "Kuuntele kieltä" ja "Kuuntele musiikkia", ja ilman tätä ne
+    // muuttuivat pysäytettäessä "Kuuntele näyte" -napeiksi.
+    const alkuperainen = nimio?.textContent ?? 'Kuuntele näyte';
+    this.kulttuuriAani = { audio, nappi, nimi: alkuperainen };
     if (nimio) nimio.textContent = 'Pysäytä näyte';
     nappi.classList.add('soi');
     // Kesto ja toistokohta näkyvät napissa näytteen soidessa
@@ -3612,7 +3625,7 @@ export class UI {
     soiva.audio.pause();
     soiva.audio.removeAttribute('src');
     const nimio = soiva.nappi.querySelector('span');
-    if (nimio) nimio.textContent = 'Kuuntele näyte';
+    if (nimio) nimio.textContent = soiva.nimi ?? 'Kuuntele näyte';
     const aika = soiva.nappi.querySelector('.aika');
     if (aika) {
       aika.hidden = true;

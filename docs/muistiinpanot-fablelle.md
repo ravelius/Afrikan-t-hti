@@ -507,8 +507,21 @@ sitä näyttävät vain Apple Musicin. Käytössä Ateenan seudulla:
 | Kroatia | HRT | `https://radio.hrt.hr/` |
 | Bulgaria | BNR | `https://bnr.bg/en/live` |
 
-Vielä selvittämättä: Europeana, IMSLP ja Commonsin omat
-musiikkitallenteet, joista saisi suoraan soivan näytteen linkin sijaan.
+**Tämä ratkaisu kumottiin 2.8.2026.** Omistajan huomio: "Tutki
+sivuilla on musiikki osiossa linkki aina jollekin sivulle. Sen tilalla
+saisi olla linkki ääninäytteeseen suoraan, eli musiikki pitäisi lähteä
+soimaan suoraan kun sitä painaa." Yleisradion etusivu ei ole musiikkia
+— se on paikka, josta musiikkia ehkä löytää. `musiikkiVapaa`-kentät
+poistettiin ja tilalle tuli `musiikkiNayte`: suora mp3, joka soi
+napista samalla soittimella kuin muutkin näytteet. Lähteet ovat
+Wikimedia Commons ja archive.org (`tools/hae-musiikkinaytteet.mjs`).
+
+Kaksi rajausta lähteissä. Vain **mp3** kelpaa, koska Safari ei soita
+oggia eikä flacia — ja peliä pelataan iPadilla, joten ogg-näyte olisi
+juuri siellä hiljainen. Ja archive.orgista vain kohteet, joilla on
+`licenseurl`: Great 78 Project (`collection:georgeblood`) osuu
+hakusanoihin ylivoimaisesti parhaiten, mutta sen kohteissa ei ole
+lisenssitietoa lainkaan, joten ne jätettiin kokonaan pois.
 
 ### Kuvien tallennuspaikka — ratkaistu
 
