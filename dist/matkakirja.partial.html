@@ -4323,6 +4323,24 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   </dialog>
 
   <!--
+    Uusi peli tyhjentää kaiken (omistajan toive). Varmistus on tässä
+    syystä: passin leimat ja laukun tavarat ovat pelin ainoa pysyvä
+    kertymä, eikä niitä saa takaisin.
+  -->
+  <dialog id="nollaa-dialog" class="dialog">
+   <div class="dialog-card">
+    <h2>Uusi peli</h2>
+    <p class="dialog-teksti">Matka alkaa alusta ja <b>kaikki muistit tyhjennetään</b>:
+      tallennettu peli, passin leimat, laukun tavarat, ääniasetukset ja välimuisti.
+      Tätä ei voi perua.</p>
+    <div class="dialog-actions">
+      <button id="nollaa-peru" class="ghost" type="button">Peruuta</button>
+      <button id="nollaa-ok" class="primary" type="button">Aloita alusta</button>
+    </div>
+   </div>
+  </dialog>
+
+  <!--
     Kehittäjätila. Salasana on tarkoituksella kevyt lukko eikä
     tietoturvaa: se estää vahingossa avaamisen, ei tahallista.
   -->
@@ -47366,6 +47384,28 @@ class UI {
     // toive). Kuuntelija on kartta-alueella, jonka päällä kortit vain
     // kelluvat, joten kortin oma napautus ei osu tähän.
     this.mapPane.addEventListener('click', () => this.kutistaPaivakirja());
+
+    /*
+     * Kartta herätetään, kun sovellus palaa taustalta.
+     *
+     * Omistajan havainto: meri katoaa kartalta silloin tällöin, ja
+     * useimmiten juuri sen jälkeen kun välissä on käyty toisessa
+     * ohjelmassa tai peli on päivittynyt uuteen versioon. Karttaa ei
+     * piirretä uudelleen kesken pelin, joten kyse ei voi olla piirrosta
+     * vaan siitä, että jo piirretty kerros lakkaa näkymästä.
+     *
+     * Meren tuntu syntyy suodatetuista kerroksista: rannikon pehmeät
+     * kaiut ja aaltomerkit. Kun iOS vapauttaa taustalle jääneen
+     * sovelluksen piirtopuskurit, juuri suodatetut kerrokset voivat
+     * palata tyhjinä — silloin meri muuttuu tyhjäksi pergamentiksi
+     * eikä eroa maasta.
+     */
+    this.herataPiirto = () => {
+      if (this.dead || document.visibilityState !== 'visible') return;
+      this.herataSuodatetutKerrokset();
+    };
+    document.addEventListener('visibilitychange', this.herataPiirto);
+    window.addEventListener('pageshow', this.herataPiirto);
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
     this.travelExpanded = false; // matkavalinnan toinen vaihe auki
@@ -47403,6 +47443,27 @@ class UI {
   paivitaKehittajaTila() {
     this.kehittajaTila = kehittajaTilaPaalla();
     this.render();
+  }
+
+  /**
+   * Pakottaa suodatetut kerrokset piirtymään uudelleen. Suodatinviite
+   * irrotetaan ja liitetään takaisin, mikä mitätöi selaimen tallettaman
+   * tuloksen — pelkkä uudelleenpiirron pyytäminen ei riitä, koska
+   * selaimen mielestä mikään ei ole muuttunut.
+   *
+   * Kartan sisältöä ei kosketa: samat elementit, sama suodatin.
+   */
+  herataSuodatetutKerrokset() {
+    if (!this.svg) return;
+    for (const kerros of this.svg.querySelectorAll('[filter]')) {
+      const suodatin = kerros.getAttribute('filter');
+      if (!suodatin) continue;
+      kerros.removeAttribute('filter');
+      // Mitan lukeminen pakottaa selaimen käsittelemään poiston ennen
+      // takaisinlaittoa; muuten se niputtaisi molemmat yhdeksi ei-muutokseksi.
+      try { kerros.getBoundingClientRect(); } catch { /* mittaus ei ole pakollinen */ }
+      kerros.setAttribute('filter', suodatin);
+    }
   }
 
   /** Piirtää annetun laudan; vaelluksessa lauta vaihtuu porttien kautta. */
@@ -47523,6 +47584,10 @@ class UI {
     this.stopQuizTimer();
     for (const lappu of this.taustaLaput ?? []) lappu.removeEventListener('click', this.lappuTausta);
     for (const lappu of this.peruutusLaput ?? []) lappu.removeEventListener('cancel', this.lappuPeruutus);
+    if (this.herataPiirto) {
+      document.removeEventListener('visibilitychange', this.herataPiirto);
+      window.removeEventListener('pageshow', this.herataPiirto);
+    }
     this.observer?.disconnect();
   }
 
@@ -52441,7 +52506,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.157';
+const APP_VERSION = '2026-08-02.158';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -52703,7 +52768,62 @@ function paivitaVersioKulma() {
   versioKulma.textContent = kehittajaTilaPaalla() ? `${numero} : kehittäjä` : numero;
 }
 paivitaVersioKulma();
-document.getElementById('newgame-btn').addEventListener('click', startGame);
+/*
+ * Uusi peli tyhjentää kaiken (omistajan toive). Sitä ennen kysytään
+ * kerran: passin leimat ja laukun tavarat ovat pelin ainoa pysyvä
+ * kertymä, eikä niitä saa takaisin. Voittoikkunan Uusi peli aloittaa
+ * kuten ennenkin eikä tyhjennä mitään — siinä kohtaa pelaaja on juuri
+ * ansainnut kertymänsä.
+ */
+const nollaaDialog = document.getElementById('nollaa-dialog');
+
+/**
+ * Kaikki pelin muistit pois: talletukset, välimuistit ja
+ * palvelutyöntekijä. Sen jälkeen sivu haetaan uutena.
+ *
+ * Avaimet poistetaan etuliitteen perusteella eikä listana, jotta uusi
+ * asetus ei jää siivouksen ulkopuolelle sitä mukaa kun niitä lisätään.
+ */
+async function tyhjennaMuistit() {
+  try {
+    const poistettavat = [];
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const avain = localStorage.key(i);
+      if (avain && (avain.startsWith('matkakirja') || avain.startsWith('afrikan-tahti'))) {
+        poistettavat.push(avain);
+      }
+    }
+    for (const avain of poistettavat) localStorage.removeItem(avain);
+  } catch {
+    /* yksityinen selaus: ei talletuksia poistettavaksi */
+  }
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+    }
+    if (window.caches) {
+      const avaimet = await caches.keys();
+      await Promise.all(avaimet.map((avain) => caches.delete(avain)));
+    }
+  } catch {
+    /* tyhjennys onnistuu myös ilman välimuistin siivousta */
+  }
+  // Sama kikka kuin Päivitä-napissa: iOS välimuistittaa aloitussivun
+  // myös palvelutyöntekijän ohi, joten osoitteesta tehdään uusi.
+  const osoite = new URL(location.href);
+  osoite.searchParams.set('paivitys', String(Date.now()));
+  location.replace(osoite.toString());
+}
+
+document.getElementById('newgame-btn').addEventListener('click', () => nollaaDialog.showModal());
+document.getElementById('nollaa-peru').addEventListener('click', () => nollaaDialog.close());
+document.getElementById('nollaa-ok').addEventListener('click', () => {
+  const nappi = document.getElementById('nollaa-ok');
+  nappi.disabled = true;
+  nappi.textContent = 'Tyhjennetään…';
+  tyhjennaMuistit();
+});
 document.getElementById('rules-btn').addEventListener('click', () => rulesDialog.showModal());
 // Passi kuuluu pelaajalle eikä yksittäiselle pelille, joten nappi kytketään
 // kerran täällä eikä käyttöliittymän mukana joka uudessa pelissä.

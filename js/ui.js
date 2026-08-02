@@ -858,6 +858,28 @@ export class UI {
     // toive). Kuuntelija on kartta-alueella, jonka päällä kortit vain
     // kelluvat, joten kortin oma napautus ei osu tähän.
     this.mapPane.addEventListener('click', () => this.kutistaPaivakirja());
+
+    /*
+     * Kartta herätetään, kun sovellus palaa taustalta.
+     *
+     * Omistajan havainto: meri katoaa kartalta silloin tällöin, ja
+     * useimmiten juuri sen jälkeen kun välissä on käyty toisessa
+     * ohjelmassa tai peli on päivittynyt uuteen versioon. Karttaa ei
+     * piirretä uudelleen kesken pelin, joten kyse ei voi olla piirrosta
+     * vaan siitä, että jo piirretty kerros lakkaa näkymästä.
+     *
+     * Meren tuntu syntyy suodatetuista kerroksista: rannikon pehmeät
+     * kaiut ja aaltomerkit. Kun iOS vapauttaa taustalle jääneen
+     * sovelluksen piirtopuskurit, juuri suodatetut kerrokset voivat
+     * palata tyhjinä — silloin meri muuttuu tyhjäksi pergamentiksi
+     * eikä eroa maasta.
+     */
+    this.herataPiirto = () => {
+      if (this.dead || document.visibilityState !== 'visible') return;
+      this.herataSuodatetutKerrokset();
+    };
+    document.addEventListener('visibilitychange', this.herataPiirto);
+    window.addEventListener('pageshow', this.herataPiirto);
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
     this.travelExpanded = false; // matkavalinnan toinen vaihe auki
@@ -895,6 +917,27 @@ export class UI {
   paivitaKehittajaTila() {
     this.kehittajaTila = kehittajaTilaPaalla();
     this.render();
+  }
+
+  /**
+   * Pakottaa suodatetut kerrokset piirtymään uudelleen. Suodatinviite
+   * irrotetaan ja liitetään takaisin, mikä mitätöi selaimen tallettaman
+   * tuloksen — pelkkä uudelleenpiirron pyytäminen ei riitä, koska
+   * selaimen mielestä mikään ei ole muuttunut.
+   *
+   * Kartan sisältöä ei kosketa: samat elementit, sama suodatin.
+   */
+  herataSuodatetutKerrokset() {
+    if (!this.svg) return;
+    for (const kerros of this.svg.querySelectorAll('[filter]')) {
+      const suodatin = kerros.getAttribute('filter');
+      if (!suodatin) continue;
+      kerros.removeAttribute('filter');
+      // Mitan lukeminen pakottaa selaimen käsittelemään poiston ennen
+      // takaisinlaittoa; muuten se niputtaisi molemmat yhdeksi ei-muutokseksi.
+      try { kerros.getBoundingClientRect(); } catch { /* mittaus ei ole pakollinen */ }
+      kerros.setAttribute('filter', suodatin);
+    }
   }
 
   /** Piirtää annetun laudan; vaelluksessa lauta vaihtuu porttien kautta. */
@@ -1015,6 +1058,10 @@ export class UI {
     this.stopQuizTimer();
     for (const lappu of this.taustaLaput ?? []) lappu.removeEventListener('click', this.lappuTausta);
     for (const lappu of this.peruutusLaput ?? []) lappu.removeEventListener('cancel', this.lappuPeruutus);
+    if (this.herataPiirto) {
+      document.removeEventListener('visibilitychange', this.herataPiirto);
+      window.removeEventListener('pageshow', this.herataPiirto);
+    }
     this.observer?.disconnect();
   }
 

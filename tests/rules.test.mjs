@@ -3042,3 +3042,32 @@ test('aloituskartan napautuszoomaus koskee vain maailmankarttaa', () => {
   assert.match(css, /body\.aloitus-zoom\.kiikari-paalla \.kiikari/,
     'kiikari voi nousta ilman aloituskartan zoomausta');
 });
+
+test('uusi peli tyhjentää muistit vasta varmistuksen jälkeen', () => {
+  // Omistajan toive: uusi peli nollaa kaikki muistit. Varmistus on
+  // pakollinen, koska passin leimat ja laukun tavarat ovat pelin ainoa
+  // pysyvä kertymä eikä niitä saa takaisin.
+  const main = readFileSync(new URL('../js/main.js', import.meta.url), 'utf8');
+  assert.match(main, /newgame-btn'\)\.addEventListener\('click', \(\) => nollaaDialog\.showModal\(\)\)/,
+    'uusi peli tyhjentää ilman varmistusta');
+  // Avaimet poistetaan etuliitteen perusteella, jotta myöhemmin lisätty
+  // asetus ei jää siivouksen ulkopuolelle.
+  assert.match(main, /startsWith\('matkakirja'\)/);
+  assert.match(main, /startsWith\('afrikan-tahti'\)/);
+  // Vieraisiin avaimiin ei kosketa: sama selain voi pitää muutakin.
+  assert.doesNotMatch(main, /localStorage\.clear\(\)/,
+    'localStorage.clear veisi muidenkin sovellusten tiedot');
+});
+
+test('kartta herätetään, kun sovellus palaa taustalta', () => {
+  // Omistajan havainto: meri katoaa kartalta useimmiten sen jälkeen kun
+  // välissä on käyty toisessa ohjelmassa. Karttaa ei piirretä uudelleen
+  // kesken pelin, joten kyse on jo piirretyn kerroksen katoamisesta.
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  assert.match(ui, /addEventListener\('visibilitychange', this\.herataPiirto\)/);
+  assert.match(ui, /addEventListener\('pageshow', this\.herataPiirto\)/);
+  // Kuuntelijat myös irti, ettei kuollut instanssi herättele uuden pelin
+  // karttaa.
+  assert.match(ui, /removeEventListener\('visibilitychange', this\.herataPiirto\)/);
+  assert.match(ui, /removeEventListener\('pageshow', this\.herataPiirto\)/);
+});
