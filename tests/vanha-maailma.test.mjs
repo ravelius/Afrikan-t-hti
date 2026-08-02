@@ -167,3 +167,41 @@ test('porttikaupungit yhdistävät mantereet', async () => {
     assert.ok(naapureita >= 2, `${portti}: vain ${naapureita} reittiä — sauma ei kanna`);
   }
 });
+
+test('nimien sijoitus välttää päällekkäisyydet', async () => {
+  const { sijoita, laatikko } = await import('../tools/nimien-paikat.mjs');
+  // Kolme kaupunkia lähes päällekkäin: sijoittajan on löydettävä
+  // kullekin oma suunta, muuten nimet menevät lukukelvottomiksi.
+  const kaupungit = [
+    { id: 'a', nimi: 'Ankara', x: 500, y: 500 },
+    { id: 'b', nimi: 'Bagdad', x: 530, y: 510 },
+    { id: 'c', nimi: 'Kairo', x: 505, y: 545 },
+  ];
+  const leveydet = new Map([['a', 70], ['b', 70], ['c', 60]]);
+  const { paikat, pulmat } = sijoita(kaupungit, leveydet, []);
+  assert.equal(paikat.size, 3);
+
+  // Tarkistetaan tulos itse: yksikään laatikko ei saa leikata toista.
+  const laatikot = kaupungit.map((c) => laatikko(c, paikat.get(c.id), leveydet.get(c.id)));
+  for (let i = 0; i < laatikot.length; i++) {
+    for (let j = i + 1; j < laatikot.length; j++) {
+      const [a, b] = [laatikot[i], laatikot[j]];
+      const leikkaa = a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+      assert.ok(!leikkaa,
+        `${kaupungit[i].nimi} ja ${kaupungit[j].nimi} menevät päällekkäin`);
+    }
+  }
+  assert.deepEqual(pulmat, [], 'kolmen kaupungin pitäisi mahtua');
+});
+
+test('nimi ei jää kaupunkiympyrän alle', async () => {
+  const { sijoita, laatikko } = await import('../tools/nimien-paikat.mjs');
+  // Yksinäinen kaupunki: nimi ei saa peittää omaa ympyräänsä, muuten
+  // nappulaa ei näe eikä laattaa voi napauttaa.
+  const kaupungit = [{ id: 'a', nimi: 'Timbuktu', x: 300, y: 300 }];
+  const { paikat } = sijoita(kaupungit, new Map([['a', 80]]), []);
+  const l = laatikko(kaupungit[0], paikat.get('a'), 80);
+  const ympyra = { x0: 300 - 16, x1: 300 + 16, y0: 300 - 16, y1: 300 + 16 };
+  const leikkaa = l.x0 < ympyra.x1 && ympyra.x0 < l.x1 && l.y0 < ympyra.y1 && ympyra.y0 < l.y1;
+  assert.ok(!leikkaa, 'nimi peittää oman kaupunkinsa ympyrän');
+});
