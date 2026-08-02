@@ -205,3 +205,39 @@ test('nimi ei jää kaupunkiympyrän alle', async () => {
   const leikkaa = l.x0 < ympyra.x1 && ympyra.x0 < l.x1 && l.y0 < ympyra.y1 && ympyra.y0 < l.y1;
   assert.ok(!leikkaa, 'nimi peittää oman kaupunkinsa ympyrän');
 });
+
+test('jokaisella vanhan maailman kaupungilla on saapumisteksti', async () => {
+  const { PACKS } = await import('../js/pack.js');
+  const { AFRICA_SAAPUMISET } = await import('../js/packs/africa-saapumiset.js');
+  const { EUROPE_SAAPUMISET } = await import('../js/packs/europe-saapumiset.js');
+  const { ASIA_SAAPUMISET } = await import('../js/packs/asia-saapumiset.js');
+  const tekstit = { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET };
+  const pack = PACKS.find((p) => p.id === 'vanhamaailma');
+  const ilman = pack.cities.filter((c) => !tekstit[c.id]).map((c) => c.id);
+  assert.deepEqual(ilman, [], 'näiltä kaupungeilta puuttuu matkakirjan merkintä');
+});
+
+test('saapumistekstissä on molemmat äänet', async () => {
+  const { ASIA_SAAPUMISET } = await import('../js/packs/asia-saapumiset.js');
+  // Merkintä on kahden äänen vuoropuhelu: nuoren herran tuore havainto
+  // ja isoisän kirjan lainaus. Ilman jälkimmäistä kortti on pelkkä
+  // matkaopas, ja koko kehyskertomus katoaa.
+  for (const [id, t] of Object.entries(ASIA_SAAPUMISET)) {
+    assert.ok(t.kuvaus?.length > 80, `${id}: kuvaus liian lyhyt`);
+    assert.ok(t.nosto?.length > 50, `${id}: nosto liian lyhyt`);
+    assert.match(t.nosto, /[Ii]soisä/, `${id}: nostosta puuttuu isoisän ääni`);
+  }
+});
+
+test('radiolähetykset ovat salattuja', async () => {
+  const { RADIOT, radioMaalle } = await import('../js/packs/radiot.js');
+  // Peli tarjoillaan https:llä, ja selain estää salaamattoman
+  // äänivirran kokonaan. Yksikin http-osoite tarkoittaa napin, joka
+  // ei koskaan soi.
+  for (const [maa, r] of Object.entries(RADIOT)) {
+    assert.match(r.url, /^https:\/\//, `${maa}: ${r.asema} ei ole https`);
+    assert.ok(r.asema?.length, `${maa}: asemalta puuttuu nimi`);
+  }
+  assert.equal(radioMaalle('EI_OLE'), null);
+  assert.equal(radioMaalle(undefined), null);
+});

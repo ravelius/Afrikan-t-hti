@@ -384,6 +384,98 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 61: Kuuntele kieltä suorana radiona — VALMIS v185 3.8.2026
+
+Omistajan havainto: näytteissä puhutaan liian vähän. Ratkaisu on
+suora puheradio, ja järjestys on omistajan antama: maan virallinen
+ykkösradio ensin, sen puuttuessa mikä tahansa saman maan asema, ja
+vasta viimeisenä vanha kolmen minuutin tallenne.
+
+Uudet tiedostot: `tools/hae-radiot.mjs` (haku), `tools/kirjoita-radiot.mjs`
+(pakkatiedoston kirjoitus), `js/packs/radiot.js` (71 maata, joista 45
+maan yleisradion kanava).
+
+### Neljä ehtoa, joista ei jousteta
+
+1. **https.** Peli tarjoillaan salattuna, ja selain estää salaamattoman
+   äänivirran kokonaan. Osa asemista vastaa kumpaankin, joten
+   http-osoite yritetään päivittää — mutta vain jos se oikeasti vastaa.
+2. **Ei HLS:ää.** `<audio>` soittaa `.m3u8`-virtaa vain Safarissa.
+3. **Osoite tarkistetaan hakemalla.** Hakemiston "toimii"-merkintä on
+   voinut vanhentua kuukausia sitten.
+4. **Nappi ei saa jäädä hiljaiseksi.** Lähetysosoitteet lakkaavat
+   toimimasta ilman varoitusta, joten soitin osaa nyt pudota kokonaan
+   toiseen ääneen (`nosto.vara`) — ei vain saman äänen toiseen
+   osoitteeseen kuten peilin varareitti.
+
+### Kolme ansaa, joihin jäin kiinni
+
+**1. Noden fetch ei lue HTTPS_PROXYa.** Suora yhteys torjutaan tässä
+ympäristössä vastauksella "Blocked by egress policy", joka näyttää
+täsmälleen samalta kuin aseman oma esto — työkalu hylkäsi hyviä
+asemia vääränä tietona. Sama pyyntö curlilla onnistui, ja ero oli
+juuri välipalvelin. Työkalut käynnistävät nyt itsensä uudestaan
+`NODE_USE_ENV_PROXY=1`:n kanssa. **Tämä koskee kaikkia uusia
+työkaluja**, ei vain radiohakua.
+
+**2. Osuma nimen keskeltä ei kelpaa.** Ensimmäinen versio hyväksyi
+"ZamRock Radio Nigeria Relay" -aseman Nigerian yleisradiona, koska
+nimessä luki "Radio Nigeria". Yleisradion kanava alkaa lähes aina
+omalla nimellään, joten osuman on oltava nimen alussa.
+
+**3. Maakoodi on yhteisön kirjaama, ja siinä on virheitä.** Sama
+arabiankielinen koraanikanava osui seitsemän eri maan kohdalle, ja
+Pjongjangin asema oli kirjattu Etelä-Korean asemaksi. Kielitieto
+paljastaa nämä: portugalia puhuvan maan asemalla ei lue "arabic".
+14 valintaa hylättiin näin, ja hylätyt luetellaan aina ajon lopuksi —
+hiljainen karsinta näyttäisi täydeltä listalta.
+
+**Kesken:** 26 maalle löytyi asema mutta ei virallista kanavaa, ja 14
+maata jäi kokonaan ilman (niille jää vanha äänite tai ei nappia).
+Nämä vaativat maakohtaista tutkimista.
+
+
+## Paketti 60: Aasian saapumistekstit ja kuvien aitous — VALMIS v185 3.8.2026
+
+63 puuttuvaa saapumistekstiä kirjoitettu (`js/packs/asia-saapumiset.js`):
+Turkki ja Levantti, Arabian niemimaa, Mesopotamia ja Persia, Siperia ja
+Kaukoitä, Keski-Aasia, Itä-Aasia, Kaakkois-Aasia, Etelä-Aasia. Sama
+muoto ja sama kahden äänen rakenne kuin Euroopassa ja Afrikassa.
+Nyt **kaikilla 143 kaupungilla on matkakirjan merkintä** — testi
+vahtii sitä.
+
+### Kuvateksti voi valehdella, vaikka kuva olisi aito
+
+Omistaja huomasi Darfurin kortista: "Tämä ei ole aito vanha kuva."
+Miehellä oli rannekello ja nykyaikaiset silmälasit. Tiedoston nimi oli
+`Sultan Ali Dinar.jpg` ja kuvateksti kertoi sulttaanista, joka kuoli
+1916 — mutta Commonsin tiedoissa luki vuosi 2016 ja kuvaus "The
+Official Portrait of the 30TH Sultan of Darfur". Kyseessä oli nykyinen
+arvonimen haltija.
+
+**Tiedostonimi ei kerro kuvan ikää. Metatieto kertoo, ja se on ilmaista
+kysyä.** Siitä syntyi `tools/tarkista-kuvaiat.mjs`, joka hakee jokaiselle
+vanhaksi merkitylle kuvalle `DateTimeOriginal`-kentän. 80 kuvasta se
+nosti kahdeksan, joista kolme oli oikeita virheitä:
+
+- **darfur** — nykyaikainen muotokuva vanhana valokuvana. Vaihdettu
+  Jebel Marran kuvaan 1961, samaan vuoreen josta päiväkirja kertoo.
+  (Ali Dinarista on olemassa vain yksi valokuva, brittiarmeijan ottama
+  hänen kuolemansa jälkeen. Sitä ei panna lastenpelin korttiin.)
+- **murzuk** — kuvana oli sodanjälkeinen postimerkki. Vaihdettu
+  vuoden 1891 kuvalaattaan, ja kuvatekstissä sanotaan että se on piirros.
+- **kumasi** — kuva oli aito vuodelta 1900, mutta kuvateksti kertoi
+  kaupungin katoista. Kuvassa on kokous. Teksti korjattiin kuvan
+  mukaiseksi.
+
+Loput viisi olivat vääriä hälytyksiä tai tiedossa olevia myönnytyksiä
+(ahaggar 1991, ja se sanotaan kuvatekstissä ääneen).
+
+**Opetus:** kaksi tarkistusta ei riitä. Kuva voi olla oikean kokoinen,
+oikealla lisenssillä ja silti väärä — ja kuvateksti voi olla väärä,
+vaikka kuva olisi oikea. Kolmas tarkistus on nyt olemassa.
+
+
 ## Paketti 59: kuvakortti keskelle ruutua — VALMIS v184 3.8.2026
 
 Omistajan havainto edellisen version jälkeen: "Ei keskellä." Kortti

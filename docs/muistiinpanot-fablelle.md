@@ -627,3 +627,52 @@ sittemmin hoidettu; jäljelle jää kaksi:
   vertailuluku vai yksi matka, jonka eri laudat näyttävät eri paloina?
 - **`TURN_HOURS = 6` odottaa pelitestiä.** Yhden vakion muutos
   `js/game.js`:ssä; oikea arvo selviää vain pelaamalla.
+
+---
+
+## Kuvateksti voi valehdella, vaikka kuva olisi aito (v185)
+
+**[Omistaja]** "Tämä ei ole aito vanha kuva." Darfurin kortin miehellä
+oli rannekello ja nykyaikaiset silmälasit.
+
+**[Opus]** Tiedoston nimi oli `Sultan Ali Dinar.jpg` ja kuvateksti
+kertoi sulttaanista, joka kuoli 1916. Commonsin tiedoissa luki vuosi
+2016 ja kuvaus "The Official Portrait of the 30TH Sultan of Darfur" —
+kyseessä oli nykyinen arvonimen haltija. Nimi oli oikein; kaikki muu
+oli väärin.
+
+Tarkistin kaikki 80 vanhaksi merkittyä kuvaa uudella työkalulla
+(`tools/tarkista-kuvaiat.mjs`). Kolme oikeaa virhettä löytyi, ja ne
+olivat kolme eri virhettä:
+
+1. **Darfur:** kuva oli väärä.
+2. **Murzuk:** kuva oli postimerkki, ei valokuva.
+3. **Kumasi:** kuva oli aito vuodelta 1900, mutta kuvateksti kertoi
+   aivan muusta kuin mitä kuvassa on.
+
+Sama havainto kolmesti: **tarkistus, joka kysyy vain yhtä asiaa,
+päästää läpi kaiken muun.** Aiemmat tarkistukset kysyivät kuvan kokoa
+ja lisenssiä, eivätkä kumpikaan kysy, esittääkö kuva sitä mitä
+kuvateksti väittää.
+
+## Radio: kolme tapaa erehtyä samasta listasta (v185)
+
+**[Opus]** "Kuuntele kieltä" soittaa nyt suoraa radiolähetystä.
+Kolme asiaa meni ensin pieleen, ja jokainen niistä oli sama virhe
+eri asussa — **luotin lähteeseen enemmän kuin sen pitäisi kestää.**
+
+1. **Ympäristö valehteli aseman puolesta.** Noden `fetch` ei lue
+   `HTTPS_PROXY`-muuttujaa, ja suora yhteys torjutaan vastauksella
+   "Blocked by egress policy". Se näyttää samalta kuin aseman oma
+   esto. Hyviä asemia hylättiin, kunnes huomasin curlin onnistuvan
+   samassa osoitteessa.
+2. **Nimi valehteli sisällöstä.** "ZamRock Radio Nigeria Relay"
+   hyväksyttiin Nigerian yleisradiona, koska nimessä luki "Radio
+   Nigeria". Korjaus: osuman on oltava nimen alussa.
+3. **Maakoodi valehteli maasta.** Sama koraanikanava osui seitsemän
+   maan kohdalle, ja Pjongjangin asema oli kirjattu Etelä-Koreaan.
+   Kielitieto paljasti nämä.
+
+Työkalu luettelee nyt aina, mitä se hylkäsi. Hiljainen karsinta
+näyttäisi täydeltä listalta — ja se on juuri se virhe, jonka olen
+tehnyt tässä projektissa useimmin.

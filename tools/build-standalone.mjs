@@ -27,6 +27,8 @@ const MODULES = [
   'js/packs/omat-tiivistelmat.js',
   'js/packs/europe-countries.js',
   'js/packs/europe-saapumiset.js',
+  'js/packs/asia-saapumiset.js',
+  'js/packs/radiot.js',
   'js/packs/europe-kulttuuri.js',
   'js/packs/europe-valokuvat.js',
   'js/packs/europe-kielet.js',

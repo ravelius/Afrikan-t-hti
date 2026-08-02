@@ -43,6 +43,8 @@ import {
 import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
 import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
 import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
+import { ASIA_SAAPUMISET } from './packs/asia-saapumiset.js';
+import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
 import { EUROPE_KIELET } from './packs/europe-kielet.js';
@@ -71,7 +73,10 @@ import { LIPPU_TEKIJAT } from './packs/lippu-tekijat.js';
 const SAAPUMISTEKSTIT = {
   africa: AFRICA_SAAPUMISET,
   europe: EUROPE_SAAPUMISET,
-  vanhamaailma: { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET },
+  // Aasian teksteillä ei ole omaa lautaa: kaupungit ovat vain
+  // yhdistetyllä vanhalla maailmalla, joten ne tulevat mukaan vain
+  // tähän. Erillistä asia-lautaa ei ole olemassa.
+  vanhamaailma: { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET },
 };
 
 // Kaupungin elämää -nostot laudoittain.
@@ -4143,20 +4148,31 @@ export class UI {
   naytaKieliNappi(city) {
     const kohde = this.arrivalMaaTervehdykset;
     const nayte = (KIELET[this.game.pack.id] ?? {})[city.id];
-    if (!nayte?.url) return;
+    /*
+     * Suora lähetys ensin, äänite varalle (omistajan järjestys).
+     * Äänitettä ei poistettu: lähetysosoitteet lakkaavat toimimasta
+     * ilman varoitusta, ja silloin nappi soittaa nauhan sen sijaan
+     * että jäisi hiljaiseksi.
+     */
+    const radio = radioMaalle(this.game.pack.map?.cityCountry?.[city.id]);
+    if (!radio && !nayte?.url) return;
     kohde.hidden = false;
     const nappi = html('button', 'kulttuuri-kuuntele kieli-kuuntele');
     nappi.type = 'button';
-    nappi.title = nayte.nimi ?? 'Kaupungissa nauhoitettu näyte';
+    nappi.title = radio
+      ? `${radio.asema} — suora lähetys`
+      : (nayte.nimi ?? 'Kaupungissa nauhoitettu näyte');
     nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
       + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
       + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
       + '</svg><span>Kuuntele kieltä</span><span class="aika" hidden></span>';
     // Sama soitin kuin kulttuurinostojen näytteillä: peilin varareitti,
     // taustan väistö ja aikanäyttö tulevat siitä valmiina.
-    nappi.addEventListener('click', () => this.kulttuuriAaniNapista(
-      { aani: nayte.url, otsikko: 'Kuuntele kieltä' }, nappi,
-    ));
+    nappi.addEventListener('click', () => this.kulttuuriAaniNapista({
+      aani: radio ? radio.url : nayte.url,
+      vara: radio ? (nayte?.url ?? null) : null,
+      otsikko: 'Kuuntele kieltä',
+    }, nappi));
     kohde.appendChild(nappi);
   }
 
@@ -4433,14 +4449,33 @@ export class UI {
     // Peilin pettäessä sama äänite haetaan alkuperäisestä lähteestä
     // ennen kuin näyte luovuttaa (ks. js/media.js).
     let varareittiKokeiltu = false;
+    let toinenAaniKokeiltu = false;
     const petti = () => {
-      if (varareittiKokeiltu || !onPeilista(audio.getAttribute('src'))) { nollaa(); return; }
-      varareittiKokeiltu = true;
-      peiliPetti('aanet');
       if (this.kulttuuriAani?.audio !== audio) return;
-      audio.src = asetus.url;
-      audio.load();
-      audio.play().catch(nollaa);
+      if (!varareittiKokeiltu && onPeilista(audio.getAttribute('src'))) {
+        varareittiKokeiltu = true;
+        peiliPetti('aanet');
+        audio.src = asetus.url;
+        audio.load();
+        audio.play().catch(petti);
+        return;
+      }
+      /*
+       * Kokonaan toinen ääni, ei saman äänen toinen osoite. "Kuuntele
+       * kieltä" soittaa suoraa radiolähetystä, ja lähetysosoitteet
+       * lakkaavat toimimasta ilman varoitusta — silloin soitetaan
+       * kaupungissa nauhoitettu näyte sen sijaan että nappi jäisi
+       * hiljaiseksi. Kokeillaan vain kerran, joten silmukkaa ei synny.
+       */
+      if (!toinenAaniKokeiltu && nosto.vara) {
+        toinenAaniKokeiltu = true;
+        varareittiKokeiltu = false;
+        audio.src = aaniOsoite(jaaAlku(nosto.vara).url);
+        audio.load();
+        audio.play().catch(petti);
+        return;
+      }
+      nollaa();
     };
     audio.addEventListener('ended', nollaa);
     audio.addEventListener('error', petti);
