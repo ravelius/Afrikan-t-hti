@@ -60,6 +60,8 @@ const AMBIENSSI = {
   kathmandu: 'vuoristo', delhi: 'basaari', kolkata: 'basaari',
   mumbai: 'kaupunki', chennai: 'meri', colombo: 'satama', karachi: 'satama',
   kabul: 'vuoristo', samarkand: 'basaari', kashgar: 'basaari',
+  // Porttikaupungit: sama ääni kuin niiden omilla laudoilla.
+  istanbul: 'basaari', kairo: 'basaari',
 };
 
 /*
@@ -74,7 +76,19 @@ const HAKUSANAT = {
   ulanbator: ['Ulan Bator'], astana: ['Astana'], peking: ['Peking'],
   borneo: ['Borneo'], sumatra: ['Sumatra'], siinai: ['Siinain niemimaa', 'Siinai'],
   persepolis: ['Persepolis'], salalah: ['Salalah'], doha: ['Doha'],
+  // Suomenkielinen otsikko poikkeaa pelin nimestä: 'Soul' on
+  // täsmennyssivu (kaupunki ja musiikkityyli), ja Kamtšatka on
+  // artikkelina niemimaa.
+  soul: ['Soul (kaupunki)', 'Souli', 'Soul'],
+  petra: ['Petra (kaupunki)', 'Petra (Jordania)', 'Petra'],
+  kamtsatka: ['Kamtšatkan niemimaa', 'Kamtšatka'],
 };
+
+/*
+ * Maatunnukset, joita Wikidata ei anna. Singapore on kaupunkivaltio,
+ * eikä artikkelilla ole 'sijaintimaa'-tietoa — se ON maa.
+ */
+const OMAT_MAAT = { singapore: 'SGP', hongkong: 'HKG' };
 
 /*
  * Haku hidastettuna ja uudelleenyrityksellä.
@@ -103,30 +117,78 @@ async function hae(osoite, yrityksia = 4) {
   return null;
 }
 
-/** Onko sivu olemassa eikä täsmennyssivu? Palauttaa lopullisen otsikon. */
-async function artikkeli(nimi) {
-  const osoite = 'https://fi.wikipedia.org/w/api.php?action=query&redirects=1'
-    + `&prop=pageprops&titles=${encodeURIComponent(nimi)}&format=json`;
-  const data = await hae(osoite);
-  if (!data) return null;
-  const sivut = Object.values(data?.query?.pages ?? {});
-  const sivu = sivut[0];
-  if (!sivu || sivu.missing !== undefined) return null;
-  // Täsmennyssivu ei kelpaa: siitä ei saa tiivistelmää eikä kuvia.
-  if (sivu.pageprops?.disambiguation !== undefined) return null;
-  return { otsikko: sivu.title, qid: sivu.pageprops?.wikibase_item ?? null };
+/*
+ * Kyselyt NIPUTETAAN.
+ *
+ * Ensimmäinen versio kysyi yhden kaupungin kerrallaan, ja Wikipedia
+ * vastasi 429 "too many requests" — ensin 46 kaupungille, ja hidastuksen
+ * jälkeenkin seitsemälle. Hidastus oli väärä korjaus: MediaWikin
+ * rajapinta ottaa viisikymmentä nimeä yhdellä kertaa, ja Wikidata
+ * viisikymmentä tunnusta. Koko työ mahtuu kouralliseen pyyntöjä, eikä
+ * rajaa tarvitse kiertää lainkaan.
+ */
+
+/** Artikkelit nipussa: nimi -> { otsikko, qid } tai null. */
+async function artikkelit(nimet) {
+  const ulos = new Map();
+  for (let i = 0; i < nimet.length; i += 50) {
+    const pala = nimet.slice(i, i + 50);
+    const osoite = 'https://fi.wikipedia.org/w/api.php?action=query&redirects=1'
+      + `&prop=pageprops&titles=${encodeURIComponent(pala.join('|'))}&format=json`;
+    const data = await hae(osoite);
+    if (!data) continue;
+    // Uudelleenohjaukset ja normalisointi pitää seurata, jotta kysytty
+    // nimi löytää vastauksensa.
+    const polku = new Map();
+    for (const r of data?.query?.normalized ?? []) polku.set(r.from, r.to);
+    for (const r of data?.query?.redirects ?? []) polku.set(r.from, r.to);
+    const sivut = new Map();
+    for (const sivu of Object.values(data?.query?.pages ?? {})) sivut.set(sivu.title, sivu);
+    for (const nimi of pala) {
+      let avain = nimi;
+      for (let k = 0; k < 4 && polku.has(avain); k++) avain = polku.get(avain);
+      const sivu = sivut.get(avain);
+      if (!sivu || sivu.missing !== undefined) { ulos.set(nimi, null); continue; }
+      // Täsmennyssivu ei kelpaa: siitä ei saa tiivistelmää eikä kuvia.
+      if (sivu.pageprops?.disambiguation !== undefined) { ulos.set(nimi, null); continue; }
+      ulos.set(nimi, { otsikko: sivu.title, qid: sivu.pageprops?.wikibase_item ?? null });
+    }
+    await nuku(600);
+  }
+  return ulos;
 }
 
-/** Maan ISO-3-tunnus Wikidatasta (P17 -> P298). */
-async function maatunnus(qid) {
-  if (!qid) return null;
-  const data = await hae(`https://www.wikidata.org/wiki/Special:EntityData/${qid}.json`);
-  if (!data) return null;
-  const vaateet = data?.entities?.[qid]?.claims?.P17 ?? [];
-  const maaQid = vaateet[0]?.mainsnak?.datavalue?.value?.id;
-  if (!maaQid) return null;
-  const maaData = await hae(`https://www.wikidata.org/wiki/Special:EntityData/${maaQid}.json`);
-  return maaData?.entities?.[maaQid]?.claims?.P298?.[0]?.mainsnak?.datavalue?.value ?? null;
+/** Maatunnukset nipussa: qid -> ISO-3 tai null. */
+async function maatunnukset(qidit) {
+  const kohde = new Map();
+  const maaQidit = new Set();
+  for (let i = 0; i < qidit.length; i += 50) {
+    const pala = qidit.slice(i, i + 50);
+    const data = await hae('https://www.wikidata.org/w/api.php?action=wbgetentities'
+      + `&ids=${pala.join('|')}&props=claims&format=json`);
+    if (!data) continue;
+    for (const [qid, olio] of Object.entries(data?.entities ?? {})) {
+      const maa = olio?.claims?.P17?.[0]?.mainsnak?.datavalue?.value?.id ?? null;
+      kohde.set(qid, maa);
+      if (maa) maaQidit.add(maa);
+    }
+    await nuku(600);
+  }
+  const isot = new Map();
+  const lista = [...maaQidit];
+  for (let i = 0; i < lista.length; i += 50) {
+    const pala = lista.slice(i, i + 50);
+    const data = await hae('https://www.wikidata.org/w/api.php?action=wbgetentities'
+      + `&ids=${pala.join('|')}&props=claims&format=json`);
+    if (!data) continue;
+    for (const [qid, olio] of Object.entries(data?.entities ?? {})) {
+      isot.set(qid, olio?.claims?.P298?.[0]?.mainsnak?.datavalue?.value ?? null);
+    }
+    await nuku(600);
+  }
+  const ulos = new Map();
+  for (const [qid, maa] of kohde) ulos.set(qid, maa ? isot.get(maa) ?? null : null);
+  return ulos;
 }
 
 const tulokset = new Map();
@@ -139,22 +201,26 @@ for (const [lauta, pack] of [['middleeast', MIDDLE_EAST], ['asia', ASIA]]) {
   }
 }
 
+// Kaikki ehdokasnimet yhteen nippuun.
+const ehdokkaat = new Map();
+for (const k of kaupungit) ehdokkaat.set(k.id, [...(HAKUSANAT[k.id] ?? []), k.nimi]);
+const kaikkiNimet = [...new Set([...ehdokkaat.values()].flat())];
+const loydetyt = await artikkelit(kaikkiNimet);
+
+const valitut = new Map();
 for (const k of kaupungit) {
-  const ehdokkaat = [...(HAKUSANAT[k.id] ?? []), k.nimi];
-  let loytyi = null;
-  for (const ehdokas of ehdokkaat) {
-    loytyi = await artikkeli(ehdokas);
-    if (loytyi) break;
-  }
-  if (!loytyi) {
-    console.log(`${k.id}: ARTIKKELIA EI LÖYTYNYT (${ehdokkaat.join(', ')})`);
-    continue;
-  }
-  await nuku(400);
-  const iso = await maatunnus(loytyi.qid);
-  await nuku(400);
-  tulokset.set(k.id, { wiki: loytyi.otsikko, ambience: AMBIENSSI[k.id] ?? 'kaupunki', iso });
-  console.log(`${k.id.padEnd(16)} ${loytyi.otsikko.padEnd(28)} ${AMBIENSSI[k.id] ?? '?'} ${iso ?? '—'}`);
+  const osuma = ehdokkaat.get(k.id).map((n) => loydetyt.get(n)).find(Boolean);
+  if (!osuma) { console.log(`${k.id}: ARTIKKELIA EI LÖYTYNYT (${ehdokkaat.get(k.id).join(', ')})`); continue; }
+  valitut.set(k.id, osuma);
+}
+
+const isot = await maatunnukset([...new Set([...valitut.values()].map((v) => v.qid).filter(Boolean))]);
+for (const k of kaupungit) {
+  const osuma = valitut.get(k.id);
+  if (!osuma) continue;
+  const iso = OMAT_MAAT[k.id] ?? (osuma.qid ? isot.get(osuma.qid) ?? null : null);
+  tulokset.set(k.id, { wiki: osuma.otsikko, ambience: AMBIENSSI[k.id] ?? 'kaupunki', iso });
+  console.log(`${k.id.padEnd(16)} ${osuma.otsikko.padEnd(28)} ${AMBIENSSI[k.id] ?? '?'} ${iso ?? '—'}`);
 }
 
 console.log(`\n${tulokset.size}/${kaupungit.length} täydennettävää.`);
@@ -169,8 +235,18 @@ for (const tiedosto of ['asia.js', 'middleeast.js']) {
   const rivit = readFileSync(polku, 'utf8').split('\n');
   let osumia = 0;
   for (let i = 0; i < rivit.length; i++) {
+    /*
+     * Kaupunki voi olla yhdellä rivillä tai monella.
+     *
+     * Ensimmäinen versio hyväksyi vain rivit, jotka ALKAVAT
+     * aaltosulkeella. Aloituskaupungit on kirjoitettu useammalle
+     * riville, jolloin `id:` on rivin alussa ilman sulkua — ja juuri ne
+     * jäivät täydentämättä: Tokio, Peking, Istanbul, Kairo. Riittää,
+     * että rivillä on sekä id että name.
+     */
     const sisus = rivit[i].trim().replace(/,$/, '');
-    if (!sisus.startsWith('{ id:') && !sisus.startsWith('{"id"')) continue;
+    if (!/(^|\{\s*)id:\s*'/.test(sisus) && !/"id":"/.test(sisus)) continue;
+    if (!/name:\s*'/.test(sisus) && !/"name":"/.test(sisus)) continue;
     const tunnus = sisus.match(/id:\s*'([^']+)'/)?.[1] ?? sisus.match(/"id":"([^"]+)"/)?.[1];
     const lisa = tunnus && tulokset.get(tunnus);
     if (!lisa) continue;

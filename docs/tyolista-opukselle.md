@@ -305,6 +305,55 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 55: perustiedot 66 kaupungille — VALMIS v178 2.8.2026
+
+Aasian ja Lähi-idän kaupungeilta puuttui wiki-artikkeli, ambienssi ja
+maatunnus — **kaikilta, myös alkuperäisiltä laudoilta**. Ilman wikiä
+kaupungista ei saa kuvia eikä tiivistelmää, ja ilman ambienssia kaupunki
+on mykkä.
+
+**Nyt kaikilla 143 kaupungilla on kumpikin.** Maatunnuksia on 87 (loput
+odottavat Aasian maarajoja, joita ei ole vielä olemassa).
+
+Korjaus meni sekä `asia.js`:ään että `middleeast.js`:ään, joten se
+hyödyttää myös alkuperäisiä lautoja — ei vain yhdistettyä.
+
+### Kolme virhettä, jotka kaikki opettivat saman asian
+
+**1. Hiljainen nieleminen teki verkkovirheestä sisältövirheen.**
+Ensimmäinen ajo ilmoitti, ettei 46 kaupungille löydy artikkelia — mukana
+Tokio, Delhi ja Bangkok. Wikipedia oli vastannut 429 "too many
+requests", ja työkalu tulosti sen puuttuvana artikkelina. Se on sama
+virhe kuin äänipuolella aiemmin.
+
+**2. Hidastus oli väärä korjaus.** Lisäsin taukoja ja
+uudelleenyrityksiä, ja seitsemän kaupunkia kaatui silti. Oikea korjaus
+oli **niputtaa kyselyt**: MediaWiki ottaa viisikymmentä nimeä yhdellä
+pyynnöllä ja Wikidata viisikymmentä tunnusta. Koko työ mahtuu
+kouralliseen pyyntöjä, eikä rajaa tarvitse kiertää lainkaan. Ajo lyheni
+viidestä minuutista muutamaan sekuntiin.
+
+**3. Kirjoitussuodatin ohitti puolet kaupungeista hiljaa.** Se hyväksyi
+vain rivit, jotka alkavat aaltosulkeella — mutta aloituskaupungit on
+kirjoitettu useammalle riville. Juuri ne jäivät täydentämättä: Tokio,
+Peking, Istanbul, Kairo. Ajo ilmoitti onnistuneensa.
+
+Yhteinen opetus: **työkalu, joka ei erota "ei löytynyt" ja "ei
+kysytty" -tapauksia, valehtelee onnistumisesta.**
+
+### Käsin päätetyt kohdat
+
+- **Ambienssi** on makuasia eikä sitä voi hakea mistään: Bagdad on
+  basaari, Jakutsk on pohjoinen, Borneo on sademetsä. Arolle ei ole
+  omaa ääntä, joten Astana ja Ulan Bator saavat savannin — molemmat
+  ovat avointa ruohotasankoa ja ääni on sama tuuli heinikossa.
+- **Kolme otsikkoa poikkeaa pelin nimestä:** Soul on suomeksi
+  täsmennyssivu (kaupunki ja musiikkityyli), Kamtšatka on artikkelina
+  niemimaa, ja Petra on etunimi. Ne haetaan tarkemmalla otsikolla.
+- **Singaporella ja Hongkongilla ei ole sijaintimaata** Wikidatassa —
+  ne ovat itse valtio tai erityishallintoalue. Tunnus annetaan käsin.
+
+
 ## KESKEN: vanhan maailman kaupungit valmiiksi (aloitettu 2.8.2026)
 
 Omistajan toimeksianto: "Tee kaikki loput kaupungit vanhassa maailmassa

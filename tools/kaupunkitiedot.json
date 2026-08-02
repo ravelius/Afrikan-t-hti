@@ -1,0 +1,52 @@
+{
+  "istanbul": {
+    "wiki": "Istanbul",
+    "ambience": "basaari",
+    "iso": "TUR"
+  },
+  "kairo": {
+    "wiki": "Kairo",
+    "ambience": "basaari",
+    "iso": "EGY"
+  },
+  "petra": {
+    "wiki": "Petra (kaupunki)",
+    "ambience": "aavikko",
+    "iso": "JOR"
+  },
+  "dubai": {
+    "wiki": "Dubai",
+    "ambience": "satama",
+    "iso": "ARE"
+  },
+  "teheran": {
+    "wiki": "Teheran",
+    "ambience": "kaupunki",
+    "iso": "IRN"
+  },
+  "tokio": {
+    "wiki": "Tokio",
+    "ambience": "kaupunki",
+    "iso": "JPN"
+  },
+  "peking": {
+    "wiki": "Peking",
+    "ambience": "kaupunki",
+    "iso": "CHN"
+  },
+  "singapore": {
+    "wiki": "Singapore",
+    "ambience": "satama",
+    "iso": "SGP"
+  },
+  "jakarta": {
+    "wiki": "Jakarta",
+    "ambience": "kaupunki",
+    "iso": "IDN"
+  },
+  "mumbai": {
+    "wiki": "Mumbai",
+    "ambience": "kaupunki",
+    "iso": "IND"
+  }
+}
