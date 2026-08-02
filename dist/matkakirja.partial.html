@@ -44146,6 +44146,30 @@ function kaupunkiKori(lauta, cityId) {
     .map((e) => (e.alku ? `${e.url}#alku=${e.alku}` : e.url));
 }
 
+/**
+ * Maan arvontakori: saman maan muiden kaupunkien äänitykset.
+ *
+ * Periaate 2b (paikka ennen lajia): ääni haetaan niin läheltä kuin
+ * mahdollista. Jos kaupungista itsestään ei ole nauhoitusta, saman maan
+ * toinen kaupunki on lähempänä kuin lajikohtainen varamies — Fesin tori
+ * kuulostaa enemmän Marrakechilta kuin geneerinen basaarinauha.
+ *
+ * Lajikohtainen kori jää viimeiseksi varamieheksi. Sama basaarinauha
+ * kolmessa kaupungissa kertoisi pelaajalle, että paikat ovat
+ * vaihtokelpoisia, ja se on vastoin periaatetta 3.
+ */
+function maaKori(lauta, cityId, cityCountry) {
+  const iso = cityCountry?.[cityId];
+  if (!iso) return [];
+  const omat = KAUPUNKI_EHDOKKAAT[lauta] ?? {};
+  const ulos = [];
+  for (const [muu, lista] of Object.entries(omat)) {
+    if (muu === cityId || cityCountry[muu] !== iso) continue;
+    for (const e of lista) ulos.push(e.alku ? `${e.url}#alku=${e.alku}` : e.url);
+  }
+  return ulos;
+}
+
 /** Tallentaa yhden kaupungin arvontakorin. Tyhjä lista = tyyppikoriin. */
 function valitseKaupunkiKori(lauta, cityId, lista) {
   try {
@@ -45392,11 +45416,22 @@ const VAKIOPAIKAT = new Set(['etusivu']);
  * kaupungista — ne menevät korin edelle (omistajan toive). Ilman omaa
  * äänitystä tyyppikori toimii kuten ennen.
  */
-function arvoAani(cityId, tyyppi, lauta) {
+function arvoAani(cityId, tyyppi, lauta, cityCountry = null) {
   if (!cityId) return null;
   if (arvottu?.cityId === cityId) return arvottu.url;
+  /*
+   * Kolme porrasta, periaate 2b: kaupunki, maa, laji.
+   *
+   * Aiemmin portaita oli kaksi, ja lajikohtainen kori oli oletus heti
+   * kun kaupungilta puuttui oma nauhoitus. Silloin sama basaariääni soi
+   * Marrakechissa, Isfahanissa ja Bagdadissa — ja se kertoo pelaajalle,
+   * että paikat ovat vaihtokelpoisia. Saman maan toinen kaupunki on
+   * lähempänä kuin geneerinen laji.
+   */
   const oma = kaupunkiKori(lauta, cityId);
-  const kori = oma.length ? oma : (tyyppi ? tyyppiKori(tyyppi, lauta) : []);
+  const maa = oma.length ? [] : maaKori(lauta, cityId, cityCountry);
+  const kori = oma.length ? oma
+    : (maa.length ? maa : (tyyppi ? tyyppiKori(tyyppi, lauta) : []));
   if (!kori.length) return null;
   const url = VAKIOPAIKAT.has(cityId)
     ? kori[0]
@@ -45545,10 +45580,10 @@ function stopPlaceStream() {
  * automaattitoisto tai poistunut tiedosto — palauttaa synteesin itsestään,
  * ja seuraava renderöinti yrittää striimiä uudelleen.
  */
-function playPlaceAmbience(cityId, fallbackType, lauta) {
+function playPlaceAmbience(cityId, fallbackType, lauta, cityCountry = null) {
   // Kaupungin oma äänitys ensin, maisematyypin maanosakohtainen
   // arvontakori varalle. Tyhjä kori tarkoittaa syntetisoitua ambienssia.
-  const url = arvoAani(cityId, fallbackType, lauta);
+  const url = arvoAani(cityId, fallbackType, lauta, cityCountry);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);
@@ -53248,7 +53283,7 @@ class UI {
       return;
     }
     const city = game.board.cityById.get(pos.city);
-    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null, lauta);
+    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null, lauta, this.game.pack?.map?.cityCountry ?? null);
   }
 
   /**
@@ -53266,7 +53301,7 @@ class UI {
     if (!pos || pos.type !== 'city' || game.phase === 'over') return;
     const city = game.board.cityById.get(pos.city);
     if (!city) return;
-    playPlaceAmbience(city.id, city.ambience ?? null, game.pack?.id);
+    playPlaceAmbience(city.id, city.ambience ?? null, game.pack?.id, game.pack?.map?.cityCountry ?? null);
   }
 
   /**
@@ -56208,7 +56243,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.178';
+const APP_VERSION = '2026-08-02.179';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

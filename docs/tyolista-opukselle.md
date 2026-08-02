@@ -354,6 +354,38 @@ kysytty" -tapauksia, valehtelee onnistumisesta.**
   ne ovat itse valtio tai erityishallintoalue. Tunnus annetaan käsin.
 
 
+## PÄÄTETTY, EI VIELÄ TEHTY: Kuuntele kieltä suorana radiona
+
+Omistajan havainto: "Kuuntele kieltä toimii mutta sisältö on heikko,
+koska suurimmassa osassa pätkiä puhetta kuuluu aika vähän. Löytyisikö
+parempaa aineistoa? Esim. paikalliset radiot olisivat hyviä."
+
+**Ongelma on oikea ja se on aineistossa, ei koodissa.** Nykyiset
+näytteet ovat kenttä-äänityksiä: niissä on katua, tuulta ja
+taustahälyä, ja puhetta vain hetkittäin. Kieltä ei niistä kuule.
+
+### Omistajan päätökset
+
+1. **Suora lähetys on parempi kuin tallenne.** Radiossa puhutaan koko
+   ajan — se on juuri se mitä napista haetaan.
+2. **Valtion virallinen yleisradio ensin** (Suomessa Yle Ykkönen), mutta
+   jos sitä ei löydy tai se ei ole vapaasti kuunneltavissa, **mikä
+   tahansa muu saman maan asema kelpaa**.
+3. **Tärkein ehto: maan kieltä puhuttuna.** Musiikkikanava ei kelpaa,
+   vaikka olisi virallinen.
+4. **Kolmen minuutin tallenne on viimeinen vaihtoehto**, ei ensimmäinen.
+
+### Mitä tämä vaatii
+
+- Lähdeluettelo asemista maittain. Radio Browser on avoin ja ilmainen
+  hakemisto, jossa on kielitieto ja striimiosoite — se sopii tähän
+  suoraan eikä vaadi avainta.
+- Suora striimi ei toimi offline. Nappi tarvitsee siis kaksi tasoa:
+  suora ensin, tallenne varalle. Sama kahden portaan rakenne kuin
+  ambienssilla jo on.
+- Kaikki asemat eivät salli upottamista. Se on tarkistettava asemakohtaisesti,
+  ja epäselvät jätetään pois — sama linja kuin kuvien lisensseissä.
+
 ## KESKEN: vanhan maailman kaupungit valmiiksi (aloitettu 2.8.2026)
 
 Omistajan toimeksianto: "Tee kaikki loput kaupungit vanhassa maailmassa

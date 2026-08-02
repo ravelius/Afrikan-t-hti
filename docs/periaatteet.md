@@ -30,6 +30,24 @@ kiistanalaista ei esitetä varmana. Kysymykseen tai tietoon voi liittää
 lähteen, ja pull requestissa kerrotaan, mistä faktat on tarkistettu.
 Erimielisyydet ratkaistaan lähteillä, ei äänekkyydellä.
 
+### 2b. Paikka ennen lajia
+
+Ääni ja kuva haetaan aina niin läheltä kuin mahdollista:
+
+1. **kaupungista itsestään** — juuri siellä nauhoitettu ääni, juuri sen
+   kadulta otettu kuva
+2. **maasta**, jos kaupungista ei löydy
+3. **vasta sitten lajista** (basaari, satama, sademetsä)
+
+Lajikohtainen ääni on varamies, ei oletus. Sama basaarinauha kolmessa
+kaupungissa kertoo pelaajalle, että paikat ovat vaihtokelpoisia — ja se
+on vastoin periaatetta 3: jokainen paikka kuvataan omana itsenään.
+Marrakechin tori ei kuulosta Isfahanin torilta, ja juuri se ero on osa
+sitä mitä peli opettaa.
+
+Sääntö koskee myös kuvia: kaupungin oma valokuva ennen yleistä
+maisemakuvaa.
+
 ### 3. Kunnioitus ja tasapuolisuus
 
 Jokainen maa ja kaupunki kuvataan asukkaidensa silmin, ei ulkopuolisen

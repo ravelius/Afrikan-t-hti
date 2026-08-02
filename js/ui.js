@@ -3660,7 +3660,7 @@ export class UI {
       return;
     }
     const city = game.board.cityById.get(pos.city);
-    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null, lauta);
+    playPlaceAmbience(city?.id ?? null, city?.ambience ?? null, lauta, this.game.pack?.map?.cityCountry ?? null);
   }
 
   /**
@@ -3678,7 +3678,7 @@ export class UI {
     if (!pos || pos.type !== 'city' || game.phase === 'over') return;
     const city = game.board.cityById.get(pos.city);
     if (!city) return;
-    playPlaceAmbience(city.id, city.ambience ?? null, game.pack?.id);
+    playPlaceAmbience(city.id, city.ambience ?? null, game.pack?.id, game.pack?.map?.cityCountry ?? null);
   }
 
   /**
