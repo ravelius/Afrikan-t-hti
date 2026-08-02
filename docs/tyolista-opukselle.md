@@ -98,6 +98,71 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   diagnosoitu väärin). **Afrikka jätettiin myöhemmäksi omistajan
   päätöksellä 1.8.2026** — ei siis unohdus.
 
+## PÄÄTTÄMÄTTÄ: aarteet ja varusteet yhdistetyllä kartalla
+
+Omistajan linjaus 2.8.2026: *"Tässä pelissä ei tarvitse enää palata niin
+sanotusti alkupisteelle, joten aarteita voi olla yksi jokaisessa
+maanosassa tai niin sanottuja pääaarteita. Lisätään peliin myös
+muunlaisia, niin kuin ne erikoissilmälasit ja niin edelleen. Yritän
+tehdä pelistä mahdollisimman erityyppisen verrattuna Afrikan tähteen."*
+
+Ja perään: *"Mietitään vähän myöhemmin vielä noita aarteita. Nuo
+ehdotuksesi olivat hyviä ja voisit kirjata niitä ylös."*
+
+**Tässä ne ovat. Mitään ei ole toteutettu — tämä odottaa päätöstä.**
+
+### Lähtökohta: mikä nyt on Afrikan tähteä
+
+Nykyiset laatat ovat käytännössä alkuperäisen pelin omat: tähti lopettaa
+pelin, hevosenkenkä ohittaa kaksintaistelun, ryöstäjä vie rahat,
+jalokivet ovat pelkkää rahaa ja tyhjä laatta ei tee mitään.
+
+Erottuvin idea on tehdä esineistä **matkailijan varusteita, jotka
+helpottavat matkaa ja oppimista** — eivät jalokiviä, jotka ovat vain
+rahaa. Ne tarttuvat pelin OMIIN järjestelmiin: tietovisaan, päiviin ja
+kelloon, passin leimoihin, matkustustapoihin ja kokemuspisteisiin.
+
+Toinen iso ero: **tyhjä laatta pois**. Osa tyhjistä muuttuu varusteiksi,
+jolloin laatan kääntäminen on aina jotain — se on Afrikan tähden
+turhauttavin piirre.
+
+### Varuste-ehdotukset
+
+| varuste | vaikutus | mihin tarttuu |
+|---|---|---|
+| **Erikoissilmälasit** (omistajan oma esimerkki) | karsii tietovisassa kaksi väärää vaihtoehtoa ilmaiseksi | `actionFiftyFifty` on jo olemassa maksullisena (80 £) — varuste tekee siitä ilmaisen kerran |
+| **Kiikari** | näet naapurikaupunkien laatat käymättä siellä | kiikaritehoste on jo piirretty peliin (etusivun linssi) |
+| **Kompassi** | saat valita nopan tuloksen kerran | `die.js`, nopanheitto |
+| **Suosituskirje** | yksi ilmainen laiva- tai lentomatka | `SEA_FARE`, `FLIGHT_PRICE`, `pendingFare` |
+| **Kiniini** | estää sairastumisen, joka veisi päiviä | vaatisi uuden sairastumismekaniikan — 1873 matkustamisen todellisuutta |
+| **Isoisän muistikirja** | yksi uusi yritys väärin menneeseen kysymykseen | tietovisan `chosen`/`right` |
+| **Valokuvauskamera** | kuva kaupungissa: passiin leima kuvan kanssa + kokemuspisteitä | `passport.js`, `awardXp` — ei auta voittamaan vaan palkitsee uteliaisuudesta |
+
+Kamera on näistä **kauimpana Afrikan tähdestä**: se ei liity voittamiseen
+lainkaan. Silmälasit ja suosituskirje ovat **halvimmat toteuttaa**, koska
+mekaniikka on jo olemassa ja varuste vain tekee siitä ilmaisen.
+
+### Aarrevaihtoehdot
+
+1. **Yksi per maanosa** *(oma suositukseni)*. Eurooppa, Afrikka, Lähi-itä
+   ja Aasia pitävät kukin nykyisen aarteensa — Meripihkahuone, tähti ja
+   niin edelleen. Sisältöä ei tarvitse heittää pois, ja peli jatkuu
+   kunnes kaikki on löydetty. Sopii siihen ettei alkuun tarvitse palata.
+2. **Yksi pääaarre, muut sivuaarteita.** Selkeämpi päämäärä, mutta kolme
+   nykyistä aarretta menettää asemansa.
+3. **Ei aarrejahtia lainkaan.** Passin leimat, kokemuspisteet ja
+   päiväkirja ovat päämäärä. Kauimpana Afrikan tähdestä, mutta poistaa
+   nykyisen loppuhuipennuksen.
+
+### Mitä pitää päättää ennen toteutusta
+
+- Kumpi aarremalli
+- Mitkä varusteet ensimmäiseen erään
+- **Miten varusteet löytyvät:** laatan alta (suositus — poistaa tyhjän
+  laatan turhuuden), ostamalla kaupungissa, vai kokemuspisteillä
+- Kuluvatko varusteet käytössä vai ovatko pysyviä
+
+
 ## Avoimet asiat
 
 **Media-repon PR:t #1 ja #2 on yhdistetty** (1.8.2026), joten peili on
