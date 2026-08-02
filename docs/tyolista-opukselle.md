@@ -91,14 +91,23 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
 - Kuvien tekijämerkinnät lisenssin vaatimalla tavalla: ✅ (1.8.2026)
 - Astu mantereelle -napin korjaus, ylävalikko hampurilaiseksi,
   ambienssin aloituskohta ja etusivun taso: ✅ (1.8.2026, v139)
-- Paketti 20 (kaupunkien omat ambienssiäänet): ✅ (1.8.2026, v140) —
-  Eurooppa valmis. Kaikilla 41 kaupungilla oma kenttä-äänitys, yhteensä
-  69 äänitettä radio aporeesta. Työkalun molemmat viat korjattu (ks.
-  alempaa: kumpikin oli diagnosoitu väärin). Afrikka on vielä tekemättä.
+- Paketti 20 (kaupunkien omat ambienssiäänet): ✅ PR #237 (1.8.2026,
+  v140) — Eurooppa valmis. Kaikilla 41 kaupungilla oma kenttä-äänitys,
+  yhteensä 69 äänitettä radio aporeesta; peilaus media-repon PR #2.
+  Työkalun molemmat viat korjattu (ks. alempaa: kumpikin oli
+  diagnosoitu väärin). **Afrikka jätettiin myöhemmäksi omistajan
+  päätöksellä 1.8.2026** — ei siis unohdus.
 
 ## Avoimet asiat
 
-**Media-repon PR #1 on yhdistetty** (1.8.2026), joten peili on käytössä.
+**Media-repon PR:t #1 ja #2 on yhdistetty** (1.8.2026), joten peili on
+käytössä ja sisältää myös Euroopan kaupunkiäänitykset.
+
+**Yhdistämisjärjestys, jos peiliin tulee lisää aineistoa:** media-repo
+ensin, pelirepo vasta sen jälkeen. Peli hakee aineiston ensisijaisesti
+peilistä, ja kolmen epäonnistuneen haun jälkeen peili ohitetaan koko
+istunnoksi — myös kuvien osalta. Väärä järjestys ei riko peliä, mutta
+tekee siitä hitaan siihen asti kun välilehti suljetaan.
 
 **Peilin koko ei ole enää ongelma, mutta pidä sitä silmällä.** Kolmen
 minuutin katko kutisti peilin **580 → 399 megatavuun**, vaikka samalla
@@ -285,9 +294,22 @@ Tulos: ehdokkaita löytyi **41/41 kaupungille** (ennen 24/41).
    koodaamatta uudelleen, joten ffmpegiä ei tarvita eikä laatu muutu.
    Manifestiin jää `leikattu`-merkintä, jotta uusintajo ei luule
    lyhennettyä tiedostoa katkenneeksi.
-9. **TEKEMÄTTÄ: sama Afrikalle.** Työkalu ja pelin puoli ovat valmiit,
-   joten jäljellä on ajo (`--maanosa africa`), karsinta ja peilaus.
-   Katso ensin peilin kokoa koskeva avoin asia ylempää.
+9. **TEKEMÄTTÄ: sama Afrikalle.** Omistajan päätös 1.8.2026: tehdään
+   myöhemmin. Työkalu ja pelin puoli ovat valmiit, joten jäljellä on
+   ajo (`--maanosa africa`), karsinta ja peilaus.
+
+   Afrikan tilanne on lievempi kuin Euroopan oli, mutta ei kunnossa —
+   sen 39 kaupunkia jakavat tyyppikorit näin:
+
+       meri       10 kaupunkia · 6 ääntä
+       savanni     9 kaupunkia · 6 ääntä
+       aavikko     7 kaupunkia · 5 ääntä
+       sademetsa   6 kaupunkia · 5 ääntä
+       basaari     5 kaupunkia · 2 ääntä
+       ylanko      2 kaupunkia · 1 ääni
+
+   Pahimmat kohdat ovat ylänkö ja basaari. Jos aikaa on vähän, ne
+   kannattaa tehdä ensin.
 
 ### Reunaehdot
 
