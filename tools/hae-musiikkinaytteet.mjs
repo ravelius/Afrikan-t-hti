@@ -35,7 +35,9 @@ const arg = (nimi, oletus) => {
   return i > 0 ? process.argv[i + 1] : oletus;
 };
 const ULOS = arg('--ulos', join(JUURI, '../musiikkinaytteet.json'));
-const VAIN = arg('--vain', null);
+// --vain hyväksyy pilkkulistan, jotta toisen kierroksen voi ajaa
+// pelkille epäonnistuneille korteille ilman että muut haetaan uudestaan.
+const VAIN = (arg('--vain', null) ?? '').split(',').filter(Boolean);
 
 const nuku = (s) => execFileSync('sleep', [String(s)]);
 const hae = (url, data = []) => {
@@ -55,39 +57,39 @@ const hae = (url, data = []) => {
  * pitää esiintyä otsikossa tai tekijässä — se karsii sattumaosumat.
  */
 const KORTIT = [
-  { kaupunki: 'ateena', haut: ['rebetiko', 'rembetiko', 'bouzouki greek'], osuma: /rebe|remb|bouzouk|greek/i },
+  { kaupunki: 'ateena', haut: ['rebetiko', 'rembetiko', 'bouzouki greek', 'bouzouki taverna', 'greek folk bouzouki'], osuma: /rebe|remb|bouzouk|greek folk/i },
   { kaupunki: 'kreeta', haut: ['cretan lyra', 'lyra crete', 'kritiki lyra'], osuma: /lyra|cret|krit/i },
-  { kaupunki: 'dubrovnik', haut: ['klapa dalmatia', 'klapa singing', 'dalmatian a cappella'], osuma: /klapa|dalmat/i },
-  { kaupunki: 'sofia', haut: ['gaida bagpipe bulgaria', 'bulgarian folk music', 'kaba gaida'], osuma: /gaida|bulgar/i },
+  { kaupunki: 'dubrovnik', haut: ['klapa dalmatia', 'klapa singing', 'dalmatian a cappella', 'croatian folk song', 'hrvatska klapa'], osuma: /klapa|dalmat|croat|hrvat/i },
+  { kaupunki: 'sofia', haut: ['gaida bagpipe bulgaria', 'bulgarian folk music', 'kaba gaida', 'bulgarian village song', 'gadulka kaval'], osuma: /gaida|gadulka|kaval|bulgar/i },
   { kaupunki: 'lontoo', haut: ['Elgar Pomp and Circumstance', 'Land of Hope and Glory'], osuma: /elgar|pomp|hope and glory/i },
-  { kaupunki: 'edinburgh', haut: ['Great Highland Bagpipe pibroch', 'scottish bagpipe piobaireachd'], osuma: /bagpipe|piob|pibroch|highland/i },
-  { kaupunki: 'dublin', haut: ['uilleann pipes', 'irish pipes traditional'], osuma: /uilleann|irish pipe/i },
-  { kaupunki: 'pariisi', haut: ['musette accordion paris', 'valse musette'], osuma: /musette|accord/i },
+  { kaupunki: 'edinburgh', haut: ['Great Highland Bagpipe', 'piobaireachd', 'scottish pipe band', 'bagpipe march scotland'], osuma: /bagpipe|piob|pipe band|highland/i },
+  { kaupunki: 'dublin', haut: ['uilleann pipes', 'irish traditional music session', 'irish jig reel fiddle', 'irish traditional tune'], osuma: /uilleann|irish/i },
+  { kaupunki: 'pariisi', haut: ['accordion musette waltz', 'accordeon francais valse', 'bal musette accordion'], osuma: /musette|accord/i },
   { kaupunki: 'lissabon', haut: ['fado portuguese guitar', 'guitarra portuguesa fado'], osuma: /fado|guitarra portug/i },
-  { kaupunki: 'madrid', haut: ['chotis madrileno', 'organillo madrid'], osuma: /chotis|schotis|organillo/i },
+  { kaupunki: 'madrid', haut: ['chotis madrileno', 'organillo madrid', 'zarzuela madrid', 'pasodoble espanol'], osuma: /chotis|schotis|organillo|zarzuela|pasodoble/i },
   { kaupunki: 'barcelona', haut: ['sardana cobla', 'cobla catalana'], osuma: /sardana|cobla/i },
   { kaupunki: 'amsterdam', haut: ['draaiorgel', 'street organ dutch', 'barrel organ amsterdam'], osuma: /draaiorgel|street organ|barrel organ/i },
   { kaupunki: 'berliini', haut: ['berlin techno', 'techno set berlin'], osuma: /techno/i },
   { kaupunki: 'wien', haut: ['An der schoenen blauen Donau', 'Blue Danube Strauss'], osuma: /donau|danube/i },
-  { kaupunki: 'alpit', haut: ['alphorn', 'alpenhorn', 'Alphorn Schweiz'], osuma: /alphorn|alpenhorn|alpuhorn/i },
+  { kaupunki: 'alpit', haut: ['alphorn', 'alpenhorn', 'jodel schweiz', 'swiss folk music', 'tyrolean folk music'], osuma: /alphorn|alpenhorn|jodel|yodel|swiss|tyrol/i },
   { kaupunki: 'praha', haut: ['Vltava Smetana', 'Moldau Smetana'], osuma: /vltava|moldau/i },
-  { kaupunki: 'budapest', haut: ['hungarian folk music tanchaz', 'magyar nepzene'], osuma: /hungar|magyar|nepzene|tanchaz/i },
+  { kaupunki: 'budapest', haut: ['hungarian folk music', 'magyar nepzene', 'hungarian gypsy violin', 'cimbalom'], osuma: /hungar|magyar|nepzene|cimbalom|czardas/i },
   { kaupunki: 'varsova', haut: ['Chopin mazurka', 'Chopin polonaise'], osuma: /chopin/i },
-  { kaupunki: 'bukarest', haut: ['lautari romania', 'romanian folk music taraf'], osuma: /lautar|roman|taraf/i },
-  { kaupunki: 'kiova', haut: ['bandura kobzar', 'ukrainian bandura'], osuma: /bandura|kobza/i },
-  { kaupunki: 'odessa', haut: ['odessa songs klezmer', 'odessa mama'], osuma: /odessa|klezmer/i },
+  { kaupunki: 'bukarest', haut: ['romanian folk music', 'taraf lautari', 'panpipe nai romania', 'muzica populara romaneasca'], osuma: /roman|taraf|lautar|nai |populara/i },
+  { kaupunki: 'kiova', haut: ['bandura', 'ukrainian folk song', 'ukrainian traditional music', 'kobzar'], osuma: /bandura|ukrain|kobza/i },
+  { kaupunki: 'odessa', haut: ['klezmer', 'yiddish song odessa', 'jewish folk music violin'], osuma: /klezmer|yiddish|odessa|jewish/i },
   { kaupunki: 'moskova', haut: ['Tchaikovsky Swan Lake', 'Tchaikovsky Nutcracker'], osuma: /tchaikov|swan lake|nutcracker/i },
   { kaupunki: 'pietari', haut: ['Shostakovich symphony', 'Glinka'], osuma: /shostakovich|glinka/i },
-  { kaupunki: 'tallinna', haut: ['estonian choir song festival', 'eesti laulupidu'], osuma: /eston|eesti|laulupidu/i },
-  { kaupunki: 'riika', haut: ['latvian folk song daina', 'latviesu tautasdziesma'], osuma: /latvi|daina/i },
+  { kaupunki: 'tallinna', haut: ['estonian choir', 'estonian folk song', 'eesti rahvalaul', 'regilaul'], osuma: /eston|eesti|regilaul|rahvalaul/i },
+  { kaupunki: 'riika', haut: ['latvian folk song', 'latviesu dziesma', 'latvian choir', 'daina latvia'], osuma: /latvi|daina|dziesma/i },
   { kaupunki: 'vilna', haut: ['sutartines', 'lithuanian folk song'], osuma: /sutartin|lithuan|lietuv/i },
   { kaupunki: 'istanbul', haut: ['mehter marsi', 'ottoman military band', 'janissary music'], osuma: /mehter|janissar|ottoman/i },
   { kaupunki: 'helsinki', haut: ['Finlandia Sibelius', 'Sibelius'], osuma: /finlandia|sibelius/i },
-  { kaupunki: 'tukholma', haut: ['swedish folk music nyckelharpa', 'polska sweden fiddle'], osuma: /nyckelharpa|swed|polska/i },
+  { kaupunki: 'tukholma', haut: ['swedish folk music', 'nyckelharpa', 'svensk folkmusik', 'polska fiddle sweden'], osuma: /nyckelharpa|swed|svensk|folkmusik|polska/i },
   { kaupunki: 'oslo', haut: ['Hall of the Mountain King Grieg', 'Peer Gynt Grieg'], osuma: /grieg|mountain king|peer gynt/i },
-  { kaupunki: 'kobenhavn', haut: ['Carl Nielsen symphony', 'Carl Nielsen'], osuma: /nielsen/i },
-  { kaupunki: 'lappi', haut: ['joik sami', 'yoik saami', 'juoiggus'], osuma: /joik|yoik|juoig|sami|saami/i },
-  { kaupunki: 'tromssa', haut: ['norwegian electronic music', 'nordic synth'], osuma: /norweg|nordic|synth/i },
+  { kaupunki: 'kobenhavn', haut: ['Carl Nielsen symphony', 'danish folk music', 'dansk folkemusik'], osuma: /nielsen|danish|dansk|denmark/i },
+  { kaupunki: 'lappi', haut: ['joik', 'yoik', 'juoiggus', 'sami music', 'saami song'], osuma: /joik|yoik|juoig|s(a|á)mi|saami|lapp/i },
+  { kaupunki: 'tromssa', haut: ['norwegian folk music', 'hardanger fiddle', 'norsk folkemusikk'], osuma: /norweg|norsk|hardanger|folkemusikk/i },
 ];
 
 // --- Wikimedia Commons -------------------------------------------------------
@@ -179,7 +181,7 @@ function archiveMp3(tunnus) {
 
 const tulos = {};
 for (const kortti of KORTIT) {
-  if (VAIN && kortti.kaupunki !== VAIN) continue;
+  if (VAIN.length && !VAIN.includes(kortti.kaupunki)) continue;
   const ehdokkaat = [];
   const nahty = new Set();
   for (const haku of kortti.haut) {

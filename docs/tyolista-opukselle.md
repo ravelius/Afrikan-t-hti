@@ -240,6 +240,52 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 22: musiikki soimaan napista — VALMIS 2.8.2026
+
+**Omistajan huomio:** "Tutki sivuilla on musiikki osiossa linkki aina
+jollekin sivulle. Sen tilalla saisi olla linkki ääninäytteeseen
+suoraan, eli musiikki pitäisi lähteä soimaan suoraan kun sitä painaa.
+Tämä siis eri kuin apple music."
+
+Vanha `musiikkiVapaa`-kenttä osoitti kansallisen yleisradion etusivulle
+(ERT, BBC, HRT). Sivulle päätyminen ei ole musiikin kuulemista. Kentät
+on poistettu, ja tilalla on `musiikkiNayte`: suora mp3, joka soi
+napista samalla soittimella kuin muutkin näytteet. Apple Music -linkki
+säilyy sen vieressä ennallaan.
+
+**Näytteitä 20 kortissa.** Kreeta, Lontoo, Edinburgh, Dublin,
+Lissabon, Madrid, Barcelona, Amsterdam, Wien, Praha, Varsova, Kiova,
+Odessa, Moskova, Pietari, Tallinna, Vilna, Istanbul, Helsinki ja Oslo.
+
+**Ilman nappia jäävät** Ateena, Dubrovnik, Sofia, Pariisi, Berliini,
+Alpit, Budapest, Bukarest, Riika, Tukholma, Kööpenhamina, Lappi ja
+Tromssa. Syy on melkein aina sama: vapaasti lisensoitua äänitystä ei
+ole, tai ainoa osuma on ND-lisenssillä (ei muokkausta), joka ei sovi
+peiliin leikattavaksi. Tukholman ABBAlle, Tromssan Röyksoppille ja
+Pietarin Šostakovitšin 7. sinfonialle ei tällaista löydy lainkaan —
+Pietari sai näytteeksi saman säveltäjän 5. sinfonian, ja napin selite
+kertoo sen.
+
+**Kaksi rajausta lähteissä, älä poista niitä:**
+
+- Vain **mp3**. Commonsin äänitiedostot ovat useimmiten ogg tai flac,
+  joita Safari ei soita — ja peliä pelataan iPadilla, joten ogg-näyte
+  olisi juuri siellä hiljainen.
+- archive.orgista vain kohteet, joilla on `licenseurl`. Great 78
+  Project (`collection:georgeblood`) osuu hakusanoihin ylivoimaisesti
+  parhaiten ja sisältää juuri näitä levytyksiä, mutta sen kohteissa ei
+  ole lisenssitietoa lainkaan. Peli kopioi äänet omaan peiliinsä,
+  joten tuntematon lisenssi ei kelpaa.
+
+Commonsista tulevia näytteitä ei peilata (peilaustyökalu poimii vain
+freesound- ja archive.org-osoitteet). Se on tarkoituksellista: Commons
+on pysyvä lähde, ja näin peili ei kasva turhaan.
+
+**Rehellisyyden vuoksi:** valinta on tehty äänitysten kuvausten ja
+tekijätietojen perusteella, ei kuuntelemalla. Ehdokaslistat saa
+uudestaan komennolla `node tools/hae-musiikkinaytteet.mjs`.
+
+
 ## Paketti 21: Kuuntele kieltä -nappi — VALMIS 2.8.2026
 
 **Omistajan toive:** "Puheääntä voisi tosiaan lisätä oman napin taakse

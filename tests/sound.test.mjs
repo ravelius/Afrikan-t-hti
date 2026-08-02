@@ -518,3 +518,33 @@ test('kielinäytteet ovat oikeista kaupungeista ja muodoltaan kelvollisia', asyn
   assert.ok(Object.keys(EUROPE_KIELET).length >= 25,
     'kielinäytteitä on liian vähän — nappi jäisi useimmilta näkymättä');
 });
+
+test('musiikkinäytteet ovat suoria mp3-osoitteita ja kertovat lisenssin', async () => {
+  const { EUROPE_KULTTUURI } = await import('../js/packs/europe-kulttuuri.js');
+  let maara = 0;
+  for (const [city, tiedot] of Object.entries(EUROPE_KULTTUURI)) {
+    for (const nosto of tiedot.nostot ?? []) {
+      // Vanha kenttä oli linkki yleisradion etusivulle. Sitä ei saa
+      // palauttaa: sivulle päätyminen ei ole musiikin kuulemista.
+      assert.equal(nosto.musiikkiVapaa, undefined,
+        `${city}: musiikkiVapaa on korvattu musiikkiNayte-kentällä`);
+      if (!nosto.musiikkiNayte) continue;
+      maara += 1;
+      // Soitin on <audio>, joten osoitteen pitää olla suora
+      // äänitiedosto. Ogg ja flac eivät kelpaa: Safari ei soita niitä.
+      assert.match(nosto.musiikkiNayte, /^https:\/\/[^\s'"]+\.mp3$/i,
+        `${city}: näytteen pitää olla suora mp3 — ${nosto.musiikkiNayte}`);
+      assert.match(nosto.musiikkiNayte,
+        /^https:\/\/(upload\.wikimedia\.org|archive\.org)\//,
+        `${city}: tuntematon lähde — vain Commons ja archive.org`);
+      // Nimi näkyy napin selitteenä ja on samalla lähdemaininta.
+      assert.match(nosto.musiikkiNayteNimi ?? '', /(CC BY|CC0|PD|public domain)/i,
+        `${city}: näytteen nimestä puuttuu lisenssi — ${nosto.musiikkiNayteNimi}`);
+      // ND kieltää muokkaamisen, ja archive.orgin näytteet leikataan
+      // peiliin kolmeen minuuttiin.
+      assert.doesNotMatch(nosto.musiikkiNayteNimi ?? '', /-ND\b/,
+        `${city}: ND-lisenssi ei sovi leikattavaksi`);
+    }
+  }
+  assert.ok(maara >= 15, `musiikkinäytteitä vain ${maara}`);
+});
