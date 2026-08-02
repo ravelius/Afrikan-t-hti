@@ -375,3 +375,118 @@ test('Xing-otsakkeen kesto korjataan leikkauksen mukaiseksi', async () => {
   assert.equal(tulos.puskuri.readUInt32BE(xing + 12), tulos.puskuri.length - 10,
     'tavumäärä ei täsmää');
 });
+
+// --- silmukan sauma ja ristihäivytys ----------------------------------------
+//
+// Kolmen minuutin äänitteen silmukka näkyy vasta kolmen minuutin päästä,
+// joten sitä ei voi todeta pelaamalla. Tynkäsoittimella sauman saa esiin
+// heti: nauhan loppu kelataan käsin ja katsotaan, alkaako uusi kierros
+// päällekkäin edellisen kanssa.
+
+/** Tynkä <audio>: kirjaa soitot ja antaa ajan liikkua käsin. */
+function tekoAudio(rekisteri) {
+  return class {
+    constructor(src) {
+      this.src = src;
+      this.volume = 1;
+      this.paused = true;
+      this.loop = false;
+      this.preload = '';
+      this.duration = 180;
+      this.currentTime = 0;
+      this.kuuntelijat = new Map();
+      rekisteri.push(this);
+    }
+
+    addEventListener(nimi, fn) {
+      if (!this.kuuntelijat.has(nimi)) this.kuuntelijat.set(nimi, []);
+      this.kuuntelijat.get(nimi).push(fn);
+    }
+
+    removeEventListener() {}
+    getAttribute() { return this.src; }
+    removeAttribute() { this.src = null; }
+    load() {}
+    pause() { this.paused = true; }
+    play() { this.paused = false; return Promise.resolve(); }
+    laukaise(nimi) { for (const fn of this.kuuntelijat.get(nimi) ?? []) fn(); }
+  };
+}
+
+/** Ajaa kaikki jonossa olevat rAF-askeleet loppuun asti. */
+async function ajaHaivytykset(kello) {
+  for (let i = 0; i < 400; i += 1) {
+    kello.nyt += 120;
+    const jono = kello.jono.splice(0);
+    if (!jono.length) break;
+    for (const fn of jono) fn(kello.nyt);
+    await Promise.resolve();
+  }
+}
+
+async function lataaAmbienssi() {
+  const soittimet = [];
+  const kello = { nyt: 0, jono: [] };
+  globalThis.Audio = tekoAudio(soittimet);
+  globalThis.requestAnimationFrame = (fn) => { kello.jono.push(fn); return kello.jono.length; };
+  globalThis.performance = { now: () => kello.nyt };
+  globalThis.window = { AudioContext: null };
+  globalThis.localStorage = { getItem: () => null, setItem: () => {} };
+  const mod = await import(`../js/ambience-stream.js?kerta=${soittimet.length}-${Math.random()}`);
+  const { sfx } = await import('../js/sound.js');
+  sfx.enabled = true;
+  return { mod, soittimet, kello };
+}
+
+test('silmukan sauma ristihäivytetään: uusi kierros alkaa ennen nauhan loppua', async () => {
+  const { mod, soittimet, kello } = await lataaAmbienssi();
+  mod.playPlaceAmbience('lontoo', 'kaupunki', 'europe');
+  await Promise.resolve();
+  assert.equal(soittimet.length, 1, 'ensimmäinen soitin ei käynnistynyt');
+  const eka = soittimet[0];
+  eka.laukaise('loadedmetadata');
+  await ajaHaivytykset(kello);
+  assert.ok(eka.volume > 0, 'ensimmäinen kierros ei noussut kuuluviin');
+
+  // Nauhan loppu lähestyy: sauman pitää alkaa ennen kuin aika loppuu.
+  eka.currentTime = eka.duration - 1;
+  eka.laukaise('timeupdate');
+  await Promise.resolve();
+  assert.equal(soittimet.length, 2, 'uusi kierros ei alkanut ennen nauhan loppua');
+  const toka = soittimet[1];
+  assert.equal(toka.paused, false, 'uusi kierros ei lähtenyt soimaan');
+  assert.ok(!eka.paused, 'edellinen kierros katkaistiin heti — ei ristihäivytystä');
+
+  // Häivytysten jälkeen vanha on vaiennut ja uusi soi.
+  toka.laukaise('loadedmetadata');
+  await ajaHaivytykset(kello);
+  assert.equal(eka.paused, true, 'edellinen kierros jäi soimaan');
+  assert.ok(toka.volume > 0, 'uusi kierros jäi hiljaiseksi');
+  mod.stopPlaceStream();
+});
+
+test('väistö säilyy silmukan sauman yli', async () => {
+  const { mod, soittimet, kello } = await lataaAmbienssi();
+  mod.playPlaceAmbience('praha', 'kaupunki', 'europe');
+  await Promise.resolve();
+  const eka = soittimet[0];
+  eka.laukaise('loadedmetadata');
+  await ajaHaivytykset(kello);
+  const taysi = eka.volume;
+
+  // Kertoja puhuu: tausta väistyy. Sauma osuu keskelle puhetta.
+  mod.vaimennaTausta();
+  await ajaHaivytykset(kello);
+  assert.ok(eka.volume < taysi, 'väistö ei laskenut taustaa');
+
+  eka.currentTime = eka.duration - 1;
+  eka.laukaise('timeupdate');
+  await Promise.resolve();
+  const toka = soittimet[1];
+  toka.laukaise('loadedmetadata');
+  await ajaHaivytykset(kello);
+  // Ilman väistön muistamista uusi kierros nousisi täyteen voimaan ja
+  // puhe hukkuisi sen alle kesken lauseen.
+  assert.ok(toka.volume < taysi, `uusi kierros ohitti väistön (${toka.volume} vs ${taysi})`);
+  mod.stopPlaceStream();
+});

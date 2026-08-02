@@ -313,6 +313,17 @@ const BOT_QUIZ_DELAY = 1500; // botin kysymys jää hetkeksi näkyviin luettavak
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 // Animaatioiden rytmi millisekunteina.
+/*
+ * Luennan loppuhäivytys. Aiempi neljännessekunti oli niin lyhyt, että
+ * kertoja katkesi töksähtäen (omistajan havainto) — etenkin lyhyessä
+ * kertojatilassa, jossa ääni pysäytettiin lauserajalla ilman häivytystä
+ * lainkaan. Puolitoista sekuntia riittää pehmentämään lopun ilman että
+ * viimeinen sana hukkuu, koska käyrä on aluksi loiva.
+ */
+const LUENNAN_HAIPYMA_S = 1.5;
+/** Pehmennyskäyrä: alkaa hitaasti, jyrkkenee lopussa (ease-in). */
+const pehmene = (t) => Math.max(0, Math.min(1, t)) ** 1.8;
+
 const STEP_MS = 190; // yksi askel kartalla
 const FLIGHT_MS = 900;
 // Mantereen sisäinen lento liukuu rauhallisemmin moottorin hurinalla.
@@ -2868,6 +2879,24 @@ export class UI {
   }
 
   /**
+   * Käynnistää määränpään äänimaiseman jo ennen saapumista (omistajan
+   * toive): ristihäivytys ehtii alkaa, ja kun kertoja aloittaa sekunnin
+   * kuluttua saapumisesta, tausta on ollut hetken kuuluvissa.
+   *
+   * Ohittaa syncAmbiencen lentolipun tarkoituksella — juuri lennon
+   * lopussa tämä on ainoa tapa saada ääni liikkeelle ennen kalvon
+   * sulkeutumista. Saapumisen jälkeinen syncAmbience toteaa saman
+   * kaupungin eikä aloita mitään uudestaan.
+   */
+  ennakoiAmbienssi(pos) {
+    const { game } = this;
+    if (!pos || pos.type !== 'city' || game.phase === 'over') return;
+    const city = game.board.cityById.get(pos.city);
+    if (!city) return;
+    playPlaceAmbience(city.id, city.ambience ?? null, game.pack?.id);
+  }
+
+  /**
    * Lataa laudan kaupunkien kuvia taustalla valokuvakysymyksiä varten ja
    * kertoo moottorille, mitkä ovat valmiina. Lista ei ole pelitilaa:
    * ilman verkkoa se jää tyhjäksi ja valokuvamuoto putoaa pois käytöstä.
@@ -4224,9 +4253,12 @@ export class UI {
             audio.removeEventListener('timeupdate', vahti);
             return;
           }
-          if (audio.currentTime >= raja) {
-            audio.pause();
+          // Häivytys alkaa jo ennen lauserajaa, jotta ääni on hiljainen
+          // juuri silloin kun se loppuu — pelkkä pause() katkaisi sen
+          // töksähtäen (omistajan havainto).
+          if (audio.currentTime >= raja - LUENNAN_HAIPYMA_S) {
             audio.removeEventListener('timeupdate', vahti);
+            this.haivytaAani(audio);
           }
         };
         audio.addEventListener('timeupdate', vahti);
@@ -4341,13 +4373,13 @@ export class UI {
         return;
       }
       const jaljella = audio.duration - audio.currentTime;
-      if (jaljella <= 0.06) {
+      if (jaljella <= 0.05) {
         audio.pause();
         rampissa = false;
         return;
       }
-      if (jaljella < 0.3) {
-        audio.volume = perus * Math.max(0, (jaljella - 0.05) / 0.25);
+      if (jaljella < LUENNAN_HAIPYMA_S) {
+        audio.volume = perus * pehmene(jaljella / LUENNAN_HAIPYMA_S);
       }
       requestAnimationFrame(rullaa);
     };
@@ -4355,11 +4387,29 @@ export class UI {
     // käynnistää tiheän rampin, kun loppu lähestyy.
     audio.addEventListener('timeupdate', () => {
       if (rampissa || !audio.duration) return;
-      if (audio.duration - audio.currentTime < 1.2) {
+      if (audio.duration - audio.currentTime < LUENNAN_HAIPYMA_S + 0.9) {
         rampissa = true;
         requestAnimationFrame(rullaa);
       }
     });
+  }
+
+  /**
+   * Häivyttää soivan luennan pois annetussa ajassa. Käytetään myös
+   * lyhyen kertojan lauserajalla: siellä ääni pysähtyi ennen kesken
+   * sanaa, koska pause() tuli ilman häivytystä.
+   */
+  haivytaAani(audio, kesto = LUENNAN_HAIPYMA_S * 1000) {
+    const perus = audio.volume;
+    const t0 = performance.now();
+    const askel = (nyt) => {
+      if (audio.paused) return;
+      const t = Math.min(1, Math.max(0, (nyt - t0) / kesto));
+      audio.volume = perus * pehmene(1 - t);
+      if (t < 1) requestAnimationFrame(askel);
+      else audio.pause();
+    };
+    requestAnimationFrame(askel);
   }
 
   stopDiaryVoice() {
@@ -5405,6 +5455,10 @@ export class UI {
     });
 
     sfx.stopFlight();
+    // Kohteen äänimaisema alkaa jo kalvon häivytyksen aikana: kun
+    // kertoja aloittaa sekunnin kuluttua saapumisesta, tausta on ehtinyt
+    // nousta kuuluviin eikä ilmesty puheen kanssa yhtä aikaa.
+    this.ennakoiAmbienssi(this.game.player?.pos);
     overlay.classList.add('flight-leaving');
     await this.wait(280);
     overlay.remove();
@@ -5457,6 +5511,10 @@ export class UI {
     for (const [i, pos] of path.entries()) {
       const { x, y } = pixelOf(board, pos);
       g.style.transform = `translate(${x}px, ${y}px)`;
+      // Määränpään äänimaisema lähtee nousemaan jo viimeisellä
+      // askeleella, jotta ristihäivytys on käynnissä saapumishetkellä
+      // eikä ala vasta kertojan kanssa yhtä aikaa (omistajan toive).
+      if (i === path.length - 1) this.ennakoiAmbienssi(pos);
       sfx.play(i === path.length - 1 ? 'arrive' : 'step');
       await this.wait(this.reducedMotion ? 0 : stepMs);
     }
