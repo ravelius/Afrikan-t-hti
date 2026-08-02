@@ -3093,6 +3093,7 @@ export class UI {
     // Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja niihin
     // liittyvä tutustu ja vastaa -kysymys (pilottikaupungit).
     this.naytaKulttuuri(city);
+    this.esilataaKaupunki(city);
 
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
@@ -3119,6 +3120,75 @@ export class UI {
       if (summary.extract && !omaIntro) this.arrivalIntro.textContent = shortIntro(summary.extract);
       this.arrivalWiki.hidden = false;
     });
+  }
+
+  /**
+   * Hakee kaupungin kuvat ja ääninäytteet valmiiksi selaimen välimuistiin
+   * heti saapuessa (omistajan toive): kuvakarusellin selaaminen ja
+   * Kuuntele näyte -nappi toimivat silloin heti eivätkä odota latausta.
+   *
+   * Kaikki menee selaimen omaan välimuistiin, joten varsinainen näyttö
+   * käyttää samoja osoitteita eikä lataa mitään toiseen kertaan. Haut
+   * porrastetaan, ettei saapumishetki tuki yhteyttä juuri silloin kun
+   * kortti piirtyy ja kertoja alkaa puhua.
+   *
+   * Esilataus on pelkkää nopeutta: jos se epäonnistuu, kaikki toimii
+   * kuten ennenkin. Siksi virheet niellään hiljaa.
+   */
+  esilataaKaupunki(city) {
+    if (!city || this.esilatattu === city.id) return;
+    this.esilatattu = city.id;
+    const kuvat = [];
+    const aanet = [];
+
+    // Kulttuurinostojen kuvat ja ääninäytteet. Kuvat ovat lazy-tilassa
+    // eivätkä lataudu ennen kuin lohko avataan; ääninäyte alkaisi ladata
+    // vasta napin painalluksesta.
+    const kulttuuri = (KULTTUURIT[this.game.pack.id] ?? {})[city.id];
+    for (const nosto of kulttuuri?.nostot ?? []) {
+      if (nosto.tiedosto) kuvat.push(valokuvaUrl(nosto.tiedosto, 640));
+      if (nosto.aani) aanet.push(aaniOsoite(jaaAlku(nosto.aani).url));
+    }
+    // Silloin ja nyt -valokuvapari.
+    const valokuva = (VALOKUVAT[this.game.pack.id] ?? {})[city.id];
+    // `uusi` on oma merkintänsä selitteineen, ei pelkkä tiedostonimi.
+    if (valokuva?.tiedosto) kuvat.push(valokuvaUrl(valokuva.tiedosto, 640));
+    if (valokuva?.uusi?.tiedosto) kuvat.push(valokuvaUrl(valokuva.uusi.tiedosto, 640));
+
+    // Wikipedian kuvagalleria: juuri sitä pelaaja selaa nuolilla.
+    if (city.wiki) {
+      cachedGallery(city.wiki).then((lista) => {
+        if (this.esilatattu !== city.id) return;
+        this.esilataaOsoitteet(lista.map((k) => k.src), city.id);
+      }).catch(() => { /* galleriaa ei saatu — selaus toimii silti */ });
+    }
+
+    this.esilataaOsoitteet(kuvat, city.id);
+    for (const url of aanet) {
+      if (!url) continue;
+      const audio = new Audio(url);
+      audio.preload = 'auto';
+      // Elementti pidetään hengissä latauksen ajan; selain säilyttää
+      // tavut omassa välimuistissaan senkin jälkeen.
+      (this.esiladatutAanet ??= []).push(audio);
+      audio.addEventListener('error', () => { /* soitto hoitaa varareitin */ });
+    }
+    if ((this.esiladatutAanet?.length ?? 0) > 6) this.esiladatutAanet.splice(0, 3);
+  }
+
+  /** Lataa kuvat taustalla muutama kerrallaan, jottei yhteys tuki. */
+  esilataaOsoitteet(osoitteet, cityId, kerralla = 3) {
+    const jono = osoitteet.filter(Boolean);
+    const seuraava = () => {
+      if (this.dead || this.esilatattu !== cityId) return;
+      const url = jono.shift();
+      if (!url) return;
+      const kuva = new Image();
+      kuva.addEventListener('load', seuraava, { once: true });
+      kuva.addEventListener('error', seuraava, { once: true });
+      kuva.src = url;
+    };
+    for (let i = 0; i < kerralla; i += 1) seuraava();
   }
 
   /**
