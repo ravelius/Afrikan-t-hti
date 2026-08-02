@@ -280,6 +280,14 @@ tarvitse CORSia lainkaan. Sääntö sallii GETin osoitteesta
 tiedoston versio levyltä) tehosteet putoavat alkuperäiseen lähteeseen,
 eikä peli siitä kärsi.
 
+**Tiedossa oleva rajoite: `pub-….r2.dev` on kehitysosoite.**
+Cloudflaren oma dokumentaatio sanoo sen olevan nopeusrajoitettu ja
+tarkoitettu kehityskäyttöön; välimuisti, palomuurisäännöt ja pääsynhallinta
+ovat käytettävissä vasta oman verkkotunnuksen takana. Perheen pelille
+tämä riittää hyvin, mutta jos äänet alkavat joskus takkuilla, syy on
+todennäköisesti tässä eikä pelissä. Korjaus on oma verkkotunnus ämpärin
+eteen — silloin muuttuu vain `AANI_JUURI`.
+
 **Vielä tekemättä: Pagesin siivous.** Äänet ovat nyt kahdessa paikassa.
 Varsinainen tilansäästö syntyy vasta kun media-repon Pages julkaisee
 pelkät `kuvat/` ja `liput/` — tiedostot saavat jäädä repoon, koska
