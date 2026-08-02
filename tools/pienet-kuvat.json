@@ -1,0 +1,272 @@
+[
+ {
+  "lauta": "europe",
+  "kaupunki": "granada",
+  "kohta": "vanha",
+  "tiedosto": "Court of the Lions, Alhambra by Juan Laurent.jpg",
+  "selite": "Leijonapiha Juan Laurentin valokuvaamana isoisän aikaan. Laurent kiersi Espanjaa suurella kamerallaan ja myi vedoksia matkailijoille — moni eurooppalainen näki Alhambran ensimmäisen kerran juuri hänen kuvinaan.",
+  "leveys": 563,
+  "korkeus": 766
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "sarajevo",
+  "kohta": "vanha",
+  "tiedosto": "Sarajevo Sebilj and Bascarsija, ca. 1930.jpg",
+  "selite": "Sebiljin vesikioski ja Baščaršijan basaari 1930-luvulla. Nykyinen kioski rakennettiin 1891 palaneen tilalle, ja aukio on ollut kauppapaikkana 1400-luvulta asti.",
+  "leveys": 768,
+  "korkeus": 514
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "ateena",
+  "kohta": "vanha",
+  "tiedosto": "Athènes. L' Acropole et le Temple de Thesée LCCN2017658103.jpg",
+  "selite": "Akropolis ja etualalla Hefaistoksen temppeli käsinvärittynä photochrom-vedoksena. Kaupunki oli tuolloin pieni: Ateenassa asui noin 100 000 ihmistä, ja temppelien ympärillä oli peltoa.",
+  "leveys": 1024,
+  "korkeus": 752
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "kreeta",
+  "kohta": "vanha",
+  "tiedosto": "Cnossus - room of (?), columns - north entrance - DPLA - 156faa906e3d69e9b9c71702853f1b8a.jpg",
+  "selite": "Knossoksen pohjoinen sisäänkäynti kaivausten aikaan. Arthur Evans alkoi kaivaa palatsia 1900 ja rakensi osan siitä uudelleen betonista — tapa, jota arkeologit yhä kiistelevät.",
+  "leveys": 800,
+  "korkeus": 622
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "sisilia",
+  "kohta": "vanha",
+  "tiedosto": "Crupi, Giovanni (1861-1925) - n. 0030 B - Teatro Greco - Taormina - DPLA - 51ed756181740204aed046a9302cef1b (page 8).jpg",
+  "selite": "Taorminan kreikkalainen teatteri Giovanni Crupin kuvaamana. Crupi piti Taorminassa valokuvaamoa ja myi näkymiä matkailijoille — juuri sellaisia, joita isoisä olisi voinut ostaa muistoksi.",
+  "leveys": 934,
+  "korkeus": 800
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "sofia",
+  "kohta": "vanha",
+  "tiedosto": "Banya Bashi 1900.jpg",
+  "selite": "Banya Bashin moskeija noin vuonna 1900. Se rakennettiin 1566 kuumien lähteiden päälle — nimi tarkoittaa \"monta kylpyä\". Bulgaria oli vasta itsenäistynyt, ja Sofiasta tehtiin pääkaupunki 1879.",
+  "leveys": 1024,
+  "korkeus": 767
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "lissabon",
+  "kohta": "vanha",
+  "tiedosto": "Elevador-Sta-Justa 1902 fotoCarris.jpg",
+  "selite": "Santa Justan hissi valmistumisvuonnaan 1902. Valurautainen torni nostaa ihmiset Baixan kaduilta 45 metriä ylös Chiadon kaupunginosaan. Aluksi hissiä käytti höyrykone, ja 1907 se sähköistettiin.",
+  "leveys": 750,
+  "korkeus": 623
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "lappi",
+  "kohta": "vanha",
+  "tiedosto": "Kultala Ivalojoki.jpg",
+  "selite": "Ivalojoen kulta-aluetta noin vuonna 1900. Rannat on kaivettu auki ja puut kaadettu. Valtio rakensi jokivarteen Kultalan kruununaseman kevättalvella 1870, ja parhaimmillaan paikalla oli noin 600 ihmistä.",
+  "leveys": 1024,
+  "korkeus": 738
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "lappi",
+  "kohta": "uusi",
+  "tiedosto": "Kutturan silta.jpg",
+  "selite": "Sama joki tänään Kutturan sillalta, kulta-alueen laidalta. Koivikko on kasvanut kaivantojen päälle. Kylässä asuu parikymmentä ihmistä, ja silta valmistui vasta 1996 — sitä ennen joen yli mentiin veneellä.",
+  "leveys": 1024,
+  "korkeus": 682
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "tanger",
+  "kohta": "vanha",
+  "tiedosto": "Tangier Grand Mosque 1900s.jpg",
+  "selite": "Tangerin suurmoskeijan kulmalla kävi vilske jo isoisän aikaan: kantajia, kauppiaita ja aaseja samalla kapealla kadulla.",
+  "leveys": 184,
+  "korkeus": 229
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "kairo",
+  "kohta": "uusi",
+  "tiedosto": "Cairo-Hilton-Skyline.jpg",
+  "selite": "Nykyinen Kairo nousee Niilin rannalla korkeuksiin — mutta joki virtaa keskellä yhtä tyynenä kuin ennenkin.",
+  "leveys": 600,
+  "korkeus": 251
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "murzuk",
+  "kohta": "vanha",
+  "tiedosto": "Osmanisches Fort von Mursuk.jpg",
+  "selite": "Murzukin linnoitus vartioi Saharan karavaanireittiä. Sen savimuurien varjossa lepäsivät sekä kamelit että kauppiaat.",
+  "leveys": 1010,
+  "korkeus": 672
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "dakar",
+  "kohta": "vanha",
+  "tiedosto": "Dakar mosque circa 1900.jpg",
+  "selite": "Dakarin moskeija minareetteineen nuoren satamakaupungin keskellä. Kuvan otti postikorteistaan tunnettu Edmond Fortier.",
+  "leveys": 990,
+  "korkeus": 638
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "sierraleone",
+  "kohta": "vanha",
+  "tiedosto": "Cotton Tree Railway Station 3.30 p.m. Bungalow Train, Freetown.jpg",
+  "selite": "Iltapäiväjuna lähdössä Freetownin Cotton Tree -asemalta. Kaupungin kuuluisa puuvillapuu kasvaa yhä samalla paikalla.",
+  "leveys": 688,
+  "korkeus": 390
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "orjarannikko",
+  "kohta": "vanha",
+  "tiedosto": "São João Baptista de Ajudá 1920s.jpg",
+  "selite": "Ouidahin vanha portugalilaislinnake, Orjarannikon synkän historian vartiopaikka. Isoisän aikaan sen muurit olivat jo rapistumassa.",
+  "leveys": 940,
+  "korkeus": 582
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "kano",
+  "kohta": "vanha",
+  "tiedosto": "View-Kano city-1911.jpg",
+  "selite": "Kanon savitaloja ja muureja vuonna 1911. Koko vanha kaupunki on rakennettu auringossa kuivatusta savesta.",
+  "leveys": 760,
+  "korkeus": 425
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "madagaskar",
+  "kohta": "vanha",
+  "tiedosto": "Tananarive-Temple d'Andohalo.jpg",
+  "selite": "Antananarivon kukkulakaupunkia Madagaskarilla. Talot kipuavat rinnettä kohti Andohalon aukiota ja sen kirkkoa.",
+  "leveys": 1006,
+  "korkeus": 896
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "kilimandzaro",
+  "kohta": "vanha",
+  "tiedosto": "Bundesarchiv Bild 105-DOA0437, Deutsch-Ostafrika, Kilimandscharo, Gummiplantage.jpg",
+  "selite": "Viljelmiä Kilimandžaron juurella. Lumihuippu häämöttää pilvien takana — keskellä Afrikkaa, lähes päiväntasaajalla.",
+  "leveys": 800,
+  "korkeus": 606
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "addisabeba",
+  "kohta": "vanha",
+  "tiedosto": "British delegation Addis Abeba.jpg",
+  "selite": "Juhlakulkue Addis Abebassa keisari Haile Selassien kruunajaisvuonna 1930. Koko maailma lähetti edustajansa vuoristopääkaupunkiin.",
+  "leveys": 1037,
+  "korkeus": 814
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "rashafun",
+  "kohta": "vanha",
+  "tiedosto": "Garesadihafun.jpg",
+  "selite": "Vanha garesa-linnoitus Hafunin niemellä, Afrikan itäisimmässä kärjessä. Monsuunituulet toivat tänne purjehtijoita jo tuhat vuotta sitten.",
+  "leveys": 621,
+  "korkeus": 350
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "rashafun",
+  "kohta": "uusi",
+  "tiedosto": "Hafun from space.jpg",
+  "selite": "Hafunin niemi avaruudesta: Afrikan itäisin kärki työntyy Intian valtamereen kapean hiekkakannaksen päässä.",
+  "leveys": 633,
+  "korkeus": 640
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "marrakech",
+  "kohta": "vanha",
+  "tiedosto": "Marrakech Minaret depuis la rue animée - sap04 10l01821 p.jpg",
+  "selite": "Vilkas katu Marrakechissa ja taustalla Koutoubian minareetti — sama torni, jonka mukaan kaupungissa suunnistetaan yhä.",
+  "leveys": 397,
+  "korkeus": 512
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "timbuktu",
+  "kohta": "vanha",
+  "tiedosto": "Timbuktu, 1906.png",
+  "selite": "Timbuktun savutaloja ja hiekkakatuja vuonna 1906. Kaupunki oli juuri se salaperäinen aavikon satama, josta Euroopassa tarinoitiin.",
+  "leveys": 403,
+  "korkeus": 562
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "lagos",
+  "kohta": "vanha",
+  "tiedosto": "Lagos, 1929.jpg",
+  "selite": "Lagosin satamakatua vuonna 1929: kauppahuoneita ja laitureita laguunin rannalla — kaupunki oli jo silloin Länsi-Afrikan vilkkaimpia.",
+  "leveys": 607,
+  "korkeus": 382
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "kamerun",
+  "kohta": "uusi",
+  "tiedosto": "Mount Cameroon view from Buea (Soppo).jpg",
+  "selite": "Kamerunvuori Buean kaupungin yltä nykyään. Tulivuori on yhä toiminnassa — viimeksi se purkautui vuonna 2000.",
+  "leveys": 1040,
+  "korkeus": 780
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "viktorianputoukset",
+  "kohta": "vanha",
+  "tiedosto": "Victoria Falls Bridge 1905.jpg",
+  "selite": "Putousten rautatiesilta juuri valmistuneena 1905. Se rakennettiin niin lähelle, että vaunuihin sataa vesisumua — suunnittelijan tarkoituksella.",
+  "leveys": 728,
+  "korkeus": 528
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "darfur",
+  "kohta": "vanha",
+  "tiedosto": "Sultan Ali Dinar.jpg",
+  "selite": "Ali Dinar, Darfurin viimeinen sulttaani, virallisessa muotokuvassaan. Hänen valtakautensa päättyi 1916 — vain kymmenkunta vuotta ennen isoisän matkaa.",
+  "leveys": 960,
+  "korkeus": 1280
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "suakin",
+  "kohta": "vanha",
+  "tiedosto": "TheLandingPlaceAtSuakim(Suakin)1871.jpg",
+  "selite": "Suakinin laituripaikka 1871: dhow-veneitä ja korallitaloja saaren rannassa, kun satama oli vielä täydessä kukassaan.",
+  "leveys": 997,
+  "korkeus": 262
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "bahrelghazal",
+  "kohta": "vanha",
+  "tiedosto": "Mission Marchand Haut-Oubangui Bahr-el-Ghazal Nil (...)Marchand Jean-Baptiste btv1b53198373d 4.jpg",
+  "selite": "Marchandin retkikunnan kartta: Ranska marssi Bahr el Ghazalin halki Fashodaan 1898 ja oli ajaa Euroopan suursotaan Britannian kanssa — suot ratkaisivat enemmän kuin armeijat.",
+  "leveys": 1024,
+  "korkeus": 1387
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "bahrelghazal",
+  "kohta": "uusi",
+  "tiedosto": "Cattle Wau Sudan.jpg",
+  "selite": "Pitkäsarvinen karja on Bahr el Ghazalin rikkaus nykyäänkin: paimenten vuosi kiertää karjaleirien ja tulvatasankojen mukana.",
+  "leveys": 900,
+  "korkeus": 747
+ }
+]

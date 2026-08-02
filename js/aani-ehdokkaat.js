@@ -830,6 +830,30 @@ export function kaupunkiKori(lauta, cityId) {
     .map((e) => (e.alku ? `${e.url}#alku=${e.alku}` : e.url));
 }
 
+/**
+ * Maan arvontakori: saman maan muiden kaupunkien äänitykset.
+ *
+ * Periaate 2b (paikka ennen lajia): ääni haetaan niin läheltä kuin
+ * mahdollista. Jos kaupungista itsestään ei ole nauhoitusta, saman maan
+ * toinen kaupunki on lähempänä kuin lajikohtainen varamies — Fesin tori
+ * kuulostaa enemmän Marrakechilta kuin geneerinen basaarinauha.
+ *
+ * Lajikohtainen kori jää viimeiseksi varamieheksi. Sama basaarinauha
+ * kolmessa kaupungissa kertoisi pelaajalle, että paikat ovat
+ * vaihtokelpoisia, ja se on vastoin periaatetta 3.
+ */
+export function maaKori(lauta, cityId, cityCountry) {
+  const iso = cityCountry?.[cityId];
+  if (!iso) return [];
+  const omat = KAUPUNKI_EHDOKKAAT[lauta] ?? {};
+  const ulos = [];
+  for (const [muu, lista] of Object.entries(omat)) {
+    if (muu === cityId || cityCountry[muu] !== iso) continue;
+    for (const e of lista) ulos.push(e.alku ? `${e.url}#alku=${e.alku}` : e.url);
+  }
+  return ulos;
+}
+
 /** Tallentaa yhden kaupungin arvontakorin. Tyhjä lista = tyyppikoriin. */
 export function valitseKaupunkiKori(lauta, cityId, lista) {
   try {

@@ -9,7 +9,7 @@
 
 import { sfx } from './sound.js';
 import {
-  valittuTaiOletus, jaaAlku, tyyppiKori, kaupunkiKori,
+  valittuTaiOletus, jaaAlku, tyyppiKori, kaupunkiKori, maaKori,
 } from './aani-ehdokkaat.js';
 import { aaniOsoite, onPeilista, peiliPetti } from './media.js';
 
@@ -36,11 +36,22 @@ const VAKIOPAIKAT = new Set(['etusivu']);
  * kaupungista — ne menevät korin edelle (omistajan toive). Ilman omaa
  * äänitystä tyyppikori toimii kuten ennen.
  */
-function arvoAani(cityId, tyyppi, lauta) {
+function arvoAani(cityId, tyyppi, lauta, cityCountry = null) {
   if (!cityId) return null;
   if (arvottu?.cityId === cityId) return arvottu.url;
+  /*
+   * Kolme porrasta, periaate 2b: kaupunki, maa, laji.
+   *
+   * Aiemmin portaita oli kaksi, ja lajikohtainen kori oli oletus heti
+   * kun kaupungilta puuttui oma nauhoitus. Silloin sama basaariääni soi
+   * Marrakechissa, Isfahanissa ja Bagdadissa — ja se kertoo pelaajalle,
+   * että paikat ovat vaihtokelpoisia. Saman maan toinen kaupunki on
+   * lähempänä kuin geneerinen laji.
+   */
   const oma = kaupunkiKori(lauta, cityId);
-  const kori = oma.length ? oma : (tyyppi ? tyyppiKori(tyyppi, lauta) : []);
+  const maa = oma.length ? [] : maaKori(lauta, cityId, cityCountry);
+  const kori = oma.length ? oma
+    : (maa.length ? maa : (tyyppi ? tyyppiKori(tyyppi, lauta) : []));
   if (!kori.length) return null;
   const url = VAKIOPAIKAT.has(cityId)
     ? kori[0]
@@ -189,10 +200,10 @@ export function stopPlaceStream() {
  * automaattitoisto tai poistunut tiedosto — palauttaa synteesin itsestään,
  * ja seuraava renderöinti yrittää striimiä uudelleen.
  */
-export function playPlaceAmbience(cityId, fallbackType, lauta) {
+export function playPlaceAmbience(cityId, fallbackType, lauta, cityCountry = null) {
   // Kaupungin oma äänitys ensin, maisematyypin maanosakohtainen
   // arvontakori varalle. Tyhjä kori tarkoittaa syntetisoitua ambienssia.
-  const url = arvoAani(cityId, fallbackType, lauta);
+  const url = arvoAani(cityId, fallbackType, lauta, cityCountry);
   if (!sfx.enabled || !url) {
     stopPlaceStream();
     sfx.setAmbience(sfx.enabled ? fallbackType ?? null : null);

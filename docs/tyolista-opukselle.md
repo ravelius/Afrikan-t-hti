@@ -354,6 +354,66 @@ kysytty" -tapauksia, valehtelee onnistumisesta.**
   ne ovat itse valtio tai erityishallintoalue. Tunnus annetaan käsin.
 
 
+## PÄÄTETTY: kaikki tekstit kirjoitetaan itse
+
+Omistajan linjaus: "Kirjoitathan wiki-artikkelit itse vielä uudestaan.
+Ovat yleensä liian pitkiä ja tyyli vaihtelee." Ja tarkennus: **ne
+artikkelit, joita ei ole aiemmin kirjoitettu.**
+
+Wikipedian tiivistelmä kelpaa **raaka-aineeksi mutta ei sisällöksi**:
+
+- se on liian pitkä pelin korttiin
+- tyyli vaihtelee artikkelista toiseen — yksi alkaa väkiluvulla, toinen
+  perustamisvuodella, kolmas hallinnollisella asemalla
+- se on kirjoitettu tietosanakirjaksi, ei matkakertomukseksi
+
+Sama koskee kuvatekstejä: Commonsin kuvaus on englanniksi ja kömpelö.
+
+**Missä tämä on jo tehty:** Euroopan ja Afrikan kaupungeilla on omat
+kirjoitetut tekstit (`OMAT_ARTIKKELIT`, `EUROPE_ARTIKKELIT`). Ne
+pysyvät ennallaan — omistaja pyysi kirjoittamaan vain ne, joita ei ole
+vielä kirjoitettu.
+
+**Mitä puuttuu:** Aasian ja Lähi-idän 63 kaupunkia. Niillä kortin
+teksti tulee suoraan Wikipediasta, ja juuri se näkyy pituutena ja
+tyylin vaihteluna.
+
+**Sääntö:** faktoja ei keksitä. Teksti kirjoitetaan tiivistelmän
+pohjalta, ja jos jokin asia ei ole varmaa, sitä ei sanota — periaate 2.
+
+
+## PÄÄTETTY, EI VIELÄ TEHTY: Kuuntele kieltä suorana radiona
+
+Omistajan havainto: "Kuuntele kieltä toimii mutta sisältö on heikko,
+koska suurimmassa osassa pätkiä puhetta kuuluu aika vähän. Löytyisikö
+parempaa aineistoa? Esim. paikalliset radiot olisivat hyviä."
+
+**Ongelma on oikea ja se on aineistossa, ei koodissa.** Nykyiset
+näytteet ovat kenttä-äänityksiä: niissä on katua, tuulta ja
+taustahälyä, ja puhetta vain hetkittäin. Kieltä ei niistä kuule.
+
+### Omistajan päätökset
+
+1. **Suora lähetys on parempi kuin tallenne.** Radiossa puhutaan koko
+   ajan — se on juuri se mitä napista haetaan.
+2. **Valtion virallinen yleisradio ensin** (Suomessa Yle Ykkönen), mutta
+   jos sitä ei löydy tai se ei ole vapaasti kuunneltavissa, **mikä
+   tahansa muu saman maan asema kelpaa**.
+3. **Tärkein ehto: maan kieltä puhuttuna.** Musiikkikanava ei kelpaa,
+   vaikka olisi virallinen.
+4. **Kolmen minuutin tallenne on viimeinen vaihtoehto**, ei ensimmäinen.
+
+### Mitä tämä vaatii
+
+- Lähdeluettelo asemista maittain. Radio Browser on avoin ja ilmainen
+  hakemisto, jossa on kielitieto ja striimiosoite — se sopii tähän
+  suoraan eikä vaadi avainta.
+- Suora striimi ei toimi offline. Nappi tarvitsee siis kaksi tasoa:
+  suora ensin, tallenne varalle. Sama kahden portaan rakenne kuin
+  ambienssilla jo on.
+- Kaikki asemat eivät salli upottamista. Se on tarkistettava asemakohtaisesti,
+  ja epäselvät jätetään pois — sama linja kuin kuvien lisensseissä.
+
 ## KESKEN: vanhan maailman kaupungit valmiiksi (aloitettu 2.8.2026)
 
 Omistajan toimeksianto: "Tee kaikki loput kaupungit vanhassa maailmassa

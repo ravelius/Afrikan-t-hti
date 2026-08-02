@@ -230,6 +230,20 @@ for (const pack of PACKS) {
     assert.deepEqual(extra, [], 'tietoja kaupungeille joita ei ole laudalla');
   });
 
+  test(`${pack.id}: laudalla on nopan lepopaikka`, () => {
+    /*
+     * Noppa on DOM-kerros kartan päällä, ja sen paikka luetaan laudan
+     * koristetiedoista. Jos `dieSpot` puuttuu, sijoitus kaatuu ja noppa
+     * jää kokonaan näkymättömiin — omistajan havainto yhdistetyltä
+     * laudalta: "noppa-animaatio puuttuu kokonaan". Virhe ei näy
+     * missään muualla, joten se on vartioitava täällä.
+     */
+    const paikka = pack.decor?.dieSpot;
+    assert.ok(paikka, 'decor.dieSpot puuttuu — noppa ei näy');
+    assert.ok(paikka.x >= 0 && paikka.x <= 1, 'dieSpot.x on osuus ruudusta, 0-1');
+    assert.ok(paikka.y >= 0 && paikka.y <= 1, 'dieSpot.y on osuus ruudusta, 0-1');
+  });
+
   test(`${pack.id}: merireitit kulkevat veden päällä`, {
     skip: MERIREITIT_KESKEN.has(pack.id) && 'merireitit vielä laskematta loppuun',
   }, () => {
