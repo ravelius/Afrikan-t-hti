@@ -3088,33 +3088,57 @@ test('uusi peli tyhjentää muistit vasta varmistuksen jälkeen', () => {
     'localStorage.clear veisi muidenkin sovellusten tiedot');
 });
 
-test('zoomiportaat ovat laskevia näkyviä leveyksiä', () => {
+test('zoomiportaat lasketaan laudan koosta eikä kiinteinä kertoimina', () => {
   const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
-  const rivi = ui.match(/const ZOOMI_LEVEYDET = \[([^\]]+)\]/);
-  assert.ok(rivi, 'ZOOMI_LEVEYDET-portaita ei löytynyt');
-  const leveydet = rivi[1].split(',').map((s) => Number(s.trim()));
+  const askel = Number(ui.match(/const ZOOMI_ASKEL = ([\d.]+)/)?.[1]);
+  const lahin = Number(ui.match(/const ZOOMI_LAHIN = ([\d.]+)/)?.[1]);
+  const osuus = Number(ui.match(/const SAAPUMIS_OSUUS = ([\d.]+)/)?.[1]);
+  const levein = Number(ui.match(/const SAAPUMIS_LEVEIN = ([\d.]+)/)?.[1]);
+  assert.ok(askel > 1 && askel < 2, 'askeleen pitää olla maltillinen suurennos');
+  assert.ok(lahin <= 100, 'lähimmän portaan pitää yltää kaupungin ympäristöön');
 
   /*
-   * Portaat kertovat, kuinka LEVEÄ pala lautaa näkyy — eivät sitä,
-   * moninkertainen lähikuva on yleiskuvaan.
-   *
-   * Ero on olennainen: kertoimina sama nappi tarkoitti eri asiaa eri
-   * laudalla. Tuhannen yksikön laudalla kerroin 5 näytti 200 yksikköä
-   * eli kaupungin ympäristön, mutta 7200 yksikön yhdistetyllä laudalla
-   * sama kerroin näytti 1440 yksikköä eli koko Euroopan, eikä lähelle
-   * päässyt lainkaan.
+   * Sama koodi kuin ui.js:n zoomiTasot ja saapumisPorras. Testi ei voi
+   * kutsua niitä suoraan (ne tarvitsevat DOMin), joten portaat lasketaan
+   * samoista vakioista.
    */
-  for (let i = 1; i < leveydet.length; i++) {
-    assert.ok(leveydet[i] < leveydet[i - 1], `porras ${i} ei näytä edellistä pienempää alaa`);
+  const portaat = (leveys) => {
+    const tasot = [1];
+    let nakyva = leveys / askel;
+    while (nakyva > lahin * 1.05) { tasot.push(leveys / nakyva); nakyva /= askel; }
+    tasot.push(leveys / lahin);
+    return tasot;
+  };
+  const saapuminen = (leveys) => {
+    const tavoite = Math.min(leveys * osuus, levein);
+    const tasot = portaat(leveys);
+    let paras = 1;
+    for (let i = 1; i < tasot.length; i++) {
+      if (Math.abs(leveys / tasot[i] - tavoite) < Math.abs(leveys / tasot[paras] - tavoite)) paras = i;
+    }
+    return leveys / tasot[paras];
+  };
+
+  for (const leveys of [1000, 7200]) {
+    const tasot = portaat(leveys);
+    assert.equal(tasot[0], 1, 'ensimmäisen portaan pitää olla kokonäkymä');
+    for (let i = 1; i < tasot.length; i++) {
+      assert.ok(tasot[i] > tasot[i - 1], `${leveys}: porras ${i} ei ole edellistä lähempänä`);
+    }
+    // Portaiden väli pysyy maltillisena myös heti kokonäkymän jälkeen.
+    // Juuri tämä meni rikki kiinteillä leveyksillä: 7200 yksikön laudalla
+    // ensimmäinen porras näytti 667 yksikköä eli hyppy oli yli kymmen-
+    // kertainen, ja saapuminen vei kaupungin päälle.
+    for (let i = 1; i < tasot.length; i++) {
+      assert.ok(tasot[i] / tasot[i - 1] <= askel + 0.01, `${leveys}: hyppy portaaseen ${i} on liian iso`);
+    }
+    assert.ok(leveys / tasot[tasot.length - 1] <= 100, `${leveys}: lähin porras ei pääse tarpeeksi lähelle`);
   }
-  // Kokonäkymä on porras 0 ja se lisätään erikseen, joten listassa
-  // itsessään ei saa olla laudan levyistä porrasta.
-  assert.ok(leveydet[0] < 1000, 'ensimmäisen portaan pitää olla jo lähikuva');
-  // Lähin porras riittää yhden kaupungin ympäristöön millä tahansa laudalla.
-  assert.ok(leveydet[leveydet.length - 1] <= 100, 'lähin porras ei pääse tarpeeksi lähelle');
-  // Kertoimet lasketaan laudan leveydestä, jotta sama nappi tuo yhtä
-  // lähelle kaikilla laudoilla.
-  assert.match(ui, /zoomiTasot\(\)\s*\{[\s\S]*?leveys \/ nakyva/);
+
+  // Saapumistaso: pienellä laudalla noin kolmannes lautaa kuten ennenkin,
+  // isolla laudalla mannerta eikä koko vanhaa maailmaa.
+  assert.ok(saapuminen(1000) > 380 && saapuminen(1000) < 500, 'pieni lauta saapuu väärälle tasolle');
+  assert.ok(saapuminen(7200) > 1500 && saapuminen(7200) < 3000, 'iso lauta saapuu väärälle tasolle');
 });
 
 test('zoomipainikkeet toimivat kaikilla laudoilla ja ruuduilla', () => {

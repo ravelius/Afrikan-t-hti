@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-02.167';
+const CACHE = 'matkakirja-2026-08-02.168';
 const SHELL = [
   './',
   './index.html',

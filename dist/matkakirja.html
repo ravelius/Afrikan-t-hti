@@ -49924,7 +49924,7 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
  * ne on käyty läpi.
  */
 const ZOOMATTAVAT = new Set(['europe', 'vanhamaailma']);
-const MANNER_ZOOM = 2.3;        // vanha kiinteä kerroin; kts. ZOOMI_LEVEYDET
+const MANNER_ZOOM = 2.3;        // vanha kiinteä kerroin; nykyään portaat lasketaan
 
 /*
  * Zoomiportaat (omistajan toive: painikkeet kaikille alustoille).
@@ -49948,10 +49948,38 @@ const MANNER_ZOOM = 2.3;        // vanha kiinteä kerroin; kts. ZOOMI_LEVEYDET
  * ja ensimmäisen lähikuvan välillä ei hypätä liikaa, ja yläpäässä
  * suurempi, koska lähellä pieni muutos ei enää tunnu miltään.
  */
-const ZOOMI_LEVEYDET = [667, 435, 294, 200, 132, 88];
-// Mantereelle saavuttaessa zoomataan tähän portaaseen (vastaa vanhaa
-// kerrointa 2.3 tuhannen yksikön laudalla).
-const ZOOMI_OLETUS = 2;
+/*
+ * Portaat lasketaan puolitoistakertaisina askelina laudan leveydestä
+ * lähimpään portaaseen asti.
+ *
+ * Kiinteä lista näkyviä leveyksiä ei kelvannut. Sen tihein porras oli
+ * 667 yksikköä, ja se on tuhannen yksikön laudalla sopiva ensiaskel
+ * mutta 7200 yksikön laudalla jo kaupungin ympäristö: yleiskuvan ja
+ * ensimmäisen portaan väliin jäi yhdentoista kertaluokan hyppy.
+ * Omistajan havainto iPadilta: "zoomautuu aivan liian lähelle Ateenaa."
+ *
+ * Suhteellinen askel korjaa sen itsestään. Tuhannen yksikön laudalla
+ * portaat ovat 1000, 667, 444, 296, 198, 132, 88 — käytännössä samat
+ * kuin vanhat kertoimet [1, 1.5, 2.3, 3.4, 5] ja kaksi lisää
+ * lähemmäs. Isolla laudalla väliin syntyy portaita sitä mukaa kuin
+ * lautaa on enemmän.
+ */
+const ZOOMI_ASKEL = 1.5;
+// Lähin porras: yhden kaupungin ympäristö millä tahansa laudalla.
+const ZOOMI_LAHIN = 88;
+
+/*
+ * Mihin saapumiszoom pysähtyy.
+ *
+ * Osuus laudasta on sama kuin ennen (vanha MANNER_ZOOM 2.3 näytti
+ * 1/2,3 eli 43 % laudasta). Isolla laudalla pelkkä osuus veisi liian
+ * kauas, joten sille on lisäksi yläraja yksikköinä: 2400 yksikköä
+ * vastaa yhdistetyllä kartalla noin viittäkymmentä pituusastetta eli
+ * Lissabonista Moskovaan — omistajan toive oli, että saavuttaessa
+ * näkyy Eurooppa eikä koko vanha maailma.
+ */
+const SAAPUMIS_OSUUS = 0.43;
+const SAAPUMIS_LEVEIN = 2400;
 const MANNER_ZOOM_VIIVE = 1400; // kokonäkymä näkyy tämän verran ennen zoomausta
 // Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
 // alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
@@ -50808,7 +50836,7 @@ class UI {
   /** Nykyinen zoomiporras; kokonäkymässä 0. */
   get zoomiIndeksi() {
     if (!this.mannerZoom) return 0;
-    return this.zoomiPorras ?? ZOOMI_OLETUS;
+    return this.zoomiPorras ?? this.saapumisPorras();
   }
 
   /**
@@ -50822,17 +50850,38 @@ class UI {
   zoomiTasot() {
     const leveys = this.contentBox?.w ?? 1000;
     const tasot = [1];
-    for (const nakyva of ZOOMI_LEVEYDET) {
-      const kerroin = leveys / nakyva;
-      if (kerroin > 1.05) tasot.push(kerroin);
+    let nakyva = leveys / ZOOMI_ASKEL;
+    while (nakyva > ZOOMI_LAHIN * 1.05) {
+      tasot.push(leveys / nakyva);
+      nakyva /= ZOOMI_ASKEL;
     }
+    tasot.push(leveys / ZOOMI_LAHIN);
     return tasot;
+  }
+
+  /**
+   * Porras, johon mantereelle saavuttaessa zoomataan.
+   *
+   * Valitaan se porras, joka on lähimpänä tavoiteltua näkyvää leveyttä.
+   * Kiinteä indeksi ei kelpaa, koska portaiden määrä riippuu laudan
+   * koosta: sama numero olisi pienellä laudalla lähikuva ja isolla
+   * suurpiirteinen yleisnäkymä.
+   */
+  saapumisPorras() {
+    const leveys = this.contentBox?.w ?? 1000;
+    const tavoite = Math.min(leveys * SAAPUMIS_OSUUS, SAAPUMIS_LEVEIN);
+    const tasot = this.zoomiTasot();
+    let paras = 1;
+    for (let i = 1; i < tasot.length; i++) {
+      if (Math.abs(leveys / tasot[i] - tavoite) < Math.abs(leveys / tasot[paras] - tavoite)) paras = i;
+    }
+    return paras;
   }
 
   /** Zoomikerroin, jolla sovitaMannerZoom laskee lähikuvan mitat. */
   get zoomiKerroin() {
     const tasot = this.zoomiTasot();
-    return tasot[this.zoomiIndeksi] ?? tasot[ZOOMI_OLETUS] ?? MANNER_ZOOM;
+    return tasot[this.zoomiIndeksi] ?? tasot[this.saapumisPorras()] ?? MANNER_ZOOM;
   }
 
   /**
@@ -51226,6 +51275,18 @@ class UI {
     this.zoomKohde = kohde;
     document.body.classList.add('manner-zoom');
     this.fitViewBox();
+    /*
+     * Isolla laudalla ei liu'uta vaan ollaan heti perillä.
+     *
+     * Liuku alkaa kokonäkymästä, ja se on juuri se mitä ei haluta
+     * nähdä: omistajan havainto iPadilta oli, että vanha maailma
+     * "näkyy kokonaan ja zoomautuu sen jälkeen". Pienellä laudalla
+     * liuku on hyvä — siinä kokonäkymä kertoo minne on tultu.
+     */
+    if (this.isoLauta()) {
+      this.paivitaZoomiNapit();
+      return;
+    }
     this.asetaZoomAlku(kohde, sx, sy, yleisSkaala);
     this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
   }
@@ -55889,7 +55950,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.167';
+const APP_VERSION = '2026-08-02.168';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
