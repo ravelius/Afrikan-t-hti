@@ -240,6 +240,41 @@ kirjoittamiseen, eivät julkaistavaa sisältöä — siksi ne ovat
 media-repon .gitignoressa. Ne saa milloin tahansa uudestaan.
 
 
+## Paketti 31: kiikari ilmestyi kesken pelin — KORJATTU 2.8.2026
+
+**Omistajan havainto:** "Valitsin laivamatkan Ateenassa ja peli zoomasi
+uudelleen jonka jälkeen tuli kiikaritehoste."
+
+**Syy.** `asennaPanorointi`in kartta-napautuksen kuuntelija kutsui
+`zoomaaAloituskartta()`:a millä tahansa laudalla. Se lisää bodyyn
+`aloitus-zoom`-luokan, ja luokan perään syttyy kiikari — joka on
+tarkoitettu vain etusivulle.
+
+Euroopassa `fitViewBox` palaa mannerzoomin haarasta eikä ehdi nollata
+`aloitusZoom`-lippua, joten luokka jäi päälle ja kiikari syttyi noin
+neljä sekuntia myöhemmin. **Afrikassa vika ei näkynyt**, koska siellä
+`fitViewBox` kulkee nollaavan haaran läpi ja lippu putoaa heti — siksi
+tämä oli piilossa näin pitkään.
+
+Ehto on nyt `this.game.pack.id !== 'maailma'`: napautuszoomaus kuuluu
+vain maailmankartalle, jolla ei ole omaa lähikuvaa.
+
+**Sivuvaikutus, joka korjautui samalla.** Kuuntelija on
+kaappausvaiheessa ja pysäyttää tapahtuman, joten se söi mantereella
+kartan kohderenkaiden napautukset.
+
+**Testausopetus, joka kannattaa muistaa.** `?lauta=xxx` avaa
+katselutilan, jossa `zoomTarpeen()` ja `mannerZoomTarpeen()` palauttavat
+aina false. Kaikki aiemmat Playwright-ajoni olivat siinä tilassa
+eivätkä olisi voineet paljastaa tätä. Toisto vaati `ui.katselu = false`
+ja `ui.reducedMotion = false` — headless-selain ilmoittaa myös
+liikkeenvähennyksen päälle, mikä sammuttaa saman polun.
+
+Toistettu ennen korjausta: napautus → `aloitus-zoom` heti, `kiikari-paalla`
+4 sekunnin kohdalla, kiikari `visible`. Korjauksen jälkeen kumpikaan ei
+syty kahdeksassa sekunnissa.
+
+
 ## Paketti 30: vinjetti pois lähikuvasta — VALMIS 2.8.2026
 
 **Omistajan toive:** "Zoomatussa mannernäkymässä vaalean vinjetin voi

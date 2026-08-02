@@ -1586,6 +1586,22 @@ export class UI {
       // palataan kesken matkan (omistajan havainto): kartta on yhtä pieni
       // kummallakin kerralla. Aloitusportin takana zoomausta ei tarjota.
       if (!this.aloitettu || this.aloitusportti) return;
+      /*
+       * Vain maailmankartalla. Mantereilla on oma lähikuvansa
+       * (zoomaaMantereelle), eikä aloituskartan napautuszoomaus kuulu
+       * niille lainkaan.
+       *
+       * Ilman tätä ehtoa napautus lisäsi bodyyn aloitus-zoom-luokan.
+       * Euroopassa fitViewBox palaa sen jälkeen mannerzoomin haarasta
+       * eikä ehdi nollata lippua, joten kartta zoomasi uudelleen ja
+       * perään syttyi kiikari — joka kuuluu vain etusivulle (omistajan
+       * havainto: laivamatkan valinta Ateenassa).
+       *
+       * Sama ehto lopettaa toisenkin haitan: kuuntelija on
+       * kaappausvaiheessa ja pysäyttää tapahtuman, joten mantereella se
+       * söi kartalla olevien kohderenkaiden napautukset.
+       */
+      if (this.game.pack.id !== 'maailma') return;
       e.stopPropagation();
       e.preventDefault();
       this.zoomaaAloituskartta(this.kartanKohta(e.clientX, e.clientY));
