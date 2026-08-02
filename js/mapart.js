@@ -982,3 +982,139 @@ export function drawDoodles(svg, decor) {
   }, title).textContent = decor.mapLabel;
   el('path', { d: 'M-80,14 L80,14 M-58,22 L58,22', class: 'doodle' }, title);
 }
+
+// --- staattinen taide bittikartaksi ----------------------------------------
+
+/*
+ * Kartan raskas osa — pergamentti, mantereet, aallot, maasto ja
+ * koristeet — muutetaan yhdeksi kuvaksi.
+ *
+ * MIKSI. Panorointi tehdään CSS-muunnoksella, ja koodin vanha kommentti
+ * lupasi, että selain käyttää silloin valmista rasteria. Mittaus osoitti
+ * lupauksen vääräksi: yhdistetyllä laudalla SVG:ssä on 7192 elementtiä,
+ * ja yksi panorointikehys maksoi 236 millisekuntia — noin neljä kuvaa
+ * sekunnissa. Euroopan laudalla, jossa elementtejä on 741, sama kehys
+ * maksoi 30 millisekuntia. Selain siis piirsi vektorit uudelleen joka
+ * kehyksellä. Omistaja arvasi tämän itse: "onhan se bittikarttana kun
+ * scrollataan?"
+ *
+ * Kuvaksi muutettuna elävään puuhun jää vain se, mikä muuttuu pelin
+ * aikana: reitit, kaupungit, nimet, laatat ja nappulat.
+ *
+ * TYYLIT PITÄÄ OTTAA MUKAAN. Kartan värit tulevat sivun tyylitiedostosta,
+ * eikä irrotettu SVG peri niitä mistään. Säännöt kirjoitetaan siksi
+ * kuvan sisään. Ilman tätä kartasta tulisi musta paperi ja mustat
+ * mantereet.
+ *
+ * EPÄONNISTUMINEN EI SAA RIKKOA KARTTAA. Jos kuvan teko ei onnistu —
+ * vanha selain, estetty blob, mikä tahansa — vektorikerros jää
+ * paikalleen ja peli näyttää täsmälleen samalta, vain hitaammalta.
+ */
+
+/*
+ * Tyylit kirjoitetaan elementteihin.
+ *
+ * Ensimmäinen versio upotti sivun tyylitiedoston kuvan sisään. Se ei
+ * toiminut: säännöt on kirjoitettu sivun rakennetta vasten (`#board`,
+ * `body.jotain ...`), eikä irrallisessa SVG:ssä ole bodya eikä
+ * board-tunnusta. Yksikään sääntö ei osunut, ja kartasta tuli musta
+ * paperi mustine mantereineen.
+ *
+ * Nyt jokaiselta elävältä elementiltä kysytään sen LASKETTU tyyli ja
+ * kirjoitetaan se kloonin omaksi tyyliksi. Silloin ei ole väliä, mistä
+ * arvo tuli — se on sama kuin ruudulla.
+ */
+const KOPIOITAVAT = [
+  'fill', 'fill-opacity', 'fill-rule',
+  'stroke', 'stroke-width', 'stroke-opacity', 'stroke-linecap',
+  'stroke-linejoin', 'stroke-dasharray', 'stroke-dashoffset',
+  'opacity', 'mix-blend-mode',
+  'font-family', 'font-size', 'font-style', 'font-weight',
+  'letter-spacing', 'text-anchor', 'dominant-baseline',
+];
+
+/**
+ * Klooni, jonka tyylit ovat kiinni elementeissä. Tehdään kerran laudan
+ * piirron jälkeen; ikkunat rasteroidaan tästä.
+ */
+export function tyylitSisaan(ryhma) {
+  const klooni = ryhma.cloneNode(true);
+  const elavat = [ryhma, ...ryhma.querySelectorAll('*')];
+  const kloonit = [klooni, ...klooni.querySelectorAll('*')];
+  if (elavat.length !== kloonit.length) return klooni;
+  for (let i = 0; i < elavat.length; i++) {
+    const laskettu = window.getComputedStyle(elavat[i]);
+    const palat = [];
+    for (const nimi of KOPIOITAVAT) {
+      const arvo = laskettu.getPropertyValue(nimi);
+      if (arvo) palat.push(`${nimi}:${arvo}`);
+    }
+    kloonit[i].setAttribute('style', palat.join(';'));
+  }
+  return klooni;
+}
+
+/*
+ * Kuvan enimmäisleveys pikseleinä.
+ *
+ * Ilman kattoa lähikuvan ikkuna kasvaisi rajatta: 36-kertaisella
+ * zoomilla puhelimen levyinen näkymä on jo 15 000 pikseliä leveä, ja
+ * selaimet kieltäytyvät sitä isommista rasteroinneista.
+ */
+const KUVA_MAX = 3000;
+
+/**
+ * Rasteroi lähderyhmästä yhden ikkunan kuvaksi.
+ *
+ * IKKUNA EIKÄ KOKO KARTTA. Ensimmäinen versio teki koko pergamentista
+ * yhden kuvan. Se toimi yleiskuvassa mutta on väärin lähikuvassa:
+ * yhdistetyn laudan paperi on noin 26 000 yksikköä leveä, ja sen
+ * rasterointi lähietäisyyden tarkkuudella olisi kymmeniä tuhansia
+ * pikseleitä joka suuntaan. Omistajan huomio: "ei kannata laskea koko
+ * valtavaa karttaa bittikartaksi heti, vaan vain osa alueesta."
+ *
+ * Ikkunaa laajennetaan pyyhkäisyjen välissä, koska sormi ehtii siirtää
+ * karttaa vain rajallisen matkan kerrallaan.
+ *
+ * Palauttaa <image>-elementin tai null, jos rasterointi ei onnistunut.
+ * Epäonnistuminen ei ole virhe: kutsuja jättää silloin vektorit
+ * paikalleen, ja kartta näyttää samalta mutta piirtyy hitaammin.
+ */
+export async function rasteroiIkkuna(lahde, maarittelyt, ikkuna, skaala) {
+  if (!lahde || typeof XMLSerializer === 'undefined') return null;
+  if (!window.Blob || !URL.createObjectURL) return null;
+  try {
+    const irrallinen = document.createElementNS(NS, 'svg');
+    irrallinen.setAttribute('xmlns', NS);
+    irrallinen.setAttribute('viewBox', `${ikkuna.x} ${ikkuna.y} ${ikkuna.w} ${ikkuna.h}`);
+    const leveysPx = Math.min(KUVA_MAX, Math.max(64, Math.round(ikkuna.w * skaala)));
+    irrallinen.setAttribute('width', leveysPx);
+    irrallinen.setAttribute('height', Math.max(1, Math.round((leveysPx * ikkuna.h) / ikkuna.w)));
+
+    if (maarittelyt) irrallinen.appendChild(maarittelyt.cloneNode(true));
+    irrallinen.appendChild(lahde.cloneNode(true));
+
+    const xml = new XMLSerializer().serializeToString(irrallinen);
+    const osoite = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
+    try {
+      await new Promise((valmis, virhe) => {
+        const koe = new Image();
+        koe.onload = valmis;
+        koe.onerror = () => virhe(new Error('kuvaa ei voitu ladata'));
+        koe.src = osoite;
+      });
+    } catch {
+      URL.revokeObjectURL(osoite);
+      return null;
+    }
+    const kuva = el('image', {
+      x: ikkuna.x, y: ikkuna.y, width: ikkuna.w, height: ikkuna.h,
+      href: osoite, preserveAspectRatio: 'none',
+    });
+    // Osoite talteen, jotta kutsuja voi vapauttaa sen kun kuva vaihtuu.
+    kuva.dataset.osoite = osoite;
+    return kuva;
+  } catch {
+    return null;
+  }
+}

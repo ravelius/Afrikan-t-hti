@@ -47380,6 +47380,142 @@ function drawDoodles(svg, decor) {
   el('path', { d: 'M-80,14 L80,14 M-58,22 L58,22', class: 'doodle' }, title);
 }
 
+// --- staattinen taide bittikartaksi ----------------------------------------
+
+/*
+ * Kartan raskas osa — pergamentti, mantereet, aallot, maasto ja
+ * koristeet — muutetaan yhdeksi kuvaksi.
+ *
+ * MIKSI. Panorointi tehdään CSS-muunnoksella, ja koodin vanha kommentti
+ * lupasi, että selain käyttää silloin valmista rasteria. Mittaus osoitti
+ * lupauksen vääräksi: yhdistetyllä laudalla SVG:ssä on 7192 elementtiä,
+ * ja yksi panorointikehys maksoi 236 millisekuntia — noin neljä kuvaa
+ * sekunnissa. Euroopan laudalla, jossa elementtejä on 741, sama kehys
+ * maksoi 30 millisekuntia. Selain siis piirsi vektorit uudelleen joka
+ * kehyksellä. Omistaja arvasi tämän itse: "onhan se bittikarttana kun
+ * scrollataan?"
+ *
+ * Kuvaksi muutettuna elävään puuhun jää vain se, mikä muuttuu pelin
+ * aikana: reitit, kaupungit, nimet, laatat ja nappulat.
+ *
+ * TYYLIT PITÄÄ OTTAA MUKAAN. Kartan värit tulevat sivun tyylitiedostosta,
+ * eikä irrotettu SVG peri niitä mistään. Säännöt kirjoitetaan siksi
+ * kuvan sisään. Ilman tätä kartasta tulisi musta paperi ja mustat
+ * mantereet.
+ *
+ * EPÄONNISTUMINEN EI SAA RIKKOA KARTTAA. Jos kuvan teko ei onnistu —
+ * vanha selain, estetty blob, mikä tahansa — vektorikerros jää
+ * paikalleen ja peli näyttää täsmälleen samalta, vain hitaammalta.
+ */
+
+/*
+ * Tyylit kirjoitetaan elementteihin.
+ *
+ * Ensimmäinen versio upotti sivun tyylitiedoston kuvan sisään. Se ei
+ * toiminut: säännöt on kirjoitettu sivun rakennetta vasten (`#board`,
+ * `body.jotain ...`), eikä irrallisessa SVG:ssä ole bodya eikä
+ * board-tunnusta. Yksikään sääntö ei osunut, ja kartasta tuli musta
+ * paperi mustine mantereineen.
+ *
+ * Nyt jokaiselta elävältä elementiltä kysytään sen LASKETTU tyyli ja
+ * kirjoitetaan se kloonin omaksi tyyliksi. Silloin ei ole väliä, mistä
+ * arvo tuli — se on sama kuin ruudulla.
+ */
+const KOPIOITAVAT = [
+  'fill', 'fill-opacity', 'fill-rule',
+  'stroke', 'stroke-width', 'stroke-opacity', 'stroke-linecap',
+  'stroke-linejoin', 'stroke-dasharray', 'stroke-dashoffset',
+  'opacity', 'mix-blend-mode',
+  'font-family', 'font-size', 'font-style', 'font-weight',
+  'letter-spacing', 'text-anchor', 'dominant-baseline',
+];
+
+/**
+ * Klooni, jonka tyylit ovat kiinni elementeissä. Tehdään kerran laudan
+ * piirron jälkeen; ikkunat rasteroidaan tästä.
+ */
+function tyylitSisaan(ryhma) {
+  const klooni = ryhma.cloneNode(true);
+  const elavat = [ryhma, ...ryhma.querySelectorAll('*')];
+  const kloonit = [klooni, ...klooni.querySelectorAll('*')];
+  if (elavat.length !== kloonit.length) return klooni;
+  for (let i = 0; i < elavat.length; i++) {
+    const laskettu = window.getComputedStyle(elavat[i]);
+    const palat = [];
+    for (const nimi of KOPIOITAVAT) {
+      const arvo = laskettu.getPropertyValue(nimi);
+      if (arvo) palat.push(`${nimi}:${arvo}`);
+    }
+    kloonit[i].setAttribute('style', palat.join(';'));
+  }
+  return klooni;
+}
+
+/*
+ * Kuvan enimmäisleveys pikseleinä.
+ *
+ * Ilman kattoa lähikuvan ikkuna kasvaisi rajatta: 36-kertaisella
+ * zoomilla puhelimen levyinen näkymä on jo 15 000 pikseliä leveä, ja
+ * selaimet kieltäytyvät sitä isommista rasteroinneista.
+ */
+const KUVA_MAX = 3000;
+
+/**
+ * Rasteroi lähderyhmästä yhden ikkunan kuvaksi.
+ *
+ * IKKUNA EIKÄ KOKO KARTTA. Ensimmäinen versio teki koko pergamentista
+ * yhden kuvan. Se toimi yleiskuvassa mutta on väärin lähikuvassa:
+ * yhdistetyn laudan paperi on noin 26 000 yksikköä leveä, ja sen
+ * rasterointi lähietäisyyden tarkkuudella olisi kymmeniä tuhansia
+ * pikseleitä joka suuntaan. Omistajan huomio: "ei kannata laskea koko
+ * valtavaa karttaa bittikartaksi heti, vaan vain osa alueesta."
+ *
+ * Ikkunaa laajennetaan pyyhkäisyjen välissä, koska sormi ehtii siirtää
+ * karttaa vain rajallisen matkan kerrallaan.
+ *
+ * Palauttaa <image>-elementin tai null, jos rasterointi ei onnistunut.
+ * Epäonnistuminen ei ole virhe: kutsuja jättää silloin vektorit
+ * paikalleen, ja kartta näyttää samalta mutta piirtyy hitaammin.
+ */
+async function rasteroiIkkuna(lahde, maarittelyt, ikkuna, skaala) {
+  if (!lahde || typeof XMLSerializer === 'undefined') return null;
+  if (!window.Blob || !URL.createObjectURL) return null;
+  try {
+    const irrallinen = document.createElementNS(NS, 'svg');
+    irrallinen.setAttribute('xmlns', NS);
+    irrallinen.setAttribute('viewBox', `${ikkuna.x} ${ikkuna.y} ${ikkuna.w} ${ikkuna.h}`);
+    const leveysPx = Math.min(KUVA_MAX, Math.max(64, Math.round(ikkuna.w * skaala)));
+    irrallinen.setAttribute('width', leveysPx);
+    irrallinen.setAttribute('height', Math.max(1, Math.round((leveysPx * ikkuna.h) / ikkuna.w)));
+
+    if (maarittelyt) irrallinen.appendChild(maarittelyt.cloneNode(true));
+    irrallinen.appendChild(lahde.cloneNode(true));
+
+    const xml = new XMLSerializer().serializeToString(irrallinen);
+    const osoite = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
+    try {
+      await new Promise((valmis, virhe) => {
+        const koe = new Image();
+        koe.onload = valmis;
+        koe.onerror = () => virhe(new Error('kuvaa ei voitu ladata'));
+        koe.src = osoite;
+      });
+    } catch {
+      URL.revokeObjectURL(osoite);
+      return null;
+    }
+    const kuva = el('image', {
+      x: ikkuna.x, y: ikkuna.y, width: ikkuna.w, height: ikkuna.h,
+      href: osoite, preserveAspectRatio: 'none',
+    });
+    // Osoite talteen, jotta kutsuja voi vapauttaa sen kun kuva vaihtuu.
+    kuva.dataset.osoite = osoite;
+    return kuva;
+  } catch {
+    return null;
+  }
+}
+
 // ===== js/game.js =====
 // Pelin tila ja säännöt: vuorot, laattojen kääntäminen ja voittoehdot.
 
@@ -49781,23 +49917,35 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
  * (omistajan päätös); muut laudat lisätään tähän settiin sitä mukaa kuin
  * ne on käyty läpi.
  */
-const ZOOMATTAVAT = new Set(['europe']);
-const MANNER_ZOOM = 2.3;        // kuinka moninkertainen lähikuva on yleiskuvaan
+const ZOOMATTAVAT = new Set(['europe', 'vanhamaailma']);
+const MANNER_ZOOM = 2.3;        // vanha kiinteä kerroin; kts. ZOOMI_LEVEYDET
 
 /*
  * Zoomiportaat (omistajan toive: painikkeet kaikille alustoille).
  *
- * Ensimmäinen porras on 1 eli kokonäkymä — silloin lähikuvasta poistutaan
- * kokonaan eikä karttaa panoroida. MANNER_ZOOM (2.3) on portaissa mukana,
- * koska mantereelle saavuttaessa zoomataan yhä automaattisesti juuri
- * siihen; painikkeet jatkavat siitä eteen- ja taaksepäin.
+ * Portaat kerrotaan siitä, kuinka LEVEÄ pala lautaa näkyy — ei siitä,
+ * moninkertainen lähikuva on yleiskuvaan.
+ *
+ * Ero ratkaisee isolla laudalla. Ennen portaat olivat kertoimia
+ * [1, 1.5, 2.3, 3.4, 5]. Tuhannen yksikön laudalla suurin porras näytti
+ * 200 yksikköä eli kaupungin ympäristön, mutta yhdistetyllä 7200
+ * yksikön laudalla sama kerroin näytti 1440 yksikköä — koko Euroopan.
+ * Sama nappi tarkoitti eri asiaa eri laudalla, ja isolla laudalla ei
+ * päässyt lähelle lainkaan (omistajan havainto).
+ *
+ * Luvut ovat samat kuin vanhat kertoimet tuhannen yksikön laudalla
+ * (1000/1.5 = 667, 1000/2.3 = 435 ja niin edelleen), joten pienet
+ * laudat käyttäytyvät täsmälleen kuten ennen. Kaksi uutta porrasta
+ * jatkavat lähemmäs: niitä tarvitaan vasta isolla laudalla.
  *
  * Portaat eivät ole tasavälein: alapäässä ero on pieni, jotta yleiskuvan
  * ja ensimmäisen lähikuvan välillä ei hypätä liikaa, ja yläpäässä
  * suurempi, koska lähellä pieni muutos ei enää tunnu miltään.
  */
-const ZOOMI_TASOT = [1, 1.5, MANNER_ZOOM, 3.4, 5];
-const ZOOMI_OLETUS = ZOOMI_TASOT.indexOf(MANNER_ZOOM);
+const ZOOMI_LEVEYDET = [667, 435, 294, 200, 132, 88];
+// Mantereelle saavuttaessa zoomataan tähän portaaseen (vastaa vanhaa
+// kerrointa 2.3 tuhannen yksikön laudalla).
+const ZOOMI_OLETUS = 2;
 const MANNER_ZOOM_VIIVE = 1400; // kokonäkymä näkyy tämän verran ennen zoomausta
 // Kuinka suuri osa ruudusta varataan laudan eteläpuolelle, jotta
 // alarivin nappien alle jäävät kaupungit saa panoroitua näkyviin.
@@ -50524,10 +50672,12 @@ class UI {
     // Aloituskartan lähikuva hoitaa oman rajauksensa ja kokonsa.
     if (this.aloitusZoom && alkuun) {
       this.sovitaAloitusZoom(w, h);
+      this.paivitaTaideKuva?.();
       return;
     }
     if (this.mannerZoom && !alkuun) {
       this.sovitaMannerZoom(w, h);
+      this.paivitaTaideKuva?.();
       return;
     }
     // Lähikuvasta poistuttaessa (kaupunki valittu, uusi peli) kartta
@@ -50537,6 +50687,16 @@ class UI {
     this.placeFactCard(w, h);
     // Noppa lepää kartan koordinaateissa, joten se siirretään uuteen mittakaavaan.
     if (this.dieThrown && this.boardDie) this.boardDie.place(this.dieRestingSpot());
+    /*
+     * Kartan kuva päivitetään AINA kun näkymä asettuu.
+     *
+     * Ilman tätä ensimmäinen kuva jäi voimaan: se piirtyi heti laudan
+     * luonnin jälkeen, jolloin viewBox oli vielä oletusarvoinen
+     * 1000 x 1000, ja ikkunaksi tuli 3000 yksikköä. Kun näkymä sen
+     * jälkeen asettui 6379 yksikön levyiseksi, mikään ei pyytänyt uutta
+     * kuvaa — yleiskuvassa ei panoroida — ja kartta jäi kaistaleeksi.
+     */
+    this.paivitaTaideKuva?.();
   }
 
   /**
@@ -50610,6 +50770,10 @@ class UI {
     this.panY = Math.min(0, Math.max(-(this.panVaraY ?? 0), y));
     this.svg.style.transform =
       `translate3d(${this.panX.toFixed(1)}px, ${this.panY.toFixed(1)}px, 0)`;
+    // Piirretty ikkuna laajenee liikkeen mukana. Tarkistus on muutama
+    // vertailu, joten sen voi tehdä joka siirrolla; varsinainen piirto
+    // alkaa vasta kun reuna lähestyy.
+    this.paivitaTaideKuva?.();
   }
 
   /*
@@ -50641,9 +50805,28 @@ class UI {
     return this.zoomiPorras ?? ZOOMI_OLETUS;
   }
 
+  /**
+   * Zoomiportaat tälle laudalle kertoimina. Porras 0 on kokonäkymä.
+   *
+   * Kerroin lasketaan laudan leveydestä, jotta sama nappi tuo yhtä
+   * lähelle kaikilla laudoilla. Portaat, jotka olisivat kokonäkymää
+   * kauempana, jätetään pois: pienellä laudalla ei ole mieltä tarjota
+   * porrasta, joka näyttäisi lautaa enemmän kuin sitä on.
+   */
+  zoomiTasot() {
+    const leveys = this.contentBox?.w ?? 1000;
+    const tasot = [1];
+    for (const nakyva of ZOOMI_LEVEYDET) {
+      const kerroin = leveys / nakyva;
+      if (kerroin > 1.05) tasot.push(kerroin);
+    }
+    return tasot;
+  }
+
   /** Zoomikerroin, jolla sovitaMannerZoom laskee lähikuvan mitat. */
   get zoomiKerroin() {
-    return ZOOMI_TASOT[this.zoomiIndeksi] ?? MANNER_ZOOM;
+    const tasot = this.zoomiTasot();
+    return tasot[this.zoomiIndeksi] ?? tasot[ZOOMI_OLETUS] ?? MANNER_ZOOM;
   }
 
   /**
@@ -50677,7 +50860,7 @@ class UI {
     if (this.avausNakymassa()) return false;
 
     const nykyinen = this.zoomiIndeksi;
-    const uusi = Math.min(ZOOMI_TASOT.length - 1, Math.max(0, nykyinen + suunta));
+    const uusi = Math.min(this.zoomiTasot().length - 1, Math.max(0, nykyinen + suunta));
     if (uusi === nykyinen) return false;
 
     // Keskipiste luetaan ENNEN tason vaihtoa, vanhalla mittakaavalla.
@@ -50710,6 +50893,146 @@ class UI {
     return true;
   }
 
+  /**
+   * Muuttaa kartan staattisen taiteen yhdeksi kuvaksi.
+   *
+   * Rajaus on pergamentin koko eikä laudan: paperi jatkuu reunojen yli,
+   * ja lähikuvassa panoroidaan sinne. Jos rajaisi laudan mukaan, reunan
+   * takaa paljastuisi tyhjää.
+   *
+   * Kutsu ei odota tulosta. Kartta näkyy heti vektoreina ja vaihtuu
+   * kuvaksi kun se on valmis; jos vaihto ei onnistu, vektorit jäävät.
+   */
+  rasteroiTaide(ryhma) {
+    // Lähde talteen irralleen: kuva piirretään aina siitä uudestaan, kun
+    // ikkuna tai zoomitaso vaihtuu. Tyylit kirjoitetaan samalla kiinni
+    // elementteihin, koska irrallinen SVG ei peri sivun tyylitiedostoa.
+    this.taideLahde = tyylitSisaan(ryhma);
+    this.taideRyhma = ryhma;
+    this.taideIkkuna = null;
+    this.taideSkaala = 0;
+    this.taideKierros = 0;
+    /*
+     * Ensimmäinen kuva vasta seuraavalla kehyksellä.
+     *
+     * Laudan piirtohetkellä viewBox on vielä oletusarvoinen 1000 x 1000,
+     * eikä paneelin koko ole tiedossa. Jos kuva tehdään heti, siitä
+     * tulee 3000 yksikön kaistale keskelle karttaa — ja koska
+     * yleiskuvassa ei panoroida, mikään ei pyydä parempaa.
+     */
+    requestAnimationFrame(() => this.paivitaTaideKuva());
+  }
+
+  /**
+   * Näkyvä alue laudan koordinaatteina.
+   *
+   * Tästä ei ole olemassa valmista lukua: viewBox kattaa koko laudan ja
+   * varsinainen rajaus tehdään panoroinnilla ja elementin koolla.
+   */
+  nakyvaAlue() {
+    const pane = this.svg?.parentElement;
+    if (!pane) return null;
+    /*
+     * Luvut luetaan ruudulta eikä zoomimuuttujista.
+     *
+     * Ensimmäinen versio laski alueen this.zoomSkaalasta, joka on
+     * olemassa vain lähikuvassa. Yleiskuvassa se on nolla, jolloin
+     * funktio palautti nullin eikä kuvaa syntynyt lainkaan — mittaus
+     * näytti yhä 7192 elementtiä ja 218 millisekunnin kehyksen.
+     * viewBox ja elementin oma koko ovat olemassa aina.
+     */
+    const vb = this.svg.viewBox?.baseVal;
+    const laatikko = this.svg.getBoundingClientRect();
+    const paneeli = pane.getBoundingClientRect();
+    if (!vb?.width || !laatikko.width) return null;
+    const skaala = laatikko.width / vb.width;
+    return {
+      x: vb.x + Math.max(0, paneeli.left - laatikko.left) / skaala,
+      y: vb.y + Math.max(0, paneeli.top - laatikko.top) / skaala,
+      w: Math.min(paneeli.width, laatikko.width) / skaala,
+      h: Math.min(paneeli.height, laatikko.height) / skaala,
+      skaala,
+    };
+  }
+
+  /**
+   * Piirtää kartan taiteen kuvaksi näkyvän alueen ympäriltä.
+   *
+   * Puskuri on yksi ruudullinen joka suuntaan, eli kuva on kolme kertaa
+   * ruudun levyinen ja korkuinen. Uusi kuva tilataan jo silloin, kun
+   * näkyvä alue lähestyy reunaa puolen ruudun päähän — ei vasta reunalla.
+   * Näin sormi ei ehdi ohittaa piirrettyä aluetta, eikä tyhjää näy
+   * missään vaiheessa (omistajan vaatimus).
+   *
+   * Vanha kuva jää paikalleen siihen asti, kunnes uusi on ladattu.
+   */
+  paivitaTaideKuva() {
+    if (!this.taideLahde || !this.taideRyhma || this.dead) return;
+    const nakyva = this.nakyvaAlue();
+    if (!nakyva) return;
+
+    const PUSKURI = 1;      // ruudullista joka suuntaan
+    const VARARAJA = 0.45;  // näin lähelle reunaa saa tulla ennen uutta
+
+    /*
+     * Riittääkö nykyinen kuva?
+     *
+     * Reunan lähestyminen ei riitä ehdoksi yksinään: ikkuna rajataan
+     * paperin sisään, joten kartan laidalla se EI voi ulottua puskurin
+     * verran ulommas. Ensimmäinen versio ei ottanut sitä huomioon, ja
+     * laidalla ehto jäi ikuisesti täyttymättä — työkalu jumittui, koska
+     * kuvaa piirrettiin uudestaan ilman loppua.
+     */
+    const arkki = paperi(this.game.pack.map);
+    const ikkunaRiittaa = (i) => {
+      if (!i) return false;
+      const vasen = i.x <= arkki.x + 0.5 || nakyva.x - i.x >= nakyva.w * VARARAJA;
+      const yla = i.y <= arkki.y + 0.5 || nakyva.y - i.y >= nakyva.h * VARARAJA;
+      const oikea = i.x + i.w >= arkki.x + arkki.w - 0.5
+        || (i.x + i.w) - (nakyva.x + nakyva.w) >= nakyva.w * VARARAJA;
+      const ala = i.y + i.h >= arkki.y + arkki.h - 0.5
+        || (i.y + i.h) - (nakyva.y + nakyva.h) >= nakyva.h * VARARAJA;
+      return vasen && yla && oikea && ala;
+    };
+    const riittaa = this.taideSkaala >= nakyva.skaala * 0.85 && ikkunaRiittaa(this.taideIkkuna);
+    if (riittaa) { this.taideKierros = 0; return; }
+    if (this.taidePiirtyy) return;
+
+    const x0 = Math.max(arkki.x, nakyva.x - nakyva.w * PUSKURI);
+    const y0 = Math.max(arkki.y, nakyva.y - nakyva.h * PUSKURI);
+    const x1 = Math.min(arkki.x + arkki.w, nakyva.x + nakyva.w * (1 + PUSKURI));
+    const y1 = Math.min(arkki.y + arkki.h, nakyva.y + nakyva.h * (1 + PUSKURI));
+    const ikkuna = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+    if (!(ikkuna.w > 0 && ikkuna.h > 0)) return;
+
+    this.taidePiirtyy = true;
+    const skaala = nakyva.skaala;
+    rasteroiIkkuna(this.taideLahde, this.svg.querySelector('defs'), ikkuna, skaala)
+      .then((kuva) => {
+        this.taidePiirtyy = false;
+        if (!kuva || this.dead || !this.taideRyhma) return;
+        // Koko sisältö kerralla: ensimmäisellä kerralla ryhmässä ovat
+        // vielä alkuperäiset vektorit, myöhemmin edellinen kuva. Vaihto
+        // yhdellä kutsulla, jottei välissä ole hetkeä ilman karttaa.
+        const vanhaOsoite = this.taideRyhma.firstElementChild?.dataset?.osoite;
+        this.taideRyhma.replaceChildren(kuva);
+        if (vanhaOsoite) URL.revokeObjectURL(vanhaOsoite);
+        this.taideIkkuna = ikkuna;
+        this.taideSkaala = skaala;
+        /*
+         * Tarkistus heti uudestaan: näkymä on voinut muuttua piirron
+         * aikana (zoom, koon muutos). Kierrokset rajataan, ettei
+         * mahdollinen erimielisyys ehdon ja rajauksen välillä jää
+         * pyörimään ikuisesti — se virhe sattui jo kerran.
+         */
+        if (this.taideKierros < 3) {
+          this.taideKierros += 1;
+          this.paivitaTaideKuva();
+        }
+      })
+      .catch(() => { this.taidePiirtyy = false; });
+  }
+
   /** Vuorossa olevan pelaajan nappulan kohta laudan koordinaateissa. */
   pelaajanKohta() {
     const pelaaja = this.game.players?.[this.game.turn];
@@ -50729,7 +51052,7 @@ class UI {
     const piilossa = this.avausNakymassa();
     const ryhma = sisaan.parentElement;
     if (ryhma) ryhma.hidden = piilossa;
-    sisaan.disabled = this.zoomiIndeksi >= ZOOMI_TASOT.length - 1;
+    sisaan.disabled = this.zoomiIndeksi >= this.zoomiTasot().length - 1;
     ulos.disabled = this.zoomiIndeksi <= 0;
   }
 
@@ -50775,7 +51098,25 @@ class UI {
     // sitä. Zoomaus odottaa Astu mantereelle -napin painallusta
     // (omistajan havainto: zoomaus ehti tapahtua lennon aikana).
     if (document.body.classList.contains('flight-active')) return false;
+    // Isolla laudalla lähikuva tarvitaan aina, myös leveällä ruudulla:
+    // kokonäkymä näyttäisi koko vanhan maailman kerralla, eikä siitä
+    // erota mitään.
+    if (this.isoLauta()) return true;
     return (this.svg.parentElement?.clientWidth ?? 0) < 700;
+  }
+
+  /**
+   * Onko lauta niin iso, ettei kokonäkymästä ole hyötyä?
+   *
+   * Vanhat laudat ovat 1000 yksikköä leveitä, ja niiden kokonäkymä on
+   * luettava. Yhdistetty vanha maailma on 7200, ja kokonäkymässä
+   * Lissabonista Tokioon mahtuu puhelimen ruudulle — kaupungit ovat
+   * pisteitä eikä nimiä erota. Omistajan toive: lennettäessä kartan
+   * pitää olla valmiiksi yhtä lähellä kuin ennenkin, ja loput näkyvät
+   * vasta jos pelaaja itse loitontaa.
+   */
+  isoLauta() {
+    return (this.contentBox?.w ?? 1000) > 2000;
   }
 
   /** Mantereen lähikuvan mitat ja rajat. */
@@ -50831,6 +51172,18 @@ class UI {
     clearTimeout(this.mannerAjastin);
     if (!this.mannerZoomTarpeen() || this.mannerZoom) {
       document.body.classList.remove('manner-odottaa');
+      return;
+    }
+    /*
+     * Isolla laudalla kokonäkymää ei näytetä lainkaan.
+     *
+     * Kokonäkymä on siellä siksi, että pelaaja näkee minne on tullut.
+     * Vanhalla maailmalla se ei kerro sitä: koko manner mahtuu ruudulle
+     * niin pienenä, ettei kaupunkeja erota. Silloin on parempi laskeutua
+     * suoraan lähikuvaan, kuten pienemmillä laudoilla ennenkin.
+     */
+    if (this.isoLauta()) {
+      this.zoomaaMantereelle();
       return;
     }
     // Matkakirja ja toimintonapit odottavat zoomauksen loppuun (omistajan
@@ -51310,10 +51663,22 @@ class UI {
     const svg = { appendChild: (node) => root.appendChild(node) };
     this.boardRoot = root;
 
-    drawParchment(svg, this.game.pack.map);
+    /*
+     * Kartan raskas, muuttumaton osa omaan ryhmäänsä.
+     *
+     * Pergamentti, mantereet, aallot, maasto ja koristeet eivät muutu
+     * pelin aikana, ja niitä on ylivoimaisesti eniten: yhdistetyllä
+     * laudalla noin 6500 elementtiä 7200:sta. Ne muutetaan piirron
+     * jälkeen yhdeksi kuvaksi, jotta panorointi ei joudu piirtämään
+     * niitä uudelleen joka kehyksellä.
+     */
+    const staattinen = el('g', { class: 'staattinen' }, root);
+    const taide = { appendChild: (node) => staattinen.appendChild(node) };
+
+    drawParchment(taide, this.game.pack.map);
     // Pallonpuoliskokartalla kehykset ja asteverkko piirtyvät maiden alle.
-    drawHemisphereFrames(svg, pack.map);
-    drawLand(svg, pack.map);
+    drawHemisphereFrames(taide, pack.map);
+    drawLand(taide, pack.map);
     // Nykyisen maan korostus (hento sävy + nimi kaunolla) piirretään tähän
     // kerrokseen pelin edetessä (drawCountryBorders). Sävy rajataan
     // tyylitellyn rantaviivan sisään, ettei se valu mereen — maiden
@@ -51331,13 +51696,17 @@ class UI {
     // kaunokirjoituksen saa katketa siihen.
     this.countryNameLayer = el('g', { class: 'country-names' }, root);
     this.countryKey = null;
-    drawWaves(svg, pack.map, [
+    drawWaves(taide, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
       ...decor.waveSkip,
     ]);
-    drawTerrain(svg, pack.map, this.mapObstacles(), decor.terrainBands);
-    drawCompass(svg, decor.compass.x, decor.compass.y, decor.compass.r);
-    drawDoodles(svg, decor);
+    drawTerrain(taide, pack.map, this.mapObstacles(), decor.terrainBands);
+    drawCompass(taide, decor.compass.x, decor.compass.y, decor.compass.r);
+    drawDoodles(taide, decor);
+    // Kuvaksi muuttaminen on hidasta vain kerran, ja se saa tapahtua
+    // piirron jälkeen: kartta näkyy heti vektoreina ja vaihtuu kuvaksi
+    // huomaamatta. Epäonnistuessaan vektorit jäävät paikalleen.
+    this.rasteroiTaide(staattinen);
 
     // Lentoreitit kaarina.
     const air = el('g', { class: 'air-routes' }, root);
@@ -55514,7 +55883,7 @@ class UI {
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-02.166';
+const APP_VERSION = '2026-08-02.167';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
