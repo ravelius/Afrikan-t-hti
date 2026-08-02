@@ -1210,7 +1210,18 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .postikortti {
   position: fixed;
   z-index: 70;
-  /* Hieman entistä isompi (omistajan toive). */
+  /*
+   * Puhelimella entinen mitoitus, isolla ruudulla isompi.
+   *
+   * Omistajan toive 3.8.2026: "nämä kuvat voisi näkyä isompana" —
+   * havainto tuli iPadilta. Katto 460 px oli mitoitettu puhelimelle, ja
+   * tabletilla kortti jäi ruudun keskelle pieneksi lapuksi vaikka tilaa
+   * oli runsaasti.
+   *
+   * Kasvatus tehdään vain leveille ruuduille (alla @media). Puhelimella
+   * korttiin ei mahdu enempää: kuvan lisäksi siinä on kuvateksti, ja
+   * pelkkä korkeuden kasvattaminen tekisi vaakakuvasta pystykortin.
+   */
   width: min(84vw, 460px);
   animation: postikortti-esiin 0.24s ease-out;
 }
@@ -1270,6 +1281,16 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   background: #ded5c2;
   border: 1px solid rgba(0, 0, 0, 0.12);
   filter: grayscale(1) contrast(1.03);
+}
+
+/*
+ * Leveä ruutu: kortti ja kuva isommiksi. Raja 700 px on sama kuin
+ * muuallakin pelissä (mannerzoomin automatiikka), joten "kapea ruutu"
+ * tarkoittaa kaikkialla samaa.
+ */
+@media (min-width: 700px) {
+  .postikortti { width: min(88vw, 76vh, 720px); }
+  .postikortti img { height: min(52vh, 500px); }
 }
 
 /* Uusi kuva on nykyaikaa — se saa pitää värinsä. */
