@@ -165,7 +165,9 @@ const EU_CITIES = [
     // Sama kaupunki on myös Maailma-laudalla, josta Siperian rata jatkuu itään.
     links: [{ pack: 'maailma', city: 'moskova', label: 'Maailma-lauta' }],
   },
-  { id: 'pietari', name: 'Pietari', wiki: 'Pietari', ambience: 'kaupunki', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
+  // 'Pietari' on fi-wikissä täsmennyssivu (apostoli, kaupunki, etunimi):
+  // ilman tarkennetta Lue lisää, kuvat ja peilaus jäivät tyhjiksi.
+  { id: 'pietari', name: 'Pietari', wiki: 'Pietari (kaupunki)', ambience: 'kaupunki', x: 793, y: 317, la: 'start', lx: 16, ly: 5 },
   {
     id: 'helsinki', name: 'Helsinki', wiki: 'Helsinki', ambience: 'metsa', x: 688, y: 303, airport: true, la: 'end', lx: -16, ly: -12,
     // Suomen oma lauta avautuu Helsingistä.

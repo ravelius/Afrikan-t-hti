@@ -28,6 +28,16 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync
 import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { leikkaaMp3 } from './leikkaa-mp3.mjs';
+
+/*
+ * Taustaäänen enimmäispituus (omistajan linjaus 1.8.2026). Kenttä-
+ * äänitykset ovat usein 10–30 minuuttia, ja peli soittaa niitä
+ * silmukassa muutaman minuutin kerrallaan: loppuosa on painolastia
+ * peilissä. Leikkaus tehdään kehysrajalta koodaamatta uudelleen, joten
+ * ääni on bitilleen sama kuin alkuperäinen.
+ */
+const AANI_MAX_S = 180;
 
 const JUURI = join(dirname(fileURLToPath(import.meta.url)), '..');
 const argv = process.argv.slice(2);
@@ -78,8 +88,21 @@ function etakoko(url) {
   try {
     const ulos = execFileSync('curl', ['-sSIL', '--max-time', '45', '-A', AGENTTI, url],
       { maxBuffer: 1e7 }).toString();
-    const osumat = [...ulos.matchAll(/^content-length:\s*(\d+)/gim)].map((m) => Number(m[1]));
-    return osumat.length ? osumat.at(-1) : null;
+    // Uudelleenohjausketjussa on monta vastausta, ja niiden joukkoon
+    // eksyy myös välipalvelimen virhesivuja. Aiemmin otettiin ketjun
+    // viimeinen content-length sellaisenaan, jolloin hetkellinen
+    // virhevastaus antoi odotetuksi kooksi 170 tavua ja täysin ehjä
+    // lataus tuomittiin katkenneeksi. Kelpuutetaan vain onnistuneen
+    // vastauksen ilmoittama koko.
+    let onnistui = false;
+    let koko = null;
+    for (const rivi of ulos.split(/\r?\n/)) {
+      const tila = rivi.match(/^HTTP\/[\d.]+\s+(\d{3})/i);
+      if (tila) onnistui = tila[1] === '200';
+      const pituus = rivi.match(/^content-length:\s*(\d+)/i);
+      if (pituus && onnistui) koko = Number(pituus[1]);
+    }
+    return koko;
   } catch {
     return null;
   }
@@ -274,6 +297,7 @@ function lataaAanet(urlit) {
       : `aporee-${url.match(/download\/([^/]+)/)?.[1] ?? i}`;
     const kohde = turvanimi(tunnus, pate === 'mp3' ? 'mp3' : pate);
     const polku = join(kansio, kohde);
+    const vanha = manifesti.aanet[url] ?? {};
     manifesti.aanet[url] = { tiedosto: `aanet/${kohde}`, alkuperainen: url };
 
     // Äänitteet ovat kymmeniä megatavuja ja latautuvat hitaasti, joten
@@ -283,9 +307,13 @@ function lataaAanet(urlit) {
     // pysyvästi: seuraava ajo näki sen olemassa olevana ja ohitti.
     const odotettu = etakoko(url);
     if (existsSync(polku)) {
-      const vika = kelpaa(polku, odotettu);
+      // Leikattu tiedosto on tarkoituksella palvelimen ilmoittamaa
+      // pienempi, joten sitä verrataan manifestiin kirjattuun kokoon.
+      // Ilman tätä jokainen ajo hakisi leikatut uudestaan.
+      const mitta = vanha.leikattu ? vanha.koko ?? null : odotettu;
+      const vika = kelpaa(polku, mitta);
       if (!vika) {
-        manifesti.aanet[url].koko = statSync(polku).size;
+        Object.assign(manifesti.aanet[url], vanha, { koko: statSync(polku).size });
         nuku(200);
         continue;
       }
@@ -303,6 +331,16 @@ function lataaAanet(urlit) {
         rmSync(polku, { force: true });
         virheet.push(`aanet: ${url} → ${vika}`);
       } else {
+        // Eheys on tarkistettu koko tiedostoa vasten — vasta sen jälkeen
+        // ylipitkä äänite lyhennetään.
+        if (pate === 'mp3') {
+          const leikattu = leikkaaMp3(readFileSync(polku), AANI_MAX_S);
+          if (leikattu) {
+            writeFileSync(polku, leikattu.puskuri);
+            manifesti.aanet[url].leikattu = leikattu.kesto;
+            manifesti.aanet[url].alkuperainenKoko = odotettu ?? null;
+          }
+        }
         manifesti.aanet[url].koko = statSync(polku).size;
         kokoYhteensa += statSync(polku).size;
       }
@@ -397,7 +435,10 @@ Kansiot:
 
 - \`kuvat/\` — Wikimedia Commonsin valokuvat ja kulttuurikuvat
 - \`liput/\` — lippukuvat
-- \`aanet/\` — äänimaisemat (Freesound) ja kenttä-äänitykset (radio aporee)
+- \`aanet/\` — äänimaisemat (Freesound) ja kenttä-äänitykset (radio aporee).
+  Taustaäänet on leikattu kolmeen minuuttiin kehysrajalta koodaamatta
+  uudelleen, joten ne ovat alkuperäistä lyhyempiä mutta äänenlaadultaan
+  samoja. Manifestin \`leikattu\`-kenttä kertoo keston sekunteina.
 Pelin tekstit eivät ole täällä: ne kirjoitetaan itse pelin tyyliin ja
 asuvat pelirepossa.
 

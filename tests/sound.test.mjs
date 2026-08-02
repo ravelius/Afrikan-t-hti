@@ -233,3 +233,145 @@ test('treasureSound osaa kaikki laattatyypit', async () => {
   assert.equal(treasureSound('emerald'), 'gem');
   assert.equal(treasureSound(undefined), 'gem');
 });
+
+// --- kaupunkien omat kenttä-äänitykset (paketti 20) -------------------------
+//
+// Tyyppikori antaa saman äänen kaikille saman maiseman kaupungeille, joten
+// Praha ja Lissabon kuulostivat samalta. Kaupungin oma äänitys menee korin
+// edelle. Nämä testit vartioivat, että äänitykset ovat muodoltaan kunnossa
+// ja että ne tosiaan voittavat tyyppikorin.
+
+test('kaupunkien omat äänitykset ovat muodoltaan kelvollisia', async () => {
+  const { KAUPUNKI_EHDOKKAAT } = await import('../js/aani-ehdokkaat.js');
+  const { PACKS } = await import('../js/pack.js');
+  let maara = 0;
+  for (const [lauta, kaupungit] of Object.entries(KAUPUNKI_EHDOKKAAT)) {
+    const pack = PACKS.find((p) => p.id === lauta);
+    assert.ok(pack, `tuntematon lauta ${lauta}`);
+    for (const [cityId, lista] of Object.entries(kaupungit)) {
+      assert.ok(pack.cities.some((c) => c.id === cityId),
+        `${lauta}: tuntematon kaupunki ${cityId}`);
+      assert.ok(Array.isArray(lista) && lista.length,
+        `${lauta}/${cityId}: tyhjä lista — jätä kaupunki pois, älä merkitse tyhjäksi`);
+      for (const e of lista) {
+        maara += 1;
+        // Äänitykset ovat radio aporeesta, ja osoitteen pitää olla
+        // suora tiedosto — kohdesivu ei soi <audio>-elementissä.
+        // Pääte voi olla kummalla tahansa kirjainkoolla (…EarlStreetSouth.MP3).
+        assert.match(e.url, /^https:\/\/archive\.org\/download\/[^/]+\/.+\.mp3$/i,
+          `${lauta}/${cityId}: kelvoton osoite ${e.url}`);
+        // Nimi näkyy studiossa ja kertoo tekijän ja lisenssin: aporee on
+        // CC BY, CC BY-SA, CC BY-NC(-ND) tai public domain.
+        assert.ok(typeof e.nimi === 'string' && e.nimi.length > 5,
+          `${lauta}/${cityId}: puuttuva nimi`);
+        assert.match(e.nimi, /(CC BY|CC0|public domain)/i,
+          `${lauta}/${cityId}: nimestä puuttuu lisenssi — ${e.nimi}`);
+      }
+    }
+  }
+  assert.ok(maara >= 40, `äänityksiä vain ${maara}`);
+});
+
+test('jokainen kaupunkiäänitys saa oman peilipolun', async () => {
+  const { KAUPUNKI_EHDOKKAAT } = await import('../js/aani-ehdokkaat.js');
+  const { peiliAaniPolku } = await import('../js/media.js');
+  // Peili on ensisijainen lähde: ilman polkua jokainen soitto menisi
+  // ohi peilin, ja päällekkäinen polku ylikirjoittaisi toisen äänitteen.
+  const polut = new Map();
+  for (const [lauta, kaupungit] of Object.entries(KAUPUNKI_EHDOKKAAT)) {
+    for (const [cityId, lista] of Object.entries(kaupungit)) {
+      for (const e of lista) {
+        const polku = peiliAaniPolku(e.url);
+        assert.ok(polku, `${lauta}/${cityId}: peilipolkua ei voi laskea (${e.url})`);
+        assert.ok(!polut.has(polku),
+          `${polku} on kahdesti: ${polut.get(polku)} ja ${lauta}/${cityId}`);
+        polut.set(polku, `${lauta}/${cityId}`);
+      }
+    }
+  }
+});
+
+test('kaupungin oma äänitys voittaa tyyppikorin, muut putoavat siihen', async () => {
+  const { kaupunkiKori, KAUPUNKI_EHDOKKAAT } = await import('../js/aani-ehdokkaat.js');
+  const omat = KAUPUNKI_EHDOKKAAT.europe ?? {};
+  const [cityId, lista] = Object.entries(omat)[0];
+  const kori = kaupunkiKori('europe', cityId);
+  assert.equal(kori.length, lista.length, `${cityId}: kori ei vastaa äänityksiä`);
+  assert.ok(kori.every((k) => k.startsWith('https://archive.org/')));
+  // Kaupunki ilman omaa äänitystä saa tyhjän korin, jolloin
+  // ambience-stream putoaa maisematyypin koriin kuten ennen.
+  assert.deepEqual(kaupunkiKori('europe', 'ei-tallaista-kaupunkia'), []);
+  assert.deepEqual(kaupunkiKori('afrikka-jota-ei-ole', cityId), []);
+});
+
+// --- mp3:n leikkaus kolmeen minuuttiin --------------------------------------
+//
+// Leikkuri katkaisee tiedoston kehysrajalta koodaamatta uudelleen. Jos se
+// osuu väärään kohtaan, ääni rätisee tai tiedosto ei soi lainkaan — eikä
+// sitä huomaisi ennen kuin pelaaja saapuu kaupunkiin. Testi rakentaa
+// tunnetun mp3:n ja tarkistaa tuloksen kehys kehykseltä.
+
+/** MPEG1 Layer III, 128 kb/s, 44,1 kHz, stereo: 417 tavua ja 0,026 s per kehys. */
+function tekoMp3(kehyksia, { xing = false } = {}) {
+  const KEHYS = 417;
+  // Tyhjä ID3v2-tunniste: 'ID3', versio, liput ja nelitavuinen koko (0).
+  const tunniste = Buffer.alloc(10);
+  tunniste.write('ID3', 0, 'latin1');
+  tunniste[3] = 3;
+  const osat = [tunniste];
+  for (let i = 0; i < kehyksia; i += 1) {
+    const kehys = Buffer.alloc(KEHYS);
+    kehys[0] = 0xff; kehys[1] = 0xfb; kehys[2] = 0x90; kehys[3] = 0x00;
+    // Täyte ei saa sisältää tahdistustavuja, jotta kehysraja on yksikäsitteinen.
+    kehys.fill(0x41, 4);
+    if (xing && i === 0) {
+      kehys.write('Xing', 36, 'latin1');
+      kehys.writeUInt32BE(0b0111, 40); // kehykset, tavut, hakutaulukko
+      kehys.writeUInt32BE(kehyksia, 44);
+      kehys.writeUInt32BE(kehyksia * KEHYS, 48);
+    }
+    osat.push(kehys);
+  }
+  return Buffer.concat(osat);
+}
+
+test('mp3 leikkautuu kehysrajalta eikä ylitä annettua kestoa', async () => {
+  const { leikkaaMp3 } = await import('../tools/leikkaa-mp3.mjs');
+  const KEHYS = 417;
+  const KESTO = 1152 / 44100;
+  const alkuperainen = tekoMp3(2000); // noin 52 s
+  const tulos = leikkaaMp3(alkuperainen, 10);
+  assert.ok(tulos, 'leikkaus epäonnistui');
+  assert.ok(tulos.kesto <= 10, `kesto ${tulos.kesto} s ylittää rajan`);
+  assert.ok(tulos.kesto >= 9, `kesto ${tulos.kesto} s jäi liian lyhyeksi`);
+  // Pituus osuu tasan kehysrajalle: ID3-tunniste ja kokonaisia kehyksiä.
+  const kehyksia = Math.floor(10 / KESTO);
+  assert.equal(tulos.puskuri.length, 10 + kehyksia * KEHYS);
+  // Alkuperäinen sisältö säilyy sellaisenaan — ääntä ei koodata uudelleen.
+  assert.ok(tulos.puskuri.equals(alkuperainen.subarray(0, tulos.puskuri.length)),
+    'leikattu tiedosto ei ole alkuperäisen alkuosa');
+});
+
+test('leikkuri jättää tarpeeksi lyhyen tiedoston koskematta', async () => {
+  const { leikkaaMp3 } = await import('../tools/leikkaa-mp3.mjs');
+  // Peilaustyökalu tulkitsee null-paluun "ei leikattavaa" -tiedoksi, eikä
+  // silloin merkitse tiedostoa manifestiin leikatuksi.
+  assert.equal(leikkaaMp3(tekoMp3(2000), 600), null);
+  assert.equal(leikkaaMp3(Buffer.from('ei tama mp3 ole'), 180), null);
+});
+
+test('Xing-otsakkeen kesto korjataan leikkauksen mukaiseksi', async () => {
+  const { leikkaaMp3 } = await import('../tools/leikkaa-mp3.mjs');
+  // Ilman korjausta selain laskisi keston alkuperäisestä pituudesta ja
+  // arpoisi ambienssin aloituskohdan tiedoston lopun ulkopuolelta.
+  const tulos = leikkaaMp3(tekoMp3(2000, { xing: true }), 10);
+  assert.ok(tulos);
+  const xing = tulos.puskuri.indexOf('Xing', 0, 'latin1');
+  assert.ok(xing > 0, 'Xing-otsake katosi');
+  const liput = tulos.puskuri.readUInt32BE(xing + 4);
+  assert.equal(liput & 4, 0, 'hakutaulukon lippu jäi päälle vaikka taulukko ei enää päde');
+  const kehyksia = Math.floor(10 / (1152 / 44100));
+  assert.equal(tulos.puskuri.readUInt32BE(xing + 8), kehyksia, 'kehysmäärä ei täsmää');
+  assert.equal(tulos.puskuri.readUInt32BE(xing + 12), tulos.puskuri.length - 10,
+    'tavumäärä ei täsmää');
+});
