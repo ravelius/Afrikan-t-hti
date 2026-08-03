@@ -790,7 +790,7 @@ export const EUROPE_QUESTIONS = {
       options: ['Marco Polo', 'Vasco da Gama', 'James Cook', 'Ibn Battuta'],
       correct: 0,
       level: 3,
-      fact: 'Marco Polo palveli suurkaani Kublain hovissa yli kaksikymmentä vuotta. Hänen matkakirjansa avasi eurooppalaisille idän ja innoitti myöhempiä löytöretkiä.',
+      fact: 'Marco Polo palveli suurkaani Kublain hovissa seitsemäntoista vuotta. Hänen matkakirjansa avasi eurooppalaisille idän ja innoitti myöhempiä löytöretkiä.',
       hint: 'Hänen matkakirjaansa luettiin koko keskiajan.',
       source: 'https://fi.wikipedia.org/wiki/Marco_Polo',
     },
@@ -1460,7 +1460,7 @@ export const EUROPE_QUESTIONS = {
       options: ['Latvia', 'Liettua', 'Viro', 'Puola'],
       correct: 0,
       level: 1,
-      fact: 'Riika on Latvian pääkaupunki ja Baltian maiden suurin kaupunki.',
+      fact: 'Riika on Latvian pääkaupunki ja Baltian maiden suurimpia kaupunkeja sekä alueen tärkein satama.',
       hint: 'Maa on Baltian kolmikon keskimmäinen.',
     },
     {

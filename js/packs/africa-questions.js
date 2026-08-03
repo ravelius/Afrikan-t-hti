@@ -197,7 +197,7 @@ export const AFRICA_QUESTIONS = {
     },
     {
       q: 'Mikä paimentolaiskansa asuu perinteisesti Ahaggarin alueella?',
-      options: ['tuaregit', 'zulut', 'masait', 'berberien sijaan somalit'],
+      options: ['tuaregit', 'zulut', 'masait', 'somalit'],
       correct: 0,
       fact: 'Tuaregit ovat berberitaustainen Saharan paimentolaiskansa.',
       hint: 'Heitä kutsutaan sinisiksi miehiksi.',
@@ -1795,7 +1795,7 @@ export const AFRICA_QUESTIONS = {
       q: 'Kanava kannaksen läpi on ollut auki neljä vuotta, ja kummastelin sitä koko läpiajon: siinä ei ole yhtäkään sulkua. Välimeri ja Punainenmeri makaavat samalla korkeudella, joten laiva purjehtii suoraan läpi kuin joen uomaa.',
       correct: true,
       place: 'Suezin kanava',
-      fact: 'Suezin kanavassa ei ole yhäkään sulkuja: merenpinnat ovat käytännössä samalla tasolla, toisin kuin Panamassa. Väylää on levennetty useaan kertaan, ja Egypti kansallisti kanavan vuonna 1956.',
+      fact: 'Suezin kanavassa ei ole yhtäkään sulkua: merenpinnat ovat käytännössä samalla tasolla, toisin kuin Panamassa. Väylää on levennetty useaan kertaan, ja Egypti kansallisti kanavan vuonna 1956.',
     },
     {
       q: 'Seurasin jokea ylävirtaan enkä meinannut uskoa kompassiani: vesi tulee lounaasta ja jatkaa koilliseen, siis poispäin merestä. Etelään se kääntyy vasta paljon myöhemmin.',
@@ -1836,7 +1836,7 @@ export const AFRICA_QUESTIONS = {
     {
       q: 'Ylätasangolla pesuvesi oli aamulla jäässä, ja idässä siinsivät lumiset harjanteet. Heinäkuu, ja minä palelen mantereella, jota kotona sanotaan kuumaksi.',
       correct: true,
-      place: 'Etiopian ylänkö',
+      place: 'Etelä-Afrikan ylätasanko',
       fact: 'Etelä-Afrikan sisämaan ylätasangolla on talvisin yöpakkasia, ja Draakonivuorilla sataa lunta lähes joka talvi. Lesothon ylängöllä toimii hiihtokeskus 3 050 metrin korkeudessa, ja sen kausi on kesäkuusta elokuuhun.',
     },
     {

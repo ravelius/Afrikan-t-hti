@@ -1095,7 +1095,7 @@ export const MIDDLEEAST_QUESTIONS = {
       options: ['Damavand', 'Mont Blanc', 'Ararat', 'Elbrus'],
       correct: 0,
       level: 3,
-      fact: 'Damavand on sammunut tulivuori ja Lähi-idän korkein huippu, yli 5 600 metriä.',
+      fact: 'Damavand on uinuva tulivuori ja Lähi-idän korkein huippu, yli 5 600 metriä.',
       hint: 'Se on Lähi-idän korkein huippu ja vanha tulivuori.',
     },
     {

@@ -635,6 +635,76 @@ function html(tag, className, text) {
   return node;
 }
 
+/*
+ * Onko valokuva niin vanha, että se näytetään mustavalkoisena?
+ *
+ * Omistajan toive: "matkakirjan kuvat pitäisi pitää värillisinä jos ne
+ * ovat uusia. vain oikeasti vanhat kuvat saisivat olla mustavalkoisia,
+ * jotta kävisi helpommin ilmi, kumpia kuvat ovat."
+ *
+ * Aiemmin harmaasävy oli CSS-sääntö, joka koski kaikkia postikortin
+ * kuvia. Silloin nykypäivän kuva näytti yhtä vanhalta kuin sadan
+ * vuoden takainen, ja koko ennen/nyt-asetelma katosi.
+ *
+ * Ratkaisu luetaan AINEISTOSTA eikä kortin paikasta: jokaisella
+ * kuvalla on vuosi-kenttä, ja se kertoo totuuden silloinkin, kun
+ * pinon keskellä on 1924 otettu lisäkuva.
+ *
+ * Raja on 1960, sama kuin tools/tarkista-kuvaiat.mjs:ssä. Väri­kuvaus
+ * yleistyi 1950-luvulla, joten sitä vanhempi kuva on käytännössä aina
+ * mustavalkoinen jo valmiiksi — harmaasävy ei siis muuta sitä miltä
+ * kuva näyttää, vaan siistii skannauksen kellastumat pois.
+ */
+const VARIKUVAN_RAJA = 1960;
+
+function vuosiluku(teksti) {
+  const m = /\d{4}/.exec(String(teksti ?? ''));
+  return m ? Number(m[0]) : null;
+}
+
+function onVanhaKuva(kuvaTiedot, oletusVanha = false) {
+  const v = vuosiluku(kuvaTiedot?.vuosi);
+  // Tuntematon vuosi: luotetaan kutsujan tietoon siitä, mikä kuva on
+  // kyseessä. Pelkkä arvaus värittäisi historiakuvan tai
+  // harmaannuttaisi nykykuvan, ja molemmat valehtelisivat.
+  if (v === null) return oletusVanha;
+  return v < VARIKUVAN_RAJA;
+}
+
+/**
+ * Merkkijono turvalliseksi innerHTML:ään.
+ *
+ * Radioasemien nimet tulevat generoidusta paketista, joka on koottu
+ * Radio Browserin avoimesta hakemistosta — siellä on ampersandeja ja
+ * lainausmerkkejä ("Rádio & Televisão", 'FM 83.4"'). Ilman suojausta
+ * ne rikkoisivat napin rakenteen.
+ */
+function suojaa(teksti) {
+  return String(teksti)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/*
+ * Soita- ja pysäytä-merkit ääninappeihin.
+ *
+ * Aiemmin napissa oli kaiutinkuvake, joka pysyi samana soi tai ei —
+ * vain teksti vaihtui. Kolmio ja neliö kertovat tilan yhdellä
+ * silmäyksellä, ja ne ovat samat merkit kuin kaikissa soittimissa,
+ * joten niitä ei tarvitse opetella.
+ *
+ * Piirretään samalla kynällä kuin kartta: pelkkä ääriviiva nykyisellä
+ * tekstivärillä (ks. VIIVA_IKONIT alla).
+ */
+const MERKKI_SOITA = '<svg class="merkki" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
+  + '<path d="M8.4 5.8 18 12l-9.6 6.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+  + '</svg>';
+const MERKKI_SEIS = '<svg class="merkki" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
+  + '<rect x="7" y="7" width="10" height="10" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+  + '</svg>';
+
 /**
  * Toimintonappien viivaikonit: emoji erottui kartan mustepiirroksesta,
  * joten ikonit piirretään samalla kynällä kuin kartta — pelkkä ääriviiva
@@ -3273,11 +3343,13 @@ export class UI {
     const tiedot = this.factValokuvaTiedot;
     if (!tiedot) return;
     const kortti = html('div', 'postikortti');
-    const teeKortti = (kuvaTiedot, luokka, altTeksti) => {
+    const teeKortti = (kuvaTiedot, luokka, altTeksti, oletusVanha = false) => {
       const osa = html('div', `postikortti-kortti${luokka ? ` ${luokka}` : ''}`);
       const kuva = document.createElement('img');
       asetaKuva(kuva,
         valokuvaUrl(kuvaTiedot.tiedosto, 1000), valokuvaVara(kuvaTiedot.tiedosto, 1000));
+      // Harmaasävy vain aidosti vanhoille (ks. onVanhaKuva).
+      if (onVanhaKuva(kuvaTiedot, oletusVanha)) kuva.classList.add('vanha-vedos');
       kuva.alt = altTeksti;
       osa.appendChild(kuva);
       // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
@@ -3320,7 +3392,9 @@ export class UI {
         kuvaTiedot === pino[pino.length - 1] && tiedot.uusi ? 'uusi' : '',
         i === 0 ? '' : 'alla',
       ].filter(Boolean).join(' ');
-      const osa = teeKortti(kuvaTiedot, luokat, kuvaTiedot.alt);
+      // Pinon ensimmainen on kaupungin historiakuva. Jos siita puuttuu
+      // vuosi, se on silti vanha — muissa oletus on varillinen.
+      const osa = teeKortti(kuvaTiedot, luokat, kuvaTiedot.alt, i === 0);
       // Laskuri kertoo, että kuvia on lisää — muuten pinon alta
       // pilkottava reuna jää helposti huomaamatta.
       if (pino.length > 1) {
@@ -4160,21 +4234,32 @@ export class UI {
     const radio = radioMaalle(this.game.pack.map?.cityCountry?.[city.id]);
     if (!radio && !nayte?.url) return;
     kohde.hidden = false;
+    /*
+     * Napissa lukee aseman nimi, ei "Kuuntele kieltä" (omistajan
+     * toive). Nimi on se, mikä tekee napista houkuttelevan: "TRT
+     * Radyo 1" kertoo että toisessa päässä on oikea asema, kun taas
+     * yleisnimike voisi olla mitä tahansa nauhaa.
+     *
+     * Merkki vuorottelee soita/pysäytä-kuvakkeiden välillä, ja
+     * suoralle lähetykselle näkyy punainen piste. Piste EI ole
+     * koriste vaan tieto: jos suora katkeaa ja soitin putoaa
+     * nauhoitettuun näytteeseen, piste sammuu — muuten se väittäisi
+     * suoraa lähetystä nauhasta.
+     */
     const nappi = html('button', 'kulttuuri-kuuntele kieli-kuuntele');
     nappi.type = 'button';
-    nappi.title = radio
-      ? `${radio.asema} — suora lähetys`
-      : (nayte.nimi ?? 'Kaupungissa nauhoitettu näyte');
-    nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
-      + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
-      + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
-      + '</svg><span>Kuuntele kieltä</span><span class="aika" hidden></span>';
+    const nimi = radio ? radio.asema : (nayte.nimi ?? 'Kaupungissa nauhoitettu näyte');
+    nappi.title = radio ? `${nimi} — suora lähetys` : nimi;
+    nappi.innerHTML = `${MERKKI_SOITA}<span>${suojaa(nimi)}</span>`
+      + (radio ? '<span class="live" title="suora lähetys">live</span>' : '')
+      + '<span class="aika" hidden></span>';
     // Sama soitin kuin kulttuurinostojen näytteillä: peilin varareitti,
     // taustan väistö ja aikanäyttö tulevat siitä valmiina.
     nappi.addEventListener('click', () => this.kulttuuriAaniNapista({
       aani: radio ? radio.url : nayte.url,
       vara: radio ? (nayte?.url ?? null) : null,
-      otsikko: 'Kuuntele kieltä',
+      otsikko: nimi,
+      suora: Boolean(radio),
     }, nappi));
     kohde.appendChild(nappi);
   }
@@ -4431,7 +4516,15 @@ export class UI {
     // muuttuivat pysäytettäessä "Kuuntele näyte" -napeiksi.
     const alkuperainen = nimio?.textContent ?? 'Kuuntele näyte';
     this.kulttuuriAani = { audio, nappi, nimi: alkuperainen };
-    if (nimio) nimio.textContent = 'Pysäytä näyte';
+    /*
+     * Radionapissa lukee aseman nimi, ja se saa jäädä lukemaan sitä
+     * myös soidessa: nimi on napin tunniste, ei kehotus. Muissa
+     * napeissa teksti on kehotus ("Kuuntele näyte"), ja silloin sen
+     * on vaihduttava. Merkki (kolmio/neliö) kertoo tilan molemmissa.
+     */
+    const merkki = nappi.querySelector('.merkki');
+    if (merkki) merkki.outerHTML = MERKKI_SEIS;
+    if (nimio && !merkki) nimio.textContent = 'Pysäytä näyte';
     nappi.classList.add('soi');
     // Kesto ja toistokohta näkyvät napissa näytteen soidessa
     // (omistajan toive) — muodossa 0:12 / 3:10.
@@ -4473,6 +4566,13 @@ export class UI {
       if (!toinenAaniKokeiltu && nosto.vara) {
         toinenAaniKokeiltu = true;
         varareittiKokeiltu = false;
+        /*
+         * Live-merkki sammuu tässä. Nyt soi kaupungissa nauhoitettu
+         * näyte, ei suora lähetys, ja punainen piste väittäisi
+         * muuta. Merkki on tieto eikä koriste, joten sen on
+         * kadottava samalla hetkellä kuin sen kertoma asia.
+         */
+        nappi.querySelector('.live')?.remove();
         audio.src = aaniOsoite(jaaAlku(nosto.vara).url);
         audio.load();
         audio.play().catch(petti);
@@ -4491,8 +4591,12 @@ export class UI {
     if (!soiva) return;
     soiva.audio.pause();
     soiva.audio.removeAttribute('src');
+    const merkki = soiva.nappi.querySelector('.merkki');
+    if (merkki) merkki.outerHTML = MERKKI_SOITA;
     const nimio = soiva.nappi.querySelector('span');
-    if (nimio) nimio.textContent = soiva.nimi ?? 'Kuuntele näyte';
+    // Nimiö palautetaan vain jos se oli kehotus. Radionapissa lukee
+    // aseman nimi, eikä se muuttunut soidessakaan.
+    if (nimio && !merkki) nimio.textContent = soiva.nimi ?? 'Kuuntele näyte';
     const aika = soiva.nappi.querySelector('.aika');
     if (aika) {
       aika.hidden = true;

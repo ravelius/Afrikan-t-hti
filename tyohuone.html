@@ -519,7 +519,13 @@
        * kertoo pakatun koon palvelimella — ei sama kuin työkopion koko
        * levyllä, mutta se on ainoa luku, jonka saa ilman kloonausta.
        */
-      for (const repo of ['ravelius/Matkakirja', 'ravelius/Matkakirja-media']) {
+      /*
+       * Vain pelin repo. Erillinen media-repo (ravelius/Matkakirja-media)
+       * poistettiin 3.8.2026: aineisto oli jo siirtynyt Cloudflaren
+       * ämpäriin, ja repo jäi tarpeettomaksi. Sen rivi näyttäisi nyt
+       * ikuisesti virhettä eikä kertoisi mitään.
+       */
+      for (const repo of ['ravelius/Matkakirja']) {
         try {
           const tiedot = await haeAikarajalla(`https://api.github.com/repos/${repo}`, 8000);
           rivit.push(tilaRivi(`repo ${repo.split('/')[1]}`, koko(tiedot.size * 1024),

@@ -282,7 +282,7 @@ export const ASIA_SAAPUMISET = {
     kuvaus: 'Teheran on kiinni vuorissa: kadun päässä näkyy '
       + 'lumihuippuinen Alborz, ja kaupunki nousee rinnettä niin, että '
       + 'pohjoisosassa on useita asteita viileämpää kuin etelässä. '
-      + 'Damavand, Iranin korkein huippu, on 5 610 metriä ja sammunut '
+      + 'Damavand, Iranin korkein huippu, on 5 610 metriä ja uinuva '
       + 'tulivuori. Sitä katsoo kaupungista kuin vahtimestaria.',
     nosto: 'Isoisän kirjassa lukee: "Persiassa puutarha ei ole koriste '
       + 'vaan lupaus — se kertoo, että vettä on." Istuin platanien varjossa '
@@ -408,8 +408,8 @@ export const ASIA_SAAPUMISET = {
       + 'ja niiden julkisivut ovat kokonaan sinistä ja kultaista '
       + 'kaakelia — sellaista sinistä, jota ei ole missään muualla. '
       + 'Samarkand oli Timurin pääkaupunki 1300-luvulla, ja tähtitieteen '
-      + 'observatorio rakennettiin tänne sata vuotta ennen kuin Kopernikus '
-      + 'syntyi.',
+      + 'observatorio rakennettiin tänne puoli vuosisataa ennen kuin '
+      + 'Kopernikus syntyi.',
     nosto: 'Isoisä kirjoitti: "Samarkandissa Ulug Beg mittasi vuoden '
       + 'pituuden virheellä, joka on alle minuutin." Seisoin '
       + 'kvadrantin kaaren äärellä ja tunsin itseni hitaaksi.',
@@ -606,7 +606,7 @@ export const ASIA_SAAPUMISET = {
     kuvaus: 'Kathmandun laaksosta näkyy selkeällä säällä lumihuippuja, '
       + 'jotka ovat kahdeksan kilometrin korkuisia — maailman '
       + 'neljätoista korkeinta vuorta ovat kaikki tässä samassa '
-      + 'vuoristossa. Durbar-aukiolla puiset temppelit ovat kaiverrettu '
+      + 'vuoristossa. Durbar-aukiolla puiset temppelit on kaiverrettu '
       + 'niin tiheään, ettei sileää kohtaa löydy.',
     nosto: 'Isoisän kirjassa lukee: "Nepalissa vuoret eivät ole '
       + 'maisemaa vaan seinä, ja portit siihen ovat harvassa." Seisoin '

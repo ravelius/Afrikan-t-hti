@@ -1288,8 +1288,17 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   object-fit: cover;
   background: #ded5c2;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  filter: grayscale(1) contrast(1.03);
 }
+
+/*
+ * Harmaasavy vain aidosti vanhoille vedoksille (omistajan toive).
+ *
+ * Ennen sääntö koski kaikkia postikortin kuvia, jolloin nykypäivän
+ * kuva näytti yhtä vanhalta kuin sadan vuoden takainen — ja koko
+ * ennen/nyt-asetelma katosi. Luokan asettaa js/ui.js kuvan oman
+ * vuosiluvun perusteella, ei kortin paikan.
+ */
+.postikortti img.vanha-vedos { filter: grayscale(1) contrast(1.03); }
 
 /*
  * Pinon laskuri: monesko kuva ja montako niitä on.
@@ -1320,8 +1329,30 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   .postikortti img { height: min(52vh, 500px); }
 }
 
-/* Uusi kuva on nykyaikaa — se saa pitää värinsä. */
-.postikortti-kortti.uusi img { filter: none; }
+/*
+ * Työpöytäselain: kuva vielä isommaksi, jos ikkunaa riittää.
+ *
+ * Omistajan toive: "työpöytäselaimella kuvat voisivat aueta vielä
+ * isommiksi jos selaimen ikkuna on vain tarpeeksi iso."
+ *
+ * Ehtona on sekä leveys ETTÄ korkeus. Pelkkä leveysehto kasvattaisi
+ * kuvaa myös matalassa ikkunassa — esimerkiksi kannettavalla, jossa
+ * selain on puolikkaana näytön leveydeltä mutta täydessä korkeudessa
+ * vain 600 px — ja kortin alareuna jäisi ruudun alle.
+ *
+ * Nämä tulevat 700px-säännön JÄLKEEN tarkoituksella: kaikilla on sama
+ * tarkkuus, joten lähdejärjestys ratkaisee, ja aiemmin kirjoitettuna
+ * nämä olisivat jääneet tehottomiksi.
+ */
+@media (min-width: 1000px) and (min-height: 760px) {
+  .postikortti { width: min(84vw, 82vh, 880px); }
+  .postikortti img { height: min(60vh, 600px); }
+}
+
+@media (min-width: 1500px) and (min-height: 950px) {
+  .postikortti { width: min(76vw, 84vh, 1040px); }
+  .postikortti img { height: min(64vh, 760px); }
+}
 
 .postikortti .kuvateksti {
   margin: 0.35rem 0.1rem 0.15rem;
@@ -1523,6 +1554,67 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   font-variant-numeric: tabular-nums;
   font-size: 0.72rem;
   color: rgba(70, 51, 31, 0.75);
+}
+
+/*
+ * Radionapin live-merkki.
+ *
+ * Punainen on tässä ainoa paikka koko kartalla, jossa sitä käytetään
+ * merkkinä eikä piirroksena — juuri siksi se erottuu pergamentilta
+ * heti. Merkki kertoo, että toisessa päässä on oikea lähetys, joka
+ * soi juuri nyt jossain päin maailmaa.
+ *
+ * Piste sykkii vain napin soidessa. Levossa sykkivä piste kilpailisi
+ * huomiosta kaupungin sisällön kanssa, ja liike kartalla on varattu
+ * pelin omille tapahtumille.
+ */
+.kulttuuri-kuuntele .live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a3281c;
+}
+
+.kulttuuri-kuuntele .live::before {
+  content: '';
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: #c4321f;
+}
+
+.kulttuuri-kuuntele.soi .live::before {
+  animation: live-syke 1.6s ease-in-out infinite;
+}
+
+@keyframes live-syke {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/*
+ * Aseman nimi voi olla pitkä ("SLBC Tamil National Service"), eikä
+ * nappi saa työntää korttia leveämmäksi. Nimi katkeaa kolmeen
+ * pisteeseen, mutta merkki, live ja kello pysyvät aina näkyvissä:
+ * ne ovat napin toiminta, nimi on sen selite.
+ */
+.kulttuuri-kuuntele > span:not(.aika):not(.live) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 14rem;
+}
+
+.kulttuuri-kuuntele .merkki,
+.kulttuuri-kuuntele .aika,
+.kulttuuri-kuuntele .live { flex: 0 0 auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kulttuuri-kuuntele.soi .live::before { animation: none; }
 }
 
 /* Kulttuurivisan avausnappi: sama mustekynän nappityyli kuin näytteellä. */
@@ -6754,7 +6846,7 @@ const AFRICA_QUESTIONS = {
     },
     {
       q: 'Mikä paimentolaiskansa asuu perinteisesti Ahaggarin alueella?',
-      options: ['tuaregit', 'zulut', 'masait', 'berberien sijaan somalit'],
+      options: ['tuaregit', 'zulut', 'masait', 'somalit'],
       correct: 0,
       fact: 'Tuaregit ovat berberitaustainen Saharan paimentolaiskansa.',
       hint: 'Heitä kutsutaan sinisiksi miehiksi.',
@@ -8352,7 +8444,7 @@ const AFRICA_QUESTIONS = {
       q: 'Kanava kannaksen läpi on ollut auki neljä vuotta, ja kummastelin sitä koko läpiajon: siinä ei ole yhtäkään sulkua. Välimeri ja Punainenmeri makaavat samalla korkeudella, joten laiva purjehtii suoraan läpi kuin joen uomaa.',
       correct: true,
       place: 'Suezin kanava',
-      fact: 'Suezin kanavassa ei ole yhäkään sulkuja: merenpinnat ovat käytännössä samalla tasolla, toisin kuin Panamassa. Väylää on levennetty useaan kertaan, ja Egypti kansallisti kanavan vuonna 1956.',
+      fact: 'Suezin kanavassa ei ole yhtäkään sulkua: merenpinnat ovat käytännössä samalla tasolla, toisin kuin Panamassa. Väylää on levennetty useaan kertaan, ja Egypti kansallisti kanavan vuonna 1956.',
     },
     {
       q: 'Seurasin jokea ylävirtaan enkä meinannut uskoa kompassiani: vesi tulee lounaasta ja jatkaa koilliseen, siis poispäin merestä. Etelään se kääntyy vasta paljon myöhemmin.',
@@ -8393,7 +8485,7 @@ const AFRICA_QUESTIONS = {
     {
       q: 'Ylätasangolla pesuvesi oli aamulla jäässä, ja idässä siinsivät lumiset harjanteet. Heinäkuu, ja minä palelen mantereella, jota kotona sanotaan kuumaksi.',
       correct: true,
-      place: 'Etiopian ylänkö',
+      place: 'Etelä-Afrikan ylätasanko',
       fact: 'Etelä-Afrikan sisämaan ylätasangolla on talvisin yöpakkasia, ja Draakonivuorilla sataa lunta lähes joka talvi. Lesothon ylängöllä toimii hiihtokeskus 3 050 metrin korkeudessa, ja sen kausi on kesäkuusta elokuuhun.',
     },
     {
@@ -10547,17 +10639,6 @@ const EUROPE_SAAPUMISET = {
       + 'vanhempi kuin Englannin — ja tulivuoret vanhempia kuin molemmat.',
   },
 
-  lontoo: {
-    kuvaus: 'Kotikaupunki — ja silti sydän hakkasi kuin vieraassa! Sumu '
-              + 'nousi Thamesilta, Tower Bridge avasi kitansa laivalle, ja '
-              + 'metro jyrisi jalkojeni alla kuin maanalainen ukkonen. Tästä '
-              + 'kaupungista lähdetään maailmalle — ja tänne se aina jotenkin '
-              + 'palataan.',
-    nosto: 'Matkakirjan ensimmäisellä sivulla lukee: "Lontoosta pääsee '
-             + 'kaikkialle, mutta mikään ei valmista siihen, mitä sieltä '
-             + 'löytää." Nyt minä lähden tarkistamaan.',
-  },
-
   edinburgh: {
     kuvaus: 'Edinburgh on kahdessa kerroksessa! Alhaalla uudenkaupungin '
               + 'suorat kadut, ylhäällä vanhankaupungin kujat, jotka putoavat '
@@ -10585,20 +10666,6 @@ const EUROPE_SAAPUMISET = {
              + 'katu, jonka olen nähnyt, ja sen keskellä seisoo Nelson '
              + 'pylväänsä nokassa." Katu on nyt O\'Connell Street ja pylvään '
              + 'paikalla kiiltää teräsneula — leveys on yhä sama 49 metriä.',
-  },
-
-  pariisi: {
-    kuvaus: 'Pariisi tuoksui sateelta ja tuoreelta leivältä. Kävelin '
-              + 'Boulevard Saint-Micheliä: se on kolmekymmentä metriä leveä ja '
-              + 'suora kuin viivoitin. Bulevardista päätettiin vuonna 1855, ja '
-              + 'sen alta katosi kokonaisia vanhoja katuja — Haussmann piirsi '
-              + 'Pariisin uusiksi. Metroon menin vihreän valurautakaaren ali; '
-              + 'vanhimmat kaaret ovat vuodelta 1900. Sitten istuin kahvilaan '
-              + 'ja kuuntelin: viereisessä pöydässä puhuttiin arabiaa, tiskillä '
-              + 'portugalia, ja tarjoilija vastasi kaikille ranskaksi.',
-    nosto: 'Isoisä kirjoitti: "Pariisissa istuin kolme tuntia samassa '
-             + 'kahvilassa enkä hävennyt hetkeäkään. Se on tämän kaupungin '
-             + 'suurin keksintö." Tilasin toisen kaakaon hänen kunniakseen.',
   },
 
   lissabon: {
@@ -11256,7 +11323,7 @@ const ASIA_SAAPUMISET = {
     kuvaus: 'Teheran on kiinni vuorissa: kadun päässä näkyy '
       + 'lumihuippuinen Alborz, ja kaupunki nousee rinnettä niin, että '
       + 'pohjoisosassa on useita asteita viileämpää kuin etelässä. '
-      + 'Damavand, Iranin korkein huippu, on 5 610 metriä ja sammunut '
+      + 'Damavand, Iranin korkein huippu, on 5 610 metriä ja uinuva '
       + 'tulivuori. Sitä katsoo kaupungista kuin vahtimestaria.',
     nosto: 'Isoisän kirjassa lukee: "Persiassa puutarha ei ole koriste '
       + 'vaan lupaus — se kertoo, että vettä on." Istuin platanien varjossa '
@@ -11382,8 +11449,8 @@ const ASIA_SAAPUMISET = {
       + 'ja niiden julkisivut ovat kokonaan sinistä ja kultaista '
       + 'kaakelia — sellaista sinistä, jota ei ole missään muualla. '
       + 'Samarkand oli Timurin pääkaupunki 1300-luvulla, ja tähtitieteen '
-      + 'observatorio rakennettiin tänne sata vuotta ennen kuin Kopernikus '
-      + 'syntyi.',
+      + 'observatorio rakennettiin tänne puoli vuosisataa ennen kuin '
+      + 'Kopernikus syntyi.',
     nosto: 'Isoisä kirjoitti: "Samarkandissa Ulug Beg mittasi vuoden '
       + 'pituuden virheellä, joka on alle minuutin." Seisoin '
       + 'kvadrantin kaaren äärellä ja tunsin itseni hitaaksi.',
@@ -11580,7 +11647,7 @@ const ASIA_SAAPUMISET = {
     kuvaus: 'Kathmandun laaksosta näkyy selkeällä säällä lumihuippuja, '
       + 'jotka ovat kahdeksan kilometrin korkuisia — maailman '
       + 'neljätoista korkeinta vuorta ovat kaikki tässä samassa '
-      + 'vuoristossa. Durbar-aukiolla puiset temppelit ovat kaiverrettu '
+      + 'vuoristossa. Durbar-aukiolla puiset temppelit on kaiverrettu '
       + 'niin tiheään, ettei sileää kohtaa löydy.',
     nosto: 'Isoisän kirjassa lukee: "Nepalissa vuoret eivät ole '
       + 'maisemaa vaan seinä, ja portit siihen ovat harvassa." Seisoin '
@@ -12241,7 +12308,7 @@ const ASIA_ARTIKKELIT = {
       + 'useita asteita viileämpää kuin eteläosassa.',
     teksti: 'Teheran on noin 1 200 metrin korkeudessa, ja sen '
       + 'pohjoislaidalla kohoavat Alborz-vuoret. Niiden takana näkyy '
-      + 'Damavand, Iranin korkein huippu, 5 610 metriä. Se on sammunut '
+      + 'Damavand, Iranin korkein huippu, 5 610 metriä. Se on uinuva '
       + 'tulivuori ja näkyy kaupungista selkeällä säällä.'
       + '\n\n'
       + 'Teheran oli pitkään pieni kaupunki Rayn suuren kaupungin '
@@ -17893,7 +17960,7 @@ const EUROPE_KULTTUURI = {
         selite: 'Teepuutarha Çengelköyssä Istanbulin Aasian puolella. '
                   + 'Pöydät on aseteltu vanhan plataanin alle, ja jokaisella '
                   + 'pöydällä on oma pieni teepannu.',
-        lahde: 'M, Wikimedia Commons (CC BY 4.0)',
+        lahde: 'M. Fatih Morgül, Wikimedia Commons (CC BY 4.0)',
         wiki: 'Tee',
       },
       {
@@ -17965,7 +18032,7 @@ const EUROPE_KULTTUURI = {
                   + 'Silakan lisäksi kojuissa myytiin villasukkia ja '
                   + 'kangaspakkoja — markkinat olivat saariston ja kaupungin '
                   + 'vuosittainen kohtaaminen.',
-        lahde: 'Unknown authorUnknown author, Wikimedia Commons (CC BY 4.0)',
+        lahde: 'Unknown author, Wikimedia Commons (CC BY 4.0)',
         wiki: 'Silakkamarkkinat',
       },
       {
@@ -21875,7 +21942,7 @@ const EUROPE_ARTIKKELIT = {
       + 'Välimeren mahtavin kauppakaupunki. Sen laivat toivat idästä '
       + 'silkkiä, mausteita ja tarinoita — kuuluisin kertoja oli '
       + 'kauppiaan poika Marco Polo, joka matkasi 1200-luvulla Kiinaan '
-      + 'asti ja palveli suurkaania yli kaksikymmentä vuotta.\n\n'
+      + 'asti ja palveli suurkaania seitsemäntoista vuotta.\n\n'
       + 'Kaupungin sydän on Pyhän Markuksen tori: basilika '
       + 'kultamosaiikkeineen, dogen palatsi ja korkea kellotorni. Dogi '
       + 'oli tasavallan vaaleilla valittu ruhtinas, ja hänen palatsinsa '
@@ -24809,7 +24876,7 @@ const AFRICA_VALOKUVAT = {
       + 'kuulemma merelle asti, ennen kuin kaupunki edes näkyi.',
     uusi: {
       tiedosto: 'Harbour at the picturesque Stone Town.jpg',
-      lahde: 'Dr, Commons (CC BY 4.0)',
+      lahde: 'Dr. Ondřej Havelka, Commons (CC BY 4.0)',
       selite: 'Sansibarin satama nykyään: dhow-purjeet ovat harvinaistuneet, '
       + 'mutta Kivikaupungin rantaviiva on tunnistettavasti sama.',
     },
@@ -24956,8 +25023,8 @@ const AFRICA_VALOKUVAT = {
       },
     ],
     tiedosto: 'Tunisie, Carthage, cathédrale et séminaire de St Louis - btv1b53114044m.jpg',
-    vuosi: '1800-luvun loppu',
-    lahde: 'BnF Gallica (PD)',
+    vuosi: '1912',
+    lahde: 'Agence Rol / BnF Gallica (PD)',
     selite: 'Karthagon Byrsan kukkula isoisän aikaan: raunioiden keskelle '
       + 'oli noussut katedraali, ja kaivaukset olivat vasta alussa.',
     uusi: {
@@ -31176,7 +31243,7 @@ const MIDDLEEAST_QUESTIONS = {
       options: ['Damavand', 'Mont Blanc', 'Ararat', 'Elbrus'],
       correct: 0,
       level: 3,
-      fact: 'Damavand on sammunut tulivuori ja Lähi-idän korkein huippu, yli 5 600 metriä.',
+      fact: 'Damavand on uinuva tulivuori ja Lähi-idän korkein huippu, yli 5 600 metriä.',
       hint: 'Se on Lähi-idän korkein huippu ja vanha tulivuori.',
     },
     {
@@ -32449,7 +32516,7 @@ const EUROPE_QUESTIONS = {
       options: ['Marco Polo', 'Vasco da Gama', 'James Cook', 'Ibn Battuta'],
       correct: 0,
       level: 3,
-      fact: 'Marco Polo palveli suurkaani Kublain hovissa yli kaksikymmentä vuotta. Hänen matkakirjansa avasi eurooppalaisille idän ja innoitti myöhempiä löytöretkiä.',
+      fact: 'Marco Polo palveli suurkaani Kublain hovissa seitsemäntoista vuotta. Hänen matkakirjansa avasi eurooppalaisille idän ja innoitti myöhempiä löytöretkiä.',
       hint: 'Hänen matkakirjaansa luettiin koko keskiajan.',
       source: 'https://fi.wikipedia.org/wiki/Marco_Polo',
     },
@@ -33119,7 +33186,7 @@ const EUROPE_QUESTIONS = {
       options: ['Latvia', 'Liettua', 'Viro', 'Puola'],
       correct: 0,
       level: 1,
-      fact: 'Riika on Latvian pääkaupunki ja Baltian maiden suurin kaupunki.',
+      fact: 'Riika on Latvian pääkaupunki ja Baltian maiden suurimpia kaupunkeja sekä alueen tärkein satama.',
       hint: 'Maa on Baltian kolmikon keskimmäinen.',
     },
     {
@@ -57734,6 +57801,76 @@ function html(tag, className, text) {
   return node;
 }
 
+/*
+ * Onko valokuva niin vanha, että se näytetään mustavalkoisena?
+ *
+ * Omistajan toive: "matkakirjan kuvat pitäisi pitää värillisinä jos ne
+ * ovat uusia. vain oikeasti vanhat kuvat saisivat olla mustavalkoisia,
+ * jotta kävisi helpommin ilmi, kumpia kuvat ovat."
+ *
+ * Aiemmin harmaasävy oli CSS-sääntö, joka koski kaikkia postikortin
+ * kuvia. Silloin nykypäivän kuva näytti yhtä vanhalta kuin sadan
+ * vuoden takainen, ja koko ennen/nyt-asetelma katosi.
+ *
+ * Ratkaisu luetaan AINEISTOSTA eikä kortin paikasta: jokaisella
+ * kuvalla on vuosi-kenttä, ja se kertoo totuuden silloinkin, kun
+ * pinon keskellä on 1924 otettu lisäkuva.
+ *
+ * Raja on 1960, sama kuin tools/tarkista-kuvaiat.mjs:ssä. Väri­kuvaus
+ * yleistyi 1950-luvulla, joten sitä vanhempi kuva on käytännössä aina
+ * mustavalkoinen jo valmiiksi — harmaasävy ei siis muuta sitä miltä
+ * kuva näyttää, vaan siistii skannauksen kellastumat pois.
+ */
+const VARIKUVAN_RAJA = 1960;
+
+function vuosiluku(teksti) {
+  const m = /\d{4}/.exec(String(teksti ?? ''));
+  return m ? Number(m[0]) : null;
+}
+
+function onVanhaKuva(kuvaTiedot, oletusVanha = false) {
+  const v = vuosiluku(kuvaTiedot?.vuosi);
+  // Tuntematon vuosi: luotetaan kutsujan tietoon siitä, mikä kuva on
+  // kyseessä. Pelkkä arvaus värittäisi historiakuvan tai
+  // harmaannuttaisi nykykuvan, ja molemmat valehtelisivat.
+  if (v === null) return oletusVanha;
+  return v < VARIKUVAN_RAJA;
+}
+
+/**
+ * Merkkijono turvalliseksi innerHTML:ään.
+ *
+ * Radioasemien nimet tulevat generoidusta paketista, joka on koottu
+ * Radio Browserin avoimesta hakemistosta — siellä on ampersandeja ja
+ * lainausmerkkejä ("Rádio & Televisão", 'FM 83.4"'). Ilman suojausta
+ * ne rikkoisivat napin rakenteen.
+ */
+function suojaa(teksti) {
+  return String(teksti)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/*
+ * Soita- ja pysäytä-merkit ääninappeihin.
+ *
+ * Aiemmin napissa oli kaiutinkuvake, joka pysyi samana soi tai ei —
+ * vain teksti vaihtui. Kolmio ja neliö kertovat tilan yhdellä
+ * silmäyksellä, ja ne ovat samat merkit kuin kaikissa soittimissa,
+ * joten niitä ei tarvitse opetella.
+ *
+ * Piirretään samalla kynällä kuin kartta: pelkkä ääriviiva nykyisellä
+ * tekstivärillä (ks. VIIVA_IKONIT alla).
+ */
+const MERKKI_SOITA = '<svg class="merkki" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
+  + '<path d="M8.4 5.8 18 12l-9.6 6.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+  + '</svg>';
+const MERKKI_SEIS = '<svg class="merkki" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
+  + '<rect x="7" y="7" width="10" height="10" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+  + '</svg>';
+
 /**
  * Toimintonappien viivaikonit: emoji erottui kartan mustepiirroksesta,
  * joten ikonit piirretään samalla kynällä kuin kartta — pelkkä ääriviiva
@@ -60371,11 +60508,13 @@ class UI {
     const tiedot = this.factValokuvaTiedot;
     if (!tiedot) return;
     const kortti = html('div', 'postikortti');
-    const teeKortti = (kuvaTiedot, luokka, altTeksti) => {
+    const teeKortti = (kuvaTiedot, luokka, altTeksti, oletusVanha = false) => {
       const osa = html('div', `postikortti-kortti${luokka ? ` ${luokka}` : ''}`);
       const kuva = document.createElement('img');
       asetaKuva(kuva,
         valokuvaUrl(kuvaTiedot.tiedosto, 1000), valokuvaVara(kuvaTiedot.tiedosto, 1000));
+      // Harmaasävy vain aidosti vanhoille (ks. onVanhaKuva).
+      if (onVanhaKuva(kuvaTiedot, oletusVanha)) kuva.classList.add('vanha-vedos');
       kuva.alt = altTeksti;
       osa.appendChild(kuva);
       // Parin lauseen selite kertoo mitä kuvassa näkyy; lähde ja vuosi
@@ -60418,7 +60557,9 @@ class UI {
         kuvaTiedot === pino[pino.length - 1] && tiedot.uusi ? 'uusi' : '',
         i === 0 ? '' : 'alla',
       ].filter(Boolean).join(' ');
-      const osa = teeKortti(kuvaTiedot, luokat, kuvaTiedot.alt);
+      // Pinon ensimmainen on kaupungin historiakuva. Jos siita puuttuu
+      // vuosi, se on silti vanha — muissa oletus on varillinen.
+      const osa = teeKortti(kuvaTiedot, luokat, kuvaTiedot.alt, i === 0);
       // Laskuri kertoo, että kuvia on lisää — muuten pinon alta
       // pilkottava reuna jää helposti huomaamatta.
       if (pino.length > 1) {
@@ -61258,21 +61399,32 @@ class UI {
     const radio = radioMaalle(this.game.pack.map?.cityCountry?.[city.id]);
     if (!radio && !nayte?.url) return;
     kohde.hidden = false;
+    /*
+     * Napissa lukee aseman nimi, ei "Kuuntele kieltä" (omistajan
+     * toive). Nimi on se, mikä tekee napista houkuttelevan: "TRT
+     * Radyo 1" kertoo että toisessa päässä on oikea asema, kun taas
+     * yleisnimike voisi olla mitä tahansa nauhaa.
+     *
+     * Merkki vuorottelee soita/pysäytä-kuvakkeiden välillä, ja
+     * suoralle lähetykselle näkyy punainen piste. Piste EI ole
+     * koriste vaan tieto: jos suora katkeaa ja soitin putoaa
+     * nauhoitettuun näytteeseen, piste sammuu — muuten se väittäisi
+     * suoraa lähetystä nauhasta.
+     */
     const nappi = html('button', 'kulttuuri-kuuntele kieli-kuuntele');
     nappi.type = 'button';
-    nappi.title = radio
-      ? `${radio.asema} — suora lähetys`
-      : (nayte.nimi ?? 'Kaupungissa nauhoitettu näyte');
-    nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
-      + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
-      + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
-      + '</svg><span>Kuuntele kieltä</span><span class="aika" hidden></span>';
+    const nimi = radio ? radio.asema : (nayte.nimi ?? 'Kaupungissa nauhoitettu näyte');
+    nappi.title = radio ? `${nimi} — suora lähetys` : nimi;
+    nappi.innerHTML = `${MERKKI_SOITA}<span>${suojaa(nimi)}</span>`
+      + (radio ? '<span class="live" title="suora lähetys">live</span>' : '')
+      + '<span class="aika" hidden></span>';
     // Sama soitin kuin kulttuurinostojen näytteillä: peilin varareitti,
     // taustan väistö ja aikanäyttö tulevat siitä valmiina.
     nappi.addEventListener('click', () => this.kulttuuriAaniNapista({
       aani: radio ? radio.url : nayte.url,
       vara: radio ? (nayte?.url ?? null) : null,
-      otsikko: 'Kuuntele kieltä',
+      otsikko: nimi,
+      suora: Boolean(radio),
     }, nappi));
     kohde.appendChild(nappi);
   }
@@ -61529,7 +61681,15 @@ class UI {
     // muuttuivat pysäytettäessä "Kuuntele näyte" -napeiksi.
     const alkuperainen = nimio?.textContent ?? 'Kuuntele näyte';
     this.kulttuuriAani = { audio, nappi, nimi: alkuperainen };
-    if (nimio) nimio.textContent = 'Pysäytä näyte';
+    /*
+     * Radionapissa lukee aseman nimi, ja se saa jäädä lukemaan sitä
+     * myös soidessa: nimi on napin tunniste, ei kehotus. Muissa
+     * napeissa teksti on kehotus ("Kuuntele näyte"), ja silloin sen
+     * on vaihduttava. Merkki (kolmio/neliö) kertoo tilan molemmissa.
+     */
+    const merkki = nappi.querySelector('.merkki');
+    if (merkki) merkki.outerHTML = MERKKI_SEIS;
+    if (nimio && !merkki) nimio.textContent = 'Pysäytä näyte';
     nappi.classList.add('soi');
     // Kesto ja toistokohta näkyvät napissa näytteen soidessa
     // (omistajan toive) — muodossa 0:12 / 3:10.
@@ -61571,6 +61731,13 @@ class UI {
       if (!toinenAaniKokeiltu && nosto.vara) {
         toinenAaniKokeiltu = true;
         varareittiKokeiltu = false;
+        /*
+         * Live-merkki sammuu tässä. Nyt soi kaupungissa nauhoitettu
+         * näyte, ei suora lähetys, ja punainen piste väittäisi
+         * muuta. Merkki on tieto eikä koriste, joten sen on
+         * kadottava samalla hetkellä kuin sen kertoma asia.
+         */
+        nappi.querySelector('.live')?.remove();
         audio.src = aaniOsoite(jaaAlku(nosto.vara).url);
         audio.load();
         audio.play().catch(petti);
@@ -61589,8 +61756,12 @@ class UI {
     if (!soiva) return;
     soiva.audio.pause();
     soiva.audio.removeAttribute('src');
+    const merkki = soiva.nappi.querySelector('.merkki');
+    if (merkki) merkki.outerHTML = MERKKI_SOITA;
     const nimio = soiva.nappi.querySelector('span');
-    if (nimio) nimio.textContent = soiva.nimi ?? 'Kuuntele näyte';
+    // Nimiö palautetaan vain jos se oli kehotus. Radionapissa lukee
+    // aseman nimi, eikä se muuttunut soidessakaan.
+    if (nimio && !merkki) nimio.textContent = soiva.nimi ?? 'Kuuntele näyte';
     const aika = soiva.nappi.querySelector('.aika');
     if (aika) {
       aika.hidden = true;
@@ -63841,6 +64012,11 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
+  { v: 198, teksti: 'Radionapissa aseman nimi ja live-merkki' },
+  { v: 198, teksti: 'Vain aidosti vanhat kuvat ovat mustavalkoisia' },
+  { v: 198, teksti: 'Kuvat aukeavat isompina työpöytäselaimella' },
+  { v: 198, teksti: 'Sisältötarkastus: 15 virhettä pois teksteistä' },
+  { v: 198, teksti: 'Pariisin ja Lontoon tekstit vastaavat kertojaa' },
   { v: 197, teksti: 'Laajennussuunnat työhuoneen suunnitelmaan' },
   { v: 196, teksti: 'Työhuoneen karttakehys ei jää soimaan taustalle' },
   { v: 196, teksti: 'Työhuone näyttää peilin ja repojen koot' },
@@ -63883,7 +64059,7 @@ const MUUTOKSET = [
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.197';
+const APP_VERSION = '2026-08-03.198';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -64402,43 +64578,6 @@ function kytkeKehittaja() {
     asetaKehittajaTila(false);
     ui?.paivitaKehittajaTila();
     paivitaVersioKulma();
-
-/*
- * Päivitysloki napautuksesta (omistajan toive). Numero kulmassa on jo
- * se paikka, josta pelin tila luetaan, joten loki kuuluu sen taakse
- * eikä omaan valikkokohtaansa.
- *
- * Lista rakennetaan vasta ensimmäisellä avauksella: se on kymmeniä
- * rivejä, eikä useimmilla pelikerroilla katsota lainkaan.
- */
-const muutoksetDialog = document.getElementById('muutokset-dialog');
-const muutoksetLista = document.getElementById('muutokset-lista');
-let lokiRakennettu = false;
-
-function avaaMuutokset() {
-  if (!lokiRakennettu) {
-    for (const m of MUUTOKSET) {
-      const rivi = document.createElement('li');
-      const numero = document.createElement('span');
-      numero.className = 'muutos-versio';
-      numero.textContent = `v${m.v}`;
-      const teksti = document.createElement('span');
-      teksti.textContent = m.teksti;
-      rivi.append(numero, teksti);
-      muutoksetLista.appendChild(rivi);
-    }
-    lokiRakennettu = true;
-  }
-  muutoksetDialog.showModal();
-}
-
-versioKulma.addEventListener('click', avaaMuutokset);
-document.getElementById('muutokset-sulje')
-  .addEventListener('click', () => muutoksetDialog.close());
-// Napautus kortin ulkopuolelle sulkee, kuten muissakin ikkunoissa.
-muutoksetDialog.addEventListener('click', (e) => {
-  if (e.target === muutoksetDialog) muutoksetDialog.close();
-});
     kehittajaDialog.close();
     return;
   }
@@ -64451,43 +64590,6 @@ muutoksetDialog.addEventListener('click', (e) => {
   asetaKehittajaTila(true);
   ui?.paivitaKehittajaTila();
   paivitaVersioKulma();
-
-/*
- * Päivitysloki napautuksesta (omistajan toive). Numero kulmassa on jo
- * se paikka, josta pelin tila luetaan, joten loki kuuluu sen taakse
- * eikä omaan valikkokohtaansa.
- *
- * Lista rakennetaan vasta ensimmäisellä avauksella: se on kymmeniä
- * rivejä, eikä useimmilla pelikerroilla katsota lainkaan.
- */
-const muutoksetDialog = document.getElementById('muutokset-dialog');
-const muutoksetLista = document.getElementById('muutokset-lista');
-let lokiRakennettu = false;
-
-function avaaMuutokset() {
-  if (!lokiRakennettu) {
-    for (const m of MUUTOKSET) {
-      const rivi = document.createElement('li');
-      const numero = document.createElement('span');
-      numero.className = 'muutos-versio';
-      numero.textContent = `v${m.v}`;
-      const teksti = document.createElement('span');
-      teksti.textContent = m.teksti;
-      rivi.append(numero, teksti);
-      muutoksetLista.appendChild(rivi);
-    }
-    lokiRakennettu = true;
-  }
-  muutoksetDialog.showModal();
-}
-
-versioKulma.addEventListener('click', avaaMuutokset);
-document.getElementById('muutokset-sulje')
-  .addEventListener('click', () => muutoksetDialog.close());
-// Napautus kortin ulkopuolelle sulkee, kuten muissakin ikkunoissa.
-muutoksetDialog.addEventListener('click', (e) => {
-  if (e.target === muutoksetDialog) muutoksetDialog.close();
-});
   kehittajaDialog.close();
 }
 

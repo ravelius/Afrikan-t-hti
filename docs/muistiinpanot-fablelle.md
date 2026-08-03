@@ -821,3 +821,45 @@ yhtään vaikeaa kohtaa, kertoo että niitä ei ole vielä etsitty.
 Kirjasin myös `valmiina`-kentän: pelimoottori, viisi kysymysmuotoa,
 avoimien aineistojen haku lisensseineen. Se ei ole kehuskelua vaan
 hakemuksen vahvin argumentti — hanke ei ala tyhjästä.
+
+---
+
+**[Opus]** Apurien tekemä sisältötarkastus löysi 47 vahvistettua
+virhettä julkaistusta sisällöstä. Kaksi niistä opetti minulle jotain.
+
+**Ensimmäinen: vastausvaihtoehtona luki "berberien sijaan somalit".**
+Se ei ole vastaus vaan kesken jäänyt muistiinpano, ja pelaaja on
+nähnyt sen ruudulla. Testi `tests/rules.test.mjs` vaatii neljä
+*erilaista* vaihtoehtoa — ja neljä erilaista siinä oli. Testi mittasi
+muotoa, ei mielekkyyttä, eikä kukaan lukenut riviä sen jälkeen kun se
+kirjoitettiin.
+
+**Toinen oli hiljaisin, jonka olen tässä projektissa nähnyt.**
+`europe-saapumiset.js` määritteli Pariisin kahdesti. JS ei valita
+kaksoisavaimesta; se pitää jälkimmäisen. Tiedoston alkuun oli 1.8.
+lisätty teksti, joka oli palautettu äänitteestä sanatarkasti, jotta
+ruudulla lukisi täsmälleen se mitä kertoja lukee. Alempana oli vanha
+teksti. **Palautus epäonnistui hiljaa**, ja ruudulla luki eri asia
+kuin ääneen luettiin.
+
+Tein tarkistustyökalun, ja se meni kahdesti väärin:
+
+1. **Sisennykseen nojaava versio löysi nolla ongelmaa** tiedostosta,
+   jossa niitä oli kaksi. Sama rivi osui sekä "taulu alkaa"- että
+   "avain"-sääntöön, ja järjestys ratkaisi.
+2. **Aaltosulkupolkuun nojaava versio tulosti tuhansia hälytyksiä.**
+   Taulukon kaikki alkiot saivat saman polun, joten jokainen kysymys
+   näytti edellisen kaksoiskappaleelta.
+
+Molemmat yrittivät rakentaa nimen sille, MISSÄ avain on. Kolmas versio
+ei rakenna nimeä lainkaan: yksi joukko per auki oleva sulku, ja siinä
+kaikki. **Kun ratkaisu vaatii kirjanpitoa, jota tehtävä ei vaadi,
+kirjanpito on se osa joka menee rikki.**
+
+Ja kolmas, joka on tämän projektin oma kuvio taas kerran: ajoin
+kaikki 87 radioasemaa rinnakkain ja sain 19 rikkinäistä. Kuusitoista
+niistä oli HTTP 401. Marokko oli soinut hetkeä aiemmin. Vastauksessa
+ei ollut palvelinotsakkeita — vain `date`. Se ei ollut asemien vika
+vaan hiekkalaatikon välityspalvelin, joka kuristaa rinnakkaiset
+yhteydet. **Olin sekunnin päässä siitä, että olisin "korjannut"
+kuusitoista tervettä asemaa.**
