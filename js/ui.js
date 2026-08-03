@@ -1833,6 +1833,23 @@ export class UI {
       const pane = this.svg.parentElement;
       this.taideTarkkuus = piirtotarkkuus(pane?.clientWidth ?? 400, pane?.clientHeight ?? 800);
       this.taideRuutu = ruudunKoko(nakyva.skaala, this.taideTarkkuus);
+      /*
+       * Kiertävällä kartalla ruudun on jaettava maailma tasan.
+       *
+       * Ruudun koko lasketaan pikselirajasta, ja loitonnetulla
+       * maailmankartalla se venyi 23860 yksikköön — kaksi kertaa
+       * maailmaa leveämmäksi. Ruutu on läpinäkymätön pergamentti koko
+       * alaltaan, joten sen TYHJÄ oikea puoli maalattiin kierron
+       * kopion päälle: kartta loppui pystysuoraan reunaan ja oikealla
+       * oli tyhjää (omistajan kuvakaappaus iPadilta).
+       *
+       * Kun leveys on maailman jaollinen osa, yksikään ruutu ei ulotu
+       * laudan ulkopuolelle eikä siis voi peittää kopiota.
+       */
+      if (this.kiertava()) {
+        const W = this.game.pack.map.width;
+        this.taideRuutu = W / Math.max(1, Math.round(W / this.taideRuutu));
+      }
       this.taideVanhat = [...this.taideRuudut.values()];
       this.taideRuudut = new Map();
     }
@@ -1840,9 +1857,16 @@ export class UI {
     const koko = this.taideRuutu;
     const arkki = paperi(this.game.pack.map);
     const PUSKURI = 1; // ruudullista joka suuntaan: koko pyyhkäisyn matka
-    const x0 = Math.max(arkki.x, nakyva.x - nakyva.w * PUSKURI);
+    /*
+     * Kiertävällä kartalla ruudut rajataan laudan leveyteen. Sen
+     * ulkopuolella ei ole taidetta vaan kierron kopio, ja ruutu peittäisi
+     * sen tyhjällä pergamentilla.
+     */
+    const vasen = this.kiertava() ? 0 : arkki.x;
+    const oikea = this.kiertava() ? this.game.pack.map.width : arkki.x + arkki.w;
+    const x0 = Math.max(vasen, nakyva.x - nakyva.w * PUSKURI);
     const y0 = Math.max(arkki.y, nakyva.y - nakyva.h * PUSKURI);
-    const x1 = Math.min(arkki.x + arkki.w, nakyva.x + nakyva.w * (1 + PUSKURI));
+    const x1 = Math.min(oikea, nakyva.x + nakyva.w * (1 + PUSKURI));
     const y1 = Math.min(arkki.y + arkki.h, nakyva.y + nakyva.h * (1 + PUSKURI));
 
     const puuttuvat = [];

@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 211, teksti: 'Nipistys zoomaa karttaa kahdella sormella' },
+  { v: 211, teksti: 'Korjattu: kartta katkesi kesken kierroksen' },
+  { v: 210, teksti: 'Pohjolan merkinnät uusiksi yhden idean malliin' },
   { v: 209, teksti: 'Maailmankartta korvasi vanhan maailman laudan' },
   { v: 209, teksti: 'Maat, rajat ja matkakirja maailmankartalle' },
   { v: 209, teksti: 'Kesken jäänyt peli siirtyy uudelle kartalle' },

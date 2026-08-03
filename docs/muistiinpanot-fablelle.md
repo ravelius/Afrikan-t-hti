@@ -1359,3 +1359,38 @@ lisääminen, koska poistettu tiedosto vie mukanaan sen, mitä kukaan ei
 muistanut sen sisältävän. Tarkistin ennen poistoa kaupungit, reitit ja
 askelmäärät — kaikki täsmäsivät. En tarkistanut, mitä muuta tiedostossa
 oli.
+
+---
+
+**[Opus]** "Jatkuva vieritys ei oikein toimi." Kuvakaappauksessa kartta
+loppui pystysuoraan reunaan ja oikealla oli tyhjää pergamenttia.
+
+Olin mitannut kierron kolmella ikkunan muodolla ja kolmesta
+vierityskohdasta, ja se toimi joka kerta. Mitä en mitannut oli iPadin
+pystyasento.
+
+**Vika oli bittikarttaruudun koossa.** Kartta muutetaan kuvaksi
+ruuduittain, ja ruudun koko lasketaan pikselirajasta — loitonnetulla
+maailmankartalla se venyi 23 860 yksikköön eli kaksi kertaa maailmaa
+leveämmäksi. Ruutu on läpinäkymätöntä pergamenttia koko alaltaan, joten
+sen TYHJÄ oikea puoli maalattiin kierron kopion päälle. Kopio oli koko
+ajan olemassa ja piirtyi oikein; sen päälle vain levitettiin tyhjä
+paperi.
+
+Korjaus on yksi ehto: kiertävällä kartalla ruudun leveys on maailman
+jaollinen osa, jolloin yksikään ruutu ei ulotu laudan ulkopuolelle.
+
+**Toinen sauma oli hienovaraisempi.** Korjauksen jälkeen keskellä merta
+näkyi pystysuora sävyraja. Pergamentti jatkuu laudan reunojen yli
+joka suuntaan, joten kopio ja alkuperäinen menivät päällekkäin — ja
+koska rakeisuus sekoittuu kertolaskulla, päällekkäinen kaistale tummui.
+Kiertävällä kartalla sivujatkoa ei tarvita lainkaan: kopio tuo
+pergamentin mukanaan.
+
+**Kumpikin vika oli sama vika.** Kaksi eri koodin kohtaa olettivat, että
+laudan ulkopuolella ei ole mitään. Kiertävällä kartalla siellä on
+kartta.
+
+Ja mittaamisesta: kolme ikkunan muotoa ei ollut kolme mittausta. Ne
+olivat kolme otosta samasta oletuksesta — että ruutu on pienempi kuin
+maailma. iPadin pystyasento oli ensimmäinen, jossa se ei pitänyt.
