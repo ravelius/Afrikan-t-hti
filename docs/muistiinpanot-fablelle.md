@@ -1430,3 +1430,60 @@ kautta lähetetty kosketusliike ei mennyt perille lainkaan — mittari oli
 rikki, ei sovellus. Vasta sivun sisällä luodut `TouchEvent`-oliot
 näyttivät eleen toimivan päästä päähän.
 
+
+---
+
+**[Opus]** Peili ei ollut koskaan toiminut, ja siksi se näytti
+toimivalta.
+
+Omistaja lähetti kuvan rikkinäisestä valokuvasta Marseillessa ja lisäsi:
+"Ateenassa ei tainnut olla kuvia ollenkaan."
+
+Ensimmäinen oletukseni oli, että tiedostot ovat kadonneet Commonsista.
+Kirjoitin tarkistuksen kaikille 537 kuvalle. Yksikään ei puuttunut.
+
+Vika oli yhdessä sanassa palvelutyöntekijässä. Peilin kuvat haettiin
+CORS-tilassa, eikä peiliämpäri lähetä sitä otsaketta, joka CORS-haussa
+vaaditaan. Selain hylkää sellaisen pyynnön aina. **Jokainen peilihaku
+oli epäonnistunut siitä asti kun peili otettiin käyttöön.**
+
+Miksi kukaan ei huomannut: koodissa oli varareitti. Kun peili petti,
+kuva haettiin Commonsista, ja se toimi. Peli näytti oikealta ja tuntui
+oikealta — se vain teki jokaisesta kuvasta kaksi pyyntöä, joista
+ensimmäinen oli aina turha. Vasta kun kuvia pyydettiin monta kerralla,
+Commons alkoi rajoittaa, ja silloin kuva jäi rikkinäiseksi tai pino
+tyhjäksi.
+
+**Varareitti, joka toimii liian hyvin, piilottaa sen mitä se korvaa.**
+Peilin koko tarkoitus oli olla nopea ensisijainen lähde; se oli
+muuttunut hiljaa pelkäksi viiveeksi ennen varareittiä. Mikään mittari
+ei kertonut siitä, koska lopputulos oli oikea.
+
+Ja vanha tarkistustyökalu kävi läpi vain kaupungin pääkuvan ja
+`uusi`-kuvan — ei `lisat`-taulukkoa, jossa rikkinäinen Marseillen kuva
+oli. Se oli mennyt läpi joka kerta, koska se ei koskenut siihen kuvaan
+lainkaan. Sama opetus kuin nipistyksessä, uudessa paikassa:
+**tarkistuksen kattavuus pitää lukea rakenteesta, ei muistaa.**
+
+---
+
+**[Opus]** Himalaja näytti reiältä, ja syy oli väri eikä piirto.
+
+Vein maastokerroksen kartalle omistajan antamilla rajoilla: yli 4000
+metriä saa valkoista sävyä eli lumipeitteen. Rajat olivat hänen, ja
+noudatin niitä.
+
+Alpeilla ja Andeilla 4000 m on suunnilleen lumiraja. Himalajalla ei ole:
+siellä lumiraja on noin 5000 m, ja koko Tiibetin ylätasanko on yli
+neljän kilometrin korkeudessa. Valkoinen ei siis päätynyt huipuille vaan
+tasangolle — läiskäksi, joka oli laudasta lähes puoli prosenttia.
+
+Toinen puoli oli sävy. Sepia-kartalla ei ole valkoista: vaalein sävy on
+paperi itse. Käyttämäni `#f6f1e6` oli sekä vaaleampi että harmaampi kuin
+paperi, joten silmä ei lukenut sitä lumeksi vaan puuttuvaksi paperiksi.
+
+**Yksi luku voi olla oikein maailmanlaajuisesti ja väärin joka
+paikassa.** 4000 metriä on hyvä keskiarvo eikä kuvaa mitään todellista
+vuorta. Nostin rajan 5000 metriin ja lämmitin sävyn paperin puolelle:
+valkoinen alue kutistui viidesosaan ja siirtyi harjanteelle. Läiskä
+näytti reiältä, nauha näyttää vuorelta.
