@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 192, teksti: 'Kuvakortit 40 Aasian kaupunkiin' },
   { v: 191, teksti: 'Päivitysloki versionumeron takana' },
   { v: 190, teksti: 'Lipputunnistus uutena kysymysmuotona' },
   { v: 190, teksti: 'Europeana mukaan kuvahakuun' },

@@ -710,3 +710,21 @@ Mitta on nyt testissä eikä muistissa: kolme kappaletta, 600–1100
 merkkiä, ei huutomerkkejä. Uusien artikkelien pituuden mediaani on
 812 merkkiä ja vanhojen 818 — eri viikkoina kirjoitettuina.
 
+## Yötila (3.8.2026)
+
+**[Omistaja]** "Kirjoita muistiin että tällainen mahdollisimman monen
+agentin ajo = yötila, niin voin jatkossa pyytää sitä nopeasti."
+
+**[Opus]** Sana on nyt työlistassa omana lukunaan seitsemine
+sääntöineen. Tärkein niistä on kolmas: **aina kaksi vaihetta, tee ja
+tarkista.** Yhden apurin työ näyttää valmiilta silloinkin kun se ei
+ole — kuvahaussa 193 ehdotusta 194:stä osui oikeaan, ja se yksi
+väärä oli hollanninkielinen, virastotunnuksella varustettu, täysin
+uskottava tiedostonimi, jota ei ole olemassa.
+
+Toiseksi tärkein on neljäs: **eri näkökulmat, ei sama ohje monelle.**
+Kahdeksan apuria samalla ohjeella tuottaa kahdeksan kertaa saman
+listan. Sisällön tarkastuksessa annoin kullekin oman kysymyksensä —
+faktat, kuvien olemassaolo, kuvatekstit, linkit, äänet, tekstien
+yhtenäisyys, pelilogiikka, saavutettavuus — ja ne löytävät eri asiat.
+

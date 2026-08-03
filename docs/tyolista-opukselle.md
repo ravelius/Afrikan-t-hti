@@ -384,6 +384,72 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 68: Aasian kuvakortit — VALMIS v192 3.8.2026
+
+40 Aasian ja Lähi-idän kaupunkia sai kuvakortin: vanha valokuva,
+päiväkirjan mainitsemat näkymät ja nykypäivä. **184 kuvaa.** Loput 23
+tulevat kun parvi ehtii.
+
+Uusi työkalu `tools/kirjoita-kuvakortit.mjs` luo kortit tyhjästä
+laudalle, jolla niitä ei ole (`lisaa-kuvapinoon.mjs` vain täydentää jo
+olemassa olevia).
+
+### Neljä tarkistusta, koska ne ovat neljä eri kysymystä
+
+187 ehdotuksesta hylättiin kolme, ja kaikki kolme samasta syystä:
+**Commonsin päiväys oli museon skannauspäivä**, ei kuvan ikä.
+
+- `riad/vanha` — Commons sanoo 2024
+- `teheran/vanha` — Antoin Sevruguinin valokuva, Rietbergin museon
+  kokoelmatunnus 2023
+- `persepolis/vanha` — sama museo, tunnus 2022
+
+Sevruguin kuoli 1933, joten kuva on varmasti aito. Työkalu hylkäsi sen
+silti, ja se on oikein: **turvallinen oletus on hylätä se, mitä ei voi
+todentaa.** Kolme kuvaa katsotaan käsin erikseen.
+
+Aiemmin (v185) sama tarkistus otti vain suurimman vuosiluvun ja
+hylkäsi aitoja kuvia; nyt se ottaa vuosiluvun sekä päiväyksestä että
+kuvauksesta ja luottaa vanhempaan. Silti se ei auta, jos kumpikaan
+kenttä ei mainitse alkuperäistä vuotta.
+
+
+## YÖTILA — omistajan komento
+
+**"Yötila"** tarkoittaa: käynnistä niin monta apuria kuin keksit, ja
+tee mahdollisimman paljon itsenäisesti. Omistaja sanoi sen näin:
+"Minulla on vielä reilu pari tuntia aikaa käyttää iso kasa kredittejä.
+Laita niin paljon agentteja käyntiin kuin vain keksit."
+
+Sanaa ei tarvitse selittää joka kerta. Kun omistaja sanoo **yötila**,
+tee tämä:
+
+1. **Kartoita aukot koneella, älä muistista.** Aja kysely, joka
+   luettelee mitä puuttuu: kaupungit ilman kysymyksiä, maat ilman
+   tunnuslukuja, kuvat ilman tarkistusta. Lista ratkaisee, mitä
+   apureita kannattaa käynnistää.
+2. **Yksi työnkulku per aukko**, ei yhtä isoa. Jokainen saa oman
+   ohjeensa ja oman tarkistusvaiheensa.
+3. **Aina kaksi vaihetta: tee ja tarkista.** Toinen apuri yrittää
+   kumota ensimmäisen työn. Kuvahaussa 194 ehdotuksesta yksi
+   tiedostonimi oli keksitty — tarkistus maksoi yhden kyselyn per kuva
+   ja poisti koko kysymyksen.
+4. **Eri näkökulmat, ei sama ohje monelle.** Kahdeksan apuria samalla
+   ohjeella löytää kahdeksan kertaa samat asiat. Kuvassa koko, lisenssi
+   ja aitous ovat kolme eri kysymystä, eikä yksi vastaa toiseen.
+5. **Kirjoittaminen jää minulle.** Apurit etsivät ja tarkistavat;
+   saapumistekstit ja artikkelit kirjoitan itse, koska ääni vaihtuu
+   ryhmien rajoilla jos kirjoittajia on monta. Se on juuri se, mistä
+   omistaja valitti Wikipedian teksteissä.
+6. **Julkaise erä kerrallaan.** Ei yhtä isoa pakettia aamulla vaan
+   valmis alue kerrallaan, testit vihreänä ja versionosto joka kerta.
+7. **Kerro aamulla mitä hylättiin.** Hiljainen karsinta näyttää
+   täydeltä listalta.
+
+Muista myös yötilassa: **ElevenLabsia ei käytetä** (omistajan päätös),
+eikä avaimia kopioida keskusteluun.
+
+
 ## Paketti 67: lipputunnistus ja päivitysloki — VALMIS v191 3.8.2026
 
 Kaksi omistajan toivetta samassa paketissa.
