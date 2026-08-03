@@ -19,11 +19,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-<<<<<<< Updated upstream
-const APP_VERSION = '2026-08-03.219';
-=======
-const APP_VERSION = '2026-08-03.217';
->>>>>>> Stashed changes
+const APP_VERSION = '2026-08-03.220';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

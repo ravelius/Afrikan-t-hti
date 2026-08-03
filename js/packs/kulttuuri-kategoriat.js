@@ -69,28 +69,6 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Lontoon suurpalo',
         },
         {
-          otsikko: 'Markkinat joen jäällä',
-          teksti: 'Vanhassa Lontoon sillassa oli yhdeksäntoista kaarta, ja niiden '
-            + 'paksut tukijalat hidastivat virtaa niin paljon, että Thames '
-            + 'saattoi jäätyä umpeen. Kylminä talvina jäälle pystytettiin '
-            + 'teltat ja pidettiin pakkasmarkkinat. Viimeiset alkoivat 1. '
-            + 'helmikuuta 1814 ja kestivät neljä päivää: tanssia, keilapeliä, '
-            + 'paistettua lammasta ja toistakymmentä painokonetta, jotka '
-            + 'painoivat jäällä muistorunoja ostajille. Yksi näytös oli '
-            + 'norsu, joka talutettiin joen yli Blackfriarsin sillan '
-            + 'alapuolelta. Kun vanha silta purettiin 1831 ja tilalle tuli '
-            + 'leveäkaarinen uusi, vesi pääsi virtaamaan vapaasti — eikä '
-            + 'vuorovesi-Thames ole Lontoon kohdalla jäätynyt umpeen sen '
-            + 'koommin.',
-          tiedosto: 'Frost Fair on the River Thames (1814).jpg',
-          selite: 'Pakkasmarkkinat Thamesin jäällä 4. helmikuuta 1814, kuvattuna '
-            + 'Banksiden rannalta. Jäälle on pystytetty telttoja ja keinuja, '
-            + 'väki keilaa ja tanssii, ja taustalla näkyvät Pyhän Paavalin '
-            + 'kupoli, Monument sekä oikealla vanha Lontoon silta.',
-          lahde: 'George Thompson, Wikimedia Commons (public domain)',
-          wiki: 'Pieni jääkausi',
-        },
-        {
           otsikko: 'Rantakatu on viemärin katto',
           teksti: 'Kesällä 1858 Thames löyhkäsi niin pahasti, että parlamentin '
             + 'jokipuolen verhot kastettiin kalkkikloridiin ja edustajat '
@@ -109,7 +87,7 @@ export const KULTTUURI_KATEGORIAT = {
             + '(1), matalan tason viemäri (2), metrorata höyryvetureineen (3) '
             + 'ja joen pohjan alle paineilmarata (4); oikealla muurataan '
             + 'uutta rantamuuria ulos jokeen.',
-          lahde: 'The Illustrated London News / Wellcome Collection, Wikimedia Commons (public domain)',
+          lahde: 'The Illustrated London News / Wellcome Collection, Wikimedia Commons (PD)',
           wiki: 'Thames',
         },
         {
@@ -164,27 +142,6 @@ export const KULTTUURI_KATEGORIAT = {
             + 'häämöttää ohut kuunsirppi.',
           lahde: 'Joseph Mallord William Turner, Wikimedia Commons (PD)',
           wiki: 'William Turner',
-        },
-        {
-          otsikko: 'Tyhjä jalusta, jolle sai nousta',
-          teksti: 'Trafalgar Squaren luoteiskulmaan muurattiin vuonna 1841 '
-            + 'jalusta kuningas Vilhelm IV:n ratsastajapatsasta varten, mutta '
-            + 'rahat loppuivat kesken ja kivi jäi tyhjäksi yli 150 vuodeksi. '
-            + 'Vuodesta 1999 sen päällä on vaihtunut yksi nykytaideteos '
-            + 'kerrallaan, ja kesällä 2009 teos oli ihminen: Antony Gormleyn '
-            + 'One & Other nosti jalustalle 2 400 tavallista ihmistä, kunkin '
-            + 'yhdeksi tunniksi, sadan vuorokauden ajan yötä ja päivää. '
-            + 'Jokainen sai tehdä siellä mitä halusi ja ottaa mukaan sen '
-            + 'minkä jaksoi yksin kantaa, ja jalustaa näytettiin verkossa '
-            + 'suorana lähetyksenä.',
-          tiedosto: 'Gormley-OneandOther-4thPlinth-TrafalgarSq-20090706.jpg',
-          selite: 'Trafalgar Squaren neljäs jalusta One & Other -teoksen '
-            + 'avauspäivän iltana 6. heinäkuuta 2009: jalustalla seisova mies '
-            + 'lukee papereista mikrofoniin turvaverkon reunustamalla '
-            + 'kivellä. Vasemmalla näkyvät National Galleryn kupoli ja St '
-            + 'Martin-in-the-Fieldsin torni, alhaalla katsojajoukko.',
-          lahde: 'Simon Lee, Wikimedia Commons (CC BY 2.0)',
-          wiki: 'Trafalgar Square',
         },
         {
           otsikko: 'Talo, jota ei saanut muuttaa',
@@ -530,6 +487,25 @@ export const KULTTUURI_KATEGORIAT = {
           lahde: 'Philafrenzy, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Steel pan',
         },
+        {
+          otsikko: 'Proms — konsertti, jossa seistään',
+          tiedosto: 'Royal Albert Hall, BBC Proms 2017.jpg',
+          teksti: 'Proms on kahdeksan viikon konserttisarja, joka on soinut '
+            + 'joka kesä vuodesta 1895. Royal Albert Halliin mahtuu 5 272 '
+            + 'istujaa, mutta halvimmat liput ovat lattialle: prommaajat '
+            + 'seisovat orkesterin edessä koko illan. Jokainen konsertti '
+            + 'lähetetään radiossa, joten sen kuulee ilmaiseksi missä '
+            + 'tahansa.',
+          selite: 'Royal Albert Hall Proms-konsertin aikana. Alhaalla '
+            + 'areenalla ei ole tuoleja lainkaan — siellä seisova yleisö '
+            + 'on kuulunut Promsiin alusta asti.',
+          lahde: 'Ed g2s, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'BBC Proms',
+          musiikki: 'https://music.apple.com/fi/search?term=bbc%20proms',
+          musiikkiNimi: 'Proms-konsertteja Apple Musicissa',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/2/28/ELGAR_Pomp_and_Circumstance_in_D%2C_Opus_39%2C_No._1_-_United_States_Marine_Band.mp3',
+          musiikkiNayteNimi: 'Elgar: Pomp and Circumstance nro 1 — United States Marine Band, PD',
+        },
       ],
     },
     {
@@ -651,6 +627,21 @@ export const KULTTUURI_KATEGORIAT = {
             + 'teekuppi.',
           lahde: 'RT6HPU, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Kello viiden tee',
+        },
+        {
+          otsikko: 'Piirakka, muusi ja vihreä liquor',
+          tiedosto: 'Pie mash and liquor Manze Bermondsey.jpg',
+          teksti: 'Pie and mash on Lontoon satamakortteleiden ruokaa: '
+            + 'jauhelihapiirakka, perunamuusia ja päälle liquor eli '
+            + 'vihreä persiljakastike — nimestä huolimatta siinä ei ole '
+            + 'tippaakaan väkijuomaa. Ennen piirakat tehtiin ankeriaasta, '
+            + 'sillä Thames oli niitä täynnä ja ne olivat halvinta lihaa '
+            + 'mitä sai.',
+          selite: 'Annos lontoolaisessa piirakkapuodissa marmoripöydällä. '
+            + 'Liquor keitettiin alun perin ankeriaan keitinliemestä, ja '
+            + 'väri tulee persiljasta.',
+          lahde: 'Secretlondon, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Brittiläinen keittiö',
         },
       ],
     },
@@ -909,6 +900,21 @@ export const KULTTUURI_KATEGORIAT = {
           lahde: 'APK, Commons (CC BY 4.0)',
           wiki: 'Natural History Museum',
         },
+        {
+          otsikko: 'Maailman ensimmäinen metro',
+          tiedosto: 'Metropolitan Railway, Baker Street Station.jpg',
+          teksti: 'Lontoon metro avattiin 10. tammikuuta 1863 maailman '
+            + 'ensimmäisenä. Vaunut olivat puuta ja niitä valaistiin '
+            + 'kaasulyhdyillä, ja maan alla junaa veti höyryveturi — savu '
+            + 'johdettiin ulos tunneliin jätetyistä aukoista. '
+            + 'Ensimmäisenä vuonna tehtiin 9,5 miljoonaa matkaa. Nyt '
+            + 'asemia on 272 ja rataa 400 kilometriä.',
+          selite: 'Baker Streetin asema noin 1863. Krinoliinihameiset '
+            + 'matkustajat odottavat laiturilla, ja tunnelin suulla '
+            + 'savuaa höyryveturi.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Lontoon metro',
+        },
       ],
     },
     {
@@ -1060,7 +1066,7 @@ export const KULTTUURI_KATEGORIAT = {
             + 'Ryysyinen väki katselee kullattuihin kehyksiin ripustettuja '
             + 'ylhäisön muotokuvia: mukana on kepin varassa kulkeva mies, '
             + 'lapsia rievuissa ja pyörällisellä laudalla istuva raajarikko.',
-          lahde: 'John Leech, Wikimedia Commons (PD-old-100)',
+          lahde: 'John Leech, Wikimedia Commons (PD)',
           wiki: 'Pilapiirros',
         },
         {

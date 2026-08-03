@@ -113,6 +113,53 @@ const osat = kategoriat.map((k) => {
   return r.join('\n');
 });
 
+/*
+ * YHDISTÄVÄ KIRJOITUS: jos kohdetiedosto on jo olemassa, sen muut
+ * kaupungit säilyvät ja vain oma kaupunki korvautuu. Ilman tätä ajo
+ * toiselle kaupungille pyyhkisi Lontoon 53 nostoa (ensimmäisen ajon
+ * jälkeen huomattu monistamisen este).
+ *
+ * Muut kaupungit luetaan moduulista ja serialisoidaan uudelleen samalla
+ * kaavalla — käsin tehdyt hienosäädöt säilyvät, koska serialisointi on
+ * sama jolla ne on alun perin kirjoitettu.
+ */
+const omaLohko = `  ${kaupunki}: [\n${osat.join('\n')}\n  ],`;
+const kaupungit = [omaLohko];
+try {
+  const olemassa = (await import(join(JUURI, kohde)))[vientinimi] ?? {};
+  for (const [id, lista] of Object.entries(olemassa)) {
+    if (id === kaupunki) continue;
+    const rivit = lista.map((k) => {
+      const r = ['    {'];
+      r.push(`      id: ${lainaa(k.id)},`);
+      r.push(`      nimi: ${lainaa(k.nimi)},`);
+      if (k.johdanto) r.push(`      johdanto: ${katko(k.johdanto, '      ')},`);
+      if (k.ikoni) r.push(`      ikoni: ${lainaa(k.ikoni)},`);
+      r.push('      nostot: [');
+      for (const n of k.nostot ?? []) {
+        r.push('        {');
+        r.push(`          otsikko: ${lainaa(n.otsikko)},`);
+        r.push(`          teksti: ${katko(n.teksti, '          ')},`);
+        if (n.tiedosto) r.push(`          tiedosto: ${lainaa(n.tiedosto)},`);
+        if (n.selite) r.push(`          selite: ${katko(n.selite, '          ')},`);
+        if (n.lahde) r.push(`          lahde: ${lainaa(n.lahde)},`);
+        if (n.wiki) r.push(`          wiki: ${lainaa(n.wiki)},`);
+        if (n.musiikki) r.push(`          musiikki: ${lainaa(n.musiikki)},`);
+        if (n.musiikkiNimi) r.push(`          musiikkiNimi: ${lainaa(n.musiikkiNimi)},`);
+        if (n.musiikkiNayte) r.push(`          musiikkiNayte: ${lainaa(n.musiikkiNayte)},`);
+        if (n.musiikkiNayteNimi) r.push(`          musiikkiNayteNimi: ${lainaa(n.musiikkiNayteNimi)},`);
+        r.push('        },');
+      }
+      r.push('      ],');
+      r.push('    },');
+      return r.join('\n');
+    });
+    kaupungit.push(`  ${id}: [\n${rivit.join('\n')}\n  ],`);
+  }
+} catch {
+  /* kohdetta ei ole vielä — kirjoitetaan vain oma kaupunki */
+}
+
 const sisalto = `// Kaupungin kulttuurinostot kategorioittain.
 //
 // Omistajan toive: "sinne voisi lisätä myös nostoja enemmän ja
@@ -133,9 +180,7 @@ const sisalto = `// Kaupungin kulttuurinostot kategorioittain.
 //
 // Tuotettu komennolla tools/kirjoita-kategoriat.mjs.
 export const ${vientinimi} = {
-  ${kaupunki}: [
-${osat.join('\n')}
-  ],
+${kaupungit.join('\n')}
 };
 `;
 

@@ -1,9 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-<<<<<<< Updated upstream
-const CACHE = 'matkakirja-2026-08-03.219';
-=======
-const CACHE = 'matkakirja-2026-08-03.217';
->>>>>>> Stashed changes
+const CACHE = 'matkakirja-2026-08-03.220';
 const SHELL = [
   './',
   './index.html',
