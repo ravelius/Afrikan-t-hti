@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 216, teksti: 'Aasian ja Lähi-idän merkinnät uusiksi' },
+  { v: 216, teksti: 'Kertojan luenta 50 uuteen kaupunkiin' },
   { v: 215, teksti: 'Luennat eivät enää lopu napsahdukseen' },
   { v: 214, teksti: 'Uudet kaupungit: Asunción, Montevideo, Houston, Havanna' },
   { v: 213, teksti: 'Nipistys zoomaa karttaa — nyt oikeasti' },
