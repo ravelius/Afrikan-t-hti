@@ -1429,3 +1429,4 @@ Sen todentaminen vaati kolmannen yrityksen testivälineessä. Selaimen
 kautta lähetetty kosketusliike ei mennyt perille lainkaan — mittari oli
 rikki, ei sovellus. Vasta sivun sisällä luodut `TouchEvent`-oliot
 näyttivät eleen toimivan päästä päähän.
+

@@ -13,8 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
-  { v: 212, teksti: 'Nipistys zoomaa karttaa — nyt oikeasti' },
-  { v: 212, teksti: 'Zoomipainikkeet pois kosketuslaitteilta' },
+  { v: 213, teksti: 'Nipistys zoomaa karttaa — nyt oikeasti' },
+  { v: 213, teksti: 'Zoomipainikkeet pois kosketuslaitteilta' },
+  { v: 212, teksti: 'Koko Eurooppa kirjoitettu uusiksi ja luettu' },
+  { v: 212, teksti: 'Kertojan luenta kaikkiin 41 Euroopan kaupunkiin' },
   { v: 211, teksti: 'Nipistys zoomaa karttaa kahdella sormella' },
   { v: 211, teksti: 'Korjattu: kartta katkesi kesken kierroksen' },
   { v: 210, teksti: 'Pohjolan merkinnät uusiksi yhden idean malliin' },
