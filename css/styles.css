@@ -4561,14 +4561,48 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    * reunaviiva elää ±5 pikseliä, joten kapea marginaali näyttää eri
    * levyiseltä eri kohdissa.
    */
-  padding: 1.7rem 1.75rem 1.9rem;
+  --arkki-reunus: 1.75rem;
+  --arkki-yla: 1.7rem;
+  padding: var(--arkki-yla) var(--arkki-reunus) 1.9rem;
 }
 
 @media (min-width: 700px) {
   .dialog.arkki .dialog-card,
   .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
-    padding: 2rem 2.2rem 2.2rem;
+    --arkki-reunus: 2.2rem;
+    --arkki-yla: 2rem;
+    padding: var(--arkki-yla) var(--arkki-reunus) 2.2rem;
   }
+}
+
+/*
+ * Aiherivi tarttuu arkin yläreunaan.
+ *
+ * Omistaja aiheen vaihdosta: "parempi, mutta ei tarvitsisi vierittää
+ * ollenkaan". Aiemmin napautus nosti rivin ylös vierittämällä — nyt
+ * rivi on jo ylhäällä, joten napautus ei liikuta mitään. Aihe vaihtuu
+ * rivin alla eikä näkymä liiku pikseliäkään.
+ *
+ * Rivi levenee palstan reunojen yli negatiivisella marginaalilla,
+ * jottei alta vierivä teksti pilkota sivuilta. Pehmeä varjo alla
+ * kertoo, että sisältö menee sen alitse.
+ */
+.dialog.arkki #arrival-liuskat {
+  position: sticky;
+  /*
+   * Negatiivinen top vie rivin kiinni paperin reunaan asti. Ilman sitä
+   * se pysähtyy kortin sisäreunukseen, ja sen yläpuolelle jää raollinen
+   * kaistale, josta alta vierivä teksti pilkottaa. Sama mitta lisätään
+   * rivin omaan yläpehmusteeseen, joten kuvakkeet pysyvät paikallaan.
+   */
+  top: calc(var(--arkki-yla) * -1);
+  z-index: 2;
+  margin-inline: calc(var(--arkki-reunus) * -1);
+  padding-inline: var(--arkki-reunus);
+  padding-top: calc(var(--arkki-yla) + 0.9rem);
+  background-image: var(--paper-noise), linear-gradient(#f2e2bf, #ecdab2);
+  background-blend-mode: multiply, normal;
+  box-shadow: 0 7px 9px -7px rgba(70, 51, 31, 0.35);
 }
 
 /* Ulompi kiertynyt katkoviiva ei kuulu arkkiin — se oli juuri se

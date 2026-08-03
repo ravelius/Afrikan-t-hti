@@ -4910,7 +4910,7 @@ export class UI {
     // Ei Yleistä-liuskaa: artikkeli asuu "Lue lisää" -linkin takana
     // omassa ikkunassaan, ei tällä rivillä.
     const osiot = kategoriat;
-    const valitse = (id, vierita = true) => {
+    const valitse = (id) => {
       for (const nappi of this.arrivalLiuskat.querySelectorAll('button')) {
         const paalla = nappi.dataset.osio === id;
         nappi.classList.toggle('paalla', paalla);
@@ -4919,7 +4919,6 @@ export class UI {
       const auki = kategoriat.find((k) => k.id === id);
       this.piirraKategoria(auki);
       this.arrivalKategoria.hidden = false;
-      if (vierita) this.nostaLiuskatYlos();
     };
     for (const osio of osiot) {
       const nappi = html('button');
@@ -4940,34 +4939,9 @@ export class UI {
       this.arrivalLiuskat.appendChild(nappi);
     }
     this.arrivalLiuskat.hidden = false;
-    // Ensimmäinen valinta kortin avautuessa ei saa vierittää: kortti
-    // avataan aina alusta.
-    valitse(osiot[0].id, false);
+    valitse(osiot[0].id);
   }
 
-  /*
-   * Aiheen vaihto nostaa liuskarivin kortin yläreunaan.
-   *
-   * Aiemmin tässä oli scrollIntoView({ block: 'nearest' }), ja omistaja
-   * kuvasi tuloksen: "näkymä hyppää ikävästi". Syy on siinä, että
-   * 'nearest' vierittää sen verran kuin tarvitaan — ja tarvittava määrä
-   * riippuu siitä, kuinka pitkä juuri avattu aihe on. Sama napautus
-   * liikutti näkymää joka kerta eri verran ja eri suuntaan.
-   *
-   * Nyt liikkeellä on yksi sääntö: liuskarivi menee ylös, aihe alkaa
-   * sen alta. Napautus tekee joka kerta saman asian, rivi jää näkyviin
-   * seuraavaa valintaa varten, eikä lopputulos riipu sisällön
-   * pituudesta. Pehmeä vieritys, koska hyppy oli juuri se vika.
-   */
-  nostaLiuskatYlos() {
-    const kortti = this.arrivalDialog?.querySelector('.dialog-card');
-    if (!kortti || !this.arrivalLiuskat) return;
-    const kohde = kortti.scrollTop
-      + this.arrivalLiuskat.getBoundingClientRect().top
-      - kortti.getBoundingClientRect().top
-      - 10;
-    kortti.scrollTo({ top: Math.max(0, kohde), behavior: 'smooth' });
-  }
 
   /** Yhden kategorian nostot: johdanto ja sen alla kortit. */
   piirraKategoria(kategoria) {
