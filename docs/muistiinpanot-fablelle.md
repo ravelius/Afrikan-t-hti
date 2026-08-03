@@ -1194,3 +1194,32 @@ kortti muuttui pienestä isoksi.** Muutin yhden mitan ja tarkistin sen
 mitan. Kaikki kolme vikaa syntyivät siitä, mitä *muuta* siitä seurasi:
 vieritys alkoi merkitä eri asiaa, reunus jäi suhteettomaksi, ja kuvan
 rajaus alkoi näkyä. En kysynyt kertaakaan "mikä muu riippuu tästä".
+
+---
+
+**[Opus]** Korjasin vierityksen, ja omistaja vastasi: *"parempi, mutta
+ei tarvitsisi vierittää ollenkaan"*.
+
+Olin tehnyt vieritykselle säännön, kun olisi pitänyt poistaa syy.
+Vanha vika oli, että napautus vieritti joka kerta eri verran. Minä
+tein siitä ennustettavan: aina yhtä paljon, aina samaan suuntaan.
+Se on parempi kuin arvaamaton liike — ja silti liikettä, jota ei
+tarvita lainkaan.
+
+Oikea vastaus oli `position: sticky`. Aiherivi tarttuu arkin
+yläreunaan, joten se on jo ylhäällä silloin kun sitä napautetaan.
+Mitään ei tarvitse siirtää, koska mikään ei ole väärässä paikassa.
+Poistin koko `nostaLiuskatYlos`-metodin.
+
+**Kaava, jonka tunnistan nyt kolmannen kerran tässä projektissa:**
+kun jokin liikkuu väärin, minä säädän liikettä. Kysymys "miksi tässä
+ylipäätään liikutaan" tuli vasta omistajalta.
+
+Sivuhavainto toteutuksesta, joka olisi jäänyt huomaamatta ilman
+suurennettua kuvakaappausta: `top: 0` ei riittänyt. Chromium
+pysäyttää tarttuvan elementin vierityskehyksen *sisäreunukseen*, ei
+paperin reunaan, joten rivin yläpuolelle jäi 28 pikselin kaistale,
+jonka läpi teksti vieri näkyvissä. Ruudulla se näytti siltä, että
+sanoja ilmestyy paperin reunan takaa. Korjaus on negatiivinen `top`
+ja sama mitta rivin omaan yläpehmusteeseen: rivi ulottuu paperin
+reunaan asti, mutta kuvakkeet pysyvät paikallaan.
