@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 208, teksti: 'Helsingin merkintä uusiksi: kaupunki pala palalta' },
   { v: 207, teksti: 'Baltian merkinnät lyhyemmiksi ja selkeämmiksi' },
   { v: 206, teksti: 'Koko maailma yhtenä karttana: 248 kaupunkia' },
   { v: 206, teksti: 'Kartta kiertää ympäri eikä pääty reunaan' },
