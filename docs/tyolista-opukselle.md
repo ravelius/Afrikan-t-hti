@@ -384,6 +384,44 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 64: Aasian 63 artikkelia — VALMIS v188 3.8.2026
+
+Omistajan päätös: "Kirjoitathan wiki artikkelit itse vielä uudestaan.
+Ovat yleensä liian pitkiä ja tyyli vaihtelee. — Siis ne wiki artikkelit
+mitä et ole vielä aiemmin kirjoittanut."
+
+63 uutta artikkelia (`js/packs/asia-artikkelit.js`). **Nyt jokaisella
+143 kaupungilla on oma artikkeli**, eikä yksikään "Lue lisää" nojaa
+enää Wikipedian omaan tekstiin.
+
+### Mitta on osa muotoa, ei makuasia
+
+Wikipedian artikkelien pituus vaihtelee kymmenkertaisesti kaupungista
+toiseen, ja juuri se oli omistajan valitus. Talon mitta on nyt
+kirjattu testiin:
+
+- **kolme kappaletta**, aina. Ensimmäinen kertoo missä ollaan, toinen
+  mitä täällä on tapahtunut, kolmas millaista täällä on nyt.
+- **teksti 600–1100 merkkiä.** Uusien mediaani on 812, vanhojen 818 —
+  sama mitta, vaikka ne kirjoitettiin eri viikkoina.
+- **intro 100–280 merkkiä**, kaksi lausetta, joista toisessa on jotain
+  mitä lukija ei arvaisi.
+- **ei huutomerkkejä.** Innostus kuuluu saapumistekstiin; artikkeli on
+  se rauhallinen ääni, joka kertoo taustan.
+
+Kirjoitin nämä itse enkä apureilla. Ääni on niin tarkka, ettei sitä
+kannata jakaa monelle kirjoittajalle — sama päätös kuin
+saapumisteksteissä (paketti 60).
+
+### Näkymätön merkki tekstissä
+
+Yhteen artikkeliin (Yangon) oli päätynyt pehmeä tavuviiva (U+00AD).
+Se ei näy koodissa eikä ruudulla, mutta se katkaisee sanan
+hakutoiminnoilta ja lukuohjelmilta. Tarkistus kaikkien tekstien yli
+löysi sen — näkymättömiä merkkejä ei voi etsiä silmällä, ja siksi
+niitä on etsittävä koneella.
+
+
 ## Paketti 63: radio kaikkiin maihin — VALMIS v187 3.8.2026
 
 Automaattihaku (paketti 61) sai 71 maata ja 45 virallista kanavaa.

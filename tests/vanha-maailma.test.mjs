@@ -285,3 +285,32 @@ test('jokaisella vanhan maailman maalla on radiolähetys', async () => {
   const ilman = maat.filter((m) => !RADIOT[m]).sort();
   assert.deepEqual(ilman, [], 'näiltä mailta puuttuu suora lähetys');
 });
+
+test('jokaisella vanhan maailman kaupungilla on oma artikkeli', async () => {
+  const { PACKS } = await import('../js/pack.js');
+  const { OMAT_ARTIKKELIT } = await import('../js/packs/africa-artikkelit.js');
+  const { EUROPE_ARTIKKELIT } = await import('../js/packs/europe-artikkelit.js');
+  const { ASIA_ARTIKKELIT } = await import('../js/packs/asia-artikkelit.js');
+  const kaikki = { ...OMAT_ARTIKKELIT, ...EUROPE_ARTIKKELIT, ...ASIA_ARTIKKELIT };
+  const pack = PACKS.find((p) => p.id === 'vanhamaailma');
+  const ilman = pack.cities.filter((c) => !kaikki[c.wiki ?? c.name]).map((c) => c.id);
+  assert.deepEqual(ilman, [], 'näiltä kaupungeilta puuttuu oma artikkeli');
+});
+
+test('Aasian artikkelit noudattavat talon mittaa', async () => {
+  const { ASIA_ARTIKKELIT } = await import('../js/packs/asia-artikkelit.js');
+  /*
+   * Omistajan huomio Wikipedian teksteistä: "Ovat yleensä liian pitkiä
+   * ja tyyli vaihtelee." Siksi mitta on osa muotoa eikä makuasia:
+   * kolme kappaletta ja alle tuhat merkkiä, jotta kortti pysyy
+   * luettavana ja kaupungit keskenään samanmittaisina.
+   */
+  for (const [nimi, a] of Object.entries(ASIA_ARTIKKELIT)) {
+    assert.equal(a.teksti.split('\n\n').length, 3, `${nimi}: ei kolmea kappaletta`);
+    assert.ok(a.teksti.length > 600 && a.teksti.length < 1100,
+      `${nimi}: teksti ${a.teksti.length} merkkiä (600–1100)`);
+    assert.ok(a.intro.length > 100 && a.intro.length < 280,
+      `${nimi}: intro ${a.intro.length} merkkiä (100–280)`);
+    assert.ok(!/[!]/.test(a.teksti + a.intro), `${nimi}: huutomerkki ei kuulu artikkeliin`);
+  }
+});
