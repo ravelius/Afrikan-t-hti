@@ -1959,7 +1959,7 @@ test('pysähdyksen muoto arvotaan painojen mukaan', () => {
   const game = newGame(301);
   // Valokuvamuoto on painoissa vain, kun kuvia on ladattu.
   game.setPhotoPool(['tripoli', 'kairo']);
-  const lukumaarat = { quiz: 0, claim: 0, photo: 0, event: 0 };
+  const lukumaarat = { quiz: 0, claim: 0, photo: 0, flag: 0, event: 0 };
   for (let i = 0; i < 6000; i++) {
     game.lastForm = null; // ilman toistoestoa painot näkyvät sellaisinaan
     lukumaarat[game.pickForm('timbuktu')]++;
@@ -3299,4 +3299,91 @@ test('kartan kerroksilla ei ole suodattimia, ja viittaukset osuvat', () => {
     if (!id.includes('rough')) continue;
     assert.ok(maaritellyt.has(id), `#${id}: viitataan mutta ei määritellä — kerros ei piirry`);
   }
+});
+
+// --- paketti 67: lippukysymys ----------------------------------------------
+
+test('lippukysymys näyttää lipun ja neljä vaihtoehtoa', async () => {
+  const { FLAG_CHOICES } = await import('../js/game.js');
+  // Afrikan lauta riittää: sillä on omat countryShapes-rajat lippuineen.
+  // Laatta pelaajan alle, muuten actionQuiz avaa Tutki-kortin.
+  const game = newGame(455);
+  game.worldOf(game.player).tokens.set(game.cityOf().id, 'ruby');
+  game.phase = 'action';
+  const tulos = game.actionQuiz({ form: 'flag' });
+  assert.ok(tulos.ok, tulos.error);
+  const q = tulos.quiz;
+  assert.equal(q.kind, 'flag');
+  assert.equal(q.options.length, FLAG_CHOICES);
+  assert.ok(q.flagFile?.endsWith('.svg'), 'lipputiedosto puuttuu');
+  assert.equal(q.options[q.correct], q.flagCountry);
+  // Vaihtoehdot ovat eri maita: sama nimi kahdesti tekisi kysymyksestä
+  // ratkeamattoman.
+  assert.equal(new Set(q.options).size, FLAG_CHOICES);
+});
+
+test('lippukysymys ei kysy samaa maata kahdesti', async () => {
+  const game = newGame(456);
+  game.worldOf(game.player).tokens.set(game.cityOf().id, 'ruby');
+  const nahdyt = new Set();
+  for (let i = 0; i < 25; i++) {
+    game.worldOf(game.player).tokens.set(game.cityOf().id, 'ruby');
+    game.phase = 'action';
+    const q = game.actionQuiz({ form: 'flag' }).quiz;
+    if (q.kind !== 'flag') break;
+    assert.ok(!nahdyt.has(q.flagCountry), `${q.flagCountry} kysyttiin kahdesti`);
+    nahdyt.add(q.flagCountry);
+  }
+  assert.ok(nahdyt.size >= 15, `vain ${nahdyt.size} eri maata`);
+});
+
+test('kaikilla laudan mailla on paikallinen lippu', async () => {
+  const { PACKS } = await import('../js/pack.js');
+  const { LIPUT_PAIKALLISET } = await import('../js/packs/liput-paikalliset.js');
+  /*
+   * Lippukysymys toimii yhteydettömänä vain, jos lippu on repossa.
+   * Työkalu tools/fetch-flags.mjs poimi ne aiemmin tekstistä hahmolla,
+   * joka vaati heittomerkit — JSON-muodossa kirjoitetut 28 uutta lippua
+   * jäivät hiljaa pois. Tämä testi huomaa sen.
+   */
+  const puuttuu = [];
+  for (const pack of PACKS) {
+    for (const [iso, maa] of Object.entries(pack.map?.countryShapes ?? {})) {
+      if (maa.lippu && !LIPUT_PAIKALLISET.has(maa.lippu)) puuttuu.push(`${pack.id}/${iso}: ${maa.lippu}`);
+    }
+  }
+  assert.deepEqual(puuttuu, [], 'näiltä mailta puuttuu paikallinen lippu');
+});
+
+// --- paketti 67: päivitysloki ----------------------------------------------
+
+test('päivitysloki on tiivis ja järjestyksessä', async () => {
+  const { MUUTOKSET } = await import('../js/muutokset.js');
+  /*
+   * "Erittäin tiivis" on omistajan muotovaatimus, ei tyyliohje: lokia
+   * luetaan puhelimen ruudulla kartan päältä, ja jos riviä joutuu
+   * vierittämään, se on liian pitkä.
+   */
+  assert.ok(MUUTOKSET.length >= 10, 'loki on liian lyhyt ollakseen historia');
+  let edellinen = Infinity;
+  for (const m of MUUTOKSET) {
+    assert.ok(Number.isInteger(m.v), `versio ei ole kokonaisluku: ${m.v}`);
+    assert.ok(m.teksti.length <= 60, `liian pitkä rivi (${m.teksti.length}): ${m.teksti}`);
+    assert.ok(m.teksti.length >= 10, `liian lyhyt rivi: ${m.teksti}`);
+    assert.ok(!m.teksti.endsWith('.'), `rivi ei tarvitse pistettä: ${m.teksti}`);
+    assert.ok(m.v <= edellinen, `uusin ensin — ${m.v} tuli ${edellinen} jälkeen`);
+    edellinen = m.v;
+  }
+});
+
+test('päivitysloki kattaa nykyisen version', async () => {
+  const { MUUTOKSET } = await import('../js/muutokset.js');
+  const { readFileSync } = await import('node:fs');
+  // Versionosto ilman lokiriviä jättäisi pelaajan ihmettelemään, mikä
+  // muuttui — se on juuri se, mitä loki on tarkoitettu estämään.
+  const main = readFileSync(new URL('../js/main.js', import.meta.url), 'utf8');
+  const nykyinen = Number(main.match(/APP_VERSION = '[\d-]+\.(\d+)'/)?.[1]);
+  assert.ok(Number.isInteger(nykyinen), 'APP_VERSIONia ei löytynyt');
+  assert.equal(MUUTOKSET[0].v, nykyinen,
+    `loki alkaa versiosta ${MUUTOKSET[0].v}, mutta peli on versiossa ${nykyinen}`);
 });

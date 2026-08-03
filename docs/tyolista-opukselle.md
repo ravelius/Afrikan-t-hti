@@ -384,6 +384,49 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 67: lipputunnistus ja päivitysloki — VALMIS v191 3.8.2026
+
+Kaksi omistajan toivetta samassa paketissa.
+
+### Lipputunnistus
+
+Uusi kysymysmuoto `flag`: tullimies näyttää lipun ja kysyy, minkä maan
+se on. Väärät vaihtoehdot ovat muita laudan maita, ja oikea vastaus
+painottuu siihen maahan, jossa pelaaja on — lippu ja paikka kuuluvat
+yhteen, ja pelaaja on juuri lukenut maan nimen saapumiskortista.
+
+Aineistoa ei tarvinnut hakea: peli tuntee jo 84 maan liput. **Kysymys
+toimii yhteydettömänä**, toisin kuin valokuvakysymys, joka hakee kuvan
+verkosta.
+
+Valokuvan paikannus oli jo olemassa muotona `photo` — omistajan
+listaamista minipeleistä siis kaksi kolmesta on nyt tehty.
+
+**Sivulöytö:** `tools/fetch-flags.mjs` poimi lippujen nimet paketeista
+tekstihaulla `/lippu: '([^']+)'/` eli heittomerkeillä. Kun Aasian
+rajat kirjoitettiin `JSON.stringify`llä, kentät saivat lainausmerkit,
+ja **kaikki 28 uutta lippua jäivät hakematta — hiljaa**, koska
+puuttuvasta ei tullut virhettä vaan lyhyempi lista. Työkalu lukee nyt
+paketit moduuleina, jolloin muotoilulla ei ole väliä. Testi vahtii,
+että jokaisella laudan maalla on paikallinen lippu.
+
+### Päivitysloki
+
+Omistajan toive: "Tee erittäin tiivis päivitysloki joka tulee
+näkyviin klikkaamalla versionumeroa kartalla."
+
+Numero kulmassa on jo se paikka, josta pelin tila luetaan, joten loki
+kuuluu sen taakse eikä omaan valikkokohtaansa. Uusi `js/muutokset.js`,
+uusin ensin.
+
+**Tiiviys on muotovaatimus, ei tyyliohje**, ja se on testissä: yksi
+rivi per versio, enintään 60 merkkiä, ei loppupistettä, uusin ensin.
+Lokia luetaan puhelimen ruudulla kartan päältä, ja jos riviä joutuu
+vierittämään, se on liian pitkä. Toinen testi vaatii, että lokin
+ensimmäinen rivi vastaa nykyistä versiota — versionosto ilman
+lokiriviä jättäisi pelaajan ihmettelemään, mikä muuttui.
+
+
 ## Paketti 66: Europeana kytketty — VALMIS v190 3.8.2026
 
 Omistaja lisäsi `EUROPEANA_API`-avaimen repon salaisuuksiin. Se ei

@@ -5647,7 +5647,7 @@ export class UI {
     // saada (esim. verkko katkesi kysymyksen avauduttua), tilalle jää
     // kysymysteksti — vaihtoehtoihin voi silti vastata tai antaa ajan
     // valua umpeen.
-    this.quizPhoto.hidden = quiz.kind !== 'photo';
+    this.quizPhoto.hidden = quiz.kind !== 'photo' && quiz.kind !== 'flag';
     if (quiz.kind === 'photo' && this.photoShownFor !== quiz) {
       this.photoShownFor = quiz;
       this.quizPhoto.removeAttribute('src');
@@ -5657,11 +5657,22 @@ export class UI {
         this.quizPhoto.alt = 'Matkavalokuvaajan vedos';
       });
     }
+    /*
+     * Lippu tulee samaan kehykseen kuin valokuva, mutta se on repossa
+     * eikä verkossa — kysymys toimii siis myös yhteydettömänä. Alt-teksti
+     * ei saa kertoa maata: se olisi vastaus.
+     */
+    this.quizPhoto.classList.toggle('quiz-lippu', quiz.kind === 'flag');
+    if (quiz.kind === 'flag' && this.photoShownFor !== quiz) {
+      this.photoShownFor = quiz;
+      asetaKuva(this.quizPhoto, lippuUrl(quiz.flagFile, 320), lippuVara(quiz.flagFile, 320));
+      this.quizPhoto.alt = 'Tullimiehen näyttämä lippu';
+    }
 
     // Leima näkyy vain pulmissa ja valokuvissa: irrallinen "Tietovisa"-sana
     // on turha, kun kehys kertoo kuka kysymyksen esittää.
-    this.quizBadge.hidden = quiz.kind !== 'puzzle' && quiz.kind !== 'photo';
-    this.quizBadge.textContent = quiz.kind === 'photo' ? 'Valokuva' : 'Pulma';
+    this.quizBadge.hidden = !['puzzle', 'photo', 'flag'].includes(quiz.kind);
+    this.quizBadge.textContent = { photo: 'Valokuva', flag: 'Lippu' }[quiz.kind] ?? 'Pulma';
     let otsikko;
     if (quiz.kind === 'puzzle') {
       otsikko = `Isoisän luonnoskirjasta — ${quiz.title}`;

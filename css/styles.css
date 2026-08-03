@@ -3730,7 +3730,69 @@ body.katselu #newgame-btn { display: none; }
   font-size: 0.62rem;
   letter-spacing: 0.04em;
   color: rgba(70, 51, 31, 0.55);
-  pointer-events: none;
+  /* Napautettava: numero avaa päivityslokin. Ulkonäkö pysyy samana
+     kuin ennen, joten napiksi muuttuminen ei näy kartalla. */
+  background: none;
+  border: 0;
+  padding: 0.35rem 0.25rem;
+  margin: -0.35rem -0.25rem;
+  font: inherit;
+  font-size: 0.62rem;
+  cursor: pointer;
+}
+
+/* Päivitysloki: lyhyt lista siitä, mitä kussakin versiossa muuttui.
+   Kortti on kapea ja teksti pientä — lokia luetaan kartan päältä,
+   ei erillisenä sivuna. */
+.muutokset-dialog {
+  border: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 4px;
+  background: rgba(252, 241, 212, 0.97);
+  color: #46331f;
+  padding: 1rem 1.1rem 0.8rem;
+  width: min(86vw, 340px);
+  max-height: 70vh;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.muutokset-dialog::backdrop { background: rgba(20, 14, 8, 0.45); }
+.muutokset-otsikko {
+  margin: 0 0 0.6rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.muutokset-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 52vh;
+  overflow-y: auto;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+.muutokset-lista li {
+  display: flex;
+  gap: 0.55rem;
+  padding: 0.16rem 0;
+}
+/* Versionumero omassa sarakkeessaan: rivit alkavat samasta kohdasta,
+   jolloin listaa voi silmäillä pelkän tekstin perusteella. */
+.muutokset-lista .muutos-versio {
+  flex: 0 0 2.2rem;
+  color: rgba(70, 51, 31, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+.muutokset-sulje {
+  margin-top: 0.7rem;
+  width: 100%;
+  padding: 0.4rem;
+  font: inherit;
+  font-size: 0.8rem;
+  color: #46331f;
+  background: rgba(252, 241, 212, 0.88);
+  border: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 /* Palautehuutomerkki oikeassa alakulmassa (omistajan toive): pieni ja
@@ -4172,3 +4234,17 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 /* Kehittäjätilassa kohteita ei piirretä lainkaan (omistajan toive):
    41 rengasta kerralla peitti kartan. Napautusalue (.target-hit) on
    näkymätön, ja versionumeron perässä lukee ": kehittäjä". */
+
+/*
+ * Lippukysymyksen kuva. Lippu on leveä ja matala eikä kestä samaa
+ * rajausta kuin valokuva: se näytetään kokonaan (contain) ja kehystä
+ * kavennetaan, jotta mittasuhteet pysyvät oikeina. Vaalea tausta
+ * erottaa valkoiset kentät kortista — Japanin lippu katoaisi muuten.
+ */
+#quiz-photo.quiz-lippu {
+  object-fit: contain;
+  max-height: 26vh;
+  background: rgba(252, 241, 212, 0.92);
+  padding: 0.5rem;
+  border-radius: 3px;
+}
