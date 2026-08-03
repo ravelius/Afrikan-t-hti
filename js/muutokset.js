@@ -13,6 +13,11 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 198, teksti: 'Radionapissa aseman nimi ja live-merkki' },
+  { v: 198, teksti: 'Vain aidosti vanhat kuvat ovat mustavalkoisia' },
+  { v: 198, teksti: 'Kuvat aukeavat isompina työpöytäselaimella' },
+  { v: 198, teksti: 'Sisältötarkastus: 15 virhettä pois teksteistä' },
+  { v: 198, teksti: 'Pariisin ja Lontoon tekstit vastaavat kertojaa' },
   { v: 197, teksti: 'Laajennussuunnat työhuoneen suunnitelmaan' },
   { v: 196, teksti: 'Työhuoneen karttakehys ei jää soimaan taustalle' },
   { v: 196, teksti: 'Työhuone näyttää peilin ja repojen koot' },

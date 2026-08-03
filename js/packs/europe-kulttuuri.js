@@ -2405,7 +2405,7 @@ export const EUROPE_KULTTUURI = {
         selite: 'Teepuutarha Çengelköyssä Istanbulin Aasian puolella. '
                   + 'Pöydät on aseteltu vanhan plataanin alle, ja jokaisella '
                   + 'pöydällä on oma pieni teepannu.',
-        lahde: 'M, Wikimedia Commons (CC BY 4.0)',
+        lahde: 'M. Fatih Morgül, Wikimedia Commons (CC BY 4.0)',
         wiki: 'Tee',
       },
       {
@@ -2477,7 +2477,7 @@ export const EUROPE_KULTTUURI = {
                   + 'Silakan lisäksi kojuissa myytiin villasukkia ja '
                   + 'kangaspakkoja — markkinat olivat saariston ja kaupungin '
                   + 'vuosittainen kohtaaminen.',
-        lahde: 'Unknown authorUnknown author, Wikimedia Commons (CC BY 4.0)',
+        lahde: 'Unknown author, Wikimedia Commons (CC BY 4.0)',
         wiki: 'Silakkamarkkinat',
       },
       {

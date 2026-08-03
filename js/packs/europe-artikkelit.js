@@ -11,7 +11,7 @@ export const EUROPE_ARTIKKELIT = {
       + 'Välimeren mahtavin kauppakaupunki. Sen laivat toivat idästä '
       + 'silkkiä, mausteita ja tarinoita — kuuluisin kertoja oli '
       + 'kauppiaan poika Marco Polo, joka matkasi 1200-luvulla Kiinaan '
-      + 'asti ja palveli suurkaania yli kaksikymmentä vuotta.\n\n'
+      + 'asti ja palveli suurkaania seitsemäntoista vuotta.\n\n'
       + 'Kaupungin sydän on Pyhän Markuksen tori: basilika '
       + 'kultamosaiikkeineen, dogen palatsi ja korkea kellotorni. Dogi '
       + 'oli tasavallan vaaleilla valittu ruhtinas, ja hänen palatsinsa '

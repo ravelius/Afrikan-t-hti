@@ -577,7 +577,7 @@ export const ASIA_ARTIKKELIT = {
       + 'useita asteita viileämpää kuin eteläosassa.',
     teksti: 'Teheran on noin 1 200 metrin korkeudessa, ja sen '
       + 'pohjoislaidalla kohoavat Alborz-vuoret. Niiden takana näkyy '
-      + 'Damavand, Iranin korkein huippu, 5 610 metriä. Se on sammunut '
+      + 'Damavand, Iranin korkein huippu, 5 610 metriä. Se on uinuva '
       + 'tulivuori ja näkyy kaupungista selkeällä säällä.'
       + '\n\n'
       + 'Teheran oli pitkään pieni kaupunki Rayn suuren kaupungin '

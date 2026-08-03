@@ -71,8 +71,37 @@ function siisti(arvo) {
   s = s.replace(/^File:[^:]+:\s*/i, '');
   // "This Photo was taken by X", "Photo by X", "Foto: X", "© X"
   s = s.replace(/^(this (photo|image|picture) (was )?(taken|created) by|photo(graph)? by|foto:|bild:|©)\s*/i, '');
-  // Ensimmäinen virke riittää: loppu on käyttöehtoja tai kiitoksia.
-  s = s.split(/(?:\.\s|\s\.\s)/)[0].trim();
+  /*
+   * Ensimmäinen virke riittää: loppu on käyttöehtoja tai kiitoksia.
+   *
+   * Piste ei kuitenkaan aina lopeta virkettä. "Dr. Ondřej Havelka"
+   * katkesi muotoon "Dr" ja "M. Fatih Morgül" muotoon "M", eli tulos
+   * oli suoraan tämän tiedoston oman aikeen vastainen: nimen
+   * katkaiseminen kesken on väärin juuri sitä kohtaan, jota lisenssi
+   * käskee nimetä.
+   *
+   * Piste ohitetaan, jos sitä edeltää yksittäinen alkukirjain tai
+   * tunnettu titteli. Lista on lyhyt tarkoituksella — tuntematon lyhenne
+   * on harvinaisempi kuin kokonainen virke, ja liian salliva sääntö
+   * päästäisi käyttöehdot takaisin nimeen.
+   */
+  const EI_KATKAISE = /(?:^|\s)(?:[A-ZÅÄÖ]|Dr|Mr|Mrs|Ms|Prof|St|Sr|Jr|Fr|Sta|Ing|Rev|Hr|Mme|Mlle)$/;
+  for (const osuma of [...s.matchAll(/\.\s|\s\.\s/g)]) {
+    if (EI_KATKAISE.test(s.slice(0, osuma.index))) continue;
+    s = s.slice(0, osuma.index);
+    break;
+  }
+  s = s.trim();
+
+  /*
+   * Sama nimi kahdesti peräkkäin ilman erotinta.
+   *
+   * Tagit poistetaan yllä ilman välilyöntiä, jotta pilkottu nimi ei
+   * hajoa. Sivuvaikutus: jos sama teksti on kahdessa elementissä
+   * ("Unknown author" kahdesti), tuloksena on "Unknown authorUnknown
+   * author". Se näkyi pelaajalle asti.
+   */
+  s = s.replace(/^(.{3,40}?)\1$/, '$1');
   // Allekirjoituksen aikaleima ("Nimi 11:52, 3 July 2012 (UTC)")
   s = s.replace(/\s+\d{1,2}:\d{2},.*$/, '');
   // Kotipaikka ei kuulu nimeen ("Tony Hisgett from Birmingham, UK")

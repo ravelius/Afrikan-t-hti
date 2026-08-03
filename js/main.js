@@ -10,7 +10,7 @@ import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.197';
+const APP_VERSION = '2026-08-03.198';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -529,43 +529,6 @@ function kytkeKehittaja() {
     asetaKehittajaTila(false);
     ui?.paivitaKehittajaTila();
     paivitaVersioKulma();
-
-/*
- * Päivitysloki napautuksesta (omistajan toive). Numero kulmassa on jo
- * se paikka, josta pelin tila luetaan, joten loki kuuluu sen taakse
- * eikä omaan valikkokohtaansa.
- *
- * Lista rakennetaan vasta ensimmäisellä avauksella: se on kymmeniä
- * rivejä, eikä useimmilla pelikerroilla katsota lainkaan.
- */
-const muutoksetDialog = document.getElementById('muutokset-dialog');
-const muutoksetLista = document.getElementById('muutokset-lista');
-let lokiRakennettu = false;
-
-function avaaMuutokset() {
-  if (!lokiRakennettu) {
-    for (const m of MUUTOKSET) {
-      const rivi = document.createElement('li');
-      const numero = document.createElement('span');
-      numero.className = 'muutos-versio';
-      numero.textContent = `v${m.v}`;
-      const teksti = document.createElement('span');
-      teksti.textContent = m.teksti;
-      rivi.append(numero, teksti);
-      muutoksetLista.appendChild(rivi);
-    }
-    lokiRakennettu = true;
-  }
-  muutoksetDialog.showModal();
-}
-
-versioKulma.addEventListener('click', avaaMuutokset);
-document.getElementById('muutokset-sulje')
-  .addEventListener('click', () => muutoksetDialog.close());
-// Napautus kortin ulkopuolelle sulkee, kuten muissakin ikkunoissa.
-muutoksetDialog.addEventListener('click', (e) => {
-  if (e.target === muutoksetDialog) muutoksetDialog.close();
-});
     kehittajaDialog.close();
     return;
   }
@@ -578,43 +541,6 @@ muutoksetDialog.addEventListener('click', (e) => {
   asetaKehittajaTila(true);
   ui?.paivitaKehittajaTila();
   paivitaVersioKulma();
-
-/*
- * Päivitysloki napautuksesta (omistajan toive). Numero kulmassa on jo
- * se paikka, josta pelin tila luetaan, joten loki kuuluu sen taakse
- * eikä omaan valikkokohtaansa.
- *
- * Lista rakennetaan vasta ensimmäisellä avauksella: se on kymmeniä
- * rivejä, eikä useimmilla pelikerroilla katsota lainkaan.
- */
-const muutoksetDialog = document.getElementById('muutokset-dialog');
-const muutoksetLista = document.getElementById('muutokset-lista');
-let lokiRakennettu = false;
-
-function avaaMuutokset() {
-  if (!lokiRakennettu) {
-    for (const m of MUUTOKSET) {
-      const rivi = document.createElement('li');
-      const numero = document.createElement('span');
-      numero.className = 'muutos-versio';
-      numero.textContent = `v${m.v}`;
-      const teksti = document.createElement('span');
-      teksti.textContent = m.teksti;
-      rivi.append(numero, teksti);
-      muutoksetLista.appendChild(rivi);
-    }
-    lokiRakennettu = true;
-  }
-  muutoksetDialog.showModal();
-}
-
-versioKulma.addEventListener('click', avaaMuutokset);
-document.getElementById('muutokset-sulje')
-  .addEventListener('click', () => muutoksetDialog.close());
-// Napautus kortin ulkopuolelle sulkee, kuten muissakin ikkunoissa.
-muutoksetDialog.addEventListener('click', (e) => {
-  if (e.target === muutoksetDialog) muutoksetDialog.close();
-});
   kehittajaDialog.close();
 }
 

@@ -164,17 +164,6 @@ export const EUROPE_SAAPUMISET = {
       + 'vanhempi kuin Englannin — ja tulivuoret vanhempia kuin molemmat.',
   },
 
-  lontoo: {
-    kuvaus: 'Kotikaupunki — ja silti sydän hakkasi kuin vieraassa! Sumu '
-              + 'nousi Thamesilta, Tower Bridge avasi kitansa laivalle, ja '
-              + 'metro jyrisi jalkojeni alla kuin maanalainen ukkonen. Tästä '
-              + 'kaupungista lähdetään maailmalle — ja tänne se aina jotenkin '
-              + 'palataan.',
-    nosto: 'Matkakirjan ensimmäisellä sivulla lukee: "Lontoosta pääsee '
-             + 'kaikkialle, mutta mikään ei valmista siihen, mitä sieltä '
-             + 'löytää." Nyt minä lähden tarkistamaan.',
-  },
-
   edinburgh: {
     kuvaus: 'Edinburgh on kahdessa kerroksessa! Alhaalla uudenkaupungin '
               + 'suorat kadut, ylhäällä vanhankaupungin kujat, jotka putoavat '
@@ -202,20 +191,6 @@ export const EUROPE_SAAPUMISET = {
              + 'katu, jonka olen nähnyt, ja sen keskellä seisoo Nelson '
              + 'pylväänsä nokassa." Katu on nyt O\'Connell Street ja pylvään '
              + 'paikalla kiiltää teräsneula — leveys on yhä sama 49 metriä.',
-  },
-
-  pariisi: {
-    kuvaus: 'Pariisi tuoksui sateelta ja tuoreelta leivältä. Kävelin '
-              + 'Boulevard Saint-Micheliä: se on kolmekymmentä metriä leveä ja '
-              + 'suora kuin viivoitin. Bulevardista päätettiin vuonna 1855, ja '
-              + 'sen alta katosi kokonaisia vanhoja katuja — Haussmann piirsi '
-              + 'Pariisin uusiksi. Metroon menin vihreän valurautakaaren ali; '
-              + 'vanhimmat kaaret ovat vuodelta 1900. Sitten istuin kahvilaan '
-              + 'ja kuuntelin: viereisessä pöydässä puhuttiin arabiaa, tiskillä '
-              + 'portugalia, ja tarjoilija vastasi kaikille ranskaksi.',
-    nosto: 'Isoisä kirjoitti: "Pariisissa istuin kolme tuntia samassa '
-             + 'kahvilassa enkä hävennyt hetkeäkään. Se on tämän kaupungin '
-             + 'suurin keksintö." Tilasin toisen kaakaon hänen kunniakseen.',
   },
 
   lissabon: {

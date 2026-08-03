@@ -605,7 +605,7 @@ export const AFRICA_VALOKUVAT = {
       + 'kuulemma merelle asti, ennen kuin kaupunki edes näkyi.',
     uusi: {
       tiedosto: 'Harbour at the picturesque Stone Town.jpg',
-      lahde: 'Dr, Commons (CC BY 4.0)',
+      lahde: 'Dr. Ondřej Havelka, Commons (CC BY 4.0)',
       selite: 'Sansibarin satama nykyään: dhow-purjeet ovat harvinaistuneet, '
       + 'mutta Kivikaupungin rantaviiva on tunnistettavasti sama.',
     },
@@ -752,8 +752,8 @@ export const AFRICA_VALOKUVAT = {
       },
     ],
     tiedosto: 'Tunisie, Carthage, cathédrale et séminaire de St Louis - btv1b53114044m.jpg',
-    vuosi: '1800-luvun loppu',
-    lahde: 'BnF Gallica (PD)',
+    vuosi: '1912',
+    lahde: 'Agence Rol / BnF Gallica (PD)',
     selite: 'Karthagon Byrsan kukkula isoisän aikaan: raunioiden keskelle '
       + 'oli noussut katedraali, ja kaivaukset olivat vasta alussa.',
     uusi: {
