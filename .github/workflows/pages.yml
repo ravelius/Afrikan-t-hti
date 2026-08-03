@@ -41,7 +41,12 @@ jobs:
       - name: Kerää julkaistavat tiedostot
         run: |
           mkdir -p _site/dist
-          cp index.html aanet.html tyohuone.html manifest.webmanifest sw.js .nojekyll _site/
+          # Peli ja työhuone ovat kaksi eri sovellusta, ja kummallakin on
+          # oma manifestinsa ja palvelutyöntekijänsä. Jos työhuoneen omat
+          # jäävät kopioimatta, sivu latautuu mutta ei asennu
+          # kotivalikkoon — ja se näkyy vasta puhelimella.
+          cp index.html manifest.webmanifest sw.js .nojekyll _site/
+          cp tyohuone.html tyohuone-kasikirja.html tyohuone.webmanifest tyohuone-sw.js _site/
           cp -r css js assets docs _site/
           cp dist/matkakirja.html _site/dist/
 
