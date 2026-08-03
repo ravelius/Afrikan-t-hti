@@ -2,1542 +2,995 @@
 <html lang="fi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Matkakirja — työhuone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Työhuone — Matkakirja</title>
+  <link rel="manifest" href="tyohuone.webmanifest" />
+  <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#16181c" media="(prefers-color-scheme: dark)" />
+  <!-- iOS: kotivalikkoon asennettuna aukeaa ilman selaimen palkkeja. -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Työhuone" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon" href="assets/tyohuone-apple.png" />
+  <link rel="icon" href="assets/tyohuone-192.png" />
   <style>
+    /*
+     * TYÖHUONEEN ULKOASU ON TARKOITUKSELLA ERI KUIN PELIN.
+     *
+     * Peli on pergamenttia ja mustetta, ja se on oikein: pelaaja
+     * katsoo 1873:n matkakirjaa. Työhuone ei ole matkakirja vaan
+     * työkalu, ja työkalussa luettavuus voittaa tunnelman.
+     *
+     * Kolme eroa pelin ulkoasuun:
+     *  1. Kirjasin on laitteen oma päätteetön (SF Pro, Segoe, Roboto).
+     *     Vanha työhuone käytti Courier Newiä, joka on kaunis mutta
+     *     kapea ja väsyttävä pitkässä luvussa.
+     *  2. Tausta on vaalea. Tummalla pohjalla ohut päätteetön teksti
+     *     kukkuu, ja työhuoneessa luetaan paljon pientä tekstiä.
+     *  3. Yksi korostusväri, ei viittä. Kun kaikki on korostettu,
+     *     mikään ei ole.
+     *
+     * Ainoa tietoinen viittaus peliin on korostusväri: sama kullan
+     * sävy kuin kartan musteessa.
+     */
     :root {
-      --pohja: #241a12; --teksti: #f0e2c4; --himmea: #cbb691; --haalea: #9c8661;
-      --korostus: #d9a13b; --reuna: rgba(214, 188, 140, 0.45);
-      --nappi: rgba(247, 237, 216, 0.08);
+      color-scheme: light dark;
+      --pohja: #f7f5f0;
+      --kortti: #ffffff;
+      --teksti: #1d2024;
+      --himmea: #565b63;
+      --haalea: #8a9099;
+      --reuna: #dcd8d0;
+      --korostus: #9a6b12;
+      --korostus-pehmea: rgba(154, 107, 18, 0.1);
+      --vihrea: #2e7d5b;
+      --punainen: #b3401f;
+      --varjo: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 14px rgba(0, 0, 0, 0.04);
+      --pyoristys: 12px;
     }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --pohja: #16181c;
+        --kortti: #1e2126;
+        --teksti: #e8eaed;
+        --himmea: #a8aeb6;
+        --haalea: #767c85;
+        --reuna: #2e3238;
+        --korostus: #e0a94a;
+        --korostus-pehmea: rgba(224, 169, 74, 0.14);
+        --vihrea: #5ec49a;
+        --punainen: #e4805f;
+        --varjo: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
-      margin: 0; padding: 1rem 1.2rem 3rem; background: var(--pohja);
-      color: var(--teksti); font-family: 'Courier New', monospace;
+      margin: 0;
+      background: var(--pohja);
+      color: var(--teksti);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI',
+        Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      /* iPhonen lovi ja kotipalkki. */
+      padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
-    h1 { font-size: 1.05rem; letter-spacing: 0.08em; color: var(--korostus); margin: 0; white-space: nowrap; }
-    h1 .lyhyt { display: none; }
-    /* iPadilla (ja kapeammilla) valikko mahtuu yhdelle riville: otsikko
-       lyhenee ja napit tiivistyvät. */
-    @media (max-width: 1180px) {
-      h1 { font-size: 0.95rem; }
-      h1 .pitka { display: none; }
-      h1 .lyhyt { display: inline; }
-      header { gap: 0.3rem 0.6rem; }
-      header nav { gap: 0.25rem; }
-      header nav button { padding: 0.26rem 0.45rem; font-size: 0.78rem; }
-      #tyohuone-paivita { padding: 0.26rem 0.5rem; font-size: 0.78rem; }
-    }
-    /* iPad pystyssä: otsikko ja versio väistyvät ja valikko pysyy aina
-       yhdellä rivillä — ylivuoto vierittyy sivusuunnassa, joten rivi
-       kestää myös tulevat välilehdet. */
-    @media (max-width: 900px) {
-      h1 { display: none; }
-      #tyohuone-versio { display: none; }
-      header { flex-wrap: nowrap; }
-      header nav { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap;
-        overflow-x: auto; scrollbar-width: none; }
-      header nav::-webkit-scrollbar { display: none; }
-      header nav button { padding: 0.24rem 0.4rem; font-size: 0.75rem; white-space: nowrap; }
-    }
-    h2 { font-size: 0.95rem; letter-spacing: 0.06em; color: var(--korostus); margin: 1.4rem 0 0.4rem; }
-    p, li { max-width: 46rem; line-height: 1.55; color: var(--himmea); }
-    a { color: var(--korostus); }
-    button, input, select, textarea {
-      background: var(--nappi); color: var(--teksti);
-      border: 1px solid var(--reuna); border-radius: 8px;
-      font-family: inherit; font-size: 0.92rem; padding: 0.5rem 0.8rem;
-    }
-    button { cursor: pointer; }
-    button.paalla { border-color: var(--korostus); color: var(--korostus); }
-    .grid { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-    /* Tiivis yläpalkki: otsikko ja välilehdet samalla rivillä, jotta
-     * sisällölle — etenkin upotetulle äänistudiolle — jää enemmän tilaa. */
+
+    /* --- yläpalkki ------------------------------------------------------- */
+
     header {
-      position: sticky; top: 0; z-index: 3; background: var(--pohja);
-      display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: center;
-      padding: 0.5rem 0; border-bottom: 1px solid var(--reuna); margin-bottom: 0.8rem;
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in srgb, var(--pohja) 88%, transparent);
+      backdrop-filter: saturate(1.6) blur(12px);
+      -webkit-backdrop-filter: saturate(1.6) blur(12px);
+      border-bottom: 1px solid var(--reuna);
+      padding: max(env(safe-area-inset-top), 0.4rem) 0.9rem 0;
     }
-    nav { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-    nav button { padding: 0.3rem 0.6rem; font-size: 0.85rem; border-radius: 6px; }
+    .ylarivi {
+      display: flex; align-items: center; gap: 0.6rem;
+      min-height: 2.4rem;
+    }
+    h1 {
+      margin: 0; font-size: 1.02rem; font-weight: 600;
+      letter-spacing: -0.01em; flex: 1 1 auto;
+    }
+    /*
+     * Versio on nappi, ei koriste: napautus avaa päivityslokin.
+     * Vanhassa työhuoneessa versio piilotettiin kapealla ruudulla,
+     * ja juuri silloin sitä eniten tarvitsi — puhelimessa ei näe
+     * mistä versiosta on kyse.
+     */
+    .versio {
+      font: inherit; font-size: 0.8rem; font-variant-numeric: tabular-nums;
+      color: var(--korostus); background: var(--korostus-pehmea);
+      border: 0; border-radius: 999px; padding: 0.2rem 0.62rem;
+      cursor: pointer; white-space: nowrap;
+    }
+    .ikoni-nappi {
+      font: inherit; font-size: 0.8rem; color: var(--himmea);
+      background: none; border: 1px solid var(--reuna); border-radius: 999px;
+      padding: 0.2rem 0.62rem; cursor: pointer; white-space: nowrap;
+    }
+    .ikoni-nappi:disabled { opacity: 0.5; cursor: default; }
+
+    /* Välilehdet: vieritettävä rivi, joka kestää uudet lehdet. */
+    nav {
+      display: flex; gap: 0.15rem; overflow-x: auto;
+      scrollbar-width: none; margin: 0 -0.9rem; padding: 0.25rem 0.9rem 0;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    nav button {
+      font: inherit; font-size: 0.88rem; font-weight: 500;
+      color: var(--himmea); background: none; border: 0;
+      border-bottom: 2px solid transparent;
+      padding: 0.45rem 0.7rem 0.5rem; cursor: pointer; white-space: nowrap;
+    }
+    nav button.paalla { color: var(--korostus); border-bottom-color: var(--korostus); }
+
+    main { padding: 1.1rem 0.9rem 4rem; max-width: 70rem; margin: 0 auto; }
     section[hidden] { display: none; }
-    table { border-collapse: collapse; width: 100%; max-width: 60rem; font-size: 0.85rem; }
-    th, td { border: 1px solid var(--reuna); padding: 0.4rem 0.55rem; text-align: left; }
-    th { color: var(--haalea); font-weight: normal; letter-spacing: 0.05em; }
-    td.num { text-align: right; }
-    .tila { font-size: 0.78rem; padding: 0.1rem 0.45rem; border: 1px solid var(--reuna);
-      border-radius: 999px; white-space: nowrap; }
-    .tila.kaytossa { border-color: var(--korostus); color: var(--korostus); }
-    .kortti { border: 1px solid var(--reuna); border-radius: 10px; padding: 0.7rem 0.9rem;
-      margin: 0.5rem 0; max-width: 46rem; }
-    .kortti h3 { margin: 0 0 0.25rem; font-size: 0.95rem; color: var(--teksti); }
-    .kortti .meta { color: var(--haalea); font-size: 0.8rem; margin-bottom: 0.3rem; }
-    .kortti p { margin: 0.2rem 0; }
-    pre { white-space: pre-wrap; color: var(--himmea); max-width: 46rem; line-height: 1.5; }
-    .moottori-kentat { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 0.6rem;
-      align-items: center; margin-top: 0.4rem; max-width: 30rem; }
-    .moottori-kentat label { color: var(--haalea); font-size: 0.82rem; }
-    blockquote { border-left: 2px solid var(--reuna); margin: 0.6rem 0; padding: 0.1rem 0 0.1rem 0.9rem;
-      color: var(--himmea); max-width: 44rem; line-height: 1.55; }
-    /* Upotetut kehykset (äänistudio, laudan kartta) täyttävät näkymän
-       yläpalkin alta. */
-    #aanet-kehys, #kartta-kehys {
-      width: 100%; height: calc(100vh - 9rem); min-height: 26rem;
-      border: 1px solid var(--reuna); border-radius: 10px; background: var(--pohja);
+
+    /* --- perustypografia -------------------------------------------------- */
+
+    h2 {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--haalea);
+      margin: 1.8rem 0 0.6rem;
     }
-    #kartta-kehys { margin-top: 0.5rem; }
-    /* Etusivun tehtävälistat: kommenttikenttä suoraan kohdan alla. */
-    .tehtavat li { margin-bottom: 0.45rem; }
-    .kommentti { width: 100%; max-width: 42rem; margin-top: 0.2rem;
-      padding: 0.3rem 0.55rem; font-size: 0.85rem; display: block; }
-    /* Kuvat-välilehti: vanhat valokuvat pieninä vedoksina. */
-    .kuvaruudukko { display: grid; gap: 0.7rem; max-width: 72rem;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
-    .kuvakortti { background: #f8f3e6; color: #3c2f1e; padding: 5px 5px 7px;
-      border-radius: 2px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35); }
-    .kuvakortti img { display: block; width: 100%; height: 130px;
-      object-fit: cover; filter: grayscale(1) contrast(1.03);
-      background: #ded5c2; }
-    /* Nykypäivän parikuvat näytetään väreissä kuten pelissäkin. */
-    .kuvakortti.nykyinen img { filter: none; }
-    .kuvakortti .nimi { font-size: 0.85rem; margin: 0.3rem 0 0.1rem; }
-    .kuvakortti .nimi a { color: #5a4a33; }
-    .kuvakortti .meta { font-size: 0.72rem; color: #6d5a40; }
-    /* Tekstit-välilehti: tiiviit riviluettelot. */
-    .tekstirivi { border-top: 1px dotted var(--reuna); padding: 0.35rem 0;
-      max-width: 62rem; font-size: 0.86rem; color: var(--himmea); line-height: 1.5; }
-    .tekstirivi b { color: var(--teksti); font-weight: normal; }
-    .tekstirivi .oikea { color: var(--korostus); }
-    .tekstirivi .meta { color: var(--haalea); font-size: 0.78rem; }
-    #tekstit-ryhmat button { padding: 0.3rem 0.6rem; font-size: 0.85rem;
-      border-radius: 999px; }
-    /* Brändikirjan värimallit. */
-    .vari { display: inline-flex; align-items: center; gap: 0.4rem;
-      margin: 0.15rem 0.9rem 0.15rem 0; color: var(--himmea); font-size: 0.85rem; }
-    .vari i { width: 1.05rem; height: 1.05rem; border-radius: 4px;
-      border: 1px solid rgba(240, 226, 196, 0.4); display: inline-block; }
-    details.tiivis { max-width: 46rem; margin-top: 0.8rem; color: var(--himmea); }
-    details.tiivis summary { cursor: pointer; color: var(--korostus); }
+    h2:first-child { margin-top: 0; }
+    h3 { font-size: 1rem; font-weight: 600; margin: 0 0 0.3rem; }
+    p { margin: 0 0 0.7rem; max-width: 44rem; color: var(--himmea); }
+    p.iso { color: var(--teksti); }
+    a { color: var(--korostus); text-underline-offset: 2px; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.88em; background: var(--korostus-pehmea);
+      padding: 0.05em 0.35em; border-radius: 4px;
+    }
+
+    .kortti {
+      background: var(--kortti); border: 1px solid var(--reuna);
+      border-radius: var(--pyoristys); padding: 0.9rem 1rem;
+      box-shadow: var(--varjo); margin-bottom: 0.7rem;
+    }
+    .rivi { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+
+    input, select, button.toiminto {
+      font: inherit; font-size: 0.95rem;
+      color: var(--teksti); background: var(--kortti);
+      border: 1px solid var(--reuna); border-radius: 9px;
+      padding: 0.5rem 0.7rem;
+    }
+    input:focus-visible, select:focus-visible, button:focus-visible {
+      outline: 2px solid var(--korostus); outline-offset: 1px;
+    }
+    button.toiminto { cursor: pointer; }
+
+    /* --- tilanne: luvut --------------------------------------------------- */
+
+    .luvut {
+      display: grid; gap: 0.6rem;
+      grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+      margin-bottom: 1rem;
+    }
+    .luku {
+      background: var(--kortti); border: 1px solid var(--reuna);
+      border-radius: var(--pyoristys); padding: 0.7rem 0.85rem;
+      box-shadow: var(--varjo);
+    }
+    .luku b {
+      display: block; font-size: 1.5rem; font-weight: 600;
+      font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+    }
+    .luku span { font-size: 0.8rem; color: var(--haalea); }
+
+    /* Edistymispalkki: yksi silmäys kertoo, mikä on kesken. */
+    .palkki {
+      height: 6px; border-radius: 999px; background: var(--reuna);
+      overflow: hidden; margin-top: 0.45rem;
+    }
+    .palkki i { display: block; height: 100%; background: var(--korostus); }
+    .palkki.taysi i { background: var(--vihrea); }
+
+    /* --- puutelista ------------------------------------------------------- */
+
+    .puute {
+      display: flex; gap: 0.6rem; align-items: baseline;
+      padding: 0.45rem 0; border-top: 1px solid var(--reuna);
+    }
+    .puute:first-child { border-top: 0; }
+    .puute b { font-weight: 600; font-variant-numeric: tabular-nums; min-width: 2.6rem; }
+    .puute span { color: var(--himmea); font-size: 0.92rem; }
+    .puute em { color: var(--haalea); font-style: normal; font-size: 0.85rem; }
+
+    /* --- kaupunkiselain --------------------------------------------------- */
+
+    .kaupunkilista {
+      display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.6rem 0 1rem;
+      max-height: 11rem; overflow-y: auto;
+    }
+    .kaupunkilista button {
+      font: inherit; font-size: 0.85rem; color: var(--himmea);
+      background: var(--kortti); border: 1px solid var(--reuna);
+      border-radius: 999px; padding: 0.25rem 0.66rem; cursor: pointer;
+    }
+    .kaupunkilista button.paalla {
+      color: var(--korostus); border-color: var(--korostus);
+      background: var(--korostus-pehmea);
+    }
+    /* Vajaa kaupunki merkitään pisteellä: silmä löytää sen listasta. */
+    .kaupunkilista button.vajaa::after {
+      content: '·'; color: var(--punainen); font-weight: 700; margin-left: 0.25rem;
+    }
+
+    .lohko { margin-bottom: 1.1rem; }
+    .lohko > h3 {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--haalea); margin-bottom: 0.4rem;
+    }
+    .puuttuu {
+      color: var(--haalea); font-size: 0.9rem; font-style: italic;
+    }
+    .merkinta { border-left: 3px solid var(--korostus); padding-left: 0.8rem; }
+    .merkinta p:last-child { margin-bottom: 0; }
+
+    .kuvarivi {
+      display: grid; gap: 0.6rem;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    .kuva { background: var(--kortti); border: 1px solid var(--reuna);
+      border-radius: 8px; overflow: hidden; box-shadow: var(--varjo); }
+    .kuva img { display: block; width: 100%; height: 110px; object-fit: cover; background: var(--reuna); }
+    .kuva .teksti { padding: 0.4rem 0.5rem 0.5rem; font-size: 0.78rem; color: var(--himmea); }
+    .kuva .vuosi { color: var(--haalea); font-size: 0.72rem; }
+
+    .tagi {
+      display: inline-block; font-size: 0.74rem; color: var(--haalea);
+      border: 1px solid var(--reuna); border-radius: 999px;
+      padding: 0.05rem 0.5rem; margin: 0 0.25rem 0.25rem 0;
+    }
+    .tagi.on { color: var(--vihrea); border-color: var(--vihrea); }
+    .tagi.ei { color: var(--punainen); border-color: var(--punainen); }
+
+    /* --- haitari: yksi auki kerrallaan ------------------------------------ */
+
+    details.osio {
+      background: var(--kortti); border: 1px solid var(--reuna);
+      border-radius: var(--pyoristys); margin-bottom: 0.6rem;
+      box-shadow: var(--varjo); overflow: hidden;
+    }
+    details.osio > summary {
+      cursor: pointer; padding: 0.75rem 1rem; font-weight: 600;
+      list-style: none; display: flex; align-items: center; gap: 0.5rem;
+    }
+    details.osio > summary::-webkit-details-marker { display: none; }
+    details.osio > summary::after {
+      content: '⌄'; margin-left: auto; color: var(--haalea);
+      transition: transform 0.15s;
+    }
+    details.osio[open] > summary::after { transform: rotate(180deg); }
+    details.osio > summary small { font-weight: 400; color: var(--haalea); }
+    details.osio .sisus { padding: 0 1rem 1rem; }
+    details.osio .sisus > :first-child { margin-top: 0; }
+
+    /* --- upotetut kehykset ------------------------------------------------ */
+
+    iframe.kehys {
+      width: 100%; height: min(78vh, 46rem); min-height: 22rem;
+      border: 1px solid var(--reuna); border-radius: var(--pyoristys);
+      background: var(--kortti);
+    }
+
+    /* --- päivitysloki ------------------------------------------------------ */
+
+    dialog.loki {
+      border: 1px solid var(--reuna); border-radius: var(--pyoristys);
+      background: var(--kortti); color: var(--teksti);
+      padding: 1rem 1.1rem 0.8rem; width: min(90vw, 26rem);
+      max-height: 78vh; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    }
+    dialog.loki::backdrop { background: rgba(0, 0, 0, 0.35); }
+    dialog.loki ol { list-style: none; margin: 0; padding: 0;
+      max-height: 58vh; overflow-y: auto; font-size: 0.88rem; }
+    dialog.loki li { display: flex; gap: 0.6rem; padding: 0.2rem 0; }
+    dialog.loki .v { flex: 0 0 2.6rem; color: var(--haalea);
+      font-variant-numeric: tabular-nums; }
+
+    /* Uusi versio saatavilla -palkki. */
+    #paivitysvihje {
+      position: fixed; left: 0.9rem; right: 0.9rem;
+      bottom: calc(0.9rem + env(safe-area-inset-bottom));
+      background: var(--korostus); color: #fff; border: 0;
+      border-radius: 999px; padding: 0.6rem 1rem; font: inherit;
+      font-weight: 600; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      cursor: pointer; z-index: 20; max-width: 26rem; margin: 0 auto;
+    }
+
+    table { border-collapse: collapse; width: 100%; font-size: 0.86rem; }
+    th, td { border-bottom: 1px solid var(--reuna); padding: 0.42rem 0.5rem; text-align: left; }
+    th { color: var(--haalea); font-weight: 500; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   </style>
 </head>
 <body>
   <header>
-    <h1><span class="pitka">Matkakirja — työhuone</span><span class="lyhyt">Työhuone</span></h1>
+    <div class="ylarivi">
+      <h1>Työhuone</h1>
+      <button class="versio" id="versio" type="button" aria-haspopup="dialog">–</button>
+      <button class="ikoni-nappi" id="paivita" type="button" title="Hakee uusimman version">Päivitä</button>
+    </div>
     <nav id="valilehdet">
-      <button data-tab="etusivu">Etusivu</button>
-      <button data-tab="aanet">Äänet</button>
-      <button data-tab="tekstit">Tekstit</button>
-      <button data-tab="kuvat">Kuvat</button>
-      <button data-tab="juoni">Juoni</button>
-      <button data-tab="lasit">Lasit</button>
-      <button data-tab="pelit">Peli-ideat</button>
-      <button data-tab="lahteet">Lähteet</button>
-      <button data-tab="moottorit">Moottorit</button>
-      <button data-tab="maanosat">Maanosat</button>
-      <button data-tab="brandi">Brändikirja</button>
+      <button data-tab="tilanne">Tilanne</button>
+      <button data-tab="kaupungit">Kaupungit</button>
+      <button data-tab="kartat">Kartat</button>
+      <button data-tab="studio">Studio</button>
+      <button data-tab="suunnitelma">Suunnitelma</button>
+      <button data-tab="kasikirja">Käsikirja</button>
     </nav>
-    <span id="tyohuone-versio" style="color:var(--haalea);font-size:0.8rem"></span>
-    <button id="tyohuone-paivita" title="Tyhjentää välimuistin ja lataa uusimman version">Päivitä</button>
   </header>
 
-  <!-- ETUSIVU -->
-  <section id="tab-etusivu" hidden>
-    <h2>Tilastot</h2>
-    <p>Yhteenveto pelin koosta. Pelin omat luvut lasketaan suoraan
-       paketeista, joten ne eivät voi vanhentua; peilin luvut luetaan
-       media-repon manifestista, joten ne kertovat mitä siellä juuri nyt on.</p>
-    <div id="tilastot" class="taulu"></div>
-  </section>
+  <main>
+    <!-- TILANNE: missä projekti on juuri nyt -->
+    <section id="tab-tilanne">
+      <div class="luvut" id="luvut"></div>
 
-  <!-- LASIT: mitä erikoislasien läpi näkee -->
-  <section id="tab-lasit" hidden>
-    <p>Aarteina löytyvien erikoislasien toiminnallisuudet. Nämä eivät ole
-       minipelejä vaan <strong>kerroksia kartan päällä</strong>: kartta
-       pysyy paikallaan ja lasien läpi katsottaessa sen päälle piirtyy
-       jotain, mitä paljaalla silmällä ei näe. Omistajan havainto
-       3.8.2026: nämä olivat väärässä listassa.</p>
-    <div id="lasi-lista"></div>
-  </section>
+      <h2>Mitä puuttuu</h2>
+      <p>Lasketaan suoraan paketeista joka latauksella, joten lista ei voi
+         vanhentua. Suurin puute ensin.</p>
+      <div class="kortti" id="puutteet"></div>
 
-  <!-- PELI-IDEAT -->
-  <!-- JUONI -->
-  <section id="tab-juoni" hidden>
-    <h2>Pelin tavoite</h2>
-    <p id="juoni-tavoite"></p>
-    <div id="juoni-palkinto" class="kortti"></div>
+      <h2>Laudat</h2>
+      <div class="kortti" id="laudat"></div>
+    </section>
 
-    <h2 style="margin-top:1.4rem">Aarteet</h2>
-    <p>Yksi jokaisesta maanosasta. Nykyiset aarteet säilyvät tarinoineen.</p>
-    <div id="aarre-lista"></div>
+    <!-- KAUPUNGIT: yksi kaupunki kerrallaan, kaikki siitä -->
+    <section id="tab-kaupungit" hidden>
+      <div class="rivi">
+        <select id="kaupunki-lauta"></select>
+        <input id="kaupunki-haku" type="search" placeholder="Hae kaupunkia…"
+               style="flex:1 1 10rem;max-width:16rem" />
+        <label class="rivi" style="gap:0.35rem;font-size:0.88rem;color:var(--himmea)">
+          <input type="checkbox" id="vain-vajaat" style="width:auto;padding:0" />
+          vain vajaat
+        </label>
+      </div>
+      <div class="kaupunkilista" id="kaupunkilista"></div>
+      <div id="kaupunki-kortti"></div>
+    </section>
 
-    <h2 style="margin-top:1.4rem">Kaupunkikartat</h2>
-    <p>Kaupungin sisällä välimatkat ovat pieniä, joten <b>aika kuluu
-       hitaammin</b> kuin mantereella. Näin kaupunkiin pysähtyminen ei ole
-       pois kahdeksankymmenestä päivästä samalla tavalla — se kannattaa,
-       ja juuri siellä ehtii oppia.</p>
-    <p><b>Sisään pääsee vasta kaupungin avaimilla.</b> Avaimet on
-       löydettävä ennen kuin kaupunkikartan voi avata. Näin kaupunki on
-       palkinto eikä oikotie: sinne ei vain kävellä, vaan sinne
-       ansaitaan pääsy. "Kaupungin avaimet" on myös oikea kunnianosoitus,
-       jonka kaupungit ovat antaneet arvovieraille — se istuu suoraan
-       1873:n matkakertomukseen.</p>
-    <div id="kaupunki-lista"></div>
+    <!-- KARTAT -->
+    <section id="tab-kartat" hidden>
+      <div class="rivi" style="margin-bottom:0.6rem">
+        <select id="kartta-lauta"></select>
+        <a id="kartta-uuteen" href="index.html?lauta=vanhamaailma" target="_blank" rel="noopener">
+          <button class="toiminto" type="button">Avaa omaan ikkunaan ↗</button></a>
+      </div>
+      <iframe id="kartta-kehys" class="kehys" title="Laudan kartta"></iframe>
+      <p style="margin-top:0.6rem">Ikkunassa on oikea peli katselutilassa.
+         Mikään ei tallennu eikä koske pelattavaan peliin.</p>
+    </section>
 
-    <h2 style="margin-top:1.4rem">Varusteet</h2>
-    <p>Matkailijan varusteita, jotka helpottavat matkaa ja oppimista —
-       eivät jalokiviä, jotka ovat pelkkää rahaa. Jokainen tarttuu pelin
-       omaan järjestelmään. Rahaa ja varusteita saa eri paikoista
-       riippumatta siitä, missä maanosassa ollaan.</p>
-    <div id="varuste-lista"></div>
-  </section>
-
-  <!-- PELI-IDEAT -->
-  <section id="tab-pelit" hidden>
-    <p>Minipelit löytöjen takana. Alkuperäinen idea lähti tietovisasta —
-       nyt muotoja on jo useita ja niitä kehitellään lisää. Tänne kirjataan
-       sekä käytössä olevat että ideat, joita mietitään yhdessä.</p>
-    <div id="peli-lista"></div>
-  </section>
-
-  <!-- ÄÄNET -->
-  <section id="tab-aanet" hidden>
-    <!-- Äänistudio pyörii suoraan tässä: sama sivu, sama selain, samat
-         tallennukset. Kehys ladataan vasta kun välilehti avataan. -->
-    <iframe id="aanet-kehys" title="Äänistudio"></iframe>
-    <p class="grid" style="margin:0.5rem 0 0">
-      <a href="aanet.html" target="_blank" rel="noopener"><button>Avaa äänistudio omaan ikkunaan ↗</button></a>
-    </p>
-    <details class="tiivis">
-      <summary>Äänilähteet lyhyesti</summary>
-      <ul>
-        <li><b>radio aporee</b> — kaupunkien omat kenttä-äänitykset. Haetaan
-            koordinaateilla (<code>tools/hae-kaupunkiaanet.mjs</code>), joten äänite on
-            varmasti siitä kaupungista. Kaikilla 41 Euroopan kaupungilla on oma;
-            se soi maisematyypin arvontakorin edellä.</li>
-        <li><b>Freesound</b> — maisematyyppien korit ja tehosteet (CC0/CC BY, esikuunteluosoitteet toimivat suoraan).</li>
-        <li><b>xeno-canto</b> — lintujen äänet alueittain; valitse laji joka oikeasti pesii seudulla.</li>
-        <li><b>ElevenLabs</b> — puhe (v3/v2) ja efektigeneraattori; ks. Moottorit-välilehti.</li>
-        <li>Peiliin menevät äänet leikataan <b>kolmeen minuuttiin</b> kehysrajalta
-            (<code>tools/leikkaa-mp3.mjs</code>) — ääntä ei koodata uudelleen.</li>
-      </ul>
-    </details>
-  </section>
-
-  <!-- TEKSTIT: pelin kaikki tekstit laudoittain -->
-  <section id="tab-tekstit" hidden>
-    <p>Kaikki pelin tekstit, repliikit ja pelimuotojen sisällöt suoraan
-       paketeista — sivu ei voi vanhentua. Valitse lauta, rastita näkyvät
-       ryhmät ja rajaa hakusanalla. Lukitut avaustekstit ovat Brändikirjassa.</p>
-    <div class="grid" style="margin-bottom:0.5rem">
-      <select id="tekstit-lauta"></select>
-      <input id="tekstit-haku" type="search" placeholder="Hae tekstiä…"
-             style="flex:1 1 12rem;max-width:20rem" />
-      <span id="tekstit-laskuri" style="color:var(--haalea);font-size:0.85rem"></span>
-    </div>
-    <div class="grid" id="tekstit-ryhmat" style="margin-bottom:0.4rem"></div>
-    <div id="tekstit-lista"></div>
-  </section>
-
-  <!-- KUVAT: muistikirjan vanhat valokuvat -->
-  <section id="tab-kuvat" hidden>
-    <p>Muistikirjan valokuvat kaupungeittain — samat kuvat, jotka
-       aukeavat pelissä postikorttipinona: vanha kuva päällä ja nykypäivän
-       kuva sen alla. Nimi vie Commonsin tiedostosivulle, jolta näkee
-       alkuperän ja lisenssin. Merkitse vaihdettavat etusivun
-       kommenttikenttään.</p>
-    <div id="kuva-ruudukko" class="kuvaruudukko"></div>
-    <p id="kuvattomat" style="margin-top:0.8rem"></p>
-  </section>
-
-  <!-- LÄHTEET -->
-  <section id="tab-lahteet" hidden>
-    <p>Avoimia aineistolähteitä peliin: kuvia, karttoja, ääntä, dataa ja
-       live-ikkunoita maailmaan. Suodata tyypillä. <b>Tarkista lisenssi aina
-       aineistokohtaisesti</b> — merkintä on lähteen pääsääntö.</p>
-    <div class="grid" id="lahde-suodattimet"></div>
-    <div id="lahde-lista"></div>
-  </section>
-
-  <!-- MOOTTORIT -->
-  <section id="tab-moottorit" hidden>
-    <p>Generointi- ja palvelumoottorit: mikä on käytössä, mitä kannattaa
-       kokeilla, ja krediittien käsikirjanpito. Saldot tallentuvat vain tähän
-       selaimeen — päivitä ne palvelun omasta paneelista katsottuna.
-       <b>API-avaimia ei koskaan kirjata tänne eikä repoon.</b></p>
-    <div id="moottori-lista"></div>
-  </section>
-
-  <!-- MAANOSAT -->
-  <section id="tab-maanosat" hidden>
-    <p>Katsele lautojen karttoja isossa koossa yksi kerrallaan. Ikkunassa on
-       oikea peli katselutilassa: kaupunkeja voi klikata ja lautaa kokeilla
-       vapaasti — mikään ei tallennu eikä koske oikeaan peliin.</p>
-    <div class="grid">
-      <select id="kartta-lauta"></select>
-      <a id="kartta-uuteen" href="index.html?lauta=africa" target="_blank" rel="noopener">
-        <button>Avaa omaan ikkunaan ↗</button></a>
-    </div>
-    <iframe id="kartta-kehys" title="Laudan kartta"></iframe>
-    <h2>Lautojen edistyminen</h2>
-    <p>Luvut lasketaan suoraan pelin paketeista, joten taulukko on aina
-       ajan tasalla. Sääntö: Afrikka hiotaan valmiiksi ennen muita.</p>
-    <div id="maanosa-taulukko"></div>
-    <p style="margin-top:0.8rem">Sarakkeet: kaupungit · kaupunkeja joilla
-       äänimaisematyyppi · kysymyksiä (kaupunkien omat + yleiset) · pulmia ·
-       päiväkirjamerkintöjä · lentorepliikkejä · maiden rajat kartalla.</p>
-  </section>
-
-  <!-- BRÄNDIKIRJA: tarina, karaktääri, tyyli ja arvot yksissä kansissa -->
-  <section id="tab-brandi" hidden>
-    <p>Pelin sydän yksissä kansissa: miksi peli on olemassa, kuka siinä puhuu,
-       miltä se näyttää ja kuulostaa. Kun uusi sisältö ei tunnu istuvan,
-       vastaus löytyy täältä. Pysyvä arvopohja on
-       <a href="docs/periaatteet.md">docs/periaatteet.md</a> — tämä sivu on
-       sen käytännön käsikirja.</p>
-
-    <h2>1 · Sydän: missio, arvot ja tavoitteet</h2>
-    <div class="kortti">
-      <h3>Missio</h3>
-      <p>Edistämme aikuisten ja lasten tietoa eri maiden elinoloista,
-         kulttuurista, maantieteestä ja geopolitiikasta — ja ymmärrystä siitä,
-         että maailma on suurempi kuin oma ympäristö. Väline on koukuttava
-         seikkailupeli, jonka kanssa pidetään hauskaa; oppiminen syntyy
-         sivutuotteena.</p>
-    </div>
-    <div class="kortti">
-      <h3>Viisi pilaria (perustuslaki)</h3>
-      <p>1. <b>Peli edellä</b> — seikkailupeli, ei oppikirja johon on liimattu noppa.</p>
-      <p>2. <b>Totuus ja lähteet</b> — jokainen väittämä on tarkistettavissa; epävarmaa ei väitetä.</p>
-      <p>3. <b>Kunnioitus ja tasapuolisuus</b> — jokainen paikka kuvataan asukkaidensa silmin, ei ulkopuolisen kummasteluna.</p>
-      <p>4. <b>Ikäsopivuus</b> — vaikeita aiheita ei kaunistella eikä kauhistella.</p>
-      <p>5. <b>Avoimuus</b> — vapaat lisenssit, julkiset päätökset, testit valvovat koneellisesti mitattavan.</p>
-    </div>
-    <div class="kortti">
-      <h3>Tavoitteet nyt</h3>
-      <p>Afrikka hiotaan valmiiksi ennen muita mantereita. Peli toimii
-         iPadilla ja puhelimella asennettuna ja ilman verkkoa. Kaikki sisältö
-         kestää sekä lapsen että aikuisen katseen.</p>
-    </div>
-
-    <h2>2 · Tarina ja kaanon</h2>
-    <p>Nuori matkaaja löytää vintiltä isoisän matkalaukun: kartta vuodelta
-       1872, kukkarollinen puntia ja kulunut päiväkirja. Ensimmäinen sivu:
-       "Maailman ympäri kahdeksassakymmenessä päivässä." Viimeinen sivu on
-       revitty melkein kokonaan — jäljellä vain katkelma <i>"…en tajunnut,
-       että siellä olikin…"</i>. Matkaaja lähtee selvittämään, mitä isoisä
-       löysi. Pääaarretta ei nimetä: se on "jotain suurempaa kuin yksikään
-       ennätys".</p>
-    <h2>Avausteksti (lukittu — ui.js INTRO_TEXT, muutokset vain omistajan luvalla)</h2>
-    <blockquote id="tarina-intro">Ladataan…</blockquote>
-    <h2>Avauslennon repliikki (lukittu, luettu ääneen)</h2>
-    <blockquote id="tarina-lento"></blockquote>
-    <h2>Päiväkirjamerkinnät laudoittain</h2>
-    <div id="tarina-paivakirjat"></div>
-    <h2>Avoimet juonikoukut</h2>
-    <ul>
-      <li>Irti revitty sivu — minne se joutui? Voi löytyä pelin lopussa.</li>
-      <li>Isoisän 80 päivän ennätys — pohjustaa tulevan aikaraja-vastustajan.</li>
-      <li>Matkamuistot palkintoina (sormus, pergamentti, voodoo-esine…) —
-          osa rahanarvoisia, osa jää muistoiksi, joilla voi olla käyttöä myöhemmin.</li>
-    </ul>
-
-    <h2>3 · Hahmot ja karaktääri</h2>
-    <div class="kortti">
-      <h3>Matkaaja (pelaaja)</h3>
-      <p>Utelias ja ripeä, vähän hätäinenkin. Puhuu minä-muodossa omaan
-         matkakirjaansa. Ei tiedä kaikkea — ja juuri siksi kysyy, ihmettelee
-         ja oppii. Ei koskaan ylimielinen paikallisia kohtaan.</p>
-    </div>
-    <div class="kortti">
-      <h3>Isoisä</h3>
-      <p>Näkyy vain kirjansa rivien läpi: vuoden 1873 maailmankuva, ylpeä
-         mutta ajastaan sokea. Hänen karttansa tyhjät kohdat ja vanhentuneet
-         väittämät ovat pelin opetuksen moottori — "tyhjä kohta kartassa
-         kertoo piirtäjästä, ei maasta". Häntä ei pilkata: hän oli rohkea,
-         mutta aikansa vanki.</p>
-    </div>
-    <div class="kortti">
-      <h3>Kertojaääni</h3>
-      <p>"Viisas Kertoja" (ElevenLabs v3): lämmin, kiireetön, hieman
-         salaperäinen. Lukee avaustekstin, lennot ja päiväkirjat — ruudun
-         teksti ja puhe eivät koskaan eriä.</p>
-    </div>
-    <div class="kortti">
-      <h3>Paikalliset kysyjät</h3>
-      <p>Jokainen kysymys tulee ihmiseltä — kalastajalta, opettajalta,
-         kauppiaalta — ei "peliltä". Kysyjä on aina oman paikkansa asiantuntija
-         ja kohtelee matkaajaa vieraana, ei turistina.</p>
-    </div>
-
-    <h2>4 · Vaikutteet ja inspiraatio</h2>
-    <ul>
-      <li><b>Afrikan tähti</b> — laudan rytmi ja laattojen jännitys. Mutta oma
-          tarina: pääaarre ei ole tähti, eikä rikkaus ole päämäärä.</li>
-      <li><b>Jules Verne: Maailman ympäri 80 päivässä</b> — aikakausi, kehys
-          ja matkaajan nimi (herra Fogg).</li>
-      <li><b>1800-luvun tutkimusmatkaajien päiväkirjat ja vanhat kartat</b> —
-          visuaalinen kieli. Ja niiden kritiikki: peli näyttää myös sen, mitä
-          piirtäjät eivät nähneet.</li>
-      <li><b>Tietovisaperinne</b> — vihjeet, 50:50 ja aikapaine tuovat
-          television visailujen jännitteen lautapelin päälle.</li>
-    </ul>
-
-    <h2>5 · Visuaalinen tyyli</h2>
-    <div class="kortti">
-      <h3>Väripaletti</h3>
-      <p>
-        <span class="vari"><i style="background:#efdcb4"></i>pergamentti</span>
-        <span class="vari"><i style="background:#dcc08f"></i>tumma pergamentti</span>
-        <span class="vari"><i style="background:#46331f"></i>kartan muste</span>
-        <span class="vari"><i style="background:#8a6c46"></i>vaalea muste</span>
-        <span class="vari"><i style="background:#d9a13b"></i>kulta (korostus)</span>
-        <span class="vari"><i style="background:#7a5514"></i>tumma kulta (pergamentilla)</span>
-        <span class="vari"><i style="background:#2a1f16"></i>paneelin tausta</span>
-        <span class="vari"><i style="background:#d94f3d"></i>matkaajan punainen</span>
+    <!-- STUDIO -->
+    <section id="tab-studio" hidden>
+      <iframe id="studio-kehys" class="kehys" title="Äänistudio"></iframe>
+      <p class="rivi" style="margin-top:0.6rem">
+        <a href="aanet.html" target="_blank" rel="noopener">
+          <button class="toiminto" type="button">Avaa omaan ikkunaan ↗</button></a>
       </p>
-      <p class="meta">Kirkas kulta toimii tummalla taustalla, pergamentilla
-         käytetään tummaa kultaa. Punainen on varattu pelaajan nappulalle ja
-         virheille.</p>
-    </div>
-    <div class="kortti">
-      <h3>Kartta on aina pääasia</h3>
-      <p>Kortit kelluvat kartan päällä ilman laatikoita: teksti kirjoitetaan
-         suoraan pergamentille kartan musteella, vaalea tekstivarjo pitää sen
-         luettavana. Kartta täyttää ruudun joka laitteella; kehyksessä
-         pyöristetyt kulmat ja tasainen väli joka reunalla.</p>
-    </div>
-    <div class="kortti">
-      <h3>Yksi kynä</h3>
-      <p>Kaikki piirretään samalla kynällä: ohut ääriviiva, ei täyttövärejä
-         (nopan silmät poikkeus). Nappien ikonit ovat viivaikoneita tekstin
-         värillä — emojia ei käytetä käyttöliittymässä. Maiden nimet kartalla
-         hennolla kaunokirjoituksella, aktiivinen maa aavistuksen tummempana.</p>
-    </div>
-    <div class="kortti">
-      <h3>Typografia</h3>
-      <p>Kirjoituskonefontti kaikessa (American Typewriter / Courier Prime):
-         peli on matkakirja, joka kirjoitetaan koneella. Otsikot harvennettuina
-         versaaleina. Teksti ilmestyy kirjoittautumalla, ei hyppäämällä.</p>
-    </div>
+    </section>
 
-    <h2>6 · Teksti ja kieli</h2>
-    <div class="kortti">
-      <h3>Sävy</h3>
-      <p>Utelias ja lämmin, ei opettajamainen. Huumori lempeää, ei ivaa.
-         Vaikeat aiheet todetaan ikätasoisesti — ei kaunistella, ei
-         kauhistella. Väärästäkin vastauksesta oppii: selite kertoo aina,
-         miksi oikea vastaus on oikea.</p>
-    </div>
-    <div class="kortti">
-      <h3>Kirjoitusasu</h3>
-      <p>Suomi, paikannimet suomalaisittain (Tanger, Kairo, Sansibar).
-         Aikakauden rekvisiitta: punnat, päivät, höyrylaivat. Päiväkirja
-         minä-muodossa; kysyjät puhuttelevat matkaajaa suoraan.</p>
-    </div>
+    <!-- SUUNNITELMA: mitä aiotaan rakentaa -->
+    <section id="tab-suunnitelma" hidden>
+      <div id="suunnitelma"></div>
+    </section>
 
-    <h2>7 · Ääni</h2>
-    <div class="kortti">
-      <h3>Äänimaailman säännöt</h3>
-      <p>Ambienssit ovat aitoja kenttä-äänityksiä (CC0/CC BY), eivät
-         synteettisiä matkailumainoksia. Taso pidetään hiljaisena — ambienssi
-         on tausta, ei tehoste. Tietovisan musiikki väistyy puheen alta.
-         Tehosteet lyhyitä ja vähäeleisiä. Jokaisen äänen alkuperä kirjataan
-         pelin hyvityksiin.</p>
-    </div>
-  </section>
+    <!-- KÄSIKIRJA: mihin nojataan -->
+    <section id="tab-kasikirja" hidden>
+      <div id="kasikirja"></div>
+    </section>
+  </main>
 
+  <dialog class="loki" id="loki-ikkuna">
+    <h3 style="margin-bottom:0.6rem">Päivitysloki</h3>
+    <ol id="loki-lista"></ol>
+    <button class="toiminto" type="button" id="loki-sulje"
+            style="width:100%;margin-top:0.7rem">Sulje</button>
+  </dialog>
 
   <script type="module">
-    import { PACKS, packById } from './js/pack.js';
-    import { AFRICA_VALOKUVAT, valokuvaUrl } from './js/packs/africa-valokuvat.js';
-    import { AFRICA_SAAPUMISET } from './js/packs/africa-saapumiset.js';
-    import { OMAT_ARTIKKELIT } from './js/packs/africa-artikkelit.js';
-    import { AFRICA_KULTTUURI } from './js/packs/africa-kulttuuri.js';
-    import { EUROPE_SAAPUMISET } from './js/packs/europe-saapumiset.js';
-    import { EUROPE_KULTTUURI } from './js/packs/europe-kulttuuri.js';
-    import { EUROPE_VALOKUVAT } from './js/packs/europe-valokuvat.js';
-    import { EUROPE_ARTIKKELIT } from './js/packs/europe-artikkelit.js';
-    import { EUROPE_KIELET } from './js/packs/europe-kielet.js';
-    import { KAUPUNKI_EHDOKKAAT } from './js/aani-ehdokkaat.js';
-    import { SAAPUMISLUENNAT } from './js/ui.js';
-    import { PEILI_JUURI } from './js/media.js';
+    import { PACKS } from './js/pack.js';
+    import { MUUTOKSET } from './js/muutokset.js';
+    import {
+      AARTEET, VARUSTEET, KAUPUNKIKARTAT, LASIT, PELIT, PELITILAT, LAHTEET, MOOTTORIT,
+    } from './js/tyohuone-data.js';
 
-    /*
-     * Maanosien sisältö samassa muodossa, jotta tekstivälilehti näyttää
-     * ne kaikki. Työhuone tehtiin aikana, jolloin sisältöä oli vain
-     * Afrikassa, ja Euroopan 41 kaupunkia jäivät siksi näkymättömiin.
-     *
-     * Artikkelin runko on Afrikassa kentässä `artikkeli` ja Euroopassa
-     * kentässä `teksti` — pakettien oma historia, ei tarkoitus.
-     */
-    const SISALTO = {
-      africa: {
-        saapumiset: AFRICA_SAAPUMISET,
-        kulttuuri: AFRICA_KULTTUURI,
-        valokuvat: AFRICA_VALOKUVAT,
-        artikkelit: OMAT_ARTIKKELIT,
-        runko: 'artikkeli',
-      },
-      europe: {
-        saapumiset: EUROPE_SAAPUMISET,
-        kulttuuri: EUROPE_KULTTUURI,
-        valokuvat: EUROPE_VALOKUVAT,
-        artikkelit: EUROPE_ARTIKKELIT,
-        runko: 'teksti',
-      },
+    const $ = (id) => document.getElementById(id);
+    const el = (tagi, luokka, teksti) => {
+      const n = document.createElement(tagi);
+      if (luokka) n.className = luokka;
+      if (teksti != null) n.textContent = teksti;
+      return n;
     };
 
-    // --- välilehdet: #aihe-osoite toimii kirjanmerkkinä ---------------------
+    /* ------------------------------------------------------------------ *
+     * Sisältötaulut.
+     *
+     * Työhuone lukee SAMAT moduulit kuin peli, ei kopiota niistä. Siksi
+     * sivu ei voi näyttää vanhentunutta tietoa: jos paketti muuttuu,
+     * työhuone muuttuu samalla latauksella.
+     * ------------------------------------------------------------------ */
+    const [
+      afrikkaSaap, europeSaap, asiaSaap,
+      afrikkaKult, europeKult,
+      afrikkaKuvat, europeKuvat, asiaKuvat,
+      afrikkaArt, europeArt, asiaArt,
+      europeKielet, asiaMaat, afrikkaMaat, europeMaat, radiot, kuvaApu,
+    ] = await Promise.all([
+      import('./js/packs/africa-saapumiset.js').then((m) => m.AFRICA_SAAPUMISET),
+      import('./js/packs/europe-saapumiset.js').then((m) => m.EUROPE_SAAPUMISET),
+      import('./js/packs/asia-saapumiset.js').then((m) => m.ASIA_SAAPUMISET),
+      import('./js/packs/africa-kulttuuri.js').then((m) => m.AFRICA_KULTTUURI),
+      import('./js/packs/europe-kulttuuri.js').then((m) => m.EUROPE_KULTTUURI),
+      import('./js/packs/africa-valokuvat.js').then((m) => m.AFRICA_VALOKUVAT),
+      import('./js/packs/europe-valokuvat.js').then((m) => m.EUROPE_VALOKUVAT),
+      import('./js/packs/asia-valokuvat.js').then((m) => m.ASIA_VALOKUVAT).catch(() => ({})),
+      import('./js/packs/africa-artikkelit.js').then((m) => m.OMAT_ARTIKKELIT),
+      import('./js/packs/europe-artikkelit.js').then((m) => m.EUROPE_ARTIKKELIT),
+      import('./js/packs/asia-artikkelit.js').then((m) => m.ASIA_ARTIKKELIT).catch(() => ({})),
+      import('./js/packs/europe-kielet.js').then((m) => m.EUROPE_KIELET),
+      import('./js/packs/asia-maatiedot.js').then((m) => m.ASIA_MAATIEDOT).catch(() => ({})),
+      import('./js/packs/africa-maatiedot.js').then((m) => m.AFRICA_MAATIEDOT),
+      import('./js/packs/europe-maatiedot.js').then((m) => m.EUROPE_MAATIEDOT),
+      import('./js/packs/radiot.js').then((m) => m.RADIOT).catch(() => ({})),
+      import('./js/packs/africa-valokuvat.js').then((m) => m.valokuvaUrl),
+    ]);
+
+    const SAAPUMISET = { ...afrikkaSaap, ...europeSaap, ...asiaSaap };
+    const KULTTUURI = { ...afrikkaKult, ...europeKult };
+    const KUVAT = { ...afrikkaKuvat, ...europeKuvat, ...asiaKuvat };
+    const ARTIKKELIT = { ...afrikkaArt, ...europeArt, ...asiaArt };
+    const KIELET = { ...europeKielet };
+    const MAATIEDOT = { ...afrikkaMaat, ...europeMaat, ...asiaMaat };
+
+    /* Artikkelin runko on vanhoissa `artikkeli`, uusissa `teksti`. */
+    const artikkelinTeksti = (a) => a?.artikkeli ?? a?.teksti ?? null;
+
+    // --- välilehdet -----------------------------------------------------
+
     const napit = [...document.querySelectorAll('#valilehdet button')];
-    const nayta = (tab) => {
-      if (tab === 'tarina') tab = 'brandi'; // vanha kirjanmerkki ohjautuu brändikirjaan
-      for (const nappi of napit) nappi.classList.toggle('paalla', nappi.dataset.tab === tab);
-      for (const osio of document.querySelectorAll('section[id^="tab-"]')) {
-        osio.hidden = osio.id !== `tab-${tab}`;
-      }
-      // Äänistudio ja laudan kartta ladataan vasta kun välilehti avataan
-      // ensi kertaa — muuten ne hakisivat tiedostoja joka käynnillä.
-      if (tab === 'aanet') {
-        const kehys = document.getElementById('aanet-kehys');
-        if (!kehys.src) kehys.src = 'aanet.html';
-      }
-      if (tab === 'maanosat') paivitaKartta();
-      if (tab === 'kuvat') piirraKuvat();
-      history.replaceState(null, '', `#${tab}`);
+    /* Vanhat kirjanmerkit eivät saa hajota nimien muuttuessa. */
+    const VANHAT = {
+      etusivu: 'tilanne', maanosat: 'kartat', aanet: 'studio', tekstit: 'kaupungit',
+      kuvat: 'kaupungit', juoni: 'suunnitelma', lasit: 'suunnitelma',
+      pelit: 'suunnitelma', brandi: 'kasikirja', tarina: 'kasikirja',
+      lahteet: 'kasikirja', moottorit: 'kasikirja',
     };
-    for (const nappi of napit) nappi.addEventListener('click', () => nayta(nappi.dataset.tab));
-    // Avausvälilehti valitaan skriptin lopussa, kun kaikki osiot on rakennettu.
-
-    // --- päivitys: sama kuin pelin Päivitä-nappi ----------------------------
-    // Palvelutyöntekijä välimuistittaa myös työhuoneen ja äänistudion,
-    // joten päivityksen voi tehdä suoraan täältä pelin puolelle menemättä.
-    const paivita = document.getElementById('tyohuone-paivita');
-    paivita.addEventListener('click', async () => {
-      paivita.disabled = true;
-      paivita.textContent = 'Päivitetään…';
-      try {
-        if ('serviceWorker' in navigator) {
-          const regs = await navigator.serviceWorker.getRegistrations();
-          await Promise.all(regs.map((reg) => reg.unregister()));
-        }
-        if (window.caches) {
-          const keys = await caches.keys();
-          await Promise.all(keys.map((key) => caches.delete(key)));
-        }
-      } catch { /* päivitys onnistuu ilman siivoustakin */ }
-      location.reload();
-    });
-    // Versionumero luetaan pelistä, jotta päivityksen onnistumisen näkee heti.
-    fetch('js/main.js').then((r) => r.text()).then((src) => {
-      const m = src.match(/APP_VERSION = '([^']+)'/);
-      if (m) document.getElementById('tyohuone-versio').textContent = `v${m[1].split('.').pop()}`;
-    }).catch(() => {});
-
-    // --- peli-ideat ---------------------------------------------------------
-    // tila: kaytossa | ideoitava (mietitään yhdessä) | idea
-    const PELIT = [
-      { nimi: 'Tietovisa (monivalinta)', tila: 'kaytossa',
-        kuvaus: 'Perusmuoto aarrekaupungeissa: paikallinen kysyjä esittää kysymyksen, neljä vaihtoehtoa, 30 s. Vihje ja 50:50 ostettavissa.' },
-      { nimi: 'Isoisän väittämä', tila: 'kaytossa',
-        kuvaus: 'Päiväkirjan väite vuodelta 1873 — pitääkö yhä paikkansa? Kaksi vaihtoehtoa; pelin ydinteema (vanha maailma vs. nykyaika) tiivistettynä.' },
-      { nimi: 'Valokuvakysymys', tila: 'kaytossa',
-        kuvaus: 'Matkavalokuvaajan vedos: mistä kaupungista kuva on? Kuvat haetaan Wikipediasta lennossa.' },
-      { nimi: 'Isoisän luonnoskirjan pulmat', tila: 'kaytossa',
-        kuvaus: 'Piirrospäättelyt (naksutuskieli, vesileilit ym.) ilman kelloa; selite ja ostettava vihje. Viisi pulmaa Afrikassa.' },
-      { nimi: 'Tapahtumakortti', tila: 'kaytossa',
-        kuvaus: 'Ei kysymys vaan käänne: kyyti, viivästys, rahalöytö. Rytmittää matkaa.' },
-      { nimi: 'Rosvon kaksintaistelu', tila: 'kaytossa',
-        kuvaus: 'Kahdeksan vaihtoehtoa, kova panos. Hevosenkengällä ohitus.' },
-      { nimi: 'Tietoportti', tila: 'kaytossa',
-        kuvaus: 'Vaikea kysymys avaa maan laudan (esim. Helsinki → Suomi) ilmaiseksi.' },
-      { nimi: 'Tutkiminen', tila: 'kaytossa',
-        kuvaus: 'Laatattomatkin kaupungit voi tutkia kerran: palkintona tietoa ja kokemuspisteitä.' },
-      { nimi: 'Aineistotutkimus', tila: 'ideoitava',
-        kuvaus: 'Omistajan idea: pelaaja saa ensin tutkia aineistoa (esim. museon kuvakokoelman poiminta, vanha kartta tai päiväkirjan aukeama) niin kauan kuin haluaa. Kun hän on valmis, alkaa kysymys- tai pulmasarja aineiston pohjalta. Lisämaksusta pääsee kurkkaamaan aineistoa kesken pelin, ja aikaraja on tavallista pidempi.',
-        huomiot: 'Sopii museo-API-lähteisiin (Met, Smithsonian) — aineisto voi olla aidosti eri joka kerralla. Palkinnoksi sopisi matkamuisto.' },
-      { nimi: 'Lähikuvatunnistus', tila: 'idea',
-        kuvaus: 'Zoomattu yksityiskohta esineestä, kartasta tai rakennuksesta — mikä se on tai missä se sijaitsee? Kuva laajenee vihje vihjeeltä.' },
-      { nimi: 'Aikajana', tila: 'idea',
-        kuvaus: 'Järjestä tapahtumat tai keksinnöt aikajärjestykseen (esim. 3–5 korttia raahaten).' },
-      { nimi: 'Äänitunnistus', tila: 'idea',
-        kuvaus: 'Kuuntele ääni — minkä eläimen tai paikan ääni on kyseessä? xeno-canton lintuäänet alueittain sopisivat suoraan.' },
-      { nimi: 'Yhdistelypeli', tila: 'idea',
-        kuvaus: 'Yhdistä parit: kieli ja maa, ruoka ja kaupunki, lippu ja valtio.' },
-      { nimi: 'Salakirjoitus', tila: 'idea',
-        kuvaus: 'Isoisän koodattu rivi puretaan yksinkertaisella avaimella — kytkeytyy revityn sivun mysteeriin.' },
-      { nimi: 'Basaaritinkiminen', tila: 'idea',
-        kuvaus: 'Neuvottelupeli kauppiaan kanssa: osta matkamuisto oikeaan hintaan. Rahapeli, ei tietopeli — vaihtelua rytmiin.' },
-      { nimi: 'Muistipeli', tila: 'idea',
-        kuvaus: 'Matkamuistojen tai laattojen parit lyhyenä muistipelinä — kevyt välipala nuoremmille pelaajille.' },
-
-      // --- ideat 2.8.2026 -------------------------------------------------
-      // Kolme ensimmäistä eivät tarvitse YHTÄÄN uutta aineistoa: kaikki on
-      // jo peilattuna. Se tekee niistä selvästi halvimmat toteuttaa.
-      { nimi: 'Kielitunnistus', tila: 'idea',
-        kuvaus: 'Kuuntele näyte ja arvaa kaupunki tai kieli. Kolme vaihtoehtoa, '
-          + 'näyte soi napista.',
-        huomiot: 'AINEISTO ON JO OLEMASSA: 31 kaupungissa nauhoitettua '
-          + 'kielinäytettä (js/packs/europe-kielet.js), kaikki peilattuna ja '
-          + 'lisenssit tarkistettuina. Ei tarvitse yhtään uutta tiedostoa.' },
-      { nimi: 'Lipputunnistus', tila: 'idea',
-        kuvaus: 'Minkä maan lippu? Tai: mikä näistä lipuista kuuluu maahan, '
-          + 'jossa nyt olet?',
-        huomiot: 'AINEISTO ON JO OLEMASSA: 83 lippua peilissä. Sopii '
-          + 'erityisesti nuoremmille ja on nopea — hyvä kaupunkilaudoille, '
-          + 'joissa aika kuluu hitaammin.' },
-      { nimi: 'Valokuvan paikannus', tila: 'idea',
-        kuvaus: 'Näytetään kuva ja kysytään, missä päin karttaa se on. '
-          + 'Vastaus annetaan osoittamalla karttaa.',
-        huomiot: 'AINEISTO ON JO OLEMASSA: 320 kuvaa peilissä, kaikki '
-          + 'paikkaan sidottuja. Opettaa karttaa ja maailmankuvaa yhtä aikaa '
-          + '— osuu suoraan siihen mitä pelillä tavoitellaan.' },
-      { nimi: 'Päivämäärä ja pituuspiiri', tila: 'idea',
-        kuvaus: 'Matkalla itään päivä lyhenee, länteen pitenee. Pulma siitä, '
-          + 'monesko päivä on, kun on kierretty maapallo.',
-        huomiot: 'Tämä on Kahdeksankymmenen päivän oma juonenkäänne: Fogg '
-          + 'voitti vedon, koska oli matkannut itään ja voittanut päivän. '
-          + 'Sopii pelin loppuun Lontooseen palatessa täydellisesti.' },
-      { nimi: 'Reitinvalinta', tila: 'idea',
-        kuvaus: 'Kaksi tai kolme reittiä samaan kohteeseen: halvin, nopein ja '
-          + 'se, jonka varrella näkee eniten. Valinta maksaa rahaa tai päiviä.',
-        huomiot: 'Ei ole arvausta vaan päätös — ja juuri se tekee '
-          + 'aikarajasta merkityksellisen. Tarttuu suoraan '
-          + 'kahdeksaankymmeneen päivään.' },
-      { nimi: 'Valuutanvaihto', tila: 'idea',
-        kuvaus: 'Vaihda puntia paikalliseen rahaan oikealla kurssilla — tai '
-          + 'huomaa, milloin sinua yritetään huijata.',
-        huomiot: '1873 matkustamisen arkea ja opettaa lukuja. Vaatii '
-          + 'aikakauden kurssit lähteineen.' },
-      { nimi: 'Kaupungin avaimet', tila: 'ideoitava',
-        kuvaus: 'Pulma, jonka ratkaisemalla saa kaupungin avaimet ja pääsee '
-          + 'kaupunkikartalle.',
-        huomiot: 'Omistajan sääntö: kaupunkiin ei pääse ilman avaimia. '
-          + 'Tämä tarvitsee oman muotonsa — ehkä kaupungin erityispiirteisiin '
-          + 'liittyvä kysymyssarja, jolloin avaimet ansaitaan juuri sitä '
-          + 'kaupunkia tuntemalla.' },
-    ];
-    // --- juoni: tavoite, aarteet ja varusteet -------------------------------
-    //
-    // Omistajan linjaus 2.8.2026. Tavoite on PÄÄTETTY; varusteiden tilat
-    // kertovat mikä on sovittu ja mikä vielä idea.
-    //
-    // Tämä vastasi samalla työlistan pitkään auki olleeseen kysymykseen:
-    // 80 päivää ei ole lautakohtainen vertailuluku vaan YKSI matka koko
-    // maailman ympäri — kuten isoisän päiväkirjassa 1873.
-    const JUONI = {
-      tavoite: 'Löydä aarre jokaisesta maanosasta ja palaa Lontooseen — '
-        + 'kaikki alle kahdeksassakymmenessä päivässä.',
-      palkinto: 'Suurin palkinto ja löytö on se, että pelaaja on oppinut '
-        + 'ymmärtämään maailmaa paremmin: sen ihmisiä, kulttuureja ja '
-        + 'politiikkaa. Kaikki kokemukset ja työvälineet matkan varrella '
-        + 'palvelevat sitä — eivät pisteitä.',
-    };
-
-    const AARTEET = [
-      { maanosa: 'Eurooppa', aarre: 'Meripihkahuone', tila: 'kaytossa' },
-      { maanosa: 'Afrikka', aarre: 'Tähti', tila: 'kaytossa' },
-      { maanosa: 'Lähi-itä', aarre: 'laudan oma aarre', tila: 'kaytossa' },
-      { maanosa: 'Aasia', aarre: 'laudan oma aarre', tila: 'kaytossa' },
-    ];
-
-    // tila: kaytossa | sovittu | idea
-    const VARUSTEET = [
-      { nimi: 'Erikoissilmälasit', tila: 'sovittu',
-        vaikutus: 'Karsii tietovisassa kaksi väärää vaihtoehtoa ilmaiseksi.',
-        huomiot: 'Omistajan oma esimerkki. Halpa toteuttaa: mekaniikka on jo '
-          + 'olemassa maksullisena (50:50 maksaa 80 puntaa) — varuste tekee '
-          + 'siitä ilmaisen kerran.' },
-      { nimi: 'Suosituskirje', tila: 'idea',
-        vaikutus: 'Yksi ilmainen laiva- tai lentomatka.',
-        huomiot: 'Toinen halvoista: maksumekaniikka on jo olemassa. Sopii '
-          + 'kahdeksankymmenen päivän kiireeseen.' },
-      { nimi: 'Kiikari', tila: 'idea',
-        vaikutus: 'Näet naapurikaupunkien laatat käymättä siellä.',
-        huomiot: 'Kiikaritehoste on jo piirretty peliin (etusivun linssi), '
-          + 'joten ulkoasu on valmiina.' },
-      { nimi: 'Kompassi', tila: 'idea',
-        vaikutus: 'Saat valita nopan tuloksen kerran.',
-        huomiot: 'Vahvin näistä — kannattaa olla harvinainen.' },
-      { nimi: 'Isoisän muistikirja', tila: 'idea',
-        vaikutus: 'Yksi uusi yritys väärin menneeseen kysymykseen.',
-        huomiot: 'Sopii tarinaan: peli perustuu isoisän päiväkirjaan.' },
-      { nimi: 'Kiniini', tila: 'idea',
-        vaikutus: 'Estää sairastumisen, joka veisi päiviä.',
-        huomiot: 'Vaatisi uuden sairastumismekaniikan. 1873 matkustamisen '
-          + 'todellisuutta, ja puree suoraan aikarajaan.' },
-      { nimi: 'Kaupungin avaimet', tila: 'sovittu',
-        vaikutus: 'Avaa yhden kaupunkikartan. Ilman avaimia kaupunkiin ei pääse.',
-        huomiot: 'Omistajan sääntö: kaupunki on palkinto eikä oikotie — '
-          + 'sinne ansaitaan pääsy. Avaimet ovat kaupunkikohtaiset, joten '
-          + 'niitä on yhtä monta kuin kaupunkikarttoja. Oikeakin '
-          + 'kunnianosoitus: kaupungit ovat antaneet avaimensa '
-          + 'arvovieraille.' },
-      { nimi: 'Valokuvauskamera', tila: 'idea',
-        vaikutus: 'Kuva kaupungissa: passiin leima kuvan kanssa ja kokemuspisteitä.',
-        huomiot: 'Kauimpana Afrikan tähdestä: ei auta voittamaan lainkaan, '
-          + 'vaan palkitsee uteliaisuudesta. Istuu suoraan siihen, että '
-          + 'suurin palkinto on ymmärrys.' },
-    ];
-
-    document.getElementById('juoni-tavoite').textContent = JUONI.tavoite;
-    document.getElementById('juoni-palkinto').innerHTML =
-      `<h3>Todellinen palkinto</h3><p>${JUONI.palkinto}</p>`;
-
-    const aarreLista = document.getElementById('aarre-lista');
-    for (const a of AARTEET) {
-      const k = document.createElement('div');
-      k.className = 'kortti';
-      k.innerHTML = `<h3>${a.maanosa} <span class="tila kaytossa">${a.aarre}</span></h3>`;
-      aarreLista.appendChild(k);
+    function nayta(tab) {
+      const kohde = VANHAT[tab] ?? tab;
+      const loytyi = napit.some((n) => n.dataset.tab === kohde) ? kohde : 'tilanne';
+      for (const n of napit) n.classList.toggle('paalla', n.dataset.tab === loytyi);
+      for (const s of document.querySelectorAll('section[id^="tab-"]')) {
+        s.hidden = s.id !== `tab-${loytyi}`;
+      }
+      // Raskaat kehykset ladataan vasta avattaessa.
+      if (loytyi === 'studio' && !$('studio-kehys').src) $('studio-kehys').src = 'aanet.html';
+      if (loytyi === 'kartat') paivitaKartta();
+      history.replaceState(null, '', `#${loytyi}`);
+      window.scrollTo(0, 0);
     }
+    for (const n of napit) n.addEventListener('click', () => nayta(n.dataset.tab));
 
-    // Kaupunkitason laudat. Istanbul on jo pelissä, joten pohja on
-    // todistettu — uutta olisi hitaampi kello.
-    const KAUPUNKIKARTAT = [
-      { nimi: 'Istanbul', tila: 'kaytossa',
-        kuvaus: 'Ensimmäinen kaupunkitason lauta. Bosporin lautat ovat '
-          + 'laivareittejä ja kaupunginosat kaupunkeja.',
-        huomiot: 'Kello käy täällä yhä samaa vauhtia kuin mantereella — '
-          + 'hitaampi kello on vielä tekemättä (js/game.js TURN_HOURS).' },
-      { nimi: 'Lisää kaupunkeja', tila: 'idea',
-        kuvaus: 'Kaupungin sisältä voi löytyä lisää asioita: varusteita, '
-          + 'rahaa ja kohtaamisia.',
-        huomiot: 'Omistajan linjaus: aika kuluu kaupungissa hitaammin, '
-          + 'koska välimatkat ovat pieniä. Se tekee pysähtymisestä '
-          + 'kannattavaa aikarajasta huolimatta.' },
-      { nimi: 'Yhteiskehitys — myöhemmin', tila: 'idea',
-        kuvaus: 'Kaupunkien sisällöt tulisivat ainakin osittain '
-          + 'yhteiskehityksen piiriin: joku, joka tuntee kaupungin oikein '
-          + 'hyvin — vaikka on sieltä kotoisin — voisi ehdottaa tai jopa '
-          + 'itse rakentaa kaupungin kartan ja kirjoittaa ylös sen '
-          + 'erityispiirteet.',
-        huomiot: 'Vasta sitten kun koko maailmankartta on rakennettu. '
-          + 'Omistaja lisää todennäköisesti itse ensimmäisenä yhden '
-          + 'kaupungin Suomeen. Tämä sopii siihen, että paikallinen tieto '
-          + 'on juuri sitä mitä peli tavoittelee — ymmärrystä maailman '
-          + 'ihmisistä ja kulttuureista.' },
-    ];
-    const kaupunkiLista = document.getElementById('kaupunki-lista');
-    for (const k of KAUPUNKIKARTAT) {
-      const el = document.createElement('div');
-      el.className = 'kortti';
-      el.innerHTML = `
-        <h3>${k.nimi} <span class="tila ${k.tila === 'kaytossa' ? 'kaytossa' : ''}">${k.tila === 'kaytossa' ? 'käytössä' : 'idea'}</span></h3>
-        <p>${k.kuvaus}</p><p class="meta">${k.huomiot}</p>`;
-      kaupunkiLista.appendChild(el);
-    }
-
-    const VARUSTETILAT = { kaytossa: 'käytössä', sovittu: 'sovittu, ei tehty', idea: 'idea' };
-    const varusteLista = document.getElementById('varuste-lista');
-    for (const v of VARUSTEET) {
-      const k = document.createElement('div');
-      k.className = 'kortti';
-      k.innerHTML = `
-        <h3>${v.nimi} <span class="tila ${v.tila === 'kaytossa' ? 'kaytossa' : ''}">${VARUSTETILAT[v.tila]}</span></h3>
-        <p>${v.vaikutus}</p><p class="meta">${v.huomiot}</p>`;
-      varusteLista.appendChild(k);
-    }
+    // --- versio ja päivitysloki -----------------------------------------
 
     /*
-     * Erikoislasien toiminnallisuudet.
-     *
-     * Nämä olivat ensin peli-ideoissa, ja se oli väärä paikka: ne eivät
-     * ole minipelejä vaan kerroksia kartan päällä. Omistajan havainto
-     * 3.8.2026: "Neljä ylintä tässä ovat aarteiden (erikoislasit)
-     * toiminnallisuuksia, ei peli-ideoita."
-     *
-     * Yhteinen piirre: kartta pysyy paikallaan ja lasien läpi
-     * katsottaessa sen päälle piirtyy jotain, mitä paljaalla silmällä ei
-     * näe. Siksi ne jakavat saman koneiston keskenään mutta eivät
-     * minkään minipelin kanssa.
+     * Versio luetaan pelin lähteestä eikä kirjoiteta tänne käsin: kaksi
+     * paikkaa samalle luvulle on oikea korkeintaan toisessa.
      */
-    const PELITILAT = { kaytossa: 'käytössä', ideoitava: 'ideoidaan yhdessä seuraavaksi', idea: 'idea' };
+    const pelinVersio = await fetch('js/main.js')
+      .then((r) => r.text())
+      .then((s) => s.match(/APP_VERSION = '([^']+)'/)?.[1] ?? null)
+      .catch(() => null);
+    $('versio').textContent = pelinVersio ? `v${pelinVersio.split('.').pop()}` : 'v?';
+    $('versio').title = pelinVersio ? `Pelin versio ${pelinVersio} — napauta nähdäksesi lokin` : '';
 
-    const LASIT = [
-      { nimi: 'Animoitu historiakartta', tila: 'ideoitava',
-        kuvaus: 'Omistajan idea 2.8.2026: kartta pysyy paikallaan ja sen päällä oleva kerros elää vuosilukujen mukana. Ensimmäinen aihe: Silkkitie. Taikalasit voisivat olla juuri se väline, jolla historialliset kartat näkee.',
-        huomiot: 'Tämä on rakennettavissa nykyisillä välineillä. Kartta on jo vektoria, ja pelin oma projektio kääntää leveys- ja pituuspiirit laudan koordinaateiksi — sama kaava, jolla neljä lautaa yhdistettiin. Kerros on siis lista pisteitä ja vuosilukuja, ja aikajana valitsee mitkä niistä näkyvät. Työläin osa ei ole tekniikka vaan AINEISTO: reitit ja rajat pitää saada luotettavasta lähteestä ja vuosiluvut tarkistaa. Yksi tärkeä varaus: mitä kauemmas ajassa mennään, sitä epävarmempia rajat ovat, ja se pitää sanoa pelaajalle ääneen — muuten peli opettaa arvauksia faktoina.' },
-      { nimi: 'Ihmisen leviäminen Afrikasta', tila: 'ideoitava',
-        kuvaus: 'Omistajan idea: animoitu kerros, joka näyttää ihmisen leviämisen maapallolle Afrikasta alkaen.',
-        huomiot: 'Sama koneisto kuin historiakartassa, mutta aikaskaala on kymmeniä tuhansia vuosia eikä vuosisatoja, joten aikajanan pitää olla logaritminen. Sopii pelin ytimeen erinomaisesti: se kertoo yhdellä kuvalla, että kaikki matkalla kohdatut kansat ovat samaa sukua.' },
-      { nimi: 'Lämpökartat: onnellisuus ja muut luvut', tila: 'ideoitava',
-        kuvaus: 'Omistajan idea: onnellisuusindeksi lämpökarttana ja sen muunnelmat — asukasluku, bruttokansantuote, odotettu elinikä, veroprosentti ja niin edelleen.',
-        huomiot: 'Tämä on näistä kolmesta helpoin: aineisto on nykyaikaista, avointa ja maakohtaista (World Happiness Report, Maailmanpankki, YK). Peli tuntee jo maiden rajat maakerroksessa, joten kerros on maa ja väri. Opetuksellisesti vahvin kohta on vertailu: kaksi lukua rinnakkain kertoo enemmän kuin kumpikaan yksin — esimerkiksi bruttokansantuote ja onnellisuus.' },
-      { nimi: 'Museokuva kaupungista', tila: 'ideoitava',
-        kuvaus: 'Omistajan linjaus 2.8.2026: "Paras idea on käyttää museoiden yms kuvia tehtävissä. Olisi kiva että tehtävä liittyy kyseiseen kaupunkiin jossa ollaan." Tehtävä rakennetaan siis oikean museoesineen ympärille, ja esine on sieltä missä pelaaja juuri on: Istanbulissa osmanikäsityötä, Kairossa egyptiläistä, Lissabonissa löytöretkien aineistoa.',
-        huomiot: 'Tämä on minipelien tärkein suunta. Lähteet ovat avoimia ja ilmaisia: Met Museum (avoin API, CC0), Smithsonian, Rijksmuseum, Europeana ja Wikimedia Commons. Kuvat menevät saman peilin läpi kuin muutkin, joten ne toimivat myös offline. Kaupunkiin sidonta tehdään esineen alkuperämaan tai -kaupungin perusteella, ja aineisto haetaan etukäteen pelipaketteihin — ei lennossa, ettei tehtävä jää tulematta yhteydettömänä.' },
-    ];
-    const lasiLista = document.getElementById('lasi-lista');
-    for (const l of LASIT) {
-      const k = document.createElement('div');
-      k.className = 'kortti';
-      k.innerHTML = `
-        <h3>${l.nimi} <span class="tila">${PELITILAT[l.tila] ?? 'idea'}</span></h3>
-        <p>${l.kuvaus}</p>${l.huomiot ? `<p class="meta">${l.huomiot}</p>` : ''}`;
-      lasiLista.appendChild(k);
+    const lokiIkkuna = $('loki-ikkuna');
+    for (const m of MUUTOKSET) {
+      const li = el('li');
+      li.append(el('span', 'v', `v${m.v}`), el('span', '', m.teksti));
+      $('loki-lista').append(li);
     }
+    $('versio').addEventListener('click', () => lokiIkkuna.showModal());
+    $('loki-sulje').addEventListener('click', () => lokiIkkuna.close());
+    lokiIkkuna.addEventListener('click', (e) => { if (e.target === lokiIkkuna) lokiIkkuna.close(); });
 
-    const peliLista = document.getElementById('peli-lista');
-    for (const peli of PELIT) {
-      const k = document.createElement('div');
-      k.className = 'kortti';
-      k.innerHTML = `
-        <h3>${peli.nimi} <span class="tila ${peli.tila === 'kaytossa' ? 'kaytossa' : ''}">${PELITILAT[peli.tila]}</span></h3>
-        <p>${peli.kuvaus}</p>${peli.huomiot ? `<p class="meta">${peli.huomiot}</p>` : ''}`;
-      peliLista.appendChild(k);
-    }
+    // --- itsestään päivittyminen ----------------------------------------
 
-    // --- lähteet ------------------------------------------------------------
-    // tila: kaytossa | kokeiltava | idea. Lisenssi on lähteen pääsääntö —
-    // yksittäinen aineisto tarkistetaan aina erikseen.
-    const LAHTEET = [
-      { nimi: 'Wikimedia Commons', tyyppi: 'kuvat', lisenssi: 'PD/CC', api: true, url: 'https://commons.wikimedia.org', tila: 'kaytossa',
-        idea: 'Pelin nykyiset kuvat tulevat Wikipedian kautta täältä. Suora API antaisi enemmän kuvia per paikka.' },
-      { nimi: 'The Met Open Access', tyyppi: 'kuvat', lisenssi: 'CC0', api: true, url: 'https://metmuseum.github.io', tila: 'kokeiltava',
-        idea: 'Yli 400 000 CC0-teosta ilman avainta. Egyptin, Afrikan ja Aasian kokoelmat: aarre-esineiden kuvat, taidekysymykset.' },
-      { nimi: 'Smithsonian Open Access', tyyppi: 'kuvat', lisenssi: 'CC0', api: true, url: 'https://www.si.edu/openaccess', tila: 'kokeiltava',
-        idea: 'Miljoonia CC0-kuvia: luonnontiede, kulttuurit, historia. Ilmainen api.data.gov-avain.' },
-      { nimi: 'Rijksmuseum (Rijksstudio)', tyyppi: 'kuvat', lisenssi: 'PD', api: true, url: 'https://www.rijksmuseum.nl/en/rijksstudio', tila: 'kokeiltava',
-        idea: 'Hollannin kulta-ajan taide suurina kuvina. Löytöretki- ja karttateemat sopivat pelin henkeen.' },
-      { nimi: 'Cleveland Museum of Art', tyyppi: 'kuvat', lisenssi: 'CC0', api: true, url: 'https://openaccess-api.clevelandart.org', tila: 'kokeiltava',
-        idea: 'Avoin API ilman avainta, CC0-teokset. Hyvä Afrikan taiteen kokoelma.' },
-      { nimi: 'Art Institute of Chicago', tyyppi: 'kuvat', lisenssi: 'CC0', api: true, url: 'https://api.artic.edu/docs/', tila: 'kokeiltava',
-        idea: 'Siisti julkinen API, IIIF-kuvat — tarkkoja rajauksia teoksista pulmiin ja kysymyksiin.' },
-      { nimi: 'Europeana', tyyppi: 'kuvat', lisenssi: 'vaihtelee', api: true, url: 'https://pro.europeana.eu/page/apis', tila: 'idea',
-        idea: 'Euroopan museoiden ja arkistojen yhteishaku — Euroopan laudan sisältöön aikanaan.' },
-      { nimi: 'Library of Congress', tyyppi: 'kuvat', lisenssi: 'PD (pääosin)', api: true, url: 'https://www.loc.gov/apis/', tila: 'idea',
-        idea: 'Historialliset valokuvat ja julisteet; 1800-luvun matkakuvaukset sopivat isoisän aikakauteen.' },
-      { nimi: 'Flickr Commons', tyyppi: 'kuvat', lisenssi: 'PD ("no known copyright")', api: true, url: 'https://www.flickr.com/commons', tila: 'idea',
-        idea: 'Kymmenien museoiden vanhat valokuvat yhdellä haulla — aikalaiskuvia kaupungeista.' },
-      { nimi: 'David Rumsey Map Collection', tyyppi: 'kartat', lisenssi: 'CC BY-NC-SA', api: false, url: 'https://www.davidrumsey.com', tila: 'kokeiltava',
-        idea: 'Valtava historiallisten karttojen kokoelma. 1870-luvun Afrikka-kartta "Katso kuva" -aiheeksi tai pulmien pohjaksi.' },
-      { nimi: 'Old Maps Online', tyyppi: 'kartat', lisenssi: 'vaihtelee', api: false, url: 'https://www.oldmapsonline.org', tila: 'idea',
-        idea: 'Hakukone vanhoihin karttoihin paikan mukaan — reitti alkuperäislähteille.' },
-      { nimi: 'Natural Earth', tyyppi: 'kartat', lisenssi: 'PD', api: false, url: 'https://www.naturalearthdata.com', tila: 'kaytossa',
-        idea: 'Rannikot ja maiden rajat tulevat jo täältä. Myös joet ja järvet saatavilla samasta aineistosta.' },
-      { nimi: 'Freesound', tyyppi: 'ääni', lisenssi: 'CC0/CC BY', api: true, url: 'https://freesound.org', tila: 'kaytossa',
-        idea: 'Kaikki pelin kenttä-äänitykset. API-avaimella haku suoraan äänistudioon olisi mahdollinen.' },
-      { nimi: 'xeno-canto', tyyppi: 'ääni', lisenssi: 'CC (vaihtelee)', api: true, url: 'https://xeno-canto.org', tila: 'kokeiltava',
-        idea: 'Lintuäänet lajilleen ja alueelleen: kaupungin ambienssiin juuri sillä seudulla pesivä laji (esim. kenkänokka Bahr el Ghazaliin).' },
-      { nimi: 'BBC Sound Effects', tyyppi: 'ääni', lisenssi: 'RemArc (ei-kaupallinen)', api: false, url: 'https://sound-effects.bbcrewind.co.uk', tila: 'idea',
-        idea: '33 000 arkistotehoste-ääntä; höyrylaivat, juna-asemat, torit. Lisenssi sallii harrastuskäytön.' },
-      { nimi: 'radio aporee', tyyppi: 'ääni', lisenssi: 'CC', api: true, url: 'https://aporee.org/maps/', tila: 'kaytossa',
-        idea: 'Kenttä-äänityksiä kartalla ympäri maailmaa. Haku archive.orgin rajapinnasta koordinaateilla, ei nimellä: jokaisen 41 Euroopan kaupungin oma taustaääni tulee täältä. Huom: hakemisto pudottaa koordinaateista miinusmerkin, joten kysely tehdään itseisarvoilla.' },
-      { nimi: 'Musopen', tyyppi: 'musiikki', lisenssi: 'PD/CC', api: false, url: 'https://musopen.org', tila: 'idea',
-        idea: 'Vapaita klassisen musiikin äänityksiä — aikakauden salonkimusiikkia esim. voittoruutuun.' },
-      { nimi: 'Free Music Archive', tyyppi: 'musiikki', lisenssi: 'CC (vaihtelee)', api: false, url: 'https://freemusicarchive.org', tila: 'idea',
-        idea: 'CC-musiikkia tunnelmittain, jos tietovisamusiikille halutaan vaihtoehtoja.' },
-      { nimi: 'Internet Archive', tyyppi: 'kuvat', lisenssi: 'vaihtelee (paljon PD)', api: true, url: 'https://archive.org', tila: 'idea',
-        idea: '1800-luvun matkakirjojen skannaukset: aitoja sivuja, piirroksia ja karttoja isoisän kirjan kuvitukseksi.' },
-      { nimi: 'Wikidata', tyyppi: 'data', lisenssi: 'CC0', api: true, url: 'https://www.wikidata.org', tila: 'kokeiltava',
-        idea: 'Rakenteinen tieto (väkiluvut, korkeudet, vuodet) kysymysgeneroinnin ja faktantarkistuksen tueksi.' },
-      { nimi: 'Our World in Data', tyyppi: 'data', lisenssi: 'CC BY', api: false, url: 'https://ourworldindata.org', tila: 'idea',
-        idea: 'Nykypäivän tilastot kysymyksiin, joissa isoisän aikakäsitys törmää nykyaikaan — pelin ydinteema.' },
-      { nimi: 'REST Countries', tyyppi: 'data', lisenssi: 'avoin', api: true, url: 'https://restcountries.com', tila: 'idea',
-        idea: 'Liput, valuutat, kielet ja rajanaapurit koneluettavana — lippukysymykset ja tarkistukset.' },
-      { nimi: 'UNESCO World Heritage', tyyppi: 'data', lisenssi: 'avoin lista', api: false, url: 'https://whc.unesco.org/en/list/', tila: 'idea',
-        idea: 'Maailmanperintökohteet mantereittain — valmis runko uusien kaupunkien "aarrepaikoiksi".' },
-      { nimi: 'Open-Meteo', tyyppi: 'live', lisenssi: 'avoin API', api: true, url: 'https://open-meteo.com', tila: 'kokeiltava',
-        idea: 'Ilmainen sääAPI ilman avainta: saapumiskorttiin kaupungin sää juuri nyt — "Kairossa on tänään 34°C".' },
-      { nimi: 'explore.org', tyyppi: 'live', lisenssi: 'upotus sallittu', api: false, url: 'https://explore.org/livecams', tila: 'kokeiltava',
-        idea: 'Livekamerat Afrikan vesipaikoilta (Mpala, Tembe). "Ikkuna maailmaan" -nappi savannikaupungeissa.' },
-      { nimi: 'Windy Webcams', tyyppi: 'live', lisenssi: 'API (ilmainen taso)', api: true, url: 'https://api.windy.com/webcams', tila: 'idea',
-        idea: 'Kaupunkien webkamerat rajapinnan kautta — live-näkymä saapumiskorttiin missä kamera löytyy.' },
-      { nimi: 'Skyline Webcams', tyyppi: 'live', lisenssi: 'upotus', api: false, url: 'https://www.skylinewebcams.com', tila: 'idea',
-        idea: 'Paljon kaupunkikameroita (mm. Välimeri, Afrikka) — linkkeinä varovaisesti, upotusehdot tarkistettava.' },
-    ];
-    const TYYPIT = ['kaikki', 'kuvat', 'kartat', 'ääni', 'musiikki', 'data', 'live'];
-    const TILAT = { kaytossa: 'käytössä', kokeiltava: 'kokeiltava seuraavaksi', idea: 'idea' };
-    let lahdeTyyppi = 'kaikki';
-    const lahdeSuodattimet = document.getElementById('lahde-suodattimet');
-    for (const t of TYYPIT) {
-      const b = document.createElement('button');
-      b.textContent = t;
-      if (t === lahdeTyyppi) b.classList.add('paalla');
-      b.addEventListener('click', () => {
-        lahdeTyyppi = t;
-        for (const n of lahdeSuodattimet.children) n.classList.toggle('paalla', n === b);
-        piirraLahteet();
-      });
-      lahdeSuodattimet.appendChild(b);
-    }
-    const lahdeLista = document.getElementById('lahde-lista');
-    function piirraLahteet() {
-      lahdeLista.textContent = '';
-      for (const l of LAHTEET) {
-        if (lahdeTyyppi !== 'kaikki' && l.tyyppi !== lahdeTyyppi) continue;
-        const k = document.createElement('div');
-        k.className = 'kortti';
-        k.innerHTML = `
-          <h3>${l.nimi} <span class="tila ${l.tila === 'kaytossa' ? 'kaytossa' : ''}">${TILAT[l.tila]}</span></h3>
-          <div class="meta">${l.tyyppi} · ${l.lisenssi} · ${l.api ? 'API' : 'ei APIa'} ·
-            <a href="${l.url}" target="_blank" rel="noopener">${l.url.replace('https://', '')}</a></div>
-          <p>${l.idea}</p>`;
-        lahdeLista.appendChild(k);
-      }
-    }
-    piirraLahteet();
-
-    // --- moottorit ----------------------------------------------------------
-    const MOOTTORIT = [
-      { id: 'elevenlabs', nimi: 'ElevenLabs', tila: 'kaytossa',
-        mita: 'Puhe (eleven_v3 tunnetageilla, eleven_multilingual_v2 nopeussäädöllä) ja efektigeneraattori (/v1/sound-generation, myös luupit).',
-        huomiot: 'Käytössä: intro, lentorepliikki, 23 tehostetta ja 32 kaupunkien saapumisluentaa (ääni: Viisas Kertoja). Krediitit kuluvat merkeistä; efektit halpoja, puhe kalliimpaa. Avain kierrätetään generointien jälkeen.' },
-      { id: 'piper', nimi: 'Piper TTS (avoin)', tila: 'kokeiltava',
-        mita: 'Ilmainen paikallinen puhesynteesi, suomenkielisiä ääniä. Ei krediittejä lainkaan.',
-        huomiot: 'Laatu selvästi ElevenLabsia heikompi, mutta ilmainen varakone jos krediitit loppuvat tai halutaan massatuotantoa (esim. joka kaupungin tervehdys).' },
-      { id: 'azure', nimi: 'Azure / Google TTS', tila: 'idea',
-        mita: 'Suuret pilvipuhepalvelut, ilmainen kuukausikiintiö, hyvä suomi.',
-        huomiot: 'Neutraalimpi luenta kuin ElevenLabs. Varteenotettava jos tarvitaan paljon puhetta halvalla.' },
-      { id: 'stableaudio', nimi: 'Stable Audio', tila: 'idea',
-        mita: 'Musiikin ja äänimaisemien generointi tekstistä.',
-        huomiot: 'Voisi tehdä tietovisamusiikin variaatioita. Lisenssiehdot luettava ennen käyttöä pelissä.' },
-      { id: 'musicgen', nimi: 'MusicGen (Meta, avoin)', tila: 'idea',
-        mita: 'Avoin musiikkigeneraattori, ajettavissa itse.',
-        huomiot: 'Ilmainen vaihtoehto taustamusiikin kokeiluihin; laatu vaihtelee.' },
-      { id: 'deepl', nimi: 'DeepL', tila: 'idea',
-        mita: 'Käännökset (ilmainen taso 500 000 merkkiä/kk).',
-        huomiot: 'Jos peli joskus käännetään ruotsiksi/englanniksi, tämä on työkalu siihen.' },
-    ];
-    const MOOTTORI_AVAIN = 'matkakirja-moottorit';
-    const moottoriMuistiot = () => {
-      try { return JSON.parse(localStorage.getItem(MOOTTORI_AVAIN) ?? '{}'); } catch { return {}; }
-    };
-    const moottoriLista = document.getElementById('moottori-lista');
-    // ElevenLabsin saldo haetaan suoraan rajapinnasta. Avain tallentuu
-    // vain tähän selaimeen (kuten Freesound-avain äänistudiossa) —
-    // repoon tai sivulle sitä ei koskaan kirjata.
-    const EL_AVAIN = 'matkakirja-elevenlabs-avain';
-    function haeElSaldo(tulos, kentat) {
-      let avain = '';
-      try { avain = localStorage.getItem(EL_AVAIN) ?? ''; } catch { /* ei säily */ }
-      if (!avain) {
-        tulos.textContent = 'Liitä API-avain, niin saldo haetaan tähän.';
-        return;
-      }
-      tulos.textContent = 'Haetaan saldoa…';
-      fetch('https://api.elevenlabs.io/v1/user/subscription', { headers: { 'xi-api-key': avain } })
-        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-        .then((d) => {
-          const raja = d.character_limit ?? 0;
-          const kaytetty = d.character_count ?? 0;
-          const jaljella = Math.max(0, raja - kaytetty);
-          const aika = new Date().toLocaleString('fi-FI', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
-          tulos.innerHTML = `<b>Krediittejä jäljellä ${jaljella.toLocaleString('fi-FI')}</b> / ${raja.toLocaleString('fi-FI')} (käytetty ${kaytetty.toLocaleString('fi-FI')}) · haettu ${aika}`;
-          // Lukema kirjataan käsikirjanpitoon JA näkyviin kenttiin heti —
-          // pelkkä talletus ei päivittänyt jo piirrettyä kenttää.
-          const saldoTeksti = `${jaljella.toLocaleString('fi-FI')} / ${raja.toLocaleString('fi-FI')}`;
-          const tanaan = new Date().toISOString().slice(0, 10);
-          if (kentat) {
-            const [saldoKentta, pvmKentta] = kentat.querySelectorAll('input');
-            if (saldoKentta) saldoKentta.value = saldoTeksti;
-            if (pvmKentta) pvmKentta.value = tanaan;
-          }
-          const kaikki = moottoriMuistiot();
-          kaikki.elevenlabs = { ...(kaikki.elevenlabs ?? {}), saldo: saldoTeksti, pvm: tanaan };
-          try { localStorage.setItem(MOOTTORI_AVAIN, JSON.stringify(kaikki)); } catch { /* ei säily */ }
-        })
-        .catch((e) => {
-          tulos.textContent = e.message === '401'
-            ? 'Avain ei kelvannut (401) — tarkista tai luo uusi.'
-            : `Saldoa ei saatu haettua (${e.message}).`;
+    /*
+     * Kaksi tasoa:
+     *  1. Palvelutyöntekijä hakee verkosta ensin, joten sisältö on tuore
+     *     aina kun verkko toimii.
+     *  2. Jos työhuoneen OMA koodi on muuttunut, selain lataa uuden
+     *     työntekijän ja me kerromme siitä palkilla. Ilman ilmoitusta
+     *     käyttäjä katsoisi vanhaa sivua tietämättään.
+     */
+    if ('serviceWorker' in navigator) {
+      try {
+        const reg = await navigator.serviceWorker.register('tyohuone-sw.js');
+        reg.addEventListener('updatefound', () => {
+          const uusi = reg.installing;
+          if (!uusi) return;
+          uusi.addEventListener('statechange', () => {
+            if (uusi.state === 'installed' && navigator.serviceWorker.controller) {
+              const palkki = el('button', '', 'Uusi versio ladattu — napauta ottaaksesi käyttöön');
+              palkki.id = 'paivitysvihje';
+              palkki.addEventListener('click', () => location.reload());
+              document.body.append(palkki);
+            }
+          });
         });
+        // Tarkistus tunnin välein: työhuone on usein auki koko päivän.
+        setInterval(() => reg.update().catch(() => {}), 3600e3);
+      } catch { /* ilman työntekijää sivu toimii silti */ }
     }
 
-    function piirraMoottorit() {
-      moottoriLista.textContent = '';
-      const muistiot = moottoriMuistiot();
-      // ElevenLabs näkyy suoraan; muut moottorit aukeavat nuolesta.
-      const muut = document.createElement('details');
-      muut.className = 'tiivis';
-      const muutOtsikko = document.createElement('summary');
-      muutOtsikko.textContent = `Muut moottorit (${MOOTTORIT.length - 1})`;
-      muut.appendChild(muutOtsikko);
-      for (const m of MOOTTORIT) {
-        const tiedot = muistiot[m.id] ?? {};
-        const k = document.createElement('div');
-        k.className = 'kortti';
-        k.innerHTML = `
-          <h3>${m.nimi} <span class="tila ${m.tila === 'kaytossa' ? 'kaytossa' : ''}">${TILAT[m.tila] ?? m.tila}</span></h3>
-          <p>${m.mita}</p>
-          <p class="meta">${m.huomiot}</p>`;
-        // Ajantasainen saldo suoraan ElevenLabsin rajapinnasta.
-        if (m.id === 'elevenlabs') {
-          const saldo = document.createElement('p');
-          saldo.style.margin = '0.4rem 0';
-          k.appendChild(saldo);
-          const rivi = document.createElement('div');
-          rivi.className = 'grid';
-          const avainKentta = document.createElement('input');
-          avainKentta.type = 'password';
-          avainKentta.placeholder = 'ElevenLabs API-avain (vain tämä selain)';
-          avainKentta.style.flex = '1 1 16rem';
-          try { avainKentta.value = localStorage.getItem(EL_AVAIN) ?? ''; } catch { /* ei säily */ }
-          avainKentta.addEventListener('change', () => {
-            try { localStorage.setItem(EL_AVAIN, avainKentta.value.trim()); } catch { /* ei säily */ }
-          });
-          const hae = document.createElement('button');
-          hae.textContent = 'Hae saldo';
-          rivi.appendChild(avainKentta);
-          rivi.appendChild(hae);
-          k.appendChild(rivi);
-          k.dataset.elSaldo = '1';
-          k.elSaldoKaynnistys = (kentat) => {
-            hae.addEventListener('click', () => haeElSaldo(saldo, kentat));
-            haeElSaldo(saldo, kentat);
-          };
-        }
-        const kentat = document.createElement('div');
-        kentat.className = 'moottori-kentat';
-        const tee = (nimi, avain, tyyppi = 'text', paikka = '') => {
-          const label = document.createElement('label');
-          label.textContent = nimi;
-          const input = document.createElement('input');
-          input.type = tyyppi;
-          input.value = tiedot[avain] ?? '';
-          input.placeholder = paikka;
-          input.addEventListener('change', () => {
-            const kaikki = moottoriMuistiot();
-            kaikki[m.id] = { ...(kaikki[m.id] ?? {}), [avain]: input.value };
-            try { localStorage.setItem(MOOTTORI_AVAIN, JSON.stringify(kaikki)); } catch { /* ei säily */ }
-          });
-          kentat.appendChild(label);
-          kentat.appendChild(input);
-        };
-        tee('krediittejä jäljellä', 'saldo', 'text', 'esim. 18 400 / 30 000');
-        tee('tarkistettu', 'pvm', 'date');
-        tee('muistiinpano', 'huomio', 'text', 'esim. uusi avain luotu 29.7.');
-        k.appendChild(kentat);
-        if (k.elSaldoKaynnistys) k.elSaldoKaynnistys(kentat);
-        if (m.id === 'elevenlabs') moottoriLista.appendChild(k);
-        else muut.appendChild(k);
-      }
-      moottoriLista.appendChild(muut);
-    }
-    piirraMoottorit();
-
-    // --- maanosat: kartat isossa koossa --------------------------------------
-    // Kehyksessä on oikea peli katselutilassa (?lauta=): kartta ilman
-    // porttia, avaustekstiä ja tallennusta. Ladataan vasta kun välilehti
-    // on auki, ja vain valittu lauta kerrallaan.
-    const karttaValinta = document.getElementById('kartta-lauta');
-    for (const p of PACKS) {
-      const o = document.createElement('option');
-      o.value = p.id;
-      o.textContent = `${p.boardLabel ?? p.name} — ${p.name}`;
-      karttaValinta.appendChild(o);
-    }
-    karttaValinta.value = 'africa';
-    const karttaKehys = document.getElementById('kartta-kehys');
-    const karttaLinkki = document.getElementById('kartta-uuteen');
-    function paivitaKartta() {
-      const osoite = `index.html?lauta=${karttaValinta.value}`;
-      karttaLinkki.href = osoite;
-      if (document.getElementById('tab-maanosat').hidden) return;
-      if (karttaKehys.src !== new URL(osoite, location.href).href) karttaKehys.src = osoite;
-    }
-    karttaValinta.addEventListener('change', paivitaKartta);
-
-    // --- etusivun tilastot: lasketaan suoraan paketeista -------------------
-    (async () => {
-      const kohde = document.getElementById('tilastot');
-      const rivit = [];
-      const num = (n) => n.toLocaleString('fi-FI');
-      // Versio myös tilastoriville: yläpalkin versionumero piilotetaan
-      // kapealla näytöllä, jotta välilehtirivi mahtuu — ja juuri siellä
-      // sitä eniten kaipaa (omistajan havainto).
+    $('paivita').addEventListener('click', async () => {
+      const nappi = $('paivita');
+      nappi.disabled = true;
+      nappi.textContent = 'Haetaan…';
       try {
-        const src = await (await fetch('js/main.js')).text();
-        const v = src.match(/APP_VERSION = '([^']+)'/);
-        if (v) rivit.push(['Versio', v[1]]);
-      } catch { /* ilman verkkoa jää pois */ }
-      let kaupungit = 0;
-      let reitit = 0;
-      let lennot = 0;
-      let kysymykset = 0;
-      let tiedot = 0;
-      let vihjeet = 0;
+        const regs = await navigator.serviceWorker?.getRegistrations?.() ?? [];
+        await Promise.all(regs.map((r) => r.unregister()));
+        for (const avain of await caches.keys()) await caches.delete(avain);
+      } catch { /* siivous ei ole edellytys */ }
+      // Muuttuva parametri kiertää iOS:n oman aloitussivuvälimuistin.
+      const url = new URL(location.href);
+      url.searchParams.set('p', String(Date.now()));
+      location.replace(url.toString());
+    });
+
+    // --- kaupunkien tila -------------------------------------------------
+
+    /*
+     * Yksi totuus siitä, mitä kaupungilta puuttuu. Sekä puutelista että
+     * kaupunkiselaimen merkinnät lukevat tämän — kaksi eri laskentaa
+     * ajautuisi väistämättä erilleen.
+     */
+    const OSAT = [
+      { avain: 'saapuminen', nimi: 'päiväkirjamerkintä', on: (c) => Boolean(SAAPUMISET[c.id]) },
+      { avain: 'artikkeli', nimi: 'oma artikkeli', on: (c) => Boolean(artikkelinTeksti(ARTIKKELIT[c.wiki ?? c.name])) },
+      { avain: 'kuvat', nimi: 'kuvakortti', on: (c) => Boolean(KUVAT[c.id]) },
+      { avain: 'kulttuuri', nimi: 'kulttuurinostot', on: (c) => Boolean(KULTTUURI[c.id]) },
+      { avain: 'kysymykset', nimi: 'tietovisakysymykset', on: (c, p) => Boolean((p.questions?.[c.id] ?? []).length) },
+      { avain: 'aani', nimi: 'äänimaisema', on: (c) => Boolean(c.ambience) },
+      { avain: 'maa', nimi: 'maatunnus', on: (c, p) => Boolean(p.map?.cityCountry?.[c.id]) },
+      { avain: 'tunnusluvut', nimi: 'maan tunnusluvut', on: (c, p) => Boolean(MAATIEDOT[p.map?.cityCountry?.[c.id]]) },
+      { avain: 'kieli', nimi: 'kielinäyte tai radio', on: (c, p) => Boolean(KIELET[c.id] || radiot[p.map?.cityCountry?.[c.id]]) },
+    ];
+    const puuttuvat = (c, p) => OSAT.filter((o) => !o.on(c, p));
+
+    // --- TILANNE ---------------------------------------------------------
+
+    const paalauta = PACKS.find((p) => p.id === 'vanhamaailma') ?? PACKS[0];
+    /*
+     * Sama kaupunki on usealla laudalla: Lontoo on sekä Euroopan
+     * laudalla että yhdistetyllä vanhalla maailmalla. Puutteet
+     * lasketaan KERRAN kaupunkia kohti, muuten sama puute näkyisi
+     * listassa kahdesti ja luku olisi 445 vaikka kaupunkeja on 283.
+     *
+     * Jos kaupunki on monella laudalla, käytetään sitä lautaa, jolla
+     * sillä on eniten sisältöä — muuten tyhjä rinnakkaislauta
+     * merkitsisi valmiin kaupungin vajaaksi.
+     */
+    const kaikkiKaupungit = (() => {
+      const paras = new Map();
       for (const p of PACKS) {
-        kaupungit += p.cities.length;
-        reitit += p.edges.length;
-        lennot += (p.airRoutes ?? []).length;
-        for (const qs of Object.values(p.questions ?? {})) {
-          if (Array.isArray(qs)) kysymykset += qs.filter((q) => q.options).length;
+        for (const c of p.cities) {
+          const ehdokas = { c, p, pisteet: OSAT.filter((o) => o.on(c, p)).length };
+          const ed = paras.get(c.id);
+          if (!ed || ehdokas.pisteet > ed.pisteet) paras.set(c.id, ehdokas);
         }
-        for (const fs of Object.values(p.placeFacts ?? {})) tiedot += fs.length;
-        vihjeet += Object.keys(p.texts?.starHints ?? {}).length;
       }
-      const vanhat = Object.keys(AFRICA_VALOKUVAT).length;
-      const uudet = Object.values(AFRICA_VALOKUVAT).filter((k) => k.uusi).length;
-      const nostot = Object.values(AFRICA_KULTTUURI)
-        .reduce((s, k) => s + (k.nostot?.length ?? 0), 0);
-      rivit.push(['Lautoja', num(PACKS.length)]);
-      rivit.push(['Kaupunkeja ja paikkoja', num(kaupungit)]);
-      rivit.push(['Reittejä (+ lentoreittejä)', `${num(reitit)} (+ ${num(lennot)})`]);
-      rivit.push(['Visakysymyksiä', num(kysymykset)]);
-      rivit.push(['Tiesitkö-tietoja', num(tiedot)]);
-      rivit.push(['Aarrevihjeitä', num(vihjeet)]);
-      rivit.push(['Matkakirjan saapumisia (Afrikka)', num(Object.keys(AFRICA_SAAPUMISET).length)]);
-      rivit.push(['Omia artikkeleita (Afrikka)', num(Object.keys(OMAT_ARTIKKELIT).length)]);
-      rivit.push(['Kulttuurinostoja (Afrikka)', num(nostot)]);
-      rivit.push(['Valokuvia (vanha + nykypäivä)', `${num(vanhat)} + ${num(uudet)}`]);
-      // Kenttä-äänitykset: kaupungin oma taustaääni ja puhenäyte ovat eri
-      // asioita, joten ne myös lasketaan erikseen.
-      const omatAanet = Object.values(KAUPUNKI_EHDOKKAAT)
-        .reduce((s, lista) => s + lista.length, 0);
-      const kieliKaupungit = Object.keys(EUROPE_KIELET).length;
-      const europe = PACKS.find((p) => p.id === 'europe');
-      rivit.push(['Kaupunkien omia äänityksiä',
-        `${num(omatAanet)} (${num(Object.keys(KAUPUNKI_EHDOKKAAT).length)} kaupunkia)`]);
-      rivit.push(['Kielinäytteitä (Eurooppa)',
-        `${num(kieliKaupungit)} / ${num(europe?.cities.length ?? 0)} kaupunkia`]);
-      const musiikkiKortit = Object.values(EUROPE_KULTTUURI)
-        .flatMap((k) => k.nostot ?? []).filter((n) => n.musiikki);
-      rivit.push(['Musiikkinäytteitä (Eurooppa)',
-        `${num(musiikkiKortit.filter((n) => n.musiikkiNayte).length)} / ${num(musiikkiKortit.length)} korttia`]);
-      // Äänet ja koko luetaan sovelluksen omista tiedostoista.
-      try {
-        const sw = await (await fetch('sw.js')).text();
-        const aanet = (sw.match(/\.mp3/g) ?? []).length;
-        rivit.push(['Äänitiedostoja', num(aanet)]);
-      } catch { /* ilman verkkoa jää pois */ }
-      try {
-        const vastaus = await fetch('dist/matkakirja.html', { method: 'HEAD' });
-        const koko = Number(vastaus.headers.get('content-length'));
-        if (koko) rivit.push(['Standalone-paketin koko', `${Math.round(koko / 1024)} kt`]);
-      } catch { /* ilman verkkoa jää pois */ }
-
-      const taulu = document.createElement('table');
-      const piirra = (lista) => {
-        taulu.innerHTML = lista
-          .map(([nimi, arvo]) => `<tr><td>${nimi}</td><td class="num">${arvo}</td></tr>`)
-          .join('');
-      };
-      piirra([...rivit, ['Peili (media-repo)', 'luetaan…']]);
-      kohde.appendChild(taulu);
-
-      /*
-       * Peilin luvut media-repon manifestista. Manifesti on ainoa paikka,
-       * josta kopioiden määrän ja koon näkee ilman repon kloonaamista, ja
-       * se päivittyy jokaisella peilausajolla.
-       *
-       * Haku tehdään vasta taulukon piirtämisen jälkeen ja aikarajan
-       * kanssa: pelin omat luvut eivät saa jäädä odottamaan verkkoa.
-       * Ilman aikarajaa koko taulukko jäi tyhjäksi, jos peiliin ei ollut
-       * yhteyttä — fetch ei kaadu itsestään, se vain jää roikkumaan.
-       */
-      // Alle megatavun erät (liput) näyttivät nollalta pelkkinä megatavuina.
-      const mt = (tavuja) => (tavuja < 1048576
-        ? `${Math.round(tavuja / 1024)} kt`
-        : `${Math.round(tavuja / 1048576)} Mt`);
-      const peilinRivit = async () => {
-        const katkaisin = AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined;
-        const manifesti = await (await fetch(`${PEILI_JUURI}manifesti.json`,
-          { signal: katkaisin })).json();
-        const laske = (laji) => {
-          const merkinnat = Object.values(manifesti[laji] ?? {});
-          return {
-            kpl: merkinnat.length,
-            koko: merkinnat.reduce((s, m) => s + (m.koko ?? 0), 0),
-          };
-        };
-        const kuvat = laske('kuvat');
-        const liput = laske('liput');
-        const aanet = laske('aanet');
-        const leikatut = Object.values(manifesti.aanet ?? {}).filter((m) => m.leikattu).length;
-        return [
-          ['Peili: kuvia', `${num(kuvat.kpl)} · ${mt(kuvat.koko)}`],
-          ['Peili: lippuja', `${num(liput.kpl)} · ${mt(liput.koko)}`],
-          ['Peili: ääniä', `${num(aanet.kpl)} · ${mt(aanet.koko)}`],
-          ['Peili: ääniä leikattu 3 min', `${num(leikatut)} / ${num(aanet.kpl)}`],
-          ['Peili yhteensä', mt(kuvat.koko + liput.koko + aanet.koko)],
-        ];
-      };
-      peilinRivit().then(
-        (lisa) => piirra([...rivit, ...lisa]),
-        () => piirra([...rivit, ['Peili (media-repo)', 'ei saatu yhteyttä']]),
-      );
+      return [...paras.values()];
     })();
 
-    // --- kuvat: muistikirjan vanhat valokuvat --------------------------------
-    // Ruudukko rakennetaan vasta kun välilehti avataan, ettei työhuone
-    // hae parinkymmentä kuvaa Commonsista joka käynnillä.
-    let kuvatPiirretty = false;
-    function piirraKuvat() {
-      if (kuvatPiirretty) return;
-      kuvatPiirretty = true;
-      const afrikka = packById('africa');
-      const ruudukko = document.getElementById('kuva-ruudukko');
-      const ilman = [];
-      for (const city of afrikka.cities) {
-        const kuva = AFRICA_VALOKUVAT[city.id];
-        if (!kuva) {
-          ilman.push(city.name);
-          continue;
-        }
-        const kortti = document.createElement('div');
-        kortti.className = 'kuvakortti';
-        const img = document.createElement('img');
-        img.loading = 'lazy';
-        img.alt = `${city.name} — vanha valokuva`;
-        img.src = valokuvaUrl(kuva.tiedosto, 320);
-        kortti.appendChild(img);
-        const nimi = document.createElement('p');
-        nimi.className = 'nimi';
-        const linkki = document.createElement('a');
-        linkki.href = `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(kuva.tiedosto)}`;
-        linkki.target = '_blank';
-        linkki.rel = 'noopener';
-        linkki.textContent = city.name;
-        nimi.appendChild(linkki);
-        kortti.appendChild(nimi);
-        const meta = document.createElement('p');
-        meta.className = 'meta';
-        meta.textContent = [kuva.vuosi, kuva.lahde].filter(Boolean).join(' · ');
-        kortti.appendChild(meta);
-        ruudukko.appendChild(kortti);
-        // Nykypäivän pari heti vanhan viereen, jos kaupungille on kuvapino.
-        if (kuva.uusi) {
-          const pari = document.createElement('div');
-          pari.className = 'kuvakortti nykyinen';
-          const kuva2 = document.createElement('img');
-          kuva2.loading = 'lazy';
-          kuva2.alt = `${city.name} — nykypäivän kuva`;
-          kuva2.src = valokuvaUrl(kuva.uusi.tiedosto, 320);
-          pari.appendChild(kuva2);
-          const nimi2 = document.createElement('p');
-          nimi2.className = 'nimi';
-          const linkki2 = document.createElement('a');
-          linkki2.href = `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(kuva.uusi.tiedosto)}`;
-          linkki2.target = '_blank';
-          linkki2.rel = 'noopener';
-          linkki2.textContent = `${city.name} · nykyään`;
-          nimi2.appendChild(linkki2);
-          pari.appendChild(nimi2);
-          const meta2 = document.createElement('p');
-          meta2.className = 'meta';
-          meta2.textContent = [kuva.uusi.vuosi ?? 'nykypäivä', kuva.uusi.lahde].filter(Boolean).join(' · ');
-          pari.appendChild(meta2);
-          ruudukko.appendChild(pari);
-        }
-      }
-      document.getElementById('kuvattomat').textContent = ilman.length
-        ? `Ilman kuvaa vielä (${ilman.length}): ${ilman.join(', ')}. Näille etsitään sopiva vanha kuva myöhemmin.`
-        : 'Jokaisella kaupungilla on kuva.';
+    function piirraLuvut() {
+      const luvut = [
+        ['Kaupunkeja', kaikkiKaupungit.length],
+        ['Valmiita kaupunkeja', kaikkiKaupungit.filter(({ c, p }) => !puuttuvat(c, p).length).length],
+        ['Päiväkirjamerkintöjä', Object.keys(SAAPUMISET).length],
+        ['Omia artikkeleita', Object.keys(ARTIKKELIT).length],
+        ['Kuvakortteja', Object.keys(KUVAT).length],
+        ['Maita tunnusluvuin', Object.keys(MAATIEDOT).length],
+        ['Radiolähetyksiä', Object.keys(radiot).length],
+        ['Kysymyksiä', PACKS.reduce((s, p) => s + Object.entries(p.questions ?? {})
+          .filter(([k]) => k !== 'claims').reduce((a, [, v]) => a + (Array.isArray(v) ? v.length : 0), 0), 0)],
+      ];
+      $('luvut').replaceChildren(...luvut.map(([nimi, arvo]) => {
+        const d = el('div', 'luku');
+        d.append(el('b', '', String(arvo)), el('span', '', nimi));
+        return d;
+      }));
     }
 
-    // --- maanosat: luvut suoraan paketeista ---------------------------------
-    const TILA_MERKINNAT = {
-      maailma: 'perusta — lennot ja aloitus',
-      africa: 'AKTIIVINEN — hiotaan valmiiksi ensin',
-      europe: 'Venetsia Afrikan tasolla (pilotti), muut odottavat',
-      middleeast: 'runko olemassa, odottaa',
-      asia: 'runko olemassa, odottaa',
-      oceania: 'runko olemassa, odottaa',
-      northamerica: 'runko olemassa, odottaa',
-      southamerica: 'runko olemassa, odottaa',
-      suomi: 'maakohtainen kokeilu',
-      istanbul: 'kaupunkilauta, kokeilu',
-    };
-    const taulu = document.getElementById('maanosa-taulukko');
-    const rivit = PACKS.map((p) => {
-      const kysymykset = Object.values(p.questions ?? {}).reduce((s, lista) => s + (lista?.length ?? 0), 0);
-      const tyypit = p.cities.filter((c) => c.ambience).length;
-      return {
-        nimi: p.boardLabel ?? p.name,
-        tila: TILA_MERKINNAT[p.id] ?? '',
-        kaupungit: p.cities.length,
-        tyypit,
-        kysymykset,
-        pulmat: p.puzzles?.length ?? 0,
-        paivakirjat: p.texts?.diaries?.length ?? 0,
-        repliikit: Object.values(p.texts?.flightLines ?? {}).reduce((s, l) => s + l.length, 0)
-          + (p.texts?.flightDefault?.length ?? 0) + (p.texts?.flightFirst?.length ?? 0),
-        rajat: p.map?.borders ? '✓' : '—',
-      };
-    });
-    const t = document.createElement('table');
-    t.innerHTML = `<tr><th>Lauta</th><th>Tila</th><th>Kaup.</th><th>Äänityypit</th>
-      <th>Kysym.</th><th>Pulmat</th><th>Päiväk.</th><th>Repliikit</th><th>Rajat</th></tr>`
-      + rivit.map((r) => `<tr><td>${r.nimi}</td><td>${r.tila}</td><td class="num">${r.kaupungit}</td>
-        <td class="num">${r.tyypit}</td><td class="num">${r.kysymykset}</td><td class="num">${r.pulmat}</td>
-        <td class="num">${r.paivakirjat}</td><td class="num">${r.repliikit}</td><td>${r.rajat}</td></tr>`).join('');
-    taulu.appendChild(t);
-
-    // --- tarina: lukitut tekstit suoraan lähteistä --------------------------
-    // Avausteksti on ui.js:ssä; haetaan tiedosto ja poimitaan vakio, jotta
-    // tämä sivu ei koskaan näytä vanhentunutta versiota.
-    fetch('js/ui.js').then((r) => r.text()).then((src) => {
-      const m = src.match(/const INTRO_TEXT = ([^;]+);/);
-      if (!m) return;
-      // eval on ok omalla dev-sivulla omalle tiedostolle.
-      const teksti = eval(m[1]); // eslint-disable-line no-eval
-      document.getElementById('tarina-intro').textContent = teksti;
-    }).catch(() => {
-      document.getElementById('tarina-intro').textContent = '(ei saatu luettua ui.js:stä)';
-    });
-    const maailma = packById('maailma');
-    document.getElementById('tarina-lento').textContent = maailma.texts?.flightFirst?.[0] ?? '';
-    const paivakirjat = document.getElementById('tarina-paivakirjat');
-    for (const p of PACKS) {
-      const luvut = p.texts?.diaries ?? [];
-      if (!luvut.length) continue;
-      const k = document.createElement('div');
-      k.className = 'kortti';
-      k.innerHTML = `<h3>${p.boardLabel ?? p.name} (${luvut.length})</h3>`
-        + luvut.map((d) => `<p>· ${d}</p>`).join('');
-      paivakirjat.appendChild(k);
-    }
-
-    // --- tekstit: kaikki pelin tekstit laudoittain ---------------------------
-    // Rivit kootaan suoraan paketeista, joten välilehti ei voi vanhentua.
-    // Ryhmävalinnat ja lauta muistetaan tässä selaimessa.
-    const TEKSTIRYHMAT = [
-      ['juoni', 'Avaus ja juoni'],
-      ['saapumiset', 'Matkakirjan saapumiset'],
-      ['lennot', 'Lentorepliikit'],
-      ['paivakirjat', 'Päiväkirja'],
-      ['kysymykset', 'Kysymykset'],
-      ['vaittamat', 'Isoisän väittämät'],
-      ['pulmat', 'Pulmat'],
-      ['tapahtumat', 'Tapahtumakortit'],
-      ['vihjeet', 'Tähtivihjeet'],
-      ['artikkelit', 'Omat artikkelit ja nostot'],
-      ['valokuvat', 'Valokuvien selitteet'],
-      ['kulttuuri', 'Kulttuurinostot'],
-    ];
-    // Osa teksteistä on funktioita (nimi ja summa täytetään pelissä):
-    // ne näytetään esimerkkiarvoilla.
-    const esimerkilla = (arvo, ...args) => {
-      try { return typeof arvo === 'function' ? arvo(...args) : arvo; } catch { return null; }
-    };
-
-    function teeTekstiRivit(p) {
-      const rivit = []; // { ryhma, html, haku }
-      const lisaa = (ryhma, html) => rivit.push({
-        ryhma, html, haku: html.replace(/<[^>]*>/g, ' ').toLowerCase(),
-      });
-      const kaupunki = (id) => p.cities.find((c) => c.id === id)?.name ?? id;
-      const t = p.texts ?? {};
-
-      if (t.intro) lisaa('juoni', `<b>Aloitus:</b> ${t.intro}`);
-      if (t.starToast) lisaa('juoni', `<b>Tähti löytyi (ilmoitus):</b> ${t.starToast}`);
-      const loyto = esimerkilla(t.starFound, 'Herra Fogg', 'Kairo');
-      if (loyto) lisaa('juoni', `<b>Tähti löytyi:</b> ${loyto} <span class="meta">(esimerkkiarvoilla)</span>`);
-      if (t.starChase) lisaa('juoni', `<b>Loppukiri:</b> ${t.starChase}`);
-      if (t.winStar) lisaa('juoni', `<b>Voiton peruste:</b> ${t.winStar}`);
-      const voitto = esimerkilla(t.winnerStar, 'Herra Fogg', 600);
-      if (voitto) lisaa('juoni', `<b>Voittoteksti:</b> ${voitto} <span class="meta">(esimerkkiarvoilla)</span>`);
-
-      for (const rivi of t.flightFirst ?? []) lisaa('lennot', `<b>Avauslento:</b> ${rivi}`);
-      for (const rivi of t.flightDefault ?? []) lisaa('lennot', `<b>Yleinen:</b> ${rivi}`);
-      for (const [cityId, linjat] of Object.entries(t.flightLines ?? {})) {
-        for (const rivi of linjat) lisaa('lennot', `<b>${kaupunki(cityId)}:</b> ${rivi}`);
+    function piirraPuutteet() {
+      const laskurit = new Map(OSAT.map((o) => [o.avain, []]));
+      for (const { c, p } of kaikkiKaupungit) {
+        for (const o of puuttuvat(c, p)) laskurit.get(o.avain).push(`${c.name} (${p.id})`);
       }
-
-      (t.diaries ?? []).forEach((d, i) => lisaa('paivakirjat', `<b>Merkintä ${i + 1}:</b> ${d}`));
-      for (const s of t.schedule ?? []) {
-        lisaa('paivakirjat', `<b>Isoisän reitti, päivä ${s.day}:</b> ${s.text}`);
-      }
-
-      const optiot = (k) => (k.options ?? [])
-        .map((o, i) => (i === k.correct ? `<span class="oikea">${o} ✓</span>` : o)).join(' / ');
-      const kysymysRivi = (otsikko, k) => {
-        const osat = [`<b>${otsikko}</b> ${k.q}`, `→ ${optiot(k)}`];
-        if (k.hint) osat.push(`<span class="meta">vihje: ${k.hint}</span>`);
-        if (k.fact) osat.push(`<span class="meta">fakta: ${k.fact}</span>`);
-        lisaa('kysymykset', osat.join('<br>'));
-      };
-      for (const c of p.cities) {
-        for (const k of p.questions?.[c.id] ?? []) kysymysRivi(`[${c.name}]`, k);
-      }
-      for (const k of p.questions?.general ?? []) kysymysRivi('[Yleinen]', k);
-
-      for (const v of p.questions?.claims ?? []) {
-        lisaa('vaittamat', [
-          `<b>[${v.place ?? '—'}]</b> ${v.q}`,
-          `→ <span class="oikea">${v.correct ? 'pitää yhä paikkansa' : 'ei pidä enää paikkaansa'}</span>`,
-          v.fact ? `<span class="meta">fakta: ${v.fact}</span>` : '',
-        ].filter(Boolean).join('<br>'));
-      }
-
-      for (const pulma of p.puzzles ?? []) {
-        lisaa('pulmat', [
-          `<b>${pulma.title}</b> <span class="meta">(${kaupunki(pulma.city)})</span>`,
-          pulma.q ?? '',
-          pulma.selite ? `<span class="meta">${pulma.selite}</span>` : '',
-          pulma.options ? `→ ${optiot(pulma)}` : '',
-          pulma.hint ? `<span class="meta">vihje: ${pulma.hint}</span>` : '',
-          pulma.fact ? `<span class="meta">fakta: ${pulma.fact}</span>` : '',
-        ].filter(Boolean).join('<br>'));
-      }
-
-      for (const e of p.events ?? []) {
-        lisaa('tapahtumat', `${e.text}<br><span class="meta">vaikutus: ${e.effect?.kind ?? '—'}</span>`);
-      }
-
-      for (const [cityId, vihje] of Object.entries(t.starHints ?? {})) {
-        lisaa('vihjeet', `<b>[${kaupunki(cityId)}]</b> ${vihje}`);
-      }
-
-      // Afrikan uudet sisällöt: saapumistekstit (lukukierros ennen äänien
-      // generointia), omat artikkelit ja nostot, valokuvien selitteet ja
-      // kulttuurinostot. Rivit tulevat suoraan paketeista, eivät kopioina.
-      const sisalto = SISALTO[p.id];
-      if (sisalto) {
-        // Tiivis tunteellinen kuvaus + isoisän nosto. Luenta näytetään
-        // vain niille kaupungeille, joille se on generoitu — muuten
-        // soitin näyttäisi rikkinäiseltä.
-        const soitin = (osoite) => '<span class="meta">Luenta:</span> '
-          + `<audio controls preload="none" src="${osoite}" style="vertical-align: middle; height: 28px; max-width: 100%;"></audio>`;
-        for (const c of p.cities) {
-          const s = sisalto.saapumiset[c.id];
-          if (!s) continue;
-          const onLuenta = SAAPUMISLUENNAT.has(`${p.id}:${c.id}`);
-          lisaa('saapumiset', [
-            `<b>[${c.name}]</b>`,
-            `<b>${s.kuvaus}</b>`,
-            s.nosto,
-            onLuenta ? soitin(`assets/audio/puhe-${p.id}-saapuminen-${c.id}.mp3`)
-              : '<span class="meta">Luentaa ei ole vielä generoitu.</span>',
-          ].join('<br>'));
-        }
-        for (const [otsikko, a] of Object.entries(sisalto.artikkelit)) {
-          const runko = a[sisalto.runko];
-          if (!runko) continue;
-          lisaa('artikkelit', `<b>[${otsikko} — lyhytnosto]</b> ${a.intro}`);
-          lisaa('artikkelit', `<b>[${otsikko} — oma artikkeli]</b><br>`
-            + runko
-              .replace(/== ([^=]+) ==/g, '<b>$1</b>')
-              .replaceAll('\n', '<br>'));
-        }
-        for (const c of p.cities) {
-          const v = sisalto.valokuvat[c.id];
-          if (!v?.selite) continue;
-          lisaa('valokuvat', `<b>[${c.name}]</b> ${v.selite}`
-            + `<br><span class="meta">${[v.vuosi, v.lahde].filter(Boolean).join(' · ')}</span>`);
-          if (v.uusi?.selite) {
-            lisaa('valokuvat', `<b>[${c.name} — nykyään]</b> ${v.uusi.selite}`
-              + `<br><span class="meta">${v.uusi.lahde ?? ''}</span>`);
-          }
-        }
-        for (const c of p.cities) {
-          const k = sisalto.kulttuuri[c.id];
-          if (!k) continue;
-          for (const nosto of k.nostot ?? []) {
-            lisaa('kulttuuri', `<b>[${c.name}] ${nosto.otsikko}:</b> ${nosto.teksti}`
-              + (nosto.lahde ? `<br><span class="meta">${nosto.lahde}</span>` : ''));
-          }
-          if (k.kysymys) {
-            lisaa('kulttuuri', [
-              `<b>[${c.name} — kulttuurivisa]</b> ${k.kysymys.q}`,
-              `→ ${optiot(k.kysymys)}`,
-              k.kysymys.fact ? `<span class="meta">fakta: ${k.kysymys.fact}</span>` : '',
-            ].filter(Boolean).join('<br>'));
-          }
-        }
-      }
-      return rivit;
-    }
-
-    const tekstitLauta = document.getElementById('tekstit-lauta');
-    for (const p of PACKS) {
-      const o = document.createElement('option');
-      o.value = p.id;
-      o.textContent = p.boardLabel ?? p.name;
-      tekstitLauta.appendChild(o);
-    }
-    const TEKSTIT_MUISTI = 'matkakirja-tekstit-nakyma';
-    let tekstitTila = { lauta: 'africa', ryhmat: TEKSTIRYHMAT.map(([id]) => id) };
-    try {
-      const muisti = JSON.parse(localStorage.getItem(TEKSTIT_MUISTI) ?? 'null');
-      if (muisti && typeof muisti === 'object') {
-        tekstitTila = { ...tekstitTila, ...muisti };
-        // Uudet ryhmät näkyvät heti, vaikka vanha valinta olisi muistissa:
-        // tallennettu lista kertoo vain silloin tunnetuista ryhmistä.
-        const tunnetut = new Set(muisti.tunnetut ?? muisti.ryhmat ?? []);
-        for (const [id] of TEKSTIRYHMAT) {
-          if (!tunnetut.has(id) && !tekstitTila.ryhmat.includes(id)) tekstitTila.ryhmat.push(id);
-        }
-      }
-    } catch { /* oletukset kelpaavat */ }
-    tekstitTila.tunnetut = TEKSTIRYHMAT.map(([id]) => id);
-    if (![...tekstitLauta.options].some((o) => o.value === tekstitTila.lauta)) {
-      tekstitTila.lauta = 'africa';
-    }
-    tekstitLauta.value = tekstitTila.lauta;
-    const tallennaTekstitTila = () => {
-      try { localStorage.setItem(TEKSTIT_MUISTI, JSON.stringify(tekstitTila)); } catch { /* ei säily */ }
-    };
-    let tekstitHaku = '';
-    document.getElementById('tekstit-haku').addEventListener('input', (e) => {
-      tekstitHaku = e.target.value.trim().toLowerCase();
-      piirraTekstit();
-    });
-    tekstitLauta.addEventListener('change', () => {
-      tekstitTila.lauta = tekstitLauta.value;
-      tallennaTekstitTila();
-      piirraTekstit();
-    });
-    const tekstitRyhmatEl = document.getElementById('tekstit-ryhmat');
-    const tekstitLista = document.getElementById('tekstit-lista');
-
-    function piirraTekstit() {
-      const p = packById(tekstitTila.lauta);
-      const rivit = teeTekstiRivit(p);
-
-      // Ryhmänapit: valinta kertoo näkyvyyden, luku ryhmän rivimäärän.
-      tekstitRyhmatEl.textContent = '';
-      for (const [id, nimi] of TEKSTIRYHMAT) {
-        const maara = rivit.filter((r) => r.ryhma === id).length;
-        const paalla = tekstitTila.ryhmat.includes(id);
-        const b = document.createElement('button');
-        b.textContent = `${nimi} (${maara})`;
-        b.classList.toggle('paalla', paalla);
-        b.addEventListener('click', () => {
-          tekstitTila.ryhmat = paalla
-            ? tekstitTila.ryhmat.filter((r) => r !== id)
-            : [...tekstitTila.ryhmat, id];
-          tallennaTekstitTila();
-          piirraTekstit();
+      const rivit = OSAT
+        .map((o) => ({ o, lista: laskurit.get(o.avain) }))
+        .filter((x) => x.lista.length)
+        .sort((a, b) => b.lista.length - a.lista.length)
+        .map(({ o, lista }) => {
+          const d = el('div', 'puute');
+          d.append(
+            el('b', '', String(lista.length)),
+            el('span', '', `kaupunkia ilman: ${o.nimi}`),
+            el('em', '', lista.slice(0, 3).map((x) => x.split(' (')[0]).join(', ')
+              + (lista.length > 3 ? ` +${lista.length - 3}` : '')),
+          );
+          return d;
         });
-        tekstitRyhmatEl.appendChild(b);
-      }
-      const kaikkiNappi = document.createElement('button');
-      kaikkiNappi.textContent = tekstitTila.ryhmat.length ? 'Piilota kaikki' : 'Näytä kaikki';
-      kaikkiNappi.addEventListener('click', () => {
-        tekstitTila.ryhmat = tekstitTila.ryhmat.length ? [] : TEKSTIRYHMAT.map(([id]) => id);
-        tallennaTekstitTila();
-        piirraTekstit();
-      });
-      tekstitRyhmatEl.appendChild(kaikkiNappi);
-
-      tekstitLista.textContent = '';
-      let nakyvia = 0;
-      for (const [id, nimi] of TEKSTIRYHMAT) {
-        if (!tekstitTila.ryhmat.includes(id)) continue;
-        const ryhman = rivit.filter((r) => r.ryhma === id
-          && (!tekstitHaku || r.haku.includes(tekstitHaku)));
-        if (!ryhman.length) continue;
-        const osio = document.createElement('div');
-        const otsikko = document.createElement('h2');
-        otsikko.textContent = `${nimi} · ${ryhman.length}`;
-        osio.appendChild(otsikko);
-        for (const r of ryhman) {
-          const d = document.createElement('div');
-          d.className = 'tekstirivi';
-          d.innerHTML = r.html;
-          osio.appendChild(d);
-          nakyvia += 1;
-        }
-        tekstitLista.appendChild(osio);
-      }
-      document.getElementById('tekstit-laskuri').textContent = `${nakyvia} / ${rivit.length} riviä`;
+      $('puutteet').replaceChildren(...(rivit.length ? rivit
+        : [el('p', '', 'Ei puutteita — kaikilla kaupungeilla on kaikki osat.')]));
     }
-    piirraTekstit();
 
+    function piirraLaudat() {
+      const taulu = el('table');
+      const otsikko = el('tr');
+      for (const t of ['Lauta', 'Kaupunkeja', 'Valmiina', 'Osuus']) {
+        const th = el('th', t === 'Lauta' ? '' : 'num', t);
+        otsikko.append(th);
+      }
+      taulu.append(el('thead').appendChild(otsikko).parentNode);
+      const runko = el('tbody');
+      for (const p of PACKS) {
+        const valmiit = p.cities.filter((c) => puuttuvat(c, p).length === 0).length;
+        const osuus = p.cities.length ? Math.round((valmiit / p.cities.length) * 100) : 0;
+        const tr = el('tr');
+        tr.append(el('td', '', p.id));
+        tr.append(el('td', 'num', String(p.cities.length)));
+        tr.append(el('td', 'num', String(valmiit)));
+        const td = el('td', 'num');
+        td.append(el('span', '', `${osuus} %`));
+        const palkki = el('div', osuus === 100 ? 'palkki taysi' : 'palkki');
+        const i = el('i');
+        i.style.width = `${osuus}%`;
+        palkki.append(i);
+        td.append(palkki);
+        tr.append(td);
+        runko.append(tr);
+      }
+      taulu.append(runko);
+      $('laudat').replaceChildren(taulu);
+    }
 
-    // Avausvälilehti vasta nyt: kaikki osiot ja kehysten lataajat ovat valmiina.
-    nayta(location.hash.slice(1) || 'etusivu');
+    // --- KAUPUNGIT -------------------------------------------------------
+
+    let valittuLauta = paalauta.id;
+    let valittuKaupunki = null;
+
+    $('kaupunki-lauta').replaceChildren(...PACKS.map((p) => {
+      const o = el('option', '', `${p.id} (${p.cities.length})`);
+      o.value = p.id;
+      return o;
+    }));
+    $('kaupunki-lauta').value = valittuLauta;
+
+    function piirraKaupunkilista() {
+      const pack = PACKS.find((p) => p.id === valittuLauta);
+      const haku = $('kaupunki-haku').value.trim().toLowerCase();
+      const vainVajaat = $('vain-vajaat').checked;
+      const napitLista = pack.cities
+        .filter((c) => !haku || c.name.toLowerCase().includes(haku) || c.id.includes(haku))
+        .filter((c) => !vainVajaat || puuttuvat(c, pack).length > 0)
+        .map((c) => {
+          const b = el('button', '', c.name);
+          b.type = 'button';
+          if (puuttuvat(c, pack).length) b.classList.add('vajaa');
+          if (c.id === valittuKaupunki) b.classList.add('paalla');
+          b.addEventListener('click', () => { valittuKaupunki = c.id; piirraKaupunkilista(); piirraKaupunki(); });
+          return b;
+        });
+      $('kaupunkilista').replaceChildren(...(napitLista.length ? napitLista
+        : [el('span', 'puuttuu', 'Ei osumia.')]));
+    }
+
+    function lohko(otsikko, sisus) {
+      const d = el('div', 'lohko');
+      d.append(el('h3', '', otsikko));
+      d.append(...(Array.isArray(sisus) ? sisus : [sisus]));
+      return d;
+    }
+
+    function kuvaKortti(k, vuosiTeksti) {
+      const d = el('div', 'kuva');
+      const img = el('img');
+      img.loading = 'lazy';
+      img.alt = k.selite ?? '';
+      img.src = kuvaApu(k.tiedosto, 320);
+      const t = el('div', 'teksti');
+      t.append(el('div', 'vuosi', vuosiTeksti ?? k.vuosi ?? ''), el('div', '', k.selite ?? ''));
+      d.append(img, t);
+      return d;
+    }
+
+    function piirraKaupunki() {
+      const pack = PACKS.find((p) => p.id === valittuLauta);
+      const c = pack.cities.find((x) => x.id === valittuKaupunki);
+      if (!c) { $('kaupunki-kortti').replaceChildren(el('p', 'puuttuu', 'Valitse kaupunki.')); return; }
+
+      const ulos = [];
+      const otsikko = el('div', 'kortti');
+      otsikko.append(el('h3', '', c.name));
+      const tagit = el('div');
+      for (const o of OSAT) {
+        const on = o.on(c, pack);
+        tagit.append(el('span', `tagi ${on ? 'on' : 'ei'}`, `${on ? '✓' : '✗'} ${o.nimi}`));
+      }
+      otsikko.append(tagit);
+      const maa = pack.map?.cityCountry?.[c.id];
+      const meta = [c.wiki ? `wiki: ${c.wiki}` : null, c.ambience ? `ääni: ${c.ambience}` : null,
+        maa ? `maa: ${maa}` : null].filter(Boolean).join(' · ');
+      if (meta) otsikko.append(el('p', '', meta));
+      ulos.push(otsikko);
+
+      const s = SAAPUMISET[c.id];
+      if (s) {
+        const m = el('div', 'merkinta');
+        m.append(el('p', 'iso', s.kuvaus), el('p', '', s.nosto));
+        ulos.push(lohko('Matkakirjasta', m));
+      }
+
+      const a = ARTIKKELIT[c.wiki ?? c.name];
+      const teksti = artikkelinTeksti(a);
+      if (teksti) {
+        const d = el('div');
+        d.append(el('p', 'iso', a.intro));
+        for (const kappale of teksti.split('\n\n')) d.append(el('p', '', kappale));
+        ulos.push(lohko('Oma artikkeli', d));
+      }
+
+      const kuvat = KUVAT[c.id];
+      if (kuvat) {
+        const ruudukko = el('div', 'kuvarivi');
+        if (kuvat.tiedosto) ruudukko.append(kuvaKortti(kuvat, kuvat.vuosi));
+        for (const l of kuvat.lisat ?? []) ruudukko.append(kuvaKortti(l));
+        if (kuvat.uusi) ruudukko.append(kuvaKortti(kuvat.uusi, kuvat.uusi.vuosi ?? 'nykypäivä'));
+        ulos.push(lohko(`Kuvakortti (${1 + (kuvat.lisat?.length ?? 0) + (kuvat.uusi ? 1 : 0)} kuvaa)`, ruudukko));
+      }
+
+      const kult = KULTTUURI[c.id];
+      if (kult?.nostot?.length) {
+        const d = el('div');
+        for (const n of kult.nostot) {
+          const k = el('div', 'kortti');
+          k.append(el('h3', '', n.otsikko), el('p', '', n.teksti));
+          d.append(k);
+        }
+        ulos.push(lohko('Kaupungin elämää', d));
+      }
+
+      const kysymykset = pack.questions?.[c.id] ?? [];
+      if (kysymykset.length) {
+        const d = el('div');
+        for (const q of kysymykset) {
+          const k = el('div', 'kortti');
+          k.append(el('h3', '', q.q));
+          k.append(el('p', '', q.options.map((o, i) => (i === q.correct ? `✓ ${o}` : o)).join(' · ')));
+          if (q.fact) k.append(el('p', '', q.fact));
+          d.append(k);
+        }
+        ulos.push(lohko(`Kysymykset (${kysymykset.length})`, d));
+      }
+
+      const md = MAATIEDOT[maa];
+      if (md) {
+        const d = el('div', 'kortti');
+        d.append(el('p', '', `${md.vakiluku} asukasta (${md.vakilukuSija}) · `
+          + `${md.pintaAla} (${md.pintaAlaSija}) · ${md.keskitulo.arvo} (${md.keskitulo.sija})`));
+        d.append(el('p', '', `Demokratia ${md.demokratia.arvo} (${md.demokratia.sija}) — ${md.demokratia.selitys}`));
+        d.append(el('p', '', (md.tervehdykset ?? [])
+          .map((t) => `${t.teksti} (${t.kieli})`).join(' · ')));
+        ulos.push(lohko('Maan tunnusluvut', d));
+      }
+
+      const radio = radiot[maa];
+      const kieli = KIELET[c.id];
+      if (radio || kieli) {
+        const d = el('div', 'kortti');
+        if (radio) d.append(el('p', '', `Radio: ${radio.asema}${radio.virallinen ? ' (yleisradio)' : ''}`));
+        if (kieli) d.append(el('p', '', `Äänite: ${kieli.nimi}`));
+        ulos.push(lohko('Kieli kuuluviin', d));
+      }
+
+      const vajaa = puuttuvat(c, pack);
+      if (vajaa.length) {
+        ulos.push(lohko('Puuttuu', el('p', 'puuttuu', vajaa.map((o) => o.nimi).join(', '))));
+      }
+
+      $('kaupunki-kortti').replaceChildren(...ulos);
+    }
+
+    for (const id of ['kaupunki-haku', 'vain-vajaat']) {
+      $(id).addEventListener('input', piirraKaupunkilista);
+    }
+    $('kaupunki-lauta').addEventListener('change', () => {
+      valittuLauta = $('kaupunki-lauta').value;
+      valittuKaupunki = null;
+      piirraKaupunkilista();
+      piirraKaupunki();
+    });
+
+    // --- KARTAT ----------------------------------------------------------
+
+    $('kartta-lauta').replaceChildren(...PACKS.map((p) => {
+      const o = el('option', '', p.id);
+      o.value = p.id;
+      return o;
+    }));
+    $('kartta-lauta').value = paalauta.id;
+    function paivitaKartta() {
+      const lauta = $('kartta-lauta').value;
+      const osoite = `index.html?lauta=${lauta}&katselu=1`;
+      if ($('kartta-kehys').dataset.lauta !== lauta) {
+        $('kartta-kehys').src = osoite;
+        $('kartta-kehys').dataset.lauta = lauta;
+      }
+      $('kartta-uuteen').href = osoite;
+    }
+    $('kartta-lauta').addEventListener('change', paivitaKartta);
+
+    // --- SUUNNITELMA -----------------------------------------------------
+
+    /*
+     * Haitari, jossa yksi osio on auki kerrallaan. Omistajan toive:
+     * "vain juuri halutut tiedot ovat näkyvissä kerrallaan". Vanhassa
+     * työhuoneessa Juoni-välilehti oli neljä listaa allekkain, ja
+     * puhelimella niitä vieritti minuutin.
+     */
+    function haitari(kohde, osiot) {
+      const ulos = osiot.map(({ otsikko, maara, rakenna }) => {
+        const d = el('details', 'osio');
+        const s = el('summary', '', otsikko);
+        if (maara != null) s.append(el('small', '', ` ${maara}`));
+        d.append(s);
+        const sisus = el('div', 'sisus');
+        d.append(sisus);
+        let rakennettu = false;
+        d.addEventListener('toggle', () => {
+          if (d.open) {
+            for (const muu of ulos) if (muu !== d) muu.open = false;
+            if (!rakennettu) { sisus.append(...rakenna()); rakennettu = true; }
+          }
+        });
+        return d;
+      });
+      kohde.replaceChildren(...ulos);
+    }
+
+    const korttiLista = (rivit) => rivit.map(({ otsikko, meta, teksti }) => {
+      const k = el('div', 'kortti');
+      k.append(el('h3', '', otsikko));
+      if (meta) k.append(el('p', '', meta));
+      if (teksti) k.append(el('p', '', teksti));
+      return k;
+    });
+
+    haitari($('suunnitelma'), [
+      {
+        otsikko: 'Aarteet',
+        maara: `${AARTEET.length} kpl`,
+        rakenna: () => [
+          el('p', '', 'Yksi jokaisesta maanosasta. Nykyiset aarteet säilyvät tarinoineen.'),
+          ...korttiLista(AARTEET.map((a) => ({ otsikko: a.aarre, meta: a.maanosa, teksti: PELITILAT[a.tila] ?? a.tila }))),
+        ],
+      },
+      {
+        otsikko: 'Varusteet',
+        maara: `${VARUSTEET.length} kpl`,
+        rakenna: () => [
+          el('p', '', 'Matkailijan varusteita, jotka helpottavat matkaa ja oppimista — '
+            + 'eivät jalokiviä, jotka ovat pelkkää rahaa.'),
+          ...korttiLista(VARUSTEET.map((v) => ({ otsikko: v.nimi, meta: [PELITILAT[v.tila] ?? v.tila, v.vaikutus].filter(Boolean).join(' · '), teksti: v.huomiot }))),
+        ],
+      },
+      {
+        otsikko: 'Kaupunkikartat',
+        maara: `${KAUPUNKIKARTAT.length} kpl`,
+        rakenna: () => [
+          el('p', '', 'Kaupungin sisällä aika kuluu hitaammin kuin mantereella, joten '
+            + 'pysähtyminen kannattaa. Sisään pääsee vasta kaupungin avaimilla: '
+            + 'kaupunki on palkinto eikä oikotie.'),
+          ...korttiLista(KAUPUNKIKARTAT.map((k) => ({ otsikko: k.nimi, meta: PELITILAT[k.tila] ?? k.tila, teksti: [k.kuvaus, k.huomiot].filter(Boolean).join(' ') }))),
+        ],
+      },
+      {
+        otsikko: 'Lasit',
+        maara: `${LASIT.length} kpl`,
+        rakenna: () => [
+          el('p', '', 'Aarteina löytyvien erikoislasien toiminnallisuudet. Nämä eivät ole '
+            + 'minipelejä vaan kerroksia kartan päällä: kartta pysyy paikallaan ja '
+            + 'lasien läpi katsottaessa sen päälle piirtyy jotain, mitä paljaalla '
+            + 'silmällä ei näe.'),
+          ...korttiLista(LASIT.map((l) => ({ otsikko: l.nimi, meta: PELITILAT[l.tila] ?? l.tila, teksti: [l.kuvaus, l.huomiot].filter(Boolean).join(' ') }))),
+        ],
+      },
+      {
+        otsikko: 'Peli-ideat',
+        maara: `${PELIT.filter((p) => p.tila === 'kaytossa').length}/${PELIT.length} käytössä`,
+        rakenna: () => [
+          el('p', '', 'Minipelit löytöjen takana. Tänne kirjataan sekä käytössä olevat '
+            + 'että ideat, joita mietitään yhdessä.'),
+          ...korttiLista(PELIT.map((p) => ({ otsikko: p.nimi, meta: PELITILAT[p.tila] ?? p.tila, teksti: p.kuvaus }))),
+        ],
+      },
+    ]);
+
+    // --- KÄSIKIRJA -------------------------------------------------------
+
+    haitari($('kasikirja'), [
+      {
+        otsikko: 'Brändikirja',
+        maara: 'tarina, ääni, tyyli',
+        rakenna: () => {
+          const d = el('div');
+          d.append(el('p', '', 'Ladataan…'));
+          fetch('tyohuone-kasikirja.html')
+            .then((r) => r.text())
+            .then((html) => { d.innerHTML = html; })
+            .catch(() => { d.replaceChildren(el('p', 'puuttuu', 'Käsikirjaa ei saatu haettua.')); });
+          return [d];
+        },
+      },
+      {
+        otsikko: 'Lähteet',
+        maara: `${LAHTEET.length} kpl`,
+        rakenna: () => {
+          const d = el('div');
+          d.append(el('p', '', 'Avoimia aineistolähteitä: kuvia, karttoja, ääntä ja dataa. '
+            + 'Tarkista lisenssi aina aineistokohtaisesti — merkintä on lähteen pääsääntö.'));
+          for (const l of LAHTEET) {
+            const k = el('div', 'kortti');
+            const h = el('h3');
+            const a = el('a', '', l.nimi);
+            a.href = l.url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            h.append(a);
+            k.append(h, el('p', '', [l.tyyppi, l.lisenssi, l.api ? 'API' : null,
+              PELITILAT[l.tila] ?? l.tila].filter(Boolean).join(' · ')));
+            if (l.idea) k.append(el('p', '', l.idea));
+            d.append(k);
+          }
+          return [d];
+        },
+      },
+      {
+        otsikko: 'Moottorit',
+        maara: `${MOOTTORIT.length} kpl`,
+        rakenna: () => [
+          el('p', '', 'Generointi- ja palvelumoottorit. API-avaimia ei koskaan kirjata '
+            + 'tänne eikä repoon — ne ovat GitHubin salaisuuksissa.'),
+          ...korttiLista(MOOTTORIT.map((m) => ({
+            otsikko: m.nimi, meta: [PELITILAT[m.tila] ?? m.tila, m.mita].filter(Boolean).join(' · '),
+            teksti: m.huomiot,
+          }))),
+        ],
+      },
+    ]);
+
+    // --- käynnistys ------------------------------------------------------
+
+    piirraLuvut();
+    piirraPuutteet();
+    piirraLaudat();
+    piirraKaupunkilista();
+    piirraKaupunki();
+    nayta((location.hash || '#tilanne').slice(1));
   </script>
 </body>
 </html>

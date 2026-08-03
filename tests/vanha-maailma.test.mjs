@@ -363,3 +363,58 @@ test('kaupunki on oman maansa rajojen sisällä', async () => {
   }
   assert.deepEqual(vaarat, [], 'nämä kaupungit on merkitty väärään maahan');
 });
+
+test('suomenkielisistä teksteistä ei puutu ä- ja ö-kirjaimia', async () => {
+  const { readFileSync, readdirSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  /*
+   * Apurien kirjoittamista teksteistä jäi kerran neljännes ä- ja
+   * ö-kirjaimista pois ("lahtee", "paiva", "Vahan-Aasia"). Syy oli
+   * ohjeessa: kirjoitin sen itse ilman niitä, ja esimerkki voitti
+   * käskyn. Virhettä ei näe silmäilemällä — teksti näyttää suomelta.
+   *
+   * KAKSI VÄÄRÄÄ YRITYSTÄ ennen tätä:
+   *  1. Osuus tiedoston merkeistä. Maatiedot putosivat läpi: ne ovat
+   *     enimmäkseen numeroita ja verkko-osoitteita.
+   *  2. Osuus proosasta. Kulttuurinostot putosivat läpi: niissä on
+   *     paljon vieraskielisiä nimiä ja lisenssitekstiä.
+   * Kummassakin mittari mittasi kieltä keskiarvona, ja keskiarvo
+   * vaihtelee tiedostosta toiseen ilman että mikään on vialla.
+   *
+   * Tämä versio ei mittaa keskiarvoa vaan etsii NIMETTYJÄ SANOJA,
+   * jotka eivät voi olla oikein ilman umlauttia. Lista on
+   * tarkoituksella lyhyt ja yksiselitteinen: mukana ei ole sanoja,
+   * joilla on umlautiton merkitys (lahti, vaha, jaa, kasi, tuli).
+   */
+  const EPASANAT = [
+    'paiva', 'paivan', 'paivaa', 'paivat', 'paivina',
+    'kaytto', 'kayttaa', 'kaytetaan', 'kaytti', 'kaytossa',
+    'nakyy', 'nakee', 'naki', 'nahda', 'nakyvat',
+    // 'aani' ei ole listalla: se on kenttänimi (aani: '<osoite>') ja
+    // tiedostonimi (js/aani-ehdokkaat.js). Koodin tunnukset ovat
+    // tarkoituksella umlautittomia, eikä niitä pidä korjata.
+    'aanen', 'aania', 'aanet',
+    'tarkea', 'tarkein', 'tarkeaa',
+    'taynna', 'tayttaa', 'taydellinen',
+    'lahtee', 'lahtevat', 'lahdossa',
+    'maara', 'maaran', 'maaraa',
+    'jalkeen', 'jaljella', 'jaljelle',
+    'vahintaan', 'enintaan', 'vahemman',
+    'elama', 'elaman', 'elamaa',
+    'ymparilla', 'ymparille', 'ympari',
+    'sailyy', 'paattyy', 'kaantyy', 'kasitys',
+    'lampo', 'lammin', 'tyontaa', 'myohemmin', 'loytyy', 'loysi',
+  ];
+  const hahmo = new RegExp(`\\b(${EPASANAT.join('|')})\\b`, 'gi');
+
+  const kansio = new URL('../js/packs/', import.meta.url).pathname;
+  const osumat = [];
+  for (const nimi of readdirSync(kansio)) {
+    if (!nimi.endsWith('.js')) continue;
+    const s = readFileSync(join(kansio, nimi), 'utf8');
+    const loydot = [...new Set((s.match(hahmo) ?? []).map((x) => x.toLowerCase()))];
+    if (loydot.length) osumat.push(`${nimi}: ${loydot.slice(0, 6).join(', ')}`);
+  }
+  assert.deepEqual(osumat, [],
+    'näistä puuttuu ä tai ö — sanat on kirjoitettu ilman umlauttia');
+});

@@ -414,6 +414,232 @@ kuvauksesta ja luottaa vanhempaan. Silti se ei auta, jos kumpikaan
 kenttä ei mainitse alkuperäistä vuotta.
 
 
+## Paketti 69: työhuone uusiksi — VALMIS v194 3.8.2026
+
+Omistajan toive: "Uudista työhuone. Sen ei tarvitse olla visuaalisesti
+matkakirjan kanssa samannäköinen. — Olisi tärkeää, että kaikki näkyvät
+ovat selkeitä ja vain juuri halutut tiedot ovat näkyvissä kerrallaan."
+
+### Yksitoista välilehteä kuudeksi
+
+| ennen | nyt |
+|---|---|
+| Etusivu | **Tilanne** |
+| Maanosat (edistyminen) | Tilanne |
+| Tekstit, Kuvat | **Kaupungit** |
+| Maanosat (kartta) | **Kartat** |
+| Äänet | **Studio** |
+| Juoni, Lasit, Peli-ideat | **Suunnitelma** |
+| Brändikirja, Lähteet, Moottorit | **Käsikirja** |
+
+Ryhmittely on nyt **tekemisen mukaan**, ei tietolajin: "missä ollaan",
+"mitä pelissä on", "mitä aiotaan", "mihin nojataan".
+
+### Kaupunkinäkymä: yksi kaupunki kerrallaan, kaikki siitä
+
+Suurin muutos. Ennen sisältöä katsottiin lajeittain — tekstit yhdellä
+välilehdellä, kuvat toisella — mutta **sisältöä arvioidaan kaupunki
+kerrallaan**: onko Bagdadilla kaikki, ja jos ei, mitä puuttuu.
+
+Uusi Kaupungit-välilehti näyttää yhden kaupungin kerrallaan:
+merkinnän, artikkelin, kuvakortin, kulttuurinostot, kysymykset, maan
+tunnusluvut ja kielen — ja niiden yllä rivin merkkejä, jotka kertovat
+yhdellä silmäyksellä mitä on ja mitä ei. Listassa vajaan kaupungin
+perässä on punainen piste, ja "vain vajaat" rajaa listan niihin.
+
+### Puutelista laskee itsensä
+
+Tilanne-välilehti laskee **joka latauksella paketeista**, montako
+kaupunkia on ilman kutakin osaa, ja järjestää puutteet suurin ensin.
+Sen ensimmäinen ajo löysi heti sen, että Lontoolta puuttuvat
+tietovisakysymykset — kotikaupungilta.
+
+Sekä puutelista että kaupunkilistan merkinnät lukevat **saman
+`OSAT`-taulukon**. Kaksi eri laskentaa ajautuisi väistämättä erilleen,
+ja silloin kumpi tahansa niistä valehtelisi.
+
+### Kaupunki lasketaan kerran, ei kerran per lauta
+
+Ensimmäinen versio ilmoitti 445 kaupunkia. Niitä on 283: sama kaupunki
+on sekä maanosalaudalla että yhdistetyllä vanhalla maailmalla.
+Puutteet lasketaan nyt kerran kaupunkia kohti, ja jos kaupunki on
+monella laudalla, käytetään sitä lautaa, jolla sillä on eniten
+sisältöä — muuten tyhjä rinnakkaislauta merkitsisi valmiin kaupungin
+vajaaksi.
+
+### Oma sovellus, ei pelin sivu
+
+- **Oma palvelutyöntekijä** `tyohuone-sw.js` ja oma välimuisti. Sama
+  työntekijä kahdelle sovellukselle tarkoittaisi, että toisen päivitys
+  tyhjentää toisen.
+- **Verkko ensin, välimuisti varalle** — päinvastoin kuin pelissä.
+  Peli on tuote, jonka pitää käynnistyä lentokoneessa; työhuone on
+  työkalu, jossa vanha tieto on pahempi kuin hidas lataus.
+- **Manifesti ja kuvakkeet**: asennettavissa kotivalikkoon iPhonella ja
+  iPadilla omana sovelluksenaan.
+- **Päivitys itsestään**: uusi versio havaitaan ja siitä kerrotaan
+  palkilla. Tarkistus tunnin välein, koska työhuone on usein auki koko
+  päivän.
+- **Versio aina näkyvissä** ja napautettavissa: se avaa päivityslokin.
+  Vanhassa työhuoneessa versio piilotettiin kapealla ruudulla — juuri
+  siellä missä sitä eniten tarvitsi.
+
+### Ulkoasu on tarkoituksella eri kuin pelin
+
+Peli on pergamenttia ja mustetta, ja se on oikein: pelaaja katsoo
+1873:n matkakirjaa. Työhuone on työkalu, ja työkalussa luettavuus
+voittaa tunnelman.
+
+Kolme eroa: **laitteen oma päätteetön kirjasin** (ennen Courier New,
+joka on kapea ja väsyttävä pitkässä luvussa), **vaalea tausta** (ohut
+päätteetön teksti kukkuu tummalla), ja **yksi korostusväri viiden
+sijaan** — kun kaikki on korostettu, mikään ei ole. Ainoa tietoinen
+lainaus pelistä on korostusvärin kullansävy. Tumma tila seuraa
+laitteen asetusta.
+
+### Sisältö irti rakenteesta
+
+`tyohuone.html` oli 1543 riviä, joissa sisältö ja rakenne olivat
+sekaisin. Listat (aarteet, varusteet, lasit, peli-ideat, lähteet,
+moottorit) ovat nyt `js/tyohuone-data.js`, ja brändikirja on
+`tyohuone-kasikirja.html`. Vanhat kirjanmerkit ohjautuvat uusille
+välilehdille eivätkä hajoa.
+
+
+## PYYDETTY, MYÖHEMMÄKSI: meret Jules Vernen hengessä
+
+Omistajan tieto 3.8.2026:
+
+> "Suurimpiin meriin on tarkoitus tehdä Jules Verne hengessä. Myös omia
+> kohteita mennään pinnan alle, mutta palataan näihin vasta sitten
+> myöhemmin, mutta tämä jo tiedoksi."
+
+Eli merillä on tulossa **omia kohteita pinnan alla** — sukellus
+Sukelluslaivalla Nautilus -hengessä. Merestä tulee siis oma
+tapahtumapaikkansa eikä pelkkä väli kahden sataman välillä.
+
+**Ei toteuteta vielä.** Kirjattu tänne, jotta merireittien ja kartan
+merikerroksen ratkaisuissa ei tehdä mitään, mikä estäisi tämän
+myöhemmin. Käytännössä se tarkoittaa kahta asiaa:
+
+1. **Merireitti saa jo nyt olla enemmän kuin viiva.** Reiteillä on
+   `via`-pisteitä, ja ne kelpaavat sellaisenaan sukelluskohteiden
+   ankkureiksi — niitä ei kannata poistaa optimoinnin nimissä.
+2. **Merialueiden nimet kannattaa säilyttää.** Jos merikerrokseen
+   piirretään nimiä (ks. maastokerros), samat nimet ovat myöhemmin
+   sukelluskohteiden koteja.
+
+Verne on jo pelin kehyskertomuksessa: matka 80 päivässä on Vernen, ja
+Nautilus on saman kirjailijan. Se sopii yhteen ilman selittelyä.
+
+
+## PYYDETTY: maasto kartalle — vuoret, joet ja järvet
+
+Omistajan toive 3.8.2026:
+
+> "Voisiko merkittävimmät ylängöt ja vuoret sekä joet piirtää karttaan?
+> Joet voisivat näkyä kevyen sinisinä ja vuoret tummemman ruskeina.
+> Vuorien näkyvyys voisi kuitenkin olla hillitty, eli ei mikään oikea
+> korkeuskartta, joka on aika hässäkän näköinen, ennemmin vain suuret
+> linjat ja siinä voisi käyttää jotain rajoitinta."
+
+### Omistajan antamat rajat (tarkennettavissa)
+
+- **Alle noin kilometrin korkeuserot eivät näy lainkaan.** Vain selvästi
+  korkeammat saavat väriä. Tavoite ei ole korkeuskartta vaan suuret
+  linjat: Alpit, Himalaja, Andit.
+- **Yli noin neljän kilometrin huiput** saavat valkoista sävyä eli
+  lumipeitteen.
+- **Joet kevyen sinisinä.** Venäjän pitkät joet mainittiin erikseen.
+- **Suurimmat järvet hyvin kevyesti.**
+- **Yleisvaikutelma ei saa muuttua sekavaksi.** Tämä on tärkein ehto:
+  jos kartta menee tukkoon, rajaa on nostettava eikä yksityiskohtia
+  lisättävä.
+
+Numerot ovat omistajan mukaan minun tarkennettavissani. Luonnos:
+- 0–1000 m ei väriä
+- 1000–2500 m hyvin kevyt ruskea
+- 2500–4000 m tummempi ruskea
+- yli 4000 m valkoinen huippu
+
+### Nimet ja i-ikoni
+
+> "Zoomattaessa tarpeeksi lähelle suurimmat järvet ja vuoristot voisi
+> nimetä ja kirjoittaa kaunokirjoituksella."
+
+> "Niissä voisi olla pieni i-ikoni tai vastaava perässä, jota painamalla
+> pääsisi lukemaan ja katsomaan kuvia paikasta, ellei siinä ole jo omaa
+> laattaansa tehtynä."
+
+Eli maastonimet ovat **kevyt tietopolku ilman pelilaattaa**: nimi
+näkyy vasta lähellä, ja sen perässä oleva i avaa saman Lue lisää
+-ikkunan kuin kaupungeilla. Jos paikalla on jo oma laatta (esim.
+Kilimandžaro, Alpit, Baikal), i-ikonia ei tule — laatta on parempi.
+
+### Varattu myöhemmäksi
+
+Varsinainen korkeuserokartta tulee omaksi **linsseikseen**, joka
+löytyy kätköstä. Se on Lasit-listalla eikä kuulu tähän: tämä on kartan
+pysyvä pohjapiirros, ei erikoisnäkymä.
+
+### Mitä tämä vaatii
+
+- Korkeusaineisto, joka on vapaa ja tarpeeksi karkea (ETOPO tai
+  Natural Earthin `ne_50m_geography_regions_elevation_points` ja
+  vuoristoalueiden polygonit).
+- Joet ja järvet: Natural Earth `rivers_lake_centerlines` ja
+  `lakes`, public domain.
+- Piirto samaan staattiseen kerrokseen kuin muu kartta-taide, jotta
+  bittikarttaruudukko hoitaa sen ilmaiseksi. **Ei suodattimia** — sama
+  iOS-sääntö kuin kaikella muullakin kartalla.
+
+
+## PÄÄTETTY: maailmankartta kiertyy, mutta paikka näkyy vain kerran
+
+Omistajan toive: "Kartta toimii nyt niin hienosti että sen voisi
+laajentaa koko maailmaan. Vierittämällä voisi liikkua loputtomasti
+pallon ympäri kumpaan tahansa suuntaan."
+
+Omistajan rajaus: **"Älä mahdollista että mikään paikka näkyy kahtena,
+rajoita zoomausmäärällä."**
+
+### Mitä se tarkoittaa
+
+Uloin zoomaustaso rajataan niin, että näkyvä alue on **enintään yhden
+maailmanleveyden** verran. Silloin kartta kiertyy vaakasuunnassa
+loputtomasti, mutta yksikään kaupunki ei koskaan ole ruudulla kahdessa
+kohdassa yhtä aikaa.
+
+```
+viewBox.width <= MAAILMAN_LEVEYS
+```
+
+### Miksi tämä on hyvä päätös, ei vain rajoitus
+
+Se ratkaisee kerralla kolme ongelmaa, jotka olisivat muuten olleet
+kolme erillistä sotkua:
+
+1. **Osumantunnistus.** Kun kaupunki on ruudulla enintään kerran,
+   napautus osuu yksiselitteisesti. Ilman rajausta olisi pitänyt
+   päättää, kumpi kopio voittaa — ja se päätös olisi ollut väärä
+   jommassakummassa reunassa.
+2. **Nimien sijoitus.** Nimet on laskettu laudan koordinaatteihin
+   (`tools/nimien-paikat.mjs`). Kahtena näkyvä nimi olisi vaatinut
+   sijoituksen laskemisen uudestaan joka kopiolle.
+3. **Nappulan löytäminen.** Lapsi puhelimella ei saa eksyä. Kun
+   maailmaa on ruudulla enintään yksi, "missä minä olen" on aina
+   yksikäsitteinen kysymys.
+
+Vaakakiertyminen on siis rullaus, ei toisto: kartan reunan yli
+mennessä sama maailma jatkuu, mutta sitä ei näy kahdesti.
+
+### Pystysuunta ei kierry
+
+Pituusaste on jaksollinen, leveysaste ei: pallolla tulee napa vastaan.
+Pystysuunnassa kartta siis loppuu, ja se on oikein — ei ole olemassa
+suuntaa, johon jatkamalla pohjoisnavalta päätyisi etelänavalle.
+
+
 ## YÖTILA — omistajan komento
 
 **"Yötila"** tarkoittaa: käynnistä niin monta apuria kuin keksit, ja

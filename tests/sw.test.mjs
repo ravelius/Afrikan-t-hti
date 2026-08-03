@@ -17,12 +17,20 @@ test('kaikki SHELLin tiedostot ovat olemassa', () => {
   assert.deepEqual(puuttuu, [], 'SHELL viittaa tiedostoihin joita ei ole');
 });
 
+/*
+ * Työhuoneen omat moduulit eivät kuulu pelin SHELLiin. Työhuone on eri
+ * sovellus, jolla on oma palvelutyöntekijä (tyohuone-sw.js) ja oma
+ * välimuisti; sen tiedostojen lisääminen pelin listalle kasvattaisi
+ * pelin latauskokoa turhaan eikä auttaisi ketään.
+ */
+const VAIN_TYOHUONE = /^js\/tyohuone-/;
+
 test('kaikki js-moduulit ovat SHELLissä', () => {
   const levy = [
     ...readdirSync(join(JUURI, 'js')).filter((f) => f.endsWith('.js')).map((f) => `js/${f}`),
     ...readdirSync(join(JUURI, 'js/packs')).filter((f) => f.endsWith('.js')).map((f) => `js/packs/${f}`),
   ];
-  const unohtui = levy.filter((p) => !SHELL.includes(p));
+  const unohtui = levy.filter((p) => !SHELL.includes(p) && !VAIN_TYOHUONE.test(p));
   assert.deepEqual(unohtui, [],
     'nämä moduulit puuttuvat sw.js:n SHELL-listalta — offline hajoaisi');
 });

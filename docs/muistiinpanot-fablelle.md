@@ -728,3 +728,34 @@ listan. Sisällön tarkastuksessa annoin kullekin oman kysymyksensä —
 faktat, kuvien olemassaolo, kuvatekstit, linkit, äänet, tekstien
 yhtenäisyys, pelilogiikka, saavutettavuus — ja ne löytävät eri asiat.
 
+## Ohjeen muoto opettaa yhtä paljon kuin sen sisältö (3.8.2026)
+
+**[Opus]** Kirjoitin apurien ohjeen ilman ä- ja ö-kirjaimia, koska
+työnkulun skripti kulkee monen kerroksen läpi ja halusin välttää
+merkistösekaannuksia. Ohjeessa luki nimenomaan: *"Suomen aakkoset ovat
+käytössä normaalisti — kirjoita ä ja ö sinne missä ne kuuluvat."*
+
+Neljännes ä- ja ö-kirjaimista jäi silti pois: "lahtee", "paiva",
+"Vahan-Aasia". **Esimerkki voitti käskyn.**
+
+Virhettä ei näe silmäilemällä — teksti näyttää suomelta, ja yksittäinen
+lause menee ohi. Se näkyy vasta massana.
+
+Tein testin, joka vahtii sitä. Kaksi ensimmäistä yritystä olivat
+vääriä, ja molemmat samasta syystä:
+
+1. **Osuus tiedoston merkeistä.** Maatiedot putosivat läpi: ne ovat
+   enimmäkseen numeroita, ISO-tunnuksia ja verkko-osoitteita.
+2. **Osuus proosasta.** Kulttuurinostot putosivat läpi: niissä on
+   paljon vieraskielisiä nimiä ja lisenssitekstiä.
+
+Kumpikin mittasi kieltä **keskiarvona**, ja keskiarvo vaihtelee
+tiedostosta toiseen ilman että mikään on vialla. Kolmas versio ei
+mittaa keskiarvoa vaan etsii nimettyjä sanoja, jotka eivät voi olla
+oikein ilman umlauttia — ja sekin osui aluksi kenttänimeen `aani`,
+joka on tarkoituksella umlautiton.
+
+Sama kuvio kuin kaikkialla muualla tässä projektissa: **kun mittari
+tuottaa vääriä hälytyksiä, kynnyksen säätäminen on väärä korjaus.
+Oikea on mitata toista asiaa.**
+
