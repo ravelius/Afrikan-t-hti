@@ -16,7 +16,7 @@
  * on. Välimuisti on siis vain turvaverkko sille hetkelle, kun verkkoa
  * ei ole.
  */
-const KORI = 'tyohuone-2026-08-03.3';
+const KORI = 'tyohuone-2026-08-03.4';
 
 /*
  * Vain kuori esiladataan. Pelin paketit (js/packs/*) ovat isoja ja

@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 197, teksti: 'Laajennussuunnat työhuoneen suunnitelmaan' },
   { v: 196, teksti: 'Työhuoneen karttakehys ei jää soimaan taustalle' },
   { v: 196, teksti: 'Työhuone näyttää peilin ja repojen koot' },
   { v: 196, teksti: 'Äänistudio työhuoneen sisään, oma sivu pois' },

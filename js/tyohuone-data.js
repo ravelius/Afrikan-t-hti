@@ -265,3 +265,58 @@ export const MOOTTORIT = [
     mita: 'Käännökset (ilmainen taso 500 000 merkkiä/kk).',
     huomiot: 'Jos peli joskus käännetään ruotsiksi/englanniksi, tämä on työkalu siihen.' },
 ];
+
+// --- laajennussuunnat ---------------------------------------------------
+//
+// Nämä eivät ole pelin ominaisuuksia vaan suuntia koko projektille:
+// asioita, jotka vaatisivat rahoitusta tai aikaa enemmän kuin yksi
+// julkaisu. Erillään Suunnitelmasta, koska sekaisin mentynä pieni
+// korjaus ja vuoden hanke näyttäisivät samalta työltä.
+//
+// Kirjoitettu niin, että tekstin voi liittää apurahahakemukseen
+// sellaisenaan — siksi mukana on myös se, mikä on jo olemassa ja
+// mitkä ovat tiedossa olevat vaikeat kohdat. Hakemuksessa
+// realistisuus vakuuttaa enemmän kuin innostus.
+export const LAAJENNUKSET = [
+  {
+    nimi: 'Oma kartta kouluun — lapset sisällöntekijöinä',
+    tila: 'idea',
+    lahde: 'Omistajan idea 3.8.2026, apurahahaun pohjaksi.',
+    idea: 'Helppokäyttöinen työkalu, jolla koululuokka tekee opettajan '
+      + 'johdolla kartan omasta kotipaikkakunnastaan: merkitsee kohteet, '
+      + 'kirjoittaa niihin sisällön ja laatii kysymykset ja vastaukset. '
+      + 'Lopputulos on pelattava kartta, samalla moottorilla kuin '
+      + 'Matkakirja.',
+    miksi: 'Oppiminen tapahtuu tekemisessä, ei pelaamisessa. Kysymyksen '
+      + 'laatiminen vaatii aiheen ymmärtämistä selvästi enemmän kuin '
+      + 'siihen vastaaminen: pitää tietää mikä on olennaista, mikä on '
+      + 'uskottava väärä vaihtoehto ja mistä tiedon voi tarkistaa. '
+      + 'Luokka oppii samalla lähdekritiikkiä, tekijänoikeuksia ja '
+      + 'oman kotiseudun historiaa.',
+    tekoaly: 'Tekoäly on työkalu luokan käsissä, ei sisällön tekijä. '
+      + 'Se ehdottaa kysymyksiä oppilaan kirjoittamasta tekstistä, '
+      + 'etsii kuvaehdokkaita avoimista arkistoista lisensseineen ja '
+      + 'huomauttaa jos väite ei löydy lähteestä. Oppilas päättää. '
+      + 'Näin lapset näkevät myös sen, että tekoäly ehdottaa väärin — '
+      + 'ja se on osa opetusta.',
+    valmiina: 'Pelimoottori, karttapiirto, kysymysmuodot (monivalinta, '
+      + 'väittämä, valokuva, lippu, tapahtuma), avoimien aineistojen '
+      + 'haku Wikimediasta ja arkistoista lisenssitietoineen, '
+      + 'peilauskoneisto ja koko sisältöputki apureineen. '
+      + 'Laajennus ei siis ala tyhjästä vaan toimivasta pelistä.',
+    puuttuu: 'Selainpohjainen karttaeditori ilman koodia. Luokan oma '
+      + 'tallennustila ja jako-osoite. Opettajan näkymä: kenen työ on '
+      + 'kesken, mikä on tarkistamatta. Moderointi ennen julkaisua. '
+      + 'Tietosuoja: alaikäisten tuotokset ja mahdolliset omat kuvat.',
+    vaikeat: 'Kolme tiedossa olevaa vaikeaa kohtaa. '
+      + '1) Tietosuoja: jos oppilas lisää oman valokuvan, siinä voi olla '
+      + 'muita lapsia — tarvitaan selkeä sääntö ja tekninen este. '
+      + '2) Moderointi: julkinen kartta tarvitsee jonkun, joka vastaa '
+      + 'sisällöstä; opettaja ei ehdi lukea kaikkea. '
+      + '3) Helppokäyttöisyys on koko hankkeen ydin eikä kuori — jos '
+      + 'työkalu vaatii ohjeen, sitä ei käytetä oppitunnilla.',
+    huomiot: 'Kohderyhmä kannattaa rajata hakemuksessa yhteen '
+      + 'luokka-asteeseen ja kokeilu yhteen kouluun. Laajemmalti '
+      + 'luvattu hanke on vaikeampi uskoa kuin kapea ja valmis.',
+  },
+];
