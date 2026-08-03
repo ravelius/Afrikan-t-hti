@@ -1,10 +1,11 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-03.190';
+const CACHE = 'matkakirja-2026-08-03.191';
 const SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './css/styles.css',
+  './js/muutokset.js',
   './js/main.js',
   './js/ui.js',
   './js/game.js',

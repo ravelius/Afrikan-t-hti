@@ -25,8 +25,16 @@
     <p>Matkakirja luetaan pystyssä.</p>
     <p class="muted">Käännä laite pystyasentoon.</p>
   </div>
-  <!-- Versionumero näkyy aina pienenä alakulmassa. -->
-  <div id="versio-kulma" class="versio-kulma" aria-hidden="true"></div>
+  <!-- Versionumero näkyy aina pienenä alakulmassa. Napautus avaa
+       päivityslokin (omistajan toive) — siksi tämä on nappi eikä
+       koristediv, ja siksi aria-hidden on poissa. -->
+  <button id="versio-kulma" class="versio-kulma" type="button"
+          aria-haspopup="dialog" title="Mitä uutta?"></button>
+  <dialog id="muutokset-dialog" class="muutokset-dialog">
+    <h2 class="muutokset-otsikko">Mitä uutta</h2>
+    <ol id="muutokset-lista" class="muutokset-lista"></ol>
+    <button id="muutokset-sulje" class="muutokset-sulje" type="button">Sulje</button>
+  </dialog>
   <!-- Palautehuutomerkki oikeassa alakulmassa: palautetta juuri siitä
        kohdasta peliä, jossa pelaaja on (omistajan toive). -->
   <button id="palaute-kulma" class="palaute-kulma" type="button"

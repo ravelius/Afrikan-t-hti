@@ -27,7 +27,9 @@ export const XP_RECORD = 200; // bonus, jos aarre löytyy ennätyksen sisällä
 // varmistuvat vasta pelitestissä. Jos laudalla ei ole väittämiä tai
 // tapahtumia, niiden paino siirtyy monivalinnalle — peli toimii jokaisella
 // laudalla ilman uutta sisältöä.
-export const FORM_WEIGHTS = { quiz: 60, claim: 15, photo: 10, event: 15 };
+export const FORM_WEIGHTS = {
+  quiz: 55, claim: 15, photo: 10, flag: 8, event: 12,
+};
 
 // Tietovisan kehys: joku paikallinen esittää kysymyksen. Kysyjä valitaan
 // kaupungin äänimaiseman mukaan, joten sama tyyppi ei kysele aavikolla ja
@@ -71,6 +73,7 @@ export const ASKERS = {
   ],
 };
 export const PHOTO_CHOICES = 4; // valokuvakysymyksen nimivaihtoehdot
+export const FLAG_CHOICES = 4;  // lippukysymyksen maavaihtoehdot
 
 /** Vuorokaudenajan nimi tunnista. Kierto: aamu, keskipäivä, ilta, yö. */
 export function timeOfDayName(hour) {
@@ -893,12 +896,17 @@ export class Game {
     if (this.photoTargets().length === 0 || this.board.cities.length < PHOTO_CHOICES) {
       painot.photo = 0;
     }
+    // Lippukysymys tarvitsee laudan omat maat. Afrikan ja Euroopan
+    // erillislaudoilla niitä on, yhdistetyllä 84 — mutta esimerkiksi
+    // Suomi-laudalla ei yhtään, ja silloin muoto putoaa pois.
+    if (this.flagTargets().length < FLAG_CHOICES) painot.flag = 0;
     if (this.lastForm && this.lastForm !== 'quiz') painot[this.lastForm] = 0;
     // Kaupungin omissa kysymyksissä voi olla vaikeita, joita ei ole vielä
     // kysytty; monivalinta on aina mahdollinen, joten se kerää loput.
     const siirtyy = FORM_WEIGHTS.claim - painot.claim
       + FORM_WEIGHTS.event - painot.event
-      + FORM_WEIGHTS.photo - painot.photo;
+      + FORM_WEIGHTS.photo - painot.photo
+      + FORM_WEIGHTS.flag - painot.flag;
     painot.quiz += siirtyy;
     return painot;
   }
@@ -946,6 +954,7 @@ export class Game {
     this.lastForm = muoto;
     if (muoto === 'claim') return this.openClaim(city);
     if (muoto === 'photo') return this.openPhotoQuestion(city);
+    if (muoto === 'flag') return this.openFlagQuestion(city);
     if (muoto === 'event') return this.openEvent(city);
 
     const difficulty = hard ? 'hard' : this.player.quizLevel;
@@ -1026,6 +1035,75 @@ export class Game {
     return [...(this.photoPool ?? [])].filter(
       (id) => this.board.cityById.has(id) && !this.usedQuestions.has(`photo:${id}`),
     );
+  }
+
+  /**
+   * Lippukysymykseen kelpaavat maat: laudan omat, joilla on lippu ja
+   * joita ei ole vielä kysytty tässä pelissä.
+   *
+   * Liput ovat repossa (assets/liput), joten kysymys toimii myös
+   * yhteydettömänä — toisin kuin valokuvakysymys, joka hakee kuvan
+   * verkosta.
+   */
+  flagTargets() {
+    const maat = this.pack.map?.countryShapes ?? {};
+    return Object.entries(maat)
+      .filter(([iso, maa]) => maa.lippu && maa.nimi && !this.usedQuestions.has(`flag:${iso}`))
+      .map(([iso, maa]) => ({ iso, nimi: maa.nimi, lippu: maa.lippu }));
+  }
+
+  /**
+   * Lippukysymys: tullimies näyttää lipun ja kysyy, minkä maan se on.
+   *
+   * Miksi tämä on oma muotonsa eikä tavallinen kysymys: lipun
+   * tunnistaminen on kuvan lukemista, ei muistamista, ja se opettaa
+   * juuri sen mikä lipussa on — värit, tähdet, puolikuu. Peli tuntee
+   * jo 84 maan liput, joten aineistoa ei tarvitse hakea mistään.
+   */
+  openFlagQuestion(city) {
+    const kohteet = this.flagTargets();
+    if (kohteet.length < FLAG_CHOICES) return this.actionQuiz({ form: 'quiz' });
+
+    /*
+     * Oikea vastaus painottuu siihen maahan, jossa pelaaja on: paikka
+     * ja lippu kuuluvat yhteen, ja pelaaja on juuri lukenut maan nimen
+     * saapumiskortista. Jos maata ei tunneta, arvotaan mikä tahansa.
+     */
+    const omaIso = this.pack.map?.cityCountry?.[city.id] ?? null;
+    const oma = kohteet.find((m) => m.iso === omaIso);
+    const kohde = oma ?? kohteet[Math.floor(this.rng() * kohteet.length)];
+    this.usedQuestions.add(`flag:${kohde.iso}`);
+
+    // Väärät vaihtoehdot ovat muita laudan maita.
+    const muut = kohteet.filter((m) => m.iso !== kohde.iso);
+    const vaarat = this.shuffledOrder(muut.length)
+      .slice(0, FLAG_CHOICES - 1)
+      .map((i) => muut[i]);
+    const jarj = this.shuffledOrder(FLAG_CHOICES);
+    const ehdokkaat = jarj.map((i) => [kohde, ...vaarat][i]);
+
+    this.quiz = {
+      kind: 'flag',
+      cityId: city.id,
+      flagFile: kohde.lippu,
+      flagCountry: kohde.nimi,
+      hard: false,
+      frame: 'tullimies kääntää passia kädessään ja kysyy',
+      question: 'Minkä maan lippu tämä on?',
+      fact: `Lippu on ${kohde.nimi}.`,
+      source: [],
+      options: ehdokkaat.map((m) => m.nimi),
+      correct: ehdokkaat.indexOf(kohde),
+      hint: null,
+      hintShown: false,
+      hidden: [],
+      chosen: null,
+      right: null,
+      timedOut: false,
+      seconds: QUIZ_SECONDS,
+    };
+    this.phase = 'quiz';
+    return { ok: true, quiz: this.quiz };
   }
 
   /**

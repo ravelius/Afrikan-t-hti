@@ -20,12 +20,31 @@ const LEVEYS = 120;              // riittää sekä 0,8 rem että 1,05 rem korke
 const KANSIO = 'assets/liput';
 const KARTTA = 'js/packs/liput-paikalliset.js';
 
-// Poimi lippujen tiedostonimet pakkatiedostoista, jotta lista pysyy
-// automaattisesti ajan tasalla kun uusia maita lisätään.
+/*
+ * Poimi lippujen tiedostonimet paketeista MODUULEINA, ei tekstinä.
+ *
+ * Ensimmäinen versio haki tekstistä hahmolla /lippu: '([^']+)'/ eli
+ * heittomerkeillä. Kun Aasian rajat kirjoitettiin JSON.stringifyllä,
+ * kentät saivat lainausmerkit ("lippu":"Flag of Japan.svg") ja
+ * kaikki 28 uutta lippua jäivät löytymättä — hiljaa, koska
+ * puuttuvasta ei tullut virhettä vaan vain lyhyempi lista.
+ *
+ * Moduulina luettuna muotoilulla ei ole väliä.
+ */
 const nimet = new Set();
+const { PACKS } = await import('../js/pack.js');
+for (const pack of PACKS) {
+  for (const maa of Object.values(pack.map?.countryShapes ?? {})) {
+    if (maa.lippu) nimet.add(maa.lippu);
+  }
+  // Tervehdyskorteissa ja kulttuurinostoissa on lippuja kentässä
+  // `lippu` myös muualla kuin maiden rajoissa.
+  for (const c of pack.cities ?? []) if (c.lippu) nimet.add(c.lippu);
+}
+// Loput tekstistä: osa lipuista on taulukoissa, joita ei viedä ulos.
 for (const tiedosto of fs.readdirSync('js/packs')) {
   const sisalto = fs.readFileSync(path.join('js/packs', tiedosto), 'utf8');
-  for (const osuma of sisalto.matchAll(/lippu: '([^']+)'/g)) nimet.add(osuma[1]);
+  for (const osuma of sisalto.matchAll(/["']?lippu["']?\s*:\s*['"]([^'"]+)['"]/g)) nimet.add(osuma[1]);
 }
 const lista = [...nimet].sort();
 console.log(`${lista.length} lippua`);

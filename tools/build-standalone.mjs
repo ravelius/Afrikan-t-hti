@@ -73,6 +73,7 @@ const MODULES = [
   'js/game.js',
   'js/ai.js',
   'js/ui.js',
+  'js/muutokset.js',
   'js/main.js',
 ];
 
