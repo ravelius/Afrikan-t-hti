@@ -46,6 +46,7 @@ import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
 import { ASIA_SAAPUMISET } from './packs/asia-saapumiset.js';
 import { ASIA_ARTIKKELIT } from './packs/asia-artikkelit.js';
 import { ASIA_VALOKUVAT } from './packs/asia-valokuvat.js';
+import { ASIA_MAATIEDOT } from './packs/asia-maatiedot.js';
 import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
@@ -101,7 +102,7 @@ const KIELET = { europe: EUROPE_KIELET, vanhamaailma: EUROPE_KIELET };
 const MAATIEDOT = {
   africa: AFRICA_MAATIEDOT,
   europe: EUROPE_MAATIEDOT,
-  vanhamaailma: { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT },
+  vanhamaailma: { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT, ...ASIA_MAATIEDOT },
 };
 
 /*
