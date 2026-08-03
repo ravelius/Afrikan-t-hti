@@ -4571,15 +4571,24 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    */
   --arkki-reunus: 1.75rem;
   --arkki-yla: 1.7rem;
-  padding: var(--arkki-yla) var(--arkki-reunus) 1.9rem;
+  /*
+   * Yläreunus EI ole kortin omaa pehmustetta vaan ensimmäisen palstan.
+   * Syy on tarttuvassa aiherivissä: selaimet ovat eri mieltä siitä,
+   * mihin `top: 0` pysäyttää tarttuvan elementin — Chromium sisä-
+   * reunukseen, WebKit toisin. Kun yläpehmustetta ei ole, erimielisyys
+   * katoaa: rivi pysähtyy paperin reunaan molemmissa.
+   */
+  padding: 0 var(--arkki-reunus) 1.9rem;
 }
+
+.dialog.arkki .arrival-palstat { padding-top: var(--arkki-yla); }
 
 @media (min-width: 700px) {
   .dialog.arkki .dialog-card,
   .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
     --arkki-reunus: 2.2rem;
     --arkki-yla: 2rem;
-    padding: var(--arkki-yla) var(--arkki-reunus) 2.2rem;
+    padding: 0 var(--arkki-reunus) 2.2rem;
   }
 }
 
@@ -4597,17 +4606,13 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  */
 .dialog.arkki #arrival-liuskat {
   position: sticky;
-  /*
-   * Negatiivinen top vie rivin kiinni paperin reunaan asti. Ilman sitä
-   * se pysähtyy kortin sisäreunukseen, ja sen yläpuolelle jää raollinen
-   * kaistale, josta alta vierivä teksti pilkottaa. Sama mitta lisätään
-   * rivin omaan yläpehmusteeseen, joten kuvakkeet pysyvät paikallaan.
-   */
-  top: calc(var(--arkki-yla) * -1);
+  /* Kortilla ei ole yläpehmustetta, joten top: 0 pysäyttää rivin
+   * tarkalleen paperin reunaan kaikissa selaimissa. */
+  top: 0;
   z-index: 2;
   margin-inline: calc(var(--arkki-reunus) * -1);
   padding-inline: var(--arkki-reunus);
-  padding-top: calc(var(--arkki-yla) + 0.9rem);
+  padding-top: 0.95rem;
   background-image: var(--paper-noise), linear-gradient(#f2e2bf, #ecdab2);
   background-blend-mode: multiply, normal;
   box-shadow: 0 7px 9px -7px rgba(70, 51, 31, 0.35);
@@ -63174,7 +63179,15 @@ class UI {
       lohko.appendChild(otsikkoRivi);
       if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
         const kuva = document.createElement('img');
-        kuva.loading = 'lazy';
+        /*
+         * EI loading="lazy". Kuva säilyttää mittasuhteensa (width: auto),
+         * jolloin sen laatikko on ennen latausta nollan kokoinen — eikä
+         * WebKit lataa nollan kokoista laiskaa kuvaa koskaan. iPhonella
+         * nostot jäivät kokonaan ilman kuvaa. Nämä kuvat esiladataan jo
+         * saapuessa, joten laiskuus ei säästänyt mitään.
+         */
+        kuva.decoding = 'async';
+        kuva.fetchPriority = 'low';
         kuva.alt = nosto.otsikko;
         // Ilman verkkoa nosto jää pelkäksi tekstiksi — mutta vasta kun
         // sekä peili että alkuperäinen lähde ovat pettäneet.
@@ -63718,7 +63731,11 @@ class UI {
       lohko.appendChild(html('h3', '', nosto.otsikko));
       if (nosto.tiedosto) {
         const kuva = document.createElement('img');
-        kuva.loading = 'lazy';
+        // Sama syy kuin litteissä nostoissa: nollan kokoinen laiska kuva
+        // ei lataudu WebKitissä lainkaan. Vain avatun aiheen kuvat ovat
+        // kerrallaan DOM:issa, joten määrä pysyy pienenä.
+        kuva.decoding = 'async';
+        kuva.fetchPriority = 'low';
         kuva.alt = nosto.selite ?? nosto.otsikko;
         // Ilman verkkoa nosto jää tekstiksi — mutta vasta kun sekä
         // peili että alkuperäinen lähde ovat pettäneet.
@@ -65933,6 +65950,7 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
+  { v: 205, teksti: 'Korjattu: nostojen kuvat puuttuivat iPhonelta' },
   { v: 204, teksti: 'Aiherivi pysyy näkyvissä arkin yläreunassa' },
   { v: 203, teksti: 'Kuvat omissa mittasuhteissaan, ei panoraamana' },
   { v: 203, teksti: 'Aiheen vaihto ei enää hyppää näkymässä' },
@@ -65999,7 +66017,7 @@ const PLAYER_COLOR = '#d94f3d';
  */
 const SAVE_KEY = 'matkakirja-save-v1';
 const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.204';
+const APP_VERSION = '2026-08-03.205';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
