@@ -25,6 +25,18 @@ export function paperi(map) {
   const w = map?.width ?? 1000;
   const h = map?.height ?? 1000;
   const vara = Math.max(w, h) * 1.3;
+  /*
+   * Kiertävällä kartalla pergamentti EI jatku sivuille.
+   *
+   * Jatkoa ei tarvita: kartasta on kopio laudan leveyden päässä, ja se
+   * tuo pergamentin mukanaan. Mutta jos jatko on, kopio ja alkuperäinen
+   * menevät päällekkäin — ja koska rakeisuus sekoittuu kertolaskulla,
+   * päällekkäinen kaistale tummuu. Ruudulla se näkyi pystysuorana
+   * sävyrajana keskellä merta.
+   *
+   * Pystysuunnassa jatko säilyy: siellä ei kierretä.
+   */
+  if (map?.kiertava) return { x: 0, y: -vara, w, h: h + vara * 2 };
   return { x: -vara, y: -vara, w: w + vara * 2, h: h + vara * 2 };
 }
 

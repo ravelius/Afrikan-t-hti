@@ -57944,6 +57944,18 @@ function paperi(map) {
   const w = map?.width ?? 1000;
   const h = map?.height ?? 1000;
   const vara = Math.max(w, h) * 1.3;
+  /*
+   * Kiertävällä kartalla pergamentti EI jatku sivuille.
+   *
+   * Jatkoa ei tarvita: kartasta on kopio laudan leveyden päässä, ja se
+   * tuo pergamentin mukanaan. Mutta jos jatko on, kopio ja alkuperäinen
+   * menevät päällekkäin — ja koska rakeisuus sekoittuu kertolaskulla,
+   * päällekkäinen kaistale tummuu. Ruudulla se näkyi pystysuorana
+   * sävyrajana keskellä merta.
+   *
+   * Pystysuunnassa jatko säilyy: siellä ei kierretä.
+   */
+  if (map?.kiertava) return { x: 0, y: -vara, w, h: h + vara * 2 };
   return { x: -vara, y: -vara, w: w + vara * 2, h: h + vara * 2 };
 }
 
@@ -63114,6 +63126,23 @@ class UI {
       const pane = this.svg.parentElement;
       this.taideTarkkuus = piirtotarkkuus(pane?.clientWidth ?? 400, pane?.clientHeight ?? 800);
       this.taideRuutu = ruudunKoko(nakyva.skaala, this.taideTarkkuus);
+      /*
+       * Kiertävällä kartalla ruudun on jaettava maailma tasan.
+       *
+       * Ruudun koko lasketaan pikselirajasta, ja loitonnetulla
+       * maailmankartalla se venyi 23860 yksikköön — kaksi kertaa
+       * maailmaa leveämmäksi. Ruutu on läpinäkymätön pergamentti koko
+       * alaltaan, joten sen TYHJÄ oikea puoli maalattiin kierron
+       * kopion päälle: kartta loppui pystysuoraan reunaan ja oikealla
+       * oli tyhjää (omistajan kuvakaappaus iPadilta).
+       *
+       * Kun leveys on maailman jaollinen osa, yksikään ruutu ei ulotu
+       * laudan ulkopuolelle eikä siis voi peittää kopiota.
+       */
+      if (this.kiertava()) {
+        const W = this.game.pack.map.width;
+        this.taideRuutu = W / Math.max(1, Math.round(W / this.taideRuutu));
+      }
       this.taideVanhat = [...this.taideRuudut.values()];
       this.taideRuudut = new Map();
     }
@@ -63121,9 +63150,16 @@ class UI {
     const koko = this.taideRuutu;
     const arkki = paperi(this.game.pack.map);
     const PUSKURI = 1; // ruudullista joka suuntaan: koko pyyhkäisyn matka
-    const x0 = Math.max(arkki.x, nakyva.x - nakyva.w * PUSKURI);
+    /*
+     * Kiertävällä kartalla ruudut rajataan laudan leveyteen. Sen
+     * ulkopuolella ei ole taidetta vaan kierron kopio, ja ruutu peittäisi
+     * sen tyhjällä pergamentilla.
+     */
+    const vasen = this.kiertava() ? 0 : arkki.x;
+    const oikea = this.kiertava() ? this.game.pack.map.width : arkki.x + arkki.w;
+    const x0 = Math.max(vasen, nakyva.x - nakyva.w * PUSKURI);
     const y0 = Math.max(arkki.y, nakyva.y - nakyva.h * PUSKURI);
-    const x1 = Math.min(arkki.x + arkki.w, nakyva.x + nakyva.w * (1 + PUSKURI));
+    const x1 = Math.min(oikea, nakyva.x + nakyva.w * (1 + PUSKURI));
     const y1 = Math.min(arkki.y + arkki.h, nakyva.y + nakyva.h * (1 + PUSKURI));
 
     const puuttuvat = [];
@@ -68621,6 +68657,7 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
+  { v: 211, teksti: 'Nipistys zoomaa karttaa kahdella sormella' },
   { v: 210, teksti: 'Pohjolan merkinnät uusiksi yhden idean malliin' },
   { v: 209, teksti: 'Maailmankartta korvasi vanhan maailman laudan' },
   { v: 209, teksti: 'Maat, rajat ja matkakirja maailmankartalle' },
@@ -68702,7 +68739,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-03.210';
+const APP_VERSION = '2026-08-03.211';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
