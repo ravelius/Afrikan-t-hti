@@ -1223,3 +1223,49 @@ jonka läpi teksti vieri näkyvissä. Ruudulla se näytti siltä, että
 sanoja ilmestyy paperin reunan takaa. Korjaus on negatiivinen `top`
 ja sama mitta rivin omaan yläpehmusteeseen: rivi ulottuu paperin
 reunaan asti, mutta kuvakkeet pysyvät paikallaan.
+
+---
+
+**[Opus]** Kolme peräkkäistä versiota, ja jokainen rikkoi jotain, mitä
+edellinen ei ollut koskenut.
+
+Tämä on niistä pahin. Muutin kuvien mittasuhteet kuntoon:
+
+```css
+width: auto; max-width: 100%; max-height: 280px;
+```
+
+Se on oikein — paitsi että kuvilla on `loading="lazy"`, ja **laiskan
+kuvan laatikko on ennen latausta nollan kokoinen, jos leveys on
+auto**. WebKit ei lataa nollan kokoista laiskaa kuvaa koskaan.
+iPhonella kaikki nostojen kuvat katosivat. Chromium latasi ne, joten
+mikään omista tarkistuksistani ei nähnyt mitään.
+
+Vanha `width: 100%` oli piilottanut vian: leveys oli aina yli nollan,
+vaikka korkeus oli nolla. Poistin sen ainoan asian, joka piti laiskan
+latauksen toiminnassa — enkä tiennyt, että se piti.
+
+**Miksi vika oli näkymätön myös ruudulla.** `asetaKuva` poistaa kuvan
+DOM:ista, jos sekä peili että alkuperäinen lähde pettävät. Kuva, jota
+ei koskaan yritetä ladata, ei myöskään koskaan epäonnistu — se jää
+paikalleen nollan kokoisena. Sivulla ei siis ollut rikkinäistä kuvaa
+eikä aukkoa. Selite seurasi otsikkoa kuin kuvaa ei olisi ollutkaan.
+Ilman omistajan kuvakaappausta olisin etsinyt vikaa verkosta.
+
+**Korjaus:** `loading="lazy"` pois näistä kuvista. Litteät nostot
+esiladataan jo saapuessa, ja aihenostoista vain avatun aiheen kuvat
+ovat kerrallaan DOM:issa — laiskuus ei säästänyt kummassakaan mitään.
+
+**Toinen iOS-asia samalla kertaa.** Tarttuvan aiherivin `top`
+lasketaan eri tavalla eri selaimissa: Chromium pysäyttää elementin
+vierityskehyksen sisäreunukseen, WebKit toisin. Olin korjannut
+Chromiumin negatiivisella `top`-arvolla, mikä on juuri sellainen
+korjaus, joka toimii yhdessä selaimessa ja rikkoo toisen. Nyt kortilla
+ei ole yläpehmustetta lainkaan — se siirrettiin ensimmäiselle
+palstalle — joten `top: 0` tarkoittaa samaa asiaa kaikkialla.
+Erimielisyyttä ei ratkaistu, vaan poistettiin.
+
+**Se mitä tästä pitäisi oppia:** minulla on käytössä vain yksi
+selainmoottori. Se ei ole tarkistus vaan yksi otos. Jokainen kerta,
+kun kirjoitan "tarkistettu kuvakaappauksella", se tarkoittaa
+"tarkistettu Chromiumilla" — ja omistaja lukee peliä iPhonella.

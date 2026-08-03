@@ -4563,15 +4563,24 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    */
   --arkki-reunus: 1.75rem;
   --arkki-yla: 1.7rem;
-  padding: var(--arkki-yla) var(--arkki-reunus) 1.9rem;
+  /*
+   * Yläreunus EI ole kortin omaa pehmustetta vaan ensimmäisen palstan.
+   * Syy on tarttuvassa aiherivissä: selaimet ovat eri mieltä siitä,
+   * mihin `top: 0` pysäyttää tarttuvan elementin — Chromium sisä-
+   * reunukseen, WebKit toisin. Kun yläpehmustetta ei ole, erimielisyys
+   * katoaa: rivi pysähtyy paperin reunaan molemmissa.
+   */
+  padding: 0 var(--arkki-reunus) 1.9rem;
 }
+
+.dialog.arkki .arrival-palstat { padding-top: var(--arkki-yla); }
 
 @media (min-width: 700px) {
   .dialog.arkki .dialog-card,
   .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
     --arkki-reunus: 2.2rem;
     --arkki-yla: 2rem;
-    padding: var(--arkki-yla) var(--arkki-reunus) 2.2rem;
+    padding: 0 var(--arkki-reunus) 2.2rem;
   }
 }
 
@@ -4589,17 +4598,13 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  */
 .dialog.arkki #arrival-liuskat {
   position: sticky;
-  /*
-   * Negatiivinen top vie rivin kiinni paperin reunaan asti. Ilman sitä
-   * se pysähtyy kortin sisäreunukseen, ja sen yläpuolelle jää raollinen
-   * kaistale, josta alta vierivä teksti pilkottaa. Sama mitta lisätään
-   * rivin omaan yläpehmusteeseen, joten kuvakkeet pysyvät paikallaan.
-   */
-  top: calc(var(--arkki-yla) * -1);
+  /* Kortilla ei ole yläpehmustetta, joten top: 0 pysäyttää rivin
+   * tarkalleen paperin reunaan kaikissa selaimissa. */
+  top: 0;
   z-index: 2;
   margin-inline: calc(var(--arkki-reunus) * -1);
   padding-inline: var(--arkki-reunus);
-  padding-top: calc(var(--arkki-yla) + 0.9rem);
+  padding-top: 0.95rem;
   background-image: var(--paper-noise), linear-gradient(#f2e2bf, #ecdab2);
   background-blend-mode: multiply, normal;
   box-shadow: 0 7px 9px -7px rgba(70, 51, 31, 0.35);

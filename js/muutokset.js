@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 205, teksti: 'Korjattu: nostojen kuvat puuttuivat iPhonelta' },
   { v: 204, teksti: 'Aiherivi pysyy näkyvissä arkin yläreunassa' },
   { v: 203, teksti: 'Kuvat omissa mittasuhteissaan, ei panoraamana' },
   { v: 203, teksti: 'Aiheen vaihto ei enää hyppää näkymässä' },

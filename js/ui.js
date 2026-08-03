@@ -4421,7 +4421,15 @@ export class UI {
       lohko.appendChild(otsikkoRivi);
       if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
         const kuva = document.createElement('img');
-        kuva.loading = 'lazy';
+        /*
+         * EI loading="lazy". Kuva säilyttää mittasuhteensa (width: auto),
+         * jolloin sen laatikko on ennen latausta nollan kokoinen — eikä
+         * WebKit lataa nollan kokoista laiskaa kuvaa koskaan. iPhonella
+         * nostot jäivät kokonaan ilman kuvaa. Nämä kuvat esiladataan jo
+         * saapuessa, joten laiskuus ei säästänyt mitään.
+         */
+        kuva.decoding = 'async';
+        kuva.fetchPriority = 'low';
         kuva.alt = nosto.otsikko;
         // Ilman verkkoa nosto jää pelkäksi tekstiksi — mutta vasta kun
         // sekä peili että alkuperäinen lähde ovat pettäneet.
@@ -4966,7 +4974,11 @@ export class UI {
       lohko.appendChild(html('h3', '', nosto.otsikko));
       if (nosto.tiedosto) {
         const kuva = document.createElement('img');
-        kuva.loading = 'lazy';
+        // Sama syy kuin litteissä nostoissa: nollan kokoinen laiska kuva
+        // ei lataudu WebKitissä lainkaan. Vain avatun aiheen kuvat ovat
+        // kerrallaan DOM:issa, joten määrä pysyy pienenä.
+        kuva.decoding = 'async';
+        kuva.fetchPriority = 'low';
         kuva.alt = nosto.selite ?? nosto.otsikko;
         // Ilman verkkoa nosto jää tekstiksi — mutta vasta kun sekä
         // peili että alkuperäinen lähde ovat pettäneet.
