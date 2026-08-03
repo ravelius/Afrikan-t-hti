@@ -384,6 +384,44 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 63: radio kaikkiin maihin — VALMIS v187 3.8.2026
+
+Automaattihaku (paketti 61) sai 71 maata ja 45 virallista kanavaa.
+Loput jäivät, koska hakemistosta ei voi päätellä mikä asema on maan
+yleisradio. Ne haettiin apureilla maa kerrallaan ja tarkistettiin
+skriptillä (`tools/tarkista-radiot.mjs`).
+
+**Nyt kaikilla 87 maalla on suora lähetys, ja 56 niistä on maan
+yleisradion kanava.** Testi vahtii, ettei yksikään maa jää ilman.
+
+### Kaksi kertaa sama virhe: tarkistus ei erottanut väärää eri
+### tavalla kirjoitetusta
+
+**1. Yhdistämissääntö.** Ensimmäinen versio päivitti tietueen vain jos
+uusi oli virallinen ja vanha ei. Automaattihaun arvaukset olivat
+kuitenkin huonompia kuin tutkitut valinnat myös silloin, kun kumpikaan
+ei ollut virallinen — Latvian valinta oli "Nordic Chillout Radio".
+Sääntö on nyt: tutkittu voittaa arvatun, paitsi jos vanha on maan
+virallinen kanava.
+
+**2. Kielisuodatin hylkäsi 17 hyvää asemaa.** Suodatin vertaa aseman
+kielitietoa maan pääkieliin, ja lista on hakemiston kirjoitusasussa
+(englanniksi). Apurit kirjoittivat kielen suomeksi: kentässä luki
+"arabia" eikä "arabic", ja jokainen niistä hylättiin väärällä
+kielellä. Tutkitut valinnat merkitään nyt `tutkittu: true`, ja
+suodatin ohittaa ne — ne ovat jo käyneet läpi oman tarkistuksensa.
+
+**3. Aseman nimi ei ole lause.** Ehdotukset tulivat muodossa
+"Radio 9090 / 90.90 FM Radio Egypt (Kairo) – puhe ja
+ajankohtaisohjelmat". Nimi näkyy napin otsikkona, joten selite
+katkaistaan — ja katkaisu jätti aluksi puolikkaan sulun perään
+("SAMS Radio 1 (South Atlantic Media Services"). Jos nimi mahtuu
+ilman sulkulauseketta, koko lauseke pudotetaan.
+
+Kaikki kolme ovat sama asia: **kun tarkistus vertaa muotoa eikä
+sisältöä, se hylkää hyvän yhtä helposti kuin päästää huonon läpi.**
+
+
 ## Paketti 62: päiväkirjan näkymät kuviksi — VALMIS v186 3.8.2026
 
 Omistajan toive: "Matkakirjassa mainitut näkymät ja asiat olisi kiva

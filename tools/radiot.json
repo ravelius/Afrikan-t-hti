@@ -28,11 +28,11 @@
   "pisteet": 635
  },
  "EGY": {
-  "url": "https://qurango.net/radio/mahmoud_khalil_alhussary_warsh",
-  "asema": "إذاعة محمود خليل الحصري",
-  "kieli": "arabic",
+  "url": "https://9090streaming.mobtada.com/9090FMEGYPT",
+  "asema": "Radio 9090 / 90.90 FM Radio Egypt (Kairo) – puhe ja ajankohtaisohjelmat",
+  "kieli": "arabia (egyptin murre)",
   "virallinen": false,
-  "pisteet": 75
+  "tutkittu": true
  },
  "IND": {
   "url": "https://audio-edge-fvq45.ams.d.radiomast.io/3ccc1156-fcf8-4ba7-9a0c-28e3a465e1ae?listening-from-radio-garden=1607152226837",
@@ -42,25 +42,25 @@
   "pisteet": 570
  },
  "AFG": {
-  "url": "https://listen.radioking.com/radio/291025/stream/337294",
-  "asema": "chalabi",
-  "kieli": "",
+  "url": "https://s5.radio.co/se6264cb34/listen",
+  "asema": "Radio Begum (Kabul)",
+  "kieli": "dari (myös pašto)",
   "virallinen": false,
-  "pisteet": 124
+  "tutkittu": true
  },
  "AGO": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
-  "virallinen": false,
-  "pisteet": 70
+  "url": "https://stream.zeno.fm/vyu630hfy4zuv",
+  "asema": "Rádio Luanda (RNA)",
+  "kieli": "portugali",
+  "virallinen": true,
+  "tutkittu": true
  },
  "ARE": {
-  "url": "https://nl4.mystreaming.net/uber/forkidzbedtimestories/icecast.audio",
-  "asema": "Fun Radio For Kids - Bedtime Stories",
-  "kieli": "english",
-  "virallinen": false,
-  "pisteet": 130
+  "url": "https://l3.itworkscdn.net/smcradiolive/smcradiolive/icecast.audio",
+  "asema": "Sharjah FM 94.4 (إذاعة الشارقة) – Sharjah Broadcasting Authority",
+  "kieli": "arabia (emiraattimurre)",
+  "virallinen": true,
+  "tutkittu": true
  },
  "AUT": {
   "url": "https://orf-live.ors-shoutcast.at/oe1-q2a",
@@ -77,11 +77,11 @@
   "pisteet": 571
  },
  "BIH": {
-  "url": "https://srv.mediastriming.com/8330/stream",
-  "asema": "Srce Krajine",
-  "kieli": "serbian",
-  "virallinen": false,
-  "pisteet": 75
+  "url": "https://s2.free-shoutcast.com/stream/18170",
+  "asema": "Federalni radio (RTVFBiH)",
+  "kieli": "bosnia",
+  "virallinen": true,
+  "tutkittu": true
  },
  "CHE": {
   "url": "https://stream.srg-ssr.ch/m/la-1ere/mp3_128",
@@ -98,25 +98,25 @@
   "pisteet": 635
  },
  "CMR": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
+  "url": "https://stream.zeno.fm/43q33pgvbphvv",
+  "asema": "Radio Bafung",
+  "kieli": "ranska",
   "virallinen": false,
-  "pisteet": 69
+  "tutkittu": true
  },
  "COD": {
-  "url": "https://topcongofm2.ice.infomaniak.ch/topcongofm2-64.mp3",
-  "asema": "Top Congo FM",
-  "kieli": "french",
+  "url": "https://mpbradio.ice.infomaniak.ch/topcongo3-128.mp3",
+  "asema": "Top Congo FM 88.4 (Kinshasa)",
+  "kieli": "ranska, lingala",
   "virallinen": false,
-  "pisteet": 135
+  "tutkittu": true
  },
  "CYP": {
-  "url": "https://r1.cloudskep.com/radio3/supersportfm/icecast.audio",
-  "asema": "Super Sport FM 104.0",
-  "kieli": "greek",
-  "virallinen": false,
-  "pisteet": 72
+  "url": "https://r1.cloudskep.com/cybcr/cybc1/icecast.audio",
+  "asema": "ΡΙΚ Πρώτο Πρόγραμμα (CyBC)",
+  "kieli": "kreikka",
+  "virallinen": true,
+  "tutkittu": true
  },
  "CZE": {
   "url": "https://rozhlas.stream/radiozurnal_sport_high.aac",
@@ -224,18 +224,18 @@
   "pisteet": 575
  },
  "IRQ": {
-  "url": "https://audio-edge-3mayu.fra.h.radiomast.io/04b1ce4c-24f2-4172-b756-065832ef78bf",
-  "asema": "Kurdistan 24",
-  "kieli": "kurdish.",
+  "url": "https://radio.shafaq.com/radio",
+  "asema": "Radio Shafaq (Shafaq News)",
+  "kieli": "arabia",
   "virallinen": false,
-  "pisteet": 135
+  "tutkittu": true
  },
  "ISL": {
   "url": "https://stream.utvarpsaga.is/Hljodver",
   "asema": "Útvarp Saga",
-  "kieli": "icelandic",
+  "kieli": "islanti",
   "virallinen": false,
-  "pisteet": 127
+  "tutkittu": true
  },
  "ITA": {
   "url": "https://icestreaming.rai.it/1.mp3",
@@ -246,17 +246,17 @@
  },
  "JOR": {
   "url": "https://dc1.serverse.com/proxy/kjxwtpdt/stream",
-  "asema": "Hayat FM",
-  "kieli": "",
+  "asema": "Hayat FM (Amman) – puhe-, keskustelu- ja perheohjelmat",
+  "kieli": "arabia",
   "virallinen": false,
-  "pisteet": 82
+  "tutkittu": true
  },
  "JPN": {
-  "url": "https://s10.webradio-hosting.com/proxy/fredradiojp/stream",
-  "asema": "Fred Film Radio(日本語)",
-  "kieli": "japanese",
+  "url": "https://fmsetagaya834.out.airtime.pro/fmsetagaya834_a",
+  "asema": "エフエム世田谷 (FM Setagaya 83.4 MHz, Tokio)",
+  "kieli": "japani",
   "virallinen": false,
-  "pisteet": 132
+  "tutkittu": true
  },
  "KAZ": {
   "url": "https://radio-streams.kaztrk.kz/qazradio/qazradio/icecast.audio",
@@ -273,32 +273,32 @@
   "pisteet": 469
  },
  "KOR": {
-  "url": "https://listen7.myradio24.com/69366",
-  "asema": "평양FM",
-  "kieli": "korean",
+  "url": "https://wbsradio.kr/wbs-seoul",
+  "asema": "WBS 원음방송 서울 (Won-Buddhism Broadcasting System, Soul FM 89.7)",
+  "kieli": "korea",
   "virallinen": false,
-  "pisteet": 129
+  "tutkittu": true
  },
  "KWT": {
-  "url": "https://montecarlodoualiya128k.ice.infomaniak.ch/mc-doualiya.mp3",
-  "asema": "الكويت - البرنامج الثاني",
-  "kieli": "arabic",
+  "url": "https://listen.radioking.com/radio/280804/stream/326527",
+  "asema": "moja (مُوجَة), Kuwait City – arabiankielinen puhe/huumori/musiikki",
+  "kieli": "arabia (kuwaitin murre)",
   "virallinen": false,
-  "pisteet": 75
+  "tutkittu": true
  },
  "LBR": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
-  "virallinen": false,
-  "pisteet": 70
+  "url": "https://stream.zeno.fm/xxmnohwx4zyuv",
+  "asema": "LBS Radio (Liberia Broadcasting System)",
+  "kieli": "englanti",
+  "virallinen": true,
+  "tutkittu": true
  },
  "LBY": {
   "url": "https://stream.zeno.fm/z9wfrdpmgg0uv",
-  "asema": "راديو فنون طرابلس - Radio Arts Tripoli",
-  "kieli": "arabic",
+  "asema": "Radio Funun Tripoli (راديو فنون طرابلس) – kulttuuri- ja puheohjelmat",
+  "kieli": "arabia (libyan murre)",
   "virallinen": false,
-  "pisteet": 75
+  "tutkittu": true
  },
  "LKA": {
   "url": "https://stream-32.zeno.fm/xekhrn4zetzuv?zs=KXT1gTNYSemcxyslV6-vdA",
@@ -308,18 +308,18 @@
   "pisteet": 575
  },
  "LTU": {
-  "url": "https://stream2.zipfm.lt/zipfm128.mp3",
-  "asema": "ZipFM",
-  "kieli": "",
+  "url": "https://netradio.ziniur.lt/ziniur.mp3",
+  "asema": "Žinių radijas",
+  "kieli": "liettua",
   "virallinen": false,
-  "pisteet": 75
+  "tutkittu": true
  },
  "LVA": {
-  "url": "https://play.radioking.io/nordic-chillout-radio/736489",
-  "asema": "Nordic Chillout Radio",
-  "kieli": "english",
+  "url": "https://live.radioswh.lv/plusmp3",
+  "asema": "Radio SWH+",
+  "kieli": "latvia",
   "virallinen": false,
-  "pisteet": 69
+  "tutkittu": true
  },
  "MAR": {
   "url": "https://stream.zeno.fm/une3a02mb",
@@ -343,32 +343,32 @@
   "pisteet": 575
  },
  "MMR": {
-  "url": "https://edge.mixlr.com/channel/nmtev",
-  "asema": "MandalayFM",
-  "kieli": "burmese",
+  "url": "https://listen.radioking.com/radio/681745/stream/746185",
+  "asema": "Shwe FM (valtakunnallinen FM-verkko, Yangon)",
+  "kieli": "burma",
   "virallinen": false,
-  "pisteet": 75
+  "tutkittu": true
  },
  "MNG": {
   "url": "https://c2.radioboss.fm/stream/394",
-  "asema": "Family Radio FM",
-  "kieli": "monoglian",
+  "asema": "Гэр бүлийн радио 104.5 (Family Radio, Ulaanbaatar)",
+  "kieli": "mongoli",
   "virallinen": false,
-  "pisteet": 131
+  "tutkittu": true
  },
  "MOZ": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
-  "virallinen": false,
-  "pisteet": 70
+  "url": "https://stream.zeno.fm/tskpv4vscv8uv",
+  "asema": "Rádio Moçambique",
+  "kieli": "portugali",
+  "virallinen": true,
+  "tutkittu": true
  },
  "NAM": {
-  "url": "https://edge.iono.fm/xice/88_high.mp3",
-  "asema": "Kosmos 94.1",
-  "kieli": "afrikaans",
+  "url": "https://edge.iono.fm/xice/193_high.aac",
+  "asema": "Omulunga Radio 100.9 (Windhoek)",
+  "kieli": "oshiwambo",
   "virallinen": false,
-  "pisteet": 134
+  "tutkittu": true
  },
  "NGA": {
   "url": "https://mega-public-relay.deathsmack-a51.workers.dev/",
@@ -399,11 +399,11 @@
   "pisteet": 635
  },
  "OMN": {
-  "url": "https://listen-halafm.sharp-stream.com/halafmlow.mp3",
-  "asema": "Hala FM",
-  "kieli": "arabic",
+  "url": "https://stream.zeno.fm/84652g7meg8uv",
+  "asema": "Al Wisal (الوصال), Muscat – Omanin suosituin arabiankielinen puhe-/musiikkiasema",
+  "kieli": "arabia (omanin murre)",
   "virallinen": false,
-  "pisteet": 71
+  "tutkittu": true
  },
  "PHL": {
   "url": "https://azura.dzrh.com.ph/listen/dzrh_manila/radio.mp3",
@@ -413,11 +413,11 @@
   "pisteet": 569
  },
  "POL": {
-  "url": "https://radiostream.pl/tuba10-1.mp3#TOK_FM",
+  "url": "https://radiostream.pl/tuba10-1.mp3",
   "asema": "TOK FM",
-  "kieli": "polish",
+  "kieli": "puola",
   "virallinen": false,
-  "pisteet": 135
+  "tutkittu": true
  },
  "PRT": {
   "url": "https://radiocast.rtp.pt/rdpint80a.mp3",
@@ -428,10 +428,10 @@
  },
  "QAT": {
   "url": "https://l3.itworkscdn.net/alarabyradiolive/alarabyradio_audio/icecast.audio",
-  "asema": "Al araby",
-  "kieli": "arabic",
+  "asema": "Al Araby Radio (Doha/Lusail) – uutis- ja keskustelukanava",
+  "kieli": "arabia",
   "virallinen": false,
-  "pisteet": 134
+  "tutkittu": true
  },
  "RUS": {
   "url": "https://icecast-vgtrk.cdnvideo.ru/vestifm_mp3_64kbps",
@@ -448,18 +448,18 @@
   "pisteet": 572
  },
  "SDN": {
-  "url": "https://stream.dabangasudan.org/",
-  "asema": "Dabanga Radio",
-  "kieli": "",
+  "url": "https://a13.asurahosting.com/listen/al_masaa_fm_101/radio.mp3",
+  "asema": "Al Masaa FM 101 (Khartum)",
+  "kieli": "arabia",
   "virallinen": false,
-  "pisteet": 72
+  "tutkittu": true
  },
  "SDS": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
+  "url": "https://stream.zeno.fm/w3lic6qp9eouv",
+  "asema": "Freedom FM",
+  "kieli": "englanti (+ juba-arabia)",
   "virallinen": false,
-  "pisteet": 68
+  "tutkittu": true
  },
  "SEN": {
   "url": "https://stream.zeno.fm/kxud8vhqt1duv",
@@ -476,25 +476,25 @@
   "pisteet": 570
  },
  "SHN": {
-  "url": "https://laut.fm/edmradio",
-  "asema": "EDM Radio",
-  "kieli": "geopn",
+  "url": "https://s2.radio.co/s418cc827e/listen",
+  "asema": "SAMS Radio 1 (South Atlantic Media Services, Jamestown)",
+  "kieli": "englanti",
   "virallinen": false,
-  "pisteet": -14
+  "tutkittu": true
  },
  "SLE": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
+  "url": "https://stream.zeno.fm/jetj7igyezmtv",
+  "asema": "Culture Radio FM 104.5 (Freetown)",
+  "kieli": "englanti / krio",
   "virallinen": false,
-  "pisteet": 68
+  "tutkittu": true
  },
  "SOM": {
-  "url": "https://av.voanews.com/clips/VSO/2021/04/29/20210429-033000-VSO065-program_48k.mp3",
-  "asema": "Idaacadda Subaxnimo VOA",
-  "kieli": "",
+  "url": "https://stream.zeno.fm/m7p996vfec9uv",
+  "asema": "Radio Shabelle 101.5 (Mogadishu)",
+  "kieli": "somali",
   "virallinen": false,
-  "pisteet": 134
+  "tutkittu": true
  },
  "SWE": {
   "url": "https://live1.sr.se/p1-aac-32",
@@ -504,18 +504,18 @@
   "pisteet": 629
  },
  "SYR": {
-  "url": "https://radio.farah.fm/",
-  "asema": "Farah FM",
-  "kieli": "arabic",
+  "url": "https://asima.out.airtime.pro/asima_a",
+  "asema": "Al Asemeh FM / العاصمة إف إم (Damaskos) – yhteiskunta- ja keskusteluohjelmat",
+  "kieli": "arabia (syyrian murre)",
   "virallinen": false,
-  "pisteet": 74
+  "tutkittu": true
  },
  "TCD": {
-  "url": "https://strhls.streamakaci.tv/str_tchad_radio/str_tchad_radio/icecast.audio?fbclid=IwAR32Ir_eHaV-HSrh46OVT_VeTZt5KoNggoq8qzeSiAeZTJNBKKUtsSNUtcY",
-  "asema": "Radio Tchad",
-  "kieli": "french",
+  "url": "https://strhls.streamakaci.tv/str_tchad_radio/str_tchad_radio/icecast.audio",
+  "asema": "Radiodiffusion Nationale Tchadienne (ONAMA / Radio Tchad)",
+  "kieli": "ranska, tsadinarabia",
   "virallinen": true,
-  "pisteet": 575
+  "tutkittu": true
  },
  "THA": {
   "url": "https://radio12.plathong.net/7234/;stream.mp3",
@@ -525,11 +525,11 @@
   "pisteet": 569
  },
  "TUN": {
-  "url": "https://radio.mosaiquefm.net/mosalive",
-  "asema": "mosaiquefm",
-  "kieli": "arabic",
-  "virallinen": false,
-  "pisteet": 135
+  "url": "https://radio.radiotunisienne.tn/nationale",
+  "asema": "Radio Nationale (Etablissement de la Radio Tunisienne)",
+  "kieli": "arabia (tunisianarabia)",
+  "virallinen": true,
+  "tutkittu": true
  },
  "TWN": {
   "url": "https://n03.rcs.revma.com/78fm9wyy2tzuv",
@@ -539,11 +539,11 @@
   "pisteet": 630
  },
  "TZA": {
-  "url": "https://capitalradio.radioca.st/stream",
-  "asema": "Capital Radio",
-  "kieli": "english",
-  "virallinen": false,
-  "pisteet": 133
+  "url": "https://a7.asurahosting.com/listen/tbc_taifa/radio.mp3",
+  "asema": "TBC Taifa",
+  "kieli": "swahili",
+  "virallinen": true,
+  "tutkittu": true
  },
  "UGA": {
   "url": "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service_west_africa",
@@ -553,18 +553,18 @@
   "pisteet": 634
  },
  "UKR": {
-  "url": "https://online-radio.nv.ua/radionv.mp3",
-  "asema": "Радіо НВ 96.0",
-  "kieli": "ukrainian",
+  "url": "https://online-news.radioplayer.ua/RadioNews",
+  "asema": "Єдині новини (Radio News)",
+  "kieli": "ukraina",
   "virallinen": false,
-  "pisteet": 135
+  "tutkittu": true
  },
  "UZB": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
+  "url": "https://live.qalbimnavosi.uz/qalbimnavosi",
+  "asema": "Qalbim navosi",
+  "kieli": "uzbekki",
   "virallinen": false,
-  "pisteet": 72
+  "tutkittu": true
  },
  "VNM": {
   "url": "https://rfienvietnamien64k.ice.infomaniak.ch/rfienvietnamien-64.mp3",
@@ -574,24 +574,38 @@
   "pisteet": 135
  },
  "YEM": {
-  "url": "https://node-23.zeno.fm/b67qheuk54zuv",
-  "asema": "صوت المقاومة",
-  "kieli": "arabic",
-  "virallinen": false,
-  "pisteet": 135
+  "url": "https://dc5.serverse.com/proxy/pbmhbvxs/stream",
+  "asema": "Sana'a Radio (إذاعة صنعاء) – Jemenin valtiollinen yleisradio",
+  "kieli": "arabia (jemenin murre)",
+  "virallinen": true,
+  "tutkittu": true
  },
  "ZAF": {
-  "url": "https://edge.iono.fm/xice/82_medium.aac",
-  "asema": "Kaya FM",
-  "kieli": "english",
-  "virallinen": false,
-  "pisteet": 135
+  "url": "https://25643.live.streamtheworld.com/UKHOZIFMAAC_SC",
+  "asema": "Ukhozi FM (SABC)",
+  "kieli": "isizulu",
+  "virallinen": true,
+  "tutkittu": true
  },
  "ZWE": {
-  "url": "https://edge.iono.fm/xice/159_medium.aac",
-  "asema": "Star FM 89.7",
-  "kieli": "",
+  "url": "https://edge.iono.fm/xice/159_high.aac",
+  "asema": "Star FM 89.7 (Harare)",
+  "kieli": "shona, englanti",
   "virallinen": false,
-  "pisteet": 74
+  "tutkittu": true
+ },
+ "PAK": {
+  "url": "https://samaakhi107-itelservices.radioca.st/stream",
+  "asema": "MERA FM 107.4 (Karachin lähetin, valtakunnallinen FM-verkko)",
+  "kieli": "urdu",
+  "virallinen": false,
+  "tutkittu": true
+ },
+ "ROU": {
+  "url": "https://edge76.rcs-rds.ro/digifm/digi24fm.mp3",
+  "asema": "Digi24 FM",
+  "kieli": "romania",
+  "virallinen": false,
+  "tutkittu": true
  }
 }
