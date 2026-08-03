@@ -4474,3 +4474,81 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   padding: 0.5rem;
   border-radius: 3px;
 }
+
+
+/* ── Tutki-kortti muistiinpanoarkkina ─────────────────────────────── */
+/*
+ * Omistajan toive: "tutki ikkuna piti olla melkein koko ruudun
+ * kokoinen niin että sivu näyttää muistiinpanoarkilta. eli ääriviiva
+ * käsinpiirretyn näköinen ja kartta näkyy vain hieman laitojen
+ * ulkopuolelta blurrina."
+ *
+ * Kartta jää siis näkyviin kapeana kehyksenä, ei peittoon. Sumennus
+ * tehdään backdrop-filterillä eli kerroksessa kortin TAKANA — ei
+ * kartan omana filtterinä. Ero on ratkaiseva: iOS pudottaa
+ * suodatetun SVG-kerroksen puskurin, ja kartta katosi kokonaan silloin
+ * kun sitä kokeiltiin suoraan. Backdrop-filter ei koske karttaan.
+ */
+.dialog.arkki::backdrop {
+  background: rgba(14, 9, 4, 0.34);
+  -webkit-backdrop-filter: blur(6px) saturate(0.85);
+  backdrop-filter: blur(6px) saturate(0.85);
+}
+
+.dialog.arkki .dialog-card,
+.dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
+  width: calc(100vw - 1.6rem);
+  max-width: none;
+  max-height: calc(100dvh - 1.6rem);
+  /*
+   * Käsinpiirretty ääriviiva: epäsymmetrinen pyöristys molemmilla
+   * akseleilla tekee reunasta piirretyn eikä lasketun. Sama keino kuin
+   * pelin napeissa, mutta loivempi — arkki on iso, ja napin voimakas
+   * kaari näyttäisi isossa koossa vinolta pahvilta.
+   */
+  border-radius: 26px 8px 22px 10px / 10px 24px 8px 26px;
+  border-width: 2px;
+  /* Kaksi varjoa: terävä lähivarjo nostaa arkin kartasta irti, pehmeä
+   * kaukovarjo antaa sille painon. */
+  box-shadow: 0 2px 0 rgba(70, 51, 31, 0.28), 0 22px 60px rgba(0, 0, 0, 0.55);
+}
+
+@media (min-width: 700px) {
+  .dialog.arkki .dialog-card,
+  .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
+    /* Työpöydällä kartta saa näkyä leveämmältä: arkki ei kasva
+     * ruudun mukana loputtomiin, koska rivi pitenisi lukukelvottomaksi. */
+    width: min(calc(100vw - 6rem), 1100px);
+    max-height: calc(100dvh - 3rem);
+    border-radius: 34px 10px 28px 12px / 12px 30px 10px 34px;
+  }
+}
+
+/* Avatun aiheen nimi: kuvake ei kerro sitä, joten teksti kertoo. */
+.wiki-kategoria .aihe-nimi {
+  margin: 0 0 0.7rem;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(70, 51, 31, 0.66);
+}
+
+/*
+ * Kuvakeliuskat mitoitetaan mahtumaan YHDELLE riville kapeimmalla
+ * puhelimella (360 px). Yhdeksän liuskaa ja kahdeksan väliä on silloin
+ * noin 33 pistettä liuskaa kohti, joten täyte on laskettu eikä
+ * arvattu: 18 px kuvake + 2 × 4,5 px täyte + reunat.
+ *
+ * Tekstiliuska sai olla väljä; kuvakeliuska ei voi, koska omistajan
+ * toive oli nimenomaan yksi rivi.
+ */
+.wiki-liuskat:has(svg) { gap: 0.15rem; }
+
+.wiki-liuskat button svg { display: block; }
+
+.wiki-liuskat button:has(svg) {
+  padding: 0.3rem 0.28rem 0.34rem;
+  min-width: 0;
+}

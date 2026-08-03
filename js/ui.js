@@ -706,6 +706,33 @@ const MERKKI_SEIS = '<svg class="merkki" viewBox="0 0 24 24" width="15" height="
   + '<rect x="7" y="7" width="10" height="10" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.7"/>'
   + '</svg>';
 
+/*
+ * Aiheliuskojen kuvakkeet.
+ *
+ * Omistajan toive: "liuskan otsikot ehkä kuvakkeina että mahtuu yhteen
+ * riviin." Yhdeksän suomenkielistä sanaa vie puhelimella kolme riviä;
+ * yhdeksän kuvaketta mahtuu yhdelle.
+ *
+ * Piirretty samalla ohuella kynällä kuin kartta ja muut viivaikonit:
+ * pelkkä ääriviiva nykyisellä tekstivärillä, ei täyttöä.
+ *
+ * Jokaisella liuskalla on silti nimi — se on napin aria-label ja
+ * title, ja se lukee avatun liuskan alla otsikkona. Pelkkä kuvake
+ * ilman nimeä jättäisi arvailun varaan, ja arvailu on sitä
+ * todennäköisempää mitä pienempi kuvake on.
+ */
+const AIHE_IKONIT = {
+  historia: '<path d="M7 3.6h10M7 20.4h10M8 3.6c0 4 4 5.6 4 8.4s-4 4.4-4 8.4M16 3.6c0 4-4 5.6-4 8.4s4 4.4 4 8.4"/>',
+  kuvataide: '<path d="M4.4 19.6 14 10l1.9 1.9-9.6 9.6zM4.4 19.6l-.9 2.9 2.9-.9"/><path d="m15.9 8.1 2.4-2.4a1.7 1.7 0 0 1 2.4 2.4l-2.4 2.4z"/>',
+  kirjallisuus: '<path d="M5 20.5c3-7.5 8-12.5 14.5-16.5-1 7-4.5 12-9.5 15"/><path d="M5 20.5c1.5-1 3.5-1.5 5-1.5"/>',
+  musiikki: '<path d="M9 18.5V6.2l9-1.7v11.3"/><circle cx="6.8" cy="18.6" r="2.2"/><circle cx="15.8" cy="15.9" r="2.2"/>',
+  ruoka: '<path d="M3.5 11.5h17c0 4.4-3.8 7-8.5 7s-8.5-2.6-8.5-7z"/><path d="M2.5 21h19"/><path d="M9 8.4c0-1.3 1.2-1.6 1.2-2.9M12 8.4c0-1.3 1.2-1.6 1.2-2.9M15 8.4c0-1.3 1.2-1.6 1.2-2.9"/>',
+  luonto: '<path d="M12 21c0-6.5 2.5-11 8-13.5C20 14 16.5 19 12 21z"/><path d="M12 21C12 14.5 9.5 10 4 7.5 4 14 7.5 19 12 21z"/><path d="M12 21v-6"/>',
+  tiede: '<path d="M9.5 3.5h5M10.5 3.5v6L5.5 19a1.6 1.6 0 0 0 1.4 2.4h10.2A1.6 1.6 0 0 0 18.5 19l-5-9.5v-6"/><path d="M7.8 15.4h8.4"/>',
+  nykytaide: '<path d="M4 20.5 12 4l8 16.5z"/><path d="M8.2 13h7.6"/>',
+  huumori: '<path d="M3.6 8.4c2.8-1.6 5.6-1.6 8.4 0 2.8-1.6 5.6-1.6 8.4 0-.4 5.2-2.6 8.4-4.8 8.4-1.6 0-2.6-1.4-3.6-1.4s-2 1.4-3.6 1.4c-2.2 0-4.4-3.2-4.8-8.4z"/><circle cx="8" cy="11.4" r="1"/><circle cx="16" cy="11.4" r="1"/>',
+};
+
 /**
  * Toimintonappien viivaikonit: emoji erottui kartan mustepiirroksesta,
  * joten ikonit piirretään samalla kynällä kuin kartta — pelkkä ääriviiva
@@ -845,6 +872,8 @@ export class UI {
     // Kaupungin elämää -lohko täytetään openArrivalissa.
     this.arrivalKulttuuri = document.getElementById('arrival-kulttuuri');
     this.arrivalKulttuuriLista = document.getElementById('arrival-kulttuuri-lista');
+    this.arrivalLiuskat = document.getElementById('arrival-liuskat');
+    this.arrivalKategoria = document.getElementById('arrival-kategoria');
     this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
     // Visa aukeaa omasta napistaan samaan näkymään (omistajan toive):
     // nappi väistyy ja kysymys vaihtoehtoineen tulee tilalle.
@@ -890,8 +919,7 @@ export class UI {
     this.wikiTitle = document.getElementById('wiki-title');
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
-    this.wikiLiuskat = document.getElementById('wiki-liuskat');
-    this.wikiKategoria = document.getElementById('wiki-kategoria');
+
     this.wikiSource = document.getElementById('wiki-source');
     // Sama galleriaselaus kuin Tutki-kortin kuvassa (omistajan toive):
     // laskuri ja nuolet Lue lisää -lehden kuvaan, suurennos aukeaa
@@ -4011,8 +4039,11 @@ export class UI {
     // Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja niihin
     // liittyvä tutustu ja vastaa -kysymys (pilottikaupungit).
     this.naytaKulttuuri(city);
+    this.rakennaLiuskat(city.id);
     this.esilataaKaupunki(city);
 
+    // Muistiinpanoarkki: lähes koko ruutu, kartta jää sumeana laidoille.
+    this.arrivalDialog.classList.add('arkki');
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
     if (!city.wiki) return;
 
@@ -4311,12 +4342,16 @@ export class UI {
    * pieni palkkio kerran per kaupunki — väärästä ei rangaista, mutta
    * uutta yritystä ei saa.
    */
-  naytaKulttuuri(city) {
-    const tiedot = (KULTTUURIT[this.game.pack.id] ?? {})[city.id] ?? null;
-    this.arrivalKulttuuri.hidden = !tiedot;
-    this.arrivalKulttuuri.open = false;
-    if (!tiedot) return;
-    const lista = this.arrivalKulttuuriLista;
+  /*
+   * Kulttuurinostot annettuun kohteeseen.
+   *
+   * Erotettu omaksi metodikseen, koska nostoja piirretään nyt kahdesta
+   * paikasta: Tutki-ikkunan liuskoilta ja (siirtymän ajan) muualta.
+   * Kaksi kopiota samasta piirrosta ajautuisi erilleen ensimmäisellä
+   * muutoksella — ja juuri musiikkilinkit ja ääninäytteet ovat se osa,
+   * jota muutetaan useimmin.
+   */
+  piirraKulttuuriNostot(lista, nostot) {
     lista.textContent = '';
     for (const nosto of tiedot.nostot ?? []) {
       const lohko = html('div', 'kulttuuri-nosto');
@@ -4399,6 +4434,28 @@ export class UI {
       if (lahteet) lohko.appendChild(html('p', 'kulttuuri-lahde', lahteet));
       lista.appendChild(lohko);
     }
+
+  }
+
+  naytaKulttuuri(city) {
+    const tiedot = (KULTTUURIT[this.game.pack.id] ?? {})[city.id] ?? null;
+    this.arrivalKulttuuri.hidden = !tiedot;
+    this.arrivalKulttuuri.open = false;
+    if (!tiedot) return;
+    /*
+     * Nostot EIVÄT ole enää saapumiskortissa vaan Tutki-ikkunassa
+     * (omistajan toive: "nyt kun tutki ikkunaan tulee lisää, sinne
+     * voisi lisätä myös nostoja enemmän").
+     *
+     * Saapumiskortti on saapumisen hetki: lyhyt, ja se tarjoaa
+     * valinnan. Tutki-ikkuna on se, jonka pelaaja on itse valinnut
+     * avata, ja syventävä sisältö kuuluu sinne.
+     *
+     * Kulttuurivisa jää tänne, koska se on pelitoiminto eikä
+     * luettavaa: siitä saa puntia, ja se kuuluu samaan hetkeen kuin
+     * "Etsi kätkö".
+     */
+    this.arrivalKulttuuriLista.textContent = '';
 
     const { kysymys } = tiedot;
     this.arrivalKulttuuriVisa.hidden = !kysymys;
@@ -4648,7 +4705,7 @@ export class UI {
   async openWiki(cityId) {
     const city = this.game.board.cityById.get(cityId);
     if (!city?.wiki) return;
-    await this.openWikiArticle(city.wiki, city.name, cityId);
+    await this.openWikiArticle(city.wiki, city.name);
   }
 
   /**
@@ -4668,60 +4725,82 @@ export class UI {
    */
   rakennaLiuskat(cityId) {
     const kategoriat = cityId ? (KULTTUURI_KATEGORIAT[cityId] ?? []) : [];
-    this.wikiLiuskat.replaceChildren();
-    this.wikiKategoria.replaceChildren();
-    this.wikiKategoria.hidden = true;
+    /*
+     * Kaupungit, joilla ei ole kategorioita mutta on litteä nostolista,
+     * saavat yhden liuskan nimeltä "Kaupungin elämää".
+     *
+     * Ilman tätä nostot katoaisivat kokonaan 79 kaupungista, kun ne
+     * siirrettiin pois saapumiskortista. Sama sääntö kuin artikkelin
+     * kanssa: ominaisuuden lisääminen ei saa viedä mitään pois niiltä,
+     * jotka eivät sitä vielä saa.
+     */
+    const litteat = cityId ? ((KULTTUURIT[this.game.pack.id] ?? {})[cityId]?.nostot ?? []) : [];
+    if (!kategoriat.length && litteat.length) {
+      kategoriat.push({ id: 'elama', nimi: 'Elämää', nostot: litteat, litteä: true });
+    }
+    this.arrivalLiuskat.replaceChildren();
+    this.arrivalKategoria.replaceChildren();
+    this.arrivalKategoria.hidden = true;
     if (!kategoriat.length) {
-      this.wikiLiuskat.hidden = true;
-      /*
-       * Artikkeli takaisin näkyviin. Sama dialogi palvellaan uudelleen
-       * eri kaupungille, ja jos edellisellä oli kategorioita, artikkeli
-       * jäi piiloon liuskaa vaihdettaessa. Ilman tätä riviä kaupunki
-       * ilman kategorioita näytti tyhjältä — ja vika olisi näkynyt
-       * vasta 142 kaupungissa, ei siinä yhdessä jossa se testattiin.
-       */
-      this.wikiExtract.hidden = false;
-      this.wikiSource.hidden = false;
-      this.wikiKuvakotelo.hidden = !this.wikiImage.src;
+      this.arrivalLiuskat.hidden = true;
       return;
     }
-    const osiot = [{ id: 'yleista', nimi: 'Yleistä' }, ...kategoriat];
+    // Ei Yleistä-liuskaa: artikkeli asuu "Lue lisää" -linkin takana
+    // omassa ikkunassaan, ei tällä rivillä.
+    const osiot = kategoriat;
     const valitse = (id) => {
-      for (const nappi of this.wikiLiuskat.querySelectorAll('button')) {
+      for (const nappi of this.arrivalLiuskat.querySelectorAll('button')) {
         const paalla = nappi.dataset.osio === id;
         nappi.classList.toggle('paalla', paalla);
         nappi.setAttribute('aria-selected', String(paalla));
       }
-      const yleista = id === 'yleista';
-      // Artikkelin osat ovat omia elementtejään eivätkä yhdessä
-      // kääreessä, joten ne piilotetaan erikseen.
-      this.wikiKuvakotelo.hidden = !yleista || !this.wikiImage.src;
-      this.wikiExtract.hidden = !yleista;
-      this.wikiSource.hidden = !yleista;
-      this.wikiKategoria.hidden = yleista;
-      if (!yleista) this.piirraKategoria(kategoriat.find((k) => k.id === id));
-      // Liuskan vaihto vie aina sisällön alkuun: edellisen välilehden
-      // vierityskohta ei tarkoita uudessa mitään.
-      this.wikiDialog.querySelector('.dialog-card')?.scrollTo({ top: 0 });
+      const auki = kategoriat.find((k) => k.id === id);
+      this.piirraKategoria(auki);
+      this.arrivalKategoria.hidden = false;
+      // Liuskan vaihto vie sisällön alkuun: edellisen aiheen
+      // vierityskohta ei tarkoita uudessa mitään. Kortin oma vieritys,
+      // ei koko sivun.
+      this.arrivalKategoria.scrollIntoView({ block: 'nearest' });
     };
     for (const osio of osiot) {
-      const nappi = html('button', '', osio.nimi);
+      const nappi = html('button');
       nappi.type = 'button';
       nappi.dataset.osio = osio.id;
       nappi.setAttribute('role', 'tab');
+      // Nimi jää saavutettavuuteen ja pitkään painallukseen, vaikka
+      // ruudulla näkyy vain kuvake.
+      nappi.title = osio.nimi;
+      nappi.setAttribute('aria-label', osio.nimi);
+      const piirto = AIHE_IKONIT[osio.id];
+      nappi.innerHTML = piirto
+        ? `<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             stroke-linejoin="round">${piirto}</svg>`
+        : suojaa(osio.nimi);
       nappi.addEventListener('click', () => valitse(osio.id));
-      this.wikiLiuskat.appendChild(nappi);
+      this.arrivalLiuskat.appendChild(nappi);
     }
-    this.wikiLiuskat.hidden = false;
-    valitse('yleista');
+    this.arrivalLiuskat.hidden = false;
+    valitse(osiot[0].id);
   }
 
   /** Yhden kategorian nostot: johdanto ja sen alla kortit. */
   piirraKategoria(kategoria) {
-    this.wikiKategoria.replaceChildren();
+    this.arrivalKategoria.replaceChildren();
     if (!kategoria) return;
+    // Kuvake ei kerro nimeä, joten nimi lukee sisällön yllä.
+    this.arrivalKategoria.appendChild(html('h3', 'aihe-nimi', kategoria.nimi));
+    /*
+     * Litteä nostolista piirretään vanhalla piirrolla: siinä on
+     * musiikkilinkit, ääninäytteet ja "Lue lisää aiheesta" -napit,
+     * joita kategorianostoissa ei ole.
+     */
+    if (kategoria.litteä) {
+      this.piirraKulttuuriNostot(this.arrivalKategoria, kategoria.nostot ?? []);
+      return;
+    }
     if (kategoria.johdanto) {
-      this.wikiKategoria.appendChild(html('p', 'johdanto', kategoria.johdanto));
+      this.arrivalKategoria.appendChild(html('p', 'johdanto', kategoria.johdanto));
     }
     for (const nosto of kategoria.nostot ?? []) {
       const lohko = html('div', 'wiki-nosto');
@@ -4740,7 +4819,7 @@ export class UI {
       lohko.appendChild(html('p', 'teksti', nosto.teksti));
       if (nosto.selite) lohko.appendChild(html('p', 'selite', nosto.selite));
       if (nosto.lahde) lohko.appendChild(html('p', 'lahde', nosto.lahde));
-      this.wikiKategoria.appendChild(lohko);
+      this.arrivalKategoria.appendChild(lohko);
     }
   }
 
@@ -4748,12 +4827,9 @@ export class UI {
    * Sama dialogi mille tahansa artikkelille — esimerkiksi havainnossa
    * mainitulle ilmiölle (Katso kuva), jolla ei ole omaa kaupunkia.
    */
-  async openWikiArticle(title, label = title, cityId = null) {
+  async openWikiArticle(title, label = title) {
     this.wikiOpenFor = title;
     this.wikiTitle.textContent = label;
-    // Liuskat vain kaupungeille, joilla on kategorioita. Ilmiöiden ja
-    // maiden artikkeleilla niitä ei ole eikä pidäkään olla.
-    this.rakennaLiuskat(cityId);
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
     this.wikiKuvakotelo.hidden = true;

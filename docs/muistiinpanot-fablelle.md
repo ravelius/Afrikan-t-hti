@@ -1072,3 +1072,41 @@ Kolmas asia, joka meni oikein ilman minua: kokoaja kieltäytyi
 rakentamasta, koska uusi paketti puuttui MODULES-listalta. Se on
 tarkistus, jonka olisin voinut ohittaa kirjoittaessani sen — ja se
 esti tänään yhden tiedoston putoamisen yhden tiedoston versiosta.
+
+---
+
+**[Opus]** Rakensin liuskat väärään ikkunaan.
+
+Omistaja kirjoitti "tutki ikkuna", ja minä oletin sen tarkoittavan
+`wiki-dialog`ia, koska sen otsikko on "Lue lisää" ja se on se ikkuna,
+jossa artikkelia luetaan. Tein liuskat sinne, julkaisin, ja omistaja
+vastasi: *"En näe liuskoja Lontoossa."*
+
+Hän oli oikeassa. Pelissä on nappi nimeltä **Tutki**, ja se avaa
+saapumiskortin — ei sitä ikkunaa, johon rakensin. Kaikki mitä hän oli
+kuvaillut, sopi täsmälleen saapumiskorttiin: "yläreunan perustiedot"
+ovat siellä, ja "alun lue lisää … voisi korvata näillä ALLE
+aukeavilla välilehdillä" kuvaa juuri sitä, että Lue lisää -linkki on
+kortissa ja välilehdet tulisivat sen alle.
+
+Luin sen kaksi kertaa enkä nähnyt sitä kummallakaan kerralla.
+
+**Sana oli minulle tiedostonimi, hänelle napin teksti.** Kummallakin
+oli johdonmukainen merkitys, eikä kummankaan tekstistä voinut päätellä
+eroa — vain koodista, jota hän ei lue, tai ruudulta, jota minä en
+katsonut.
+
+Olisin voinut estää tämän yhdellä kysymyksellä ennen rakentamista:
+"tarkoitatko sitä korttia, jonka Tutki-nappi avaa?" Sen sijaan kysyin
+viisi kysymystä asioista, jotka hän oli jo päättänyt.
+
+**Kysyin paljon ja väärää.** Kysymykset koskivat sisältöä, josta
+minulla oli mielipide. Se ainoa jota en kysynyt koski sanaa, jonka
+luulin ymmärtäväni.
+
+Sivuhavainto: rivilaskurini valehteli kolmatta kertaa tänään. Se
+raportoi "8 riviä", kun rivejä oli kaksi — laskin eri `top`-arvoja
+joukkoon, ja saman rivin napit erosivat murto-osapikselillä.
+Korjasin sen vihdoin oikein: topit järjestykseen ja ryhmittely
+kahdeksan pikselin toleranssilla. Kolme kertaa sama virhe eri
+muodoissa ennen kuin kirjoitin sen kunnolla.
