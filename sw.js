@@ -1,5 +1,9 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-03.218';
+<<<<<<< Updated upstream
+const CACHE = 'matkakirja-2026-08-03.219';
+=======
+const CACHE = 'matkakirja-2026-08-03.217';
+>>>>>>> Stashed changes
 const SHELL = [
   './',
   './index.html',
@@ -209,6 +213,19 @@ const SHELL = [
   './assets/audio/puhe-middleeast-saapuminen-siinai.mp3',
   './assets/audio/puhe-middleeast-saapuminen-tabriz.mp3',
   './assets/audio/puhe-middleeast-saapuminen-teheran.mp3',
+  './assets/audio/puhe-asia-saapuminen-borneo.mp3',
+  './assets/audio/puhe-asia-saapuminen-chennai.mp3',
+  './assets/audio/puhe-asia-saapuminen-colombo.mp3',
+  './assets/audio/puhe-asia-saapuminen-delhi.mp3',
+  './assets/audio/puhe-asia-saapuminen-jakarta.mp3',
+  './assets/audio/puhe-asia-saapuminen-kabul.mp3',
+  './assets/audio/puhe-asia-saapuminen-karachi.mp3',
+  './assets/audio/puhe-asia-saapuminen-kathmandu.mp3',
+  './assets/audio/puhe-asia-saapuminen-kolkata.mp3',
+  './assets/audio/puhe-asia-saapuminen-mumbai.mp3',
+  './assets/audio/puhe-asia-saapuminen-singapore.mp3',
+  './assets/audio/puhe-asia-saapuminen-sumatra.mp3',
+  './assets/audio/puhe-asia-saapuminen-yangon.mp3',
   './assets/audio/puhe-asia-saapuminen-astana.mp3',
   './assets/audio/puhe-asia-saapuminen-bangkok.mp3',
   './assets/audio/puhe-asia-saapuminen-hanoi.mp3',

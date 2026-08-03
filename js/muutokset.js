@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 219, teksti: 'Loput 13 luentaa: koko Aasia on nyt luettu' },
   { v: 218, teksti: 'Korjattu: Tutki-ikkuna ei auennut monessa kaupungissa' },
   { v: 217, teksti: 'Vuoret, joet ja järvet kartalle' },
   { v: 217, teksti: 'Korjattu: kuvat jäivät välillä lataamatta' },
