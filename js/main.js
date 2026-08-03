@@ -10,7 +10,7 @@ import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
 const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.195';
+const APP_VERSION = '2026-08-03.196';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -418,6 +418,20 @@ if (hasManifest && 'serviceWorker' in navigator && location.protocol.startsWith(
 // piilossa, ettei se tyhjentäisi oikeaa tallennusta.
 function avaaKatselu(pack) {
   document.body.classList.add('katselu');
+  /*
+   * Katselutila on mykkä.
+   *
+   * Työhuone näyttää kartat kehyksessä, ja kehyksessä pyörii oikea
+   * peli — myös sen taustaääni. Työhuoneessa se kuuluu ambienssina,
+   * jolle ei näy mitään lähdettä eikä säädintä. Kartan esikatselu on
+   * kuva laudasta, ei pelisessio, joten ääntä ei tarvita.
+   *
+   * Lippu asetetaan suoraan eikä setEnabledillä: setEnabled kirjoittaa
+   * valinnan localStorageen, ja se on sama varasto kuin oikealla
+   * pelillä samassa osoitteessa. Kartan vilkaisu työhuoneessa
+   * mykistäisi silloin omistajan oman pelin.
+   */
+  sfx.enabled = false;
   const game = new Game({ players: [newPlayer()], pack });
   if (ui) ui.destroy();
   ui = new UI(game, { onNewGame: () => {}, onChange: () => {} });

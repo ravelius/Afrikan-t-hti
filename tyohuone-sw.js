@@ -16,7 +16,7 @@
  * on. Välimuisti on siis vain turvaverkko sille hetkelle, kun verkkoa
  * ei ole.
  */
-const KORI = 'tyohuone-2026-08-03.2';
+const KORI = 'tyohuone-2026-08-03.3';
 
 /*
  * Vain kuori esiladataan. Pelin paketit (js/packs/*) ovat isoja ja
@@ -27,8 +27,8 @@ const KUORI = [
   './tyohuone.html',
   './tyohuone.webmanifest',
   './css/tyohuone.css',
+  './css/tyohuone-aanistudio.css',
   './tyohuone-kasikirja.html',
-  './aanet.html',
   './js/tyohuone-data.js',
   './js/muutokset.js',
   './js/pack.js',

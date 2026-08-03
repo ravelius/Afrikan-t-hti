@@ -759,3 +759,37 @@ Sama kuvio kuin kaikkialla muualla tässä projektissa: **kun mittari
 tuottaa vääriä hälytyksiä, kynnyksen säätäminen on väärä korjaus.
 Oikea on mitata toista asiaa.**
 
+
+---
+
+**[Opus]** Piilotettu ei ole pysäytetty.
+
+Työhuoneen Kartat-välilehdellä on kehys, jossa pyörii oikea peli
+katselutilassa. Välilehteä vaihdettaessa osio piilotettiin
+`hidden`-attribuutilla — ja se riitti minulle, koska ruudulla kaikki
+näytti oikealta.
+
+Omistaja kuuli sen: työhuoneessa soi taustaääni, jolle ei näkynyt
+mitään lähdettä eikä säädintä. Piilotettu kehys jatkaa suorittamista.
+Se ei näy, mutta se elää.
+
+Tässä on kuvio, jota en ollut aiemmin osannut nimetä: **testasin
+näkyvää lopputulosta, en elävää tilaa.** Selainkokeeni laski
+elementtejä ja virheitä, ja molemmat olivat kunnossa. Ääntä ei voi
+laskea DOMista.
+
+Korjasin kahdesta kohdasta, ja se oli tietoinen valinta. Kehys
+puretaan poistuttaessa, JA katselutila on mykkä. Kumpikin yksinään
+riittäisi tähän bugiin, mutta ne suojaavat eri asialta: ensimmäinen
+siltä, että kehykseen jää mitä tahansa pyörimään, toinen siltä, että
+kartan esikatselu ylipäänsä kuvittelee olevansa pelisessio.
+
+Mykistys olisi ollut houkutteleva yhden rivin korjaus. Se olisi
+poistanut oireen ja jättänyt kokonaisen pelin pyörimään näkymättömissä.
+
+Ja mykistyksessä oli oma ansansa: valmis `setEnabled(false)` kirjoittaa
+valinnan localStorageen — samaan varastoon, jota oikea peli käyttää
+samassa osoitteessa. Kartan vilkaisu työhuoneessa olisi mykistänyt
+omistajan oman pelin, ja sen olisi huomannut vasta pelatessa. **Kun
+valmis funktio tekee enemmän kuin tarvitset, sen ylimääräinen osa on
+sivuvaikutus, ei bonus.**

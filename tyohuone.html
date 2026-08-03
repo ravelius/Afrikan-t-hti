@@ -15,6 +15,7 @@
   <link rel="apple-touch-icon" href="assets/tyohuone-apple.png" />
   <link rel="icon" href="assets/tyohuone-192.png" />
   <link rel="stylesheet" href="css/tyohuone.css" />
+  <link rel="stylesheet" href="css/tyohuone-aanistudio.css" />
 </head>
 <body>
   <header>
@@ -45,6 +46,12 @@
 
       <h2>Laudat</h2>
       <div class="kortti" id="laudat"></div>
+
+      <h2>Tila</h2>
+      <p>Peili on Cloudflare R2 -ämpäri, johon kaikki ulkopuolinen aineisto
+         kopioidaan. Luvut luetaan peilin omasta manifestista, joten ne
+         kertovat mitä siellä juuri nyt on.</p>
+      <div class="kortti" id="tila"></div>
     </section>
 
     <!-- KAUPUNGIT: yksi kaupunki kerrallaan, kaikki siitä -->
@@ -74,13 +81,68 @@
          Mikään ei tallennu eikä koske pelattavaan peliin.</p>
     </section>
 
-    <!-- STUDIO -->
+    <!-- STUDIO: äänistudio samassa sivussa, ei omana sivunaan -->
     <section id="tab-studio" hidden>
-      <iframe id="studio-kehys" class="kehys" title="Äänistudio"></iframe>
-      <p class="rivi" style="margin-top:0.6rem">
-        <a href="aanet.html" target="_blank" rel="noopener">
-          <button class="toiminto" type="button">Avaa omaan ikkunaan ↗</button></a>
-      </p>
+      <div class="ylapalkki">
+        <div class="soitin">
+          <span class="mika" id="soitin-mika">Ei ääntä valittuna — paina ▶ jostakin rivistä.</span>
+          <button id="soitin-tauko">⏯</button>
+          <button id="soitin-seis">■</button>
+          <button id="soitin-ab" title="Vaihda kahden viimeksi soitetun välillä">⇄</button>
+          <input id="soitin-jana" class="aikajana" type="range" min="0" max="100" value="0" step="0.1" />
+          <span class="aika" id="soitin-aika">0:00 / 0:00</span>
+          <button id="soitin-merkitse" title="Aseta soittimen kohta klipin aloituskohdaksi">⌖ Alkukohta tästä</button>
+          <label class="laskuri"><input id="soitin-luuppi" type="checkbox" /> luuppi</label>
+        </div>
+        <div class="suodattimet">
+          <input id="haku" type="search" placeholder="Hae paikkaa tai ääntä…" />
+          <button id="vain-avoimet">Vain valitsemattomat</button>
+          <span class="laskuri" id="laskuri"></span>
+        </div>
+      </div>
+
+      <p>Soita ehdokkaita, valitse paras ja säädä aloituskohta — helpoiten:
+         kuuntele, raahaa aikajana hyvään kohtaan ja paina
+         <b>⌖ Alkukohta tästä</b>. Valinnat tallentuvat tähän selaimeen ja peli
+         käyttää niitä heti seuraavasta latauksesta.
+         <b>Huom:</b> kotivalikkoon asennettu peli on iPadilla oma sovelluksensa
+         eikä näe Safarin valintoja. Lähetä valinnat <b>Kopioi valinnat</b>
+         -napilla kommenttien mukana, niin niistä tehdään pelin oletukset —
+         oletukset kulkevat koodin mukana joka selaimeen ja sovellukseen.</p>
+
+      <details class="pikatestit">
+        <summary>Freesound-haku: API-avain</summary>
+        <p>"Hae Freesoundista" -napit käyttävät Freesoundin virallista hakua ja
+           tarvitsevat ilmaisen avaimen: kirjaudu Freesoundiin ja pyydä avain
+           osoitteessa <a href="https://freesound.org/apiv2/apply/" target="_blank"
+           rel="noopener">freesound.org/apiv2/apply</a>. Avain tallentuu vain
+           tähän selaimeen.</p>
+        <input id="fs-avain" type="text" placeholder="Freesound API-avain"
+               style="width:100%;max-width:26rem" />
+      </details>
+
+      <details class="pikatestit">
+        <summary>Pikatestit: pelin tehosteet ja lentokohtaus</summary>
+        <div id="lista" class="grid" style="margin-top:0.6rem"></div>
+        <div class="grid" style="margin-top:0.6rem">
+          <button id="lento-alku">startFlight</button>
+          <button id="lento-loppu">stopFlight</button>
+        </div>
+      </details>
+
+      <div id="valinnat"></div>
+
+      <div class="grid" style="margin-top:1.4rem">
+        <button id="kopioi">Kopioi valinnat</button>
+        <button id="kopioi-json">Kopioi JSON</button>
+      </div>
+      <pre id="valinnat-teksti"></pre>
+      <details class="pikatestit">
+        <summary>Tuo valinnat toisesta selaimesta (JSON)</summary>
+        <textarea id="tuo-alue" placeholder='{"valinnat":{"musiikki:tietovisa":"https://…"},"korit":{"meri":{"africa":["https://…"]}}}'></textarea>
+        <div class="grid" style="margin-top:0.5rem"><button id="tuo">Tuo</button></div>
+      </details>
+
     </section>
 
     <!-- SUUNNITELMA: mitä aiotaan rakentaa -->
@@ -104,6 +166,7 @@
   <script type="module">
     import { PACKS } from './js/pack.js';
     import { MUUTOKSET } from './js/muutokset.js';
+    import { PEILI_JUURI } from './js/media.js';
     import {
       AARTEET, VARUSTEET, KAUPUNKIKARTAT, LASIT, PELIT, PELITILAT, LAHTEET, MOOTTORIT,
     } from './js/tyohuone-data.js';
@@ -177,12 +240,31 @@
         s.hidden = s.id !== `tab-${loytyi}`;
       }
       // Raskaat kehykset ladataan vasta avattaessa.
-      if (loytyi === 'studio' && !$('studio-kehys').src) $('studio-kehys').src = 'aanet.html';
-      if (loytyi === 'kartat') paivitaKartta();
+      if (loytyi === 'studio') kaynnistaStudio();
+      if (loytyi === 'kartat') paivitaKartta(); else sammutaKartta();
       history.replaceState(null, '', `#${loytyi}`);
       window.scrollTo(0, 0);
     }
     for (const n of napit) n.addEventListener('click', () => nayta(n.dataset.tab));
+
+    /*
+     * Äänistudio rakennetaan vasta kun välilehti avataan ensi kertaa.
+     * Se lukee kaikki äänipaketit ja rakentaa satoja rivejä DOMia,
+     * eikä sitä kannata tehdä joka työhuoneen avauksella.
+     */
+    let studioKaynnissa = false;
+    async function kaynnistaStudio() {
+      if (studioKaynnissa) return;
+      studioKaynnissa = true;
+      try {
+        const { kaynnistaAanistudio } = await import('./js/tyohuone-aanistudio.js');
+        kaynnistaAanistudio();
+      } catch (virhe) {
+        studioKaynnissa = false;
+        $('tab-studio').prepend(Object.assign(document.createElement('p'),
+          { className: 'puuttuu', textContent: `Äänistudiota ei saatu ladattua: ${virhe.message}` }));
+      }
+    }
 
     // --- versio ja päivitysloki -----------------------------------------
 
@@ -369,6 +451,95 @@
       $('laudat').replaceChildren(taulu);
     }
 
+    /*
+     * Tilatiedot: paljonko peilissä ja repossa on tavaraa.
+     *
+     * Peilin luvut tulevat manifestista — se on ainoa paikka, josta
+     * kopioiden määrän ja koon näkee ilman ämpärin listaamista, ja se
+     * päivittyy jokaisella peilausajolla. Repon koko tulee GitHubin
+     * rajapinnasta.
+     *
+     * Molemmat haetaan AIKARAJAN kanssa ja erikseen. Ilman aikarajaa
+     * fetch ei kaadu vaan jää roikkumaan, ja koko taulukko jäisi
+     * tyhjäksi, jos yhteyttä ei ole. Kumpikin puoli näytetään heti kun
+     * se saapuu; toisen puuttuminen ei estä toista.
+     */
+    const koko = (tavuja) => (tavuja < 1048576
+      ? `${Math.round(tavuja / 1024)} kt`
+      : `${(tavuja / 1048576).toFixed(tavuja < 104857600 ? 1 : 0)} Mt`);
+
+    async function haeAikarajalla(osoite, ms = 12000) {
+      const vastaus = await fetch(osoite, { signal: AbortSignal.timeout(ms) });
+      if (!vastaus.ok) throw new Error(`HTTP ${vastaus.status}`);
+      return vastaus.json();
+    }
+
+    function tilaRivi(nimi, arvo, lisa) {
+      const d = el('div', 'puute');
+      d.append(el('b', '', arvo), el('span', '', nimi));
+      if (lisa) d.append(el('em', '', lisa));
+      return d;
+    }
+
+    async function piirraTila() {
+      const kohde = $('tila');
+      kohde.replaceChildren(el('p', 'puuttuu', 'Haetaan…'));
+      const rivit = [];
+
+      try {
+        const manifesti = await haeAikarajalla(`${PEILI_JUURI}manifesti.json`);
+        const laske = (laji) => {
+          const m = Object.values(manifesti[laji] ?? {});
+          return { kpl: m.length, tavut: m.reduce((s, x) => s + (x.koko ?? 0), 0) };
+        };
+        const kuvat = laske('kuvat');
+        const liput = laske('liput');
+        const aanet = laske('aanet');
+        const tekstit = laske('tekstit');
+        const leikatut = Object.values(manifesti.aanet ?? {}).filter((m) => m.leikattu).length;
+        const yhteensa = kuvat.tavut + liput.tavut + aanet.tavut + tekstit.tavut;
+        const tiedostoja = kuvat.kpl + liput.kpl + aanet.kpl + tekstit.kpl;
+        rivit.push(
+          tilaRivi('peilissä yhteensä (Cloudflare R2)', koko(yhteensa),
+            `${tiedostoja} tiedostoa · peilattu ${manifesti.luotu ?? '?'}`),
+          tilaRivi('kuvia', koko(kuvat.tavut), `${kuvat.kpl} kpl`),
+          tilaRivi('ääniä', koko(aanet.tavut), `${aanet.kpl} kpl · ${leikatut} leikattu 3 min`),
+          tilaRivi('lippuja', koko(liput.tavut), `${liput.kpl} kpl`),
+          // Tekstipeilauksissa (lähdeartikkelit) ei ole koko-kenttää,
+          // joten niistä näytetään vain kappalemäärä.
+          tilaRivi('lähdetekstejä', `${tekstit.kpl}`, 'kpl'),
+        );
+      } catch (virhe) {
+        rivit.push(tilaRivi('peiliin ei saatu yhteyttä', '–', String(virhe.message ?? virhe)));
+      }
+
+      /*
+       * Repon koko GitHubin rajapinnasta. `size` on kibitavuina ja
+       * kertoo pakatun koon palvelimella — ei sama kuin työkopion koko
+       * levyllä, mutta se on ainoa luku, jonka saa ilman kloonausta.
+       */
+      for (const repo of ['ravelius/Matkakirja', 'ravelius/Matkakirja-media']) {
+        try {
+          const tiedot = await haeAikarajalla(`https://api.github.com/repos/${repo}`, 8000);
+          rivit.push(tilaRivi(`repo ${repo.split('/')[1]}`, koko(tiedot.size * 1024),
+            `päivitetty ${new Date(tiedot.pushed_at).toLocaleDateString('fi-FI')}`));
+        } catch (virhe) {
+          /*
+           * Syy näkyviin. GitHubin rajapinta päästää tunnistautumatta
+           * 60 kutsua tunnissa osoitetta kohti, ja rajan tullessa
+           * vastaan tulee HTTP 403 — pelkkä "ei saatu haettua"
+           * näyttäisi rikkinäiseltä, vaikka kyse on vain odottamisesta.
+           */
+          rivit.push(tilaRivi(`repo ${repo.split('/')[1]}`, '–',
+            String(virhe.message ?? virhe).includes('403')
+              ? 'GitHubin tuntiraja täynnä — yritä myöhemmin'
+              : `ei saatu haettua (${virhe.message ?? virhe})`));
+        }
+      }
+
+      kohde.replaceChildren(...rivit);
+    }
+
     // --- KAUPUNGIT -------------------------------------------------------
 
     let valittuLauta = paalauta.id;
@@ -543,6 +714,28 @@
       }
       $('kartta-uuteen').href = osoite;
     }
+
+    /*
+     * Kehys puretaan, kun Kartat-välilehdeltä poistutaan.
+     *
+     * Kehyksessä pyörii oikea peli, ja peli soittaa taustaääntä.
+     * Osion piilottaminen (hidden) ei pysäytä kehystä: selain jatkaa
+     * sen suorittamista ja ääni kuuluu yhä, vaikka kartta ei näy.
+     * Silloin työhuoneessa soi ambienssi, jolle ei näy mitään
+     * lähdettä eikä säädintä — juuri se, mistä omistaja huomautti.
+     *
+     * about:blank on tässä oikea keino: se lopettaa pelin oikeasti.
+     * Pelkkä äänen mykistys jättäisi pelin pyörimään taustalle, ja
+     * dataset.lauta nollataan, jotta kartta latautuu uudelleen kun
+     * välilehti avataan seuraavan kerran.
+     */
+    function sammutaKartta() {
+      const kehys = $('kartta-kehys');
+      if (!kehys.dataset.lauta) return;
+      kehys.src = 'about:blank';
+      delete kehys.dataset.lauta;
+    }
+
     $('kartta-lauta').addEventListener('change', paivitaKartta);
 
     // --- SUUNNITELMA -----------------------------------------------------
@@ -689,6 +882,7 @@
     piirraLuvut();
     piirraPuutteet();
     piirraLaudat();
+    piirraTila();
     piirraKaupunkilista();
     piirraKaupunki();
     nayta((location.hash || '#tilanne').slice(1));

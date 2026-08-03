@@ -414,6 +414,101 @@ kuvauksesta ja luottaa vanhempaan. Silti se ei auta, jos kumpikaan
 kenttä ei mainitse alkuperäistä vuotta.
 
 
+## Paketti 71: studio sivun sisään, tilat näkyviin — VALMIS v196 3.8.2026
+
+Kaksi omistajan toivetta samassa julkaisussa, ja yksi bugi, jonka
+omistaja huomasi kesken työn.
+
+### Äänistudiolla ei ole enää omaa sivua
+
+Toive: *"Äänistudiosta voi ottaa erillisen sivun pois. Olisi hyvä, että
+se pyörisi samoilla sivuilla."*
+
+`aanet.html` poistettiin. Sen sisältö jaettiin kolmeen osaan:
+
+| mihin | mitä |
+|---|---|
+| `tyohuone.html`, Studio-osio | markup |
+| `css/tyohuone-aanistudio.css` | tyylit, kaikki `#tab-studio`-alla |
+| `js/tyohuone-aanistudio.js` | logiikka, `kaynnistaAanistudio()` |
+
+Studio ladataan **laiskasti**: moduuli haetaan vasta kun Studio-
+välilehti avataan ensimmäisen kerran. Se lukee kaikki äänipaketit ja
+rakentaa satoja rivejä DOMia, eikä sitä kannata tehdä joka kerta kun
+työhuone avataan.
+
+### Nimestä pitää näkyä, kumpaan sovellukseen tiedosto kuuluu
+
+Tiedostot olivat aluksi `js/aanistudio.js` ja `css/aanistudio.css`, ja
+`tests/sw.test.mjs` kaatui heti: se vaatii, että jokainen `js/`-moduuli
+on pelin `sw.js`:n SHELL-listalla, muuten peli hajoaisi lentokoneessa.
+Studio kuuluu työhuoneeseen, ei peliin.
+
+Poikkeuksen lisääminen testiin olisi ollut yhden rivin korjaus. Tein
+sen sijaan uudelleennimeämisen `tyohuone-`-etuliitteellä, jolloin
+olemassa oleva sääntö kattaa sen ilman erikoistapausta. **Kun testi
+valittaa nimestä, nimi on useammin väärässä kuin testi.**
+
+### Julkaisutyönkulusta puuttui puolet työhuoneesta
+
+`cp`-rivi `.github/workflows/pages.yml`:ssä olisi kaatunut poistettuun
+`aanet.html`:ään. Sitä korjatessa selvisi isompi asia: rivi ei
+kopioinut **koskaan** `tyohuone.webmanifest`-, `tyohuone-sw.js`- eikä
+`tyohuone-kasikirja.html`-tiedostoja.
+
+Työhuone siis latautui Pagesissa, mutta ei asentunut kotivalikkoon
+eikä toiminut verkotta — ja sen huomaa vasta puhelimella. Molemmat
+korjattu.
+
+### Tila-osio: mitä peilissä ja repoissa on
+
+Toive: *"Näkyykö siellä Cloudflaren ja repon käyttämät tilat? Voisi
+näkyä etusivulla."*
+
+Tilanne-välilehdelle tuli Tila-osio. Luvut tulevat kahdesta lähteestä:
+
+- **Peili** — `manifesti.json` R2-ämpärin juuresta. Se on ainoa paikka,
+  josta kopioiden määrän ja koon näkee ilman ämpärin listaamista, ja se
+  päivittyy jokaisella peilausajolla. Kentät tarkistettiin elävää
+  manifestia vasten: `kuvat` 692, `liput` 111, `aanet` 176, `tekstit`
+  276. Lähdeteksteillä ei ole `koko`-kenttää, joten niistä näytetään
+  vain kappalemäärä.
+- **Repot** — GitHubin rajapinnan `size`, kibitavuina.
+
+Molemmat haetaan **aikarajan kanssa ja toisistaan riippumatta**. Ilman
+`AbortSignal.timeout`ia fetch ei kaadu vaan jää roikkumaan, ja koko
+taulukko jäisi tyhjäksi. Nyt kumpi tahansa puoli näkyy heti kun se
+saapuu, ja puuttuva puoli näkyy viivana eikä estä toista.
+
+GitHub päästää tunnistautumatta 60 kutsua tunnissa, ja rajan tullessa
+vastaan tulee HTTP 403. Se erotetaan omaksi viestikseen: pelkkä "ei
+saatu haettua" näyttäisi rikkinäiseltä, vaikka kyse on odottamisesta.
+
+### Bugi: työhuoneessa soi ambienssi, jolle ei ollut lähdettä
+
+Omistaja kesken työn: *"Työhuone soittaa taustalla ambienssi ääntä.
+Siellä ei ole siis työhuoneen oma soitin päällä, vaan tulee jotain
+muuta kautta."*
+
+Kartat-välilehden kehyksessä pyörii **oikea peli** katselutilassa — ja
+peli soittaa taustaääntä. Kun välilehdeltä poistui, osio piilotettiin
+`hidden`-attribuutilla, mutta **piilotettu kehys jatkaa suorittamista
+ja ääni kuuluu yhä**. Työhuoneessa se kuului ambienssina, jolla ei
+ollut näkyvää lähdettä eikä säädintä.
+
+Korjattu kahdesta kohdasta, ja tarkoituksella molemmista:
+
+1. **Kehys puretaan** (`src = 'about:blank'`), kun Kartat-välilehdeltä
+   poistutaan. Pelkkä mykistys jättäisi pelin pyörimään taustalle.
+2. **Katselutila on mykkä** (`sfx.enabled = false`). Kartan esikatselu
+   on kuva laudasta, ei pelisessio.
+
+Lippu asetetaan suoraan eikä `setEnabled`illä: `setEnabled` kirjoittaa
+valinnan localStorageen, ja se on **sama varasto kuin oikealla
+pelillä samassa osoitteessa**. Kartan vilkaisu työhuoneessa olisi
+silloin mykistänyt omistajan oman pelin.
+
+
 ## Paketti 70: äänistudio samaan tyyliin — VALMIS v195 3.8.2026
 
 Omistajan havainto työhuoneen uudistuksen jälkeen: "Tämä näkyy vielä
