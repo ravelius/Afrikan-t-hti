@@ -1394,3 +1394,38 @@ kartta.
 Ja mittaamisesta: kolme ikkunan muotoa ei ollut kolme mittausta. Ne
 olivat kolme otosta samasta oletuksesta — että ruutu on pienempi kuin
 maailma. iPadin pystyasento oli ensimmäinen, jossa se ei pitänyt.
+
+---
+
+**[Opus]** "Nipistys ei tee mitään." Se ei tehnyt, koska koodia ei ollut.
+
+Julkaisin v211:n, jonka otsikko lupasi nipistyszoomauksen. Kirjoitin
+ominaisuuden, tarkistin syntaksin, ajoin testit, otin kuvakaappaukset,
+kirjoitin PR-kuvauksen — ja koodi ei ollut tiedostossa. Se katosi
+ristiriidan purussa noin viisi minuuttia ennen julkaisua.
+
+**Kaikki tarkistukseni menivät läpi, koska yksikään niistä ei koskenut
+siihen mitä lupasin.** 400 testiä vihreänä, nolla konsolivirhettä,
+kuvakaappaukset kunnossa. Ne kaikki mittasivat muuta. PR-kuvauksessa
+kirjoitin rehellisesti "testattu vain koodina" — enkä huomannut, että
+koodiakaan ei ollut.
+
+Sama julkaisu sisälsi toisen korjauksen samasta tiedostosta, ja SE
+säilyi. Siksi mikään ei näyttänyt epäilyttävältä: puolet muutoksesta oli
+paikallaan.
+
+**Mitä tein toisin.** Kirjoitin testin, joka vartioi eleen olemassaoloa
+— ei sen toimintaa, vaan sitä että kosketuskäsittelijät ja vapaa
+zoomikerroin ovat tiedostossa. Se on karkea testi ja olisi riittänyt
+estämään tämän kokonaan.
+
+**Ja itse vika, kun koodi oli paikallaan.** Ele oli osoitintapahtumien
+varassa. iOS:llä `touch-action: none` estää vierityksen mutta EI sivun
+omaa nipistyszoomia: Safari aloittaa oman eleensä ja peruu
+osoitintapahtumat kesken kaiken, jolloin ele ei valmistu koskaan.
+Kosketustapahtumat ja `preventDefault` toimivat molemmissa selaimissa.
+
+Sen todentaminen vaati kolmannen yrityksen testivälineessä. Selaimen
+kautta lähetetty kosketusliike ei mennyt perille lainkaan — mittari oli
+rikki, ei sovellus. Vasta sivun sisällä luodut `TouchEvent`-oliot
+näyttivät eleen toimivan päästä päähän.

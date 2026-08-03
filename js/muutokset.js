@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 212, teksti: 'Nipistys zoomaa karttaa — nyt oikeasti' },
+  { v: 212, teksti: 'Zoomipainikkeet pois kosketuslaitteilta' },
   { v: 211, teksti: 'Nipistys zoomaa karttaa kahdella sormella' },
   { v: 211, teksti: 'Korjattu: kartta katkesi kesken kierroksen' },
   { v: 210, teksti: 'Pohjolan merkinnät uusiksi yhden idean malliin' },

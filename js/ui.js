@@ -1335,6 +1335,11 @@ export class UI {
     this.stopQuizTimer();
     for (const lappu of this.taustaLaput ?? []) lappu.removeEventListener('click', this.lappuTausta);
     for (const lappu of this.peruutusLaput ?? []) lappu.removeEventListener('cancel', this.lappuPeruutus);
+    // Nipistyksen kuuntelijat pois: ne ovat paneelissa, joka jää eloon.
+    for (const [nimi, kasittele] of this.nipistysKuuntelijat ?? []) {
+      this.mapPane?.removeEventListener(nimi, kasittele, { passive: false });
+    }
+    this.nipistysKuuntelijat = [];
     for (const [nappi, kasittele] of this.zoomiKuuntelijat ?? []) {
       nappi.removeEventListener('click', kasittele);
     }
@@ -1661,8 +1666,21 @@ export class UI {
 
   /** Zoomikerroin, jolla sovitaMannerZoom laskee lähikuvan mitat. */
   get zoomiKerroin() {
+    /*
+     * Nipistys antaa minkä tahansa kertoimen portaiden välistä, ja
+     * silloin se voittaa portaikon. Painikkeet nollaavat sen, jolloin
+     * portaat palaavat käyttöön: kaksi eri tapaa zoomata samaan
+     * lukuun, eikä niiden tarvitse olla samaa mieltä.
+     */
+    if (this.zoomiVapaa) return this.zoomiVapaa;
     const tasot = this.zoomiTasot();
     return tasot[this.zoomiIndeksi] ?? tasot[this.saapumisPorras()] ?? MANNER_ZOOM;
+  }
+
+  /** Pienin ja suurin sallittu kerroin: portaikon päät. */
+  zoomiRajat() {
+    const tasot = this.zoomiTasot();
+    return { pienin: tasot[0] ?? 1, suurin: tasot.at(-1) ?? MANNER_ZOOM };
   }
 
   /**
@@ -1695,9 +1713,22 @@ export class UI {
     // pelissä, joten siellä ne kuuluvat — sama ehto kuin fitViewBoxissa.
     if (this.avausNakymassa()) return false;
 
-    const nykyinen = this.zoomiIndeksi;
-    const uusi = Math.min(this.zoomiTasot().length - 1, Math.max(0, nykyinen + suunta));
-    if (uusi === nykyinen) return false;
+    const tasot = this.zoomiTasot();
+    /*
+     * Nipistyksen jälkeen ollaan portaiden VÄLISSÄ. Painike siirtyy
+     * silloin lähimpään portaaseen menosuunnassa — ei indeksiin, jota
+     * ei ole.
+     */
+    const vapaa = this.zoomiVapaa;
+    const nykyinen = vapaa
+      ? tasot.findIndex((t) => (suunta > 0 ? t > vapaa * 1.02 : t >= vapaa * 0.98))
+      : this.zoomiIndeksi;
+    const lahin = nykyinen < 0 ? tasot.length - 1 : nykyinen;
+    const uusi = vapaa
+      ? Math.min(tasot.length - 1, Math.max(0, suunta > 0 ? lahin : lahin - 1))
+      : Math.min(tasot.length - 1, Math.max(0, lahin + suunta));
+    this.zoomiVapaa = 0;
+    if (!vapaa && uusi === nykyinen) return false;
 
     // Keskipiste luetaan ENNEN tason vaihtoa, vanhalla mittakaavalla.
     const keskipiste = this.nykyinenKeskipiste();
@@ -1966,6 +1997,7 @@ export class UI {
     this.panVara = 0;
     this.panVaraY = 0;
     this.panJakso = 0;
+    this.zoomiVapaa = 0;
     this.svg.style.transition = '';
     this.svg.style.transform = '';
     this.svg.style.width = '';
@@ -2336,7 +2368,150 @@ export class UI {
     let alku = null;
     let liikkui = false;
 
+    /*
+     * --- nipistys ---------------------------------------------------
+     *
+     * Omistajan toive: zoomaus nipistyseleen taakse. Painikkeet jäävät,
+     * koska tietokoneella ei nipistetä.
+     *
+     * KOSKETUSTAPAHTUMAT eikä osoitintapahtumat. Ero on ratkaiseva
+     * iOS:llä: `touch-action: none` estää siellä vierityksen mutta EI
+     * selaimen omaa nipistyszoomia. Safari aloittaa oman eleensä ja
+     * peruu osoitintapahtumat kesken kaiken, jolloin käsittelijä ei saa
+     * elettä koskaan valmiiksi — omistajan havainto: "nipistys ei tee
+     * mitään". `touchmove`in preventDefault pysäyttää sivun zoomin, ja
+     * se toimii sekä Safarissa että Chromessa.
+     *
+     * Ele piirretään CSS-muunnoksella ja mittakaava lukitaan vasta kun
+     * sormet irtoavat. Sama sääntö kuin siirrossa ja samasta syystä:
+     * rasterointi vie satoja millisekunteja pääsäikeessä.
+     *
+     * Muunnoksen origo on elementin vasen yläkulma, joten sormien
+     * keskipiste pysyy paikallaan kun siirto lasketaan
+     *   t = m - (m - siirto) * suhde
+     */
+    let nipistys = null;
+
+    const kaksiSormea = (e) => {
+      const [a, b] = [e.touches[0], e.touches[1]];
+      const laatikko = pane.getBoundingClientRect();
+      return {
+        etaisyys: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+        keski: {
+          x: (a.clientX + b.clientX) / 2 - laatikko.left,
+          y: (a.clientY + b.clientY) / 2 - laatikko.top,
+        },
+      };
+    };
+
+    /** Paneelin piste laudan koordinaateiksi nykyisellä mittakaavalla. */
+    const laudalle = (m) => {
+      const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
+      const skaala = this.zoomSkaala || 1;
+      return {
+        x: box.x + (m.x - (this.panX ?? 0)) / skaala,
+        y: (this.zoomYlaReuna ?? box.y) + (m.y - (this.panY ?? 0)) / skaala,
+      };
+    };
+
+    const aloitaNipistys = (e) => {
+      const { etaisyys, keski } = kaksiSormea(e);
+      if (etaisyys < 24) return;
+      // Kokonäkymästä nipistettäessä siirrytään ensin lähikuvatilaan,
+      // muuten mittakaavaa ei ole mistä jatkaa.
+      if (!this.mannerZoom && !this.aloitusZoom) {
+        this.mannerZoom = true;
+        document.body.classList.add('manner-zoom');
+        this.zoomKohde = this.pelaajanKohta() ?? null;
+        this.panX = null;
+        this.panY = null;
+        this.fitViewBox();
+      }
+      nipistys = {
+        etaisyys,
+        keski,
+        kohde: laudalle(keski),
+        panX: this.panX ?? 0,
+        panY: this.panY ?? 0,
+        kerroin: this.zoomiKerroin,
+        suhde: 1,
+      };
+      alku = null;
+      liikkui = false;
+      this.kartanRaahaus = true;
+      document.body.classList.add('kartta-raahaus');
+      this.svg.style.transition = '';
+    };
+
+    const paivitaNipistys = (e) => {
+      if (!nipistys || e.touches.length < 2) return;
+      const { etaisyys } = kaksiSormea(e);
+      const { pienin, suurin } = this.zoomiRajat();
+      // Rajat kertoimessa eikä suhteessa: sama katto riippumatta siitä,
+      // mistä ele alkoi.
+      const kerroin = Math.min(suurin, Math.max(pienin, nipistys.kerroin * (etaisyys / nipistys.etaisyys)));
+      nipistys.suhde = kerroin / nipistys.kerroin;
+      const m = nipistys.keski;
+      const tx = m.x - (m.x - nipistys.panX) * nipistys.suhde;
+      const ty = m.y - (m.y - nipistys.panY) * nipistys.suhde;
+      this.svg.style.transform =
+        `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${nipistys.suhde.toFixed(4)})`;
+    };
+
+    const paataNipistys = () => {
+      if (!nipistys) return;
+      const { pienin } = this.zoomiRajat();
+      const kerroin = nipistys.kerroin * nipistys.suhde;
+      const kohde = nipistys.kohde;
+      nipistys = null;
+      this.kartanRaahaus = false;
+      document.body.classList.remove('kartta-raahaus');
+      this.svg.style.transform = '';
+      // Napautus eleen jälkeen ei saa valita kaupunkia.
+      this.raahattiin = true;
+      setTimeout(() => { this.raahattiin = false; }, 0);
+      // Alarajalle nipistäminen palaa kokonäkymään: sama kuin
+      // loitonnusnapin viimeinen painallus.
+      if (kerroin <= pienin * 1.02) {
+        this.nollaaAloitusZoom();
+        this.fitViewBox();
+        this.paivitaZoomiNapit();
+        return;
+      }
+      this.zoomiVapaa = kerroin;
+      this.zoomKohde = kohde;
+      this.panX = null;
+      this.panY = null;
+      this.fitViewBox();
+      this.paivitaZoomiNapit();
+      this.taydennaTaide({ heti: true });
+    };
+
+    this.nipistysKuuntelijat = [
+      ['touchstart', (e) => {
+        if (e.touches.length !== 2) return;
+        e.preventDefault();
+        aloitaNipistys(e);
+      }],
+      ['touchmove', (e) => {
+        if (!nipistys) return;
+        e.preventDefault();
+        paivitaNipistys(e);
+      }],
+      ['touchend', (e) => { if (nipistys && e.touches.length < 2) paataNipistys(); }],
+      ['touchcancel', () => { if (nipistys) paataNipistys(); }],
+      // Safarin oma ele: estetään, ettei sivu zoomaa kartan alta.
+      ['gesturestart', (e) => e.preventDefault()],
+      ['gesturechange', (e) => e.preventDefault()],
+    ];
+    for (const [nimi, kasittele] of this.nipistysKuuntelijat) {
+      pane.addEventListener(nimi, kasittele, { passive: false });
+    }
+    /** Onko nipistys kesken? Siirto ei saa sekaantua siihen. */
+    const nipistetaan = () => nipistys !== null;
+
     pane.addEventListener('pointerdown', (e) => {
+      if (nipistetaan()) return;
       if (!this.aloitusZoom && !this.mannerZoom) return;
       if (!this.panVara && !this.panVaraY && !this.panJakso) return;
       alku = {
@@ -2353,6 +2528,7 @@ export class UI {
     });
 
     pane.addEventListener('pointermove', (e) => {
+      if (nipistetaan()) return;
       if (!alku || e.pointerId !== alku.id) return;
       const dx = e.clientX - alku.x;
       // Mantereella liikutaan molempiin suuntiin, aloituskartalla vain
