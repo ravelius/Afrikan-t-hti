@@ -895,3 +895,45 @@ oli väärä, mutta havainto oikea.
 Kun joku sanoo "tämä ei tunnu oikealta" eikä osaa sanoa miksi, mittaa
 ennen kuin korjaat. Olin lähdössä hakemaan uusia äänitteitä
 ongelmaan, joka ei ollut äänitteissä.
+
+---
+
+**[Opus]** Omistaja lähetti kuvan työhuoneesta: alalaidassa vilkkui
+"Uusi versio ladattu — napauta ottaaksesi käyttöön", vaikka versio oli
+jo uusin. Klikkaus ei tehnyt mitään eikä nappi poistunut.
+
+Se näytti käyttöliittymävialta. Se oli arkkitehtuurivika.
+
+Palvelutyöntekijän laajuus on sen oman hakemiston polku. Peli ja
+työhuone asuvat molemmat sivuston juuressa, ja niillä oli **kaksi eri
+työntekijää samassa laajuudessa**. Se ei ole rinnakkaisuus vaan
+vuorottelu: jälkimmäinen rekisteröinti korvaa edellisen. Joka kerta
+kun omistaja avasi työhuoneen, asennus alkoi alusta — ja palkki
+ilmestyi.
+
+Palkki oli siis oire, ja se oli **lievempi kahdesta oireesta**.
+
+Toinen ei näkynyt mitenkään: pelin `activate` poistaa kaikki korit
+paitsi omansa. Joka kerta kun omistaja avasi työhuoneen ja palasi
+peliin, **pelin offline-välimuisti rakennettiin uudelleen tyhjästä**.
+Peli on julkaistu tuote, jonka pitää käynnistyä lentokoneessa. Sen
+tärkein ominaisuus oli rikki kuukauden, eikä siitä jäänyt yhtään
+jälkeä ruudulle.
+
+Kaksi asiaa jäi mieleen.
+
+**Näkyvä oire ei kerro vian kokoa.** Olisin voinut korjata palkin
+kymmenessä minuutissa, ja omistaja olisi ollut tyytyväinen. Vika olisi
+jäänyt.
+
+**"Oma sovellus, oma työntekijä" kuulosti siistiltä.** Kirjoitin
+tyohuone-sw.js:ään pitkän perustelun siitä, miksi työhuone ansaitsee
+oman työntekijänsä — eri päivitystahti, eri strategia, eikä toisen
+päivitys saa kaataa toisen välimuistia. Jokainen lause oli tosi. Koko
+päätelmä oli väärä, koska alustan sääntö ei salli sitä.
+
+**Hyvä perustelu väärälle ratkaisulle on vaarallisempi kuin huono,
+koska kukaan ei palaa lukemaan sitä uudelleen.**
+
+Strategiat ovat yhä erilliset — ne vain asuvat nyt samassa
+työntekijässä, jossa haara valitsee kumpaa käytetään.

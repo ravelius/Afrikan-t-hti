@@ -18,10 +18,13 @@ test('kaikki SHELLin tiedostot ovat olemassa', () => {
 });
 
 /*
- * Työhuoneen omat moduulit eivät kuulu pelin SHELLiin. Työhuone on eri
- * sovellus, jolla on oma palvelutyöntekijä (tyohuone-sw.js) ja oma
- * välimuisti; sen tiedostojen lisääminen pelin listalle kasvattaisi
- * pelin latauskokoa turhaan eikä auttaisi ketään.
+ * Työhuoneen omat moduulit eivät kuulu pelin SHELLiin.
+ *
+ * Sama palvelutyöntekijä palvelee molempia sovelluksia (sama laajuus ei
+ * voi kuulua kahdelle), mutta eri strategialla: työhuoneen tiedostot
+ * haetaan verkosta ensin eikä niitä esiladata. Niiden lisääminen pelin
+ * SHELL-listalle kasvattaisi pelin latauskokoa turhaan — peli ei tarvitse
+ * työhuonetta lentokoneessa.
  */
 const VAIN_TYOHUONE = /^js\/tyohuone-/;
 

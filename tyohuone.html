@@ -293,27 +293,40 @@
     // --- itsestään päivittyminen ----------------------------------------
 
     /*
-     * Kaksi tasoa:
-     *  1. Palvelutyöntekijä hakee verkosta ensin, joten sisältö on tuore
-     *     aina kun verkko toimii.
-     *  2. Jos työhuoneen OMA koodi on muuttunut, selain lataa uuden
-     *     työntekijän ja me kerromme siitä palkilla. Ilman ilmoitusta
-     *     käyttäjä katsoisi vanhaa sivua tietämättään.
+     * SAMA palvelutyöntekijä kuin pelillä (sw.js), ei omaa.
+     *
+     * Työntekijän laajuus on sen oman hakemiston polku, ja sekä peli
+     * että työhuone asuvat sivuston juuressa. Kaksi eri työntekijää
+     * samassa laajuudessa ei toimi rinnakkain: jälkimmäinen
+     * rekisteröinti korvaa edellisen. Aiemmin työhuoneella oli oma
+     * tyohuone-sw.js, ja se johti kahteen vikaan:
+     *
+     *  1. Työhuoneessa vilkkui ikuisesti "uusi versio ladattu" -palkki,
+     *     koska asennus alkoi alusta joka avauksella.
+     *  2. Pelin offline-välimuisti tuhoutui aina kun työhuone avattiin.
+     *
+     * Strategiat pysyvät silti erillisinä: sw.js hakee työhuoneen
+     * tiedostot verkosta ensin ja pelin tiedostot välimuistista ensin.
+     *
+     * Palkki näytetään VASTA controllerchange-tapahtumasta. Se on
+     * täsmällinen merkki siitä, että uusi työntekijä otti vallan tämän
+     * sivun latauksen jälkeen — eli että ruudulla oleva koodi on
+     * vanhentunut. Aiempi versio näytti palkin jo asennusvaiheessa,
+     * jolloin se ilmestyi silloinkin kun mikään ei ollut muuttunut.
      */
     if ('serviceWorker' in navigator) {
       try {
-        const reg = await navigator.serviceWorker.register('tyohuone-sw.js');
-        reg.addEventListener('updatefound', () => {
-          const uusi = reg.installing;
-          if (!uusi) return;
-          uusi.addEventListener('statechange', () => {
-            if (uusi.state === 'installed' && navigator.serviceWorker.controller) {
-              const palkki = el('button', '', 'Uusi versio ladattu — napauta ottaaksesi käyttöön');
-              palkki.id = 'paivitysvihje';
-              palkki.addEventListener('click', () => location.reload());
-              document.body.append(palkki);
-            }
-          });
+        const reg = await navigator.serviceWorker.register('sw.js');
+        // Ensimmäisellä käynnillä ei ole ohjaajaa, ja sellaisen
+        // saaminen ei tarkoita että sivu olisi vanhentunut.
+        const oliOhjaaja = Boolean(navigator.serviceWorker.controller);
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!oliOhjaaja || $('paivitysvihje')) return;
+          const palkki = el('button', '', 'Uusi versio saatavilla — lataa uudelleen');
+          palkki.id = 'paivitysvihje';
+          palkki.type = 'button';
+          palkki.addEventListener('click', () => location.reload());
+          document.body.append(palkki);
         });
         // Tarkistus tunnin välein: työhuone on usein auki koko päivän.
         setInterval(() => reg.update().catch(() => {}), 3600e3);
