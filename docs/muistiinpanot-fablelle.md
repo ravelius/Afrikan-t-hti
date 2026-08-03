@@ -937,3 +937,34 @@ koska kukaan ei palaa lukemaan sitä uudelleen.**
 
 Strategiat ovat yhä erilliset — ne vain asuvat nyt samassa
 työntekijässä, jossa haara valitsee kumpaa käytetään.
+
+---
+
+**[Opus]** Omistaja pysäytti matkakirjan merkintöjen kirjoittamisen:
+liian pitkiä ja vaikeaselkoisia. Tein tilannekuvan
+`docs/matkakirjan-tekstit.md`, ja mittaus paljasti jotain, mitä en
+osannut odottaa.
+
+**Äänitetyt tekstit ovat neljänneksen lyhyempiä kuin äänittämättömät.**
+408 merkkiä vastaan 512.
+
+Ne 48 tekstiä kirjoitettiin ääneen luettaviksi. Korva ei kestä pitkää
+virkettä, ja se pakotti tiiviyteen. Loput 95 kirjoitettiin silmälle,
+eikä mikään enää rajoittanut — ja ne paisuivat.
+
+Rajoite ei ollut ohjeessa. Se oli **kanavassa**, ja kun kanava vaihtui,
+rajoite katosi kenenkään huomaamatta. Kukaan ei päättänyt, että
+tekstien pitäisi olla pidempiä.
+
+Omistaja huomasi eron lukemalla. Minä huomasin sen vasta mitattuani, ja
+vasta koska hän käski katsoa.
+
+**Kun laatu heikkenee ilman että kukaan päätti niin, etsi rajoite joka
+katosi.** Se on useammin työtavassa kuin ohjeessa.
+
+Sivuhuomio samasta päivästä: laskin ensin, että äänihaku tuotti nolla
+ehdokasta 105 kaupungille. Se oli oma mittausvirheeni — luin taulukkoa
+kuin oliota. Oikea luku oli 246 äänitettä 48 kaupunkiin. Olin
+sekunnin päässä siitä, että olisin ilmoittanut onnistuneen ajon
+epäonnistuneeksi. **Sama virhe kuin radioasemien 401-vastauksissa,
+saman päivän aikana, eri muodossa.**
