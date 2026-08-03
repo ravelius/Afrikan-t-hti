@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 214, teksti: 'Uudet kaupungit: Asunción, Montevideo, Houston, Havanna' },
   { v: 213, teksti: 'Nipistys zoomaa karttaa — nyt oikeasti' },
   { v: 213, teksti: 'Zoomipainikkeet pois kosketuslaitteilta' },
   { v: 212, teksti: 'Koko Eurooppa kirjoitettu uusiksi ja luettu' },
