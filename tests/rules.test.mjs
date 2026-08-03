@@ -3247,6 +3247,31 @@ test('maailmankartta: sauman yli kulkeva reitti piirtyy yhtenäisenä', () => {
   assert.ok(laidanYli, 'reitti ei jatku laudan reunan yli');
 });
 
+test('yhdistetyt laudat ovat kaikissa sisältötauluissa', () => {
+  /*
+   * Sisältötaulut ui.js:ssä on avainnettu laudan tunnuksella, ja uusi
+   * yhdistetty lauta on jäänyt niistä pois jo kolmesti. Ansa on
+   * hiljainen: mikään ei kaadu, mitään ei näy lokissa, Tutki-ikkuna
+   * vain jää vajaaksi. Maailmankartalta puuttuivat kaikki viisi.
+   *
+   * Testi vertaa taulujen lautajoukkoja keskenään: jos lauta on
+   * yhdessä, sen on oltava kaikissa. KIELET on tarkoituksella
+   * suppeampi (vain Eurooppa on äänitetty), joten se on rajattu pois.
+   */
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  const laudat = (nimi) => {
+    const osuma = ui.match(new RegExp(`const ${nimi} = \\{([\\s\\S]*?)\\n\\};`));
+    assert.ok(osuma, `${nimi} ei löydy`);
+    return new Set([...osuma[1].matchAll(/^\s{2}([a-z]+):/gm)].map((m) => m[1]));
+  };
+  const perus = laudat('SAAPUMISTEKSTIT');
+  for (const nimi of ['KULTTUURIT', 'VALOKUVAT', 'MAATIEDOT']) {
+    assert.deepEqual([...laudat(nimi)].sort(), [...perus].sort(),
+      `${nimi} ja SAAPUMISTEKSTIT eivät kata samoja lautoja`);
+  }
+  assert.ok(perus.has('maailmankartta'), 'maailmankartta puuttuu sisältötauluista');
+});
+
 test('maailmankartta on kiertävä ja kaupungit pysyvät laudalla', () => {
   const pack = PACKS.find((p) => p.id === 'maailmankartta');
   assert.equal(pack.map.kiertava, true, 'kiertava-lippu puuttuu kartan geometriasta');

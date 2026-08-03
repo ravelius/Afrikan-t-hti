@@ -1,7 +1,7 @@
 /*
  * Hakee puuttuvat maatunnukset yhdistetylle laudalle.
  *
- *   node tools/hae-maatunnukset.mjs [--kuiva]
+ *   node tools/hae-maatunnukset.mjs [lauta] [--kuiva]
  *
  * Maatunnus (`map.cityCountry`) ratkaisee, näkyykö Tutki-ikkunan oikea
  * palsta: maan nimi, lippu, tunnusluvut ja tervehdykset. Ilman sitä
@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url';
 import { PACKS } from '../js/pack.js';
 
 const JUURI = join(dirname(fileURLToPath(import.meta.url)), '..');
+const lauta = process.argv.find((a) => !a.startsWith('--') && !a.includes('/')) ?? 'vanhamaailma';
 const kuiva = process.argv.includes('--kuiva');
 const nuku = (ms) => new Promise((r) => { setTimeout(r, ms); });
 
@@ -40,7 +41,8 @@ async function hae(osoite, yrityksia = 6) {
   return null;
 }
 
-const pack = PACKS.find((p) => p.id === 'vanhamaailma');
+const pack = PACKS.find((p) => p.id === lauta);
+if (!pack) throw new Error(`tuntematon lauta: ${lauta}`);
 const cityCountry = { ...(pack.map.cityCountry ?? {}) };
 const puuttuu = pack.cities.filter((c) => c.wiki && !cityCountry[c.id]);
 console.log(`${puuttuu.length} kaupunkia ilman maatunnusta\n`);
@@ -113,7 +115,7 @@ console.log(`${lisatty} tunnusta löytyi, ${ilman.length} ilman.`);
 if (ilman.length) console.log('ilman maata:', ilman.join(' '));
 if (kuiva) process.exit(0);
 
-const polku = join(JUURI, 'js', 'packs', 'vanhamaailma.js');
+const polku = join(JUURI, 'js', 'packs', `${lauta}.js`);
 let teksti = readFileSync(polku, 'utf8');
 const osuma = teksti.match(/const CITY_COUNTRY = (\{[^\n]*\});/);
 if (!osuma) throw new Error('CITY_COUNTRY ei löydy');

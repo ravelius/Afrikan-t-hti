@@ -235,8 +235,22 @@ const cities = pisteet.map((c) => {
     // Portit maailmankartalle. Linkin pitää olla vastavuoroinen: jos
     // maailmankartalta pääsee tänne, tästä pitää päästä takaisin. Testi
     // vartioi sitä, ja ilman paluulinkkiä pelaaja jäisi laudalle.
+    /*
+     * Portit. Koko maapallon kartta on ensimmäisenä, koska se on laajin
+     * eikä sinne muuten löydä: omistaja yritti vierittää tältä laudalta
+     * Amerikkaan eikä päässyt, koska Amerikkaa ei tällä laudalla ole.
+     *
+     * "Maailmankartta" ei enää kelpaa maailma-laudan nimeksi napissa —
+     * se on nyt toisen laudan nimi. Valintaruutu on "Valitse toinen
+     * lauta", mitä se onkin.
+     */
     ...(MAAILMAN_PORTIT.has(c.id)
-      ? { links: [{ pack: 'maailma', city: c.id, label: 'Maailmankartta' }] } : {}),
+      ? {
+        links: [
+          { pack: 'maailmankartta', city: c.id, label: 'Koko maailma' },
+          { pack: 'maailma', city: c.id, label: 'Valitse toinen lauta' },
+        ],
+      } : {}),
     ...(lahde.airport || lahde.start ? { airport: true } : {}),
     la: p.la,
     lx: p.lx,

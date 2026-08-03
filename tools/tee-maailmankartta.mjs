@@ -259,11 +259,15 @@ const { paikat: nimiPaikat, pulmat } = sijoita(pisteet, new Map(Object.entries(m
  * Paluuportit maailmankartan valintaruudulle.
  *
  * Tämä lauta ON koko maapallo, joten mihinkään ei tarvitse hypätä
- * jatkaakseen matkaa. Yksi paluulinkki tarvitaan silti: pelaajan pitää
- * päästä takaisin valitsemaan toinen lauta, ja testi vaatii linkin
- * olevan vastavuoroinen. Lontoo riittää — se on matkan alku ja loppu.
+ * jatkaakseen matkaa. Paluuportit tarvitaan silti kahdesta syystä:
+ * pelaajan pitää päästä takaisin valitsemaan toinen lauta, ja linkin
+ * on oltava vastavuoroinen — vanhalta maailmalta tullaan näihin
+ * samoihin kaupunkeihin, joten niistä on päästävä myös takaisin.
  */
-const PALUUPORTIT = new Set(['lontoo']);
+const PALUUPORTIT = new Set([
+  'lontoo', 'kairo', 'mumbai', 'peking', 'tokio', 'singapore',
+  'moskova', 'ateena', 'kapkaupunki', 'tanger',
+]);
 const cities = pisteet.map((c) => {
   const lahde = lahdeKaupunki.get(c.id) ?? {};
   const p = nimiPaikat.get(c.id);
@@ -275,6 +279,11 @@ const cities = pisteet.map((c) => {
     x: c.x,
     y: c.y,
     ...(lahde.start ? { start: true } : {}),
+    /*
+     * Paluu valintaruudulle. Linkin on oltava vastavuoroinen: kaikki
+     * kymmenen valintaruudun porttikaupunkia osoittavat tänne, joten
+     * jokaisesta on myös päästävä takaisin.
+     */
     ...(PALUUPORTIT.has(c.id)
       ? { links: [{ pack: 'maailma', city: c.id, label: 'Valitse toinen lauta' }] } : {}),
     ...(lahde.airport || lahde.start ? { airport: true } : {}),
@@ -328,6 +337,22 @@ for (const [laji, osuus] of Object.entries(OSUUDET)) {
   jaljella -= counts[laji];
 }
 counts.empty = jaljella;
+
+/*
+ * Maatunnukset lähteistä. Vanha maailma on mukana siksi, että sen
+ * tunnukset on jo kertaalleen ratkaistu Wikidatasta — sitä työtä ei
+ * kannata teettää uudelleen.
+ */
+const cityCountry = {};
+{
+  const { VANHA_MAAILMA } = await import('../js/packs/vanhamaailma.js');
+  const lahteet = [...PACKS.map((p) => p.map?.cityCountry ?? {}), VANHA_MAAILMA.map?.cityCountry ?? {}];
+  for (const c of pisteet) {
+    for (const taulu of lahteet) {
+      if (taulu[c.id]) { cityCountry[c.id] = taulu[c.id]; break; }
+    }
+  }
+}
 
 // --- tiedosto ------------------------------------------------------------------
 
@@ -438,6 +463,15 @@ const CITIES = [
 ${cities.map((c) => `  ${JSON.stringify(c)},`).join('\n')}
 ];
 
+/*
+ * Kaupungin maatunnus. Ratkaisee, näkyykö Tutki-ikkunan oikea palsta:
+ * maan nimi, lippu, tunnusluvut, tervehdykset ja radio.
+ *
+ * Siemenenä lähdelautojen ja vanhan maailman jo ratkaistut tunnukset;
+ * loput haetaan Wikidatasta työkalulla tools/hae-maatunnukset.mjs.
+ */
+const CITY_COUNTRY = ${JSON.stringify(cityCountry)};
+
 const EDGES = [
 ${edges.map((e) => `  ${JSON.stringify(e)},`).join('\n')}
 ];
@@ -456,7 +490,10 @@ export const MAAILMANKARTTA = {
    */
   kiertava: true,
 
-  map: { width: ${LEVEYS}, height: ${korkeus}, outlines: OUTLINES, kiertava: true },
+  map: {
+    width: ${LEVEYS}, height: ${korkeus}, outlines: OUTLINES, kiertava: true,
+    cityCountry: CITY_COUNTRY,
+  },
   cities: CITIES,
   edges: EDGES,
   airRoutes: LAHTEET.flatMap((p) => p.airRoutes ?? []),
@@ -505,6 +542,7 @@ console.log(`reittejä ${edges.length}, joista meritse ${edges.filter((e) => e.t
 console.log(`valtameriylityksiä ${ylitykset.length}/${YLITYKSET.length}`
   + (puuttuvat.length ? ` — puuttuu: ${puuttuvat.join(', ')}` : ''));
 console.log(`saaria ${islands.length}`);
+console.log(`maatunnuksia ${Object.keys(cityCountry).length}/${cities.length}`);
 console.log(`laattoja ${Object.values(counts).reduce((a, b) => a + b, 0)} `
   + `/ kaupunkeja ilman aloitusta ${laattaKaupunkeja}`);
 if (pudotetut.length) {

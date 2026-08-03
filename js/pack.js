@@ -12,27 +12,25 @@ import { NORTHAMERICA } from './packs/northamerica.js';
 import { ASIA } from './packs/asia.js';
 import { OCEANIA } from './packs/oceania.js';
 import { SUOMI } from './packs/suomi.js';
-import { VANHA_MAAILMA } from './packs/vanhamaailma.js';
 import { MAAILMANKARTTA } from './packs/maailmankartta.js';
 
 export const PACKS = [
   MAAILMA,
   /*
-   * Maailmankartta on koko maapallo yhtenä kiertävänä karttana: 248
-   * kaupunkia seitsemältä laudalta, yksi yhtenäinen reittiverkko.
+   * Maailmankartta KORVASI vanhan maailman (omistajan päätös 3.8.2026).
    *
-   * Se ei korvaa vanhaa maailmaa vielä. Kolme verkkoa yhdistyi vasta
-   * kun lisättiin seitsemän valtameriylitystä, ja sen pitää ehtiä
-   * osoittaa toimivansa ennen kuin mitään otetaan pois.
+   * Se on sama kartta laajempana: kaikki 143 vanhan maailman kaupunkia,
+   * kaikki 222 reittiä ja samat askelmäärät ovat mukana sellaisinaan, ja
+   * lisäksi Amerikat ja Oseania. Siksi vaihto oli turvallinen — kesken
+   * jäänyt peli siirtyy laudalta toiselle kaupunkitunnuksillaan
+   * (js/main.js loadGame).
+   *
+   * js/packs/vanhamaailma.js jää repoon: se on yhä tools/-työkalujen
+   * lähde maatunnuksille, mutta peli ei enää lataa sitä.
    */
   MAAILMANKARTTA,
-  // Vanha maailma on Euroopan, Afrikan, Lähi-idän ja Aasian yhdistetty
-  // kartta, ja se on maailmankartan porteista ensimmäinen vaihtoehto.
-  // Neljä alkuperäistä lautaa jäävät rinnalle: niillä on kullakin oma
-  // aarteensa, kun yhdistetyllä on toistaiseksi yksi. Aarrelogiikka
-  // (yksi aarre per maanosa) on seuraava paketti, ja vasta sen jälkeen
-  // alkuperäiset voi jättää pois.
-  VANHA_MAAILMA,
+  // Maanosalaudat jäävät rinnalle: niillä on kullakin oma aarteensa,
+  // kun yhdistetyllä on toistaiseksi yksi.
   AFRICA, EUROPE, ASIA, OCEANIA, NORTHAMERICA, SOUTHAMERICA, MIDDLE_EAST,
   SUOMI, ISTANBUL,
 ];
