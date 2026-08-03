@@ -103,7 +103,7 @@ const SA_CITIES = [
   },
   {
     id: 'buenosaires', name: 'Buenos Aires', wiki: 'Buenos Aires', ambience: 'kaupunki', x: 554, y: 681, start: true, airport: true,
-    la: 'start', lx: 18, ly: 5,
+    la: 'end', lx: -18, ly: 28,
   },
 
   { id: 'caracas', name: 'Caracas', wiki: 'Caracas', ambience: 'kaupunki', x: 430, y: 59 },
@@ -139,16 +139,16 @@ const SA_CITIES = [
     links: [{ pack: 'maailma', city: 'rio', label: 'Maailma-lauta' }],
   },
   { id: 'saopaulo', name: 'São Paulo', wiki: 'São Paulo', ambience: 'kaupunki', x: 682, y: 525, la: 'end', lx: -6, ly: 20 },
-  { id: 'iguazu', name: 'Iguazú', wiki: 'Iguassun putoukset', ambience: 'sademetsa', x: 603, y: 561, la: 'end', lx: -16, ly: 5 },
+  { id: 'iguazu', name: 'Iguazú', wiki: 'Iguassun putoukset', ambience: 'sademetsa', x: 603, y: 561, la: 'start', lx: 16, ly: 5 },
   { id: 'portoalegre', name: 'Porto Alegre', wiki: 'Porto Alegre', ambience: 'satama', x: 633, y: 616, la: 'start', lx: 16, ly: 5 },
   { id: 'antofagasta', name: 'Antofagasta', wiki: 'Antofagasta', ambience: 'aavikko', x: 417, y: 536, la: 'end', lx: -16, ly: 5 },
   { id: 'salta', name: 'Salta', wiki: 'Salta', ambience: 'vuoristo', x: 473, y: 549, la: 'start', lx: 16, ly: 5 },
-  { id: 'catamarca', name: 'Catamarca', wiki: 'Catamarca', ambience: 'vuoristo', x: 466, y: 604, la: 'start', lx: 16, ly: 5 },
+  { id: 'asuncion', name: 'Asunción', wiki: 'Asunción', ambience: 'kaupunki', x: 550, y: 567, la: 'middle', lx: 0, ly: 24 },
   { id: 'valparaiso', name: 'Valparaíso', wiki: 'Valparaíso', ambience: 'satama', x: 413, y: 661, airport: true, la: 'start', lx: 16, ly: 5 },
   { id: 'sanambrosio', name: 'San Ambrosio', wiki: 'Desventuradas Islands', ambience: 'meri', x: 304, y: 585, la: 'middle', lx: 0, ly: 28 },
   { id: 'robinsoncrusoe', name: 'Robinson Crusoe', wiki: 'Juan Fernándezin saaret', ambience: 'meri', x: 330, y: 679, la: 'middle', lx: 0, ly: 28 },
   { id: 'puertomontt', name: 'Puerto Montt', wiki: 'Puerto Montt', ambience: 'satama', x: 408, y: 775, la: 'end', lx: -16, ly: 5 },
-  { id: 'sanjorge', name: 'San Jorge', wiki: 'San Jorge Gulf', ambience: 'meri', x: 460, y: 829, la: 'start', lx: 16, ly: 5 },
+  { id: 'montevideo', name: 'Montevideo', wiki: 'Montevideo', ambience: 'satama', x: 606, y: 664, la: 'start', lx: 16, ly: 5 },
   { id: 'falkland', name: 'Falkland', wiki: 'Falklandinsaaret', ambience: 'meri', x: 542, y: 915, la: 'start', lx: 16, ly: 5 },
   { id: 'puntaarenas', name: 'Punta Arenas', wiki: 'Punta Arenas', ambience: 'satama', x: 434, y: 931, la: 'end', lx: -16, ly: 5 },
   { id: 'caphorn', name: 'Kap Horn', wiki: 'Kap Horn', ambience: 'meri', x: 474, y: 980, la: 'start', lx: 16, ly: 8 },
@@ -201,14 +201,15 @@ const SA_EDGES = [
   { a: 'titicaca', b: 'antofagasta', steps: 4 },
   { a: 'santacruz', b: 'salta', steps: 3 },
   { a: 'salta', b: 'antofagasta', steps: 3 },
-  { a: 'salta', b: 'catamarca', steps: 2 },
-  { a: 'catamarca', b: 'valparaiso', steps: 4 },
-  { a: 'catamarca', b: 'buenosaires', steps: 4 },
+  { a: 'salta', b: 'asuncion', steps: 3 },
+  { a: 'salta', b: 'valparaiso', steps: 4 },
+  { a: 'asuncion', b: 'buenosaires', steps: 4 },
+  { a: 'asuncion', b: 'iguazu', steps: 2 },
 
   // Patagonia
   { a: 'valparaiso', b: 'puertomontt', steps: 4 },
-  { a: 'buenosaires', b: 'sanjorge', steps: 5 },
-  { a: 'sanjorge', b: 'puntaarenas', steps: 5 },
+  { a: 'buenosaires', b: 'montevideo', steps: 2, type: 'sea', via: [[580, 688]] },
+  { a: 'montevideo', b: 'portoalegre', steps: 4 },
 
   // Laivareitit
   { a: 'panama', b: 'galapagos', steps: 5, type: 'sea',
@@ -232,7 +233,7 @@ const SA_EDGES = [
     via: [[379, 828], [370, 901], [411, 941]] },
   { a: 'puntaarenas', b: 'caphorn', steps: 3, type: 'sea', via: [[454, 970]] },
   { a: 'caphorn', b: 'falkland', steps: 4, type: 'sea', via: [[511, 965], [537, 941]] },
-  { a: 'falkland', b: 'sanjorge', steps: 4, type: 'sea', via: [[519, 883], [494, 844]] },
+  { a: 'montevideo', b: 'falkland', steps: 7, type: 'sea', via: [[600, 700], [590, 780], [568, 862]] },
 ];
 
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
@@ -376,12 +377,12 @@ export const SOUTHAMERICA = {
       portoalegre: 'Etelässä laajan laguunin pohjukassa on satama, jonka ympäristössä ratsastavat karjapaimenet ja juodaan mate-teetä yhteisestä astiasta.',
       antofagasta: 'Maailman kuivimman autiomaan rannikolla on satama, josta viedään kuparia ja jonne vesi tuodaan putkessa vuorilta.',
       salta: 'Luoteisen vuoriston laaksossa on kaupunki, jossa soitetaan perinnemusiikkia ja josta rautatie nousee neljän kilometrin korkeuteen.',
-      catamarca: 'Kuivien vuorilaaksojen maakunnassa kastellaan viiniköynnöksiä, ja ylätasangolla kohoaa maailman korkein tulivuori.',
+      asuncion: 'Paraguayn jokipääkaupungissa puhutaan kahta kieltä, ja kaupunkien äidiksi kutsuttua satamaa vartioi leveä Paraguayjoki.',
       valparaiso: 'Tyynenmeren rannalla jyrkille rinteille rakennettu satamakaupunki nousee vinohisseillä. Maan parlamentti kokoontuu siellä.',
       sanambrosio: 'Avomerellä satojen kilometrien päässä rannikosta on pieni tulivuorisaari ilman satamaa ja ilman makeaa vettä.',
       robinsoncrusoe: 'Tyynellämerellä on saari, joka on nimetty romaanin mukaan. Sen esikuvana oli merimies, joka eli siellä yksin neljä vuotta.',
       puertomontt: 'Eteläisen rannikon kohdalla, siellä missä alkaa vuonojen ja saarten sokkelo, on satama jonne saksalaiset siirtolaiset asettuivat 1850-luvulla.',
-      sanjorge: 'Patagonian tuulisella arorannikolla on lahti, jonka rannoilta pumpataan öljyä ja jonka niemillä pesii pingviinejä tuhansittain.',
+      montevideo: 'La Platan suiston rannalla mate kiertää kädestä käteen ja rantabulevardi jatkuu yli kaksikymmentä kilometriä.',
       falkland: 'Kaukana etelässä avomerellä on saariryhmä, jossa on enemmän lampaita kuin ihmisiä. Kaksi maata esittää siitä eri näkemyksen.',
       puntaarenas: 'Mantereen eteläkärjen salmen rannalla on kaupunki, jonka ohi purjehti jokainen Tyynellemerelle matkaava laiva ennen kanavan avaamista.',
       caphorn: 'Mantereen eteläisimmässä kärjessä on kallioinen saari, jonka ohi purjehtiminen on merimiehen kunniamerkki. Aallot kiertävät siellä koko maapallon.',
