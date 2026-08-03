@@ -209,11 +209,17 @@
       <button id="arrival-maa-wiki" class="wiki-btn" type="button" hidden>Lue lisää maasta</button>
      </div>
     </div>
-    <!-- Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja tutustu ja
-         vastaa -kysymys (pilotti). -->
-    <details id="arrival-kulttuuri" class="arrival-kulttuuri" hidden>
-     <summary>Kaupungin elämää — taide, ruoka ja musiikki</summary>
-     <div id="arrival-kulttuuri-lista"></div>
+    <!--
+      Kirjanmerkkiliuskat kuten vanhassa osoite- tai tilikirjassa: yksi
+      aihe auki kerrallaan (omistajan toive). Nämä tulivat entisen
+      "Kaupungin elämää" -haitarin tilalle.
+    -->
+    <nav id="arrival-liuskat" class="wiki-liuskat" aria-label="Aiheet" hidden></nav>
+    <div id="arrival-kategoria" class="wiki-kategoria" hidden></div>
+    <!-- Kulttuurivisa jää saapumiseen: se on pelitoiminto eikä
+         luettavaa, ja siitä saa puntia. -->
+    <div id="arrival-kulttuuri" class="arrival-kulttuuri" hidden>
+     <div id="arrival-kulttuuri-lista" hidden></div>
      <div id="arrival-kulttuuri-visa" hidden>
       <!-- Visa aukeaa omasta napistaan samaan näkymään (omistajan toive). -->
       <button id="arrival-kulttuuri-avaa" class="kulttuuri-kuuntele kulttuuri-visa-avaa" type="button" hidden>
@@ -226,7 +232,7 @@
       <div class="kulttuuri-vaihtoehdot" id="arrival-kulttuuri-vaihtoehdot" hidden></div>
       <p id="arrival-kulttuuri-tulos" class="arrival-intro" hidden></p>
      </div>
-    </details>
+    </div>
     <div class="dialog-actions">
       <!-- "Etsi kätkö": isoisä on merkinnyt paikan karttaansa, ja nappi
            käynnistää kätkön etsinnän (tarinallisempi kuin Tutki paikka). -->

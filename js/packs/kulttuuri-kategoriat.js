@@ -533,7 +533,7 @@ export const KULTTUURI_KATEGORIAT = {
       ],
     },
     {
-      id: 'ruoka ja tavat',
+      id: 'ruoka',
       nimi: 'Ruoka',
       johdanto: 'Lontoossa ruoka kertoo aina jotain muutakin kuin mitä lautasella '
         + 'on: sunnuntain paistista, torin kojuista, kahvikupista ja '
@@ -786,7 +786,7 @@ export const KULTTUURI_KATEGORIAT = {
       ],
     },
     {
-      id: 'tiede ja keksinnöt',
+      id: 'tiede',
       nimi: 'Tiede',
       johdanto: 'Lontoossa mitattiin maailmalle aika, piirrettiin epidemiologian '
         + 'kuuluisin tautikartta ja muurattiin viemärit, jotka näyttävät '

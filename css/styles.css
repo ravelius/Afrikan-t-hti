@@ -4474,3 +4474,149 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   padding: 0.5rem;
   border-radius: 3px;
 }
+
+
+/* ── Tutki-kortti muistiinpanoarkkina ─────────────────────────────── */
+/*
+ * Omistajan toive: "tutki ikkuna piti olla melkein koko ruudun
+ * kokoinen niin että sivu näyttää muistiinpanoarkilta. eli ääriviiva
+ * käsinpiirretyn näköinen ja kartta näkyy vain hieman laitojen
+ * ulkopuolelta blurrina."
+ *
+ * Kartta jää siis näkyviin kapeana kehyksenä, ei peittoon. Sumennus
+ * tehdään backdrop-filterillä eli kerroksessa kortin TAKANA — ei
+ * kartan omana filtterinä. Ero on ratkaiseva: iOS pudottaa
+ * suodatetun SVG-kerroksen puskurin, ja kartta katosi kokonaan silloin
+ * kun sitä kokeiltiin suoraan. Backdrop-filter ei koske karttaan.
+ */
+.dialog.arkki::backdrop {
+  background: rgba(14, 9, 4, 0.34);
+  -webkit-backdrop-filter: blur(6px) saturate(0.85);
+  backdrop-filter: blur(6px) saturate(0.85);
+}
+
+/*
+ * Dialogilla on oltava tarkalleen kortin mitat. Muuten kortti
+ * leviää dialogin ulkopuolelle, arkki ei ole keskellä ruutua eivätkä
+ * reunakerrokset osu kohdalleen.
+ */
+.dialog.arkki {
+  width: calc(100vw - 1.6rem);
+  max-width: none;
+  max-height: calc(100dvh - 1.6rem);
+}
+
+.dialog.arkki .dialog-card,
+.dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
+  width: calc(100vw - 1.6rem);
+  max-width: none;
+  max-height: calc(100dvh - 1.6rem);
+  /*
+   * Käsinpiirretty ääriviiva: epäsymmetrinen pyöristys molemmilla
+   * akseleilla tekee reunasta piirretyn eikä lasketun. Sama keino kuin
+   * pelin napeissa, mutta loivempi — arkki on iso, ja napin voimakas
+   * kaari näyttäisi isossa koossa vinolta pahvilta.
+   */
+  /*
+   * Reunaviiva on kartan rantaviivaa, ei katkoviivaa (omistajan
+   * toive: "reuna pitäisi olla kuin maan ja meren raja kartoissa" ja
+   * "vanhalta paperilehdeltä jonka reunaviiva on hieman elävä").
+   *
+   * Itse viiva piirretään SVG:nä (js/ui.js piirraArkinReuna), koska
+   * se on ainoa tapa saada aallon korkeus pysymään samana kortin
+   * koosta riippumatta. CSS:n border-image skaalaa aallon reunan
+   * paksuuden mukana, ja 14 pisteen reunassa siitä jäi näkyviin alle
+   * pikselin — eli suora viiva.
+   *
+   * Kortti itse leikataan samalla muodolla (clip-path asetetaan
+   * JS:stä), joten paperin reuna ON piirretty viiva. Siksi kortilla
+   * ei ole tässä omaa reunaa, pyöristystä eikä varjoa: ne piirtyisivät
+   * suorakulmiona viivan alle. Varjo on omassa kerroksessaan, koska
+   * clip-path leikkaisi sen pois.
+   */
+  border-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ulompi kiertynyt katkoviiva ei kuulu arkkiin — se oli juuri se
+ * "tuollainen katkoviiva", jota omistaja ei halunnut. */
+.dialog.arkki .dialog-card::before { display: none; }
+
+/*
+ * Kaksi kerrosta saman muodon ympärillä: varjo alle, viiva päälle.
+ * Ne ovat dialogin lapsia eivätkä kortin, koska kortti vierii.
+ */
+.arkin-varjo,
+.arkin-reuna {
+  position: absolute;
+  pointer-events: none;
+  animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
+}
+
+.arkin-varjo {
+  z-index: 0;
+  /* Terävä lähivarjo nostaa arkin kartasta irti, pehmeä kaukovarjo
+   * antaa sille painon. drop-shadow seuraa piirretyn reunan muotoa,
+   * box-shadow seuraisi laatikkoa. */
+  filter: drop-shadow(0 2px 0 rgba(70, 51, 31, 0.3))
+          drop-shadow(0 20px 52px rgba(0, 0, 0, 0.55));
+}
+
+/* Täyttö jää kokonaan kortin alle; se on olemassa vain varjoa varten,
+ * ja siksi paperin pohjasävyä — reunan pehmennyspikselit eivät saa
+ * vilkkua vieraana värinä. */
+.arkin-varjo path { fill: #e8d5a9; }
+
+.arkin-reuna { z-index: 3; }
+
+.arkin-reuna path {
+  fill: none;
+  stroke: var(--map-ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  opacity: 0.9;
+}
+
+@media (min-width: 700px) {
+  .dialog.arkki,
+  .dialog.arkki .dialog-card,
+  .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
+    /* Työpöydällä kartta saa näkyä leveämmältä: arkki ei kasva
+     * ruudun mukana loputtomiin, koska rivi pitenisi lukukelvottomaksi. */
+    width: min(calc(100vw - 6rem), 1100px);
+    max-height: calc(100dvh - 3rem);
+  }
+}
+
+/* Avatun aiheen nimi: kuvake ei kerro sitä, joten teksti kertoo. */
+.wiki-kategoria .aihe-nimi {
+  margin: 0 0 0.7rem;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(70, 51, 31, 0.66);
+}
+
+/*
+ * Kuvakeliuskat mitoitetaan mahtumaan YHDELLE riville kapeimmalla
+ * puhelimella (360 px). Yhdeksän liuskaa ja kahdeksan väliä on silloin
+ * noin 33 pistettä liuskaa kohti, joten täyte on laskettu eikä
+ * arvattu: 18 px kuvake + 2 × 4,5 px täyte + reunat.
+ *
+ * Tekstiliuska sai olla väljä; kuvakeliuska ei voi, koska omistajan
+ * toive oli nimenomaan yksi rivi.
+ */
+.wiki-liuskat:has(svg) { gap: 0.15rem; }
+
+.wiki-liuskat button svg { display: block; }
+
+.wiki-liuskat button:has(svg) {
+  padding: 0.3rem 0.28rem 0.34rem;
+  min-width: 0;
+}

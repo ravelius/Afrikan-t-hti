@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 202, teksti: 'Arkin reuna piirtyy kuin rantaviiva kartalla' },
+  { v: 202, teksti: 'Tutki-kortti täyttää ruudun muistiinpanoarkkina' },
+  { v: 202, teksti: 'Aiheliuskat kuvakkeina yhdelle riville' },
   { v: 201, teksti: 'Tutki-ikkunaan kirjanmerkkiliuskat aiheittain' },
   { v: 201, teksti: 'Lontooseen 53 kulttuurinostoa yhdeksään aiheeseen' },
   { v: 200, teksti: 'Työhuone ei enää syö pelin offline-muistia' },

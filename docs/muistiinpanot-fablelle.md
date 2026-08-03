@@ -1072,3 +1072,84 @@ Kolmas asia, joka meni oikein ilman minua: kokoaja kieltäytyi
 rakentamasta, koska uusi paketti puuttui MODULES-listalta. Se on
 tarkistus, jonka olisin voinut ohittaa kirjoittaessani sen — ja se
 esti tänään yhden tiedoston putoamisen yhden tiedoston versiosta.
+
+---
+
+**[Opus]** Rakensin liuskat väärään ikkunaan.
+
+Omistaja kirjoitti "tutki ikkuna", ja minä oletin sen tarkoittavan
+`wiki-dialog`ia, koska sen otsikko on "Lue lisää" ja se on se ikkuna,
+jossa artikkelia luetaan. Tein liuskat sinne, julkaisin, ja omistaja
+vastasi: *"En näe liuskoja Lontoossa."*
+
+Hän oli oikeassa. Pelissä on nappi nimeltä **Tutki**, ja se avaa
+saapumiskortin — ei sitä ikkunaa, johon rakensin. Kaikki mitä hän oli
+kuvaillut, sopi täsmälleen saapumiskorttiin: "yläreunan perustiedot"
+ovat siellä, ja "alun lue lisää … voisi korvata näillä ALLE
+aukeavilla välilehdillä" kuvaa juuri sitä, että Lue lisää -linkki on
+kortissa ja välilehdet tulisivat sen alle.
+
+Luin sen kaksi kertaa enkä nähnyt sitä kummallakaan kerralla.
+
+**Sana oli minulle tiedostonimi, hänelle napin teksti.** Kummallakin
+oli johdonmukainen merkitys, eikä kummankaan tekstistä voinut päätellä
+eroa — vain koodista, jota hän ei lue, tai ruudulta, jota minä en
+katsonut.
+
+Olisin voinut estää tämän yhdellä kysymyksellä ennen rakentamista:
+"tarkoitatko sitä korttia, jonka Tutki-nappi avaa?" Sen sijaan kysyin
+viisi kysymystä asioista, jotka hän oli jo päättänyt.
+
+**Kysyin paljon ja väärää.** Kysymykset koskivat sisältöä, josta
+minulla oli mielipide. Se ainoa jota en kysynyt koski sanaa, jonka
+luulin ymmärtäväni.
+
+Sivuhavainto: rivilaskurini valehteli kolmatta kertaa tänään. Se
+raportoi "8 riviä", kun rivejä oli kaksi — laskin eri `top`-arvoja
+joukkoon, ja saman rivin napit erosivat murto-osapikselillä.
+Korjasin sen vihdoin oikein: topit järjestykseen ja ryhmittely
+kahdeksan pikselin toleranssilla. Kolme kertaa sama virhe eri
+muodoissa ennen kuin kirjoitin sen kunnolla.
+
+---
+
+**[Opus]** Piirsin reunan kolmesti, ja kaksi ensimmäistä kertaa
+mittasin väärää asiaa.
+
+Omistaja halusi Tutki-kortin näyttävän vanhalta paperiarkilta, jonka
+"reunaviiva on hieman elävä" ja jonka reuna on "kuin maan ja meren
+raja kartoissa, ei tuollainen katkoviiva".
+
+**Ensimmäinen yritys:** CSS:n `border-image`, jonka lähteenä aaltoileva
+SVG. Katsoin lähdekoodin ja totesin sen aaltoilevan. Ruudulla se oli
+suora viiva. Border-image skaalaa kuvion reunan paksuuden mukaan: 120
+yksikön laatikkoon piirretty ±1.9 yksikön aalto renderöityi 14 pisteen
+reunassa alle pikselin korkuisena.
+
+**Toinen yritys:** SVG kortin sisällä, oikeissa pikseleissä, poikkeama
+per piste `hash01`:stä. Nyt aalto oli olemassa, mutta se oli kohinaa,
+ei rantaviivaa — ja pisteiden välit vedettiin suorilla, joten joka
+pisteessä oli kulma. Se näytti rispaantuneelta paperilta.
+
+**Kolmas yritys toimi**, ja siinä oli kolme eri asiaa:
+
+1. Poikkeama ei ole arvottu piste pisteeltä vaan **kaksi pehmennettyä
+   aaltoa** — pitkä (~120 px) antaa lahdet ja niemet, lyhyt (~34 px)
+   rikkoo suoran. Rantaviivalla on mittakaava; kohinalla ei ole.
+2. Viiva vedetään **keskipisteiden kautta neliöllisenä käyränä**,
+   jolloin siinä ei ole yhtään kulmaa.
+3. **Sama muoto leikkaa kortin** (`clip-path`). Ilman sitä paperin oma
+   suorakulmio näkyi piirretyn viivan takaa, ja koko vaikutelma meni.
+
+Kaksi asiaa jäi mieleen.
+
+**"Elävä" ei tarkoita satunnaista.** Oletin, että elävyys syntyy
+sattumasta, ja lisäsin sattumaa. Se teki viivasta levottoman, ei
+elävän. Elävyys syntyi vasta kun sattuma sai rakenteen: kaksi
+mittakaavaa ja pehmeä siirtymä niiden välillä.
+
+**Katsoin koodia kun olisi pitänyt katsoa ruutua.** Molemmat
+ensimmäiset versiot olivat lähdekoodina oikein. Kumpikaan ei ollut
+ruudulla oikein. Kolmannen tarkistin suurentamalla kuvakaappauksesta
+palan reunaa kuusinkertaiseksi — se olisi paljastanut molemmat viat
+minuutissa, ja tein sen vasta kolmannella kerralla.
