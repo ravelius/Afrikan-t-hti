@@ -4144,7 +4144,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 .wiki-liuskat button.paalla {
   background: var(--card-bg, #f6e7c6);
   border-color: rgba(70, 51, 31, 0.75);
-  border-bottom-color: var(--card-bg, #f6e7c6);
+  /* --card-bg on liukuväri eikä kelpaa reunaväriksi — selain hylkäisi
+   * koko rivin ja alareuna jäisi tummaksi. Kiinteä paperinsävy vastaa
+   * tarttuvan aiherivin alaosaa, johon liuska kiinnittyy. */
+  border-bottom-color: #eedcb6;
   color: #46331f;
   font-weight: 700;
 }
@@ -4185,7 +4188,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   width: auto;
   max-width: 100%;
   max-height: 280px;
-  margin: 0 0 0.5rem;
+  /* Erilevyiset kuvat keskitetään palstalle — vasemmassa laidassa
+   * kapea kuva jätti oikealle ison tyhjän kaistan. */
+  margin: 0 auto 0.5rem;
   border: 3px solid #f7efdc;
   outline: 1px solid rgba(70, 51, 31, 0.35);
   border-radius: 2px;
@@ -4761,6 +4766,15 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 .wiki-liuskat button:has(svg) {
   padding: 0.3rem 0.28rem 0.34rem;
   min-width: 0;
+}
+
+/* Kapeimmilla puhelimilla (≤ 400 px) yhdeksän kuvaketta ei enää mahdu
+ * riville v203:n leveämmillä arkkireunuksilla — kuvake ja täyte
+ * kapenevat sen verran, että rivi pitää. */
+@media (max-width: 400px) {
+  .wiki-liuskat:has(svg) { gap: 0.12rem; }
+  .wiki-liuskat button:has(svg) { padding: 0.28rem 0.2rem 0.32rem; }
+  .wiki-liuskat button svg { width: 17px; height: 17px; }
 }
 
 </style>
@@ -16658,60 +16672,11 @@ const EUROPE_KULTTUURI = {
   },
 
   lontoo: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Proms — konsertti, jossa seistään',
-        tiedosto: 'Royal Albert Hall, BBC Proms 2017.jpg',
-        teksti: 'Proms on kahdeksan viikon konserttisarja, joka on soinut '
-                  + 'joka kesä vuodesta 1895. Royal Albert Halliin mahtuu 5 272 '
-                  + 'istujaa, mutta halvimmat liput ovat lattialle: prommaajat '
-                  + 'seisovat orkesterin edessä koko illan. Jokainen konsertti '
-                  + 'lähetetään radiossa, joten sen kuulee ilmaiseksi missä '
-                  + 'tahansa.',
-        selite: 'Royal Albert Hall Proms-konsertin aikana. Alhaalla '
-                  + 'areenalla ei ole tuoleja lainkaan — siellä seisova yleisö '
-                  + 'on kuulunut Promsiin alusta asti.',
-        lahde: 'Ed g2s, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'BBC Proms',
-        musiikki: 'https://music.apple.com/fi/search?term=bbc%20proms',
-        musiikkiNimi: 'Proms-konsertteja Apple Musicissa',
-        musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/2/28/ELGAR_Pomp_and_Circumstance_in_D%2C_Opus_39%2C_No._1_-_United_States_Marine_Band.mp3',
-        musiikkiNayteNimi: 'Elgar: Pomp and Circumstance nro 1 — United States Marine Band, PD',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Piirakka, muusi ja vihreä liquor',
-        tiedosto: 'Pie mash and liquor Manze Bermondsey.jpg',
-        teksti: 'Pie and mash on Lontoon satamakortteleiden ruokaa: '
-                  + 'jauhelihapiirakka, perunamuusia ja päälle liquor eli '
-                  + 'vihreä persiljakastike — nimestä huolimatta siinä ei ole '
-                  + 'tippaakaan väkijuomaa. Ennen piirakat tehtiin ankeriaasta, '
-                  + 'sillä Thames oli niitä täynnä ja ne olivat halvinta lihaa '
-                  + 'mitä sai.',
-        selite: 'Annos lontoolaisessa piirakkapuodissa marmoripöydällä. '
-                  + 'Liquor keitettiin alun perin ankeriaan keitinliemestä, ja '
-                  + 'väri tulee persiljasta.',
-        lahde: 'Secretlondon, Wikimedia Commons (CC BY-SA 3.0)',
-        wiki: 'Brittiläinen keittiö',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Maailman ensimmäinen metro',
-        tiedosto: 'Metropolitan Railway, Baker Street Station.jpg',
-        teksti: 'Lontoon metro avattiin 10. tammikuuta 1863 maailman '
-                  + 'ensimmäisenä. Vaunut olivat puuta ja niitä valaistiin '
-                  + 'kaasulyhdyillä, ja maan alla junaa veti höyryveturi — savu '
-                  + 'johdettiin ulos tunneliin jätetyistä aukoista. '
-                  + 'Ensimmäisenä vuonna tehtiin 9,5 miljoonaa matkaa. Nyt '
-                  + 'asemia on 272 ja rataa 400 kilometriä.',
-        selite: 'Baker Streetin asema noin 1863. Krinoliinihameiset '
-                  + 'matkustajat odottavat laiturilla, ja tunnelin suulla '
-                  + 'savuaa höyryveturi.',
-        lahde: 'Wikimedia Commons (PD)',
-        wiki: 'Lontoon metro',
-      },
-    ],
+    /*
+     * Lontoon nostot asuvat kategorioittain kulttuuri-kategoriat.js:ssä
+     * (9 aihetta) — tänne jää vain kulttuurivisa, joka piirretään
+     * saapumiskortille litteästä taulusta.
+     */
     kysymys: {
       q: 'Mikä veti maailman ensimmäisiä metrojunia Lontoossa vuonna 1863?',
       options: [
@@ -18828,28 +18793,6 @@ const KULTTUURI_KATEGORIAT = {
           wiki: 'Lontoon suurpalo',
         },
         {
-          otsikko: 'Markkinat joen jäällä',
-          teksti: 'Vanhassa Lontoon sillassa oli yhdeksäntoista kaarta, ja niiden '
-            + 'paksut tukijalat hidastivat virtaa niin paljon, että Thames '
-            + 'saattoi jäätyä umpeen. Kylminä talvina jäälle pystytettiin '
-            + 'teltat ja pidettiin pakkasmarkkinat. Viimeiset alkoivat 1. '
-            + 'helmikuuta 1814 ja kestivät neljä päivää: tanssia, keilapeliä, '
-            + 'paistettua lammasta ja toistakymmentä painokonetta, jotka '
-            + 'painoivat jäällä muistorunoja ostajille. Yksi näytös oli '
-            + 'norsu, joka talutettiin joen yli Blackfriarsin sillan '
-            + 'alapuolelta. Kun vanha silta purettiin 1831 ja tilalle tuli '
-            + 'leveäkaarinen uusi, vesi pääsi virtaamaan vapaasti — eikä '
-            + 'vuorovesi-Thames ole Lontoon kohdalla jäätynyt umpeen sen '
-            + 'koommin.',
-          tiedosto: 'Frost Fair on the River Thames (1814).jpg',
-          selite: 'Pakkasmarkkinat Thamesin jäällä 4. helmikuuta 1814, kuvattuna '
-            + 'Banksiden rannalta. Jäälle on pystytetty telttoja ja keinuja, '
-            + 'väki keilaa ja tanssii, ja taustalla näkyvät Pyhän Paavalin '
-            + 'kupoli, Monument sekä oikealla vanha Lontoon silta.',
-          lahde: 'George Thompson, Wikimedia Commons (public domain)',
-          wiki: 'Pieni jääkausi',
-        },
-        {
           otsikko: 'Rantakatu on viemärin katto',
           teksti: 'Kesällä 1858 Thames löyhkäsi niin pahasti, että parlamentin '
             + 'jokipuolen verhot kastettiin kalkkikloridiin ja edustajat '
@@ -18868,7 +18811,7 @@ const KULTTUURI_KATEGORIAT = {
             + '(1), matalan tason viemäri (2), metrorata höyryvetureineen (3) '
             + 'ja joen pohjan alle paineilmarata (4); oikealla muurataan '
             + 'uutta rantamuuria ulos jokeen.',
-          lahde: 'The Illustrated London News / Wellcome Collection, Wikimedia Commons (public domain)',
+          lahde: 'The Illustrated London News / Wellcome Collection, Wikimedia Commons (PD)',
           wiki: 'Thames',
         },
         {
@@ -18923,27 +18866,6 @@ const KULTTUURI_KATEGORIAT = {
             + 'häämöttää ohut kuunsirppi.',
           lahde: 'Joseph Mallord William Turner, Wikimedia Commons (PD)',
           wiki: 'William Turner',
-        },
-        {
-          otsikko: 'Tyhjä jalusta, jolle sai nousta',
-          teksti: 'Trafalgar Squaren luoteiskulmaan muurattiin vuonna 1841 '
-            + 'jalusta kuningas Vilhelm IV:n ratsastajapatsasta varten, mutta '
-            + 'rahat loppuivat kesken ja kivi jäi tyhjäksi yli 150 vuodeksi. '
-            + 'Vuodesta 1999 sen päällä on vaihtunut yksi nykytaideteos '
-            + 'kerrallaan, ja kesällä 2009 teos oli ihminen: Antony Gormleyn '
-            + 'One & Other nosti jalustalle 2 400 tavallista ihmistä, kunkin '
-            + 'yhdeksi tunniksi, sadan vuorokauden ajan yötä ja päivää. '
-            + 'Jokainen sai tehdä siellä mitä halusi ja ottaa mukaan sen '
-            + 'minkä jaksoi yksin kantaa, ja jalustaa näytettiin verkossa '
-            + 'suorana lähetyksenä.',
-          tiedosto: 'Gormley-OneandOther-4thPlinth-TrafalgarSq-20090706.jpg',
-          selite: 'Trafalgar Squaren neljäs jalusta One & Other -teoksen '
-            + 'avauspäivän iltana 6. heinäkuuta 2009: jalustalla seisova mies '
-            + 'lukee papereista mikrofoniin turvaverkon reunustamalla '
-            + 'kivellä. Vasemmalla näkyvät National Galleryn kupoli ja St '
-            + 'Martin-in-the-Fieldsin torni, alhaalla katsojajoukko.',
-          lahde: 'Simon Lee, Wikimedia Commons (CC BY 2.0)',
-          wiki: 'Trafalgar Square',
         },
         {
           otsikko: 'Talo, jota ei saanut muuttaa',
@@ -19289,6 +19211,25 @@ const KULTTUURI_KATEGORIAT = {
           lahde: 'Philafrenzy, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Steel pan',
         },
+        {
+          otsikko: 'Proms — konsertti, jossa seistään',
+          tiedosto: 'Royal Albert Hall, BBC Proms 2017.jpg',
+          teksti: 'Proms on kahdeksan viikon konserttisarja, joka on soinut '
+            + 'joka kesä vuodesta 1895. Royal Albert Halliin mahtuu 5 272 '
+            + 'istujaa, mutta halvimmat liput ovat lattialle: prommaajat '
+            + 'seisovat orkesterin edessä koko illan. Jokainen konsertti '
+            + 'lähetetään radiossa, joten sen kuulee ilmaiseksi missä '
+            + 'tahansa.',
+          selite: 'Royal Albert Hall Proms-konsertin aikana. Alhaalla '
+            + 'areenalla ei ole tuoleja lainkaan — siellä seisova yleisö '
+            + 'on kuulunut Promsiin alusta asti.',
+          lahde: 'Ed g2s, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'BBC Proms',
+          musiikki: 'https://music.apple.com/fi/search?term=bbc%20proms',
+          musiikkiNimi: 'Proms-konsertteja Apple Musicissa',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/2/28/ELGAR_Pomp_and_Circumstance_in_D%2C_Opus_39%2C_No._1_-_United_States_Marine_Band.mp3',
+          musiikkiNayteNimi: 'Elgar: Pomp and Circumstance nro 1 — United States Marine Band, PD',
+        },
       ],
     },
     {
@@ -19410,6 +19351,21 @@ const KULTTUURI_KATEGORIAT = {
             + 'teekuppi.',
           lahde: 'RT6HPU, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Kello viiden tee',
+        },
+        {
+          otsikko: 'Piirakka, muusi ja vihreä liquor',
+          tiedosto: 'Pie mash and liquor Manze Bermondsey.jpg',
+          teksti: 'Pie and mash on Lontoon satamakortteleiden ruokaa: '
+            + 'jauhelihapiirakka, perunamuusia ja päälle liquor eli '
+            + 'vihreä persiljakastike — nimestä huolimatta siinä ei ole '
+            + 'tippaakaan väkijuomaa. Ennen piirakat tehtiin ankeriaasta, '
+            + 'sillä Thames oli niitä täynnä ja ne olivat halvinta lihaa '
+            + 'mitä sai.',
+          selite: 'Annos lontoolaisessa piirakkapuodissa marmoripöydällä. '
+            + 'Liquor keitettiin alun perin ankeriaan keitinliemestä, ja '
+            + 'väri tulee persiljasta.',
+          lahde: 'Secretlondon, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Brittiläinen keittiö',
         },
       ],
     },
@@ -19668,6 +19624,21 @@ const KULTTUURI_KATEGORIAT = {
           lahde: 'APK, Commons (CC BY 4.0)',
           wiki: 'Natural History Museum',
         },
+        {
+          otsikko: 'Maailman ensimmäinen metro',
+          tiedosto: 'Metropolitan Railway, Baker Street Station.jpg',
+          teksti: 'Lontoon metro avattiin 10. tammikuuta 1863 maailman '
+            + 'ensimmäisenä. Vaunut olivat puuta ja niitä valaistiin '
+            + 'kaasulyhdyillä, ja maan alla junaa veti höyryveturi — savu '
+            + 'johdettiin ulos tunneliin jätetyistä aukoista. '
+            + 'Ensimmäisenä vuonna tehtiin 9,5 miljoonaa matkaa. Nyt '
+            + 'asemia on 272 ja rataa 400 kilometriä.',
+          selite: 'Baker Streetin asema noin 1863. Krinoliinihameiset '
+            + 'matkustajat odottavat laiturilla, ja tunnelin suulla '
+            + 'savuaa höyryveturi.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Lontoon metro',
+        },
       ],
     },
     {
@@ -19819,7 +19790,7 @@ const KULTTUURI_KATEGORIAT = {
             + 'Ryysyinen väki katselee kullattuihin kehyksiin ripustettuja '
             + 'ylhäisön muotokuvia: mukana on kepin varassa kulkeva mies, '
             + 'lapsia rievuissa ja pyörällisellä laudalla istuva raajarikko.',
-          lahde: 'John Leech, Wikimedia Commons (PD-old-100)',
+          lahde: 'John Leech, Wikimedia Commons (PD)',
           wiki: 'Pilapiirros',
         },
         {
@@ -62824,6 +62795,12 @@ const AIHE_IKONIT = {
   tiede: '<path d="M9.5 3.5h5M10.5 3.5v6L5.5 19a1.6 1.6 0 0 0 1.4 2.4h10.2A1.6 1.6 0 0 0 18.5 19l-5-9.5v-6"/><path d="M7.8 15.4h8.4"/>',
   nykytaide: '<path d="M4 20.5 12 4l8 16.5z"/><path d="M8.2 13h7.6"/>',
   huumori: '<path d="M3.6 8.4c2.8-1.6 5.6-1.6 8.4 0 2.8-1.6 5.6-1.6 8.4 0-.4 5.2-2.6 8.4-4.8 8.4-1.6 0-2.6-1.4-3.6-1.4s-2 1.4-3.6 1.4c-2.2 0-4.4-3.2-4.8-8.4z"/><circle cx="8" cy="11.4" r="1"/><circle cx="16" cy="11.4" r="1"/>',
+  // Varaliuska kaupungeille, joilla on vain litteä nostolista.
+  elama: '<circle cx="12" cy="12" r="4.2"/><path d="M12 3.4v2.4M12 18.2v2.4M3.4 12h2.4M18.2 12h2.4M5.9 5.9l1.7 1.7M16.4 16.4l1.7 1.7M18.1 5.9l-1.7 1.7M7.6 16.4l-1.7 1.7"/>',
+  // Yleiskuvake aiheelle, jolle ei ole omaa: kirjanmerkki. Ilman tätä
+  // tuntematon aihe-id piirtyisi leveänä tekstinappina ja rikkoisi
+  // yhden rivin kuvakerivin.
+  muu: '<path d="M7 3.6h10v16.8l-5-3.4-5 3.4z"/>',
 };
 
 /**
@@ -66571,9 +66548,14 @@ class UI {
     // eivätkä lataudu ennen kuin lohko avataan; ääninäyte alkaisi ladata
     // vasta napin painalluksesta.
     const kulttuuri = (KULTTUURIT[this.game.pack.id] ?? {})[city.id];
-    for (const nosto of kulttuuri?.nostot ?? []) {
-      if (nosto.tiedosto) kuvat.push(valokuvaUrl(nosto.tiedosto, 640));
-      if (nosto.aani) aanet.push(aaniOsoite(jaaAlku(nosto.aani).url));
+    // Kategoriakaupungissa litteät nostot eivät piirry, joten niiden
+    // kuvia ei esiladata — ensimmäisen aiheen kuvat renderöityvät heti
+    // avattaessa eivätkä nekään tarvitse erillistä esilatausta.
+    if (!(KULTTUURI_KATEGORIAT[city.id] ?? []).length) {
+      for (const nosto of kulttuuri?.nostot ?? []) {
+        if (nosto.tiedosto) kuvat.push(valokuvaUrl(nosto.tiedosto, 640));
+        if (nosto.aani) aanet.push(aaniOsoite(jaaAlku(nosto.aani).url));
+      }
     }
     // Silloin ja nyt -valokuvapari.
     const valokuva = (VALOKUVAT[this.game.pack.id] ?? {})[city.id];
@@ -66836,56 +66818,9 @@ class UI {
       // kaiutinkuvakkeella erottuu tekstilinkeistä (omistajan toive).
       const otsikkoRivi = html('div', 'kulttuuri-otsikkorivi');
       otsikkoRivi.appendChild(html('p', 'kulttuuri-otsikko', nosto.otsikko));
-      if (nosto.aani) {
-        const nappi = html('button', 'kulttuuri-kuuntele');
-        nappi.type = 'button';
-        nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
-          + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
-          + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
-          + '</svg><span>Kuuntele näyte</span><span class="aika" hidden></span>';
-        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(nosto, nappi));
-        otsikkoRivi.appendChild(nappi);
-      }
-      // Muusikoista linkki Apple Musiciin otsikon korkeudella oikeassa
-      // reunassa (omistajan toive): aukeaa uuteen välilehteen, jotta
-      // peli jää taustalle odottamaan. Artistin nimi vihjeenä.
-      if (nosto.musiikki) {
-        const linkki = html('a', 'kulttuuri-musiikkilinkki');
-        linkki.href = nosto.musiikki;
-        linkki.target = '_blank';
-        linkki.rel = 'noopener';
-        if (nosto.musiikkiNimi) linkki.title = nosto.musiikkiNimi;
-        linkki.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'
-          + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
-          + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
-          + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> Apple Music';
-        otsikkoRivi.appendChild(linkki);
-      }
-      // Ilmainen ääninäyte Apple Music -linkin rinnalle (omistajan
-      // toive): "musiikin pitäisi lähteä soimaan suoraan kun sitä
-      // painaa". Ennen tässä oli linkki kansallisen yleisradion
-      // etusivulle, mistä musiikkia ei kuulunut — sivulle päätyminen
-      // on eri asia kuin musiikin kuuleminen.
-      //
-      // Näyte on vapaasti lisensoitu äänite (Wikimedia Commons tai
-      // archive.org). Kaikelle ei ole sellaista: ABBAlta, Röyksoppilta
-      // ja Šostakovitšilta ei ole ilmaista levytystä, ja silloin
-      // korttiin jää pelkkä Apple Music -linkki. Tyhjä nappi lupaisi
-      // enemmän kuin antaa.
-      if (nosto.musiikkiNayte) {
-        const nappi = html('button', 'kulttuuri-kuuntele kulttuuri-musiikkinayte');
-        nappi.type = 'button';
-        nappi.title = nosto.musiikkiNayteNimi ?? 'Vapaasti lisensoitu ääninäyte';
-        nappi.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
-          + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
-          + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
-          + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg>'
-          + '<span>Kuuntele musiikkia</span><span class="aika" hidden></span>';
-        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(
-          { aani: nosto.musiikkiNayte, otsikko: nosto.otsikko }, nappi,
-        ));
-        otsikkoRivi.appendChild(nappi);
-      }
+      // Ääninäyte, Apple Music ja ilmainen musiikkinäyte — yhteinen
+      // toteutus kategorianostojen kanssa (lisaaNostonNapit).
+      this.lisaaNostonNapit(otsikkoRivi, nosto);
       lohko.appendChild(otsikkoRivi);
       if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
         const kuva = document.createElement('img');
@@ -67385,7 +67320,6 @@ class UI {
     }
     // Ei Yleistä-liuskaa: artikkeli asuu "Lue lisää" -linkin takana
     // omassa ikkunassaan, ei tällä rivillä.
-    const osiot = kategoriat;
     const valitse = (id) => {
       for (const nappi of this.arrivalLiuskat.querySelectorAll('button')) {
         const paalla = nappi.dataset.osio === id;
@@ -67396,7 +67330,7 @@ class UI {
       this.piirraKategoria(auki);
       this.arrivalKategoria.hidden = false;
     };
-    for (const osio of osiot) {
+    for (const osio of kategoriat) {
       const nappi = html('button');
       nappi.type = 'button';
       nappi.dataset.osio = osio.id;
@@ -67405,17 +67339,18 @@ class UI {
       // ruudulla näkyy vain kuvake.
       nappi.title = osio.nimi;
       nappi.setAttribute('aria-label', osio.nimi);
-      const piirto = AIHE_IKONIT[osio.id];
-      nappi.innerHTML = piirto
-        ? `<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+      // Kuvake voi tulla datasta (osio.ikoni), jolloin uusi kaupunki ei
+      // vaadi koodimuutosta; oletuskartta kattaa vakioaiheet ja
+      // yleiskuvake loput.
+      const piirto = osio.ikoni ?? AIHE_IKONIT[osio.id] ?? AIHE_IKONIT.muu;
+      nappi.innerHTML = `<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
              stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-             stroke-linejoin="round">${piirto}</svg>`
-        : suojaa(osio.nimi);
+             stroke-linejoin="round">${piirto}</svg>`;
       nappi.addEventListener('click', () => valitse(osio.id));
       this.arrivalLiuskat.appendChild(nappi);
     }
     this.arrivalLiuskat.hidden = false;
-    valitse(osiot[0].id);
+    valitse(kategoriat[0].id);
   }
 
   /** Yhden kategorian nostot: johdanto ja sen alla kortit. */
@@ -67438,7 +67373,13 @@ class UI {
     }
     for (const nosto of kategoria.nostot ?? []) {
       const lohko = html('div', 'wiki-nosto');
-      lohko.appendChild(html('h3', '', nosto.otsikko));
+      // Otsikko ja kuuntelu-/musiikkinapit samalla rivillä — sama
+      // toiminnallisuus kuin litteissä nostoissa, ettei monistaminen
+      // hävitä Apple Music -linkkejä ja ääninäytteitä.
+      const otsikkoRivi = html('div', 'kulttuuri-otsikkorivi');
+      otsikkoRivi.appendChild(html('h3', '', nosto.otsikko));
+      this.lisaaNostonNapit(otsikkoRivi, nosto);
+      lohko.appendChild(otsikkoRivi);
       if (nosto.tiedosto) {
         const kuva = document.createElement('img');
         // Sama syy kuin litteissä nostoissa: nollan kokoinen laiska kuva
@@ -67456,8 +67397,58 @@ class UI {
       }
       lohko.appendChild(html('p', 'teksti', nosto.teksti));
       if (nosto.selite) lohko.appendChild(html('p', 'selite', nosto.selite));
+      if (nosto.wiki) {
+        const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
+        nappi.type = 'button';
+        nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
+        lohko.appendChild(nappi);
+      }
       if (nosto.lahde) lohko.appendChild(html('p', 'lahde', nosto.lahde));
       this.arrivalKategoria.appendChild(lohko);
+    }
+  }
+
+  /*
+   * Ääninäyte-, Apple Music- ja musiikkinäytenapit otsikkoriville.
+   * Yksi toteutus molemmille nostomuodoille (litteä ja kategoria) —
+   * kaksi kopiota ajautuisi erilleen ensimmäisellä muutoksella.
+   */
+  lisaaNostonNapit(otsikkoRivi, nosto) {
+    if (nosto.aani) {
+      const nappi = html('button', 'kulttuuri-kuuntele');
+      nappi.type = 'button';
+      nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
+        + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+        + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+        + '</svg><span>Kuuntele näyte</span><span class="aika" hidden></span>';
+      nappi.addEventListener('click', () => this.kulttuuriAaniNapista(nosto, nappi));
+      otsikkoRivi.appendChild(nappi);
+    }
+    if (nosto.musiikki) {
+      const linkki = html('a', 'kulttuuri-musiikkilinkki');
+      linkki.href = nosto.musiikki;
+      linkki.target = '_blank';
+      linkki.rel = 'noopener';
+      if (nosto.musiikkiNimi) linkki.title = nosto.musiikkiNimi;
+      linkki.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'
+        + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+        + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
+        + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> Apple Music';
+      otsikkoRivi.appendChild(linkki);
+    }
+    if (nosto.musiikkiNayte) {
+      const nappi = html('button', 'kulttuuri-kuuntele kulttuuri-musiikkinayte');
+      nappi.type = 'button';
+      nappi.title = nosto.musiikkiNayteNimi ?? 'Vapaasti lisensoitu ääninäyte';
+      nappi.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
+        + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+        + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
+        + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg>'
+        + '<span>Kuuntele musiikkia</span><span class="aika" hidden></span>';
+      nappi.addEventListener('click', () => this.kulttuuriAaniNapista(
+        { aani: nosto.musiikkiNayte, otsikko: nosto.otsikko }, nappi,
+      ));
+      otsikkoRivi.appendChild(nappi);
     }
   }
 
@@ -69660,6 +69651,9 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
+  { v: 220, teksti: 'Tutki-aiheet valmiit monistettaviksi muualle' },
+  { v: 220, teksti: 'Lontoon metro, Proms ja piirakka aiheisiin' },
+  { v: 220, teksti: 'Aiheisiin Lue lisää -napit ja musiikkilinkit' },
   { v: 219, teksti: 'Loput 13 luentaa: koko Aasia on nyt luettu' },
   { v: 218, teksti: 'Korjattu: Tutki-ikkuna ei auennut monessa kaupungissa' },
   { v: 217, teksti: 'Vuoret, joet ja järvet kartalle' },
@@ -69756,11 +69750,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-<<<<<<< Updated upstream
-const APP_VERSION = '2026-08-03.219';
-=======
-const APP_VERSION = '2026-08-03.217';
->>>>>>> Stashed changes
+const APP_VERSION = '2026-08-03.220';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');

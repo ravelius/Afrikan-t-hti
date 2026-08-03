@@ -4136,7 +4136,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 .wiki-liuskat button.paalla {
   background: var(--card-bg, #f6e7c6);
   border-color: rgba(70, 51, 31, 0.75);
-  border-bottom-color: var(--card-bg, #f6e7c6);
+  /* --card-bg on liukuväri eikä kelpaa reunaväriksi — selain hylkäisi
+   * koko rivin ja alareuna jäisi tummaksi. Kiinteä paperinsävy vastaa
+   * tarttuvan aiherivin alaosaa, johon liuska kiinnittyy. */
+  border-bottom-color: #eedcb6;
   color: #46331f;
   font-weight: 700;
 }
@@ -4177,7 +4180,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   width: auto;
   max-width: 100%;
   max-height: 280px;
-  margin: 0 0 0.5rem;
+  /* Erilevyiset kuvat keskitetään palstalle — vasemmassa laidassa
+   * kapea kuva jätti oikealle ison tyhjän kaistan. */
+  margin: 0 auto 0.5rem;
   border: 3px solid #f7efdc;
   outline: 1px solid rgba(70, 51, 31, 0.35);
   border-radius: 2px;
@@ -4753,4 +4758,13 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 .wiki-liuskat button:has(svg) {
   padding: 0.3rem 0.28rem 0.34rem;
   min-width: 0;
+}
+
+/* Kapeimmilla puhelimilla (≤ 400 px) yhdeksän kuvaketta ei enää mahdu
+ * riville v203:n leveämmillä arkkireunuksilla — kuvake ja täyte
+ * kapenevat sen verran, että rivi pitää. */
+@media (max-width: 400px) {
+  .wiki-liuskat:has(svg) { gap: 0.12rem; }
+  .wiki-liuskat button:has(svg) { padding: 0.28rem 0.2rem 0.32rem; }
+  .wiki-liuskat button svg { width: 17px; height: 17px; }
 }
