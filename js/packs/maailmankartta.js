@@ -34,6 +34,7 @@ import { NORTHAMERICA } from './northamerica.js';
 import { SOUTHAMERICA } from './southamerica.js';
 import { OCEANIA } from './oceania.js';
 import { themedTokenTypes } from '../tokens.js';
+import { MAAILMANKARTAN_MAASTO } from './maailmankartta-maasto.js';
 
 const LAHTEET = [EUROPE, AFRICA, MIDDLE_EAST, ASIA, NORTHAMERICA, SOUTHAMERICA, OCEANIA];
 
@@ -4736,6 +4737,7 @@ export const MAAILMANKARTTA = {
   map: {
     width: 12000, height: 5399, outlines: OUTLINES, kiertava: true,
     cityCountry: CITY_COUNTRY,
+    maasto: MAAILMANKARTAN_MAASTO,
     countryShapes: COUNTRY_SHAPES,
   },
   cities: CITIES,

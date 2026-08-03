@@ -80,15 +80,42 @@ const rengas = (pisteet) => {
   return ulos;
 };
 
-const vyohyke = (renkaat) => (renkaat ?? []).flatMap(rengas);
+/*
+ * Laudan ulkopuolelle jäävä muoto pois.
+ *
+ * Aineisto kattaa koko pallon, mutta lauta on rajattu leveysasteille
+ * -58…76: Miller venyttää navat äärettömiin eikä siellä ole kaupunkeja.
+ * Etelämanner projisoituu siis laudan alareunan ALAPUOLELLE ja piirtyi
+ * silti — ruskeana möykkynä kartan alle. Grönlanti taas ylittää
+ * yläreunan osittain ja kuuluu ehdottomasti mukaan.
+ *
+ * Siksi ratkaisee enemmistö: muoto säilyy, jos suurin osa siitä on
+ * laudalla. Reunan yli valuva osa on kunnossa — kartta jatkuu reunojen
+ * yli muutenkin.
+ */
+const KORKEUS = MAAILMANKARTTA.map.height;
+const enimmakseenLaudalla = (pisteet) => {
+  const sisalla = pisteet.filter(([, y]) => y >= 0 && y <= KORKEUS).length;
+  return sisalla > pisteet.length * 0.5;
+};
+
+let pudotettu = 0;
+const suodata = (renkaat) => (renkaat ?? []).filter((r) => {
+  const kelpaa = enimmakseenLaudalla(viiva(r));
+  if (!kelpaa) pudotettu += 1;
+  return kelpaa;
+});
+
+const vyohyke = (renkaat) => suodata(renkaat).flatMap(rengas);
 
 const maasto = {
   keski: vyohyke(korkeus?.keski),
   ylos: vyohyke(korkeus?.ylos),
   huippu: vyohyke(korkeus?.huippu),
-  jarvet: (jarvet ?? []).flatMap((j) => rengas(j.rengas ?? j)
-    .map((r) => ({ nimi: j.nimi ?? null, rengas: r }))),
-  joet: (joet ?? []).map((j) => ({ nimi: j.nimi ?? null, pisteet: viiva(j.pisteet ?? j) })),
+  jarvet: (jarvet ?? []).filter((j) => enimmakseenLaudalla(viiva(j.rengas ?? j)))
+    .flatMap((j) => rengas(j.rengas ?? j).map((r) => ({ nimi: j.nimi ?? null, rengas: r }))),
+  joet: (joet ?? []).filter((j) => enimmakseenLaudalla(viiva(j.pisteet ?? j)))
+    .map((j) => ({ nimi: j.nimi ?? null, pisteet: viiva(j.pisteet ?? j) })),
 };
 
 const pisteita = (lista) => lista.reduce((s, r) => s + (r.pisteet ?? r.rengas ?? r).length, 0);
@@ -97,6 +124,7 @@ console.log(`ylos    ${maasto.ylos.length} rengasta, ${pisteita(maasto.ylos)} pi
 console.log(`huippu  ${maasto.huippu.length} rengasta, ${pisteita(maasto.huippu)} pistettä`);
 console.log(`järvet  ${maasto.jarvet.length}, ${pisteita(maasto.jarvet)} pistettä`);
 console.log(`joet    ${maasto.joet.length}, ${pisteita(maasto.joet)} pistettä`);
+console.log(`laudan ulkopuolelta pudotettu ${pudotettu} muotoa`);
 
 if (kuiva) process.exit(0);
 

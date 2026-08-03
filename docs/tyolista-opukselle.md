@@ -98,6 +98,72 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   diagnosoitu väärin). **Afrikka jätettiin myöhemmäksi omistajan
   päätöksellä 1.8.2026** — ei siis unohdus.
 
+## PÄÄTETTY: aarteet ja varusteet yhdistetyllä kartalla
+
+**Omistaja vastasi kyselyyn 3.8.2026. Neljä päätöstä:**
+
+1. **Aarremalli: yksi per maanosa.** Eurooppa, Afrikka, Lähi-itä ja Aasia
+   pitävät nykyiset aarteensa, ja uudet mantereet saavat omansa. Peli
+   jatkuu kunnes kaikki on löydetty; alkuun ei tarvitse palata.
+2. **Ensimmäiseen erään vain monimutkaiset linssit.** Omistajan sanoin:
+   *"Tee ainoastaan ne monimutkaisemmat, esim. väestön liikehdintä,
+   historiakartat, oikea topografia jne. Nämä voi tehdä aarteiksi jo nyt
+   vaikka toiminnallisuus vielä puuttuu. Toteutetaan ne myöhemmin."*
+   Ja perään: *"Maailman radio oli myös yksi aarre."* Yksinkertaiset
+   varusteet (kiikari, kompassi, kiniini) jäävät siis odottamaan.
+3. **Löytäminen: laatan alta JA kokemuspisteillä.** Molemmat reitit,
+   ei ostamista kaupungista.
+4. **Kuluminen: sekamalli.** Osa kuluu käytössä, osa on pysyviä.
+
+### Mitä päätökset tarkoittavat käytännössä
+
+**Linssi ei ole varuste.** Varuste auttaa voittamaan — karsii vääriä
+vastauksia, maksaa laivalipun. Linssi ei auta voittamaan lainkaan: se
+näyttää maailmasta jotain mitä ei muuten näe. Juuri siksi linssit
+kelpaavat aarteiksi ilman että peli menee epätasapainoon, ja siksi
+päätös 4 osuu luontevasti: **linssit ovat pysyviä, varusteet kuluvat.**
+Kertakäyttöinen linssi olisi julma — kerran nähtyä maailmaa ei oteta
+pois.
+
+Päätös 3 seuraa samasta: laatan alta löytyvä linssi on onnenkauppa,
+kokemuspisteillä ansaittu on palkinto uteliaisuudesta. Kumpikin reitti
+tarvitaan, koska pelkkä laatta jättäisi ahkeran pelaajan tyhjin käsin.
+
+### Täysi lista edistyneistä linsseistä ja kojeista
+
+Omistajan pyyntö: *"Listaa mitkä voisi olla näitä edistyneitä laseja
+yms."* Lista on työhuoneen Lasit-välilehdellä (`js/tyohuone-data.js`,
+`LASIT`) kokonaisuudessaan perusteluineen. Tiivistettynä, helpoimmasta
+työläimpään:
+
+| # | linssi | tila | mihin nojaa |
+|---|---|---|---|
+| 1 | **Maailman radio** | **valmis** | 87 maan suorat lähetykset ovat jo pelissä — aarteeksi tekeminen on pelkkä lukko |
+| 2 | **Oikea topografia** | ideoitava | ETOPO1 on jo haettu repoon; sama ajo antaa niin monta vyöhykettä kuin halutaan |
+| 3 | **Lämpökartat** (onnellisuus, BKT, väkiluku) | ideoitava | maiden rajat ja osa luvuista ovat jo pelissä |
+| 4 | **Väestön liikehdintä** | ideoitava | uusi kaarikerros; YK:n muuttoliikeaineisto |
+| 5 | **Animoitu historiakartta** (Silkkitie) | ideoitava | sama kaarikerros, työläin osa on aineiston vuosiluvut |
+| 6 | **Ihmisen leviäminen Afrikasta** | ideoitava | sama koneisto, logaritminen aikajana |
+| 7 | **Museokuva kaupungista** | ideoitava | Met, Smithsonian, Rijksmuseum — kaikki CC0 |
+| 8 | **Tuulet ja merivirrat** | ideoitava | selittää pelin omat merireitit; monsuuni kääntyy puolivuosittain |
+| 9 | **Yön kartta: maailma valoissa** | ideoitava | NASA Black Marble, yksi public domain -kuva |
+| 10 | **Kielten kartta** | ideoitava | Glottolog/WALS; antaa selityksen Kuuntele kieltä -napille |
+| 11 | **Ilmastovyöhykkeet** | ideoitava | Köppen, CC BY, valmiina monikulmioina |
+| 12 | **Vanhojen karttojen linssi** | ideoitava | tarinallisesti osuvin; lisenssi tarkistettava |
+| 13 | **Tähtitaivas ja sekstantti** | ideoitava | ainoa KOJE eikä linssi — siinä on tekemistä |
+| 14 | **Aikavyöhykkeet ja päivämääräraja** | ideoitava | pienin työ, iso tarina: Vernen voitettu vuorokausi |
+
+**Suositukseni järjestykseksi:** 1 → 2 → 9 → 3. Radio on valmis, ja
+topografia sekä yön kartta ovat kumpikin lähes pelkkää piirtoa jo
+olemassa olevasta aineistosta. Vasta niiden jälkeen kannattaa rakentaa
+kaarikerros, jota kohdat 4, 5, 6 ja osin 13 kaikki tarvitsevat — se on
+yksi työ, joka avaa neljä linssiä.
+
+Aarteita on maanosia myöten tarpeen noin kymmenen, joten lista riittää
+kattamaan koko kartan yhdellä kierroksella.
+
+### Alkuperäinen pohdinta (säilytetty)
+
 ## PÄÄTTÄMÄTTÄ: aarteet ja varusteet yhdistetyllä kartalla
 
 Omistajan linjaus 2.8.2026: *"Tässä pelissä ei tarvitse enää palata niin

@@ -2427,23 +2427,43 @@ export class UI {
 
     const kaksiSormea = (e) => {
       const [a, b] = [e.touches[0], e.touches[1]];
-      const laatikko = pane.getBoundingClientRect();
       return {
         etaisyys: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
-        keski: {
-          x: (a.clientX + b.clientX) / 2 - laatikko.left,
-          y: (a.clientY + b.clientY) / 2 - laatikko.top,
-        },
+        // Asiakaskoordinaatteina: paneelin suhteen laskettu keskipiste
+        // ei kelpaa ankkuriksi, koska elementti ei ala paneelin kulmasta.
+        keski: { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 },
       };
     };
 
-    /** Paneelin piste laudan koordinaateiksi nykyisellä mittakaavalla. */
-    const laudalle = (m) => {
-      const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
-      const skaala = this.zoomSkaala || 1;
+    /*
+     * Ruudun piste laudan koordinaateiksi — ELEMENTIN OMASTA
+     * SIJAINNISTA, ei zoomimuuttujista.
+     *
+     * Ensin laskin tämän kaavalla panX/panY ja zoomYlaReuna. Kaava on
+     * oikein, mutta se olettaa SVG:n alkavan paneelin vasemmasta
+     * yläkulmasta. Pystysuunnassa se ei pidä paikkaansa: lähikuvassa
+     * elementti on `align-self: flex-start`, aloituskartalla `center`,
+     * ja asettelu siirtää sitä. Ero näkyi juuri niin kuin omistaja
+     * kuvasi — kartta heilahti sormien irrotessa, ja heilahdus oli
+     * lähes kokonaan pystysuuntainen.
+     *
+     * getBoundingClientRect ja viewBox kertovat totuuden ilman
+     * oletuksia, ja sama laskenta kelpaa kumpaankin suuntaan.
+     */
+    const laudanKuvaus = () => {
+      const r = this.svg.getBoundingClientRect();
+      const vb = this.svg.viewBox?.baseVal;
+      if (!r.width || !vb?.width) return null;
+      return { r, vb, pxPerYks: r.width / vb.width };
+    };
+
+    /** Asiakaskoordinaatti laudan koordinaatiksi. */
+    const laudalle = (asiakas) => {
+      const k = laudanKuvaus();
+      if (!k) return { x: 0, y: 0 };
       return {
-        x: box.x + (m.x - (this.panX ?? 0)) / skaala,
-        y: (this.zoomYlaReuna ?? box.y) + (m.y - (this.panY ?? 0)) / skaala,
+        x: k.vb.x + (asiakas.x - k.r.left) / k.pxPerYks,
+        y: k.vb.y + (asiakas.y - k.r.top) / k.pxPerYks,
       };
     };
 
@@ -2484,7 +2504,8 @@ export class UI {
       // mistä ele alkoi.
       const kerroin = Math.min(suurin, Math.max(pienin, nipistys.kerroin * (etaisyys / nipistys.etaisyys)));
       nipistys.suhde = kerroin / nipistys.kerroin;
-      const m = nipistys.keski;
+      const laatikko = pane.getBoundingClientRect();
+      const m = { x: nipistys.keski.x - laatikko.left, y: nipistys.keski.y - laatikko.top };
       const tx = m.x - (m.x - nipistys.panX) * nipistys.suhde;
       const ty = m.y - (m.y - nipistys.panY) * nipistys.suhde;
       this.svg.style.transform =
@@ -2496,6 +2517,7 @@ export class UI {
       const { pienin } = this.zoomiRajat();
       const kerroin = nipistys.kerroin * nipistys.suhde;
       const kohde = nipistys.kohde;
+      const keski = nipistys.keski;
       nipistys = null;
       this.kartanRaahaus = false;
       document.body.classList.remove('kartta-raahaus');
@@ -2511,11 +2533,33 @@ export class UI {
         this.paivitaZoomiNapit();
         return;
       }
+      /*
+       * Uusi mittakaava — ja sen jälkeen ankkuri takaisin sormien alle.
+       *
+       * fitViewBox keskittää kartan zoomKohteeseen eli ruudun KESKELLE.
+       * Eleen aikana ankkuri on kuitenkin sormien keskipisteessä, ja jos
+       * se lopuksi siirretään ruudun keskelle, kartta heilahtaa juuri sen
+       * verran kuin sormet olivat keskeltä sivussa. Omistaja: "kartta
+       * heilahtaa rajusti kun sormet päästää irti."
+       *
+       * Siksi vieritys lasketaan tässä uudelleen suoraan ankkurista:
+       * piste, joka oli sormien alla, on siellä yhä.
+       */
       this.zoomiVapaa = kerroin;
       this.zoomKohde = kohde;
       this.panX = null;
       this.panY = null;
       this.fitViewBox();
+      const k = laudanKuvaus();
+      if (k) {
+        // Elementin asettelusijainti = nykyinen kulma miinus nykyinen siirto.
+        const asetteluX = k.r.left - (this.panX ?? 0);
+        const asetteluY = k.r.top - (this.panY ?? 0);
+        this.asetaPan(
+          keski.x - asetteluX - (kohde.x - k.vb.x) * k.pxPerYks,
+          keski.y - asetteluY - (kohde.y - k.vb.y) * k.pxPerYks,
+        );
+      }
       this.paivitaZoomiNapit();
       this.taydennaTaide({ heti: true });
     };
