@@ -818,6 +818,42 @@ export const KAUPUNKI_LISTA = PACKS
 const KAUPUNKIKORI_AVAIN = 'matkakirja-kaupunkivalinnat';
 
 /** Kaupungin arvontakori: studiovalinta, muuten kaikki sen äänitykset. */
+/*
+ * Yhdistetty lauta perii mannerlautojen kaupunkiäänet.
+ *
+ * KAUPUNKI_EHDOKKAAT on avainnettu lautatunnuksella, ja se on tässä
+ * projektissa toistuva ansa: yhdistetty lauta ei ole minkään
+ * mannerlaudan tunnus, joten se putoaa jokaisesta tällaisesta
+ * hausta läpi hiljaa. Euroopan 41 kaupunkiäänitystä olivat siis
+ * olemassa mutta eivät soineet lainkaan sillä laudalla, jota
+ * oikeasti pelataan — kaikki 143 kaupunkia soittivat yleiskoria.
+ *
+ * Vika ei näy mistään: ääntä kuuluu, se on oikean maiseman ääni,
+ * eikä mikään kaadu. Se vain ei ole sen kaupungin ääni.
+ *
+ * Periytyminen kirjoitetaan tähän eikä kutsupaikkaan, jotta uusi
+ * kutsuja ei voi unohtaa sitä.
+ */
+const YHDISTETYT = {
+  vanhamaailma: ['europe', 'africa', 'middleeast', 'asia'],
+  maailma: ['europe', 'africa', 'middleeast', 'asia', 'oceania', 'northamerica', 'southamerica'],
+};
+
+/** Laudan omat kaupunkiäänet, yhdistetyillä laudoilla osalautojen omat. */
+function laudanKaupungit(lauta) {
+  const osat = YHDISTETYT[lauta];
+  if (!osat) return KAUPUNKI_EHDOKKAAT[lauta] ?? {};
+  // Ensimmäinen osuma voittaa: sama kaupunkitunnus voi olla kahdella
+  // mannerlaudalla (Istanbul on sekä Euroopassa että Lähi-idässä).
+  const ulos = {};
+  for (const osa of osat) {
+    for (const [id, lista] of Object.entries(KAUPUNKI_EHDOKKAAT[osa] ?? {})) {
+      if (!ulos[id]) ulos[id] = lista;
+    }
+  }
+  return ulos;
+}
+
 export function kaupunkiKori(lauta, cityId) {
   try {
     const kaikki = JSON.parse(localStorage.getItem(KAUPUNKIKORI_AVAIN) ?? '{}');
@@ -826,7 +862,7 @@ export function kaupunkiKori(lauta, cityId) {
   } catch {
     /* yksityinen selaustila — oletus kelpaa */
   }
-  return (KAUPUNKI_EHDOKKAAT[lauta]?.[cityId] ?? [])
+  return (laudanKaupungit(lauta)[cityId] ?? [])
     .map((e) => (e.alku ? `${e.url}#alku=${e.alku}` : e.url));
 }
 
@@ -845,7 +881,7 @@ export function kaupunkiKori(lauta, cityId) {
 export function maaKori(lauta, cityId, cityCountry) {
   const iso = cityCountry?.[cityId];
   if (!iso) return [];
-  const omat = KAUPUNKI_EHDOKKAAT[lauta] ?? {};
+  const omat = laudanKaupungit(lauta);
   const ulos = [];
   for (const [muu, lista] of Object.entries(omat)) {
     if (muu === cityId || cityCountry[muu] !== iso) continue;
