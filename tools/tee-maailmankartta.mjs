@@ -403,6 +403,7 @@ const teksti = `// Maailmankartta: koko maapallo yhtenä kiertävänä karttana.
 
 ${TUONNIT.map((t) => `import { ${t.vienti} } from '${t.tiedosto}';`).join('\n')}
 import { themedTokenTypes } from '../tokens.js';
+import { MAAILMANKARTAN_MAASTO } from './maailmankartta-maasto.js';
 
 const LAHTEET = [${TUONNIT.map((t) => t.vienti).join(', ')}];
 
@@ -493,6 +494,7 @@ export const MAAILMANKARTTA = {
   map: {
     width: ${LEVEYS}, height: ${korkeus}, outlines: OUTLINES, kiertava: true,
     cityCountry: CITY_COUNTRY,
+    maasto: MAAILMANKARTAN_MAASTO,
   },
   cities: CITIES,
   edges: EDGES,

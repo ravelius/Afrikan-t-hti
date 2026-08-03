@@ -2221,6 +2221,50 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .land { fill: url(#land-grad); }
 .lake { fill: #ecd9ae; }
+
+/*
+ * Maasto: korkeusvyöhykkeet, järvet ja joet.
+ *
+ * Omistaja: "Vuorien näkyvyys voisi kuitenkin olla hillitty." Siksi
+ * vyöhykkeet ovat läpikuultavia eivätkä peittäviä — pergamentin
+ * rakeisuus ja maan oma liukuväri näkyvät läpi, ja vuoristo lukee
+ * sävynä eikä uutena karttana kartan päällä.
+ *
+ * Ääriviivaa ei ole. Korkeusvyöhykkeen raja on sopimus eikä rantaviiva,
+ * eikä siitä pidä tulla yhtä terävää kuin mantereen reunasta.
+ */
+.maasto path { stroke: none; }
+.korkeus-keski { fill: #c9a86e; opacity: 0.3; }
+.korkeus-ylos { fill: #a8823f; opacity: 0.34; }
+/*
+ * Lumi on VAALEA SÄVY, ei valkoinen täyttö.
+ *
+ * Alkuperäinen #f6f1e6 oli sekä vaaleampi että harmaampi kuin paperi,
+ * joten se ei näyttänyt lumelta vaan siltä että kartasta puuttuu pala
+ * (omistajan havainto: "Himalaja näyttää reiältä kartalla"). Sepia-
+ * kartalla ei ole valkoista — vaalein sävy on paperi itse, ja mikä
+ * tahansa sitä vaaleampi luetaan aukoksi.
+ *
+ * Siksi sävy on lämmin ja paperin puolella: se vaalenee ruskeasta
+ * ylöspäin mutta pysyy saman perheen värinä. Toinen puoli korjausta on
+ * aineistossa: lumiraja nostettiin 4000 metristä 5000 metriin, jolloin
+ * Tiibetin ylätasanko jäi ruskeaksi ja vaalea sävy kutistui
+ * harjanteeksi. Läiskä näytti reiältä, nauha näyttää vuorelta.
+ */
+.korkeus-huippu { fill: #f0e3c6; opacity: 0.55; }
+
+/* Suuret järvet hyvin kevyesti (omistajan sana: "hyvin kevyesti"). */
+.iso-jarvi { fill: #b9c9cf; opacity: 0.55; }
+
+/* Joet kevyen sinisinä. Viiva on ohut, koska niitä on paljon. */
+.joki {
+  fill: none;
+  stroke: #7d9aa8;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.5;
+}
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
 /* Maiden rajat: hyvin hento katkoviiva vanhan kartan tapaan. */

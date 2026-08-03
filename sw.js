@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-03.216';
+const CACHE = 'matkakirja-2026-08-03.217';
 const SHELL = [
   './',
   './index.html',
@@ -16,6 +16,9 @@ const SHELL = [
   './js/wiki.js',
   './js/media.js',
   './js/packs/maailmankartta.js',
+  './js/packs/maailmankartta-maasto.js',
+  './js/packs/maasto-vedet.js',
+  './js/packs/maasto-korkeus.js',
   './js/packs/maailma.js',
   './js/packs/maailma-questions.js',
   './js/packs/africa.js',
@@ -450,12 +453,36 @@ self.addEventListener('fetch', (event) => {
         || (osoite.hostname.endsWith('.r2.dev')
           && /^\/(kuvat|liput)\//.test(osoite.pathname)));
     if (!kuvalahde) return;
+    /*
+     * CORS-nouto vain sinne, mistä sen tiedetään onnistuvan.
+     *
+     * Wikimedia lähettää Access-Control-Allow-Origin: *, joten sieltä
+     * vastaus on tavallinen (ei opaakki) ja kelpaa koriin sellaisenaan.
+     *
+     * Peili (R2:n oma pub-*.r2.dev-osoite) EI lähetä sitä otsaketta.
+     * Sinne tehty { mode: 'cors' } -nouto hylätään aina — ja juuri niin
+     * kävi: jokainen peilikuva epäonnistui palvelutyöntekijässä, ja peli
+     * eli koko ajan Commons-varareitin varassa. Yksittäinen kuva näytti
+     * silti toimivan, joten vika ei näkynyt mistään — paitsi silloin kun
+     * kuvia pyydettiin monta kerralla ja Commons alkoi rajoittaa: silloin
+     * pino jäi tyhjäksi tai kuva rikkinäiseksi.
+     *
+     * Peilille tehdään siis pyyntö sellaisenaan (kuvan oma no-cors),
+     * jolloin se onnistuu. Vastausta ei panna koriin: opaakki vastaus
+     * vie selaimen kiintiölaskennassa moninkertaisen tilan todelliseen
+     * kokoonsa nähden, ja peilin kuvilla on 30 vuorokauden
+     * Cache-Control, jonka selaimen oma välimuisti hoitaa.
+     *
+     * Offline-tuen saa takaisin lisäämällä ämpäriin CORS-säännön
+     * (Cloudflare: R2 > Settings > CORS policy, AllowedOrigins *).
+     * Silloin tämän ehdon voi poistaa.
+     */
+    const peilista = osoite.hostname.endsWith('.r2.dev');
     event.respondWith(
       caches.open(KUVACACHE).then(async (kuvat) => {
         const osuma = await kuvat.match(event.request.url);
         if (osuma) return osuma;
-        // CORS-nouto: upload.wikimedia.org sallii sen, ja vastaus on
-        // silloin tavallinen (ei opaakki), joten se ei paisuta kiintiötä.
+        if (peilista) return fetch(event.request).catch(() => Response.error());
         const vastaus = await fetch(event.request.url, { mode: 'cors' }).catch(() => null);
         if (vastaus && vastaus.ok) kuvat.put(event.request.url, vastaus.clone());
         return vastaus ?? Response.error();

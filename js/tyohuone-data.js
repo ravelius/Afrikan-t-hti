@@ -169,7 +169,41 @@ export const KAUPUNKIKARTAT = [
       + 'ihmisistä ja kulttuureista.' },
 ];
 
+/*
+ * Edistyneet linssit ja kojeet — nämä ovat aarteita.
+ *
+ * Omistajan päätös 3.8.2026: "Tee ainoastaan ne monimutkaisemmat, esim.
+ * väestön liikehdintä, historiakartat, oikea topografia jne. Nämä voi
+ * tehdä aarteiksi jo nyt vaikka toiminnallisuus vielä puuttuu.
+ * Toteutetaan ne myöhemmin." Ja perään: "Maailman radio oli myös yksi
+ * aarre."
+ *
+ * Ero varusteisiin (VARUSTEET) on tarkoituksellinen. Varuste auttaa
+ * VOITTAMAAN — se karsii vääriä vastauksia tai maksaa laivalipun.
+ * Linssi ei auta voittamaan lainkaan: se näyttää maailmasta jotain,
+ * mitä ei muuten näe. Siksi juuri linssit kelpaavat aarteiksi ilman
+ * että peli menee epätasapainoon, ja siksi niitä voi lisätä yhden
+ * maanosaa kohti sitä mukaa kuin ne valmistuvat.
+ *
+ * Järjestys on karkeasti helpoimmasta työläimpään. Kolme ensimmäistä
+ * nojaa aineistoon, joka on JO haettuna repossa — ne ovat lähinnä
+ * käyttöliittymätyötä. Loput vaativat uuden aineiston.
+ *
+ * tila: kaytossa | sovittu | ideoitava
+ */
 export const LASIT = [
+  { nimi: 'Maailman radio', tila: 'kaytossa',
+    kuvaus: 'Omistajan muistutus 3.8.2026: "Maailman radio oli myös yksi aarre." Suora radiolähetys siitä maasta, jossa pelaaja on — kuuntelet oikeaa asemaa juuri nyt, 150 vuotta isoisän matkan jälkeen.',
+    huomiot: 'AINOA näistä joka on jo rakennettu: js/packs/radiot.js kattaa 87 maata, ja nappi toimii kaupunkinäkymässä. Aarteeksi tekeminen on siis pelkkä lukko eikä uutta koodia: ennen löytämistä nappia ei näy. Tämä on myös paras ensimmäinen aarre-linssi juuri siksi — pelaaja saa heti jotain valmista käteensä, eikä lupausta.' },
+  { nimi: 'Oikea topografia (korkeuslinssi)', tila: 'ideoitava',
+    kuvaus: 'Omistajan oma esimerkki. Kartan pysyvä maasto näyttää vain suuret linjat vaimeana sävynä; tämä linssi näyttää oikean korkeuseron täydellä värillä — laaksot, harjanteet, merenpohjan syvänteet.',
+    huomiot: 'Aineisto on jo haettu: ETOPO1 (NOAA, public domain) tools/hae-korkeusvyohykkeet.mjs:n kautta. Sama ajo tuottaa niin monta vyöhykettä kuin halutaan — pysyvä kartta käyttää kolmea, linssi voi käyttää kymmentä. Työ on siis piirtoa ja väriskaalaa, ei tiedonhakua. Halvin toteuttaa heti radion jälkeen.' },
+  { nimi: 'Lämpökartat: onnellisuus ja muut luvut', tila: 'ideoitava',
+    kuvaus: 'Omistajan idea: onnellisuusindeksi lämpökarttana ja sen muunnelmat — asukasluku, bruttokansantuote, odotettu elinikä, veroprosentti ja niin edelleen.',
+    huomiot: 'Helppo siksi, että peli tuntee jo maiden rajat (map.countryShapes) ja osan luvuista (maatiedot-paketit): kerros on maa ja väri. Aineisto on avointa ja nykyaikaista — World Happiness Report, Maailmanpankki, YK. Opetuksellisesti vahvin kohta on vertailu: kaksi lukua rinnakkain kertoo enemmän kuin kumpikaan yksin, esimerkiksi bruttokansantuote ja onnellisuus.' },
+  { nimi: 'Väestön liikehdintä', tila: 'ideoitava',
+    kuvaus: 'Omistajan oma esimerkki. Mistä ihmiset muuttavat ja minne — sekä isoisän aikana (1800-luvun siirtolaisuus Eurooppa-Amerikka, orjakauppa, siirtomaamuutot) että nyt.',
+    huomiot: 'Sama animoitu koneisto kuin historiakartassa: virta on kaari lähtömaasta kohdemaahan ja paksuus on määrä. Aineisto on olemassa (YK:n muuttoliiketaulukot, CC BY), mutta 1800-luvun luvut ovat epävarmoja ja se pitää sanoa ääneen. Vahva pari ihmisen leviämisen kanssa: sama kuva kahdella aikaskaalalla.' },
   { nimi: 'Animoitu historiakartta', tila: 'ideoitava',
     kuvaus: 'Omistajan idea 2.8.2026: kartta pysyy paikallaan ja sen päällä oleva kerros elää vuosilukujen mukana. Ensimmäinen aihe: Silkkitie. Taikalasit voisivat olla juuri se väline, jolla historialliset kartat näkee.',
     huomiot: 'Tämä on rakennettavissa nykyisillä välineillä. Kartta on jo vektoria, ja pelin oma projektio kääntää leveys- ja pituuspiirit laudan koordinaateiksi — sama kaava, jolla neljä lautaa yhdistettiin. Kerros on siis lista pisteitä ja vuosilukuja, ja aikajana valitsee mitkä niistä näkyvät. Työläin osa ei ole tekniikka vaan AINEISTO: reitit ja rajat pitää saada luotettavasta lähteestä ja vuosiluvut tarkistaa. Yksi tärkeä varaus: mitä kauemmas ajassa mennään, sitä epävarmempia rajat ovat, ja se pitää sanoa pelaajalle ääneen — muuten peli opettaa arvauksia faktoina.' },
@@ -182,6 +216,30 @@ export const LASIT = [
   { nimi: 'Museokuva kaupungista', tila: 'ideoitava',
     kuvaus: 'Omistajan linjaus 2.8.2026: "Paras idea on käyttää museoiden yms kuvia tehtävissä. Olisi kiva että tehtävä liittyy kyseiseen kaupunkiin jossa ollaan." Tehtävä rakennetaan siis oikean museoesineen ympärille, ja esine on sieltä missä pelaaja juuri on: Istanbulissa osmanikäsityötä, Kairossa egyptiläistä, Lissabonissa löytöretkien aineistoa.',
     huomiot: 'Tämä on minipelien tärkein suunta. Lähteet ovat avoimia ja ilmaisia: Met Museum (avoin API, CC0), Smithsonian, Rijksmuseum, Europeana ja Wikimedia Commons. Kuvat menevät saman peilin läpi kuin muutkin, joten ne toimivat myös offline. Kaupunkiin sidonta tehdään esineen alkuperämaan tai -kaupungin perusteella, ja aineisto haetaan etukäteen pelipaketteihin — ei lennossa, ettei tehtävä jää tulematta yhteydettömänä.' },
+  { nimi: 'Tuulet ja merivirrat', tila: 'ideoitava',
+    kuvaus: 'Pasaatituulet, monsuuni ja suuret merivirrat kartalle. Tämä linssi selittää pelin oman kartan: miksi purjelaivan reitti Intiaan kulkee juuri noin ja miksi paluu on eri reitti kuin meno.',
+    huomiot: 'Sopii peliin paremmin kuin mikään muu näistä, koska pelissä JO matkustetaan meritse ja reitit on piirretty. Linssi tekee reiteistä ymmärrettäviä sen sijaan että ne olisivat vain viivoja. Aineisto: NOAA:n ja Copernicuksen avoimet virta- ja tuuliaineistot, joista tarvitaan vain karkea vuodenaikakeskiarvo. Monsuunin vuodenaikavaihtelu on tässä se hieno kohta — sama meri kääntyy toisin päin puolen vuoden välein.' },
+  { nimi: 'Yön kartta: maailma valoissa', tila: 'ideoitava',
+    kuvaus: 'Maapallo yöllä satelliitista. Yhdellä kuvalla näkee missä ihmiset asuvat ja kuinka paljon sähköä heillä on — ja saman kartan päällä isoisän 1873 pimeä maailma, jossa valoa oli vain kaasulampuissa.',
+    huomiot: 'Aineisto on valmis ja ilmainen: NASA Black Marble / VIIRS, public domain, yksi kuva. Tekninen työ on siis vähäinen — kuvan projisointi laudan koordinaatteihin, sama kaava kuin maastolla. Vaikutus on kuitenkin näistä kaikista voimakkain, koska se on valokuva eikä piirros. Korean niemimaa yksin riittää oppitunniksi.' },
+  { nimi: 'Kielten kartta', tila: 'ideoitava',
+    kuvaus: 'Kielikunnat väreinä: mistä suomi on kotoisin, miksi Madagaskarilla puhutaan Borneon sukuista kieltä, kuinka pitkälle indoeurooppalaiset kielet ulottuvat.',
+    huomiot: 'Peli osaa jo soittaa kaupungin kieltä radiona (Kuuntele kieltä), joten linssi antaa sille kuullulle selityksen. Aineisto: Glottolog ja WALS ovat avoimia (CC BY), ja karkea kielikunta-alue riittää — tarkkaa rajaa ei ole olemassakaan. Madagaskar on tässä se yksi kohta, joka jää mieleen lopullisesti.' },
+  { nimi: 'Ilmastovyöhykkeet', tila: 'ideoitava',
+    kuvaus: 'Köppenin ilmastoluokat kartalle: aavikko, savanni, sademetsä, aro, tundra. Selittää sen mitä pelaaja näkee matkalla — miksi Kairon jälkeen tulee hiekkaa ja Nairobin jälkeen ruohoa.',
+    huomiot: 'Aineisto on avointa (Beck ym. 2018, CC BY) ja valmiiksi monikulmioina. Tämä on pysyvän maastokerroksen luonnollinen pari: maasto kertoo korkeuden, ilmasto kertoo mitä siellä kasvaa. Voisi myös näyttää kaksi aikaa rinnakkain — 1873 ja nyt — mutta se on oma päätöksensä eikä kuulu ensimmäiseen versioon.' },
+  { nimi: 'Vanhojen karttojen linssi', tila: 'ideoitava',
+    kuvaus: 'Oikea 1870-luvun kartta pelin kartan päälle: näet maailman niin kuin isoisä sen näki, valkoisine läiskineen ja väärine rannikkoineen.',
+    huomiot: 'Tarinallisesti näistä osuvin — koko peli perustuu isoisän päiväkirjaan. Lähde on David Rumsey Map Collection, mutta lisenssi on CC BY-NC-SA eli ei-kaupallinen; se on tarkistettava ennen kuin tähän sitoutuu. Vaihtoehtona Library of Congressin ja Internet Archiven skannaukset, jotka ovat public domainia. Tekninen pulma on kohdistus: vanha kartta ei ole missään tunnetussa projektiossa, joten se on venytettävä paikoilleen tunnetuista pisteistä käsin.' },
+  { nimi: 'Tähtitaivas ja sekstantti', tila: 'ideoitava',
+    kuvaus: 'Yön taivas siltä leveysasteelta, jossa pelaaja on. Etelänristi näkyy vasta päiväntasaajan eteläpuolella, Pohjantähti katoaa horisonttiin — ja sekstantilla oman sijainnin voi laskea itse, kuten 1873 tehtiin.',
+    huomiot: 'Ainoa näistä, joka on linssin sijaan KOJE: siinä on tekemistä eikä vain katsomista, joten se sopisi myös minipeliksi. Tähtiaineisto on pieni ja vapaa (Yale Bright Star Catalogue, public domain) — kirkkaimmat pari tuhatta tähteä riittää. Laskenta leveysasteesta taivaaksi on suoraviivaista geometriaa.' },
+  { nimi: 'Eläinten linssi', tila: 'ideoitava',
+    kuvaus: 'Lajien levinneisyys ja lintujen muuttoreitit kartalle: sama pääskynen, joka lentää Suomen kesästä Etelä-Afrikkaan, tekee saman matkan kuin pelaaja.',
+    huomiot: 'Kytkeytyy pelin ääniin: xeno-canto (avoin, CC) antaa juuri sen lajin äänen, joka sillä seudulla pesii, ja levinneisyysaineisto tulee GBIF:stä (CC0/CC BY). Muuttoreitti on kaari kuten väestön liikehdinnässä, joten sama piirtokoneisto kelpaa. Kevyt toteuttaa sen jälkeen kun yksi kaarilinssi on kerran tehty.' },
+  { nimi: 'Aikavyöhykkeet ja päivämääräraja', tila: 'ideoitava',
+    kuvaus: 'Aikavyöhykkeet kartalle ja kello jokaisessa kaupungissa. Tämän linssin läpi näkee myös Jules Vernen tempun: itään matkaava voittaa vuorokauden, ja juuri se ratkaisi vedon kahdeksassakymmenessä päivässä.',
+    huomiot: 'Pienin ja halvin näistä: aineisto on IANA:n aikavyöhyketietokanta (public domain) ja pelissä on jo oma kello ja päivälaskuri. Tarinallinen palkinto on kuitenkin iso, koska peli mittaa aikaa muutenkin. Huomioitava historiallinen tarkkuus: vyöhykkeitä ei vuonna 1873 ollut vielä olemassa — ne sovittiin vasta 1884, ja se on itsessään hyvä tarina.' },
 ];
 
 // --- lähteet ------------------------------------------------------------
