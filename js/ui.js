@@ -45,6 +45,7 @@ import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js
 import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
 import { ASIA_SAAPUMISET } from './packs/asia-saapumiset.js';
 import { ASIA_ARTIKKELIT } from './packs/asia-artikkelit.js';
+import { ASIA_VALOKUVAT } from './packs/asia-valokuvat.js';
 import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
@@ -91,7 +92,7 @@ const KULTTUURIT = {
 const VALOKUVAT = {
   africa: AFRICA_VALOKUVAT,
   europe: EUROPE_VALOKUVAT,
-  vanhamaailma: { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT },
+  vanhamaailma: { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT, ...ASIA_VALOKUVAT },
 };
 // Kaupungissa nauhoitettu puhenäyte: kieli kuuluviin omasta napistaan.
 const KIELET = { europe: EUROPE_KIELET, vanhamaailma: EUROPE_KIELET };

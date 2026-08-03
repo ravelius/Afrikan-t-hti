@@ -384,6 +384,36 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 68: Aasian kuvakortit — VALMIS v192 3.8.2026
+
+40 Aasian ja Lähi-idän kaupunkia sai kuvakortin: vanha valokuva,
+päiväkirjan mainitsemat näkymät ja nykypäivä. **184 kuvaa.** Loput 23
+tulevat kun parvi ehtii.
+
+Uusi työkalu `tools/kirjoita-kuvakortit.mjs` luo kortit tyhjästä
+laudalle, jolla niitä ei ole (`lisaa-kuvapinoon.mjs` vain täydentää jo
+olemassa olevia).
+
+### Neljä tarkistusta, koska ne ovat neljä eri kysymystä
+
+187 ehdotuksesta hylättiin kolme, ja kaikki kolme samasta syystä:
+**Commonsin päiväys oli museon skannauspäivä**, ei kuvan ikä.
+
+- `riad/vanha` — Commons sanoo 2024
+- `teheran/vanha` — Antoin Sevruguinin valokuva, Rietbergin museon
+  kokoelmatunnus 2023
+- `persepolis/vanha` — sama museo, tunnus 2022
+
+Sevruguin kuoli 1933, joten kuva on varmasti aito. Työkalu hylkäsi sen
+silti, ja se on oikein: **turvallinen oletus on hylätä se, mitä ei voi
+todentaa.** Kolme kuvaa katsotaan käsin erikseen.
+
+Aiemmin (v185) sama tarkistus otti vain suurimman vuosiluvun ja
+hylkäsi aitoja kuvia; nyt se ottaa vuosiluvun sekä päiväyksestä että
+kuvauksesta ja luottaa vanhempaan. Silti se ei auta, jos kumpikaan
+kenttä ei mainitse alkuperäistä vuotta.
+
+
 ## YÖTILA — omistajan komento
 
 **"Yötila"** tarkoittaa: käynnistä niin monta apuria kuin keksit, ja
