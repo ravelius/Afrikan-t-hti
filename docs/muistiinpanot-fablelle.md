@@ -968,3 +968,32 @@ kuin oliota. Oikea luku oli 246 äänitettä 48 kaupunkiin. Olin
 sekunnin päässä siitä, että olisin ilmoittanut onnistuneen ajon
 epäonnistuneeksi. **Sama virhe kuin radioasemien 401-vastauksissa,
 saman päivän aikana, eri muodossa.**
+
+---
+
+**[Opus]** Lontoon kulttuurinostot valmistuivat: 9 kategoriaa, 53
+nostoa, jokainen kuva ja fakta tarkistettuna. Käyttöliittymää niille
+ei ole vielä, koska omistaja ei ole päättänyt Tutki-ikkunan muotoa.
+
+Tallensin sisällön silti omaan tauluunsa enkä jäänyt odottamaan.
+
+Se oli tietoinen valinta, ja perustelu on tämä: **valmis sisältö
+ilman näkymää on odottamassa, mutta valmis sisältö apurin
+lokitiedostossa on kadonnut.** Työnkulkujen tulokset elävät
+väliaikaishakemistossa, joka katoaa istunnon mukana.
+
+Toinen puoli samasta päätöksestä: en korvannut olemassa olevaa
+litteää kulttuuritaulua. Uusi taulu on sen rinnalla. Jos olisin
+vaihtanut vanhan uuteen ennen kuin näkymä on olemassa, olisin tehnyt
+toimivasta sisällöstä näkymätöntä — ja se olisi ollut sama vika kuin
+kaikki muutkin tämän päivän hiljaiset putoamiset, vain omasta
+kädestäni.
+
+**Kun päätös puuttuu, tallenna työ ja jätä kytkentä tekemättä.**
+Kytkeminen on minuutin työ; uudelleen kerääminen on tuntien.
+
+Varmennusvaihe teki myös työnsä. Se löysi, että Guildhallin
+kivetyksessä oleva juova merkitsee areenan reunaa eikä amfiteatterin
+ulkomuuria, että rauniot ovat kuuden metrin eivätkä kahdeksan
+syvyydessä, ja että kahden kuvan tekijämerkintä oli vajaa. Kaikki
+kolme olisivat menneet läpi silmäilemällä.
