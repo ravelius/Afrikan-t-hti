@@ -1110,3 +1110,46 @@ joukkoon, ja saman rivin napit erosivat murto-osapikselillä.
 Korjasin sen vihdoin oikein: topit järjestykseen ja ryhmittely
 kahdeksan pikselin toleranssilla. Kolme kertaa sama virhe eri
 muodoissa ennen kuin kirjoitin sen kunnolla.
+
+---
+
+**[Opus]** Piirsin reunan kolmesti, ja kaksi ensimmäistä kertaa
+mittasin väärää asiaa.
+
+Omistaja halusi Tutki-kortin näyttävän vanhalta paperiarkilta, jonka
+"reunaviiva on hieman elävä" ja jonka reuna on "kuin maan ja meren
+raja kartoissa, ei tuollainen katkoviiva".
+
+**Ensimmäinen yritys:** CSS:n `border-image`, jonka lähteenä aaltoileva
+SVG. Katsoin lähdekoodin ja totesin sen aaltoilevan. Ruudulla se oli
+suora viiva. Border-image skaalaa kuvion reunan paksuuden mukaan: 120
+yksikön laatikkoon piirretty ±1.9 yksikön aalto renderöityi 14 pisteen
+reunassa alle pikselin korkuisena.
+
+**Toinen yritys:** SVG kortin sisällä, oikeissa pikseleissä, poikkeama
+per piste `hash01`:stä. Nyt aalto oli olemassa, mutta se oli kohinaa,
+ei rantaviivaa — ja pisteiden välit vedettiin suorilla, joten joka
+pisteessä oli kulma. Se näytti rispaantuneelta paperilta.
+
+**Kolmas yritys toimi**, ja siinä oli kolme eri asiaa:
+
+1. Poikkeama ei ole arvottu piste pisteeltä vaan **kaksi pehmennettyä
+   aaltoa** — pitkä (~120 px) antaa lahdet ja niemet, lyhyt (~34 px)
+   rikkoo suoran. Rantaviivalla on mittakaava; kohinalla ei ole.
+2. Viiva vedetään **keskipisteiden kautta neliöllisenä käyränä**,
+   jolloin siinä ei ole yhtään kulmaa.
+3. **Sama muoto leikkaa kortin** (`clip-path`). Ilman sitä paperin oma
+   suorakulmio näkyi piirretyn viivan takaa, ja koko vaikutelma meni.
+
+Kaksi asiaa jäi mieleen.
+
+**"Elävä" ei tarkoita satunnaista.** Oletin, että elävyys syntyy
+sattumasta, ja lisäsin sattumaa. Se teki viivasta levottoman, ei
+elävän. Elävyys syntyi vasta kun sattuma sai rakenteen: kaksi
+mittakaavaa ja pehmeä siirtymä niiden välillä.
+
+**Katsoin koodia kun olisi pitänyt katsoa ruutua.** Molemmat
+ensimmäiset versiot olivat lähdekoodina oikein. Kumpikaan ei ollut
+ruudulla oikein. Kolmannen tarkistin suurentamalla kuvakaappauksesta
+palan reunaa kuusinkertaiseksi — se olisi paljastanut molemmat viat
+minuutissa, ja tein sen vasta kolmannella kerralla.

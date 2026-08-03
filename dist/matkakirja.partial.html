@@ -4498,6 +4498,17 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   backdrop-filter: blur(6px) saturate(0.85);
 }
 
+/*
+ * Dialogilla on oltava tarkalleen kortin mitat. Muuten kortti
+ * leviää dialogin ulkopuolelle, arkki ei ole keskellä ruutua eivätkä
+ * reunakerrokset osu kohdalleen.
+ */
+.dialog.arkki {
+  width: calc(100vw - 1.6rem);
+  max-width: none;
+  max-height: calc(100dvh - 1.6rem);
+}
+
 .dialog.arkki .dialog-card,
 .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
   width: calc(100vw - 1.6rem);
@@ -4509,21 +4520,78 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    * pelin napeissa, mutta loivempi — arkki on iso, ja napin voimakas
    * kaari näyttäisi isossa koossa vinolta pahvilta.
    */
-  border-radius: 26px 8px 22px 10px / 10px 24px 8px 26px;
-  border-width: 2px;
-  /* Kaksi varjoa: terävä lähivarjo nostaa arkin kartasta irti, pehmeä
-   * kaukovarjo antaa sille painon. */
-  box-shadow: 0 2px 0 rgba(70, 51, 31, 0.28), 0 22px 60px rgba(0, 0, 0, 0.55);
+  /*
+   * Reunaviiva on kartan rantaviivaa, ei katkoviivaa (omistajan
+   * toive: "reuna pitäisi olla kuin maan ja meren raja kartoissa" ja
+   * "vanhalta paperilehdeltä jonka reunaviiva on hieman elävä").
+   *
+   * Itse viiva piirretään SVG:nä (js/ui.js piirraArkinReuna), koska
+   * se on ainoa tapa saada aallon korkeus pysymään samana kortin
+   * koosta riippumatta. CSS:n border-image skaalaa aallon reunan
+   * paksuuden mukana, ja 14 pisteen reunassa siitä jäi näkyviin alle
+   * pikselin — eli suora viiva.
+   *
+   * Kortti itse leikataan samalla muodolla (clip-path asetetaan
+   * JS:stä), joten paperin reuna ON piirretty viiva. Siksi kortilla
+   * ei ole tässä omaa reunaa, pyöristystä eikä varjoa: ne piirtyisivät
+   * suorakulmiona viivan alle. Varjo on omassa kerroksessaan, koska
+   * clip-path leikkaisi sen pois.
+   */
+  border-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ulompi kiertynyt katkoviiva ei kuulu arkkiin — se oli juuri se
+ * "tuollainen katkoviiva", jota omistaja ei halunnut. */
+.dialog.arkki .dialog-card::before { display: none; }
+
+/*
+ * Kaksi kerrosta saman muodon ympärillä: varjo alle, viiva päälle.
+ * Ne ovat dialogin lapsia eivätkä kortin, koska kortti vierii.
+ */
+.arkin-varjo,
+.arkin-reuna {
+  position: absolute;
+  pointer-events: none;
+  animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
+}
+
+.arkin-varjo {
+  z-index: 0;
+  /* Terävä lähivarjo nostaa arkin kartasta irti, pehmeä kaukovarjo
+   * antaa sille painon. drop-shadow seuraa piirretyn reunan muotoa,
+   * box-shadow seuraisi laatikkoa. */
+  filter: drop-shadow(0 2px 0 rgba(70, 51, 31, 0.3))
+          drop-shadow(0 20px 52px rgba(0, 0, 0, 0.55));
+}
+
+/* Täyttö jää kokonaan kortin alle; se on olemassa vain varjoa varten,
+ * ja siksi paperin pohjasävyä — reunan pehmennyspikselit eivät saa
+ * vilkkua vieraana värinä. */
+.arkin-varjo path { fill: #e8d5a9; }
+
+.arkin-reuna { z-index: 3; }
+
+.arkin-reuna path {
+  fill: none;
+  stroke: var(--map-ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  opacity: 0.9;
 }
 
 @media (min-width: 700px) {
+  .dialog.arkki,
   .dialog.arkki .dialog-card,
   .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
     /* Työpöydällä kartta saa näkyä leveämmältä: arkki ei kasva
      * ruudun mukana loputtomiin, koska rivi pitenisi lukukelvottomaksi. */
     width: min(calc(100vw - 6rem), 1100px);
     max-height: calc(100dvh - 3rem);
-    border-radius: 34px 10px 28px 12px / 12px 30px 10px 34px;
   }
 }
 
@@ -62632,6 +62700,15 @@ class UI {
     // Muistiinpanoarkki: lähes koko ruutu, kartta jää sumeana laidoille.
     this.arrivalDialog.classList.add('arkki');
     if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+    const arkki = this.arrivalDialog.querySelector('.dialog-card');
+    if (arkki) {
+      this.piirraArkinReuna(arkki);
+      // Kortin korkeus muuttuu, kun liuskaa vaihdetaan tai kuva latautuu.
+      if (!this.arkinTarkkailija) {
+        this.arkinTarkkailija = new ResizeObserver(() => this.piirraArkinReuna(arkki));
+        this.arkinTarkkailija.observe(arkki);
+      }
+    }
     if (!city.wiki) return;
 
     Promise.all([cachedSummary(city.wiki), cachedImage(city.wiki)]).then(([summary, image]) => {
@@ -63310,6 +63387,159 @@ class UI {
    * Liuskat piilotetaan kokonaan, jos kategorioita ei ole. Yhden
    * liuskan rivi ei valitse mitään eikä siis kerro mitään.
    */
+  /*
+   * Arkin ääriviiva: kartan rantaviivaa, ei katkoviivaa.
+   *
+   * Omistajan toive: "reuna pitäisi olla kuin maan ja meren raja
+   * kartoissa" ja "vanhalta paperilehdeltä jonka reunaviiva on hieman
+   * elävä".
+   *
+   * Kolme asiaa piti tehdä toisin kuin ensin.
+   *
+   * 1. Muoto lasketaan kortin todellisissa pikseleissä, ei CSS:n
+   *    border-imagella. Border-image skaalaa kuvion reunan paksuuden
+   *    mukana, ja 14 pisteen reunassa aallosta jäi näkyviin alle
+   *    pikseli — eli suora viiva.
+   *
+   * 2. Poikkeama ei ole kohinaa vaan kahta pehmennettyä aaltoa:
+   *    pitkä (noin 120 pisteen jakso) antaa lahdet ja niemet, lyhyt
+   *    (noin 34) rikkoo suoran. Piste per piste arvottu poikkeama
+   *    näyttää rispaantuneelta paperilta, ei piirretyltä rannalta.
+   *    Viiva vedetään keskipisteiden kautta neliöllisenä käyränä,
+   *    joten siinä ei ole yhtään kulmaa.
+   *
+   * 3. Sama muoto leikkaa kortin (clip-path). Muuten paperin oma
+   *    suorakulmio näkyisi piirretyn viivan takaa, ja koko vaikutelma
+   *    menisi — arkin reuna on tämä viiva, ei laatikon reuna.
+   *
+   * Poikkeamat tulevat hash01:stä eivätkä satunnaisluvusta: sama
+   * kortti piirtyy joka kerta samanlaisena. Arpova viiva värisisi
+   * jokaisella uudelleenpiirrolla, ja liike kartalla on varattu pelin
+   * omille tapahtumille.
+   */
+  arkinAariviiva(w, h) {
+    const M = 6;              // suurin poikkeama + 1, jotta viiva mahtuu laatikkoon
+    const NAYTE = 9;          // pisteväli — tiheämpi ei näy, harvempi pyöristää aallon
+    const AALLOT = [
+      { jakso: 120, korkeus: 3.4, avain: 'ranta-iso' },
+      { jakso: 34, korkeus: 1.6, avain: 'ranta-pieni' },
+    ];
+    const R = Math.max(8, Math.min(26, (Math.min(w, h) - 2 * M) / 2));
+
+    // Perusmuoto pisteiksi: jokaisella piste, ulospäin osoittava
+    // normaali ja matka reunaa pitkin (aallot lasketaan matkasta,
+    // jotta ne jatkuvat kulmien yli katkeamatta).
+    const pisteet = [];
+    let matka = 0;
+    const jana = (x1, y1, x2, y2) => {
+      const pit = Math.hypot(x2 - x1, y2 - y1);
+      const nx = (y2 - y1) / pit;
+      const ny = -(x2 - x1) / pit;
+      const n = Math.max(1, Math.round(pit / NAYTE));
+      for (let i = 0; i < n; i++) {
+        const t = i / n;
+        pisteet.push({ x: x1 + (x2 - x1) * t, y: y1 + (y2 - y1) * t, nx, ny, s: matka + pit * t });
+      }
+      matka += pit;
+    };
+    const kaari = (cx, cy, a1, a2) => {
+      const pit = Math.abs(a2 - a1) * R;
+      const n = Math.max(2, Math.round(pit / NAYTE));
+      for (let i = 0; i < n; i++) {
+        const t = i / n;
+        const a = a1 + (a2 - a1) * t;
+        const nx = Math.cos(a);
+        const ny = Math.sin(a);
+        pisteet.push({ x: cx + R * nx, y: cy + R * ny, nx, ny, s: matka + pit * t });
+      }
+      matka += pit;
+    };
+
+    const vas = M;
+    const oik = w - M;
+    const yla = M;
+    const ala = h - M;
+    jana(vas + R, yla, oik - R, yla);
+    kaari(oik - R, yla + R, -Math.PI / 2, 0);
+    jana(oik, yla + R, oik, ala - R);
+    kaari(oik - R, ala - R, 0, Math.PI / 2);
+    jana(oik - R, ala, vas + R, ala);
+    kaari(vas + R, ala - R, Math.PI / 2, Math.PI);
+    jana(vas, ala - R, vas, yla + R);
+    kaari(vas + R, yla + R, Math.PI, Math.PI * 1.5);
+    const ymparys = matka;
+
+    /*
+     * Pehmennetty aalto: arvotut arvot hilapisteissä, niiden välissä
+     * sulava siirtymä. Hila kiertyy ympäri (i % n), joten viiva
+     * kohtaa itsensä saumatta lähtöpisteessä.
+     */
+    const aalto = ({ jakso, korkeus, avain }) => {
+      const n = Math.max(4, Math.round(ymparys / jakso));
+      const askel = ymparys / n;
+      return (s) => {
+        const p = s / askel;
+        const i = Math.floor(p);
+        const f = p - i;
+        const pehmeys = f * f * (3 - 2 * f);
+        const a = hash01(`${avain}:${((i % n) + n) % n}`) - 0.5;
+        const b = hash01(`${avain}:${(((i + 1) % n) + n) % n}`) - 0.5;
+        return (a + (b - a) * pehmeys) * 2 * korkeus;
+      };
+    };
+    const aallot = AALLOT.map(aalto);
+
+    const siirretyt = pisteet.map((p) => {
+      const d = aallot.reduce((summa, f) => summa + f(p.s), 0);
+      return [p.x + p.nx * d, p.y + p.ny * d];
+    });
+
+    const luku = (n) => Math.round(n * 10) / 10;
+    const keski = (a, b) => `${luku((a[0] + b[0]) / 2)},${luku((a[1] + b[1]) / 2)}`;
+    const n = siirretyt.length;
+    const osat = [`M${keski(siirretyt[n - 1], siirretyt[0])}`];
+    for (let i = 0; i < n; i++) {
+      const p = siirretyt[i];
+      osat.push(`Q${luku(p[0])},${luku(p[1])} ${keski(p, siirretyt[(i + 1) % n])}`);
+    }
+    osat.push('Z');
+    return osat.join('');
+  }
+
+  piirraArkinReuna(kortti) {
+    const dialogi = kortti.parentElement;
+    const w = kortti.offsetWidth;
+    const h = kortti.offsetHeight;
+    if (!dialogi || !w || !h) return;
+    const d = this.arkinAariviiva(w, h);
+
+    /*
+     * SVG:t ovat dialogin lapsia, eivät kortin. Kortti vierii, ja sen
+     * sisällä absoluuttisesti sijoitettu kerros vierii mukana — reuna
+     * olisi kadonnut heti kun tekstiä lukee.
+     */
+    const kerros = (luokka, alle) => {
+      let svg = dialogi.querySelector(`:scope > .${luokka}`);
+      if (!svg) {
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', luokka);
+        svg.setAttribute('aria-hidden', 'true');
+        svg.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'path'));
+        if (alle) dialogi.prepend(svg); else dialogi.append(svg);
+      }
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      svg.style.left = `${kortti.offsetLeft}px`;
+      svg.style.top = `${kortti.offsetTop}px`;
+      svg.style.width = `${w}px`;
+      svg.style.height = `${h}px`;
+      svg.firstChild.setAttribute('d', d);
+    };
+    // Alempi kerros on pelkkä varjo: laatikon varjo leikkautuisi pois.
+    kerros('arkin-varjo', true);
+    kerros('arkin-reuna', false);
+    kortti.style.clipPath = `path('${d}')`;
+  }
+
   rakennaLiuskat(cityId) {
     const kategoriat = cityId ? (KULTTUURI_KATEGORIAT[cityId] ?? []) : [];
     /*
@@ -65609,6 +65839,7 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
+  { v: 202, teksti: 'Arkin reuna piirtyy kuin rantaviiva kartalla' },
   { v: 202, teksti: 'Tutki-kortti täyttää ruudun muistiinpanoarkkina' },
   { v: 202, teksti: 'Aiheliuskat kuvakkeina yhdelle riville' },
   { v: 201, teksti: 'Tutki-ikkunaan kirjanmerkkiliuskat aiheittain' },
