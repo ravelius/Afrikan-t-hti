@@ -67,65 +67,91 @@ const SA_MAP = {
   ],
 };
 
-// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+/*
+ * start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+ *
+ * wiki = suomenkielisen Wikipedia-artikkelin otsikko (js/wiki.js kokeilee
+ * fi ensin, en varalla). Otsikot on tarkistettu rajapinnasta: moni
+ * portugalin- ja espanjankielinen nimi on suomeksi täsmennyssivu, eikä
+ * täsmennyssivusta saa tiivistelmää eikä kuvaa. Siksi Manaus on
+ * 'Manaus (kaupunki)' — pelkkä 'Manaus' on suomeksi loitsimista
+ * tarkoittava sana — ja Santarém, Salvador ja Boa Vista tarvitsevat
+ * suluissa olevan tarkenteen.
+ *
+ * ambience = äänimaisema; sanasto on sama kuin muilla laudoilla.
+ * Ei-ilmeiset valinnat:
+ *
+ *  - Amazonin sisämaan paikat (Macapá, Manaus, Santarém, Iquitos,
+ *    Porto Velho, Cayenne) ovat 'sademetsa' vaikka moni niistä on myös
+ *    jokisatama: metsä on se, mitä paikan päällä kuuluu.
+ *  - Antofagasta on 'aavikko' eikä 'satama'. Se on satama, mutta
+ *    Atacama on kuivin autiomaa maailmassa ja määrittää paikan.
+ *  - Bogotá ja Titicaca ovat 'ylanko' (avoin korkea tasanko), kun taas
+ *    Quito, Machu Picchu, Salta ja Catamarca ovat 'vuoristo' (laakso
+ *    jyrkkien rinteiden välissä).
+ *  - Boa Vista, Ilha do Bananal ja Campo Grande ovat 'savanni': ne
+ *    ovat cerradoa ja kosteikon laitaa, eivät sademetsää.
+ *  - Kap Horn, Falkland, San Ambrosio, Robinson Crusoe ja San Jorgen
+ *    lahti ovat 'meri' — avomerta, ei satamaa.
+ */
 const SA_CITIES = [
   {
-    id: 'panama', name: 'Panama', x: 236, y: 98, start: true, airport: true,
+    id: 'panama', name: 'Panama', wiki: 'Panama (kaupunki)', ambience: 'satama', x: 236, y: 98, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Pohjois-Amerikan laudalla: kannas yhdistää mantereet.
     links: [{ pack: 'northamerica', city: 'panama', label: 'Pohjois-Amerikan lauta' }],
   },
   {
-    id: 'buenosaires', name: 'Buenos Aires', x: 554, y: 681, start: true, airport: true,
+    id: 'buenosaires', name: 'Buenos Aires', wiki: 'Buenos Aires', ambience: 'kaupunki', x: 554, y: 681, start: true, airport: true,
     la: 'start', lx: 18, ly: 5,
   },
 
-  { id: 'caracas', name: 'Caracas', x: 430, y: 59 },
-  { id: 'bogota', name: 'Bogotá', x: 327, y: 152, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'quito', name: 'Quito', x: 271, y: 232, la: 'end', lx: -16, ly: 5 },
-  { id: 'galapagos', name: 'Galápagos', x: 105, y: 271, la: 'middle', lx: 0, ly: 26 },
-  { id: 'boavista', name: 'Boa Vista', x: 527, y: 169 },
-  { id: 'cayenne', name: 'Cayenne', x: 647, y: 144, la: 'start', lx: 16, ly: 5 },
-  { id: 'macapa', name: 'Macapá', x: 663, y: 212, la: 'start', lx: 16, ly: 5 },
-  { id: 'manaus', name: 'Manaus', x: 537, y: 255, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'santarem', name: 'Santarém', x: 613, y: 247, la: 'middle', lx: 0, ly: -22 },
-  { id: 'saoluis', name: 'São Luís', x: 755, y: 265, la: 'middle', lx: 0, ly: -22 },
+  { id: 'caracas', name: 'Caracas', wiki: 'Caracas', ambience: 'kaupunki', x: 430, y: 59 },
+  { id: 'bogota', name: 'Bogotá', wiki: 'Bogotá', ambience: 'ylanko', x: 327, y: 152, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'quito', name: 'Quito', wiki: 'Quito', ambience: 'vuoristo', x: 271, y: 232, la: 'end', lx: -16, ly: 5 },
+  { id: 'galapagos', name: 'Galápagos', wiki: 'Galápagossaaret', ambience: 'meri', x: 105, y: 271, la: 'middle', lx: 0, ly: 26 },
+  { id: 'boavista', name: 'Boa Vista', wiki: 'Boa Vista (Roraima)', ambience: 'savanni', x: 527, y: 169 },
+  { id: 'cayenne', name: 'Cayenne', wiki: 'Cayenne', ambience: 'sademetsa', x: 647, y: 144, la: 'start', lx: 16, ly: 5 },
+  { id: 'macapa', name: 'Macapá', wiki: 'Macapá', ambience: 'sademetsa', x: 663, y: 212, la: 'start', lx: 16, ly: 5 },
+  { id: 'manaus', name: 'Manaus', wiki: 'Manaus (kaupunki)', ambience: 'sademetsa', x: 537, y: 255, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'santarem', name: 'Santarém', wiki: 'Santarém (Brasilia)', ambience: 'sademetsa', x: 613, y: 247, la: 'middle', lx: 0, ly: -22 },
+  { id: 'saoluis', name: 'São Luís', wiki: 'São Luís', ambience: 'kaupunki', x: 755, y: 265, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'joaopessoa', name: 'João Pessoa', x: 875, y: 344, airport: true,
+    id: 'joaopessoa', name: 'João Pessoa', wiki: 'João Pessoa', ambience: 'meri', x: 875, y: 344, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Etelä-Atlantin postilentoreitti Dakariin: Brasilian itäkärki on
     // Afrikkaa lähinnä oleva kohta koko Amerikassa.
     links: [{ pack: 'africa', city: 'dakar', label: 'Afrikan lauta' }],
   },
-  { id: 'salvador', name: 'Salvador', x: 815, y: 411, la: 'start', lx: 16, ly: 5 },
-  { id: 'iquitos', name: 'Iquitos', x: 351, y: 273, la: 'end', lx: -16, ly: 5 },
-  { id: 'portovelho', name: 'Porto Velho', x: 485, y: 334, la: 'end', lx: -16, ly: 5 },
-  { id: 'bananal', name: 'Ilha do Bananal', x: 668, y: 366, la: 'start', lx: 16, ly: 5 },
-  { id: 'machupicchu', name: 'Machu Picchu', x: 373, y: 404, la: 'start', lx: 16, ly: -6 },
-  { id: 'titicaca', name: 'Titicaca', x: 418, y: 433, la: 'end', lx: -16, ly: 16 },
-  { id: 'lima', name: 'Lima', x: 319, y: 397, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'santacruz', name: 'Santa Cruz', x: 497, y: 455 },
-  { id: 'campogrande', name: 'Campo Grande', x: 604, y: 492, la: 'start', lx: 16, ly: 5 },
+  { id: 'salvador', name: 'Salvador', wiki: 'Salvador (Brasilia)', ambience: 'kaupunki', x: 815, y: 411, la: 'start', lx: 16, ly: 5 },
+  { id: 'iquitos', name: 'Iquitos', wiki: 'Iquitos', ambience: 'sademetsa', x: 351, y: 273, la: 'end', lx: -16, ly: 5 },
+  { id: 'portovelho', name: 'Porto Velho', wiki: 'Porto Velho', ambience: 'sademetsa', x: 485, y: 334, la: 'end', lx: -16, ly: 5 },
+  { id: 'bananal', name: 'Ilha do Bananal', wiki: 'Bananal', ambience: 'savanni', x: 668, y: 366, la: 'start', lx: 16, ly: 5 },
+  { id: 'machupicchu', name: 'Machu Picchu', wiki: 'Machu Picchu', ambience: 'vuoristo', x: 373, y: 404, la: 'start', lx: 16, ly: -6 },
+  { id: 'titicaca', name: 'Titicaca', wiki: 'Titicaca', ambience: 'ylanko', x: 418, y: 433, la: 'end', lx: -16, ly: 16 },
+  { id: 'lima', name: 'Lima', wiki: 'Lima', ambience: 'kaupunki', x: 319, y: 397, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'santacruz', name: 'Santa Cruz', wiki: 'Santa Cruz de la Sierra', ambience: 'kaupunki', x: 497, y: 455 },
+  { id: 'campogrande', name: 'Campo Grande', wiki: 'Campo Grande', ambience: 'savanni', x: 604, y: 492, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'rio', name: 'Rio de Janeiro', x: 738, y: 533, start: true, airport: true,
+    id: 'rio', name: 'Rio de Janeiro', wiki: 'Rio de Janeiro', ambience: 'kaupunki', x: 738, y: 533, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'rio', label: 'Maailma-lauta' }],
   },
-  { id: 'saopaulo', name: 'São Paulo', x: 682, y: 525, la: 'end', lx: -6, ly: 20 },
-  { id: 'iguazu', name: 'Iguazú', x: 603, y: 561, la: 'end', lx: -16, ly: 5 },
-  { id: 'portoalegre', name: 'Porto Alegre', x: 633, y: 616, la: 'start', lx: 16, ly: 5 },
-  { id: 'antofagasta', name: 'Antofagasta', x: 417, y: 536, la: 'end', lx: -16, ly: 5 },
-  { id: 'salta', name: 'Salta', x: 473, y: 549, la: 'start', lx: 16, ly: 5 },
-  { id: 'catamarca', name: 'Catamarca', x: 466, y: 604, la: 'start', lx: 16, ly: 5 },
-  { id: 'valparaiso', name: 'Valparaíso', x: 413, y: 661, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'sanambrosio', name: 'San Ambrosio', x: 304, y: 585, la: 'middle', lx: 0, ly: 28 },
-  { id: 'robinsoncrusoe', name: 'Robinson Crusoe', x: 330, y: 679, la: 'middle', lx: 0, ly: 28 },
-  { id: 'puertomontt', name: 'Puerto Montt', x: 408, y: 775, la: 'end', lx: -16, ly: 5 },
-  { id: 'sanjorge', name: 'San Jorge', x: 460, y: 829, la: 'start', lx: 16, ly: 5 },
-  { id: 'falkland', name: 'Falkland', x: 542, y: 915, la: 'start', lx: 16, ly: 5 },
-  { id: 'puntaarenas', name: 'Punta Arenas', x: 434, y: 931, la: 'end', lx: -16, ly: 5 },
-  { id: 'caphorn', name: 'Kap Horn', x: 474, y: 980, la: 'start', lx: 16, ly: 8 },
+  { id: 'saopaulo', name: 'São Paulo', wiki: 'São Paulo', ambience: 'kaupunki', x: 682, y: 525, la: 'end', lx: -6, ly: 20 },
+  { id: 'iguazu', name: 'Iguazú', wiki: 'Iguassun putoukset', ambience: 'sademetsa', x: 603, y: 561, la: 'end', lx: -16, ly: 5 },
+  { id: 'portoalegre', name: 'Porto Alegre', wiki: 'Porto Alegre', ambience: 'satama', x: 633, y: 616, la: 'start', lx: 16, ly: 5 },
+  { id: 'antofagasta', name: 'Antofagasta', wiki: 'Antofagasta', ambience: 'aavikko', x: 417, y: 536, la: 'end', lx: -16, ly: 5 },
+  { id: 'salta', name: 'Salta', wiki: 'Salta', ambience: 'vuoristo', x: 473, y: 549, la: 'start', lx: 16, ly: 5 },
+  { id: 'catamarca', name: 'Catamarca', wiki: 'Catamarca', ambience: 'vuoristo', x: 466, y: 604, la: 'start', lx: 16, ly: 5 },
+  { id: 'valparaiso', name: 'Valparaíso', wiki: 'Valparaíso', ambience: 'satama', x: 413, y: 661, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'sanambrosio', name: 'San Ambrosio', wiki: 'Desventuradas Islands', ambience: 'meri', x: 304, y: 585, la: 'middle', lx: 0, ly: 28 },
+  { id: 'robinsoncrusoe', name: 'Robinson Crusoe', wiki: 'Juan Fernándezin saaret', ambience: 'meri', x: 330, y: 679, la: 'middle', lx: 0, ly: 28 },
+  { id: 'puertomontt', name: 'Puerto Montt', wiki: 'Puerto Montt', ambience: 'satama', x: 408, y: 775, la: 'end', lx: -16, ly: 5 },
+  { id: 'sanjorge', name: 'San Jorge', wiki: 'San Jorge Gulf', ambience: 'meri', x: 460, y: 829, la: 'start', lx: 16, ly: 5 },
+  { id: 'falkland', name: 'Falkland', wiki: 'Falklandinsaaret', ambience: 'meri', x: 542, y: 915, la: 'start', lx: 16, ly: 5 },
+  { id: 'puntaarenas', name: 'Punta Arenas', wiki: 'Punta Arenas', ambience: 'satama', x: 434, y: 931, la: 'end', lx: -16, ly: 5 },
+  { id: 'caphorn', name: 'Kap Horn', wiki: 'Kap Horn', ambience: 'meri', x: 474, y: 980, la: 'start', lx: 16, ly: 8 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
