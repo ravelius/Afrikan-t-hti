@@ -112,7 +112,7 @@ Vaiheet:
 5. **Mitoita laatat.** Laattojen yhteismäärän on oltava sama kuin
    aarrekaupunkien määrä (kaupungit miinus aloituskaupungit), ja pääaarteita
    (`star`-laattoja) on aina tasan yksi. **Keksi laudalle oma aarre:**
-   Afrikan tähti on vain Afrikassa — muilla laudoilla pääaarre on paikallinen
+   Jokaisella laudalla on oma pääaarteensa — se on aina paikallinen
    legenda, kuten Meripihkahuoneen aarre (Eurooppa), Montezuman aarre
    (Pohjois-Amerikka) tai Lapin kulta (Suomi). Nimi annetaan
    `tokens.types`-kohdassa ja `texts`-teksteissä.

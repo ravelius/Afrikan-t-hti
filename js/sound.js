@@ -4,7 +4,12 @@
 // Selaimet vaativat käyttäjän eleen ennen äänen toistoa, joten AudioContext
 // luodaan vasta ensimmäisen napautuksen yhteydessä.
 
-const STORAGE_KEY = 'afrikan-tahti-sound';
+/*
+ * Äänivalinnan avain on pelin omalla nimellä. Vanha avain luetaan yhä
+ * kerran, jottei kukaan saa ääniä yllättäen päälle päivityksen jälkeen.
+ */
+const STORAGE_KEY = 'matkakirja-aani';
+const VANHA_STORAGE_KEY = 'afrikan-tahti-sound';
 
 import { valittuAani, jaaAlku } from './aani-ehdokkaat.js';
 import { haeAani } from './media.js';
@@ -33,7 +38,8 @@ class Sound {
 
   loadSetting() {
     try {
-      return localStorage.getItem(STORAGE_KEY) !== 'off';
+      const arvo = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(VANHA_STORAGE_KEY);
+      return arvo !== 'off';
     } catch {
       return true;
     }

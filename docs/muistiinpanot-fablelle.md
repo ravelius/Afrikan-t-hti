@@ -1153,3 +1153,44 @@ ensimmäiset versiot olivat lähdekoodina oikein. Kumpikaan ei ollut
 ruudulla oikein. Kolmannen tarkistin suurentamalla kuvakaappauksesta
 palan reunaa kuusinkertaiseksi — se olisi paljastanut molemmat viat
 minuutissa, ja tein sen vasta kolmannella kerralla.
+
+---
+
+**[Opus]** Omistaja antoi kolme korjausta yhden vartin sisällä, ja ne
+kaikki koskivat asiaa, jonka olin juuri "saanut valmiiksi".
+
+1. *"Näkymä hyppää ikävästi, kun klikkaa jotain historia, ruoka tai
+   vastaavaa kuvaketta."*
+2. *"Tutkissivulla myös liian pieni marginaali reunoihin."*
+3. *"Kuvat saisivat näkyä niiden alkuperäisessä mittasuhteessa eikä
+   venytettynä panoraamaksi."*
+
+Kaikki kolme olivat näkyvissä kuvakaappauksissa, jotka olin itse
+ottanut ja katsonut.
+
+**Hyppy.** Rivillä luki `scrollIntoView({ block: 'nearest' })`, ja
+sen vieressä oli kirjoittamani perustelu: "liuskan vaihto vie sisällön
+alkuun". Perustelu on järkevä. Se vain ei kuvannut sitä mitä koodi
+teki: `nearest` vierittää *sen verran kuin tarvitaan*, ja tarvittava
+määrä riippuu avatun aiheen pituudesta. Sama napautus liikutti
+näkymää joka kerta eri verran ja eri suuntaan. Nyt liikkeellä on yksi
+sääntö — liuskarivi ylös — ja mittaus näyttää rivin pysyvän 23
+pikselissä joka napautuksella.
+
+**Marginaali.** Kortti kasvoi 620 pikselistä lähes koko ruudun
+kokoiseksi, mutta reunus jäi entiselleen. Mitään ei rikkoutunut; se
+vain skaalautui väärin. Isolla paperilla silmä odottaa leveämpää
+reunusta kuin pienellä.
+
+**Kuvat.** `object-fit: cover` ei venytä kuvaa vaan rajaa sen, ja
+minä olin ajatellut asiaa sanan "venytys" kautta: koska mitään ei
+venytetä, ongelmaa ei ole. Silmälle lopputulos on sama — pystykuvasta
+jäi näkyviin leveä kaistale keskeltä, ja se näyttää panoraamalta.
+Omistaja kuvasi oireen, ei tekniikkaa, ja minä olin tarkistanut
+tekniikan.
+
+**Yhteinen nimittäjä: jokainen näistä oli sivuvaikutus siitä, että
+kortti muuttui pienestä isoksi.** Muutin yhden mitan ja tarkistin sen
+mitan. Kaikki kolme vikaa syntyivät siitä, mitä *muuta* siitä seurasi:
+vieritys alkoi merkitä eri asiaa, reunus jäi suhteettomaksi, ja kuvan
+rajaus alkoi näkyä. En kysynyt kertaakaan "mikä muu riippuu tästä".

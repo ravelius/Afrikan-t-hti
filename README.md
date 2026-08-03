@@ -1,8 +1,9 @@
 # Matkakirja ★
 
-Selaimessa pelattava seikkailupeli, jonka innoittajana on klassinen Afrikan tähti
--lautapeli. Matkakirja on itsenäinen harrastusprojekti, jolla ei ole
-yhteyttä alkuperäisen pelin oikeudenhaltijoihin. Ei riippuvuuksia, ei
+Selaimessa pelattava seikkailupeli maailman ympäri. Matkakirja on oma
+pelinsä: se on saanut inspiraatiota Jules Vernen teoksista, Afrikan tähti
+-lautapelistä ja monista muista, mutta se ei jäljittele mitään niistä eikä
+sillä ole yhteyttä niiden oikeudenhaltijoihin. Ei riippuvuuksia, ei
 käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana on
 oppia ja opettaa maiden kulttuurista, arjesta ja maantieteestä kiinnostavasti.
 
@@ -30,7 +31,7 @@ päiväkirjamerkinnät. Matka jatkuu, kun astut ulos koneesta.
   porttikaupunkien kautta laudalta toiselle — mantereille, maihin ja
   kaupunkitasolle. Löytöjä voi kerätä niin kauan kuin huvittaa.
 - **Kymmenen pelilautaa**, jokaisella oma pääaarre: Maailma (Magellanin
-  kompassi), Afrikka (Afrikan tähti — vain täällä), Eurooppa
+  kompassi), Afrikka (Suuren Zimbabwen kivilintu), Eurooppa
   (Meripihkahuoneen aarre), Aasia (Keisarin jadesinetti), Oseania
   (Eteläristin helmi), Pohjois-Amerikka (Montezuman aarre), Etelä-Amerikka
   (El Doradon aarre), Lähi-itä (Sheban kuningattaren aarre), Suomi (Lapin
@@ -120,10 +121,10 @@ seuraavalla avauskerralla; *Uusi peli* aloittaa alusta.
 
 ## Säännöt
 
-**Tavoite.** Löydä laudan pääaarre — Afrikassa Afrikan tähti — ja vie se
-johonkin laudan aloituskaupungeista. Vaelluksessa peli ei pääty: tähti on
-2000 punnan arvoinen löytö, ja matka jatkuu porttikaupunkien kautta uusille
-laudoille. Isoisän 80 päivän ennätyksen alittaminen tuo kunniamerkinnän.
+**Tavoite.** Löydä laudan pääaarre — Afrikassa Suuren Zimbabwen kivilintu —
+ja vie se johonkin laudan aloituskaupungeista. Vaelluksessa peli ei pääty:
+pääaarre on 2000 punnan arvoinen löytö, ja matka jatkuu porttikaupunkien
+kautta uusille laudoille. Isoisän 80 päivän ennätyksen alittaminen tuo kunniamerkinnän.
 
 **Vuoron kulku.**
 

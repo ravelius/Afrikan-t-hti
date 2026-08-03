@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 203, teksti: 'Kuvat omissa mittasuhteissaan, ei panoraamana' },
+  { v: 203, teksti: 'Aiheen vaihto ei enää hyppää näkymässä' },
+  { v: 203, teksti: 'Väljemmät marginaalit Tutki-arkilla' },
+  { v: 203, teksti: 'Afrikan pääaarre: Suuren Zimbabwen kivilintu' },
   { v: 202, teksti: 'Arkin reuna piirtyy kuin rantaviiva kartalla' },
   { v: 202, teksti: 'Tutki-kortti täyttää ruudun muistiinpanoarkkina' },
   { v: 202, teksti: 'Aiheliuskat kuvakkeina yhdelle riville' },
