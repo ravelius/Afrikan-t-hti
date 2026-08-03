@@ -74,36 +74,58 @@ import { LIPPU_TEKIJAT } from './packs/lippu-tekijat.js';
  * porttikaupungit (Istanbul, Kairo, Teheran) ovat yhdistetyllä laudalla
  * yksi kappale kukin.
  */
+/*
+ * YHDISTETYT LAUDAT PERIVÄT LÄHDELAUTOJEN SISÄLLÖN.
+ *
+ * Yhdistelmät nimetään kerran ja jaetaan kaikille yhdistetyille
+ * laudoille. Aiemmin sama objekti kirjoitettiin joka tauluun erikseen,
+ * ja kun maailmankartta lisättiin, se jäi jokaisesta pois — uudella
+ * laudalla Tutki-ikkunassa olisi näkynyt vain Wikipedian tiivistelmä,
+ * ei matkakirjan merkintää, kulttuurinostoja, vanhaa valokuvaa,
+ * kielinäytettä eikä maan tunnuslukuja.
+ *
+ * Tämä ansa on lauennut tässä projektissa jo kolmesti. Se on hiljainen:
+ * mikään ei kaadu, mitään ei näy lokissa, sisältö vain puuttuu.
+ * Nimetty yhdistelmä ei estä ansaa mutta tekee siitä yhden rivin
+ * kokoisen: uusi lauta lisätään yhteen paikkaan taulua kohti.
+ */
+const KAIKKI_SAAPUMISET = { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET };
+const KAIKKI_KULTTUURI = { ...AFRICA_KULTTUURI, ...EUROPE_KULTTUURI };
+const KAIKKI_VALOKUVAT = { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT, ...ASIA_VALOKUVAT };
+const KAIKKI_MAATIEDOT = { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT, ...ASIA_MAATIEDOT };
+
 const SAAPUMISTEKSTIT = {
   africa: AFRICA_SAAPUMISET,
   europe: EUROPE_SAAPUMISET,
   // Aasian teksteillä ei ole omaa lautaa: kaupungit ovat vain
-  // yhdistetyllä vanhalla maailmalla, joten ne tulevat mukaan vain
-  // tähän. Erillistä asia-lautaa ei ole olemassa.
-  vanhamaailma: { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET },
+  // yhdistetyillä laudoilla, joten ne tulevat mukaan vain tänne.
+  maailmankartta: KAIKKI_SAAPUMISET,
 };
 
 // Kaupungin elämää -nostot laudoittain.
 const KULTTUURIT = {
   africa: AFRICA_KULTTUURI,
   europe: EUROPE_KULTTUURI,
-  vanhamaailma: { ...AFRICA_KULTTUURI, ...EUROPE_KULTTUURI },
+  maailmankartta: KAIKKI_KULTTUURI,
 };
 
 // Vanhat valokuvat muistikirjan kylkeen laudoittain.
 const VALOKUVAT = {
   africa: AFRICA_VALOKUVAT,
   europe: EUROPE_VALOKUVAT,
-  vanhamaailma: { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT, ...ASIA_VALOKUVAT },
+  maailmankartta: KAIKKI_VALOKUVAT,
 };
 // Kaupungissa nauhoitettu puhenäyte: kieli kuuluviin omasta napistaan.
-const KIELET = { europe: EUROPE_KIELET, vanhamaailma: EUROPE_KIELET };
+const KIELET = {
+  europe: EUROPE_KIELET,
+  maailmankartta: EUROPE_KIELET,
+};
 
 // Maiden tunnusluvut laudoittain.
 const MAATIEDOT = {
   africa: AFRICA_MAATIEDOT,
   europe: EUROPE_MAATIEDOT,
-  vanhamaailma: { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT, ...ASIA_MAATIEDOT },
+  maailmankartta: KAIKKI_MAATIEDOT,
 };
 
 /*
@@ -184,7 +206,7 @@ async function cachedImage(title) {
  * Luentojen laudat.
  *
  * Luennat on avainnettu `lauta:kaupunki`, ja tiedoston nimessä on sama
- * laudan tunnus. Yhdistetyllä laudalla tunnus on `vanhamaailma`, jolle
+ * laudan tunnus. Yhdistetyllä laudalla tunnus on `maailmankartta`, jolle
  * ei ole yhtään luentaa — eikä tulekaan, koska ne ovat samat kaupungit
  * ja samat nauhoitukset. Ilman tätä kaiutinnappi katosi kortista ja
  * matkakertoja vaikeni koko laudalla (omistajan havainto: "matkakirjan
@@ -198,7 +220,7 @@ const LUENTA_LAUDAT = ['europe', 'africa', 'middleeast', 'asia'];
 function luentaLauta(joukko, packId, cityId) {
   if (!cityId) return null;
   if (joukko.has(`${packId}:${cityId}`)) return packId;
-  if (packId !== 'vanhamaailma') return null;
+  if (packId !== 'maailmankartta') return null;
   for (const lauta of LUENTA_LAUDAT) {
     if (joukko.has(`${lauta}:${cityId}`)) return lauta;
   }
@@ -492,7 +514,7 @@ const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872
  * (omistajan päätös); muut laudat lisätään tähän settiin sitä mukaa kuin
  * ne on käyty läpi.
  */
-const ZOOMATTAVAT = new Set(['europe', 'vanhamaailma']);
+const ZOOMATTAVAT = new Set(['europe', 'maailmankartta']);
 const MANNER_ZOOM = 2.3;        // vanha kiinteä kerroin; nykyään portaat lasketaan
 
 /*

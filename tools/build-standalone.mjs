@@ -64,7 +64,6 @@ const MODULES = [
   'js/packs/suomi.js',
   'js/packs/istanbul-questions.js',
   'js/packs/istanbul.js',
-  'js/packs/vanhamaailma.js',
   'js/packs/maailmankartta.js',
   'js/pack.js',
   'js/passport.js',

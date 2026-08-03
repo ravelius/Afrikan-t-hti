@@ -73,7 +73,7 @@
     <section id="tab-kartat" hidden>
       <div class="rivi" style="margin-bottom:0.6rem">
         <select id="kartta-lauta"></select>
-        <a id="kartta-uuteen" href="index.html?lauta=vanhamaailma" target="_blank" rel="noopener">
+        <a id="kartta-uuteen" href="index.html?lauta=maailmankartta" target="_blank" rel="noopener">
           <button class="toiminto" type="button">Avaa omaan ikkunaan ↗</button></a>
       </div>
       <iframe id="kartta-kehys" class="kehys" title="Laudan kartta"></iframe>
@@ -367,27 +367,43 @@
       { avain: 'kieli', nimi: 'kielinäyte tai radio', on: (c, p) => Boolean(KIELET[c.id] || radiot[p.map?.cityCountry?.[c.id]]) },
     ];
     const puuttuvat = (c, p) => OSAT.filter((o) => !o.on(c, p));
+    /* Puutteet lautojen yli: osa on olemassa, jos yksikin lauta antaa sen. */
+    const puuttuvatKaikilta = (laudat) => OSAT.filter(
+      (o) => !laudat.some(({ c, p }) => o.on(c, p)),
+    );
 
     // --- TILANNE ---------------------------------------------------------
 
-    const paalauta = PACKS.find((p) => p.id === 'vanhamaailma') ?? PACKS[0];
+    const paalauta = PACKS.find((p) => p.id === 'maailmankartta') ?? PACKS[0];
     /*
      * Sama kaupunki on usealla laudalla: Lontoo on sekä Euroopan
      * laudalla että yhdistetyllä vanhalla maailmalla. Puutteet
      * lasketaan KERRAN kaupunkia kohti, muuten sama puute näkyisi
      * listassa kahdesti ja luku olisi 445 vaikka kaupunkeja on 283.
      *
-     * Jos kaupunki on monella laudalla, käytetään sitä lautaa, jolla
-     * sillä on eniten sisältöä — muuten tyhjä rinnakkaislauta
-     * merkitsisi valmiin kaupungin vajaaksi.
+     * Osa lasketaan LAUTOJEN YLI: kaupungilla on äänimaisema, jos
+     * millä tahansa laudalla on. Aiemmin tässä valittiin se lauta,
+     * jolla oli eniten osia, ja se antoi vääriä lukuja — kahdella
+     * laudalla voi olla yhtä monta osaa mutta ERI osat.
+     *
+     * Sydney oli tästä esimerkki. Sillä on äänimaisema Oseanian
+     * laudalla ja maailmankartalla, ja valintaruudulla on kysymykset.
+     * Kaikki kolme antoivat yhden osan, tasapelin voitti ensimmäinen —
+     * ja Sydney näkyi listassa "ilman äänimaisemaa", vaikka ääni on
+     * ollut olemassa koko ajan. Sama vika koski jokaista kaupunkia,
+     * jonka sisältö on hajallaan monella laudalla.
      */
     const kaikkiKaupungit = (() => {
       const paras = new Map();
       for (const p of PACKS) {
         for (const c of p.cities) {
-          const ehdokas = { c, p, pisteet: OSAT.filter((o) => o.on(c, p)).length };
           const ed = paras.get(c.id);
-          if (!ed || ehdokas.pisteet > ed.pisteet) paras.set(c.id, ehdokas);
+          if (!ed) { paras.set(c.id, { c, p, laudat: [{ c, p }] }); continue; }
+          ed.laudat.push({ c, p });
+          // Näytettäväksi laudaksi se, jolla on eniten osia — pelkkä
+          // esitysasia, luvut tulevat yhdisteestä.
+          if (OSAT.filter((o) => o.on(c, p)).length
+              > OSAT.filter((o) => o.on(ed.c, ed.p)).length) { ed.c = c; ed.p = p; }
         }
       }
       return [...paras.values()];
@@ -396,7 +412,7 @@
     function piirraLuvut() {
       const luvut = [
         ['Kaupunkeja', kaikkiKaupungit.length],
-        ['Valmiita kaupunkeja', kaikkiKaupungit.filter(({ c, p }) => !puuttuvat(c, p).length).length],
+        ['Valmiita kaupunkeja', kaikkiKaupungit.filter(({ laudat }) => !puuttuvatKaikilta(laudat).length).length],
         ['Päiväkirjamerkintöjä', Object.keys(SAAPUMISET).length],
         ['Omia artikkeleita', Object.keys(ARTIKKELIT).length],
         ['Kuvakortteja', Object.keys(KUVAT).length],
@@ -414,8 +430,8 @@
 
     function piirraPuutteet() {
       const laskurit = new Map(OSAT.map((o) => [o.avain, []]));
-      for (const { c, p } of kaikkiKaupungit) {
-        for (const o of puuttuvat(c, p)) laskurit.get(o.avain).push(`${c.name} (${p.id})`);
+      for (const { c, p, laudat } of kaikkiKaupungit) {
+        for (const o of puuttuvatKaikilta(laudat)) laskurit.get(o.avain).push(`${c.name} (${p.id})`);
       }
       const rivit = OSAT
         .map((o) => ({ o, lista: laskurit.get(o.avain) }))

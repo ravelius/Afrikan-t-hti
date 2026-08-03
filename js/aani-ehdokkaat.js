@@ -835,7 +835,7 @@ const KAUPUNKIKORI_AVAIN = 'matkakirja-kaupunkivalinnat';
  * kutsuja ei voi unohtaa sitä.
  */
 const YHDISTETYT = {
-  vanhamaailma: ['europe', 'africa', 'middleeast', 'asia'],
+  maailmankartta: ['europe', 'africa', 'middleeast', 'asia', 'oceania', 'northamerica', 'southamerica'],
   maailma: ['europe', 'africa', 'middleeast', 'asia', 'oceania', 'northamerica', 'southamerica'],
 };
 

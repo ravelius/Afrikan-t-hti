@@ -206,14 +206,34 @@ test('nimi ei jää kaupunkiympyrän alle', async () => {
   assert.ok(!leikkaa, 'nimi peittää oman kaupunkinsa ympyrän');
 });
 
+/*
+ * Vanhan maailman kaupungit maailmankartalla.
+ *
+ * Maailmankartta korvasi vanhan maailman ja toi mukanaan Amerikat ja
+ * Oseanian. Näiden testien tehtävä on yhä sama kuin ennen: vartioida
+ * ettei yhdistäminen vie sisältöä pois niiltä kaupungeilta, joilla se
+ * oli. Uusilta kaupungeilta sisältö puuttuu tieten tahtoen, eikä tämä
+ * ole se paikka, joka siitä huomauttaa.
+ */
+async function vanhanMaailmanKaupungit() {
+  const { PACKS } = await import('../js/pack.js');
+  const lahteet = ['europe', 'africa', 'middleeast', 'asia'];
+  const omat = new Set();
+  for (const id of lahteet) {
+    for (const c of PACKS.find((p) => p.id === id).cities) omat.add(c.id);
+  }
+  const pack = PACKS.find((p) => p.id === 'maailmankartta');
+  return { pack, kaupungit: pack.cities.filter((c) => omat.has(c.id)) };
+}
+
 test('jokaisella vanhan maailman kaupungilla on saapumisteksti', async () => {
   const { PACKS } = await import('../js/pack.js');
   const { AFRICA_SAAPUMISET } = await import('../js/packs/africa-saapumiset.js');
   const { EUROPE_SAAPUMISET } = await import('../js/packs/europe-saapumiset.js');
   const { ASIA_SAAPUMISET } = await import('../js/packs/asia-saapumiset.js');
   const tekstit = { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET };
-  const pack = PACKS.find((p) => p.id === 'vanhamaailma');
-  const ilman = pack.cities.filter((c) => !tekstit[c.id]).map((c) => c.id);
+  const { kaupungit } = await vanhanMaailmanKaupungit();
+  const ilman = kaupungit.filter((c) => !tekstit[c.id]).map((c) => c.id);
   assert.deepEqual(ilman, [], 'näiltä kaupungeilta puuttuu matkakirjan merkintä');
 });
 
@@ -280,8 +300,8 @@ test('radioaseman nimi mahtuu napin otsikoksi', async () => {
 test('jokaisella vanhan maailman maalla on radiolähetys', async () => {
   const { PACKS } = await import('../js/pack.js');
   const { RADIOT } = await import('../js/packs/radiot.js');
-  const pack = PACKS.find((p) => p.id === 'vanhamaailma');
-  const maat = [...new Set(Object.values(pack.map.cityCountry ?? {}))];
+  const { pack, kaupungit } = await vanhanMaailmanKaupungit();
+  const maat = [...new Set(kaupungit.map((c) => pack.map.cityCountry?.[c.id]).filter(Boolean))];
   const ilman = maat.filter((m) => !RADIOT[m]).sort();
   assert.deepEqual(ilman, [], 'näiltä mailta puuttuu suora lähetys');
 });
@@ -292,8 +312,8 @@ test('jokaisella vanhan maailman kaupungilla on oma artikkeli', async () => {
   const { EUROPE_ARTIKKELIT } = await import('../js/packs/europe-artikkelit.js');
   const { ASIA_ARTIKKELIT } = await import('../js/packs/asia-artikkelit.js');
   const kaikki = { ...OMAT_ARTIKKELIT, ...EUROPE_ARTIKKELIT, ...ASIA_ARTIKKELIT };
-  const pack = PACKS.find((p) => p.id === 'vanhamaailma');
-  const ilman = pack.cities.filter((c) => !kaikki[c.wiki ?? c.name]).map((c) => c.id);
+  const { kaupungit } = await vanhanMaailmanKaupungit();
+  const ilman = kaupungit.filter((c) => !kaikki[c.wiki ?? c.name]).map((c) => c.id);
   assert.deepEqual(ilman, [], 'näiltä kaupungeilta puuttuu oma artikkeli');
 });
 
@@ -317,7 +337,7 @@ test('Aasian artikkelit noudattavat talon mittaa', async () => {
 
 test('kaupunki on oman maansa rajojen sisällä', async () => {
   const { PACKS } = await import('../js/pack.js');
-  const pack = PACKS.find((p) => p.id === 'vanhamaailma');
+  const pack = PACKS.find((p) => p.id === 'maailmankartta');
   const { cityCountry: maat = {}, countryShapes: rajat = {} } = pack.map;
 
   const sisalla = (piste, rengas) => {

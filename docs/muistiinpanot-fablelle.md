@@ -1313,3 +1313,49 @@ kukaan oli pyytänyt.
 
 **Se mitä tästä jäi käteen:** kun mittakaava kasvaa kolminkertaiseksi,
 esiin ei tule uusia vikoja vaan vanhoja. Ne olivat aina siellä.
+
+---
+
+**[Opus]** Omistaja kysyi kuvakaappauksesta: "pitääkö nämä paikansa?"
+
+Ne pitivät. Laskin työhuoneen yhdeksän lukua itse rivi riviltä, ja
+kaikki täsmäsivät. Mutta yksi rivi oli silti väärä, ja se selvisi vasta
+kun katsoin mitä luku tarkoitti eikä vain mitä se oli.
+
+**Sydney listattiin kaupunkina ilman äänimaisemaa.** Sillä on
+äänimaisema — kahdella laudalla. Työhuone valitsi jokaiselle
+kaupungille yhden laudan: sen, jolla oli eniten osia. Sydney sai yhden
+osan kolmella laudalla, tasapelin voitti ensimmäinen, ja se sattui
+olemaan valintaruutu, jolla on kysymykset muttei ääntä.
+
+**Kahdella laudalla voi olla yhtä monta osaa mutta ERI osat.** Mittari
+oli kirjoitettu niin kuin osien MÄÄRÄ kertoisi, mitkä osat ne ovat.
+Perustelu koodissa oli järkevä ja väärä samaan aikaan.
+
+Sama kysymys paljasti kaksi omaa virhettäni.
+
+**Maailmankartta puuttui jokaisesta sisältötaulusta.** Taulut on
+avainnettu laudan tunnuksella, ja uusi lauta ei ollut yhdessäkään.
+Uudella kartalla Tutki-ikkunassa olisi näkynyt vain Wikipedian
+tiivistelmä: ei matkakirjan merkintää, ei kulttuurinostoja, ei vanhaa
+valokuvaa, ei kielinäytettä, ei maan tunnuslukuja. **Tämä ansa on
+lauennut tässä projektissa neljästi, ja minä kävelin siihen itse
+päivä sen jälkeen kun kirjoitin siitä muistiinpanon.**
+
+**Ja maiden rajat olisivat kadonneet 143 kaupungilta.** Kun omistaja
+käski korvata vanhan laudan koko kartalla, olin poistamassa laudan,
+jonka tiedostossa oli ainoa kappale Aasian rajoista — ne oli kirjoitettu
+suoraan siihen eikä lähdepakettiin. Huomasin sen vasta kun maapalsta
+jäi tyhjäksi selaintarkistuksessa.
+
+Rajat pelastuivat, koska ne ovat käännettävissä: vanhan laudan
+kaupungeille tiedetään sekä asteet että pikselit, joten projektion saa
+takaisin pienimmän neliösumman sovituksella. Mediaanipoikkeama 0,8
+yksikköä 7200 yksikön laudalla. Sen jälkeen rajat kääntyivät asteiksi ja
+projisoituivat uudelleen.
+
+**Se mitä tästä jäi käteen:** poistaminen on vaarallisempaa kuin
+lisääminen, koska poistettu tiedosto vie mukanaan sen, mitä kukaan ei
+muistanut sen sisältävän. Tarkistin ennen poistoa kaupungit, reitit ja
+askelmäärät — kaikki täsmäsivät. En tarkistanut, mitä muuta tiedostossa
+oli.

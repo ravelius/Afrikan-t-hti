@@ -16,7 +16,10 @@ const PLAYER_COLOR = '#d94f3d';
  */
 const SAVE_KEY = 'matkakirja-save-v1';
 const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.206';
+// Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
+const VANHA_LAUTA = 'vanhamaailma';
+const UUSI_LAUTA = 'maailmankartta';
+const APP_VERSION = '2026-08-03.208';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -54,11 +57,58 @@ function loadGame() {
       }
     }
     if (!raw) return null;
-    const game = Game.fromJSON(JSON.parse(raw));
+    const tila = JSON.parse(raw);
+    /*
+     * Vanha maailma korvattiin maailmankartalla. Kesken jäänyt peli ei
+     * saa kadota siihen: kartta on sama laajempana, ja kaikki 143
+     * kaupunkia, 222 reittiä ja niiden askelmäärät ovat mukana
+     * sellaisinaan. Tarkistettu vertaamalla, ennen kuin vaihto tehtiin.
+     *
+     * Siirto tehdään joka latauksella eikä kerran: tallennus kirjoitetaan
+     * uudella tunnuksella heti ensimmäisen siirron jälkeen, mutta
+     * selaimessa voi olla vanha välilehti auki vanhalla tunnuksella.
+     */
+    siirraVanhaMaailma(tila);
+    const game = Game.fromJSON(tila);
     return game && game.phase !== 'over' ? game : null;
   } catch {
     return null;
   }
+}
+
+/*
+ * Vaihtaa laudan tunnuksen tallennuksessa.
+ *
+ * Tunnus esiintyy monessa paikassa: juuripaketissa, `worlds`-kartan
+ * AVAIMENA, pelaajien sijainneissa ja tutkittujen kaupunkien
+ * `lauta:kaupunki`-avaimissa. Siksi vaihto tehdään koko rakenteen läpi
+ * eikä yhdestä kentästä — yksikin unohtunut kohta jättäisi pelaajan
+ * laudalle, jota ei enää ole.
+ *
+ * Kaupunkitunnukset ovat pieniä kirjaimia eivätkä voi olla
+ * 'vanhamaailma', joten sekaannusta ei synny.
+ */
+function siirraVanhaMaailma(arvo) {
+  if (Array.isArray(arvo)) {
+    for (let i = 0; i < arvo.length; i++) {
+      if (arvo[i] === VANHA_LAUTA) arvo[i] = UUSI_LAUTA;
+      else if (typeof arvo[i] === 'string') arvo[i] = arvo[i].replace(`${VANHA_LAUTA}:`, `${UUSI_LAUTA}:`);
+      else siirraVanhaMaailma(arvo[i]);
+    }
+    return arvo;
+  }
+  if (!arvo || typeof arvo !== 'object') return arvo;
+  for (const avain of Object.keys(arvo)) {
+    const sisus = arvo[avain];
+    if (sisus === VANHA_LAUTA) arvo[avain] = UUSI_LAUTA;
+    else if (typeof sisus === 'string') arvo[avain] = sisus.replace(`${VANHA_LAUTA}:`, `${UUSI_LAUTA}:`);
+    else siirraVanhaMaailma(sisus);
+    if (avain === VANHA_LAUTA) {
+      arvo[UUSI_LAUTA] = arvo[avain];
+      delete arvo[avain];
+    }
+  }
+  return arvo;
 }
 
 function clearSave() {
