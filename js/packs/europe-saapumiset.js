@@ -417,48 +417,35 @@ export const EUROPE_SAAPUMISET = {
   },
 
   tallinna: {
-    kuvaus: 'Tallinnaan tullaan mereltä, ja vanhakaupunki nousee näkyviin '
-              + 'kuin kulissi: punaiset torninhatut, kalkkikiviset muurit ja '
-              + 'niiden yllä Toompean kallio. Kävelin porttiholvin läpi, ja '
-              + 'katu kapeni niin, että kattoharjat melkein koskettivat '
-              + 'toisiaan. Muuria vartioi yhä kaksikymmentäkuusi tornia. '
-              + 'Raatihuoneentorilla paahdettiin manteleita kuparipannussa, ja '
-              + 'tuoksu seurasi minua kolme korttelia.',
-    nosto: 'Isoisä kirjoitti 1873: "Revalissa laiva purki lastinsa aamulla, '
-             + 'ja rautatie vei sen Pietariin ennen iltaa. Kolme vuotta sitten '
-             + 'se olisi ollut mahdotonta." Sama asema on yhä paikallaan — nyt '
-             + 'sen vieressä myydään villasukkia.',
+    kuvaus: 'Tallinna nousi merestä kuin satukirjan kuva: punaiset '
+              + 'torninhatut, harmaat muurit ja Toompean kallio kaiken yllä. '
+              + 'Porttiholvin takana katu kapeni, ja Raatihuoneentorilla '
+              + 'tuoksuivat kuparipannussa paahdetut mantelit. Sitä tuoksua '
+              + 'seurasin kolme korttelia.',
+    nosto: 'Isoisä kirjoitti: "Revalissa laiva purki lastinsa aamulla, ja '
+             + 'juna vei sen Pietariin ennen iltaa." Asema on yhä paikallaan '
+             + '— nyt sen vieressä myydään villasukkia.',
   },
 
   riika: {
-    kuvaus: 'Riikaan tullaan Daugavan yli, ja silta on niin pitkä että '
-              + 'toinen ranta erottuu vasta puolimatkassa. Kaupungissa on yli '
-              + 'seitsemänsataa jugendtaloa, ja niiden julkisivuilta '
-              + 'tuijottavat kivikasvot, leijonat ja pöllöt — käänsin päätä '
-              + 'niin kauan, että niska jumittui. Keskustorilla viisi '
-              + 'jättimäistä hallia kaartuu pään päällä kuin ylösalaisin '
-              + 'käännetyt veneet. Sisällä tuoksuu savukala, kumina ja tumma '
-              + 'ruisleipä, ja myyjä ojensi minulle palan maistiaisiksi '
-              + 'kysymättä.',
-    nosto: 'Isoisä kirjoitti kesäkuussa 1873: "Riiassa lauloi tänään tuhat '
-             + 'ihmistä yhtä aikaa latviaksi. Kukaan ei aavistanut, että siitä '
-             + 'tulisi tapa." Tapa on nyt yli 150 vuotta vanha, ja juhlat '
-             + 'pidetään yhä.',
+    kuvaus: 'Riiassa käänsin päätäni koko ajan: talojen seiniltä tuijottivat '
+              + 'kivikasvot, leijonat ja pöllöt. Keskustorin suuret hallit '
+              + 'kaartuivat pääni päällä kuin ylösalaisin käännetyt veneet, '
+              + 'ja myyjä ojensi minulle palan tummaa ruisleipää kysymättä '
+              + 'mitään.',
+    nosto: 'Isoisä kirjoitti: "Riiassa lauloi tänään tuhat ihmistä yhtä '
+             + 'aikaa latviaksi." Ne laulujuhlat pidetään yhä — tapa on '
+             + 'jatkunut jo yli 150 vuotta.',
   },
 
   vilna: {
-    kuvaus: 'Vilna yllätti: kaupunki on rakennettu kukkuloille, ja jokaisen '
-              + 'kadunmutkan takaa paljastui uusi barokkitorni. Kävelin '
-              + 'Aamunportin ali — se on ainoa jäljellä oleva yhdeksästä '
-              + 'kaupunginportista — ja ohikulkijat ottivat hatun päästään '
-              + 'keskellä katua. Vanhakaupunki on yli kolmesataa hehtaaria, '
-              + 'Itä-Euroopan laajimpia, ja siellä eksyy mielellään. Joen '
-              + 'toisella puolella tuoksui tuore ruisleipä, ja sillan vieressä '
-              + 'muurin kolossa istui pronssinen merenneito.',
-    nosto: 'Isoisä kirjoitti 1873: "Täällä liettuaa saa puhua, muttei '
-             + 'painaa latinalaisin kirjaimin. Kirjat kannetaan rajan yli '
-             + 'säkeissä yöllä." Kirjankantajille on nykyään oma patsaansa — ja '
-             + 'kielto kumottiin 1904.',
+    kuvaus: 'Vilnassa jokaisen kadunmutkan takaa nousi esiin uusi '
+              + 'barokkitorni. Kävelin Aamunportin ali — se on ainoa jäljellä '
+              + 'yhdeksästä kaupunginportista — ja ohikulkijat nostivat '
+              + 'hattuaan keskellä katua. Tässä kaupungissa eksyy mielellään.',
+    nosto: 'Isoisä kirjoitti: "Täällä saa puhua liettuaa, mutta kirjoja ei '
+             + 'saa painaa omilla kirjaimilla. Ne kannetaan rajan yli säkeissä '
+             + 'yöllä." Kirjankantajilla on nykyään oma patsaansa.',
   },
 
   istanbul: {
