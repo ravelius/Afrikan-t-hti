@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 206, teksti: 'Koko maailma yhtenä karttana: 248 kaupunkia' },
+  { v: 206, teksti: 'Kartta kiertää ympäri eikä pääty reunaan' },
+  { v: 206, teksti: 'Valtameriylitykset yhdistävät mantereet' },
+  { v: 206, teksti: 'Kartta latautuu kolmekymmentä kertaa nopeammin' },
   { v: 205, teksti: 'Korjattu: nostojen kuvat puuttuivat iPhonelta' },
   { v: 204, teksti: 'Aiherivi pysyy näkyvissä arkin yläreunassa' },
   { v: 203, teksti: 'Kuvat omissa mittasuhteissaan, ei panoraamana' },

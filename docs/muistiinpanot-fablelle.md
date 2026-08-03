@@ -1269,3 +1269,47 @@ Erimielisyyttä ei ratkaistu, vaan poistettiin.
 selainmoottori. Se ei ole tarkistus vaan yksi otos. Jokainen kerta,
 kun kirjoitan "tarkistettu kuvakaappauksella", se tarkoittaa
 "tarkistettu Chromiumilla" — ja omistaja lukee peliä iPhonella.
+
+---
+
+**[Opus]** Maailmankartta: kolme vikaa, jotka näyttivät kolmelta eri
+vialta ja olivat sama vika.
+
+Omistaja kysyi, voiko Amerikat yhdistää karttaan, ja valitsi koko
+maailman. Sitten hän lisäsi kaksi vaatimusta: kartan pitää olla
+loputtomasti sivusuunnassa vieritettävä, eikä yksi paikka saa näkyä
+kahdessa kohdassa yhtä aikaa.
+
+**Jälkimmäinen vaatimus poisti hankalimman ongelman.** Olin juuri
+miettimässä, mihin kohtaan maapalloa kartan saa katkaista niin, että
+se häiritsee vähiten. Kiertävällä kartalla sitä kysymystä ei ole.
+Vaatimus, joka kuulostaa lisätyöltä, oli itse asiassa vastaus.
+
+**Kolme vikaa.** Reittiviiva kulki koko kartan poikki Aasian yli.
+Reitinkorjaaja antoi Tokio–San Franciscolle 1875 välipistettä Intian
+valtameren kautta. Maantunnistus ei nähnyt Tšukotkaa, joka alkaa
+laudan oikeasta laidasta ja jatkuu vasempaan.
+
+Ne näyttivät kolmelta eri vialta, ja korjasin ne kolmena eri asiana.
+Ne ovat sama vika: **jokainen kohta koodissa, joka vertaa kahta
+x-koordinaattia, olettaa että pienempi on vasemmalla.** Kiertävällä
+kartalla se ei päde. En löytänyt niitä lukemalla vaan törmäämällä —
+yksi kerrallaan, aina siinä järjestyksessä missä ne sattuivat
+kaatumaan.
+
+**Neljäs oli hiljaisin ja isoin.** Laudan rajauslaatikko lasketaan
+sisällöstä, ja kiertävällä kartalla rannikot jatkuvat reunan yli.
+Laatikko oli 24 860 yksikköä — yli kaksi maapalloa. Kaikki siitä
+johdettu meni mukana: kierron jakso, elementin leveys ja loitonnuksen
+raja. Yksikään rivi ei näyttänyt väärältä. Vain luku oli väärä, ja se
+löytyi vasta kun tulostin sen ruudulle.
+
+**Ja viides ei ollut uusi.** Kartta ei latautunut lainkaan:
+taustapisteiden laskenta vei 22 sekuntia. Vika oli koodissa alusta
+asti — kartta oli vain aina ollut tarpeeksi pieni, ettei se haitannut.
+Rannikkojanat ruudukkoon ja ääriviivat vaakakaistoihin: 22 s → 0,7 s,
+ja vanha kartta nopeutui samalla kahdeksankertaisesti ilman että
+kukaan oli pyytänyt.
+
+**Se mitä tästä jäi käteen:** kun mittakaava kasvaa kolminkertaiseksi,
+esiin ei tule uusia vikoja vaan vanhoja. Ne olivat aina siellä.

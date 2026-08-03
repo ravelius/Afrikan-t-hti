@@ -41483,50 +41483,75 @@ const OC_MAP = {
   ],
 };
 
-// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+/*
+ * start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+ *
+ * wiki = suomenkielisen Wikipedia-artikkelin otsikko (js/wiki.js kokeilee
+ * fi ensin, en varalla). Otsikot on tarkistettu rajapinnasta. Perth ja
+ * Darwin ovat suomeksi täsmennyssivuja, joten ne tarvitsevat tarkenteen.
+ * Kolmella pikkupaikalla — Birdsville, Coober Pedy ja Exmouth — ei ole
+ * suomenkielistä artikkelia lainkaan, joten otsikko on englanninkielinen
+ * kuten africa.js:n 'Cape Palmas'.
+ *
+ * ambience = äänimaisema; sanasto on sama kuin muilla laudoilla.
+ * Ei-ilmeiset valinnat:
+ *
+ *  - Sisämaan Australia on 'aavikko' myös silloin kun paikka on
+ *    kaivoskaupunki (Kalgoorlie, Mount Isa, Coober Pedy) tai puuton
+ *    tasanko (Nullarbor). Autiomaan tuuli on niissä sama ääni.
+ *  - Rannikon paikat jakautuvat kahtia: satamakaupungit ovat 'satama'
+ *    (Cairns, Darwin, Broome, Townsville, Hobart, Geraldton, Auckland,
+ *    Suva, Honiara, Port Vila, Nouméa, Port Moresby, Dili), kun taas
+ *    Exmouth ja Norfolk ovat 'meri' — riuttaa ja jyrkkää rantaa,
+ *    ei laituria.
+ *  - Milford Sound on 'vuoristo' eikä 'meri': vuono on kapea ja
+ *    seinämät nousevat pystyyn, joten paikka kuulostaa vuorelta.
+ *  - Sepik on 'sademetsa' (joki viidakon läpi) ja Bali samoin, kuten
+ *    Sumatra ja Borneo asia.js:ssä.
+ */
 const OC_CITIES = [
   {
-    id: 'sydney', name: 'Sydney', x: 568, y: 639, start: true, airport: true,
+    id: 'sydney', name: 'Sydney', wiki: 'Sydney', ambience: 'kaupunki', x: 568, y: 639, start: true, airport: true,
     la: 'start', lx: 18, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'sydney', label: 'Maailma-lauta' }],
   },
   {
-    id: 'perth', name: 'Perth', x: 123, y: 650, start: true, airport: true,
+    id: 'perth', name: 'Perth', wiki: 'Perth (Länsi-Australia)', ambience: 'kaupunki', x: 123, y: 650, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
   },
 
-  { id: 'melbourne', name: 'Melbourne', x: 492, y: 696, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'brisbane', name: 'Brisbane', x: 594, y: 546, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'cairns', name: 'Cairns', x: 501, y: 384, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'darwin', name: 'Darwin', x: 279, y: 329, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'adelaide', name: 'Adelaide', x: 411, y: 655, airport: true, la: 'end', lx: -16, ly: 16 },
-  { id: 'alicesprings', name: 'Alice Springs', x: 338, y: 494, la: 'start', lx: 16, ly: 5 },
-  { id: 'uluru', name: 'Uluru', x: 288, y: 528, la: 'end', lx: -16, ly: 5 },
-  { id: 'broome', name: 'Broome', x: 165, y: 427, la: 'start', lx: 16, ly: 5 },
-  { id: 'kalgoorlie', name: 'Kalgoorlie', x: 186, y: 620, la: 'middle', lx: 0, ly: -22 },
-  { id: 'townsville', name: 'Townsville', x: 526, y: 439, la: 'start', lx: 16, ly: 5 },
-  { id: 'hobart', name: 'Hobart', x: 518, y: 778, la: 'start', lx: 16, ly: 5 },
-  { id: 'nullarbor', name: 'Nullarbor', x: 297, y: 615, la: 'middle', lx: 0, ly: 28 },
-  { id: 'birdsville', name: 'Birdsville', x: 416, y: 522, la: 'start', lx: 16, ly: 5 },
-  { id: 'exmouth', name: 'Exmouth', x: 73, y: 513, la: 'start', lx: 16, ly: 5 },
-  { id: 'mountisa', name: 'Mount Isa', x: 414, y: 444, la: 'end', lx: -16, ly: 5 },
-  { id: 'cooberpedy', name: 'Coober Pedy', x: 357, y: 573, la: 'start', lx: 16, ly: -6 },
-  { id: 'geraldton', name: 'Geraldton', x: 88, y: 594, la: 'end', lx: -16, ly: 5 },
-  { id: 'portmoresby', name: 'Port Moresby', x: 523, y: 265, la: 'start', lx: 16, ly: 5 },
-  { id: 'sepik', name: 'Sepik', x: 463, y: 190, la: 'middle', lx: 0, ly: -22 },
-  { id: 'honiara', name: 'Honiara', x: 722, y: 281, la: 'start', lx: 16, ly: 5 },
-  { id: 'portvila', name: 'Port Vila', x: 829, y: 426, la: 'start', lx: 16, ly: 5 },
-  { id: 'noumea', name: 'Nouméa', x: 791, y: 489, la: 'start', lx: 16, ly: 5 },
-  { id: 'norfolk', name: 'Norfolk', x: 795, y: 594, la: 'start', lx: 16, ly: 5 },
-  { id: 'suva', name: 'Suva', x: 970, y: 454, la: 'end', lx: -16, ly: 20 },
-  { id: 'auckland', name: 'Auckland', x: 857, y: 729, airport: true, la: 'start', lx: 16, ly: -6 },
-  { id: 'wellington', name: 'Wellington', x: 845, y: 795, la: 'start', lx: 16, ly: 5 },
-  { id: 'christchurch', name: 'Christchurch', x: 801, y: 830, la: 'start', lx: 16, ly: 12 },
-  { id: 'milfordsound', name: 'Milford Sound', x: 746, y: 842, la: 'end', lx: -16, ly: 5 },
-  { id: 'dili', name: 'Dili', x: 191, y: 280, la: 'middle', lx: 0, ly: -22 },
+  { id: 'melbourne', name: 'Melbourne', wiki: 'Melbourne', ambience: 'kaupunki', x: 492, y: 696, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'brisbane', name: 'Brisbane', wiki: 'Brisbane', ambience: 'kaupunki', x: 594, y: 546, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'cairns', name: 'Cairns', wiki: 'Cairns', ambience: 'satama', x: 501, y: 384, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'darwin', name: 'Darwin', wiki: 'Darwin (Australia)', ambience: 'satama', x: 279, y: 329, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'adelaide', name: 'Adelaide', wiki: 'Adelaide', ambience: 'kaupunki', x: 411, y: 655, airport: true, la: 'end', lx: -16, ly: 16 },
+  { id: 'alicesprings', name: 'Alice Springs', wiki: 'Alice Springs', ambience: 'aavikko', x: 338, y: 494, la: 'start', lx: 16, ly: 5 },
+  { id: 'uluru', name: 'Uluru', wiki: 'Uluru', ambience: 'aavikko', x: 288, y: 528, la: 'end', lx: -16, ly: 5 },
+  { id: 'broome', name: 'Broome', wiki: 'Broome', ambience: 'satama', x: 165, y: 427, la: 'start', lx: 16, ly: 5 },
+  { id: 'kalgoorlie', name: 'Kalgoorlie', wiki: 'Kalgoorlie', ambience: 'aavikko', x: 186, y: 620, la: 'middle', lx: 0, ly: -22 },
+  { id: 'townsville', name: 'Townsville', wiki: 'Townsville', ambience: 'satama', x: 526, y: 439, la: 'start', lx: 16, ly: 5 },
+  { id: 'hobart', name: 'Hobart', wiki: 'Hobart', ambience: 'satama', x: 518, y: 778, la: 'start', lx: 16, ly: 5 },
+  { id: 'nullarbor', name: 'Nullarbor', wiki: 'Nullarborin tasanko', ambience: 'aavikko', x: 297, y: 615, la: 'middle', lx: 0, ly: 28 },
+  { id: 'birdsville', name: 'Birdsville', wiki: 'Birdsville', ambience: 'aavikko', x: 416, y: 522, la: 'start', lx: 16, ly: 5 },
+  { id: 'exmouth', name: 'Exmouth', wiki: 'Exmouth, Western Australia', ambience: 'meri', x: 73, y: 513, la: 'start', lx: 16, ly: 5 },
+  { id: 'mountisa', name: 'Mount Isa', wiki: 'Mount Isa', ambience: 'aavikko', x: 414, y: 444, la: 'end', lx: -16, ly: 5 },
+  { id: 'cooberpedy', name: 'Coober Pedy', wiki: 'Coober Pedy', ambience: 'aavikko', x: 357, y: 573, la: 'start', lx: 16, ly: -6 },
+  { id: 'geraldton', name: 'Geraldton', wiki: 'Geraldton', ambience: 'satama', x: 88, y: 594, la: 'end', lx: -16, ly: 5 },
+  { id: 'portmoresby', name: 'Port Moresby', wiki: 'Port Moresby', ambience: 'satama', x: 523, y: 265, la: 'start', lx: 16, ly: 5 },
+  { id: 'sepik', name: 'Sepik', wiki: 'Sepik', ambience: 'sademetsa', x: 463, y: 190, la: 'middle', lx: 0, ly: -22 },
+  { id: 'honiara', name: 'Honiara', wiki: 'Honiara', ambience: 'satama', x: 722, y: 281, la: 'start', lx: 16, ly: 5 },
+  { id: 'portvila', name: 'Port Vila', wiki: 'Port Vila', ambience: 'satama', x: 829, y: 426, la: 'start', lx: 16, ly: 5 },
+  { id: 'noumea', name: 'Nouméa', wiki: 'Nouméa', ambience: 'satama', x: 791, y: 489, la: 'start', lx: 16, ly: 5 },
+  { id: 'norfolk', name: 'Norfolk', wiki: 'Norfolkinsaari', ambience: 'meri', x: 795, y: 594, la: 'start', lx: 16, ly: 5 },
+  { id: 'suva', name: 'Suva', wiki: 'Suva', ambience: 'satama', x: 970, y: 454, la: 'end', lx: -16, ly: 20 },
+  { id: 'auckland', name: 'Auckland', wiki: 'Auckland', ambience: 'satama', x: 857, y: 729, airport: true, la: 'start', lx: 16, ly: -6 },
+  { id: 'wellington', name: 'Wellington', wiki: 'Wellington', ambience: 'kaupunki', x: 845, y: 795, la: 'start', lx: 16, ly: 5 },
+  { id: 'christchurch', name: 'Christchurch', wiki: 'Christchurch', ambience: 'kaupunki', x: 801, y: 830, la: 'start', lx: 16, ly: 12 },
+  { id: 'milfordsound', name: 'Milford Sound', wiki: 'Milford Sound', ambience: 'vuoristo', x: 746, y: 842, la: 'end', lx: -16, ly: 5 },
+  { id: 'dili', name: 'Dili', wiki: 'Dili', ambience: 'satama', x: 191, y: 280, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'bali', name: 'Bali', x: 29, y: 306, airport: true, la: 'middle', lx: 0, ly: 28,
+    id: 'bali', name: 'Bali', wiki: 'Bali', ambience: 'sademetsa', x: 29, y: 306, airport: true, la: 'middle', lx: 0, ly: 28,
     // Indonesian saariketju jatkuu lännessä Aasian laudalle.
     links: [{ pack: 'asia', city: 'jakarta', label: 'Aasian lauta' }],
   },
@@ -44126,58 +44151,80 @@ const NA_MAP = {
   ],
 };
 
-// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+/*
+ * start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+ *
+ * wiki = suomenkielisen Wikipedia-artikkelin otsikko. Peli hakee sen
+ * tiivistelmän ja kuvan; js/wiki.js kokeilee ensin suomea ja sitten
+ * englantia. Otsikot on tarkistettu rajapinnasta, koska väärä otsikko
+ * ei näy koodissa eikä testeissä vaan vasta pelaajalle.
+ *
+ * ambience = kaupungin äänimaisema. Sanasto on sama kuin muilla
+ * laudoilla: kaupunki, satama, meri, aavikko, savanni, sademetsa,
+ * pohjoinen, metsa, ylanko, vuoristo, basaari. Valinta on makuasia,
+ * eikä sitä voi hakea mistään. Suurin osa on ilmeinen; nämä eivät:
+ *
+ *  - Yellowstone ja Appalakit ovat 'metsa' eivätkä 'vuoristo': kumpikin
+ *    on metsän peittämä, eikä pelaaja kuule niissä paljasta huippua.
+ *  - Mount Rushmore ja Santa Fe ovat 'ylanko' — avointa korkeaa maata,
+ *    ei louhikkoa. Grand Canyon on 'aavikko', koska rotko on kuiva.
+ *  - Alaskan, Yukonin, Nunavutin, Grönlannin ja Labradorin paikat ovat
+ *    'pohjoinen'. Sanaa ei ole muilla laudoilla montaa, mutta se on
+ *    juuri tämän laudan pohjoisreunan ääni.
+ *  - Havaiji ja Bermuda ovat 'meri' eivätkä 'satama': saarille tullaan
+ *    laivalla, mutta kumpikaan ei ole satamakaupunki.
+ */
 const NA_CITIES = [
   {
-    id: 'newyork', name: 'New York', x: 818, y: 507, start: true, airport: true,
+    id: 'newyork', name: 'New York', wiki: 'New York', ambience: 'kaupunki', x: 818, y: 507, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'newyork', label: 'Maailma-lauta' }],
   },
   {
-    id: 'sanfrancisco', name: 'San Francisco', x: 420, y: 546, start: true, airport: true,
+    id: 'sanfrancisco', name: 'San Francisco', wiki: 'San Francisco', ambience: 'satama', x: 420, y: 546, start: true, airport: true,
     la: 'end', lx: -18, ly: 5,
   },
 
-  { id: 'nome', name: 'Nome', x: 304, y: 153, la: 'start', lx: 16, ly: 5 },
-  { id: 'anchorage', name: 'Anchorage', x: 343, y: 234, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'whitehorse', name: 'Whitehorse', x: 414, y: 278, la: 'middle', lx: 0, ly: 28 },
-  { id: 'yellowknife', name: 'Yellowknife', x: 530, y: 290, la: 'middle', lx: 0, ly: -22 },
-  { id: 'vancouver', name: 'Vancouver', x: 447, y: 422, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'yellowstone', name: 'Yellowstone', x: 527, y: 493, la: 'end', lx: -16, ly: 5 },
-  { id: 'mountrushmore', name: 'Mount Rushmore', x: 586, y: 489, la: 'middle', lx: -14, ly: -24 },
-  { id: 'winnipeg', name: 'Winnipeg', x: 629, y: 439, la: 'middle', lx: 0, ly: -22 },
-  { id: 'churchill', name: 'Churchill', x: 644, y: 338, la: 'end', lx: -16, ly: 5 },
-  { id: 'iqaluit', name: 'Iqaluit', x: 750, y: 281, la: 'start', lx: 16, ly: 5 },
-  { id: 'nuuk', name: 'Nuuk', x: 852, y: 204, la: 'end', lx: -16, ly: 5 },
-  { id: 'labrador', name: 'Labrador', x: 863, y: 343, la: 'end', lx: -16, ly: 5 },
-  { id: 'stjohns', name: 'St. John’s', x: 926, y: 372, la: 'end', lx: -16, ly: 18 },
-  { id: 'halifax', name: 'Halifax', x: 883, y: 436, la: 'start', lx: 16, ly: 5 },
-  { id: 'montreal', name: 'Montreal', x: 807, y: 450, la: 'middle', lx: 0, ly: -22 },
-  { id: 'toronto', name: 'Toronto', x: 769, y: 488, la: 'end', lx: -16, ly: 5 },
-  { id: 'chicago', name: 'Chicago', x: 709, y: 520, airport: true, la: 'start', lx: 16, ly: 12 },
-  { id: 'appalakit', name: 'Appalakit', x: 776, y: 556, la: 'end', lx: -16, ly: 26 },
-  { id: 'bermuda', name: 'Bermuda', x: 927, y: 566, la: 'start', lx: 16, ly: 5 },
-  { id: 'denver', name: 'Denver', x: 567, y: 550, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'santafe', name: 'Santa Fe', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
-  { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
+  { id: 'nome', name: 'Nome', wiki: 'Nome', ambience: 'pohjoinen', x: 304, y: 153, la: 'start', lx: 16, ly: 5 },
+  { id: 'anchorage', name: 'Anchorage', wiki: 'Anchorage', ambience: 'pohjoinen', x: 343, y: 234, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'whitehorse', name: 'Whitehorse', wiki: 'Whitehorse', ambience: 'pohjoinen', x: 414, y: 278, la: 'middle', lx: 0, ly: 28 },
+  { id: 'yellowknife', name: 'Yellowknife', wiki: 'Yellowknife', ambience: 'pohjoinen', x: 530, y: 290, la: 'middle', lx: 0, ly: -22 },
+  { id: 'vancouver', name: 'Vancouver', wiki: 'Vancouver', ambience: 'satama', x: 447, y: 422, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'yellowstone', name: 'Yellowstone', wiki: 'Yellowstonen kansallispuisto', ambience: 'metsa', x: 527, y: 493, la: 'end', lx: -16, ly: 5 },
+  { id: 'mountrushmore', name: 'Mount Rushmore', wiki: 'Mount Rushmore', ambience: 'ylanko', x: 586, y: 489, la: 'middle', lx: -14, ly: -24 },
+  { id: 'winnipeg', name: 'Winnipeg', wiki: 'Winnipeg', ambience: 'kaupunki', x: 629, y: 439, la: 'middle', lx: 0, ly: -22 },
+  { id: 'churchill', name: 'Churchill', wiki: 'Churchill (Kanada)', ambience: 'pohjoinen', x: 644, y: 338, la: 'end', lx: -16, ly: 5 },
+  { id: 'iqaluit', name: 'Iqaluit', wiki: 'Iqaluit', ambience: 'pohjoinen', x: 750, y: 281, la: 'start', lx: 16, ly: 5 },
+  { id: 'nuuk', name: 'Nuuk', wiki: 'Nuuk', ambience: 'pohjoinen', x: 852, y: 204, la: 'end', lx: -16, ly: 5 },
+  { id: 'labrador', name: 'Labrador', wiki: 'Labrador', ambience: 'pohjoinen', x: 863, y: 343, la: 'end', lx: -16, ly: 5 },
+  { id: 'stjohns', name: 'St. John’s', wiki: 'St. John’s (Kanada)', ambience: 'satama', x: 926, y: 372, la: 'end', lx: -16, ly: 18 },
+  { id: 'halifax', name: 'Halifax', wiki: 'Halifax (Kanada)', ambience: 'satama', x: 883, y: 436, la: 'start', lx: 16, ly: 5 },
+  { id: 'montreal', name: 'Montreal', wiki: 'Montreal', ambience: 'kaupunki', x: 807, y: 450, la: 'middle', lx: 0, ly: -22 },
+  { id: 'toronto', name: 'Toronto', wiki: 'Toronto', ambience: 'kaupunki', x: 769, y: 488, la: 'end', lx: -16, ly: 5 },
+  { id: 'chicago', name: 'Chicago', wiki: 'Chicago', ambience: 'kaupunki', x: 709, y: 520, airport: true, la: 'start', lx: 16, ly: 12 },
+  { id: 'appalakit', name: 'Appalakit', wiki: 'Appalakit', ambience: 'metsa', x: 776, y: 556, la: 'end', lx: -16, ly: 26 },
+  { id: 'bermuda', name: 'Bermuda', wiki: 'Bermuda', ambience: 'meri', x: 927, y: 566, la: 'start', lx: 16, ly: 5 },
+  { id: 'denver', name: 'Denver', wiki: 'Denver', ambience: 'vuoristo', x: 567, y: 550, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'santafe', name: 'Santa Fe', wiki: 'Santa Fe (New Mexico)', ambience: 'ylanko', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
+  { id: 'grandcanyon', name: 'Grand Canyon', wiki: 'Grand Canyon', ambience: 'aavikko', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, start: true, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'losangeles', name: 'Los Angeles', wiki: 'Los Angeles', ambience: 'kaupunki', x: 445, y: 594, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'maailma', city: 'losangeles', label: 'Maailma-lauta' }],
   },
-  { id: 'hawaii', name: 'Havaiji', x: 185, y: 628, la: 'middle', lx: 0, ly: 34 },
-  { id: 'dallas', name: 'Dallas', x: 638, y: 626, la: 'start', lx: 16, ly: 5 },
-  { id: 'neworleans', name: 'New Orleans', x: 701, y: 649, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'miami', name: 'Miami', x: 801, y: 678, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 865, y: 730, la: 'middle', lx: 0, ly: 24 },
-  { id: 'sanjuan', name: 'San Juan', x: 973, y: 720, la: 'end', lx: -16, ly: 5 },
-  { id: 'monterrey', name: 'Monterrey', x: 606, y: 705, la: 'end', lx: -16, ly: 5 },
-  { id: 'mexico', name: 'Mexico City', x: 618, y: 775, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'merida', name: 'Mérida', x: 725, y: 765, la: 'start', lx: 16, ly: -6 },
-  { id: 'guatemala', name: 'Guatemala', x: 718, y: 824, la: 'end', lx: -16, ly: 5 },
-  { id: 'managua', name: 'Managua', x: 771, y: 847, la: 'start', lx: 14, ly: 16 },
+  { id: 'hawaii', name: 'Havaiji', wiki: 'Havaiji', ambience: 'meri', x: 185, y: 628, la: 'middle', lx: 0, ly: 34 },
+  { id: 'dallas', name: 'Dallas', wiki: 'Dallas', ambience: 'kaupunki', x: 638, y: 626, la: 'start', lx: 16, ly: 5 },
+  { id: 'neworleans', name: 'New Orleans', wiki: 'New Orleans', ambience: 'satama', x: 701, y: 649, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'miami', name: 'Miami', wiki: 'Miami', ambience: 'kaupunki', x: 801, y: 678, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'santiagodecuba', name: 'Santiago de Cuba', wiki: 'Santiago de Cuba', ambience: 'satama', x: 865, y: 730, la: 'middle', lx: 0, ly: 24 },
+  { id: 'sanjuan', name: 'San Juan', wiki: 'San Juan (Puerto Rico)', ambience: 'satama', x: 973, y: 720, la: 'end', lx: -16, ly: 5 },
+  { id: 'monterrey', name: 'Monterrey', wiki: 'Monterrey', ambience: 'kaupunki', x: 606, y: 705, la: 'end', lx: -16, ly: 5 },
+  { id: 'mexico', name: 'Mexico City', wiki: 'México', ambience: 'kaupunki', x: 618, y: 775, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'merida', name: 'Mérida', wiki: 'Mérida (Meksiko)', ambience: 'kaupunki', x: 725, y: 765, la: 'start', lx: 16, ly: -6 },
+  { id: 'guatemala', name: 'Guatemala', wiki: 'Guatemala (kaupunki)', ambience: 'kaupunki', x: 718, y: 824, la: 'end', lx: -16, ly: 5 },
+  { id: 'managua', name: 'Managua', wiki: 'Managua', ambience: 'kaupunki', x: 771, y: 847, la: 'start', lx: 14, ly: 16 },
   {
-    id: 'panama', name: 'Panama', x: 857, y: 871, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'panama', name: 'Panama', wiki: 'Panama (kaupunki)', ambience: 'satama', x: 857, y: 871, airport: true, la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Etelä-Amerikan laudalla: kannas yhdistää mantereet.
     links: [{ pack: 'southamerica', city: 'panama', label: 'Etelä-Amerikan lauta' }],
   },
@@ -46783,65 +46830,91 @@ const SA_MAP = {
   ],
 };
 
-// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+/*
+ * start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+ *
+ * wiki = suomenkielisen Wikipedia-artikkelin otsikko (js/wiki.js kokeilee
+ * fi ensin, en varalla). Otsikot on tarkistettu rajapinnasta: moni
+ * portugalin- ja espanjankielinen nimi on suomeksi täsmennyssivu, eikä
+ * täsmennyssivusta saa tiivistelmää eikä kuvaa. Siksi Manaus on
+ * 'Manaus (kaupunki)' — pelkkä 'Manaus' on suomeksi loitsimista
+ * tarkoittava sana — ja Santarém, Salvador ja Boa Vista tarvitsevat
+ * suluissa olevan tarkenteen.
+ *
+ * ambience = äänimaisema; sanasto on sama kuin muilla laudoilla.
+ * Ei-ilmeiset valinnat:
+ *
+ *  - Amazonin sisämaan paikat (Macapá, Manaus, Santarém, Iquitos,
+ *    Porto Velho, Cayenne) ovat 'sademetsa' vaikka moni niistä on myös
+ *    jokisatama: metsä on se, mitä paikan päällä kuuluu.
+ *  - Antofagasta on 'aavikko' eikä 'satama'. Se on satama, mutta
+ *    Atacama on kuivin autiomaa maailmassa ja määrittää paikan.
+ *  - Bogotá ja Titicaca ovat 'ylanko' (avoin korkea tasanko), kun taas
+ *    Quito, Machu Picchu, Salta ja Catamarca ovat 'vuoristo' (laakso
+ *    jyrkkien rinteiden välissä).
+ *  - Boa Vista, Ilha do Bananal ja Campo Grande ovat 'savanni': ne
+ *    ovat cerradoa ja kosteikon laitaa, eivät sademetsää.
+ *  - Kap Horn, Falkland, San Ambrosio, Robinson Crusoe ja San Jorgen
+ *    lahti ovat 'meri' — avomerta, ei satamaa.
+ */
 const SA_CITIES = [
   {
-    id: 'panama', name: 'Panama', x: 236, y: 98, start: true, airport: true,
+    id: 'panama', name: 'Panama', wiki: 'Panama (kaupunki)', ambience: 'satama', x: 236, y: 98, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Pohjois-Amerikan laudalla: kannas yhdistää mantereet.
     links: [{ pack: 'northamerica', city: 'panama', label: 'Pohjois-Amerikan lauta' }],
   },
   {
-    id: 'buenosaires', name: 'Buenos Aires', x: 554, y: 681, start: true, airport: true,
+    id: 'buenosaires', name: 'Buenos Aires', wiki: 'Buenos Aires', ambience: 'kaupunki', x: 554, y: 681, start: true, airport: true,
     la: 'start', lx: 18, ly: 5,
   },
 
-  { id: 'caracas', name: 'Caracas', x: 430, y: 59 },
-  { id: 'bogota', name: 'Bogotá', x: 327, y: 152, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'quito', name: 'Quito', x: 271, y: 232, la: 'end', lx: -16, ly: 5 },
-  { id: 'galapagos', name: 'Galápagos', x: 105, y: 271, la: 'middle', lx: 0, ly: 26 },
-  { id: 'boavista', name: 'Boa Vista', x: 527, y: 169 },
-  { id: 'cayenne', name: 'Cayenne', x: 647, y: 144, la: 'start', lx: 16, ly: 5 },
-  { id: 'macapa', name: 'Macapá', x: 663, y: 212, la: 'start', lx: 16, ly: 5 },
-  { id: 'manaus', name: 'Manaus', x: 537, y: 255, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'santarem', name: 'Santarém', x: 613, y: 247, la: 'middle', lx: 0, ly: -22 },
-  { id: 'saoluis', name: 'São Luís', x: 755, y: 265, la: 'middle', lx: 0, ly: -22 },
+  { id: 'caracas', name: 'Caracas', wiki: 'Caracas', ambience: 'kaupunki', x: 430, y: 59 },
+  { id: 'bogota', name: 'Bogotá', wiki: 'Bogotá', ambience: 'ylanko', x: 327, y: 152, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'quito', name: 'Quito', wiki: 'Quito', ambience: 'vuoristo', x: 271, y: 232, la: 'end', lx: -16, ly: 5 },
+  { id: 'galapagos', name: 'Galápagos', wiki: 'Galápagossaaret', ambience: 'meri', x: 105, y: 271, la: 'middle', lx: 0, ly: 26 },
+  { id: 'boavista', name: 'Boa Vista', wiki: 'Boa Vista (Roraima)', ambience: 'savanni', x: 527, y: 169 },
+  { id: 'cayenne', name: 'Cayenne', wiki: 'Cayenne', ambience: 'sademetsa', x: 647, y: 144, la: 'start', lx: 16, ly: 5 },
+  { id: 'macapa', name: 'Macapá', wiki: 'Macapá', ambience: 'sademetsa', x: 663, y: 212, la: 'start', lx: 16, ly: 5 },
+  { id: 'manaus', name: 'Manaus', wiki: 'Manaus (kaupunki)', ambience: 'sademetsa', x: 537, y: 255, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'santarem', name: 'Santarém', wiki: 'Santarém (Brasilia)', ambience: 'sademetsa', x: 613, y: 247, la: 'middle', lx: 0, ly: -22 },
+  { id: 'saoluis', name: 'São Luís', wiki: 'São Luís', ambience: 'kaupunki', x: 755, y: 265, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'joaopessoa', name: 'João Pessoa', x: 875, y: 344, airport: true,
+    id: 'joaopessoa', name: 'João Pessoa', wiki: 'João Pessoa', ambience: 'meri', x: 875, y: 344, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Etelä-Atlantin postilentoreitti Dakariin: Brasilian itäkärki on
     // Afrikkaa lähinnä oleva kohta koko Amerikassa.
     links: [{ pack: 'africa', city: 'dakar', label: 'Afrikan lauta' }],
   },
-  { id: 'salvador', name: 'Salvador', x: 815, y: 411, la: 'start', lx: 16, ly: 5 },
-  { id: 'iquitos', name: 'Iquitos', x: 351, y: 273, la: 'end', lx: -16, ly: 5 },
-  { id: 'portovelho', name: 'Porto Velho', x: 485, y: 334, la: 'end', lx: -16, ly: 5 },
-  { id: 'bananal', name: 'Ilha do Bananal', x: 668, y: 366, la: 'start', lx: 16, ly: 5 },
-  { id: 'machupicchu', name: 'Machu Picchu', x: 373, y: 404, la: 'start', lx: 16, ly: -6 },
-  { id: 'titicaca', name: 'Titicaca', x: 418, y: 433, la: 'end', lx: -16, ly: 16 },
-  { id: 'lima', name: 'Lima', x: 319, y: 397, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'santacruz', name: 'Santa Cruz', x: 497, y: 455 },
-  { id: 'campogrande', name: 'Campo Grande', x: 604, y: 492, la: 'start', lx: 16, ly: 5 },
+  { id: 'salvador', name: 'Salvador', wiki: 'Salvador (Brasilia)', ambience: 'kaupunki', x: 815, y: 411, la: 'start', lx: 16, ly: 5 },
+  { id: 'iquitos', name: 'Iquitos', wiki: 'Iquitos', ambience: 'sademetsa', x: 351, y: 273, la: 'end', lx: -16, ly: 5 },
+  { id: 'portovelho', name: 'Porto Velho', wiki: 'Porto Velho', ambience: 'sademetsa', x: 485, y: 334, la: 'end', lx: -16, ly: 5 },
+  { id: 'bananal', name: 'Ilha do Bananal', wiki: 'Bananal', ambience: 'savanni', x: 668, y: 366, la: 'start', lx: 16, ly: 5 },
+  { id: 'machupicchu', name: 'Machu Picchu', wiki: 'Machu Picchu', ambience: 'vuoristo', x: 373, y: 404, la: 'start', lx: 16, ly: -6 },
+  { id: 'titicaca', name: 'Titicaca', wiki: 'Titicaca', ambience: 'ylanko', x: 418, y: 433, la: 'end', lx: -16, ly: 16 },
+  { id: 'lima', name: 'Lima', wiki: 'Lima', ambience: 'kaupunki', x: 319, y: 397, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'santacruz', name: 'Santa Cruz', wiki: 'Santa Cruz de la Sierra', ambience: 'kaupunki', x: 497, y: 455 },
+  { id: 'campogrande', name: 'Campo Grande', wiki: 'Campo Grande', ambience: 'savanni', x: 604, y: 492, la: 'start', lx: 16, ly: 5 },
   {
-    id: 'rio', name: 'Rio de Janeiro', x: 738, y: 533, start: true, airport: true,
+    id: 'rio', name: 'Rio de Janeiro', wiki: 'Rio de Janeiro', ambience: 'kaupunki', x: 738, y: 533, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'rio', label: 'Maailma-lauta' }],
   },
-  { id: 'saopaulo', name: 'São Paulo', x: 682, y: 525, la: 'end', lx: -6, ly: 20 },
-  { id: 'iguazu', name: 'Iguazú', x: 603, y: 561, la: 'end', lx: -16, ly: 5 },
-  { id: 'portoalegre', name: 'Porto Alegre', x: 633, y: 616, la: 'start', lx: 16, ly: 5 },
-  { id: 'antofagasta', name: 'Antofagasta', x: 417, y: 536, la: 'end', lx: -16, ly: 5 },
-  { id: 'salta', name: 'Salta', x: 473, y: 549, la: 'start', lx: 16, ly: 5 },
-  { id: 'catamarca', name: 'Catamarca', x: 466, y: 604, la: 'start', lx: 16, ly: 5 },
-  { id: 'valparaiso', name: 'Valparaíso', x: 413, y: 661, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'sanambrosio', name: 'San Ambrosio', x: 304, y: 585, la: 'middle', lx: 0, ly: 28 },
-  { id: 'robinsoncrusoe', name: 'Robinson Crusoe', x: 330, y: 679, la: 'middle', lx: 0, ly: 28 },
-  { id: 'puertomontt', name: 'Puerto Montt', x: 408, y: 775, la: 'end', lx: -16, ly: 5 },
-  { id: 'sanjorge', name: 'San Jorge', x: 460, y: 829, la: 'start', lx: 16, ly: 5 },
-  { id: 'falkland', name: 'Falkland', x: 542, y: 915, la: 'start', lx: 16, ly: 5 },
-  { id: 'puntaarenas', name: 'Punta Arenas', x: 434, y: 931, la: 'end', lx: -16, ly: 5 },
-  { id: 'caphorn', name: 'Kap Horn', x: 474, y: 980, la: 'start', lx: 16, ly: 8 },
+  { id: 'saopaulo', name: 'São Paulo', wiki: 'São Paulo', ambience: 'kaupunki', x: 682, y: 525, la: 'end', lx: -6, ly: 20 },
+  { id: 'iguazu', name: 'Iguazú', wiki: 'Iguassun putoukset', ambience: 'sademetsa', x: 603, y: 561, la: 'end', lx: -16, ly: 5 },
+  { id: 'portoalegre', name: 'Porto Alegre', wiki: 'Porto Alegre', ambience: 'satama', x: 633, y: 616, la: 'start', lx: 16, ly: 5 },
+  { id: 'antofagasta', name: 'Antofagasta', wiki: 'Antofagasta', ambience: 'aavikko', x: 417, y: 536, la: 'end', lx: -16, ly: 5 },
+  { id: 'salta', name: 'Salta', wiki: 'Salta', ambience: 'vuoristo', x: 473, y: 549, la: 'start', lx: 16, ly: 5 },
+  { id: 'catamarca', name: 'Catamarca', wiki: 'Catamarca', ambience: 'vuoristo', x: 466, y: 604, la: 'start', lx: 16, ly: 5 },
+  { id: 'valparaiso', name: 'Valparaíso', wiki: 'Valparaíso', ambience: 'satama', x: 413, y: 661, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'sanambrosio', name: 'San Ambrosio', wiki: 'Desventuradas Islands', ambience: 'meri', x: 304, y: 585, la: 'middle', lx: 0, ly: 28 },
+  { id: 'robinsoncrusoe', name: 'Robinson Crusoe', wiki: 'Juan Fernándezin saaret', ambience: 'meri', x: 330, y: 679, la: 'middle', lx: 0, ly: 28 },
+  { id: 'puertomontt', name: 'Puerto Montt', wiki: 'Puerto Montt', ambience: 'satama', x: 408, y: 775, la: 'end', lx: -16, ly: 5 },
+  { id: 'sanjorge', name: 'San Jorge', wiki: 'San Jorge Gulf', ambience: 'meri', x: 460, y: 829, la: 'start', lx: 16, ly: 5 },
+  { id: 'falkland', name: 'Falkland', wiki: 'Falklandinsaaret', ambience: 'meri', x: 542, y: 915, la: 'start', lx: 16, ly: 5 },
+  { id: 'puntaarenas', name: 'Punta Arenas', wiki: 'Punta Arenas', ambience: 'satama', x: 434, y: 931, la: 'end', lx: -16, ly: 5 },
+  { id: 'caphorn', name: 'Kap Horn', wiki: 'Kap Horn', ambience: 'meri', x: 474, y: 980, la: 'start', lx: 16, ly: 8 },
 ];
 
 // steps = kuinka monta silmälukua reitin kulkeminen vaatii.
@@ -56319,111 +56392,111 @@ const CITIES = [
   {"id":"kabul","name":"Kabul","wiki":"Kabul","ambience":"vuoristo","x":8140,"y":2014.3,"la":"start","lx":20,"ly":5},
   {"id":"samarkand","name":"Samarkand","wiki":"Samarkand","ambience":"basaari","x":8063.3,"y":1814.7,"la":"start","lx":17,"ly":-16},
   {"id":"kashgar","name":"Kašgar","wiki":"Kašgar","ambience":"basaari","x":8363.3,"y":1822.5,"la":"middle","lx":0,"ly":-24},
-  {"id":"newyork","name":"New York","x":3360,"y":1767.4,"start":true,"airport":true,"la":"end","lx":-20,"ly":5},
-  {"id":"sanfrancisco","name":"San Francisco","x":1760,"y":1884.7,"start":true,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"nome","name":"Nome","x":346.7,"y":687.8,"la":"end","lx":-20,"ly":5},
-  {"id":"anchorage","name":"Anchorage","x":836.7,"y":865.4,"airport":true,"la":"middle","lx":0,"ly":-24},
-  {"id":"whitehorse","name":"Whitehorse","x":1330,"y":890.6,"la":"middle","lx":0,"ly":-24},
-  {"id":"yellowknife","name":"Yellowknife","x":2020,"y":798.7,"la":"middle","lx":0,"ly":-24},
-  {"id":"vancouver","name":"Vancouver","x":1736.7,"y":1411.9,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"yellowstone","name":"Yellowstone","x":2150,"y":1618.2,"la":"end","lx":-20,"ly":5},
-  {"id":"mountrushmore","name":"Mount Rushmore","x":2400,"y":1589.4,"la":"start","lx":20,"ly":5},
-  {"id":"winnipeg","name":"Winnipeg","x":2596.7,"y":1394.5,"la":"start","lx":20,"ly":5},
-  {"id":"churchill","name":"Churchill","x":2703.5,"y":986.9,"la":"middle","lx":0,"ly":-24},
-  {"id":"iqaluit","name":"Iqaluit","x":3366.7,"y":824.5,"la":"middle","lx":0,"ly":-24},
-  {"id":"nuuk","name":"Nuuk","x":4146.7,"y":703.9,"la":"start","lx":20,"ly":5},
-  {"id":"labrador","name":"Labrador","x":3820,"y":1243.7,"la":"start","lx":20,"ly":5},
-  {"id":"stjohns","name":"St. John’s","x":4016.7,"y":1463.4,"la":"end","lx":-17,"ly":-16},
-  {"id":"halifax","name":"Halifax","x":3720,"y":1605.9,"la":"start","lx":20,"ly":5},
-  {"id":"montreal","name":"Montreal","x":3386.7,"y":1552,"la":"end","lx":-20,"ly":5},
-  {"id":"toronto","name":"Toronto","x":3186.7,"y":1655,"la":"start","lx":20,"ly":5},
-  {"id":"chicago","name":"Chicago","x":2913.3,"y":1727.6,"airport":true,"la":"end","lx":-20,"ly":5},
-  {"id":"appalakit","name":"Appalakit","x":3150,"y":1900.1,"la":"start","lx":20,"ly":5},
-  {"id":"bermuda","name":"Bermuda","x":3675,"y":2096.4,"la":"start","lx":20,"ly":5},
-  {"id":"denver","name":"Denver","x":2333.3,"y":1814.7,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"santafe","name":"Santa Fe","x":2293.3,"y":2010.5,"la":"start","lx":20,"ly":5},
-  {"id":"grandcanyon","name":"Grand Canyon","x":2096.7,"y":1953.7,"la":"middle","lx":0,"ly":-24},
-  {"id":"losangeles","name":"Los Angeles","x":1893.3,"y":2025.5,"start":true,"airport":true,"la":"start","lx":17,"ly":26},
-  {"id":"hawaii","name":"Havaiji","x":623.3,"y":2536,"la":"end","lx":-20,"ly":5},
-  {"id":"dallas","name":"Dallas","x":2606.7,"y":2077.8,"la":"end","lx":-20,"ly":5},
-  {"id":"neworleans","name":"New Orleans","x":2819.8,"y":2171.9,"airport":true,"la":"end","lx":-20,"ly":5},
-  {"id":"miami","name":"Miami","x":3143.3,"y":2318,"airport":true,"la":"end","lx":-20,"ly":5},
-  {"id":"santiagodecuba","name":"Santiago de Cuba","x":3300,"y":2522.1,"la":"start","lx":17,"ly":-16},
-  {"id":"sanjuan","name":"San Juan","x":3620,"y":2598.2,"la":"start","lx":20,"ly":5},
-  {"id":"monterrey","name":"Monterrey","x":2490,"y":2335.8,"la":"start","lx":20,"ly":5},
-  {"id":"mexico","name":"Mexico City","x":2530,"y":2549.8,"airport":true,"la":"end","lx":-20,"ly":5},
-  {"id":"merida","name":"Mérida","x":2856.7,"y":2542.9,"la":"middle","lx":0,"ly":-24},
-  {"id":"guatemala","name":"Guatemala","x":2816.7,"y":2711.2,"la":"start","lx":20,"ly":5},
-  {"id":"managua","name":"Managua","x":2956.7,"y":2796.1,"la":"end","lx":-20,"ly":5},
-  {"id":"panama","name":"Panama","x":3176.7,"y":2904,"airport":true,"la":"start","lx":17,"ly":-16},
-  {"id":"buenosaires","name":"Buenos Aires","x":3883.3,"y":4423.8,"start":true,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"caracas","name":"Caracas","x":3603.3,"y":2870.3,"la":"middle","lx":0,"ly":-24},
-  {"id":"bogota","name":"Bogotá","x":3364.3,"y":3054.4,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"quito","name":"Quito","x":3217.7,"y":3217.5,"la":"start","lx":20,"ly":5},
-  {"id":"galapagos","name":"Galápagos","x":2823.3,"y":3236.2,"la":"start","lx":20,"ly":5},
-  {"id":"boavista","name":"Boa Vista","x":3811,"y":3117.5,"la":"end","lx":-20,"ly":5},
-  {"id":"cayenne","name":"Cayenne","x":4076.7,"y":3054.7,"la":"start","lx":20,"ly":5},
-  {"id":"macapa","name":"Macapá","x":4123.3,"y":3204.8,"la":"end","lx":-20,"ly":5},
-  {"id":"manaus","name":"Manaus","x":3832.7,"y":3315.5,"airport":true,"la":"start","lx":17,"ly":-16},
-  {"id":"santarem","name":"Santarém","x":4009.7,"y":3292.8,"la":"end","lx":-17,"ly":-16},
-  {"id":"saoluis","name":"São Luís","x":4344.7,"y":3311.7,"la":"middle","lx":0,"ly":-24},
-  {"id":"joaopessoa","name":"João Pessoa","x":4660,"y":3451.9,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"salvador","name":"Salvador","x":4540,"y":3640.5,"la":"start","lx":20,"ly":5},
-  {"id":"iquitos","name":"Iquitos","x":3391.7,"y":3336.6,"la":"end","lx":-20,"ly":5},
-  {"id":"portovelho","name":"Porto Velho","x":3703.3,"y":3504.2,"la":"start","lx":20,"ly":5},
-  {"id":"bananal","name":"Ilha do Bananal","x":4161.3,"y":3572.9,"la":"start","lx":20,"ly":5},
-  {"id":"machupicchu","name":"Machu Picchu","x":3413.3,"y":3660.8,"la":"start","lx":20,"ly":5},
-  {"id":"titicaca","name":"Titicaca","x":3521.7,"y":3742.5,"la":"end","lx":-20,"ly":5},
-  {"id":"lima","name":"Lima","x":3280,"y":3626.9,"airport":true,"la":"end","lx":-20,"ly":5},
-  {"id":"santacruz","name":"Santa Cruz","x":3727.3,"y":3810.3,"la":"start","lx":20,"ly":5},
-  {"id":"campogrande","name":"Campo Grande","x":4012.7,"y":3902.6,"la":"end","lx":-20,"ly":5},
-  {"id":"rio","name":"Rio de Janeiro","x":4386.7,"y":3981.2,"start":true,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"saopaulo","name":"São Paulo","x":4230,"y":3977.6,"la":"middle","lx":0,"ly":-24},
-  {"id":"iguazu","name":"Iguazú","x":4018.7,"y":4086.8,"la":"start","lx":20,"ly":5},
-  {"id":"portoalegre","name":"Porto Alegre","x":4113.3,"y":4234.8,"la":"start","lx":20,"ly":5},
-  {"id":"antofagasta","name":"Antofagasta","x":3500,"y":4012.8,"la":"start","lx":17,"ly":-16},
-  {"id":"salta","name":"Salta","x":3653,"y":4054.8,"la":"start","lx":20,"ly":5},
-  {"id":"catamarca","name":"Catamarca","x":3626.7,"y":4205.7,"la":"start","lx":20,"ly":5},
-  {"id":"valparaiso","name":"Valparaíso","x":3460,"y":4352.6,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"sanambrosio","name":"San Ambrosio","x":3170,"y":4110.3,"la":"end","lx":-20,"ly":5},
-  {"id":"robinsoncrusoe","name":"Robinson Crusoe","x":3202.8,"y":4375.9,"la":"end","lx":-20,"ly":5},
-  {"id":"puertomontt","name":"Puerto Montt","x":3413.3,"y":4675.5,"la":"start","lx":20,"ly":5},
-  {"id":"sanjorge","name":"San Jorge","x":3570,"y":4846,"la":"start","lx":20,"ly":5},
-  {"id":"falkland","name":"Falkland","x":3863.9,"y":5115.5,"la":"start","lx":20,"ly":5},
-  {"id":"puntaarenas","name":"Punta Arenas","x":3453.3,"y":5143.2,"la":"start","lx":20,"ly":5},
-  {"id":"caphorn","name":"Kap Horn","x":3591.7,"y":5299.2,"la":"start","lx":20,"ly":5},
-  {"id":"sydney","name":"Sydney","x":10866.7,"y":4375,"start":true,"airport":true,"la":"start","lx":17,"ly":-16},
-  {"id":"perth","name":"Perth","x":9710,"y":4308.1,"start":true,"airport":true,"la":"end","lx":-20,"ly":5},
-  {"id":"melbourne","name":"Melbourne","x":10666.7,"y":4519,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"brisbane","name":"Brisbane","x":10920,"y":4148,"airport":true,"la":"start","lx":17,"ly":26},
-  {"id":"cairns","name":"Cairns","x":10686.7,"y":3780.1,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"darwin","name":"Darwin","x":10200.7,"y":3633.7,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"adelaide","name":"Adelaide","x":10453.3,"y":4412.5,"airport":true,"la":"start","lx":17,"ly":-16},
-  {"id":"alicesprings","name":"Alice Springs","x":10296.7,"y":4016.3,"la":"start","lx":20,"ly":5},
-  {"id":"uluru","name":"Uluru","x":10166.7,"y":4083.6,"la":"start","lx":20,"ly":5},
-  {"id":"broome","name":"Broome","x":9913.3,"y":3814.5,"la":"start","lx":20,"ly":5},
-  {"id":"kalgoorlie","name":"Kalgoorlie","x":9883.3,"y":4267.7,"la":"middle","lx":0,"ly":-24},
-  {"id":"townsville","name":"Townsville","x":10746.7,"y":3904.4,"la":"start","lx":20,"ly":5},
-  {"id":"hobart","name":"Hobart","x":10740,"y":4723.5,"la":"start","lx":20,"ly":5},
-  {"id":"nullarbor","name":"Nullarbor","x":10166.7,"y":4293.4,"la":"start","lx":20,"ly":5},
-  {"id":"birdsville","name":"Birdsville","x":10480,"y":4094.3,"la":"end","lx":-20,"ly":5},
-  {"id":"exmouth","name":"Exmouth","x":9663.3,"y":3967.1,"la":"start","lx":20,"ly":5},
-  {"id":"mountisa","name":"Mount Isa","x":10483.3,"y":3911.3,"la":"end","lx":-20,"ly":5},
-  {"id":"cooberpedy","name":"Coober Pedy","x":10326.7,"y":4205.7,"la":"start","lx":20,"ly":5},
-  {"id":"geraldton","name":"Geraldton","x":9653.3,"y":4158.7,"la":"start","lx":20,"ly":5},
-  {"id":"portmoresby","name":"Port Moresby","x":10733.3,"y":3519,"la":"end","lx":-20,"ly":5},
-  {"id":"sepik","name":"Sepik","x":10606.7,"y":3361.6,"la":"start","lx":20,"ly":5},
-  {"id":"honiara","name":"Honiara","x":11163.3,"y":3525.7,"la":"start","lx":20,"ly":5},
-  {"id":"portvila","name":"Port Vila","x":11443.3,"y":3807.6,"la":"start","lx":17,"ly":-16},
-  {"id":"noumea","name":"Nouméa","x":11380,"y":3963.6,"la":"end","lx":-17,"ly":-16},
-  {"id":"norfolk","name":"Norfolk","x":11431.7,"y":4207.5,"la":"start","lx":20,"ly":5},
-  {"id":"suva","name":"Suva","x":11773.3,"y":3804.2,"la":"start","lx":20,"ly":5},
-  {"id":"auckland","name":"Auckland","x":11660,"y":4499.8,"airport":true,"la":"start","lx":20,"ly":5},
-  {"id":"wellington","name":"Wellington","x":11666.7,"y":4667.5,"la":"start","lx":20,"ly":5},
-  {"id":"christchurch","name":"Christchurch","x":11566.7,"y":4776.1,"la":"start","lx":20,"ly":5},
-  {"id":"milfordsound","name":"Milford Sound","x":11416.7,"y":4833.6,"la":"end","lx":-20,"ly":5},
-  {"id":"dili","name":"Dili","x":10020,"y":3505.6,"la":"start","lx":20,"ly":5},
-  {"id":"bali","name":"Bali","x":9670,"y":3495.5,"airport":true,"la":"end","lx":-20,"ly":5},
+  {"id":"newyork","name":"New York","wiki":"New York","ambience":"kaupunki","x":3360,"y":1767.4,"start":true,"airport":true,"la":"end","lx":-20,"ly":5},
+  {"id":"sanfrancisco","name":"San Francisco","wiki":"San Francisco","ambience":"satama","x":1760,"y":1884.7,"start":true,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"nome","name":"Nome","wiki":"Nome","ambience":"pohjoinen","x":346.7,"y":687.8,"la":"end","lx":-20,"ly":5},
+  {"id":"anchorage","name":"Anchorage","wiki":"Anchorage","ambience":"pohjoinen","x":836.7,"y":865.4,"airport":true,"la":"middle","lx":0,"ly":-24},
+  {"id":"whitehorse","name":"Whitehorse","wiki":"Whitehorse","ambience":"pohjoinen","x":1330,"y":890.6,"la":"middle","lx":0,"ly":-24},
+  {"id":"yellowknife","name":"Yellowknife","wiki":"Yellowknife","ambience":"pohjoinen","x":2020,"y":798.7,"la":"middle","lx":0,"ly":-24},
+  {"id":"vancouver","name":"Vancouver","wiki":"Vancouver","ambience":"satama","x":1736.7,"y":1411.9,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"yellowstone","name":"Yellowstone","wiki":"Yellowstonen kansallispuisto","ambience":"metsa","x":2150,"y":1618.2,"la":"end","lx":-20,"ly":5},
+  {"id":"mountrushmore","name":"Mount Rushmore","wiki":"Mount Rushmore","ambience":"ylanko","x":2400,"y":1589.4,"la":"start","lx":20,"ly":5},
+  {"id":"winnipeg","name":"Winnipeg","wiki":"Winnipeg","ambience":"kaupunki","x":2596.7,"y":1394.5,"la":"start","lx":20,"ly":5},
+  {"id":"churchill","name":"Churchill","wiki":"Churchill (Kanada)","ambience":"pohjoinen","x":2703.5,"y":986.9,"la":"middle","lx":0,"ly":-24},
+  {"id":"iqaluit","name":"Iqaluit","wiki":"Iqaluit","ambience":"pohjoinen","x":3366.7,"y":824.5,"la":"middle","lx":0,"ly":-24},
+  {"id":"nuuk","name":"Nuuk","wiki":"Nuuk","ambience":"pohjoinen","x":4146.7,"y":703.9,"la":"start","lx":20,"ly":5},
+  {"id":"labrador","name":"Labrador","wiki":"Labrador","ambience":"pohjoinen","x":3820,"y":1243.7,"la":"start","lx":20,"ly":5},
+  {"id":"stjohns","name":"St. John’s","wiki":"St. John’s (Kanada)","ambience":"satama","x":4016.7,"y":1463.4,"la":"end","lx":-17,"ly":-16},
+  {"id":"halifax","name":"Halifax","wiki":"Halifax (Kanada)","ambience":"satama","x":3720,"y":1605.9,"la":"start","lx":20,"ly":5},
+  {"id":"montreal","name":"Montreal","wiki":"Montreal","ambience":"kaupunki","x":3386.7,"y":1552,"la":"end","lx":-20,"ly":5},
+  {"id":"toronto","name":"Toronto","wiki":"Toronto","ambience":"kaupunki","x":3186.7,"y":1655,"la":"start","lx":20,"ly":5},
+  {"id":"chicago","name":"Chicago","wiki":"Chicago","ambience":"kaupunki","x":2913.3,"y":1727.6,"airport":true,"la":"end","lx":-20,"ly":5},
+  {"id":"appalakit","name":"Appalakit","wiki":"Appalakit","ambience":"metsa","x":3150,"y":1900.1,"la":"start","lx":20,"ly":5},
+  {"id":"bermuda","name":"Bermuda","wiki":"Bermuda","ambience":"meri","x":3675,"y":2096.4,"la":"start","lx":20,"ly":5},
+  {"id":"denver","name":"Denver","wiki":"Denver","ambience":"vuoristo","x":2333.3,"y":1814.7,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"santafe","name":"Santa Fe","wiki":"Santa Fe (New Mexico)","ambience":"ylanko","x":2293.3,"y":2010.5,"la":"start","lx":20,"ly":5},
+  {"id":"grandcanyon","name":"Grand Canyon","wiki":"Grand Canyon","ambience":"aavikko","x":2096.7,"y":1953.7,"la":"middle","lx":0,"ly":-24},
+  {"id":"losangeles","name":"Los Angeles","wiki":"Los Angeles","ambience":"kaupunki","x":1893.3,"y":2025.5,"start":true,"airport":true,"la":"start","lx":17,"ly":26},
+  {"id":"hawaii","name":"Havaiji","wiki":"Havaiji","ambience":"meri","x":623.3,"y":2536,"la":"end","lx":-20,"ly":5},
+  {"id":"dallas","name":"Dallas","wiki":"Dallas","ambience":"kaupunki","x":2606.7,"y":2077.8,"la":"end","lx":-20,"ly":5},
+  {"id":"neworleans","name":"New Orleans","wiki":"New Orleans","ambience":"satama","x":2819.8,"y":2171.9,"airport":true,"la":"end","lx":-20,"ly":5},
+  {"id":"miami","name":"Miami","wiki":"Miami","ambience":"kaupunki","x":3143.3,"y":2318,"airport":true,"la":"end","lx":-20,"ly":5},
+  {"id":"santiagodecuba","name":"Santiago de Cuba","wiki":"Santiago de Cuba","ambience":"satama","x":3300,"y":2522.1,"la":"start","lx":17,"ly":-16},
+  {"id":"sanjuan","name":"San Juan","wiki":"San Juan (Puerto Rico)","ambience":"satama","x":3620,"y":2598.2,"la":"start","lx":20,"ly":5},
+  {"id":"monterrey","name":"Monterrey","wiki":"Monterrey","ambience":"kaupunki","x":2490,"y":2335.8,"la":"start","lx":20,"ly":5},
+  {"id":"mexico","name":"Mexico City","wiki":"México","ambience":"kaupunki","x":2530,"y":2549.8,"airport":true,"la":"end","lx":-20,"ly":5},
+  {"id":"merida","name":"Mérida","wiki":"Mérida (Meksiko)","ambience":"kaupunki","x":2856.7,"y":2542.9,"la":"middle","lx":0,"ly":-24},
+  {"id":"guatemala","name":"Guatemala","wiki":"Guatemala (kaupunki)","ambience":"kaupunki","x":2816.7,"y":2711.2,"la":"start","lx":20,"ly":5},
+  {"id":"managua","name":"Managua","wiki":"Managua","ambience":"kaupunki","x":2956.7,"y":2796.1,"la":"end","lx":-20,"ly":5},
+  {"id":"panama","name":"Panama","wiki":"Panama (kaupunki)","ambience":"satama","x":3176.7,"y":2904,"airport":true,"la":"start","lx":17,"ly":-16},
+  {"id":"buenosaires","name":"Buenos Aires","wiki":"Buenos Aires","ambience":"kaupunki","x":3883.3,"y":4423.8,"start":true,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"caracas","name":"Caracas","wiki":"Caracas","ambience":"kaupunki","x":3603.3,"y":2870.3,"la":"middle","lx":0,"ly":-24},
+  {"id":"bogota","name":"Bogotá","wiki":"Bogotá","ambience":"ylanko","x":3364.3,"y":3054.4,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"quito","name":"Quito","wiki":"Quito","ambience":"vuoristo","x":3217.7,"y":3217.5,"la":"start","lx":20,"ly":5},
+  {"id":"galapagos","name":"Galápagos","wiki":"Galápagossaaret","ambience":"meri","x":2823.3,"y":3236.2,"la":"start","lx":20,"ly":5},
+  {"id":"boavista","name":"Boa Vista","wiki":"Boa Vista (Roraima)","ambience":"savanni","x":3811,"y":3117.5,"la":"end","lx":-20,"ly":5},
+  {"id":"cayenne","name":"Cayenne","wiki":"Cayenne","ambience":"sademetsa","x":4076.7,"y":3054.7,"la":"start","lx":20,"ly":5},
+  {"id":"macapa","name":"Macapá","wiki":"Macapá","ambience":"sademetsa","x":4123.3,"y":3204.8,"la":"end","lx":-20,"ly":5},
+  {"id":"manaus","name":"Manaus","wiki":"Manaus (kaupunki)","ambience":"sademetsa","x":3832.7,"y":3315.5,"airport":true,"la":"start","lx":17,"ly":-16},
+  {"id":"santarem","name":"Santarém","wiki":"Santarém (Brasilia)","ambience":"sademetsa","x":4009.7,"y":3292.8,"la":"end","lx":-17,"ly":-16},
+  {"id":"saoluis","name":"São Luís","wiki":"São Luís","ambience":"kaupunki","x":4344.7,"y":3311.7,"la":"middle","lx":0,"ly":-24},
+  {"id":"joaopessoa","name":"João Pessoa","wiki":"João Pessoa","ambience":"meri","x":4660,"y":3451.9,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"salvador","name":"Salvador","wiki":"Salvador (Brasilia)","ambience":"kaupunki","x":4540,"y":3640.5,"la":"start","lx":20,"ly":5},
+  {"id":"iquitos","name":"Iquitos","wiki":"Iquitos","ambience":"sademetsa","x":3391.7,"y":3336.6,"la":"end","lx":-20,"ly":5},
+  {"id":"portovelho","name":"Porto Velho","wiki":"Porto Velho","ambience":"sademetsa","x":3703.3,"y":3504.2,"la":"start","lx":20,"ly":5},
+  {"id":"bananal","name":"Ilha do Bananal","wiki":"Bananal","ambience":"savanni","x":4161.3,"y":3572.9,"la":"start","lx":20,"ly":5},
+  {"id":"machupicchu","name":"Machu Picchu","wiki":"Machu Picchu","ambience":"vuoristo","x":3413.3,"y":3660.8,"la":"start","lx":20,"ly":5},
+  {"id":"titicaca","name":"Titicaca","wiki":"Titicaca","ambience":"ylanko","x":3521.7,"y":3742.5,"la":"end","lx":-20,"ly":5},
+  {"id":"lima","name":"Lima","wiki":"Lima","ambience":"kaupunki","x":3280,"y":3626.9,"airport":true,"la":"end","lx":-20,"ly":5},
+  {"id":"santacruz","name":"Santa Cruz","wiki":"Santa Cruz de la Sierra","ambience":"kaupunki","x":3727.3,"y":3810.3,"la":"start","lx":20,"ly":5},
+  {"id":"campogrande","name":"Campo Grande","wiki":"Campo Grande","ambience":"savanni","x":4012.7,"y":3902.6,"la":"end","lx":-20,"ly":5},
+  {"id":"rio","name":"Rio de Janeiro","wiki":"Rio de Janeiro","ambience":"kaupunki","x":4386.7,"y":3981.2,"start":true,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"saopaulo","name":"São Paulo","wiki":"São Paulo","ambience":"kaupunki","x":4230,"y":3977.6,"la":"middle","lx":0,"ly":-24},
+  {"id":"iguazu","name":"Iguazú","wiki":"Iguassun putoukset","ambience":"sademetsa","x":4018.7,"y":4086.8,"la":"start","lx":20,"ly":5},
+  {"id":"portoalegre","name":"Porto Alegre","wiki":"Porto Alegre","ambience":"satama","x":4113.3,"y":4234.8,"la":"start","lx":20,"ly":5},
+  {"id":"antofagasta","name":"Antofagasta","wiki":"Antofagasta","ambience":"aavikko","x":3500,"y":4012.8,"la":"start","lx":17,"ly":-16},
+  {"id":"salta","name":"Salta","wiki":"Salta","ambience":"vuoristo","x":3653,"y":4054.8,"la":"start","lx":20,"ly":5},
+  {"id":"catamarca","name":"Catamarca","wiki":"Catamarca","ambience":"vuoristo","x":3626.7,"y":4205.7,"la":"start","lx":20,"ly":5},
+  {"id":"valparaiso","name":"Valparaíso","wiki":"Valparaíso","ambience":"satama","x":3460,"y":4352.6,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"sanambrosio","name":"San Ambrosio","wiki":"Desventuradas Islands","ambience":"meri","x":3170,"y":4110.3,"la":"end","lx":-20,"ly":5},
+  {"id":"robinsoncrusoe","name":"Robinson Crusoe","wiki":"Juan Fernándezin saaret","ambience":"meri","x":3202.8,"y":4375.9,"la":"end","lx":-20,"ly":5},
+  {"id":"puertomontt","name":"Puerto Montt","wiki":"Puerto Montt","ambience":"satama","x":3413.3,"y":4675.5,"la":"start","lx":20,"ly":5},
+  {"id":"sanjorge","name":"San Jorge","wiki":"San Jorge Gulf","ambience":"meri","x":3570,"y":4846,"la":"start","lx":20,"ly":5},
+  {"id":"falkland","name":"Falkland","wiki":"Falklandinsaaret","ambience":"meri","x":3863.9,"y":5115.5,"la":"start","lx":20,"ly":5},
+  {"id":"puntaarenas","name":"Punta Arenas","wiki":"Punta Arenas","ambience":"satama","x":3453.3,"y":5143.2,"la":"start","lx":20,"ly":5},
+  {"id":"caphorn","name":"Kap Horn","wiki":"Kap Horn","ambience":"meri","x":3591.7,"y":5299.2,"la":"start","lx":20,"ly":5},
+  {"id":"sydney","name":"Sydney","wiki":"Sydney","ambience":"kaupunki","x":10866.7,"y":4375,"start":true,"airport":true,"la":"start","lx":17,"ly":-16},
+  {"id":"perth","name":"Perth","wiki":"Perth (Länsi-Australia)","ambience":"kaupunki","x":9710,"y":4308.1,"start":true,"airport":true,"la":"end","lx":-20,"ly":5},
+  {"id":"melbourne","name":"Melbourne","wiki":"Melbourne","ambience":"kaupunki","x":10666.7,"y":4519,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"brisbane","name":"Brisbane","wiki":"Brisbane","ambience":"kaupunki","x":10920,"y":4148,"airport":true,"la":"start","lx":17,"ly":26},
+  {"id":"cairns","name":"Cairns","wiki":"Cairns","ambience":"satama","x":10686.7,"y":3780.1,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"darwin","name":"Darwin","wiki":"Darwin (Australia)","ambience":"satama","x":10200.7,"y":3633.7,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"adelaide","name":"Adelaide","wiki":"Adelaide","ambience":"kaupunki","x":10453.3,"y":4412.5,"airport":true,"la":"start","lx":17,"ly":-16},
+  {"id":"alicesprings","name":"Alice Springs","wiki":"Alice Springs","ambience":"aavikko","x":10296.7,"y":4016.3,"la":"start","lx":20,"ly":5},
+  {"id":"uluru","name":"Uluru","wiki":"Uluru","ambience":"aavikko","x":10166.7,"y":4083.6,"la":"start","lx":20,"ly":5},
+  {"id":"broome","name":"Broome","wiki":"Broome","ambience":"satama","x":9913.3,"y":3814.5,"la":"start","lx":20,"ly":5},
+  {"id":"kalgoorlie","name":"Kalgoorlie","wiki":"Kalgoorlie","ambience":"aavikko","x":9883.3,"y":4267.7,"la":"middle","lx":0,"ly":-24},
+  {"id":"townsville","name":"Townsville","wiki":"Townsville","ambience":"satama","x":10746.7,"y":3904.4,"la":"start","lx":20,"ly":5},
+  {"id":"hobart","name":"Hobart","wiki":"Hobart","ambience":"satama","x":10740,"y":4723.5,"la":"start","lx":20,"ly":5},
+  {"id":"nullarbor","name":"Nullarbor","wiki":"Nullarborin tasanko","ambience":"aavikko","x":10166.7,"y":4293.4,"la":"start","lx":20,"ly":5},
+  {"id":"birdsville","name":"Birdsville","wiki":"Birdsville","ambience":"aavikko","x":10480,"y":4094.3,"la":"end","lx":-20,"ly":5},
+  {"id":"exmouth","name":"Exmouth","wiki":"Exmouth, Western Australia","ambience":"meri","x":9663.3,"y":3967.1,"la":"start","lx":20,"ly":5},
+  {"id":"mountisa","name":"Mount Isa","wiki":"Mount Isa","ambience":"aavikko","x":10483.3,"y":3911.3,"la":"end","lx":-20,"ly":5},
+  {"id":"cooberpedy","name":"Coober Pedy","wiki":"Coober Pedy","ambience":"aavikko","x":10326.7,"y":4205.7,"la":"start","lx":20,"ly":5},
+  {"id":"geraldton","name":"Geraldton","wiki":"Geraldton","ambience":"satama","x":9653.3,"y":4158.7,"la":"start","lx":20,"ly":5},
+  {"id":"portmoresby","name":"Port Moresby","wiki":"Port Moresby","ambience":"satama","x":10733.3,"y":3519,"la":"end","lx":-20,"ly":5},
+  {"id":"sepik","name":"Sepik","wiki":"Sepik","ambience":"sademetsa","x":10606.7,"y":3361.6,"la":"start","lx":20,"ly":5},
+  {"id":"honiara","name":"Honiara","wiki":"Honiara","ambience":"satama","x":11163.3,"y":3525.7,"la":"start","lx":20,"ly":5},
+  {"id":"portvila","name":"Port Vila","wiki":"Port Vila","ambience":"satama","x":11443.3,"y":3807.6,"la":"start","lx":17,"ly":-16},
+  {"id":"noumea","name":"Nouméa","wiki":"Nouméa","ambience":"satama","x":11380,"y":3963.6,"la":"end","lx":-17,"ly":-16},
+  {"id":"norfolk","name":"Norfolk","wiki":"Norfolkinsaari","ambience":"meri","x":11431.7,"y":4207.5,"la":"start","lx":20,"ly":5},
+  {"id":"suva","name":"Suva","wiki":"Suva","ambience":"satama","x":11773.3,"y":3804.2,"la":"start","lx":20,"ly":5},
+  {"id":"auckland","name":"Auckland","wiki":"Auckland","ambience":"satama","x":11660,"y":4499.8,"airport":true,"la":"start","lx":20,"ly":5},
+  {"id":"wellington","name":"Wellington","wiki":"Wellington","ambience":"kaupunki","x":11666.7,"y":4667.5,"la":"start","lx":20,"ly":5},
+  {"id":"christchurch","name":"Christchurch","wiki":"Christchurch","ambience":"kaupunki","x":11566.7,"y":4776.1,"la":"start","lx":20,"ly":5},
+  {"id":"milfordsound","name":"Milford Sound","wiki":"Milford Sound","ambience":"vuoristo","x":11416.7,"y":4833.6,"la":"end","lx":-20,"ly":5},
+  {"id":"dili","name":"Dili","wiki":"Dili","ambience":"satama","x":10020,"y":3505.6,"la":"start","lx":20,"ly":5},
+  {"id":"bali","name":"Bali","wiki":"Bali","ambience":"sademetsa","x":9670,"y":3495.5,"airport":true,"la":"end","lx":-20,"ly":5},
 ];
 
 const EDGES = [
@@ -70915,6 +70988,10 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
+  { v: 206, teksti: 'Koko maailma yhtenä karttana: 248 kaupunkia' },
+  { v: 206, teksti: 'Kartta kiertää ympäri eikä pääty reunaan' },
+  { v: 206, teksti: 'Valtameriylitykset yhdistävät mantereet' },
+  { v: 206, teksti: 'Kartta latautuu kolmekymmentä kertaa nopeammin' },
   { v: 205, teksti: 'Korjattu: nostojen kuvat puuttuivat iPhonelta' },
   { v: 204, teksti: 'Aiherivi pysyy näkyvissä arkin yläreunassa' },
   { v: 203, teksti: 'Kuvat omissa mittasuhteissaan, ei panoraamana' },
@@ -70982,7 +71059,7 @@ const PLAYER_COLOR = '#d94f3d';
  */
 const SAVE_KEY = 'matkakirja-save-v1';
 const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.205';
+const APP_VERSION = '2026-08-03.206';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
