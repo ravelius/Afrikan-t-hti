@@ -414,6 +414,73 @@ kuvauksesta ja luottaa vanhempaan. Silti se ei auta, jos kumpikaan
 kenttä ei mainitse alkuperäistä vuotta.
 
 
+## Paketti 72: laajennussuunnat työhuoneeseen — VALMIS v197 3.8.2026
+
+Omistajan idea: *"Voisin hakea apurahaa tämän projektin laajentamiseen.
+Siinä olisi sen laajennuksen idea — luoda helppokäyttöinen työkalu,
+jota myös lapset osaisivat käyttää koulussa, esimerkiksi
+opettajanjohdolla, missä he voisivat tehdä omansa paikkakunnan kartan
+ja lisätä sinne sisältöä ja tehdä kysymyksiä ja vastauksia ja samalla
+opetella myös."*
+
+### Oma osionsa, ei uusi rivi Peli-ideoihin
+
+Suunnitelma-välilehdellä on viisi listaa, joissa kaikissa on yhden
+julkaisun kokoisia asioita: aarteita, varusteita, minipelejä.
+Vuoden hanke samassa listassa näyttäisi yhtä isolta työltä kuin
+uusi varuste, ja se hämärtäisi molemmat.
+
+Uusi taulu `LAAJENNUKSET` ja oma osio **Laajennussuunnat** viimeisenä.
+Sinne tulee vain se, mikä vaatii rahoitusta tai enemmän aikaa kuin
+yksi julkaisu.
+
+### Kirjoitettu hakemuspohjaksi, ei muistilapuksi
+
+Tavallinen ideamerkintä olisi ollut kaksi lausetta. Tämä on
+jäsennetty kenttiin, jotka apurahahakemus joka tapauksessa kysyy:
+
+| kenttä | mitä siihen kuuluu |
+|---|---|
+| `idea` | mitä rakennetaan |
+| `miksi` | miksi se opettaa — pedagoginen perustelu |
+| `tekoaly` | tekoälyn rooli, rajattuna |
+| `valmiina` | mikä on jo olemassa |
+| `puuttuu` | mitä pitäisi rakentaa |
+| `vaikeat` | tiedossa olevat vaikeat kohdat |
+| `huomiot` | rajausneuvot hakemukseen |
+
+Kaksi kenttää ovat mukana harkiten.
+
+**`valmiina`**, koska hankkeen uskottavuus on suurin, kun se ei ala
+tyhjästä: pelimoottori, karttapiirto, viisi kysymysmuotoa, avoimien
+aineistojen haku lisensseineen ja koko sisältöputki ovat jo olemassa
+ja toiminnassa.
+
+**`vaikeat`**, koska hakemuksessa realistisuus vakuuttaa enemmän kuin
+innostus. Kolme kohtaa on kirjattu: alaikäisten kuvien tietosuoja,
+julkisen sisällön moderointi, ja se että helppokäyttöisyys on
+hankkeen ydin eikä kuori — työkalu, joka vaatii ohjeen, jää
+oppitunnilla käyttämättä.
+
+### Pedagoginen ydin yhdessä lauseessa
+
+Merkinnän tärkein kohta on se, että **oppiminen tapahtuu tekemisessä,
+ei pelaamisessa**. Kysymyksen laatiminen vaatii aiheen ymmärtämistä
+selvästi enemmän kuin siihen vastaaminen: pitää tietää mikä on
+olennaista, mikä on uskottava väärä vaihtoehto ja mistä tiedon voi
+tarkistaa.
+
+Tekoälyn rooli on rajattu tarkoituksella: se **ehdottaa**, oppilas
+päättää. Silloin lapset näkevät myös sen, että tekoäly ehdottaa
+väärin — ja se on osa opetusta, ei hankkeen vika.
+
+### Rivinpituus tyylissä
+
+`.laajennus p { max-width: 62ch }`. Muut suunnitelmakortit ovat kolme
+riviä, tämä on hakemuksen mittainen. Kannettavalla koko leveys olisi
+yli 150 merkkiä riviä kohti, eikä silmä löydä seuraavan rivin alkua.
+
+
 ## Paketti 71: studio sivun sisään, tilat näkyviin — VALMIS v196 3.8.2026
 
 Kaksi omistajan toivetta samassa julkaisussa, ja yksi bugi, jonka

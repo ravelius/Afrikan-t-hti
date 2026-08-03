@@ -169,6 +169,7 @@
     import { PEILI_JUURI } from './js/media.js';
     import {
       AARTEET, VARUSTEET, KAUPUNKIKARTAT, LASIT, PELIT, PELITILAT, LAHTEET, MOOTTORIT,
+      LAAJENNUKSET,
     } from './js/tyohuone-data.js';
 
     const $ = (id) => document.getElementById(id);
@@ -820,6 +821,39 @@
           el('p', '', 'Minipelit löytöjen takana. Tänne kirjataan sekä käytössä olevat '
             + 'että ideat, joita mietitään yhdessä.'),
           ...korttiLista(PELIT.map((p) => ({ otsikko: p.nimi, meta: PELITILAT[p.tila] ?? p.tila, teksti: p.kuvaus }))),
+        ],
+      },
+      {
+        /*
+         * Laajennussuunnat ovat viimeisenä ja omana osionaan, koska ne
+         * ovat eri kokoluokan asioita kuin muu suunnitelma: hankkeita,
+         * eivät ominaisuuksia. Kentät näytetään otsikoituina, jotta
+         * tekstin voi lukea hakemuksen jäsennyksenä eikä muistilappuna.
+         */
+        otsikko: 'Laajennussuunnat',
+        maara: `${LAAJENNUKSET.length} kpl`,
+        rakenna: () => [
+          el('p', '', 'Suuntia koko projektille: asioita, jotka vaatisivat rahoitusta '
+            + 'tai enemmän aikaa kuin yksi julkaisu. Kirjoitettu niin, että tekstin '
+            + 'voi liittää apurahahakemukseen sellaisenaan.'),
+          ...LAAJENNUKSET.map((x) => {
+            const k = el('div', 'kortti laajennus');
+            k.append(el('h3', '', x.nimi));
+            k.append(el('p', 'lahde', [PELITILAT[x.tila] ?? x.tila, x.lahde].filter(Boolean).join(' · ')));
+            for (const [otsikko, kentta] of [
+              ['Idea', 'idea'],
+              ['Miksi se opettaa', 'miksi'],
+              ['Tekoälyn osuus', 'tekoaly'],
+              ['Mikä on jo valmiina', 'valmiina'],
+              ['Mitä pitäisi rakentaa', 'puuttuu'],
+              ['Tiedossa olevat vaikeat kohdat', 'vaikeat'],
+              ['Huomioita hakemukseen', 'huomiot'],
+            ]) {
+              if (!x[kentta]) continue;
+              k.append(el('h4', '', otsikko), el('p', '', x[kentta]));
+            }
+            return k;
+          }),
         ],
       },
     ]);

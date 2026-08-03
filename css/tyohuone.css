@@ -243,6 +243,25 @@ button.toiminto { cursor: pointer; }
 .puuttuu {
   color: var(--haalea); font-size: 0.9rem; font-style: italic;
 }
+/*
+ * Laajennuskortti: pitkä teksti otsikoituna osiin.
+ *
+ * Muut suunnitelmakortit ovat kolme riviä, tämä on hakemuksen mittainen.
+ * Ilman väliotsikoita se olisi seinä, ja juuri se jäisi lukematta.
+ * Rivin pituus rajataan luettavaan mittaan: kannettavalla koko leveys
+ * olisi yli 150 merkkiä riviä kohti, eikä silmä löydä seuraavan rivin
+ * alkua.
+ */
+.laajennus p { max-width: 62ch; }
+.laajennus h4 {
+  font-size: 0.76rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--haalea);
+  margin: 0.9rem 0 0.25rem;
+}
+.laajennus > p.lahde {
+  color: var(--haalea); font-size: 0.85rem; margin-bottom: 0.2rem;
+}
+
 .merkinta { border-left: 3px solid var(--korostus); padding-left: 0.8rem; }
 .merkinta p:last-child { margin-bottom: 0; }
 

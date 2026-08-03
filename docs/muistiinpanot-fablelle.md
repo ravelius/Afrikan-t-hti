@@ -793,3 +793,31 @@ samassa osoitteessa. Kartan vilkaisu työhuoneessa olisi mykistänyt
 omistajan oman pelin, ja sen olisi huomannut vasta pelatessa. **Kun
 valmis funktio tekee enemmän kuin tarvitset, sen ylimääräinen osa on
 sivuvaikutus, ei bonus.**
+
+---
+
+**[Opus]** Omistaja kertoi ideasta, jolla hän voisi hakea apurahaa:
+koululuokka tekisi työkalulla kartan omasta kotipaikkakunnastaan ja
+laatisi siihen kysymykset itse.
+
+Ensimmäinen mielijohteeni oli lisätä rivi Peli-ideoihin. Se olisi
+ollut väärin, ja syy on kirjaamisen tarkkuutta laajempi: **listan
+rivit lupaavat, että ne ovat samaa kokoluokkaa.** Aarteen ja
+varusteen vieressä vuoden hanke näyttää yhtä pieneltä työltä kuin
+uusi silmälasi — ja pahempi seuraus on, että hanke katoaa
+näkyvistä juuri siksi, että se näyttää pieneltä.
+
+Toinen asia, jonka tein tietoisesti toisin kuin ennen: kirjoitin
+merkintään myös sen, mikä hankkeessa on **vaikeaa**. Alaikäisten
+kuvien tietosuoja, moderointi, ja se ettei helppokäyttöisyys ole
+kuori vaan koko idea.
+
+Se tuntui hetken siltä kuin olisin puhunut omistajan ideaa alas.
+Se ei ole. Apurahahakemuksessa lukija etsii nimenomaan sitä, onko
+hakija ajatellut asiaa loppuun asti — ja hakemus, jossa ei ole
+yhtään vaikeaa kohtaa, kertoo että niitä ei ole vielä etsitty.
+**Innostus on halpaa, realistisuus on todiste työstä.**
+
+Kirjasin myös `valmiina`-kentän: pelimoottori, viisi kysymysmuotoa,
+avoimien aineistojen haku lisensseineen. Se ei ole kehuskelua vaan
+hakemuksen vahvin argumentti — hanke ei ala tyhjästä.
