@@ -336,6 +336,67 @@ export function drawLand(svg, map) {
   }
 }
 
+/*
+ * Maasto: korkeusvyöhykkeet, joet ja järvet.
+ *
+ * Omistajan toive 3.8.2026: *"Voisiko merkittävimmät ylängöt ja vuoret
+ * sekä joet piirtää karttaan? Joet voisivat näkyä kevyen sinisinä ja
+ * vuoret tummemman ruskeina. Vuorien näkyvyys voisi kuitenkin olla
+ * hillitty, eli ei mikään oikea korkeuskartta, joka on aika hässäkän
+ * näköinen, ennemmin vain suuret linjat."*
+ *
+ * Kolme sääntöä, jotka seuraavat siitä:
+ *
+ * 1. Vyöhykkeitä on kolme eikä kolmeakymmentä. Alle kilometrin
+ *    korkeuserot eivät näy lainkaan — se on omistajan raja, ja se on
+ *    tämän kerroksen tärkein piirre. Ilman sitä kartta menee tukkoon.
+ * 2. Piirto on samassa staattisessa ryhmässä kuin muu kartta-taide,
+ *    joten bittikarttaruudukko hoitaa sen ilmaiseksi eikä maasto
+ *    hidasta panorointia.
+ * 3. Ei suodattimia. Sama iOS-sääntö kuin kaikella muullakin kartalla:
+ *    suodatettu kerros tarvitsee oman piirtopuskurin, jonka iOS
+ *    vapauttaa taustalla eikä saa enää varattua — ja kerros katoaa.
+ *
+ * Kerros piirtyy maan päälle mutta reittien ja kaupunkien alle. Ilman
+ * aineistoa funktio ei tee mitään, joten lauta ilman maastoa toimii
+ * kuten ennenkin.
+ */
+export function drawMaasto(svg, map) {
+  const maasto = map?.maasto;
+  if (!maasto) return;
+  const g = el('g', { class: 'maasto' }, svg);
+
+  // Vyöhykkeet matalimmasta ylimpään: korkeampi piirtyy alemman päälle.
+  for (const [luokka, renkaat] of [
+    ['korkeus-keski', maasto.keski],
+    ['korkeus-ylos', maasto.ylos],
+    ['korkeus-huippu', maasto.huippu],
+  ]) {
+    for (const rengas of renkaat ?? []) {
+      if (rengas.length < 4) continue;
+      el('path', { d: smoothClosedPath(kasinPiirretty(rengas)), class: luokka }, g);
+    }
+  }
+
+  // Järvet vyöhykkeiden päälle: järvi on vettä maan sisällä.
+  for (const jarvi of maasto.jarvet ?? []) {
+    const rengas = jarvi.rengas ?? jarvi;
+    if (!rengas || rengas.length < 4) continue;
+    el('path', { d: smoothClosedPath(kasinPiirretty(rengas)), class: 'iso-jarvi' }, g);
+  }
+
+  // Joet päällimmäisenä: ne kulkevat laaksoissa eivätkä katoa vuorten alle.
+  for (const joki of maasto.joet ?? []) {
+    const pisteet = joki.pisteet ?? joki;
+    if (!pisteet || pisteet.length < 2) continue;
+    const heilunut = kasinPiirretty(pisteet);
+    el('path', {
+      d: `M${heilunut.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' L')}`,
+      class: 'joki',
+    }, g);
+  }
+}
+
 // --- geometria: missä on merta, missä tyhjää maata ------------------------
 
 /*

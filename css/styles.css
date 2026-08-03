@@ -2221,6 +2221,35 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .land { fill: url(#land-grad); }
 .lake { fill: #ecd9ae; }
+
+/*
+ * Maasto: korkeusvyöhykkeet, järvet ja joet.
+ *
+ * Omistaja: "Vuorien näkyvyys voisi kuitenkin olla hillitty." Siksi
+ * vyöhykkeet ovat läpikuultavia eivätkä peittäviä — pergamentin
+ * rakeisuus ja maan oma liukuväri näkyvät läpi, ja vuoristo lukee
+ * sävynä eikä uutena karttana kartan päällä.
+ *
+ * Ääriviivaa ei ole. Korkeusvyöhykkeen raja on sopimus eikä rantaviiva,
+ * eikä siitä pidä tulla yhtä terävää kuin mantereen reunasta.
+ */
+.maasto path { stroke: none; }
+.korkeus-keski { fill: #c9a86e; opacity: 0.3; }
+.korkeus-ylos { fill: #a8823f; opacity: 0.34; }
+.korkeus-huippu { fill: #f6f1e6; opacity: 0.62; }
+
+/* Suuret järvet hyvin kevyesti (omistajan sana: "hyvin kevyesti"). */
+.iso-jarvi { fill: #b9c9cf; opacity: 0.55; }
+
+/* Joet kevyen sinisinä. Viiva on ohut, koska niitä on paljon. */
+.joki {
+  fill: none;
+  stroke: #7d9aa8;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.5;
+}
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
 /* Maiden rajat: hyvin hento katkoviiva vanhan kartan tapaan. */

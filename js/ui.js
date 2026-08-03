@@ -464,6 +464,7 @@ import {
   ruudunKoko,
   valmisteleTaide,
   tyylitSisaan,
+  drawMaasto,
 } from './mapart.js';
 
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
@@ -2846,6 +2847,11 @@ export class UI {
     // Pallonpuoliskokartalla kehykset ja asteverkko piirtyvät maiden alle.
     drawHemisphereFrames(taide, pack.map);
     drawLand(taide, pack.map);
+    // Korkeusvyöhykkeet, joet ja järvet maan päälle mutta reittien ja
+    // kaupunkien alle: maiseman piirre, ei pelielementti. Nimi on
+    // drawMaasto eikä drawTerrain, koska jälkimmäinen on varattu
+    // maastosymboleille (puut, vuoret, dyynit) — eri asia.
+    drawMaasto(taide, pack.map);
     // Nykyisen maan korostus (hento sävy + nimi kaunolla) piirretään tähän
     // kerrokseen pelin edetessä (drawCountryBorders). Sävy rajataan
     // tyylitellyn rantaviivan sisään, ettei se valu mereen — maiden
