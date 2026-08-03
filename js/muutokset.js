@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 195, teksti: 'Äänistudio samaan tyyliin työhuoneen kanssa' },
   { v: 194, teksti: 'Työhuone uusiksi: selkeämpi ja oma sovellus' },
   { v: 193, teksti: 'Tunnusluvut 21 Aasian maalle' },
   { v: 192, teksti: 'Kuvakortit 40 Aasian kaupunkiin' },

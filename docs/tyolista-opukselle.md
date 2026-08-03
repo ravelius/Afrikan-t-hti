@@ -414,6 +414,34 @@ kuvauksesta ja luottaa vanhempaan. Silti se ei auta, jos kumpikaan
 kenttä ei mainitse alkuperäistä vuotta.
 
 
+## Paketti 70: äänistudio samaan tyyliin — VALMIS v195 3.8.2026
+
+Omistajan havainto työhuoneen uudistuksen jälkeen: "Tämä näkyy vielä
+vanhalla tyylillä. Uudista tämä kokonaan."
+
+Äänistudio (`aanet.html`) on **upotettu työhuoneen Studio-välilehteen
+iframellä**, joten kaksi eri tyyliä näkyi vierekkäin samalla ruudulla:
+uusi vaalea kehys ja sen sisällä vanha tumma Courier New. Se näytti
+siltä kuin sovellus olisi kesken.
+
+### Yhteinen tyylitiedosto, ei kopio
+
+Tyylit siirrettiin `css/tyohuone.css`:ään, jota **molemmat sivut
+lukevat**. Vaihtoehto olisi ollut kopioida värit ja kirjasin
+äänistudioon, mutta kaksi kopiota samasta tyylistä ajautuisi erilleen
+ensimmäisellä muutoksella — ja juuri se ero oli nyt korjattavana.
+
+Äänistudioon jäi vain se, mikä on nimenomaan äänistudiota:
+soitinpalkki, arvontakorit ja rivit. Tokenit (värit, kirjasin,
+pyöristykset, varjot) tulevat jaetusta tiedostosta.
+
+### Sivutuote: tumma tila tuli ilmaiseksi
+
+Jaettu tiedosto tuo `prefers-color-scheme`-tuen myös äänistudioon.
+Sitä ei tarvinnut kirjoittaa kahdesti, ja se on koko jaetun tiedoston
+idea pienoiskoossa.
+
+
 ## Paketti 69: työhuone uusiksi — VALMIS v194 3.8.2026
 
 Omistajan toive: "Uudista työhuone. Sen ei tarvitse olla visuaalisesti
