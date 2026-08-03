@@ -4862,6 +4862,15 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   <dialog id="wiki-dialog" class="dialog">
    <div class="dialog-card wiki-card">
     <h2 id="wiki-title">Lue lisää</h2>
+    <!--
+      Kirjanmerkkiliuskat kuten vanhassa osoite- tai tilikirjassa: yksi
+      välilehti auki kerrallaan (omistajan toive). Piilossa, jos
+      kaupungilla on vain artikkeli — yhden liuskan rivi ei valitse
+      mitään eikä siis kerro mitään.
+    -->
+    <nav id="wiki-liuskat" class="wiki-liuskat" aria-label="Aiheet" hidden></nav>
+    <!-- Kategorian nostot. Yleistä-liuskalla piilossa. -->
+    <div id="wiki-kategoria" class="wiki-kategoria" hidden></div>
     <!-- Sama galleriaselaus kuin Tutki-kortin kuvassa: laskuri ja nuolet. -->
     <div id="wiki-kuvakotelo" class="arrival-kuvakotelo" hidden>
      <img id="wiki-image" class="wiki-image" alt="" loading="lazy" />
