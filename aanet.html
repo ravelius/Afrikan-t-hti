@@ -4,90 +4,126 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Matkakirja — äänistudio</title>
+  <link rel="stylesheet" href="css/tyohuone.css" />
   <style>
-    :root {
-      --pohja: #241a12; --teksti: #f0e2c4; --himmea: #cbb691; --haalea: #9c8661;
-      --korostus: #d9a13b; --reuna: rgba(214, 188, 140, 0.45);
-      --nappi: rgba(247, 237, 216, 0.08);
+    /*
+     * Äänistudion omat säännöt. Yleiset värit, kirjasin ja komponentit
+     * tulevat css/tyohuone.css:stä — täällä on vain se, mikä on
+     * nimenomaan äänistudiota: soitinpalkki, arvontakorit ja rivit.
+     *
+     * Sivu on upotettu työhuoneen Studio-välilehteen iframellä, joten
+     * sen on näytettävä samalta kuin ympäröivä sivu.
+     */
+    body { padding: 0 0.9rem 3rem; }
+    h1 { font-size: 1.05rem; font-weight: 600; margin: 0.9rem 0 0.4rem; }
+
+    /* Soitinpalkki pysyy ylhäällä: iPadin alareunan eleet eivät osu
+       säätimiin, ja soitin on aina käden ulottuvilla. */
+    .ylapalkki {
+      position: sticky; top: 0; z-index: 5;
+      background: color-mix(in srgb, var(--pohja) 92%, transparent);
+      backdrop-filter: saturate(1.6) blur(12px);
+      -webkit-backdrop-filter: saturate(1.6) blur(12px);
+      margin: 0 -0.9rem; padding: 0.5rem 0.9rem;
+      border-bottom: 1px solid var(--reuna);
+      display: flex; flex-direction: column; gap: 0.45rem;
     }
-    body {
-      margin: 0; padding: 0 1.2rem 3rem; background: var(--pohja);
-      color: var(--teksti); font-family: 'Courier New', monospace;
+    .soitin { display: flex; flex-wrap: wrap; gap: 0.4rem 0.6rem; align-items: center; }
+    .soitin .mika {
+      flex: 1 1 100%; color: var(--himmea); font-size: 0.84rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    h1 { font-size: 1.05rem; letter-spacing: 0.08em; color: var(--korostus); margin: 0.8rem 0 0.4rem; }
-    p { max-width: 44rem; line-height: 1.5; color: var(--himmea); }
-    button, input, select {
-      background: var(--nappi); color: var(--teksti);
-      border: 1px solid var(--reuna); border-radius: 8px;
-      font-family: inherit; font-size: 0.92rem; padding: 0.55rem 0.8rem;
+    .soitin input[type="range"] { accent-color: var(--korostus); touch-action: none; }
+    .soitin .aikajana { flex: 1 1 9rem; min-width: 8rem; }
+    .soitin .aika {
+      color: var(--haalea); font-size: 0.85rem; min-width: 6.4rem;
+      text-align: right; font-variant-numeric: tabular-nums;
+    }
+    .suodattimet { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+    .suodattimet input[type="search"] { flex: 1 1 10rem; }
+    .laskuri { color: var(--haalea); font-size: 0.85rem; white-space: nowrap; }
+
+    button, input, select, textarea {
+      font: inherit; font-size: 0.92rem;
+      color: var(--teksti); background: var(--kortti);
+      border: 1px solid var(--reuna); border-radius: 9px;
+      padding: 0.45rem 0.7rem;
     }
     button { cursor: pointer; }
-    button:active { background: rgba(247, 237, 216, 0.2); }
-    button.paalla { border-color: var(--korostus); color: var(--korostus); }
+    button:active { background: var(--korostus-pehmea); }
+    button.paalla { border-color: var(--korostus); color: var(--korostus); background: var(--korostus-pehmea); }
+    label { color: var(--himmea); }
+
     .grid { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-    .osio { margin-top: 1.1rem; font-size: 0.8rem; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--haalea); display: flex; gap: 0.6rem; align-items: baseline;
-      flex-wrap: wrap; }
+    .osio {
+      margin-top: 1.4rem; font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--haalea);
+      display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap;
+    }
     .osio .tila { text-transform: none; letter-spacing: 0; }
     .tila-valittu { color: var(--korostus); }
-    .rivi { display: flex; gap: 0.45rem; margin: 0.3rem 0; align-items: stretch; flex-wrap: wrap; }
+
+    .rivi { display: flex; gap: 0.4rem; margin: 0.25rem 0; align-items: stretch; flex-wrap: wrap; }
     .rivi .nimi { min-width: 0; text-align: left; flex: 1 1 14rem; }
     .rivi .soita { min-width: 3rem; flex: 0 0 auto; }
     .rivi input[type="number"] { width: 4.4rem; }
     .rivi .sek { align-self: center; color: var(--haalea); }
-    .rivi .poista { min-width: 2.4rem; color: #d98b6b; }
+    .rivi .poista { min-width: 2.4rem; color: var(--punainen); }
+
     /* Arvontakorit: äänityyppi on yläkategoria, sen alla maanosat ja
        niiden alla kaupungit — jokaisella maanosalla oma korinsa. */
-    details.manner { border: 1px dashed var(--reuna); border-radius: 8px;
-      padding: 0 0.7rem 0.45rem; margin: 0.5rem 0; }
-    details.manner > summary { cursor: pointer; padding: 0.5rem 0;
-      color: var(--korostus); font-size: 0.9rem; }
-    details.manner > summary .maara { color: var(--haalea); font-size: 0.8rem; }
-    /* Sisäkkäinen lohko (maisematyyppi maanosan alla) erottuu kevyemmin. */
-    details.manner details.manner { border-style: solid;
-      border-color: rgba(214, 188, 140, 0.28); margin: 0.4rem 0; }
-    .kori-seloste { color: var(--haalea); font-size: 0.8rem; margin: 0.1rem 0 0.4rem; }
-    .kori-rivi { display: flex; align-items: center; gap: 0.5rem; padding: 0.12rem 0; }
+    details.manner, details.ryhma {
+      background: var(--kortti); border: 1px solid var(--reuna);
+      border-radius: var(--pyoristys); box-shadow: var(--varjo);
+      margin: 0.5rem 0; padding: 0 0.85rem 0.5rem;
+    }
+    details.manner > summary, details.ryhma > summary {
+      cursor: pointer; padding: 0.6rem 0; font-weight: 600; font-size: 0.94rem;
+      list-style: none;
+    }
+    details.manner > summary::-webkit-details-marker,
+    details.ryhma > summary::-webkit-details-marker { display: none; }
+    details.manner > summary .maara, details.ryhma > summary .maara {
+      color: var(--haalea); font-size: 0.82rem; font-weight: 400;
+    }
+    /* Sisäkkäinen lohko erottuu kevyemmin: ei varjoa eikä valkoista
+       pohjaa, muuten kortti kortin sisällä näyttää portaikolta. */
+    details.manner details.manner {
+      background: none; box-shadow: none; border-style: dashed;
+      margin: 0.35rem 0;
+    }
+
+    .kori-seloste { color: var(--haalea); font-size: 0.82rem; margin: 0.1rem 0 0.4rem; }
+    .kori-rivi { display: flex; align-items: center; gap: 0.5rem; padding: 0.14rem 0; }
     .kori-rivi .soita { min-width: 3rem; flex: 0 0 auto; }
-    .kori-rivi label { display: flex; align-items: center; gap: 0.45rem; cursor: pointer;
-      color: var(--himmea); font-size: 0.9rem; flex: 1 1 12rem; min-width: 0; }
+    .kori-rivi label {
+      display: flex; align-items: center; gap: 0.45rem; cursor: pointer;
+      font-size: 0.9rem; flex: 1 1 12rem; min-width: 0;
+    }
     .kori-rivi input[type="range"] { width: 7.5rem; accent-color: var(--korostus); }
     .kori-rivi input[type="range"].alku { width: auto; flex: 1 1 12rem; max-width: 24rem; }
-    .kori-rivi .sek { min-width: 2.9rem; text-align: right; color: var(--haalea); align-self: center; }
-    /* Paikan muut vaihtoehdot aukeavat nuolesta. */
+    .kori-rivi .sek {
+      min-width: 2.9rem; text-align: right; color: var(--haalea);
+      align-self: center; font-variant-numeric: tabular-nums;
+    }
+
     details.loput { margin: 0.1rem 0 0.7rem; }
-    details.loput > summary { cursor: pointer; color: var(--haalea);
-      font-size: 0.85rem; padding: 0.2rem 0; }
+    details.loput > summary { cursor: pointer; color: var(--haalea); font-size: 0.85rem; padding: 0.2rem 0; }
+    details.pikatestit { margin-top: 1rem; }
+    details.pikatestit > summary { cursor: pointer; color: var(--korostus); font-size: 0.9rem; }
+
     .oma { margin: 0.3rem 0 0.1rem; }
     .oma input[type="url"] { flex: 2 1 14rem; }
     .oma input[type="text"] { flex: 1 1 9rem; }
-    details.ryhma { border: 1px solid var(--reuna); border-radius: 10px;
-      margin: 0.6rem 0; padding: 0 0.8rem 0.4rem; max-width: 60rem; }
-    details.ryhma > summary { cursor: pointer; padding: 0.7rem 0; color: var(--teksti);
-      font-size: 0.95rem; letter-spacing: 0.04em; }
-    details.ryhma > summary .maara { color: var(--haalea); font-size: 0.82rem; }
-    details.pikatestit { margin-top: 1rem; }
-    details.pikatestit summary { cursor: pointer; color: var(--haalea); }
-    /* Yläpalkki: soitin ja suodattimet yhdessä, ylhäällä — iPadin alareunan
-     * eleet eivät osu säätimiin. */
-    .ylapalkki {
-      position: sticky; top: 0; z-index: 3; background: var(--pohja);
-      padding: 0.55rem 0; border-bottom: 1px solid var(--reuna);
-      display: flex; flex-direction: column; gap: 0.45rem;
+
+    #tuo-alue {
+      width: 100%; max-width: 44rem; min-height: 5rem;
+      background: var(--kortti); color: var(--teksti);
+      border: 1px solid var(--reuna); border-radius: 9px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.82rem; padding: 0.6rem;
     }
-    .soitin { display: flex; flex-wrap: wrap; gap: 0.4rem 0.7rem; align-items: center; }
-    .soitin .mika { flex: 1 1 100%; color: var(--himmea); font-size: 0.84rem;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .soitin input[type="range"] { accent-color: var(--korostus); touch-action: none; }
-    .soitin .aikajana { flex: 1 1 9rem; min-width: 8rem; }
-    .soitin .aika { color: var(--haalea); font-size: 0.85rem; min-width: 6.4rem; text-align: right; }
-    .suodattimet { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
-    .suodattimet input[type="search"] { flex: 1 1 10rem; }
-    .laskuri { color: var(--haalea); font-size: 0.85rem; white-space: nowrap; }
-    #tuo-alue { width: 100%; max-width: 44rem; min-height: 5rem; background: var(--nappi);
-      color: var(--teksti); border: 1px solid var(--reuna); border-radius: 8px;
-      font-family: inherit; padding: 0.6rem; }
-    pre { white-space: pre-wrap; color: var(--himmea); }
+    pre { white-space: pre-wrap; color: var(--himmea); font-size: 0.82rem; }
   </style>
 </head>
 <body>
