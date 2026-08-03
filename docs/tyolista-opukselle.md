@@ -384,6 +384,36 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 66: Europeana kytketty — VALMIS v190 3.8.2026
+
+Omistaja lisäsi `EUROPEANA_API`-avaimen repon salaisuuksiin. Se ei
+ollut käytössä: `tools/hae-kaupunkikuvat.mjs` **dokumentoi** Europeanan
+kolmantena lähteenä, mutta hakua ei ollut koskaan kirjoitettu — koodissa
+ei ollut sanaa "europeana" missään. Kommentti lupasi enemmän kuin
+tiedosto teki.
+
+Nyt haku on olemassa (`reusability=open&media=true&qf=TYPE:IMAGE`), ja
+avain luetaan muuttujasta `EUROPEANA_API` (vanha nimi
+`EUROPEANA_AVAIN` kelpaa yhä).
+
+### Avain pysyy siellä missä se on
+
+Salaisuus on luettavissa vain GitHubin ajossa, eikä sitä saa kopioida
+mihinkään — ei keskusteluun, ei tiedostoon, ei tulosteeseen. Siksi
+uusi työnkulku `.github/workflows/kuvahaku.yml`: haku ajetaan
+GitHubissa, jossa avain on, ja tulos noudetaan artefaktina. Ajo
+käynnistetään käsin, koska kuvahaku on kertaluonteista aineistotyötä
+eikä kuulu jokaiseen puskuun.
+
+### Hiljainen ohitus sanotaan nyt ääneen
+
+Vanha kommentti kertoi, että ilman avainta vaihe "ohitetaan hiljaa".
+Se on juuri se virhe, joka on toistunut tässä projektissa useimmin:
+**työkalu, joka ei erota "ei löytynyt" ja "ei kysytty" toisistaan,
+valehtelee onnistumisesta.** Ajo tulostaa nyt ensimmäisellä rivillä
+joko "avain löytyi, haku käytössä" tai "EI AVAINTA — vaihe ohitetaan".
+
+
 ## Paketti 65: maiden rajat Aasiaan — VALMIS v189 3.8.2026
 
 Tutki-ikkunan minikartta oli tyhjä 31 maalta: Aasialla ja Lähi-idällä

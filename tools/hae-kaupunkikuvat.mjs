@@ -17,9 +17,14 @@
  * 2. Library of Congress täydentää (omistajan päätös). Photochrom-
  *    kokoelma on vuosilta 1890–1910 eli juuri isoisän aikaa, public
  *    domain, eikä vaadi avainta.
- * 3. Europeana kolmantena, jos avain on ympäristössä
- *    (EUROPEANA_AVAIN). Ilman avainta se ohitetaan hiljaa — se on
- *    lisä, ei edellytys.
+ * 3. Europeana kolmantena, jos avain on ympäristössä. Se on lisä eikä
+ *    edellytys, mutta ohitus SANOTAAN ÄÄNEEN: hiljainen ohitus näytti
+ *    aiemmin siltä, että Europeanasta ei vain löytynyt mitään.
+ *
+ *    Avain luetaan muuttujasta EUROPEANA_API (myös vanha nimi
+ *    EUROPEANA_AVAIN kelpaa). Avainta EI kirjoiteta tänne eikä
+ *    tulosteeseen: se annetaan ympäristöstä, ja GitHubissa se tulee
+ *    repon salaisuuksista (.github/workflows/kuvahaku.yml).
  *
  * --- mitä EI oteta ---
  *
@@ -147,6 +152,36 @@ function vapaaLisenssi(teksti) {
   return /public domain|cc0|cc by|cc-by|attribution|gfdl/.test(t);
 }
 
+/*
+ * Europeana kokoaa Euroopan museoiden, kirjastojen ja arkistojen
+ * aineiston yhteen. Se täydentää Commonsia siellä, missä paikallinen
+ * museo on digitoinut kokoelmansa mutta ei ole vienyt sitä Commonsiin.
+ *
+ * reusability=open rajaa suoraan siihen, mitä saa käyttää ja muokata;
+ * ilman sitä tuloksissa on paljon aineistoa, jota ei saa näyttää.
+ */
+const EUROPEANA_AVAIN = process.env.EUROPEANA_API ?? process.env.EUROPEANA_AVAIN ?? null;
+
+async function europeana(nimi) {
+  if (!EUROPEANA_AVAIN) return [];
+  const osoite = 'https://api.europeana.eu/record/v2/search.json'
+    + `?wskey=${encodeURIComponent(EUROPEANA_AVAIN)}`
+    + `&query=${encodeURIComponent(nimi)}`
+    + '&qf=TYPE:IMAGE&reusability=open&media=true&rows=30&profile=rich';
+  const data = await hae(osoite);
+  return (data?.items ?? [])
+    .filter((x) => x.edmIsShownBy?.length || x.edmPreview?.length)
+    .map((x) => ({
+      tiedosto: null,
+      osoite: (x.edmIsShownBy ?? x.edmPreview)[0],
+      kuvaus: (x.dcDescription?.[0] ?? x.title?.[0] ?? '').slice(0, 600),
+      vuosi: (x.year ?? [])[0] ?? '',
+      tekija: (x.dcCreator ?? []).join(', ').slice(0, 120),
+      lisenssi: `Europeana: ${(x.rights ?? []).join(' ') || 'open'}`,
+      lahde: 'europeana',
+    }));
+}
+
 /** Library of Congressin kuvat kaupungista. Ei vaadi avainta. */
 async function loc(nimi) {
   const osoite = `https://www.loc.gov/photos/?q=${encodeURIComponent(nimi)}`
@@ -172,7 +207,15 @@ const pack = PACKS.find((p) => p.id === lautaTunnus);
 if (!pack) throw new Error(`tuntematon lauta: ${lautaTunnus}`);
 
 const kohteet = pack.cities.filter((c) => (!vainKaupunki || c.id === vainKaupunki) && c.wiki);
-console.log(`${kohteet.length} kaupunkia, tavoite ${MAARA} kuvaa kussakin\n`);
+console.log(`${kohteet.length} kaupunkia, tavoite ${MAARA} kuvaa kussakin`);
+/*
+ * Sanotaan ääneen. Hiljainen ohitus on tässä projektissa toistuvin
+ * virhe: työkalu joka ei erota "ei löytynyt" ja "ei kysytty" toisistaan
+ * valehtelee onnistumisesta.
+ */
+console.log(EUROPEANA_AVAIN
+  ? 'Europeana: avain löytyi, haku käytössä\n'
+  : 'Europeana: EI AVAINTA ympäristössä (EUROPEANA_API) — vaihe ohitetaan\n');
 
 const kansio = join(JUURI, 'tools', 'kuva-aineisto');
 if (!kuiva && !existsSync(kansio)) mkdirSync(kansio, { recursive: true });
@@ -185,10 +228,12 @@ for (const c of kohteet) {
     // Pystykuvat ja pikkukuvat pois: galleria on vaakasuuntainen.
     .filter((t) => t.leveys >= 800 && t.leveys >= t.korkeus * 0.9);
   const locKuvat = tiedot.length >= MAARA ? [] : await loc(c.name);
-  const kaikki = [...tiedot, ...locKuvat].slice(0, MAARA);
+  const euKuvat = (tiedot.length + locKuvat.length) >= MAARA ? [] : await europeana(c.name);
+  const kaikki = [...tiedot, ...locKuvat, ...euKuvat].slice(0, MAARA);
   yhteenveto.push({ id: c.id, nimi: c.name, wiki: c.wiki, kuvia: kaikki.length });
   console.log(`${c.id.padEnd(16)} commons ${tiedot.length.toString().padStart(3)} `
-    + `+ loc ${locKuvat.length.toString().padStart(2)} = ${kaikki.length}`);
+    + `+ loc ${locKuvat.length.toString().padStart(2)} `
+    + `+ eur ${euKuvat.length.toString().padStart(2)} = ${kaikki.length}`);
   if (!kuiva) {
     writeFileSync(join(kansio, `${c.id}.json`), `${JSON.stringify(kaikki, null, 1)}\n`);
   }

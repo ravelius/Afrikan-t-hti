@@ -1,0 +1,61 @@
+# Kuvahaku, jossa Europeanan avain on käytettävissä.
+#
+# Miksi tämä on olemassa: avain on repon salaisuuksissa
+# (EUROPEANA_API), eikä sitä saa kopioida mihinkään muualle —
+# ei keskusteluun, ei tiedostoon, ei tulosteeseen. Salaisuus on
+# luettavissa vain GitHubin ajossa, joten haku ajetaan täällä ja
+# tulos noudetaan artefaktina.
+#
+# Ajetaan käsin (workflow_dispatch): kuvahaku on kertaluonteista
+# aineistotyötä eikä kuulu jokaiseen puskuun.
+name: Kuvahaku
+
+on:
+  workflow_dispatch:
+    inputs:
+      lauta:
+        description: 'Lauta, jonka kaupungeille haetaan (esim. vanhamaailma)'
+        required: false
+        default: 'vanhamaailma'
+      kaupunki:
+        description: 'Vain yksi kaupunki (tyhjä = kaikki)'
+        required: false
+        default: ''
+      maara:
+        description: 'Kuvia kaupunkia kohti'
+        required: false
+        default: '16'
+
+permissions:
+  contents: read
+
+jobs:
+  hae:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Hae kuvat
+        env:
+          # Avain tulee repon salaisuuksista. Sitä ei tulosteta:
+          # työkalu kertoo vain, löytyikö se vai ei.
+          EUROPEANA_API: ${{ secrets.EUROPEANA_API }}
+        run: |
+          args="--lauta ${{ inputs.lauta }} --maara ${{ inputs.maara }}"
+          if [ -n "${{ inputs.kaupunki }}" ]; then
+            args="$args --kaupunki ${{ inputs.kaupunki }}"
+          fi
+          node tools/hae-kaupunkikuvat.mjs $args
+
+      - name: Talleta aineisto
+        uses: actions/upload-artifact@v4
+        with:
+          name: kuva-aineisto
+          path: tools/kuva-aineisto/
+          if-no-files-found: error
+          retention-days: 14
