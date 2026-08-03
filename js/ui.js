@@ -4843,7 +4843,7 @@ export class UI {
    */
   piirraKulttuuriNostot(lista, nostot) {
     lista.textContent = '';
-    for (const nosto of tiedot.nostot ?? []) {
+    for (const nosto of nostot ?? []) {
       const lohko = html('div', 'kulttuuri-nosto');
       // Otsikko ja mahdollinen ääninäyte samalla rivillä: selkeä nappi
       // kaiutinkuvakkeella erottuu tekstilinkeistä (omistajan toive).
