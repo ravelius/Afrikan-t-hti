@@ -937,3 +937,138 @@ koska kukaan ei palaa lukemaan sitä uudelleen.**
 
 Strategiat ovat yhä erilliset — ne vain asuvat nyt samassa
 työntekijässä, jossa haara valitsee kumpaa käytetään.
+
+---
+
+**[Opus]** Omistaja pysäytti matkakirjan merkintöjen kirjoittamisen:
+liian pitkiä ja vaikeaselkoisia. Tein tilannekuvan
+`docs/matkakirjan-tekstit.md`, ja mittaus paljasti jotain, mitä en
+osannut odottaa.
+
+**Äänitetyt tekstit ovat neljänneksen lyhyempiä kuin äänittämättömät.**
+408 merkkiä vastaan 512.
+
+Ne 48 tekstiä kirjoitettiin ääneen luettaviksi. Korva ei kestä pitkää
+virkettä, ja se pakotti tiiviyteen. Loput 95 kirjoitettiin silmälle,
+eikä mikään enää rajoittanut — ja ne paisuivat.
+
+Rajoite ei ollut ohjeessa. Se oli **kanavassa**, ja kun kanava vaihtui,
+rajoite katosi kenenkään huomaamatta. Kukaan ei päättänyt, että
+tekstien pitäisi olla pidempiä.
+
+Omistaja huomasi eron lukemalla. Minä huomasin sen vasta mitattuani, ja
+vasta koska hän käski katsoa.
+
+**Kun laatu heikkenee ilman että kukaan päätti niin, etsi rajoite joka
+katosi.** Se on useammin työtavassa kuin ohjeessa.
+
+Sivuhuomio samasta päivästä: laskin ensin, että äänihaku tuotti nolla
+ehdokasta 105 kaupungille. Se oli oma mittausvirheeni — luin taulukkoa
+kuin oliota. Oikea luku oli 246 äänitettä 48 kaupunkiin. Olin
+sekunnin päässä siitä, että olisin ilmoittanut onnistuneen ajon
+epäonnistuneeksi. **Sama virhe kuin radioasemien 401-vastauksissa,
+saman päivän aikana, eri muodossa.**
+
+---
+
+**[Opus]** Lontoon kulttuurinostot valmistuivat: 9 kategoriaa, 53
+nostoa, jokainen kuva ja fakta tarkistettuna. Käyttöliittymää niille
+ei ole vielä, koska omistaja ei ole päättänyt Tutki-ikkunan muotoa.
+
+Tallensin sisällön silti omaan tauluunsa enkä jäänyt odottamaan.
+
+Se oli tietoinen valinta, ja perustelu on tämä: **valmis sisältö
+ilman näkymää on odottamassa, mutta valmis sisältö apurin
+lokitiedostossa on kadonnut.** Työnkulkujen tulokset elävät
+väliaikaishakemistossa, joka katoaa istunnon mukana.
+
+Toinen puoli samasta päätöksestä: en korvannut olemassa olevaa
+litteää kulttuuritaulua. Uusi taulu on sen rinnalla. Jos olisin
+vaihtanut vanhan uuteen ennen kuin näkymä on olemassa, olisin tehnyt
+toimivasta sisällöstä näkymätöntä — ja se olisi ollut sama vika kuin
+kaikki muutkin tämän päivän hiljaiset putoamiset, vain omasta
+kädestäni.
+
+**Kun päätös puuttuu, tallenna työ ja jätä kytkentä tekemättä.**
+Kytkeminen on minuutin työ; uudelleen kerääminen on tuntien.
+
+Varmennusvaihe teki myös työnsä. Se löysi, että Guildhallin
+kivetyksessä oleva juova merkitsee areenan reunaa eikä amfiteatterin
+ulkomuuria, että rauniot ovat kuuden metrin eivätkä kahdeksan
+syvyydessä, ja että kahden kuvan tekijämerkintä oli vajaa. Kaikki
+kolme olisivat menneet läpi silmäilemällä.
+
+---
+
+**[Opus]** Omistaja tarkensi yhdellä lauseella: *"tämä nykyinen versio
+on aikuisille. lapsille voidaan tehdä kevennetty versio sitten
+myöhemmin."*
+
+Olin olettanut päinvastoin koko päivän. Aarteiden arviointiin
+rakensin tuomarin, joka katsoo kymmenvuotiaan silmin, ja hänen
+huomionsa ohjasivat kahta kokonaista kierrosta. Kolmas oli käynnissä
+ohjeella, joka kielsi sanat *"joita kymmenvuotias ei ymmärrä ilman
+selitystä"*.
+
+Pysäytin sen. Se oli tekemässä kokoelmasta huonompaa juuri sille
+lukijalle, jolle se on tarkoitettu.
+
+Terävin esimerkki: tuomari moitti nimeä "Kali Gandakin
+shaligram-ammoniitti" museon luettelokortiksi ja ehdotti tilalle
+"Kivi, jonka sisällä on kiertynyt kaari". Lapselle jälkimmäinen on
+parempi. Aikuiselle se on huonompi — se kiertää nimen, jonka esine
+oikeasti kantaa, eikä jätä mitään käteen.
+
+**En kysynyt kohdeyleisöä kertaakaan.** Rakensin tuomarin, annoin
+sille auktoriteetin ja annoin sen ohjata kahta kierrosta — ja koko
+ajan sen premissi oli minun keksimäni, ei omistajan sanoma.
+
+Kuvio on tuttu tästä samasta päivästä, mutta pahempi muoto: kun
+mittari tuottaa vääriä hälytyksiä, olen oppinut epäilemään mittaria.
+Tässä mittari toimi moitteettomasti. **Väärin oli se, mitä vasten
+mitattiin — ja sitä ei voi huomata mittaamalla tarkemmin.**
+
+Yksi asia ei muutu: "liian pitkä ja vaikeaselkoinen" pätee yhä.
+Vaativa teksti palkitsee lukijan, vaikeaselkoinen vain väsyttää, eikä
+aikuinenkaan lue 600 merkkiä tiheää kirjoituskonefonttia puhelimella
+mielellään.
+
+---
+
+**[Opus]** Rakensin Tutki-ikkunan kirjanmerkkiliuskat. Kaksi asiaa
+jäi mieleen, ja toinen niistä on nolo.
+
+**Ensimmäinen: mittarini valehteli, ja uskoin sitä.** Selainkokeeni
+raportoi "10 liuskaa 10 rivillä". Aloin etsiä syytä siihen, miksi
+flex-wrap ei toimi. Sitä ei ollut: liuskat olivat neljällä rivillä,
+mutta laskin rivit keräämällä eri `top`-arvot joukkoon, ja saman
+rivin napit erosivat parilla pikselillä koska niiden korkeudet
+vaihtelivat. Mittari laski pikseleitä, minä luulin sen laskevan
+rivejä.
+
+Tämä on **neljäs kerta tänään**, kun oma mittaukseni antoi väärän
+kuvan: radioasemien 401-vastaukset, äänihaun "nolla ehdokasta",
+taulukon lukeminen oliona, ja nyt tämä. Kolmessa neljästä olin
+ilmoittamassa toimivaa asiaa rikkinäiseksi.
+
+Ero edellisiin: tämä mittari **löysi silti oikean vian**. Rivit eivät
+olleet tasan, ja se johtui samasta korkeuserosta. Väärä luku
+osoitti oikeaan paikkaan väärästä syystä. Se on onnea, ei menetelmä.
+
+**Toinen: 310 pikseliä liuskoja.** Ensimmäinen versio näytti hyvältä
+kuvakaappauksessa mutta söi kolmanneksen puhelimen ruudusta ennen kuin
+sisältö alkoi. Syy oli, että olin pidentänyt omistajan alkuperäiset
+kategorianimet: hän kirjoitti "tiede", minä tein siitä "Tiede ja
+keksinnöt".
+
+Lyhensin ne takaisin ja liuskarivi kutistui 86 pikseliin.
+
+**Pidensin nimiä koska ne kuulostivat paremmilta lukea. Ne eivät ole
+luettavaa tekstiä vaan liuskoja rekisterikirjassa, ja liuska on lyhyt
+koska sen tehtävä on mahtua.** Omistajan alkuperäinen sana oli oikea,
+ja minä paransin sen rikki.
+
+Kolmas asia, joka meni oikein ilman minua: kokoaja kieltäytyi
+rakentamasta, koska uusi paketti puuttui MODULES-listalta. Se on
+tarkistus, jonka olisin voinut ohittaa kirjoittaessani sen — ja se
+esti tänään yhden tiedoston putoamisen yhden tiedoston versiosta.
