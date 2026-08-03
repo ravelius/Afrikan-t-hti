@@ -1,7 +1,7 @@
 {
   "name": "matkakirja",
   "version": "1.0.0",
-  "description": "Selaimessa pelattava Afrikan tähti -lautapeli (ei riippuvuuksia)",
+  "description": "Matkakirja — selaimessa pelattava seikkailupeli maailman ympäri (ei riippuvuuksia)",
   "type": "module",
   "scripts": {
     "start": "python3 -m http.server 8000",

@@ -9,8 +9,14 @@ import { startQuizMusic, stopPlaceStream, stopQuizMusic } from './ambience-strea
 import { kertojaTila, asetaKertojaTila } from './aani-ehdokkaat.js';
 
 const PLAYER_COLOR = '#d94f3d';
-const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.202';
+/*
+ * Tallennusavain on pelin omalla nimellä. Vanha avain luetaan yhä, jotta
+ * kesken jäänyt peli ei katoa päivityksessä — se siirretään uuteen avaimeen
+ * ensimmäisellä latauksella ja poistetaan vasta sitten.
+ */
+const SAVE_KEY = 'matkakirja-save-v1';
+const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
+const APP_VERSION = '2026-08-03.203';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -38,7 +44,15 @@ function saveGame(game) {
 
 function loadGame() {
   try {
-    const raw = localStorage.getItem(SAVE_KEY);
+    let raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) {
+      // Siirtymä vanhasta avaimesta: siirrä kerran, älä lue sitä uudestaan.
+      raw = localStorage.getItem(VANHA_SAVE_KEY);
+      if (raw) {
+        localStorage.setItem(SAVE_KEY, raw);
+        localStorage.removeItem(VANHA_SAVE_KEY);
+      }
+    }
     if (!raw) return null;
     const game = Game.fromJSON(JSON.parse(raw));
     return game && game.phase !== 'over' ? game : null;
@@ -78,7 +92,10 @@ function attach(game) {
   if (ui) ui.destroy();
   ui = new UI(game, { onNewGame: startGame, onChange: saveGame });
   ui.mount();
-  window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
+  // Kehityksen apuri konsolia varten. Vanha nimi jää rinnalle, koska
+  // työkalut ja kuvakaappausskriptit käyttävät sitä.
+  window.matkakirja = { game, ui, sfx };
+  window.afrikanTahti = window.matkakirja;
 }
 
 function startGame() {
@@ -438,7 +455,8 @@ function avaaKatselu(pack) {
   ui.katselu = true;
   ui.aloitettu = true;
   ui.mount();
-  window.afrikanTahti = { game, ui, sfx };
+  window.matkakirja = { game, ui, sfx };
+  window.afrikanTahti = window.matkakirja;
 }
 
 let katseluPack = null;

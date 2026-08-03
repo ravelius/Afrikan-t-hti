@@ -1005,14 +1005,29 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 /* Wikipedian kuva saapumiskortissa; Lue lisää -linkki on esittelyn alla. */
 .arrival-kuvakotelo {
   position: relative;
-  margin: 0.15rem 0 0.3rem;
+  margin: 0.15rem auto 0.3rem;
+  /* Kotelo kutistuu kuvan levyiseksi, jotta laskuri ja selailunuolet
+   * pysyvät kuvan päällä myös silloin kun pystykuva ei täytä palstaa. */
+  width: fit-content;
+  max-width: 100%;
 }
 
+/*
+ * Kuvat omissa mittasuhteissaan (omistajan toive: "kuvat saisivat näkyä
+ * niiden alkuperäisessä mittasuhteessa eikä venytettynä panoraamaksi").
+ *
+ * Aiemmin tässä oli width:100% + kiinteä max-height + object-fit:cover.
+ * Se ei venyttänyt kuvaa vaan rajasi sen — mutta lopputulos oli sama
+ * silmälle: pystykuvasta jäi näkyviin leveä kaistale keskeltä, ja se
+ * näyttää panoraamalta. Nyt selain skaalaa kuvan mahtumaan molempiin
+ * rajoihin suhteet säilyttäen: pystykuva jää kapeaksi ja korkeaksi,
+ * vaakakuva leveäksi ja matalaksi. Mitään ei rajata pois.
+ */
 .arrival-image {
   display: block;
-  width: 100%;
-  max-height: 170px;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  max-height: 210px;
   border-radius: 6px;
   border: 1px solid rgba(70, 51, 31, 0.3);
 }
@@ -1453,9 +1468,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .kulttuuri-nosto img {
   display: block;
-  width: 100%;
-  max-height: 230px;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  max-height: 260px;
   border: 1px solid rgba(70, 51, 31, 0.3);
   border-radius: 6px;
   margin: 0.25rem 0;
@@ -4094,9 +4109,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
 .wiki-nosto img {
   display: block;
-  width: 100%;
-  max-height: 240px;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  max-height: 280px;
   margin: 0 0 0.5rem;
   border: 3px solid #f7efdc;
   outline: 1px solid rgba(70, 51, 31, 0.35);
@@ -4539,6 +4554,21 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   box-shadow: none;
   position: relative;
   z-index: 1;
+  /*
+   * Väljempi marginaali kuin muissa korteissa (omistajan huomio: "liian
+   * pieni marginaali reunoihin"). Arkki on nyt lähes ruudun kokoinen, ja
+   * mitä isompi paperi, sitä leveämpää reunusta silmä odottaa. Lisäksi
+   * reunaviiva elää ±5 pikseliä, joten kapea marginaali näyttää eri
+   * levyiseltä eri kohdissa.
+   */
+  padding: 1.7rem 1.75rem 1.9rem;
+}
+
+@media (min-width: 700px) {
+  .dialog.arkki .dialog-card,
+  .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
+    padding: 2rem 2.2rem 2.2rem;
+  }
 }
 
 /* Ulompi kiertynyt katkoviiva ei kuulu arkkiin — se oli juuri se

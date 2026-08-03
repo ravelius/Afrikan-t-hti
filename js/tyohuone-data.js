@@ -137,7 +137,7 @@ export const VARUSTEET = [
       + 'arvovieraille.' },
   { nimi: 'Valokuvauskamera', tila: 'idea',
     vaikutus: 'Kuva kaupungissa: passiin leima kuvan kanssa ja kokemuspisteitä.',
-    huomiot: 'Kauimpana Afrikan tähdestä: ei auta voittamaan lainkaan, '
+    huomiot: 'Kauimpana lautapelin logiikasta: ei auta voittamaan lainkaan, '
       + 'vaan palkitsee uteliaisuudesta. Istuu suoraan siihen, että '
       + 'suurin palkinto on ymmärrys.' },
 ];

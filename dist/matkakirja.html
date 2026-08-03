@@ -1013,14 +1013,29 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 /* Wikipedian kuva saapumiskortissa; Lue lisää -linkki on esittelyn alla. */
 .arrival-kuvakotelo {
   position: relative;
-  margin: 0.15rem 0 0.3rem;
+  margin: 0.15rem auto 0.3rem;
+  /* Kotelo kutistuu kuvan levyiseksi, jotta laskuri ja selailunuolet
+   * pysyvät kuvan päällä myös silloin kun pystykuva ei täytä palstaa. */
+  width: fit-content;
+  max-width: 100%;
 }
 
+/*
+ * Kuvat omissa mittasuhteissaan (omistajan toive: "kuvat saisivat näkyä
+ * niiden alkuperäisessä mittasuhteessa eikä venytettynä panoraamaksi").
+ *
+ * Aiemmin tässä oli width:100% + kiinteä max-height + object-fit:cover.
+ * Se ei venyttänyt kuvaa vaan rajasi sen — mutta lopputulos oli sama
+ * silmälle: pystykuvasta jäi näkyviin leveä kaistale keskeltä, ja se
+ * näyttää panoraamalta. Nyt selain skaalaa kuvan mahtumaan molempiin
+ * rajoihin suhteet säilyttäen: pystykuva jää kapeaksi ja korkeaksi,
+ * vaakakuva leveäksi ja matalaksi. Mitään ei rajata pois.
+ */
 .arrival-image {
   display: block;
-  width: 100%;
-  max-height: 170px;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  max-height: 210px;
   border-radius: 6px;
   border: 1px solid rgba(70, 51, 31, 0.3);
 }
@@ -1461,9 +1476,9 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .kulttuuri-nosto img {
   display: block;
-  width: 100%;
-  max-height: 230px;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  max-height: 260px;
   border: 1px solid rgba(70, 51, 31, 0.3);
   border-radius: 6px;
   margin: 0.25rem 0;
@@ -4102,9 +4117,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
 .wiki-nosto img {
   display: block;
-  width: 100%;
-  max-height: 240px;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  max-height: 280px;
   margin: 0 0 0.5rem;
   border: 3px solid #f7efdc;
   outline: 1px solid rgba(70, 51, 31, 0.35);
@@ -4547,6 +4562,21 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   box-shadow: none;
   position: relative;
   z-index: 1;
+  /*
+   * Väljempi marginaali kuin muissa korteissa (omistajan huomio: "liian
+   * pieni marginaali reunoihin"). Arkki on nyt lähes ruudun kokoinen, ja
+   * mitä isompi paperi, sitä leveämpää reunusta silmä odottaa. Lisäksi
+   * reunaviiva elää ±5 pikseliä, joten kapea marginaali näyttää eri
+   * levyiseltä eri kohdissa.
+   */
+  padding: 1.7rem 1.75rem 1.9rem;
+}
+
+@media (min-width: 700px) {
+  .dialog.arkki .dialog-card,
+  .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
+    padding: 2rem 2.2rem 2.2rem;
+  }
 }
 
 /* Ulompi kiertynyt katkoviiva ei kuulu arkkiin — se oli juuri se
@@ -5133,7 +5163,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 // aarrekaupunkiin.
 
 const TOKEN_TYPES = {
-  star: { id: 'star', name: 'Afrikan tähti', symbol: '★', value: 0, color: '#f6c445' },
+  // Oletusnimi on tarkoituksella yleinen: jokainen lauta antaa pääaarteelleen
+  // oman nimen themedTokenTypes-apurilla. Jos oletus jää ruudulle näkyviin,
+  // se on merkki puuttuvasta nimestä eikä toisen pelin lainasta.
+  star: { id: 'star', name: 'Pääaarre', symbol: '★', value: 0, color: '#f6c445' },
   horseshoe: { id: 'horseshoe', name: 'Hevosenkenkä', symbol: 'Ω', value: 0, color: '#c9d1d9' },
   robber: { id: 'robber', name: 'Ryöstäjä', symbol: '☠', value: 0, color: '#8a8f98' },
   ruby: { id: 'ruby', name: 'Rubiini', symbol: '◆', value: 1000, color: '#e0413e' },
@@ -31173,7 +31206,7 @@ const AFRICA_MAP = {
     [918.7, 666.2],
   ],
   // St. Helena: todella pieni yksinäinen saari eteläisellä Atlantilla,
-  // kuten alkuperäisessä Afrikan tähdessä. Hieman oikeaa sijaintiaan
+  // ja siksi luonteva pysähdys avomerellä. Hieman oikeaa sijaintiaan
   // koillisempana, jotta kompassiruusu mahtuu alle.
   sthelenaPoints: [
     [205, 661], [213, 664], [216, 672], [212, 679],
@@ -31233,8 +31266,8 @@ const AFRICA_CITIES = [
   { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', ambience: 'sademetsa', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'angola', name: 'Angola', wiki: 'Angola', ambience: 'savanni', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
   { id: 'namib', name: 'Namib', wiki: 'Namib', ambience: 'aavikko', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
-  // St. Helena kuten alkuperäisessä pelissä: pieni saari avomerellä,
-  // jonne pääsee vain laivalla.
+  // St. Helena: pieni saari avomerellä, jonne pääsee vain laivalla.
+  // Yksi laudan harvoista paikoista, joihin ei ole maareittiä.
   { id: 'sthelena', name: 'St. Helena', wiki: 'Saint Helena', ambience: 'meri', x: 205, y: 672 },
   {
     id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, start: true, airport: true, la: 'end', lx: -22, ly: 6,
@@ -31365,9 +31398,9 @@ const AFRICA_AIR_ROUTES = [
 // Uusi manner lisätään tekemällä vastaava tiedosto ja lisäämällä se pack.js:ään.
 const AFRICA = {
   id: 'africa',
-  name: 'Afrikan tähti',
+  name: 'Afrikan aarrekartta',
   boardLabel: 'Afrikka',
-  tagline: 'Etsi tähti, vastaa kysymyksiin, palaa kotiin.',
+  tagline: 'Etsi kivilintu, vastaa kysymyksiin, palaa kotiin.',
   ariaLabel: 'Afrikan aarrekartta',
 
   map: {
@@ -31386,7 +31419,17 @@ const AFRICA = {
   minCityDistance: 55,
 
   tokens: {
-    types: themedTokenTypes(),
+    /*
+     * Afrikan pääaarre on Suuren Zimbabwen kivilintu: kahdeksan
+     * vuolukivilintua veistettiin 1200–1400-luvulla, ja ne ryöstettiin
+     * 1800-luvun lopulla lähes kaikki pois. Palautukset kestivät yli
+     * sata vuotta, ja yhdestä linnusta puuttuu yhä alaosa.
+     *
+     * Jokaisella laudalla on oma pääaarteensa. Afrikka oli ainoa, joka
+     * käytti oletusnimeä — eikä se enää käy: Matkakirja on oma pelinsä,
+     * ja pääaarre on nyt oikea esine oikeine tarinoineen.
+     */
+    types: themedTokenTypes({ star: { name: 'Suuren Zimbabwen kivilintu' } }),
     // 37 laattakaupunkia seitsemän uuden paikan jälkeen (omistajan laajennus).
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 8, empty: 11 },
   },
@@ -31506,12 +31549,12 @@ const AFRICA = {
         'Sivun laidassa on kahvipapu ja kellotaulu vierekkäin: isoisä odotti tunnin ja kirjasi sen ylös. Siitä tunnista minä maksaisin mitä tahansa.',
       ],
     },
-    intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin, Kairoon tai Kapkaupunkiin.',
-    starFound: (name, city) => `★ ${name} löysi AFRIKAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'AFRIKAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Suuren Zimbabwen kivilintu ja palatkaa Tangeriin, Kairoon tai Kapkaupunkiin.',
+    starFound: (name, city) => `★ ${name} löysi SUUREN ZIMBABWEN KIVILINNUN kaupungista ${city}!`,
+    starToast: 'SUUREN ZIMBABWEN KIVILINTU!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Afrikan tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Afrikan tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Suuren Zimbabwen kivilinnun turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Suuren Zimbabwen kivilinnun kotiin ${money} punnan kanssa.`,
     // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
     diaries: [
       'Isoisän kartassa tämä manner on paikoin väritetty tyhjäksi. Piirtäjä ei ilmeisesti vaivautunut kysymään niiltä miljoonilta, jotka asuivat täällä jo silloin. Tyhjä kohta kartassa kertoo piirtäjästä, ei maasta.',
@@ -53257,7 +53300,12 @@ function kaikkiValinnat() {
 // Selaimet vaativat käyttäjän eleen ennen äänen toistoa, joten AudioContext
 // luodaan vasta ensimmäisen napautuksen yhteydessä.
 
-const STORAGE_KEY = 'afrikan-tahti-sound';
+/*
+ * Äänivalinnan avain on pelin omalla nimellä. Vanha avain luetaan yhä
+ * kerran, jottei kukaan saa ääniä yllättäen päälle päivityksen jälkeen.
+ */
+const STORAGE_KEY = 'matkakirja-aani';
+const VANHA_STORAGE_KEY = 'afrikan-tahti-sound';
 
 // Ambienssin ristihäivytys ja tapahtumien väli. Väli on tarkoituksella pitkä
 // ja epäsäännöllinen: säännöllinen ääni alkaa kuulua kellona.
@@ -53283,7 +53331,8 @@ class Sound {
 
   loadSetting() {
     try {
-      return localStorage.getItem(STORAGE_KEY) !== 'off';
+      const arvo = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(VANHA_STORAGE_KEY);
+      return arvo !== 'off';
     } catch {
       return true;
     }
@@ -63580,7 +63629,7 @@ class UI {
     // Ei Yleistä-liuskaa: artikkeli asuu "Lue lisää" -linkin takana
     // omassa ikkunassaan, ei tällä rivillä.
     const osiot = kategoriat;
-    const valitse = (id) => {
+    const valitse = (id, vierita = true) => {
       for (const nappi of this.arrivalLiuskat.querySelectorAll('button')) {
         const paalla = nappi.dataset.osio === id;
         nappi.classList.toggle('paalla', paalla);
@@ -63589,10 +63638,7 @@ class UI {
       const auki = kategoriat.find((k) => k.id === id);
       this.piirraKategoria(auki);
       this.arrivalKategoria.hidden = false;
-      // Liuskan vaihto vie sisällön alkuun: edellisen aiheen
-      // vierityskohta ei tarkoita uudessa mitään. Kortin oma vieritys,
-      // ei koko sivun.
-      this.arrivalKategoria.scrollIntoView({ block: 'nearest' });
+      if (vierita) this.nostaLiuskatYlos();
     };
     for (const osio of osiot) {
       const nappi = html('button');
@@ -63613,7 +63659,33 @@ class UI {
       this.arrivalLiuskat.appendChild(nappi);
     }
     this.arrivalLiuskat.hidden = false;
-    valitse(osiot[0].id);
+    // Ensimmäinen valinta kortin avautuessa ei saa vierittää: kortti
+    // avataan aina alusta.
+    valitse(osiot[0].id, false);
+  }
+
+  /*
+   * Aiheen vaihto nostaa liuskarivin kortin yläreunaan.
+   *
+   * Aiemmin tässä oli scrollIntoView({ block: 'nearest' }), ja omistaja
+   * kuvasi tuloksen: "näkymä hyppää ikävästi". Syy on siinä, että
+   * 'nearest' vierittää sen verran kuin tarvitaan — ja tarvittava määrä
+   * riippuu siitä, kuinka pitkä juuri avattu aihe on. Sama napautus
+   * liikutti näkymää joka kerta eri verran ja eri suuntaan.
+   *
+   * Nyt liikkeellä on yksi sääntö: liuskarivi menee ylös, aihe alkaa
+   * sen alta. Napautus tekee joka kerta saman asian, rivi jää näkyviin
+   * seuraavaa valintaa varten, eikä lopputulos riipu sisällön
+   * pituudesta. Pehmeä vieritys, koska hyppy oli juuri se vika.
+   */
+  nostaLiuskatYlos() {
+    const kortti = this.arrivalDialog?.querySelector('.dialog-card');
+    if (!kortti || !this.arrivalLiuskat) return;
+    const kohde = kortti.scrollTop
+      + this.arrivalLiuskat.getBoundingClientRect().top
+      - kortti.getBoundingClientRect().top
+      - 10;
+    kortti.scrollTo({ top: Math.max(0, kohde), behavior: 'smooth' });
   }
 
   /** Yhden kategorian nostot: johdanto ja sen alla kortit. */
@@ -65854,6 +65926,10 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
+  { v: 203, teksti: 'Kuvat omissa mittasuhteissaan, ei panoraamana' },
+  { v: 203, teksti: 'Aiheen vaihto ei enää hyppää näkymässä' },
+  { v: 203, teksti: 'Väljemmät marginaalit Tutki-arkilla' },
+  { v: 203, teksti: 'Afrikan pääaarre: Suuren Zimbabwen kivilintu' },
   { v: 202, teksti: 'Arkin reuna piirtyy kuin rantaviiva kartalla' },
   { v: 202, teksti: 'Tutki-kortti täyttää ruudun muistiinpanoarkkina' },
   { v: 202, teksti: 'Aiheliuskat kuvakkeina yhdelle riville' },
@@ -65908,8 +65984,14 @@ const MUUTOKSET = [
 // Käynnistys: aloitusruutu, pelin luonti, tallennus ja dialogit.
 
 const PLAYER_COLOR = '#d94f3d';
-const SAVE_KEY = 'afrikan-tahti-save-v1';
-const APP_VERSION = '2026-08-03.202';
+/*
+ * Tallennusavain on pelin omalla nimellä. Vanha avain luetaan yhä, jotta
+ * kesken jäänyt peli ei katoa päivityksessä — se siirretään uuteen avaimeen
+ * ensimmäisellä latauksella ja poistetaan vasta sitten.
+ */
+const SAVE_KEY = 'matkakirja-save-v1';
+const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
+const APP_VERSION = '2026-08-03.203';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -65937,7 +66019,15 @@ function saveGame(game) {
 
 function loadGame() {
   try {
-    const raw = localStorage.getItem(SAVE_KEY);
+    let raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) {
+      // Siirtymä vanhasta avaimesta: siirrä kerran, älä lue sitä uudestaan.
+      raw = localStorage.getItem(VANHA_SAVE_KEY);
+      if (raw) {
+        localStorage.setItem(SAVE_KEY, raw);
+        localStorage.removeItem(VANHA_SAVE_KEY);
+      }
+    }
     if (!raw) return null;
     const game = Game.fromJSON(JSON.parse(raw));
     return game && game.phase !== 'over' ? game : null;
@@ -65977,7 +66067,10 @@ function attach(game) {
   if (ui) ui.destroy();
   ui = new UI(game, { onNewGame: startGame, onChange: saveGame });
   ui.mount();
-  window.afrikanTahti = { game, ui, sfx }; // kehityksen apuri konsolia varten
+  // Kehityksen apuri konsolia varten. Vanha nimi jää rinnalle, koska
+  // työkalut ja kuvakaappausskriptit käyttävät sitä.
+  window.matkakirja = { game, ui, sfx };
+  window.afrikanTahti = window.matkakirja;
 }
 
 function startGame() {
@@ -66337,7 +66430,8 @@ function avaaKatselu(pack) {
   ui.katselu = true;
   ui.aloitettu = true;
   ui.mount();
-  window.afrikanTahti = { game, ui, sfx };
+  window.matkakirja = { game, ui, sfx };
+  window.afrikanTahti = window.matkakirja;
 }
 
 let katseluPack = null;

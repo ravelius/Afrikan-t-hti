@@ -39,7 +39,7 @@ const AFRICA_MAP = {
     [918.7, 666.2],
   ],
   // St. Helena: todella pieni yksinäinen saari eteläisellä Atlantilla,
-  // kuten alkuperäisessä Afrikan tähdessä. Hieman oikeaa sijaintiaan
+  // ja siksi luonteva pysähdys avomerellä. Hieman oikeaa sijaintiaan
   // koillisempana, jotta kompassiruusu mahtuu alle.
   sthelenaPoints: [
     [205, 661], [213, 664], [216, 672], [212, 679],
@@ -99,8 +99,8 @@ const AFRICA_CITIES = [
   { id: 'kongo', name: 'Kongo', wiki: 'Kongo (joki)', ambience: 'sademetsa', x: 440, y: 560, airport: true, la: 'end', lx: -16, ly: 5 },
   { id: 'angola', name: 'Angola', wiki: 'Angola', ambience: 'savanni', x: 480, y: 650, la: 'end', lx: -16, ly: 5 },
   { id: 'namib', name: 'Namib', wiki: 'Namib', ambience: 'aavikko', x: 475, y: 795, la: 'end', lx: -16, ly: 5 },
-  // St. Helena kuten alkuperäisessä pelissä: pieni saari avomerellä,
-  // jonne pääsee vain laivalla.
+  // St. Helena: pieni saari avomerellä, jonne pääsee vain laivalla.
+  // Yksi laudan harvoista paikoista, joihin ei ole maareittiä.
   { id: 'sthelena', name: 'St. Helena', wiki: 'Saint Helena', ambience: 'meri', x: 205, y: 672 },
   {
     id: 'kapkaupunki', name: 'Kapkaupunki', wiki: 'Kapkaupunki', ambience: 'meri', x: 525, y: 915, start: true, airport: true, la: 'end', lx: -22, ly: 6,
@@ -232,9 +232,9 @@ const AFRICA_AIR_ROUTES = [
 // Uusi manner lisätään tekemällä vastaava tiedosto ja lisäämällä se pack.js:ään.
 export const AFRICA = {
   id: 'africa',
-  name: 'Afrikan tähti',
+  name: 'Afrikan aarrekartta',
   boardLabel: 'Afrikka',
-  tagline: 'Etsi tähti, vastaa kysymyksiin, palaa kotiin.',
+  tagline: 'Etsi kivilintu, vastaa kysymyksiin, palaa kotiin.',
   ariaLabel: 'Afrikan aarrekartta',
 
   map: {
@@ -253,7 +253,17 @@ export const AFRICA = {
   minCityDistance: 55,
 
   tokens: {
-    types: themedTokenTypes(),
+    /*
+     * Afrikan pääaarre on Suuren Zimbabwen kivilintu: kahdeksan
+     * vuolukivilintua veistettiin 1200–1400-luvulla, ja ne ryöstettiin
+     * 1800-luvun lopulla lähes kaikki pois. Palautukset kestivät yli
+     * sata vuotta, ja yhdestä linnusta puuttuu yhä alaosa.
+     *
+     * Jokaisella laudalla on oma pääaarteensa. Afrikka oli ainoa, joka
+     * käytti oletusnimeä — eikä se enää käy: Matkakirja on oma pelinsä,
+     * ja pääaarre on nyt oikea esine oikeine tarinoineen.
+     */
+    types: themedTokenTypes({ star: { name: 'Suuren Zimbabwen kivilintu' } }),
     // 37 laattakaupunkia seitsemän uuden paikan jälkeen (omistajan laajennus).
     counts: { star: 1, horseshoe: 2, robber: 3, ruby: 5, emerald: 6, topaz: 8, empty: 11 },
   },
@@ -373,12 +383,12 @@ export const AFRICA = {
         'Sivun laidassa on kahvipapu ja kellotaulu vierekkäin: isoisä odotti tunnin ja kirjasi sen ylös. Siitä tunnista minä maksaisin mitä tahansa.',
       ],
     },
-    intro: 'Peli alkaa! Etsikää Afrikan tähti ja palatkaa Tangeriin, Kairoon tai Kapkaupunkiin.',
-    starFound: (name, city) => `★ ${name} löysi AFRIKAN TÄHDEN kaupungista ${city}!`,
-    starToast: 'AFRIKAN TÄHTI!',
+    intro: 'Peli alkaa! Etsikää Suuren Zimbabwen kivilintu ja palatkaa Tangeriin, Kairoon tai Kapkaupunkiin.',
+    starFound: (name, city) => `★ ${name} löysi SUUREN ZIMBABWEN KIVILINNUN kaupungista ${city}!`,
+    starToast: 'SUUREN ZIMBABWEN KIVILINTU!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
-    winStar: 'toi Afrikan tähden turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi Afrikan tähden kotiin ${money} punnan kanssa.`,
+    winStar: 'toi Suuren Zimbabwen kivilinnun turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi Suuren Zimbabwen kivilinnun kotiin ${money} punnan kanssa.`,
     // Saapumismerkinnät: yksi arvotaan laudalle saavuttaessa.
     diaries: [
       'Isoisän kartassa tämä manner on paikoin väritetty tyhjäksi. Piirtäjä ei ilmeisesti vaivautunut kysymään niiltä miljoonilta, jotka asuivat täällä jo silloin. Tyhjä kohta kartassa kertoo piirtäjästä, ei maasta.',
