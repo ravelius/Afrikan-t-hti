@@ -314,3 +314,52 @@ test('Aasian artikkelit noudattavat talon mittaa', async () => {
     assert.ok(!/[!]/.test(a.teksti + a.intro), `${nimi}: huutomerkki ei kuulu artikkeliin`);
   }
 });
+
+test('kaupunki on oman maansa rajojen sisällä', async () => {
+  const { PACKS } = await import('../js/pack.js');
+  const pack = PACKS.find((p) => p.id === 'vanhamaailma');
+  const { cityCountry: maat = {}, countryShapes: rajat = {} } = pack.map;
+
+  const sisalla = (piste, rengas) => {
+    let osuu = false;
+    for (let i = 0, j = rengas.length - 1; i < rengas.length; j = i++) {
+      const [xi, yi] = rengas[i];
+      const [xj, yj] = rengas[j];
+      if ((yi > piste[1]) !== (yj > piste[1])
+        && piste[0] < ((xj - xi) * (piste[1] - yi)) / (yj - yi) + xi) osuu = !osuu;
+    }
+    return osuu;
+  };
+
+  /*
+   * Kumpikaan ehto ei yksin riitä.
+   *
+   * Pelkkä etäisyys hylkäisi Riian: rannikkokaupungit on siirretty
+   * lähimpään maakohtaan, ja Riika jää 40 yksikköä yksinkertaistetun
+   * Latvian ulkopuolelle täysin oikein merkittynä.
+   *
+   * Pelkkä "piste on toisessa maassa" hylkäisi Tallinnan, Dubrovnikin
+   * ja Kilimanjaron: ne ovat rajan tuntumassa, ja 50m-aineiston
+   * harvennettu raja kulkee paikoin väärältä puolelta. Niiden
+   * maamerkintä on silti oikea.
+   *
+   * Merkintävirhe on se, jossa MOLEMMAT pätevät: piste on toisen maan
+   * sisällä eikä ole oman maansa rajan tuntumassa. Rub al-Khali oli
+   * kirjattu Arabiemiirikuntiin 84 yksikön päähän sen rajasta, ja
+   * piste oli keskellä Saudi-Arabiaa.
+   */
+  const REUNA = 60;
+  const vaarat = [];
+  for (const c of pack.cities) {
+    const oma = maat[c.id];
+    if (!rajat[oma]) continue;
+    if (rajat[oma].renkaat.some((r) => sisalla([c.x, c.y], r))) continue;
+    const etaisyys = Math.min(...rajat[oma].renkaat.flat()
+      .map(([x, y]) => Math.hypot(x - c.x, y - c.y)));
+    if (etaisyys <= REUNA) continue;
+    const toinen = Object.entries(rajat)
+      .find(([iso, maa]) => iso !== oma && maa.renkaat.some((r) => sisalla([c.x, c.y], r)));
+    if (toinen) vaarat.push(`${c.id}: merkitty ${oma}, mutta piste on keskellä maata ${toinen[0]}`);
+  }
+  assert.deepEqual(vaarat, [], 'nämä kaupungit on merkitty väärään maahan');
+});

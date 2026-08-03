@@ -384,6 +384,54 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 65: maiden rajat Aasiaan — VALMIS v189 3.8.2026
+
+Tutki-ikkunan minikartta oli tyhjä 31 maalta: Aasialla ja Lähi-idällä
+ei ole omaa lähdelautaa, josta rajat olisi voinut kääntää. Ne haettiin
+Natural Earthin 50m-aineistosta (public domain) uudella työkalulla
+`tools/aasian-rajat.mjs`.
+
+**84 maalla on nyt rajat** (ennen 56). Ilman jäivät Singapore, Saint
+Helena ja Hongkong — ne olisivat tässä mittakaavassa yhden pikselin
+täpliä, ja se on tietoinen valinta eikä puute.
+
+Millerin sovitus luetaan **laudalta itseltään** eikä lasketa uudestaan:
+jokaiselle kaupungille tiedetään sekä lon/lat että valmis x/y, joten
+skaalan saa pienimmän neliösumman sovituksella. Mediaanivirhe 0,0
+yksikköä. Näin työkalu ei voi ajautua eri mittakaavaan kuin lauta,
+vaikka se lukee aivan toista lähdettä kuin tuontityökalu.
+
+### Ahne säännöllinen lauseke söi koko tiedoston
+
+Kirjoitusvaiheen `/const COUNTRY_SHAPES = (\{.*\});/s` nappasi
+viimeiseen `};`-pariin asti — siis koko loppupaketin. `JSON.parse`
+kaatui siihen, eikä mitään kirjoitettu. **Vika näkyi vain siinä, että
+tiedoston koko ei muuttunut.** Rivinvaihto on oikea raja
+(`[^\n]*`), koska COUNTRY_SHAPES kirjoitetaan aina yhdelle riville.
+
+Hyvä puoli: työkalu kaatui äänekkäästi eikä kirjoittanut rikkinäistä
+tiedostoa. Huono puoli: pelkkä "0 virhettä" -tuloste olisi näyttänyt
+onnistumiselta, ellen olisi tarkistanut tiedoston kokoa.
+
+### Testi, joka ei toiminut kahdella ensimmäisellä yrityksellä
+
+Rub al-Khali oli merkitty Arabiemiirikuntiin, vaikka piste on
+keskellä Saudi-Arabiaa. Halusin testin, joka löytää tällaiset.
+
+1. **Pelkkä etäisyys** hylkäsi Riian: rannikkokaupungit on siirretty
+   lähimpään maakohtaan, ja Riika jää 40 yksikköä yksinkertaistetun
+   Latvian ulkopuolelle täysin oikein merkittynä.
+2. **Pelkkä "piste on toisessa maassa"** hylkäsi Tallinnan,
+   Dubrovnikin, Alpit ja Kilimanjaron: ne ovat rajan tuntumassa, ja
+   harvennettu raja kulkee paikoin väärältä puolelta.
+3. **Molemmat yhdessä** toimii: piste on toisen maan sisällä JA yli 60
+   yksikön päässä oman maansa rajasta. Rub al-Khali oli 84 yksikön
+   päässä.
+
+Opetus: kun mittari tuottaa vääriä hälytyksiä, kynnyksen nostaminen on
+väärä korjaus. Oikea on kysyä toista kysymystä sen rinnalle.
+
+
 ## Paketti 64: Aasian 63 artikkelia — VALMIS v188 3.8.2026
 
 Omistajan päätös: "Kirjoitathan wiki artikkelit itse vielä uudestaan.
