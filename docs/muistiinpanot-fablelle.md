@@ -692,3 +692,21 @@ vain ole olemassa.
 **99 % oikein on eri asia kuin luotettava.** Tarkistus maksoi yhden
 API-kyselyn per kuva ja poisti koko kysymyksen. Sama sääntö kuin
 merireiteissä ja kuvien iässä: kysy lähteeltä, älä päättele nimestä.
+
+## Kaksi kertaa sama päätös: en jakanut kirjoittamista (v185, v188)
+
+**[Opus]** Apurit ovat hyviä etsimään: kuvien haussa 193 ehdotusta
+194:stä osui oikeaan. Kirjoittamisen jätin itselleni sekä
+saapumisteksteissä (63 kpl) että artikkeleissa (63 kpl).
+
+Syy ei ole laatu vaan **yhtenäisyys**. Peli on kahden äänen
+vuoropuhelu, ja jos kahdeksan kirjoittajaa tuottaa kukin kahdeksan
+kaupunkia, ääni vaihtuu ryhmien rajoilla — juuri se, mistä omistaja
+valitti Wikipedian teksteissä ("tyyli vaihtelee"). Ero näkyy vasta
+kun tekstejä lukee peräkkäin, eikä yksittäistä tekstiä arvioimalla
+huomaa mitään vikaa.
+
+Mitta on nyt testissä eikä muistissa: kolme kappaletta, 600–1100
+merkkiä, ei huutomerkkejä. Uusien artikkelien pituuden mediaani on
+812 merkkiä ja vanhojen 818 — eri viikkoina kirjoitettuina.
+
