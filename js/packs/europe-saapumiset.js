@@ -464,17 +464,15 @@ export const EUROPE_SAAPUMISET = {
   },
 
   helsinki: {
-    kuvaus: 'Laiva kaartoi Kauppatorin eteen, ja kaupunki nousi merestä '
-              + 'vaaleana: keltaisia empiretaloja, vihreitä kupoleita ja '
-              + 'Tuomiokirkon portaat kuin valkoinen vuori keskellä kaikkea. '
-              + 'Torilla myytiin silakkaa ja mustikoita, hintoja huudettiin '
-              + 'kahdella kielellä, ja lokki nappasi munkin suoraan viereisen '
-              + 'miehen kädestä. Ilmassa oli suolaa ja paahdettua kahvia. '
-              + 'Sitten raitiovaunu kilisi ohi, ja minä tiesin olevani perillä.',
-    nosto: 'Isoisä kirjoitti 1873: "Helsinki on keisarikunnan siisteimpiä '
-             + 'kaupunkeja — ja puhuu ruotsia." Ruotsi oli silloin enemmistön '
-             + 'kieli. Nyt kadulla kuulee suomea, ruotsia, viroa, venäjää, '
-             + 'somalia ja arabiaa.',
+    kuvaus: 'Helsinki ei noussut merestä kerralla vaan pala palalta: ensin '
+              + 'paljas luoto, sitten graniittiranta ja lopulta Tuomiokirkko '
+              + 'valkoisena kaiken yllä. Laiva pujotteli Suomenlinnan saarten '
+              + 'välistä satamaan, ja Kauppatorilla lokit väijyivät '
+              + 'saalistaan.',
+    nosto: 'Isoisä kirjoitti: "Helsingfors on nuori pääkaupunki, joka '
+             + 'näyttää mereltä suuremmalta kuin maalta. Valkoinen kirkko '
+             + 'seisoo sen yllä kuin keisarin allekirjoitus." Keisari on '
+             + 'poissa — kirkko seisoo paikallaan.',
   },
 
   tukholma: {

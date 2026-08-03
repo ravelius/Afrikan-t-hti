@@ -11310,17 +11310,15 @@ const EUROPE_SAAPUMISET = {
   },
 
   helsinki: {
-    kuvaus: 'Laiva kaartoi Kauppatorin eteen, ja kaupunki nousi merestä '
-              + 'vaaleana: keltaisia empiretaloja, vihreitä kupoleita ja '
-              + 'Tuomiokirkon portaat kuin valkoinen vuori keskellä kaikkea. '
-              + 'Torilla myytiin silakkaa ja mustikoita, hintoja huudettiin '
-              + 'kahdella kielellä, ja lokki nappasi munkin suoraan viereisen '
-              + 'miehen kädestä. Ilmassa oli suolaa ja paahdettua kahvia. '
-              + 'Sitten raitiovaunu kilisi ohi, ja minä tiesin olevani perillä.',
-    nosto: 'Isoisä kirjoitti 1873: "Helsinki on keisarikunnan siisteimpiä '
-             + 'kaupunkeja — ja puhuu ruotsia." Ruotsi oli silloin enemmistön '
-             + 'kieli. Nyt kadulla kuulee suomea, ruotsia, viroa, venäjää, '
-             + 'somalia ja arabiaa.',
+    kuvaus: 'Helsinki ei noussut merestä kerralla vaan pala palalta: ensin '
+              + 'paljas luoto, sitten graniittiranta ja lopulta Tuomiokirkko '
+              + 'valkoisena kaiken yllä. Laiva pujotteli Suomenlinnan saarten '
+              + 'välistä satamaan, ja Kauppatorilla lokit väijyivät '
+              + 'saalistaan.',
+    nosto: 'Isoisä kirjoitti: "Helsingfors on nuori pääkaupunki, joka '
+             + 'näyttää mereltä suuremmalta kuin maalta. Valkoinen kirkko '
+             + 'seisoo sen yllä kuin keisarin allekirjoitus." Keisari on '
+             + 'poissa — kirkko seisoo paikallaan.',
   },
 
   tukholma: {
@@ -68635,10 +68633,11 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
-  { v: 208, teksti: 'Maailmankartalle pääsee myös vanhalta laudalta' },
-  { v: 208, teksti: 'Maailmankartalla näkyvät maat ja matkakirja' },
-  { v: 208, teksti: 'Maatunnukset 240 kaupungille maailmankartalla' },
-  { v: 208, teksti: 'Työhuone laski puutteita liian ankarasti' },
+  { v: 209, teksti: 'Maailmankartta korvasi vanhan maailman laudan' },
+  { v: 209, teksti: 'Maat, rajat ja matkakirja maailmankartalle' },
+  { v: 209, teksti: 'Kesken jäänyt peli siirtyy uudelle kartalle' },
+  { v: 209, teksti: 'Työhuone laski puutteita liian ankarasti' },
+  { v: 208, teksti: 'Helsingin merkintä uusiksi: kaupunki pala palalta' },
   { v: 207, teksti: 'Baltian merkinnät lyhyemmiksi ja selkeämmiksi' },
   { v: 206, teksti: 'Koko maailma yhtenä karttana: 248 kaupunkia' },
   { v: 206, teksti: 'Kartta kiertää ympäri eikä pääty reunaan' },
@@ -68714,7 +68713,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-03.208';
+const APP_VERSION = '2026-08-03.209';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
