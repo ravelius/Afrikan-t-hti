@@ -997,3 +997,38 @@ kivetyksessä oleva juova merkitsee areenan reunaa eikä amfiteatterin
 ulkomuuria, että rauniot ovat kuuden metrin eivätkä kahdeksan
 syvyydessä, ja että kahden kuvan tekijämerkintä oli vajaa. Kaikki
 kolme olisivat menneet läpi silmäilemällä.
+
+---
+
+**[Opus]** Omistaja tarkensi yhdellä lauseella: *"tämä nykyinen versio
+on aikuisille. lapsille voidaan tehdä kevennetty versio sitten
+myöhemmin."*
+
+Olin olettanut päinvastoin koko päivän. Aarteiden arviointiin
+rakensin tuomarin, joka katsoo kymmenvuotiaan silmin, ja hänen
+huomionsa ohjasivat kahta kokonaista kierrosta. Kolmas oli käynnissä
+ohjeella, joka kielsi sanat *"joita kymmenvuotias ei ymmärrä ilman
+selitystä"*.
+
+Pysäytin sen. Se oli tekemässä kokoelmasta huonompaa juuri sille
+lukijalle, jolle se on tarkoitettu.
+
+Terävin esimerkki: tuomari moitti nimeä "Kali Gandakin
+shaligram-ammoniitti" museon luettelokortiksi ja ehdotti tilalle
+"Kivi, jonka sisällä on kiertynyt kaari". Lapselle jälkimmäinen on
+parempi. Aikuiselle se on huonompi — se kiertää nimen, jonka esine
+oikeasti kantaa, eikä jätä mitään käteen.
+
+**En kysynyt kohdeyleisöä kertaakaan.** Rakensin tuomarin, annoin
+sille auktoriteetin ja annoin sen ohjata kahta kierrosta — ja koko
+ajan sen premissi oli minun keksimäni, ei omistajan sanoma.
+
+Kuvio on tuttu tästä samasta päivästä, mutta pahempi muoto: kun
+mittari tuottaa vääriä hälytyksiä, olen oppinut epäilemään mittaria.
+Tässä mittari toimi moitteettomasti. **Väärin oli se, mitä vasten
+mitattiin — ja sitä ei voi huomata mittaamalla tarkemmin.**
+
+Yksi asia ei muutu: "liian pitkä ja vaikeaselkoinen" pätee yhä.
+Vaativa teksti palkitsee lukijan, vaikeaselkoinen vain väsyttää, eikä
+aikuinenkaan lue 600 merkkiä tiheää kirjoituskonefonttia puhelimella
+mielellään.

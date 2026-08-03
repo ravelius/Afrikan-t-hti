@@ -148,3 +148,40 @@ teksti liian pitkä, katso sitä puhelimen kokoisella ruudulla.
 **Älä luota siihen, että näkyvä oire kertoo vian koon.** Päivityspalkki
 näytti käyttöliittymävialta ja oli arkkitehtuurivika. Kuvan puuttuminen
 näytti aineistopuutteelta ja oli yhden rivin ehto.
+
+---
+
+## KOHDEYLEISÖ: AIKUISET
+
+*Lisätty 3.8.2026 omistajan tarkennuksen jälkeen.*
+
+Omistaja: *"tämä nykyinen versio on aikuisille. lapsille voidaan tehdä
+kevennetty versio sitten myöhemmin."*
+
+Tämä on tärkeämpi kuin se näyttää, koska olin olettanut päinvastoin ja
+ohjannut apureita sen mukaan.
+
+**Mitä se tarkoittaa käytännössä:**
+
+| asia | lapsille | aikuisille |
+|---|---|---|
+| täsmällinen nimi | selitettävä | **arvo sinänsä** |
+| vieras sana | vältettävä | opettaa jotain |
+| eettinen epämukavuus | pehmennettävä | **koko pointti** |
+| tietotiheys | kevennettävä | kestää |
+
+**Mikä EI muutu.** "Liian pitkä ja vaikeaselkoinen" tarkoittaa yhä
+liian pitkää ja vaikeaselkoista. Aikuinenkaan ei lue 600 merkkiä
+tiheää kirjoituskonefonttia puhelimen ruudulla mielellään.
+*Vaikeaselkoinen* on eri asia kuin *vaativa*: vaativa teksti palkitsee
+lukijan, vaikeaselkoinen vain väsyttää.
+
+**Konkreettinen esimerkki siitä, mikä kääntyi väärinpäin.** Aarteiden
+arvioinnissa yksi tuomari katsoi kymmenvuotiaan silmin ja moitti
+nimeä "Kali Gandakin shaligram-ammoniitti" museon luettelokortiksi.
+Ehdotus tilalle oli "Kivi, jonka sisällä on kiertynyt kaari".
+
+Aikuiselle jälkimmäinen on huonompi. Se kiertää nimen, jonka esine
+oikeasti kantaa, eikä opeta mitään. Aloitin kolmannen kierroksen
+ohjeella, joka kielsi sanat "joita kymmenvuotias ei ymmärrä ilman
+selitystä" — ja pysäytin sen tämän tarkennuksen jälkeen.
