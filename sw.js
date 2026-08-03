@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-03.199';
+const CACHE = 'matkakirja-2026-08-03.200';
 const SHELL = [
   './',
   './index.html',
@@ -302,6 +302,32 @@ const KUVACACHE = 'matkakirja-wikikuvat-v1';
 /** Repon oma valokuva, joka haetaan vasta kun se ensi kerran näytetään. */
 const OMA_VALOKUVA = (osoite) => osoite.pathname.includes('/assets/valokuvat/');
 
+/*
+ * Työhuoneen tiedostot — sama palvelutyöntekijä, eri strategia.
+ *
+ * Miksi yksi työntekijä kahdelle sovellukselle:
+ *
+ * Palvelutyöntekijän laajuus on sen oman hakemiston polku, ja sekä peli
+ * että työhuone asuvat sivuston juuressa. Kaksi eri työntekijää samassa
+ * laajuudessa EI toimi rinnakkain: jälkimmäinen rekisteröinti korvaa
+ * edellisen. Peli ja työhuone siis vuorottelivat, ja jokainen vaihto
+ * asensi työntekijän uudelleen.
+ *
+ * Näkyvät seuraukset olivat kaksi:
+ *  1. Työhuoneessa vilkkui ikuisesti "uusi versio ladattu" -palkki,
+ *     koska asennus alkoi joka avauksella alusta.
+ *  2. Pelin offline-välimuisti tuhoutui aina kun työhuone avattiin —
+ *     ja peli on julkaistu tuote, jonka pitää käynnistyä lentokoneessa.
+ *
+ * Jälkimmäinen oli vaarallisempi eikä näkynyt mitenkään.
+ *
+ * Strategiat pysyvät erillisinä: peli välimuisti ensin (aukeaa
+ * lentokoneessa), työhuone verkko ensin (kertoo mikä pelissä juuri nyt
+ * on, ja siinä vanha tieto on pahempi kuin hidas lataus).
+ */
+const TYOHUONE = (osoite) => /(?:^|\/)tyohuone(?:[-.]|$)/.test(osoite.pathname)
+  || /\/(?:css|js)\/tyohuone-/.test(osoite.pathname);
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
@@ -369,6 +395,31 @@ self.addEventListener('fetch', (event) => {
     );
     return;
   }
+  /*
+   * Työhuone: verkko ensin, välimuisti vain turvaverkoksi.
+   *
+   * Vain onnistuneet vastaukset talteen. Ilman tätä 404-sivu jäisi
+   * koriin ja näyttäisi ikuisesti siltä, ettei tiedostoa ole — vaikka
+   * se olisi jo lisätty.
+   */
+  if (TYOHUONE(osoite)) {
+    event.respondWith((async () => {
+      try {
+        const vastaus = await fetch(event.request);
+        if (vastaus && vastaus.ok) {
+          const kopio = vastaus.clone();
+          caches.open(CACHE).then((kori) => kori.put(event.request, kopio));
+        }
+        return vastaus;
+      } catch (virhe) {
+        const talletettu = await caches.match(event.request);
+        if (talletettu) return talletettu;
+        throw virhe;
+      }
+    })());
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((hit) => {
       const network = fetch(event.request)
