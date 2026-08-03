@@ -130,8 +130,13 @@ const WORLD_MAP = {
 // start = aloituskaupunki (ei laattaa), airport = lentokenttä.
 const WORLD_CITIES = [
   { id: 'lontoo', name: 'Lontoo', x: 731.7, y: 225.9, start: true, airport: true, la: 'end', lx: -16, ly: 5,
-    // Lontoo on matkan alku ja loppu: vanhan maailman lauta on ensimmäisenä.
+    /*
+     * Lontoo on matkan alku ja loppu, ja siksi se on myös ainoa portti
+     * koko maapallon kartalle. Järjestys on tarkoituksellinen: laajin
+     * kartta ensin, sitten vanha maailma, sitten yksi maanosa.
+     */
     links: [
+      { pack: 'maailmankartta', city: 'lontoo', label: 'Koko maailma' },
       { pack: 'vanhamaailma', city: 'lontoo', label: 'Vanha maailma' },
       { pack: 'europe', city: 'lontoo', label: 'Eurooppa erikseen' },
     ] },

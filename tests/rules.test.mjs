@@ -43,7 +43,7 @@ import {
 } from '../js/ai.js';
 
 const AFRICA = packById('africa');
-const board = buildBoard(AFRICA.cities, AFRICA.edges);
+const board = buildBoard(AFRICA.cities, AFRICA.edges, AFRICA.map);
 
 /**
  * Kahden pelaajan peli testejä varten (Afrikan laudalla). Pulmat
@@ -106,7 +106,7 @@ const VOICES_DONE = new Set([
 ]);
 
 for (const pack of PACKS) {
-  const packBoard = buildBoard(pack.cities, pack.edges);
+  const packBoard = buildBoard(pack.cities, pack.edges, pack.map);
   const startCities = pack.cities.filter((c) => c.start);
   const home = startCities[0].id;
 

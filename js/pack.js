@@ -13,9 +13,19 @@ import { ASIA } from './packs/asia.js';
 import { OCEANIA } from './packs/oceania.js';
 import { SUOMI } from './packs/suomi.js';
 import { VANHA_MAAILMA } from './packs/vanhamaailma.js';
+import { MAAILMANKARTTA } from './packs/maailmankartta.js';
 
 export const PACKS = [
   MAAILMA,
+  /*
+   * Maailmankartta on koko maapallo yhtenä kiertävänä karttana: 248
+   * kaupunkia seitsemältä laudalta, yksi yhtenäinen reittiverkko.
+   *
+   * Se ei korvaa vanhaa maailmaa vielä. Kolme verkkoa yhdistyi vasta
+   * kun lisättiin seitsemän valtameriylitystä, ja sen pitää ehtiä
+   * osoittaa toimivansa ennen kuin mitään otetaan pois.
+   */
+  MAAILMANKARTTA,
   // Vanha maailma on Euroopan, Afrikan, Lähi-idän ja Aasian yhdistetty
   // kartta, ja se on maailmankartan porteista ensimmäinen vaihtoehto.
   // Neljä alkuperäistä lautaa jäävät rinnalle: niillä on kullakin oma

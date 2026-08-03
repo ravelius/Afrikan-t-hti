@@ -251,7 +251,7 @@ export class Game {
     }
     const world = {
       pack,
-      board: buildBoard(pack.cities, pack.edges),
+      board: buildBoard(pack.cities, pack.edges, pack.map),
       tokens: new Map(tokenCities.map((city, i) => [city, pile[i]])),
       revealed: new Map(), // kaupunki -> laattatyyppi
       visited: new Set(), // kaupungit, joissa on jo käyty (kokemuspisteitä varten)
@@ -1866,7 +1866,7 @@ export class Game {
       const pack = packById(id);
       game.worlds.set(pack.id, {
         pack,
-        board: buildBoard(pack.cities, pack.edges),
+        board: buildBoard(pack.cities, pack.edges, pack.map),
         tokens: new Map(w.tokens ?? []),
         revealed: new Map(w.revealed ?? []),
         // Vanhoissa tallennuksissa käyntejä ei kirjattu: jo käännetyt laatat

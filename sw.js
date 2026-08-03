@@ -16,6 +16,7 @@ const SHELL = [
   './js/wiki.js',
   './js/media.js',
   './js/packs/vanhamaailma.js',
+  './js/packs/maailmankartta.js',
   './js/packs/maailma.js',
   './js/packs/maailma-questions.js',
   './js/packs/africa.js',

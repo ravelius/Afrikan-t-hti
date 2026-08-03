@@ -56,7 +56,7 @@ function hash01(key) {
  * maareitit saavat hyvin pienen, aina samanlaisen mutkan, jotta kartta näyttää
  * käsin piirretyltä.
  */
-export function edgePolyline(edge, cityById) {
+export function edgePolyline(edge, cityById, map = null) {
   const a = cityById.get(edge.a);
   const b = cityById.get(edge.b);
   let waypoints = edge.via ?? [];
@@ -74,7 +74,35 @@ export function edgePolyline(edge, cityById) {
     });
   }
 
-  return densify([[a.x, a.y], ...waypoints, [b.x, b.y]]);
+  return densify(avaaSauma([[a.x, a.y], ...waypoints, [b.x, b.y]], map));
+}
+
+/*
+ * Kiertävällä kartalla reitti voi kulkea laudan reunan yli.
+ *
+ * Kaupungit pidetään aina välillä [0, leveys), joten Tokio on laudan
+ * oikeassa laidassa ja San Francisco vasemmassa — vaikka Tyynimeri
+ * niiden välissä on kapea. Sellaisenaan viiva kulkisi koko kartan
+ * poikki Aasian ja Euroopan yli.
+ *
+ * Tässä viiva avataan: jokainen piste siirretään kokonaisen laudan
+ * verran niin, ettei peräkkäisten pisteiden väli ylitä puolta laudasta.
+ * Lopputulos jatkuu reunan yli, ja piirtäjä toistaa kartan molemmin
+ * puolin niin että viiva näkyy siellä missä sen kuuluukin.
+ */
+function avaaSauma(pisteet, map) {
+  if (!map?.kiertava || pisteet.length < 2) return pisteet;
+  const leveys = map.width;
+  const ulos = [pisteet[0]];
+  let siirto = 0;
+  for (let i = 1; i < pisteet.length; i++) {
+    let x = pisteet[i][0] + siirto;
+    const edellinen = ulos[i - 1][0];
+    while (x - edellinen > leveys / 2) { siirto -= leveys; x -= leveys; }
+    while (x - edellinen < -leveys / 2) { siirto += leveys; x += leveys; }
+    ulos.push([x, pisteet[i][1]]);
+  }
+  return ulos;
 }
 
 /** Piste polulla suhteellisella etäisyydellä t (0–1), kaarenpituuden mukaan. */
@@ -102,7 +130,7 @@ export function pointAlong(poly, t) {
   return { x: last[0], y: last[1] };
 }
 
-export function buildBoard(cities, edges) {
+export function buildBoard(cities, edges, map = null) {
   const cityById = new Map(cities.map((c) => [c.id, c]));
   const edgeById = new Map();
   const adj = new Map(cities.map((c) => [c.id, []]));
@@ -119,7 +147,7 @@ export function buildBoard(cities, edges) {
       type: raw.type ?? 'land',
       fee: raw.type === 'sea' ? (raw.fee ?? SEA_FEE) : 0,
     };
-    edge.poly = edgePolyline(edge, cityById);
+    edge.poly = edgePolyline(edge, cityById, map);
     edgeById.set(id, edge);
     adj.get(raw.a).push(id);
     adj.get(raw.b).push(id);

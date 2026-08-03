@@ -356,13 +356,45 @@ function rajaus(poly) {
   return laatikko;
 }
 
+/*
+ * Ääriviivan janat vaakakaistoihin.
+ *
+ * Säteenheitto laskee vain ne janat, jotka ylittävät pisteen
+ * korkeuden — muut eivät voi osua. Ilman kaistoja ne silti käydään
+ * läpi: Euraasian ja Afrikan yhteinen rannikko on kymmenentuhatta
+ * pistettä, ja jokainen "onko tämä maalla" kävi ne kaikki.
+ *
+ * Rajauslaatikko ei auta tässä, koska Euraasian laatikko peittää
+ * puolet kartasta. Kaista peittää muutaman kymmenen janaa.
+ */
+const kaistat = new WeakMap();
+const KAISTAN_KORKEUS = 64;
+
+function kaistoita(poly) {
+  let indeksi = kaistat.get(poly);
+  if (indeksi) return indeksi;
+  const r = rajaus(poly);
+  const maara = Math.max(1, Math.ceil((r.y1 - r.y0) / KAISTAN_KORKEUS) + 1);
+  const listat = Array.from({ length: maara }, () => []);
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const ala = Math.min(poly[i][1], poly[j][1]);
+    const yla = Math.max(poly[i][1], poly[j][1]);
+    const k0 = Math.max(0, Math.floor((ala - r.y0) / KAISTAN_KORKEUS));
+    const k1 = Math.min(maara - 1, Math.floor((yla - r.y0) / KAISTAN_KORKEUS));
+    for (let k = k0; k <= k1; k++) listat[k].push([poly[i], poly[j]]);
+  }
+  indeksi = { y0: r.y0, listat };
+  kaistat.set(poly, indeksi);
+  return indeksi;
+}
+
 function pointInPolygon([px, py], poly) {
   const r = rajaus(poly);
   if (px < r.x0 || px > r.x1 || py < r.y0 || py > r.y1) return false;
+  const { y0, listat } = kaistoita(poly);
+  const kaista = listat[Math.min(listat.length - 1, Math.max(0, Math.floor((py - y0) / KAISTAN_KORKEUS)))];
   let inside = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const [xi, yi] = poly[i];
-    const [xj, yj] = poly[j];
+  for (const [[xi, yi], [xj, yj]] of kaista) {
     const hits = yi > py !== yj > py && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi;
     if (hits) inside = !inside;
   }
@@ -384,14 +416,103 @@ function distanceToPolygon([px, py], poly) {
 }
 
 function onLand(p, map) {
-  if (!map.outlines.some((outline) => pointInPolygon(p, outline))) return false;
+  /*
+   * Kiertävällä kartalla sama piste on olemassa kolmessa kohdassa.
+   *
+   * Ääriviivat saavat mennä laudan reunan yli — Tšukotka alkaa laudan
+   * oikeasta laidasta ja jatkuu tuhat yksikköä sen yli. Piste, joka on
+   * vasemmassa laidassa, on siis oikeasti sen ääriviivan sisällä,
+   * vaikka lukuina ne ovat kaukana toisistaan. Ja päinvastoin: reitin
+   * välipiste voi olla laudan ulkopuolella ja silti keskellä mannerta.
+   *
+   * Siksi kokeillaan kolmea kohtaa: piste itse ja sen kopiot molemmin
+   * puolin. Tavallisella kartalla tämä ei muutu miksikään.
+   */
+  const kohdat = map.kiertava
+    ? [p, [p[0] - map.width, p[1]], [p[0] + map.width, p[1]]]
+    : [p];
+  const osuma = kohdat.find((k) => map.outlines.some((outline) => pointInPolygon(k, outline)));
+  if (!osuma) return false;
   // Järvet ovat vettä maan sisällä (map.lakes) — esimerkiksi Saimaa tai Inari.
-  return !(map.lakes ?? []).some((lake) => pointInPolygon(p, lake));
+  return !(map.lakes ?? []).some((lake) => pointInPolygon(osuma, lake));
 }
 
+/*
+ * Rannikkojanat ruudukkoon, kerran laudalle.
+ *
+ * Ilman tätä `coastDistance` kävi läpi JOKAISEN rannikkopisteen joka
+ * kerta. Vanhalla maailmalla se oli siedettävää; maailmankartalla se
+ * ei ollut. Kartta on kolme kertaa isompi ja siinä on kaksi kertaa
+ * enemmän rannikkoa, ja taustapisteiden laskenta vei 22 sekuntia —
+ * sivu ei latautunut lainkaan.
+ *
+ * Ruudukko rakennetaan laiskasti ja säilytetään WeakMapissa laudan
+ * mukana, joten se katoaa laudan mukana eikä vuoda muistia.
+ */
+const RANTARUUDUKOT = new WeakMap();
+const RUUDUN_KOKO = 120;
+
+function rantaruudukko(map) {
+  let ruudukko = RANTARUUDUKOT.get(map);
+  if (ruudukko) return ruudukko;
+  const solut = new Map();
+  for (const outline of [...map.outlines, ...(map.lakes ?? [])]) {
+    for (let i = 0, j = outline.length - 1; i < outline.length; j = i++) {
+      const jana = [outline[j], outline[i]];
+      const x0 = Math.floor(Math.min(jana[0][0], jana[1][0]) / RUUDUN_KOKO);
+      const x1 = Math.floor(Math.max(jana[0][0], jana[1][0]) / RUUDUN_KOKO);
+      const y0 = Math.floor(Math.min(jana[0][1], jana[1][1]) / RUUDUN_KOKO);
+      const y1 = Math.floor(Math.max(jana[0][1], jana[1][1]) / RUUDUN_KOKO);
+      for (let x = x0; x <= x1; x++) {
+        for (let y = y0; y <= y1; y++) {
+          const avain = `${x}:${y}`;
+          let lista = solut.get(avain);
+          if (!lista) solut.set(avain, lista = []);
+          lista.push(jana);
+        }
+      }
+    }
+  }
+  ruudukko = solut;
+  RANTARUUDUKOT.set(map, ruudukko);
+  return ruudukko;
+}
+
+/** Pisteen etäisyys yhteen janaan. */
+function janaEtaisyys([px, py], [[x1, y1], [x2, y2]]) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len2 = dx * dx + dy * dy || 1;
+  const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / len2));
+  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+}
+
+/*
+ * Etäisyys lähimpään rantaan. Haku laajenee ruutukehä kerrallaan ja
+ * pysähtyy heti kun ulompi kehä ei voi enää sisältää lähempää janaa.
+ *
+ * Yläraja on kaksitoista kehää eli noin 1400 yksikköä. Kauempana
+ * merellä tarkka luku ei kiinnosta ketään: kutsujat vertaavat sitä
+ * muutaman kymmenen yksikön marginaaliin.
+ */
 function coastDistance(p, map) {
-  const shores = [...map.outlines, ...(map.lakes ?? [])];
-  return shores.reduce((best, outline) => Math.min(best, distanceToPolygon(p, outline)), Infinity);
+  const solut = rantaruudukko(map);
+  const cx = Math.floor(p[0] / RUUDUN_KOKO);
+  const cy = Math.floor(p[1] / RUUDUN_KOKO);
+  let best = Infinity;
+  for (let r = 0; r <= 12; r++) {
+    for (let x = cx - r; x <= cx + r; x++) {
+      for (let y = cy - r; y <= cy + r; y++) {
+        // Vain uusi kehä; sisemmät on jo käyty.
+        if (Math.max(Math.abs(x - cx), Math.abs(y - cy)) !== r) continue;
+        for (const jana of solut.get(`${x}:${y}`) ?? []) {
+          best = Math.min(best, janaEtaisyys(p, jana));
+        }
+      }
+    }
+    if (best <= r * RUUDUN_KOKO) return best;
+  }
+  return best;
 }
 
 /** Ruudukon pisteet merellä, riittävän kaukana rannikosta. */

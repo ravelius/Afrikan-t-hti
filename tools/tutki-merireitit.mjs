@@ -13,7 +13,7 @@ const lauta = process.argv[2] ?? 'vanhamaailma';
 const pack = PACKS.find((p) => p.id === lauta);
 if (!pack) throw new Error(`tuntematon lauta: ${lauta}`);
 
-const board = buildBoard(pack.cities, pack.edges);
+const board = buildBoard(pack.cities, pack.edges, pack.map);
 const SATAMA = 55;
 
 let maalla = 0;
