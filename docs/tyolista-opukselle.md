@@ -414,6 +414,52 @@ kuvauksesta ja luottaa vanhempaan. Silti se ei auta, jos kumpikaan
 kenttä ei mainitse alkuperäistä vuotta.
 
 
+## PÄÄTETTY: maailmankartta kiertyy, mutta paikka näkyy vain kerran
+
+Omistajan toive: "Kartta toimii nyt niin hienosti että sen voisi
+laajentaa koko maailmaan. Vierittämällä voisi liikkua loputtomasti
+pallon ympäri kumpaan tahansa suuntaan."
+
+Omistajan rajaus: **"Älä mahdollista että mikään paikka näkyy kahtena,
+rajoita zoomausmäärällä."**
+
+### Mitä se tarkoittaa
+
+Uloin zoomaustaso rajataan niin, että näkyvä alue on **enintään yhden
+maailmanleveyden** verran. Silloin kartta kiertyy vaakasuunnassa
+loputtomasti, mutta yksikään kaupunki ei koskaan ole ruudulla kahdessa
+kohdassa yhtä aikaa.
+
+```
+viewBox.width <= MAAILMAN_LEVEYS
+```
+
+### Miksi tämä on hyvä päätös, ei vain rajoitus
+
+Se ratkaisee kerralla kolme ongelmaa, jotka olisivat muuten olleet
+kolme erillistä sotkua:
+
+1. **Osumantunnistus.** Kun kaupunki on ruudulla enintään kerran,
+   napautus osuu yksiselitteisesti. Ilman rajausta olisi pitänyt
+   päättää, kumpi kopio voittaa — ja se päätös olisi ollut väärä
+   jommassakummassa reunassa.
+2. **Nimien sijoitus.** Nimet on laskettu laudan koordinaatteihin
+   (`tools/nimien-paikat.mjs`). Kahtena näkyvä nimi olisi vaatinut
+   sijoituksen laskemisen uudestaan joka kopiolle.
+3. **Nappulan löytäminen.** Lapsi puhelimella ei saa eksyä. Kun
+   maailmaa on ruudulla enintään yksi, "missä minä olen" on aina
+   yksikäsitteinen kysymys.
+
+Vaakakiertyminen on siis rullaus, ei toisto: kartan reunan yli
+mennessä sama maailma jatkuu, mutta sitä ei näy kahdesti.
+
+### Pystysuunta ei kierry
+
+Pituusaste on jaksollinen, leveysaste ei: pallolla tulee napa vastaan.
+Pystysuunnassa kartta siis loppuu, ja se on oikein — ei ole olemassa
+suuntaa, johon jatkamalla pohjoisnavalta päätyisi etelänavalle.
+
+
 ## YÖTILA — omistajan komento
 
 **"Yötila"** tarkoittaa: käynnistä niin monta apuria kuin keksit, ja
