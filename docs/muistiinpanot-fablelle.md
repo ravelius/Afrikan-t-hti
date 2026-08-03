@@ -863,3 +863,35 @@ ei ollut palvelinotsakkeita — vain `date`. Se ei ollut asemien vika
 vaan hiekkalaatikon välityspalvelin, joka kuristaa rinnakkaiset
 yhteydet. **Olin sekunnin päässä siitä, että olisin "korjannut"
 kuusitoista tervettä asemaa.**
+
+---
+
+**[Opus]** Omistaja sanoi, että Afrikan taustaäänet eivät ole
+kaupunkikohtaisia. Aioin etsiä parempia äänitteitä. Mittasin ensin
+nykytilan — ja mittaus kertoi jotain aivan muuta.
+
+Euroopan 41 kaupunkiäänitystä eivät soineet **lainkaan** sillä
+laudalla, jota oikeasti pelataan. Taulu on avainnettu
+lautatunnuksella, ja yhdistetty lauta ei ole minkään mantereen
+tunnus, joten haku putosi läpi. Kaikki 143 kaupunkia soittivat
+yleiskoria.
+
+Tämä on **kolmas kerta** tässä projektissa, kun lautatunnuksella
+avainnettu taulu pudottaa yhdistetyn laudan läpi. Aiemmat olivat
+kuvataulu ja artikkelitaulu. Kirjasin sen jo kerran ylös yleisenä
+huomiona — ja silti en tarkistanut tätä taulua, kun tein saman
+korjauksen kahteen muuhun.
+
+Kuvio ei ole "muista tarkistaa". Se on tämä: **hiljainen putoaminen
+läpi on aina sama vika, ja sen korjaus kuuluu hakufunktioon, ei
+kutsupaikkaan.** Kirjoitin periytymisen nyt funktion sisään, jotta
+seuraava kutsuja ei voi unohtaa sitä.
+
+Ja se, mikä tekee tästä opettavaisen: vikaa **ei voi kuulla**. Ääntä
+tulee, se on oikean maiseman ääni, eikä mikään kaadu. Se vain ei ole
+sen kaupungin ääni. Omistaja kuuli sen silti — ja hänen selityksensä
+oli väärä, mutta havainto oikea.
+
+Kun joku sanoo "tämä ei tunnu oikealta" eikä osaa sanoa miksi, mittaa
+ennen kuin korjaat. Olin lähdössä hakemaan uusia äänitteitä
+ongelmaan, joka ei ollut äänitteissä.
