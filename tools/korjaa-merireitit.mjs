@@ -29,7 +29,7 @@ const kuiva = process.argv.includes('--kuiva');
 const pack = PACKS.find((p) => p.id === lauta);
 if (!pack) throw new Error(`tuntematon lauta: ${lauta}`);
 
-const board = buildBoard(pack.cities, pack.edges);
+const board = buildBoard(pack.cities, pack.edges, pack.map);
 const leveys = pack.map.width;
 const korkeus = pack.map.height;
 
@@ -37,10 +37,32 @@ const korjatut = new Map();
 let kunnossa = 0;
 let jai = 0;
 
+/*
+ * Kiertävällä kartalla sauman yli kulkevaa reittiä ei voi korjata täällä.
+ *
+ * Reitinhaun vesiruudukko on suorakaide eikä tunne saumaa: kun Tokio on
+ * laudan oikeassa laidassa ja San Francisco vasemmassa, haku ei näe
+ * niiden olevan naapureita Tyynenmeren yli. Se etsii tien TOISTA kautta
+ * ja löytää sen — ensimmäisellä ajolla Tokio–San Francisco sai 1875
+ * välipistettä Intian valtameren ja Atlantin kautta.
+ *
+ * Tunnistus on yksinkertainen ja varma: jos päät ovat vaakasuunnassa yli
+ * puolen laudan päässä toisistaan, lyhyempi tie kulkee sauman yli.
+ * Nämä reitit ovat valtameriylityksiä, joiden välipisteet koostaja on
+ * jo laskenut isoympyrää pitkin.
+ */
+const ohitaSauma = (a, b) => pack.kiertava && Math.abs(a.x - b.x) > leveys / 2;
+let saumanYli = 0;
+
 for (const edge of pack.edges) {
   if (edge.type !== 'sea') continue;
   const a = board.cityById.get(edge.a);
   const b = board.cityById.get(edge.b);
+  if (ohitaSauma(a, b)) {
+    saumanYli += 1;
+    console.log(`${edge.a}-${edge.b}: sauman yli — jätetään koostajan välipisteisiin`);
+    continue;
+  }
   if (kulkeeVedessa(a, b, edge.via ?? [], isOnLand, pack.map)) { kunnossa += 1; continue; }
 
   const tulos = tarkennaMeripolku(pack.map, a, b, isOnLand, leveys, korkeus);
@@ -56,7 +78,8 @@ for (const edge of pack.edges) {
   );
 }
 
-console.log(`\n${kunnossa} kunnossa, ${korjatut.size} korjattu, ${jai} jäi.`);
+console.log(`\n${kunnossa} kunnossa, ${korjatut.size} korjattu, ${jai} jäi`
+  + (saumanYli ? `, ${saumanYli} sauman yli ohitettu` : '') + '.');
 if (!korjatut.size || kuiva) process.exit(jai ? 1 : 0);
 
 // --- kirjoitus pakettiin ---------------------------------------------------

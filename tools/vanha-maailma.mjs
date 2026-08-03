@@ -58,20 +58,51 @@ const arvo = (lippu, oletus) => {
   return i >= 0 ? argv[i + 1] : oletus;
 };
 
+/*
+ * Mistä kunkin laudan paketti ja sen alkuperäiset koordinaatit löytyvät.
+ *
+ * `tuonti` on tiedosto ja siitä poimittava vienti. `mapdata` kertoo,
+ * onko laudalla alkuperäinen lon/lat-aineisto tallessa: jos on, sitä
+ * käytetään sellaisenaan. Muuten koordinaatit käännetään takaisin
+ * laudan omasta kaavasta (KAANTEISET).
+ *
+ * Käännös on aina häviöllinen — mediaanivirhe 2 km — joten alkuperäistä
+ * käytetään aina kun se on olemassa.
+ */
+export const LAUDAT = {
+  europe: { tuonti: ['../js/packs/europe.js', 'EUROPE'] },
+  africa: { tuonti: ['../js/packs/africa.js', 'AFRICA'] },
+  middleeast: { tuonti: ['../js/packs/middleeast.js', 'MIDDLE_EAST'] },
+  asia: { tuonti: ['../js/packs/asia.js', 'ASIA'], mapdata: 'asia' },
+  northamerica: { tuonti: ['../js/packs/northamerica.js', 'NORTHAMERICA'], mapdata: 'northamerica' },
+  southamerica: { tuonti: ['../js/packs/southamerica.js', 'SOUTHAMERICA'], mapdata: 'southamerica' },
+  oceania: { tuonti: ['../js/packs/oceania.js', 'OCEANIA'], mapdata: 'oceania' },
+};
+
+/** Vanha maailma: neljä lautaa, jotka yhdistettiin ensimmäisenä. */
+export const VANHA_MAAILMA = ['europe', 'africa', 'middleeast', 'asia'];
+
+/** Koko maailma: kaikki laudat, joilla on oma maantieteensä. */
+export const KOKO_MAAILMA = [...VANHA_MAAILMA, 'northamerica', 'southamerica', 'oceania'];
+
+/** Laudan alkuperäinen lon/lat-aineisto, jos sellainen on. */
+function mapdata(id) {
+  const nimi = LAUDAT[id]?.mapdata;
+  if (!nimi) return null;
+  return JSON.parse(readFileSync(join(JUURI, `tools/mapdata/${nimi}.json`), 'utf8'));
+}
+
 /**
- * Neljä lähdepakettia. Tuodaan tiedostoittain eikä js/pack.js:n kautta,
- * koska rekisteri lataa myös yhdistetyn paketin — ja se on näiden
+ * Lähdepaketit. Tuodaan tiedostoittain eikä js/pack.js:n kautta, koska
+ * rekisteri lataa myös yhdistetyt paketit — ja ne ovat näiden
  * työkalujen tuotos. Riippuvuus omaan tuotokseen tekisi työkalusta
  * käyttökelvottoman juuri silloin kun sitä eniten tarvitaan.
  */
-export async function lahdepaketit() {
-  const [{ EUROPE }, { AFRICA }, { MIDDLE_EAST }, { ASIA }] = await Promise.all([
-    import('../js/packs/europe.js'),
-    import('../js/packs/africa.js'),
-    import('../js/packs/middleeast.js'),
-    import('../js/packs/asia.js'),
-  ]);
-  return [EUROPE, AFRICA, MIDDLE_EAST, ASIA];
+export async function lahdepaketit(laudat = VANHA_MAAILMA) {
+  return Promise.all(laudat.map(async (id) => {
+    const [polku, vienti] = LAUDAT[id].tuonti;
+    return (await import(polku))[vienti];
+  }));
 }
 
 // --- projektio ---------------------------------------------------------------
@@ -217,6 +248,75 @@ export function sovita(ryhmat, { leveys = 4000, marginaali = 40 } = {}) {
   };
 }
 
+/*
+ * Sovitus koko maapallolle, kun kartan on kierrettävä ympäri.
+ *
+ * Ero `sovita`an on ratkaiseva. `sovita` venyttää kartan sisällön
+ * mukaan: leveys on se, mihin läntisin ja itäisin piste sattuvat
+ * osumaan. Kiertävällä kartalla se ei käy — jos laudan leveys ei ole
+ * TARKALLEEN 360 astetta, sauma ei kohtaa itseään, ja kartan reunassa
+ * olisi joko rako tai päällekkäisyys.
+ *
+ * Siksi leveys annetaan ja se tarkoittaa aina täyttä kierrosta.
+ *
+ * Pituusasteet mitataan lon0:sta itään päin ja kierretään välille
+ * [0, leveys). Yksikään piste ei siis putoa laudan ulkopuolelle
+ * vaakasuunnassa. Rannikot, jotka kulkevat sauman yli, jäävät
+ * roikkumaan reunan yli — se on tarkoitus: piirtäjä toistaa kartan
+ * molemmin puolin, jolloin ylivuoto osuu naapurikopioon.
+ *
+ * Korkeus rajataan annettuihin leveysasteisiin eikä aineiston mukaan:
+ * Miller venyttää navat äärettömiin, eikä 85. leveysasteella ole
+ * yhtään kaupunkia.
+ */
+export function sovitaMaailma({ leveys = 12000, lon0 = -30, etela = -58, pohjoinen = 74 } = {}) {
+  const KIERROS = 2 * Math.PI;
+  const skaala = leveys / KIERROS;
+  const yPohjoinen = miller.eteen(0, pohjoinen)[1];
+  const yEtela = miller.eteen(0, etela)[1];
+  // Pituusasteen matka lon0:sta itään, kierrettynä yhteen kierrokseen.
+  const kaari = (lon) => {
+    const d = (lon - lon0) * RAD;
+    return ((d % KIERROS) + KIERROS) % KIERROS;
+  };
+  const muunna = ([lon, lat]) => [
+    Number((kaari(lon) * skaala).toFixed(1)),
+    Number(((miller.eteen(0, lat)[1] - yPohjoinen) * skaala).toFixed(1)),
+  ];
+  return {
+    muunna,
+    /*
+     * Sama, mutta viivalle: peräkkäiset pisteet pidetään yhtenäisinä.
+     * Ilman tätä rannikko, joka ylittää sauman, piirtyisi vaakaviivana
+     * halki koko kartan — piste hyppäisi laidasta laitaan.
+     */
+    muunnaViiva: (pisteet) => {
+      const ulos = [];
+      let siirto = 0;
+      let edellinen = null;
+      for (const [lon, lat] of pisteet) {
+        let x = kaari(lon) * skaala;
+        if (edellinen != null) {
+          // Yli puolen maailman hyppy on sauman ylitys, ei liikettä.
+          while (x + siirto - edellinen > leveys / 2) siirto -= leveys;
+          while (x + siirto - edellinen < -leveys / 2) siirto += leveys;
+        }
+        x += siirto;
+        edellinen = x;
+        ulos.push([
+          Number(x.toFixed(1)),
+          Number(((miller.eteen(0, lat)[1] - yPohjoinen) * skaala).toFixed(1)),
+        ]);
+      }
+      return ulos;
+    },
+    korkeus: Math.round((yEtela - yPohjoinen) * skaala),
+    leveys,
+    skaala,
+    lon0,
+  };
+}
+
 // --- kaupunkien kokoaminen ---------------------------------------------------
 
 /**
@@ -224,21 +324,17 @@ export function sovita(ryhmat, { leveys = 4000, marginaali = 40 } = {}) {
  * Sama kaupunki voi olla usealla laudalla (Istanbul, Kairo, Teheran);
  * ensimmäinen esiintymä voittaa ja loput kirjataan päällekkäisiksi.
  */
-export async function kaupungit() {
-  // Lähdepaketit suoraan, EI js/pack.js:n rekisteriä: rekisteri lataa
-  // myös vanhamaailma.js:n, joka on tämän työkalun oma tuotos. Jos se
-  // on rikki tai puuttuu, työkalu ei käynnistyisi korjaamaan sitä.
-  const PACKS = await lahdepaketit();
-  const asia = JSON.parse(readFileSync(join(JUURI, 'tools/mapdata/asia.json'), 'utf8'));
+export async function kaupungit(laudat = VANHA_MAAILMA) {
+  const PACKS = await lahdepaketit(laudat);
   const ulos = new Map();
   const paallekkaiset = [];
-  for (const id of ['europe', 'africa', 'middleeast', 'asia']) {
+  for (const id of laudat) {
     const pack = PACKS.find((p) => p.id === id);
+    const alkuperainen = mapdata(id);
     for (const c of pack.cities) {
       let lonlat;
-      if (id === 'asia') {
-        // Aasialla on alkuperäinen aineisto — ei tarvitse kääntää.
-        lonlat = asia.cities[c.id];
+      if (alkuperainen) {
+        lonlat = alkuperainen.cities[c.id];
         if (!lonlat) continue;
       } else {
         lonlat = KAANTEISET[id](c.x, c.y);
@@ -264,16 +360,13 @@ export async function kaupungit() {
  * ne kaartavat rannikon ympäri vanhan laudan koordinaateissa, ja uudella
  * kartalla ne osuisivat muuten maalle.
  */
-export async function reitit() {
-  // Lähdepaketit suoraan, EI js/pack.js:n rekisteriä: rekisteri lataa
-  // myös vanhamaailma.js:n, joka on tämän työkalun oma tuotos. Jos se
-  // on rikki tai puuttuu, työkalu ei käynnistyisi korjaamaan sitä.
-  const PACKS = await lahdepaketit();
-  const asia = JSON.parse(readFileSync(join(JUURI, 'tools/mapdata/asia.json'), 'utf8'));
+export async function reitit(laudat = VANHA_MAAILMA) {
+  const PACKS = await lahdepaketit(laudat);
   const ulos = [];
   const nahdyt = new Set();
-  for (const id of ['europe', 'africa', 'middleeast', 'asia']) {
+  for (const id of laudat) {
     const pack = PACKS.find((p) => p.id === id);
+    const alkuperainen = mapdata(id);
     for (const e of pack.edges) {
       // Sama kaupunkipari voi olla kahdella laudalla (porttikaupunkien
       // ympärillä); reitti tarvitaan kerran.
@@ -282,9 +375,9 @@ export async function reitit() {
       nahdyt.add(avain);
       let via = null;
       if (e.via?.length) {
-        if (id === 'asia') {
-          // Aasialla välipisteet ovat alkuperäisinä lon/lat-pareina.
-          via = (asia.routes?.[avain] ?? asia.routes?.[`${e.a}_${e.b}`] ?? null);
+        if (alkuperainen) {
+          // Alkuperäisessä aineistossa välipisteet ovat lon/lat-pareina.
+          via = (alkuperainen.routes?.[avain] ?? alkuperainen.routes?.[`${e.a}_${e.b}`] ?? null);
         } else {
           via = e.via.map(([x, y]) => KAANTEISET[id](x, y));
         }

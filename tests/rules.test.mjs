@@ -43,7 +43,7 @@ import {
 } from '../js/ai.js';
 
 const AFRICA = packById('africa');
-const board = buildBoard(AFRICA.cities, AFRICA.edges);
+const board = buildBoard(AFRICA.cities, AFRICA.edges, AFRICA.map);
 
 /**
  * Kahden pelaajan peli testejä varten (Afrikan laudalla). Pulmat
@@ -106,7 +106,7 @@ const VOICES_DONE = new Set([
 ]);
 
 for (const pack of PACKS) {
-  const packBoard = buildBoard(pack.cities, pack.edges);
+  const packBoard = buildBoard(pack.cities, pack.edges, pack.map);
   const startCities = pack.cities.filter((c) => c.start);
   const home = startCities[0].id;
 
@@ -3212,8 +3212,49 @@ test('zoomipainikkeet toimivat kaikilla laudoilla ja ruuduilla', () => {
   // Zoomatessa keskipiste luetaan ennen tason vaihtoa, muuten kartta
   // hyppäisi laudan keskelle joka painalluksella.
   assert.match(funktio, /nykyinenKeskipiste\(\)/);
-  // Skaala tulee portaikosta eikä kiinteästä vakiosta.
-  assert.match(ui, /const skaala = yleiskuva \* this\.zoomiKerroin/);
+  // Skaala tulee portaikosta eikä kiinteästä vakiosta. Kiertävällä
+  // kartalla se kulkee vielä rajaaSkaalan läpi, jottei maailma mahtuisi
+  // ruudulle kahdesti — mutta portaikko on yhä lähde, ja se on tämän
+  // testin asia.
+  assert.match(ui, /yleiskuva \* this\.zoomiKerroin/);
+  assert.match(ui, /rajaaSkaala\(yleiskuva \* this\.zoomiKerroin/,
+    'kiertävän kartan loitonnusraja puuttuu lähikuvasta');
+});
+
+test('maailmankartta: sauman yli kulkeva reitti piirtyy yhtenäisenä', () => {
+  /*
+   * Tokio on laudan oikeassa laidassa ja San Francisco vasemmassa,
+   * vaikka Tyynimeri niiden välissä on kapea. Sellaisenaan reittiviiva
+   * kulkisi koko kartan poikki Aasian ja Euroopan yli — ja niin se
+   * kulkikin, kunnes edgePolyline oppi avaamaan sauman.
+   *
+   * Kaksi ehtoa: peräkkäiset pisteet eivät saa hypätä yli puolen laudan,
+   * ja polun on jatkuttava laudan reunan yli. Jälkimmäinen on se, mikä
+   * erottaa avatun viivan pelkästä lyhyestä viivasta.
+   */
+  const pack = PACKS.find((p) => p.id === 'maailmankartta');
+  const board = buildBoard(pack.cities, pack.edges, pack.map);
+  const edge = board.edges.find((e) => (
+    (e.a === 'tokio' && e.b === 'sanfrancisco') || (e.a === 'sanfrancisco' && e.b === 'tokio')
+  ));
+  assert.ok(edge, 'Tyynenmeren ylitys puuttuu maailmankartalta');
+  for (let i = 1; i < edge.poly.length; i++) {
+    const hyppy = Math.abs(edge.poly[i][0] - edge.poly[i - 1][0]);
+    assert.ok(hyppy < pack.map.width / 2,
+      `reittiviiva hyppää ${Math.round(hyppy)} yksikköä kohdassa ${i} — sauma ei ole auki`);
+  }
+  const laidanYli = edge.poly.some(([x]) => x > pack.map.width || x < 0);
+  assert.ok(laidanYli, 'reitti ei jatku laudan reunan yli');
+});
+
+test('maailmankartta on kiertävä ja kaupungit pysyvät laudalla', () => {
+  const pack = PACKS.find((p) => p.id === 'maailmankartta');
+  assert.equal(pack.map.kiertava, true, 'kiertava-lippu puuttuu kartan geometriasta');
+  // Kaupunkien paikkaa käytetään osumatestaukseen, joten ne EIVÄT saa
+  // mennä reunan yli vaikka rannikot ja reitit saavat.
+  for (const c of pack.cities) {
+    assert.ok(c.x >= 0 && c.x < pack.map.width, `${c.name} on laudan ulkopuolella (${c.x})`);
+  }
 });
 
 test('kartan isot kerrokset eivät käytä suodatinta', () => {

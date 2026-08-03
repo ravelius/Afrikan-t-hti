@@ -88,50 +88,75 @@ const OC_MAP = {
   ],
 };
 
-// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+/*
+ * start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+ *
+ * wiki = suomenkielisen Wikipedia-artikkelin otsikko (js/wiki.js kokeilee
+ * fi ensin, en varalla). Otsikot on tarkistettu rajapinnasta. Perth ja
+ * Darwin ovat suomeksi täsmennyssivuja, joten ne tarvitsevat tarkenteen.
+ * Kolmella pikkupaikalla — Birdsville, Coober Pedy ja Exmouth — ei ole
+ * suomenkielistä artikkelia lainkaan, joten otsikko on englanninkielinen
+ * kuten africa.js:n 'Cape Palmas'.
+ *
+ * ambience = äänimaisema; sanasto on sama kuin muilla laudoilla.
+ * Ei-ilmeiset valinnat:
+ *
+ *  - Sisämaan Australia on 'aavikko' myös silloin kun paikka on
+ *    kaivoskaupunki (Kalgoorlie, Mount Isa, Coober Pedy) tai puuton
+ *    tasanko (Nullarbor). Autiomaan tuuli on niissä sama ääni.
+ *  - Rannikon paikat jakautuvat kahtia: satamakaupungit ovat 'satama'
+ *    (Cairns, Darwin, Broome, Townsville, Hobart, Geraldton, Auckland,
+ *    Suva, Honiara, Port Vila, Nouméa, Port Moresby, Dili), kun taas
+ *    Exmouth ja Norfolk ovat 'meri' — riuttaa ja jyrkkää rantaa,
+ *    ei laituria.
+ *  - Milford Sound on 'vuoristo' eikä 'meri': vuono on kapea ja
+ *    seinämät nousevat pystyyn, joten paikka kuulostaa vuorelta.
+ *  - Sepik on 'sademetsa' (joki viidakon läpi) ja Bali samoin, kuten
+ *    Sumatra ja Borneo asia.js:ssä.
+ */
 const OC_CITIES = [
   {
-    id: 'sydney', name: 'Sydney', x: 568, y: 639, start: true, airport: true,
+    id: 'sydney', name: 'Sydney', wiki: 'Sydney', ambience: 'kaupunki', x: 568, y: 639, start: true, airport: true,
     la: 'start', lx: 18, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'sydney', label: 'Maailma-lauta' }],
   },
   {
-    id: 'perth', name: 'Perth', x: 123, y: 650, start: true, airport: true,
+    id: 'perth', name: 'Perth', wiki: 'Perth (Länsi-Australia)', ambience: 'kaupunki', x: 123, y: 650, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
   },
 
-  { id: 'melbourne', name: 'Melbourne', x: 492, y: 696, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'brisbane', name: 'Brisbane', x: 594, y: 546, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'cairns', name: 'Cairns', x: 501, y: 384, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'darwin', name: 'Darwin', x: 279, y: 329, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'adelaide', name: 'Adelaide', x: 411, y: 655, airport: true, la: 'end', lx: -16, ly: 16 },
-  { id: 'alicesprings', name: 'Alice Springs', x: 338, y: 494, la: 'start', lx: 16, ly: 5 },
-  { id: 'uluru', name: 'Uluru', x: 288, y: 528, la: 'end', lx: -16, ly: 5 },
-  { id: 'broome', name: 'Broome', x: 165, y: 427, la: 'start', lx: 16, ly: 5 },
-  { id: 'kalgoorlie', name: 'Kalgoorlie', x: 186, y: 620, la: 'middle', lx: 0, ly: -22 },
-  { id: 'townsville', name: 'Townsville', x: 526, y: 439, la: 'start', lx: 16, ly: 5 },
-  { id: 'hobart', name: 'Hobart', x: 518, y: 778, la: 'start', lx: 16, ly: 5 },
-  { id: 'nullarbor', name: 'Nullarbor', x: 297, y: 615, la: 'middle', lx: 0, ly: 28 },
-  { id: 'birdsville', name: 'Birdsville', x: 416, y: 522, la: 'start', lx: 16, ly: 5 },
-  { id: 'exmouth', name: 'Exmouth', x: 73, y: 513, la: 'start', lx: 16, ly: 5 },
-  { id: 'mountisa', name: 'Mount Isa', x: 414, y: 444, la: 'end', lx: -16, ly: 5 },
-  { id: 'cooberpedy', name: 'Coober Pedy', x: 357, y: 573, la: 'start', lx: 16, ly: -6 },
-  { id: 'geraldton', name: 'Geraldton', x: 88, y: 594, la: 'end', lx: -16, ly: 5 },
-  { id: 'portmoresby', name: 'Port Moresby', x: 523, y: 265, la: 'start', lx: 16, ly: 5 },
-  { id: 'sepik', name: 'Sepik', x: 463, y: 190, la: 'middle', lx: 0, ly: -22 },
-  { id: 'honiara', name: 'Honiara', x: 722, y: 281, la: 'start', lx: 16, ly: 5 },
-  { id: 'portvila', name: 'Port Vila', x: 829, y: 426, la: 'start', lx: 16, ly: 5 },
-  { id: 'noumea', name: 'Nouméa', x: 791, y: 489, la: 'start', lx: 16, ly: 5 },
-  { id: 'norfolk', name: 'Norfolk', x: 795, y: 594, la: 'start', lx: 16, ly: 5 },
-  { id: 'suva', name: 'Suva', x: 970, y: 454, la: 'end', lx: -16, ly: 20 },
-  { id: 'auckland', name: 'Auckland', x: 857, y: 729, airport: true, la: 'start', lx: 16, ly: -6 },
-  { id: 'wellington', name: 'Wellington', x: 845, y: 795, la: 'start', lx: 16, ly: 5 },
-  { id: 'christchurch', name: 'Christchurch', x: 801, y: 830, la: 'start', lx: 16, ly: 12 },
-  { id: 'milfordsound', name: 'Milford Sound', x: 746, y: 842, la: 'end', lx: -16, ly: 5 },
-  { id: 'dili', name: 'Dili', x: 191, y: 280, la: 'middle', lx: 0, ly: -22 },
+  { id: 'melbourne', name: 'Melbourne', wiki: 'Melbourne', ambience: 'kaupunki', x: 492, y: 696, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'brisbane', name: 'Brisbane', wiki: 'Brisbane', ambience: 'kaupunki', x: 594, y: 546, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'cairns', name: 'Cairns', wiki: 'Cairns', ambience: 'satama', x: 501, y: 384, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'darwin', name: 'Darwin', wiki: 'Darwin (Australia)', ambience: 'satama', x: 279, y: 329, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'adelaide', name: 'Adelaide', wiki: 'Adelaide', ambience: 'kaupunki', x: 411, y: 655, airport: true, la: 'end', lx: -16, ly: 16 },
+  { id: 'alicesprings', name: 'Alice Springs', wiki: 'Alice Springs', ambience: 'aavikko', x: 338, y: 494, la: 'start', lx: 16, ly: 5 },
+  { id: 'uluru', name: 'Uluru', wiki: 'Uluru', ambience: 'aavikko', x: 288, y: 528, la: 'end', lx: -16, ly: 5 },
+  { id: 'broome', name: 'Broome', wiki: 'Broome', ambience: 'satama', x: 165, y: 427, la: 'start', lx: 16, ly: 5 },
+  { id: 'kalgoorlie', name: 'Kalgoorlie', wiki: 'Kalgoorlie', ambience: 'aavikko', x: 186, y: 620, la: 'middle', lx: 0, ly: -22 },
+  { id: 'townsville', name: 'Townsville', wiki: 'Townsville', ambience: 'satama', x: 526, y: 439, la: 'start', lx: 16, ly: 5 },
+  { id: 'hobart', name: 'Hobart', wiki: 'Hobart', ambience: 'satama', x: 518, y: 778, la: 'start', lx: 16, ly: 5 },
+  { id: 'nullarbor', name: 'Nullarbor', wiki: 'Nullarborin tasanko', ambience: 'aavikko', x: 297, y: 615, la: 'middle', lx: 0, ly: 28 },
+  { id: 'birdsville', name: 'Birdsville', wiki: 'Birdsville', ambience: 'aavikko', x: 416, y: 522, la: 'start', lx: 16, ly: 5 },
+  { id: 'exmouth', name: 'Exmouth', wiki: 'Exmouth, Western Australia', ambience: 'meri', x: 73, y: 513, la: 'start', lx: 16, ly: 5 },
+  { id: 'mountisa', name: 'Mount Isa', wiki: 'Mount Isa', ambience: 'aavikko', x: 414, y: 444, la: 'end', lx: -16, ly: 5 },
+  { id: 'cooberpedy', name: 'Coober Pedy', wiki: 'Coober Pedy', ambience: 'aavikko', x: 357, y: 573, la: 'start', lx: 16, ly: -6 },
+  { id: 'geraldton', name: 'Geraldton', wiki: 'Geraldton', ambience: 'satama', x: 88, y: 594, la: 'end', lx: -16, ly: 5 },
+  { id: 'portmoresby', name: 'Port Moresby', wiki: 'Port Moresby', ambience: 'satama', x: 523, y: 265, la: 'start', lx: 16, ly: 5 },
+  { id: 'sepik', name: 'Sepik', wiki: 'Sepik', ambience: 'sademetsa', x: 463, y: 190, la: 'middle', lx: 0, ly: -22 },
+  { id: 'honiara', name: 'Honiara', wiki: 'Honiara', ambience: 'satama', x: 722, y: 281, la: 'start', lx: 16, ly: 5 },
+  { id: 'portvila', name: 'Port Vila', wiki: 'Port Vila', ambience: 'satama', x: 829, y: 426, la: 'start', lx: 16, ly: 5 },
+  { id: 'noumea', name: 'Nouméa', wiki: 'Nouméa', ambience: 'satama', x: 791, y: 489, la: 'start', lx: 16, ly: 5 },
+  { id: 'norfolk', name: 'Norfolk', wiki: 'Norfolkinsaari', ambience: 'meri', x: 795, y: 594, la: 'start', lx: 16, ly: 5 },
+  { id: 'suva', name: 'Suva', wiki: 'Suva', ambience: 'satama', x: 970, y: 454, la: 'end', lx: -16, ly: 20 },
+  { id: 'auckland', name: 'Auckland', wiki: 'Auckland', ambience: 'satama', x: 857, y: 729, airport: true, la: 'start', lx: 16, ly: -6 },
+  { id: 'wellington', name: 'Wellington', wiki: 'Wellington', ambience: 'kaupunki', x: 845, y: 795, la: 'start', lx: 16, ly: 5 },
+  { id: 'christchurch', name: 'Christchurch', wiki: 'Christchurch', ambience: 'kaupunki', x: 801, y: 830, la: 'start', lx: 16, ly: 12 },
+  { id: 'milfordsound', name: 'Milford Sound', wiki: 'Milford Sound', ambience: 'vuoristo', x: 746, y: 842, la: 'end', lx: -16, ly: 5 },
+  { id: 'dili', name: 'Dili', wiki: 'Dili', ambience: 'satama', x: 191, y: 280, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'bali', name: 'Bali', x: 29, y: 306, airport: true, la: 'middle', lx: 0, ly: 28,
+    id: 'bali', name: 'Bali', wiki: 'Bali', ambience: 'sademetsa', x: 29, y: 306, airport: true, la: 'middle', lx: 0, ly: 28,
     // Indonesian saariketju jatkuu lännessä Aasian laudalle.
     links: [{ pack: 'asia', city: 'jakarta', label: 'Aasian lauta' }],
   },

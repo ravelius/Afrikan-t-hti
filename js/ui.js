@@ -1252,6 +1252,21 @@ export class UI {
     }
     const pad = 12;
     const box = { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
+    /*
+     * Kiertävällä kartalla vaakarajaus on laudan leveys, ei sisällön.
+     *
+     * Sisällöstä laskettu laatikko on täällä väärä mitta: rannikot ja
+     * reitit JATKUVAT laudan reunan yli, koska sauman ylittävät viivat
+     * pidetään yhtenäisinä. Mitattuna laatikko oli 24860 yksikköä eli
+     * yli kaksi maapalloa, ja kaikki siitä johdettu meni mukana —
+     * kierron jakso, elementin leveys ja loitonnuksen raja.
+     *
+     * Pystysuunta lasketaan yhä sisällöstä: siellä ei kierretä.
+     */
+    if (this.kiertava()) {
+      box.x = 0;
+      box.w = pack.map.width;
+    }
     // Aloitusnäkymässä pergamenttia jatketaan kartan alapuolelle, jotta
     // avausteksti mahtuu siihen ja lauta nousee ruudun yläreunaan. Näkymä
     // keskittää laatikon, joten alaosan kasvattaminen nostaa karttaa ylös.
@@ -1349,6 +1364,29 @@ export class UI {
    * mahdollisimman suurena. Kartta on staattinen: sitä ei zoomata eikä
    * raahata, joten kaikki on aina esillä.
    */
+  /** Kiertääkö tämän laudan kartta ympäri? */
+  kiertava() {
+    return this.game?.pack?.map?.kiertava === true;
+  }
+
+  /*
+   * Pienin sallittu mittakaava kiertävällä kartalla.
+   *
+   * Omistajan vaatimus: yksi paikka ei saa näkyä kahdessa kohdassa
+   * samaan aikaan. Näkyvä leveys on paneelin leveys jaettuna
+   * mittakaavalla, joten mittakaava ei saa alittaa arvoa
+   * paneeli / maailman leveys.
+   *
+   * Raja tarvitaan erikseen lähikuvassa, koska siellä mittakaava
+   * lasketaan KORKEUDEN mukaan. Leveässä ja matalassa ikkunassa
+   * (2400 x 420) korkeus kutistaa mittakaavan niin pieneksi, että
+   * maailma mahtui ruudulle kahdesti — mitattu, ei arvattu.
+   */
+  rajaaSkaala(skaala, paneW, box) {
+    if (!this.kiertava()) return skaala;
+    return Math.max(skaala, paneW / box.w);
+  }
+
   fitViewBox() {
     const pane = this.svg.parentElement;
     const w = pane.clientWidth;
@@ -1364,7 +1402,20 @@ export class UI {
     // ruudulla leveys rajoittaa, kaista jää nollaan eikä asettelu muutu.
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     const kaista = !alkuun && w / box.w > h / box.h ? Math.min(h * 0.2, rem * 7) : 0;
-    const scale = Math.min(w / box.w, (h - kaista) / box.h);
+    /*
+     * Loitonnuksen raja kiertävällä kartalla (omistajan vaatimus): yksi
+     * paikka ei saa näkyä kahdessa kohdassa samaan aikaan.
+     *
+     * Näkyvä leveys on w / scale, joten se ei saa ylittää laudan
+     * leveyttä. Ilman rajaa leveä ja matala ikkuna teki juuri sen:
+     * korkeus rajoitti mittakaavaa, ja 2000 x 400 pikselin ikkunaan
+     * olisi mahtunut kaksi maapalloa vierekkäin.
+     *
+     * Raja leikkaa pystysuunnasta eikä vaakasuunnasta — kartan ylä- ja
+     * alalaidassa on merta, kaupungit ovat keskellä.
+     */
+    let scale = Math.min(w / box.w, (h - kaista) / box.h);
+    if (this.kiertava()) scale = Math.max(scale, w / box.w);
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
@@ -1451,7 +1502,7 @@ export class UI {
     // teksti on jo väistynyt, joten koko korkeus on laudan käytössä.
     const laudanKorkeus = box.h / (1 + INTRO_SPACE);
     const yleiskuva = Math.min(paneW / box.w, paneH / box.h);
-    const skaala = yleiskuva * ALOITUS_ZOOM;
+    const skaala = this.rajaaSkaala(yleiskuva * ALOITUS_ZOOM, paneW, box);
     const leveys = Math.round(box.w * skaala);
     // Kartta täyttää paneelin myös pystysuunnassa. Näkymä rajataan
     // kaupunkien korkeudelle eikä laudan keskelle: maailmankartan ylä-
@@ -1459,16 +1510,22 @@ export class UI {
     // yhtään napautettavaa kohdetta eikä mannerta (omistajan havainto).
     const nakyvaKorkeus = paneH / skaala;
     const vy = this.kaupunkienKeskiY(box, laudanKorkeus) - nakyvaKorkeus / 2;
-    this.svg.setAttribute('viewBox', `${box.x} ${vy} ${box.w} ${nakyvaKorkeus}`);
-    this.svg.style.width = `${leveys}px`;
+    // Kiertävällä kartalla yksi ruudullinen yli laudan leveyden: se on
+    // kaistale, jonka <use>-kopio täyttää kun vieritys kiertyy ympäri.
+    const yliLeveys = this.kiertava() ? Math.ceil(paneW) : 0;
+    const nakyvaYks = box.w + yliLeveys / skaala;
+    this.svg.setAttribute('viewBox', `${box.x} ${vy} ${nakyvaYks} ${nakyvaKorkeus}`);
+    this.svg.style.width = `${leveys + yliLeveys}px`;
     this.svg.style.height = `${Math.round(nakyvaKorkeus * skaala)}px`;
     this.svg.style.flex = '0 0 auto';
     this.svg.style.alignSelf = 'center';
-    this.viewBoxSize = { vw: box.w, vh: nakyvaKorkeus };
+    this.viewBoxSize = { vw: nakyvaYks, vh: nakyvaKorkeus };
     this.zoomYlaReuna = vy;
     this.zoomSkaala = skaala;
     // Panorointivara: kuinka paljon karttaa jää ruudun ulkopuolelle.
-    this.panVara = Math.max(0, leveys - paneW);
+    // Kiertävällä kartalla varaa ei ole — on jakso, joka kiertää ympäri.
+    this.panJakso = this.kiertava() ? leveys : 0;
+    this.panVara = this.kiertava() ? 0 : Math.max(0, leveys - paneW);
     // Aloituskohta: sama kohta kartasta, joka oli keskellä yleiskuvassa.
     if (this.panX == null) {
       const keskiX = this.zoomAnkkuri ?? box.x + box.w / 2;
@@ -1483,7 +1540,20 @@ export class UI {
    * liikutaan vain vaakasuunnassa (panVaraY = 0), mantereella molempiin.
    */
   asetaPan(x, y = this.panY ?? 0) {
-    this.panX = Math.min(0, Math.max(-(this.panVara ?? 0), x));
+    if (this.panJakso) {
+      /*
+       * Kiertävällä kartalla vieritys ei pysähdy vaan kiertää ympäri.
+       *
+       * Arvo pidetään välillä [-jakso, 0). Kun se ylittää rajan, se
+       * hyppää tasan yhden laudan leveyden verran — ja koska sisällöstä
+       * on kopio juuri sen päässä, ruudulla ei muutu mikään. Sauma on
+       * olemassa vain lukuna.
+       */
+      const j = this.panJakso;
+      this.panX = ((x % j) + j) % j - j;
+    } else {
+      this.panX = Math.min(0, Math.max(-(this.panVara ?? 0), x));
+    }
     this.panY = Math.min(0, Math.max(-(this.panVaraY ?? 0), y));
     this.svg.style.transform =
       `translate3d(${this.panX.toFixed(1)}px, ${this.panY.toFixed(1)}px, 0)`;
@@ -1849,6 +1919,7 @@ export class UI {
     this.panY = null;
     this.panVara = 0;
     this.panVaraY = 0;
+    this.panJakso = 0;
     this.svg.style.transition = '';
     this.svg.style.transform = '';
     this.svg.style.width = '';
@@ -1908,7 +1979,7 @@ export class UI {
     const yleiskuva = Math.min(paneW / box.w, paneH / box.h);
     // Zoomitaso tulee portaikosta: automaattinen saapumiszoom käyttää
     // oletusporrasta, painikkeet siirtävät sitä.
-    const skaala = yleiskuva * this.zoomiKerroin;
+    const skaala = this.rajaaSkaala(yleiskuva * this.zoomiKerroin, paneW, box);
     // Laudan eteläpuolelle varataan tilaa alarivin nappien verran, jotta
     // eteläisimmät kaupungit saa panoroitua niiden alta pois (omistajan
     // havainto: Kreeta ja Ateena jäivät nappien alle). Tila ei muuta
@@ -1924,17 +1995,26 @@ export class UI {
     const pohjoisJatko = (paneH * YLAKAISTA) / skaala;
     const ylaReuna = box.y - pohjoisJatko;
     const korkeusYks = box.h + pohjoisJatko + etelaJatko;
-    const leveys = Math.round(box.w * skaala);
+    /*
+     * Kiertävällä kartalla piirretään yksi ruudullinen yli laudan
+     * leveyden. Se on juuri se kaistale, jonka <use>-kopio täyttää, ja
+     * juuri se mitä tarvitaan kun vieritys on kiertymässä ympäri.
+     */
+    const jakso = Math.round(box.w * skaala);
+    const yliLeveys = this.kiertava() ? Math.ceil(paneW) : 0;
+    const nakyvaYks = box.w + yliLeveys / skaala;
+    const leveys = jakso + yliLeveys;
     const korkeus = Math.round(korkeusYks * skaala);
-    this.svg.setAttribute('viewBox', `${box.x} ${ylaReuna} ${box.w} ${korkeusYks}`);
+    this.svg.setAttribute('viewBox', `${box.x} ${ylaReuna} ${nakyvaYks} ${korkeusYks}`);
     this.svg.style.width = `${leveys}px`;
     this.svg.style.height = `${korkeus}px`;
     this.svg.style.flex = '0 0 auto';
     this.svg.style.alignSelf = 'flex-start';
-    this.viewBoxSize = { vw: box.w, vh: korkeusYks };
+    this.viewBoxSize = { vw: nakyvaYks, vh: korkeusYks };
     this.zoomSkaala = skaala;
     this.zoomYlaReuna = ylaReuna;
-    this.panVara = Math.max(0, leveys - paneW);
+    this.panJakso = this.kiertava() ? jakso : 0;
+    this.panVara = this.kiertava() ? 0 : Math.max(0, leveys - paneW);
     this.panVaraY = Math.max(0, korkeus - paneH);
     if (this.panX == null || this.panY == null) {
       const kohde = this.zoomKohde ?? { x: box.x + box.w / 2, y: box.y + box.h / 2 };
@@ -2212,7 +2292,7 @@ export class UI {
 
     pane.addEventListener('pointerdown', (e) => {
       if (!this.aloitusZoom && !this.mannerZoom) return;
-      if (!this.panVara && !this.panVaraY) return;
+      if (!this.panVara && !this.panVaraY && !this.panJakso) return;
       alku = {
         x: e.clientX, y: e.clientY, pan: this.panX ?? 0, panY: this.panY ?? 0, id: e.pointerId,
       };
@@ -2467,6 +2547,34 @@ export class UI {
     const root = el('g', { class: 'board-root' }, this.svg);
     const svg = { appendChild: (node) => root.appendChild(node) };
     this.boardRoot = root;
+
+    /*
+     * Kiertävä kartta: yksi kopio koko sisällöstä laudan leveyden verran
+     * oikealle.
+     *
+     * <use> viittaa elävään ryhmään, joten kopio seuraa kaikkea mitä
+     * alkuperäisessä tapahtuu — myös bittikarttaruutuja, laattoja ja
+     * nappulaa — ilman että mitään piirretään toiseen kertaan. Kopiosta
+     * ei voi napauttaa mitään, koska tapahtuma osuisi <use>-elementtiin
+     * eikä sen sisältöön; siksi napautettavat kohderenkaat monistetaan
+     * erikseen oikeina elementteinä (piirraKohteet).
+     *
+     * Vain oikealle: vieritys pidetään välillä [-leveys, 0), jolloin
+     * näkyvä alue on aina [0, leveys + ruudullinen]. Vasemmalle
+     * puolelle ei siis koskaan katsota.
+     */
+    if (this.kiertava()) {
+      root.setAttribute('id', 'lauta-sisalto');
+      const kopio = el('use', {
+        class: 'lauta-kierto',
+        transform: `translate(${pack.map.width}, 0)`,
+        'pointer-events': 'none',
+      }, this.svg);
+      kopio.setAttribute('href', '#lauta-sisalto');
+      this.laudanKierto = kopio;
+    } else {
+      this.laudanKierto = null;
+    }
 
     /*
      * Kartan raskas, muuttumaton osa omaan ryhmäänsä.
@@ -2791,17 +2899,19 @@ export class UI {
       // riittää olla valitsematta kaupunkia.
       const zoomaa = this.zoomTarpeen() && !this.aloitusZoom;
       for (const c of game.board.cities) {
-        const g = el('g', { class: 'target' }, this.targetLayer);
-        el('circle', { cx: c.x, cy: c.y, r: 34, class: 'target-hit' }, g);
-        el('circle', {
-          cx: c.x,
-          cy: c.y,
-          r: c.start ? 27 : 22,
-          class: 'target-ring pick',
-        }, g);
-        g.addEventListener('click', () => {
-          if (!zoomaa) this.doPickStart(c);
-        });
+        for (const x of this.kiertoKohdat(c.x)) {
+          const g = el('g', { class: 'target' }, this.targetLayer);
+          el('circle', { cx: x, cy: c.y, r: 34, class: 'target-hit' }, g);
+          el('circle', {
+            cx: x,
+            cy: c.y,
+            r: c.start ? 27 : 22,
+            class: 'target-ring pick',
+          }, g);
+          g.addEventListener('click', () => {
+            if (!zoomaa) this.doPickStart(c);
+          });
+        }
       }
       return;
     }
@@ -2814,17 +2924,16 @@ export class UI {
       for (const dest of game.airportDestinations()) {
         const city = game.board.cityById.get(dest);
         if (!city) continue;
-        const g = el('g', { class: 'target' }, this.targetLayer);
-        el('circle', { cx: city.x, cy: city.y, r: 34, class: 'target-hit' }, g);
-        el('circle', { cx: city.x, cy: city.y, r: 25, class: 'target-ring lento' }, g);
-        const merkki = el('text', {
-          x: city.x,
-          y: city.y - 33,
-          class: 'lento-kohde-merkki',
-          'text-anchor': 'middle',
-        }, g);
-        merkki.textContent = '✈';
-        g.addEventListener('click', () => this.doFly(dest));
+        for (const x of this.kiertoKohdat(city.x)) {
+          const g = el('g', { class: 'target' }, this.targetLayer);
+          el('circle', { cx: x, cy: city.y, r: 34, class: 'target-hit' }, g);
+          el('circle', { cx: x, cy: city.y, r: 25, class: 'target-ring lento' }, g);
+          const merkki = el('text', {
+            x, y: city.y - 33, class: 'lento-kohde-merkki', 'text-anchor': 'middle',
+          }, g);
+          merkki.textContent = '✈';
+          g.addEventListener('click', () => this.doFly(dest));
+        }
       }
       return;
     }
@@ -2832,16 +2941,34 @@ export class UI {
     if (game.phase !== 'move' || game.player.isBot) return;
     for (const opt of game.moveOptions()) {
       const { x, y } = pixelOf(game.board, opt.pos);
-      const g = el('g', { class: 'target' }, this.targetLayer);
-      el('circle', { cx: x, cy: y, r: 30, class: 'target-hit' }, g);
-      el('circle', {
-        cx: x,
-        cy: y,
-        r: opt.city ? 22 : 14,
-        class: opt.city ? 'target-ring' : 'target-ring far',
-      }, g);
-      g.addEventListener('click', () => this.doMove(opt.key));
+      for (const kx of this.kiertoKohdat(x)) {
+        const g = el('g', { class: 'target' }, this.targetLayer);
+        el('circle', { cx: kx, cy: y, r: 30, class: 'target-hit' }, g);
+        el('circle', {
+          cx: kx,
+          cy: y,
+          r: opt.city ? 22 : 14,
+          class: opt.city ? 'target-ring' : 'target-ring far',
+        }, g);
+        g.addEventListener('click', () => this.doMove(opt.key));
+      }
     }
+  }
+
+  /*
+   * Napautettavan kohdan x-koordinaatit.
+   *
+   * Kartan sisällöstä on kiertävällä laudalla <use>-kopio laudan
+   * leveyden verran oikealla, mutta kopiosta ei voi napauttaa mitään:
+   * tapahtuma osuisi <use>-elementtiin eikä sen sisältöön. Siksi
+   * napautettavat renkaat piirretään oikeina elementteinä molempiin
+   * kohtiin. Niitä on korkeintaan muutama kymmenen, joten hinta on
+   * olematon — ja ilman tätä oikeaan laitaan kiertynyt kaupunki näyttää
+   * napautettavalta mutta ei ole sitä.
+   */
+  kiertoKohdat(x) {
+    if (!this.kiertava()) return [x];
+    return [x, x + this.game.pack.map.width];
   }
 
   /** Pelinappula: varjo, vaalea kehys, pelaajan väri ja kiilto. */

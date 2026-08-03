@@ -1,7 +1,20 @@
 // Vanha maailma: Eurooppa, Afrikka, Lähi-itä ja Aasia yhtenä karttana.
 //
-// TÄMÄ TIEDOSTO ON KONEEN KIRJOITTAMA. Älä muokkaa käsin —
-// aja `node tools/tee-vanhamaailma.mjs` uudelleen.
+// TÄMÄ TIEDOSTO ON KONEEN KIRJOITTAMA. Älä muokkaa käsin.
+//
+// MUTTA ÄLÄ MYÖSKÄÄN aja pelkkää koostajaa: se pyyhkii kolme jälkivaihetta.
+// Koko ketju on
+//
+//   1. NE_LAND=... node tools/tee-vanhamaailma.mjs
+//   2. node tools/puuttuvat-saaret.mjs        (Korsika, Sardinia ja muut
+//                                              kaupungittomat saaret takaisin)
+//   3. node tools/satamat-rannalle.mjs vanhamaailma
+//   4. node tools/korjaa-merireitit.mjs vanhamaailma
+//
+// Vaiheet 2-4 kirjoittavat tähän tiedostoon koostajan jälkeen. Pelkkä
+// vaihe 1 hävittää neljä saarta, siirtää Madagaskarin ja Mosambikin pois
+// rannalta ja palauttaa merireitit kulkemaan maan yli. Tarkistettu
+// ajamalla: ero on todellinen, ei teoreettinen.
 //
 // Koordinaatisto on 7200 x 4694 yksikköä Millerin
 // lieriöprojektiossa. Miller valittiin, koska alue ulottuu

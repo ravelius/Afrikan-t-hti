@@ -81,58 +81,80 @@ const NA_MAP = {
   ],
 };
 
-// start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+/*
+ * start = aloituskaupunki (ei laattaa), airport = lentokenttä.
+ *
+ * wiki = suomenkielisen Wikipedia-artikkelin otsikko. Peli hakee sen
+ * tiivistelmän ja kuvan; js/wiki.js kokeilee ensin suomea ja sitten
+ * englantia. Otsikot on tarkistettu rajapinnasta, koska väärä otsikko
+ * ei näy koodissa eikä testeissä vaan vasta pelaajalle.
+ *
+ * ambience = kaupungin äänimaisema. Sanasto on sama kuin muilla
+ * laudoilla: kaupunki, satama, meri, aavikko, savanni, sademetsa,
+ * pohjoinen, metsa, ylanko, vuoristo, basaari. Valinta on makuasia,
+ * eikä sitä voi hakea mistään. Suurin osa on ilmeinen; nämä eivät:
+ *
+ *  - Yellowstone ja Appalakit ovat 'metsa' eivätkä 'vuoristo': kumpikin
+ *    on metsän peittämä, eikä pelaaja kuule niissä paljasta huippua.
+ *  - Mount Rushmore ja Santa Fe ovat 'ylanko' — avointa korkeaa maata,
+ *    ei louhikkoa. Grand Canyon on 'aavikko', koska rotko on kuiva.
+ *  - Alaskan, Yukonin, Nunavutin, Grönlannin ja Labradorin paikat ovat
+ *    'pohjoinen'. Sanaa ei ole muilla laudoilla montaa, mutta se on
+ *    juuri tämän laudan pohjoisreunan ääni.
+ *  - Havaiji ja Bermuda ovat 'meri' eivätkä 'satama': saarille tullaan
+ *    laivalla, mutta kumpikaan ei ole satamakaupunki.
+ */
 const NA_CITIES = [
   {
-    id: 'newyork', name: 'New York', x: 818, y: 507, start: true, airport: true,
+    id: 'newyork', name: 'New York', wiki: 'New York', ambience: 'kaupunki', x: 818, y: 507, start: true, airport: true,
     la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Maailma-laudalla.
     links: [{ pack: 'maailma', city: 'newyork', label: 'Maailma-lauta' }],
   },
   {
-    id: 'sanfrancisco', name: 'San Francisco', x: 420, y: 546, start: true, airport: true,
+    id: 'sanfrancisco', name: 'San Francisco', wiki: 'San Francisco', ambience: 'satama', x: 420, y: 546, start: true, airport: true,
     la: 'end', lx: -18, ly: 5,
   },
 
-  { id: 'nome', name: 'Nome', x: 304, y: 153, la: 'start', lx: 16, ly: 5 },
-  { id: 'anchorage', name: 'Anchorage', x: 343, y: 234, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'whitehorse', name: 'Whitehorse', x: 414, y: 278, la: 'middle', lx: 0, ly: 28 },
-  { id: 'yellowknife', name: 'Yellowknife', x: 530, y: 290, la: 'middle', lx: 0, ly: -22 },
-  { id: 'vancouver', name: 'Vancouver', x: 447, y: 422, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'yellowstone', name: 'Yellowstone', x: 527, y: 493, la: 'end', lx: -16, ly: 5 },
-  { id: 'mountrushmore', name: 'Mount Rushmore', x: 586, y: 489, la: 'middle', lx: -14, ly: -24 },
-  { id: 'winnipeg', name: 'Winnipeg', x: 629, y: 439, la: 'middle', lx: 0, ly: -22 },
-  { id: 'churchill', name: 'Churchill', x: 644, y: 338, la: 'end', lx: -16, ly: 5 },
-  { id: 'iqaluit', name: 'Iqaluit', x: 750, y: 281, la: 'start', lx: 16, ly: 5 },
-  { id: 'nuuk', name: 'Nuuk', x: 852, y: 204, la: 'end', lx: -16, ly: 5 },
-  { id: 'labrador', name: 'Labrador', x: 863, y: 343, la: 'end', lx: -16, ly: 5 },
-  { id: 'stjohns', name: 'St. John’s', x: 926, y: 372, la: 'end', lx: -16, ly: 18 },
-  { id: 'halifax', name: 'Halifax', x: 883, y: 436, la: 'start', lx: 16, ly: 5 },
-  { id: 'montreal', name: 'Montreal', x: 807, y: 450, la: 'middle', lx: 0, ly: -22 },
-  { id: 'toronto', name: 'Toronto', x: 769, y: 488, la: 'end', lx: -16, ly: 5 },
-  { id: 'chicago', name: 'Chicago', x: 709, y: 520, airport: true, la: 'start', lx: 16, ly: 12 },
-  { id: 'appalakit', name: 'Appalakit', x: 776, y: 556, la: 'end', lx: -16, ly: 26 },
-  { id: 'bermuda', name: 'Bermuda', x: 927, y: 566, la: 'start', lx: 16, ly: 5 },
-  { id: 'denver', name: 'Denver', x: 567, y: 550, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'santafe', name: 'Santa Fe', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
-  { id: 'grandcanyon', name: 'Grand Canyon', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
+  { id: 'nome', name: 'Nome', wiki: 'Nome', ambience: 'pohjoinen', x: 304, y: 153, la: 'start', lx: 16, ly: 5 },
+  { id: 'anchorage', name: 'Anchorage', wiki: 'Anchorage', ambience: 'pohjoinen', x: 343, y: 234, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'whitehorse', name: 'Whitehorse', wiki: 'Whitehorse', ambience: 'pohjoinen', x: 414, y: 278, la: 'middle', lx: 0, ly: 28 },
+  { id: 'yellowknife', name: 'Yellowknife', wiki: 'Yellowknife', ambience: 'pohjoinen', x: 530, y: 290, la: 'middle', lx: 0, ly: -22 },
+  { id: 'vancouver', name: 'Vancouver', wiki: 'Vancouver', ambience: 'satama', x: 447, y: 422, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'yellowstone', name: 'Yellowstone', wiki: 'Yellowstonen kansallispuisto', ambience: 'metsa', x: 527, y: 493, la: 'end', lx: -16, ly: 5 },
+  { id: 'mountrushmore', name: 'Mount Rushmore', wiki: 'Mount Rushmore', ambience: 'ylanko', x: 586, y: 489, la: 'middle', lx: -14, ly: -24 },
+  { id: 'winnipeg', name: 'Winnipeg', wiki: 'Winnipeg', ambience: 'kaupunki', x: 629, y: 439, la: 'middle', lx: 0, ly: -22 },
+  { id: 'churchill', name: 'Churchill', wiki: 'Churchill (Kanada)', ambience: 'pohjoinen', x: 644, y: 338, la: 'end', lx: -16, ly: 5 },
+  { id: 'iqaluit', name: 'Iqaluit', wiki: 'Iqaluit', ambience: 'pohjoinen', x: 750, y: 281, la: 'start', lx: 16, ly: 5 },
+  { id: 'nuuk', name: 'Nuuk', wiki: 'Nuuk', ambience: 'pohjoinen', x: 852, y: 204, la: 'end', lx: -16, ly: 5 },
+  { id: 'labrador', name: 'Labrador', wiki: 'Labrador', ambience: 'pohjoinen', x: 863, y: 343, la: 'end', lx: -16, ly: 5 },
+  { id: 'stjohns', name: 'St. John’s', wiki: 'St. John’s (Kanada)', ambience: 'satama', x: 926, y: 372, la: 'end', lx: -16, ly: 18 },
+  { id: 'halifax', name: 'Halifax', wiki: 'Halifax (Kanada)', ambience: 'satama', x: 883, y: 436, la: 'start', lx: 16, ly: 5 },
+  { id: 'montreal', name: 'Montreal', wiki: 'Montreal', ambience: 'kaupunki', x: 807, y: 450, la: 'middle', lx: 0, ly: -22 },
+  { id: 'toronto', name: 'Toronto', wiki: 'Toronto', ambience: 'kaupunki', x: 769, y: 488, la: 'end', lx: -16, ly: 5 },
+  { id: 'chicago', name: 'Chicago', wiki: 'Chicago', ambience: 'kaupunki', x: 709, y: 520, airport: true, la: 'start', lx: 16, ly: 12 },
+  { id: 'appalakit', name: 'Appalakit', wiki: 'Appalakit', ambience: 'metsa', x: 776, y: 556, la: 'end', lx: -16, ly: 26 },
+  { id: 'bermuda', name: 'Bermuda', wiki: 'Bermuda', ambience: 'meri', x: 927, y: 566, la: 'start', lx: 16, ly: 5 },
+  { id: 'denver', name: 'Denver', wiki: 'Denver', ambience: 'vuoristo', x: 567, y: 550, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'santafe', name: 'Santa Fe', wiki: 'Santa Fe (New Mexico)', ambience: 'ylanko', x: 553, y: 604, la: 'start', lx: 16, ly: 5 },
+  { id: 'grandcanyon', name: 'Grand Canyon', wiki: 'Grand Canyon', ambience: 'aavikko', x: 502, y: 583, la: 'middle', lx: 0, ly: -22 },
   {
-    id: 'losangeles', name: 'Los Angeles', x: 445, y: 594, start: true, airport: true, la: 'end', lx: -16, ly: 5,
+    id: 'losangeles', name: 'Los Angeles', wiki: 'Los Angeles', ambience: 'kaupunki', x: 445, y: 594, start: true, airport: true, la: 'end', lx: -16, ly: 5,
     links: [{ pack: 'maailma', city: 'losangeles', label: 'Maailma-lauta' }],
   },
-  { id: 'hawaii', name: 'Havaiji', x: 185, y: 628, la: 'middle', lx: 0, ly: 34 },
-  { id: 'dallas', name: 'Dallas', x: 638, y: 626, la: 'start', lx: 16, ly: 5 },
-  { id: 'neworleans', name: 'New Orleans', x: 701, y: 649, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'miami', name: 'Miami', x: 801, y: 678, airport: true, la: 'start', lx: 16, ly: 5 },
-  { id: 'santiagodecuba', name: 'Santiago de Cuba', x: 865, y: 730, la: 'middle', lx: 0, ly: 24 },
-  { id: 'sanjuan', name: 'San Juan', x: 973, y: 720, la: 'end', lx: -16, ly: 5 },
-  { id: 'monterrey', name: 'Monterrey', x: 606, y: 705, la: 'end', lx: -16, ly: 5 },
-  { id: 'mexico', name: 'Mexico City', x: 618, y: 775, airport: true, la: 'end', lx: -16, ly: 5 },
-  { id: 'merida', name: 'Mérida', x: 725, y: 765, la: 'start', lx: 16, ly: -6 },
-  { id: 'guatemala', name: 'Guatemala', x: 718, y: 824, la: 'end', lx: -16, ly: 5 },
-  { id: 'managua', name: 'Managua', x: 771, y: 847, la: 'start', lx: 14, ly: 16 },
+  { id: 'hawaii', name: 'Havaiji', wiki: 'Havaiji', ambience: 'meri', x: 185, y: 628, la: 'middle', lx: 0, ly: 34 },
+  { id: 'dallas', name: 'Dallas', wiki: 'Dallas', ambience: 'kaupunki', x: 638, y: 626, la: 'start', lx: 16, ly: 5 },
+  { id: 'neworleans', name: 'New Orleans', wiki: 'New Orleans', ambience: 'satama', x: 701, y: 649, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'miami', name: 'Miami', wiki: 'Miami', ambience: 'kaupunki', x: 801, y: 678, airport: true, la: 'start', lx: 16, ly: 5 },
+  { id: 'santiagodecuba', name: 'Santiago de Cuba', wiki: 'Santiago de Cuba', ambience: 'satama', x: 865, y: 730, la: 'middle', lx: 0, ly: 24 },
+  { id: 'sanjuan', name: 'San Juan', wiki: 'San Juan (Puerto Rico)', ambience: 'satama', x: 973, y: 720, la: 'end', lx: -16, ly: 5 },
+  { id: 'monterrey', name: 'Monterrey', wiki: 'Monterrey', ambience: 'kaupunki', x: 606, y: 705, la: 'end', lx: -16, ly: 5 },
+  { id: 'mexico', name: 'Mexico City', wiki: 'México', ambience: 'kaupunki', x: 618, y: 775, airport: true, la: 'end', lx: -16, ly: 5 },
+  { id: 'merida', name: 'Mérida', wiki: 'Mérida (Meksiko)', ambience: 'kaupunki', x: 725, y: 765, la: 'start', lx: 16, ly: -6 },
+  { id: 'guatemala', name: 'Guatemala', wiki: 'Guatemala (kaupunki)', ambience: 'kaupunki', x: 718, y: 824, la: 'end', lx: -16, ly: 5 },
+  { id: 'managua', name: 'Managua', wiki: 'Managua', ambience: 'kaupunki', x: 771, y: 847, la: 'start', lx: 14, ly: 16 },
   {
-    id: 'panama', name: 'Panama', x: 857, y: 871, airport: true, la: 'start', lx: 16, ly: 5,
+    id: 'panama', name: 'Panama', wiki: 'Panama (kaupunki)', ambience: 'satama', x: 857, y: 871, airport: true, la: 'start', lx: 16, ly: 5,
     // Sama kaupunki on myös Etelä-Amerikan laudalla: kannas yhdistää mantereet.
     links: [{ pack: 'southamerica', city: 'panama', label: 'Etelä-Amerikan lauta' }],
   },
