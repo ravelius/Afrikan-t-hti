@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 201, teksti: 'Tutki-ikkunaan kirjanmerkkiliuskat aiheittain' },
+  { v: 201, teksti: 'Lontooseen 53 kulttuurinostoa yhdeksään aiheeseen' },
   { v: 200, teksti: 'Työhuone ei enää syö pelin offline-muistia' },
   { v: 200, teksti: 'Turha päivityskehotus pois työhuoneesta' },
   { v: 199, teksti: 'Kaupungin oma ääni soi vihdoin isolla laudalla' },

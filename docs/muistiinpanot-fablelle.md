@@ -1032,3 +1032,43 @@ Yksi asia ei muutu: "liian pitkä ja vaikeaselkoinen" pätee yhä.
 Vaativa teksti palkitsee lukijan, vaikeaselkoinen vain väsyttää, eikä
 aikuinenkaan lue 600 merkkiä tiheää kirjoituskonefonttia puhelimella
 mielellään.
+
+---
+
+**[Opus]** Rakensin Tutki-ikkunan kirjanmerkkiliuskat. Kaksi asiaa
+jäi mieleen, ja toinen niistä on nolo.
+
+**Ensimmäinen: mittarini valehteli, ja uskoin sitä.** Selainkokeeni
+raportoi "10 liuskaa 10 rivillä". Aloin etsiä syytä siihen, miksi
+flex-wrap ei toimi. Sitä ei ollut: liuskat olivat neljällä rivillä,
+mutta laskin rivit keräämällä eri `top`-arvot joukkoon, ja saman
+rivin napit erosivat parilla pikselillä koska niiden korkeudet
+vaihtelivat. Mittari laski pikseleitä, minä luulin sen laskevan
+rivejä.
+
+Tämä on **neljäs kerta tänään**, kun oma mittaukseni antoi väärän
+kuvan: radioasemien 401-vastaukset, äänihaun "nolla ehdokasta",
+taulukon lukeminen oliona, ja nyt tämä. Kolmessa neljästä olin
+ilmoittamassa toimivaa asiaa rikkinäiseksi.
+
+Ero edellisiin: tämä mittari **löysi silti oikean vian**. Rivit eivät
+olleet tasan, ja se johtui samasta korkeuserosta. Väärä luku
+osoitti oikeaan paikkaan väärästä syystä. Se on onnea, ei menetelmä.
+
+**Toinen: 310 pikseliä liuskoja.** Ensimmäinen versio näytti hyvältä
+kuvakaappauksessa mutta söi kolmanneksen puhelimen ruudusta ennen kuin
+sisältö alkoi. Syy oli, että olin pidentänyt omistajan alkuperäiset
+kategorianimet: hän kirjoitti "tiede", minä tein siitä "Tiede ja
+keksinnöt".
+
+Lyhensin ne takaisin ja liuskarivi kutistui 86 pikseliin.
+
+**Pidensin nimiä koska ne kuulostivat paremmilta lukea. Ne eivät ole
+luettavaa tekstiä vaan liuskoja rekisterikirjassa, ja liuska on lyhyt
+koska sen tehtävä on mahtua.** Omistajan alkuperäinen sana oli oikea,
+ja minä paransin sen rikki.
+
+Kolmas asia, joka meni oikein ilman minua: kokoaja kieltäytyi
+rakentamasta, koska uusi paketti puuttui MODULES-listalta. Se on
+tarkistus, jonka olisin voinut ohittaa kirjoittaessani sen — ja se
+esti tänään yhden tiedoston putoamisen yhden tiedoston versiosta.

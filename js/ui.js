@@ -49,6 +49,7 @@ import { ASIA_VALOKUVAT } from './packs/asia-valokuvat.js';
 import { ASIA_MAATIEDOT } from './packs/asia-maatiedot.js';
 import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
+import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
 import { EUROPE_KIELET } from './packs/europe-kielet.js';
 import { EUROPE_MAATIEDOT } from './packs/europe-maatiedot.js';
@@ -889,6 +890,8 @@ export class UI {
     this.wikiTitle = document.getElementById('wiki-title');
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
+    this.wikiLiuskat = document.getElementById('wiki-liuskat');
+    this.wikiKategoria = document.getElementById('wiki-kategoria');
     this.wikiSource = document.getElementById('wiki-source');
     // Sama galleriaselaus kuin Tutki-kortin kuvassa (omistajan toive):
     // laskuri ja nuolet Lue lisää -lehden kuvaan, suurennos aukeaa
@@ -4645,16 +4648,112 @@ export class UI {
   async openWiki(cityId) {
     const city = this.game.board.cityById.get(cityId);
     if (!city?.wiki) return;
-    await this.openWikiArticle(city.wiki, city.name);
+    await this.openWikiArticle(city.wiki, city.name, cityId);
+  }
+
+  /**
+   * Kirjanmerkkiliuskat Tutki-ikkunan yläreunaan.
+   *
+   * Omistajan toive: nostot jaoteltuina kategorioihin, joista yksi on
+   * auki kerrallaan.
+   *
+   * Yleistä-liuska on aina ensimmäinen ja se on artikkeli. Sitä EI
+   * korvata kategorioilla, vaikka omistaja ehdotti sitä: 122
+   * kaupungilla on oma artikkeli ja kategorioita on toistaiseksi
+   * yhdellä. Korvaaminen tyhjentäisi 142 kaupunkia sinä päivänä, kun
+   * ominaisuus julkaistaan.
+   *
+   * Liuskat piilotetaan kokonaan, jos kategorioita ei ole. Yhden
+   * liuskan rivi ei valitse mitään eikä siis kerro mitään.
+   */
+  rakennaLiuskat(cityId) {
+    const kategoriat = cityId ? (KULTTUURI_KATEGORIAT[cityId] ?? []) : [];
+    this.wikiLiuskat.replaceChildren();
+    this.wikiKategoria.replaceChildren();
+    this.wikiKategoria.hidden = true;
+    if (!kategoriat.length) {
+      this.wikiLiuskat.hidden = true;
+      /*
+       * Artikkeli takaisin näkyviin. Sama dialogi palvellaan uudelleen
+       * eri kaupungille, ja jos edellisellä oli kategorioita, artikkeli
+       * jäi piiloon liuskaa vaihdettaessa. Ilman tätä riviä kaupunki
+       * ilman kategorioita näytti tyhjältä — ja vika olisi näkynyt
+       * vasta 142 kaupungissa, ei siinä yhdessä jossa se testattiin.
+       */
+      this.wikiExtract.hidden = false;
+      this.wikiSource.hidden = false;
+      this.wikiKuvakotelo.hidden = !this.wikiImage.src;
+      return;
+    }
+    const osiot = [{ id: 'yleista', nimi: 'Yleistä' }, ...kategoriat];
+    const valitse = (id) => {
+      for (const nappi of this.wikiLiuskat.querySelectorAll('button')) {
+        const paalla = nappi.dataset.osio === id;
+        nappi.classList.toggle('paalla', paalla);
+        nappi.setAttribute('aria-selected', String(paalla));
+      }
+      const yleista = id === 'yleista';
+      // Artikkelin osat ovat omia elementtejään eivätkä yhdessä
+      // kääreessä, joten ne piilotetaan erikseen.
+      this.wikiKuvakotelo.hidden = !yleista || !this.wikiImage.src;
+      this.wikiExtract.hidden = !yleista;
+      this.wikiSource.hidden = !yleista;
+      this.wikiKategoria.hidden = yleista;
+      if (!yleista) this.piirraKategoria(kategoriat.find((k) => k.id === id));
+      // Liuskan vaihto vie aina sisällön alkuun: edellisen välilehden
+      // vierityskohta ei tarkoita uudessa mitään.
+      this.wikiDialog.querySelector('.dialog-card')?.scrollTo({ top: 0 });
+    };
+    for (const osio of osiot) {
+      const nappi = html('button', '', osio.nimi);
+      nappi.type = 'button';
+      nappi.dataset.osio = osio.id;
+      nappi.setAttribute('role', 'tab');
+      nappi.addEventListener('click', () => valitse(osio.id));
+      this.wikiLiuskat.appendChild(nappi);
+    }
+    this.wikiLiuskat.hidden = false;
+    valitse('yleista');
+  }
+
+  /** Yhden kategorian nostot: johdanto ja sen alla kortit. */
+  piirraKategoria(kategoria) {
+    this.wikiKategoria.replaceChildren();
+    if (!kategoria) return;
+    if (kategoria.johdanto) {
+      this.wikiKategoria.appendChild(html('p', 'johdanto', kategoria.johdanto));
+    }
+    for (const nosto of kategoria.nostot ?? []) {
+      const lohko = html('div', 'wiki-nosto');
+      lohko.appendChild(html('h3', '', nosto.otsikko));
+      if (nosto.tiedosto) {
+        const kuva = document.createElement('img');
+        kuva.loading = 'lazy';
+        kuva.alt = nosto.selite ?? nosto.otsikko;
+        // Ilman verkkoa nosto jää tekstiksi — mutta vasta kun sekä
+        // peili että alkuperäinen lähde ovat pettäneet.
+        asetaKuva(kuva, valokuvaUrl(nosto.tiedosto, 900),
+          valokuvaVara(nosto.tiedosto, 900), () => kuva.remove());
+        kuva.addEventListener('click', () => this.naytaKulttuuriKuva(nosto));
+        lohko.appendChild(kuva);
+      }
+      lohko.appendChild(html('p', 'teksti', nosto.teksti));
+      if (nosto.selite) lohko.appendChild(html('p', 'selite', nosto.selite));
+      if (nosto.lahde) lohko.appendChild(html('p', 'lahde', nosto.lahde));
+      this.wikiKategoria.appendChild(lohko);
+    }
   }
 
   /**
    * Sama dialogi mille tahansa artikkelille — esimerkiksi havainnossa
    * mainitulle ilmiölle (Katso kuva), jolla ei ole omaa kaupunkia.
    */
-  async openWikiArticle(title, label = title) {
+  async openWikiArticle(title, label = title, cityId = null) {
     this.wikiOpenFor = title;
     this.wikiTitle.textContent = label;
+    // Liuskat vain kaupungeille, joilla on kategorioita. Ilmiöiden ja
+    // maiden artikkeleilla niitä ei ole eikä pidäkään olla.
+    this.rakennaLiuskat(cityId);
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
     this.wikiKuvakotelo.hidden = true;

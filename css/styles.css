@@ -3995,6 +3995,140 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
 .wiki-card { max-width: 560px; }
 
+/*
+ * Kirjanmerkkiliuskat Tutki-ikkunan yläreunaan.
+ *
+ * Omistajan toive: "kategoria valitsemessa voisi olla joku kiva pieni
+ * vanhanaikainen visu. eli vain yksi kategoria näkyisi auki
+ * kerrallaan."
+ *
+ * Malli on vanhan osoite- tai tilikirjan rekisteriliuska: pieni
+ * kieleke, jonka yläkulmat ovat pyöristetyt ja joka istuu kiinni
+ * sisällön yläreunaan. Piirretty samalla mustekynällä kuin kartta —
+ * ei täyttövärejä, vain ääriviiva ja pergamentti.
+ *
+ * Liuskat KIERTYVÄT usealle riville (flex-wrap) eivätkä vierity
+ * vaakasuunnassa. Vieritys piilottaisi osan vaihtoehdoista, ja
+ * omistajan linjaus on "vain juuri halutut tiedot näkyvissä
+ * kerrallaan" — ei "vain osa vaihtoehdoista löydettävissä".
+ * Yhdeksän liuskaa mahtuu puhelimella kolmelle riville.
+ */
+.wiki-liuskat {
+  display: flex;
+  flex-wrap: wrap;
+  /* Liuskat riippuvat yhteisestä alalinjasta kuten oikeassa
+   * rekisterikirjassa. Ilman tätä eripituiset nimet asettuvat eri
+   * korkeuksille ja rivi näyttää huolimattomalta. */
+  align-items: flex-end;
+  gap: 0.25rem;
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1.5px solid rgba(70, 51, 31, 0.55);
+}
+
+.wiki-liuskat button {
+  appearance: none;
+  flex: 0 0 auto;
+  padding: 0.26rem 0.52rem 0.3rem;
+  min-height: 0;
+  background: rgba(255, 250, 238, 0.55);
+  border: 1.2px solid rgba(70, 51, 31, 0.45);
+  /* Yläkulmat pyöreät, alakulmat terävät: liuska nousee sisällöstä. */
+  border-bottom-color: transparent;
+  border-radius: 7px 7px 0 0;
+  color: rgba(70, 51, 31, 0.78);
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  /* Alareunan viiva kulkee liuskan ali; tämä nostaa sen sen päälle. */
+  margin-bottom: -0.55rem;
+  padding-bottom: 0.62rem;
+}
+
+.wiki-liuskat button:hover { background: #fffdf6; }
+
+/*
+ * Valittu liuska on pergamentin värinen ja sen alareuna on auki —
+ * se on sama paperi kuin sisältö alla. Juuri se tekee liuskasta
+ * liuskan eikä napin.
+ */
+.wiki-liuskat button.paalla {
+  background: var(--card-bg, #f6e7c6);
+  border-color: rgba(70, 51, 31, 0.75);
+  border-bottom-color: var(--card-bg, #f6e7c6);
+  color: #46331f;
+  font-weight: 700;
+}
+
+.wiki-liuskat button:focus-visible {
+  outline: 2px solid #46331f;
+  outline-offset: 1px;
+}
+
+/* Kategorian johdanto: yksi lause siitä, mitä täältä löytyy. */
+.wiki-kategoria .johdanto {
+  margin: 0 0 0.9rem;
+  font-style: italic;
+  color: rgba(70, 51, 31, 0.85);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+/* Yksi nosto: kuva, otsikko, teksti, selite, lähde. */
+.wiki-nosto {
+  margin: 0 0 1.4rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px dashed rgba(70, 51, 31, 0.28);
+}
+
+.wiki-nosto:last-child { border-bottom: 0; padding-bottom: 0; margin-bottom: 0.2rem; }
+
+.wiki-nosto h3 {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-type);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.wiki-nosto img {
+  display: block;
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  margin: 0 0 0.5rem;
+  border: 3px solid #f7efdc;
+  outline: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 2px;
+  cursor: zoom-in;
+}
+
+.wiki-nosto .teksti {
+  margin: 0 0 0.45rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.wiki-nosto .selite {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  line-height: 1.42;
+  color: rgba(70, 51, 31, 0.82);
+}
+
+/* Lähdemaininta on lisenssiehto, ei koriste: se näkyy aina. */
+.wiki-nosto .lahde {
+  margin: 0;
+  font-size: 0.74rem;
+  color: rgba(70, 51, 31, 0.68);
+}
+
+@media (min-width: 700px) {
+  .wiki-nosto img { max-height: 340px; }
+  .wiki-liuskat button { font-size: 0.8rem; }
+}
+
 /* Kuvan napautus avaa katselimen — kursori kertoo sen hiirikäyttäjälle. */
 .arrival-image,
 .wiki-image { cursor: zoom-in; }
