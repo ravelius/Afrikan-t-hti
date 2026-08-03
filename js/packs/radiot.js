@@ -21,7 +21,7 @@
  *   node tools/kirjoita-radiot.mjs
  * Radio Browserin aineistosta. Älä muokkaa käsin: aja haku uudelleen.
  *
- * 71 maata, joista 45 maan yleisradion kanava.
+ * 71 maata, joista 46 maan yleisradion kanava.
  *
  * Avaimena ISO-3-maatunnus, sama jota map.cityCountry käyttää.
  */
@@ -86,7 +86,7 @@ export const RADIOT = {
   SOM: { url: 'https://av.voanews.com/clips/VSO/2021/04/29/20210429-033000-VSO065-program_48k.mp3', asema: 'Idaacadda Subaxnimo VOA' },
   SWE: { url: 'https://live1.sr.se/p1-aac-32', asema: 'Sveriges Radio P1', virallinen: true },
   SYR: { url: 'https://radio.farah.fm/', asema: 'Farah FM' },
-  TCD: { url: 'https://strhls.streamakaci.tv/str_tchad_radio/str_tchad_radio/icecast.audio?fbclid=IwAR32Ir_eHaV-HSrh46OVT_VeTZt5KoNggoq8qzeSiAeZTJNBKKUtsSNUtcY', asema: 'Radio Tchad' },
+  TCD: { url: 'https://strhls.streamakaci.tv/str_tchad_radio/str_tchad_radio/icecast.audio?fbclid=IwAR32Ir_eHaV-HSrh46OVT_VeTZt5KoNggoq8qzeSiAeZTJNBKKUtsSNUtcY', asema: 'Radio Tchad', virallinen: true },
   THA: { url: 'https://radio12.plathong.net/7234/;stream.mp3', asema: 'วิทยุเสียงอิสลาม', virallinen: true },
   TUN: { url: 'https://radio.mosaiquefm.net/mosalive', asema: 'mosaiquefm' },
   TUR: { url: 'https://trt.radyotvonline.net/trt1', asema: 'TRT Radyo 1', virallinen: true },

@@ -4586,9 +4586,20 @@ export class UI {
     // Oma artikkeli (pilottikaupungit): Wikipedia-tekstin sijaan näytetään
     // pelin tyyliin kirjoitettu lyhyempi artikkeli — Wikipedian pohjalta,
     // joten lähdemaininta säilyy. Kuva haetaan silti Wikipediasta.
+    /*
+     * Kaksi kenttänimeä samalle asialle. Vanhemmat artikkelit
+     * (Tanger, Tripoli, maat) käyttävät nimeä `artikkeli`, uudemmat
+     * `teksti`. Renderöinti luki vain ensimmäistä, ja 69 paikan
+     * kohdalla se sai undefinedin — "Lue lisää" kaatui kokonaan
+     * Venetsiassa, Roomassa, Ateenassa, Krakovassa ja Sarajevossa.
+     *
+     * Kenttiä ei yhtenäistetä tässä: se olisi 69 tiedostomuutosta
+     * yhden rivin ongelmaan.
+     */
     const oma = ARTIKKELIT[title];
-    if (oma) {
-      this.renderArticle(this.wikiExtract, oma.artikkeli);
+    const omaTeksti = oma?.artikkeli ?? oma?.teksti ?? null;
+    if (omaTeksti) {
+      this.renderArticle(this.wikiExtract, omaTeksti);
       this.wikiSource.textContent = 'Matkakirjan oma artikkeli, kirjoitettu Wikipedian pohjalta (CC BY-SA)';
       if (summary.url) {
         this.wikiSource.appendChild(document.createTextNode(' — '));

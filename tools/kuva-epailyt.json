@@ -11,6 +11,18 @@
  },
  {
   "lauta": "europe",
+  "kaupunki": "kreeta",
+  "kohta": "lisa1",
+  "tiedosto": "Bull leaping minoan fresco archmus Heraklion.jpg",
+  "vuosi": "noin 1600–1450 eaa. (kuvattu 2015)",
+  "selite": "Härkähyppyfresko Knossoksesta, nykyään Herakleionin arkeologisessa museossa. Maalaus ajoitetaan noin vuosiin 1600–1450 eaa., ja siinä hypätään härän yli juuri niin kuin päiväkirja kertoo.",
+  "syy": "Commons sanoo 2015",
+  "pvm": "2015-02-23 11:43:24",
+  "kuvaus": "",
+  "leveys": 4305
+ },
+ {
+  "lauta": "europe",
   "kaupunki": "lissabon",
   "kohta": "vanha",
   "tiedosto": "Elevador-Sta-Justa 1902 fotoCarris.jpg",
@@ -28,6 +40,30 @@
   "selite": "Romanian Ateneum ja sen puutarha käsinvärittynä postikorttina 1900-luvun taitteessa. Konserttitalo vihittiin vuonna 1888, ja osa rakennusrahoista kerättiin kansalaiskeräyksellä, jonka tunnuslause oli \"Dați un leu pentru Ateneu\" — antakaa yksi leu Ateneumille.",
   "syy": "ei päiväystä Commonsissa — katsottava itse",
   "kuvaus": "Postcard from the Belle Époque with the Romanian Athenaeum and its garden"
+ },
+ {
+  "lauta": "europe",
+  "kaupunki": "kobenhavn",
+  "kohta": "lisa4",
+  "tiedosto": "History of Tivoli Gardens (Copenhagen) around 1900.jpg",
+  "vuosi": "noin 1900",
+  "selite": "Tivoli noin vuonna 1900 Peter Elfeltin valokuvaamana. Huvipuisto oli silloin ollut auki jo yli puoli vuosisataa.",
+  "syy": "Commons sanoo 2019",
+  "pvm": "2019-06-11 10:53:38",
+  "kuvaus": "History of Tivoli Gardens (Copenhagen) around 1900",
+  "leveys": 2186
+ },
+ {
+  "lauta": "africa",
+  "kaupunki": "sierraleone",
+  "kohta": "lisa2",
+  "tiedosto": "SierraLeone068.jpg",
+  "vuosi": "1935",
+  "selite": "Väkeä ja purjeveneitä Freetownin rannassa vuonna 1935. Ranta on täynnä ihmisiä, ja veneet odottavat vieri vieressä lastia.",
+  "syy": "Commons sanoo 2014",
+  "pvm": "2014-01-17 15:01:42",
+  "kuvaus": "Crowd near port in Freetown. Sierra Leone, 1935. Collection Hofstra. Photograph: Sjoerd Hofstra",
+  "leveys": 6662
  },
  {
   "lauta": "africa",

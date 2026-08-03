@@ -514,8 +514,8 @@
   "url": "https://strhls.streamakaci.tv/str_tchad_radio/str_tchad_radio/icecast.audio?fbclid=IwAR32Ir_eHaV-HSrh46OVT_VeTZt5KoNggoq8qzeSiAeZTJNBKKUtsSNUtcY",
   "asema": "Radio Tchad",
   "kieli": "french",
-  "virallinen": false,
-  "pisteet": 75
+  "virallinen": true,
+  "pisteet": 575
  },
  "THA": {
   "url": "https://radio12.plathong.net/7234/;stream.mp3",

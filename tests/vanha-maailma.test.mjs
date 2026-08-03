@@ -241,3 +241,22 @@ test('radiolähetykset ovat salattuja', async () => {
   assert.equal(radioMaalle('EI_OLE'), null);
   assert.equal(radioMaalle(undefined), null);
 });
+
+test('jokaisella omalla artikkelilla on luettava teksti', async () => {
+  const { OMAT_ARTIKKELIT } = await import('../js/packs/africa-artikkelit.js');
+  const { EUROPE_ARTIKKELIT } = await import('../js/packs/europe-artikkelit.js');
+  const kaikki = { ...OMAT_ARTIKKELIT, ...EUROPE_ARTIKKELIT };
+  /*
+   * Kenttä on kahdella nimellä: vanhemmissa `artikkeli`, uudemmissa
+   * `teksti`. Renderöinti luki vain ensimmäistä, ja 69 paikan kohdalla
+   * "Lue lisää" kaatui undefinediin. Tämä testi vahtii, että kentän
+   * nimi on toinen kahdesta — kumpi tahansa, mutta ei kumpikaan
+   * puuttuen.
+   */
+  for (const [nimi, a] of Object.entries(kaikki)) {
+    const teksti = a.artikkeli ?? a.teksti ?? null;
+    assert.ok(typeof teksti === 'string' && teksti.length > 200,
+      `${nimi}: artikkelin teksti puuttuu (kentät: ${Object.keys(a).join(', ')})`);
+    assert.ok(a.intro?.length > 60, `${nimi}: introa ei ole`);
+  }
+});
