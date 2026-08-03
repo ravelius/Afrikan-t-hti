@@ -353,9 +353,16 @@ body.manner-zoom .map-pane {
    jota ollaan katsomassa. Kokonäkymässä häivytys palaa itsestään, kun
    luokka poistuu. */
 
+/*
+ * Selain ei saa napata eleitä omaan käyttöönsä — ei vaakavetoa eikä
+ * nipistystä. Tämä koskee myös kokonäkymää, koska nipistys ALKAA
+ * sieltä. iOS:llä tämä ei yksin riitä: siellä sivun oma zoom estetään
+ * vasta kosketustapahtumien preventDefaultilla (js/ui.js).
+ */
+#board { touch-action: none; }
+
 body.aloitus-zoom #board,
 body.manner-zoom #board {
-  /* Selain ei saa napata vaakaeleitä omaan käyttöönsä. */
   touch-action: none;
   /* Raahaus ei saa maalata kartan tekstejä valituiksi. */
   user-select: none;
@@ -575,6 +582,20 @@ body.aloitus-zoom .kiikari {
 }
 
 .zoomi[hidden] { display: none; }
+
+/*
+ * Zoomipainikkeet pois kosketuslaitteilta (omistajan toive): siellä
+ * zoomataan nipistämällä, ja napit peittävät karttaa turhaan.
+ *
+ * Ehto on LAITTEEN KYKY eikä käyttöjärjestelmä. "Piilota iOS:llä"
+ * kuulostaa samalta mutta on eri asia: se jättäisi napit Androidiin,
+ * jossa nipistys toimii samoin, ja veisi ne iPadista siinäkin
+ * tapauksessa että siihen on kytketty hiiri. Karkea osoitin ilman
+ * osoitinta kartalla tarkoittaa sormea — ja sormella on nipistys.
+ */
+@media (pointer: coarse) and (hover: none) {
+  .zoomi { display: none; }
+}
 
 .zoomi-nappi {
   width: 2.15rem;

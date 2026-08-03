@@ -3272,6 +3272,44 @@ test('yhdistetyt laudat ovat kaikissa sisältötauluissa', () => {
   assert.ok(perus.has('maailmankartta'), 'maailmankartta puuttuu sisältötauluista');
 });
 
+test('nipistyszoomaus on olemassa', () => {
+  /*
+   * Tämä testi on olemassa yhdestä syystä: julkaisin kerran version,
+   * joka LUPASI nipistyszoomauksen ja jossa koodia ei ollut lainkaan.
+   * Se katosi ristiriidan purussa juuri ennen julkaisua, ja koska
+   * yksikään testi ei koskenut eleeseen, mikään ei huomauttanut.
+   * Omistaja huomasi: "nipistys ei tee mitään".
+   *
+   * Testi ei osaa nipistää — se vartioi vain, että ele on olemassa.
+   * Se olisi riittänyt estämään sen mitä tapahtui.
+   */
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
+
+  // Kosketustapahtumat eikä osoitintapahtumat: iOS peruu jälkimmäiset
+  // kesken oman eleensä, jolloin nipistys ei valmistu koskaan.
+  for (const nimi of ['touchstart', 'touchmove', 'touchend', 'touchcancel']) {
+    assert.match(ui, new RegExp(`'${nimi}'`), `nipistyksestä puuttuu ${nimi}`);
+  }
+  assert.match(ui, /passive: false/, 'preventDefault ei toimi passiivisella kuuntelijalla');
+  // Mittakaava portaikon ulkopuolelta.
+  assert.match(ui, /zoomiVapaa/, 'vapaa zoomikerroin puuttuu');
+  assert.match(ui, /zoomiRajat\(\)/, 'zoomin rajat puuttuvat');
+  // Eleen aikana venytetään valmista kuvaa, ei rasteroida uudelleen.
+  assert.match(ui, /scale\(\$\{[^}]*suhde/, 'eleen aikainen esikatselu puuttuu');
+  // Selain ei saa napata elettä myöskään kokonäkymässä.
+  assert.match(css, /#board \{ touch-action: none; \}/,
+    'kokonäkymän touch-action puuttuu — selain zoomaisi sivua');
+  /*
+   * Painikkeet piilotetaan kosketuslaitteilta, koska siellä on
+   * nipistys. Jos ele katoaa mutta piilotus jää, kartalla ei olisi
+   * enää mitään tapaa zoomata — siksi nämä kaksi kuuluvat samaan
+   * testiin.
+   */
+  assert.match(css, /\(pointer: coarse\) and \(hover: none\)[\s\S]{0,120}\.zoomi \{ display: none; \}/,
+    'zoomipainikkeiden piilotus kosketuslaitteilta puuttuu');
+});
+
 test('maailmankartta on kiertävä ja kaupungit pysyvät laudalla', () => {
   const pack = PACKS.find((p) => p.id === 'maailmankartta');
   assert.equal(pack.map.kiertava, true, 'kiertava-lippu puuttuu kartan geometriasta');
