@@ -1,0 +1,91 @@
+# Hakee ääniehdokkaita Freesoundista.
+#
+# MIKSI TÄMÄ ON TYÖNKULKU EIKÄ KOMENTO:
+#
+# Freesoundin avain on repon salaisuuksissa, eikä GitHub näytä
+# salaisuuden arvoa sen tallentamisen jälkeen kenellekään — ei
+# käyttöliittymässä eikä rajapinnassa. Arvo on luettavissa vain
+# työnkulun ajon sisällä.
+#
+# Se on tarkoituksellista ja hyvä niin: omistajan sääntö on, ettei
+# avaimia liitetä keskusteluun, koska ne päätyisivät lokeihin. Tämä
+# työnkulku on se reitti, jolla avainta voi käyttää rikkomatta sääntöä.
+#
+# Tulokset tulevat ajon lokiin ja artefaktina. Peliin ne otetaan
+# äänistudion kautta ("Tuo valinnat"), ei automaattisesti: äänen
+# valinta on kuuntelupäätös, jota kone ei voi tehdä.
+
+name: Äänihaku (Freesound)
+
+on:
+  workflow_dispatch:
+    inputs:
+      kori:
+        description: 'Valmis kori (meri, basaari, aavikko, sademetsä…) — jätä tyhjäksi jos käytät omaa hakua'
+        required: false
+        default: 'meri'
+      haku:
+        description: 'Oma hakulause englanniksi (ohittaa korin)'
+        required: false
+        default: ''
+      maara:
+        description: 'Montako ehdokasta'
+        required: false
+        default: '12'
+      min-kesto:
+        description: 'Lyhin hyväksyttävä kesto sekunteina'
+        required: false
+        default: '20'
+      max-kesto:
+        description: 'Pisin hyväksyttävä kesto sekunteina'
+        required: false
+        default: '600'
+
+# Vain luku: työnkulku ei kirjoita repoon mitään. Tulokset ovat
+# ehdokkaita, ja niistä valitseminen on kuuntelutyötä.
+permissions:
+  contents: read
+
+jobs:
+  hae:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Hae ehdokkaat
+        env:
+          # Avain tulee repon salaisuuksista eikä sitä tulosteta:
+          # työkalu kertoo vain, mistä muuttujasta se löytyi.
+          #
+          # Kaikki tavalliset kirjoitusasut välitetään, koska
+          # salaisuuden nimeä ei voi tarkistaa repon ulkopuolelta ja
+          # väärä arvaus näyttäisi samalta kuin puuttuva avain.
+          # Määrittelemätön salaisuus on tyhjä merkkijono, jonka
+          # työkalu ohittaa.
+          FREESOUND_API: ${{ secrets.FREESOUND_API }}
+          FREESOUND_API_KEY: ${{ secrets.FREESOUND_API_KEY }}
+          FREESOUND_AVAIN: ${{ secrets.FREESOUND_AVAIN }}
+          FREESOUND_TOKEN: ${{ secrets.FREESOUND_TOKEN }}
+          FREESOUND: ${{ secrets.FREESOUND }}
+        run: |
+          args="--maara ${{ inputs.maara }}"
+          args="$args --min-kesto ${{ inputs.min-kesto }}"
+          args="$args --max-kesto ${{ inputs.max-kesto }}"
+          if [ -n "${{ inputs.haku }}" ]; then
+            args="$args --haku '${{ inputs.haku }}'"
+          elif [ -n "${{ inputs.kori }}" ]; then
+            args="$args --kori ${{ inputs.kori }}"
+          fi
+          eval node tools/hae-freesound.mjs $args --ulos ehdokkaat.json
+
+      - name: Talleta ehdokkaat
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aaniehdokkaat
+          path: ehdokkaat.json
+          if-no-files-found: ignore
