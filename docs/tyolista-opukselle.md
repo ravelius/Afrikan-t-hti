@@ -384,6 +384,45 @@ lennossa. Muuten tehtävä jää tulematta juuri silloin, kun peliä eniten
 pelataan — yhteydettömänä.
 
 
+## Paketti 62: päiväkirjan näkymät kuviksi — VALMIS v186 3.8.2026
+
+Omistajan toive: "Matkakirjassa mainitut näkymät ja asiat olisi kiva
+saada kuvin matkakirjan kuviin." Paketti 58 teki kortista pinon; tämä
+täytti pinon.
+
+**193 uutta kuvaa 80 kaupunkiin.** Jokaisella Euroopan ja Afrikan
+kaupungilla on nyt vähintään kolme kuvaa, suurimmassa (Dublin)
+seitsemän. Kuvat eivät ole kaupungin yleiskuvia vaan juuri niitä
+näkymiä, jotka päiväkirjamerkintä mainitsee — Dublinissa Liffeyn
+sillat, eriväriset ovet, pubin perinnemusiikki ja Nelsonin pylvään
+paikalla seisova teräsneula.
+
+Tuotettu apureilla: kukin luki kaupungin saapumistekstin, poimi siitä
+konkreettiset maininnat ja etsi kullekin kuvan. **Ehdotukseen ei
+luotettu sellaisenaan** — `tools/lisaa-kuvapinoon.mjs` tarkistaa
+jokaisen tiedoston Commonsista ennen kirjoittamista: onko olemassa,
+vähintään 1200 px, vapaa lisenssi ilman ND-ehtoa, ei jo kortissa.
+194 ehdotuksesta yksi tiedostonimi oli keksitty. Se on pieni osuus,
+mutta ilman tarkistusta se olisi ollut rikkinäinen kuva pelissä.
+
+### Sivulöytö: 69 paikan "Lue lisää" kaatui
+
+Omat artikkelit on kirjoitettu kahdella kenttänimellä: vanhemmat
+(`Tanger`, `Tripoli`, maat) käyttävät nimeä `artikkeli`, uudemmat
+nimeä `teksti`. Renderöinti luki vain ensimmäistä, ja 69 paikan
+kohdalla se sai `undefined`in — dialogi kaatui Venetsiassa, Roomassa,
+Ateenassa, Krakovassa ja Sarajevossa.
+
+Korjaus on yksi rivi (`oma.artikkeli ?? oma.teksti`), ja testi vahtii
+nyt, että jokaisella artikkelilla on luettava teksti kummalla tahansa
+nimellä. **Kenttiä ei yhtenäistetty:** se olisi 69 tiedostomuutosta
+yhden rivin ongelmaan.
+
+Opetus on tuttu tästä projektista: **kaksi nimeä samalle asialle on
+oikea korkeintaan toisessa paikassa.** Sama kuin luennan häivytyksessä,
+jossa yksi vakio palveli kahta tarkoitusta.
+
+
 ## Paketti 61: Kuuntele kieltä suorana radiona — VALMIS v185 3.8.2026
 
 Omistajan havainto: näytteissä puhutaan liian vähän. Ratkaisu on

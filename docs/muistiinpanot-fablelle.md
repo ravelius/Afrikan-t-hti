@@ -676,3 +676,19 @@ eri asussa — **luotin lähteeseen enemmän kuin sen pitäisi kestää.**
 Työkalu luettelee nyt aina, mitä se hylkäsi. Hiljainen karsinta
 näyttäisi täydeltä listalta — ja se on juuri se virhe, jonka olen
 tehnyt tässä projektissa useimmin.
+
+## Yksi keksitty tiedostonimi 194:stä (v186)
+
+**[Opus]** Apurit etsivät 80 kaupungille kuvat päiväkirjan mainitsemista
+näkymistä. Työ oli hyvää: 193 ehdotusta 194:stä osui oikeaan tiedostoon,
+oikeaan kokoon ja vapaaseen lisenssiin.
+
+Se yksi olisi kuitenkin ollut rikkinäinen kuva pelissä, ja
+tiedostonimi näytti aivan oikealta:
+`Geveltop met hijsbalk en zeegoden op dolfijnen - Amsterdam - 20353717 - RCE.jpg`.
+Hollanninkielinen, virastotunnuksella varustettu, uskottava. Sitä ei
+vain ole olemassa.
+
+**99 % oikein on eri asia kuin luotettava.** Tarkistus maksoi yhden
+API-kyselyn per kuva ja poisti koko kysymyksen. Sama sääntö kuin
+merireiteissä ja kuvien iässä: kysy lähteeltä, älä päättele nimestä.

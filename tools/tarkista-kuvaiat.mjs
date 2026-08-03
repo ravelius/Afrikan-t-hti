@@ -49,8 +49,17 @@ const kuvat = [];
 for (const [lauta, taulu] of [['europe', EUROPE_VALOKUVAT], ['africa', AFRICA_VALOKUVAT]]) {
   for (const [kaupunki, v] of Object.entries(taulu)) {
     if (v.tiedosto) kuvat.push({ lauta, kaupunki, kohta: 'vanha', tiedosto: v.tiedosto, vuosi: v.vuosi ?? '', selite: v.selite ?? '' });
+    /*
+     * Lisäkuvat ovat päiväkirjan mainitsemia näkymiä, ja moni niistä
+     * on tarkoituksella nykypäivästä. Vain ne, jotka VÄITTÄVÄT olevansa
+     * vanhoja, kuuluvat tähän tarkistukseen — muuten lista täyttyisi
+     * kohinasta ja oikeat löydöt hukkuisivat siihen.
+     */
     for (const [i, k] of (v.lisat ?? []).entries()) {
-      if (k.tiedosto) kuvat.push({ lauta, kaupunki, kohta: `lisa${i + 1}`, tiedosto: k.tiedosto, vuosi: k.vuosi ?? '', selite: k.selite ?? '' });
+      const vuosi = Number(String(k.vuosi ?? '').match(/\d{4}/)?.[0] ?? 0);
+      if (k.tiedosto && vuosi && vuosi < RAJA) {
+        kuvat.push({ lauta, kaupunki, kohta: `lisa${i + 1}`, tiedosto: k.tiedosto, vuosi: k.vuosi ?? '', selite: k.selite ?? '' });
+      }
     }
   }
 }
