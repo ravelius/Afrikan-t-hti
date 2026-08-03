@@ -59,6 +59,8 @@ const hylatyt = [];
 for (const maa of Object.keys(data)) {
   const r = data[maa];
   if (r.virallinen) continue;
+  // Tutkittu valinta on jo käynyt läpi oman tarkistuksensa.
+  if (r.tutkittu) continue;
   const kielet = KIELI_MAALLE[maa];
   const kieli = (r.kieli ?? '').toLowerCase();
   const vaaraKieli = kielet && kieli && !kielet.some((k) => kieli.includes(k));
@@ -67,6 +69,30 @@ for (const maa of Object.keys(data)) {
     delete data[maa];
   }
 }
+
+/*
+ * Aseman nimi näkyy napin otsikkona, joten se ei saa olla lause.
+ * Tutkitut ehdotukset tulivat muodossa "Radio 9090 / 90.90 FM Radio
+ * Egypt (Kairo) – puhe ja ajankohtaisohjelmat", ja siitä on nimeä vain
+ * alkuosa. Ajatusviivan jälkeinen selitys pois, ja pituus katkaistaan
+ * viimeisestä sanavälistä eikä kesken sanan.
+ */
+function lyhenna(nimi) {
+  let n = String(nimi).split(/\s+[–—]\s+/)[0].trim();
+  if (n.length <= 52) return n;
+  /*
+   * Sulkeissa oleva selite katkeaisi kesken ("SAMS Radio 1 (South
+   * Atlantic Media Services"), ja puolikas sulku näyttää virheeltä.
+   * Jos nimi mahtuu ilman sulkuja, pudotetaan koko sulkulauseke.
+   */
+  const ilmanSulkuja = n.replace(/\s*\([^)]*\)\s*/g, ' ').trim();
+  if (ilmanSulkuja.length >= 8 && ilmanSulkuja.length <= 52) return ilmanSulkuja;
+  const lyhyt = ilmanSulkuja.length >= 8 ? ilmanSulkuja : n;
+  const katkaisu = lyhyt.slice(0, 52).lastIndexOf(' ');
+  return lyhyt.slice(0, katkaisu > 20 ? katkaisu : 52).replace(/[(,/]$/, '').trim();
+}
+
+for (const r of Object.values(data)) r.asema = lyhenna(r.asema);
 
 const maat = Object.keys(data).sort();
 const rivit = maat.map((maa) => {

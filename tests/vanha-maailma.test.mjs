@@ -260,3 +260,28 @@ test('jokaisella omalla artikkelilla on luettava teksti', async () => {
     assert.ok(a.intro?.length > 60, `${nimi}: introa ei ole`);
   }
 });
+
+test('radioaseman nimi mahtuu napin otsikoksi', async () => {
+  const { RADIOT } = await import('../js/packs/radiot.js');
+  /*
+   * Nimi näkyy napin title-tekstinä, joten se ei saa olla lause.
+   * Tutkitut ehdotukset tulivat muodossa "Radio 9090 (Kairo) – puhe
+   * ja ajankohtaisohjelmat", ja katkaisu jätti aluksi puolikkaan
+   * sulun perään.
+   */
+  for (const [maa, r] of Object.entries(RADIOT)) {
+    assert.ok(r.asema.length <= 52, `${maa}: nimi liian pitkä (${r.asema.length})`);
+    const auki = (r.asema.match(/\(/g) ?? []).length;
+    const kiinni = (r.asema.match(/\)/g) ?? []).length;
+    assert.equal(auki, kiinni, `${maa}: sulut eivät täsmää — ${r.asema}`);
+  }
+});
+
+test('jokaisella vanhan maailman maalla on radiolähetys', async () => {
+  const { PACKS } = await import('../js/pack.js');
+  const { RADIOT } = await import('../js/packs/radiot.js');
+  const pack = PACKS.find((p) => p.id === 'vanhamaailma');
+  const maat = [...new Set(Object.values(pack.map.cityCountry ?? {}))];
+  const ilman = maat.filter((m) => !RADIOT[m]).sort();
+  assert.deepEqual(ilman, [], 'näiltä mailta puuttuu suora lähetys');
+});
