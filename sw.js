@@ -19,6 +19,16 @@ const SHELL = [
   './js/packs/maailmankartta-maasto.js',
   './js/packs/maasto-vedet.js',
   './js/packs/maasto-korkeus.js',
+  './js/packs/linssi-topografia.js',
+  './js/packs/linssi-maaluvut.js',
+  './js/packs/linssi-muuttoliike.js',
+  './js/packs/linssi-historia.js',
+  './js/packs/linssi-leviaminen.js',
+  './js/packs/linssi-yokartta.js',
+  './js/packs/linssi-ilmasto.js',
+  './js/packs/linssi-kielet.js',
+  './js/packs/linssi-tahdet.js',
+  './js/packs/linssi-tuulet.js',
   './js/packs/maailma.js',
   './js/packs/maailma-questions.js',
   './js/packs/africa.js',
@@ -72,6 +82,10 @@ const SHELL = [
   './js/ambience-stream.js',
   './js/die.js',
   './assets/icon.svg',
+  // Yölinssin kuva. Ainoa linssi, joka on binääri eikä moduuli — ilman
+  // esilatausta se puuttuisi juuri offline-tilassa, jossa linssiä
+  // selaillaan eniten.
+  './assets/linssit/yokartta.jpg',
   './assets/audio/intro-puhe.mp3',
   './assets/audio/puhe-lento-alku.mp3',
   './assets/audio/efekti-klik.mp3',
@@ -354,7 +368,10 @@ const SHELL = [
  * näkee (ks. KUVACACHE alempana), joten kerran nähty kaupunki toimii
  * offline. Peli itse, äänet ja kartat haetaan yhä etukäteen.
  */
-const MEDIAA = (osoite) => /\/assets\/(liput|audio)\//.test(osoite);
+// Linssikuvat kuuluvat samaan erään: yölinssin kuva on satoja kilotavuja,
+// eikä sen katkennut lataus saa kaataa koko asennusta. Ilman tätä rivi
+// päätyisi YDIMEEN, jossa yksikin virhe vie pelin ilman välimuistia.
+const MEDIAA = (osoite) => /\/assets\/(liput|audio|linssit)\//.test(osoite);
 const YDIN = SHELL.filter((o) => !MEDIAA(o));
 const MEDIA = SHELL.filter(MEDIAA);
 
