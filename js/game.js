@@ -1290,6 +1290,17 @@ export class Game {
    * Palauttaa null, jos pakassa ei ole repliikkejä lainkaan.
    */
   flightLine(cityId, pack = this.pack) {
+    /*
+     * Silloin tällöin lento muistuttaa löytämättömästä tähtiaarteesta
+     * (omistajan toive): pelaaja hahmottaa, että jonnekin kannattaa
+     * vielä palata. Rivi ei koskaan paljasta, missä aarre on — vain
+     * että se on yhä jossain. Arvonta pelin rng:llä kuten muutkin.
+     */
+    const katumukset = pack.texts?.flightRegret ?? [];
+    if (katumukset.length && this.world && !this.world.starFound
+      && this.rng() < 0.35) {
+      return katumukset[Math.floor(this.rng() * katumukset.length)];
+    }
     const omat = pack.texts?.flightLines?.[cityId] ?? [];
     const yleiset = pack.texts?.flightDefault ?? [];
     const pakka = omat.length ? omat : yleiset;

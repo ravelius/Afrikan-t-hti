@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 225, teksti: 'Avauslento esittelee pelin idean ääneen' },
+  { v: 225, teksti: 'Lennot muistuttavat löytämättömästä tähtiaarteesta' },
   { v: 224, teksti: 'Maailmanradio: kaupungit soivat kartalta' },
   { v: 224, teksti: 'Vanhan ajan radiosoitin ruudun alalaitaan' },
   { v: 224, teksti: 'Kehittäjätilaan kaikki toimivat aarteet' },

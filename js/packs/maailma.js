@@ -483,13 +483,22 @@ export const MAAILMA = {
       'Kuun vaiheita on piirretty riviin ja yksi niistä ympyröity, ilman sanaakaan selitystä. Toivon, ettei selitystä tulekaan ennen kuin arvaan sen itse.',
       'Muste on tällä aukeamalla vaaleampaa, kuin kirjoitettuna kiireessä. Sytytin lukuvalon vaikka ulkona paistaa: kiireessä kirjoitettu sivu on aina se kiinnostavin.',
     ],
+    // Tähtiaarre löytämättä: osa lennoista muistuttaa, että jonnekin
+    // kannattaa vielä palata. Ei koskaan kerro minne — se on etsintää.
+    flightRegret: [
+      'Tähtiaarre jäi vielä löytymättä. Kirjoitan sivun kulmaan: palattava vielä — aarre ei etsi itse itseään.',
+      'Selaan merkintöjä ja harmittelen: tähtiaarre on yhä jossain takanapäin. Ei se katoa minnekään — mutta ei se löydykään ilman minua.',
+      'Isoisä olisi jo löytänyt tähtiaarteen, väittäisin. Minä säästän sen löytämisen ilon vielä hetkeksi.',
+      'Piirrän karttaan pienen tähden muistutukseksi: tähtiaarre odottaa yhä. Tämä lento ei ole luovutus vaan kierros.',
+      'Tähtiaarre välttelee minua toistaiseksi. Hyvä niin — parhaat löydöt vaativat pari yritystä.',
+    ],
     // Ensimmäinen lento: matka alkaa, ja repliikki hehkuttaa aina
     // matkakirjaa — se on koko pelin lähtölaukaus.
     // Avauslennon repliikki on lukittu yhteen riviin, koska sille on
     // tuotettu lukuääni (assets/audio/puhe-lento-alku.mp3) — teksti ja
     // puhe pysyvät aina samana. Rivi jatkaa avaustekstin revittyä sivua.
     flightFirst: [
-      'Painan kämmeneni kirjan kannelle: sata viisikymmentä vuotta ja revitty sivu. Tästä hetkestä alkaen tarinaa kirjoitetaan loppuun.',
+      'Selaan kirjaa enkä pysty istumaan paikallani: kaikki nämä paikat — ja minä saan nähdä ne itse! Mutta kahdeksankymmentä päivää... miten siinä ajassa ehtii löytää aarteet kaikista maanosista? Isoisä ehti kiertää koko maailman. Otetaan selvää, miten.',
     ],
     intro: 'Peli alkaa! Etsikää Magellanin kompassi — maailmanympäripurjehtijan kadonnut aarre.',
     starFound: (name, city) => `★ ${name} löysi MAGELLANIN KOMPASSIN kaupungista ${city}!`,
