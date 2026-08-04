@@ -524,6 +524,43 @@ export const NIMEN_ZOOMIRAJA = { 1: 4200, 2: 1800, 3: 800 };
  * Omistaja: "jotkin nimet taas aivan liian pieniä."
  */
 const NIMEN_FONTTI_PX = 23;
+/*
+ * Nimen koko seuraa zoomia.
+ *
+ * Kiinteä ruutukoko oli sekä liian pieni lähellä että liian iso
+ * kaukana: sama 23 pikseliä, jolla Ural juuri ja juuri erottuu
+ * lähikuvassa, peitti yleiskuvassa puolet Euroopasta (omistaja:
+ * "tekstit ovat nyt liian isoja, varsinkin kun on zoomattu
+ * kauemmas"). Nimi on kartan mittakaavan osa, joten sen on kutistuttava
+ * kun kartta laajenee — mutta ei laudan yksiköissä, tai kaukaa ei
+ * lukisi mitään.
+ */
+const NIMEN_FONTTI_MIN = 15;
+const NIMEN_LAAJA = 9000;   // tätä leveämpi näkymä on yleiskuva
+const NIMEN_LAHI = 1600;    // tätä kapeampi on lähikuva
+
+/** Nimen koko ruudun pikseleinä näkyvän alueen leveyden mukaan. */
+function nimenKoko(nakyvaLeveys) {
+  if (!nakyvaLeveys) return NIMEN_FONTTI_PX;
+  const osuus = (NIMEN_LAAJA - nakyvaLeveys) / (NIMEN_LAAJA - NIMEN_LAHI);
+  const k = Math.min(1, Math.max(0, osuus));
+  return NIMEN_FONTTI_MIN + (NIMEN_FONTTI_PX - NIMEN_FONTTI_MIN) * k;
+}
+
+/*
+ * Joen nimen ankkuri pysyy paikallaan niin kauan kuin se näkyy.
+ *
+ * Nimi kirjoitetaan siihen uoman pisteeseen, joka on lähinnä ruudun
+ * keskustaa. Se on oikea sääntö sille, MISTÄ nimi valitaan, mutta väärä
+ * sille, milloin se vaihtuu: keskusta liikkuu joka kuvaruudulla, joten
+ * nimi liukui pitkin jokea koko vierityksen ajan (omistaja: "jokien
+ * nimien paikat hyppivät villisti, kun näyttöä vierittää").
+ *
+ * Muisti korjaa juuri sen: kerran valittu piste pidetään niin kauan kuin
+ * se on ruudulla. Nimi vaihtaa paikkaa vasta kun vanha katoaa näkyvistä
+ * — silloin siirtymä on tarpeellinen eikä häiritsevä.
+ */
+const jokienAnkkurit = new Map();
 const I_IKONIN_SADE_PX = 7.5;
 
 /*
@@ -775,7 +812,7 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
   if (!nimet || !nakyva?.skaala || !(nakyva.w > 0)) return 0;
 
   const { skaala } = nakyva;
-  const fontti = NIMEN_FONTTI_PX / skaala;      // laudan yksiköitä
+  const fontti = nimenKoko(nakyva.w) / skaala;  // laudan yksiköitä
   const iSade = I_IKONIN_SADE_PX / skaala;
   const leveys = map?.kiertava ? map.width : 0;
 
@@ -816,14 +853,30 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
     if (nakyva.w > (NIMEN_ZOOMIRAJA[joki.tarkeys] ?? 0)) continue;
     const teksti = nimenLeveys(joki.nimi, fontti);
     if (joki.pituus < teksti * 1.15) continue;
-    // Lähin piste, kaikki kierron kopiot mukaan lukien.
+    /*
+     * Vanha ankkuri ensin: jos edellinen valinta on yhä ruudulla, se
+     * pidetään. Vain kadonnut ankkuri korvataan uudella.
+     */
+    const ruudulla = (x, y) => x >= nakyva.x - teksti && x <= nakyva.x + nakyva.w + teksti
+      && y >= nakyva.y - fontti * 2 && y <= nakyva.y + nakyva.h + fontti * 2;
     let paras = null;
-    for (const siirto of leveys ? [0, leveys, -leveys, leveys * 2] : [0]) {
-      for (let i = 0; i < joki.pisteet.length; i++) {
-        const [x, y] = joki.pisteet[i];
-        const etaisyys = Math.hypot(x + siirto - keskiX, y - keskiY);
-        if (!paras || etaisyys < paras.etaisyys) paras = { etaisyys, siirto, i, x: x + siirto, y };
+    const muistettu = jokienAnkkurit.get(joki.avain);
+    if (muistettu && joki.pisteet[muistettu.i]) {
+      const [mx, my] = joki.pisteet[muistettu.i];
+      for (const siirto of leveys ? [0, leveys, -leveys, leveys * 2] : [0]) {
+        if (ruudulla(mx + siirto, my)) { paras = { siirto, i: muistettu.i, x: mx + siirto, y: my }; break; }
       }
+    }
+    if (!paras) {
+      // Lähin piste, kaikki kierron kopiot mukaan lukien.
+      for (const siirto of leveys ? [0, leveys, -leveys, leveys * 2] : [0]) {
+        for (let i = 0; i < joki.pisteet.length; i++) {
+          const [x, y] = joki.pisteet[i];
+          const etaisyys = Math.hypot(x + siirto - keskiX, y - keskiY);
+          if (!paras || etaisyys < paras.etaisyys) paras = { etaisyys, siirto, i, x: x + siirto, y };
+        }
+      }
+      if (paras) jokienAnkkurit.set(joki.avain, { i: paras.i });
     }
     if (!paras) continue;
     // Osuuko lähin piste ruudulle? Vara on nimen puolikas: nimi, jonka
