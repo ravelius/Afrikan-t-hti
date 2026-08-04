@@ -856,8 +856,13 @@ const MANNER_SIIRTO_Y = 0.2;
  * Saapumisliu'un lähtölaajuus isolla laudalla: monenko kertaisena
  * näkymä avautuu ennen kuin se laskeutuu lähikuvaan. Kokonäkymästä ei
  * lähdetä (ks. zoomaaMantereelle).
+ *
+ * Nostettu 2,6:sta omistajan pyynnöstä: "aloita zoomaus hieman
+ * kauempaa kuin tällä hetkellä". 3,6 on yhä selvästi alle kokonäkymän
+ * — maailmankartalla se on noin kolmasosa laudan leveydestä eli
+ * mannerta ympäristöineen, ei maapalloa.
  */
-const MANNER_LAAJUUS = 2.6;
+const MANNER_LAAJUUS = 3.6;
 const ZOOM_MS = 2400;
 // Etusivun zoomaus vielä tätäkin hitaammin (omistajan toive): se on
 // pelin avaus, ja koko maailmankartta on iso matka lähikuvaan.
@@ -8785,17 +8790,39 @@ export class UI {
     // kertoja aloittaa sekunnin kuluttua saapumisesta, tausta on ehtinyt
     // nousta kuuluviin eikä ilmesty puheen kanssa yhtä aikaa.
     this.ennakoiAmbienssi(this.game.player?.pos);
+    /*
+     * SAAPUMISNÄKYMÄ ASETETAAN ENNEN KALVON HÄIVYTYSTÄ.
+     *
+     * Kalvo häipyy 280 millisekuntia, ja sen läpi näkyy kartta. Jos
+     * saapumiszoom ajastetaan vasta kalvon poiston jälkeen, häivytyksen
+     * ajan näkyy laudan KOKONÄKYMÄ — ja vasta sitten kuva hyppää
+     * lähemmäs ja alkaa liukua. Omistaja näki juuri sen: "näkyy ensin
+     * koko maailmankartta, sitten se vain hyppää lähemmäs ja sitten
+     * vasta zoomaa."
+     *
+     * Kun näkymä asetetaan ensin, kalvon takaa paljastuu suoraan liu'un
+     * lähtöasento eikä kokonäkymä. Hyppyä ei ole, koska mitään ei
+     * ehditty näyttää siitä mistä hypättäisiin.
+     *
+     * zoomaaMantereelle asettaa asennon heti mutta käynnistää liu'un
+     * vasta ZOOM_TAUKO_MS:n kuluttua (260 ms), eli suunnilleen silloin
+     * kun kalvo on juuri kadonnut.
+     *
+     * flight-active on purettava ENSIN. mannerZoomTarpeen() palauttaa
+     * falsen niin kauan kuin lippu on päällä (zoomaus ehti muuten
+     * tapahtua lennon aikana), joten ilman purkua saapumiszoom ei
+     * käynnisty lainkaan — mitattuna näkyvä leveys jäi laudan
+     * levyiseksi koko saapumisen ajaksi.
+     */
+    document.body.classList.remove('flight-active');
+    this.ajastaMannerZoom();
     overlay.classList.add('flight-leaving');
     await this.wait(280);
     overlay.remove();
     this.hideFlightLine();
-    document.body.classList.remove('flight-active');
     // Ulos astuttaessa päiväkirja pääsee ääneen: lennon ajaksi lykätty
     // saapumismerkintä alkaa kirjoittua ja soida vasta nyt.
     if (!this.dead) this.render();
-    // Vasta nyt kartta on oikeasti näkyvissä: mantereen kokonäkymä saa
-    // hetken aikaa olla esillä, ja sen jälkeen zoomataan lähelle.
-    this.ajastaMannerZoom();
     // Kartan bittikartta täydennetään vasta tässä: lennon aikana
     // rasterointi olisi jumittanut kalvon animaation ja puheen ajastimen.
     this.taydennaTaide?.({ heti: true });

@@ -61,6 +61,10 @@ const nuku = (ms) => new Promise((r) => { setTimeout(r, ms); });
 
 /* Hakemisto puhuu kaksikirjaimista koodia, peli kolmikirjaimista. */
 const ISO2 = {
+  ARG: 'AR', AUS: 'AU', BOL: 'BO', BRA: 'BR', CAN: 'CA', CHL: 'CL', COL: 'CO',
+  CUB: 'CU', ECU: 'EC', FJI: 'FJ', GRL: 'GL', GTM: 'GT', MEX: 'MX', NIC: 'NI',
+  NZL: 'NZ', PAN: 'PA', PER: 'PE', PNG: 'PG', SLB: 'SB', TLS: 'TL', USA: 'US',
+  VEN: 'VE', VUT: 'VU',
   AFG: 'AF', AGO: 'AO', ARE: 'AE', AUT: 'AT', BGR: 'BG', BIH: 'BA', CHE: 'CH',
   CHN: 'CN', CMR: 'CM', COD: 'CD', CYP: 'CY', CZE: 'CZ', DEU: 'DE', DNK: 'DK',
   DZA: 'DZ', EGY: 'EG', ESP: 'ES', EST: 'EE', ETH: 'ET', FIN: 'FI', FRA: 'FR',
@@ -86,6 +90,34 @@ const ISO2 = {
  * koska hakemistoon on kirjattu kumpaakin.
  */
 const YKKOSRADIO = {
+  /*
+   * Amerikat ja Oseania. Latinalaisessa Amerikassa valtion kanava on
+   * lähes aina "Radio Nacional", ja koska säännöt ovat maakohtaisia,
+   * sama nimi kelpaa monessa maassa sekoittumatta.
+   */
+  ARG: /radio nacional|\bam 870\b|radio continental/i,
+  AUS: /abc radio national|abc news radio|abc local|\bradio national\b/i,
+  BOL: /patria nueva|radio fides|radio panamericana|radio illimani/i,
+  BRA: /r[aá]dio nacional|r[aá]dio mec|\bebc\b|band ?news|cbn /i,
+  CAN: /cbc radio (one|1)|ici premi[eè]re|radio-?canada/i,
+  CHL: /radio cooperativa|radio bio ?b[ií]o|radio nacional de chile|radio agricultura/i,
+  COL: /radio nacional de colombia|\brtvc\b|caracol radio|rcn radio|\bw radio\b/i,
+  CUB: /radio rebelde|radio progreso|radio habana|radio reloj|radio taino/i,
+  ECU: /radio p[uú]blica|radio quito|ecuadoradio|radio sucesos/i,
+  FJI: /radio fiji|\bfbc\b|bula fm|radio pasifik/i,
+  GRL: /\bknr\b|kalaallit nunaata/i,
+  GTM: /\btgw\b|emisoras unidas|radio nacional|radio punto/i,
+  MEX: /radio educaci[oó]n|\bimer\b|radio f[oó]rmula|radio unam|\bw radio\b/i,
+  NIC: /radio nicaragua|radio corporaci[oó]n|primer[ií]sima|radio ya\b/i,
+  NZL: /\brnz\b|radio new zealand|radio nz/i,
+  PAN: /radio nacional|\brpc\b|radio panam[aá]|\bkw continente\b/i,
+  PER: /radio nacional|\brpp\b|radio exitosa/i,
+  PNG: /\bnbc\b|karai|radio kundu|national broadcasting/i,
+  SLB: /\bsibc\b|solomon islands broadcasting/i,
+  TLS: /radio timor|\brttl\b|radio liberdade|radio komunidade/i,
+  USA: /\bnpr\b|national public radio|\bwnyc\b|\bkqed\b|\bwbur\b|\bwamu\b/i,
+  VEN: /radio nacional de venezuela|\brnv\b|uni[oó]n radio|radio fe y alegr[ií]a/i,
+  VUT: /radio vanuatu|\bvbtc\b/i,
   FIN: /yle radio 1|yle puhe/i,
   SWE: /sveriges radio p1|\bsr p1\b/i,
   NOR: /nrk p1|nrk alltid nyheter/i,
@@ -184,6 +216,29 @@ const YKKOSRADIO = {
  * Vain ne maat, joille maalistaus ei löytänyt virallista asemaa.
  */
 const HAKUSANAT = {
+  ARG: ['Radio Nacional Argentina', 'Radio Continental', 'AM 750'],
+  AUS: ['ABC Radio National', 'ABC News Radio', 'ABC Sydney'],
+  BOL: ['Radio Patria Nueva', 'Radio Fides', 'Radio Panamericana'],
+  BRA: ['Radio Nacional Brasilia', 'Radio MEC', 'CBN Rio'],
+  CAN: ['CBC Radio One', 'Ici Premiere', 'CBC Toronto'],
+  CHL: ['Radio Cooperativa', 'Radio Bio Bio', 'Radio Agricultura'],
+  COL: ['Radio Nacional de Colombia', 'Caracol Radio', 'RCN Radio'],
+  CUB: ['Radio Rebelde', 'Radio Progreso', 'Radio Habana Cuba'],
+  ECU: ['Radio Publica del Ecuador', 'Radio Quito', 'Radio Sucesos'],
+  FJI: ['Radio Fiji One', 'FBC Radio', 'Bula FM'],
+  GRL: ['KNR', 'Kalaallit Nunaata Radioa'],
+  GTM: ['Radio TGW', 'Emisoras Unidas', 'Radio Punto'],
+  MEX: ['Radio Educacion', 'IMER', 'Radio UNAM', 'Radio Formula'],
+  NIC: ['Radio Nicaragua', 'Radio Corporacion', 'La Primerisima'],
+  NZL: ['RNZ National', 'Radio New Zealand'],
+  PAN: ['Radio Nacional Panama', 'RPC Radio', 'KW Continente'],
+  PER: ['Radio Nacional del Peru', 'RPP Noticias', 'Radio Exitosa'],
+  PNG: ['NBC PNG', 'Radio Kundu', 'Karai'],
+  SLB: ['SIBC', 'Solomon Islands Broadcasting'],
+  TLS: ['Radio Timor Leste', 'RTTL', 'Radio Liberdade Dili'],
+  USA: ['WNYC', 'KQED', 'WBUR', 'NPR News'],
+  VEN: ['Radio Nacional de Venezuela', 'Union Radio', 'Radio Fe y Alegria'],
+  VUT: ['Radio Vanuatu', 'VBTC'],
   EGY: ['Nile FM', 'Radio Cairo', 'ERTU'],
   IND: ['Akashvani', 'All India Radio', 'AIR News'],
   AFG: ['Radio Afghanistan', 'Salam Watandar', 'Arman FM'],
@@ -339,9 +394,18 @@ function pisteet(asema, maa) {
 
 // --- ajo ----------------------------------------------------------------------
 
+/*
+ * Maat luetaan lautojen omista taulukoista eikä käsin kirjoitetusta
+ * listasta: kaupunkeja lisätään pakkoihin, ja käsin ylläpidetty lista
+ * jäisi jälkeen huomaamatta. Lauta "vanhamaailma" jakautui aikanaan
+ * kolmeksi (maailmankartta, europe, africa), ja haku etsi sitä vielä
+ * nimellä — silloin se kaatui heti alkuun.
+ */
 const { PACKS } = await import('../js/pack.js');
-const pack = PACKS.find((p) => p.id === 'vanhamaailma');
-const kaikki = [...new Set(Object.values(pack.map.cityCountry ?? {}))].sort();
+const LAUDAT = ['maailmankartta', 'europe', 'africa'];
+const kaikki = [...new Set(LAUDAT.flatMap((id) => Object.values(
+  PACKS.find((p) => p.id === id)?.map?.cityCountry ?? {},
+)))].sort();
 const pyydetyt = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const maat = pyydetyt.length ? pyydetyt : kaikki;
 

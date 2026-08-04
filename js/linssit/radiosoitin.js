@@ -678,18 +678,49 @@ function osa(tagi, luokka, teksti = '') {
  * ole täysi: himmentymä sirottaa valoa, jolloin kirkkaat kohdat
  * tummuvat ja tummat vaalenevat. Kirkkain sävy laski 244 → 218 ja tummin
  * nousi 74 → 82, eli koko kromin vaihteluväli kapeni viidenneksen.
- * Vertailukohta on kotelon puu, jonka vaalein kohta on noin 150: kytkin
- * saa yhä olla laitteen kirkkain osa, muttei enää kaksi kertaa
- * kirkkaampi kuin mikään muu.
+ *
+ * PATINOITU KOLMANNEN KERRAN, JA TÄLLÄ KERTAA MITATEN (omistaja kolmatta
+ * kertaa: "radion kytkimet ovat liian uuden näköiset ja kirkkaat").
+ * Kaksi ensimmäistä patinointia olivat hienosäätöä, ja mittaus kertoo
+ * miksi ne eivät riittäneet. Kytkimen kirkkain pikseli oli 223 (rgb
+ * 226,224,210) samalla kun kotelon puun keskisävy kytkimen ympärillä on
+ * 76 ja puun kirkkaimmatkin kohdat jäävät 132:een. Kytkin oli siis
+ * kolme kertaa ympäristönsä sävyinen ja koko laitteen kirkkain esine —
+ * kirkkaampi kuin näyttö (161) ja kaiuttimen messinkikilpi (207).
+ *
+ * KROMI EI OLE TÄSSÄ PEILI VAAN VANHA, HIMMENTYNYT METALLI. Kolme
+ * muutosta yhdessä, ja kaikki kolme tarvittiin:
+ *
+ *   1. Huippukiillot pois lähes kokonaan. Kirkkain raita 219 → 135,
+ *      vivun kiiltojuova 210 → 136, kupu 223 → 126. Peilikiilto on
+ *      juuri se, mistä uusi metalli tunnistetaan.
+ *   2. Sävy lämpimämmäksi ja harmaammaksi. Vanhat sävyt olivat
+ *      viherharmaita (G suurin kanava); nyt punainen johtaa ja sininen
+ *      jää jälkeen, kylläisyys noin 12 %. Himmentynyt nikkelikromi on
+ *      lämmin harmaa, ei kylmä peili.
+ *   3. Kontrasti pienemmäksi. Vaihteluväli 85–219 kapeni 65–135:een eli
+ *      puoleen. Himmentymä sirottaa valoa molempiin suuntiin.
+ *
+ * TAVOITE ON MITATTAVISSA: kytkin ei enää ole kuvan kirkkain asia.
+ * Kirkkaimmiksi jäävät merkkivalo ja näyttö, ja kytkimen huippu on
+ * kotelon puun omalla sävyalueella (puun kirkkaat kohdat 132).
+ *
+ * VERTAILUKOHDAT OVAT SAMASSA KUVASSA: VU-mittarin kehys ja
+ * kaiutinsäleikkö. Molempien metalliosat — mittarin messinkiviiva ja
+ * säleikön messinkikilpi — ovat matalakontrastista, lämmintä ja tummaa
+ * metallia, ja kytkimen on oltava niiden ikäinen. Siksi patinointi
+ * ulottuu myös merkkivalon kromirenkaaseen (css/radio.css
+ * .radio-lamppu-kehys): kaksi eri ikäistä metallia samassa kotelossa
+ * lukee virheeksi eikä kulumaksi.
  *
  * Sameus ja epätasaisuus ovat vetoina SVG:ssä (kytkimenSvg: harso ja
  * pistesyöpymä), koska liukuväri on aina tasainen — ja tasaisuus on
  * juuri se, mikä lukee uutena.
  */
 const KROMIN_RAIDAT = [
-  [0, '#d2d5cd'], [0.11, '#a9afa8'], [0.22, '#5f645d'], [0.34, '#c6c9be'],
-  [0.46, '#dadcd0'], [0.57, '#888d86'], [0.7, '#525751'], [0.82, '#b4b9ae'],
-  [1, '#6c706a'],
+  [0, '#888278'], [0.11, '#736e66'], [0.22, '#4b4842'], [0.34, '#827c72'],
+  [0.46, '#8c867b'], [0.57, '#615d56'], [0.7, '#44413c'], [0.82, '#79746a'],
+  [1, '#524e48'],
 ];
 
 /*
@@ -711,12 +742,15 @@ const KROMIN_RAIDAT = [
  *
  * VIPU HIMMENI MUTTERIN MUKANA, ja sen kiiltojuova eniten: vipu on
  * kytkimen suurin yhtenäinen metallipinta, joten juuri sen kiilto sai
- * laitteen näyttämään vastaostetulta. Juova laski 242 → 209 mutta jäi
- * sarjan kirkkaimmaksi — ilman sitä lieriö litistyisi tikuksi.
+ * laitteen näyttämään vastaostetulta. Juova laski 242 → 209 ja
+ * kolmannessa patinoinnissa edelleen 209 → 136, mutta se jää yhä sarjan
+ * kirkkaimmaksi — ilman sitä lieriö litistyisi tikuksi. Viisi sävyä on
+ * yhä viisi sävyä; ne vain mahtuvat nyt puolta kapeampaan väliin
+ * (65–136, ks. KROMIN_RAIDAT).
  */
 const VARREN_RAIDAT = [
-  [0, '#4d524b'], [0.22, '#d1d3c7'], [0.5, '#8e938c'],
-  [0.72, '#474c46'], [1, '#a8ada2'],
+  [0, '#47443e'], [0.22, '#8d877c'], [0.5, '#6a655d'],
+  [0.72, '#43413b'], [1, '#787369'],
 ];
 
 /**
@@ -787,11 +821,15 @@ function kytkimenSvg(tunniste) {
       <!-- Kulmien kiilto: vaalea ydin, joka sammuu reunalle. Sama kuvio
            kuudessa kärjessä, ks. mutterin patina alempana. Ydin ei ole
            enää puhdas valkoinen eikä läpinäkymätön: kiilto on vanhassa
-           kromissa hajavaloa, ei peilikuvaa. -->
+           kromissa hajavaloa, ei peilikuvaa.
+           KOLMANNESSA PATINOINNISSA sekä sävy että voima laskivat (242 →
+           176, peitto 0,34 → 0,20). Kärkien kiilto on kytkimen ainoa
+           kohta, jossa kromi on vielä koskematonta, ja juuri siksi se oli
+           se, mikä kirkkaudesta jäi viimeisenä jäljelle. -->
       <radialGradient id="${kulmat}" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0" stop-color="#f6f2e4" stop-opacity="0.34"/>
-        <stop offset="0.5" stop-color="#f6f2e4" stop-opacity="0.12"/>
-        <stop offset="1" stop-color="#f6f2e4" stop-opacity="0"/>
+        <stop offset="0" stop-color="#b7afa1" stop-opacity="0.2"/>
+        <stop offset="0.5" stop-color="#b7afa1" stop-opacity="0.07"/>
+        <stop offset="1" stop-color="#b7afa1" stop-opacity="0"/>
       </radialGradient>
       <!--
         HIMMENTYMÄN HARSO. Vanhan kromin sameus ei ole tasainen kalvo
@@ -799,11 +837,17 @@ function kytkimenSvg(tunniste) {
         on se, johon pöly ja kosteus jäävät. Liukuväri on siksi
         keskipisteeltään sivussa (0,64 / 0,7) — keskitetty harso lukisi
         varjostukseksi eikä lialta.
+
+        HARSON ON OLTAVA KROMIA TUMMEMPI, TAI SE EI HIMMENNÄ VAAN
+        VAALENTAA. Vanha sävy #7c7a63 oli kirkkaudeltaan 121, ja kun
+        kromin keskisävy laski kolmannessa patinoinnissa sadan tienoille,
+        harso olisi kääntynyt valoksi juuri niissä kohdissa, joita sen
+        pitäisi samentaa. Nyt sävy on 87 ja peitto hitusen suurempi.
       -->
       <radialGradient id="${harso}" cx="0.64" cy="0.7" r="0.62">
-        <stop offset="0" stop-color="#7c7a63" stop-opacity="0.34"/>
-        <stop offset="0.55" stop-color="#7c7a63" stop-opacity="0.16"/>
-        <stop offset="1" stop-color="#7c7a63" stop-opacity="0.02"/>
+        <stop offset="0" stop-color="#5d5747" stop-opacity="0.38"/>
+        <stop offset="0.55" stop-color="#5d5747" stop-opacity="0.18"/>
+        <stop offset="1" stop-color="#5d5747" stop-opacity="0.03"/>
       </radialGradient>
       <!-- Kiilto rajataan mutteriin: kärkien yli vuotava valo osuisi
            puuhun, ja siellä se lukisi tahrana eikä metallina. -->
@@ -817,10 +861,15 @@ function kytkimenSvg(tunniste) {
         <stop offset="0.84" stop-color="#000000" stop-opacity="0.3"/>
         <stop offset="1" stop-color="#000000" stop-opacity="0"/>
       </radialGradient>
+      <!-- Vivun tyven kupu. TÄMÄ OLI KOKO KYTKIMEN KIRKKAIN PIKSELI:
+           mitattuna 223 (rgb 226,224,210) puun 76:n vieressä. Kupu on
+           pyöreä ja kiillotettu, joten sen kohokohta on koko laitteen
+           ainoa aito peilipiste — ja juuri sellaisen vanha kromi on
+           menettänyt ensimmäisenä. Ydin 223 → 126. -->
       <radialGradient id="${kupu}" cx="0.36" cy="0.3" r="0.78">
-        <stop offset="0" stop-color="#e2e0d2"/>
-        <stop offset="0.45" stop-color="#9aa09b"/>
-        <stop offset="1" stop-color="#343a37"/>
+        <stop offset="0" stop-color="#837d73"/>
+        <stop offset="0.45" stop-color="#68645c"/>
+        <stop offset="1" stop-color="#3c3a35"/>
       </radialGradient>
       <!--
         VIVUN KÄRKI ON KIILLOTTUNUT. Kytkintä käännetään kärjestä, ja
@@ -832,9 +881,9 @@ function kytkimenSvg(tunniste) {
         alhaalla.
       -->
       <linearGradient id="${kiilto}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#f7f3e6" stop-opacity="0.24"/>
-        <stop offset="0.3" stop-color="#f7f3e6" stop-opacity="0.08"/>
-        <stop offset="0.72" stop-color="#f7f3e6" stop-opacity="0"/>
+        <stop offset="0" stop-color="#afa79a" stop-opacity="0.14"/>
+        <stop offset="0.3" stop-color="#afa79a" stop-opacity="0.05"/>
+        <stop offset="0.72" stop-color="#afa79a" stop-opacity="0"/>
       </linearGradient>
     </defs>
 
@@ -848,7 +897,7 @@ function kytkimenSvg(tunniste) {
     <circle cx="20" cy="33" r="13.4" fill="url(#${kromiV})"
       stroke="rgba(0,0,0,0.62)" stroke-width="0.7"/>
     <circle cx="20" cy="33" r="12.4" fill="none"
-      stroke="rgba(246,242,228,0.16)" stroke-width="0.7"/>
+      stroke="rgba(190,182,168,0.16)" stroke-width="0.7"/>
     <!-- Prikan himmentymä: harso alanurkkaan, ks. gradientti ${harso}.
          Prikka on kytkimen suurin kromipinta, joten juuri sen tasaisuus
          luki uutena. -->
@@ -863,9 +912,9 @@ function kytkimenSvg(tunniste) {
          kapeana vaaleana kaistana lapetta pitkin. Kaista on himmeä ja
          katkeaa alalappeella — avain on hionut viisteen sieltä pois. -->
     <path d="M10.2 33 L15.2 24.2 L24.8 24.2 L29.8 33 L24.8 41.8 L15.2 41.8 Z"
-      fill="none" stroke="rgba(246,242,228,0.2)" stroke-width="0.8"/>
+      fill="none" stroke="rgba(190,182,168,0.2)" stroke-width="0.8"/>
     <path d="M10.2 33 L15.2 24.2 L24.8 24.2 L29.8 33"
-      fill="none" stroke="rgba(246,242,228,0.12)" stroke-width="0.8"/>
+      fill="none" stroke="rgba(190,182,168,0.12)" stroke-width="0.8"/>
 
     <!--
       MUTTERIN PATINA JA KULMIEN KIILTO (omistajan toive 4.8.2026:
@@ -879,7 +928,7 @@ function kytkimenSvg(tunniste) {
     -->
     <g clip-path="url(#${mutteri})">
       <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
-        fill="#8b8a72" opacity="0.24"/>
+        fill="#7d7768" opacity="0.26"/>
       <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
         fill="url(#${harso})"/>
       <g fill="url(#${kulmat})">

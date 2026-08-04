@@ -142,7 +142,20 @@ const WORLD_CITIES = [
   {
     id: 'newyork', name: 'New York', x: 359, y: 293.2, start: true, airport: true,
     la: 'end', lx: -16, ly: 5,
-    links: [{ pack: 'northamerica', city: 'newyork', label: 'Pohjois-Amerikan lauta' }],
+    /*
+     * Koko maailma ensin, kuten muillakin porteilla.
+     *
+     * New York, Los Angeles, Rio ja Sydney veivät suoraan vanhalle
+     * mannerlaudalle, ja kymmenen muuta porttia uudelle
+     * maailmankartalle. Omistaja: "Jos lennän aloitusnäytöltä New
+     * Yorkiin, niin tulee vanha kartta, joka ei ole edes
+     * skrollattavissa." Manner on 1000 yksikköä leveä eli kapeampi kuin
+     * näkymä, joten panoroitavaa ei ollut — eikä siinä ole maastoa.
+     */
+    links: [
+      { pack: 'maailmankartta', city: 'newyork', label: 'Koko maailma' },
+      { pack: 'northamerica', city: 'newyork', label: 'Pohjois-Amerikan lauta' },
+    ],
   },
 
   {
@@ -157,7 +170,10 @@ const WORLD_CITIES = [
   {
     id: 'rio', name: 'Rio de Janeiro', x: 457.7, y: 477, airport: true, la: 'end', lx: -16, ly: 5,
     // Sama kaupunki on myös Etelä-Amerikan laudalla.
-    links: [{ pack: 'southamerica', city: 'rio', label: 'Etelä-Amerikan lauta' }],
+    links: [
+      { pack: 'maailmankartta', city: 'rio', label: 'Koko maailma' },
+      { pack: 'southamerica', city: 'rio', label: 'Etelä-Amerikan lauta' },
+    ],
   },
   {
     id: 'mumbai', name: 'Mumbai', x: 871.5, y: 353.5, airport: true, la: 'start', lx: 16, ly: 5,
@@ -176,7 +192,10 @@ const WORLD_CITIES = [
   },
   {
     id: 'sydney', name: 'Sydney', x: 1051.9, y: 527.7, airport: true, la: 'end', lx: -16, ly: -10,
-    links: [{ pack: 'oceania', city: 'sydney', label: 'Oseanian lauta' }],
+    links: [
+      { pack: 'maailmankartta', city: 'sydney', label: 'Koko maailma' },
+      { pack: 'oceania', city: 'sydney', label: 'Oseanian lauta' },
+    ],
   },
   {
     id: 'moskova', name: 'Moskova', x: 806.6, y: 248.6, airport: true, la: 'start', lx: 16, ly: 5,
@@ -208,7 +227,10 @@ const WORLD_CITIES = [
   },
   {
     id: 'losangeles', name: 'Los Angeles', x: 286.5, y: 322.3, airport: true, la: 'end', lx: -16, ly: 12,
-    links: [{ pack: 'northamerica', city: 'losangeles', label: 'Pohjois-Amerikan lauta' }],
+    links: [
+      { pack: 'maailmankartta', city: 'losangeles', label: 'Koko maailma' },
+      { pack: 'northamerica', city: 'losangeles', label: 'Pohjois-Amerikan lauta' },
+    ],
   },
   {
     id: 'ateena', name: 'Ateena', x: 757.8, y: 279.4, airport: true,
