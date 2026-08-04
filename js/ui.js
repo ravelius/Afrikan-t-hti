@@ -1444,6 +1444,34 @@ export class UI {
       else this.kutistaPaivakirja();
     });
 
+    /*
+     * Yhden rivin päiväkirja: koko kortti on painike.
+     *
+     * Kutistuneena kortista näkyy vain kaupungin nimi (.fact-place), ja
+     * kaikki muu on kartan päällä tieltä pois. Napautus mihin tahansa
+     * kohtaan lappua palauttaa tavallisen ikkunan — kortin omat napit ja
+     * tekstirivi eivät silloin ota napautuksia vastaan lainkaan (css:n
+     * pointer-events), joten tähän ei tarvita nappisuodatusta.
+     *
+     * stopPropagation on tässä tahallinen: kutistunut lappu on pieni,
+     * mutta se on kartan päällä, ja sen oma napautus ei saa jatkaa
+     * kartalle napautuszoomaukseksi.
+     */
+    this.factCard.addEventListener('click', (e) => {
+      if (!this.factCard.classList.contains('pieni')) return;
+      e.stopPropagation();
+      this.asetaPaivakirjanKoko(false);
+    });
+    // Sama näppäimistöltä: kutistuneena kortilla on role="button" ja
+    // tabindex, joten sen kuuluu totella myös Enteriä ja välilyöntiä.
+    this.factCard.addEventListener('keydown', (e) => {
+      if (!this.factCard.classList.contains('pieni')) return;
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      e.preventDefault();
+      e.stopPropagation();
+      this.asetaPaivakirjanKoko(false);
+    });
+
     this.winnerDialog = document.getElementById('winner-dialog');
     this.quizDialog = document.getElementById('quiz-dialog');
     this.quizCity = document.getElementById('quiz-city');
@@ -3174,6 +3202,8 @@ export class UI {
       liikkui = false;
       this.kartanRaahaus = true;
       document.body.classList.add('kartta-raahaus');
+      // Kartta lähtee kahden sormen alla liikkeelle: päiväkirja riviksi.
+      this.asetaPaivakirjanKoko(true);
       this.svg.style.transition = '';
     };
 
@@ -3333,6 +3363,14 @@ export class UI {
         this.kartanRaahaus = true;
         document.body.classList.add('kartta-raahaus');
         pane.setPointerCapture?.(e.pointerId);
+        /*
+         * Päiväkirja yhdelle riville heti kun kartta lähtee liikkeelle
+         * — ja vain kerran eleen aikana (omistajan toive: kortti ei saa
+         * napsahdella kesken vierityksen). Tämä haara on kynnyksen
+         * takana ja suoritetaan eleessä täsmälleen kerran, ja
+         * asetaPaivakirjanKoko palaa saman tien, jos lappu on jo pieni.
+         */
+        this.asetaPaivakirjanKoko(true);
       }
       this.asetaPan(alku.pan + dx, alku.panY + dy);
     });
@@ -4765,6 +4803,55 @@ export class UI {
   uusiFactKey(key) {
     this.factKey = key;
     this.kutistaPaivakirja();
+    /*
+     * Uusi merkintä avaa myös yhden rivin lapun.
+     *
+     * Linssi tai kartan vieritys on voinut kutistaa kortin nimeksi, ja
+     * jos lappu jäisi siihen, pelaaja ei näkisi juuri kirjoitettua
+     * tekstiä lainkaan — hän ei edes tietäisi, että sellainen tuli
+     * (omistajan linjaus). Seuraava kartan liike kutistaa kortin taas.
+     */
+    this.asetaPaivakirjanKoko(false);
+  }
+
+  /**
+   * Päiväkirjan kaksi kokoa kartalla: tavallinen ikkuna ja yhden rivin
+   * nimilappu.
+   *
+   * Lappu on kolmen tilanteen vastaus (omistajan toive 4.8.2026):
+   * linssin päällä kartan pitää näkyä selitteen ja päiväkirjan välistä,
+   * ja kun karttaa vieritetään sormella, kortti on tiellä juuri siinä
+   * nurkassa, jota katsotaan. Kutistuminen on aina peruttavissa
+   * napautuksella, eikä se koskaan kestä uuden merkinnän yli.
+   *
+   * Tila luetaan ja kirjoitetaan luokasta itsestään, ei erillisestä
+   * kentästä: niin kortin ulkoasu ja saavutettavuusmääreet eivät voi
+   * ajautua eri linjoille.
+   */
+  asetaPaivakirjanKoko(pieni) {
+    if (!this.factCard) return;
+    if (this.factCard.classList.contains('pieni') === pieni) return;
+    this.factCard.classList.toggle('pieni', pieni);
+    if (pieni) {
+      // Auki levitetty ja yhdelle riville kutistettu ovat toistensa
+      // vastakohdat: molemmat päällä jättäisi kortin epämääräiseen
+      // välitilaan, jos lappu avataan takaisin.
+      this.factCard.classList.remove('laajennettu');
+      if (this.factText) this.factText.scrollTop = 0;
+      this.factCard.setAttribute('role', 'button');
+      this.factCard.setAttribute('tabindex', '0');
+      this.factCard.setAttribute('aria-expanded', 'false');
+      this.factCard.setAttribute('aria-label', 'Avaa matkapäiväkirjan merkintä');
+    } else {
+      // Auki kortti on tavallista sisältöä omine nappeineen, joten
+      // painikkeen rooli ja tila otetaan pois — sisäkkäinen painike
+      // painikkeen sisällä ei ole luettavissa oleva tila.
+      this.factCard.removeAttribute('role');
+      this.factCard.removeAttribute('tabindex');
+      this.factCard.removeAttribute('aria-expanded');
+      this.factCard.removeAttribute('aria-label');
+    }
+    this.paivitaJatkuuVihje?.();
   }
 
   /**
@@ -8003,22 +8090,60 @@ export class UI {
    */
   piirraLinssiSelite() {
     const linssi = this.paallaOlevaLinssi();
+    const kerrosPaalla = !!linssi && linssi.kerros !== false && !this.dead;
+    /*
+     * Linssin syttyminen kutistaa päiväkirjan yhdelle riville ja
+     * sammuminen palauttaa sen (omistajan toive): kartan päällä on
+     * silloin kaksi paperia, ja kartan pitää näkyä niiden välistä.
+     *
+     * Vain vaihtumishetkellä, ei joka piirrolla: selite piirretään
+     * uudelleen myös askelvalinnasta ja laudan vaihdosta, eikä pelaajan
+     * omaa napautusta saa kumota selän takaa.
+     */
+    this.linssiKortitPienina ??= false;
+    if (kerrosPaalla !== this.linssiKortitPienina) {
+      this.linssiKortitPienina = kerrosPaalla;
+      this.asetaPaivakirjanKoko(kerrosPaalla);
+    }
     // Kerrokseton linssi (radio, tähtitaivas) ei piirrä kartalle mitään,
     // joten sillä ei ole kartalla selitettävää.
-    if (!linssi || linssi.kerros === false || this.dead) {
+    if (!kerrosPaalla) {
       this.suljeLinssiSelite();
       return;
     }
+    /*
+     * Selite avautuu ja sulkeutuu napauttamalla, ja kutistettuna siitä
+     * jää näkyviin vain linssin nimi. Aloitustila on kutistettu: linssin
+     * päällä kartta on se, jota katsotaan, ja värilaatikot ovat
+     * yhden napautuksen päässä. Valinta säilyy istunnon yli linssistä
+     * toiseen, joten kerran avattu selite pysyy auki.
+     */
+    this.linssiSelitePieni ??= true;
     if (!this.linssiSelite) {
       this.linssiSelite = html('aside', 'linssi-selite');
       // Kartan oma napautuskuuntelija kutistaisi päiväkirjan, ja
       // kortin napit ovat napautuksia varten.
-      this.linssiSelite.addEventListener('click', (e) => e.stopPropagation());
+      this.linssiSelite.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Otsikkopainike ja askelliuskat hoitavat oman napautuksensa.
+        if (e.target.closest('button')) return;
+        this.vaihdaLinssiSelite();
+      });
       this.mapPane.appendChild(this.linssiSelite);
     }
     const kortti = this.linssiSelite;
     kortti.replaceChildren();
-    kortti.appendChild(html('h2', '', linssi.nimi));
+    /*
+     * Nimi on oikea painike eikä pelkkä otsikko: kutistettuna se on
+     * ainoa näkyvä osa selitteestä, ja aria-expanded kertoo apuvälineelle
+     * kumpi tila on päällä. Otsikkotaso säilyy sen ympärillä.
+     */
+    const otsikko = html('h2');
+    const otsikkoNappi = html('button', 'linssi-selite-nappi', linssi.nimi);
+    otsikkoNappi.type = 'button';
+    otsikkoNappi.addEventListener('click', () => this.vaihdaLinssiSelite());
+    otsikko.appendChild(otsikkoNappi);
+    kortti.appendChild(otsikko);
 
     let rivit = [];
     try {
@@ -8085,7 +8210,22 @@ export class UI {
      * ja linssin oma pitkä merkintä on yhä linssivalitsimen "Mistä tämä
      * tieto on?" -napin takana (paivitaLinssiTiedot).
      */
+    this.vaihdaLinssiSelite(this.linssiSelitePieni);
     this.sijoitaLinssiSelite();
+  }
+
+  /**
+   * Selite auki tai kiinni. Ilman argumenttia napautus vaihtaa tilaa;
+   * argumentin kanssa tila vain kirjoitetaan uudelleen piirrettyyn
+   * korttiin (piirraLinssiSelite rakentaa lapset joka kerta uusiksi).
+   */
+  vaihdaLinssiSelite(pieni) {
+    this.linssiSelitePieni = pieni ?? !this.linssiSelitePieni;
+    const kortti = this.linssiSelite;
+    if (!kortti) return;
+    kortti.classList.toggle('pieni', this.linssiSelitePieni);
+    kortti.querySelector('.linssi-selite-nappi')
+      ?.setAttribute('aria-expanded', String(!this.linssiSelitePieni));
   }
 
   suljeLinssiSelite() {

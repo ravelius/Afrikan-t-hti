@@ -202,7 +202,7 @@
        parin lauseen esittely Wikipedian tiivistelmästä ja päätös. Pidempi
        tarina tulee kartan päiväkirjasta ja koko artikkeli Lue lisää -linkistä. -->
   <dialog id="arrival-dialog" class="dialog">
-   <div class="dialog-card arrival-card">
+   <div class="dialog-card arrival-card" tabindex="-1" autofocus>
     <!-- Kaupunki ja maa vierekkäisinä palstoina leveällä ruudulla,
          kapealla allekkain (omistajan toive). -->
     <div class="arrival-palstat">
@@ -264,7 +264,7 @@
 
   <!-- Lue lisää: Wikipedian tiivistelmä -->
   <dialog id="wiki-dialog" class="dialog">
-   <div class="dialog-card wiki-card">
+   <div class="dialog-card wiki-card" tabindex="-1" autofocus>
     <h2 id="wiki-title">Lue lisää</h2>
     <!--
       Kirjanmerkkiliuskat kuten vanhassa osoite- tai tilikirjassa: yksi
@@ -292,7 +292,7 @@
 
   <!-- Tapahtumakortti: kysymyksen sijaan tapahtuu jotain -->
   <dialog id="event-dialog" class="dialog">
-   <div class="dialog-card arrival-card">
+   <div class="dialog-card arrival-card" tabindex="-1" autofocus>
     <h2>Matkalla sattui</h2>
     <p id="event-voice" class="fact-place">Nuoren herran havainto</p>
     <p id="event-text" class="arrival-text"></p>
@@ -305,7 +305,7 @@
 
   <!-- Isoisän matkalaukku: sisällä passi leimoineen ja matkan tavarat -->
   <dialog id="passport-dialog" class="dialog">
-   <div class="dialog-card passport-card">
+   <div class="dialog-card passport-card" tabindex="-1" autofocus>
     <h2>Isoisän matkalaukku</h2>
     <p class="muted">Laukku kulkee mukana koko matkan: sisällä on isoisän
       vihreä passi ja matkalta kertyneet tavarat.</p>
@@ -330,7 +330,7 @@
        aineistoista, joista peli on koottu. Aukeaa matkalaukun alalaidan
        linkistä; sisältö tulee js/lahteet.js:stä. -->
   <dialog id="lahteet-dialog" class="dialog">
-   <div class="dialog-card lahteet-card">
+   <div class="dialog-card lahteet-card" tabindex="-1" autofocus>
     <h2 id="lahteet-otsikko">Unohdettu aarre</h2>
     <div id="lahteet-sisus" class="lahteet-sisus"></div>
     <form method="dialog" class="dialog-actions">
@@ -345,7 +345,7 @@
     kertymä, eikä niitä saa takaisin.
   -->
   <dialog id="nollaa-dialog" class="dialog">
-   <div class="dialog-card">
+   <div class="dialog-card" tabindex="-1" autofocus>
     <h2>Uusi peli</h2>
     <p class="dialog-teksti">Matka alkaa alusta ja <b>kaikki muistit tyhjennetään</b>:
       tallennettu peli, passin leimat, laukun tavarat, ääniasetukset ja välimuisti.
@@ -362,7 +362,7 @@
     tietoturvaa: se estää vahingossa avaamisen, ei tahallista.
   -->
   <dialog id="kehittaja-dialog" class="dialog">
-   <div class="dialog-card">
+   <div class="dialog-card" tabindex="-1" autofocus>
     <h2>Kehittäjätila</h2>
     <p id="kehittaja-selite" class="dialog-teksti"></p>
     <form id="kehittaja-lomake" class="kehittaja-lomake">
@@ -381,7 +381,7 @@
 
   <!-- Säännöt -->
   <dialog id="rules-dialog" class="dialog">
-   <div class="dialog-card">
+   <div class="dialog-card" tabindex="-1" autofocus>
     <h2>Säännöt</h2>
     <div class="rules-text">
       <p><b>Peli.</b> Unohdettu aarre on yksin pelattava vaellus: kierrä maailmaa,
@@ -486,7 +486,7 @@
 
   <!-- Tietovisa -->
   <dialog id="quiz-dialog" class="dialog quiz">
-   <div class="dialog-card">
+   <div class="dialog-card" tabindex="-1" autofocus>
     <div class="quiz-head">
       <div class="quiz-head-text">
         <span id="quiz-badge" class="quiz-badge">Tietovisa</span>
@@ -537,7 +537,7 @@
 
   <!-- Voittoruutu -->
   <dialog id="winner-dialog" class="dialog">
-   <div class="dialog-card">
+   <div class="dialog-card" tabindex="-1" autofocus>
     <h2 id="winner-title">Voitto!</h2>
     <p id="winner-text"></p>
     <menu>
