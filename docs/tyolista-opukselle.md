@@ -5019,3 +5019,65 @@ kaventaa kahdesti: ensin `width: max-content`, sitten `1fr` pois. Kumpikaan
 ei purrut, koska mitoitusta ei ohjannut se, mikä näkyi, vaan se, mikä oli
 piilossa saman sarakkeen alapuolella. `opacity: 0` ja leikkaava
 korkeusraja piilottavat silmältä mutta eivät asettelijalta.
+
+## v253 — Vieritys takaisin sujuvaksi, maastonimet mittaan, logo (4.8.2026)
+
+**"Kartan vieritys tökkii taas" — ja "taas" oli oikea sana.** Vika tuli
+mukana v245:ssä, samassa versiossa kuin paperin rae.
+
+Rae maalattiin ruudulle kuviotäyttönä (`createPattern` + `setTransform`)
+multiply-sekoituksessa. Se on oikea lopputulos mutta väärä tapa: selain
+laskee kuvion muunnoksen ja sekoituksen pikseli kerrallaan. MITATTU
+1100 × 1100 ruudulle:
+
+| tapa | aika |
+|---|---|
+| kuviotäyttö + multiply | **28,9 ms** |
+| valmis laatta + multiply | **2,6 ms** |
+| pelkkä pohjaväri | 0,3 ms |
+
+Ruutuja syntyy panoroinnin aikana useita, joten 28 ms per ruutu on juuri
+se tökkiminen. Rae laatoitetaan nyt kerran valmiiksi ruudun kokoiseksi
+kankaaksi, ja ruutuun se menee yhtenä `drawImage`-kutsuna. Ulkonäkö on
+täsmälleen sama — multiply ja peittävyys ennallaan, vain toisto on
+laskettu etukäteen. **Yksitoistakertainen ero.**
+
+Kankaat välimuistissa raekoon mukaan, katto kolme (yksi kangas ~5 Mt).
+
+*Rehellisyyden nimissä:* tämän ympäristön päästä päähän -mittaus ei
+vahvista parannusta, koska headless-selaimen kehysvauhti on katossa
+30 fps:ssä (mediaani 33,3 ms kaikissa tiloissa, myös kerrokset
+poistettuina). Yksikkömittaus ruudun hinnasta on yksiselitteinen, ja se
+on juuri se työ, joka panoroinnin aikana tehdään.
+
+**Maastonimet kaupunkien nimien kokoisiksi.** Kaupungin nimi on 18
+LAUDAN yksikköä: se kutistuu ruudulla, kun karttaa loitontaa. Maastonimi
+oli kiinteä RUUDUN pikseleissä (15…23 px) eli ei kutistunut lainkaan —
+ja kasvoi siksi loitontaessa yhä suuremmaksi suhteessa kaupunkeihin,
+kunnes Volga oli moninkertainen Helsinkiin nähden. Nyt maastonimi on
+18 × 1,18 laudan yksikköä: sama mitta plus kaunokirjoituksen pieni lisä,
+koska kursiivi ja vaaleampi muste luetaan pienemmäksi kuin ne ovat.
+
+**Nimet syttyvät vasta kun kaupunkien nimet näkyvät.** Raja ei ole enää
+laudan leveys vaan se, kuinka suurena kaupungin nimi piirtyy RUUDULLE —
+juuri se on "näkyykö kaupunkien nimiä". Mitattu:
+
+| askel | näkymä | maastonimiä | maastonimi | kaupunki |
+|---|---|---|---|---|
+| 0–4 | 20000–14370 | 0 | – | 1,1–4,3 px |
+| 5 | 13580 | 4 | 6,0 px | 6,4 px |
+
+**Logon rivit tasavälein.** v252:n `text-align-last: justify` teki rivit
+yhtä leveiksi mutta venytti SANAVÄLIN, ei kirjainvälejä — keskelle jäi
+kuoppa. Alanimi on nyt flex-rivi, jossa jokainen kirjain on oma
+elementtinsä ja `justify-content: space-between` jakaa välit tasan.
+Mitattu: ylärivi 85,3 px, alarivi 85,3 px, ja **jokainen kirjainväli
+2,06 px** — pienin ja suurin sama.
+
+### Opittua
+
+**Sama kuva, eri hinta.** Rae näytti samalta molemmilla tavoilla, joten
+mikään katselu ei olisi paljastanut eroa — vain kello. Kun jokin alkaa
+tökkiä sen jälkeen kun ulkonäköön on koskettu, epäile ensin sitä
+muutosta, vaikka se näyttäisi viattomalta: multiply-sekoitus koko ruudun
+yli on pikselityötä, ja pikselityö kertautuu ruuduilla.

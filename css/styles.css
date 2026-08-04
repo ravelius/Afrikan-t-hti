@@ -147,17 +147,27 @@ button, .brand, .turn-pill, .fact-card h2 {
  * kahdelle riville.
  */
 .brand-alanimi {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   margin-top: 0.16em;
   padding-top: 0.14em;
   border-top: 1px solid var(--accent);
   font-size: 0.46em;
-  letter-spacing: 0.1em;
-  white-space: normal;
-  text-align: justify;
-  text-align-last: justify;
+  /*
+   * Kirjainväli nollaan: väli syntyy nyt jaosta, ei tasaisesta lisäyksestä.
+   * Jäljelle jäävä letter-spacing lisäisi vielä oman tyhjänsä VIIMEISEN
+   * kirjaimen jälkeen, jolloin rivi olisi juuri sen verran liian leveä.
+   */
+  letter-spacing: 0;
   opacity: 0.85;
 }
+
+/*
+ * Sanaväli hieman kirjainväliä leveämpi, jotta kaksi sanaa erottuu
+ * toisistaan. Tyhjä elementti eikä välilyönti: välilyönti kutistuisi
+ * flexissä nollaan, ja sanat sulautuisivat yhteen.
+ */
+.brand-vali { width: 0.5em; }
 
 /*
  * Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan toive):

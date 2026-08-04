@@ -273,22 +273,71 @@ function grainTile() {
  * (css/styles.css .grain: opacity 0.5, mix-blend-mode multiply), jotta
  * rasteroitu ja rasteroimaton kartta näyttävät samalta.
  */
-function piirraRakeisuus(ctx, leveysPx, korkeusPx, kanvaksiaPerCss) {
+/*
+ * RAE LAATOITETAAN KERRAN, EI JOKA RUUDULLE.
+ *
+ * Ensimmäinen versio täytti ruudun kuviolla (`createPattern` +
+ * `setTransform`) multiply-sekoituksessa. Se on oikea lopputulos mutta
+ * väärä tapa: selain laskee kuvion muunnoksen ja sekoituksen pikseli
+ * kerrallaan. MITATTU 1100 × 1100 ruudulle:
+ *
+ *   kuviotäyttö + multiply     28,9 ms
+ *   valmis laatta + multiply    2,6 ms
+ *   pelkkä pohjaväri            0,3 ms
+ *
+ * Ruutuja syntyy panoroinnin aikana useita, joten 28 ms per ruutu on
+ * juuri se tökkiminen, josta omistaja huomautti ("kartan vieritys
+ * tökkii taas") — ja se tuli mukana v245:ssä, samassa versiossa kuin
+ * rae itse.
+ *
+ * Nyt rae laatoitetaan kerran valmiiksi ruudun kokoiseksi kankaaksi, ja
+ * ruutuun se menee yhtenä `drawImage`-kutsuna. Ulkonäkö on täsmälleen
+ * sama: multiply ja peittävyys ovat ennallaan, vain toisto on laskettu
+ * etukäteen.
+ *
+ * Kankaat välimuistissa raekoon mukaan. Kokoja on käytännössä yksi tai
+ * kaksi (laitteen pikselisuhde ja ruudun tarkkuuskatto), ja koko
+ * pyöristetään kahdeksaan pikseliin, ettei pieni vaihtelu synnytä uutta
+ * kangasta. Kolme on katto: yksi kangas on noin viisi megatavua.
+ */
+const grainKankaat = new Map();
+const GRAIN_KANKAITA = 3;
+
+function grainLaatoitettu(koko) {
+  const valmis = grainKankaat.get(koko);
+  if (valmis) return valmis;
   if (!grainKangas) grainTile();
-  if (!grainKangas || !ctx.createPattern) return;
-  const koko = Math.max(24, Math.round(GRAIN_RUUDULLA_PX * kanvaksiaPerCss));
-  const kuvio = ctx.createPattern(grainKangas, 'repeat');
-  if (!kuvio) return;
-  // Laatta on 256 pikseliä; se kutistetaan haluttuun kokoon kuvion
-  // omalla muunnoksella, jolloin toistoa ei tarvitse piirtää käsin.
+  if (!grainKangas || typeof document === 'undefined') return null;
+  const kangas = document.createElement('canvas');
+  kangas.width = RUUDUN_PIKSELIT;
+  kangas.height = RUUDUN_PIKSELIT;
+  const ctx = kangas.getContext('2d');
+  const kuvio = ctx?.createPattern?.(grainKangas, 'repeat');
+  if (!kuvio) return null;
   if (kuvio.setTransform && typeof DOMMatrix === 'function') {
     kuvio.setTransform(new DOMMatrix([koko / grainKangas.width, 0, 0, koko / grainKangas.height, 0, 0]));
   }
+  ctx.fillStyle = kuvio;
+  ctx.fillRect(0, 0, RUUDUN_PIKSELIT, RUUDUN_PIKSELIT);
+  if (grainKankaat.size >= GRAIN_KANKAITA) {
+    grainKankaat.delete(grainKankaat.keys().next().value);
+  }
+  grainKankaat.set(koko, kangas);
+  return kangas;
+}
+
+function piirraRakeisuus(ctx, leveysPx, korkeusPx, kanvaksiaPerCss) {
+  const koko = Math.max(24, Math.round(GRAIN_RUUDULLA_PX * kanvaksiaPerCss / 8) * 8);
+  const laatta = grainLaatoitettu(koko);
+  if (!laatta) return;
+  const w = Math.min(leveysPx, laatta.width);
+  const h = Math.min(korkeusPx, laatta.height);
   ctx.save();
   ctx.globalCompositeOperation = 'multiply';
   ctx.globalAlpha = 0.5;
-  ctx.fillStyle = kuvio;
-  ctx.fillRect(0, 0, leveysPx, korkeusPx);
+  // Lähdealue 1:1, ei skaalausta: rae pysyy juuri sen kokoisena kuin se
+  // laatoitettiin.
+  ctx.drawImage(laatta, 0, 0, w, h, 0, 0, w, h);
   ctx.restore();
 }
 
@@ -580,63 +629,46 @@ export function drawMaasto(svg, map, varjostus = null) {
  * suodatinta eikä varjoa.
  */
 
-/**
- * Kuinka kapea näkyvän alueen on oltava laudan yksikköinä, ennen kuin
- * tämän tärkeysluokan nimi ilmestyy.
- *
- * Luvut on valittu maailmankartan zoomiportaista (js/ui.js zoomiTasot:
- * 12000 → 8000 → 5333 → 3556 → 2370 → 1580 → 1053 → 702 → …), jotta
- * jokainen luokka syttyy omalla portaallaan eikä kaksi luokkaa yhtä
- * aikaa: 1 tulee portaalla 3, 2 portaalla 5 ja 3 portaalla 7.
- */
-export const NIMEN_ZOOMIRAJA = { 1: 4200, 2: 1800, 3: 800 };
 
 /*
- * Nimen koko RUUDULLA eikä laudalla.
+ * MAASTONIMI ON SAMAA KOKOA KUIN KAUPUNGIN NIMI.
  *
- * Maan nimi (.country-name) on laudan yksiköissä ja kasvaa siksi
- * zoomatessa. Se sopii sille: maa on yksi kerrallaan ja nimi on
- * vesileima. Maastonimiä on kymmeniä samaan aikaan, ja jos ne
- * kasvaisivat zoomin mukana, lähikuvassa Volga peittäisi Venäjän.
- * Karttojen oma tapa on pitää teksti samankokoisena ja vaihtaa sitä
- * mitä näytetään — se on juuri se, mitä tärkeysraja tekee.
+ * Tässä oli pitkä kierros, joka päättyy nyt yksinkertaiseen sääntöön.
+ *
+ * Kaupungin nimi (.city-label) on 18 LAUDAN yksikköä: se kutistuu
+ * ruudulla, kun karttaa loitontaa, kuten kaikki muukin kartalla.
+ * Maastonimi oli sen sijaan kiinteä RUUDUN pikseleissä (15…23 px), eli
+ * se ei kutistunut lainkaan — ja siksi se kasvoi loitontaessa yhä
+ * suuremmaksi suhteessa kaupunkeihin, kunnes Volga oli moninkertainen
+ * Helsinkiin nähden (omistajan kuvakaappaus).
+ *
+ * Omistajan linjaus: "piirrä samaan kokoon + kaunolle pieni koko lisä."
+ * Maastonimi on nyt kaupungin nimen kokoinen laudan yksiköissä, ja
+ * kaunokirjoituksen pieni lisä on siinä, koska kursiivi ja vaaleampi
+ * muste luetaan pienemmäksi kuin se on.
  */
-/*
- * Maastonimen koko ruudun pikseleinä.
- *
- * Nostettu 15:stä omistajan pyynnöstä: "Uralin nimikyltistä ei saa
- * selvää. Nimet voisi kirjoittaa aina vaakasuuntaan ja saa olla kyllä
- * isommalla." Nimet ovat kartan pienintä tekstiä ja niitä luetaan
- * puhelimen ruudulta kartan kuvion päältä, joten koko on luettavuutta
- * eikä tyyliä.
- *
- * Nostettu vielä 19:stä 23:een: mitattuna maastonimi ja kaupungin nimi
- * olivat lähikuvassa yhtä korkeat (21,0 ja 21,4 px), mutta maastonimi
- * on kursiivi ja vaaleampi, joten se luetaan pienemmäksi kuin se on.
- * Omistaja: "jotkin nimet taas aivan liian pieniä."
- */
-const NIMEN_FONTTI_PX = 23;
-/*
- * Nimen koko seuraa zoomia.
- *
- * Kiinteä ruutukoko oli sekä liian pieni lähellä että liian iso
- * kaukana: sama 23 pikseliä, jolla Ural juuri ja juuri erottuu
- * lähikuvassa, peitti yleiskuvassa puolet Euroopasta (omistaja:
- * "tekstit ovat nyt liian isoja, varsinkin kun on zoomattu
- * kauemmas"). Nimi on kartan mittakaavan osa, joten sen on kutistuttava
- * kun kartta laajenee — mutta ei laudan yksiköissä, tai kaukaa ei
- * lukisi mitään.
- */
-const NIMEN_FONTTI_MIN = 15;
-const NIMEN_LAAJA = 9000;   // tätä leveämpi näkymä on yleiskuva
-const NIMEN_LAHI = 1600;    // tätä kapeampi on lähikuva
+const KAUPUNGIN_NIMI_YKSIKKOA = 18;   // css .city-label font-size
+const KAUNON_LISA = 1.18;
+const MAASTONIMEN_YKSIKKOA = KAUPUNGIN_NIMI_YKSIKKOA * KAUNON_LISA;
 
-/** Nimen koko ruudun pikseleinä näkyvän alueen leveyden mukaan. */
-function nimenKoko(nakyvaLeveys) {
-  if (!nakyvaLeveys) return NIMEN_FONTTI_PX;
-  const osuus = (NIMEN_LAAJA - nakyvaLeveys) / (NIMEN_LAAJA - NIMEN_LAHI);
-  const k = Math.min(1, Math.max(0, osuus));
-  return NIMEN_FONTTI_MIN + (NIMEN_FONTTI_PX - NIMEN_FONTTI_MIN) * k;
+/*
+ * NIMET SYTTYVÄT VASTA KUN KAUPUNKIEN NIMET NÄKYVÄT.
+ *
+ * Omistajan toive. Raja ei ole enää laudan leveys vaan se, kuinka
+ * suurena kaupungin nimi piirtyy RUUDULLE — juuri se on "näkyykö
+ * kaupunkien nimiä". Kun mitta on sama, maastonimet eivät voi tulla
+ * esiin ennen kaupunkeja millään laitteella eikä millään laudalla.
+ *
+ * Tärkeysluokat porrastuvat kertoimella: pääjoet ja suuret vuoristot
+ * heti kun nimiä ylipäänsä lukee, pienemmät vasta lähempää.
+ */
+const NIMI_LUETTAVA_PX = 4.5;
+const NIMEN_VAATIMUS = { 1: 1, 2: 1.8, 3: 3.2 };
+
+/** Näkyykö tämän tärkeysluokan nimi tällä mittakaavalla? */
+function nimiNakyy(tarkeys, skaala) {
+  const nakyva = KAUPUNGIN_NIMI_YKSIKKOA * (skaala || 0);
+  return nakyva >= NIMI_LUETTAVA_PX * (NIMEN_VAATIMUS[tarkeys] ?? 1);
 }
 
 /*
@@ -653,7 +685,6 @@ function nimenKoko(nakyvaLeveys) {
  * — silloin siirtymä on tarpeellinen eikä häiritsevä.
  */
 const jokienAnkkurit = new Map();
-const I_IKONIN_SADE_PX = 7.5;
 
 /*
  * Kirjaimen keskileveys osuutena fonttikoosta.
@@ -904,8 +935,10 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
   if (!nimet || !nakyva?.skaala || !(nakyva.w > 0)) return 0;
 
   const { skaala } = nakyva;
-  const fontti = nimenKoko(nakyva.w) / skaala;  // laudan yksiköitä
-  const iSade = I_IKONIN_SADE_PX / skaala;
+  // Laudan yksiköitä, vakio: sama mitta kuin kaupungin nimellä.
+  const fontti = MAASTONIMEN_YKSIKKOA;
+  // Ikoni seuraa nimeä, ei ruutua: muuten se kasvaisi nimen ohi kaukaa.
+  const iSade = fontti * 0.42;
   const leveys = map?.kiertava ? map.width : 0;
 
   /*
@@ -917,7 +950,7 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
    */
   const ehdokkaat = [];
   const lisaa = (kohde, laji, x, y, mitta) => {
-    if (nakyva.w > (NIMEN_ZOOMIRAJA[kohde.tarkeys] ?? 0)) return;
+    if (!nimiNakyy(kohde.tarkeys, skaala)) return;
     const teksti = nimenLeveys(kohde.nimi, fontti);
     // Kohteen on oltava nimeään leveämpi, muuten nimi ei kuvaa mitään.
     if (mitta !== null && mitta < teksti * 1.15) return;
@@ -942,7 +975,7 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
   const keskiX = nakyva.x + nakyva.w / 2;
   const keskiY = nakyva.y + nakyva.h / 2;
   for (const joki of nimet.joet ?? []) {
-    if (nakyva.w > (NIMEN_ZOOMIRAJA[joki.tarkeys] ?? 0)) continue;
+    if (!nimiNakyy(joki.tarkeys, skaala)) continue;
     const teksti = nimenLeveys(joki.nimi, fontti);
     if (joki.pituus < teksti * 1.15) continue;
     /*
