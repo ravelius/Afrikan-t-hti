@@ -438,26 +438,20 @@ export function teeRadiosoitin({
   const kotelo = osa('div', 'radio-kotelo');
   juuri.appendChild(kotelo);
 
-  // --- äänenvoimakkuus: pieni nuppi vasempaan laitaan ------------------
   /*
-   * Nuppi siirtyi vasemmalle, kun oikean laidan kaksi isoa nuppia
-   * korvattiin kytkimillä (omistajan toive 4.8.2026). Paikka ei ole
-   * mielivaltainen: aikakauden pöytäradiossa äänenvoimakkuus oli
-   * nimenomaan vasemmanpuoleisin säädin, ja kytkimet ovat nyt siellä
-   * missä ne käytössä ovat kätevimmin — oikeassa laidassa.
+   * ÄÄNENVOIMAKKUUDEN NUPPI POISTETTU (omistajan päätös 4.8.2026:
+   * "jätä äänenvoimakkuuden säätönappi pois, se on turha").
+   *
+   * Se oli turha kahdesta syystä. Pelissä on jo oma äänisäätönsä
+   * (js/sound.js), johon radio tottelee, ja laitteen oma nuppi
+   * tarjosi toisen totuuden samasta asiasta. Toiseksi se vei tilaa
+   * juuri siitä laidasta, jossa kytkimet ja merkkivalo tarvitsevat
+   * ilmaa.
+   *
+   * asetaAani() ja onAani jäävät rajapintaan: kutsuja säätää
+   * voimakkuutta yhä, mutta laitteessa ei ole sille kahvaa. Sama
+   * arvo ohjaa yhä soittoa.
    */
-  const aaniKehys = osa('div', 'radio-aani-kehys');
-  const aaniNuppi = osa('div', 'radio-nuppi radio-aani');
-  aaniNuppi.tabIndex = 0;
-  aaniNuppi.setAttribute('role', 'slider');
-  aaniNuppi.setAttribute('aria-label', 'Äänenvoimakkuus');
-  aaniNuppi.setAttribute('aria-valuemin', '0');
-  aaniNuppi.setAttribute('aria-valuemax', '100');
-  aaniNuppi.appendChild(osa('span', 'radio-nuppi-uurre'));
-  const aaninOsoitin = osa('span', 'radio-nuppi-osoitin');
-  aaniNuppi.appendChild(aaninOsoitin);
-  aaniKehys.append(aaniNuppi, osa('span', 'radio-nuppi-teksti', 'ÄÄNI'));
-  kotelo.appendChild(aaniKehys);
 
   // --- kaiutinsäleikkö -------------------------------------------------
   // Kangas ja sen päälle listat tehdään kokonaan CSS-kuvioina: kuvatiedosto
@@ -951,9 +945,7 @@ export function teeRadiosoitin({
     aaniArvo = uusi;
     // Nuppi kääntyy ±135°, kuten oikea potentiometri: täysi ympyrä
     // antaisi ymmärtää, että nuppia voi pyörittää loputtomiin.
-    aaninOsoitin.style.transform = `rotate(${-135 + uusi * 270}deg)`;
-    aaniNuppi.setAttribute('aria-valuenow', String(Math.round(uusi * 100)));
-    aaniNuppi.setAttribute('aria-valuetext', `${Math.round(uusi * 100)} prosenttia`);
+    // Nuppia ei enää ole; arvo elää vain kutsujan ja soiton välillä.
     if (kerro) {
       try {
         onAani?.(uusi);
@@ -1022,42 +1014,6 @@ export function teeRadiosoitin({
       onSulje?.();
     } catch (syy) {
       console.warn('Radiotilan sulkeminen epäonnistui.', syy);
-    }
-  });
-
-  /*
-   * Ääninuppia väännetään pystysuunnassa, ei ympyrää seuraten.
-   *
-   * Ympyrää seuraava veto on oikeaoppinen mutta hankala sormella: nupin
-   * halkaisija on parikymmentä pikseliä, ja kaari sen ympäri karkaa
-   * herkästi. Pystyveto toimii, vaikka sormi peittäisi koko nupin.
-   * 120 pikseliä = koko asteikko, jolloin pienikin liike on hallittava.
-   */
-  const VEDON_MATKA = 120;
-  let vedonAlku = null;
-  aaniNuppi.addEventListener('pointerdown', (tapahtuma) => {
-    vedonAlku = { y: tapahtuma.clientY, arvo: aaniArvo };
-    aaniNuppi.setPointerCapture?.(tapahtuma.pointerId);
-    tapahtuma.preventDefault();
-  });
-  aaniNuppi.addEventListener('pointermove', (tapahtuma) => {
-    if (!vedonAlku) return;
-    asetaAani(vedonAlku.arvo + (vedonAlku.y - tapahtuma.clientY) / VEDON_MATKA);
-  });
-  const lopetaVeto = () => { vedonAlku = null; };
-  aaniNuppi.addEventListener('pointerup', lopetaVeto);
-  aaniNuppi.addEventListener('pointercancel', lopetaVeto);
-  aaniNuppi.addEventListener('keydown', (tapahtuma) => {
-    const askel = { ArrowUp: 0.05, ArrowRight: 0.05, ArrowDown: -0.05, ArrowLeft: -0.05 };
-    if (tapahtuma.key in askel) {
-      asetaAani(aaniArvo + askel[tapahtuma.key]);
-      tapahtuma.preventDefault();
-    } else if (tapahtuma.key === 'Home') {
-      asetaAani(0);
-      tapahtuma.preventDefault();
-    } else if (tapahtuma.key === 'End') {
-      asetaAani(1);
-      tapahtuma.preventDefault();
     }
   });
 
