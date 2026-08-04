@@ -42,27 +42,50 @@
 import { el } from '../mapart.js';
 import { radioMaalle } from '../packs/radiot.js';
 import { teeRadiosoitin } from './radiosoitin.js';
-import { teePistenaytto } from './pistenaytto.js';
+import { teePistenaytto, merkinRivit, FONTTI } from './pistenaytto.js';
 import { sfx } from '../sound.js';
 import { stopPlaceStream } from '../ambience-stream.js';
 
 /*
  * NÄYTÖN MITAT.
  *
- * Soittimen aukko on kuvasuhteeltaan 5 : 1 (radiosoitin.js NAYTON_SUHDE).
- * Pistenäytön ruudukko on merkkiluku × (5 + 1) − 1 saraketta ja
- * rivimäärä × (7 + 1) − 1 riviä, ja SVG:n mitat ovat (sarakkeita − 1) ×
- * 10 + 18 sekä (rivejä − 1) × 10 + 18. Kahdella tekstirivillä korkeus on
- * siis kiinteä 158, ja kolmentoista merkin leveys 778 — suhde 4,92, eli
- * niin lähellä viittä kuin kokonaisilla merkeillä pääsee. Neljätoista
- * merkkiä antaisi 5,30 ja jättäisi aukon ylä- ja alalaitaan raidan.
+ * KUUSITOISTA MERKKIÄ ON MITATTU RAJA, EI MAKUASIA. Soittimen omat
+ * tekstit ovat pisimmillään täsmälleen kuusitoista merkkiä:
+ * "VALITSE KAUPUNKI" (sammuksissa), "HELSINKI · SUOMI" (soi) ja
+ * "ASEMA EI VASTAA" (aikakatkaisu). Pistenäyttö vierittää tekstiä, joka
+ * ei mahdu — ja kolmellatoista merkillä EI MAHTUNUT MIKÄÄN NÄISTÄ,
+ * jolloin laite vieritti kartan päällä taukoamatta. Jatkuva liike on
+ * juuri se, minkä sekä soittimen kuori (css/radio.css) että
+ * linssimoottori (js/linssit/kerros.js 492–500) kiertävät tarkoituksella:
+ * yksikin liikkuva elementti pudottaa kartan 15 kuvaan sekunnissa.
+ * Kuudellatoista merkillä vieritys jää sille, mille se on tarkoitettu —
+ * ulkomaisille pitkille asemannimille.
+ *
+ * Ruudukko: merkkiluku × (5 + 1) − 1 saraketta ja rivimäärä × (7 + 1) − 1
+ * riviä, SVG:n mitat (sarakkeita − 1) × 10 + 18 ja (rivejä − 1) × 10 + 18.
+ * Kahdella rivillä ja kuudellatoista merkillä 958 × 158 eli 6,06 : 1,
+ * mikä on aukon 6 : 1 (radiosoitin.js NAYTON_SUHDE) parin pikselin
+ * tarkkuudella.
  *
  * Kaksi riviä eikä yksi, koska kanavassa on kaksi eri asiaa: asema ja
  * paikka. Yhdellä rivillä ne pitäisi ketjuttaa, ja silloin lyhytkin
  * asemannimi alkaisi vieriä.
  */
-const NAYTON_MERKIT = 13;
+const NAYTON_MERKIT = 16;
 const NAYTON_RIVIT = 2;
+
+/*
+ * NÄYTÖN VÄRIT.
+ *
+ * Lasi on soittimen aukossa (css/radio.css --radio-lcd), ei täällä.
+ * Pistenäyttö piirtää siis pelkät pisteet ilman omaa taustaa ja kehystä
+ * — muuten laitteessa olisi kaksi eri sävyistä ruutua sisäkkäin, eikä
+ * kuoren tilanvaihdos (sammuksissa himmenee, virhe kellastuu) näkyisi
+ * lainkaan. Musteeksi otetaan sama kuin kuoren varatekstillä
+ * (--radio-lcd-muste) kirjaimellisena heksana, koska irrallinen SVG ei
+ * näe var()-muuttujia.
+ */
+const NAYTON_MUSTE = '#1f2a16';
 
 /*
  * Radion aloitusäänenvoimakkuus.
@@ -167,6 +190,51 @@ export function kanavakaupungit(map, kaupungit = []) {
   return loydetyt;
 }
 
+/*
+ * ASEMANNIMI PISTENÄYTÖLLE.
+ *
+ * Aineisto on maailmalta, ja se näkyy: js/packs/radiot.js:n 87 nimestä
+ * 40 ei mahdu kuuteentoista merkkiin ja 19:ssä on kirjaimia, joita
+ * 5 × 7 -pistefontti ei osaa piirtää. Kreikan ΕΡΤ Πρώτο Πρόγραμμα ja
+ * Thaimaan วิทยุเสียงอิสลาม piirtyisivät sellaisenaan KOKONAAN TYHJÄNÄ
+ * rivinä, joka vielä vierii ohi — laite näyttäisi rikkinäiseltä juuri
+ * silloin, kun se toimii.
+ *
+ * Kaksi sääntöä, tässä järjestyksessä:
+ *
+ *  1. Lyhennä. Nimestä otetaan osa ennen ensimmäistä sulkua, pilkkua,
+ *     kauttaviivaa tai pystyviivaa: "Radio Begum (Kabul)" → "RADIO
+ *     BEGUM", "Deutschlandfunk | DLF | MP3 128k" → "DEUTSCHLANDFUNK".
+ *     Pois jää kaupunki, bittinopeus ja rinnakkaisnimi — kaupunki on jo
+ *     näytön alarivillä, eikä kumpikaan muu kuulu radion kuoreen.
+ *  2. Jos jäljelle jäävässä on yhäkin merkkejä, joita fontti ei osaa,
+ *     tilalle tulee maan nimi ja viimeisenä ISO-koodi. Maan nimi on
+ *     tosi ja luettava tieto, ja aseman oikea nimi näkyy joka
+ *     tapauksessa kotelon tekstirivillä, joka osaa kaikki kirjaimet.
+ *
+ * Tämä on soittimen eikä näytön päätös (pistenaytto.js: "tyhjä kohta on
+ * parempi kuin kaatuva soitin"): vain tämä moduuli tietää, mikä maa on
+ * kyseessä ja mitä muuta tilalle voisi panna.
+ */
+const TYHJA_RUUTU = FONTTI[' '];
+
+/** Osaako pistenäyttö piirtää tämän tekstin kokonaan? */
+function piirtyyKokonaan(teksti) {
+  const merkit = [...String(teksti ?? '')];
+  if (!merkit.some((m) => m.trim())) return false;
+  return merkit.every((m) => m === ' ' || merkinRivit(m) !== TYHJA_RUUTU);
+}
+
+function naytonAsemannimi(asema, maa, iso) {
+  // Ensimmäinen erotin katkaisee. Sulun sisältö ei ala aina sulusta:
+  // "moja (مُوجَة), Kuwait City" katkeaa sulkuun, "Al Asemeh FM / العاصمة"
+  // kauttaviivaan.
+  const lyhyt = String(asema ?? '').split(/[(,/|]/)[0].trim();
+  if (piirtyyKokonaan(lyhyt)) return lyhyt;
+  if (piirtyyKokonaan(maa)) return String(maa);
+  return String(iso ?? '');
+}
+
 /** Kaupungin paikkatiedot näyttöä varten. Toimii myös ilman kanavaa. */
 function paikkatiedot(cityId) {
   const iso = tila?.map?.cityCountry?.[cityId] ?? null;
@@ -183,6 +251,11 @@ function paikkatiedot(cityId) {
  * Palautetussa oliossa on se, mitä soittimen näyttö kysyy: `asema`,
  * `maa`, `kaupunki`. `url` on virran osoite ja `virallinen` kertoo, onko
  * kyseessä maan yleisradio (js/packs/radiot.js).
+ *
+ * `naytto` on sama nimi pistenäytölle kelpaavaksi lyhennettynä, ks.
+ * naytonAsemannimi. Kaksi kenttää yhden sijaan, koska kotelon
+ * tekstirivi näyttää aseman oikean nimen kaikkine kirjaimineen ja
+ * pisteruudukko sen, minkä se osaa piirtää.
  */
 export function kanavaKaupungille(cityId) {
   const { iso, maa, kaupunki } = paikkatiedot(cityId);
@@ -194,6 +267,7 @@ export function kanavaKaupungille(cityId) {
     kaupunki,
     url: kanava.url,
     asema: kanava.asema,
+    naytto: naytonAsemannimi(kanava.asema, maa, iso),
     virallinen: kanava.virallinen === true,
   };
 }
@@ -414,7 +488,15 @@ export function paalle({
     if (kaupunki?.id) nimet.set(kaupunki.id, kaupunki.name ?? null);
   }
 
-  const naytto = teePistenaytto({ merkkeja: NAYTON_MERKIT, rivit: NAYTON_RIVIT });
+  const naytto = teePistenaytto({
+    merkkeja: NAYTON_MERKIT,
+    rivit: NAYTON_RIVIT,
+    // Lasi on kuoressa, ks. NAYTON_MUSTE yllä.
+    tausta: null,
+    kehys: null,
+    palava: NAYTON_MUSTE,
+    sammunut: NAYTON_MUSTE,
+  });
   const soitin = teeRadiosoitin({
     aani: aanenvoimakkuus,
     onStop: () => pysayta(),

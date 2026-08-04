@@ -30,8 +30,13 @@
   --radio-kangas: #7d6039;
   --radio-asteikko: var(--paper, #efdcb4);
   --radio-muste: var(--map-ink, #46331f);
-  /* Nestekidenäytön lasi: kalpea kellanvihreä, kuten aikansa näytöissä. */
-  --radio-lcd: #aebc5f;
+  /*
+   * Nestekidenäytön lasi: kalpea kellanvihreä, kuten aikansa näytöissä.
+   * Sävy on tarkoituksella himmeä oliivi eikä kirkas limetti: laite
+   * seisoo pergamenttikartan päällä (--paper #efdcb4), ja kylläinen
+   * vihreä hyppäsi siitä esiin muovilelun tavoin.
+   */
+  --radio-lcd: #a4ad6c;
   --radio-lcd-muste: #1f2a16;
   --radio-punainen: var(--mark, #b03a2b);
 
@@ -70,18 +75,28 @@
   padding: 0.5rem 0.6rem;
   border-radius: 14px 14px 9px 9px;
   /*
-   * Puu: pystysuora syy hienona raidoituksena, sen päällä leveämpi
-   * vuosirengaskuvio ja pohjalla pystysävytys, joka antaa kotelolle
-   * pyöreyden. Kolme kerrosta riittää: enemmän alkaa näyttää kankaalta.
+   * Puu: pystysuora syy kolmena raidoituksena, ja pohjalla pystysävytys,
+   * joka antaa kotelolle pyöreyden.
+   *
+   * RAITOJEN JAOT OVAT 7, 23 JA 61 PIKSELIÄ eivätkä tasalukuja. Puun
+   * syy ei toistu, ja jos jaot ovat toistensa kerrannaisia, kuvio
+   * asettuu näkyväksi ruudukoksi — silloin kotelo ei näytä puulta vaan
+   * vakosamettikankaalta. Keskenään jaottomat jaot lyövät toisiaan
+   * vastaan noin 9800 pikselin välein eli eivät kotelon leveydellä
+   * koskaan. Samasta syystä kontrasti on matala: näkyvin raita on
+   * seitsemän prosentin musta, ei kolmentoista.
    */
   background-image:
-    repeating-linear-gradient(92deg,
-      rgba(0, 0, 0, 0.13) 0 1px,
-      rgba(255, 255, 255, 0.05) 1px 3px,
-      rgba(0, 0, 0, 0) 3px 9px),
-    repeating-linear-gradient(88deg,
-      rgba(0, 0, 0, 0.16) 0 2px,
-      rgba(0, 0, 0, 0) 2px 27px),
+    repeating-linear-gradient(90.6deg,
+      rgba(0, 0, 0, 0.07) 0 1px,
+      rgba(255, 240, 214, 0.045) 1px 2px,
+      rgba(0, 0, 0, 0) 2px 7px),
+    repeating-linear-gradient(89.4deg,
+      rgba(0, 0, 0, 0.06) 0 2px,
+      rgba(0, 0, 0, 0) 2px 23px),
+    repeating-linear-gradient(90deg,
+      rgba(24, 12, 4, 0.09) 0 3px,
+      rgba(0, 0, 0, 0) 3px 61px),
     linear-gradient(180deg, var(--radio-puu-vaalea), var(--radio-puu) 42%, var(--radio-puu-tumma));
   border: 1px solid rgba(0, 0, 0, 0.5);
   /* Messinkilista yläreunassa ja syvä varjo: kotelo seisoo kartan päällä. */
@@ -159,12 +174,12 @@
 
 .radio-keskio {
   /*
-   * Keskiön leveys on kiinteä, ei venyvä. Se on näytön leveys (340) +
-   * merkkivalo väleineen (32): jos keskiö venyisi ruudun mukana, näyttö
-   * kutistuisi sen mukana eikä luvattu 340 × 68 pitäisi paikkaansa.
+   * Keskiön leveys on kiinteä, ei venyvä. Se on näytön leveys (408) +
+   * merkkivalo väleineen (20): jos keskiö venyisi ruudun mukana, näyttö
+   * kutistuisi sen mukana eikä luvattu 408 × 68 pitäisi paikkaansa.
    * Ylijäävä leveys menee kaiuttimelle, jolle koko on vapaa.
    */
-  flex: 0 1 372px;
+  flex: 0 1 428px;
   max-width: 100%;
   min-width: 0;
   display: flex;
@@ -173,44 +188,54 @@
   justify-content: center;
 }
 
+/*
+ * Näyttö ja merkkivalo keskitetään, ei levitetä laitoihin. Kapealla
+ * ruudulla keskiö saa koko kotelon leveyden, ja space-between heittäisi
+ * silloin merkkivalon yksinään oikeaan reunaan metrin päähän näytöstä.
+ */
 .radio-naytto-kehys {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 0.5rem;
 }
 
 /*
  * NÄYTÖN AUKKO — varattu pistematriisinäytölle.
  *
- * Koko on kiinteä ja kaksiportainen: 340 × 68 px, kapealla ruudulla
- * 270 × 54 px. Sama kuvasuhde 5:1 molemmissa, joten yksi piirto kelpaa
- * kumpaankin (js/linssit/radiosoitin.js: NAYTON_MITAT).
+ * Koko on kiinteä ja kaksiportainen: 408 × 68 px, kapealla ruudulla
+ * 324 × 54 px. Sama kuvasuhde 6:1 molemmissa, joten yksi piirto kelpaa
+ * kumpaankin (js/linssit/radiosoitin.js: NAYTON_MITAT). Kuusi eikä
+ * viisi, koska 16 merkkiä × 2 riviä on 6,06:1 — ja kuusitoista merkkiä
+ * on se raja, jolla laitteen tekstit mahtuvat vierittämättä.
  *
  * Miksi kiinteä eikä venyvä: pisterasteri näyttää siistiltä vain, kun
  * pisteen koko osuu kokonaisiin pikseleihin. Portaattomasti venyvä
  * aukko takaisi, ettei osu koskaan.
  *
- * max-width suojaa hyvin kapealta ruudulta (alle 330 px): silloin aukko
- * kapenee eikä työnnä nuppeja ulos kotelosta. Se on ainoa tilanne, jossa
- * kuvasuhde ei ole tasan 5:1.
- *
- * Sisään pantava elementti venytetään täyttämään aukko (sääntö alla).
- * Aukon oma tausta on kalpea nestekidelasi hienolla pisterasterilla,
- * jotta kolo näyttää näytöltä myös ennen kuin varsinainen näyttö on
- * paikallaan.
+ * AUKKO ON LASI, EI KOLO. Näytön ei pidä tuoda omaa taustaansa: sävy,
+ * hieno rasteri ja syvennyksen varjo ovat tässä, ja tilat muuttavat
+ * niitä (sammuksissa himmenee, virhe kellastuu). Näyttö piirtää siis
+ * pelkät pisteet tämän lasin päälle. Kun näyttö on paikallaan
+ * (data-oma), aukon oma varateksti on jo poistettu.
  */
 .radio-naytto {
   --radio-naytto-korkeus: 68px;
   position: relative;
-  /* Ei kutistu: mitta on lupaus näytön tekijälle, ei toive. */
-  flex: 0 0 auto;
+  /*
+   * Ei kasva. Kutistua se saa vasta, kun kotelo itse on kapeampi kuin
+   * näyttö ja nupit yhteensä (alle noin 340 px:n ruutu): silloin
+   * kaventunut lasi on parempi kuin nuppien työntyminen ulos kotelosta,
+   * ja pistenäyttö keskittyy lasille itse omalla kuvasuhteellaan.
+   */
+  flex: 0 1 auto;
   height: var(--radio-naytto-korkeus);
-  width: calc(var(--radio-naytto-korkeus) * 5);
+  width: calc(var(--radio-naytto-korkeus) * 6);
   max-width: 100%;
-  /* Näyttö keskitetään aukkoon. Pistenäytön kuvasuhde ei ole tasan 5:1
-     (16 merkkiä × 2 riviä on 6,1:1), ja keskitettynä ylijäävä lasi
-     näyttää reunukselta eikä virheeltä. */
+  min-width: 0;
+  /* Näyttö keskitetään aukkoon: 6,06:1 ruudukko jättää 408 px:n lasille
+     runsaat kaksi pikseliä ylä- ja alalaitaan, ja se näyttää
+     reunukselta eikä virheeltä. */
   display: grid;
   place-items: center;
   border-radius: 3px;
@@ -270,14 +295,19 @@
 .radio-naytto-ala { font-size: 8px; opacity: 0.75; }
 
 /*
- * Kun aukossa on oikea pistenäyttö, aukon oma lasi väistyy tummaksi
- * syvennykseksi. Muuten näyttö olisi näytön päällä: kaksi eri sävyistä
- * lasia sisäkkäin, ja reunoille jäävä kaistale näyttäisi virheeltä.
- * Tumma syvennys on se, miltä kehys oikeassa laitteessa näyttää.
+ * Kun aukossa on oikea pistenäyttö, lasi PYSYY — vain oma rasteri
+ * jätetään pois. Pistenäytön oma pisteruudukko on hienompi kuin tämän
+ * varalasin rasteri, ja päällekkäin ne olivat pelkkää rakeisuutta.
+ *
+ * Aiemmin tämä sääntö muutti aukon tummaksi syvennykseksi siltä
+ * varalta, että näyttö tuo oman taustansa. Kaksi lasia sisäkkäin oli
+ * juuri se, mitä siitä seurasi: pistenäyttö peitti nestekidesävyn
+ * omalla pergamentillaan, eikä laitteen tila (himmennys, virheen
+ * kellastuminen) näkynyt lainkaan. Nyt näyttö on taustaton ja tämä on
+ * sen lasi.
  */
 .radio-naytto[data-oma] {
-  background-color: #17140c;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.25));
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.20), rgba(0, 0, 0, 0.16));
 }
 
 /* Sammunut näyttö on himmeä, ei musta: nestekidelasi ei sammu, se vain
@@ -327,8 +357,15 @@
  */
 .radio-asteikko {
   position: relative;
-  height: 26px;
-  padding: 3px 6px 8px;
+  height: 30px;
+  /*
+   * Nimet ylös, jaotus koko lopun matkalle. Aiemmin jaotus oli vain
+   * alimmassa seitsemässä pikselissä, ja väliin jäi yhdeksän pikseliä
+   * tyhjää lasia — se näytti keskeneräiseltä. Oikeassa asteikossa viivat
+   * yltävät nimien alareunaan asti, ja juuri se tekee siitä mitta-
+   * asteikon eikä nimirivin.
+   */
+  padding: 3px 6px 16px;
   border-radius: 2px;
   background:
     linear-gradient(180deg, #fbf1d8, var(--radio-asteikko));
@@ -338,21 +375,23 @@
   overflow: hidden;
 }
 
-/* Jaotus alareunassa: joka viides viiva pidempi, kuten mitta-asteikossa. */
+/* Jaotus: joka viides viiva pidempi ja tummempi, kuten mitta-asteikossa. */
 .radio-asteikko::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 7px;
+  height: 16px;
   background-image:
     repeating-linear-gradient(90deg,
-      rgba(58, 42, 23, 0.75) 0 1px, rgba(0, 0, 0, 0) 1px 40px),
+      rgba(58, 42, 23, 0.85) 0 1px, rgba(0, 0, 0, 0) 1px 40px),
     repeating-linear-gradient(90deg,
-      rgba(58, 42, 23, 0.45) 0 1px, rgba(0, 0, 0, 0) 1px 8px);
-  background-size: 100% 7px, 100% 4px;
-  background-position: bottom, bottom;
+      rgba(58, 42, 23, 0.5) 0 1px, rgba(0, 0, 0, 0) 1px 8px),
+    /* Perusviiva, johon viivat päättyvät. */
+    linear-gradient(0deg, rgba(58, 42, 23, 0.55) 0 1px, rgba(0, 0, 0, 0) 1px);
+  background-size: 100% 15px, 100% 8px, 100% 100%;
+  background-position: bottom, bottom, bottom;
   background-repeat: repeat-x;
 }
 
@@ -383,8 +422,12 @@
   bottom: 1px;
   width: 2px;
   margin-left: -1px;
+  /* Nimien ja jaotuksen päällä. Viisari on ainoa asia, joka asteikolla
+     liikkuu, ja kaupungin nimen alle jäävää viisaria etsii turhaan. */
+  z-index: 2;
   background: var(--radio-punainen);
-  box-shadow: 0 0 4px rgba(176, 58, 43, 0.7);
+  /* Vaalea reunus erottaa viisarin myös kaupungin nimen kohdalla. */
+  box-shadow: 0 0 4px rgba(176, 58, 43, 0.7), 0 0 0 1px rgba(251, 241, 216, 0.85);
   transition: left 0.55s ease;
 }
 
@@ -535,8 +578,14 @@
  * viereen. Näin näyttö ja asteikko saavat koko leveyden — ne ovat
  * laitteen tieto-osa, ja kavennettuna niistä katoaisi juuri se, mikä
  * tekee laitteesta radion.
+ *
+ * Raja on 700 eikä 640: yhdelle riville tarvitaan keskiö (428),
+ * säleikkö (92), nupit (noin 120) sekä välit ja täytteet (35) eli 675
+ * pikseliä. Jos raja olisi 640, väliin jäisi kaistale 641–675, jossa
+ * laite yrittäisi vielä yhtä riviä eikä mahtuisi — ja rivittyisi
+ * satunnaisen näköisesti kahdelle.
  */
-@media (max-width: 640px) {
+@media (max-width: 700px) {
   .radio-kotelo { gap: 0.4rem; padding: 0.45rem 0.5rem; }
   .radio-keskio { order: 1; flex: 1 1 100%; max-width: none; }
   .radio-kaiutin { order: 2; flex: 1 1 auto; min-height: 52px; }

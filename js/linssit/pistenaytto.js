@@ -550,6 +550,29 @@ export const FONTTI = {
     '#....',
     '#....',
   ],
+  // Pystyviiva ja plus ovat mukana siksi, että ne ovat oikeissa
+  // asemannimissä: js/packs/radiot.js:ssä lukee "Ö1 | ORF | HQ",
+  // "Deutschlandfunk | DLF | MP3 128k" ja "Radio SWH+". Ilman näitä
+  // nimeen tulisi aukko juuri siihen kohtaan, jossa ihminen odottaa
+  // erotinta — ja aukko luetaan rikkinäiseksi näytöksi.
+  '|': [
+    '..#..',
+    '..#..',
+    '..#..',
+    '..#..',
+    '..#..',
+    '..#..',
+    '..#..',
+  ],
+  '+': [
+    '.....',
+    '..#..',
+    '..#..',
+    '#####',
+    '..#..',
+    '..#..',
+    '.....',
+  ],
   // Välipiste erottaa aseman ja kaupungin toisistaan soittimen rivillä
   // ("YLE RADIO SUOMI · HELSINKI"). Yksi piste keskellä riittää; isompi
   // merkki lukisi pisteenä.
