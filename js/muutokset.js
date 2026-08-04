@@ -13,6 +13,14 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 239, teksti: 'Kartta lämpimämmäksi, korkeus punaruskeaan' },
+  { v: 239, teksti: 'Viritysääni kuuluu taas myös äänet pois päältä' },
+  { v: 239, teksti: 'VU-mittari seuraa lähetystä 98 asemalla' },
+  { v: 239, teksti: 'Radiokanava kaikkiin 110 maahan' },
+  { v: 239, teksti: 'Hiiren rulla zoomaa karttaa työpöydällä' },
+  { v: 239, teksti: 'Zoomaus hitaammaksi, ei enää tökkimistä' },
+  { v: 239, teksti: 'Topografialinssin yläreuna sai värinsä' },
+  { v: 239, teksti: 'Ylärivin napit isommiksi puhelimessa' },
   { v: 238, teksti: 'New York ja Rio vievät nyt maailmankartalle' },
   { v: 238, teksti: 'Saapumisessa ei enää välähdä koko maailma' },
   { v: 238, teksti: 'Zoomaus alkaa kauempaa ja laskeutuu pehmeästi' },

@@ -315,6 +315,24 @@
     <div id="passport-grid" class="passport-grid"></div>
     <p class="passport-count">Tavarat</p>
     <div id="passport-finds" class="passport-finds"></div>
+    <!-- Laukun alalaita: pelin nimi vie tekijätietoihin ja lähdeluetteloon
+         (omistajan toive). Sulje jää alimmaksi, kuten muissakin ikkunoissa. -->
+    <p class="laukku-nimikilpi">
+      <button id="laukku-lahteet" class="laukku-lahteet-linkki" type="button">Unohdettu aarre</button>
+    </p>
+    <form method="dialog" class="dialog-actions">
+      <button class="primary" value="close">Sulje</button>
+    </form>
+   </div>
+  </dialog>
+
+  <!-- Pelin nimikilpi: tekijänoikeus, tekijätiedot ja luettelo kaikista
+       aineistoista, joista peli on koottu. Aukeaa matkalaukun alalaidan
+       linkistä; sisältö tulee js/lahteet.js:stä. -->
+  <dialog id="lahteet-dialog" class="dialog">
+   <div class="dialog-card lahteet-card">
+    <h2 id="lahteet-otsikko">Unohdettu aarre</h2>
+    <div id="lahteet-sisus" class="lahteet-sisus"></div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
     </form>

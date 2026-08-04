@@ -127,6 +127,9 @@ const MODULES = [
   'js/packs/linssi-topografia-kuva.js',
   'js/pack.js',
   'js/passport.js',
+  // Matkalaukun "Unohdettu aarre": tekijänoikeus ja lähdeluettelo.
+  // Pelkkää dataa, jonka js/ui.js tuo staattisesti.
+  'js/lahteet.js',
   'js/aani-ehdokkaat.js',
   'js/sound.js',
   'js/ambience-stream.js',

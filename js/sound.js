@@ -990,19 +990,27 @@ const SOUNDS = {
     // alipäästön takana, ja juuri sitä pieni zoomimoottori kuulostaa.
     const osc = ctx.createOscillator();
     osc.type = 'square';
-    osc.frequency.setValueCurveAtTime(kaari(106, 201), t0, kesto);
+    /*
+     * Taajuudet laskettu reilusti (omistajan toive: "madalla ääniefektin
+     * taajuutta reilusti"). Moottori 106-201 Hz -> 62-118 Hz, eli
+     * suunnilleen oktaavin verran alas. Sävelkulku ja kaari säilyvät
+     * samoina, joten ääni on sama moottori mutta raskaampi ja
+     * isompikokoinen — ja se sopii hitaampaan liukuun, joka on nyt
+     * pidempi (ui.js ZOOM_MS).
+     */
+    osc.frequency.setValueCurveAtTime(kaari(62, 118), t0, kesto);
 
     // Kaistanpäästö jättää jäljelle keskialueen sörinän: matalat jyrinät
     // pois, jotta ääni tulee koneistosta eikä kellarista.
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
     bp.Q.value = 1.1;
-    bp.frequency.setValueCurveAtTime(kaari(730, 1062), t0, kesto);
+    bp.frequency.setValueCurveAtTime(kaari(430, 625), t0, kesto);
 
     // Hammaspyörän vinkuna: ohut sävel moottorin yläpuolella.
     const vinku = ctx.createOscillator();
     vinku.type = 'triangle';
-    vinku.frequency.setValueCurveAtTime(kaari(531, 1004), t0, kesto);
+    vinku.frequency.setValueCurveAtTime(kaari(312, 590), t0, kesto);
     const vinkuTaso = ctx.createGain();
     vinkuTaso.gain.value = 0.055;
 

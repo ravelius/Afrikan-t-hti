@@ -1557,25 +1557,72 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * ruutua ja väreissä — taideteos tai valokuva näytetään sellaisenaan.
  * Katselin elää saapumisikkunan sisällä (modaalin päällä).
  */
+/*
+ * Suurennus on AINA SUORASSA ja niin isona kuin ruutuun mahtuu
+ * (omistajan toive: "Tutkinäkymän kuvat voisivat aina avautua
+ * maksimikokoon... aina suorassa").
+ *
+ * Kierto kuului postikorttipinoon, jossa se on osa asetelmaa. Yksin
+ * avatussa suurennuksessa se ei kerro mitään — se vain kallistaa
+ * teoksen. Myös ilmestymisliike on poistettu: napautuksen ja kuvan
+ * väliin ei jää mitään.
+ */
 .postikortti.kulttuuri-suurennos {
-  left: 50%;
-  top: 50%;
-  width: min(92vw, 720px);
-  transform: translate(-50%, -50%) rotate(-1.2deg);
+  /*
+   * Keskitys marginaalilla eikä transformilla. Transform tekee
+   * elementistä kiinnitettyjen jälkeläisten sijoituskehyksen, jolloin
+   * alla oleva koko ruudun pohja olisi rajautunut kortin kokoiseksi.
+   */
+  inset: 0;
+  margin: auto;
+  width: min(96vw, 1600px);
+  height: fit-content;
+  max-height: 100dvh;
+  transform: none;
   cursor: zoom-out;
-  animation: kulttuuri-suurennos-esiin 0.2s ease-out;
+  animation: none;
 }
 
-@keyframes kulttuuri-suurennos-esiin {
-  from { opacity: 0; }
+/*
+ * Tumma pohja koko ruudun yli. Maksimikokoinen kuva peittää arkin
+ * tekstin, ja ilman pohjaa selite jäisi tekstin sekaan lukukelvottomaksi
+ * — ja kuvan reuna katosi vaaleaan paperiin. Tämä on luettavuutta, ei
+ * tehoste: ei liikettä, ei sumennusta.
+ */
+.postikortti.kulttuuri-suurennos::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(14, 9, 4, 0.88);
 }
 
 .postikortti.kulttuuri-suurennos img {
   filter: none;
-  max-height: 76vh;
+  /* .postikortti img antaa kiinteän kuvaikkunan (min(48vh, 330px)),
+   * joka on pinon mitoitus eikä suurennuksen: se on kumottava, tai
+   * kuva jäisi 330 pikselin korkuiseksi ruudun koosta riippumatta. */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 80dvh;
+  margin-inline: auto;
   object-fit: contain;
   background: #efe7d4;
 }
+
+/* Selite ja lähde jäävät kuvan alle kapeana rivinä, eivät levene
+ * kortin täyteen leveyteen isolla ruudulla. */
+.postikortti.kulttuuri-suurennos .kuvateksti,
+.postikortti.kulttuuri-suurennos .kuvalahde {
+  max-width: 60rem;
+  margin-inline: auto;
+  text-align: center;
+  /* Vaalea teksti tummalla pohjalla. */
+  color: rgba(247, 239, 220, 0.92);
+}
+
+.postikortti.kulttuuri-suurennos .kuvalahde { color: rgba(247, 239, 220, 0.62); }
 
 /*
  * Maan tiedot kaupungin rinnalla saapumiskortissa (omistajan toive):
@@ -2174,6 +2221,139 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 /* Sulje irti tavaroista (omistajan huomio). */
 .passport-card .dialog-actions { margin-top: 1.4rem; }
 
+/* Laukun alalaidan nimikilpi: pelin nimi kuin matkalaukkuun kiinnitetty
+ * messinkilaatta, jonka takaa löytyvät tekijätiedot ja lähdeluettelo.
+ * Keskitetty ja hiljainen — se ei kilpaile Sulje-napin kanssa. */
+.laukku-nimikilpi {
+  margin: 1.2rem 0 0;
+  text-align: center;
+}
+
+/* Valitsin on `.dialog button.…` samasta syystä kuin kuvanuolilla:
+ * .dialog button antaa jokaiselle napille katkoviivakehyksen ja
+ * pyöristyksen, ja tämä on linkki eikä nappi. */
+.dialog button.laukku-lahteet-linkki {
+  min-height: 0;
+  padding: 0.1rem 0.2rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: rgba(70, 51, 31, 0.75);
+  background: none;
+  border: none;
+  /* Alleviivaus katkoviivalla kertoo linkin ja pitää sen samassa
+   * käsin piirretyssä maailmassa kuin korttien reunat. */
+  border-bottom: 1px dashed rgba(70, 51, 31, 0.5);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.dialog button.laukku-lahteet-linkki:hover:not(:disabled),
+.dialog button.laukku-lahteet-linkki:focus-visible {
+  color: #46331f;
+  background: none;
+  border-bottom-color: rgba(70, 51, 31, 0.85);
+}
+
+/* Lähdeikkuna: pitkä luettelo, joka luetaan silmäillen. Kortti on
+ * tavallinen paperikortti (.dialog-card hoitaa reunan, taustan ja
+ * pystyvierityksen), joten täällä säädetään vain sisältöä. */
+.lahteet-card {
+  /* Rivit ovat pitkiä nimiä; kapeampi kortti katkoisi ne palasiksi. */
+  max-width: 620px;
+}
+
+.lahteet-sisus {
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.lahteet-alaotsikko {
+  margin: -0.3rem 0 0.6rem;
+  font-style: italic;
+  color: rgba(70, 51, 31, 0.7);
+}
+
+.lahteet-copyright {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+.lahteet-teksti { margin: 0 0 0.5rem; }
+
+.lahteet-sisus h3.lahteet-otsikko {
+  margin: 1.1rem 0 0.4rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-top: 1px dashed rgba(70, 51, 31, 0.45);
+  padding-top: 0.8rem;
+}
+
+.lahteet-sisus h4.lahteet-ryhma {
+  margin: 1rem 0 0.15rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.lahteet-ryhma-johdanto {
+  margin: 0 0 0.45rem;
+  font-style: italic;
+  color: rgba(70, 51, 31, 0.7);
+}
+
+.lahteet-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Yksi lähde = yksi lohko, jossa nimi, tekijä ja lisenssi allekkain.
+ * Taulukko olisi luettavampi leveällä ruudulla mutta hajoaisi
+ * puhelimessa, jolla peliä pelataan. */
+.lahteet-lista li {
+  margin: 0 0 0.55rem;
+  padding-left: 0.7rem;
+  border-left: 2px solid rgba(70, 51, 31, 0.22);
+}
+
+.lahteet-nimi,
+.lahteet-tekija,
+.lahteet-lisenssi,
+.lahteet-huom {
+  display: block;
+}
+
+.lahteet-nimi { font-weight: 600; }
+
+.lahteet-tekija {
+  font-size: 0.78rem;
+  color: rgba(70, 51, 31, 0.8);
+}
+
+.lahteet-lisenssi {
+  font-size: 0.78rem;
+  color: rgba(70, 51, 31, 0.62);
+}
+
+/* Kirjaamaton lisenssi erottuu, jottei tyhjää kohtaa lueta vapaudeksi. */
+.lahteet-lisenssi.epaselva {
+  color: #8a4a1c;
+  font-style: italic;
+}
+
+.lahteet-huom {
+  font-size: 0.76rem;
+  font-style: italic;
+  color: rgba(70, 51, 31, 0.7);
+}
+
+.lahteet-lopetus {
+  margin: 1rem 0 0;
+  font-size: 0.78rem;
+  color: rgba(70, 51, 31, 0.7);
+}
+
 /* Tavarat matkamuistoina: isompi kuva ja selite sen alla, rivit
  * täyttyvät vasemmalta oikealle (omistajan toive). */
 #passport-finds {
@@ -2525,8 +2705,26 @@ body.linssi-valokuva .grain { display: none; }
 .korkeus-ylos,
 .korkeus-huippu,
 .iso-jarvi { stroke: none; }
-.korkeus-keski { fill: #c9a86e; opacity: 0.3; }
-.korkeus-ylos { fill: #a8823f; opacity: 0.34; }
+/*
+ * VYÖHYKKEET LÄMPENEVÄT YLÖSPÄIN.
+ *
+ * Omistaja 4.8.2026: "Kartta saisi olla lämpimämmän näköinen
+ * kauttaaltaan. Korkeusero lisäys teki kartasta nyt liian harmaan
+ * vihertävän peruskorkeudeltaan. Eli peruskorkeuden väri saisi olla
+ * sama kuin mikä oli ennen korkeuserojen käyttöönottoa kartan väri ja
+ * siitä ylöspäin mentäessä värit tulisivat tummemmiksi ja punaisen
+ * ruskeammiksi."
+ *
+ * Vanhat sävyt olivat oikeansuuntaisia mutta vääränlämpöisiä: #c9a86e
+ * ja #a8823f ovat keltavihreän puolella (vihreän osuus suurempi kuin
+ * punaisen ja sinisen väli antaisi olettaa), ja haaleana paperin päällä
+ * ne veivät koko maan oliivin suuntaan. Nyt sama vaaleusporrastus mutta
+ * punaisen ruskean suuntaan käännettynä. Alanko ei saa vyöhykettä
+ * lainkaan, joten sen väri on tasan sama kuin ennen korkeuseroja:
+ * pelkkä land-grad (mapart.js #e7d2a4 -> #d2b47e).
+ */
+.korkeus-keski { fill: #c69257; opacity: 0.3; }
+.korkeus-ylos { fill: #a2603a; opacity: 0.34; }
 /*
  * Lumi on VAALEA SÄVY, ei valkoinen täyttö.
  *
@@ -2599,9 +2797,15 @@ body.linssi-valokuva .grain { display: none; }
  *
  * varjo2 piirtyy varjo1:n PÄÄLLE, joten syvin varjo on 0,36 eikä 0,20.
  */
-.varjo-1 { fill: #6a5836; opacity: 0.2; }
-.varjo-2 { fill: #6a5836; opacity: 0.2; }
-.valo-1 { fill: #fff6e0; opacity: 0.32; }
+/*
+ * Varjon sävy käännettiin lämpimäksi samasta syystä kuin vyöhykkeiden.
+ * #6a5836 on oliivinruskea, ja koska varjo peittää lähes kaiken maan
+ * jolla on rinnettä, se vei koko kartan harmaanvihreään. #6b4529 on
+ * saman tummuinen mutta punaisen ruskean puolella.
+ */
+.varjo-1 { fill: #6b4529; opacity: 0.2; }
+.varjo-2 { fill: #6b4529; opacity: 0.2; }
+.valo-1 { fill: #fff2d4; opacity: 0.32; }
 
 /*
  * Vesi on yhtä sävyä koko kartalla, eikä se sävy ole sininen.
@@ -4803,6 +5007,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   letter-spacing: 0.02em;
 }
 
+/* Nosto on oma taittolohkonsa: leveällä ruudulla kuva kelluu tekstin
+ * seassa, ja float on saatava pysymään noston sisällä. */
+.wiki-nosto { display: flow-root; }
+
 .wiki-nosto img {
   display: block;
   width: auto;
@@ -4837,9 +5045,47 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   color: rgba(70, 51, 31, 0.68);
 }
 
+/*
+ * Kuva isommaksi ja tekstin sekaan (omistajan toive: "työpöytäselaimella
+ * kuvat näkyvät liian pieninä historiaosiossa — saisiko niitä kuvia
+ * taitettua vähän isommassa koossa tekstin sekaan?").
+ *
+ * Kaksi porrasta, koska sama ratkaisu ei käy molempiin:
+ *
+ * 700–1099 px (tabletti): palsta on 650–860 px eikä siihen mahdu kuvaa
+ * JA luettavaa tekstipalstaa rinnakkain — kelluva kuva jättäisi
+ * tekstille alle 300 px. Kuva pysyy siis omalla rivillään, mutta saa
+ * kasvaa: 340 px -> 470 px korkeutta, jolloin vaakakuva täyttää
+ * palstan lähes reunasta reunaan.
+ *
+ * 1100 px ja yli (työpöytä): palsta on yli 1000 px, ja silloin kuva
+ * kelluu tekstin seassa kuten kirjassa. Leveys on 56 % palstasta
+ * (n. 575 px) ja korkeuskatto 520 px pitää pystykuvan kurissa —
+ * ilman kattoa 1280x1966 kuva olisi ollut lähes 900 px korkea.
+ * Puoli lukua kerrallaan vaihtaa puolta, jottei sivu ole yksipuolinen.
+ */
 @media (min-width: 700px) {
-  .wiki-nosto img { max-height: 340px; }
+  .wiki-nosto img { max-height: 470px; }
   .wiki-liuskat button { font-size: 0.8rem; }
+}
+
+@media (min-width: 1100px) {
+  .wiki-nosto img {
+    float: right;
+    width: 56%;
+    max-width: 620px;
+    max-height: 520px;
+    margin: 0.15rem 0 0.6rem 1.5rem;
+  }
+
+  .wiki-nosto:nth-of-type(even) img {
+    float: left;
+    margin: 0.15rem 1.5rem 0.6rem 0;
+  }
+
+  /* Lähde on lisenssiehto: se ei saa jäädä kuvan kylkeen puristuksiin
+   * vaan alkaa aina kuvan alta. */
+  .wiki-nosto .lahde { clear: both; }
 }
 
 /* Kuvan napautus avaa katselimen — kursori kertoo sen hiirikäyttäjälle. */
@@ -5395,6 +5641,116 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   .wiki-liuskat:has(svg) { gap: 0.12rem; }
   .wiki-liuskat button:has(svg) { padding: 0.28rem 0.2rem 0.32rem; }
   .wiki-liuskat button svg { width: 17px; height: 17px; }
+}
+
+/*
+ * ── Puhelimen Tutki-arkki: koko ruutu, ei paperireunusta, aiherivi
+ *    alalaidassa ───────────────────────────────────────────────────
+ *
+ * Kaksi omistajan havaintoa samasta näkymästä:
+ *
+ * "iphonella historia yms napit täytyy siirtää alareunaan, koska
+ * skrollatessa ne jäävät dynamic islandin alle piiloon" — tarttuva
+ * ylärivi pysähtyi arkin yläreunaan, joka on ruudun yläreunassa eli
+ * juuri lovi- ja tilapalkkialueella.
+ *
+ * "iphonella tutki ikkunan voisi levittää kokonäytölle ja poistaa koko
+ * paperireunuksen ja samalla isontaa ikoneita niin paljon kuin pystyy
+ * yhdellä rivillä."
+ *
+ * Kaikki tämä koskee VAIN kapeaa ruutua. Tabletilla ja työpöydällä
+ * arkki on paperi kartan päällä, ja reuna on sen idea.
+ */
+@media (max-width: 699px) {
+  .dialog.arkki {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    inset: 0;
+  }
+
+  .dialog.arkki .dialog-card,
+  .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    /*
+     * Leikkaus tulee js/ui.js:stä inline-tyylinä, ja se on pakko
+     * kumota: clip-path rajaisi myös alalaitaan kiinnitetyn aiherivin
+     * pois. Sama tarkistus on JS:n puolella (piirraArkinReuna), joten
+     * reunaa ei edes lasketa puhelimella.
+     */
+    clip-path: none !important;
+    /* Kortti on ruutu: ilmestymisliike loisi transformin, jonka sisään
+     * kiinnitetty aiherivi jäisi. */
+    animation: none;
+    --arkki-reunus: 0.95rem;
+    --arkki-yla: calc(0.85rem + env(safe-area-inset-top));
+    /*
+     * Alalaidan varaus = aiherivin korkeus + kotipalkin turva-alue.
+     * Ilman tätä viimeinen kappale ja Etsi kätkö -napit jäisivät
+     * kiinnitetyn rivin alle.
+     */
+    padding: 0 var(--arkki-reunus) calc(4.4rem + env(safe-area-inset-bottom));
+  }
+
+  /* Piirretty paperireuna ja sen varjo pois. */
+  .dialog.arkki .arkin-varjo,
+  .dialog.arkki .arkin-reuna { display: none; }
+
+  /*
+   * Aiherivi kiinni ruudun alareunaan. `fixed` eikä `sticky`: rivi on
+   * sisällön alussa, ja alareunaan tarttuva sticky irtoaisi heti kun
+   * sen oma paikka on vieritetty ohi.
+   */
+  .dialog.arkki #arrival-liuskat {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 6;
+    /* Koko marginaali nollataan: .wiki-liuskat jättää alle 0,9 rem
+     * välin, ja kiinnitetyssä palkissa se nostaisi rivin irti ruudun
+     * alareunasta — raosta näkyi vierivää tekstiä. */
+    margin: 0;
+    padding: 0.3rem 0.4rem calc(0.3rem + env(safe-area-inset-bottom));
+    border-top: 1.2px solid rgba(70, 51, 31, 0.5);
+    border-bottom: 0;
+    box-shadow: 0 -8px 10px -8px rgba(70, 51, 31, 0.45);
+  }
+
+  /*
+   * Kuvakkeet niin isoiksi kuin yhdelle riville mahtuu. Määrää ei
+   * kovakoodata: jokainen liuska ottaa saman osuuden rivistä
+   * (flex: 1 1 0), joten kuvake kasvaa itsestään, jos kaupungilla on
+   * vähemmän lukuja, ja kutistuu, jos niitä on enemmän. Katto 34 px
+   * estää sen, että kolmen luvun kaupungissa kuvakkeista tulisi
+   * peukalonkokoisia.
+   */
+  .dialog.arkki #arrival-liuskat.wiki-liuskat:has(svg) {
+    gap: 0.2rem;
+    flex-wrap: nowrap;
+  }
+
+  .dialog.arkki #arrival-liuskat button:has(svg) {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.45rem 0.1rem 0.5rem;
+  }
+
+  .dialog.arkki #arrival-liuskat button svg {
+    width: 100%;
+    height: auto;
+    max-width: 40px;
+    margin-inline: auto;
+  }
 }
 
 /*

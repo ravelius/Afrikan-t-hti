@@ -19,6 +19,8 @@ import {
   factSource, factText, factVoice, isSourceUrl, packById, sourceLabel, voiceTitle,
 } from './pack.js';
 import { stampBoard, stampDate, stampList } from './passport.js';
+// Matkalaukun alalaidan "Unohdettu aarre": tekijänoikeus ja lähdeluettelo.
+import { LAHTEET, LAHTEITA, PELI } from './lahteet.js';
 import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from './wiki.js';
 import { drawPuzzle as piirraAfrikanPulma, hasSketch as afrikanPulma } from './packs/africa-puzzles.js';
 import { drawPuzzle as piirraEuroopanPulma } from './packs/europe-puzzles.js';
@@ -863,7 +865,13 @@ const MANNER_SIIRTO_Y = 0.2;
  * mannerta ympäristöineen, ei maapalloa.
  */
 const MANNER_LAAJUUS = 3.6;
-const ZOOM_MS = 2400;
+/*
+ * Zoomiliu'un kesto. Nostettu 2400:sta omistajan havainnon jälkeen:
+ * "zoomaus tökkii kun kartta yrittää pysyä perässä piirtämisessä.
+ * zoomausvauhti voisi olla ainakin hitaampi." Hitaampi liuku antaa
+ * bittikartalle aikaa, ja liikkeestä tulee samalla arvokkaampi.
+ */
+const ZOOM_MS = 3400;
 // Etusivun zoomaus vielä tätäkin hitaammin (omistajan toive): se on
 // pelin avaus, ja koko maailmankartta on iso matka lähikuvaan.
 const ALOITUS_ZOOM_MS = 3600;
@@ -1118,21 +1126,6 @@ function liuskaIkoniSvg(piirto, koko = 19) {
        stroke-linejoin="round">${piirto}</svg>`;
 }
 
-/**
- * Lyhyt lähdemerkintä kartan selitekorttiin: tekijä ja lisenssi.
- *
- * Aineistojen nimet ovat muotoa "Beck ym. 2018: Present and future
- * Köppen–Geiger climate classification maps". Kortin levyiseen tilaan
- * otetaan kaksoispistettä edeltävä osa — se on juuri se nimeäminen,
- * jota CC BY vaatii. Koko merkintä osoitteineen on valitsimen
- * lähdekortissa yhden napautuksen päässä.
- */
-function linssiLahdeLyhyt(lahde) {
-  if (!lahde) return '';
-  const nimi = String(lahde.aineisto ?? '').split(':')[0].trim();
-  return [nimi, lahde.lisenssi].filter(Boolean).join(' · ');
-}
-
 /** Viivaikoni ikonin nimellä — tai null, jos nimi onkin tekstimerkki. */
 function viivaIkoni(nimi) {
   const piirto = VIIVA_IKONIT[nimi];
@@ -1182,6 +1175,21 @@ export class UI {
     this.passportCount = document.getElementById('passport-count-sisus');
     this.passportFinds = document.getElementById('passport-finds');
     this.passportProgress = document.getElementById('passport-progress');
+
+    /*
+     * Laukun alalaidan nimikilpi avaa lähdeikkunan.
+     *
+     * Kaksi <dialog>-modaalia päällekkäin jättäisi alemman
+     * taustahimmennyksen päälle (sama ansa kuin päivityslokissa,
+     * js/main.js), joten laukku suljetaan ensin. Sulkeminen ei hävitä
+     * mitään: laukku rakennetaan uudelleen joka avauksella.
+     */
+    this.lahteetDialog = document.getElementById('lahteet-dialog');
+    this.lahteetSisus = document.getElementById('lahteet-sisus');
+    document.getElementById('laukku-lahteet')?.addEventListener('click', () => {
+      this.passportDialog.close();
+      this.avaaLahteet();
+    });
 
     this.turnCard = document.getElementById('actions').closest('.turn-card');
     this.introEl = document.getElementById('intro');
@@ -1489,6 +1497,10 @@ export class UI {
     this.taustaLaput = [
       this.arrivalDialog, this.wikiDialog, this.eventDialog, this.passportDialog,
       this.quizDialog, this.winnerDialog, document.getElementById('rules-dialog'),
+      // Lähdeikkuna ei vie pelitilaa eteenpäin, joten sille riittää
+      // suljeLappun viimeinen haara: paperin kahina ja close(). Esc
+      // sulkee sen selaimen omalla oletuksella.
+      this.lahteetDialog,
     ];
     for (const lappu of this.taustaLaput) lappu.addEventListener('click', this.lappuTausta);
     this.peruutusLaput = [this.quizDialog, this.eventDialog, this.arrivalDialog];
@@ -2329,6 +2341,16 @@ export class UI {
      * Kuva täydennetään heti kun kalvo väistyy.
      */
     if (document.body.classList.contains('flight-active')) { this.taideOdottaa = true; return; }
+    /*
+     * Zoomiliu'un aikana ei rasteroida.
+     *
+     * Sama syy kuin lennolla: yksi ruutu vie satoja millisekunteja
+     * pääsäikeessä, ja liuku on CSS-muunnos, jonka kompositori hoitaisi
+     * muuten ilman nykäisyä. Omistaja: "zoomaus tökkii kun kartta
+     * yrittää pysyä perässä piirtämisessä." Kuva täydennetään heti kun
+     * liuku on ohi (kaynnistaZoomLiuku poistaa luokan).
+     */
+    if (document.body.classList.contains('zoom-kaynnissa')) { this.taideOdottaa = true; return; }
     // Kesken eleen ei ladata. Merkitään vain, että päättyessä pitää.
     if (this.kartanRaahaus && !heti) { this.taideOdottaa = true; return; }
     if (this.taidePiirtyy) { this.taideOdottaa = true; return; }
@@ -2987,6 +3009,8 @@ export class UI {
     this.zoomAjastin = setTimeout(() => {
       this.svg.style.transition = '';
       document.body.classList.remove('zoom-kaynnissa');
+      // Liuku ohi: nyt kuva saa piirtyä loppuun.
+      this.taydennaTaide?.({ heti: true });
     }, kesto + 60);
     clearTimeout(this.kiikariAjastin);
     // Kortit takaisin näkyviin, kun liuku on ohi.
@@ -3629,7 +3653,22 @@ export class UI {
        * sisällön siirrettynä ja kattaa tarkalleen [12000, 24000).
        */
       const rajaus = el('clipPath', { id: 'linssi-rajaus' }, root);
-      el('rect', { x: 0, y: 0, width: pack.map.width, height: pack.map.height }, rajaus);
+      /*
+       * Rajaus vain VAAKASUUNNASSA.
+       *
+       * Kierron kaksinkertaistuminen on vaakasuuntainen ilmiö: kopio on
+       * laudan leveyden päässä sivussa. Pystysuunnassa rajaus ei estä
+       * mitään — se vain leikkasi pois sen, mitä linssi piirtää laudan
+       * ylä- ja alapuolelle varattuun kaistaan. Topografialinssi täyttää
+       * kaistan merellä, ja rajaus söi täytön: kartan yläreunaan jäi
+       * pergamenttikaistale keskelle Jäämerta (omistajan havainto).
+       */
+      el('rect', {
+        x: 0,
+        y: -pack.map.height,
+        width: pack.map.width,
+        height: pack.map.height * 3,
+      }, rajaus);
     }
     this.linssiKerros = el('g', {
       class: 'linssi',
@@ -5619,16 +5658,9 @@ export class UI {
          * nostot jäivät kokonaan ilman kuvaa. Nämä kuvat esiladataan jo
          * saapuessa, joten laiskuus ei säästänyt mitään.
          */
-        kuva.decoding = 'async';
-        kuva.fetchPriority = 'low';
-        kuva.alt = nosto.otsikko;
-        // Ilman verkkoa nosto jää pelkäksi tekstiksi — mutta vasta kun
-        // sekä peili että alkuperäinen lähde ovat pettäneet.
-        asetaKuva(kuva, valokuvaUrl(nosto.tiedosto, 640),
-          valokuvaVara(nosto.tiedosto, 640), () => kuva.remove());
         // Napautus avaa kuvan isompana (omistajan toive).
         kuva.classList.add('kulttuuri-kuva-nappi');
-        kuva.addEventListener('click', () => this.naytaKulttuuriKuva(nosto));
+        this.varustaNostonKuva(kuva, nosto, 640);
         lohko.appendChild(kuva);
       }
       lohko.appendChild(html('p', 'arrival-intro', nosto.teksti));
@@ -5724,6 +5756,79 @@ export class UI {
         this.renderTurnPill();
       });
       this.arrivalKulttuuriVaihtoehdot.appendChild(nappi);
+    });
+  }
+
+  /**
+   * Nostokuvan lataus ja napautus yhdessä paikassa (litteät nostot ja
+   * aihenostot).
+   *
+   * KUVA EI KOSKAAN POISTU LATAUSVIRHEESTÄ. Ennen molemmat piirrot
+   * antoivat `asetaKuvalle` varareitin `() => kuva.remove()`, jolloin
+   * kuva katosi sivulta pysyvästi heti kun sekä peili että Commons
+   * pettivät. Ja kun peilin katkaisija on lauennut (kolme virhettä
+   * samassa istunnossa, tila sessionStoragessa), `valokuvaUrl` ja
+   * `valokuvaVara` palauttavat SAMAN Commons-osoitteen — silloin
+   * `asetaKuva` ei enää pidä sitä varareittinä ja ensimmäinen virhe
+   * riitti poistoon. Luvusta katosivat kaikki kuvat kerralla, eikä
+   * sivulla näkynyt rikkinäistä kuvaa eikä aukkoa, joka kertoisi syyn.
+   *
+   * Nyt osoitteita kokeillaan vuorotellen kolme kertaa pienellä
+   * odotuksella, ja vasta sen jälkeen kuva jää piiloon — se ei poistu,
+   * joten uusi yritys onnistuu heti kun yhteys palaa.
+   *
+   * EI myöskään `fetchPriority = 'low'`: kuva on luvun sisältöä eikä
+   * koriste, eikä sen lataus saa jäädä muiden pyyntöjen jalkoihin.
+   */
+  varustaNostonKuva(kuva, nosto, leveys) {
+    kuva.decoding = 'async';
+    kuva.alt = nosto.selite ?? nosto.otsikko;
+    const osoitteet = [...new Set([
+      valokuvaUrl(nosto.tiedosto, leveys), valokuvaVara(nosto.tiedosto, leveys),
+    ])].filter(Boolean);
+    let yritys = 0;
+    const YRITYKSIA = 3;
+    const seuraava = () => {
+      if (yritys >= YRITYKSIA) { kuva.hidden = true; return; }
+      const url = osoitteet[yritys % osoitteet.length];
+      yritys += 1;
+      // Sama osoite uudelleen ei lähtisi liikkeelle pelkällä src-
+      // asetuksella, joten se nollataan ensin.
+      if (kuva.getAttribute('src') === url) kuva.removeAttribute('src');
+      kuva.src = url;
+    };
+    kuva.addEventListener('error', () => {
+      if (onPeilista(kuva.currentSrc || kuva.src)) {
+        peiliPetti(peilinLaji(kuva.currentSrc || kuva.src) ?? 'kuvat');
+      }
+      // Pieni odotus: heti uusittu pyyntö kaatuisi samaan syyhyn.
+      setTimeout(seuraava, 700);
+    });
+    seuraava();
+    // Suurennus vain tarkoituksellisesta napautuksesta, ei vierityksen
+    // tai raahauksen päätteeksi (omistajan toive).
+    this.napautuksesta(kuva, () => this.naytaKulttuuriKuva(nosto));
+  }
+
+  /**
+   * Napautus, joka ei laukea vieritettäessä.
+   *
+   * Kuvat elävät vierivän arkin sisällä, ja kosketusnäytöllä sormi
+   * liikkuu lähes aina hieman. Suurennus avataan vasta kun osoitin
+   * pysyi paikallaan — muuten sivupyyhkäisy tai vierityksen pysäytys
+   * avasi kuvan vahingossa.
+   */
+  napautuksesta(el, toiminto) {
+    let alku = null;
+    el.addEventListener('pointerdown', (e) => { alku = { x: e.clientX, y: e.clientY }; });
+    el.addEventListener('pointercancel', () => { alku = null; });
+    el.addEventListener('click', (e) => {
+      const paikka = alku;
+      alku = null;
+      // Näppäimistön ja hiiren napsautuksissa pointerdownia ei
+      // välttämättä ole — ne kelpaavat sellaisenaan.
+      if (paikka && Math.hypot(e.clientX - paikka.x, e.clientY - paikka.y) > 10) return;
+      toiminto();
     });
   }
 
@@ -6055,6 +6160,20 @@ export class UI {
     const w = kortti.offsetWidth;
     const h = kortti.offsetHeight;
     if (!dialogi || !w || !h) return;
+    /*
+     * Puhelimella arkkia ei kehystetä lainkaan (omistajan toive:
+     * "tutki ikkunan voisi levittää kokonäytölle ja poistaa koko
+     * paperireunuksen"). Reunakerrokset puretaan ja leikkaus otetaan
+     * pois — leikkaus on tässä olennainen, koska clip-path rajaisi
+     * myös alareunaan kiinnitetyn aiherivin pois näkyvistä.
+     */
+    if (globalThis.matchMedia?.('(max-width: 699px)').matches) {
+      for (const el of dialogi.querySelectorAll(':scope > .arkin-varjo, :scope > .arkin-reuna')) {
+        el.remove();
+      }
+      kortti.style.clipPath = '';
+      return;
+    }
     const d = this.arkinAariviiva(w, h);
 
     /*
@@ -6174,14 +6293,7 @@ export class UI {
         // Sama syy kuin litteissä nostoissa: nollan kokoinen laiska kuva
         // ei lataudu WebKitissä lainkaan. Vain avatun aiheen kuvat ovat
         // kerrallaan DOM:issa, joten määrä pysyy pienenä.
-        kuva.decoding = 'async';
-        kuva.fetchPriority = 'low';
-        kuva.alt = nosto.selite ?? nosto.otsikko;
-        // Ilman verkkoa nosto jää tekstiksi — mutta vasta kun sekä
-        // peili että alkuperäinen lähde ovat pettäneet.
-        asetaKuva(kuva, valokuvaUrl(nosto.tiedosto, 900),
-          valokuvaVara(nosto.tiedosto, 900), () => kuva.remove());
-        kuva.addEventListener('click', () => this.naytaKulttuuriKuva(nosto));
+        this.varustaNostonKuva(kuva, nosto, 900);
         lohko.appendChild(kuva);
       }
       lohko.appendChild(html('p', 'teksti', nosto.teksti));
@@ -7273,6 +7385,65 @@ export class UI {
     }
   }
 
+  /**
+   * Nimikilpi laukun alalaidasta: pelin tekijänoikeus, tekijätiedot ja
+   * luettelo kaikista aineistoista, joista peli on koottu.
+   *
+   * Sisältö rakennetaan VASTA ensimmäisellä avauksella ja jää sitten
+   * paikoilleen. Rivejä on toista sataa, eikä useimmilla pelikerroilla
+   * ikkunaa avata lainkaan — sama päätös kuin päivityslokissa
+   * (js/main.js avaaMuutokset).
+   */
+  avaaLahteet() {
+    if (!this.lahteetDialog || !this.lahteetSisus) return;
+    if (!this.lahteetRakennettu) {
+      const sisus = this.lahteetSisus;
+      sisus.replaceChildren();
+
+      sisus.appendChild(html('p', 'lahteet-alaotsikko', PELI.englanniksi));
+      sisus.appendChild(html('p', 'lahteet-copyright', PELI.copyright));
+      sisus.appendChild(html('p', 'lahteet-teksti', PELI.tekija));
+      sisus.appendChild(html('p', 'lahteet-teksti', PELI.apu));
+      sisus.appendChild(html('p', 'lahteet-teksti', PELI.ehdot));
+      sisus.appendChild(html('p', 'lahteet-teksti', PELI.johdanto));
+
+      sisus.appendChild(html('h3', 'lahteet-otsikko', 'Lähteet ja aineistot'));
+      sisus.appendChild(html('p', 'lahteet-teksti', PELI.kolmannet));
+
+      for (const ryhma of LAHTEET) {
+        sisus.appendChild(html('h4', 'lahteet-ryhma', ryhma.otsikko));
+        if (ryhma.johdanto) {
+          sisus.appendChild(html('p', 'lahteet-ryhma-johdanto', ryhma.johdanto));
+        }
+        const lista = html('ul', 'lahteet-lista');
+        for (const rivi of ryhma.rivit) {
+          const kohta = html('li');
+          kohta.appendChild(html('span', 'lahteet-nimi', rivi.nimi));
+          if (rivi.tekija) kohta.appendChild(html('span', 'lahteet-tekija', rivi.tekija));
+          /*
+           * Kirjaamaton lisenssi merkitään näkyvästi eikä jätetä pois.
+           * Tyhjä kohta luettaisiin "ei ehtoja", ja se olisi juuri
+           * väärä johtopäätös — epäselvyyden pitää näkyä.
+           */
+          kohta.appendChild(html(
+            'span',
+            rivi.lisenssi ? 'lahteet-lisenssi' : 'lahteet-lisenssi epaselva',
+            rivi.lisenssi ?? 'Lisenssi epäselvä',
+          ));
+          if (rivi.huom) kohta.appendChild(html('span', 'lahteet-huom', rivi.huom));
+          lista.appendChild(kohta);
+        }
+        sisus.appendChild(lista);
+      }
+
+      sisus.appendChild(html('p', 'lahteet-lopetus',
+        `${LAHTEITA} aineistoa. Yksittäisen valokuvan, äänitteen ja väitteen `
+        + 'oma lähde näkyy siinä kohdassa peliä, jossa se esitetään.'));
+      this.lahteetRakennettu = true;
+    }
+    if (!this.lahteetDialog.open) this.lahteetDialog.showModal();
+  }
+
   // --- linssit: valitsin, kerros ja selitekortti -----------------------------
 
   /**
@@ -7729,8 +7900,18 @@ export class UI {
       kortti.appendChild(rivi);
     }
 
-    const lahde = linssiLahdeLyhyt(linssi.lahde);
-    if (lahde) kortti.appendChild(html('p', 'linssi-selite-lahde', lahde));
+    /*
+     * Lähdemerkintä EI ole tässä kortissa (omistajan päätös 4.8.2026).
+     *
+     * Kartan päällä se oli kolmen rivin mittainen aineiston nimi
+     * ("NOAA NGDC ETOPO1 … Public domain"), joka vei selitteeltä tilan
+     * eikä kertonut pelaajalle mitään siitä, mitä värit tarkoittavat.
+     * Merkintä ei silti katoa mihinkään: kaikkien aineistojen lähteet,
+     * tekijät ja lisenssit ovat yhdessä paikassa matkalaukun alalaidan
+     * "Unohdettu aarre" -ikkunassa (js/lahteet.js) sekä README.md:ssä,
+     * ja linssin oma pitkä merkintä on yhä linssivalitsimen "Mistä tämä
+     * tieto on?" -napin takana (paivitaLinssiTiedot).
+     */
     this.sijoitaLinssiSelite();
   }
 
