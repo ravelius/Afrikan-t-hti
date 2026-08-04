@@ -172,7 +172,7 @@ const NAPIN_RENGAS = 21;
  * (SIIRTYMAN_KESTO_MS 1,25 s): kohinan pitää olla täydessä voimassaan
  * kauan ennen kuin viritys alkaa, tai vaihdosta tulee pelkkää nousua.
  *
- * Loppupää on 1,4 s. Tässä luki ennen, että 0,6 s riittää molempiin ja
+ * Loppupää on 0,9 s. Tässä luki ennen, että 0,6 s riittää molempiin ja
  * että pidempi jättäisi lähetyksen ensimmäisen lauseen kohinan alle.
  * Kumpikaan ei pitänyt paikkaansa. Omistaja kuuli kohinan mutta ei
  * vaihtoa lainkaan ("minusta siinä ei ole myöskään niitä feidauksia") ja
@@ -200,7 +200,7 @@ const NAPIN_RENGAS = 21;
  * 25 ms:n askel on 24 askelta koko vaihdossa; harvempi kuuluu portaina.
  */
 const RISTIHAIVYTYS_S = 0.6;
-const LUKITUKSEN_HAIVYTYS_S = 1.4;
+const LUKITUKSEN_HAIVYTYS_S = 0.9;
 const HAIVYTYKSEN_ASKEL_MS = 25;
 
 /*
@@ -807,7 +807,7 @@ function kerroVaihe(virta, vaihe) {
  * paikka pitää oikeana.
  *
  * Ääni vaihtuu heti lukittumisen alkaessa ja soittimen tila vasta sen
- * lopussa: ristihäivytys kestää 1,4 s eli pidempään kuin lukittuminen,
+ * lopussa: ristihäivytys kestää 0,9 s eli pidempään kuin lukittuminen,
  * joten lähetys on jo nousemassa silloin kun nauha asettuu. Näin
  * "VIRITTÄÄ..." vaihtuu aseman nimeksi samassa tahdissa kuin kohina
  * väistyy — ei ennen sitä.
@@ -829,7 +829,7 @@ function lukitseAsema(virta) {
    * ei antanut reititystä (CORS), lähde palautuu oletukseen eikä neula
    * väitä lukevansa lähetystä.
    */
-  asetaMittarinLahde(virta.mittari?.vahvistin ?? null);
+  asetaMittarinLahde(virta.mittari?.vahvistin ?? jaljiteltyLukija(virta));
   ajastaVirralle(virta, LUKITTUMISEN_KESTO_MS, () => {
     tila?.soitin.asetaTila('soi');
     kerroMuutos();
@@ -1001,6 +1001,71 @@ function liitaMittariin(audio) {
     }
     return null;
   }
+}
+
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ * KUN LÄHETYSTÄ EI SAA MITATA: JÄLJITELTY LUKEMA
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Tämä on kolmas yritys samaan vikaan, ja kaksi edellistä korjasivat
+ * oikeat viat mutta väärässä paikassa. Nyt syy on selvillä, ja se on
+ * selaimen turvasääntö eikä bugi tässä koodissa:
+ *
+ *   `createMediaElementSource` antaa pelkkiä nollia, jos ääni tulee
+ *   toiselta palvelimelta EIKÄ palvelin lähetä CORS-otsakkeita. Ja jos
+ *   pyydämme CORSia (`crossOrigin = 'anonymous'`) palvelimelta, joka ei
+ *   sitä anna, LATAUS EPÄONNISTUU KOKONAAN — asema ei soi lainkaan.
+ *
+ * Siksi koodissa on varareitti, joka avaa aseman uudelleen ilman
+ * CORS-pyyntöä. Se pelastaa lähetyksen, mutta samalla mittari jää
+ * pysyvästi ilman lähdettä. Nettiradioasemista valtaosa ei lähetä
+ * CORS-otsakkeita, joten käytännössä neula makasi levossa lähes joka
+ * asemalla — täsmälleen se, mistä omistaja on huomauttanut kolmesti.
+ *
+ * TÄTÄ EI VOI KORJATA MITTAAMALLA. Vaihtoehtoja on kaksi: neula makaa
+ * kuolleena, tai se liikkuu ilman että lukemaa oikeasti mitataan.
+ * Valittu on jälkimmäinen, ja se sanotaan tässä suoraan: LUKEMA ON
+ * JÄLJITELTY, EI MITATTU. Laite on peliesine eikä studiomittari, ja
+ * kuollut neula soivan radion päällä on rikki myös pelin logiikassa.
+ *
+ * Mitattu lukema käytetään aina kun se on saatavilla: jos asema antaa
+ * CORSin, ketju syntyy (liitaMittariin) ja neula lukee oikeaa ääntä.
+ * Jäljitelmä on vain se, mikä ennen oli tyhjä.
+ *
+ * KAKSI ASIAA JÄLJITELMÄSSÄ ON SILTI TOTTA, ja ne riittävät tekemään
+ * siitä uskottavan:
+ *
+ *   1. Se seuraa äänenvoimakkuutta. Nupin kääntäminen laskee neulaa, ja
+ *      ristihäivytyksen aikana neula nousee lähetyksen mukana — koska
+ *      kerroin luetaan elementin omasta `volume`-arvosta.
+ *   2. Se vaikenee, kun lähetys vaikenee. Puskuroinnin aikana elementti
+ *      on `paused`, ja neula palaa lepoon niin kuin oikeakin.
+ *
+ * Liike on kolmen sinin summa eikä satunnaislukuja. Jaksot ovat
+ * yhteismitattomia (0,9 / 7,3 / 19,4 rad/s eli noin 7 s, 0,9 s ja
+ * 0,3 s), joten kuvio ei toistu kuultavan ajan sisällä, ja kolme
+ * aikatasoa vastaa sitä mitä puheessa oikeasti on: lause, tavu ja
+ * äänteen särmä. Satunnaisluvut näyttäisivät tärinältä, eivät
+ * puheelta — VU-mittari on keskiarvomittari, joka ei nykähtele.
+ */
+const JALJITELMAN_POHJA = 0.34;
+
+function jaljiteltyLukija(virta) {
+  const alku = kello();
+  return () => {
+    const audio = virta.audio;
+    // Vaiennut, puskuroiva tai jo suljettu lähetys ei liikuta neulaa.
+    if (!audio || audio.paused || audio.ended) return 0;
+    const voimakkuus = Number(audio.volume);
+    if (!(voimakkuus > 0)) return 0;
+    const t = (kello() - alku) / 1000;
+    const lause = 0.5 + 0.5 * Math.sin(t * 0.9 + 0.4);
+    const tavu = 0.5 + 0.5 * Math.sin(t * 7.3 + 1.7);
+    const sarma = 0.5 + 0.5 * Math.sin(t * 19.4 + 2.9);
+    const taso = JALJITELMAN_POHJA + 0.30 * lause + 0.22 * tavu + 0.10 * sarma;
+    return taso * voimakkuus;
+  };
 }
 
 /** Antaa mittarille sen, mitä juuri nyt kuuluu — tai palauttaa oletuksen. */
