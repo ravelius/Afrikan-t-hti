@@ -746,14 +746,27 @@
  * SÄVYT ON PATINOITU SAMALLA KERRALLA KUIN KYTKINTEN KROMI, ja niiden
  * on pysyttävä samoina: kaksi eri ikäistä metallia samassa kotelossa
  * lukee virheeksi eikä kulumaksi. Jos toista muuttaa, muuta molemmat.
+ *
+ * KOLMAS PATINOINTI 4.8.2026, ja tämä rengas oli mittauksessa se, mikä
+ * paljasti säännön tarpeelliseksi: kytkinten kromia oli jo laskettu
+ * kahdesti, mutta rengas oli jäänyt entiselleen ja oli mitattuna koko
+ * laitteen kirkkain kohta (245). Nyt kaikki yhdeksän sävyä ovat samasta
+ * sarjasta kuin kytkinten kromi (js/linssit/radiosoitin.js
+ * KROMIN_RAIDAT): lämpimiä harmaita, huippu 143 eikä 245, ja
+ * vaihteluväli 56–143 entisen 78–245:n sijaan.
+ *
+ * RENGAS SAA JÄÄDÄ HITUSEN KYTKINTÄ KIRKKAAMMAKSI (143 vs. 135). Se on
+ * merkkivalon oma kehys, ja lasin hehku osuu siihen ensimmäisenä — sama
+ * metalli lähempänä valonlähdettä on kirkkaampi, mikä on eri asia kuin
+ * uudempi metalli.
  */
 .radio-lamppu-kehys {
   position: absolute;
   inset: 0;
   border-radius: 50%;
   background-image: linear-gradient(180deg,
-    #e9ece9 0%, #bbc2c1 11%, #5b625f 22%, #e0e4dd 34%,
-    #f4f6f0 46%, #8f9591 57%, #4a504c 70%, #c9cfc7 82%, #6b706b 100%);
+    #90897e 0%, #79736a 11%, #45423c 22%, #8b857a 34%,
+    #958f83 46%, #605c55 57%, #3b3834 70%, #7f7a70 82%, #4c4943 100%);
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.6),
     inset 0 0 0 1px rgba(0, 0, 0, 0.45);
@@ -1238,36 +1251,43 @@
 .radio-viisari {
   position: absolute;
   /*
-   * Viisari alkaa vasta nimirivin alta. Koko asteikon mittaisena se
-   * halkaisi keskimmäisen kaupunginnimen kahtia ("LON|TOO") — ja juuri
-   * se nimi on se, jonka pelaajan pitää pystyä lukemaan. Nyt viiva
-   * kulkee jaotuksen yli ja kärki osoittaa ylös nimeen.
+   * PELKKÄ VIIVA, EI NUOLTA (omistaja: "radion virittimen punainen nuoli
+   * pitää korvata pelkällä punaisella viivalla").
+   *
+   * Aiemmin viisari alkoi vasta nimirivin alta ja sen päässä oli ylöspäin
+   * osoittava kolmion kärki. Kärki oli siellä siksi, että lyhyt viiva ei
+   * yksinään kertonut, MIHIN nimeen laite on viritetty — se päättyi
+   * nimen alapuolelle ja jätti osoituksen arvailun varaan.
+   *
+   * Nuolen tilalle ei siis riitä pelkkä kärjen poisto: viivan on
+   * ylletttävä asteikon yli päästä päähän, jolloin se leikkaa myös
+   * nimirivin ja osoittaa kohdan itse. Juuri niin viritysasteikko
+   * oikeassa laitteessa toimii — osoitin on lasin takana kulkeva lanka,
+   * ei nuoli.
+   *
+   * VIIVA ON OHUEMPI KUIN ENNEN (2 -> 1,5 px) EIKÄ SUMENNETTU. Se
+   * kulkee nyt keskimmäisen kaupunginnimen päältä, ja siinä kohtaa
+   * jokainen ylimääräinen pikseli on pois nimen luettavuudesta. Punainen
+   * hehku (0 0 4px) oli myös tiedoston ainoa sumennettu varjo asteikolla
+   * — sumennus on iOS:llä oma pintansa (ks. tiedoston alku) — ja nimen
+   * päällä se olisi ollut sumea punainen läikkä kirjainten yllä.
+   *
+   * VAALEA REUNUS JÄÄ, ja se on nyt tärkeämpi kuin ennen: hiuksenohut
+   * pergamentinvärinen raita viivan molemmin puolin irrottaa viivan
+   * kirjaimista, jolloin nimi on luettavissa senkin läpi.
    */
-  top: 12px;
-  bottom: 1px;
-  width: 2px;
-  margin-left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  margin-left: -0.75px;
   /* Nimien ja jaotuksen päällä. Viisari on ainoa asia, joka asteikolla
      liikkuu, ja kaupungin nimen alle jäävää viisaria etsii turhaan.
      Napautukset menevät sen läpi nimille. */
   z-index: 2;
   pointer-events: none;
   background: var(--radio-punainen);
-  /* Vaalea reunus erottaa viisarin myös kaupungin nimen kohdalla. */
-  box-shadow: 0 0 4px rgba(176, 58, 43, 0.7), 0 0 0 1px rgba(251, 241, 216, 0.85);
+  box-shadow: 0 0 0 1px rgba(251, 241, 216, 0.85);
   transition: left 0.55s ease;
-}
-
-/* Kärki osoittaa ylös siihen nimeen, johon laite on viritetty. */
-.radio-viisari::before {
-  content: "";
-  position: absolute;
-  top: -5px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 5px solid var(--radio-punainen);
 }
 
 .radiosoitin[data-tila="sammuksissa"] .radio-viisari { opacity: 0.45; }
@@ -1546,7 +1566,48 @@
  * pienenevät. Rivitys on jo tehty ylempänä.
  */
 @media (max-width: 700px) {
-  .radio-kotelo { gap: 0.4rem; padding: 0.45rem 0.5rem; }
+  /*
+   * ══════════════════════════════════════════════════════════════════
+   * LAITE KIINNI RUUDUN ALAREUNAAN
+   * ══════════════════════════════════════════════════════════════════
+   *
+   * Omistaja: "radio saisi olla iphonen alareunassa kiinni."
+   *
+   * Soitin oli jo `bottom: 0`, mutta kehyksellä oli alatäyte, ja kotelo
+   * kellui siksi viitisen pikseliä irti ruudun reunasta. Kelluva laite
+   * lukee ponnahdusikkunaksi; kiinni oleva lukee laitteeksi, joka on
+   * osa ruutua.
+   *
+   * TURVA-ALA EI KATOA VAAN SIIRTYY KEHYKSELTÄ KOTELOLLE. Se on koko
+   * tempun ehto: iPhonen kotipalkki saa jäädä KOTELON PUUN alle, muttei
+   * yhdenkään säätimen tai tekstin alle. Kun alatäyte on kehyksellä,
+   * turva-ala työntää koko laitteen ylös; kun se on kotelon omassa
+   * täytteessä, puu jatkuu ruudun reunaan asti ja sisältö nousee
+   * palkin yläpuolelle. Ilman turva-alaa (Android, työpöytä) mikään ei
+   * muutu, koska env() on silloin nolla.
+   *
+   * ALAREUNAN PYÖRISTYS POIS. Pyöristetty kulma ruudun reunassa jättää
+   * kolmion, jonka läpi kartta näkyy — silloin laite ei näytä kiinni
+   * olevalta vaan siltä, että se on liu'utettu puoliksi ulos. Yläkulmat
+   * pyöristyvät kuten ennenkin: ne ovat kotelon omat kulmat.
+   *
+   * SIVUILLE JÄÄ ENNALLAAN KAPEA RAKO. Omistaja pyysi laitetta kiinni
+   * ALAREUNAAN, ja koko ruudun levyinen palkki näyttäisi
+   * käyttöliittymäpalkilta — sama syy, jonka takia kotelolla on
+   * ylipäätään reunat (ks. .radio-kotelo max-width).
+   */
+  .radiosoitin { padding-bottom: 0; }
+  .radio-kotelo {
+    gap: 0.4rem;
+    padding: 0.45rem 0.5rem calc(0.45rem + var(--turva-ala, 0px));
+    border-radius: 12px 12px 0 0;
+    /* Alareuna on ruudun ulkopuolella; reunaviiva ja sen sisävarjo
+       jäisivät roikkumaan puoliksi näkyvänä juovana kotipalkin päälle. */
+    border-bottom: 0;
+    box-shadow:
+      inset 0 1px 0 rgba(217, 161, 59, 0.45),
+      0 -3px 14px rgba(0, 0, 0, 0.45);
+  }
   .radio-kytkimet { gap: 0.8rem; margin-left: 0.3rem; }
   /* Pienempi näyttö: soitin vie puhelimen pystyruudusta jo neljänneksen,
      eikä kartta saa jäädä sen alle. */

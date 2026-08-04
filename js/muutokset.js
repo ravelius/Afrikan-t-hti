@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 238, teksti: 'New York ja Rio vievät nyt maailmankartalle' },
+  { v: 238, teksti: 'Saapumisessa ei enää välähdä koko maailma' },
+  { v: 238, teksti: 'Zoomaus alkaa kauempaa ja laskeutuu pehmeästi' },
+  { v: 238, teksti: 'Pelin nimi pienemmäksi puhelimen ylärivillä' },
   { v: 237, teksti: 'Hampurilainen pois: säännöt ja uusi peli riville' },
   { v: 237, teksti: 'Päivitys ja kehittäjätila versionumeron takaa' },
   { v: 237, teksti: 'Radiotilassa vain kartta ja soitin' },

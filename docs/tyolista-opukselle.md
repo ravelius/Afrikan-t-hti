@@ -4401,3 +4401,53 @@ kertomatta kumpi on oikea.
 kartan asettelun radion syttyessä ja palauttanut sen sammuessa. `visibility`
 säilyttää mitat, joten kartta pysyy paikallaan — käyttäjälle radio vain
 himmentää muun pois.
+
+## v238 — neljä porttia löysi maailmankartan (4.8.2026)
+
+**New York, Los Angeles, Rio ja Sydney veivät vanhalle mannerlaudalle.**
+Omistaja: *"Jos lennän aloitusnäytöltä New Yorkiin, niin tulee vanha kartta,
+joka ei ole edes skrollattavissa. Tapahtuukohan sama myös muihin kaupunkeihin
+mentäessä?"* Tapahtui — kolmelle muulle.
+
+Aloitusruudun (`maailma`) neljästätoista portista **kymmenen** avasi
+`maailmankartan` ja **neljä** avasi suoraan vanhan mannerlaudan. Ne ovat 1000
+yksikköä leveitä eli KAPEAMPIA kuin näkymä, joten panoroitavaa ei ollut
+lainkaan (`panVara: 0`), eikä niissä ole maastoa, jokia tai nimiä.
+
+Korjaus: neljälle portille `maailmankartta` listan ensimmäiseksi, kuten
+kymmenellä muulla. Vanha mannerlauta jäi toiseksi linkiksi. Testi
+"porttien linkit ovat vastavuoroisia" hajosi heti — paluuportteja oli
+kymmenen eikä neljätoista — ja se korjattiin sekä generaattoriin
+(`tools/tee-maailmankartta.mjs` PALUUPORTIT) että pakettiin kohdennetusti,
+koska pakettia ei saa luoda uudelleen.
+
+**Saapumisessa ei enää välähdä koko maailma.** Omistaja: *"näkyy ensin koko
+maailmankartta, sitten se vain hyppää lähemmäs ja sitten vasta zoomaa."*
+Saapumiszoom ajastettiin vasta lentokalvon poiston jälkeen, joten kalvon 280
+ms:n häivytyksen ajan sen läpi näkyi laudan kokonäkymä. Nyt näkymä asetetaan
+ennen häivytystä, jolloin kalvon takaa paljastuu suoraan liu'un lähtöasento.
+
+Tämä paljasti toisen asian: `mannerZoomTarpeen()` palauttaa falsen niin
+kauan kuin `flight-active` on päällä, joten pelkkä kutsun siirto ESTI
+zoomauksen kokonaan. Mitattuna näkyvä leveys jäi 11 640 yksikköön koko
+saapumisen ajaksi. Lippu on purettava ensin.
+
+Lähtölaajuus 2,6 → 3,6 omistajan pyynnöstä ("aloita zoomaus hieman
+kauempaa"). Mitattu sarja saapumisesta: 5697 → 2819 → 1585 → 1583 yksikköä.
+
+**Pelin nimi pienemmäksi puhelimessa.** 1,05 rem vei kahdellakin rivillä 121
+px ja kukkaropilleri katkesi. 0,86 rem vie 91 px, ja pilleri mahtuu
+kokonaan 390 ja 430 pikselin ruuduilla.
+
+### Opittua
+
+**Siirretty kutsu on eri kutsu.** Saapumiszoomin siirto muutaman rivin
+verran ylöspäin näytti puhtaalta järjestyskorjaukselta, mutta se siirsi
+kutsun ehdon väärälle puolelle ja sammutti koko toiminnon. Testit eivät
+huomanneet mitään — vasta selaimesta mitattu näkyvän alueen leveys kertoi
+sen. Animaatiota ei voi tarkistaa lukemalla.
+
+**Osittain korjattu on helpompi jäädä huomaamatta kuin kokonaan rikki.**
+Kymmenen porttia neljästätoista vei uudelle kartalle, joten satunnainen
+kokeilu näytti toimivalta. Vika löytyi vasta kun omistaja sattui
+valitsemaan yhden neljästä.

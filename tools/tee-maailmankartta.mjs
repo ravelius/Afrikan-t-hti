@@ -267,6 +267,11 @@ const { paikat: nimiPaikat, pulmat } = sijoita(pisteet, new Map(Object.entries(m
 const PALUUPORTIT = new Set([
   'lontoo', 'kairo', 'mumbai', 'peking', 'tokio', 'singapore',
   'moskova', 'ateena', 'kapkaupunki', 'tanger',
+  // New York, Los Angeles, Rio ja Sydney veivät ennen suoraan vanhalle
+  // mannerlaudalle eivätkä tänne, joten paluuporttia ei tarvittu. Nyt
+  // kaikki neljätoista valintaruudun porttia tulevat tälle laudalle, ja
+  // linkin on oltava vastavuoroinen.
+  'newyork', 'losangeles', 'rio', 'sydney',
 ]);
 const cities = pisteet.map((c) => {
   const lahde = lahdeKaupunki.get(c.id) ?? {};

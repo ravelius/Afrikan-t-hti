@@ -607,5 +607,166 @@
   "kieli": "romania",
   "virallinen": false,
   "tutkittu": true
+ },
+ "ARG": {
+  "url": "https://sa.mp3.icecast.magma.edge-access.net/sc_rad1",
+  "asema": "LRA1 Radio Nacional Argentina",
+  "kieli": "spanish",
+  "virallinen": true,
+  "pisteet": 630
+ },
+ "AUS": {
+  "url": "https://abc.streamguys1.com/live/newsradio/icecast.audio",
+  "asema": "ABC News Radio",
+  "kieli": "english",
+  "virallinen": true,
+  "pisteet": 610
+ },
+ "BOL": {
+  "url": "https://stream.zeno.fm/pnwpbyfambruv",
+  "asema": "Radio Panamericana",
+  "kieli": "spanish",
+  "virallinen": true,
+  "pisteet": 610
+ },
+ "BRA": {
+  "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/BANDNEWSFM_SPAAC_SC",
+  "asema": "BandNews FM",
+  "kieli": "portuguese",
+  "virallinen": true,
+  "pisteet": 633
+ },
+ "CAN": {
+  "url": "https://26733.live.streamtheworld.com/CBLAFM_CBC_SC",
+  "asema": "CBC Radio One - Toronto, ON (MP3 stream)",
+  "kieli": "english",
+  "virallinen": true,
+  "pisteet": 628
+ },
+ "CHL": {
+  "url": "https://unlimited3-cl.dps.live/biobiotemuco/aac/icecast.audio",
+  "asema": "Radio Bio Bio Temuco",
+  "kieli": "spanish",
+  "virallinen": true,
+  "pisteet": 625
+ },
+ "COL": {
+  "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CARACOL_RADIOAAC.aac",
+  "asema": "Caracol Radio (Bogotá) - 100.9 FM / 810 AM - HJGL / HJCY - PRISA Radio - Bogotá, Colombia",
+  "kieli": "spanish",
+  "virallinen": true,
+  "pisteet": 635
+ },
+ "CUB": {
+  "url": "https://securestreams7.autopo.st/?uri=https://icecast.teveo.cu/b3jbfThq",
+  "asema": "Radio Reloj Cuba 950 AM",
+  "kieli": "spanish",
+  "virallinen": true,
+  "pisteet": 623
+ },
+ "ECU": {
+  "url": "https://icecast.radiopichincha.com/radiopichincha",
+  "asema": "Radio Pichincha",
+  "kieli": "esapa",
+  "virallinen": false,
+  "pisteet": 126
+ },
+ "FJI": {
+  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
+  "asema": "Abdulbasit Abdulsamad",
+  "kieli": "arabic",
+  "virallinen": false,
+  "pisteet": 65
+ },
+ "GRL": {
+  "url": "https://play.streams.gr/sc/radiodiplopenies/stream",
+  "asema": "ΡΑΔΙΟ ΔΙΠΛΟΠΕΝΙΕΣ",
+  "kieli": "",
+  "virallinen": false,
+  "pisteet": 66
+ },
+ "GTM": {
+  "url": "https://stream.zenolive.com/z96sq8tndseuv",
+  "asema": "Emisoras Unidas 89.7",
+  "kieli": "spanish",
+  "virallinen": true,
+  "pisteet": 635
+ },
+ "MEX": {
+  "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/W_RADIOAAC.aac",
+  "asema": "W Radio Ciudad de México - 96.9 FM / 900 AM - XEW-FM / XEW-AM - Radiópolis - Ciudad de México",
+  "kieli": "spanish",
+  "virallinen": true,
+  "pisteet": 635
+ },
+ "NIC": {
+  "url": "https://stream.zeno.fm/cbd1wweamzzuv",
+  "asema": "La Voz del Norte",
+  "kieli": "spanish",
+  "virallinen": false,
+  "pisteet": 133
+ },
+ "NZL": {
+  "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/NZME_41AAC.aac",
+  "asema": "Newstalk ZB",
+  "kieli": "",
+  "virallinen": false,
+  "pisteet": 129
+ },
+ "PAN": {
+  "url": "https://stream.zeno.fm/fz1rcfd1x1zuv",
+  "asema": "Stereo Vida Panama",
+  "kieli": "spanish",
+  "virallinen": false,
+  "pisteet": 67
+ },
+ "PER": {
+  "url": "https://mdstrm.com/audio/5fab3416b5f9ef165cfab6e9/icecast.audio",
+  "asema": "Radio RPP Noticias",
+  "kieli": "",
+  "virallinen": true,
+  "pisteet": 635
+ },
+ "PNG": {
+  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
+  "asema": "Abdulbasit Abdulsamad",
+  "kieli": "arabic",
+  "virallinen": false,
+  "pisteet": 68
+ },
+ "SLB": {
+  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
+  "asema": "Abdulbasit Abdulsamad",
+  "kieli": "arabic",
+  "virallinen": false,
+  "pisteet": 67
+ },
+ "TLS": {
+  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
+  "asema": "Abdulbasit Abdulsamad",
+  "kieli": "arabic",
+  "virallinen": false,
+  "pisteet": 66
+ },
+ "USA": {
+  "url": "https://fm939.wnyc.org/wnycfm",
+  "asema": "WNYC-FM 93.9 New York Public Radio",
+  "kieli": "english",
+  "virallinen": true,
+  "pisteet": 635
+ },
+ "VEN": {
+  "url": "https://guri.tepuyserver.net/8048/stream",
+  "asema": "Radio Nacional de Venezuela - Informativa",
+  "kieli": "español - latinoamerica",
+  "virallinen": true,
+  "pisteet": 563
+ },
+ "VUT": {
+  "url": "https://radio.vbtc.vu/paradisefm",
+  "asema": "Paradise 98FM",
+  "kieli": "bislama",
+  "virallinen": false,
+  "pisteet": 63
  }
 }
