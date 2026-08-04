@@ -527,6 +527,7 @@ import {
   piirtotarkkuus,
   ruudunKoko,
   valmisteleTaide,
+  pilkoTaide,
   tyylitSisaan,
   drawMaasto,
 } from './mapart.js';
@@ -2007,7 +2008,19 @@ export class UI {
      * ruutua kohti maksaisi enemmän kuin itse piirto.
      */
     this.taideRyhma = ryhma;
-    this.taide = valmisteleTaide(tyylitSisaan(ryhma), this.svg.querySelector('defs'));
+    /*
+     * Pilkottu taide, jos se onnistuu; muuten yksi teksti kuten ennen.
+     *
+     * Pilkkominen tarvitsee elävän puun mitat, ja se on tehtävä NYT —
+     * vektorit poistetaan heti kun ensimmäiset ruudut ovat valmiit.
+     * Varareitti ei ole muodollisuus: pilkkominen palauttaa nullin, jos
+     * kloonin ja elävän puun rakenne ei täsmää, ja silloin kartta
+     * piirtyy hitaammin mutta oikein.
+     */
+    const tyylitelty = tyylitSisaan(ryhma);
+    const maarittelyt = this.svg.querySelector('defs');
+    this.taide = pilkoTaide(tyylitelty, ryhma, maarittelyt)
+      ?? valmisteleTaide(tyylitelty, maarittelyt);
     this.taideRuudut = new Map();
     this.taideSkaala = 0;
     this.taideRuutu = 0;

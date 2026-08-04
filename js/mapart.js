@@ -1276,6 +1276,24 @@ const RUUDUN_PIKSELIT = 1100;
  * uudestaan, 6500 elementin läpikäynti maksaisi enemmän kuin itse
  * piirto. Nyt teksti syntyy kerran ja ruutu vaihtaa siitä vain
  * näkymäikkunan ja koon.
+ *
+ * --- mutta yksi teksti ei riitä ---
+ *
+ * Sarjallistus kerran ratkaisi väärän puolen ongelmasta. Teksti syntyy
+ * kerran, mutta SELAIN JÄSENTÄÄ SEN JOKA RUUDULLA UUDESTAAN: ruutu on
+ * oma <svg>-blobinsa, ja blobin sisällä on koko maailmankartta.
+ * Mitattuna 12,4 megatavua ja 12 512 elementtiä — ja yhteen ruutuun
+ * niistä osuu 353 eli KOLME PROSENTTIA. Loput 97 % jäsennetään,
+ * asetellaan ja rajataan pois joka kerta.
+ *
+ * viewBox rajaa vasta piirron, ei työn: mitään ei voi jättää
+ * jäsentämättä sillä perusteella, että se jää lopulta ruudun
+ * ulkopuolelle.
+ *
+ * Siksi taide pilkotaan: jokaisesta osasta talletetaan sen teksti ja
+ * sen rajauslaatikko laudan koordinaateissa. Ruutu kootaan niistä
+ * osista, jotka oikeasti osuvat siihen. Pilkkominen maksaa kerran,
+ * ruutuja on kymmeniä.
  */
 export function valmisteleTaide(ryhma, maarittelyt) {
   if (typeof XMLSerializer === 'undefined') return null;
@@ -1284,6 +1302,201 @@ export function valmisteleTaide(ryhma, maarittelyt) {
   if (maarittelyt) osat.push(sarjallistin.serializeToString(maarittelyt));
   osat.push(sarjallistin.serializeToString(ryhma));
   return osat.join('');
+}
+
+/*
+ * Rajauslaatikko laudan koordinaateissa.
+ *
+ * getBBox antaa laatikon elementin OMASSA koordinaatistossa, ja
+ * koristeryhmillä on siirtoja (translate(700,4535)). Pelkkä getBBox
+ * osuisi niillä satoja yksiköitä väärään paikkaan, jolloin koriste
+ * katoaisi ruudusta johon se kuuluu.
+ *
+ * getScreenCTM antaa muunnoksen ruutupikseleihin. Kahden CTM:n erotus
+ * antaa muunnoksen elementistä juureen riippumatta siitä, montako
+ * siirtoa välissä on ja mikä viewBox sattuu olemaan voimassa.
+ */
+function laatikkoJuuressa(elementti, juurenCtmKaanteinen) {
+  let b;
+  try { b = elementti.getBBox(); } catch { return null; }
+  if (!b || (!b.width && !b.height)) return null;
+  const ctm = elementti.getScreenCTM?.();
+  if (!ctm || !juurenCtmKaanteinen) return { x0: b.x, y0: b.y, x1: b.x + b.width, y1: b.y + b.height };
+  const m = juurenCtmKaanteinen.multiply(ctm);
+  let x0 = Infinity; let y0 = Infinity; let x1 = -Infinity; let y1 = -Infinity;
+  for (const [px, py] of [[b.x, b.y], [b.x + b.width, b.y],
+    [b.x, b.y + b.height], [b.x + b.width, b.y + b.height]]) {
+    const x = m.a * px + m.c * py + m.e;
+    const y = m.b * px + m.d * py + m.f;
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+  }
+  return { x0, y0, x1, y1 };
+}
+
+/**
+ * Pilkkoo taiteen paloihin, joista ruutu voidaan koota.
+ *
+ * Palan koko on ryhmän suora lapsi: reittikerroksessa yksi tie,
+ * mantereissa yksi ääriviiva. Se on oikea raekoko — yksittäinen
+ * <path> olisi tarkempi mutta maksaisi 12 512 sarjallistusta, ja
+ * ryhmä kokonaisuutena olisi liian karkea (reittikerros yksin kattaa
+ * koko laudan).
+ *
+ * Ryhmä, jolla on oma siirto tai joka on pieni, otetaan yhtenä
+ * palana: pilkkomisesta ei ole hyötyä, jos osia on kymmenen.
+ *
+ * Palauttaa null, jos pilkkominen ei onnistu — silloin kutsuja
+ * käyttää entistä yhtä tekstiä eikä mikään hajoa.
+ */
+const PILKO_VAHINTAAN = 24;
+
+/*
+ * KAKSI PUUTA, EI YHTÄ.
+ *
+ * Teksti otetaan tyylitellystä KLOONISTA, koska vain siinä tyylit ovat
+ * kiinni elementeissä — irrallinen SVG ei peri sivun tyylitiedostoa.
+ * Mitat on pakko lukea ELÄVÄSTÄ puusta, koska getBBox ja getScreenCTM
+ * vaativat asetellun dokumentin: kloonilla ne palauttavat nollaa, ja
+ * jokainen pala päätyisi ruutuun 0,0.
+ *
+ * Puut käydään rinnakkain. tyylitSisaan takaa saman rakenteen tai
+ * palauttaa kloonin koskemattomana, joten varmistetaan lapsimäärä
+ * ennen kuin niihin luotetaan.
+ */
+export function pilkoTaide(klooni, elava, maarittelyt) {
+  if (typeof XMLSerializer === 'undefined') return null;
+  if (!klooni || !elava?.getScreenCTM) return null;
+  if (klooni.children.length !== elava.children.length) return null;
+  const juurenCtm = elava.getScreenCTM();
+  if (!juurenCtm) return null;
+  const kaanteinen = juurenCtm.inverse();
+  const sarjallistin = new XMLSerializer();
+  const palat = [];
+
+  const lisaa = (kloonattu, elavaSama, kuori) => {
+    const laatikko = laatikkoJuuressa(elavaSama, kaanteinen);
+    if (!laatikko) return;
+    palat.push({ ...laatikko, xml: sarjallistin.serializeToString(kloonattu), kuori });
+  };
+
+  for (let i = 0; i < elava.children.length; i++) {
+    const e = elava.children[i];
+    const k = klooni.children[i];
+    if (!k) return null;
+    const omat = e.children ?? [];
+    const jaettava = e.tagName === 'g' && !e.getAttribute('transform')
+      && omat.length >= PILKO_VAHINTAAN && k.children.length === omat.length;
+    if (!jaettava) { lisaa(k, e, null); continue; }
+    /*
+     * Ryhmän avaus talletetaan erikseen, jotta lapset voidaan kääriä
+     * takaisin samaan ryhmään. Luokka ja tyyli ovat ryhmässä, ja ilman
+     * kuorta lapset menettäisivät ne.
+     */
+    const avaus = `<g${[...k.attributes].map((a) => ` ${a.name}="${a.value.replace(/"/g, '&quot;')}"`).join('')}>`;
+    for (let j = 0; j < omat.length; j++) lisaa(k.children[j], omat[j], avaus);
+  }
+  if (!palat.length) return null;
+
+  /*
+   * SAMA ÄÄRIVIIVA VAIN KERRAN.
+   *
+   * Rantaviiva piirretään viitenä päällekkäisenä polkuna: maan täyttö,
+   * paksu ranta, hento ranta ja kaksi meren kaikua. Niillä on eri väri
+   * ja paksuus mutta TÄSMÄLLEEN sama d. Mitattuna 79 eri ääriviivaa
+   * vievät 4,7 megatavua, joista 3,6 on pelkkää toistoa — ja Euraasian
+   * ääriviiva yksin on 321 kilotavua ja 23 668 pistettä.
+   *
+   * Selain jäsentää jokaisen kopion erikseen. <use> viittaa kerran
+   * jäsennettyyn polkuun, joten viisi kopiota maksaa yhden.
+   *
+   * Mallikappaleesta on riisuttava tyyli. tyylitSisaan on kirjoittanut
+   * jokaiseen elementtiin oman style-attribuutin, ja jos se jää
+   * mallikappaleeseen, se voittaa <use>-elementin tyylin — jolloin
+   * kaikki viisi kerrosta piirtyisivät samannäköisinä.
+   */
+  const kertoja = new Map();
+  for (const pala of palat) {
+    const d = pala.xml.match(/ d="([^"]*)"/)?.[1];
+    if (!d || d.length < 400) continue;
+    kertoja.set(d, (kertoja.get(d) ?? 0) + 1);
+  }
+  const mallit = new Map();
+  const tunnukset = new Map();
+  for (const [d, kertaa] of kertoja) {
+    if (kertaa < 2) continue;
+    const tunnus = `mp${mallit.size}`;
+    tunnukset.set(d, tunnus);
+    mallit.set(tunnus, `<path id="${tunnus}" d="${d}"/>`);
+  }
+  for (const pala of palat) {
+    const d = pala.xml.match(/ d="([^"]*)"/)?.[1];
+    const tunnus = d && tunnukset.get(d);
+    if (!tunnus) continue;
+    // Polku käytöksi: d pois, viittaus tilalle, muut määreet ennallaan.
+    pala.malli = tunnus;
+    pala.xml = pala.xml
+      .replace(/^<path\b/, '<use')
+      .replace(/ d="[^"]*"/, ` href="#${tunnus}"`)
+      .replace(/<\/path>/, '</use>');
+  }
+
+  return {
+    maarittelyt: maarittelyt ? sarjallistin.serializeToString(maarittelyt) : '',
+    /*
+     * Mallikappaleet EIVÄT ole valmiissa maarittelyt-lohkossa.
+     *
+     * Ne ovat yhteensä yli megatavun, ja jos ne liitettäisiin jokaiseen
+     * ruutuun, koko säästö menisi päinvastoin: ruutu kantaisi kaikkien
+     * mantereiden ääriviivat vaikka näkyvissä olisi yksi. Ruutu ottaa
+     * vain ne mallit, joihin sen omat palat viittaavat.
+     */
+    mallit,
+    palat,
+  };
+}
+
+/**
+ * Kokoaa yhden ruudun taiteen: vain ne palat, jotka osuvat ikkunaan.
+ *
+ * Reunavara on tarpeen, koska rajauslaatikko ei tunne viivan
+ * paksuutta: juuri ruudun ulkopuolelle jäävä ääriviiva piirtäisi silti
+ * viivansa ruudun puolelle, ja ilman varaa siihen jäisi sauma.
+ */
+const REUNAVARA = 40;
+
+export function kokoaRuudunTaide(pilkottu, ikkuna) {
+  if (!pilkottu) return null;
+  const x0 = ikkuna.x - REUNAVARA;
+  const y0 = ikkuna.y - REUNAVARA;
+  const x1 = ikkuna.x + ikkuna.w + REUNAVARA;
+  const y1 = ikkuna.y + ikkuna.h + REUNAVARA;
+  const osat = [];
+  const tarvitut = new Set();
+  let auki = null;
+  for (const pala of pilkottu.palat) {
+    if (pala.x0 > x1 || pala.x1 < x0 || pala.y0 > y1 || pala.y1 < y0) continue;
+    if (pala.malli) tarvitut.add(pala.malli);
+    if (pala.kuori !== auki) {
+      if (auki) osat.push('</g>');
+      if (pala.kuori) osat.push(pala.kuori);
+      auki = pala.kuori;
+    }
+    osat.push(pala.xml);
+  }
+  if (auki) osat.push('</g>');
+  if (!osat.length) return null;
+
+  // Mallit ennen käyttöä: <use> ei löydä viitettä, joka tulee vasta
+  // sen jälkeen samassa asiakirjassa.
+  const mallit = [];
+  for (const tunnus of tarvitut) {
+    const malli = pilkottu.mallit?.get(tunnus);
+    if (malli) mallit.push(malli);
+  }
+  return `${pilkottu.maarittelyt}${mallit.length ? `<defs>${mallit.join('')}</defs>` : ''}${osat.join('')}`;
 }
 
 /**
@@ -1305,14 +1518,22 @@ export function valmisteleTaide(ryhma, maarittelyt) {
  * Palauttaa <image>-elementin tai null. Epäonnistuminen ei ole virhe:
  * kutsuja jättää silloin vektorit paikalleen.
  */
+/**
+ * @param taide  merkkijono (koko taide) TAI pilkoTaiteen palanippu.
+ *               Nippu on nopeampi: ruutuun kootaan vain sen omat palat.
+ */
 export async function rasteroiRuutu(taide, ikkuna, skaala, tarkkuus = 1) {
   if (!taide || !window.Blob || !URL.createObjectURL) return null;
   try {
+    const sisalto = typeof taide === 'string' ? taide : kokoaRuudunTaide(taide, ikkuna);
+    // Tyhjä ruutu: pelkkää merta ilman yhtään palaa. Pergamentti tulee
+    // kartan taustasta, joten tyhjää ei tarvitse rasteroida lainkaan.
+    if (!sisalto) return null;
     const teho = skaala * tarkkuus;
     const leveysPx = Math.min(RUUDUN_PIKSELIT, Math.max(32, Math.round(ikkuna.w * teho)));
     const korkeusPx = Math.min(RUUDUN_PIKSELIT, Math.max(32, Math.round(ikkuna.h * teho)));
     const xml = `<svg xmlns="${NS}" viewBox="${ikkuna.x} ${ikkuna.y} ${ikkuna.w} ${ikkuna.h}"`
-      + ` width="${leveysPx}" height="${korkeusPx}">${taide}</svg>`;
+      + ` width="${leveysPx}" height="${korkeusPx}">${sisalto}</svg>`;
 
     const lahdeOsoite = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
     let kuvalahde;
@@ -1334,10 +1555,29 @@ export async function rasteroiRuutu(taide, ikkuna, skaala, tarkkuus = 1) {
     canvas.getContext('2d').drawImage(kuvalahde, 0, 0, leveysPx, korkeusPx);
     URL.revokeObjectURL(lahdeOsoite);
 
-    const png = await new Promise((valmis) => {
-      if (canvas.toBlob) canvas.toBlob((b) => valmis(b), 'image/png');
-      else valmis(null);
+    /*
+     * WebP eikä PNG.
+     *
+     * PNG-pakkaus oli mitattuna ruudun toiseksi kallein vaihe heti
+     * SVG:n jäsennyksen jälkeen. Se on häviötön ja siksi hidas, ja
+     * kartta on juuri sellaista kuvaa — laajoja tasaisia sävyjä ja
+     * ohuita viivoja — jota se pakkaa huonoiten.
+     *
+     * WebP laadulla 0.92 on samaa luokkaa tarkka mutta moninkertaisesti
+     * nopeampi, ja tiedosto on murto-osa. Kuvaa ei suurenneta pikselin
+     * tarkkuudella eikä siitä lueta värejä takaisin, joten häviöllisyys
+     * ei näy: ruutu piirretään täsmälleen siihen kokoon, johon se
+     * rasteroitiin.
+     *
+     * Vanha PNG jää varareitiksi. toBlob palauttaa null tuntemattomalle
+     * tyypille joissakin selaimissa, ja silloin on parempi olla hidas
+     * kuin tyhjä.
+     */
+    const pakkaa = (tyyppi, laatu) => new Promise((valmis) => {
+      if (!canvas.toBlob) { valmis(null); return; }
+      canvas.toBlob((b) => valmis(b && b.type === tyyppi ? b : null), tyyppi, laatu);
     });
+    const png = await pakkaa('image/webp', 0.92) ?? await pakkaa('image/png');
     const osoite = png ? URL.createObjectURL(png) : canvas.toDataURL('image/png');
 
     /*
