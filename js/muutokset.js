@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 224, teksti: 'Maailmanradio: kaupungit soivat kartalta' },
+  { v: 224, teksti: 'Vanhan ajan radiosoitin ruudun alalaitaan' },
+  { v: 224, teksti: 'Kehittäjätilaan kaikki toimivat aarteet' },
   { v: 223, teksti: 'Järvet, joet ja vuoristot nimetty kaunolla' },
   { v: 223, teksti: 'Vesi saa syvyyden ja värin lähelle zoomatessa' },
   { v: 223, teksti: 'Joet levenevät uomiksi kun karttaa katsoo läheltä' },
