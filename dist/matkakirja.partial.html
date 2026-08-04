@@ -12053,6 +12053,1122 @@ const ASIA_SAAPUMISET = {
   },
 };
 
+// ===== js/packs/northamerica-saapumiset.js =====
+// Matkakirjan saapumistekstit (Pohjois- ja Väli-Amerikka) — sama muoto
+// ja ääni kuin muissa maanosissa: nuoren herran tuore fiilis (kuvaus)
+// ja isoisän kirjan lainaus (nosto). Yksi kantava idea per kaupunki.
+// Luennat: puhe-northamerica-saapuminen-<id>.mp3.
+const NORTHAMERICA_SAAPUMISET = {
+  newyork: {
+    kuvaus: 'New Yorkissa nostin katseen enkä meinannut laskea sitä enää: '
+      + 'torneja nousee saarelta niin tiheässä, että kadut ovat kuin '
+      + 'kanjoneita. Ja keskellä kaikkea aukeaa Central Park — metsä, '
+      + 'järviä ja kallioita, joiden takana pilvenpiirtäjät seisovat '
+      + 'rivissä kuin katsomo.',
+    nosto: 'Isoisä kirjoitti: "Sataman yli rakennetaan siltaa, jonka '
+      + 'tornit näkyvät jo kauas — sanovat, ettei moista ole tehty '
+      + 'ikinä." Brooklynin silta seisoo yhä, ja sen takana nousi '
+      + 'kaupunki, jota ukko ei olisi uskonut todeksi.',
+  },
+  sanfrancisco: {
+    kuvaus: 'San Franciscossa raitiovaunua vedetään kaapelilla, joka kulkee '
+      + 'kadun alla: vaunu tarrautuu siihen ja kiipeää mäkiä, joita '
+      + 'autotkin arastelevat. Lahden yllä punainen silta katosi sumuun '
+      + 'ja ilmestyi taas — sumulla on täällä oma nimikin, Karl.',
+    nosto: 'Isoisä kirjoitti: "Kaupunkiin avattiin tänä vuonna köysirata, '
+      + 'joka vetää vaunut mäkien yli — keksintö, jota tullaan '
+      + 'katsomaan kauempaakin." Tultiin, ja tullaan yhä: samat vaunut '
+      + 'kulkevat samoja mäkiä.',
+  },
+  nome: {
+    kuvaus: 'Nomessa ranta on kullanhuuhtojien: kuka tahansa saa yhä '
+      + 'vaskata hiekasta kultaa, ja moni saa. Maaliskuussa kaupunkiin '
+      + 'saapuu Iditarod — yli tuhannen kilometrin koiravaljakkoajo, '
+      + 'jonka voittajaa koko kaupunki odottaa kadulla '
+      + 'vuorokaudenajasta riippumatta.',
+    nosto: 'Isoisän kartalla tämä ranta on tyhjä viiva. Kaksikymmentäviisi '
+      + 'vuotta myöhemmin hiekasta löytyi kultaa, ja tyhjälle rannalle '
+      + 'nousi kaupunki teltoista. Kartat vanhenevat täällä nopeasti.',
+  },
+  anchorage: {
+    kuvaus: 'Anchoragessa hirvi voi seistä pihalla kuin naapurin hevonen: '
+      + 'kaupungissa elää satoja hirviä, ja karhujakin eksyy kaduille '
+      + 'joka kesä. Puolen tunnin ajomatkalla on jäätikkö — '
+      + 'suurkaupungin ja erämaan raja on tässä ohuempi kuin missään.',
+    nosto: 'Isoisä kirjoitti Alaskasta: "Venäjä myi juuri tämän maan '
+      + 'Amerikalle — moni pitää kauppaa hulluutena." Se maksoi kaksi '
+      + 'senttiä eekkeriltä. Hulluus vaihtoi omistajaa edullisesti.',
+  },
+  whitehorse: {
+    kuvaus: 'Whitehorsessa Yukonjoki virtaa kaupungin läpi vihreänä ja '
+      + 'kylmänä, ja rannalla lepää museona vanha siipiratashöyry — '
+      + 'samanlainen kuin ne, jotka kuljettivat kullankaivajia '
+      + 'pohjoiseen. Talvella taivas leimuaa revontulia useammin kuin '
+      + 'pilviä.',
+    nosto: 'Isoisä kirjoitti pohjoisen joista: "Ne virtaavat kuukausia '
+      + 'jään alla ja kesän kolme kuukautta kuin vapautetut." Yukon '
+      + 'tekee niin yhä — ja kaupunki elää sen tahdissa.',
+  },
+  yellowknife: {
+    kuvaus: 'Yellowknife syntyi kullasta ja elää nyt timanteista: kaupungin '
+      + 'alla ja ympärillä on kaivoksia, joista nostetaan Kanadan '
+      + 'timantit. Talviyönä taivas syttyi vihreään — revontulet '
+      + 'näkyvät täällä yli kahtenasatana yönä vuodessa, ja niitä '
+      + 'tullaan katsomaan toiselta puolen maailmaa.',
+    nosto: 'Isoisä kirjoitti: "Pohjoisen taivas liekehtii öisin niin, että '
+      + 'lukemaan näkee — intiaanit sanovat henkien tanssivan." Samat '
+      + 'tulet tanssivat yhä, ja niitä katsotaan yhä sanattomina.',
+  },
+  vancouver: {
+    kuvaus: 'Vancouverissa voi hiihtää aamulla ja meloa iltapäivällä: '
+      + 'vuoret nousevat suoraan kaupungin takaa ja meri alkaa sen '
+      + 'edestä. Stanley Parkin metsässä seisoo rivissä totem-paalut — '
+      + 'rannikon kansojen veistettyjä sukutarinoita, joista jokainen '
+      + 'hahmo merkitsee jotakin.',
+    nosto: 'Isoisän aikaan tässä oli saha ja muutama mökki metsän '
+      + 'reunassa. Hän kirjoitti rannikosta: "Kuuset ovat täällä '
+      + 'mastojen mittaisia." Kaupunki tuli vasta rautatien mukana — ja '
+      + 'kasvoi kuusia korkeammaksi.',
+  },
+  yellowstone: {
+    kuvaus: 'Yellowstonessa maa kiehuu: geysirit purkautuvat aikataulussa, '
+      + 'kuumat lähteet hohtavat sinistä ja oranssia, ja höyry nousee '
+      + 'metsästä sadoista kohdista. Biisonilauma pysäytti autojonon — '
+      + 'täällä tie kuuluu niille, ja ne tietävät sen.',
+    nosto: 'Isoisä kirjoitti: "Amerikka teki ihmeellisen päätöksen: '
+      + 'kokonainen erämaa pantiin säästöön kansallispuistoksi, '
+      + 'ensimmäisenä maailmassa — vain vuosi sitten." Se päätös opetti '
+      + 'koko maailman säästämään parhaita paikkojaan.',
+  },
+  mountrushmore: {
+    kuvaus: 'Mount Rushmorella neljä presidenttiä katsoo vuoren rinteestä: '
+      + 'kasvot ovat kahdeksantoista metriä korkeat, ja ne veistettiin '
+      + 'dynamiitilla ja poralla neljäntoista vuoden aikana. Black '
+      + 'Hillsin vuoret ovat lakotakansalle pyhät — kivi kantaa täällä '
+      + 'kahta tarinaa.',
+    nosto: 'Isoisä kirjoitti näistä vuorista: "Mustat kukkulat ovat '
+      + 'intiaanien pyhää maata — sopimus takaa sen heille ikuisesti." '
+      + 'Sopimus ei pitänyt. Sekin tarina kuuluu tähän vuoreen.',
+  },
+  winnipeg: {
+    kuvaus: 'Winnipegin pääristeystä sanotaan Kanadan tuulisimmaksi ja '
+      + 'kylmimmäksi kulmaksi, ja paikalliset kertovat siitä ylpeinä '
+      + 'kuin nähtävyydestä. Kaupungin nallekarhu on kuuluisin '
+      + 'maailmassa: ensimmäisen maailmansodan aikana täältä matkaan '
+      + 'lähtenyt karhunpentu sai nimen Winnie — ja siitä tuli Nalle '
+      + 'Puh.',
+    nosto: 'Isoisä kirjoitti: "Preerian kauppapaikka sai juuri '
+      + 'kaupunkioikeudet — pari tuhatta asukasta ja rajattomasti '
+      + 'tasankoa." Kaupunki syntyi hänen matkavuonnaan. Nalle tuli '
+      + 'myöhemmin.',
+  },
+  churchill: {
+    kuvaus: 'Churchillissä jääkarhut kävelevät kaupungin läpi: syksyllä ne '
+      + 'odottavat lahden jäätymistä, ja autojen ovet jätetään '
+      + 'lukitsematta, jotta kadulla yllätetty voi paeta sisään. '
+      + 'Kaupungissa on maailman ainoa jääkarhuputka — sinne joutuu '
+      + 'karhu, joka ei opi kiertämään kylää.',
+    nosto: 'Isoisä kirjoitti Hudsoninlahdesta: "Valkoinen karhu on täällä '
+      + 'maan isäntä, ja ihminen vieras — turkiskauppiaat tietävät '
+      + 'järjestyksen." Järjestys on sama. Ihminen vain rakensi putkan '
+      + 'muistin tueksi.',
+  },
+  iqaluit: {
+    kuvaus: 'Iqaluitiin ei johda yhtään tietä eikä rautatietä — kaikki '
+      + 'tulee lentäen tai kesän laivalla, ja kaupungin autot elävät '
+      + 'koko elämänsä saarella. Kadunnimet ovat inuktitutiksi, ja '
+      + 'koulun pihalla lapset pelasivat jalkapalloa lumessa keskiyön '
+      + 'valossa.',
+    nosto: 'Isoisä kirjoitti pohjoisesta: "Inuiitit rakentavat lumesta '
+      + 'talon tunnissa ja lukevat jäätä kuin kirjaa." Lukutaito elää: '
+      + 'vanhimmat opettavat sitä nyt koulussa, jotta se ei katoa.',
+  },
+  nuuk: {
+    kuvaus: 'Nuukissa värikkäät puutalot kipuavat kalliolle vuonon '
+      + 'reunalla, ja kaupungin edustalla lipuu jäävuoria kuin ohi '
+      + 'purjehtiva vuoristo. Grönlanti on maailman suurin saari, mutta '
+      + 'sen pääkaupungissa on vähemmän asukkaita kuin monessa '
+      + 'suomalaisessa pikkukaupungissa.',
+    nosto: 'Isoisä kirjoitti: "Siirtokunnan satamassa kajakit lipuvat '
+      + 'höyrylaivan ohi kuin nuolet tynnyrin." Kajakki on '
+      + 'grönlantilaisten keksintö — ja sana yksi harvoista, jotka koko '
+      + 'maailma on heiltä lainannut.',
+  },
+  labrador: {
+    kuvaus: 'Labradorissa maa on suurempi kuin sen tarinat: tuntureita, '
+      + 'tuhansia järviä ja rannikko, jota pitkin jäävuoret purjehtivat '
+      + 'etelään kevään merkkinä. Kalastajakylissä veneet nostetaan '
+      + 'syksyllä maihin, ja karibulauma voi ylittää tien missä '
+      + 'tahansa.',
+    nosto: 'Isoisä kirjoitti: "Kalastajat sanovat tätä rannikkoa Suureksi '
+      + 'maaksi — nimi ei selitä mitään ja silti kaiken." Big Land on '
+      + 'yhä sen nimi. Ja se riittää yhä.',
+  },
+  stjohns: {
+    kuvaus: 'St. John\'sin rinteet on maalattu kuin karamellilaatikko: '
+      + 'rivitalot ovat punaisia, sinisiä ja keltaisia, ja väriä '
+      + 'kutsutaan hyväntuulen nimellä Jellybean Row. Sataman suulla on '
+      + 'kapea portti kallioiden välissä — sen läpi on purjehdittu '
+      + 'viisisataa vuotta.',
+    nosto: 'Isoisä kirjoitti: "Uuden ja vanhan maailman välinen '
+      + 'lennätinkaapeli nousee merestä näillä rannoilla — viesti '
+      + 'ylittää valtameren silmänräpäyksessä." Ihme oli tuore. Nyt '
+      + 'sama matka kulkee taskussa.',
+  },
+  halifax: {
+    kuvaus: 'Halifaxissa satama on kaupungin olohuone: rantalaudoitusta voi '
+      + 'kävellä kilometrikaupalla, ja linnoituskukkulalta ammutaan '
+      + 'tykillä joka keskipäivä — kello voi tarkistaa pamauksesta. '
+      + 'Merimuseossa on esineitä Titanicilta, jonka uhreja tuotiin '
+      + 'juuri tähän satamaan.',
+    nosto: 'Isoisä kirjoitti: "Postilaivat lähtevät täältä Eurooppaan '
+      + 'säällä kuin säällä — satama ei jäädy koskaan." Meri on sama, '
+      + 'laivat isompia. Tykki paukkuu yhä ajallaan.',
+  },
+  montreal: {
+    kuvaus: 'Montrealissa kävelin korttelin toisensa perään käymättä '
+      + 'kertaakaan ulkona: talven varalle kaupungin alle on rakennettu '
+      + 'käytäväverkosto, jossa on kauppoja, metroasemia ja aukioita. '
+      + 'Kadulla ranska vaihtuu englanniksi kesken lauseen ja takaisin '
+      + '— kukaan ei hämmenny.',
+    nosto: 'Isoisä kirjoitti: "Kanadan suurin kaupunki puhuu kahta kieltä '
+      + 'ja käy kauppaa kaikilla muilla." Sisarkaupunki ohitti sen '
+      + 'sittemmin koossa — mutta ei kaksikielisyydessä.',
+  },
+  toronto: {
+    kuvaus: 'Torontossa nousin torniin, joka oli valmistuessaan maailman '
+      + 'korkein rakennelma, ja katsoin lasilattian läpi suoraan alas — '
+      + 'jalkojen alla oli kolmesataa metriä tyhjää. Saarilautalta '
+      + 'kaupungin siluetti näkyy kokonaisena järven yli, ja puolet '
+      + 'kaupunkilaisista on syntynyt muualla kuin Kanadassa.',
+    nosto: 'Isoisä kirjoitti: "Järven rannan kaupunki kasvaa '
+      + 'englantilaisella tarmolla ja amerikkalaisella kiireellä." '
+      + 'Kiire voitti: siitä tuli Kanadan suurin — ja koko maailman '
+      + 'kaupunki pienoiskoossa.',
+  },
+  chicago: {
+    kuvaus: 'Chicagossa joki virtaa väärään suuntaan: insinöörit käänsivät '
+      + 'sen kulkemaan poispäin järvestä, jotta juomavesi pysyisi '
+      + 'puhtaana. Kaupunki keksi pilvenpiirtäjän, ja arkkitehtuuria '
+      + 'esitellään veneestä — opas osoitti torneja kuin '
+      + 'taulukokoelmaa.',
+    nosto: 'Isoisä kirjoitti: "Kaupunki paloi poroksi kaksi vuotta sitten, '
+      + 'ja se rakentaa itseään uudelleen kivestä ja raudasta — entistä '
+      + 'korkeammaksi." Juuri niin kävi: tuhkasta nousi '
+      + 'pilvenpiirtäjien ensimmäinen kaupunki.',
+  },
+  appalakit: {
+    kuvaus: 'Appalakeilla kulkee polku, jonka päästä päähän kävely vie '
+      + 'puoli vuotta: yli kolmetuhatta kilometriä metsäistä '
+      + 'harjannetta neljäntoista osavaltion halki. Vaeltajat saavat '
+      + 'polkunimen ja jättävät oikean nimensä laaksoon — tapasin '
+      + 'Maapähkinän ja Kilpikonnan.',
+    nosto: 'Isoisä kirjoitti: "Nämä vuoret ovat vanhempia kuin luut niiden '
+      + 'alla — pyöreiksi kuluneita kuin joenkivet." Appalakit ovat '
+      + 'maailman vanhimpia vuoristoja. Siksi ne eivät pistä, vaan '
+      + 'kutsuvat.',
+  },
+  bermuda: {
+    kuvaus: 'Bermudalla hiekka on vaaleanpunaista: korallinmurut värjäävät '
+      + 'rannat, ja talojen valkoiset porraskatot keräävät sadeveden '
+      + 'talteen, koska saarella ei ole yhtään jokea. Riuttojen '
+      + 'ympärillä lepää satoja hylkyjä — sukeltajille saari on museo.',
+    nosto: 'Isoisä kirjoitti: "Saaren ympärillä on enemmän hylkyjä kuin '
+      + 'missään — riutat ovat keränneet veroa neljäsataa vuotta." '
+      + 'Kolmion tarinat tulivat myöhemmin. Riutat riittivät '
+      + 'selitykseksi jo silloin.',
+  },
+  denver: {
+    kuvaus: 'Denverissä valtiontalon portaisiin on kaiverrettu merkki: '
+      + 'tasan yksi maili merenpinnan yläpuolella. Kaupunki on preerian '
+      + 'ja Kalliovuorten saumassa — lännessä seinänä lumihuiput, '
+      + 'idässä tasankoa horisonttiin. Ohuessa ilmassa pallo lentää '
+      + 'pidemmälle, ja siitä ollaan täällä ylpeitä.',
+    nosto: 'Isoisä kirjoitti: "Kullankaivajien leiristä kasvoi kaupunki, '
+      + 'joka mittaa korkeutensa merestä, jota ei näy mistään." Mailin '
+      + 'korkeus on yhä kaupungin ylpeys — se lukee joukkueidenkin '
+      + 'nimissä.',
+  },
+  santafe: {
+    kuvaus: 'Santa Fessä talot on rakennettu auringonpaisteesta ja savesta: '
+      + 'adobe-seinät pyöristyvät kulmista, ja koko kaupunki hehkuu '
+      + 'samaa hiekan väriä. Ovenpielissä roikkuu chilinauhoja '
+      + 'kuivumassa, ja aukiolla taiteilijat myyvät hopeaa ja '
+      + 'turkoosia.',
+    nosto: 'Isoisä kirjoitti: "Amerikan vanhin pääkaupunki ei ole idässä '
+      + 'vaan täällä — espanjalaiset perustivat sen ennen kuin '
+      + 'Mayflower purjehti." Vuosiluku on 1610. Itärannikolla sitä ei '
+      + 'aina uskota.',
+  },
+  grandcanyon: {
+    kuvaus: 'Grand Canyonin reunalla sanat loppuivat: kanjoni on niin syvä '
+      + 'ja leveä, että vastarannan seinämät näyttävät maalatulta '
+      + 'taustalta, ja joki pilkottaa pohjalla hopeisena lankana. Kivi '
+      + 'vaihtaa väriä valon mukana koko päivän — punaisesta violettiin '
+      + 'ja kultaan.',
+    nosto: 'Isoisä kirjoitti: "Yksikätinen majuri laski neljä vuotta '
+      + 'sitten tuntemattoman joen läpi tämän kanjonin — puolet '
+      + 'miehistä piti häntä hulluna." Powell selvisi. Ja kanjonista '
+      + 'tuli tuntemattoman sijaan kuuluisin.',
+  },
+  losangeles: {
+    kuvaus: 'Los Angelesissa kaupunki jatkuu yli sadan kilometrin '
+      + 'leveydeltä, ja silti sen kuuluisin asia on yhdeksän valkoista '
+      + 'kirjainta rinteessä. Rannalla rullaluistelijat, surffarit ja '
+      + 'kehonrakentajat jakavat saman auringonlaskun — jokainen omassa '
+      + 'elokuvassaan.',
+    nosto: 'Isoisä kirjoitti: "Appelsiinilehtojen kylä, jossa aurinko '
+      + 'paistaa joka päivä — sanovat, että täällä paranee sairas ja '
+      + 'laiskistuu terve." Lehdot vaihtuivat elokuviin. Aurinko pitää '
+      + 'sopimuksensa yhä.',
+  },
+  hawaii: {
+    kuvaus: 'Havaijilla katsoin, kun maa syntyy: Kilauea-tulivuoren laava '
+      + 'valuu mereen, ja höyrypatsaan alla saari kasvaa sentti '
+      + 'sentiltä. Rannalla pojat odottivat aaltoa laudoillaan samalla '
+      + 'kärsivällisyydellä kuin heidän esi-isänsä — lainelautailu on '
+      + 'täällä vanhempaa kuin kirjoitettu historia.',
+    nosto: 'Isoisä kirjoitti: "Saarten kuninkaat ratsastavat aalloilla '
+      + 'puisilla laudoilla — taito, joka kuuluu arvolle ja '
+      + 'rohkeudelle." Kuninkaiden laji kuuluu nyt kaikille. Rohkeus '
+      + 'vaaditaan yhä.',
+  },
+  houston: {
+    kuvaus: 'Houstonissa istuin ohjaamossa, josta kuulennot johdettiin: '
+      + 'näytöt, nappulat ja tuolit ovat tallella kuin väki olisi juuri '
+      + 'poistunut kahville. Lasin takana valmennetaan jo seuraavia '
+      + 'kuulentoja — täällä avaruus ei ole historiaa vaan työpaikka.',
+    nosto: 'Isoisä kirjoitti: "Rautatie vie puuvillaa lahden satamaan, ja '
+      + 'kauppiaat vannovat, että täällä kaikki on huomenna suurempaa." '
+      + 'He eivät tienneet kuinka oikeassa olivat: seuraava satama oli '
+      + 'Kuu.',
+  },
+  neworleans: {
+    kuvaus: 'New Orleansissa musiikki tulee vastaan kadulla: '
+      + 'torvisoittokunta marssi ohi, ja jonon perään liittyi tanssien '
+      + 'puoli katua. Ranskalaiskorttelin parvekkeet ovat '
+      + 'valurautapitsiä, ja Mississippi kääntyy kaupungin kohdalla '
+      + 'niin leveänä, että sitä sanotaan puolikuuksi.',
+    nosto: 'Isoisä kirjoitti: "Höyrylaivojen savupiiput seisovat rannassa '
+      + 'rivissä kuin urkupillit, ja kaupungissa soi musiikki joka '
+      + 'ovesta." Piiput harvenivat. Musiikki ei — siitä syntyi täällä '
+      + 'kokonaan uusi laji.',
+  },
+  miami: {
+    kuvaus: 'Miamissa aamu alkoi kahdella kielellä: kahvilassa tilattiin '
+      + 'cafecito espanjaksi ja vastattiin englanniksi. Rannan '
+      + 'hotellirivi on pastellinvärinen art deco -museo, ja tunnin '
+      + 'ajomatkan päässä alkavat Everglades — ruohomeri, jossa '
+      + 'alligaattorit makaavat polkujen vieressä.',
+    nosto: 'Isoisän kartalla tässä oli vain mangrovea ja hyttysiä. '
+      + 'Kaupunki perustettiin vasta neljännesvuosisata myöhemmin — '
+      + 'nuorin suurista, ja sen aurinko houkutti lopulta puoli '
+      + 'maailmaa.',
+  },
+  havanna: {
+    kuvaus: 'Havannassa ajoin avoautossa, joka on vanhempi kuin kuljettajan '
+      + 'isoisä: kaduilla kiiltää tuhansia 1950-luvun amerikanautoja, '
+      + 'joita pidetään käynnissä kekseliäisyydellä ja rakkaudella. '
+      + 'Illalla Malecónin rantamuurille kokoontui koko kaupunki — '
+      + 'kitaroita, dominoa ja auringonlasku.',
+    nosto: 'Isoisä kirjoitti: "Sokeri ja sikarit tekevät täällä '
+      + 'omaisuuksia, ja satamaa vartioi linnoitusketju merirosvojen '
+      + 'ajoilta." Linnoitukset seisovat yhä. Ja ilta Malecónilla on '
+      + 'yhä kaupungin paras huone.',
+  },
+  sanjuan: {
+    kuvaus: 'San Juanin vanhassakaupungissa kadut on päällystetty sinisillä '
+      + 'kivillä — adoquines tuotiin aikanaan laivojen painolastina, ja '
+      + 'ne hohtavat sateen jälkeen kuin emali. El Morron linnoitus on '
+      + 'vartioinut sataman suuta viisisataa vuotta, ja sen nurmella '
+      + 'lennätetään nyt leijoja.',
+    nosto: 'Isoisä kirjoitti: "Linnoitus on kestänyt merirosvot, laivastot '
+      + 'ja pommitukset — sen muurit ovat kuusi metriä paksut." Nyt '
+      + 'muureilla piknikoidaan. Se on linnoituksen paras kohtalo.',
+  },
+  monterrey: {
+    kuvaus: 'Monterreyn yllä kohoaa vuori, jonka huippu on kuin satulan '
+      + 'kaari — Cerro de la Silla on kaupungin tunnus, ja se näkyy '
+      + 'joka kadulta. Vanha valimo on nyt tiedepuisto, jossa masuunin '
+      + 'sisään voi kävellä: teollisuuskaupunki teki historiastaan '
+      + 'leikkipaikan.',
+    nosto: 'Isoisä kirjoitti: "Vuoret sulkevat kaupungin syliinsä — '
+      + 'pohjoisen kauppiaat kutsuvat sitä Meksikon ovenkahvaksi." '
+      + 'Kahvasta tuli kone: täällä valetaan, hitsataan ja rakennetaan '
+      + 'yhä koko maan tarpeisiin.',
+  },
+  mexico: {
+    kuvaus: 'México on rakennettu järven päälle: atsteekkien saarikaupunki '
+      + 'täytettiin ja päälle nousi metropoli, joka vajoaa hitaasti — '
+      + 'katedraalin lattia on aaltoileva kuin meri. Zócalon kulmassa '
+      + 'kaivaukset paljastivat atsteekkien pääтemppelin portaat '
+      + 'suoraan katukiveyksen alta.',
+    nosto: 'Isoisä kirjoitti: "Kaupunki seisoo kuivatun järven pohjalla, '
+      + 'ja intiaanien temppelien kivet ovat kirkkojen seinissä." '
+      + 'Kerrokset ovat yhä päällekkäin — kaupunki kaivaa omaa '
+      + 'historiaansa joka kerta kun se kaivaa metroa.',
+  },
+  merida: {
+    kuvaus: 'Méridassa mayat ovat enemmistö, eivät historiaa: kieltä kuulee '
+      + 'torilla, ja valkoiset puvut hohtavat helteessä. Kaupungista '
+      + 'ajetaan tunnissa Chichén Itzáan, jonka pyramidin portaita '
+      + 'laskeutuu päiväntasauksena käärmeen varjo — mayat rakensivat '
+      + 'kalenterinsa kiveen.',
+    nosto: 'Isoisä kirjoitti: "Sisal-agaave tekee tästä kaupungista '
+      + 'rikkaan — köyttä lähtee täältä koko maailman laivoihin." '
+      + 'Vihreä kulta rakensi palatsikadun. Mayat rakensivat kaiken '
+      + 'muun, ja rakentavat yhä.',
+  },
+  guatemala: {
+    kuvaus: 'Guatemalan pääkaupungista näkyy tulivuoria joka suuntaan, ja '
+      + 'yksi niistä savuaa aina: Fuego puhahtaa tuhkapilven muutaman '
+      + 'tunnin välein kuin valtava hengitys. Naapurissa lepää Antigua, '
+      + 'jonka raunioituneet kirkot jäivät maanjäristysten muistoksi '
+      + 'barokkiasuunsa.',
+    nosto: 'Isoisä kirjoitti: "Pääkaupunki on muuttanut kolmesti '
+      + 'tulivuorten ja järistysten tieltä — tämä on neljäs yritys." '
+      + 'Neljäs piti. Tulivuoret hyväksyivät naapurin, kunhan niitä '
+      + 'kunnioitetaan.',
+  },
+  managua: {
+    kuvaus: 'Managua on kaupunki ilman keskustaa: suuri järistys tyhjensi '
+      + 'ydinkorttelit puoli vuosisataa sitten, ja kaupunki kasvoi sen '
+      + 'jälkeen moneksi keskustaksi ympäri järven rantaa. Vanhan '
+      + 'katedraalin kuori seisoo yhä tyhjänä — ja järvessä uiskentelee '
+      + 'haita, jotka oppivat elämään makeassa vedessä.',
+    nosto: 'Isoisä kirjoitti: "Nicaraguan järvi on ainoa, jossa hai ui '
+      + 'sisämaassa — kalastajat vannovat sen nimeen." Tiede vahvisti '
+      + 'tarinan myöhemmin: härkähai kulkee jokea pitkin mereltä '
+      + 'järvelle.',
+  },
+  panama: {
+    kuvaus: 'Panamassa seisoin katsomassa, kuinka valtamerilaiva nostetaan '
+      + 'portaita ylös: kanavan sulut täyttyvät ja laiva kohoaa metri '
+      + 'metriltä kohti järveä, ylittää mantereen ja laskeutuu toiseen '
+      + 'valtamereen. Vieressä vanhakaupunki ja pilvenpiirtäjät '
+      + 'katsovat samaa näytöstä.',
+    nosto: 'Isoisä kirjoitti: "Kannaksen rautatie vie valtamerestä toiseen '
+      + 'tunnissa — ja insinöörit puhuvat jo kanavasta laivoille." '
+      + 'Puheista tuli totta neljäkymmentä vuotta myöhemmin. Maailman '
+      + 'laivat kulkevat siitä yhä.',
+  },
+};
+
+// ===== js/packs/southamerica-saapumiset.js =====
+// Matkakirjan saapumistekstit (Etelä-Amerikka) — sama muoto ja ääni
+// kuin muissa maanosissa: nuoren herran tuore fiilis (kuvaus) ja
+// isoisän kirjan lainaus (nosto). Yksi kantava idea per kaupunki.
+// Luennat: puhe-southamerica-saapuminen-<id>.mp3.
+const SOUTHAMERICA_SAAPUMISET = {
+  buenosaires: {
+    kuvaus: 'Buenos Airesissa La Bocan korttelit on maalattu kaikilla '
+      + 'väreillä, joita satamasta on löytynyt — talot saivat aikanaan '
+      + 'sen värin, mitä laivamaalia jäi yli. Kulmassa pariskunta '
+      + 'tanssi tangoa keskellä iltapäivää, ja ohikulkijat pysähtyivät '
+      + 'kuin käskystä.',
+    nosto: 'Isoisä kirjoitti: "Satama on täynnä siirtolaislaivoja — puoli '
+      + 'Eurooppaa tuntuu muuttavan tänne." Heidän mukanaan tulivat '
+      + 'sävelet, joista pian syntyi tango. Ukko ehti paikalle juuri '
+      + 'ennen sitä.',
+  },
+  caracas: {
+    kuvaus: 'Caracasin yllä seisoo vihreä muuri: Ávilan vuori erottaa '
+      + 'kaupungin merestä, ja köysirata nostaa sen harjalle, josta '
+      + 'näkee molemmat — miljoonakaupungin laaksossa ja Karibian meren '
+      + 'toisella puolen. Ylhäällä ilma oli viileää kuin toisessa '
+      + 'maassa.',
+    nosto: 'Isoisä kirjoitti: "Kaupunki makaa laaksossa kuin kämmenellä, '
+      + 'ja vuori pitää siitä kiinni." Vuori pitää yhä — caracasilaiset '
+      + 'sanovat sitä kaupungin keuhkoiksi.',
+  },
+  bogota: {
+    kuvaus: 'Bogotá on korkeammalla kuin moni Alppien huippu, ja sen '
+      + 'kultamuseossa hengästyy toisesta syystä: tuhansia '
+      + 'esikolumbiaanisia kultaesineitä, joiden joukossa on pieni '
+      + 'lautta — juuri se, josta El Doradon legenda alkoi. '
+      + 'Sunnuntaisin pääkadut suljetaan autoilta ja koko kaupunki '
+      + 'pyöräilee.',
+    nosto: 'Isoisä kirjoitti: "Täällä tarinat kullatusta miehestä eivät '
+      + 'ole satua vaan muistoja — järvenpohjasta nostetaan kultaa '
+      + 'yhä." Se järvi on Guatavita, ja lautta on nyt museossa. Kävin '
+      + 'katsomassa.',
+  },
+  quito: {
+    kuvaus: 'Quiton laidalla seisoo keltainen viiva, jolla voi tehdä '
+      + 'tempun: toinen jalka pohjoiselle ja toinen eteläiselle '
+      + 'pallonpuoliskolle. Kaupunki itse on rakennettu tulivuoren '
+      + 'kylkeen lähes kolmen kilometrin korkeuteen, ja vanhakaupunki '
+      + 'on Amerikan parhaiten säilyneitä.',
+    nosto: 'Isoisä kirjoitti: "Ranskalaiset mittasivat täällä maapallon '
+      + 'muodon — siksi viiva kulkee juuri tästä." Seisoin viivalla '
+      + 'hajareisin kuin hän Uralilla: käsi kummallakin puoliskolla.',
+  },
+  galapagos: {
+    kuvaus: 'Galápagossaarilla eläimet eivät väistä: merileijona nukkui '
+      + 'puistonpenkillä, jättiläiskilpikonna ylitti tien omaan '
+      + 'tahtiinsa ja sinijalkasuula tanssi esittelytanssiaan metrin '
+      + 'päässä. Täällä ihminen on se, joka väistää — ja niin on hyvä.',
+    nosto: 'Isoisä kirjoitti: "Herra Darwinin kirja teki näistä saarista '
+      + 'kuuluisia — hän väittää, että saarten linnut kertovat elämän '
+      + 'historian." Ne kertovat sen yhä, jokaiselle joka pysähtyy '
+      + 'katsomaan.',
+  },
+  boavista: {
+    kuvaus: 'Boa Vista on savannin pääkaupunki: Brasilian pohjoisin kolkka '
+      + 'ei olekaan sademetsää vaan aavaa ruohotasankoa, jolla '
+      + 'laiduntaa puolivillejä karjalaumoja. Kadut säteilevät '
+      + 'keskusaukiolta kuin viuhka, ja joen rannalla syödään '
+      + 'paistettua piraijaa.',
+    nosto: 'Isoisä kirjoitti: "Sademetsän takana aukeaa yllättäen '
+      + 'ruohomeri — kuin Afrikka olisi eksynyt Amerikkaan." '
+      + 'Lavrado-tasanko yllättää tulijan yhä samalla tavalla.',
+  },
+  cayenne: {
+    kuvaus: 'Cayennessa voi nähdä raketin nousevan sademetsän ylle: '
+      + 'naapurissa Kouroussa on Euroopan avaruuskeskus, josta '
+      + 'satelliitit lähtevät matkaan päiväntasaajan vauhdilla. Torilla '
+      + 'myytiin sitä kuuluisaa pippuria, joka kantaa kaupungin nimeä '
+      + 'maailmalla.',
+    nosto: 'Isoisä kirjoitti: "Siirtokunta tunnetaan kahdesta asiasta: '
+      + 'pippurista ja vankilasta, jonne Ranska lähettää '
+      + 'unohdettavansa." Vankila suljettiin aikaa sitten. Pippuri jäi '
+      + '— ja raketit tulivat tilalle.',
+  },
+  macapa: {
+    kuvaus: 'Macapássa jalkapallostadion on rakennettu niin, että '
+      + 'keskiviiva kulkee tarkalleen päiväntasaajaa pitkin: joukkueet '
+      + 'pelaavat eri pallonpuoliskoilla, ja maalit vaihtuvat puolelta '
+      + 'toiselle kuin vuodenajat. Kaupungin nollapistettä käydään '
+      + 'katsomassa kuin nähtävyyttä.',
+    nosto: 'Isoisä kirjoitti: "Amazonin suulla joki on niin leveä, ettei '
+      + 'vastarantaa näy — makea vesi värjää meren ruskeaksi kauas '
+      + 'ulapalle." Väri näkyy yhä avaruudesta asti.',
+  },
+  manaus: {
+    kuvaus: 'Manausissa kaksi jokea kohtaa suostumatta sekoittumaan: Rio '
+      + 'Negron musta ja Solimõesin savenruskea vesi virtaavat '
+      + 'kilometrikaupalla rinnakkain kuin kaksiraitainen tie. Keskellä '
+      + 'sademetsän suurkaupunkia nousee oopperatalo, jonka kupoli '
+      + 'hohtaa Brasilian väreissä.',
+    nosto: 'Isoisä kirjoitti: "Kumipuun maito tekee täällä miehistä '
+      + 'ruhtinaita — kaupunki aikoo rakentaa oopperan keskelle '
+      + 'viidakkoa." Se rakensi. Kumi loppui, mutta ooppera soi yhä.',
+  },
+  santarem: {
+    kuvaus: 'Santarémissa Tapajósjoen vesi on kirkasta ja lämmintä, ja sen '
+      + 'valkohiekkaiset rannat kilpailevat meren kanssa — keskellä '
+      + 'Amazoniaa on rantakylä, jota kutsutaan sisämaan Karibiaksi. '
+      + 'Laiturilla vaaleanpunainen jokidelfiini nousi henkäisemään.',
+    nosto: 'Isoisä kirjoitti: "Joella näkee delfiinin, joka on '
+      + 'vaaleanpunainen kuin ilta-aurinko. Intiaanit kertovat sen '
+      + 'muuttuvan öisin ihmiseksi." Boto ui näissä vesissä yhä — '
+      + 'tarina myös.',
+  },
+  saoluis: {
+    kuvaus: 'São Luísin vanhakaupunki on päällystetty portugalilaisilla '
+      + 'kaakeleilla: kokonaiset julkisivut sinivalkoista posliinia, '
+      + 'joka pitää talot viileinä. Ja kaikkialla soi reggae — tämä '
+      + 'Brasilian kolkka rakastui Jamaikan musiikkiin ja teki siitä '
+      + 'omansa.',
+    nosto: 'Isoisä kirjoitti: "Kaupungin talot on vuorattu posliinilla '
+      + 'kuin astiakaappi nurinpäin." Kaakelit hohtavat yhä — ja '
+      + 'iltaisin niiden edessä tanssitaan.',
+  },
+  joaopessoa: {
+    kuvaus: 'João Pessoassa seisoin Amerikan mantereen itäisimmässä '
+      + 'kärjessä: tästä niemestä aurinko nousee koko '
+      + 'kaksoismantereelle ensimmäisenä. Rantabulevardilla ei saa '
+      + 'rakentaa taloja palmuja korkeammalle, joten meri näkyy '
+      + 'kaikkialle.',
+    nosto: 'Isoisä kirjoitti: "Purjehdimme niemen ohi, joka kurottaa kohti '
+      + 'Afrikkaa kuin ojennettu käsi." Tässä kohtaa mantereet ovat '
+      + 'lähimpänä toisiaan — ja silti valtameren päässä.',
+  },
+  salvador: {
+    kuvaus: 'Salvadorissa kaupunki on kahdessa kerroksessa, ja niiden '
+      + 'välillä kulkee hissi. Yläkaupungin Pelourinhon aukioilla '
+      + 'capoeira-piirit pyörivät berimbaun soidessa — laji, joka on '
+      + 'tanssia ja kamppailua samassa liikkeessä, syntyi juuri täällä.',
+    nosto: 'Isoisä kirjoitti: "Kaupunkiin valmistui juuri hissi, joka '
+      + 'nostaa ihmiset rantakadulta yläkaupunkiin — uskomaton laite." '
+      + 'Lacerdan hissi kulkee yhä, päivin ja öin. Ajoin sillä ylös ja '
+      + 'alas, kahdesti.',
+  },
+  iquitos: {
+    kuvaus: 'Iquitosiin ei pääse maantietä pitkin mistään — se on maailman '
+      + 'suurin kaupunki, johon ajaa vain vene tai lentokone. Belénin '
+      + 'kaupunginosassa talot kelluvat tulvan mukana, ja torilla '
+      + 'myydään asioita, joiden nimiä ei opi kirjoista.',
+    nosto: 'Isoisä kirjoitti: "Kumiherrat rakentavat viidakkoon palatseja '
+      + 'ja verhoavat ne portugalilaisiin kaakeleihin." Palatsit '
+      + 'seisovat yhä rantakadulla — kaakelit hohtavat, vaikka kumi on '
+      + 'kauan lopetettu.',
+  },
+  portovelho: {
+    kuvaus: 'Porto Velhossa rautatieasema on museo, ja sen tarina on '
+      + 'raskas: Madeira–Mamoré-rata rakennettiin sademetsän läpi kumin '
+      + 'kuljettamiseksi, ja työ maksoi tuhansien rakentajien hengen. '
+      + 'Kaupunki elää nyt joesta — se on portti Amazonin latvavesille.',
+    nosto: 'Isoisä kirjoitti: "Madeiran kosket katkaisevat joen — lastit '
+      + 'kannetaan maitse koskien ohi, ja moni jää sille matkalle." '
+      + 'Rata rakennettiin myöhemmin juuri siksi. Kosket kohisevat yhä.',
+  },
+  bananal: {
+    kuvaus: 'Bananal on maailman suurin jokisaari — kahden joen väliin '
+      + 'jäänyt maa, joka on kokonaisen maakunnan kokoinen. Saarella '
+      + 'asuu karajá-kansa, jonka savesta muotoillut nuket tunnetaan '
+      + 'kautta Brasilian, ja kosteikoilla kahlaa tuhansittain '
+      + 'haikaroita.',
+    nosto: 'Isoisä kirjoitti: "Joki jakautuu kahtia ja sulkee sisäänsä '
+      + 'saaren, jonka ympäri purjehtiminen veisi viikkoja." Araguaia '
+      + 'tekee sen yhä — hitaasti, niin kuin kaikki täällä.',
+  },
+  machupicchu: {
+    kuvaus: 'Machu Picchu ilmestyi pilvien takaa kuin verho olisi vedetty '
+      + 'sivuun: kokonainen kivikaupunki vuorenharjalla, terassit '
+      + 'rinteissä ja laamoja nurmella muurien välissä. Inkat '
+      + 'rakensivat sen ilman laastia — kivet on hiottu niin tarkasti, '
+      + 'ettei veitsenterä mahdu väliin.',
+    nosto: 'Isoisä ratsasti laakson halki tietämättä, mitä pilvien '
+      + 'yläpuolella oli. Hänen kirjassaan lukee vain: "Vuoret kätkevät '
+      + 'täällä enemmän kuin näyttävät." Hän ei arvannut, kuinka '
+      + 'oikeassa oli.',
+  },
+  titicaca: {
+    kuvaus: 'Titicacalla kävelin saarella, joka kellui: urukansa rakentaa '
+      + 'saarensa, talonsa ja veneensä samasta kaislasta, ja uusi '
+      + 'kerros lisätään aina vanhan päälle. Järvi on niin korkealla, '
+      + 'että pilvet kulkevat matalalla — laivat purjehtivat lähempänä '
+      + 'taivasta kuin missään muualla.',
+    nosto: 'Isoisä kirjoitti: "Järvelle laskettiin höyrylaiva, joka '
+      + 'kannettiin vuorten yli muulien selässä — osina, kahdeksan '
+      + 'vuoden urakalla." Se laiva, Yavari, kelluu Punossa yhä. Kävin '
+      + 'sen kannella.',
+  },
+  lima: {
+    kuvaus: 'Limassa ei sada koskaan, ja silti kaupunki on puoli vuotta '
+      + 'harmaan vaipan alla: garúa, merisumu, peittää taivaan mutta ei '
+      + 'koskaan kastele katua. Vanhoissa kortteleissa törröttää puisia '
+      + 'umpiparvekkeita, joista aikanaan katseltiin katua näkymättä '
+      + 'itse.',
+    nosto: 'Isoisä kirjoitti: "Kaupungissa ei ole sateenvarjoja eikä '
+      + 'salamanjohdattimia — täällä ei sada eikä jyrise koskaan." Ukko '
+      + 'piti sitä mahdottomana. Se on totta tänäkin päivänä.',
+  },
+  santacruz: {
+    kuvaus: 'Santa Cruzin pääaukiolla asuu laiskiaisia: ne roikkuvat '
+      + 'puistokujan puissa ja vaihtavat oksaa kerran päivässä, jos '
+      + 'sittenkään. Kaupunki itse on kaikkea muuta — Bolivian '
+      + 'nopeimmin kasvava, kuuma ja kova käymään kauppaa.',
+    nosto: 'Isoisä kirjoitti: "Tasangon kaupunki elää härkävankkureista ja '
+      + 'kärsivällisyydestä." Vankkurit vaihtuivat rekkoihin, '
+      + 'kärsivällisyys jäi puihin — laiskiaiset eivät ole muuttaneet '
+      + 'minnekään.',
+  },
+  campogrande: {
+    kuvaus: 'Campo Grandessa siniset arat lentävät kaupungin puistojen yli '
+      + 'kuin papukaijojen kuninkaalliset — metrin mittaisia, '
+      + 'koboltinsinisiä ja äänekkäitä. Kaupunki on portti Pantanaliin, '
+      + 'maailman suurimmalle kosteikolle, jossa kaimaanit makaavat '
+      + 'rannoilla riveissä.',
+    nosto: 'Isoisä kirjoitti: "Tasangolla karja kahlaa polviaan myöten '
+      + 'vedessä puoli vuotta — ja lihoo silti." Pantanal tulvii yhä '
+      + 'kellonsa mukaan, ja kaikki elävä on oppinut sen rytmin.',
+  },
+  rio: {
+    kuvaus: 'Riossa katselin kaupunkia Sokeritopan huipulta: lahdet, saaret '
+      + 'ja rannat kaartuvat vuorten lomassa niin, että kaupunki '
+      + 'näyttää kasvaneen maisemaan eikä päinvastoin. Copacabanan '
+      + 'jalkakäytävä aaltoilee mustavalkoisena mosaiikkina koko rannan '
+      + 'pituuden.',
+    nosto: 'Isoisä kirjoitti: "Amerikassa on yksi keisarikunta, ja sen '
+      + 'pääkaupunki on tämä. Keisari Pedro kuulemma pitää enemmän '
+      + 'kirjoista kuin kruunusta." Keisarit menivät — mutta vuorelle '
+      + 'nousi patsas, joka levittää käsiään koko kaupungille.',
+  },
+  saopaulo: {
+    kuvaus: 'São Paulossa ei näy horisonttia: torneja jatkuu joka suuntaan '
+      + 'niin kauas kuin silmä kantaa, ja sunnuntaisin pääkatu Paulista '
+      + 'suljetaan autoilta, jolloin miljoonakaupungin valtaväylä '
+      + 'muuttuu kävelykaduksi täynnä soittajia. Täällä syödään joka '
+      + 'maan keittiöstä — japanilaisia on enemmän kuin missään Japanin '
+      + 'ulkopuolella.',
+    nosto: 'Isoisä kirjoitti: "Kahvi rakentaa tätä kaupunkia — jokainen '
+      + 'laiva vie säkkejä ja tuo siirtolaisia." Kahvi rakensi pohjan, '
+      + 'siirtolaiset kaiken muun. Siksi täällä maistuu koko maailma.',
+  },
+  iguazu: {
+    kuvaus: 'Iguazún putouksilla vesi ei putoa yhtenä rintamana vaan '
+      + 'sadoissa erillisissä putouksissa, jotka jatkuvat '
+      + 'kilometrikaupalla — ja Pirunkurkun reunalla jyly tuntuu '
+      + 'rintakehässä asti. Perhoset istuivat käsivarsilleni '
+      + 'levähtämään vesipölyssä.',
+    nosto: 'Isoisä kirjoitti: "Putousten ääni kuuluu tunnin '
+      + 'ratsastusmatkan päähän, ja sumu näkyy vielä kauemmas." Kuulin '
+      + 'sen itse ennen kuin näin mitään — ukko ei liioitellut '
+      + 'tälläkään kertaa.',
+  },
+  portoalegre: {
+    kuvaus: 'Porto Alegressa illan tullen puistot täyttyvät gaúchoista '
+      + 'termospulloineen: chimarrão-mate kiertää piirissä, ja '
+      + 'jokaisella on oma tarkka mielipide oikeasta lämpötilasta. '
+      + 'Sunnuntain grillijuhla, churrasco, on täällä uskonnon ja '
+      + 'urheilun väliltä.',
+    nosto: 'Isoisä kirjoitti: "Etelän paimenet ratsastavat kuin olisivat '
+      + 'syntyneet satulaan, ja lihaa paistetaan miekan mitalla." '
+      + 'Miekka on nyt metallivarras — muu ei ole muuttunut.',
+  },
+  antofagasta: {
+    kuvaus: 'Antofagasta elää maailman kuivimman paikan reunalla: '
+      + 'Atacamassa on mittauspisteitä, joissa ei ole satanut '
+      + 'kertaakaan mittaushistorian aikana. Kaupungin takana aavikko '
+      + 'nousee ylängöksi, jossa tähdet näkyvät niin kirkkaina, että '
+      + 'tänne on rakennettu maailman suurimmat kaukoputket.',
+    nosto: 'Isoisä kirjoitti: "Salpietari tekee tästä rannikosta '
+      + 'kultarannikon — lannoite lähtee täältä koko maailman '
+      + 'pelloille." Salpietarin aika meni. Nyt aavikosta kaivetaan '
+      + 'kuparia ja katsotaan tähtiin.',
+  },
+  salta: {
+    kuvaus: 'Saltassa vuoret ovat raidalliset: mineraalit ovat värjänneet '
+      + 'rinteet punaisen, vihreän ja keltaisen kerroksiksi kuin '
+      + 'jättiläisen maalikaupassa. Kaupungin empanadat ovat '
+      + 'Argentiinan kuuluisimmat, ja illalla peñassa laulettiin '
+      + 'kansanlauluja kitaran ympärillä.',
+    nosto: 'Isoisä kirjoitti: "Laaksot ovat täällä värikkäämmät kuin '
+      + 'mikään maalaus — luonto ei tiennyt lopettaa ajoissa." '
+      + 'Seitsemän värin kukkula todistaa, ettei tiennyt vieläkään.',
+  },
+  asuncion: {
+    kuvaus: 'Asunciónissa istuin joenrantaan katsomaan auringonlaskua '
+      + 'Paraguayjoen yli, ja vieressä istunut perhe ojensi '
+      + 'tereré-kupin kuin vanhalle tutulle: jääkylmää matea '
+      + 'kierrätetään täällä tuntemattomallekin. Appelsiinipuita kasvaa '
+      + 'pihoilla ja katujen varsilla.',
+    nosto: 'Isoisä kirjoitti: "Kaupunki toipuu raskaasta sodasta, mutta '
+      + 'pihoilla kypsyvät appelsiinit ja torilla myydään pitsiä." '
+      + 'Ñandutí-pitsiä kudotaan yhä — sen nimi tarkoittaa '
+      + 'hämähäkinseittiä.',
+  },
+  valparaiso: {
+    kuvaus: 'Valparaísossa kaupunki kiipeää neljällekymmenelle kukkulalle, '
+      + 'ja rinteitä nousevat vinohissit ovat sadan vuoden ikäisiä '
+      + 'puulaatikoita, jotka narisevat mutta kulkevat. Portaikot ja '
+      + 'seinät ovat yhtä jättimäistä ulkoilmagalleriaa — muraaleja on '
+      + 'kaikkialla.',
+    nosto: 'Isoisä kirjoitti: "Jokainen Kap Hornin kiertänyt laiva '
+      + 'pysähtyy tässä satamassa — kadut ovat täynnä maailman '
+      + 'merimiehiä." Panaman kanava hiljensi sataman, mutta kukkulat '
+      + 'eivät hiljentyneet koskaan.',
+  },
+  sanambrosio: {
+    kuvaus: 'San Ambrosio on kallio keskellä valtamerta: jyrkänteet '
+      + 'nousevat suoraan merestä, ja ainoat asukkaat ovat merilinnut, '
+      + 'jotka pesivät seinämillä tuhansittain. Kalastajat käyvät '
+      + 'vesillä hummerinpyynnissä, mutta yöksi kukaan ei jää.',
+    nosto: 'Isoisä kirjoitti: "Kartalla on saaria, joilla ei käy kukaan — '
+      + 'ne ovat merilintujen valtakuntia, ja niin niiden kuuluu '
+      + 'ollakin." Tämä on yksi niistä. Linnut hallitsevat hyvin.',
+  },
+  robinsoncrusoe: {
+    kuvaus: 'Robinson Crusoen saari sai nimensä kirjasta, mutta tarina on '
+      + 'tosi: merimies Alexander Selkirk eli täällä yksin neljä vuotta '
+      + 'ja neljä kuukautta, ja hänen näköalapaikkansa vuorella on yhä '
+      + 'merkitty. Kylän laiturilla nostettiin hummeriruukkuja.',
+    nosto: 'Isoisä kirjoitti: "Saari, jolla yksinäinen merimies odotti '
+      + 'laivaa neljä vuotta — hänen tarinastaan tehtiin kuuluisin '
+      + 'seikkailukirja." Saari vaihtoi lopulta nimensä kirjan mukaan. '
+      + 'Tarina voitti kartan.',
+  },
+  puertomontt: {
+    kuvaus: 'Puerto Monttissa Patagonia alkaa: tästä etelään tiet vaihtuvat '
+      + 'laivareitteihin, ja satamassa lastataan lohta, joka on tehnyt '
+      + 'lahdesta Chilen kalatalouden sydämen. Torikahvilassa '
+      + 'tarjottiin saksalaista kakkua — siirtolaisten perintö näkyy '
+      + 'taloissa ja resepteissä.',
+    nosto: 'Isoisä kirjoitti: "Saksalaiset raivasivat tänne pellot ja '
+      + 'rakensivat talot kuin kotonaan — vain vuoret ovat korkeammat." '
+      + 'Kirkontornit ja kakut ovat yhä kuin Baijerissa. Vuoret '
+      + 'voittavat yhä.',
+  },
+  montevideo: {
+    kuvaus: 'Montevideossa sunnuntai kuuluu ramblalle: koko kaupunki '
+      + 'kävelee, kalastaa ja juo matea rantabulevardilla, joka jatkuu '
+      + 'yli kaksikymmentä kilometriä. Illalla vanhankaupungin '
+      + 'kortteleista kuului candombe-rumpujen jylinä — kolme rumpua, '
+      + 'kolme ääntä, yksi kieli.',
+    nosto: 'Isoisä kirjoitti: "Satamassa liput vaihtuvat mutta rummut '
+      + 'eivät vaikene — afrikkalaisten vapautettujen tanssi kaikuu '
+      + 'kaduilla." Candombe kaikuu yhä, joka sunnuntai, samoilla '
+      + 'kaduilla.',
+  },
+  falkland: {
+    kuvaus: 'Falklandinsaarilla pingviinejä on satakertaisesti ihmisiin '
+      + 'nähden: rannat kuuluvat kuningaspingviineille, jotka seisovat '
+      + 'riveissä kuin juhlapukuinen kuoro. Stanleyn kylässä on '
+      + 'punaisia puhelinkoppeja ja englantilainen pubi — keskellä '
+      + 'Etelä-Atlanttia.',
+    nosto: 'Isoisä kirjoitti: "Saarilla on enemmän lampaita kuin ihmisiä '
+      + 'ja enemmän lintuja kuin lampaita." Suhdeluvut pitävät yhä — ja '
+      + 'linnut ovat edelleen parhaiten pukeutuneita.',
+  },
+  puntaarenas: {
+    kuvaus: 'Punta Arenasissa tuuli on niin kova, että keskustan kadulle on '
+      + 'viritetty köysiä, joista pitää kiinni pahimpina päivinä. '
+      + 'Kaupunki vaurastui aikanaan Magalhãesinsalmen laivoista ja '
+      + 'lampaista — aukiolla intiaanipatsaan varvasta kosketetaan, '
+      + 'jotta tänne vielä palataan.',
+    nosto: 'Isoisä kirjoitti: "Salmi on myrskyjen koti, mutta ainoa tie '
+      + 'valtamerestä toiseen — jokainen laiva maksaa sille tullinsa '
+      + 'pelossa." Kanava vei laivat, tuuli jäi. Kosketin varvasta '
+      + 'varmuuden vuoksi.',
+  },
+  caphorn: {
+    kuvaus: 'Kap Hornilla maailma loppuu: edessä on vain harmaata merta ja '
+      + 'seuraavaksi Etelämanner. Niemen kalliolla seisoo albatrossin '
+      + 'muotoinen muistomerkki merimiehille, jotka jäivät näihin '
+      + 'vesiin — aallot voivat nousta täällä talon korkuisiksi.',
+    nosto: 'Isoisä kirjoitti: "Joka kiertää Hornin purjeilla, saa kantaa '
+      + 'kultarengasta korvassaan ja pitää jalkansa pöydällä." Vanha '
+      + 'merimiesten laki — kovalla työllä ansaittu oikeus pieneen '
+      + 'ylpeyteen.',
+  },
+};
+
+// ===== js/packs/oceania-saapumiset.js =====
+// Matkakirjan saapumistekstit (Oseania) — sama muoto ja ääni kuin
+// muissa maanosissa: nuoren herran tuore fiilis (kuvaus) ja isoisän
+// kirjan lainaus (nosto). Yksi kantava idea per kaupunki, teksti
+// kirjoitettu korvalle. Luennat: puhe-oceania-saapuminen-<id>.mp3.
+const OCEANIA_SAAPUMISET = {
+  sydney: {
+    kuvaus: 'Sydneyn lautta kaartoi niemen ohi, ja siinä se oli: '
+      + 'oopperatalo, jonka valkoiset katot kohoavat kuin purjeet '
+      + 'tuulessa — tai kuin appelsiinin lohkot, väittää paikallinen '
+      + 'vieressäni. Satama on niin suuri, että lautat risteilevät '
+      + 'sillä kuin bussit kaduilla.',
+    nosto: 'Isoisä kirjoitti: "Sydneyn satamaan mahtuisivat kaikki '
+      + 'maailman laivastot kerralla, ja silti jäisi tilaa purjehtia." '
+      + 'Purjeet ovat yhä täällä — nyt yksi seisoo rannalla kivestä '
+      + 'tehtynä.',
+  },
+  perth: {
+    kuvaus: 'Perth on suurkaupunki keskellä ei-mitään: lähin toinen iso '
+      + 'kaupunki on yli kahden tuhannen kilometrin päässä. '
+      + 'Joutsenjoella lipui mustia joutsenia — täällä ne eivät ole '
+      + 'satua vaan arkea, ja koko joki on nimetty niiden mukaan.',
+    nosto: 'Isoisä kirjoitti: "Vanhassa maailmassa musta joutsen tarkoitti '
+      + 'mahdotonta. Täällä niitä ui satamassa laumoittain." Mahdoton '
+      + 'on vain asia, jota ei ole vielä nähty.',
+  },
+  melbourne: {
+    kuvaus: 'Melbournessa raitiovaunuverkko on maailman suurin, ja '
+      + 'keskustassa vaunuihin saa hypätä ilmaiseksi. Kujat ovat '
+      + 'kahviloiden ja seinämaalausten labyrintti — täällä väitetään '
+      + 'vakavissaan, että kaupungissa tehdään maailman paras kahvi.',
+    nosto: 'Isoisä kirjoitti: "Kultaryntäys on tehnyt Melbournesta '
+      + 'maailman rikkaimpia kaupunkeja — teatterit ovat Lontoon '
+      + 'veroisia." Kulta loppui, mutta itsevarmuus jäi. Nyt se '
+      + 'kohdistuu kahviin.',
+  },
+  brisbane: {
+    kuvaus: 'Brisbanessa joki mutkittelee kaupungin läpi niin monta kertaa, '
+      + 'että sillalta näkee aina toisen sillan. Keskellä kaupunkia on '
+      + 'oikea uimaranta — hiekka tuotu, laguuni rakennettu, mutta '
+      + 'aurinko ja uimarit ovat aitoja ympäri vuoden.',
+    nosto: 'Isoisä kirjoitti: "Joki tekee täällä niin monta mutkaa, että '
+      + 'laiva kulkee tunnin päästäkseen paikkaan, jonne kävelisi '
+      + 'vartissa." Mutkat ovat samat — nyt niitä ajetaan pikaveneellä.',
+  },
+  cairns: {
+    kuvaus: 'Cairnsista vene vei Isolle valliriutalle. Painoin kasvot '
+      + 'veteen ja maailma vaihtui: korallipuutarhoja, sinisiä tähtiä, '
+      + 'kilpikonna joka souti ohi kuin vanha herra. Riutta näkyy '
+      + 'avaruuteen asti — se on maailman suurin elävän rakentama '
+      + 'rakennelma.',
+    nosto: 'Isoisä kirjoitti: "Korallimeri on laivurin painajainen — '
+      + 'riutat repivät pohjan huomaamatta." Sama riutta, kaksi '
+      + 'maailmaa: hänelle vaara, minulle ihme. Kumpikaan ei ole '
+      + 'väärässä.',
+  },
+  darwin: {
+    kuvaus: 'Darwinissa uimarannan kyltti ei varoita syvästä vedestä vaan '
+      + 'krokotiileista — suolaisen veden krokotiili kasvaa '
+      + 'kuusimetriseksi, ja niitä elää joissa ja meressä. Kaupungissa '
+      + 'on trooppinen rytmi: sadekausi ja kuiva kausi, eikä mitään '
+      + 'siltä väliltä.',
+    nosto: 'Isoisä kirjoitti: "Pohjoisrannikolla joet kuhisevat liskoja, '
+      + 'jotka vetävät härän veteen." Ne kuhisevat yhä — ja siksi '
+      + 'täällä uidaan vain siellä, missä kyltti antaa luvan.',
+  },
+  adelaide: {
+    kuvaus: 'Adelaide on rakennettu viivoittimella: suorat kadut, viisi '
+      + 'aukiota ja koko keskustan ympäri kiertävä puistovyö. Tunnin '
+      + 'päässä ovat viinilaaksot, joiden tarhoista osa on maailman '
+      + 'vanhimpia — ne eivät koskaan kärsineet tuholaisesta, joka '
+      + 'tuhosi Euroopan köynnökset.',
+    nosto: 'Isoisä kirjoitti: "Siirtokunta ilman vankeja — kaupunki täynnä '
+      + 'kirkkoja ja hyvää omaatuntoa." Kirkot seisovat yhä, ja hyvä '
+      + 'omatunto on vaihtunut hyväksi viiniksi.',
+  },
+  alicesprings: {
+    kuvaus: 'Alice Springs on mantereen keskipiste: punainen hiekka, kuiva '
+      + 'joenuoma ja kaupunki, joka syntyi lennätinaseman ympärille. '
+      + 'Nykyään täällä toimii lentävien lääkärien tukikohta ja '
+      + 'radiokoulu, jonka oppilaat asuvat satojen kilometrien päässä '
+      + 'toisistaan.',
+    nosto: 'Isoisä kirjoitti: "Lennätinlinja halkaisi juuri koko mantereen '
+      + 'etelästä pohjoiseen — viesti kulkee Adelaidesta Lontooseen '
+      + 'tunneissa." Se linja kulki tästä pihasta. Asema on yhä '
+      + 'paikallaan.',
+  },
+  uluru: {
+    kuvaus: 'Uluru nousee tasangolta kuin nukkuva jättiläinen, ja sen väri '
+      + 'muuttuu koko päivän: aamulla violetti, keskipäivällä oranssi, '
+      + 'auringonlaskussa hehkuvan punainen. Kalliota kierretään jalan '
+      + '— sen päälle ei enää nousta, koska se on anangu-kansalle pyhä.',
+    nosto: 'Isoisä kirjoitti: "Tutkimusmatkailija kertoi tänä vuonna '
+      + 'jättimäisestä punaisesta kalliosta keskellä mannerta." Uutinen '
+      + 'oli uusi vain hänelle — anangut olivat tunteneet kallionsa '
+      + 'kymmeniätuhansia vuosia.',
+  },
+  broome: {
+    kuvaus: 'Broomessa helmisimpukka rakensi kokonaisen kaupungin: '
+      + 'sukeltajia tuli Japanista ja Malesiasta asti, ja rannalla on '
+      + 'yhä maailman helmikaupan pikkuinen pääkatu. Illalla '
+      + 'kamelikaravaani käveli pitkin Cable Beachin rantaa '
+      + 'auringonlaskua vasten.',
+    nosto: 'Isoisä kirjoitti: "Luoteisrannikon simpukoissa kasvaa helmiä, '
+      + 'joista Lontoossa maksetaan talon hinta." Helmiä viljellään nyt '
+      + 'tarhoissa — mutta kaupungin nimi tarkoittaa yhä helmeä '
+      + 'kaikilla kielillä.',
+  },
+  kalgoorlie: {
+    kuvaus: 'Kalgoorliessa kaupungin laidalla aukeaa Super Pit — '
+      + 'kultakaivos, joka on niin valtava kuoppa, että sen pohjalla '
+      + 'jättirekat näyttävät leluilta. Pääkatu on leveä kuin tori: se '
+      + 'mitoitettiin aikanaan kamelikaravaanin kääntymistä varten.',
+    nosto: 'Isoisä kulki näiden tasankojen editse tietämättä, että '
+      + 'jalkojen alla lepäsi yksi maailman rikkaimmista kultasuonista. '
+      + 'Se löytyi vasta parikymmentä vuotta myöhemmin — onni suosii '
+      + 'myös myöhästyjiä.',
+  },
+  townsville: {
+    kuvaus: 'Townsvillestä lautta vie Magneettisaarelle, jossa koalat '
+      + 'nukkuvat eukalyptuksissa polkujen varrella — laskin niitä '
+      + 'kuusi yhden kävelyn aikana. Saaren nimen antoi kapteeni Cook, '
+      + 'jonka kompassi sekosi tässä kohtaa. Vika ei ollut saaressa '
+      + 'vaan laivassa.',
+    nosto: 'Isoisä kirjoitti: "Rannikolla on saari, joka muka vetää '
+      + 'kompassin sekaisin — merimiehet vannovat sen nimeen." Tarina '
+      + 'elää yhä, vaikka syyllistä ei koskaan löytynyt. Hyvä nimi '
+      + 'voittaa selityksen.',
+  },
+  hobart: {
+    kuvaus: 'Hobartissa vuori vartioi kaupunkia: Wellingtonin huipulla voi '
+      + 'olla lunta samana päivänä, kun satamassa syödään jäätelöä. '
+      + 'Vanhat kivimakasiinit ovat nyt gallerioita ja panimoita, ja '
+      + 'lauantaisin koko kaupunki tungeksii Salamancan torilla.',
+    nosto: 'Isoisä kirjoitti: "Etelämpänä ei ole enää kaupunkia — seuraava '
+      + 'satama on jäätikkö." Se pitää melkein paikkansa yhä: täältä '
+      + 'lähtevät etelämantereen tutkimuslaivat.',
+  },
+  nullarbor: {
+    kuvaus: 'Nullarborin tasangolla ei kasva yhtään puuta, ja nimi kertoo '
+      + 'sen latinaksi. Juna kulkee täällä maailman pisimmän suoran '
+      + 'rataosuuden: lähes viisisataa kilometriä ilman ainuttakaan '
+      + 'kaarretta. Katsoin ikkunasta tunnin — horisontti ei muuttunut '
+      + 'miksikään.',
+    nosto: 'Isoisä kirjoitti: "Tasanko, jolla ei ole puuta eikä vettä — '
+      + 'sen poikki ei kulje kukaan huvikseen." Nyt sen poikki kulkee '
+      + 'juna, ja ravintolavaunussa tarjoillaan teetä. Ukko olisi '
+      + 'nauranut.',
+  },
+  birdsville: {
+    kuvaus: 'Birdsvillessä on sata asukasta, yksi kuuluisa pubi ja '
+      + 'lentokenttä, jolle pikkukoneet laskeutuvat kuin '
+      + 'parkkipaikalle. Kerran vuodessa kylään saapuu seitsemäntuhatta '
+      + 'ihmistä hevoskilpailuihin — teltat leviävät aavikolle kuin oma '
+      + 'kaupunkinsa.',
+    nosto: 'Isoisä kirjoitti karjapoluista: "Paimenet ajavat laumat '
+      + 'tuhannen virstan halki aavikon — reitin varrella on kaivo ja '
+      + 'kapakka." Se kapakka on tämä. Ja kaivo toimii yhä.',
+  },
+  exmouth: {
+    kuvaus: 'Exmouthissa uin valashain rinnalla: se on maailman suurin '
+      + 'kala, pidempi kuin bussi, ja se söi vain planktonia '
+      + 'välittämättä minusta lainkaan. Ningaloon riutta alkaa suoraan '
+      + 'rannasta — ei venematkaa, vain maski päähän ja mereen.',
+    nosto: 'Isoisä kirjoitti: "Luoteisrannikon vesillä valaat kulkevat ohi '
+      + 'laumoina — laiva väisti niitä koko päivän." Ryhävalaat '
+      + 'vaeltavat samaa reittiä yhä, samoina kuukausina, samassa '
+      + 'järjestyksessä.',
+  },
+  mountisa: {
+    kuvaus: 'Mount Isassa kaivos ei ole kaupungin vieressä vaan kaupunki '
+      + 'kaivoksen: piiput nousevat suoraan pääkadun päästä, ja maan '
+      + 'alla on enemmän tunnelikilometrejä kuin kaduilla '
+      + 'katukilometrejä. Elokuussa täällä pidetään Australian suurin '
+      + 'rodeo.',
+    nosto: 'Isoisä kirjoitti sisämaasta: "Karjatilat ovat täällä '
+      + 'kreivikuntien kokoisia, ja naapuriin ratsastetaan kaksi '
+      + 'päivää." Tilat ovat yhä sen kokoisia — nyt naapuriin lennetään '
+      + 'omalla pikkukoneella.',
+  },
+  cooberpedy: {
+    kuvaus: 'Coober Pedyssä asutaan maan alla: kesähelle on niin ankara, '
+      + 'että kodit, kirkko ja hotellikin on kaivettu kallioon, jossa '
+      + 'on aina viileää. Kaupunki elää opaaleista — hohtavista '
+      + 'jalokivistä, joita löytyy vain täältä ja joita kaivetaan yhä '
+      + 'käsin.',
+    nosto: 'Isoisän kartassa tässä kohtaa lukee vain: "Kivistä '
+      + 'autiomaata." Hän oli oikeassa — kukaan ei vain vielä tiennyt, '
+      + 'että ne kivet hohtavat sateenkaaren värejä, kun ne nostaa '
+      + 'valoon.',
+  },
+  geraldton: {
+    kuvaus: 'Geraldtonissa tuulee aina — surffaajat rakastavat sitä, ja '
+      + 'sataman langustiveneet lähtevät ulos ennen aamunkoittoa. '
+      + 'Kaupungin langustit lennätetään eläviksi Aasian ravintoloihin: '
+      + 'hummeripyynti on täällä yhtä arkista kuin muualla maidonhaku.',
+    nosto: 'Isoisä kirjoitti: "Länsirannikon tuuli ei lakkaa koskaan — '
+      + 'purjeet paikataan täällä useammin kuin missään." Tuuli on '
+      + 'sama. Nyt sillä pyöritetään sähköä koko rannikolle.',
+  },
+  portmoresby: {
+    kuvaus: 'Port Moresbyssa tori oli kuin kielten näyttely: '
+      + 'Papua-Uusi-Guinea on maa, jossa puhutaan yli kahdeksaasataa '
+      + 'kieltä — enemmän kuin missään muualla maailmassa. '
+      + 'Naapurikylillä voi olla eri kieli, ja yhteinen tok pisin '
+      + 'syntyi, jotta kauppa kävisi.',
+    nosto: 'Isoisä kirjoitti: "Saarella sanotaan puhuttavan enemmän kieliä '
+      + 'kuin koko Euroopassa yhteensä." Se ei ollut liioittelua — se '
+      + 'oli aliarvio.',
+  },
+  sepik: {
+    kuvaus: 'Sepik virtaa tuhat kilometriä ilman yhtäkään patoa tai siltaa '
+      + '— vain kyliä, kanootteja ja krokotiileja. Joen kylissä '
+      + 'veistetään puuta kuuluisalla kädellä: henkitalojen pylväät, '
+      + 'naamiot ja kanootin keulat kertovat sukujen tarinat.',
+    nosto: 'Isoisä kirjoitti: "Joki on täällä ainoa tie, ja kanootti on '
+      + 'hevonen, kärry ja talo samassa." Sepikillä se on sitä yhä — '
+      + 'moottori vain korvasi melan, kun on kiire.',
+  },
+  honiara: {
+    kuvaus: 'Honiaran edustalla meri kätkee historiaa: toisen maailmansodan '
+      + 'taisteluissa upposi niin monta laivaa, että salmea kutsutaan '
+      + 'Rautapohjaksi. Nyt hylyt ovat korallin peitossa ja kalojen '
+      + 'kerrostaloja — sukeltajat tulevat katsomaan, kuinka meri '
+      + 'korjaa sodan jäljet.',
+    nosto: 'Isoisä kirjoitti Salomonsaarista: "Saaret ovat vihreitä kuin '
+      + 'smaragdit, ja niiden nimet lupaavat kultaa." Kultaa ei '
+      + 'löytynyt — mutta smaragdit olivat totta.',
+  },
+  portvila: {
+    kuvaus: 'Port Vilassa markkinatätien pöydillä oli hedelmiä, joiden '
+      + 'nimiä en tiennyt, ja naurua riitti vaikkei yhteistä kieltä '
+      + 'ollut. Vanuatu keikkuu tulivuorten ja mannerlaattojen päällä — '
+      + 'maanjäristys on täällä arkea, ja silti kyselyissä tämä on '
+      + 'maailman onnellisimpia maita.',
+    nosto: 'Isoisä kirjoitti: "Saarilla maa vavahtelee viikoittain, eikä '
+      + 'kukaan hätkähdä." Sama tyyneys kantaa yhä — talot rakennetaan '
+      + 'kevyiksi ja mieli vielä kevyemmäksi.',
+  },
+  noumea: {
+    kuvaus: 'Noumeassa ranskalainen leipomo tuoksuu palmujen alla: '
+      + 'croissantit tulevat uunista trooppisessa aamussa, ja '
+      + 'rantakadulla pelataan petankkia. Kaupunkia ympäröi maailman '
+      + 'suurin laguuni, jonka vesi on niin kirkasta, että vene näyttää '
+      + 'ankkuroituneen ilmaan.',
+    nosto: 'Isoisä kirjoitti: "Ranska on tuonut tänne leipänsä, pelinsä ja '
+      + 'vankilansa." Vankila on kauan poissa — leipä ja petankki '
+      + 'jäivät, ja laguuni päätyi maailmanperintölistalle.',
+  },
+  norfolk: {
+    kuvaus: 'Norfolkinsaarella puhutaan kieltä, jota ei puhuta missään '
+      + 'muualla: norfukia, joka syntyi Bounty-laivan kapinallisten '
+      + 'jälkeläisten mukana. Saaren omat männyt nousevat suorina kuin '
+      + 'mastot — niitä vietiin aikanaan juuri laivojen mastoiksi.',
+    nosto: 'Isoisä kirjoitti: "Saari oli ankarin rangaistussiirtola, mitä '
+      + 'imperiumi keksi — sen nimi sai vangit vapisemaan." Rauniot '
+      + 'ovat jäljellä, mutta niiden ympärillä pelataan nyt golfia. '
+      + 'Aika on armollinen.',
+  },
+  suva: {
+    kuvaus: 'Suvassa rugby on enemmän kuin peli: joka nurmikaistaleella '
+      + 'potkitaan ja syötellään, ja maajoukkueen ottelupäivänä koko '
+      + 'kaupunki pysähtyy. Illalla kava-malja kiersi piirissä kädestä '
+      + 'käteen — juoma puuduttaa kielen ja hidastaa puheen '
+      + 'ystävälliseksi.',
+    nosto: 'Isoisä kirjoitti: "Fidžin päälliköt neuvottelevat parhaillaan '
+      + 'koko saariston liittämisestä Britanniaan." Vuotta myöhemmin se '
+      + 'tapahtui. Rugby jäi briteiltä — kava oli täällä jo ennen '
+      + 'heitä.',
+  },
+  auckland: {
+    kuvaus: 'Auckland on rakennettu tulivuorille: kaupungissa on lähes '
+      + 'viisikymmentä sammunutta purkausaukkoa, ja moni niistä on nyt '
+      + 'vihreä puistokukkula lampaineen. Satamassa purjeita on niin '
+      + 'tiheässä, että kaupunkia kutsutaan purjeiden kaupungiksi.',
+    nosto: 'Isoisä kirjoitti: "Kaupunki makaa tulivuorten päällä kuin '
+      + 'peitolla — maori tuntee jokaisen kukkulan nimen ja tarinan." '
+      + 'Nimet ja tarinat elävät yhä. Tulivuoret nukkuvat, '
+      + 'toistaiseksi.',
+  },
+  wellington: {
+    kuvaus: 'Wellingtonissa tuuli on niin vakiovieras, että kaupunki on '
+      + 'rakentanut sille patsaankin. Punainen köysirata nousee '
+      + 'keskustasta kukkulalle, ja kahviloita on asukasta kohti '
+      + 'enemmän kuin New Yorkissa — säässä, joka vaihtuu neljästi '
+      + 'päivässä, kahvila on turvasatama.',
+    nosto: 'Isoisä kirjoitti: "Pääkaupunki muutti juuri tänne, keskemmälle '
+      + '— salmen rannalle, jossa tuuli ei anna lipun levätä." Lippu ei '
+      + 'lepää vieläkään. Pääkaupunki ei muuttanut enää mihinkään.',
+  },
+  christchurch: {
+    kuvaus: 'Christchurchissa katedraalin vierellä seisoo toinen katedraali '
+      + '— pahvista tehty. Kun maanjäristys mursi vanhan, kaupunki '
+      + 'rakensi väliaikaisen pahviputkista ja rakastui siihen. Uutta '
+      + 'kaupunkia rakennetaan yhä, ja seinämaalaukset valtasivat '
+      + 'tyhjät seinät.',
+    nosto: 'Isoisä kirjoitti: "Englantilaisempi kuin Englanti — '
+      + 'soutuveneitä, pajuja ja teetä joen rannalla." Punting-veneet '
+      + 'soutavat samalla joella yhä. Kaupunki oppi olemaan myös jotain '
+      + 'omaansa.',
+  },
+  milfordsound: {
+    kuvaus: 'Milford Soundissa laiva tuntui lelulta: vuonon seinämät '
+      + 'nousevat suoraan merestä yli kilometrin, ja sade — jota täällä '
+      + 'riittää — herättää satoja vesiputouksia kerralla. Delfiinit '
+      + 'saattoivat laivaa ulos kuin kunniavartio.',
+    nosto: 'Isoisä kirjoitti: "Vuono, jonka seinät katoavat pilviin. '
+      + 'Sanoin kapteenille, että tämä on katedraali — hän vastasi, '
+      + 'että se on vasta eteinen." Kapteeni oli oikeassa: perällä '
+      + 'odotti Mitre Peak.',
+  },
+  dili: {
+    kuvaus: 'Dili on nuoren maan pääkaupunki: Itä-Timor itsenäistyi vasta '
+      + 'vuosituhannen alussa, ja puolet kansasta on alle '
+      + 'parikymppisiä. Aamulla kalastajat työnsivät veneensä vesille '
+      + 'pyhän patsaan alla, joka katsoo kaupunkia vuorelta kuin Rio de '
+      + 'Janeirossa.',
+    nosto: 'Isoisä kirjoitti: "Saarelta laivataan santelipuuta, jonka '
+      + 'tuoksu täyttää koko ruuman viikoiksi." Santelipuu vietiin '
+      + 'melkein loppuun — mutta saari itse ei loppunut, ja nyt se '
+      + 'kuuluu itselleen.',
+  },
+  bali: {
+    kuvaus: 'Balilla riisiterassit kiipeävät rinteitä kuin vihreät '
+      + 'portaikot, ja niiden vesijärjestelmää ovat hoitaneet '
+      + 'temppeliyhteisöt tuhat vuotta. Joka aamu kynnyksille ilmestyy '
+      + 'pieniä palmunlehtikoreja — kukkia ja riisiä, kiitokseksi ja '
+      + 'pyynnöksi hyville hengille.',
+    nosto: 'Isoisä kirjoitti: "Saarella on enemmän temppeleitä kuin '
+      + 'taloja, ja jokainen päivä on jonkin juhla." Laskin yhden '
+      + 'aamupäivän aikana kolme kulkuetta. Ukko ei liioitellut.',
+  },
+};
+
 // ===== js/packs/asia-artikkelit.js =====
 // Matkakirjan omat artikkelit Aasian ja Lähi-idän kaupungeista.
 //
@@ -62063,7 +63179,10 @@ function drawPuzzle(svg, id, data) {
  * Nimetty yhdistelmä ei estä ansaa mutta tekee siitä yhden rivin
  * kokoisen: uusi lauta lisätään yhteen paikkaan taulua kohti.
  */
-const KAIKKI_SAAPUMISET = { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET };
+const KAIKKI_SAAPUMISET = {
+  ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET,
+  ...NORTHAMERICA_SAAPUMISET, ...SOUTHAMERICA_SAAPUMISET, ...OCEANIA_SAAPUMISET,
+};
 const KAIKKI_KULTTUURI = { ...AFRICA_KULTTUURI, ...EUROPE_KULTTUURI };
 const KAIKKI_VALOKUVAT = { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT, ...ASIA_VALOKUVAT };
 const KAIKKI_MAATIEDOT = { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT, ...ASIA_MAATIEDOT };
@@ -62189,7 +63308,8 @@ async function cachedImage(title) {
  * Haku käy lähdelaudat läpi ja palauttaa sen, jolta luenta löytyy.
  * Palautettua tunnusta käytetään myös tiedoston nimessä.
  */
-const LUENTA_LAUDAT = ['europe', 'africa', 'middleeast', 'asia'];
+const LUENTA_LAUDAT = ['europe', 'africa', 'middleeast', 'asia',
+  'northamerica', 'southamerica', 'oceania'];
 
 function luentaLauta(joukko, packId, cityId) {
   if (!cityId) return null;
@@ -62345,6 +63465,111 @@ const SAAPUMISLUENNAT = new Set([
   'asia:vladivostok',
   'asia:xian',
   'asia:yangon',
+  'northamerica:anchorage',
+  'northamerica:appalakit',
+  'northamerica:bermuda',
+  'northamerica:chicago',
+  'northamerica:churchill',
+  'northamerica:denver',
+  'northamerica:grandcanyon',
+  'northamerica:guatemala',
+  'northamerica:halifax',
+  'northamerica:havanna',
+  'northamerica:hawaii',
+  'northamerica:houston',
+  'northamerica:iqaluit',
+  'northamerica:labrador',
+  'northamerica:losangeles',
+  'northamerica:managua',
+  'northamerica:merida',
+  'northamerica:mexico',
+  'northamerica:miami',
+  'northamerica:monterrey',
+  'northamerica:montreal',
+  'northamerica:mountrushmore',
+  'northamerica:neworleans',
+  'northamerica:newyork',
+  'northamerica:nome',
+  'northamerica:nuuk',
+  'northamerica:panama',
+  'northamerica:sanfrancisco',
+  'northamerica:sanjuan',
+  'northamerica:santafe',
+  'northamerica:stjohns',
+  'northamerica:toronto',
+  'northamerica:vancouver',
+  'northamerica:whitehorse',
+  'northamerica:winnipeg',
+  'northamerica:yellowknife',
+  'northamerica:yellowstone',
+  'southamerica:antofagasta',
+  'southamerica:asuncion',
+  'southamerica:bananal',
+  'southamerica:boavista',
+  'southamerica:bogota',
+  'southamerica:buenosaires',
+  'southamerica:campogrande',
+  'southamerica:caphorn',
+  'southamerica:caracas',
+  'southamerica:cayenne',
+  'southamerica:falkland',
+  'southamerica:galapagos',
+  'southamerica:iguazu',
+  'southamerica:iquitos',
+  'southamerica:joaopessoa',
+  'southamerica:lima',
+  'southamerica:macapa',
+  'southamerica:machupicchu',
+  'southamerica:manaus',
+  'southamerica:montevideo',
+  'southamerica:portoalegre',
+  'southamerica:portovelho',
+  'southamerica:puertomontt',
+  'southamerica:puntaarenas',
+  'southamerica:quito',
+  'southamerica:rio',
+  'southamerica:robinsoncrusoe',
+  'southamerica:salta',
+  'southamerica:salvador',
+  'southamerica:sanambrosio',
+  'southamerica:santacruz',
+  'southamerica:santarem',
+  'southamerica:saoluis',
+  'southamerica:saopaulo',
+  'southamerica:titicaca',
+  'southamerica:valparaiso',
+  'oceania:adelaide',
+  'oceania:alicesprings',
+  'oceania:auckland',
+  'oceania:bali',
+  'oceania:birdsville',
+  'oceania:brisbane',
+  'oceania:broome',
+  'oceania:cairns',
+  'oceania:christchurch',
+  'oceania:cooberpedy',
+  'oceania:darwin',
+  'oceania:dili',
+  'oceania:exmouth',
+  'oceania:geraldton',
+  'oceania:hobart',
+  'oceania:honiara',
+  'oceania:kalgoorlie',
+  'oceania:melbourne',
+  'oceania:milfordsound',
+  'oceania:mountisa',
+  'oceania:norfolk',
+  'oceania:noumea',
+  'oceania:nullarbor',
+  'oceania:perth',
+  'oceania:portmoresby',
+  'oceania:portvila',
+  'oceania:sepik',
+  'oceania:suva',
+  'oceania:sydney',
+  'oceania:townsville',
+  'oceania:uluru',
+  'oceania:wellington',
 ]);
 
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
@@ -69645,6 +70870,9 @@ class UI {
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 const MUUTOKSET = [
+  { v: 221, teksti: 'Matkakirja valmis: 248 paikkaa, 248 luentaa' },
+  { v: 221, teksti: 'Amerikat ja Oseania kirjoitettu ja luettu' },
+  { v: 221, teksti: 'Kertoja eläytyy: huikeat paikat kuuluvat äänessä' },
   { v: 220, teksti: 'Tutki-aiheet valmiit monistettaviksi muualle' },
   { v: 220, teksti: 'Lontoon metro, Proms ja piirakka aiheisiin' },
   { v: 220, teksti: 'Aiheisiin Lue lisää -napit ja musiikkilinkit' },
@@ -69744,7 +70972,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-03.220';
+const APP_VERSION = '2026-08-03.221';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
