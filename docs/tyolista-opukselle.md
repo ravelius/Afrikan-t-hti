@@ -3565,6 +3565,12 @@ tämä teksti (kirjoituskoneella naksuen, kolme kappaletta):
 >
 > mistä aloitan?
 
+(Päivitetty 4.8.2026: omistaja pyysi avaustekstin lyhyemmäksi — "sitä ei
+jaksa kuunnella". Voimassa oleva teksti on js/ui.js:n INTRO_TEXT: pois
+jäivät matkalaukun sisältöluettelo, "Hetkinen…" ja "mietin enää yhtä
+asiaa"; revitty sivu, "Mitä hän oli löytänyt?" ja "mistä aloitan?"
+säilyivät. Luenta generoitiin uudelleen, 34 s → 23 s.)
+
 (Päivitetty 30.7.2026 omistajan uuteen muotoiluun: päiväkirjasta tuli
 matkakirja — sama esine kuin sovelluksen nimi — ja loppu tiivistyi
 juoksuksi kentälle. "Mistä aloitan?" johtaa suoraan laudan valintaan.)
