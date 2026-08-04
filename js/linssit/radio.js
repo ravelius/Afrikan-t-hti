@@ -481,7 +481,13 @@ export function paalle({
   // vain toinen toimisi.
   if (tila) pois();
 
-  if (alkuAani !== null) aanenvoimakkuus = Math.min(1, Math.max(0, Number(alkuAani) || 0));
+  /*
+   * Number.isFinite eikä `!== null`. Kutsuja lukee arvon omasta
+   * muististaan, ja tyhjä muisti on yhtä hyvin undefined kuin null —
+   * `Number(undefined) || 0` olisi nolla, eli radio avautuisi mykkänä
+   * juuri niille pelaajille, jotka eivät ole koskaan koskeneet nuppiin.
+   */
+  if (Number.isFinite(alkuAani)) aanenvoimakkuus = Math.min(1, Math.max(0, alkuAani));
 
   const nimet = new Map();
   for (const kaupunki of kaupungit) {
