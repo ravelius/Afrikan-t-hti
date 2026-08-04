@@ -4451,3 +4451,53 @@ sen. Animaatiota ei voi tarkistaa lukemalla.
 Kymmenen porttia neljästätoista vei uudelle kartalle, joten satunnainen
 kokeilu näytti toimivalta. Vika löytyi vasta kun omistaja sattui
 valitsemaan yhden neljästä.
+
+## v240 — Tutki taitetuksi lehdeksi (4.8.2026)
+
+Omistaja: *"Tutkissivusta pitää tehdä kuin taitettu lehti… poistetaan nuo
+keskellä olevat valintanapit kokonaan. Pelaaja voi yksinkertaisesti
+pyyhkäistä sivuja eteenpäin, jolloin seuraavalle sivulle avautuisi aina yksi
+aihealue kerrallaan ja sen alueen otsikko lukisi ylhäällä."*
+
+Liuskarivi poistettiin. Sivu 1 on kaupunki + maa + ensimmäinen aihe; sivut
+2…n yksi aihe kerrallaan, otsikko ylhäällä. Lontoolla sivuja on yhdeksän, ja
+määrä luetaan aineistosta. Pyyhkäisy vaatii 60 px vaakamatkan JA
+kaksinkertaisen ylivoiman pystyyn nähden — muuten artikkelin lukeminen
+heittäisi sivua vahingossa. Työpöydällä myös nuolinäppäimet ja hillityt
+nuolet laidoissa, sekä sivunumero.
+
+**iPadin kadonneet kuvat — mitattu mekanismi, päätelty laukaisin.**
+Kolme tunnettua WebKit-ansaa suljettiin pois oikealla WebKitillä mitaten:
+kuvat olivat DOM:issa ja latautuivat 4/4 kaikilla kuudellatoista
+ruutuleveydellä 320–1440. Ainoa polku, joka voi hävittää kuvan kokonaan, on
+`asetaKuva`:n virhereitti `() => kuva.remove()` — ja siihen riittää YKSI
+virhe silloin kun peilin katkaisija on lauennut, koska silloin peiliosoite
+ja varaosoite ovat sama Commons-osoite eikä varareittiä ole. Mitattu:
+`{ peiliJaVaraSama: true, kuvaVielaSivulla: false, lapsia: 0 }` — ei
+rikkinäistä kuvaa eikä aukkoa, vaan tyhjä. Miksi juuri iPad: katkaisijan
+tila elää `sessionStoragessa` koko istunnon, ja iPadilla peli on
+kotivalikkoon asennettuna pitkissä istunnoissa. Sitä ei voitu vahvistaa
+omistajan laitteelta, ja se sanotaan suoraan.
+
+Korjaus: osoitteita kokeillaan vuorotellen kolmesti, kuvaa ei koskaan
+poisteta, ja epäonnistunut jää `hidden`-tilaan seuraavaa avausta varten.
+
+**Mitatut kuvaleveydet** (sama Chromiumilla ja WebKitillä): 390 → 360 px,
+430 → 400, 820 → 652, 1024 → 479 (kelluu tekstin seassa), 1440 → 575
+(kelluu). Ennen kaikilla 451–508 px riippumatta ruudusta.
+
+**Suurennus** on nyt `transform: none` (oli `rotate(-1.2deg)`), täydessä
+koossa ja ilman ilmestymisanimaatiota. Se avautuu vain napautuksesta, jossa
+osoitin liikkui alle 10 px.
+
+### Opittua
+
+**Selaimen oma toiminto voi syödä eleen.** Pyyhkäisy kuoli heti kun se alkoi
+kuvan päältä: selaimen kuvanraahaus lähetti `pointercancel`in. Yhden rivin
+korjaus (`draggable = false`), mutta se löytyi vain kokeilemalla oikeassa
+selaimessa.
+
+**Virhereitti, joka poistaa elementin, on peruuttamaton.** `kuva.remove()`
+näytti siistiltä siivoukselta, mutta se hävitti ainoan paikan, josta
+seuraava yritys olisi voinut alkaa. Piilotus jättää oven auki; poisto
+muuraa sen.

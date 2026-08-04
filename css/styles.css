@@ -5057,24 +5057,24 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  *
  * Kaksi porrasta, koska sama ratkaisu ei käy molempiin:
  *
- * 700–1099 px (tabletti): palsta on 650–860 px eikä siihen mahdu kuvaa
- * JA luettavaa tekstipalstaa rinnakkain — kelluva kuva jättäisi
- * tekstille alle 300 px. Kuva pysyy siis omalla rivillään, mutta saa
- * kasvaa: 340 px -> 470 px korkeutta, jolloin vaakakuva täyttää
- * palstan lähes reunasta reunaan.
+ * 700–999 px (tabletti pystyssä): palsta on 650–780 px eikä siihen
+ * mahdu kuvaa JA luettavaa tekstipalstaa rinnakkain — kelluva kuva
+ * jättäisi tekstille alle 300 px. Kuva pysyy siis omalla rivillään,
+ * mutta saa kasvaa: 340 px -> 470 px korkeutta, jolloin vaakakuva
+ * täyttää palstan lähes reunasta reunaan.
  *
- * 1100 px ja yli (työpöytä): palsta on yli 1000 px, ja silloin kuva
- * kelluu tekstin seassa kuten kirjassa. Leveys on 56 % palstasta
- * (n. 575 px) ja korkeuskatto 520 px pitää pystykuvan kurissa —
+ * 1000 px ja yli (tabletti vaakaan, työpöytä): palsta on yli 830 px,
+ * ja silloin kuva kelluu tekstin seassa kuten sanomalehdessä. Leveys
+ * on 56 % palstasta ja korkeuskatto 520 px pitää pystykuvan kurissa —
  * ilman kattoa 1280x1966 kuva olisi ollut lähes 900 px korkea.
- * Puoli lukua kerrallaan vaihtaa puolta, jottei sivu ole yksipuolinen.
+ * Joka toinen nosto vaihtaa puolta, jottei sivu ole yksipuolinen.
  */
 @media (min-width: 700px) {
   .wiki-nosto img { max-height: 470px; }
   .wiki-liuskat button { font-size: 0.8rem; }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1000px) {
   .wiki-nosto img {
     float: right;
     width: 56%;

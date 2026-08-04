@@ -42,9 +42,14 @@ export const AANI_JUURI = R2_JUURI;
 
 /**
  * Turvallinen tiedostonimi mistä tahansa merkkijonosta.
- * Sama funktio kuin peilaustyökalussa — älä muuta vain toista puolta.
+ *
+ * Tämä on peilin nimeämissäännön AINOA kopio. Peilaustyökalu
+ * (tools/peilaa-media.mjs) tuo tämän ja alla olevat polkufunktiot
+ * täältä eikä toista sääntöä omassa koodissaan: kaksi kopiota ehtivät
+ * kerran eriytyä niin, että työkalu kirjoitti tiedoston yhdellä
+ * nimellä ja peli haki sitä toisella.
  */
-function turvanimi(teksti, pate) {
+export function turvanimi(teksti, pate) {
   const puhdas = teksti
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/[^a-zA-Z0-9._-]+/g, '-')
@@ -62,15 +67,61 @@ export function peiliKuvaPolku(tiedosto, kansio) {
   return `${kansio}/${turvanimi(tiedosto.replace(/\.[^.]+$/, ''), pate === 'svg' ? 'png' : pate)}`;
 }
 
-/** Freesoundin tai archive.orgin osoitteesta peilin polku. */
+/*
+ * Peilattavia ääniosoitteita on tasan kaksi muotoa, ja molemmat
+ * osoittavat suoraan tiedostoon:
+ *
+ *   https://cdn.freesound.org/previews/511/511005_571436-lq.mp3
+ *   https://archive.org/download/aporee_21876_25420/marrakesh.mp3
+ *
+ * Tunnus otetaan osoitteen pysyvästä osasta: Freesoundin äänen
+ * numerosta ja archive.orgin kohteen (item) tunnuksesta. Kumpikin on
+ * arkiston oma pysyvä tunniste, joten sama äänite saa saman nimen
+ * riippumatta siitä, missä kohtaa lähdelistaa se sattuu olemaan.
+ *
+ * NIMI EI SAA RIIPPUA JÄRJESTYKSESTÄ. Ennen tätä peilaustyökalu nimesi
+ * tunnistamattoman osoitteen silmukan indeksillä (`aporee-50`) ja peli
+ * tyhjällä merkkijonolla — sama tiedosto sai kaksi eri nimeä, eikä peli
+ * löytänyt sitä peilistä kertaakaan. Indeksi oli lisäksi hiljainen
+ * aikapommi: yksi uusi ääni listan alkuun olisi vaihtanut kaikkien
+ * perässä olevien nimet, ja jo peilatut tiedostot olisivat jääneet
+ * ämpäriin tavoittamattomiksi. Arvausta ei siis ole: joko tunnus
+ * luetaan osoitteesta tai osoitetta ei peilata lainkaan.
+ */
+const AANIMUODOT = [
+  [/^https?:\/\/cdn\.freesound\.org\/previews\/\d+\/(\d+)/, 'freesound'],
+  [/^https?:\/\/archive\.org\/download\/([^/]+)\/[^/]+$/, 'aporee'],
+];
+
+/**
+ * Peilin polku äänen osoitteesta, tai null jos osoite ei ole peilattava
+ * äänitiedosto.
+ *
+ * Null on tavallinen vastaus eikä virhe. Paketeissa on archive.org-
+ * osoitteita myös lähdeviitteinä — kirjaskannien ja viritysäänten
+ * lisenssisivut ovat muotoa `archive.org/details/<tunnus>` — ja ne ovat
+ * HTML-sivuja, eivät äänitiedostoja. Sellaista ei ole peilissä eikä
+ * pidäkään olla: peli soittaa viritysäänet repon omasta
+ * assets/audio-kansiosta ja käyttää details-osoitetta vain linkkinä.
+ *
+ * Peilaustyökalu päättää tällä samalla funktiolla, minkä osoitteiden
+ * kopion se lataa. Kirjoittaja ja lukija eivät siis voi olla eri mieltä
+ * siitä, mitä peilissä on ja millä nimellä.
+ */
 export function peiliAaniPolku(url) {
-  const loppu = url.split('/').pop() ?? 'aani.mp3';
-  const pate = (loppu.split('.').pop() ?? 'mp3').toLowerCase();
-  const tunnus = url.includes('freesound')
-    ? `freesound-${url.match(/previews\/\d+\/(\d+)/)?.[1] ?? ''}`
-    : `aporee-${url.match(/download\/([^/]+)/)?.[1] ?? ''}`;
-  if (tunnus.endsWith('-')) return null;
-  return `aanet/${turvanimi(tunnus, pate === 'mp3' ? 'mp3' : pate)}`;
+  if (typeof url !== 'string') return null;
+  // Valinta voi kantaa aloituskohdan (#alku=20&voima=1.5). Se ei kuulu
+  // tiedoston nimeen.
+  const osoite = url.split('#')[0].split('?')[0];
+  const osuma = AANIMUODOT
+    .map(([kuvio, etuliite]) => [osoite.match(kuvio), etuliite])
+    .find(([m]) => m);
+  if (!osuma) return null;
+  const [m, etuliite] = osuma;
+  // Pääte luetaan tiedostonimestä, mutta vain jos se on uskottava pääte.
+  // Muuten peilistä tulisi nimiä kuten `…​.2k-hz`.
+  const pate = (osoite.split('/').pop() ?? '').split('.').pop()?.toLowerCase() ?? '';
+  return `aanet/${turvanimi(`${etuliite}-${m[1]}`, /^[a-z0-9]{2,4}$/.test(pate) ? pate : 'mp3')}`;
 }
 
 // --- katkaisija ---------------------------------------------------------------
@@ -134,10 +185,11 @@ export function nollaaPeili() {
  */
 export function aaniOsoite(url) {
   if (!url || !peiliKaytossa('aanet')) return url;
-  if (!/cdn\.freesound\.org|archive\.org/.test(url)) return url;
-  // Valinta voi kantaa aloituskohdan (#alku=20&voima=1.5). Peilattu
-  // nimi on laskettu ilman sitä, joten tunniste otetaan katkaistusta.
-  const polku = peiliAaniPolku(url.split('#')[0]);
+  // peiliAaniPolku tunnistaa itse, mitkä osoitteet ovat peilissä:
+  // se palauttaa null kaikelle muulle (repon omat tiedostot, arkiston
+  // lähdesivut). Erillistä esikarsintaa ei tarvita — se olisi toinen
+  // paikka, jossa sääntö voisi eriytyä.
+  const polku = peiliAaniPolku(url);
   return polku ? `${AANI_JUURI}${polku}` : url;
 }
 

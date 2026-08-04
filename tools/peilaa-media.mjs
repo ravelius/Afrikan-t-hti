@@ -31,6 +31,13 @@ import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { leikkaaMp3 } from './leikkaa-mp3.mjs';
+// Peilin nimeämissääntö on pelin puolella, ja tämä työkalu käyttää
+// juuri sitä — ei omaa kopiotaan. Kaksi kopiota ehti kerran eriytyä:
+// työkalu nimesi tunnistamattoman ääniosoitteen silmukan indeksillä ja
+// peli tyhjällä merkkijonolla, joten peli ei löytänyt tiedostoa
+// koskaan. js/media.js ei tuo mitään eikä koske selaimen rajapintoihin
+// latautuessaan, joten se latautuu myös nodessa.
+import { turvanimi, peiliKuvaPolku, peiliAaniPolku } from '../js/media.js';
 
 /*
  * Taustaäänen enimmäispituus (omistajan linjaus 1.8.2026). Kenttä-
@@ -158,17 +165,6 @@ function kelpaa(polku, odotettu) {
 
 const nuku = (ms) => execFileSync('sleep', [String(ms / 1000)]);
 
-/** Turvallinen tiedostonimi mistä tahansa merkkijonosta. */
-function turvanimi(teksti, pate) {
-  const puhdas = teksti
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-zA-Z0-9._-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase()
-    .slice(0, 90);
-  return pate ? `${puhdas}.${pate}` : puhdas;
-}
-
 // --- kerätään kohteet paketeista -------------------------------------------
 
 function kohteet() {
@@ -186,12 +182,27 @@ function kohteet() {
     ...[...paketit.matchAll(new RegExp(`${kentta}: '((?:[^'\\\\]|\\\\.)*)'`, 'g'))].map((m) => pura(m[1])),
     ...[...paketit.matchAll(new RegExp(`${kentta}: "((?:[^"\\\\]|\\\\.)*)"`, 'g'))].map((m) => pura(m[1])),
   ]);
-  const kuvat = poimi('tiedosto');
+  // `tiedosto:` tarkoittaa paketeissa Commonsin kuvatiedostoa, mutta
+  // sama kentännimi on myös repon omilla äänitiedostoilla
+  // (js/packs/viritysaanet.js). Niitä ei ole Commonsissa: haku palautti
+  // joka ajolla saman viiden 404:n rivistön ja manifestiin jäi rivi
+  // kuvasta, jota ei ole olemassa. Äänipääte kertoo eron varmasti.
+  const kuvat = [...poimi('tiedosto')].filter((n) => !/\.(mp3|ogg|wav|m4a|opus|flac)$/i.test(n));
   const liput = poimi('lippu');
-  const aanet = new Set(
+  // Hakukuvio löytää kaikki arkisto-osoitteet, myös ne jotka eivät ole
+  // äänitiedostoja: kirjaskannien ja viritysäänten lähdeviitteet ovat
+  // muotoa archive.org/details/<tunnus> ja osoittavat HTML-sivulle.
+  // Niiden lataaminen tuotti joka ajolla saman kourallisen virheitä
+  // ("vastaus oli HTML-sivu") ja jätti manifestiin rivin tiedostosta,
+  // jota ei voi olla olemassa. Peilattavuuden ratkaisee sama funktio
+  // jolla peli laskee polun: jos se ei anna nimeä, osoite ei ole
+  // peilissä eikä sitä haeta.
+  const arkistot = [...new Set(
     [...kaikki.matchAll(/https?:\/\/(?:cdn\.freesound\.org|archive\.org)\/[^'"\s)#]+/g)]
       .map((m) => m[0]),
-  );
+  )];
+  const aanet = arkistot.filter((u) => peiliAaniPolku(u));
+  const eiAania = arkistot.filter((u) => !peiliAaniPolku(u));
   // Heittomerkki katkaisi myös artikkelin otsikon ("Youssou N'Dour"),
   // joten sama poimija kuin kuvilla.
   const wikit = poimi('wiki');
@@ -200,7 +211,7 @@ function kohteet() {
     for (const m of s.matchAll(/^ {2}('?)([A-ZÅÄÖ][^:']*)\1: \{/gm)) wikit.add(m[2]);
   }
   return {
-    kuvat: [...kuvat], liput: [...liput], aanet: [...aanet], wikit: [...wikit],
+    kuvat, liput: [...liput], aanet, eiAania, wikit: [...wikit],
   };
 }
 
@@ -226,6 +237,33 @@ function lueManifesti() {
 
 const manifesti = lueManifesti();
 const virheet = [];
+
+/**
+ * Pois manifestista ne merkinnät, joita paketit eivät enää mainitse.
+ *
+ * Manifesti täydentyy ajosta toiseen (ks. lueManifesti), joten ilman
+ * tätä poistetun kortin kuva tai vaihtunut äänilähde jäisi riviksi
+ * ikuisesti. Pahempaa: kun nimeämissääntöä korjataan, vanhan säännön
+ * mukainen rivi jää manifestiin eikä yksikään ajo enää kirjoita sen
+ * päälle — silloin tests/media.test.mjs kaatuu joka kerta virheeseen,
+ * jota ei voi korjata muuttamatta manifestia käsin. Karsinta tehdään
+ * vain sille lajille, joka oikeasti ajetaan: `--vain aanet` ei saa
+ * tyhjentää kuvarivejä.
+ *
+ * Ämpäriin karsinta ei koske: vienti ei käytä --deleteä, joten vanha
+ * tiedosto jää sinne. Se ei riko mitään, mutta manifesti kertoo tästä
+ * eteenpäin vain siitä aineistosta, jota peli oikeasti käyttää.
+ */
+function karsi(laji, avaimet) {
+  const pida = new Set(avaimet);
+  let poistettu = 0;
+  for (const avain of Object.keys(manifesti[laji])) {
+    if (pida.has(avain)) continue;
+    delete manifesti[laji][avain];
+    poistettu += 1;
+  }
+  if (poistettu) console.log(`  ${laji}: ${poistettu} vanhentunutta riviä pois manifestista`);
+}
 
 function commonsMeta(nimet) {
   const url = 'https://commons.wikimedia.org/w/api.php?format=json&action=query'
@@ -257,8 +295,7 @@ async function lataaKuvat(nimet, alikansio, leveys) {
     const era = nimet.slice(i, i + 20);
     const meta = commonsMeta(era);
     for (const nimi of era) {
-      const pate = (nimi.split('.').pop() ?? 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
-      const kohde = turvanimi(nimi.replace(/\.[^.]+$/, ''), pate === 'svg' ? 'png' : pate);
+      const kohde = peiliKuvaPolku(nimi, alikansio).slice(alikansio.length + 1);
       const polku = join(kansio, kohde);
       manifesti[alikansio][nimi] = {
         tiedosto: `${alikansio}/${kohde}`,
@@ -298,15 +335,17 @@ function lataaAanet(urlit) {
   const kansio = join(ULOS, 'aanet');
   mkdirSync(kansio, { recursive: true });
   for (const [i, url] of urlit.entries()) {
-    const loppu = url.split('/').pop() ?? 'aani.mp3';
-    const pate = (loppu.split('.').pop() ?? 'mp3').toLowerCase();
-    const tunnus = url.includes('freesound')
-      ? `freesound-${url.match(/previews\/\d+\/(\d+)/)?.[1] ?? i}`
-      : `aporee-${url.match(/download\/([^/]+)/)?.[1] ?? i}`;
-    const kohde = turvanimi(tunnus, pate === 'mp3' ? 'mp3' : pate);
+    const tiedosto = peiliAaniPolku(url);
+    // kohteet() päästää tänne vain osoitteet, joille sääntö antaa
+    // nimen. Jos tänne silti päätyy nimetön, se on ohjelmointivirhe
+    // eikä arvattava tilanne — ennen tässä oli varasuunnitelmana
+    // silmukan indeksi, ja juuri se rikkoi peilin hiljaa.
+    if (!tiedosto) throw new Error(`ei nimeä ääniosoitteelle: ${url}`);
+    const pate = tiedosto.split('.').pop();
+    const kohde = tiedosto.slice('aanet/'.length);
     const polku = join(kansio, kohde);
     const vanha = manifesti.aanet[url] ?? {};
-    manifesti.aanet[url] = { tiedosto: `aanet/${kohde}`, alkuperainen: url };
+    manifesti.aanet[url] = { tiedosto, alkuperainen: url };
 
     // Äänitteet ovat kymmeniä megatavuja ja latautuvat hitaasti, joten
     // juuri ne katkeavat. Palvelimen ilmoittamaa kokoa vasten näkee sekä
@@ -321,7 +360,12 @@ function lataaAanet(urlit) {
       const mitta = vanha.leikattu ? vanha.koko ?? null : odotettu;
       const vika = kelpaa(polku, mitta);
       if (!vika) {
-        Object.assign(manifesti.aanet[url], vanha, { koko: statSync(polku).size });
+        // Vanhasta merkinnästä otetaan talteen vain leikkaustiedot.
+        // Polku lasketaan aina uudestaan säännöstä: jos vanha `tiedosto`
+        // pääsisi tästä läpi, kertaalleen kirjattu väärä nimi eläisi
+        // manifestissa ikuisesti eikä sääntöä voisi enää korjata.
+        Object.assign(manifesti.aanet[url], vanha,
+          { tiedosto, alkuperainen: url, koko: statSync(polku).size });
         nuku(200);
         continue;
       }
@@ -411,12 +455,20 @@ function lataaTekstit(otsikot) {
 const k = kohteet();
 console.log(`Peilataan: ${k.kuvat.length} kuvaa, ${k.liput.length} lippua, `
   + `${k.aanet.length} ääntä, ${k.wikit.length} tekstiä → ${ULOS}`);
+// Ohitetut näkyviin: näin listalta puuttuva äänimuoto huomataan täältä
+// eikä vasta pelistä puuttuvana äänenä.
+if (k.eiAania.length) {
+  console.log(`  ohitettu ${k.eiAania.length} arkisto-osoitetta, jotka eivät ole `
+    + 'äänitiedostoja (lähdeviitteitä, ei peilata):');
+  for (const u of k.eiAania.slice(0, 5)) console.log(`    ${u}`);
+  if (k.eiAania.length > 5) console.log(`    … ja ${k.eiAania.length - 5} muuta`);
+}
 mkdirSync(ULOS, { recursive: true });
 
-if (!VAIN || VAIN === 'kuvat') await lataaKuvat(k.kuvat, 'kuvat', 1200);
-if (!VAIN || VAIN === 'liput') await lataaKuvat(k.liput, 'liput', 320);
-if (!VAIN || VAIN === 'aanet') lataaAanet(k.aanet);
-if (!VAIN || VAIN === 'tekstit') lataaTekstit(k.wikit);
+if (!VAIN || VAIN === 'kuvat') { karsi('kuvat', k.kuvat); await lataaKuvat(k.kuvat, 'kuvat', 1200); }
+if (!VAIN || VAIN === 'liput') { karsi('liput', k.liput); await lataaKuvat(k.liput, 'liput', 320); }
+if (!VAIN || VAIN === 'aanet') { karsi('aanet', k.aanet); lataaAanet(k.aanet); }
+if (!VAIN || VAIN === 'tekstit') { karsi('tekstit', k.wikit); lataaTekstit(k.wikit); }
 
 manifesti.luotu = new Date().toISOString().slice(0, 10);
 writeFileSync(join(ULOS, 'manifesti.json'), JSON.stringify(manifesti, null, 1));
