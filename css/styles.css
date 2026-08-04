@@ -2602,6 +2602,7 @@ body.linssi-valokuva .grain { display: none; }
   font-size: 0.76rem;
   line-height: 1.4;
   animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
+  transition: max-height 260ms ease, padding 260ms ease;
 }
 
 .linssi-selite[data-corner='tl'] { top: 0.5rem; left: 0.5rem; }
@@ -2616,6 +2617,63 @@ body.linssi-valokuva .grain { display: none; }
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
+}
+
+/*
+ * Linssin nimi on painike, ei pelkkä otsikko: kutistettuna se on ainoa
+ * näkyvä osa selitettä, ja aria-expanded kertoo apuvälineelle kumpi
+ * tila on päällä. Ulkonäkö on tarkalleen entinen otsikkorivi — kaikki
+ * napin oletukset (pehmuste, kehys, 42 px korkeus) otetaan pois.
+ */
+.linssi-selite-nappi {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.linssi-selite-nappi:hover:not(:disabled) { background: none; }
+
+/*
+ * --- kutistettu selite (.pieni) --------------------------------------
+ *
+ * Omistajan toive 4.8.2026: "samoin topografian selitykset — kummankin
+ * voisi avata klikkaamalla suuremmaksi." Kutistettuna jäljellä on vain
+ * linssin nimi; värilaatikot, askelliuskat ja muut rivit jäävät
+ * leikkautuvan reunan alle ja häipyvät ennen sitä.
+ *
+ * Kortin pehmuste siirtyy kutistettuna nappiin, jolloin koko lappu on
+ * yhtä napautuspintaa eikä nappi jää keskelle kehystä.
+ */
+.linssi-selite.pieni {
+  /* Nimirivi (1.4 × 0.76rem) + napin pehmuste + kortin kehys. */
+  max-height: calc(1.4 * 0.76rem + 0.8rem + 2px + 1px);
+  padding: 0;
+  overflow: hidden;
+  width: max-content;
+  max-width: min(240px, 52%);
+}
+
+.linssi-selite.pieni h2 { margin: 0; }
+.linssi-selite.pieni .linssi-selite-nappi { padding: 0.4rem 0.65rem; }
+
+/* Siirtymä perusluokassa, jotta se pätee molempiin suuntiin. */
+.linssi-selite > *:not(h2) { transition: opacity 160ms ease; }
+
+.linssi-selite.pieni > *:not(h2) {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .linssi-selite-rivit {
@@ -2661,8 +2719,17 @@ body.linssi-valokuva .grain { display: none; }
   color: var(--muted);
 }
 
+/*
+ * Kutistuminen ja avautuminen ovat pehmeitä vain sille, joka haluaa
+ * liikettä: liikeherkälle molemmat tapahtuvat kertaheitolla. Tila
+ * vaihtuu silti tarkalleen samoin, vain ilman liukua.
+ */
 @media (prefers-reduced-motion: reduce) {
   .linssi-selite { animation: none; }
+  .linssi-selite,
+  .linssi-selite > *:not(h2),
+  body[data-mode] .fact-card,
+  .fact-card > *:not(.fact-place) { transition: none; }
 }
 
 .graticule { stroke: #9d8253; stroke-width: 1; opacity: 0.28; fill: none; }
@@ -4390,6 +4457,77 @@ body[data-mode] .fact-card.laajennettu {
 }
 
 /*
+ * --- yhden rivin päiväkirja (.pieni) ---------------------------------
+ *
+ * Omistajan toive 4.8.2026: linssin päällä ja karttaa vieritettäessä
+ * matkakirja kutistuu yhden rivin korkuiseksi ja avautuu napauttamalla.
+ *
+ * Näkyväksi riviksi valittiin kaupungin nimi eikä merkinnän ensimmäinen
+ * rivi: nimi on aina yksi rivi ja aina valmis, kun taas merkintä syntyy
+ * kirjoituskoneella kirjain kerrallaan ja sen alku olisi lapussa milloin
+ * mitäkin. Rivi nostetaan pystyflexin ensimmäiseksi (order), jolloin
+ * kaikki muu jää leikkautuvan alareunan alle EIKÄ katoa asettelusta —
+ * juuri siksi kutistuminen liukuu eikä nytkähdä.
+ *
+ * Korkeus on rivimitta (rivinkorkeus × kirjasinkoko + kortin pehmuste),
+ * ei pikselivakio: kortin teksti on eri kokoista puhelimella ja
+ * työpöydällä, ja kirjasin voi pudota varapinoon.
+ */
+.fact-card {
+  /* .fact-place-rivin koko; puhelinversio alempana media-lohkossa. */
+  --pieni-rivi: 0.8rem;
+}
+
+body[data-mode] .fact-card.pieni {
+  /* 0.4rem = body[data-mode]-kortin pysty pehmuste (0.2rem + 0.2rem). */
+  max-height: calc(1.5 * var(--pieni-rivi) + 0.4rem + 1px);
+  /*
+   * Leveys sisällön mukaan. Kutistunut lappu on kartan päällä ja nappaa
+   * napautukset alleen, joten se ei saa varata kaistaa, jossa ei ole
+   * mitään luettavaa — sama kaupunkinimi kelluu nyt vain oman
+   * mittansa verran karttaa.
+   */
+  width: max-content;
+  max-width: min(340px, 46%);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.fact-card.pieni .fact-place {
+  order: -1;
+  margin: 0;
+  line-height: 1.5;
+  /* Yksi rivi myös pitkällä nimellä: ennemmin kolme pistettä kuin
+   * kahdelle riville karkaava lappu. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*
+ * Muut osat häipyvät ennen kuin reuna ehtii leikata ne: kaiutinnappi ja
+ * pikkukuva ovat kortin omilla paikoillaan ylhäällä, ja pelkkä leikkaus
+ * jättäisi ne roikkumaan puoliksi rivin päälle. Häipymä on kortin omaa
+ * kutistumista nopeampi, joten ne ovat poissa ennen kuin lappu on
+ * valmis. Siirtymä on perusluokassa, jotta se pätee molempiin suuntiin.
+ */
+.fact-card > *:not(.fact-place) { transition: opacity 160ms ease; }
+
+.fact-card.pieni > *:not(.fact-place),
+.fact-card.pieni .fact-valokuva {
+  opacity: 0;
+  /* Napautus osuu kutistuneena aina lappuun itseensä, ei sen alle
+   * jääneisiin nappeihin. */
+  pointer-events: none;
+}
+
+.fact-card.pieni:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/*
  * Kartan päällä ei ole laatikoita: päiväkirja ja toiminnot kirjoitetaan
  * suoraan pergamentille kartan omalla musteella. Vaalea tekstivarjo pitää
  * kirjaimet luettavina myös ruudukkoviivojen ja rannikon päällä — sama
@@ -4541,6 +4679,8 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    * merkinnän saa auki napauttamalla, joten pieni ikkuna riittää. */
   .fact-card h2 { font-size: 0.68rem; margin-bottom: 0.2rem; }
   .fact-place { font-size: 0.7rem; margin-bottom: 0.15rem; }
+  /* Yhden rivin lapun korkeus seuraa samaa pienennystä. */
+  .fact-card { --pieni-rivi: 0.7rem; }
   .fact-text { font-size: 0.78rem; line-height: 1.35; }
 
   /*

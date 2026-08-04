@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 242, teksti: 'Ikkunan avaus ei enää korosta ensimmäistä nappia' },
   { v: 241, teksti: 'Jokien nimet pysyvät paikallaan vierittäessä' },
   { v: 241, teksti: 'Nimen koko seuraa zoomia' },
   { v: 241, teksti: 'Maastoon enemmän syvyyttä lähikuvassa' },
