@@ -125,66 +125,48 @@ button, .brand, .turn-pill, .fact-card h2 {
   border-bottom: 1px solid var(--line);
 }
 
+/*
+ * NIMILOGO ON KUVA (omistajan toimittama tiedosto, 5.8.2026).
+ *
+ * Ennen tässä oli ladottu teksti: MATKAKIRJA ja sen alla viiva ja
+ * UNOHDETTU AARRE, jonka kirjaimet tasattiin yksitellen flexillä, jotta
+ * rivit olisivat täsmälleen yhtä leveät. Se oli kiertotie sen ympäri,
+ * ettei tämän ympäristön selaimessa ole pelin kirjasimia eikä
+ * kirjainmittoihin voinut luottaa. Kuvassa mitat ovat kuvassa.
+ *
+ * Kuva on läpinäkyvä PNG (assets/logo.png). Alkuperäinen tiedosto oli
+ * kirkkaanvihreällä taustalla; vihreä on avainnettu pois ja reunojen
+ * sekoitus purettu, jotta kirjainten ympärille ei jää vihreää reunusta.
+ * Mitattu lopputuloksesta yläpalkin ruskealla: vihreysjäämä -11, eli
+ * yhtään vihertävää pikseliä ei jäänyt.
+ */
 .brand {
   margin: 0;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: var(--font-type);
-  font-size: clamp(1rem, 2.2vw, 1.3rem);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  white-space: nowrap;
-  /* Nimilogo on kaksirivinen mutta vain päänimen levyinen. */
-  display: inline-block;
-  line-height: 1.05;
-}
-
-/* Alanimi pienellä päänimen alla; yläreunan viiva on se "pitkä viiva",
-   joka erottaa rivit ja on aina täsmälleen logon levyinen. */
-/*
- * ALANIMI VENYTETÄÄN TÄSMÄLLEEN PÄÄNIMEN LEVYISEKSI.
- *
- * Ennen tässä oli kiinteä `letter-spacing: 0.34em`, ja sen leveys oli
- * mitä sattui olemaan — kirjainväli ei tiedä, kuinka leveä sanan
- * MATKAKIRJA on. Rivit jäivät eri mittaisiksi, ja koska niiden välissä
- * on viiva, ero näkyi heti (omistaja: "korjaa logon kirjainleveys
- * samaksi yllä ja alla").
- *
- * `text-align-last: justify` venyttää AINOAN rivin täyteen leveyteen,
- * eli täsmälleen päänimen mittaan. Se pitää paikkansa myös silloin, kun
- * kirjasin on eri: leveys tulee asettelusta eikä kirjainmitoista, ja
- * juuri se on tässä oikein — tämän ympäristön selaimessa ei ole pelin
- * kirjasimia, joten kirjainten mittaan ei täällä voi luottaa.
- *
- * `white-space: normal` on pakko: päänimeltä peritty `nowrap` estäisi
- * tasauksen kokonaan. Kirjainväli jää pieneksi pohjaksi, jotta rivi
- * mahtuu päänimen alle myös kapeimmalla kirjasimella eikä katkea
- * kahdelle riville.
- */
-.brand-alanimi {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.16em;
-  padding-top: 0.14em;
-  border-top: 1px solid var(--accent);
-  font-size: 0.46em;
-  /*
-   * Kirjainväli nollaan: väli syntyy nyt jaosta, ei tasaisesta lisäyksestä.
-   * Jäljelle jäävä letter-spacing lisäisi vielä oman tyhjänsä VIIMEISEN
-   * kirjaimen jälkeen, jolloin rivi olisi juuri sen verran liian leveä.
-   */
-  letter-spacing: 0;
-  opacity: 0.85;
+  display: block;
+  line-height: 0;
 }
 
 /*
- * Sanaväli hieman kirjainväliä leveämpi, jotta kaksi sanaa erottuu
- * toisistaan. Tyhjä elementti eikä välilyönti: välilyönti kutistuisi
- * flexissä nollaan, ja sanat sulautuisivat yhteen.
+ * KORKEUS, EI LEVEYS.
+ *
+ * Logo on ylärivin korkein osa, ja ylärivi on kartasta pois. Korkeus
+ * sidotaan siis suoraan, ja leveys seuraa kuvasuhdetta (4,09:1).
+ *
+ * Luvut ovat entisen tekstilogon mitat, jotta ylärivi ei muuta
+ * korkeuttaan: mitattu 36 px työpöydällä (1440), 32 px tabletilla (834)
+ * ja 22 px puhelimessa (390). Puhelimen arvo on omassa lohkossaan
+ * alempana.
+ *
+ * vw-yksikkö keskellä eikä pelkkä rem: sama syy kuin ennen, eli kapea
+ * ruutu ei saa saada työpöydän kokoista logoa.
  */
-.brand-vali { width: 0.5em; }
+.brand-kuva {
+  display: block;
+  height: clamp(1.73rem, 3.8vw, 2.25rem);
+  width: auto;
+  max-width: 100%;
+}
 
 /*
  * Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan toive):
@@ -4943,21 +4925,16 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    */
   .topbar { padding: 0.3rem 0.45rem; gap: 0.35rem; }
   /*
-   * Nimilogo puhelimessa: sama kaksirivinen logo (Matkakirja / viiva /
-   * unohdettu aarre) pienemmällä. Koko sidotaan ruudun leveyteen (vw)
-   * eikä pikseleihin, koska iPhonen "American Typewriter" on selvästi
-   * kehityskoneen varafonttia leveämpi (opittu v241:ssä). Päänimi on
-   * yksi sana, joten rivitystemppuja ei enää tarvita — alanimi on oma
-   * blokkinsa ja skaalautuu em-yksiköillä mukana.
+   * Nimilogo puhelimessa pienempänä. Koko sidotaan ruudun leveyteen
+   * (vw) eikä pelkkiin pikseleihin: kapeimmalla puhelimella ylärivillä
+   * on logon lisäksi kukkaro ja hampurilainen, ja ne on mitoitettu
+   * samaan riviin.
+   *
+   * 5,7vw on entisen tekstilogon mitta: 390 pikselin ruudulla se on
+   * 22 px, eli tarkalleen se korkeus, joka logolla oli ennen.
    */
-  .brand {
-    font-size: min(0.86rem, 3.3vw);
-    letter-spacing: 0.02em;
-    flex: 0 1 auto;
-    overflow: visible;
-    text-overflow: clip;
-    line-height: 1.05;
-  }
+  .brand { flex: 0 1 auto; }
+  .brand-kuva { height: min(1.47rem, 5.7vw); }
   .turn-pill { font-size: 0.78rem; padding: 0.2rem 0.5rem; gap: 0.3rem; }
   .topbar-actions { gap: 0.15rem; }
   /*
