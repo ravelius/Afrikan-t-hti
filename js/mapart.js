@@ -337,9 +337,31 @@ export function drawDefs(svg) {
   el('stop', { offset: '55%', 'stop-color': '#ecd8ae' }, paper);
   el('stop', { offset: '100%', 'stop-color': '#cfae79' }, paper);
 
+  /*
+   * MAAN VÄRI ON ERI KUIN PAPERIN — ja tässä oli koko "meri vuotaa maiden
+   * päälle" -vika.
+   *
+   * Meri on kartalla paljasta pergamenttia; se on tarkoitus. Maalla on oma
+   * liukuvärinsä. Mutta ne olivat käytännössä SAMA VÄRI. Mitattu 4.8.2026
+   * pelin omasta ruudusta:
+   *
+   *   Välimeri  200,177,135  vs  Saharan rannikko  201,178,135   ero 1
+   *   Atlantti  217,202,170  vs  Afrikan länsi     215,201,172   ero 2
+   *
+   * Yhden yksikön ero 255:stä ei ole raja. Rannikkoa erotti vain
+   * mustepiirto, ja siksi silmä luki koko vaalean kentän mereksi — maa
+   * mukaan lukien. Omistaja raportoi tästä kolmesti eri sanoin, ja joka
+   * kerta etsin vikaa siitä, mikä piirtyy maan päälle. Mitään ei piirtynyt
+   * maan päälle: maa vain näytti mereltä.
+   *
+   * Väri pysyy lämpimänä (omistajan linjaus v239: peruskorkeuden on oltava
+   * sama lämmin sävy kuin ennen korkeuserojen käyttöönottoa), mutta se on
+   * nyt selvästi paperia tummempi ja kylläisempi. Korkeusvyöhykkeet
+   * piirtyvät tämän päälle kuten ennenkin.
+   */
   const land = el('linearGradient', { id: 'land-grad', x1: '0', y1: '0', x2: '0.4', y2: '1' }, defs);
-  el('stop', { offset: '0%', 'stop-color': '#e7d2a4' }, land);
-  el('stop', { offset: '100%', 'stop-color': '#d2b47e' }, land);
+  el('stop', { offset: '0%', 'stop-color': '#e2c898' }, land);
+  el('stop', { offset: '100%', 'stop-color': '#cba86e' }, land);
 
 
   return defs;

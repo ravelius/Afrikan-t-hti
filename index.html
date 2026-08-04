@@ -94,18 +94,32 @@
           <div id="kertoja-valikko" class="kertoja-valikko" hidden></div>
         </div>
         <!--
-             Säännöt ja uusi peli ovat suoraan ylärivillä (omistajan
-             toive): hampurilainen piilotti kaksi nappia, joita tarvitaan
-             usein, kolmen napautuksen taakse. Harvoin tarvittavat
-             päivitys ja kehittäjätila löytyvät versionumerosta oikeasta
-             alalaidasta.
+             Hampurilainen takaisin (omistajan toive 4.8.2026). v237 nosti
+             säännöt ja uuden pelin suoraan yläriville, koska hampurilainen
+             piilotti ne kolmen napautuksen taakse. Ylärivi kävi kuitenkin
+             ahtaaksi: nimilogon ja neljän kuvakkeen välissä päiväpilleri
+             leikkautui kesken sanan puhelimella.
+
+             Päivitys ja kehittäjätila jäävät versionumeron taakse, minne
+             ne v237:ssä siirrettiin — ne eivät ole ylärivin tavaraa, ja
+             sama tunniste kahdessa paikassa rikkoisi getElementById:n.
         -->
-        <button id="rules-btn" class="ghost" type="button" title="Säännöt" aria-label="Säännöt">
-          <span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span>
-        </button>
-        <button id="newgame-btn" class="ghost" type="button" title="Uusi peli" aria-label="Uusi peli">
-          <span class="viiva-ikoni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span>
-        </button>
+        <div class="valikko-kotelo">
+          <button id="menu-btn" class="ghost" type="button" title="Valikko"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="paavalikko">
+            <span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg></span>
+          </button>
+          <div id="paavalikko" class="paavalikko" hidden>
+            <button id="rules-btn" class="ghost" type="button" title="Säännöt">
+              <span class="viiva-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span>
+              <span>Säännöt</span>
+            </button>
+            <button id="newgame-btn" class="ghost" type="button" title="Uusi peli">
+              <span class="viiva-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span>
+              <span>Uusi peli</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
