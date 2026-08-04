@@ -4792,14 +4792,14 @@ export const MAAILMANKARTTA = {
     ...EUROPE.texts,
     flightFirst: MAAILMA.texts.flightFirst,
     flightRegret: MAAILMA.texts.flightRegret,
-    // Maailmankartan pääaarretta ei ole nimetty (revitty sivu jättää sen
-    // arvoitukseksi) — perityt Euroopan rivit kuuluttaisivat täällä
-    // Meripihkahuoneen, vaikka aarre löytyisi vaikka Perusta.
-    intro: 'Peli alkaa! Etsi pääaarre ja kerää löytöjä ympäri maailmaa.',
-    starFound: (name, city) => `◈ ${name} löysi PÄÄAARTEEN kaupungista ${city}!`,
-    starToast: 'PÄÄAARRE LÖYTYI!',
-    winStar: 'toi pääaarteen turvallisesti kotiin',
-    winnerStar: (name, money) => `${name} toi pääaarteen kotiin ${money} punnan kanssa.`,
+    // Maailmankartan unohdettua aarretta ei ole nimetty (revitty sivu
+    // jättää sen arvoitukseksi) — perityt Euroopan rivit kuuluttaisivat
+    // täällä Meripihkahuoneen, vaikka aarre löytyisi vaikka Perusta.
+    intro: 'Peli alkaa! Etsi unohdettu aarre ja kerää löytöjä ympäri maailmaa.',
+    starFound: (name, city) => `◈ ${name} löysi UNOHDETUN AARTEEN kaupungista ${city}!`,
+    starToast: 'UNOHDETTU AARRE LÖYTYI!',
+    winStar: 'toi unohdetun aarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi unohdetun aarteen kotiin ${money} punnan kanssa.`,
   },
 
   decor: {

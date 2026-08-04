@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 229, teksti: 'Aarteet ovat nyt unohdettuja aarteita' },
+  { v: 229, teksti: 'Tarinaan Aarnin luettelo, pelin ajojahti' },
   { v: 228, teksti: 'Radion äänisäädin pois, kytkimille tilaa' },
   { v: 228, teksti: 'Viisi aitoa lyhytaaltoäänitystä viritykseen' },
   { v: 227, teksti: 'Radion asteikossa naapurikaupungit, klikattavina' },

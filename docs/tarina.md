@@ -33,12 +33,48 @@ rakenne, ei koriste:
 Vitsi syntyy näiden välistä. Joskus isoisä on oikeassa ja nuori herra
 yllättyy siitä — se on tärkeää, jottei vanha ääni ole pelkkä narri.
 
+## Aarni ja unohdetut aarteet
+
+*(Päätetty omistajan kanssa 4.8.2026. Tämä on pelin keskeinen ajojahti,
+ja nimistö on sitova kaikessa sisällössä — myös tulevassa.)*
+
+Peli on irrotettu Afrikan tähdestä kokonaan: aarre ei ole tähti missään
+tekstissä, symbolissa eikä nimessä. Tilalla on oma tarusto:
+
+**Tutkimusmatkailija Aarni** kirjasi 1800-luvun alussa luetteloonsa
+maailman kuuluisat kadonneet aarteet — Meripihkahuoneen, El Doradon,
+keisarin jadesinetin, Suuren Zimbabwen kivilinnut ja muut — yhden
+jokaisesta maanosasta. Hän kutsui niitä **unohdetuiksi aarteiksi**:
+aarteiksi, joista kerrotaan tarinoita mutta joita kukaan ei enää etsi.
+Aikalaiset pitivät **Aarnin luetteloa** satukirjana. Nimi ei ole
+sattumaa: kansanperinteessä *aarnivalkea* on liekki, joka palaa kätketyn
+aarteen päällä, ja *aarnihauta* on aarrekumpu.
+
+**Isoisä uskoi luetteloon.** Hän lähti 1873 matkalleen Aarnin luettelo
+taskussaan, ja hänen matkansa jäi aarteiden osalta kesken. Matkakirjan
+revitty viimeinen sivu ("…voinut uskoa, siellä olikin…") vihjaa, että
+yhden hän löysi — sivu ei koskaan kerro minkä, eikä sitä paljasteta.
+Nuori herra Fogg jatkaa siitä, mihin isoisä jäi.
+
+Sanasto (sitova, myös käännöksiin):
+
+| Suomeksi | Englanniksi | Käyttö |
+| --- | --- | --- |
+| unohdettu aarre | forgotten treasure | arkitermi säännöissä ja pelin ilmoituksissa (laattatyypin nimi) |
+| Aarnin luettelo | Aarni's Catalogue | tarinan erisnimi aarrekokoelmalle; kirjan koko nimi "Aarnin luettelo unohdetuista aarteista" / "Aarni's Catalogue of Forgotten Treasures" |
+| tutkimusmatkailija Aarni | the explorer Aarni | erisnimi säilyy käännöksessä sellaisenaan |
+
+Laudan omat aarrenimet (kivilintu, jadesinetti, Montezuman aarre…)
+säilyvät — ne ovat luettelon rivejä. Maailmankartan unohdettua aarretta
+ei nimetä: se on revityn sivun arvoitus. Sanaa "pääaarre" saa käyttää
+koodin sisäisissä kommenteissa, mutta ei pelaajalle näkyvissä teksteissä.
+
 ## Päiväkirjan taitettu sivu
 
 Isoisä ei löytänyt kaikkea, mitä lähti hakemaan. Sinne tänne päiväkirjaan
 on jäänyt merkintä paikasta, jonne hän ei ehtinyt: suunta, seutu, huhu —
 ei koskaan kaupungin nimeä. Nämä nousevat pelissä esiin harvakseltaan ja
-kaventavat aluetta, jolta laudan pääaarretta kannattaa etsiä.
+kaventavat aluetta, jolta laudan unohdettua aarretta kannattaa etsiä.
 
 ## Sävy: särmää, mutta piikki osoittaa aina oikeaan suuntaan
 

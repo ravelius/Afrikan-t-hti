@@ -815,7 +815,11 @@
         otsikko: 'Aarteet',
         maara: `${AARTEET.length} kpl`,
         rakenna: () => [
-          el('p', '', 'Yksi jokaisesta maanosasta. Nykyiset aarteet säilyvät tarinoineen.'),
+          el('p', '', 'Yksi jokaisesta maanosasta. Nykyiset aarteet säilyvät tarinoineen. '
+            + 'Nimistö (päätetty 4.8.2026): yleistermi on "unohdettu aarre" (engl. forgotten treasure), '
+            + 'ja tarinan erisnimi kokoelmalle on "Aarnin luettelo" (Aarni\'s Catalogue) — '
+            + 'tutkimusmatkailija Aarni luetteloi aarteet, isoisä etsi niitä ja hänen matkansa jäi kesken. '
+            + 'Tähti-sanastoa ei käytetä missään. Koko tarusto: docs/tarina.md.'),
           ...korttiLista(AARTEET.map((a) => ({ otsikko: a.aarre, meta: a.maanosa, teksti: PELITILAT[a.tila] ?? a.tila }))),
         ],
       },
