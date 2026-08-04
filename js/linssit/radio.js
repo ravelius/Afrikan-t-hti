@@ -1181,12 +1181,55 @@ function jaljiteltyLukija(virta) {
  * joten neula lepää — se on omistajan nimenomainen valinta, ja se on myös
  * rehellisempi: mittari näyttää aseman tason, ei laitteen omaa sirinää.
  */
+/*
+ * VARMISTUS: NEULA EI SAA JÄÄDÄ KUOLLEEKSI SOIVAN ASEMAN PÄÄLLE.
+ *
+ * Mitattu lukema voi jäädä nollaan syistä, joita tästä ympäristöstä ei
+ * näe: selain antaa reitityksen mutta ei ääntä (CORS-otsake kelpasi
+ * lataukseen mutta ei Web Audiolle), iOS mykistää reititetyn elementin,
+ * tai lähetys on hetken puskuroimassa. Silloin neula makaa levossa,
+ * vaikka kaiuttimesta kuuluu radio — ja se on omistajan raportti
+ * neljästä versiosta ("VU ei toimi ollenkaan").
+ *
+ * Vahti ei arvaa syytä eikä yritä korjata sitä. Se katsoo vain
+ * lopputulosta: jos MITATTU lukema on ollut nolla yhtäjaksoisesti
+ * puolitoista sekuntia, vaikka lähetys soi eikä ole vaimennettu, mittaus
+ * ei toimi tällä asemalla — ja lukija vaihdetaan jäljiteltyyn. Vaihto
+ * tehdään kerran virtaa kohti eikä sitä peruta: sahaaminen mitatun ja
+ * jäljitellyn välillä näkyisi neulassa nykimisenä.
+ *
+ * Asteikko ei vaihdu, vain lukeman lähde. Omistajan linjaus "ei vaihdeta
+ * herkkyyttä" pysyy siis voimassa.
+ */
+const MITTAUS_KUOLLUT_MS = 1500;
+
 function pysyvaLukija() {
   return () => {
     const virta = soiva;
     if (!virta) return 0;
+    if (virta.jaljitelmaan) return virta.jaljitelmaan();
     const lukija = virta.mittarinLukija;
-    return lukija ? lukija() : 0;
+    if (!lukija) return 0;
+    const arvo = lukija();
+    if (arvo > 0.02) {
+      virta.nollasta = 0;
+      return arvo;
+    }
+    // Vaimennettu tai pysäytetty lähetys EI ole vika: silloin nollan
+    // kuuluukin olla nolla, eikä kelloa saa käynnistää.
+    const audio = virta.audio;
+    const kuuluu = audio && !audio.paused && !audio.ended && Number(audio.volume) > 0.02;
+    if (!virta.lukittu || !kuuluu) {
+      virta.nollasta = 0;
+      return arvo;
+    }
+    if (!virta.nollasta) virta.nollasta = kello();
+    else if (kello() - virta.nollasta > MITTAUS_KUOLLUT_MS && virta.mittari) {
+      console.warn('VU-mittarin mittaus jäi nollaan; siirrytään jäljiteltyyn lukemaan.');
+      virta.jaljitelmaan = jaljiteltyLukija(virta);
+      return virta.jaljitelmaan();
+    }
+    return arvo;
   };
 }
 
@@ -1391,6 +1434,10 @@ function aloitaVirta(cityId, kanava) {
     mittari: null,
     // Neulan lukija, luodaan kerran lukittuessa (ks. pysyvaLukija).
     mittarinLukija: null,
+    // Vahdin tila: milloin mitattu lukema meni nollaan, ja korvaava
+    // jäljitelty lukija jos mittaus todettiin kuolleeksi.
+    nollasta: 0,
+    jaljitelmaan: null,
     // Onko tämä jo varareitin yritys eli elementti ilman crossOriginia.
     varalla: false,
     haivytys: 0,

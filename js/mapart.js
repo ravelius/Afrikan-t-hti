@@ -565,7 +565,27 @@ export function drawMaasto(svg, map, varjostus = null) {
    * täytön reunaan tarkalleen.
    */
   /*
-   * JOET JA ISOT JÄRVET EIVÄT OLE ENÄÄ POHJAKARTALLA.
+   * ISOT JÄRVET PIIRRETÄÄN, JOET EIVÄT.
+   *
+   * Omistajan tarkennus: "Isot järvet saisi näkyä kartalla, vain joet
+   * pois." Järvi on paikka kuten vuoristokin — se on kartalla siellä
+   * missä se on eikä liiku silmissä. Joki on viiva, joka kulkee koko
+   * mantereen halki ja risteää kaiken kanssa; juuri se teki kartasta
+   * sekavan.
+   *
+   * Täyttö on paperia eikä väriä (.iso-jarvi), joten järvi erottuu
+   * ääriviivastaan eikä sävystään — sama sääntö kuin merellä.
+   */
+  for (const jarvi of maasto.jarvet ?? []) {
+    const rengas = jarvi.rengas ?? jarvi;
+    if (!rengas || rengas.length < 4) continue;
+    const d = smoothClosedPath(kasinPiirretty(rengas));
+    el('path', { d, class: 'iso-jarvi' }, g);
+    el('path', { d, class: 'iso-jarvi-reuna' }, g);
+  }
+
+  /*
+   * JOET EIVÄT OLE ENÄÄ POHJAKARTALLA.
    *
    * Omistajan päätös 4.8.2026: "Ota joet pois kokonaan. Täytyy tehdä
    * niistä vaikka oma linssi, missä näkyisi vain pelkät joet ja järvet.
@@ -962,16 +982,14 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
   };
 
   /*
-   * VESISTÖJEN NIMET EIVÄT OLE POHJAKARTALLA.
+   * JOKIEN NIMET POIS, JÄRVIEN NIMET TAKAISIN.
    *
-   * Joet ja järvet siirtyivät omaan linssiinsä (ks. drawMaasto), ja nimi
-   * ilman uomaa olisi pahempi kuin ei nimeä lainkaan: kaunokirjoitettu
-   * "Tonava" tyhjän maan päällä ei kerro mitään. Nimet piirretään samassa
-   * kerroksessa kuin niiden kohteet.
-   *
-   * Vuoristot jäävät: ne ovat pohjakartan omaa maastoa, ja niiden
-   * korkeusvyöhykkeet piirtyvät yhä (drawMaasto).
+   * Nimi piirretään sinne missä sen kohde on. Joet lähtivät kartalta
+   * (drawMaasto), joten niiden nimet lähtivät mukana: kaunokirjoitettu
+   * "Tonava" tyhjän maan päällä ei kerro mitään. Isot järvet piirretään
+   * yhä, joten niiden nimet kuuluvat tänne — samoin vuoristot.
    */
+  for (const jarvi of nimet.jarvet ?? []) lisaa(jarvi, 'jarvi', jarvi.x, jarvi.y, jarvi.pituus);
   // Vuoristolla ei ole mittaa: se on nimipaketissa piste ja kulma, ei
   // muoto. Nimi kirjoitetaan sen yli, joten se mahtuu aina.
   for (const vuori of nimet.vuoret ?? []) lisaa(vuori, 'vuori', vuori.x, vuori.y, null);
