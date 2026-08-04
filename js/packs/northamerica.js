@@ -325,7 +325,7 @@ export const NORTHAMERICA = {
 
   texts: {
     intro: 'Peli alkaa! Etsikää Montezuman aarre ja palatkaa New Yorkiin, San Franciscoon tai Los Angelesiin.',
-    starFound: (name, city) => `★ ${name} löysi MONTEZUMAN AARTEEN kaupungista ${city}!`,
+    starFound: (name, city) => `◈ ${name} löysi MONTEZUMAN AARTEEN kaupungista ${city}!`,
     starToast: 'MONTEZUMAN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Montezuman aarteen turvallisesti kotiin',

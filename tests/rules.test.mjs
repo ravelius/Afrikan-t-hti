@@ -2849,9 +2849,15 @@ test('jokaiselle lentokohteelle löytyy repliikki', () => {
 });
 
 test('lentorepliikin arvonta on siemenellä deterministinen', () => {
-  const uusi = (seed) => new Game({
-    players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed,
-  });
+  // Tähtiaarre merkitään löytyneeksi, jotta kaipuurivit eivät sotke
+  // pakkakohtaista tarkistusta — niillä on oma testinsä alla.
+  const uusi = (seed) => {
+    const game = new Game({
+      players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed,
+    });
+    game.starFound = true;
+    return game;
+  };
   const a = uusi(77).flightLine('kairo');
   const b = uusi(77).flightLine('kairo');
   assert.equal(a, b, 'sama siemen antoi eri repliikin');
@@ -2867,8 +2873,35 @@ test('tuntematon kohde saa yleisrivin', () => {
   const game = new Game({
     players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed: 3,
   });
+  game.starFound = true;
   const rivi = game.flightLine('ei-tallaista-kaupunkia');
   assert.ok(packById('maailma').texts.flightDefault.includes(rivi));
+});
+
+test('lento muistuttaa pääaarteesta vain kun se on löytämättä', () => {
+  const kaipuu = packById('maailma').texts.flightRegret;
+  assert.ok(Array.isArray(kaipuu) && kaipuu.length >= 3, 'kaipuurivejä pitää olla useita');
+  for (const rivi of kaipuu) {
+    assert.ok(/pääaar/i.test(rivi), `rivi ei puhu pääaarteesta: "${rivi}"`);
+    // Peli irrotetaan Afrikan tähdestä: aarre ei ole tähti missään rivissä.
+    assert.ok(!/tähti|tähde/i.test(rivi), `rivi puhuu tähdestä: "${rivi}"`);
+  }
+  const uusi = (seed) => new Game({
+    players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed,
+  });
+  // Kun aarre on löytämättä, osa lennoista muistuttaa siitä...
+  let osumia = 0;
+  for (let seed = 1; seed <= 40; seed++) {
+    if (kaipuu.includes(uusi(seed).flightLine('kairo'))) osumia++;
+  }
+  assert.ok(osumia >= 5, `kaipuurivi ei nouse arvonnassa (${osumia}/40)`);
+  assert.ok(osumia <= 25, `kaipuurivi jyrää muut repliikit (${osumia}/40)`);
+  // ...mutta löydön jälkeen ei enää koskaan.
+  for (let seed = 1; seed <= 40; seed++) {
+    const game = uusi(seed);
+    game.starFound = true;
+    assert.ok(!kaipuu.includes(game.flightLine('kairo')), 'kaipuurivi soi vaikka aarre löytyi');
+  }
 });
 
 test('lauta ilman lentorepliikkejä ei kaadu', () => {

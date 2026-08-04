@@ -138,7 +138,7 @@ export const ISTANBUL = {
   minCityDistance: 55,
 
   tokens: {
-    // Tähtiaarre on Topkapın kuuluisan timantin henkinen sukulainen.
+    // Pääaarre on Topkapın kuuluisan timantin henkinen sukulainen.
     types: themedTokenTypes({
       star: { name: 'Sulttaanin timantti' },
       topaz: { name: 'Turkoosi', color: '#3aaea6' },
@@ -191,7 +191,7 @@ export const ISTANBUL = {
 
   texts: {
     intro: 'Peli alkaa! Etsikää Sulttaanin timantti ja palatkaa lentoasemalle.',
-    starFound: (name, city) => `★ ${name} löysi SULTTAANIN TIMANTIN: ${city}!`,
+    starFound: (name, city) => `◈ ${name} löysi SULTTAANIN TIMANTIN: ${city}!`,
     starToast: 'SULTTAANIN TIMANTTI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Sulttaanin timantin turvallisesti kotiin',

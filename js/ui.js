@@ -864,7 +864,7 @@ const EVENT_SOUND = { fare: 'ferry', flight: 'flight', aid: 'coin', stuck: 'stuc
 const TRAVEL_LABEL = { land: 'Maitse', sea: 'Laivalla', fly: 'Lentäen', stay: 'Paikallaan' };
 
 const REVEAL_SUB = {
-  star: 'Vie tähti kotiin ja voitat pelin!',
+  star: 'Vie pääaarre kotiin ja voitat pelin!',
   horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
   robber: 'Rosvo haastaa kaksintaisteluun!',
   empty: 'Isoisän merkintä oli vanhentunut — täältä ei löytynyt mitään',
@@ -3826,7 +3826,7 @@ export class UI {
     el('path', { d: 'M-5,-3 a6,6 0 0 1 8,-3', class: 'pawn-gloss', fill: 'none',
       stroke: 'rgba(255,255,255,0.6)', 'stroke-width': 2.2, 'stroke-linecap': 'round' }, g);
     if (player.hasStar) {
-      el('text', { x: 0, y: -18, class: 'pawn-star', 'text-anchor': 'middle' }, g).textContent = '★';
+      el('text', { x: 0, y: -18, class: 'pawn-star', 'text-anchor': 'middle' }, g).textContent = '◈';
     }
     return g;
   }
@@ -4546,7 +4546,7 @@ export class UI {
       if (this.factKey === key) return;
       this.uusiFactKey(key);
       this.factCard.classList.add('vihjekortti');
-      this.factVoiceEl.textContent = '★ Isoisän vihje aarteesta';
+      this.factVoiceEl.textContent = '◈ Isoisän vihje aarteesta';
       this.factPlace.textContent = 'Päiväkirjasta revitty sivu';
       this.factImage.hidden = true;
       this.naytaFactValokuva(null);
@@ -7529,7 +7529,7 @@ export class UI {
     document.getElementById('winner-title').textContent = `${w.name} voitti!`;
     this.typeText(document.getElementById('winner-text'), w.hasStar
       ? this.game.pack.texts.winnerStar(w.name, w.money)
-      : `${w.name} ehti hevosenkengän kanssa kotiin ennen tähden löytäjää.`, 'winner');
+      : `${w.name} ehti hevosenkengän kanssa kotiin ennen pääaarteen löytäjää.`, 'winner');
     const roamBtn = document.getElementById('winner-roam');
     roamBtn.onclick = () => {
       this.winnerDialog.close();

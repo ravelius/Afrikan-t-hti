@@ -27,6 +27,7 @@
 // näkyy myös täällä eikä sisältö pääse eriytymään.
 
 import { EUROPE } from './europe.js';
+import { MAAILMA } from './maailma.js';
 import { AFRICA } from './africa.js';
 import { MIDDLE_EAST } from './middleeast.js';
 import { ASIA } from './asia.js';
@@ -4785,7 +4786,21 @@ export const MAAILMANKARTTA = {
   placeFacts: yhdistaTiedot('placeFacts'),
   duels: yksilolliset(LAHTEET.flatMap((p) => p.duels ?? [])),
   puzzles: yksilolliset(LAHTEET.flatMap((p) => p.puzzles ?? [])),
-  texts: EUROPE.texts,
+  // Euroopan tekstit + oma avausrepliikki: ilman sitä ensimmäinen lento
+  // arpoisi tavallisen rivin, vaikka lukuääni lukee lukittua avausriviä.
+  texts: {
+    ...EUROPE.texts,
+    flightFirst: MAAILMA.texts.flightFirst,
+    flightRegret: MAAILMA.texts.flightRegret,
+    // Maailmankartan pääaarretta ei ole nimetty (revitty sivu jättää sen
+    // arvoitukseksi) — perityt Euroopan rivit kuuluttaisivat täällä
+    // Meripihkahuoneen, vaikka aarre löytyisi vaikka Perusta.
+    intro: 'Peli alkaa! Etsi pääaarre ja kerää löytöjä ympäri maailmaa.',
+    starFound: (name, city) => `◈ ${name} löysi PÄÄAARTEEN kaupungista ${city}!`,
+    starToast: 'PÄÄAARRE LÖYTYI!',
+    winStar: 'toi pääaarteen turvallisesti kotiin',
+    winnerStar: (name, money) => `${name} toi pääaarteen kotiin ${money} punnan kanssa.`,
+  },
 
   decor: {
     mapLabel: 'MAAILMA',
