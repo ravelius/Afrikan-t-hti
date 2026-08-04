@@ -517,8 +517,13 @@ export const NIMEN_ZOOMIRAJA = { 1: 4200, 2: 1800, 3: 800 };
  * isommalla." Nimet ovat kartan pienintä tekstiä ja niitä luetaan
  * puhelimen ruudulta kartan kuvion päältä, joten koko on luettavuutta
  * eikä tyyliä.
+ *
+ * Nostettu vielä 19:stä 23:een: mitattuna maastonimi ja kaupungin nimi
+ * olivat lähikuvassa yhtä korkeat (21,0 ja 21,4 px), mutta maastonimi
+ * on kursiivi ja vaaleampi, joten se luetaan pienemmäksi kuin se on.
+ * Omistaja: "jotkin nimet taas aivan liian pieniä."
  */
-const NIMEN_FONTTI_PX = 19;
+const NIMEN_FONTTI_PX = 23;
 const I_IKONIN_SADE_PX = 7.5;
 
 /*
@@ -992,7 +997,16 @@ const LAHIVESI_TAYSI = 900;
  * Nyt levein uoma on kaupungin ympyrää kapeampi, ja se on oikea
  * suhde — joki on maiseman piirre, ei pelin kohde.
  */
-const UOMAN_LEVEYS = { 1: 6, 2: 3.6, 3: 2.2 };
+/*
+ * Uoman leveys tärkeysluokittain, laudan yksiköitä.
+ *
+ * Kavennettu kolmanneksella (6 / 3,6 / 2,2 -> 4 / 2,4 / 1,5) omistajan
+ * havainnon jälkeen: "Joet ovat liian leveitä." Sama huomautus tuli jo
+ * kerran aiemmin, ja silloin kavennettiin liian varovasti. Joki on
+ * kartalla viiva eikä nauha: leveä uoma vie huomion mantereelta ja saa
+ * pienen joen näyttämään suurelta.
+ */
+const UOMAN_LEVEYS = { 1: 4, 2: 2.4, 3: 1.5 };
 
 const rajaa = (arvo, ala, yla) => Math.min(yla, Math.max(ala, arvo));
 

@@ -1256,6 +1256,8 @@ export class UI {
     this.arrivalKulttuuriLista = document.getElementById('arrival-kulttuuri-lista');
     this.arrivalLiuskat = document.getElementById('arrival-liuskat');
     this.arrivalKategoria = document.getElementById('arrival-kategoria');
+    // Kaupunki- ja maapalstat: näkyvät vain lehden etusivulla.
+    this.arrivalPalstat = document.querySelector('#arrival-dialog .arrival-palstat');
     this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
     // Visa aukeaa omasta napistaan samaan näkymään (omistajan toive):
     // nappi väistyy ja kysymys vaihtoehtoineen tulee tilalle.
@@ -5306,7 +5308,7 @@ export class UI {
     // Kaupungin elämää: taide-, ruoka- ja musiikkinostot ja niihin
     // liittyvä tutustu ja vastaa -kysymys (pilottikaupungit).
     this.naytaKulttuuri(city);
-    this.rakennaLiuskat(city.id);
+    this.rakennaSivut(city.id);
     this.esilataaKaupunki(city);
 
     // Muistiinpanoarkki: lähes koko ruutu, kartta jää sumeana laidoille.
@@ -5315,7 +5317,9 @@ export class UI {
     const arkki = this.arrivalDialog.querySelector('.dialog-card');
     if (arkki) {
       this.piirraArkinReuna(arkki);
-      // Kortin korkeus muuttuu, kun liuskaa vaihdetaan tai kuva latautuu.
+      // Sivujen selaus pyyhkäisyllä ja nuolinäppäimillä.
+      this.kytkeTutkiSelaus(arkki);
+      // Kortin korkeus muuttuu, kun sivu vaihtuu tai kuva latautuu.
       if (!this.arkinTarkkailija) {
         this.arkinTarkkailija = new ResizeObserver(() => this.piirraArkinReuna(arkki));
         this.arkinTarkkailija.observe(arkki);
@@ -5681,6 +5685,9 @@ export class UI {
     const tiedot = (KULTTUURIT[this.game.pack.id] ?? {})[city.id] ?? null;
     this.arrivalKulttuuri.hidden = !tiedot;
     this.arrivalKulttuuri.open = false;
+    // Lehden etusivu näyttää visan; naytaTutkiSivu tarvitsee tiedon
+    // siitä, onko sitä ylipäätään olemassa.
+    this.kulttuuriSaatavilla = Boolean(tiedot);
     if (!tiedot) return;
     /*
      * Nostot EIVÄT ole enää saapumiskortissa vaan Tutki-ikkunassa
@@ -5783,6 +5790,12 @@ export class UI {
   varustaNostonKuva(kuva, nosto, leveys) {
     kuva.decoding = 'async';
     kuva.alt = nosto.selite ?? nosto.otsikko;
+    /*
+     * Selaimen oma kuvanraahaus keskeyttää osoitintapahtumat
+     * (pointercancel), ja sivunvaihtopyyhkäisy kuoli heti kun se alkoi
+     * kuvan päältä — juuri siitä mistä se useimmiten alkaa.
+     */
+    kuva.draggable = false;
     const osoitteet = [...new Set([
       valokuvaUrl(nosto.tiedosto, leveys), valokuvaVara(nosto.tiedosto, leveys),
     ])].filter(Boolean);
@@ -6203,11 +6216,27 @@ export class UI {
     kortti.style.clipPath = `path('${d}')`;
   }
 
-  rakennaLiuskat(cityId) {
+  /**
+   * Tutki-ikkunan sivut: taitettu lehti (omistajan toive).
+   *
+   * "Ensimmäisellä sivulla olisi Lontoo, Iso-Britannia ja sen alla
+   * historia — poistetaan nuo keskellä olevat valintanapit kokonaan.
+   * Pelaaja voi yksinkertaisesti pyyhkäistä sivuja eteenpäin, jolloin
+   * seuraavalle sivulle avautuisi aina yksi aihealue kerrallaan ja sen
+   * alueen otsikko lukisi ylhäällä."
+   *
+   * Sivu 0 on etusivu: kaupunki, maa ja ensimmäinen aihe. Sivut 1…n
+   * ovat yksi aihe kukin. Sivumäärä tulee aineistosta, ei koodista.
+   *
+   * Entinen kuvakeliuskarivi (rakennaLiuskat) on poistettu. Elementti
+   * jää DOM:iin piiloon, jottei index.html ja muut siihen viittaavat
+   * kohdat mene rikki.
+   */
+  rakennaSivut(cityId) {
     const kategoriat = cityId ? (KULTTUURI_KATEGORIAT[cityId] ?? []) : [];
     /*
      * Kaupungit, joilla ei ole kategorioita mutta on litteä nostolista,
-     * saavat yhden liuskan nimeltä "Kaupungin elämää".
+     * saavat yhden sivun nimeltä "Elämää".
      *
      * Ilman tätä nostot katoaisivat kokonaan 79 kaupungista, kun ne
      * siirrettiin pois saapumiskortista. Sama sääntö kuin artikkelin
@@ -6219,45 +6248,139 @@ export class UI {
       kategoriat.push({ id: 'elama', nimi: 'Elämää', nostot: litteat, litteä: true });
     }
     this.arrivalLiuskat.replaceChildren();
-    this.arrivalKategoria.replaceChildren();
-    this.arrivalKategoria.hidden = true;
-    if (!kategoriat.length) {
-      this.arrivalLiuskat.hidden = true;
-      return;
+    this.arrivalLiuskat.hidden = true;
+    this.tutkiSivut = kategoriat;
+    this.naytaTutkiSivu(0, { heti: true });
+  }
+
+  /** Sivumäärä: etusivu on aina olemassa, aiheita voi olla nolla. */
+  tutkiSivuja() {
+    return Math.max(1, this.tutkiSivut?.length ?? 0);
+  }
+
+  /**
+   * Näyttää yhden sivun. Etusivulla (0) kaupunki- ja maapalstat sekä
+   * kulttuurivisa ovat näkyvissä; aihesivuilla vain aihe, jotta luettava
+   * alkaa heti otsikosta.
+   */
+  naytaTutkiSivu(indeksi, { heti = false, suunta = 0 } = {}) {
+    const sivuja = this.tutkiSivuja();
+    const i = Math.min(Math.max(indeksi, 0), sivuja - 1);
+    this.tutkiSivu = i;
+    const etusivu = i === 0;
+    if (this.arrivalPalstat) this.arrivalPalstat.hidden = !etusivu;
+    // Visa on pelitoiminto ja kuuluu saapumiseen, ei luettaviin sivuihin.
+    this.arrivalKulttuuri.hidden = !etusivu || !this.kulttuuriSaatavilla;
+
+    const kategoria = this.tutkiSivut?.[i] ?? null;
+    this.piirraKategoria(kategoria);
+    this.arrivalKategoria.hidden = !kategoria;
+
+    // Liike kertoo suunnan; ilman sitä sivu vain vaihtuu paikallaan.
+    this.arrivalKategoria.classList.remove('sivu-vasemmalta', 'sivu-oikealta');
+    if (!heti && suunta) {
+      // Uudelleenkäynnistys vaatii välissä asettelun lukemisen.
+      void this.arrivalKategoria.offsetWidth;
+      this.arrivalKategoria.classList.add(suunta > 0 ? 'sivu-oikealta' : 'sivu-vasemmalta');
     }
-    // Ei Yleistä-liuskaa: artikkeli asuu "Lue lisää" -linkin takana
-    // omassa ikkunassaan, ei tällä rivillä.
-    const valitse = (id) => {
-      for (const nappi of this.arrivalLiuskat.querySelectorAll('button')) {
-        const paalla = nappi.dataset.osio === id;
-        nappi.classList.toggle('paalla', paalla);
-        nappi.setAttribute('aria-selected', String(paalla));
-      }
-      const auki = kategoriat.find((k) => k.id === id);
-      this.piirraKategoria(auki);
-      this.arrivalKategoria.hidden = false;
-    };
-    for (const osio of kategoriat) {
-      const nappi = html('button');
-      nappi.type = 'button';
-      nappi.dataset.osio = osio.id;
-      nappi.setAttribute('role', 'tab');
-      // Nimi jää saavutettavuuteen ja pitkään painallukseen, vaikka
-      // ruudulla näkyy vain kuvake.
-      nappi.title = osio.nimi;
-      nappi.setAttribute('aria-label', osio.nimi);
-      // Kuvake voi tulla datasta (osio.ikoni), jolloin uusi kaupunki ei
-      // vaadi koodimuutosta; oletuskartta kattaa vakioaiheet ja
-      // yleiskuvake loput.
-      const piirto = osio.ikoni ?? AIHE_IKONIT[osio.id] ?? AIHE_IKONIT.muu;
-      nappi.innerHTML = `<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
-             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-             stroke-linejoin="round">${piirto}</svg>`;
-      nappi.addEventListener('click', () => valitse(osio.id));
-      this.arrivalLiuskat.appendChild(nappi);
+
+    this.paivitaTutkiNavi();
+    // Uusi sivu alkaa alusta, ei edellisen sivun vierityskohdasta.
+    const kortti = this.arrivalDialog.querySelector('.dialog-card');
+    if (kortti) kortti.scrollTop = 0;
+  }
+
+  /** Sivun vaihto suuntaan (+1 seuraava, -1 edellinen). */
+  vaihdaTutkiSivu(suunta) {
+    const sivuja = this.tutkiSivuja();
+    const uusi = (this.tutkiSivu ?? 0) + suunta;
+    if (uusi < 0 || uusi >= sivuja) return false;
+    sfx.play('paper');
+    this.naytaTutkiSivu(uusi, { suunta });
+    return true;
+  }
+
+  /**
+   * Sivunuolet ja sivunumero. Ne ovat dialogin lapsia eivätkä kortin:
+   * kortti vierii, ja sen sisällä ne katoaisivat heti kun tekstiä lukee
+   * — sama syy kuin arkin reunakerroksilla.
+   */
+  paivitaTutkiNavi() {
+    const sivuja = this.tutkiSivuja();
+    let navi = this.arrivalDialog.querySelector(':scope > .tutki-navi');
+    if (!navi) {
+      navi = html('div', 'tutki-navi');
+      const nuoli = (luokka, nimi, d) => {
+        const nappi = html('button', `tutki-nuoli ${luokka}`);
+        nappi.type = 'button';
+        nappi.title = nimi;
+        nappi.setAttribute('aria-label', nimi);
+        nappi.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none"
+             stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+             stroke-linejoin="round"><path d="${d}"/></svg>`;
+        nappi.addEventListener('click', () => this.vaihdaTutkiSivu(luokka === 'seuraava' ? 1 : -1));
+        navi.appendChild(nappi);
+        return nappi;
+      };
+      nuoli('edellinen', 'Edellinen sivu', 'M15 5 8 12l7 7');
+      nuoli('seuraava', 'Seuraava sivu', 'M9 5l7 7-7 7');
+      navi.appendChild(html('p', 'tutki-sivunumero'));
+      this.arrivalDialog.appendChild(navi);
     }
-    this.arrivalLiuskat.hidden = false;
-    valitse(kategoriat[0].id);
+    const edellinen = navi.querySelector('.edellinen');
+    const seuraava = navi.querySelector('.seuraava');
+    const numero = navi.querySelector('.tutki-sivunumero');
+    // Yhden sivun kaupungissa ei ole mitään selattavaa: koko navi pois.
+    navi.hidden = sivuja < 2;
+    edellinen.hidden = this.tutkiSivu <= 0;
+    seuraava.hidden = this.tutkiSivu >= sivuja - 1;
+    numero.textContent = `${(this.tutkiSivu ?? 0) + 1} / ${sivuja}`;
+  }
+
+  /**
+   * Sivunvaihto pyyhkäisystä ja nuolinäppäimistä.
+   *
+   * Pyyhkäisy ei saa syödä pystyvieritystä: sivu on pitkä ja sitä
+   * luetaan pystyyn. Siksi pystysuunta voittaa heti kun se on
+   * vaakasuuntaa suurempi, ja vaakasuunnalta vaaditaan sekä 60
+   * pikselin matka että kaksinkertainen ylivoima pystysuuntaan.
+   *
+   * Kuuntelijat ovat kortissa, eivät ikkunassa: kartalla on oma
+   * raahauslogiikkansa, eikä Tutki-ikkunan ele saa vuotaa sinne.
+   */
+  kytkeTutkiSelaus(kortti) {
+    if (this.tutkiSelausKytketty) return;
+    this.tutkiSelausKytketty = true;
+    let alku = null;
+    kortti.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) { alku = null; return; }
+      alku = { x: e.clientX, y: e.clientY, pysty: false };
+    });
+    kortti.addEventListener('pointermove', (e) => {
+      if (!alku || alku.pysty) return;
+      if (Math.abs(e.clientY - alku.y) > Math.abs(e.clientX - alku.x)) alku.pysty = true;
+    });
+    kortti.addEventListener('pointercancel', () => { alku = null; });
+    kortti.addEventListener('pointerup', (e) => {
+      const a = alku;
+      alku = null;
+      if (!a || a.pysty) return;
+      const dx = e.clientX - a.x;
+      const dy = e.clientY - a.y;
+      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 2) return;
+      if (!this.vaihdaTutkiSivu(dx < 0 ? 1 : -1)) return;
+      // Pyyhkäisyn päättävä napsautus ei saa painaa nappia eikä avata
+      // kuvaa sillä sivulla, jolle juuri siirryttiin.
+      kortti.addEventListener('click', (napsautus) => {
+        napsautus.preventDefault();
+        napsautus.stopPropagation();
+      }, { capture: true, once: true });
+    });
+    this.arrivalDialog.addEventListener('keydown', (e) => {
+      if (!this.arrivalDialog.open || this.tutkiSivuja() < 2) return;
+      if (e.key === 'ArrowRight') { if (this.vaihdaTutkiSivu(1)) e.preventDefault(); }
+      else if (e.key === 'ArrowLeft') { if (this.vaihdaTutkiSivu(-1)) e.preventDefault(); }
+    });
   }
 
 
