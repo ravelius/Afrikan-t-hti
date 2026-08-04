@@ -656,8 +656,11 @@ import {
   tyylitSisaan,
   drawMaasto,
   drawMaastonimet,
+  drawLahivesi,
+  lahivedenVoima,
 } from './mapart.js';
 import { MAAILMANKARTAN_NIMET } from './packs/maailmankartta-nimet.js';
+import { MERISYVYYS } from './packs/maailmankartta-syvyys.js';
 
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
@@ -2222,6 +2225,7 @@ export class UI {
      * silloin nullin eikä this.taide ole olemassa).
      */
     if (!this.kartanRaahaus && !document.body.classList.contains('flight-active')) {
+      this.paivitaLahivesi();
       this.paivitaMaastonimet();
     }
     if (!this.taide || !this.taideRyhma) return;
@@ -2339,6 +2343,32 @@ export class UI {
    * paneelin auetessa). Turha piirto maksaisi muutaman sadan elementin
    * poiston ja luonnin joka kerta.
    */
+  /**
+   * Lähikuvan vesi: uomat, järvien syvyys ja meren pohja.
+   *
+   * Sama tunnistetemppu kuin maastonimillä: pieni liike ei muuta
+   * mitään, koska kerros herää ja sammuu kokonaisina askelina.
+   * Tunnisteessa on mukana voimakkuus eikä pelkkä mittakaava, jotta
+   * häivytyksen välivaiheet piirtyvät mutta paikallaan seisominen ei
+   * piirrä mitään uudelleen.
+   */
+  paivitaLahivesi() {
+    if (!this.lahivesiKerros) return;
+    const nakyva = this.nakyvaAlue();
+    if (!nakyva) return;
+    const voima = lahivedenVoima(nakyva.w);
+    const tunniste = voima
+      ? [Math.round(voima * 20), ...[nakyva.x, nakyva.y, nakyva.w].map((n) => Math.round(n / 40))].join(':')
+      : 'pois';
+    if (this.lahivesiTunniste === tunniste) return;
+    this.lahivesiTunniste = tunniste;
+    drawLahivesi(this.lahivesiKerros, this.game.pack.map, {
+      nakyva,
+      nimet: this.maastonimet,
+      syvyys: this.merisyvyys,
+    });
+  }
+
   paivitaMaastonimet() {
     if (!this.maastonimiKerros) return;
     if (!this.maastonimet) return;
@@ -3373,6 +3403,17 @@ export class UI {
      * Muilla laudoilla kerros jää tyhjäksi eikä maksa mitään.
      */
     this.maastonimet = pack.id === 'maailmankartta' ? MAAILMANKARTAN_NIMET : null;
+    /*
+     * Lähikuvan vesi maastonimien ALLE.
+     *
+     * Nimi on luettava veden päältä. Jos kerrokset olisivat toisin
+     * päin, uoman vaalea valojuova kulkisi juuri joen nimen yli — ja
+     * juuri siinä kohtaa, missä nimi on, koska nimi piirretään uoman
+     * mukaan.
+     */
+    this.merisyvyys = pack.id === 'maailmankartta' ? MERISYVYYS : null;
+    this.lahivesiKerros = el('g', { class: 'lahivesi-kerros' }, root);
+    this.lahivesiTunniste = null;
     this.maastonimiKerros = el('g', { class: 'maastonimet' }, root);
     // Uusi lauta, tyhjä kerros: muistettu näkymätunniste ei saa jäädä
     // voimaan, tai nimet jäisivät piirtymättä kun sama näkymä palaa.

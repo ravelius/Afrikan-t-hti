@@ -72,11 +72,15 @@ export const NAYTON_MITAT = Object.freeze({
  * näköisen kuin se oli. Nimet eivät ole kiinni pelin kaupungeissa
  * eivätkä ne osoita nykyistä asemaa — asteikko on koristeltu tausta,
  * jonka päällä viisari liikkuu.
+ *
+ * Nimiä on yhdeksän eikä viittätoista, koska asteikko on kotelossa 372
+ * pikseliä leveä: seitsemän pisteen kirjasimella siihen mahtuu noin 70
+ * merkkiä, ja ylimääräiset nimet leikkautuisivat reunasta puoliksi.
+ * Kapealla ruudulla joka toinen jää pois (css/radio.css).
  */
 const ASTEIKON_KAUPUNGIT = [
-  'LAHTI', 'MOTALA', 'KALUNDBORG', 'HILVERSUM', 'DROITWICH', 'LUXEMBOURG',
-  'PARIS', 'TOULOUSE', 'BEROMÜNSTER', 'WIEN', 'ROMA', 'BUDAPEST',
-  'WARSZAWA', 'MOSKVA', 'ANKARA',
+  'LAHTI', 'MOTALA', 'HILVERSUM', 'DROITWICH', 'LUXEMBOURG',
+  'BEROMÜNSTER', 'WIEN', 'BUDAPEST', 'MOSKVA',
 ];
 
 /** Näytön oletusrivit tiloittain. Ylärivi kertoo tilan, alarivi tarkennuksen. */
@@ -267,6 +271,8 @@ export function teeRadiosoitin({
   let nykyinenKanava = null;
   let vahti = 0;
   let aaniArvo = Math.min(1, Math.max(0, Number(aani) || 0));
+  // Asetetun näytön oma kirjoitusfunktio, jos sellainen annettiin.
+  let naytonKirjoitin = null;
 
   /** Katkaisee viritysvahdin. Kutsutaan jokaisessa tilanvaihdossa. */
   function nollaaVahti() {
@@ -282,6 +288,13 @@ export function teeRadiosoitin({
     naytto.dataset.rivit = JSON.stringify([yla, ala]);
     varaYla.textContent = yla;
     varaAla.textContent = ala;
+    try {
+      naytonKirjoitin?.([yla, ala]);
+    } catch (syy) {
+      // Rikkinäinen näyttö ei saa kaataa soitinta: laite jää näyttämään
+      // vanhaa tekstiä, mutta stop-nappi toimii yhä.
+      console.warn('Radion näytön kirjoitus epäonnistui.', syy);
+    }
     naytto.dispatchEvent(new CustomEvent('radio-naytto', {
       bubbles: false,
       detail: { tila, rivit: [yla, ala] },
@@ -368,14 +381,25 @@ export function teeRadiosoitin({
   /**
    * Panee pistematriisinäytön aukkoon.
    *
-   * Elementti venytetään täyttämään aukko, ja soittimen oma varateksti
-   * väistyy. null palauttaa varatekstin — näyttö ei saa jättää aukkoa
+   * Ottaa vastaan kaksi muotoa:
+   *   asetaNaytto(elementti)
+   *   asetaNaytto({ juuri, naytaTeksti })   — esim. teePistenaytto()
+   *
+   * Jälkimmäisessä soitin kutsuu naytaTeksti(rivit) itse jokaisessa
+   * muutoksessa. Näin kytkentä on yksi rivi eikä kolme, eikä kumpikaan
+   * moduuli tunne toista: tunnistus on muodosta, ei tuonnista.
+   *
+   * null palauttaa soittimen oman varatekstin — aukko ei saa jäädä
    * tyhjäksi, koska musta kolo näyttää rikkinäiseltä.
    */
   function asetaNaytto(elementti) {
+    const solmu = elementti?.juuri ?? elementti;
+    naytonKirjoitin = typeof elementti?.naytaTeksti === 'function'
+      ? (rivit) => elementti.naytaTeksti(rivit)
+      : null;
     naytto.replaceChildren();
-    if (elementti) {
-      naytto.appendChild(elementti);
+    if (solmu) {
+      naytto.appendChild(solmu);
       naytto.dataset.oma = 'true';
     } else {
       naytto.appendChild(naytonVara);

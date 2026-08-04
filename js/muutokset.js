@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 223, teksti: 'Järvet, joet ja vuoristot nimetty kaunolla' },
+  { v: 223, teksti: 'Vesi saa syvyyden ja värin lähelle zoomatessa' },
+  { v: 223, teksti: 'Joet levenevät uomiksi kun karttaa katsoo läheltä' },
+  { v: 223, teksti: 'Nimen perässä i avaa paikan tarinan' },
   { v: 222, teksti: 'Kuvat kaikkiin 248 kaupunkiin' },
   { v: 222, teksti: 'Uusi alue piirtyy viisi kertaa nopeammin' },
   { v: 222, teksti: 'Korjattu: joet eivät näkyneet kartalla lainkaan' },

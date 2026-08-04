@@ -932,6 +932,150 @@ function piirraIIkoni(parent, [x, y], sade, kohde, avaa, kulma) {
   return g;
 }
 
+
+// --- lähikuvan vesi ------------------------------------------------------------
+
+/*
+ * Vesi muuttuu sitä mukaa kuin sitä lähestyy.
+ *
+ * Omistajan toive 4.8.2026: "Joet voisi levetä ja tulla
+ * kolmiulotteisemmiksi kun zoomattu tarpeeksi. Silloin voisi ehkä tulla
+ * myös sininen väri. Sama järvissä ja merissä. Niihin voisi tehdä saman
+ * kevyen topografian."
+ *
+ * Kaukaa katsottuna kartta on vanha painate: meri on paperia ja joki
+ * ohut mustejuova. Se on oikea vaikutelma yleisnäkymässä, ja siihen ei
+ * kosketa. Lähellä sama kartta on eri esine — silloin joella on uoma,
+ * järvellä syvyys ja merellä pohja.
+ *
+ * TÄMÄ KERROS EI OLE STAATTISESSA TAITEESSA. Staattinen taide
+ * muutetaan bittikartaksi kerran, joten zoomista riippuva sävy
+ * jäätyisi siihen mittakaavaan, jossa kuva sattui syntymään. Siksi
+ * lähivesi on elävässä puussa kuten maastonimet — ja siksi sen
+ * elementtimäärä on pidettävä kurissa: piirretään vain se, mikä on
+ * näkyvissä.
+ */
+
+/* Näkyvä leveys laudan yksiköinä: mistä vesi alkaa herätä ja missä se on täysi. */
+const LAHIVESI_ALKAA = 3400;
+const LAHIVESI_TAYSI = 900;
+
+/*
+ * Uoman leveys laudan yksiköinä tärkeysluokan mukaan.
+ *
+ * Laudan yksikköinä eikä pikseleinä: silloin uoma levenee ruudulla
+ * samassa tahdissa kuin kartta, mikä on juuri se vaikutelma jota
+ * haettiin. Pikselimitta pysyisi samana ja joki näyttäisi kutistuvan
+ * mitä lähemmäs mennään.
+ */
+const UOMAN_LEVEYS = { 1: 13, 2: 8, 3: 5 };
+
+const rajaa = (arvo, ala, yla) => Math.min(yla, Math.max(ala, arvo));
+
+/** Kuinka voimakkaana lähivesi näkyy: 0 kaukana, 1 lähellä. */
+export function lahivedenVoima(nakyvaLeveys) {
+  if (!nakyvaLeveys) return 0;
+  return rajaa((LAHIVESI_ALKAA - nakyvaLeveys) / (LAHIVESI_ALKAA - LAHIVESI_TAYSI), 0, 1);
+}
+
+const osuuIkkunaan = (pisteet, ikkuna, vara) => {
+  let x0 = Infinity; let y0 = Infinity; let x1 = -Infinity; let y1 = -Infinity;
+  for (const [x, y] of pisteet) {
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+  }
+  return !(x0 > ikkuna.x + ikkuna.w + vara || x1 < ikkuna.x - vara
+    || y0 > ikkuna.y + ikkuna.h + vara || y1 < ikkuna.y - vara);
+};
+
+/**
+ * Lähikuvan vesi: uomat, järvien syvyys ja meren pohja.
+ *
+ * @param ryhma    elävä <g>, joka tyhjennetään ja täytetään
+ * @param map      pack.map (maasto, kiertava, width)
+ * @param nakyva   { x, y, w, h } laudan yksiköissä
+ * @param nimet    VESISTONIMET tärkeysluokkia varten (valinnainen)
+ * @param syvyys   MERISYVYYS-vyöhykkeet (valinnainen)
+ */
+export function drawLahivesi(ryhma, map, { nakyva, nimet, syvyys } = {}) {
+  if (!ryhma) return;
+  ryhma.textContent = '';
+  const voima = lahivedenVoima(nakyva?.w);
+  if (!voima || !map?.maasto) return;
+
+  const vara = nakyva.w * 0.2;
+  const kierrot = map.kiertava ? [0, -map.width, map.width] : [0];
+  const nakyy = (pisteet) => kierrot.some((dx) => osuuIkkunaan(
+    dx ? pisteet.map(([x, y]) => [x + dx, y]) : pisteet, nakyva, vara,
+  ));
+
+  /*
+   * Ryhmän peittävyys hoitaa häivytyksen. Yksittäisten viivojen
+   * peittävyyden säätäminen kasaisi ne päällekkäin: kolme läpikuultavaa
+   * vetoa samasta uomasta näkyisi kolmena raitana eikä yhtenä nauhana.
+   */
+  const g = el('g', { class: 'lahivesi', opacity: voima.toFixed(3) }, ryhma);
+
+  // --- meren pohja: matalimmasta syvimpään, sisäkkäiset vyöhykkeet ---
+  if (syvyys?.vyohykkeet?.length) {
+    const meri = el('g', { class: 'lahivesi-meri' }, g);
+    for (const vyohyke of syvyys.vyohykkeet) {
+      const luokka = `merisyvyys merisyvyys-${String(vyohyke.metria).replace('-', '')}`;
+      for (const rengas of vyohyke.renkaat ?? []) {
+        if (rengas.length < 4 || !nakyy(rengas)) continue;
+        el('path', { d: smoothClosedPath(rengas), class: luokka }, meri);
+      }
+    }
+  }
+
+  // --- järvet: vesi ja matala reunus ---
+  const tarkeydet = new Map((nimet?.jarvet ?? []).map((j) => [j.avain, j.tarkeys]));
+  const jarvet = el('g', { class: 'lahivesi-jarvet' }, g);
+  let rajausNro = 0;
+  for (const jarvi of map.maasto.jarvet ?? []) {
+    const rengas = jarvi.rengas ?? jarvi;
+    if (!rengas || rengas.length < 4 || !nakyy(rengas)) continue;
+    const d = smoothClosedPath(kasinPiirretty(rengas));
+    el('path', { d, class: 'lahivesi-jarvi' }, jarvet);
+    /*
+     * Matala reunus paksuna viivana järven SISÄPUOLELLE rajattuna.
+     * Oikea monikulmion kutistus on työläs ja menee solmuun kapeilla
+     * järvillä (Baikal, Tanganjika); rajattu paksu veto antaa saman
+     * vaikutelman — reuna matala, keskusta syvä — ilman geometriaa.
+     */
+    const tunnus = `jarviraja${rajausNro++}`;
+    const rajaus = el('clipPath', { id: tunnus }, jarvet);
+    el('path', { d }, rajaus);
+    el('path', { d, class: 'lahivesi-jarvi-matala', 'clip-path': `url(#${tunnus})` }, jarvet);
+    void tarkeydet;
+  }
+
+  // --- joet: uoma, rannat ja valo ---
+  const jokiTarkeys = new Map((nimet?.joet ?? []).map((j) => [j.avain, j.tarkeys]));
+  const joet = el('g', { class: 'lahivesi-joet' }, g);
+  for (const joki of map.maasto.joet ?? []) {
+    const pisteet = joki.pisteet ?? joki;
+    if (!pisteet || pisteet.length < 2 || !nakyy(pisteet)) continue;
+    const leveys = UOMAN_LEVEYS[jokiTarkeys.get(joki.nimi) ?? 3] ?? UOMAN_LEVEYS[3];
+    const d = `M${kasinPiirretty(pisteet).map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' L')}`;
+    /*
+     * Kolme vetoa päällekkäin tekee pyöreän nauhan ilman suodattimia:
+     * levein tummana rantana, keskimmäinen vetenä ja kapein vaaleana
+     * valona hieman ylävasemmalle siirrettynä. Suodattimet olisivat
+     * helpompi tapa, mutta iOS:n webapp-tila palauttaa suodatetun
+     * kerroksen tyhjänä — se on rikkonut tämän kartan kolmesti.
+     */
+    el('path', { d, class: 'lahivesi-ranta', 'stroke-width': (leveys * 1.35).toFixed(1) }, joet);
+    el('path', { d, class: 'lahivesi-uoma', 'stroke-width': leveys.toFixed(1) }, joet);
+    el('path', {
+      d, class: 'lahivesi-valo', 'stroke-width': (leveys * 0.3).toFixed(1),
+      transform: `translate(${(-leveys * 0.16).toFixed(2)},${(-leveys * 0.16).toFixed(2)})`,
+    }, joet);
+  }
+}
+
 // --- geometria: missä on merta, missä tyhjää maata ------------------------
 
 /*

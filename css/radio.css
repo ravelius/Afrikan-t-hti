@@ -95,9 +95,16 @@
 
 .radio-kaiutin {
   position: relative;
-  /* Säleikkö ottaa ylijäävän leveyden: keskiö ja nupit ovat kiinteitä,
-     ja leveällä ruudulla ylimääräinen tila kuuluu kaiuttimelle. */
-  flex: 3 1 130px;
+  /*
+   * Säleikkö ottaa ylijäävän leveyden: keskiö ja nupit ovat kiinteitä,
+   * ja leveällä ruudulla ylimääräinen tila kuuluu kaiuttimelle.
+   *
+   * Lähtöleveys on sama kuin pienin sallittu (92 px). Rivitys ratkeaa
+   * lähtöleveyksien summasta, ei kutistuneista mitoista: isompi luku
+   * pudottaisi keskiön omalle rivilleen jo 680 pikselin ruudulla,
+   * vaikka kaikki mahtuisi vierekkäin.
+   */
+  flex: 3 1 92px;
   min-width: 92px;
   min-height: 76px;
   border-radius: 6px;
@@ -151,10 +158,14 @@
 /* --- keskiö: näyttö, asteikko, kanavan tiedot --------------------- */
 
 .radio-keskio {
-  flex: 1 1 280px;
-  /* Asteikko on saman levyinen kuin näyttö: laitteen etulevy on yksi
-     pystysuora pino, ei kolme eri levyistä palaa. */
-  max-width: 372px;
+  /*
+   * Keskiön leveys on kiinteä, ei venyvä. Se on näytön leveys (340) +
+   * merkkivalo väleineen (32): jos keskiö venyisi ruudun mukana, näyttö
+   * kutistuisi sen mukana eikä luvattu 340 × 68 pitäisi paikkaansa.
+   * Ylijäävä leveys menee kaiuttimelle, jolle koko on vapaa.
+   */
+  flex: 0 1 372px;
+  max-width: 100%;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -165,6 +176,7 @@
 .radio-naytto-kehys {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
 }
 
@@ -191,10 +203,16 @@
 .radio-naytto {
   --radio-naytto-korkeus: 68px;
   position: relative;
-  flex: 0 1 auto;
+  /* Ei kutistu: mitta on lupaus näytön tekijälle, ei toive. */
+  flex: 0 0 auto;
   height: var(--radio-naytto-korkeus);
   width: calc(var(--radio-naytto-korkeus) * 5);
   max-width: 100%;
+  /* Näyttö keskitetään aukkoon. Pistenäytön kuvasuhde ei ole tasan 5:1
+     (16 merkkiä × 2 riviä on 6,1:1), ja keskitettynä ylijäävä lasi
+     näyttää reunukselta eikä virheeltä. */
+  display: grid;
+  place-items: center;
   border-radius: 3px;
   overflow: hidden;
   background-color: var(--radio-lcd);
@@ -209,11 +227,14 @@
     0 1px 0 rgba(217, 161, 59, 0.28);
 }
 
-/* Näyttö täyttää aukon riippumatta siitä, onko se canvas, svg vai div. */
-.radio-naytto > * {
-  display: block;
-  width: 100%;
-  height: 100%;
+/*
+ * Näyttö mahtuu aukkoon riippumatta siitä, onko se svg, canvas vai div.
+ * Rajat annetaan enimmäismittoina eikä pakotettuna venytyksenä: SVG, joka
+ * osaa oman kuvasuhteensa (js/linssit/pistenaytto.js), saa pitää sen.
+ */
+.radio-naytto > *:not(.radio-naytto-vara) {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 /*
@@ -247,6 +268,17 @@
 
 .radio-naytto-yla { font-size: 11px; font-weight: 700; }
 .radio-naytto-ala { font-size: 8px; opacity: 0.75; }
+
+/*
+ * Kun aukossa on oikea pistenäyttö, aukon oma lasi väistyy tummaksi
+ * syvennykseksi. Muuten näyttö olisi näytön päällä: kaksi eri sävyistä
+ * lasia sisäkkäin, ja reunoille jäävä kaistale näyttäisi virheeltä.
+ * Tumma syvennys on se, miltä kehys oikeassa laitteessa näyttää.
+ */
+.radio-naytto[data-oma] {
+  background-color: #17140c;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.25));
+}
 
 /* Sammunut näyttö on himmeä, ei musta: nestekidelasi ei sammu, se vain
    lakkaa näyttämästä. */
@@ -509,14 +541,13 @@
   .radio-maa { font-size: 0.64rem; }
 }
 
-/* Nimiä harvennetaan kapeassa, jottei asteikosta tule mustaa mönjää. */
-@media (max-width: 860px) {
+/*
+ * Nimiä harvennetaan kapeassa ruudussa. Asteikko on leveällä ruudulla
+ * kiinteät 372 px, joten harvennus tarvitaan vasta kun kotelo itse
+ * kapenee ruudun mukana — eli puhelimessa.
+ */
+@media (max-width: 400px) {
   .radio-kaupunki:nth-child(even) { display: none; }
-}
-
-@media (max-width: 560px) {
-  .radio-kaupunki { display: none; }
-  .radio-kaupunki:nth-child(4n+1) { display: inline; }
 }
 
 /* Sormelle riittävä osumapinta, vaikka nuppi näyttää pieneltä —

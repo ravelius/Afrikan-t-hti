@@ -2568,10 +2568,17 @@ body.linssi-valokuva .grain { display: none; }
 .iso-jarvi { fill: #ecd9ae; }
 .iso-jarvi-reuna { fill: none; stroke: var(--sea-ink); stroke-width: 1.4; opacity: 0.5; }
 
-/* Joki samalla musteella kuin meren aallot — ks. .iso-jarvi. */
+/*
+ * Joki vaaleampana kuin meren aallot (omistajan toive 4.8.2026).
+ *
+ * Sama sävyperhe kuin muullakin vedellä, mutta vaaleampi: joki on
+ * kartan hennoin viiva, ja täysi musteen voima teki siitä yhtä
+ * painavan kuin rantaviiva. Lähellä joki saa oman uomansa
+ * (.lahivesi-uoma), joten tämän ei tarvitse kantaa kuin yleisvaikutelma.
+ */
 .joki {
   fill: none;
-  stroke: var(--sea-ink);
+  stroke: #8e836d;
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -2631,6 +2638,54 @@ body.linssi-valokuva .grain { display: none; }
   stroke: none;
 }
 .maastonimi-i:hover .maastonimi-i-keha { fill: var(--accent); }
+
+
+/*
+ * LÄHIKUVAN VESI.
+ *
+ * Yleisnäkymässä kartalla ei ole sinistä: meri on paperia ja joki
+ * ohut mustejuova (ks. .joki ja .iso-jarvi). Se sääntö pätee yhä.
+ * Tämä kerros on eri asia — se herää vasta kun karttaa katsoo
+ * läheltä, ja silloin vesi saa uoman, syvyyden ja värin.
+ *
+ * Sininen on vaimeaa ja harmaan puolella: kirkas sininen riitelisi
+ * pergamentin kanssa ja näyttäisi toisesta ohjelmasta lainatulta.
+ * Kaikki peittävyydet ovat matalia, jotta paperin rakeisuus näkyy
+ * läpi myös veden alta.
+ */
+.lahivesi { pointer-events: none; }
+
+/* Meren pohja: mitä syvempi, sitä tummempi. Sisäkkäiset vyöhykkeet. */
+.merisyvyys { stroke: none; }
+.merisyvyys-200 { fill: #b9c8ce; opacity: 0.22; }
+.merisyvyys-2000 { fill: #a3b6bf; opacity: 0.20; }
+.merisyvyys-4000 { fill: #8ea6b2; opacity: 0.18; }
+.merisyvyys-6000 { fill: #7b95a3; opacity: 0.20; }
+
+/* Järvi: vesi ja matala reunus. */
+.lahivesi-jarvi { fill: #b3c6cd; opacity: 0.38; stroke: none; }
+.lahivesi-jarvi-matala {
+  fill: none;
+  stroke: #93a9b3;
+  stroke-width: 26;
+  opacity: 0.30;
+}
+
+/*
+ * Joen kolme vetoa. Järjestys on tärkeä: ranta alimmaisena, uoma
+ * päälle, valo viimeisenä. Viivan päät ja kulmat pyöreiksi, tai
+ * nauha katkeaa mutkissa neliömäisiin nokkiin.
+ */
+.lahivesi-ranta,
+.lahivesi-uoma,
+.lahivesi-valo {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lahivesi-ranta { stroke: #75868e; opacity: 0.38; }
+.lahivesi-uoma { stroke: #a6bec7; opacity: 0.62; }
+.lahivesi-valo { stroke: #d8e5e9; opacity: 0.4; }
 
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
