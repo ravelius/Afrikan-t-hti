@@ -1,23 +1,22 @@
 # Unohdettu aarre ◈
 
-*(engl. The Forgotten Treasure. Peli tunnettiin aiemmin nimellä
-**Matkakirja**; omistajan päätöksellä 4.8.2026 nimi vaihtui, ja
-matkakirja on nyt vain tarinan keskusesine — isoisän kirja.)*
+*(engl. The Forgotten Treasure)*
 
 Selaimessa pelattava seikkailupeli maailman ympäri. Unohdettu aarre on
-oma pelinsä: se on saanut inspiraatiota Jules Vernen teoksista ja monista
-muista, mutta se ei jäljittele mitään niistä eikä sillä ole yhteyttä
-niiden oikeudenhaltijoihin. Ei riippuvuuksia, ei käännösvaihetta —
-pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana on oppia ja
-opettaa maiden kulttuurista, arjesta ja maantieteestä kiinnostavasti.
+oma pelinsä: se on saanut inspiraatiota Jules Vernen teoksista ja
+monista muista, mutta se ei jäljittele mitään niistä eikä sillä ole
+yhteyttä niiden oikeudenhaltijoihin. Ei riippuvuuksia, ei
+käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana
+on oppia ja opettaa maiden kulttuurista, arjesta ja maantieteestä
+kiinnostavasti.
 
-Pelin ytimessä ovat **unohdetut aarteet** (engl. *forgotten treasures*):
-tutkimusmatkailija Aarni luetteloi aikoinaan maailman kuuluisat kadonneet
-aarteet — Meripihkahuoneen, El Doradon, keisarin jadesinetin ja muut —
-eikä kukaan uskonut häntä. Isoisä uskoi, ja hänen matkansa jäi kesken.
-**Aarnin luettelo** (*Aarni's Catalogue*) on pelin keskeinen ajojahti:
-jokaisella laudalla yksi luettelon aarre odottaa löytäjäänsä
-([docs/tarina.md](docs/tarina.md)).
+Nimi tulee pelin ytimestä, **unohdetuista aarteista** (engl. *forgotten
+treasures*): tutkimusmatkailija Aarni luetteloi aikoinaan maailman
+kuuluisat kadonneet aarteet — Meripihkahuoneen, El Doradon, keisarin
+jadesinetin ja muut — eikä kukaan uskonut häntä. Isoisä uskoi, ja hänen
+matkansa jäi kesken. **Aarnin luettelo** (*Aarni's Catalogue*) on pelin
+keskeinen ajojahti: jokaisella laudalla yksi luettelon aarre odottaa
+löytäjäänsä ([docs/tarina.md](docs/tarina.md)).
 
 ## Tarina
 
@@ -42,7 +41,7 @@ päiväkirjamerkinnät. Matka jatkuu, kun astut ulos koneesta.
 - **Yksinpeli ilman loppua:** vaellus alkaa maailmankartalta ja jatkuu
   porttikaupunkien kautta laudalta toiselle — mantereille, maihin ja
   kaupunkitasolle. Löytöjä voi kerätä niin kauan kuin huvittaa.
-- **Kymmenen pelilautaa**, jokaisella oma unohdettu aarteensa: Maailma (Magellanin
+- **Kymmenen pelilautaa**, jokaisella oma unohdettu aarre: Maailma (Magellanin
   kompassi), Afrikka (Suuren Zimbabwen kivilintu), Eurooppa
   (Meripihkahuoneen aarre), Aasia (Keisarin jadesinetti), Oseania
   (Eteläristin helmi), Pohjois-Amerikka (Montezuman aarre), Etelä-Amerikka

@@ -13,10 +13,11 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 232, teksti: 'Kartta jatkuu ehjänä laudan reunan yli' },
+  { v: 232, teksti: 'Kartta tarkentuu zoomatessa eikä sumene' },
+  { v: 232, teksti: 'Uusi kuvake: kultainen aarre kahden pallon välissä' },
   { v: 231, teksti: 'Pelin nimi on nyt Unohdettu aarre' },
-  { v: 231, teksti: 'Kartta jatkuu ehjänä laudan reunan yli' },
-  { v: 231, teksti: 'Kartta tarkentuu zoomatessa eikä sumene' },
-  { v: 231, teksti: 'Uusi kuvake: kultainen aarre kahden pallon välissä' },
+  { v: 231, teksti: 'Avausteksti tiiviimmäksi, luenta 34 s → 23 s' },
   { v: 230, teksti: 'Siperia ja Alaska yhtyvät ehjänä rantana' },
   { v: 230, teksti: 'Radio näkyy matkalaukussa' },
   { v: 230, teksti: 'Versionumero pois matkakirjan päältä' },

@@ -56,19 +56,11 @@ revitty viimeinen sivu ("…voinut uskoa, siellä olikin…") vihjaa, että
 yhden hän löysi — sivu ei koskaan kerro minkä, eikä sitä paljasteta.
 Nuori herra Fogg jatkaa siitä, mihin isoisä jäi.
 
-**Peli on nimetty ajojahtinsa mukaan.** Omistajan päätös 4.8.2026: pelin
-nimi on **Unohdettu aarre** (engl. *The Forgotten Treasure*). Entinen nimi
-*Matkakirja* jää tarinan keskusesineeksi — isoisän kirjaksi, jota nuori
-herra lukee matkalla — eikä sitä enää käytetä pelin nimenä. Sana
-"matkakirja" tarkoittaa tästä eteenpäin joko isoisän kirjaa tai pelin
-matkakirjanäkymää (kaupunkiin saavuttaessa avautuva päiväkirjakortti), ei
-koskaan peliä itseään.
-
 Sanasto (sitova, myös käännöksiin):
 
 | Suomeksi | Englanniksi | Käyttö |
 | --- | --- | --- |
-| Unohdettu aarre | The Forgotten Treasure | pelin nimi (isolla alkukirjaimella erisnimenä); sitova myös käännökseen |
+| Unohdettu aarre | The Forgotten Treasure | PELIN NIMI (päätetty 4.8.2026; entinen työnimi Matkakirja). "Matkakirja" jää tarinan keskusesineeksi — isoisän kirjaksi — eikä ole enää pelin nimi. |
 | unohdettu aarre | forgotten treasure | arkitermi säännöissä ja pelin ilmoituksissa (laattatyypin nimi) |
 | Aarnin luettelo | Aarni's Catalogue | tarinan erisnimi aarrekokoelmalle; kirjan koko nimi "Aarnin luettelo unohdetuista aarteista" / "Aarni's Catalogue of Forgotten Treasures" |
 | tutkimusmatkailija Aarni | the explorer Aarni | erisnimi säilyy käännöksessä sellaisenaan |

@@ -731,13 +731,13 @@ const QUIZ_PAUSE_MS = 700;
 const INTRO_FONT_MAX = 1.32;
 const INTRO_FONT_MIN = 0.72;
 // Omistajan päättämä avausteksti. ÄLÄ muokkaa ilman omistajan lupaa
-// (docs/tyolista-opukselle.md, paketti 3).
-const INTRO_TEXT = 'Vintiltä löytyi isoisän matkalaukku: kartta vuodelta 1872, '
-  + 'kukkarollinen puntia ja kulunut matkakirja: '
+// (docs/tyolista-opukselle.md, paketti 3). Lyhennetty omistajan
+// pyynnöstä 4.8.2026: pitkää versiota ei jaksanut kuunnella.
+const INTRO_TEXT = 'Vintiltä löytyi isoisän kulunut matkakirja: '
   + '"Maailman ympäri kahdeksassakymmenessä päivässä".\n\n'
-  + 'Viimeinen sivu oli revitty kesken lauseen: "…voinut uskoa, siellä olikin…"\n\n'
-  + 'Hetkinen… Mitä hän oli löytänyt?\n\n'
-  + 'Juoksin kentälle kirja kädessäni ja mietin enää yhtä asiaa:\n\n'
+  + 'Viimeinen sivu oli revitty kesken lauseen: "…voinut uskoa, siellä '
+  + 'olikin…" Mitä hän oli löytänyt?\n\n'
+  + 'Juoksin kentälle kirja kädessäni:\n\n'
   + 'mistä aloitan?';
 /*
  * Mantereiden lähikuva puhelimella. Ilme hiotaan ensin Euroopalla

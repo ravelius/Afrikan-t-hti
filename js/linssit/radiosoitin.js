@@ -658,7 +658,7 @@ function mittarinSvg(tunniste) {
       fill="none" stroke="#241a10" stroke-width="0.9" stroke-linecap="round"/>
     <!-- Punainen alue nollasta ylöspäin. -->
     <path d="M${px.toFixed(2)} ${py.toFixed(2)} A ${(kaari + 3.4).toFixed(2)} ${(kaari + 3.4).toFixed(2)} 0 0 1 ${qx.toFixed(2)} ${qy.toFixed(2)}"
-      fill="none" stroke="#8d2b1d" stroke-width="2" stroke-linecap="butt" opacity="0.88"/>
+      fill="none" stroke="#8d2b1d" stroke-width="1.7" stroke-linecap="butt" opacity="0.82"/>
     ${jaot}
     <!-- Kilpi kortin alalaidassa. "VU" on se kaksi kirjainta, joista
          mittarin tunnistaa ennen kuin asteikkoa ehtii lukea. -->
@@ -1510,33 +1510,69 @@ export function teeRadiosoitin({
       const aikavakio = kohde > neulanLukema ? nousu : lasku;
       neulanLukema += (kohde - neulanLukema) * (1 - Math.exp(-dt / aikavakio));
       piirraNeula();
+
+      // Levossa = kohde on lepopaikassa JA neula on ehtinyt sinne.
+      const lepaa = kohde <= MITTARIN_LEPO + 0.004
+        && Math.abs(neulanLukema - MITTARIN_LEPO) < 0.004;
+      hiljaisuus = lepaa ? hiljaisuus + kulunut : 0;
+
       /*
-       * Levännyt neula sammuttaa silmukan. Tämä on se kohta, joka pitää
-       * poikkeuksen "ei jatkuvia animaatioita" siedettävänä: kun radio
-       * on hiljaa, kartan päällä ei laske mitään.
+       * Levännyt neula sammuttaa silmukan KOKONAAN, kun radio on
+       * hiljaa. Tämä on se kohta, joka pitää poikkeuksen "ei jatkuvia
+       * animaatioita" siedettävänä: sammuksissa olevan laitteen päällä
+       * ei laske mitään.
        *
-       * EHTO ON `!soi` EIKÄ `mitattu === null`. Soiva radio, jonka
-       * tasoa ei vielä saada mistään, on odottava eikä valmis: juuri
-       * siinä tilassa ollaan, kun äänikonteksti on vasta syntymässä.
-       * Silmukan sammuttaminen silloin jättäisi neulan lepoon koko
-       * viritykseksi.
+       * SOIVA RADIO EI SAMMUTA SILMUKKAA vaan hidastaa sen (ks.
+       * ajastaSeuraava). Ero on siinä, palaako ääni: sammutetun
+       * radion neula herää vasta tilanvaihdoksesta, joka kutsuu
+       * paivitaMittari(), mutta soivan radion ääni voi palata milloin
+       * tahansa ilman että mikään ilmoittaa siitä.
        */
-      if (!soi && Math.abs(neulanLukema - MITTARIN_LEPO) < 0.002) {
+      if (!soi && lepaa) {
         neulanLukema = MITTARIN_LEPO;
         piirraNeula();
         pysaytaMittari();
         return;
       }
     }
-    mittarinVuoro = requestAnimationFrame(mittarinAskel);
+    ajastaSeuraava();
+  }
+
+  /**
+   * Seuraava askel: kehysvauhtia liikkeessä, valvontavauhtia levossa.
+   *
+   * Kaksi ajastinta eikä yksi, koska ne tekevät eri työtä.
+   * requestAnimationFrame on oikea silloin kun neula liikkuu — se
+   * osuu ruudun päivitykseen ja pysähtyy taustavälilehdessä
+   * itsestään. Hiljaisen lähetyksen aikana se olisi kuitenkin
+   * kuusikymmentä turhaa herätystä sekunnissa minuuttien ajan, ja
+   * silloin setTimeout neljä kertaa sekunnissa on rehellisempi:
+   * mitään ei animoida, vain kuunnellaan palaako ääni.
+   */
+  function ajastaSeuraava() {
+    if (!mittariKay) return;
+    const kehyksella = hiljaisuus < MITTARIN_HILJAISUUS_MS
+      && typeof requestAnimationFrame === 'function';
+    if (kehyksella) {
+      mittarinVuoro = requestAnimationFrame(mittarinAskel);
+      return;
+    }
+    mittarinAjastin = setTimeout(() => {
+      mittarinAjastin = 0;
+      mittarinAskel(typeof performance === 'object' && performance
+        ? performance.now() : Date.now());
+    }, hiljaisuus >= MITTARIN_HILJAISUUS_MS ? MITTARIN_ODOTUS_MS : MITTARIN_VALI_MS);
   }
 
   /** Käynnistää neulan silmukan, jos se ei jo pyöri. */
   function kaynnistaMittari() {
-    if (mittariKay || typeof requestAnimationFrame !== 'function') return;
+    if (mittariKay) return;
     mittariKay = true;
     mittarinKello = 0;
-    mittarinVuoro = requestAnimationFrame(mittarinAskel);
+    // Uusi käynnistys on aina liikettä: hiljaisuuslaskuri nollataan,
+    // jotta ensimmäinen askel osuu heti eikä neljännessekunnin päähän.
+    hiljaisuus = 0;
+    ajastaSeuraava();
   }
 
   /** Pysäyttää silmukan. Neula jää siihen mihin se ehti. */
@@ -1545,7 +1581,9 @@ export function teeRadiosoitin({
     if (mittarinVuoro && typeof cancelAnimationFrame === 'function') {
       cancelAnimationFrame(mittarinVuoro);
     }
+    if (mittarinAjastin) clearTimeout(mittarinAjastin);
     mittarinVuoro = 0;
+    mittarinAjastin = 0;
   }
 
   /**
@@ -1555,6 +1593,9 @@ export function teeRadiosoitin({
    */
   function paivitaMittari() {
     if (nykyinenTila === 'soi' || nykyinenTila === 'virittaa') varmistaAnalysoija();
+    // Tilanvaihdos on herätys: hidastunut valvonta palaa täyteen
+    // vauhtiin, ettei neula lähde liikkeelle neljännessekunnin myöhässä.
+    hiljaisuus = 0;
     kaynnistaMittari();
   }
 
