@@ -179,14 +179,41 @@ const KROMIN_RAIDAT = [
   [1, '#6e777e'],
 ];
 
-/** Liukuväri annetulla tunnuksella ja suunnalla ('pysty' | 'vaaka'). */
-function kromiLiuku(tunnus, suunta) {
+/*
+ * VIVUN OMA KROMI, JA SYY ON MITTA.
+ *
+ * Yhdeksän raitaa on oikea resepti leveälle kappaleelle: mutteri on
+ * ruudulla parikymmentä pikseliä, ja yhdeksän raitaa jakautuu siihen
+ * kahden pikselin nauhoiksi, jotka näkyvät. VIPU ON NELJÄ PIKSELIÄ
+ * LEVEÄ. Yhdeksän raitaa neljälle pikselille on puoli pikseliä raita
+ * kohti, ja selain laskee niistä keskiarvon — lopputulos oli tasainen
+ * vaaleanharmaa tikku. Juuri sitä katselmuksessa kysyttiin: näyttääkö
+ * kromi kromilta vai harmaalta suorakaiteelta. Näytti suorakaiteelta.
+ *
+ * Viisi raitaa neljälle pikselille on vajaa pikseli kukin, ja se on
+ * pienin mitta, jossa lieriön poikkileikkaus vielä luetaan: tumma reuna,
+ * valkoinen kiiltojuova, keskiharmaa, tumma varjopuoli ja kapea vaalea
+ * takaisinheijastus vastakkaisella reunalla. Samat viisi sävyä ovat
+ * yhdeksän raidan sarjassa; tässä ne vain eivät mahdu useampaan kertaan.
+ */
+const VARREN_RAIDAT = [
+  [0, '#4c545a'], [0.22, '#ffffff'], [0.5, '#9aa3aa'],
+  [0.72, '#3f474d'], [1, '#bcc5cb'],
+];
+
+/**
+ * Liukuväri annetulla tunnuksella ja suunnalla ('pysty' | 'vaaka').
+ *
+ * `raidat` on oletuksena leveän kappaleen yhdeksän raitaa; kapea kappale
+ * antaa oman sarjansa (ks. VARREN_RAIDAT).
+ */
+function kromiLiuku(tunnus, suunta, raidat = KROMIN_RAIDAT) {
   const pysty = suunta === 'pysty';
-  const raidat = KROMIN_RAIDAT
+  const nauhat = raidat
     .map(([kohta, vari]) => `<stop offset="${kohta}" stop-color="${vari}"/>`)
     .join('');
-  return `<linearGradient id="${tunnus}" x1="${pysty ? 0 : 0}" y1="0" `
-    + `x2="${pysty ? 0 : 1}" y2="${pysty ? 1 : 0}">${raidat}</linearGradient>`;
+  return `<linearGradient id="${tunnus}" x1="0" y1="0" `
+    + `x2="${pysty ? 0 : 1}" y2="${pysty ? 1 : 0}">${nauhat}</linearGradient>`;
 }
 
 /**
@@ -196,13 +223,27 @@ function kromiLiuku(tunnus, suunta) {
  * pyöreä mutteri pohjalla. Siis oikein perinteinen sen ajan
  * metallikytkin, jossa on semmoinen vipu."
  *
- * Kytkin on piirretty EDESTÄ, kuten se paneelissa näkyy: musta
- * bakeliittikanta, sen päällä kromattu kuusiomutteri (edestä katsottuna
- * kuusikulmio — juuri siitä mutterin tunnistaa), mutterin sisällä
- * kierteinen kaulus ja keskeltä ulos tuleva kromattu vipu, jonka kärki
- * on pyöristetty. Sivulta piirrettynä alas käännetty vipu osuisi
- * mutteriin; edestä se kääntyy puhtaasti ylös tai alas, ja juuri niin
- * sen omistaja pyysi kääntyvän.
+ * Kytkin on piirretty EDESTÄ, kuten se paneelissa näkyy: kotelon puuhun
+ * upotettu reikä, sen päällä kromattu pyöreä prikka, prikan päällä
+ * kuusiomutteri, mutterin sisällä kierteinen kaulus ja keskeltä ulos
+ * tuleva kromattu vipu, jonka kärki on pyöristetty. Sivulta piirrettynä
+ * alas käännetty vipu osuisi mutteriin; edestä se kääntyy puhtaasti ylös
+ * tai alas, ja juuri niin sen omistaja pyysi kääntyvän.
+ *
+ * KAKSI MUUTOSTA KATSELMUKSESSA 4.8.2026, molemmat samasta syystä:
+ * omistaja pyysi METALLIKYTKINTÄ, ja laitteen suurin yksittäinen pinta
+ * oli musta.
+ *
+ *  1. Musta bakeliittilevy pois. Se oli pyöristetty neliö, ja ruudulla
+ *     parinkymmenen pikselin pyöristetty musta neliö näyttää
+ *     sovelluskuvakkeelta, ei kytkimeltä. Tilalle tuli se, mitä
+ *     aikakauden paneelissa oikeasti on: reikä puussa ja sen varjo.
+ *     Nyt kytkimestä on metallia kaikki, mitä siitä näkyy.
+ *  2. Pyöreä prikka mutterin alle. Omistajan sanat olivat "pyöreä
+ *     mutteri pohjalla"; pelkkä kuusikulmio ei ole pyöreä. Prikan
+ *     kromiraidat kulkevat vaakaan ja mutterin pystyyn, jolloin kaksi
+ *     kiillotettua kappaletta erottuu toisistaan eikä niistä tule yhtä
+ *     möykkyä.
  *
  * Vipu kääntyy attribuutilla eikä siirtymällä, koska oikea kytkin
  * NAPSAHTAA: jousi vie vivun asentoon eikä siinä ole välitilaa. Pehmeä
@@ -212,18 +253,22 @@ function kromiLiuku(tunnus, suunta) {
 function kytkimenSvg(tunniste) {
   const kromiP = `${tunniste}-kromi-p`;
   const kromiV = `${tunniste}-kromi-v`;
-  const kanta = `${tunniste}-kanta`;
+  const varsi = `${tunniste}-varsi`;
+  const reika = `${tunniste}-reika`;
   const kupu = `${tunniste}-kupu`;
   return `<svg class="radio-kytkin-kuva" viewBox="0 0 40 66" width="30" height="49.5"
       aria-hidden="true" focusable="false">
     <defs>
       ${kromiLiuku(kromiP, 'pysty')}
       ${kromiLiuku(kromiV, 'vaaka')}
-      <linearGradient id="${kanta}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#4a4a4d"/>
-        <stop offset="0.35" stop-color="#232326"/>
-        <stop offset="1" stop-color="#0b0b0d"/>
-      </linearGradient>
+      ${kromiLiuku(varsi, 'vaaka', VARREN_RAIDAT)}
+      <!-- Reiän varjo puussa. Liukuväri eikä sumennettu varjo: iOS
+           piirtää sumennuksen omalle pinnalleen (ks. css/radio.css). -->
+      <radialGradient id="${reika}" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0.62" stop-color="#000000" stop-opacity="0.5"/>
+        <stop offset="0.84" stop-color="#000000" stop-opacity="0.3"/>
+        <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+      </radialGradient>
       <radialGradient id="${kupu}" cx="0.36" cy="0.3" r="0.78">
         <stop offset="0" stop-color="#ffffff"/>
         <stop offset="0.45" stop-color="#aab3ba"/>
@@ -231,34 +276,47 @@ function kytkimenSvg(tunniste) {
       </radialGradient>
     </defs>
 
-    <!-- Musta bakeliittikanta: se levy, jolla mutteri istuu. -->
-    <rect x="3" y="18" width="34" height="30" rx="5" fill="url(#${kanta})"/>
-    <rect x="3.5" y="18.5" width="33" height="29" rx="4.6" fill="none"
-      stroke="rgba(255,255,255,0.13)" stroke-width="1"/>
+    <!-- Reikä puussa ja sen varjo. Kytkin on läpi paneelin, ei sen
+         päällä liimattu, ja varjo on ainoa asia, joka kertoo sen. -->
+    <circle cx="20" cy="33" r="17" fill="url(#${reika})"/>
 
-    <!-- Kromattu kuusiomutteri. Kuusikulmion kärjet ovat sivuilla ja
-         lappeet ylhäällä ja alhaalla, kuten avaimelle tarkoitetussa
-         mutterissa. -->
-    <path d="M6 33 L13 21 L27 21 L34 33 L27 45 L13 45 Z"
-      fill="url(#${kromiP})" stroke="rgba(0,0,0,0.55)" stroke-width="0.7"/>
+    <!-- Kromattu pyöreä prikka mutterin alla: "pyöreä mutteri pohjalla".
+         Raidat vaakaan, jotta prikka erottuu pystyraitaisesta
+         mutterista. -->
+    <circle cx="20" cy="33" r="13.4" fill="url(#${kromiV})"
+      stroke="rgba(0,0,0,0.55)" stroke-width="0.7"/>
+    <circle cx="20" cy="33" r="12.4" fill="none"
+      stroke="rgba(255,255,255,0.34)" stroke-width="0.7"/>
+
+    <!-- Kromattu kuusiomutteri prikan päällä. Kuusikulmion kärjet ovat
+         sivuilla ja lappeet ylhäällä ja alhaalla, kuten avaimelle
+         tarkoitetussa mutterissa. -->
+    <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
+      fill="url(#${kromiP})" stroke="rgba(0,0,0,0.6)" stroke-width="0.7"/>
     <!-- Viisto reuna: mutterin särmät ovat viistetyt, ja viiste näkyy
          kapeana vaaleana kaistana lapetta pitkin. -->
-    <path d="M8.6 33 L14.4 23 L25.6 23 L31.4 33 L25.6 43 L14.4 43 Z"
-      fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+    <path d="M10.2 33 L15.2 24.2 L24.8 24.2 L29.8 33 L24.8 41.8 L15.2 41.8 Z"
+      fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="0.8"/>
 
-    <!-- Kierteinen kaulus mutterin sisällä: kolme kierrettä varjoina. -->
-    <circle cx="20" cy="33" r="9" fill="#101215"/>
-    <circle cx="20" cy="33" r="7.6" fill="url(#${kromiP})"/>
-    <path d="M13.4 30.2 H26.6 M12.8 33 H27.2 M13.4 35.8 H26.6"
+    <!-- Kierteinen kaulus mutterin sisällä: kolme kierrettä varjoina.
+         Kauluksen ja mutterin väliin jää rako, ja rako on tumma juova
+         eikä musta rengas — kun kaikki ympärillä oli mustaa levyä,
+         paksukin rengas hukkui, mutta kromilla se olisi silmiinpistävä
+         donitsi. Kahdeksan kymmenystä yksikköä riittää raoksi. -->
+    <circle cx="20" cy="33" r="8" fill="#20262b"/>
+    <circle cx="20" cy="33" r="7.2" fill="url(#${kromiP})"/>
+    <path d="M13.6 30.3 H26.4 M13 33 H27 M13.6 35.7 H26.4"
       stroke="rgba(0,0,0,0.34)" stroke-width="0.8" fill="none"/>
 
     <!-- Vipu. Kiertokeskiö on kauluksen keskellä (20, 33): ylhäällä
          kärki nousee mutterin yläpuolelle, alhaalla se laskeutuu sen
-         alle, eikä kumpikaan asento jää arvailun varaan. -->
+         alle, eikä kumpikaan asento jää arvailun varaan.
+         KAPENEE KÄRKEÄ KOHTI, kuten oikea vipu: tasapaksu tikku on se,
+         mikä saa kytkimen näyttämään piirretyltä eikä sorvatulta. -->
     <g class="radio-vipu" transform="rotate(0 20 33)">
-      <rect x="17.1" y="6" width="5.8" height="28" rx="2.9" fill="url(#${kromiV})"/>
-      <rect x="21.4" y="7.4" width="1.3" height="25" rx="0.65" fill="rgba(0,0,0,0.3)"/>
-      <ellipse cx="19.4" cy="8.4" rx="1.7" ry="1.2" fill="rgba(255,255,255,0.8)"/>
+      <path d="M16.2 32.4 L17.4 10.2 Q20 6 22.6 10.2 L23.8 32.4 Z"
+        fill="url(#${varsi})" stroke="rgba(0,0,0,0.5)" stroke-width="0.6"
+        stroke-linejoin="round"/>
       <circle cx="20" cy="33" r="5.4" fill="url(#${kupu})"
         stroke="rgba(0,0,0,0.4)" stroke-width="0.6"/>
     </g>
@@ -459,9 +517,24 @@ export function teeRadiosoitin({
   const tiedot = osa('p', 'radio-kanava');
   tiedot.setAttribute('aria-live', 'polite');
   const asemaNimi = osa('span', 'radio-asema');
+  const erotin = osa('span', 'radio-erotin');
   const maaNimi = osa('span', 'radio-maa');
-  tiedot.append(asemaNimi, maaNimi);
+  tiedot.append(asemaNimi, erotin, maaNimi);
   keskio.appendChild(tiedot);
+
+  /*
+   * Erotin kahden span-elementin väliin.
+   *
+   * Ilman sitä ruudunlukija latoo tekstit kiinni toisiinsa: rivi kuului
+   * "France InterVirittää" (mitattu ruudulta 4.8.2026), koska
+   * elementtien välissä ei ole välilyöntiä eikä rivinvaihtoa — ja rivi
+   * on visuaalisesti piilotettu, joten virhe ei näy silmällä lainkaan.
+   * Erotin syntyy vain kun molemmilla puolilla on tekstiä; muuten
+   * pelkän aseman perään jäisi lukeva viiva.
+   */
+  function tahdistaErotin() {
+    erotin.textContent = asemaNimi.textContent && maaNimi.textContent ? ' — ' : '';
+  }
 
   // --- kytkimet --------------------------------------------------------
   /*
@@ -533,6 +606,14 @@ export function teeRadiosoitin({
   // Asteikon keskimmäinen kaupunki. Se on soittokytkimen oletusvalinta:
   // ylös käännetty kytkin soittaa sen, mihin viisari osoittaa.
   let keskusId = null;
+  /*
+   * Viimeksi viritetty kaupunki. Pysäytetty radio EI SIIRRÄ VIISARIA:
+   * oikeassa laitteessa asteikko jää siihen, mihin se on viritetty, ja
+   * virran kytkeminen takaisin jatkaa samalta asemalta. Ilman tätä stop
+   * heittäisi asteikon takaisin pelaajan kotikaupunkiin, ja juuri
+   * kuunneltu naapuri katoaisi näkyvistä.
+   */
+  let viimeisinKeskus = null;
 
   /** Katkaisee viritysvahdin. Kutsutaan jokaisessa tilanvaihdossa. */
   function nollaaVahti() {
@@ -603,6 +684,7 @@ export function teeRadiosoitin({
     if (nykyinenKanava?.cityId && asteikonKaupungit.has(nykyinenKanava.cityId)) {
       return nykyinenKanava.cityId;
     }
+    if (viimeisinKeskus && asteikonKaupungit.has(viimeisinKeskus)) return viimeisinKeskus;
     if (pelaajanPaikka && asteikonKaupungit.has(pelaajanPaikka)) return pelaajanPaikka;
     if (asteikonKaupungit.size === 0) return null;
 
@@ -690,6 +772,7 @@ export function teeRadiosoitin({
   /** Piirtää asteikon uudelleen nykyiselle keskukselle. */
   function paivitaAsteikko() {
     keskusId = laskeKeskus();
+    if (keskusId) viimeisinKeskus = keskusId;
     const { vasen, keski, oikea } = naapurit(keskusId);
     nimet.replaceChildren();
     vasen.forEach((kaupunki, i) => {
@@ -699,7 +782,9 @@ export function teeRadiosoitin({
     oikea.forEach((kaupunki, i) => {
       nimet.appendChild(asteikonNappi(kaupunki, 'oikea', i + 1));
     });
-    asteikko.dataset.tyhja = keski ? 'false' : 'true';
+    // Viisari piiloon, jos asteikolla ei ole yhtään nimeä: yksinäinen
+    // punainen viiva tyhjällä pergamentilla näyttää vialta.
+    viisari.hidden = !keski;
     siirraViisari();
   }
 
@@ -742,6 +827,7 @@ export function teeRadiosoitin({
     else if (uusi === 'sammuksissa') maaNimi.textContent = 'Valitse kaupunki kartalta';
     else maaNimi.textContent = [nykyinenKanava?.kaupunki, nykyinenKanava?.maa]
       .filter(Boolean).join(' · ');
+    tahdistaErotin();
 
     if (uusi === 'virittaa' && viritysAika > 0) {
       vahti = setTimeout(() => {
@@ -779,6 +865,7 @@ export function teeRadiosoitin({
         ? 'Virittää…'
         : [nykyinenKanava?.kaupunki, nykyinenKanava?.maa].filter(Boolean).join(' · ');
     }
+    tahdistaErotin();
     return nykyinenKanava;
   }
 

@@ -2588,9 +2588,28 @@ body.linssi-valokuva .grain { display: none; }
 .varjo-1,
 .varjo-2,
 .valo-1 { stroke: none; }
-.varjo-1 { fill: #6a5836; opacity: 0.09; }
-.varjo-2 { fill: #6a5836; opacity: 0.1; }
-.valo-1 { fill: #fff6e0; opacity: 0.16; }
+/*
+ * Luvut on mitattu eikä arvattu. Vertailukuvat samasta Himalajan
+ * näkymästä, kun varjostus on kytketty pois ja päälle (900 x 700 px,
+ * suurin yksittäisen pikselin muutos 255-asteikolla):
+ *
+ *     varjo   valo   suurin muutos   keskimäärin
+ *      0,09   0,16         22            2,4
+ *      0,14   0,24         30            3,6
+ *      0,20   0,32         39            4,9
+ *      0,28   0,42         47            6,3
+ *
+ * 0,09 oli kirjaimellisesti liian hienovarainen: ero näkyy mittarissa
+ * muttei silmässä, ja näkymätön muutos on turha muutos. 0,28:ssa
+ * vuoristot alkavat olla kartan pääasia. 0,20 on se kohta, jossa
+ * Andit, Kalliovuoret ja Tiibet erottuvat yleiskuvassa muodoiksi mutta
+ * kartta on yhä sama seepiakartta.
+ *
+ * varjo2 piirtyy varjo1:n PÄÄLLE, joten syvin varjo on 0,36 eikä 0,20.
+ */
+.varjo-1 { fill: #6a5836; opacity: 0.2; }
+.varjo-2 { fill: #6a5836; opacity: 0.2; }
+.valo-1 { fill: #fff6e0; opacity: 0.32; }
 
 /*
  * Vesi on yhtä sävyä koko kartalla, eikä se sävy ole sininen.

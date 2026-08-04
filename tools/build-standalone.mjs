@@ -39,6 +39,7 @@ const MODULES = [
   'js/packs/oceania-valokuvat.js',
   'js/packs/asia-maatiedot.js',
   'js/packs/radiot.js',
+  'js/packs/viritysaanet.js',
   'js/packs/europe-kulttuuri.js',
   'js/packs/kulttuuri-kategoriat.js',
   'js/packs/europe-valokuvat.js',

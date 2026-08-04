@@ -51,7 +51,10 @@ const SHELL = [
   './js/linssit/omistus.js',
   './js/linssit/pistenaytto.js',
   './js/linssit/radiosoitin.js',
+  './js/linssit/viritin.js',
   './js/linssit/radio.js',
+  './js/linssit/topografia.js',
+  './js/packs/viritysaanet.js',
   './css/radio.css',
   './js/packs/valokuvat-paikalliset.js',
   './js/packs/africa-valokuvat.js',
@@ -134,6 +137,14 @@ const SHELL = [
   './assets/audio/efekti-jumissa.mp3',
   './assets/audio/efekti-vuoro.mp3',
   './assets/audio/efekti-voitto.mp3',
+  // Maailmanradion viritysäänet (js/packs/viritysaanet.js). Nämä tulevat
+  // koriin, vaikka itse lähetystä ei offline saakaan: soitin näyttää ja
+  // kuulostaa oikealta siihen asti, että se toteaa verkon puuttuvan.
+  './assets/audio/viritys-taajuustungos.mp3',
+  './assets/audio/viritys-raskaskohina.mp3',
+  './assets/audio/viritys-tyhjakaista.mp3',
+  './assets/audio/viritys-datasignaali.mp3',
+  './assets/audio/viritys-asteikonpaa.mp3',
   './assets/audio/musiikki-visa-afrikka-1.mp3',
   './assets/audio/musiikki-visa-afrikka-2.mp3',
   './assets/audio/musiikki-visa-afrikka-3.mp3',

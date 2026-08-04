@@ -12,12 +12,25 @@
  * olisi kolme lisälatausta siitä, minkä selain piirtää ilmaiseksi, ja
  * peli latautuu myös hitaalla yhteydellä.
  *
- * EI SUODATTIMIA JA EI JATKUVIA ANIMAATIOITA. Soitin on kartan päällä,
- * ja yksikin sykkivä elementti pakottaa kartan piirtymään uudelleen joka
+ * EI JATKUVIA ANIMAATIOITA, EIKÄ POIKKEUKSIA. Soitin on kartan päällä, ja
+ * yksikin sykkivä elementti pakottaa kartan piirtymään uudelleen joka
  * kehyksellä — mitattu 15 fps vastaan 60 fps (js/ui.js 7529–7534).
- * Siirtymät ovat sallittuja: ne loppuvat. Merkkivalon sykkeelle on
- * poikkeus, ks. .radio-lamppu-hehku — se on rajattu virityksen kestoon
- * ja liikuttaa vain opacityä, joka ei piirrä karttaa uudelleen.
+ * Siirtymät ovat sallittuja: ne loppuvat.
+ *
+ * Merkkivalolla oli hetken poikkeus: se sykki virittäessä. Perustelu oli
+ * että syke on rajattu virityksen kahteentoista sekuntiin ja liikuttaa
+ * vain opacityä. Poikkeus purettiin katselmuksessa 4.8.2026 kahdesta
+ * syystä. Ensinnäkin sääntö on kirjoitettu iOS:n Safaria varten, eikä
+ * sen kompositointia voi mitata pöytäkoneen selaimesta — "vain opacity"
+ * on oletus, ei mittaustulos. Toiseksi merkki tulee perille ilmankin:
+ * lamppu vaihtuu keltaiseksi ja näytössä lukee VIRITTÄÄ..., eli laitteen
+ * elonmerkki on kaksinkertainen jo valmiiksi.
+ *
+ * EI SUODATTIMIA UUSISSA OSISSA. iOS piirtää suodatetun elementin omalle
+ * pinnalleen, joten kytkinten kromi, merkkivalon hehku ja lasin kuperuus
+ * tehdään liukuväreillä ja päällekkäisillä vedoilla. Ainoa filter koko
+ * tiedostossa on sammuneen näytön himmennys (.radio-naytto): se on yksi
+ * pieni suorakaide, joka ei liiku eikä muutu kuin tilanvaihdossa.
  *
  * Värit haetaan pelin muuttujista, mutta jokaisella on varavärí. Näin
  * soitin näyttää oikealta myös silloin, kun css/styles.css ei ole
@@ -369,18 +382,38 @@
  * Hehku. Kaksi liukuväriä: tiivis ydin lasin ympärillä ja laaja,
  * hyvin himmeä kajo kauemmas. Yksi liukuväri joko loppuu liian jyrkästi
  * (renkaan näköinen) tai leviää liian tasaisesti (usvan näköinen).
+ *
+ * VÄRIEN JAKOKOHDAT ALKAVAT VASTA LASIN REUNALTA, eivät keskeltä. Se on
+ * katselmuksen 4.8.2026 korjaus, ja syy on pelkkää laskentaa: hehkulaatta
+ * on 66 px eli säde 33 px, ja 26 px:n lamppu peittää siitä sisimmät 13 px
+ * = 39 %. Kun ensimmäinen liukuväri sammui 52 %:n kohdalla, sen voimasta
+ * jäi puun päälle näkyviin viimeinen kymmenys — loput paloivat lampun
+ * alla, jossa niitä ei näe kukaan. Omistaja pyysi valoa, joka "loistaa
+ * hieman ympäristöön"; nyt voimakkain kohta on 40–56 %:ssa eli juuri
+ * kromirenkaan ulkopuolella, ja kajo jatkuu puulle 20 pikselin päähän.
+ *
+ * MOLEMMAT LIUKUVÄRIT PÄÄTTYVÄT VASTA 100 %:SSA, JA closest-side ON
+ * PAKOLLINEN. Ilman sitä liukuväri on selaimen oletuksen mukaan
+ * farthest-corner, eli sen 100 % on laatan KULMASSA (46,7 px) eikä
+ * sivulla (33 px) — mutta border-radius: 50% leikkaa hehkun juuri
+ * sivun kohdalta. Liuku katkesi siis kesken, peitto 0,1:n kohdalla, ja
+ * lampun ympärille jäi terävärajainen oranssi kiekko: se ei näyttänyt
+ * valolta vaan tahralta puussa. Valolla ei ole reunaa, joten liuku on
+ * vietävä nollaan tasan siellä, missä laatta loppuu. Samasta syystä
+ * huippupeitto on 0,46 eikä 0,72: hehku saa hohtaa puun läpi, ei
+ * peittää sitä.
  */
 .radio-lamppu-hehku {
   position: absolute;
-  inset: -17px;
+  inset: -20px;
   border-radius: 50%;
   pointer-events: none;
   background-image:
-    radial-gradient(circle at 50% 50%,
-      rgba(255, 96, 62, 0.62) 0%, rgba(255, 96, 62, 0.28) 26%,
-      rgba(255, 96, 62, 0) 52%),
-    radial-gradient(circle at 50% 50%,
-      rgba(255, 140, 96, 0.22) 0%, rgba(255, 140, 96, 0) 78%);
+    radial-gradient(circle closest-side at 50% 50%,
+      rgba(255, 110, 70, 0.46) 40%, rgba(255, 110, 70, 0.24) 56%,
+      rgba(255, 110, 70, 0.07) 76%, rgba(255, 110, 70, 0) 100%),
+    radial-gradient(circle closest-side at 50% 50%,
+      rgba(255, 150, 105, 0.16) 35%, rgba(255, 150, 105, 0) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -443,12 +476,16 @@
 .radiosoitin[data-tila="soi"] .radio-lamppu-hehku { opacity: 1; }
 
 /*
- * Virittäessä lamppu on keltainen ja SYKKII HITAASTI. Se on ainoa
- * liikkuva asia soittimessa, ja poikkeus on harkittu: viritys kestää
- * korkeintaan VIRITYKSEN_AIKAKATKAISU_MS eli 12 sekuntia, syke on
- * pelkkää opacityä (selain hoitaa sen kompositoinnissa piirtämättä
- * karttaa uudelleen), ja juuri odottaminen on se hetki, jolloin pelaaja
- * tarvitsee merkin siitä että laite tekee jotain.
+ * Virittäessä lamppu on keltainen. Se PALAA TASAISESTI eikä syki: sykkivä
+ * valo olisi jatkuvaa liikettä kartan päällä, mistä koko tiedosto
+ * pidättyy (ks. tiedoston alku). Odottamisen merkki tulee perille
+ * kaksin verroin ilmankin — väri vaihtuu punaisesta keltaiseksi ja
+ * näytössä lukee VIRITTÄÄ... — ja viritys kestää joka tapauksessa
+ * korkeintaan VIRITYKSEN_AIKAKATKAISU_MS eli 12 sekuntia.
+ *
+ * Hehku on hitusen himmeämpi kuin soidessa. Se on tässä lukuohje eikä
+ * makuasia: keltainen on kirkkaampi väri kuin punainen, ja samalla
+ * peitolla virittävä laite näyttäisi valoisammalta kuin soiva.
  */
 .radiosoitin[data-tila="virittaa"] .radio-lamppu-lasi {
   background-image: radial-gradient(circle at 34% 28%,
@@ -456,18 +493,12 @@
 }
 .radiosoitin[data-tila="virittaa"] .radio-lamppu-hehku {
   background-image:
-    radial-gradient(circle at 50% 50%,
-      rgba(255, 196, 88, 0.6) 0%, rgba(255, 196, 88, 0.26) 26%,
-      rgba(255, 196, 88, 0) 52%),
-    radial-gradient(circle at 50% 50%,
-      rgba(255, 216, 150, 0.2) 0%, rgba(255, 216, 150, 0) 78%);
+    radial-gradient(circle closest-side at 50% 50%,
+      rgba(255, 196, 88, 0.42) 40%, rgba(255, 196, 88, 0.22) 56%,
+      rgba(255, 196, 88, 0.06) 76%, rgba(255, 196, 88, 0) 100%),
+    radial-gradient(circle closest-side at 50% 50%,
+      rgba(255, 216, 150, 0.14) 35%, rgba(255, 216, 150, 0) 100%);
   opacity: 0.85;
-  animation: radio-lampun-syke 1.8s ease-in-out infinite;
-}
-
-@keyframes radio-lampun-syke {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.9; }
 }
 
 /* Virhetilassa lamppu on sammunut mutta lasi jää tummanpunaiseksi:
@@ -869,8 +900,17 @@
   /* Pienempi näyttö: soitin vie puhelimen pystyruudusta jo neljänneksen,
      eikä kartta saa jäädä sen alle. */
   .radio-naytto { --radio-naytto-korkeus: 54px; }
+  /*
+   * Pienemmät kytkimet samasta syystä. Kilpineen kytkinpylväs on
+   * laitteen korkein osa, ja jokainen sen pikseli on pois kartasta.
+   * Kuva on SVG, joten pienennys ei sumene.
+   */
+  .radio-kytkin-kuva { width: 25px; height: 41px; }
+  .radio-kytkin-kilpi { font-size: 6px; letter-spacing: 0.14em; }
   .radio-lamppu { width: 22px; height: 22px; }
-  .radio-lamppu-hehku { inset: -14px; }
+  /* Sama suhde kuin leveällä ruudulla: lasi peittää hehkulaatasta noin
+     40 %, joten liukuvärien jakokohdat osuvat yhä puulle. */
+  .radio-lamppu-hehku { inset: -16px; }
   .radio-lamppu-lasi { inset: 3px; }
 
   /*
@@ -909,10 +949,4 @@
   .radio-kytkin-kilpi,
   .radio-lamppu-hehku,
   .radio-lamppu-lasi { transition: none; }
-  /*
-   * Virityksen syke pois. Sykkivä valo on juuri sitä liikettä, jota
-   * tämä asetus tarkoittaa, ja tieto tulee perille ilmankin: keltainen
-   * lamppu ja "VIRITTÄÄ..." näytöllä kertovat saman.
-   */
-  .radiosoitin[data-tila="virittaa"] .radio-lamppu-hehku { animation: none; }
 }

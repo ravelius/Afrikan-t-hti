@@ -43,6 +43,7 @@ import { el } from '../mapart.js';
 import { radioMaalle } from '../packs/radiot.js';
 import { teeRadiosoitin } from './radiosoitin.js';
 import { teePistenaytto, merkinRivit, FONTTI } from './pistenaytto.js';
+import { teeViritysaani, esilataaViritysaanet, unohdaViritysaanet } from './viritin.js';
 import { sfx } from '../sound.js';
 import { stopPlaceStream } from '../ambience-stream.js';
 
@@ -120,16 +121,57 @@ const NAPIN_OSUMA = 34;
 const NAPIN_RENGAS = 21;
 
 /*
- * Moduulin koko muisti kahdessa muuttujassa.
+ * RISTIHÄIVYTYS VIRITYKSESTÄ SUORAAN LÄHETYKSEEN.
+ *
+ * Viritys ei saa katketa napsahtaen. Sama vika on korjattu tässä pelissä
+ * jo kahdesti — kertojan äänestä (v176) ja luennoista (v215) — ja tässä
+ * se olisi vielä räikeämpi: kohina on jatkuvaa ääntä, ja jatkuvan äänen
+ * katkaisu kuuluu aina.
+ *
+ * Kuusi kymmenystä sekuntia on mitattu kompromissi. Lyhyempi (0,3 s) on
+ * kuultavissa leikkauksena, pidempi (1 s) jättää lähetyksen ensimmäisen
+ * lauseen kohinan alle — ja lähetyksen alku on juuri se, mitä pelaaja
+ * odottaa.
+ *
+ * Vaihto on TASATEHOINEN: viritys laskee kosinia (js/linssit/viritin.js
+ * haivytaPois) ja lähetys nousee siniä. Kaksi riippumatonta ääntä
+ * summautuu teholtaan, joten lineaarinen pari jättäisi keskelle 3 dB:n
+ * notkahduksen — reiän juuri siihen kohtaan, jota vaihdolla piti peittää.
+ *
+ * Lähetys on <audio>-elementti eikä kulje Web Audion läpi (ks.
+ * aloitaVirta: crossOrigin veisi äänen kokonaan monelta asemalta), joten
+ * sen puoli häivytyksestä tehdään elementin volume-arvoa askeltamalla.
+ * 25 ms:n askel on 24 askelta koko vaihdossa; harvempi kuuluu portaina.
+ */
+const RISTIHAIVYTYS_S = 0.6;
+const HAIVYTYKSEN_ASKEL_MS = 25;
+
+/*
+ * Kuinka usein tarkistetaan, sammuttiko pelaaja pelin äänet kesken
+ * virityksen.
+ *
+ * js/sound.js ei kerro mykistyksestä kenellekään eikä sitä voi muuttaa
+ * täältä (tiedosto on toisen työvaiheen hallussa), joten tieto on
+ * kysyttävä. Vahti elää vain virityksen ajan eli enintään 12 sekuntia,
+ * ja neljä kertaa sekunnissa on riittävän nopea: mykistys tuntuu
+ * välittömältä, kun ääni katoaa neljännessekunnissa.
+ */
+const MYKISTYKSEN_VAHTI_MS = 250;
+
+/*
+ * Moduulin koko muisti neljässä muuttujassa.
  *
  * `tila` on olemassa vain radiotilan ajan: se sisältää laitteen, näytön
  * ja sen mitä kartasta tarvitaan. `soiva` on kerrallaan enintään yksi —
  * kaksi yhtä aikaa auki olevaa lähetysvirtaa on juuri se sekasotku, jota
  * omistaja ei halunnut, ja se olisi myös kaksi verkkoyhteyttä
- * puhelinliittymästä.
+ * puhelinliittymästä. `viritin` on niiden väliin jäävä kohina, ja sitäkin
+ * on kerrallaan enintään yksi.
  */
 let tila = null;
 let soiva = null;
+let viritin = null;
+let mykistysVahti = 0;
 let aanenvoimakkuus = OLETUSAANI;
 
 /** Onko radiotila päällä? */

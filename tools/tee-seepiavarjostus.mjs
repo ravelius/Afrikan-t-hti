@@ -157,12 +157,25 @@ const ASETUKSET = {
    *
    * Tämä on se säädin, joka päättää tuleeko kartalle maastoa vai
    * täpliä. Sumentamaton varjo on täynnä yhden ruudun kokoisia
-   * saarekkeita, joista jokainen on oma renkaansa: mitattuna 0 kierrosta
-   * antaa yli 8000 rengasta ja 3 kierrosta reilut 1200 samalla
-   * alarajalla. Muoto ei häviä, koska se on satoja kilometrejä leveä —
-   * vain rakeisuus häviää.
+   * saarekkeita, joista jokainen on oma renkaansa. Mitattuna, raakojen
+   * ääriviivarenkaiden määrä ennen alarajaa ja tiedoston koko:
+   *
+   *     kierroksia   raakoja renkaita   jäljelle jää   koko
+   *          0            32 982            508       292 kt
+   *          1             5 054            379       147 kt
+   *          2             2 155            308        98 kt
+   *          3             1 313            266        79 kt
+   *          4               958            234        67 kt
+   *
+   * Nollan ja kahden välillä katoaa 30 000 rengasta ja jäljelle jää
+   * 60 % muodoista: se on juuri sitä rakeisuutta, joka ei ole maastoa.
+   * Kolmannesta eteenpäin alkaa kadota valon puoli — valovyöhyke on
+   * kapea nauha ja sumentuu ensimmäisenä pois (35 rengasta -> 21).
+   *
+   * Kaksi on siis se kohta, jossa täplät ovat menneet mutta harjanteen
+   * valorinne on vielä tallella.
    */
-  sumennus: valitsin('sumennus', 3),
+  sumennus: valitsin('sumennus', 2),
   /*
    * Vyöhykkeiden rajat POIKKEAMANA tasaisesta maasta (varjosta()
    * palauttaa `tasainen`, joka on 0,707 eikä 0,5 — ks. varjostus.mjs).

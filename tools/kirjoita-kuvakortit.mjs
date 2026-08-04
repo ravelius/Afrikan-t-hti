@@ -26,6 +26,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { VANHA_RAJA, kuvanVuosi } from './kuvan-ika.mjs';
 
 // Noden fetch ei lue HTTPS_PROXYa; ks. tools/hae-radiot.mjs.
 if (!process.env.NODE_USE_ENV_PROXY && (process.env.HTTPS_PROXY || process.env.https_proxy)) {
@@ -45,12 +46,7 @@ if (!lahde || !kohde || !vientinimi) {
 }
 
 const RAJA = 1200;
-/*
- * Vanhaksi merkitty kuva saa olla 1960 tai vanhempi. Raja on väljä
- * tarkoituksella: 1950-luvun kuva on yhä uskottavasti "vanha
- * valokuva", mutta sitä uudempi ei ole.
- */
-const VANHA_RAJA = 1960;
+// Ikäraja ja vuosiluvun lukeminen: tools/kuvan-ika.mjs.
 const ND = /\bND\b|NoDeriv/i;
 const nuku = (ms) => new Promise((r) => { setTimeout(r, ms); });
 const siivoa = (s) => (s?.value ?? '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -93,52 +89,6 @@ async function tarkista(nimet) {
   return ulos;
 }
 
-/*
- * Vuosiluku merkkijonosta.
- *
- * Ensimmäinen versio otti suurimman neljän numeron jakson. Se on oikea
- * oletus silloin kun tekstissä on vain päiväyksiä, mutta Commonsin
- * kentissä on muutakin: arkiston tunnusnumero (N-1979-003-0525),
- * digitointivuosi (item:825974 : 2008) ja kirjaston luettelokoodi.
- * Suurin luku osui niihin, ja neljä aitoa 1900-luvun alun valokuvaa
- * hylättiin "liian uusina" — Yellowknifen 1930-luvun kuva luettiin
- * vuodeksi 1979, koska se on arkiston tunnus.
- *
- * Nyt luetaan kolmessa portaassa, luotettavimmasta alkaen:
- *
- *  1. Tunnisteet pois. Neljän numeron jakso pidemmän numero- tai
- *     kirjainjonon sisällä ei ole vuosiluku.
- *  2. Vuosikymmen ("1930s", "1930-luku") ja vihjeellinen vuosi
- *     ("circa 1903", "[Circa 1930]", "published 1903") ovat
- *     nimenomaan kuvan ikä. Näistä otetaan PIENIN.
- *  3. Muuten suurin, kuten ennen. Se on tahallisen ankara: vanhaksi
- *     merkitty kuva, jonka iästä ei ole vihjettä, on hylättävä
- *     ennemmin kuin päästettävä läpi.
- */
-const ilmanTunnisteita = (teksti) => String(teksti)
-  // N-1979-003-0525, 2001-07-01-0525 ja vastaavat moniosaiset tunnukset
-  .replace(/\b[A-Za-z]*\d{2,}(?:[-_/]\d+){2,}\b/g, ' ')
-  // LCCN2001701072, kirjainalkuinen pitkä koodi
-  .replace(/\b[A-Za-z]{2,}\d{6,}\b/g, ' ')
-  // item:825974 — viisi numeroa tai enemmän ei ole vuosiluku
-  .replace(/\b\d{5,}\b/g, ' ');
-
-const VUOSI = /\b(1[5-9]\d\d|20\d\d)\b/g;
-const VIHJE = /(circa|ca|c|about|around|between|published|created|taken|dated|photographed|photograph|noin|vuonna|from)\.?\s*[[(]?\s*$/i;
-
-const vuosiluku = (teksti) => {
-  const puhdas = ilmanTunnisteita(teksti);
-  const varmat = [...puhdas.matchAll(/\b(1[5-9]\d0|20[0-2]0)\s*(?:s\b|-luku|-tal)/gi)]
-    .map((m) => Number(m[1]));
-  const kaikki = [];
-  for (const m of puhdas.matchAll(VUOSI)) {
-    kaikki.push(Number(m[1]));
-    if (VIHJE.test(puhdas.slice(Math.max(0, m.index - 28), m.index))) varmat.push(Number(m[1]));
-  }
-  if (varmat.length) return Math.min(...varmat);
-  return kaikki.length ? Math.max(...kaikki) : null;
-};
-
 // --- tarkistus -----------------------------------------------------------------
 
 const ehdotukset = JSON.parse(readFileSync(lahde, 'utf8'));
@@ -160,23 +110,13 @@ function kelpaa(kuva, id, kohta) {
   if (info.width < RAJA) { hylatyt.push(`${id}/${kohta}: vain ${info.width} px — ${kuva.tiedosto}`); return null; }
   const lisenssi = siivoa(info.extmetadata?.LicenseShortName);
   if (ND.test(lisenssi)) { hylatyt.push(`${id}/${kohta}: ND-lisenssi — ${kuva.tiedosto}`); return null; }
-  /*
-   * Vanhan kuvan ikä tarkistetaan päiväyksestä JA kuvauksesta.
-   * Commonsin päiväys on usein skannauspäivä, ja silloin oikea vuosi
-   * on kuvauksessa ("around 1900"). Pelkkä päiväys hylkäisi aidot
-   * kuvat; pelkkä kuvaus päästäisi läpi väärät.
-   */
+  // Vanhan kuvan ikä päiväyksestä, kuvauksesta ja nimestä; ks. kuvan-ika.mjs.
   if (kohta === 'vanha') {
-    const pvm = vuosiluku(siivoa(info.extmetadata?.DateTimeOriginal));
-    const kuvaus = vuosiluku(siivoa(info.extmetadata?.ImageDescription));
-    /*
-     * Myös tiedostonimestä. Lataajat nimeävät tiedoston kuvan AIHEEN
-     * mukaan ("João Pessoa, Paraíba circa 1903.jpg"), kun taas
-     * päiväyskenttä kertoo usein skannauspäivän. Nimi on siis näistä
-     * kolmesta useimmiten se, joka tietää oikean vuoden.
-     */
-    const nimesta = vuosiluku(kuva.tiedosto.replace(/\.[^.]+$/, ''));
-    const vanhin = [pvm, kuvaus, nimesta].filter((v) => v !== null).sort((a, b) => a - b)[0] ?? null;
+    const vanhin = kuvanVuosi({
+      paivays: siivoa(info.extmetadata?.DateTimeOriginal),
+      kuvaus: siivoa(info.extmetadata?.ImageDescription),
+      tiedosto: kuva.tiedosto,
+    });
     if (vanhin !== null && vanhin > VANHA_RAJA) {
       hylatyt.push(`${id}/vanha: Commons sanoo ${vanhin} — ${kuva.tiedosto}`);
       return null;

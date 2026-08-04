@@ -1,0 +1,34 @@
+[
+  {
+    "id": "campogrande",
+    "commons": true,
+    "tiedosto": "Inauguração da base de Mato Grosso com a presença do ministro da Aeronáutica, em Campo Grande..tif",
+    "vuosi": "1945",
+    "lahde": "Arquivo Nacional (Brasilia), Commons (PD)",
+    "leveys": 2818,
+    "selite": "Campo Granden lentotukikohdan vihkiäiset 19. huhtikuuta 1945. Nurmikentälle on aseteltu riviin kymmenkunta konetta, kaksitasoja ja yksitasoja sekaisin, ja niiden takana seisoo sotilasosasto ruoduissa. Kuvassa oli paikalla myös ilmailuministeri Salgado Filho, mutta häntä ei erota mistään: juhlaväki jää pistemäisiksi hahmoiksi kentän laidalle.",
+    "huom": "Aito valokuva, Arquivo Nacionalin Wikimedia-GLAM-erästä. Tiedostomuoto on TIFF ja nimessä on kaksi pistettä peräkkäin ('Campo Grande..tif') — se kuuluu nimeen, ei ole kirjoitusvirhe."
+  },
+  {
+    "id": "santacruz",
+    "commons": false,
+    "osoite": "https://pictures.smns-bw.org/SMNS-K-archivaliacoll/SMNS-K-Arc-300677_001_Positiv.jpg",
+    "arkisto": "Staatliches Museum für Naturkunde Stuttgart, Gran-Chaco-Expedition -arkisto (Deutsche Digitale Bibliothek / Europeana)",
+    "lisenssi": "Public Domain Mark 1.0",
+    "leveys": 2427,
+    "vuosi": "1925-1927",
+    "selite": "Katunäkymä Santa Cruz de la Sierrasta saksalaisen Gran Chaco -retkikunnan kuvaamana. Mukulakivikadulla vedetään härkävaljakoita, oikealla seisoo säkeillä kuormattu kaksipyöräiset kärryt ja aasin selässä istuu valkohuivinen nainen. Kadun varren talot ovat matalia ja rapattuja, ja koko kuvassa ei näy yhtään moottoriajoneuvoa — kaupunkiin ei silloin päässyt maantietä pitkin, vaan tavara tuli härkäkärryillä ja mulilla.",
+    "huom": "Alkuperäinen on lasinegatiivi. Arkisto tarjoaa samasta kuvasta kaksi tiedostoa: '...300677_001.jpg' on negatiivi ja '...300677_001_Positiv.jpg' on käännetty positiivi. Yllä oleva osoite on positiivi, eli se kelpaa sellaisenaan. Kuvaajaksi on merkitty Erwin Lindner (1888-1988), retkikunnan johtaja oli Hans Krieg. Retkikunnan aineisto on ajoitettu marraskuun 1925 ja tammikuun 1927 väliin; yksittäistä päivämäärää tälle otokselle ei ole kirjattu. Vaihtoehto samasta kaupungista: 'Park vor der Kathedrale', https://pictures.smns-bw.org/SMNS-K-archivaliacoll/SMNS-K-Arc-300680_001_Positiv.jpg (2548 px) — katedraali ja palmut Plaza 24 de Septiembren yli."
+  },
+  {
+    "id": "caphorn",
+    "commons": false,
+    "osoite": "https://finna.fi/Cover/Show?source=Solr&id=museovirasto.2F355E4AADBAE6C532CF0198E9225D29&index=0&size=large",
+    "arkisto": "Museovirasto, Suomen merimuseon kuvakokoelma (Finna)",
+    "lisenssi": "CC BY 4.0",
+    "leveys": 1200,
+    "vuosi": "1900-luvun alkupuoli",
+    "selite": "Kap Horn merestä nähtynä, kuvattuna purjelaiva Lawhillin kannelta. Kallioinen niemi nousee matalana ja tylppänä horisontista, ja etualalla on pelkkää avomerta — rannalla ei näy majakkaa, laituria eikä muuta rakennettua. Alkuperäinen on 6 x 9 senttimetrin mustavalkonegatiivi Suomen merimuseon kuvakokoelmassa, eikä kuvaajan nimeä ole merkitty muistiin.",
+    "huom": "Tietue: https://finna.fi/Record/museovirasto.2F355E4AADBAE6C532CF0198E9225D29 , luettelointinumero SMK200414:639. Museovirasto EI ilmoita kuvalle vuotta, joten vuosikenttä on tarkoituksella väljä: ajoitus perustuu siihen, että kyseessä on Lawhillin kannelta otettu rahtipurjelaivakauden kuva. ÄLÄ kirjoita korttiin tarkkaa vuosilukua. Museoviraston oma latauspalvelu (mpfinlandrepox.zetcom.app) vaatii kirjautumisen, mutta Finnan Cover/Show -osoite palvelee kuvan vapaasti koossa 1200 x 872. Suurempi TIFF (200414_639.tif) on olemassa, mutta se pitäisi pyytää Museovirastolta. Kuva on rasteroitu vedos eli painojäljestä skannattu — pistekuvio näkyy lähikatselussa."
+  }
+]

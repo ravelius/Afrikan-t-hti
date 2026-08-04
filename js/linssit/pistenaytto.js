@@ -894,10 +894,10 @@ const TYHJA = FONTTI[' '];
  * NÄYTTEISTIN — JÄRJESTELMÄN FONTTI PISTEIKSI
  *
  * Käsin piirretty fontti kattaa latinalaisen ja kyrillisen. Sen
- * ulkopuolelle jää yhä kreikka (ΕΡΤ Πρώτο Πρόγραμμα, ΡΙΚ), thai
- * (วิทยุเสียงอิสลาม), arabia ja heprea — js/packs/radiot.js:n 87 nimestä
- * toistakymmentä. Niitä ei kannata piirtää käsin: aakkostoja on liikaa,
- * ja jokainen uusi asemalista toisi lisää.
+ * ulkopuolelle jää yhä kreikka (ΕΡΤ Πρώτο Πρόγραμμα, ΡΙΚ Πρώτο), armenia,
+ * georgia ja ne kyrilliset kirjaimet, joita venäjässä ei ole (mongolian Ү,
+ * kazakin Ә). Niitä ei kannata piirtää käsin: aakkostoja on liikaa, ja
+ * jokainen uusi asemalista toisi lisää.
  *
  * Siksi tuntematon merkki piirretään laitteen omalla fontilla canvasille
  * ja LUETAAN TAKAISIN PISTEINÄ: solu palaa, jos musteen peitto ylittää
@@ -907,14 +907,19 @@ const TYHJA = FONTTI[' '];
  * solmuja — sama sääntö kuin muualla tässä tiedostossa.
  *
  * MIKSI EI clip-path. Sama idea saataisiin rajaamalla <text> ympyröiden
- * ruudukkoon. Mitattuna (koe 4.8.2026, headless Chromium): 16 × 2 merkin
- * näytön rajaus on 1425 ympyrää ja sen rakentaminen vei 31,8 ms — ja se
- * maksu tulisi uudelleen jokaisella vierityksen askeleella, koska teksti
- * liikkuu rajauksen ali yhdeksän kertaa sekunnissa. Näytteistys maksaa
- * 0,70 ms merkiltä KERRAN, minkä jälkeen merkki on muistissa eikä
- * vieritys maksa mitään. Lisäksi clip-path jättäisi rasterointinsa
- * selaimen huoleksi, ja siitä on tässä tiedostossa jo yksi oppi
- * (ks. "EI SUODATTIMIA" tiedoston alussa).
+ * ruudukkoon. Mitattuna (koe 4.8.2026, headless Chromium):
+ *
+ *   clip-path 16 × 2 merkin näytölle   1425 ympyrää, 31,8 ms rakentaa
+ *   näytteistys, uusi merkki            0,21 ms
+ *   näytteistys, muistista              0,0005 ms
+ *   koko näytön piirto (16 × 2)         0,03–0,08 ms
+ *
+ * Ratkaiseva ei ole ensimmäinen luku vaan se, että clip-pathin maksu
+ * tulisi uudelleen jokaisella vierityksen askeleella — teksti liukuu
+ * rajauksen ali yhdeksän kertaa sekunnissa. Näytteistys maksetaan kerran
+ * merkkiä kohti, minkä jälkeen vieritys on yhtä halpaa kuin ennenkin.
+ * Lisäksi clip-path jättäisi rasteroinnin selaimen huoleksi, ja siitä on
+ * tässä tiedostossa jo yksi oppi (ks. "EI SUODATTIMIA" tiedoston alussa).
  *
  * YLINÄYTTEISTYS ON PAKOLLINEN. Suoraan 5 × 7 pikselin kokoon rasteroitu
  * kirjain katoaisi: ohuet vedot osuvat pikselien väliin. Merkki piirretään
