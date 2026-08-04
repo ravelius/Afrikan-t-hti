@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 260, teksti: 'Osastonotsikon paksu yläviiva takaisin' },
   { v: 259, teksti: 'Uusi vesistölinssi: pelkät joet ja järvet' },
   { v: 259, teksti: 'Jokien nimet takaisin vesistölinssin kanssa' },
   { v: 259, teksti: 'Tutki-otsikon tausta ei enää näy tummana palkkina' },
