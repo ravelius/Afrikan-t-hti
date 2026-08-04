@@ -1,0 +1,317 @@
+[
+  {
+    "id": "buenosaires",
+    "paikka": "Buenos Aires",
+    "vanha": {
+      "tiedosto": "Buenos Aires. Plaza Victoria l LCCN2017656795.jpg",
+      "vuosi": "1890",
+      "lahde": "Photoglob Co., Library of Congress (PD)",
+      "selite": "Plaza Victoria eli nykyinen Plaza de Mayo käsinväritettynä photochrom-vedoksena. Nurmikkokolmiot, suihkulähde ja ratsastajapatsas ovat paikoillaan, mutta aukion laidalla on vielä matalia kaarikäytäväisiä taloja. Vedokset painettiin Sveitsissä mustavalkoisista negatiiveista ja myytiin matkailijoille muistoksi."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Feria de San Telmo, Buenos Aires.jpg",
+        "vuosi": "2005",
+        "lahde": "Alexandre Campolina, Commons (CC BY 3.0)",
+        "selite": "Sunnuntaitori San Telmon mukulakivikadulla. Valkoisissa teltoissa myydään vanhoja käyttöesineitä ja huonekaluja, ja kadun varren talon kyltissä lukee antigüedades. San Telmo oli 1800-luvulla varakkaiden kortteli, kunnes keltakuume ajoi heidät pohjoisemmas ja vanhat talot jäivät siirtolaisperheille."
+      },
+      {
+        "tiedosto": "San Telmo Plaza Dorrego.JPG",
+        "vuosi": "2008",
+        "lahde": "Helge Høifødt, Commons (CC BY-SA 3.0)",
+        "selite": "Tangoa Plaza Dorregolla sunnuntai-iltapäivänä. Sama aukio on San Telmon torin keskus, ja tanssijat ottavat sen käyttöönsä kojujen välissä. Tango syntyi 1800-luvun lopun Buenos Airesissa satamakortteleiden ja siirtolaisten musiikkina."
+      },
+      {
+        "tiedosto": "2018-10-19 La Boca, Buenos Aires, Argentina (Martin Rulsch) 10.jpg",
+        "vuosi": "2018",
+        "lahde": "DerHexer, Commons (CC BY-SA 4.0)",
+        "selite": "Caminito La Bocan kaupunginosassa. Talojen seinät on maalattu isoina värikenttinä, ja kujalla myydään taidetta ja matkamuistoja. La Boca kasvoi Riachuelo-joen suulle satamatyön ympärille, ja suuri osa sen asukkaista tuli aikoinaan Genovasta."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Plaza de Mayo panorama.jpg",
+      "lahde": "The Cosmonaut, Commons (CC BY-SA 2.5)",
+      "selite": "Sama aukio nykyään, kuvattuna vastakkaisesta suunnasta. Perällä on Casa Rosada eli presidentin virastotalo, ja vasemmalla seisoo ratsastajapatsas kuten vanhassakin vedoksessa. Plaza de Mayo on Argentiinan tärkein mielenosoitusten ja juhlien paikka."
+    }
+  },
+  {
+    "id": "caracas",
+    "paikka": "Caracas",
+    "vanha": {
+      "tiedosto": "Panoramic view of Caracas, Venezuela 1900 restored version.jpg",
+      "vuosi": "noin 1900",
+      "lahde": "Library of Congress, Commons (CC0)",
+      "selite": "Caracas El Calvarion kukkulalta kuvattuna. Oikealla on Lourdesin Neitsyen kappeli, alhaalla matalia tiilikattoisia kortteleita ja takana Ávila-vuori, joka erottaa kaupungin merestä. Kaupunki mahtui tuolloin kokonaan laakson pohjalle."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Caracas Metro 1.jpg",
+        "vuosi": "2013",
+        "lahde": "Wilfredor, Commons (CC0)",
+        "selite": "Plaza Venezuelan metroasema ruuhka-aikaan. Kyltti opastaa linjalle 3 ja suuntaan El Valle. Metro avattiin 1983, ja se kulkee laakson suunnassa kuten kaupunkikin: kapea laakso pakottaa liikenteen yhteen putkeen."
+      },
+      {
+        "tiedosto": "Teleferico waraira repano caracas.JPG",
+        "vuosi": "2007",
+        "lahde": "Adryan Amaya, Commons (CC BY-SA 3.0)",
+        "selite": "Köysirata nousee kaupungin yläpuolelle Waraira Repanon eli Ávilan kansallispuistoon. Vuorenrinne on jätetty rakentamatta, ja huipulla on selvästi viileämpää kuin laaksossa parin kilometrin päässä alempana."
+      },
+      {
+        "tiedosto": "Plaza Bolivar de Caracas en la celebracion del Bicentenario.JPG",
+        "vuosi": "2011",
+        "lahde": "Javiermartinez76, Commons (CC BY-SA 3.0)",
+        "selite": "Plaza Bolívar itsenäisyyden 200-vuotisjuhlan aikaan. Aukio on kaupungin alkuperäisen ruutukaavan keskiruutu vuodelta 1567, ja sen laidoilla ovat katedraali, arkkipiispan palatsi ja kaupungintalo."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Caracas, Venezuela (10707698243).jpg",
+      "lahde": "Fernando Flores, Commons (CC BY-SA 2.0)",
+      "selite": "Caracas nykyään. Laakso on täyttynyt reunoja myöten ja asutus noussut ympäröiville rinteille. Kaupunki on noin 900 metrin korkeudessa, mikä pitää lämpötilan tasaisena ympäri vuoden vaikka päiväntasaaja on lähellä."
+    }
+  },
+  {
+    "id": "bogota",
+    "paikka": "Bogotá",
+    "vanha": {
+      "tiedosto": "Calle Real - Bogota.jpg",
+      "vuosi": "1886",
+      "lahde": "Julio Racines, Gallica / Commons (PD)",
+      "selite": "Calle Real eli nykyinen Carrera Séptima. Kadun päässä kohoaa San Franciscon kirkon torni, ja kulkijat näkyvät haamuina, koska valotusaika oli pitkä. Katu oli kaupungin pääväylä jo espanjalaisajalla."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Market in Bogotá.jpg",
+        "vuosi": "2022",
+        "lahde": "Mussi Katz, Commons (CC0)",
+        "selite": "Paloquemaon torihalli. Kolumbian hedelmät kasvavat hyvin eri korkeuksilla, kylmästä ylätasangosta kuumiin laaksoihin, ja ne kohtaavat vasta täällä samoilla tiskeillä."
+      },
+      {
+        "tiedosto": "2019 Bogotá - Ciclovía en la calle 26.jpg",
+        "vuosi": "2019",
+        "lahde": "Felipe Restrepo Acosta, Commons (CC BY-SA 4.0)",
+        "selite": "Ciclovía Calle 26:lla. Sunnuntaisin ja pyhäpäivinä osa pääkaduista suljetaan autoilta ja annetaan pyöräilijöille ja kävelijöille. Tapa alkoi Bogotássa 1970-luvulla ja on sittemmin kopioitu moneen muuhun kaupunkiin."
+      },
+      {
+        "tiedosto": "Bogotá Monserrate desde La Candelaria.JPG",
+        "vuosi": "2013",
+        "lahde": "Felipe Restrepo Acosta, Commons (CC BY-SA 3.0)",
+        "selite": "Monserraten kirkko kohoaa La Candelarian tiilikattojen yllä. Vuorelle noustaan funikulaarilla tai köysiradalla, ja se on ollut pyhiinvaelluskohde vuosisatoja. Bogotá on itsekin jo 2 600 metrissä, joten huipulle jää nousua noin puoli kilometriä."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Peatonalización de Carrera Séptima cerca Avenida Jimenez.jpg",
+      "lahde": "Peter Angritt, Commons (CC BY-SA 4.0)",
+      "selite": "Sama katu nykyään: Carrera Séptimaa muutetaan kävelykaduksi Avenida Jiménezin kohdalla. Taustalla näkyy yhä San Franciscon kirkon torni, sama kuin vuoden 1886 kuvassa. Työmiehet latovat laattoja entiselle ajoradalle."
+    }
+  },
+  {
+    "id": "quito",
+    "paikka": "Quito",
+    "vanha": {
+      "tiedosto": "Government Building and principal public square with cathedral at left, Quito, Ecuador LCCN90710775.jpg",
+      "vuosi": "1907",
+      "lahde": "Underwood & Underwood, Library of Congress (PD)",
+      "selite": "Quiton pääaukio vuonna 1907: oikealla hallituspalatsin pitkä pylväikkö, vasemmalla katedraali. Etualalla kannetaan taakkoja selässä ja saviruukkua päälaella, ja mukulakivillä odottaa hevosvaunu. Kuva on stereokortin puolikas — pariksi otetut vedokset antoivat katselulaitteessa syvyysvaikutelman."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Quito calle García Moreno.jpg",
+        "vuosi": "2010",
+        "lahde": "Cayambe, Commons (CC BY-SA 3.0)",
+        "selite": "García Morenon katu laskee vanhan keskustan halki, ja perällä El Panecillon kukkulalla seisoo Quiton Neitsyen patsas. Vanha keskusta kuuluu Unescon maailmanperintöluetteloon, ja siksi julkisivuja ei saa muuttaa."
+      },
+      {
+        "tiedosto": "Iglesia de la Compañía de Jesus, Quito 01.jpg",
+        "vuosi": "2014",
+        "lahde": "Bernard Gagnon, Commons (CC BY-SA 3.0)",
+        "selite": "Jesuiittakirkon La Compañían julkisivun yksityiskohta. Kierrepylväät ja koristeet on veistetty vulkaanisesta kivestä paikallisissa työpajoissa, joiden tuotannosta käytetään nimitystä Quiton koulukunta."
+      },
+      {
+        "tiedosto": "Basílica del Voto Nacional, Quito (exterior) pic.ao1.jpg",
+        "vuosi": "2017",
+        "lahde": "David Adam Kess, Commons (CC BY-SA 4.0)",
+        "selite": "Basílica del Voto Nacional illalla. Uusgoottilainen kirkko kohoaa vanhan keskustan yläpuolelle, ja sen torneihin voi kiivetä: ylhäältä näkyvät keskusta ja Pichincha-tulivuori."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Quito Plaza Independencia Pal Carondelet 2010.jpg",
+      "lahde": "Cayambe, Commons (CC BY-SA 3.0)",
+      "selite": "Sama aukio nykyään. Hallituspalatsin Palacio de Carondelet'n pylväikkö ja katedraali ovat ennallaan, mutta mukulakivien tilalla on laatoitus ja istutukset ja kuormankantajien tilalla kävelijöitä."
+    }
+  },
+  {
+    "id": "galapagos",
+    "paikka": "Galápagos",
+    "vanha": {
+      "tiedosto": "Preparing for the trail LCCN99472325.jpg",
+      "vuosi": "1903",
+      "lahde": "R. H. Beck, Library of Congress (PD)",
+      "selite": "Keräysretkikunnan miehiä työssä Galápagossaarilla vuonna 1903. Maassa on jättiläiskilpikonnien kilpiä, ja näytteitä valmistellaan kuljetusta varten. Library of Congressin luettelossa kuvan aiheiksi on merkitty kilpikonnat, Galápagossaaret ja metsästys; retkikunnat keräsivät saarilta eläinnäytteitä museoiden kokoelmiin."
+    },
+    "lisat": [
+      {
+        "tiedosto": "PtoAyoraMercado.jpg",
+        "vuosi": "2018",
+        "lahde": "Torbenbrinker, Commons (CC BY-SA 4.0)",
+        "selite": "Puerto Ayoran tori Santa Cruzin saarella. Kaali, banaani, sipuli ja munat myydään muovilaareista ja pahvilaatikoista. Osa tuotteista kasvatetaan saaren kosteammalla ylängöllä, osa tuodaan laivalla mantereelta."
+      },
+      {
+        "tiedosto": "(Zalophus wollebaeki) main water taxi dock at Puerto Ayora, three Galápagos Sea Lions.JPG",
+        "vuosi": "2015",
+        "lahde": "David Adam Kess, Commons (CC BY-SA 4.0)",
+        "selite": "Kolme galápagosinmerileijonaa makaa Puerto Ayoran vesitaksilaiturilla. Laituri on saaren vilkkain kohta, mutta eläimet eivät väisty: saarten lajit ovat suojeltuja eivätkä ole oppineet pelkäämään ihmistä."
+      },
+      {
+        "tiedosto": "Piquero patiazul (Sula nebouxii), isla Lobos, islas Galápagos, Ecuador, 2015-07-25, DD 42.JPG",
+        "vuosi": "2015",
+        "lahde": "Diego Delso, Commons (CC BY-SA 4.0)",
+        "selite": "Sinijalkasuulapari kosiomenoissa Lobosin saarella. Koiras nostelee jalkojaan vuoron perään naaraan edessä. Jalkojen sinisen sävy vaihtelee ravinnon mukaan, ja tutkijoiden mukaan se kertoo linnun kunnosta."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "20180809-Galápagos giant tortoise eating leaves (9960).jpg",
+      "lahde": "Nicolas Völcker, Commons (CC BY-SA 4.0)",
+      "selite": "Santa Cruzin jättiläiskilpikonna syömässä Charles Darwinin tutkimusasemalla. Sata vuotta sen jälkeen, kun kilpikonnia vietiin saarilta laatikoittain, asemalla kasvatetaan poikasia ja palautetaan niitä takaisin saarille."
+    }
+  },
+  {
+    "id": "lima",
+    "paikka": "Lima",
+    "vanha": {
+      "tiedosto": "Lima. The Rimac Bridge LCCN2006679716.jpg",
+      "vuosi": "1868",
+      "lahde": "Courret Hermanos, Library of Congress (PD)",
+      "selite": "Lima korkealta kuvattuna vuonna 1868. Keskellä näkyvät Puente de Piedran holvit ja Rímac-joen uoma, takana paljas San Cristóbalin kukkula. Kaupunki oli tuolloin matalaa, tasakattoista kortteliverkkoa. Albumiinivedos on Courret'n veljesten kuvaamosta, joka dokumentoi Limaa vuosikymmeniä."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Lunchtime ceviche at the Mercado Central.jpg",
+        "vuosi": "2018",
+        "lahde": "Bex Walton, Commons (CC BY 2.0)",
+        "selite": "Cevichetiski Limán keskustorilla. Ceviche on raakaa kalaa, joka kypsyy limemehun hapossa ja tarjotaan sipulin, chilin ja keitetyn maissin kanssa. Perussa se syödään perinteisesti keskipäivällä."
+      },
+      {
+        "tiedosto": "Escolta presidencial, Plaza de Armas, Lima, Perú, 2015-07-28, DD 40.JPG",
+        "vuosi": "2015",
+        "lahde": "Diego Delso, Commons (CC BY-SA 4.0)",
+        "selite": "Presidentin ratsuväkisaattue Plaza de Armasilla itsenäisyyspäivänä 28. heinäkuuta. Vartiosto kuuluu Mariscal Domingo Nieton ratsuväkirykmenttiin ja esiintyy hallituspalatsin edessä."
+      },
+      {
+        "tiedosto": "Cerro de San Cristóbal, Lima, Perú, 2015-07-28, DD 113.JPG",
+        "vuosi": "2015",
+        "lahde": "Diego Delso, Commons (CC BY-SA 4.0)",
+        "selite": "San Cristóbalin kukkula nykyään. Sama rinne, joka vuoden 1868 kuvassa on paljas, on nyt katettu taloilla laelle asti. Korttelit syntyivät maaltamuuton myötä, ja talot on rakennettu vähitellen omin voimin."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Puente de piedra en el rio rimac Lima.jpg",
+      "lahde": "Silvia Alcocer, Commons (CC BY-SA 4.0)",
+      "selite": "Puente de Piedra nykyään, kuvattuna Desamparadosin rautatieaseman puolelta. Kivinen holvisilta on 1600-luvun alusta ja yhä käytössä; joen rannat on muurattu ja penkereille istutettu palmuja."
+    }
+  },
+  {
+    "id": "machupicchu",
+    "paikka": "Machu Picchu",
+    "vanha": {
+      "tiedosto": "Machupicchu hb10.jpg",
+      "vuosi": "1912",
+      "lahde": "Hiram Bingham, National Geographic 1913 (PD)",
+      "selite": "Machu Picchu vuonna 1912, kun Hiram Binghamin retkikunta oli raivannut rinteen kasvillisuudesta. Takana kohoaa Huayna Picchu. Vuotta aiemmin paikka oli lähes kokonaan viidakon peitossa, ja raivaus tehtiin käsityönä."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Machu Picchu, Perú, 2015-07-30, DD 51.JPG",
+        "vuosi": "2015",
+        "lahde": "Diego Delso, Commons (CC BY-SA 4.0)",
+        "selite": "Muureja ja pengerryksiä läheltä. Kivet on hakattu sopimaan toisiinsa ilman laastia, ja terassien tukimuurit pitävät jyrkän rinteen paikallaan sadekaudella."
+      },
+      {
+        "tiedosto": "Llamas on Machu Picchu Peru.jpg",
+        "vuosi": "2012",
+        "lahde": "Thomas Quine, Commons (CC BY 2.0)",
+        "selite": "Laamoja Machu Picchun pengerryksillä. Eläimet liikkuvat alueella vapaasti. Terasseja viljeltiin vielä muutama vuosikymmen sitten, ja nyt niillä kasvaa nurmi."
+      },
+      {
+        "tiedosto": "Machu Picchu, Perú, 2015-07-30, DD 47.JPG",
+        "vuosi": "2015",
+        "lahde": "Diego Delso, Commons (CC BY-SA 4.0)",
+        "selite": "Asuinrakennusten jäännöksiä. Machu Picchu rakennettiin 1400-luvulla ja hylättiin noin sata vuotta myöhemmin; katot olivat olkea, joten jäljellä ovat vain kiviseinät ja oviaukot."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Machu Picchu, Perú, 2015-07-30, DD 60.JPG",
+      "lahde": "Diego Delso, Commons (CC BY-SA 4.0)",
+      "selite": "Sama näkymä nykyään: pengerrykset ovat nurmella, rinteessä seisoo pari olkikattoista rekonstruktiota ja Huayna Picchu on yhä taustalla. Muurin päällä laiduntaa laama."
+    }
+  },
+  {
+    "id": "titicaca",
+    "paikka": "Titicaca",
+    "vanha": {
+      "tiedosto": "N° 308. Lago Titicaca, Balsas de cañas, hechas por los naturales del pais.png",
+      "vuosi": "1900",
+      "lahde": "Fernando Garreaud, albumi República Peruana (PD)",
+      "selite": "Kaislaveneitä Titicacajärvellä vuonna 1900. Miehet seisovat keulassa ja työntävät venettä sauvomalla, ja tyyni vesi kahdentaa mastot. Veneet punotaan totora-kaislasta, jota kasvaa järven matalikoilla."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Islas flotantes de los Uros, Lago Titicaca, Perú, 2015-08-01, DD 32.JPG",
+        "vuosi": "2015",
+        "lahde": "Diego Delso, Commons (CC BY-SA 4.0)",
+        "selite": "Uros-kansan kelluva saari. Sekä alusta että majat tehdään totora-kaislasta. Pintaan on lisättävä uutta kaislaa jatkuvasti, koska alta se lahoaa veteen."
+      },
+      {
+        "tiedosto": "Puno, puerto, 2023.jpg",
+        "vuosi": "2023",
+        "lahde": "Draceane, Commons (CC BY-SA 4.0)",
+        "selite": "Punon satama järven Perun-puoleisella rannalla. Laiturissa on matkustajaveneiden lisäksi ruoppaaja: väylä on pidettävä auki kaislikon läpi, jotta veneet pääsevät ulos järvelle."
+      },
+      {
+        "tiedosto": "Dança na Ilha de Taquile.jpg",
+        "vuosi": "2022",
+        "lahde": "NKost94, Commons (CC BY-SA 4.0)",
+        "selite": "Taquilen saaren asukkaita tanssimassa kylän aukiolla. Saari tunnetaan käsin kudotuista ja neulotuista tekstiileistä, ja tanssiasut on tehty itse."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Traditional reed boat in the Uros floating islands.jpg",
+      "lahde": "H.dav.are, Commons (CC BY-SA 4.0)",
+      "selite": "Totora-kaislasta tehty vene Uros-saarten välisellä kanavalla. Vene on punottu samasta kasvista kuin vanhassa kuvassa, mutta sen keula on nyt koristeltu ja matkustajia kuljetetaan saarelta toiselle."
+    }
+  },
+  {
+    "id": "iquitos",
+    "paikka": "Iquitos",
+    "vanha": {
+      "tiedosto": "PERU. SCENES IN IQUITOS LCCN2016864106.jpg",
+      "vuosi": "1912",
+      "lahde": "Harris & Ewing, Library of Congress (PD)",
+      "selite": "Iquitosin laituri vuonna 1912; kuvan alareunassa lukee The Booth Pier. Höyrylaivoja on kiinni kylki kyljessä, laiturin päässä nosturi. Kaupunki eli tuolloin kumibuumista, ja merikelpoiset alukset pääsivät Atlantilta tuhansia kilometrejä ylös Amazonia hakemaan lasteja."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Belen, Iquitos (11473478223).jpg",
+        "vuosi": "2013",
+        "lahde": "M M, Commons (CC BY-SA 2.0)",
+        "selite": "Belénin kortteli sateen jälkeen. Mototaksit eli moottoripyörän ja rikšan yhdistelmät ovat kaupungin pääasiallinen kulkuneuvo, ja kadun molemmin puolin on peltikatteisia kojuja."
+      },
+      {
+        "tiedosto": "Iquitos-Plaza de Armas-1.JPG",
+        "vuosi": "2015",
+        "lahde": "Maurice Chédel, Commons (CC BY 3.0)",
+        "selite": "Iquitosin pääaukio, oikealla Casa de Fierro eli rautatalo. Sen valurautaosat tuotiin laivalla Euroopasta kumikaupan aikaan, jolloin kaupungilla oli varaa tilata rakennusaineensa meren takaa."
+      },
+      {
+        "tiedosto": "Paiche en Belen.jpg",
+        "vuosi": "2006",
+        "lahde": "Jorge Mori, Commons (PD)",
+        "selite": "Suolattua paichea myynnissä Belénin torilla. Paiche eli arapaima on Amazonin suurimpia kaloja. Suolaus ja kuivaus pitävät saaliin syömäkelpoisena ilman kylmäketjua."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Vista ciudad desde rio.JPG",
+      "lahde": "Gabymuaa, Commons (PD)",
+      "selite": "Iquitos nykyään Itaya-joelta katsottuna. Rannassa on veneitä ja paalujen varaan rakennettuja taloja, ja niiden takaa kohoaa kaupungin kellotorni. Iquitosiin ei tule tietä muualta: sinne pääsee joko jokea pitkin tai lentäen."
+    }
+  }
+]

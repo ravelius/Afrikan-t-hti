@@ -25,7 +25,7 @@
   --paper-dark: #dcc08f;
   --map-ink: #46331f;
   --map-ink-soft: #8a6c46;
-  --sea-ink: #4f7385;
+  --sea-ink: #6e6350;
   --mark: #b03a2b;
 
   --radius: 12px;
@@ -298,6 +298,150 @@ button, .brand, .turn-pill, .fact-card h2 {
 .paavalikko .narrow-label { display: inline; }
 .paavalikko .narrow-label { order: -1; display: inline-flex; }
 
+
+/*
+ * Linssivalitsin (docs/linssit-suunnitelma.md luku 5).
+ *
+ * Sama kotelo + absoluuttinen paneeli kuin kertoja- ja päävalikossa,
+ * jotta se käyttäytyy tutulla tavalla eikä vie ylärivistä tilaa ennen
+ * kuin ensimmäinen linssi on löytynyt. Paneeli aukeaa oikeasta
+ * reunastaan vasemmalle: kotelo on ylärivin oikeassa laidassa, ja
+ * vasemmalle aukeava paneeli mahtuu myös 360 px:n puhelimelle.
+ */
+.linssi-kotelo { position: relative; }
+
+/* Päällä oleva linssi näkyy napissa kullalla: ylärivistä pitää nähdä
+   yhdellä silmäyksellä, katsotaanko karttaa jonkin lasin läpi. */
+#linssi-btn.paalla { color: var(--accent); }
+
+.linssi-valikko {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 60;
+  width: max-content;
+  /*
+   * Leveysraja mitattu puhelimella: kotelo on ylärivin oikeassa
+   * laidassa mutta kahden napin päässä reunasta, joten oikeaan
+   * reunaansa kiinnitetty paneeli alkaa noin 7 rem päässä ruudun
+   * oikeasta laidasta. Ilman tätä rajaa 336 px:n paneeli valui 390 px:n
+   * ruudulla vasemman reunan yli ja nimen ensimmäinen kirjain jäi
+   * näkymättömiin (mitattu: paneelin vasen reuna oli -17 px).
+   */
+  max-width: min(21rem, calc(100vw - 7rem));
+  padding: 0.45rem 0.55rem 0.55rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(15, 10, 5, 0.45);
+}
+
+/*
+ * Liuskarivi on Tutki-ikkunan aiheliuskojen kuvio (.wiki-liuskat):
+ * kuvakkeet yhdellä rivillä, valittu liuska samaa pintaa kuin sisältö
+ * sen alla. Värit ovat ylärivin tummat eivätkä pergamentin, koska
+ * paneeli on osa käyttöliittymää eikä karttaa — muoto kantaa
+ * tunnistuksen, ei väri.
+ *
+ * Liuskat KIERTYVÄT usealle riville eivätkä vierity vaakaan: vieritys
+ * piilottaisi linssejä, ja piilotettu linssi on sama kuin löytymätön.
+ */
+.linssi-liuskat {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1.5px solid var(--line);
+}
+
+.linssi-liuskat button {
+  appearance: none;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 0.3rem 0.5rem 0.62rem;
+  min-height: 0;
+  background: rgba(53, 39, 26, 0.55);
+  border: 1.2px solid var(--line);
+  border-bottom-color: transparent;
+  border-radius: 7px 7px 0 0;
+  color: var(--muted);
+  cursor: pointer;
+  /* Alareunan viiva kulkee liuskan ali; tämä nostaa sen sen päälle. */
+  margin-bottom: -0.5rem;
+}
+
+.linssi-liuskat button svg { display: block; }
+
+.linssi-liuskat button:hover { background: var(--panel-2); color: var(--ink-light); }
+
+/* Valittu liuska on samaa pintaa kuin paneeli sen alla ja sen alareuna
+   on auki — juuri se tekee liuskasta liuskan eikä napista. */
+.linssi-liuskat button.paalla {
+  background: var(--panel);
+  border-color: var(--accent-dark);
+  border-bottom-color: var(--panel);
+  color: var(--accent);
+}
+
+.linssi-liuskat button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Valitun linssin nimi ja yhden rivin kuvaus liuskojen alla: kuvake
+   yksin jättäisi arvailun varaan. */
+.linssi-tiedot { padding-top: 0.6rem; }
+
+.linssi-nimi {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-type);
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+.linssi-lyhyt {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--ink-light);
+}
+
+/*
+ * Lähde ja lisenssi eivät ole koriste: aineistot ovat CC BY -lisenssin
+ * alaisia ja vaativat nimeämisen. Kortti on napin takana, koska koko
+ * merkintä osoitteineen on pitkä — lyhyt muoto (tekijä · lisenssi) on
+ * näkyvissä koko ajan kartan selitekortissa.
+ */
+.linssi-lahde-avaa {
+  margin-top: 0.5rem;
+  padding: 0.15rem 0;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+
+.linssi-lahde-avaa:hover { color: var(--ink-light); }
+
+.linssi-lahde {
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.55rem;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.linssi-lahde p { margin: 0 0 0.25rem; }
+.linssi-lahde-lisenssi { color: var(--muted); }
+.linssi-lahde-linkki { color: var(--accent); }
 
 .stage {
   display: grid;
@@ -2212,6 +2356,129 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
    suodatinta on halpa. */
 .grain { opacity: 0.5; mix-blend-mode: multiply; pointer-events: none; }
 
+/*
+ * Linssikerros (js/linssit/kerros.js).
+ *
+ * Kerros on tyhjä ja näkymätön, kunnes linssi sytytetään. Siirtymä on
+ * ainoa liike, jonka linssi saa tehdä: mitattu 15 fps vastaan 60 fps,
+ * kun kartan päällä on jatkuvasti muuttuva elementti (js/ui.js
+ * 7529–7534). Tämä laukeaa kerran vaihdossa ja jää sitten paikalleen.
+ *
+ * Sisällön värit EIVÄT tule täältä vaan elementeiltä itseltään:
+ * rasteroitava linssi on irrallinen SVG eikä peri tätä tiedostoa.
+ */
+.linssi { pointer-events: none; transition: opacity 0.22s ease-out; }
+
+/*
+ * Paperin rakeisuus pois valokuvalinssin päältä.
+ *
+ * rect.grain on juuriryhmässä kaupunkien jälkeen ja sekoittuu
+ * kertolaskulla, joten se jää linssin päälle. Piirretylle linssille se
+ * on hyväksi — se sitoo linssin samaan karttaan eikä näytä päälle
+ * liimatulta — mutta valokuva (yökartta) himmenisi sen alla ruskeaksi.
+ * Malli on sama kuin lennon ajaksi tehty poisto alempana.
+ */
+body.linssi-valokuva .grain { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .linssi { transition: none; }
+}
+
+/*
+ * Linssin selitekortti kartan nurkassa (suunnitelman luku 5.2).
+ *
+ * Kortti nojaa .event-toastin pergamenttiin: läpikuultava tumma pohja
+ * ja kultainen reuna, jotta värilaput luetaan sekä meren että
+ * mantereen päältä. Se on tavallista DOM:ia kartan päällä eikä SVG:tä,
+ * joten kierron <use>-kopio ei monista sitä eivätkä napautukset mene
+ * kartan läpi.
+ *
+ * Nurkan valitsee js/ui.js sijoitaLinssiSelite: aina se, jossa
+ * päiväkirja ei ole.
+ */
+.linssi-selite {
+  position: absolute;
+  z-index: 4;
+  width: min(240px, 52%);
+  /* Vyöhykelinssillä voi olla toistakymmentä riviä (topografiassa 12).
+     Kortti ei saa kasvaa yli puolen ruudun: kartan pitää jäädä näkyviin
+     sen vierestä. Sama dvh-mitta kuin päiväkirjalla — iPadin Safari ei
+     soveltanut prosenttirajaa. */
+  max-height: 46vh;
+  max-height: 46dvh;
+  overflow-y: auto;
+  padding: 0.5rem 0.65rem;
+  background: var(--overlay-card);
+  border: 1px solid var(--overlay-line);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  color: var(--ink-light);
+  font-size: 0.76rem;
+  line-height: 1.4;
+  animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
+}
+
+.linssi-selite[data-corner='tl'] { top: 0.5rem; left: 0.5rem; }
+.linssi-selite[data-corner='tr'] { top: 0.5rem; right: 0.5rem; }
+.linssi-selite[data-corner='bl'] { bottom: 0.9rem; left: 0.5rem; }
+.linssi-selite[data-corner='br'] { bottom: 0.9rem; right: 0.5rem; }
+
+.linssi-selite h2 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-type);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.linssi-selite-rivit {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.18rem;
+}
+
+.linssi-selite-rivit li { display: flex; align-items: center; gap: 0.4rem; }
+
+/* Värilappu on aineiston oma väri, joten sen asettaa js/ui.js. */
+.linssi-lappu {
+  flex: 0 0 auto;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.linssi-askel-otsikko {
+  margin: 0.5rem 0 0.15rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Askelliuskat ovat samat kuin valitsimessa, vain tekstillä: aikataso
+   vaihtuu pelaajan komennolla eikä ajastimella (riski 12). */
+.linssi-selite .linssi-liuskat { border-bottom-color: var(--overlay-line); }
+.linssi-selite .linssi-liuskat button {
+  padding: 0.22rem 0.45rem 0.55rem;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+}
+
+.linssi-selite-lahde {
+  margin: 0.5rem 0 0;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .linssi-selite { animation: none; }
+}
+
 .graticule { stroke: #9d8253; stroke-width: 1; opacity: 0.28; fill: none; }
 
 .sea-echo { fill: none; stroke: #b99a68; stroke-linejoin: round; }
@@ -2233,7 +2500,25 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * Ääriviivaa ei ole. Korkeusvyöhykkeen raja on sopimus eikä rantaviiva,
  * eikä siitä pidä tulla yhtä terävää kuin mantereen reunasta.
  */
-.maasto path { stroke: none; }
+/*
+ * Reunaviivattomuus sanotaan VYÖHYKKEILLE, ei koko kerrokselle.
+ *
+ * Tässä luki ennen `.maasto path { stroke: none; }`. Se on kahden
+ * osan valitsin (luokka + elementti) ja voittaa siksi jokaisen yhden
+ * luokan säännön — myös `.joki`-viivan oman värin. Seuraus: joet
+ * piirtyivät kartalle mutta ilman viivaa, eli eivät näkyneet
+ * KOSKAAN. Vika ei näkynyt mistään: elementit olivat DOMissa, testit
+ * menivät läpi, ja puuttuvaa jokea ei osaa kaivata ennen kuin
+ * huomaa, ettei Mississippiä ole.
+ *
+ * Nyt sama asia sanotaan niille kolmelle luokalle, joita se koskee.
+ * Pidempi mutta ei salakavala: uusi viivallinen muoto ei voi enää
+ * kadota siksi, että joku muu sääntö sattuu olemaan tarkempi.
+ */
+.korkeus-keski,
+.korkeus-ylos,
+.korkeus-huippu,
+.iso-jarvi { stroke: none; }
 .korkeus-keski { fill: #c9a86e; opacity: 0.3; }
 .korkeus-ylos { fill: #a8823f; opacity: 0.34; }
 /*
@@ -2253,17 +2538,30 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  */
 .korkeus-huippu { fill: #f0e3c6; opacity: 0.55; }
 
-/* Suuret järvet hyvin kevyesti (omistajan sana: "hyvin kevyesti"). */
-.iso-jarvi { fill: #b9c9cf; opacity: 0.55; }
+/*
+ * Vesi on yhtä sävyä koko kartalla, eikä se sävy ole sininen.
+ *
+ * Omistaja 4.8.2026: "Järvet ja joet pitää olla meren kanssa saman
+ * sävyisiä. Ota sininen pois."
+ *
+ * Meri ei ole tällä kartalla väri vaan PAPERI: mantereet on sävytetty
+ * ja meri jää pohjaksi. Järvi on siis meri maan sisällä, ja oikea
+ * täyttö on sama paperi — täsmälleen kuten pienillä järvillä jo on
+ * (.lake, rantaviiva-aineistosta). Sininen täyttö teki suurista
+ * järvistä kartalle liimatun tarran, koska mikään muu kartalla ei ole
+ * sinistä.
+ */
+.iso-jarvi { fill: #ecd9ae; }
+.iso-jarvi-reuna { fill: none; stroke: var(--sea-ink); stroke-width: 1.4; opacity: 0.5; }
 
-/* Joet kevyen sinisinä. Viiva on ohut, koska niitä on paljon. */
+/* Joki samalla musteella kuin meren aallot — ks. .iso-jarvi. */
 .joki {
   fill: none;
-  stroke: #7d9aa8;
+  stroke: var(--sea-ink);
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
@@ -2780,6 +3078,12 @@ body.flight-active .fact-card {
 
 .icon-empty { fill: none; stroke: #8a765a; stroke-width: 2; stroke-dasharray: 4 4; }
 .icon-empty-line { stroke: #8a765a; stroke-width: 2; stroke-linecap: round; }
+
+/* Taikalasi: läpikuultava lasi, tumma kehys ja varsi. Väri on sama kuin
+   laattatyypin oma sävy js/tokens.js:ssä. */
+.icon-linssi-lasi { fill: rgba(127, 179, 200, 0.5); stroke: #3b2a13; stroke-width: 1.7; }
+.icon-linssi-varsi { fill: none; stroke: #3b2a13; stroke-width: 3.4; stroke-linecap: round; }
+.icon-linssi-kajo { fill: none; stroke: rgba(255, 255, 255, 0.8); stroke-width: 1.4; stroke-linecap: round; }
 
 .icon-gem { stroke: #3b2a13; stroke-width: 1.5; stroke-linejoin: round; }
 .icon-gem-facets { fill: none; stroke: rgba(255, 255, 255, 0.55); stroke-width: 1.1; }

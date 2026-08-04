@@ -1,0 +1,317 @@
+[
+  {
+    "id": "newyork",
+    "paikka": "New York",
+    "vanha": {
+      "tiedosto": "NYC Mulberry Street 3g04637u.jpg",
+      "vuosi": "noin 1900",
+      "lahde": "Library of Congress (PD)",
+      "selite": "Mulberry Street Manhattanilla noin vuonna 1900: katu on täynnä kärryjä, kojuja ja kaupustelijoita. Kortteli oli italialaissiirtolaisten keskus, ja tori levisi ajoradalle asti. Kuva on photochrom-vedos eli mustavalkoisesta negatiivista kivipainolevyille väritetty painate, jollaisia myytiin matkamuistoksi."
+    },
+    "lisat": [
+      {
+        "tiedosto": "USA san gennaro feast NY.jpg",
+        "vuosi": "2004",
+        "lahde": "Daniel Schwen, Commons (CC BY 2.5)",
+        "selite": "San Gennaron juhla Grand Streetin ja Mulberry Streetin kulmassa Little Italyssa. Juhlaa vietetään samalla kadulla kuin sata vuotta sitten, ja se on omistettu Napolin suojeluspyhimykselle."
+      },
+      {
+        "tiedosto": "Street Vendors on Canal Street, Chinatown, New York (7237369622).jpg",
+        "vuosi": "2012",
+        "lahde": "Ken Lund, Commons (CC BY-SA 2.0)",
+        "selite": "Katumyyjiä Canal Streetillä. Katu kulkee halki alemman Manhattanin ja muodostaa Chinatownin selkärangan; se on myös raja, joka erottaa korttelit Little Italysta."
+      },
+      {
+        "tiedosto": "Staten Island Ferry - New York, NY, USA - August 19, 2015 01.jpg",
+        "vuosi": "2015",
+        "lahde": "Giorgio Galeotti, Commons (CC BY 4.0)",
+        "selite": "Staten Islandin lautta Verrazzano-salmen sillan edustalla. Lautta kuljettaa työmatkalaisia Manhattanin kärjestä Staten Islandille, ja matkustajilta ei peritä maksua."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Little Italy, Mulberry Street, Manhattan, New York (7237377196).jpg",
+      "lahde": "Ken Lund, Commons (CC BY-SA 2.0)",
+      "selite": "Sama Mulberry Street nykyään. Kojujen tilalla on ravintoloita ja terasseja, ja italiankielinen kortteli on kutistunut muutaman korttelin mittaiseksi, kun asukkaat muuttivat vuosikymmenten mittaan muualle."
+    }
+  },
+  {
+    "id": "sanfrancisco",
+    "paikka": "San Francisco",
+    "vanha": {
+      "tiedosto": "Market Street, San Francisco LCCN2015647623.jpg",
+      "vuosi": "1900",
+      "lahde": "Library of Congress (PD)",
+      "selite": "Market Street vuonna 1900, kaupungin pääkatu hevosvaunujen ja raitiovaunujen aikaan. Detroit Photographic Companyn photochrom-vedos. Kuusi vuotta myöhemmin maanjäristys ja sitä seurannut tulipalo tuhosivat suuren osan tässä näkyvistä taloista."
+    },
+    "lisat": [
+      {
+        "tiedosto": "San Francisco (CA, USA), Powell-Mason Cable Car Turnaround -- 2022 -- 2964.jpg",
+        "vuosi": "2022",
+        "lahde": "Dietmar Rabich, Commons (CC BY-SA 4.0)",
+        "selite": "Powell–Mason-linjan kääntöpöytä Mason Streetin päässä. Vaunuissa ei ole omaa moottoria, vaan ne tarttuvat kadun alla lakkaamatta liikkuvaan vaijeriin; päätepysäkillä vaunu käännetään ympäri työntämällä."
+      },
+      {
+        "tiedosto": "Grant Avenue, looking North by California Street, San Francisco (16163162316).jpg",
+        "vuosi": "2008",
+        "lahde": "Michael Beaton, Commons (CC BY 2.0)",
+        "selite": "Grant Avenue, Chinatownin pääkatu, kuvattuna California Streetin kulmasta. Kadun kiinalaistyylinen katukuva rakennettiin pitkälti 1906 tulipalon jälkeen, kun kaupunginosa nousi uudelleen paikalleen."
+      },
+      {
+        "tiedosto": "Muni 1059 at the Ferry Building, February 2018.jpg",
+        "vuosi": "2018",
+        "lahde": "Elizabeth K. Joseph, Commons (CC BY 2.0)",
+        "selite": "PCC-raitiovaunu F-linjalla Ferry Buildingin edustalla. Linjalla ajetaan vanhoilla vaunuilla, jotka on maalattu niiden alkuperäisten kaupunkien väreihin — tämä on käytössä oleva liikenneväline, ei museo."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Market Street at Kearny Street, San Francisco (January 2015)(Unsplash).jpg",
+      "lahde": "Anurag Arora, Commons (CC0)",
+      "selite": "Market Street nykyään Kearny Streetin kohdalla. Katu kulkee yhä samaa vinoa linjaa läpi keskustan, ja sen suunta poikkeaa muusta ruutukaavasta, koska kaupunki kasvoi kahden eri suuntiin mitatun kaavan varaan."
+    }
+  },
+  {
+    "id": "chicago",
+    "paikka": "Chicago",
+    "vanha": {
+      "tiedosto": "State Street, north from Madison, Chicago-LCCN2008678298.jpg",
+      "vuosi": "1900",
+      "lahde": "Library of Congress (PD)",
+      "selite": "State Street pohjoiseen Madison Streetin kulmasta vuonna 1900. Katu oli kaupungin tavarataloiden katu, ja raitiovaunut, kärryt ja jalankulkijat jakoivat saman ajoradan. Photochrom-vedos Kongressin kirjaston kokoelmasta."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Chicago Elevated, Wabash.jpg",
+        "vuosi": "2010",
+        "lahde": "Cragin Spring, Commons (CC BY 2.0)",
+        "selite": "Korkealla kulkeva metro Wabash Avenuen yllä. Radat kiertävät keskustan ympäri silmukkana, ja kaupunginosaa kutsutaan siksi nimellä Loop."
+      },
+      {
+        "tiedosto": "Maxwell Street Market (10626282205).jpg",
+        "vuosi": "2013",
+        "lahde": "Edsel Little, Commons (CC BY-SA 2.0)",
+        "selite": "Maxwell Street Market, sunnuntaisin auki oleva katutori. Nimi on peräisin kadulta, jonka varrella siirtolaisten kauppapaikka aikoinaan oli; tori on sittemmin siirretty lähemmäs keskustaa."
+      },
+      {
+        "tiedosto": "20170409 01 Chicago River @ Wabash Ave. (38511674331).jpg",
+        "vuosi": "2017",
+        "lahde": "David Wilson, Commons (CC BY 2.0)",
+        "selite": "Chicago-joki Wabash Avenuen sillalta. Joen virtaussuunta käännettiin 1900-luvun alussa niin, että se vie vetensä poispäin Michiganjärvestä eikä siihen — järvi oli kaupungin juomavesi."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "The Chicago Theater (48353771986).jpg",
+      "lahde": "Thank You (Flickr), Commons (CC BY 2.0)",
+      "selite": "Chicago Theatren valokyltti State Streetillä, samalla kadulla kuin vanha kuva. Elokuvateatteri valmistui 1921, ja sen kyltti on jäänyt kaupungin tunnusmerkiksi."
+    }
+  },
+  {
+    "id": "losangeles",
+    "paikka": "Los Angeles",
+    "vanha": {
+      "tiedosto": "Broadway and Third Street, looking east on Third Street from Olive Street, Los Angeles, 1890-1900 (CHS-2858).jpg",
+      "vuosi": "1890-luku",
+      "lahde": "California Historical Society, USC (PD)",
+      "selite": "Näkymä Third Streetiä itään kohti Broadwayn risteystä 1890-luvun Los Angelesissa. Kadut ovat täynnä hevosvaunuja ja jalankulkijoita, ja oikealla näkyy Bradbury Building, joka on yhä paikallaan. Valokuvaaja Charles C. Pierce."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Grand Central Market - Downtown Los Angeles - California - USA (33316414168).jpg",
+        "vuosi": "2019",
+        "lahde": "Adam Jones, Commons (CC BY-SA 2.0)",
+        "selite": "Grand Central Market Broadwayn varrella. Kauppahalli avattiin 1917, ja sen kojuriveillä myydään yhä ruokaa tiskin yli — nyt enimmäkseen valmiina annoksina."
+      },
+      {
+        "tiedosto": "Food truck Tacos Super Gallito (Westwood Bld X Santa Monica Bld).jpg",
+        "vuosi": "2024",
+        "lahde": "Alexis Doine, Commons (CC0)",
+        "selite": "Taco-auto Westwood Boulevardin ja Santa Monica Boulevardin kulmassa. Kuorma-autosta myytävä ruoka on Los Angelesissa oma keittiönsä, ja autot pysähtyvät iltaisin samoihin kulmiin."
+      },
+      {
+        "tiedosto": "Los Angeles Theatre on Broadway.jpg",
+        "vuosi": "2017",
+        "lahde": "Codera23, Commons (CC BY-SA 4.0)",
+        "selite": "Los Angeles Theatre Broadwayn teatterikorttelissa. Elokuvapalatsi avattiin 1930-luvun alussa, ja korttelissa on säilynyt poikkeuksellisen tiheä rivi tämän kokoluokan teattereita."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Broadway Theater and Commercial District, 300-849 S. Broadway; 100.jpg",
+      "lahde": "MikeJiroch, Commons (CC BY-SA 3.0)",
+      "selite": "Sama Broadway nykyään. Katu säilyi kaupungin liikekeskuksena teatteriaikaan asti; sittemmin liikkeet muuttivat muualle ja kadun vanhat julkisivut jäivät paikoilleen."
+    }
+  },
+  {
+    "id": "neworleans",
+    "paikka": "New Orleans",
+    "vanha": {
+      "tiedosto": "Old French Market New Orleans Wagons W H Jackson.jpg",
+      "vuosi": "1880–1895",
+      "lahde": "Library of Congress (PD)",
+      "selite": "Vanha Ranskalainen tori 1800-luvun lopun New Orleansissa: puuvillakuormia ja muita kärryjä mukulakivikadulla, taustalla rautakauppa ja vaateliikkeitä. Tori sijaitsee Mississippin rannassa vanhassa ranskalaisessa korttelissa. Valokuvaaja William Henry Jackson."
+    },
+    "lisat": [
+      {
+        "tiedosto": "TBC Brass Band horn line Uptown Swingers Social Aid & Pleasure Club parade, New Orleans 2008.jpg",
+        "vuosi": "2008",
+        "lahde": "Derek Bridges, Commons (CC BY 2.0)",
+        "selite": "Torvisektio Uptown Swingers -kerhon kulkueessa. Tällaiset seurat syntyivät avustuskassoiksi, jotka maksoivat jäsentensä hautajaiset ja sairaanhoidon; kulkueen perässä kulkevaa väkeä kutsutaan nimellä second line."
+      },
+      {
+        "tiedosto": "Beignets served at Café du Monde, New Orleans, April 2014.jpg",
+        "vuosi": "2014",
+        "lahde": "Sunnya343, Commons (CC BY-SA 4.0)",
+        "selite": "Beignet-munkkeja tomusokerissa Café du Mondessa Ranskalaisen torin laidalla. Talon kahvi maustetaan sikurilla, tavasta joka juontuu ajoista jolloin kahvipavuista oli pulaa."
+      },
+      {
+        "tiedosto": "St Charles Avenue Uptown New Orleans with streetcar 460, December 2024.jpg",
+        "vuosi": "2024",
+        "lahde": "Infrogmation, Commons (CC BY-SA 4.0)",
+        "selite": "Raitiovaunu St Charles Avenuella. Linja on yksi maailman vanhimpia yhä liikennöiviä raitiotielinjoja, ja sen vihreät puuvaunut ovat 1920-luvulta."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "City of New Orleans, The French Market, March 2015.jpg",
+      "lahde": "Steve Knight, Commons (CC BY 2.0)",
+      "selite": "Ranskalainen tori nykyään. Kärryjen ja puuvillan tilalla myydään ruokaa ja matkamuistoja, mutta katettu hallirivi kulkee yhä samaa linjaa Decatur Streetin varressa."
+    }
+  },
+  {
+    "id": "miami",
+    "paikka": "Miami",
+    "vanha": {
+      "tiedosto": "Indians canoeing on Miami River - J.N. Chamberlain, photographer, Miami, Fla. LCCN00650881.jpg",
+      "vuosi": "1904",
+      "lahde": "Library of Congress (PD)",
+      "selite": "Alkuperäisasukkaita ruuhissa Miami-joella vuonna 1904. Joki oli reitti Evergladesin suoalueelta Biscayne Bayn rannalle, ja sitä pitkin tuotiin tavaraa kaupunkiin. Miami oli tuolloin nuori paikka: se sai kaupunkioikeudet vasta 1896."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Little Havana Domino Club Park Calle Ocho.JPG",
+        "vuosi": "2010",
+        "lahde": "Infrogmation, Commons (CC BY-SA 3.0)",
+        "selite": "Dominopeliä Calle Ocholla Little Havanassa. Puisto on kuubalaissiirtolaisten kokoontumispaikka, ja kadun nimi tarkoittaa yksinkertaisesti kahdeksatta katua."
+      },
+      {
+        "tiedosto": "Art Deco Hotels Ocean Drive South Beach.jpg",
+        "vuosi": "2025",
+        "lahde": "Phillip Pessar, Commons (CC BY 4.0)",
+        "selite": "Ocean Driven hotellirivi Miami Beachilla. Talot ovat 1930-luvun art deco -tyyliä, ja korttelit säästettiin purkamiselta, kun alue suojeltiin kokonaisuutena."
+      },
+      {
+        "tiedosto": "April 7, 2015 - Little Havana, Miami, Florida - Exquisito.jpg",
+        "vuosi": "2015",
+        "lahde": "osseous, Commons (CC BY 2.0)",
+        "selite": "Kuubalainen ravintola Calle Ocholla. Little Havanan korttelit kasvoivat 1960-luvulta alkaen Kuubasta muuttaneiden ympärille, ja espanja on kadulla arkikieli."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Miami River Downtown Miami Florida 1 May 2023.jpg",
+      "lahde": "Phillip Pessar, Commons (CC BY 2.0)",
+      "selite": "Sama Miami-joki nykyään keskustan kohdalla. Rannat ovat täynnä tornitaloja, mutta joki on yhä työssä: sen varressa lastataan rahtia pienille aluksille, jotka liikennöivät Karibialle."
+    }
+  },
+  {
+    "id": "houston",
+    "paikka": "Houston",
+    "vanha": {
+      "tiedosto": "Lewis Hine, J.T. Marshall, Western Union messenger no. 51, Houston, Texas, 1913.jpg",
+      "vuosi": "1913",
+      "lahde": "Lewis Hine, Library of Congress (PD)",
+      "selite": "Yksitoistavuotias Western Unionin sähkelähetti J. T. Marshall Houstonissa lokakuussa 1913. Lewis Hine kiersi Yhdysvaltoja kuvaamassa lapsityötä kansallisen lapsityökomitean lukuun, ja hänen kuviaan käytettiin lakialoitteiden perusteluina."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Greens Port.jpg",
+        "vuosi": "2022",
+        "lahde": "WRaTeLog, Commons (CC BY-SA 4.0)",
+        "selite": "Greens Portin terminaali Houstonin laivaväylällä. Kaivettu väylä yhdistää sisämaassa sijaitsevan kaupungin Meksikonlahteen ja tekee siitä satamakaupungin, vaikka merta ei näy."
+      },
+      {
+        "tiedosto": "Taqueria Arandas 2014 on Irvington in Houston-1.jpg",
+        "vuosi": "2014",
+        "lahde": "EricEnfermero, Commons (CC BY-SA 3.0)",
+        "selite": "Taqueria Arandasin alkuperäinen ravintola Irvington Drivella. Paikka avattiin 1980-luvun alussa ja kasvoi sittemmin ravintolaketjuksi."
+      },
+      {
+        "tiedosto": "NRG Park in Houston, Texas (The 2026 Houston Livestock Show and Rodeo).jpg",
+        "vuosi": "2026",
+        "lahde": "Alexis Doine, Commons (CC0)",
+        "selite": "NRG Parkin alue Houstonin karjanäyttelyn ja rodeon aikaan. Tapahtuma kestää kolmisen viikkoa keväällä ja on yksi maailman suurimmista lajissaan; karjanäyttely on sen alkuperäinen ydin."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Downtown Houston, TX Skyline - 2018.jpg",
+      "lahde": "David Daniel Turner, Commons (CC BY 4.0)",
+      "selite": "Houstonin keskusta lännestä Buffalo Bayoun yli katsottuna. Houston on Yhdysvaltain suurista kaupungeista ainoa, jolla ei ole kaavoituslakia, ja korkeat talot nousevat siksi hajanaisina ryppäinä."
+    }
+  },
+  {
+    "id": "denver",
+    "paikka": "Denver",
+    "vanha": {
+      "tiedosto": "Welcome Arch and Union Depot, Denver, Colo..jpg",
+      "vuosi": "noin 1908",
+      "lahde": "Library of Congress (PD)",
+      "selite": "Tervetuloakaari rautatieaseman edustalla noin vuonna 1908. Kaari pystytettiin ottamaan vastaan junalla saapuvat matkustajat, jotka astuivat asemalta suoraan sen alle. Kaari purettiin myöhemmin, mutta asema on yhä paikallaan."
+    },
+    "lisat": [
+      {
+        "tiedosto": "16th Street Mall northwest past Tremont Place.jpeg",
+        "vuosi": "2021",
+        "lahde": "Dough4872, Commons (CC BY-SA 4.0)",
+        "selite": "16th Street Mall Tremont Placen risteyksen kohdalla. Mailin mittainen katuosuus on varattu jalankulkijoille, ja sitä pitkin kulkee maksuton bussi päästä päähän."
+      },
+      {
+        "tiedosto": "One Mile Above Sea Level.jpg",
+        "vuosi": "2010",
+        "lahde": "J. Miers, Commons (CC BY-SA 3.0)",
+        "selite": "Osavaltion parlamenttitalon portaisiin hakattu merkintä One Mile Above Sea Level. Denverin lempinimi Mile High City tulee siitä, että kaupunki on tasan mailin merenpinnan yläpuolella."
+      },
+      {
+        "tiedosto": "Colorado State Capitol (2023).jpg",
+        "vuosi": "2023",
+        "lahde": "xiquinhosilva, Commons (CC BY 2.0)",
+        "selite": "Coloradon parlamenttitalo Colfax Avenuen varrella. Rakennus valmistui 1890-luvulla, ja sen kupoli on päällystetty aidolla lehtikullalla muistona osavaltion kultaryntäyksestä."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Denver Union Station - June 2022 - Sarah Stierch 01.jpg",
+      "lahde": "Sarah Stierch, Commons (CC BY 4.0)",
+      "selite": "Sama asema nykyään. Rakennus kunnostettiin ja avattiin uudelleen 2014, ja se toimii yhtä aikaa juna- ja bussiasemana sekä liikkeiden ja ravintoloiden halliaulana."
+    }
+  },
+  {
+    "id": "santafe",
+    "paikka": "Santa Fe",
+    "vanha": {
+      "tiedosto": "\"East Side of Plaza, Santa Fe, N. M.\" 1866 - NARA - 533174.jpg",
+      "vuosi": "1866",
+      "lahde": "National Archives (PD)",
+      "selite": "Aukion itälaita Santa Fessa vuonna 1866. Matalat savitiilitalot ja niiden edessä kulkevat pylväskäytävät ovat espanjalaisen siirtomaakaupungin perusmuotoa. Aukio oli Santa Fe Trailin pääte: Missourista lähteneet härkävankkurit purkivat kuormansa tähän."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Native American vendors on the Santa Fe Plaza.jpg",
+        "vuosi": "2005",
+        "lahde": "FranHogan, Commons (CC BY-SA 4.0)",
+        "selite": "Alkuperäiskansojen käsityöläisiä myymässä Santa Fen aukiolla. Kuvernöörien palatsin pylväskäytävässä on myyntipaikkoja, joissa saa myydä vain itse tehtyä työtä."
+      },
+      {
+        "tiedosto": "Chiles at the Santa Fe Farmers' Market (16070909691).jpg",
+        "vuosi": "2014",
+        "lahde": "Paul Asman ja Jill Lenoble, Commons (CC BY 2.0)",
+        "selite": "Chilejä Santa Fen torilla. Chile on New Mexicon tunnusomaisin viljelykasvi, ja syksyllä vihreä sato paahdetaan pyörivissä rummuissa torin laidalla."
+      },
+      {
+        "tiedosto": "Palace of the Governors (4101684497).jpg",
+        "vuosi": "2009",
+        "lahde": "Chris M Morris, Commons (CC BY 2.0)",
+        "selite": "Kuvernöörien palatsi aukion pohjoislaidalla. Savitiilirakennus pystytettiin 1600-luvun alussa Espanjan siirtomaahallinnon taloksi, ja se on ollut käytössä siitä lähtien."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Santa Fe Plaza gazebo.jpg",
+      "lahde": "WikTalksmart, Commons (CC BY-SA 4.0)",
+      "selite": "Sama aukio nykyään. Keskellä on soittolava ja ympärillä yhä pylväskäytävät, sillä kaupungin rakennusmääräykset vaativat keskustassa savitiilityyliä myös uusilta taloilta."
+    }
+  }
+]

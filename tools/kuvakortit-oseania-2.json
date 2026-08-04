@@ -1,0 +1,386 @@
+[
+  {
+    "id": "alicesprings",
+    "paikka": "Alice Springs",
+    "vanha": {
+      "tiedosto": "Alice Springs Telegraph Station, Northern Territory(GN01146).jpg",
+      "vuosi": "1900-luku",
+      "lahde": "State Government Photographer / History Trust of South Australia, Commons (CC0)",
+      "selite": "Alice Springsin lennätinasema noin vuonna 1905: kivitaloja, aitauksia ja karjatarha kuivan Todd-joen varrella. Asema oli yksi Adelaiden ja Darwinin välisen yleislennätinlinjan toistoasemista, ja kaupunki syntyi sen ympärille."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Todd Mall, 2015 (02).JPG",
+        "vuosi": "2015",
+        "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+        "selite": "Todd Mall, Alice Springsin kävelykatu. Kadun varrella on useita aboriginaalitaiteen gallerioita, ja katuun on pingotettu banderolli kaupungin vuotuisesta Alice Springs Show'sta."
+      },
+      {
+        "tiedosto": "Alice Springs Camel Cup 2015 01.jpg",
+        "vuosi": "2015",
+        "lahde": "Caroline Jones, Commons (CC0)",
+        "selite": "Kamelinajot Alice Springsin Camel Cupissa. Kamelit tuotiin Australiaan 1800-luvulla sisämaan kuljetuksiin, ja kun autot syrjäyttivät ne, osa päästettiin vapaaksi — villiintyneitä kameleja elää keskisessä Australiassa yhä."
+      },
+      {
+        "tiedosto": "FlyingDrsDispC1311.JPG",
+        "vuosi": "2008",
+        "lahde": "Leonard G., Commons (PD)",
+        "selite": "Royal Flying Doctor Servicen viestikeskus Alice Springsissä, josta lentävien lääkäreiden tehtävät ohjataan. Penkkirivit on rakennettu vierailijaryhmiä varten, sillä keskus on myös käyntikohde."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Alice Springs Telegraph Station, 2015 (02).JPG",
+      "vuosi": "2015",
+      "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+      "selite": "Sama lennätinasema runsaat sata vuotta myöhemmin. Kivirakennukset ovat nykyään museona noin neljä kilometriä keskustasta pohjoiseen, ja pihaa varjostaa kumipuu, jollaista vanhassa kuvassa ei vielä ole."
+    }
+  },
+  {
+    "id": "uluru",
+    "paikka": "Uluru",
+    "vanha": {
+      "tiedosto": "Camel team approaching Ayers Rock in search for Lasseter's body - John Bailey.jpg",
+      "vuosi": "1930-luku",
+      "lahde": "State Library of New South Wales, Commons (PD)",
+      "selite": "Kamelijono lähestymässä Ayers Rockia etsimässä Harold Lasseterin ruumista. Lasseter väitti löytäneensä keskisestä Australiasta valtavan kultasuonen ja katosi lähtiessään uudelleen etsimään sitä; etsintäretkikunnat liikkuivat aavikolla kameleilla."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Wet Uluru.jpg",
+        "vuosi": "2010",
+        "lahde": "Harbison, Commons (CC BY-SA 3.0)",
+        "selite": "Sadevettä valumassa Ulurua pitkin Mutitjulun vesikuoppaan maaliskuussa 2010. Sade on täällä harvinaista, mutta kun sitä tulee, kallion sivut muuttuvat tunneissa vesiputousten verkoksi."
+      },
+      {
+        "tiedosto": "Petermann Ranges (AU), Uluru-Kata Tjuta National Park, Uluru, Kuniya Walk -- 2019 -- 3656.jpg",
+        "vuosi": "2019",
+        "lahde": "Dietmar Rabich, Commons (CC BY-SA 4.0)",
+        "selite": "Kalliomaalaus Kuniya-polun varrella Ulurun juurella. Kuviot on tehty maaväreillä kallionkielekkeen suojaan, jossa ne ovat säilyneet sateelta ja tuulelta."
+      },
+      {
+        "tiedosto": "Mutitjulu Waterhole.jpg",
+        "vuosi": "2017",
+        "lahde": "Coen Hird, Commons (CC BY-SA 4.0)",
+        "selite": "Mutitjulun vesikuoppa Ulurun juurella. Kallion sileät sivut ohjaavat sateen tänne, ja siksi kuopassa on vettä silloinkin, kun ympäröivä maa on kuiva."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Uluṟu (Ayers Rock), Sunset.jpg",
+      "vuosi": "2011",
+      "lahde": "Weyf, Commons (CC0)",
+      "selite": "Uluru auringonlaskussa. Punainen sävy syntyy hiekkakiven pinnan rautayhdisteiden hapettumisesta, ja matala aurinko korostaa sitä; kallolle kiipeäminen kiellettiin lopullisesti vuonna 2019."
+    }
+  },
+  {
+    "id": "broome",
+    "paikka": "Broome",
+    "vanha": {
+      "tiedosto": "LISWA 009553d Koolama.jpg",
+      "vuosi": "1940-luku",
+      "lahde": "State Library of Western Australia, Commons (PD)",
+      "selite": "Höyrylaiva Koolama laskuveden aikaan Broomen laiturissa noin vuonna 1940: runko lepää merenpohjalla ja vesiraja näkyy kylkeen piirtyneenä juovana. Broomessa vuorovesi vaihtelee suurimmillaan lähes kymmenen metriä, joten laivat jäivät kuiville joka päivä."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Streeter's Jetty, 2019 (03).jpg",
+        "vuosi": "2019",
+        "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+        "selite": "Streeter's Jetty, kapea puulaituri mangrovepuron pohjukassa aivan Dampier Terracen takana. Laituri on peräisin helmenpyynnin ajoilta; kuvassa on laskuvesi, ja veneet pääsevät sen viereen vasta vuoroveden noustessa."
+      },
+      {
+        "tiedosto": "Japanese Cemetery, Broome, WA, Australia 03.jpg",
+        "vuosi": "2024",
+        "lahde": "Ridiculopathy, Commons (CC0)",
+        "selite": "Broomen japanilainen hautausmaa. Suurin osa haudoista on helmisukeltajia, jotka tulivat Japanista töihin 1800-luvun lopulta alkaen; hautakivet on tehty rannan kirjavista kivistä, ja moni kuoli sukeltajantautiin tai hukkui."
+      },
+      {
+        "tiedosto": "Cable Beach Sunset Camel Ride.JPG",
+        "vuosi": "2008",
+        "lahde": "Binarysequence, Commons (CC BY-SA 3.0)",
+        "selite": "Kamelisaattue Cable Beachilla auringonlaskun aikaan. Ranta sai nimensä merikaapelista, joka vedettiin Broomesta Jaavalle 1880-luvulla ja liitti Luoteis-Australian lennätinverkkoon."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Dampier Terrace, Broome, 2019 (02).jpg",
+      "vuosi": "2019",
+      "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+      "selite": "Dampier Terrace Broomen Chinatownissa. Matalissa aaltopeltikattoisissa taloissa on nykyään helmiliikkeitä; kaupunginosa tunnetaan Chinatownina, vaikka helmenpyynnin väki tuli aikoinaan myös Japanista, Malajien saaristosta ja Filippiineiltä."
+    }
+  },
+  {
+    "id": "kalgoorlie",
+    "paikka": "Kalgoorlie",
+    "vanha": {
+      "tiedosto": "Crowd watching parade in Hannan Street, Kalgoorlie, 1901.jpg",
+      "vuosi": "1901",
+      "lahde": "State Library of Western Australia, Commons (PD)",
+      "selite": "Väkeä seuraamassa kulkuetta Hannan Streetillä vuonna 1901. Kalgoorlien kulta löytyi 1893, ja alle kymmenessä vuodessa leiristä oli kasvanut kaupunki, jonka pääkadun varrella oli tiilisiä liiketaloja, postikonttori ja hotelleja."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Kalgoorlie Super Pit, October 2023 02.jpg",
+        "vuosi": "2023",
+        "lahde": "Chuq, Commons (CC BY-SA 4.0)",
+        "selite": "Super Pit eli Fimistonin avolouhos Kalgoorlien laidalla. Kymmenet vanhat kuilukaivokset ostettiin 1980-luvun lopulla saman omistajan käsiin ja yhdistettiin yhdeksi kuopaksi, joka on runsaat kolme kilometriä pitkä."
+      },
+      {
+        "tiedosto": "Komatsu PC8000, Super Pit, 2016.jpg",
+        "vuosi": "2016",
+        "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+        "selite": "Käytöstä poistettu Komatsu PC8000 -kaivinkone esillä Super Pitin näköalapaikalla. Kauhan koosta hahmottaa, millä välineillä kultamalmia louhoksessa siirretään."
+      },
+      {
+        "tiedosto": "Palace Hotel, Kalgoorlie, 2016.jpg",
+        "vuosi": "2016",
+        "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+        "selite": "Palace Hotel Hannan Streetin ja Maritana Streetin kulmassa. Kultakauden hotellit rakennettiin leveine parvekkeineen ja pylväskäytävineen, jotka varjostavat jalkakäytävää autiomaan auringolta."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Hannan Street looking south.jpg",
+      "vuosi": "2017",
+      "lahde": "JarrahTree, Commons (CC BY 2.5 AU)",
+      "selite": "Hannan Street nykyään etelään päin. Kadun päässä kohoaa kaupungintalon kellotorni, ja pääkatu on yhä yhtä leveä kuin vanhassa kuvassa — kultakenttien kaupungit mitoitettiin väljiksi alusta alkaen."
+    }
+  },
+  {
+    "id": "nullarbor",
+    "paikka": "Nullarbor",
+    "vanha": {
+      "tiedosto": "Camel train crossing Nullarbor Plain(GN00374).jpg",
+      "vuosi": "1910-luku",
+      "lahde": "State Government Photographer / History Trust of South Australia, Commons (CC0)",
+      "selite": "Kamelikaravaani ylittämässä Nullarborin tasankoa noin vuonna 1915. Nimi tulee latinan sanoista nullus arbor, ei puuta: maassa kasvaa suolayrttiä ja matalaa pensasta mutta ei metsää, ja tavarat kulkivat täällä kameleilla ennen rautatietä."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Late afternoon in Cook.jpg",
+        "vuosi": "2012",
+        "lahde": "Rosslyn Young, Commons (CC BY-SA 4.0)",
+        "selite": "Rata Cookin pysäkillä myöhään iltapäivällä. Tästä alkaa maailman pisin suora ratapätkä, 478 kilometriä ilman ainuttakaan kaarretta; Cookissa asuu enää kourallinen ihmisiä, ja kylä palvelee vain rautatietä."
+      },
+      {
+        "tiedosto": "Bunda Cliffs, 2017 (01).jpg",
+        "vuosi": "2017",
+        "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+        "selite": "Bundan jyrkänteet Suuren Australianlahden rannalla. Nullarborin kalkkikivitasanko päättyy tähän kuin veitsellä leikaten, ja jyrkänne jatkuu rantaviivaa pitkin kymmeniä kilometrejä yhtenä muurina."
+      },
+      {
+        "tiedosto": "Eucla-Reid Road, Eucla, 2017 (02).jpg",
+        "vuosi": "2017",
+        "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+        "selite": "Tie laskeutuu Euclan kohdalla tasangon reunalta alas Roen tasangolle, ja taustalla siintää Suuri Australianlahti. Nullarbor päättyy täällä portaaseen, jonka alapuolelle jää kapea rannikkokaistale."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Eyre Highway, South Australia (on Nullarbor Plain) - eastward.jpg",
+      "vuosi": "2023",
+      "lahde": "Chuq, Commons (CC BY-SA 4.0)",
+      "selite": "Eyre Highway itään päin Nullarborin poikki. Tie on ainoa päällystetty maantieyhteys Länsi-Australian ja muun mantereen välillä, ja sen pisin suora osuus on lähes 150 kilometriä."
+    }
+  },
+  {
+    "id": "birdsville",
+    "paikka": "Birdsville",
+    "vanha": {
+      "tiedosto": "Royal Mail car on Birdsville Track, 1934.jpg",
+      "vuosi": "1934",
+      "lahde": "State Library of South Australia, Commons (PD)",
+      "selite": "Postiauto ylittämässä hiekkadyyniä Birdsville Trackilla vuonna 1934. Reitti Marreesta Birdsvilleen oli 320 mailia eli runsaat 500 kilometriä autiomaata, ja sitä pidettiin yhtenä Australian rankimmista postireiteistä."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Birdsville mail truck.JPG",
+        "vuosi": "2013",
+        "lahde": "Peterdownunder, Commons (CC BY-SA 4.0)",
+        "selite": "Vanha postiauto pukkien päällä Marreessa, Birdsville Trackin eteläpäässä. Ohjaamon kyljessä lukee yhä E. G. Kruse, Marree ja etupuskurissa Royal Mail."
+      },
+      {
+        "tiedosto": "Big Red Dune west of Birdsville - panoramio (6).jpg",
+        "vuosi": "2013",
+        "lahde": "Lobster1, Commons (CC BY-SA 3.0)",
+        "selite": "Big Red, Simpsonin autiomaan itäisin hiekkadyyni noin 35 kilometriä Birdsvillestä länteen. Harjanteen takana alkaa satojen samansuuntaisten dyynien vyöhyke, sen edessä on tasainen kivikkoaavikko."
+      },
+      {
+        "tiedosto": "Birdsville DSC02987 SA (38329387251).jpg",
+        "vuosi": "2017",
+        "lahde": "Ian Cochrane, Commons (CC BY 2.0)",
+        "selite": "Royal Hotelin rauniot Birdsvillessä. Kylä oli 1800-luvun lopulla vilkas rajapaikka, jossa Queenslandista Etelä-Australiaan ajetusta karjasta perittiin tullia — hotelleja oli silloin useampi kuin nyt."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Birdsville Hotel.jpg",
+      "vuosi": "2007",
+      "lahde": "Stuart Edwards, Commons (PD)",
+      "selite": "Birdsville Hotel jouluaamuna. Päädyn kilvessä lukee 1884, ja taustalla näkyy kylän lentokenttä pienkoneineen; asukkaita on muutamia kymmeniä, mutta syyskuun hevoskilpailut tuovat paikalle tuhansia."
+    }
+  },
+  {
+    "id": "exmouth",
+    "paikka": "Exmouth",
+    "lisat": [
+      {
+        "tiedosto": "Whale shark (Rhincodon typus) (15600945944).jpg",
+        "vuosi": "2014",
+        "lahde": "Sylke Rohrlach, Commons (CC BY-SA 2.0)",
+        "selite": "Valashai Ningaloo-riutalla Exmouthin edustalla. Maailman suurin kala kerääntyy riutalle vuosittain maalis–heinäkuussa korallien kutua seuraavan planktonrunsauden perässä; se syö siivilöimällä eikä ole ihmiselle vaarallinen."
+      },
+      {
+        "tiedosto": "001852 North West Cape, Western Australia - Vlaming Head Lighthouse.jpg",
+        "vuosi": "2007",
+        "lahde": "W. Bulach, Commons (CC BY-SA 4.0)",
+        "selite": "Vlamingh Headin majakka North West Capen harjanteella Exmouthin pohjoispuolella. Majakka on rakennettu ylös rinteeseen, jotta valo näkyy niemen molemmin puolin; alarinteessä on karavaanialue."
+      },
+      {
+        "tiedosto": "Antenna location at the US Naval Communication Station Harold E. Holt in Exmouth, Western Australia, 1972.png",
+        "vuosi": "1972",
+        "lahde": "US Navy, Naval Electronics Systems Command, Commons (PD)",
+        "selite": "Harold E. Holtin viestiaseman antennikenttä Exmouthin lähellä vuonna 1972. Erittäin matalataajuinen lähetin pitää yhteyttä pinnan alla oleviin sukellusveneisiin, ja siihen tarvitaan tornien varaan ripustettu, kilometrien laajuinen vaijeriverkko."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "00 4574 Exmouth - Western Australia.jpg",
+      "vuosi": "2007",
+      "lahde": "W. Bulach, Commons (CC BY-SA 4.0)",
+      "selite": "Exmouthin keskustaa. Kaupunki perustettiin vasta 1960-luvulla viestiaseman väkeä varten, ja se näkyy yhä kaavassa: leveät suorat kadut, matalat rakennukset ja nurmikenttä keskellä."
+    }
+  },
+  {
+    "id": "mountisa",
+    "paikka": "Mount Isa",
+    "vanha": {
+      "tiedosto": "StateLibQld 2 160404 Weekly Qantas plane service from Mount Isa to Brisbane, 1932.jpg",
+      "vuosi": "1932",
+      "lahde": "State Library of Queensland, Commons (PD)",
+      "selite": "Qantasin viikoittainen kone Mount Isan hiekkakentällä vuonna 1932. Kaksitaso on De Havilland DH.50J nimeltä Hippomenes, ja se hoiti yhteyttä Brisbaneen; Qantas aloitti nimenomaan sisämaan reiteillä, ei valtamerilennoilla."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Road train in Mount Isa, Queensland, 2023.jpg",
+        "vuosi": "2023",
+        "lahde": "Chris Olszewski, Commons (CC BY-SA 4.0)",
+        "selite": "Neliperävaunuinen road train Mount Isan kadulla. Pohjois-Australiassa yksi vetoauto saa vetää neljää perävaunua, koska välimatkat ovat pitkiä ja rautateitä harvassa; kaupungin läpi kulkee Barkly Highway."
+      },
+      {
+        "tiedosto": "Mount Isa copper smelter 2002.jpg",
+        "vuosi": "2002",
+        "lahde": "ChrisFountain, Commons (CC BY-SA 3.0)",
+        "selite": "Mount Isan kuparisulatto vuonna 2002. Vasemmalla nosturin alla on ISASMELT-laitos: sulatusmenetelmä kehitettiin täällä ja sitä on sittemmin myyty kaivoksille ympäri maailman."
+      },
+      {
+        "tiedosto": "Mount Isa, Queensland - Underground hospital.jpg",
+        "vuosi": "2007",
+        "lahde": "Mart Moppel, Commons (CC BY-SA 2.0)",
+        "selite": "Maanalainen sairaala Mount Isassa: kallioon louhittu käytävä, rautasänkyjä ja emalivateja. Kaivosmiehet louhivat tilan toisen maailmansodan aikana varasairaalaksi, ja se on nykyään museona."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Panorama of Mount Isa, Queensland.jpg",
+      "vuosi": "2006",
+      "lahde": "Tennis expert, Commons (CC BY-SA 2.5)",
+      "selite": "Mount Isa ja sen kaivos samassa kuvassa. Kaupunki ja sulatto ovat Leichhardt-joen vastakkaisilla puolilla, ja savupiippu on yli 250 metriä korkea — se kohoaa ympäröivien punaisten kukkuloiden yli."
+    }
+  },
+  {
+    "id": "cooberpedy",
+    "paikka": "Coober Pedy",
+    "vanha": {
+      "tiedosto": "Men standing outside an underground post office - branch of Commonwealth Bank of Australia (Coober Pedy)(GN04186).jpg",
+      "vuosi": "1920-luku",
+      "lahde": "State Government Photographer / History Trust of South Australia, Commons (CC0)",
+      "selite": "Miehiä Coober Pedyn maanalaisen postin ja pankkiasiamiehen edessä noin vuonna 1925. Käsin maalattu kyltti ilmoittaa Commonwealth Bankin säästöpankkiosaston; talon rakensivat Arch Burnett ja Jack Norton, jotka olivat saapuneet paikalle autolla vuonna 1919."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Coober Pedy underground motel room, 2007.jpg",
+        "vuosi": "2007",
+        "lahde": "Kerry Raymond, Commons (CC BY 4.0)",
+        "selite": "Maanalainen motellihuone Coober Pedyssä. Katossa oleva ylösalaisin käännetty sateenvarjo kerää sen hiekan, joka putoaa pinnalle johtavasta ilmanvaihtokuilusta; kalliossa lämpötila pysyy tasaisena ympäri vuoden."
+      },
+      {
+        "tiedosto": "Coober Pedy Mines Australia.jpg",
+        "vuosi": "2005",
+        "lahde": "Thomas Schoch, Commons (CC BY-SA 2.5)",
+        "selite": "Kaivoskuilujen sivukiviläjiä Coober Pedyn ympärillä. Jokainen valkoinen kartio on yhden kuilun jäljiltä nostettua maata — opaalia etsitään poraamalla kapeita reikiä, ja maasto on täynnä niitä."
+      },
+      {
+        "tiedosto": "The Breakaways.jpg",
+        "vuosi": "2011",
+        "lahde": "Jburger234, Commons (CC BY-SA 4.0)",
+        "selite": "Breakawaysin matalat pöytäkukkulat Coober Pedystä pohjoiseen. Ne olivat aikoinaan osa Stuart Rangesia; ympäröivä maa on kulunut pois ja jättänyt jäljelle vain kovimmat kerrokset."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Coober Pedy - The Big winch lookout.jpg",
+      "vuosi": "2000",
+      "lahde": "Tal Shiar, Commons (PD)",
+      "selite": "Coober Pedy Big Winch -näköalapaikalta. Kuvassa erottuu päätie, motelli, poravaunu ja kymmeniä sivukiviläjiä; suuri osa asunnoista ei näy lainkaan, koska ne on kaivettu rinteiden sisään."
+    }
+  },
+  {
+    "id": "geraldton",
+    "paikka": "Geraldton",
+    "vanha": {
+      "tiedosto": "SS Charon at Geraldton, SLWA b4792667.png",
+      "vuosi": "1922",
+      "lahde": "State Library of Western Australia, Commons (PD)",
+      "selite": "Höyrylaiva Charon Geraldtonin puulaiturissa vuonna 1922. Laiturille on ajettu säkkilastissa olevia rautatievaunuja, ja rata kulkee aivan laivan kylkeen asti. Laiva oli tuolloin matkalla vuoden 1922 auringonpimennystä havainnoineen retkikunnan kanssa."
+    },
+    "lisat": [
+      {
+        "tiedosto": "HMAS Sydney II Memorial, Geraldton, October 2023 03.jpg",
+        "vuosi": "2023",
+        "lahde": "DaHuzyBru, Commons (CC BY-SA 4.0)",
+        "selite": "HMAS Sydneyn muistomerkki Geraldtonin yllä kohoavalla kukkulalla. Kupoli on tehty 645 metallilokista, yksi jokaista miehistön jäsentä kohti: risteilijä katosi kaikkine miehineen Länsi-Australian rannikolla marraskuussa 1941."
+      },
+      {
+        "tiedosto": "Geraldton Foreshore October 2023 02.jpg",
+        "vuosi": "2023",
+        "lahde": "DaHuzyBru, Commons (CC BY-SA 4.0)",
+        "selite": "Geraldtonin rantabulevardin uimalahti. Oikealla kohoaa sataman viljasiilo ja lastauslaite — kaupunki on Keski-Länsi-Australian viljavyöhykkeen vientisatama, ja siilot seisovat aivan uimarannan vieressä."
+      },
+      {
+        "tiedosto": "Gone Driveabout 10, Fishing boat, Geraldton, Western Australia, 24 Oct. 2010 - Flickr - PhillipC.jpg",
+        "vuosi": "2010",
+        "lahde": "Phillip Capper, Commons (CC BY 2.0)",
+        "selite": "Kalastusalus Ocean Quest telakalla Geraldtonissa, runko pukkien varassa huoltoa varten. Geraldton on läntisen rannikon kalasatamia, ja alueen tunnetuin saalis on langusti, jota pyydetään mertoihin ja viedään pääosin ulkomaille."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Geraldton harbour at sunset.jpg",
+      "vuosi": "2019",
+      "lahde": "JarrahTree, Commons (CC BY 2.5 AU)",
+      "selite": "Geraldtonin satama iltavalossa: hinaajia laiturissa, viljasiilot takana ja irtolastialus kauempana laiturilla. Etualalla kulkee rata, jota pitkin lasti tulee sisämaasta samaan tapaan kuin sata vuotta sitten."
+    }
+  },
+  {
+    "id": "norfolk",
+    "paikka": "Norfolkinsaari",
+    "lisat": [
+      {
+        "tiedosto": "The view of the Kingston Town area - Taken on the Saturday, 12th July 2014 @ 11-49am (Sydney Time) - panoramio.jpg",
+        "vuosi": "2014",
+        "lahde": "Christopher Wood, Commons (CC BY-SA 3.0)",
+        "selite": "Kingston ylhäältä katsottuna. Valkoiset kivitalot ovat vankisiirtolan ajalta 1800-luvun alkupuolelta, ja rantaa suojaa riutta; saarella ei ole satamaa, joten tavarat on aina tuotu maihin veneillä juuri täältä."
+      },
+      {
+        "tiedosto": "Emily Bay Norfolk Island.jpg",
+        "vuosi": "2018",
+        "lahde": "Inas, Commons (CC BY-SA 4.0)",
+        "selite": "Emily Bay Kingstonin edustalla. Riutta katkaisee aallokon ja tekee lahdesta saaren tyynen uimapaikan — riutan korallit ovat maailman eteläisimpiä."
+      },
+      {
+        "tiedosto": "Norfolk Island (41).jpg",
+        "vuosi": "2017",
+        "lahde": "Brian, Commons (CC BY-SA 2.0)",
+        "selite": "Norfolkinsaaren rannikkoa: jyrkkiä rinteitä, punaruskeaa maata ja norfolkinmäntyjä. Puu kasvaa luonnonvaraisena vain täällä, ja sen suorat rungot olivat yksi syy siirtokunnan perustamiseen — mastopuuksi puu osoittautui lopulta liian hauraaksi."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Kingston, Norfolk Island.jpg",
+      "vuosi": "2006",
+      "lahde": "thinboyfatter, Commons (CC BY 2.0)",
+      "selite": "Kingston norfolkinmäntyjen välistä. Alarinteessä näkyvät vankisiirtolan ajan rakennukset ja niiden takana avomeri; Kingston on saaren hallinnollinen keskus, mutta kaupat ja asutus ovat ylhäällä Burnt Pinen kylässä."
+    }
+  }
+]

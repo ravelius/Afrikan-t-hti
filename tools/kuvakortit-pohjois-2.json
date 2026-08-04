@@ -1,0 +1,314 @@
+[
+  {
+    "id": "nome",
+    "paikka": "Nome",
+    "vanha": {
+      "tiedosto": "Nome Alaska 1900.jpg",
+      "vuosi": "1900",
+      "lahde": "Carrie M. McLain Memorial Museum, Commons (PD)",
+      "selite": "Front Street 17. heinäkuuta 1900, keskellä kultaryntäystä. Vasemmalla kohoaa Dexter Saloon, kaupungin ensimmäinen kaksikerroksinen puutalo; sen omisti Wyatt Earp yhdessä Charles E. Hoxien kanssa. Nomeen tultiin siksi, että kultaa löytyi myös rantahiekasta, eikä kaivosmiehen tarvinnut lähteä kaupungista minnekään."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Iditarod 2013 (8572097753).jpg",
+        "vuosi": "2013",
+        "lahde": "Bering Land Bridge National Preserve, Commons (CC BY 2.0)",
+        "selite": "Jeff Kingin valjakko tulee pahkakaaren alle yöllä Iditarod-ajossa 2013. Nome on kilpailun maali: valjakot lähtevät Anchoragen seudulta ja saapuvat tänne siinä järjestyksessä kuin ehtivät, usein keskellä yötä."
+      },
+      {
+        "tiedosto": "Coast Guard conducts gold dredge boardings in Nome, Alaska 140803-G-YE680-669.jpg",
+        "vuosi": "2014",
+        "lahde": "Grant DeVuyst / Yhdysvaltain rannikkovartiosto, Commons (PD)",
+        "selite": "Rannikkovartiosto nousee kullankaivuulautan kannelle Nomen edustalla. Lautan mastossa liehuu punavalkoinen sukeltajalippu: pohjahiekka nostetaan vedenalaisesta imusta kannen seulastoon. Kultaa haetaan siis yhä, mutta nyt meren pohjasta."
+      },
+      {
+        "tiedosto": "Post Office in Nome, AK.jpg",
+        "vuosi": "2018",
+        "lahde": "Quintin Soloviev, Commons (CC BY 4.0)",
+        "selite": "Nomen postitoimisto sisältä: seinällinen postilokeroita ja niiden vieressä palvelutiski. Kaupunkiin ei johda maantietä muualta Alaskasta, joten posti ja tavara tulevat lentokoneella tai kesällä laivalla."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Nome Alaska front street snow.jpg",
+      "vuosi": "2006",
+      "lahde": "ra64, Commons (CC BY-SA 2.0)",
+      "selite": "Sama Front Street maaliskuussa. Lumi on kasattu valliksi kadun reunaan ja kone työntää sitä yhä kadun päässä. Kuvaajan mukaan juuri tämän näkymän Iditarodin maaliin ajava valjakko kohtaa."
+    }
+  },
+  {
+    "id": "anchorage",
+    "paikka": "Anchorage",
+    "vanha": {
+      "tiedosto": "Anchorage Alaska 1 July 1915.jpg",
+      "vuosi": "1915",
+      "lahde": "Alberta Pyatt / Anchorage Museum, Commons (PD)",
+      "selite": "Telttakaupunki Ship Creekin rannalla 1. heinäkuuta 1915, taustalla Chugachin vuoret. Käsin kirjoitettu kuvateksti nimittää paikkaa Valkoiseksi kaupungiksi. Anchorage alkoi rautatien rakennusleirinä, ja ensimmäinen kesä asuttiin purjekankaan alla. Oikealla kohoaa jo hirsistä rakennettu kaksikerroksinen talo."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Seaplane base on Lake Hood, Anchorage (3574288498).jpg",
+        "vuosi": "2009",
+        "lahde": "Joseph (umnak), Commons (CC BY-SA 2.0)",
+        "selite": "Vesitasoja kiinni Lake Hoodin rannassa Anchoragessa. Kuvaaja kutsuu paikkaa maailman vilkkaimmaksi vesilentotukikohdaksi. Suureen osaan Alaskan kyliä ei pääse tietä pitkin, joten kone laskeutuu järvelle tai joelle."
+      },
+      {
+        "tiedosto": "The ceremonial dog sled making the turn on 4th Avenue in Anchorage (3411117618).jpg",
+        "vuosi": "2009",
+        "lahde": "Frank Kovalchek, Commons (CC BY 2.0)",
+        "selite": "Valjakko kääntyy Fourth Avenuelle Iditarodin näytöslähdössä. Varsinainen kilpailu alkaa vasta seuraavana päivänä Willow'sta; Anchoragessa ajetaan lyhyt katuosuus, ja reessä istuu matkustaja, joka on ostanut paikkansa huutokaupasta."
+      },
+      {
+        "tiedosto": "Traffic Moose. Old Seward Highway, Anchorage, Alaska.jpg",
+        "vuosi": "2009",
+        "lahde": "FairbanksMike, Commons (CC BY 2.0)",
+        "selite": "Hirvinaaras ja kaksi vasaa kävelevät Old Seward Highwayta pitkin autoliikkeiden ohi. Anchoragen alueella elää hirviä ympäri vuoden, ja ne liikkuvat myös keskellä kaupunkia."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Ship Creek Fishing - Anchorage.jpg",
+      "vuosi": "2019",
+      "lahde": "Haydn Blackey, Commons (CC BY-SA 2.0)",
+      "selite": "Sama Ship Creek nykyään, samat Chugachin vuoret takana. Purossa seisoo onkijoita: lohi nousee jokea keskellä kaupunkia, muutaman korttelin päässä keskustasta. Vasemmalla näkyy vanha voimalaitos."
+    }
+  },
+  {
+    "id": "whitehorse",
+    "paikka": "Whitehorse",
+    "vanha": {
+      "tiedosto": "Sternwheelers at Whitehorse, Yukon, ca. 1899 - DPLA - eb876214e43d7026043f6d4ac38db14c.jpg",
+      "vuosi": "noin 1899",
+      "lahde": "Arthur C. Pillsbury / Seattle Public Library, Commons (PD)",
+      "selite": "Kaksi siipiratasalusta rannassa ja telttarivi vastapäätä. Yhden teltan kyltissä lukee White Horse Saloon. Whitehorse oli pysähdyspaikka Klondiken kultakentille: joen yläpuoliset Miles Canyon ja Whitehorsen kosket kierrettiin maitse, ja täältä jatkettiin laivalla Dawsoniin."
+    },
+    "lisat": [
+      {
+        "tiedosto": "SS Klondike paddlewheeler - National Historic Site - Whitehorse, Yukon.jpg",
+        "vuosi": "2012",
+        "lahde": "Anthony DeLorenzo, Commons (CC BY-SA 3.0)",
+        "selite": "SS Klondike Yukonjoen rannalla talvella. Alus rakennettiin 1930-luvulla ja se on nyt museona kuivalla maalla. Siipiratasalukset olivat Yukonin tavaraliikenne siihen asti, kunnes maantiet veivät kuljetukset."
+      },
+      {
+        "tiedosto": "Cañón Miles, Yukón, Canadá, 2017-08-26, DD 130-132 PAN.jpg",
+        "vuosi": "2017",
+        "lahde": "Diego Delso, Commons (CC BY-SA 4.0)",
+        "selite": "Miles Canyon Whitehorsen yläpuolella. Yukonjoki puristuu kapeaan basalttikanjoniin, joka oli kultaryntäyksen aikaan matkan vaarallisimpia kohtia. Kanjonin yläpuolelle vesi on nykyään padottu Schwatka-järveksi."
+      },
+      {
+        "tiedosto": "Quest dogs.JPG",
+        "vuosi": "2003",
+        "lahde": "Commons (public domain)",
+        "selite": "Valjakko lähtee Yukon Questin lähtöportista helmikuussa 2003. Yleisö seisoo aitojen takana kadulla: lähtö ajetaan keskeltä kaupunkia, ja reitti jatkuu talvisen erämaan halki Alaskan puolelle."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Downtown Whitehorse (6325219946).jpg",
+      "vuosi": "2011",
+      "lahde": "Anthony DeLorenzo, Commons (CC BY 2.0)",
+      "selite": "Sama rantatörmä nykyään. Yukonjoki virtaa yhä keskustan ohi, mutta laivojen tilalla on matalia taloja ja rantatie. Whitehorse on Yukonin pääkaupunki, ja suurin osa koko territorion asukkaista asuu juuri täällä."
+    }
+  },
+  {
+    "id": "yellowknife",
+    "paikka": "Yellowknife",
+    "vanha": {
+      "tiedosto": "Radium King moored in Yellowknife.jpg",
+      "vuosi": "1930-luku",
+      "lahde": "Edmonton Air Museum Committee / NWT Archives, Commons (PD)",
+      "selite": "Rahtialus Radium King kiinni laiturissa Yellowknifessä 1930-luvulla. Miehet vetävät letkua kannelle, rannalla on tynnyreitä ja peltikatoksia. Kaupunki syntyi kultalöydön ympärille, ja kaikki tavara tuli tänne vesitse: maantietä etelään ei vielä ollut."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Houseboats on Great Slave Lake in Yellowknife.JPG",
+        "vuosi": "2013",
+        "lahde": "CambridgeBayWeather, Commons (CC BY-SA 3.0)",
+        "selite": "Asuntolaivoja Suuren Orjajärven jäässä Yellowknifen edustalla helmikuussa. Talot kelluvat kesät lahdella ja jäätyvät talveksi paikoilleen; silloin niiden luo kuljetaan jäätä pitkin."
+      },
+      {
+        "tiedosto": "Dettah Ice Road.jpg",
+        "vuosi": "2014",
+        "lahde": "GravityRidesEverything, Commons (CC BY-SA 3.0)",
+        "selite": "Jäätie Yellowknifestä Dettahin kylään. Talvella järven jää kantaa auton ja matka oikaisee lahden yli; kesällä samaan kylään ajetaan huomattavasti pidempi kierros maitse."
+      },
+      {
+        "tiedosto": "2018 Aurora Yellowknife Canada.jpg",
+        "vuosi": "2018",
+        "lahde": "Commons (public domain)",
+        "selite": "Revontulet Yellowknifen yllä maaliskuussa. Kaupunki on suoraan revontulivyöhykkeen alla, ja talven ilma on kuivaa ja usein selkeä; siitä on tullut revontulimatkailun kohde."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Old Town and N'Dilo.JPG",
+      "vuosi": "2008",
+      "lahde": "CambridgeBayWeather, Commons (CC BY-SA 3.0)",
+      "selite": "Yellowknifen Old Town kesällä, taustalla N'Dilon niemi ja Suuri Orjajärvi. Talot on rakennettu suoraan kallion päälle koivujen sekaan, ja rannassa näkyy vesitasojen laituri — sama lahti, jossa Radium King oli kiinni."
+    }
+  },
+  {
+    "id": "vancouver",
+    "paikka": "Vancouver",
+    "vanha": {
+      "tiedosto": "Cordova St looking east from cambie 1890s.jpg",
+      "vuosi": "1890-luku",
+      "lahde": "Richard H. Trueman / City of Vancouver Archives, Commons (PD)",
+      "selite": "Cordova Street itään Cambie Streetin kohdalta 1890-luvulla. Raitiovaunu kulkee hiekkakadulla, jalkakäytävät ovat lautaa ja pylväät kantavat tiheää lankaviuhkaa. Vancouver oli tuolloin vasta reilun vuosikymmenen ikäinen, ja Cordova oli sen liikekatu."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Granville Island Public Market 2015.jpg",
+        "vuosi": "2015",
+        "lahde": "Jay Esplana, Commons (CC BY 4.0)",
+        "selite": "Granville Islandin kauppahalli False Creekin rannalla. Saari oli teollisuusaluetta — konepajoja ja varastoja — ja hallit muutettiin 1970-luvun lopulla toriksi ja työpajoiksi. Vanhat peltikatot ja teräsristikot jätettiin näkyviin."
+      },
+      {
+        "tiedosto": "Port cranes 2011.jpg",
+        "vuosi": "2011",
+        "lahde": "Hiestun.Photography, Commons (CC BY-SA 2.0)",
+        "selite": "Konttinostureita Vancouverin satamassa Burrard Inletin rannalla. Satama on Kanadan suurin. Kaupunki syntyi juuri tähän, kun mannerten välisen rautatien päätepiste vedettiin 1880-luvulla lahden rantaan."
+      },
+      {
+        "tiedosto": "Vancouver (BC, Canada), Vancouver Harbour Flight Centre, Wasserflugzeuge -- 2022 -- 2127.jpg",
+        "vuosi": "2022",
+        "lahde": "Dietmar Rabich, Commons (CC BY-SA 4.0)",
+        "selite": "Vesitasoja laiturissa Coal Harbourissa aivan keskustan edustalla. Koneet lähtevät säännöllisessä liikenteessä Vancouverin saarelle ja rannikon kyliin; nousukiito otetaan suoraan sataman edestä."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Cordova Street, 2016 Blue Hour.jpg",
+      "vuosi": "2016",
+      "lahde": "Dllu, Commons (CC BY-SA 4.0)",
+      "selite": "Sama Cordova Street runsaat sata vuotta myöhemmin, iltahämärässä. Vasemmalla on 1800-luvun tiilitaloja, joissa on nykyään panimoravintola; taustalla näkyy Woodward'sin tavaratalon vanha W-valokyltti ja Harbour Centren torni."
+    }
+  },
+  {
+    "id": "winnipeg",
+    "paikka": "Winnipeg",
+    "vanha": {
+      "tiedosto": "Canadian Dog Train and Remains of Old Fort Garry, Winnipeg 1899 (HS85-10-11350).jpg",
+      "vuosi": "1899",
+      "lahde": "Steele & Co. / British Library, Commons (PD)",
+      "selite": "Kuuden koiran valjakko ja kuormareki Fort Garryn jäljellä olevan porttitornin edessä talvella 1899. Hudson's Bay Companyn kivilinnoituksesta oli jo tuolloin jäljellä vain portti. Kauppa-asema seisoi Punaisen- ja Assiniboinejoen yhtymäkohdassa, ja sen ympärille kasvoi Winnipeg."
+    },
+    "lisat": [
+      {
+        "tiedosto": "The Forks Market, Winnipeg Manitoba.JPG",
+        "vuosi": "2012",
+        "lahde": "Ccyyrree, Commons (CC0)",
+        "selite": "The Forks Market samojen jokien yhtymäkohdassa. Kauppahalli on entinen rautatien tiilirakennus, johon on lisätty lasikatteiset kylkiäiset. Paikka oli kohtaamis- ja vaihtopaikka tuhansia vuosia ennen kaupunkia."
+      },
+      {
+        "tiedosto": "Festival du Voyageur. Whittier Park, St. Boniface, Winnipeg (500147b) (14018205902).jpg",
+        "vuosi": "2014",
+        "lahde": "Robert Linsdell, Commons (CC BY 2.0)",
+        "selite": "Lumiveistos Festival du Voyageur -talvijuhlassa Whittier Parkissa. Juhla vietetään St. Bonifacessa, Winnipegin ranskankielisessä kaupunginosassa, ja se on nimetty turkiskaupan jokimatkaajien mukaan."
+      },
+      {
+        "tiedosto": "Portage Ave & Main St, Winnipeg (502315) (15963363704).jpg",
+        "vuosi": "2014",
+        "lahde": "Robert Linsdell, Commons (CC BY 2.0)",
+        "selite": "Portage Avenuen ja Main Streetin risteys. Kadut seuraavat vanhoja kärryreittejä, jotka kulkivat Fort Garrysta kahteen suuntaan; risteys tunnetaan Kanadassa tuulisimpana kulmana, ja jalankulkijat ohjattiin vuosikymmeniksi alikulkuun."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Winnipeg skyline and WINNIPEG sign at The Forks, Manitoba, Canada.jpg",
+      "vuosi": "2026",
+      "lahde": "Ethan Sahagun, Commons (CC BY 4.0)",
+      "selite": "Keskustan siluetti hämärissä The Forksin puistosta katsottuna, edessä valaistu WINNIPEG-kyltti. Oikealla kaartuu Kanadan ihmisoikeusmuseon lasiseinä. Tämä on sama jokien kohtaamispaikka, jossa Fort Garryn portti seisoo."
+    }
+  },
+  {
+    "id": "churchill",
+    "paikka": "Churchill",
+    "lisat": [
+      {
+        "tiedosto": "Prince of Wales Fort - Churchill, Manitoba (40402156465).jpg",
+        "vuosi": "2014",
+        "lahde": "TravelingOtter, Commons (CC BY 2.0)",
+        "selite": "Prince of Wales Fortin muurit Churchilljoen suulla. Hudson's Bay Company rakensi kivilinnoituksen 1700-luvulla turkiskauppansa turvaksi. Ranskalainen laivasto valtasi sen 1782 ilman taistelua: väkeä ei ollut lähimainkaan tarpeeksi tykkien taakse."
+      },
+      {
+        "tiedosto": "Polar Bear and Tundra Buggy - Churchill, Manitoba (26427267077).jpg",
+        "vuosi": "2014",
+        "lahde": "TravelingOtter, Commons (CC BY 2.0)",
+        "selite": "Jääkarhu ja tundravaunu Churchillin lähellä. Karhut odottavat syksyllä rannikolla, että Hudsoninlahti jäätyy ja hylkeenpyynti alkaa. Katsojat kuljetetaan korkealla alustalla oleviin vaunuihin, jotta karhut eivät ylety."
+      },
+      {
+        "tiedosto": "Beluga Whales - Churchill, Manitoba (27426558548).jpg",
+        "vuosi": "2014",
+        "lahde": "TravelingOtter, Commons (CC BY 2.0)",
+        "selite": "Valkovalaita eli belugia Churchilljoen suulla. Ne kokoontuvat kesällä tuhansittain joen suulle, jossa vesi on lämpimämpää ja makeampaa kuin lahdella. Vilkkaan vedenalaisen äänekkyytensä takia niitä on kutsuttu meren kanarialinnuiksi."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "End of the line, Churchill Manitoba (30352378547).jpg",
+      "vuosi": "2014",
+      "lahde": "Mike Beauregard, Commons (CC BY 2.0)",
+      "selite": "Radan pää Churchillissä: kiskot loppuvat tundralle ja taustalla häämöttää viljaterminaali kaupungin laidalla. Hudsoninlahden rata on ainoa maayhteys tänne. Tulva katkaisi sen 2017, ja ensimmäinen juna pääsi perille vasta syksyllä 2018."
+    }
+  },
+  {
+    "id": "iqaluit",
+    "paikka": "Iqaluit",
+    "lisat": [
+      {
+        "tiedosto": "Iqlauit waterfront.JPG",
+        "vuosi": "2011",
+        "lahde": "Sebastian Kasten, Commons (CC BY-SA 3.0)",
+        "selite": "Iqaluitin ranta Frobisherinlahdella elokuussa. Avoimet alumiiniveneet ovat ankkurissa aivan rannan tuntumassa, ja niiden takana nousee kaupunki värikkäine taloineen. Puita ei näy: Iqaluit on selvästi puurajan pohjoispuolella."
+      },
+      {
+        "tiedosto": "Throat Singing (5878138705).jpg",
+        "vuosi": "2011",
+        "lahde": "US Embassy Canada, Commons (CC BY 2.0)",
+        "selite": "Kaksi laulajaa kurkkulaulun eli katajjaqin äärellä. Laulajat seisovat vastakkain aivan lähekkäin ja vuorottelevat hengitysäänin, kunnes toinen antaa periksi. Perinteisesti kyse on ollut naisten leikkimielisestä kilpailusta."
+      },
+      {
+        "tiedosto": "Hunter's Market (Iqaluit).jpg",
+        "vuosi": "2025",
+        "lahde": "OhanaUnited, Commons (CC BY-SA 4.0)",
+        "selite": "Hunter's Market, pieni ruokakauppa ja noutoravintola Iqaluitin keskustassa. Talo on nostettu irti maasta puisen kuistin ja portaiden varaan. Kyltissä lukee sama asia englanniksi ja inuktitutin tavumerkein: inuktitut on Nunavutin virallisia kieliä."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Iqaluit from Joamie Hill.JPG",
+      "vuosi": "2010",
+      "lahde": "Aaron M Lloyd, Commons (public domain)",
+      "selite": "Iqaluit Joamie Hillin päältä toukokuussa. Talot on maalattu kirkkain värein lumen ja harmaan kallion keskellä, ja etualalla on varastovaja tavaroineen. Iqaluit on Nunavutin pääkaupunki ja koko territorion ainoa varsinainen kaupunki."
+    }
+  },
+  {
+    "id": "nuuk",
+    "paikka": "Nuuk",
+    "vanha": {
+      "tiedosto": "No-nb bldsa 3b158.jpg",
+      "vuosi": "1888–1889",
+      "lahde": "Fridtjof Nansen / Norjan kansalliskirjasto, Commons (PD)",
+      "selite": "Näkymä Godthåbiin: kajakkeja vedessä, ihmisryhmä kalliolla ja vastarannalla kirkontorni ja puutalot. Kuvan otti Fridtjof Nansen, joka hiihti seurueineen Grönlannin poikki 1888. Retkikunta joutui talvehtimaan täällä, ja Nansen käytti talven tutustumalla inuiittien elämään ja valokuvaamalla sitä."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Hans Egede statue, old church, old hospital and other buildings in Nuuk, seen from Radiofjeldet.jpg",
+        "vuosi": "2020",
+        "lahde": "Vikebe, Commons (CC0)",
+        "selite": "Nuukin vanha osa talvella: punainen kirkko, kolonia-ajan puutalot ja kukkulalla Hans Egeden patsas. Norjalainen pappi Egede perusti tänne lähetys- ja kauppa-aseman 1720-luvulla, ja siitä kasvoi Godthåb, nykyinen Nuuk."
+      },
+      {
+        "tiedosto": "Greenland 10, Nuuk, harbour, Kilisaatinut.JPG",
+        "vuosi": "2011",
+        "lahde": "Vincent van Zeijst, Commons (CC BY-SA 3.0)",
+        "selite": "Kevät Nuukin satamassa: lumesta paljastuu auto, joka on ollut kinoksen alla koko talven. Taustalla on kalastusveneiden laituri, ja kallion päälle on rakennettu kerrostaloja, joihin noustaan puuportaita pitkin."
+      },
+      {
+        "tiedosto": "Katuaq 2023.jpg",
+        "vuosi": "2023",
+        "lahde": "ThatGuyOnline, Commons (CC BY-SA 4.0)",
+        "selite": "Katuaq, Grönlannin kulttuuritalo Nuukin keskustassa. Talossa on konserttisali, elokuvateatteri ja kahvila. Aaltoilevan puujulkisivun on kerrottu jäljittelevän revontulten liikettä."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Nuup Kangerlua and Nuuk (2) (Kenny McFly).jpg",
+      "vuosi": "2022",
+      "lahde": "Kenny McFly, Commons (CC BY-SA 4.0)",
+      "selite": "Sama vuono nykyään: Nuup Kangerlua ja sen takana avautuvat vuoret. Etualalla on kerrostaloja aivan kallion reunalla, ja kaukana niemen kärjessä näkyy vanhan kolonisataman värikäs talorykelmä."
+    }
+  }
+]

@@ -1,0 +1,326 @@
+[
+  {
+    "id": "hawaii",
+    "paikka": "Havaiji",
+    "vanha": {
+      "tiedosto": "Native Hawaiian surfer standing with alaia board (PPWD-19-6-019, original).jpg",
+      "vuosi": "1898",
+      "lahde": "Frank Davey / Hawaii State Archives, Commons (PD)",
+      "selite": "Charles Kauha ja hänen alaia-lautansa Waikikin rannalla. Frank Davey kuvasi hänet vuonna 1898 useaan asentoon, mutta yhdessäkään otoksessa Kauha ei ole aalloilla. Alaia oli ohut ja evätön puulauta, ja arkiston mukaan tämä oli yksi viimeisistä."
+    },
+    "lisat": [
+      {
+        "tiedosto": "USGS Lava on Makamae Street.jpg",
+        "vuosi": "2018",
+        "lahde": "USGS, Commons (PD)",
+        "selite": "Laavavirta etenee Makamae-katua pitkin Leilani Estatesin asuinalueella 6. toukokuuta 2018 kello 9.32 aamulla. Kuvan otti Yhdysvaltain geologian tutkimuskeskus, joka seuraa Kīlaueaa päivittäin; tuon kesän purkaus tuhosi noin 600 taloa."
+      },
+      {
+        "tiedosto": "Hula dancers (a0007031).jpg",
+        "vuosi": "2013",
+        "lahde": "Thomas Tunsch, Commons (CC BY-SA 4.0)",
+        "selite": "Hula kahiko -tanssijoita lavalla Merrie Monarch -festivaalin 50. vuosikerrassa. Kahiko on hulan vanha muoto; saman festivaalin ohjelmassa tanssitaan myös uudempaa ʻauana-tyyliä, jossa pukukin on toisenlainen."
+      },
+      {
+        "tiedosto": "Paddling the Pacific 121117-F-ZB240-145.jpg",
+        "vuosi": "2012",
+        "lahde": "Mike Meares / Yhdysvaltain ilmavoimat, Commons (PD)",
+        "selite": "Yli sata puomikanoottia lähtee liikkeelle Hawaii Kaissa marraskuussa 2012. Varsinaista lähtöviivaa ei ollut: veneet ajautuivat hitaasti eteenpäin, kunnes torvi soi. Matkaa oli kahdeksan ja puoli mailia Oahun rannikkovesissä."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Lots of surfers in the water at Waikiki Beach with cloudy sky and Sheraton Waikiki Beach Resort in the background at Honolulu, Hawaii, United States of America, Summer, 2006.jpg",
+      "vuosi": "2006",
+      "lahde": "Antonio Salsedo, Commons (CC BY 3.0)",
+      "selite": "Waikikin ranta heinäkuussa 2006. Vedessä on kymmenittäin lautailijoita ja rannalla hotellirivi; juuri tällä rannalla Frank Davey kuvasi Charles Kauhan alaia-lautoineen runsaat sata vuotta aiemmin."
+    }
+  },
+  {
+    "id": "sanjuan",
+    "paikka": "San Juan",
+    "vanha": {
+      "tiedosto": "St. Cristobal Fortress, San Juan, Puerto Rico LCCN96522666.jpg",
+      "vuosi": "1908",
+      "lahde": "Library of Congress (PD)",
+      "selite": "San Cristóbalin linnoitus vuonna 1908. Espanjalaisten rakentama linnake sulkee vanhan kaupungin maanpuoleisen kannaksen; kuva on otettu kymmenen vuotta sen jälkeen, kun Puerto Rico siirtyi Espanjalta Yhdysvalloille."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Top of homes in La Perla, San Juan, Puerto Rico.jpg",
+        "vuosi": "2019",
+        "lahde": "Šarūnas Burdulis, Commons (CC BY-SA 2.0)",
+        "selite": "La Perlan kattoja. Kaupunginosa rakentui kaupunginmuurin ulkopuolelle, muurin ja meren väliin jäävälle kapealle kaistaleelle, ja talot laskeutuvat portaittain rantakalliolle. Sen yli näkee San Cristóbalin valleilta."
+      },
+      {
+        "tiedosto": "San Juan, calles 4.jpg",
+        "vuosi": "2013",
+        "lahde": "LBM1948, Commons (CC BY-SA 4.0)",
+        "selite": "Katu vanhassa San Juanissa. Talot ovat kiinni toisissaan ja parvekkeet työntyvät kadun ylle. Ajorata on sinertävää adokiinikiveä, jota laivat toivat Espanjasta painolastina ja joka ladottiin täällä kaduksi."
+      },
+      {
+        "tiedosto": "San Juan Pier.jpg",
+        "vuosi": "2018",
+        "lahde": "Moebiusuibeom-en, Commons (CC BY-SA 4.0)",
+        "selite": "San Juanin sataman laitureita lahden puolella. Vanha kaupunki on rakennettu niemen kärkeen ja satama sen suojanpuoleiselle rannalle — juuri tämän luonnonsataman takia paikka valittiin 1500-luvulla."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Castillo San Cristobal - panoramio (7).jpg",
+      "vuosi": "2014",
+      "lahde": "socaltraveler, Commons (CC BY-SA 3.0)",
+      "selite": "Sama San Cristóbal nykyään. Vallit ovat pystyssä ja niiden päällä kuljetaan kävellen; linnoitus kuuluu Unescon maailmanperintöluetteloon ja sitä hoitaa Yhdysvaltain kansallispuistovirasto."
+    }
+  },
+  {
+    "id": "havanna",
+    "paikka": "Havanna",
+    "vanha": {
+      "tiedosto": "La Catedral, Habana LCCN90711052.jpg",
+      "vuosi": "1900",
+      "lahde": "Library of Congress (PD)",
+      "selite": "Havannan katedraali noin vuonna 1900 käsinvärittynä photochrom-vedoksena. Barokkijulkisivun kellotornit ovat eri levyiset. Photochrom oli valokuvasta kivipainolla tehty värivedos, jollaisia myytiin matkailijoille jo isoisän aikaan."
+    },
+    "lisat": [
+      {
+        "tiedosto": "El Malecon Havanna Sunset (16443824281).jpg",
+        "vuosi": "2014",
+        "lahde": "Ashu Mathura, Commons (CC BY-SA 2.0)",
+        "selite": "Aalto iskee Malecónin rantamuuriin ukkoskuuron jälkeen. Kuvaaja kertoo kastuneensa läpimäräksi seuraavasta aallosta muutama sekunti tämän jälkeen. Muuri suojaa rantabulevardia, jolla havannalaiset istuvat iltaisin."
+      },
+      {
+        "tiedosto": "Habana Vieja (35890978074).jpg",
+        "vuosi": "2015",
+        "lahde": "Antonio Schubert, Commons (CC BY-SA 2.0)",
+        "selite": "Vanhan Havannan katukuvaa. Auto on vuoden 1956 Ford, jonka kylkilistat on riisuttu pois. Uusien autojen tuonti oli Kuubassa vuosikymmeniä lähes pysähdyksissä, joten 1950-luvun rungot pidettiin ajossa itse tehdyin osin."
+      },
+      {
+        "tiedosto": "La Habana - Estadio Latinoamericano.jpg",
+        "vuosi": "2005",
+        "lahde": "Goodgirl, Commons (CC BY-SA 2.0 de)",
+        "selite": "Estadio Latinoamericano, näkymä sisäkentän yli oikean laidan katsomoon. Baseball on Kuuban seuratuin urheilulaji ja tämä on maan suurin stadion; kotijoukkue Industriales on Havannan oma."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Plaza de la Catedral - Havana - Cuba (18059112736).jpg",
+      "vuosi": "2015",
+      "lahde": "Maxence, Commons (CC BY-SA 2.0)",
+      "selite": "Katedraaliaukio vuonna 2015 — sama paikka kuin runsaan sadan vuoden takaisessa vedoksessa. Julkisivu on ennallaan, ja koko vanhakaupunki on Unescon maailmanperintökohde."
+    }
+  },
+  {
+    "id": "monterrey",
+    "paikka": "Monterrey",
+    "vanha": {
+      "tiedosto": "15177-Monterrey-1912-Fabrik Guido Moebius-Brück & Sohn Kunstverlag.jpg",
+      "vuosi": "1912",
+      "lahde": "Brück & Sohn Kunstverlag, Meissen, Commons (CC0)",
+      "selite": "Guido Moebiuksen tehdas Monterreyssä postikortissa vuodelta 1912. Kortin painoi saksalainen kustantamo Brück & Sohn Meissenissä — meksikolaisiakin näkymiä painettiin tuohon aikaan Saksassa asti. Monterrey oli jo silloin maan teollisuuskaupunki."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Horno 3, Parque Fundidora - panoramio.jpg",
+        "vuosi": "2013",
+        "lahde": "JavierDo, Commons (CC BY-SA 3.0)",
+        "selite": "Masuuni numero 3 Parque Fundidorassa. Monterreyn terästehdas toimi tällä paikalla 1900-luvun alusta 1986 asti; kun tuotanto loppui, alue muutettiin puistoksi ja masuuni jätettiin paikalleen museoksi."
+      },
+      {
+        "tiedosto": "Cerro de La Silla on a warm day (Unsplash).jpg",
+        "vuosi": "2015",
+        "lahde": "Hafid Davila, Commons (CC0)",
+        "selite": "Cerro de la Silla kohoaa Monterreyn itäpuolella. Nimi tarkoittaa satulaa: harjanteen kaksi huippua ja niiden välinen notko muistuttavat satulaa sivulta katsottuna. Vuori on kaupungin tunnus."
+      },
+      {
+        "tiedosto": "Paseo Santa Lucía - Santa Lucía Riverwalk.jpg",
+        "vuosi": "2008",
+        "lahde": "México en Fotos, Commons (CC BY-SA 2.0)",
+        "selite": "Paseo Santa Lucía, keinotekoinen kanava keskustan Macroplazalta Fundidoran puistoon. Väylää on 2,5 kilometriä ja sitä pitkin kulkee myös veneitä; kuvaajan mukaan se on Latinalaisen Amerikan pisin keinojoki."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Cerro de La Silla y Faro del Comercio desde el aire.jpg",
+      "vuosi": "2023",
+      "lahde": "ProtoplasmaKid, Commons (CC BY 4.0)",
+      "selite": "Ilmakuva Macroplazan yltä: etualalla Faro del Comercio -monumentti ja taustalla Cerro de la Silla. Kaupunki on levinnyt laaksoon vuorten väliin, ja tehtaiden ympärille kasvanut Monterrey ulottuu nyt rinteille asti."
+    }
+  },
+  {
+    "id": "mexico",
+    "paikka": "Mexico City",
+    "vanha": {
+      "tiedosto": "Lavanderas, Mexico City, ca. 1900.jpg",
+      "vuosi": "1890-luku",
+      "lahde": "William Henry Jackson / Library of Congress (PD)",
+      "selite": "Pyykkärit työssään Mexico Cityssä. Photochrom-vedos on tehty William Henry Jacksonin valokuvasta, ja pyykki pestään yhteisillä altailla. Kaupunki on rakennettu kuivatun järven pohjalle, joten vettä johdettiin kanavia ja altaita pitkin."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Trajineras en Xochimilco.jpg",
+        "vuosi": "2018",
+        "lahde": "Ralibreros112, Commons (CC BY-SA 4.0)",
+        "selite": "Trajineroita eli kukkakaarilla koristeltuja lauttaveneitä Xochimilcon kanavissa. Kanavat ovat jäänne siitä järvestä ja sen kelluvista viljelylautoista, joiden päälle kaupunki aikanaan rakennettiin."
+      },
+      {
+        "tiedosto": "Metro Patriotismo de la Lína 9 del Metro de la Ciudad de México 17.jpg",
+        "vuosi": "2025",
+        "lahde": "ProtoplasmaKid, Commons (CC BY-SA 4.0)",
+        "selite": "Juna saapuu Patriotismon asemalle linjalla 9, ja matkustajat valmistautuvat nousemaan kyytiin. Jokaisella Mexico Cityn metroasemalla on nimen lisäksi oma kuvatunnuksensa — alun perin siksi, etteivät kaikki matkustajat osanneet lukea."
+      },
+      {
+        "tiedosto": "Alebrijes en la catedral.jpg",
+        "vuosi": "2019",
+        "lahde": "Stargeiser01, Commons (CC BY-SA 4.0)",
+        "selite": "Jättiläisalebrijeitä katedraalin edustalla. Alebrije on paperimassasta ja rautalangasta tehty kirjava mielikuvitusolento; vuosittainen kulkue lähtee Zócalolta ja kulkee kaupungin halki."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Bandera en plancha del Zocalo.JPG",
+      "vuosi": "2013",
+      "lahde": "Reviloiasi, Commons (CC BY-SA 3.0)",
+      "selite": "Zócalo iltapäivällä. Aukion keskellä liehuu suuri lippu, joka lasketaan salosta joka ilta. Sama aukio oli jo atsteekkien Tenochtitlánin keskus, ja sen laidalta on kaivettu esiin Templo Mayorin perustukset."
+    }
+  },
+  {
+    "id": "merida",
+    "paikka": "Mérida",
+    "vanha": {
+      "tiedosto": "Merida Yucatan Stereo 1901 cropped.jpg",
+      "vuosi": "1901",
+      "lahde": "Underwood & Underwood / Library of Congress (PD)",
+      "selite": "Mérida vuonna 1901, kuvattuna vanhan San Beniton linnoituksen muureilta stereokorttia varten. Etualalla on Lucas de Gálvezin tori kaksine kioskeineen ja tuulimylly, joka nosti kaupunkilaisille vettä; taustalla vasemmalla näkyy katedraali."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Paseo de Montejo, Merida Yucatan Mexico 02.jpg",
+        "vuosi": "2017",
+        "lahde": "Travel4Brews, Commons (CC BY 2.0)",
+        "selite": "Huvila Paseo de Montejon varrella. Leveä puistokatu ja sen palatsimaiset talot rakennettiin sisalin eli henekenin viennin rahoilla, kun Yucatánin köysikuitu meni maailmanmarkkinoille."
+      },
+      {
+        "tiedosto": "Hacienda Sotuta de Peón - Secado.jpg",
+        "vuosi": "2017",
+        "lahde": "Gildardo Sánchez, Commons (CC BY 2.0)",
+        "selite": "Henekenkuitua kuivumassa Sotuta de Peónin haciendalla. Agaavin lehdistä irrotettu kuitu levitetään telineille aurinkoon ennen kuin siitä kierretään köyttä. Tämä työ rahoitti Méridan komeat kadut."
+      },
+      {
+        "tiedosto": "Mercado - Mérida, Yucatán, 12 Mayo 2015.jpg",
+        "vuosi": "2015",
+        "lahde": "Bex Walton, Commons (CC BY 2.0)",
+        "selite": "Torikojuja Méridassa. Yucatánin keittiö eroaa muusta Meksikosta: mausteena on achiote eli annaton siemen, ja sen ansiosta liha ja riisi saavat tiilenpunaisen värin."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Mercado Municipal Lucas de Gálvez - Mérida, Yucatán.jpg",
+      "vuosi": "2015",
+      "lahde": "Bex Walton, Commons (CC BY 2.0)",
+      "selite": "Lucas de Gálvezin tori nykyään — sama tori, joka näkyy vuoden 1901 stereokuvan etualalla. Kojut ovat siirtyneet katosten ja hallien alle, mutta paikka on yhä kaupungin keskeisin kauppapaikka."
+    }
+  },
+  {
+    "id": "guatemala",
+    "paikka": "Guatemala",
+    "vanha": {
+      "tiedosto": "Guatemala, Plaza De Armas LCCN2014706038.tif",
+      "vuosi": "1915",
+      "lahde": "Bain News Service / Library of Congress (PD)",
+      "selite": "Guatemala Cityn Plaza de Armas vuonna 1915 lasinegatiivilta. Aukio on ollut kaupungin keskus siitä asti, kun pääkaupunki siirrettiin tänne 1770-luvulla maanjäristyksen tuhoaman Antiguan tilalle."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Paseo de la Sexta, Guatemala City - Dos medios, el mismo camino.jpg",
+        "vuosi": "2013",
+        "lahde": "Alfredo José Ortiz Garcia, Commons (CC BY-SA 2.0)",
+        "selite": "Paseo de la Sexta eli kuudes avenue ykkösvyöhykkeellä. Katu oli pitkään autoliikenteen käytössä, kunnes se muutettiin kävelykaduksi; nyt siinä liikutaan jalan ja polkupyörällä."
+      },
+      {
+        "tiedosto": "Central Market (3746532790).jpg",
+        "vuosi": "2009",
+        "lahde": "Francisco Anzola, Commons (CC BY 2.0)",
+        "selite": "Mercado Central Guatemala Cityssä. Torilla myydään ruokaa, kankaita ja käsitöitä, ja se sijaitsee katedraalin takana kaupungin ykkösvyöhykkeellä lähellä pääaukiota."
+      },
+      {
+        "tiedosto": "View of eruption of Fuego Volcano from Guatemala City.jpg",
+        "vuosi": "2018",
+        "lahde": "Jose Hernandez, Commons (CC BY-SA 2.0)",
+        "selite": "Volcán de Fuegon purkaus nähtynä Guatemala Cityn eteläpuolelta kesäkuussa 2018. Etualalla ovat kaupungin eteläosat ja Villa Nuevan naapurikaupunki. Saman kesän purkaus hautasi kokonaisia kyliä tulivuoren rinteillä."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Palacion Nacional de Guatemala 12.jpg",
+      "vuosi": "2022",
+      "lahde": "Simon Burchell, Commons (CC BY-SA 4.0)",
+      "selite": "Kansallispalatsi saman aukion laidalla nykyään. Vihertävä rakennus valmistui 1940-luvun alussa hallituksen taloksi, mutta se ei ole enää hallinnon käytössä vaan kulttuurikeskus; aukion nimi on nykyään Plaza de la Constitución."
+    }
+  },
+  {
+    "id": "managua",
+    "paikka": "Managua",
+    "vanha": {
+      "tiedosto": "Nicaragua. National Palace, Managua LCCN2016820953.jpg",
+      "vuosi": "1910-luku",
+      "lahde": "National Photo Company / Library of Congress (PD)",
+      "selite": "Managuan kansallispalatsi 1910-luvulla lasinegatiivilta. Nicaraguan pääkaupunki oli tuolloin pieni järvenrantakaupunki. Keskusta on sen jälkeen sortunut kahdesti maanjäristyksessä, vuosina 1931 ja 1972."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Old Managua Cathedral (3).jpg",
+        "vuosi": "2016",
+        "lahde": "Byralaal, Commons (CC BY-SA 4.0)",
+        "selite": "Vanha katedraali Managuan keskustassa. Kirkko vaurioitui vuoden 1972 maanjäristyksessä eikä ole enää käytössä, mutta se jätettiin paikalleen; kuvaajan mukaan managualaiset tulevat katsomaan sitä joka viikonloppu."
+      },
+      {
+        "tiedosto": "MALECON SALVADOR ALLENDE, LAGO XOLOTLAN. MANAGUA, NICARAGUA - panoramio.jpg",
+        "vuosi": "2010",
+        "lahde": "feinteriano, Commons (CC BY-SA 3.0)",
+        "selite": "Salvador Allenden rantabulevardi Xolotlán-järven rannassa. Managua on rakennettu järven etelärannalle, ja rantapuisto on kaupunkilaisten kokoontumispaikka iltaisin."
+      },
+      {
+        "tiedosto": "Metro Managua trffic.jpg",
+        "vuosi": "2016",
+        "lahde": "Byralaal, Commons (CC BY-SA 4.0)",
+        "selite": "Liikennettä Managuan uudessa keskuksessa. Kun vanha keskusta tuhoutui 1972, kaupunki hajaantui leveiden teiden varrelle eikä yhtenäistä ydintä rakennettu tilalle — osoitteet annetaan yhä maamerkkien mukaan."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Plaza de la Revolucion (Managua) 01 CH.jpg",
+      "vuosi": "2016",
+      "lahde": "Martin Thurnherr, Commons (CC BY-SA 4.0)",
+      "selite": "Vallankumouksen aukio nykyään, laidoillaan vanha katedraali ja kansallispalatsi. Aukio on yhä sama kuin sadan vuoden takaisessa kuvassa, mutta rakennukset sen ympärillä ovat järistysten jälkeen toiset."
+    }
+  },
+  {
+    "id": "panama",
+    "paikka": "Panama",
+    "vanha": {
+      "tiedosto": "City of Panama and the Harbor LCCN2014689104.jpg",
+      "vuosi": "1900-luvun alku",
+      "lahde": "Bain News Service / Library of Congress (PD)",
+      "selite": "Panama Cityn kaupunki ja satama lasinegatiivilta 1900-luvun alusta. Kaupunki oli tuolloin kanavatyömaan huoltosatama; kanava avattiin 1914, ja sen jälkeen laivat pääsivät valtamereltä toiselle kiertämättä Etelä-Amerikkaa."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Seaways Rosemar in Miraflores Locks.agr.jpg",
+        "vuosi": "2018",
+        "lahde": "ArnoldReinhold, Commons (CC BY-SA 4.0)",
+        "selite": "Rahtialus Seaways Rosemar Mirafloresin sulussa kahden vetomuulin välissä. Muulit ovat kiskoilla kulkevia sähkövetureita, jotka pitävät laivan irti sulun seinistä. Alusta nostetaan kaikkiaan 26 metriä merenpinnasta kanavan tasolle."
+      },
+      {
+        "tiedosto": "Mercado de Mariscos de la Ciudad de Panamá.jpg",
+        "vuosi": "2025",
+        "lahde": "Virpana, Commons (CC0)",
+        "selite": "Panama Cityn kalatori rannassa vanhankaupungin laidalla. Saalis myydään laiturin vieressä, ja samassa rakennuksessa on ruokakojuja, joissa kala paistetaan heti ja tarjotaan kookosriisin ja pataconien kanssa."
+      },
+      {
+        "tiedosto": "MolasCascoAntiguo.JPG",
+        "vuosi": "2013",
+        "lahde": "Ayaita, Commons (CC BY-SA 3.0)",
+        "selite": "Moloja myytävänä Casco Antiguossa. Mola on gunanaisten tekemää käänteisapplikointia: useita värillisiä kangaskerroksia ommellaan päällekkäin ja kuvio leikataan esiin alempia kerroksia paljastaen."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Panama City 2016.jpg",
+      "vuosi": "2016",
+      "lahde": "Dronepicr, Commons (CC BY 3.0)",
+      "selite": "Panama Cityn siluetti ilmasta. Kanavan tuottamat maksut ja niiden ympärille kasvanut pankki- ja logistiikka-ala ovat nostaneet rantaan pilvenpiirtäjärivin, jollaista Keski-Amerikassa ei muualla ole."
+    }
+  }
+]

@@ -19,7 +19,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-03.221';
+const APP_VERSION = '2026-08-04.222';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -239,6 +239,10 @@ for (const tiedot of KERTOJA_TILAT) {
 muteBtn.addEventListener('click', () => {
   kertojaValikko.hidden = !kertojaValikko.hidden;
   muteBtn.setAttribute('aria-expanded', String(!kertojaValikko.hidden));
+  // Kolmas pudotusvalikko on linssivalitsin (js/ui.js). Se sulkee itse
+  // itsensä napautuksesta muualle, mutta ylärivin napit ovat sen omalla
+  // puolella: ilman tätä kaksi paneelia olisi auki vierekkäin.
+  if (!kertojaValikko.hidden) ui?.suljeLinssivalikko?.();
 });
 // Napautus muualle sulkee valikon.
 document.addEventListener('pointerdown', (event) => {
@@ -271,6 +275,7 @@ menuBtn.addEventListener('click', () => {
   if (!paavalikko.hidden) {
     kertojaValikko.hidden = true;
     muteBtn.setAttribute('aria-expanded', 'false');
+    ui?.suljeLinssivalikko?.();
   }
 });
 

@@ -1,0 +1,317 @@
+[
+  {
+    "id": "sydney",
+    "paikka": "Sydney",
+    "vanha": {
+      "tiedosto": "Sydney Harbour LCCN2017657737.jpg",
+      "vuosi": "1890",
+      "lahde": "Photoglob Co., Library of Congress (PD)",
+      "selite": "Sydneyn satama käsinvärillisenä photochrom-vedoksena. Photochrom oli sveitsiläinen painomenetelmä, jossa mustavalkoinen negatiivi siirrettiin useille kivilaatoille ja painettiin väreissä; tällaisia vedoksia myytiin matkailijoille aikana, jolloin värivalokuvaa ei vielä ollut."
+    },
+    "lisat": [
+      {
+        "tiedosto": "SydFishMarkets.jpg",
+        "vuosi": "2018",
+        "lahde": "MDRX, Commons (CC BY-SA 4.0)",
+        "selite": "Kalatorin myyntitiski Sydneyssä. Jään päällä on kokonaisia kaloja, katkarapuja, taskurapuja ja kuningasravun jalkoja, ja hintalapuissa lukee muun muassa eastern school whiting ja king crab clusters. Taustalla työntekijät perkaavat saalista tiskin takana."
+      },
+      {
+        "tiedosto": "Manly Ferry arrives at Circular Quay.jpg",
+        "vuosi": "2021",
+        "lahde": "Hardlinerr, Commons (CC BY-SA 4.0)",
+        "selite": "Manlyn lautta saapuu Circular Quaylle, taustalla oopperatalo ja satamansilta. Lautta ei ole Sydneyssä nähtävyyskierros vaan osa tavallista joukkoliikennettä: samalla matkakortilla noustaan bussiin, junaan ja laivaan."
+      },
+      {
+        "tiedosto": "(1)Bondi Beach lifesavers.jpg",
+        "vuosi": "2018",
+        "lahde": "Sardaka, Commons (CC BY-SA 4.0)",
+        "selite": "Rantapelastajia Bondin rannalla. Australian surf lifesaving -klubit toimivat vapaaehtoisvoimin, ja punakeltainen lippupari merkitsee rannalle sen kaistan, jonka sisällä uiminen on valvottua."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Sydney Harbour from Circular Quay.jpg",
+      "lahde": "Paul Carmona, Commons (CC BY 2.0)",
+      "selite": "Sama satama nykyään Circular Quayn lauttaterminaalilta. Kumpaakaan maamerkkiä ei ollut vanhan vedoksen aikaan: satamansilta valmistui 1932 ja oopperatalo 1973 niemekkeelle, jossa oli sitä ennen raitiovaunuvarikko."
+    }
+  },
+  {
+    "id": "perth",
+    "paikka": "Perth",
+    "vanha": {
+      "tiedosto": "Esplanade 29011900.jpg",
+      "vuosi": "1900",
+      "lahde": "Tuntematon kuvaaja, Commons (PD-Australia)",
+      "selite": "Länsi-Australian joukko-osasto paraatissa Perthin esplanadilla 29. tammikuuta 1900, matkalla buurisotaan Etelä-Afrikkaan. Ratsastajat seisovat riveissä joen puoleisella nurmikentällä ja yleisö tiiviinä muurina etualalla. Kuva on säilynyt lehden rasteripainoksena, ei alkuperäisenä vedoksena."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Fremantle markets fruit veg gn.jpg",
+        "vuosi": "2021",
+        "lahde": "Gnangcomapp, Commons (CC BY-SA 4.0)",
+        "selite": "Hedelmä- ja vihannestiski Fremantlen kauppahallissa, Perthin satamakaupungissa. Halli on toiminut samassa 1800-luvun lopun tiilirakennuksessaan yli sata vuotta ja on auki vain viikonlopun ympärillä."
+      },
+      {
+        "tiedosto": "Perth City from Kings Park (6916729629).jpg",
+        "vuosi": "2012",
+        "lahde": "Aaron Meads, Commons (CC BY 2.0)",
+        "selite": "Perthin keskusta illalla Kings Parkista kuvattuna. Valotusaika on pitkä, joten autojen valot piirtyvät kadulle viivoiksi. Kings Park on kaupungin yläpuolella oleva laaja puisto, josta keskusta ja Swan-joki näkyvät samalla kertaa."
+      },
+      {
+        "tiedosto": "Cottesloe Beach, May 2021 02.jpg",
+        "vuosi": "2021",
+        "lahde": "Calistemon, Commons (CC BY-SA 4.0)",
+        "selite": "Cottesloen ranta Perthin länsipuolella, kuvattuna pohjoisesta John Streetin päässä olevalta pysäköintialueelta. Perthin rannat avautuvat Intian valtamerelle, joten aurinko laskee niillä suoraan mereen."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Perth (AU), Elizabeth Quay -- 2019 -- 0259.jpg",
+      "lahde": "Dietmar Rabich, Commons (CC BY-SA 4.0)",
+      "selite": "Elizabeth Quayn allas ja keskustan tornit Swan-joen rannalla; oikealla kaartuu Spanda-veistoksen teräskaari. Korkeimpien tornien katoilla lukee BHP ja Rio Tinto — kaivosyhtiöiden nimet kertovat, mistä Länsi-Australian talous tulee."
+    }
+  },
+  {
+    "id": "melbourne",
+    "paikka": "Melbourne",
+    "vanha": {
+      "tiedosto": "Collins Street, near the corner of Spring Street.jpg",
+      "vuosi": "1880–1900",
+      "lahde": "State Library Victoria, Commons (PD-Australia)",
+      "selite": "Collins Streetin itäpää Spring Streetin kulman tuntumassa, albumiinivedos. Keskellä on Grosvenor Chambers, joka rakennettiin taiteilijoiden ateljeetaloksi. Kadulla odottaa hevosajuri ja oikealla kulkee köysiraitiovaunu: vaunulla ei ollut omaa moottoria, vaan se tarttui kadun alla lakkaamatta pyörivään teräsvaijeriin."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Melbourne (AU), Queen Victoria Market -- 2019 -- 1535.jpg",
+        "vuosi": "2019",
+        "lahde": "Dietmar Rabich, Commons (CC BY-SA 4.0)",
+        "selite": "Queen Victoria Marketin päätykolmio. Kaaren sisään on veistetty sika, nauta ja lammas, ja alle on kaiverrettu torin nimi. Reliefi kertoo, mitä oven takaa löytyy: tämä on lihahallin sisäänkäynti."
+      },
+      {
+        "tiedosto": "Trams on Swanston Street July 2018.jpg",
+        "vuosi": "2018",
+        "lahde": "Nick-D, Commons (CC BY-SA 3.0)",
+        "selite": "Kaksi raitiovaunua matkalla pohjoiseen Swanston Streetiä. Melbournen raitiotieverkko on maailman laajimpia, ja se on ainoa Australian suurkaupunkiverkoista, jota ei purettu autoilun tieltä 1900-luvun puolivälissä."
+      },
+      {
+        "tiedosto": "Hosier Lane Melbourne Australia 2.jpg",
+        "vuosi": "2014",
+        "lahde": "MusikAnimal, Commons (CC BY-SA 4.0)",
+        "selite": "Hosier Lane, yksi keskustan kapeista huoltokujista. Seinät maalataan uudelleen jatkuvasti, ja kaupunki on antanut osalle kujista luvan katutaiteeseen sen sijaan että poistaisi sen."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Collins Street east end.jpg",
+      "lahde": "HappyWaldo, Commons (CC BY-SA 4.0)",
+      "selite": "Collins Streetin itäpää nykyään. Köysiraitiovaunun tilalla ajaa sähkövaunu ja matalan kivikaupungin päälle on noussut toimistotorneja, mutta kadun leveys ja plataanirivi ovat samat kuin vanhassa kuvassa."
+    }
+  },
+  {
+    "id": "brisbane",
+    "paikka": "Brisbane",
+    "vanha": {
+      "tiedosto": "Queen Street, Brisbane, c 1900.jpg",
+      "vuosi": "1900",
+      "lahde": "Queensland State Archives, Commons (PD-Australia)",
+      "selite": "Queen Street ylhäältä kuvattuna vuoden 1900 tienoilla. Kadulla kulkee hevosvetoisia raitiovaunuja ja vossikoita, ja jalkakäytäviä varjostavat kauppojen peltikatokset — subtrooppisessa Brisbanessa katosta tarvittiin sekä auringolta että kaatosateelta."
+    },
+    "lisat": [
+      {
+        "tiedosto": "CityCat Spirit of Brisbane approaches North Quay Ferry Terminal Brisbane P1220387.jpg",
+        "vuosi": "2012",
+        "lahde": "John Robert McPherson, Commons (CC BY-SA 4.0)",
+        "selite": "CityCat-katamaraani lähestyy North Quayn laituria Brisbane-joella. Joki mutkittelee keskustan läpi niin jyrkästi, että vesibussi on monelle nopein tapa siirtyä kaupunginosasta toiseen."
+      },
+      {
+        "tiedosto": "Streets Beach, South Bank Parklands, Brisbane, 2020, 03.jpg",
+        "vuosi": "2020",
+        "lahde": "Kgbo, Commons (CC BY-SA 4.0)",
+        "selite": "Streets Beach South Bankin puistossa: keinotekoinen hiekkaranta ja uima-allas aivan joen rannassa, vastarannalla keskustan tornit. Puisto rakennettiin vuoden 1988 maailmannäyttelyn alueelle sen jälkeen, kun näyttely purettiin."
+      },
+      {
+        "tiedosto": "Story Bridge and Brisbane River views from Bowen Terrace, 2020, 01.jpg",
+        "vuosi": "2020",
+        "lahde": "Kgbo, Commons (CC BY-SA 4.0)",
+        "selite": "Story Bridge ja Brisbane-joen mutka Bowen Terracelta katsottuna. Silta valmistui 1940, ja se on Australian pisin ulokepalkkisilta: keskijänne rakennettiin molemmilta rannoilta ulos, kunnes puoliskot kohtasivat."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Queen Street Mall crowd Queen Street Mall Brisbane P1300780.jpg",
+      "lahde": "John Robert McPherson, Commons (CC BY-SA 4.0)",
+      "selite": "Sama Queen Street nykyään. Kadun keskiosa muutettiin kävelykaduksi 1982, eikä siellä kulje enää ajoneuvoja; noin puolen kilometrin matkalla on kuusi kauppakeskusta ja satoja liikkeitä."
+    }
+  },
+  {
+    "id": "cairns",
+    "paikka": "Cairns",
+    "vanha": {
+      "tiedosto": "Bicycles piled up outside a picture theatre in Cairns, ca. 1937 (4461930292).jpg",
+      "vuosi": "n. 1937",
+      "lahde": "State Library of Queensland, Commons (ei tunnettuja tekijänoikeusrajoituksia)",
+      "selite": "Toistakymmentä polkupyörää nojaa toisiaan vasten elokuvateatterin edessä Cairnsissa. Julkisivussa lukee illan elokuvan nimi My American Wife, ja ovensuussa seisoo kaksi miestä paitasillaan. Katsojat olivat tulleet näytökseen polkien."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Rusty's Markets, Cairns, Australia in May 02.jpg",
+        "vuosi": "2025",
+        "lahde": "Ridiculopathy, Commons (CC0)",
+        "selite": "Rusty's Markets Grafton Streetin varrella. Katoksen alla myydään ananasta, papaijaa, mangoa ja vesimelonia, ja käytävän toisella puolella on parkkipaikka. Cairns on trooppisella vyöhykkeellä, joten valikoima on toinen kuin etelämpänä Australiassa."
+      },
+      {
+        "tiedosto": "Esplanade Lagoon, Cairns, 2025, 05.jpg",
+        "vuosi": "2025",
+        "lahde": "Chris Olszewski, Commons (CC BY-SA 4.0)",
+        "selite": "Esplanadin laguuni Cairnsin rantabulevardilla. Kaupungin rakentama suolavesiallas tehtiin siksi, että merenranta on tässä kohtaa laajaa liejuista vuorovesitasankoa, jossa ei juuri uida."
+      },
+      {
+        "tiedosto": "Great Barrier Reef off Cairns coast (Ank Kumar) 05.jpg",
+        "vuosi": "2016",
+        "lahde": "Ank Kumar, Commons (CC BY-SA 4.0)",
+        "selite": "Ison valliriutan koralliriuttoja Cairnsin edustalla ilmasta kuvattuna. Ulompi riutta on kymmenien kilometrien päässä rannikosta, ja sinne lähtee retkiveneitä kaupungin satamasta päivittäin."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Esplanade, Cairns, 2015 (01).JPG",
+      "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+      "selite": "Cairnsin esplanadi nykyään. Katu kulkee kaupungin ja Trinity Bayn rantatasangon välissä, ja sen varrelle on kasvanut kaupungin majoitus- ja ravintolakortteli."
+    }
+  },
+  {
+    "id": "darwin",
+    "paikka": "Darwin",
+    "vanha": {
+      "tiedosto": "New iron jetty at Port Darwin, Northern Territory - SS 'Charon' first ship to berth(GN02694).jpg",
+      "vuosi": "n. 1905",
+      "lahde": "Osavaltion valokuvaaja, History Trust of South Australia, Commons (CC0)",
+      "selite": "Port Darwinin uusi rautalaituri ja siihen ensimmäisenä kiinnittynyt höyrylaiva Charon. Etualalla nousee rinnettä kiskoyhteys, jolla lasti siirrettiin rantatörmän päälle kaupunkiin. Pohjoisterritoriota hallinnoi tuolloin Etelä-Australia, ja kaupungin virallinen nimi oli Palmerston."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Mindil markets 230616 gnangarra-126.JPG",
+        "vuosi": "2016",
+        "lahde": "Gnangarra, Commons (CC BY 2.5 AU)",
+        "selite": "Tulitaituri esiintyy yleisölle Mindil Beachin auringonlaskumarkkinoilla. Markkinat pidetään vain kuivalla kaudella, kun sateet ovat ohi, ja ihmiset tulevat sinne syömään ja katsomaan auringon laskua mereen."
+      },
+      {
+        "tiedosto": "Darwin Waterfront, 2023 (02).jpg",
+        "vuosi": "2023",
+        "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+        "selite": "Kävelysilta keskustan törmältä alas Darwin Waterfrontin alueelle. Vanha satamakortteli rakennettiin 2000-luvulla uudelleen asunnoiksi, hotelleiksi ja uima-altaiksi, ja silta yhdistää sen ylhäällä olevaan keskustaan."
+      },
+      {
+        "tiedosto": "Mitchell Street in March 2004.jpg",
+        "vuosi": "2004",
+        "lahde": "Ken Hodge, Commons (CC BY 2.0)",
+        "selite": "Mitchell Street sunnuntaiaamuna. Katu on Darwinin ravintola- ja baarikortteli. Suuri osa kaupungista on rakennettu uudelleen sen jälkeen, kun sykloni Tracy tuhosi sen jouluna 1974."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Darwin (AU), Stokes Hill Wharf -- 2019 -- 4388.jpg",
+      "lahde": "Dietmar Rabich, Commons (CC BY-SA 4.0)",
+      "selite": "Stokes Hill Wharf, Darwinin vanha syväsatamalaituri. Laiturin kärkeen on tullut ravintoloita ja onkipaikkoja, mutta satama on yhä työssä: sen kautta viedään muun muassa eläviä nautoja Kaakkois-Aasiaan."
+    }
+  },
+  {
+    "id": "adelaide",
+    "paikka": "Adelaide",
+    "vanha": {
+      "tiedosto": "Port Adelaide Dock, with the barque Primera and Elder Smith and Co Wool and Grain Store(GN01802).jpg",
+      "vuosi": "n. 1885",
+      "lahde": "Samuel White Sweet, History Trust of South Australia, Commons (CC0)",
+      "selite": "Rautarunkoinen parkki Primera kiinni Port Adelaiden altaassa, takana Elder Smith & Co:n villa- ja viljavarasto. Kuvan otti Samuel White Sweet, entinen merikapteeni, joka kiersi Etelä-Australiaa hevosvetoinen pimiö mukanaan. Primera paloi ja upposi vuonna 1900."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Stall at Central Market 1.jpg",
+        "vuosi": "2023",
+        "lahde": "Doug Butler, Commons (CC BY-SA 4.0)",
+        "selite": "Hedelmä- ja vihannestiski Adelaiden Central Marketissa. Kuvaajan mukaan on maanantaiaamu, jolloin vain osa kojuista on auki; torstait ja perjantait ovat torin vilkkaimmat päivät."
+      },
+      {
+        "tiedosto": "Adelaide Metro Alstom Citadis at Glenelg.jpg",
+        "vuosi": "2018",
+        "lahde": "Thebusofdoom, Commons (CC BY-SA 4.0)",
+        "selite": "Raitiovaunu Jetty Roadin päätepysäkillä Glenelgissä. Linja vie keskustasta merenrannalle ja on ainoa reitti, joka jäi jäljelle Adelaiden vanhasta raitiotieverkosta."
+      },
+      {
+        "tiedosto": "Adelaide CBD skyline across the River Torrens, July 2026 (028A8463).jpg",
+        "vuosi": "2026",
+        "lahde": "Yu Chu Chin, Commons (CC BY-SA 4.0)",
+        "selite": "Adelaiden keskusta Torrens-joen takaa. Joki on padottu keskustan kohdalla leveäksi altaaksi, ja sen rannalle on koottu kaupungin konsertti- ja kongressitalot."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "'Yelta' tugboat moored at Queen's Wharf, Port Adelaide (51849328065).jpg",
+      "lahde": "Philip Mallis, Commons (CC BY-SA 2.0)",
+      "selite": "Hinaaja Yelta Queen's Wharfin laiturissa Port Adelaidessa. Vuonna 1949 rakennettu alus on nyt museolaiva samassa satamassa, jossa Primera aikoinaan makasi; rahtiliikenne on siirtynyt uusiin terminaaleihin kauemmas."
+    }
+  },
+  {
+    "id": "hobart",
+    "paikka": "Hobart",
+    "vanha": {
+      "tiedosto": "Apple cases being loaded onto ships, Hobart Wharves, Tasmania (c1900s) (31995606893).jpg",
+      "vuosi": "1900-luvun alku",
+      "lahde": "C. P. Ray, Tasmanian Archives, Commons (ei tunnettuja tekijänoikeusrajoituksia)",
+      "selite": "Omenalaatikoita nostetaan nostoliinassa höyrylaivan lastiin Hobartin laitureilla; laatikoiden kylkeen on maalattu APPLES. Laiturilla seisoo satamatyöläisiä ja pikkupoikia katsomassa. Tasmaniasta lähti vuosikymmeniä omenalaivoja Britanniaan asti, ja saarta alettiin siksi kutsua Omenasaareksi."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Salamanca Market July 2017.jpg",
+        "vuosi": "2017",
+        "lahde": "Nick-D, Commons (CC BY-SA 4.0)",
+        "selite": "Salamancan tori Hobartissa. Kojut pystytetään joka lauantai vanhojen hiekkakivimakasiinien eteen, jotka rakennettiin 1830-luvulla satamavarastoiksi."
+      },
+      {
+        "tiedosto": "Hobart City in the back drop of rocks on Mt Wellington.jpg",
+        "vuosi": "2016",
+        "lahde": "Srinivas Purupati, Commons (CC BY-SA 4.0)",
+        "selite": "Hobart ja Derwentin suisto Mount Wellingtonin rinteeltä. Vuori kohoaa runsaat 1200 metriä aivan kaupungin takana. Sillä on nykyään kaksi virallista nimeä: palawa-kielinen kunanyi ja englanninkielinen Mount Wellington."
+      },
+      {
+        "tiedosto": "Battery Point in Hobart.jpg",
+        "vuosi": "2016",
+        "lahde": "Phil Whitehouse, Commons (CC BY 2.0)",
+        "selite": "Battery Pointin taloja Runnymede Streetillä, kivenheiton päässä Salamancan torilta. Kaupunginosa on Hobartin vanhimpia, ja kuvan talot on merkitty Tasmanian rakennusperintörekisteriin."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Victoria Dock, Hobart, 2019 (06).jpg",
+      "lahde": "Bahnfrend, Commons (CC BY-SA 4.0)",
+      "selite": "Kalastusaluksia Victoria Dockissa. Sama allas on yhä työsatama keskellä kaupunkia, mutta omenalaivojen sijaan laiturissa lepää kalastuslaivasto."
+    }
+  },
+  {
+    "id": "townsville",
+    "paikka": "Townsville",
+    "vanha": {
+      "tiedosto": "StateLibQld 1 235004 Scene at Jetty Wharf, Townsville, Queensland, 1901.jpg",
+      "vuosi": "1901",
+      "lahde": "John Oxley Library, State Library of Queensland, Commons (PD-Australia)",
+      "selite": "Laivoja Jetty Wharfin laiturissa 26. elokuuta 1901. Albumin sivulle on kirjoitettu alusten nimet ja vetoisuudet: Perthshire 5530 tonnia, Barcoo 1605, Innamincka 2501 ja barkki Tourist 774. Satamasta vietiin Pohjois-Queenslandin sokeria, villaa ja malmia."
+    },
+    "lisat": [
+      {
+        "tiedosto": "Strand Pier, Townsville, 2023, 01.jpg",
+        "vuosi": "2023",
+        "lahde": "Kgbo, Commons (CC BY-SA 4.0)",
+        "selite": "Strandin laituri Townsvillen rantabulevardin varrella. Promenadin varrella on uima-altaita ja verkolla rajattu uimapaikka, sillä kesäkuukausina rannikon vedessä esiintyy myrkyllisiä meduusoja."
+      },
+      {
+        "tiedosto": "View from Castle Hill Lookout, Townsville, 2023, 01.jpg",
+        "vuosi": "2023",
+        "lahde": "Kgbo, Commons (CC BY-SA 4.0)",
+        "selite": "Näkymä Castle Hillin näköalapaikalta merelle ja Magnetic Islandia kohti. Castle Hill on vaaleanpunertavasta graniitista muodostunut kukkula keskellä kaupunkia, ja sen laelle nousee sekä tie että portaat."
+      },
+      {
+        "tiedosto": "Flinders Street, Townsville, Queensland.jpg",
+        "vuosi": "2016",
+        "lahde": "Kgbo, Commons (CC BY-SA 4.0)",
+        "selite": "Flinders Street on Townsvillen pääkatu. Sen varrella on säilynyt joukko vanhoja pankki- ja hotellirakennuksia ajalta, jolloin kaupunki oli Pohjois-Queenslandin kauppakeskus."
+      }
+    ],
+    "uusi": {
+      "tiedosto": "Views of the Port of Townsville from the Magnetic Island ferry, Townsville, Australia 01.jpg",
+      "lahde": "Ridiculopathy, Commons (CC0)",
+      "selite": "Townsvillen satama Magnetic Islandin lautalta nähtynä. Pitkän paalulaiturin päällä kulkee kuljetinhihna ja keskellä seisoo laivanlastauskone: purjelaivojen tilalla laiturissa käsitellään nykyään irtolastia."
+    }
+  }
+]

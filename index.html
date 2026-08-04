@@ -51,6 +51,20 @@
       <button id="turn-pill" class="turn-pill" type="button"
               title="Isoisän matkalaukku: passi, leimat ja tavarat"></button>
       <div class="topbar-actions">
+        <!-- Taikalasit: kartan linssivalitsin. Kotelo on piilossa, kunnes
+             pelaaja löytää ensimmäisen linssin — löytämätöntä ei näytetä
+             edes harmaana, tai valikko kertoisi mitä on vielä hakematta.
+             Rivit rakentaa js/ui.js, koska valikoima riippuu omistuksesta
+             ja laudasta. Paikka on ylärivi eikä kartan reuna: kartan
+             oikean reunan napit katoavat kosketuslaitteilta kokonaan
+             (@media pointer: coarse), ja peliä pelataan eniten iPadilla. -->
+        <div id="linssi-kotelo" class="linssi-kotelo" hidden>
+          <button id="linssi-btn" class="ghost" type="button" title="Taikalasit"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="linssi-valikko">
+            <span class="viiva-ikoni" id="linssi-ikoni"></span>
+          </button>
+          <div id="linssi-valikko" class="linssi-valikko" hidden></div>
+        </div>
         <!-- Kertojavalikko: mykistys / ei kertojaa / lyhyt / pitkä kertoja.
              Kuvakkeet ja valikko rakennetaan main.js:ssä; nappi näyttää
              aina nykyisen tilan kuvakkeen. -->

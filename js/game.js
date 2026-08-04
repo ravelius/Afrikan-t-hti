@@ -3,6 +3,7 @@
 import { FLIGHT_PRICE, buildBoard, findMoves, posKey, reachableCities } from './rules.js';
 import { createTokenPile } from './tokens.js';
 import { packById, sourceList } from './pack.js';
+import { laattamantereet, linssiKaupungista, myonna, tarkistaKynnys } from './linssit/omistus.js';
 
 export const START_MONEY = 300;
 export const SEA_FARE = 100; // laivamatkan hinta vuorolta
@@ -154,6 +155,10 @@ export class Game {
       hasStar: false,
       horseshoes: 0,
       finds: [], // löydetyt laatat tyyppeinä
+      // Tällä matkalla löydetyt linssit tunnuksina. Omistus itsessään on
+      // passissa ja kestää pelin yli; tämä lista kertoo mitkä löytyivät
+      // nyt, jotta lokista ja laukusta näkee matkan oman saaliin.
+      linssit: [],
       xp: 0,
       // Tietoprosentin laskurit: mukana sekä tietovisat että kaksintaistelut.
       quizAsked: 0,
@@ -252,7 +257,7 @@ export class Game {
     const world = {
       pack,
       board: buildBoard(pack.cities, pack.edges, pack.map),
-      tokens: new Map(tokenCities.map((city, i) => [city, pile[i]])),
+      tokens: this.jaaLaatat(pack, tokenCities, pile),
       revealed: new Map(), // kaupunki -> laattatyyppi
       visited: new Set(), // kaupungit, joissa on jo käyty (kokemuspisteitä varten)
       starFound: false,
@@ -260,6 +265,55 @@ export class Game {
     };
     this.worlds.set(pack.id, world);
     return world;
+  }
+
+  /**
+   * Laattojen jako kaupungeille.
+   *
+   * Linssilaatat eivät saa jäädä sekoituksen varaan: sattuma voisi
+   * kasata kaksi samaan maanosaan ja jättää toisen ilman, jolloin osa
+   * linsseistä olisi käytännössä löytymättömissä. Siksi jokaiselle
+   * mantereelle, jolla on rekisterissä oma linssi, arvotaan yksi
+   * laattakaupunki erikseen ja loput laatat jaetaan kuten ennen.
+   *
+   * Jos mantereella ei ole yhtään vapaata laattakaupunkia — tai jos
+   * linssejä on laudalla enemmän kuin mantereita — ylimääräiset laatat
+   * jäävät sekoitukseen ja arvotaan muiden mukana. Peli ei kaadu siihen.
+   */
+  jaaLaatat(pack, tokenCities, pile) {
+    // Muilla laudoilla kuin maailmankartalla koko lauta on yksi manner.
+    const mannerNimi = (cityId) => pack.map?.cityManner?.[cityId] ?? pack.id;
+    const linsseja = pile.filter((type) => type === 'linssi').length;
+    const linssikaupungit = new Set();
+
+    // Mantereet eivät mene päällekkäin — kaupunki kuuluu tasan yhdelle —
+    // joten valittua kaupunkia ei tarvitse merkitä varatuksi.
+    for (const manner of laattamantereet()) {
+      if (linssikaupungit.size >= linsseja) break;
+      const ehdokkaat = tokenCities.filter((id) => mannerNimi(id) === manner);
+      if (!ehdokkaat.length) continue;
+      linssikaupungit.add(ehdokkaat[Math.floor(this.rng() * ehdokkaat.length)]);
+    }
+
+    // Käsin sijoitetut linssilaatat poistetaan pinon alusta, jottei
+    // muiden laattojen keskinäinen järjestys muutu lainkaan: sekoitus
+    // on jo tehty, ja tämä vaihe vain nostaa siitä osan sivuun.
+    const jaettava = [];
+    let poistettavia = linssikaupungit.size;
+    for (const type of pile) {
+      if (type === 'linssi' && poistettavia > 0) {
+        poistettavia--;
+        continue;
+      }
+      jaettava.push(type);
+    }
+
+    const laatat = new Map();
+    let i = 0;
+    for (const city of tokenCities) {
+      laatat.set(city, linssikaupungit.has(city) ? 'linssi' : jaettava[i++]);
+    }
+    return laatat;
   }
 
   // --- apurit -------------------------------------------------------------
@@ -466,8 +520,27 @@ export class Game {
    * vastaus vaikeaan kysymykseen ja laudan pääaarre. Rahalla niitä ei saa.
    */
   awardXp(player, amount) {
-    player.xp = (player.xp ?? 0) + amount;
+    const ennen = player.xp ?? 0;
+    player.xp = ennen + amount;
+    this.tarkistaLinssikynnys(player, ennen, player.xp);
     return amount;
+  }
+
+  /**
+   * Linssien toinen löytöreitti: kokemuspisteet. Tarkistus on tässä,
+   * koska awardXp on ainoa portti, jonka läpi jokainen kokemuspiste
+   * kulkee — kahdeksan kutsupaikkaa, yksi kynnystarkistus.
+   *
+   * Tapahtumalaji on 'aid' eikä 'treasure': käyttöliittymä suodattaa
+   * aarretapahtumat pois, koska ne nähdään laatan paljastusanimaatiossa.
+   * Kokemuksella ansaittu linssi ei tule laatan alta, joten 'treasure'
+   * katoaisi näkymättömiin.
+   */
+  tarkistaLinssikynnys(player, ennen, jalkeen) {
+    for (const tunnus of tarkistaKynnys(this, player, ennen, jalkeen)) {
+      this.say(player.id, `${player.name} on nähnyt maailmaa niin paljon, että sai uuden linssin (${jalkeen} kp).`);
+      this.emit('aid', 'Uusi linssi', { icon: 'suurennuslasi', linssi: tunnus, sub: 'Kokemus avasi uuden katselutavan' });
+    }
   }
 
   /**
@@ -1752,6 +1825,21 @@ export class Game {
         });
         this.duelArmed = true;
         break;
+      case 'linssi': {
+        // Kumpi linssi löytyy, ratkeaa kaupungin mantereesta. Jos
+        // annettavaa ei ole — kaikki linssit on jo omistettu — kätkö on
+        // tyhjä. Laatta ei saa luvata sitä, mitä se ei voi antaa.
+        const tunnus = linssiKaupungista(this, cityId);
+        if (!tunnus) {
+          this.say(p.id, `${p.name} löysi tyhjän linssikotelon kaupungissa ${city.name}.`);
+          this.emit('treasure', 'Tyhjä kotelo', { token: 'empty', sub: 'Lasi oli jo laukussa' });
+          break;
+        }
+        myonna(this, p, tunnus);
+        this.say(p.id, `${token.symbol} ${p.name} löysi taikalasin kaupungista ${city.name} — maailma näyttää uuden puolensa.`);
+        this.emit('treasure', token.name, { token: type, linssi: tunnus, sub: 'Uusi linssi kartalle' });
+        break;
+      }
       case 'empty':
         this.say(p.id, `${p.name} käänsi tyhjän laatan kaupungissa ${city.name}.`);
         this.emit('treasure', 'Tyhjä laatta', { token: type, sub: 'Isoisän merkintä oli vanhentunut' });
@@ -1876,11 +1964,16 @@ export class Game {
         starCity: w.starCity ?? null,
       });
     }
+    // Uusi kenttä saa oletuksen spreadin edestä eikä version numeroa
+    // nosteta: fromJSON hylkää kaiken muun kuin version 1, joten noston
+    // hinta olisi jokainen kesken jäänyt peli. Sama kuvio kuin xp- ja
+    // quizAsked-kentillä aiemmin.
     game.players = data.players.map((p) => ({
       packId: rootPack.id,
       xp: 0,
       quizAsked: 0,
       quizCorrect: 0,
+      linssit: [],
       ...p,
     }));
     game.usedQuestions = new Set(data.usedQuestions ?? []);
