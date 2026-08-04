@@ -3045,11 +3045,33 @@ body.linssi-valokuva .grain { display: none; }
 .lahivesi { pointer-events: none; }
 
 /* Meren pohja: mitä syvempi, sitä tummempi. Sisäkkäiset vyöhykkeet. */
+/*
+ * MERISYVYYS ON HILLITTY, KOSKA SE VUOTAA RANNAN YLI.
+ *
+ * Vyöhykkeet on rajattu piirrettyyn rantaviivaan (js/ui.js
+ * `meri-rajaus`), ja rajaus toimii — mutta se ei riitä. Aineisto on
+ * karkeampaa kuin rannikko, ja rajauksen reunalle jää muutaman pikselin
+ * levyinen kaistale, joka lähikuvassa lukeutuu maaksi. Omistaja on
+ * raportoinut siitä neljästi.
+ *
+ * MITATTU lähimmällä zoomilla, maan keskiväri sisämaan pisteistä:
+ *
+ *   kaikki näkyvissä      191,167,125
+ *   rajaus pois           190,171,135
+ *   joet ja järvet pois   192,167,125   ← joet EIVÄT ole syy
+ *   merisyvyys pois       193,162,111   ← sama kuin kaukaa katsottuna
+ *
+ * Eli rajaus poistaa vuodosta noin 40 %, ja loput tulee siitä, ettei
+ * kahden eri tarkkuuden rajaa saa osumaan yhteen pikselilleen. Ainoa
+ * keino, joka ei riipu aineistojen yhteensopivuudesta, on tehdä
+ * vyöhykkeistä niin hennot, ettei ylivuoto erotu. Syvänteet saavat jäädä
+ * hieman vahvemmiksi: ne ovat kaukana rannasta.
+ */
 .merisyvyys { stroke: none; }
-.merisyvyys-200 { fill: #b9c8ce; opacity: 0.22; }
-.merisyvyys-2000 { fill: #a3b6bf; opacity: 0.20; }
-.merisyvyys-4000 { fill: #8ea6b2; opacity: 0.18; }
-.merisyvyys-6000 { fill: #7b95a3; opacity: 0.20; }
+.merisyvyys-200 { fill: #b9c8ce; opacity: 0.07; }
+.merisyvyys-2000 { fill: #a3b6bf; opacity: 0.08; }
+.merisyvyys-4000 { fill: #8ea6b2; opacity: 0.09; }
+.merisyvyys-6000 { fill: #7b95a3; opacity: 0.11; }
 
 /* Järvi: vesi ja matala reunus. */
 .lahivesi-jarvi { fill: #b3c6cd; opacity: 0.38; stroke: none; }
@@ -4559,7 +4581,16 @@ body[data-mode] .fact-card.pieni {
    * yhä eikä nytkähdä.
    */
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  /*
+   * MOLEMMAT SARAKKEET SISÄLTÖNSÄ LEVYISIÄ.
+   *
+   * Tässä luki `auto minmax(0, 1fr)`, ja `1fr` söi kaiken vapaan tilan:
+   * palkki venyi kaistan levyiseksi, vaikka `width: max-content` oli
+   * asetettu — max-content laskee raidat, ja 1fr-raita ilmoittaa
+   * haluavansa kaiken. Omistaja: "korjaa matkakirjan liian pitkä palkki."
+   */
+  grid-template-columns: auto auto;
+  justify-content: start;
   align-items: baseline;
   column-gap: 0.45em;
   /*

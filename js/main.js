@@ -19,7 +19,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-04.250';
+const APP_VERSION = '2026-08-04.251';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -281,10 +281,20 @@ menuBtn.addEventListener('click', () => {
   }
 });
 
-// Valinta sulkee valikon. Kuuntelija on valikossa itsessään, joten
-// nappien omat toiminnot pysyvät siellä missä ne on määritelty.
+/*
+ * Valinta sulkee valikon. Kuuntelija on valikossa itsessään, joten
+ * nappien omat toiminnot pysyvät siellä missä ne on määritelty.
+ *
+ * POIKKEUS: taikalasit ja kertojan äänet avaavat OMAN alivalikkonsa
+ * päävalikon sisällä. Jos ne sulkisivat päävalikon, alivalikko katoaisi
+ * samalla napautuksella, jolla se aukesi — eli niihin ei pääsisi
+ * lainkaan.
+ */
 paavalikko.addEventListener('click', (event) => {
-  if (event.target.closest('button')) suljeValikko();
+  const nappi = event.target.closest('button');
+  if (!nappi) return;
+  if (nappi.closest('.linssi-kotelo, .kertoja-kotelo')) return;
+  suljeValikko();
 });
 
 document.addEventListener('pointerdown', (event) => {

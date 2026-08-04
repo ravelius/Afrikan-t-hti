@@ -830,12 +830,10 @@ function lukitseAsema(virta) {
    * väitä lukevansa lähetystä.
    */
   /*
-   * Lukija kerran, ks. vahdiMittaria. Mitattu lukema aina kun reititys
+   * Lukija kerran, ks. pysyvaLukija. Mitattu lukema aina kun reititys
    * saatiin; jäljitelty vain kun selain ei anna mitata.
    */
   virta.mittarinLukija ??= virta.mittari?.lukija ?? jaljiteltyLukija(virta);
-  asetaMittarinLahde(virta.mittarinLukija);
-  vahdiMittaria(virta);
   ajastaVirralle(virta, LUKITTUMISEN_KESTO_MS, () => {
     tila?.soitin.asetaTila('soi');
     kerroMuutos();
@@ -1158,50 +1156,38 @@ function jaljiteltyLukija(virta) {
 
 /*
  * ══════════════════════════════════════════════════════════════════════
- * MITTARIN VAHTI: LÄHDE PIDETÄÄN, EI VAIN ASETETA KERRAN
+ * YKSI LÄHDE JA YKSI HERKKYYS KOKO RADIOTILAN AJAN
  * ══════════════════════════════════════════════════════════════════════
  *
- * Omistajan havainto, ja se osui suoraan syyhyn: "mittaus ei koskaan
- * palaudu takaisin aseman mittaustasolle, vaan jää siihen taustakohinan
- * mittaustasolle, kun kaupunkia vaihtaa."
+ * Omistajan linjaus, ja se on lopullinen: "pidä koko ajan pelkän
+ * kaupungin herkkyys päällä ja kohinan mittaus jää pois. Eli ei
+ * vaihdeta herkkyyttä."
  *
- * Juuri niin koodi oli rakennettu. Kanavanvaihto antaa mittarin takaisin
- * pelin äänisummalle (lopetaAani → asetaMittarinLahde(null)), koska
- * silloin kuuluu viritysääni. Lähetys otetaan takaisin YHDESSÄ AINOASSA
- * KOHDASSA, lukitseAsemassa. Jos se kohta jää käymättä — asema ei ehdi
- * lukittua, `playing` ei tule, vaihto tapahtuu kesken virityksen — mitään
- * ei enää koskaan palauta mittaria lähetykseen. Neula jää lukemaan pelin
- * äänisummaa, jossa lähetystä ei ole: se on juuri se "taustakohinan taso",
- * josta omistaja puhuu, ja se pysyy siinä myös takaisin vaihdettaessa,
- * koska mikään ei ole rikki — lähdettä ei vain aseteta uudestaan.
+ * Tässä oli kolmen version vika. Mittarin lähdettä VAIHDETTIIN:
+ * kanavanvaihto antoi sen takaisin pelin äänisummalle (viritysääni,
+ * laitteen oma asteikko −48…−20 dB) ja lukittuminen otti sen takaisin
+ * lähetykselle (oma asteikko −40…−6 dB). Kaksi asteikkoa ja neljä
+ * vaihtokohtaa — ja jos yksikin vaihto jäi tekemättä, neula jäi lukemaan
+ * väärää asteikkoa lopullisesti. Kolme korjausyritystä etsi sitä
+ * yksittäistä vaihtoa, joka jää väliin. Yhtään ei löytynyt, koska vika ei
+ * ollut missään yksittäisessä vaihdossa vaan siinä, että vaihtoja on.
  *
- * Kertaluontoinen asetus on väärä muoto tähän. Lähde on TILA, jota pitää
- * ylläpitää niin kauan kuin asema soi. Vahti tekee sen sekunnin välein.
- * Se on halpa (yksi sulkeuman vaihto, ei uusia solmuja) ja se korjaa koko
- * vikaluokan kerralla — myös ne reitit, joita en ole osannut kuvitella.
+ * Nyt lähde asetetaan KERRAN radiotilan alkaessa eikä sen jälkeen
+ * koskaan. Se on pysyvä sulkeuma, joka katsoo joka lukemalla, mikä virta
+ * on juuri nyt soiva, ja lukee sen omalla lähetysasteikolla. Vaihtokohtia
+ * ei ole yhtään, joten yksikään ei voi jäädä väliin.
  *
- * Lukija luodaan KERRAN virtaa kohti eikä joka tikillä: jäljitelty lukija
- * laskee aikaa omasta alustaan, ja uusi sulkeuma joka sekunti nollaisi
- * sen — neula nytkähtelisi sekunnin välein samaan kohtaan.
+ * Kohinaa ei mitata lainkaan. Virityksen ajan lähetys on vaimennettu,
+ * joten neula lepää — se on omistajan nimenomainen valinta, ja se on myös
+ * rehellisempi: mittari näyttää aseman tason, ei laitteen omaa sirinää.
  */
-const MITTARIN_VAHTI_MS = 1000;
-let mittarinVahti = 0;
-
-function lopetaMittarinVahti() {
-  if (!mittarinVahti) return;
-  clearInterval(mittarinVahti);
-  mittarinVahti = 0;
-}
-
-function vahdiMittaria(virta) {
-  lopetaMittarinVahti();
-  mittarinVahti = setInterval(() => {
-    if (soiva !== virta || !virta.lukittu || !virta.audio) {
-      lopetaMittarinVahti();
-      return;
-    }
-    asetaMittarinLahde(virta.mittarinLukija);
-  }, MITTARIN_VAHTI_MS);
+function pysyvaLukija() {
+  return () => {
+    const virta = soiva;
+    if (!virta) return 0;
+    const lukija = virta.mittarinLukija;
+    return lukija ? lukija() : 0;
+  };
 }
 
 /** Antaa mittarille sen, mitä juuri nyt kuuluu — tai palauttaa oletuksen. */
@@ -1351,10 +1337,12 @@ function lopetaAani({ viritysJatkuu = false, haive = 0 } = {}) {
    * tämän jälkeen se on nouseva viritysääni, ja lukittuessaan uusi
    * kanava ottaa lähteen taas omakseen (lukitseAsema).
    */
-  // Vahti ensin: sen seuraava tikki kirjoittaisi juuri poistetun
-  // lähetyksen takaisin mittariin.
-  lopetaMittarinVahti();
-  if (vanha.mittari) asetaMittarinLahde(null);
+  /*
+   * MITTARIA EI KOSKETA. Lähde on pysyvä sulkeuma, joka lukee sitä virtaa
+   * joka kulloinkin soi (ks. pysyvaLukija) — ja juuri vaihdon
+   * palauttaminen pelin äänisummaan oli se, mikä jätti neulan väärälle
+   * asteikolle kaupunkia vaihdettaessa.
+   */
   // Vaiheajastimet ensin: keskeytetty viritys ei saa kertoa vaiheitaan
   // loppuun sen jälkeen, kun sen kanava on jo suljettu.
   tyhjennaAjastimet(vanha);
@@ -1401,7 +1389,7 @@ function aloitaVirta(cityId, kanava) {
     audio: null,
     // Mittarin ketju, jos lähetys saatiin Web Audioon, ks. liitaMittariin.
     mittari: null,
-    // Neulan lukija, luodaan kerran lukittuessa (ks. vahdiMittaria).
+    // Neulan lukija, luodaan kerran lukittuessa (ks. pysyvaLukija).
     mittarinLukija: null,
     // Onko tämä jo varareitin yritys eli elementti ilman crossOriginia.
     varalla: false,
@@ -1801,6 +1789,13 @@ export function paalle({
 
   (juuri ?? document.body)?.appendChild(soitin.juuri);
 
+  /*
+   * MITTARIN LÄHDE ASETETAAN TÄSSÄ, KERRAN, EIKÄ SEN JÄLKEEN KOSKAAN.
+   * Ks. pysyvaLukija: yksi asteikko koko radiotilan ajan, ei kohinan
+   * mittausta, ei vaihtokohtia jotka voivat jäädä väliin.
+   */
+  asetaMittarinLahde(pysyvaLukija());
+
   // Kaupungin ääni väistyy kokonaan, ei väisty vaimentamalla: radiotilassa
   // radio on ainoa ääni.
   stopPlaceStream();
@@ -1859,6 +1854,9 @@ export function pois() {
   // tarvita ennen kuin radiotila avataan uudelleen. Tiedostot jäävät
   // selaimen välimuistiin, joten paluu ei maksa uutta latausta.
   unohdaViritysaanet(sfx.ctx);
+  // Laite takaisin omaan oletuslähteeseensä: radiotilan ulkopuolella
+  // mittarilla ei ole lähetystä luettavanaan.
+  asetaMittarinLahde(null);
   const vanha = tila;
   tila = null;
   try {
