@@ -780,6 +780,15 @@ function lukitseAsema(virta) {
   kerroVaihe(virta, 'lukittuu');
   haivytaLahetysSisaan(virta);
   lopetaViritys(RISTIHAIVYTYS_S);
+  /*
+   * MITTARI VAIHTAA LÄHTEEN VASTA TÄSSÄ, ei virran alkaessa. Virityksen
+   * ajan neula lukee viritysääntä pelin äänisummasta — juuri se on
+   * mittarin oma mitoitus (radiosoitin.js) — ja lukittuminen on se
+   * hetki, jolla ääni vaihtuu lähetykseksi myös kaiuttimessa. Jos asema
+   * ei antanut reititystä (CORS), lähde palautuu oletukseen eikä neula
+   * väitä lukevansa lähetystä.
+   */
+  asetaMittarinLahde(virta.mittari?.vahvistin ?? null);
   ajastaVirralle(virta, LUKITTUMISEN_KESTO_MS, () => {
     tila?.soitin.asetaTila('soi');
     kerroMuutos();
@@ -988,14 +997,7 @@ function vapautaVirta(virta) {
     clearInterval(virta.haivytys);
     virta.haivytys = 0;
   }
-  const { audio } = virta;
-  try {
-    audio.pause();
-    audio.removeAttribute('src');
-    audio.load();
-  } catch (syy) {
-    console.warn('Radiovirran sulkeminen epäonnistui.', syy);
-  }
+  irrotaVirta(virta);
 }
 
 /**
@@ -1079,6 +1081,13 @@ function lopetaAani({ viritysJatkuu = false, haive = 0 } = {}) {
    */
   if (!(haive > 0) && vaistyva) vapautaVirta(vaistyva.virta);
   if (!vanha) return;
+  /*
+   * Mittari takaisin pelin äänisummaan. Väistyvän ketju elää vielä
+   * häivytyksensä ajan, mutta neulan on luettava sitä, mikä KUULUU: heti
+   * tämän jälkeen se on nouseva viritysääni, ja lukittuessaan uusi
+   * kanava ottaa lähteen taas omakseen (lukitseAsema).
+   */
+  if (vanha.mittari) asetaMittarinLahde(null);
   // Vaiheajastimet ensin: keskeytetty viritys ei saa kertoa vaiheitaan
   // loppuun sen jälkeen, kun sen kanava on jo suljettu.
   tyhjennaAjastimet(vanha);
@@ -1214,12 +1223,23 @@ function aloitaVirta(cityId, kanava) {
     // Reititys ENNEN src:tä: crossOrigin on luettava ennen latausta.
     oma.mittari = mittarilla ? liitaMittariin(audio) : null;
 
-    audio.addEventListener('playing', lahetysAlkoi);
-    audio.addEventListener('timeupdate', lahetysAlkoi);
-    audio.addEventListener('error', () => petti('Asema ei vastaa'));
-    audio.addEventListener('ended', () => petti('Lähetys katkesi', { korsiSyy: false }));
+    /*
+     * Kuuntelijat tarkistavat virran lisäksi ELEMENTIN. Varareitille
+     * siirtyminen jättää vanhan elementin taakse, ja sen myöhässä tuleva
+     * virhe sammuttaisi juuri käynnistyneen lähetyksen — sama
+     * vanhentuneen vuoron ongelma kuin virralla itsellään, yhtä
+     * kerrosta syvemmällä.
+     */
+    const tama = () => oma.audio === audio;
+    audio.addEventListener('playing', () => { if (tama()) lahetysAlkoi(); });
+    audio.addEventListener('timeupdate', () => { if (tama()) lahetysAlkoi(); });
+    audio.addEventListener('error', () => { if (tama()) petti('Asema ei vastaa'); });
+    audio.addEventListener('ended', () => {
+      if (tama()) petti('Lähetys katkesi', { korsiSyy: false });
+    });
     audio.src = kanava.url;
     audio.play().catch((syy) => {
+      if (!tama()) return;
       /*
        * Selain voi estää toiston, jos napautusta ei tunnistettu eleeksi.
        * Se on eri vika kuin kuollut asema, ja pelaajan on erotettava ne:

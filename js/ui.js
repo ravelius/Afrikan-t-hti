@@ -1716,6 +1716,9 @@ export class UI {
     this.pysaytaKulttuuriAani();
     // Kesken jäänyt lentokalvo siivotaan, ettei se jää uuden pelin päälle.
     document.body.classList.remove('flight-active');
+    // Radiotila piilottaa matkakirjan ja alanapit; ilman purkua ne
+    // jäisivät piiloon uudessa pelissä.
+    document.body.classList.remove('radio-tila');
     for (const kalvo of document.querySelectorAll('.flight-overlay')) kalvo.remove();
     this.suljeAloitusportti();
     clearTimeout(this.botTimer);
@@ -7254,34 +7257,15 @@ export class UI {
     return this.radioLataus;
   }
 
-  /**
-   * X-nappi radiotilan sulkemiseen, ruudun oikeaan yläkulmaan.
+  /*
+   * Erillistä X-nappia EI ole.
    *
-   * Omistajan toive 4.8.2026: "oikeassa yläreunassa olisi X-nappi,
-   * mistä radiotila saisi suljettua."
-   *
-   * Bodyn alle eikä yläpalkkiin: yläpalkin napit ovat pelin omia, ja
-   * radiotilassa peli on tauolla. Sulku kuuluu radiolle, ja se katoaa
-   * yhdessä soittimen kanssa.
+   * Sellainen oli hetken ruudun oikeassa yläkulmassa, mutta soittimessa
+   * on jo virtakytkin, joka sammuttaa koko radiotilan (onSulje).
+   * Omistaja 4.8.2026: "Poista myös yläreunan x. Riittää kun radiosta
+   * saa suljettua." Kaksi sulkutapaa samalle tilalle on yksi liikaa, ja
+   * kytkin on se, joka kuuluu laitteeseen.
    */
-  naytaRadionSulku(nakyy) {
-    if (!nakyy) {
-      this.radionSulku?.remove();
-      this.radionSulku = null;
-      return;
-    }
-    if (this.radionSulku) return;
-    const nappi = html('button', 'radio-sulje');
-    nappi.type = 'button';
-    nappi.setAttribute('aria-label', 'Sulje radiotila');
-    nappi.title = 'Sulje radiotila';
-    nappi.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">'
-      + '<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" '
-      + 'stroke-width="2.2" stroke-linecap="round"/></svg>';
-    nappi.addEventListener('click', () => { this.valitseLinssi(null); });
-    document.body.appendChild(nappi);
-    this.radionSulku = nappi;
-  }
 
   /** Onko radiotila päällä? Synkroninen: piirto kysyy tätä. */
   radioPaalla() {
@@ -7302,7 +7286,20 @@ export class UI {
       // Kertoja vaikenee radion tieltä. Radio sulkee itse kaupungin
       // äänimaiseman, mutta se ei tunne luentaa eikä voi tuoda ui.js:ää.
       this.stopDiaryVoice();
-      this.naytaRadionSulku(true);
+      /*
+       * Radiotilassa ruudulla on vain kartta ja soitin.
+       *
+       * Omistajan toive 4.8.2026: "Piilota Matkakirja ja alanapit radion
+       * ollessa käytössä. Poista myös yläreunan x. Riittää kun radiosta
+       * saa suljettua."
+       *
+       * Radiotilassa peli on tauolla: matkustustavan valinta ja
+       * matkakirjan kortti eivät koske mihinkään, mitä radiossa voi
+       * tehdä. Piilotus tehdään bodyn luokalla eikä elementti kerrallaan,
+       * jotta se purkautuu varmasti myös silloin kun radio sammuu
+       * omalta puoleltaan.
+       */
+      document.body.classList.add('radio-tila');
       radio.paalle({
         map: this.game.pack.map,
         kaupungit: this.game.board.cities,
@@ -7327,7 +7324,7 @@ export class UI {
        * ennen kuin linssi sammuu). Ehdon sisällä nappi jäisi ruudulle
        * yksin sulkemaan tilaa, joka on jo suljettu.
        */
-      this.naytaRadionSulku(false);
+      document.body.classList.remove('radio-tila');
       if (radio.paalla()) {
         radio.pois();
         // Radio ei tiedä kaupunkia eikä maisematyyppiä, joten kaupungin
