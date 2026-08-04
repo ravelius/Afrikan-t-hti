@@ -2666,7 +2666,15 @@ body.linssi-valokuva .grain { display: none; }
 }
 
 .linssi-selite.pieni h2 { margin: 0; }
-.linssi-selite.pieni .linssi-selite-nappi { padding: 0.4rem 0.65rem; }
+
+.linssi-selite.pieni .linssi-selite-nappi {
+  padding: 0.4rem 0.65rem;
+  /* Nimi pysyy yhdellä rivillä myös silloin, kun jonkin tulevan linssin
+   * nimi on pitkä: toinen rivi jäisi korkeusrajan alle piiloon. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* Siirtymä perusluokassa, jotta se pätee molempiin suuntiin. */
 .linssi-selite > *:not(h2) { transition: opacity 160ms ease; }
@@ -4481,28 +4489,57 @@ body[data-mode] .fact-card.laajennettu {
 body[data-mode] .fact-card.pieni {
   /* 0.4rem = body[data-mode]-kortin pysty pehmuste (0.2rem + 0.2rem). */
   max-height: calc(1.5 * var(--pieni-rivi) + 0.4rem + 1px);
-  /*
-   * Leveys sisällön mukaan. Kutistunut lappu on kartan päällä ja nappaa
-   * napautukset alleen, joten se ei saa varata kaistaa, jossa ei ole
-   * mitään luettavaa — sama kaupunkinimi kelluu nyt vain oman
-   * mittansa verran karttaa.
-   */
-  width: max-content;
-  max-width: min(340px, 46%);
   overflow: hidden;
-  cursor: pointer;
+  /*
+   * NAPAUTUSALUE ON TÄSMÄLLEEN SE, MISSÄ ON MUSTETTA.
+   *
+   * Kortin oma laatikko on yhä kaistan levyinen — sen on pakko olla,
+   * sillä kutistuminen liukuu vain jos sisältö pysyy asettelussa ja
+   * korkeusraja rajaa sen. Laatikko on kuitenkin kartan päällä, ja
+   * tyhjänä se söisi napautukset paikasta, jossa ei näy mitään.
+   * Siksi laatikko päästää napautukset lävitseen ja vain näkyvä
+   * nimirivi ottaa ne vastaan.
+   */
+  pointer-events: none;
 }
 
 .fact-card.pieni .fact-place {
   order: -1;
   margin: 0;
   line-height: 1.5;
+  /*
+   * Rivi ei kutistu, muut kutistuvat.
+   *
+   * Kortti on pystyflex, ja korkeusraja tekee siitä ylitäyden: ilman
+   * tätä selain kutistaa KAIKKIA lapsia suhteessa, myös nimiriviä, ja
+   * lappu jää tyhjäksi (mitattu: rivin korkeudeksi jäi 0,1 px).
+   * Nimirivi pitää oman mittansa ja leikkaus osuu vain siihen, mikä on
+   * jo häivytetty näkymättömiin.
+   */
+  flex: 0 0 auto;
+  /* Rivi vain oman mittansa levyinen — ks. pointer-events yllä. */
+  width: max-content;
+  max-width: 100%;
+  pointer-events: auto;
+  cursor: pointer;
   /* Yksi rivi myös pitkällä nimellä: ennemmin kolme pistettä kuin
    * kahdelle riville karkaava lappu. */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/*
+ * Mantereen lähikuvassa päiväkirjan alla on pehmeä pergamenttivalo
+ * (body.manner-zoom .fact-card::before). Yhden rivin lapun alla se
+ * kutistuu kirkkaaksi vaaleaksi palkiksi kartan poikki — valo on
+ * mitoitettu monirivisen leipätekstin alle, ei yhdelle sanalle. Lapun
+ * ajaksi se sammuu: kaupungin nimi jää saman vaalean tekstivarjon
+ * varaan kuin kartan omat paikannimet, ja juuri se varjo on tehty
+ * pitämään yksittäisen nimen luettavana kartan päällä.
+ */
+body.manner-zoom .fact-card::before { transition: opacity 200ms ease; }
+body.manner-zoom .fact-card.pieni::before { opacity: 0; }
 
 /*
  * Muut osat häipyvät ennen kuin reuna ehtii leikata ne: kaiutinnappi ja
@@ -4521,10 +4558,15 @@ body[data-mode] .fact-card.pieni {
   pointer-events: none;
 }
 
-.fact-card.pieni:focus-visible {
+/* Kohdistusrengas piirtyy näkyvän rivin ympäri eikä kortin näkymättömän
+ * laatikon: rengas kaistan levyisenä yhden sanan ympärillä ei kertoisi
+ * mihin näppäimistö osoittaa. */
+.fact-card.pieni:focus-visible { outline: none; }
+
+.fact-card.pieni:focus-visible .fact-place {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 /*
