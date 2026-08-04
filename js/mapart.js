@@ -540,7 +540,21 @@ function viivanPituus(pisteet) {
  * korjattu joen yleissuunta (tools/tee-maastonimet.mjs), mutta yksi
  * mutka voi silti kulkea vastavirtaan — ja siinä nimi olisi ylösalaisin.
  */
-const KAAREN_OTOKSET = 6;
+/*
+ * Kaksi lukua, jotka päättävät luettavuuden.
+ *
+ * OTOKSET on kaari-ikkunan pisteiden määrä. Kuusi oli liikaa: se
+ * seurasi vielä yksittäisiä mutkia, ja Väinäjoki luki kaarella joka
+ * kääntyi kolmesti nimen mitalla. Kaksi väliä eli kolme pistettä antaa
+ * yhden loivan kaaren — sen minkä silmä tunnistaa joen suunnaksi.
+ *
+ * OIKAISU vetää välipisteet puoliväliin kohti suoraa jännettä. Se on
+ * sama temppu kuin käsin piirretyssä kartassa: nimi kaartaa joen
+ * mukana, mutta vähemmän kuin joki. Ilman sitä jyrkkä mutka levittää
+ * kirjaimet kaaren ulkoreunalle ja puristaa ne sisäreunalla yhteen.
+ */
+const KAAREN_OTOKSET = 2;
+const KAAREN_OIKAISU = 0.5;
 
 function nimenKaari(pisteet, kohtaIndeksi, tarve) {
   const matkat = [0];
@@ -568,6 +582,19 @@ function nimenKaari(pisteet, kohtaIndeksi, tarve) {
   const otokset = [];
   for (let k = 0; k <= KAAREN_OTOKSET; k++) {
     otokset.push(kohdassa(keskus - puolikas + (puolikas * 2 * k) / KAAREN_OTOKSET));
+  }
+
+  // Välipisteet puoliväliin kohti jännettä: kaari loivenee, suunta jää.
+  const [ax, ay] = otokset[0];
+  const [bx, by] = otokset.at(-1);
+  for (let k = 1; k < otokset.length - 1; k++) {
+    const t = k / KAAREN_OTOKSET;
+    const jx = ax + (bx - ax) * t;
+    const jy = ay + (by - ay) * t;
+    otokset[k] = [
+      otokset[k][0] + (jx - otokset[k][0]) * KAAREN_OIKAISU,
+      otokset[k][1] + (jy - otokset[k][1]) * KAAREN_OIKAISU,
+    ];
   }
   return otokset.at(-1)[0] < otokset[0][0] ? otokset.reverse() : otokset;
 }
