@@ -4626,3 +4626,74 @@ Hornista kaikki ennen 1960 on maalauksia ja merikarttoja).
 
 Tarkistimet ajon jälkeen: 1172 kuvakohtaa, 0 rikkinäistä, ei
 kaksoisavaimia. Ikätarkistin 9/99 (oli 10).
+
+## v246 — Meren vuoto maalle, VU-mittarin oikea syy (4.8.2026)
+
+**Meren sinisyys vuoti maiden päälle** (omistajan kuvakaappaus: Itämeren,
+Mustanmeren ja Punaisenmeren ympärillä vaalea sävy peitti kokonaisia
+maakuntia). Syy on aineistojen eri tarkkuus: syvyysvyöhykkeet ovat omaa
+aineistoaan eivätkä tunne tämän kartan rantaviivaa, joten matalikko
+(0–200 m, `#b9c8ce`) ulottuu rannan yli maalle.
+
+Järjestys ei korjaa tätä. Lähivesikerros on staattisen taiteen PÄÄLLÄ, ja
+samassa kerroksessa ovat joet ja järvet, joiden pitää olla maan päällä.
+Rajaus koskee siis vain merenpohjaa: uusi `clipPath#meri-rajaus` päästää
+läpi sen, mikä on kehyksen sisällä mutta rantaviivojen ulkopuolella.
+
+**Yksi polku ja `evenodd`, ei kahta elementtiä.** clipPathin lapset
+yhdistyvät summana, joten suorakaide ja rantaviivat erillisinä antaisivat
+pelkän suorakaiteen. Samassa `d`:ssä parillisuussääntö tekee halutun.
+Mitattu Chromiumissa (200 × 200 px, "maa" keskellä):
+
+| | maan päällä | merellä |
+|---|---|---|
+| `evenodd` | **rajattu pois** | näkyy |
+| `nonzero` | näkyy (väärin) | näkyy |
+
+Sama vika korjattiin kerran jo toiseen suuntaan: maan korostussävy valui
+mereen ja rajattiin rantaviivan sisään (`maa-rajaus`). Tämä on saman rajan
+toinen puoli.
+
+**VU-mittari: oikea syy löytyi vasta nyt, ja se on selaimen turvasääntö.**
+Kaksi edellistä korjausta (v239 reititys, v244 pysäytetty konteksti) olivat
+oikeita korjauksia oikeisiin vikoihin, mutta ne eivät voineet auttaa, koska
+este on tämä:
+
+> `createMediaElementSource` antaa pelkkiä nollia, jos ääni tulee toiselta
+> palvelimelta eikä palvelin lähetä CORS-otsakkeita. Ja jos pyydämme
+> CORSia palvelimelta joka ei sitä anna, LATAUS EPÄONNISTUU KOKONAAN.
+
+Siksi koodissa on varareitti, joka avaa aseman uudelleen ilman CORS-pyyntöä.
+Se pelastaa lähetyksen, mutta jättää mittarin pysyvästi ilman lähdettä.
+Nettiradioasemista valtaosa ei lähetä CORS-otsakkeita — eli neula makasi
+levossa lähes joka asemalla, täsmälleen kuten omistaja kolmesti raportoi.
+
+**Tätä ei voi korjata mittaamalla.** Vaihtoehtoja on kaksi: kuollut neula
+tai liikkuva neula, jonka lukemaa ei oikeasti mitata. Valittu on
+jälkimmäinen, ja se sanotaan koodissa suoraan: **lukema on jäljitelty, ei
+mitattu**. Mitattu lukema käytetään aina kun se on saatavilla; jäljitelmä
+korvaa vain sen, mikä ennen oli tyhjä.
+
+Kaksi asiaa jäljitelmässä on silti totta, ja ne riittävät tekemään siitä
+uskottavan: se seuraa äänenvoimakkuutta (kerroin luetaan elementin omasta
+`volume`-arvosta, joten nuppi ja ristihäivytys näkyvät neulassa), ja se
+vaikenee kun lähetys vaikenee (puskuroinnin aikana elementti on `paused`).
+
+Liike on kolmen sinin summa eikä satunnaislukuja. Jaksot ovat
+yhteismitattomia (noin 7 s, 0,9 s ja 0,3 s) eli lause, tavu ja äänteen
+särmä. Mitattu vaihteluväli 0,34–0,96 ja keskimääräinen liike 0,73
+asteikkoa sekunnissa ennen vaimennusta. Satunnaisluvut näyttäisivät
+tärinältä, eivät puheelta — VU-mittari on keskiarvomittari, joka ei
+nykähtele.
+
+**Kanavanvaihdon häivytys 1,4 s → 0,9 s** omistajan pyynnöstä.
+
+### Opittua
+
+**Kun sama vika palaa kolmannen kerran, vika ei ole toteutuksessa vaan
+oletuksessa.** Kaksi ensimmäistä korjausta olivat kumpikin oikein ja
+kumpikin mitattu toimivaksi — paikallisella virralla, joka sattuu olemaan
+samaa alkuperää. Oletus, jota ei koskaan tarkistettu, oli että oikeat
+asemat käyttäytyvät kuin testivirta. Ne eivät käyttäydy, eikä sitä olisi
+voinut mitata tästä ympäristöstä lainkaan. Silloin on parempi lukea
+selaimen sääntö kuin mitata uudelleen.

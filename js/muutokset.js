@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 246, teksti: 'Meren sinisyys ei enää vuoda maiden päälle' },
+  { v: 246, teksti: 'VU-mittari liikkuu myös CORSittomilla asemilla' },
+  { v: 246, teksti: 'Kanavanvaihdon häivytys 0,9 sekuntiin' },
   { v: 245, teksti: 'Paperin pinta näkyy nyt myös lähikuvassa' },
   { v: 245, teksti: 'Kanavanvaihdon häivytys selvästi pidempi' },
   { v: 244, teksti: 'VU-mittari sai lähetyksen myös hitaalla alulla' },

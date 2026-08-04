@@ -1142,8 +1142,10 @@ const osuuIkkunaan = (pisteet, ikkuna, vara) => {
  * @param nakyva   { x, y, w, h } laudan yksiköissä
  * @param nimet    VESISTONIMET tärkeysluokkia varten (valinnainen)
  * @param syvyys   MERISYVYYS-vyöhykkeet (valinnainen)
+ * @param meriRajaus  clip-path-viittaus, joka rajaa merenpohjan mereen
+ *                    (valinnainen; ks. lahivesi-meri alempana)
  */
-export function drawLahivesi(ryhma, map, { nakyva, nimet, syvyys } = {}) {
+export function drawLahivesi(ryhma, map, { nakyva, nimet, syvyys, meriRajaus } = {}) {
   if (!ryhma) return;
   ryhma.textContent = '';
   const voima = lahivedenVoima(nakyva?.w);
@@ -1162,9 +1164,30 @@ export function drawLahivesi(ryhma, map, { nakyva, nimet, syvyys } = {}) {
    */
   const g = el('g', { class: 'lahivesi', opacity: voima.toFixed(3) }, ryhma);
 
-  // --- meren pohja: matalimmasta syvimpään, sisäkkäiset vyöhykkeet ---
+  /*
+   * --- meren pohja: matalimmasta syvimpään, sisäkkäiset vyöhykkeet ---
+   *
+   * RAJATTU MAAN ULKOPUOLELLE. Syvyysvyöhykkeet ovat omaa aineistoaan
+   * eivätkä tunne tämän kartan rantaviivaa: ne on projisoitu laudalle
+   * karkeampana kuin piirretty rannikko, ja matalikko (0–200 m) ulottuu
+   * siksi rannan yli maalle. Omistajan havainto: "veden sinisyys vuotaa
+   * maiden päälle" — Itämeren, Mustanmeren ja Punaisenmeren ympärillä
+   * vaalea sävy peitti kokonaisia maakuntia.
+   *
+   * Kerros piirretään laudan päälle (js/ui.js: lahivesiKerros on
+   * staattisen taiteen jälkeen), joten järjestys ei sitä korjaa: sama
+   * kerros sisältää joet ja järvet, joiden PITÄÄ olla maan päällä.
+   * Rajaus koskee siis vain merenpohjaa.
+   *
+   * Sama vika korjattiin kerran jo toiseen suuntaan: maan korostussävy
+   * valui mereen, ja se rajattiin rantaviivan sisään (js/ui.js
+   * `maa-rajaus`). Tämä on saman rajan toinen puoli.
+   */
   if (syvyys?.vyohykkeet?.length) {
-    const meri = el('g', { class: 'lahivesi-meri' }, g);
+    const meri = el('g', {
+      class: 'lahivesi-meri',
+      ...(meriRajaus ? { 'clip-path': meriRajaus } : {}),
+    }, g);
     for (const vyohyke of syvyys.vyohykkeet) {
       const luokka = `merisyvyys merisyvyys-${String(vyohyke.metria).replace('-', '')}`;
       for (const rengas of vyohyke.renkaat ?? []) {

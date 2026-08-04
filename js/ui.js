@@ -2563,6 +2563,7 @@ export class UI {
       nakyva,
       nimet: this.maastonimet,
       syvyys: this.merisyvyys,
+      meriRajaus: this.meriRajaus,
     });
   }
 
@@ -3730,6 +3731,39 @@ export class UI {
       }
     }
     this.countryLayer = el('g', { class: 'country-borders', 'clip-path': 'url(#maa-rajaus)' }, root);
+    /*
+     * SAMAN RAJAN TOINEN PUOLI: merenpohja rajataan maan ULKOPUOLELLE.
+     *
+     * Syvyysvyöhykkeet ovat karkeampaa aineistoa kuin piirretty
+     * rannikko, ja matalikko ulottui rannan yli maalle (ks. mapart.js
+     * drawLahivesi). Yläpuolinen `maa-rajaus` pitää maan sävyn poissa
+     * merestä; tämä pitää meren sävyn poissa maalta.
+     *
+     * YKSI POLKU JA `evenodd`, ei kahta elementtiä. clipPathin lapset
+     * yhdistyvät summana, joten suorakaide ja rantaviivat erillisinä
+     * antaisivat pelkän suorakaiteen. Samassa d:ssä parillisuussääntö
+     * tekee juuri halutun: suorakaiteen sisällä, rantaviivojen
+     * ulkopuolella.
+     *
+     * Suorakaide ulottuu laudan yli joka suuntaan, jotta kiertävän
+     * kartan sauman toisella puolella oleva meri ei jää rajauksen
+     * ulkopuolelle.
+     */
+    if (pack.map.outlines?.length) {
+      const W = pack.map.width;
+      const H = pack.map.height;
+      const kehys = `M${-W},${-H} L${2 * W},${-H} L${2 * W},${2 * H} L${-W},${2 * H} Z`;
+      const maat = pack.map.outlines
+        .map((outline) => `M${outline.map(([x, y]) => `${x},${y}`).join(' L')}Z`)
+        .join('');
+      const meriClip = el('clipPath', { id: 'meri-rajaus' }, root);
+      el('path', { d: `${kehys}${maat}`, 'clip-rule': 'evenodd' }, meriClip);
+      this.meriRajaus = 'url(#meri-rajaus)';
+    } else {
+      // Viittaus olemattomaan clipPathiin jättäisi kerroksen kokonaan
+      // piirtämättä, joten sitä ei anneta ellei rajausta oikeasti ole.
+      this.meriRajaus = null;
+    }
     // Nimi piirretään leikkaamattomaan kerrokseen: maan todellinen
     // keskipiste voi osua tyylitellyn rannikon ulkopuolelle, eikä
     // kaunokirjoituksen saa katketa siihen.
