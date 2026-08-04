@@ -262,6 +262,9 @@ export function kanavaKaupungille(cityId) {
   const kanava = radioMaalle(iso);
   if (!kanava) return null;
   return {
+    // `cityId` on soittimen asteikkoa varten: se keskittää naapurinimet
+    // soivaan kaupunkiin, eikä laite tunne karttaa muuten mitenkään.
+    cityId,
     iso,
     maa,
     kaupunki,
@@ -466,6 +469,15 @@ export function aani() {
  * @param {Array}    asetukset.kaupungit  board.cities — nimet ja sijainnit
  * @param {Element}  asetukset.juuri      mihin soitin liitetään (esim. document.body)
  * @param {Function} [asetukset.onMuutos] kutsutaan kun soiva kanava vaihtuu
+ * @param {Function} [asetukset.onSulje]  soittimen virtakytkin käännettiin
+ *                                        off-asentoon. Kutsuja sammuttaa
+ *                                        linssin; ilman tätä tila puretaan
+ *                                        tästä (pois()), jolloin kartta
+ *                                        palaa normaaliksi mutta
+ *                                        linssivalikko jää auki.
+ * @param {string}   [asetukset.sijainti] pelaajan kaupungin tunnus; soittimen
+ *                                        asteikko keskittyy siihen ennen kuin
+ *                                        mitään on soitettu
  * @param {number}   [asetukset.aani]     aloitusäänenvoimakkuus 0–1
  * @returns {object} tilannekuva
  */
@@ -474,6 +486,8 @@ export function paalle({
   kaupungit = [],
   juuri = null,
   onMuutos = null,
+  onSulje = null,
+  sijainti = null,
   aani: alkuAani = null,
 } = {}) {
   // Uudelleenkytkentä (laudan vaihto, kartan uudelleenpiirto) purkaa
@@ -494,6 +508,32 @@ export function paalle({
     if (kaupunki?.id) nimet.set(kaupunki.id, kaupunki.name ?? null);
   }
 
+  const kanavalliset = kanavakaupungit(map, kaupungit);
+  /*
+   * Soittimen asteikon aineisto: vain ne kaupungit, joilla on kanava.
+   * Suodatus tehdään täällä eikä laitteessa, koska kanavan olemassaolo
+   * on tämän moduulin tietoa (radioMaalle) — soitin ei tunne maita
+   * eikä lähetysosoitteita, ja juuri se kolmijako pitää laitteen
+   * vaihdettavana (ks. tiedoston alku).
+   *
+   * `laudanLeveys` kerrotaan vain kiertävältä laudalta. Maailmankartalla
+   * Tokion naapuri voi olla laudan toisessa laidassa, ja ilman tätä
+   * asteikko loppuisi reunaan kesken.
+   */
+  const asteikonKaupungit = [];
+  const kaikkiPaikat = [];
+  for (const kaupunki of kaupungit) {
+    if (!kaupunki?.id) continue;
+    kaikkiPaikat.push({ id: kaupunki.id, x: kaupunki.x, y: kaupunki.y });
+    if (!kanavalliset.has(kaupunki.id)) continue;
+    asteikonKaupungit.push({
+      id: kaupunki.id,
+      nimi: kaupunki.name ?? kaupunki.id,
+      x: kaupunki.x,
+      y: kaupunki.y,
+    });
+  }
+
   const naytto = teePistenaytto({
     merkkeja: NAYTON_MERKIT,
     rivit: NAYTON_RIVIT,
@@ -505,7 +545,25 @@ export function paalle({
   });
   const soitin = teeRadiosoitin({
     aani: aanenvoimakkuus,
+    kaupungit: asteikonKaupungit,
+    kaikkiKaupungit: kaikkiPaikat,
+    laudanLeveys: map?.kiertava === true ? (map?.width ?? 0) : 0,
+    sijainti,
     onStop: () => pysayta(),
+    // Asteikon nimi ja soittokytkimen ylösvääntö ovat sama toiminto kuin
+    // kaupungin napautus kartalla: yksi napautus, kanava vaihtuu heti.
+    onValitseKaupunki: (id) => soitaKaupunki(id),
+    /*
+     * Virtakytkin off-asennossa. Laite on jo piilottanut itsensä; tämän
+     * tehtävä on sulkea äänet ja kartan radiotila. Kutsujan oma
+     * takaisinkutsu saa etusijan, koska vain se osaa sammuttaa myös
+     * linssin — ilman sitä puretaan ainakin tämä tila, jottei
+     * näkymättömän soittimen alla jää soimaan kanavaa.
+     */
+    onSulje: () => {
+      if (onSulje) onSulje();
+      else pois();
+    },
     onAani: (arvo) => {
       aanenvoimakkuus = arvo;
       if (soiva) soiva.audio.volume = arvo;
@@ -542,7 +600,7 @@ export function paalle({
     soitin,
     naytto,
     onMuutos,
-    kanavalliset: kanavakaupungit(map, kaupungit),
+    kanavalliset,
   };
 
   (juuri ?? document.body)?.appendChild(soitin.juuri);

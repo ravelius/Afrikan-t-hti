@@ -2553,6 +2553,46 @@ body.linssi-valokuva .grain { display: none; }
 .korkeus-huippu { fill: #f0e3c6; opacity: 0.55; }
 
 /*
+ * Varjostus: sama seepia, mutta maasto alkaa näyttää maastolta.
+ *
+ * Omistaja 4.8.2026: "täysväri siihen linssiin, mutta pidetään seepia
+ * normaalissa pelinäkymässä, ja sitä voi HIEMAN kehittää vielä noiden
+ * mainitsemieni varjostusten ja muiden avulla."
+ *
+ * --- miksi tämä ei ole uusi väri ---
+ *
+ * Varjo ei tuo kartalle mitään uutta sävyä. Se on sama ruskea muste
+ * kuin korkeusvyöhykkeillä ja sama lämmin paperinvalkoinen kuin
+ * lumella (.korkeus-huippu), vain hyvin haaleana. Kartta ei siis saa
+ * uutta ilmettä — nykyiset vyöhykkeet saavat suunnan.
+ *
+ * --- miksi läpinäkyvyys eikä tummempi väri ---
+ *
+ * Voimakkuutta säädetään TÄSSÄ eikä varjostuksen liioittelukertoimessa
+ * (tools/varjostus.mjs). Syy on että leikkautunut varjo pysyy
+ * leikkautuneena, vaikka sen piirtäisi kuinka haaleana: liian suuri
+ * kerroin painaa jyrkimmät rinteet nollaan, jolloin muoto muuttuu
+ * reiäksi eikä sitä saa enää takaisin millään opacityllä.
+ *
+ * --- miksi varjo on vahvempi kuin valo ---
+ *
+ * Seepiakartan vaalein sävy on paperi itse, eikä sitä vaaleampaa ole
+ * (sama syy kuin lumella: liian vaalea luetaan reiäksi kartassa).
+ * Valolla on siis vain hitunen matkaa, varjolla koko musteen matka.
+ * Aineistossa sama epäsymmetria on jo valmiina: varjo leikkautuu
+ * nollaan ja valo ykköseen, joten varjon puoli ulottuu kolme kertaa
+ * kauemmas tasaisesta.
+ *
+ * Ääriviivaa ei ole. Varjolla ei ole rajaa maastossakaan.
+ */
+.varjo-1,
+.varjo-2,
+.valo-1 { stroke: none; }
+.varjo-1 { fill: #6a5836; opacity: 0.09; }
+.varjo-2 { fill: #6a5836; opacity: 0.1; }
+.valo-1 { fill: #fff6e0; opacity: 0.16; }
+
+/*
  * Vesi on yhtä sävyä koko kartalla, eikä se sävy ole sininen.
  *
  * Omistaja 4.8.2026: "Järvet ja joet pitää olla meren kanssa saman
