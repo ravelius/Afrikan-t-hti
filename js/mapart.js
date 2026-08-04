@@ -2242,13 +2242,27 @@ export function kokoaRuudunTaide(pilkottu, ikkuna) {
  * @param taide  merkkijono (koko taide) TAI pilkoTaiteen palanippu.
  *               Nippu on nopeampi: ruutuun kootaan vain sen omat palat.
  */
+/*
+ * Tyhjä ruutu erotettuna epäonnistuneesta.
+ *
+ * Molemmat palauttivat ennen nullin, ja kutsuja hyppäsi molempien yli
+ * kirjaamatta mitään. Tyhjä ruutu — pelkkää merta ilman yhtään palaa —
+ * pyydettiin siksi uudestaan joka kerta kun näkymä asettui, ja avomeren
+ * yllä se tarkoitti samaa turhaa työtä loputtomiin.
+ *
+ * Ero on pakko säilyttää: epäonnistunutta EI saa muistaa, koska
+ * selaimessa, jossa rasterointi ei toimi lainkaan, kartta jäisi
+ * lopullisesti tyhjäksi vektorien sijaan.
+ */
+export const RUUTU_TYHJA = 'tyhjä';
+
 export async function rasteroiRuutu(taide, ikkuna, skaala, tarkkuus = 1) {
   if (!taide || !window.Blob || !URL.createObjectURL) return null;
   try {
     const sisalto = typeof taide === 'string' ? taide : kokoaRuudunTaide(taide, ikkuna);
-    // Tyhjä ruutu: pelkkää merta ilman yhtään palaa. Pergamentti tulee
-    // kartan taustasta, joten tyhjää ei tarvitse rasteroida lainkaan.
-    if (!sisalto) return null;
+    // Pergamentti tulee kartan taustasta, joten tyhjää ei tarvitse
+    // rasteroida lainkaan — mutta se on muistettava tyhjänä.
+    if (!sisalto) return RUUTU_TYHJA;
     const teho = skaala * tarkkuus;
     const leveysPx = Math.min(RUUDUN_PIKSELIT, Math.max(32, Math.round(ikkuna.w * teho)));
     const korkeusPx = Math.min(RUUDUN_PIKSELIT, Math.max(32, Math.round(ikkuna.h * teho)));

@@ -1,7 +1,7 @@
 {
-  "name": "Matkakirja",
-  "short_name": "Matkakirja",
-  "description": "Matkakirja: kierrä maailmaa isoisän päiväkirjan kanssa, etsi aarteet ja opi matkalla.",
+  "name": "Unohdettu aarre",
+  "short_name": "Unohdettu aarre",
+  "description": "Unohdettu aarre: kierrä maailmaa isoisän päiväkirjan kanssa, etsi aarteet ja opi matkalla.",
   "lang": "fi",
   "start_url": "./index.html",
   "scope": "./",

@@ -23,7 +23,6 @@
         }
       ]
     },
-
     "Vilyuy": {
       "kappaleet": [
         {
@@ -44,14 +43,13 @@
         }
       ]
     },
-
     "Aldan": {
       "kappaleet": [
         {
           "teksti": "George Kennan rakensi 1860-luvulla lennätinlinjaa, jonka piti yhdistää Amerikka Eurooppaan Beringinsalmen kautta. Atlantin kaapeli valmistui ensin ja hanke haudattiin. Kennan palasi Ohotskin rannikolta sisämaahan poroilla ja suksilla ja lähestyi marraskuussa Aldanin laaksoa."
         },
         {
-          "lainaus": "Alhaalla edessämme, laakson takaisten kukkuloiden mustaa vasten, nousi neljä tai viisi hohtavan sumun pylvästä kuin tulipatsaat erämaassa.",
+          "lainaus": "Alhaalla edessämme, laakson takaisten kukkuloiden mustaa vasten, nousi neljä tai viisi hohtavan sumun pylvästä kuin tulipatsaat exoduksen erämaassa.",
           "kuka": "George Kennan",
           "teos": "Tent Life in Siberia, uudistettu laitos",
           "vuosi": 1910,
@@ -59,20 +57,19 @@
           "linkki": "https://www.gutenberg.org/ebooks/12328"
         },
         {
+          "teksti": "Pylväät olivat savua jakuuttien tulisijoista, ja ne seisoivat pystyssä, koska ilma oli täysin liikkumaton. Aldan on Jakutiassa yhä ennemmin tie kuin este: laivakelpoista uomaa on runsaat 1 700 kilometriä, eikä sen rinnalla kulje maantietä."
+        },
+        {
           "tiedosto": "Aldan River (near Dvortsy section, Siberia, Russia) 2 (21485056591).jpg",
           "selite": "Aldan Dvortsyn kohdalla. Ranta on ikiroudan päällä olevaa hiekkaa, joka sortuu kevättulvassa metreittäin kerrallaan; uoma siirtyy siksi vuodesta toiseen.",
           "lahde": "Wikimedia Commons (CC BY 2.0), James St. John"
-        },
-        {
-          "teksti": "Pylväät olivat savua jakuuttien tulisijoista, ja ne seisoivat pystyssä, koska ilma oli täysin liikkumaton. Aldan on Jakutiassa yhä ennemmin tie kuin este: laivakelpoista uomaa on runsaat 1 700 kilometriä, eikä sen rinnalla kulje maantietä."
         }
       ]
     },
-
     "Petšora": {
       "kappaleet": [
         {
-          "teksti": "Sheffieldiläinen teräksentekijä Henry Seebohm lähti keväällä 1875 Petšoralle syystä, joka kuulostaa pieneltä eikä ollut sitä. Puolikymmentä Britannian rannoilla talvehtivaa kahlaajalajia pesi jossakin pohjoisessa, eikä yhdenkään munia ollut nähnyt kukaan."
+          "teksti": "Sheffieldiläinen teräksentekijä Henry Seebohm lähti keväällä 1875 Petšoralle syystä, joka kuulostaa pieneltä eikä ollut sitä. Kuusi Britannian rannoilla talvehtivaa lintulajia pesi jossakin pohjoisessa, eikä yhdenkään munia ollut nähnyt kukaan."
         },
         {
           "lainaus": "Jäljellä oli puolisen tusinaa hyvin tunnettua brittiläistä lintua, joiden pesimäseudut olivat yhä salaisuuden verhoamat, ja niiden ratkaiseminen on ollut monen kenttätutkijan kunnianhimo kahdenkymmenen viime vuoden ajan.",
@@ -92,7 +89,6 @@
         }
       ]
     },
-
     "Indigirka": {
       "kappaleet": [
         {
@@ -116,7 +112,6 @@
         }
       ]
     },
-
     "Kama": {
       "kappaleet": [
         {
@@ -128,14 +123,13 @@
           "lahde": "Wikimedia Commons (CC BY-SA 4.0), Ludvig14"
         },
         {
-          "teksti": "Solikamsk tarkoittaa Kaman suolaa. Säkkejä kantaneiden miesten korvat olivat aina valkoiset kiteistä, ja siitä jäi permiläisille pilkkanimi solonyje uši, suolakorvat. Nimi on vanhempi kuin yksikään tehdas alueella."
+          "teksti": "Solikamsk tarkoittaa Kaman suolaa. Säkkejä kantaneiden miesten korvat olivat aina valkoiset kiteistä, ja siitä jäi permiläisille pilkkanimi solonyje uši, suolakorvat."
         },
         {
           "teksti": "Samaa jokea kuljettiin myös toiseen suuntaan. Suolakeittämöt omistaneet Stroganovit varustivat 1580-luvulla kasakkajoukon, joka nousi Kaman sivujokea Tšusovajaa ja ylitti Uralin. Siitä alkoi se, mitä Venäjällä sanotaan Siperian valloitukseksi."
         }
       ]
     },
-
     "Arkansas": {
       "kappaleet": [
         {
@@ -143,7 +137,7 @@
         },
         {
           "tiedosto": "Grand Canyon of the Arkansas, Royal Gorge, by Jackson, William Henry, 1843-1942.jpg",
-          "selite": "William Henry Jacksonin valokuva Kuninkaan kurusta. Arkansas laskee täällä Kalliovuorilta niin jyrkästi, että seinämät nousevat kolmesataa metriä. Kapeimmassa kohdassa rautatie ripustettiin sillalla joen ylle vuonna 1879.",
+          "selite": "William Henry Jacksonin valokuva Kuninkaan kurusta. Arkansas laskee Kalliovuorilta niin jyrkästi, että seinämät nousevat kolmesataa metriä. Kapeimpaan kohtaan rautatie ripustettiin sillalla joen ylle 1879.",
           "lahde": "Wikimedia Commons (PD), William Henry Jackson"
         },
         {
@@ -159,7 +153,6 @@
         }
       ]
     },
-
     "Peace": {
       "kappaleet": [
         {
@@ -175,7 +168,7 @@
         },
         {
           "tiedosto": "Peace River, Alberta (HS85-10-32013).jpg",
-          "selite": "Rauhanjoki Albertassa. Joki on vanhempi kuin sitä ympäröivät Kalliovuoret ja kuluttaa uomaansa niiden läpi; siksi se on ainoa, joka läpäisee vuoriston tässä kohtaa.",
+          "selite": "Rauhanjoki Albertassa. Uoma on vanhempi kuin nykyinen vuoristo ja on kuluttanut itsensä sen läpi; Rauhanjoki on siksi harvoja jokia, jotka läpäisevät Kalliovuoret idästä länteen.",
           "lahde": "Wikimedia Commons (PD)"
         },
         {
@@ -183,7 +176,6 @@
         }
       ]
     },
-
     "Purús": {
       "kappaleet": [
         {
@@ -207,7 +199,6 @@
         }
       ]
     },
-
     "Athabasca": {
       "kappaleet": [
         {
@@ -231,7 +222,6 @@
         }
       ]
     },
-
     "Ucayali": {
       "kappaleet": [
         {
@@ -246,16 +236,15 @@
           "linkki": "https://www.gutenberg.org/ebooks/57756"
         },
         {
+          "teksti": "Riita on yhä auki. Pituudella mitattuna Ucayali voittaa, sillä Apurímacin latvoilta laskien sen uoma on selvästi pidempi. Virtaamalla mitattuna voittaa Marañón. Kysymys ei ratkea maastossa, koska se ei ole geologinen vaan sopimuskysymys."
+        },
+        {
           "tiedosto": "ISS-45 StoryOfWater, Meandering River - Rio Ucayali.jpg",
           "selite": "Ucayali avaruusasemalta. Uoma siirtyy nopeammin kuin kartat ehtivät perässä: rannalla näkyy kymmeniä vanhoja mutkia, ja rantakylä voi jäädä vuosikymmenessä kilometrien päähän vedestä.",
           "lahde": "Wikimedia Commons (PD), NASA / Kjell Lindgren"
-        },
-        {
-          "teksti": "Riita on yhä auki. Pituudella mitattuna Ucayali voittaa, sillä Apurímacin latvoilta laskien sen uoma on selvästi pidempi. Virtaamalla mitattuna voittaa Marañón. Kysymys ei ratkea maastossa, koska se ei ole geologinen vaan sopimuskysymys."
         }
       ]
     },
-
     "Tocantins": {
       "kappaleet": [
         {
@@ -279,7 +268,6 @@
         }
       ]
     },
-
     "Araguaia": {
       "kappaleet": [
         {
@@ -298,7 +286,6 @@
         }
       ]
     },
-
     "North Saskatchewan": {
       "kappaleet": [
         {
@@ -322,11 +309,10 @@
         }
       ]
     },
-
     "Snake": {
       "kappaleet": [
         {
-          "teksti": "John Jacob Astorin turkiskauppiaat lähtivät syksyllä 1811 laskemaan jokea, jonka arvelivat vievän heidät Columbialle ja sitä myöten mereen. Kanootit hylättiin viikossa. Matka jatkui rantoja pitkin kävellen, ja seurue hajosi pienempiin ryhmiin, jotka kulkivat eri puolilla."
+          "teksti": "John Jacob Astorin turkiskauppiaat lähtivät lokakuussa 1811 laskemaan jokea, jonka arvelivat vievän heidät Columbialle ja mereen. Kanootit hylättiin koskeen, jolle jäi nimi Caldron Linn. Matka jatkui rantoja pitkin kävellen, ja seurue hajosi ryhmiin eri puolille uomaa."
         },
         {
           "lainaus": "Yli kahdeksansataa mailia raskasta taivalta se oli heille maksanut, ja siihen liittyneet kärsimykset tekivät siitä muistoissa vihattavan, niin että kanadalaiset venemiehet puhuivat siitä aina nimellä la maudite rivière enragée, kirottu raivojoki.",
@@ -342,19 +328,18 @@
           "lahde": "Wikimedia Commons (PD), Boyd Norton / U.S. National Archives"
         },
         {
-          "teksti": "Kolmekymmentä vuotta myöhemmin samaa laaksoa kulki Oregon Trail, koska muuta reittiä ei ollut. Vaunut pysyivät ylätasangolla ja laskeutuivat veteen vain kahlaamoilla. Nykyään joessa on viisitoista patoa, ja lohi nousee enää neljännekseen entisistä kutupaikoistaan."
+          "teksti": "Kolmekymmentä vuotta myöhemmin samaa laaksoa kulki Oregon Trail, koska muuta reittiä ei ollut. Vaunut pysyivät ylätasangolla ja laskeutuivat veteen vain kahlaamoilla. Hells Canyonin padot 1950- ja 1960-luvuilta ovat ilman kalatietä, joten lohi ei nouse enää lainkaan yläjuoksun kutupaikoille."
         }
       ]
     },
-
     "Tobol": {
       "kappaleet": [
         {
-          "teksti": "Vuonna 1581 Stroganovien palkkaama kasakkapäällikkö Jermak Timofejev ylitti Uralin ja laskeutui Turaa ja Tobolia alas. Retkikuntaa oli kahdeksansataa miestä, ja sen ase oli tuliase; vastassa oli Kutšum-kaanin ratsuväki jousineen."
+          "teksti": "Vuonna 1581 Stroganovien palkkaama kasakkapäällikkö Jermak Timofejev ylitti Uralin ja laskeutui Turaa ja Tobolia alas. Retkikuntaa oli muutama sata miestä, ja sen ase oli tuliase; vastassa oli Kutšum-kaanin ratsuväki jousineen."
         },
         {
           "tiedosto": "Vasily Surikov - Yermak's Conquest of Siberia - Google Art Project.jpg",
-          "selite": "Vasili Surikovin maalaus vuodelta 1895. Surikov oli itse kasakkasukua Krasnojarskista ja matkusti Tobolille luonnostelemaan maisemaa. Kuvassa savu on tarkoituksellisesti niin sakea, ettei kumpaakaan puolta erota kunnolla.",
+          "selite": "Vasili Surikovin maalaus vuodelta 1895. Surikov oli itse kasakkasukua Krasnojarskista. Savu on maalattu niin sakeaksi, ettei kumpaakaan puolta erota kunnolla, ja se on tarkoituksellista.",
           "lahde": "Wikimedia Commons (PD), Vasili Surikov"
         },
         {
@@ -370,7 +355,6 @@
         }
       ]
     },
-
     "Fraser": {
       "kappaleet": [
         {
@@ -394,11 +378,10 @@
         }
       ]
     },
-
     "Kasai": {
       "kappaleet": [
         {
-          "teksti": "William Sheppard, virginialaisen orjan poika ja Yhdysvaltain ensimmäisiä mustia lähetyssaarnaajia Afrikassa, saapui Kasain suulle keväällä 1890. Höyrylaiva Florida yritti kääntyä Kongosta sivujokeen kohdassa, jossa uoma kapenee runsaaseen sataan metriin kallioiden väliin."
+          "teksti": "William Sheppard, virginialaisen parturin poika ja eteläisen presbyteerikirkon ensimmäinen musta lähetti Afrikassa, saapui Kasain suulle keväällä 1890. Höyrylaiva Florida yritti kääntyä Kongosta sivujokeen kohdassa, jossa uoma kapenee runsaaseen sataan metriin kallioiden väliin."
         },
         {
           "lainaus": "Näimme Kasain punaisen veden syöksyvän Kongoon kuin myllyränni — suulla joki on vain noin sataviisikymmentä jaardia leveä, ja molemmin puolin on suuri kalliomuuri.",
@@ -414,11 +397,10 @@
           "lahde": "Wikimedia Commons (PD), Library of Congress"
         },
         {
-          "teksti": "Höyrysimme viisi tuntia ja etenimme puoli mailia, Sheppard kirjoittaa. Ohjausketju katkesi, ja hän ohjasi peräsintä käsin rautakangesta. Ylävirrassa hän pääsi kuubien kuninkaan luo Mushengeen ensimmäisenä ulkomaalaisena ja opetteli kielen ennen kuin pyysi lupaa."
+          "teksti": "Viisi tuntia täydellä höyryllä vei laivan puoli mailia eteenpäin. Ohjausketju katkesi, ja Sheppard ohjasi peräsintä käsin rautakangesta perän yli kumartuen. Ylävirrassa hän pääsi kuubien kuninkaan luo Mushengeen ensimmäisenä ulkomaalaisena ja opetteli kielen ennen kuin pyysi lupaa."
         }
       ]
     },
-
     "Xingu": {
       "kappaleet": [
         {
@@ -437,7 +419,6 @@
         }
       ]
     },
-
     "Uele": {
       "kappaleet": [
         {
@@ -449,7 +430,7 @@
           "lahde": "Wikimedia Commons (PD)"
         },
         {
-          "lainaus": "Voidaan väittää, että Welle kuuluu Sharin vesistöön. Sitä, että Wellellä olisi yhteys Gazelleen ja siten Niiliin, ei kumoa ainoastaan yleinen käsitys vaan myös sen rannoilla asuvien vahvistetut kertomukset.",
+          "lainaus": "Voidaan väittää, että Welle kuuluu Sharin vesistöön. Se, että Wellellä olisi yhteys Gazelleen ja siten Niiliin, on vastoin sekä yleistä käsitystä että joen rannoilla asuvien vahvistettuja kertomuksia.",
           "kuka": "Georg Schweinfurth",
           "teos": "The Heart of Africa, engl. Ellen E. Frewer",
           "vuosi": 1873,
@@ -457,20 +438,23 @@
           "linkki": "https://www.gutenberg.org/ebooks/71621"
         },
         {
-          "teksti": "Hän oli oikeassa siinä, ettei joki kuulu Niiliin, ja väärässä kaikessa muussa. Uele kääntyy länteen ja yhtyy Ubangiin, joka laskee Kongoon eikä Tšad-järveen. Asia ratkesi vasta 1887, kun belgialainen Alphonse van Gèle nousi Ubangia ylöspäin.",
-          "kuka": null
+          "teksti": "Hän oli oikeassa siinä, ettei joki kuulu Niiliin, ja väärässä kaikessa muussa. Uele kääntyy länteen ja yhtyy Ubangiin, joka laskee Kongoon eikä Tšad-järveen. Asia ratkesi vasta 1887, kun belgialainen Alphonse van Gèle nousi Ubangia ylöspäin."
+        },
+        {
+          "tiedosto": "Uele river.jpg",
+          "selite": "Uele Kongon pohjoisosassa. Joki kulkee koko matkansa ylätasangolla ja putoaa Ubangiin vasta lopussa, mikä on syy siihen, että sen suunta oli pitkään arvailun varassa.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.0), Julien Harneis"
         }
       ]
     },
-
     "Lualaba": {
       "kappaleet": [
         {
-          "teksti": "David Livingstone vietti viimeiset kuusi vuottaan etsimässä Niilin lähdettä paikasta, jossa sitä ei ole. Hän oli vakuuttunut, että Lualaba on Niilin yläjuoksu, koska se oli leveä ja syvä ja virtasi pohjoiseen. Kasembe-niminen päällikkö oli kertonut hänelle vastauksen jo aiemmin."
+          "teksti": "David Livingstone vietti viimeiset kuusi vuottaan etsimässä Niilin lähdettä paikasta, jossa sitä ei ole. Hän oli vakuuttunut, että Lualaba on Niilin yläjuoksu, koska se oli leveä ja syvä ja virtasi pohjoiseen. Casembe-niminen päällikkö oli kertonut hänelle vastauksen jo vuosia aiemmin."
         },
         {
           "lainaus": "Se on samaa vettä täällä kuin Chambezéssa, samaa Moerossa ja Lualabassa, ja yksi vesi on samanlaista kuin toinen. Aiotko vetää siitä kangasta, kun haluat nähdä sen.",
-          "kuka": "päällikkö Kasembe, Livingstonen muistiin merkitsemänä",
+          "kuka": "päällikkö Casembe, Livingstonen muistiin merkitsemänä",
           "teos": "The Last Journals of David Livingstone in Central Africa, toim. Horace Waller",
           "vuosi": 1874,
           "suomennos": "oma",
@@ -482,18 +466,17 @@
           "lahde": "Wikimedia Commons (CC BY-SA 3.0), Ad Meskens"
         },
         {
-          "teksti": "Vastaus tarkoitti, että kaikki oli yhtä ja samaa vesistöä, ja se oli Kongo. Livingstone kuoli uskoen toisin. Henry Morton Stanley laski saman joen mereen asti vuosina 1876–1877 ja todisti asian; matkalle lähti kaksisataakolmekymmentä ihmistä ja perille pääsi sata kahdeksan."
+          "teksti": "Vastaus tarkoitti, että kaikki oli yhtä ja samaa vesistöä, ja se oli Kongo. Livingstone kuoli uskoen toisin. Henry Morton Stanley laski saman joen mereen asti vuosina 1876–1877 ja todisti asian; matkalle lähti runsaat kaksisataa ihmistä ja perille pääsi vajaat puolet."
         }
       ]
     },
-
     "Sutlej": {
       "kappaleet": [
         {
-          "teksti": "Punjab tarkoittaa viittä vettä, ja Sutlej on niistä pisin ja itäisin. Kaksi näistä joista puhuu Rigvedan kolmannen kirjan hymnissä: laulaja Višvamitra pyytää Vipasia ja Sutudria laskemaan vetensä, jotta bharata-heimo pääsee yli, ja joet vastaavat hänelle."
+          "teksti": "Punjab tarkoittaa viittä vettä, ja Sutlej on niistä pisin ja itäisin. Kaksi näistä joista saa puheenvuoron Rigvedan kolmannen kirjan hymnissä: laulaja Višvamitra pyytää Vipasia ja Sutudria laskemaan vetensä, jotta bharata-heimo pääsee yli, ja joet vastaavat hänelle."
         },
         {
-          "lainaus": "Vuorten povesta, kiihkeinä kuin kaksi nopeaa tammaa ohjat irrallaan kilpaa juosten, kuin kaksi kirkasta emälehmää vasikkaansa nuollen, Ganga ja Sutudri syöksevät vetensä alas.",
+          "lainaus": "Vuorten povesta, kiihkeinä kuin kaksi nopeaa tammaa ohjat irrallaan kilpaa juosten, kuin kaksi kirkasta emälehmää vasikkaansa nuollen, Vipas ja Sutudri syöksevät vetensä alas.",
           "kuka": "Rigveda 3.33.1",
           "teos": "The Hymns of the Rigveda, engl. Ralph T. H. Griffith",
           "vuosi": 1896,
@@ -510,7 +493,6 @@
         }
       ]
     },
-
     "Marañón": {
       "kappaleet": [
         {
@@ -534,7 +516,6 @@
         }
       ]
     },
-
     "Tapajós": {
       "kappaleet": [
         {
@@ -549,23 +530,22 @@
           "linkki": "https://www.gutenberg.org/ebooks/2440"
         },
         {
+          "teksti": "Tapajósin latvoilla on nykyään soijaa. Santarémiin rakennettiin 2003 vientiterminaali, ja sen jälkeen sadat proomut ovat vieneet vuosittain miljoonia tonneja alavirtaan. Kuljetusreitti kulkee tarkalleen sitä uomaa, jota Bates souteli hyönteisverkkoineen."
+        },
+        {
           "tiedosto": "Santarém May 2015-9a.jpg",
           "selite": "Santarém Tapajósin suulla. Raja näkyy yhä, mutta ei enää samana: Tapajósin vesi on 2000-luvulla samentunut, kun laiton kullankaivuu on nostanut lietettä yläjuoksulta.",
           "lahde": "Wikimedia Commons (CC BY-SA 4.0), Alvesgaspar"
-        },
-        {
-          "teksti": "Tapajósin latvoilla on nykyään soijaa. Santarémiin rakennettiin 2003 vientiterminaali, ja sen jälkeen sadat proomut ovat vieneet vuosittain miljoonia tonneja alavirtaan. Kuljetusreitti kulkee tarkalleen sitä uomaa, jota Bates souteli hyönteisverkkoineen."
         }
       ]
     },
-
     "Dnestr": {
       "kappaleet": [
         {
           "teksti": "Herodotos luetteli 400-luvulla eaa. skyytien joet mereen laskevassa järjestyksessä. Tyras, nykyinen Dnestr, oli niistä toinen, ja sen suulla asui kreikkalainen siirtokunta, jonka väkeä kutsuttiin tyriittalaisiksi. Yhden asian hän kertoo siitä erikseen."
         },
         {
-          "lainaus": "Tässä maassa ei ole mitään ihmeellistä paitsi että sen joet ovat paljon suuremmat ja lukuisammat kuin minkään muun maan. Yksi seikka on kuitenkin mainittava: Tyras-joen rannalla näytetään kalliossa Herakleen jalanjälkeä, kaksi kyynärää pitkää.",
+          "lainaus": "Tässä maassa ei ole mitään ihmeellistä paitsi että sen joet ovat suuremmat ja lukuisammat kuin missään muualla. Yksi asia on kuitenkin mainittava: Tyras-joen rannalla näytetään kalliossa Herakleen jalanjälkeä, joka on kuin ihmisen jalan jälki mutta kaksi kyynärää pitkä.",
           "kuka": "Herodotos",
           "teos": "Historiateos IV.82, engl. G. C. Macaulay",
           "vuosi": "n. 430 eaa.",
@@ -582,17 +562,16 @@
         }
       ]
     },
-
     "Godavari": {
       "kappaleet": [
         {
-          "teksti": "Ramayanan kolmas kirja sijoittaa Raman, Sitan ja Lakšmanan maanpakovuodet Pancavatiin, lehtoon Godavarin rannalla. Siellä Ravana ryöstää Sitan. Ennen kuin vaunu nousee, Sita jättää jäähyväiset paikoille, joissa on asunut, ja pyytää niitä viemään sanan."
+          "teksti": "Ramayanan kolmas kirja sijoittaa Raman, Sitan ja Lakšmanan viimeiset metsävuodet Pancavatiin, lehtoon Godavarin rannalla. Siellä Ravana ryöstää Sitan. Ennen kuin vaunu nousee, Sita jättää jäähyväiset paikoille, joissa on asunut, ja pyytää niitä viemään sanan."
         },
         {
           "lainaus": "Jää hyvästi, pitkät hyvästit sinulle, oi suloinen Godavari, jonka väreileviä aaltoja liikuttavat lakkaamatta iloiset vesilinnut. Kertokaa te kaikki Raman korviin jättiläisen teko ja Sitan kohtalo.",
           "kuka": "Valmiki",
           "teos": "The Rámáyan of Válmíki, engl. Ralph T. H. Griffith",
-          "vuosi": 1874,
+          "vuosi": "1870-1874",
           "suomennos": "oma, Griffithin englanninnoksesta",
           "linkki": "https://www.gutenberg.org/ebooks/24869"
         },
@@ -602,11 +581,10 @@
           "lahde": "Wikimedia Commons (CC BY-SA 4.0), Prashant Kharote"
         },
         {
-          "teksti": "Alajuoksulla joki tekee toista työtä. Arthur Cotton rakensi 1852 suistoon kilometrin mittaisen sulkupadon, joka jakoi veden kanaviin. Nälänhädät alueella loppuivat, ja Godavarin suisto on siitä lähtien ollut Intian tiheimmin viljeltyjä seutuja."
+          "teksti": "Alajuoksulla joki tekee toista työtä. Arthur Cotton rakensi 1852 suistoon sulkupadon, joka jakoi veden kastelukanaviin. Nälänhädät alueella loppuivat, ja Godavarin suisto on siitä lähtien ollut Intian tiheimmin viljeltyjä seutuja."
         }
       ]
     },
-
     "Selenga": {
       "kappaleet": [
         {
@@ -630,7 +608,6 @@
         }
       ]
     },
-
     "Krishna": {
       "kappaleet": [
         {
@@ -650,11 +627,10 @@
           "lahde": "Wikimedia Commons (CC BY-SA 3.0), Bernard Gagnon"
         },
         {
-          "teksti": "Kollurin kaivos Krishnan rannalla tuotti Koh-i-Noorin ja Hopen timantin. Suonet tyhjenivät 1700-luvun kuluessa, ja Brasilian löydöt veivät markkinat. Joen samat kerrostumat ovat nyt sokeriruokopeltoa, ja vesi on jaettu tarkoin kolmen osavaltion kesken."
+          "teksti": "Kollurin kaivosta Krishnan rannalla pidetään Koh-i-Noorin ja Hopen timantin löytöpaikkana. Suonet tyhjenivät 1700-luvun kuluessa, ja Brasilian löydöt veivät markkinat. Joen samat kerrostumat ovat nyt sokeriruokopeltoa, ja vesi on jaettu tarkoin kolmen osavaltion kesken."
         }
       ]
     },
-
     "Narmada": {
       "kappaleet": [
         {

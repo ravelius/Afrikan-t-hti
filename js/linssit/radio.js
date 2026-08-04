@@ -22,6 +22,12 @@
  * VIRITYKSEN_TAPA. Tämä tiedosto ei tiedä kummasta on kyse — se vain
  * käynnistää ja pysäyttää.
  *
+ * VIRITYKSEN AJOITUS ON TÄÄLLÄ, LIIKE ON KUORESSA. Viritys kestää
+ * vähimmäisajan vaikka asema avautuisi heti, ja se kuljetaan kolmena
+ * vaiheena (VIRITYKSEN_VAHIMMAISAIKA_MS). Vaihe kerrotaan soittimelle
+ * yhdellä valinnaisella kutsulla, ks. kerroVaihe — mikä asteikolla
+ * liikkuu ja miten, on radiosoitin.js:n ja css/radio.css:n asia.
+ *
  * RADIO ON POIKKEUS LINSSISOPIMUKSESSA (docs/linssit-suunnitelma.md
  * luku 2, kenttä `kerros: false`). Kaksi sopimuksen sääntöä rikkoutuisi,
  * jos ne otettaisiin kirjaimellisesti:
@@ -155,6 +161,71 @@ const RISTIHAIVYTYS_S = 0.6;
 const HAIVYTYKSEN_ASKEL_MS = 25;
 
 /*
+ * VIRITYKSEN VÄHIMMÄISAIKA JA SEN KOLME VAIHETTA.
+ *
+ * Omistaja 4.8.2026: "kaupunkitekstit liikkuvat liian nopeasti
+ * viritettäessä. Voisi tehdä minimiajan joka kuluu joka tapauksessa
+ * viritykseen vaikka kanava olisi nopeammin valmiina oikeasti."
+ *
+ * Nopea asema avautui kolmessa kymmenyksessä, ja silloin koko viritys
+ * oli yksi nykäys: asteikko hyppäsi uuteen kaupunkiin ja kohina
+ * katkesi ennen kuin sen ehti kuulla. Se ei ole nopeutta vaan
+ * uskottavuuden menetys — mikään oikea vastaanotin ei löydä asemaa
+ * hetkessä, ja juuri hakemisesta koko laite tunnistetaan radioksi.
+ *
+ * KOLME VAIHETTA, JA NIIDEN ERO ON KOKO IDEA:
+ *
+ *   siirtyma  nauha liukuu edelliseltä asemalta uudelle, hidastuen
+ *             loppua kohti. Tämä on se ele, jonka tilalla ennen oli
+ *             hyppy.
+ *   haku      nauha etsii kohtaa hyvin pienellä ja hitaalla
+ *             edestakaisella liikkeellä. Jatkuu niin kauan kuin
+ *             lähetystä odotetaan.
+ *   lukittuu  nauha asettuu paikalleen ja liike loppuu. Samalla
+ *             hetkellä alkaa ristihäivytys kohinasta lähetykseen, eli
+ *             korva ja silmä saavat saman tiedon yhtä aikaa.
+ *
+ * LUVUT ON VALITTU KUUNTELEMALLA, ja ne ovat omistajan ehdottamalla
+ * välillä 2,5–3 s. Kaksi ja puoli sekuntia tuntui yhä kiireiseltä
+ * silloin kun asema avautui heti, ja kolme alkoi tuntua siltä että
+ * peli jumittaa. 2,6 s on niiden väliltä ja jakautuu näin: 1,25 s
+ * liukua, vähintään 1,03 s hakua ja 0,32 s lukittumista.
+ *
+ * HAKU ON MUKANA AINA, EI VAIN HITAALLA YHTEYDELLÄ. Jos vähimmäisaika
+ * kuluisi pelkkään liukuun, nopea asema näyttäisi liu'un ja napsahduksen
+ * eikä hakua näkisi koskaan — ja silloin kolmesta vaiheesta olisi
+ * turha puhua. Yli sekunti hakua on riittävästi, jotta pienen liikkeen
+ * ehtii huomata.
+ *
+ * Vähimmäisaika EI ole aikakatkaisun pari: yläraja on soittimen oma
+ * (radiosoitin.js VIRITYKSEN_AIKAKATKAISU_MS, 12 s), ja tämä on alaraja.
+ */
+const VIRITYKSEN_VAHIMMAISAIKA_MS = 2600;
+const SIIRTYMAN_KESTO_MS = 1250;
+const LUKITTUMISEN_KESTO_MS = 320;
+/*
+ * Aikaisin hetki, jona asema voi lukittua. Lukittuminen on
+ * vähimmäisajan viimeinen pala eikä sen jatke — muuten jokainen viritys
+ * kestäisi vähimmäisajan JA lukittumisen, eli aina liikaa.
+ */
+const LUKITUKSEN_AIKAISINTAAN_MS = VIRITYKSEN_VAHIMMAISAIKA_MS - LUKITTUMISEN_KESTO_MS;
+
+/**
+ * Virityksen vaiheet siinä järjestyksessä, jossa ne kuljetaan.
+ *
+ * Viety, koska tämä on rajapinta eikä toteutuksen yksityiskohta: nimet
+ * ovat sopimus soittimen kuoren kanssa (ks. kerroVaihe).
+ */
+export const VIRITYKSEN_VAIHEET = Object.freeze(['siirtyma', 'haku', 'lukittuu']);
+
+/** Vaiheiden ajoitus millisekunteina — mittausta ja testejä varten. */
+export const VIRITYKSEN_AJAT = Object.freeze({
+  vahimmaisaika: VIRITYKSEN_VAHIMMAISAIKA_MS,
+  siirtyma: SIIRTYMAN_KESTO_MS,
+  lukittuminen: LUKITTUMISEN_KESTO_MS,
+});
+
+/*
  * Kuinka usein tarkistetaan, sammuttiko pelaaja pelin äänet kesken
  * virityksen.
  *
@@ -208,8 +279,8 @@ export function soivaKaupunki() {
 /**
  * Onko kaupungin maalla suora lähetys?
  *
- * ETUKÄTEEN TIEDETTÄVÄ ASIA. Kanava on 87 maalla ja kaupunkeja on 248,
- * joten sammuneita nappeja on enemmän kuin soivia. Jos ne näyttäisivät
+ * ETUKÄTEEN TIEDETTÄVÄ ASIA. Kanava on 87 maalla, ja maailmankartalla
+ * on 110 maata: joka neljäs nappi on sammunut. Jos ne näyttäisivät
  * samalta, pelaaja napauttaisi turhaan eikä tietäisi kummasta on kyse:
  * hitaasta yhteydestä vai siitä ettei asemaa ole. Siksi joukko lasketaan
  * kerran paalle():ssa ja napit piirretään sen mukaan.
@@ -238,6 +309,137 @@ export function kanavakaupungit(map, kaupungit = []) {
     if (radioMaalle(map?.cityCountry?.[id])) loydetyt.add(id);
   }
   return loydetyt;
+}
+
+/*
+ * YKSI KAUPUNKI PER MAA.
+ *
+ * Omistaja 4.8.2026: "voisi piilottaa maan muut kaupungit pois kartasta
+ * ja viritysnauhasta, koska maalla on joka tapauksessa vain yksi
+ * kanava."
+ *
+ * Havainto on tarkka. Kanava on maalla eikä kaupungilla (js/packs/
+ * radiot.js on avaimiltaan ISO-3-maatunnus), joten maailmankartan 248
+ * kaupungista 146 tarjosi 87 eri lähetystä: Venäjän kahdeksan kaupunkia
+ * olivat kahdeksan nappia samaan Вести ФМ:ään, ja asteikolla saattoi
+ * olla yhdeksän nimeä ja kolme kanavaa. Toisto ei ollut runsautta vaan
+ * harhaa — se lupasi valinnan, jota ei ollut.
+ *
+ * SÄÄNTÖ KOSKEE MYÖS KANAVATTOMIA MAITA. Näin pelaajalle jää yksi
+ * sääntö opittavaksi: radiotilassa kartalla on maita, ei kaupunkeja.
+ * Yksi katkoviivarengas kertoo maasta saman kuin kolmetoista — ettei
+ * sieltä kuulu mitään — ja kaikki loput ovat pois soivien nappien
+ * tieltä.
+ *
+ * KUMPI KAUPUNKI, JA MIKSI JUURI SE. Kolme sääntöä järjestyksessä:
+ *
+ *  1. PELAAJAN OMA SIJAINTI, jos se on tämän maan kaupunki. Pelaajan on
+ *     löydettävä itsensä kartalta myös radiotilassa; muuten hän joutuu
+ *     sulkemaan radion selvittääkseen missä on. Sijainti VALITAAN maan
+ *     edustajaksi eikä lisätä muiden rinnalle, jotta sääntö "yksi per
+ *     maa" pysyy poikkeuksettomana — kanava on sama kummasta tahansa
+ *     kaupungista, joten valinnalla ei menetetä mitään.
+ *  2. KAUPUNKI, JONKA NIMI ON ASEMAN NIMESSÄ: "Radio Begum (Kabul)",
+ *     "Al Asemeh FM (Damaskos)", "Radio Funun Tripoli". Tämä on ainoa
+ *     sääntö, joka osuu siihen kaupunkiin, josta lähetys OIKEASTI
+ *     tulee, joten se on ensimmäisenä. Aineisto on maailmalta ja
+ *     kirjoitusasut vaihtelevat ("Muscat" ei ole "Masqat"), joten osumia
+ *     tulee vain neljä maailmankartalla — mutta jokainen niistä on oikea.
+ *  3. LAUDAN OMAT ARVOMERKIT. Kaupungilla voi olla `start` (peli voi
+ *     alkaa siitä) ja `airport` (kansainvälinen lentokenttä). Ne ovat
+ *     laudan oma arvio siitä, mitkä kaupungit ovat maansa tunnetuimpia
+ *     — eikä laudalla ole muuta väkilukua tai pääkaupunkitietoa. Tulos
+ *     on käytännössä pääkaupunkilista: Lontoo, Pariisi, Moskova,
+ *     Helsinki, Peking, Kairo, Rooma, Buenos Aires. Tasapelin ratkaisee
+ *     laudan järjestys, joka on VAKAA: sama maa saa saman kaupungin
+ *     joka kerta eikä kartta muutu kesken pelin.
+ */
+
+/** Poistaa tarkkeet ja kirjainkoon: "Kilimandžaro" ja "kilimandzaro" ovat sama. */
+function riisuNimi(teksti) {
+  return String(teksti ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+}
+
+/**
+ * Esiintyykö kaupungin nimi tekstissä OMANA SANANAAN?
+ *
+ * Sanaraja on tässä välttämätön eikä siisteyttä: ilman sitä "Gao" osuisi
+ * sanaan "Gaoyang" ja "Sana" sanaan "Sanaa". Kolmea merkkiä lyhyempiä
+ * nimiä ei haeta lainkaan — kahden kirjaimen osuma on sattuma useammin
+ * kuin havainto.
+ */
+function nimiEsiintyy(teksti, nimi) {
+  const pitka = riisuNimi(teksti);
+  const lyhyt = riisuNimi(nimi);
+  if (lyhyt.length < 3 || !pitka) return false;
+  const kirjain = /[\p{L}\p{N}]/u;
+  for (let i = pitka.indexOf(lyhyt); i !== -1; i = pitka.indexOf(lyhyt, i + 1)) {
+    const edella = pitka[i - 1] ?? ' ';
+    const jaljessa = pitka[i + lyhyt.length] ?? ' ';
+    if (!kirjain.test(edella) && !kirjain.test(jaljessa)) return true;
+  }
+  return false;
+}
+
+/** Laudan oma arvio kaupungin painoarvosta, ks. sääntö 3 yllä. */
+function laudanArvo(kaupunki) {
+  return (kaupunki?.start ? 2 : 0) + (kaupunki?.airport ? 1 : 0);
+}
+
+/** Yhden maan edustaja kolmen säännön mukaan. Lista on laudan järjestyksessä. */
+function maanKaupunki(iso, lista, sijainti) {
+  if (lista.length === 1) return lista[0].id;
+
+  const oma = sijainti ? lista.find((kaupunki) => kaupunki.id === sijainti) : null;
+  if (oma) return oma.id;
+
+  const asema = radioMaalle(iso)?.asema ?? '';
+  if (asema) {
+    const mainittu = lista.find((kaupunki) => nimiEsiintyy(asema, kaupunki.name));
+    if (mainittu) return mainittu.id;
+  }
+
+  let paras = lista[0];
+  for (const kaupunki of lista) {
+    if (laudanArvo(kaupunki) > laudanArvo(paras)) paras = kaupunki;
+  }
+  return paras.id;
+}
+
+/**
+ * KAUPUNGIT, JOTKA RADIOTILASSA NÄKYVÄT: yksi jokaisesta maasta.
+ *
+ * Puhdas funktio: ei lue eikä kirjoita moduulin tilaa, joten sen voi
+ * laskea ennen radiotilan avaamista ja tarkistaa testissä.
+ *
+ * @param {object} map        pack.map (cityCountry)
+ * @param {Array}  kaupungit  board.cities laudan järjestyksessä
+ * @param {string} [sijainti] pelaajan kaupunki; aina näkyvissä
+ * @returns {Set<string>}
+ */
+export function radionKaupungit(map, kaupungit = [], { sijainti = null } = {}) {
+  const naytettavat = new Set();
+  const maittain = new Map();
+  for (const kaupunki of kaupungit) {
+    if (!kaupunki?.id) continue;
+    const iso = map?.cityCountry?.[kaupunki.id] ?? null;
+    /*
+     * Kaupunki ilman maatunnusta edustaa itseään. Niitä on
+     * maailmankartalla kahdeksan (Jerusalem, Jakutsk, Montevideo...),
+     * eikä niillä ole maata, jonka toinen kaupunki voisi puhua niiden
+     * puolesta — piilotettuna ne katoaisivat kartalta kokonaan.
+     */
+    if (!iso) {
+      naytettavat.add(kaupunki.id);
+      continue;
+    }
+    if (!maittain.has(iso)) maittain.set(iso, []);
+    maittain.get(iso).push(kaupunki);
+  }
+  for (const [iso, lista] of maittain) {
+    naytettavat.add(maanKaupunki(iso, lista, sijainti));
+  }
+  return naytettavat;
 }
 
 /*
@@ -409,6 +611,107 @@ function lopetaViritys(haive = RISTIHAIVYTYS_S) {
   }
 }
 
+/*
+ * Yksi kello koko moduulille. performance.now() ei hyppää, jos
+ * käyttöjärjestelmän kello siirtyy kesken virityksen; Date.now() on
+ * varareitti sitä varten, ettei tämä kaadu ympäristössä, jossa
+ * performancea ei ole.
+ */
+function kello() {
+  return (typeof performance === 'object' && performance) ? performance.now() : Date.now();
+}
+
+/**
+ * Ajastin, joka kuolee virran mukana.
+ *
+ * Virityksen vaiheet ovat ajastettuja, ja jokainen niistä koskee YHTÄ
+ * kanavaa. Kun pelaaja hyppää kaupungista toiseen kesken virityksen,
+ * vanhan kanavan ajastimet kertoisivat uudelle vaiheen, jota se ei ole
+ * vielä kulkenut — sama vanhentuneen vuoron ongelma kuin muualla tässä
+ * tiedostossa. Tunnukset talletetaan siis virran mukaan ja nollataan
+ * lopetaAani():ssa.
+ */
+function ajastaVirralle(virta, ms, tehtava) {
+  const id = setTimeout(() => {
+    virta.ajastimet.delete(id);
+    if (soiva !== virta) return;
+    tehtava();
+  }, ms);
+  virta.ajastimet.add(id);
+  return id;
+}
+
+/** Katkaisee virran kaikki kesken olevat vaiheajastimet. */
+function tyhjennaAjastimet(virta) {
+  for (const id of virta.ajastimet) clearTimeout(id);
+  virta.ajastimet.clear();
+}
+
+/**
+ * KERTOO SOITTIMELLE, MISSÄ VAIHEESSA VIRITYS ON.
+ *
+ * RAJAPINTA: soitin.asetaVirityksenVaihe(vaihe), jossa vaihe on
+ * 'siirtyma', 'haku' tai 'lukittuu' (VIRITYKSEN_VAIHEET). Kutsu tulee
+ * aina soittimen 'virittaa'-tilan sisällä ja aina tässä järjestyksessä;
+ * tilan vaihtuminen 'soi'- tai 'virhe'-tilaan päättää sarjan ilman
+ * eri ilmoitusta.
+ *
+ * JÄRJESTYS ON OSA SOPIMUSTA: naytaKanava() ja asetaTila('virittaa')
+ * tulevat ENNEN ensimmäistä vaihetta. Kun 'siirtyma' saapuu, laite siis
+ * jo tietää uuden kanavan ja on laskenut asteikkonsa uudelle
+ * keskukselle — vaihe kertoo vain, MITEN sinne siirrytään, ei minne.
+ *
+ * KUTSU ON VALINNAINEN, ja se on tarkoituksellista. Soittimen kuori on
+ * toisen työvaiheen hallussa (js/linssit/radiosoitin.js, css/radio.css),
+ * ja vaiheiden liike kuuluu sinne — nauhan liuku, hakuheilunta ja
+ * lukittuminen ovat pikseleitä, joista tämä moduuli ei tiedä mitään.
+ * Optiokutsu tarkoittaa, että ajoitus toimii jo ennen kuin kuori tuntee
+ * vaiheet: viritys kestää vähimmäisajan riippumatta siitä, kuunteleeko
+ * kukaan. Samasta syystä vaihetta EI kerrota asetaTila():n toisena
+ * argumenttina — siinä on jo merkitys (näytön alarivin viesti), ja
+ * olio siinä kohtaa piirtyisi näytölle merkkijonona.
+ */
+function kerroVaihe(virta, vaihe) {
+  if (soiva !== virta || virta.vaihe === vaihe) return;
+  virta.vaihe = vaihe;
+  try {
+    tila?.soitin?.asetaVirityksenVaihe?.(vaihe);
+  } catch (syy) {
+    // Vaihe on ele, ei toiminto: rikkinäinen kuori ei saa katkaista viritystä.
+    console.warn('Virityksen vaiheen välitys epäonnistui.', syy);
+  }
+}
+
+/**
+ * LUKITSEE ASEMAN, kun molemmat ehdot täyttyvät: lähetys kuuluu JA
+ * vähimmäisaika on kulunut.
+ *
+ * Kutsutaan kahdesta suunnasta — lähetyksen alkaessa ja vähimmäisajan
+ * täyttyessä — koska kumpi tahansa voi olla myöhemmin. Ehdot
+ * tarkistetaan tässä eikä kutsupaikoissa, jotta niitä on vain yksi
+ * paikka pitää oikeana.
+ *
+ * Ääni vaihtuu heti lukittumisen alkaessa ja soittimen tila vasta sen
+ * lopussa: ristihäivytys kestää 0,6 s eli pidempään kuin lukittuminen,
+ * joten lähetys on jo nousemassa silloin kun nauha asettuu. Näin
+ * "VIRITTÄÄ..." vaihtuu aseman nimeksi samassa tahdissa kuin kohina
+ * väistyy — ei ennen sitä.
+ */
+function lukitseAsema(virta) {
+  if (soiva !== virta || virta.lukittu || !virta.kuuluu) return;
+  // Vähimmäisaika ei ole vielä täynnä; sen oma ajastin kutsuu uudelleen.
+  if (kello() - virta.alkoi < LUKITUKSEN_AIKAISINTAAN_MS) return;
+
+  virta.lukittu = true;
+  kerroVaihe(virta, 'lukittuu');
+  haivytaLahetysSisaan(virta);
+  lopetaViritys(RISTIHAIVYTYS_S);
+  ajastaVirralle(virta, LUKITTUMISEN_KESTO_MS, () => {
+    tila?.soitin.asetaTila('soi');
+    kerroMuutos();
+  });
+}
+
 /**
  * HÄIVYTTÄÄ SUORAN LÄHETYKSEN SISÄÄN virityksen väistyessä.
  *
@@ -422,8 +725,6 @@ function lopetaViritys(haive = RISTIHAIVYTYS_S) {
  * kanavan päälle.
  */
 function haivytaLahetysSisaan(virta) {
-  const kello = () => (typeof performance === 'object' && performance
-    ? performance.now() : Date.now());
   const alku = kello();
   const askel = () => {
     if (soiva !== virta) {
@@ -469,6 +770,9 @@ function lopetaAani({ viritysJatkuu = false } = {}) {
   const vanha = soiva;
   soiva = null;
   if (!vanha) return;
+  // Vaiheajastimet ensin: keskeytetty viritys ei saa kertoa vaiheitaan
+  // loppuun sen jälkeen, kun sen kanava on jo suljettu.
+  tyhjennaAjastimet(vanha);
   if (vanha.haivytys) {
     clearInterval(vanha.haivytys);
     vanha.haivytys = 0;
@@ -492,9 +796,11 @@ function lopetaAani({ viritysJatkuu = false } = {}) {
  * napsahdusta edelsi hiljaisuus. Nyt sitä edeltää kohina, ja kohinan
  * katkeaminen kesken sanaa ei ole minkään laitteen ääni.
  *
- * Elementti aloittaa VAIMENNETTUNA (volume 0) ja nousee vasta kun
- * lähetys oikeasti kuuluu. Ilman sitä puskurin ensimmäiset kymmenykset
- * pauhaisivat täydellä voimalla kohinan päälle.
+ * Elementti aloittaa VAIMENNETTUNA (volume 0) ja nousee vasta kun asema
+ * lukittuu (lukitseAsema) — ei siis silloin kun lähetys alkaa kuulua,
+ * vaan silloin kun viritys on valmis. Ilman vaimennusta puskurin
+ * ensimmäiset kymmenykset pauhaisivat täydellä voimalla kohinan päälle,
+ * ja vähimmäisajan myötä ne pauhaisivat siellä kaksi sekuntia.
  *
  * Kaikki kuuntelijat tarkistavat ensin, että virta on yhä sama. Ilman
  * sitä hitaasti avautuvan aseman virhe sammuttaisi jo seuraavaksi
@@ -518,14 +824,29 @@ function aloitaVirta(cityId, kanava) {
   audio.volume = 0;
   audio.src = kanava.url;
 
-  const oma = { cityId, kanava, audio, haivytys: 0, alkanut: false };
+  const oma = {
+    cityId,
+    kanava,
+    audio,
+    haivytys: 0,
+    // `kuuluu` on lähetyksen oma tila ja `lukittu` virityksen: nopea
+    // asema kuuluu jo kauan ennen kuin se lukittuu, ks. lukitseAsema.
+    kuuluu: false,
+    lukittu: false,
+    alkoi: kello(),
+    vaihe: null,
+    ajastimet: new Set(),
+  };
   soiva = oma;
 
   const yhaSama = () => soiva === oma;
 
   /*
-   * LÄHETYS ALKOI KUULUA. Tästä alkaa ristihäivytys: viritys laskee ja
-   * lähetys nousee saman 0,6 sekunnin aikana.
+   * LÄHETYS ALKOI KUULUA — mutta se ei vielä kuulu pelaajalle.
+   * Vähimmäisaika on kesken, joten elementti soi vaimennettuna siihen
+   * asti kunnes asema lukittuu (lukitseAsema). Suora lähetys on
+   * jatkuvaa: odotus ei jätä sitä jälkeen, vaan pelaaja tulee mukaan
+   * siihen kohtaan, jossa lähetys sillä hetkellä on.
    *
    * Kaksi tapahtumaa samaan asiaan, koska kumpikin yksinään pettää.
    * `playing` on oikea tapahtuma, mutta osa suoratoistoista ei lähetä
@@ -535,12 +856,9 @@ function aloitaVirta(cityId, kanava) {
    * etenee. Ensimmäinen voittaa, loput ovat maksuttomia.
    */
   const lahetysAlkoi = () => {
-    if (!yhaSama() || oma.alkanut) return;
-    oma.alkanut = true;
-    tila?.soitin.asetaTila('soi');
-    haivytaLahetysSisaan(oma);
-    lopetaViritys(RISTIHAIVYTYS_S);
-    kerroMuutos();
+    if (!yhaSama() || oma.kuuluu) return;
+    oma.kuuluu = true;
+    lukitseAsema(oma);
   };
   audio.addEventListener('playing', lahetysAlkoi);
   audio.addEventListener('timeupdate', lahetysAlkoi);
@@ -565,7 +883,15 @@ function aloitaVirta(cityId, kanava) {
   // asemalle — aikakatkaisu kutsuu onAikakatkaisu → lopetaAani → viritys
   // vaikenee.
   tila.soitin.asetaTila('virittaa');
+  /*
+   * Vaiheet käyntiin heti tilanvaihdoksen perässä. Siirtymä alkaa
+   * samalla hetkellä kuin kohina, koska ne ovat sama ele: nauha lähtee
+   * liikkeelle ja viritysääni alkaa.
+   */
+  kerroVaihe(oma, 'siirtyma');
   aloitaViritys();
+  ajastaVirralle(oma, SIIRTYMAN_KESTO_MS, () => kerroVaihe(oma, 'haku'));
+  ajastaVirralle(oma, LUKITUKSEN_AIKAISINTAAN_MS, () => lukitseAsema(oma));
 
   audio.play().catch((syy) => {
     /*
@@ -645,7 +971,15 @@ export function pysayta() {
  */
 function paivitaAanenvoimakkuus(arvo) {
   aanenvoimakkuus = Math.min(1, Math.max(0, Number(arvo) || 0));
-  if (soiva && !soiva.haivytys) soiva.audio.volume = aanenvoimakkuus;
+  /*
+   * VAIN LUKITTUNEEN ASEMAN VOIMAKKUUTTA SAA KIRJOITTAA SUORAAN.
+   * Virittyvä kanava soi vaimennettuna koko vähimmäisajan, ja ennen
+   * tätä ehtoa nupin vääntäminen kesken virityksen olisi nostanut sen
+   * täyteen voimaan kohinan päälle — eli purkanut juuri sen odotuksen,
+   * jota varten vähimmäisaika on. Häivytyksen aikana arvo menee perille
+   * askeleiden kautta (haivytaLahetysSisaan).
+   */
+  if (soiva?.lukittu && !soiva.haivytys) soiva.audio.volume = aanenvoimakkuus;
   viritin?.asetaVoimakkuus(aanenvoimakkuus);
   return aanenvoimakkuus;
 }
@@ -719,12 +1053,22 @@ export function paalle({
   }
 
   const kanavalliset = kanavakaupungit(map, kaupungit);
+  // Yksi kaupunki per maa, ks. radionKaupungit. Sama joukko ohjaa sekä
+  // kartan nappeja että asteikkoa: kartalla ja nauhalla on oltava samat
+  // kaupungit, tai nauhalta valittua ei löydy kartalta.
+  const naytettavat = radionKaupungit(map, kaupungit, { sijainti });
   /*
-   * Soittimen asteikon aineisto: vain ne kaupungit, joilla on kanava.
-   * Suodatus tehdään täällä eikä laitteessa, koska kanavan olemassaolo
-   * on tämän moduulin tietoa (radioMaalle) — soitin ei tunne maita
-   * eikä lähetysosoitteita, ja juuri se kolmijako pitää laitteen
-   * vaihdettavana (ks. tiedoston alku).
+   * Soittimen asteikon aineisto: vain ne kaupungit, joilla on kanava ja
+   * jotka radiotilassa ylipäänsä näkyvät. Suodatus tehdään täällä eikä
+   * laitteessa, koska kanavan olemassaolo on tämän moduulin tietoa
+   * (radioMaalle) — soitin ei tunne maita eikä lähetysosoitteita, ja
+   * juuri se kolmijako pitää laitteen vaihdettavana (ks. tiedoston alku).
+   *
+   * `kaikkiPaikat` sen sijaan on koko lauta. Se on vain koordinaattilista
+   * sitä varten, että soitin löytää pelaajan sijaintia lähimmän
+   * kanavakaupungin (radiosoitin.js laskeKeskus), eikä siihen tarvita
+   * eikä saa tehdä samaa karsintaa: kadonnut sijainti veisi asteikon
+   * keskuksen laudan painopisteeseen.
    *
    * `laudanLeveys` kerrotaan vain kiertävältä laudalta. Maailmankartalla
    * Tokion naapuri voi olla laudan toisessa laidassa, ja ilman tätä
@@ -735,7 +1079,7 @@ export function paalle({
   for (const kaupunki of kaupungit) {
     if (!kaupunki?.id) continue;
     kaikkiPaikat.push({ id: kaupunki.id, x: kaupunki.x, y: kaupunki.y });
-    if (!kanavalliset.has(kaupunki.id)) continue;
+    if (!kanavalliset.has(kaupunki.id) || !naytettavat.has(kaupunki.id)) continue;
     asteikonKaupungit.push({
       id: kaupunki.id,
       nimi: kaupunki.name ?? kaupunki.id,
@@ -808,6 +1152,7 @@ export function paalle({
     naytto,
     onMuutos,
     kanavalliset,
+    naytettavat,
   };
 
   (juuri ?? document.body)?.appendChild(soitin.juuri);
@@ -902,6 +1247,10 @@ export function pois() {
  *   asema olemassa   ohut rengas, kolmio
  *   ei asemaa        katkoviivarengas, ei kolmiota, himmeä
  *
+ * JOKAISESTA MAASTA PIIRRETÄÄN VAIN YKSI KAUPUNKI (ks. radionKaupungit).
+ * Karsinta on tässä eikä kutsujassa, koska joukko on radiotilan tietoa
+ * ja koska kartan ja asteikon on näytettävä samat kaupungit.
+ *
  * Napit eivät ole näppäimistöfokusoitavia. 248 kaupunkia kiertokopioineen
  * olisi lähes viisisataa sarkainpysähdystä, eikä kartan muillakaan
  * kohteilla ole niitä (js/ui.js drawTargets). Jokaisella napilla on
@@ -920,6 +1269,7 @@ export function piirraKaupunkinapit(ryhma, kaupungit = [], { kiertoKohdat = null
 
   for (const kaupunki of kaupungit) {
     if (!kaupunki?.id) continue;
+    if (!tila.naytettavat.has(kaupunki.id)) continue;
     const onKanava = tila.kanavalliset.has(kaupunki.id);
     const soiTama = soiva?.cityId === kaupunki.id;
 

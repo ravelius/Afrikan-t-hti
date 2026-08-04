@@ -260,7 +260,7 @@ export const AFRICA = {
      * sata vuotta, ja yhdestä linnusta puuttuu yhä alaosa.
      *
      * Jokaisella laudalla on oma pääaarteensa. Afrikka oli ainoa, joka
-     * käytti oletusnimeä — eikä se enää käy: Matkakirja on oma pelinsä,
+     * käytti oletusnimeä — eikä se enää käy: Unohdettu aarre on oma pelinsä,
      * ja pääaarre on nyt oikea esine oikeine tarinoineen.
      */
     types: themedTokenTypes({ star: { name: 'Suuren Zimbabwen kivilintu' } }),

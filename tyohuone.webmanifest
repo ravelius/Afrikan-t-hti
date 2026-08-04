@@ -1,7 +1,7 @@
 {
-  "name": "Matkakirja — työhuone",
+  "name": "Unohdettu aarre — työhuone",
   "short_name": "Työhuone",
-  "description": "Matkakirjan kehitystyöhuone: tilanne, sisältö, kartat ja käsikirja.",
+  "description": "Unohdetun aarteen kehitystyöhuone: tilanne, sisältö, kartat ja käsikirja.",
   "start_url": "./tyohuone.html",
   "scope": "./",
   "display": "standalone",

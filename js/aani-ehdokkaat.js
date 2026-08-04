@@ -309,7 +309,7 @@ export const EHDOKKAAT = {
     ],
   },
   'tehoste:star': {
-    otsikko: 'Tähden paljastus',
+    otsikko: 'Aarteen paljastus',
     oletus: 'assets/audio/efekti-tahti.mp3',
     ehdokkaat: [
       { url: 'assets/audio/efekti-tahti.mp3', nimi: 'Celestan nouseva kimallus — ElevenLabs SFX' },
