@@ -5235,6 +5235,36 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v260 — Osastonotsikon paksu yläviiva takaisin (4.8.2026)
+
+Omistaja: *"Alkuperäinen tuplaviiva hävisi."* Sanomalehden osastoviiva
+on paksu yllä ja ohut alla, ja paksu oli kadonnut kokonaan.
+
+Syy oli v258:n paperikaistale otsikon yllä. `bottom: 100%` asettaa
+absoluuttisen elementin alareunan **pehmustelaatikon** yläreunaan — ja
+reunaviiva on sen yläpuolella, laatikon ja pehmusteen välissä. Kaistale
+maalasi siis paperia tasan sen viivan päälle, jonka oli tarkoitus jäädä
+näkyviin.
+
+Pseudoelementtiä ei voi laittaa viivan alle z-indeksillä: `::before`
+maalataan aina emonsa taustan JA reunan päälle samassa
+pinoamiskontekstissa, myös negatiivisella z-indeksillä. Ainoa keino on
+geometria — kaistaleen alareuna nostetaan viivan verran ylemmäs
+(`bottom: calc(100% + var(--osaston-viiva))`).
+
+Mitattu pikselirivi riviltä otsikon laatikon yläreunasta alkaen. Ennen:
+rivit 0–2 kirkkaus 201/203/206 eli paperia, kun alaviiva luki 119.
+Jälkeen: rivit 0–2 kirkkaus 74/73/73, alaviiva 119. Molemmat sekä
+vieritettynä että vierittämättä.
+
+### Opittua
+
+**Reunaviiva ei ole laatikon sisällä.** `bottom: 100%`,
+`height: 100%` ja muut prosenttimitat lasketaan pehmustelaatikosta,
+eivät reunalaatikosta. Kun elementillä on reuna ja jokin asetetaan sen
+viereen prosenteilla, reunan leveys on aina lisättävä käsin — muuten
+uusi kerros syö juuri sen viivan, jonka piti näkyä.
+
 ## v259 — Vesistölinssi ja tarttuvan otsikon tausta (4.8.2026)
 
 ### Vesistölinssi

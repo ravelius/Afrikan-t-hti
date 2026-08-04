@@ -6150,7 +6150,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   background-color: var(--arkki-paperi, #eedab3);
   background-image: var(--paper-noise);
   background-blend-mode: multiply;
-  border-top: 3px solid rgba(70, 51, 31, 0.85);
+  /* Leveys muuttujaan, koska kaistale otsikon yllä on väistettävä
+   * täsmälleen tämän verran (ks. ::before alempana). */
+  --osaston-viiva: 3px;
+  border-top: var(--osaston-viiva) solid rgba(70, 51, 31, 0.85);
   border-bottom: 1px solid rgba(70, 51, 31, 0.55);
   font-family: var(--font-type);
   font-size: 1.45rem;
@@ -6162,14 +6165,32 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   color: rgba(70, 51, 31, 0.92);
 }
 
-/* Paperikaistale otsikon yllä: täyttää tarttumakohdan yläpuolisen raon,
- * jottei siinä vilkkuisi vierivää tekstiä. */
+/*
+ * Paperikaistale otsikon yllä: täyttää tarttumakohdan yläpuolisen raon,
+ * jottei siinä vilkkuisi vierivää tekstiä.
+ *
+ * ALAREUNA ON OTSIKON LAATIKON YLÄREUNASSA, EI PEHMUSTEEN.
+ *
+ * `bottom: 100%` yksinään asettaa kaistaleen alareunan PEHMUSTELAATIKON
+ * yläreunaan — ja reunaviiva on sen yläpuolella, laatikon ja pehmusteen
+ * välissä. Kaistale peitti siis paksun osastoviivan kokonaan, ja
+ * sanomalehden tuplaviivasta jäi jäljelle vain ohut alaviiva. Omistaja:
+ * "Alkuperäinen tuplaviiva hävisi."
+ *
+ * Pseudoelementtiä ei voi laittaa viivan alle z-indeksillä: ::before
+ * maalataan aina emonsa taustan JA reunan päälle samassa
+ * pinoamiskontekstissa, myös negatiivisella z-indeksillä. Ainoa keino on
+ * geometria — kaistale nostetaan viivan verran ylemmäs.
+ *
+ * Mitattu ennen korjausta: viivan kohdalla kirkkaus 201–206 eli paperia,
+ * kun alaviiva luki 119.
+ */
 .wiki-kategoria .aihe-nimi::before {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 100%;
+  bottom: calc(100% + var(--osaston-viiva, 0px));
   height: calc(var(--arkki-tarttuma, 0px) + 2px);
   background-color: var(--arkki-paperi, #eedab3);
   background-image: var(--paper-noise);
