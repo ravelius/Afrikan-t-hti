@@ -5235,6 +5235,45 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v261 — Radio pysyy yhdellä rivillä (5.8.2026)
+
+Omistaja iPadin kuvakaappauksesta: *"Miksi radio näyttää tuolta?"*
+Kytkimet olivat pudonneet toiselle riville, säleikkö oli venynyt
+vapautuneeseen tilaan ja kotelosta oli tullut puolityhjä ja puolet
+liian korkea.
+
+Syy on v257:n kavennus 880 → 800. Kotelon oma laskelma (samassa
+tiedostossa, `@media max-width: 765px` -lohkon kommentissa) kertoo,
+mitä yksi rivi vaatii: keskiö 440, mittari 112, säleikkö 80, kytkimet
+102 ja kolme väliä 24 — eli 758, ja kotelon täyte päälle 777. Kun
+`max-width` on 800, koko rivissä on **23 pikseliä pelivaraa.**
+
+Ja rivitys päätetään osien TOIVEKOOISTA ennen kutistamista. Mikä
+tahansa muutama pikseli riittää siis työntämään viimeisen osan
+seuraavalle riville — esimerkiksi kytkinkilpien leveys pelin omalla
+kirjasimella, jota kehitysselaimessa ei ole. Se on tämän repon
+vanhin ansa, ja astuin siihen taas: mittasin kavennuksen selaimessa,
+jossa mitta oli väärä.
+
+Korjaus ei ole leveys vaan `flex-wrap: nowrap` yli 765 pikselin
+ruudulla. Kahden rivin asettelu on jo olemassa omana lohkonaan
+(`max-width: 765px`) ja se on tarkoituksellinen; sen yläpuolella
+rivitys voi vain vahingoittaa. Nyt keskiö kutistuu muutaman pikselin —
+sillä on `min-width: 0` — eikä mikään putoa riviltä.
+
+Mitattu: kotelo pysyy 122 pikselin korkuisena 834, 768 ja 1440
+pikselin ruudulla myös silloin, kun kytkinpylväs pakotetaan 145
+pikselin levyiseksi (43 px leveämmäksi kuin täällä). Omistajan
+iPadilla se oli 181.
+
+### Opittua
+
+**Tiukka asettelu ei ole tiivis vaan hauras.** Kun rivissä on 23
+pikseliä pelivaraa, se ei ole "juuri sopiva" vaan rikki jokaisella
+laitteella, jonka kirjasin, kieli tai zoom eroaa siitä yhdestä, jolla
+mittasit. Jos mitta on tiukka tarkoituksella, rivitys on estettävä
+erikseen — muuten pelivara on ainoa, mikä pitää asettelun kasassa.
+
 ## v260 — Osastonotsikon paksu yläviiva takaisin (4.8.2026)
 
 Omistaja: *"Alkuperäinen tuplaviiva hävisi."* Sanomalehden osastoviiva
