@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-05.261';
+const CACHE = 'matkakirja-2026-08-05.262';
 const SHELL = [
   './',
   './index.html',
@@ -109,6 +109,7 @@ const SHELL = [
   './js/ambience-stream.js',
   './js/die.js',
   './assets/icon.svg',
+  './assets/logo.png',
   // Kuvalinssit. Nämä ovat binäärejä eivätkä moduuleja — ilman
   // esilatausta ne puuttuisivat juuri offline-tilassa, jossa linssejä
   // selaillaan eniten.

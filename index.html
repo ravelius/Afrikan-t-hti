@@ -62,7 +62,19 @@
       <!-- Nimilogo (omistajan toive): Matkakirja, pitkä viiva ja sen
            alla alanimi "unohdettu aarre" pienellä. Viiva on alanimen
            yläreuna, jotta se on aina täsmälleen logon levyinen. -->
-      <h1 class="brand" aria-label="Matkakirja – unohdettu aarre">Matkakirja<span class="brand-alanimi" aria-hidden="true"><span>u</span><span>n</span><span>o</span><span>h</span><span>d</span><span>e</span><span>t</span><span>t</span><span>u</span><span class="brand-vali"></span><span>a</span><span>a</span><span>r</span><span>r</span><span>e</span></span></h1>
+      <!--
+        Nimilogo on kuva eikä ladottua tekstiä (omistajan toimittama
+        tiedosto). Aiemmin tässä oli MATKAKIRJA ja sen alla kirjain
+        kerrallaan tasattu UNOHDETTU AARRE, koska rivien piti olla
+        täsmälleen yhtä leveät eikä kirjainmittoihin voinut luottaa —
+        kuvassa se ongelma ei ole olemassa lainkaan.
+
+        width ja height ovat tiedoston omat mitat, jotta selain varaa
+        logolle tilan ennen latausta eikä ylärivi hyppää.
+      -->
+      <h1 class="brand" aria-label="Matkakirja – unohdettu aarre"><img
+        class="brand-kuva" src="assets/logo.png" width="720" height="176"
+        alt="" aria-hidden="true" decoding="async"></h1>
       <!-- Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan
            toive): rahat ja tavarat ovat samassa laukussa, joten pilleriä
            napauttamalla se aukeaa. -->

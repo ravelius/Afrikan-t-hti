@@ -5235,6 +5235,40 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v262 — Nimilogo on kuva (5.8.2026)
+
+Omistaja toimitti logon tiedostona: *"Käytä tätä läpinäkyvää logoa
+pelissä."* Se ei ollut läpinäkyvä — tausta oli kirkkaanvihreä
+(chroma key), ja omistaja huomasi sen itsekin heti perään.
+
+**Vihreän avainnus.** Mitattu tiedostosta: tausta (11, 252, 11),
+kulta (223, 182, 98). Erottelu tehdään suureella *vihreys* =
+G − max(R, B), joka on molemmilla lineaarinen (R > B kummassakin),
+joten sekoitussuhteen saa siitä suoraan: tausta 240, kulta −30, ja
+reunapikselit siltä väliltä. Alfa on tuo suora, ja reunan väri
+puretaan takaisin kaavalla F = (C − (1 − a)·K) / a.
+
+Pelkkä avainnus ei riitä: reunoille jää vihreä hohde. Se poistetaan
+säännöllä, joka pätee kaikelle kullalle — G on aina R:n ja B:n välissä,
+joten `G = min(G, max(R, B))`.
+
+Mitattu lopputuloksesta yläpalkin ruskealla taustalla: suurin vihreys
+**−11**, eli yhtään vihertävää pikseliä ei jäänyt.
+
+**Koko.** 720 × 176, 96 väriä, 28 kt. Väriero täyteen paletiin on
+4,3/255 eli 1,7 % — näkymätön 36 pikselin korkuisessa logossa, ja
+tiedosto kutistui 137 kt:sta.
+
+**Asettelu.** Logon korkeus on sidottu entisen tekstilogon mittoihin,
+jotta ylärivi ei muuta korkeuttaan: mitattu 36 px työpöydällä, 32 px
+tabletilla, 22 px puhelimessa — kaikki täsmälleen samat kuin ennen.
+Leveys seuraa kuvasuhdetta (4,09:1) ja kasvoi puhelimessa 80 → 91 px,
+joka on sama budjetti kuin v237:ssä.
+
+Samalla poistui koodia: kirjain kerrallaan flexillä tasattu alanimi ja
+sen kaksi sääntöä olivat kiertotie sen ympäri, ettei kehitysselaimessa
+ole pelin kirjasimia. Kuvassa mitat ovat kuvassa.
+
 ## v261 — Radio pysyy yhdellä rivillä (5.8.2026)
 
 Omistaja iPadin kuvakaappauksesta: *"Miksi radio näyttää tuolta?"*
