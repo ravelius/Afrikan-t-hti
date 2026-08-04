@@ -126,13 +126,36 @@ button, .brand, .turn-pill, .fact-card h2 {
 
 /* Alanimi pienellä päänimen alla; yläreunan viiva on se "pitkä viiva",
    joka erottaa rivit ja on aina täsmälleen logon levyinen. */
+/*
+ * ALANIMI VENYTETÄÄN TÄSMÄLLEEN PÄÄNIMEN LEVYISEKSI.
+ *
+ * Ennen tässä oli kiinteä `letter-spacing: 0.34em`, ja sen leveys oli
+ * mitä sattui olemaan — kirjainväli ei tiedä, kuinka leveä sanan
+ * MATKAKIRJA on. Rivit jäivät eri mittaisiksi, ja koska niiden välissä
+ * on viiva, ero näkyi heti (omistaja: "korjaa logon kirjainleveys
+ * samaksi yllä ja alla").
+ *
+ * `text-align-last: justify` venyttää AINOAN rivin täyteen leveyteen,
+ * eli täsmälleen päänimen mittaan. Se pitää paikkansa myös silloin, kun
+ * kirjasin on eri: leveys tulee asettelusta eikä kirjainmitoista, ja
+ * juuri se on tässä oikein — tämän ympäristön selaimessa ei ole pelin
+ * kirjasimia, joten kirjainten mittaan ei täällä voi luottaa.
+ *
+ * `white-space: normal` on pakko: päänimeltä peritty `nowrap` estäisi
+ * tasauksen kokonaan. Kirjainväli jää pieneksi pohjaksi, jotta rivi
+ * mahtuu päänimen alle myös kapeimmalla kirjasimella eikä katkea
+ * kahdelle riville.
+ */
 .brand-alanimi {
   display: block;
   margin-top: 0.16em;
   padding-top: 0.14em;
   border-top: 1px solid var(--accent);
   font-size: 0.46em;
-  letter-spacing: 0.34em;
+  letter-spacing: 0.1em;
+  white-space: normal;
+  text-align: justify;
+  text-align-last: justify;
   opacity: 0.85;
 }
 
@@ -3006,7 +3029,7 @@ body.linssi-valokuva .grain { display: none; }
  * Sävy tummennettiin täyteen peittoon; koko nostettiin mapart.js:ssä.
  */
 .maastonimi-joki .maastonimi-teksti,
-.maastonimi-jarvi .maastonimi-teksti { fill: rgba(70, 86, 99, 0.98); }
+.maastonimi-jarvi .maastonimi-teksti { fill: rgba(92, 80, 60, 0.98); }
 
 .maastonimi-i {
   pointer-events: auto;
@@ -3046,6 +3069,15 @@ body.linssi-valokuva .grain { display: none; }
 
 /* Meren pohja: mitä syvempi, sitä tummempi. Sisäkkäiset vyöhykkeet. */
 /*
+ * VESI ON MUSTETTA JA PAPERIA, EI SINISTÄ.
+ *
+ * Omistajan linjaus 4.8.2026: "jätä sininen väri pois kaikista
+ * vesielementeistä". Sävyt ovat nyt samasta sepiaperheestä kuin kartan
+ * muu muste (--sea-ink #6e6350) — vesi erottuu vaaleudella ja
+ * tummuudella, ei värillä. Sama linjaus kuin v222:ssa järvillä ja
+ * joilla; tämä vie sen loppuun myös syvyysvyöhykkeissä, lähivedessä ja
+ * vesistönimissä.
+ *
  * MERISYVYYS ON HILLITTY, KOSKA SE VUOTAA RANNAN YLI.
  *
  * Vyöhykkeet on rajattu piirrettyyn rantaviivaan (js/ui.js
@@ -3068,16 +3100,16 @@ body.linssi-valokuva .grain { display: none; }
  * hieman vahvemmiksi: ne ovat kaukana rannasta.
  */
 .merisyvyys { stroke: none; }
-.merisyvyys-200 { fill: #b9c8ce; opacity: 0.07; }
-.merisyvyys-2000 { fill: #a3b6bf; opacity: 0.08; }
-.merisyvyys-4000 { fill: #8ea6b2; opacity: 0.09; }
-.merisyvyys-6000 { fill: #7b95a3; opacity: 0.11; }
+.merisyvyys-200 { fill: #c3b598; opacity: 0.07; }
+.merisyvyys-2000 { fill: #b0a186; opacity: 0.08; }
+.merisyvyys-4000 { fill: #9c8d74; opacity: 0.09; }
+.merisyvyys-6000 { fill: #877a63; opacity: 0.11; }
 
 /* Järvi: vesi ja matala reunus. */
-.lahivesi-jarvi { fill: #b3c6cd; opacity: 0.38; stroke: none; }
+.lahivesi-jarvi { fill: #c6b795; opacity: 0.38; stroke: none; }
 .lahivesi-jarvi-matala {
   fill: none;
-  stroke: #93a9b3;
+  stroke: #a89a7c;
   stroke-width: 26;
   opacity: 0.30;
 }
@@ -3094,9 +3126,9 @@ body.linssi-valokuva .grain { display: none; }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.lahivesi-ranta { stroke: #75868e; opacity: 0.38; }
-.lahivesi-uoma { stroke: #a6bec7; opacity: 0.62; }
-.lahivesi-valo { stroke: #d8e5e9; opacity: 0.4; }
+.lahivesi-ranta { stroke: #877a61; opacity: 0.38; }
+.lahivesi-uoma { stroke: #b7a888; opacity: 0.62; }
+.lahivesi-valo { stroke: #e7dcc0; opacity: 0.4; }
 
 
 /*
@@ -3183,7 +3215,8 @@ body.radio-tila .board-hint {
 }
 
 .step { fill: #e8d7b0; stroke: #8a7048; stroke-width: 1.2; opacity: 0.7; }
-.step-sea { fill: #dfe9ee; stroke: #6d8c9a; opacity: 0.65; }
+/* Meriaskelmat samaan sepiaan kuin muu vesi: ei sinistä (v252). */
+.step-sea { fill: #eee3c8; stroke: #8a7a5f; opacity: 0.65; }
 
 .fare { fill: var(--sea-ink); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
 
@@ -4626,6 +4659,24 @@ body[data-mode] .fact-card.pieni > #fact-voice {
 /* Kaikki muu kuin rivi itse jää leikkautuvalle toiselle riville. */
 body[data-mode] .fact-card.pieni > *:not(#fact-voice):not(.fact-place) {
   grid-row: 2;
+  /*
+   * PIILOSSA OLEVA TEKSTI EI SAA MÄÄRÄTÄ PALKIN LEVEYTTÄ.
+   *
+   * `width: max-content` ei riittänyt, ja syy oli mitattavissa: leikattu
+   * merkintä on yhä ruudukossa (rivillä 2), ja sen leveys 339 px venytti
+   * ensimmäisen sarakkeen samaan mittaan — palkista tuli koko kaistan
+   * levyinen, vaikka näkyvissä oli kaksi sanaa. Ruudukko mitoittaa
+   * sarakkeen KAIKEN sisältönsä mukaan, myös sen, mikä on häivytetty
+   * näkymättömiin.
+   *
+   * Nollaleveys ja `overflow: hidden` vievät niiden osuuden mitoituksesta
+   * kokonaan (silloin myös `min-width: auto` ratkeaa nollaan). Ne pysyvät
+   * silti asettelussa, joten kutistuminen liukuu yhä.
+   */
+  grid-column: 1 / -1;
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .fact-card.pieni .fact-place {

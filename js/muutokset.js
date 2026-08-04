@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 252, teksti: 'Vesi on nyt mustetta ja paperia, ei sinistä' },
+  { v: 252, teksti: 'Matkakirjan palkki vain sanojensa levyinen' },
+  { v: 252, teksti: 'Logon rivit täsmälleen yhtä leveät' },
   { v: 251, teksti: 'VU-mittari pitää aseman herkkyyden koko ajan' },
   { v: 251, teksti: 'Merisyvyys hillitymmäksi: ei enää vuoda rannan yli' },
   { v: 251, teksti: 'Matkakirjan palkki vain otsikkonsa levyinen' },
