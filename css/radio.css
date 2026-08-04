@@ -436,6 +436,13 @@
 
 .radiosoitin[data-tila="virhe"] .radio-maa { color: var(--danger, #ff9b8a); }
 
+/*
+ * Sammuneessa laitteessa ei lue asemaa. Edellisen kanavan nimi "RADIO
+ * POIS" -näytön vieressä lupaisi ääntä, jota ei tule. Teksti jää DOM:iin,
+ * joten se palaa heti kun laite käynnistyy uudelleen.
+ */
+.radiosoitin[data-tila="sammuksissa"] .radio-asema { display: none; }
+
 /* --- nupit -------------------------------------------------------- */
 
 .radio-nupit {
