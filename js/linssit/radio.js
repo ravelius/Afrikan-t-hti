@@ -1879,6 +1879,54 @@ export function paalle({
    */
   asetaMittarinLahde(pysyvaLukija());
 
+  /*
+   * VU-DIAGNOOSI SORMELLA. Omistajan raportti 5.8.2026: "kaikki asemat
+   * näyttää feikki-VU:ta" iPadilla — eikä iPadia voi tutkia etänä.
+   * Pitkä painallus mittariin näyttää näytöllä neljä sekuntia, MITTAAKO
+   * neula oikeasti vai jäljitteleekö ja miksi, sekä mitatun polun
+   * raakalukeman desibeleinä: asteikkovirhe (lukema elää mutta jää
+   * asteikon alle) erottuu näin hiljaisuudesta (lukemaa ei tule
+   * lainkaan). Tämä on laite pelaajan kädessä, joten diagnoosi puhuu
+   * pistenäytön kieltä eikä konsolin.
+   */
+  const mittariAlue = soitin.juuri.querySelector('.radio-mittari');
+  if (mittariAlue) {
+    let painallus = 0;
+    const naytaDiagnoosi = () => {
+      const virta = soiva;
+      let asema = 'VU: EI VIRTAA';
+      let kaupunki = '';
+      let maa = '';
+      if (virta) {
+        const arvo = virta.mittarinLukija ? virta.mittarinLukija() : null;
+        const db = arvo === null ? null
+          : Math.round(arvo * (LAHETYKSEN_KATTO_DB - LAHETYKSEN_POHJA_DB) + LAHETYKSEN_POHJA_DB);
+        maa = virta.varalla ? 'EI CORSIA' : (virta.mittari ? 'CORS OK' : 'EI KETJUA');
+        if (virta.jaljitelmaan) {
+          asema = 'VU: JALJITELTY';
+          kaupunki = db === null ? 'EI LUKEMAA' : `MITTAUS ${db} DB`;
+        } else if (virta.mittarinLukija) {
+          asema = `VU: MITATTU ${db} DB`;
+          kaupunki = `VOL ${Math.round((Number(virta.audio?.volume) || 0) * 100)}`;
+        } else {
+          asema = 'VU: EI LAHDETTA';
+        }
+      }
+      tila?.soitin.naytaKanava({ asema, kaupunki, maa });
+      const id = setTimeout(() => {
+        if (tila) tila.soitin.naytaKanava(soiva?.kanava ?? null);
+      }, 4000);
+      soiva?.ajastimet?.add(id);
+    };
+    mittariAlue.addEventListener('pointerdown', () => {
+      clearTimeout(painallus);
+      painallus = setTimeout(naytaDiagnoosi, 600);
+    });
+    for (const tapahtuma of ['pointerup', 'pointercancel', 'pointerleave']) {
+      mittariAlue.addEventListener(tapahtuma, () => clearTimeout(painallus));
+    }
+  }
+
   // Kaupungin ääni väistyy kokonaan, ei väisty vaimentamalla: radiotilassa
   // radio on ainoa ääni.
   stopPlaceStream();

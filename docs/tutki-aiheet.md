@@ -1,5 +1,28 @@
 # Tutki-ikkunan aiheet — monistusresepti
 
+## PÄÄTETTY 5.8.2026: maa kantaa aiheet, kaupunki kantaa kannen
+
+Omistajan malli: nostot tehdään ensisijaisesti MAASTA, ja kaupungilla
+on muutaman noston kansisivu itsestään. Pilotti: Venetsia + Italia
+(v265). Näin yksi maapaketti palvelee maan kaikkia kaupunkeja — sama
+matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
+
+- **Maan aiheet:** `js/packs/maa-kategoriat.js`, avain ISO-3-tunnus
+  (sama kuin `map.cityCountry`). Monistusmitta 5–6 aihetta × 4–5
+  nostoa; Lontoo (54 nostoa) on lippulaiva, ei mittatikku.
+- **Kaupungin kansi:** `KULTTUURI_KATEGORIAT[cityId]`, yksi aihe
+  (id `kaupunki`, nimi = kaupungin nimi) ja 3–5 paikallista nostoa:
+  maamerkit, paikallinen elämä, visan aihe.
+- **Yhdistäminen** (js/ui.js rakennaSivut): kaupungin aiheet ensin,
+  sitten litteä "Elämää" jos omia ei ole, sitten maan aiheet. Sama
+  aihe-id kaupungilla voittaa maan version.
+- **Järjestys monistukseen:** maat sen mukaan, montako kaupunkia ne
+  kattavat ja mihin lennetään ensin — Italia ✅, sitten Ranska, USA,
+  Japani, Egypti, Brasilia, Australia.
+
+Loput tämän tiedoston säännöt (kuvat, lisenssit, mitat, työkalu,
+tarkistuslista) pätevät sellaisinaan molempiin tasoihin.
+
 *Kirjattu v220:ssä, kun Lontoon pilotti (9 aihetta, 54 nostoa) hiottiin
 monistettavaksi. Tämä on resepti seuraaville kaupungeille — Lontoo on
 mallikappale, jota vasten uutta kaupunkia verrataan.*

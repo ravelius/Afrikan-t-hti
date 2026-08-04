@@ -217,6 +217,16 @@ Kamera on näistä **kauimpana Afrikan tähdestä**: se ei liity voittamiseen
 lainkaan. Silmälasit ja suosituskirje ovat **halvimmat toteuttaa**, koska
 mekaniikka on jo olemassa ja varuste vain tekee siitä ilmaisen.
 
+### PÄÄTETTY 5.8.2026: Tutki-aiheet maittain, kaupungille kansisivu
+
+Omistajan malli: Tutki-nostot tehdään ensisijaisesti MAASTA
+(js/packs/maa-kategoriat.js, ISO-3-avain) ja kaupungilla on muutaman
+noston kansisivu (KULTTUURI_KATEGORIAT[cityId], aihe id 'kaupunki').
+Pilotti Venetsia + Italia on mainissa (v265). Resepti ja
+monistusjärjestys: docs/tutki-aiheet.md. Seuraavat maapaketit tehdään
+tässä järjestyksessä: Ranska, USA, Japani, Egypti, Brasilia, Australia
+— yksi maa per PR, kaupunkikannet samassa erässä kevyinä.
+
 ### PÄÄTETTY 4.8.2026: aarteiden nimistö (sitova kaikessa sisällössä)
 
 Peli irrotetaan Afrikan tähdestä kokonaan — aarre ei ole tähti missään

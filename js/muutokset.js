@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 265, teksti: 'Tutki: Italian aiheet kaikkiin maan kaupunkeihin' },
+  { v: 265, teksti: 'Venetsia sai kansisivun, maa sisäsivut' },
+  { v: 265, teksti: 'VU-mittarin pitkä painallus näyttää diagnoosin' },
   { v: 264, teksti: 'Radion näyttö hehkuu meripihkaa, ei laskinvihreää' },
   { v: 264, teksti: 'VU palaa jäljitelmästä aitoon mittaukseen' },
   { v: 264, teksti: 'Neljä asemaa vaihdettu: mittari näkee lähetyksen' },
