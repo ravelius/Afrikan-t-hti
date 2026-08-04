@@ -28,8 +28,12 @@
   <!-- Versionumero näkyy aina pienenä alakulmassa. Napautus avaa
        päivityslokin (omistajan toive) — siksi tämä on nappi eikä
        koristediv, ja siksi aria-hidden on poissa. -->
+  <!-- Saavutettava nimi on kirjoitettava tähän: napin oma teksti on
+       pelkkä versionumero ("v238"), eikä siitä kuule mitä nappi tekee.
+       Se on nyt myös ainoa reitti päivitykseen ja kehittäjätilaan. -->
   <button id="versio-kulma" class="versio-kulma" type="button"
-          aria-haspopup="dialog" title="Mitä uutta?"></button>
+          aria-haspopup="dialog" title="Mitä uutta?"
+          aria-label="Mitä uutta, päivitys ja kehittäjätila"></button>
   <dialog id="muutokset-dialog" class="muutokset-dialog">
     <h2 class="muutokset-otsikko">Mitä uutta</h2>
     <ol id="muutokset-lista" class="muutokset-lista"></ol>
@@ -55,8 +59,9 @@
           title="Lähetä palautetta tästä kohdasta">!</button>
   <div class="app">
     <header class="topbar">
-      <!-- Koko nimi näkyy myös puhelimella (omistajan toive): tilaa
-           vapautui, kun ylävalikon napit siirtyivät hampurilaisen alle. -->
+      <!-- Koko nimi näkyy myös puhelimella (omistajan toive). Puhelimessa
+           se rivittyy kahdelle riville pienemmällä: yhdellä rivillä se vei
+           kukkaropilleriltä tilan ja katkesi kolmeen pisteeseen. -->
       <h1 class="brand">Unohdettu aarre</h1>
       <!-- Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan
            toive): rahat ja tavarat ovat samassa laukussa, joten pilleriä

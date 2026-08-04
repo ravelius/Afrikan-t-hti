@@ -516,7 +516,7 @@ if (katseluPack) {
 }
 
 /*
- * Kehittäjätila (omistajan toive). Valikosta aukeaa salasanaikkuna, ja
+ * Kehittäjätila (omistajan toive). Muutoslokista aukeaa salasanaikkuna, ja
  * kytkennän jälkeen minkä tahansa kaupungin laatan napautus vie sinne
  * suoraan — sisällön tarkasteluun ei tarvitse pelata.
  *

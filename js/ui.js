@@ -876,6 +876,12 @@ const ALOITUS_ZOOM_MS = 3600;
 const ZOOM_PEHMENNYS = 'cubic-bezier(0.68, 0, 0.3, 1)';
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
 const ZOOM_TAUKO_MS = 260;
+/*
+ * Hiiren rullan vähimmäisväli. Tarkka rulla ja trackpad lähettävät
+ * kymmeniä tapahtumia yhdestä eleestä, ja ilman väliä kartta hyppäisi
+ * portaikon läpi yhdellä nykäisyllä.
+ */
+const RULLAN_VALI_MS = 220;
 // Aloituskartan lähikuvan suurennos yleiskuvaan nähden.
 const ALOITUS_ZOOM = 3.1;
 /*
@@ -1549,7 +1555,7 @@ export class UI {
         this.linssiKuuntelijat.push([kohde, nimi, kasittele]);
       };
       kytke(this.linssiNappi, 'click', () => this.avaaLinssivalikko(this.linssiValikko.hidden));
-      // Sulkeutuminen samoin kuin kertoja- ja päävalikossa (js/main.js):
+      // Sulkeutuminen samoin kuin kertojavalikossa (js/main.js):
       // napautus muualle ja Esc. Kuuntelijat ovat documentissa, joten ne
       // on poistettava destroyssa — muuten kuollut peli sulkisi uuden
       // pelin valikkoa.
@@ -2165,8 +2171,12 @@ export class UI {
     this.zoomiVapaa = 0;
     if (!vapaa && uusi === nykyinen) return false;
 
-    // Keskipiste luetaan ENNEN tason vaihtoa, vanhalla mittakaavalla.
-    const keskipiste = this.nykyinenKeskipiste();
+    /*
+     * Keskipiste luetaan ENNEN tason vaihtoa, vanhalla mittakaavalla.
+     * Rullalla se on osoittimen alla oleva kartan piste, painikkeilla
+     * ruudun keskipiste — painikkeella ei ole osoitinta.
+     */
+    const keskipiste = this.rullanKohta ?? this.nykyinenKeskipiste();
 
     if (uusi === 0) {
       // Takaisin kokonäkymään: lähikuvan mitat ja siirto pois.
@@ -3223,6 +3233,39 @@ export class UI {
       // Safarin oma ele: estetään, ettei sivu zoomaa kartan alta.
       ['gesturestart', (e) => e.preventDefault()],
       ['gesturechange', (e) => e.preventDefault()],
+      /*
+       * HIIREN RULLA ZOOMAA (omistajan toive).
+       *
+       * Työpöydällä kartalla oli vain +/- -painikkeet, ja rulla vieritti
+       * sivua kartan alta. Rulla on se, mihin käsi tarttuu kartalla
+       * ensimmäisenä.
+       *
+       * Rulla kulkee samat portaat kuin painikkeet — ei vapaata
+       * mittakaavaa. Portaat on valittu niin, ettei mikään paikka näy
+       * kahdesti (rajaaSkaala), ja vapaa rulla ohittaisi sen rajan.
+       *
+       * Kohdistus kursoriin: zoomKohde asetetaan siihen kartan pisteeseen,
+       * joka on osoittimen alla, jolloin kuva laajenee siitä eikä ruudun
+       * keskeltä. Painikkeet pitävät keskipisteen, koska niillä ei ole
+       * osoitinta.
+       *
+       * Nykäisyjä hillitään: tarkka rulla (trackpad) lähettää kymmeniä
+       * tapahtumia yhdestä eleestä, ja jokainen niistä olisi kokonainen
+       * porras.
+       */
+      ['wheel', (e) => {
+        if (nipistys) return;
+        if (this.avausNakymassa() || this.radioPaalla()) return;
+        e.preventDefault();
+        const nyt = performance.now();
+        if (nyt - (this.rullanHetki ?? 0) < RULLAN_VALI_MS) return;
+        const suunta = e.deltaY < 0 ? 1 : -1;
+        const kohta = this.kartanKohta(e.clientX, e.clientY);
+        this.rullanHetki = nyt;
+        this.rullanKohta = kohta;
+        this.zoomaaPainikkeella(suunta);
+        this.rullanKohta = null;
+      }],
     ];
     for (const [nimi, kasittele] of this.nipistysKuuntelijat) {
       pane.addEventListener(nimi, kasittele, { passive: false });
@@ -7491,7 +7534,7 @@ export class UI {
     this.linssiNappi.setAttribute('aria-expanded', String(auki));
   }
 
-  /** Päävalikon avaus sulkee tämän: kaksi valikkoa ei ole auki yhtä aikaa. */
+  /** Kertojavalikon avaus sulkee tämän: kaksi valikkoa ei ole auki yhtä aikaa. */
   suljeLinssivalikko() {
     this.avaaLinssivalikko(false);
   }
