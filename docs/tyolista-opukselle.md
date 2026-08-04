@@ -208,6 +208,23 @@ Kamera on näistä **kauimpana Afrikan tähdestä**: se ei liity voittamiseen
 lainkaan. Silmälasit ja suosituskirje ovat **halvimmat toteuttaa**, koska
 mekaniikka on jo olemassa ja varuste vain tekee siitä ilmaisen.
 
+### PÄÄTETTY 4.8.2026: aarteiden nimistö (sitova kaikessa sisällössä)
+
+Peli irrotetaan Afrikan tähdestä kokonaan — aarre ei ole tähti missään
+pelaajalle näkyvässä tekstissä, nimessä eikä symbolissa (laatan ja
+nappulan merkki on nyt ◈). Nimistö, joka on käytössä v229:stä alkaen:
+
+- **unohdettu aarre** (engl. *forgotten treasure*) — arkitermi säännöissä,
+  ilmoituksissa ja laattatyypin nimenä. Ei "pääaarre" eikä "tähti"
+  pelaajateksteissä; koodikommenteissa pääaarre saa elää.
+- **Aarnin luettelo** (engl. *Aarni's Catalogue*) — tarinan erisnimi:
+  tutkimusmatkailija Aarni luetteloi 1800-luvun alussa maailman unohdetut
+  aarteet, kukaan ei uskonut, isoisä uskoi ja hänen matkansa jäi kesken.
+  Tämä on pelin keskeinen ajojahti. Koko tarina: docs/tarina.md
+  ("Aarni ja unohdetut aarteet") — lue se ennen aarteisiin liittyvää
+  sisältöä. Laudan omat aarrenimet (kivilintu, jadesinetti…) säilyvät
+  luettelon riveinä; maailmankartan aarretta ei nimetä (revitty sivu).
+
 ### Aarrevaihtoehdot
 
 1. **Yksi per maanosa** *(oma suositukseni)*. Eurooppa, Afrikka, Lähi-itä

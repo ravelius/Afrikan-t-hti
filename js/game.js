@@ -1816,7 +1816,7 @@ export class Game {
           this.say(null, this.pack.texts.starChase);
           this.emit('treasure', this.pack.texts.starToast, {
             token: type,
-            sub: `${p.name} löysi pääaarteen — nyt kiire kotiin!`,
+            sub: `${p.name} löysi unohdetun aarteen — nyt kiire kotiin!`,
           });
         }
         break;
@@ -1825,7 +1825,7 @@ export class Game {
         this.say(p.id, `Ω ${p.name} löysi hevosenkengän kaupungista ${city.name}.`);
         this.emit('treasure', 'Hevosenkenkä', {
           token: type,
-          sub: 'Voi voittaa pelin, jos pääaarre löytyy',
+          sub: 'Voi voittaa pelin, jos unohdettu aarre löytyy',
         });
         break;
       case 'robber':

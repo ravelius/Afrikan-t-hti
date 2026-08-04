@@ -483,14 +483,15 @@ export const MAAILMA = {
       'Kuun vaiheita on piirretty riviin ja yksi niistä ympyröity, ilman sanaakaan selitystä. Toivon, ettei selitystä tulekaan ennen kuin arvaan sen itse.',
       'Muste on tällä aukeamalla vaaleampaa, kuin kirjoitettuna kiireessä. Sytytin lukuvalon vaikka ulkona paistaa: kiireessä kirjoitettu sivu on aina se kiinnostavin.',
     ],
-    // Pääaarre löytämättä: osa lennoista muistuttaa, että jonnekin
+    // Unohdettu aarre löytämättä: osa lennoista muistuttaa, että jonnekin
     // kannattaa vielä palata. Ei koskaan kerro minne — se on etsintää.
+    // Erisnimi "Aarnin luettelo" on tarinan aarrekokoelma (docs/tarina.md).
     flightRegret: [
-      'Pääaarre jäi vielä löytymättä. Kirjoitan sivun kulmaan: palattava vielä — aarre ei etsi itse itseään.',
-      'Selaan merkintöjä ja harmittelen: pääaarre on yhä jossain takanapäin. Ei se katoa minnekään — mutta ei se löydykään ilman minua.',
-      'Isoisä olisi jo löytänyt pääaarteen, väittäisin. Minä säästän sen löytämisen ilon vielä hetkeksi.',
-      'Piirrän karttaan pienen rastin muistutukseksi: pääaarre odottaa yhä. Tämä lento ei ole luovutus vaan kierros.',
-      'Pääaarre välttelee minua toistaiseksi. Hyvä niin — parhaat löydöt vaativat pari yritystä.',
+      'Unohdettu aarre jäi vielä löytymättä. Kirjoitan sivun kulmaan: palattava vielä — aarre ei etsi itse itseään.',
+      'Selaan merkintöjä ja harmittelen: unohdettu aarre on yhä jossain takanapäin. Ei se katoa minnekään — mutta ei se löydykään ilman minua.',
+      'Isoisä olisi jo löytänyt unohdetun aarteen, väittäisin. Minä säästän sen löytämisen ilon vielä hetkeksi.',
+      'Piirrän karttaan pienen rastin muistutukseksi: Aarnin luettelossa on yhä rivi vailla rastia. Tämä lento ei ole luovutus vaan kierros.',
+      'Aarnin luettelo lupaa jokaiselle maanosalle aarteensa. Yksi odottaa vielä minua — eikä unohdettu aarre löydy kuin palaamalla.',
     ],
     // Ensimmäinen lento: matka alkaa, ja repliikki hehkuttaa aina
     // matkakirjaa — se on koko pelin lähtölaukaus.

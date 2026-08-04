@@ -864,7 +864,7 @@ const EVENT_SOUND = { fare: 'ferry', flight: 'flight', aid: 'coin', stuck: 'stuc
 const TRAVEL_LABEL = { land: 'Maitse', sea: 'Laivalla', fly: 'Lentäen', stay: 'Paikallaan' };
 
 const REVEAL_SUB = {
-  star: 'Vie pääaarre kotiin ja voitat pelin!',
+  star: 'Vie unohdettu aarre kotiin ja voitat pelin!',
   horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
   robber: 'Rosvo haastaa kaksintaisteluun!',
   empty: 'Isoisän merkintä oli vanhentunut — täältä ei löytynyt mitään',
@@ -7529,7 +7529,7 @@ export class UI {
     document.getElementById('winner-title').textContent = `${w.name} voitti!`;
     this.typeText(document.getElementById('winner-text'), w.hasStar
       ? this.game.pack.texts.winnerStar(w.name, w.money)
-      : `${w.name} ehti hevosenkengän kanssa kotiin ennen pääaarteen löytäjää.`, 'winner');
+      : `${w.name} ehti hevosenkengän kanssa kotiin ennen unohdetun aarteen löytäjää.`, 'winner');
     const roamBtn = document.getElementById('winner-roam');
     roamBtn.onclick = () => {
       this.winnerDialog.close();

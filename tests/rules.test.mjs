@@ -2878,14 +2878,16 @@ test('tuntematon kohde saa yleisrivin', () => {
   assert.ok(packById('maailma').texts.flightDefault.includes(rivi));
 });
 
-test('lento muistuttaa pääaarteesta vain kun se on löytämättä', () => {
+test('lento muistuttaa unohdetusta aarteesta vain kun se on löytämättä', () => {
   const kaipuu = packById('maailma').texts.flightRegret;
   assert.ok(Array.isArray(kaipuu) && kaipuu.length >= 3, 'kaipuurivejä pitää olla useita');
   for (const rivi of kaipuu) {
-    assert.ok(/pääaar/i.test(rivi), `rivi ei puhu pääaarteesta: "${rivi}"`);
+    assert.ok(/aarre|aarte|aarni/i.test(rivi), `rivi ei puhu aarteesta: "${rivi}"`);
     // Peli irrotetaan Afrikan tähdestä: aarre ei ole tähti missään rivissä.
     assert.ok(!/tähti|tähde/i.test(rivi), `rivi puhuu tähdestä: "${rivi}"`);
   }
+  // Tarinakerros: Aarnin luettelo (docs/tarina.md) elää kaipuuriveissä.
+  assert.ok(kaipuu.some((r) => /Aarnin luettelo/.test(r)), 'Aarnin luettelo puuttuu kaipuuriveistä');
   const uusi = (seed) => new Game({
     players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed,
   });
