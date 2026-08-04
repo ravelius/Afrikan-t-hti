@@ -4358,3 +4358,46 @@ se vain tummuu.
 oikea valinta idässä–lännessä kulkevalle joelle ja väärä pohjoisesta etelään
 kulkevalle vuorijonolle. Kommentti perusteli säännön hyvin mutta ei kertonut,
 missä se lakkaa pätemästä — ja juuri siellä se rikkoutui.
+
+## v237 — hampurilainen pois, radiotila puhtaaksi (4.8.2026)
+
+**Hampurilainen poistettiin.** Omistaja: *"Hampurilaisen voisi poistaa ja jättää
+tilalle pelkän sääntöikonin ja uuden pelin ikonin. Päivitys ja kehittäjätila
+löytyisivät kaikki napsauttamalla versionumeroa oikeassa alareunassa."*
+
+Ylärivillä ovat nyt säännöt ja uusi peli suorina ikoneina. Päivitys ja
+kehittäjätila siirtyivät muutosloki-ikkunaan, joka aukeaa versionumerosta —
+versionumeron takaa etsitään juuri sitä, mikä versioon liittyy. Lokin oma
+toimintopainike sulkee lokin ensin, koska kehittäjätila avaa oman modaalinsa
+eikä kahta päällekkäistä `<dialog>`-modaalia saa olla auki.
+
+**Radiotila puhdistettiin.** Omistaja: *"Piilota Matkakirja ja alanapit radion
+ollessa käytössä. Poista myös yläreunan x. Riittää kun radiosta saa
+suljettua."* Bodyn `radio-tila`-luokka piilottaa matkakirjan kortin,
+toimintonapit ja karttavihjeen `visibility`illä — ei `display`illä, jotta
+kartan asettelu ei hyppää radion syttyessä. Erillinen X-nappi poistettiin:
+soittimessa on jo virtakytkin, joka sammuttaa koko tilan, ja kaksi sulkutapaa
+samalle tilalle on yksi liikaa.
+
+**Pelin nimi kahdelle riville puhelimessa.** "Unohdettu aarre" katkesi kolmeen
+pisteeseen 390 pikselin ruudulla. Kahdella rivillä nimi mahtuu kokonaan ja
+vie 121 px entisen ~155 px sijaan, joten kukkaropilleri sai lisää tilaa.
+
+**Radio (rinnakkainen työ, neljä kohtaa).** Virityssuhinan ristifeidaus nyt
+molemmissa päissä tasatehoisena 0,6 s vaihtona; viritysnauha etenee 4–6
+nykäisynä pienellä ylityksellä lukittuessaan; kanavalistan takana neljä
+epäsymmetristä lämmintä lamppua ja lasilla oma heijastuskaari; VU-mittari
+seuraa lähetystä `crossOrigin`-reitityksellä, varareittinä sama osoite ilman
+sitä (asema soi, vain lukema jää saamatta).
+
+### Opittua
+
+**Kaksi tapaa tehdä sama asia on yksi liikaa.** Radiotilan sulkuun oli sekä
+X-nappi että soittimen virtakytkin. Molemmat toimivat, mutta kytkin on se,
+joka kuuluu laitteeseen — ja X ruudun kulmassa kilpaili sen kanssa
+kertomatta kumpi on oikea.
+
+**Piilota mitalla, älä poistamalla.** `display: none` olisi romahduttanut
+kartan asettelun radion syttyessä ja palauttanut sen sammuessa. `visibility`
+säilyttää mitat, joten kartta pysyy paikallaan — käyttäjälle radio vain
+himmentää muun pois.

@@ -13,6 +13,14 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 237, teksti: 'Hampurilainen pois: säännöt ja uusi peli riville' },
+  { v: 237, teksti: 'Päivitys ja kehittäjätila versionumeron takaa' },
+  { v: 237, teksti: 'Radiotilassa vain kartta ja soitin' },
+  { v: 237, teksti: 'Kanavalista hehkuu epätasaisesti, lasi syvenee' },
+  { v: 237, teksti: 'Viritys häipyy sisään ja ulos ristikkäin' },
+  { v: 237, teksti: 'Viritysnauha nykii kuin oikea rulla' },
+  { v: 237, teksti: 'VU-mittari seuraa myös lähetystä' },
+  { v: 237, teksti: 'Pelin nimi kahdelle riville puhelimessa' },
   { v: 236, teksti: 'Radion kytkimet kuluneiksi, valoläiskät pois' },
   { v: 235, teksti: 'Maastonimet vaakaan ja isommalla' },
   { v: 235, teksti: 'Versionumero ei enää tummu laatikoksi' },
