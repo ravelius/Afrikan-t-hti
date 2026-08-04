@@ -829,7 +829,7 @@ function lukitseAsema(virta) {
    * ei antanut reititystä (CORS), lähde palautuu oletukseen eikä neula
    * väitä lukevansa lähetystä.
    */
-  asetaMittarinLahde(virta.mittari?.vahvistin ?? jaljiteltyLukija(virta));
+  asetaMittarinLahde(virta.mittari?.lukija ?? jaljiteltyLukija(virta));
   ajastaVirralle(virta, LUKITTUMISEN_KESTO_MS, () => {
     tila?.soitin.asetaTila('soi');
     kerroMuutos();
@@ -943,6 +943,67 @@ function merkitseKorsiton(url) {
   if (koti) KORSITTOMAT.add(koti);
 }
 
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ * LÄHETYKSEN OMA ASTEIKKO
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Tässä oli VU-mittarin toinen vika, ja se oli mittayksikkövirhe siinä
+ * missä kartan rakeisuuskin: reititys toimi, mutta LUKEMA MENI ASTEIKON
+ * YLÄPÄÄSTÄ ULOS.
+ *
+ * Laitteen oma asteikko (radiosoitin.js: −48 dB … −20 dB) on mitoitettu
+ * VIRITYSÄÄNELLE, joka kulkee pelin äänisumman kautta vaimennettuna.
+ * Lähetys ei kulje siellä vaan menee suoraan kontekstin ulostuloon
+ * täydellä tasollaan. Mitattu 4.8.2026 samalla ketjulla kuin pelissä:
+ *
+ *   äänenvoimakkuus 1,0   →  −13,0 dB  →  asteikolla 1,25
+ *   äänenvoimakkuus 0,5   →  −15,8 dB  →  asteikolla 1,15
+ *   äänenvoimakkuus 0     →  −120 dB   →  asteikolla 0
+ *
+ * Yli yhden menevä lukema rajautuu ykköseen. Neula siis LÖI ÄÄRIASENTOON
+ * JA JÄI SINNE — ei se maannut nollassa vaan seisoi vasteessa, mikä
+ * näyttää yhtä rikkinäiseltä. Vasta äänenvoimakkuuden nollaus vei sen
+ * alas, ja juuri niin peli tekee koko virityksen ajan (audio.volume = 0).
+ *
+ * Uusi asteikko on mitattu lähetykselle: −40 dB … −6 dB. Sillä sama
+ * −13 dB antaa 0,79 ja hiljainen puhekohta noin −28 dB antaa 0,35 —
+ * neula elää siinä mitassa, jota varten se on.
+ *
+ * VOIMAKKUUS JAETAAN POIS. Elementin `volume` kulkee mittauspisteeseen
+ * asti (mitattu yllä), joten ilman jakoa neula näyttäisi nupin asentoa
+ * eikä lähetyksen tasoa. Oikea VU-mittari näyttää ohjelman tason.
+ * Jakaja on pohjattu, ettei häivytyksen alku (volume lähellä nollaa)
+ * räjäytä lukemaa.
+ */
+const LAHETYKSEN_POHJA_DB = -40;
+const LAHETYKSEN_KATTO_DB = -6;
+const JAKAJAN_POHJA = 0.15;
+
+function lahetyksenLukija(analysoija, audio) {
+  const puskuri = typeof analysoija.getFloatTimeDomainData === 'function'
+    ? new Float32Array(analysoija.fftSize)
+    : new Uint8Array(analysoija.fftSize);
+  return () => {
+    let summa = 0;
+    if (puskuri instanceof Float32Array) {
+      analysoija.getFloatTimeDomainData(puskuri);
+      for (let i = 0; i < puskuri.length; i += 1) summa += puskuri[i] * puskuri[i];
+    } else {
+      analysoija.getByteTimeDomainData(puskuri);
+      for (let i = 0; i < puskuri.length; i += 1) {
+        const nayte = (puskuri[i] - 128) / 128;
+        summa += nayte * nayte;
+      }
+    }
+    const rms = Math.sqrt(summa / puskuri.length);
+    if (!(rms > 0)) return 0;
+    const voimakkuus = Math.max(JAKAJAN_POHJA, Number(audio?.volume) || 0);
+    const db = 20 * Math.log10(rms / voimakkuus);
+    return (db - LAHETYKSEN_POHJA_DB) / (LAHETYKSEN_KATTO_DB - LAHETYKSEN_POHJA_DB);
+  };
+}
+
 /**
  * Reitittää lähetyksen Web Audion läpi VU-mittaria varten.
  *
@@ -990,7 +1051,28 @@ function liitaMittariin(audio) {
     const vahvistin = ctx.createGain();
     vahvistin.gain.value = 1;
     lahde.connect(vahvistin).connect(ctx.destination);
-    return { vahvistin, solmut: [lahde, vahvistin] };
+    /*
+     * ANALYSAATTORI TEHDÄÄN TÄSSÄ EIKÄ SOITTIMESSA, koska lähetys
+     * tarvitsee OMAN ASTEIKKONSA — ks. LAHETYKSEN_POHJA_DB.
+     *
+     * Soitin osaa liittää analysaattorin itsekin, mutta se käyttää
+     * silloin laitteen omaa asteikkoa, joka on mitoitettu
+     * viritysäänelle. Lähetys on siihen nähden parikymmentä desibeliä
+     * kovempi, ja neula jää vasteeseen kiinni.
+     */
+    const analysoija = ctx.createAnalyser();
+    analysoija.fftSize = 1024;
+    vahvistin.connect(analysoija);
+    // Vaimennettu pääte, ettei haara jää umpikujaan: sama syy kuin
+    // soittimessa (radiosoitin.js varmistaAnalysoija).
+    const paate = ctx.createGain();
+    paate.gain.value = 0;
+    analysoija.connect(paate).connect(ctx.destination);
+    return {
+      vahvistin,
+      lukija: lahetyksenLukija(analysoija, audio),
+      solmut: [lahde, vahvistin, analysoija, paate],
+    };
   } catch (syy) {
     // createMediaElementSource heittää, jos elementti on jo reititetty.
     console.warn('Lähetyksen reititys mittariin epäonnistui.', syy);

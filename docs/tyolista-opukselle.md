@@ -4697,3 +4697,70 @@ samaa alkuperää. Oletus, jota ei koskaan tarkistettu, oli että oikeat
 asemat käyttäytyvät kuin testivirta. Ne eivät käyttäydy, eikä sitä olisi
 voinut mitata tästä ympäristöstä lainkaan. Silloin on parempi lukea
 selaimen sääntö kuin mitata uudelleen.
+
+## v247 — VU-mittarin oikea vika: neula oli vasteessa, ei nollassa (4.8.2026)
+
+Edellinen versio päätteli, että CORS estää mittauksen lähes joka asemalla.
+**Se päätelmä oli väärä, ja sen näki mittaamalla.** Tämän ympäristön proxy
+päästi läpi 12 asemaa 110:stä, ja niistä **11 eli 92 % lähettää
+`Access-Control-Allow-Origin`-otsakkeen**. Icecast lähettää sen
+oletuksena. Mittaus on siis useimmiten täysin mahdollinen, eikä
+jäljitelmää olisi pitänyt tarjota ennen kuin oikea syy on löydetty.
+
+### Mitä selain oikeasti sallii (mitattu kahdella paikallisella palvelimella)
+
+| reitti | CORSiton palvelin | CORS-palvelin |
+|---|---|---|
+| `createMediaElementSource` ilman crossOriginia | **RMS 0** (mykistyy) | — |
+| `createMediaElementSource` + `crossOrigin` | **NotSupportedError** | **RMS 0,31** |
+| `audio.captureStream()` | **SecurityError** | — |
+
+Aidosti CORSittomalle asemalle ei siis ole reittiä lainkaan — se osa
+edellisestä päätelmästä piti paikkansa. Lisäksi mitattu: **CORS-palvelin,
+joka ohjaa CORSittomaan (`302`), kaataa latauksen** — ja moni osoite on
+juuri tällainen uudelleenohjaus (`playerservices.streamtheworld.com`).
+Kahden CORS-palvelimen välinen ohjaus toimii.
+
+### Oikea vika: mittayksikkövirhe, sama laji kuin kartan rakeisuudessa
+
+Reititys toimi. Lukema meni asteikon yläpäästä ulos.
+
+Laitteen asteikko (−48 dB … −20 dB) on mitoitettu VIRITYSÄÄNELLE, joka
+kulkee pelin äänisumman kautta vaimennettuna. Lähetys ei kulje siellä vaan
+menee suoraan kontekstin ulostuloon täydellä tasollaan:
+
+| äänenvoimakkuus | taso | vanhalla asteikolla |
+|---|---|---|
+| 1,0 | −13,0 dB | **1,25** |
+| 0,5 | −15,8 dB | **1,15** |
+| 0 (viritys) | −120 dB | 0 |
+
+Yli yhden menevä lukema rajautuu ykköseen: **neula löi ääriasentoon ja jäi
+sinne.** Se ei maannut nollassa vaan seisoi vasteessa, mikä näyttää yhtä
+rikkinäiseltä — ja koko virityksen ajan peli pitää `audio.volume`-arvon
+nollassa, joten neula todella oli nollassa juuri sen ajan, jonka pelaaja
+katsoo sitä tarkimmin.
+
+Uusi asteikko on mitattu lähetykselle: **−40 dB … −6 dB**, ja
+äänenvoimakkuus jaetaan pois, koska se kulkee mittauspisteeseen asti.
+Oikea VU-mittari näyttää ohjelman tason eikä nupin asentoa. Jakaja on
+pohjattu (0,15), ettei häivytyksen alku räjäytä lukemaa.
+
+Mitattu korjauksen jälkeen: voimakkuus 1,0 → **0,81**, voimakkuus 0,5 →
+**0,89**, mykkä → 0. Neula elää siinä mitassa, jota varten se on.
+
+Analysaattori tehdään nyt `liitaMittariin`-ketjussa eikä soittimessa,
+koska asteikko on lähetyskohtainen. Soittimen oma asteikko jää
+viritysäänelle, jolle se on mitoitettu.
+
+Jäljitelty lukema (v246) jää vain sille tapaukselle, jossa reititystä ei
+oikeasti saada — eli aidosti CORSittomille asemille, joille selain ei anna
+mitään reittiä.
+
+### Opittua
+
+**"Ei liiku" ei kerro kummassa päässä se ei liiku.** Koko edellinen
+päätelmäketju rakentui sen varaan, että neula makaa lepokulmassaan, eli
+että signaalia ei ole. Mitattuna signaali oli olemassa ja niin kova, että
+se meni asteikosta yli. Yksi mittaus asteikon TOISESTA päästä olisi
+kaatanut väärän selityksen ennen kuin se ehti kahteen versioon.
