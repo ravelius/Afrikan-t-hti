@@ -97,6 +97,15 @@ Pakettien jälkeen tehty omistajan toivelistan mukaan:
   Työkalun molemmat viat korjattu (ks. alempaa: kumpikin oli
   diagnosoitu väärin). **Afrikka jätettiin myöhemmäksi omistajan
   päätöksellä 1.8.2026** — ei siis unohdus.
+- Paketti 73 (irti Afrikan tähdestä: logo, pelin nimi, loput tähdet):
+  ✅ PR #339 (4.8.2026, v231) — tehtiin omistajan chat-ohjeista jo ennen
+  kuin paketti ehti tähän listaan. Nimistö on sitova: ks. alempaa
+  "PÄÄTETTY 4.8.2026: aarteiden nimistö" ja docs/tarina.md ("Aarni ja
+  unohdetut aarteet"). **Jäljellä kaksi asiaa:** (1) reponimen vaihto
+  GitHubissa (Matkakirja → Unohdettu-aarre) on omistajan käsityö —
+  Pages-osoite vaihtuu ja iPadin kotivalikkoasennus pitää uusia, sovi
+  ajoitus; (2) avausteksti on lukittu — maininnan Aarnin luettelosta
+  saa lisätä vain omistajan erillisellä luvalla, ehdota älä muuta.
 
 ## PÄÄTETTY: aarteet ja varusteet yhdistetyllä kartalla
 
