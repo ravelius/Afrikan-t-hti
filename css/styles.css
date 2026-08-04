@@ -41,6 +41,23 @@
   /* Vanhan matkakirjoituskoneen fontti kaikelle käyttöliittymätekstille.
      Kartan käsin piirretyt nimet pysyvät serif-musteella. */
   --font-type: "American Typewriter", "Courier Prime", "Courier New", Courier, monospace;
+  /*
+   * LUKUKIRJASIN pitkälle leipätekstille.
+   *
+   * Kirjoituskone on pelin ääni ja se pysyy otsikoissa, napeissa ja
+   * kartalla. Mutta Tutki-sivulla on kolmisen tuhatta merkkiä yhtenäistä
+   * tekstiä kategoriaa kohti, ja tasalevyinen kirjasin tekee siitä
+   * työlästä: kaikki kirjaimet ovat yhtä leveitä, joten sanoilla ei ole
+   * muotoa, josta silmä tunnistaa ne vilkaisulla (omistaja: "vaivalloinen
+   * lukea, kun tekstiä on niin paljon").
+   *
+   * Iowan Old Style on iOS:n oma lukukirjasin ja piirretty juuri tähän:
+   * iso x-korkeus, avoimet muodot, tumma piirto. Se on jo pelissä kartan
+   * kaupunkinimissä, joten uutta latausta ei tule. Varapino kattaa muut
+   * laitteet, ja viimeisenä on aina jokin päätteellinen.
+   */
+  --font-luku: "Iowan Old Style", Charter, "Palatino Linotype", Palatino,
+    Georgia, "Times New Roman", serif;
 
   /*
    * Isoisän käsiala: yksi kaunokirjoitus koko pelissä.
@@ -5351,13 +5368,95 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   outline-offset: 1px;
 }
 
-/* Kategorian johdanto: yksi lause siitä, mitä täältä löytyy. */
+/*
+ * Kategorian johdanto = lehden ingressi: yksi kappale siitä, mitä täältä
+ * löytyy. Leipätekstiä isompi ja lukukirjasimella, jotta se erottuu
+ * aloitukseksi eikä vain ensimmäiseksi kappaleeksi.
+ */
 .wiki-kategoria .johdanto {
-  margin: 0 0 0.9rem;
+  margin: 0 0 1.1rem;
+  font-family: var(--font-luku);
   font-style: italic;
-  color: rgba(70, 51, 31, 0.85);
-  font-size: 0.9rem;
-  line-height: 1.45;
+  color: rgba(70, 51, 31, 0.9);
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+/*
+ * LEIPÄTEKSTI LUKUKIRJASIMELLA, ks. --font-luku.
+ *
+ * Rivinkorkeus 1,62 ja rivin mitta enintään 68 merkkiä: kumpikin on
+ * typografian vanha nyrkkisääntö pitkälle tekstille, eikä kumpaakaan ole
+ * arvattu — liian tiheä tai liian pitkä rivi eksyttää silmän rivinvaihdossa.
+ */
+.wiki-nosto .teksti {
+  font-family: var(--font-luku);
+  font-size: 1.02rem;
+  line-height: 1.62;
+  max-width: 68ch;
+  margin: 0 0 0.7rem;
+  color: rgba(58, 42, 26, 0.95);
+}
+
+.wiki-nosto .teksti:last-of-type { margin-bottom: 0.5rem; }
+
+/* Lihavoitu aloitus — lehden keino tarttua lukijaan ("poldaus"). */
+.wiki-nosto .leipa-aloitus {
+  font-weight: 700;
+  color: rgba(52, 37, 22, 1);
+}
+
+/*
+ * ANFANGI aukeaman ensimmäiseen kappaleeseen, kerran sivua kohti.
+ * Kirjain nostetaan kolmen rivin korkuiseksi float-tekniikalla, joka
+ * toimii kaikissa selaimissa — ::first-letter + initial-letter on
+ * kauniimpi mutta tukee vaihtelee.
+ */
+.wiki-nosto .teksti.anfangi::first-letter {
+  float: left;
+  font-family: var(--font-type);
+  font-size: 3.1em;
+  line-height: 0.82;
+  font-weight: 700;
+  padding: 0.06em 0.12em 0 0;
+  color: rgba(70, 51, 31, 0.9);
+}
+
+/*
+ * SITAATTINOSTO: lehden hengähdyspaikka aukeaman keskellä.
+ *
+ * Viivat ylä- ja alapuolella samaan tapaan kuin osastootsikossa, mutta
+ * ohuempina — nosto on tekstin sisällä eikä sen yläpuolella. Lainausmerkki
+ * on koristeena omalla rivillään, ei virkkeen edessä: virkkeen alkuun
+ * liitettynä se sotkisi ensimmäisen sanan luettavuuden.
+ */
+.wiki-sitaatti {
+  margin: 1.3rem 0 1.5rem;
+  padding: 0.9rem 0 0.9rem;
+  border-top: 1px solid rgba(70, 51, 31, 0.5);
+  border-bottom: 1px solid rgba(70, 51, 31, 0.5);
+  text-align: center;
+}
+
+.wiki-sitaatti::before {
+  content: '\201D';
+  display: block;
+  font-family: var(--font-luku);
+  font-size: 2.2rem;
+  line-height: 0.5;
+  margin-bottom: 0.45rem;
+  color: rgba(70, 51, 31, 0.45);
+}
+
+.wiki-sitaatti p {
+  margin: 0;
+  font-family: var(--font-luku);
+  font-style: italic;
+  font-size: 1.16rem;
+  line-height: 1.42;
+  max-width: 34ch;
+  margin-inline: auto;
+  color: rgba(58, 42, 26, 0.95);
 }
 
 /* Yksi nosto: kuva, otsikko, teksti, selite, lähde. */
@@ -5980,15 +6079,30 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   }
 }
 
-/* Avatun aiheen nimi: kuvake ei kerro sitä, joten teksti kertoo. */
+/*
+ * OSASTON OTSIKKO KUIN SANOMALEHDESSÄ.
+ *
+ * Omistaja: "Kuvataide ja muut vastaavat pääotsikot saisivat olla paljon
+ * isommalla, vähän kuin sanomalehdessä, voi olla joku viiva vielä otsikon
+ * alla ja päällä."
+ *
+ * Kaksi viivaa eri paksuisina: paksu yllä, ohut alla. Se on vanhan
+ * lehden osastoviiva, ja epäsymmetria on tarkoituksellinen — kaksi
+ * samanpaksuista viivaa näyttäisi taulukolta, ei otsikolta.
+ */
 .wiki-kategoria .aihe-nimi {
-  margin: 0 0 0.7rem;
+  margin: 0.2rem 0 1rem;
+  padding: 0.42rem 0 0.34rem;
+  border-top: 3px solid rgba(70, 51, 31, 0.85);
+  border-bottom: 1px solid rgba(70, 51, 31, 0.55);
   font-family: var(--font-type);
-  font-size: 0.78rem;
+  font-size: 1.45rem;
   font-weight: 700;
-  letter-spacing: 0.11em;
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+  text-align: center;
   text-transform: uppercase;
-  color: rgba(70, 51, 31, 0.66);
+  color: rgba(70, 51, 31, 0.92);
 }
 
 /*

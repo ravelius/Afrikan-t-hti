@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 256, teksti: 'Tutki: leipäteksti luettavalla kirjasimella' },
+  { v: 256, teksti: 'Osastojen otsikot lehden tapaan viivojen väliin' },
+  { v: 256, teksti: 'Kappalejako, lihavoitu aloitus ja anfangi' },
+  { v: 256, teksti: 'Sivulle sitaattinosto kuin aikakauslehdessä' },
   { v: 255, teksti: 'Joet ja järvet pois kartalta: tulossa oma linssi' },
   { v: 255, teksti: 'Taikalasien kuvake: silmälasit, ei suurennuslasi' },
   { v: 254, teksti: 'Joen nimi vain kerran ja aina samassa kohdassa' },

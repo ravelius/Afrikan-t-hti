@@ -5178,3 +5178,59 @@ TAIKALASIT, eivät suurennuslaseja.
 
 Vesistölinssi (joet ja järvet omalla ruudullaan) ja Tutki-ikkunan
 luettavampi kirjasin.
+
+## v256 — Tutki-sivu luettavaksi lehdeksi (4.8.2026)
+
+Omistaja: "Se on tällä hetkellä vaivalloinen lukea, kun tekstiä on niin
+paljon." Ja: "Kuvataide ja muut vastaavat pääotsikot saisivat olla paljon
+isommalla, vähän kuin sanomalehdessä… tekstiä pitäisi vähän elävöittää
+poldauksilla tai muilla nostoilla."
+
+**Vika näkyy jo mitasta.** Yhden kategorian sivulla on 4–7 nostoa à noin
+500–650 merkkiä eli kolmisen tuhatta merkkiä yhtenäistä tekstiä — ja se
+oli KIRJOITUSKONEKIRJASIMELLA, yhtenä kappaleena nostoa kohti.
+Kirjoituskone on pelin ääni ja oikea valinta otsikoihin, nappeihin ja
+kartalle, mutta pitkän leipätekstin lukeminen sillä on työlästä:
+tasalevyisessä kirjasimessa kaikki kirjaimet ovat yhtä leveitä, joten
+sanoilla ei ole muotoa, josta silmä tunnistaa ne vilkaisulla.
+
+**Muutokset:**
+
+- **Lukukirjasin** (`--font-luku`): Iowan Old Style ja varapino. Se on
+  iOS:n oma lukukirjasin ja jo pelissä kartan kaupunkinimissä, joten
+  uutta latausta ei tule. Leipäteksti 1,02 rem, rivinkorkeus 1,62, rivin
+  mitta enintään 68 merkkiä — typografian vanhat nyrkkisäännöt pitkälle
+  tekstille.
+- **Osaston otsikko** kuin sanomalehdessä: 1,45 rem, keskitetty,
+  harvennettu, paksu viiva yllä ja ohut alla. Epäsymmetria on
+  tarkoituksellinen — kaksi samanpaksuista viivaa näyttäisi taulukolta.
+- **Kappalejako**: yksi tekstimuuri kahdeksi kappaleeksi virkkeen
+  rajalta.
+- **Lihavoitu aloitus** ensimmäisiin sanoihin — juuri se "poldaus", jota
+  omistaja pyysi. Sanamäärä on kiinteä: kone ei osaa päättää, mikä kohta
+  on tärkeä, mutta alku on aina alku.
+- **Anfangi** sivun ensimmäiseen kappaleeseen, kerran sivua kohti.
+- **Sitaattinosto** kerran sivulla, viivojen väliin.
+
+**Kaksi vikaa kiinni esikatselussa ennen julkaisua** — kumpikin sellainen,
+jonka olisi huomannut vasta omistaja:
+
+1. *Virkejako ei osannut suomea.* Ensimmäinen versio katkaisi jokaisesta
+   pisteestä, ja suomen JÄRJESTYSLUVUSSA on piste: "…10. kesäkuuta 1735
+   astui voimaan laki…" katkesi luvun jälkeen, ja sitaattinosto alkoi
+   keskeltä virkettä sanalla "kesäkuuta". Nyt piste päättää virkkeen vain,
+   jos sen edellä ei ole numeroa ja jäljessä on väli ja iso kirjain tai
+   numero. Ei takaumakatsetta (lookbehind), koska sitä ei ole vanhemmissa
+   iOS-Safareissa.
+2. *Sitaatti luki saman lauseen, joka alkoi kahden rivin päästä.* Virke
+   poimittiin mistä tahansa nostosta ja osui juuri seuraavaan. Nyt virke
+   otetaan ENSIMMÄISESTÄ nostosta ja nosto sijoitetaan sen jälkeen:
+   lehdessä nosto kaikuu sitä, minkä lukija on jo lukenut — ei sitä, mitä
+   hän on juuri lukemassa.
+
+### Opittua
+
+**Esikatsele ennen kuin julkaiset, kun muutos on ulkonäköä.** Kumpikaan
+näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
+olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
+Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
