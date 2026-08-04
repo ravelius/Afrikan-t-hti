@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 255, teksti: 'Joet ja järvet pois kartalta: tulossa oma linssi' },
+  { v: 255, teksti: 'Taikalasien kuvake: silmälasit, ei suurennuslasi' },
   { v: 254, teksti: 'Joen nimi vain kerran ja aina samassa kohdassa' },
   { v: 254, teksti: 'Merisyvyys pois: ei sinistä, kevyempi vieritys' },
   { v: 254, teksti: 'Joet vaimeammiksi, ei enää viileää välkettä' },

@@ -564,24 +564,23 @@ export function drawMaasto(svg, map, varjostus = null) {
    * ylängön kohdalla kokonaan. Sama d molemmille, jotta viiva osuu
    * täytön reunaan tarkalleen.
    */
-  for (const jarvi of maasto.jarvet ?? []) {
-    const rengas = jarvi.rengas ?? jarvi;
-    if (!rengas || rengas.length < 4) continue;
-    const d = smoothClosedPath(kasinPiirretty(rengas));
-    el('path', { d, class: 'iso-jarvi' }, g);
-    el('path', { d, class: 'iso-jarvi-reuna' }, g);
-  }
-
-  // Joet päällimmäisenä: ne kulkevat laaksoissa eivätkä katoa vuorten alle.
-  for (const joki of maasto.joet ?? []) {
-    const pisteet = joki.pisteet ?? joki;
-    if (!pisteet || pisteet.length < 2) continue;
-    const heilunut = kasinPiirretty(pisteet);
-    el('path', {
-      d: `M${heilunut.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' L')}`,
-      class: 'joki',
-    }, g);
-  }
+  /*
+   * JOET JA ISOT JÄRVET EIVÄT OLE ENÄÄ POHJAKARTALLA.
+   *
+   * Omistajan päätös 4.8.2026: "Ota joet pois kokonaan. Täytyy tehdä
+   * niistä vaikka oma linssi, missä näkyisi vain pelkät joet ja järvet.
+   * Nykyinen on liian sekava."
+   *
+   * Päätös on hyvä ja se ratkaisee kerralla koko sen sarjan, joka
+   * alkoi v246:sta: vesi maalla, maan sävy zoomin mukaan, viileä
+   * välke, tökkivä vieritys. Kaikki johtuivat siitä, että vesi
+   * piirrettiin maan päälle samalle kartalle, jolla luetaan
+   * kaupunkeja ja reittejä. Oma linssi antaa vesistöille oman
+   * ruudun, jossa ne saavat olla niin selkeitä kuin haluavat.
+   *
+   * Aineisto (map.maasto.joet ja .jarvet) jää paikalleen linssiä
+   * varten; vain piirto pohjakartalta on poissa.
+   */
 }
 
 // --- maastonimet ------------------------------------------------------------
@@ -963,44 +962,16 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
   };
 
   /*
-   * JOEN NIMI ON AINA SAMASSA KOHDASSA UOMAA.
+   * VESISTÖJEN NIMET EIVÄT OLE POHJAKARTALLA.
    *
-   * Tässä oli ennen liikkuva ankkuri: nimi kirjoitettiin siihen uoman
-   * pisteeseen, joka oli lähinnä ruudun keskustaa, jotta pitkä joki
-   * saisi nimensä sinne minne pelaaja katsoo. Ajatus oli hyvä ja
-   * lopputulos huono — omistaja: "Joen nimi hyppii uusiin paikkoihin kun
-   * karttaa katsoo eri paikassa."
+   * Joet ja järvet siirtyivät omaan linssiinsä (ks. drawMaasto), ja nimi
+   * ilman uomaa olisi pahempi kuin ei nimeä lainkaan: kaunokirjoitettu
+   * "Tonava" tyhjän maan päällä ei kerro mitään. Nimet piirretään samassa
+   * kerroksessa kuin niiden kohteet.
    *
-   * Se on väistämätöntä, jos paikka riippuu katseesta: jokainen
-   * panorointi siirtää keskipistettä, ja nimi seuraa. Painetussa
-   * kartassa joen nimi on yhdessä kohdassa uomaa ja pysyy siinä; jos
-   * katsoo muualle, nimi jää näkymättömiin. Nyt sama sääntö täällä.
-   *
-   * Ankkuri on uoman KESKIMMÄINEN piste. Se ei riipu näkymästä eikä
-   * järjestyksestä, joten se on sama joka ruudulla ja joka käynnistyksen
-   * jälkeen — nimi ei voi hypätä, koska mikään ei valitse sitä uudelleen.
-   *
-   * Kierrosta huolehditaan yhä: kiertävällä laudalla sama piste voi
-   * näkyä kopion kautta, ja siirto valitaan sen mukaan kumpi kopio on
-   * ruudulla. Se ei siirrä nimeä uomassa vaan kertoo, kummalla puolella
-   * saumaa se piirretään.
+   * Vuoristot jäävät: ne ovat pohjakartan omaa maastoa, ja niiden
+   * korkeusvyöhykkeet piirtyvät yhä (drawMaasto).
    */
-  for (const joki of nimet.joet ?? []) {
-    if (!nimiNakyy(joki.tarkeys, skaala)) continue;
-    const teksti = nimenLeveys(joki.nimi, fontti);
-    if (joki.pituus < teksti * 1.15) continue;
-    const kohta = Math.floor(joki.pisteet.length / 2);
-    const piste = joki.pisteet[kohta];
-    if (!piste) continue;
-    const [px, py] = piste;
-    if (py < nakyva.y - fontti * 2 || py > nakyva.y + nakyva.h + fontti * 2) continue;
-    const siirto = saumasiirto(px, nakyva, leveys, teksti);
-    if (siirto === null) continue;
-    ehdokkaat.push({
-      kohde: joki, laji: 'joki', x: px + siirto, y: py, siirto, teksti, kohta,
-    });
-  }
-  for (const jarvi of nimet.jarvet ?? []) lisaa(jarvi, 'jarvi', jarvi.x, jarvi.y, jarvi.pituus);
   // Vuoristolla ei ole mittaa: se on nimipaketissa piste ja kulma, ei
   // muoto. Nimi kirjoitetaan sen yli, joten se mahtuu aina.
   for (const vuori of nimet.vuoret ?? []) lisaa(vuori, 'vuori', vuori.x, vuori.y, null);

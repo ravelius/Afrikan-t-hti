@@ -5141,3 +5141,40 @@ asiaa.** Sinistä etsittiin sävyistä, ja sävyt olivat lämpimiä joka
 kierroksella. Silmä ei kuitenkaan lue sävyä irrallaan vaan suhteessa
 ympäristöön: kirkas vaalea viiva lämpimällä pohjalla näyttää viileältä.
 Oikea mitta ei ollut väri vaan kontrasti.
+
+## v255 — Joet pois pohjakartalta, uusi kuvake taikalaseille (4.8.2026)
+
+**Omistajan päätös:** "Ota joet pois kokonaan. Täytyy tehdä niistä vaikka
+oma linssi, missä näkyisi vain pelkät joet ja järvet. Nykyinen on liian
+sekava."
+
+Päätös ratkaisee kerralla koko sen sarjan, joka alkoi v246:sta: vesi
+maalla, maan sävy zoomin mukaan, viileä välke, tökkivä vieritys. Jokainen
+niistä johtui samasta asiasta — vesi piirrettiin maan päälle samalle
+kartalle, jolla luetaan kaupunkeja ja reittejä. Kuusi versiota yritti
+sovittaa kahta karttaa yhteen ruutuun. Oma linssi antaa vesistöille oman
+ruudun, jossa ne saavat olla niin selkeitä kuin haluavat.
+
+Poistettu pohjakartalta:
+
+- joet ja isot järvet staattisesta taiteesta (`drawMaasto`)
+- koko lähivesikerros (uomat, järvet, matalikot) — kerrosta ei enää luoda
+- vesistöjen nimet (`drawMaastonimet`): nimi ilman uomaa on pahempi kuin
+  ei nimeä lainkaan, sillä kaunokirjoitettu "Tonava" tyhjän maan päällä ei
+  kerro mitään
+
+Vuoristot jäävät: ne ovat pohjakartan omaa maastoa, ja niiden nimet ja
+korkeusvyöhykkeet piirtyvät ennallaan. Kaikki vesiaineisto
+(`map.maasto.joet`, `.jarvet`, vesistönimet) jää paikalleen linssiä
+varten; vain piirto pohjakartalta on poissa.
+
+**Taikalasien kuvake: silmälasit.** Suurennuslasi oli linssivalitsimessa,
+mutta se on jo Tutki-napissa — sama kuvake kahdessa eri toiminnossa on
+pahempi kuin osuva ja tylsä (omistaja: "suurennuslasikuvake on jo
+toisessa napissa"). Lasit sopivat myös nimeen: linssit ovat pelissä
+TAIKALASIT, eivät suurennuslaseja.
+
+### Seuraavaksi
+
+Vesistölinssi (joet ja järvet omalla ruudullaan) ja Tutki-ikkunan
+luettavampi kirjasin.

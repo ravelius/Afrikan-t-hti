@@ -1092,6 +1092,16 @@ const VIIVA_IKONIT = {
   saapas: '<path d="M7 3.5h4.4v8.2c0 .9.6 1.7 1.5 2l4.8 1.6c1.4.5 2.3 1.3 2.3 2.4 0 .8-.6 1.4-1.4 1.4H8.6c-.9 0-1.6-.7-1.6-1.6z"/><path d="M7 6h4.4M7 8.2h4.4M4 20.6h16.5"/>',
   purje: '<path d="M11 5.4 6 13.6h5zM13 4.2l5.6 9.4H13z"/><path d="M4.6 16.2h14.8l-2 3.4H6.6zM12 13.6v2.6"/>',
   suurennuslasi: '<circle cx="9.8" cy="9.8" r="5.6"/><path d="M13.9 13.9 20 20"/>',
+  /*
+   * Silmälasit linssivalitsimelle. Suurennuslasi oli siinä ennen, mutta
+   * se on jo Tutki-napissa — sama kuvake kahdessa eri toiminnossa on
+   * pahempi kuin osuva ja tylsä (omistaja: "suurennuslasikuvake on jo
+   * toisessa napissa"). Lasit sopivat myös nimeen: linssit ovat pelissä
+   * TAIKALASIT, eivät suurennuslaseja.
+   */
+  taikalasit: '<circle cx="6.9" cy="13.6" r="3.5"/><circle cx="17.1" cy="13.6" r="3.5"/>'
+    + '<path d="M10.4 13.2c1-.8 2.2-.8 3.2 0"/>'
+    + '<path d="M3.5 12.2 2.1 9.2M20.5 12.2 21.9 9.2"/>',
   noppa: '<rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.2"/><g class="taytto"><circle cx="8.2" cy="8.2" r="1.25"/><circle cx="15.8" cy="8.2" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="8.2" cy="15.8" r="1.25"/><circle cx="15.8" cy="15.8" r="1.25"/></g>',
   kompassi: '<circle cx="12" cy="12" r="8.4"/><path d="M12 5.8 14.3 12 12 18.2 9.7 12z"/><circle class="taytto" cx="12" cy="12" r="1"/>',
   nuoli: '<path d="M9.5 6.2 5 10.6l4.5 4.4"/><path d="M5 10.6h9.2a4.6 4.6 0 1 1 0 9.2H9.5"/>',
@@ -1115,7 +1125,7 @@ const VIIVA_IKONIT = {
  * piirretty samalla kynällä kuin linssien omat kuvakkeet — rivien on
  * oltava keskenään samaa sarjaa, tai valinta näyttää sekalaiselta.
  */
-const LINSSI_EI_IKONI = `${VIIVA_IKONIT.suurennuslasi}<path d="M5.4 5.4 20 20"/>`;
+const LINSSI_EI_IKONI = `${VIIVA_IKONIT.taikalasit}<path d="M5.4 5.4 20 20"/>`;
 
 /**
  * Liuskanapin kuvake. Sama kuori kuin aiheliuskoilla (rakennaLiuskat):
@@ -2550,6 +2560,11 @@ export class UI {
    * piirrä mitään uudelleen.
    */
   paivitaLahivesi() {
+    /*
+     * LÄHIVESI ON POIS KÄYTÖSTÄ. Joet ja järvet siirtyivät omaan
+     * linssiinsä (ks. mapart.js drawMaasto), eikä pohjakartalla ole enää
+     * vettä piirrettävänä. Kerrosta ei luoda, joten tämä palaa heti.
+     */
     if (!this.lahivesiKerros) return;
     const nakyva = this.nakyvaAlue();
     if (!nakyva) return;
@@ -3793,7 +3808,8 @@ export class UI {
      * takaisin, jos ne joskus halutaan omalla saumallaan projisoituina.
      */
     this.merisyvyys = null;
-    this.lahivesiKerros = el('g', { class: 'lahivesi-kerros' }, root);
+    // Lähivesikerrosta ei luoda: vesi on omassa linssissään.
+    this.lahivesiKerros = null;
     this.lahivesiTunniste = null;
     /*
      * MAASTONIMET JUURIRYHMÄN ULKOPUOLELLE — YKSI NIMI, EI KAHTA.
@@ -8070,7 +8086,7 @@ export class UI {
   paivitaLinssiNappi() {
     if (!this.linssiNappi || !this.linssiNapinIkoni) return;
     const linssi = this.paallaOlevaLinssi();
-    this.linssiNapinIkoni.innerHTML = `<svg viewBox="0 0 24 24">${linssi?.ikoni ?? VIIVA_IKONIT.suurennuslasi}</svg>`;
+    this.linssiNapinIkoni.innerHTML = `<svg viewBox="0 0 24 24">${linssi?.ikoni ?? VIIVA_IKONIT.taikalasit}</svg>`;
     this.linssiNappi.title = linssi ? `Linssi: ${linssi.nimi}` : 'Taikalasit — valitse linssi kartalle';
     this.linssiNappi.classList.toggle('paalla', Boolean(linssi));
   }
