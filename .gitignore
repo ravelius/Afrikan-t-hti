@@ -7,6 +7,11 @@ media/
 # lataa nämä avuksi (--vain tekstit); valmis teksti menee paketteihin.
 lahteet/
 
+# Maastotekstien lainausten tarkistus lataa tänne kokonaiset
+# lähdeteokset Gutenbergista ja arkistoista. Sadan teoksen tekstit —
+# välimuisti, ei aineisto. Ks. tools/tarkista-lainaukset.mjs.
+.lainausvalimuisti/
+
 # dist/ EI ole täällä: yhden tiedoston versio on tarkoituksella repossa,
 # jotta pelin voi ottaa mukaan levyllä ilman verkkoa.
 

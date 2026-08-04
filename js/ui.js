@@ -2167,7 +2167,8 @@ export class UI {
      */
     const tyylitelty = tyylitSisaan(ryhma);
     const maarittelyt = this.svg.querySelector('defs');
-    this.taide = pilkoTaide(tyylitelty, ryhma, maarittelyt)
+    this.taide = pilkoTaide(tyylitelty, ryhma, maarittelyt,
+      { leveys: this.kiertava() ? this.game.pack.map.width : 0 })
       ?? valmisteleTaide(tyylitelty, maarittelyt);
     this.taideRuudut = new Map();
     this.taideTyhjat = new Set();

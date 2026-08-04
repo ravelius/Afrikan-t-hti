@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 233, teksti: 'Beringinsalmi ehjäksi: Tšukotkan kärki takaisin' },
+  { v: 233, teksti: 'Radiossa soiva kaupunki näkyy punaisena' },
   { v: 232, teksti: 'Kartta jatkuu ehjänä laudan reunan yli' },
   { v: 232, teksti: 'Kartta tarkentuu zoomatessa eikä sumene' },
   { v: 232, teksti: 'Uusi kuvake: kultainen aarre kahden pallon välissä' },

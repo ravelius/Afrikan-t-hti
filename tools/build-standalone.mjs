@@ -112,6 +112,7 @@ const MODULES = [
   'js/packs/maasto-nimet-vedet.js',
   'js/packs/maailmankartta-syvyys.js',
   'js/packs/maasto-tekstit-malli.js',
+  'js/packs/maasto-tekstit.js',
   'js/packs/maailmankartta-varjostus.js',
   'js/packs/linssi-topografia.js',
   'js/packs/linssi-maaluvut.js',

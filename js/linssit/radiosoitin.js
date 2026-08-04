@@ -53,6 +53,24 @@
  * (asetaAanilahde), jos lähetys joskus reititetään Web Audion läpi
  * samalla varareitillä kuin kaupunkien äänimaisema
  * (js/ambience-stream.js liitaKompressori).
+ *
+ * MITATTU SEURAUS 4.8.2026: neula elää virittäessä (11 eri kulmaa
+ * kahdessa sekunnissa, −43,7°…+9,8°) ja palaa lepoon sillä hetkellä,
+ * kun asema alkaa kuulua. Katselmuksessa tämä on soittimen suurin
+ * jäljellä oleva puute.
+ *
+ * KORJAUSTA EI TEHTY, JA SYY ON iOS EIKÄ TYÖNJAKO. Varareitti vaatii
+ * crossOriginin ennen srciä, ja jos asema ei lähetä CORS-otsakkeita,
+ * lataus epäonnistuu — silloin on luotava UUSI elementti ilman
+ * crossOriginia (vanhaa ei voi käyttää, koska createMediaElementSource
+ * on jo sitonut sen Web Audioon ja tuottaisi hiljaisuutta). Uusi
+ * elementti aloittaa toistonsa virhekäsittelijästä eli ilman
+ * käyttäjän elettä, ja juuri sen iOS:n Safari estää. Hinta olisi siis
+ * mittarilukema CORSia tukevista asemista ja HILJAISUUS lopuista
+ * iOS:llä — ja radio, joka ei soi, on huonompi kuin mittari, joka ei
+ * liiku. Ratkaisu vaatii oikean laitteen kokeen, eikä sitä voi tehdä
+ * selainajossa: CORSiton asema käyttäytyy työpöydän Chromessa
+ * moitteettomasti.
  */
 
 import { sfx } from '../sound.js';
@@ -63,6 +81,23 @@ import { sfx } from '../sound.js';
  * sekunnit näyttäisivät täsmälleen samalta kuin rikkinäinen asema.
  */
 export const RADION_TILAT = Object.freeze(['sammuksissa', 'virittaa', 'soi', 'virhe']);
+
+/*
+ * VIRITYKSEN VAIHEET — sopimus soittimen ja js/linssit/radio.js:n välillä.
+ *
+ * Viritys ei ole yksi tapahtuma vaan kolme, ja pelaaja näkee erot:
+ * asteikko LIUKUU uuden aseman kohdalle (siirtyma), HAKEE sitä pienellä
+ * edestakaisella liikkeellä niin kauan kuin lähetystä odotetaan (haku)
+ * ja ASETTUU paikalleen kun asema on löytynyt (lukittuu).
+ *
+ * NIMET ASUVAT TÄÄLLÄ EIVÄTKÄ radio.js:SSÄ, vaikka ajoitus on siellä.
+ * Vaihe on käsky kuorelle — "liu'u", "hae", "asetu" — ja käskyn sanaston
+ * omistaa se, joka sen toteuttaa. radio.js tuo listan tästä ja vie sen
+ * edelleen omalla nimellään, jotta ajoituksen testit näkevät saman
+ * totuuden eikä kopiota. Kaksi erillistä listaa ehtisi eri mieltä
+ * ensimmäisessä lisäyksessä.
+ */
+export const VIRITYKSEN_VAIHEET = Object.freeze(['siirtyma', 'haku', 'lukittuu']);
 
 /*
  * Kauanko "VIRITTÄÄ..." saa kestää, ennen kuin soitin myöntää ettei
@@ -125,6 +160,51 @@ export const NAYTON_MITAT = Object.freeze({
  * näkyy.
  */
 export const NAAPUREITA_PER_PUOLI = 4;
+
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ * VIRITYSNAUHAN LIUKU
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Omistaja 4.8.2026: "Kaupunkitekstit liikkuvat liian nopeasti
+ * viritettäessä. --- Silloin voisi animoida pehmeämmän siirtymän
+ * viritysnauhalle ja jatkaa sitten tarpeeksi hidasta edestakaista, hyvin
+ * pientä liikettä mikäli lataus vaatii enemmän aikaa."
+ *
+ * Liu'un PITUUS lasketaan täällä, sen NOPEUS on css/radio.css:ssä. Jako
+ * menee siitä, kumpi tietää asian: pikselimatka uuden aseman vanhalta
+ * paikalta uudelle on asettelua, jonka vain mittaus kertoo, ja
+ * kiihtyvyyskäyrä on tyyliä.
+ *
+ * MATKA MITATAAN, EI ARVATA. Kun pelaaja napauttaa asteikon naapuria,
+ * uusi asema oli hetki sitten näkyvissä tietyssä kohdassa nauhaa, ja
+ * juuri sen verran nauhan pitää liukua. Arvattu vakiomatka olisi
+ * naapurilla liian pitkä ja toisen mantereen kaupungilla liian lyhyt —
+ * ja silloin liuku ei kertoisi mitään siitä, kuinka kaukaa asema
+ * haettiin.
+ */
+
+/*
+ * Kartalta valitun kaupungin liukumatka osuutena asteikon leveydestä.
+ *
+ * Kartalta valittu kaupunki ei yleensä ole nauhalla lainkaan, joten
+ * mitattavaa paikkaa ei ole. Puolikas asteikko on se matka, jolla uusi
+ * nimi tulee juuri ja juuri reunan takaa: pidempi matka olisi
+ * ensimmäisen puolen sekunnin ajan pelkkää tyhjää nauhaa, ja lyhyempi
+ * ei erottuisi naapurin valinnasta.
+ */
+const LIUUN_VARAMATKA = 0.5;
+
+/*
+ * Lyhin liuku, joka ylipäätään näytetään.
+ *
+ * Sama asema uudelleen (virheen jälkeen tehty uusi yritys) ei siirrä
+ * nauhaa lainkaan, ja täysin liikkumaton nauha kahden sekunnin ajan on
+ * jäätynyt laite eikä virittyvä. Kymmenen pikselin nytkähdys on se, mitä
+ * oikea laite tekee, kun viritysnuppia kokeillaan uudelleen samasta
+ * kohtaa.
+ */
+const LIUUN_VAHIN = 10;
 
 /*
  * ══════════════════════════════════════════════════════════════════════
@@ -242,17 +322,25 @@ const MITTARIN_VAISU_LASKU_S = 1.1;
  *
  * Viritysääni on mitoitettu pelin masteriketjussa RMS −32 dBFS:ään
  * (js/linssit/viritin.js ULOSTULON_TASO), ja mittari lukee juuri sitä
- * summaa. Kun asteikon nolla (0,76) osuu −24 dB:hen, tyypillinen kohina
- * pitää neulaa asteikon puolivälin yläpuolella ja voimakkaimmat
- * vilahdukset käyvät punaisella — eli mittari näyttää samalta kuin
- * aikakauden laitteessa, jossa 0 VU oli tavoite eikä katto.
+ * summaa. Mitattu selaimesta 4.8.2026 kahdella arvotulla nauhalla,
+ * kuuden sekunnin viritys kummallakin:
+ *
+ *   tasainen kohina   RMS −34,6 … −31,3 dBFS
+ *   tungoksinen kaista  RMS −36,7 … −25,5 dBFS (asemien vilahdukset)
+ *
+ * Näillä päillä (−48 … −20 dB) neula lepää kohinassa juuri nollan
+ * alapuolella ja käy vilahduksissa punaisella — eli näyttää samalta
+ * kuin aikakauden laitteessa, jossa 0 VU oli tavoite eikä katto.
+ * Leveämpi asteikko (−52 … −18) mitattiin ensin, mutta se puristi
+ * tasaisen kohinan viiden asteen heilahdukseksi: neula oli oikeassa
+ * mutta näytti jumittuneelta.
  *
  * Jos viritysäänen tasoa muutetaan, MITTAA NÄMÄ UUDELLEEN. Väärin
  * asetettuna neula joko makaa vasteessa tai seisoo punaisella, ja
  * kumpikin näyttää rikkinäiseltä laitteelta.
  */
-const MITTARIN_POHJA_DB = -52;
-const MITTARIN_KATTO_DB = -18;
+const MITTARIN_POHJA_DB = -48;
+const MITTARIN_KATTO_DB = -20;
 
 /*
  * Neulan päivitysväli millisekunteina.
@@ -463,6 +551,7 @@ function kytkimenSvg(tunniste) {
   const kupu = `${tunniste}-kupu`;
   const kulmat = `${tunniste}-kulmat`;
   const mutteri = `${tunniste}-mutteri`;
+  const kiilto = `${tunniste}-kiilto`;
   return `<svg class="radio-kytkin-kuva" viewBox="0 0 40 66" width="30" height="49.5"
       aria-hidden="true" focusable="false">
     <defs>
@@ -493,6 +582,20 @@ function kytkimenSvg(tunniste) {
         <stop offset="0.45" stop-color="#aab3ba"/>
         <stop offset="1" stop-color="#3d454b"/>
       </radialGradient>
+      <!--
+        VIVUN KÄRKI ON KIILLOTTUNUT. Kytkintä käännetään kärjestä, ja
+        sormenpää kiillottaa juuri sen kohdan — sama sääntö kuin
+        mutterin kärjissä, mutta vastakkaiseen suuntaan: mutteria
+        naarmuttaa avain ja himmentää, vipua kiillottaa sormi ja
+        kirkastaa. Liuku on vivun omassa suunnassa (pituudella), joten
+        se kääntyy vivun mukana eikä jää ylös silloin, kun kytkin on
+        alhaalla.
+      -->
+      <linearGradient id="${kiilto}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.42"/>
+        <stop offset="0.3" stop-color="#ffffff" stop-opacity="0.14"/>
+        <stop offset="0.72" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
     </defs>
 
     <!-- Reikä puussa ja sen varjo. Kytkin on läpi paneelin, ei sen
@@ -559,6 +662,10 @@ function kytkimenSvg(tunniste) {
       <path d="M16.2 32.4 L17.4 10.2 Q20 6 22.6 10.2 L23.8 32.4 Z"
         fill="url(#${varsi})" stroke="rgba(0,0,0,0.5)" stroke-width="0.6"
         stroke-linejoin="round"/>
+      <!-- Sormen kiillottama kärki, ks. gradientti ${kiilto}. Sama
+           muoto kuin varsi, jotta kiilto ei vuoda reunan yli. -->
+      <path d="M16.2 32.4 L17.4 10.2 Q20 6 22.6 10.2 L23.8 32.4 Z"
+        fill="url(#${kiilto})"/>
       <circle cx="20" cy="33" r="5.4" fill="url(#${kupu})"
         stroke="rgba(0,0,0,0.4)" stroke-width="0.6"/>
     </g>
@@ -637,10 +744,17 @@ function mittarinSvg(tunniste) {
     const viiva = `<path d="M${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)}"`
       + ` stroke="${vari}" stroke-width="${jako.pitka ? 1.1 : 0.75}" stroke-linecap="round"/>`;
     if (!jako.teksti) return viiva;
+    /*
+     * Luvun paikka on kaaren keskilinjalla, mutta SVG lataa tekstin
+     * PERUSVIIVALLE. dominant-baseline hoitaisi eron yhdellä
+     * attribuutilla, mutta se on iOS:n Safarissa uudehko — vanhemmalla
+     * versiolla luvut valuisivat pari pikseliä alas jaotuksen päälle.
+     * Puolikas versaalikorkeus (0,35 × kirjasinkoko) on sama korjaus
+     * ilman selainriippuvuutta.
+     */
     const [tx, ty] = mittarinPiste(aste, kaari + 9.5);
-    return `${viiva}<text x="${tx.toFixed(2)}" y="${ty.toFixed(2)}" fill="${vari}"`
-      + ` font-size="5" text-anchor="middle" dominant-baseline="middle"`
-      + ` font-family="var(--font-type, 'Courier New', monospace)">${jako.teksti}</text>`;
+    return `${viiva}<text x="${tx.toFixed(2)}" y="${(ty + 1.75).toFixed(2)}" fill="${vari}"`
+      + ` font-size="5" text-anchor="middle">${jako.teksti}</text>`;
   }).join('');
 
   return `<svg class="radio-mittari-asteikko" viewBox="0 0 ${leveys} ${korkeus}"
@@ -663,8 +777,7 @@ function mittarinSvg(tunniste) {
     <!-- Kilpi kortin alalaidassa. "VU" on se kaksi kirjainta, joista
          mittarin tunnistaa ennen kuin asteikkoa ehtii lukea. -->
     <text x="${(napaX - 26).toFixed(2)}" y="${(napaY - 0.5).toFixed(2)}" fill="#3a2a18"
-      font-size="6" text-anchor="middle" font-weight="700" letter-spacing="0.8"
-      font-family="var(--font-type, 'Courier New', monospace)">VU</text>
+      font-size="6" text-anchor="middle" font-weight="700" letter-spacing="0.8">VU</text>
     <!-- Akselin kupu ja sen varjo kortilla. Vastapaino jää kuvun alle,
          kuten oikeassa liikkeessä. -->
     <ellipse cx="${napaX}" cy="${(napaY + 1.6).toFixed(2)}" rx="6.4" ry="2.6"
@@ -751,6 +864,9 @@ function ero(a, b, laudanLeveys) {
  *                            pistenäytölle, ks. rivit(). `cityId` keskittää
  *                            asteikon soivaan kaupunkiin.
  *   asetaTila(tila, viesti)
+ *   asetaVirityksenVaihe(vaihe) — 'siirtyma' | 'haku' | 'lukittuu' | null.
+ *                            Kertoo nauhalle, MITEN uudelle asemalle
+ *                            siirrytään. Ks. VIRITYKSEN_VAIHEET.
  *   asetaNaytto(elementti) — pistematriisinäyttö aukkoon.
  *   asetaAani(arvo)
  *   asetaAanilahde(lahde) — VU-mittarin äänilähde. Oletuksena laite
@@ -818,7 +934,8 @@ export function teeRadiosoitin({
   // olisi yksi lisälataus siitä, mikä on kaksi toistuvaa gradienttia.
   const kaiutin = osa('div', 'radio-kaiutin');
   kaiutin.setAttribute('aria-hidden', 'true');
-  kaiutin.appendChild(osa('span', 'radio-kilpi', 'MATKAKIRJA'));
+  // Kilpi on soittimen valmistajan nimi, ja se on pelin oma nimi.
+  kaiutin.appendChild(osa('span', 'radio-kilpi', 'UNOHDETTU AARRE'));
   kotelo.appendChild(kaiutin);
 
   // --- keskiö: näyttö, asteikko ja kanavan tiedot ----------------------
@@ -968,6 +1085,11 @@ export function teeRadiosoitin({
    * kuunneltu naapuri katoaisi näkyvistä.
    */
   let viimeisinKeskus = null;
+  // Virityksen vaihe ja nauhan liukumatka pikseleinä, ks. laskeLiuku ja
+  // asetaVirityksenVaihe. Molemmat ovat merkityksellisiä vain
+  // 'virittaa'-tilassa.
+  let virityksenVaihe = null;
+  let liuunMatka = 0;
 
   /** Katkaisee viritysvahdin. Kutsutaan jokaisessa tilanvaihdossa. */
   function nollaaVahti() {
@@ -1096,6 +1218,9 @@ export function teeRadiosoitin({
     const nappi = document.createElement('button');
     nappi.type = 'button';
     nappi.className = 'radio-kaupunki';
+    // Tunnus talteen myös DOM:iin: liu'un matka mitataan nimien
+    // paikoista ennen ja jälkeen uudelleenpiirron (ks. laskeLiuku).
+    nappi.dataset.id = String(kaupunki.id);
     nappi.dataset.puoli = puoli;
     nappi.dataset.sija = String(sija);
     nappi.textContent = String(kaupunki.nimi ?? kaupunki.id).toUpperCase();
@@ -1123,8 +1248,60 @@ export function teeRadiosoitin({
     viisari.style.left = `${Math.min(99, Math.max(1, (kohta / leveys) * 100))}%`;
   }
 
+  /**
+   * Nimien keskikohdat asteikolla juuri nyt: id → x pikseleinä.
+   *
+   * Mitataan ENNEN uudelleenpiirtoa, koska juuri siitä liu'un matka
+   * syntyy: uusi keskus oli hetki sitten jossain, ja nauhan on
+   * liu'uttava tuosta kohdasta viisarin alle.
+   */
+  function nimienPaikat() {
+    const paikat = new Map();
+    for (const nappi of nimet.querySelectorAll('.radio-kaupunki')) {
+      paikat.set(nappi.dataset.id, nappi.offsetLeft + nappi.offsetWidth / 2);
+    }
+    return paikat;
+  }
+
+  /**
+   * Liu'un matka pikseleinä: mistä nauha lähtee, kun se päätyy nollaan.
+   *
+   * Etumerkki on nauhan suunta eikä aseman: idässä oleva asema on
+   * viisarin oikealla puolella, joten nauha ALKAA oikealta (+) ja
+   * liukuu vasemmalle nollaan. Sama luku syntyy molemmista säännöistä,
+   * joten mitatun ja arvatun matkan välillä ei ole suuntaeroa.
+   */
+  function laskeLiuku(vanhatPaikat, vanhaKeskus, uusiKeskus) {
+    if (!uusiKeskus) return 0;
+    /*
+     * Uusi paikka luetaan samasta taulukosta kuin vanha eikä
+     * valitsimella. CSS.escape olisi lyhyempi, mutta kaupungin tunnus
+     * tulee laudan aineistosta — merkkijonosta, jota tämä tiedosto ei
+     * ole kirjoittanut — eikä valitsimen jäsennysvirhe saa kaataa koko
+     * asteikon piirtoa yhden liu'un takia.
+     */
+    const uusiX = nimienPaikat().get(uusiKeskus) ?? null;
+    // 1. Uusi asema näkyi nauhalla: matka on mitattavissa suoraan.
+    const vanhaX = vanhatPaikat.get(uusiKeskus);
+    if (Number.isFinite(vanhaX) && Number.isFinite(uusiX)) {
+      const matka = vanhaX - uusiX;
+      if (Math.abs(matka) >= LIUUN_VAHIN) return matka;
+      // Sama tai lähes sama paikka: nytkähdys, ks. LIUUN_VAHIN.
+      return matka < 0 ? -LIUUN_VAHIN : LIUUN_VAHIN;
+    }
+    // 2. Kartalta valittu kaupunki: suunta laudalta, matka vakio.
+    const varamatka = Math.max(LIUUN_VAHIN, asteikko.offsetWidth * LIUUN_VARAMATKA);
+    const vanha = asteikonKaupungit.get(vanhaKeskus);
+    const uusi = asteikonKaupungit.get(uusiKeskus);
+    if (!vanha || !uusi) return varamatka;
+    // dx > 0 = uusi asema on idässä eli viisarin oikealla puolella.
+    return ero(vanha, uusi, kierto).dx < 0 ? -varamatka : varamatka;
+  }
+
   /** Piirtää asteikon uudelleen nykyiselle keskukselle. */
   function paivitaAsteikko() {
+    const vanhatPaikat = nimienPaikat();
+    const vanhaKeskus = keskusId;
     keskusId = laskeKeskus();
     if (keskusId) viimeisinKeskus = keskusId;
     const { vasen, keski, oikea } = naapurit(keskusId);
@@ -1140,6 +1317,90 @@ export function teeRadiosoitin({
     // punainen viiva tyhjällä pergamentilla näyttää vialta.
     viisari.hidden = !keski;
     siirraViisari();
+    /*
+     * Liu'un matka talteen, käytettäköön tai ei. Se on laskettava
+     * TÄSSÄ, koska vanhat paikat ovat olemassa vain tämän kutsun ajan;
+     * 'siirtyma'-vaihe saapuu vasta seuraavalla rivillä radio.js:ssä,
+     * jolloin vanha asettelu on jo poissa. Ilman kanavanvaihtoa
+     * tehdyssä piirrossa (laudan vaihto, sijainnin päivitys) luku jää
+     * käyttämättä eikä nauha liiku.
+     */
+    liuunMatka = laskeLiuku(vanhatPaikat, vanhaKeskus, keskusId);
+  }
+
+  /**
+   * VIRITYKSEN VAIHE KUORELLE. Kutsuu js/linssit/radio.js, ks.
+   * VIRITYKSEN_VAIHEET.
+   *
+   * Kaikki liike on css/radio.css:ssä; täällä kerrotaan vain, mikä
+   * vaihe on menossa (juuren data-vaihe) ja mistä kohtaa nauha lähtee
+   * tai mihin se jää (kaksi mukautettua ominaisuutta). Sama työnjako
+   * kuin muuallakin laitteessa: JS tietää tilan, CSS tietää miltä se
+   * näyttää.
+   *
+   * null lopettaa sarjan. Sen tekee asetaTila() itse aina kun laite
+   * poistuu 'virittaa'-tilasta — kuori ei jää heilumaan siksi, että
+   * kutsuja unohti kertoa lopusta.
+   */
+  function asetaVirityksenVaihe(vaihe) {
+    const uusi = VIRITYKSEN_VAIHEET.includes(vaihe) ? vaihe : null;
+    if (!uusi) {
+      virityksenVaihe = null;
+      delete juuri.dataset.vaihe;
+      return null;
+    }
+
+    if (uusi === 'siirtyma') {
+      // Nauha lähtee sieltä, missä uusi asema äsken oli (laskeLiuku), ja
+      // päätyy nollaan eli viisarin alle.
+      juuri.style.setProperty('--radio-liuku', `${Math.round(liuunMatka)}px`);
+    } else if (uusi === 'lukittuu') {
+      /*
+       * Asettuminen alkaa siitä, mihin haku sattui jäämään. Ilman
+       * mittausta nauha napsahtaisi ensin nollaan ja vasta sitten
+       * "asettuisi" — eli tekisi juuri sen nykäisyn, jonka poistamiseksi
+       * koko vaihe on olemassa.
+       */
+      juuri.style.setProperty('--radio-lukko', `${nauhanSiirto()}px`);
+    }
+
+    /*
+     * SAMA VAIHE UUDELLEEN ON KÄYNNISTETTÄVÄ KÄSIN. Kesken virityksen
+     * valittu uusi kaupunki aloittaa sarjan alusta ('siirtyma' →
+     * 'siirtyma'), eikä selain käynnistä animaatiota uudelleen, jos
+     * valitsin ja animaation nimi pysyvät samoina — nauha jäisi
+     * liukumaan vanhaa matkaansa loppuun uudella nimistöllä. Poisto,
+     * pakotettu asettelunluku ja palautus on ainoa tapa, joka toimii
+     * kaikissa selaimissa. Hinta on yksi asettelu kanavanvaihtoa kohti,
+     * ja sellainen tehdään tässä samassa silmänräpäyksessä jo muutenkin
+     * (siirraViisari mittaa nimien paikat).
+     */
+    if (virityksenVaihe === uusi) {
+      nimet.style.animation = 'none';
+      void nimet.offsetWidth;
+      nimet.style.animation = '';
+    }
+    virityksenVaihe = uusi;
+    juuri.dataset.vaihe = uusi;
+    return uusi;
+  }
+
+  /**
+   * Nauhan nykyinen vaakasiirto pikseleinä.
+   *
+   * Matriisi luetaan merkkijonosta eikä DOMMatrixilla: kysely tehdään
+   * kerran virityksessä, ja käsin poimittu neljäs luku toimii myös
+   * niissä selaimissa, joissa DOMMatrixia ei ole. Tunnistamaton muoto
+   * on nolla — silloin asettuminen alkaa keskeltä, mikä on väärin mutta
+   * vain hiuksenhienosti.
+   */
+  function nauhanSiirto() {
+    const muunnos = getComputedStyle(nimet).transform;
+    if (!muunnos || muunnos === 'none') return 0;
+    const luvut = muunnos.slice(muunnos.indexOf('(') + 1, -1).split(',').map(Number);
+    // matrix(a, b, c, d, tx, ty) ja matrix3d(...): tx on kuudes tai 13.
+    const tx = luvut.length === 6 ? luvut[4] : luvut[12];
+    return Number.isFinite(tx) ? Math.round(tx * 10) / 10 : 0;
   }
 
   /** Asteikolta valittu kaupunki: kutsuja soittaa, laite ei. */
@@ -1167,6 +1428,14 @@ export function teeRadiosoitin({
      * ylhäällä oleva vipu vaikenevan radion päällä on rikkinäinen laite.
      */
     soittoKytkin.asetaAsento(uusi === 'soi' || uusi === 'virittaa');
+    /*
+     * Vaihesarja päättyy tilan mukana. Kutsuja kertoo alun ja keskikohdan
+     * (radio.js kerroVaihe) mutta ei loppua — lopun tietää tila, ja se on
+     * oikea paikka: keskeytynyt viritys, virhe ja aikakatkaisu päättyvät
+     * kaikki tänne, eikä yhdenkään varassa saa olla, että joku muistaa
+     * sammuttaa nauhan liikkeen erikseen.
+     */
+    if (uusi !== 'virittaa') asetaVirityksenVaihe(null);
     // Mittari seuraa samaa tilaa: neula elää vain kun laite tekee
     // ääntä, ja palaa muulloin lepoon omaa vauhtiaan.
     paivitaMittari();
@@ -1330,6 +1599,7 @@ export function teeRadiosoitin({
    * ks. asetaAanilahde.
    */
   let mittarinLukija = null;     // kutsujan antama lähde funktioksi käärittynä
+  let lahteenSolmut = [];        // kutsujan lähteelle luodut solmut, purettavaksi
   let analysoija = null;         // oma analysaattori pelin äänisummassa
   let analyysinPuskuri = null;
   let mittarinPaate = null;      // vaimennettu pääte, ks. varmistaAnalysoija
@@ -1447,14 +1717,33 @@ export function teeRadiosoitin({
     analyysinPuskuri = null;
   }
 
+  /**
+   * Irrottaa kutsujan lähteelle luodut solmut.
+   *
+   * Nämä ovat eri kasa kuin oma analysaattori, koska ne elävät eri
+   * ajan: kutsuja voi vaihtaa lähdettä kesken kaiken, ja vanha ketju
+   * jäisi muuten kiinni pelaajan äänikontekstiin. Sama sääntö kuin
+   * virittimen solmuilla (js/linssit/viritin.js pura).
+   */
+  function irrotaLahde() {
+    for (const solmu of lahteenSolmut) {
+      try { solmu.disconnect(); } catch { /* jo irrotettu */ }
+    }
+    lahteenSolmut = [];
+  }
+
   /** Nykyinen taso 0–1, tai null jos mitattavaa ei ole. */
   function mittarinTaso() {
     if (mittarinLukija) {
       try {
         return rajaaLukema(mittarinLukija());
       } catch (syy) {
+        // Rikki mennyt lähde ei jää yrittämään uudelleen kolmekymmentä
+        // kertaa sekunnissa: se hylätään, ja seuraava askel kytkee
+        // mittarin takaisin pelin omaan äänisummaan.
         console.warn('VU-mittarin äänilähde epäonnistui.', syy);
         mittarinLukija = null;
+        irrotaLahde();
       }
     }
     if (analysoija && analyysinPuskuri) {
@@ -1619,6 +1908,7 @@ export function teeRadiosoitin({
    */
   function asetaAanilahde(lahde) {
     mittarinLukija = null;
+    irrotaLahde();
     if (typeof lahde === 'function') {
       mittarinLukija = () => rajaaLukema(Number(lahde()));
     } else if (lahde && typeof lahde.getByteTimeDomainData === 'function') {
@@ -1635,6 +1925,7 @@ export function teeRadiosoitin({
         const paate = lahde.context.createGain();
         paate.gain.value = 0;
         solmu.connect(paate).connect(lahde.context.destination);
+        lahteenSolmut = [solmu, paate];
         const puskuri = analyysiPuskurille(solmu);
         mittarinLukija = () => analysoijanTaso(solmu, puskuri);
       } catch (syy) {
@@ -1728,6 +2019,8 @@ export function teeRadiosoitin({
     // koska ketju pitää siitä kiinni — sama sääntö kuin virittimen
     // solmuilla (js/linssit/viritin.js lopeta).
     irrotaAnalysoija();
+    irrotaLahde();
+    mittarinLukija = null;
     vahtija?.disconnect();
     juuri.remove();
   }
@@ -1753,6 +2046,7 @@ export function teeRadiosoitin({
     naytonAukko: naytto,
     naytaKanava,
     asetaTila,
+    asetaVirityksenVaihe,
     asetaNaytto,
     asetaAani,
     asetaAanilahde,

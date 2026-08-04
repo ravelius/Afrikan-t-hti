@@ -2086,7 +2086,51 @@ const PILKO_VAHINTAAN = 24;
  * palauttaa kloonin koskemattomana, joten varmistetaan lapsimäärä
  * ennen kuin niihin luotetaan.
  */
-export function pilkoTaide(klooni, elava, maarittelyt) {
+/*
+ * Laudan reunan yli menevä pala myös reunan toiselle puolelle.
+ *
+ * Kiertävällä kartalla laudan oikea reuna ja vasen reuna ovat SAMA
+ * kohta maastossa, ja moni muoto menee sen yli: Tšukotka alkaa 170.
+ * itäiseltä pituuspiiriltä ja päättyy 169. läntiselle, eli se jatkuu
+ * sauman toiselle puolelle. Yhdistetty ääriviiva ulottui siksi 179
+ * yksikköä laudan oikean reunan ULKOPUOLELLE — ja siellä sitä ei
+ * piirtänyt kukaan: ruudut kattavat välin [0, W], joten ylimenevä kärki
+ * jäi jokaisen ruudun ulkopuolelle. Kartalla näkyi reikä, ja
+ * Beringinsalmi levisi kaksinkertaiseksi (omistajan kuvakaappaus).
+ *
+ * Korjaus tehdään tässä eikä aineistossa: sama sääntö koskee mitä
+ * tahansa kerrosta — rantaviivoja, maastoa, jokia — ilman että yhtäkään
+ * pakettia tarvitsee luoda uudelleen. Pala, joka menee reunan yli, saa
+ * kaksoiskappaleen laudan leveyden verran toiseen suuntaan siirrettynä.
+ * Siirretty kappale on sama muoto samalla mallilla; vain kääre on eri.
+ */
+function reunanYliMenevat(palat, leveys) {
+  if (!leveys) return palat;
+  const ulos = [];
+  for (const pala of palat) {
+    ulos.push(pala);
+    const siirto = pala.x1 > leveys ? -leveys : (pala.x0 < 0 ? leveys : 0);
+    if (!siirto) continue;
+    /*
+     * Kaksoiskappaleen rajauslaatikko kutistetaan siihen osaan, jota
+     * varten se on olemassa. Euraasian ääriviiva ulottuu 5249:stä
+     * 12179:ään, joten siirretty kappale kattaisi laatikkona välin
+     * −6751…179 — ja tulisi mukaan jokaiseen laudan vasemman puolen
+     * ruutuun, vaikka siitä näkyy vain 179 yksikön kärki. Laatikoksi
+     * riittää se, mikä oli laudan ulkopuolella.
+     */
+    ulos.push({
+      ...pala,
+      x0: siirto < 0 ? 0 : pala.x0 + siirto,
+      x1: siirto < 0 ? pala.x1 + siirto : leveys,
+      kuori: `<g transform="translate(${siirto},0)">${pala.kuori ?? ''}`,
+      sulku: pala.kuori ? '</g></g>' : '</g>',
+    });
+  }
+  return ulos;
+}
+
+export function pilkoTaide(klooni, elava, maarittelyt, { leveys = 0 } = {}) {
   if (typeof XMLSerializer === 'undefined') return null;
   if (!klooni || !elava?.getScreenCTM) return null;
   if (klooni.children.length !== elava.children.length) return null;
@@ -2174,7 +2218,7 @@ export function pilkoTaide(klooni, elava, maarittelyt) {
      * vain ne mallit, joihin sen omat palat viittaavat.
      */
     mallit,
-    palat,
+    palat: reunanYliMenevat(palat, leveys),
   };
 }
 
@@ -2196,17 +2240,20 @@ export function kokoaRuudunTaide(pilkottu, ikkuna) {
   const osat = [];
   const tarvitut = new Set();
   let auki = null;
+  let sulku = '</g>';
   for (const pala of pilkottu.palat) {
     if (pala.x0 > x1 || pala.x1 < x0 || pala.y0 > y1 || pala.y1 < y0) continue;
     if (pala.malli) tarvitut.add(pala.malli);
     if (pala.kuori !== auki) {
-      if (auki) osat.push('</g>');
+      if (auki) osat.push(sulku);
       if (pala.kuori) osat.push(pala.kuori);
       auki = pala.kuori;
+      // Siirretyllä palalla on kaksi ryhmää auki, tavallisella yksi.
+      sulku = pala.sulku ?? '</g>';
     }
     osat.push(pala.xml);
   }
-  if (auki) osat.push('</g>');
+  if (auki) osat.push(sulku);
   if (!osat.length) return null;
 
   // Mallit ennen käyttöä: <use> ei löydä viitettä, joka tulee vasta
