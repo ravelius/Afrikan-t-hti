@@ -2212,6 +2212,34 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
    suodatinta on halpa. */
 .grain { opacity: 0.5; mix-blend-mode: multiply; pointer-events: none; }
 
+/*
+ * Linssikerros (js/linssit/kerros.js).
+ *
+ * Kerros on tyhjä ja näkymätön, kunnes linssi sytytetään. Siirtymä on
+ * ainoa liike, jonka linssi saa tehdä: mitattu 15 fps vastaan 60 fps,
+ * kun kartan päällä on jatkuvasti muuttuva elementti (js/ui.js
+ * 7529–7534). Tämä laukeaa kerran vaihdossa ja jää sitten paikalleen.
+ *
+ * Sisällön värit EIVÄT tule täältä vaan elementeiltä itseltään:
+ * rasteroitava linssi on irrallinen SVG eikä peri tätä tiedostoa.
+ */
+.linssi { pointer-events: none; transition: opacity 0.22s ease-out; }
+
+/*
+ * Paperin rakeisuus pois valokuvalinssin päältä.
+ *
+ * rect.grain on juuriryhmässä kaupunkien jälkeen ja sekoittuu
+ * kertolaskulla, joten se jää linssin päälle. Piirretylle linssille se
+ * on hyväksi — se sitoo linssin samaan karttaan eikä näytä päälle
+ * liimatulta — mutta valokuva (yökartta) himmenisi sen alla ruskeaksi.
+ * Malli on sama kuin lennon ajaksi tehty poisto alempana.
+ */
+body.linssi-valokuva .grain { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .linssi { transition: none; }
+}
+
 .graticule { stroke: #9d8253; stroke-width: 1; opacity: 0.28; fill: none; }
 
 .sea-echo { fill: none; stroke: #b99a68; stroke-linejoin: round; }

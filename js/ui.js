@@ -2946,6 +2946,53 @@ export class UI {
     // drawMaasto eikä drawTerrain, koska jälkimmäinen on varattu
     // maastosymboleille (puut, vuoret, dyynit) — eri asia.
     drawMaasto(taide, pack.map);
+
+    /*
+     * Linssikerros: staattisen karttakuvan päällä, kaupunkien alla.
+     *
+     * JUURIRYHMÄN SISÄÄN, koska kiertävä kartta saa sisällön ilmaiseksi:
+     * <use href="#lauta-sisalto"> on elävä viittaus ja seuraa kaikkea
+     * mitä juuriryhmään lisätään. Suoraan this.svg:hen lisätty kerros ei
+     * näkyisi sauman toisella puolella lainkaan.
+     *
+     * TÄHÄN KOHTAAN, koska lapsijärjestys on g.staattinen →
+     * clipPath#maa-rajaus → g.country-borders → g.country-names →
+     * g.cities → rect.grain → nappulat. Linssi on siis koko
+     * bittikarttakartan päällä mutta kaupunkien, nimien, laattojen,
+     * kohderenkaiden ja nappuloiden alla: linssi selittää maailmaa, se
+     * ei peitä pelitilaa.
+     *
+     * pointer-events: none, ettei kerros syö kartan omaa
+     * napautuszoomausta eikä kohderenkaiden napautuksia.
+     *
+     * Kerros on tyhjä, kunnes joku sytyttää linssin. Sisällön piirtää
+     * js/linssit/kerros.js, jota EI tuoda tähän tiedostoon staattisesti
+     * (ks. sen tiedoston alkukommentti: yhden tiedoston version kokoaja
+     * vaatisi linssit MODULES-listalleen).
+     */
+    if (pack.map.kiertava) {
+      /*
+       * Rajaus sauman yli.
+       *
+       * Mitattu vika (js/mapart.js paperi() 24–41): jos sisältö vuotaa
+       * laudan reunan yli, <use>-kopio ja alkuperäinen menevät
+       * päällekkäin ja kaistale tummuu — ruudulla se näkyi pystysuorana
+       * sävyrajana keskellä merta. Läpikuultava linssi tekee tasan saman:
+       * peittävyys tuplaantuu siinä vyöhykkeessä. Ja sisältö todella
+       * vuotaa: map.outlines ulottuu x = 12178,6 asti.
+       *
+       * Rajaus on juuriryhmän sisällä, joten kopio saa saman rajatun
+       * sisällön siirrettynä ja kattaa tarkalleen [12000, 24000).
+       */
+      const rajaus = el('clipPath', { id: 'linssi-rajaus' }, root);
+      el('rect', { x: 0, y: 0, width: pack.map.width, height: pack.map.height }, rajaus);
+    }
+    this.linssiKerros = el('g', {
+      class: 'linssi',
+      'pointer-events': 'none',
+      ...(pack.map.kiertava ? { 'clip-path': 'url(#linssi-rajaus)' } : {}),
+    }, root);
+
     // Nykyisen maan korostus (hento sävy + nimi kaunolla) piirretään tähän
     // kerrokseen pelin edetessä (drawCountryBorders). Sävy rajataan
     // tyylitellyn rantaviivan sisään, ettei se valu mereen — maiden

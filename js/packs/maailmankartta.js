@@ -39,6 +39,28 @@ import { MAAILMANKARTAN_MAASTO } from './maailmankartta-maasto.js';
 const LAHTEET = [EUROPE, AFRICA, MIDDLE_EAST, ASIA, NORTHAMERICA, SOUTHAMERICA, OCEANIA];
 
 /*
+ * Mikä manner minkin kaupungin takana on. Tarvitaan linssilaattojen
+ * jakoon: yksi linssi per manner (omistajan päätös 3.8.2026).
+ *
+ * Manner luetaan lähdepaketista eikä kaupungin sijainnista, koska
+ * sijainti ei kerro sitä luotettavasti. Keskellä merta ovat esimerkiksi
+ * Havaiji, Bermuda ja Nuuk (northamerica), Islanti (europe),
+ * Falklandinsaaret ja Galápagos (southamerica) sekä Norfolk (oceania):
+ * mikään suorakaide tai etäisyysvertailu ei osu näihin kaikkiin oikein.
+ * Lähdepaketin jako sen sijaan on käsin tehty ja se on juuri se jako,
+ * jonka mukaan koko peli on rakennettu — kysymykset, kuvat ja portit.
+ *
+ * Neljä kaupunkia on kahdessa pakassa (Istanbul, Kairo, Teheran,
+ * Panama), ja Object.fromEntries antaa niille viimeisen mantereen
+ * LAHTEET-järjestyksessä. Se on deterministinen ja riittää: kaupunki on
+ * pelin kannalta joka tapauksessa yhdellä mantereella, eikä yksikään
+ * niistä ole mantereensa ainoa laattakaupunki.
+ */
+const CITY_MANNER = Object.fromEntries(
+  LAHTEET.flatMap((p) => (p.cities ?? []).map((c) => [c.id, p.id])),
+);
+
+/*
  * Yhdistää lähdepakettien kysymyskorit lajeittain.
  *
  * Kaksoiskappaleet karsitaan kysymystekstin perusteella KAIKKIEN lajien
@@ -4738,6 +4760,7 @@ export const MAAILMANKARTTA = {
   map: {
     width: 12000, height: 5399, outlines: OUTLINES, kiertava: true,
     cityCountry: CITY_COUNTRY,
+    cityManner: CITY_MANNER,
     maasto: MAAILMANKARTAN_MAASTO,
     countryShapes: COUNTRY_SHAPES,
   },
@@ -4750,7 +4773,12 @@ export const MAAILMANKARTTA = {
   tokens: {
     types: themedTokenTypes({}),
     // Laattamäärä suhteutettu kaupunkien määrään (248).
-    counts: {"star":1,"horseshoe":11,"robber":18,"ruby":30,"emerald":37,"topaz":48,"empty":84},
+    //
+    // Seitsemän linssilaattaa on otettu tyhjistä (84 -> 77), koska
+    // maailmankartalla on seitsemän lähdemannerta ja tyhjä laatta on
+    // pelin turhauttavin ruutu: se vie vuoron eikä anna mitään. Summa
+    // pysyy 229:ssä eli laattakaupunkien määrässä.
+    counts: {"star":1,"horseshoe":11,"robber":18,"ruby":30,"emerald":37,"topaz":48,"empty":77,"linssi":7},
   },
 
   questions: yhdistaKysymykset(),

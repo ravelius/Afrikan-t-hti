@@ -28,6 +28,10 @@ const TAULUT = {
   europe: ['europe-valokuvat.js', 'EUROPE_VALOKUVAT'],
   africa: ['africa-valokuvat.js', 'AFRICA_VALOKUVAT'],
   asia: ['asia-valokuvat.js', 'ASIA_VALOKUVAT'],
+  'asia-lisat': ['asia-lisat-valokuvat.js', 'ASIA_LISAT_VALOKUVAT'],
+  northamerica: ['northamerica-valokuvat.js', 'NORTHAMERICA_VALOKUVAT'],
+  southamerica: ['southamerica-valokuvat.js', 'SOUTHAMERICA_VALOKUVAT'],
+  oceania: ['oceania-valokuvat.js', 'OCEANIA_VALOKUVAT'],
 };
 
 const pyydetyt = process.argv.slice(2).filter((a) => !a.startsWith('--'));

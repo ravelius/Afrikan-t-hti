@@ -17,6 +17,11 @@ export const TOKEN_TYPES = {
   emerald: { id: 'emerald', name: 'Smaragdi', symbol: '◆', value: 600, color: '#2fa36b' },
   topaz: { id: 'topaz', name: 'Topaasi', symbol: '◆', value: 300, color: '#e8a020' },
   empty: { id: 'empty', name: 'Tyhjä', symbol: '·', value: 0, color: '#6f5b45' },
+  // Taikalasi on katselutapa eikä jalokivi: sen arvo puntina on nolla,
+  // ja juuri siksi sillä on oltava revealTokenissa oma haara ennen
+  // defaultia. Ilman sitä laatta maksaisi "+0 puntaa" ja kuulostaisi
+  // pettymykseltä (js/game.js, docs/linssit-suunnitelma.md luku 4.1).
+  linssi: { id: 'linssi', name: 'Taikalasi', symbol: '◉', value: 0, color: '#7fb3c8' },
 };
 
 /** Laattatyypit laudan omilla nimillä ja väreillä. */
