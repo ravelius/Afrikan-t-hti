@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 258, teksti: 'Tutki: osaston otsikko pysyy näkyvissä vierittäessä' },
   { v: 257, teksti: 'Isot järvet takaisin kartalle, vain joet pois' },
   { v: 257, teksti: 'Radio kiinni alareunaan ja hieman kapeammaksi' },
   { v: 257, teksti: 'VU-neula ei jää kuolleeksi soivan aseman päälle' },
