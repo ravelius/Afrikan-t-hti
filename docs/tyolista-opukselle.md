@@ -5235,6 +5235,51 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v258 — Tutki-osaston otsikko tarttuu yläreunaan (4.8.2026)
+
+Omistaja: *"Otsikko saisi pysyä näkyvissä myös alas vierittäessä."*
+Kirjallisuus-sivu on pitkä (mitattu 3808 px puhelimella), ja sen
+puolivälissä lukija ei enää tiedä, minkä osaston juttua lukee.
+
+`.wiki-kategoria .aihe-nimi` on nyt `position: sticky`.
+
+**Tarttumakohta ei ole nolla.** Se oli koko tehtävän ainoa oikea
+kysymys, ja vastaus on eri kummassakin koossa:
+
+- **Työpöydällä** arkin yläreuna ei ole kortin laatikon yläreuna.
+  Paperin reuna on piirretty aaltoviiva, joka alkaa 6 px laatikon
+  sisältä ja aaltoilee vielä 5 px syvemmälle (`arkinAariviiva`: `M = 6`,
+  aallot 3,4 + 1,6). Nollassa otsikon yläviiva olisi jäänyt leikkauksen
+  ulkopuolelle — eli näkymättömiin juuri siltä osin, joka oli tarkoitus
+  näyttää.
+- **Puhelimessa** paperireunaa ei ole, mutta yläreunassa on umpinainen
+  turvakaista Dynamic Islandin alla
+  (`env(safe-area-inset-top) + 0.55rem`). Otsikko pysähtyy tarkalleen
+  sen alareunaan.
+
+Molemmat arvot ovat samassa muuttujassa `--arkki-tarttuma`, joka
+määritellään kortilla ja jonka puhelinsääntö korvaa. Mitattu: neula
+pysähtyy 15 px:iin työpöydällä ja 9 px:iin puhelimella, kun sivua on
+vieritetty 1400 px.
+
+Kaksi pikkuseikkaa, jotka olisivat rikkoneet lopputuloksen:
+
+1. **Yläreunus oli marginaali, ei pehmustetta.** Tarttuvan elementin
+   pysähdyskohtaa siirtää sen oma marginaali, joten `margin: 0.2rem 0
+   1rem` olisi jättänyt 3 px:n raon, jossa vierivä teksti vilkkuu.
+   Marginaali pois, pehmuste tilalle.
+2. **Otsikon yläpuolelle jää rako** (se 9–15 px). Se peitetään
+   `::before`-kaistaleella, joka ulottuu palstan reunojen yli
+   negatiivisella sivumarginaalilla — muuten teksti pilkottaisi
+   sivuilta.
+
+### Opittua
+
+**Kun elementti tarttuu reunaan, kysy mikä reuna.** Laatikon reuna ja
+näkyvä reuna ovat eri asia aina kun päällä on leikkaus, piirretty
+kehys tai turva-alue. `top: 0` on oikea vastaus vain siinä
+erikoistapauksessa, että ne sattuvat olemaan sama.
+
 ## v257 — Järvet takaisin, radio alas, VU-vahti (4.8.2026)
 
 **Isot järvet takaisin kartalle, vain joet pois** (omistajan tarkennus).

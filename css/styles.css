@@ -5980,6 +5980,13 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   --arkki-reunus: 1.75rem;
   --arkki-yla: 1.7rem;
   /*
+   * Mihin tarttuva osaston otsikko pysähtyy. Ei nolla: piirretty
+   * paperireuna on 6 px kortin laatikon sisällä ja aaltoilee vielä
+   * 5 px syvemmälle, joten nollassa otsikon viiva jäisi leikkauksen
+   * ulkopuolelle. 0,85rem on syvin aallonpohja plus pieni vara.
+   */
+  --arkki-tarttuma: 0.85rem;
+  /*
    * Yläreunus EI ole kortin omaa pehmustetta vaan ensimmäisen palstan.
    * Syy on tarttuvassa aiherivissä: selaimet ovat eri mieltä siitä,
    * mihin `top: 0` pysäyttää tarttuvan elementin — Chromium sisä-
@@ -6092,10 +6099,30 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  * Kaksi viivaa eri paksuisina: paksu yllä, ohut alla. Se on vanhan
  * lehden osastoviiva, ja epäsymmetria on tarkoituksellinen — kaksi
  * samanpaksuista viivaa näyttäisi taulukolta, ei otsikolta.
+ *
+ * OTSIKKO TARTTUU YLÄREUNAAN (omistajan toive: "otsikko saisi pysyä
+ * näkyvissä myös alas vierittäessä"). Pitkällä sivulla lukija ei muuten
+ * enää tiedä, minkä osaston juttua lukee.
+ *
+ * Tarttumakohta ei ole nolla vaan --arkki-tarttuma, koska arkin
+ * yläreuna EI ole kortin laatikon yläreuna: työpöydällä paperin reuna
+ * on piirretty aaltoviiva (leikkaus alkaa noin 11 pikselin syvyydeltä)
+ * ja puhelimessa yläreunassa on umpinainen turvakaista. Nollassa
+ * otsikko jäisi kummassakin osittain piiloon.
+ *
+ * Ylle jäävä rako peitetään ::before-kerroksella: ilman sitä otsikon
+ * yllä vilkkuisi kaistale vierivää tekstiä.
  */
 .wiki-kategoria .aihe-nimi {
-  margin: 0.2rem 0 1rem;
+  position: sticky;
+  top: var(--arkki-tarttuma, 0px);
+  z-index: 3;
+  /* Yläreunuksen on oltava pehmustetta eikä marginaalia: marginaali
+   * siirtäisi tarttumakohtaa alaspäin ja jättäisi raon. */
+  margin: 0 0 1rem;
   padding: 0.42rem 0 0.34rem;
+  background-image: var(--paper-noise), var(--card-bg);
+  background-blend-mode: multiply, normal;
   border-top: 3px solid rgba(70, 51, 31, 0.85);
   border-bottom: 1px solid rgba(70, 51, 31, 0.55);
   font-family: var(--font-type);
@@ -6106,6 +6133,20 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   text-align: center;
   text-transform: uppercase;
   color: rgba(70, 51, 31, 0.92);
+}
+
+/* Paperikaistale otsikon yllä: täyttää tarttumakohdan yläpuolisen raon
+ * ja ulottuu palstan reunojen yli, jottei teksti pilkota sivuilta. */
+.wiki-kategoria .aihe-nimi::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--arkki-reunus, 0px) * -1);
+  right: calc(var(--arkki-reunus, 0px) * -1);
+  bottom: 100%;
+  height: calc(var(--arkki-tarttuma, 0px) + 2px);
+  background-image: var(--paper-noise), var(--card-bg);
+  background-blend-mode: multiply, normal;
+  pointer-events: none;
 }
 
 /*
@@ -6175,6 +6216,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     animation: none;
     --arkki-reunus: 0.95rem;
     --arkki-yla: calc(0.85rem + env(safe-area-inset-top));
+    /* Puhelimessa paperireunaa ei ole, mutta yläreunassa on umpinainen
+     * turvakaista. Otsikko pysähtyy tarkalleen sen alareunaan. */
+    --arkki-tarttuma: calc(env(safe-area-inset-top, 0px) + 0.55rem);
     /* Alalaidan varaus = sivunumero + kotipalkin turva-alue. */
     padding: 0 var(--arkki-reunus) calc(2.6rem + env(safe-area-inset-bottom));
   }
