@@ -60,6 +60,7 @@ Sanasto (sitova, myös käännöksiin):
 
 | Suomeksi | Englanniksi | Käyttö |
 | --- | --- | --- |
+| Unohdettu aarre | The Forgotten Treasure | PELIN NIMI (päätetty 4.8.2026; entinen työnimi Matkakirja). "Matkakirja" jää tarinan keskusesineeksi — isoisän kirjaksi — eikä ole enää pelin nimi. |
 | unohdettu aarre | forgotten treasure | arkitermi säännöissä ja pelin ilmoituksissa (laattatyypin nimi) |
 | Aarnin luettelo | Aarni's Catalogue | tarinan erisnimi aarrekokoelmalle; kirjan koko nimi "Aarnin luettelo unohdetuista aarteista" / "Aarni's Catalogue of Forgotten Treasures" |
 | tutkimusmatkailija Aarni | the explorer Aarni | erisnimi säilyy käännöksessä sellaisenaan |

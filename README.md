@@ -1,19 +1,23 @@
-# Matkakirja ◈
+# Unohdettu aarre ◈
 
-Selaimessa pelattava seikkailupeli maailman ympäri. Matkakirja on oma
-pelinsä: se on saanut inspiraatiota Jules Vernen teoksista ja monista
-muista, mutta se ei jäljittele mitään niistä eikä sillä ole yhteyttä
-niiden oikeudenhaltijoihin. Ei riippuvuuksia, ei käännösvaihetta —
-pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana on oppia ja
-opettaa maiden kulttuurista, arjesta ja maantieteestä kiinnostavasti.
+*(engl. The Forgotten Treasure; entinen työnimi Matkakirja — matkakirja
+on nyt tarinan keskusesine, isoisän kirja, ei enää pelin nimi.)*
 
-Pelin ytimessä ovat **unohdetut aarteet** (engl. *forgotten treasures*):
-tutkimusmatkailija Aarni luetteloi aikoinaan maailman kuuluisat kadonneet
-aarteet — Meripihkahuoneen, El Doradon, keisarin jadesinetin ja muut —
-eikä kukaan uskonut häntä. Isoisä uskoi, ja hänen matkansa jäi kesken.
-**Aarnin luettelo** (*Aarni's Catalogue*) on pelin keskeinen ajojahti:
-jokaisella laudalla yksi luettelon aarre odottaa löytäjäänsä
-([docs/tarina.md](docs/tarina.md)).
+Selaimessa pelattava seikkailupeli maailman ympäri. Unohdettu aarre on
+oma pelinsä: se on saanut inspiraatiota Jules Vernen teoksista ja
+monista muista, mutta se ei jäljittele mitään niistä eikä sillä ole
+yhteyttä niiden oikeudenhaltijoihin. Ei riippuvuuksia, ei
+käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana
+on oppia ja opettaa maiden kulttuurista, arjesta ja maantieteestä
+kiinnostavasti.
+
+Nimi tulee pelin ytimestä, **unohdetuista aarteista** (engl. *forgotten
+treasures*): tutkimusmatkailija Aarni luetteloi aikoinaan maailman
+kuuluisat kadonneet aarteet — Meripihkahuoneen, El Doradon, keisarin
+jadesinetin ja muut — eikä kukaan uskonut häntä. Isoisä uskoi, ja hänen
+matkansa jäi kesken. **Aarnin luettelo** (*Aarni's Catalogue*) on pelin
+keskeinen ajojahti: jokaisella laudalla yksi luettelon aarre odottaa
+löytäjäänsä ([docs/tarina.md](docs/tarina.md)).
 
 ## Tarina
 
