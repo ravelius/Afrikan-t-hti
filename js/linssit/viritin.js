@@ -874,12 +874,16 @@ export function unohdaViritysaanet(audioCtx) {
  * pelin masteriketju vaimentaa noin 14 dB (js/sound.js: dry 0,82 ×
  * master 0,24). Ilman korotusta viritys jäisi RMS −36 dBFS:ään eli
  * selvästi hiljaisemmaksi kuin synteesi, jonka taso mitattiin
- * kuunneltavaksi. Tämä kerroin nostaa nauhan samaan −31 dBFS:ään, jotta
- * tavan vaihtaminen VIRITYKSEN_TAPA-vakiosta ei muuta äänenvoimakkuutta.
+ * kuunneltavaksi.
+ *
+ * Kerroin 1,5 mitattiin nauhoittamalla kolme viritystä molemmilla
+ * tavoilla pelin masteriketjun läpi: nauha RMS −31,7…−31,9 dBFS,
+ * synteesi −31,9…−33,8 dBFS. Ero on alle desibelin, joten tavan
+ * vaihtaminen VIRITYKSEN_TAPA-vakiosta ei muuta äänenvoimakkuutta.
  *
  * Jos tätä muuttaa, MITTAA UUDELLEEN — ks. ULOSTULON_TASO yllä.
  */
-const NAUHAN_TASO = 1.8;
+const NAUHAN_TASO = 1.5;
 
 /*
  * Viimeksi arvottu äänite koko moduulin muistissa, ei virittimen.
@@ -920,6 +924,7 @@ export function teeNauhaviritin(audioCtx, {
   let kaynnissa = false;
   let lopetettu = false;
   let valittu = null;
+  let aloituskohta = 0;
   let taso = rajaa(Number(voimakkuus) || 0, [0, 1]);
 
   const onMykistetty = typeof mykistetty === 'function'
@@ -954,8 +959,8 @@ export function teeNauhaviritin(audioCtx, {
     // Aloituskohta mistä tahansa pätkän sisältä. Viimeisen kymmenyksen
     // jättäminen väliin ei ole makuasia: puskurin lopun yli aloitettu
     // toisto alkaa Web Audiossa hiljaisuudella eikä silmukan alusta.
-    const alku = arvonta() * Math.max(0, puskuri.duration - 0.1);
-    lahde.start(t0, alku);
+    aloituskohta = arvonta() * Math.max(0, puskuri.duration - 0.1);
+    lahde.start(t0, aloituskohta);
     ulos.gain.cancelScheduledValues(t0);
     ulos.gain.setValueAtTime(HILJAA, t0);
     ulos.gain.exponentialRampToValueAtTime(huippu(), t0 + VIRITTIMEN_RAJAT.alkuHaive);
@@ -1047,8 +1052,10 @@ export function teeNauhaviritin(audioCtx, {
     get soi() { return kaynnissa; },
     get solmuja() { return (ulos ? 1 : 0) + (lahde ? 1 : 0) + (vara?.solmuja ?? 0); },
     get siivoaa() { return false; },
-    // Kumpi äänite arvottiin. Mittaus ja demot lukevat tämän; peli ei.
+    // Kumpi äänite arvottiin ja mistä kohtaa se alkoi. Mittaus ja demot
+    // lukevat nämä; peli ei.
     get valinta() { return valittu; },
+    get aloituskohta() { return aloituskohta; },
   };
 }
 

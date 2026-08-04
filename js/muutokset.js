@@ -13,6 +13,11 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 227, teksti: 'Radion asteikossa naapurikaupungit, klikattavina' },
+  { v: 227, teksti: 'Kromatut vipukytkimet ja hehkuva merkkivalo' },
+  { v: 227, teksti: 'Viritysääni kun radio hakee kanavaa' },
+  { v: 227, teksti: 'Kyrilliset ja kiinalaiset merkit näytölle' },
+  { v: 227, teksti: 'Vanhat vedokset seitsemään kaupunkiin lisää' },
   { v: 224, teksti: 'Maailmanradio: kaupungit soivat kartalta' },
   { v: 224, teksti: 'Vanhan ajan radiosoitin ruudun alalaitaan' },
   { v: 224, teksti: 'Kehittäjätilaan kaikki toimivat aarteet' },
