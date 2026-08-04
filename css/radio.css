@@ -132,6 +132,29 @@
    */
   max-width: 800px;
   display: flex;
+  /*
+   * RIVITYS ON PUHELINTA VARTEN, EI TABLETTIA.
+   *
+   * Kapealla ruudulla näyttö nousee omalle rivilleen ja mittari,
+   * säleikkö ja kytkimet jäävät alle — se on oikein. Leveällä ruudulla
+   * rivitys on pelkkä ansa, ja se laukesi omistajan iPadilla: kytkimet
+   * putosivat toiselle riville, säleikkö venyi vapautuneeseen tilaan ja
+   * kotelosta tuli puolityhjä ja puolet liian korkea.
+   *
+   * SYY OLI KNIFE-EDGE. Kotelo kavennettiin v257:ssä 880 -> 800, ja
+   * mitattuna 800 pikselissä osat täyttivät rivin viimeistä pikseliä
+   * myöten. Rivitys päätetään osien TOIVEKOOISTA ennen kutistamista,
+   * joten mikä tahansa muutama pikseli — esimerkiksi kytkinkilpien
+   * leveys pelin omalla kirjasimella, jota kehitysselaimessa ei ole —
+   * riitti työntämään kytkimet yli. Mitattu ero omistajan
+   * kuvakaappauksesta: kotelo 181 px korkea, kun sen pitäisi olla 122.
+   *
+   * `nowrap` yli 765 pikselin ruudulla poistaa ansan kokonaan: näyttö
+   * kutistuu muutaman pikselin (sillä on `min-width: 0`) eikä mikään
+   * putoa riviltä. Kotelo saa siis pysyä omistajan pyytämän kapeana.
+   * Kahden rivin asettelu on omassa lohkossaan (max-width: 765px), ja
+   * se on tarkoituksellinen — tämä ansa ei ollut.
+   */
   flex-wrap: wrap;
   align-items: stretch;
   gap: 0.5rem;
@@ -1539,6 +1562,18 @@
 @media (max-width: 800px) {
   .radio-mittari { width: 80px; height: 57px; }
   .radio-mittari-neula { width: 1.7px; margin-left: -0.85px; }
+}
+
+/*
+ * YKSI RIVI ON YKSI RIVI (ks. .radio-kotelo flex-wrap).
+ *
+ * Alempi lohko (max-width: 765px) siirtää osat kahdelle riville
+ * tarkoituksella ja hallitusti. Sen yläpuolella rivitys voi vain
+ * vahingoittaa: se ei koskaan tuota parempaa asettelua, vain sen
+ * puolityhjän kotelon, jonka omistaja näki iPadillaan.
+ */
+@media (min-width: 766px) {
+  .radio-kotelo { flex-wrap: nowrap; }
 }
 
 /*
