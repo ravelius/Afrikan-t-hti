@@ -4329,3 +4329,30 @@ ollut kertonut.
 laudalta hyvästä syystä (kokonäkymä oli väärä lähtökohta), mutta sen mukana
 katosi se, minkä liike kertoo: mistä tullaan ja minne. Oikea korjaus ei ollut
 poistaa liikettä vaan vaihtaa sen lähtökohta.
+
+## v235 — maastonimet vaakaan (4.8.2026)
+
+Omistaja: *"Uralin nimikyltistä ei saa selvää. Nimet voisi kirjoittaa aina
+vaakasuuntaan ja saa olla kyllä isommalla."*
+
+Joen nimi seurasi uomaa `textPath`illa ja vuoriston nimi jonon kulmaa. Se oli
+tarkoituksellista — kommentti sanoi sen olevan "se kohta, joka tekee kartasta
+kartan eikä luettelon" — mutta pohjois-eteläinen jono kääntää nimen pystyyn, ja
+pystyssä oleva nimi on kyltti jota ei lueta. Ural on aineistossa −87 astetta ja
+Andit −84, eli käytännössä pystysuoria.
+
+Nyt kaikki nimet kirjoitetaan vaakaan, ja fontti on 15 px → 19 px. Nimi
+kirjoitetaan yhä siihen kohtaan kohdetta, joka on lähinnä ruudun keskustaa,
+joten joen nimi osuu uomalle vaikkei seuraakaan sitä.
+
+Samalla versionumeron hover: yleinen `button:hover` maalasi napin tummalla, ja
+se osui myös versionumeroon — työpöytäselaimessa numeron päälle ilmestyi musta
+suorakaide keskelle karttaa. Numero on merkintä pergamentilla eikä nappi; nyt
+se vain tummuu.
+
+### Opittua
+
+**Perusteltu ratkaisu voi silti olla väärä reunatapauksessa.** Kaartuva nimi on
+oikea valinta idässä–lännessä kulkevalle joelle ja väärä pohjoisesta etelään
+kulkevalle vuorijonolle. Kommentti perusteli säännön hyvin mutta ei kertonut,
+missä se lakkaa pätemästä — ja juuri siellä se rikkoutui.

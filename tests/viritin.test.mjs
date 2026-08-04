@@ -24,9 +24,16 @@ import {
 
 // --- tynkäkonteksti ---------------------------------------------------------
 
-/** Automaatioparametri, joka hyväksyy kaikki aikataulutuskutsut. */
-function param(value = 0) {
-  return {
+/**
+ * Automaatioparametri, joka hyväksyy kaikki aikataulutuskutsut.
+ *
+ * `kayrat` lisää setValueCurveAtTime- ja cancelAndHoldAtTime-kutsut eli
+ * sen tien, jota oikea selain kulkee. Oletuksena niitä EI ole, koska
+ * ristihäivytyksen varareitti (eksponenttiramppi) on yhtä lailla
+ * testattava: siihen putoavat ne kontekstit, joissa käyriä ei ole.
+ */
+function param(value = 0, { kayrat = false } = {}) {
+  const p = {
     value,
     kutsut: [],
     setValueAtTime(v, t) { this.kutsut.push(['set', v, t]); return this; },
@@ -34,9 +41,20 @@ function param(value = 0) {
     exponentialRampToValueAtTime(v, t) { this.kutsut.push(['exp', v, t]); return this; },
     cancelScheduledValues() { this.kutsut.push(['peru']); return this; },
   };
+  if (kayrat) {
+    p.setValueCurveAtTime = function curve(kayra, t, kesto) {
+      this.kutsut.push(['kayra', Array.from(kayra), t, kesto]);
+      // Käyrän päätearvo jää voimaan, jotta seuraava häivytys lähtee
+      // oikealta tasolta niin kuin selaimessakin.
+      this.value = kayra[kayra.length - 1];
+      return this;
+    };
+    p.cancelAndHoldAtTime = function hold(t) { this.kutsut.push(['pidatys', t]); return this; };
+  }
+  return p;
 }
 
-function tynkaContext() {
+function tynkaContext({ kayrat = false } = {}) {
   const ctx = {
     currentTime: 0,
     sampleRate: 44100,
@@ -60,7 +78,7 @@ function tynkaContext() {
     ctx.luodut.push(solmu);
     return solmu;
   };
-  ctx.createGain = () => luo('gain', { gain: param(1) });
+  ctx.createGain = () => luo('gain', { gain: param(1, { kayrat }) });
   ctx.createOscillator = () => luo('oscillator', { frequency: param(440), type: 'sine' });
   ctx.createBufferSource = () => luo('bufferSource', { buffer: null, loop: false });
   ctx.createBiquadFilter = () => luo('filter', {
@@ -76,11 +94,18 @@ function tynkaContext() {
 }
 
 /** Viritin tynkäkontekstiin, aina äänet päällä ja oma kohde. */
-function tynkaViritin(asetukset = {}) {
-  const ctx = tynkaContext();
+function tynkaViritin(asetukset = {}, { kayrat = false } = {}) {
+  const ctx = tynkaContext({ kayrat });
   const kohde = { type: 'kohde', connect: (k) => k, disconnect() {} };
   const viritin = teeViritin(ctx, { kohde, mykistetty: () => false, ...asetukset });
   return { ctx, viritin };
+}
+
+/** Virittimen ulostulo eli ensimmäinen luotu vahvistin. */
+function ulostulo(ctx) {
+  const gain = ctx.luodut.find((s) => s.laji === 'gain');
+  assert.ok(gain, 'ulostuloa ei luotu');
+  return gain.gain;
 }
 
 // --- arvonnan rajat ---------------------------------------------------------
@@ -282,6 +307,113 @@ test('lopetus häivyttää eikä katkaise', () => {
   for (const p of ctx.pysaytetyt) {
     if (p.laji === 'bufferSource') assert.ok(p.t >= R.loppuHaive, `lähde katkaistiin ${p.t} s`);
   }
+});
+
+// --- ristihäivytys ----------------------------------------------------------
+//
+// Omistajan toive: "Virityssuhina saisi feidautua kanavanvaihdon alussa ja
+// lopussa. Tarkoitan, että siinä pitäisi olla ristifeidaus." Molemmat päät
+// ovat siis häivytyksiä, ja molempien on oltava TASATEHOISIA: viritys on
+// eri ääni kuin lähetys, ja riippumattomat äänet summautuvat teholtaan.
+// Lineaarinen pari jättäisi vaihdon keskelle 3 dB:n kuopan.
+
+test('aloitus häivyttää sisään eikä hyppää täyteen voimaan', () => {
+  const { ctx, viritin } = tynkaViritin();
+  viritin.aloita(0.6);
+  const gain = ulostulo(ctx);
+
+  const alku = gain.kutsut.find((k) => k[0] === 'set');
+  assert.ok(alku, 'lähtöarvoa ei asetettu lainkaan');
+  assert.ok(alku[1] <= 0.001, `kohina alkoi tasolta ${alku[1]}`);
+
+  const nousu = gain.kutsut.find((k) => k[0] === 'exp');
+  assert.ok(nousu, 'sisäänhäivytystä ei ajoitettu');
+  assert.ok(nousu[1] > alku[1] * 10, 'ramppi ei nosta ääntä kuuluviin');
+  assert.ok(Math.abs(nousu[2] - 0.6) < 1e-9, `sisäänhäivytys kesti ${nousu[2]} s`);
+
+  // Yksikään kutsu ei aseta täyttä tasoa suoraan: se olisi juuri se
+  // töksähdys, jonka poistamiseksi häivytys on.
+  for (const kutsu of gain.kutsut) {
+    if (kutsu[0] === 'set') assert.ok(kutsu[1] <= 0.001, `taso ${kutsu[1]} asetettiin hypyllä`);
+  }
+  viritin.lopeta();
+});
+
+test('kumpikin pää on tasatehoinen käyrä, ei lineaarinen', () => {
+  const { ctx, viritin } = tynkaViritin({}, { kayrat: true });
+  viritin.aloita(0.6);
+  const gain = ulostulo(ctx);
+
+  const nousu = gain.kutsut.find((k) => k[0] === 'kayra');
+  assert.ok(nousu, 'sisäänhäivytystä ei ajoitettu käyränä');
+  assert.equal(nousu[3], 0.6, 'sisäänhäivytyksen kesto ei ole pyydetty');
+  const ylos = nousu[1];
+  assert.ok(ylos.length >= 16, `käyrässä vain ${ylos.length} pistettä`);
+  assert.ok(ylos[0] <= 0.001, `nousu alkaa tasolta ${ylos[0]}`);
+  const huippu = ylos.at(-1);
+  assert.ok(huippu > 0.5, `nousun huippu jäi tasolle ${huippu}`);
+  for (let i = 1; i < ylos.length; i++) {
+    assert.ok(ylos[i] > ylos[i - 1], 'nousu ei ole yksitoikkoisesti kasvava');
+  }
+  // Tasateho: puolivälissä sin(π/4) ≈ 0,707 huipusta. Lineaarinen nousu
+  // olisi tasan puolet, ja juuri se ero on se 3 dB:n kuoppa.
+  const keski = ylos[(ylos.length - 1) / 2];
+  assert.ok(
+    Math.abs(keski / huippu - Math.SQRT1_2) < 0.01,
+    `nousu on puolivälissä ${(keski / huippu).toFixed(3)} huipusta, pitäisi olla 0,707`,
+  );
+
+  viritin.lopeta(0.6);
+  const lasku = gain.kutsut.filter((k) => k[0] === 'kayra').at(-1);
+  assert.notEqual(lasku, nousu, 'lopetus ei ajoittanut omaa käyräänsä');
+  assert.equal(lasku[3], 0.6, 'loppuhäivytyksen kesto ei ole pyydetty');
+  const alas = lasku[1];
+  assert.ok(alas[0] > 0.5, `lasku alkaa tasolta ${alas[0]}`);
+  assert.ok(alas.at(-1) <= 0.001, `lasku päättyy tasolle ${alas.at(-1)}`);
+  for (let i = 1; i < alas.length; i++) {
+    assert.ok(alas[i] < alas[i - 1], 'lasku ei ole yksitoikkoisesti vähenevä');
+  }
+  const laskunKeski = alas[(alas.length - 1) / 2];
+  assert.ok(
+    Math.abs(laskunKeski / alas[0] - Math.SQRT1_2) < 0.01,
+    `lasku on puolivälissä ${(laskunKeski / alas[0]).toFixed(3)} lähdöstä`,
+  );
+  // Nouseva ja väistyvä puoli ovat sama pari: sin² + cos² = 1.
+  for (let i = 0; i < ylos.length; i++) {
+    const teho = (ylos[i] / huippu) ** 2 + (alas[i] / alas[0]) ** 2;
+    assert.ok(Math.abs(teho - 1) < 0.01, `yhteisteho ${teho} pisteessä ${i}`);
+  }
+});
+
+test('keskeytys ei kasaa päällekkäisiä häivytyksiä', () => {
+  const { ctx, viritin } = tynkaViritin({}, { kayrat: true });
+  viritin.aloita(0.6);
+  const gain = ulostulo(ctx);
+  const kayria = () => gain.kutsut.filter((k) => k[0] === 'kayra').length;
+  assert.equal(kayria(), 1, 'aloitus ajoitti muutakin kuin yhden nousun');
+
+  // Toinen aloitus ei ajoita toista nousua: kesken oleva viritys jatkuu
+  // sellaisenaan, kun pelaaja hyppää kaupungista toiseen.
+  viritin.aloita(0.6);
+  assert.equal(kayria(), 1, 'toinen aloitus ajoitti toisen häivytyksen');
+
+  // Nupin kääntäminen kesken nousun katkaisee automaation ensin.
+  viritin.asetaVoimakkuus(0.4);
+  const nupinJalkeen = gain.kutsut.at(-3);
+  assert.ok(
+    nupinJalkeen[0] === 'pidatys' || nupinJalkeen[0] === 'peru',
+    'voimakkuuden muutos ei katkaissut kesken olevaa häivytystä',
+  );
+
+  // Lopetus katkaisee kesken olevan nousun ENNEN laskun ajoittamista.
+  viritin.lopeta(0.6);
+  const laskunKohta = gain.kutsut.findLastIndex((k) => k[0] === 'kayra');
+  assert.equal(kayria(), 2, 'lopetus ajoitti muutakin kuin yhden laskun');
+  const edeltava = gain.kutsut[laskunKohta - 1];
+  assert.ok(
+    edeltava && (edeltava[0] === 'pidatys' || edeltava[0] === 'peru'),
+    'laskua ei edeltänyt automaation katkaisu',
+  );
 });
 
 test('lopetus irrottaa solmut', async () => {
