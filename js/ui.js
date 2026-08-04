@@ -1168,6 +1168,123 @@ function shortIntro(text, maxChars = 280, maxSentences = 3) {
   return esittely.trim();
 }
 
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ * TUTKI-SIVUN TYPOGRAFIA: LEHTIMÄINEN LEIPÄTEKSTI
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Omistaja: "Se on tällä hetkellä vaivalloinen lukea, kun tekstiä on niin
+ * paljon." Ja: "tekstiä pitäisi vähän elävöittää poldauksilla tai muilla
+ * nostoilla, niin kuin lehdessä."
+ *
+ * Kaksi vikaa, jotka näkyvät jo mitasta. Yhden kategorian sivulla on
+ * 4–7 nostoa à noin 500–650 merkkiä eli kolmisen tuhatta merkkiä
+ * yhtenäistä tekstiä — ja se oli KIRJOITUSKONEKIRJASIMELLA yhtenä
+ * kappaleena nostoa kohti. Kirjoituskone on oikea valinta otsikoihin ja
+ * nappeihin, mutta pitkän leipätekstin lukeminen sillä on työlästä:
+ * tasalevyinen kirjasin ei anna sanoille muotoa, josta silmä tunnistaa
+ * ne vilkaisulla.
+ *
+ * Tämä funktio tekee tekstille kolme lehdestä tuttua asiaa:
+ *
+ *   1. KAPPALEJAKO. Virkkeet jaetaan kahteen kappaleeseen suunnilleen
+ *      puolivälistä. Yksi tekstimuuri muuttuu kahdeksi luettavaksi
+ *      palaksi ilman että sanoihin kosketaan.
+ *   2. LIHAVOITU ALOITUS. Ensimmäiset sanat lihavana — se on lehden vanha
+ *      keino tarttua lukijaan, ja juuri se "poldaus", jota omistaja
+ *      pyysi. Sanamäärä on kiinteä eikä valittu sisällön mukaan: kone ei
+ *      osaa päättää, mikä kohta on tärkeä, mutta alku on aina alku.
+ *   3. ANFANGI ensimmäiseen kappaleeseen sivulla (vain kerran, ks.
+ *      kutsuja) — aukeaman avaus.
+ */
+const LEIPAN_ALOITUS_SANOJA = 4;
+
+/*
+ * VIRKEJAKO, JOKA OSAA SUOMEA.
+ *
+ * Ensimmäinen versio katkaisi jokaisesta pisteestä, ja se meni heti
+ * pieleen: suomen JÄRJESTYSLUVUSSA on piste. Teksti "…10. kesäkuuta 1735
+ * astui voimaan laki…" katkesi luvun jälkeen, ja sivun sitaattinosto
+ * alkoi keskeltä virkettä sanalla "kesäkuuta" — nähtiin esikatselussa
+ * ennen julkaisua.
+ *
+ * Piste päättää virkkeen vain, jos sen edellä EI ole numeroa
+ * (järjestysluku, päivämäärä, mitta) ja sen jälkeen tulee väli ja iso
+ * kirjain tai lainausmerkki.
+ *
+ * Ei takaumakatsetta (lookbehind): sitä ei ole vanhemmissa iOS-Safareissa,
+ * ja tämä on peli, jota pelataan puhelimella. Silmukka on yhtä tarkka.
+ */
+const VIRKKEEN_ALKU = /[0-9A-ZÅÄÖÜÉ"\u201C\u00AB]/;
+
+function virkkeiksi(teksti) {
+  const t = String(teksti ?? '');
+  const ulos = [];
+  let alku = 0;
+  for (let i = 0; i < t.length; i++) {
+    const merkki = t[i];
+    if (merkki !== '.' && merkki !== '!' && merkki !== '?') continue;
+    if (merkki === '.' && /[0-9]/.test(t[i - 1] ?? '')) continue;
+    const osuma = /^\s+(.)/.exec(t.slice(i + 1));
+    if (!osuma) break;
+    if (!VIRKKEEN_ALKU.test(osuma[1])) continue;
+    ulos.push(t.slice(alku, i + 1).trim());
+    alku = i + 1;
+  }
+  if (alku < t.length) ulos.push(t.slice(alku).trim());
+  return ulos.filter(Boolean);
+}
+
+function jaaKappaleiksi(teksti) {
+  const virkkeet = virkkeiksi(teksti);
+  if (virkkeet.length < 3) return [String(teksti ?? '').trim()].filter(Boolean);
+  const puoli = Math.ceil(virkkeet.length / 2);
+  return [virkkeet.slice(0, puoli).join(' '), virkkeet.slice(puoli).join(' ')].filter(Boolean);
+}
+
+function piirraLeipa(kohde, teksti, { anfangi = false } = {}) {
+  const kappaleet = jaaKappaleiksi(teksti);
+  kappaleet.forEach((kappale, i) => {
+    const p = html('p', i === 0 ? 'teksti ensimmainen' : 'teksti');
+    if (i === 0 && anfangi) p.classList.add('anfangi');
+    if (i === 0) {
+      // Lihavoitu aloitus omaksi elementikseen; loppu jää tavalliseksi.
+      const sanat = kappale.split(' ');
+      const alku = sanat.slice(0, LEIPAN_ALOITUS_SANOJA).join(' ');
+      const loppu = sanat.slice(LEIPAN_ALOITUS_SANOJA).join(' ');
+      p.appendChild(html('strong', 'leipa-aloitus', alku));
+      if (loppu) p.appendChild(document.createTextNode(` ${loppu}`));
+    } else {
+      p.textContent = kappale;
+    }
+    kohde.appendChild(p);
+  });
+}
+
+/**
+ * Sivun oma nosto: yksi virke lehden tapaan isolla väliin.
+ *
+ * KERRAN SIVUA KOHTI eikä joka nostossa. Sitaattinosto toistaa virkkeen,
+ * joka on jo tekstissä — se on lehden tapa ja lukija tunnistaa sen, mutta
+ * seitsemän kertaa peräkkäin se olisi pelkkää toistoa. Valinta on pisin
+ * virke, koska lyhyt virke nostettuna näyttää irralliselta.
+ *
+ * VIRKE OTETAAN ENSIMMÄISESTÄ NOSTOSTA, ja nosto sijoitetaan sen JÄLKEEN.
+ * Ensimmäinen esikatselu otti virkkeen mistä tahansa, ja se osui juuri
+ * seuraavaan nostoon: sitaatti luki saman lauseen, joka alkoi kahden
+ * rivin päästä uudestaan. Lehdessä nosto kaikuu sitä, minkä lukija on jo
+ * lukenut — ei sitä, mitä hän on juuri lukemassa.
+ */
+function poimiNostoVirke(nostot) {
+  let paras = '';
+  for (const nosto of nostot ?? []) {
+    for (const virke of virkkeiksi(nosto.teksti)) {
+      if (virke.length > paras.length && virke.length <= 170) paras = virke;
+    }
+  }
+  return paras;
+}
+
 export class UI {
   constructor(game, { onNewGame, onChange }) {
     this.game = game;
@@ -6604,7 +6721,20 @@ export class UI {
     if (kategoria.johdanto) {
       this.arrivalKategoria.appendChild(html('p', 'johdanto', kategoria.johdanto));
     }
+    /*
+     * Sitaattinosto sivun alkupuolelle: lehdessä se on aukeaman
+     * hengähdyspaikka, ei koriste. Yksi per sivu, ks. poimiNostoVirke.
+     */
+    const nostoVirke = poimiNostoVirke((kategoria.nostot ?? []).slice(0, 1));
+    let ensimmainen = true;
+    let nostoSijoitettu = false;
     for (const nosto of kategoria.nostot ?? []) {
+      if (!ensimmainen && !nostoSijoitettu && nostoVirke) {
+        const sitaatti = html('blockquote', 'wiki-sitaatti');
+        sitaatti.appendChild(html('p', '', nostoVirke));
+        this.arrivalKategoria.appendChild(sitaatti);
+        nostoSijoitettu = true;
+      }
       const lohko = html('div', 'wiki-nosto');
       // Otsikko ja kuuntelu-/musiikkinapit samalla rivillä — sama
       // toiminnallisuus kuin litteissä nostoissa, ettei monistaminen
@@ -6621,7 +6751,8 @@ export class UI {
         this.varustaNostonKuva(kuva, nosto, 900);
         lohko.appendChild(kuva);
       }
-      lohko.appendChild(html('p', 'teksti', nosto.teksti));
+      piirraLeipa(lohko, nosto.teksti, { anfangi: ensimmainen });
+      ensimmainen = false;
       if (nosto.selite) lohko.appendChild(html('p', 'selite', nosto.selite));
       if (nosto.wiki) {
         const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
