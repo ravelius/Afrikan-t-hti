@@ -138,6 +138,144 @@ Vaiheet:
    paketille: laudan yhtenäisyys, laattamäärät, kysymyspankin eheys,
    laivareittien sijainti vedellä ja kokonainen bottien pelaama peli.
 
+## Uuden linssin lisääminen
+
+Linssi on läpikuultava karttakerros, joka selittää maailmaa: ilmastovyöhykkeet,
+korkeuserot, muuttoliike, yön valot. Pelaaja ansaitsee linssit laattojen alta ja
+kokemuspisteillä, ja kerrallaan päällä on tarkalleen yksi. Koko rakennusohje
+perusteluineen on [docs/linssit-suunnitelma.md](docs/linssit-suunnitelma.md);
+tässä on se, mitä tekijän pitää tehdä.
+
+Tunnus (esim. `ilmasto`) on sama joka paikassa: tiedostonimi, rekisterin avain ja
+`LINSSI.tunnus`.
+
+### 1. Neljä tiedostoa
+
+| tiedosto | kirjoittaja | sisältö |
+|---|---|---|
+| `tools/mapdata/linssi-<tunnus>.js` | hakutyökalu `tools/hae-*.mjs` | aineisto **asteina** (lon/lat) |
+| `tools/tee-linssi-<tunnus>.mjs` | sinä | projisoi asteet laudan pikseleiksi |
+| `js/packs/linssi-<tunnus>-lauta.js` | kone | projisoitu aineisto, jonka peli lukee |
+| `js/linssit/<tunnus>.js` | sinä | linssimoduuli: yksi `LINSSI`-vakio |
+
+Asteaineisto asuu `tools/mapdata/`-kansiossa eikä `js/packs/`:issa kahdesta
+syystä: `js/`-puolella ei ole yhtään lon/lat-muunnosta (asteet ja pikselit
+pidetään erillään, ks. `tools/tee-maasto.mjs`), ja jokainen `js/packs/*.js`
+kuuluu offline-pakettiin — sinne jätetty asteaineisto kulkisi pelaajan mukana
+turhaan toisena kappaleena. Kun siirrät aineiston, muuta myös hakutyökalun
+kirjoituspolku.
+
+### 2. Projisointi
+
+Muunnosta ei kirjoiteta uudelleen. `tools/tee-linssi-<tunnus>.mjs` käyttää
+yhteistä apuria:
+
+```js
+import { sovitaLinssi } from './linssiprojektio.mjs';
+
+const { piste, viiva, rengas, enimmakseenLaudalla, kirjoita } = sovitaLinssi();
+```
+
+- **`viiva`** pitää sauman ylittävän viivan yhtenäisenä. Ilman sitä Venäjän
+  pohjoisrannan joet piirtyvät vaakaviivana halki kartan.
+- **`rengas`** palauttaa yhden **tai kaksi** rengasta (kierron kopio laudan
+  toisella laidalla), joten kutsu on aina `flatMap(rengas)` eikä `map(rengas)`.
+- **`enimmakseenLaudalla`** karsii muodot, joista yli puolet jää laudan
+  ulkopuolelle. Muuten Etelämanner piirtyy möykkynä kartan alle.
+- **`kirjoita`** tekee tiedoston `TÄMÄ TIEDOSTO ON KONEEN KIRJOITTAMA`
+  -otsikolla, jossa on lähde, lisenssi ja hakupäivä.
+
+Aja työkalu ja tarkista tulos:
+
+```bash
+node tools/tee-linssi-<tunnus>.mjs
+```
+
+### 3. Linssimoduuli
+
+`js/linssit/<tunnus>.js` vie tarkalleen yhden vakion. Pakollisia ovat `tunnus`,
+`nimi`, `lyhyt`, `ikoni`, `laudat`, `lahde` ja `piirra` (ellei `kerros: false`):
+
+```js
+let tiedot = null;
+
+export const LINSSI = {
+  tunnus: 'ilmasto',
+  jarjestys: 30,                 // valitsimen järjestys, kymmenen välein
+  nimi: 'Ilmastolinssi',
+  lyhyt: 'Köppenin vyöhykkeet: missä kasvaa sademetsä ja missä aavikko.',
+  ikoni: '<path d="M4 14h16"/>', // 24x24 polut ilman <svg>-kuorta
+  laudat: ['maailmankartta'],    // '*' = kaikki laudat
+  lahde: { aineisto: '…', lisenssi: 'CC BY 4.0', osoite: 'https://…', haettu: '2026-08-04' },
+
+  async lataa() {                // aineisto vasta kun linssiä katsotaan
+    if (!tiedot) ({ ILMASTO_LAUTA: tiedot } = await import('../packs/linssi-ilmasto-lauta.js'));
+  },
+  piirra(ryhma, tila) { … },     // palauta false, jos laudalle ei ole mitään
+  selite() { … },                // valinnainen: [{ vari, teksti }]
+  askeleet() { … },              // valinnainen: aikataso tai mittarivalinta
+  vapauta() { … },               // valinnainen
+};
+```
+
+Säännöt, joita moottori (`js/linssit/kerros.js`) ja testit valvovat:
+
+- **Ei yhtään SVG-suodatinta** — ei `filter`-attribuuttia, ei `feTurbulence`- tai
+  muuta `fe*`-alkiota, ei myöskään rasteroitavan linssin sisällä. iOS:n
+  webapp-tila palauttaa suodatetun kerroksen **tyhjänä** taustalta palatessa.
+  Tämä on repon toistuvin vika, ja se on huomattu joka kerta vasta iPadilta.
+  Pehmeys ja kohina esilasketaan kuvaan tai `<pattern>`-laattaan.
+- **Ei `class`-attribuutteja.** Rasteroitava SVG on irrallinen eikä peri sivun
+  tyylitiedostoa, joten luokkaan nojaava väri katoaa ja jäljelle jää musta
+  läiskä. Jokainen väri ja viivanleveys annetaan SVG-attribuuttina.
+- **Peittävyys enintään 0,72**, jotta reitit ja kaupungit näkyvät läpi.
+- **Ei ajastimia eikä animaatiota.** Yksikin sykkivä elementti kartan päällä
+  pudotti ruudunpäivityksen 60:stä 15 kuvaan sekunnissa. Aikajana askelletaan
+  pelaajan komennolla `askeleet()`-vaihtoehdoilla.
+- **Ei `id`-attribuutteja.** Kiertävän kartan `<use>`-kopio monistaisi ne. Jos
+  gradientti on välttämätön, tunnisteen alkuun tulee `linssi-<tunnus>-`.
+- **Ei tapahtumakuuntelijoita** — kerros on `pointer-events: none`, ja
+  rasterointi hävittäisi ne joka tapauksessa.
+- **Vain laudan koordinaatteja.** Moduuli ei laske asteita eikä tunne
+  projektiota, ja se lukee aineistonsa dynaamisella tuonnilla `lataa()`:ssa.
+- Sallitut tuonnit: `../mapart.js` (`el`, `kasinPiirretty`) ja oma
+  aineistopaketti. Ei `js/ui.js`:ää, `js/game.js`:ää eikä moottoria — ne
+  toisivat kiertoviittauksen. `smoothClosedPath` on `js/mapart.js`:n sisäinen
+  eikä sitä ole viety ulos; jos linssi tarvitsee pehmennettyä käyrää, vienti on
+  oma erillinen muutoksensa.
+
+### 4. Listat, joihin linssi lisätään
+
+1. **`js/linssit/rekisteri.js`** — poista oman rivisi edestä kommenttimerkki.
+   Tasan yksi muutos: älä lisää, poista äläkä järjestä rivejä.
+2. **`sw.js`** — lisää `./js/packs/linssi-<tunnus>-lauta.js` SHELL-listalle ja
+   poista sieltä siirtämäsi asteaineisto. **`CACHE`-riviin ei kosketa** — version
+   nostaa yksi tekijä kerran, muuten yhtaikaiset nostot rikkovat testin.
+3. **`tools/hae-<x>.mjs`** — kirjoituspolku osoittamaan `tools/mapdata/`-kansioon.
+4. **`tools/build-standalone.mjs`** — tänne **ei** lisätä mitään. Yhden tiedoston
+   versio jää tarkoituksella ilman linssejä, kuten se jää ilman valokuvia ja
+   ääniä; moottori nappaa tuontivirheen ja jättää linssin pois valikoimasta.
+
+### 5. Testit
+
+```bash
+npm test
+node tools/mittaa-kartta.mjs maailmankartta   # ms/kehys linssi päällä
+```
+
+Mitä testit vahtivat:
+
+- `tests/sw.test.mjs` — jokainen `js/`-, `js/packs/`- ja `js/linssit/`-moduuli on
+  `sw.js`:n SHELL-listalla. Unohdus ei näy kehityksessä lainkaan, vaan vasta
+  lentokoneessa.
+- `tests/sw.test.mjs` — yhdessäkään `js/linssit/*.js`-tiedostossa ei ole
+  `filter`-attribuuttia eikä `fe*`-suodatinalkiota.
+- `tests/linssiprojektio.test.mjs` — projisointi osuu tunnettuihin pisteisiin
+  (Helsinki, Sydney, laudan reunat).
+
+Ennen kuin linssi on valmis, käy läpi tarkistuslista
+[docs/linssit-suunnitelma.md](docs/linssit-suunnitelma.md) luvusta 9.
+
 ## Ennen pull requestia
 
 ```bash

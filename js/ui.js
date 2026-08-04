@@ -46,6 +46,17 @@ import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
 import { ASIA_SAAPUMISET } from './packs/asia-saapumiset.js';
 import { ASIA_ARTIKKELIT } from './packs/asia-artikkelit.js';
 import { ASIA_VALOKUVAT } from './packs/asia-valokuvat.js';
+/*
+ * Loput kuvapaketit. Aasia on kahdessa tiedostossa, koska ensimmäiset
+ * 40 kaupunkia kirjoitettiin omalla ajollaan eikä valmista pakettia
+ * saa korvata — koostaja kirjoittaa tiedoston kokonaan uusiksi, ja
+ * ylikirjoitus veisi mukanaan kaiken, mitä siihen on käsin korjattu.
+ * Yksi ylimääräinen tiedosto on halvempi kuin yksi menetetty.
+ */
+import { ASIA_LISAT_VALOKUVAT } from './packs/asia-lisat-valokuvat.js';
+import { NORTHAMERICA_VALOKUVAT } from './packs/northamerica-valokuvat.js';
+import { SOUTHAMERICA_VALOKUVAT } from './packs/southamerica-valokuvat.js';
+import { OCEANIA_VALOKUVAT } from './packs/oceania-valokuvat.js';
 import { ASIA_MAATIEDOT } from './packs/asia-maatiedot.js';
 import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
@@ -91,7 +102,10 @@ import { LIPPU_TEKIJAT } from './packs/lippu-tekijat.js';
  */
 const KAIKKI_SAAPUMISET = { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET };
 const KAIKKI_KULTTUURI = { ...AFRICA_KULTTUURI, ...EUROPE_KULTTUURI };
-const KAIKKI_VALOKUVAT = { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT, ...ASIA_VALOKUVAT };
+const KAIKKI_VALOKUVAT = {
+  ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT, ...ASIA_VALOKUVAT, ...ASIA_LISAT_VALOKUVAT,
+  ...NORTHAMERICA_VALOKUVAT, ...SOUTHAMERICA_VALOKUVAT, ...OCEANIA_VALOKUVAT,
+};
 const KAIKKI_MAATIEDOT = { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT, ...ASIA_MAATIEDOT };
 
 const SAAPUMISTEKSTIT = {
@@ -722,7 +736,37 @@ const REVEAL_SUB = {
   horseshoe: 'Voit voittaa, jos ehdit kotiin ensimmäisenä',
   robber: 'Rosvo haastaa kaksintaisteluun!',
   empty: 'Isoisän merkintä oli vanhentunut — täältä ei löytynyt mitään',
+  // Ilman tätä riviä taikalasin alle tulisi "+0 puntaa": laattatyypin
+  // arvo on nolla, koska linssi ei ole rahaa (js/tokens.js).
+  linssi: 'Uusi linssi kartalle — katso maailmaa toisin',
 };
+
+/*
+ * Valittu linssi on laitteen katseluasetus, ei pelin tapahtuma.
+ *
+ * Siksi se ei kuulu pelitallennukseen vaan omaan avaimeensa kuten
+ * äänet ja kertoja (docs/linssit-suunnitelma.md luku 5.3). Kelvoton tai
+ * omistamaton arvo ohitetaan hiljaa: tallennus voi olla vanhalta
+ * versiolta, jossa linssi oli toisen niminen.
+ */
+const LINSSI_AVAIN = 'matkakirja-linssi';
+
+function tallennettuLinssi() {
+  try {
+    return localStorage.getItem(LINSSI_AVAIN);
+  } catch {
+    return null; // yksityinen selaus
+  }
+}
+
+function tallennaLinssi(tunnus) {
+  try {
+    if (tunnus) localStorage.setItem(LINSSI_AVAIN, tunnus);
+    else localStorage.removeItem(LINSSI_AVAIN);
+  } catch {
+    /* yksityinen selaus: valinta jää vain tälle istunnolle */
+  }
+}
 
 /**
  * Ensimmäinen virke lainaus- ja päätösmerkkeineen; loput erikseen.
@@ -863,6 +907,40 @@ const VIIVA_IKONIT = {
   // Kaiutin ääniaaltoineen — aloitussivun ääniviihje.
   kaiutin: '<path d="M4.2 9.3h3.2l4.4-3.6v12.6l-4.4-3.6H4.2z"/><path d="M14.8 9.4a3.7 3.7 0 0 1 0 5.2"/><path d="M17.4 6.9a7.3 7.3 0 0 1 0 10.2"/>',
 };
+
+/*
+ * Linssivalitsimen oma kuvake: sama suurennuslasi kuin Tutki-napissa,
+ * yliviivattuna. Se on valitsimen "Ei linssiä" -rivi, ja siksi se on
+ * piirretty samalla kynällä kuin linssien omat kuvakkeet — rivien on
+ * oltava keskenään samaa sarjaa, tai valinta näyttää sekalaiselta.
+ */
+const LINSSI_EI_IKONI = `${VIIVA_IKONIT.suurennuslasi}<path d="M5.4 5.4 20 20"/>`;
+
+/**
+ * Liuskanapin kuvake. Sama kuori kuin aiheliuskoilla (rakennaLiuskat):
+ * linssimoduulit antavat kuvakkeensa täsmälleen samassa muodossa,
+ * 24×24-polkuina ilman <svg>-kuorta.
+ */
+function liuskaIkoniSvg(piirto, koko = 19) {
+  return `<svg viewBox="0 0 24 24" width="${koko}" height="${koko}" aria-hidden="true" fill="none"
+       stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+       stroke-linejoin="round">${piirto}</svg>`;
+}
+
+/**
+ * Lyhyt lähdemerkintä kartan selitekorttiin: tekijä ja lisenssi.
+ *
+ * Aineistojen nimet ovat muotoa "Beck ym. 2018: Present and future
+ * Köppen–Geiger climate classification maps". Kortin levyiseen tilaan
+ * otetaan kaksoispistettä edeltävä osa — se on juuri se nimeäminen,
+ * jota CC BY vaatii. Koko merkintä osoitteineen on valitsimen
+ * lähdekortissa yhden napautuksen päässä.
+ */
+function linssiLahdeLyhyt(lahde) {
+  if (!lahde) return '';
+  const nimi = String(lahde.aineisto ?? '').split(':')[0].trim();
+  return [nimi, lahde.lisenssi].filter(Boolean).join(' · ');
+}
 
 /** Viivaikoni ikonin nimellä — tai null, jos nimi onkin tekstimerkki. */
 function viivaIkoni(nimi) {
@@ -1246,6 +1324,51 @@ export class UI {
       this.zoomiKuuntelijat.push([nappi, kasittele]);
     }
 
+    /*
+     * Linssivalitsin ylärivissä (docs/linssit-suunnitelma.md luku 5.1).
+     *
+     * Kotelo on index.html:ssä valmiina mutta piilossa: nappi ilmestyy
+     * vasta kun pelaaja omistaa ensimmäisen linssin, joten uudelle
+     * pelaajalle ylärivi pysyy tarkalleen entisellään. Sisältö
+     * rakennetaan täällä, koska valikoima riippuu sekä omistuksesta
+     * että laudasta.
+     *
+     * Valitsin on YLÄRIVISSÄ eikä kartan reunassa: @media (pointer:
+     * coarse) and (hover: none) piilottaa .zoomin kokonaan, ja sama
+     * sääntö veisi valitsimen juuri iPadilta, jolla peliä eniten
+     * pelataan (suunnitelman riski 10).
+     */
+    this.linssiKotelo = document.getElementById('linssi-kotelo');
+    this.linssiNappi = document.getElementById('linssi-btn');
+    this.linssiNapinIkoni = document.getElementById('linssi-ikoni');
+    this.linssiValikko = document.getElementById('linssi-valikko');
+    this.linssiTuki = null; // moottori ja omistus, kun dynaaminen tuonti onnistui
+    this.linssiLataus = null; // kesken oleva tuonti; jaetaan kaikille kutsujille
+    this.linssiValittu = tallennettuLinssi();
+    this.linssiPiirretty = null; // mihin kerrokseen linssi on piirretty
+    this.linssiPois = new Set(); // linssit, joilla ei ollut tälle laudalle mitään
+    this.linssiLauta = null; // mille laudalle valikoima on laskettu
+    this.linssiTunniste = null; // valikoiman tunniste: valikko rakennetaan vain muutoksesta
+    this.linssiAskeleet = new Map(); // valittu askel linssiä kohti
+    this.linssiKuuntelijat = [];
+    if (this.linssiNappi && this.linssiValikko) {
+      const kytke = (kohde, nimi, kasittele) => {
+        kohde.addEventListener(nimi, kasittele);
+        this.linssiKuuntelijat.push([kohde, nimi, kasittele]);
+      };
+      kytke(this.linssiNappi, 'click', () => this.avaaLinssivalikko(this.linssiValikko.hidden));
+      // Sulkeutuminen samoin kuin kertoja- ja päävalikossa (js/main.js):
+      // napautus muualle ja Esc. Kuuntelijat ovat documentissa, joten ne
+      // on poistettava destroyssa — muuten kuollut peli sulkisi uuden
+      // pelin valikkoa.
+      kytke(document, 'pointerdown', (event) => {
+        if (!event.target.closest?.('.linssi-kotelo')) this.avaaLinssivalikko(false);
+      });
+      kytke(document, 'keydown', (event) => {
+        if (event.key === 'Escape') this.avaaLinssivalikko(false);
+      });
+    }
+
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
     this.travelExpanded = false; // matkavalinnan toinen vaihe auki
@@ -1426,6 +1549,23 @@ export class UI {
     for (const [nappi, kasittele] of this.zoomiKuuntelijat ?? []) {
       nappi.removeEventListener('click', kasittele);
     }
+    // Linssin kuuntelijat ovat documentissa ja ylärivissä, jotka jäävät
+    // eloon uuden pelin ajaksi.
+    for (const [kohde, nimi, kasittele] of this.linssiKuuntelijat ?? []) {
+      kohde.removeEventListener(nimi, kasittele);
+    }
+    this.linssiKuuntelijat = [];
+    /*
+     * Kuollut käyttöliittymä luopuu linssistään: sammutus vapauttaa
+     * rasterin blob-osoitteen (10,4 Mt kerrallaan) ja body-luokat.
+     * Kerroksen hakija tarkistaa dead-lipun, joten tämä ei voi tyhjentää
+     * uuden pelin kerrosta, vaikka uusi peli ehtisi jo alkaa.
+     */
+    this.linssiTuki?.moottori?.sammuta();
+    this.linssiSelite?.remove();
+    this.linssiSelite = null;
+    if (this.linssiKotelo) this.linssiKotelo.hidden = true;
+    if (this.linssiValikko) this.linssiValikko.hidden = true;
     this.observer?.disconnect();
   }
 
@@ -2823,6 +2963,9 @@ export class UI {
     }
     nurkat.sort((a, b) => b.meri - a.meri);
     this.factCard.dataset.corner = nurkat[0].id;
+    // Linssin selitekortti väistää päiväkirjaa: se saa oman nurkkansa
+    // vasta kun päiväkirjan nurkka on tiedossa.
+    this.sijoitaLinssiSelite();
   }
 
   /** Kartan koordinaatit kartta-alueen pikseleiksi. */
@@ -4434,6 +4577,9 @@ export class UI {
     this.renderActions();
     this.renderFact();
     this.renderQuiz();
+    // Linssit tahdistetaan joka piirrossa, mutta työ tehdään vasta kun
+    // jokin oikeasti muuttui: uusi löytö, uusi lauta tai uusi kerros.
+    void this.paivitaLinssit();
 
     if (this.game.phase === 'over') {
       this.showWinner();
@@ -4890,7 +5036,12 @@ export class UI {
    */
   piirraKulttuuriNostot(lista, nostot) {
     lista.textContent = '';
-    for (const nosto of tiedot.nostot ?? []) {
+    // Nostot tulevat parametrina. Tässä luki aiemmin `tiedot.nostot`,
+    // joka jäi metodia irrotettaessa osoittamaan kutsuvan funktion
+    // muuttujaan: metodin omassa näkyvyysalueessa sellaista ei ole,
+    // joten jokainen kutsu heitti ReferenceErrorin ja Tutki-ikkunan
+    // liuska jäi tyhjäksi.
+    for (const nosto of nostot ?? []) {
       const lohko = html('div', 'kulttuuri-nosto');
       // Otsikko ja mahdollinen ääninäyte samalla rivillä: selkeä nappi
       // kaiutinkuvakkeella erottuu tekstilinkeistä (omistajan toive).
@@ -6506,9 +6657,430 @@ export class UI {
       rivi(tokenIconSvg(type, 44), `${game.tokenTypes[type].name}${n > 1 ? ` ×${n}` : ''}`);
     }
 
+    /*
+     * Taikalasit: tämän matkan aikana löydetyt linssit.
+     *
+     * Lista luetaan pelaajan omasta linssit-kentästä eikä finds-listasta
+     * kahdesta syystä: finds saa 'linssi'-merkinnän myös silloin, kun
+     * kotelo oli tyhjä (kaikki jo omistettu), ja yllä oleva suodatin
+     * päästää läpi vain arvokkaat laatat — linssi on arvoton puntina.
+     *
+     * Nimi tulee linssimoduulista, jos se on jo ladattu. Ellei ole,
+     * rivi kertoo silti mitä laukussa on: laattatyypin nimi on
+     * "Taikalasi", ei tyhjä.
+     */
+    for (const tunnus of p.linssit ?? []) {
+      const linssi = this.linssiTuki?.kaikki.find((l) => l.tunnus === tunnus) ?? null;
+      rivi(tokenIconSvg('linssi', 44), linssi?.nimi ?? game.tokenTypes.linssi?.name ?? 'Taikalasi');
+    }
+
     if (!this.passportFinds.childElementCount) {
       this.passportFinds.appendChild(html('p', 'muted', 'Laukku on vielä tyhjä.'));
     }
+  }
+
+  // --- linssit: valitsin, kerros ja selitekortti -----------------------------
+
+  /**
+   * Linssikoneisto tuodaan DYNAAMISESTI ja tarkalleen kerran.
+   *
+   * Staattinen tuonti kaataisi yhden tiedoston version kokoajan
+   * (tools/build-standalone.mjs vaatii jokaisen from-tuonnin
+   * MODULES-listalleen, eivätkä linssit kuulu sinne — suunnitelman luku
+   * 2.1). Samalla tämä pitää pelin käynnistyksen ennallaan: linssien
+   * metatiedot ovat kilotavuja, ja raskas aineisto haetaan vasta kun
+   * linssi sytytetään.
+   *
+   * Epäonnistuminen ei ole virhe vaan hyväksytty raja: yhden tiedoston
+   * versiossa linssejä ei ole, ja silloin koko valitsin jää pois.
+   */
+  lataaLinssit() {
+    if (!this.linssiLataus) {
+      this.linssiLataus = (async () => {
+        try {
+          const [kerros, omistus] = await Promise.all([
+            import('./linssit/kerros.js'),
+            import('./linssit/omistus.js'),
+          ]);
+          const tuki = {
+            kerros,
+            omistus,
+            /*
+             * Moottorille annetaan oma kerroksen hakija.
+             *
+             * Oletushakija etsii kerroksen documentista, jolloin kuollut
+             * käyttöliittymä voisi kirjoittaa seuraavan pelin kerrokseen
+             * — kesken jäänyt rasterointi valmistuu vasta uuden pelin
+             * alettua. Tämä hakija palauttaa null heti kun instanssi on
+             * kuollut, ja seuraa muuten drawBoardin luomaa uutta ryhmää.
+             */
+            moottori: new kerros.Linssikerros(() => (this.dead ? null : this.linssiKerros ?? null)),
+            kaikki: await kerros.haeKaikki(),
+          };
+          this.linssiTuki = tuki;
+          return tuki;
+        } catch (syy) {
+          console.warn('Linssejä ei voitu ladata; valitsin jää pois.', syy);
+          return null;
+        }
+      })();
+    }
+    return this.linssiLataus;
+  }
+
+  /**
+   * Linssit, jotka pelaaja omistaa ja jotka pätevät tälle laudalle.
+   *
+   * Löytämätön linssi ei näy valitsimessa edes harmaana: valikko
+   * kertoisi muuten suoraan, montako on vielä löytämättä ja mistä.
+   */
+  nakyvatLinssit(tuki) {
+    const omat = tuki.omistus.omistetut(this.game, this.game.player);
+    return tuki.kaikki.filter((linssi) => omat.has(linssi.tunnus)
+      && tuki.kerros.kelpaaLaudalle(linssi, this.game.pack.id)
+      && !this.linssiPois.has(linssi.tunnus));
+  }
+
+  /**
+   * Valitsimen ja kerroksen tahdistus. Kutsutaan joka renderissä, mutta
+   * valikko rakennetaan vain kun valikoima oikeasti muuttuu: löydetty
+   * linssi ilmestyy itsestään eikä välissä tehdä turhaa työtä.
+   */
+  async paivitaLinssit() {
+    const tuki = await this.lataaLinssit();
+    if (!tuki || this.dead || !this.linssiKotelo) return;
+    // Laudan vaihto antaa uuden mahdollisuuden niille linsseille, joilla
+    // ei ollut edelliselle laudalle mitään näytettävää: pudotus koski
+    // lautaa eikä linssiä.
+    if (this.linssiLauta !== this.game.pack.id) {
+      this.linssiLauta = this.game.pack.id;
+      this.linssiPois.clear();
+    }
+    const nakyvat = this.nakyvatLinssit(tuki);
+    this.linssiKotelo.hidden = nakyvat.length === 0;
+    if (!nakyvat.length) this.avaaLinssivalikko(false);
+
+    const tunniste = `${this.game.pack.id}|${nakyvat.map((l) => l.tunnus).join(',')}`;
+    if (tunniste !== this.linssiTunniste) {
+      this.linssiTunniste = tunniste;
+      this.rakennaLinssivalikko(nakyvat);
+    }
+
+    // Omistamaton tai tuntematon tallennettu valinta ohitetaan hiljaa
+    // (suunnitelman luku 5.3): tallennus voi olla toiselta pelikerralta.
+    const haluttu = nakyvat.some((l) => l.tunnus === this.linssiValittu) ? this.linssiValittu : null;
+    /*
+     * Lauta piirretään uudelleen monesta syystä (uusi peli, laudan
+     * vaihto, kehittäjätilan esikatselu), ja silloin kerros on uusi ja
+     * tyhjä. Moottori ei kuuntele karttaa, joten linssi on sytytettävä
+     * tässä uudelleen — muuten se katoaisi ilman yhtään virhettä.
+     */
+    if (haluttu !== tuki.moottori.tunnus || this.linssiKerros !== this.linssiPiirretty) {
+      await this.sytytaLinssi(haluttu);
+    }
+  }
+
+  /** Sytyttää linssin kartalle; tunnus === null sammuttaa. */
+  async sytytaLinssi(tunnus) {
+    const tuki = await this.lataaLinssit();
+    if (!tuki || this.dead) return;
+    const askel = tunnus ? this.linssiAskeleet.get(tunnus) ?? null : null;
+    let tulos = null;
+    try {
+      tulos = await tuki.moottori.vaihda(tunnus, tuki.kerros.linssitila(this.game.pack, askel));
+    } catch (syy) {
+      /*
+       * Moottori heittää sopimusrikkeestä tarkoituksella: se on aina
+       * linssimoduulin oma vika ja se pitää nähdä. Peli ei silti saa
+       * kaatua siihen — rikkinäinen linssi pudotetaan valikoimasta ja
+       * kartta jää entiselleen.
+       */
+      console.error(syy);
+      this.pudotaLinssi(tunnus);
+      return;
+    }
+    if (this.dead) return;
+    this.linssiPiirretty = this.linssiKerros;
+    if (tulos === false) {
+      // Linssillä ei ollut tälle laudalle mitään näytettävää.
+      this.pudotaLinssi(tunnus);
+      return;
+    }
+    this.paivitaLinssiNappi();
+    this.paivitaLinssiTiedot();
+    this.piirraLinssiSelite();
+  }
+
+  /** Ottaa linssin pois valikoimasta ja palaa linssittömään karttaan. */
+  pudotaLinssi(tunnus) {
+    if (tunnus) this.linssiPois.add(tunnus);
+    this.linssiValittu = null;
+    tallennaLinssi(null);
+    this.linssiTunniste = null;
+    this.linssiPiirretty = null;
+    void this.paivitaLinssit();
+  }
+
+  /** Valitsimen rivin napautus. tunnus === null = "Ei linssiä". */
+  valitseLinssi(tunnus) {
+    if (this.linssiValittu === tunnus) return;
+    this.linssiValittu = tunnus;
+    tallennaLinssi(tunnus);
+    // Merkintä valikkoon heti, kerros hetkeä myöhemmin: raskas linssi
+    // rasteroidaan, eikä napin pidä odottaa sitä näyttääkseen valinnan.
+    this.paivitaLinssiTiedot();
+    void this.sytytaLinssi(tunnus);
+  }
+
+  /** Avaa tai sulkee pudotuspaneelin. */
+  avaaLinssivalikko(auki) {
+    if (!this.linssiValikko || !this.linssiNappi) return;
+    if (this.linssiValikko.hidden === !auki) return;
+    this.linssiValikko.hidden = !auki;
+    this.linssiNappi.setAttribute('aria-expanded', String(auki));
+  }
+
+  /** Päävalikon avaus sulkee tämän: kaksi valikkoa ei ole auki yhtä aikaa. */
+  suljeLinssivalikko() {
+    this.avaaLinssivalikko(false);
+  }
+
+  /**
+   * Valitsimen sisältö: kuvakerivi ja sen alla valitun linssin nimi,
+   * kuvaus ja lähde.
+   *
+   * Kuvio on Tutki-ikkunan aiheliuskoista (rakennaLiuskat): kuvakkeet
+   * yhdellä rivillä, valittu liuska samaa paperia kuin sisältö alla.
+   * Rooli on kuitenkin aria-pressed eikä role="tab" — role="tab" lupaa
+   * nuolinäppäinnavigoinnin, jota tässä pelissä ei ole yhdessäkään
+   * liuskarivissä (suunnitelman luku 5.2).
+   */
+  rakennaLinssivalikko(linssit) {
+    if (!this.linssiValikko) return;
+    this.linssiValikko.replaceChildren();
+    // Vanha tietolohko jäi irralleen puusta: viittaus siihen kirjoittaisi
+    // näkymättömään elementtiin.
+    this.linssiTiedot = null;
+    if (!linssit.length) return;
+
+    const liuskat = html('nav', 'linssi-liuskat');
+    liuskat.setAttribute('role', 'group');
+    liuskat.setAttribute('aria-label', 'Linssit');
+    // "Ei linssiä" on aina ensimmäisenä: paluu tavalliseen karttaan on
+    // yhtä lähellä kuin linssin valinta.
+    liuskat.appendChild(this.linssiLiuska(null, 'Ei linssiä', LINSSI_EI_IKONI));
+    for (const linssi of linssit) {
+      liuskat.appendChild(this.linssiLiuska(linssi.tunnus, linssi.nimi, linssi.ikoni));
+    }
+    this.linssiValikko.appendChild(liuskat);
+    this.linssiTiedot = html('div', 'linssi-tiedot');
+    this.linssiValikko.appendChild(this.linssiTiedot);
+    this.paivitaLinssiNappi();
+    this.paivitaLinssiTiedot();
+  }
+
+  linssiLiuska(tunnus, nimi, ikoni) {
+    const nappi = html('button');
+    nappi.type = 'button';
+    nappi.dataset.linssi = tunnus ?? '';
+    // Nimi jää saavutettavuuteen ja pitkään painallukseen, vaikka
+    // ruudulla näkyy vain kuvake.
+    nappi.title = nimi;
+    nappi.setAttribute('aria-label', nimi);
+    nappi.innerHTML = liuskaIkoniSvg(ikoni);
+    nappi.addEventListener('click', () => this.valitseLinssi(tunnus));
+    return nappi;
+  }
+
+  /** Ylärivin nappi näyttää päällä olevan linssin kuvakkeen. */
+  paivitaLinssiNappi() {
+    if (!this.linssiNappi || !this.linssiNapinIkoni) return;
+    const linssi = this.paallaOlevaLinssi();
+    this.linssiNapinIkoni.innerHTML = `<svg viewBox="0 0 24 24">${linssi?.ikoni ?? VIIVA_IKONIT.suurennuslasi}</svg>`;
+    this.linssiNappi.title = linssi ? `Linssi: ${linssi.nimi}` : 'Taikalasit — valitse linssi kartalle';
+    this.linssiNappi.classList.toggle('paalla', Boolean(linssi));
+  }
+
+  /** Valittu linssi moduulina, tai null kun karttaa katsotaan paljain silmin. */
+  paallaOlevaLinssi() {
+    if (!this.linssiValittu) return null;
+    return this.linssiTuki?.kaikki.find((l) => l.tunnus === this.linssiValittu) ?? null;
+  }
+
+  /** Valittu rivi korostetaan ja sen kuvaus kirjoitetaan rivien alle. */
+  paivitaLinssiTiedot() {
+    if (!this.linssiValikko) return;
+    for (const nappi of this.linssiValikko.querySelectorAll('.linssi-liuskat button')) {
+      const paalla = (nappi.dataset.linssi || null) === this.linssiValittu;
+      nappi.classList.toggle('paalla', paalla);
+      nappi.setAttribute('aria-pressed', String(paalla));
+    }
+    if (!this.linssiTiedot) return;
+    this.linssiTiedot.replaceChildren();
+    const linssi = this.paallaOlevaLinssi();
+    if (!linssi) {
+      this.linssiTiedot.appendChild(html('p', 'linssi-lyhyt', 'Kartta sellaisena kuin isoisä sen piirsi.'));
+      return;
+    }
+    this.linssiTiedot.appendChild(html('h3', 'linssi-nimi', linssi.nimi));
+    this.linssiTiedot.appendChild(html('p', 'linssi-lyhyt', linssi.lyhyt));
+
+    /*
+     * Lähde ja lisenssi eivät ole koriste vaan ehto: aineistot ovat CC
+     * BY -lisensoituja ja vaativat nimeämisen. Kortissa on koko
+     * merkintä; kartan selitekortissa näkyy sen lyhyt muoto koko ajan.
+     */
+    const kortti = html('div', 'linssi-lahde');
+    kortti.hidden = true;
+    const avaa = html('button', 'linssi-lahde-avaa', 'Mistä tämä tieto on?');
+    avaa.type = 'button';
+    avaa.setAttribute('aria-expanded', 'false');
+    avaa.addEventListener('click', () => {
+      kortti.hidden = !kortti.hidden;
+      avaa.setAttribute('aria-expanded', String(!kortti.hidden));
+    });
+    const lahde = linssi.lahde ?? {};
+    if (lahde.aineisto) kortti.appendChild(html('p', 'linssi-lahde-aineisto', lahde.aineisto));
+    const rivi = [lahde.lisenssi, lahde.haettu ? `haettu ${lahde.haettu}` : null]
+      .filter(Boolean).join(' · ');
+    if (rivi) kortti.appendChild(html('p', 'linssi-lahde-lisenssi', rivi));
+    if (lahde.osoite) {
+      const linkki = html('a', 'linssi-lahde-linkki', 'Avaa alkuperäinen aineisto');
+      linkki.href = lahde.osoite;
+      linkki.target = '_blank';
+      linkki.rel = 'noopener noreferrer';
+      kortti.appendChild(linkki);
+    }
+    this.linssiTiedot.appendChild(avaa);
+    this.linssiTiedot.appendChild(kortti);
+  }
+
+  /**
+   * Selitekortti kartan nurkassa: linssin nimi, värilaput selityksineen,
+   * mahdolliset askeleet ja lähdemerkintä.
+   *
+   * Kortti on tavallista DOM:ia kartan päällä eikä SVG:tä, joten
+   * napautukset toimivat normaalisti eikä kierron <use>-kopio koske
+   * siihen lainkaan.
+   */
+  piirraLinssiSelite() {
+    const linssi = this.paallaOlevaLinssi();
+    // Kerrokseton linssi (radio, tähtitaivas) ei piirrä kartalle mitään,
+    // joten sillä ei ole kartalla selitettävää.
+    if (!linssi || linssi.kerros === false || this.dead) {
+      this.suljeLinssiSelite();
+      return;
+    }
+    if (!this.linssiSelite) {
+      this.linssiSelite = html('aside', 'linssi-selite');
+      // Kartan oma napautuskuuntelija kutistaisi päiväkirjan, ja
+      // kortin napit ovat napautuksia varten.
+      this.linssiSelite.addEventListener('click', (e) => e.stopPropagation());
+      this.mapPane.appendChild(this.linssiSelite);
+    }
+    const kortti = this.linssiSelite;
+    kortti.replaceChildren();
+    kortti.appendChild(html('h2', '', linssi.nimi));
+
+    let rivit = [];
+    try {
+      rivit = linssi.selite?.() ?? [];
+    } catch (syy) {
+      console.warn(`Linssin "${linssi.tunnus}" selite kaatui.`, syy);
+    }
+    if (rivit.length) {
+      const lista = html('ul', 'linssi-selite-rivit');
+      for (const rivi of rivit) {
+        const kohta = html('li');
+        if (rivi.vari) {
+          const lappu = html('span', 'linssi-lappu');
+          // Väri tulee aineistosta, joten se asetetaan tyylinä eikä
+          // luokkana: luokkia olisi yhtä monta kuin vyöhykkeitä.
+          lappu.style.background = rivi.vari;
+          kohta.appendChild(lappu);
+        }
+        kohta.appendChild(html('span', '', rivi.teksti ?? ''));
+        lista.appendChild(kohta);
+      }
+      kortti.appendChild(lista);
+    }
+
+    let askeleet = null;
+    try {
+      askeleet = linssi.askeleet?.() ?? null;
+    } catch (syy) {
+      console.warn(`Linssin "${linssi.tunnus}" askeleet kaatui.`, syy);
+    }
+    if (askeleet?.vaihtoehdot?.length) {
+      /*
+       * Askellus on aina pelaajan komennolla, ei ajastimella. Mitattu:
+       * yksikin sykkivä elementti kartan päällä pudottaa ruudunpäivityksen
+       * 60:stä 15 kuvaan sekunnissa (js/ui.js 7529–7534) — ja juuri
+       * aikajanalinsseillä houkutus animaatioon on suurin.
+       */
+      const valittu = this.linssiAskeleet.get(linssi.tunnus) ?? askeleet.valittu ?? null;
+      if (askeleet.otsikko) kortti.appendChild(html('p', 'linssi-askel-otsikko', askeleet.otsikko));
+      const rivi = html('nav', 'linssi-liuskat linssi-askeleet');
+      rivi.setAttribute('role', 'group');
+      rivi.setAttribute('aria-label', askeleet.otsikko ?? 'Askeleet');
+      for (const vaihtoehto of askeleet.vaihtoehdot) {
+        const nappi = html('button', '', vaihtoehto.nimi);
+        nappi.type = 'button';
+        const paalla = vaihtoehto.avain === valittu;
+        nappi.classList.toggle('paalla', paalla);
+        nappi.setAttribute('aria-pressed', String(paalla));
+        nappi.addEventListener('click', () => this.valitseLinssiAskel(linssi.tunnus, vaihtoehto.avain));
+        rivi.appendChild(nappi);
+      }
+      kortti.appendChild(rivi);
+    }
+
+    const lahde = linssiLahdeLyhyt(linssi.lahde);
+    if (lahde) kortti.appendChild(html('p', 'linssi-selite-lahde', lahde));
+    this.sijoitaLinssiSelite();
+  }
+
+  suljeLinssiSelite() {
+    this.linssiSelite?.remove();
+    this.linssiSelite = null;
+  }
+
+  /**
+   * Selitekortti sille kartan nurkalle, jossa päiväkirja ei ole.
+   * Päiväkirja valitsee nurkkansa meren mukaan (placeFactCard); kortti
+   * ottaa ensimmäisen vapaan mieluisuusjärjestyksessä, jotta kaksi
+   * paperia ei koskaan mene päällekkäin.
+   */
+  sijoitaLinssiSelite() {
+    if (!this.linssiSelite) return;
+    const varattu = this.factCard?.dataset.corner ?? 'bl';
+    /*
+     * Kapealla ruudulla alanurkat ovat toimintokortin käytössä: se on
+     * leveydeltään koko ruutu miinus rako. Sama mitta kuin päiväkirjalla
+     * (placeFactCard), joten kortit tekevät saman päätöksen samasta
+     * syystä — leveällä ruudulla alanurkka on rauhallisin paikka, mutta
+     * puhelimella siellä ovat matkustusnapit.
+     */
+    const leveys = this.mapPane?.getBoundingClientRect().width ?? 0;
+    const jarjestys = leveys >= FACT_WIDTH + TURN_WIDTH + 40
+      ? ['bl', 'tl', 'br', 'tr']
+      // Vasen ylänurkka ennen oikeaa: oikeasta laskeutuu valitsimen
+      // paneeli, ja sen alle jäävä kortti näkyisi vasta paneelin
+      // sulkeuduttua.
+      : ['tl', 'tr', 'br', 'bl'];
+    this.linssiSelite.dataset.corner = jarjestys.find((n) => n !== varattu) ?? 'tr';
+  }
+
+  /** Aikajanan tai mittarin vaihto: moduulille tieto ja kerros uusiksi. */
+  async valitseLinssiAskel(tunnus, avain) {
+    this.linssiAskeleet.set(tunnus, avain);
+    const linssi = this.linssiTuki?.kaikki.find((l) => l.tunnus === tunnus) ?? null;
+    try {
+      linssi?.valitseAskel?.(avain);
+    } catch (syy) {
+      console.warn(`Linssin "${tunnus}" valitseAskel kaatui.`, syy);
+    }
+    await this.sytytaLinssi(tunnus);
   }
 
   showWinner() {
@@ -7054,6 +7626,14 @@ export class UI {
     const caption = html('div', 'reveal-caption');
     caption.appendChild(html('strong', '', token.name));
     caption.appendChild(html('span', '', REVEAL_SUB[type] ?? `+${token.value} puntaa`));
+    /*
+     * Taikalasin kohdalla "Taikalasi" ei kerro vielä mitään: pelaajan
+     * pitää nähdä KUMPI lasi löytyi ja mitä sillä näkee. Nimi ja kuvaus
+     * asuvat linssimoduulissa (suunnitelman luku 3), joten ne haetaan
+     * dynaamisella tuonnilla — eikä laatan kääntyminen jää sitä
+     * odottamaan, vaan teksti täydentyy paikalleen kun se saapuu.
+     */
+    if (type === 'linssi') void this.taydennaLinssiPaljastus(caption);
 
     const stage = html('div', 'reveal-stage');
     stage.appendChild(rays);
@@ -7095,6 +7675,26 @@ export class UI {
     // Löytö päätyy matkalaukkuun: yläreunan Laukku-nappi heilahtaa
     // eloisasti merkiksi (omistajan toive). Tyhjä laatta ei tuo mitään.
     if (type !== 'empty') this.elavoitaLaukku();
+  }
+
+  /**
+   * Paljastusruudun teksti taikalasille: linssin oma nimi ja se yksi
+   * rivi, joka kertoo miksi lasi on hieno.
+   *
+   * Tunnus luetaan pelin tapahtumajonosta, johon revealToken juuri
+   * kirjoitti sen (kenttä linssi). Jono tyhjennetään vasta
+   * playEventsissä, joka ajetaan tämän animaation jälkeen.
+   */
+  async taydennaLinssiPaljastus(caption) {
+    const tunnus = this.game.events?.find((e) => e.linssi)?.linssi ?? null;
+    if (!tunnus) return;
+    const tuki = await this.lataaLinssit();
+    const linssi = tuki?.kaikki.find((l) => l.tunnus === tunnus) ?? null;
+    // Kortti on voinut jo poistua ruudulta: hidas tuonti ei saa
+    // kirjoittaa irralliseen elementtiin.
+    if (!linssi || !caption.isConnected) return;
+    caption.firstChild.textContent = linssi.nimi;
+    caption.lastChild.textContent = linssi.lyhyt;
   }
 
   /**

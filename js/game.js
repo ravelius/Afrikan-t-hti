@@ -285,15 +285,14 @@ export class Game {
     const mannerNimi = (cityId) => pack.map?.cityManner?.[cityId] ?? pack.id;
     const linsseja = pile.filter((type) => type === 'linssi').length;
     const linssikaupungit = new Set();
-    const vapaat = new Set(tokenCities);
 
+    // Mantereet eivät mene päällekkäin — kaupunki kuuluu tasan yhdelle —
+    // joten valittua kaupunkia ei tarvitse merkitä varatuksi.
     for (const manner of laattamantereet()) {
       if (linssikaupungit.size >= linsseja) break;
-      const ehdokkaat = tokenCities.filter((id) => vapaat.has(id) && mannerNimi(id) === manner);
+      const ehdokkaat = tokenCities.filter((id) => mannerNimi(id) === manner);
       if (!ehdokkaat.length) continue;
-      const valittu = ehdokkaat[Math.floor(this.rng() * ehdokkaat.length)];
-      vapaat.delete(valittu);
-      linssikaupungit.add(valittu);
+      linssikaupungit.add(ehdokkaat[Math.floor(this.rng() * ehdokkaat.length)]);
     }
 
     // Käsin sijoitetut linssilaatat poistetaan pinon alusta, jottei

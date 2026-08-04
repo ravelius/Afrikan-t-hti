@@ -378,11 +378,21 @@ export function drawMaasto(svg, map) {
     }
   }
 
-  // Järvet vyöhykkeiden päälle: järvi on vettä maan sisällä.
+  /*
+   * Järvet vyöhykkeiden päälle: järvi on vettä maan sisällä.
+   *
+   * Täyttö on paperia eikä väriä (ks. .iso-jarvi), joten järvi erottuu
+   * vain siitä että maan sävy loppuu. Sävytön reunaviiva on siksi
+   * pakollinen eikä koriste: ilman sitä järven raja katoaa vaaleimman
+   * ylängön kohdalla kokonaan. Sama d molemmille, jotta viiva osuu
+   * täytön reunaan tarkalleen.
+   */
   for (const jarvi of maasto.jarvet ?? []) {
     const rengas = jarvi.rengas ?? jarvi;
     if (!rengas || rengas.length < 4) continue;
-    el('path', { d: smoothClosedPath(kasinPiirretty(rengas)), class: 'iso-jarvi' }, g);
+    const d = smoothClosedPath(kasinPiirretty(rengas));
+    el('path', { d, class: 'iso-jarvi' }, g);
+    el('path', { d, class: 'iso-jarvi-reuna' }, g);
   }
 
   // Joet päällimmäisenä: ne kulkevat laaksoissa eivätkä katoa vuorten alle.
@@ -886,6 +896,23 @@ export function drawTokenIcon(parent, type) {
     case 'empty':
       el('circle', { r: 9, class: 'icon-empty' }, g);
       el('path', { d: 'M-4,0 L4,0', class: 'icon-empty-line' }, g);
+      break;
+
+    case 'linssi':
+      /*
+       * Taikalasi: sama suurennuslasin muoto kuin Tutki-napissa, jotta
+       * laatan alta löytyvä esine tunnistetaan siksi työkaluksi, jolla
+       * maailmaa katsotaan tarkemmin.
+       *
+       * Lasi on läpikuultava eikä jalokiven tapaan täyteen väritetty:
+       * linssi ei peitä maailmaa vaan näyttää siitä uuden puolen. Ilman
+       * omaa haaraa tämä piirtyisi default-haaran jalokivenä
+       * (docs/linssit-suunnitelma.md luku 4.7).
+       */
+      el('circle', { cx: -2, cy: -3, r: 7.4, class: 'icon-linssi-lasi' }, g);
+      el('path', { d: 'M3.2,2.2 L9.6,8.8', class: 'icon-linssi-varsi' }, g);
+      // Valon kajo lasissa: sama pieni kaari kuin isoisän kiikarissa.
+      el('path', { d: 'M-6.6,-4.4 A5,5 0 0 1 -2.8,-7.8', class: 'icon-linssi-kajo' }, g);
       break;
 
     default: {

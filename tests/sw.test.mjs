@@ -28,14 +28,125 @@ test('kaikki SHELLin tiedostot ovat olemassa', () => {
  */
 const VAIN_TYOHUONE = /^js\/tyohuone-/;
 
+/*
+ * Hakemistot, joiden jokainen .js-tiedosto kuuluu pelin SHELLiin.
+ *
+ * Lista on hakemistoina eikä tiedostoina, koska juuri kokonainen uusi
+ * KANSIO jää muuten huomaamatta: yksittäisen unohtuneen tiedoston
+ * huomaa alla oleva vertailu, mutta jos skannaus ei tunne kansiota
+ * lainkaan, se ei voi kertoa mistään. Niin kävi js/linssit-kansiolle:
+ * peli olisi toiminut kehityksessä ja hajonnut vasta lentokoneessa.
+ *
+ * Kun tänne syntyy uusi js-alihakemisto, se lisätään tähän listaan.
+ */
+const SKANNATTAVAT = ['js', 'js/packs', 'js/linssit'];
+
+/**
+ * Hakemiston .js-tiedostot repon juuresta laskettuina polkuina.
+ *
+ * Puuttuva hakemisto ei ole virhe. Kansiot syntyvät kesken työn, ja
+ * testin tehtävä on vahtia SHELLiä — ei sanella missä järjestyksessä
+ * kansiot ilmestyvät.
+ */
+function moduulitLevylla(hakemisto) {
+  const polku = join(JUURI, hakemisto);
+  if (!existsSync(polku)) return [];
+  return readdirSync(polku)
+    .filter((f) => f.endsWith('.js'))
+    .map((f) => `${hakemisto}/${f}`)
+    .sort();
+}
+
 test('kaikki js-moduulit ovat SHELLissä', () => {
-  const levy = [
-    ...readdirSync(join(JUURI, 'js')).filter((f) => f.endsWith('.js')).map((f) => `js/${f}`),
-    ...readdirSync(join(JUURI, 'js/packs')).filter((f) => f.endsWith('.js')).map((f) => `js/packs/${f}`),
-  ];
+  const levy = SKANNATTAVAT.flatMap(moduulitLevylla);
   const unohtui = levy.filter((p) => !SHELL.includes(p) && !VAIN_TYOHUONE.test(p));
   assert.deepEqual(unohtui, [],
-    'nämä moduulit puuttuvat sw.js:n SHELL-listalta — offline hajoaisi');
+    'nämä moduulit puuttuvat sw.js:n SHELL-listalta — offline hajoaisi. Korjaus on '
+    + `sw.js:n SHELL-listaan: ${unohtui.map((p) => `'./${p}',`).join(' ')}`);
+});
+
+/*
+ * Linssikerroksessa ei ole yhtään SVG-suodatinta.
+ *
+ * iOS:n webapp-tila palauttaa suodatetun kerroksen TYHJÄNÄ sen jälkeen,
+ * kun sovellus on ollut taustalla. Sama vika on korjattu tässä repossa
+ * jo kolmesti (js/mapart.js 72–91 ja 236–242, js/ui.js 2986–3004), ja
+ * joka kerta se huomattiin vasta omistajan iPadilta — kehityskoneelta
+ * suodatin näyttää täsmälleen oikealta. Linssi kattaa koko
+ * maailmankartan, joten se ei ole missään olosuhteissa se "pieni
+ * kerros", joka aikoinaan sai pitää suodattimensa.
+ *
+ * js/linssit/kerros.js tarkistaa saman ajon aikana, mutta vasta kun
+ * linssi on oikeasti piirretty ruudulle. Tämä testi lukee lähdekoodia,
+ * joten se osuu myös rasteroitavaan SVG-merkkijonoon ja linssiin, jota
+ * kukaan ei ole vielä avannut kertaakaan.
+ *
+ * Pehmeys ja kohina esilasketaan kuvaan tai <pattern>-laattaan
+ * (malli: grainTile, js/mapart.js 177–222).
+ */
+const SUODATINSAANNOT = [
+  // feTurbulence, feGaussianBlur, feColorMatrix… — pieni fe + iso kirjain
+  // on SVG:ssä aina suodatinalkio. Taulukon .filter() ja merkkijono 'fe'
+  // eivät osu tähän.
+  { nimi: 'suodatinalkio', saanto: /\bfe[A-Z]\w*/ },
+  // filter="url(#…)", { filter: … }, 'filter': … ja <filter>. Vertailu
+  // nimi === 'filter' (moottorin oma vahti) ei osu, koska sitä ei seuraa
+  // kaksoispiste eikä yhtäläisyysmerkki.
+  { nimi: 'filter-attribuutti', saanto: /<\s*filter\b|filter\s*=\s*["']|["']filter["']\s*:|\bfilter\s*:/ },
+];
+
+/** Kokonaan kommentiksi kirjoitettu rivi — sääntöä saa selittää sanoin. */
+const kommenttirivi = (rivi) => /^\s*(\/\/|\/?\*)/.test(rivi);
+
+test('linssimoduuleissa ei ole SVG-suodattimia', () => {
+  const loydot = [];
+  for (const polku of moduulitLevylla('js/linssit')) {
+    readFileSync(join(JUURI, polku), 'utf8').split('\n').forEach((rivi, i) => {
+      if (kommenttirivi(rivi)) return;
+      for (const { nimi, saanto } of SUODATINSAANNOT) {
+        const osuma = rivi.match(saanto);
+        if (osuma) loydot.push(`${polku}:${i + 1} ${nimi}: ${osuma[0]}`);
+      }
+    });
+  }
+  assert.deepEqual(loydot, [],
+    'linssikerroksessa ei saa olla SVG-suodattimia: iOS:n webapp-tila palauttaa '
+    + 'suodatetun kerroksen tyhjänä taustalta palatessa. Esilaske pehmeys kuvaan '
+    + 'tai <pattern>-laattaan (docs/linssit-suunnitelma.md luku 1.7)');
+});
+
+/*
+ * Yhden tiedoston versio niputtaa jokaisen karttapaketin.
+ *
+ * tools/build-standalone.mjs kokoaa vain MODULES-listan tiedostot, ja
+ * sen oma checkModuleList huomaa vain listalla jo olevien moduulien
+ * puuttuvat riippuvuudet. Kokonaan unohtunut paketti menee siis läpi:
+ * dist/matkakirja.html syntyy virheittä mutta vajaana, ja puute näkyy
+ * vasta pelatessa. SHELListä puuttumisesta on testi yllä; MODULESista
+ * puuttumisesta ei ollut mitään.
+ *
+ * Linssimoduulit (js/linssit/) EIVÄT kuulu listalle: ne tuodaan
+ * dynaamisesti ja yhden tiedoston versio jää tarkoituksella ilman
+ * linssejä, kuten se jää ilman valokuvia ja ääniä
+ * (docs/linssit-suunnitelma.md luku 2.1). Siksi tämä testi vertaa vain
+ * karttapaketteja.
+ */
+test('yhden tiedoston versio niputtaa kaikki karttapaketit', () => {
+  const kokooja = readFileSync(join(JUURI, 'tools/build-standalone.mjs'), 'utf8');
+  const lohko = kokooja.match(/const MODULES = \[([\s\S]*?)\n\];/);
+  assert.ok(lohko, 'MODULES-listaa ei löytynyt tools/build-standalone.mjs:stä');
+  const listatut = lohko[1].split('\n')
+    .filter((rivi) => !kommenttirivi(rivi))
+    .flatMap((rivi) => [...rivi.matchAll(/'([^']+)'/g)].map((m) => m[1]));
+
+  const unohtui = moduulitLevylla('js/packs').filter((p) => !listatut.includes(p));
+  assert.deepEqual(unohtui, [],
+    'nämä karttapaketit puuttuvat tools/build-standalone.mjs:n MODULES-listalta — '
+    + 'yhden tiedoston versio jäisi vajaaksi');
+
+  const haamut = listatut.filter((p) => p.startsWith('js/packs/') && !existsSync(join(JUURI, p)));
+  assert.deepEqual(haamut, [],
+    'MODULES-lista viittaa karttapaketteihin joita ei ole — kokoaja kaatuu lukemiseen');
 });
 
 test('välimuistin nimi seuraa sovelluksen versiota', () => {
