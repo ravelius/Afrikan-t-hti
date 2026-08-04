@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 250, teksti: 'Maa erottuu merestä selvästi omalla värillään' },
+  { v: 250, teksti: 'Hampurilainen takaisin: säännöt ja uusi peli sen alle' },
   { v: 249, teksti: 'Kutistettuun matkakirjaan jää otsikko ja tausta' },
   { v: 249, teksti: 'VU-mittari palaa asemalle myös kaupunkia vaihtaessa' },
   { v: 249, teksti: 'Merenpohja rajataan piirrettyyn rantaviivaan' },

@@ -4837,3 +4837,66 @@ alangoilla ei ole korkeusvyöhykettä.
 etsi yksittäistä rikkinäistä kohtaa. Vika oli siinä, että oikea arvo
 asetettiin kerran ja toivottiin sen pysyvän. Ylläpidetty tila ei tarvitse
 selitystä sille, mikä sen rikkoi.
+
+## v250 — Maa erottuu merestä, hampurilainen takaisin (4.8.2026)
+
+**"Meren sinisyys vuotaa maiden päälle" — neljäs yritys, ja tällä kertaa
+mitattuna oikein.**
+
+Ensin oikaisu: v249:n päätelmä "meri ja maa ovat täsmälleen sama väri" oli
+**väärä**, ja väärä juuri siitä syystä, jota vastaan olen tässä
+tiedostossa varoittanut. Poimin kaksi pistettä silmämääräisesti
+kuvakaappauksesta ja vertasin niitä — ja **molemmat osuivat maalle**. Ero
+oli tietysti yksi yksikkö. Silmämääräinen näytteenotto ei ole mittaus.
+
+Oikea mittaus luokittelee pisteet RANTAVIIVAN perusteella: ruudun piste
+muunnetaan laudan koordinaateiksi ja testataan monikulmion sisäisyys
+`map.outlines`-renkaita vasten. Siitä saa satoja pisteitä kumpaakin lajia
+eikä kahta arvausta.
+
+Mitattu (zoomaustaso, jolla omistaja oireen näki):
+
+| | maa | meri | ero |
+|---|---|---|---|
+| kauempana rannasta | 190,163,117 | 212,199,168 | 22,36,51 |
+| **rannan tuntumassa** | 182,157,113 | 197,182,150 | **15,25,37** |
+
+Ero ei siis ollut olematon — mutta se oli PIENI, ja nimenomaan rannan
+tuntumassa, missä sillä on merkitystä. Maan liukuväri
+(`#e7d2a4` → `#d2b47e`) oli niin lähellä pergamenttia, että rannikkoa
+erotti käytännössä vain mustepiirto. Silmä täyttää sellaisen rajan sillä,
+kumpi puoli on suurempi — ja avomeri on suurempi.
+
+Maan väri on nyt `#e2c898` → `#cba86e`: sama lämmin sävy, selvästi
+tummempi ja kylläisempi. Korkeusvyöhykkeet piirtyvät tämän päälle kuten
+ennenkin. Rannan tuntuman ero kasvoi noin puolitoistakertaiseksi.
+
+**Mitä matkan varrella suljettiin pois, jottei sitä tarvitse toistaa:**
+
+- Merenpohjan rajaus TOIMII. Mitattu maapikselin sinikanavasta rajauksen
+  kanssa ja ilman: Sahara −5, Puola −3, Kongo −2, avomeri 0.
+- Kartalla ei ole yhtään sinistä elementtiä. Kävin läpi jokaisen laudan
+  elementin lasketun `fill`- ja `stroke`-arvon ja etsin sävyjä, joissa
+  sininen ≥ punainen: osumia yksi, ja se on nappulan kiilto.
+- Vaalea ilme EI ole lähivesikerros. Kun kerros piilotetaan kokonaan,
+  Euroopan pikseli muuttuu 207,183,137 → 206,186,143.
+
+**Hampurilainen takaisin** (omistajan toive). v237 nosti säännöt ja uuden
+pelin suoraan yläriville, koska hampurilainen piilotti ne kolmen
+napautuksen taakse. Ylärivi kävi kuitenkin ahtaaksi: nimilogon ja neljän
+kuvakkeen välissä päiväpilleri leikkautui kesken sanan puhelimella
+(omistajan kuvakaappaus: "£300 · Päivä 3, a"). Päivitys ja kehittäjätila
+jäävät versionumeron taakse, minne ne v237:ssä siirrettiin — ne eivät ole
+ylärivin tavaraa, ja sama tunniste kahdessa paikassa rikkoisi
+`getElementById`:n.
+
+Mitattu: valikko aukeaa, sisältää Säännöt ja Uusi peli, 106 × 52 px, ei
+sivuvirheitä.
+
+### Opittua
+
+**Silmämääräinen näytteenotto ei ole mittaus.** Otin kaksi pistettä
+kuvakaappauksesta, sain eroksi yhden yksikön ja julistin sen syyksi. Ne
+olivat molemmat maalla. Kun näyte pitää luokitella, luokittelu on tehtävä
+aineistosta — ei silmällä siitä samasta kuvasta, jonka epäselvyys on koko
+tutkittava ilmiö.

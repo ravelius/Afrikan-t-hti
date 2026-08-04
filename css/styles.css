@@ -208,6 +208,45 @@ button, .brand, .turn-pill, .fact-card h2 {
   .turn-pill.aika-valahdys .clock { animation: none; }
 }
 
+/*
+ * Päävalikko eli hampurilainen (omistajan toive 4.8.2026, palautettu).
+ *
+ * v237 nosti säännöt ja uuden pelin suoraan yläriville ja poisti tämän.
+ * Ylärivi kävi kuitenkin ahtaaksi: nimilogon ja neljän kuvakkeen välissä
+ * päiväpilleri leikkautui kesken sanan puhelimella. Valikossa on tilaa
+ * sekä kuvakkeelle että nimelle, toisin kuin ylärivillä.
+ */
+.valikko-kotelo { position: relative; }
+
+.paavalikko {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.3rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(15, 10, 5, 0.45);
+}
+
+.paavalikko button {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.paavalikko button:hover { background: rgba(234, 184, 78, 0.12); }
+
 /* Kertojavalikko: nappi näyttää nykyisen tilan kuvakkeen ja avaa alleen
  * pienen paneelin, jossa neljä kuvakeriviä täppineen. */
 .kertoja-kotelo { position: relative; }

@@ -19,7 +19,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-04.249';
+const APP_VERSION = '2026-08-04.250';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -253,14 +253,47 @@ document.addEventListener('pointerdown', (event) => {
 });
 naytaKertoja();
 
-// --- valikot sulkeutuvat Esc-näppäimestä ------------------------------------
+// --- päävalikko --------------------------------------------------------------
 //
-// Hampurilainen poistettiin (omistajan toive): säännöt ja uusi peli ovat
-// suoraan ylärivillä, ja päivitys ja kehittäjätila löytyvät
-// versionumerosta. Esc-kuuntelija jäi, koska linssi- ja kertojavalikko
-// ovat yhä avattavia.
+// Hampurilainen on takaisin (omistajan toive 4.8.2026). Säännöt ja uusi
+// peli asuvat sen alla; päivitys ja kehittäjätila jäävät versionumeron
+// taakse, minne ne v237:ssä siirrettiin.
+//
+// Valikko sulkeutuu valinnasta, napautuksesta muualle ja Escistä.
+
+const menuBtn = document.getElementById('menu-btn');
+const paavalikko = document.getElementById('paavalikko');
+
+const suljeValikko = () => {
+  if (paavalikko.hidden) return;
+  paavalikko.hidden = true;
+  menuBtn.setAttribute('aria-expanded', 'false');
+};
+
+menuBtn.addEventListener('click', () => {
+  paavalikko.hidden = !paavalikko.hidden;
+  menuBtn.setAttribute('aria-expanded', String(!paavalikko.hidden));
+  // Kaksi valikkoa ei ole auki yhtä aikaa.
+  if (!paavalikko.hidden) {
+    kertojaValikko.hidden = true;
+    muteBtn.setAttribute('aria-expanded', 'false');
+    ui?.suljeLinssivalikko?.();
+  }
+});
+
+// Valinta sulkee valikon. Kuuntelija on valikossa itsessään, joten
+// nappien omat toiminnot pysyvät siellä missä ne on määritelty.
+paavalikko.addEventListener('click', (event) => {
+  if (event.target.closest('button')) suljeValikko();
+});
+
+document.addEventListener('pointerdown', (event) => {
+  if (!event.target.closest?.('.valikko-kotelo')) suljeValikko();
+});
+
 document.addEventListener('keydown', (event) => {
   if (event.key !== 'Escape') return;
+  suljeValikko();
   kertojaValikko.hidden = true;
   muteBtn.setAttribute('aria-expanded', 'false');
   ui?.suljeLinssivalikko?.();
