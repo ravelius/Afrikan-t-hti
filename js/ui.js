@@ -883,6 +883,8 @@ const ALOITUS_ZOOM_MS = 3600;
 // samaa kaarta. Jos muutat toisen, muuta myös toinen.
 const ZOOM_PEHMENNYS = 'cubic-bezier(0.68, 0, 0.3, 1)';
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
+// Tutki-sivun ylä- ja alareunan kaista, joka vierittää päähän.
+const TUTKI_KAISTA_PX = 64;
 const ZOOM_TAUKO_MS = 260;
 /*
  * Hiiren rullan vähimmäisväli. Tarkka rulla ja trackpad lähettävät
@@ -6381,6 +6383,54 @@ export class UI {
       if (e.key === 'ArrowRight') { if (this.vaihdaTutkiSivu(1)) e.preventDefault(); }
       else if (e.key === 'ArrowLeft') { if (this.vaihdaTutkiSivu(-1)) e.preventDefault(); }
     });
+
+    /*
+     * RUUDUN YLÄ- JA ALAREUNA VIERITTÄVÄT PÄÄHÄN.
+     *
+     * Omistajan toive: "Tutkissivu voisi scrollautua kokonaan ylös ja
+     * alas painamalla näytön ihan yläreunaa ja vastaavasti ihan
+     * alareunaa." Artikkeli on pitkä, ja puhelimessa alkuun palaaminen
+     * vaatii muuten monta pyyhkäisyä.
+     *
+     * Kaista on ohut ja se reagoi vain napautukseen, joka EI ole
+     * pyyhkäisy eikä osu mihinkään nappiin — muuten se veisi
+     * napautukset kuvilta ja linkeiltä, jotka ovat sivun ylälaidassa.
+     */
+    /*
+     * Väkänen alareunaan kertomassa, että sieltä pääsee pohjaan.
+     * Piiloutuu kun ollaan jo pohjassa, ettei se osoita sinne missä
+     * ollaan. Se on pelkkä vihje: napautuksen ottaa vastaan alakaista,
+     * ei väkänen itse (pointer-events: none).
+     */
+    const vakanen = html('button', 'tutki-pohjaan');
+    vakanen.type = 'button';
+    vakanen.tabIndex = -1;
+    vakanen.setAttribute('aria-hidden', 'true');
+    vakanen.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 9 L12 15 L18 9" fill="none"'
+      + ' stroke="currentColor" stroke-width="2" stroke-linecap="round"'
+      + ' stroke-linejoin="round"/></svg>';
+    this.arrivalDialog.appendChild(vakanen);
+    const paivitaVakanen = () => {
+      const pohjassa = kortti.scrollTop + kortti.clientHeight >= kortti.scrollHeight - 8;
+      vakanen.hidden = pohjassa || kortti.scrollHeight <= kortti.clientHeight + 8;
+    };
+    kortti.addEventListener('scroll', paivitaVakanen, { passive: true });
+    this.arrivalDialog.addEventListener('close', () => { vakanen.hidden = true; });
+    this.tutkiVakanen = paivitaVakanen;
+
+    kortti.addEventListener('click', (e) => {
+      if (!this.arrivalDialog.open) return;
+      if (e.target.closest('button, a, img, .tutki-nuoli')) return;
+      const laatikko = kortti.getBoundingClientRect();
+      const yla = e.clientY - laatikko.top;
+      const ala = laatikko.bottom - e.clientY;
+      const kaista = Math.min(TUTKI_KAISTA_PX, laatikko.height * 0.12);
+      if (yla > kaista && ala > kaista) return;
+      const kohde = yla <= kaista ? 0 : kortti.scrollHeight;
+      kortti.scrollTo({ top: kohde, behavior: this.reducedMotion ? 'auto' : 'smooth' });
+      setTimeout(paivitaVakanen, 400);
+    });
+    paivitaVakanen();
   }
 
 

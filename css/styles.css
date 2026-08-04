@@ -2803,9 +2803,9 @@ body.linssi-valokuva .grain { display: none; }
  * jolla on rinnettä, se vei koko kartan harmaanvihreään. #6b4529 on
  * saman tummuinen mutta punaisen ruskean puolella.
  */
-.varjo-1 { fill: #6b4529; opacity: 0.2; }
-.varjo-2 { fill: #6b4529; opacity: 0.2; }
-.valo-1 { fill: #fff2d4; opacity: 0.32; }
+.varjo-1 { fill: #6b4529; opacity: 0.26; }
+.varjo-2 { fill: #6b4529; opacity: 0.26; }
+.valo-1 { fill: #fff2d4; opacity: 0.4; }
 
 /*
  * Vesi on yhtä sävyä koko kartalla, eikä se sävy ole sininen.
@@ -4566,15 +4566,30 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    * kaventaa nimen noin sataan pikseliin eikä se silti putoa pois
    * silmästä — nimi on yläpalkin ainoa korostusvärinen asia.
    */
+  /*
+   * Koko sidotaan ruudun leveyteen JA merkkileveyteen, ei pikseleihin.
+   *
+   * Aiemmat mitat otettiin kehitysselaimesta, jossa yhtäkään pelin
+   * fontista ei ole asennettuna — kirjasinpino putosi geneeriseen
+   * monospaceen, ja nimi mahtui. iPhonessa ensimmäinen vaihtoehto
+   * "American Typewriter" ON olemassa ja se on selvästi leveämpi, joten
+   * sama luku ei kerro samaa asiaa (omistaja: "Logo ei vieläkään mahdu
+   * iPhonen ruudulle").
+   *
+   * vw sitoo koon ruutuun ja ch merkin leveyteen, joten kumpikaan ei
+   * riipu siitä, mikä fontti lopulta osui. 10ch riittää sanalle
+   * "Unohdettu", ja "aarre" menee toiselle riville millä tahansa
+   * kirjasimella.
+   */
   .brand {
-    font-size: 0.86rem;
+    font-size: min(0.86rem, 3.3vw);
     letter-spacing: 0.02em;
     flex: 0 1 auto;
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
     line-height: 1.05;
-    max-width: 6.6em;
+    max-width: 10ch;
   }
   .turn-pill { font-size: 0.78rem; padding: 0.2rem 0.5rem; gap: 0.3rem; }
   .topbar-actions { gap: 0.15rem; }
@@ -5700,6 +5715,56 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   /* Piirretty paperireuna ja sen varjo pois. */
   .dialog.arkki .arkin-varjo,
   .dialog.arkki .arkin-reuna { display: none; }
+
+  /*
+   * UMPINAINEN KAISTA YLÄREUNAAN.
+   *
+   * Omistaja: "iPhoneilla vierittäessä yläreunan voisi muuttaa pelkäksi
+   * pohjaväriksi, niin että kuvat ja teksti eivät sekoittuisi iPhonen
+   * Dynamic Islandin kanssa."
+   *
+   * Kortti on koko ruudun kokoinen, joten vieritetty kuva kulkee suoraan
+   * kellukkeen taakse. Kaista on kortin väristä paperia ja se peittää
+   * turva-alueen kokonaan; sisältö katoaa sen alle siististi eikä
+   * puoliksi. Kiinnitetty dialogiin eikä korttiin, jottei se vieri
+   * sisällön mukana.
+   */
+  .dialog.arkki::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(env(safe-area-inset-top, 0px) + 0.55rem);
+    background: var(--card-bg, #f2e3bd);
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  /*
+   * Väkänen alareunaan: vihje siitä, että sieltä painamalla sivu
+   * vierittyy pohjaan (omistajan toive). Sama hillitty ilme kuin
+   * lennon ohitusnuolella — se ei saa kilpailla tekstin kanssa.
+   */
+  .dialog.arkki .tutki-pohjaan {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 0.35rem);
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink, #46331f);
+    opacity: 0.34;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .dialog.arkki .tutki-pohjaan svg { width: 100%; height: 100%; display: block; }
+  /* Pohjassa väkänen on turha: se osoittaisi sinne missä jo ollaan. */
+  .dialog.arkki .tutki-pohjaan[hidden] { display: none; }
 }
 
 /*

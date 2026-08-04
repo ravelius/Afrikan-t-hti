@@ -13,6 +13,11 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 241, teksti: 'Jokien nimet pysyvät paikallaan vierittäessä' },
+  { v: 241, teksti: 'Nimen koko seuraa zoomia' },
+  { v: 241, teksti: 'Maastoon enemmän syvyyttä lähikuvassa' },
+  { v: 241, teksti: 'Tutki: ylä- ja alareunasta pääsee päähän' },
+  { v: 241, teksti: 'Pelin nimi mahtuu vihdoin iPhonen ruudulle' },
   { v: 240, teksti: 'Tutki on nyt taitettu lehti: pyyhkäise sivuja' },
   { v: 240, teksti: 'Kuvat isommiksi ja tekstin lomaan' },
   { v: 240, teksti: 'Korjattu: kuvat katosivat iPadilla kokonaan' },
