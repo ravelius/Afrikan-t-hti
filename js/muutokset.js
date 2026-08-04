@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 253, teksti: 'Kartan vieritys taas sujuvaa: rae 11x halvempi' },
+  { v: 253, teksti: 'Maastonimet kaupunkien nimien kokoisia' },
+  { v: 253, teksti: 'Maastonimet vasta kun kaupunkien nimet näkyvät' },
+  { v: 253, teksti: 'Logon rivit tasavälein, ei enää kuoppaa keskellä' },
   { v: 252, teksti: 'Vesi on nyt mustetta ja paperia, ei sinistä' },
   { v: 252, teksti: 'Matkakirjan palkki vain sanojensa levyinen' },
   { v: 252, teksti: 'Logon rivit täsmälleen yhtä leveät' },
