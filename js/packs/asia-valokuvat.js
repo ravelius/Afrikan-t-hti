@@ -1157,6 +1157,15 @@ export const ASIA_VALOKUVAT = {
     },
   },
   persepolis: {
+    tiedosto: 'Groep mannen poserend bij de Poort van alle Naties (Poort van Xerxes) in Persepolis Persepolis (titel op object), RP-F-F01048-AI.jpg',
+    vuosi: 'n. 1880-1895',
+    lahde: 'Antoin Sevruguin (attribuoitu) / Rijksmuseum, Commons (CC0)',
+    selite: 'Kaikkien kansojen portti Persepoliissa: pystyssä olevien pylväiden '
+      + 'ja siivekkään härkähahmon juurella seisoo ryhmä miehiä, ja vasta '
+      + 'heistä näkee kuinka korkealle raunio nousee. Albumiinivedos on '
+      + 'hollantilaisen H. Dunlopin matka-albumista, jossa Persian kuvien '
+      + 'seassa on otoksia Skotlannista, Venäjältä ja Kiinasta - Persepolis '
+      + 'oli yksi pysähdys pitkällä maailmanmatkalla.',
     lisat: [
       {
         tiedosto: 'IranPersepolisApadana2.jpg',
@@ -1234,6 +1243,13 @@ export const ASIA_VALOKUVAT = {
     },
   },
   riad: {
+    tiedosto: 'Qaṣr Murabbaʿ.jpg',
+    vuosi: '1930-luku',
+    lahde: 'Tuntematon kuvaaja, Commons (CC BY 4.0)',
+    selite: 'Murabban linna Riadissa 1930-luvulla: savitiilinen muuri, '
+      + 'hammastettu harja ja neljä kulmatornia keskellä aavikkoa. Kuva on '
+      + 'otettu lounaasta, eli katsoja on kaupungista poispäin - linnan '
+      + 'takana on se suunta, johon Riad myöhemmin kasvoi.',
     lisat: [
       {
         tiedosto: 'Thumairi Street in Riyadh, 1938.jpg',
@@ -1449,6 +1465,13 @@ export const ASIA_VALOKUVAT = {
     },
   },
   sana: {
+    tiedosto: 'Jewish children in Sana\'a, Yemen, circa 1909.jpg',
+    vuosi: 'n. 1909',
+    lahde: 'Hermann Burchardt, Commons (PD)',
+    selite: 'Lapsijoukko Sanaan juutalaiskorttelin hiekkakadulla, taustalla '
+      + 'korkeita savitiilitaloja pienine ikkuna-aukkoineen. Kuvan otti '
+      + 'saksalainen matkaaja Hermann Burchardt, joka kuoli samana vuonna '
+      + '1909, joten tämä on hänen viimeisiä Jemenistä ottamiaan vedoksia.',
     lisat: [
       {
         tiedosto: 'Old Tower-Houses in Sana\'a (صنعاء القديمة) (2286028843).jpg',
@@ -1573,6 +1596,14 @@ export const ASIA_VALOKUVAT = {
     },
   },
   teheran: {
+    tiedosto: 'Téhéran, le Meydan de l\'Ark.jpg',
+    vuosi: '1850-luku',
+    lahde: 'Luigi Pesce / Gallica, Ranskan kansalliskirjasto, Commons (PD)',
+    selite: 'Arkin aukio Teheranissa: kaksikerroksinen kaarikäytävärivi ja sen '
+      + 'edessä pitkä jono tykinlavetteja. Etualan aukiolla liikkuneet '
+      + 'ihmiset ovat jättäneet vain haaleita haamuja, koska valotus kesti '
+      + 'minuutteja. Vedos on 1850-luvulta eli runsas vuosikymmen '
+      + 'valokuvauksen keksimisen jälkeen.',
     lisat: [
       {
         tiedosto: '981012-Damavand-South-IMG 9861-2.jpg',

@@ -39,17 +39,44 @@ const MODULES = [
   'js/packs/oceania-valokuvat.js',
   'js/packs/asia-maatiedot.js',
   'js/packs/radiot.js',
+  'js/packs/viritysaanet.js',
   'js/packs/europe-kulttuuri.js',
   'js/packs/kulttuuri-kategoriat.js',
   'js/packs/europe-valokuvat.js',
   'js/packs/europe-kielet.js',
   'js/packs/europe-maatiedot.js',
   'js/packs/europe-artikkelit.js',
-  'js/linssit/kerros.js',
+  /*
+   * Linsseistä niputetaan VAIN omistus ja rekisteri, eikä sekään ole
+   * valinta: js/game.js tuo omistus.js:n staattisesti (laattajako ja
+   * kokemuspistekynnykset), ja omistus.js tuo rekisteri.js:n. Ilman
+   * niitä checkModuleList kaataisi kokoajan.
+   *
+   * Kaikki muu linssikoneisto jää pois, koska yhden tiedoston versio ei
+   * saa linssejä lainkaan (docs/linssit-suunnitelma.md luku 2.1, sama
+   * tarkoituksellinen raja kuin valokuvilla ja äänillä): js/ui.js tuo
+   * kerros.js:n ja radio.js:n dynaamisesti, ja niiden tuonti kaatuu
+   * täällä hallitusti.
+   *
+   * TÄSTÄ SEURASI NIMITÖRMÄYS. kerros.js ja pistenaytto.js olivat
+   * listalla, vaikka mikään listan moduuli ei tuo niitä, ja molemmat
+   * julistavat `const NS` — jonka js/mapart.js julistaa myös. Niputus on
+   * merkkijonojen ketjutusta ilman moduulirajoja, joten selain kaatui
+   * heti: "Identifier 'NS' has already been declared". Sääntö tästä
+   * eteenpäin: älä lisää tänne moduulia, jota mikään listalla oleva ei
+   * staattisesti tuo.
+   *
+   * HUOM: yhden tiedoston versio ei silti käynnisty. Samanlaisia
+   * törmäyksiä on vielä ainakin viisitoista muuta, ja ne ovat vanhempia
+   * kuin tämä rivi (mitattu 4.8.2026 myös HEADin dist-tiedostosta):
+   * africa-puzzles.js ja europe-puzzles.js julistavat samat kahdeksan
+   * nimeä, KEHITTAJA_AVAIN on kahdesti, JARVET ja JOET kolmesti,
+   * hash01 kahdesti. Yksikään testi ei näe niitä, koska KOKOAMINEN
+   * onnistuu virheittä ja vika on vasta ajossa. Kunnollinen korjaus on
+   * kääriä jokainen moduuli omaan sulkeumaansa; se on oma työnsä.
+   */
   'js/linssit/rekisteri.js',
   'js/linssit/omistus.js',
-  'js/linssit/pistenaytto.js',
-  'js/linssit/radiosoitin.js',
   'js/packs/valokuvat-paikalliset.js',
   'js/packs/liput-paikalliset.js',
   'js/packs/lippu-tekijat.js',
@@ -84,6 +111,8 @@ const MODULES = [
   'js/packs/maasto-nimet-vuoret.js',
   'js/packs/maasto-nimet-vedet.js',
   'js/packs/maailmankartta-syvyys.js',
+  'js/packs/maasto-tekstit-malli.js',
+  'js/packs/maailmankartta-varjostus.js',
   'js/packs/linssi-topografia.js',
   'js/packs/linssi-maaluvut.js',
   'js/packs/linssi-muuttoliike.js',
@@ -94,6 +123,7 @@ const MODULES = [
   'js/packs/linssi-tahdet.js',
   'js/packs/linssi-tuulet.js',
   'js/packs/linssi-yokartta.js',
+  'js/packs/linssi-topografia-kuva.js',
   'js/pack.js',
   'js/passport.js',
   'js/aani-ehdokkaat.js',

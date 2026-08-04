@@ -43,7 +43,7 @@ export const LINSSIT = [
   // { tunnus: 'muuttoliike',  manner: null,            tuo: () => import('./muuttoliike.js') },
   { tunnus: 'radio',        manner: null,            tuo: () => import('./radio.js') },
   // { tunnus: 'tahdet',       manner: null,            tuo: () => import('./tahdet.js') },
-  // { tunnus: 'topografia',   manner: 'southamerica',  tuo: () => import('./topografia.js') },
+  { tunnus: 'topografia',   manner: 'southamerica',  tuo: () => import('./topografia.js') },
   // { tunnus: 'tuulet',       manner: 'asia',          tuo: () => import('./tuulet.js') },
   // { tunnus: 'yokartta',     manner: 'northamerica',  tuo: () => import('./yokartta.js') },
 ];

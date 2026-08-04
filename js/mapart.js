@@ -360,8 +360,21 @@ export function drawLand(svg, map) {
  * Kerros piirtyy maan päälle mutta reittien ja kaupunkien alle. Ilman
  * aineistoa funktio ei tee mitään, joten lauta ilman maastoa toimii
  * kuten ennenkin.
+ *
+ * --- varjostus ---
+ *
+ * Kolmas argumentti on valinnainen varjostusaineisto (js/packs/
+ * maailmankartta-varjostus.js). Se on eri asia kuin korkeusvyöhykkeet:
+ * vyöhyke kertoo KUINKA KORKEALLA maa on, varjo MIHIN SUUNTAAN se
+ * viettää. Silmä lukee muodon varjosta, ei väristä, ja siksi vaimeat
+ * vyöhykkeet alkavat vasta varjon kanssa näyttää maastolta eivätkä
+ * täplältä.
+ *
+ * Se tulee erillisenä argumenttina eikä map-oliossa, koska map on
+ * koneen kirjoittamassa js/packs/maailmankartta.js:ssä: sinne lisätty
+ * kenttä katoaisi seuraavassa koostajan ajossa.
  */
-export function drawMaasto(svg, map) {
+export function drawMaasto(svg, map, varjostus = null) {
   const maasto = map?.maasto;
   if (!maasto) return;
   const g = el('g', { class: 'maasto' }, svg);
@@ -371,6 +384,29 @@ export function drawMaasto(svg, map) {
     ['korkeus-keski', maasto.keski],
     ['korkeus-ylos', maasto.ylos],
     ['korkeus-huippu', maasto.huippu],
+  ]) {
+    for (const rengas of renkaat ?? []) {
+      if (rengas.length < 4) continue;
+      el('path', { d: smoothClosedPath(kasinPiirretty(rengas)), class: luokka }, g);
+    }
+  }
+
+  /*
+   * Varjo vyöhykkeiden PÄÄLLE mutta järvien ja jokien alle.
+   *
+   * Järjestys ei ole makuasia. Varjo on tumma kalvo, jonka koko idea on
+   * nostaa vyöhykkeen pinta esiin — vyöhykkeen ALLE piirrettynä se
+   * jäisi ruskean täytön peittoon juuri siellä missä sitä eniten
+   * tarvitaan eli vuorilla. Vesi taas kuuluu varjon päälle: joki
+   * kulkee laaksossa eikä katoa rinteen varjoon.
+   *
+   * varjo1 ennen varjo2:ta, koska ne ovat sisäkkäisiä: päällekkäisyys
+   * tummentaa syvimmät kohdat itsestään, aivan kuten korkeusvyöhykkeillä.
+   */
+  for (const [luokka, renkaat] of [
+    ['varjo-1', varjostus?.varjo1],
+    ['varjo-2', varjostus?.varjo2],
+    ['valo-1', varjostus?.valo1],
   ]) {
     for (const rengas of renkaat ?? []) {
       if (rengas.length < 4) continue;

@@ -281,6 +281,15 @@ export const SOUTHAMERICA_VALOKUVAT = {
     },
   },
   campogrande: {
+    tiedosto: 'Inauguração da base de Mato Grosso com a presença do ministro da Aeronáutica, em Campo Grande..tif',
+    vuosi: '1945',
+    lahde: 'Arquivo Nacional (Brasilia), Commons (PD)',
+    selite: 'Campo Granden lentotukikohdan vihkiäiset 19. huhtikuuta 1945. '
+      + 'Nurmikentälle on aseteltu riviin kymmenkunta konetta, kaksitasoja ja '
+      + 'yksitasoja sekaisin, ja niiden takana seisoo sotilasosasto '
+      + 'ruoduissa. Etualan tiilikatolla ja kentän laidalla katselijat jäävät '
+      + 'pistemäisiksi hahmoiksi, joten koko juhla näkyy kuvassa pienempänä '
+      + 'kuin tasainen ruohokenttä ympärillä.',
     lisat: [
       {
         tiedosto: 'Feira Central de Campo Grande, dezembro de 2022 (1).jpg',

@@ -14,6 +14,14 @@
  * pikseleistä juuri mitään. Näin laitteen ulkonäköä voi korjata
  * koskematta ääneen ja päinvastoin.
  *
+ * KAKSI ÄÄNTÄ, EI YKSI. Suoran lähetyksen lisäksi radiolla on
+ * VIRITYSÄÄNI: kohina, joka soi napautuksesta siihen asti kunnes asema
+ * kuuluu (omistajan toive 4.8.2026 — hiljainen tauko näyttää
+ * rikkinäiseltä). Se tulee js/linssit/viritin.js:stä, ja siellä on myös
+ * ainoa kohta, josta valitaan soiko aito äänite vai synteesi:
+ * VIRITYKSEN_TAPA. Tämä tiedosto ei tiedä kummasta on kyse — se vain
+ * käynnistää ja pysäyttää.
+ *
  * RADIO ON POIKKEUS LINSSISOPIMUKSESSA (docs/linssit-suunnitelma.md
  * luku 2, kenttä `kerros: false`). Kaksi sopimuksen sääntöä rikkoutuisi,
  * jos ne otettaisiin kirjaimellisesti:
@@ -43,6 +51,7 @@ import { el } from '../mapart.js';
 import { radioMaalle } from '../packs/radiot.js';
 import { teeRadiosoitin } from './radiosoitin.js';
 import { teePistenaytto, merkinRivit, FONTTI } from './pistenaytto.js';
+import { teeViritysaani, esilataaViritysaanet, unohdaViritysaanet } from './viritin.js';
 import { sfx } from '../sound.js';
 import { stopPlaceStream } from '../ambience-stream.js';
 
@@ -120,16 +129,57 @@ const NAPIN_OSUMA = 34;
 const NAPIN_RENGAS = 21;
 
 /*
- * Moduulin koko muisti kahdessa muuttujassa.
+ * RISTIHÄIVYTYS VIRITYKSESTÄ SUORAAN LÄHETYKSEEN.
+ *
+ * Viritys ei saa katketa napsahtaen. Sama vika on korjattu tässä pelissä
+ * jo kahdesti — kertojan äänestä (v176) ja luennoista (v215) — ja tässä
+ * se olisi vielä räikeämpi: kohina on jatkuvaa ääntä, ja jatkuvan äänen
+ * katkaisu kuuluu aina.
+ *
+ * Kuusi kymmenystä sekuntia on mitattu kompromissi. Lyhyempi (0,3 s) on
+ * kuultavissa leikkauksena, pidempi (1 s) jättää lähetyksen ensimmäisen
+ * lauseen kohinan alle — ja lähetyksen alku on juuri se, mitä pelaaja
+ * odottaa.
+ *
+ * Vaihto on TASATEHOINEN: viritys laskee kosinia (js/linssit/viritin.js
+ * haivytaPois) ja lähetys nousee siniä. Kaksi riippumatonta ääntä
+ * summautuu teholtaan, joten lineaarinen pari jättäisi keskelle 3 dB:n
+ * notkahduksen — reiän juuri siihen kohtaan, jota vaihdolla piti peittää.
+ *
+ * Lähetys on <audio>-elementti eikä kulje Web Audion läpi (ks.
+ * aloitaVirta: crossOrigin veisi äänen kokonaan monelta asemalta), joten
+ * sen puoli häivytyksestä tehdään elementin volume-arvoa askeltamalla.
+ * 25 ms:n askel on 24 askelta koko vaihdossa; harvempi kuuluu portaina.
+ */
+const RISTIHAIVYTYS_S = 0.6;
+const HAIVYTYKSEN_ASKEL_MS = 25;
+
+/*
+ * Kuinka usein tarkistetaan, sammuttiko pelaaja pelin äänet kesken
+ * virityksen.
+ *
+ * js/sound.js ei kerro mykistyksestä kenellekään eikä sitä voi muuttaa
+ * täältä (tiedosto on toisen työvaiheen hallussa), joten tieto on
+ * kysyttävä. Vahti elää vain virityksen ajan eli enintään 12 sekuntia,
+ * ja neljä kertaa sekunnissa on riittävän nopea: mykistys tuntuu
+ * välittömältä, kun ääni katoaa neljännessekunnissa.
+ */
+const MYKISTYKSEN_VAHTI_MS = 250;
+
+/*
+ * Moduulin koko muisti neljässä muuttujassa.
  *
  * `tila` on olemassa vain radiotilan ajan: se sisältää laitteen, näytön
  * ja sen mitä kartasta tarvitaan. `soiva` on kerrallaan enintään yksi —
  * kaksi yhtä aikaa auki olevaa lähetysvirtaa on juuri se sekasotku, jota
  * omistaja ei halunnut, ja se olisi myös kaksi verkkoyhteyttä
- * puhelinliittymästä.
+ * puhelinliittymästä. `viritin` on niiden väliin jäävä kohina, ja sitäkin
+ * on kerrallaan enintään yksi.
  */
 let tila = null;
 let soiva = null;
+let viritin = null;
+let mykistysVahti = 0;
 let aanenvoimakkuus = OLETUSAANI;
 
 /** Onko radiotila päällä? */
@@ -262,6 +312,9 @@ export function kanavaKaupungille(cityId) {
   const kanava = radioMaalle(iso);
   if (!kanava) return null;
   return {
+    // `cityId` on soittimen asteikkoa varten: se keskittää naapurinimet
+    // soivaan kaupunkiin, eikä laite tunne karttaa muuten mitenkään.
+    cityId,
     iso,
     maa,
     kaupunki,
@@ -293,6 +346,111 @@ function kerroMuutos() {
 }
 
 /**
+ * KÄYNNISTÄÄ VIRITYSÄÄNEN.
+ *
+ * Ääni alkaa siitä, kun kaupunkia napautetaan, ja kestää siihen asti
+ * kunnes suora lähetys kuuluu tai viritys epäonnistuu. Kumpi ääni soi —
+ * aito äänite vai synteesi — päätetään yhdessä paikassa, ks.
+ * js/linssit/viritin.js VIRITYKSEN_TAPA.
+ *
+ * JO SOIVAA VIRITYSTÄ EI ALOITETA ALUSTA. Kun pelaaja hyppii kaupungista
+ * toiseen, jokainen napautus veisi virityksen hiljaisuuden kautta uuteen
+ * ääneen — ja kaksi häivytystä peräkkäin on kuoppa, ei viritys. Yhtäjaksoinen
+ * kohina on myös se, mitä oikea laite tekisi: viisari liikkuu, kohina jatkuu.
+ *
+ * Äänikonteksti pyydetään vasta tässä, napautuksen sisällä. Selain
+ * vaatii eleen, ja tämä on se ele.
+ */
+function aloitaViritys() {
+  if (viritin) return;
+  const ctx = sfx.ensureContext();
+  // ensureContext palauttaa null, jos pelin äänet ovat pois päältä.
+  // Silloin viritystäkään ei tule — se on pelin ääni, ei radion.
+  if (!ctx) return;
+  try {
+    const uusi = teeViritysaani(ctx, { voimakkuus: aanenvoimakkuus });
+    if (!uusi.aloita()) return;
+    viritin = uusi;
+  } catch (syy) {
+    // Viritysääni on koriste. Jos se ei jostain syystä käynnisty, radio
+    // toimii ilman sitä täsmälleen kuten ennen.
+    console.warn('Viritysäänen käynnistys epäonnistui.', syy);
+    viritin = null;
+    return;
+  }
+  mykistysVahti = setInterval(() => {
+    if (sfx.enabled === false) lopetaViritys(0.15);
+  }, MYKISTYKSEN_VAHTI_MS);
+}
+
+/**
+ * PYSÄYTTÄÄ VIRITYSÄÄNEN häivyttäen.
+ *
+ * `haive` on häivytyksen pituus sekunteina: lähetyksen alkaessa se on
+ * ristihäivytyksen mitta, muualla lyhyempi — pysäytetyn radion pitää
+ * vaieta heti, mutta ei napsahtaen.
+ *
+ * Turvallinen kutsua aina, myös silloin kun mikään ei soi. Juuri siksi
+ * tämä on jokaisessa pysäytyspaikassa eikä vain siellä, missä virityksen
+ * tiedetään olevan käynnissä.
+ */
+function lopetaViritys(haive = RISTIHAIVYTYS_S) {
+  if (mykistysVahti) {
+    clearInterval(mykistysVahti);
+    mykistysVahti = 0;
+  }
+  const vanha = viritin;
+  viritin = null;
+  if (!vanha) return;
+  try {
+    vanha.lopeta(haive);
+  } catch (syy) {
+    console.warn('Viritysäänen pysäytys epäonnistui.', syy);
+  }
+}
+
+/**
+ * HÄIVYTTÄÄ SUORAN LÄHETYKSEN SISÄÄN virityksen väistyessä.
+ *
+ * Elementin volume-arvoa askelletaan ajastimella, koska lähetys ei kulje
+ * Web Audion läpi. Jokainen askel lukee `aanenvoimakkuus`-muuttujan
+ * uudelleen, joten nupin vääntäminen kesken vaihdon menee perille eikä
+ * jää häivytyksen loppuarvon alle.
+ *
+ * Ajastin nollataan myös silloin, kun virta ei ole enää se sama:
+ * vanhentunut häivytys kirjoittaisi voimakkuuden seuraavan kaupungin
+ * kanavan päälle.
+ */
+function haivytaLahetysSisaan(virta) {
+  const kello = () => (typeof performance === 'object' && performance
+    ? performance.now() : Date.now());
+  const alku = kello();
+  const askel = () => {
+    if (soiva !== virta) {
+      clearInterval(virta.haivytys);
+      virta.haivytys = 0;
+      return;
+    }
+    const osuus = Math.min(1, (kello() - alku) / (RISTIHAIVYTYS_S * 1000));
+    try {
+      // Sini vastaa virityksen kosinia: cos² + sin² = 1 eli yhteisteho
+      // pysyy vakiona koko vaihdon ajan.
+      virta.audio.volume = aanenvoimakkuus * Math.sin(osuus * (Math.PI / 2));
+    } catch (syy) {
+      console.warn('Lähetyksen häivytys epäonnistui.', syy);
+    }
+    if (osuus >= 1) {
+      clearInterval(virta.haivytys);
+      virta.haivytys = 0;
+    }
+  };
+  virta.haivytys = setInterval(askel, HAIVYTYKSEN_ASKEL_MS);
+  // Ensimmäinen askel heti: ilman sitä lähetys soisi 25 ms sillä
+  // voimakkuudella, joka elementillä sattuu olemaan.
+  askel();
+}
+
+/**
  * Sulkee soivan virran ja vapauttaa yhteyden.
  *
  * `pause()` EI RIITÄ suoralle lähetykselle. Pysäytetty <audio> pitää
@@ -301,11 +459,20 @@ function kerroMuutos() {
  * — se katkaisee kesken olevan haun. Sama kaksivaiheinen sulkeminen on
  * kaupungin äänimaisemassa (js/ambience-stream.js paasta), mutta ilman
  * `load()`-kutsua, koska äänite on äärellinen tiedosto eikä loputon virta.
+ *
+ * Pysäyttää myös viritysäänen — paitsi kun kutsuja on juuri
+ * käynnistämässä uutta kanavaa (`viritysJatkuu`), jolloin kohina jatkuu
+ * yhtäjaksoisena kaupungista toiseen.
  */
-function lopetaAani() {
+function lopetaAani({ viritysJatkuu = false } = {}) {
+  if (!viritysJatkuu) lopetaViritys(0.25);
   const vanha = soiva;
   soiva = null;
   if (!vanha) return;
+  if (vanha.haivytys) {
+    clearInterval(vanha.haivytys);
+    vanha.haivytys = 0;
+  }
   const { audio } = vanha;
   try {
     audio.pause();
@@ -319,10 +486,15 @@ function lopetaAani() {
 /**
  * Käynnistää kanavan virran.
  *
- * Ei omaa häivytystä. js/ambience-stream.js:n `haivyta` ei ole vietynä,
- * eikä sen rinnalle kirjoiteta toista — ja tähän se ei sovi muutenkaan:
- * laite on mekaaninen radio, ja mekaaninen radio napsahtaa. Napsahdus on
- * tässä oikea ääni, ei puute.
+ * LÄHETYS TULEE SISÄÄN RISTIHÄIVYTYKSELLÄ VIRITYSÄÄNESTÄ, ks.
+ * RISTIHAIVYTYS_S. Aiemmin tässä luki, että mekaaninen radio napsahtaa ja
+ * että napsahdus on oikea ääni — se piti paikkansa niin kauan kuin
+ * napsahdusta edelsi hiljaisuus. Nyt sitä edeltää kohina, ja kohinan
+ * katkeaminen kesken sanaa ei ole minkään laitteen ääni.
+ *
+ * Elementti aloittaa VAIMENNETTUNA (volume 0) ja nousee vasta kun
+ * lähetys oikeasti kuuluu. Ilman sitä puskurin ensimmäiset kymmenykset
+ * pauhaisivat täydellä voimalla kohinan päälle.
  *
  * Kaikki kuuntelijat tarkistavat ensin, että virta on yhä sama. Ilman
  * sitä hitaasti avautuvan aseman virhe sammuttaisi jo seuraavaksi
@@ -330,7 +502,9 @@ function lopetaAani() {
  * linssimoottorissa (js/linssit/kerros.js, kenttä `vuoro`).
  */
 function aloitaVirta(cityId, kanava) {
-  lopetaAani();
+  // Viritys jatkuu vanhan kanavan yli: pelaaja on vaihtamassa asemaa,
+  // ei sammuttamassa radiota.
+  lopetaAani({ viritysJatkuu: true });
 
   /*
    * Peiliä ei käytetä. js/media.js aaniOsoite palauttaisi lähetysosoitteen
@@ -341,19 +515,35 @@ function aloitaVirta(cityId, kanava) {
    */
   const audio = new Audio();
   audio.preload = 'none';
-  audio.volume = aanenvoimakkuus;
+  audio.volume = 0;
   audio.src = kanava.url;
 
-  const oma = { cityId, kanava, audio };
+  const oma = { cityId, kanava, audio, haivytys: 0, alkanut: false };
   soiva = oma;
 
   const yhaSama = () => soiva === oma;
 
-  audio.addEventListener('playing', () => {
-    if (!yhaSama()) return;
+  /*
+   * LÄHETYS ALKOI KUULUA. Tästä alkaa ristihäivytys: viritys laskee ja
+   * lähetys nousee saman 0,6 sekunnin aikana.
+   *
+   * Kaksi tapahtumaa samaan asiaan, koska kumpikin yksinään pettää.
+   * `playing` on oikea tapahtuma, mutta osa suoratoistoista ei lähetä
+   * sitä lainkaan — silloin lähetys jäisi ikuisesti vaimennetuksi, mikä
+   * on pahempi vika kuin se, jonka korjaamiseksi vaimennus on. Siksi
+   * rinnalla on `timeupdate`, joka syntyy vasta kun toisto oikeasti
+   * etenee. Ensimmäinen voittaa, loput ovat maksuttomia.
+   */
+  const lahetysAlkoi = () => {
+    if (!yhaSama() || oma.alkanut) return;
+    oma.alkanut = true;
     tila?.soitin.asetaTila('soi');
+    haivytaLahetysSisaan(oma);
+    lopetaViritys(RISTIHAIVYTYS_S);
     kerroMuutos();
-  });
+  };
+  audio.addEventListener('playing', lahetysAlkoi);
+  audio.addEventListener('timeupdate', lahetysAlkoi);
   /*
    * Suoralla lähetyksellä `ended` tarkoittaa katkennutta yhteyttä, ei
    * loppunutta kappaletta: virrassa ei ole loppua. Se on siis virhe
@@ -369,7 +559,13 @@ function aloitaVirta(cityId, kanava) {
   audio.addEventListener('ended', () => petti('Lähetys katkesi'));
 
   tila.soitin.naytaKanava(kanava);
+  // Tilanvaihdos ensin, ääni perässä: soittimen 'virittaa' käynnistää myös
+  // aikakatkaisun (radiosoitin.js VIRITYKSEN_AIKAKATKAISU_MS), joka on se
+  // vahti, jonka varassa viritysääni ei jää soimaan ikuisesti kuolleelle
+  // asemalle — aikakatkaisu kutsuu onAikakatkaisu → lopetaAani → viritys
+  // vaikenee.
   tila.soitin.asetaTila('virittaa');
+  aloitaViritys();
 
   audio.play().catch((syy) => {
     /*
@@ -436,10 +632,27 @@ export function pysayta() {
   return tilanne();
 }
 
+/**
+ * Vie äänenvoimakkuuden kaikkeen, mikä radiossa soi.
+ *
+ * Kesken olevaa ristihäivytystä EI ohiteta: sen jokainen askel lukee
+ * `aanenvoimakkuus`-muuttujan uudelleen, joten uusi arvo menee perille
+ * ilman että vaihto katkeaa hyppyyn.
+ *
+ * Erillään asetaAani():sta, koska soittimen nuppi kutsuu tätä
+ * takaisinkutsun kautta — asetaAani kertoisi arvon takaisin soittimelle,
+ * joka kertoisi sen taas tänne.
+ */
+function paivitaAanenvoimakkuus(arvo) {
+  aanenvoimakkuus = Math.min(1, Math.max(0, Number(arvo) || 0));
+  if (soiva && !soiva.haivytys) soiva.audio.volume = aanenvoimakkuus;
+  viritin?.asetaVoimakkuus(aanenvoimakkuus);
+  return aanenvoimakkuus;
+}
+
 /** Äänenvoimakkuus 0–1. Muistetaan istunnon ajan myös kanavan vaihdon yli. */
 export function asetaAani(arvo) {
-  aanenvoimakkuus = Math.min(1, Math.max(0, Number(arvo) || 0));
-  if (soiva) soiva.audio.volume = aanenvoimakkuus;
+  paivitaAanenvoimakkuus(arvo);
   tila?.soitin.asetaAani(aanenvoimakkuus);
   return aanenvoimakkuus;
 }
@@ -466,6 +679,15 @@ export function aani() {
  * @param {Array}    asetukset.kaupungit  board.cities — nimet ja sijainnit
  * @param {Element}  asetukset.juuri      mihin soitin liitetään (esim. document.body)
  * @param {Function} [asetukset.onMuutos] kutsutaan kun soiva kanava vaihtuu
+ * @param {Function} [asetukset.onSulje]  soittimen virtakytkin käännettiin
+ *                                        off-asentoon. Kutsuja sammuttaa
+ *                                        linssin; ilman tätä tila puretaan
+ *                                        tästä (pois()), jolloin kartta
+ *                                        palaa normaaliksi mutta
+ *                                        linssivalikko jää auki.
+ * @param {string}   [asetukset.sijainti] pelaajan kaupungin tunnus; soittimen
+ *                                        asteikko keskittyy siihen ennen kuin
+ *                                        mitään on soitettu
  * @param {number}   [asetukset.aani]     aloitusäänenvoimakkuus 0–1
  * @returns {object} tilannekuva
  */
@@ -474,6 +696,8 @@ export function paalle({
   kaupungit = [],
   juuri = null,
   onMuutos = null,
+  onSulje = null,
+  sijainti = null,
   aani: alkuAani = null,
 } = {}) {
   // Uudelleenkytkentä (laudan vaihto, kartan uudelleenpiirto) purkaa
@@ -494,6 +718,32 @@ export function paalle({
     if (kaupunki?.id) nimet.set(kaupunki.id, kaupunki.name ?? null);
   }
 
+  const kanavalliset = kanavakaupungit(map, kaupungit);
+  /*
+   * Soittimen asteikon aineisto: vain ne kaupungit, joilla on kanava.
+   * Suodatus tehdään täällä eikä laitteessa, koska kanavan olemassaolo
+   * on tämän moduulin tietoa (radioMaalle) — soitin ei tunne maita
+   * eikä lähetysosoitteita, ja juuri se kolmijako pitää laitteen
+   * vaihdettavana (ks. tiedoston alku).
+   *
+   * `laudanLeveys` kerrotaan vain kiertävältä laudalta. Maailmankartalla
+   * Tokion naapuri voi olla laudan toisessa laidassa, ja ilman tätä
+   * asteikko loppuisi reunaan kesken.
+   */
+  const asteikonKaupungit = [];
+  const kaikkiPaikat = [];
+  for (const kaupunki of kaupungit) {
+    if (!kaupunki?.id) continue;
+    kaikkiPaikat.push({ id: kaupunki.id, x: kaupunki.x, y: kaupunki.y });
+    if (!kanavalliset.has(kaupunki.id)) continue;
+    asteikonKaupungit.push({
+      id: kaupunki.id,
+      nimi: kaupunki.name ?? kaupunki.id,
+      x: kaupunki.x,
+      y: kaupunki.y,
+    });
+  }
+
   const naytto = teePistenaytto({
     merkkeja: NAYTON_MERKIT,
     rivit: NAYTON_RIVIT,
@@ -505,11 +755,26 @@ export function paalle({
   });
   const soitin = teeRadiosoitin({
     aani: aanenvoimakkuus,
+    kaupungit: asteikonKaupungit,
+    kaikkiKaupungit: kaikkiPaikat,
+    laudanLeveys: map?.kiertava === true ? (map?.width ?? 0) : 0,
+    sijainti,
     onStop: () => pysayta(),
-    onAani: (arvo) => {
-      aanenvoimakkuus = arvo;
-      if (soiva) soiva.audio.volume = arvo;
+    // Asteikon nimi ja soittokytkimen ylösvääntö ovat sama toiminto kuin
+    // kaupungin napautus kartalla: yksi napautus, kanava vaihtuu heti.
+    onValitseKaupunki: (id) => soitaKaupunki(id),
+    /*
+     * Virtakytkin off-asennossa. Laite on jo piilottanut itsensä; tämän
+     * tehtävä on sulkea äänet ja kartan radiotila. Kutsujan oma
+     * takaisinkutsu saa etusijan, koska vain se osaa sammuttaa myös
+     * linssin — ilman sitä puretaan ainakin tämä tila, jottei
+     * näkymättömän soittimen alla jää soimaan kanavaa.
+     */
+    onSulje: () => {
+      if (onSulje) onSulje();
+      else pois();
     },
+    onAani: (arvo) => paivitaAanenvoimakkuus(arvo),
     /*
      * Aikakatkaisu tulee laitteelta: se on jo vaihtanut näyttönsä
      * virhetilaan, ja tämän tehtävä on sulkea virta. Rikki mennyt
@@ -542,7 +807,7 @@ export function paalle({
     soitin,
     naytto,
     onMuutos,
-    kanavalliset: kanavakaupungit(map, kaupungit),
+    kanavalliset,
   };
 
   (juuri ?? document.body)?.appendChild(soitin.juuri);
@@ -552,8 +817,38 @@ export function paalle({
   stopPlaceStream();
   sfx.setAmbience(null);
 
+  /*
+   * Viritysäänet valmiiksi selaimen välimuistiin heti tilan avautuessa.
+   * Ne ovat pieniä (284 kt yhteensä) ja tavallisesti jo offline-korissa,
+   * mutta ensimmäisellä käynnillä lataus osuisi juuri siihen hetkeen,
+   * jona pelaaja napauttaa kaupunkia — eli siihen taukoon, jonka
+   * poistamisesta koko viritysäänessä on kyse. Synteesitavalla tämä ei
+   * tee mitään.
+   */
+  esilataaViritysaanet(sfx.ctx);
+
   kerroMuutos();
   return tilanne();
+}
+
+/*
+ * SIVUN SULKEMINEN JA TAUSTALLE SIIRTYMINEN.
+ *
+ * `pagehide` kattaa molemmat: sivulta poistumisen ja bfcacheen jäämisen.
+ * Jälkimmäisessä JavaScript jäädytetään mutta äänet voivat jäädä
+ * soimaan, ja palaava pelaaja löytäisi radion, joka on tilansa mukaan
+ * virittämässä asemaa jota ei enää haeta. pysayta() jättää radiotilan
+ * päälle mutta sammuttaa sekä lähetyksen että virityksen, joten paluu
+ * osuu ehjään laitteeseen: "RADIO POIS · VALITSE KAUPUNKI".
+ *
+ * Kuuntelija liitetään kerran moduulin latautuessa eikä radiotilan
+ * avautuessa, koska irrottamiselle ei ole paikkaa, jonka varmasti
+ * ajetaan — ja tila === null tekee siitä muulloin tyhjän kutsun.
+ */
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('pagehide', () => {
+    if (tila) pysayta();
+  });
 }
 
 /**
@@ -571,6 +866,10 @@ export function paalle({
 export function pois() {
   if (!tila) return tilanne();
   lopetaAani();
+  // Puretut viritysäänet pois muistista: ne ovat noin 8 Mt eikä niitä
+  // tarvita ennen kuin radiotila avataan uudelleen. Tiedostot jäävät
+  // selaimen välimuistiin, joten paluu ei maksa uutta latausta.
+  unohdaViritysaanet(sfx.ctx);
   const vanha = tila;
   tila = null;
   try {

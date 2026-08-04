@@ -683,6 +683,15 @@ export const OCEANIA_VALOKUVAT = {
     },
   },
   honiara: {
+    tiedosto: 'Army and Marines on KuKum Beach, Guadalcanal, circa 1942.jpg',
+    vuosi: '1942',
+    lahde: 'USMC History Division, Thayer Soule -kokoelma, Commons (CC BY 2.0)',
+    selite: 'Kuormaa puretaan Kukumin rannalle Guadalcanalilla 1942: '
+      + 'laatikkovuoria hiekalla, kuorma-autoja ja veneitä matalikossa. '
+      + 'Laituria ei ollut, joten kaikki tuli maihin rantaan asti. Kukum on '
+      + 'nykyään Honiaran kaupunginosa - kaupunki perustettiin 1945 '
+      + 'amerikkalaisten jättämän tukikohdan paikalle, ja siitä tuli '
+      + 'Salomonsaarten pääkaupunki Tulagin tilalle 1952.',
     lisat: [
       {
         tiedosto: 'Honiara Central Market.jpg',

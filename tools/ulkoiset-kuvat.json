@@ -1,0 +1,49 @@
+{
+  "kuvaus": "Vanhoja vedoksia, jotka EIVÄT ole Wikimedia Commonsissa. Pelin kuvaputki osaa vain Commonsin tiedostonimiä (js/packs/*-valokuvat.js -> Special:FilePath), joten näitä ei voi lisätä kuvapaketteihin sellaisenaan. Lista odottaa päätöstä siitä, siirretäänkö kuvat peiliin vai Commonsiin.",
+  "tarkistettu": "2026-08-04",
+  "tarkistustapa": "Jokainen osoite noudettu ja vastauksesta luettu HTTP-koodi, MIME-tyyppi ja JPEG-otsakkeen todellinen kuvakoko. Jokainen kuva myös katsottu silmällä. Leveys alla on mitattu, ei lähteen ilmoittama.",
+  "kuvat": [
+    {
+      "id": "magadan",
+      "lauta": "asia",
+      "osoite": "https://tile.loc.gov/image-services/iiif/public:gdc:2018688066:kl0004u/full/pct:100.0/0/default.jpg",
+      "sivu": "https://www.loc.gov/item/2018688066/",
+      "arkisto": "Library of Congress (World Digital Library); alkuperäinen vedos Kolyman muistin museossa",
+      "lisenssi": "PD - kirjasto ei tunne kokoelmaan kohdistuvia tekijänoikeusrajoituksia",
+      "leveys": 2868,
+      "korkeus": 1881,
+      "vuosi": "1930",
+      "selite": "Hirsitaloja pystytetään Nagajevanlahden rannalle. Miehet seisovat puolivalmiin seinän hirsillä ja maassa, ja vedoksen alareunaan on kirjoitettu käsin Nagajevo 1930. Näistä ensimmäisistä taloista kasvoi Magadan, Kolyman kultakenttien ja Dalstroin vankileirijärjestelmän hallintokeskus. Kuvaan poseeraavia miehiä ei ole nimetty, eikä lähde kerro, ketkä heistä olivat palkkatyöläisiä ja ketkä vankeja.",
+      "kunto": "Paras tämän erän ulkoisista. Terävä, hyvä sävyala, ei rajaustarvetta. Käsinkirjoitettu vuosiluku näkyy kuvassa itsessään eli ajoitus on todennettavissa vedoksesta.",
+      "vaihtoehto": "Samasta kokoelmasta 'Ulitsa poselka Nagaevo' 1932, 2662x1960, https://www.loc.gov/item/2018688064/"
+    },
+    {
+      "id": "santacruz",
+      "lauta": "southamerica",
+      "osoite": "https://pictures.smns-bw.org/SMNS-K-archivaliacoll/SMNS-K-Arc-300677_001_Positiv.jpg",
+      "arkisto": "Staatliches Museum für Naturkunde Stuttgart, Gran-Chaco-Expedition -arkisto (Deutsche Digitale Bibliothek / Europeana)",
+      "lisenssi": "Public Domain Mark 1.0 (laitoksen itsensä asettama)",
+      "leveys": 2427,
+      "korkeus": 1808,
+      "vuosi": "1925-1927",
+      "selite": "Katunäkymä Santa Cruz de la Sierrasta saksalaisen Gran Chaco -retkikunnan kuvaamana. Mukulakivikadulla vedetään härkävaljakoita, oikealla seisoo säkeillä kuormattu kaksipyöräinen kärry ja aasin selässä istuu valkohuivinen nainen. Kadun varren talot ovat matalia ja rapattuja, eikä koko kuvassa näy yhtään moottoriajoneuvoa - kaupunkiin ei silloin päässyt maantietä pitkin, vaan tavara tuli härkäkärryillä ja mulilla.",
+      "kunto": "Oikein päin oleva positiivi, sisältö juuri kuten kuvattu. VAATII TYÖTÄ ennen käyttöä: sävyala on hyvin latteä ja sinertävä, ja lasilevyn musta reunus sekä emulsiovauriot näkyvät kuvan laidoilla. Rajaus ja tasojen korjaus tarpeen.",
+      "varauma": "Kuvaajaksi merkitty Erwin Lindner (1888-1988). Laitos julkaisee kuvan Public Domain Markilla, mutta kuvaajan kuolemasta on alle 70 vuotta, joten PD-peruste nojaa yksin laitoksen ilmoitukseen. Tämä on erän heikoin lisenssiperuste.",
+      "vaihtoehto": "Samasta kaupungista 'Park vor der Kathedrale', https://pictures.smns-bw.org/SMNS-K-archivaliacoll/SMNS-K-Arc-300680_001_Positiv.jpg (2548 px) - katedraali ja palmut Plaza 24 de Septiembren yli."
+    },
+    {
+      "id": "caphorn",
+      "lauta": "southamerica",
+      "osoite": "https://finna.fi/Cover/Show?source=Solr&id=museovirasto.2F355E4AADBAE6C532CF0198E9225D29&index=0&size=large",
+      "sivu": "https://finna.fi/Record/museovirasto.2F355E4AADBAE6C532CF0198E9225D29",
+      "arkisto": "Museovirasto, Suomen merimuseon kuvakokoelma (Finna), luettelointinumero SMK200414:639",
+      "lisenssi": "CC BY 4.0",
+      "leveys": 1200,
+      "korkeus": 872,
+      "vuosi": "1900-luvun alkupuoli",
+      "selite": "Kap Horn merestä nähtynä, kuvattuna purjelaiva Lawhillin kannelta. Kallioinen niemi nousee matalana ja tylppänä horisontista, ja etualalla on pelkkää avomerta - rannalla ei näy majakkaa, laituria eikä muuta rakennettua. Alkuperäinen on 6 x 9 senttimetrin mustavalkonegatiivi Suomen merimuseon kuvakokoelmassa, eikä kuvaajan nimeä ole merkitty muistiin.",
+      "kunto": "Heikoin tämän erän kuvista. Tiedosto on täsmälleen rajalla 1200 px, ja siitä osa on valkoista paperimarginaalia: itse kuva-ala on noin 1140 px leveä eli ALLE rajan. Vedos on rasteroitu eli skannattu painojäljestä, joten pistekuvio näkyy selvästi jo tässä koossa.",
+      "varauma": "Museovirasto EI ilmoita kuvalle vuotta. Ajoitus perustuu vain siihen, että kyseessä on Lawhillin kannelta otettu rahtipurjelaivakauden kuva. ÄLÄ kirjoita korttiin tarkkaa vuosilukua. Suurempi alkuperäisskannaus (200414_639.tif) on olemassa, mutta se pitäisi pyytää Museovirastolta - Museoviraston oma latauspalvelu vaatii kirjautumisen."
+    }
+  ]
+}

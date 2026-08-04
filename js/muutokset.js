@@ -13,6 +13,11 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 227, teksti: 'Radion asteikossa naapurikaupungit, klikattavina' },
+  { v: 227, teksti: 'Kromatut vipukytkimet ja hehkuva merkkivalo' },
+  { v: 227, teksti: 'Viritysääni kun radio hakee kanavaa' },
+  { v: 227, teksti: 'Kyrilliset ja kiinalaiset merkit näytölle' },
+  { v: 227, teksti: 'Vanhat vedokset seitsemään kaupunkiin lisää' },
   { v: 226, teksti: 'Tähti-sanat pois: aarre on nyt pääaarre' },
   { v: 226, teksti: 'Maailmankartan aarrekuulutus ei väitä Meripihkahuonetta' },
   { v: 225, teksti: 'Avauslento esittelee pelin idean ääneen' },

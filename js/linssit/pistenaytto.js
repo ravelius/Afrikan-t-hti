@@ -19,6 +19,14 @@
  * joka on tyhjä juuri kun pelaaja katsoo sitä, on pahempi kuin näyttö
  * ilman hehkua.
  *
+ * KAKSI TAPAA SAADA KIRJAIN. Latinalainen ja kyrillinen on piirretty
+ * käsin tähän tiedostoon (FONTTI); kaikki muu — kreikka, thai, heprea —
+ * piirretään laitteen omalla fontilla canvasille ja luetaan takaisin
+ * pisteinä (ks. NÄYTTEISTIN alempana). Käsin piirretty voittaa aina kun
+ * se osaa merkin: se on siistimpi ja aina samannäköinen. Kiinalainen,
+ * japanilainen ja korealainen merkki jää tyhjäksi ruuduksi eikä sitä
+ * yritetäkään — perustelu on onNeliomerkki-funktion kohdalla.
+ *
  * EI TUONTEJA. Moduuli ei tuo edes js/mapart.js:n el()-apuria, vaikka
  * se tekisi saman kolmella rivillä. Syy on kaksi: näyttö on soittimen
  * osa eikä karttakerros, joten se ei tarvitse karttamoduulia mihinkään,
@@ -89,6 +97,9 @@ const NOPEUS_MS = 110;
  * Merkkien väliin ei ole kirjoitettu tyhjää saraketta — ruudukko lisää
  * sen itse (ks. sarakkeita-laskenta), jotta jokainen merkki on täsmälleen
  * yhtä leveä kuten oikeassa pistenäytössä.
+ *
+ * Taulukko on kahdessa osassa: latinalainen ja välimerkit ensin,
+ * kyrilliset niiden jälkeen omana lohkonaan.
  *
  * Ä JA Ö OVAT PAKOLLISIA. Suomenkielisissä asemannimissä on niitä
  * (Yle Ykkönen, Radio Suomi Jyväskylä), ja puuttuva merkki jättäisi
@@ -585,20 +596,527 @@ export const FONTTI = {
     '.....',
     '.....',
   ],
+
+  /*
+   * KYRILLISET
+   *
+   * Kyrillinen on aakkosto siinä missä latinalainenkin: kirjaimet ovat
+   * kapeita ja korkeita, ja ne mahtuvat samaan 5 × 7 -ruutuun ilman
+   * temppuja. Siksi ne piirretään käsin tähän samaan taulukkoon eikä
+   * jätetä näytteistimen varaan (ks. naytteistetytRivit alempana):
+   * käsin piirretty kirjain on siisti ja aina samannäköinen, kun taas
+   * näytteistetty riippuu laitteen fonttivalikoimasta.
+   *
+   * js/packs/radiot.js:ssä on kyrillisiä asemannimiä ainakin Venäjältä
+   * ("Вести ФМ"), Bulgariasta, Mongoliasta ("Гэр бүлийн радио") ja
+   * Ukrainasta ("Єдині новини") — tähän asti ne kaikki piirtyivät
+   * TYHJÄNÄ rivinä, ja soitin joutui korvaamaan nimen maan nimellä.
+   *
+   * Yksitoista kirjainta (А В Е К М Н О Р С Т Х) on muodoltaan sama
+   * kuin latinalainen kaimansa; ne jaetaan alempana eikä piirretä
+   * uudelleen. Loput 22 ovat tässä.
+   */
+  Б: [
+    '#####',
+    '#....',
+    '#....',
+    '####.',
+    '#...#',
+    '#...#',
+    '####.',
+  ],
+  Г: [
+    '#####',
+    '#....',
+    '#....',
+    '#....',
+    '#....',
+    '#....',
+    '#....',
+  ],
+  // Д seisoo omilla jaloillaan: alin rivi on kaksi erillistä pistettä
+  // sen alla olevan viivan päissä. Ilman jalkoja Д lukisi А:na.
+  Д: [
+    '..###',
+    '..#.#',
+    '..#.#',
+    '.#..#',
+    '.#..#',
+    '#####',
+    '#...#',
+  ],
+  // Ё saa saman kohtelun kuin Ä ja Ö: pisteet ylimmälle riville ja itse
+  // kirjain kavennettuna viidelle riville.
+  Ё: [
+    '.#.#.',
+    '.....',
+    '#####',
+    '#....',
+    '####.',
+    '#....',
+    '#####',
+  ],
+  // Ж on K ja peilikuvansa yhteisen pystyvarren ympärillä. Varsi (sarake
+  // 2) palaa jokaisella rivillä — katkennut varsi tekisi kirjaimesta
+  // kaksi erillistä merkkiä.
+  Ж: [
+    '#.#.#',
+    '#.#.#',
+    '.###.',
+    '..#..',
+    '.###.',
+    '#.#.#',
+    '#.#.#',
+  ],
+  З: [
+    '.###.',
+    '#...#',
+    '....#',
+    '..##.',
+    '....#',
+    '#...#',
+    '.###.',
+  ],
+  И: [
+    '#...#',
+    '#...#',
+    '#..##',
+    '#.#.#',
+    '##..#',
+    '#...#',
+    '#...#',
+  ],
+  // Й on И hatun kanssa. Yhdelle riville ei mahdu kaarta, joten hattu on
+  // lyhyt viiva — sama pakkoratkaisu kuin Å:n renkaassa.
+  Й: [
+    '.###.',
+    '.....',
+    '#...#',
+    '#..##',
+    '#.#.#',
+    '##..#',
+    '#...#',
+  ],
+  Л: [
+    '..###',
+    '.#..#',
+    '.#..#',
+    '.#..#',
+    '.#..#',
+    '.#..#',
+    '#...#',
+  ],
+  П: [
+    '#####',
+    '#...#',
+    '#...#',
+    '#...#',
+    '#...#',
+    '#...#',
+    '#...#',
+  ],
+  // У eroaa latinalaisesta Y:stä siinä, että varsi kääntyy alhaalta
+  // vasemmalle. Ilman sitä käännöstä nämä kaksi olisivat sama merkki.
+  У: [
+    '#...#',
+    '#...#',
+    '.#.#.',
+    '..#..',
+    '..#..',
+    '.#...',
+    '#....',
+  ],
+  Ф: [
+    '..#..',
+    '.###.',
+    '#.#.#',
+    '#.#.#',
+    '#.#.#',
+    '.###.',
+    '..#..',
+  ],
+  // Ц ja Щ ovat samaa perhettä: molemmissa on häntä oikeassa alakulmassa
+  // viivan alla. Se on ainoa ero Ц:n ja П:n käännöksen sekä Щ:n ja Ш:n
+  // välillä, joten hännän on oltava selvästi erillään.
+  Ц: [
+    '#...#',
+    '#...#',
+    '#...#',
+    '#...#',
+    '#...#',
+    '#####',
+    '....#',
+  ],
+  Ч: [
+    '#...#',
+    '#...#',
+    '#...#',
+    '.####',
+    '....#',
+    '....#',
+    '....#',
+  ],
+  Ш: [
+    '#.#.#',
+    '#.#.#',
+    '#.#.#',
+    '#.#.#',
+    '#.#.#',
+    '#.#.#',
+    '#####',
+  ],
+  Щ: [
+    '#.#.#',
+    '#.#.#',
+    '#.#.#',
+    '#.#.#',
+    '#.#.#',
+    '#####',
+    '....#',
+  ],
+  Ъ: [
+    '##...',
+    '.#...',
+    '.#...',
+    '.###.',
+    '.#..#',
+    '.#..#',
+    '.###.',
+  ],
+  Ы: [
+    '#...#',
+    '#...#',
+    '#...#',
+    '##..#',
+    '#.#.#',
+    '#.#.#',
+    '##..#',
+  ],
+  Ь: [
+    '#....',
+    '#....',
+    '#....',
+    '####.',
+    '#...#',
+    '#...#',
+    '####.',
+  ],
+  // Э:n keskiviiva ulottuu oikeaan reunaan asti ja З:n ei — se on koko
+  // ero näiden kahden välillä viiden pisteen leveydellä.
+  Э: [
+    '.###.',
+    '#...#',
+    '....#',
+    '.####',
+    '....#',
+    '#...#',
+    '.###.',
+  ],
+  Ю: [
+    '#..#.',
+    '#.#.#',
+    '#.#.#',
+    '###.#',
+    '#.#.#',
+    '#.#.#',
+    '#..#.',
+  ],
+  Я: [
+    '.####',
+    '#...#',
+    '#...#',
+    '.####',
+    '..#.#',
+    '.#..#',
+    '#...#',
+  ],
+  // Ukrainan ja Bulgarian nimissä on kirjaimia, joita venäjässä ei ole:
+  // "Єдині новини" (UKR) ja "Радіо" tarvitsevat Є:n ja І:n. Ї ja Ґ ovat
+  // mukana samasta syystä — puolikas aakkosto jättäisi nimeen aukon.
+  Є: [
+    '.###.',
+    '#...#',
+    '#....',
+    '###..',
+    '#....',
+    '#...#',
+    '.###.',
+  ],
+  Ї: [
+    '.#.#.',
+    '.....',
+    '.###.',
+    '..#..',
+    '..#..',
+    '..#..',
+    '.###.',
+  ],
+  Ґ: [
+    '####.',
+    '#...#',
+    '#....',
+    '#....',
+    '#....',
+    '#....',
+    '#....',
+  ],
 };
+
+/*
+ * KYRILLISET LAINAT
+ *
+ * Vasemmalla kyrillinen, oikealla latinalainen kirjain, jonka muoto on
+ * täsmälleen sama. Ne EIVÄT ole sama merkki — О on kyrillinen o ja O on
+ * latinalainen — mutta pistematriisissa niiden ero katoaa, ja kahdesti
+ * piirretty sama ruudukko olisi kaksi paikkaa, joissa korjaus pitää
+ * muistaa tehdä.
+ *
+ * Taulukko jaetaan viittauksena eikä kopiona tarkoituksella: radio.js
+ * tunnistaa piirtymättömän merkin vertaamalla paluuarvoa tyhjään
+ * ruutuun (===), ja koko fontti nojaa siihen että sama merkki antaa aina
+ * saman olion.
+ */
+const KYRILLISET_LAINAT = {
+  А: 'A', В: 'B', Е: 'E', К: 'K', М: 'M', Н: 'H',
+  О: 'O', Р: 'P', С: 'C', Т: 'T', Х: 'X',
+  // Ukrainan І on latinalainen I ja Ѕ (makedonia) latinalainen S.
+  І: 'I', Ѕ: 'S', Ј: 'J',
+};
+for (const [kyrillinen, latinalainen] of Object.entries(KYRILLISET_LAINAT)) {
+  FONTTI[kyrillinen] = FONTTI[latinalainen];
+}
 
 /** Tuntematon merkki: tyhjä ruutu. Sama kuin väli, mutta oma vakionsa,
  *  jotta lukija näkee ettei tämä ole vahinko. */
 const TYHJA = FONTTI[' '];
 
+/* ------------------------------------------------------------------ *
+ * NÄYTTEISTIN — JÄRJESTELMÄN FONTTI PISTEIKSI
+ *
+ * Käsin piirretty fontti kattaa latinalaisen ja kyrillisen. Sen
+ * ulkopuolelle jää yhä kreikka (ΕΡΤ Πρώτο Πρόγραμμα, ΡΙΚ Πρώτο), armenia,
+ * georgia ja ne kyrilliset kirjaimet, joita venäjässä ei ole (mongolian Ү,
+ * kazakin Ә). Niitä ei kannata piirtää käsin: aakkostoja on liikaa, ja
+ * jokainen uusi asemalista toisi lisää.
+ *
+ * Siksi tuntematon merkki piirretään laitteen omalla fontilla canvasille
+ * ja LUETAAN TAKAISIN PISTEINÄ: solu palaa, jos musteen peitto ylittää
+ * kynnyksen. Tulos ei ole rajattu kuva vaan oikeaa pistedataa, joka kulkee
+ * saman sarakepuskurin ja saman vierityksen läpi kuin käsin piirretty
+ * kirjain. Ruudukko pysyy tasavälisenä eikä piirtoon tule uudenlaisia
+ * solmuja — sama sääntö kuin muualla tässä tiedostossa.
+ *
+ * MIKSI EI clip-path. Sama idea saataisiin rajaamalla <text> ympyröiden
+ * ruudukkoon. Mitattuna (koe 4.8.2026, headless Chromium):
+ *
+ *   clip-path 16 × 2 merkin näytölle   1425 ympyrää, 31,8 ms rakentaa
+ *   näytteistys, uusi merkki            0,21 ms
+ *   näytteistys, muistista              0,0005 ms
+ *   koko näytön piirto (16 × 2)         0,03–0,08 ms
+ *
+ * Ratkaiseva ei ole ensimmäinen luku vaan se, että clip-pathin maksu
+ * tulisi uudelleen jokaisella vierityksen askeleella — teksti liukuu
+ * rajauksen ali yhdeksän kertaa sekunnissa. Näytteistys maksetaan kerran
+ * merkkiä kohti, minkä jälkeen vieritys on yhtä halpaa kuin ennenkin.
+ * Lisäksi clip-path jättäisi rasteroinnin selaimen huoleksi, ja siitä on
+ * tässä tiedostossa jo yksi oppi (ks. "EI SUODATTIMIA" tiedoston alussa).
+ *
+ * YLINÄYTTEISTYS ON PAKOLLINEN. Suoraan 5 × 7 pikselin kokoon rasteroitu
+ * kirjain katoaisi: ohuet vedot osuvat pikselien väliin. Merkki piirretään
+ * kahdeksankertaisella tarkkuudella ja jokaisen solun 64 pikseliä
+ * lasketaan yhteen.
+ * ------------------------------------------------------------------ */
+
+/** Montako piirtopikseliä yhtä pistettä kohti näytteistettäessä. */
+const NAYTTEEN_YLINAYTE = 8;
+/*
+ * Kuinka suuri osa solusta on oltava musteen peitossa, jotta piste palaa.
+ * 0,35 on koeteltu arvo (kynnyssarja 0,25 / 0,40 / 0,55): matalampi
+ * täyttää kreikkalaisen kirjaimen sisukset umpeen, korkeampi katkaisee
+ * ohuet vedot ja jättää kirjaimesta pelkän luurangon.
+ */
+const NAYTTEEN_KYNNYS = 0.35;
+/*
+ * Vertailumerkki tofun tunnistamiseen. U+10FFFD on Unicodin viimeisen
+ * yksityiskäyttöalueen viimeinen koodipiste: siinä ei ole merkkiä eikä
+ * sinne sellaista standardoida, joten selain piirtää siitä varmasti sen
+ * saman "puuttuva merkki" -laatikon kuin muistakin tuntemattomista.
+ */
+const TOFUN_MERKKI = '\u{10FFFD}';
+
+/*
+ * MITÄ NÄYTTEISTETÄÄN — VALKOINEN LISTA, EI MUSTAA
+ *
+ * Näytteistin osaa piirtää minkä tahansa merkin, mutta PISTENÄYTTÖ ei osaa
+ * ladata mitä tahansa kirjoitusta. Ruudukko latoo yhden koodipisteen
+ * yhteen 5 × 7 -ruutuun vasemmalta oikealle, eikä se voi tehdä muuta.
+ * Siksi tässä on lista siitä, mitä laite oikeasti osaa, ja kaikki muu jää
+ * tyhjäksi ruuduksi. Musta lista olisi väärä päin: uusi asemalista toisi
+ * uuden kirjoitusjärjestelmän, ja se pääsisi näyttöön sotkuna.
+ *
+ * Kolme syytä, joista jokainen yksinään riittää jättämään kirjoituksen
+ * pois:
+ *
+ *  1. NELIÖMERKIT EIVÄT MAHDU KORKEUSSUUNNASSA. Kiinalainen, japanilainen
+ *     ja korealainen merkki vaatii korkeutta. Mitattu koe (4.8.2026):
+ *     中国之声 on selvästi luettava 12 × 12 ja 16 × 16 pisteen ruutuun,
+ *     mutta seitsemälle riville se muuttuu läiskäksi millä tahansa
+ *     kynnyksellä ja millä tahansa leveydellä (7, 9 ja 12 saraketta
+ *     kokeiltu). Syy on laskettavissa: 国 tarvitsee viisi vaakaviivaa ja
+ *     neljä väliä niiden välissä eli VÄHINTÄÄN yhdeksän riviä.
+ *  2. YHDISTYVÄ JA PINOUTUVA KIRJOITUS HAJOAA. Thain vokaalimerkit
+ *     ("วิทยุเสียงอิสลาม") pinoutuvat konsonantin päälle ja alle; yhteen
+ *     ruutuun ladottuna jokainen merkki on oma ruutunsa ja sana muuttuu
+ *     merkkisadeeksi. Arabian kirjaimet vaihtavat muotoaan naapureidensa
+ *     mukaan, ja erillisinä ne eivät ole sama sana.
+ *  3. OIKEALTA VASEMMALLE KIRJOITETTAVAT LATOUTUISIVAT NURINPÄIN. Näyttö
+ *     latoo aina vasemmalta oikealle. Heprea ja arabia lukisivat takaperin
+ *     — eli väärin, mutta väärin niin ettei suomalainen pelaaja huomaisi.
+ *
+ * Pois jäänyt nimi ei katoa: soitin (js/linssit/radio.js
+ * naytonAsemannimi) panee näyttöön maan nimen, eli "KIINA" ja "THAIMAA"
+ * eikä sotkua. Se toimii vain niin kauan kuin merkki jää tässä tyhjäksi
+ * ruuduksi — tyhjä ruutu on siis tarkoitettu vastaus eikä luovutus.
+ */
+const NAYTTEISTETTAVAT_ALUEET = [
+  [0x00c0, 0x024f],   // latinalaisen laajennukset: Đ, Ł, Ə, Ŋ
+  [0x0370, 0x03ff],   // kreikka: ΕΡΤ Πρώτο Πρόγραμμα, ΡΙΚ
+  [0x0400, 0x052f],   // kyrillinen kokonaan: käsin piirretyn ulkopuolelle
+                      // jäävät mm. mongolian Ү ja Ө, kazakin Ә ja Ұ
+  [0x0530, 0x058f],   // armenia
+  [0x10a0, 0x10ff],   // georgia
+  [0x1e00, 0x1fff],   // latinalaisen ja kreikan lisätarkkeet: Ạ, Ộ, Ή
+];
+
+function voikoNaytteistaa(merkki) {
+  const koodi = merkki.codePointAt(0);
+  return NAYTTEISTETTAVAT_ALUEET.some(([alku, loppu]) => koodi >= alku && koodi <= loppu);
+}
+
+/*
+ * Näytteistimen tila. null = ei vielä yritetty, false = ei käytettävissä
+ * (testiympäristö tai selain ilman canvasia). Kolme tilaa eikä kaksi,
+ * jotta epäonnistunutta yritystä ei toisteta jokaisella merkillä.
+ */
+let naytteistin = null;
+/** Näytteistetyt merkit muistissa. Asemannimiä on rajallinen määrä. */
+const naytekatalogi = new Map();
+
+/** Piirtää merkin canvasille ja lukee sen pisteinä. Palauttaa 7 riviä. */
+function piirraJaLue(merkki, piirto, kangas) {
+  piirto.clearRect(0, 0, kangas.width, kangas.height);
+  piirto.fillStyle = '#000';
+  piirto.textAlign = 'center';
+  piirto.textBaseline = 'middle';
+  /*
+   * Kirjasinkoko haetaan mittaamalla eikä arvaamalla. Em-neliö on eri
+   * kirjoitusjärjestelmissä eri tavalla täytetty: kreikkalainen versaali
+   * täyttää siitä noin 70 %, thain kirjain vähemmän. Ilman mittausta
+   * toinen jäisi kääpiöksi ja toinen leikkautuisi reunoistaan.
+   */
+  const perus = MERKIN_KORKEUS * NAYTTEEN_YLINAYTE;
+  piirto.font = `${perus}px sans-serif`;
+  const mitta = piirto.measureText(merkki);
+  const musteenKorkeus = (mitta.actualBoundingBoxAscent || 0) + (mitta.actualBoundingBoxDescent || 0);
+  if (musteenKorkeus > 0) {
+    // Yläraja 1,6-kertainen: mittaus voi mennä pieleen merkillä, jossa ei
+    // ole mustetta lainkaan, eikä silloin saa syntyä jättikirjasinta.
+    piirto.font = `${Math.min(perus * 1.6, (perus * perus) / musteenKorkeus)}px sans-serif`;
+  }
+  const tarkka = piirto.measureText(merkki);
+  const keskitys = ((tarkka.actualBoundingBoxAscent || 0) - (tarkka.actualBoundingBoxDescent || 0)) / 2;
+  piirto.fillText(merkki, kangas.width / 2, kangas.height / 2 + keskitys);
+
+  const kuvapisteet = piirto.getImageData(0, 0, kangas.width, kangas.height).data;
+  const raja = 255 * NAYTTEEN_YLINAYTE * NAYTTEEN_YLINAYTE * NAYTTEEN_KYNNYS;
+  const rivit = [];
+  for (let y = 0; y < MERKIN_KORKEUS; y += 1) {
+    let rivi = '';
+    for (let x = 0; x < MERKIN_LEVEYS; x += 1) {
+      let peitto = 0;
+      for (let sy = 0; sy < NAYTTEEN_YLINAYTE; sy += 1) {
+        const kuvarivi = (y * NAYTTEEN_YLINAYTE + sy) * kangas.width;
+        for (let sx = 0; sx < NAYTTEEN_YLINAYTE; sx += 1) {
+          // +3 = alfakanava. Muste on mustaa, joten peitto luetaan siitä.
+          peitto += kuvapisteet[(kuvarivi + x * NAYTTEEN_YLINAYTE + sx) * 4 + 3];
+        }
+      }
+      rivi += peitto >= raja ? '#' : '.';
+    }
+    rivit.push(rivi);
+  }
+  return rivit;
+}
+
+/**
+ * Näytteistin käyttöön, tai false jos sitä ei ole.
+ *
+ * Yhteydessä otetaan talteen myös TOFUN JÄLKI: kuva, jonka selain piirtää
+ * merkistä, jota missään fontissa ei ole. Se on yleensä tyhjä suorakaide,
+ * ja pisteinä luettuna se olisi ruma umpilaatikko keskellä nimeä. Jälki
+ * mitataan varatusta yksityiskäyttöalueesta, jossa ei ole eikä tule
+ * olemaan yhtään merkkiä.
+ */
+function haeNaytteistin() {
+  if (naytteistin !== null) return naytteistin;
+  naytteistin = false;
+  try {
+    const kangas = document.createElement('canvas');
+    kangas.width = MERKIN_LEVEYS * NAYTTEEN_YLINAYTE;
+    kangas.height = MERKIN_KORKEUS * NAYTTEEN_YLINAYTE;
+    const piirto = kangas.getContext('2d', { willReadFrequently: true });
+    if (!piirto || typeof piirto.getImageData !== 'function') return naytteistin;
+    const tofu = piirraJaLue(TOFUN_MERKKI, piirto, kangas).join('\n');
+    naytteistin = { kangas, piirto, tofu };
+  } catch {
+    // Ei canvasia (DOM-tynkä, vanha selain, tiukka tietosuoja-asetus).
+    // Tuntematon merkki jää tyhjäksi ruuduksi, kuten ennenkin.
+    naytteistin = false;
+  }
+  return naytteistin;
+}
+
+/**
+ * Tuntemattoman merkin rivit järjestelmän fontista, tai tyhjä ruutu.
+ *
+ * Tulos riippuu laitteen fonttivalikoimasta, eli sama nimi voi näyttää eri
+ * koneilla hitusen erilaiselta. Se on hyväksytty hinta: vaihtoehto on
+ * aukko nimen keskellä, ja aukko luetaan rikkinäiseksi näytöksi.
+ */
+function naytteistetytRivit(merkki) {
+  const muistissa = naytekatalogi.get(merkki);
+  if (muistissa) return muistissa;
+
+  let rivit = TYHJA;
+  if (voikoNaytteistaa(merkki)) {
+    const laite = haeNaytteistin();
+    if (laite) {
+      try {
+        const luettu = piirraJaLue(merkki, laite.piirto, laite.kangas);
+        const jalki = luettu.join('\n');
+        // Tyhjä tulos ja tofu ovat molemmat "tätä merkkiä ei ole".
+        if (jalki !== laite.tofu && jalki.includes('#')) rivit = luettu;
+      } catch {
+        // Yksi merkki ei saa kaataa koko nimeä.
+        rivit = TYHJA;
+      }
+    }
+  }
+  naytekatalogi.set(merkki, rivit);
+  return rivit;
+}
+
 /**
  * Fontin rivit yhdelle merkille. Palauttaa AINA seitsemän riviä.
  *
- * Tuntematon merkki ei ole virhe eikä poikkeus vaan tyhjä ruutu.
- * Asemannimet tulevat js/packs/radiot.js:stä eli maailmalta: joukossa on
- * kyrillisiä, kreikkalaisia ja arabialaisia nimiä, joita 5 × 7 -fontti ei
- * voi esittää. Näyttö saa jäädä niiden kohdalta tyhjäksi — se ei saa
- * kaatua, koska silloin katoaisi koko soitin eikä vain yksi kirjain.
+ * Järjestys on tarkoituksellinen: käsin piirretty fontti ensin, sitten
+ * tarkkeiden riisuminen, ja vasta viimeisenä järjestelmän fontti. Käsin
+ * piirretty näyttää paremmalta ja on aina samanlainen, joten se voittaa
+ * aina kun se osaa merkin.
+ *
+ * Tuntematon merkki ei ole virhe eikä poikkeus vaan tyhjä ruutu. Näyttö
+ * saa jäädä yhden merkin kohdalta tyhjäksi — se ei saa kaatua, koska
+ * silloin katoaisi koko soitin eikä vain yksi kirjain.
  */
 export function merkinRivit(merkki) {
   if (typeof merkki !== 'string' || merkki.length === 0) return TYHJA;
@@ -613,7 +1131,7 @@ export function merkinRivit(merkki) {
    */
   const riisuttu = iso.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   if (riisuttu.length === 1 && FONTTI[riisuttu]) return FONTTI[riisuttu];
-  return TYHJA;
+  return naytteistetytRivit(iso);
 }
 
 /**

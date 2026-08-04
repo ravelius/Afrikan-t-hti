@@ -189,6 +189,15 @@ export const NORTHAMERICA_VALOKUVAT = {
     },
   },
   churchill: {
+    tiedosto: 'Royal North West Mounted Police barracks and Churchill River, Churchill, 1907 (HS85-10-18547).jpg',
+    vuosi: '1907',
+    lahde: 'Geraldine Moodie, Commons (PD)',
+    selite: 'Luoteisen ratsupoliisin asema Churchilljoen suulla 1907. Etualan '
+      + 'täyttää tuulen veistämä ahtojää, ja matalat rakennukset erottuvat '
+      + 'sen takana pieninä. Kuvan otti Geraldine Moodie, ja hänen '
+      + 'nimikirjoituksensa näkyy vedoksessa. Satamaa tai rautatietä ei vielä '
+      + 'ollut - kiskot ylsivät Churchilliin vasta 1929 ja viljasatama '
+      + 'avattiin 1931.',
     lisat: [
       {
         tiedosto: 'Prince of Wales Fort - Churchill, Manitoba (40402156465).jpg',

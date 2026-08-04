@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-04.226';
+const CACHE = 'matkakirja-2026-08-04.227';
 const SHELL = [
   './',
   './index.html',
@@ -23,12 +23,15 @@ const SHELL = [
   './js/packs/maasto-nimet-vuoret.js',
   './js/packs/maasto-nimet-vedet.js',
   './js/packs/maailmankartta-syvyys.js',
+  './js/packs/maasto-tekstit-malli.js',
+  './js/packs/maailmankartta-varjostus.js',
   './js/packs/linssi-topografia.js',
   './js/packs/linssi-maaluvut.js',
   './js/packs/linssi-muuttoliike.js',
   './js/packs/linssi-historia.js',
   './js/packs/linssi-leviaminen.js',
   './js/packs/linssi-yokartta.js',
+  './js/packs/linssi-topografia-kuva.js',
   './js/packs/linssi-ilmasto.js',
   './js/packs/linssi-kielet.js',
   './js/packs/linssi-tahdet.js',
@@ -48,7 +51,10 @@ const SHELL = [
   './js/linssit/omistus.js',
   './js/linssit/pistenaytto.js',
   './js/linssit/radiosoitin.js',
+  './js/linssit/viritin.js',
   './js/linssit/radio.js',
+  './js/linssit/topografia.js',
+  './js/packs/viritysaanet.js',
   './css/radio.css',
   './js/packs/valokuvat-paikalliset.js',
   './js/packs/africa-valokuvat.js',
@@ -100,10 +106,11 @@ const SHELL = [
   './js/ambience-stream.js',
   './js/die.js',
   './assets/icon.svg',
-  // Yölinssin kuva. Ainoa linssi, joka on binääri eikä moduuli — ilman
-  // esilatausta se puuttuisi juuri offline-tilassa, jossa linssiä
+  // Kuvalinssit. Nämä ovat binäärejä eivätkä moduuleja — ilman
+  // esilatausta ne puuttuisivat juuri offline-tilassa, jossa linssejä
   // selaillaan eniten.
   './assets/linssit/yokartta.jpg',
+  './assets/linssit/topografia.webp',
   './assets/audio/intro-puhe.mp3',
   './assets/audio/puhe-lento-alku.mp3',
   './assets/audio/efekti-klik.mp3',
@@ -130,6 +137,14 @@ const SHELL = [
   './assets/audio/efekti-jumissa.mp3',
   './assets/audio/efekti-vuoro.mp3',
   './assets/audio/efekti-voitto.mp3',
+  // Maailmanradion viritysäänet (js/packs/viritysaanet.js). Nämä tulevat
+  // koriin, vaikka itse lähetystä ei offline saakaan: soitin näyttää ja
+  // kuulostaa oikealta siihen asti, että se toteaa verkon puuttuvan.
+  './assets/audio/viritys-taajuustungos.mp3',
+  './assets/audio/viritys-raskaskohina.mp3',
+  './assets/audio/viritys-tyhjakaista.mp3',
+  './assets/audio/viritys-datasignaali.mp3',
+  './assets/audio/viritys-asteikonpaa.mp3',
   './assets/audio/musiikki-visa-afrikka-1.mp3',
   './assets/audio/musiikki-visa-afrikka-2.mp3',
   './assets/audio/musiikki-visa-afrikka-3.mp3',

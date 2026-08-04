@@ -1,0 +1,45 @@
+[
+  {
+    "id": "churchill",
+    "commons": true,
+    "tiedosto": "Royal North West Mounted Police barracks and Churchill River, Churchill, 1907 (HS85-10-18547).jpg",
+    "vuosi": "1907",
+    "lahde": "Geraldine Moodie, Commons (PD)",
+    "leveys": 1936,
+    "selite": "Luoteisen ratsupoliisin asema Churchilljoen suulla 1907: matalat rakennukset erottuvat pieninä tuulen veistämän ahtojään takana. Kuvan otti Geraldine Moodie, ja hänen nimikirjoituksensa näkyy vedoksen alakulmassa. Satamaa tai rautatietä ei vielä ollut — kiskot ylsivät Churchilliin vasta 1929 ja viljasatama avattiin 1931.",
+    "huom": "Aito valokuva. Commonsissa on myös sama kuva TIFF-muodossa suurempana (2845x2244): 'Royal North West Mounted Police barracks and Churchill River, Churchill, 1907 (HS85-10-18547) original.tif'. Ehdotan JPEG-versiota, koska muut kuvakortit ovat JPEG."
+  },
+  {
+    "id": "honiara",
+    "commons": true,
+    "tiedosto": "Army and Marines on KuKum Beach, Guadalcanal, circa 1942.jpg",
+    "vuosi": "1942",
+    "lahde": "USMC History Division, Thayer Soule -kokoelma, Commons (CC BY 2.0)",
+    "leveys": 2887,
+    "selite": "Yhdysvaltain armeijan ja merijalkaväen kuormaa puretaan Kukumin rannalle Guadalcanalilla 1942. Laituria ei ollut, joten kaikki tuli maihin veneillä ja rannalle kasattiin laatikkovuoria. Kukum on nykyään Honiaran kaupunginosa: kaupunki perustettiin 1945 amerikkalaisten jättämän tukikohdan paikalle, ja siitä tuli Salomonsaarten pääkaupunki Tulagin tilalle 1952.",
+    "huom": "Aito valokuva."
+  },
+  {
+    "id": "magadan",
+    "commons": false,
+    "osoite": "https://tile.loc.gov/image-services/iiif/public:gdc:2018688066:kl0004u/full/pct:100.0/0/default.jpg",
+    "sivu": "https://www.loc.gov/item/2018688066/",
+    "arkisto": "Library of Congress (World Digital Library); alkuperäinen vedos Kolyman muistin museossa",
+    "lisenssi": "PD — kirjasto ei tunne kokoelmaan kohdistuvia tekijänoikeusrajoituksia",
+    "leveys": 2868,
+    "korkeus": 1881,
+    "vuosi": "1930",
+    "selite": "Hirsitaloja pystytetään Nagajevanlahden rannalle; vedoksen alareunaan on kirjoitettu käsin marraskuu 1930. Näistä ensimmäisistä taloista kasvoi Magadan, Kolyman kultakenttien ja Dalstroin vankileirijärjestelmän hallintokeskus. Kuvaan poseeraavia miehiä ei ole nimetty, eikä lähde kerro, ketkä heistä olivat palkkatyöläisiä ja ketkä vankeja.",
+    "huom": "Aito valokuva. EI Commonsissa — tarkistettu haulla. Vaihtoehto samasta kokoelmasta: 'Ulitsa poselka Nagaevo' 1932, 2662x1960, https://www.loc.gov/item/2018688064/"
+  },
+  {
+    "id": "norfolk",
+    "commons": true,
+    "tiedosto": "Landing Place (Sydney Bay), Norfolk Island mutineersofbount00belcuoft 0267.jpg",
+    "vuosi": "1871",
+    "lahde": "Lady Belcher, The mutineers of the Bounty (1871), Commons (PD)",
+    "leveys": 2746,
+    "selite": "Maihinnousupaikka Sydney Baylla lounaismyrskyssä. Norfolkinsaarella ei ole satamaa: vene on kiskottava rantakiville, ja kärryt odottavat lastia vesirajassa. Puupiirros on Lady Belcherin kirjasta, joka kertoo Bountyn kapinallisten jälkeläisistä — heidät siirrettiin Pitcairnilta Norfolkille 1856, kun rangaistussiirtola oli juuri lakkautettu.",
+    "huom": "VAROITUS: tämä on puupiirros, EI valokuva. Norfolkinsaarelta ei löytynyt yhtään yli 1200 px leveää vapaata valokuvaa vuodelta 1960 tai vanhempaa; kaikki aidot vanhat valokuvat (Tyrrell-kokoelma 1898-1900, RAHS 1917) ovat Commonsissa vain noin 1024 px leveinä. Vaihtoehto, jos piirros ei kelpaa: 'Convict Establishment Norfolk Island 1848.jpg', 4813x3500, PD — mutta se on maalaus."
+  }
+]

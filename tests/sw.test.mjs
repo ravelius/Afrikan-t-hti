@@ -5,7 +5,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const JUURI = new URL('..', import.meta.url).pathname;
@@ -190,4 +190,39 @@ test('peilin kuvia ei haeta cors-tilassa', () => {
   );
   assert.ok(corsRivit.length <= 1,
     'cors-nouto kuuluu vain wikimedia-haaraan');
+});
+
+/*
+ * Yhdistämismerkkejä ei saa päätyä julkaistuun koodiin.
+ *
+ * Tänään kävi juuri niin: neljään tiedostoon jäi purkamaton ristiriita
+ * (<<<<<<< HEAD), ne commitoitiin, ja KOKO TESTISARJA MENI SILTI LÄPI.
+ * Syy on yksinkertainen: yksikään testi ei tuo js/linssit/- eikä
+ * css/-tiedostoja, joten rikkinäistä syntaksia ei kukaan jäsentänyt.
+ * Peli hajosi selaimessa ensimmäiseen riviin ("Unexpected token '<<'"),
+ * ja sen huomasi vain siksi, että satuin ottamaan kuvakaappauksen.
+ *
+ * Tämä testi lukee tiedostot tekstinä eikä koodina, joten se kattaa myös
+ * ne, joita ei voi tuoda: tyylit, HTML ja yhden tiedoston versio.
+ */
+test('yhdistämismerkkejä ei ole jäänyt tiedostoihin', () => {
+  const merkki = /^(<{7}|={7}|>{7})(\s|$)/m;
+  const kansiot = ['js', 'js/packs', 'js/linssit', 'css', 'tools', 'tests'];
+  const loydot = [];
+  for (const kansio of kansiot) {
+    const polku = join(JUURI, kansio);
+    if (!existsSync(polku)) continue;
+    for (const nimi of readdirSync(polku)) {
+      if (!/\.(js|mjs|css|html)$/.test(nimi)) continue;
+      const tiedosto = join(polku, nimi);
+      if (!statSync(tiedosto).isFile()) continue;
+      if (merkki.test(readFileSync(tiedosto, 'utf8'))) loydot.push(`${kansio}/${nimi}`);
+    }
+  }
+  for (const juuriTiedosto of ['index.html', 'tyohuone.html', 'sw.js']) {
+    const tiedosto = join(JUURI, juuriTiedosto);
+    if (existsSync(tiedosto) && merkki.test(readFileSync(tiedosto, 'utf8'))) loydot.push(juuriTiedosto);
+  }
+  assert.deepEqual(loydot, [],
+    'näihin tiedostoihin on jäänyt purkamaton yhdistämisristiriita');
 });

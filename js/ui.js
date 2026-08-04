@@ -661,6 +661,7 @@ import {
 } from './mapart.js';
 import { MAAILMANKARTAN_NIMET } from './packs/maailmankartta-nimet.js';
 import { MERISYVYYS } from './packs/maailmankartta-syvyys.js';
+import { MAASTON_VARJOSTUS } from './packs/maailmankartta-varjostus.js';
 
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
@@ -3332,7 +3333,12 @@ export class UI {
     // kaupunkien alle: maiseman piirre, ei pelielementti. Nimi on
     // drawMaasto eikä drawTerrain, koska jälkimmäinen on varattu
     // maastosymboleille (puut, vuoret, dyynit) — eri asia.
-    drawMaasto(taide, pack.map);
+    //
+    // Varjostus tulee tässä erikseen samasta syystä kuin MERISYVYYS:
+    // se on laudalle projisoitua aineistoa, jota on vain
+    // maailmankartalla, eikä se mahdu koneen kirjoittamaan
+    // maailmankartta.js:ään ilman että koostajan seuraava ajo pyyhkii sen.
+    drawMaasto(taide, pack.map, pack.id === 'maailmankartta' ? MAASTON_VARJOSTUS : null);
 
     /*
      * Linssikerros: staattisen karttakuvan päällä, kaupunkien alla.
@@ -7092,18 +7098,32 @@ export class UI {
         kaupungit: this.game.board.cities,
         juuri: document.body,
         aani: this.radioAani,
+        // Soittimen asteikko keskittyy siihen, missä pelaaja seisoo,
+        // kunnes ensimmäinen kanava valitaan.
+        sijainti: this.game.player?.pos?.city ?? null,
+        // Soittimen virtakytkin (OFF) sammuttaa koko radiotilan, ei vain
+        // laitetta: radio ei tunne linssivalikkoa eikä saa tuntea.
+        onSulje: () => this.valitseLinssi(null),
         onMuutos: (tilanne) => {
           this.radioAani = tilanne.aani;
           // Soivan kaupungin napin ulkoasu päivittyy vain näin.
           if (!this.dead) this.drawTargets();
         },
       });
-    } else if (radio.paalla()) {
+    } else {
+      /*
+       * X-nappi katoaa aina, myös silloin kun radiotila on jo purettu
+       * omalta puoleltaan (soittimen OFF-kytkin ehtii kutsua pois():n
+       * ennen kuin linssi sammuu). Ehdon sisällä nappi jäisi ruudulle
+       * yksin sulkemaan tilaa, joka on jo suljettu.
+       */
       this.naytaRadionSulku(false);
-      radio.pois();
-      // Radio ei tiedä kaupunkia eikä maisematyyppiä, joten kaupungin
-      // oma äänimaisema palautetaan täältä.
-      this.syncAmbience();
+      if (radio.paalla()) {
+        radio.pois();
+        // Radio ei tiedä kaupunkia eikä maisematyyppiä, joten kaupungin
+        // oma äänimaisema palautetaan täältä.
+        this.syncAmbience();
+      }
     }
     this.drawTargets();
   }
