@@ -4406,8 +4406,16 @@ body.katselu #newgame-btn { display: none; }
   /* Numero lepää kartan pergamentilla (omistajan toive) — ei kehyksen
    * rajalla, jossa se jäi puoliksi piiloon. Väri on kartan mustetta. */
   left: max(1.3rem, calc(env(safe-area-inset-left, 0px) + 0.9rem));
-  /* Sama syy kuin .railissa: turva-alue jää sovelluksen alueen
-   * ulkopuolelle, joten sen varaaminen vain nostaisi numeron turhan ylös. */
+  /*
+   * Sama syy kuin .railissa: turva-alue jää sovelluksen alueen
+   * ulkopuolelle, joten sen varaaminen vain nostaisi numeron turhan ylös.
+   *
+   * ISOLLA RUUDULLA NUMERO VÄISTÄÄ MATKAKIRJAKORTTIA. Kortti kelluu
+   * samassa kulmassa, ja työpöytäselaimessa se on niin korkea että
+   * numero jäi kiinni sen alareunaan (omistajan havainto). Puhelimessa
+   * kortti on matalampi eikä väistöä tarvita, joten se tehdään vasta
+   * leveällä ruudulla — muuten numero karkaisi kartan reunasta.
+   */
   bottom: 0.95rem;
   z-index: 5;
   font-size: 0.62rem;
@@ -5278,4 +5286,25 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   .wiki-liuskat:has(svg) { gap: 0.12rem; }
   .wiki-liuskat button:has(svg) { padding: 0.28rem 0.2rem 0.32rem; }
   .wiki-liuskat button svg { width: 17px; height: 17px; }
+}
+
+/*
+ * Leveällä ruudulla versionumero siirtyy oikeaan alakulmaan.
+ *
+ * Vasen alakulma on matkakirjakortin, ja työpöytäselaimessa kortti on
+ * niin korkea että numero jäi kiinni sen alareunaan (omistajan
+ * havainto). Puhelimessa kortti on matalampi ja numero mahtuu sen alle,
+ * joten siirto tehdään vasta leveällä.
+ *
+ * Siirto on EHDOTON eikä riipu siitä, näkyykö kortti: numero ei saa
+ * hypätä puolelta toiselle sitä mukaa kuin kortti ilmestyy ja katoaa.
+ * Oikeassa laidassa on jo palautenappi, joten numero jää sen vasemmalle
+ * puolelle.
+ */
+@media (min-width: 900px) {
+  .versio-kulma {
+    left: auto;
+    right: max(3.6rem, calc(env(safe-area-inset-right, 0px) + 3.2rem));
+    bottom: 1.05rem;
+  }
 }

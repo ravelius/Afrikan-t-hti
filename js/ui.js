@@ -7002,7 +7002,17 @@ export class UI {
      * rivi kertoo silti mitä laukussa on: laattatyypin nimi on
      * "Taikalasi", ei tyhjä.
      */
-    for (const tunnus of p.linssit ?? []) {
+    /*
+     * Omistetut EIKÄ pelaajan oma kenttä.
+     *
+     * p.linssit on se, mitä pelaaja on LÖYTÄNYT. Omistukseen kuuluu
+     * lisäksi passin leimat (aiemmat pelikerrat) ja kehittäjätilan
+     * lahja — ja juuri jälkimmäinen puuttui: kehittäjätilassa radio
+     * toimi yläpalkin valitsimesta mutta laukku väitti olevansa tyhjä.
+     * Omistuksesta on yksi totuus, ja se on omistus.js.
+     */
+    const omat = this.linssiTuki?.omistus?.omistetut?.(game, p) ?? new Set(p.linssit ?? []);
+    for (const tunnus of omat) {
       const linssi = this.linssiTuki?.kaikki.find((l) => l.tunnus === tunnus) ?? null;
       rivi(tokenIconSvg('linssi', 44), linssi?.nimi ?? game.tokenTypes.linssi?.name ?? 'Taikalasi');
     }

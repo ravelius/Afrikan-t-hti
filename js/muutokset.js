@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 230, teksti: 'Siperia ja Alaska yhtyvät ehjänä rantana' },
+  { v: 230, teksti: 'Radio näkyy matkalaukussa' },
+  { v: 230, teksti: 'Versionumero pois matkakirjan päältä' },
   { v: 229, teksti: 'Aarteet ovat nyt unohdettuja aarteita' },
   { v: 229, teksti: 'Tarinaan Aarnin luettelo, pelin ajojahti' },
   { v: 228, teksti: 'Radion äänisäädin pois, kytkimille tilaa' },
