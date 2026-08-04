@@ -208,6 +208,211 @@ const LIUUN_VAHIN = 10;
 
 /*
  * ══════════════════════════════════════════════════════════════════════
+ * NAUHAN NYKÄISEVÄ LIIKE (tarttuu ja irtoaa)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Omistaja: "Kanavalista liikkuu liian pehmeästi. Jos sitä oikeasti
+ * kädellä vääntää, niin se menee välillä töksähtäen, tai ei ainakaan noin
+ * pehmeästi."
+ *
+ * Havainto on mekaniikkaa. Viritysrulla ei liu'u vaan TARTTUU JA IRTOAA:
+ * sormi painaa, kitka pitää, jännite kasvaa, ote pettää ja nauha hypähtää
+ * eteenpäin. Sama ilmiö kirskuu jarrussa ja soi viulunkielessä. Tasainen
+ * kiihdytyskäyrä on siis väärä malli — se on moottorin liikettä, ei käden.
+ *
+ * MITÄ MUUTETAAN JA MITÄ EI. Nauhan MATKA lasketaan yhä mittaamalla
+ * (laskeLiuku) ja KESTO on yhä css/radio.css:n oma. Hakuvaiheen pieni
+ * edestakainen liike ja virityksen vähimmäisaika (js/linssit/radio.js
+ * VIRITYKSEN_AJAT) jäävät koskematta — ne ovat omistajan aiempia toiveita,
+ * eikä uusi toive kumoa niitä. Vain se, MITEN matka jakautuu ajalle,
+ * vaihtuu tasaisesta käyrästä nykäyksiksi.
+ *
+ * KEINO ON CSS:N linear()-PEHMENNIN. Animaatio on yhä sama kahden
+ * avainkehyksen liuku (matka → nolla), mutta pehmennin on porrasmainen:
+ * se seisoo tartunnan ajan paikallaan ja etenee sitten kerralla. Liike
+ * pysyy siis yhtenä transform-animaationa — ei ajastinta, ei
+ * kehyskohtaista javascriptiä, ei kartan uudelleenpiirtoa. Vanha
+ * cubic-bezier jää css/radio.css:ään varalle: jos selain ei tunne
+ * linear()-pehmennintä, liuku on entisensä eikä rikki.
+ *
+ * ARVONTA ON SIEMENNETTÄVISSÄ. Nykäisyt arvotaan joka virityksellä
+ * uudelleen — sama ote kahdesti peräkkäin ei ole käden liikettä — mutta
+ * arvontalähde tulee kutsujalta samaan tapaan kuin viritysäänessä
+ * (js/linssit/viritin.js), joten testi ja demo saavat toistettavan
+ * tuloksen antamalla oman lähteensä.
+ */
+
+/*
+ * Nykäisyn rajat yhdessä paikassa, jäädytettynä. Sama sääntö kuin
+ * viritysäänessä (js/linssit/viritin.js VIRITTIMEN_RAJAT): satunnaisuus on
+ * ominaisuus, mutta rajaton satunnaisuus tuottaa ennen pitkää liikkeen,
+ * joka näyttää vialta. Testi tarkistaa nämä rajat.
+ */
+export const NYKAISYN_RAJAT = Object.freeze({
+  /*
+   * Montako otetta yhteen liukuun. Kolme on liian vähän — silloin
+   * jokainen nykäisy on niin pitkä, että se ehtii lukea liu'uksi — ja
+   * seitsemän niin tiheä, ettei yksittäistä pysähdystä enää erota
+   * tärinästä.
+   */
+  nykaisyja: Object.freeze([4, 6]),
+  /*
+   * Tartunnan osuus yhden otteen ajasta: kuinka kauan nauha seisoo ennen
+   * kuin ote pettää. Alaraja pitää huolen, että pysähdys ehtii näkyä
+   * (1,25 s:n liu'ussa viidesosa otteesta on runsaat 50 ms), yläraja
+   * siitä, ettei liuku ole enemmän seisomista kuin liikettä.
+   */
+  tartunta: Object.freeze([0.2, 0.5]),
+  /*
+   * Otteen ajan vaihtelu kertoimena. Ilman vaihtelua nykäisyt tulisivat
+   * tasavälein, ja tasavälinen nykiminen lukee koneeksi — juuri se
+   * konemaisuus, jota omistaja ei pyytänyt.
+   */
+  vaihtelu: Object.freeze([0.75, 1.3]),
+  /*
+   * Etenemän vaihtelu: paljonko yksi ote saa poiketa siitä, mitä
+   * hidastuva kaari sille laskee.
+   */
+  etenemanVaihtelu: Object.freeze([-0.05, 0.05]),
+  /*
+   * Ylitys osuutena koko matkasta: viimeinen ote menee kohteen yli ja
+   * palaa. Omistajan sanoin loppu saa yhä olla pehmeä muttei liukas —
+   * ylitys on juuri se ero. 2–5 % puolikkaasta asteikosta on 4–9 px eli
+   * pari kirjaimen leveyttä: se näkyy korjausliikkeenä eikä virheenä.
+   */
+  ylitys: Object.freeze([0.02, 0.05]),
+  /*
+   * Paluu ylityksestä kohteeseen, osuutena koko ajasta. Tämä on liu'un
+   * viimeinen ele, ja se on nopea: käsi huomaa menneensä yli ja korjaa.
+   */
+  paluu: Object.freeze([0.09, 0.16]),
+  /*
+   * Lukittumisen ylitys pikseleinä. Lukkovaiheessa matka on hakuliikkeen
+   * mittainen (pari pikseliä), joten osuutena laskettu ylitys jäisi
+   * alle puolen pikselin eli näkymättömiin — tässä ylitys on siksi
+   * pikseleitä eikä prosentteja.
+   */
+  lukonYlitys: Object.freeze([0.8, 1.8]),
+  /*
+   * Hidastuvan kaaren jyrkkyys. Yksi olisi tasainen eteneminen; 2,2
+   * antaa saman muodon kuin vanha cubic-bezier eli reipas alku ja
+   * viimeisten millien etsintä.
+   */
+  kaari: 2.2,
+});
+
+/** Satunnaisluku väliltä [min, max]. */
+function valilta(arvonta, [min, max]) {
+  return min + arvonta() * (max - min);
+}
+
+/** Kokonaisluku väliltä [min, max], molemmat mukaan luettuina. */
+function kokonaisValilta(arvonta, [min, max]) {
+  return min + Math.floor(arvonta() * (max - min + 1));
+}
+
+/**
+ * ARPOO YHDEN LIU'UN NYKÄISYT.
+ *
+ * MIKSI TÄMÄ ON OMA, PUHDAS FUNKTIONSA: se on tämän liikkeen ainoa osa,
+ * jonka voi tarkistaa ilman selainta — animaation ajaa CSS. Sama työnjako
+ * kuin viritysäänessä: arvonta erikseen, toteutus erikseen.
+ *
+ * Palauttaa pisteet aikajärjestyksessä. `aika` on osuus liu'un kestosta
+ * (0–1) ja `etenema` osuus matkasta (0 = lähtö, 1 = perillä, yli yhden =
+ * kohteen ohi). Peräkkäiset pisteet, joilla on sama etenemä, ovat
+ * tartunta: nauha seisoo niiden välisen ajan.
+ *
+ * @param {() => number} [arvonta] satunnaislähde, oletuksena Math.random
+ * @returns {{pisteet: Array<{aika: number, etenema: number}>, ylitys: number}}
+ */
+export function arvoNykaisyt(arvonta = Math.random) {
+  const R = NYKAISYN_RAJAT;
+  const otteita = kokonaisValilta(arvonta, R.nykaisyja);
+  const ylitys = valilta(arvonta, R.ylitys);
+  const paluu = valilta(arvonta, R.paluu);
+
+  /*
+   * Otteiden ajat: myöhemmät otteet ovat pidempiä. Kättä käännetään
+   * ensin reippaasti ja etsitään sitten viimeisiä millejä, joten
+   * loppupään otteet vievät enemmän aikaa ja vähemmän matkaa.
+   */
+  const painot = [];
+  for (let i = 0; i < otteita; i++) {
+    painot.push((1 + i * 0.55) * valilta(arvonta, R.vaihtelu));
+  }
+  const summa = painot.reduce((a, b) => a + b, 0);
+
+  // Liikkeelle jäävä aika: paluu ylityksestä on tämän jälkeen.
+  const liikeAika = 1 - paluu;
+  const pisteet = [{ aika: 0, etenema: 0 }];
+  let aika = 0;
+  let edellinen = 0;
+
+  for (let i = 0; i < otteita; i++) {
+    const viimeinen = i === otteita - 1;
+    const kesto = (painot[i] / summa) * liikeAika;
+    // Hidastuva kaari: mihin asti tämän otteen jälkeen ollaan.
+    const pohja = 1 - (1 - (i + 1) / otteita) ** R.kaari;
+    const kohde = viimeinen
+      ? 1 + ylitys
+      : Math.min(0.985, Math.max(
+        edellinen + 0.02, pohja + valilta(arvonta, R.etenemanVaihtelu),
+      ));
+
+    // Tartunta: nauha seisoo paikallaan otteen alkuosan.
+    const seisonta = kesto * valilta(arvonta, R.tartunta);
+    aika += seisonta;
+    pisteet.push({ aika, etenema: edellinen });
+    // Irtoaminen: koko otteen matka kerralla.
+    aika += kesto - seisonta;
+    pisteet.push({ aika, etenema: kohde });
+    edellinen = kohde;
+  }
+
+  /*
+   * Ylityksen huipulla pieni pysähdys ennen paluuta. Ilman sitä ylitys
+   * olisi terävä kärki eikä korjausliike: käsi huomaa menneensä yli
+   * vasta pysähdyttyään.
+   */
+  pisteet.push({ aika: liikeAika + paluu * 0.25, etenema: 1 + ylitys });
+  pisteet.push({ aika: 1, etenema: 1 });
+  return { pisteet, ylitys };
+}
+
+/**
+ * Nykäisyt CSS:n linear()-pehmentimeksi.
+ *
+ * Muoto on `linear(0, 0.39 22%, 0.39 31%, …, 1)`: arvo on etenemä ja
+ * prosentti sen ajankohta. Selain interpoloi pisteiden välit suoraan,
+ * joten sama etenemä kahdesti peräkkäin ON pysähdys.
+ */
+export function nykaisyKaari(arvonta = Math.random) {
+  const { pisteet } = arvoNykaisyt(arvonta);
+  const osat = pisteet.map(({ aika, etenema }, i) => {
+    const arvo = Math.round(etenema * 1000) / 1000;
+    // Ensimmäinen ja viimeinen saavat oletusajankohtansa (0 % ja 100 %).
+    if (i === 0 || i === pisteet.length - 1) return String(arvo);
+    return `${arvo} ${Math.round(aika * 1000) / 10}%`;
+  });
+  return `linear(${osat.join(', ')})`;
+}
+
+/**
+ * Lukittumisen ylitys pikseleinä: mihin nauha käy ennen kuin asettuu.
+ *
+ * Etumerkki on vastakkainen kuin lähtökohdan, koska ylitys on kohteen
+ * TOISELLA puolella: hakuvaiheesta vasemmalta tuleva nauha käy hitusen
+ * oikealla ja palaa.
+ */
+export function lukonYlitys(lahto, arvonta = Math.random) {
+  const koko = valilta(arvonta, NYKAISYN_RAJAT.lukonYlitys);
+  const suunta = Number(lahto) > 0 ? -1 : 1;
+  return Math.round(suunta * koko * 10) / 10;
+}
+
+/*
+ * ══════════════════════════════════════════════════════════════════════
  * VU-MITTARI
  * ══════════════════════════════════════════════════════════════════════
  *
@@ -855,6 +1060,10 @@ function ero(a, b, laudanLeveys) {
  *                            tähän, kun mitään ei soi.
  *   viritysAika            — aikakatkaisu millisekunteina (oletus 12 s).
  *   aani                   — aloitusäänenvoimakkuus 0–1 (oletus 0,8).
+ *   arvonta                — satunnaislähde nauhan nykäisyille (oletus
+ *                            Math.random). Vain testejä ja demoja varten:
+ *                            siemennetty lähde antaa saman liikkeen
+ *                            joka kerta, ks. arvoNykaisyt.
  *
  * Palauttaa:
  *   juuri                  — elementti, jonka kutsuja liittää haluamaansa
@@ -888,6 +1097,7 @@ export function teeRadiosoitin({
   sijainti = null,
   viritysAika = VIRITYKSEN_AIKAKATKAISU_MS,
   aani = 0.8,
+  arvonta = Math.random,
 } = {}) {
   lataaTyyli();
   const tunniste = `radio-${(tunnusLaskuri += 1)}`;
@@ -1354,6 +1564,13 @@ export function teeRadiosoitin({
       // Nauha lähtee sieltä, missä uusi asema äsken oli (laskeLiuku), ja
       // päätyy nollaan eli viisarin alle.
       juuri.style.setProperty('--radio-liuku', `${Math.round(liuunMatka)}px`);
+      /*
+       * Nykäisyt arvotaan JOKA LIUULLE UUDELLEEN: sama ote kahdesti
+       * peräkkäin ei ole käden liikettä vaan silmukka. Pehmennin on
+       * mukautetussa ominaisuudessa, jotta liu'un kesto ja avainkehykset
+       * pysyvät css/radio.css:n omina, ks. NYKAISYN_RAJAT.
+       */
+      juuri.style.setProperty('--radio-liuku-kaari', nykaisyKaari(arvonta));
     } else if (uusi === 'lukittuu') {
       /*
        * Asettuminen alkaa siitä, mihin haku sattui jäämään. Ilman
@@ -1361,7 +1578,10 @@ export function teeRadiosoitin({
        * "asettuisi" — eli tekisi juuri sen nykäisyn, jonka poistamiseksi
        * koko vaihe on olemassa.
        */
-      juuri.style.setProperty('--radio-lukko', `${nauhanSiirto()}px`);
+      const lahto = nauhanSiirto();
+      juuri.style.setProperty('--radio-lukko', `${lahto}px`);
+      // Viimeinen kohdistus käy hitusen yli ja palaa, ks. lukonYlitys.
+      juuri.style.setProperty('--radio-lukko-yli', `${lukonYlitys(lahto, arvonta)}px`);
     }
 
     /*

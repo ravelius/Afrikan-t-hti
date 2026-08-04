@@ -13,6 +13,11 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 234, teksti: 'Saapumisessa zoomaus, kohdemanner näkyviin' },
+  { v: 234, teksti: 'Lento kestää repliikin lukemisen ajan' },
+  { v: 234, teksti: 'Pieni nuoli ohittaa lennon halutessa' },
+  { v: 234, teksti: 'Loitonnus ei enää näytä samaa paikkaa kahdesti' },
+  { v: 234, teksti: 'Tangeriin tarkka markkinakuva Grand Socolta' },
   { v: 233, teksti: 'Beringinsalmi ehjäksi: Tšukotkan kärki takaisin' },
   { v: 233, teksti: 'Radiossa soiva kaupunki näkyy punaisena' },
   { v: 232, teksti: 'Kartta jatkuu ehjänä laudan reunan yli' },

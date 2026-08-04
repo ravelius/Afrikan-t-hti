@@ -129,7 +129,14 @@ export const VIRITTIMEN_RAJAT = Object.freeze({
   // Kaikkia kerroksia koskeva katto. Mikään ei pääse tämän yli, koska
   // kuulokkeissa kirkas kohina on kipeää eikä tunnelmaa.
   katto: 3200,
-  // Pehmennykset sekunteina.
+  /*
+   * Pehmennykset sekunteina. NÄMÄ OVAT VAIN OLETUKSIA: kutsuja antaa
+   * kummankin pituuden itse (aloita, lopeta), koska vain se tietää MIKSI
+   * viritys alkaa tai loppuu. Radiossa molemmat päät ovat ristihäivytyksen
+   * puolikkaita ja kestävät saman kuin lähetyksen väistö tai nousu
+   * (js/linssit/radio.js RISTIHAIVYTYS). Nämä luvut jäävät niille
+   * kutsujille, jotka eivät ristihäivytä mitään.
+   */
   alkuHaive: 0.25,
   loppuHaive: 0.4,
 });
@@ -392,6 +399,38 @@ function verho(param, { alku, kesto, huippu, nousu = 0.28, lasku = 0.35 }) {
   param.exponentialRampToValueAtTime(HILJAA, alku + kesto);
 }
 
+/*
+ * Käyrän pisteiden määrä: 33 pistettä eli noin 20 ms välein 0,6 sekunnin
+ * häivytyksessä. Käyrä on tiheämpi kuin korva erottaa, ja selain
+ * interpoloi pisteiden välit joka tapauksessa.
+ */
+const KAYRAN_PISTEET = 33;
+
+/**
+ * KATKAISEE PARAMETRIN KESKEN OLEVAN AUTOMAATION nykyiseen arvoonsa.
+ *
+ * MIKSI OMA FUNKTIO: viritys voi vaihtaa suuntaa kesken häivytyksen —
+ * pelaaja painaa stopia sillä sekunnilla, jona kohina on vasta nousemassa
+ * — ja silloin uusi käyrä ajoitettaisiin vanhan päälle. Web Audio ei
+ * salli päällekkäisiä setValueCurveAtTime-jaksoja vaan heittää
+ * poikkeuksen, joten vanha on nimenomaisesti katkaistava ensin.
+ *
+ * cancelAndHoldAtTime on tähän oikea työkalu: se jättää arvon siihen,
+ * mihin käyrä oli ehtinyt. Pelkkä cancelScheduledValues on varareitti
+ * niille selaimille (ja testien tynkäkontekstille), joissa sitä ei ole.
+ */
+function katkaiseAutomaatio(param, t) {
+  if (typeof param.cancelAndHoldAtTime === 'function') {
+    try {
+      param.cancelAndHoldAtTime(t);
+      return;
+    } catch {
+      /* ei tuettu tälle parametrille — mennään perumisella */
+    }
+  }
+  param.cancelScheduledValues(t);
+}
+
 /**
  * Häivyttää voimakkuusparametrin hiljaisuuteen TASATEHOISESTI.
  *
@@ -411,14 +450,11 @@ function verho(param, { alku, kesto, huippu, nousu = 0.28, lasku = 0.35 }) {
 function haivytaPois(param, audioCtx, kesto) {
   const t = audioCtx.currentTime;
   const lahto = Math.max(Number(param.value) || 0, HILJAA);
-  param.cancelScheduledValues(t);
+  katkaiseAutomaatio(param, t);
   if (typeof param.setValueCurveAtTime === 'function') {
-    // 33 pistettä eli noin 20 ms välein: käyrä on tiheämpi kuin korva
-    // erottaa, mutta selain interpoloi pisteiden välit joka tapauksessa.
-    const pisteita = 33;
-    const kayra = new Float32Array(pisteita);
-    for (let i = 0; i < pisteita; i++) {
-      kayra[i] = lahto * Math.cos((i / (pisteita - 1)) * (Math.PI / 2));
+    const kayra = new Float32Array(KAYRAN_PISTEET);
+    for (let i = 0; i < KAYRAN_PISTEET; i++) {
+      kayra[i] = lahto * Math.cos((i / (KAYRAN_PISTEET - 1)) * (Math.PI / 2));
     }
     try {
       param.setValueCurveAtTime(kayra, t, kesto);
@@ -429,6 +465,49 @@ function haivytaPois(param, audioCtx, kesto) {
   }
   param.setValueAtTime(lahto, t);
   param.exponentialRampToValueAtTime(HILJAA, t + kesto);
+}
+
+/**
+ * Nostaa voimakkuusparametrin hiljaisuudesta tasolleen TASATEHOISESTI.
+ *
+ * TÄMÄ ON RISTIHÄIVYTYKSEN TOINEN PÄÄ (omistajan toive: "virityssuhina
+ * saisi feidautua kanavanvaihdon alussa ja lopussa. --- siinä pitäisi
+ * olla ristifeidaus"). Kohina nousee siniä samalla kun edellinen kanava
+ * väistyy kosinia (js/linssit/radio.js haivytaLahetysPois), täsmälleen
+ * niin kuin lopussa mutta toisin päin. Sini ja kosini ovat sama pari kuin
+ * haivytaPois-funktiossa, joten yhteisteho pysyy vakiona myös alussa.
+ *
+ * MIKSI EI PELKKÄ EKSPONENTTIRAMPPI, joka tässä ennen oli: se on
+ * desibeliasteikolla suora eli nousee alussa hitaasti. Ristihäivytyksen
+ * nousevan puolen pitää tehdä päinvastoin — nousta heti reippaasti — tai
+ * vaihdon keskelle jää kuoppa, jossa kumpikaan ääni ei vielä kanna.
+ *
+ * Eksponenttiramppi jää varareitiksi sinne, missä setValueCurveAtTime
+ * puuttuu, ks. haivytaPois.
+ */
+function haivytaSisaan(param, audioCtx, kesto, kohde) {
+  const t = audioCtx.currentTime;
+  const taso = Math.max(Number(kohde) || 0, HILJAA);
+  katkaiseAutomaatio(param, t);
+  if (typeof param.setValueCurveAtTime === 'function') {
+    const kayra = new Float32Array(KAYRAN_PISTEET);
+    for (let i = 0; i < KAYRAN_PISTEET; i++) {
+      kayra[i] = taso * Math.sin((i / (KAYRAN_PISTEET - 1)) * (Math.PI / 2));
+    }
+    try {
+      param.setValueCurveAtTime(kayra, t, kesto);
+      return;
+    } catch {
+      /* päällekkäinen automaatio — mennään rampilla */
+    }
+  }
+  param.setValueAtTime(HILJAA, t);
+  param.exponentialRampToValueAtTime(taso, t + kesto);
+}
+
+/** Häivytyksen pituus sekunteina: kutsujan luku tai moduulin oletus. */
+function haiveTai(arvo, oletus) {
+  return Math.max(0.05, Number(arvo) || oletus);
 }
 
 /**
@@ -631,9 +710,14 @@ export function teeViritin(audioCtx, {
    * Aloittaa virityksen. Toinen kutsu ei tee mitään — päällekkäiset
    * viritykset olisivat kaksi radiota, ei yksi.
    *
+   * `haiveSekunteina` on sisäänhäivytyksen pituus, ja se on kutsujan
+   * tieto samasta syystä kuin lopetuksessakin: vain kutsuja tietää, onko
+   * alku ristihäivytyksen puolikas (edellinen kanava väistyy samaan
+   * tahtiin) vai nousu hiljaisuudesta. Oletus on moduulin oma alkuHaive.
+   *
    * @returns {boolean} soiko viritin nyt
    */
-  function aloita() {
+  function aloita(haiveSekunteina = VIRITTIMEN_RAJAT.alkuHaive) {
     if (lopetettu || kaynnissa) return kaynnissa;
     if (!audioCtx || typeof audioCtx.createGain !== 'function') return false;
     if (onMykistetty()) return false;
@@ -651,9 +735,11 @@ export function teeViritin(audioCtx, {
     ulos = muista(audioCtx.createGain());
     ulos.connect(katto);
     const t0 = audioCtx.currentTime;
-    ulos.gain.setValueAtTime(HILJAA, t0);
-    ulos.gain.exponentialRampToValueAtTime(
-      Math.max(taso * ULOSTULON_TASO, HILJAA), t0 + VIRITTIMEN_RAJAT.alkuHaive,
+    // Kohina nousee ristihäivytyksen nousevaa puolta, ks. haivytaSisaan.
+    ulos.gain.value = HILJAA;
+    haivytaSisaan(
+      ulos.gain, audioCtx, haiveTai(haiveSekunteina, VIRITTIMEN_RAJAT.alkuHaive),
+      taso * ULOSTULON_TASO,
     );
 
     // Kohinapohja on yksi ainoa lähde koko virityksen ajan. Sen suodatin
@@ -707,7 +793,7 @@ export function teeViritin(audioCtx, {
     lopetettu = true;
     kaynnissa = false;
 
-    const haive = Math.max(0.05, Number(haiveSekunteina) || VIRITTIMEN_RAJAT.loppuHaive);
+    const haive = haiveTai(haiveSekunteina, VIRITTIMEN_RAJAT.loppuHaive);
     const t = audioCtx.currentTime;
     try {
       haivytaPois(ulos.gain, audioCtx, haive);
@@ -745,13 +831,17 @@ export function teeViritin(audioCtx, {
   /**
    * Radion äänenvoimakkuusnuppi kesken virityksen. Ramppi eikä hyppy,
    * koska nuppia vedetään sormella eikä askelin.
+   *
+   * Kesken oleva sisäänhäivytys katkaistaan siihen arvoon, mihin se on
+   * ehtinyt (katkaiseAutomaatio): ilman sitä nupin vääntäminen vaihdon
+   * aikana jättäisi kaksi automaatiota päällekkäin.
    */
   function asetaVoimakkuus(arvo) {
     taso = rajaa(Number(arvo) || 0, [0, 1]);
     if (!ulos || lopetettu) return taso;
     const t = audioCtx.currentTime;
     try {
-      ulos.gain.cancelScheduledValues(t);
+      katkaiseAutomaatio(ulos.gain, t);
       ulos.gain.setValueAtTime(Math.max(ulos.gain.value, HILJAA), t);
       ulos.gain.exponentialRampToValueAtTime(Math.max(taso * ULOSTULON_TASO, HILJAA), t + 0.08);
     } catch {
@@ -929,6 +1019,12 @@ export function teeNauhaviritin(audioCtx, {
   let valittu = null;
   let aloituskohta = 0;
   let taso = rajaa(Number(voimakkuus) || 0, [0, 1]);
+  /*
+   * Sisäänhäivytyksen pituus talteen aloita():sta. Äänite puretaan
+   * taustalla, joten häivytys alkaa vasta lupauksen ratkettua — ja
+   * silloin kutsujan antama luku on jo kaukana kutsupinosta.
+   */
+  let alkuHaive = VIRITTIMEN_RAJAT.alkuHaive;
 
   const onMykistetty = typeof mykistetty === 'function'
     ? mykistetty
@@ -949,7 +1045,9 @@ export function teeNauhaviritin(audioCtx, {
     vara = teeViritin(audioCtx, {
       voimakkuus: taso, kohde, mykistetty: () => false, arvonta,
     });
-    if (!vara.aloita()) vara = null;
+    // Sama sisäänhäivytys kuin nauhalla: varareitin pitää kuulostaa
+    // samalta myös vaihdon alussa, tai sen tunnistaa varareitiksi.
+    if (!vara.aloita(alkuHaive)) vara = null;
   }
 
   /** Panee puretun äänitteen soimaan silmukkana arvotusta kohdasta. */
@@ -964,16 +1062,18 @@ export function teeNauhaviritin(audioCtx, {
     // toisto alkaa Web Audiossa hiljaisuudella eikä silmukan alusta.
     aloituskohta = arvonta() * Math.max(0, puskuri.duration - 0.1);
     lahde.start(t0, aloituskohta);
-    ulos.gain.cancelScheduledValues(t0);
-    ulos.gain.setValueAtTime(HILJAA, t0);
-    ulos.gain.exponentialRampToValueAtTime(huippu(), t0 + VIRITTIMEN_RAJAT.alkuHaive);
+    // Nousu ristihäivytyksen sinipuolta, ks. haivytaSisaan.
+    ulos.gain.value = HILJAA;
+    haivytaSisaan(ulos.gain, audioCtx, alkuHaive, huippu());
   }
 
   /**
    * Aloittaa virityksen. Palauttaa heti — äänite puretaan taustalla, ja
    * jos lopeta() ehtii ensin, mitään ei käynnisty.
+   *
+   * `haiveSekunteina` on sisäänhäivytyksen pituus, ks. teeViritin aloita.
    */
-  function aloita() {
+  function aloita(haiveSekunteina = VIRITTIMEN_RAJAT.alkuHaive) {
     if (lopetettu || kaynnissa) return kaynnissa;
     if (!audioCtx || typeof audioCtx.createGain !== 'function') return false;
     if (onMykistetty()) return false;
@@ -983,6 +1083,7 @@ export function teeNauhaviritin(audioCtx, {
     valittu = aani ?? arvoViritysaani(edellinenNauha, arvonta);
     edellinenNauha = valittu;
     kaynnissa = true;
+    alkuHaive = haiveTai(haiveSekunteina, VIRITTIMEN_RAJAT.alkuHaive);
 
     ulos = audioCtx.createGain();
     ulos.gain.value = HILJAA;
@@ -1004,7 +1105,7 @@ export function teeNauhaviritin(audioCtx, {
     if (lopetettu) return;
     lopetettu = true;
     kaynnissa = false;
-    const haive = Math.max(0.05, Number(haiveSekunteina) || VIRITTIMEN_RAJAT.loppuHaive);
+    const haive = haiveTai(haiveSekunteina, VIRITTIMEN_RAJAT.loppuHaive);
     vara?.lopeta(haive);
     vara = null;
     if (!ulos) return;
@@ -1039,7 +1140,7 @@ export function teeNauhaviritin(audioCtx, {
     if (!ulos || lopetettu) return taso;
     const t = audioCtx.currentTime;
     try {
-      ulos.gain.cancelScheduledValues(t);
+      katkaiseAutomaatio(ulos.gain, t);
       ulos.gain.setValueAtTime(Math.max(Number(ulos.gain.value) || HILJAA, HILJAA), t);
       ulos.gain.exponentialRampToValueAtTime(huippu(), t + 0.08);
     } catch {
