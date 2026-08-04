@@ -4973,3 +4973,49 @@ lähde korjattiin kolmesti asettamalla se oikein yhdessä lisäkohdassa. Vasta
 neljäs korjaus poisti asettamisen kokonaan — yksi lähde, ei yhtään
 vaihtoa. Sama muoto kuin v249:n vahdissa, mutta vietynä loppuun asti:
 vahti ylläpitää tilaa, tämä ei tarvitse tilaa lainkaan.
+
+## v252 — Sininen pois vedestä, palkki ja logo mittaan (4.8.2026)
+
+**Sininen pois kaikista vesielementeistä** (omistajan linjaus). Vesi
+erottuu nyt vaaleudella ja tummuudella, ei värillä — samasta
+sepiaperheestä kuin kartan muu muste (`--sea-ink` #6e6350). Muutetut:
+merisyvyyden neljä vyöhykettä, lähiveden järvi ja matalikko, joen kolme
+vetoa (ranta, uoma, valo), vesistönimien teksti ja meriaskelmat
+(`.step-sea`).
+
+Tarkistettu koko tyylitiedosto ja `js/mapart.js` läpi hakemalla jokainen
+sävy, jossa sininen ≥ punainen: vesielementeissä ei ole enää yhtään.
+Jäljelle jääneet viileät sävyt ovat linssikuvake, lentokohteen rengas,
+topaasi ja nappulan kiilto — ei yksikään vettä.
+
+**Matkakirjan palkki oli yhä koko kaistan levyinen, ja syy oli
+mitattavissa.** `width: max-content` ei riittänyt: leikattu merkintä on
+yhä ruudukossa rivillä 2, ja sen leveys **339 px** venytti ensimmäisen
+sarakkeen samaan mittaan. Ruudukko mitoittaa sarakkeen kaiken sisältönsä
+mukaan, myös sen, mikä on häivytetty näkymättömiin.
+
+Piilossa oleville lapsille annettiin `width: 0` ja `overflow: hidden`,
+jolloin niiden osuus mitoituksesta on nolla (silloin myös `min-width:
+auto` ratkeaa nollaan). Ne pysyvät asettelussa, joten kutistuminen liukuu
+yhä. Mitattu: palkki **406 px → 171 px** (kaista 406 px), sarakkeet
+104,75 px + 42,98 px.
+
+**Logon rivit täsmälleen yhtä leveiksi.** Alanimellä oli kiinteä
+`letter-spacing: 0.34em`, ja sen leveys oli mitä sattui olemaan —
+kirjainväli ei tiedä, kuinka leveä sana MATKAKIRJA on. Rivien välissä on
+viiva, joten ero näkyi heti. Nyt `text-align-last: justify` venyttää
+ainoan rivin täyteen leveyteen. Mitattu: ylärivi 85,3 px, alarivi 85,3
+px, **ero 0**.
+
+Tämä pätee myös toisella kirjasimella: leveys tulee asettelusta eikä
+kirjainmitoista — ja se on tässä olennaista, koska tämän ympäristön
+selaimessa ei ole pelin kirjasimia eikä kirjainten mittaan voi täällä
+luottaa.
+
+### Opittua
+
+**Näkymätön sisältö on yhä sisältöä mitoitukselle.** Palkkia yritettiin
+kaventaa kahdesti: ensin `width: max-content`, sitten `1fr` pois. Kumpikaan
+ei purrut, koska mitoitusta ei ohjannut se, mikä näkyi, vaan se, mikä oli
+piilossa saman sarakkeen alapuolella. `opacity: 0` ja leikkaava
+korkeusraja piilottavat silmältä mutta eivät asettelijalta.
