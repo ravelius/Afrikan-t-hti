@@ -1480,6 +1480,13 @@ export class UI {
     this.linssiNapinIkoni = document.getElementById('linssi-ikoni');
     this.linssiValikko = document.getElementById('linssi-valikko');
     this.linssiTuki = null; // moottori ja omistus, kun dynaaminen tuonti onnistui
+    /*
+     * Maailmanradio talteen synkronisesti: drawTargets kysyy tilaa
+     * kesken piirron eikä voi odottaa lupausta.
+     */
+    this.radioModuuli = null;
+    this.radioLataus = null;
+    this.radioAani = null;
     this.linssiLataus = null; // kesken oleva tuonti; jaetaan kaikille kutsujille
     this.linssiValittu = tallennettuLinssi();
     this.linssiPiirretty = null; // mihin kerrokseen linssi on piirretty
@@ -1699,6 +1706,9 @@ export class UI {
      * uuden pelin kerrosta, vaikka uusi peli ehtisi jo alkaa.
      */
     this.linssiTuki?.moottori?.sammuta();
+    // Soitin elää document.bodyssä eikä laudassa, joten se jäisi
+    // ruutuun ja soimaan uuden pelin päälle.
+    this.radioModuuli?.pois();
     this.linssiSelite?.remove();
     this.linssiSelite = null;
     if (this.linssiKotelo) this.linssiKotelo.hidden = true;
@@ -3677,6 +3687,22 @@ export class UI {
     this.targetLayer.textContent = '';
 
     /*
+     * Maailmanradio: kaupungit ovat itse play-nappeja eikä kartalla
+     * ole muita kohteita. Ei nopanheiton kohteita, ei lentokohteita,
+     * ei lähtöpisteen valintaa — se on koko tilan idea (omistaja
+     * 4.8.2026: "kaikki muu toiminto häviää").
+     *
+     * ENNEN kehittäjätilaa: radiotilassa napautus kuuluu radiolle
+     * silloinkin kun kehittäjätila on päällä, muuten radiota ei voisi
+     * kokeilla juuri siinä tilassa, jota varten se avattiin.
+     */
+    if (this.radioPaalla()) {
+      this.radioModuuli.piirraKaupunkinapit(this.targetLayer, game.board.cities,
+        { kiertoKohdat: (x) => this.kiertoKohdat(x) });
+      return;
+    }
+
+    /*
      * Kehittäjätila (omistajan toive): jokainen kaupunki on napautettava
      * ja napautus vie sinne suoraan. Tämä ohittaa kaikki muut kohteet,
      * myös lähtöpisteen valinnan — muuten tilaa ei pääsisi käyttämään
@@ -4183,6 +4209,8 @@ export class UI {
 
   /** Jalan: matkustustapa ja nopanheitto samalla painalluksella. */
   doWalk() {
+    // Radiotilassa kartalla ei liikuta.
+    if (this.radioPaalla()) return;
     const { game } = this;
     // Nopanheitto keskeyttää tarinan: luenta häipyy pehmeästi pois.
     this.haivytaLuenta();
@@ -4735,6 +4763,9 @@ export class UI {
    */
   syncAmbience() {
     const { game } = this;
+    // Radiotilassa radio on ainoa ääni. Kaupungin äänimaiseman sulkee
+    // radio.paalle() itse; tämä estää sen palaamisen.
+    if (this.radioPaalla()) return;
     // Lennon aikana kuuluu vain moottori: kaupungin äänimaisema alkaa
     // vasta, kun pelaaja astuu ulos koneesta (kalvon sulkeva render).
     if (document.body.classList.contains('flight-active')) {
@@ -6679,8 +6710,15 @@ export class UI {
    * `ekaLauseeseen` pysäyttää toiston ensimmäisen virkkeen jälkeiseen
    * hiljaisuuteen — kaiutinnappi jatkaa samasta kohdasta.
    */
+  /*
+   * Omistajan ehto 4.8.2026: radiotilassa kaupungin matkakirja saa
+   * päivittyä, mutta ilman luenta-ääntä. Kaksi ääntä yhtä aikaa on
+   * sekasotku. Yksi tarkistus kattaa kaikki kuusi luennan
+   * aloituskohtaa, koska ne kaikki kulkevat tästä.
+   */
   playDiaryVoice(url, { ekaLauseeseen = false, osuus = null, viive = 0 } = {}) {
     this.stopDiaryVoice();
+    if (this.radioModuuli && !this.radioModuuli.luentaSallittu()) return;
     if (!url || !sfx.enabled) return;
     const audio = new Audio(url);
     audio.volume = puheVoima();
@@ -6983,6 +7021,93 @@ export class UI {
    * Epäonnistuminen ei ole virhe vaan hyväksytty raja: yhden tiedoston
    * versiossa linssejä ei ole, ja silloin koko valitsin jää pois.
    */
+  /**
+   * Maailmanradion moduuli. OMA laiska tuontinsa eikä osa
+   * lataaLinssit():ia: jos radio ei lataudu (yhden tiedoston versio),
+   * muiden linssien pitää silti toimia.
+   */
+  lataaRadio() {
+    if (!this.radioLataus) {
+      this.radioLataus = import('./linssit/radio.js')
+        .then((moduuli) => { this.radioModuuli = moduuli; return moduuli; })
+        .catch((syy) => {
+          console.warn('Maailmanradiota ei voitu ladata; linssi jää pois.', syy);
+          return null;
+        });
+    }
+    return this.radioLataus;
+  }
+
+  /**
+   * X-nappi radiotilan sulkemiseen, ruudun oikeaan yläkulmaan.
+   *
+   * Omistajan toive 4.8.2026: "oikeassa yläreunassa olisi X-nappi,
+   * mistä radiotila saisi suljettua."
+   *
+   * Bodyn alle eikä yläpalkkiin: yläpalkin napit ovat pelin omia, ja
+   * radiotilassa peli on tauolla. Sulku kuuluu radiolle, ja se katoaa
+   * yhdessä soittimen kanssa.
+   */
+  naytaRadionSulku(nakyy) {
+    if (!nakyy) {
+      this.radionSulku?.remove();
+      this.radionSulku = null;
+      return;
+    }
+    if (this.radionSulku) return;
+    const nappi = html('button', 'radio-sulje');
+    nappi.type = 'button';
+    nappi.setAttribute('aria-label', 'Sulje radiotila');
+    nappi.title = 'Sulje radiotila';
+    nappi.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">'
+      + '<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" '
+      + 'stroke-width="2.2" stroke-linecap="round"/></svg>';
+    nappi.addEventListener('click', () => { this.valitseLinssi(null); });
+    document.body.appendChild(nappi);
+    this.radionSulku = nappi;
+  }
+
+  /** Onko radiotila päällä? Synkroninen: piirto kysyy tätä. */
+  radioPaalla() {
+    return this.radioModuuli?.paalla() === true;
+  }
+
+  /**
+   * Kytkee maailmanradion päälle tai pois.
+   *
+   * Kutsutaan joka kerta kun linssi sytytetään, myös kun sama linssi
+   * sytytetään uudelleen. Se on turvallista: moottori sammuttaa aina
+   * ensin, ja paalle() purkaa vielä itsekin vanhan tilan.
+   */
+  async tahdistaRadio(halutaan) {
+    const radio = await this.lataaRadio();
+    if (!radio || this.dead) return;
+    if (halutaan) {
+      // Kertoja vaikenee radion tieltä. Radio sulkee itse kaupungin
+      // äänimaiseman, mutta se ei tunne luentaa eikä voi tuoda ui.js:ää.
+      this.stopDiaryVoice();
+      this.naytaRadionSulku(true);
+      radio.paalle({
+        map: this.game.pack.map,
+        kaupungit: this.game.board.cities,
+        juuri: document.body,
+        aani: this.radioAani,
+        onMuutos: (tilanne) => {
+          this.radioAani = tilanne.aani;
+          // Soivan kaupungin napin ulkoasu päivittyy vain näin.
+          if (!this.dead) this.drawTargets();
+        },
+      });
+    } else if (radio.paalla()) {
+      this.naytaRadionSulku(false);
+      radio.pois();
+      // Radio ei tiedä kaupunkia eikä maisematyyppiä, joten kaupungin
+      // oma äänimaisema palautetaan täältä.
+      this.syncAmbience();
+    }
+    this.drawTargets();
+  }
+
   lataaLinssit() {
     if (!this.linssiLataus) {
       this.linssiLataus = (async () => {
@@ -7095,6 +7220,11 @@ export class UI {
       this.pudotaLinssi(tunnus);
       return;
     }
+    // Maailmanradio ei ole karttakerros vaan kartan TILA: moottori
+    // merkitsi linssin vain valituksi (kerros: false), ja tila
+    // kytketään tässä.
+    await this.tahdistaRadio(tunnus === 'radio');
+    if (this.dead) return;
     this.paivitaLinssiNappi();
     this.paivitaLinssiTiedot();
     this.piirraLinssiSelite();
@@ -8117,6 +8247,8 @@ export class UI {
 
   /** Nopanheitto: silmäluku pyörii kartan päällä ja jää hetkeksi näkyviin. */
   doRoll() {
+    // Radiotilassa kartalla ei liikuta.
+    if (this.radioPaalla()) return;
     // Nopanheitto keskeyttää tarinan: luenta häipyy pehmeästi pois.
     this.haivytaLuenta();
     this.run(() => this.game.actionRoll(), { after: (result) => this.animateDie(result.die) });
@@ -8154,6 +8286,8 @@ export class UI {
 
   /** Siirto: nappula hyppii reittiä pitkin piste kerrallaan. */
   doMove(key) {
+    // Radiotilassa kartalla ei liikuta.
+    if (this.radioPaalla()) return;
     const { game } = this;
     const move = game.moves?.get(key);
     if (!move) return;
@@ -8164,6 +8298,8 @@ export class UI {
   }
 
   doFly(destination) {
+    // Radiotilassa kartalla ei liikuta.
+    if (this.radioPaalla()) return;
     const { game } = this;
     // Matkavalinnan välivaihe ei saa jäädä päälle seuraavaan vuoroon.
     this.travelExpanded = false;

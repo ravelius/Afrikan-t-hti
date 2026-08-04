@@ -48,19 +48,25 @@ export const VIRITYKSEN_AIKAKATKAISU_MS = 12000;
  * Näytön aukon kuvasuhde (leveys : korkeus) ja kaksi mittaa, joilla se
  * on toteutettu css/radio.css:ssä.
  *
- * Aukko on toisen tekijän pistematriisinäyttöä varten. Koko on kiinteä
- * eikä venyvä: pisterasteri näyttää siistiltä vain, kun pisteen koko
- * osuu kokonaisiin pikseleihin, ja portaattomasti venyvä aukko takaisi
- * sen, ettei osu koskaan. Kaksi kokoa riittää — puhelin ja muut — ja
- * niillä on sama kuvasuhde, joten sama piirto kelpaa molempiin.
+ * SUHDE ON KUUSI EIKÄ VIISI, ja luku tulee suoraan siitä mitä näytössä
+ * pitää lukea. js/linssit/pistenaytto.js piirtää merkin 5 × 7 pisteen
+ * ruutuun, joten kuudentoista merkin ja kahden rivin ruudukko on
+ * 958 × 158 yksikköä eli 6,06 : 1. Kuusitoista merkkiä on se raja, jolla
+ * laitteen omat tekstit ("VALITSE KAUPUNKI", "HELSINKI · SUOMI",
+ * "ASEMA EI VASTAA") mahtuvat kokonaan näkyviin. Kolmellatoista ne eivät
+ * mahtuneet, ja silloin näyttö vieritti tekstiä TAUKOAMATTA — kartan
+ * päällä ikuisesti liikkuva elementti on juuri se, mitä tämä tiedosto
+ * muuten välttää (ks. css/radio.css: EI JATKUVIA ANIMAATIOITA).
  *
- * Kahdeksaakymmentä pistettä leveä ja kuusitoista korkea rasteri osuu
- * molempiin tasan (340/80 = 4,25 ja 270/80 = 3,375 pikseliä pisteelle).
+ * Kaksi kokoa riittää — puhelin ja muut — ja niillä on sama kuvasuhde,
+ * joten sama piirto kelpaa molempiin. Aukko saa kutistua tästä vain
+ * hyvin kapealla ruudulla, jolloin pistenäyttö keskittyy lasille itse
+ * eikä veny (SVG:n oma preserveAspectRatio).
  */
-export const NAYTON_SUHDE = 5;
+export const NAYTON_SUHDE = 6;
 export const NAYTON_MITAT = Object.freeze({
-  leveä: { leveys: 340, korkeus: 68 },   // yli 640 px:n ruutu
-  kapea: { leveys: 270, korkeus: 54 },   // enintään 640 px:n ruutu
+  leveä: { leveys: 408, korkeus: 68 },   // yli 700 px:n ruutu
+  kapea: { leveys: 324, korkeus: 54 },   // enintään 700 px:n ruutu
 });
 
 /*
@@ -97,26 +103,30 @@ const TYYLIN_TUNNUS = 'radiosoittimen-tyyli';
 /**
  * Liittää css/radio.css sivuun, jos sitä ei vielä ole.
  *
- * Osoite lasketaan moduulin omasta sijainnista eikä kirjoiteta
- * suhteellisena merkkijonona: peli ajetaan myös GitHub Pagesin
- * alihakemistosta, jossa 'css/radio.css' osoittaisi väärään paikkaan
- * riippuen siitä, mikä sivu on auki.
+ * Osoite johdetaan pelin OMASTA tyylilinkistä (css/styles.css) eikä
+ * kirjoiteta suhteellisena merkkijonona. Kaksi syytä:
+ *
+ * 1. Peli ajetaan myös GitHub Pagesin alihakemistosta, jossa pelkkä
+ *    'css/radio.css' osoittaisi juureen ja jäisi lataamatta.
+ * 2. Sama tehtävä hoituisi import.meta.url:lla, mutta se on
+ *    KIELLETTY tässä tiedostossa: tools/build-standalone.mjs niputtaa
+ *    tämän moduulin tavalliseen <script>-lohkoon, ja import.meta
+ *    tavallisessa skriptissä on jäsennysvirhe — koko yhden tiedoston
+ *    versio jäisi käynnistymättä, ei vain radio.
+ *
+ * Jos tyylilinkkiä ei löydy, tyyli jätetään lataamatta. Se on juuri
+ * yhden tiedoston versio, jossa tyylit on jo upotettu sivuun eikä
+ * erillisiä css-tiedostoja ole olemassakaan.
  */
 function lataaTyyli() {
   if (typeof document === 'undefined') return;
   if (document.getElementById(TYYLIN_TUNNUS)) return;
-  let osoite = 'css/radio.css';
-  try {
-    osoite = new URL('../../css/radio.css', import.meta.url).href;
-  } catch {
-    // import.meta.url ei ole käytettävissä (esim. koottu yksi tiedosto).
-    // Suhteellinen osoite on silloin paras arvaus; tyylin puuttuminen ei
-    // riko soitinta, se näyttää vain karulta.
-  }
+  const peruslinkki = document.querySelector('link[rel="stylesheet"][href*="styles.css"]');
+  if (!peruslinkki) return;
   const linkki = document.createElement('link');
   linkki.id = TYYLIN_TUNNUS;
   linkki.rel = 'stylesheet';
-  linkki.href = osoite;
+  linkki.href = new URL('radio.css', peruslinkki.href).href;
   document.head.appendChild(linkki);
 }
 
@@ -154,7 +164,9 @@ function viisarinPaikka(avain) {
  * Palauttaa:
  *   juuri               — elementti, jonka kutsuja liittää haluamaansa
  *                         paikkaan (soitin asemoi itsensä alalaitaan).
- *   naytaKanava(tiedot) — { asema, maa, kaupunki } tai null.
+ *   naytaKanava(tiedot) — { asema, maa, kaupunki, naytto } tai null.
+ *                         `naytto` on valinnainen lyhennetty nimi
+ *                         pistenäytölle, ks. rivit().
  *   asetaTila(tila, viesti)
  *   asetaNaytto(elementti) — pistematriisinäyttö aukkoon.
  *   asetaAani(arvo)
@@ -304,7 +316,14 @@ export function teeRadiosoitin({
   /** Näytön rivit nykytilalle ja -kanavalle. */
   function rivit(tila) {
     const pohja = TILAN_RIVIT[tila] ?? TILAN_RIVIT.sammuksissa;
-    const asema = (nykyinenKanava?.asema ?? '').toUpperCase();
+    /*
+     * `naytto` on kutsujan lyhentämä, pistenäytölle kelpaava versio
+     * aseman nimestä; `asema` on nimi sellaisenaan. Ne eroavat, koska
+     * ne menevät eri paikkoihin: kotelon tekstirivi osaa kreikkalaiset
+     * ja kyrilliset kirjaimet, 5 × 7 -pisteruudukko ei. Kumpi tahansa
+     * kelpaa yksinään — kutsuja saa jättää `nayton` antamatta.
+     */
+    const asema = (nykyinenKanava?.naytto ?? nykyinenKanava?.asema ?? '').toUpperCase();
     const paikka = [nykyinenKanava?.kaupunki, nykyinenKanava?.maa]
       .filter(Boolean).join(' · ').toUpperCase();
     if (tila === 'soi') return [asema || 'SUORA LÄHETYS', paikka];
@@ -388,6 +407,13 @@ export function teeRadiosoitin({
    * Jälkimmäisessä soitin kutsuu naytaTeksti(rivit) itse jokaisessa
    * muutoksessa. Näin kytkentä on yksi rivi eikä kolme, eikä kumpikaan
    * moduuli tunne toista: tunnistus on muodosta, ei tuonnista.
+   *
+   * ANNETUN NÄYTÖN ON OLTAVA TAUSTATON. Aukko on jo lasi: sillä on
+   * nestekidesävy, hieno rasteri ja syvennyksen varjo, ja tilat
+   * (sammuksissa, virhe) muuttavat sitä. Jos näyttö tuo oman
+   * taustalaattansa, se peittää lasin ja laitteessa on kaksi eri
+   * sävyistä ruutua sisäkkäin. Kutsuja antaa siis pistenäytölle
+   * `tausta: null, kehys: null` — ks. js/linssit/radio.js.
    *
    * null palauttaa soittimen oman varatekstin — aukko ei saa jäädä
    * tyhjäksi, koska musta kolo näyttää rikkinäiseltä.

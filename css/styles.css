@@ -2687,6 +2687,34 @@ body.linssi-valokuva .grain { display: none; }
 .lahivesi-uoma { stroke: #a6bec7; opacity: 0.62; }
 .lahivesi-valo { stroke: #d8e5e9; opacity: 0.4; }
 
+
+/*
+ * Radiotilan sulkunappi ruudun oikeaan yläkulmaan.
+ *
+ * Yläpalkin PÄÄLLE eikä sen sisään: radiotilassa peli on tauolla, ja
+ * sulku kuuluu radiolle. Se ilmestyy ja katoaa soittimen mukana, joten
+ * yläpalkin oma asettelu ei saa muuttua sen takia.
+ */
+.radio-sulje {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  z-index: 61;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #6b5233;
+  border-radius: 50%;
+  background: #2a1c10;
+  color: #e8d9b8;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 45%);
+}
+.radio-sulje:hover { background: #3a2716; }
+.radio-sulje:active { transform: translateY(1px); }
+
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
 /* Maiden rajat: hyvin hento katkoviiva vanhan kartan tapaan. */

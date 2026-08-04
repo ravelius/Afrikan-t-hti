@@ -967,8 +967,15 @@ const LAHIVESI_TAYSI = 900;
  * samassa tahdissa kuin kartta, mikä on juuri se vaikutelma jota
  * haettiin. Pikselimitta pysyisi samana ja joki näyttäisi kutistuvan
  * mitä lähemmäs mennään.
+ *
+ * Ensimmäiset luvut (13 / 8 / 5) olivat yli kaksinkertaiset. Amazon
+ * piirtyi paksumpana kuin kaupunkien ympyrät, ja kartalta katosi
+ * mittasuhde: joki näytti moottoritieltä. Omistaja: "joet näkyvät
+ * liian suurina, kolmiulotteisuus pitäisi olla hienovaraisempi".
+ * Nyt levein uoma on kaupungin ympyrää kapeampi, ja se on oikea
+ * suhde — joki on maiseman piirre, ei pelin kohde.
  */
-const UOMAN_LEVEYS = { 1: 13, 2: 8, 3: 5 };
+const UOMAN_LEVEYS = { 1: 6, 2: 3.6, 3: 2.2 };
 
 const rajaa = (arvo, ala, yla) => Math.min(yla, Math.max(ala, arvo));
 
@@ -1059,19 +1066,27 @@ export function drawLahivesi(ryhma, map, { nakyva, nimet, syvyys } = {}) {
     const pisteet = joki.pisteet ?? joki;
     if (!pisteet || pisteet.length < 2 || !nakyy(pisteet)) continue;
     const leveys = UOMAN_LEVEYS[jokiTarkeys.get(joki.nimi) ?? 3] ?? UOMAN_LEVEYS[3];
-    const d = `M${kasinPiirretty(pisteet).map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' L')}`;
+    const d = smoothOpenPath(kasinPiirretty(pisteet));
     /*
      * Kolme vetoa päällekkäin tekee pyöreän nauhan ilman suodattimia:
      * levein tummana rantana, keskimmäinen vetenä ja kapein vaaleana
      * valona hieman ylävasemmalle siirrettynä. Suodattimet olisivat
      * helpompi tapa, mutta iOS:n webapp-tila palauttaa suodatetun
      * kerroksen tyhjänä — se on rikkonut tämän kartan kolmesti.
+     *
+     * MITTASUHTEET OVAT KOKO TEMPUN YDIN. Ensin ranta oli 1,35-kertainen
+     * ja valo siirtyi kuudesosan leveydestä: molemmat erottuivat omiksi
+     * viivoikseen, ja nauhasta tuli putki jossa on kolme raitaa. Kun
+     * ranta on vain hitusen uomaa leveämpi ja valo siirtyy alle
+     * kymmenesosan, silmä ei enää erota vetoja toisistaan vaan lukee
+     * ne yhdeksi pyöreäksi pinnaksi. Hienovaraisuus ei ole tässä
+     * makuasia vaan se, mikä erottaa veden putkesta.
      */
-    el('path', { d, class: 'lahivesi-ranta', 'stroke-width': (leveys * 1.35).toFixed(1) }, joet);
-    el('path', { d, class: 'lahivesi-uoma', 'stroke-width': leveys.toFixed(1) }, joet);
+    el('path', { d, class: 'lahivesi-ranta', 'stroke-width': (leveys * 1.18).toFixed(2) }, joet);
+    el('path', { d, class: 'lahivesi-uoma', 'stroke-width': leveys.toFixed(2) }, joet);
     el('path', {
-      d, class: 'lahivesi-valo', 'stroke-width': (leveys * 0.3).toFixed(1),
-      transform: `translate(${(-leveys * 0.16).toFixed(2)},${(-leveys * 0.16).toFixed(2)})`,
+      d, class: 'lahivesi-valo', 'stroke-width': (leveys * 0.22).toFixed(2),
+      transform: `translate(${(-leveys * 0.09).toFixed(2)},${(-leveys * 0.09).toFixed(2)})`,
     }, joet);
   }
 }

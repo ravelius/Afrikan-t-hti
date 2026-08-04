@@ -74,9 +74,36 @@ function ensimmainenOmistamaton(omat, ehto) {
  * vaikka kaikki eivät sitä tarvitse: kutsurivit js/game.js:ssä ovat
  * silloin samanmuotoisia eikä kutsujan tarvitse muistaa poikkeuksia.
  */
+/*
+ * Kehittäjätila: kaikki TOIMIVAT linssit heti käyttöön.
+ *
+ * Omistajan toive 4.8.2026: "lisää kehittäjätilaan automaattisesti
+ * kaikki aarteet heti näkyville, niin pystyn kokeilemaan niitä" —
+ * ja tarkennus perään: "Siis toiminnalliset aarteet."
+ *
+ * Toimiva tarkoittaa tässä täsmälleen sitä, mikä on rekisterissä auki.
+ * Rekisterin rivit avataan sitä mukaa kuin linssit valmistuvat, joten
+ * tämä lista kasvaa itsestään eikä jää jälkeen. Suunnitellut mutta
+ * tekemättömät linssit ovat rivejä kommenttien takana, eivätkä ne siis
+ * ilmesty tänne lupaamaan jotain mitä ei ole.
+ *
+ * Avain luetaan suoraan localStoragesta eikä js/ui.js:n kautta:
+ * js/ui.js tuo tämän tiedoston, joten tuonti takaisin olisi kehä.
+ */
+const KEHITTAJA_AVAIN = 'matkakirja-kehittaja';
+
+function kehittajaTila() {
+  try {
+    return globalThis.localStorage?.getItem(KEHITTAJA_AVAIN) === '1';
+  } catch {
+    return false; // yksityinen selaus
+  }
+}
+
 export function omistetut(game, player = game?.player) {
   const ulos = passinLinssit();
   for (const tunnus of player?.linssit ?? []) ulos.add(tunnus);
+  if (kehittajaTila()) for (const r of LINSSIT) ulos.add(r.tunnus);
   return ulos;
 }
 
