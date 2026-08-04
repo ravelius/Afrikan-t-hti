@@ -351,27 +351,40 @@ export const SAAPUMISLUENNAT = new Set([
   'middleeast:teheran',
   'asia:astana',
   'asia:bangkok',
+  'asia:borneo',
+  'asia:chennai',
+  'asia:colombo',
+  'asia:delhi',
   'asia:hanoi',
   'asia:hongkong',
   'asia:irkutsk',
+  'asia:jakarta',
   'asia:jakutsk',
   'asia:jekaterinburg',
+  'asia:kabul',
   'asia:kamtsatka',
+  'asia:karachi',
   'asia:kashgar',
+  'asia:kathmandu',
+  'asia:kolkata',
   'asia:lhasa',
   'asia:magadan',
   'asia:manila',
+  'asia:mumbai',
   'asia:novosibirsk',
   'asia:peking',
   'asia:sahalin',
   'asia:samarkand',
   'asia:shanghai',
+  'asia:singapore',
   'asia:soul',
+  'asia:sumatra',
   'asia:taipei',
   'asia:tokio',
   'asia:ulanbator',
   'asia:vladivostok',
   'asia:xian',
+  'asia:yangon',
 ]);
 
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
@@ -881,6 +894,12 @@ const AIHE_IKONIT = {
   tiede: '<path d="M9.5 3.5h5M10.5 3.5v6L5.5 19a1.6 1.6 0 0 0 1.4 2.4h10.2A1.6 1.6 0 0 0 18.5 19l-5-9.5v-6"/><path d="M7.8 15.4h8.4"/>',
   nykytaide: '<path d="M4 20.5 12 4l8 16.5z"/><path d="M8.2 13h7.6"/>',
   huumori: '<path d="M3.6 8.4c2.8-1.6 5.6-1.6 8.4 0 2.8-1.6 5.6-1.6 8.4 0-.4 5.2-2.6 8.4-4.8 8.4-1.6 0-2.6-1.4-3.6-1.4s-2 1.4-3.6 1.4c-2.2 0-4.4-3.2-4.8-8.4z"/><circle cx="8" cy="11.4" r="1"/><circle cx="16" cy="11.4" r="1"/>',
+  // Varaliuska kaupungeille, joilla on vain litteä nostolista.
+  elama: '<circle cx="12" cy="12" r="4.2"/><path d="M12 3.4v2.4M12 18.2v2.4M3.4 12h2.4M18.2 12h2.4M5.9 5.9l1.7 1.7M16.4 16.4l1.7 1.7M18.1 5.9l-1.7 1.7M7.6 16.4l-1.7 1.7"/>',
+  // Yleiskuvake aiheelle, jolle ei ole omaa: kirjanmerkki. Ilman tätä
+  // tuntematon aihe-id piirtyisi leveänä tekstinappina ja rikkoisi
+  // yhden rivin kuvakerivin.
+  muu: '<path d="M7 3.6h10v16.8l-5-3.4-5 3.4z"/>',
 };
 
 /**
@@ -4790,9 +4809,14 @@ export class UI {
     // eivätkä lataudu ennen kuin lohko avataan; ääninäyte alkaisi ladata
     // vasta napin painalluksesta.
     const kulttuuri = (KULTTUURIT[this.game.pack.id] ?? {})[city.id];
-    for (const nosto of kulttuuri?.nostot ?? []) {
-      if (nosto.tiedosto) kuvat.push(valokuvaUrl(nosto.tiedosto, 640));
-      if (nosto.aani) aanet.push(aaniOsoite(jaaAlku(nosto.aani).url));
+    // Kategoriakaupungissa litteät nostot eivät piirry, joten niiden
+    // kuvia ei esiladata — ensimmäisen aiheen kuvat renderöityvät heti
+    // avattaessa eivätkä nekään tarvitse erillistä esilatausta.
+    if (!(KULTTUURI_KATEGORIAT[city.id] ?? []).length) {
+      for (const nosto of kulttuuri?.nostot ?? []) {
+        if (nosto.tiedosto) kuvat.push(valokuvaUrl(nosto.tiedosto, 640));
+        if (nosto.aani) aanet.push(aaniOsoite(jaaAlku(nosto.aani).url));
+      }
     }
     // Silloin ja nyt -valokuvapari.
     const valokuva = (VALOKUVAT[this.game.pack.id] ?? {})[city.id];
@@ -5060,56 +5084,9 @@ export class UI {
       // kaiutinkuvakkeella erottuu tekstilinkeistä (omistajan toive).
       const otsikkoRivi = html('div', 'kulttuuri-otsikkorivi');
       otsikkoRivi.appendChild(html('p', 'kulttuuri-otsikko', nosto.otsikko));
-      if (nosto.aani) {
-        const nappi = html('button', 'kulttuuri-kuuntele');
-        nappi.type = 'button';
-        nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
-          + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
-          + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
-          + '</svg><span>Kuuntele näyte</span><span class="aika" hidden></span>';
-        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(nosto, nappi));
-        otsikkoRivi.appendChild(nappi);
-      }
-      // Muusikoista linkki Apple Musiciin otsikon korkeudella oikeassa
-      // reunassa (omistajan toive): aukeaa uuteen välilehteen, jotta
-      // peli jää taustalle odottamaan. Artistin nimi vihjeenä.
-      if (nosto.musiikki) {
-        const linkki = html('a', 'kulttuuri-musiikkilinkki');
-        linkki.href = nosto.musiikki;
-        linkki.target = '_blank';
-        linkki.rel = 'noopener';
-        if (nosto.musiikkiNimi) linkki.title = nosto.musiikkiNimi;
-        linkki.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'
-          + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
-          + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
-          + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> Apple Music';
-        otsikkoRivi.appendChild(linkki);
-      }
-      // Ilmainen ääninäyte Apple Music -linkin rinnalle (omistajan
-      // toive): "musiikin pitäisi lähteä soimaan suoraan kun sitä
-      // painaa". Ennen tässä oli linkki kansallisen yleisradion
-      // etusivulle, mistä musiikkia ei kuulunut — sivulle päätyminen
-      // on eri asia kuin musiikin kuuleminen.
-      //
-      // Näyte on vapaasti lisensoitu äänite (Wikimedia Commons tai
-      // archive.org). Kaikelle ei ole sellaista: ABBAlta, Röyksoppilta
-      // ja Šostakovitšilta ei ole ilmaista levytystä, ja silloin
-      // korttiin jää pelkkä Apple Music -linkki. Tyhjä nappi lupaisi
-      // enemmän kuin antaa.
-      if (nosto.musiikkiNayte) {
-        const nappi = html('button', 'kulttuuri-kuuntele kulttuuri-musiikkinayte');
-        nappi.type = 'button';
-        nappi.title = nosto.musiikkiNayteNimi ?? 'Vapaasti lisensoitu ääninäyte';
-        nappi.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
-          + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
-          + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
-          + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg>'
-          + '<span>Kuuntele musiikkia</span><span class="aika" hidden></span>';
-        nappi.addEventListener('click', () => this.kulttuuriAaniNapista(
-          { aani: nosto.musiikkiNayte, otsikko: nosto.otsikko }, nappi,
-        ));
-        otsikkoRivi.appendChild(nappi);
-      }
+      // Ääninäyte, Apple Music ja ilmainen musiikkinäyte — yhteinen
+      // toteutus kategorianostojen kanssa (lisaaNostonNapit).
+      this.lisaaNostonNapit(otsikkoRivi, nosto);
       lohko.appendChild(otsikkoRivi);
       if (nosto.tyyppi === 'kuva' && nosto.tiedosto) {
         const kuva = document.createElement('img');
@@ -5609,7 +5586,6 @@ export class UI {
     }
     // Ei Yleistä-liuskaa: artikkeli asuu "Lue lisää" -linkin takana
     // omassa ikkunassaan, ei tällä rivillä.
-    const osiot = kategoriat;
     const valitse = (id) => {
       for (const nappi of this.arrivalLiuskat.querySelectorAll('button')) {
         const paalla = nappi.dataset.osio === id;
@@ -5620,7 +5596,7 @@ export class UI {
       this.piirraKategoria(auki);
       this.arrivalKategoria.hidden = false;
     };
-    for (const osio of osiot) {
+    for (const osio of kategoriat) {
       const nappi = html('button');
       nappi.type = 'button';
       nappi.dataset.osio = osio.id;
@@ -5629,17 +5605,18 @@ export class UI {
       // ruudulla näkyy vain kuvake.
       nappi.title = osio.nimi;
       nappi.setAttribute('aria-label', osio.nimi);
-      const piirto = AIHE_IKONIT[osio.id];
-      nappi.innerHTML = piirto
-        ? `<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+      // Kuvake voi tulla datasta (osio.ikoni), jolloin uusi kaupunki ei
+      // vaadi koodimuutosta; oletuskartta kattaa vakioaiheet ja
+      // yleiskuvake loput.
+      const piirto = osio.ikoni ?? AIHE_IKONIT[osio.id] ?? AIHE_IKONIT.muu;
+      nappi.innerHTML = `<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
              stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-             stroke-linejoin="round">${piirto}</svg>`
-        : suojaa(osio.nimi);
+             stroke-linejoin="round">${piirto}</svg>`;
       nappi.addEventListener('click', () => valitse(osio.id));
       this.arrivalLiuskat.appendChild(nappi);
     }
     this.arrivalLiuskat.hidden = false;
-    valitse(osiot[0].id);
+    valitse(kategoriat[0].id);
   }
 
 
@@ -5663,7 +5640,13 @@ export class UI {
     }
     for (const nosto of kategoria.nostot ?? []) {
       const lohko = html('div', 'wiki-nosto');
-      lohko.appendChild(html('h3', '', nosto.otsikko));
+      // Otsikko ja kuuntelu-/musiikkinapit samalla rivillä — sama
+      // toiminnallisuus kuin litteissä nostoissa, ettei monistaminen
+      // hävitä Apple Music -linkkejä ja ääninäytteitä.
+      const otsikkoRivi = html('div', 'kulttuuri-otsikkorivi');
+      otsikkoRivi.appendChild(html('h3', '', nosto.otsikko));
+      this.lisaaNostonNapit(otsikkoRivi, nosto);
+      lohko.appendChild(otsikkoRivi);
       if (nosto.tiedosto) {
         const kuva = document.createElement('img');
         // Sama syy kuin litteissä nostoissa: nollan kokoinen laiska kuva
@@ -5681,8 +5664,58 @@ export class UI {
       }
       lohko.appendChild(html('p', 'teksti', nosto.teksti));
       if (nosto.selite) lohko.appendChild(html('p', 'selite', nosto.selite));
+      if (nosto.wiki) {
+        const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
+        nappi.type = 'button';
+        nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
+        lohko.appendChild(nappi);
+      }
       if (nosto.lahde) lohko.appendChild(html('p', 'lahde', nosto.lahde));
       this.arrivalKategoria.appendChild(lohko);
+    }
+  }
+
+  /*
+   * Ääninäyte-, Apple Music- ja musiikkinäytenapit otsikkoriville.
+   * Yksi toteutus molemmille nostomuodoille (litteä ja kategoria) —
+   * kaksi kopiota ajautuisi erilleen ensimmäisellä muutoksella.
+   */
+  lisaaNostonNapit(otsikkoRivi, nosto) {
+    if (nosto.aani) {
+      const nappi = html('button', 'kulttuuri-kuuntele');
+      nappi.type = 'button';
+      nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
+        + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+        + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+        + '</svg><span>Kuuntele näyte</span><span class="aika" hidden></span>';
+      nappi.addEventListener('click', () => this.kulttuuriAaniNapista(nosto, nappi));
+      otsikkoRivi.appendChild(nappi);
+    }
+    if (nosto.musiikki) {
+      const linkki = html('a', 'kulttuuri-musiikkilinkki');
+      linkki.href = nosto.musiikki;
+      linkki.target = '_blank';
+      linkki.rel = 'noopener';
+      if (nosto.musiikkiNimi) linkki.title = nosto.musiikkiNimi;
+      linkki.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">'
+        + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+        + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
+        + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg> Apple Music';
+      otsikkoRivi.appendChild(linkki);
+    }
+    if (nosto.musiikkiNayte) {
+      const nappi = html('button', 'kulttuuri-kuuntele kulttuuri-musiikkinayte');
+      nappi.type = 'button';
+      nappi.title = nosto.musiikkiNayteNimi ?? 'Vapaasti lisensoitu ääninäyte';
+      nappi.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
+        + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+        + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
+        + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg>'
+        + '<span>Kuuntele musiikkia</span><span class="aika" hidden></span>';
+      nappi.addEventListener('click', () => this.kulttuuriAaniNapista(
+        { aani: nosto.musiikkiNayte, otsikko: nosto.otsikko }, nappi,
+      ));
+      otsikkoRivi.appendChild(nappi);
     }
   }
 

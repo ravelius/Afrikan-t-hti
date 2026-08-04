@@ -786,60 +786,11 @@ export const EUROPE_KULTTUURI = {
   },
 
   lontoo: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Proms — konsertti, jossa seistään',
-        tiedosto: 'Royal Albert Hall, BBC Proms 2017.jpg',
-        teksti: 'Proms on kahdeksan viikon konserttisarja, joka on soinut '
-                  + 'joka kesä vuodesta 1895. Royal Albert Halliin mahtuu 5 272 '
-                  + 'istujaa, mutta halvimmat liput ovat lattialle: prommaajat '
-                  + 'seisovat orkesterin edessä koko illan. Jokainen konsertti '
-                  + 'lähetetään radiossa, joten sen kuulee ilmaiseksi missä '
-                  + 'tahansa.',
-        selite: 'Royal Albert Hall Proms-konsertin aikana. Alhaalla '
-                  + 'areenalla ei ole tuoleja lainkaan — siellä seisova yleisö '
-                  + 'on kuulunut Promsiin alusta asti.',
-        lahde: 'Ed g2s, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'BBC Proms',
-        musiikki: 'https://music.apple.com/fi/search?term=bbc%20proms',
-        musiikkiNimi: 'Proms-konsertteja Apple Musicissa',
-        musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/2/28/ELGAR_Pomp_and_Circumstance_in_D%2C_Opus_39%2C_No._1_-_United_States_Marine_Band.mp3',
-        musiikkiNayteNimi: 'Elgar: Pomp and Circumstance nro 1 — United States Marine Band, PD',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Piirakka, muusi ja vihreä liquor',
-        tiedosto: 'Pie mash and liquor Manze Bermondsey.jpg',
-        teksti: 'Pie and mash on Lontoon satamakortteleiden ruokaa: '
-                  + 'jauhelihapiirakka, perunamuusia ja päälle liquor eli '
-                  + 'vihreä persiljakastike — nimestä huolimatta siinä ei ole '
-                  + 'tippaakaan väkijuomaa. Ennen piirakat tehtiin ankeriaasta, '
-                  + 'sillä Thames oli niitä täynnä ja ne olivat halvinta lihaa '
-                  + 'mitä sai.',
-        selite: 'Annos lontoolaisessa piirakkapuodissa marmoripöydällä. '
-                  + 'Liquor keitettiin alun perin ankeriaan keitinliemestä, ja '
-                  + 'väri tulee persiljasta.',
-        lahde: 'Secretlondon, Wikimedia Commons (CC BY-SA 3.0)',
-        wiki: 'Brittiläinen keittiö',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Maailman ensimmäinen metro',
-        tiedosto: 'Metropolitan Railway, Baker Street Station.jpg',
-        teksti: 'Lontoon metro avattiin 10. tammikuuta 1863 maailman '
-                  + 'ensimmäisenä. Vaunut olivat puuta ja niitä valaistiin '
-                  + 'kaasulyhdyillä, ja maan alla junaa veti höyryveturi — savu '
-                  + 'johdettiin ulos tunneliin jätetyistä aukoista. '
-                  + 'Ensimmäisenä vuonna tehtiin 9,5 miljoonaa matkaa. Nyt '
-                  + 'asemia on 272 ja rataa 400 kilometriä.',
-        selite: 'Baker Streetin asema noin 1863. Krinoliinihameiset '
-                  + 'matkustajat odottavat laiturilla, ja tunnelin suulla '
-                  + 'savuaa höyryveturi.',
-        lahde: 'Wikimedia Commons (PD)',
-        wiki: 'Lontoon metro',
-      },
-    ],
+    /*
+     * Lontoon nostot asuvat kategorioittain kulttuuri-kategoriat.js:ssä
+     * (9 aihetta) — tänne jää vain kulttuurivisa, joka piirretään
+     * saapumiskortille litteästä taulusta.
+     */
     kysymys: {
       q: 'Mikä veti maailman ensimmäisiä metrojunia Lontoossa vuonna 1863?',
       options: [

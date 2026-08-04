@@ -13,6 +13,15 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 221, teksti: 'Kuvat kaikkiin 248 kaupunkiin' },
+  { v: 221, teksti: 'Uusi alue piirtyy viisi kertaa nopeammin' },
+  { v: 221, teksti: 'Korjattu: joet eivät näkyneet kartalla lainkaan' },
+  { v: 221, teksti: 'Järvet ja joet meren sävyyn, sininen pois' },
+  { v: 220, teksti: 'Tutki-aiheet valmiit monistettaviksi muualle' },
+  { v: 220, teksti: 'Lontoon metro, Proms ja piirakka aiheisiin' },
+  { v: 220, teksti: 'Aiheisiin Lue lisää -napit ja musiikkilinkit' },
+  { v: 219, teksti: 'Loput 13 luentaa: koko Aasia on nyt luettu' },
+  { v: 218, teksti: 'Korjattu: Tutki-ikkuna ei auennut monessa kaupungissa' },
   { v: 217, teksti: 'Vuoret, joet ja järvet kartalle' },
   { v: 217, teksti: 'Korjattu: kuvat jäivät välillä lataamatta' },
   { v: 217, teksti: 'Himalajan lumi ei enää näytä reiältä' },
