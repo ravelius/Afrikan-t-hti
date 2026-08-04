@@ -4540,3 +4540,50 @@ modulo-vertailu jäivät talteen.
 onnistuvan (renkaita 73 → 72), mutta sama mittari, joka löysi ongelman, kertoi
 että tulos oli huonompi kuin lähtötilanne. Ilman jälkimittausta olisin
 julkaissut regression parannuksena.
+
+## v245 — Paperin rae ruudun pikseleihin, pidempi kanavanvaihto (4.8.2026)
+
+**"Kartta näyttää kuolleelta lähempää zoomattuna."** Syy löytyi lopulta
+rakeisuudesta, ja se oli mittayksikössä. Paperin kuituhäiriö piirretään
+kuviona, jonka laatta on **laudan koordinaateissa** (160 yksikköä). Kuvio siis
+suurenee yhdessä kartan kanssa: koko maailma näkyvissä yksi rae on noin 16
+pikseliä eli hienoa hiekkaa, mutta kaupungin kohdalle zoomattuna sama rae venyy
+satoihin pikseleihin — pehmeäksi läiskäksi, jota ei erota tasaisesta väristä.
+Pinta ei siis kadonnut mihinkään; se suurennettiin näkymättömäksi.
+
+Rasteroidussa ruudussa rae piirretään nyt vasta canvakselle, **ruudun omissa
+pikseleissä** (`piirraRakeisuus`, tavoitekoko 110 px). Laudan kokoinen
+kuviosuorakaide jätetään samalla ruudun ulkopuolelle (`pilkoTaide`), jottei
+sama pinta ole kahdesti. Elävään SVG:hen suorakaide jää, koska rasteroimaton
+kartta tarvitsee sen yhä.
+
+Ruudun tarkkuus ei ole vakio — katto on 1100 pikseliä ja retinanäytöllä piirto
+on kaksinkertainen — joten raekoko suhteutetaan siihen, montako canvas-pikseliä
+vastaa yhtä ruudun pikseliä. Ilman sitä rae olisi eri kokoinen eri laitteilla ja
+eri zoomaustasoilla, eli sama vika uudestaan pienempänä.
+
+Mitattu Chromiumissa tasaiselta maaväriltä (400×400 px):
+
+| | keskihajonta | vaihteluväli |
+|---|---|---|
+| ilman raetta | **0,00** | 231–231 |
+| rae 110 px | **3,68** | 212–231 |
+
+Nolla on kirjaimellisesti kuollut pinta: jokainen pikseli oli sama.
+
+**Kanavanvaihdon loppupää 0,6 s → 1,4 s.** Omistaja kuuli kohinan mutta ei
+vaihtoa lainkaan ja arveli itse syyn oikein: "voisiko olla, että se häivytys on
+vain liian nopea?" Kyllä. Tässä luki ennen, että pidempi jättäisi lähetyksen
+ensimmäisen lauseen kohinan alle — se ei pidä paikkaansa, koska kanava soi jo
+vaimennettuna koko vähimmäisajan, eli lukitushetkellä ollaan joka tapauksessa
+keskellä lausetta. Alkupää jää 0,6 sekuntiin: sen on mahduttava
+siirtymävaiheen (1,25 s) sisään.
+
+### Opittua
+
+**Mittayksikkö on osa toteutusta, ei muotoseikka.** Rae oli koko ajan
+paikallaan ja koodi teki juuri sitä, mitä siinä luki. Vika oli siinä, ETTÄ SE
+OLI SIDOTTU VÄÄRÄÄN AVARUUTEEN: pinta, joka kuuluu katsojan silmään, oli
+sidottu maailmaan. Kolme edellistä yritystä (varjostuksen vahvistus, palettien
+lämmitys) hakivat vikaa väristä, koska oire näytti värivialta. Sama testi olisi
+löytänyt sen heti: mittaa hajonta lähellä, ei kaukana.

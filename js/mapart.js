@@ -165,6 +165,25 @@ function outlinePaths(map) {
 // toisto erotu, ja riittävän pieni, että laatta pysyy kevyenä.
 const GRAIN_TILE = 160;
 let grainTileUrl = null;
+let grainKangas = null;
+
+/*
+ * Rakeen koko RUUDULLA, ei laudalla.
+ *
+ * Tässä oli koko "kartta näyttää kuolleelta lähempää" -vika. Kuvio on
+ * laudan koordinaateissa (GRAIN_TILE = 160 yksikköä), joten se suurenee
+ * yhdessä kartan kanssa: koko maailma näkyvissä yksi rae on noin 16
+ * pikseliä eli hienoa hiekkaa, mutta kaupungin kohdalle zoomattuna sama
+ * rae venyy satoihin pikseleihin — pehmeäksi läiskäksi, jota ei erota
+ * tasaisesta väristä. Pinta ei siis kadonnut mihinkään, se suurennettiin
+ * näkymättömäksi.
+ *
+ * Rasteroidussa ruudussa rakeisuus piirretään siksi vasta canvakselle,
+ * ruudun omissa pikseleissä. Silloin paperin pinta on samanlainen joka
+ * etäisyydellä, eikä se maksa mitään: laatta on valmiina muistissa ja
+ * ruutu piirretään joka tapauksessa kerran.
+ */
+const GRAIN_RUUDULLA_PX = 110;
 
 /**
  * Piirtää paperin kuituhäiriön kerran canvakselle ja palauttaa sen
@@ -218,8 +237,42 @@ function grainTile() {
     }
   }
   ctx.putImageData(kuva, 0, 0);
+  grainKangas = canvas;
   grainTileUrl = canvas.toDataURL('image/png');
   return grainTileUrl;
+}
+
+/**
+ * Sivelee paperin rakeisuuden valmiin ruudun päälle sen omissa
+ * pikseleissä, ks. GRAIN_RUUDULLA_PX.
+ *
+ * `kanvaksiaPerCss` kertoo, montako canvas-pikseliä vastaa yhtä ruudun
+ * pikseliä. Ruudun tarkkuus ei ole vakio — se on katossa 1100 pikseliä
+ * ja retinanäytöllä kaksinkertainen — joten ilman tätä rae olisi eri
+ * kokoinen eri laitteilla ja eri zoomaustasoilla, eli sama vika
+ * uudestaan pienempänä.
+ *
+ * Sekoitus ja voimakkuus vastaavat vektoripuolen tyyliä
+ * (css/styles.css .grain: opacity 0.5, mix-blend-mode multiply), jotta
+ * rasteroitu ja rasteroimaton kartta näyttävät samalta.
+ */
+function piirraRakeisuus(ctx, leveysPx, korkeusPx, kanvaksiaPerCss) {
+  if (!grainKangas) grainTile();
+  if (!grainKangas || !ctx.createPattern) return;
+  const koko = Math.max(24, Math.round(GRAIN_RUUDULLA_PX * kanvaksiaPerCss));
+  const kuvio = ctx.createPattern(grainKangas, 'repeat');
+  if (!kuvio) return;
+  // Laatta on 256 pikseliä; se kutistetaan haluttuun kokoon kuvion
+  // omalla muunnoksella, jolloin toistoa ei tarvitse piirtää käsin.
+  if (kuvio.setTransform && typeof DOMMatrix === 'function') {
+    kuvio.setTransform(new DOMMatrix([koko / grainKangas.width, 0, 0, koko / grainKangas.height, 0, 0]));
+  }
+  ctx.save();
+  ctx.globalCompositeOperation = 'multiply';
+  ctx.globalAlpha = 0.5;
+  ctx.fillStyle = kuvio;
+  ctx.fillRect(0, 0, leveysPx, korkeusPx);
+  ctx.restore();
 }
 
 export function drawDefs(svg) {
@@ -2189,6 +2242,16 @@ export function pilkoTaide(klooni, elava, maarittelyt, { leveys = 0 } = {}) {
   const palat = [];
 
   const lisaa = (kloonattu, elavaSama, kuori) => {
+    /*
+     * Rakeisuus jätetään ruudun ulkopuolelle: rasteroituun ruutuun se
+     * piirretään canvakselle ruudun omissa pikseleissä
+     * (piirraRakeisuus). Jos laudan kokoinen kuviosuorakaide tulisi
+     * mukaan tähänkin, sama pinta olisi kahdesti — ja se kalliimpi
+     * puolikas on juuri se, joka lähempää katsoen suurenee läiskiksi.
+     * Elävään SVG:hen suorakaide jää, koska rasteroimaton kartta
+     * tarvitsee sen yhä.
+     */
+    if (elavaSama.classList?.contains('grain')) return;
     const laatikko = laatikkoJuuressa(elavaSama, kaanteinen);
     if (!laatikko) return;
     palat.push({ ...laatikko, xml: sarjallistin.serializeToString(kloonattu), kuori });
@@ -2381,8 +2444,13 @@ export async function rasteroiRuutu(taide, ikkuna, skaala, tarkkuus = 1) {
     const canvas = document.createElement('canvas');
     canvas.width = leveysPx;
     canvas.height = korkeusPx;
-    canvas.getContext('2d').drawImage(kuvalahde, 0, 0, leveysPx, korkeusPx);
+    const piirturi = canvas.getContext('2d');
+    piirturi.drawImage(kuvalahde, 0, 0, leveysPx, korkeusPx);
     URL.revokeObjectURL(lahdeOsoite);
+
+    // Paperin pinta ruudun omissa pikseleissä, ks. GRAIN_RUUDULLA_PX.
+    const ruudullaPx = ikkuna.w * skaala;
+    if (ruudullaPx > 0) piirraRakeisuus(piirturi, leveysPx, korkeusPx, leveysPx / ruudullaPx);
 
     /*
      * WebP eikä PNG.
