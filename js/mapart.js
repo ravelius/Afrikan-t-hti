@@ -488,6 +488,33 @@ const KIRJAIMEN_LEVEYS = 0.46;
 
 const nimenLeveys = (teksti, fontti) => teksti.length * fontti * KIRJAIMEN_LEVEYS;
 
+/*
+ * Ikkuna, jonka verran uomaa varataan nimelle: reilusti yli arvion.
+ *
+ * <textPath> LEIKKAA polun ulkopuolelle jäävät kirjaimet pois — ei
+ * siirrä niitä, vaan jättää piirtämättä. Kun arvio oli liian tiukka,
+ * Donista tuli kartalle "Do". Ylimitoitus taas ei maksa mitään: polku
+ * itse on näkymätön, ja nimi keskitetään sen puoliväliin.
+ */
+const KAAREN_VARA = 2.4;
+
+/*
+ * Nimen TODELLINEN leveys ruudulta, jos selain suostuu mittaamaan.
+ *
+ * Kirjainarvio (KIRJAIMEN_LEVEYS) riittää päättämään mahtuuko nimi,
+ * mutta i-ikonin paikka on eri asia: muutaman prosentin virhe siirtää
+ * ikonin viimeisen kirjaimen päälle. getComputedTextLength tietää
+ * tarkalleen, myös silloin kun laitteella on eri kaunokirjoitusfontti
+ * kuin toisella. Arvio jää varareitiksi.
+ */
+function mitattuLeveys(elementti, arvio) {
+  try {
+    const mitta = elementti.getComputedTextLength?.();
+    if (mitta > 0) return mitta;
+  } catch { /* mittaus ei onnistunut; arvio kelpaa */ }
+  return arvio;
+}
+
 /** Catmull–Rom-pehmennys AVOIMELLE viivalle: joen pisteistä sulava kaari. */
 function smoothOpenPath(points) {
   if (points.length < 2) return '';
@@ -757,7 +784,7 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
        * katsotaan (ks. nimenKaari). Nimi keskitetään siihen, joten
        * startOffset on 50 %: ikkuna on rakennettu nimen ympärille.
        */
-      const kaari = nimenKaari(kohde.pisteet, e.kohta, e.teksti * 1.2)
+      const kaari = nimenKaari(kohde.pisteet, e.kohta, e.teksti * KAAREN_VARA)
         .map(([x, y]) => [x + e.siirto, y]);
       const tunnus = `maastonimi-uoma-${kohde.avain.replace(/[^A-Za-z0-9]/g, '-')}`;
       el('path', { id: tunnus, d: smoothOpenPath(kaari), fill: 'none' }, maarittelyt);
@@ -771,7 +798,7 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
       polku.textContent = kohde.nimi;
       // Ikoni nimen perään uomaa pitkin: sama kaari, sama etäisyys.
       const pituus = viivanPituus(kaari);
-      ikoninPaikka = pisteMatkalla(kaari, pituus / 2 + e.teksti / 2 + iSade * 1.6);
+      ikoninPaikka = pisteMatkalla(kaari, pituus / 2 + mitattuLeveys(teksti, e.teksti) / 2 + iSade * 1.6);
       ikoninPaikka = [ikoninPaikka[0], ikoninPaikka[1] - fontti * 0.42];
     } else {
       // Järvi suorana, vuoristo jonon suuntaisesti. Kulma on laskettu
@@ -780,11 +807,12 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
       const kaanto = el('g', {
         transform: `rotate(${kulma} ${e.x.toFixed(1)} ${e.y.toFixed(1)})`,
       }, ryhma);
-      el('text', {
+      const teksti = el('text', {
         x: e.x.toFixed(1), y: e.y.toFixed(1), class: 'maastonimi-teksti',
         'font-size': fontti.toFixed(1), 'text-anchor': 'middle',
-      }, kaanto).textContent = kohde.nimi;
-      ikoninPaikka = [e.x + e.teksti / 2 + iSade * 1.6, e.y - fontti * 0.3];
+      }, kaanto);
+      teksti.textContent = kohde.nimi;
+      ikoninPaikka = [e.x + mitattuLeveys(teksti, e.teksti) / 2 + iSade * 1.6, e.y - fontti * 0.3];
       ikoninKulma = kulma;
       // Ikoni samaan käännettyyn ryhmään, jotta se pysyy nimen perässä.
       if (ikoni) {
