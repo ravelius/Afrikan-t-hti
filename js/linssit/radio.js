@@ -824,6 +824,146 @@ function haivytaLahetysSisaan(virta) {
   askel();
 }
 
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ * SUORA LÄHETYS VU-MITTARIIN
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Omistaja: "VU-mittari ei liiku muuta kuin viritysäänestä, eli
+ * radioäänestä. Se pysyy nollassa."
+ *
+ * Havainto on tarkka ja syy tiedossa: viritysääni on Web Audiota, joten
+ * laitteen oma analysaattori näkee sen pelin äänisummasta, mutta lähetys
+ * soi <audio>-elementistä eikä kulje kontekstin läpi lainkaan. Mittari ei
+ * siis lukenut hiljaisuutta vaan EI MITÄÄN — lähetystä ei ollut siellä,
+ * mistä se katsoi.
+ *
+ * KORJAUS ON SAMA REITTI KUIN KAUPUNGIN ÄÄNIMAISEMASSA
+ * (js/ambience-stream.js liitaKompressori): crossOrigin ennen src:tä,
+ * createMediaElementSource ja vahvistin kontekstin ulostuloon. Sitten
+ * ketjun vahvistin annetaan soittimelle (radiosoitin.js asetaAanilahde),
+ * joka liittää siihen oman analysaattorinsa.
+ *
+ * KOLME EHTOA, JOIDEN ALLA REITITYSTÄ EI EDES YRITETÄ. Jokainen niistä
+ * veisi äänen kokonaan, eikä yksikään anna virhettä, jonka voisi napata:
+ *
+ *   1. Kontekstia ei ole tai se ei ole käynnissä. Reititetty elementti ei
+ *      enää soi suoraan kaiuttimeen, eikä pysähtynyt konteksti soita
+ *      mitään — tuloksena olisi täysi hiljaisuus.
+ *   2. Selain ei osaa createMediaElementSourcea.
+ *   3. Saman palvelimen tiedetään jo kieltäytyneen CORSista.
+ *
+ * JA NELJÄS TURVA ON VARAREITTI: jos lataus epäonnistuu, sama osoite
+ * avataan uudelleen ilman crossOriginia (aloitaVirta petti). Moni asema ei
+ * lähetä CORS-otsakkeita, ja niiden pitää soida yhä — mittarilukema on
+ * koriste, lähetys ei.
+ */
+
+/*
+ * Palvelimet, jotka ovat kieltäytyneet CORSista tämän istunnon aikana.
+ *
+ * MIKSI MUISTIIN: ilman tätä jokainen napautus samaan asemaan maksaisi
+ * kaksi yhteydenavausta — ensin CORS-yritys, sitten varareitti. Yksi
+ * turha yritys asemaa kohti on hinta, joka mittarista maksetaan; sama
+ * hinta joka kerta ei ole.
+ *
+ * Avain on alkuperä eikä koko osoite: CORS-otsakkeet ovat palvelimen
+ * ominaisuus, ei yksittäisen lähetysvirran.
+ */
+const KORSITTOMAT = new Set();
+
+/** Osoitteen alkuperä, tai null jos osoitetta ei voi jäsentää. */
+function alkupera(url) {
+  try {
+    return new URL(url, typeof location === 'object' ? location.href : undefined).origin;
+  } catch {
+    return null;
+  }
+}
+
+/** Onko tämän palvelimen jo todettu kieltäytyvän CORSista? */
+function onkoKorsiton(url) {
+  const koti = alkupera(url);
+  return koti ? KORSITTOMAT.has(koti) : false;
+}
+
+/** Merkitsee palvelimen CORSittomaksi tämän istunnon ajaksi. */
+function merkitseKorsiton(url) {
+  const koti = alkupera(url);
+  if (koti) KORSITTOMAT.add(koti);
+}
+
+/**
+ * Reitittää lähetyksen Web Audion läpi VU-mittaria varten.
+ *
+ * Palauttaa ketjun tai `null`, jos reititys ei ole turvallista — silloin
+ * elementti jää tavalliseksi <audio>-elementiksi ja soi suoraan.
+ *
+ * PÄÄTE ON KONTEKSTIN OMA ULOSTULO EIKÄ PELIN BUSSI. Bussissa on kaiku,
+ * kompressori ja masterin vaimennus (js/sound.js), jotka on mitoitettu
+ * pelin omille tehosteille — suora lähetys kulkisi niiden läpi eri
+ * tasoisena kuin ennen, ja mittari näyttäisi väärää lukemaa siitä.
+ * Sama ratkaisu on kaupungin äänimaisemassa samasta syystä.
+ */
+function liitaMittariin(audio) {
+  const ctx = sfx.ensureContext?.();
+  if (!ctx || ctx.state !== 'running' || typeof ctx.createMediaElementSource !== 'function') {
+    return null;
+  }
+  try {
+    // CORS-pyyntö on asetettava ENNEN src:tä, tai selain ei ota sitä
+    // huomioon lainkaan.
+    audio.crossOrigin = 'anonymous';
+    const lahde = ctx.createMediaElementSource(audio);
+    const vahvistin = ctx.createGain();
+    vahvistin.gain.value = 1;
+    lahde.connect(vahvistin).connect(ctx.destination);
+    return { vahvistin, solmut: [lahde, vahvistin] };
+  } catch (syy) {
+    // createMediaElementSource heittää, jos elementti on jo reititetty.
+    console.warn('Lähetyksen reititys mittariin epäonnistui.', syy);
+    try {
+      audio.removeAttribute('crossorigin');
+    } catch {
+      /* elementti oli jo purettu */
+    }
+    return null;
+  }
+}
+
+/** Antaa mittarille sen, mitä juuri nyt kuuluu — tai palauttaa oletuksen. */
+function asetaMittarinLahde(lahde) {
+  try {
+    tila?.soitin?.asetaAanilahde?.(lahde ?? null);
+  } catch (syy) {
+    console.warn('VU-mittarin lähteen vaihto epäonnistui.', syy);
+  }
+}
+
+/**
+ * Sulkee virran elementin ja irrottaa sen mittariketjun.
+ *
+ * Erillään vapautaVirta():sta, koska varareitti tarvitsee tämän ILMAN
+ * virran lopettamista: elementti vaihtuu, virta jatkaa.
+ */
+function irrotaVirta(virta) {
+  const { audio, mittari } = virta;
+  virta.mittari = null;
+  if (mittari) {
+    for (const solmu of mittari.solmut) {
+      try { solmu.disconnect(); } catch { /* jo irrotettu */ }
+    }
+  }
+  if (!audio) return;
+  try {
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+  } catch (syy) {
+    console.warn('Radiovirran sulkeminen epäonnistui.', syy);
+  }
+}
+
 /**
  * SULKEE VIRRAN JA VAPAUTTAA YHTEYDEN. Tämä on ainoa paikka, joka
  * oikeasti päästää lähetyksestä irti — häivytys vain vie voimakkuuden
@@ -979,22 +1119,14 @@ function aloitaVirta(cityId, kanava) {
    */
   lopetaAani({ viritysJatkuu: true, haive: RISTIHAIVYTYS_S });
 
-  /*
-   * Peiliä ei käytetä. js/media.js aaniOsoite palauttaisi lähetysosoitteen
-   * sellaisenaan (peilissä on vain Freesound ja archive.org), ja suoraa
-   * lähetystä ei voi peilata: sitä ei ole tiedostona missään. Sama koskee
-   * crossOriginia — moni asema ei lähetä CORS-otsakkeita, ja sen
-   * pyytäminen veisi äänen kokonaan.
-   */
-  const audio = new Audio();
-  audio.preload = 'none';
-  audio.volume = 0;
-  audio.src = kanava.url;
-
   const oma = {
     cityId,
     kanava,
-    audio,
+    audio: null,
+    // Mittarin ketju, jos lähetys saatiin Web Audioon, ks. liitaMittariin.
+    mittari: null,
+    // Onko tämä jo varareitin yritys eli elementti ilman crossOriginia.
+    varalla: false,
     haivytys: 0,
     // `kuuluu` on lähetyksen oma tila ja `lukittu` virityksen: nopea
     // asema kuuluu jo kauan ennen kuin se lukittuu, ks. lukitseAsema.
@@ -1027,21 +1159,76 @@ function aloitaVirta(cityId, kanava) {
     oma.kuuluu = true;
     lukitseAsema(oma);
   };
-  audio.addEventListener('playing', lahetysAlkoi);
-  audio.addEventListener('timeupdate', lahetysAlkoi);
+
   /*
    * Suoralla lähetyksellä `ended` tarkoittaa katkennutta yhteyttä, ei
    * loppunutta kappaletta: virrassa ei ole loppua. Se on siis virhe
    * siinä missä `error`kin.
+   *
+   * `korsiSyy` erottaa ne virheet, jotka VOIVAT johtua CORS-pyynnöstä
+   * (lataus ei alkanut) niistä, jotka eivät voi (selain esti toiston,
+   * yhteys katkesi kesken lähetyksen). Vain ensin mainitut yritetään
+   * uudelleen ilman mittariketjua, ks. avaaVirta.
    */
-  const petti = (syy) => {
+  const petti = (syy, { korsiSyy = true } = {}) => {
     if (!yhaSama()) return;
+    if (korsiSyy && oma.mittari && !oma.varalla && !oma.kuuluu) {
+      /*
+       * CORS-YRITYS EI SAA VIEDÄ ASEMAA. Mittarilukema on koriste,
+       * lähetys ei — joten sama osoite avataan heti uudelleen ilman
+       * crossOriginia, ja mittari jää tältä asemalta saamatta.
+       */
+      merkitseKorsiton(kanava.url);
+      avaaVirta(false);
+      return;
+    }
     lopetaAani();
     tila?.soitin.asetaTila('virhe', syy);
     kerroMuutos();
   };
-  audio.addEventListener('error', () => petti('Asema ei vastaa'));
-  audio.addEventListener('ended', () => petti('Lähetys katkesi'));
+
+  /**
+   * Avaa lähetyksen elementtiin. `mittarilla` kertoo, yritetäänkö ääni
+   * samalla Web Audioon VU-mittaria varten.
+   *
+   * Toinen kutsu on varareitti: vanha elementti suljetaan ja tilalle
+   * tulee uusi ilman crossOriginia. Uusi elementti on pakko luoda, koska
+   * createMediaElementSource on peruuttamaton — kerran reititettyä
+   * elementtiä ei saa takaisin suoraan kaiuttimeen.
+   */
+  function avaaVirta(mittarilla) {
+    if (oma.audio) irrotaVirta(oma);
+    oma.varalla = !mittarilla;
+
+    /*
+     * Peiliä ei käytetä. js/media.js aaniOsoite palauttaisi
+     * lähetysosoitteen sellaisenaan (peilissä on vain Freesound ja
+     * archive.org), ja suoraa lähetystä ei voi peilata: sitä ei ole
+     * tiedostona missään.
+     */
+    const audio = new Audio();
+    audio.preload = 'none';
+    // Lukittu asema jatkaa omalla voimakkuudellaan, virittyvä on mykkä.
+    audio.volume = oma.lukittu ? aanenvoimakkuus : 0;
+    oma.audio = audio;
+    // Reititys ENNEN src:tä: crossOrigin on luettava ennen latausta.
+    oma.mittari = mittarilla ? liitaMittariin(audio) : null;
+
+    audio.addEventListener('playing', lahetysAlkoi);
+    audio.addEventListener('timeupdate', lahetysAlkoi);
+    audio.addEventListener('error', () => petti('Asema ei vastaa'));
+    audio.addEventListener('ended', () => petti('Lähetys katkesi', { korsiSyy: false }));
+    audio.src = kanava.url;
+    audio.play().catch((syy) => {
+      /*
+       * Selain voi estää toiston, jos napautusta ei tunnistettu eleeksi.
+       * Se on eri vika kuin kuollut asema, ja pelaajan on erotettava ne:
+       * estetyn toiston korjaa uusi napautus, kuolleen aseman ei mikään.
+       */
+      const estetty = syy?.name === 'NotAllowedError';
+      petti(estetty ? 'Ääni estetty' : 'Asema ei vastaa', { korsiSyy: !estetty });
+    });
+  }
 
   tila.soitin.naytaKanava(kanava);
   // Tilanvaihdos ensin, ääni perässä: soittimen 'virittaa' käynnistää myös
@@ -1060,14 +1247,9 @@ function aloitaVirta(cityId, kanava) {
   ajastaVirralle(oma, SIIRTYMAN_KESTO_MS, () => kerroVaihe(oma, 'haku'));
   ajastaVirralle(oma, LUKITUKSEN_AIKAISINTAAN_MS, () => lukitseAsema(oma));
 
-  audio.play().catch((syy) => {
-    /*
-     * Selain voi estää toiston, jos napautusta ei tunnistettu eleeksi.
-     * Se on eri vika kuin kuollut asema, ja pelaajan on erotettava ne:
-     * estetyn toiston korjaa uusi napautus, kuolleen aseman ei mikään.
-     */
-    petti(syy?.name === 'NotAllowedError' ? 'Ääni estetty' : 'Asema ei vastaa');
-  });
+  // Mittariketju vain, jos tämän aseman palvelin ei ole jo kerran
+  // kieltäytynyt CORSista, ks. onkoKorsiton.
+  avaaVirta(!onkoKorsiton(kanava.url));
   kerroMuutos();
 }
 

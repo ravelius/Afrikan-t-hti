@@ -1272,28 +1272,23 @@
   padding-right: 0.5rem;
   margin-left: 0.6rem;
   /*
-   * KULUMA SEURAA KÄTTÄ, JA TÄSSÄ KÄSI ON. Kotelon muut kulumat ovat
-   * arvauksia siitä, mistä laitetta on nostettu; kytkinten ympärys on
-   * ainoa kohta, josta pelaaja OIKEASTI koskee laitteeseen. Lakka on
-   * siinä hioutunut kiiltäväksi, ja kiiltävä lakka heijastaa vaaleana.
+   * EI KULUMALAIKKUJA KYTKINTEN TAKANA (omistaja: "Radiossa on oudot
+   * valoläiskät kahden kytkimen kohdalla").
    *
-   * VASEN LAIKKU ON ISOMPI JA KIRKKAAMPI KUIN OIKEA, koska play ja stop
-   * käännetään joka kanavalla ja virta kerran istunnossa. Symmetrinen
-   * pari näyttäisi valaistukselta; erisuuruinen pari kertoo, kumpaa
-   * kytkintä on käytetty.
+   * Tässä oli kaksi vaaleaa radial-gradienttia — ajatuksena kiillottunut
+   * lakka siinä ainoassa kohdassa, josta laitteeseen oikeasti kosketaan.
+   * Ajatus oli oikea, toteutus ei: laikut istuivat kytkinten TAKANA
+   * omalla elementillään, joten ne eivät seuranneet kotelon puusyytä
+   * eivätkä sen pystyvarjostusta. Reunallinen vaalea läntti keskellä
+   * yhtenäistä puuta ei lue kulumaksi vaan virheeksi — valuneelta
+   * lakalta tai piirtovirheeltä.
    *
-   * LAIKULLA ON REUNA. Ensimmäinen yritys oli pehmeä liuku laidasta
-   * laitaan, ja se katosi kotelon omaan pystyvarjostukseen kokonaan
-   * (mitattu: puun kirkkaus muuttui 3 yksikköä, kun kotelo itse
-   * vaihtelee 80 yksikköä ylhäältä alas). Kiillottunut kohta on
-   * tasainen keskeltä ja häviää vasta reunalla — juuri se raja tekee
-   * siitä kuluman eikä valokeilan.
+   * Kuluma ei ole poissa laitteesta: kotelolla on omat kulumakuvionsa
+   * (ks. .radio-kotelo), ja ne piirtyvät samaan puuhun samassa
+   * kerroksessa. Käden jälki kytkimissä on siellä, missä se oikeastikin
+   * näkyy — kytkinten omassa kromissa (js/linssit/radiosoitin.js
+   * kytkimenSvg: sormen kiillottama vivun kärki).
    */
-  background-image:
-    radial-gradient(26% 34% at 27% 56%,
-      rgba(255, 240, 212, 0.2) 0 46%, rgba(255, 240, 212, 0) 92%),
-    radial-gradient(20% 26% at 76% 52%,
-      rgba(255, 240, 212, 0.1) 0 42%, rgba(255, 240, 212, 0) 90%);
 }
 
 .radio-kytkin-kehys {

@@ -670,11 +670,26 @@ function osa(tagi, luokka, teksti = '') {
  * himmentynyttä kromia. VUOROTTELUJEN MÄÄRÄ EI MUUTTUNUT: juuri se on
  * se, mikä erottaa kromin harmaasta muovista (ks. yllä), ja himmeäkin
  * peili on peili.
+ *
+ * PATINOITU TOISEN KERRAN (omistaja: "Ne kytkimet ovat myös aivan liian
+ * uuden ja kirkkaan näköisiä"). Ensimmäinen patinointi otti pois vain
+ * puhtaan valkoisen; kytkin jäi silti kotelon ainoaksi esineeksi, jossa
+ * oli täysi kontrasti laidasta laitaan. Vanhassa kromissa kontrasti EI
+ * ole täysi: himmentymä sirottaa valoa, jolloin kirkkaat kohdat
+ * tummuvat ja tummat vaalenevat. Kirkkain sävy laski 244 → 218 ja tummin
+ * nousi 74 → 82, eli koko kromin vaihteluväli kapeni viidenneksen.
+ * Vertailukohta on kotelon puu, jonka vaalein kohta on noin 150: kytkin
+ * saa yhä olla laitteen kirkkain osa, muttei enää kaksi kertaa
+ * kirkkaampi kuin mikään muu.
+ *
+ * Sameus ja epätasaisuus ovat vetoina SVG:ssä (kytkimenSvg: harso ja
+ * pistesyöpymä), koska liukuväri on aina tasainen — ja tasaisuus on
+ * juuri se, mikä lukee uutena.
  */
 const KROMIN_RAIDAT = [
-  [0, '#e9ece9'], [0.11, '#bbc2c1'], [0.22, '#5b625f'], [0.34, '#e0e4dd'],
-  [0.46, '#f4f6f0'], [0.57, '#8f9591'], [0.7, '#4a504c'], [0.82, '#c9cfc7'],
-  [1, '#6b706b'],
+  [0, '#d2d5cd'], [0.11, '#a9afa8'], [0.22, '#5f645d'], [0.34, '#c6c9be'],
+  [0.46, '#dadcd0'], [0.57, '#888d86'], [0.7, '#525751'], [0.82, '#b4b9ae'],
+  [1, '#6c706a'],
 ];
 
 /*
@@ -693,10 +708,15 @@ const KROMIN_RAIDAT = [
  * valkoinen kiiltojuova, keskiharmaa, tumma varjopuoli ja kapea vaalea
  * takaisinheijastus vastakkaisella reunalla. Samat viisi sävyä ovat
  * yhdeksän raidan sarjassa; tässä ne vain eivät mahdu useampaan kertaan.
+ *
+ * VIPU HIMMENI MUTTERIN MUKANA, ja sen kiiltojuova eniten: vipu on
+ * kytkimen suurin yhtenäinen metallipinta, joten juuri sen kiilto sai
+ * laitteen näyttämään vastaostetulta. Juova laski 242 → 209 mutta jäi
+ * sarjan kirkkaimmaksi — ilman sitä lieriö litistyisi tikuksi.
  */
 const VARREN_RAIDAT = [
-  [0, '#4b514d'], [0.22, '#f2f4ee'], [0.5, '#959b96'],
-  [0.72, '#434944'], [1, '#b6bcb4'],
+  [0, '#4d524b'], [0.22, '#d1d3c7'], [0.5, '#8e938c'],
+  [0.72, '#474c46'], [1, '#a8ada2'],
 ];
 
 /**
@@ -757,18 +777,33 @@ function kytkimenSvg(tunniste) {
   const kulmat = `${tunniste}-kulmat`;
   const mutteri = `${tunniste}-mutteri`;
   const kiilto = `${tunniste}-kiilto`;
+  const harso = `${tunniste}-harso`;
   return `<svg class="radio-kytkin-kuva" viewBox="0 0 40 66" width="30" height="49.5"
       aria-hidden="true" focusable="false">
     <defs>
       ${kromiLiuku(kromiP, 'pysty')}
       ${kromiLiuku(kromiV, 'vaaka')}
       ${kromiLiuku(varsi, 'vaaka', VARREN_RAIDAT)}
-      <!-- Kulmien kiilto: valkoinen ydin, joka sammuu reunalle. Sama
-           kuvio kuudessa kärjessä, ks. mutterin patina alempana. -->
+      <!-- Kulmien kiilto: vaalea ydin, joka sammuu reunalle. Sama kuvio
+           kuudessa kärjessä, ks. mutterin patina alempana. Ydin ei ole
+           enää puhdas valkoinen eikä läpinäkymätön: kiilto on vanhassa
+           kromissa hajavaloa, ei peilikuvaa. -->
       <radialGradient id="${kulmat}" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0.6"/>
-        <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.22"/>
-        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset="0" stop-color="#f6f2e4" stop-opacity="0.34"/>
+        <stop offset="0.5" stop-color="#f6f2e4" stop-opacity="0.12"/>
+        <stop offset="1" stop-color="#f6f2e4" stop-opacity="0"/>
+      </radialGradient>
+      <!--
+        HIMMENTYMÄN HARSO. Vanhan kromin sameus ei ole tasainen kalvo
+        vaan laikku: kytkin on kotelossa vinossa valossa, ja alanurkka
+        on se, johon pöly ja kosteus jäävät. Liukuväri on siksi
+        keskipisteeltään sivussa (0,64 / 0,7) — keskitetty harso lukisi
+        varjostukseksi eikä lialta.
+      -->
+      <radialGradient id="${harso}" cx="0.64" cy="0.7" r="0.62">
+        <stop offset="0" stop-color="#7c7a63" stop-opacity="0.34"/>
+        <stop offset="0.55" stop-color="#7c7a63" stop-opacity="0.16"/>
+        <stop offset="1" stop-color="#7c7a63" stop-opacity="0.02"/>
       </radialGradient>
       <!-- Kiilto rajataan mutteriin: kärkien yli vuotava valo osuisi
            puuhun, ja siellä se lukisi tahrana eikä metallina. -->
@@ -783,9 +818,9 @@ function kytkimenSvg(tunniste) {
         <stop offset="1" stop-color="#000000" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="${kupu}" cx="0.36" cy="0.3" r="0.78">
-        <stop offset="0" stop-color="#ffffff"/>
-        <stop offset="0.45" stop-color="#aab3ba"/>
-        <stop offset="1" stop-color="#3d454b"/>
+        <stop offset="0" stop-color="#e2e0d2"/>
+        <stop offset="0.45" stop-color="#9aa09b"/>
+        <stop offset="1" stop-color="#343a37"/>
       </radialGradient>
       <!--
         VIVUN KÄRKI ON KIILLOTTUNUT. Kytkintä käännetään kärjestä, ja
@@ -797,9 +832,9 @@ function kytkimenSvg(tunniste) {
         alhaalla.
       -->
       <linearGradient id="${kiilto}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0.42"/>
-        <stop offset="0.3" stop-color="#ffffff" stop-opacity="0.14"/>
-        <stop offset="0.72" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset="0" stop-color="#f7f3e6" stop-opacity="0.24"/>
+        <stop offset="0.3" stop-color="#f7f3e6" stop-opacity="0.08"/>
+        <stop offset="0.72" stop-color="#f7f3e6" stop-opacity="0"/>
       </linearGradient>
     </defs>
 
@@ -811,19 +846,26 @@ function kytkimenSvg(tunniste) {
          Raidat vaakaan, jotta prikka erottuu pystyraitaisesta
          mutterista. -->
     <circle cx="20" cy="33" r="13.4" fill="url(#${kromiV})"
-      stroke="rgba(0,0,0,0.55)" stroke-width="0.7"/>
+      stroke="rgba(0,0,0,0.62)" stroke-width="0.7"/>
     <circle cx="20" cy="33" r="12.4" fill="none"
-      stroke="rgba(255,255,255,0.34)" stroke-width="0.7"/>
+      stroke="rgba(246,242,228,0.16)" stroke-width="0.7"/>
+    <!-- Prikan himmentymä: harso alanurkkaan, ks. gradientti ${harso}.
+         Prikka on kytkimen suurin kromipinta, joten juuri sen tasaisuus
+         luki uutena. -->
+    <circle cx="20" cy="33" r="13.4" fill="url(#${harso})"/>
 
     <!-- Kromattu kuusiomutteri prikan päällä. Kuusikulmion kärjet ovat
          sivuilla ja lappeet ylhäällä ja alhaalla, kuten avaimelle
          tarkoitetussa mutterissa. -->
     <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
-      fill="url(#${kromiP})" stroke="rgba(0,0,0,0.6)" stroke-width="0.7"/>
+      fill="url(#${kromiP})" stroke="rgba(0,0,0,0.68)" stroke-width="0.7"/>
     <!-- Viisto reuna: mutterin särmät ovat viistetyt, ja viiste näkyy
-         kapeana vaaleana kaistana lapetta pitkin. -->
+         kapeana vaaleana kaistana lapetta pitkin. Kaista on himmeä ja
+         katkeaa alalappeella — avain on hionut viisteen sieltä pois. -->
     <path d="M10.2 33 L15.2 24.2 L24.8 24.2 L29.8 33 L24.8 41.8 L15.2 41.8 Z"
-      fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="0.8"/>
+      fill="none" stroke="rgba(246,242,228,0.2)" stroke-width="0.8"/>
+    <path d="M10.2 33 L15.2 24.2 L24.8 24.2 L29.8 33"
+      fill="none" stroke="rgba(246,242,228,0.12)" stroke-width="0.8"/>
 
     <!--
       MUTTERIN PATINA JA KULMIEN KIILTO (omistajan toive 4.8.2026:
@@ -837,7 +879,9 @@ function kytkimenSvg(tunniste) {
     -->
     <g clip-path="url(#${mutteri})">
       <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
-        fill="#8b8a72" opacity="0.16"/>
+        fill="#8b8a72" opacity="0.24"/>
+      <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
+        fill="url(#${harso})"/>
       <g fill="url(#${kulmat})">
         <circle cx="9.4" cy="33" r="3.6"/>
         <circle cx="14.6" cy="23.4" r="3.2"/>
@@ -846,6 +890,24 @@ function kytkimenSvg(tunniste) {
         <circle cx="25.4" cy="42.6" r="3.2"/>
         <circle cx="14.6" cy="42.6" r="3.2"/>
       </g>
+    </g>
+
+    <!--
+      PISTESYÖPYMÄ. Yhdeksänkymmenen vuoden kromissa on kohtia, joissa
+      pinta on puhki: nikkeli sen alla on tummunut, ja jälki on pieni,
+      epäsäännöllinen ja aina samassa paikassa — se ei ole kuvio vaan
+      vika. Neljä pistettä riittää; enemmän lukee ruvelta.
+
+      Pisteet ovat prikan reunamilla eivätkä keskellä, koska keskellä on
+      mutteri ja kaulus. Koot ja paikat ovat käsin valitut: arvottuina ne
+      osuisivat joskus päällekkäin, ja kaksi vierekkäistä pistettä lukee
+      naarmuksi, mikä on eri asia.
+    -->
+    <g fill="#2f322b" opacity="0.3">
+      <circle cx="11.4" cy="26.6" r="0.9"/>
+      <circle cx="28.9" cy="27.4" r="0.6"/>
+      <circle cx="13.2" cy="41.2" r="0.7"/>
+      <circle cx="27.6" cy="40.2" r="1"/>
     </g>
 
     <!-- Kierteinen kaulus mutterin sisällä: kolme kierrettä varjoina.
@@ -871,6 +933,12 @@ function kytkimenSvg(tunniste) {
            muoto kuin varsi, jotta kiilto ei vuoda reunan yli. -->
       <path d="M16.2 32.4 L17.4 10.2 Q20 6 22.6 10.2 L23.8 32.4 Z"
         fill="url(#${kiilto})"/>
+      <!-- Ja sama muoto kolmannen kerran: himmentymä vivun tyveen,
+           jonne sormi ei ylety. Kiillotettu kärki ja samentunut tyvi
+           ovat sama havainto kahdesta suunnasta — kulunut kappale ei
+           ole kauttaaltaan yhtä kirkas. -->
+      <path d="M16.2 32.4 L17.4 10.2 Q20 6 22.6 10.2 L23.8 32.4 Z"
+        fill="url(#${harso})" opacity="0.75"/>
       <circle cx="20" cy="33" r="5.4" fill="url(#${kupu})"
         stroke="rgba(0,0,0,0.4)" stroke-width="0.6"/>
     </g>
