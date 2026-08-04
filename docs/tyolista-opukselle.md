@@ -4587,3 +4587,42 @@ OLI SIDOTTU VÄÄRÄÄN AVARUUTEEN: pinta, joka kuuluu katsojan silmään, oli
 sidottu maailmaan. Kolme edellistä yritystä (varjostuksen vahvistus, palettien
 lämmitys) hakivat vikaa väristä, koska oire näytti värivialta. Sama testi olisi
 löytänyt sen heti: mittaa hajonta lähellä, ei kaukana.
+
+### Kuvavelka: mitä löytyi ja mitä ei (v245)
+
+Kolme erillistä kuvavelkaa selvitettiin kerralla. Tulos on enimmäkseen
+kielteinen, ja juuri siksi se kannattaa kirjata: samaa hakua ei tarvitse
+tehdä uudestaan.
+
+**Karachi vaihdettu.** Uusi pääkuva on Wellcome Collectionin 1897 vedos Old
+Townin Rampart Row'lta (3069 × 2463 px, CC BY 4.0). Vanha 1946 Malir-kuva
+siirtyi lisäkuvaksi, ei hukattu. Frere Hallista, Merewether-tornista ja
+satamasta EI ole yhtään yli 1200 px:n vanhaa vedosta Commonsissa.
+
+**Kuudestatoista kaupungista onnistui kaksi.** Darfur (1958, 3735 × 2787,
+CC BY-SA 4.0) ja Magadan (1931, 1280 × 905, PD — Nagajevanlahden ensimmäiset
+talot). Loput 14 tarkistettiin kategoriapuu kerrallaan, eikä syy ole
+laiskuus:
+
+- **Dubai, Astana, Iqaluit, Boa Vista, Santarém, San Ambrosio, Norfolk** —
+  Commonsissa ei ole vaadittua kuvaa lainkaan. Norfolkin aidot vanhat
+  vedokset (Tyrrell 1898, Hurley 1910) ovat siellä 1024 px:n levyisinä.
+- **Doha ja Salalah** — kuva on olemassa mutta **albumilehden skannauksena**.
+  RAF:n 1934 Doha-kuvat ovat 2033 × 3000 px, mutta itse valokuva lehden
+  alalaidassa on noin 1040 px ja loput on tyhjää paperia. Rajattu versio jää
+  siis rajan alle. *Jos 1040 px kelpaa, kuva on saatavilla — oma päätöksesi.*
+- **Exmouth** — kaupunki perustettiin 1963, joten vanhaa kuvaa ei voi olla.
+- **Ahaggar, Mosambik** — löydöt eivät ole tunnistettavasti oikeasta
+  paikasta.
+
+**Kolme "ulkoista kuvaa" — lähtötilanne oli väärin ymmärretty.** Ne eivät
+ole paketeissa lainkaan eivätkä lataudu mistään; ne ovat vain ehdokkaita
+`tools/ulkoiset-kuvat.json`-tiedostossa. Kuvaputki osaa vain Commons-
+tiedostonimen (`valokuvaUrl` → peili tai `commonsUrl`), eikä `osoite`-
+kentälle ole tukea missään. Magadan ratkesi Commons-vastineella. Santa Cruz
+ja Kap Horn jäävät: kummallekaan ei ole Commonsissa vastinetta (Santa Cruzin
+koko 410 tiedoston kategoriapuussa vanhin valokuva on 1960-luvulta; Kap
+Hornista kaikki ennen 1960 on maalauksia ja merikarttoja).
+
+Tarkistimet ajon jälkeen: 1172 kuvakohtaa, 0 rikkinäistä, ei
+kaksoisavaimia. Ikätarkistin 9/99 (oli 10).
