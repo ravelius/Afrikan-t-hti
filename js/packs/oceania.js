@@ -320,7 +320,7 @@ export const OCEANIA = {
 
   texts: {
     intro: 'Peli alkaa! Etsikää Eteläristin helmi ja palatkaa Sydneyyn tai Perthiin.',
-    starFound: (name, city) => `★ ${name} löysi ETELÄRISTIN HELMEN kaupungista ${city}!`,
+    starFound: (name, city) => `◈ ${name} löysi ETELÄRISTIN HELMEN kaupungista ${city}!`,
     starToast: 'ETELÄRISTIN HELMI!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Eteläristin helmen turvallisesti kotiin',

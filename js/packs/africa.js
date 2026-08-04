@@ -384,7 +384,7 @@ export const AFRICA = {
       ],
     },
     intro: 'Peli alkaa! Etsikää Suuren Zimbabwen kivilintu ja palatkaa Tangeriin, Kairoon tai Kapkaupunkiin.',
-    starFound: (name, city) => `★ ${name} löysi SUUREN ZIMBABWEN KIVILINNUN kaupungista ${city}!`,
+    starFound: (name, city) => `◈ ${name} löysi SUUREN ZIMBABWEN KIVILINNUN kaupungista ${city}!`,
     starToast: 'SUUREN ZIMBABWEN KIVILINTU!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Suuren Zimbabwen kivilinnun turvallisesti kotiin',

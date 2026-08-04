@@ -598,7 +598,7 @@ export const EUROPE = {
 
   texts: {
     intro: 'Peli alkaa! Etsikää kadonneen Meripihkahuoneen aarre ja palatkaa kotisatamaan: Lontooseen, Istanbuliin, Moskovaan tai Ateenaan.',
-    starFound: (name, city) => `★ ${name} löysi MERIPIHKAHUONEEN AARTEEN kaupungista ${city}!`,
+    starFound: (name, city) => `◈ ${name} löysi MERIPIHKAHUONEEN AARTEEN kaupungista ${city}!`,
     starToast: 'MERIPIHKAHUONEEN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Meripihkahuoneen aarteen turvallisesti kotiin',
