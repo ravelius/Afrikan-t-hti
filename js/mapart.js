@@ -127,8 +127,15 @@ export function kasinPiirretty(points, maara = 4) {
   ]);
 }
 
-/** Catmull–Rom-pehmennys: pisteistä sulava suljettu käyrä. */
-function smoothClosedPath(points) {
+/**
+ * Catmull–Rom-pehmennys: pisteistä sulava suljettu käyrä.
+ *
+ * Viety ulos vesistölinssiä varten (js/linssit/vesistot.js). Linssin on
+ * pakko piirtää järvet TÄSMÄLLEEN samalla pehmennyksellä kuin pohjakartta
+ * piirtäisi ne: sama rengas janoina ja kaarina eroaa toisistaan lahden
+ * levyisesti (ks. rantaviivanPolut alempana samasta syystä).
+ */
+export function smoothClosedPath(points) {
   const n = points.length;
   const p = (i) => points[((i % n) + n) % n];
   let d = `M${p(0)[0]},${p(0)[1]}`;
@@ -745,7 +752,7 @@ function mitattuLeveys(elementti, arvio) {
 }
 
 /** Catmull–Rom-pehmennys AVOIMELLE viivalle: joen pisteistä sulava kaari. */
-function smoothOpenPath(points) {
+export function smoothOpenPath(points) {
   if (points.length < 2) return '';
   const p = (i) => points[Math.max(0, Math.min(points.length - 1, i))];
   const luku = (n) => n.toFixed(1);
@@ -942,13 +949,14 @@ function saumasiirto(x, nakyva, leveys, vara) {
  *
  * @param {SVGElement} svg   kerros, joka tyhjennetään ja täytetään
  * @param {object} map       lauta (leveys ja kiertävyys)
- * @param {object} asetukset { nimet, nakyva, avaa }
+ * @param {object} asetukset { nimet, nakyva, avaa, joet }
  *   nimet   js/packs/maailmankartta-nimet.js:n MAAILMANKARTAN_NIMET
  *   nakyva  js/ui.js:n nakyvaAlue(): { x, y, w, h, skaala }
  *   avaa    kutsutaan i-ikonin napautuksesta: avaa(kohde)
+ *   joet    tosi vain kun vesistölinssi on päällä (ks. alempaa)
  * @returns {number} montako nimeä piirrettiin (testejä ja mittausta varten)
  */
-export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
+export function drawMaastonimet(svg, map, { nimet, nakyva, avaa, joet = false } = {}) {
   if (!svg) return 0;
   svg.textContent = '';
   if (!nimet || !nakyva?.skaala || !(nakyva.w > 0)) return 0;
@@ -982,13 +990,32 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
   };
 
   /*
-   * JOKIEN NIMET POIS, JÄRVIEN NIMET TAKAISIN.
+   * JOKIEN NIMET VAIN VESISTÖLINSSIN KANSSA.
    *
-   * Nimi piirretään sinne missä sen kohde on. Joet lähtivät kartalta
-   * (drawMaasto), joten niiden nimet lähtivät mukana: kaunokirjoitettu
-   * "Tonava" tyhjän maan päällä ei kerro mitään. Isot järvet piirretään
-   * yhä, joten niiden nimet kuuluvat tänne — samoin vuoristot.
+   * Nimi piirretään sinne missä sen kohde on. Joet lähtivät
+   * pohjakartalta (drawMaasto), joten niiden nimet lähtivät mukana:
+   * kaunokirjoitettu "Tonava" tyhjän maan päällä ei kerro mitään.
+   * Vesistölinssi (js/linssit/vesistot.js) piirtää uomat takaisin, ja
+   * silloin nimillä on taas kohde — `joet` on tosi juuri silloin.
+   *
+   * Nimet EIVÄT ole linssin omassa kerroksessa, vaikka ne kuuluvat
+   * linssiin. Syy on mittakaava: linssikerros piirretään kerran linssiä
+   * vaihdettaessa, tämä kerros joka zoomilla. Linssin sisällä nimi
+   * jäätyisi yhteen kokoon — maailmankuvassa lukukelvottomaksi ja
+   * kaupunkikuvassa jättimäiseksi.
+   *
+   * Ankkuri on uoman KIINTEÄ keskikohta eikä lähin piste ruudun
+   * keskustaan: omistaja "Joen nimi hyppii uusiin paikkoihin kun karttaa
+   * katsoo eri paikassa". Nimi kuuluu paikkaan, ei katseeseen.
    */
+  if (joet) {
+    for (const joki of nimet.joet ?? []) {
+      const pisteet = joki.pisteet ?? [];
+      if (pisteet.length < 2) continue;
+      const piste = pisteet[Math.floor(pisteet.length / 2)];
+      lisaa(joki, 'joki', piste[0], piste[1], joki.pituus);
+    }
+  }
   for (const jarvi of nimet.jarvet ?? []) lisaa(jarvi, 'jarvi', jarvi.x, jarvi.y, jarvi.pituus);
   // Vuoristolla ei ole mittaa: se on nimipaketissa piste ja kulma, ei
   // muoto. Nimi kirjoitetaan sen yli, joten se mahtuu aina.

@@ -2706,14 +2706,28 @@ export class UI {
     if (!nakyva) return;
     // Tunniste karkealla tarkkuudella: pienempi liike ei muuta yhtään
     // nimeä, koska nimet ilmestyvät ja katoavat kokonaisina.
+    /*
+     * Vesistölinssi kuuluu tunnisteeseen: linssin vaihto ei liikuta
+     * karttaa, joten pelkkä näkymä olisi sama ennen ja jälkeen — ja
+     * jokien nimet jäisivät piirtymättä (tai jäisivät päälle) siihen
+     * asti kun pelaaja seuraavan kerran panoroi.
+     */
+    /*
+     * Moottorin tunnus eikä `linssiValittu`: valinta voi olla
+     * tallennettu edelliseltä pelikerralta linssistä, jota pelaaja ei
+     * vielä omista, ja silloin kerrosta ei sytytetä. Jokien nimet
+     * seuraavat sitä mikä KARTALLA on, ei sitä mikä on muistissa.
+     */
+    const joet = this.linssiTuki?.moottori?.tunnus === 'vesistot';
     const tunniste = [nakyva.x, nakyva.y, nakyva.w, nakyva.skaala]
-      .map((n) => Math.round(n * 4)).join(':');
+      .map((n) => Math.round(n * 4)).join(':') + (joet ? '+joet' : '');
     if (this.maastonimiTunniste === tunniste) return;
     this.maastonimiTunniste = tunniste;
     drawMaastonimet(this.maastonimiKerros, this.game.pack.map, {
       nimet: this.maastonimet,
       nakyva,
       avaa: (kohde) => this.avaaMaastonimi(kohde),
+      joet,
     });
   }
 
@@ -8130,6 +8144,15 @@ export class UI {
     this.paivitaLinssiNappi();
     this.paivitaLinssiTiedot();
     this.piirraLinssiSelite();
+    /*
+     * Jokien nimet kuuluvat vesistölinssiin mutta asuvat kartan omassa
+     * nimikerroksessa (js/mapart.js drawMaastonimet). Kerros piirtää
+     * uudelleen vain kun näkymä muuttuu, eikä linssin vaihto liikuta
+     * karttaa — muistettu tunniste on siis nollattava käsin, tai nimet
+     * ilmestyisivät vasta seuraavasta panoroinnista.
+     */
+    this.maastonimiTunniste = null;
+    this.paivitaMaastonimet();
   }
 
   /** Ottaa linssin pois valikoimasta ja palaa linssittömään karttaan. */

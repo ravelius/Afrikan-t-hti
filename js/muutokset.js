@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 259, teksti: 'Uusi vesistölinssi: pelkät joet ja järvet' },
+  { v: 259, teksti: 'Jokien nimet takaisin vesistölinssin kanssa' },
+  { v: 259, teksti: 'Tutki-otsikon tausta ei enää näy tummana palkkina' },
   { v: 258, teksti: 'Tutki: osaston otsikko pysyy näkyvissä vierittäessä' },
   { v: 257, teksti: 'Isot järvet takaisin kartalle, vain joet pois' },
   { v: 257, teksti: 'Radio kiinni alareunaan ja hieman kapeammaksi' },
