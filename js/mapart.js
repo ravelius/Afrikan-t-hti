@@ -407,6 +407,411 @@ export function drawMaasto(svg, map) {
   }
 }
 
+// --- maastonimet ------------------------------------------------------------
+
+/*
+ * Joen, järven ja vuoriston nimi kartalle kaunokirjoituksella.
+ *
+ * Omistajan toive 4.8.2026: *"Zoomattaessa tarpeeksi lähelle suurimmat
+ * järvet ja vuoristot voisi nimetä ja kirjoittaa kaunokirjoituksella."*
+ * Ja: *"Niissä voisi olla pieni i-ikoni tai vastaava perässä, jota
+ * painamalla pääsisi lukemaan ja katsomaan kuvia paikasta, ellei siinä
+ * ole jo omaa laattaansa tehtynä."*
+ *
+ * --- miksi tämä EI ole staattista taidetta ---
+ *
+ * Kartan raskas osa muutetaan bittikartaksi kerran (ks. valmisteleTaide),
+ * koska se ei muutu pelin aikana. Nimet muuttuvat: mikä nimi näkyy,
+ * minkä kokoisena ja missä kohdassa laudan kiertoa, riippuu siitä mitä
+ * ruudulla juuri nyt on. Bittikartassa ne jäätyisivät ensimmäisen
+ * piirron zoomiin — Mississippi olisi joko kilometrin korkuinen tai
+ * kadonnut. Siksi nimet piirretään elävään kerrokseen ja piirretään
+ * uudelleen aina kun näkymä asettuu.
+ *
+ * Hinta on pieni juuri siksi, että nimiä on kerrallaan vähän: tämä
+ * funktio piirtää vain sen, mikä osuu näkyvään alueeseen ja mahtuu
+ * sinne. Tyypillisesti muutama kymmenen elementtiä.
+ *
+ * --- kolme sääntöä, jotka pitävät kartan siistinä ---
+ *
+ * 1. TÄRKEYS RATKAISEE MILLOIN. Nimi ilmestyy vasta, kun näkyvä alue on
+ *    kapeampi kuin sen luokan raja. Ilman tätä 213 nimeä olisi
+ *    yleiskuvassa yhtä aikaa eikä kartasta näkisi mitään.
+ * 2. NIMEN ON MAHDUTTAVA KOHTEESEENSA. Saint Lawrence on tärkeydeltään
+ *    2 mutta laudalla vain 44 yksikköä pitkä, koska aineistossa siitä on
+ *    vain pätkä. Pelkkä tärkeys sijoittaisi sen kartalle kymmenen kertaa
+ *    kohdettaan pidempänä. Siksi vaaditaan, että kohde on ruudulla
+ *    leveämpi kuin sen nimi.
+ * 3. PÄÄLLEKKÄISYYS KARSITAAN. Nimet käydään tärkeysjärjestyksessä, ja
+ *    nimi, joka osuisi jo piirretyn päälle, jää pois. Tärkeämpi voittaa.
+ *
+ * --- ei suodattimia ---
+ *
+ * Sama iOS-sääntö kuin kaikella muullakin kartalla (ks. drawDefs):
+ * suodatettu kerros palaa taustalta tyhjänä. Nimissä ei ole yhtään
+ * suodatinta eikä varjoa.
+ */
+
+/**
+ * Kuinka kapea näkyvän alueen on oltava laudan yksikköinä, ennen kuin
+ * tämän tärkeysluokan nimi ilmestyy.
+ *
+ * Luvut on valittu maailmankartan zoomiportaista (js/ui.js zoomiTasot:
+ * 12000 → 8000 → 5333 → 3556 → 2370 → 1580 → 1053 → 702 → …), jotta
+ * jokainen luokka syttyy omalla portaallaan eikä kaksi luokkaa yhtä
+ * aikaa: 1 tulee portaalla 3, 2 portaalla 5 ja 3 portaalla 7.
+ */
+export const NIMEN_ZOOMIRAJA = { 1: 4200, 2: 1800, 3: 800 };
+
+/*
+ * Nimen koko RUUDULLA eikä laudalla.
+ *
+ * Maan nimi (.country-name) on laudan yksiköissä ja kasvaa siksi
+ * zoomatessa. Se sopii sille: maa on yksi kerrallaan ja nimi on
+ * vesileima. Maastonimiä on kymmeniä samaan aikaan, ja jos ne
+ * kasvaisivat zoomin mukana, lähikuvassa Volga peittäisi Venäjän.
+ * Karttojen oma tapa on pitää teksti samankokoisena ja vaihtaa sitä
+ * mitä näytetään — se on juuri se, mitä tärkeysraja tekee.
+ */
+const NIMEN_FONTTI_PX = 15;
+const I_IKONIN_SADE_PX = 7.5;
+
+/*
+ * Kirjaimen keskileveys osuutena fonttikoosta.
+ *
+ * Kaunokirjoitus on kapeaa ja kaltevaa. Arvo on mitattu Snell
+ * Roundhandista ruudulla; se on arvio eikä mittaus, ja sitä käytetään
+ * vain sen päättämiseen mahtuuko nimi — ei sen sijoittamiseen. Väärä
+ * arvio siirtäisi i-ikonia muutaman pikselin, ei enempää.
+ */
+const KIRJAIMEN_LEVEYS = 0.46;
+
+const nimenLeveys = (teksti, fontti) => teksti.length * fontti * KIRJAIMEN_LEVEYS;
+
+/** Catmull–Rom-pehmennys AVOIMELLE viivalle: joen pisteistä sulava kaari. */
+function smoothOpenPath(points) {
+  if (points.length < 2) return '';
+  const p = (i) => points[Math.max(0, Math.min(points.length - 1, i))];
+  const luku = (n) => n.toFixed(1);
+  let d = `M${luku(p(0)[0])},${luku(p(0)[1])}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const [x0, y0] = p(i - 1);
+    const [x1, y1] = p(i);
+    const [x2, y2] = p(i + 1);
+    const [x3, y3] = p(i + 2);
+    d += ` C${luku(x1 + (x2 - x0) / 6)},${luku(y1 + (y2 - y0) / 6)}`
+      + ` ${luku(x2 - (x3 - x1) / 6)},${luku(y2 - (y3 - y1) / 6)} ${luku(x2)},${luku(y2)}`;
+  }
+  return d;
+}
+
+/** Murtoviivan pituus ja piste annetun matkan päässä sen alusta. */
+function viivanPituus(pisteet) {
+  let summa = 0;
+  for (let i = 1; i < pisteet.length; i++) {
+    summa += Math.hypot(pisteet[i][0] - pisteet[i - 1][0], pisteet[i][1] - pisteet[i - 1][1]);
+  }
+  return summa;
+}
+
+/*
+ * Uoman pätkä nimen alle: tasavälinen, pehmennetty ja vasemmalta oikealle.
+ *
+ * TÄMÄ ON KOKO JOKINIMEN VAIKEIN KOHTA, ja ensimmäinen versio meni
+ * siihen pieleen. Se pani nimen suoraan piirretylle uomalle — samoille
+ * pisteille ja samalle heilunnalle kuin viiva itse — ja lähikuvassa
+ * lopputulos oli lukukelvoton: Väinäjoki kiemursi kerälle, Tigris meni
+ * solmuun, Amudarja luki takaperin. Syy on mittasuhde. Uoman mutka on
+ * muutaman kymmenen yksikön mittainen ja käsin piirretty heilunta
+ * ±4 yksikköä; kun kirjain on kymmenen yksikön korkuinen, jokainen
+ * kirjain kääntyy eri suuntaan.
+ *
+ * Kartantekijät ratkaisevat saman asian samalla tavalla: nimi seuraa
+ * joen YLEISSUUNTAA, ei jokaista mutkaa. Siksi tästä otetaan nimen
+ * mittainen ikkuna, se harvennetaan muutamaksi tasaväliseksi pisteeksi
+ * — mikä keskiarvoistaa mutkat ja heilunnan pois — ja niiden läpi
+ * vedetään loiva kaari.
+ *
+ * Heiluntaa EI lisätä takaisin. Se siirtäisi nimeä enintään neljä
+ * yksikköä, mikä on kaukaa näkymätöntä ja läheltä juuri se, mikä teki
+ * tekstistä sotkun.
+ *
+ * Suunta tarkistetaan IKKUNALLE eikä koko joelle. Aineistossa on
+ * korjattu joen yleissuunta (tools/tee-maastonimet.mjs), mutta yksi
+ * mutka voi silti kulkea vastavirtaan — ja siinä nimi olisi ylösalaisin.
+ */
+const KAAREN_OTOKSET = 6;
+
+function nimenKaari(pisteet, kohtaIndeksi, tarve) {
+  const matkat = [0];
+  for (let i = 1; i < pisteet.length; i++) {
+    matkat.push(matkat[i - 1]
+      + Math.hypot(pisteet[i][0] - pisteet[i - 1][0], pisteet[i][1] - pisteet[i - 1][1]));
+  }
+  const kokonais = matkat.at(-1);
+  const puolikas = Math.min(tarve, kokonais) / 2;
+  const keskus = Math.min(Math.max(matkat[kohtaIndeksi] ?? kokonais / 2, puolikas),
+    kokonais - puolikas);
+
+  /** Piste annetun matkan päässä; matkat on jo laskettu. */
+  const kohdassa = (matka) => {
+    let i = 1;
+    while (i < matkat.length - 1 && matkat[i] < matka) i++;
+    const jakso = matkat[i] - matkat[i - 1];
+    const t = jakso > 0 ? (matka - matkat[i - 1]) / jakso : 0;
+    return [
+      pisteet[i - 1][0] + (pisteet[i][0] - pisteet[i - 1][0]) * t,
+      pisteet[i - 1][1] + (pisteet[i][1] - pisteet[i - 1][1]) * t,
+    ];
+  };
+
+  const otokset = [];
+  for (let k = 0; k <= KAAREN_OTOKSET; k++) {
+    otokset.push(kohdassa(keskus - puolikas + (puolikas * 2 * k) / KAAREN_OTOKSET));
+  }
+  return otokset.at(-1)[0] < otokset[0][0] ? otokset.reverse() : otokset;
+}
+
+function pisteMatkalla(pisteet, matka) {
+  let jaljella = Math.max(0, matka);
+  for (let i = 1; i < pisteet.length; i++) {
+    const [x1, y1] = pisteet[i - 1];
+    const [x2, y2] = pisteet[i];
+    const pit = Math.hypot(x2 - x1, y2 - y1);
+    if (jaljella <= pit || i === pisteet.length - 1) {
+      const t = pit ? Math.min(1, jaljella / pit) : 0;
+      return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
+    }
+    jaljella -= pit;
+  }
+  return pisteet.at(-1);
+}
+
+/*
+ * Nimen paikka kiertävällä kartalla.
+ *
+ * Sama nimi on olemassa laudan leveyden välein loputtomiin, ja piirtoon
+ * kelpaa se kopio, joka sattuu olemaan näkyvissä. Kopio valitaan tässä
+ * eikä jätetä <use>-kierrolle, koska kierron kopiosta ei voi napauttaa
+ * mitään: i-ikoni osuisi <use>-elementtiin eikä sen sisältöön. Näin
+ * ikoni on aina oikea elementti, missä päin lautaa tahansa katsotaan.
+ *
+ * Palauttaa siirron laudan yksiköissä tai null, jos nimi ei osu
+ * näkyvään alueeseen millään kopiolla.
+ */
+function saumasiirto(x, nakyva, leveys, vara) {
+  const kopiot = leveys ? [0, leveys, -leveys, leveys * 2] : [0];
+  for (const siirto of kopiot) {
+    const kohta = x + siirto;
+    if (kohta >= nakyva.x - vara && kohta <= nakyva.x + nakyva.w + vara) return siirto;
+  }
+  return null;
+}
+
+/**
+ * Piirtää näkyvät maastonimet annettuun kerrokseen.
+ *
+ * @param {SVGElement} svg   kerros, joka tyhjennetään ja täytetään
+ * @param {object} map       lauta (leveys ja kiertävyys)
+ * @param {object} asetukset { nimet, nakyva, avaa }
+ *   nimet   js/packs/maailmankartta-nimet.js:n MAAILMANKARTAN_NIMET
+ *   nakyva  js/ui.js:n nakyvaAlue(): { x, y, w, h, skaala }
+ *   avaa    kutsutaan i-ikonin napautuksesta: avaa(kohde)
+ * @returns {number} montako nimeä piirrettiin (testejä ja mittausta varten)
+ */
+export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
+  if (!svg) return 0;
+  svg.textContent = '';
+  if (!nimet || !nakyva?.skaala || !(nakyva.w > 0)) return 0;
+
+  const { skaala } = nakyva;
+  const fontti = NIMEN_FONTTI_PX / skaala;      // laudan yksiköitä
+  const iSade = I_IKONIN_SADE_PX / skaala;
+  const leveys = map?.kiertava ? map.width : 0;
+
+  /*
+   * Ehdokkaat: oikean tärkeysluokan nimet, jotka osuvat näkyvään
+   * alueeseen ja joiden kohde on ruudulla nimeään leveämpi.
+   *
+   * Reunavara on nimen puolikas: nimi, jonka keskipiste on juuri
+   * ruudun ulkopuolella, näkyy silti puoliksi eikä saa kadota.
+   */
+  const ehdokkaat = [];
+  const lisaa = (kohde, laji, x, y, mitta) => {
+    if (nakyva.w > (NIMEN_ZOOMIRAJA[kohde.tarkeys] ?? 0)) return;
+    const teksti = nimenLeveys(kohde.nimi, fontti);
+    // Kohteen on oltava nimeään leveämpi, muuten nimi ei kuvaa mitään.
+    if (mitta !== null && mitta < teksti * 1.15) return;
+    const siirto = saumasiirto(x, nakyva, leveys, teksti);
+    if (siirto === null) return;
+    if (y < nakyva.y - fontti * 2 || y > nakyva.y + nakyva.h + fontti * 2) return;
+    ehdokkaat.push({
+      kohde, laji, x: x + siirto, y, siirto, teksti,
+    });
+  };
+
+  /*
+   * JOEN NIMI SIIHEN KOHTAAN UOMAA, JOTA KATSOTAAN.
+   *
+   * Ensimmäinen versio kirjoitti nimen uoman keskikohtaan. Lähikuvassa
+   * se tarkoitti, että Volga virtasi ruudun poikki nimettömänä aina kun
+   * katsottiin muualle kuin sen keskelle — ja lähikuva on juuri se, jota
+   * varten nimet tehtiin. Nyt haetaan uoman piste, joka on lähinnä
+   * ruudun keskustaa, ja nimi kirjoitetaan siihen. Pitkä joki saa siis
+   * nimensä sinne minne pelaaja katsoo, kuten oikeissa kartoissa.
+   */
+  const keskiX = nakyva.x + nakyva.w / 2;
+  const keskiY = nakyva.y + nakyva.h / 2;
+  for (const joki of nimet.joet ?? []) {
+    if (nakyva.w > (NIMEN_ZOOMIRAJA[joki.tarkeys] ?? 0)) continue;
+    const teksti = nimenLeveys(joki.nimi, fontti);
+    if (joki.pituus < teksti * 1.15) continue;
+    // Lähin piste, kaikki kierron kopiot mukaan lukien.
+    let paras = null;
+    for (const siirto of leveys ? [0, leveys, -leveys, leveys * 2] : [0]) {
+      for (let i = 0; i < joki.pisteet.length; i++) {
+        const [x, y] = joki.pisteet[i];
+        const etaisyys = Math.hypot(x + siirto - keskiX, y - keskiY);
+        if (!paras || etaisyys < paras.etaisyys) paras = { etaisyys, siirto, i, x: x + siirto, y };
+      }
+    }
+    if (!paras) continue;
+    // Osuuko lähin piste ruudulle? Vara on nimen puolikas: nimi, jonka
+    // ankkuri on juuri reunan takana, näkyisi silti puoliksi.
+    if (paras.x < nakyva.x - teksti || paras.x > nakyva.x + nakyva.w + teksti) continue;
+    if (paras.y < nakyva.y - fontti * 2 || paras.y > nakyva.y + nakyva.h + fontti * 2) continue;
+    ehdokkaat.push({
+      kohde: joki, laji: 'joki', x: paras.x, y: paras.y, siirto: paras.siirto, teksti, kohta: paras.i,
+    });
+  }
+  for (const jarvi of nimet.jarvet ?? []) lisaa(jarvi, 'jarvi', jarvi.x, jarvi.y, jarvi.pituus);
+  // Vuoristolla ei ole mittaa: se on nimipaketissa piste ja kulma, ei
+  // muoto. Nimi kirjoitetaan sen yli, joten se mahtuu aina.
+  for (const vuori of nimet.vuoret ?? []) lisaa(vuori, 'vuori', vuori.x, vuori.y, null);
+
+  /*
+   * Tärkein ensin, ja saman luokan sisällä suurin kohde ensin. Kun
+   * kaksi nimeä on päällekkäin, kartalle jää se, joka kertoo enemmän.
+   */
+  ehdokkaat.sort((a, b) => (a.kohde.tarkeys - b.kohde.tarkeys)
+    || ((b.kohde.pituus ?? 0) - (a.kohde.pituus ?? 0)));
+
+  const varatut = [];
+  const vapaa = (laatikko) => !varatut.some((v) => (
+    laatikko.x0 < v.x1 && laatikko.x1 > v.x0 && laatikko.y0 < v.y1 && laatikko.y1 > v.y0
+  ));
+
+  const maarittelyt = el('defs', {}, svg);
+  let piirretty = 0;
+
+  for (const e of ehdokkaat) {
+    const { kohde } = e;
+    // i-ikoni vain sinne, missä ei ole jo omaa laattaa tai kaupunkia.
+    const ikoni = !kohde.laatta;
+    const kokoLeveys = e.teksti + (ikoni ? iSade * 3.2 : 0);
+    const laatikko = {
+      x0: e.x - kokoLeveys / 2, x1: e.x + kokoLeveys / 2,
+      y0: e.y - fontti * 0.75, y1: e.y + fontti * 0.75,
+    };
+    if (!vapaa(laatikko)) continue;
+    varatut.push(laatikko);
+    piirretty += 1;
+
+    const ryhma = el('g', { class: `maastonimi maastonimi-${e.laji}` }, svg);
+    let ikoninPaikka = null;
+    let ikoninKulma = 0;
+
+    if (e.laji === 'joki') {
+      /*
+       * JOEN NIMI SEURAA JOKEA. Tämä on se kohta, joka tekee kartasta
+       * kartan eikä luettelon.
+       *
+       * Kaari on nimen mittainen pätkä uomaa siitä kohdasta, jota
+       * katsotaan (ks. nimenKaari). Nimi keskitetään siihen, joten
+       * startOffset on 50 %: ikkuna on rakennettu nimen ympärille.
+       */
+      const kaari = nimenKaari(kohde.pisteet, e.kohta, e.teksti * 1.2)
+        .map(([x, y]) => [x + e.siirto, y]);
+      const tunnus = `maastonimi-uoma-${kohde.avain.replace(/[^A-Za-z0-9]/g, '-')}`;
+      el('path', { id: tunnus, d: smoothOpenPath(kaari), fill: 'none' }, maarittelyt);
+      const teksti = el('text', {
+        class: 'maastonimi-teksti', 'font-size': fontti.toFixed(1), dy: -fontti * 0.42,
+      }, ryhma);
+      const polku = el('textPath', {
+        startOffset: '50%', 'text-anchor': 'middle',
+      }, teksti);
+      polku.setAttribute('href', `#${tunnus}`);
+      polku.textContent = kohde.nimi;
+      // Ikoni nimen perään uomaa pitkin: sama kaari, sama etäisyys.
+      const pituus = viivanPituus(kaari);
+      ikoninPaikka = pisteMatkalla(kaari, pituus / 2 + e.teksti / 2 + iSade * 1.6);
+      ikoninPaikka = [ikoninPaikka[0], ikoninPaikka[1] - fontti * 0.42];
+    } else {
+      // Järvi suorana, vuoristo jonon suuntaisesti. Kulma on laskettu
+      // aineistossa laudan koordinaateissa (maasto-nimet-vuoret.js).
+      const kulma = e.laji === 'vuori' ? (kohde.kulma ?? 0) : 0;
+      const kaanto = el('g', {
+        transform: `rotate(${kulma} ${e.x.toFixed(1)} ${e.y.toFixed(1)})`,
+      }, ryhma);
+      el('text', {
+        x: e.x.toFixed(1), y: e.y.toFixed(1), class: 'maastonimi-teksti',
+        'font-size': fontti.toFixed(1), 'text-anchor': 'middle',
+      }, kaanto).textContent = kohde.nimi;
+      ikoninPaikka = [e.x + e.teksti / 2 + iSade * 1.6, e.y - fontti * 0.3];
+      ikoninKulma = kulma;
+      // Ikoni samaan käännettyyn ryhmään, jotta se pysyy nimen perässä.
+      if (ikoni) {
+        piirraIIkoni(kaanto, ikoninPaikka, iSade, kohde, avaa, ikoninKulma);
+        ikoninPaikka = null;
+      }
+    }
+
+    if (ikoni && ikoninPaikka) piirraIIkoni(ryhma, ikoninPaikka, iSade, kohde, avaa, 0);
+  }
+
+  return piirretty;
+}
+
+/*
+ * Pieni i nimen perässä: napautus avaa Lue lisää -ikkunan.
+ *
+ * Ikoni käännetään takaisin pystyyn silloinkin kun nimi on kallellaan
+ * (Ural -87°, Andit -84°): kirjain i luetaan pystyssä, ja kallellaan se
+ * näyttäisi virheeltä eikä tyyliltä.
+ *
+ * Napautus pysäytetään tähän. Kartalla on oma napautuszoomauksensa ja
+ * kaupunkien valinta, ja ilman pysäytystä i-ikonin painallus zoomaisi
+ * kartan sen sijaan että avaisi ikkunan.
+ */
+function piirraIIkoni(parent, [x, y], sade, kohde, avaa, kulma) {
+  const g = el('g', {
+    class: 'maastonimi-i',
+    transform: `translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${-kulma})`,
+    role: 'button',
+    tabindex: '0',
+  }, parent);
+  el('title', {}, g).textContent = `${kohde.nimi} — lue lisää`;
+  el('circle', { r: sade.toFixed(1), class: 'maastonimi-i-keha' }, g);
+  el('text', {
+    x: 0, y: sade * 0.36, class: 'maastonimi-i-kirjain',
+    'font-size': (sade * 1.15).toFixed(1), 'text-anchor': 'middle',
+  }, g).textContent = 'i';
+  if (!avaa) return g;
+  const paina = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    avaa(kohde);
+  };
+  g.addEventListener('click', paina);
+  // Osoittimen painallus pysäytetään erikseen: kartan raahaus alkaa
+  // pointerdownista, eikä ikonin painaminen saa käynnistää sitä.
+  g.addEventListener('pointerdown', (e) => e.stopPropagation());
+  g.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') paina(e);
+  });
+  return g;
+}
+
 // --- geometria: missä on merta, missä tyhjää maata ------------------------
 
 /*

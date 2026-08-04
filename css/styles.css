@@ -41,6 +41,20 @@
   /* Vanhan matkakirjoituskoneen fontti kaikelle käyttöliittymätekstille.
      Kartan käsin piirretyt nimet pysyvät serif-musteella. */
   --font-type: "American Typewriter", "Courier Prime", "Courier New", Courier, monospace;
+
+  /*
+   * Isoisän käsiala: yksi kaunokirjoitus koko pelissä.
+   *
+   * Sama pino oli neljässä eri säännössä (maan nimi, lentokalvon
+   * vyöhykkeet ja merkinnät, nyt myös maastonimet). Kaksi eri kaunoa
+   * samalla kartalla näyttää virheeltä, ja neljä kopiota on neljä
+   * tilaisuutta poiketa — siksi pino on tässä kerran.
+   *
+   * Snell Roundhand ja Savoye löytyvät Applen laitteilta, Segoe Script
+   * Windowsista; cursive on varalla.
+   */
+  --font-kauno: "Snell Roundhand", "Savoye LET", "Bradley Hand",
+    "Segoe Script", "Comic Sans MS", cursive;
 }
 
 * { box-sizing: border-box; }
@@ -2563,6 +2577,61 @@ body.linssi-valokuva .grain { display: none; }
   stroke-linejoin: round;
   opacity: 0.6;
 }
+/*
+ * Maastonimet: joet, järvet ja vuoristot kaunokirjoituksella.
+ *
+ * KOLME ASIAA, JOTKA TÄSSÄ ON PAKKO SANOA ÄÄNEEN.
+ *
+ * 1. SAMA KÄSIALA KUIN MAAN NIMESSÄ. Fontti tulee muuttujasta
+ *    --font-kauno, jota myös .country-name ja lentokalvon merkinnät
+ *    käyttävät. Kaksi eri kaunoa samalla kartalla näyttää virheeltä.
+ *
+ * 2. TÄYTTÖ JA VIIVA SANOTAAN ERIKSEEN JOKAISELLE LUOKALLE.
+ *    Naapurissa (.maasto) on kirjattu, mitä tapahtui kun
+ *    `.maasto path { stroke: none; }` voitti `.joki`-säännön: kaikki
+ *    169 jokea olivat näkymättömiä kuukausia, elementit olivat DOMissa
+ *    ja testit vihreinä. Nimikerroksessa on <text>, <circle> ja
+ *    <textPath> sisäkkäin, joten sama ansa on täällä auki: yhden
+ *    ryhmäsäännön sijaan jokainen muoto saa oman.
+ *
+ * 3. EI SUODATTIMIA EIKÄ VARJOJA. Sama iOS-sääntö kuin muulla
+ *    kartalla: suodatettu kerros palaa taustalta tyhjänä.
+ *
+ * Kerros ei ota napautuksia vastaan — muuten nimi söisi kartan oman
+ * napautuszoomauksen. Poikkeus on i-ikoni, joka palauttaa ne itselleen.
+ */
+.maastonimi { pointer-events: none; }
+.maastonimi-teksti {
+  font-family: var(--font-kauno);
+  font-style: italic;
+  letter-spacing: 0.06em;
+  fill: rgba(70, 51, 31, 0.72);
+  stroke: none;
+}
+/* Vesistön nimi meren musteella, kuten uoma ja järven reuna itsekin. */
+.maastonimi-joki .maastonimi-teksti,
+.maastonimi-jarvi .maastonimi-teksti { fill: rgba(88, 99, 110, 0.9); }
+
+.maastonimi-i {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.maastonimi-i-keha {
+  fill: rgba(239, 220, 180, 0.85);
+  stroke: rgba(70, 51, 31, 0.55);
+  stroke-width: 1;
+  /* Viivan paksuus on laudan yksiköissä ja kutistuisi lähikuvassa
+     näkymättömiin. Vektorimitta pitää kehän aina yhtä ohuena. */
+  vector-effect: non-scaling-stroke;
+}
+.maastonimi-i-kirjain {
+  font-family: var(--font-type);
+  font-weight: 700;
+  fill: rgba(70, 51, 31, 0.8);
+  stroke: none;
+}
+.maastonimi-i:hover .maastonimi-i-keha { fill: var(--accent); }
+
 .coast { fill: none; stroke: var(--map-ink); stroke-width: 3.2; stroke-linejoin: round; }
 .coast-soft { fill: none; stroke: var(--map-ink); stroke-width: 1.2; opacity: 0.45; }
 /* Maiden rajat: hyvin hento katkoviiva vanhan kartan tapaan. */
@@ -2582,8 +2651,7 @@ body.linssi-valokuva .grain { display: none; }
   stroke: none;
 }
 .country-name {
-  font-family: "Snell Roundhand", "Savoye LET", "Bradley Hand",
-    "Segoe Script", "Comic Sans MS", cursive;
+  font-family: var(--font-kauno);
   font-style: italic;
   letter-spacing: 0.12em;
   fill: rgba(70, 51, 31, 0.42);
@@ -2734,12 +2802,10 @@ body.flight-active .grain { display: none; }
 /*
  * Isoisän käsiala: kursiivinen kaunokirjoitus, jota ei ole tarkoituskaan
  * pystyä lukemaan kuin osittain — kuin vanhan kartan reunamerkinnät.
- * Snell Roundhand ja Savoye löytyvät Applen laitteilta, Segoe Script
- * Windowsista; cursive on varalla.
+ * Fonttipino on --font-kauno, ks. :root.
  */
 .flight-zone-name {
-  font-family: "Snell Roundhand", "Savoye LET", "Bradley Hand",
-    "Segoe Script", "Comic Sans MS", cursive;
+  font-family: var(--font-kauno);
   font-style: italic;
   font-size: 21px;
   letter-spacing: 0.1em;
@@ -2748,8 +2814,7 @@ body.flight-active .grain { display: none; }
 
 /* Isoisän himmeät merkinnät ja piirrokset kalvon laidoilla. */
 .flight-note-text {
-  font-family: "Snell Roundhand", "Savoye LET", "Bradley Hand",
-    "Segoe Script", "Comic Sans MS", cursive;
+  font-family: var(--font-kauno);
   font-style: italic;
   font-size: 24px;
   letter-spacing: 0.02em;
