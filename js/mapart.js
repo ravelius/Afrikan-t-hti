@@ -627,21 +627,20 @@ function nimenKaari(pisteet, kohtaIndeksi, tarve) {
    * Suunta: teksti vasemmalta oikealle, ja pystysuoralla uomalla
    * alhaalta ylös.
    *
-   * Vaakasuunta ratkaisee ensin. Pystysuoralla joella (Volga
-   * Volgogradin yläpuolella, Nile) vaakaero on lähes nolla, ja silloin
-   * pelkkä x-vertailu valitsisi suunnan sattumanvaraisesti. Karttojen
-   * tapa on kirjoittaa pystysuora nimi alhaalta ylös — sama sääntö,
-   * jolla vuoristojen kulmat on laskettu (maasto-nimet-vuoret.js).
+   * RATKAISEE VAAKASUUNTA, ei kumpi ero on suurempi. Teksti kääntyy
+   * ylösalaisin aina kun polku kulkee vasemmalle — myös silloin kun se
+   * kulkee enimmäkseen ylöspäin. Kun suunta valittiin hetken aikaa
+   * suuremman eron mukaan, Amudarja nousee luoteeseen ja luki
+   * peilikuvana.
+   *
+   * Vain lähes pystysuoralla uomalla (Volga Volgogradin yläpuolella,
+   * Niili) vaakaero on niin pieni, ettei se kerro mitään; silloin
+   * valitaan ylöspäin, mikä on karttojen tapa kirjoittaa pystysuora
+   * nimi — sama sääntö, jolla vuoristojen kulmat on laskettu
+   * (maasto-nimet-vuoret.js).
    */
   const dx = otokset.at(-1)[0] - otokset[0][0];
   const dy = otokset.at(-1)[1] - otokset[0][1];
-  /*
-   * Ratkaisee VAAKASUUNTA, ei kumpi ero on suurempi. Teksti on
-   * ylösalaisin aina kun polku kulkee vasemmalle — myös silloin kun se
-   * kulkee enimmäkseen ylöspäin. Se virhe oli tässä hetken: Amudarja
-   * nousee luoteeseen, ja kun suunta valittiin pystyeron mukaan, nimi
-   * luki peilikuvana.
-   */
   const pysty = Math.abs(dx) < Math.abs(dy) * 0.05;
   const nurin = pysty ? dy > 0 : dx < 0;
   return nurin ? otokset.reverse() : otokset;

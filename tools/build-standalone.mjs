@@ -48,6 +48,8 @@ const MODULES = [
   'js/linssit/kerros.js',
   'js/linssit/rekisteri.js',
   'js/linssit/omistus.js',
+  'js/linssit/pistenaytto.js',
+  'js/linssit/radiosoitin.js',
   'js/packs/valokuvat-paikalliset.js',
   'js/packs/liput-paikalliset.js',
   'js/packs/lippu-tekijat.js',
