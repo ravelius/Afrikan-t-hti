@@ -650,7 +650,6 @@ import {
   tokenIconSvg,
   paperi,
   kasinPiirretty,
-  rantaviivanPolut,
   rasteroiRuutu,
   RUUTU_TYHJA,
   piirtotarkkuus,
@@ -3733,38 +3732,20 @@ export class UI {
     }
     this.countryLayer = el('g', { class: 'country-borders', 'clip-path': 'url(#maa-rajaus)' }, root);
     /*
-     * SAMAN RAJAN TOINEN PUOLI: merenpohja rajataan maan ULKOPUOLELLE.
+     * MERENPOHJAN RAJAUS ON POISTETTU YHDESSÄ SYVYYSVYÖHYKKEIDEN KANSSA.
      *
-     * Syvyysvyöhykkeet ovat karkeampaa aineistoa kuin piirretty
-     * rannikko, ja matalikko ulottui rannan yli maalle (ks. mapart.js
-     * drawLahivesi). Yläpuolinen `maa-rajaus` pitää maan sävyn poissa
-     * merestä; tämä pitää meren sävyn poissa maalta.
+     * Rajaus oli laudan kokoinen `evenodd`-polku, johon koottiin koko
+     * rantaviiva (317 000 merkkiä), ja se arvioitiin uudelleen joka kerta
+     * kun lähivesi piirrettiin — eli joka panorointiaskeleella. Se oli
+     * olemassa vain siksi, että syvyysvyöhykkeet eivät valuisi maalle;
+     * kun vyöhykkeitä ei piirretä (ks. this.merisyvyys), sillä ei ole
+     * mitään rajattavaa.
      *
-     * YKSI POLKU JA `evenodd`, ei kahta elementtiä. clipPathin lapset
-     * yhdistyvät summana, joten suorakaide ja rantaviivat erillisinä
-     * antaisivat pelkän suorakaiteen. Samassa d:ssä parillisuussääntö
-     * tekee juuri halutun: suorakaiteen sisällä, rantaviivojen
-     * ulkopuolella.
-     *
-     * Suorakaide ulottuu laudan yli joka suuntaan, jotta kiertävän
-     * kartan sauman toisella puolella oleva meri ei jää rajauksen
-     * ulkopuolelle.
+     * `maa-rajaus` yllä jää: se on eri raja eri tarkoitukseen (maan
+     * korostussävy pysyy rannan sisällä) ja se koskee vain yhtä maata
+     * kerrallaan.
      */
-    if (pack.map.outlines?.length) {
-      const W = pack.map.width;
-      const H = pack.map.height;
-      const kehys = `M${-W},${-H} L${2 * W},${-H} L${2 * W},${2 * H} L${-W},${2 * H} Z`;
-      // Rajaus PIIRRETYSTÄ rantaviivasta, ei raakapisteistä: ks.
-      // mapart.js rantaviivanPolut.
-      const maat = rantaviivanPolut(pack.map).join('');
-      const meriClip = el('clipPath', { id: 'meri-rajaus' }, root);
-      el('path', { d: `${kehys}${maat}`, 'clip-rule': 'evenodd' }, meriClip);
-      this.meriRajaus = 'url(#meri-rajaus)';
-    } else {
-      // Viittaus olemattomaan clipPathiin jättäisi kerroksen kokonaan
-      // piirtämättä, joten sitä ei anneta ellei rajausta oikeasti ole.
-      this.meriRajaus = null;
-    }
+    this.meriRajaus = null;
     // Nimi piirretään leikkaamattomaan kerrokseen: maan todellinen
     // keskipiste voi osua tyylitellyn rannikon ulkopuolelle, eikä
     // kaunokirjoituksen saa katketa siihen.
@@ -3772,9 +3753,10 @@ export class UI {
     /*
      * Maastonimet: joet, järvet ja vuoristot kaunokirjoituksella.
      *
-     * JUURIRYHMÄN SISÄÄN samasta syystä kuin linssikerros: kiertävällä
-     * kartalla <use href="#lauta-sisalto"> on elävä viittaus ja tuo
-     * sisällön sauman toiselle puolelle ilmaiseksi.
+     * JUURIRYHMÄN ULKOPUOLELLE, toisin kuin muut kerrokset: ks.
+     * maastonimiKerros alempana. Nimi on merkintä kartalla eikä osa
+     * maastoa, joten kierron kopio ei saa kirjoittaa sitä toiseen
+     * kertaan.
      *
      * ELÄVÄÄN PUUHUN eikä staattiseen taiteeseen, koska nimet muuttuvat
      * zoomin mukana: mikä nimi näkyy ja minkä kokoisena riippuu siitä
@@ -3794,10 +3776,42 @@ export class UI {
      * juuri siinä kohtaa, missä nimi on, koska nimi piirretään uoman
      * mukaan.
      */
-    this.merisyvyys = pack.id === 'maailmankartta' ? MERISYVYYS : null;
+    /*
+     * MERISYVYYS POIS KÄYTÖSTÄ.
+     *
+     * Vyöhykkeet olivat neljän raportin lähde: sinistä maalla, maan sävy
+     * eri zoomeilla, ja lopulta tökkivä vieritys. Mitattu matkan varrella:
+     * rajaus poistaa vuodosta vain noin 40 %, koska syvyysaineisto on
+     * karkeampaa kuin rannikko eikä kahden eri tarkkuuden rajaa saa
+     * osumaan yhteen pikselilleen; peittävyys jouduttiin pudottamaan
+     * kolmasosaan (0,07), jolloin kerros ei enää juuri näy — mutta se
+     * maksaa yhä 82 polkua ja 317 000 merkin rajauspolun uudelleen joka
+     * panorointiaskeleella.
+     *
+     * Hinta on siis täysi ja hyöty lähes olematon. Aineisto ja piirtäjä
+     * jäävät paikalleen: tämän rivin palauttaminen tuo vyöhykkeet
+     * takaisin, jos ne joskus halutaan omalla saumallaan projisoituina.
+     */
+    this.merisyvyys = null;
     this.lahivesiKerros = el('g', { class: 'lahivesi-kerros' }, root);
     this.lahivesiTunniste = null;
-    this.maastonimiKerros = el('g', { class: 'maastonimet' }, root);
+    /*
+     * MAASTONIMET JUURIRYHMÄN ULKOPUOLELLE — YKSI NIMI, EI KAHTA.
+     *
+     * Kaikki muu piirretään `root`iin, jonka kiertävä kartta monistaa
+     * <use>-kopiona laudan leveyden verran oikealle. Vedelle ja maalle se
+     * on juuri oikein: molemmat puolet ovat samaa maastoa. NIMELLE SE EI
+     * OLE. Nimi on merkintä kartalla, ei osa maastoa, ja kopio kirjoitti
+     * sen toistamiseen — omistaja: "Joen nimi vain kerran. Nyt lukee
+     * monta kertaa."
+     *
+     * Kerros on nyt `this.svg`:n suora lapsi eli <use>-kopion sisar. Se
+     * liikkuu ja skaalautuu yhä kartan mukana, koska panorointi tehdään
+     * viewBoxilla eikä ryhmän muunnoksella. Sauman yli menevän nimen
+     * paikan hoitaa jo `saumasiirto` (js/mapart.js), joten kopiota ei
+     * tarvita mihinkään.
+     */
+    this.maastonimiKerros = el('g', { class: 'maastonimet' }, this.svg);
     // Uusi lauta, tyhjä kerros: muistettu näkymätunniste ei saa jäädä
     // voimaan, tai nimet jäisivät piirtymättä kun sama näkymä palaa.
     this.maastonimiTunniste = null;
