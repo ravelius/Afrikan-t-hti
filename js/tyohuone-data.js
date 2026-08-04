@@ -96,6 +96,8 @@ export const PELIT = [
       + 'kaupunkia tuntemalla.' },
 ];
 
+// Nimistö (4.8.2026): yleistermi "unohdettu aarre", tarinan erisnimi
+// "Aarnin luettelo" — ks. docs/tarina.md "Aarni ja unohdetut aarteet".
 export const AARTEET = [
   { maanosa: 'Eurooppa', aarre: 'Meripihkahuone', tila: 'kaytossa' },
   { maanosa: 'Afrikka', aarre: 'Suuren Zimbabwen kivilintu', tila: 'kaytossa' },
