@@ -44,6 +44,9 @@ import { AFRICA_SAAPUMISET } from './packs/africa-saapumiset.js';
 import { AFRICA_KULTTUURI, KULTTUURI_PALKKIO } from './packs/africa-kulttuuri.js';
 import { EUROPE_SAAPUMISET } from './packs/europe-saapumiset.js';
 import { ASIA_SAAPUMISET } from './packs/asia-saapumiset.js';
+import { NORTHAMERICA_SAAPUMISET } from './packs/northamerica-saapumiset.js';
+import { SOUTHAMERICA_SAAPUMISET } from './packs/southamerica-saapumiset.js';
+import { OCEANIA_SAAPUMISET } from './packs/oceania-saapumiset.js';
 import { ASIA_ARTIKKELIT } from './packs/asia-artikkelit.js';
 import { ASIA_VALOKUVAT } from './packs/asia-valokuvat.js';
 import { ASIA_MAATIEDOT } from './packs/asia-maatiedot.js';
@@ -89,7 +92,10 @@ import { LIPPU_TEKIJAT } from './packs/lippu-tekijat.js';
  * Nimetty yhdistelmä ei estä ansaa mutta tekee siitä yhden rivin
  * kokoisen: uusi lauta lisätään yhteen paikkaan taulua kohti.
  */
-const KAIKKI_SAAPUMISET = { ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET };
+const KAIKKI_SAAPUMISET = {
+  ...AFRICA_SAAPUMISET, ...EUROPE_SAAPUMISET, ...ASIA_SAAPUMISET,
+  ...NORTHAMERICA_SAAPUMISET, ...SOUTHAMERICA_SAAPUMISET, ...OCEANIA_SAAPUMISET,
+};
 const KAIKKI_KULTTUURI = { ...AFRICA_KULTTUURI, ...EUROPE_KULTTUURI };
 const KAIKKI_VALOKUVAT = { ...AFRICA_VALOKUVAT, ...EUROPE_VALOKUVAT, ...ASIA_VALOKUVAT };
 const KAIKKI_MAATIEDOT = { ...AFRICA_MAATIEDOT, ...EUROPE_MAATIEDOT, ...ASIA_MAATIEDOT };
@@ -215,7 +221,8 @@ async function cachedImage(title) {
  * Haku käy lähdelaudat läpi ja palauttaa sen, jolta luenta löytyy.
  * Palautettua tunnusta käytetään myös tiedoston nimessä.
  */
-const LUENTA_LAUDAT = ['europe', 'africa', 'middleeast', 'asia'];
+const LUENTA_LAUDAT = ['europe', 'africa', 'middleeast', 'asia',
+  'northamerica', 'southamerica', 'oceania'];
 
 function luentaLauta(joukko, packId, cityId) {
   if (!cityId) return null;
@@ -371,6 +378,111 @@ export const SAAPUMISLUENNAT = new Set([
   'asia:vladivostok',
   'asia:xian',
   'asia:yangon',
+  'northamerica:anchorage',
+  'northamerica:appalakit',
+  'northamerica:bermuda',
+  'northamerica:chicago',
+  'northamerica:churchill',
+  'northamerica:denver',
+  'northamerica:grandcanyon',
+  'northamerica:guatemala',
+  'northamerica:halifax',
+  'northamerica:havanna',
+  'northamerica:hawaii',
+  'northamerica:houston',
+  'northamerica:iqaluit',
+  'northamerica:labrador',
+  'northamerica:losangeles',
+  'northamerica:managua',
+  'northamerica:merida',
+  'northamerica:mexico',
+  'northamerica:miami',
+  'northamerica:monterrey',
+  'northamerica:montreal',
+  'northamerica:mountrushmore',
+  'northamerica:neworleans',
+  'northamerica:newyork',
+  'northamerica:nome',
+  'northamerica:nuuk',
+  'northamerica:panama',
+  'northamerica:sanfrancisco',
+  'northamerica:sanjuan',
+  'northamerica:santafe',
+  'northamerica:stjohns',
+  'northamerica:toronto',
+  'northamerica:vancouver',
+  'northamerica:whitehorse',
+  'northamerica:winnipeg',
+  'northamerica:yellowknife',
+  'northamerica:yellowstone',
+  'southamerica:antofagasta',
+  'southamerica:asuncion',
+  'southamerica:bananal',
+  'southamerica:boavista',
+  'southamerica:bogota',
+  'southamerica:buenosaires',
+  'southamerica:campogrande',
+  'southamerica:caphorn',
+  'southamerica:caracas',
+  'southamerica:cayenne',
+  'southamerica:falkland',
+  'southamerica:galapagos',
+  'southamerica:iguazu',
+  'southamerica:iquitos',
+  'southamerica:joaopessoa',
+  'southamerica:lima',
+  'southamerica:macapa',
+  'southamerica:machupicchu',
+  'southamerica:manaus',
+  'southamerica:montevideo',
+  'southamerica:portoalegre',
+  'southamerica:portovelho',
+  'southamerica:puertomontt',
+  'southamerica:puntaarenas',
+  'southamerica:quito',
+  'southamerica:rio',
+  'southamerica:robinsoncrusoe',
+  'southamerica:salta',
+  'southamerica:salvador',
+  'southamerica:sanambrosio',
+  'southamerica:santacruz',
+  'southamerica:santarem',
+  'southamerica:saoluis',
+  'southamerica:saopaulo',
+  'southamerica:titicaca',
+  'southamerica:valparaiso',
+  'oceania:adelaide',
+  'oceania:alicesprings',
+  'oceania:auckland',
+  'oceania:bali',
+  'oceania:birdsville',
+  'oceania:brisbane',
+  'oceania:broome',
+  'oceania:cairns',
+  'oceania:christchurch',
+  'oceania:cooberpedy',
+  'oceania:darwin',
+  'oceania:dili',
+  'oceania:exmouth',
+  'oceania:geraldton',
+  'oceania:hobart',
+  'oceania:honiara',
+  'oceania:kalgoorlie',
+  'oceania:melbourne',
+  'oceania:milfordsound',
+  'oceania:mountisa',
+  'oceania:norfolk',
+  'oceania:noumea',
+  'oceania:nullarbor',
+  'oceania:perth',
+  'oceania:portmoresby',
+  'oceania:portvila',
+  'oceania:sepik',
+  'oceania:suva',
+  'oceania:sydney',
+  'oceania:townsville',
+  'oceania:uluru',
+  'oceania:wellington',
 ]);
 
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).

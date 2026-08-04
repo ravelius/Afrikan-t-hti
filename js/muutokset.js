@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 221, teksti: 'Matkakirja valmis: 248 paikkaa, 248 luentaa' },
+  { v: 221, teksti: 'Amerikat ja Oseania kirjoitettu ja luettu' },
+  { v: 221, teksti: 'Kertoja eläytyy: huikeat paikat kuuluvat äänessä' },
   { v: 220, teksti: 'Tutki-aiheet valmiit monistettaviksi muualle' },
   { v: 220, teksti: 'Lontoon metro, Proms ja piirakka aiheisiin' },
   { v: 220, teksti: 'Aiheisiin Lue lisää -napit ja musiikkilinkit' },
