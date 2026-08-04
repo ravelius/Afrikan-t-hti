@@ -286,16 +286,19 @@ export const VIRITYKSEN_AJAT = Object.freeze({
 });
 
 /*
- * Kuinka usein tarkistetaan, sammuttiko pelaaja pelin äänet kesken
- * virityksen.
+ * MYKISTYSVAHTIA EI OLE, JA SE ON TAHALLISTA.
  *
- * js/sound.js ei kerro mykistyksestä kenellekään eikä sitä voi muuttaa
- * täältä (tiedosto on toisen työvaiheen hallussa), joten tieto on
- * kysyttävä. Vahti elää vain virityksen ajan eli enintään 12 sekuntia,
- * ja neljä kertaa sekunnissa on riittävän nopea: mykistys tuntuu
- * välittömältä, kun ääni katoaa neljännessekunnissa.
+ * Tässä oli ajastin, joka neljä kertaa sekunnissa kysyi, sammuttiko
+ * pelaaja pelin äänet, ja vaiensi virityksen jos oli. Se poistettiin,
+ * koska se vastasi väärään kysymykseen: viritysääni on radion ääni eikä
+ * pelin (ks. aloitaViritys). Suora lähetys ei ole koskaan totellut
+ * kertojavalikkoa — se soi <audio>-elementistä — joten vahti vaiensi
+ * ristihäivytyksestä vain toisen puolen ja jätti aseman pauhaamaan.
+ *
+ * Radion oma vaientaminen tapahtuu radion omilla kytkimillä: stop-nappi
+ * (pysayta), virtakytkin (pois) ja äänenvoimakkuusnuppi (asetaAani).
+ * Niistä jokainen vie sekä kohinan että lähetyksen, eli koko laitteen.
  */
-const MYKISTYKSEN_VAHTI_MS = 250;
 
 /*
  * Moduulin koko muisti viidessä muuttujassa.
@@ -319,7 +322,6 @@ let tila = null;
 let soiva = null;
 let vaistyva = null;
 let viritin = null;
-let mykistysVahti = 0;
 let aanenvoimakkuus = OLETUSAANI;
 
 /** Onko radiotila päällä? */
@@ -634,15 +636,48 @@ function kerroMuutos() {
  *
  * Äänikonteksti pyydetään vasta tässä, napautuksen sisällä. Selain
  * vaatii eleen, ja tämä on se ele.
+ *
+ * VIRITYSÄÄNI ON RADION ÄÄNI, EI PELIN — ja tässä oli vika.
+ *
+ * Omistaja 4.8.2026: "viritysääni on hävinnyt kokonaan." Ennen tässä
+ * luki päinvastoin ("se on pelin ääni, ei radion"), ja siksi
+ * `sfx.ensureContext()` sai palauttaa null aina kun pelin äänet olivat
+ * pois päältä. Silloin tämä funktio poistui heti: ei ääntä, ei virhettä,
+ * ei jälkeä.
+ *
+ * MITATTU 4.8.2026 (Chromium, analysaattori pelin bussissa): kun
+ * `sfx.enabled` oli false, virittimen gain-solmua ei syntynyt lainkaan,
+ * bussin RMS oli 0 koko virityksen ajan ja VU-mittarin neula makasi
+ * lepokulmassaan −43,7° myös lähetyksen soidessa. Kun sama mitattiin
+ * äänet päällä, gain nousi 0,0001 → 1,2 kuudessa kymmenyksessä ja RMS
+ * oli 0,10–0,13. Vika ei siis ollut ristihäivytyksessä vaan siinä, ettei
+ * viritintä käynnistetty ollenkaan.
+ *
+ * TÄMÄ TILA EI OLE HARVINAINEN: katselutila (`?lauta=`, työhuoneen
+ * karttaesikatselu) mykistää pelin tahallaan (js/main.js avaaKatselu), ja
+ * kertojavalikon "mykistys" tekee saman pysyvästi. Molemmissa suora
+ * lähetys soi silti täydellä voimalla, koska se tulee <audio>-elementistä
+ * eikä kysy js/sound.js:ltä mitään. Laite oli siis puolikas: asema kuului,
+ * mutta se kohina, josta asema ristihäivytetään, ei.
+ *
+ * Radio on laite, jonka pelaaja on ITSE kytkenyt päälle, ja sen omat
+ * äänet seuraavat sen omaa virtakytkintä. Siksi konteksti pakotetaan ja
+ * viritin saa oman `mykistetty`-vastauksensa: kumpikaan ei kysy
+ * kertojavalikolta lupaa. Pelin omat tehosteet eivät muutu tästä — ne
+ * kysyvät `sfx.enabled`-lippua erikseen.
  */
 function aloitaViritys() {
   if (viritin) return;
-  const ctx = sfx.ensureContext();
-  // ensureContext palauttaa null, jos pelin äänet ovat pois päältä.
-  // Silloin viritystäkään ei tule — se on pelin ääni, ei radion.
+  const ctx = sfx.ensureContext({ pakota: true });
+  // Konteksti voi yhä puuttua: selain ilman Web Audiota.
   if (!ctx) return;
   try {
-    const uusi = teeViritysaani(ctx, { voimakkuus: aanenvoimakkuus });
+    const uusi = teeViritysaani(ctx, {
+      voimakkuus: aanenvoimakkuus,
+      // Radion oma ääni, ks. yllä. Virittimen oletus lukisi tässä pelin
+      // äänivalintaa ja vaikenisi juuri niin kuin ennenkin.
+      mykistetty: () => false,
+    });
     // Kohina nousee ristihäivytyksen mitassa: edellinen kanava on juuri
     // lähtenyt väistymään saman verran (haivytaLahetysPois).
     if (!uusi.aloita(RISTIHAIVYTYS_S)) return;
@@ -652,11 +687,7 @@ function aloitaViritys() {
     // toimii ilman sitä täsmälleen kuten ennen.
     console.warn('Viritysäänen käynnistys epäonnistui.', syy);
     viritin = null;
-    return;
   }
-  mykistysVahti = setInterval(() => {
-    if (sfx.enabled === false) lopetaViritys(0.15);
-  }, MYKISTYKSEN_VAHTI_MS);
 }
 
 /**
@@ -671,10 +702,6 @@ function aloitaViritys() {
  * tiedetään olevan käynnissä.
  */
 function lopetaViritys(haive = RISTIHAIVYTYS_S) {
-  if (mykistysVahti) {
-    clearInterval(mykistysVahti);
-    mykistysVahti = 0;
-  }
   const vanha = viritin;
   viritin = null;
   if (!vanha) return;
@@ -915,7 +942,15 @@ function merkitseKorsiton(url) {
  * Sama ratkaisu on kaupungin äänimaisemassa samasta syystä.
  */
 function liitaMittariin(audio) {
-  const ctx = sfx.ensureContext?.();
+  /*
+   * Sama pakotus kuin viritysäänellä, ja samasta syystä: ilman sitä
+   * `ensureContext` palautti null aina kun pelin äänet olivat pois
+   * päältä, reititystä ei tehty kertaakaan eikä mittarilla ollut
+   * mitään luettavaa. MITATTU 4.8.2026: neula makasi lepokulmassaan
+   * −43,7° koko lähetyksen ajan, vaikka asema kuului kaiuttimesta.
+   * Lähetys ei tottele kertojavalikkoa, joten ei tottele mittarikaan.
+   */
+  const ctx = sfx.ensureContext?.({ pakota: true });
   if (!ctx || ctx.state !== 'running' || typeof ctx.createMediaElementSource !== 'function') {
     return null;
   }

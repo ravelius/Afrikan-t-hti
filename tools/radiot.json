@@ -616,11 +616,11 @@
   "pisteet": 630
  },
  "AUS": {
-  "url": "https://abc.streamguys1.com/live/newsradio/icecast.audio",
-  "asema": "ABC News Radio",
-  "kieli": "english",
+  "url": "https://abc.streamguys1.com/live/rnnsw/icecast.audio",
+  "asema": "ABC Radio National",
+  "kieli": "englanti",
   "virallinen": true,
-  "pisteet": 610
+  "tutkittu": true
  },
  "BOL": {
   "url": "https://stream.zeno.fm/pnwpbyfambruv",
@@ -658,11 +658,11 @@
   "pisteet": 635
  },
  "CUB": {
-  "url": "https://securestreams7.autopo.st/?uri=https://icecast.teveo.cu/b3jbfThq",
-  "asema": "Radio Reloj Cuba 950 AM",
-  "kieli": "spanish",
+  "url": "https://securestreams7.autopo.st/?uri=https://icecast.teveo.cu/kHKL7tWd",
+  "asema": "Radio Rebelde 1180 AM",
+  "kieli": "espanja",
   "virallinen": true,
-  "pisteet": 623
+  "tutkittu": true
  },
  "ECU": {
   "url": "https://icecast.radiopichincha.com/radiopichincha",
@@ -672,18 +672,18 @@
   "pisteet": 126
  },
  "FJI": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
-  "virallinen": false,
-  "pisteet": 65
+  "url": "https://icecast1.sere.plus/RFOne",
+  "asema": "Radio Fiji One (FBC, fidžin kieli)",
+  "kieli": "fidzi",
+  "virallinen": true,
+  "tutkittu": true
  },
  "GRL": {
-  "url": "https://play.streams.gr/sc/radiodiplopenies/stream",
-  "asema": "ΡΑΔΙΟ ΔΙΠΛΟΠΕΝΙΕΣ",
-  "kieli": "",
+  "url": "https://getnanoq.retro-radio.dk/Nanoq-TX-1",
+  "asema": "Nanoq FM (Nuuk)",
+  "kieli": "gronlanti",
   "virallinen": false,
-  "pisteet": 66
+  "tutkittu": true
  },
  "GTM": {
   "url": "https://stream.zenolive.com/z96sq8tndseuv",
@@ -714,11 +714,11 @@
   "pisteet": 129
  },
  "PAN": {
-  "url": "https://stream.zeno.fm/fz1rcfd1x1zuv",
-  "asema": "Stereo Vida Panama",
-  "kieli": "spanish",
+  "url": "https://stream.zeno.fm/nvpr0uec8e9uv",
+  "asema": "La Exitosa Panamá",
+  "kieli": "espanja",
   "virallinen": false,
-  "pisteet": 67
+  "tutkittu": true
  },
  "PER": {
   "url": "https://mdstrm.com/audio/5fab3416b5f9ef165cfab6e9/icecast.audio",
@@ -728,25 +728,25 @@
   "pisteet": 635
  },
  "PNG": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
+  "url": "https://stream.rcs.revma.com/n5vb288kmbpwv",
+  "asema": "Yumi FM (tok pisin, Port Moresby)",
+  "kieli": "tok pisin",
   "virallinen": false,
-  "pisteet": 68
+  "tutkittu": true
  },
  "SLB": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
-  "virallinen": false,
-  "pisteet": 67
+  "url": "https://listen.mixlr.com/e1e2be07dfce2a18e8ee3cdd0dd2d437",
+  "asema": "SIBC Solomon Islands Broadcasting (Honiara)",
+  "kieli": "pijin",
+  "virallinen": true,
+  "tutkittu": true
  },
  "TLS": {
-  "url": "https://radio.mp3islam.com/listen/abdulbasit/radio.mp3",
-  "asema": "Abdulbasit Abdulsamad",
-  "kieli": "arabic",
+  "url": "https://streaming.kalohan.net/proxy/raliber?mp=/stream",
+  "asema": "Rádio Liberdade Dili",
+  "kieli": "tetum",
   "virallinen": false,
-  "pisteet": 66
+  "tutkittu": true
  },
  "USA": {
   "url": "https://fm939.wnyc.org/wnycfm",
@@ -764,9 +764,9 @@
  },
  "VUT": {
   "url": "https://radio.vbtc.vu/paradisefm",
-  "asema": "Paradise 98FM",
+  "asema": "Paradise 98FM (VBTC, Port Vila)",
   "kieli": "bislama",
-  "virallinen": false,
-  "pisteet": 63
+  "virallinen": true,
+  "tutkittu": true
  }
 }

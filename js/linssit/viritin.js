@@ -407,34 +407,36 @@ function verho(param, { alku, kesto, huippu, nousu = 0.28, lasku = 0.35 }) {
 const KAYRAN_PISTEET = 33;
 
 /**
- * KATKAISEE PARAMETRIN KESKEN OLEVAN AUTOMAATION nykyiseen arvoonsa.
+ * KATKAISEE PARAMETRIN KESKEN OLEVAN AUTOMAATION.
  *
  * MIKSI OMA FUNKTIO: viritys voi vaihtaa suuntaa kesken häivytyksen —
  * pelaaja painaa stopia sillä sekunnilla, jona kohina on vasta nousemassa
  * — ja silloin uusi käyrä ajoitettaisiin vanhan päälle. Web Audio ei
  * salli päällekkäisiä setValueCurveAtTime-jaksoja vaan heittää
- * poikkeuksen, joten vanha on nimenomaisesti katkaistava ensin.
+ * NotSupportedErrorin, joten vanha on nimenomaisesti katkaistava ensin.
  *
- * MOLEMMAT KUTSUT, JA SIINÄ JÄRJESTYKSESSÄ:
+ * VAIN cancelScheduledValues, EIKÄ cancelAndHoldAtTime SEN EDELLÄ.
  *
- *   cancelAndHoldAtTime  purkaa kesken olevan käyrän ja jättää arvon
- *                        siihen, mihin se oli ehtinyt. Tämä on ainoa
- *                        kutsu, joka osaa katkaista jo alkaneen käyrän;
- *                        vanhemmissa selaimissa sitä ei ole.
- *   cancelScheduledValues vie tulevat tapahtumat — myös edellisen
- *                        jättämän pidätystapahtuman. Se on tässä
- *                        välttämätön eikä varmuuden vuoksi: uutta käyrää
- *                        EI saa ajoittaa hetkeen, jossa on jo tapahtuma,
- *                        ja pidätys on juuri siinä hetkessä.
+ * Tässä oli hetken molemmat, siinä järjestyksessä, ja pari on itsensä
+ * kanssa ristiriidassa. cancelAndHoldAtTime jättää arvon paikalleen
+ * lisäämällä pidätystapahtuman hetkeen `t`; heti perään tuleva
+ * cancelScheduledValues(t) poistaa kaikki tapahtumat hetkestä `t`
+ * eteenpäin eli myös juuri lisätyn pidätyksen. Jäljelle ei jää mitään, ja
+ * parametri putoaa takaisin omaan pohja-arvoonsa — virittimellä se on
+ * HILJAA. Sama koskee kesken olevaa käyrää: spesifikaation mukaan
+ * cancelScheduledValues poistaa setValueCurve-tapahtuman kokonaan, jos
+ * katkaisuhetki osuu käyrän sisään.
+ *
+ * Pidätystä ei tarvita, koska JOKAINEN KUTSUJA LUKEE ARVON ITSE ENNEN
+ * KATKAISUA ja kirjoittaa sen uuden käyränsä ensimmäiseksi pisteeksi
+ * (haivytaPois, haivytaSisaan, asetaVoimakkuus). Mitattu arvo on
+ * täsmälleen se, minkä pidätys jättäisi — mutta se on meidän kädessämme
+ * eikä riipu siitä, mitä kukin selain tekee peräkkäisillä perumisilla.
+ *
+ * JÄRJESTYS ON SIIS OSA SOPIMUSTA: lue arvo, katkaise, kirjoita uusi
+ * kaari. Katkaisun jälkeen luettu `param.value` ei kerro enää mitään.
  */
 function katkaiseAutomaatio(param, t) {
-  if (typeof param.cancelAndHoldAtTime === 'function') {
-    try {
-      param.cancelAndHoldAtTime(t);
-    } catch {
-      /* ei tuettu tälle parametrille — peruminen riittää */
-    }
-  }
   param.cancelScheduledValues(t);
 }
 
@@ -848,8 +850,12 @@ export function teeViritin(audioCtx, {
     if (!ulos || lopetettu) return taso;
     const t = audioCtx.currentTime;
     try {
+      // LÄHTÖARVO ENNEN KATKAISUA, ks. katkaiseAutomaatio. Katkaisun
+      // jälkeen luettu arvo on pohja-arvo eli HILJAA, ja nuppia
+      // väännettäisiin joka kerta hiljaisuuden kautta.
+      const lahto = Math.max(Number(ulos.gain.value) || 0, HILJAA);
       katkaiseAutomaatio(ulos.gain, t);
-      ulos.gain.setValueAtTime(Math.max(ulos.gain.value, HILJAA), t);
+      ulos.gain.setValueAtTime(lahto, t);
       ulos.gain.exponentialRampToValueAtTime(Math.max(taso * ULOSTULON_TASO, HILJAA), t + 0.08);
     } catch {
       /* solmu oli jo purettu */
@@ -1147,8 +1153,10 @@ export function teeNauhaviritin(audioCtx, {
     if (!ulos || lopetettu) return taso;
     const t = audioCtx.currentTime;
     try {
+      // Lähtöarvo ennen katkaisua, ks. katkaiseAutomaatio.
+      const lahto = Math.max(Number(ulos.gain.value) || 0, HILJAA);
       katkaiseAutomaatio(ulos.gain, t);
-      ulos.gain.setValueAtTime(Math.max(Number(ulos.gain.value) || HILJAA, HILJAA), t);
+      ulos.gain.setValueAtTime(lahto, t);
       ulos.gain.exponentialRampToValueAtTime(huippu(), t + 0.08);
     } catch {
       /* solmu oli jo purettu */

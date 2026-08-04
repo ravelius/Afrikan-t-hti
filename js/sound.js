@@ -56,9 +56,32 @@ class Sound {
     else this.setAmbience(null);
   }
 
-  /** Luo äänikontekstin ensimmäisellä kerralla ja herättää sen tarvittaessa. */
-  ensureContext() {
-    if (!this.enabled) return null;
+  /**
+   * Luo äänikontekstin ensimmäisellä kerralla ja herättää sen tarvittaessa.
+   *
+   * `pakota` OHITTAA PELIN OMAN ÄÄNIVALINNAN, ja sille on tasan yksi
+   * käyttötarkoitus: ääni, joka EI ole pelin ääni.
+   *
+   * Maailmanradion suora lähetys soi <audio>-elementistä eikä kysy tätä
+   * luokkaa mitään — se kuuluu siis silloinkin, kun pelaaja on sammuttanut
+   * pelin äänet. Viritysääni sen sijaan kulkee tämän kontekstin läpi, ja
+   * ilman pakotusta se jäi ainoana pois: laite soitti aseman mutta ei sitä
+   * kohinaa, josta asema ristihäivytetään, eikä VU-mittarilla ollut
+   * kontekstia jota lukea. MITATTU 4.8.2026 (js/linssit/radio.js): kun
+   * `enabled` oli false, viritysäänen gain ei syntynyt lainkaan ja neula
+   * makasi lepokulmassaan koko lähetyksen ajan.
+   *
+   * Radio on laite, jonka pelaaja on itse kytkenyt päälle. Sen omat äänet
+   * seuraavat radion virtakytkintä, eivät kertojavalikkoa — ja koska
+   * lähetys kuuluu joka tapauksessa, kohinan vaientaminen ei ollut
+   * hiljaisuutta vaan puolikas laite.
+   *
+   * TÄMÄ EI SOITA MITÄÄN. Konteksti on pelkkä putki; mitä sen läpi menee,
+   * päättää kutsuja. Pelin omat tehosteet (play, ambience, kertoja)
+   * kysyvät `enabled`-lippua erikseen eivätkä muutu tästä.
+   */
+  ensureContext({ pakota = false } = {}) {
+    if (!this.enabled && !pakota) return null;
     if (!this.ctx) {
       const Ctx = window.AudioContext || window.webkitAudioContext;
       if (!Ctx) return null;
