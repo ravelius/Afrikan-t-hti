@@ -405,14 +405,24 @@ export const ASIA_LISAT_VALOKUVAT = {
     },
   },
   karachi: {
-    tiedosto: 'Rustpauze bij de oase van Malir bij Karachi, Bestanddeelnr 255-8196.jpg',
-    vuosi: '1946',
-    lahde: 'Willem van de Poll / Nationaal Archief, Commons (CC0)',
-    selite: 'Autot ovat pysähtyneet tauolle Malirin keitaalle Karachin laidalla '
-      + 'helmikuussa 1946. Hollantilainen Willem van de Poll kuvasi '
-      + 'matkalaisia Malaijalle ja Indonesiaan; Malir on nykyään yksi '
-      + 'Karachin kaupunginosista.',
+    tiedosto: 'A street in Old Town, Karachi, India. Photograph, 1897. Wellcome V0029261.jpg',
+    vuosi: '1897',
+    lahde: 'R. Jalbhoy / Wellcome Collection, Commons (CC BY 4.0)',
+    selite: 'Rampart Row Karachin vanhassakaupungissa: leveä päällystämätön katu, '
+      + 'kivitaloja ja niiden julkisivuilla riveittäin veistettyjä '
+      + 'puuparvekkeita. Vedos on kaupungin ruttokomitean teettämästä '
+      + 'sarjasta, ja korttelit näyttivät yhä samalta kun isoisä nousi '
+      + 'maihin runsaat kaksikymmentä vuotta myöhemmin.',
     lisat: [
+      {
+        tiedosto: 'Rustpauze bij de oase van Malir bij Karachi, Bestanddeelnr 255-8196.jpg',
+        vuosi: '1946',
+        lahde: 'Willem van de Poll / Nationaal Archief, Commons (CC0)',
+        selite: 'Autot ovat pysähtyneet tauolle Malirin keitaalle Karachin '
+          + 'ulkopuolelle helmikuussa 1946. Hollantilainen Willem van de Poll '
+          + 'kuvasi matkalaisia Malaijalle ja Indonesiaan; Malir on nykyään '
+          + 'yksi Karachin kaupunginosista.',
+      },
       {
         tiedosto: 'Empress Market Saddar Karachi.jpg',
         vuosi: '2018',

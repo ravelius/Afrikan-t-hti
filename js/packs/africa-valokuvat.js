@@ -1100,7 +1100,23 @@ export const AFRICA_VALOKUVAT = {
    * päiväkirjamerkintä kertoo.
    */
   darfur: {
+    tiedosto: 'Photo Dwelling in the Darfur region 1958 - Touring Club Italiano BBT 072.jpg',
+    vuosi: '1958',
+    lahde: 'Touring Club Italiano, Commons (CC BY-SA 4.0)',
+    selite: 'Darfurilaisen talouden piha: takana iso olkikattoinen maja, edessä '
+      + 'rivi jalkojen varaan nostettuja pieniä olkikatoksia ja maassa '
+      + 'puhvelin kallo. Pienet katokset ovat pyhäkköjä, joihin vainajien '
+      + 'sielujen uskotaan asettuvan katsomaan suvun elämää.',
     lisat: [
+      {
+        tiedosto: 'ASC Leiden - NSAG - van Dis 4 - 048 - Conical thatched huts - Marrah Mountains, Darfur, Sudan - 27 December 1961.tif',
+        vuosi: '1961',
+        lahde: 'Maarten van Dis, ASC Leiden, Commons (CC BY-SA 4.0)',
+        selite: 'Kartiokattoisia majoja pengerretyllä rinteellä Jebel Marran '
+          + 'juurella joulukuussa 1961. Vuori nousee puoliaavikosta yli '
+          + 'kolmeen kilometriin ja kerää oman sateensa — siksi sen '
+          + 'rinteillä kasvaa se, mitä alhaalla ei kasva.',
+      },
       {
         tiedosto: 'Sudan Jebel Marra Deriba Lakes.jpg',
         vuosi: '1986',
@@ -1118,13 +1134,6 @@ export const AFRICA_VALOKUVAT = {
           + 'kuivaa ja pölyistä.',
       },
     ],
-    tiedosto: 'ASC Leiden - NSAG - van Dis 4 - 048 - Conical thatched huts - Marrah Mountains, Darfur, Sudan - 27 December 1961.tif',
-    vuosi: '1961',
-    lahde: 'Maarten van Dis, ASC Leiden, Commons (CC BY-SA 4.0)',
-    selite: 'Kartiokattoisia majoja pengerretyllä rinteellä Jebel Marran '
-      + 'juurella. Vuori nousee puoliaavikosta yli kolmeen kilometriin ja '
-      + 'kerää oman sateensa — siksi sen rinteillä kasvaa se, mitä '
-      + 'alhaalla ei kasva.',
     uusi: {
       tiedosto: 'ElFasherDarfurSudan RomanDeckert18022015.jpg',
       lahde: 'RomanDeckert, Commons (CC BY-SA 4.0)',

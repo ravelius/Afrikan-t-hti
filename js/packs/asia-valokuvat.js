@@ -853,6 +853,13 @@ export const ASIA_VALOKUVAT = {
     },
   },
   magadan: {
+    tiedosto: 'Kultbasa 016.jpg',
+    vuosi: '1931',
+    lahde: 'Tuntematon kuvaaja, Commons (PD)',
+    selite: 'Nagajevanlahden kulttuuriasema vuonna 1931: muutama hirsitalo ja '
+      + 'teltta kannoiksi raivatulla rinteellä, takana lahti ja paljaat '
+      + 'kukkulat. Näistä mökeistä kasvoi Magadan, ja samaan lahteen tuotiin '
+      + 'pian laivalastittain väkeä Kolyman kultakentille ja leireille.',
     lisat: [
       {
         tiedosto: 'Memorial magadan - panoramio.jpg',

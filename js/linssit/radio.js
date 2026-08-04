@@ -166,14 +166,26 @@ const NAPIN_RENGAS = 21;
  *   LOPPU   kohina väistyy kosinia ja uusi lähetys nousee siniä
  *           (lukitseAsema → haivytaLahetysSisaan + viritin lopeta).
  *
- * Kuusi kymmenystä sekuntia on mitattu kompromissi. Lyhyempi (0,3 s) on
- * kuultavissa leikkauksena, pidempi (1 s) jättää lähetyksen ensimmäisen
- * lauseen kohinan alle — ja lähetyksen alku on juuri se, mitä pelaaja
- * odottaa. Sama luku kelpaa myös alkuun: se mahtuu hyvin siirtymävaiheen
- * sisään (SIIRTYMAN_KESTO_MS 1,25 s), joten kohina on täydessä voimassaan
- * kauan ennen kuin nauha pysähtyy. Taustaäänimaisemien 1,8–2,6 s
- * (js/ambience-stream.js) olisi tässä aivan liian pitkä: maisemat
- * vaihtuvat huomaamatta, kanava napautuksesta.
+ * PÄÄT OVAT ERI MITTAISET, JA SE ON TARKOITUS.
+ *
+ * Alkupää on 0,6 s, koska sen on mahduttava siirtymävaiheen sisään
+ * (SIIRTYMAN_KESTO_MS 1,25 s): kohinan pitää olla täydessä voimassaan
+ * kauan ennen kuin viritys alkaa, tai vaihdosta tulee pelkkää nousua.
+ *
+ * Loppupää on 1,4 s. Tässä luki ennen, että 0,6 s riittää molempiin ja
+ * että pidempi jättäisi lähetyksen ensimmäisen lauseen kohinan alle.
+ * Kumpikaan ei pitänyt paikkaansa. Omistaja kuuli kohinan mutta ei
+ * vaihtoa lainkaan ("minusta siinä ei ole myöskään niitä feidauksia") ja
+ * arveli itse syyn oikein: "voisiko olla, että se häivytys on vain liian
+ * nopea?" Kuuden kymmenyksen ristihäivytys jatkuvasta kohinasta puheeseen
+ * EI kuulu vaihtona vaan leikkauksena — silmä ja korva lukevat sen
+ * katkoksi, koska molemmat äänet ovat koko ajan läsnä eikä hiljaisuutta
+ * tule väliin. Eikä lähetyksen alkua menetetä: kanava soi jo vaimennettuna
+ * koko vähimmäisajan (LUKITUKSEN_AIKAISINTAAN_MS), joten lukitushetkellä
+ * ollaan joka tapauksessa keskellä lausetta.
+ *
+ * Taustaäänimaisemien 1,8–2,6 s (js/ambience-stream.js) olisi silti liian
+ * pitkä: maisemat vaihtuvat huomaamatta, kanava napautuksesta.
  *
  * Vaihto on TASATEHOINEN. Kaksi riippumatonta ääntä summautuu
  * TEHOLTAAN, joten lineaarinen pari jättäisi keskelle 3 dB:n
@@ -188,6 +200,7 @@ const NAPIN_RENGAS = 21;
  * 25 ms:n askel on 24 askelta koko vaihdossa; harvempi kuuluu portaina.
  */
 const RISTIHAIVYTYS_S = 0.6;
+const LUKITUKSEN_HAIVYTYS_S = 1.4;
 const HAIVYTYKSEN_ASKEL_MS = 25;
 
 /*
@@ -212,6 +225,7 @@ const osuudeksi = (arvo) => Math.min(1, Math.max(0, Number(arvo) || 0));
  */
 export const RISTIHAIVYTYS = Object.freeze({
   kesto: RISTIHAIVYTYS_S,
+  lukitus: LUKITUKSEN_HAIVYTYS_S,
   askel: HAIVYTYKSEN_ASKEL_MS,
   nouseva: (osuus) => Math.sin(osuudeksi(osuus) * (Math.PI / 2)),
   vaistyva: (osuus) => Math.cos(osuudeksi(osuus) * (Math.PI / 2)),
@@ -793,7 +807,7 @@ function kerroVaihe(virta, vaihe) {
  * paikka pitää oikeana.
  *
  * Ääni vaihtuu heti lukittumisen alkaessa ja soittimen tila vasta sen
- * lopussa: ristihäivytys kestää 0,6 s eli pidempään kuin lukittuminen,
+ * lopussa: ristihäivytys kestää 1,4 s eli pidempään kuin lukittuminen,
  * joten lähetys on jo nousemassa silloin kun nauha asettuu. Näin
  * "VIRITTÄÄ..." vaihtuu aseman nimeksi samassa tahdissa kuin kohina
  * väistyy — ei ennen sitä.
@@ -806,7 +820,7 @@ function lukitseAsema(virta) {
   virta.lukittu = true;
   kerroVaihe(virta, 'lukittuu');
   haivytaLahetysSisaan(virta);
-  lopetaViritys(RISTIHAIVYTYS_S);
+  lopetaViritys(LUKITUKSEN_HAIVYTYS_S);
   /*
    * MITTARI VAIHTAA LÄHTEEN VASTA TÄSSÄ, ei virran alkaessa. Virityksen
    * ajan neula lukee viritysääntä pelin äänisummasta — juuri se on
@@ -842,7 +856,7 @@ function haivytaLahetysSisaan(virta) {
       virta.haivytys = 0;
       return;
     }
-    const osuus = (kello() - alku) / (RISTIHAIVYTYS_S * 1000);
+    const osuus = (kello() - alku) / (LUKITUKSEN_HAIVYTYS_S * 1000);
     try {
       // Sini vastaa virityksen kosinia, ks. RISTIHAIVYTYS.
       virta.audio.volume = aanenvoimakkuus * RISTIHAIVYTYS.nouseva(osuus);

@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 245, teksti: 'Paperin pinta näkyy nyt myös lähikuvassa' },
+  { v: 245, teksti: 'Kanavanvaihdon häivytys selvästi pidempi' },
   { v: 244, teksti: 'VU-mittari sai lähetyksen myös hitaalla alulla' },
   { v: 244, teksti: 'Panaman kuvakortti ei enää kahdennu' },
   { v: 243, teksti: 'Matkakirja kutistuu riviksi karttaa vierittäessä' },

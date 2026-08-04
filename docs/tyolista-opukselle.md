@@ -4540,3 +4540,89 @@ modulo-vertailu jäivät talteen.
 onnistuvan (renkaita 73 → 72), mutta sama mittari, joka löysi ongelman, kertoi
 että tulos oli huonompi kuin lähtötilanne. Ilman jälkimittausta olisin
 julkaissut regression parannuksena.
+
+## v245 — Paperin rae ruudun pikseleihin, pidempi kanavanvaihto (4.8.2026)
+
+**"Kartta näyttää kuolleelta lähempää zoomattuna."** Syy löytyi lopulta
+rakeisuudesta, ja se oli mittayksikössä. Paperin kuituhäiriö piirretään
+kuviona, jonka laatta on **laudan koordinaateissa** (160 yksikköä). Kuvio siis
+suurenee yhdessä kartan kanssa: koko maailma näkyvissä yksi rae on noin 16
+pikseliä eli hienoa hiekkaa, mutta kaupungin kohdalle zoomattuna sama rae venyy
+satoihin pikseleihin — pehmeäksi läiskäksi, jota ei erota tasaisesta väristä.
+Pinta ei siis kadonnut mihinkään; se suurennettiin näkymättömäksi.
+
+Rasteroidussa ruudussa rae piirretään nyt vasta canvakselle, **ruudun omissa
+pikseleissä** (`piirraRakeisuus`, tavoitekoko 110 px). Laudan kokoinen
+kuviosuorakaide jätetään samalla ruudun ulkopuolelle (`pilkoTaide`), jottei
+sama pinta ole kahdesti. Elävään SVG:hen suorakaide jää, koska rasteroimaton
+kartta tarvitsee sen yhä.
+
+Ruudun tarkkuus ei ole vakio — katto on 1100 pikseliä ja retinanäytöllä piirto
+on kaksinkertainen — joten raekoko suhteutetaan siihen, montako canvas-pikseliä
+vastaa yhtä ruudun pikseliä. Ilman sitä rae olisi eri kokoinen eri laitteilla ja
+eri zoomaustasoilla, eli sama vika uudestaan pienempänä.
+
+Mitattu Chromiumissa tasaiselta maaväriltä (400×400 px):
+
+| | keskihajonta | vaihteluväli |
+|---|---|---|
+| ilman raetta | **0,00** | 231–231 |
+| rae 110 px | **3,68** | 212–231 |
+
+Nolla on kirjaimellisesti kuollut pinta: jokainen pikseli oli sama.
+
+**Kanavanvaihdon loppupää 0,6 s → 1,4 s.** Omistaja kuuli kohinan mutta ei
+vaihtoa lainkaan ja arveli itse syyn oikein: "voisiko olla, että se häivytys on
+vain liian nopea?" Kyllä. Tässä luki ennen, että pidempi jättäisi lähetyksen
+ensimmäisen lauseen kohinan alle — se ei pidä paikkaansa, koska kanava soi jo
+vaimennettuna koko vähimmäisajan, eli lukitushetkellä ollaan joka tapauksessa
+keskellä lausetta. Alkupää jää 0,6 sekuntiin: sen on mahduttava
+siirtymävaiheen (1,25 s) sisään.
+
+### Opittua
+
+**Mittayksikkö on osa toteutusta, ei muotoseikka.** Rae oli koko ajan
+paikallaan ja koodi teki juuri sitä, mitä siinä luki. Vika oli siinä, ETTÄ SE
+OLI SIDOTTU VÄÄRÄÄN AVARUUTEEN: pinta, joka kuuluu katsojan silmään, oli
+sidottu maailmaan. Kolme edellistä yritystä (varjostuksen vahvistus, palettien
+lämmitys) hakivat vikaa väristä, koska oire näytti värivialta. Sama testi olisi
+löytänyt sen heti: mittaa hajonta lähellä, ei kaukana.
+
+### Kuvavelka: mitä löytyi ja mitä ei (v245)
+
+Kolme erillistä kuvavelkaa selvitettiin kerralla. Tulos on enimmäkseen
+kielteinen, ja juuri siksi se kannattaa kirjata: samaa hakua ei tarvitse
+tehdä uudestaan.
+
+**Karachi vaihdettu.** Uusi pääkuva on Wellcome Collectionin 1897 vedos Old
+Townin Rampart Row'lta (3069 × 2463 px, CC BY 4.0). Vanha 1946 Malir-kuva
+siirtyi lisäkuvaksi, ei hukattu. Frere Hallista, Merewether-tornista ja
+satamasta EI ole yhtään yli 1200 px:n vanhaa vedosta Commonsissa.
+
+**Kuudestatoista kaupungista onnistui kaksi.** Darfur (1958, 3735 × 2787,
+CC BY-SA 4.0) ja Magadan (1931, 1280 × 905, PD — Nagajevanlahden ensimmäiset
+talot). Loput 14 tarkistettiin kategoriapuu kerrallaan, eikä syy ole
+laiskuus:
+
+- **Dubai, Astana, Iqaluit, Boa Vista, Santarém, San Ambrosio, Norfolk** —
+  Commonsissa ei ole vaadittua kuvaa lainkaan. Norfolkin aidot vanhat
+  vedokset (Tyrrell 1898, Hurley 1910) ovat siellä 1024 px:n levyisinä.
+- **Doha ja Salalah** — kuva on olemassa mutta **albumilehden skannauksena**.
+  RAF:n 1934 Doha-kuvat ovat 2033 × 3000 px, mutta itse valokuva lehden
+  alalaidassa on noin 1040 px ja loput on tyhjää paperia. Rajattu versio jää
+  siis rajan alle. *Jos 1040 px kelpaa, kuva on saatavilla — oma päätöksesi.*
+- **Exmouth** — kaupunki perustettiin 1963, joten vanhaa kuvaa ei voi olla.
+- **Ahaggar, Mosambik** — löydöt eivät ole tunnistettavasti oikeasta
+  paikasta.
+
+**Kolme "ulkoista kuvaa" — lähtötilanne oli väärin ymmärretty.** Ne eivät
+ole paketeissa lainkaan eivätkä lataudu mistään; ne ovat vain ehdokkaita
+`tools/ulkoiset-kuvat.json`-tiedostossa. Kuvaputki osaa vain Commons-
+tiedostonimen (`valokuvaUrl` → peili tai `commonsUrl`), eikä `osoite`-
+kentälle ole tukea missään. Magadan ratkesi Commons-vastineella. Santa Cruz
+ja Kap Horn jäävät: kummallekaan ei ole Commonsissa vastinetta (Santa Cruzin
+koko 410 tiedoston kategoriapuussa vanhin valokuva on 1960-luvulta; Kap
+Hornista kaikki ennen 1960 on maalauksia ja merikarttoja).
+
+Tarkistimet ajon jälkeen: 1172 kuvakohtaa, 0 rikkinäistä, ei
+kaksoisavaimia. Ikätarkistin 9/99 (oli 10).
