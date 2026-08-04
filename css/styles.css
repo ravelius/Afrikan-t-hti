@@ -5987,6 +5987,32 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    */
   --arkki-tarttuma: 0.85rem;
   /*
+   * TARTTUVAN OTSIKON TAUSTA — TASAINEN VÄRI, EI KORTIN TAUSTAA.
+   *
+   * Ensimmäinen yritys antoi otsikolle saman taustan kuin kortille
+   * (--paper-noise + --card-bg). Se näytti oikealta koodissa ja väärältä
+   * ruudulla: --card-bg on SÄTEITTÄINEN LIUKUVÄRI, ja liukuväri
+   * mitoitetaan sen elementin laatikkoon johon se maalataan. Kortissa
+   * ympyrä on tuhat pikseliä leveä ja vaihtuu huomaamatta; kuudenkymmenen
+   * pikselin korkuisessa otsikossa koko liuku puristuu otsikon mittaan,
+   * ja tuloksena on tumma palkki jonka keskusta hohtaa.
+   *
+   * Mitattu omistajan kuvakaappauksesta: palkissa #ebd9b4 keskellä ja
+   * #d0b686 reunassa, kun paperi sen alla on tasainen #e5d2a9. Omistaja:
+   * "Miksi muutit ulkoasua, piti vain pitää ylhäällä näkyissä."
+   *
+   * Tilalla on tasainen pohjaväri ja SAMA paperin rakeisuus kuin
+   * kortilla. Rakeisuus on 140 pikselin laatta eikä liukuväri, joten se
+   * ei mitoitu elementin mukaan — se toistuu samankokoisena kaikkialla,
+   * ja juuri siksi se kelpaa tähän vaikka liukuväri ei kelpaa.
+   *
+   * Pohjaväri ei ole valittu silmällä vaan laskettu siitä, mitä se
+   * peittää: arkin yläosan paperi on mitattuna #e5d2a9, ja rakeisuus
+   * tummentaa kertolaskulla noin 3,5 %, joten pohjan on oltava sitä
+   * saman verran vaaleampi.
+   */
+  --arkki-paperi: #eedab3;
+  /*
    * Yläreunus EI ole kortin omaa pehmustetta vaan ensimmäisen palstan.
    * Syy on tarttuvassa aiherivissä: selaimet ovat eri mieltä siitä,
    * mihin `top: 0` pysäyttää tarttuvan elementin — Chromium sisä-
@@ -6121,8 +6147,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    * siirtäisi tarttumakohtaa alaspäin ja jättäisi raon. */
   margin: 0 0 1rem;
   padding: 0.42rem 0 0.34rem;
-  background-image: var(--paper-noise), var(--card-bg);
-  background-blend-mode: multiply, normal;
+  background-color: var(--arkki-paperi, #eedab3);
+  background-image: var(--paper-noise);
+  background-blend-mode: multiply;
   border-top: 3px solid rgba(70, 51, 31, 0.85);
   border-bottom: 1px solid rgba(70, 51, 31, 0.55);
   font-family: var(--font-type);
@@ -6135,17 +6162,18 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   color: rgba(70, 51, 31, 0.92);
 }
 
-/* Paperikaistale otsikon yllä: täyttää tarttumakohdan yläpuolisen raon
- * ja ulottuu palstan reunojen yli, jottei teksti pilkota sivuilta. */
+/* Paperikaistale otsikon yllä: täyttää tarttumakohdan yläpuolisen raon,
+ * jottei siinä vilkkuisi vierivää tekstiä. */
 .wiki-kategoria .aihe-nimi::before {
   content: '';
   position: absolute;
-  left: calc(var(--arkki-reunus, 0px) * -1);
-  right: calc(var(--arkki-reunus, 0px) * -1);
+  left: 0;
+  right: 0;
   bottom: 100%;
   height: calc(var(--arkki-tarttuma, 0px) + 2px);
-  background-image: var(--paper-noise), var(--card-bg);
-  background-blend-mode: multiply, normal;
+  background-color: var(--arkki-paperi, #eedab3);
+  background-image: var(--paper-noise);
+  background-blend-mode: multiply;
   pointer-events: none;
 }
 

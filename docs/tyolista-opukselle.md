@@ -5235,6 +5235,74 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v259 — Vesistölinssi ja tarttuvan otsikon tausta (4.8.2026)
+
+### Vesistölinssi
+
+Omistajan päätös: *"Ota joet pois kokonaan. Täytyy tehdä niistä vaikka
+oma linssi, missä näkyisi vain pelkät joet ja järvet. Nykyinen on liian
+sekava."* Joet lähtivät pohjakartalta v255:ssä; nyt niillä on paikka.
+
+`js/linssit/vesistot.js`. Kolme ratkaisua, joista jokainen oli
+pakollinen:
+
+**1. Kartta himmenee alta.** Ensimmäinen kerros on vaalea
+pergamenttihuntu koko laudan yli. Ilman sitä uomat piirtyisivät täyden
+kartan päälle, ja lopputulos olisi tarkalleen se sekavuus, joka pyydettiin
+poistamaan. Huntu on koko linssin idea, ei koriste.
+
+**2. Viivanleveys on ruudun pikseleitä, ei laudan yksiköitä.**
+`vector-effect="non-scaling-stroke"`. Pohjakartan uomat mitattiin laudan
+yksiköissä, jolloin ne levenevät kartan mukana — oikein maastolle,
+väärin tälle. Linssi piirretään KERRAN eikä zoomin mukana, ja lauta on
+12000 yksikköä leveä: maailmankuvassa yksi pikseli on noin kymmenen
+yksikköä, joten 4 yksikön uoma olisi ollut näkymätön. Vesistökartta on
+verkosto eikä maasto, ja verkoston viiva on merkintä, ei mitta.
+
+**3. Nimet EIVÄT ole linssin kerroksessa.** Ne piirtyvät kartan omaan
+maastonimikerrokseen (`drawMaastonimet`, uusi `joet`-lippu), joka
+piirtyy uudelleen joka zoomilla ja osaa siksi näyttää nimen oikean
+kokoisena ja vain kun se on luettava. Linssin sisällä nimi olisi
+jäätynyt yhteen kokoon. Ankkuri on uoman kiinteä keskikohta — sama
+korjaus kuin v253:ssa (*"Joen nimi hyppii uusiin paikkoihin"*).
+
+Elementtejä on **212**, eli alle moottorin rasterointirajan (400). Se on
+mitattu eikä arvattu, ja se on ehto: rasteroituna `non-scaling-stroke`
+paistuisi kuvaan yhdellä mittakaavalla. Siksi järvi on yksi polku
+(täyttö ja reuna samassa) ja joki yksi veto — pohjakartan kolmen vedon
+nauha olisi nostanut luvun yli viiden sadan.
+
+Linssi ansaitaan kokemuspisteillä (rekisterissä `manner: null`), eli se
+on toinen kokemuspistelinssi radion jälkeen.
+
+### Tarttuvan otsikon tausta
+
+Omistaja v258:n jälkeen: *"Miksi muutit ulkoasua, piti vain pitää
+ylhäällä näkyissä."* Kuvakaappauksessa otsikon takana oli tumma palkki,
+jonka keskusta hohti.
+
+Syy: annoin otsikolle saman taustan kuin kortille, ja `--card-bg` on
+**säteittäinen liukuväri**. Liukuväri mitoitetaan sen elementin
+laatikkoon johon se maalataan: kortissa ympyrä on tuhat pikseliä leveä
+ja vaihtuu huomaamatta, kuudenkymmenen pikselin otsikossa koko liuku
+puristuu otsikon mittaan.
+
+Mitattu omistajan kuvakaappauksesta: palkissa `#ebd9b4` keskellä ja
+`#d0b686` reunassa, kun paperi sen alla on tasainen `#e5d2a9` — eli
+vaihtelua 27 yksikköä siellä, missä paperissa on 3.
+
+Tilalla on tasainen pohjaväri ja sama rakeisuus kuin kortilla.
+Rakeisuus on 140 pikselin laatta eikä liukuväri, joten se ei mitoitu
+elementin mukaan. Pohjaväri on laskettu siitä, mitä se peittää.
+Mitattu korjauksen jälkeen: palkki `#e6d2aa`, paperi `#e5cfa5`.
+
+### Opittua
+
+**Liukuväri on laatikkonsa kokoinen.** Kaksi elementtiä, joilla on sama
+`background`-sääntö, eivät ole samanvärisiä, jos ne ovat eri kokoisia.
+Se on ilmeistä jälkikäteen ja näkymätöntä koodissa. Kun peität jotain
+osaksi, käytä väriä joka ei riipu peittäjän mitoista.
+
 ## v258 — Tutki-osaston otsikko tarttuu yläreunaan (4.8.2026)
 
 Omistaja: *"Otsikko saisi pysyä näkyvissä myös alas vierittäessä."*
