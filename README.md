@@ -1,16 +1,16 @@
-# Unohdettu aarre ◈
+# Matkakirja ja unohdettu aarre ◈
 
-*(engl. The Forgotten Treasure)*
+*(lyhyesti Matkakirja)*
 
-Selaimessa pelattava seikkailupeli maailman ympäri. Unohdettu aarre on
-oma pelinsä: se on saanut inspiraatiota Jules Vernen teoksista ja
+Selaimessa pelattava seikkailupeli maailman ympäri. Matkakirja on oma
+pelinsä: se on saanut inspiraatiota Jules Vernen teoksista ja
 monista muista, mutta se ei jäljittele mitään niistä eikä sillä ole
 yhteyttä niiden oikeudenhaltijoihin. Ei riippuvuuksia, ei
 käännösvaihetta — pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana
 on oppia ja opettaa maiden kulttuurista, arjesta ja maantieteestä
 kiinnostavasti.
 
-Nimi tulee pelin ytimestä, **unohdetuista aarteista** (engl. *forgotten
+Nimen loppuosa tulee pelin ytimestä, **unohdetuista aarteista** (engl. *forgotten
 treasures*): tutkimusmatkailija Aarni luetteloi aikoinaan maailman
 kuuluisat kadonneet aarteet — Meripihkahuoneen, El Doradon, keisarin
 jadesinetin ja muut — eikä kukaan uskonut häntä. Isoisä uskoi, ja hänen

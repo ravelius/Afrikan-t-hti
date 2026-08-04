@@ -7032,7 +7032,7 @@ export class UI {
       kortti.appendChild(h);
     };
 
-    kappale('Unohdettu aarre on seikkailupeli, jonka sivutuotteena opitaan — '
+    kappale('Matkakirja ja unohdettu aarre on seikkailupeli, jonka sivutuotteena opitaan — '
       + 'ei oppikirja, johon on liimattu noppa. Pelin pitää olla '
       + 'koukuttava ensin; tieto tarttuu matkassa.', 'kärki');
 
@@ -7199,8 +7199,8 @@ export class UI {
             vaihe: this.game?.phase ?? '',
             versio: peliVersio(),
             _subject: tilanne
-              ? `Unohdettu aarre — palaute: ${tilanne}`
-              : 'Unohdettu aarre — palaute',
+              ? `Matkakirja — palaute: ${tilanne}`
+              : 'Matkakirja — palaute',
           }),
         });
         if (!vastaus.ok) throw new Error(`HTTP ${vastaus.status}`);
@@ -7227,7 +7227,7 @@ export class UI {
     const otsikko = tilanne
       ? `Palautetta: ${tilanne}`
       : 'Palautetta Unohdetusta aarteesta';
-    const runko = `\n\n---\nUnohdettu aarre v${peliVersio()}`
+    const runko = `\n\n---\nMatkakirja v${peliVersio()}`
       + (tilanne ? `\nKohta pelissä: ${tilanne}` : '');
     linkki.href = 'https://github.com/ravelius/Matkakirja/issues/new'
       + `?title=${encodeURIComponent(otsikko)}`
