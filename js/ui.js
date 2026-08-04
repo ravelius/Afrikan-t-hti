@@ -655,7 +655,12 @@ import {
   pilkoTaide,
   tyylitSisaan,
   drawMaasto,
+  drawMaastonimet,
+  drawLahivesi,
+  lahivedenVoima,
 } from './mapart.js';
+import { MAAILMANKARTAN_NIMET } from './packs/maailmankartta-nimet.js';
+import { MERISYVYYS } from './packs/maailmankartta-syvyys.js';
 
 const DIE_FACES = ['', '⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 const BOT_DELAY = 650;
@@ -2204,7 +2209,26 @@ export class UI {
    *    kaistale, joka tuli näkyviin.
    */
   taydennaTaide({ heti = false } = {}) {
-    if (!this.taide || !this.taideRyhma || this.dead) return;
+    if (this.dead) return;
+    /*
+     * Maastonimet päivitetään SAMASSA KOHDASSA kuin kartan kuva.
+     *
+     * Molemmat riippuvat täsmälleen samasta asiasta — siitä mikä osa
+     * laudasta on näkyvissä ja millä mittakaavalla — ja tätä funktiota
+     * kutsutaan jokaisesta kohdasta, jossa näkymä asettuu: fitViewBox,
+     * zoomipainikkeet, nipistys ja raahauksen loppu. Oma kutsuketju
+     * olisi neljä uutta tilaisuutta unohtaa yksi niistä.
+     *
+     * Nimet ovat kuitenkin ENNEN rasteroinnin tarkistusta: ne piirtyvät
+     * elävään kerrokseen, joten niiden on toimittava myös selaimessa,
+     * jossa bittikarttaa ei saada tehtyä (rasteroiRuutu palauttaa
+     * silloin nullin eikä this.taide ole olemassa).
+     */
+    if (!this.kartanRaahaus && !document.body.classList.contains('flight-active')) {
+      this.paivitaLahivesi();
+      this.paivitaMaastonimet();
+    }
+    if (!this.taide || !this.taideRyhma) return;
     /*
      * Lennon aikana ei rasteroida.
      *
@@ -2308,6 +2332,72 @@ export class UI {
       this.poistaVanhatRuudut();
       if (this.taideOdottaa && !this.kartanRaahaus) this.taydennaTaide({ heti: true });
     })();
+  }
+
+  /**
+   * Piirtää maastonimet uudelleen näkyvälle alueelle.
+   *
+   * Piirto tehdään vain kun näkymä on OIKEASTI muuttunut. Sama funktio
+   * kutsutaan jokaisesta näkymän asettumisesta, ja moni niistä ei siirrä
+   * karttaa lainkaan (fitViewBox ajetaan myös ikkunan koon muuttuessa ja
+   * paneelin auetessa). Turha piirto maksaisi muutaman sadan elementin
+   * poiston ja luonnin joka kerta.
+   */
+  /**
+   * Lähikuvan vesi: uomat, järvien syvyys ja meren pohja.
+   *
+   * Sama tunnistetemppu kuin maastonimillä: pieni liike ei muuta
+   * mitään, koska kerros herää ja sammuu kokonaisina askelina.
+   * Tunnisteessa on mukana voimakkuus eikä pelkkä mittakaava, jotta
+   * häivytyksen välivaiheet piirtyvät mutta paikallaan seisominen ei
+   * piirrä mitään uudelleen.
+   */
+  paivitaLahivesi() {
+    if (!this.lahivesiKerros) return;
+    const nakyva = this.nakyvaAlue();
+    if (!nakyva) return;
+    const voima = lahivedenVoima(nakyva.w);
+    const tunniste = voima
+      ? [Math.round(voima * 20), ...[nakyva.x, nakyva.y, nakyva.w].map((n) => Math.round(n / 40))].join(':')
+      : 'pois';
+    if (this.lahivesiTunniste === tunniste) return;
+    this.lahivesiTunniste = tunniste;
+    drawLahivesi(this.lahivesiKerros, this.game.pack.map, {
+      nakyva,
+      nimet: this.maastonimet,
+      syvyys: this.merisyvyys,
+    });
+  }
+
+  paivitaMaastonimet() {
+    if (!this.maastonimiKerros) return;
+    if (!this.maastonimet) return;
+    const nakyva = this.nakyvaAlue();
+    if (!nakyva) return;
+    // Tunniste karkealla tarkkuudella: pienempi liike ei muuta yhtään
+    // nimeä, koska nimet ilmestyvät ja katoavat kokonaisina.
+    const tunniste = [nakyva.x, nakyva.y, nakyva.w, nakyva.skaala]
+      .map((n) => Math.round(n * 4)).join(':');
+    if (this.maastonimiTunniste === tunniste) return;
+    this.maastonimiTunniste = tunniste;
+    drawMaastonimet(this.maastonimiKerros, this.game.pack.map, {
+      nimet: this.maastonimet,
+      nakyva,
+      avaa: (kohde) => this.avaaMaastonimi(kohde),
+    });
+  }
+
+  /**
+   * i-ikonin napautus: Wikipedian artikkeli kohteesta.
+   *
+   * Sama ikkuna kuin kaupungeilla, joten kuvat, galleria ja lähdemerkintä
+   * tulevat ilmaiseksi. Nimipaketin oma suomenkielinen selitys näytetään
+   * heti odotustekstin tilalla — se on paikalla ennen kuin verkosta
+   * kuuluu mitään, ja se jää ainoaksi tekstiksi, jos yhteyttä ei ole.
+   */
+  avaaMaastonimi(kohde) {
+    if (!kohde?.wiki) return;
+    this.openWikiArticle(kohde.wiki, kohde.nimi, { alkuteksti: kohde.selitys });
   }
 
   /**
@@ -3296,6 +3386,38 @@ export class UI {
     // keskipiste voi osua tyylitellyn rannikon ulkopuolelle, eikä
     // kaunokirjoituksen saa katketa siihen.
     this.countryNameLayer = el('g', { class: 'country-names' }, root);
+    /*
+     * Maastonimet: joet, järvet ja vuoristot kaunokirjoituksella.
+     *
+     * JUURIRYHMÄN SISÄÄN samasta syystä kuin linssikerros: kiertävällä
+     * kartalla <use href="#lauta-sisalto"> on elävä viittaus ja tuo
+     * sisällön sauman toiselle puolelle ilmaiseksi.
+     *
+     * ELÄVÄÄN PUUHUN eikä staattiseen taiteeseen, koska nimet muuttuvat
+     * zoomin mukana: mikä nimi näkyy ja minkä kokoisena riippuu siitä
+     * mitä ruudulla juuri nyt on (ks. drawMaastonimet). Bittikartassa ne
+     * jäätyisivät ensimmäisen piirron mittakaavaan.
+     *
+     * Nimiaineisto on toistaiseksi vain maailmankartalla: se on
+     * projisoitu juuri tälle laudalle (tools/tee-maastonimet.mjs).
+     * Muilla laudoilla kerros jää tyhjäksi eikä maksa mitään.
+     */
+    this.maastonimet = pack.id === 'maailmankartta' ? MAAILMANKARTAN_NIMET : null;
+    /*
+     * Lähikuvan vesi maastonimien ALLE.
+     *
+     * Nimi on luettava veden päältä. Jos kerrokset olisivat toisin
+     * päin, uoman vaalea valojuova kulkisi juuri joen nimen yli — ja
+     * juuri siinä kohtaa, missä nimi on, koska nimi piirretään uoman
+     * mukaan.
+     */
+    this.merisyvyys = pack.id === 'maailmankartta' ? MERISYVYYS : null;
+    this.lahivesiKerros = el('g', { class: 'lahivesi-kerros' }, root);
+    this.lahivesiTunniste = null;
+    this.maastonimiKerros = el('g', { class: 'maastonimet' }, root);
+    // Uusi lauta, tyhjä kerros: muistettu näkymätunniste ei saa jäädä
+    // voimaan, tai nimet jäisivät piirtymättä kun sama näkymä palaa.
+    this.maastonimiTunniste = null;
     this.countryKey = null;
     drawWaves(taide, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
@@ -5835,7 +5957,14 @@ export class UI {
    * Sama dialogi mille tahansa artikkelille — esimerkiksi havainnossa
    * mainitulle ilmiölle (Katso kuva), jolla ei ole omaa kaupunkia.
    */
-  async openWikiArticle(title, label = title) {
+  /**
+   * @param {string} [asetukset.alkuteksti] näytetään "Haetaan…" tilalla,
+   *   kunnes verkosta tulee vastaus. Maastonimillä se on paketin oma
+   *   suomenkielinen selitys: ikkunassa lukee jotain heti, ja jos
+   *   yhteyttä ei ole, se jää ainoaksi tekstiksi kohteliaan
+   *   virheilmoituksen sijaan.
+   */
+  async openWikiArticle(title, label = title, { alkuteksti = null } = {}) {
     this.wikiOpenFor = title;
     this.wikiTitle.textContent = label;
     this.wikiImage.hidden = true;
@@ -5844,7 +5973,7 @@ export class UI {
     this.wikiKuvat = [];
     this.wikiKuvaKohdalla = 0;
     this.paivitaWikiKuvaLaskuri();
-    this.wikiExtract.textContent = 'Haetaan…';
+    this.wikiExtract.textContent = alkuteksti || 'Haetaan…';
     this.wikiSource.textContent = '';
     if (!this.wikiDialog.open) this.wikiDialog.showModal();
 
@@ -5853,7 +5982,9 @@ export class UI {
     if (!this.wikiDialog.open || this.wikiOpenFor !== title) return;
 
     if (!summary) {
-      this.wikiExtract.textContent = 'Tietoja ei saatu haettua. Matka jatkuu.';
+      // Oma selitys on parempi kuin pahoittelu: se on jo ruudulla, ja
+      // lentokoneessa se on ainoa mitä kohteesta voidaan kertoa.
+      if (!alkuteksti) this.wikiExtract.textContent = 'Tietoja ei saatu haettua. Matka jatkuu.';
       return;
     }
 

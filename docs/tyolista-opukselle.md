@@ -4080,3 +4080,54 @@ jokainen SOUNDS-nimi soi ilman poikkeusta OfflineAudioContextissa).
   MODULES-listaan ja sw.js SHELL-listaan).
 - Kuvakaappaus ennen/jälkeen, jos muutos näkyy ruudulla.
 - Suomenkieliset commit-viestit; pienet PR:t, yksi paketti per PR.
+
+## PYYDETTY: maailmanradio omaksi karttatilakseen
+
+Omistajan määrittely 4.8.2026:
+
+> "Maailmanradio pitää toimia niin, että kun sen laittaa päälle,
+> kytkeytyy uusi tila karttanäkymään, missä kaupungit toimivat itsessään
+> play-nappeina. Eli kaikki muu toiminto häviää, kaupungin matkakirja saa
+> päivittyä, mutta ilman luenta-ääntä."
+
+> "Painamalla kaupunkia alkaa sen maan kanava pyöriä välittömästi. Ja
+> alalaidassa voisi olla yksinkertainen radiosoitin, missä olisi ainakin
+> stop-nappi sekä tiedot kanavasta. Siitä voisi tehdä visuaalisesti
+> mahdollisimman hienon ja vanhan tyylisen näköisen."
+
+> "Myös kanavan tiedot saisivat tulla sen radion päälle niin, että siinä
+> olisi nestekidenäyttö. Tekstillä täytyy olla erilainen, eli sellainen,
+> missä kirjaimet koostuvat lähellä olevista pisteistä. Piirtotyyli olisi
+> suoraviivainen ja yksinkertainen."
+
+Ja perään:
+
+> "Sitten oikeassa yläreunassa olisi X-nappi, mistä radiotila saisi
+> suljettua. Radio saisi uudelleen käyntiin klikkaamalla matkalaukusta
+> radioesinettä."
+
+### Mitä tästä seuraa
+
+**Radio on ESINE matkalaukussa, ei nappi yläpalkissa.** Tämä ratkaisee
+sen, miten linssit yleensäkin avataan: löydetty linssi menee laukkuun,
+ja laukusta sen ottaa käyttöön. Sama kuvio kelpaa kaikille yhdelletoista
+linssille, joten laukku on linssivalitsin — erillistä valitsinta ei
+tarvita.
+
+**Radiotila on tila eikä kerros.** Muut linssit piirtävät kartan päälle;
+radio muuttaa sen, mitä kaupungin napautus tekee. Siksi `kerros: false`
+ja oma päälle/pois-rajapinta.
+
+**Ilman luentaääntä on ehto eikä yksityiskohta.** Kaupungin matkakirja
+päivittyy, mutta kertoja vaikenee: kaksi ääntä yhtä aikaa on sekasotku.
+
+**Sammunut kaupunki on tunnistettava etukäteen.** Kanava on 87 maalla,
+kaupunkeja on 248. Ilman eroa pelaaja napauttaa turhaan.
+
+### Kytkentä js/ui.js:ään (pääistunnon työ)
+
+1. Matkalaukkuun radioesine, joka avaa tilan.
+2. X-nappi oikeaan yläreunaan, joka sulkee sen.
+3. Kaupungin napautus radiotilassa: kanava päälle, ei muuta.
+4. Luentaäänen vaimennus tilan ajaksi.
+5. Muun toiminnan (noppa, matkustus, laatat, tietovisa) esto.

@@ -1,0 +1,563 @@
+/*
+ * Maailmanradion soitin: 1930–40-luvun putkiradio ruudun alalaitaan.
+ *
+ * Tämän tiedoston lataa js/linssit/radiosoitin.js itse, eikä sitä ole
+ * linkitetty index.htmliin. Syy on työnjaollinen: css/styles.css on
+ * toisen työvaiheen hallussa, eikä samaan tiedostoon kirjoita kaksi
+ * tekijää yhtä aikaa. Soitin on siis kokonaan omissa nimissään —
+ * jokainen valitsin alkaa .radiosoitin- tai .radio-.
+ *
+ * KAIKKI PINNAT OVAT CSS-KUVIOITA, EI KUVATIEDOSTOJA. Puu, kaiuttimen
+ * kangas ja nupin uurteet ovat toistuvia gradientteja. Kuvatiedosto
+ * olisi kolme lisälatausta siitä, minkä selain piirtää ilmaiseksi, ja
+ * peli latautuu myös hitaalla yhteydellä.
+ *
+ * EI JATKUVIA ANIMAATIOITA. Soitin on kartan päällä, ja yksikin sykkivä
+ * elementti pakottaa kartan piirtymään uudelleen joka kehyksellä —
+ * mitattu 15 fps vastaan 60 fps (js/ui.js 7529–7534). Siirtymät ovat
+ * sallittuja: ne loppuvat.
+ *
+ * Värit haetaan pelin muuttujista, mutta jokaisella on varavärí. Näin
+ * soitin näyttää oikealta myös silloin, kun css/styles.css ei ole
+ * mukana (esim. yksittäinen kokeilusivu).
+ */
+
+.radiosoitin {
+  --radio-puu: #6b4423;
+  --radio-puu-tumma: #33200f;
+  --radio-puu-vaalea: #8f5f2f;
+  --radio-messinki: #d9a13b;
+  --radio-kangas: #7d6039;
+  --radio-asteikko: var(--paper, #efdcb4);
+  --radio-muste: var(--map-ink, #46331f);
+  /* Nestekidenäytön lasi: kalpea kellanvihreä, kuten aikansa näytöissä. */
+  --radio-lcd: #aebc5f;
+  --radio-lcd-muste: #1f2a16;
+  --radio-punainen: var(--mark, #b03a2b);
+
+  position: fixed;
+  left: 0;
+  right: 0;
+  /* Alalaita, mutta iOS:n kotipainikepalkin yläpuolella. */
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  justify-content: center;
+  padding: 0.35rem 0.4rem calc(0.35rem + var(--turva-ala, 0px));
+  /*
+   * Kehys ei ota napautuksia vastaan, vain kotelo. Muuten koko ruudun
+   * levyinen palkki söisi kartan painallukset kotelon vierestä — ja juuri
+   * kartan kaupungit ovat maailmanradiossa ne play-napit.
+   */
+  pointer-events: none;
+}
+
+/* --- kotelo ------------------------------------------------------- */
+
+.radio-kotelo {
+  pointer-events: auto;
+  box-sizing: border-box;
+  width: 100%;
+  /*
+   * Kotelon leveys. Koko ruudun levyinen palkki näyttäisi
+   * käyttöliittymäpalkilta; pöytäradio on esine, jolla on reunat.
+   */
+  max-width: 780px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 14px 14px 9px 9px;
+  /*
+   * Puu: pystysuora syy hienona raidoituksena, sen päällä leveämpi
+   * vuosirengaskuvio ja pohjalla pystysävytys, joka antaa kotelolle
+   * pyöreyden. Kolme kerrosta riittää: enemmän alkaa näyttää kankaalta.
+   */
+  background-image:
+    repeating-linear-gradient(92deg,
+      rgba(0, 0, 0, 0.13) 0 1px,
+      rgba(255, 255, 255, 0.05) 1px 3px,
+      rgba(0, 0, 0, 0) 3px 9px),
+    repeating-linear-gradient(88deg,
+      rgba(0, 0, 0, 0.16) 0 2px,
+      rgba(0, 0, 0, 0) 2px 27px),
+    linear-gradient(180deg, var(--radio-puu-vaalea), var(--radio-puu) 42%, var(--radio-puu-tumma));
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  /* Messinkilista yläreunassa ja syvä varjo: kotelo seisoo kartan päällä. */
+  box-shadow:
+    inset 0 1px 0 rgba(217, 161, 59, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 -3px 14px rgba(0, 0, 0, 0.45);
+}
+
+/* --- kaiutinsäleikkö ---------------------------------------------- */
+
+.radio-kaiutin {
+  position: relative;
+  /*
+   * Säleikkö ottaa ylijäävän leveyden: keskiö ja nupit ovat kiinteitä,
+   * ja leveällä ruudulla ylimääräinen tila kuuluu kaiuttimelle.
+   *
+   * Lähtöleveys on sama kuin pienin sallittu (92 px). Rivitys ratkeaa
+   * lähtöleveyksien summasta, ei kutistuneista mitoista: isompi luku
+   * pudottaisi keskiön omalle rivilleen jo 680 pikselin ruudulla,
+   * vaikka kaikki mahtuisi vierekkäin.
+   */
+  flex: 3 1 92px;
+  min-width: 92px;
+  min-height: 76px;
+  border-radius: 6px;
+  overflow: hidden;
+  /* Kudottu kangas: pystyloimi ja vaakakude samasta kuviosta. */
+  background-color: var(--radio-kangas);
+  background-image:
+    repeating-linear-gradient(90deg,
+      rgba(0, 0, 0, 0.42) 0 1px, rgba(226, 198, 150, 0.16) 1px 2px,
+      rgba(0, 0, 0, 0) 2px 4px),
+    repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.42) 0 1px, rgba(226, 198, 150, 0.16) 1px 2px,
+      rgba(0, 0, 0, 0) 2px 4px),
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.13), rgba(0, 0, 0, 0.28));
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.35), inset 0 2px 6px rgba(0, 0, 0, 0.5);
+  display: grid;
+  place-items: center;
+}
+
+/*
+ * Vaakalistat kankaan päällä. Ne ovat se, mistä säleikön tunnistaa
+ * radioksi eikä kaiutinelementiksi — ja ne ovat puuta, joten sävy on
+ * kotelon sävy.
+ */
+.radio-kaiutin::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(51, 32, 15, 0.92) 0 5px,
+    rgba(143, 95, 47, 0.5) 5px 7px,
+    rgba(0, 0, 0, 0) 7px 20px);
+}
+
+/* Messinkikilpi säleikön keskellä: laitteen nimi, kuten aikanaan. */
+.radio-kilpi {
+  position: relative;
+  z-index: 1;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  font-family: var(--font-type, "Courier New", monospace);
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: #2a1c0c;
+  background: linear-gradient(180deg, #e5c274, #b98a34);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+/* --- keskiö: näyttö, asteikko, kanavan tiedot --------------------- */
+
+.radio-keskio {
+  /*
+   * Keskiön leveys on kiinteä, ei venyvä. Se on näytön leveys (340) +
+   * merkkivalo väleineen (32): jos keskiö venyisi ruudun mukana, näyttö
+   * kutistuisi sen mukana eikä luvattu 340 × 68 pitäisi paikkaansa.
+   * Ylijäävä leveys menee kaiuttimelle, jolle koko on vapaa.
+   */
+  flex: 0 1 372px;
+  max-width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.radio-naytto-kehys {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/*
+ * NÄYTÖN AUKKO — varattu pistematriisinäytölle.
+ *
+ * Koko on kiinteä ja kaksiportainen: 340 × 68 px, kapealla ruudulla
+ * 270 × 54 px. Sama kuvasuhde 5:1 molemmissa, joten yksi piirto kelpaa
+ * kumpaankin (js/linssit/radiosoitin.js: NAYTON_MITAT).
+ *
+ * Miksi kiinteä eikä venyvä: pisterasteri näyttää siistiltä vain, kun
+ * pisteen koko osuu kokonaisiin pikseleihin. Portaattomasti venyvä
+ * aukko takaisi, ettei osu koskaan.
+ *
+ * max-width suojaa hyvin kapealta ruudulta (alle 330 px): silloin aukko
+ * kapenee eikä työnnä nuppeja ulos kotelosta. Se on ainoa tilanne, jossa
+ * kuvasuhde ei ole tasan 5:1.
+ *
+ * Sisään pantava elementti venytetään täyttämään aukko (sääntö alla).
+ * Aukon oma tausta on kalpea nestekidelasi hienolla pisterasterilla,
+ * jotta kolo näyttää näytöltä myös ennen kuin varsinainen näyttö on
+ * paikallaan.
+ */
+.radio-naytto {
+  --radio-naytto-korkeus: 68px;
+  position: relative;
+  /* Ei kutistu: mitta on lupaus näytön tekijälle, ei toive. */
+  flex: 0 0 auto;
+  height: var(--radio-naytto-korkeus);
+  width: calc(var(--radio-naytto-korkeus) * 5);
+  max-width: 100%;
+  /* Näyttö keskitetään aukkoon. Pistenäytön kuvasuhde ei ole tasan 5:1
+     (16 merkkiä × 2 riviä on 6,1:1), ja keskitettynä ylijäävä lasi
+     näyttää reunukselta eikä virheeltä. */
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  overflow: hidden;
+  background-color: var(--radio-lcd);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(31, 42, 22, 0.10) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    repeating-linear-gradient(0deg, rgba(31, 42, 22, 0.10) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(0, 0, 0, 0.14));
+  /* Aukko on kotelossa reikä: reuna on syvennys, ei kohouma. */
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 2px rgba(24, 15, 6, 0.85),
+    0 1px 0 rgba(217, 161, 59, 0.28);
+}
+
+/*
+ * Näyttö mahtuu aukkoon riippumatta siitä, onko se svg, canvas vai div.
+ * Rajat annetaan enimmäismittoina eikä pakotettuna venytyksenä: SVG, joka
+ * osaa oman kuvasuhteensa (js/linssit/pistenaytto.js), saa pitää sen.
+ */
+.radio-naytto > *:not(.radio-naytto-vara) {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/*
+ * Soittimen oma varateksti. Se ei ole pistematriisia — sen tekee toinen
+ * tekijä — mutta se on saman näköinen sen verran, ettei aukko ole
+ * koskaan tyhjä eikä pelaaja jää arvailemaan mitä laite tekee.
+ */
+.radio-naytto-vara {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1px;
+  padding: 0 0.5em;
+  font-family: var(--font-type, "Courier New", monospace);
+  color: var(--radio-lcd-muste);
+  overflow: hidden;
+}
+
+.radio-naytto-rivi {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.radio-naytto-yla { font-size: 11px; font-weight: 700; }
+.radio-naytto-ala { font-size: 8px; opacity: 0.75; }
+
+/*
+ * Kun aukossa on oikea pistenäyttö, aukon oma lasi väistyy tummaksi
+ * syvennykseksi. Muuten näyttö olisi näytön päällä: kaksi eri sävyistä
+ * lasia sisäkkäin, ja reunoille jäävä kaistale näyttäisi virheeltä.
+ * Tumma syvennys on se, miltä kehys oikeassa laitteessa näyttää.
+ */
+.radio-naytto[data-oma] {
+  background-color: #17140c;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.25));
+}
+
+/* Sammunut näyttö on himmeä, ei musta: nestekidelasi ei sammu, se vain
+   lakkaa näyttämästä. */
+.radiosoitin[data-tila="sammuksissa"] .radio-naytto { filter: saturate(0.55) brightness(0.86); }
+.radiosoitin[data-tila="sammuksissa"] .radio-naytto-vara { opacity: 0.55; }
+.radiosoitin[data-tila="virhe"] .radio-naytto { background-color: #b1a45b; }
+
+/* --- merkkivalo --------------------------------------------------- */
+
+/*
+ * Merkkivalo kertoo, tuleeko ääntä. Se ei ole koriste: viritys ja
+ * soitto näyttävät muuten samalta, ja juuri se ero on se, minkä takia
+ * hiljainen hetki tuntuu rikkinäiseltä.
+ */
+.radio-lamppu {
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #6b3b30, #2a1410);
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(0, 0, 0, 0.45);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.radiosoitin[data-tila="virittaa"] .radio-lamppu {
+  background: radial-gradient(circle at 35% 30%, #ffd98a, #c98a1c);
+  box-shadow: 0 0 8px rgba(217, 161, 59, 0.85), 0 0 0 2px rgba(0, 0, 0, 0.45);
+}
+
+.radiosoitin[data-tila="soi"] .radio-lamppu {
+  background: radial-gradient(circle at 35% 30%, #ff9f8a, #b03a2b);
+  box-shadow: 0 0 9px rgba(176, 58, 43, 0.9), 0 0 0 2px rgba(0, 0, 0, 0.45);
+}
+
+.radiosoitin[data-tila="virhe"] .radio-lamppu {
+  background: radial-gradient(circle at 35% 30%, #7a4a42, #3a1a14);
+}
+
+/* --- asteikko ----------------------------------------------------- */
+
+/*
+ * Asteikko kaupunkien nimineen. Tämä on se yksityiskohta, joka myy koko
+ * laitteen: oikeissa aikakauden radioissa taajuudet oli merkitty
+ * asemakaupunkien niminä, ja pikkuruinen nimirivi tunnistetaan radioksi
+ * ennen kuin sitä ehtii lukea.
+ */
+.radio-asteikko {
+  position: relative;
+  height: 26px;
+  padding: 3px 6px 8px;
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, #fbf1d8, var(--radio-asteikko));
+  box-shadow:
+    inset 0 0 0 1px rgba(58, 42, 23, 0.5),
+    inset 0 1px 3px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+/* Jaotus alareunassa: joka viides viiva pidempi, kuten mitta-asteikossa. */
+.radio-asteikko::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 7px;
+  background-image:
+    repeating-linear-gradient(90deg,
+      rgba(58, 42, 23, 0.75) 0 1px, rgba(0, 0, 0, 0) 1px 40px),
+    repeating-linear-gradient(90deg,
+      rgba(58, 42, 23, 0.45) 0 1px, rgba(0, 0, 0, 0) 1px 8px);
+  background-size: 100% 7px, 100% 4px;
+  background-position: bottom, bottom;
+  background-repeat: repeat-x;
+}
+
+.radio-kaupungit {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.radio-kaupunki {
+  font-family: var(--font-type, "Courier New", monospace);
+  font-size: 7px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: rgba(58, 42, 23, 0.82);
+}
+
+/*
+ * Viisari. Sijainti tulee JavaScriptistä aseman nimen mukaan, joten
+ * sama asema löytyy aina samasta kohdasta. Siirtymä on hidas kuin
+ * käsin viritettäessä; jatkuvaa liikettä siinä ei ole.
+ */
+.radio-viisari {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--radio-punainen);
+  box-shadow: 0 0 4px rgba(176, 58, 43, 0.7);
+  transition: left 0.55s ease;
+}
+
+.radio-viisari::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--radio-punainen);
+}
+
+.radiosoitin[data-tila="sammuksissa"] .radio-viisari { opacity: 0.45; }
+
+/* --- kanavan tiedot ----------------------------------------------- */
+
+.radio-kanava {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-width: 0;
+  font-family: var(--font-type, "Courier New", monospace);
+  line-height: 1.25;
+}
+
+.radio-asema {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: 0.82rem;
+  color: var(--ink-light, #f3e6d0);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.radio-maa {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: 0.7rem;
+  color: rgba(243, 230, 208, 0.62);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.radiosoitin[data-tila="virhe"] .radio-maa { color: var(--danger, #ff9b8a); }
+
+/* --- nupit -------------------------------------------------------- */
+
+.radio-nupit {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding-left: 0.2rem;
+}
+
+.radio-nuppi-kehys {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.radio-nuppi-teksti {
+  font-family: var(--font-type, "Courier New", monospace);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  color: rgba(243, 230, 208, 0.7);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+}
+
+/*
+ * Bakeliittinuppi: vaalea heijastus vasemmalta ylhäältä, tumma varjo
+ * alta ja messinkirengas ympärillä. Uurteet ovat kartiogradientti —
+ * yksi sääntö, ei kolmeakymmentä pikku elementtiä.
+ */
+.radio-nuppi {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(217, 161, 59, 0.4);
+  background-image:
+    radial-gradient(circle at 34% 26%, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(circle at 50% 125%, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 60%),
+    linear-gradient(160deg, #4a3524, #180f07);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.radio-nuppi-kehys-pieni .radio-nuppi { width: 38px; height: 38px; }
+
+.radio-nuppi-uurre {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.11) 0deg 2deg,
+    rgba(0, 0, 0, 0) 2deg 9deg);
+  pointer-events: none;
+}
+
+/* Osoitinviiva alkaa nupin keskeltä ylöspäin; kiertokeskiö on sen alapää. */
+.radio-nuppi-osoitin {
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  width: 3px;
+  height: 41%;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #f0d69a, #b98a34);
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+
+.radio-stop:disabled { cursor: default; opacity: 0.5; }
+.radio-stop:not(:disabled):active { transform: translateY(1px); }
+
+.radio-nuppi:focus-visible {
+  outline: 2px solid var(--accent, #d9a13b);
+  outline-offset: 3px;
+}
+
+/* --- kapea ruutu -------------------------------------------------- */
+
+/*
+ * Puhelimen pystyasento (peli ei näy kosketuslaitteen vaakatilassa
+ * lainkaan, ks. css/styles.css @media pointer: coarse and landscape).
+ *
+ * Keskiö nousee omalle rivilleen ensimmäiseksi ja säleikkö jää nuppien
+ * viereen. Näin näyttö ja asteikko saavat koko leveyden — ne ovat
+ * laitteen tieto-osa, ja kavennettuna niistä katoaisi juuri se, mikä
+ * tekee laitteesta radion.
+ */
+@media (max-width: 640px) {
+  .radio-kotelo { gap: 0.4rem; padding: 0.45rem 0.5rem; }
+  .radio-keskio { order: 1; flex: 1 1 100%; max-width: none; }
+  .radio-kaiutin { order: 2; flex: 1 1 auto; min-height: 52px; }
+  .radio-nupit { order: 3; gap: 0.55rem; }
+  /* Pienempi näyttö: soitin vie puhelimen pystyruudusta jo neljänneksen,
+     eikä kartta saa jäädä sen alle. */
+  .radio-naytto { --radio-naytto-korkeus: 54px; }
+  .radio-asema { font-size: 0.76rem; }
+  .radio-maa { font-size: 0.64rem; }
+}
+
+/*
+ * Nimiä harvennetaan kapeassa ruudussa. Asteikko on leveällä ruudulla
+ * kiinteät 372 px, joten harvennus tarvitaan vasta kun kotelo itse
+ * kapenee ruudun mukana — eli puhelimessa.
+ */
+@media (max-width: 400px) {
+  .radio-kaupunki:nth-child(even) { display: none; }
+}
+
+/* Sormelle riittävä osumapinta, vaikka nuppi näyttää pieneltä —
+   sama linjaus kuin pelin muilla napeilla (css/styles.css 4165). */
+@media (pointer: coarse) {
+  .radio-nuppi { min-width: 48px; min-height: 48px; }
+  .radio-nuppi-kehys-pieni .radio-nuppi { width: 44px; height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radio-viisari,
+  .radio-lamppu { transition: none; }
+}
