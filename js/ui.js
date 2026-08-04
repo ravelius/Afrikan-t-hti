@@ -650,6 +650,7 @@ import {
   tokenIconSvg,
   paperi,
   kasinPiirretty,
+  rantaviivanPolut,
   rasteroiRuutu,
   RUUTU_TYHJA,
   piirtotarkkuus,
@@ -3753,9 +3754,9 @@ export class UI {
       const W = pack.map.width;
       const H = pack.map.height;
       const kehys = `M${-W},${-H} L${2 * W},${-H} L${2 * W},${2 * H} L${-W},${2 * H} Z`;
-      const maat = pack.map.outlines
-        .map((outline) => `M${outline.map(([x, y]) => `${x},${y}`).join(' L')}Z`)
-        .join('');
+      // Rajaus PIIRRETYSTÄ rantaviivasta, ei raakapisteistä: ks.
+      // mapart.js rantaviivanPolut.
+      const maat = rantaviivanPolut(pack.map).join('');
       const meriClip = el('clipPath', { id: 'meri-rajaus' }, root);
       el('path', { d: `${kehys}${maat}`, 'clip-rule': 'evenodd' }, meriClip);
       this.meriRajaus = 'url(#meri-rajaus)';

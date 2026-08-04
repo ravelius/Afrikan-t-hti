@@ -829,7 +829,13 @@ function lukitseAsema(virta) {
    * ei antanut reititystä (CORS), lähde palautuu oletukseen eikä neula
    * väitä lukevansa lähetystä.
    */
-  asetaMittarinLahde(virta.mittari?.lukija ?? jaljiteltyLukija(virta));
+  /*
+   * Lukija kerran, ks. vahdiMittaria. Mitattu lukema aina kun reititys
+   * saatiin; jäljitelty vain kun selain ei anna mitata.
+   */
+  virta.mittarinLukija ??= virta.mittari?.lukija ?? jaljiteltyLukija(virta);
+  asetaMittarinLahde(virta.mittarinLukija);
+  vahdiMittaria(virta);
   ajastaVirralle(virta, LUKITTUMISEN_KESTO_MS, () => {
     tila?.soitin.asetaTila('soi');
     kerroMuutos();
@@ -1150,6 +1156,54 @@ function jaljiteltyLukija(virta) {
   };
 }
 
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ * MITTARIN VAHTI: LÄHDE PIDETÄÄN, EI VAIN ASETETA KERRAN
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Omistajan havainto, ja se osui suoraan syyhyn: "mittaus ei koskaan
+ * palaudu takaisin aseman mittaustasolle, vaan jää siihen taustakohinan
+ * mittaustasolle, kun kaupunkia vaihtaa."
+ *
+ * Juuri niin koodi oli rakennettu. Kanavanvaihto antaa mittarin takaisin
+ * pelin äänisummalle (lopetaAani → asetaMittarinLahde(null)), koska
+ * silloin kuuluu viritysääni. Lähetys otetaan takaisin YHDESSÄ AINOASSA
+ * KOHDASSA, lukitseAsemassa. Jos se kohta jää käymättä — asema ei ehdi
+ * lukittua, `playing` ei tule, vaihto tapahtuu kesken virityksen — mitään
+ * ei enää koskaan palauta mittaria lähetykseen. Neula jää lukemaan pelin
+ * äänisummaa, jossa lähetystä ei ole: se on juuri se "taustakohinan taso",
+ * josta omistaja puhuu, ja se pysyy siinä myös takaisin vaihdettaessa,
+ * koska mikään ei ole rikki — lähdettä ei vain aseteta uudestaan.
+ *
+ * Kertaluontoinen asetus on väärä muoto tähän. Lähde on TILA, jota pitää
+ * ylläpitää niin kauan kuin asema soi. Vahti tekee sen sekunnin välein.
+ * Se on halpa (yksi sulkeuman vaihto, ei uusia solmuja) ja se korjaa koko
+ * vikaluokan kerralla — myös ne reitit, joita en ole osannut kuvitella.
+ *
+ * Lukija luodaan KERRAN virtaa kohti eikä joka tikillä: jäljitelty lukija
+ * laskee aikaa omasta alustaan, ja uusi sulkeuma joka sekunti nollaisi
+ * sen — neula nytkähtelisi sekunnin välein samaan kohtaan.
+ */
+const MITTARIN_VAHTI_MS = 1000;
+let mittarinVahti = 0;
+
+function lopetaMittarinVahti() {
+  if (!mittarinVahti) return;
+  clearInterval(mittarinVahti);
+  mittarinVahti = 0;
+}
+
+function vahdiMittaria(virta) {
+  lopetaMittarinVahti();
+  mittarinVahti = setInterval(() => {
+    if (soiva !== virta || !virta.lukittu || !virta.audio) {
+      lopetaMittarinVahti();
+      return;
+    }
+    asetaMittarinLahde(virta.mittarinLukija);
+  }, MITTARIN_VAHTI_MS);
+}
+
 /** Antaa mittarille sen, mitä juuri nyt kuuluu — tai palauttaa oletuksen. */
 function asetaMittarinLahde(lahde) {
   try {
@@ -1297,6 +1351,9 @@ function lopetaAani({ viritysJatkuu = false, haive = 0 } = {}) {
    * tämän jälkeen se on nouseva viritysääni, ja lukittuessaan uusi
    * kanava ottaa lähteen taas omakseen (lukitseAsema).
    */
+  // Vahti ensin: sen seuraava tikki kirjoittaisi juuri poistetun
+  // lähetyksen takaisin mittariin.
+  lopetaMittarinVahti();
   if (vanha.mittari) asetaMittarinLahde(null);
   // Vaiheajastimet ensin: keskeytetty viritys ei saa kertoa vaiheitaan
   // loppuun sen jälkeen, kun sen kanava on jo suljettu.
@@ -1344,6 +1401,8 @@ function aloitaVirta(cityId, kanava) {
     audio: null,
     // Mittarin ketju, jos lähetys saatiin Web Audioon, ks. liitaMittariin.
     mittari: null,
+    // Neulan lukija, luodaan kerran lukittuessa (ks. vahdiMittaria).
+    mittarinLukija: null,
     // Onko tämä jo varareitin yritys eli elementti ilman crossOriginia.
     varalla: false,
     haivytys: 0,
@@ -1418,6 +1477,8 @@ function aloitaVirta(cityId, kanava) {
   function avaaVirta(mittarilla) {
     if (oma.audio) irrotaVirta(oma);
     oma.varalla = !mittarilla;
+    // Vanha lukija osoittaisi juuri irrotettuun ketjuun.
+    oma.mittarinLukija = null;
 
     /*
      * Peiliä ei käytetä. js/media.js aaniOsoite palauttaisi
