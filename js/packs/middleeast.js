@@ -239,7 +239,7 @@ export const MIDDLE_EAST = {
 
   texts: {
     intro: 'Peli alkaa! Etsikää Sheban kuningattaren aarre ja palatkaa Istanbuliin, Kairoon tai Dubaihin.',
-    starFound: (name, city) => `★ ${name} löysi SHEBAN KUNINGATTAREN AARTEEN kaupungista ${city}!`,
+    starFound: (name, city) => `◈ ${name} löysi SHEBAN KUNINGATTAREN AARTEEN kaupungista ${city}!`,
     starToast: 'SHEBAN AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Sheban kuningattaren aarteen turvallisesti kotiin',

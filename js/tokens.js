@@ -10,7 +10,7 @@ export const TOKEN_TYPES = {
   // Oletusnimi on tarkoituksella yleinen: jokainen lauta antaa pääaarteelleen
   // oman nimen themedTokenTypes-apurilla. Jos oletus jää ruudulle näkyviin,
   // se on merkki puuttuvasta nimestä eikä toisen pelin lainasta.
-  star: { id: 'star', name: 'Pääaarre', symbol: '★', value: 0, color: '#f6c445' },
+  star: { id: 'star', name: 'Pääaarre', symbol: '◈', value: 0, color: '#f6c445' },
   horseshoe: { id: 'horseshoe', name: 'Hevosenkenkä', symbol: 'Ω', value: 0, color: '#c9d1d9' },
   robber: { id: 'robber', name: 'Ryöstäjä', symbol: '☠', value: 0, color: '#8a8f98' },
   ruby: { id: 'ruby', name: 'Rubiini', symbol: '◆', value: 1000, color: '#e0413e' },

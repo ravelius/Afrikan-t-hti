@@ -333,7 +333,7 @@ export const SOUTHAMERICA = {
 
   texts: {
     intro: 'Peli alkaa! Etsikää El Doradon aarre ja palatkaa Panamaan, Buenos Airesiin tai Rioon.',
-    starFound: (name, city) => `★ ${name} löysi EL DORADON AARTEEN kaupungista ${city}!`,
+    starFound: (name, city) => `◈ ${name} löysi EL DORADON AARTEEN kaupungista ${city}!`,
     starToast: 'EL DORADON AARRE!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi El Doradon aarteen turvallisesti kotiin',

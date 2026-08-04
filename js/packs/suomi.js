@@ -222,7 +222,7 @@ export const SUOMI = {
 
   texts: {
     intro: 'Peli alkaa! Etsikää Lapin kulta ja palatkaa Helsinkiin tai Ouluun.',
-    starFound: (name, city) => `★ ${name} löysi LAPIN KULLAN: ${city}!`,
+    starFound: (name, city) => `◈ ${name} löysi LAPIN KULLAN: ${city}!`,
     starToast: 'LAPIN KULTA!',
     starChase: 'Nyt on kiire kotiin — myös hevosenkengän haltija voi voittaa pelin.',
     winStar: 'toi Lapin kullan turvallisesti kotiin',

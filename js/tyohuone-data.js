@@ -98,9 +98,9 @@ export const PELIT = [
 
 export const AARTEET = [
   { maanosa: 'Eurooppa', aarre: 'Meripihkahuone', tila: 'kaytossa' },
-  { maanosa: 'Afrikka', aarre: 'Tähti', tila: 'kaytossa' },
-  { maanosa: 'Lähi-itä', aarre: 'laudan oma aarre', tila: 'kaytossa' },
-  { maanosa: 'Aasia', aarre: 'laudan oma aarre', tila: 'kaytossa' },
+  { maanosa: 'Afrikka', aarre: 'Suuren Zimbabwen kivilintu', tila: 'kaytossa' },
+  { maanosa: 'Lähi-itä', aarre: 'Sheban kuningattaren aarre', tila: 'kaytossa' },
+  { maanosa: 'Aasia', aarre: 'Keisarin jadesinetti', tila: 'kaytossa' },
 ];
 
 // tila: kaytossa | sovittu | idea

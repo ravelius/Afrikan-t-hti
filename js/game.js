@@ -12,7 +12,7 @@ export const HINT_PRICE = 40; // sanallinen vihje kysymykseen
 export const QUIZ_SECONDS = 45; // vastausaika tiimalasin verran
 export const STRANDED_AID = 100; // kotisääntö: jumiin jäänyt saa pankilta 100
 export const HARD_BONUS = 100; // palkkio vaikeasta kysymyksestä oikein vastattaessa
-export const STAR_PRIZE = 2000; // tähden arvo vaellustilassa, jossa peli ei pääty
+export const STAR_PRIZE = 2000; // pääaarteen arvo vaellustilassa, jossa peli ei pääty
 export const DUEL_PRIZE = 200; // rosvon saalis, jos kaksintaistelun voittaa suoraan
 export const DUEL_BYPASS_SHOES = 3; // näin monella hevosenkengällä rosvon voi ohittaa
 export const HINT_EVERY_TURNS = 4; // näin harvoin isoisän vihje aarteesta
@@ -1291,7 +1291,7 @@ export class Game {
    */
   flightLine(cityId, pack = this.pack) {
     /*
-     * Silloin tällöin lento muistuttaa löytämättömästä tähtiaarteesta
+     * Silloin tällöin lento muistuttaa löytämättömästä pääaarteesta
      * (omistajan toive): pelaaja hahmottaa, että jonnekin kannattaa
      * vielä palata. Rivi ei koskaan paljasta, missä aarre on — vain
      * että se on yhä jossain. Arvonta pelin rng:llä kuten muutkin.
@@ -1809,14 +1809,14 @@ export class Game {
         this.noteRecord(p);
         if (this.roaming) {
           p.money += STAR_PRIZE;
-          this.say(p.id, `★ ${p.name} löysi aarteen ${token.name} kaupungista ${city.name} — arvo ${STAR_PRIZE} puntaa!`);
+          this.say(p.id, `◈ ${p.name} löysi aarteen ${token.name} kaupungista ${city.name} — arvo ${STAR_PRIZE} puntaa!`);
           this.emit('treasure', this.pack.texts.starToast, { token: type, sub: `+${STAR_PRIZE} puntaa` });
         } else {
           this.say(p.id, this.pack.texts.starFound(p.name, city.name));
           this.say(null, this.pack.texts.starChase);
           this.emit('treasure', this.pack.texts.starToast, {
             token: type,
-            sub: `${p.name} löysi tähden — nyt kiire kotiin!`,
+            sub: `${p.name} löysi pääaarteen — nyt kiire kotiin!`,
           });
         }
         break;
@@ -1825,7 +1825,7 @@ export class Game {
         this.say(p.id, `Ω ${p.name} löysi hevosenkengän kaupungista ${city.name}.`);
         this.emit('treasure', 'Hevosenkenkä', {
           token: type,
-          sub: 'Voi voittaa pelin, jos tähti löytyy',
+          sub: 'Voi voittaa pelin, jos pääaarre löytyy',
         });
         break;
       case 'robber':

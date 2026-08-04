@@ -2878,11 +2878,13 @@ test('tuntematon kohde saa yleisrivin', () => {
   assert.ok(packById('maailma').texts.flightDefault.includes(rivi));
 });
 
-test('lento muistuttaa tähtiaarteesta vain kun se on löytämättä', () => {
+test('lento muistuttaa pääaarteesta vain kun se on löytämättä', () => {
   const kaipuu = packById('maailma').texts.flightRegret;
   assert.ok(Array.isArray(kaipuu) && kaipuu.length >= 3, 'kaipuurivejä pitää olla useita');
   for (const rivi of kaipuu) {
-    assert.ok(/tähtiaar/i.test(rivi), `rivi ei puhu tähtiaarteesta: "${rivi}"`);
+    assert.ok(/pääaar/i.test(rivi), `rivi ei puhu pääaarteesta: "${rivi}"`);
+    // Peli irrotetaan Afrikan tähdestä: aarre ei ole tähti missään rivissä.
+    assert.ok(!/tähti|tähde/i.test(rivi), `rivi puhuu tähdestä: "${rivi}"`);
   }
   const uusi = (seed) => new Game({
     players: [{ name: 'A', color: '#f00' }], pack: packById('maailma'), seed,
