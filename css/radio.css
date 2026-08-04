@@ -854,21 +854,113 @@
   padding: 2px 6px 16px;
   border-radius: 2px;
   /*
-   * Sama ikä kuin mittarin kortilla: kellastuma oikeassa laidassa,
-   * yksi pieni tahra ja vaalentuma siellä missä lasin läpi on
-   * paistanut. Peitot ovat puolet mittarin peitoista — asteikko on
-   * laitteen luettavin osa, ja nimien kontrasti on tärkeämpi kuin ikä.
+   * ══════════════════════════════════════════════════════════════════
+   * ASTEIKON TAKAVALOT — MUUTAMA LAMPPU, EI TASAISTA VALOA
+   * ══════════════════════════════════════════════════════════════════
+   *
+   * Omistaja: "Radion kanavalista on liian tasaisesti valaistu. Tee se
+   * ennemmin niin, että näyttäisi, että siellä on sisällä muutamia
+   * pieniä valonlähteitä, jotka valaisevat aina pienen osan kerrallaan,
+   * jolloin siihen tulee valovarjo-vaihteluita."
+   *
+   * Näin asteikko oikeasti valaistiin. Kotelon sisällä oli yksi tai
+   * kaksi pientä hehkulamppua asteikon YLÄREUNAN takana, ja niiden valo
+   * levisi lasin alle epätasaisesti: kirkkaimmillaan lampun kohdalla,
+   * himmeimmillään nurkissa. Vanha toteutus oli yksi pystyliuku
+   * vaaleasta paperinväriin, ja juuri se on tasaista valoa — se lukee
+   * painetuksi paperiksi, ei valaistuksi lasiksi.
+   *
+   * NELJÄ LAMPPUA, KAIKKI ERI KOKOISIA JA ERI KIRKKAITA. Epäsäännöllisyys
+   * on koko idea: tasavälinen ja tasakirkas sarja lukee LED-nauhaksi.
+   * Kaksi isoa yläreunassa (siellä lamput ovat), yksi pieni ja himmeä
+   * alempana vasemmalla ja yksi kapea kuuma piste keskellä.
+   *
+   * VALO ON LÄMMINTÄ. Hehkulangan väri on noin 2400 K eli selvästi
+   * kellertävä, ja sen läpi paistava kellastunut asteikkopaperi vielä
+   * lämmittää sitä. Valkoinen valo tekisi laitteesta nykyaikaisen.
+   *
+   * REUNAT JÄÄVÄT PIMEÄÄN. Kaksi tummennusta lamppujen PÄÄLLÄ: laaja
+   * vinjetti, joka syvenee laitoja kohti, ja sen lisäksi alakulmat,
+   * jonne valo ei yllä lainkaan. Ilman näitä lamput vain vaalentaisivat
+   * kaiken, eikä valon ja varjon vaihtelua syntyisi.
+   *
+   * IKÄ ON YHÄ TALLELLA: kellastuma oikeassa laidassa ja pieni tahra
+   * ovat samat kuin ennen, nyt vain valojen seassa. Peitot ovat puolet
+   * mittarin peitoista — asteikko on laitteen luettavin osa, ja nimien
+   * kontrasti on tärkeämpi kuin ikä.
    */
   background-color: var(--radio-asteikko);
   background-image:
+    /* Alakulmat: valon ulottumattomissa, kuten mallikuvassa. */
+    radial-gradient(44% 96% at 2% 106%, rgba(96, 58, 18, 0.44), rgba(96, 58, 18, 0) 74%),
+    radial-gradient(40% 88% at 98% 108%, rgba(96, 58, 18, 0.4), rgba(96, 58, 18, 0) 72%),
+    /* Vinjetti: keskeltä kirkas, laidoilta ja alhaalta tumma. Sävy on
+       kellertävän ruskea eikä harmaa — varjossakin asteikko on lämmin. */
+    radial-gradient(94% 150% at 40% 10%,
+      rgba(104, 66, 22, 0) 22%, rgba(100, 62, 20, 0.22) 62%, rgba(84, 50, 16, 0.46) 100%),
+    /* Ikä: kellastuma ja tahra. */
     radial-gradient(30% 80% at 93% 76%, rgba(146, 106, 48, 0.14), rgba(146, 106, 48, 0) 76%),
     radial-gradient(4% 34% at 37% 66%, rgba(126, 84, 32, 0.12), rgba(126, 84, 32, 0) 82%),
-    radial-gradient(48% 90% at 22% 8%, rgba(255, 250, 232, 0.4), rgba(255, 250, 232, 0) 78%),
-    linear-gradient(180deg, #fbf1d8, var(--radio-asteikko));
+    /* Lamppujen väliin jäävä hämärä: ilman tätä kaksi ylälampun kehää
+       sulautuisivat yhdeksi leveäksi vaaleaksi kaistaksi. */
+    radial-gradient(13% 74% at 49% 34%,
+      rgba(74, 46, 18, 0.12), rgba(74, 46, 18, 0) 82%),
+    /* Lamput. */
+    radial-gradient(11% 38% at 88% 26%,
+      rgba(255, 243, 204, 0.3), rgba(255, 236, 180, 0) 84%),
+    radial-gradient(16% 50% at 11% 62%,
+      rgba(255, 228, 166, 0.24), rgba(255, 222, 154, 0) 82%),
+    radial-gradient(26% 78% at 66% 4%,
+      rgba(255, 239, 192, 0.56), rgba(255, 223, 152, 0) 78%),
+    radial-gradient(40% 108% at 30% 0%,
+      rgba(255, 244, 208, 0.82), rgba(255, 230, 168, 0.28) 46%, rgba(255, 219, 146, 0) 82%),
+    /* Pohja: lämmin paperi, joka tummenee alaspäin. Pohja on
+       tarkoituksella himmeämpi kuin ennen — kirkkaus tulee lampuista,
+       ei paperista, tai valo olisi taas tasaista. */
+    linear-gradient(180deg, #e8d5ae 0%, #e0cba1 52%, #cfb388 100%);
   box-shadow:
     inset 0 0 0 1px rgba(58, 42, 23, 0.5),
     inset 0 1px 3px rgba(0, 0, 0, 0.25);
   overflow: hidden;
+}
+
+/*
+ * LASI ASTEIKON PÄÄLLÄ (omistaja: "Myös lasi kanavalistan päällä pitäisi
+ * näkyä aavistuksen kolmiulotteisena").
+ *
+ * Kolme vetoa, ja kaikki ovat hyvin hentoja — "aavistuksen" on tässä
+ * vaatimus eikä arvio. Lasin tehtävä on antaa syvyyttä, ei kimallella:
+ * jokainen yksikkö, jonka tämä kirkastuu, on pois nimien kontrastista.
+ *
+ *   1. Loiva heijastuskaari yläosassa. Leveä, hyvin läpikuultava liuku,
+ *      joka sammuu ennen puoltaväliä — se on ikkunan tai huoneen valon
+ *      heijastus kaltevasta lasista.
+ *   2. Hiuksenohut kirkas viiva ylimpänä: lasin särmä. Yhden pikselin
+ *      viiva on se, mikä erottaa lasin pinnasta esineen.
+ *   3. Ohut tummempi viiva alareunassa: lasin paksuus ja sen taakse
+ *      jäävä varjo. Ilman sitä lasi olisi vain vaaleampi laikku.
+ *
+ * ERILLINEN KERROS EIKÄ TAUSTAAN LISÄTTY, koska lasi on nimien PÄÄLLÄ
+ * eikä alla. Sijoitettuna pseudoelementtinä se piirtyy nimirivin yli,
+ * ja koska nauha liikkuu virittäessä (radio-liuku), lasin on pysyttävä
+ * paikallaan: heijastus on kotelossa, ei nauhassa.
+ */
+.radio-asteikko::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image:
+    linear-gradient(180deg,
+      rgba(255, 253, 244, 0.16) 0 1px,
+      rgba(255, 252, 240, 0.1) 1px 22%,
+      rgba(255, 250, 236, 0.04) 46%,
+      rgba(255, 250, 236, 0) 62%),
+    linear-gradient(0deg,
+      rgba(46, 28, 10, 0.16) 0 1px,
+      rgba(46, 28, 10, 0.06) 1px 4%,
+      rgba(46, 28, 10, 0) 12%);
 }
 
 /* Jaotus: joka viides viiva pidempi ja tummempi, kuten mitta-asteikossa. */
@@ -1076,7 +1168,17 @@
   letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
-  color: rgba(58, 42, 23, 0.72);
+  /*
+   * LUETTAVUUS VOITTAA VALAISTUKSEN. Asteikon laidat ja alakulmat ovat
+   * nyt selvästi tummemmat kuin ennen (ks. .radio-asteikko takavalot),
+   * ja tumma teksti tummalla paperilla katoaa. Kaksi korjausta:
+   * kirjaimet ovat hitusen tummemmat ja peittävämmät, ja niiden alla on
+   * hiuksenohut lämmin valo, joka irrottaa nimen pohjasta. Valoreuna
+   * eikä varjo, koska nimi on pohjaansa tummempi kaikkialla — varjo
+   * hukkuisi juuri niihin kohtiin, joita sen pitäisi auttaa.
+   */
+  color: rgba(48, 33, 15, 0.82);
+  text-shadow: 0 1px 0 rgba(255, 246, 220, 0.4);
   cursor: pointer;
   /* Kaksoisnapautuksen zoomaus pois: asteikkoa napautetaan nopeasti
      peräkkäin, kun kanavaa haetaan. */
@@ -1094,6 +1196,19 @@
   color: rgba(40, 27, 12, 0.95);
   font-weight: 700;
   letter-spacing: 0.04em;
+}
+
+/*
+ * Uloimmat nimet ovat asteikon tummimmilla alueilla — vinjetti ja
+ * alakulmat vievät niiltä juuri sen kontrastin, jonka keskimmäinen saa
+ * lampuilta. Ne saavat siksi täyden sävyn ja hieman vahvemman
+ * valoreunan. Tämä on sama sääntö kuin yllä: efekti ei saa syödä
+ * nimeä, jota sen pitäisi valaista.
+ */
+.radio-kaupunki[data-sija="3"],
+.radio-kaupunki[data-sija="4"] {
+  color: rgba(40, 26, 10, 0.94);
+  text-shadow: 0 1px 0 rgba(255, 247, 224, 0.55);
 }
 
 /*

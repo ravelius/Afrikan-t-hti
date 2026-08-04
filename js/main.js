@@ -253,43 +253,17 @@ document.addEventListener('pointerdown', (event) => {
 });
 naytaKertoja();
 
-// --- päävalikko --------------------------------------------------------------
+// --- valikot sulkeutuvat Esc-näppäimestä ------------------------------------
 //
-// Ylärivillä on vain kertojan ääninappi; päivitys, laukku, säännöt ja
-// uusi peli asuvat hampurilaisen alla (omistajan toive). Valikko
-// sulkeutuu valinnasta, napautuksesta muualle ja Esc-näppäimestä.
-
-const menuBtn = document.getElementById('menu-btn');
-const paavalikko = document.getElementById('paavalikko');
-
-const suljeValikko = () => {
-  if (paavalikko.hidden) return;
-  paavalikko.hidden = true;
-  menuBtn.setAttribute('aria-expanded', 'false');
-};
-
-menuBtn.addEventListener('click', () => {
-  paavalikko.hidden = !paavalikko.hidden;
-  menuBtn.setAttribute('aria-expanded', String(!paavalikko.hidden));
-  // Kaksi valikkoa ei ole auki yhtä aikaa.
-  if (!paavalikko.hidden) {
-    kertojaValikko.hidden = true;
-    muteBtn.setAttribute('aria-expanded', 'false');
-    ui?.suljeLinssivalikko?.();
-  }
-});
-
-// Valinta sulkee valikon. Kuuntelija on valikossa itsessään, joten
-// nappien omat toiminnot pysyvät siellä missä ne on määritelty.
-paavalikko.addEventListener('click', (event) => {
-  if (event.target.closest('button')) suljeValikko();
-});
-
-document.addEventListener('pointerdown', (event) => {
-  if (!event.target.closest?.('.valikko-kotelo')) suljeValikko();
-});
+// Hampurilainen poistettiin (omistajan toive): säännöt ja uusi peli ovat
+// suoraan ylärivillä, ja päivitys ja kehittäjätila löytyvät
+// versionumerosta. Esc-kuuntelija jäi, koska linssi- ja kertojavalikko
+// ovat yhä avattavia.
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') suljeValikko();
+  if (event.key !== 'Escape') return;
+  kertojaValikko.hidden = true;
+  muteBtn.setAttribute('aria-expanded', 'false');
+  ui?.suljeLinssivalikko?.();
 });
 
 // Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.
@@ -375,6 +349,16 @@ function avaaMuutokset() {
 }
 
 versioKulma.addEventListener('click', avaaMuutokset);
+/*
+ * Lokin omat toiminnot sulkevat lokin ensin.
+ *
+ * Kehittäjätila avaa oman modaalinsa, ja kaksi päällekkäistä
+ * <dialog>-modaalia jättää alemman taustahimmennyksen päälle. Päivitys
+ * lataa sivun uudelleen, jolloin auki jäänyt ikkuna vilkahtaisi turhaan.
+ */
+muutoksetDialog.addEventListener('click', (e) => {
+  if (e.target.closest?.('.muutokset-toiminnot button')) muutoksetDialog.close();
+});
 document.getElementById('muutokset-sulje')
   .addEventListener('click', () => muutoksetDialog.close());
 // Napautus kortin ulkopuolelle sulkee, kuten muissakin ikkunoissa.

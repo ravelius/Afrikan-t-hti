@@ -274,43 +274,42 @@ button, .brand, .turn-pill, .fact-card h2 {
  * Rakenne ja ulkoasu ovat samat kuin kertojavalikossa, jotta ne
  * käyttäytyvät samoin.
  */
-.valikko-kotelo { position: relative; }
-
-.paavalikko {
-  position: absolute;
-  top: calc(100% + 0.35rem);
-  right: 0;
-  z-index: 60;
+/*
+ * Muutoslokin omat toiminnot: päivitys ja kehittäjätila.
+ *
+ * Hampurilainen poistettiin (omistajan toive), ja nämä kaksi harvoin
+ * tarvittavaa toimintoa siirtyivät versionumeron taakse. Ne ovat lokin
+ * alalaidassa omalla rivillään, erotettuna listasta ohuella viivalla:
+ * loki on luettavaa, nämä ovat painettavaa.
+ */
+.muutokset-toiminnot {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.3rem;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  box-shadow: 0 10px 28px rgba(15, 10, 5, 0.45);
+  gap: 0.5rem;
+  margin: 0.7rem 0 0.2rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(70, 51, 31, 0.22);
 }
 
-.paavalikko button {
-  display: flex;
+.muutokset-toiminnot button {
+  flex: 1 1 0;
+  display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  width: 100%;
-  padding: 0.45rem 0.6rem;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.5rem;
+  font-size: 0.78rem;
+  color: #46331f;
   background: none;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  white-space: nowrap;
+  border: 1px solid rgba(70, 51, 31, 0.28);
+  border-radius: 3px;
 }
 
-.paavalikko button:hover { background: rgba(234, 184, 78, 0.12); }
+.muutokset-toiminnot button:hover:not(:disabled) {
+  background: rgba(234, 184, 78, 0.16);
+  color: #46331f;
+}
 
-/* Valikossa on tilaa sekä kuvakkeelle että nimelle, myös puhelimella —
- * toisin kuin ahtaalla ylärivillä, jota varten labelit alun perin
- * vuorottelivat. */
-.paavalikko .wide-label,
-.paavalikko .narrow-label { display: inline; }
-.paavalikko .narrow-label { order: -1; display: inline-flex; }
+.muutokset-toiminnot .viiva-ikoni { width: 1rem; height: 1rem; }
 
 
 /*
@@ -4338,7 +4337,6 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
   .wide-label { display: none; }
   .narrow-label { display: inline; }
   /* Valikon sisällä nimet näkyvät kapeallakin ruudulla. */
-  .paavalikko .wide-label { display: inline; }
 
   .board-hint { font-size: 0.76rem; padding: 0.25rem 0.6rem; }
   .event-toast { font-size: 0.92rem; padding: 0.55rem 0.8rem; top: 10%; }

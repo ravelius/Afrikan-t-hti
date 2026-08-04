@@ -4248,10 +4248,12 @@ Mitattuna (Chromium, 1400×900, maailmankartta): käynnistys **12,5 s → 6 s**,
 panorointi täyttyy 13–33 ms, zoomaustaso tarkentuu 2,5–5,8 s kuluessa ja vanhat
 ruudut pysyvät näkyvissä sen ajan.
 
-**Vielä auki:** omistaja raportoi vierityksen tökkivän erityisesti Macin
-selaimella. Chromiumilla Linuxissa panorointi on näiden korjausten jälkeen
-välitön, joten Macin oire tarvitsee oman toisinnon — todennäköisin epäilty on
-`<use>`-kopion kanssa kaksinkertaistuva piirtoala isolla työpöytäikkunalla.
+**Kuitattu 4.8.2026:** omistaja raportoi ensin vierityksen tökkivän erityisesti
+Macin selaimella. Ruutukorjausten jälkeen: *"Vieritys näyttäisi hyvin
+toimivan."* Syy oli siis sama kuin sumeudella — ruudusta tuli koko maailman
+kokoinen, ja jokainen ruutu maksoi mitattuna 4,7 sekuntia pääsäikeessä.
+Macin isompi ikkuna vain teki oireesta näkyvämmän. Erillistä
+`<use>`-kopion piirtoalaa ei tarvinnut epäillä.
 
 ### Opittua
 

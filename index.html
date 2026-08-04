@@ -33,6 +33,19 @@
   <dialog id="muutokset-dialog" class="muutokset-dialog">
     <h2 class="muutokset-otsikko">Mitä uutta</h2>
     <ol id="muutokset-lista" class="muutokset-lista"></ol>
+    <!-- Harvoin tarvittavat toiminnot lokin alle: versionumeron takaa
+         etsitään juuri sitä, mikä versioon liittyy. Päivitys hakee uusimman
+         version, ja kehittäjätila on salasanan takana. -->
+    <div class="muutokset-toiminnot">
+      <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
+        <span class="viiva-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.4 4.8v3.7h-3.7"/><path d="M19.2 8.4a7.4 7.4 0 1 0 1 5.4"/></svg></span>
+        <span>Päivitä</span>
+      </button>
+      <button id="kehittaja-btn" class="ghost" type="button" title="Kehittäjätila">
+        <span class="viiva-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.4 7.4 4.8 12l4.6 4.6M14.6 7.4 19.2 12l-4.6 4.6"/></svg></span>
+        <span>Kehittäjä</span>
+      </button>
+    </div>
     <button id="muutokset-sulje" class="muutokset-sulje" type="button">Sulje</button>
   </dialog>
   <!-- Palautehuutomerkki oikeassa alakulmassa: palautetta juuri siitä
@@ -75,31 +88,19 @@
           </button>
           <div id="kertoja-valikko" class="kertoja-valikko" hidden></div>
         </div>
-        <!-- Muut toiminnot hampurilaisen alle (omistajan toive): ylärivi
-             oli ahdas, ja ääni on ainoa, jota tarvitaan kesken pelin. -->
-        <div class="valikko-kotelo">
-          <button id="menu-btn" class="ghost" type="button" title="Valikko"
-                  aria-haspopup="true" aria-expanded="false" aria-controls="paavalikko">
-            <span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg></span>
-          </button>
-          <div id="paavalikko" class="paavalikko" hidden>
-        <button id="update-btn" class="ghost" type="button" title="Hae uusin versio">
-          <span class="wide-label">Päivitä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M19.4 4.8v3.7h-3.7"/><path d="M19.2 8.4a7.4 7.4 0 1 0 1 5.4"/></svg></span></span>
+        <!--
+             Säännöt ja uusi peli ovat suoraan ylärivillä (omistajan
+             toive): hampurilainen piilotti kaksi nappia, joita tarvitaan
+             usein, kolmen napautuksen taakse. Harvoin tarvittavat
+             päivitys ja kehittäjätila löytyvät versionumerosta oikeasta
+             alalaidasta.
+        -->
+        <button id="rules-btn" class="ghost" type="button" title="Säännöt" aria-label="Säännöt">
+          <span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span>
         </button>
-        <button id="rules-btn" class="ghost" type="button" title="Säännöt">
-          <span class="wide-label">Säännöt</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span></span>
+        <button id="newgame-btn" class="ghost" type="button" title="Uusi peli" aria-label="Uusi peli">
+          <span class="viiva-ikoni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span>
         </button>
-        <button id="newgame-btn" class="ghost" type="button" title="Uusi peli">
-          <span class="wide-label">Uusi peli</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span></span>
-        </button>
-        <!-- Kehittäjätila (omistajan toive): kaupunkiin pääsee napauttamalla
-             sen laattaa, jolloin sisältöä voi tarkastella ilman pelaamista.
-             Salasanan takana, ettei se aukea vahingossa lapsen kädessä. -->
-        <button id="kehittaja-btn" class="ghost" type="button" title="Kehittäjätila">
-          <span class="wide-label">Kehittäjä</span><span class="narrow-label" aria-hidden="true"><span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M9.4 7.4 4.8 12l4.6 4.6M14.6 7.4 19.2 12l-4.6 4.6"/></svg></span></span>
-        </button>
-          </div>
-        </div>
       </div>
     </header>
 
