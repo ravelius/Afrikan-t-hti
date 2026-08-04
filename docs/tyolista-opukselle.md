@@ -4131,3 +4131,47 @@ kaupunkeja on 248. Ilman eroa pelaaja napauttaa turhaan.
 3. Kaupungin napautus radiotilassa: kanava päälle, ei muuta.
 4. Luentaäänen vaimennus tilan ajaksi.
 5. Muun toiminnan (noppa, matkustus, laatat, tietovisa) esto.
+
+## JONOSSA: kuvat loppuun ja maastonimien tekstit uusiksi
+
+Omistajan pyyntö 4.8.2026, tehtäväksi radiotöiden jälkeen:
+
+> "Tarkasta vielä puuttuvat kuvat matkakirjoista loppuun, sekä kirjoita
+> vuorien ja jokien ja muiden infotekstit uudestaan. Ne taitavat olla nyt
+> suoraan Wikipediasta ja ovat liian pitkiä. Niitä voisi myös vähän
+> elävöittää käyttämällä lainauksia ja ripottelemalla kuvia tekstin
+> sekaan. Täysi Wikipedia-teksti, joka on jo tehty, voisi olla vaikka
+> sitten lopussa pienen linkin takana."
+
+### 1. Kuvat loppuun
+
+248/248 kaupungilla on kuvakortti, mutta **20 kaupungilta puuttuu vanha
+vedos**: Riad, Sana, Salalah, Dubai, Doha, Teheran, Persepolis, Astana,
+Magadan, Churchill, Iqaluit, Boa Vista, Santarém, Santa Cruz, Campo
+Grande, San Ambrosio, Kap Horn, Exmouth, Honiara, Norfolk.
+
+Näille Commonsista ei löytynyt riittävän suurta (yli 1200 px) aitoa
+1800–1900-luvun alun valokuvaa ensimmäisellä haulla. Toinen kierros
+kannattaa hakea muualta kuin Commonsista: Library of Congress,
+Internet Archive, kansalliskirjastot, Nationaal Archief.
+
+Tarkistettava erikseen: **Karachin** vanha kuva on vuodelta 1946 eikä
+näytä kaupunkia, ja **Panaman** kortti on kopioituna kahdessa paketissa.
+
+### 2. Maastonimien tekstit
+
+Nyt `js/packs/maasto-nimet-vedet.js` ja `-vuoret.js` sisältävät
+`selitys`-kentän, joka on kirjoitettu Wikipedian pohjalta. Ne ovat
+tietoa mutta eivät tarinaa: liian pitkiä ja liian tietosanakirjamaisia.
+
+Mitä tilalle:
+
+- **Lyhyempi ja elävämpi.** Yksi ajatus, ei tiivistelmä.
+- **Lainauksia.** Matkakertomukset, tutkimusmatkailijoiden päiväkirjat,
+  runot — 1800-luvun aineisto on public domainia ja sopii pelin ääneen.
+  Lainaus on se, mikä erottaa tekstin Wikipediasta.
+- **Kuvia tekstin sekaan**, ei vain alkuun.
+- **Täysi Wikipedia-teksti pienen linkin taakse loppuun.** Se on jo
+  haettuna eikä sitä heitetä pois — se vain siirtyy pois tieltä.
+
+Tämä koskee 123 jokea, 38 järveä ja 52 vuoristoa = 213 tekstiä.
