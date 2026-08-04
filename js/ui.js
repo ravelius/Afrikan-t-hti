@@ -66,6 +66,7 @@ import { ASIA_MAATIEDOT } from './packs/asia-maatiedot.js';
 import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
+import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
 import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
 import { EUROPE_KIELET } from './packs/europe-kielet.js';
 import { EUROPE_MAATIEDOT } from './packs/europe-maatiedot.js';
@@ -6527,7 +6528,8 @@ export class UI {
    * kohdat mene rikki.
    */
   rakennaSivut(cityId) {
-    const kategoriat = cityId ? (KULTTUURI_KATEGORIAT[cityId] ?? []) : [];
+    const kategoriat = cityId ? [...(KULTTUURI_KATEGORIAT[cityId] ?? [])] : [];
+    const kaupunginOmia = kategoriat.length;
     /*
      * Kaupungit, joilla ei ole kategorioita mutta on litteä nostolista,
      * saavat yhden sivun nimeltä "Elämää".
@@ -6538,8 +6540,20 @@ export class UI {
      * jotka eivät sitä vielä saa.
      */
     const litteat = cityId ? ((KULTTUURIT[this.game.pack.id] ?? {})[cityId]?.nostot ?? []) : [];
-    if (!kategoriat.length && litteat.length) {
+    if (!kaupunginOmia && litteat.length) {
       kategoriat.push({ id: 'elama', nimi: 'Elämää', nostot: litteat, litteä: true });
+    }
+    /*
+     * Maan aiheet kaupungin sivujen perään (omistajan malli 5.8.2026):
+     * lehden kansisivut ovat kaupunkia, sisäsivut maata — sama
+     * maapaketti palvelee maan jokaista kaupunkia, vain kansi vaihtuu.
+     * Jos kaupungilla on jo sama aihe-id, kaupungin versio voittaa,
+     * jotta Lontoon yhdeksän omaa aihetta eivät saa rinnalleen maan
+     * kaksoiskappaleita.
+     */
+    const maanIso = cityId ? this.game.pack.map?.cityCountry?.[cityId] : null;
+    for (const osa of (maanIso ? MAA_KATEGORIAT[maanIso] ?? [] : [])) {
+      if (!kategoriat.some((k) => k.id === osa.id)) kategoriat.push(osa);
     }
     this.arrivalLiuskat.replaceChildren();
     this.arrivalLiuskat.hidden = true;
