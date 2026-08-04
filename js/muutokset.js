@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 243, teksti: 'Matkakirja kutistuu riviksi karttaa vierittäessä' },
+  { v: 243, teksti: 'Linssin selite kutistuu ja avautuu napauttamalla' },
   { v: 242, teksti: 'Ikkunan avaus ei enää korosta ensimmäistä nappia' },
   { v: 241, teksti: 'Jokien nimet pysyvät paikallaan vierittäessä' },
   { v: 241, teksti: 'Nimen koko seuraa zoomia' },
