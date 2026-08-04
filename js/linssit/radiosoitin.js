@@ -398,20 +398,12 @@ function ero(a, b, laudanLeveys) {
  *   aani                   — aloitusäänenvoimakkuus 0–1 (oletus 0,8).
  *
  * Palauttaa:
-<<<<<<< HEAD
  *   juuri                  — elementti, jonka kutsuja liittää haluamaansa
  *                            paikkaan (soitin asemoi itsensä alalaitaan).
  *   naytaKanava(tiedot)    — { asema, maa, kaupunki, cityId, naytto } tai null.
  *                            `naytto` on valinnainen lyhennetty nimi
  *                            pistenäytölle, ks. rivit(). `cityId` keskittää
  *                            asteikon soivaan kaupunkiin.
-=======
- *   juuri               — elementti, jonka kutsuja liittää haluamaansa
- *                         paikkaan (soitin asemoi itsensä alalaitaan).
- *   naytaKanava(tiedot) — { asema, maa, kaupunki, naytto } tai null.
- *                         `naytto` on valinnainen lyhennetty nimi
- *                         pistenäytölle, ks. rivit().
->>>>>>> origin/main
  *   asetaTila(tila, viesti)
  *   asetaNaytto(elementti) — pistematriisinäyttö aukkoon.
  *   asetaAani(arvo)
