@@ -941,15 +941,22 @@
 
 /*
  * SIIRTYMÄ. Lähtökohta on mukautetussa ominaisuudessa, koska vain
- * javascript tietää matkan; käyrä on täällä, koska vain tyyli tietää
- * miltä kääntyvä viritysnuppi tuntuu.
+ * javascript tietää matkan; kesto on täällä, koska vain tyyli tietää
+ * kuinka kauan kääntyvä viritysnuppi vie.
  *
- * cubic-bezier(0.3, 0, 0.1, 1) on kiihdytys ja pitkä loppuhidastus.
- * Lähtö on pehmeä (0,3 / 0) eikä nykäisy, ja jälkimmäinen ohjauspiste
- * (0,1 / 1) vie käyrän lähelle päätearvoa jo puolivälissä — viimeinen
- * puoli sekuntia on ryömimistä paikalleen. Juuri se tekee liu'usta
- * mekaanisen: nuppia käännetään ensin reippaasti ja etsitään sitten
- * viimeiset millit.
+ * PEHMENNIN EI OLE ENÄÄ PEHMEÄ, ja se on omistajan toive: "Kanavalista
+ * liikkuu liian pehmeästi. Jos sitä oikeasti kädellä vääntää, niin se
+ * menee välillä töksähtäen, tai ei ainakaan noin pehmeästi." Nauha siis
+ * tarttuu ja irtoaa. Nykäisyt arvotaan joka liu'ulle erikseen
+ * (js/linssit/radiosoitin.js arvoNykaisyt) ja tulevat tänne
+ * linear()-pehmentimenä muuttujassa --radio-liuku-kaari.
+ *
+ * VANHA KÄYRÄ JÄÄ VARALLE. cubic-bezier(0.3, 0, 0.1, 1) on kiihdytys ja
+ * pitkä loppuhidastus, ja se on yhä sekä lyhenteen oma arvo että var():n
+ * varakäyrä: jos selain ei tunne linear()-pehmennintä tai muuttuja jää
+ * asettamatta (vanha kutsuja, yhden tiedoston versio), liuku on
+ * entisensä eikä rikki. Pehmennin on omana ilmoituksenaan juuri siksi —
+ * lyhenteen sisällä kelvoton var() veisi koko animaation.
  */
 @keyframes radio-liuku {
   from { transform: translateX(var(--radio-liuku, 0px)); }
@@ -989,9 +996,17 @@
  * LUKITTUMINEN. Lähtökohta mitataan hakuvaiheen keskeltä
  * (js/linssit/radiosoitin.js nauhanSiirto), joten nauha ei ensin
  * napsahda nollaan ja asetu vasta sitten.
+ *
+ * VIIMEINEN KOHDISTUS KÄY YLI JA PALAA. Asettuminen saa olla pehmeä
+ * muttei liukas (omistajan toive): oikea laite ei pysähdy kohdalleen
+ * ensi yrittämällä, vaan viimeinen pikseli haetaan takaisin päin.
+ * Ylityksen suunta ja koko lasketaan lähtökohdasta
+ * (js/linssit/radiosoitin.js lukonYlitys); ilman muuttujaa keskikehys on
+ * nollassa, jolloin liike on entisensä.
  */
 @keyframes radio-lukko {
   from { transform: translateX(var(--radio-lukko, 0px)); }
+  72%  { transform: translateX(var(--radio-lukko-yli, 0px)); }
   to   { transform: translateX(0); }
 }
 
@@ -1015,6 +1030,7 @@
  */
 .radiosoitin[data-tila="virittaa"][data-vaihe="siirtyma"] .radio-kaupungit {
   animation: radio-liuku 1.25s cubic-bezier(0.3, 0, 0.1, 1) both;
+  animation-timing-function: var(--radio-liuku-kaari, cubic-bezier(0.3, 0, 0.1, 1));
 }
 
 .radiosoitin[data-tila="virittaa"][data-vaihe="lukittuu"] .radio-kaupungit {

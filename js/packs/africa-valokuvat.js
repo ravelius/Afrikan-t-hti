@@ -28,11 +28,15 @@ export const AFRICA_VALOKUVAT = {
           + 'kääntyivät salmeen.',
       },
     ],
-    tiedosto: 'Tangier Grand Mosque 1900s.jpg',
+    // Aiempi kuva (Tangier Grand Mosque 1900s.jpg) oli vain 184 px leveä
+    // ja rakeinen suurennettuna; tämä on sama aika ja sama vilske,
+    // mutta 4515 px leveänä lasilevyskannauksena.
+    tiedosto: 'Le marché du Grand Soko à Tanger - btv1b532075360.jpg',
     vuosi: '1900-luvun alku',
-    lahde: 'Commons (PD)',
-    selite: 'Tangerin suurmoskeijan kulmalla kävi vilske jo isoisän aikaan: '
-      + 'kantajia, kauppiaita ja aaseja samalla kapealla kadulla.',
+    lahde: 'Agence Rol / Gallica, Commons (PD)',
+    selite: 'Grand Socco medinan portin edessä täyttyi markkinapäivänä '
+      + 'kameleista, muuleista ja kauppiaista — tämän tungoksen läpi '
+      + 'isoisänkin oli kuljettava vanhaan kaupunkiin.',
     // Uusi kuva pilkottaa vanhan alta (omistajan kokeilu).
     uusi: {
       tiedosto: 'Panorama Tanger Bay Tangier Marokko.jpg',

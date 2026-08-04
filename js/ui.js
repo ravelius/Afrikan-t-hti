@@ -713,6 +713,26 @@ const MANNER_LENTO_MS = 2800;
 // Lentoanimaation kesto: sen verran, että repliikin ehtii lukea.
 // Kalvolento saa kestää: matka on tarkoitus tuntea, ei ohittaa.
 const FLY_OVERLAY_MS = 4800;
+/*
+ * Lennon kesto seuraa repliikin pituutta.
+ *
+ * Kiinteä 4,8 sekuntia riitti koneelle mutta ei lukijalle: omistajan
+ * havainto avauslennolta oli, että "lentokoneen pitää lentää hitaammin
+ * koska tekstin luku kestää paljon kauemmin". Repliikki kirjoittuu
+ * sanoittain ja jää sitten paikalleen, joten hidas osuus ei ole
+ * kirjoitus vaan lukeminen.
+ *
+ * Aika lasketaan sanoista eikä merkeistä: silmä lukee sanan kerrallaan,
+ * ja lyhyet suomen sanat pidentäisivät merkkilaskurilla arviota väärään
+ * suuntaan. Yläraja on siksi, ettei poikkeuksellisen pitkä rivi jätä
+ * konetta ilmaan minuutiksi — lennon voi joka tapauksessa hypäyttää
+ * perille napauttamalla.
+ */
+const LENNON_POHJA_MS = 2200;
+const LENNON_SANA_MS = 210;
+const LENNON_ENINTAAN_MS = 15000;
+// Kuinka kauan lennon jälkeen odotetaan, ennen kuin pieni nuoli syttyy.
+const LENNON_NUOLI_MS = 3500;
 const TOAST_MS = { die: 950, default: 1200 };
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 // Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
@@ -817,6 +837,27 @@ const ALAKAISTA = 0.3;
 const YLAKAISTA = 0.26;
 // Zoomausliu'un kesto. Omistajan palaute on vienyt tätä pidemmäksi
 // kerta kerralta: 600 ms → 1200 → 2000 → 2400.
+/*
+ * Loitonnuksen varmuusvara: osuus laudan leveydestä, joka jää aina
+ * näkymän ulkopuolelle, jottei sauma näy kahtena (ks. rajaaSkaala).
+ */
+const SAUMAN_VARA = 0.03;
+/*
+ * Saapumisnäkymän siirto kohdemantereen suuntaan (ks. mantereenKeskitys).
+ * OSUUS on matka mantereen painopisteeseen; SIIRTO_X ja SIIRTO_Y
+ * rajaavat sen osuuteen näkyvästä alasta, jottei kaupunki karkaa
+ * laitaan. Y on tiukempi, koska ruutu on matalampi kuin leveä ja
+ * kaupungin yläpuolella on matkakirjan kortti.
+ */
+const MANNER_PAINO = 0.5;
+const MANNER_SIIRTO_X = 0.26;
+const MANNER_SIIRTO_Y = 0.2;
+/*
+ * Saapumisliu'un lähtölaajuus isolla laudalla: monenko kertaisena
+ * näkymä avautuu ennen kuin se laskeutuu lähikuvaan. Kokonäkymästä ei
+ * lähdetä (ks. zoomaaMantereelle).
+ */
+const MANNER_LAAJUUS = 2.6;
 const ZOOM_MS = 2400;
 // Etusivun zoomaus vielä tätäkin hitaammin (omistajan toive): se on
 // pelin avaus, ja koko maailmankartta on iso matka lähikuvaan.
@@ -1783,7 +1824,21 @@ export class UI {
    */
   rajaaSkaala(skaala, paneW, box) {
     if (!this.kiertava()) return skaala;
-    return Math.max(skaala, paneW / box.w);
+    /*
+     * Raja on laudan leveys MIINUS pieni varmuusvara.
+     *
+     * Tasan laudan levyinen näkymä on teoriassa oikein: sauma osuu
+     * ruudun laitaan eikä mikään näy kahdesti. Käytännössä ei osu.
+     * Näkyvä leveys lasketaan paneelin pikselileveydestä, joka on
+     * murtoluku, ja pyöristys, laitteen pikselisuhde ja kartan omien
+     * viivojen paksuus vievät reunimmaisen kaistaleen milloin
+     * kummallekin puolelle — omistajan havainto: "siinä näkyy sama
+     * paikka kahteen kertaan, kun se on kokonaan zoomattu ulos."
+     *
+     * Vara maksaa kolme prosenttia loitonnusta ja tekee saumasta aina
+     * saumattoman. Se on halvempi kuin kaksi kertaa piirtyvä ranta.
+     */
+    return Math.max(skaala, paneW / (box.w * (1 - SAUMAN_VARA)));
   }
 
   fitViewBox() {
@@ -1814,7 +1869,7 @@ export class UI {
      * alalaidassa on merta, kaupungit ovat keskellä.
      */
     let scale = Math.min(w / box.w, (h - kaista) / box.h);
-    if (this.kiertava()) scale = Math.max(scale, w / box.w);
+    if (this.kiertava()) scale = this.rajaaSkaala(scale, w, box);
     const vw = w / scale;
     const vh = h / scale;
     this.viewBoxSize = { vw, vh };
@@ -2578,6 +2633,54 @@ export class UI {
     return (this.contentBox?.w ?? 1000) > 2000;
   }
 
+  /**
+   * Saapumisnäkymän keskipiste: kaupunki, mutta kohdemantereen suuntaan
+   * siirrettynä.
+   *
+   * Omistajan havainto: "nyt kartta keskittää kaupungin ja Tangerin
+   * kohdalla näkyy Eurooppaa yhtä paljon kuin Aasiaa." Tanger on
+   * Afrikan pohjoisimmassa kulmassa, joten kaupunki keskellä tarkoittaa,
+   * että puolet ruudusta on sitä mannerta, jonne ei olla tultu.
+   *
+   * Painopiste lasketaan saman mantereen kaupungeista (map.cityManner),
+   * ei mantereen muodosta: kaupungit ovat se, mitä pelissä tehdään, ja
+   * ne ovat valmiina laudan koordinaateissa. Kiertävällä kartalla
+   * jokainen kaupunki tuodaan ensin lähimmäksi kohdetta — muuten
+   * Beringinsalmen molemmin puolin ulottuva Aasia antaisi painopisteen
+   * keskeltä Atlanttia.
+   *
+   * Siirto on osittainen ja rajattu. Koko matka painopisteeseen veisi
+   * kaupungin ruudun laitaan, ja kaupunki on se, mihin on tultu.
+   */
+  mantereenKeskitys(kohde, paneW, paneH, skaala) {
+    const kartta = this.game.pack.map;
+    const manner = kohde?.id && kartta?.cityManner?.[kohde.id];
+    if (!manner || !skaala) return kohde;
+    const W = this.kiertava() ? kartta.width : 0;
+    let summaX = 0;
+    let summaY = 0;
+    let montako = 0;
+    for (const kaupunki of this.game.board.cities ?? []) {
+      if (kartta.cityManner[kaupunki.id] !== manner) continue;
+      let x = kaupunki.x;
+      if (W) {
+        while (x - kohde.x > W / 2) x -= W;
+        while (x - kohde.x < -W / 2) x += W;
+      }
+      summaX += x;
+      summaY += kaupunki.y;
+      montako += 1;
+    }
+    if (montako < 2) return kohde;
+    const rajaX = (paneW / skaala) * MANNER_SIIRTO_X;
+    const rajaY = (paneH / skaala) * MANNER_SIIRTO_Y;
+    const vali = (arvo, raja) => Math.max(-raja, Math.min(raja, arvo));
+    return {
+      x: kohde.x + vali((summaX / montako - kohde.x) * MANNER_PAINO, rajaX),
+      y: kohde.y + vali((summaY / montako - kohde.y) * MANNER_PAINO, rajaY),
+    };
+  }
+
   /** Mantereen lähikuvan mitat ja rajat. */
   sovitaMannerZoom(paneW, paneH) {
     const box = this.contentBox ?? { x: 0, y: 0, w: 1000, h: 1000 };
@@ -2623,8 +2726,9 @@ export class UI {
     this.panVaraY = Math.max(0, korkeus - paneH);
     if (this.panX == null || this.panY == null) {
       const kohde = this.zoomKohde ?? { x: box.x + box.w / 2, y: box.y + box.h / 2 };
-      this.panX = paneW / 2 - (kohde.x - box.x) * skaala;
-      this.panY = paneH / 2 - (kohde.y - ylaReuna) * skaala;
+      const keskus = this.mantereenKeskitys(kohde, paneW, paneH, skaala);
+      this.panX = paneW / 2 - (keskus.x - box.x) * skaala;
+      this.panY = paneH / 2 - (keskus.y - ylaReuna) * skaala;
     }
     this.asetaPan(this.panX, this.panY);
     this.placeFactCard(paneW, paneH);
@@ -2676,7 +2780,7 @@ export class UI {
     // Kohde: pelaajan nappula, tai näkymän keskus jos sitä ei löydy.
     const oma = this.game.cityOf?.();
     const kohde = oma && Number.isFinite(oma.x)
-      ? { x: oma.x, y: oma.y }
+      ? { x: oma.x, y: oma.y, id: oma.id }
       : { x: vx + vw / 2, y: vy + vh / 2 };
 
     // Nappulan paikka ruudulla ennen zoomausta: liuku lähtee siitä.
@@ -2689,19 +2793,56 @@ export class UI {
     document.body.classList.add('manner-zoom');
     this.fitViewBox();
     /*
-     * Isolla laudalla ei liu'uta vaan ollaan heti perillä.
+     * Isolla laudalla liuku ei lähde kokonäkymästä vaan mantereelta.
      *
-     * Liuku alkaa kokonäkymästä, ja se on juuri se mitä ei haluta
-     * nähdä: omistajan havainto iPadilta oli, että vanha maailma
-     * "näkyy kokonaan ja zoomautuu sen jälkeen". Pienellä laudalla
-     * liuku on hyvä — siinä kokonäkymä kertoo minne on tultu.
+     * Aiemmin liuku ohitettiin isolla laudalla kokonaan, koska se alkoi
+     * kokonäkymästä — ja juuri sitä ei haluttu nähdä: omistajan havainto
+     * iPadilta oli, että vanha maailma "näkyy kokonaan ja zoomautuu sen
+     * jälkeen". Hinta oli, että saapuminen tapahtui ilman liikettä:
+     * kartta oli yhtäkkiä perillä, eikä mistään näkynyt minne oltiin
+     * tultu. Omistajan toive: "alussa voisi olla zoomaus animaatio
+     * kaikilla laitteilla niin että kohde maanosa jää selvemmin
+     * näkyviin."
+     *
+     * Nyt liuku alkaa MANNER_LAAJUUS-kertaisesta näkymästä eli reilusti
+     * mantereen kokoisesta ruudusta, ei maailmasta. Liike on puhdas
+     * laajuuden muutos saman keskipisteen ympärillä, joten mikään ei
+     * lennä ruudun poikki — kartta laskeutuu paikalleen.
      */
     if (this.isoLauta()) {
+      this.asetaSaapumisAlku(paneW, paneH);
+      this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
       this.paivitaZoomiNapit();
       return;
     }
     this.asetaZoomAlku(kohde, sx, sy, yleisSkaala);
     this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
+  }
+
+  /**
+   * Saapumisliu'un alkuasento isolla laudalla: sama näkymä
+   * MANNER_LAAJUUS kertaa laajempana.
+   *
+   * Keskipiste luetaan lopullisesta panoroinnista eikä lasketa
+   * kohteesta. Kiertävällä kartalla panX on normalisoitu välille
+   * [-jakso, 0), ja kohde voi näkyä ruudulla kierron kopion kautta —
+   * jolloin kohteesta laskettu piste olisi maailman leveyden verran
+   * pielessä ja liuku lentäisi koko kartan poikki.
+   */
+  asetaSaapumisAlku(paneW, paneH) {
+    if (this.reducedMotion) return;
+    const s = 1 / MANNER_LAAJUUS;
+    // Ruudun keskipiste elementin omissa pikseleissä, sellaisena kuin
+    // se juuri nyt on.
+    const ex = paneW / 2 - (this.panX ?? 0);
+    const ey = paneH / 2 - (this.panY ?? 0);
+    const tx = paneW / 2 - s * ex;
+    const ty = paneH / 2 - s * ey;
+    this.svg.style.transition = 'none';
+    this.svg.style.transform =
+      `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
+    // Pakotettu asettelu, jotta selain näkee alkuasennon omana tilanaan.
+    void this.svg.getBoundingClientRect();
   }
 
   /**
@@ -8563,8 +8704,37 @@ export class UI {
     const alaosa = html('div', 'flight-alaosa');
     overlay.appendChild(alaosa);
     if (line) this.showFlightLine(line, alaosa);
+    // Lennon kesto repliikin mukaan; ilman repliikkiä perusmitta.
+    const sanoja = line ? String(line).trim().split(/\s+/).length : 0;
+    const lennonKesto = Math.min(
+      LENNON_ENINTAAN_MS,
+      Math.max(FLY_OVERLAY_MS, LENNON_POHJA_MS + sanoja * LENNON_SANA_MS),
+    );
+    /*
+     * Pieni nuoli oikeaan alanurkkaan muutaman sekunnin kuluttua.
+     *
+     * Kalvon saa jo nyt hypäytettyä perille napauttamalla mistä
+     * tahansa, mutta sitä ei näe mistään. Omistajan toive: "oikeassa
+     * alareunassa voisi olla pieni nuoli joka syttyisi muutaman
+     * sekunnin kuluttua. Se saa olla kuitenkin aika huomaamaton."
+     *
+     * Huomaamaton on tässä vaatimus eikä makuasia: nuoli kilpailee
+     * saman ruudun repliikin kanssa, ja jos se vetää katseen, se vie
+     * huomion juuri siitä tekstistä, jonka lukemiseen aikaa lisättiin.
+     */
+    const nuoli = html('button', 'flight-eteen');
+    nuoli.type = 'button';
+    nuoli.setAttribute('aria-label', 'Ohita lento');
+    nuoli.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+      + '<path d="M8 5 L15 12 L8 19" fill="none" stroke="currentColor"'
+      + ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    overlay.appendChild(nuoli);
+    const nuolenAjastin = setTimeout(() => nuoli.classList.add('nakyy'), LENNON_NUOLI_MS);
+    nuoli.addEventListener('click', () => {
+      for (const a of lentoAnimaatiot) a.finish();
+    });
     // Potkurihurina koko kohtauksen ajaksi: nousee ja laskee sen mukana.
-    sfx.startFlight(FLY_OVERLAY_MS);
+    sfx.startFlight(lennonKesto);
 
     // Kone ja reittiviiva lentävät selaimen omina WAAPI-animaatioina, ei
     // rAF-silmukalla: pääsäikeessä naputtava kirjoituskone ja käynnistyvä
@@ -8588,10 +8758,10 @@ export class UI {
     // Lähtöasento ennen animaation alkua, ettei kone välähdä origossa.
     kone.style.transform = koneRuudut[0].transform;
     const koneAnim = kone.animate(koneRuudut, {
-      duration: FLY_OVERLAY_MS, easing: 'linear', fill: 'forwards',
+      duration: lennonKesto, easing: 'linear', fill: 'forwards',
     });
     const reittiAnim = reitti.animate(reittiRuudut, {
-      duration: FLY_OVERLAY_MS, easing: 'linear', fill: 'forwards',
+      duration: lennonKesto, easing: 'linear', fill: 'forwards',
     });
     lentoAnimaatiot.push(koneAnim, reittiAnim);
     await Promise.all([koneAnim.finished, reittiAnim.finished]).catch(() => {
@@ -8603,6 +8773,8 @@ export class UI {
 
     // Perillä kalvo jää odottamaan: lukuääni saa puhua rauhassa, ja
     // pelaaja astuu ulos itse valitsemallaan hetkellä.
+    clearTimeout(nuolenAjastin);
+    nuoli.remove();
     await new Promise((resolve) => {
       const nappi = html('button', 'flight-exit', 'Astu mantereelle');
       nappi.addEventListener('click', resolve, { once: true });

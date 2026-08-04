@@ -147,22 +147,40 @@ const NAPIN_OSUMA = 34;
 const NAPIN_RENGAS = 21;
 
 /*
- * RISTIHÄIVYTYS VIRITYKSESTÄ SUORAAN LÄHETYKSEEN.
+ * RISTIHÄIVYTYS KANAVANVAIHDON MOLEMMISSA PÄISSÄ.
  *
- * Viritys ei saa katketa napsahtaen. Sama vika on korjattu tässä pelissä
- * jo kahdesti — kertojan äänestä (v176) ja luennoista (v215) — ja tässä
- * se olisi vielä räikeämpi: kohina on jatkuvaa ääntä, ja jatkuvan äänen
- * katkaisu kuuluu aina.
+ * Viritys ei saa alkaa eikä katketa napsahtaen. Sama vika on korjattu
+ * tässä pelissä jo kahdesti — kertojan äänestä (v176) ja luennoista
+ * (v215) — ja tässä se olisi vielä räikeämpi: kohina on jatkuvaa ääntä,
+ * ja jatkuvan äänen katkaisu kuuluu aina.
+ *
+ * KAKSI VAIHTOA, SAMA MITTA JA SAMA KAARI (omistajan toive: "virityssuhina
+ * saisi feidautua kanavanvaihdon alussa ja lopussa --- siinä pitäisi olla
+ * ristifeidaus"):
+ *
+ *   ALKU    edellinen kanava väistyy kosinia samalla kun kohina nousee
+ *           siniä (aloitaVirta → haivytaLahetysPois + viritin aloita).
+ *           Ennen tätä vanha lähetys katkaistiin kesken sanan ja kohina
+ *           ilmestyi tyhjästä — juuri se töksähdys, josta omistaja
+ *           huomautti.
+ *   LOPPU   kohina väistyy kosinia ja uusi lähetys nousee siniä
+ *           (lukitseAsema → haivytaLahetysSisaan + viritin lopeta).
  *
  * Kuusi kymmenystä sekuntia on mitattu kompromissi. Lyhyempi (0,3 s) on
  * kuultavissa leikkauksena, pidempi (1 s) jättää lähetyksen ensimmäisen
  * lauseen kohinan alle — ja lähetyksen alku on juuri se, mitä pelaaja
- * odottaa.
+ * odottaa. Sama luku kelpaa myös alkuun: se mahtuu hyvin siirtymävaiheen
+ * sisään (SIIRTYMAN_KESTO_MS 1,25 s), joten kohina on täydessä voimassaan
+ * kauan ennen kuin nauha pysähtyy. Taustaäänimaisemien 1,8–2,6 s
+ * (js/ambience-stream.js) olisi tässä aivan liian pitkä: maisemat
+ * vaihtuvat huomaamatta, kanava napautuksesta.
  *
- * Vaihto on TASATEHOINEN: viritys laskee kosinia (js/linssit/viritin.js
- * haivytaPois) ja lähetys nousee siniä. Kaksi riippumatonta ääntä
- * summautuu teholtaan, joten lineaarinen pari jättäisi keskelle 3 dB:n
+ * Vaihto on TASATEHOINEN. Kaksi riippumatonta ääntä summautuu
+ * TEHOLTAAN, joten lineaarinen pari jättäisi keskelle 3 dB:n
  * notkahduksen — reiän juuri siihen kohtaan, jota vaihdolla piti peittää.
+ * Sini ja kosini toteuttavat sin² + cos² = 1, eli yhteisteho pysyy
+ * vakiona koko vaihdon ajan. Viritysääni ajaa oman puolensa Web Audion
+ * käyrinä (js/linssit/viritin.js haivytaSisaan ja haivytaPois).
  *
  * Lähetys on <audio>-elementti eikä kulje Web Audion läpi (ks.
  * aloitaVirta: crossOrigin veisi äänen kokonaan monelta asemalta), joten
@@ -171,6 +189,33 @@ const NAPIN_RENGAS = 21;
  */
 const RISTIHAIVYTYS_S = 0.6;
 const HAIVYTYKSEN_ASKEL_MS = 25;
+
+/*
+ * Lyhyt häivytys niihin lopetuksiin, jotka eivät ole vaihtoja: stop-nappi,
+ * virhe, radiotilasta poistuminen. Neljännessekunti ei ole vaihto vaan
+ * pehmennys — laitteen pitää vaieta heti, muttei napsahtaen.
+ */
+const PYSAYTYKSEN_HAIVE_S = 0.25;
+
+/** Rajaa edistymän välille 0–1. */
+const osuudeksi = (arvo) => Math.min(1, Math.max(0, Number(arvo) || 0));
+
+/**
+ * RISTIHÄIVYTYKSEN KAARI, tasatehoinen pari.
+ *
+ * Viety moduulista ulos, jotta molemmat päät käyttävät varmasti samaa
+ * paria eikä kumpikaan luiskahda lineaariseksi omine päineen — sen
+ * huomaisi vasta kuuntelemalla, ja vain siitä että vaihdon keskellä on
+ * kuoppa. Testi tarkistaa tasatehoisuuden (tests/radio.test.mjs).
+ *
+ *   nouseva²(x) + vaistyva²(x) = 1 kaikilla x
+ */
+export const RISTIHAIVYTYS = Object.freeze({
+  kesto: RISTIHAIVYTYS_S,
+  askel: HAIVYTYKSEN_ASKEL_MS,
+  nouseva: (osuus) => Math.sin(osuudeksi(osuus) * (Math.PI / 2)),
+  vaistyva: (osuus) => Math.cos(osuudeksi(osuus) * (Math.PI / 2)),
+});
 
 /*
  * VIRITYKSEN VÄHIMMÄISAIKA JA SEN KOLME VAIHETTA.
@@ -253,7 +298,7 @@ export const VIRITYKSEN_AJAT = Object.freeze({
 const MYKISTYKSEN_VAHTI_MS = 250;
 
 /*
- * Moduulin koko muisti neljässä muuttujassa.
+ * Moduulin koko muisti viidessä muuttujassa.
  *
  * `tila` on olemassa vain radiotilan ajan: se sisältää laitteen, näytön
  * ja sen mitä kartasta tarvitaan. `soiva` on kerrallaan enintään yksi —
@@ -261,9 +306,18 @@ const MYKISTYKSEN_VAHTI_MS = 250;
  * omistaja ei halunnut, ja se olisi myös kaksi verkkoyhteyttä
  * puhelinliittymästä. `viritin` on niiden väliin jäävä kohina, ja sitäkin
  * on kerrallaan enintään yksi.
+ *
+ * `vaistyva` on ristihäivytyksen hinta ja sen ainoa poikkeus: vaihdon
+ * alussa vanha lähetys soi vielä sen puolen sekunnin, jonka se häipyy
+ * kohinan alle. Poikkeus on rajattu tiukasti — VÄISTYVIÄ ON KERRALLAAN
+ * ENINTÄÄN YKSI, ja se vapautetaan viimeistään häivytyksen päättyessä
+ * (vapautaVirta). Kahta yhtä aikaa KUULUVAA lähetystä ei siis synny
+ * missään tilanteessa, eikä toista verkkoyhteyttä jää auki puolta
+ * sekuntia pidemmäksi ajaksi.
  */
 let tila = null;
 let soiva = null;
+let vaistyva = null;
 let viritin = null;
 let mykistysVahti = 0;
 let aanenvoimakkuus = OLETUSAANI;
@@ -574,6 +628,9 @@ function kerroMuutos() {
  * toiseen, jokainen napautus veisi virityksen hiljaisuuden kautta uuteen
  * ääneen — ja kaksi häivytystä peräkkäin on kuoppa, ei viritys. Yhtäjaksoinen
  * kohina on myös se, mitä oikea laite tekisi: viisari liikkuu, kohina jatkuu.
+ * Sama sääntö pitää huolen siitä, ettei sisäänhäivytyksiä kasaudu
+ * päällekkäin: kesken oleva viritys ei saa toista ramppia, koska se ei
+ * saa toista aloitusta.
  *
  * Äänikonteksti pyydetään vasta tässä, napautuksen sisällä. Selain
  * vaatii eleen, ja tämä on se ele.
@@ -586,7 +643,9 @@ function aloitaViritys() {
   if (!ctx) return;
   try {
     const uusi = teeViritysaani(ctx, { voimakkuus: aanenvoimakkuus });
-    if (!uusi.aloita()) return;
+    // Kohina nousee ristihäivytyksen mitassa: edellinen kanava on juuri
+    // lähtenyt väistymään saman verran (haivytaLahetysPois).
+    if (!uusi.aloita(RISTIHAIVYTYS_S)) return;
     viritin = uusi;
   } catch (syy) {
     // Viritysääni on koriste. Jos se ei jostain syystä käynnisty, radio
@@ -747,11 +806,10 @@ function haivytaLahetysSisaan(virta) {
       virta.haivytys = 0;
       return;
     }
-    const osuus = Math.min(1, (kello() - alku) / (RISTIHAIVYTYS_S * 1000));
+    const osuus = (kello() - alku) / (RISTIHAIVYTYS_S * 1000);
     try {
-      // Sini vastaa virityksen kosinia: cos² + sin² = 1 eli yhteisteho
-      // pysyy vakiona koko vaihdon ajan.
-      virta.audio.volume = aanenvoimakkuus * Math.sin(osuus * (Math.PI / 2));
+      // Sini vastaa virityksen kosinia, ks. RISTIHAIVYTYS.
+      virta.audio.volume = aanenvoimakkuus * RISTIHAIVYTYS.nouseva(osuus);
     } catch (syy) {
       console.warn('Lähetyksen häivytys epäonnistui.', syy);
     }
@@ -767,7 +825,9 @@ function haivytaLahetysSisaan(virta) {
 }
 
 /**
- * Sulkee soivan virran ja vapauttaa yhteyden.
+ * SULKEE VIRRAN JA VAPAUTTAA YHTEYDEN. Tämä on ainoa paikka, joka
+ * oikeasti päästää lähetyksestä irti — häivytys vain vie voimakkuuden
+ * nollaan ja kutsuu tätä lopuksi.
  *
  * `pause()` EI RIITÄ suoralle lähetykselle. Pysäytetty <audio> pitää
  * yhteyden auki ja jatkaa puskurointia: selain lataa taustalla lähetystä,
@@ -775,24 +835,20 @@ function haivytaLahetysSisaan(virta) {
  * — se katkaisee kesken olevan haun. Sama kaksivaiheinen sulkeminen on
  * kaupungin äänimaisemassa (js/ambience-stream.js paasta), mutta ilman
  * `load()`-kutsua, koska äänite on äärellinen tiedosto eikä loputon virta.
- *
- * Pysäyttää myös viritysäänen — paitsi kun kutsuja on juuri
- * käynnistämässä uutta kanavaa (`viritysJatkuu`), jolloin kohina jatkuu
- * yhtäjaksoisena kaupungista toiseen.
  */
-function lopetaAani({ viritysJatkuu = false } = {}) {
-  if (!viritysJatkuu) lopetaViritys(0.25);
-  const vanha = soiva;
-  soiva = null;
-  if (!vanha) return;
-  // Vaiheajastimet ensin: keskeytetty viritys ei saa kertoa vaiheitaan
-  // loppuun sen jälkeen, kun sen kanava on jo suljettu.
-  tyhjennaAjastimet(vanha);
-  if (vanha.haivytys) {
-    clearInterval(vanha.haivytys);
-    vanha.haivytys = 0;
+function vapautaVirta(virta) {
+  if (!virta) return;
+  // Väistyvän ajastin pois ennen sulkemista: ilman tätä askel jatkaisi
+  // voimakkuuden kirjoittamista jo vapautettuun elementtiin.
+  if (vaistyva?.virta === virta) {
+    clearInterval(vaistyva.ajastin);
+    vaistyva = null;
   }
-  const { audio } = vanha;
+  if (virta.haivytys) {
+    clearInterval(virta.haivytys);
+    virta.haivytys = 0;
+  }
+  const { audio } = virta;
   try {
     audio.pause();
     audio.removeAttribute('src');
@@ -803,13 +859,106 @@ function lopetaAani({ viritysJatkuu = false } = {}) {
 }
 
 /**
+ * HÄIVYTTÄÄ VÄISTYVÄN LÄHETYKSEN POIS uuden virityksen alkaessa.
+ *
+ * Tämä on ristihäivytyksen alkupään väistyvä puoli: kohina nousee siniä
+ * (js/linssit/viritin.js haivytaSisaan) ja tämä laskee kosinia, joten
+ * yhteisteho pysyy vakiona eikä vaihdon keskelle jää kuoppaa.
+ *
+ * KOLME SÄÄNTÖÄ, JOTKA PITÄVÄT HUOLEN ETTEI MIKÄÄN JÄÄ SOIMAAN:
+ *
+ *  1. Vaimennettua virtaa ei häivytetä lainkaan. Kesken virittynyt kanava
+ *     soi vaimennettuna (aloitaVirta), eikä nollasta ole mihin häipyä —
+ *     se vapautetaan heti, jolloin myös yhteys sulkeutuu aiemmin.
+ *  2. Väistyviä on kerrallaan yksi. Uusi väistyvä vapauttaa edellisen
+ *     heti, joten nopea kaupungista toiseen hyppiminen ei kasaa
+ *     päällekkäisiä häivytyksiä eikä auki jääneitä yhteyksiä.
+ *  3. Häivytys päättyy AINA vapautukseen — myös silloin kun kirjoitus
+ *     elementtiin epäonnistuu. Ainoa tapa jäädä soimaan olisi ajastin,
+ *     joka ei koskaan pääse loppuun asti.
+ *
+ * Lähtötaso luetaan kerran eikä joka askeleella: väistyvä on matkalla
+ * pois, eikä äänenvoimakkuusnupin kääntäminen saa nostaa sitä takaisin.
+ */
+function haivytaLahetysPois(virta, kesto = RISTIHAIVYTYS_S) {
+  let lahto = 0;
+  try {
+    lahto = Number(virta.audio.volume) || 0;
+  } catch {
+    lahto = 0;
+  }
+  if (!(lahto > 0) || !(kesto > 0)) {
+    vapautaVirta(virta);
+    return;
+  }
+  // Edellinen väistyvä pois heti, ks. sääntö 2.
+  if (vaistyva) vapautaVirta(vaistyva.virta);
+
+  const alku = kello();
+  const oma = { virta, ajastin: 0 };
+  const askel = () => {
+    // Ohjat vaihtuivat: vapautaVirta on jo sulkenut tämän ja katkaissut
+    // ajastimen. Tarkistus on varmistus, ei toiminto.
+    if (vaistyva !== oma) return;
+    const osuus = (kello() - alku) / (kesto * 1000);
+    try {
+      virta.audio.volume = lahto * RISTIHAIVYTYS.vaistyva(osuus);
+    } catch (syy) {
+      console.warn('Väistyvän lähetyksen häivytys epäonnistui.', syy);
+      vapautaVirta(virta);
+      return;
+    }
+    if (osuus >= 1) vapautaVirta(virta);
+  };
+  oma.ajastin = setInterval(askel, HAIVYTYKSEN_ASKEL_MS);
+  vaistyva = oma;
+  // Ensimmäinen askel heti, samasta syystä kuin nousevalla puolella.
+  askel();
+}
+
+/**
+ * Lopettaa soivan kanavan.
+ *
+ * Pysäyttää myös viritysäänen — paitsi kun kutsuja on juuri
+ * käynnistämässä uutta kanavaa (`viritysJatkuu`), jolloin kohina jatkuu
+ * yhtäjaksoisena kaupungista toiseen.
+ *
+ * `haive` on lähetyksen häivytysaika sekunteina. Nolla eli oletus
+ * tarkoittaa täyttä pysäytystä: laite vaikenee nyt, eikä mitään jää
+ * häipymään taustalle. Kanavanvaihto antaa tähän ristihäivytyksen mitan,
+ * jolloin vanha lähetys väistyy nousevan kohinan alle.
+ */
+function lopetaAani({ viritysJatkuu = false, haive = 0 } = {}) {
+  if (!viritysJatkuu) lopetaViritys(PYSAYTYKSEN_HAIVE_S);
+  const vanha = soiva;
+  soiva = null;
+  /*
+   * Täysi pysäytys vie myös väistyvän. Radiotilasta poistuttaessa tai
+   * stop-napista mikään ei saa jäädä soimaan häivytyksensä loppuun —
+   * kartan päällä ei silloin ole enää laitetta, jonka ääni se olisi.
+   */
+  if (!(haive > 0) && vaistyva) vapautaVirta(vaistyva.virta);
+  if (!vanha) return;
+  // Vaiheajastimet ensin: keskeytetty viritys ei saa kertoa vaiheitaan
+  // loppuun sen jälkeen, kun sen kanava on jo suljettu.
+  tyhjennaAjastimet(vanha);
+  if (vanha.haivytys) {
+    clearInterval(vanha.haivytys);
+    vanha.haivytys = 0;
+  }
+  if (haive > 0) haivytaLahetysPois(vanha, haive);
+  else vapautaVirta(vanha);
+}
+
+/**
  * Käynnistää kanavan virran.
  *
- * LÄHETYS TULEE SISÄÄN RISTIHÄIVYTYKSELLÄ VIRITYSÄÄNESTÄ, ks.
- * RISTIHAIVYTYS_S. Aiemmin tässä luki, että mekaaninen radio napsahtaa ja
- * että napsahdus on oikea ääni — se piti paikkansa niin kauan kuin
- * napsahdusta edelsi hiljaisuus. Nyt sitä edeltää kohina, ja kohinan
- * katkeaminen kesken sanaa ei ole minkään laitteen ääni.
+ * LÄHETYS TULEE SISÄÄN RISTIHÄIVYTYKSELLÄ VIRITYSÄÄNESTÄ JA EDELLINEN
+ * KANAVA VÄISTYY SAMOIN POIS, ks. RISTIHAIVYTYS. Aiemmin tässä luki, että
+ * mekaaninen radio napsahtaa ja että napsahdus on oikea ääni — se piti
+ * paikkansa niin kauan kuin napsahdusta edelsi hiljaisuus. Nyt sitä
+ * edeltää kohina, ja kohinan katkeaminen kesken sanaa ei ole minkään
+ * laitteen ääni.
  *
  * Elementti aloittaa VAIMENNETTUNA (volume 0) ja nousee vasta kun asema
  * lukittuu (lukitseAsema) — ei siis silloin kun lähetys alkaa kuulua,
@@ -823,9 +972,12 @@ function lopetaAani({ viritysJatkuu = false } = {}) {
  * linssimoottorissa (js/linssit/kerros.js, kenttä `vuoro`).
  */
 function aloitaVirta(cityId, kanava) {
-  // Viritys jatkuu vanhan kanavan yli: pelaaja on vaihtamassa asemaa,
-  // ei sammuttamassa radiota.
-  lopetaAani({ viritysJatkuu: true });
+  /*
+   * Viritys jatkuu vanhan kanavan yli: pelaaja on vaihtamassa asemaa,
+   * ei sammuttamassa radiota. Vanha lähetys ei katkea vaan häipyy
+   * ristihäivytyksen mitassa nousevan kohinan alle (haivytaLahetysPois).
+   */
+  lopetaAani({ viritysJatkuu: true, haive: RISTIHAIVYTYS_S });
 
   /*
    * Peiliä ei käytetä. js/media.js aaniOsoite palauttaisi lähetysosoitteen
@@ -993,6 +1145,10 @@ function paivitaAanenvoimakkuus(arvo) {
    * täyteen voimaan kohinan päälle — eli purkanut juuri sen odotuksen,
    * jota varten vähimmäisaika on. Häivytyksen aikana arvo menee perille
    * askeleiden kautta (haivytaLahetysSisaan).
+   *
+   * VÄISTYVÄÄN EI KOSKETA LAINKAAN. Se on matkalla pois, ja nupin
+   * kääntäminen kesken vaihdon nostaisi juuri sammuvan kanavan takaisin
+   * kuuluviin — vaihdon toinen puoli menisi rikki yhdestä sormenliikkeestä.
    */
   if (soiva?.lukittu && !soiva.haivytys) soiva.audio.volume = aanenvoimakkuus;
   viritin?.asetaVoimakkuus(aanenvoimakkuus);

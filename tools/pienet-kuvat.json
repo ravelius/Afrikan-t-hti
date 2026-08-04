@@ -82,30 +82,12 @@
  },
  {
   "lauta": "africa",
-  "kaupunki": "tanger",
-  "kohta": "vanha",
-  "tiedosto": "Tangier Grand Mosque 1900s.jpg",
-  "selite": "Tangerin suurmoskeijan kulmalla kävi vilske jo isoisän aikaan: kantajia, kauppiaita ja aaseja samalla kapealla kadulla.",
-  "leveys": 184,
-  "korkeus": 229
- },
- {
-  "lauta": "africa",
   "kaupunki": "kairo",
   "kohta": "uusi",
   "tiedosto": "Cairo-Hilton-Skyline.jpg",
   "selite": "Nykyinen Kairo nousee Niilin rannalla korkeuksiin — mutta joki virtaa keskellä yhtä tyynenä kuin ennenkin.",
   "leveys": 600,
   "korkeus": 251
- },
- {
-  "lauta": "africa",
-  "kaupunki": "murzuk",
-  "kohta": "vanha",
-  "tiedosto": "Osmanisches Fort von Mursuk.jpg",
-  "selite": "Murzukin linnoitus vartioi Saharan karavaanireittiä. Sen savimuurien varjossa lepäsivät sekä kamelit että kauppiaat.",
-  "leveys": 1010,
-  "korkeus": 672
  },
  {
   "lauta": "africa",
@@ -232,15 +214,6 @@
   "selite": "Putousten rautatiesilta juuri valmistuneena 1905. Se rakennettiin niin lähelle, että vaunuihin sataa vesisumua — suunnittelijan tarkoituksella.",
   "leveys": 728,
   "korkeus": 528
- },
- {
-  "lauta": "africa",
-  "kaupunki": "darfur",
-  "kohta": "vanha",
-  "tiedosto": "Sultan Ali Dinar.jpg",
-  "selite": "Ali Dinar, Darfurin viimeinen sulttaani, virallisessa muotokuvassaan. Hänen valtakautensa päättyi 1916 — vain kymmenkunta vuotta ennen isoisän matkaa.",
-  "leveys": 960,
-  "korkeus": 1280
  },
  {
   "lauta": "africa",

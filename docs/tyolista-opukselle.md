@@ -4268,3 +4268,64 @@ tarkin — mutta budjetin kanssa oikea suunta on aina se, joka pysyy budjetissa.
 nyt pääaarre" jäi kolmeksi versioksi ruudulle, koska tiedoston oma ohje sanoo
 etteivät vanhat rivit muutu. Sitova nimistö koskee kaikkea, mikä piirtyy — myös
 sitä, mikä kertoo vanhasta nimestä. Nyt vartijatesti lukee lokin.
+
+## v234 — saapumiszoomi, sauman vara ja hitaampi lento (4.8.2026)
+
+**Saapumisliuku myös isolla laudalla.** Ennen liuku ohitettiin
+maailmankartalla kokonaan, koska se olisi alkanut kokonäkymästä — ja juuri
+sitä ei haluttu nähdä. Hinta oli, ettei saapumisessa ollut liikettä lainkaan:
+kartta oli yhtäkkiä perillä. Nyt liuku alkaa `MANNER_LAAJUUS`-kertaisesta
+näkymästä eli mantereen kokoisesta ruudusta, ja se on puhdas laajuuden muutos
+saman keskipisteen ympärillä — mikään ei lennä ruudun poikki.
+
+Alkuasennon keskipiste luetaan **lopullisesta panoroinnista eikä lasketa
+kohteesta**. Kiertävällä kartalla `panX` on normalisoitu välille `[-jakso, 0)`
+ja kohde voi näkyä ruudulla kierron kopion kautta; kohteesta laskettu piste
+olisi silloin maailman leveyden verran pielessä ja liuku lentäisi koko kartan
+poikki.
+
+**Rajaus kohdemantereen puolelle.** Omistajan havainto: *"nyt kartta keskittää
+kaupungin ja Tangerin kohdalla näkyy Eurooppaa yhtä paljon kuin Aasiaa."*
+`mantereenKeskitys` siirtää näkymän keskipistettä puolet matkasta oman
+mantereen kaupunkien painopisteeseen, rajattuna neljäsosaan näkyvästä alasta.
+Painopiste lasketaan kaupungeista eikä mantereen muodosta — kaupungit ovat se,
+mitä pelissä tehdään, ja ne ovat valmiina laudan koordinaateissa. Kiertävällä
+kartalla jokainen kaupunki tuodaan ensin lähimmäksi kohdetta, tai
+Beringinsalmen yli ulottuva Aasia antaisi painopisteen keskeltä Atlanttia.
+Mitattuna: Tanger asettuu kohtaan 27 % / 30 %, eli Afrikka täyttää ruudun ja
+Euroopasta jää yläreunan kaistale.
+
+**Loitonnuksen vara.** Omistaja: *"siinä näkyy sama paikka kahteen kertaan, kun
+se on kokonaan zoomattu ulos."* Tasan laudan levyinen näkymä on teoriassa
+oikein, mutta paneelin pikselileveys on murtoluku ja pyöristys vie
+reunimmaisen kaistaleen. `SAUMAN_VARA` (3 %) jättää sen aina piiloon.
+Korjaus vaati kaksi kohtaa: `rajaaSkaala` **ja** `fitViewBox`, jossa oli oma
+kopio samasta rajasta — vain toisen korjaaminen ei muuttanut mitään, ja se
+näkyi mittauksessa (osuus pysyi 1.000 neljällä ruutukoolla).
+
+**Lento repliikin mittaiseksi.** Omistaja: *"lentokoneen pitää lentää
+hitaammin koska tekstin luku kestää paljon kauemmin."* Kesto lasketaan nyt
+sanamäärästä (`LENNON_POHJA_MS + sanat × LENNON_SANA_MS`, yläraja 15 s) eikä
+kiinteästä 4,8 sekunnista. Sanoista eikä merkeistä: silmä lukee sanan
+kerrallaan, ja lyhyet suomen sanat vetäisivät merkkilaskurin arviota väärään
+suuntaan. Avauslento kestää nyt noin 11 s.
+
+**Ohita lento -nuoli.** Kalvon sai jo ennen hypäytettyä perille napauttamalla
+mistä tahansa, mutta sitä ei näkynyt mistään. Pieni kärki oikeaan alanurkkaan,
+joka syttyy 3,5 s kuluttua opasiteettiin 0.3. Huomaamattomuus on tässä
+vaatimus eikä makuasia: nuoli on samalla ruudulla kuin se repliikki, jonka
+lukemiseen lennon kestoa juuri pidennettiin — jos se vetää katseen, se vie
+huomion pois siitä mitä varten aikaa lisättiin.
+
+### Opittua
+
+**Sama raja kahdessa paikassa on sama kuin ei rajaa.** Loitonnuksen katto oli
+kirjoitettu erikseen `rajaaSkaala`-metodiin ja `fitViewBox`-runkoon. Metodin
+korjaaminen ei muuttanut ruudulla mitään, koska sitä ei kutsuttu siitä
+kohdasta, joka oikeasti päätti. Mittaus kertoi sen heti; koodin lukeminen ei
+ollut kertonut.
+
+**Poistettu animaatio on myös menetetty tieto.** Liuku poistettiin isolta
+laudalta hyvästä syystä (kokonäkymä oli väärä lähtökohta), mutta sen mukana
+katosi se, minkä liike kertoo: mistä tullaan ja minne. Oikea korjaus ei ollut
+poistaa liikettä vaan vaihtaa sen lähtökohta.
