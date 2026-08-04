@@ -150,6 +150,35 @@ test('äänet ovat turvallisia ilman AudioContextia', async () => {
   assert.doesNotThrow(() => sfx.stopFlight());
 });
 
+/*
+ * MITATTU VIKA 4.8.2026: maailmanradion viritysääni oli hävinnyt kokonaan
+ * ja VU-mittarin neula makasi lepokulmassaan koko lähetyksen ajan. Syy oli
+ * tässä: `ensureContext` palautti null aina kun pelin äänet olivat pois
+ * päältä, joten radio ei saanut äänikontekstia — mutta suora lähetys soi
+ * silti, koska se tulee <audio>-elementistä eikä kysy tältä luokalta
+ * mitään. Laite oli puolikas: asema kuului, kohina ei.
+ *
+ * Radion omat äänet seuraavat radion virtakytkintä, joten sillä on oltava
+ * tapa saada konteksti myös mykistettynä. `pakota` on se tapa, ja nämä
+ * kaksi testiä pitävät molemmat puolet paikallaan.
+ */
+test('pakotettu konteksti syntyy myös mykistettynä (radion oma ääni)', async () => {
+  const { sfx, ctx } = await lataaSfx();
+  sfx.enabled = false;
+  assert.equal(sfx.ensureContext(), null, 'mykistetty peli sai kontekstin ilman pakotusta');
+  assert.equal(sfx.ensureContext({ pakota: true }), ctx, 'pakotus ei antanut kontekstia');
+  assert.ok(sfx.bus, 'pakotettu konteksti jäi ilman bussia');
+});
+
+test('pakotus ei avaa pelin omia ääniä', async () => {
+  const { sfx, ctx } = await lataaSfx();
+  sfx.enabled = false;
+  sfx.ensureContext({ pakota: true });
+  const ennen = ctx.aloitetut.length;
+  sfx.play('click');
+  assert.equal(ctx.aloitetut.length, ennen, 'mykistetty peli soitti tehosteen');
+});
+
 // --- paketti 17: ambienssi -------------------------------------------------
 
 test('jokainen äänimaisema käynnistyy ja sammuu ilman virhettä', async () => {

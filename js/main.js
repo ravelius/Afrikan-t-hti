@@ -19,7 +19,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-04.238';
+const APP_VERSION = '2026-08-04.239';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -516,7 +516,7 @@ if (katseluPack) {
 }
 
 /*
- * Kehittäjätila (omistajan toive). Valikosta aukeaa salasanaikkuna, ja
+ * Kehittäjätila (omistajan toive). Muutoslokista aukeaa salasanaikkuna, ja
  * kytkennän jälkeen minkä tahansa kaupungin laatan napautus vie sinne
  * suoraan — sisällön tarkasteluun ei tarvitse pelata.
  *

@@ -56,9 +56,32 @@ class Sound {
     else this.setAmbience(null);
   }
 
-  /** Luo äänikontekstin ensimmäisellä kerralla ja herättää sen tarvittaessa. */
-  ensureContext() {
-    if (!this.enabled) return null;
+  /**
+   * Luo äänikontekstin ensimmäisellä kerralla ja herättää sen tarvittaessa.
+   *
+   * `pakota` OHITTAA PELIN OMAN ÄÄNIVALINNAN, ja sille on tasan yksi
+   * käyttötarkoitus: ääni, joka EI ole pelin ääni.
+   *
+   * Maailmanradion suora lähetys soi <audio>-elementistä eikä kysy tätä
+   * luokkaa mitään — se kuuluu siis silloinkin, kun pelaaja on sammuttanut
+   * pelin äänet. Viritysääni sen sijaan kulkee tämän kontekstin läpi, ja
+   * ilman pakotusta se jäi ainoana pois: laite soitti aseman mutta ei sitä
+   * kohinaa, josta asema ristihäivytetään, eikä VU-mittarilla ollut
+   * kontekstia jota lukea. MITATTU 4.8.2026 (js/linssit/radio.js): kun
+   * `enabled` oli false, viritysäänen gain ei syntynyt lainkaan ja neula
+   * makasi lepokulmassaan koko lähetyksen ajan.
+   *
+   * Radio on laite, jonka pelaaja on itse kytkenyt päälle. Sen omat äänet
+   * seuraavat radion virtakytkintä, eivät kertojavalikkoa — ja koska
+   * lähetys kuuluu joka tapauksessa, kohinan vaientaminen ei ollut
+   * hiljaisuutta vaan puolikas laite.
+   *
+   * TÄMÄ EI SOITA MITÄÄN. Konteksti on pelkkä putki; mitä sen läpi menee,
+   * päättää kutsuja. Pelin omat tehosteet (play, ambience, kertoja)
+   * kysyvät `enabled`-lippua erikseen eivätkä muutu tästä.
+   */
+  ensureContext({ pakota = false } = {}) {
+    if (!this.enabled && !pakota) return null;
     if (!this.ctx) {
       const Ctx = window.AudioContext || window.webkitAudioContext;
       if (!Ctx) return null;
@@ -967,19 +990,27 @@ const SOUNDS = {
     // alipäästön takana, ja juuri sitä pieni zoomimoottori kuulostaa.
     const osc = ctx.createOscillator();
     osc.type = 'square';
-    osc.frequency.setValueCurveAtTime(kaari(106, 201), t0, kesto);
+    /*
+     * Taajuudet laskettu reilusti (omistajan toive: "madalla ääniefektin
+     * taajuutta reilusti"). Moottori 106-201 Hz -> 62-118 Hz, eli
+     * suunnilleen oktaavin verran alas. Sävelkulku ja kaari säilyvät
+     * samoina, joten ääni on sama moottori mutta raskaampi ja
+     * isompikokoinen — ja se sopii hitaampaan liukuun, joka on nyt
+     * pidempi (ui.js ZOOM_MS).
+     */
+    osc.frequency.setValueCurveAtTime(kaari(62, 118), t0, kesto);
 
     // Kaistanpäästö jättää jäljelle keskialueen sörinän: matalat jyrinät
     // pois, jotta ääni tulee koneistosta eikä kellarista.
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
     bp.Q.value = 1.1;
-    bp.frequency.setValueCurveAtTime(kaari(730, 1062), t0, kesto);
+    bp.frequency.setValueCurveAtTime(kaari(430, 625), t0, kesto);
 
     // Hammaspyörän vinkuna: ohut sävel moottorin yläpuolella.
     const vinku = ctx.createOscillator();
     vinku.type = 'triangle';
-    vinku.frequency.setValueCurveAtTime(kaari(531, 1004), t0, kesto);
+    vinku.frequency.setValueCurveAtTime(kaari(312, 590), t0, kesto);
     const vinkuTaso = ctx.createGain();
     vinkuTaso.gain.value = 0.055;
 

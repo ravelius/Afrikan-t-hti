@@ -28,8 +28,12 @@
   <!-- Versionumero näkyy aina pienenä alakulmassa. Napautus avaa
        päivityslokin (omistajan toive) — siksi tämä on nappi eikä
        koristediv, ja siksi aria-hidden on poissa. -->
+  <!-- Saavutettava nimi on kirjoitettava tähän: napin oma teksti on
+       pelkkä versionumero ("v238"), eikä siitä kuule mitä nappi tekee.
+       Se on nyt myös ainoa reitti päivitykseen ja kehittäjätilaan. -->
   <button id="versio-kulma" class="versio-kulma" type="button"
-          aria-haspopup="dialog" title="Mitä uutta?"></button>
+          aria-haspopup="dialog" title="Mitä uutta?"
+          aria-label="Mitä uutta, päivitys ja kehittäjätila"></button>
   <dialog id="muutokset-dialog" class="muutokset-dialog">
     <h2 class="muutokset-otsikko">Mitä uutta</h2>
     <ol id="muutokset-lista" class="muutokset-lista"></ol>
@@ -55,8 +59,9 @@
           title="Lähetä palautetta tästä kohdasta">!</button>
   <div class="app">
     <header class="topbar">
-      <!-- Koko nimi näkyy myös puhelimella (omistajan toive): tilaa
-           vapautui, kun ylävalikon napit siirtyivät hampurilaisen alle. -->
+      <!-- Koko nimi näkyy myös puhelimella (omistajan toive). Puhelimessa
+           se rivittyy kahdelle riville pienemmällä: yhdellä rivillä se vei
+           kukkaropilleriltä tilan ja katkesi kolmeen pisteeseen. -->
       <h1 class="brand">Unohdettu aarre</h1>
       <!-- Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan
            toive): rahat ja tavarat ovat samassa laukussa, joten pilleriä
@@ -310,6 +315,24 @@
     <div id="passport-grid" class="passport-grid"></div>
     <p class="passport-count">Tavarat</p>
     <div id="passport-finds" class="passport-finds"></div>
+    <!-- Laukun alalaita: pelin nimi vie tekijätietoihin ja lähdeluetteloon
+         (omistajan toive). Sulje jää alimmaksi, kuten muissakin ikkunoissa. -->
+    <p class="laukku-nimikilpi">
+      <button id="laukku-lahteet" class="laukku-lahteet-linkki" type="button">Unohdettu aarre</button>
+    </p>
+    <form method="dialog" class="dialog-actions">
+      <button class="primary" value="close">Sulje</button>
+    </form>
+   </div>
+  </dialog>
+
+  <!-- Pelin nimikilpi: tekijänoikeus, tekijätiedot ja luettelo kaikista
+       aineistoista, joista peli on koottu. Aukeaa matkalaukun alalaidan
+       linkistä; sisältö tulee js/lahteet.js:stä. -->
+  <dialog id="lahteet-dialog" class="dialog">
+   <div class="dialog-card lahteet-card">
+    <h2 id="lahteet-otsikko">Unohdettu aarre</h2>
+    <div id="lahteet-sisus" class="lahteet-sisus"></div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
     </form>

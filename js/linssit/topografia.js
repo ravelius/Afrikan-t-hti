@@ -111,6 +111,22 @@ async function esilataa(osoite) {
  * lue riviltä: silmä hakee selitteestä "mitä ruskea tarkoittaa", ei
  * neljäätoista metrilukua.
  */
+const MEREN_POHJA = '#264e91';
+
+/*
+ * Laudan ulkopuolisen kaistan sävyt: kuvan ylimmän ja alimman
+ * kuvarivin keskiarvo.
+ *
+ * Sävyjä ei valittu silmällä eikä otettu selitteestä. Kaista on kuvan
+ * jatke, joten sen on oltava täsmälleen se väri, johon kuva reunallaan
+ * päättyy — muuten raja näkyy viivana. Luvut on mitattu
+ * assets/linssit/topografia.webp:stä (3600 x 1620): kuuden ylimmän
+ * rivin keskiarvo rgb(129,163,179) eli Jäämeren jää ja matala hylly,
+ * ja kuuden alimman rgb(38,75,138) eli Eteläisen jäämeren syvänne.
+ */
+const KAISTA_POHJOINEN = 'rgb(129,163,179)';
+const KAISTA_ETELA = 'rgb(38,75,138)';
+
 const SELITERIVIT = [
   { vari: '#e8e8eb', teksti: 'Lumiraja, yli 6000 m' },
   { vari: '#baa498', teksti: 'Paljas kivi' },
@@ -119,7 +135,7 @@ const SELITERIVIT = [
   { vari: '#cdc470', teksti: 'Ylänkö, 800 m' },
   { vari: '#3e6e42', teksti: 'Alanko' },
   { vari: '#8cbee4', teksti: 'Mannerjalusta' },
-  { vari: '#264e91', teksti: 'Valtameren pohja' },
+  { vari: MEREN_POHJA, teksti: 'Valtameren pohja' },
   { vari: '#0a1c4e', teksti: 'Syvänne, yli 6000 m' },
 ];
 
@@ -202,6 +218,43 @@ export const LINSSI = {
      * valitsimesta, mikä on rehellisempi lopputulos.
      */
     if (tila.leveys !== raja.leveys || tila.korkeus !== raja.korkeus) return false;
+
+    /*
+     * MERI LAUDAN YLÄ- JA ALAPUOLELLE.
+     *
+     * Näkyvä alue ulottuu laudan yli sekä ylhäältä että alhaalta:
+     * lähikuvassa laudan pohjois- ja eteläpuolelle varataan kaista,
+     * jotta reunimmaiset kaupungit saa panoroitua yläpalkin ja
+     * alanappien alta esiin (ui.js YLAKAISTA ja ALAKAISTA). Korkeuskuva
+     * loppuu laudan reunaan, joten kaistaan jäi pergamenttia keskelle
+     * merta — omistajan havainto: "Yläreunasta puuttuu topografiavärit."
+     *
+     * Kaista täytetään valtameren pohjan sävyllä, koska sitä siellä on:
+     * lauta katkeaa 76. pohjoiselle ja 58. eteläiselle leveyspiirille, ja
+     * niiden takana on Jäämeri ja Eteläinen jäämeri. Väri on sama kuin
+     * seliterivillä "Valtameren pohja", joten kaista ei ole oma
+     * sävynsä vaan kartan jatke.
+     *
+     * Kaista on reilu: se ei voi olla liian iso, koska kuva piirtyy sen
+     * päälle ja rajaus leikkaa loput.
+     */
+    const kaista = raja.korkeus;
+    el('rect', {
+      x: raja.x,
+      y: raja.y - kaista,
+      width: raja.leveys,
+      height: kaista,
+      fill: KAISTA_POHJOINEN,
+      opacity: PEITTAVYYS,
+    }, ryhma);
+    el('rect', {
+      x: raja.x,
+      y: raja.y + raja.korkeus,
+      width: raja.leveys,
+      height: kaista,
+      fill: KAISTA_ETELA,
+      opacity: PEITTAVYYS,
+    }, ryhma);
 
     el('image', {
       x: raja.x,

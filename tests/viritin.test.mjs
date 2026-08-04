@@ -469,6 +469,231 @@ test('jaksot jatkuvat ilman aukkoa', () => {
   viritin.lopeta();
 });
 
+/* ═══════════════════════════════════════════════════════════════════════
+ * KUULUUKO SE OIKEASTI? — automaation arvo, ei pelkkä kutsujen luettelo
+ * ═══════════════════════════════════════════════════════════════════════
+ *
+ * MIKSI TÄMÄ ON OMA OSANSA JA MIKSI SE ON OLEMASSA.
+ *
+ * Omistaja 4.8.2026: "viritysääni on hävinnyt kokonaan." Kaikki tämän
+ * tiedoston testit menivät silti läpi — ne tarkistivat, että rampit ja
+ * käyrät AJOITETAAN, eivät sitä, mihin arvoon ne johtavat. Ero on koko
+ * juttu: yksikin peruminen väärässä kohdassa pyyhkii juuri ajoitetun
+ * käyrän, ja jäljelle jää täydellinen luettelo kutsuja, joiden lopputulos
+ * on hiljaisuus.
+ *
+ * Alla oleva `aikajanaParam` on siksi eri eläin kuin tiedoston alun
+ * `param`: se ei kirjaa kutsuja vaan TOTEUTTAA ne, ja osaa kertoa
+ * parametrin arvon millä tahansa hetkellä. Sen säännöt ovat Web Audion
+ * spesifikaatiosta, ja kaksi niistä on tässä tärkeitä:
+ *
+ *   1. Parametrilla on pohja-arvo (`value`), johon se palaa, jos yhtään
+ *      voimassa olevaa tapahtumaa ei ole. Virittimellä pohja on HILJAA.
+ *   2. cancelScheduledValues(t) poistaa tapahtumat hetkestä t alkaen — ja
+ *      setValueCurve-tapahtuman KOKONAAN, jos t osuu käyrän sisään.
+ *
+ * Juuri näiden kahden yhdistelmä oli vika: cancelAndHoldAtTime jätti
+ * pidätysarvon hetkeen t, ja heti perässä kutsuttu cancelScheduledValues(t)
+ * vei sen mennessään. Arvo putosi pohjaan eli hiljaisuuteen.
+ */
+
+/**
+ * Automaatioparametri, joka laskee arvonsa niin kuin selain.
+ *
+ * @param {() => number} kello äänikellon lukija (ctx.currentTime)
+ * @param {number} pohja parametrin oma arvo ilman automaatiota
+ */
+function aikajanaParam(kello, pohja = 0) {
+  const p = {
+    pohja,
+    tapahtumat: [],
+    kutsut: [],
+  };
+
+  const lisaa = (tapahtuma) => {
+    p.tapahtumat.push(tapahtuma);
+    p.tapahtumat.sort((a, b) => a.aika - b.aika);
+  };
+
+  p.setValueAtTime = function set(arvo, aika) {
+    p.kutsut.push(['set', arvo, aika]);
+    lisaa({ laji: 'set', arvo, aika });
+    return p;
+  };
+  p.linearRampToValueAtTime = function lin(arvo, aika) {
+    p.kutsut.push(['lin', arvo, aika]);
+    lisaa({ laji: 'lin', arvo, aika });
+    return p;
+  };
+  p.exponentialRampToValueAtTime = function exp(arvo, aika) {
+    p.kutsut.push(['exp', arvo, aika]);
+    lisaa({ laji: 'exp', arvo, aika });
+    return p;
+  };
+  p.setValueCurveAtTime = function curve(kayra, aika, kesto) {
+    // Selain heittää, jos käyrän ajalle osuu jo tapahtuma. Tynkä tekee
+    // samoin, jotta väärä katkaisujärjestys näkyy tässä eikä vasta korvassa.
+    const paallekkain = p.tapahtumat.some((e) => e.aika >= aika && e.aika <= aika + kesto);
+    if (paallekkain) {
+      const virhe = new Error('setValueCurveAtTime: päällekkäinen tapahtuma');
+      virhe.name = 'NotSupportedError';
+      throw virhe;
+    }
+    p.kutsut.push(['kayra', Array.from(kayra), aika, kesto]);
+    lisaa({ laji: 'kayra', kayra: Array.from(kayra), aika, kesto });
+    return p;
+  };
+  p.cancelScheduledValues = function peru(aika) {
+    p.kutsut.push(['peru', aika]);
+    p.tapahtumat = p.tapahtumat.filter((e) => {
+      if (e.laji === 'kayra') return !(aika >= e.aika && aika <= e.aika + e.kesto) && e.aika < aika;
+      return e.aika < aika;
+    });
+    return p;
+  };
+  p.cancelAndHoldAtTime = function hold(aika) {
+    p.kutsut.push(['pidatys', aika]);
+    const arvo = p.arvoHetkella(aika);
+    p.tapahtumat = p.tapahtumat.filter((e) => e.aika < aika);
+    lisaa({ laji: 'set', arvo, aika });
+    return p;
+  };
+
+  /** Parametrin arvo hetkellä t, spesifikaation sääntöjen mukaan. */
+  p.arvoHetkella = function arvoHetkella(t) {
+    const menneet = p.tapahtumat.filter((e) => e.aika <= t);
+    const viimeinen = menneet[menneet.length - 1] ?? null;
+
+    // Käyrä käynnissä: interpoloidaan sen sisältä.
+    if (viimeinen?.laji === 'kayra') {
+      const { kayra, aika, kesto } = viimeinen;
+      if (t >= aika + kesto) return kayra[kayra.length - 1];
+      const osuus = kesto > 0 ? (t - aika) / kesto : 1;
+      const kohta = osuus * (kayra.length - 1);
+      const i = Math.min(kayra.length - 2, Math.floor(kohta));
+      return kayra[i] + (kayra[i + 1] - kayra[i]) * (kohta - i);
+    }
+
+    const lahtoArvo = viimeinen ? viimeinen.arvo : p.pohja;
+    const lahtoAika = viimeinen ? viimeinen.aika : 0;
+
+    // Menossa oleva ramppi kohti seuraavaa tapahtumaa.
+    const seuraava = p.tapahtumat.find((e) => e.aika > t);
+    if (seuraava && (seuraava.laji === 'lin' || seuraava.laji === 'exp')) {
+      const matka = seuraava.aika - lahtoAika;
+      const osuus = matka > 0 ? (t - lahtoAika) / matka : 1;
+      if (seuraava.laji === 'lin') return lahtoArvo + (seuraava.arvo - lahtoArvo) * osuus;
+      const a = Math.max(lahtoArvo, 1e-7);
+      const b = Math.max(seuraava.arvo, 1e-7);
+      return a * ((b / a) ** osuus);
+    }
+    return lahtoArvo;
+  };
+
+  Object.defineProperty(p, 'value', {
+    get() { return p.arvoHetkella(kello()); },
+    set(arvo) { p.pohja = arvo; },
+  });
+  return p;
+}
+
+/** Tynkäkonteksti, jonka vahvistimet laskevat arvonsa oikeasti. */
+function aikajanaContext() {
+  const ctx = tynkaContext({ kayrat: true });
+  ctx.createGain = () => {
+    const solmu = {
+      laji: 'gain',
+      gain: aikajanaParam(() => ctx.currentTime, 1),
+      connect(kohde) { return kohde; },
+      disconnect() { ctx.irrotetut.push('gain'); },
+    };
+    ctx.luodut.push(solmu);
+    return solmu;
+  };
+  return ctx;
+}
+
+/** Virittimen ulostulon arvot annetuilla hetkillä. */
+function tasot(ctx, hetket) {
+  const gain = ulostulo(ctx);
+  return hetket.map((t) => gain.arvoHetkella(t));
+}
+
+test('viritysääni nousee oikeasti kuuluviin eikä vain ajoita ramppeja', () => {
+  const ctx = aikajanaContext();
+  const kohde = { type: 'kohde', connect: (k) => k, disconnect() {} };
+  const viritin = teeViritin(ctx, { kohde, mykistetty: () => false, voimakkuus: 1 });
+  assert.equal(viritin.aloita(0.6), true);
+
+  // TÄMÄ ON SE TARKISTUS, JOKA PUUTTUI: gainin on oltava jossain kohtaa
+  // selvästi nollaa suurempi. Pelkkä "rampit on ajoitettu" meni läpi
+  // silloinkin, kun peruminen oli pyyhkinyt ne ja arvo jäi pohjaan.
+  const nousu = tasot(ctx, [0, 0.15, 0.3, 0.45, 0.6, 1.2]);
+  const huippu = Math.max(...nousu);
+  assert.ok(
+    huippu > 0.5,
+    `viritysääni ei noussut kuuluviin: gainin huippu oli ${huippu} (arvot ${nousu.join(', ')})`,
+  );
+  assert.ok(nousu[0] <= 0.001, `kohina alkoi tasolta ${nousu[0]}`);
+  // Nousu on yksitoikkoinen: ei kuoppaa vaihdon keskellä.
+  for (let i = 1; i < 5; i++) {
+    assert.ok(nousu[i] > nousu[i - 1], `nousu notkahti kohdassa ${i}: ${nousu.join(', ')}`);
+  }
+  // Häivytyksen jälkeen taso pysyy ylhäällä eikä valu takaisin pohjaan.
+  assert.ok(nousu[5] > 0.5, `kohina vaikeni häivytyksen jälkeen tasolle ${nousu[5]}`);
+
+  // Ja lopussa se palaa hiljaisuuteen eikä jää roikkumaan.
+  ctx.currentTime = 1.2;
+  viritin.lopeta(0.6);
+  const lasku = tasot(ctx, [1.2, 1.5, 1.8, 2.4]);
+  assert.ok(lasku[0] > 0.5, `lasku alkoi tasolta ${lasku[0]}`);
+  assert.ok(
+    lasku.at(-1) <= 0.01,
+    `viritysääni jäi roikkumaan tasolle ${lasku.at(-1)} (arvot ${lasku.join(', ')})`,
+  );
+});
+
+test('nupin vääntäminen kesken häivytyksen ei vaienna viritystä', () => {
+  // Tässä vika oli: asetaVoimakkuus luki lähtöarvon VASTA katkaisun
+  // jälkeen, jolloin se sai pohja-arvon HILJAA ja kohina putosi
+  // hiljaisuuteen keskellä nousuaan.
+  const ctx = aikajanaContext();
+  const kohde = { type: 'kohde', connect: (k) => k, disconnect() {} };
+  const viritin = teeViritin(ctx, { kohde, mykistetty: () => false, voimakkuus: 1 });
+  viritin.aloita(0.6);
+
+  ctx.currentTime = 0.3;
+  const ennen = ulostulo(ctx).arvoHetkella(0.3);
+  assert.ok(ennen > 0.3, `häivytys ei ollut käynnissä (taso ${ennen})`);
+  viritin.asetaVoimakkuus(0.5);
+
+  const jalkeen = tasot(ctx, [0.3, 0.32, 0.35, 0.38, 0.5]);
+  const pohja = Math.min(...jalkeen);
+  assert.ok(
+    pohja > ennen * 0.4,
+    `nupin vääntö pudotti kohinan tasolle ${pohja} (ennen ${ennen}, arvot ${jalkeen.join(', ')})`,
+  );
+  viritin.lopeta(0.25);
+});
+
+test('lopetus kesken nousun ei jätä ääntä päälle', () => {
+  // Asema voi lukittua ennen kuin sisäänhäivytys on ohi. Silloin lasku
+  // ajoitetaan kesken nousevan käyrän, ja juuri siinä kohdassa väärä
+  // katkaisu joko heittää poikkeuksen tai jättää gainin ylös.
+  const ctx = aikajanaContext();
+  const kohde = { type: 'kohde', connect: (k) => k, disconnect() {} };
+  const viritin = teeViritin(ctx, { kohde, mykistetty: () => false, voimakkuus: 1 });
+  viritin.aloita(0.6);
+  ctx.currentTime = 0.25;
+  assert.doesNotThrow(() => viritin.lopeta(0.6));
+  const lasku = tasot(ctx, [0.25, 0.55, 0.85, 1.2]);
+  assert.ok(lasku[0] > 0.1, `lasku alkoi tasolta ${lasku[0]}`);
+  assert.ok(
+    lasku.at(-1) <= 0.01,
+    `viritys jäi soimaan tasolle ${lasku.at(-1)} (arvot ${lasku.join(', ')})`,
+  );
+});
+
 test('pitkä viritys ei kasaa solmuja loputtomiin', (t) => {
   // Viritys kestää niin kauan kuin asemaa haetaan, ja jokainen jakso
   // luo omat vihellyksensä ja vilahduksensa. Jos vaienneita solmuja ei

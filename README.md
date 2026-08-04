@@ -262,3 +262,82 @@ ne tulevat Wikimedia Commonsista, Freesoundista, radio aporeesta,
 Wikipediasta, Maailmanpankilta ja V-Demiltä omilla avoimilla
 lisensseillään. Jokaisen lähde, tekijä ja lisenssi on merkitty pelin
 sisältötiedostoihin.
+
+## Lähteet ja aineistot
+
+Sama luettelo näkyy pelissä: matkalaukun alalaidassa on linkki **Unohdettu
+aarre**, joka avaa tekijätiedot ja tämän listan. Luettelon sisältö on
+tiedostossa [js/lahteet.js](js/lahteet.js) — kun peliin tulee uusi aineisto,
+se lisätään sinne **ja** tähän lukuun.
+
+Alla ovat ne kokoelmat ja aineistot, joista sisältö on peräisin. Jokaisen
+yksittäisen valokuvan, äänitteen ja väitteen oma lähde on siinä tiedostossa,
+jossa sisältö on (kentät `lahde`, `aaniLahde`, `credit`, `source` sekä
+pakettien otsikkokommentit).
+
+### Kartta- ja korkeusaineistot
+
+| Aineisto | Tekijä / julkaisija | Lisenssi |
+| --- | --- | --- |
+| Natural Earth — rannikot, maarajat, joet, järvet ja meri (1:10m, 1:50m, 1:110m) | Natural Earth, naturalearthdata.com | Public domain |
+| ETOPO1 Global Relief Model, Ice Surface (1 kaariminuutti) — korkeus, syvyys, varjostus, reliefikartta | Amante & Eakins 2009, NOAA NGDC/NCEI, doi:10.7289/V5C8276M; haettu NOAA CoastWatch ERDDAPista | Public domain (Yhdysvaltain liittovaltion virasto) |
+| Earth at Night (Black Marble) 2016 — yökartan valot | NASA Earth Observatory / Visible Earth; NASA GSFC, Miguel Román, kuvankäsittely Joshua Stevens (SSAI) | Public domain (NASA), maininta ehtona |
+
+### Tietoaineistot
+
+| Aineisto | Tekijä / julkaisija | Lisenssi |
+| --- | --- | --- |
+| Köppen–Geiger-ilmastoluokitus 1980–2016 | Beck ym. 2018, Scientific Data 5:180214 | CC BY 4.0 |
+| Glottolog 5.2 — kielikuntien sukupuu ja sijainnit | Hammarström, Forkel, Haspelmath & Bank 2025, MPI EVA | CC BY 4.0 |
+| World Development Indicators | Maailmanpankki | CC BY 4.0 |
+| World Happiness Report 2026, Cantrilin tikapuu | Helliwell ym., University of Oxford; koosteena Our World in Data | Vapaa käyttö; OWIDin käsittely CC BY 4.0 |
+| Liberaalin demokratian indeksi | V-Dem-instituutti, Our World in Datan kautta | **Ei kirjattu repoon** |
+| International Migrant Stock 2024 | UN DESA, Population Division, © 2024 United Nations | CC BY 3.0 IGO |
+| ICOADS 2° enhanced — tuulet 1971–2000 | Freeman ym. 2017; tuote NOAA PSL | Vapaasti käytettävä (NOAA) |
+| OSCAR Sea Surface Velocity — pintavirtaukset | Bonjean & Lagerloef 2002, Earth & Space Research | Vapaasti jaeltava tutkimusaineisto |
+| Global Atmospheric Circulations — tuulivyöhykkeiden nimet | NOAA / NWS JetStream | Public domain |
+| Yale Bright Star Catalogue, 5. laitos | Hoffleit & Warren 1991, NASA ADC; jakelu CDS/VizieR (V/50) | **Ei erillistä lisenssitekstiä**; CDS pyytää mainitsemaan VizieRin ja tekijät |
+| ConstellationLines — 88 tähdistön tikkukuviot | Marc van der Sluys 2005–2023, doi:10.5281/zenodo.10397192 | CC BY 4.0 (aineistotiedosto sanoo CC BY-SA 4.0 — ristiriita lähteessä) |
+| IAU Catalog of Star Names | IAU Working Group on Star Names 2022 | CC BY |
+| Wikidata — koordinaatit, ISO-koodit, maannimet | Wikidata-yhteisö | CC0 1.0 |
+| Ihmisen leviämisen ajoitukset | Julkaistut tutkimusartikkelit (Hublin, Richter, Vidal, Hershkovitz, Groucutt, Clarkson, Fu, Bennett, Dillehay, Wilmshurst, Iasi ym.) | Lainauksia; viite rivikohtaisesti |
+| Silkkitien kaupungit, reitit ja valtakuntien rajat | UNESCO Silk Roads Programme; IDP (British Library); Silk Road Seattle; Britannica; Wikipedia | Tosiasiatietoa; selitetekstit kirjoitettu itse |
+
+### Valokuvat ja kuvitus
+
+| Aineisto | Tekijä / julkaisija | Lisenssi |
+| --- | --- | --- |
+| Wikimedia Commons — valokuvien pääasiallinen lähde | Kuvaajat tiedostokohtaisesti | PD, CC0, CC BY, CC BY-SA (ei ND eikä NC) |
+| Library of Congress — vanhat vedokset ja lasilevyt (mm. Matson, Prokudin-Gorski, Photochrom) | Library of Congress | Public domain |
+| Rijksmuseum — vanhat piirrokset ja vedokset | Rijksmuseum, Amsterdam | Public domain |
+| Internet Archive Book Images | Internet Archive | Public domain |
+| Lippukuvat | Wikimedia Commons; nimeämistä vaativat neljä on lueteltu `js/packs/lippu-tekijat.js`:ssä | Public domain sekä CC BY-SA 2.5 ja 3.0 |
+| Kartan grafiikka, laattojen kuvakkeet, pulmien piirrokset, sovelluskuvakkeet | Sami Reivinen | Copyright © 2026 Sami Reivinen |
+
+### Äänet
+
+| Aineisto | Tekijä / julkaisija | Lisenssi |
+| --- | --- | --- |
+| radio aporee ::: maps — kenttä-äänitykset (äänimaisemat, "Kuuntele kieltä") | Äänittäjät kohteittain, jakelu archive.org | PD, CC BY, CC BY-SA, CC BY-NC kohteittain |
+| Freesound — äänimaisemat ja tehosteet | Äänittäjät kohteittain (mm. LoafDV, brktkrgll, Hoscalegeek, AardsReal) | CC0, CC BY, CC BY-NC kohteittain |
+| Lyhytaaltoäänitteet — maailmanradion viritysäänet | archive.orgin arkistot, mm. samnewton94 | Public Domain Mark 1.0, CC0 |
+| "Pocket camera start and shut down" — zoomausääni | stephan, pdsounds.org Wikimedia Commonsin kautta | Public domain |
+| Musiikkinäytteet kulttuurinostoissa | Wikimedia Commons, archive.org (vain lisenssiosoitteella merkityt) | Kohteittain |
+| Suorat radiolähetykset | Asemaluettelo Radio Browserista (radio-browser.info); virrat asemien omia | **Edelleenvälityksen ehtoja ei selvitetty** |
+| Peliäänet ja avaustekstin lukuääni (`efekti-*.mp3`, `intro-puhe.mp3`) | Tuotettu ElevenLabsilla | **Ei kirjattu repoon** (ElevenLabsin tilausehdot) |
+| Syntetisoidut tehosteet ja ambienssi (Web Audio) | Sami Reivinen | Copyright © 2026 Sami Reivinen |
+
+### Tekstit
+
+| Aineisto | Tekijä / julkaisija | Lisenssi |
+| --- | --- | --- |
+| Wikipedia (fi ja en) — tiivistelmät, artikkelit, kysymysten tarkistuslähteet | Wikipedian kirjoittajat | CC BY-SA (maininta ja linkki näkyvät pelissä) |
+| Project Gutenberg — aikalaislainaukset | Alkuperäisteosten kirjoittajat; digitointi Project Gutenberg | Public domain (teokset) |
+| Internet Archive ja Wikisource — lainaukset, joita Gutenbergissa ei ole | Alkuperäisteosten kirjoittajat | Public domain (teokset) |
+| Pelin omat tekstit: tarina, päiväkirja, kysymykset, väittämät, tapahtumat, pulmat, tiivistelmät | Sami Reivinen | Copyright © 2026 Sami Reivinen |
+
+**Lisenssiltään epäselvät.** Neljä riviä yllä on merkitty lihavoituna: niiden
+lisenssiä ei ole kirjattu repoon eikä sitä ole tähän arvattu. Ne ovat V-Dem /
+Our World in Data, Yale Bright Star Catalogue, suorien radiolähetysten
+edelleenvälitys ja ElevenLabsilla tuotetut äänet. Lisäksi ConstellationLinesin
+lisenssistä on kaksi eri tietoa itse lähteessä.
