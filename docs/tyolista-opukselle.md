@@ -5234,3 +5234,47 @@ jonka olisi huomannut vasta omistaja:
 näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
+
+## v257 — Järvet takaisin, radio alas, VU-vahti (4.8.2026)
+
+**Isot järvet takaisin kartalle, vain joet pois** (omistajan tarkennus).
+Järvi on paikka kuten vuoristokin: se on kartalla siellä missä se on eikä
+liiku silmissä. Joki on viiva, joka kulkee koko mantereen halki ja
+risteää kaiken kanssa — juuri se teki kartasta sekavan. Järvien nimet
+palasivat samalla; nimi piirretään sinne missä sen kohde on.
+
+**Radio kiinni alareunaan ja kapeammaksi.** Kehyksellä oli pehmuste joka
+puolella, ja laite kellui muutaman pikselin irti reunasta — pöytäradio
+seisoo pöydällä eikä leiju sen yllä. Alapehmuste on enää se, mitä iOS:n
+kotipainikepalkki vaatii. Kotelo 880 → 800 px; kavennus tulee säleikön
+puolelta, jossa on eniten tyhjää, eikä syö mittarin kiinteää ikkunaa.
+
+**VU-neula ei jää kuolleeksi soivan aseman päälle.** Mitattu lukema voi
+jäädä nollaan syistä, joita tästä ympäristöstä ei näe: selain antaa
+reitityksen mutta ei ääntä, iOS mykistää reititetyn elementin, tai
+lähetys puskuroi. Vahti ei arvaa syytä eikä yritä korjata sitä — se
+katsoo vain lopputulosta: jos mitattu lukema on ollut nolla
+yhtäjaksoisesti 1,5 sekuntia, VAIKKA lähetys soi eikä ole vaimennettu,
+lukija vaihdetaan jäljiteltyyn. Kerran virtaa kohti, ei takaisin:
+sahaaminen näkyisi neulassa nykimisenä. Asteikko ei vaihdu, vain lukeman
+lähde — "ei vaihdeta herkkyyttä" pysyy voimassa.
+
+**v256:n tekstikoko tuli vasta nyt voimaan.** Tiedostossa oli JO
+`.wiki-nosto .teksti` -sääntö, myöhempänä kuin uusi, ja koska ne ovat
+samaa tarkkuutta, myöhempi voitti: lukukirjasin tuli voimaan mutta koko
+ja rivinkorkeus jäivät vanhoiksi (0,9 rem / 1,5). Nyt yksi sääntö yhdessä
+paikassa, ja mitattuna 16,3 px / 26,4 px. **Puolittain voimaan tullut
+muutos on pahin laji, koska se näyttää tehdyltä.**
+
+### Tutki-sivun kuvista
+
+Kuvat eivät ole rikki koodin puolesta. Osoitteet ratkeavat oikein ja
+tiedostot ovat peilissä: `curl` hakee molemmat esimerkkikuvat HTTP 200:lla
+(986 kt ja 631 kt). Tästä ympäristöstä EI voi näyttää enempää — selain ei
+pääse peiliin lainkaan (`ERR_CONNECTION_RESET`), koska hiekkalaatikon
+proxy ei välitä selaimen pyyntöjä samaan tapaan kuin curlin.
+
+Mitä tiedetään: jos kuvia epäonnistuu peräkkäin, peli sammuttaa peilin
+istunnon ajaksi (`peiliPetti`, sessionStorage) ja siirtyy Commonsiin. Se
+nollautuu kun sovellus suljetaan ja avataan uudelleen. CSS ei voi estää
+kuvan latautumista, joten v256:n typografia ei ole syy.

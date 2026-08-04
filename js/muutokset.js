@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 257, teksti: 'Isot järvet takaisin kartalle, vain joet pois' },
+  { v: 257, teksti: 'Radio kiinni alareunaan ja hieman kapeammaksi' },
+  { v: 257, teksti: 'VU-neula ei jää kuolleeksi soivan aseman päälle' },
+  { v: 257, teksti: 'Tutki-tekstin koko tuli oikeasti voimaan' },
   { v: 256, teksti: 'Tutki: leipäteksti luettavalla kirjasimella' },
   { v: 256, teksti: 'Osastojen otsikot lehden tapaan viivojen väliin' },
   { v: 256, teksti: 'Kappalejako, lihavoitu aloitus ja anfangi' },

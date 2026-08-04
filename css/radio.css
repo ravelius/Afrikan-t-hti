@@ -73,7 +73,15 @@
   z-index: 60;
   display: flex;
   justify-content: center;
-  padding: 0.35rem 0.4rem calc(0.35rem + var(--turva-ala, 0px));
+  /*
+   * KIINNI ALAREUNAAN (omistajan toive 4.8.2026: "Siirrä radio kiinni
+   * alas ja kavenna sitä hieman"). Aiemmin kehyksellä oli pehmuste joka
+   * puolella, ja laite kellui muutaman pikselin irti reunasta — pöytäradio
+   * seisoo pöydällä, ei leiju sen yllä. Sivupehmuste jää, jotta kotelon
+   * varjo ei leikkaudu ruudun reunaan; alapehmuste on enää se, mitä
+   * iOS:n kotipainikepalkki vaatii.
+   */
+  padding: 0.3rem 0.4rem var(--turva-ala, 0px);
   /*
    * Kehys ei ota napautuksia vastaan, vain kotelo. Muuten koko ruudun
    * levyinen palkki söisi kartan painallukset kotelon vierestä — ja juuri
@@ -116,7 +124,13 @@
    * kymmenen sentin kaiutin puolentoista metrin radiossa on se, mistä
    * laite lakkaa näyttämästä oikealta.
    */
-  max-width: 880px;
+  /*
+   * 880 -> 800. Omistaja pyysi kaventamaan; sata pikseliä pois vie
+   * kotelon lähemmäs pöytäradion mittasuhteita eikä syö mittarin
+   * ikkunaa, joka on kiinteän levyinen — kavennus tulee säleikön
+   * puolelta, jossa on eniten tyhjää.
+   */
+  max-width: 800px;
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;

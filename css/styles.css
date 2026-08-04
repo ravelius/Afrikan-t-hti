@@ -5494,11 +5494,14 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   cursor: zoom-in;
 }
 
-.wiki-nosto .teksti {
-  margin: 0 0 0.45rem;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
+/*
+ * Leipätekstin koko, rivinkorkeus ja marginaali ovat YHDESSÄ paikassa
+ * ylempänä (ks. "LEIPÄTEKSTI LUKUKIRJASIMELLA"). Tässä oli niistä toinen
+ * kopio, ja koska se on tiedostossa myöhempänä, se voitti: lukukirjasin
+ * tuli voimaan mutta koko ja rivinkorkeus jäivät vanhoiksi (0,9 rem /
+ * 1,5). Puolittain voimaan tullut muutos on pahin laji, koska se
+ * näyttää tehdyltä.
+ */
 
 .wiki-nosto .selite {
   margin: 0 0 0.35rem;
