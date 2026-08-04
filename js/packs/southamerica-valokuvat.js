@@ -902,53 +902,6 @@ export const SOUTHAMERICA_VALOKUVAT = {
         + 'peltoa, on nyt yhtenäinen korttelimatto.',
     },
   },
-  panama: {
-    tiedosto: 'City of Panama and the Harbor LCCN2014689104.jpg',
-    vuosi: '1900-luvun alku',
-    lahde: 'Bain News Service / Library of Congress (PD)',
-    selite: 'Panama Cityn kaupunki ja satama lasinegatiivilta 1900-luvun alusta. '
-      + 'Kaupunki oli tuolloin kanavatyömaan huoltosatama; kanava avattiin '
-      + '1914, ja sen jälkeen laivat pääsivät valtamereltä toiselle '
-      + 'kiertämättä Etelä-Amerikkaa.',
-    lisat: [
-      {
-        tiedosto: 'Seaways Rosemar in Miraflores Locks.agr.jpg',
-        vuosi: '2018',
-        lahde: 'ArnoldReinhold, Commons (CC BY-SA 4.0)',
-        selite: 'Rahtialus Seaways Rosemar Mirafloresin sulussa kahden vetomuulin '
-          + 'välissä. Muulit ovat kiskoilla kulkevia sähkövetureita, jotka '
-          + 'pitävät laivan irti sulun seinistä. Alusta nostetaan kaikkiaan '
-          + '26 metriä merenpinnasta kanavan tasolle.',
-      },
-      {
-        tiedosto: 'Mercado de Mariscos de la Ciudad de Panamá.jpg',
-        vuosi: '2025',
-        lahde: 'Virpana, Commons (CC0)',
-        selite: 'Panama Cityn kalatori rannassa vanhankaupungin laidalla. Saalis '
-          + 'myydään laiturin vieressä, ja samassa rakennuksessa on '
-          + 'ruokakojuja, joissa kala paistetaan heti ja tarjotaan '
-          + 'kookosriisin ja pataconien kanssa.',
-      },
-      {
-        tiedosto: 'MolasCascoAntiguo.JPG',
-        vuosi: '2013',
-        lahde: 'Ayaita, Commons (CC BY-SA 3.0)',
-        selite: 'Moloja myytävänä Casco Antiguossa. Mola on gunanaisten tekemää '
-          + 'käänteisapplikointia: useita värillisiä kangaskerroksia '
-          + 'ommellaan päällekkäin ja kuvio leikataan esiin alempia kerroksia '
-          + 'paljastaen.',
-      },
-    ],
-    uusi: {
-      tiedosto: 'Panama City 2016.jpg',
-      vuosi: '2016',
-      lahde: 'Dronepicr, Commons (CC BY 3.0)',
-      selite: 'Panama Cityn siluetti ilmasta. Kanavan tuottamat maksut ja niiden '
-        + 'ympärille kasvanut pankki- ja logistiikka-ala ovat nostaneet '
-        + 'rantaan pilvenpiirtäjärivin, jollaista Keski-Amerikassa ei muualla '
-        + 'ole.',
-    },
-  },
   portoalegre: {
     tiedosto: 'Porto Alegre, Rio Grande do Sul circa 1903.jpg',
     vuosi: 'noin 1903',

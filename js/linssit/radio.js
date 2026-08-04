@@ -951,9 +951,23 @@ function liitaMittariin(audio) {
    * Lähetys ei tottele kertojavalikkoa, joten ei tottele mittarikaan.
    */
   const ctx = sfx.ensureContext?.({ pakota: true });
-  if (!ctx || ctx.state !== 'running' || typeof ctx.createMediaElementSource !== 'function') {
-    return null;
-  }
+  if (!ctx || typeof ctx.createMediaElementSource !== 'function') return null;
+  /*
+   * PYSÄYTETTY KONTEKSTI EI OLE ESTE.
+   *
+   * Ehto oli aiemmin `ctx.state !== 'running' -> return null`, ja se
+   * kaatoi koko reitityksen hiljaa: selain luo AudioContextin tilaan
+   * `suspended`, ja se herää vasta käyttäjän eleestä. Radion sytytys ON
+   * ele, mutta konteksti ehtii syntyä ennen kuin selain on ehtinyt
+   * merkitä sen käynnissä olevaksi — eikä reititystä silloin tehty
+   * kertaakaan, joten neulalla ei ollut mitään luettavaa.
+   *
+   * Reitityksen saa rakentaa pysäytetyllekin kontekstille; se alkaa
+   * kuljettaa ääntä heti kun konteksti herää. Herätys pyydetään tässä
+   * eikä odoteta sitä: resume() palauttaa lupauksen, ja jos se
+   * epäonnistuu, ketju on silti pystyssä seuraavaa elettä varten.
+   */
+  if (ctx.state === 'suspended') ctx.resume?.().catch(() => {});
   try {
     // CORS-pyyntö on asetettava ENNEN src:tä, tai selain ei ota sitä
     // huomioon lainkaan.
