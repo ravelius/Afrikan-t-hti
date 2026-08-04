@@ -5081,3 +5081,63 @@ mikään katselu ei olisi paljastanut eroa — vain kello. Kun jokin alkaa
 tökkiä sen jälkeen kun ulkonäköön on koskettu, epäile ensin sitä
 muutosta, vaikka se näyttäisi viattomalta: multiply-sekoitus koko ruudun
 yli on pikselityötä, ja pikselityö kertautuu ruuduilla.
+
+## v254 — Joen nimi paikalleen, merisyvyys pois, vesi vaimeammaksi (4.8.2026)
+
+**"Joen nimi vain kerran. Nyt lukee monta kertaa."** Syy oli rakenteessa,
+ei nimilogiikassa: maastonimien kerros oli `root`in sisällä, ja kiertävä
+kartta monistaa `root`in `<use>`-kopiona laudan leveyden verran oikealle.
+Vedelle ja maalle se on oikein — molemmat puolet ovat samaa maastoa.
+NIMELLE SE EI OLE: nimi on merkintä kartalla, ei osa maastoa, ja kopio
+kirjoitti sen toistamiseen.
+
+Kerros on nyt `<use>`-kopion sisar. Se liikkuu ja skaalautuu yhä kartan
+mukana, koska panorointi tehdään viewBoxilla eikä ryhmän muunnoksella.
+Sauman yli menevän nimen paikan hoitaa jo `saumasiirto`.
+
+**"Joen nimi hyppii uusiin paikkoihin kun karttaa katsoo eri paikassa."**
+Tässä oli liikkuva ankkuri: nimi kirjoitettiin siihen uoman pisteeseen,
+joka oli lähinnä ruudun keskustaa, jotta pitkä joki saisi nimensä sinne
+minne pelaaja katsoo. Ajatus oli hyvä ja lopputulos huono — jos paikka
+riippuu katseesta, jokainen panorointi siirtää sitä.
+
+Painetussa kartassa joen nimi on yhdessä kohdassa uomaa ja pysyy siinä;
+jos katsoo muualle, nimi jää näkymättömiin. Ankkuri on nyt uoman
+KESKIMMÄINEN piste: se ei riipu näkymästä, joten mikään ei voi valita
+sitä uudelleen.
+
+**Merisyvyys pois käytöstä.** Vyöhykkeet olivat neljän raportin lähde:
+sinistä maalla, maan sävy eri zoomeilla, tökkivä vieritys. Rajaus poisti
+vuodosta vain noin 40 %, peittävyys jouduttiin pudottamaan kolmasosaan
+(0,07) — ja siltikin kerros maksoi 82 polkua ja 317 000 merkin
+rajauspolun uudelleen joka panorointiaskeleella. Hinta täysi, hyöty lähes
+olematon. Aineisto ja piirtäjä jäävät paikalleen; yhden rivin palautus
+tuo ne takaisin.
+
+**Vesi vielä vaimeammaksi.** Omistaja raportoi joesta sinisenä vielä
+senkin jälkeen, kun sinistä ei enää ollut. Mitattu elävästä puusta juuri
+ennen tätä versiota:
+
+| kerros | väri |
+|---|---|
+| uoma | rgb(183,168,136) |
+| valojuova | rgb(231,220,192) |
+| ranta | rgb(135,122,97) |
+| järvi | rgb(198,183,149) |
+
+Kaikki lämpimiä. Vika oli kirkkaudessa: vaalea nauha lämpimän
+pergamentin päällä LUETAAN viileäksi. Sama ilmiö kuin maan ja meren
+rajalla — silmä vertaa, ei mittaa. Valojuova tummennettiin ja
+vaimennettiin (0,40 → 0,28), uoma ja ranta samoin.
+
+**Topografialinssin vedet samaan musteeseen.** Linssin oma paletti oli
+yhä sinistä (`#264e91`, `#8cbee4`, neljä merivyöhykettä). Omistajan
+linjaus koskee kaikkea vettä, myös linssiä.
+
+### Opittua
+
+**Kun raportti toistuu vaikka mittaus sanoo muuta, mitattiin väärää
+asiaa.** Sinistä etsittiin sävyistä, ja sävyt olivat lämpimiä joka
+kierroksella. Silmä ei kuitenkaan lue sävyä irrallaan vaan suhteessa
+ympäristöön: kirkas vaalea viiva lämpimällä pohjalla näyttää viileältä.
+Oikea mitta ei ollut väri vaan kontrasti.

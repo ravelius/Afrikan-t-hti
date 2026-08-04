@@ -963,53 +963,41 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
   };
 
   /*
-   * JOEN NIMI SIIHEN KOHTAAN UOMAA, JOTA KATSOTAAN.
+   * JOEN NIMI ON AINA SAMASSA KOHDASSA UOMAA.
    *
-   * Ensimmäinen versio kirjoitti nimen uoman keskikohtaan. Lähikuvassa
-   * se tarkoitti, että Volga virtasi ruudun poikki nimettömänä aina kun
-   * katsottiin muualle kuin sen keskelle — ja lähikuva on juuri se, jota
-   * varten nimet tehtiin. Nyt haetaan uoman piste, joka on lähinnä
-   * ruudun keskustaa, ja nimi kirjoitetaan siihen. Pitkä joki saa siis
-   * nimensä sinne minne pelaaja katsoo, kuten oikeissa kartoissa.
+   * Tässä oli ennen liikkuva ankkuri: nimi kirjoitettiin siihen uoman
+   * pisteeseen, joka oli lähinnä ruudun keskustaa, jotta pitkä joki
+   * saisi nimensä sinne minne pelaaja katsoo. Ajatus oli hyvä ja
+   * lopputulos huono — omistaja: "Joen nimi hyppii uusiin paikkoihin kun
+   * karttaa katsoo eri paikassa."
+   *
+   * Se on väistämätöntä, jos paikka riippuu katseesta: jokainen
+   * panorointi siirtää keskipistettä, ja nimi seuraa. Painetussa
+   * kartassa joen nimi on yhdessä kohdassa uomaa ja pysyy siinä; jos
+   * katsoo muualle, nimi jää näkymättömiin. Nyt sama sääntö täällä.
+   *
+   * Ankkuri on uoman KESKIMMÄINEN piste. Se ei riipu näkymästä eikä
+   * järjestyksestä, joten se on sama joka ruudulla ja joka käynnistyksen
+   * jälkeen — nimi ei voi hypätä, koska mikään ei valitse sitä uudelleen.
+   *
+   * Kierrosta huolehditaan yhä: kiertävällä laudalla sama piste voi
+   * näkyä kopion kautta, ja siirto valitaan sen mukaan kumpi kopio on
+   * ruudulla. Se ei siirrä nimeä uomassa vaan kertoo, kummalla puolella
+   * saumaa se piirretään.
    */
-  const keskiX = nakyva.x + nakyva.w / 2;
-  const keskiY = nakyva.y + nakyva.h / 2;
   for (const joki of nimet.joet ?? []) {
     if (!nimiNakyy(joki.tarkeys, skaala)) continue;
     const teksti = nimenLeveys(joki.nimi, fontti);
     if (joki.pituus < teksti * 1.15) continue;
-    /*
-     * Vanha ankkuri ensin: jos edellinen valinta on yhä ruudulla, se
-     * pidetään. Vain kadonnut ankkuri korvataan uudella.
-     */
-    const ruudulla = (x, y) => x >= nakyva.x - teksti && x <= nakyva.x + nakyva.w + teksti
-      && y >= nakyva.y - fontti * 2 && y <= nakyva.y + nakyva.h + fontti * 2;
-    let paras = null;
-    const muistettu = jokienAnkkurit.get(joki.avain);
-    if (muistettu && joki.pisteet[muistettu.i]) {
-      const [mx, my] = joki.pisteet[muistettu.i];
-      for (const siirto of leveys ? [0, leveys, -leveys, leveys * 2] : [0]) {
-        if (ruudulla(mx + siirto, my)) { paras = { siirto, i: muistettu.i, x: mx + siirto, y: my }; break; }
-      }
-    }
-    if (!paras) {
-      // Lähin piste, kaikki kierron kopiot mukaan lukien.
-      for (const siirto of leveys ? [0, leveys, -leveys, leveys * 2] : [0]) {
-        for (let i = 0; i < joki.pisteet.length; i++) {
-          const [x, y] = joki.pisteet[i];
-          const etaisyys = Math.hypot(x + siirto - keskiX, y - keskiY);
-          if (!paras || etaisyys < paras.etaisyys) paras = { etaisyys, siirto, i, x: x + siirto, y };
-        }
-      }
-      if (paras) jokienAnkkurit.set(joki.avain, { i: paras.i });
-    }
-    if (!paras) continue;
-    // Osuuko lähin piste ruudulle? Vara on nimen puolikas: nimi, jonka
-    // ankkuri on juuri reunan takana, näkyisi silti puoliksi.
-    if (paras.x < nakyva.x - teksti || paras.x > nakyva.x + nakyva.w + teksti) continue;
-    if (paras.y < nakyva.y - fontti * 2 || paras.y > nakyva.y + nakyva.h + fontti * 2) continue;
+    const kohta = Math.floor(joki.pisteet.length / 2);
+    const piste = joki.pisteet[kohta];
+    if (!piste) continue;
+    const [px, py] = piste;
+    if (py < nakyva.y - fontti * 2 || py > nakyva.y + nakyva.h + fontti * 2) continue;
+    const siirto = saumasiirto(px, nakyva, leveys, teksti);
+    if (siirto === null) continue;
     ehdokkaat.push({
-      kohde: joki, laji: 'joki', x: paras.x, y: paras.y, siirto: paras.siirto, teksti, kohta: paras.i,
+      kohde: joki, laji: 'joki', x: px + siirto, y: py, siirto, teksti, kohta,
     });
   }
   for (const jarvi of nimet.jarvet ?? []) lisaa(jarvi, 'jarvi', jarvi.x, jarvi.y, jarvi.pituus);

@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 254, teksti: 'Joen nimi vain kerran ja aina samassa kohdassa' },
+  { v: 254, teksti: 'Merisyvyys pois: ei sinistä, kevyempi vieritys' },
+  { v: 254, teksti: 'Joet vaimeammiksi, ei enää viileää välkettä' },
+  { v: 254, teksti: 'Topografialinssin vedet samaan musteeseen' },
   { v: 253, teksti: 'Kartan vieritys taas sujuvaa: rae 11x halvempi' },
   { v: 253, teksti: 'Maastonimet kaupunkien nimien kokoisia' },
   { v: 253, teksti: 'Maastonimet vasta kun kaupunkien nimet näkyvät' },

@@ -3136,9 +3136,16 @@ body.linssi-valokuva .grain { display: none; }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.lahivesi-ranta { stroke: #877a61; opacity: 0.38; }
-.lahivesi-uoma { stroke: #b7a888; opacity: 0.62; }
-.lahivesi-valo { stroke: #e7dcc0; opacity: 0.4; }
+.lahivesi-ranta { stroke: #7d7057; opacity: 0.34; }
+.lahivesi-uoma { stroke: #ab9a78; opacity: 0.55; }
+/*
+ * Valojuova selvästi vaimeampi. Kirkas vaalea nauha lämpimän
+ * pergamentin päällä LUETAAN viileäksi, vaikka sen sävy on lämmin
+ * (mitattu elävästä puusta: rgb(231,220,192)) — omistaja raportoi
+ * joesta sinisenä vielä senkin jälkeen, kun sinistä ei enää ollut.
+ * Sama ilmiö kuin maan ja meren rajalla: silmä vertaa, ei mittaa.
+ */
+.lahivesi-valo { stroke: #d9c9a4; opacity: 0.28; }
 
 
 /*

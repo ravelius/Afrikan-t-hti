@@ -111,7 +111,8 @@ async function esilataa(osoite) {
  * lue riviltä: silmä hakee selitteestä "mitä ruskea tarkoittaa", ei
  * neljäätoista metrilukua.
  */
-const MEREN_POHJA = '#264e91';
+// Vesi ilman sinistä myös linssissä (omistajan linjaus 4.8.2026).
+const MEREN_POHJA = '#5d5340';
 
 /*
  * Laudan ulkopuolisen kaistan sävyt: kuvan ylimmän ja alimman
@@ -134,9 +135,9 @@ const SELITERIVIT = [
   { vari: '#b68452', teksti: 'Vuoristo, 2200 m' },
   { vari: '#cdc470', teksti: 'Ylänkö, 800 m' },
   { vari: '#3e6e42', teksti: 'Alanko' },
-  { vari: '#8cbee4', teksti: 'Mannerjalusta' },
+  { vari: '#b9ab8c', teksti: 'Mannerjalusta' },
   { vari: MEREN_POHJA, teksti: 'Valtameren pohja' },
-  { vari: '#0a1c4e', teksti: 'Syvänne, yli 6000 m' },
+  { vari: '#3f382a', teksti: 'Syvänne, yli 6000 m' },
 ];
 
 export const LINSSI = {
