@@ -149,6 +149,23 @@ function smoothClosedPath(points) {
 // Pehmeiksi käyriksi lasketut rannikot muistetaan karttakohtaisesti.
 const outlineCache = new WeakMap();
 
+/**
+ * Rantaviivan polut TÄSMÄLLEEN siinä muodossa kuin ne piirretään.
+ *
+ * Tämä on olemassa rajauksia varten (js/ui.js `meri-rajaus`). Ensimmäinen
+ * yritys rakensi merenpohjan rajauksen suoraan `map.outlines`-pisteistä
+ * janoina, ja sininen vuoti yhä maalle: piirretty rannikko EI ole niistä
+ * pisteistä vedetty monikulmio vaan sen pehmennetty ja käsin heiluteltu
+ * versio (kasinPiirretty + smoothClosedPath). Pisteitä on noin 280 per
+ * manner, joten kaari ja jana eroavat toisistaan lahden levyisesti.
+ *
+ * Rajaus on pakko tehdä samasta datasta kuin piirto, tai se rajaa
+ * johonkin muuhun kuin siihen rantaan, jonka pelaaja näkee.
+ */
+export function rantaviivanPolut(map) {
+  return outlinePaths(map);
+}
+
 function outlinePaths(map) {
   let paths = outlineCache.get(map);
   if (!paths) {

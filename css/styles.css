@@ -4491,16 +4491,56 @@ body[data-mode] .fact-card.pieni {
   max-height: calc(1.5 * var(--pieni-rivi) + 0.4rem + 1px);
   overflow: hidden;
   /*
-   * NAPAUTUSALUE ON TÄSMÄLLEEN SE, MISSÄ ON MUSTETTA.
+   * OTSIKKO JÄÄ NÄKYVIIN, JA SILLÄ ON TAUSTA.
    *
-   * Kortin oma laatikko on yhä kaistan levyinen — sen on pakko olla,
-   * sillä kutistuminen liukuu vain jos sisältö pysyy asettelussa ja
-   * korkeusraja rajaa sen. Laatikko on kuitenkin kartan päällä, ja
-   * tyhjänä se söisi napautukset paikasta, jossa ei näy mitään.
-   * Siksi laatikko päästää napautukset lävitseen ja vain näkyvä
-   * nimirivi ottaa ne vastaan.
+   * Ensimmäinen versio jätti riville pelkän kaupungin nimen ilman
+   * taustaa, ja omistaja huomautti siitä heti: "Ainut, mikä näkyy, on
+   * kaupungin nimi täysin irrallaan." Nimi yksin kartan päällä ei kerro
+   * olevansa matkakirjasta — se näyttää yhdeltä kartan paikannimeltä
+   * lisää, ja juuri sen erottuminen oli koko lapun tarkoitus.
+   *
+   * Rivi on siis kaksisarakkeinen ruudukko: otsikko ja sen perässä
+   * kaupungin nimi. Kaikki muu jää toiselle riville, jonka korkeusraja
+   * leikkaa pois — sisältö pysyy asettelussa, joten kutistuminen liukuu
+   * yhä eikä nytkähdä.
    */
-  pointer-events: none;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 0.45em;
+  /*
+   * Laatikko on nyt täsmälleen sen levyinen, mitä siinä näkyy, joten se
+   * saa myös ottaa napautukset vastaan. Aiemmin laatikko oli kaistan
+   * levyinen ja läpinäkyvä, ja siksi se joutui päästämään napautukset
+   * lävitseen — nyt sellaista tyhjää ei ole.
+   */
+  width: max-content;
+  max-width: 100%;
+  pointer-events: auto;
+  cursor: pointer;
+  /* Pergamenttikaistale otsikon alle: sama sävy kuin kortin paperi. */
+  background: rgba(244, 231, 202, 0.86);
+  border-radius: 6px;
+  padding-inline: 0.5em;
+  box-shadow: 0 1px 4px rgba(62, 42, 22, 0.18);
+}
+
+/* Otsikko yhden rivin mitassa: h2:n oma koko veisi lapulta kaksi riviä. */
+body[data-mode] .fact-card.pieni > #fact-voice {
+  grid-row: 1;
+  grid-column: 1;
+  order: -2;
+  opacity: 1;
+  margin: 0;
+  font-size: var(--pieni-rivi);
+  line-height: 1.5;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+/* Kaikki muu kuin rivi itse jää leikkautuvalle toiselle riville. */
+body[data-mode] .fact-card.pieni > *:not(#fact-voice):not(.fact-place) {
+  grid-row: 2;
 }
 
 .fact-card.pieni .fact-place {

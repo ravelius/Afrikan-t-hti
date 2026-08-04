@@ -4764,3 +4764,69 @@ päätelmäketju rakentui sen varaan, että neula makaa lepokulmassaan, eli
 että signaalia ei ole. Mitattuna signaali oli olemassa ja niin kova, että
 se meni asteikosta yli. Yksi mittaus asteikon TOISESTA päästä olisi
 kaatanut väärän selityksen ennen kuin se ehti kahteen versioon.
+
+## v248 — Mittarin vahti, matkakirjan otsikko, rantaviivan rajaus (4.8.2026)
+
+**VU-mittari jäi kanavanvaihdossa taustakohinan tasolle.** Omistaja
+päätteli syyn itse ja osui suoraan: "mittaus ei koskaan palaudu takaisin
+aseman mittaustasolle, vaan jää siihen taustakohinan mittaustasolle, kun
+kaupunkia vaihtaa."
+
+Juuri niin koodi oli rakennettu. Kanavanvaihto antaa mittarin takaisin
+pelin äänisummalle (`lopetaAani` → `asetaMittarinLahde(null)`), koska
+silloin kuuluu viritysääni. Lähetys otetaan takaisin **yhdessä ainoassa
+kohdassa**, `lukitseAsema`ssa. Jos se kohta jää käymättä — asema ei ehdi
+lukittua, `playing` ei tule, vaihto osuu kesken virityksen — mikään ei enää
+koskaan palauta mittaria lähetykseen. Neula jää lukemaan pelin äänisummaa,
+jossa lähetystä ei ole, ja pysyy siinä myös takaisin vaihdettaessa: mikään
+ei ole rikki, lähdettä ei vain aseteta uudestaan.
+
+**Kertaluontoinen asetus oli väärä muoto.** Lähde on TILA, jota pitää
+ylläpitää niin kauan kuin asema soi. Vahti tekee sen sekunnin välein: yksi
+sulkeuman vaihto, ei uusia solmuja. Se korjaa koko vikaluokan kerralla,
+myös ne reitit, joita en osannut kuvitella — enkä osannut: ajoin oikean
+moduulin selaimessa läpi vaihdon A → B → A sekä CORSin sallivalla että
+CORSittomalla B-asemalla, ja neula eli kaikissa kuudessa vaiheessa
+(23–25 eri kulmaa). Vikaa ei siis saanut toistettua täällä lainkaan, ja
+juuri siksi korjauksen on oltava sellainen, joka ei vaadi syyn tuntemista.
+
+Lukija luodaan kerran virtaa kohti eikä joka tikillä: jäljitelty lukija
+laskee aikaa omasta alustaan, ja uusi sulkeuma joka sekunti nollaisi sen.
+
+**Matkakirjan yhden rivin lappu sai otsikkonsa takaisin.** v243 jätti
+riville pelkän kaupungin nimen ilman taustaa, ja omistaja huomautti siitä
+heti: "Ainut, mikä näkyy, on kaupungin nimi täysin irrallaan." Nimi yksin
+kartan päällä ei kerro olevansa matkakirjasta — se näyttää yhdeltä kartan
+paikannimeltä lisää, ja juuri erottuminen oli koko lapun tarkoitus.
+
+Rivi on nyt kaksisarakkeinen ruudukko (otsikko + kaupungin nimi)
+pergamenttitaustalla. Kaikki muu jää toiselle riville, jonka korkeusraja
+leikkaa pois — sisältö pysyy asettelussa, joten kutistuminen liukuu yhä.
+Laatikko on täsmälleen sisältönsä levyinen, joten se saa myös ottaa
+napautukset vastaan; aiemmin läpinäkyvä kaistan levyinen laatikko joutui
+päästämään ne lävitseen.
+
+**Merenpohjan rajaus piirrettyyn rantaviivaan.** v246:n rajaus rakennettiin
+`map.outlines`-pisteistä janoina, mutta piirretty rannikko ei ole niistä
+vedetty monikulmio vaan sen pehmennetty ja käsin heiluteltu versio
+(`kasinPiirretty` + `smoothClosedPath`). Pisteitä on noin 280 per manner,
+joten kaari ja jana eroavat lahden levyisesti. Rajaus tehdään nyt samasta
+datasta kuin piirto (`rantaviivanPolut`).
+
+Mitattu vaikutus (maapikseli rajauksen kanssa ja ilman, sinikanava):
+Sahara −5, Puola −3, Kongo −2, avomeri 0. Rajaus siis poistaa sinisen
+maalta eikä koske mereen.
+
+**Mitattu myös, mikä EI ole vuotoa.** Zoomaustasolla, jolla lähivesi
+häivähtää esiin, Eurooppa näyttää vaalealta — mutta se on pohjakartan oma
+väri, ei meri: kun lähivesikerros piilotetaan kokonaan, Euroopan pikseli
+muuttuu 207,183,137 → 206,186,143 eli tuskin lainkaan. Kerros on
+rasteroidussa laatassa alla, ja vaalea ilme tulee siitä, että Euroopan
+alangoilla ei ole korkeusvyöhykettä.
+
+### Opittua
+
+**Kun vikaa ei saa toistettua, korjaa muoto älä tapausta.** Kolme versiota
+etsi yksittäistä rikkinäistä kohtaa. Vika oli siinä, että oikea arvo
+asetettiin kerran ja toivottiin sen pysyvän. Ylläpidetty tila ei tarvitse
+selitystä sille, mikä sen rikkoi.
