@@ -25,8 +25,8 @@
 
 /** Pelin oma tekijänoikeus. Sanamuodot ovat LICENSE-tiedostosta. */
 export const PELI = {
-  nimi: 'Unohdettu aarre',
-  englanniksi: 'The Forgotten Treasure',
+  nimi: 'Matkakirja ja unohdettu aarre',
+  englanniksi: 'The Travel Journal and the Forgotten Treasure (ehdotus, vahvistetaan käännösvaiheessa)',
   copyright: 'Copyright © 2026 Sami Reivinen. Kaikki oikeudet pidätetään.',
   tekija: 'Suunnittelu, tarina, tekstit, kartat ja koodi: Sami Reivinen.',
   apu: 'Toteutuksessa avustanut Claude (Anthropic).',

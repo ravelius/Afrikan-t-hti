@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Unohdettu aarre</title>
-  <meta name="description" content="Unohdettu aarre: kierrä maailmaa isoisän päiväkirjan kanssa, etsi aarteet ja opi matkalla." />
+  <title>Matkakirja ja unohdettu aarre</title>
+  <meta name="description" content="Matkakirja ja unohdettu aarre: kierrä maailmaa isoisän päiväkirjan kanssa, etsi aarteet ja opi matkalla." />
   <meta name="theme-color" content="#1d1610" />
   <meta name="color-scheme" content="dark" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Unohdettu aarre" />
+  <meta name="apple-mobile-web-app-title" content="Matkakirja" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
@@ -22,7 +22,7 @@
   -->
   <div class="rotate-guard" aria-hidden="true">
     <p class="rotate-glyph">📱</p>
-    <p>Unohdettu aarre pelataan pystyssä.</p>
+    <p>Matkakirja pelataan pystyssä.</p>
     <p class="muted">Käännä laite pystyasentoon.</p>
   </div>
   <!-- Versionumero näkyy aina pienenä alakulmassa. Napautus avaa
@@ -59,10 +59,10 @@
           title="Lähetä palautetta tästä kohdasta">!</button>
   <div class="app">
     <header class="topbar">
-      <!-- Koko nimi näkyy myös puhelimella (omistajan toive). Puhelimessa
-           se rivittyy kahdelle riville pienemmällä: yhdellä rivillä se vei
-           kukkaropilleriltä tilan ja katkesi kolmeen pisteeseen. -->
-      <h1 class="brand">Unohdettu aarre</h1>
+      <!-- Nimilogo (omistajan toive): Matkakirja, pitkä viiva ja sen
+           alla alanimi "unohdettu aarre" pienellä. Viiva on alanimen
+           yläreuna, jotta se on aina täsmälleen logon levyinen. -->
+      <h1 class="brand">Matkakirja<span class="brand-alanimi">unohdettu aarre</span></h1>
       <!-- Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan
            toive): rahat ja tavarat ovat samassa laukussa, joten pilleriä
            napauttamalla se aukeaa. -->
@@ -318,7 +318,7 @@
     <!-- Laukun alalaita: pelin nimi vie tekijätietoihin ja lähdeluetteloon
          (omistajan toive). Sulje jää alimmaksi, kuten muissakin ikkunoissa. -->
     <p class="laukku-nimikilpi">
-      <button id="laukku-lahteet" class="laukku-lahteet-linkki" type="button">Unohdettu aarre © 2026</button>
+      <button id="laukku-lahteet" class="laukku-lahteet-linkki" type="button">Matkakirja © 2026</button>
     </p>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
@@ -331,7 +331,7 @@
        linkistä; sisältö tulee js/lahteet.js:stä. -->
   <dialog id="lahteet-dialog" class="dialog">
    <div class="dialog-card lahteet-card" tabindex="-1" autofocus>
-    <h2 id="lahteet-otsikko">Unohdettu aarre</h2>
+    <h2 id="lahteet-otsikko">Matkakirja ja unohdettu aarre</h2>
     <div id="lahteet-sisus" class="lahteet-sisus"></div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
@@ -384,7 +384,7 @@
    <div class="dialog-card" tabindex="-1" autofocus>
     <h2>Säännöt</h2>
     <div class="rules-text">
-      <p><b>Peli.</b> Unohdettu aarre on yksin pelattava vaellus: kierrä maailmaa,
+      <p><b>Peli.</b> Matkakirja ja unohdettu aarre on yksin pelattava vaellus: kierrä maailmaa,
         avaa aarteita vastaamalla kysymyksiin ja opi matkalla maista, kulttuureista
         ja elämästä eri puolilla maapalloa. Peli ei pääty — jokaisella laudalla on
         oma unohdettu aarteensa (2000 p), ja löytöjä voi kerätä niin kauan kuin huvittaa.</p>

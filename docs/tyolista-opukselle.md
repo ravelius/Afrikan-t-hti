@@ -4210,7 +4210,14 @@ Tämä koskee 123 jokea, 38 järveä ja 52 vuoristoa = 213 tekstiä.
 
 ## v231 — nimenvaihto, kuvake ja kartan sauma (4.8.2026)
 
-**Pelin nimi on Unohdettu aarre** (engl. *The Forgotten Treasure*). Matkakirja
+**PÄIVITYS v233 (4.8.2026): omistaja tarkensi nimen.** Pelin koko nimi on
+**Matkakirja ja unohdettu aarre**, lyhyt nimi arjessa ja kotivalikossa
+**Matkakirja** (ytimekkäämpi). Yläpalkki ja short_name käyttävät lyhyttä,
+title/manifest-name/README koko nimeä. Reponimen vaihtoa EI enää tehdä —
+repo saa pysyä Matkakirjana. Sanasto: docs/tarina.md.
+
+Alkuperäinen v231-kirjaus (nimi tarkentui myöhemmin, ks. yllä):
+Pelin nimi on Unohdettu aarre. Matkakirja
 jää tarinan keskusesineeksi — isoisän kirjaksi — eikä ole enää pelin nimi.
 Vaihdettu: manifest, index.html, tyohuone*.html, README, css-otsake, ui.js:n
 palaute- ja artikkelitekstit. **Ei vaihdettu** (tietoinen päätös): sw.js:n
