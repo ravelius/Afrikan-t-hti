@@ -4900,3 +4900,76 @@ kuvakaappauksesta, sain eroksi yhden yksikön ja julistin sen syyksi. Ne
 olivat molemmat maalla. Kun näyte pitää luokitella, luokittelu on tehtävä
 aineistosta — ei silmällä siitä samasta kuvasta, jonka epäselvyys on koko
 tutkittava ilmiö.
+
+## v251 — Yksi herkkyys, hillitty merisyvyys, palkki ja valikko (4.8.2026)
+
+**VU-mittari: herkkyyttä ei enää vaihdeta lainkaan.** Omistajan linjaus:
+"pidä koko ajan pelkän kaupungin herkkyys päällä ja kohinan mittaus jää
+pois. Eli ei vaihdeta herkkyyttä."
+
+Tässä oli kolmen version vika. Mittarin lähdettä VAIHDETTIIN: kanavanvaihto
+antoi sen pelin äänisummalle (viritysääni, laitteen asteikko −48…−20 dB) ja
+lukittuminen otti sen takaisin lähetykselle (−40…−6 dB). Kaksi asteikkoa ja
+neljä vaihtokohtaa — ja jos yksikin vaihto jäi tekemättä, neula jäi väärälle
+asteikolle lopullisesti. Kolme korjausyritystä etsi sitä yhtä vaihtoa, joka
+jää väliin. Yhtään ei löytynyt, koska vika ei ollut missään yksittäisessä
+vaihdossa vaan siinä, **että vaihtoja on**.
+
+Lähde asetetaan nyt kerran radiotilan alkaessa eikä sen jälkeen koskaan. Se
+on pysyvä sulkeuma, joka katsoo joka lukemalla mikä virta on soiva ja lukee
+sen lähetysasteikolla. Vaihtokohtia ei ole yhtään.
+
+**Maan sävy eri zoomeilla — omistajan kysymys, ja vastaus oli ei.**
+
+Ensimmäinen mittaus keräsi ruudukon RUUDULTA, mikä vertasi Saharaa kaukaa ja
+Puolaa läheltä — se ei kerro zoomista mitään. Oikea mittaus ottaa **samat
+laudan pisteet** joka zoomilla ja projisoi ne ruudulle.
+
+| näkymän leveys | maa | meri | ero |
+|---|---|---|---|
+| 20000 | 192,161,110 | 222,204,168 | 131 |
+| 15556 | 189,157,107 | 220,202,167 | 128 |
+| 14370 | 190,163,117 | 213,199,169 | 101 |
+| 13580 | 191,167,125 | 206,195,170 | **88** |
+
+Maa siis siniseni **+15** zoomatessa, ja maan ja meren ero kutistui
+kolmanneksen. Juuri se on omistajan "meri vuotaa maiden päälle lähempää".
+
+**Syy eriteltiin sulkemalla kerroksia yksi kerrallaan** (lähin zoom):
+
+| tila | maa |
+|---|---|
+| kaikki näkyvissä | 191,167,125 |
+| rajaus pois | 190,171,135 |
+| joet ja järvet pois | 192,167,125 |
+| merisyvyys pois | 193,162,111 |
+
+Omistajan arvaus "ehkä joet tekee sen" **ei pidä paikkaansa**: jokien ja
+järvien piilotus muutti maata yhden yksikön. Syy on merisyvyys. Rajaus
+poistaa vuodosta noin 40 %, ja loput tulee siitä, ettei kahden eri
+tarkkuuden rajaa saa osumaan yhteen pikselilleen — rajauksen reunalle jää
+muutaman pikselin kaistale, joka lähikuvassa lukeutuu maaksi.
+
+Vyöhykkeiden peittävyys pudotettiin noin kolmasosaan (0,22 → 0,07 jne.).
+Mitattu jälkeen: maan sinisiirtymä **+15 → +5**, ja lähikuvan maa–meri-ero
+88 → **114** (kaukaa 131).
+
+**Matkakirjan palkki oli liian pitkä.** `grid-template-columns: auto
+minmax(0, 1fr)` — `1fr` söi kaiken vapaan tilan, joten palkki venyi kaistan
+levyiseksi vaikka `width: max-content` oli asetettu. max-content laskee
+raidat, ja 1fr-raita ilmoittaa haluavansa kaiken. Nyt `auto auto`.
+
+**Äänet ja taikalasit hampurilaisen alle** (omistajan toive). Ylärivillä on
+enää nimilogo, päiväpilleri ja hampurilainen. Molemmilla siirretyllä on oma
+alivalikko, joten ne EIVÄT sulje päävalikkoa napautuksesta — muuten
+alivalikko katoaisi samalla napautuksella, jolla se aukesi. Mitattu:
+valikossa neljä riviä, Äänet avaa alivalikkonsa päävalikon pysyessä auki,
+Säännöt sulkee.
+
+### Opittua
+
+**Kun korjaus ei pidä, poista se kohta jossa se voi pettää.** Mittarin
+lähde korjattiin kolmesti asettamalla se oikein yhdessä lisäkohdassa. Vasta
+neljäs korjaus poisti asettamisen kokonaan — yksi lähde, ei yhtään
+vaihtoa. Sama muoto kuin v249:n vahdissa, mutta vietynä loppuun asti:
+vahti ylläpitää tilaa, tämä ei tarvitse tilaa lainkaan.
