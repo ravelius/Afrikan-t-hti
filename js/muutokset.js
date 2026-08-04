@@ -13,6 +13,13 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 240, teksti: 'Tutki on nyt taitettu lehti: pyyhkäise sivuja' },
+  { v: 240, teksti: 'Kuvat isommiksi ja tekstin lomaan' },
+  { v: 240, teksti: 'Korjattu: kuvat katosivat iPadilla kokonaan' },
+  { v: 240, teksti: 'Suurennus aina suorassa ja täydessä koossa' },
+  { v: 240, teksti: 'Tutki täyttää puhelimen ruudun reunasta reunaan' },
+  { v: 240, teksti: 'Joet kapeammiksi, maastonimet isommiksi' },
+  { v: 240, teksti: 'Matkalaukusta lähteet ja tekijätiedot' },
   { v: 239, teksti: 'Kartta lämpimämmäksi, korkeus punaruskeaan' },
   { v: 239, teksti: 'Viritysääni kuuluu taas myös äänet pois päältä' },
   { v: 239, teksti: 'VU-mittari seuraa lähetystä 98 asemalla' },

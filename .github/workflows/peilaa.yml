@@ -130,14 +130,6 @@ jobs:
             echo "$kansio: $(ls media/$kansio 2>/dev/null | wc -l) tiedostoa"
           done
 
-      # tests/media.test.mjs vertaa pelin polkusäännön manifestiin, mutta
-      # ohittaa itsensä hiljaa jos manifestia ei ole koneella. Nyt se on:
-      # äsken noudettu media/manifesti.json. Tämä on ainoa paikka missä
-      # tarkistus oikeasti ajetaan koko aineistoa vasten — ilman sitä
-      # eriytynyt nimeäminen huomattaisiin vasta pelissä puuttuvana kuvana.
-      - name: Tarkista polkusäännöt manifestia vasten
-        run: node --test tests/media.test.mjs
-
       - name: Peilaa puuttuvat
         env:
           # Lajivalinta on olemassa vain käsin käynnistettäessä. Pushista ja
@@ -165,6 +157,30 @@ jobs:
             echo "::error::Yhtään lajia ei peilattu (LAJIT='$LAJIT')."
             exit 1
           fi
+
+      # tests/media.test.mjs vertaa pelin polkusäännön manifestiin, mutta
+      # ohittaa itsensä hiljaa jos manifestia ei ole koneella. Nyt se on:
+      # äsken kirjoitettu media/manifesti.json. Tämä on ainoa paikka
+      # missä tarkistus ajetaan koko aineistoa vasten — ilman sitä
+      # eriytynyt nimeäminen huomattaisiin vasta pelissä puuttuvana
+      # kuvana.
+      #
+      # TARKISTUS ON PEILAUKSEN JÄLKEEN, EI ENNEN. Ennen se ajettiin
+      # heti ämpäristä noudon jälkeen, ja se lukitsi ajon: jos
+      # ämpärissä ollut manifesti oli säännön kanssa ristiriidassa,
+      # testi kaatui ennen kuin peilaus ehti kirjoittaa uuden. Ainoa
+      # ajo, joka olisi voinut korjata manifestin, oli se joka ei
+      # koskaan päässyt alkuun. Sen manifestin sisällölle ei tässä
+      # vaiheessa voi enää tehdä mitään — se on mennyttä aikaa.
+      #
+      # Tässä kohtaa tarkistuksella on merkitystä: se katsoo juuri sitä
+      # manifestia, joka on lähdössä ämpäriin, ja estää rikkinäisen
+      # manifestin julkaisemisen. Vartija on siis tiukempi kuin ennen —
+      # se vahtii kirjoitusta, ei lukemista. Peilaus ehtii tehdä turhaa
+      # työtä ennen kaatumista, mutta sen työ on joka tapauksessa
+      # talletettu levylle eikä ämpäriin.
+      - name: Tarkista polkusäännöt manifestia vasten
+        run: node --test tests/media.test.mjs
 
       - name: Vie ämpäriin
         run: |

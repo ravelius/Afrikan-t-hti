@@ -2871,8 +2871,13 @@ body.linssi-valokuva .grain { display: none; }
   stroke: none;
 }
 /* Vesistön nimi meren musteella, kuten uoma ja järven reuna itsekin. */
+/*
+ * Vesien nimet olivat kursiivin ja haalean sävyn takia optisesti
+ * pienempiä kuin kaupunkien nimet, vaikka korkeus mitattuna oli sama.
+ * Sävy tummennettiin täyteen peittoon; koko nostettiin mapart.js:ssä.
+ */
 .maastonimi-joki .maastonimi-teksti,
-.maastonimi-jarvi .maastonimi-teksti { fill: rgba(88, 99, 110, 0.9); }
+.maastonimi-jarvi .maastonimi-teksti { fill: rgba(70, 86, 99, 0.98); }
 
 .maastonimi-i {
   pointer-events: auto;
@@ -5052,24 +5057,24 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  *
  * Kaksi porrasta, koska sama ratkaisu ei käy molempiin:
  *
- * 700–1099 px (tabletti): palsta on 650–860 px eikä siihen mahdu kuvaa
- * JA luettavaa tekstipalstaa rinnakkain — kelluva kuva jättäisi
- * tekstille alle 300 px. Kuva pysyy siis omalla rivillään, mutta saa
- * kasvaa: 340 px -> 470 px korkeutta, jolloin vaakakuva täyttää
- * palstan lähes reunasta reunaan.
+ * 700–999 px (tabletti pystyssä): palsta on 650–780 px eikä siihen
+ * mahdu kuvaa JA luettavaa tekstipalstaa rinnakkain — kelluva kuva
+ * jättäisi tekstille alle 300 px. Kuva pysyy siis omalla rivillään,
+ * mutta saa kasvaa: 340 px -> 470 px korkeutta, jolloin vaakakuva
+ * täyttää palstan lähes reunasta reunaan.
  *
- * 1100 px ja yli (työpöytä): palsta on yli 1000 px, ja silloin kuva
- * kelluu tekstin seassa kuten kirjassa. Leveys on 56 % palstasta
- * (n. 575 px) ja korkeuskatto 520 px pitää pystykuvan kurissa —
+ * 1000 px ja yli (tabletti vaakaan, työpöytä): palsta on yli 830 px,
+ * ja silloin kuva kelluu tekstin seassa kuten sanomalehdessä. Leveys
+ * on 56 % palstasta ja korkeuskatto 520 px pitää pystykuvan kurissa —
  * ilman kattoa 1280x1966 kuva olisi ollut lähes 900 px korkea.
- * Puoli lukua kerrallaan vaihtaa puolta, jottei sivu ole yksipuolinen.
+ * Joka toinen nosto vaihtaa puolta, jottei sivu ole yksipuolinen.
  */
 @media (min-width: 700px) {
   .wiki-nosto img { max-height: 470px; }
   .wiki-liuskat button { font-size: 0.8rem; }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1000px) {
   .wiki-nosto img {
     float: right;
     width: 56%;
@@ -5519,6 +5524,11 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
 .dialog.arkki .arrival-palstat { padding-top: var(--arkki-yla); }
 
+/* Aihesivuilla kaupunkipalstat ovat piilossa, ja silloin yläreunus on
+ * annettava aiheelle — muuten otsikko alkaa suoraan paperin reunasta
+ * (puhelimella tilapalkin alta). */
+.dialog.arkki .arrival-palstat[hidden] ~ #arrival-kategoria { padding-top: var(--arkki-yla); }
+
 @media (min-width: 700px) {
   .dialog.arkki .dialog-card,
   .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
@@ -5644,22 +5654,13 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 }
 
 /*
- * ── Puhelimen Tutki-arkki: koko ruutu, ei paperireunusta, aiherivi
- *    alalaidassa ───────────────────────────────────────────────────
+ * ── Puhelimen Tutki-arkki: koko ruutu ja paperireunus pois ────────
  *
- * Kaksi omistajan havaintoa samasta näkymästä:
+ * Omistajan toive: "iphonella tutki ikkunan voisi levittää
+ * kokonäytölle ja poistaa koko paperireunuksen."
  *
- * "iphonella historia yms napit täytyy siirtää alareunaan, koska
- * skrollatessa ne jäävät dynamic islandin alle piiloon" — tarttuva
- * ylärivi pysähtyi arkin yläreunaan, joka on ruudun yläreunassa eli
- * juuri lovi- ja tilapalkkialueella.
- *
- * "iphonella tutki ikkunan voisi levittää kokonäytölle ja poistaa koko
- * paperireunuksen ja samalla isontaa ikoneita niin paljon kuin pystyy
- * yhdellä rivillä."
- *
- * Kaikki tämä koskee VAIN kapeaa ruutua. Tabletilla ja työpöydällä
- * arkki on paperi kartan päällä, ja reuna on sen idea.
+ * Koskee VAIN kapeaa ruutua. Tabletilla ja työpöydällä arkki on paperi
+ * kartan päällä, ja piirretty reuna on sen idea.
  */
 @media (max-width: 699px) {
   .dialog.arkki {
@@ -5682,75 +5683,111 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     box-shadow: none;
     /*
      * Leikkaus tulee js/ui.js:stä inline-tyylinä, ja se on pakko
-     * kumota: clip-path rajaisi myös alalaitaan kiinnitetyn aiherivin
-     * pois. Sama tarkistus on JS:n puolella (piirraArkinReuna), joten
-     * reunaa ei edes lasketa puhelimella.
+     * kumota: clip-path rajaisi sivunuolet ja sivunumeron pois. Sama
+     * tarkistus on JS:n puolella (piirraArkinReuna), joten reunaa ei
+     * edes lasketa puhelimella.
      */
     clip-path: none !important;
-    /* Kortti on ruutu: ilmestymisliike loisi transformin, jonka sisään
-     * kiinnitetty aiherivi jäisi. */
+    /* Kortti on koko ruutu: ilmestymisliike loisi transformin, jonka
+     * sisään kiinnitetyt sivunuolet jäisivät. */
     animation: none;
     --arkki-reunus: 0.95rem;
     --arkki-yla: calc(0.85rem + env(safe-area-inset-top));
-    /*
-     * Alalaidan varaus = aiherivin korkeus + kotipalkin turva-alue.
-     * Ilman tätä viimeinen kappale ja Etsi kätkö -napit jäisivät
-     * kiinnitetyn rivin alle.
-     */
-    padding: 0 var(--arkki-reunus) calc(4.4rem + env(safe-area-inset-bottom));
+    /* Alalaidan varaus = sivunumero + kotipalkin turva-alue. */
+    padding: 0 var(--arkki-reunus) calc(2.6rem + env(safe-area-inset-bottom));
   }
 
   /* Piirretty paperireuna ja sen varjo pois. */
   .dialog.arkki .arkin-varjo,
   .dialog.arkki .arkin-reuna { display: none; }
+}
 
-  /*
-   * Aiherivi kiinni ruudun alareunaan. `fixed` eikä `sticky`: rivi on
-   * sisällön alussa, ja alareunaan tarttuva sticky irtoaisi heti kun
-   * sen oma paikka on vieritetty ohi.
-   */
-  .dialog.arkki #arrival-liuskat {
-    position: fixed;
-    top: auto;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 6;
-    /* Koko marginaali nollataan: .wiki-liuskat jättää alle 0,9 rem
-     * välin, ja kiinnitetyssä palkissa se nostaisi rivin irti ruudun
-     * alareunasta — raosta näkyi vierivää tekstiä. */
-    margin: 0;
-    padding: 0.3rem 0.4rem calc(0.3rem + env(safe-area-inset-bottom));
-    border-top: 1.2px solid rgba(70, 51, 31, 0.5);
-    border-bottom: 0;
-    box-shadow: 0 -8px 10px -8px rgba(70, 51, 31, 0.45);
-  }
+/*
+ * ── Tutki taitettuna lehtenä: sivut, nuolet ja sivunumero ─────────
+ *
+ * Omistajan toive: "Tutkissivusta pitää tehdä kuin taitettu lehti.
+ * Ensimmäisellä sivulla olisi Lontoo, Iso-Britannia ja sen alla
+ * historia — poistetaan nuo keskellä olevat valintanapit kokonaan.
+ * Pelaaja voi yksinkertaisesti pyyhkäistä sivuja eteenpäin, jolloin
+ * seuraavalle sivulle avautuisi aina yksi aihealue kerrallaan ja sen
+ * alueen otsikko lukisi ylhäällä."
+ *
+ * Nuolet ja sivunumero ovat dialogin lapsia eivätkä kortin: kortti
+ * vierii, ja sen sisällä ne olisivat kadonneet heti kun tekstiä lukee.
+ * Sama ratkaisu kuin arkin reunakerroksilla.
+ */
+.tutki-navi {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
 
-  /*
-   * Kuvakkeet niin isoiksi kuin yhdelle riville mahtuu. Määrää ei
-   * kovakoodata: jokainen liuska ottaa saman osuuden rivistä
-   * (flex: 1 1 0), joten kuvake kasvaa itsestään, jos kaupungilla on
-   * vähemmän lukuja, ja kutistuu, jos niitä on enemmän. Katto 34 px
-   * estää sen, että kolmen luvun kaupungissa kuvakkeista tulisi
-   * peukalonkokoisia.
-   */
-  .dialog.arkki #arrival-liuskat.wiki-liuskat:has(svg) {
-    gap: 0.2rem;
-    flex-wrap: nowrap;
-  }
+/*
+ * Hillitty kuten lennon ohitusnuoli (.flight-eteen): näkyy, mutta ei
+ * kilpaile tekstin kanssa. Kosketuslaitteella pyyhkäisy on pääkeino ja
+ * nuoli vain vihje siitä, että sivuja on lisää.
+ */
+.tutki-nuoli {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--map-ink);
+  opacity: 0.28;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.2s ease;
+}
 
-  .dialog.arkki #arrival-liuskat button:has(svg) {
-    flex: 1 1 0;
-    min-width: 0;
-    padding: 0.45rem 0.1rem 0.5rem;
-  }
+.tutki-nuoli:hover,
+.tutki-nuoli:focus-visible { opacity: 0.75; }
 
-  .dialog.arkki #arrival-liuskat button svg {
-    width: 100%;
-    height: auto;
-    max-width: 40px;
-    margin-inline: auto;
-  }
+.tutki-nuoli[hidden] { display: none; }
+
+.tutki-nuoli svg { width: 100%; height: 100%; display: block; }
+
+.tutki-nuoli.edellinen { left: 0.15rem; }
+.tutki-nuoli.seuraava { right: 0.15rem; }
+
+/* Sivunumero kuin lehden alalaidassa: kertoo monesko sivu on menossa
+ * ja montako niitä on, jottei pyyhkäisy jää arvailun varaan. */
+.tutki-sivunumero {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(0.35rem, env(safe-area-inset-bottom, 0px));
+  margin: 0;
+  padding: 0.1rem 0.55rem;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: rgba(70, 51, 31, 0.62);
+  background: rgba(246, 231, 198, 0.82);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+/* Sivunvaihdon liike: lyhyt liuku siihen suuntaan, johon selattiin. */
+@keyframes tutki-sivu-vasemmalta {
+  from { opacity: 0; transform: translateX(-2.2rem); }
+}
+
+@keyframes tutki-sivu-oikealta {
+  from { opacity: 0; transform: translateX(2.2rem); }
+}
+
+.wiki-kategoria.sivu-vasemmalta { animation: tutki-sivu-vasemmalta 0.22s ease-out; }
+.wiki-kategoria.sivu-oikealta { animation: tutki-sivu-oikealta 0.22s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wiki-kategoria.sivu-vasemmalta,
+  .wiki-kategoria.sivu-oikealta { animation: none; }
+  .tutki-nuoli { transition: none; }
 }
 
 /*

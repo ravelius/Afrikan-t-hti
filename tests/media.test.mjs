@@ -1,13 +1,14 @@
-// Peilin polkusääntö on kahdessa paikassa: pelissä (js/media.js) ja
-// peilaustyökalussa (tools/peilaa-media.mjs). Jos ne eriytyvät, peli
-// hakee kuvia osoitteista joita ei ole — eikä sitä huomaa ennen kuin
-// pelaaja avaa kortin. Nämä testit lukevat molemmat säännöt ja
-// vertaavat niitä toisiinsa sekä peilin manifestiin, jos se on
-// koneella.
+// Peilin polkusääntö on yhdessä paikassa: pelissä (js/media.js).
+// Peilaustyökalu (tools/peilaa-media.mjs) tuo sen sieltä. Ennen sääntö
+// oli kahtena kappaleena, ja ne eriytyivät: työkalu kirjoitti tiedoston
+// yhdellä nimellä ja peli haki sitä toisella — eikä sitä huomannut
+// ennen kuin pelaaja avasi kortin. Nämä testit vartioivat sekä sitä,
+// ettei toista kopiota synny takaisin, että sitä, että sääntö vastaa
+// peilin manifestia, jos manifesti on koneella.
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import {
@@ -47,6 +48,44 @@ test('äänen polku tunnistaa Freesoundin ja archive.orgin', () => {
     peiliAaniPolku('https://archive.org/download/aporee_21876_25420/marrakesh.mp3'),
     'aanet/aporee-aporee_21876_25420.mp3',
   );
+  // Aloituskohta ja voimakkuus kulkevat osoitteen perässä, mutta eivät
+  // kuulu tiedoston nimeen.
+  assert.equal(
+    peiliAaniPolku('https://archive.org/download/aporee_21876_25420/marrakesh.mp3#alku=20&voima=1.5'),
+    'aanet/aporee-aporee_21876_25420.mp3',
+  );
+});
+
+test('äänen nimi tulee osoitteesta eikä listan järjestyksestä', () => {
+  // Nimi oli aiemmin positionaalinen: kun osoitteesta ei saatu tunnusta,
+  // peilaustyökalu nimesi tiedoston silmukan indeksillä (aporee-50) ja
+  // peli tyhjällä merkkijonolla. Peli ei löytänyt tiedostoa koskaan, ja
+  // yksi uusi ääni listan alkuun olisi tehnyt kaikista jo peilatuista
+  // tiedostoista tavoittamattomia.
+  // Nimessä on oltava arkiston oma pysyvä tunnus. Se on ainoa osa, joka
+  // ei muutu kun lähdelista järjestyy uudelleen.
+  const parit = [
+    ['https://archive.org/download/aporee_21876_25420/marrakesh.mp3', 'aporee_21876_25420'],
+    ['https://cdn.freesound.org/previews/511/511005_571436-lq.mp3', '511005'],
+  ];
+  for (const [url, tunnus] of parit) {
+    assert.ok(peiliAaniPolku(url).includes(tunnus), `${url} → tunnus ${tunnus} puuttuu nimestä`);
+  }
+
+  // Arkiston lähdesivu (kirjaskanni, viritysäänen lisenssisivu) ei ole
+  // äänitiedosto. Sitä ei peilata, joten polkua ei ole — eikä sitä
+  // arvata. Peilaustyökalu käyttää tätä samaa vastausta päättäessään
+  // mitä se lataa, joten kirjoittaja ja lukija eivät voi eriytyä.
+  for (const sivu of [
+    'https://archive.org/details/Crowded13760khz',
+    'https://archive.org/details/radio-angela-heavy-static-edition.-th.-2023-03-24-t-03-18-12-z-5130.0k-hz',
+    'https://archive.org/details/narrativeofexped00wran_0',
+    'https://archive.org/download/aporee_21876_25420',
+  ]) {
+    assert.equal(peiliAaniPolku(sivu), null, sivu);
+    // Peilaamaton osoite soitetaan sellaisenaan alkuperäisestä lähteestä.
+    assert.equal(aaniOsoite(sivu), sivu, sivu);
+  }
 });
 
 test('aaniOsoite koskee vain peilattuja lähteitä', () => {
@@ -179,16 +218,45 @@ test('vanha kuuntelija ei pudota uutta kuvaa edellisen varareitille', () => {
 
 const JUURI = new URL('..', import.meta.url).pathname;
 
-test('peilaustyökalu käyttää samaa turvanimi-sääntöä', () => {
+test('nimeämissäännöstä on vain yksi kopio', () => {
+  // Ennen sääntö oli kahtena kappaleena ja tämä testi vertasi kopioita
+  // toisiinsa. Vertailu ei riittänyt: turvanimi pysyi samana, mutta
+  // ääniosoitteen tunnus eriytyi silti (työkalulla varana silmukan
+  // indeksi, pelillä tyhjä merkkijono) eikä testi nähnyt sitä. Nyt
+  // kopioita ei ole yhtään: työkalu tuo säännön pelistä. Tämä testi
+  // vartioi, ettei toista kopiota synny takaisin.
   const tyokalu = readFileSync(join(JUURI, 'tools/peilaa-media.mjs'), 'utf8');
-  const peli = readFileSync(join(JUURI, 'js/media.js'), 'utf8');
-  const ydin = (s) => {
-    const osa = s.match(/function turvanimi\([^)]*\) \{([\s\S]*?)\n\}/);
-    assert.ok(osa, 'turvanimi-funktiota ei löytynyt');
-    return osa[1].replace(/\s+/g, ' ').trim();
-  };
-  assert.equal(ydin(peli), ydin(tyokalu),
-    'js/media.js ja tools/peilaa-media.mjs ovat eriytyneet — korjaa molemmat');
+  assert.match(tyokalu, /import \{[^}]*peiliAaniPolku[^}]*\} from '\.\.\/js\/media\.js'/,
+    'peilaustyökalun pitää tuoda nimeämissääntö js/media.js:stä');
+  assert.doesNotMatch(tyokalu, /function turvanimi\s*\(/,
+    'peilaustyökaluun on ilmestynyt oma kopio turvanimestä');
+  for (const etuliite of ['freesound-', 'aporee-']) {
+    assert.doesNotMatch(tyokalu, new RegExp(`\`${etuliite}\\$\\{`),
+      `peilaustyökalu rakentaa taas itse nimen ${etuliite}… — sääntö on eriytymässä`);
+  }
+});
+
+test('jokainen soitettava ääni on peilattavissa', () => {
+  // Peilaustyökalu peilaa vain ne osoitteet, joille sääntö antaa nimen.
+  // Jos peliin lisätään ääni jonkin uuden muotoisen osoitteen takaa, se
+  // jäisi hiljaa peilin ulkopuolelle ja haettaisiin joka kerta suoraan
+  // lähteestä — juuri niin kävi viritysäänille. Soitettavat kentät
+  // erotetaan lähdeviitteistä (linkki, lahde): viite osoittaa arkiston
+  // sivulle, jota ei soiteta eikä peilata.
+  const SOITETTAVAT = ['url', 'musiikkiNayte', 'oletus', 'aani'];
+  const lahteet = [
+    ...readdirSync(join(JUURI, 'js/packs')).map((f) => join(JUURI, 'js/packs', f)),
+    join(JUURI, 'js/aani-ehdokkaat.js'),
+  ];
+  const teksti = lahteet.map((p) => readFileSync(p, 'utf8')).join('\n');
+  const kuvio = new RegExp(
+    `(?:${SOITETTAVAT.join('|')}): '(https?://(?:cdn\\.freesound\\.org|archive\\.org)[^']*)'`, 'g',
+  );
+  const urlit = [...new Set([...teksti.matchAll(kuvio)].map((m) => m[1]))];
+  assert.ok(urlit.length > 100, `soitettavia ääniä pitäisi olla runsaasti, nyt ${urlit.length}`);
+  const nimettomat = urlit.filter((u) => !peiliAaniPolku(u));
+  assert.deepEqual(nimettomat, [],
+    'näille soitettaville äänille ei synny peilin nimeä — peilaustyökalu ohittaa ne');
 });
 
 // Manifesti on ämpärissä eikä pelin mukana. Jos se on koneella,
