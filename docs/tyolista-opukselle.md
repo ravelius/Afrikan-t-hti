@@ -5235,6 +5235,26 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v263 — Historia sai oman sivunsa (5.8.2026)
+
+Omistaja: *"Lontoon tutki sivun ens. sivu voisi palauttaa
+alkuperäiseen muotoon ja siirtää historia omalle sivulleen kuten
+muutkin aiheet."*
+
+Etusivulla oli kaupunki- ja maapalstojen alla myös ensimmäinen aihe.
+Se tuli alkuperäisestä toiveesta sanatarkasti (*"Lontoo, Iso-Britannia
+ja sen alla historia"*), mutta lopputulos oli epäsymmetrinen: historia
+oli ainoa aihe ilman omaa sivuaan. Sen otsikko ei aloittanut sivua
+kuten muiden, se jäi kahden palstan alle jatkoksi, eikä uusi tarttuva
+osastonotsikko (v258) päässyt siinä oikeuksiinsa.
+
+Muutos on kaksi riviä: sivumäärä on `1 + aiheet` entisen
+`max(1, aiheet)` sijaan, ja aihe haetaan indeksillä `i - 1` eikä `i`.
+
+Mitattu Lontoolla: sivu 1/10 on kaupunki ja maa ilman aihetta, sivu
+2/10 on Historia omalla otsikollaan, sivu 3/10 Kuvataide. Ennen sivuja
+oli yhdeksän ja historia oli osa etusivua.
+
 ## v262 — Nimilogo on kuva (5.8.2026)
 
 Omistaja toimitti logon tiedostona: *"Käytä tätä läpinäkyvää logoa

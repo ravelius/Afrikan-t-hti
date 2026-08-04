@@ -6510,8 +6510,17 @@ export class UI {
    * seuraavalle sivulle avautuisi aina yksi aihealue kerrallaan ja sen
    * alueen otsikko lukisi ylhäällä."
    *
-   * Sivu 0 on etusivu: kaupunki, maa ja ensimmäinen aihe. Sivut 1…n
-   * ovat yksi aihe kukin. Sivumäärä tulee aineistosta, ei koodista.
+   * Sivu 0 on etusivu: kaupunki ja maa, ei mitään muuta. Sivut 1…n ovat
+   * yksi aihe kukin. Sivumäärä tulee aineistosta, ei koodista.
+   *
+   * ETUSIVULLA OLI ENNEN MYÖS ENSIMMÄINEN AIHE. Alkuperäisessä
+   * toiveessa se luki mukana ("Lontoo, Iso-Britannia ja sen alla
+   * historia"), mutta lopputulos oli epäsymmetrinen: historia oli
+   * ainoa aihe ilman omaa sivuaan, se jäi kahden palstan alle
+   * jatkoksi eikä sen otsikko aloittanut sivua kuten muiden.
+   * Omistajan tarkennus 5.8.2026: *"Lontoon tutki sivun ens. sivu
+   * voisi palauttaa alkuperäiseen muotoon ja siirtää historia omalle
+   * sivulleen kuten muutkin aiheet."*
    *
    * Entinen kuvakeliuskarivi (rakennaLiuskat) on poistettu. Elementti
    * jää DOM:iin piiloon, jottei index.html ja muut siihen viittaavat
@@ -6538,15 +6547,20 @@ export class UI {
     this.naytaTutkiSivu(0, { heti: true });
   }
 
-  /** Sivumäärä: etusivu on aina olemassa, aiheita voi olla nolla. */
+  /**
+   * Sivumäärä: etusivu ja sen jälkeen yksi sivu aihetta kohti.
+   *
+   * Etusivu on aina olemassa, aiheita voi olla nolla — silloin sivuja on
+   * yksi eikä navigaatiota piirretä lainkaan (paivitaTutkiNavi).
+   */
   tutkiSivuja() {
-    return Math.max(1, this.tutkiSivut?.length ?? 0);
+    return 1 + (this.tutkiSivut?.length ?? 0);
   }
 
   /**
-   * Näyttää yhden sivun. Etusivulla (0) kaupunki- ja maapalstat sekä
-   * kulttuurivisa ovat näkyvissä; aihesivuilla vain aihe, jotta luettava
-   * alkaa heti otsikosta.
+   * Näyttää yhden sivun. Etusivulla (0) ovat kaupunki- ja maapalstat sekä
+   * kulttuurivisa; aihesivuilla vain aihe, jotta luettava alkaa heti
+   * otsikosta.
    */
   naytaTutkiSivu(indeksi, { heti = false, suunta = 0 } = {}) {
     const sivuja = this.tutkiSivuja();
@@ -6557,7 +6571,9 @@ export class UI {
     // Visa on pelitoiminto ja kuuluu saapumiseen, ei luettaviin sivuihin.
     this.arrivalKulttuuri.hidden = !etusivu || !this.kulttuuriSaatavilla;
 
-    const kategoria = this.tutkiSivut?.[i] ?? null;
+    // Etusivu ei ole aihesivu, joten aiheiden numerointi alkaa vasta
+    // sivulta 1: sivu 1 on ensimmäinen aihe, ei toinen.
+    const kategoria = etusivu ? null : (this.tutkiSivut?.[i - 1] ?? null);
     this.piirraKategoria(kategoria);
     this.arrivalKategoria.hidden = !kategoria;
 
