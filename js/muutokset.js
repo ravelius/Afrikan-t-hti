@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 228, teksti: 'Radion äänisäädin pois, kytkimille tilaa' },
+  { v: 228, teksti: 'Viisi aitoa lyhytaaltoäänitystä viritykseen' },
   { v: 227, teksti: 'Radion asteikossa naapurikaupungit, klikattavina' },
   { v: 227, teksti: 'Kromatut vipukytkimet ja hehkuva merkkivalo' },
   { v: 227, teksti: 'Viritysääni kun radio hakee kanavaa' },

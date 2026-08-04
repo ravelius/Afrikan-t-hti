@@ -851,11 +851,14 @@ function haeNauha(audioCtx, aani) {
  * napautuksen. Palvelutyöntekijä on jo esiladannut nämä (sw.js SHELL),
  * joten tavallisesti tämä ei tee mitään verkkoon.
  */
-export function esilataaViritysaanet(audioCtx) {
-  if (!audioCtx || viritystapa() !== 'nauha') return;
-  const kori = nauhakori(audioCtx);
+export function esilataaViritysaanet(audioCtx = null) {
+  if (viritystapa() !== 'nauha') return;
+  // Äänikonteksti saa puuttua. Juuri silloin tämä on tarpeellisimmillaan:
+  // radiotila on vasta avattu eikä yhtään ääntä ole soinut, joten mitään
+  // ei ole vielä purettuna eikä välimuistissa.
+  const kori = audioCtx ? nauhakori(audioCtx) : null;
   for (const aani of VIRITYSAANET) {
-    if (kori.has(aani.tiedosto)) continue;
+    if (kori?.has(aani.tiedosto)) continue;
     fetch(viritysPolku(aani)).then((v) => v.arrayBuffer()).catch(() => {
       /* nouto on pelkkää etukäteistyötä: virhe hoidetaan vasta haeNauhassa */
     });
