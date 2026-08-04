@@ -13,9 +13,11 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
-  { v: 248, teksti: 'Kutistettuun matkakirjaan jää otsikko ja tausta' },
-  { v: 248, teksti: 'VU-mittari palaa asemalle myös kaupunkia vaihtaessa' },
-  { v: 248, teksti: 'Merenpohja rajataan piirrettyyn rantaviivaan' },
+  { v: 249, teksti: 'Kutistettuun matkakirjaan jää otsikko ja tausta' },
+  { v: 249, teksti: 'VU-mittari palaa asemalle myös kaupunkia vaihtaessa' },
+  { v: 249, teksti: 'Merenpohja rajataan piirrettyyn rantaviivaan' },
+  { v: 248, teksti: 'Pelin nimi: Matkakirja ja unohdettu aarre' },
+  { v: 248, teksti: 'Yläpalkissa nimilogo: viiva ja alanimi' },
   { v: 247, teksti: 'VU-mittari sai lähetykselle oman asteikkonsa' },
   { v: 247, teksti: 'Neula näyttää ohjelman tason, ei nupin asentoa' },
   { v: 246, teksti: 'Meren sinisyys ei enää vuoda maiden päälle' },
