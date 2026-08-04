@@ -4501,3 +4501,42 @@ selaimessa.
 näytti siistiltä siivoukselta, mutta se hävitti ainoan paikan, josta
 seuraava yritys olisi voinut alkaa. Piilotus jättää oven auki; poisto
 muuraa sen.
+
+## v244 — VU-mittari, Panama ja merisyvyyden umpikuja (4.8.2026)
+
+**VU-mittari.** Reititys hylättiin, jos `ctx.state !== 'running'`. Selain luo
+AudioContextin tilaan `suspended`, ja se herää vasta käyttäjän eleestä — radion
+sytytys ON ele, mutta konteksti ehtii syntyä ennen kuin selain merkitsee sen
+käynnissä olevaksi. Reititystä ei silloin tehty kertaakaan eikä neulalla ollut
+mitään luettavaa. Reitityksen saa rakentaa pysäytetyllekin kontekstille; se
+alkaa kuljettaa ääntä heti kun konteksti herää.
+
+Mitattu paikallisella virralla korjauksen jälkeen: neula 16 eri kulmaa,
+−43,5°…+40,4°, laitteen tila `soi`. **Oikeita asemia ei voi testata tästä
+ympäristöstä** — ne eivät soi proxyn läpi — joten CORS-käyttäytyminen jää
+omistajan laitteen varaan.
+
+**Panama** oli sekä `northamerica-` että `southamerica-valokuvat.js`:ssä, ja
+maailmankartalla molemmat ladataan. Poistettu eteläisestä; Panama City on
+Pohjois-Amerikassa.
+
+**Merisyvyyden katkokset: umpikuja, ja se kannattaa kirjata.** Aineistossa on
+50 pystysuoraa leikkausjanaa. Yleistin `yhdista-paivamaararaja.mjs`:n lukemaan
+myös syvyyspaketin ja korjasin parinmuodostuksen tunnistamaan sauman yli
+menevät parit (x −166,7 ja 11833,3 ovat sama pituuspiiri; suora vertailu löysi
+50:stä yhden parin, modulo-vertailu kolme).
+
+Kolmen parin yhdistäminen **kasvatti katkosten määrän 50:stä 60:een** —
+liitetty rengas tuottaa itse uusia pystysuoria jaksoja. Muutos peruttiin.
+Rannikolla toiminut tekniikka ei siis siirry sellaisenaan syvyysvyöhykkeisiin:
+ne ovat sisäkkäisiä monikulmioita, joiden leikkausreunat eivät ole toistensa
+peilikuvia. Oikea korjaus on todennäköisesti projisoida vyöhykkeet uudelleen
+laudan omalla saumalla (175°W) eikä korjata jälkikäteen. Työkalun yleistys ja
+modulo-vertailu jäivät talteen.
+
+### Opittua
+
+**Mittaa ennen kuin uskot korjauksen onnistuneen.** Yhdistäminen näytti
+onnistuvan (renkaita 73 → 72), mutta sama mittari, joka löysi ongelman, kertoi
+että tulos oli huonompi kuin lähtötilanne. Ilman jälkimittausta olisin
+julkaissut regression parannuksena.

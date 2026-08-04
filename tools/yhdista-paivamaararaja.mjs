@@ -33,10 +33,38 @@ import { fileURLToPath } from 'node:url';
 
 const JUURI = join(dirname(fileURLToPath(import.meta.url)), '..');
 const kuiva = process.argv.includes('--kuiva');
-const POLKU = join(JUURI, 'js/packs/maailmankartta.js');
 
-const { MAAILMANKARTTA } = await import(`file://${POLKU}`);
-const outlines = MAAILMANKARTTA.map.outlines;
+/*
+ * Sama leikkaus on kahdessa aineistossa.
+ *
+ * Rannikko korjattiin ensin, mutta merisyvyysvyöhykkeet tulevat samasta
+ * lähteestä ja ovat samalla tavalla katkaistut — 50 pystysuoraa
+ * leikkausjanaa 291 renkaassa. Ne piirtyvät meren päälle, joten katkos
+ * näkyy kartalla yhtä lailla. Yksi työkalu hoitaa molemmat: algoritmi on
+ * sama, vain se mistä renkaat luetaan ja minne ne kirjoitetaan vaihtuu.
+ */
+const KOHTEET = {
+  rannikko: {
+    polku: 'js/packs/maailmankartta.js',
+    lue: (m) => [m.MAAILMANKARTTA.map.outlines],
+    lohko: /const OUTLINES = \[[^]*?\n\];/,
+    kirjoita: (rivit) => `const OUTLINES = [\n${rivit}\n];`,
+  },
+  syvyys: {
+    polku: 'js/packs/maailmankartta-syvyys.js',
+    lue: (m) => Object.values(m)[0].vyohykkeet.map((v) => v.renkaat),
+    // Syvyyspaketti kirjoitetaan kokonaan uusiksi, koska renkaat ovat
+    // vyöhykkeiden sisällä eikä yhtenä lohkona.
+    vyohykkeet: true,
+  },
+};
+
+const nimi = process.argv.find((a) => KOHTEET[a]) ?? 'rannikko';
+const kohde = KOHTEET[nimi];
+const POLKU = join(JUURI, kohde.polku);
+const moduuli = await import(`file://${POLKU}`);
+const ryhmat = kohde.lue(moduuli);
+console.log(`kohde: ${nimi} (${ryhmat.length} ryhmää)`);
 
 /*
  * Pystysuora jana: sama x kahdella peräkkäisellä pisteellä ja pitkä
@@ -46,6 +74,8 @@ const outlines = MAAILMANKARTTA.map.outlines;
 const SIETO_X = 0.6;
 const VAHIN_PITUUS = 120;
 
+const kaikkiTulokset = [];
+for (const outlines of ryhmat) {
 const janat = [];
 for (const [i, rengas] of outlines.entries()) {
   for (let k = 1; k < rengas.length; k++) {
@@ -61,8 +91,23 @@ for (const j of janat) {
   console.log(`  ääriviiva ${j.rengas}: x ${j.x.toFixed(1)}, y ${j.ya.toFixed(1)} -> ${j.yb.toFixed(1)}`);
 }
 
-/** Sama jana vastakkaiseen suuntaan? Silloin ne ovat saman leikkauksen puolet. */
-const vastapari = (a, b) => Math.abs(a.x - b.x) < SIETO_X
+/*
+ * Sama jana vastakkaiseen suuntaan? Silloin ne ovat saman leikkauksen
+ * puolet.
+ *
+ * X vertaillaan LAUDAN LEVEYDEN MODULO. Merisyvyysaineistossa leikkauksen
+ * puolet ovat sauman eri puolilla: toinen x = 11833,3 ja toinen
+ * x = -166,7. Ne ovat sama pituuspiiri, mutta suora vertailu piti niitä
+ * eri kohtina, ja 50 katkoksesta löytyi vain yksi pari. Rannikossa tätä
+ * ei huomannut, koska siellä molemmat puolet sattuivat olemaan samalla
+ * puolella nollaa.
+ */
+const LEVEYS = 12000;
+const samaX = (a, b) => {
+  const ero = Math.abs(((a - b) % LEVEYS + LEVEYS) % LEVEYS);
+  return Math.min(ero, LEVEYS - ero) < SIETO_X;
+};
+const vastapari = (a, b) => samaX(a.x, b.x)
   && Math.abs(a.ya - b.yb) < 2 && Math.abs(a.yb - b.ya) < 2;
 
 const parit = [];
@@ -80,8 +125,9 @@ for (let i = 0; i < janat.length; i++) {
 console.log(`${parit.length} yhdistettävää paria`);
 
 if (!parit.length) {
-  console.log('Ei yhdistettävää — kartta on jo ehjä.');
-  process.exit(0);
+  console.log('  ei yhdistettävää tässä ryhmässä');
+  kaikkiTulokset.push(outlines);
+  continue;
 }
 
 /*
@@ -119,7 +165,9 @@ for (const [a, b] of parit) {
 
 const tulos = outlines.filter((_, i) => !poistettavat.has(i));
 tulos.push(...uudet);
-console.log(`ääriviivoja ${outlines.length} -> ${tulos.length}`);
+console.log(`  renkaita ${outlines.length} -> ${tulos.length}`);
+kaikkiTulokset.push(tulos);
+}
 
 if (kuiva) process.exit(0);
 
@@ -131,9 +179,25 @@ if (kuiva) process.exit(0);
  * omaan otsikkoon.
  */
 const teksti = readFileSync(POLKU, 'utf8');
-const rivi = (r) => `  [${r.map(([x, y]) => `[${Number(x.toFixed(1))},${Number(y.toFixed(1))}]`).join(',')}],`;
-const lohko = `const OUTLINES = [\n${tulos.map(rivi).join('\n')}\n];`;
-const vanhaLohko = teksti.match(/const OUTLINES = \[[^]*?\n\];/);
-if (!vanhaLohko) throw new Error('OUTLINES-lohkoa ei löytynyt');
-writeFileSync(POLKU, teksti.replace(vanhaLohko[0], lohko));
+const piste = ([x, y]) => `[${Number(x.toFixed(1))},${Number(y.toFixed(1))}]`;
+const rivi = (r) => `  [${r.map(piste).join(',')}],`;
+
+if (kohde.vyohykkeet) {
+  /*
+   * Syvyyspaketissa renkaat ovat vyöhykkeiden sisällä, joten kirjoitetaan
+   * koko vyöhykelista uusiksi. Otsikko ja muu tiedosto säilyvät.
+   */
+  const vanhat = Object.values(moduuli)[0].vyohykkeet;
+  const lohkot = vanhat.map((v, i) => `  {\n    metria: ${v.metria},\n    renkaat: [\n`
+    + `${kaikkiTulokset[i].map((r) => `      [${r.map(piste).join(',')}],`).join('\n')}\n    ],\n  },`);
+  const uusi = `  vyohykkeet: [\n${lohkot.join('\n')}\n  ],`;
+  const vanhaLohko = teksti.match(/ {2}vyohykkeet: \[[^]*?\n {2}\],/);
+  if (!vanhaLohko) throw new Error('vyohykkeet-lohkoa ei löytynyt');
+  writeFileSync(POLKU, teksti.replace(vanhaLohko[0], uusi));
+} else {
+  const lohko = `const OUTLINES = [\n${kaikkiTulokset[0].map(rivi).join('\n')}\n];`;
+  const vanhaLohko = teksti.match(/const OUTLINES = \[[^]*?\n\];/);
+  if (!vanhaLohko) throw new Error('OUTLINES-lohkoa ei löytynyt');
+  writeFileSync(POLKU, teksti.replace(vanhaLohko[0], lohko));
+}
 console.log(`Kirjoitettu ${POLKU}`);
