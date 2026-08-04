@@ -179,7 +179,7 @@ const script = `<script>\n${bundle}\n</script>`;
 
 // Artefaktialustat käärivät sisällön itse, joten niille riittää runko ilman
 // <html>/<head>/<body>-tageja.
-const partial = `<title>Matkakirja</title>
+const partial = `<title>Unohdettu aarre</title>
 
 <style>
 ${css}
@@ -195,8 +195,8 @@ const full = `<!DOCTYPE html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Matkakirja</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>★</text></svg>" />
+<title>Unohdettu aarre</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>◈</text></svg>" />
 <style>
 ${css}
 </style>

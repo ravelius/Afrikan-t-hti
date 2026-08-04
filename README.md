@@ -1,7 +1,11 @@
-# Matkakirja ◈
+# Unohdettu aarre ◈
 
-Selaimessa pelattava seikkailupeli maailman ympäri. Matkakirja on oma
-pelinsä: se on saanut inspiraatiota Jules Vernen teoksista ja monista
+*(engl. The Forgotten Treasure. Peli tunnettiin aiemmin nimellä
+**Matkakirja**; omistajan päätöksellä 4.8.2026 nimi vaihtui, ja
+matkakirja on nyt vain tarinan keskusesine — isoisän kirja.)*
+
+Selaimessa pelattava seikkailupeli maailman ympäri. Unohdettu aarre on
+oma pelinsä: se on saanut inspiraatiota Jules Vernen teoksista ja monista
 muista, mutta se ei jäljittele mitään niistä eikä sillä ole yhteyttä
 niiden oikeudenhaltijoihin. Ei riippuvuuksia, ei käännösvaihetta —
 pelkkää HTML:ää, CSS:ää ja JavaScriptiä. Pelin ideana on oppia ja
@@ -38,7 +42,7 @@ päiväkirjamerkinnät. Matka jatkuu, kun astut ulos koneesta.
 - **Yksinpeli ilman loppua:** vaellus alkaa maailmankartalta ja jatkuu
   porttikaupunkien kautta laudalta toiselle — mantereille, maihin ja
   kaupunkitasolle. Löytöjä voi kerätä niin kauan kuin huvittaa.
-- **Kymmenen pelilautaa**, jokaisella oma pääaarre: Maailma (Magellanin
+- **Kymmenen pelilautaa**, jokaisella oma unohdettu aarteensa: Maailma (Magellanin
   kompassi), Afrikka (Suuren Zimbabwen kivilintu), Eurooppa
   (Meripihkahuoneen aarre), Aasia (Keisarin jadesinetti), Oseania
   (Eteläristin helmi), Pohjois-Amerikka (Montezuman aarre), Etelä-Amerikka
@@ -71,7 +75,7 @@ päiväkirjamerkinnät. Matka jatkuu, kun astut ulos koneesta.
 - **Kaksi ääntä:** kartan päiväkirjassa vuorottelevat isoisän merkinnät
   vuodelta 1873 ja nuoren herran nykyhavainnot — yli 1000 paikkatietoa,
   Afrikassa pieniä yllättäviä arkihuomioita isojen nähtävyyksien rinnalla.
-  Harvakseltaan päiväkirjasta löytyy taitettu sivu, joka vihjaa pääaarteen
+  Harvakseltaan päiväkirjasta löytyy taitettu sivu, joka vihjaa unohdetun aarteen
   suunnasta nimeämättä kaupunkia.
 - **Yli 1500 kysymystä ja väittämää** kolmella vaikeustasolla: paikan omat
   kysymykset arvotaan aina ennen laudan yleispakkaa, joten kysymys liittyy
@@ -81,7 +85,7 @@ päiväkirjamerkinnät. Matka jatkuu, kun astut ulos koneesta.
   esittää kiperän kysymyksen kahdeksalla vaihtoehdolla — oikea vastaus tuo
   200 punnan saaliin, ja kolmella hevosenkengällä rosvon voi ohittaa.
 - **Kokemuspisteet ja vihreä passi:** uusi kaupunki 10, uusi lauta 50,
-  vaikea kysymys 25, pulma 25 ja pääaarre 100 pistettä; tietoprosentti
+  vaikea kysymys 25, pulma 25 ja unohdettu aarre 100 pistettä; tietoprosentti
   kertoo osumatarkkuuden. Passi saa leiman jokaisesta laudasta, ja leimat
   säilyvät pelikertojen yli.
 - **Käsin piirretyn aarrekartan ulkoasu:** pergamentti, mustepiirretty
@@ -129,9 +133,9 @@ seuraavalla avauskerralla; *Uusi peli* aloittaa alusta.
 
 ## Säännöt
 
-**Tavoite.** Löydä laudan pääaarre — Afrikassa Suuren Zimbabwen kivilintu —
+**Tavoite.** Löydä laudan unohdettu aarre — Afrikassa Suuren Zimbabwen kivilintu —
 ja vie se johonkin laudan aloituskaupungeista. Vaelluksessa peli ei pääty:
-pääaarre on 2000 punnan arvoinen löytö, ja matka jatkuu porttikaupunkien
+unohdettu aarre on 2000 punnan arvoinen löytö, ja matka jatkuu porttikaupunkien
 kautta uusille laudoille. Isoisän 80 päivän ennätyksen alittaminen tuo kunniamerkinnän.
 
 **Vuoron kulku.**
@@ -162,7 +166,7 @@ kysymykseen, ja oikea vastaus avaa portin ilmaiseksi.
 
 **Aarteet.** Jokaisessa isoisän merkitsemässä kaupungissa on yksi laatta.
 Oikea vastaus kääntää laatan; väärästä vuoro päättyy ja samassa kaupungissa
-saa uuden kysymyksen seuraavalla vuorolla. Laattoina ovat pääaarre,
+saa uuden kysymyksen seuraavalla vuorolla. Laattoina ovat unohdettu aarre,
 hevosenkengät, ryöstäjät, jalokivet (arvo 300–1000 puntaa suoraan kukkaroon)
 ja tyhjät — tyhjän kohdalla isoisän merkintä oli vanhentunut. Jalokivet
 vaihtuvat laudan mukaan: Lähi-idässä turkoosi, Euroopassa meripihka,

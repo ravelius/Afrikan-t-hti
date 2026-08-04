@@ -3515,6 +3515,41 @@ test('päivitysloki on tiivis ja järjestyksessä', async () => {
   }
 });
 
+test('pelaajalle näkyvässä tekstissä ei ole tähti-sanastoa eikä pääaarretta', async () => {
+  /*
+   * Peli on irrotettu Afrikan tähdestä (docs/tarina.md). Aarre on
+   * "unohdettu aarre"; sana "pääaarre" kelpaa vain koodikommenttiin ja
+   * tähti-sanasto ei mihinkään aarteeseen liittyvään.
+   *
+   * Tämä testi lukee juuri ne paikat, jotka jäivät edellisellä kerralla
+   * huomaamatta: päivitysloki oli korjaamatta kolmelta riviltä, koska
+   * lokia pidettiin historiana — mutta se piirretään ruudulle joka
+   * avauksella. Yksikään aiempi tarkistus ei koskenut siihen.
+   */
+  const { MUUTOKSET } = await import('../js/muutokset.js');
+  const { TOKEN_TYPES } = await import('../js/tokens.js');
+  const kielletty = /tähti|tähde|tähte|tähd|★|pääaarre|pääaarte/i;
+
+  for (const m of MUUTOKSET) {
+    assert.ok(!kielletty.test(m.teksti), `lokirivi v${m.v}: "${m.teksti}"`);
+  }
+  for (const t of Object.values(TOKEN_TYPES)) {
+    assert.ok(!kielletty.test(t.name), `laattatyypin nimi: "${t.name}"`);
+  }
+  // Lautojen omat aarreilmoitukset: nimi, kuulutus ja voittorivit.
+  for (const pack of PACKS) {
+    const tekstit = [
+      pack.texts?.intro, pack.texts?.starToast, pack.texts?.starChase,
+      pack.texts?.winStar, pack.texts?.starHint,
+      pack.texts?.starFound?.('A', 'B'), pack.texts?.winnerStar?.('A', 1),
+      ...Object.values(pack.tokenTypes ?? {}).map((t) => t?.name),
+    ].filter((t) => typeof t === 'string');
+    for (const teksti of tekstit) {
+      assert.ok(!kielletty.test(teksti), `${pack.id}: "${teksti}"`);
+    }
+  }
+});
+
 test('päivitysloki kattaa nykyisen version', async () => {
   const { MUUTOKSET } = await import('../js/muutokset.js');
   const { readFileSync } = await import('node:fs');

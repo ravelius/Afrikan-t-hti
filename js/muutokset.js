@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 231, teksti: 'Pelin nimi on nyt Unohdettu aarre' },
+  { v: 231, teksti: 'Kartta jatkuu ehjänä laudan reunan yli' },
+  { v: 231, teksti: 'Kartta tarkentuu zoomatessa eikä sumene' },
+  { v: 231, teksti: 'Uusi kuvake: kultainen aarre kahden pallon välissä' },
   { v: 230, teksti: 'Siperia ja Alaska yhtyvät ehjänä rantana' },
   { v: 230, teksti: 'Radio näkyy matkalaukussa' },
   { v: 230, teksti: 'Versionumero pois matkakirjan päältä' },
@@ -25,10 +29,10 @@ export const MUUTOKSET = [
   { v: 227, teksti: 'Viritysääni kun radio hakee kanavaa' },
   { v: 227, teksti: 'Kyrilliset ja kiinalaiset merkit näytölle' },
   { v: 227, teksti: 'Vanhat vedokset seitsemään kaupunkiin lisää' },
-  { v: 226, teksti: 'Tähti-sanat pois: aarre on nyt pääaarre' },
+  { v: 226, teksti: 'Aarteella on oma nimi jokaisella laudalla' },
   { v: 226, teksti: 'Maailmankartan aarrekuulutus ei väitä Meripihkahuonetta' },
   { v: 225, teksti: 'Avauslento esittelee pelin idean ääneen' },
-  { v: 225, teksti: 'Lennot muistuttavat löytämättömästä pääaarteesta' },
+  { v: 225, teksti: 'Lennot muistuttavat unohdetusta aarteesta' },
   { v: 224, teksti: 'Maailmanradio: kaupungit soivat kartalta' },
   { v: 224, teksti: 'Vanhan ajan radiosoitin ruudun alalaitaan' },
   { v: 224, teksti: 'Kehittäjätilaan kaikki toimivat aarteet' },
@@ -77,7 +81,7 @@ export const MUUTOKSET = [
   { v: 203, teksti: 'Kuvat omissa mittasuhteissaan, ei panoraamana' },
   { v: 203, teksti: 'Aiheen vaihto ei enää hyppää näkymässä' },
   { v: 203, teksti: 'Väljemmät marginaalit Tutki-arkilla' },
-  { v: 203, teksti: 'Afrikan pääaarre: Suuren Zimbabwen kivilintu' },
+  { v: 203, teksti: 'Afrikan aarre: Suuren Zimbabwen kivilintu' },
   { v: 202, teksti: 'Arkin reuna piirtyy kuin rantaviiva kartalla' },
   { v: 202, teksti: 'Tutki-kortti täyttää ruudun muistiinpanoarkkina' },
   { v: 202, teksti: 'Aiheliuskat kuvakkeina yhdelle riville' },

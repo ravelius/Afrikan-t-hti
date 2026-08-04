@@ -649,6 +649,7 @@ import {
   paperi,
   kasinPiirretty,
   rasteroiRuutu,
+  RUUTU_TYHJA,
   piirtotarkkuus,
   ruudunKoko,
   valmisteleTaide,
@@ -2169,6 +2170,7 @@ export class UI {
     this.taide = pilkoTaide(tyylitelty, ryhma, maarittelyt)
       ?? valmisteleTaide(tyylitelty, maarittelyt);
     this.taideRuudut = new Map();
+    this.taideTyhjat = new Set();
     this.taideSkaala = 0;
     this.taideRuutu = 0;
     this.taideVektorit = ryhma.firstElementChild ? [...ryhma.children] : [];
@@ -2278,36 +2280,69 @@ export class UI {
        *
        * Kun leveys on maailman jaollinen osa, yksikään ruutu ei ulotu
        * laudan ulkopuolelle eikä siis voi peittää kopiota.
+       *
+       * YLÖSPÄIN eikä lähimpään: pyöristys alaspäin SUURENTAA ruutua.
+       * Yleiskuvassa laskettu koko oli 9573 ja lähin jaollinen sarake-
+       * määrä yksi, jolloin ruudusta tuli koko maailma — 12000 yksikköä
+       * yhteen 1100 pikselin kuvaan. Kartta oli neljä kertaa liian
+       * karkea, ja yhden ruudun rasterointi kesti 4,7 sekuntia
+       * mitattuna; kolme ruutua vei ensimmäiseltä piirrolta 13 sekuntia,
+       * jonka ajan jokainen zoomaus jäi jonoon. Ylöspäin pyöristäen
+       * ruutu on aina pikselibudjetin sisällä eli tarkka, ja työ
+       * pilkkoutuu paloihin, joiden välissä sormi ehtii liikkua.
        */
       if (this.kiertava()) {
         const W = this.game.pack.map.width;
-        this.taideRuutu = W / Math.max(1, Math.round(W / this.taideRuutu));
+        this.taideRuutu = W / Math.max(1, Math.ceil(W / this.taideRuutu));
       }
       this.taideVanhat = [...this.taideRuudut.values()];
       this.taideRuudut = new Map();
+      this.taideTyhjat = new Set();
     }
 
     const koko = this.taideRuutu;
     const arkki = paperi(this.game.pack.map);
     const PUSKURI = 1; // ruudullista joka suuntaan: koko pyyhkäisyn matka
+    const kiertava = this.kiertava();
+    const W = this.game.pack.map.width;
     /*
-     * Kiertävällä kartalla ruudut rajataan laudan leveyteen. Sen
-     * ulkopuolella ei ole taidetta vaan kierron kopio, ja ruutu peittäisi
-     * sen tyhjällä pergamentilla.
+     * Kiertävällä kartalla ruudut EIVÄT rajaudu laudan leveyteen — ne
+     * kiertyvät sen yli.
+     *
+     * Näkyvä alue voi ulottua laudan oikean reunan yli, ja sen osan
+     * täyttää <use>-kopio, joka näyttää laudan VASENTA reunaa. Ruudun
+     * ei siis pidä syntyä sinne minne katsotaan vaan sinne mistä kuva
+     * haetaan: sarake W:n takaa on sama sarake kuin sarake nollan
+     * kohdalla.
+     *
+     * Vanha versio rajasi hakualueen väliin [0, W] eikä koskaan
+     * pyytänyt niitä vasemman reunan ruutuja, joita kopio tarvitsi.
+     * Kartta loppui siksi pystysuoraan saumaan ja oikealla oli pelkkä
+     * tyhjä pergamentti (omistajan kuvakaappaus, Beringinsalmi).
+     *
+     * Ruutu jakaa laudan tasan (ks. taideRuutu yllä), joten sarakkeita
+     * on kokonaisluku ja jakojäännös osuu aina ruudun reunaan.
      */
-    const vasen = this.kiertava() ? 0 : arkki.x;
-    const oikea = this.kiertava() ? this.game.pack.map.width : arkki.x + arkki.w;
-    const x0 = Math.max(vasen, nakyva.x - nakyva.w * PUSKURI);
+    const sarakkeita = kiertava ? Math.max(1, Math.round(W / koko)) : 0;
+    const x0 = kiertava ? nakyva.x - nakyva.w * PUSKURI
+      : Math.max(arkki.x, nakyva.x - nakyva.w * PUSKURI);
     const y0 = Math.max(arkki.y, nakyva.y - nakyva.h * PUSKURI);
-    const x1 = Math.min(oikea, nakyva.x + nakyva.w * (1 + PUSKURI));
+    const x1 = kiertava ? nakyva.x + nakyva.w * (1 + PUSKURI)
+      : Math.min(arkki.x + arkki.w, nakyva.x + nakyva.w * (1 + PUSKURI));
     const y1 = Math.min(arkki.y + arkki.h, nakyva.y + nakyva.h * (1 + PUSKURI));
 
     const puuttuvat = [];
+    const jonossa = new Set();
     for (let ry = Math.floor(y0 / koko); ry <= Math.floor((y1 - 0.001) / koko); ry++) {
       for (let rx = Math.floor(x0 / koko); rx <= Math.floor((x1 - 0.001) / koko); rx++) {
-        const avain = `${rx},${ry}`;
-        if (this.taideRuudut.has(avain)) continue;
-        puuttuvat.push({ avain, rx, ry });
+        // Sama sarake voi osua hakualueeseen kahdesti, kun puskurillinen
+        // näkymä on laudan levyinen. Ruutu piirretään silti kerran.
+        const sarake = kiertava ? ((rx % sarakkeita) + sarakkeita) % sarakkeita : rx;
+        const avain = `${sarake},${ry}`;
+        if (this.taideRuudut.has(avain) || this.taideTyhjat.has(avain)
+            || jonossa.has(avain)) continue;
+        jonossa.add(avain);
+        puuttuvat.push({ avain, rx: sarake, ry });
       }
     }
     if (!puuttuvat.length) {
@@ -2315,13 +2350,17 @@ export class UI {
       return;
     }
 
-    // Lähimmät ensin: keskeltä ruutua reunoja kohti.
+    // Lähimmät ensin: keskeltä ruutua reunoja kohti. Kiertävällä laudalla
+    // etäisyys mitataan lähintä kopiota pitkin, ei laudan koordinaatteina
+    // — muuten sauman takainen ruutu näyttäisi maailman levyiseltä.
     const kx = nakyva.x + nakyva.w / 2;
     const ky = nakyva.y + nakyva.h / 2;
-    puuttuvat.sort((a, b) => (
-      Math.hypot((a.rx + 0.5) * koko - kx, (a.ry + 0.5) * koko - ky)
-      - Math.hypot((b.rx + 0.5) * koko - kx, (b.ry + 0.5) * koko - ky)
-    ));
+    const etaisyys = (r) => {
+      let dx = (r.rx + 0.5) * koko - kx;
+      if (kiertava) dx = ((dx % W) + W + W / 2) % W - W / 2;
+      return Math.hypot(dx, (r.ry + 0.5) * koko - ky);
+    };
+    puuttuvat.sort((a, b) => etaisyys(a) - etaisyys(b));
 
     this.taidePiirtyy = true;
     this.taideOdottaa = false;
@@ -2331,9 +2370,28 @@ export class UI {
         if (this.dead || skaala !== this.taideSkaala) break;
         // Uusi ele kesken piirron: keskeytetään ja jatketaan sen jälkeen.
         if (this.kartanRaahaus) { this.taideOdottaa = true; break; }
+        /*
+         * Mittakaava luetaan RUUDULTA joka ruudun välissä, ei
+         * this.taideSkaalasta.
+         *
+         * taideSkaala päivittyy vain tämän funktion alussa, ja alkuun ei
+         * pääse niin kauan kuin piirto on kesken. Zoomaus kesken piirron
+         * jäi siksi odottamaan, että vanhentunut sarja piirtyy loppuun
+         * — käynnistyksessä se oli mitattuna kuusi sekuntia työtä, joka
+         * heitettiin heti pois, ja zoomia napauttaessa jono vain kasvoi.
+         * Kun näkymä on vaihtunut, tämä sarja lopetetaan kesken.
+         */
+        const nyt = this.nakyvaAlue();
+        if (nyt && (nyt.skaala > skaala * 1.2 || nyt.skaala < skaala * 0.8)) {
+          this.taideOdottaa = true;
+          break;
+        }
         const ikkuna = { x: rx * koko, y: ry * koko, w: koko, h: koko };
         const kuva = await rasteroiRuutu(this.taide, ikkuna, skaala, this.taideTarkkuus);
-        if (!kuva || this.dead || skaala !== this.taideSkaala) continue;
+        if (this.dead || skaala !== this.taideSkaala) continue;
+        // Tyhjä ruutu kirjataan tyhjänä: sitä ei piirretä eikä pyydetä uudestaan.
+        if (kuva === RUUTU_TYHJA) { this.taideTyhjat.add(avain); continue; }
+        if (!kuva) continue;
         this.taideRuudut.set(avain, kuva);
         // Uusi ruutu alimmaiseksi: vanhan mittakaavan ruudut jäävät
         // päälle siihen asti, kunnes koko näkymä on katettu.
@@ -6058,7 +6116,7 @@ export class UI {
     const omaTeksti = oma?.artikkeli ?? oma?.teksti ?? null;
     if (omaTeksti) {
       this.renderArticle(this.wikiExtract, omaTeksti);
-      this.wikiSource.textContent = 'Matkakirjan oma artikkeli, kirjoitettu Wikipedian pohjalta (CC BY-SA)';
+      this.wikiSource.textContent = 'Unohdetun aarteen oma artikkeli, kirjoitettu Wikipedian pohjalta (CC BY-SA)';
       if (summary.url) {
         this.wikiSource.appendChild(document.createTextNode(' — '));
         const alkup = html('a', '', 'lue alkuperäinen');
@@ -6083,7 +6141,7 @@ export class UI {
     // CC BY-SA vaatii maininnan ja linkin — myös kaupallisessa käytössä.
     // Oma tiivistelmä ei ole Wikipediaa, joten sille kerrotaan oma lähde.
     if (summary.oma) {
-      this.wikiSource.textContent = 'Matkakirjan oma tiivistelmä — fi-Wikipediassa ei vielä ole tästä artikkelia.';
+      this.wikiSource.textContent = 'Unohdetun aarteen oma tiivistelmä — fi-Wikipediassa ei vielä ole tästä artikkelia.';
       return;
     }
     this.wikiSource.textContent = 'Lähde: Wikipedia (CC BY-SA) — ';
@@ -6375,7 +6433,7 @@ export class UI {
       kortti.appendChild(h);
     };
 
-    kappale('Matkakirja on seikkailupeli, jonka sivutuotteena opitaan — '
+    kappale('Unohdettu aarre on seikkailupeli, jonka sivutuotteena opitaan — '
       + 'ei oppikirja, johon on liimattu noppa. Pelin pitää olla '
       + 'koukuttava ensin; tieto tarttuu matkassa.', 'kärki');
 
@@ -6542,8 +6600,8 @@ export class UI {
             vaihe: this.game?.phase ?? '',
             versio: peliVersio(),
             _subject: tilanne
-              ? `Matkakirja — palaute: ${tilanne}`
-              : 'Matkakirja — palaute',
+              ? `Unohdettu aarre — palaute: ${tilanne}`
+              : 'Unohdettu aarre — palaute',
           }),
         });
         if (!vastaus.ok) throw new Error(`HTTP ${vastaus.status}`);
@@ -6569,8 +6627,8 @@ export class UI {
     const linkki = html('a', 'periaate-linkki', 'Lähetä palautetta GitHubissa');
     const otsikko = tilanne
       ? `Palautetta: ${tilanne}`
-      : 'Palautetta Matkakirjasta';
-    const runko = `\n\n---\nMatkakirja v${peliVersio()}`
+      : 'Palautetta Unohdetusta aarteesta';
+    const runko = `\n\n---\nUnohdettu aarre v${peliVersio()}`
       + (tilanne ? `\nKohta pelissä: ${tilanne}` : '');
     linkki.href = 'https://github.com/ravelius/Matkakirja/issues/new'
       + `?title=${encodeURIComponent(otsikko)}`
@@ -7774,7 +7832,7 @@ export class UI {
         const found = quiz.found ? game.tokenTypes[quiz.found] : null;
         const body = html('div');
         if (quiz.gate && quiz.right) {
-          body.appendChild(html('strong', '', `★ Portti aukeaa — ${quiz.gate.label}!`));
+          body.appendChild(html('strong', '', `◈ Portti aukeaa — ${quiz.gate.label}!`));
           body.appendChild(html('span', 'muted', 'Tieto avasi tien: matka jatkuu ilmaiseksi.'));
         } else if (quiz.right && found) {
           this.quizResult.appendChild(tokenIconSvg(quiz.found, 24));

@@ -1,6 +1,7 @@
 // Luo sovelluskuvakkeet (assets/icon.svg + PNG:t): vanha maailmankartta
 // kahtena pallonpuoliskona, kuten pelin aloitusnäkymässä. Punainen
-// lentoreitti ylittää Atlantin ja Afrikan tähti lepää Afrikan päällä.
+// lentoreitti ylittää Atlantin ja pallonpuoliskojen välissä lepää
+// kultainen vinoneliö — sama merkki kuin pelin aarrelaatoissa.
 //
 //   node tools/make-icons.mjs                     # vain SVG
 //   node tools/make-icons.mjs --png <polku>       # myös PNG:t Playwrightilla
@@ -17,21 +18,21 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const SIZE = 512;
 
-/** Viisisakarainen tähti annettuun kohtaan. */
-function starPath(cx, cy, outer, inner, turn = -Math.PI / 2) {
-  const pts = [];
-  for (let i = 0; i < 10; i++) {
-    const r = i % 2 ? inner : outer;
-    const a = turn + (i / 10) * Math.PI * 2;
-    pts.push(`${(cx + Math.cos(a) * r).toFixed(1)},${(cy + Math.sin(a) * r).toFixed(1)}`);
-  }
-  return `M${pts.join(' L')} Z`;
+/*
+ * Vinoneliö annettuun kohtaan. Sama merkki kuin pelin aarrelaatoissa
+ * (js/tokens.js: symbol '◈'), joten kuvake ja lauta puhuvat samaa
+ * kieltä. Kaksi sisäkkäistä vinoneliötä tekee siitä ◈:n eikä pelkkää
+ * ruutua — ulompi täytetään kullalla, sisempi jää viivaksi.
+ */
+function timanttiPath(cx, cy, rx, ry) {
+  const p = (x, y) => `${x.toFixed(1)},${y.toFixed(1)}`;
+  return `M${p(cx, cy - ry)} L${p(cx + rx, cy)} L${p(cx, cy + ry)} L${p(cx - rx, cy)} Z`;
 }
 
 // Kuvake: pergamenttilaatta, jolla vanha maailmankartta kahtena
 // pallonpuoliskona. Mantereet ovat tarkoituksella karkeita läiskiä —
 // kuvakkeen pitää lukea "vanha maailmankartta" vielä 60 pikselissä.
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="Matkakirja">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" role="img" aria-label="Unohdettu aarre">
   <defs>
     <radialGradient id="paper" cx="40%" cy="34%" r="78%">
       <stop offset="0%" stop-color="#f8ecd0"/>
@@ -94,10 +95,11 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE
   <circle cx="184" cy="232" r="9" fill="#c2452f"/>
   <circle cx="332" cy="234" r="9" fill="#c2452f"/>
 
-  <!-- Afrikan tähti lepää Afrikan päällä -->
-  <g transform="rotate(-7 332 296)">
-    <path d="${starPath(332, 296, 30, 12.5)}" fill="url(#gold)" stroke="#5c430f"
-          stroke-width="6" stroke-linejoin="round"/>
+  <!-- Unohdettu aarre lepää pallonpuoliskojen välissä, lentoreitin alla.
+       Keskellä eikä minkään maanosan päällä: aarre voi olla missä vain. -->
+  <g stroke="#5c430f" stroke-linejoin="round">
+    <path d="${timanttiPath(256, 300, 42, 56)}" fill="url(#gold)" stroke-width="8"/>
+    <path d="${timanttiPath(256, 300, 21, 28)}" fill="none" stroke-width="6" opacity="0.7"/>
   </g>
 
   <!-- Aallot -->

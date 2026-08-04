@@ -49,7 +49,7 @@
           "teksti": "George Kennan rakensi 1860-luvulla lennätinlinjaa, jonka piti yhdistää Amerikka Eurooppaan Beringinsalmen kautta. Atlantin kaapeli valmistui ensin ja hanke haudattiin. Kennan palasi Ohotskin rannikolta sisämaahan poroilla ja suksilla ja lähestyi marraskuussa Aldanin laaksoa."
         },
         {
-          "lainaus": "Alhaalla edessämme, laakson takaisten kukkuloiden mustaa vasten, nousi neljä tai viisi hohtavan sumun pylvästä kuin tulipatsaat erämaassa.",
+          "lainaus": "Alhaalla edessämme, laakson takaisten kukkuloiden mustaa vasten, nousi neljä tai viisi hohtavan sumun pylvästä kuin tulipatsaat exoduksen erämaassa.",
           "kuka": "George Kennan",
           "teos": "Tent Life in Siberia, uudistettu laitos",
           "vuosi": 1910,
@@ -381,7 +381,7 @@
     "Kasai": {
       "kappaleet": [
         {
-          "teksti": "William Sheppard, virginialaisen orjan poika ja Yhdysvaltain ensimmäisiä mustia lähetyssaarnaajia Afrikassa, saapui Kasain suulle keväällä 1890. Höyrylaiva Florida yritti kääntyä Kongosta sivujokeen kohdassa, jossa uoma kapenee runsaaseen sataan metriin kallioiden väliin."
+          "teksti": "William Sheppard, virginialaisen parturin poika ja eteläisen presbyteerikirkon ensimmäinen musta lähetti Afrikassa, saapui Kasain suulle keväällä 1890. Höyrylaiva Florida yritti kääntyä Kongosta sivujokeen kohdassa, jossa uoma kapenee runsaaseen sataan metriin kallioiden väliin."
         },
         {
           "lainaus": "Näimme Kasain punaisen veden syöksyvän Kongoon kuin myllyränni — suulla joki on vain noin sataviisikymmentä jaardia leveä, ja molemmin puolin on suuri kalliomuuri.",
@@ -397,7 +397,7 @@
           "lahde": "Wikimedia Commons (PD), Library of Congress"
         },
         {
-          "teksti": "Höyrysimme viisi tuntia ja etenimme puoli mailia, Sheppard kirjoittaa. Ohjausketju katkesi, ja hän ohjasi peräsintä käsin rautakangesta. Ylävirrassa hän pääsi kuubien kuninkaan luo Mushengeen ensimmäisenä ulkomaalaisena ja opetteli kielen ennen kuin pyysi lupaa."
+          "teksti": "Viisi tuntia täydellä höyryllä vei laivan puoli mailia eteenpäin. Ohjausketju katkesi, ja Sheppard ohjasi peräsintä käsin rautakangesta perän yli kumartuen. Ylävirrassa hän pääsi kuubien kuninkaan luo Mushengeen ensimmäisenä ulkomaalaisena ja opetteli kielen ennen kuin pyysi lupaa."
         }
       ]
     },
@@ -430,7 +430,7 @@
           "lahde": "Wikimedia Commons (PD)"
         },
         {
-          "lainaus": "Voidaan väittää, että Welle kuuluu Sharin vesistöön. Sitä, että Wellellä olisi yhteys Gazelleen ja siten Niiliin, ei kumoa ainoastaan yleinen käsitys vaan myös sen rannoilla asuvien vahvistetut kertomukset.",
+          "lainaus": "Voidaan väittää, että Welle kuuluu Sharin vesistöön. Se, että Wellellä olisi yhteys Gazelleen ja siten Niiliin, on vastoin sekä yleistä käsitystä että joen rannoilla asuvien vahvistettuja kertomuksia.",
           "kuka": "Georg Schweinfurth",
           "teos": "The Heart of Africa, engl. Ellen E. Frewer",
           "vuosi": 1873,
@@ -450,11 +450,11 @@
     "Lualaba": {
       "kappaleet": [
         {
-          "teksti": "David Livingstone vietti viimeiset kuusi vuottaan etsimässä Niilin lähdettä paikasta, jossa sitä ei ole. Hän oli vakuuttunut, että Lualaba on Niilin yläjuoksu, koska se oli leveä ja syvä ja virtasi pohjoiseen. Kasembe-niminen päällikkö oli kertonut hänelle vastauksen jo aiemmin."
+          "teksti": "David Livingstone vietti viimeiset kuusi vuottaan etsimässä Niilin lähdettä paikasta, jossa sitä ei ole. Hän oli vakuuttunut, että Lualaba on Niilin yläjuoksu, koska se oli leveä ja syvä ja virtasi pohjoiseen. Casembe-niminen päällikkö oli kertonut hänelle vastauksen jo vuosia aiemmin."
         },
         {
           "lainaus": "Se on samaa vettä täällä kuin Chambezéssa, samaa Moerossa ja Lualabassa, ja yksi vesi on samanlaista kuin toinen. Aiotko vetää siitä kangasta, kun haluat nähdä sen.",
-          "kuka": "päällikkö Kasembe, Livingstonen muistiin merkitsemänä",
+          "kuka": "päällikkö Casembe, Livingstonen muistiin merkitsemänä",
           "teos": "The Last Journals of David Livingstone in Central Africa, toim. Horace Waller",
           "vuosi": 1874,
           "suomennos": "oma",
@@ -466,7 +466,7 @@
           "lahde": "Wikimedia Commons (CC BY-SA 3.0), Ad Meskens"
         },
         {
-          "teksti": "Vastaus tarkoitti, että kaikki oli yhtä ja samaa vesistöä, ja se oli Kongo. Livingstone kuoli uskoen toisin. Henry Morton Stanley laski saman joen mereen asti vuosina 1876–1877 ja todisti asian; matkalle lähti runsaat kaksisataa ihmistä ja perille pääsi vajaa puolet."
+          "teksti": "Vastaus tarkoitti, että kaikki oli yhtä ja samaa vesistöä, ja se oli Kongo. Livingstone kuoli uskoen toisin. Henry Morton Stanley laski saman joen mereen asti vuosina 1876–1877 ja todisti asian; matkalle lähti runsaat kaksisataa ihmistä ja perille pääsi vajaat puolet."
         }
       ]
     },

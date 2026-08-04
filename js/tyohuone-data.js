@@ -346,7 +346,7 @@ export const LAAJENNUKSET = [
       + 'johdolla kartan omasta kotipaikkakunnastaan: merkitsee kohteet, '
       + 'kirjoittaa niihin sisällön ja laatii kysymykset ja vastaukset. '
       + 'Lopputulos on pelattava kartta, samalla moottorilla kuin '
-      + 'Matkakirja.',
+      + 'Unohdettu aarre.',
     miksi: 'Oppiminen tapahtuu tekemisessä, ei pelaamisessa. Kysymyksen '
       + 'laatiminen vaatii aiheen ymmärtämistä selvästi enemmän kuin '
       + 'siihen vastaaminen: pitää tietää mikä on olennaista, mikä on '

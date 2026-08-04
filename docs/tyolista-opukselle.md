@@ -4192,3 +4192,64 @@ Mitä tilalle:
   haettuna eikä sitä heitetä pois — se vain siirtyy pois tieltä.
 
 Tämä koskee 123 jokea, 38 järveä ja 52 vuoristoa = 213 tekstiä.
+
+## v231 — nimenvaihto, kuvake ja kartan sauma (4.8.2026)
+
+**Pelin nimi on Unohdettu aarre** (engl. *The Forgotten Treasure*). Matkakirja
+jää tarinan keskusesineeksi — isoisän kirjaksi — eikä ole enää pelin nimi.
+Vaihdettu: manifest, index.html, tyohuone*.html, README, css-otsake, ui.js:n
+palaute- ja artikkelitekstit. **Ei vaihdettu** (tietoinen päätös): sw.js:n
+cache-etuliite, localStorage-avaimet, `window.matkakirja`, `dist/matkakirja.html`,
+repon nimi. Niiden vaihto rikkoisi offline-päivityksen turhaan.
+
+**Kuvake.** `assets/icon.svg`:n kultainen viisisakarainen tähti Afrikan päällä
+korvattiin kultaisella ◈-vinoneliöllä — samalla merkillä kuin pelin
+aarrelaatoissa. Se siirtyi samalla pallonpuoliskojen väliin keskelle: aarre ei
+ole minkään maanosan päällä. Generaattori on `tools/make-icons.mjs`; SVG:tä ei
+muokata käsin.
+
+**Kartan sauma — kolme vikaa samassa paikassa.**
+
+1. *Ruutuja ei pyydetty sauman toiselta puolelta.* Näkyvä alue ulottuu laudan
+   oikean reunan yli, ja sen täyttää `<use>`-kopio, joka näyttää laudan VASENTA
+   reunaa. Ruudukko rajattiin väliin [0, W] eikä koskaan pyytänyt niitä
+   vasemman reunan ruutuja, joita kopio tarvitsi. Kartta loppui pystysuoraan
+   saumaan. Korjaus: sarake otetaan modulo laudan leveys.
+2. *Ruutu suureni pyöristyksessä.* `Math.round(W / ruutu)` antoi yleiskuvassa
+   yhden sarakkeen, eli ruudusta tuli koko maailma: 12000 yksikköä yhteen 1100
+   pikselin kuvaan — neljä kertaa liian karkea, ja **4,7 sekuntia** yhtä ruutua.
+   Korjaus: `Math.ceil`, jolloin ruutu pysyy aina pikselibudjetin sisällä.
+3. *Vanhentunut piirtosarja ajettiin loppuun.* `taideSkaala` päivittyy vain
+   funktion alussa, eikä alkuun päässyt niin kauan kuin piirto oli kesken.
+   Zoomaus jäi odottamaan koko vanhentunutta sarjaa. Korjaus: mittakaava
+   luetaan ruudulta joka ruudun välissä ja sarja katkaistaan kesken.
+
+Lisäksi tyhjää ruutua (pelkkää merta) ei muistettu lainkaan, joten se
+rasteroitiin uudestaan joka kerta kun näkymä asettui. `RUUTU_TYHJA` erottaa
+tyhjän epäonnistuneesta — epäonnistunutta ei saa muistaa, tai selain jossa
+rasterointi ei toimi jäisi lopullisesti tyhjäksi.
+
+Mitattuna (Chromium, 1400×900, maailmankartta): käynnistys **12,5 s → 6 s**,
+panorointi täyttyy 13–33 ms, zoomaustaso tarkentuu 2,5–5,8 s kuluessa ja vanhat
+ruudut pysyvät näkyvissä sen ajan.
+
+**Vielä auki:** omistaja raportoi vierityksen tökkivän erityisesti Macin
+selaimella. Chromiumilla Linuxissa panorointi on näiden korjausten jälkeen
+välitön, joten Macin oire tarvitsee oman toisinnon — todennäköisin epäilty on
+`<use>`-kopion kanssa kaksinkertaistuva piirtoala isolla työpöytäikkunalla.
+
+### Opittua
+
+**Rajaus, joka suojaa yhtä virhettä, voi aiheuttaa toisen.** Ruudukko rajattiin
+laudan leveyteen, jotta tyhjä ruutu ei peittäisi kierron kopiota. Sama rajaus
+esti pyytämästä niitä ruutuja, joita kopio tarvitsi. Rajan molemmat puolet on
+katsottava.
+
+**Pyöristys lähimpään voi kasvattaa.** `round` valittiin siksi, että se on
+tarkin — mutta budjetin kanssa oikea suunta on aina se, joka pysyy budjetissa.
+`ceil` ei ole tässä likiarvo vaan sääntö.
+
+**Muutosloki on pelaajatekstiä, ei historiaa.** Rivi "Tähti-sanat pois: aarre on
+nyt pääaarre" jäi kolmeksi versioksi ruudulle, koska tiedoston oma ohje sanoo
+etteivät vanhat rivit muutu. Sitova nimistö koskee kaikkea, mikä piirtyy — myös
+sitä, mikä kertoo vanhasta nimestä. Nyt vartijatesti lukee lokin.
