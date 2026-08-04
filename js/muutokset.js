@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 247, teksti: 'VU-mittari sai lähetykselle oman asteikkonsa' },
+  { v: 247, teksti: 'Neula näyttää ohjelman tason, ei nupin asentoa' },
   { v: 246, teksti: 'Meren sinisyys ei enää vuoda maiden päälle' },
   { v: 246, teksti: 'VU-mittari liikkuu myös CORSittomilla asemilla' },
   { v: 246, teksti: 'Kanavanvaihdon häivytys 0,9 sekuntiin' },

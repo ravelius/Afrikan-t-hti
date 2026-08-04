@@ -1,0 +1,772 @@
+[
+  {
+    "maa": "AFG",
+    "asema": "Radio Begum (Kabul)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "AGO",
+    "asema": "Rádio Luanda (RNA)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "ARE",
+    "asema": "Sharjah FM 94.4 (إذاعة الشارقة)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "ARG",
+    "asema": "LRA1 Radio Nacional Argentina",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "AUS",
+    "asema": "ABC Radio National",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "AUT",
+    "asema": "Ö1 | ORF | HQ",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "BGR",
+    "asema": "BNR Horizont",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "BIH",
+    "asema": "Federalni radio (RTVFBiH)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "BOL",
+    "asema": "Radio Panamericana",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "BRA",
+    "asema": "BandNews FM",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "CAN",
+    "asema": "CBC Radio One - Toronto, ON (MP3 stream)",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "CHE",
+    "asema": "RTS La Première",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "CHL",
+    "asema": "Radio Bio Bio Temuco",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "CHN",
+    "asema": "CNR-1 中国之声",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "CMR",
+    "asema": "Radio Bafung",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "COD",
+    "asema": "Top Congo FM 88.4 (Kinshasa)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "COL",
+    "asema": "Caracol Radio - 100.9 FM / 810 AM - HJGL / HJCY -",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "CUB",
+    "asema": "Radio Rebelde 1180 AM",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "CYP",
+    "asema": "ΡΙΚ Πρώτο Πρόγραμμα (CyBC)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "CZE",
+    "asema": "ČRO Radiožurnál Sport",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "DEU",
+    "asema": "Deutschlandfunk | DLF | MP3 128k",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "DNK",
+    "asema": "DR P1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "DZA",
+    "asema": "Algérie Chaine 1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "ECU",
+    "asema": "Radio Pichincha",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "EGY",
+    "asema": "Radio 9090 / 90.90 FM Radio Egypt (Kairo)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "ESP",
+    "asema": "Radio Nacional de España - Radio 5 Todo noticias",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "EST",
+    "asema": "Vikerraadio",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "ETH",
+    "asema": "EBC Radio 104.7 Addis Abeba",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "FIN",
+    "asema": "Yle Radio 1 Hifi",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "FJI",
+    "asema": "Radio Fiji One (FBC, fidžin kieli)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "FRA",
+    "asema": "France Inter",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "GBR",
+    "asema": "BBC World Service",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "GHA",
+    "asema": "Info Radio Ghana",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "GRC",
+    "asema": "ΕΡΤ Πρώτο Πρόγραμμα",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "GRL",
+    "asema": "Nanoq FM (Nuuk)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "GTM",
+    "asema": "Emisoras Unidas 89.7",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "HKG",
+    "asema": "RTHK Radio 1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "HRV",
+    "asema": "HRT HR 1 - Prvi program",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "HUN",
+    "asema": "Kossuth",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "IDN",
+    "asema": "RRI Pro 3 KBRN",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "IND",
+    "asema": "aakashvani",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "IRL",
+    "asema": "RTÉ Radio 1",
+    "tavoitettu": true,
+    "cors": false,
+    "koodi": 206
+  },
+  {
+    "maa": "IRN",
+    "asema": "Radio Iran International",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "IRQ",
+    "asema": "Radio Shafaq (Shafaq News)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "ISL",
+    "asema": "Útvarp Saga",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "ITA",
+    "asema": "Rai Radio 1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 403
+  },
+  {
+    "maa": "JOR",
+    "asema": "Hayat FM (Amman)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "JPN",
+    "asema": "エフエム世田谷 (FM Setagaya 83.4 MHz, Tokio)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "KAZ",
+    "asema": "Qazaq radiosy",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "KEN",
+    "asema": "KBC",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "KOR",
+    "asema": "WBS 원음방송 서울",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "KWT",
+    "asema": "moja (مُوجَة), Kuwait City",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "LBR",
+    "asema": "LBS Radio (Liberia Broadcasting System)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "LBY",
+    "asema": "Radio Funun Tripoli (راديو فنون طرابلس)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "LKA",
+    "asema": "SLBC Tamil National Service",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "LTU",
+    "asema": "Žinių radijas",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "LVA",
+    "asema": "Radio SWH+",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "MAR",
+    "asema": "MA:-Hit Radio Maroc",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "MDG",
+    "asema": "RNM",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "MEX",
+    "asema": "W Radio Ciudad de México - 96.9 FM / 900 AM -",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "MLI",
+    "asema": "Radio Malijet",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "MMR",
+    "asema": "Shwe FM (valtakunnallinen FM-verkko, Yangon)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "MNG",
+    "asema": "Гэр бүлийн радио 104.5 (Family Radio, Ulaanbaatar)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "MOZ",
+    "asema": "Rádio Moçambique",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "NAM",
+    "asema": "Omulunga Radio 100.9 (Windhoek)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "NGA",
+    "asema": "ZamRock Radio Nigeria Relay",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "NIC",
+    "asema": "La Voz del Norte",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "NLD",
+    "asema": "NPO Radio 1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "NOR",
+    "asema": "NRK P1 Nordland",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "NPL",
+    "asema": "Radio Nepal",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "NZL",
+    "asema": "Newstalk ZB",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "OMN",
+    "asema": "Al Wisal (الوصال), Muscat",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "PAK",
+    "asema": "MERA FM 107.4",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "PAN",
+    "asema": "La Exitosa Panamá",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "PER",
+    "asema": "Radio RPP Noticias",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "PHL",
+    "asema": "DZRH",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "PNG",
+    "asema": "Yumi FM (tok pisin, Port Moresby)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "POL",
+    "asema": "TOK FM",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "PRT",
+    "asema": "RDP Internacional - Main",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "QAT",
+    "asema": "Al Araby Radio (Doha/Lusail)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "ROU",
+    "asema": "Digi24 FM",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "RUS",
+    "asema": "Вести ФМ",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "SAU",
+    "asema": "SBA Riyadh Radio 91.5 FM",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "SDN",
+    "asema": "Al Masaa FM 101 (Khartum)",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "SDS",
+    "asema": "Freedom FM",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "SEN",
+    "asema": "RTS Matam 89.1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "SGP",
+    "asema": "CAPITAL 958",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "SHN",
+    "asema": "SAMS Radio 1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "SLB",
+    "asema": "SIBC Solomon Islands Broadcasting (Honiara)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "SLE",
+    "asema": "Culture Radio FM 104.5 (Freetown)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "SOM",
+    "asema": "Radio Shabelle 101.5 (Mogadishu)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 401
+  },
+  {
+    "maa": "SWE",
+    "asema": "Sveriges Radio P1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "SYR",
+    "asema": "Al Asemeh FM / العاصمة إف إم (Damaskos)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "TCD",
+    "asema": "Radiodiffusion Nationale Tchadienne",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "THA",
+    "asema": "วิทยุเสียงอิสลาม",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "TLS",
+    "asema": "Rádio Liberdade Dili",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "TUN",
+    "asema": "Radio Nationale",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "TUR",
+    "asema": "TRT Radyo 1",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "TWN",
+    "asema": "中廣新聞網",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": 426
+  },
+  {
+    "maa": "TZA",
+    "asema": "TBC Taifa",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "UGA",
+    "asema": "107.3 BBC Radio Uganda",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "UKR",
+    "asema": "Єдині новини (Radio News)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "USA",
+    "asema": "WNYC-FM 93.9 New York Public Radio",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "UZB",
+    "asema": "Qalbim navosi",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "VEN",
+    "asema": "Radio Nacional de Venezuela - Informativa",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "VNM",
+    "asema": "RFI Tiếng Việt",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "VUT",
+    "asema": "Paradise 98FM (VBTC, Port Vila)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "YEM",
+    "asema": "Sana'a Radio (إذاعة صنعاء)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  },
+  {
+    "maa": "ZAF",
+    "asema": "Ukhozi FM (SABC)",
+    "tavoitettu": true,
+    "cors": true,
+    "koodi": 206
+  },
+  {
+    "maa": "ZWE",
+    "asema": "Star FM 89.7 (Harare)",
+    "tavoitettu": false,
+    "cors": false,
+    "koodi": null
+  }
+]
