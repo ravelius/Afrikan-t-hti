@@ -1,0 +1,1061 @@
+{
+  "_ohje": "Maastonimien tekstit, osa vuoret (kaikki 52 vuoristoa ja ylankoa paitsi himalaja, alpit ja andit, jotka ovat js/packs/maasto-tekstit-malli.js:ssa). Rakenne on sama kuin mallissa: laji -> avain -> { kappaleet }. Kokoava vaihe siirtaa taman tiedostoon js/packs/maasto-tekstit-vuoret.js muodossa `export const MAASTO_TEKSTIT_VUORET = { vuoret: { ... } };` ja lisaa tiedostonimen sw.js:n SHELL-listalle. Avain _kommentit ei kuulu aineistoon: se sisaltaa rivikommenteiksi tarkoitetut huomautukset avaimittain.",
+  "vuoret": {
+    "karakoram": {
+      "kappaleet": [
+        {
+          "teksti": "Vuoret nimettiin kirjaimin. Intian suuri kolmiomittaus merkitsi 1856 Karakoramin huiput koodeilla K1, K2, K3, ja toiseksi mitatulle ei löytynyt paikallista nimeä, koska sitä ei näy yhdestäkään asutusta laaksosta. K2 on ainoa suuri vuori, joka kantaa yhä mittausnumeroaan."
+        },
+        {
+          "tiedosto": "Chogori.jpg",
+          "selite": "K2 pohjoisesta. Jyrkkyys on koko vuoriston tunnus: neljä kahdeksantuhattametristä mahtuu muutaman kymmenen kilometrin säteelle, ja jäätiköt ovat pisimmät napa-alueiden ulkopuolella.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Zacharie Grossen"
+        },
+        {
+          "lainaus": "Myönnän suoraan, etten olisi itse koskaan yrittänyt laskeutumista ja että minä — englantilainen — pelkäsin mennä ensimmäisenä. Onneksi oppaani olivat rohkeampia kuin minä.",
+          "kuka": "Francis Younghusband",
+          "teos": "The Heart of a Continent",
+          "vuosi": 1896,
+          "suomennos": "oma",
+          "linkki": "https://archive.org/details/heartofcontinent0000fran"
+        },
+        {
+          "teksti": "Younghusband ylitti Mustaghin solan 1887 pohjoisesta, ensimmäisenä eurooppalaisena. Baltilaiset oppaat hakkasivat askelmat jäähän ja laskivat miehet kalliota alas kuusi tuntia. Alhaalla hän kääntyi katsomaan ja piti tapahtunutta mahdottomana."
+        }
+      ]
+    },
+    "hindukush": {
+      "kappaleet": [
+        {
+          "teksti": "Aleksanterin armeija ylitti vuoriston keväällä 329 eaa. lumessa ja nälässä, ja makedonialaiset kirjasivat jonon Kaukasukseksi. Nimi ei ollut erehdys vaan valinta: Kaukasus oli kreikkalaisille maailman itäinen reuna, ja sen ylittäminen teki kuninkaasta suuremman."
+        },
+        {
+          "lainaus": "Makedonialaiset siirsivät Kaukasusvuoren Mustaltamereltä maan itäisiin osiin ja antoivat sille, mikä todella oli Parapamisos, Kaukasuksen nimen kohottaakseen Aleksanterin mainetta, koska hän muka oli kulkenut Kaukasuksen yli.",
+          "kuka": "Arrianos, Eratostheneen mukaan",
+          "teos": "Aleksanterin sotaretki V.3, engl. E. J. Chinnock",
+          "vuosi": "n. 140 jaa.",
+          "suomennos": "oma, Chinnockin englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/46976"
+        },
+        {
+          "tiedosto": "Tirich Mir Hindu Kush Chitral; Tahsin Shah 06.jpg",
+          "selite": "Tirich Mir, 7 708 metriä, Chitralin laaksosta. Vuoristo on kapea mutta pitkä, ja juuri kapeus tekee soloista arvokkaita: harjan yli pääsee kävellen muutamassa päivässä, jos tietää mistä.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Tahsin A Shah"
+        },
+        {
+          "teksti": "Nykyinen nimi on yhtä ladattu. Hindukush luetaan usein muotoon hindun tappaja, ja Ibn Battuta selitti sen 1300-luvulla orjakaravaanien kuolonuhreilla. Toinen luenta johtaa sanan persian ilmaukseen, joka tarkoittaa pelkkää vuorta. Kumpaakaan ei voi todistaa."
+        }
+      ]
+    },
+    "pamir": {
+      "kappaleet": [
+        {
+          "teksti": "Marco Polo kulki Pamirin yli 1270-luvulla matkalla Kiinaan. Ylängöllä ei ollut kyliä eikä puita, ja hän pani merkille jotain, mitä ei osannut selittää: tuli käyttäytyi väärin."
+        },
+        {
+          "lainaus": "Seutu on niin korkea ja kylmä, ettei siellä näe edes lintujen lentävän. Ja on huomattava, ettei tuli tämän suuren kylmyyden vuoksi pala yhtä kirkkaasti eikä anna yhtä paljon lämpöä kuin tavallisesti, eikä se kypsennä ruokaa kunnolla.",
+          "kuka": "Marco Polo",
+          "teos": "The Book of Ser Marco Polo I.32, engl. Henry Yule ja Henri Cordier, 3. laitos",
+          "vuosi": 1903,
+          "suomennos": "oma, Yulen englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/10636"
+        },
+        {
+          "tiedosto": "Thomas Edward Gordon Lake Victoria, Great Pamir, May 2nd, 1874.png",
+          "selite": "Thomas Edward Gordonin piirros Suurelta Pamirilta 2. toukokuuta 1874. Järvi on Zorkul, jota britit kutsuivat Victoriaksi ja jota pidettiin Oxuksen lähteenä. Puuta ei kuvassa ole yhtään.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        {
+          "teksti": "Selitys on ilmanpaine. Neljän kilometrin korkeudessa sitä on jäljellä noin kuusi kymmenesosaa: liekki jää viileäksi ja vesi kiehuu jo 85 asteessa, joten liha ei kypsy vaan hautuu. Polon havainto oli tarkka, ja syy löytyi vasta viisisataa vuotta myöhemmin."
+        }
+      ]
+    },
+    "tienshan": {
+      "kappaleet": [
+        {
+          "teksti": "Nimi on käännös. Kiinan Tianshan ja turkkilaisten Tengri tag tarkoittavat kumpikin taivaan vuoria, ja Tengri oli arojen taivaanjumala. Kaksi kieltä ja kaksi uskontoa päätyivät samaan sanaan katsoessaan samaa harjaa."
+        },
+        {
+          "teksti": "Vuoriston juurella Silkkitie haarautui. Taklamakanin voi kiertää pohjoisesta tai etelästä, ja valinta ratkaisi, kenen kaupungin läpi lasti kulki. Turfan, Kuča ja Kašgar elivät siitä valinnasta, ja niiden vauraus vaihteli sen mukana."
+        },
+        {
+          "tiedosto": "Khan Tengri 87 (355).jpg",
+          "selite": "Khan Tengri iltavalossa. Marmorihuippu punertuu auringonlaskussa, ja siitä tulee nimi: taivaan herra. Kuvan otti virolainen Jaan Künnap kiipeilyretkellä 1987.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Jaan Künnap"
+        },
+        {
+          "teksti": "Jäätiköitä on runsaat viisitoistatuhatta. Ne sulavat kesällä juuri silloin, kun aroilla on kuivinta, ja Ili, Tarim ja Chu saavat siitä vetensä. Keitaat ovat sulamiskäyrän varassa, eivät sateen."
+        }
+      ]
+    },
+    "altai": {
+      "kappaleet": [
+        {
+          "teksti": "Denisovan luolasta löytyi sormiluun kärki, joka oli liian pieni kertoakseen mitään. Vuonna 2010 siitä luettiin genomi, eikä se ollut nykyihmisen eikä neandertalinihmisen. Laji nimettiin luolan mukaan, koska muuta nimeämisen perustetta ei ollut."
+        },
+        {
+          "tiedosto": "Belukha.jpg",
+          "selite": "Beluha, 4 506 metriä, Altain korkein. Vuori on neljän valtion kulmassa ja kolmen suuren joen vedenjakajalla; Katun lähtee sen etelärinteeltä ja päätyy lopulta Obiin.",
+          "lahde": "Wikimedia Commons (CC BY 2.5), Ondřej Žváček"
+        },
+        {
+          "teksti": "Sama luola on ollut asuttu myös neandertalilaisten ja nykyihmisten aikaan. Yhdestä luunsirusta tunnistettiin tyttö, jonka äiti oli neandertalilainen ja isä denisovalainen. Hän on toistaiseksi ainoa tunnettu ensimmäisen polven risteymä kahden ihmislajin väliltä."
+        },
+        {
+          "teksti": "Altai on nykyisin neljän maan kohtauspaikka: Venäjä, Kazakstan, Mongolia ja Kiina kohtaavat harjalla. Rajaviivat on piirretty 1860-luvulla. Luola on ollut käytössä satatuhatta vuotta."
+        }
+      ]
+    },
+    "ural": {
+      "kappaleet": [
+        {
+          "teksti": "Maanosien raja on sopimus, ja se piti merkitä käsin. Permin ja Tobolskin läänien rajalla, tien varressa metsäaukiolla, seisoi runsaan kolmen metrin tiilipylväs: toisella kyljellä Euroopan puoleisen läänin vaakuna, toisella Aasian."
+        },
+        {
+          "teksti": "Pylvään ohi kulki Siperian karkotustie. George Kennan pysähtyi siihen 1885 ja laski, että saman kohdan oli vuosisadan aikana ylittänyt yli puoli miljoonaa karkotettua. Saattueiden annettiin levätä siinä ja jättää hyvästit."
+        },
+        {
+          "lainaus": "Jotkut polvistuivat ja painoivat kasvonsa kotimaansa rakkaaseen maahan ja keräsivät siitä vähän mukaansa karkotukseen; muutamat painoivat huulensa kylmän tiilipylvään eurooppalaiselle puolelle, kuin suudellen jäähyväiset kaikelle, mitä se merkitsi.",
+          "kuka": "George Kennan",
+          "teos": "Siberia and the Exile System",
+          "vuosi": 1891,
+          "suomennos": "oma",
+          "linkki": "https://archive.org/details/siberiaexilesyst01kenn"
+        },
+        {
+          "tiedosto": "Snow in the Ural Mountains (MODIS 2016-05-03).jpg",
+          "selite": "Ural toukokuussa satelliitista. Jono erottuu lumijuovana kahdentuhannen kilometrin matkalla, mutta korkeus on vain vajaat kaksituhatta metriä. Maasta katsottuna sitä ei aina huomaa ylittävänsä.",
+          "lahde": "Wikimedia Commons (PD), NASA / MODIS"
+        }
+      ]
+    },
+    "kaukasus": {
+      "kappaleet": [
+        {
+          "teksti": "Kaukasuksen laaksoissa puhutaan yli neljääkymmentä kieltä, ja kolme kokonaista kielikuntaa on vain täällä eikä missään muualla. Antiikissa asia oli jo tiedossa: Mustanmeren rannalla Dioskuriaan satamassa kaupankäynti vaati tulkkeja kymmenittäin."
+        },
+        {
+          "lainaus": "Dioskuriaan kokoontuu seitsemänkymmentä kansaa, tai kolmesataa, jos uskoo kirjoittajia, jotka eivät ole tarkkoja. Kaikki puhuvat eri kieltä, koska elävät hajallaan eri paikoissa ilman keskinäistä kanssakäymistä.",
+          "kuka": "Strabon",
+          "teos": "Maantiede XI.2.16, engl. H. C. Hamilton ja W. Falconer",
+          "vuosi": "n. 20 jaa.",
+          "suomennos": "oma, Hamiltonin ja Falconerin englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/44885"
+        },
+        {
+          "tiedosto": "Travels in the central Caucasus and Bash P.380.jpg",
+          "selite": "Kuvitusta Douglas Freshfieldin matkakirjasta 1869. Hän kiipesi Kazbekille ja Elbrusille ensimmäisten eurooppalaisten joukossa, mutta reitit tunsivat paikalliset oppaat, joita ilman kumpikaan nousu ei olisi onnistunut.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        {
+          "teksti": "Syy on maasto. Jyrkkä laakso pitää kylän erillään naapurista sukupolvien ajan, ja kieli erkanee. Ubyhissa on runsaat kahdeksankymmentä konsonanttia ja kaksi vokaalia; sen viimeinen puhuja kuoli 1992."
+        }
+      ]
+    },
+    "tiibetin-ylatasanko": {
+      "kappaleet": [
+        {
+          "teksti": "Ranskalaiset lasaristit Évariste Huc ja Joseph Gabet liittyivät 1845 karavaaniin, joka kulki ylätasangon poikki Lhasaan. Tang-Lan edessä matkatoverit ilmoittivat, että sairaat kuolevat ja terveet sairastuvat. Gabetin kuolemaa pidettiin varmana."
+        },
+        {
+          "tiedosto": "A Proliferation of Lakes on the Tibetan Plateau (154011 - oli2 20240811 lrg).jpg",
+          "selite": "Changtangin järviä satelliitista. Umpinaisella ylätasangolla vedellä ei ole ulospääsyä, joten se jää altaisiin ja haihtuu suolaiseksi. Järvien pinta-ala on kasvanut mitattavasti viime vuosikymmeninä.",
+          "lahde": "Wikimedia Commons (PD), NASA Earth Observatory"
+        },
+        {
+          "lainaus": "Tang-Lalta laskeutuminen kesti kauan mutta oli itsessään nopeaa. Neljä kokonaista päivää me laskeuduimme kuin jättiläisportaita, joiden jokainen askelma oli vuori.",
+          "kuka": "Évariste Régis Huc",
+          "teos": "Travels in Tartary, Thibet and China, engl. William Hazlitt",
+          "vuosi": 1852,
+          "suomennos": "oma, Hazlittin englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/33269"
+        },
+        {
+          "teksti": "Gabet parani, ja karavaani pääsi Lhasaan tammikuussa 1846. Kuukauden päästä Kiinan lähetti karkotti heidät. Hucin kertomus jäi vuosikymmeniksi ainoaksi länsimaiseksi kuvaukseksi reitistä, jota kukaan ei kulkenut uudelleen."
+        }
+      ]
+    },
+    "kunlun": {
+      "kappaleet": [
+        {
+          "teksti": "Khotanin kaksi jokea tulevat Kunlunista ja tuovat mukanaan kiveä, jota on onkittu ja louhittu kolmetuhatta vuotta. Kiinaksi se on yu, jade. Marco Polo ei tuntenut sanaa eikä kiveä ja kirjasi sen niillä nimillä, jotka osasi."
+        },
+        {
+          "lainaus": "Tässä maassa on jokia, joista löytyy runsaasti jaspista ja kalkedonia.",
+          "kuka": "Marco Polo",
+          "teos": "The Book of Ser Marco Polo I.37, engl. Henry Yule ja Henri Cordier, 3. laitos",
+          "vuosi": 1903,
+          "suomennos": "oma, Yulen englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/10636"
+        },
+        {
+          "tiedosto": "ISS022-E-5098 - View of China - Kunlun Mountains - Liushi Shan - Trungtse Glacier (cropped).jpg",
+          "selite": "Kunlunin harjaa avaruusasemalta. Etelässä alkaa Tiibetin ylätasanko, pohjoisessa laskeudutaan suoraan Taklamakanin hiekkaan. Jono on kolmetuhatta kilometriä pitkä, ja teitä sen yli on kourallinen.",
+          "lahde": "Wikimedia Commons (PD), NASA"
+        },
+        {
+          "teksti": "Nimet ovat jääneet paikoilleen. Yurungkash on valkoisen jaden joki ja Karakash mustan. Kiinalaisessa mytologiassa Kunlun on jumalten asuinsija ja Lännen kuningatar-äidin puutarha, eli tarkalleen se suunta, josta jade tuli."
+        }
+      ]
+    },
+    "zagros": {
+      "kappaleet": [
+        {
+          "teksti": "Kymmenentuhatta kreikkalaista palkkasoturia yritti vuonna 401 eaa. päästä kotiin Babylonin luota. Tigris oli liian syvä ja ranta liian kapea, joten oli mentävä vuorten läpi. Vangit kertoivat, että ylhäällä asuu kansa, joka ei tottele kuningasta."
+        },
+        {
+          "tiedosto": "Zagros from above.jpg",
+          "selite": "Zagrosin poimuja ilmasta. Kerrokset ovat taipuneet aalloiksi Arabian ja Euraasian laattojen välissä, ja jokien uomat seuraavat poimujen välejä, mikä tekee poikittaisesta kulkemisesta hidasta.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Chrisrabinson"
+        },
+        {
+          "lainaus": "Seitsemän päivää karduukkien maassa oli ollut yhtä yhtämittaista taistelua, ja ne olivat maksaneet enemmän kärsimystä kuin kaikki vaivat kuninkaan ja Tissafernesin käsissä yhteensä.",
+          "kuka": "Ksenofon",
+          "teos": "Anabasis IV.3, engl. H. G. Dakyns",
+          "vuosi": "n. 370 eaa.",
+          "suomennos": "oma, Dakynsin englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/1170"
+        },
+        {
+          "teksti": "Karduukit ovat kurdien esi-isiä. Sama vuoristo on paikka, jossa vehnä ja ohra kesytettiin ja vuohi otettiin kotieläimeksi. Kirja, jonka Ksenofon retkestä kirjoitti, oli vuosisatoja kreikan ensimmäinen oppikirja Euroopan kouluissa."
+        }
+      ]
+    },
+    "elburz": {
+      "kappaleet": [
+        {
+          "teksti": "Kaspianmeren etelärannalla sataa yli tuhat milliä vuodessa ja rinteillä kasvaa lehtimetsä, joka on säilynyt jääkaudelta lähes ennallaan. Harjan yli on matkaa muutama kymmenen kilometriä. Toisella puolella alkaa aavikko."
+        },
+        {
+          "teksti": "Persialaisessa tarustossa vuoren sisään on kahlittu Zahhak, kuningas, jonka olkapäistä kasvoi käärmeet. Häntä ei voinut tappaa, ainoastaan sulkea. Firdausin Shahname kertoo, että hän odottaa siellä maailmanloppua."
+        },
+        {
+          "tiedosto": "2009-05-13 Damavand from Abbasabad 08.jpg",
+          "selite": "Damavand, 5 610 metriä, Aasian korkein tulivuori. Se nousee yksin ilman naapurihuippua, ja huipulla on rikkihöyryä ja keltaista lunta. Teheranista on matkaa runsaat kuusikymmentä kilometriä.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Hansueli Krapf"
+        },
+        {
+          "teksti": "Kapeus tekee jonosta muurin. Kaspian rannikko on kosteaa riisi- ja teemaata, ylängöllä sataa alle kaksisataa milliä, ja Teheran on rakennettu juuri rajalle: vesi tulee vuorilta ja ilma aavikolta."
+        }
+      ]
+    },
+    "taurusvuoret": {
+      "kappaleet": [
+        {
+          "teksti": "Kilikian portit ovat muutaman kilometrin pituinen rako Taurusvuorten läpi, paikoin niin kapea, ettei kaksi kärryä mahdu rinnakkain. Kyros nuoremman armeija nousi sinne 401 eaa. valmiina taisteluun, jota ei tullut: solaa vartioinut Syennesis oli lähtenyt yöllä."
+        },
+        {
+          "tiedosto": "Puertas Cilícias.jpg",
+          "selite": "Kilikian portit nykyisin. Çakıt-joki on sahannut raon kalkkikiveen, ja tie kulkee samassa uomassa kuin ennen. Kalliossa näkyy yhä leikkausjälkiä, joita on pidetty roomalaisen levennystyön jälkinä.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        {
+          "teksti": "Kyroksen retki päättyi kolmen kuukauden päästä hänen kuolemaansa Kunaksassa, ja kreikkalaiset joutuivat kävelemään kotiin. Sola sen sijaan jäi käyttöön ja on ollut käytössä siitä asti."
+        },
+        {
+          "lainaus": "Se on joka puolelta suljettu jyrkkien ja korkeiden vuorten muuriin, merestä mereen.",
+          "kuka": "Ksenofon",
+          "teos": "Anabasis I.2, engl. H. G. Dakyns",
+          "vuosi": "n. 370 eaa.",
+          "suomennos": "oma, Dakynsin englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/1170"
+        }
+      ]
+    },
+    "verhojansk": {
+      "kappaleet": [
+        {
+          "teksti": "Verhojanskissa luettiin helmikuussa 1892 lämpömittarista 67,8 pakkasastetta. Se on kylmin luku, joka on koskaan mitattu asutulta paikalta pohjoisella pallonpuoliskolla; Oimjakon on kiistänyt ensimmäisen sijan myöhemmin."
+        },
+        {
+          "tiedosto": "Verkhoyansk Range, Republic of Sakha (Yakutia), Russia - 2-2019.jpg",
+          "selite": "Verhojanskin vuoristoa helmikuussa. Jono kaartaa Lenan takana runsaat tuhat kilometriä ja on korkeimmillaan vain 2 400 metriä. Kylmä ei tule korkeudesta vaan siitä, mitä vuoret ympäröivät.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Ilja Varlamov"
+        },
+        {
+          "teksti": "Syy on muoto. Kaari sulkee Jakutian altaan pussiksi, ja talvella raskas kylmä ilma valuu rinteitä alas ja jää altaaseen makaamaan, koska sillä ei ole mihinkään mennä. Sama ilma on paikallaan kuukausia."
+        },
+        {
+          "teksti": "Kesällä sama kylä nousee yli kolmenkymmenen asteen. Vuotuinen vaihteluväli on runsaat sata astetta, suurin maapallolla mitattu, ja se osuu paikkaan, jossa asuu ihmisiä."
+        }
+      ]
+    },
+    "kamtshatka": {
+      "kappaleet": [
+        {
+          "teksti": "George Kennan seisoi syksyllä 1865 Kljutšin kylässä ja katsoi tulivuorta, jonka jyrinä kuului kuudenkymmenen mailin päähän. Kylä oli rakennettu sen juurelle vanhojen laavavirtojen väliin. Hän kirjasi kaksi asiaa muistiin."
+        },
+        {
+          "lainaus": "Tulivuorelle ei tietääkseni ole koskaan noustu, ja sen ilmoitettu korkeus, 16 500 jalkaa, on luultavasti jonkin venäläisen upseerin likiarvio.",
+          "kuka": "George Kennan",
+          "teos": "Tent Life in Siberia, uudistettu laitos",
+          "vuosi": 1910,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/12328"
+        },
+        {
+          "tiedosto": "Klyuchevskaya Sopka (Klyuchevskoi) Volcano with lava flow, Kamchatka, Russia - October 31st, 2020.jpg",
+          "selite": "Kljutševskaja sopka ja laavavirta lokakuussa 2020, satelliittikuvana. Purkaus tulee keskimäärin joka toinen vuosi, ja tuhkaa on satanut kaupungeissa molemmilla puolilla niemimaata.",
+          "lahde": "Wikimedia Commons (CC BY 2.0), Pierre Markuse"
+        },
+        {
+          "teksti": "Molemmissa hän erehtyi. Huipulle oli noustu jo 1788, ja korkeus on 4 754 metriä eli lähes tuhat jalkaa arviota vähemmän. Erehdykset olivat silti rehellisiä: kumpaakaan tietoa ei ollut saatavilla siellä missä hän seisoi."
+        }
+      ]
+    },
+    "lansi-ghatit": {
+      "kappaleet": [
+        {
+          "teksti": "Lounaismonsuuni tulee mereltä ja törmää seinään. Ghatit nousevat rannikolta jyrkästi ja pysäyttävät sateen: Agumben kylässä sataa yli seitsemän metriä vuodessa, ja sadan kilometrin päässä idässä Deccanin ylänkö on kuiva."
+        },
+        {
+          "tiedosto": "Monsoon clouds in Western ghats.jpg",
+          "selite": "Monsuunipilvi nousee Ghattien reunaa vasten. Sama ilmiö toistuu joka kesäkuu muutaman päivän tarkkuudella, ja Intian maatalouden vuosi on rakennettu sen varaan.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Cpangarkar"
+        },
+        {
+          "teksti": "Sama seinä teki mausteista kauppatavaraa. Pippuri ja kardemumma kasvavat vain kostealla puolella, ja roomalaiset laivat purjehtivat monsuunituulella suoraan Malabarin satamiin. Plinius vanhempi valitti, että Intia imee Roomasta viisikymmentä miljoonaa sestertiota vuodessa."
+        },
+        {
+          "teksti": "Ghatit eivät ole poimuvuoristo vaan mannerlaatan murtumareuna, ja ne ovat vanhemmat kuin Himalaja. Kun Intia irtautui Madagaskarista, sen länsireuna jäi pystyyn."
+        }
+      ]
+    },
+    "japanin-alpit": {
+      "kappaleet": [
+        {
+          "teksti": "Nimen keksi brittiläinen kaivosinsinööri William Gowland, joka työskenteli Osakan rahapajassa ja kiipesi vapaa-ajallaan. Toinen brittiläinen, pappi Walter Weston, teki nimestä pysyvän kirjalla, jossa jokainen huippu sai eurooppalaisen vertauskohtansa."
+        },
+        {
+          "lainaus": "Yarigatake, keihäshuippu, Japanin Matterhorn; Jonendake, jonka soreassa kolmiomuodossa toistuu pienoiskoossa Weisshorn, Penniinien Alppien kuningatar.",
+          "kuka": "Walter Weston",
+          "teos": "Mountaineering and Exploration in the Japanese Alps",
+          "vuosi": 1896,
+          "suomennos": "oma",
+          "linkki": "https://archive.org/details/mountaineeringex00westrich"
+        },
+        {
+          "tiedosto": "View from Kita dake-pano2.jpg",
+          "selite": "Näkymä Kita-dakelta, Japanin toiseksi korkeimmalta huipulta. Eteläiset Alpit ovat graniittia ja liusketta, ja rinteillä kasvaa kääpiövaivaiskoivikkoa, joka on jäänyt jäljelle jääkaudelta.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Kumaapr9"
+        },
+        {
+          "teksti": "Vuorilla oli omat nimensä ja oma uskontonsa. Tateyamalle ja Ontakelle on noustu pyhiinvaellusryhminä satojen vuosien ajan, valkeissa vaatteissa ja rukoillen, ja Weston kohtasi näitä ryhmiä reiteillään. Japanin oma vuoristokerho perustettiin 1905."
+        }
+      ]
+    },
+    "annamin-ylanko": {
+      "kappaleet": [
+        {
+          "teksti": "Henri Mouhot kulki syksyllä 1861 Laosin vuorilla kohti Luang Prabangia. Hän oli kerännyt hyönteisiä kolme vuotta ja tullut tunnetuksi kuvauksestaan Angkorin raunioista, joita hän ei löytänyt mutta joista hän kirjoitti Euroopalle ensimmäisenä."
+        },
+        {
+          "lainaus": "Tie kulkee korkeiden vuorten yli, ja viidakot ovat täynnä apinoita, jotka päästävät valittavia huutojaan.",
+          "kuka": "Henri Mouhot",
+          "teos": "Travels in the Central Parts of Indo-China (Siam), Cambodia, and Laos",
+          "vuosi": 1864,
+          "suomennos": "oma, teoksen englanninkielisestä laitoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/46560"
+        },
+        {
+          "tiedosto": "Phou Bia seen from Xaysomboun.jpg",
+          "selite": "Phou Bia, Laosin korkein huippu, 2 819 metriä. Ylängön metsät ovat tiheitä ja laaksot kapeita; sama maasto piti kaksi kulttuuripiiriä erillään ja tarjosi myöhemmin suojan Ho Chi Minhin polulle.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Boroli"
+        },
+        {
+          "teksti": "Merkintä on hänen viimeinen kertova rivinsä. Sen jälkeen päiväkirjassa on vain päivämääriä, ja 19. lokakuuta lukee: kuume. Hän kuoli 10. marraskuuta, ja palvelijat Phrai ja Deng hautasivat hänet ja kantoivat muistikirjat Bangkokiin asti."
+        }
+      ]
+    },
+    "sarawat": {
+      "kappaleet": [
+        {
+          "teksti": "Punaisenmeren itärannalla nousee jono, joka pysäyttää kosteuden. Jemenin ylängöllä sataa säännöllisesti, ja rinteet on porrastettu terasseiksi kivimuurein. Työ on jatkunut yli kaksituhatta vuotta, ja muurit on ladottu ilman laastia."
+        },
+        {
+          "tiedosto": "Haraz Mountains, Yemen (12633745063).jpg",
+          "selite": "Harazin vuorten terasseja. Muuri pitää mullan paikallaan ja hidastaa veden, joka muuten katoaisi rinnettä alas tunnissa. Kylät on rakennettu harjanteille, jotta viljelysmaata ei menisi hukkaan.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.0), Rod Waddington"
+        },
+        {
+          "teksti": "Kahvipensas tuotiin Etiopiasta näille terasseille 1400-luvulla, ja Jemenistä tuli maailman ensimmäinen kahvinviejä. Mokka on sataman nimi, ei pavun. Kun hollantilaiset veivät taimia Jaavaan 1600-luvun lopulla, monopoli oli ohi kahdessa sukupolvessa."
+        },
+        {
+          "teksti": "Terassit ovat nyt vaarassa toisesta syystä. Ylängön pohjavesi on ehtymässä, ja qat-pensas, joka juo enemmän ja tuottaa nopeammin, on syrjäyttänyt kahvin monelta rinteeltä."
+        }
+      ]
+    },
+    "pyreneet": {
+      "kappaleet": [
+        {
+          "teksti": "Kaarle Suuren jälkijoukko tuhoutui 15. elokuuta 778 Pyreneiden solassa. Hyökkääjät olivat baskeja ja syy oli kosto: frankit olivat matkalla etelään hajottaneet Pamplonan muurit. Kyse oli väijytyksestä, ei taistelusta."
+        },
+        {
+          "lainaus": "Korkeat ovat huiput, laaksot varjoisat, kalliot tummat, kapeikot hämmästyttävät.",
+          "kuka": "tuntematon runoilija",
+          "teos": "Rolandin laulu, laisse LXVI, engl. C. K. Scott Moncrieff",
+          "vuosi": "n. 1100",
+          "suomennos": "oma, Scott Moncrieffin englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/391"
+        },
+        {
+          "tiedosto": "Gustave Doré - Roland à Roncevaux.jpg",
+          "selite": "Gustave Doré kuvitti Rolandin laulun 1800-luvulla. Kuvassa Roland puhaltaa torveaan liian myöhään. Tapaus on tuolloin runsaat tuhat vuotta vanha, ja Dorén Pyreneet ovat jyrkemmät kuin todelliset.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        {
+          "teksti": "Kolmesataa vuotta myöhemmin tapaus oli muuttunut toiseksi. Rolandin laulussa vihollinen on saraseeni, kyseessä on uskonsota, ja jälkijoukon johtaja kuolee sankarina. Väärästä vihollisesta tuli Ranskan kansalliseepos."
+        }
+      ]
+    },
+    "karpaatit": {
+      "kappaleet": [
+        {
+          "teksti": "Bram Stoker ei käynyt koskaan Transilvaniassa. Hän luki Lontoon kirjastoissa, ja tärkein lähde oli skotlantilaisen Emily Gerardin essee transilvanialaisista taikauskoista vuodelta 1885. Siitä tuli Draculan ensimmäinen luku."
+        },
+        {
+          "lainaus": "Luin, että jokainen maailman tunnettu taikausko on kerääntynyt Karpaattien hevosenkenkään, kuin se olisi jonkinlaisen mielikuvituksen pyörteen keskus.",
+          "kuka": "Bram Stoker",
+          "teos": "Dracula, Jonathan Harkerin päiväkirja",
+          "vuosi": 1897,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/345"
+        },
+        {
+          "tiedosto": "Gerlachovský štít (Gerlach Peak).jpg",
+          "selite": "Gerlachovský štít, 2 655 metriä, Karpaattien korkein. Korkeat Tatrat ovat vain 25 kilometriä pitkä pätkä kaaresta, joka kiertää Unkarin tasangon puolitoista tuhatta kilometriä.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Midnight Runner"
+        },
+        {
+          "teksti": "Todellisuus on toisenlainen ja vähintään yhtä epätavallinen. Karpaattien kaaressa elää Euroopan suurin ruskeakarhukanta sekä sudet ja ilvekset, ja mantereen viimeiset laajat aarniometsät, joita ei ole koskaan hakattu, ovat näillä rinteillä."
+        }
+      ]
+    },
+    "skandit": {
+      "kappaleet": [
+        {
+          "teksti": "Selkäranka on jyrkkä lännestä ja loiva idästä, ja se ratkaisi kumman puolen asukkaat lähtivät merelle. Vuono ulottuu sisämaahan sata kilometriä ja on syvempi kuin ympäröivä meri; maatie ei ulottunut mihinkään."
+        },
+        {
+          "tiedosto": "Jotunheimen - view from Galdhøpiggen.JPG",
+          "selite": "Jotunheimen Galdhøpiggenin huipulta. Skandien korkein kohta on 2 469 metriä, mutta se on jäätikön keskellä eikä näytä siltä: pohjoinen sijainti tuo lumirajan alas kilometrin päähän merenpinnasta.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Pudelek / Marcin Szala"
+        },
+        {
+          "teksti": "Vuonot ovat jääkauden kaivamia laaksoja, jotka meri täytti. Sognefjord on 1 308 metriä syvä ja sen kynnys suulla vain sata: jäätikkö jyrsi pohjan merenpinnan alle mutta ei jaksanut kuljettaa ainesta ulos."
+        },
+        {
+          "teksti": "Selänne on myös vedenjakaja. Idän joet ehtivät kasvaa Pohjanlahdelle asti, lännen putoavat mereen muutamassa kymmenessä kilometrissä. Siksi Ruotsin vesivoima on joissa ja Norjan pudotuksessa."
+        }
+      ]
+    },
+    "apenniinit": {
+      "kappaleet": [
+        {
+          "teksti": "Hannibalin sotanorsuista oli Trebian taistelun jälkeen jäljellä seitsemän. Liviuksen mukaan ne kuolivat kaikki keväällä 217 eaa., kun armeija yritti ylittää Apenniinit Etruriaan — eivät Alpeilla, joista tarina yleensä muistetaan."
+        },
+        {
+          "lainaus": "Apenniineja ylittäessään häntä kohtasi niin raivokas myrsky, että se melkein voitti Alppien kauhut.",
+          "kuka": "Livius",
+          "teos": "Ab urbe condita XXI.58, engl. D. Spillan ja C. Edmonds",
+          "vuosi": "n. 20 eaa.",
+          "suomennos": "oma, Spillanin ja Edmondsin englanninnoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/10907"
+        },
+        {
+          "tiedosto": "Corno Grande del Gran Sasso d'Italia.JPG",
+          "selite": "Corno Grande, 2 912 metriä, Apenniinien korkein. Sen alla oli Calderone, Euroopan eteläisin jäätikkö, joka luokiteltiin 2000-luvulla lumikentäksi, koska se ei enää liiku.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Infinitispazi"
+        },
+        {
+          "teksti": "Apenniinit ovat Alppeja matalammat mutta kapeammat, ja ne pakottavat liikenteen muutamaan solaan. Sama kapeus pysäytti liittoutuneiden etenemisen Goottien linjalle talveksi 1944, kun rintama seisoi harjalla puoli vuotta."
+        }
+      ]
+    },
+    "dinaariset-alpit": {
+      "kappaleet": [
+        {
+          "teksti": "Sana karsti on lainattu tästä vuoristosta. Kras on slovenialainen ylänkö Triesten takana, ja 1800-luvun geologit ottivat sen nimeksi ilmiölle, jota tutkivat siellä ensimmäisenä: kalkkikivelle, jonka läpi vesi katoaa."
+        },
+        {
+          "tiedosto": "Uvala NVelebit Veliki-Lubenovac Dinarides Croatia.jpg",
+          "selite": "Velebitin karstilaakso. Pinnalla ei ole puroa eikä järveä, koska vesi menee heti maan alle. Kuoppa nimeltä uvala syntyy, kun useampi kalkkikiven liukenemispesäke sulautuu yhteen.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Boris Papeš"
+        },
+        {
+          "teksti": "Vesi kulkee alhaalla. Postojnan luolasto on yli kaksikymmentä kilometriä pitkä, ja kylän kaivo saattaa olla sadan metrin syvyydessä. Sisämaassa vettä on siksi vaikea saada, vaikka sadetta tulee runsaasti."
+        },
+        {
+          "teksti": "Muuri teki Dalmatian satamista saaria. Ne katsoivat merelle eivätkä taakseen, ja Venetsia hallitsi niitä neljäsataa vuotta ilman että sen tarvitsi hallita sisämaata lainkaan."
+        }
+      ]
+    },
+    "balkanvuoret": {
+      "kappaleet": [
+        {
+          "teksti": "Niemimaa on nimetty väärin. Saksalainen maantieteilijä August Zeune otti 1808 turkin sanan balkan, vuori, ja antoi sen koko niemimaalle olettaen, että tämä jono rajaa sen pohjoisesta. Raja on Tonava ja Sava; Balkanvuoret kulkevat keskellä Bulgariaa."
+        },
+        {
+          "teksti": "Elokuussa 1877 venäläiset ja bulgarialaiset vapaaehtoiset puolustivat solaa kuusi päivää suurta ylivoimaa vastaan. Patruunoiden loputtua he heittivät kiviä. Sola piti, ja sota kääntyi siitä."
+        },
+        {
+          "tiedosto": "Shipka pass.jpg",
+          "selite": "Šipkan sola, 1 150 metriä, jonon tunnetuin kohta. Solan huipulla on muistomerkki, jonka rahat kerättiin kansalta 1920-luvulla. Tie on sama, jota pitkin hyökättiin.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Ivan Ivanov"
+        },
+        {
+          "teksti": "Bulgaria sai autonomian seuraavana vuonna. Sola on maan käytetyin kansallissymboli, ja sen nimi on kuulunut jokaiseen koulukirjaan siitä lähtien — myös silloin kun valtio vaihtoi muotoa kahdesti."
+        }
+      ]
+    },
+    "atlas": {
+      "kappaleet": [
+        {
+          "teksti": "Joseph Dalton Hooker matkusti 1871 Marokkoon selvittääkseen, mitä Atlaksen rinteillä kasvaa. Sulttaanin lupa oli haettava etukäteen, eikä laaksoihin päässyt ilman sitä. Retkikunta nousi Tagherotin solaan, 3 500 metriin."
+        },
+        {
+          "tiedosto": "View from Toubkal west flank.jpg",
+          "selite": "Näkymä Toubkalin länsirinteeltä. Pohjois-Afrikan korkein huippu on 4 167 metriä, ja lunta on kuvan ottohetkellä paikoin. Kolmen viikon päästä samasta paikasta ei välttämättä näy yhtään.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), ThartmannWiki"
+        },
+        {
+          "lainaus": "Yksi matkaaja on voinut nähdä jonon paksun lumen peitossa kuumimpaankin aikaan, ja toinen voi yhtä totuudenmukaisesti kuvata sen lähes täysin paljaaksi.",
+          "kuka": "Joseph Dalton Hooker ja John Ball",
+          "teos": "Journal of a Tour in Marocco and the Great Atlas",
+          "vuosi": 1878,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/70700"
+        },
+        {
+          "teksti": "Kysymys oli, onko Atlaksella ikilunta. Matkakertomukset olivat keskenään ristiriitaisia, ja Hooker ja Ball tajusivat, että molemmat saattoivat olla oikeassa: lunta sataa kesälläkin, mutta pystysuora aurinko sulattaa sen viikossa. Ikilunta ei ole."
+        }
+      ]
+    },
+    "etiopian-ylangot": {
+      "kappaleet": [
+        {
+          "teksti": "James Bruce saapui marraskuussa 1770 Gishin lähteelle, josta Sinisen Niilin vesi lähtee. Hän riisui kenkänsä pyynnöstä, juoksi rinteen alas ja seisoi paikassa, jota Eurooppa oli etsinyt kaksituhatta vuotta."
+        },
+        {
+          "lainaus": "Vaikka olin vain yksityinen britti, riemuitsin siinä mielessäni kuninkaiden ja heidän armeijoidensa yli; ja jokainen vertaus vei yhä lähemmäs julkeutta, kunnes paikka itse, turhamaisuuteni kohde, painoi lyhyen riemuni maahan.",
+          "kuka": "James Bruce",
+          "teos": "Travels to Discover the Source of the Nile, osa 3",
+          "vuosi": 1790,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/54531"
+        },
+        {
+          "tiedosto": "Simien Mountains Landscape, Ethiopia (2462794039).jpg",
+          "selite": "Simienin rotkoja. Ylänkö on basalttia, jonka joet ovat leikanneet pystyseinäisiksi torneiksi; korkeuseroa on paikoin puolitoista kilometriä. Sama maasto teki valloittamisesta kalliin puuhan.",
+          "lahde": "Wikimedia Commons (CC BY 2.0), A. Davey"
+        },
+        {
+          "teksti": "Kaksi asiaa vaivasi. Portugalilainen jesuiitta Pedro Páez oli seisonut samalla lähteellä 1618, ja Bruce tiesi sen mutta kiisti. Ja Lontoossa hänen kertomustaan pidettiin valheena viisitoista vuotta. Se oli totta lähes kokonaan."
+        }
+      ]
+    },
+    "drakensberg": {
+      "kappaleet": [
+        {
+          "teksti": "Jyrkänne on tuhat metriä korkea ja se jatkuu satoja kilometrejä. Alla on rannikon kaistale, päällä Lesothon ylänkö. Zuluksi se on uKhahlamba, keihäiden muuri; buurit kutsuivat sitä lohikäärmevuoriksi."
+        },
+        {
+          "tiedosto": "San Painting, Ukalamba Drakensberge 1.JPG",
+          "selite": "Sanien kalliomaalaus Drakensbergissä. Maalauksia on yli kuudessasadassa paikassa ja kuvia kymmeniätuhansia — Afrikan laajin yhtenäinen kokoelma. Vanhimmat ovat tuhansien vuosien ikäisiä.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Lukas Kaffer"
+        },
+        {
+          "teksti": "Viimeiset maalattiin 1800-luvulla. Kuvissa on tuolloin hevosia ja pyssyjä, ja samaan aikaan maalaajien kansa hävitettiin näiltä vuorilta. Maalaukset jäivät, tekijät eivät."
+        },
+        {
+          "tiedosto": "Amphitheatre Drakensberg.jpg",
+          "selite": "Amfiteatteri, viiden kilometrin levyinen ja tuhannen metrin korkuinen seinä. Sen laelta putoaa Tugela, jonka kokonaispudotus on runsaat yhdeksänsataa metriä ja joka kuivuu talvella lähes kokonaan.",
+          "lahde": "Wikimedia Commons (PD)"
+        }
+      ]
+    },
+    "ruwenzori": {
+      "kappaleet": [
+        {
+          "teksti": "Ptolemaios merkitsi karttaansa Kuun vuoret ja sanoi, että Niili lähtee niiden lumista. Kahdeksantoista vuosisataa myöhemmin lähde oli jo etsitty ja löydetty muualta, kun Stanley näki 24. toukokuuta 1888 jotain, mitä luuli ensin pilveksi."
+        },
+        {
+          "lainaus": "Silloin tajusin ensimmäistä kertaa, ettei se, mitä katselin, ollut suunnattoman vuoren kuva tai kaltaisuus vaan sen kiinteä aine, huippu lumen peittämänä.",
+          "kuka": "Henry Morton Stanley",
+          "teos": "In Darkest Africa, osa 1",
+          "vuosi": 1890,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/43654"
+        },
+        {
+          "tiedosto": "Ruwenzori Mountains Virunga National Park.jpg",
+          "selite": "Ruwenzori pilvien välistä. Vuoret ovat pilvessä lähes aina, ja rinteillä kasvaa jättiläismäisiä lobelioita ja ristikukkaisia, jotka ovat sopeutuneet yöpakkasiin ja päivän paahteeseen saman vuorokauden sisällä.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Cai Tjeenk Willink"
+        },
+        {
+          "teksti": "Vuoren oli osoittanut poika, joka sanoi sen olevan suolan peitossa. Baker ja Emin Pasha olivat purjehtineet Albert-järveä sen juurella näkemättä mitään. Ptolemaios oli ollut osittain oikeassa: sulamisvesi menee Niiliin."
+        }
+      ]
+    },
+    "kilimanjaro": {
+      "kappaleet": [
+        {
+          "teksti": "Johannes Rebmann näki 11. toukokuuta 1848 savannin yllä valkoisen huipun ja kirjoitti päiväkirjaansa, että se on lunta. Lontoossa maantieteilijä William Desborough Cooley julisti asian mahdottomaksi: päiväntasaajalla ei ole lunta, ja lähetyssaarnaaja oli nähnyt kalkkikiveä."
+        },
+        {
+          "teksti": "Rebmann oli oikeassa, ja se myönnettiin vasta 1861. Cooley ei myöntänyt koskaan. Hän ei ollut käynyt Afrikassa eikä käynyt myöhemminkään, mutta hän oli seuransa arvostetuin Afrikan-tuntija."
+        },
+        {
+          "tiedosto": "Mount Kilimandjaro in Amboseli national park.jpg",
+          "selite": "Kilimanjaro Amboselista. Vuori nousee savannista suoraan viisi kilometriä ilman ympäröivää vuoristoa, ja siksi se näkyy sadan kilometrin päähän. Rinteellä on viisi kasvillisuusvyöhykettä.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Benh Lieu Song"
+        },
+        {
+          "teksti": "Kibon jäätiköistä on sulanut yli neljä viidesosaa siitä, mitä Hans Meyer ja Ludwig Purtscheller mittasivat 1889 noustessaan huipulle chaggaoppaansa Yohani Lauwon johdolla. Loput ovat ohuita levyjä, joiden reunat ovat pystysuorat."
+        }
+      ]
+    },
+    "kenia-vuori": {
+      "kappaleet": [
+        {
+          "teksti": "Kikujujen kielellä vuori on Kirinyaga ja sillä asuu Ngai. Perinteinen maja rakennetaan ovi vuorta kohti, ja rukoillessa käännytään samaan suuntaan. Nimi Kenia on väännös, jonka eurooppalaiset kuulivat kamban kielen muodosta."
+        },
+        {
+          "teksti": "Halford Mackinder, joka opetti maantiedettä Oxfordissa, nousi Batianille syyskuussa 1899. Huipulle pääsivät hänen kanssaan kaksi alppiopasta Courmayeurista, César Ollier ja Joseph Brocherel. Retkikunnassa oli lisäksi runsaat sata afrikkalaista kantajaa, joiden nimiä ei kirjattu."
+        },
+        {
+          "tiedosto": "Batian and Nelion in the background cropped.JPG",
+          "selite": "Batian ja Nelion, 5 199 ja 5 188 metriä. Ne ovat sammuneen tulivuoren tulikanavan jähmettynyt täyte: pehmeä kartio on kulunut pois ja kova sydän jäänyt pystyyn.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Chris 73"
+        },
+        {
+          "teksti": "Alkuperäinen vuori oli arviolta pari kilometriä nykyistä korkeampi. Se on siis pienentynyt enemmän kuin mitä siitä on jäljellä, ja jäljellä oleva on sitä osaa, joka ei koskaan päässyt ulos."
+        }
+      ]
+    },
+    "ahaggar": {
+      "kappaleet": [
+        {
+          "teksti": "Ahaggar on Saharan keskellä, ja se on viileä. Kahden ja puolen kilometrin korkeudessa yöt menevät pakkaselle, ja kallionkoloihin jää vettä, joka ei ehdi haihtua. Siksi karavaanitiet kulkivat tästä eivätkä ohi."
+        },
+        {
+          "tiedosto": "View from the Assekrem.jpg",
+          "selite": "Assekremin ylätasanko. Pystyt tornit ovat tulivuorten kurkkujen kovettunutta täytettä, jonka ympäriltä pehmeämpi tuhka on tuulettunut pois. Assekrem tarkoittaa tamašekiksi maailmanloppua.",
+          "lahde": "Wikimedia Commons (CC BY 2.0), Guillaume Lecoquierre"
+        },
+        {
+          "teksti": "Kalliomaalauksissa on karjaa, norsuja ja virtahepoja. Ne ovat viisi- tai kuusituhatta vuotta vanhoja, ajalta jolloin Saharassa satoi ja se oli ruohotasankoa. Muutos ei johtunut ihmisestä vaan maapallon akselin kallistuman hitaasta heilahduksesta."
+        },
+        {
+          "teksti": "Tuaregien kieli tamašek kirjoitetaan tifinagilla, aakkosilla, jotka polveutuvat muinaisista libyalaisista merkeistä. Kirjoitustaito on perinteisesti ollut naisilla."
+        }
+      ]
+    },
+    "tibesti": {
+      "kappaleet": [
+        {
+          "teksti": "Emi Koussi on kolme ja puoli kilometriä korkea kilpitulivuori, jonka lakikaldera on runsaat kymmenen kilometriä leveä. Se on Saharan korkein kohta, ja sen muoto on niin lähellä Marsin Elysium Monsia, että planeettatutkijat käyttävät sitä vertailukohtana."
+        },
+        {
+          "tiedosto": "Emi Koussi.jpg",
+          "selite": "Emi Koussi satelliitista. Loiva kilpi ja keskellä romahtanut kaldera; pohjalla on tuhkakartioita ja kuivunutta natronia. Ympärillä ei ole mitään sadan kilometrin säteellä.",
+          "lahde": "Wikimedia Commons (PD), NASA"
+        },
+        {
+          "teksti": "Gustav Nachtigal oli 1869 ensimmäinen ulkopuolinen, joka pääsi Tibestiin. Hän selvisi hädin tuskin: tedat pitivät häntä vakoojana ja riistivät häneltä lähes kaiken. Alue kartoitettiin kunnolla vasta 1900-luvun puolivälissä."
+        },
+        {
+          "teksti": "Trou au Natron on toinen kraatteri, lähes kilometrin syvä, ja sen pohjalla on valkoista natriumkarbonaattia. Vulkanismi ei ole loppunut: kuumia lähteitä ja rikkihöyryä on yhä."
+        }
+      ]
+    },
+    "kamerunvuori": {
+      "kappaleet": [
+        {
+          "teksti": "Mary Kingsley nousi Kamerunvuorelle syyskuussa 1895 pitkässä hameessa, jota piti ainoana säädyllisenä vaihtoehtona, ja kulki kaakkoisrinnettä, jota kukaan eurooppalainen ei ollut käyttänyt. Huipulla oli myrsky ja sumu."
+        },
+        {
+          "lainaus": "Enpä totisesti ole vuorikiipeilijä, sillä minussa ei ole riemua vaan pelkkää syvää harmia: sää vei minulta koko matkani päätarkoituksen, kunnon näkymän. Otin tilaisuuden ja se meni pieleen, joten ei ole mitään valittamista.",
+          "kuka": "Mary Kingsley",
+          "teos": "Travels in West Africa",
+          "vuosi": 1897,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/5891"
+        },
+        {
+          "tiedosto": "Gezicht op de Berg Kameroen (Mount Cameroon) vanuit Victoria (Kameroen), RP-F-F01175-AD.jpg",
+          "selite": "Kamerunvuori Victoriasta, nykyisestä Limbestä, 1800-luvun lopun valokuvassa. Kingsley lähti liikkeelle tästä satamasta. Vuori nousee suoraan merestä 4 040 metriin.",
+          "lahde": "Wikimedia Commons (CC0), Rijksmuseum"
+        },
+        {
+          "teksti": "Vuoren lounaisjuurella Debundschassa sataa yli kymmenen metriä vuodessa; se on maailman sateisimpia paikkoja. Karthagolainen Hanno purjehti ohi noin 500 eaa. ja kuvasi purkautuvan tulivuoren, jota kutsui Jumalten vaunuiksi. Nimi on yhä käytössä."
+        }
+      ]
+    },
+    "kapmaan-taittovuoret": {
+      "kappaleet": [
+        {
+          "teksti": "Kapkaupungin takana on kolme vuorimuuria peräkkäin. Hollantilaiset uudisasukkaat pysyivät niiden edessä vuosikymmeniä, koska härkävankkuri ei nouse jyrkkää hiekkakiveä eikä laaksoista päässyt eteenpäin."
+        },
+        {
+          "tiedosto": "SwartbergP1020173.JPG",
+          "selite": "Swartbergin poimuja. Kerrokset ovat kääntyneet lähes pystyyn, ja tie yli rakennettiin 1880-luvulla vankityövoimalla ilman laastia; muurit seisovat yhä pelkän kivenladonnan varassa.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.5), Winfried Bruenken"
+        },
+        {
+          "teksti": "Poimut ovat noin 250 miljoonaa vuotta vanhoja ja syntyivät, kun eteläinen manner puristui kasaan. Samat rakenteet jatkuvat Argentiinan Sierra de la Ventanassa ja Etelämantereen Ellsworthin vuorilla: yksi vuoristo kolmella mantereella."
+        },
+        {
+          "teksti": "Rinteillä kasvaa fynbos. Kapin kasvimaakunta on maailman kuudesta pienin, mutta siinä on noin yhdeksäntuhatta lajia ja kaksi kolmasosaa niistä ei kasva missään muualla."
+        }
+      ]
+    },
+    "madagaskarin-ylanko": {
+      "kappaleet": [
+        {
+          "teksti": "Ylänkö on lähes puuton, ja se on ollut sitä pitkään. Ruoho poltetaan joka kevät, jotta karjalle nousisi uutta, eivätkä taimet ehdi kasvaa palojen välissä. Metsä ei siis palaa takaisin, vaikka sade riittäisi."
+        },
+        {
+          "tiedosto": "Landscape Madagascar 01.jpg",
+          "selite": "Keskiylängön kumpuja ja riisiterasseja. Punainen maa on rautapitoista rapautumaa, ja eroosiouurteita kutsutaan nimellä lavaka; ne kasvavat sateella metrikaupalla kerrallaan.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Bernard Gagnon"
+        },
+        {
+          "lainaus": "Toisinaan näkee yhtaikaa tusinan verran tulia, pitkiä kaartuvia liekkiviivoja eri suunnissa, ja ne antavat Imerinan kevätöille oudon maalauksellisen sävyn.",
+          "kuka": "James Sibree",
+          "teos": "A Naturalist in Madagascar",
+          "vuosi": 1915,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/68708"
+        },
+        {
+          "teksti": "Saaren asukkaat tulivat kahdesta suunnasta. Malagassin kieli on austronesialainen ja sen lähin sukulainen puhutaan Borneolla; sanasto sai myöhemmin lisää bantukielistä. Kanootilla oli siis kuljettu tuhansia kilometrejä avomerta."
+        }
+      ]
+    },
+    "kalliovuoret": {
+      "kappaleet": [
+        {
+          "teksti": "Isabella Bird nousi Longs Peakille lokakuussa 1873. Oppaana oli Jim Nugent, mies jolta puuttui toinen silmä karhun takia ja jonka mainetta Coloradossa pidettiin huonona. Bird oli 42-vuotias ja matkusti yksin."
+        },
+        {
+          "tiedosto": "Sanford Robinson Gifford - Longs Peak, Colorado - Google Art Project.jpg",
+          "selite": "Sanford Robinson Gifford maalasi Longs Peakin samoihin aikoihin kuin Bird kiipesi sille. Huippu on 4 346 metriä, ja itärinteen seinä putoaa suoraan runsaat seitsemänsataa metriä.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        {
+          "lainaus": "Sinä tiedät, ettei minulla ole päätä eikä nilkkoja enkä saisi uneksiakaan vuorikiipeilystä. Nyt olen vain nöyryytetty onnistumisestani, sillä Jim raahasi minut ylös kuin tavarakollin, paljaalla lihasvoimalla.",
+          "kuka": "Isabella Bird",
+          "teos": "A Lady's Life in the Rocky Mountains",
+          "vuosi": 1879,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/755"
+        },
+        {
+          "teksti": "Kirja koottiin kirjeistä sisarelle. Nugent ammuttiin alle vuotta myöhemmin naapurikiistassa, ja Estes Park sai tien. Bird jatkoi matkaa Japaniin, Malaijien niemimaalle, Persiaan ja Kiinaan ja kirjoitti jokaisesta kirjan."
+        }
+      ]
+    },
+    "sierra-nevada": {
+      "kappaleet": [
+        {
+          "teksti": "Sama vuoristo teki kolme asiaa puolessa vuosisadassa. Talvella 1846 Donnerin retkikunta jäi lumeen solan alle, ja 87 lähteneestä selvisi 48; osa jäljelle jääneistä söi kuolleita."
+        },
+        {
+          "tiedosto": "Mount Whitney from south.jpg",
+          "selite": "Mount Whitney, 4 421 metriä, itäpuolelta. Sierra on yksi kallistunut graniittilohkare: itärinne on kahden kilometrin muuri, länsirinne loiva. Alla oleva laakso kuuluu Kuolemanlaaksoon johtavaan altaiden sarjaan.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.0), Mel Stoutsenberger"
+        },
+        {
+          "teksti": "Kaksi vuotta myöhemmin samojen rinteiden puroista löytyi kultaa, ja Kaliforniaan tuli seuraavan vuosikymmenen aikana kolmesataatuhatta ihmistä. Kun John Muir käveli samat vuoret läpi kaksikymmentä vuotta myöhemmin, hän ehdotti niille toista nimeä."
+        },
+        {
+          "lainaus": "Silloin minusta tuntui, ettei Sierraa pitäisi kutsua Nevadaksi eli Lumiseksi jonoksi vaan Valon jonoksi.",
+          "kuka": "John Muir",
+          "teos": "The Mountains of California",
+          "vuosi": 1894,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/10012"
+        }
+      ]
+    },
+    "appalakit": {
+      "kappaleet": [
+        {
+          "teksti": "William Bartram kulki 1775 Cherokee-maan halki keräten kasveja ja pani merkille, että vuorella kevät on toinen kuin rannikolla: Charlestonissa keltajasmiini oli jo kukkinut ohi, täällä nuput olivat vasta turpoamassa."
+        },
+        {
+          "tiedosto": "The Smoky Mountains, in Great Smoky Mountains National Park.jpg",
+          "selite": "Great Smoky Mountainsin harjanteita. Sininen usva on kasvien haihduttamaa terpeeniä, joka hajottaa valoa — sama ilmiö antoi nimen myös Blue Ridgelle.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), USchick"
+        },
+        {
+          "lainaus": "Nousin jälleen Joren vuorille ja lepäsin viimein korkeimmalla huipulla, jolta näin ihastuksella ja hämmästyksellä ylevän ja pelottavan näyn voimasta ja suuruudesta: maailman vuoria vuorten päällä.",
+          "kuka": "William Bartram",
+          "teos": "Travels Through North and South Carolina, Georgia, East and West Florida",
+          "vuosi": 1791,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/63678"
+        },
+        {
+          "teksti": "Korkeuden tuoma viive tekee Appalakeista poikkeuksellisen rikkaat. Eteläosa ei jäätynyt jääkaudella, joten lajit vetäytyivät korkeuseroa myöten eivätkä kuolleet: Great Smoky Mountainsista on kirjattu lähes kaksikymmentätuhatta lajia."
+        }
+      ]
+    },
+    "sierra-madre-occidental": {
+      "kappaleet": [
+        {
+          "teksti": "Rotkoja on kuusi ja ne ovat syvempiä kuin Grand Canyon. Barranca de Urique putoaa lähes kaksi kilometriä, ja sen pohjalla kasvaa palmuja samaan aikaan kun ylhäällä on mäntyä ja lunta."
+        },
+        {
+          "lainaus": "Pelottomatkin jesuiittalähetit luopuivat aluksi ajatuksesta laskeutua siihen, ja intiaanit kertoivat heille, että vain linnut tietävät kuinka syvä se on.",
+          "kuka": "Carl Lumholtz",
+          "teos": "Unknown Mexico, osa 1",
+          "vuosi": 1902,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/16426"
+        },
+        {
+          "tiedosto": "Divisadero, Barrancas del Cobre, Chihuahua.jpg",
+          "selite": "Divisaderon näköalapaikka Kuparirotkolla. Rautatie kulkee juuri tästä; se valmistui 1961 ja vaati 86 tunnelia ja 37 siltaa. Sitä ennen sisämaahan mentiin muulilla.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.0), Comisión Mexicana de Filmaciones"
+        },
+        {
+          "teksti": "Saavuttamattomuus säilytti kielen. Rarámurit puhuvat yhä omaansa, ja heidän oma nimensä tarkoittaa suunnilleen kevytjalkaisia: kylien väliset viestit vietiin juoksemalla, ja matkat mitattiin päivissä eikä kilometreissä."
+        }
+      ]
+    },
+    "sierra-madre-oriental": {
+      "kappaleet": [
+        {
+          "teksti": "Meksikonlahdelta tuleva kostea tuuli nousee jonoa vastaan ja tiivistyy. Rinteillä on sumumetsää: tammia, saniaisia ja epifyyttejä keskellä maata, joka on muualla kuivaa piikkipensaikkoa."
+        },
+        {
+          "tiedosto": "Sierra Madre en Rayones - panoramio.jpg",
+          "selite": "Sierra Madre Orientalin poimuja Nuevo Leónissa. Kerrokset ovat kalkkikiveä, joka syntyi matalassa meressä; nyt ne seisovat pystyssä ja vesi katoaa niiden sisään luoliksi.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), panza-rayada"
+        },
+        {
+          "teksti": "Hopeatie kulki tästä. Zacatecasin ja Guanajuaton kaivosten tuotto vietiin Veracruzin satamaan, ja koska jonon läpi pääsi vain muutamasta kohdasta, tiestä tuli kaistale, jonka varrelle kaupungit kasvoivat."
+        },
+        {
+          "teksti": "Amerikan kaivokset tuottivat kolmen vuosisadan ajan noin neljä viidesosaa maailman hopeasta, ja iso osa siitä päätyi lopulta Kiinaan teestä ja silkistä maksettuna. Sumumetsiä on Meksikossa alle prosentti pinta-alasta."
+        }
+      ]
+    },
+    "alaskan-vuoristo": {
+      "kappaleet": [
+        {
+          "teksti": "Neljä miestä nousi Denalin etelähuipulle 7. kesäkuuta 1913. Ensimmäisenä sinne astui Walter Harper, kaksikymmenvuotias, jonka äiti oli koyukon-athabaskaa ja isä irlantilainen kullankaivaja. Retken johti käytännössä Harry Karstens."
+        },
+        {
+          "lainaus": "Köyden viimeinen mies, joka innostuksissaan ylitti kapean hengitysvaransa, oli lähes hinattava viimeiset jalat ylös, ja hän vaipui hetkeksi tajuttomana sen pienen lumialtaan pohjalle, joka on vuoren huippu.",
+          "kuka": "Hudson Stuck",
+          "teos": "The Ascent of Denali",
+          "vuosi": 1914,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/26059"
+        },
+        {
+          "teksti": "Viimeinen mies oli Stuck itse, pappi ja kirjan kirjoittaja. Hän oli lähes viisikymmenvuotias ja kärsi korkeudesta koko nousun, mutta seisoi huipulla puolitoista tuntia lukemassa ilmapuntaria ja keittopistemittaria."
+        },
+        {
+          "tiedosto": "Alaska Range from Air (7065264169).jpg",
+          "selite": "Alaskan vuoristo ilmasta. Denali nousee ympäröivästä tundrasta yli viisi kilometriä; harva vuori maapallolla nousee jyrkemmin omalta jalustaltaan. Huipun korkeus merenpinnasta on silti vasta 6 190 metriä.",
+          "lahde": "Wikimedia Commons (PD), Denali National Park and Preserve"
+        }
+      ]
+    },
+    "kaskadit": {
+      "kappaleet": [
+        {
+          "teksti": "Theodore Winthrop matkusti 1853 Puget Soundilta itään ja katsoi vuorta, jolla oli kaksi nimeä. Vancouver oli antanut sille ystävänsä, kontra-amiraali Rainierin nimen; paikallinen nimi oli tacoma tai tahoma."
+        },
+        {
+          "lainaus": "Mount Regnieriksi kristityt ovat sen nimenneet, typerässä nimeämisinnossaan ikuistaen jonkun tai ei kenenkään nimen.",
+          "kuka": "Theodore Winthrop",
+          "teos": "The Canoe and the Saddle",
+          "vuosi": 1862,
+          "suomennos": "oma",
+          "linkki": "https://archive.org/details/canoesaddleadven00wint"
+        },
+        {
+          "teksti": "Nimi jäi vuorelle, ja toinen meni kaupungille. Rainieria pidetään Yhdysvaltain vaarallisimpana tulivuorena, mutta ei purkauksen vaan mudan takia: jäätiköt ja hauras kivi ovat kerran valuneet Puget Soundille asti, ja reitin varrella asuu nyt satatuhatta ihmistä."
+        },
+        {
+          "tiedosto": "Mount Rainier over Tacoma.jpg",
+          "selite": "Rainier Tacoman yllä. Vuorella on enemmän jäätikköä kuin millään muulla Yhdysvaltain mannerosan huipulla, ja kaupunki on rakennettu vanhan mutavyöryn kerrostumalle.",
+          "lahde": "Wikimedia Commons (PD), Lyn Topinka / USGS"
+        }
+      ]
+    },
+    "rannikkovuoret": {
+      "kappaleet": [
+        {
+          "teksti": "George Vancouver kartoitti rannikon 1792-1794 soutuveneillä, koska laivat eivät mahtuneet salmiin. Miehistö souti kesässä tuhansia kilometrejä ja palasi joka ilta samaan kysymykseen: onko tämä vuono läpikulku vai umpiperä."
+        },
+        {
+          "teksti": "Läpikulkua ei ollut. Luoteisväylää etsittiin vuonon pohjalta toisensa jälkeen, ja jokainen päättyi jäätikköön tai jokisuistoon. Vuoret nousevat merestä kolmeen kilometriin muutaman kymmenen kilometrin matkalla."
+        },
+        {
+          "tiedosto": "Mount Waddington.jpg",
+          "selite": "Mount Waddington, 4 019 metriä, Brittiläisen Kolumbian korkein kokonaan omalla alueellaan oleva huippu. Se löydettiin kartalle vasta 1920-luvulla, koska sitä ei näy mereltä eikä sisämaasta.",
+          "lahde": "Wikimedia Commons (CC BY 2.0), Kevin Teague"
+        },
+        {
+          "teksti": "Siksi Inside Passage on olemassa. Laivareitti kulkee saarten suojassa Seattlesta Alaskaan, ja moni rannikkokylä on yhä sellainen, jonne pääsee vain vesitse tai lentäen."
+        }
+      ]
+    },
+    "guyanan-ylanko": {
+      "kappaleet": [
+        {
+          "teksti": "Walter Raleigh purjehti 1595 Orinocolle etsimään kultakaupunkia. Sitä ei löytynyt, mutta Winicaporan joen varrella hänelle näytettiin kaukaa vuorta, jolle hän ei ehtinyt kulkea. Hän kirjoitti näkemänsä muistiin joka tapauksessa."
+        },
+        {
+          "lainaus": "Näimme sen kaukaa, ja se näytti valkoiselta kirkontornilta, tavattoman korkealta. Sen yli syöksyy mahtava joki, joka ei koske vuoren kylkeen lainkaan vaan ryöppyää huipun yli ja putoaa maahan niin kauhealla pauhulla kuin tuhat suurta kelloa lyötäisiin yhteen.",
+          "kuka": "Walter Raleigh",
+          "teos": "The Discovery of Guiana",
+          "vuosi": 1596,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/2272"
+        },
+        {
+          "teksti": "Kuvaus sopii pöytävuoreen ja putoukseen, joka irtoaa seinämästä ennen pohjaa. Angelin putous syöksyy yhdeltä niistä 979 metriä ja hajoaa usein sumuksi ennen kuin osuu maahan. Se merkittiin kartalle vasta 1930-luvulla, lentokoneesta."
+        },
+        {
+          "tiedosto": "Roraima vistaBase.JPG",
+          "selite": "Roraiman seinämä juurelta katsottuna. Pöytävuoren hiekkakivi on lähes kaksi miljardia vuotta vanhaa, ja laella elää lajeja, joita ei ole muualla — jokainen tepui on saari ilman merta.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Csar13"
+        }
+      ]
+    },
+    "brasilian-ylanko": {
+      "kappaleet": [
+        {
+          "teksti": "Serra do Mar ei ole vuorijono vaan ylängön reuna, joka putoaa rannikolle. Tasanko alkaa heti sen takaa ja jatkuu tuhat kilometriä sisämaahan; portugalilaiset istuivat sata vuotta muurin edessä ja tekivät sokeria."
+        },
+        {
+          "tiedosto": "Serra da Mantiqueira vista da Rodovia Floriano Rodrigues Pinheiro.jpg",
+          "selite": "Serra da Mantiqueira. Nimi tarkoittaa tupinkielellä suunnilleen itkevää vuorta, koska rinteiltä valuu vettä ympäri vuoden. Reunan takana maa nousee tasaisesti eikä laske enää.",
+          "lahde": "Wikimedia Commons (CC0), Themium"
+        },
+        {
+          "teksti": "Sitten löytyi kultaa. Minas Geraisista kaivettiin 1700-luvulla satoja tonneja kultaa, enemmän kuin Amerikoista siihen mennessä yhteensä, ja siirtokunnan painopiste siirtyi sisämaahan. Pääkaupunki siirrettiin Salvadorista Rio de Janeiroon 1763."
+        },
+        {
+          "teksti": "Ylänkö on nyt Brasilian vesitorni. São Francisco ja Paraná lähtevät siltä, ja koska tasanko on korkealla ja tasainen, joet putoavat vasta reunalla — siitä syystä maan sähköstä valtaosa on ollut vesivoimaa."
+        }
+      ]
+    },
+    "kaakkois-australian-ylangot": {
+      "kappaleet": [
+        {
+          "teksti": "Mantereen ainoa seutu, jossa on joka talvi pysyvä lumipeite, on tämä. Snowy Mountainsin lumi kattaa runsaat viisitoistatuhatta neliökilometriä, ja korkein kohta on 2 228 metriä — matala vuori, jonka yläpuolella ei ole mitään koko Australiassa."
+        },
+        {
+          "lainaus": "Kun huipulle päästiin, Clancykin hidasti. Rohkeinkin olisi pidättänyt hengitystään: villi humalapensaikko kasvoi tiheänä, ja piiloutunut maa oli täynnä vompattien koloja. Yksikin harha-askel oli kuolema.",
+          "kuka": "A. B. Paterson",
+          "teos": "The Man from Snowy River and Other Verses",
+          "vuosi": 1895,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/213"
+        },
+        {
+          "tiedosto": "Mount Kosciuszko, Australia.jpg",
+          "selite": "Kosciuszkon rinteitä kesällä. Maasto on loivaa ja pyöreää, koska jääkauden jäätiköt olivat pieniä; lumi jää silti pitkälle kevääseen, ja hiihtokausi kestää neljä kuukautta.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Reflexio"
+        },
+        {
+          "teksti": "Vesi kulkee nyt vuoren läpi. Snowy Mountains -hanke rakensi 1949-1974 kuusitoista patoa ja runsaat sata kilometriä tunnelia ja käänsi Snowy-joen sisämaahan, Murrayn ja Murrumbidgeen kastelualueille. Töissä oli satatuhatta ihmistä yli kolmestakymmenestä maasta."
+        }
+      ]
+    },
+    "suuri-vedenjakajavuoristo": {
+      "kappaleet": [
+        {
+          "teksti": "Sydneyn siirtokunta oli 25 vuotta vanki omalla rannallaan. Sinisten vuorten yli ei päästy, vaikka yritettiin toistuvasti, ja Charles Darwin ihmetteli syytä vielä kaksikymmentä vuotta myöhemmin."
+        },
+        {
+          "lainaus": "Niin mahtavasta nimestä kuin Siniset vuoret ja niiden korkeudesta päättelin näkeväni uljaan vuorijonon kulkevan halki maan; sen sijaan loivasti nouseva tasanko esittää rannikon alangolle vain vähäpätöisen otsan.",
+          "kuka": "Charles Darwin",
+          "teos": "The Voyage of the Beagle",
+          "vuosi": 1845,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/944"
+        },
+        {
+          "teksti": "Este ei ollut korkeus vaan muoto. Laaksoa seuraava kulkija päätyy aina umpiperään. Vuonna 1813 Blaxland, Lawson ja Wentworth kokeilivat päinvastaista: he pysyivät harjanteella eivätkä laskeutuneet kertaakaan, ja pääsivät läpi kolmessa viikossa."
+        },
+        {
+          "tiedosto": "Jamison Valley, Blue Mountains, Australia - Nov 2008.jpg",
+          "selite": "Jamisonin laakso. Hiekkakivitasanko on sahautunut pystyseinäisiksi lahdiksi, joiden pohja on metsää; Darwin vertasi näkymää kuivuneeseen satamaan, jonka pohjalle on kasvanut metsä.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Diliff"
+        }
+      ]
+    },
+    "uuden-seelannin-alpit": {
+      "kappaleet": [
+        {
+          "teksti": "Samuel Butler tuli Canterburyyn 1860 kasvattamaan lampaita ja etsi laitumia vuorten juurelta. Retkillä hän tajusi, että jokainen ylitetty harjanne oli vain sivuhaara ja pääjono oli aina kauempana lännessä."
+        },
+        {
+          "lainaus": "Seuraavana aamuna, aivan aamunkoitossa, näky oli mitä suurenmoisin. Vuoret olivat kalpeat kuin aaveet ja melkein vastenmieliset kuolemanvalkeudessaan.",
+          "kuka": "Samuel Butler",
+          "teos": "A First Year in Canterbury Settlement",
+          "vuosi": 1863,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/3235"
+        },
+        {
+          "teksti": "Laattojen törmäys nostaa Eteläisiä Alppeja lähes sentin vuodessa, ja eroosio vie melkein saman verran pois. Länsirinteellä sataa kymmenen metriä, ja harjan ylitettyään pilvi on jo kuiva: Canterburyn tasanko on saman vuoriston toinen puoli."
+        },
+        {
+          "tiedosto": "Aoraki-Mount Cook from Tasman Lake outlet.jpg",
+          "selite": "Aoraki Tasmanjärven laskukohdalta. Järveä ei ollut 1970-luvulla lainkaan: se on syntynyt jäätikön vetäytyessä ja kasvaa yhä. Huippu on 3 724 metriä, ja vuoden 1991 sortuma vei siitä kymmenen metriä kerralla.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Avenue"
+        }
+      ]
+    },
+    "uuden-guinean-ylangot": {
+      "kappaleet": [
+        {
+          "teksti": "Saarella puhutaan yli kahdeksaasataa kieltä, noin kymmenesosa maailman kielistä. Syy on laakso. Vuoristo pilkkoo ylängön altaisiin, joiden välillä on päivien kävely jyrkkää metsää, ja kieli ehtii erkaantua sukupolvissa."
+        },
+        {
+          "tiedosto": "20170905 Papouasie Baliem valley.jpg",
+          "selite": "Baliemin laakso. Pohja on tasainen ja ojitettu, ja bataattipenkkejä on viljelty samalla tavalla tuhansia vuosia. Laakson korkeus on 1 600 metriä, joten malariaa ei ole.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Lasthib"
+        },
+        {
+          "teksti": "Suuret asutut laaksot löytyivät ulkomaailmalle vasta 1930-luvulla. Kun australialaiset kullanetsijät lensivät ylängön yli, alla oli siistiä ojitettua peltoa ja arviolta miljoona ihmistä, joiden olemassaolosta ei ollut tietoa."
+        },
+        {
+          "teksti": "Puncak Jayan rinteellä on jäätikkö neljännellä leveysasteella päiväntasaajasta. Sitä oli 1936 noin kolmetoista neliökilometriä. Nyt on jäljellä alle yksi, ja sulaminen on ollut nopeinta 2000-luvulla."
+        },
+        {
+          "tiedosto": "Cartens peaks in West Papua.jpg",
+          "selite": "Puncak Jaya eli Carstenszin pyramidi, 4 884 metriä. Kalkkikiveä, jossa on merieläinten jäänteitä: laatta on noussut merenpohjasta lähes viiteen kilometriin muutamassa miljoonassa vuodessa.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Richarderari"
+        }
+      ]
+    }
+  },
+  "_kommentit": {
+    "hindukush": "Lainaus on Arrianoksen selostus Eratostheneen väitteestä, ei Arrianoksen oma kanta; kuka-kenttä sanoo sen. Alkuteksti (Chinnock): 'the Macedonians transferred Mount Caucasus from the Euxine Sea to the eastern parts of the earth ... calling what was really Mount Parapamisus by the name of Caucasus, in order to enhance Alexander's glory, seeing that he forsooth had gone over the Caucasus.' Kolme pistettä korvattu ajatusviivalla poistettu kohta on 'and the land of the Parapamisadians to that of the Indians'. Chinnockin käännös on vuodelta 1884; Gutenbergin laitos ei ilmoita vuotta, joten vuosi-kenttään on merkitty teoksen ajoitus.",
+    "zagros": "Dakynsin englanninnoksen vuotta ei ilmoiteta Gutenbergin laitoksessa, joten vuosi-kenttä on teoksen ajoitus. Alkuteksti: 'the last seven days spent in traversing the country of the Carduchians had been one long continuous battle, which had cost them more suffering than the whole of their troubles at the hands of the king and Tissaphernes put together.'",
+    "taurusvuoret": "Alkuteksti: 'it is shut in on all sides by a steep and lofty wall of mountains from sea to sea.' Ksenofon kuvaa Kilikian tasankoa, ei solaa; teksti sanoo sen.",
+    "tiibetin-ylatasanko": "Hazlittin englanninnoksen ensimmäinen laitos on 1852; Gutenbergin tiedosto ei ilmoita painovuotta, joten vuosi on ensilaitoksen. Alkuteksti: 'Throughout four whole days, we were going down, as it seemed, a gigantic staircase, each step of which consisted of a mountain.'",
+    "kamtshatka": "Gutenbergin laitos on Kennanin itsensä uudistama 1910, ei vuoden 1870 alkuperäinen; sanamuodot poikkeavat. Siksi vuosi on 1910 vaikka matka tehtiin 1865-1867.",
+    "pyreneet": "Rolandin laulu on nimetön; kuka-kenttään on merkitty se. Scott Moncrieffin englanninnos: 'High are the peaks, the valleys shadowful, / Swarthy the rocks, the narrows wonderful.' Sana 'merveillus' on käännetty englanniksi 'wonderful' ja tässä 'hämmästyttävä'; alkukielessä se tarkoittaa yhtä lailla pelottavaa.",
+    "kaakkois-australian-ylangot": "Runo ilmestyi ensin Sydneyn Bulletinissa 1890; luettu laitos on vuoden 1902 toisen laitoksen 1913 painos, ja kokoelman ensilaitos on 1895, joka on merkitty vuodeksi.",
+    "kalliovuoret": "Isabella Bird esiintyy myös mallitiedoston Jangtse-kohteessa, mutta eri teoksella (The Yangtze Valley and Beyond, 1899). Jos päällekkäisyys häiritsee, tämä lainaus on helpompi korvata kuin mallin.",
+    "sierra-nevada": "Alkuteksti: 'Then it seemed to me the Sierra should be called not the Nevada, or Snowy Range, but the Range of Light.'",
+    "kaskadit": "Winthropin virkkeen jatko kuuluu 'More melodiously the siwashes call it Tacoma'; sana siwash on halventava, joten lainaus katkaistaan ennen sitä ja paikallinen nimi kerrotaan leipätekstissä.",
+    "ruwenzori": "Poisto lainauksen alusta: 'then as the sight descended to the gap between the eastern and western plateaus, I became for the first time conscious that...'. Poikaa koskeva kohta on siirretty leipätekstiin, ei lainaukseen.",
+    "kaukasus": "Lainaus katkaistaan ennen Strabonin jatkoa 'in consequence of their fierce and savage manners', joka on halventava. Malli lainaa Herodotosta samasta aiheesta (Kaspianmeri I.203); tämä on eri kirjoittaja ja eri kohta, jotta päällekkäisyyttä ei tule.",
+    "madagaskarin-ylanko": "Sibree kirjoitti 1915, eli pelin aikakauden jälkeen. Havainto koskee käytäntöä, joka oli sama 1870-luvulla; jos anakronismi häiritsee, kohde toimii myös ilman lainausta.",
+    "uuden-seelannin-alpit": "Gutenbergin teksti on A. C. Fieldin 1914 uusintapainos; teos itse on vuodelta 1863, joka on merkitty vuodeksi.",
+    "ilman-lainausta": "Yhdeksäntoista kohdetta jäi ilman lainausta: tienshan, altai, elburz, verhojansk, lansi-ghatit, sarawat, skandit, dinaariset-alpit, balkanvuoret, drakensberg, kilimanjaro, kenia-vuori, ahaggar, tibesti, kapmaan-taittovuoret, sierra-madre-oriental, rannikkovuoret, brasilian-ylanko, uuden-guinean-ylangot. Jokaisesta etsittiin lähde; perustelut raportissa. Kilimanjaron kohdalla lähde löytyi (Krapf 1860) mutta ainoan saatavilla olevan skannauksen OCR oli rikki juuri lainattavassa virkkeessä, joten se jätettiin pois ohjeen luvun 6.2 mukaisesti."
+  }
+}

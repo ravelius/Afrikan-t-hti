@@ -1,0 +1,843 @@
+{
+ "_ohje": "Lainausankkurit: jokaisen maastotekstin lainauksen alkukielinen kohta lähteessä. Avain on laji/kohde, sama kuin js/packs/maasto-tekstit.js:ssä ja maasto-tekstit-malli.js:ssä. fraasi on lyhyt sanatarkka jakso, ote sen ympäristö sellaisena kuin se luettiin elokuussa 2026. Tarkistus: NODE_USE_ENV_PROXY=1 node tools/tarkista-lainaukset.mjs. Uusi lainaus ilman ankkuria on tarkistuksessa virhe, ei puute.",
+ "jarvet/Albertjärvi": {
+  "lahde": "gb-3668",
+  "linkki": "https://www.gutenberg.org/ebooks/3668",
+  "fraasi": "The glory of our prize burst suddenly upon me",
+  "ote": "ly clear, and having crossed a deep valley between the hills, we toiled up the opposite slope. I hurried to the summit. The glory of our prize burst suddenly upon me! There, like a sea of quicksilver, lay far beneath the grand expanse of water,--a boundless sea horizon on the south and southwest, glittering in the noonday sun; and on the west,"
+ },
+ "jarvet/Baikal": {
+  "lahde": "gb-6408",
+  "linkki": "https://www.gutenberg.org/ebooks/6408",
+  "fraasi": "the colour of turquoise, more transparent than the Black Sea",
+  "ote": "at the tip-top of his profession. He fed us magnificently. The weather was still and sunny. The water of Lake Baikal is the colour of turquoise, more transparent than the Black Sea. They say that in deep places you can see the bottom over a verst below; and I myself have seen to such a depth, with rocks and mountains plunged in the turquoise-blue, that it se"
+ },
+ "jarvet/Eriejärvi": {
+  "lahde": "gb-57889",
+  "linkki": "https://www.gutenberg.org/ebooks/57889",
+  "fraasi": "We have met the enemy and they are ours",
+  "ote": "iff hat for a writing-desk, scribbled the historic message which a detractor has charged he cribbed from Julius Cæsar: “We have met the enemy and they are ours:--two ships, two brigs, one schooner, and one sloop.” Calling away a small boat, he sent Midshipman Forrest with the report to General William Henry Harrison. A computation has be"
+ },
+ "jarvet/Great Bear Lake": {
+  "lahde": "gb-33467",
+  "linkki": "https://www.gutenberg.org/ebooks/33467",
+  "fraasi": "forty-fathoms of line were let down",
+  "ote": "ase Bay, limestone and sandstone are the prevailing rocks. The waters of the lake are very clear, and of unknown depth; forty-fathoms of line were let down near the shore, in Mac Tavish Bay, without reaching the bottom. There is a considerable quantity of good wood, principally white spruce, in the vicinity of the lake; but there is"
+ },
+ "jarvet/Great Slave Lake": {
+  "lahde": "gb-38404",
+  "linkki": "https://www.gutenberg.org/ebooks/38404",
+  "fraasi": "without seeing a human face",
+  "ote": "of the fall. From her account of the moons passed since her elopement, it appeared that she had been near seven months without seeing a human face; during all which time she had supported herself very well by snaring partridges, rabbits, and squirrels; she had also killed two or three beaver, and some porcupines. That she di"
+ },
+ "jarvet/Issyk-Kul": {
+  "lahde": "ia-siyukibuddhistre01hsua",
+  "linkki": "https://archive.org/details/siyukibuddhistre01hsua",
+  "fraasi": "Dragons and fishes inhabit it",
+  "ote": "s taste is bitter and salt. The waves of this lake roll along tumultuously as they expend them- selves (on the shores). Dragons and fishes inhabit it to- gether. At certain ('portentous) occasions scaly monsters rise to the surface, on which travellers passing by put up their prayers for good fortune. Although the water animals"
+ },
+ "jarvet/Kaspianmeri": {
+  "lahde": "gb-2707",
+  "linkki": "https://www.gutenberg.org/ebooks/2707",
+  "fraasi": "Caspian Sea is apart by itself",
+  "ote": "ins of seals: but the one remaining branch of the Araxes flows with unimpeded course into the Caspian Sea. 203. Now the Caspian Sea is apart by itself, not having connection with the other Sea: for all that Sea which the Hellenes navigate, and the Sea beyond the Pillars, which is called Atlantis, and the Erythraian Sea are in fa"
+ },
+ "jarvet/Lac Moeru": {
+  "lahde": "gb-16672",
+  "linkki": "https://www.gutenberg.org/ebooks/16672",
+  "fraasi": "names of 39 species of fish",
+  "ote": "till it met a large meadow on the shores of Moero, and, turning westwards, it entered there. The fishermen gave us the names of 39 species of fish in the Lake; they said that they never cease ascending the Kalongosi, though at times they are more abundant than at others: they are as follows. Monde; Mota; Lasa; Kasibe; Molobe"
+ },
+ "jarvet/Lake Athabasca": {
+  "lahde": "gb-35658",
+  "linkki": "https://www.gutenberg.org/ebooks/35658",
+  "fraasi": "the title of English Chief",
+  "ote": "adians, two of whom were attended by their wives, and a German; we were accompanied also by an Indian, who had acquired the title of English Chief, and his two wives, in a small canoe, with two young Indians; his followers in another small canoe. These men were engaged to serve us in the twofold capacity of interpreters and"
+ },
+ "jarvet/Lake Balkhash": {
+  "lahde": "ia-turkistannotesof01schu",
+  "linkki": "https://archive.org/details/turkistannotesof01schu",
+  "fraasi": "sea or lake, which containeth fifteene",
+  "ote": "entred into a most beautiful plaine, hauing high mountaines on our right hande, and on the left hande of us a certaine sea or lake, which containeth fifteene daj^es journey in circuite (Lake Balkash). All the foresayde plaine is most comm odiously watered with certaine freshets distilling from MEDIAEVAL TRAVELLERS. 403 the said motiiit"
+ },
+ "jarvet/Lake of the Woods": {
+  "lahde": "muu-https___avalon_law_yale_edu_18th_century_paris_asp",
+  "linkki": "https://avalon.law.yale.edu/18th_century/paris.asp",
+  "fraasi": "most northwesternmost point thereof",
+  "ote": "communication between it and the Lake of the Woods, to the said Lake of the Woods; thence through the said lake to the most northwesternmost point thereof, and from thence on a due west course to the river Mississippi; thence by a line to be drawn along the middle of the said river Mississippi until it shall intersect the northernmo"
+ },
+ "jarvet/Lake Torrens": {
+  "lahde": "gb-5345",
+  "linkki": "https://www.gutenberg.org/ebooks/5345",
+  "fraasi": "in the form of a horse-shoe",
+  "ote": "outh-east, in correspondence with the trend of Flinders range, the northern extremity of which it completely surrounded in the form of a horse-shoe. The shores of this lake I visited to the westward of Flinders range, at three different points, from eighty to ninety miles apart from each other, and on all these occasions I fo"
+ },
+ "jarvet/Malawijärvi": {
+  "lahde": "gb-2519",
+  "linkki": "https://www.gutenberg.org/ebooks/2519",
+  "fraasi": "one of the great slave-paths from the interior",
+  "ote": "an told us she first saw us at Mosauka's, and that the Arabs had fled for fear of an _uncanny_ sort of Basungu. This is one of the great slave-paths from the interior, others cross the Shire a little below, and some on the lake itself. We might have released these slaves but did not know what to do with them afterwards. On meeting men, led in s"
+ },
+ "jarvet/Michiganjärvi": {
+  "lahde": "gb-40143",
+  "linkki": "https://www.gutenberg.org/ebooks/40143",
+  "fraasi": "Nothing, indeed, was ever heard of her",
+  "ote": "vanished. Past all reasonable doubt, the \"Griffin\" was lost; and in her loss he and all his plans seemed ruined alike. Nothing, indeed, was ever heard of her. Indians, fur-traders, and even Jesuits, have been charged with contriving her destruction. Some say that the Ottawas boarded and burned her, after murdering those on board; other"
+ },
+ "jarvet/Nettilling Lake": {
+  "lahde": "gb-42084",
+  "linkki": "https://www.gutenberg.org/ebooks/42084",
+  "fraasi": "total absence of salt does not prevent the natives",
+  "ote": "Nettilling Fjord. He came to Qarussuit in the spring, but returned after a short stay. It may be remarked here that the total absence of salt does not prevent the natives from staying on Lake Nettilling. About 1850 the mode of life of the Talirpingmiut was as follows: In November they gathered in Isoa, the easternmost bay of the lake, descended tow"
+ },
+ "jarvet/Nicaraguajärvi": {
+  "lahde": "gb-76906",
+  "linkki": "https://www.gutenberg.org/ebooks/76906",
+  "fraasi": "sharks abound in the lake",
+  "ote": "lthough it should be observed that Oviedo is usually very accurate in matters of this kind. It is, however, a fact that sharks abound in the lake. They are called “tiburones” from their rapacity. Instances are known of their having attacked and killed bathers within a stone’s throw of the beach at Granada; and I have myself"
+ },
+ "jarvet/Pohjois-Araljärvi": {
+  "lahde": "ia-turkistannotesof01schu",
+  "linkki": "https://archive.org/details/turkistannotesof01schu",
+  "fraasi": "slightly brackish, but not strongly saline",
+  "ote": "nd immediately made off. The water looked so clear and pure that T scooped up a cup of it and drank it. In taste it was slightly brackish, but not strongly saline.^ The troops of the Orenburg detachment on their way to Khiva used it for two days, without disagreeable results, though with rapidly increasing disgust. The appearance of this sh"
+ },
+ "jarvet/Saimaa": {
+  "lahde": "gb-49600",
+  "linkki": "https://www.gutenberg.org/ebooks/49600",
+  "fraasi": "merihärkä ja Saimaan hylje",
+  "ote": "taan suolaisessa vedessä, kuolivat vähitellen sukupuuttoon. Ainoastaan muutamat varsinaiset merieläimet, sellaiset kuin merihärkä ja Saimaan hylje, tottuivat suolattomaan veteen, ja siksi tapaamme niitä vielä sisäjärvissämme, vaikka niiden varsinainen koti on Pohjois-Jäämeri. Sillä tahallansa he eivät ole tietävinään, että t"
+ },
+ "jarvet/Tanganjika": {
+  "lahde": "gb-66813",
+  "linkki": "https://www.gutenberg.org/ebooks/66813",
+  "fraasi": "What is that streak of light which lies below",
+  "ote": "g-ass. Arrived with toil,--for our fagged beasts now refused to proceed,--we halted for a few minutes upon the summit. “What is that streak of light which lies below?” I inquired of Seedy Bombay. “I am of opinion,” quoth Bombay, “that that is _the_ water.” I gazed in dismay; the remains of my blindness, the veil of trees, and a broad ray of su"
+ },
+ "jarvet/Titicaca": {
+  "lahde": "ia-firstpartofroyal01vega",
+  "linkki": "https://archive.org/details/firstpartofroyal01vega",
+  "fraasi": "placed his two children in the lake of Titicaca",
+  "ote": "f the earth like rational beings, instead of living like beasts. With these commands and intentions, our Father the Sun placed his two children in the lake of Titicaca, which is eighty leagues from here ; and He said to them that they might go where they pleased, and that at every place where they stopped to eat or sleep, they were to thrust a s"
+ },
+ "jarvet/Tšadjärvi": {
+  "lahde": "gb-71754",
+  "linkki": "https://www.gutenberg.org/ebooks/71754",
+  "fraasi": "glowing with the golden rays of the sun",
+  "ote": "and inspiring, that it would be difficult in language to convey an idea of its force or pleasure. The great lake Tchad, glowing with the golden rays of the sun in its strength, appeared to be within a mile of the spot on which we stood. My heart bounded within me at this prospect, for I believed this lake to be the key to the great objec"
+ },
+ "jarvet/Turkanajärvi": {
+  "lahde": "ia-discoveryoflakes02hhne",
+  "linkki": "https://archive.org/details/discoveryoflakes02hhne",
+  "fraasi": "sun-bleached branches to the pitiless sky",
+  "ote": "Here and there, some partly in the water, some on the beach, rose up isolated skeleton trees, stretching up their bare, sun-bleached branches to the pitiless sky. No living creature shared the gloomy solitude with us; and far as our glass could reach there was nothing to be seen but desert— desert everywhere. To all this was added the scor"
+ },
+ "jarvet/Victoriajärvi": {
+  "lahde": "gb-8417",
+  "linkki": "https://www.gutenberg.org/ebooks/8417",
+  "fraasi": "If you have come only to see a large bit of water",
+  "ote": "us of the Ukéréwé, as he called the N'yanza, on our first arrival at Kazé, proceeding westward from Zanzibar, he said, \"If you have come only to see a large bit of water, you had better go northwards and see the Ukéréwé; for it is much greater in every respect than the Tanganyika;\" and so, as far as I can ascertain, it is. Muanza, our journey's en"
+ },
+ "jarvet/Yläjärvi": {
+  "lahde": "gb-19",
+  "linkki": "https://www.gutenberg.org/ebooks/19",
+  "fraasi": "By the shores of Gitche Gumee",
+  "ote": "were dead!” she murmured, “Oh that I were dead, as thou art! No more work, and no more weeping, Wahonowin! Wahonowin!” By the shores of Gitche Gumee, By the shining Big-Sea-Water, Stood the wigwam of Nokomis, Daughter of the Moon, Nokomis. Dark behind it rose the forest, Rose the black and gloomy pine-trees, Rose the firs with"
+ },
+ "joet/Aldan": {
+  "lahde": "gb-12328",
+  "linkki": "https://www.gutenberg.org/ebooks/12328",
+  "fraasi": "pillars of fire in the wilderness of the Exodus",
+  "ote": "outlined against the intense blackness of the hills beyond the valley, rose four or five columns of luminous mist, like pillars of fire in the wilderness of the Exodus. \"What are those?\" I inquired of my Tunguse driver. \"Yakut,\" was the brief reply. They were columns of smoke, sixty or seventy feet in height, over the chimneys of Yakut farmhouse"
+ },
+ "joet/Allegheny": {
+  "lahde": "gb-60692",
+  "linkki": "https://www.gutenberg.org/ebooks/60692",
+  "fraasi": "hopeless jam of broken boats and barrels",
+  "ote": "was the freshet when a few wrecks did not lie somewhere along the creek, and often scores lay piled high on the bank—a hopeless jam of broken boats and barrels, the whole soaked in petroleum and reeking with gas and profanity. If the boats rode safely through to the river, there was little further danger. The Allegheny River traffic grew"
+ },
+ "joet/Amazon": {
+  "lahde": "gb-2440",
+  "linkki": "https://www.gutenberg.org/ebooks/2440",
+  "fraasi": "All our insect pests had disappeared, as if by magic",
+  "ote": "o rivers meet and are sharply demarcated from each other. On reaching the opposite shore, we found a remarkable change. All our insect pests had disappeared, as if by magic, even from the hold of the canoe; the turmoil of an agitated, swiftly flowing river, and its torn, perpendicular, earthy banks, had given place to tranquil water and a coast inden"
+ },
+ "joet/Amu Darya": {
+  "lahde": "gb-41751",
+  "linkki": "https://www.gutenberg.org/ebooks/41751",
+  "fraasi": "not even the Nile, Mubarek",
+  "ote": "ess and good flavour, the inhabitants of Turkestan are of opinion that there is no river on the earth comparable to it, not even the Nile, Mubarek (the blessed). At first I thought that this good flavour proceeded rather from fancy wrought up to a fit of enthusiasm on reaching its banks after having traversed the thirsty wat"
+ },
+ "joet/Amur": {
+  "lahde": "gb-6408",
+  "linkki": "https://www.gutenberg.org/ebooks/6408",
+  "fraasi": "breathes more freely on the Amur than the highest general in Russia",
+  "ote": "t. There is beauty, space, freedom and warmth. Switzerland and France have never known such freedom. The lowest convict breathes more freely on the Amur than the highest general in Russia. If you lived here, you would write a great deal of good stuff and delight the public, but I am not equal to it. One begins to meet Chinamen at Irkutsk, and here they are common a"
+ },
+ "joet/Arkansas": {
+  "lahde": "gb-44205",
+  "linkki": "https://www.gutenberg.org/ebooks/44205",
+  "fraasi": "guard of honor",
+  "ote": "nd then disturbed at night by the hideous howling of wolves, a pack of which had constituted themselves into a kind of 'guard of honor,' and followed in our wake for several hundred miles--in fact to the very border of the settlements. They were at first attracted no doubt by the remains of buffalo which were kil"
+ },
+ "joet/Athabasca": {
+  "lahde": "gb-35658",
+  "linkki": "https://www.gutenberg.org/ebooks/35658",
+  "fraasi": "bituminous fountains",
+  "ote": "harges itself into the Lake of the Hills, in latitude 58. 36. North. At about twenty-four miles from the Fork, are some bituminous fountains, into which a pole of twenty feet long may be inserted without the least resistance. The bitumen is in a fluid state, and when mixed with gum, or the resinous substance collected"
+ },
+ "joet/Benue": {
+  "lahde": "gb-76317",
+  "linkki": "https://www.gutenberg.org/ebooks/76317",
+  "fraasi": "no connection whatever between those two rivers",
+  "ote": "partly or entirely by water, &c. As for my part, I can at present certify, with the greatest confidence, that there is _no connection whatever between those two rivers_, the Chadda, which is identical with the Bénuwé, on the one, and the Sháry, the principal tributary of Lake Tsád, on the other side. Nevertheless, the Fáro as well as the Bénuwé"
+ },
+ "joet/Brahmaputra": {
+  "lahde": "gb-6478",
+  "linkki": "https://www.gutenberg.org/ebooks/6478",
+  "fraasi": "Yarou Tsampoo river",
+  "ote": "cs were never touched upon. Our queries naturally referred to Tibet and its geography, especially its great feature the Yarou Tsampoo river; this he assured us was the Burrampooter of Assam, and that no one doubted it in that country. Lhassa he described as a city in the bottom of a flat-floored valley, surrounded by"
+ },
+ "joet/Chari": {
+  "lahde": "gb-76317",
+  "linkki": "https://www.gutenberg.org/ebooks/76317",
+  "fraasi": "swampy meadow-lands",
+  "ote": "y downs, stretches from the mouth of the Sháry towards the western shore, and that all the rest of the lake consists of swampy meadow-lands, occasionally inundated. I shall have occasion to speak again about this point when briefly reporting my unfortunate companion’s voyage on the lake.[82] [Illustration: Drawn by J."
+ },
+ "joet/Colorado": {
+  "lahde": "gb-74466",
+  "linkki": "https://www.gutenberg.org/ebooks/74466",
+  "fraasi": "three-quarters of a mile in the depths of the earth",
+  "ote": "s this advantage: they will ride the waves better, and we shall have but little to carry when we make a portage. We are three-quarters of a mile in the depths of the earth, and the great river shrinks into insignificance, as it dashes its angry waves against the walls and cliffs, that rise to the world above; they are but puny ripples, and we but pi"
+ },
+ "joet/Columbia": {
+  "lahde": "gb-1371",
+  "linkki": "https://www.gutenberg.org/ebooks/1371",
+  "fraasi": "My uncle was lost a few years ago on this same bar",
+  "ote": "said he, “without seamen to man my boat, in boisterous weather, and on the most dangerous part of the northwest coast. My uncle was lost a few years ago on this same bar, and I am now going to lay my bones alongside of his.” The partners sympathized in his apprehensions, and remonstrated with the captain. The latter, however, was not to be moved."
+ },
+ "joet/Dnepr": {
+  "lahde": "gb-2707",
+  "linkki": "https://www.gutenberg.org/ebooks/2707",
+  "fraasi": "it is the sweetest water to drink",
+  "ote": "and the richest for cattle, and fish which are better by far and more numerous than those of any other river, and also it is the sweetest water to drink, and flows with clear stream, though others beside it are turbid, and along its banks crops are produced better than elsewhere, while in parts where it is not sown, grass grows de"
+ },
+ "joet/Dnestr": {
+  "lahde": "gb-2707",
+  "linkki": "https://www.gutenberg.org/ebooks/2707",
+  "fraasi": "footprint of Heracles",
+  "ote": "and which is worthy of wonder even besides the rivers and the greatness of the plain, that is to say, they point out a footprint of Heracles in the rock by the bank of the river Tyras, which in shape is like the mark of a man's foot but in size is two cubits long. This then is such as I have said; and I will go back no"
+ },
+ "joet/Eufrat": {
+  "lahde": "gb-2707",
+  "linkki": "https://www.gutenberg.org/ebooks/2707",
+  "fraasi": "sell by auction the ribs of the boat",
+  "ote": "ose of larger size several. So when they have arrived at Babylon in their voyage and have disposed of their cargo, they sell by auction the ribs of the boat and all the straw, but they pack the hides upon their asses and drive them off to Armenia: for up the stream of the river it is not possible by any means to sail, owing to the swi"
+ },
+ "joet/Fraser": {
+  "lahde": "gb-69759",
+  "linkki": "https://www.gutenberg.org/ebooks/69759",
+  "fraasi": "occupied by a succession of lakes",
+  "ote": "anation of the formation of the terraces occurred to our minds. At one time the valleys of the Thompson and Fraser were occupied by a succession of lakes, the Cascade Range being the barrier which dammed in the enormous volume of water, and the highest tier of terraces marking the level to which it rose. The tops only of the lower"
+ },
+ "joet/Ganges": {
+  "lahde": "ws-The_Hymns_of_the_Rigveda_Book_10_Hymn_75",
+  "linkki": "https://en.wikisource.org/wiki/The_Hymns_of_the_Rigveda/Book_10/Hymn_75",
+  "fraasi": "Ganga, Yamuna",
+  "ote": "a warrior king thine army's wings what time thou comest in the van of these swift streams. 5. Favour ye this my laud, O Ganga, Yamuna, O Sutudri, Parusni and Sarasvati: With Asikni, Vitasta, O Marudvrdha, O Arjikiya with Susoma hear my call. 6. First with Trstama thou art eager to flow forth, with Rasa, and Susa"
+ },
+ "joet/Godavari": {
+  "lahde": "gb-24869",
+  "linkki": "https://www.gutenberg.org/ebooks/24869",
+  "fraasi": "O pleasant stream Godávarí",
+  "ote": "re bright and fair With all your tongues to Ráma say That Rávaṇ bears his wife away. Farewell, a long farewell to thee, O pleasant stream Godávarí, Whose rippling waves are ever stirred By many a glad wild water-bird! All ye to Ráma’s ear relate The giant’s deed and Sítá’s fate. O all ye Gods who love this ground Where trees"
+ },
+ "joet/Indigirka": {
+  "lahde": "ia-narrativeofexped00wran_0",
+  "linkki": "https://archive.org/details/narrativeofexped00wran_0",
+  "fraasi": "Omokskoje Jurtowischtsche",
+  "ote": "tants have no knowledge of there ever having been any settlement in that part of the country. The place is still called Omokskoje Jurtowischtsche.f The deserted banks of the Kolyma were gradual- ^ See chapter iii., p. 64. t Where are the remnants of this once numerous nation now to be found? Can it be in Europe and on the b"
+ },
+ "joet/Indus": {
+  "lahde": "gb-58074",
+  "linkki": "https://www.gutenberg.org/ebooks/58074",
+  "fraasi": "vapour which hung over it like smoke",
+  "ote": ", at a distance of fifteen miles. It could be traced from its exit through the lower hills to the fort of Attok, by the vapour which hung over it like smoke. As the water of the Indus is much colder than the atmosphere, it may account for this phenomenon. We encamped at Huzroo, which is a mart between Peshawur and Lahore. The people w"
+ },
+ "joet/Irtysh": {
+  "lahde": "gb-6408",
+  "linkki": "https://www.gutenberg.org/ebooks/6408",
+  "fraasi": "nailing up a coffin under the water",
+  "ote": "splashed on the clay, but the Irtysh itself made no roar or din, but gave forth a strange sound as though someone were nailing up a coffin under the water.... The further bank was a flat, disconsolate plain.... You often dream of the Bozharovsky pool; in the same way now I shall dream of the Irtysh.... But behold a ferry. We must be"
+ },
+ "joet/Jangtse": {
+  "lahde": "gb-77853",
+  "linkki": "https://www.gutenberg.org/ebooks/77853",
+  "fraasi": "make up a pandemonium which can never be forgotten",
+  "ote": "ers are heard, mingled with the ceaseless beating of drums and gongs, some as signals, others to frighten evil spirits, make up a pandemonium which can never be forgotten. CHAPTER XII. RAPIDS AND TRACKERS A strong, fair wind took us swiftly and silently up the gorge of the “Military Code and the Precious Blade,” in which the water is said to be 120"
+ },
+ "joet/Jenisei": {
+  "lahde": "ia-throughsiberiala00nansuoft",
+  "linkki": "https://archive.org/details/throughsiberiala00nansuoft",
+  "fraasi": "remarkable difference between the east and west sides",
+  "ote": "e. Out here near the mouth the width is something like 30 miles. Every one going up the Yenisei must be struck with the remarkable difference between the east and west sides of the river. While the flat land on the east is comparatively high and falls abruptly with a steep bank to the river, a steeply sloping beach and relatively deep water outside, t"
+ },
+ "joet/Kagera": {
+  "lahde": "gb-75926",
+  "linkki": "https://www.gutenberg.org/ebooks/75926",
+  "fraasi": "mother of the river at Jinja",
+  "ote": "its water though dark is clear. Where can it come from? There is an enormous quantity of water in that river. It is the mother of the river at Jinja, because were it not for this river our Niyanza would dry up! “Tell me where it can come from? There is no country large enough to feed it, because when you reach Rumanika’s it is"
+ },
+ "joet/Kasai": {
+  "lahde": "ia-presbyterianpion00shep",
+  "linkki": "https://archive.org/details/presbyterianpion00shep",
+  "fraasi": "the Kasai is only about 150 yards across",
+  "ote": "he Congo like a mill race. All the tributaries of the Kasai valley run into the Kasai river, and just here at its mouth the Kasai is only about 150 yards across, with a great wall of rocks on either side. The fire bars of the boiler had been complained of by the engineer, who was unable to get up sufficient steam. The captain called me to"
+ },
+ "joet/Khatanga": {
+  "lahde": "ia-voyageofvegaroun01nord",
+  "linkki": "https://archive.org/details/voyageofvegaroun01nord",
+  "fraasi": "who owned no reindeer, and were therefore settled",
+  "ote": "uence of the river Bludnaya with the Chatanga. Here the winter was passed among a tribe of Tunguses living on the spot, who owned no reindeer, and were therefore settled. They used xui.] LAPTEV'S FIRST VOYAGE. 543 dogs as draught animals, and appear to have carried on a mode of life resembling that of the coast Chukches. In spring Chekin was sent"
+ },
+ "joet/Kongo": {
+  "lahde": "ws-An_Open_Letter_to_His_Serene_Majesty_Leopold_II__King_of_the",
+  "linkki": "https://en.wikisource.org/wiki/An_Open_Letter_to_His_Serene_Majesty_Leopold_II,_King_of_the_Belgians_and_Sovereign_of_the_Independent_State_of_Congo_By_Colonel,_The_Honorable_Geo._W._Williams,_of_the_United_States_of_America",
+  "fraasi": "burned their towns",
+  "ote": "e that they neither love nor respect the Government and its flag. Your Majesty’s Government has sequestered their land, burned their towns, stolen their property, enslaved their women and children, and committed other crimes too numerous to mention in detail. It is natural that they everywhere shrink from “the foster"
+ },
+ "joet/Krishna": {
+  "lahde": "ia-travelsinindia00tave",
+  "linkki": "https://archive.org/details/travelsinindia00tave",
+  "fraasi": "nearly 60,000 persons working there",
+  "ote": "a leafy tree, and in the green shadow one can easily detect if it is blue. The first time I was at this mine there were nearly 60,000 persons working there, including men, women, and children, who are employed in diverse ways, the men in digging, the women and children in carrying earth, for they search for the stones at this mine in"
+ },
+ "joet/Lachlan": {
+  "lahde": "gb-5334",
+  "linkki": "https://www.gutenberg.org/ebooks/5334",
+  "fraasi": "the interior of this vast country is a marsh and uninhabitable",
+  "ote": "east appearance of any such, and it was with infinite regret and pain that I was forced to come to the conclusion, that the interior of this vast country is a marsh and uninhabitable. How near these marshes may approach the south-western coast, I know not; but I do not think that the range of high and dry land in that quarter extends back north-easterly for an"
+ },
+ "joet/Lena": {
+  "lahde": "ia-inlenadeltanarra00melvuoft",
+  "linkki": "https://archive.org/details/inlenadeltanarra00melvuoft",
+  "fraasi": "crossed thirteen streams",
+  "ote": "he would reply, \" Da, da,\" or \" Bar\" (yes) ; or \" Soak \" (no), A TRIP TO THE ARCTIC SHORE. 205 as the case might be. We crossed thirteen streams, sev- eral of which were as wide, though perhaps not as deep, as the main branch, along which De Long had marched ; so it can be imagined of what value our charts were to us, whic"
+ },
+ "joet/Limpopo": {
+  "lahde": "gb-2781",
+  "linkki": "https://www.gutenberg.org/ebooks/2781",
+  "fraasi": "great grey-green, greasy Limpopo River",
+  "ote": "want to know what the Crocodile has for dinner!’ Then Kolokolo Bird said, with a mournful cry, ‘Go to the banks of the great grey-green, greasy Limpopo River, all set about with fever-trees, and find out.’ That very next morning, when there was nothing left of the Equinoxes, because the Precession had preceded according to precedent, t"
+ },
+ "joet/Loire": {
+  "lahde": "gb-2159",
+  "linkki": "https://www.gutenberg.org/ebooks/2159",
+  "fraasi": "expose all the crudities of its channel",
+  "ote": "ore poetic than the green horizons of Touraine. It is a very fit- ful stream, and is sometimes observed to run thin and expose all the crudities of its channel, - a great defect certainly in a river which is so much depended upon to give an air to the places it waters. But I speak of it as I saw it last; full, tranquil, powerful, bending"
+ },
+ "joet/Lualaba": {
+  "lahde": "gb-17024",
+  "linkki": "https://www.gutenberg.org/ebooks/17024",
+  "fraasi": "the same water here as in the Chambezé",
+  "ote": "spent two full years at this work, and the Chief Casembe was the first to throw light on the subject by saying, \"It is the same water here as in the Chambezé, the same in Moero and Lualaba, and one piece of water is just like another. Will you draw out calico from it that you wish to see it? As your chief desired you to see Bangweolo,"
+ },
+ "joet/Mackenzie": {
+  "lahde": "gb-35658",
+  "linkki": "https://www.gutenberg.org/ebooks/35658",
+  "fraasi": "very wild and unreflecting enterprise",
+  "ote": "d that they were whales; and having ordered the canoe to be prepared, we embarked in pursuit of them. It was, indeed, a very wild and unreflecting enterprise, and it was a very fortunate circumstance that we failed in our attempt to overtake them, as a stroke from the tail of one of these enormous fish would have dashed the canoe to pi"
+ },
+ "joet/Macquarie": {
+  "lahde": "gb-4330",
+  "linkki": "https://www.gutenberg.org/ebooks/4330",
+  "fraasi": "so salt as to be unfit to drink",
+  "ote": "ed their doing so, or the looks of terror and disappointment with which they called out to inform me that the water was so salt as to be unfit to drink! This was, indeed, too true: on tasting it, I found it extremely nauseous, and strongly impregnated with salt, being apparently a mixture of sea and fresh water. Whence this arose"
+ },
+ "joet/Marañón": {
+  "lahde": "gb-57756",
+  "linkki": "https://www.gutenberg.org/ebooks/57756",
+  "fraasi": "is an Indian word, and is applied to designate",
+  "ote": "past 5 a. m. At five miles of distance we passed the lower extremity of the Pongo, which commences at Shapaja. \"Pongo\" is an Indian word, and is applied to designate the place where a river breaks through a range of hills, and where navigation is of course obstructed by rocks and rapids. The place where the Marañon breaks its way through the l"
+ },
+ "joet/Mekong": {
+  "lahde": "gb-46560",
+  "linkki": "https://www.gutenberg.org/ebooks/46560",
+  "fraasi": "much larger than the Menam at Bangkok",
+  "ote": "ng betokens a degree of prosperity which I have also remarked wherever I have stopped since. The Mekon at this place is much larger than the Menam at Bangkok, and forces its way between the lofty mountains with a noise resembling the roaring of the sea and the impetuosity of a torrent, seeming scarcely able to keep within its bed. Ther"
+ },
+ "joet/Mississippi": {
+  "lahde": "gb-245",
+  "linkki": "https://www.gutenberg.org/ebooks/245",
+  "fraasi": "the romance and the beauty were all gone from the river",
+  "ote": "long, and then how is a body ever going to get through this blind place at night without the friendly old landmark. No, the romance and the beauty were all gone from the river. All the value any feature of it had for me now was the amount of usefulness it could furnish toward compassing the safe piloting of a steamboat. Since those days, I have pitied d"
+ },
+ "joet/Missouri": {
+  "lahde": "gb-8419",
+  "linkki": "https://www.gutenberg.org/ebooks/8419",
+  "fraasi": "agreeable sound of a fall of water",
+  "ote": "had proceded on this course about two miles with Goodrich at some distance behind me whin my ears were saluted with the agreeable sound of a fall of water and advancing a little further I saw the spray arrise above the plain like a collumn of smoke which would frequently dispear again in an instant caused I presume by the wind which"
+ },
+ "joet/Narmada": {
+  "lahde": "ia-highlandsofcentr00forsrich",
+  "linkki": "https://archive.org/details/highlandsofcentr00forsrich",
+  "fraasi": "two sheer walls of pure white marble",
+  "ote": "hty river pent up into a third of its width, and for a space of two miles or more boiling along deep and sullen between two sheer walls of pure white marble, a hundred feet in height, must form a scene of rare loveliness. But in a bustling, dusty, oriental land, the charm of coolness and quiet belonging to these pure cold rocks, and d"
+ },
+ "joet/Negro": {
+  "lahde": "gb-42483",
+  "linkki": "https://www.gutenberg.org/ebooks/42483",
+  "fraasi": "save a few at Chupat",
+  "ote": "me in sight of the valley, still three miles distant, where large willows--which, by the way, are unknown in Patagonia, save a few at Chupat, probably introduced by the settlers--marked the winding course of the Rio Negro. We halted at the head of an abra, or lateral opening which ran up into the barranca from the main"
+ },
+ "joet/Niger": {
+  "lahde": "gb-5266",
+  "linkki": "https://www.gutenberg.org/ebooks/5266",
+  "fraasi": "majestic Niger",
+  "ote": "See the water!”) and, looking forwards, I saw with infinite pleasure the great object of my mission—the long-sought-for majestic Niger, glittering in the morning sun, as broad as the Thames at Westminster, and flowing slowly to _the eastward_. I hastened to the brink, and having drunk of the water, lifted up my f"
+ },
+ "joet/Niili": {
+  "lahde": "gb-3284",
+  "linkki": "https://www.gutenberg.org/ebooks/3284",
+  "fraasi": "old father Nile",
+  "ote": "r slopes--as interesting a picture as one could wish to see. The expedition had now performed its functions. I saw that old father Nile without any doubt rises in the Victoria N'yanza, and, as I had foretold, that lake is the great source of the holy river which cradled the first expounder of our religious belief."
+ },
+ "joet/North Saskatchewan": {
+  "lahde": "gb-69759",
+  "linkki": "https://www.gutenberg.org/ebooks/69759",
+  "fraasi": "true North-West Passage is by land",
+  "ote": "ved valueless. We have attempted to show that the original idea of the French Canadians was the right one, and that the true North-West Passage is by land, along the fertile belt of the Saskatchewan, leading through British Columbia to the splendid harbour of Esquimalt, and the great coal-fields of Vancouver Island, which offer ever"
+ },
+ "joet/Ohio": {
+  "lahde": "gb-675",
+  "linkki": "https://www.gutenberg.org/ebooks/675",
+  "fraasi": "the oldest woman of the party sits down in the old chair",
+  "ote": "st, the chair; bid the rowers ‘good-bye;’ and shove the boat off for them. At the first plash of the oars in the water, the oldest woman of the party sits down in the old chair, close to the water’s edge, without speaking a word. None of the others sit down, though the chest is large enough for many seats. They all stand where they landed, as if stricken"
+ },
+ "joet/Okavango": {
+  "lahde": "gb-1039",
+  "linkki": "https://www.gutenberg.org/ebooks/1039",
+  "fraasi": "Bayeiye, who live on the lake",
+  "ote": "A number of dead trees lie on this space, some of them imbedded in the mud, right in the water. We were informed by the Bayeiye, who live on the lake, that when the annual inundation begins, not only trees of great size, but antelopes, as the springbuck and tsessebe ('Acronotus lunata'), are swept down by its rushing waters; th"
+ },
+ "joet/Olenjok": {
+  "lahde": "gb-24365",
+  "linkki": "https://www.gutenberg.org/ebooks/24365",
+  "fraasi": "survived him only two days",
+  "ote": "newly married when he started. His young wife accompanied him on his journey, took part in his dangers and sufferings, survived him only two days, and now rests by his side in the grave on the desolate shore of the Polar Sea. On the 9th Oct./28th Sept. the Olenek was frozen over and the winter became very severe for Chelyus"
+ },
+ "joet/Orinoco": {
+  "lahde": "gb-2272",
+  "linkki": "https://www.gutenberg.org/ebooks/2272",
+  "fraasi": "I never saw a more beautiful country",
+  "ote": "rs, as they drew me on by little and little, till we came into the next valley, where we might better discern the same. I never saw a more beautiful country, nor more lively prospects; hills so raised here and there over the valleys; the river winding into divers branches; the plains adjoining without bush or stubble, all fair green g"
+ },
+ "joet/Ottawa": {
+  "lahde": "gb-6825",
+  "linkki": "https://www.gutenberg.org/ebooks/6825",
+  "fraasi": "in drawing mine I came near losing my life",
+  "ote": "ble to carry our canoes by land on account of the density of the wood, we had to drag them in the water with ropes, and in drawing mine I came near losing my life, as it crossed into one of the eddies, and if I had not had the good fortune to fall between two rocks the canoe would have dragged me in, inasmuch as I was unable to undo quickly"
+ },
+ "joet/Paraná": {
+  "lahde": "gb-944",
+  "linkki": "https://www.gutenberg.org/ebooks/944",
+  "fraasi": "enormous collection of bones",
+  "ote": "skeletons were buried by the deposits of the very next year. What would be the opinion of a geologist, viewing such an enormous collection of bones, of all kinds of animals and of all ages, thus embedded in one thick earthy mass? Would he not attribute it to a flood having swept over the surface of the land, rather than to th"
+ },
+ "joet/Peace": {
+  "lahde": "gb-35659",
+  "linkki": "https://www.gutenberg.org/ebooks/35659",
+  "fraasi": "colonised them in the Peace River",
+  "ote": "hat I could not even walk, but with great pain and difficulty, it was my intention to have taken some salmon alive, and colonised them in the Peace River, though it is very doubtful whether that fish would live in waters that have not a communication with the sea. Some of the inhabitants had been here since we passed; and I apprehe"
+ },
+ "joet/Petšora": {
+  "lahde": "ia-siberiaineuropev00seebrich",
+  "linkki": "https://archive.org/details/siberiaineuropev00seebrich",
+  "fraasi": "wrapt in mystery",
+  "ote": "standing his researches, there remained half-a-dozen well- known British birds whose breeding-grounds still con- tinued wrapt in mystery, to solve which has been the ambition of many field naturalists during the past twenty years. These birds, to the discovery of whose eggs special interest seemed to attach, were t"
+ },
+ "joet/Po": {
+  "lahde": "gb-997",
+  "linkki": "https://www.gutenberg.org/ebooks/997",
+  "fraasi": "Po discende",
+  "ote": "noi udiremo e parleremo a voi, mentre che ’l vento, come fa, ci tace. Siede la terra dove nata fui su la marina dove ’l Po discende per aver pace co’ seguaci sui. Amor, ch’al cor gentil ratto s’apprende, prese costui de la bella persona che mi fu tolta; e ’l modo ancor m’offende. Amor, ch’a nullo amato amar pe"
+ },
+ "joet/Purús": {
+  "lahde": "gb-57756",
+  "linkki": "https://www.gutenberg.org/ebooks/57756",
+  "fraasi": "from the iron ring in its bow",
+  "ote": "and from the fact that he at that time was the only trader on the river. He also knew that it was not an Indian's boat, from the iron ring in its bow; and the only conclusion that he could come to was that the boat had broken adrift from civilized people above, and been wrecked and broken in passing the rapids. The Indians who"
+ },
+ "joet/Rein": {
+  "lahde": "gb-29091",
+  "linkki": "https://www.gutenberg.org/ebooks/29091",
+  "fraasi": "Ye Nymphs that reign",
+  "ote": "es And rags, and hags, and hideous wenches; I counted two and seventy stenches, All well defined, and several stinks! 5 Ye Nymphs that reign o'er sewers and sinks, The river Rhine, it is well known, Doth wash your city of Cologne; But tell me, Nymphs, what power divine Shall henceforth wash the river Rhine[477:4]? 10 1"
+ },
+ "joet/Rhône": {
+  "lahde": "gb-650",
+  "linkki": "https://www.gutenberg.org/ebooks/650",
+  "fraasi": "at the rate of twenty miles an hour",
+  "ote": "if introducing somebody—‘The Angel Gabriel!’ Soon after daybreak next morning, we were steaming down the Arrowy Rhone, at the rate of twenty miles an hour, in a very dirty vessel full of merchandise, and with only three or four other passengers for our companions: among whom, the most remarkable was a silly, old, meek-faced, garlic-"
+ },
+ "joet/Rio Negro": {
+  "lahde": "gb-71436",
+  "linkki": "https://www.gutenberg.org/ebooks/71436",
+  "fraasi": "no islands of floating grass",
+  "ote": "ee days, and I had a good opportunity of observing the striking difference between this river and the Amazon. Here were no islands of floating grass, no logs and uprooted trees, with their cargoes of gulls, scarcely any stream, and few signs of life in the black and sluggish waters. Yet when there is a storm, there are greater"
+ },
+ "joet/Saint Lawrence": {
+  "lahde": "gb-70123",
+  "linkki": "https://www.gutenberg.org/ebooks/70123",
+  "fraasi": "Every emigrant who arrives in this country",
+  "ote": "nd arbor-vitæ,—the latter very large and now full of fruit,—also aspens, alders, and the mountain-ash with its berries. Every emigrant who arrives in this country by way of the St. Lawrence, as he opens a point of the Isle of Orleans, sees the Montmorenci tumbling into the Great River thus magnificently in a vast white sheet, making its con"
+ },
+ "joet/Sambesi": {
+  "lahde": "gb-1039",
+  "linkki": "https://www.gutenberg.org/ebooks/1039",
+  "fraasi": "smoke that sounds in your country",
+  "ote": "these we had often heard since we came into the country; indeed, one of the questions asked by Sebituane was, \"Have you smoke that sounds in your country?\" They did not go near enough to examine them, but, viewing them with awe at a distance, said, in reference to the vapor and noise, \"Mosi oa tunya\" (smoke does sound there). It wa"
+ },
+ "joet/Saskatchewan": {
+  "lahde": "gb-69759",
+  "linkki": "https://www.gutenberg.org/ebooks/69759",
+  "fraasi": "fur-bearing animals of the woods have decreased",
+  "ote": "h and the prairie which stretches away to the south, it was formerly a post of very considerable importance. But as the fur-bearing animals of the woods have decreased, and the buffalo are often far distant, it has ceased to be one of the most profitable establishments. When we arrived there, however, we were gladdened by the news that this year"
+ },
+ "joet/Selenga": {
+  "lahde": "gb-6408",
+  "linkki": "https://www.gutenberg.org/ebooks/6408",
+  "fraasi": "Selenga is one continuous loneliness",
+  "ote": "tell you when we meet about my journey along the bank of the Selenga and across Transbaikalia. Now I will only say that Selenga is one continuous loneliness, and in Transbaikalia I found everything I wanted: the Caucasus, and the valley of the Psyol, and the Zvenigorod district, and the Don. By day you gallop through the Caucasus, at"
+ },
+ "joet/Shire": {
+  "lahde": "gb-2519",
+  "linkki": "https://www.gutenberg.org/ebooks/2519",
+  "fraasi": "the last mere driblets of this cup of woe",
+  "ote": "reality. In fact, they were received, as some may accept our own, as tinged with exaggeration; but when our eyes beheld the last mere driblets of this cup of woe, we for the first time felt that the enormous wrongs inflicted on our fellow-men by slaving are beyond exaggeration. Wherever we took a walk, human skeletons were seen in every di"
+ },
+ "joet/Slave": {
+  "lahde": "gb-35658",
+  "linkki": "https://www.gutenberg.org/ebooks/35658",
+  "fraasi": "Portage des Noyes",
+  "ote": "oes and some packages lost, in the rapids on the other side of the river, which occasioned this place to be called the _Portage des Noyes_. They were proceeding to the Slave Lake, in the fall of that year, under the direction of Mr. Cuthbert Grant. We proceeded from hence six miles, and encamped on Point de Roche, a"
+ },
+ "joet/Snake": {
+  "lahde": "gb-1371",
+  "linkki": "https://www.gutenberg.org/ebooks/1371",
+  "fraasi": "maudite riviere enragee",
+  "ote": "gs connected with it rendered it hateful in their remembrance, so that the Canadian voyageurs always spoke of it as “La maudite riviere enragee”--the accursed mad river--thus coupling a malediction with its name. CHAPTER XXXVII Departure From Snake River--Mountains to the North.--Wayworn Travellers--An Increase of the Dor"
+ },
+ "joet/Sutlej": {
+  "lahde": "ws-The_Hymns_of_the_Rigveda_Book_3_Hymn_33",
+  "linkki": "https://en.wikisource.org/wiki/The_Hymns_of_the_Rigveda/Book_3/Hymn_33",
+  "fraasi": "Vipas and Sutudri speed down their waters",
+  "ote": "ountains, eager as two swift mares with loosened rein contending, Like two bright mother cows who lick their youngling, Vipas and Sutudri speed down their waters. 2. Impelled by Indra whom ye pray to urge you, ye move as 'twere on chariots to the ocean. Flowing together, swelling with your billows, O lucid Streams, each of you seeks the ot"
+ },
+ "joet/Syr Darya": {
+  "lahde": "gb-46976",
+  "linkki": "https://www.gutenberg.org/ebooks/46976",
+  "fraasi": "call by a different name, Jaxartes",
+  "ote": "the Sogdianians. Thence he advanced to the river Tanais. This river, which Aristobulus says the neighbouring barbarians call by a different name, Jaxartes, has its source, like the Oxus, in mount Caucasus, and also discharges itself into the Hyrcanian Sea.[504] It must be a different Tanais from that of which Herodotus the historian"
+ },
+ "joet/Tajo": {
+  "lahde": "gb-5131",
+  "linkki": "https://www.gutenberg.org/ebooks/5131",
+  "fraasi": "Tagus dashing onward to the deep",
+  "ote": "but with the fifth, anon, New shores descried make every bosom gay; And Cintra's mountain greets them on their way, And Tagus dashing onward to the deep, His fabled golden tribute bent to pay; And soon on board the Lusian pilots leap, And steer 'twixt fertile shores where yet few rustics reap. XV. Oh, Christ! it is a goodly sight"
+ },
+ "joet/Tapajós": {
+  "lahde": "gb-2440",
+  "linkki": "https://www.gutenberg.org/ebooks/2440",
+  "fraasi": "flows disdainfully by",
+  "ote": "contribution to the Amazons is not perceptible in the middle of the stream. The white turbid current of the main river flows disdainfully by, occupying nearly the whole breadth of the channel, whilst the darker water of its tributary seems to creep along the shore, and is no longer distinguishable four or five miles fr"
+ },
+ "joet/Tarim": {
+  "lahde": "ia-throughasia02hedi_0",
+  "linkki": "https://archive.org/details/throughasia02hedi_0",
+  "fraasi": "easy in his mind",
+  "ote": ") at a depth of five feet; but it was salt and bitter, so that even the animals refused to drink it. Ahmed was at least easy in his mind : for he had made the same observation I had — namely, that the water in the desert wells always turns salt when you are approaching a river. At any rate, it was a good omen on my"
+ },
+ "joet/Thames": {
+  "lahde": "gb-42081",
+  "linkki": "https://www.gutenberg.org/ebooks/42081",
+  "fraasi": "even to a printing press",
+  "ote": "ndon was still planted with booths in formal streets, all sorts of trades and shops furnished, and full of commodities, even to a printing press, where the people and ladies took a fancy to have their names printed, and the day and year set down when printed on the Thames: this humor took so universally, that it was estima"
+ },
+ "joet/Tigris": {
+  "lahde": "gb-1170",
+  "linkki": "https://www.gutenberg.org/ebooks/1170",
+  "fraasi": "the name of which was Larissa",
+  "ote": "ng their march in safety for the rest of that day, reached the river Tigris. Here they came upon a large deserted city, the name of which was Larissa (1): a place inhabited by the Medes in days of old; the breadth of its walls was twenty-five feet, and the height of them a hundred, and the circuit of the whole two parasangs. It"
+ },
+ "joet/Tobol": {
+  "lahde": "gb-24365",
+  "linkki": "https://www.gutenberg.org/ebooks/24365",
+  "fraasi": "gave its name to the whole north part of Asia",
+  "ote": "esidence Sibir, situated in the neighbourhood of the present Tobolsk. It was this fortress, long since destroyed, which gave its name to the whole north part of Asia. From this point the Russians, mainly following the great rivers, and passing from one river territory to another at the places where the tributaries almost met, spread out rapidl"
+ },
+ "joet/Tocantins": {
+  "lahde": "gb-2440",
+  "linkki": "https://www.gutenberg.org/ebooks/2440",
+  "fraasi": "La está o Paraná-uassú",
+  "ote": "ll view of the Tocantins. The event was announced by one of our Indians, who was on the lookout at the prow, shouting: “La está o Paraná-uassú!” “Behold, the great river!” It was a grand sight—a broad expanse of dark waters dancing merrily to the breeze; the opposite shore, a narrow blue line, miles away. We went ashore"
+ },
+ "joet/Tonava": {
+  "lahde": "gb-2707",
+  "linkki": "https://www.gutenberg.org/ebooks/2707",
+  "fraasi": "Ister flows at an equal level always both in summer and in winter",
+  "ote": ", the Nile is superior in volume of water; for into this no river or spring flows, to contribute to its volume. And the Ister flows at an equal level always both in summer and in winter for some such cause as this, as I suppose:—in winter it is of the natural size, or becomes only a little larger than its nature, seeing that this land receives very little rain in"
+ },
+ "joet/Ucayali": {
+  "lahde": "gb-57756",
+  "linkki": "https://www.gutenberg.org/ebooks/57756",
+  "fraasi": "It is a beautiful stream, with low, shelving, green banks",
+  "ote": "y two others in a skiff (called _montaria_) next morning. In fifty-five minutes we arrived at the mouth of the Ucayali. It is a beautiful stream, with low, shelving, green banks at its mouth. But I was disappointed in its size; it was not more than half as wide as the Amazon. It is the longest known tributary above Brazil, and is therefore called by some"
+ },
+ "joet/Uele": {
+  "lahde": "gb-71621",
+  "linkki": "https://www.gutenberg.org/ebooks/71621",
+  "fraasi": "the Welle belongs to the system of the Shary",
+  "ote": "n obtained along the wide tract that extends from Lake Tsad to Kordofan and south of that line, it may be asserted that the Welle belongs to the system of the Shary. That the Welle has any connection with the Gazelle, and so ultimately with the Nile, is contradicted not merely by the general belief, but by the authenticated statements of the"
+ },
+ "joet/Ural": {
+  "lahde": "gb-1349",
+  "linkki": "https://www.gutenberg.org/ebooks/1349",
+  "fraasi": "the Volga, and the Yaik or Ural",
+  "ote": "there they formed self-governing military communities. Each one of the rivers flowing southwards--the Dnieper, the Don, the Volga, and the Yaik or Ural--was held by a community of these Free Cossacks, and no one, whether Christian or Tartar, was allowed to pass through their territory without their permission. Officially the Free"
+ },
+ "joet/Uruguay": {
+  "lahde": "gb-944",
+  "linkki": "https://www.gutenberg.org/ebooks/944",
+  "fraasi": "presented to our view a noble volume of water",
+  "ote": "n which they are said to sharpen their claws; but we did not succeed in disturbing one. From this point the Rio Uruguay presented to our view a noble volume of water. From the clearness and rapidity of the stream, its appearance was far superior to that of its neighbour the Parana. On the opposite coast, several branches from the latter river"
+ },
+ "joet/Vaal": {
+  "lahde": "gb-66343",
+  "linkki": "https://www.gutenberg.org/ebooks/66343",
+  "fraasi": "the small confluents of the river",
+  "ote": "tainly are in all respects “dry” enough. But at first the searchers confined themselves chiefly to the river bed and to the small confluents of the river, scraping up into their mining cradles the shingles and dirt they had collected, and shaking and washing away the grit and mud, till they could see by turning the remaining stones"
+ },
+ "joet/Vienanjoki": {
+  "lahde": "gb-7476",
+  "linkki": "https://www.gutenberg.org/ebooks/7476",
+  "fraasi": "an hatchet, a tinder boxe, and a kettle",
+  "ote": "uision for the way. [Sidenote: Good counsell for trauellers.] And he that will trauell those wayes, must carie with him an hatchet, a tinder boxe, and a kettle, to make fire and seethe meate, when he hath it: for there is small succour in those parts, vnlesse it be in townes. [Sidenote: December.] The first day of December, I departed fr"
+ },
+ "joet/Volga": {
+  "lahde": "gb-1349",
+  "linkki": "https://www.gutenberg.org/ebooks/1349",
+  "fraasi": "deck of the steamer is generally much more interesting",
+  "ote": "and far between.\" A glass of the most exquisite wine diluted with a gallon of water makes a very insipid beverage. The deck of the steamer is generally much more interesting than the banks of the river. There one meets with curious travelling companions. The majority of the passengers are probably Russian peasants, who are always ready to chat freely"
+ },
+ "joet/Volta": {
+  "lahde": "gb-65997",
+  "linkki": "https://www.gutenberg.org/ebooks/65997",
+  "fraasi": "the Volta river is the proper base of operations",
+  "ote": "with Ashanti, recent explorations made by Mr. McLaren, of the firm of Messrs. Alex. Miller Brothers, seem to show that the Volta river is the proper base of operations. That gentleman, in October 1879, crossed the rapids on the Volta, between Medica and Aquamoo, in the steam-launch “Agnes,” which was the first European-built craft that had ever"
+ },
+ "joet/Yukon": {
+  "lahde": "gb-47402",
+  "linkki": "https://www.gutenberg.org/ebooks/47402",
+  "fraasi": "oldest form of navigation extant",
+  "ote": "ve craft before I could exchange to good and sufficient native or civilized transportation. The raft is undoubtedly the oldest form of navigation extant, and undoubtedly the worst; it is interesting to know just how useful the raft can be as an auxiliary to geographical exploration, and certainly my raft journey was long enough to"
+ },
+ "vuoret/alaskan-vuoristo": {
+  "lahde": "gb-26059",
+  "linkki": "https://www.gutenberg.org/ebooks/26059",
+  "fraasi": "fell unconscious for a moment",
+  "ote": "nthusiasm and excitement somewhat overpassing his narrow wind margin, had almost to be hauled up the last few feet, and fell unconscious for a moment upon the floor of the little snow basin that occupies the top of the mountain. This, then, is the actual summit, a little crater-like snow basin, sixty or sixty-five feet long and"
+ },
+ "vuoret/alpit": {
+  "lahde": "gb-41234",
+  "linkki": "https://www.gutenberg.org/ebooks/41234",
+  "fraasi": "Climb if you will",
+  "ote": "o be described in words, and there have been griefs upon which I have not dared to dwell; and with these in mind I say, Climb if you will, but remember that courage and strength are naught without prudence, and that a momentary negligence may destroy the happiness of a lifetime. Do nothing in haste, look well to eac"
+ },
+ "vuoret/andit": {
+  "lahde": "gb-944",
+  "linkki": "https://www.gutenberg.org/ebooks/944",
+  "fraasi": "waved their branches on the shores of the Atlantic",
+  "ote": "much astonished that I could scarcely believe the plainest evidence. I saw the spot where a cluster of fine trees once waved their branches on the shores of the Atlantic, when that ocean (now driven back 700 miles) came to the foot of the Andes. I saw that they had sprung from a volcanic soil which had been raised above the level of the sea, and t"
+ },
+ "vuoret/annamin-ylanko": {
+  "lahde": "gb-46560",
+  "linkki": "https://www.gutenberg.org/ebooks/46560",
+  "fraasi": "monkeys uttering their plaintive cries",
+  "ote": "am-Quême, Nam-Itou, Nam-Pâne; the Nam-Khou, near Bane-Nakone. The road lies across high mountains, with jungles full of monkeys uttering their plaintive cries. I was told of a royal tiger at Na-Lê, which, in the space of four months, had killed two men and ten buffaloes. I had the satisfaction of killing the tigress. 5th September, 1861"
+ },
+ "vuoret/apenniinit": {
+  "lahde": "gb-10907",
+  "linkki": "https://www.gutenberg.org/ebooks/10907",
+  "fraasi": "so furious a storm attacked him",
+  "ote": "ain that nation to his side, like the Gauls and Ligurians, either by force or favour. As he was crossing the Apennines, so furious a storm attacked him, that it almost surpassed the horrors of the Alps. When the rain and wind together were driven directly against their faces, they at first halted, because their arms must either b"
+ },
+ "vuoret/appalakit": {
+  "lahde": "gb-63678",
+  "linkki": "https://www.gutenberg.org/ebooks/63678",
+  "fraasi": "a world of mountains piled upon mountains",
+  "ote": "st elevated peak; from whence I beheld with rapture and astonishment a sublimely awful scene of power and magnificence, a world of mountains piled upon mountains. Having contemplated this amazing prospect of grandeur, I descended the pinnacles, and again falling into the trading path, continued gently descending through a grassy plain, sca"
+ },
+ "vuoret/atlas": {
+  "lahde": "gb-70700",
+  "linkki": "https://www.gutenberg.org/ebooks/70700",
+  "fraasi": "one traveller may have seen the range thickly snowed",
+  "ote": "as we had seen, the snow melts with extreme rapidity under the almost vertical sun during the summer months; and hence one traveller may have seen the range thickly snowed even in the hottest season, while another, with equal truth, may describe it as almost completely bare. The state of things is such that a very moderate change in the physical con"
+ },
+ "vuoret/etiopian-ylangot": {
+  "lahde": "gb-54531",
+  "linkki": "https://www.gutenberg.org/ebooks/54531",
+  "fraasi": "a mere private Briton",
+  "ote": "ain upon the enterprise and abilities of mankind, or adding this desideratum for the encouragement of geography. Though a mere private Briton, I triumphed here, in my own mind, over kings and their armies; and every comparison was leading nearer and nearer to presumption, when the place itself where I stood, the object"
+ },
+ "vuoret/guyanan-ylanko": {
+  "lahde": "gb-2272",
+  "linkki": "https://www.gutenberg.org/ebooks/2272",
+  "fraasi": "as if a thousand great bells were knocked one against another",
+  "ote": "e side of the mountain, but rusheth over the top of it, and falleth to the ground with so terrible a noise and clamour, as if a thousand great bells were knocked one against another. I think there is not in the world so strange an overfall, nor so wonderful to behold. Berreo told me that there were diamonds and other precious stones on it, and that they shine"
+ },
+ "vuoret/himalaja": {
+  "lahde": "gb-6476",
+  "linkki": "https://www.gutenberg.org/ebooks/6476",
+  "fraasi": "aquamarines set in frosted silver",
+  "ote": "dazzling mass of snowy peaks, intersected by blue glaciers, which gleamed in the slanting rays of the rising sun, like aquamarines set in frosted silver. From this the sweep of snowed mountains to the eastward was almost continuous as far as Chola (bearing east-north-east), following a curve of 150 miles, and enclosing the whole o"
+ },
+ "vuoret/hindukush": {
+  "lahde": "gb-46976",
+  "linkki": "https://www.gutenberg.org/ebooks/46976",
+  "fraasi": "Macedonians transferred Mount Caucasus",
+  "ote": "racles arrived there he killed the eagle and set Prometheus free from his bonds. He also says that by their account the Macedonians transferred Mount Caucasus from the Euxine Sea to the eastern parts of the earth, and the land of the Parapamisadians to that of the Indians;[632] calling what was really Mount Parapamisus by the name of Ca"
+ },
+ "vuoret/japanin-alpit": {
+  "lahde": "ia-mountaineeringex00westrich",
+  "linkki": "https://archive.org/details/mountaineeringex00westrich",
+  "fraasi": "Jonendake",
+  "ote": "s— Exploring a new pass— Matsumoto again — \"English as she is Japped\" — Chiistianity and its spread — A kindly headman— Jonendake— A tiring scramble— Romantic bivouac— Strange legends— A glorious panorama— Getting into hot water .241 CHAI'TEU XIII. On the Nakasendn again— The peripatetic cobbler— Japanese Al"
+ },
+ "vuoret/kaakkois-australian-ylangot": {
+  "lahde": "gb-213",
+  "linkki": "https://www.gutenberg.org/ebooks/213",
+  "fraasi": "wombat holes",
+  "ote": "l, It well might make the boldest hold their breath, The wild hop scrub grew thickly, and the hidden ground was full Of wombat holes, and any slip was death. But the man from Snowy River let the pony have his head, And he swung his stockwhip round and gave a cheer, And he raced him down the mountain like a torr"
+ },
+ "vuoret/kalliovuoret": {
+  "lahde": "gb-755",
+  "linkki": "https://www.gutenberg.org/ebooks/755",
+  "fraasi": "no head and no ankles",
+  "ote": "m?\" Never-to-be-forgotten glories they were, burnt in upon my memory by six succeeding hours of terror. You know I have no head and no ankles, and never ought to dream of mountaineering; and had I known that the ascent was a real mountaineering feat I should not have felt the slightest ambition to perform it. As it is,"
+ },
+ "vuoret/kamerunvuori": {
+  "lahde": "gb-5891",
+  "linkki": "https://www.gutenberg.org/ebooks/5891",
+  "fraasi": "no exultation, but only a deep disgust",
+  "ote": "my face to it and breathe, the wind is all I can do to stand up against. Verily I am no mountaineer, for there is in me no exultation, but only a deep disgust because the weather has robbed me of my main object in coming here, namely to get a good view and an idea of the way the unexplored mountain range behind Calabar trends. I took my"
+ },
+ "vuoret/kamtshatka": {
+  "lahde": "gb-12328",
+  "linkki": "https://www.gutenberg.org/ebooks/12328",
+  "fraasi": "reported height, 16,500 feet",
+  "ote": "the channel of the Kamchatka River with a fiery flood. The volcano, so far as I know, has never been ascended, and its reported height, 16,500 feet, is probably the approximative estimate of some Russian officer. It is certainly, however, the highest peak of the Kamchatkan peninsula, and is more likely to exceed 16,000 feet t"
+ },
+ "vuoret/karakoram": {
+  "lahde": "ia-heartofcontinent0000fran",
+  "linkki": "https://archive.org/details/heartofcontinent0000fran",
+  "fraasi": "afraid to go first",
+  "ote": "ite impracticable. “T freely confess that I myself could never have attempted the descent, and that I—an Englishman—was afraid to go first. Luckily my guides were better plucked than myself, and, tying a rope round the leading man’s waist, the rest of us hung on while he hewed steps across the ice-slope which led dow"
+ },
+ "vuoret/karpaatit": {
+  "lahde": "gb-345",
+  "linkki": "https://www.gutenberg.org/ebooks/345",
+  "fraasi": "horseshoe of the Carpathians",
+  "ote": "venth century they found the Huns settled in it. I read that every known superstition in the world is gathered into the horseshoe of the Carpathians, as if it were the centre of some sort of imaginative whirlpool; if so my stay may be very interesting. (_Mem._, I must ask the Count all about them.) I did not sleep well, though"
+ },
+ "vuoret/kaskadit": {
+  "lahde": "ia-canoesaddleadven00wint",
+  "linkki": "https://archive.org/details/canoesaddleadven00wint",
+  "fraasi": "somebody or nobody",
+  "ote": "ne before me was royalest. Mount Reg- nier Christians have dubbed it, in stupid nomen- clature perpetuating the name of somebody or nobody. More melodiously the siwashes call it Tacoma. — a generic term also applied to all snow peaks. Whatever keen crests and crags there may be in its rock anatomy of basalt, snow WHU"
+ },
+ "vuoret/kaukasus": {
+  "lahde": "gb-44885",
+  "linkki": "https://www.gutenberg.org/ebooks/44885",
+  "fraasi": "There assemble at Dioscurias 70",
+  "ote": "between the Caspian Sea and the Euxine. It is a common mart of the nations situated above it, and in its neighbourhood. There assemble at Dioscurias 70 or, according to some writers who are careless in their statements,[940] 300 nations. All speak different languages, from living dispersed in various places and without intercours"
+ },
+ "vuoret/kunlun": {
+  "lahde": "gb-10636",
+  "linkki": "https://www.gutenberg.org/ebooks/10636",
+  "fraasi": "Jasper and Chalcedony are found",
+  "ote": "es, but the most noble is PEIN, the capital of the kingdom.{1} There are rivers in this country, in which quantities of Jasper and Chalcedony are found.{2} The people have plenty of all products, including cotton. They live by manufactures and trade. But they have a custom that I must relate. If the husband of any woman go away u"
+ },
+ "vuoret/madagaskarin-ylanko": {
+  "lahde": "gb-68708",
+  "linkki": "https://www.gutenberg.org/ebooks/68708",
+  "fraasi": "a dozen fires, long curving lines of flame",
+  "ote": "ountry, and the little vegetation which has held its own is constantly liable to be lessened as time goes on. Sometimes a dozen fires, long curving lines of flame, may be seen at once in different directions, and these give a strangely picturesque appearance to the nights of springtime in Imèrina. [Sidenote: BIRDS] The weather often becomes"
+ },
+ "vuoret/pamir": {
+  "lahde": "gb-10636",
+  "linkki": "https://www.gutenberg.org/ebooks/10636",
+  "fraasi": "you do not even see any birds flying",
+  "ote": "ing, so that travellers are obliged to carry with them whatever they have need of. The region is so lofty and cold that you do not even see any birds flying. And I must notice also that because of this great cold, fire does not burn so brightly, nor give out so much heat as usual, nor does it cook food so effectually.{2} Now, if we go"
+ },
+ "vuoret/pyreneet": {
+  "lahde": "gb-391",
+  "linkki": "https://www.gutenberg.org/ebooks/391",
+  "fraasi": "High are the peaks, the valleys shadowful",
+  "ote": "hs swords seven hundred flash. King Almaris, Belserne for kingdom had, On the evil day he met them in combat. AOI. LXVI High are the peaks, the valleys shadowful, Swarthy the rocks, the narrows wonderful. Franks passed that day all very sorrowful, Fifteen leagues round the rumour of them grew. When they were come, and Terra Major knew, Saw"
+ },
+ "vuoret/ruwenzori": {
+  "lahde": "gb-43654",
+  "linkki": "https://www.gutenberg.org/ebooks/43654",
+  "fraasi": "the solid substance of a real one",
+  "ote": "us, I became for the first time conscious that what I gazed upon was not the image or semblance of a vast mountain, but the solid substance of a real one, with its summit covered with snow. I ordered a halt and examined it carefully with a field-glass, then took a compass bearing of the centre of it, and found it bear 215° magnetic"
+ },
+ "vuoret/sierra-madre-occidental": {
+  "lahde": "gb-16426",
+  "linkki": "https://www.gutenberg.org/ebooks/16426",
+  "fraasi": "only the birds knew how deep it was",
+  "ote": ". Even the intrepid Jesuit missionaries at first gave up the idea of descending into it, and the Indians told them that only the birds knew how deep it was. The traveller as he stands at the edge of such gaps wonders whether it is possible to get across them. They can in a few places be crossed, even with animals if these are lightly"
+ },
+ "vuoret/sierra-nevada": {
+  "lahde": "gb-10012",
+  "linkki": "https://www.gutenberg.org/ebooks/10012",
+  "fraasi": "the Range of Light",
+  "ote": "mountains shone in all its glory. Then it seemed to me the Sierra should be called not the Nevada, or Snowy Range, but the Range of Light. And after ten years spent in the heart of it, rejoicing and wondering, bathing in its glorious floods of light, seeing the sunbursts of morning among the icy peaks, the noonday r"
+ },
+ "vuoret/suuri-vedenjakajavuoristo": {
+  "lahde": "gb-944",
+  "linkki": "https://www.gutenberg.org/ebooks/944",
+  "fraasi": "From so grand a title as Blue Mountains",
+  "ote": "most level plain extends, which, rising imperceptibly to the westward, at last attains a height of more than 3000 feet. From so grand a title as Blue Mountains, and from their absolute altitude, I expected to have seen a bold chain of mountains crossing the country; but instead of this, a sloping plain presents merely an inconsiderable f"
+ },
+ "vuoret/taurusvuoret": {
+  "lahde": "gb-1170",
+  "linkki": "https://www.gutenberg.org/ebooks/1170",
+  "fraasi": "wall of mountains from sea to sea",
+  "ote": "sesame plentifully, as also panic and millet and barley and wheat; and it is shut in on all sides by a steep and lofty wall of mountains from sea to sea. Descending through this plain country, he advanced four stages--twenty-five parasangs--to Tarsus, a large and prosperous city of Cilicia. Here stood the palace of Syennesis, the"
+ },
+ "vuoret/tiibetin-ylatasanko": {
+  "lahde": "gb-33269",
+  "linkki": "https://www.gutenberg.org/ebooks/33269",
+  "fraasi": "gigantic staircase, each step of which consisted of a mountain",
+  "ote": "Tant-La, though long in duration, was rapid in itself. Throughout four whole days, we were going down, as it seemed, a gigantic staircase, each step of which consisted of a mountain. At the bottom, we found some hot springs, of an extremely magnificent description. Amongst huge rocks, you see a great number of reservoirs, hollowed out by the hand of nature, i"
+ },
+ "vuoret/ural": {
+  "lahde": "ia-siberiaexilesyst01kenn",
+  "linkki": "https://archive.org/details/siberiaexilesyst01kenn",
+  "fraasi": "cold brick pillar",
+  "ote": "EOSS THE SIBERIAN FRONTIER 53 Tin-. - ' \\ • 54 SIBERIA exile ; and a few pressed their lips to the European side of the cold brick pillar, as if kissing good-by forever to all that it symbolized. At last the stern order \" Stroisa ! \" [Form ranks ! ] from the under officer of the convoy put an end to the rest and lea"
+ },
+ "vuoret/uuden-seelannin-alpit": {
+  "lahde": "gb-3235",
+  "linkki": "https://www.gutenberg.org/ebooks/3235",
+  "fraasi": "pale as ghosts",
+  "ote": "which contrivances I slept like a top. Next morning, at early dawn, the scene was most magnificent. The mountains were pale as ghosts, and almost sickening from their death-like whiteness. We gazed at them for a moment or two, and then turned to making a fire, which in the cold frosty morning was not unpleasant."
+ },
+ "vuoret/zagros": {
+  "lahde": "gb-1170",
+  "linkki": "https://www.gutenberg.org/ebooks/1170",
+  "fraasi": "seven days spent in traversing the country of the Carduchians",
+  "ote": "ppily; they had their provisions, they had also many memories of the labours that were now passed; seeing that the last seven days spent in traversing the country of the Carduchians had been one long continuous battle, which had cost them more suffering than the whole of their troubles at the hands of the king and Tissaphernes put together. As though they wer"
+ }
+}

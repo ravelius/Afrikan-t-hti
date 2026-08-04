@@ -55,7 +55,7 @@
 
 import { el } from '../mapart.js';
 import { radioMaalle } from '../packs/radiot.js';
-import { teeRadiosoitin } from './radiosoitin.js';
+import { teeRadiosoitin, VIRITYKSEN_VAIHEET } from './radiosoitin.js';
 import { teePistenaytto, merkinRivit, FONTTI } from './pistenaytto.js';
 import { teeViritysaani, esilataaViritysaanet, unohdaViritysaanet } from './viritin.js';
 import { sfx } from '../sound.js';
@@ -121,6 +121,18 @@ const OLETUSAANI = 0.8;
  * SVG:n esitysattribuutissa. Arvot ovat css/styles.css 24–27.
  */
 const MUSTE = '#46331f';
+/*
+ * Soiva kaupunki punaisella.
+ *
+ * Omistajan toive: "radiossa soiva kaupunki saisi näkyä punaisena
+ * kartalla, niin näkee helpommin missä mennään." Pelkkä paksumpi
+ * mustekehä ei erotu seepiakartalta kuin vieressä katsottuna, ja
+ * radiotilassa katse hakee soivaa kanavaa koko maailman laajuudelta.
+ *
+ * Sama punainen kuin lentoreitillä (css/styles.css .lento-jalki):
+ * kartalla on jo yksi punainen, ja toinen sävy näyttäisi vahingolta.
+ */
+const PUNAINEN = '#c2452f';
 const PAPERI = '#efdcb4';
 
 /*
@@ -213,10 +225,13 @@ const LUKITUKSEN_AIKAISINTAAN_MS = VIRITYKSEN_VAHIMMAISAIKA_MS - LUKITTUMISEN_KE
 /**
  * Virityksen vaiheet siinä järjestyksessä, jossa ne kuljetaan.
  *
- * Viety, koska tämä on rajapinta eikä toteutuksen yksityiskohta: nimet
- * ovat sopimus soittimen kuoren kanssa (ks. kerroVaihe).
+ * Viety edelleen soittimen kuoresta (radiosoitin.js VIRITYKSEN_VAIHEET)
+ * eikä kirjoitettu tähän uudelleen. Vaihe on käsky kuorelle, joten
+ * sanaston omistaa kuori; tämä moduuli omistaa vain sen, MILLOIN kukin
+ * käsky annetaan (VIRITYKSEN_AJAT). Kopio olisi kaksi totuutta, ja
+ * ajoituksen testit tarkistaisivat väärää.
  */
-export const VIRITYKSEN_VAIHEET = Object.freeze(['siirtyma', 'haku', 'lukittuu']);
+export { VIRITYKSEN_VAIHEET };
 
 /** Vaiheiden ajoitus millisekunteina — mittausta ja testejä varten. */
 export const VIRITYKSEN_AJAT = Object.freeze({
@@ -1295,13 +1310,29 @@ export function piirraKaupunkinapit(ryhma, kaupungit = [], { kiertoKohdat = null
         'pointer-events': 'all',
       }, nappi);
 
+      if (soiTama) {
+        /*
+         * Punainen hehku ALLE renkaiden: leveä, hyvin läpikuultava
+         * ympyrä, joka värjää paperin kaupungin ympäriltä. Se löytyy
+         * silmällä kauempaakin kuin viiva, eikä peitä kartan piirtoa.
+         */
+        el('circle', {
+          cx: x,
+          cy: kaupunki.y,
+          r: NAPIN_RENGAS + 13,
+          fill: PUNAINEN,
+          opacity: 0.16,
+          'pointer-events': 'none',
+        }, nappi);
+      }
+
       el('circle', {
         cx: x,
         cy: kaupunki.y,
         r: NAPIN_RENGAS,
         fill: 'none',
-        stroke: MUSTE,
-        'stroke-width': soiTama ? 3 : 1.6,
+        stroke: soiTama ? PUNAINEN : MUSTE,
+        'stroke-width': soiTama ? 3.2 : 1.6,
         opacity: onKanava ? 0.85 : 0.34,
         ...(onKanava ? {} : { 'stroke-dasharray': '3 5' }),
       }, nappi);
@@ -1314,9 +1345,9 @@ export function piirraKaupunkinapit(ryhma, kaupungit = [], { kiertoKohdat = null
           cy: kaupunki.y,
           r: NAPIN_RENGAS + 7,
           fill: 'none',
-          stroke: MUSTE,
-          'stroke-width': 1.2,
-          opacity: 0.4,
+          stroke: PUNAINEN,
+          'stroke-width': 1.6,
+          opacity: 0.62,
         }, nappi);
       }
 
@@ -1327,8 +1358,8 @@ export function piirraKaupunkinapit(ryhma, kaupungit = [], { kiertoKohdat = null
         el('path', {
           d: `M ${x - k * 0.55} ${kaupunki.y - k} L ${x + k} ${kaupunki.y} `
             + `L ${x - k * 0.55} ${kaupunki.y + k} Z`,
-          fill: MUSTE,
-          opacity: soiTama ? 0.95 : 0.72,
+          fill: soiTama ? PUNAINEN : MUSTE,
+          opacity: soiTama ? 1 : 0.72,
         }, nappi);
       }
 

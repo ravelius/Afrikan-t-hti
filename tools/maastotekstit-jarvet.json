@@ -1,0 +1,649 @@
+{
+  "jarvet": {
+
+    "Victoriajärvi": {
+      "kappaleet": [
+        { "teksti": "Richard Burton ja John Hanning Speke saapuivat Kazeen loppuvuodesta 1857. Arabikauppiaat olivat kulkeneet sieltä pohjoiseen jo vuosikymmeniä ja tiesivät mitä siellä on. Sheikh Snay bin Amir neuvoi heidät perille yhdellä lauseella." },
+        {
+          "lainaus": "Jos olette tulleet vain katsomaan isoa vesialuetta, menkää mieluummin pohjoiseen katsomaan Ukereweä; se on joka suhteessa Tanganjikaa suurempi.",
+          "kuka": "Sheikh Snay bin Amir, John Hanning Speken siteeraamana",
+          "teos": "What Led to the Discovery of the Source of the Nile",
+          "vuosi": 1864,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/8417"
+        },
+        {
+          "tiedosto": "Early morning fishing at Lake Victoria.jpg",
+          "selite": "Aamukalastusta Victorianjärvellä. Saalis on nykyään enimmäkseen niilinahventa, joka istutettiin järveen 1950-luvulla; sitä ennen vedessä eli satoja vain täältä tavattuja kirjoahvenlajeja, ja osa niistä on hävinnyt.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Franklin Amulyoto"
+        },
+        { "teksti": "Speke lähti pohjoiseen heinäkuussa 1858, näki järven runsaan kolmen viikon kuluttua ja antoi sille kuningattarensa nimen. Nimiä sillä oli jo: luon kielellä Nam Lolwe, gandan kielellä Nalubaale, ja kauppiaiden puheessa Ukerewe suurimman saarensa mukaan." }
+      ]
+    },
+
+    "Great Slave Lake": {
+      "kappaleet": [
+        { "teksti": "Nimi on käännöksen jälki. Cree-kansa kutsui pohjoisia naapureitaan sanalla, jonka turkiskauppiaat käänsivät orjiksi, ja se jäi englannin kieleen sekä järven että ihmisten nimeksi. Slaveyn kielellä järvi on Tucho, iso vesi." },
+        {
+          "tiedosto": "UtsingiPoint-GreatSlaveLake.JPG",
+          "selite": "Utsingi Point järven itähaarassa. Tässä loppuu Kanadan kilpi, kahden miljardin vuoden ikäinen kallio. Länsipuolella alkaa pehmeä sedimenttimaa, ja siksi järven kaksi päätä näyttävät eri järviltä.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        { "teksti": "Samuel Hearne kulki etelärantaa tammikuussa 1772 matkalla takaisin Hudsoninlahdelle. Hänen seuralaisensa löysivät metsästysretkellä vieraan lumikengän jäljen, seurasivat sitä ja tulivat majalle, jossa istui yksin nuori nainen." },
+        {
+          "lainaus": "Hänen laskemistaan kuukausista päätellen hän oli ollut lähes seitsemän kuukautta näkemättä ihmiskasvoja, ja koko sen ajan hän oli elättänyt itsensä hyvin pyydystämällä ansoilla riekkoja, jäniksiä ja oravia.",
+          "kuka": "Samuel Hearne",
+          "teos": "A Journey from Prince of Wales's Fort in Hudson's Bay to the Northern Ocean, toim. J. B. Tyrrell",
+          "vuosi": 1911,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/38404"
+        }
+      ]
+    },
+
+    "Yläjärvi": {
+      "kappaleet": [
+        { "teksti": "Henry Wadsworth Longfellow kirjoitti Hiawathan laulun vuonna 1855 Henry Schoolcraftin keräämien ojibwe-kertomusten pohjalta ja otti runomitan Kalevalasta, jonka oli lukenut saksaksi. Runo alkaa järven rannalta." },
+        {
+          "lainaus": "Gitche Gumeen rannoilla, kimmeltävän Suuren-Meren-Veden äärellä, seisoi Nokomisin wigwam, Kuun tyttären Nokomisin.",
+          "kuka": "Henry Wadsworth Longfellow",
+          "teos": "The Song of Hiawatha",
+          "vuosi": 1855,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/19"
+        },
+        {
+          "tiedosto": "North Shore of Lake Superior.jpg",
+          "selite": "Yläjärven pohjoisrantaa. Vesi vaihtuu järvessä kokonaan noin kahdessasadassa vuodessa, ja se pysyy kylmänä: kesälläkin pintakerros lämpenee harvoin yli kymmenen asteen.",
+          "lahde": "Wikimedia Commons (CC BY 2.0), Sharon Mollerus"
+        },
+        { "teksti": "Gitche Gumee on ojibwea ja tarkoittaa suurta merta. Nimi levisi englanninkieliseen maailmaan runossa, jonka mitta oli suomalainen, aihe ojibwe ja kirjoittaja Cambridgessa asuva professori." }
+      ]
+    },
+
+    "Great Bear Lake": {
+      "kappaleet": [
+        { "teksti": "John Franklinin retkikunta talvehti järven rannalla 1825 ja 1826 ja rakensi sinne Fort Franklinin. John Richardson mittasi lahdet ja nimesi ne Hudson's Bay Companyn herrojen mukaan. Yhtä asiaa hän ei saanut mitatuksi." },
+        {
+          "lainaus": "Järven vedet ovat hyvin kirkkaat ja syvyydeltään tuntemattomat; MacTavishin lahdella laskettiin lähellä rantaa neljäkymmentä syltä luotinuoraa pohjaan osumatta.",
+          "kuka": "John Richardson, John Franklinin kirjaamana",
+          "teos": "Narrative of a Second Expedition to the Shores of the Polar Sea",
+          "vuosi": 1828,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/33467"
+        },
+        {
+          "tiedosto": "Port Radium in 1936.jpg",
+          "selite": "Port Radium järven itärannalla vuonna 1936. Kaivos otti ensin radiumia, sitten uraania. Dene-miehet kantoivat malmisäkkejä laivoihin ilman suojaimia, eikä heille kerrottu mitä säkeissä oli.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        { "teksti": "Osa Port Radiumin uraanista päätyi Yhdysvaltain pommiohjelmaan. Délinen kylä lähetti vuonna 1998 valtuuskunnan Hiroshimaan pyytämään anteeksi asiaa, josta se ei ollut tiennyt mitään." }
+      ]
+    },
+
+    "Michiganjärvi": {
+      "kappaleet": [
+        { "teksti": "René-Robert Cavelier de La Salle rakennutti vuonna 1679 Niagaran yläpuolelle purjelaivan, ensimmäisen ylempiä järviä purjehtineen. Griffon lastattiin turkiksilla Green Bayssa ja lähetettiin syyskuussa takaisin itään pienen miehistön varassa." },
+        {
+          "tiedosto": "Le Griffon.jpg",
+          "selite": "Griffon 1800-luvun kuvittajan näkemänä. Laivasta ei ole yhtään aikalaiskuvaa. Hylkyä on ilmoitettu löydetyksi useita kertoja sekä Michiganjärvestä että Huronista, eikä yksikään löytö ole varmistunut.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        { "teksti": "La Sallelle laiva oli kaikki. Sen ruumassa olivat seuraavan aluksen köydet ja ankkurit. Hän odotti sitä syksyn ja talven ja rakensi odottaessaan Illinois-joen varteen linnakkeen, jolle antoi nimen Crèvecoeur, murtunut sydän." },
+        {
+          "lainaus": "Laivasta ei kuultu enää koskaan mitään. Sen tuhoamisesta on syytetty intiaaneja, turkiskauppiaita ja jopa jesuiittoja.",
+          "kuka": "Francis Parkman",
+          "teos": "La Salle and the Discovery of the Great West",
+          "vuosi": 1879,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/40143"
+        }
+      ]
+    },
+
+    "Tanganjika": {
+      "kappaleet": [
+        { "teksti": "Richard Burton oli helmikuussa 1858 vielä puolisokea silmätulehduksesta, kun karavaani nousi viimeiselle harjulle. Hän ei tunnistanut sitä mitä näki ja kysyi oppaaltaan Sidi Mubarak Bombaylta." },
+        {
+          "lainaus": "Mikä tuo valojuova on tuolla alhaalla, kysyin Bombaylta. Olen sitä mieltä, vastasi Bombay, että se on se vesi. Katsoin kauhistuneena — ja aloin liian aikaisin surkutella hulluuttani: olin vaarantanut henkeni ja menettänyt terveyteni näin kehnosta palkinnosta.",
+          "kuka": "Richard Francis Burton",
+          "teos": "The Lake Regions of Central Africa, osa 2",
+          "vuosi": 1860,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/66813"
+        },
+        { "teksti": "Muutama askel eteenpäin, ja näkymä avautui kokonaan. Bombay oli myyty lapsena orjaksi Intiaan ja vapautunut isäntänsä kuoltua. Hän opasti Burtonin ja Speken lisäksi Stanleyn ja Verney Cameronin, ja sai Lontoosta hopeamitalin." },
+        {
+          "tiedosto": "Les eaux bleues du lac Tanganyika.jpg",
+          "selite": "Tanganjika Burundin puolelta. Vettä on lähes puolentoista kilometrin syvyyteen, mutta happea vain päällimmäisessä parissasadassa metrissä. Sen alapuolella vesi ei sekoitu eikä siellä elä kaloja.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Ntahonsigaye"
+        }
+      ]
+    },
+
+    "Winnipegjärvi": {
+      "kappaleet": [
+        { "teksti": "Nimi on creetä ja tarkoittaa sameaa vettä. Järvi on matala ja tuulinen, ja aallot nostavat pohjasedimentin veteen niin että se todella on sameaa. Kaupunki eteläpuolella otti nimensä järveltä, ei toisin päin." },
+        { "teksti": "Matala allas lämpenee kesällä nopeasti. Valuma-alueelta tuleva fosfori on 1990-luvulta lähtien tuottanut sinileväkukintoja, jotka näkyvät satelliittikuvissa vihreinä kiehkuroina kymmenien kilometrien matkalla." },
+        {
+          "tiedosto": "Lake winnipeg HDRI.jpg",
+          "selite": "Winnipegjärven rantaa. Keskisyvyys on runsaat kymmenen metriä, joten myrsky sekoittaa koko vesimassan pohjaa myöten. Talvella jäältä nostetaan siikaa verkoilla, jotka lasketaan avannoista.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Non-dropframe"
+        },
+        { "teksti": "Kalastus on silti yhä yksi Pohjois-Amerikan suurimmista sisävesikalastuksista. Suurin osa saaliista on kuhaa, ja se lähtee rekoilla Yhdysvaltain ravintoloihin." }
+      ]
+    },
+
+    "Huronjärvi": {
+      "kappaleet": [
+        { "teksti": "Järvi kantaa lempinimeä. Ranskalaiset kutsuivat kaakkoisrannan wendat-kansaa nimellä huron, joka tarkoitti karkeaa tukkaa ja karkeaa ihmistä. Kansa itse sanoi olevansa wendat, saaren asukkaat." },
+        { "teksti": "Samuel de Champlain tuli tänne vuonna 1615 Ottawa- ja French-jokia pitkin ja merkitsi järven karttaansa nimellä Mer Douce, makea meri. Hän talvehti wendatien luona ja tuli riippuvaiseksi heidän maissistaan." },
+        {
+          "tiedosto": "Lake Huron from Upper Peninsula.JPG",
+          "selite": "Huronjärveä ylemmältä niemimaalta. Järvi on Michiganjärven kanssa samaa vettä: Mackinacin salmi on niin leveä ja syvä, että pinta on molemmissa sentilleen sama ja vesi kulkee edestakaisin.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), NarparMI"
+        },
+        { "teksti": "Wendake hajotettiin vuosina 1649 ja 1650 irokeesien hyökkäyksissä ja niitä edeltäneissä kulkutaudeissa. Jäljelle jääneet asettuivat Quebecin liepeille ja Oklahomaan, missä heidän jälkeläisensä asuvat yhä." }
+      ]
+    },
+
+    "Malawijärvi": {
+      "kappaleet": [
+        { "teksti": "David Livingstone saapui järven eteläpäähän 16. syyskuuta 1859. Reitti ei ollut uusi: sitä pitkin kulki orjakauppa sisämaasta Sansibariin, ja hän kohtasi ensimmäisen saattueen samana päivänä." },
+        {
+          "lainaus": "Tämä on yksi sisämaan suurista orjapoluista, toiset ylittävät Shiren hieman alempaa ja jotkin kulkevat itse järven yli. Olisimme voineet vapauttaa nämä orjat, mutta emme tienneet mitä heille sen jälkeen tekisimme.",
+          "kuka": "David Livingstone",
+          "teos": "A Popular Account of Dr. Livingstone's Expedition to the Zambesi and Its Tributaries",
+          "vuosi": 1894,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/2519"
+        },
+        { "teksti": "Livingstone palasi Britanniaan vaatimaan kauppateiden avaamista, jotta orjakauppa kävisi kannattamattomaksi. Järven ympärille tuli lähetysasemia, ja niiden perässä tuli Nyassamaan protektoraatti." },
+        {
+          "tiedosto": "Boats at the shore of the malawi lake.jpg",
+          "selite": "Veneitä Malawijärven rannalla. Järvessä elää enemmän kalalajeja kuin missään muussa järvessä, satoja kirjoahvenia, jotka lähes kaikki ovat kotoperäisiä. Ruokakalana tunnetuin on chambo.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.0), i_pinz"
+        }
+      ]
+    },
+
+    "Eriejärvi": {
+      "kappaleet": [
+        { "teksti": "Oliver Hazard Perry rakennutti laivastonsa Presque Islessä vihreästä puusta, joka kaadettiin metsästä samana keväänä. Syyskuun 10. päivänä 1813 hänen lippulaivansa ammuttiin toimintakyvyttömäksi, ja hän soudutti itsensä toiseen alukseen kesken taistelun." },
+        {
+          "lainaus": "Olemme kohdanneet vihollisen ja ne ovat meidän: kaksi laivaa, kaksi prikiä, yksi kuunari ja yksi sluuppi.",
+          "kuka": "Oliver Hazard Perry",
+          "teos": "kenttäviesti kenraali William Henry Harrisonille, siteerattuna teoksessa James Barnes, Naval Actions of the War of 1812",
+          "vuosi": 1813,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/57889"
+        },
+        {
+          "tiedosto": "Battle of Lake Erie - painted by W.H. Powell. LCCN2007683561.jpg",
+          "selite": "William Powellin näkemys Perrystä soutuveneessä, painettuna vuonna 1877. Taistelu ratkaisi, kummalle puolelle järven pohjoisranta jäi, ja siitä tuli Yhdysvalloissa yksi harvoista sodan muistetuista voitoista.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        { "teksti": "Erie on Suurista järvistä matalin, ja siksi myös herkin. Fosfori pelloilta ja viemäreistä sai 1960-luvulla vesimassan happikadolle, ja lehdissä puhuttiin kuolleesta järvestä. Rajoitukset auttoivat; hapeton pohjakerros palaa silti joka kesä." }
+      ]
+    },
+
+    "Ontariojärvi": {
+      "kappaleet": [
+        { "teksti": "Nimi on irokeesikielinen ja tarkoittaa kaunista tai kimmeltävää vettä. Järvi on ketjun alin, ja Niagaran satametrinen pudotus erottaa sen Eriestä niin jyrkästi, ettei yksikään kala ole päässyt sitä nousemaan." },
+        { "teksti": "Ihminen avasi tien. Wellandin kanava kiersi putoukset vuodesta 1829, ja sen kautta tuli merinahkiainen, joka imeytyy kalan kylkeen ja imee sen kuiviin. 1950-luvulle mennessä ylempien järvien nieriäkanta oli lähes poissa." },
+        {
+          "tiedosto": "Lake Ontario Dusk.jpg",
+          "selite": "Ontariojärvi hämärässä. Pinta-alaltaan se on Suurista järvistä pienin mutta tilavuudeltaan Eriejärveä isompi: se on kapea ja syvä, ja jäätyy kokonaan vain poikkeuksellisen kylminä talvina.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Keith Pomakis"
+        },
+        { "teksti": "Saint Lawrencen meriväylä avattiin vuonna 1959, ja valtamerilaivat pääsivät Torontoon asti. Samaa reittiä tulivat vaeltajasimpukat, jotka suodattavat veden kirkkaaksi ja muuttavat sen mukana koko ravintoketjun." }
+      ]
+    },
+
+    "Saimaa": {
+      "kappaleet": [
+        { "teksti": "Saimaa oli jääkauden jälkeen Itämeren lahti. Maa nousi, salmi kuroutui umpeen noin yhdeksäntuhatta vuotta sitten, ja järveen jäi yksi eläin, joka ei kuulu sinne: norppa." },
+        {
+          "lainaus": "Ainoastaan muutamat varsinaiset merieläimet, sellaiset kuin merihärkä ja Saimaan hylje, tottuivat suolattomaan veteen, ja siksi tapaamme niitä vielä sisäjärvissämme, vaikka niiden varsinainen koti on Pohjois-Jäämeri.",
+          "kuka": "Zacharias Topelius",
+          "teos": "Maamme kirja, 16. suomenkielinen painos, suom. Paavo Cajander",
+          "vuosi": 1899,
+          "suomennos": "ei omaa; lainaus on Cajanderin suomennoksesta",
+          "linkki": "https://www.gutenberg.org/ebooks/49600"
+        },
+        {
+          "tiedosto": "Pusa hispida saimensis 431602934.jpg",
+          "selite": "Saimaannorppa kivellä. Naaras kaivaa poikaspesän rantakinokseen helmikuussa, joten vähäluminen talvi on kannalle vaarallisempi kuin leuto kesä. Yksilöitä on vajaat viisisataa.",
+          "lahde": "Wikimedia Commons (CC BY 4.0), Jan Ebr & Ivana Ebrová"
+        },
+        { "teksti": "Saimaan lasku-uoma vaihtui vielä kerran. Vesi puhkaisi harjun Imatran kohdalla noin kuusituhatta vuotta sitten, ja siitä syntyi Vuoksi. Pinta laski kerralla useita metrejä, ja järven ranta siirtyi paikoin kilometrejä." }
+      ]
+    },
+
+    "Laatokka": {
+      "kappaleet": [
+        { "teksti": "Vuoksen varrella oli järvi nimeltä Suvanto, ja sen ja Laatokan välissä oli Taipaleen kylän kohdalla kolmensadan metrin hiekkaharju. Laatokan pinta oli harjun toisella puolen kaksitoista metriä alempana." },
+        { "teksti": "Keväällä 1818 Suvannon vesi nousi niityille. Taipaleen miehet ottivat lapiot ja kaivoivat harjun poikki pienen uran laskeakseen vettä hiukan. Sitten he menivät tyytyväisinä kotiin." },
+        {
+          "tiedosto": "Шхеры, Ладога, северная часть.jpg",
+          "selite": "Laatokan pohjoisosan luotoja. Pohjoisranta on kallioista saaristoa, eteläranta matalaa hiekkaa ja ruovikkoa — sama järvi näyttää päistään kahdelta eri maalta.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Grozovsky"
+        },
+        { "teksti": "Ura leveni yössä koskeksi, koski putoukseksi. Suvanto tyhjeni vuorokaudessa, vei mukanaan taloja ja satavuotisia honkia, ja jätti jälkeensä joen entisen järven pohjalle. Kalat jäivät kuoppiin ja ne poimittiin käsin." }
+      ]
+    },
+
+    "Titicaca": {
+      "kappaleet": [
+        { "teksti": "Garcilaso de la Vega syntyi Cuscossa vuonna 1539 espanjalaisen kapteenin ja inkaprinsessan poikana. Hän kirjoitti muistiin Espanjassa, neljäkymmentä vuotta myöhemmin, sen mitä äidin sukulaiset olivat hänelle lapsena kertoneet." },
+        {
+          "lainaus": "Näin käskien ja tarkoittaen Isämme Aurinko asetti kaksi lastaan Titicacajärveen ... ja sanoi heille, että he saivat mennä minne tahtoivat, ja että joka paikassa, missä he pysähtyivät syömään tai nukkumaan, heidän tuli työntää kultainen sauva maahan.",
+          "kuka": "Garcilaso de la Vega el Inca, enonsa kertomana",
+          "teos": "Comentarios Reales de los Incas, engl. Clements R. Markham 1869",
+          "vuosi": 1609,
+          "suomennos": "oma, Markhamin englanninnoksesta",
+          "linkki": "https://archive.org/details/firstpartofroyal01vega"
+        },
+        {
+          "tiedosto": "Barcos de Totora.jpg",
+          "selite": "Totorakaislasta sidottuja veneitä. Sama kaisla kannattaa uru-kansan kelluvia saaria: pohja mätänee alta ja päälle ladotaan uutta, joten saari on ikuisesti kesken ja kestää noin kolmekymmentä vuotta.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.0), Vieira"
+        },
+        { "teksti": "Sauva vajosi Cuscossa, ja siihen inkat perustivat pääkaupunkinsa. Järven eteläpuolella oli silloin ollut jo tuhat vuotta rauniona Tiwanaku, jonka kivityöt olivat inkoillekin vanhoja ja selittämättömiä." }
+      ]
+    },
+
+    "Lake Taymyr": {
+      "kappaleet": [
+        { "teksti": "Maailman pohjoisin suuri järvi on jäässä syyskuusta kesäkuuhun. Sulan aikana se on kolmisen metriä syvä allas, jonka pinta-ala vaihtelee kevättulvan mukaan kaksinkertaiseksi ja takaisin." },
+        {
+          "tiedosto": "Lake Taymyr-txu-oclc-6654394-ns-46-48-2nd-ed.jpg",
+          "selite": "Yhdysvaltain armeijan karttalehti Taimyrjärvestä vuodelta 1964. Rantaviiva on piirretty ilmakuvista. Matalilla rannoilla jää ulottuu talvella pohjaan asti, ja kartan ranta on siksi vain yksi hetki vuodesta.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        { "teksti": "Alexander von Middendorff mittasi järven kesällä 1843 ja sairastui vakavasti paluumatkalla. Hänen Siperiassa tekemistään mittauksista laskettiin ensimmäiset arviot siitä, kuinka syvälle ikirouta ulottuu." },
+        { "teksti": "Byrrangan vuorten pohjoispuolella ei kasva puita. Järven ympärillä on tundraa, jolla laiduntaa Euraasian suurin villipeurakanta, ja mammutin luita nousee rantatörmästä joka kesä kun jäätynyt maa sulaa reunoiltaan." }
+      ]
+    },
+
+    "Lake Balkhash": {
+      "kappaleet": [
+        { "teksti": "Vuonna 1253 flaamilainen fransiskaani Vilhelm Rubrukilainen kulki Ranskan kuninkaan lähettiläänä kohti Karakorumia. Ilin laakson jälkeen hänen edessään avautui tasanko, ja vasemmalla oli vettä." },
+        {
+          "lainaus": "Astuimme mitä kauneimmalle tasangolle: oikealla kädellämme korkeat vuoret, vasemmalla meri tai järvi, jonka ympäri kuluu viisitoista päivämatkaa. Koko tuota tasankoa kastelevat vuorilta valuvat purot, jotka kaikki laskevat järveen.",
+          "kuka": "Vilhelm Rubrukilainen",
+          "teos": "Itinerarium, engl. Richard Hakluyt 1598; siteerattuna Eugene Schuylerin teoksessa Turkistan (1877)",
+          "vuosi": 1253,
+          "suomennos": "oma, Hakluytin englanninnoksesta",
+          "linkki": "https://archive.org/details/turkistannotesof01schu"
+        },
+        {
+          "tiedosto": "Lake Balkhash by Landsat 8.jpg",
+          "selite": "Balkaš satelliitista. Läntinen puolisko on makeaa vettä, itäinen suolaista, ja niitä yhdistää vain kilometrien levyinen salmi. Väriraja näkyy kuvassa keskellä järveä.",
+          "lahde": "Wikimedia Commons (PD), NASA / Landsat 8"
+        },
+        { "teksti": "Vedet tulevat yhä vuorilta, mutta suurin osa niistä otetaan matkalla. Ili tuo neljä viidesosaa tulovirrasta, ja se padottiin 1970 Kaptšagaihin; pinta laski parissa vuosikymmenessä yli kaksi metriä." }
+      ]
+    },
+
+    "Lake Athabasca": {
+      "kappaleet": [
+        { "teksti": "Fort Chipewyan perustettiin järven rannalle vuonna 1788, ja siitä tuli turkiskaupan solmu koko luoteiseen. Alexander Mackenzie lähti sieltä 3. kesäkuuta 1789 etsimään jokea Tyynellemerelle." },
+        {
+          "lainaus": "Miehistöön kuului neljä kanadalaista, joista kahdella oli vaimo mukanaan, sekä yksi saksalainen; seuranamme oli myös intiaani, joka oli saanut arvonimen Englantilainen päällikkö, ja hänen kaksi vaimoaan.",
+          "kuka": "Alexander Mackenzie",
+          "teos": "Voyages from Montreal Through the Continent of North America, osa 1",
+          "vuosi": 1801,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/35658"
+        },
+        { "teksti": "Joki vei pohjoiseen eikä länteen, ja Mackenzie palasi Jäämereltä pettyneenä. Hän kutsui löytöään Pettymyksen joeksi. Se kantaa nykyään hänen nimeään ja on Pohjois-Amerikan toiseksi pisin." },
+        {
+          "tiedosto": "Sand Dunes at Lake Athabasca.jpg",
+          "selite": "Athabascan etelärannan dyynit, maailman pohjoisin laaja dyynikenttä. Hiekka on jääkauden sulamisvesien tuomaa, ja tuuli siirtää harjanteita yhä. Kymmenkunta kasvilajia kasvaa vain täällä.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), DSyl"
+        }
+      ]
+    },
+
+    "Ääninen": {
+      "kappaleet": [
+        { "teksti": "Äänisen itärannalla, Besov Nosin kalliolla, on tuhansia hakattuja kuvia: hirviä, joutsenia, veneitä ja yksi kolmimetrinen ihmishahmo, jota on kutsuttu pahaksi hengeksi. Ne ovat noin viisituhatta vuotta vanhoja." },
+        { "teksti": "Munkit tulivat samalle kalliolle keskiajalla ja hakkasivat hahmon päälle ristin. Molemmat ovat yhä siinä, päällekkäin, eikä kumpaakaan ole saatu pois." },
+        {
+          "tiedosto": "Lake Onega. Kizhi Island DSC 0588 2600.jpg",
+          "selite": "Kižin saari Äänisellä. Kirkastuksen kirkko valmistui 1714: hirsiseinät on salvottu ilman nauloja, ja sen kaksikymmentäkaksi kupolia on katettu haapapäreillä, jotka vaihdetaan sukupolven välein.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Alexxx1979"
+        },
+        { "teksti": "Ääninen on Euroopan toiseksi suurin järvi ja laskee Svirin kautta Laatokkaan, joten sen vesi päätyy lopulta Nevaan ja Suomenlahteen. Pohjoisosa on kallioista saaristoa, eteläosa matalaa ja soista." }
+      ]
+    },
+
+    "Reindeer Lake": {
+      "kappaleet": [
+        { "teksti": "Järven eteläosassa on lähes ympyränmuotoinen lahti, kolmetoista kilometriä leveä ja yli kaksisataa metriä syvä. Se on järven syvin kohta ja jyrkkäreunainen kuin kaivo." },
+        { "teksti": "Deep Bay on törmäyskraatteri. Isku on ajoitettu noin sadan miljoonan vuoden päähän, ja jäätikkö on sittemmin hionut reunat matalaksi renkaaksi, joka erottuu vasta ilmasta." },
+        { "teksti": "Muu järvi on rikkonaista kalliomaastoa: tuhansia saaria, kapeita salmia ja rantaviivaa paljon enemmän kuin pinta-ala antaisi olettaa. Saskatchewanin ja Manitoban raja kulkee sen halki suorana viivana." },
+        { "teksti": "Rannalla asuu muutama sata ihmistä, enimmäkseen cree- ja dene-kylissä Southendissa ja Kinoosaossa. Maantie tulee vain eteläpäähän." }
+      ]
+    },
+
+    "Lake Winnipegosis": {
+      "kappaleet": [
+        { "teksti": "Nimi on creen deminutiivi: pieni samea vesi, ison samean veden vieressä. Kolme Manitoban järveä ovat kaikki saman altaan jäänteitä, ja niiden välillä on enää muutaman metrin korkeusero." },
+        {
+          "tiedosto": "ISS059-E-19273 - View of Manitoba.jpg",
+          "selite": "Manitoban järvet avaruusasemalta nähtynä. Winnipegosis, Manitoba ja Winnipeg ovat samaa vesijättöä. Niiden väliset tasangot ovat entistä järvenpohjaa, ja siksi ne ovat provinssin parasta viljelysmaata.",
+          "lahde": "Wikimedia Commons (PD), NASA"
+        },
+        { "teksti": "Allas oli Agassiz, jääkauden reunaan patoutunut järvi. Laajimmillaan siinä oli enemmän vettä kuin kaikissa nykyisissä Suurissa järvissä yhteensä, ja se peitti alleen suuren osan Manitobaa, Ontariota ja Minnesotaa." },
+        { "teksti": "Noin kahdeksantuhatta vuotta sitten pato petti ja vesi purkautui Hudsoninlahdelle. Pohjois-Atlantin pintavesi makeni, ja lämpötilat putosivat pohjoisella pallonpuoliskolla useiksi sadoiksi vuosiksi." }
+      ]
+    },
+
+    "Lake Manitoba": {
+      "kappaleet": [
+        { "teksti": "Järven kapeikossa on Manitou-saari, jonka rannalla on kalkkikiviliusketta. Kun aallot kulkevat sen yli, kivet kolisevat toisiaan vasten ja rannalta kuuluu tasainen rummutus." },
+        { "teksti": "Anishinaabe-kansa kutsui paikkaa nimellä manitou-wapow, hengen salmi, ja ääni oli hengen rumpu. Nimi siirtyi järveen, järvestä provinssiin ja provinssista kaikkeen mitä siellä on." },
+        {
+          "tiedosto": "Delta Beach Manitoba Canada.JPG",
+          "selite": "Manitobajärven etelärantaa. Delta Marsh, järven eteläpään ruovikko, on Pohjois-Amerikan suurimpia sisämaan kosteikkoja ja levähdyspaikka miljoonille muuttolinnuille syksyisin.",
+          "lahde": "Wikimedia Commons (CC BY 3.0), Shahnoor Habib Munmun"
+        },
+        { "teksti": "Järvi on keskimäärin vain neljä metriä syvä. Tulvakevät 2011 nosti pintaa niin paljon, että rantatalot jäivät veden alle kuukausiksi, ja siitä lähtien pintaa on säädelty kaivetulla kanavalla." }
+      ]
+    },
+
+    "Georgian Bay": {
+      "kappaleet": [
+        { "teksti": "Itärannan edessä on saaria noin kolmekymmentätuhatta. Ne ovat Kanadan kilven silotettuja kallioselkiä, ja niillä kasvavaa vääntynyttä mäntyä on maalattu niin usein, että siitä tuli maan kansallinen maisema." },
+        {
+          "tiedosto": "Windswept pine on Georgian Bay.jpg",
+          "selite": "Tuulen taivuttama mänty Georgianlahden kalliolla. Frederick Varley maalasi vuonna 1921 tästä maisemasta teoksen Stormy Weather, Georgian Bay, ja siitä tuli Seitsemän ryhmän tunnusmerkki.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        { "teksti": "Lahti on niin suuri, että sitä kutsuttiin pitkään kuudenneksi Suureksi järveksi. Se on kokonaan Kanadan puolella, ja sen erottavat Huronista vain Bruce-niemi ja Manitoulin, maailman suurin järvisaari." },
+        { "teksti": "Manitoulinilla on kuusi anishinaabe-yhteisöä. Wiikwemkoong ei allekirjoittanut vuoden 1862 luovutussopimusta, ja se on siksi yhä virallisesti luovuttamatonta maata — ainoa laatuaan Ontariossa." }
+      ]
+    },
+
+    "Nettilling Lake": {
+      "kappaleet": [
+        { "teksti": "Franz Boas talvehti Baffininsaarella 1883 ja 1884 aikeenaan mitata jäätä ja maastoa. Hän päätyi mittaamaan muuta: hän piirsi karttansa suureksi osaksi sen mukaan, mitä inuitit piirsivät hänelle lumeen ja paperille." },
+        {
+          "tiedosto": "Koukdjuak 1 2002-08-24.jpg",
+          "selite": "Koukdjuak, joka vie Nettillingin vedet länteen Foxe-altaaseen. Joki on leveä ja niin matala, että se jäätyy pohjaa myöten. Sen suistoon kerääntyy kesällä satojatuhansia hanhia sulkasatoon.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.5), Ansgar Walk"
+        },
+        { "teksti": "Talirpingmiut-ryhmä nousi joka kevät rannikolta järvelle ja palasi merelle joulukuussa. Järven nimi tulee sanasta nattiq, norppa, ja nimi kertoo mitä varten sinne mentiin." },
+        {
+          "lainaus": "Tässä voidaan mainita, ettei suolan täydellinen puuttuminen estä paikallisia oleskelemasta Nettillingjärvellä.",
+          "kuka": "Franz Boas",
+          "teos": "The Central Eskimo",
+          "vuosi": 1888,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/42084"
+        }
+      ]
+    },
+
+    "Turkanajärvi": {
+      "kappaleet": [
+        { "teksti": "Unkarilainen Sámuel Teleki ja itävaltalainen Ludwig von Höhnel tulivat järvelle maaliskuussa 1888. Kantajat olivat kulkeneet seitsemän tuntia paahteessa ja juoksivat veteen. Se oli juomakelvotonta." },
+        {
+          "lainaus": "Siellä täällä, osa vedessä, osa rannalla, kohosi yksinäisiä puunrunkoja, jotka ojensivat paljaat, auringon valkaisemat oksansa armotonta taivasta kohti. Yksikään elävä olento ei jakanut kanssamme tuota synkkää yksinäisyyttä.",
+          "kuka": "Ludwig von Höhnel",
+          "teos": "Discovery of Lakes Rudolf and Stefanie, engl. Nancy Bell",
+          "vuosi": 1894,
+          "suomennos": "oma, Nancy Bellin englanninnoksesta",
+          "linkki": "https://archive.org/details/discoveryoflakes02hhne"
+        },
+        {
+          "tiedosto": "Lake Turkana Kenya.jpg",
+          "selite": "Turkanajärvi. Vesi on sinivihreää levästä, ja siitä tulee toinen nimi, Jademeri. Paikallinen nimi oli Basso Narok, musta järvi; Teleki nimesi sen Itävallan kruununprinssin mukaan.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Kaka Namwaya"
+        },
+        { "teksti": "Autiudessa on säilynyt jotain muuta. Rannoilta on löydetty ihmisen sukupuun fossiileja miljoonien vuosien ajalta, ja vuonna 1984 Nariokotomesta lähes kokonainen luuranko: poika, joka kuoli noin kymmenvuotiaana." }
+      ]
+    },
+
+    "Vänern": {
+      "kappaleet": [
+        { "teksti": "Vänern oli jään väistyttyä meren lahti. Maan kohotessa se kuroutui irti noin yhdeksäntuhatta vuotta sitten, ja sinne jäi joukko merieläimiä, jotka opettelivat elämään makeassa vedessä." },
+        { "teksti": "Yksi niistä on lohi. Vänernin lohi nousee kutemaan Klarälveniin ja Gullspångsälveniin eikä käy koskaan meressä; se on yksi harvoista järvilohikannoista maailmassa ja elää koko elämänsä sisämaassa." },
+        {
+          "tiedosto": "Vänern Skarprunmarn.jpg",
+          "selite": "Vänernin ulkoluotoja. Järvi on niin laaja, että sillä on oma merenkulkusäännöstönsä ja omat majakkansa; syysmyrskyssä aallokko voi yltää kolmeen metriin.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Esquilo"
+        },
+        { "teksti": "Göta kanal valmistui 1832 ja liitti järven Itämereen. Läntinen pää oli auennut jo aiemmin: Trollhättanin sulut ohittivat Göta älvin kosket 1800, ja Ruotsin poikki pääsi kulkemaan laivalla." }
+      ]
+    },
+
+    "Etelä-Araljärvi": {
+      "kappaleet": [
+        { "teksti": "Amudarja ei enää 1980-luvulla yltänyt Araliin asti. Vesi oli otettu matkalla puuvillapelloille, ja pelkkä Karakumin kanava johtaa siitä osan Turkmenistanin poikki ja vuotaa hiekkaan sen mukana." },
+        {
+          "tiedosto": "Moynaq, Aral Sea (6226842732).jpg",
+          "selite": "Kalastusaluksia Mo'ynoqissa. Kaupunki oli 1960-luvulla kalasatama, jossa purettiin kymmeniätuhansia tonneja kalaa vuodessa. Vesi on nyt yli sadan kilometrin päässä.",
+          "lahde": "Wikimedia Commons (CC BY 2.0), Arian Zwegers"
+        },
+        { "teksti": "Eteläinen allas jakautui kahtia ja itäinen puolisko kuivui kokonaan kesällä 2014. Pohjalle jäi Aralkum, uusi autiomaa, jonka suolapölyä tuuli kantaa satojen kilometrien päähän pelloille ja keuhkoihin." },
+        { "teksti": "Vozroždenijan saari oli Neuvostoliiton biologisen aseen koekenttä. Kun vesi laski, se yhtyi mantereeseen, ja hautapaikat oli käytävä puhdistamassa vuonna 2002 ennen kuin joku kävelisi niiden yli." }
+      ]
+    },
+
+    "Issyk-Kul": {
+      "kappaleet": [
+        { "teksti": "Kiinalainen munkki Xuanzang ylitti Tienšanin vuoden 630 tienoilla matkallaan Intiaan hakemaan buddhalaisia kirjoituksia. Jäisen solan jälkeen hän tuli järvelle ja kirjasi mitä siitä kerrottiin." },
+        {
+          "lainaus": "Lohikäärmeet ja kalat asuvat siinä yhdessä. Toisinaan suomupetoja nousee pintaan, ja ohikulkevat matkalaiset esittävät silloin rukouksia hyvän onnen puolesta. Vaikka vesieläimiä on paljon, kukaan ei uskalla pyydystää niitä.",
+          "kuka": "Xuanzang",
+          "teos": "Si-yu-ki: Buddhist Records of the Western World, engl. Samuel Beal 1884",
+          "vuosi": "n. 646",
+          "suomennos": "oma, Bealin englanninnoksesta",
+          "linkki": "https://archive.org/details/siyukibuddhistre01hsua"
+        },
+        {
+          "tiedosto": "Lob Issyk-Kul-04.JPG",
+          "selite": "Ysyk-Köl ja Tienšanin harjanne. Nimi tarkoittaa kuumaa järveä, vaikka vesi on kylmää. Se ei silti jäädy: vesi on lievästi suolaista ja lähes seitsemänsataa metriä syvää.",
+          "lahde": "Wikimedia Commons (CC0), Vladimir Lobatšev"
+        },
+        { "teksti": "Sukeltajat ovat löytäneet rantavedestä muureja, ruukkuja ja hautoja. Pinta on vaihdellut vuosituhansien mittaan kymmeniä metrejä, ja jokainen lasku on jättänyt rannalle kylän, jonka seuraava nousu peitti." }
+      ]
+    },
+
+    "Lake Torrens": {
+      "kappaleet": [
+        { "teksti": "Edward John Eyre seurasi vuonna 1840 Flindersin vuorijonoa pohjoiseen etsien tietä sisämaahan. Vuoriston pohjoispää oli suljettu. Aina kun hän yritti kiertää, edessä oli sama suola-allas." },
+        {
+          "lainaus": "Se osoittautui saarretuksi ylipääsemättömän esteen taakse: valtavan järven altaan, jonka nimesin Torrensjärveksi — ja tämä kiersi vuoriston pohjoiskärjen kokonaan hevosenkengän muotoon.",
+          "kuka": "Edward John Eyre",
+          "teos": "Journals of Expeditions of Discovery into Central Australia, osa 2",
+          "vuosi": 1845,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/5345"
+        },
+        {
+          "tiedosto": "E. C. Frome - First view of the salt desert - called Lake Torrens - Google Art Project.jpg",
+          "selite": "Edward Fromen akvarelli vuodelta 1843. Frome lähetettiin tarkastamaan Eyren havainnot ja antoi kuvalleen nimen Ensinäkymä suola-aavikkoon. Vettä siinä on hädin tuskin: valkoinen pinta on kuivunutta suolakuorta.",
+          "lahde": "Wikimedia Commons (PD)"
+        },
+        { "teksti": "Este käänsi Eyren länteen. Hän kulki rannikkoa pitkin Adelaidesta King Georgen salmeen, yli kaksituhatta kilometriä, ja sen matkan lopun hän teki yhden ainoan seuralaisen, nuoren Wylien, kanssa." }
+      ]
+    },
+
+    "Lake Eyre North": {
+      "kappaleet": [
+        { "teksti": "Kati Thanda on Australian matalin kohta, viisitoista metriä merenpinnan alapuolella. Se on kuiva suolatasanko useimpina vuosina, ja täyttyy kokonaan noin neljä kertaa vuosisadassa. Viimeksi niin kävi vuonna 1974." },
+        { "teksti": "Sade ei tule tänne vaan tuhat kilometriä pohjoisempaan Queenslandiin, ja vesi tulee perässä viikkoja myöhemmin hitaita jokia myöten. Silloin allas kasvaa muutamassa kuukaudessa maan suurimmaksi järveksi." },
+        {
+          "tiedosto": "ISS-30 Lake Eyre - South Australia.jpg",
+          "selite": "Kati Thanda avaruusasemalta. Vaaleat alueet ovat suolakuorta, tummat matalaa vettä. Kun allas täyttyy, pelikaaneja saapuu rannikolta kymmeniätuhansia parissa viikossa, eikä tiedetä mistä ne tietävät.",
+          "lahde": "Wikimedia Commons (PD), NASA"
+        },
+        { "teksti": "Kuivalla suolalla ajettiin myös nopeutta. Donald Campbell nosti heinäkuussa 1964 maanopeusennätyksen 648 kilometriin tunnissa Kati Thandan pinnalla, joka oli sateista pehmennyt eikä oikeastaan kelvannut siihen." }
+      ]
+    },
+
+    "Albertjärvi": {
+      "kappaleet": [
+        { "teksti": "Samuel Baker ja Florence Baker nousivat jyrkänteen reunalle 14. maaliskuuta 1864. Florence oli muutamaa viikkoa aiemmin maannut päiviä tajuttomana auringonpistoksesta, ja Samuel oli jo kaivattanut hänelle haudan." },
+        {
+          "lainaus": "Kiiruhdin harjanteelle. Palkintomme loisto puhkesi äkkiä eteeni. Siellä lepäsi kaukana allani kuin elohopeameri suunnaton vesi — etelässä ja lounaassa rajaton merenhorisontti, kimallellen keskipäivän auringossa.",
+          "kuka": "Samuel White Baker",
+          "teos": "The Albert N'yanza, Great Basin of the Nile",
+          "vuosi": 1866,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/3668"
+        },
+        {
+          "tiedosto": "Albertsee-Albertnil.jpg",
+          "selite": "Albertinjärvi ja Albert-Niilin lähtökohta. Järvi on hautavajoaman pohjalla: itärannan takana nousee Ugandan ylänkö, länsirannalla nousevat Kongon vuoret yli kilometrin järven pinnan yläpuolelle.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), Albert Backer"
+        },
+        { "teksti": "Baker antoi järvelle kuningattaren kuolleen puolison nimen. Paikallinen nimi oli Mwitanzige, heinäsirkkojen tappaja. Florence puolestaan oli ostettu orjahuutokaupasta Vidinissä 1859, ja hän käveli koko matkan." }
+      ]
+    },
+
+    "Lake of the Woods": {
+      "kappaleet": [
+        { "teksti": "Pariisissa vedettiin vuonna 1783 raja Yhdysvaltain ja brittiläisen Pohjois-Amerikan välille. Neuvottelijoilla oli edessään John Mitchellin kartta vuodelta 1755, jossa Mississippin lähde oli merkitty aivan liian pohjoiseen." },
+        {
+          "lainaus": "sieltä mainitun järven halki sen luoteisimpaan pisteeseen, ja siitä suoraan länteen Mississippijoelle",
+          "kuka": "Pariisin rauhansopimus, 2. artikla",
+          "teos": "Definitive Treaty of Peace between the United States of America and His Britannic Majesty",
+          "vuosi": 1783,
+          "suomennos": "oma",
+          "linkki": "https://avalon.law.yale.edu/18th_century/paris.asp"
+        },
+        { "teksti": "Länteen kulkeva viiva ei kohdannut jokea koskaan; Mississippi alkaa kaukana etelämpää. Sotku korjattiin vuonna 1818 vetämällä raja 49. leveyspiiriä pitkin, mutta järven luoteisnurkka jäi piirin pohjoispuolelle." },
+        {
+          "tiedosto": "Welcome to the United States - You are entering the Northwest Angle, Minnesota (35505460693).jpg",
+          "selite": "Tie Northwest Angleen. Tämä Minnesotan pala on maateitse saavutettavissa vain Kanadan kautta. Noin sata asukasta ilmoittautuu tullille videopuhelimella tienvarren kopista, kumpaankin suuntaan.",
+          "lahde": "Wikimedia Commons (CC BY-SA 2.0), Tony Webster"
+        }
+      ]
+    },
+
+    "Pohjois-Araljärvi": {
+      "kappaleet": [
+        { "teksti": "Amerikkalainen diplomaatti Eugene Schuyler ajoi vuonna 1873 tarantassilla Aralin pohjoisrantaa kolme tuntia auringonlaskuun asti. Rannalla oli lokkeja ja sorsia, ja hän kumartui kokeilemaan vettä." },
+        {
+          "lainaus": "Vesi näytti niin kirkkaalta ja puhtaalta, että ammensin siitä kupillisen ja join. Maku oli hieman murtovetinen mutta ei voimakkaan suolainen.",
+          "kuka": "Eugene Schuyler",
+          "teos": "Turkistan: Notes of a Journey in Russian Turkistan, Khokand, Bukhara and Kuldja, osa 1",
+          "vuosi": 1877,
+          "suomennos": "oma",
+          "linkki": "https://archive.org/details/turkistannotesof01schu"
+        },
+        {
+          "tiedosto": "The Shrinking Aral Sea Recovers 2010.jpg",
+          "selite": "Pohjoinen allas vuonna 2010. Kapea vaalea viiva altaan eteläreunassa on Kokaralin pato. Sen takana näkyy se, mitä eteläisestä Aralista on jäljellä.",
+          "lahde": "Wikimedia Commons (PD), NASA"
+        },
+        { "teksti": "Kokaralin pato valmistui 2005 ja sulki Syrdarjan veden pohjoiseen altaaseen. Pinta nousi vajaassa vuodessa neljä metriä, suolaisuus laski ja kaupallinen kalastus alkoi uudelleen. Aralskin satama on yhä parinkymmenen kilometrin päässä vedestä." }
+      ]
+    },
+
+    "Nicaraguajärvi": {
+      "kappaleet": [
+        { "teksti": "Cocibolca oli 1850-luvulla nopein tie Yhdysvaltain rannikolta toiselle. Cornelius Vanderbiltin yhtiö kuljetti kullankaivajia höyrylaivalla San Juan -jokea ylös, järven poikki ja vaunuilla Tyynellemerelle." },
+        {
+          "tiedosto": "Concepción volcano - Ometepe island.jpg",
+          "selite": "Concepción kohoaa Ometepen saarelta järven keskeltä. Saari on kaksi tulivuorta, jotka ovat kasvaneet kiinni toisiinsa; nimi on nahuatlia ja tarkoittaa kahta vuorta.",
+          "lahde": "Wikimedia Commons (CC BY 2.0), Hulivili"
+        },
+        {
+          "lainaus": "On kuitenkin tosiasia, että järvessä on runsaasti haita. — Niiden tiedetään hyökänneen kylpijöiden kimppuun kivenheiton päässä Granadan rannasta, ja olen itse nähnyt niitä toistuvasti vanhan linnoituksen muureilta, kun ne kiitävät vedessä evä pinnan yläpuolella.",
+          "kuka": "E. G. Squier",
+          "teos": "Nicaragua: Its People, Scenery, Monuments, Resources, Condition, and Proposed Canal",
+          "vuosi": 1860,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/76906"
+        },
+        { "teksti": "Haita pidettiin pitkään omana makeanveden lajinaan. 1960-luvun merkintäkokeet osoittivat, että ne ovat härkähaita, jotka nousevat San Juanin koskia ylös ja laskeutuvat takaisin Karibialle." }
+      ]
+    },
+
+    "Lake Nipigon": {
+      "kappaleet": [
+        { "teksti": "Nipigon on suurin kokonaan Ontarion sisällä oleva järvi ja osa samaa miljardi vuotta vanhaa repeämää kuin Yläjärvi. Sen saaret ja rannat ovat mustaa laavakiveä, joka kaatui tänne repeämän auetessa." },
+        { "teksti": "Vuonna 1943 sen vedet käännettiin voimalaitoksiin. Nipigonjoen putouksiin rakennettiin padot, ja järven pinta on siitä lähtien ollut säädetty: se nousee ja laskee sen mukaan, paljonko sähköä tarvitaan." },
+        {
+          "tiedosto": "Lake Nipigon.JPG",
+          "selite": "Nipigonjärven rantaa. Järvi on Yläjärven suurin yksittäinen tulovirta, ja sen vesi kulkee Nipigonjokea pitkin kuusikymmentä kilometriä ja laskee lähes kahdeksankymmentä metriä matkalla.",
+          "lahde": "Wikimedia Commons (CC BY-SA 3.0), P199"
+        },
+        { "teksti": "Nipigonjoesta nostettiin heinäkuussa 1915 puronieriä, joka painoi kuusi ja puoli kiloa. Ennätys on yhä voimassa yli sata vuotta myöhemmin, eikä lähellekään ole päästy." }
+      ]
+    },
+
+    "Lac Moeru": {
+      "kappaleet": [
+        { "teksti": "David Livingstone tuli Mwerun pohjoisrannalle marraskuussa 1867 ilman kantajia ja ilman lääkelaukkuaan, joka oli varastettu. Häntä oli yhdeksän miestä. He nukkuivat kalastajan majassa ja ostivat aamulla kalan." },
+        { "teksti": "Seuraavina päivinä hän kulki itärantaa ja kirjasi ylös sen, minkä kalastajat hänelle kertoivat. Se ei ollut hänen etsimänsä asia, mutta hän merkitsi sen muistiin yhtä huolellisesti." },
+        {
+          "lainaus": "Kalastajat antoivat meille järven kolmenkymmenenyhdeksän kalalajin nimet; he sanoivat, etteivät kalat lakkaa koskaan nousemasta Kalongosia ylös, vaikka niitä toisinaan on runsaammin kuin toisinaan.",
+          "kuka": "David Livingstone",
+          "teos": "The Last Journals of David Livingstone in Central Africa, osa 1, toim. Horace Waller",
+          "vuosi": 1874,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/16672"
+        },
+        {
+          "tiedosto": "Lake Mweru.jpg",
+          "selite": "Mwerujärvi Sambian puolelta. Luapula laskee etelästä ja lähtee pohjoisesta Luvualla. Livingstone uskoi kulkevansa Niilin latvoilla; vesi menee Kongoon ja Atlantille.",
+          "lahde": "Wikimedia Commons (CC BY-SA 4.0), Makandwe Mwape"
+        }
+      ]
+    },
+
+    "Tšadjärvi": {
+      "kappaleet": [
+        { "teksti": "Dixon Denham, Walter Oudney ja Hugh Clapperton lähtivät Tripolista vuonna 1822 ja ylittivät Saharan kamelikaravaanin mukana. Lärin kylän kohdalla, helmikuussa 1823, maasto nousi ja edessä oli vettä." },
+        {
+          "lainaus": "Suuri Tšadjärvi, hehkuen auringon kultaisissa säteissä sen ollessa voimissaan, näytti olevan mailin päässä siitä paikasta, jolla seisoimme.",
+          "kuka": "Dixon Denham",
+          "teos": "Narrative of Travels and Discoveries in Northern and Central Africa",
+          "vuosi": 1826,
+          "suomennos": "oma",
+          "linkki": "https://www.gutenberg.org/ebooks/71754"
+        },
+        {
+          "tiedosto": "Lake Chad from Apollo 7.jpg",
+          "selite": "Tšadjärvi Apollo 7:stä lokakuussa 1968. Tummana näkyvä vesi ulottuu kuvan poikki. Järvi on keskimäärin puolitoista metriä syvä, joten pieni pinnanlasku vie suuren alan.",
+          "lahde": "Wikimedia Commons (PD), NASA"
+        },
+        {
+          "tiedosto": "Chad AMO 2004323 lrg.jpg",
+          "selite": "Sama järvi vuonna 2004. Vettä on jäljellä noin kahdeskymmenesosa siitä mitä edellisessä kuvassa. Vaaleat kuviot ovat entistä pohjaa; kaakkoisosaa on jo raivattu pelloiksi.",
+          "lahde": "Wikimedia Commons (PD), NASA"
+        },
+        { "teksti": "Järvi kuivui pahiten 1970- ja 1980-luvun kuivuuksissa, eikä ole palannut ennalleen. Neljän valtion rannoilla asuu noin kolmekymmentä miljoonaa ihmistä, joiden vesi ja kala tulevat tästä altaasta." }
+      ]
+    }
+
+  },
+
+  "_kommentit": {
+    "jarvet/Victoriajärvi": "Snayn sanat Speken siteeraamina: 'If you have come only to see a large bit of water, you had better go northwards and see the Ukéréwé; for it is much greater in every respect than the Tanganyika.' Speke kirjoittaa nimen Ukéréwé; nykyasu Ukerewe.",
+    "jarvet/Great Slave Lake": "Gutenbergin teksti on J. B. Tyrrellin toimittama Champlain Societyn laitos 1911, ei Hearnen alkuperäinen 1795; siksi vuosi 1911. Hearne kirjoittaa 'Dog-ribbed Indian', nykyään Tłı̨chǫ.",
+    "jarvet/Michiganjärvi": "Parkman kirjoittaa 'Indians'; suomennos säilyttää aikakauden sanan. Gutenbergin teksti sisältää yhdennentoista laitoksen esipuheen (Boston 10.12.1878), joten luettu laitos on 1879; ensipainos 1869 nimellä The Discovery of the Great West.",
+    "jarvet/Tanganjika": "Burton kirjoittaa 'Seedy Bombay'; suomennoksessa nimi on nykyasussa Bombay (Sidi Mubarak Bombay). Ajatusviiva merkitsee poistoa kahden virkkeen välistä.",
+    "jarvet/Saimaa": "Ainoa lainaus, jota ei ole suomennettu: lähde on jo suomeksi. Gutenbergin teksti ilmoittaa pohjautuvansa 16. suomenkieliseen painokseen (1899), siksi vuosi 1899 eikä ruotsinkielisen alkuteoksen 1875.",
+    "jarvet/Laatokka": "Suvannon puhkeaminen 1818 on kerrottu Topeliuksen Maamme kirjan luvun 35 pohjalta (Gutenberg 49600), mutta leipätekstinä eikä lainauksena, jottei kahta peräkkäistä järveä lainattaisi samasta kirjasta.",
+    "jarvet/Titicaca": "Sanat ovat Garcilason enon, hänen muistiin kirjaaminaan. Poistettu välistä 'joka on kahdeksankymmenen peninkulman päässä täältä', koska Markhamin 'leagues' ei käänny suomalaiseksi mitaksi ilman muuntamista.",
+    "jarvet/Lake Balkhash": "Käännösketju on kolmiportainen: latina (1255) → Hakluytin englanti (1598) → suomi. Hakluytin teksti on luettu Schuylerin liitteestä III. Kohta on tarkistettu kahdesta eri skannauksesta (turkistannotesof01schu ja turkistannoteso01schu), koska OCR sotkee sanan 'commodiously' molemmissa eri tavalla. Schuylerin oma sulkumerkintä '(Lake Balkash)' keskellä virkettä on jätetty pois lainauksesta: se ei ole Rubrukilaisen sanoja.",
+    "jarvet/Pohjois-Araljärvi": "Luettu laitos on New York: Scribner, Armstrong & Co. 1877 (tekijänoikeus 1876), siksi vuosi 1877. Lainaus tarkistettu kahdesta skannauksesta; ensimmäisessä OCR lukee 'T scooped', toisessa oikein 'I scooped'.",
+    "jarvet/Albertjärvi": "Bakerin alkutekstissä toinen virke ('The glory of our prize burst suddenly upon me') päättyy huutomerkkiin. Suomennoksessa se on piste, koska pelin teksteissä ei käytetä huutomerkkiä; sanoja ei ole muutettu eikä lisätty.",
+    "jarvet/Malawijärvi": "Gutenbergin teksti on David Pricen litterointi John Murrayn 1894 laitoksesta, ei ensipainoksesta 1865 (Narrative of an Expedition to the Zambesi) eikä kansanpainoksen ensimmäisestä laitoksesta; siksi vuosi 1894.",
+    "jarvet/Lake Athabasca": "Mackenzie kirjoittaa 'an Indian, who had acquired the title of English Chief'; suomennos säilyttää aikakauden sanan ja arvonimen.",
+    "jarvet/Turkanajärvi": "Höhnelin alkuteos on saksankielinen (Zum Rudolph-See und Stephanie-See, 1892); luettu laitos on Nancy Bellin englanninnos 1894. Valittu kohta on sivulta 97; sivun 97 huudahduslause vedestä jätettiin pois, koska pelin teksteissä ei käytetä huutomerkkiä.",
+    "jarvet/Issyk-Kul": "Vuosi on teoksen valmistumisvuosi (Da Tang Xiyu Ji, 646), ei luetun laitoksen. Bealin tekstissä on hakasulkeisiin merkittyjä kääntäjän selityksiä ('portentous', 'or ventures'); ne on jätetty pois eikä korvattu millään.",
+    "jarvet/Lake Torrens": "Ajatusviivat merkitsevät poistoja yhden virkkeen sisältä (Eyren johdantoluku, osa 2). Alkuteksti: 'It was ascertained to be hemmed in by an impassable barrier, consisting of the basin of an immense lake, which I named Lake Torrens ... the northern extremity of which it completely surrounded in the form of a horse-shoe.'",
+    "jarvet/Lake of the Woods": "Lainaus on sopimuksen 2. artiklasta. Wikisourcen skannauksessa on OCR-virheitä ('s aid'), joten teksti on tarkistettu Yalen Avalon-laitoksesta, johon linkki osoittaa.",
+    "jarvet/Lac Moeru": "Livingstone kirjoittaa numeron muodossa '39 species of fish'; suomennoksessa luku on kirjaimin, koska muuten se lukisi kuin mittaluettelo.",
+    "jarvet/Reindeer Lake": "Ainoa kohde ilman kuvaa. Commonsista ei löytynyt yhtään yli 1200 pikselin kuvaa Peurajärvestä: haut 'Reindeer Lake', 'Reindeer Lake Saskatchewan', 'Southend Reindeer Lake', 'Kinoosao Saskatchewan' ja 'Deep Bay crater' eivät tuottaneet kelvollista osumaa, ja ainoa aihetta esittävä tiedosto (Canada.A2002236.1810.721.250m NASA.jpg) on 661x941. Neljä tekstikappaletta lainauksen ja kuvan sijaan."
+  }
+}

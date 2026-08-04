@@ -149,7 +149,39 @@
    * heijastaa hitusen enemmän, ei paljasta vaaleaa puuta. Kaksin
    * verroin voimakkaampana kotelo näytti maalatulta.
    */
+  /*
+   * KOLME JÄLKEÄ, JOTKA EIVÄT OLE LIUKUVÄREJÄ.
+   *
+   * Katselmus 4.8.2026 mittasi, miksi kotelo näytti yhä uudelta, vaikka
+   * kulumia oli jo viisi kappaletta: KAIKKI OLIVAT MATALATAAJUISIA.
+   * Kotelon oma pystyliuku vie sävyn kirkkaudesta 115 kirkkauteen 35
+   * ylhäältä alas, ja jokainen kulumalaikku muuttaa sitä 3–8 yksikköä.
+   * Silmä lukee suuren ja pehmeän vaihtelun VALAISTUKSEKSI eikä iäksi —
+   * se on sama tieto kuin muodosta, ei uutta.
+   *
+   * Ikä on korkeataajuista: naarmu, kolhu, lohkeama. Yksi hiuksenohut
+   * viiva erottuu vaikka se muuttaisi sävyä vain kymmenen yksikköä,
+   * koska sen vieressä on koskematon pinta.
+   *
+   * JÄLJET OVAT SIELLÄ, MISSÄ PUUTA YLIPÄÄTÄÄN NÄKYY. Kotelon face on
+   * lähes kokonaan mittarin, säleikön, näytön ja asteikon peitossa;
+   * paljasta puuta on vain yläreunan kaistale, laitojen reunat ja
+   * kytkinpylväs. Ensimmäinen sijoittelu (jälki kotelon keskellä
+   * alhaalla) katosi asteikon alle kokonaan, ja se on tässä
+   * yleisempikin sääntö: kulumaa ei kannata piirtää sinne, mitä ei näy.
+   *
+   * Ja ne ovat käytön kohdissa: hankausjälki yläreunassa (siitä
+   * laitetta nostetaan), sormenkynnen jälki kytkinpylväässä ja kolhu
+   * pylvään alanurkassa. VIIVAT KULKEVAT SYYN POIKKI eli lähes
+   * vaakaan; syyn suuntainen naarmu katoaa syyhyn eikä sitä näe.
+   */
   background-image:
+    linear-gradient(174deg,
+      rgba(255, 240, 210, 0) 40%, rgba(255, 240, 210, 0.34) 47%, rgba(255, 240, 210, 0) 54%),
+    linear-gradient(7deg,
+      rgba(22, 11, 3, 0) 34%, rgba(22, 11, 3, 0.5) 48%, rgba(22, 11, 3, 0) 62%),
+    linear-gradient(177deg,
+      rgba(255, 240, 210, 0) 36%, rgba(255, 240, 210, 0.22) 47%, rgba(255, 240, 210, 0) 58%),
     radial-gradient(21% 88% at 4% 6%, rgba(255, 238, 208, 0.14), rgba(255, 238, 208, 0) 74%),
     radial-gradient(11% 130% at 98% 28%, rgba(255, 240, 214, 0.1), rgba(255, 240, 214, 0) 76%),
     radial-gradient(27% 44% at 43% -10%, rgba(255, 236, 204, 0.08), rgba(255, 236, 204, 0) 72%),
@@ -166,6 +198,21 @@
       rgba(24, 12, 4, 0.09) 0 3px,
       rgba(0, 0, 0, 0) 3px 61px),
     linear-gradient(180deg, var(--radio-puu-vaalea), var(--radio-puu) 42%, var(--radio-puu-tumma));
+  /*
+   * Kolmen jäljen mitat ja paikat. Loput kerrokset ovat kotelon
+   * kokoisia (auto) ja toistuvat kuten ennenkin — luettelot on
+   * kirjoitettava loppuun asti, koska selain kiertää lyhyemmän listan
+   * alusta ja antaisi silloin naarmun mitat puun syylle.
+   */
+  background-size:
+    132px 7px, 20px 9px, 78px 9px,
+    auto, auto, auto, auto, auto, auto, auto, auto, auto;
+  background-position:
+    34% 1%, 94% 93%, 91% 14%,
+    0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-repeat:
+    no-repeat, no-repeat, no-repeat,
+    repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
   border: 1px solid rgba(0, 0, 0, 0.5);
   /* Messinkilista yläreunassa ja syvä varjo: kotelo seisoo kartan päällä. */
   box-shadow:
@@ -316,6 +363,15 @@
     linear-gradient(174deg, #efe3c2, #d8c69a);
   box-shadow:
     inset 0 2px 5px rgba(0, 0, 0, 0.5),
+    /*
+     * PÖLY LASIN ALLA, kortin alalaidassa. Mittarin sisään ei pääse
+     * käsi eikä pyyhe, joten se on laitteen ainoa kohta, jossa
+     * kuluneisuus saa olla pelkkää likaa — muualla lika ilman kättä
+     * olisi juuri se virhe, jota tässä laitteessa vältetään. Pöly
+     * laskeutuu vuosikymmenessä kortin alareunaan, ja siellä se jää
+     * neulan alle näkyviin.
+     */
+    inset 0 -4px 6px rgba(58, 38, 14, 0.22),
     inset 0 0 0 2px rgba(24, 15, 6, 0.85),
     0 1px 0 rgba(217, 161, 59, 0.28);
 }
@@ -328,6 +384,20 @@
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/*
+ * Asteikon luvut kirjoituskoneen kirjasimella, kuten laitteen muutkin
+ * tekstit.
+ *
+ * TÄÄLLÄ EIKÄ SVG:N ATTRIBUUTISSA, ja se on pakko: var() ei toimi
+ * SVG:n esitysattribuutissa lainkaan (sama sääntö kuin kaupunkinappien
+ * väreillä, js/linssit/radio.js MUSTE). Attribuuttina kirjoitettuna
+ * koko fontti olisi jäänyt selaimen oletukseksi, ja mittarin luvut
+ * olisivat olleet ainoa groteski koko laitteessa.
+ */
+.radio-mittari-asteikko text {
+  font-family: var(--font-type, "Courier New", monospace);
 }
 
 /*
@@ -517,13 +587,13 @@
   background-repeat: no-repeat;
   background-image:
     linear-gradient(97deg,
-      rgba(255, 255, 255, 0) 48%, rgba(255, 255, 255, 0.09) 48.5%, rgba(255, 255, 255, 0) 49%),
+      rgba(255, 255, 255, 0) 48%, rgba(255, 255, 255, 0.13) 48.5%, rgba(255, 255, 255, 0) 49%),
     linear-gradient(84deg,
-      rgba(255, 255, 255, 0) 39%, rgba(255, 255, 255, 0.06) 39.4%, rgba(255, 255, 255, 0) 39.8%),
+      rgba(255, 255, 255, 0) 39%, rgba(255, 255, 255, 0.085) 39.4%, rgba(255, 255, 255, 0) 39.8%),
     linear-gradient(102deg,
-      rgba(255, 255, 255, 0) 62%, rgba(255, 255, 255, 0.05) 62.4%, rgba(255, 255, 255, 0) 62.8%),
+      rgba(255, 255, 255, 0) 62%, rgba(255, 255, 255, 0.07) 62.4%, rgba(255, 255, 255, 0) 62.8%),
     linear-gradient(91deg,
-      rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.07) 30.4%, rgba(255, 255, 255, 0) 30.8%);
+      rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.1) 30.4%, rgba(255, 255, 255, 0) 30.8%);
   background-size: 96px 72%, 148px 100%, 62px 54%, 210px 86%;
   background-position: 18% 20%, 54% 0, 76% 62%, 88% 8%;
 }
@@ -831,41 +901,124 @@
 
 
 /*
- * VIRITTÄESSÄ NIMET HAKEVAT PAIKKAANSA.
+ * VIRITTÄESSÄ NAUHA LIUKUU, HAKEE JA ASETTUU.
  *
  * Omistajan toive 4.8.2026: "voisiko viritysrullan teksti heilua sen
  * aikaa kun asemaa viritetään? Punainen neula pysyisi paikallaan mutta
  * aseman nimet raahautuisivat paikalleen ja heiluisivat hieman kunnes
- * kanava löytyy."
+ * kanava löytyy." — ja katselmuksessa samana päivänä: "Kaupunkitekstit
+ * liikkuvat liian nopeasti viritettäessä. --- animoida pehmeämmän
+ * siirtymän viritysnauhalle ja jatkaa sitten tarpeeksi hidasta
+ * edestakaista, hyvin pientä liikettä mikäli lataus vaatii enemmän
+ * aikaa."
  *
  * Juuri näin oikea laite toimii: viisari on kiinni rungossa ja
  * ASTEIKKO liikkuu sen alla. Siksi liike kuuluu nimiriville eikä
  * neulalle — ja siksi neulaa ei saa animoida, vaikka se olisi
  * helpompaa.
  *
- * Heilunta vaimenee: ensimmäinen huojahdus on suurin ja viimeinen
- * hädin tuskin näkyy, kuten viritysnupin jousi todellisuudessa. Tasainen
- * edestakainen liike lukisi koristeeksi eikä hakemiseksi.
+ * KOLME VAIHETTA, KOLME ERI LIIKETTÄ, ja ne kertovat eri asian:
  *
- * POIKKEUS SÄÄNTÖÖN "ei jatkuvia animaatioita kartan päällä". Sama
- * perustelu kuin merkkivalon sykkeellä: liike on päällä vain virityksen
- * ajan (enintään 12 s), se koskee yhtä pientä elementtiä ja se on
- * pelkkä transform — kartta ei piirry uudelleen. prefers-reduced-motion
- * sammuttaa sen kokonaan.
+ *   siirtyma  Nauha liukuu uuden aseman kohdalle. Matka on mitattu
+ *             (js/linssit/radiosoitin.js laskeLiuku) eli pitkä silloin
+ *             kun asema haettiin kaukaa ja lyhyt silloin kun naapurista.
+ *   haku      Nauha hakee. Liike on hyvin pieni ja hidas, ja se jatkuu
+ *             niin kauan kuin lähetystä odotetaan.
+ *   lukittuu  Nauha asettuu paikalleen siitä, mihin haku jäi.
+ *
+ * VANHA LIIKE OLI YKSI ANIMAATIO KAIKKEEN: 2,4 sekunnin sarja, joka
+ * heilahti ensin yhdeksän pikseliä ja vaimeni, ja alkoi sitten alusta.
+ * Se oli juuri se, mitä omistaja moitti liian nopeaksi — ja se oli myös
+ * väärä ele, koska yhdeksän pikselin heilahdus on hakemista, joka alkaa
+ * aina uudelleen alusta eikä pääty mihinkään.
+ *
+ * POIKKEUS SÄÄNTÖÖN "ei jatkuvia animaatioita kartan päällä", ja sen
+ * rajat ovat ennallaan: liike on päällä vain virityksen ajan (enintään
+ * 12 s), se koskee yhtä pientä elementtiä ja se on pelkkä transform —
+ * kartta ei piirry uudelleen. prefers-reduced-motion sammuttaa kaikki
+ * kolme (tiedoston lopussa).
+ */
+
+/*
+ * SIIRTYMÄ. Lähtökohta on mukautetussa ominaisuudessa, koska vain
+ * javascript tietää matkan; käyrä on täällä, koska vain tyyli tietää
+ * miltä kääntyvä viritysnuppi tuntuu.
+ *
+ * cubic-bezier(0.3, 0, 0.1, 1) on kiihdytys ja pitkä loppuhidastus.
+ * Lähtö on pehmeä (0,3 / 0) eikä nykäisy, ja jälkimmäinen ohjauspiste
+ * (0,1 / 1) vie käyrän lähelle päätearvoa jo puolivälissä — viimeinen
+ * puoli sekuntia on ryömimistä paikalleen. Juuri se tekee liu'usta
+ * mekaanisen: nuppia käännetään ensin reippaasti ja etsitään sitten
+ * viimeiset millit.
+ */
+@keyframes radio-liuku {
+  from { transform: translateX(var(--radio-liuku, 0px)); }
+  to   { transform: translateX(0); }
+}
+
+/*
+ * HAKU. Kahden pikselin liike, kierros 2,8 sekunnissa.
+ *
+ * MITAT OVAT PIENET MUTTA EIVÄT NOLLA, ja molemmat rajat ovat oikeita
+ * virheitä: yhdeksän pikselin heilunta oli levotonta (omistajan moite),
+ * mutta pysähtynyt nauha odottavan laitteen päällä kertoo, että lataus
+ * on jumissa. Kaksi pikseliä on kolmannes kirjaimen leveydestä — se
+ * erottuu vielä liikkeeksi mutta ei enää lue tärinäksi.
+ *
+ * ENSIMMÄINEN KÄÄNNÖS ON JO 18 %:SSA eli puolessa sekunnissa, ja se on
+ * mitoitettu nopeimman mahdollisen haun mukaan. Kun asema vastaa heti,
+ * hakua nähdään vain se sekunti, joka jää siirtymän ja vähimmäisajan
+ * väliin (js/linssit/radio.js VIRITYKSEN_AJAT) — myöhempi käännös
+ * jäisi silloin kokonaan näkemättä ja koko vaihe näyttäisi tauolta.
+ *
+ * AIKAJAOT OVAT EPÄTASAISET ja käännekohdat eri suuruisia. Symmetrinen
+ * edestakainen liike lukee heilurikelloksi; hakeva nauha kulkee vähän
+ * eri matkan joka kerta.
  */
 @keyframes radio-haku {
   0%   { transform: translateX(0); }
-  8%   { transform: translateX(calc(var(--radio-haku, 1) * -9px)); }
-  20%  { transform: translateX(calc(var(--radio-haku, 1) * 7px)); }
-  34%  { transform: translateX(calc(var(--radio-haku, 1) * -5px)); }
-  50%  { transform: translateX(calc(var(--radio-haku, 1) * 3.5px)); }
-  66%  { transform: translateX(calc(var(--radio-haku, 1) * -2px)); }
-  82%  { transform: translateX(calc(var(--radio-haku, 1) * 1px)); }
+  18%  { transform: translateX(-2px); }
+  36%  { transform: translateX(0.5px); }
+  55%  { transform: translateX(1.6px); }
+  72%  { transform: translateX(-0.3px); }
+  88%  { transform: translateX(-1.3px); }
   100% { transform: translateX(0); }
 }
 
+/*
+ * LUKITTUMINEN. Lähtökohta mitataan hakuvaiheen keskeltä
+ * (js/linssit/radiosoitin.js nauhanSiirto), joten nauha ei ensin
+ * napsahda nollaan ja asetu vasta sitten.
+ */
+@keyframes radio-lukko {
+  from { transform: translateX(var(--radio-lukko, 0px)); }
+  to   { transform: translateX(0); }
+}
+
+/*
+ * Perusliike on haku, ja se on tarkoituksellista: jos vaiheita ei
+ * kerrota lainkaan (vanha kutsuja, yhden tiedoston versio), nauha hakee
+ * koko virityksen ajan sen sijaan että seisoisi paikallaan.
+ */
 .radiosoitin[data-tila="virittaa"] .radio-kaupungit {
-  animation: radio-haku 2.4s ease-in-out infinite;
+  animation: radio-haku 2.8s ease-in-out infinite;
+}
+
+/*
+ * Vaiheelliset liikkeet ovat kaksiattribuuttisia valitsimia eli
+ * väkevämpiä kuin perusliike — järjestys tiedostossa ei siis ratkaise,
+ * ja sääntöjen siirtely ei riko mitään.
+ *
+ * `both` molemmissa: kertaliikkeen on pidettävä lähtöarvonsa jo ennen
+ * ensimmäistä kehystä ja loppuarvonsa vaiheen loppuun asti. Ilman sitä
+ * nauha välähtäisi nollassa animaation molemmissa päissä.
+ */
+.radiosoitin[data-tila="virittaa"][data-vaihe="siirtyma"] .radio-kaupungit {
+  animation: radio-liuku 1.25s cubic-bezier(0.3, 0, 0.1, 1) both;
+}
+
+.radiosoitin[data-tila="virittaa"][data-vaihe="lukittuu"] .radio-kaupungit {
+  animation: radio-lukko 0.32s cubic-bezier(0.22, 0.86, 0.3, 1) both;
 }
 
 /*
@@ -1102,6 +1255,29 @@
   gap: 1.1rem;
   padding-right: 0.5rem;
   margin-left: 0.6rem;
+  /*
+   * KULUMA SEURAA KÄTTÄ, JA TÄSSÄ KÄSI ON. Kotelon muut kulumat ovat
+   * arvauksia siitä, mistä laitetta on nostettu; kytkinten ympärys on
+   * ainoa kohta, josta pelaaja OIKEASTI koskee laitteeseen. Lakka on
+   * siinä hioutunut kiiltäväksi, ja kiiltävä lakka heijastaa vaaleana.
+   *
+   * VASEN LAIKKU ON ISOMPI JA KIRKKAAMPI KUIN OIKEA, koska play ja stop
+   * käännetään joka kanavalla ja virta kerran istunnossa. Symmetrinen
+   * pari näyttäisi valaistukselta; erisuuruinen pari kertoo, kumpaa
+   * kytkintä on käytetty.
+   *
+   * LAIKULLA ON REUNA. Ensimmäinen yritys oli pehmeä liuku laidasta
+   * laitaan, ja se katosi kotelon omaan pystyvarjostukseen kokonaan
+   * (mitattu: puun kirkkaus muuttui 3 yksikköä, kun kotelo itse
+   * vaihtelee 80 yksikköä ylhäältä alas). Kiillottunut kohta on
+   * tasainen keskeltä ja häviää vasta reunalla — juuri se raja tekee
+   * siitä kuluman eikä valokeilan.
+   */
+  background-image:
+    radial-gradient(26% 34% at 27% 56%,
+      rgba(255, 240, 212, 0.2) 0 46%, rgba(255, 240, 212, 0) 92%),
+    radial-gradient(20% 26% at 76% 52%,
+      rgba(255, 240, 212, 0.1) 0 42%, rgba(255, 240, 212, 0) 90%);
 }
 
 .radio-kytkin-kehys {
@@ -1182,6 +1358,30 @@
 /* --- kapea ruutu -------------------------------------------------- */
 
 /*
+ * MITTARI KUTISTUU ENNEN KUIN LAITE RIVITTYY, JA SE ON KOKO TEMPPU.
+ *
+ * Kytkinpylväs on 57 pikseliä korkea. Kun mittari on tasan yhtä
+ * korkea, se ei kasvata alempaa riviä lainkaan — kaksiriviselläkin
+ * ruudulla laite on siis täsmälleen entisen korkuinen, eikä yhtään
+ * pikseliä kartasta mene mittarin takia. Täysikokoinen 112 × 80
+ * mittari sen sijaan tekisi rivistä kahdeksankymmenen korkuisen.
+ *
+ * 800 EIKÄ 765, eli mittari pienenee ENNEN rivitysrajaa. Väliin jäävä
+ * kaistale 766–800 on juuri se, jolla yksi rivi vielä mahtuu pienen
+ * mittarin kanssa mutta ei ison: iso vaatii 758 pikseliä sisältöä,
+ * pieni 726. Ilman tätä porrasta tabletin pystyruutu (768) olisi
+ * rivittynyt kahdelle ja laite olisi kasvanut 74 pikseliä.
+ *
+ * Kuvasuhde säilyy (112 : 80 ≈ 80 : 57), joten asteikon kaari ja
+ * neulan napa osuvat yhä samoihin kohtiin — piirustus on sama, vain
+ * mittakaava muuttuu.
+ */
+@media (max-width: 800px) {
+  .radio-mittari { width: 80px; height: 57px; }
+  .radio-mittari-neula { width: 1.7px; margin-left: -0.85px; }
+}
+
+/*
  * KAKSI RIVIÄ, KUN YKSI EI MAHDU.
  *
  * Keskiö nousee omalle rivilleen ensimmäiseksi, ja alemmalle riville
@@ -1189,23 +1389,26 @@
  * koko leveyden — ne ovat laitteen tieto-osa, ja kavennettuna niistä
  * katoaisi juuri se, mikä tekee laitteesta radion.
  *
- * RAJA ON 820 EIKÄ 700, ja se nousi VU-mittarin mukana. Yhdelle
- * riville tarvitaan keskiö (440), mittari (112), säleikkö (80),
- * kytkimet (111) sekä kolme väliä ja täytteet (45) eli 788 pikseliä,
- * ja soittimen oma reunus vie vielä 13. Vanhalla 700:n rajalla väliin
- * olisi jäänyt kaistale 701–801, jossa laite yrittäisi yhä yhtä riviä
- * eikä mahtuisi — ja rivittyisi satunnaisen näköisesti kahdelle.
+ * RAJA ON 765 EIKÄ 700, ja se nousi VU-mittarin mukana. Yhdelle
+ * riville tarvitaan keskiö (440), mittari (80), säleikkö (80),
+ * kytkimet (102) sekä kolme väliä (24) eli 726 pikseliä sisältöä;
+ * kotelon oma täyte ja reunus vievät 21 ja soittimen reunus 13, joten
+ * ruutua tarvitaan 760 — ja raja on 765, koska tasan täyteen mittaan
+ * ei kannata luottaa pyöristysten yli. Vanhalla 700:n rajalla väliin
+ * olisi jäänyt kaistale 701–760, jossa laite yrittäisi yhä yhtä riviä
+ * eikä mahtuisi — ja rivittyisi satunnaisen näköisesti niin, että
+ * kytkimet jäisivät yksin alariville.
  *
  * RIVITYS JA KUTISTAMINEN OVAT ERI RAJAT. Tämä lohko vain siirtää osat
  * kahdelle riville; näytön, kytkinten ja lampun pienentäminen on
- * puhelinta varten ja pysyy 700:ssa (alempana). Välissä on nyt
- * kaistale, jossa laite on kaksirivinen mutta täysikokoinen — juuri se
- * on oikein tabletille, jonka ruutu on kapea mutta sormi ei ole pieni.
+ * puhelinta varten ja pysyy 700:ssa (alempana).
  */
-@media (max-width: 820px) {
+@media (max-width: 765px) {
   .radio-keskio { order: 1; flex: 1 1 100%; max-width: none; }
   .radio-mittari { order: 2; }
-  .radio-kaiutin { order: 3; flex: 1 1 auto; }
+  /* Säleikkö saa kutistua matalaksi heti kun se on omalla rivillään:
+     alarivin korkeus tulee kytkimistä ja mittarista, ei kankaasta. */
+  .radio-kaiutin { order: 3; flex: 1 1 auto; min-height: 46px; }
   .radio-kytkimet { order: 4; }
 }
 
@@ -1218,18 +1421,10 @@
  */
 @media (max-width: 700px) {
   .radio-kotelo { gap: 0.4rem; padding: 0.45rem 0.5rem; }
-  .radio-kaiutin { min-height: 46px; }
   .radio-kytkimet { gap: 0.8rem; margin-left: 0.3rem; }
   /* Pienempi näyttö: soitin vie puhelimen pystyruudusta jo neljänneksen,
      eikä kartta saa jäädä sen alle. */
   .radio-naytto { --radio-naytto-korkeus: 54px; }
-  /*
-   * Mittari pienenee samassa suhteessa. Kuvasuhde säilyy (112 : 80
-   * ≈ 92 : 66), joten asteikon kaari ja neulan napa osuvat yhä
-   * samoihin kohtiin — piirustus on sama, vain mittakaava muuttuu.
-   */
-  .radio-mittari { width: 92px; height: 66px; }
-  .radio-mittari-neula { width: 2px; margin-left: -1px; }
   /*
    * Pienemmät kytkimet samasta syystä. Kilpineen kytkinpylväs on
    * laitteen korkein osa, ja jokainen sen pikseli on pois kartasta.
@@ -1282,8 +1477,16 @@
  * voimakkuudesta — pysähtynyt neula ei ole rauhallinen vaan rikki.
  */
 @media (prefers-reduced-motion: reduce) {
+  /*
+   * KAIKKI KOLME VAIHETTA, EI VAIN PERUSLIIKE. Vaiheelliset valitsimet
+   * ovat väkevämpiä kuin `[data-tila="virittaa"]` yksinään, joten
+   * pelkkä perusliikkeen sammutus jättäisi liu'un ja lukittumisen
+   * päälle — ja liuku on niistä kolmesta se, joka liikkuu eniten.
+   */
   .radiosoitin,
-  .radiosoitin[data-tila="virittaa"] .radio-kaupungit { animation: none; }
+  .radiosoitin[data-tila="virittaa"] .radio-kaupungit,
+  .radiosoitin[data-tila="virittaa"][data-vaihe="siirtyma"] .radio-kaupungit,
+  .radiosoitin[data-tila="virittaa"][data-vaihe="lukittuu"] .radio-kaupungit { animation: none; }
   .radio-viisari,
   .radio-kaupunki,
   .radio-kytkin-kilpi,
