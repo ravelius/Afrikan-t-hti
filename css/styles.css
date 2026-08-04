@@ -4482,6 +4482,21 @@ body.katselu #newgame-btn { display: none; }
   cursor: pointer;
 }
 
+/*
+ * Hiiren alla numero vain tummuu, ei muutu laatikoksi.
+ *
+ * Yleinen `button:hover` maalaa napin tummalla (#43331f), ja se osui
+ * myös tähän: työpöytäselaimessa versionumeron päälle ilmestyi musta
+ * suorakaide keskelle karttaa (omistajan havainto). Numero ei ole nappi
+ * vaan merkintä pergamentilla — se saa reagoida, mutta pinnalla eikä
+ * muodolla.
+ */
+.versio-kulma:hover:not(:disabled),
+.versio-kulma:focus-visible {
+  background: none;
+  color: rgba(70, 51, 31, 0.9);
+}
+
 /* Päivitysloki: lyhyt lista siitä, mitä kussakin versiossa muuttui.
    Kortti on kapea ja teksti pientä — lokia luetaan kartan päältä,
    ei erillisenä sivuna. */

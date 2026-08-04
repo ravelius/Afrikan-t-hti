@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 235, teksti: 'Maastonimet vaakaan ja isommalla' },
+  { v: 235, teksti: 'Versionumero ei enää tummu laatikoksi' },
   { v: 234, teksti: 'Saapumisessa zoomaus, kohdemanner näkyviin' },
   { v: 234, teksti: 'Lento kestää repliikin lukemisen ajan' },
   { v: 234, teksti: 'Pieni nuoli ohittaa lennon halutessa' },

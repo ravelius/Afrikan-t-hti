@@ -415,17 +415,24 @@ const KAYRAN_PISTEET = 33;
  * salli päällekkäisiä setValueCurveAtTime-jaksoja vaan heittää
  * poikkeuksen, joten vanha on nimenomaisesti katkaistava ensin.
  *
- * cancelAndHoldAtTime on tähän oikea työkalu: se jättää arvon siihen,
- * mihin käyrä oli ehtinyt. Pelkkä cancelScheduledValues on varareitti
- * niille selaimille (ja testien tynkäkontekstille), joissa sitä ei ole.
+ * MOLEMMAT KUTSUT, JA SIINÄ JÄRJESTYKSESSÄ:
+ *
+ *   cancelAndHoldAtTime  purkaa kesken olevan käyrän ja jättää arvon
+ *                        siihen, mihin se oli ehtinyt. Tämä on ainoa
+ *                        kutsu, joka osaa katkaista jo alkaneen käyrän;
+ *                        vanhemmissa selaimissa sitä ei ole.
+ *   cancelScheduledValues vie tulevat tapahtumat — myös edellisen
+ *                        jättämän pidätystapahtuman. Se on tässä
+ *                        välttämätön eikä varmuuden vuoksi: uutta käyrää
+ *                        EI saa ajoittaa hetkeen, jossa on jo tapahtuma,
+ *                        ja pidätys on juuri siinä hetkessä.
  */
 function katkaiseAutomaatio(param, t) {
   if (typeof param.cancelAndHoldAtTime === 'function') {
     try {
       param.cancelAndHoldAtTime(t);
-      return;
     } catch {
-      /* ei tuettu tälle parametrille — mennään perumisella */
+      /* ei tuettu tälle parametrille — peruminen riittää */
     }
   }
   param.cancelScheduledValues(t);

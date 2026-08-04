@@ -509,7 +509,16 @@ export const NIMEN_ZOOMIRAJA = { 1: 4200, 2: 1800, 3: 800 };
  * Karttojen oma tapa on pitää teksti samankokoisena ja vaihtaa sitä
  * mitä näytetään — se on juuri se, mitä tärkeysraja tekee.
  */
-const NIMEN_FONTTI_PX = 15;
+/*
+ * Maastonimen koko ruudun pikseleinä.
+ *
+ * Nostettu 15:stä omistajan pyynnöstä: "Uralin nimikyltistä ei saa
+ * selvää. Nimet voisi kirjoittaa aina vaakasuuntaan ja saa olla kyllä
+ * isommalla." Nimet ovat kartan pienintä tekstiä ja niitä luetaan
+ * puhelimen ruudulta kartan kuvion päältä, joten koko on luettavuutta
+ * eikä tyyliä.
+ */
+const NIMEN_FONTTI_PX = 19;
 const I_IKONIN_SADE_PX = 7.5;
 
 /*
@@ -867,59 +876,31 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
      * ei auta, nimi kirjoitetaan suorana: luettava nimi väärällä
      * kulmalla on parempi kuin lukukelvoton oikealla.
      */
-    let kaari = null;
-    if (e.laji === 'joki') {
-      for (const vara of [KAAREN_VARA, KAAREN_VARA * 2.5]) {
-        const ehdotus = nimenKaari(kohde.pisteet, e.kohta, e.teksti * vara)
-          .map(([x, y]) => [x + e.siirto, y]);
-        if (kaariKelpaa(ehdotus, e.teksti)) { kaari = ehdotus; break; }
-      }
-    }
-
-    if (kaari) {
-      /*
-       * JOEN NIMI SEURAA JOKEA. Tämä on se kohta, joka tekee kartasta
-       * kartan eikä luettelon.
-       *
-       * Kaari on nimen mittainen pätkä uomaa siitä kohdasta, jota
-       * katsotaan (ks. nimenKaari). Nimi keskitetään siihen, joten
-       * startOffset on 50 %: ikkuna on rakennettu nimen ympärille.
-       */
-      const tunnus = `maastonimi-uoma-${kohde.avain.replace(/[^A-Za-z0-9]/g, '-')}`;
-      el('path', { id: tunnus, d: smoothOpenPath(kaari), fill: 'none' }, maarittelyt);
-      const teksti = el('text', {
-        class: 'maastonimi-teksti', 'font-size': fontti.toFixed(1), dy: -fontti * 0.42,
-      }, ryhma);
-      const polku = el('textPath', {
-        startOffset: '50%', 'text-anchor': 'middle',
-      }, teksti);
-      polku.setAttribute('href', `#${tunnus}`);
-      polku.textContent = kohde.nimi;
-      // Ikoni nimen perään uomaa pitkin: sama kaari, sama etäisyys.
-      const pituus = viivanPituus(kaari);
-      ikoninPaikka = pisteMatkalla(kaari, pituus / 2 + mitattuLeveys(teksti, e.teksti) / 2 + iSade * 1.6);
-      ikoninPaikka = [ikoninPaikka[0], ikoninPaikka[1] - fontti * 0.42];
-    } else {
-      // Järvi suorana, vuoristo jonon suuntaisesti. Kulma on laskettu
-      // aineistossa laudan koordinaateissa (maasto-nimet-vuoret.js).
-      const kulma = e.laji === 'vuori' ? (kohde.kulma ?? 0) : 0;
-      const kaanto = el('g', {
-        transform: `rotate(${kulma} ${e.x.toFixed(1)} ${e.y.toFixed(1)})`,
-      }, ryhma);
-      const teksti = el('text', {
-        x: e.x.toFixed(1), y: e.y.toFixed(1), class: 'maastonimi-teksti',
-        'font-size': fontti.toFixed(1), 'text-anchor': 'middle',
-      }, kaanto);
-      teksti.textContent = kohde.nimi;
-      // Ikoni samaan käännettyyn ryhmään, jotta se pysyy nimen perässä.
-      if (ikoni) {
-        piirraIIkoni(
-          kaanto,
-          [e.x + mitattuLeveys(teksti, e.teksti) / 2 + iSade * 1.6, e.y - fontti * 0.3],
-          iSade, kohde, avaa, kulma,
-        );
-      }
-      ikoninPaikka = null;
+    /*
+     * KAIKKI NIMET VAAKAAN.
+     *
+     * Ennen joen nimi seurasi uomaa ja vuoriston nimi jonon kulmaa. Se
+     * näytti kartalta — mutta pohjois-eteläinen jono kääntää nimen
+     * pystyyn, ja pystyssä oleva nimi on kyltti jota ei lueta.
+     * Omistajan havainto: "Uralin nimikyltistä ei saa selvää. Nimet
+     * voisi kirjoittaa aina vaakasuuntaan ja saa olla kyllä isommalla."
+     * Ural on aineistossa -87 astetta ja Andit -84, eli käytännössä
+     * pystysuoria.
+     *
+     * Luettavuus voittaa tyylin. Nimi kirjoitetaan siihen kohtaan, joka
+     * kohteesta on lähinnä ruudun keskustaa — joen kohdalla se on yhä
+     * uoman piste, joten nimi osuu uomalle vaikkei seuraakaan sitä.
+     */
+    const teksti = el('text', {
+      x: e.x.toFixed(1), y: e.y.toFixed(1), class: 'maastonimi-teksti',
+      'font-size': fontti.toFixed(1), 'text-anchor': 'middle',
+    }, ryhma);
+    teksti.textContent = kohde.nimi;
+    if (ikoni) {
+      ikoninPaikka = [
+        e.x + mitattuLeveys(teksti, e.teksti) / 2 + iSade * 1.6,
+        e.y - fontti * 0.3,
+      ];
     }
 
     if (ikoni && ikoninPaikka) piirraIIkoni(ryhma, ikoninPaikka, iSade, kohde, avaa, 0);
