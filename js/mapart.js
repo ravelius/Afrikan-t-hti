@@ -484,7 +484,7 @@ const I_IKONIN_SADE_PX = 7.5;
  * vain sen päättämiseen mahtuuko nimi — ei sen sijoittamiseen. Väärä
  * arvio siirtäisi i-ikonia muutaman pikselin, ei enempää.
  */
-const KIRJAIMEN_LEVEYS = 0.46;
+const KIRJAIMEN_LEVEYS = 0.55;
 
 const nimenLeveys = (teksti, fontti) => teksti.length * fontti * KIRJAIMEN_LEVEYS;
 
@@ -623,7 +623,54 @@ function nimenKaari(pisteet, kohtaIndeksi, tarve) {
       otokset[k][1] + (jy - otokset[k][1]) * KAAREN_OIKAISU,
     ];
   }
-  return otokset.at(-1)[0] < otokset[0][0] ? otokset.reverse() : otokset;
+  /*
+   * Suunta: teksti vasemmalta oikealle, ja pystysuoralla uomalla
+   * alhaalta ylös.
+   *
+   * Vaakasuunta ratkaisee ensin. Pystysuoralla joella (Volga
+   * Volgogradin yläpuolella, Nile) vaakaero on lähes nolla, ja silloin
+   * pelkkä x-vertailu valitsisi suunnan sattumanvaraisesti. Karttojen
+   * tapa on kirjoittaa pystysuora nimi alhaalta ylös — sama sääntö,
+   * jolla vuoristojen kulmat on laskettu (maasto-nimet-vuoret.js).
+   */
+  const dx = otokset.at(-1)[0] - otokset[0][0];
+  const dy = otokset.at(-1)[1] - otokset[0][1];
+  /*
+   * Ratkaisee VAAKASUUNTA, ei kumpi ero on suurempi. Teksti on
+   * ylösalaisin aina kun polku kulkee vasemmalle — myös silloin kun se
+   * kulkee enimmäkseen ylöspäin. Se virhe oli tässä hetken: Amudarja
+   * nousee luoteeseen, ja kun suunta valittiin pystyeron mukaan, nimi
+   * luki peilikuvana.
+   */
+  const pysty = Math.abs(dx) < Math.abs(dy) * 0.05;
+  const nurin = pysty ? dy > 0 : dx < 0;
+  return nurin ? otokset.reverse() : otokset;
+}
+
+/*
+ * Kelpaako kaari nimen alustaksi?
+ *
+ * Kaksi ehtoa. JÄNNE: päiden välinen suora on oltava nimeä pidempi,
+ * muuten nimi ei mahdu kaarelle vaikka polkua olisi. KÄÄNNÖS: kaari ei
+ * saa taittua jyrkästi, koska taitteessa kirjaimet leviävät ulkokaarelle
+ * ja puristuvat sisäkaarelle. Volgan mutka Volgogradin luona läpäisi
+ * pelkän jännetestin ja piirtyi silti kirjainkasana — 72 asteen taite
+ * riittää siihen.
+ */
+const KAAREN_TAITTO = 45;
+
+function kaariKelpaa(kaari, tekstinLeveys) {
+  const janne = Math.hypot(kaari.at(-1)[0] - kaari[0][0], kaari.at(-1)[1] - kaari[0][1]);
+  if (janne < tekstinLeveys * 1.05) return false;
+  for (let i = 1; i < kaari.length - 1; i++) {
+    const a = Math.atan2(kaari[i][1] - kaari[i - 1][1], kaari[i][0] - kaari[i - 1][0]);
+    const b = Math.atan2(kaari[i + 1][1] - kaari[i][1], kaari[i + 1][0] - kaari[i][0]);
+    let ero = ((b - a) * 180) / Math.PI;
+    while (ero > 180) ero -= 360;
+    while (ero < -180) ero += 360;
+    if (Math.abs(ero) > KAAREN_TAITTO) return false;
+  }
+  return true;
 }
 
 function pisteMatkalla(pisteet, matka) {
@@ -773,9 +820,28 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
 
     const ryhma = el('g', { class: `maastonimi maastonimi-${e.laji}` }, svg);
     let ikoninPaikka = null;
-    let ikoninKulma = 0;
 
+    /*
+     * Kelpaako uoma kaareksi juuri tässä kohdassa?
+     *
+     * Joki voi tehdä nimen mitalla täyskäännöksen (Volgan mutka
+     * Volgogradin kohdalla). Silloin kaaren päät ovat lähes päällekkäin
+     * eikä sille voi kirjoittaa mitään — nimi kiertyisi kerälle.
+     * Ikkunaa yritetään ensin leventää, koska laajemmalla otoksella
+     * mutka keskiarvoistuu pois ja joen yleissuunta löytyy. Jos sekään
+     * ei auta, nimi kirjoitetaan suorana: luettava nimi väärällä
+     * kulmalla on parempi kuin lukukelvoton oikealla.
+     */
+    let kaari = null;
     if (e.laji === 'joki') {
+      for (const vara of [KAAREN_VARA, KAAREN_VARA * 2.5]) {
+        const ehdotus = nimenKaari(kohde.pisteet, e.kohta, e.teksti * vara)
+          .map(([x, y]) => [x + e.siirto, y]);
+        if (kaariKelpaa(ehdotus, e.teksti)) { kaari = ehdotus; break; }
+      }
+    }
+
+    if (kaari) {
       /*
        * JOEN NIMI SEURAA JOKEA. Tämä on se kohta, joka tekee kartasta
        * kartan eikä luettelon.
@@ -784,8 +850,6 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
        * katsotaan (ks. nimenKaari). Nimi keskitetään siihen, joten
        * startOffset on 50 %: ikkuna on rakennettu nimen ympärille.
        */
-      const kaari = nimenKaari(kohde.pisteet, e.kohta, e.teksti * KAAREN_VARA)
-        .map(([x, y]) => [x + e.siirto, y]);
       const tunnus = `maastonimi-uoma-${kohde.avain.replace(/[^A-Za-z0-9]/g, '-')}`;
       el('path', { id: tunnus, d: smoothOpenPath(kaari), fill: 'none' }, maarittelyt);
       const teksti = el('text', {
@@ -812,13 +876,15 @@ export function drawMaastonimet(svg, map, { nimet, nakyva, avaa } = {}) {
         'font-size': fontti.toFixed(1), 'text-anchor': 'middle',
       }, kaanto);
       teksti.textContent = kohde.nimi;
-      ikoninPaikka = [e.x + mitattuLeveys(teksti, e.teksti) / 2 + iSade * 1.6, e.y - fontti * 0.3];
-      ikoninKulma = kulma;
       // Ikoni samaan käännettyyn ryhmään, jotta se pysyy nimen perässä.
       if (ikoni) {
-        piirraIIkoni(kaanto, ikoninPaikka, iSade, kohde, avaa, ikoninKulma);
-        ikoninPaikka = null;
+        piirraIIkoni(
+          kaanto,
+          [e.x + mitattuLeveys(teksti, e.teksti) / 2 + iSade * 1.6, e.y - fontti * 0.3],
+          iSade, kohde, avaa, kulma,
+        );
       }
+      ikoninPaikka = null;
     }
 
     if (ikoni && ikoninPaikka) piirraIIkoni(ryhma, ikoninPaikka, iSade, kohde, avaa, 0);

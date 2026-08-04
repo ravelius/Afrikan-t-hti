@@ -3374,6 +3374,9 @@ export class UI {
      */
     this.maastonimet = pack.id === 'maailmankartta' ? MAAILMANKARTAN_NIMET : null;
     this.maastonimiKerros = el('g', { class: 'maastonimet' }, root);
+    // Uusi lauta, tyhjä kerros: muistettu näkymätunniste ei saa jäädä
+    // voimaan, tai nimet jäisivät piirtymättä kun sama näkymä palaa.
+    this.maastonimiTunniste = null;
     this.countryKey = null;
     drawWaves(taide, pack.map, [
       { x: decor.compass.x, y: decor.compass.y, r: decor.compass.r + 45 },
