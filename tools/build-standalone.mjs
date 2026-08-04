@@ -78,6 +78,8 @@ const MODULES = [
   'js/packs/maailmankartta-maasto.js',
   'js/packs/maasto-vedet.js',
   'js/packs/maasto-korkeus.js',
+  'js/packs/maasto-nimet-vuoret.js',
+  'js/packs/maasto-nimet-vedet.js',
   'js/packs/linssi-topografia.js',
   'js/packs/linssi-maaluvut.js',
   'js/packs/linssi-muuttoliike.js',

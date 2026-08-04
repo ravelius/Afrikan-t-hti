@@ -104,7 +104,7 @@ const JOKINIMET = {
     selitys: 'Kongo on virtaamaltaan maailman toiseksi suurin joki, ja siitä on mitattu 230 metrin syvyys — enemmän kuin mistään muusta joesta. Chambeshin latvoilta mitattuna se on 4 700 kilometriä pitkä.',
   },
 
-  // --- 2: merkittävät ---
+  // --- suuret joet: enimmäkseen tärkeys 2, alueellisemmat 3 ---
   Lena: {
     nimi: 'Lena', tarkeys: 2, wiki: 'Lena',
     selitys: 'Lena alkaa Baikalvuorilta ja virtaa 4 294 kilometriä Laptevinmereen. Sen suistoalue on 27 700 neliökilometriä eli lähes Belgian kokoinen.',
@@ -179,7 +179,7 @@ const JOKINIMET = {
   },
   'Amu Darya': {
     nimi: 'Amudarja', tarkeys: 2, wiki: 'Amudarja',
-    selitys: 'Amudarja on Keski-Aasian pisin joki ja antiikin maailman Oksos. Se laski ennen Araljärveen, mutta kastelu on kuivattanut alajuoksun, ja purjehduskelpoista uomaa on jäljellä noin 1 450 kilometriä.',
+    selitys: 'Amudarja on Keski-Aasian pisin joki ja antiikin maailman Oksos. Se laski ennen Araljärveen, mutta kastelu vei suuren osan vedestä; purjehduskelpoista uomaa on 1 450 kilometriä.',
   },
   'Syr Darya': {
     nimi: 'Syrdarja', tarkeys: 2, wiki: 'Syrdarja',
@@ -287,11 +287,11 @@ const JOKINIMET = {
   },
   Daugava: {
     nimi: 'Väinäjoki', tarkeys: 2, wiki: 'Väinäjoki',
-    selitys: 'Väinäjoki eli Daugava virtaa 1 020 kilometriä Valdailta Riianlahteen ja on Latvian tärkein joki. Sana väinä tarkoittaa leveää, hitaasti virtaavaa jokea; samasta sanasta tulee myös Vienanjoen nimi.',
+    selitys: 'Väinäjoki eli Daugava virtaa 1 020 kilometriä Valdain ylängöltä Riianlahteen ja on Latvian tärkein joki. Nimen sana väinä tarkoittaa leveää, hitaasti virtaavaa jokea.',
   },
   Madeira: {
     nimi: 'Madeira', tarkeys: 2, wiki: 'Madeira (joki)',
-    selitys: 'Madeira on Amazonin pisin sivujoki ja yhtyy pääuomaan Manausin kohdalla. Se tuo Andeilta niin paljon lietettä, että vesi on selvästi vaaleampaa kuin viereisessä Rio Negrossa.',
+    selitys: 'Madeira on Amazonin pisin sivujoki ja yhtyy pääuomaan Manausin tienoilla. Se tuo Andeilta runsaasti lietettä, joten sen vesi on savisen vaaleaa.',
   },
   'Rio Negro': {
     nimi: 'Rio Negro', tarkeys: 2, wiki: 'Rio Negro',
@@ -323,30 +323,30 @@ const JOKINIMET = {
   },
   Magdalena: {
     nimi: 'Magdalena', tarkeys: 2, wiki: 'Magdalena (joki)',
-    selitys: 'Magdalena on Kolumbian suurin joki, 1 650 kilometriä Andeilta Karibialle. Se oli vuosisatoja ainoa kulkuyhteys rannikolta Bogotáan.',
+    selitys: 'Magdalena on Kolumbian suurin joki, 1 650 kilometriä Andeilta Karibialle. Se oli vuosisatoja pääasiallinen kulkuyhteys rannikolta sisämaahan Bogotáan.',
   },
   Songhua: {
-    nimi: 'Sungari', tarkeys: 2, wiki: 'Sungari',
+    nimi: 'Sungari', tarkeys: 3, wiki: 'Sungari',
     selitys: 'Sungari eli Songhua on noin 1 927 kilometriä pitkä ja Amurin suurin sivujoki. Se on Heilongjiangin maakunnan tärkein vedenlähde, ja sen varrella on Harbin.',
   },
   Athabasca: {
-    nimi: 'Athabasca', tarkeys: 2, wiki: 'Athabascajoki',
+    nimi: 'Athabasca', tarkeys: 3, wiki: 'Athabascajoki',
     selitys: 'Athabascajoki alkaa Columbia Icefieldin jäätiköltä ja virtaa 1 532 kilometriä Athabascajärveen. Sen alajuoksulla ovat Albertan laajat öljyhiekkaesiintymät.',
   },
   Peace: {
-    nimi: 'Peace', tarkeys: 2, wiki: 'Peace',
+    nimi: 'Peace', tarkeys: 3, wiki: 'Peace',
     selitys: 'Peace virtaa noin 1 923 kilometriä Kalliovuorilta Albertan halki ja yhtyy Slavejokeen. Yläjuoksun pato on padonnut Willistoninjärven, Brittiläisen Kolumbian suurimman tekojärven.',
   },
   Fraser: {
-    nimi: 'Fraser', tarkeys: 2, wiki: 'Fraser',
+    nimi: 'Fraser', tarkeys: 3, wiki: 'Fraser',
     selitys: 'Fraser on Brittiläisen Kolumbian pisin joki, 1 375 kilometriä Kalliovuorilta Tyyneenmereen Vancouverissa. Provinssin historia on pitkälti sen laakson historiaa, turkiskaupasta kultaryntäykseen.',
   },
   Snake: {
-    nimi: 'Snake', tarkeys: 2, wiki: 'Snake River',
+    nimi: 'Snake', tarkeys: 3, wiki: 'Snake River',
     selitys: 'Snake River on Columbian suurin ja pisin sivujoki, 1 735 kilometriä Wyomingista Washingtoniin. Sen laaksoa pitkin kulki 1800-luvulla Oregon Trail, ja jokeen on rakennettu useita patoja.',
   },
   Arkansas: {
-    nimi: 'Arkansas', tarkeys: 2, wiki: 'Arkansas (joki)',
+    nimi: 'Arkansas', tarkeys: 3, wiki: 'Arkansas (joki)',
     selitys: 'Arkansas on 2 350 kilometriä pitkä ja Missourin jälkeen Mississippin toiseksi pisin sivujoki. Se alkaa Kalliovuorilta jyrkkänä vuoristovirtana ja hidastuu preerian poikki Little Rockiin.',
   },
   Uruguay: {
@@ -355,50 +355,50 @@ const JOKINIMET = {
   },
   'São Francisco': {
     nimi: 'São Francisco', tarkeys: 2, wiki: 'São Francisco',
-    selitys: 'São Francisco on 3 160 kilometrillään Etelä-Amerikan neljänneksi pisin joki ja ainoa suuri joki, joka virtaa kokonaan Brasilian sisällä. Se on Koillis-Brasilian kuivien alueiden elinehto.',
+    selitys: 'São Francisco on 3 160 kilometrillään Etelä-Amerikan neljänneksi pisin joki ja virtaa kokonaan Brasilian sisällä. Se on Koillis-Brasilian kuivien seutujen elinehto.',
   },
   Purús: {
-    nimi: 'Purus', tarkeys: 2, wiki: 'Purus',
-    selitys: 'Purus on 3 211 kilometriä pitkä ja yhtyy Amazoniin Manausin lähellä. Se on äärimmäisen mutkitteleva: linnuntietä matka olisi murto-osa uoman pituudesta.',
+    nimi: 'Purus', tarkeys: 3, wiki: 'Purus',
+    selitys: 'Purus on 3 211 kilometriä pitkä ja yhtyy Amazoniin Manausin lähellä. Se on yksi maailman mutkittelevimmista joista, joten uoma on paljon linnuntietä pidempi.',
   },
   Ucayali: {
-    nimi: 'Ucayali', tarkeys: 2, wiki: 'Ucayalijoki',
+    nimi: 'Ucayali', tarkeys: 3, wiki: 'Ucayalijoki',
     selitys: 'Ucayali on 1 960 kilometriä pitkä ja muodostaa Marañónin kanssa Amazonin alun Nautan luona Perussa. Yläjuoksullaan sitä kutsutaan Urubambaksi.',
   },
   Marañón: {
-    nimi: 'Marañón', tarkeys: 2, wiki: 'Marañón',
+    nimi: 'Marañón', tarkeys: 3, wiki: 'Marañón',
     selitys: 'Marañón alkaa 5 800 metrin korkeudelta Andien jäätiköltä ja virtaa 1 600 kilometriä ennen yhtymistään Ucayaliin. Koskien ja putousten takia yläjuoksu ei kelpaa veneille.',
   },
   Godavari: {
-    nimi: 'Godavari', tarkeys: 2, wiki: 'Godavari',
+    nimi: 'Godavari', tarkeys: 3, wiki: 'Godavari',
     selitys: 'Godavari on 1 465 kilometrillään yksi Intian pisimmistä joista ja virtaa Länsi-Ghateilta Bengalinlahteen. Se on hindujen pyhiä jokia, ja sen rannoilla on useita pyhiinvaelluskohteita.',
   },
   Krishna: {
-    nimi: 'Krishna', tarkeys: 2, wiki: 'Krishna (joki)',
+    nimi: 'Krishna', tarkeys: 3, wiki: 'Krishna (joki)',
     selitys: 'Krishnan lähde on vain 64 kilometrin päässä Intian länsirannikosta, mutta joki virtaa 1 300 kilometriä itään Bengalinlahteen. Vedenjakaja kulkee siis aivan Arabianmeren tuntumassa.',
   },
   Narmada: {
-    nimi: 'Narmada', tarkeys: 2, wiki: 'Narmada',
+    nimi: 'Narmada', tarkeys: 3, wiki: 'Narmada',
     selitys: 'Narmada on 1 312 kilometriä pitkä ja virtaa poikkeuksellisesti länteen Arabianmerelle, kun useimmat Intian suuret joet virtaavat itään. Se on yksi hindujen pyhistä joista.',
   },
   Sutlej: {
-    nimi: 'Sutlej', tarkeys: 2, wiki: 'Sutlej',
+    nimi: 'Sutlej', tarkeys: 3, wiki: 'Sutlej',
     selitys: 'Sutlej alkaa 4 600 metrin korkeudelta Tiibetistä ja on pisin niistä viidestä joesta, joiden mukaan Punjab eli viiden virran maa on nimetty. Se yhtyy lopulta Indukseen Pakistanissa.',
   },
   Kasai: {
-    nimi: 'Kasai', tarkeys: 2, wiki: 'Kasai (joki)',
+    nimi: 'Kasai', tarkeys: 3, wiki: 'Kasai (joki)',
     selitys: 'Kasai alkaa Angolasta ja yhtyy Kongojokeen Kwamouthissa lähellä Kinshasaa. Se on osan matkaa Angolan ja Kongon demokraattisen tasavallan rajajoki.',
   },
   Ubangi: {
-    nimi: 'Ubangi', tarkeys: 2, wiki: 'Ubangi',
+    nimi: 'Ubangi', tarkeys: 3, wiki: 'Ubangi',
     selitys: 'Ubangi on 2 250 kilometriä pitkä ja Kongon suurin oikeanpuoleinen sivujoki. Se toimii Kongon kahden tasavallan ja Keski-Afrikan tasavallan välisenä rajana.',
   },
   Kama: {
-    nimi: 'Kama', tarkeys: 2, wiki: 'Kama',
-    selitys: 'Kama on 1 805 kilometriä pitkä Volgan sivujoki, joka tuo Uralin lännenpuoleiset vedet pääuomaan. Sitä pitkin avautui 1500-luvulla venäläisten reitti Siperiaan.',
+    nimi: 'Kama', tarkeys: 3, wiki: 'Kama',
+    selitys: 'Kama on 1 805 kilometriä pitkä Volgan sivujoki, joka tuo Uralin länsirinteiden vedet pääuomaan. Sitä pitkin kulki 1500-luvun lopulla venäläisten reitti Uralin yli Siperiaan.',
   },
   Petšora: {
-    nimi: 'Petšora', tarkeys: 2, wiki: 'Petšora',
+    nimi: 'Petšora', tarkeys: 3, wiki: 'Petšora',
     selitys: 'Petšora virtaa 1 809 kilometriä Uralin länsipuolelta Barentsinmereen. Sen valuma-alue on Suomea suurempi, ja alue tunnetaan hiili- ja öljyesiintymistään.',
   },
   Vienanjoki: {
@@ -406,14 +406,14 @@ const JOKINIMET = {
     selitys: 'Vienanjoki eli Severnaja Dvina on 744 kilometriä pitkä ja laskee Vienanlahteen, jonka rannalla ovat Arkangeli ja Severodvinsk. Arkangeli oli 1500–1700-luvuilla Venäjän ainoa merisatama.',
   },
 
-  // --- 3: pienemmät ja paikalliset ---
+  // --- pienemmät ja paikalliset, kaikki tärkeys 3 ---
   Aldan: {
     nimi: 'Aldan', tarkeys: 3, wiki: 'Aldan (joki)',
     selitys: 'Aldan on 2 273 kilometriä pitkä ja Lenan toiseksi pisin sivujoki. Siitä 1 753 kilometriä kelpaa laivaliikenteelle, mikä on Jakutiassa merkittävä tieyhteys.',
   },
   Vilyuy: {
     nimi: 'Viljui', tarkeys: 3, wiki: 'Viljui',
-    selitys: 'Viljui on 2 650 kilometrillään Lenan pisin sivujoki. Sen latvoilla ovat Jakutian timanttikentät.',
+    selitys: 'Viljui on 2 650 kilometrillään Lenan pisin sivujoki. Sen valuma-alueella ovat Jakutian timanttikaivokset.',
   },
   Olenjok: {
     nimi: 'Olenjok', tarkeys: 3, wiki: 'Olenjok',
@@ -505,7 +505,7 @@ const JOKINIMET = {
   },
   Nelson: {
     nimi: 'Nelsonjoki', tarkeys: 3, wiki: 'Nelsonjoki',
-    selitys: 'Nelsonjoki on 644 kilometriä pitkä ja johtaa Winnipegjärven vedet Hudsoninlahteen. Sen suulla toimi Hudson’s Bay Companyn kauppapaikka York Factory.',
+    selitys: 'Nelsonjoki on 644 kilometriä pitkä ja johtaa Winnipegjärven vedet Hudsoninlahteen. Sen suun tuntumassa toimi Hudson’s Bay Companyn kauppapaikka York Factory.',
   },
   Slave: {
     nimi: 'Slave', tarkeys: 3, wiki: 'Slave (joki)',
@@ -545,7 +545,7 @@ const JOKINIMET = {
   },
   Mamoré: {
     nimi: 'Mamoré', tarkeys: 3, wiki: 'Mamoré River',
-    selitys: 'Mamoré virtaa Bolivian Andeilta pohjoiseen ja muodostaa Madre de Diosin kanssa Madeirajoen. Se on Bolivian sisämaan tärkeimpiä vesireittejä.',
+    selitys: 'Mamoré virtaa Bolivian Andeilta pohjoiseen ja on Madeiran, Amazonin pisimmän sivujoen, latvahaara. Se on Bolivian sisämaan tärkeimpiä vesireittejä.',
   },
   Paranaíba: {
     nimi: 'Paranaíba', tarkeys: 3, wiki: 'Paranaíba River',
@@ -557,7 +557,7 @@ const JOKINIMET = {
   },
   Neuquén: {
     nimi: 'Neuquén', tarkeys: 3, wiki: 'Neuquén River',
-    selitys: 'Neuquén on Limayn jälkeen Neuquénin maakunnan toiseksi tärkein joki Argentiinan Patagoniassa. Sen altaan kalkkikivet ovat kuuluisia dinosaurusfossiileistaan.',
+    selitys: 'Neuquén on Limayn jälkeen maakuntansa toiseksi tärkein joki Argentiinan Patagoniassa, ja yhdessä ne muodostavat Río Negron. Altaan kerrostumat ovat runsasfossiilisia.',
   },
   Lachlan: {
     nimi: 'Lachlan', tarkeys: 3, wiki: 'Lachlan River',
@@ -645,7 +645,7 @@ const JARVINIMET = {
   },
   Vänern: {
     nimi: 'Vänern', tarkeys: 3, wiki: 'Vänern',
-    selitys: 'Vänern on Ruotsin ja Euroopan unionin suurin järvi sekä Euroopan kolmanneksi suurin. Sen laskujoki Göta älv vie vedet Göteborgin kohdalla Pohjanmerelle.',
+    selitys: 'Vänern on Ruotsin ja Euroopan unionin suurin järvi sekä Euroopan kolmanneksi suurin. Sen laskujoki Göta älv vie vedet Kattegattiin Göteborgin kohdalla.',
   },
   'Lake Balkhash': {
     nimi: 'Balkašjärvi', tarkeys: 3, wiki: 'Balkašjärvi',
@@ -927,7 +927,18 @@ if (kuiva) process.exit(0);
 
 /* --- kirjoitus --- */
 
-const rivi = (r) => '  ' + JSON.stringify(r) + ',';
+/*
+ * Rivi JavaScriptin oliokirjoitusasussa, ei JSONina.
+ *
+ * Ero on käytännöllinen: tools/tarkista-wikit.mjs etsii paketeista
+ * hahmoa `wiki: '...'` ja tarkistaa jokaisen otsikon Wikipediasta.
+ * JSONin `"wiki":"..."` jäisi sen ulkopuolelle, ja kuollut linkki
+ * paljastuisi vasta pelaajalle tyhjänä Lue lisää -ikkunana.
+ */
+const lainaus = (arvo) => `'${String(arvo).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+const rivi = (r) => `  { avain: ${lainaus(r.avain)}, nimi: ${lainaus(r.nimi)}, `
+  + `tarkeys: ${r.tarkeys}, pituus: ${r.pituus}, wiki: ${lainaus(r.wiki)},\n`
+  + `    selitys: ${lainaus(r.selitys)} },`;
 
 const teksti = `// Vesistöjen nimet maailmankartalle: joet ja järvet.
 //
