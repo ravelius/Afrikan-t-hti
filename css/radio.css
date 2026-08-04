@@ -61,8 +61,15 @@
    * seisoo pergamenttikartan päällä (--paper #efdcb4), ja kylläinen
    * vihreä hyppäsi siitä esiin muovilelun tavoin.
    */
-  --radio-lcd: #a4ad6c;
-  --radio-lcd-muste: #1f2a16;
+  /*
+   * Näytön lasi (omistajan toive 4.8.2026: tyyliin sopivampi näyttö).
+   * Vihreä nestekidesävy oli taskulaskimen, ei putkiradion. Nyt lasi on
+   * syvän tumma, lämpimään ruskeaan taittava — kuin sammunut asteikko-
+   * lasi, jonka takaa hehkulamppu syttyy — ja pisteet hehkuvat meri-
+   * pihkan värisinä (js/linssit/radio.js NAYTON_MUSTE '#f2c05e').
+   */
+  --radio-lcd: #221204;
+  --radio-lcd-muste: #f2c05e;
   --radio-punainen: var(--mark, #b03a2b);
 
   position: fixed;
@@ -583,10 +590,14 @@
   border-radius: 3px;
   overflow: hidden;
   background-color: var(--radio-lcd);
+  /* Rasteri on tummalla lasilla himmeän lämmin, ei tumma: musta viiva
+     mustalla lasilla olisi näkymätön. Heijastus on kevyt — pimeä lasi
+     kiiltää vähemmän kuin vaalea. */
   background-image:
-    repeating-linear-gradient(90deg, rgba(31, 42, 22, 0.10) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
-    repeating-linear-gradient(0deg, rgba(31, 42, 22, 0.10) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(0, 0, 0, 0.14));
+    repeating-linear-gradient(90deg, rgba(242, 192, 94, 0.05) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    repeating-linear-gradient(0deg, rgba(242, 192, 94, 0.05) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    radial-gradient(120% 140% at 50% 0%, rgba(255, 214, 138, 0.10), rgba(0, 0, 0, 0) 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(0, 0, 0, 0.22));
   /* Aukko on kotelossa reikä: reuna on syvennys, ei kohouma. */
   box-shadow:
     inset 0 2px 5px rgba(0, 0, 0, 0.6),
@@ -690,14 +701,26 @@
  * sen lasi.
  */
 .radio-naytto[data-oma] {
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.20), rgba(0, 0, 0, 0.16));
+  background-image:
+    radial-gradient(120% 140% at 50% 0%, rgba(255, 214, 138, 0.10), rgba(0, 0, 0, 0) 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.20));
+}
+
+/* Hehku: palavat pisteet valaisevat lasia ympäriltään kuin hehkulanka.
+   Yksi suodatin koko näytölle on halpa — se lasketaan kerran per kehys
+   koostovaiheessa, ei per piste. Sammuneet pisteet hehkuvat peittonsa
+   verran eli tuskin lainkaan. */
+.radio-naytto[data-oma] svg {
+  filter: drop-shadow(0 0 4px rgba(242, 183, 90, 0.45));
 }
 
 /* Sammunut näyttö on himmeä, ei musta: nestekidelasi ei sammu, se vain
    lakkaa näyttämästä. */
 .radiosoitin[data-tila="sammuksissa"] .radio-naytto { filter: saturate(0.55) brightness(0.86); }
 .radiosoitin[data-tila="sammuksissa"] .radio-naytto-vara { opacity: 0.55; }
-.radiosoitin[data-tila="virhe"] .radio-naytto { background-color: #b1a45b; }
+/* Virhetilassa lasi punertuu kuin ylikuumennut putki — tummalla
+   lasilla kellastuminen ei erottuisi. */
+.radiosoitin[data-tila="virhe"] .radio-naytto { background-color: #3a1408; }
 
 /* --- merkkivalo --------------------------------------------------- */
 

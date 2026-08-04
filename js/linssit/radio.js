@@ -100,7 +100,14 @@ const NAYTON_RIVIT = 2;
  * (--radio-lcd-muste) kirjaimellisena heksana, koska irrallinen SVG ei
  * näe var()-muuttujia.
  */
-const NAYTON_MUSTE = '#1f2a16';
+/*
+ * Näytön hehkuväri. Meripihkanvärinen valopiste tummalla lasilla
+ * (omistajan toive 4.8.2026: näytöstä visuaalisesti tyyliin sopivampi):
+ * vihreä nestekidelasi oli 1980-lukua, mutta lämmin keltainen hehku on
+ * juuri se, miltä putkiradion valaistu asteikkolasi näyttää pimeässä.
+ * Lasi itse on css/radio.css:n --radio-lcd; tämä on pisteen väri.
+ */
+const NAYTON_MUSTE = '#f2c05e';
 
 /*
  * Radion aloitusäänenvoimakkuus.
@@ -1207,7 +1214,36 @@ function pysyvaLukija() {
   return () => {
     const virta = soiva;
     if (!virta) return 0;
-    if (virta.jaljitelmaan) return virta.jaljitelmaan();
+    if (virta.jaljitelmaan) {
+      /*
+       * PALUU MITATTUUN, KERRAN. Jäljitelmään voidaan pudota myös
+       * ohimenevästä syystä: iPadilla AudioContext herää joskus vasta
+       * sekuntien päästä eleestä, ja siihen asti analysaattori antaa
+       * nollia — vahti ehtii vaihtaa jäljitelmään, vaikka mittaus
+       * alkaisi kohta toimia. Siksi mitattua koetetaan jäljitelmän
+       * rinnalla kahden sekunnin välein, ja jos se antaa oikean
+       * lukeman kolmesti peräkkäin, siihen palataan. Paluu tehdään
+       * kerran eikä sitä peruta samoin perustein kuin menokaan:
+       * sahaaminen näkyisi neulassa nykimisenä. Kynnys 0,05 on
+       * selvästi kohinan yllä, joten kolme peräkkäistä osumaa ei
+       * synny vuotavasta nollasta.
+       */
+      const lukija = virta.mittarinLukija;
+      if (lukija && kello() - (virta.koeteltu ?? 0) > 2000) {
+        virta.koeteltu = kello();
+        if (lukija() > 0.05) {
+          virta.osumat = (virta.osumat ?? 0) + 1;
+          if (virta.osumat >= 3) {
+            virta.jaljitelmaan = null;
+            virta.nollasta = 0;
+            return lukija();
+          }
+        } else {
+          virta.osumat = 0;
+        }
+      }
+      return virta.jaljitelmaan();
+    }
     const lukija = virta.mittarinLukija;
     if (!lukija) return 0;
     const arvo = lukija();

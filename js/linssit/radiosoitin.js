@@ -1261,8 +1261,8 @@ export function teeRadiosoitin({
   // olisi yksi lisälataus siitä, mikä on kaksi toistuvaa gradienttia.
   const kaiutin = osa('div', 'radio-kaiutin');
   kaiutin.setAttribute('aria-hidden', 'true');
-  // Kilpi on soittimen valmistajan nimi, ja se on pelin oma nimi.
-  kaiutin.appendChild(osa('span', 'radio-kilpi', 'UNOHDETTU AARRE'));
+  // Kilpi on soittimen valmistajan nimi, ja se on pelin lyhyt nimi.
+  kaiutin.appendChild(osa('span', 'radio-kilpi', 'MATKAKIRJA'));
   kotelo.appendChild(kaiutin);
 
   // --- keskiö: näyttö, asteikko ja kanavan tiedot ----------------------

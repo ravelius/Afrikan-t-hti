@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 264, teksti: 'Radion näyttö hehkuu meripihkaa, ei laskinvihreää' },
+  { v: 264, teksti: 'VU palaa jäljitelmästä aitoon mittaukseen' },
+  { v: 264, teksti: 'Neljä asemaa vaihdettu: mittari näkee lähetyksen' },
   { v: 263, teksti: 'Historia sai oman sivunsa kuten muutkin aiheet' },
   { v: 262, teksti: 'Ylärivin nimilogo on nyt piirretty kuva' },
   { v: 261, teksti: 'Radio pysyy yhdellä rivillä isolla ruudulla' },
