@@ -38,12 +38,16 @@
  *      edellinen valinta, ei koko historiaa: viidellä äänellä pelkkä
  *      tasajakauma osuisi samaan noin joka viides kerta, ja juuri se
  *      toisto omistaja pyysi pois.
- *   3. Aloituskohtaa EI arvota. Se on hyvä keino pitkälle äänitteelle
- *      (js/media.js tuntee merkinnän '#alku=20&voima=1.5'), mutta nämä
- *      pätkät ovat 7–9 sekuntia eli lyhyempiä kuin viritys pisimmillään.
- *      Keskeltä aloittaminen katkaisisi silmukan sauman ja jättäisi
- *      pätkästä kuulumatta juuri sen verran kuin arvottiin. Vaihtelu
- *      tulee tiedoston valinnasta, ei aloituskohdasta.
+ *   3. Aloituskohta arvotaan, MUTTA VAIN SILMUKASSA. Tämä ohje oli
+ *      alun perin päinvastainen, ja peruste oli oikea väärästä
+ *      oletuksesta: kertasoittona pätkä on 7–9 sekuntia eli lyhyempi kuin
+ *      viritys pisimmillään (12 s), joten keskeltä aloittava kertasoitto
+ *      loppuisi kesken. Silmukkana sitä ongelmaa ei ole. Toisto kiertää
+ *      lopusta alkuun juuri sen sauman kautta, joka on ristihäivytetty,
+ *      eikä arvottu aloituskohta tee muuta kuin siirtää sitä hetkeä,
+ *      jolloin sauma ohitetaan. Näin viisi äänitettä riittää siihen,
+ *      ettei sama viritys toistu koskaan samanlaisena.
+ *      Toteutus: js/linssit/viritin.js teeNauhaviritin.
  *   4. Äänet on normalisoitu samaan tasoon (RMS −20 dB), joten arvonta ei
  *      kuulu voimakkuuden hyppäyksenä. Älä säädä niitä erikseen.
  *
