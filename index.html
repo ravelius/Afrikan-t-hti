@@ -282,13 +282,18 @@
            joilla on lähde js/packs/uutislahteet.js:ssä JA omistajan
            uutisvälitys on otettu käyttöön — ks. tools/uutisproxy/).
            Napautus avaa uutisen pelin kirjasimilla. -->
-      <div id="arrival-uutiset" class="arrival-uutiset" hidden>
-       <p class="uutiset-nimio"></p>
-       <div class="uutiset-lista"></div>
+      <!-- Oikea palsta lehtitaitossa: uutiset ja mediarivi samassa
+           kääreessä, jotta ne istuvat kiinni toisissaan — erillisinä
+           ruudukon riveinä vasemman palstan korkeudet työnsivät
+           mediarivin irti otsikoista. -->
+      <div id="arrival-oikea" class="maa-oikea">
+       <div id="arrival-uutiset" class="arrival-uutiset" hidden>
+        <p class="uutiset-nimio"></p>
+        <div class="uutiset-lista"></div>
+       </div>
+       <!-- Mediarivi: maan radio ja tv-kanavan suora lähetys. -->
+       <div id="arrival-media" class="maa-media" hidden></div>
       </div>
-      <!-- Mediarivi: maan radio ja tv-kanavan suora lähetys (lehdessä
-           uutisten alla oikeassa palstassa, jossa on tilaa). -->
-      <div id="arrival-media" class="maa-media" hidden></div>
      </div>
     </div>
     <!--
