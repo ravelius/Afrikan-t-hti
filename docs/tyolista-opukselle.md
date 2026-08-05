@@ -5282,6 +5282,27 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v287 — Laukun kahva laukun ulkopuolelle (5.8.2026)
+
+Omistaja: *"Kahva pitäisi olla laukun (rajan) ulkopuolella,
+läpinäkyvänä kartan päällä."*
+
+v282 piirsi kahvan kortin sisään, koska kortilla on `overflow: hidden`
+(kulmavahvikkeet vaativat sen) eikä ulos roikkuva kaari olisi näkynyt.
+Lopputulos ei ollut kahva vaan kortille piirretty KUVA kahvasta.
+
+Nyt kahva on kortin sisar ja asemoitu sen alapuolelle. `<dialog>` on
+auki ollessaan `position: absolute`, joten se kelpaa sijoituskehykseksi
+sellaisenaan, ja `.dialog`illa on jo `overflow: visible` — muutos on
+siis rakenteen siirto eikä uusi kerros.
+
+Kaaren silmukan läpi näkyy kartta, ja juuri se tekee siitä esineen eikä
+kuviota. Mitattu: kahva alkaa tarkalleen kortin alareunasta (0 px) ja
+on vaakasuunnassa keskellä (poikkeama 0 px).
+
+`pointer-events: none`, jotta napautus kahvan kohdalla menee läpi
+dialogille ja sulkee laukun kuten muukin ulkopuoli.
+
 ## v285 — Laukku aukeaa palkista, isommat varustekuvakkeet (5.8.2026)
 
 ### Sulje pois, napautus ulos tilalle
