@@ -27,6 +27,12 @@
 > Ennen uudelleenjulkaisua popup näyttää vain syötteen lyhyen
 > kuvauksen — mikään ei mene rikki.
 
+> **Päivitys 6.8.2026 (Espanja/Madrid):** sallittuihin lisättiin
+> `https://www.20minutos.es/` (Espanjan uutislähde). **Julkaise worker
+> uudelleen: Edit code → liitä tuore `worker.js` → Deploy.** Siihen
+> asti Espanjan lehden uutisosio on piilossa; muut maat toimivat
+> ennallaan.
+
 Lehden maaosaston uutisotsikot tarvitsevat pienen välityspalvelimen,
 koska uutissivustot eivät salli selaimen hakea RSS-syötteitään suoraan
 toiselta sivustolta (CORS). Välitys on ilmainen Cloudflare Worker —

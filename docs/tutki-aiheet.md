@@ -23,8 +23,10 @@ matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
   oikealta vasemmalle kirjoitettaville kielille), Britannia ✅
   (Lontoo, v305: kansi + sää + kohtaaminen + BBC + Sky News —
   maa-aiheita EI tehty, koska Lontoolla on omat 9 aihetta jotka
-  kantavat lehden sisäsivut), sitten Lontoon lentokohteet eli pelin
-  ensimmäiset matkakohteet: Espanja (Madrid), Saksa (Berliini) ja
+  kantavat lehden sisäsivut), Espanja ✅ (Madrid, v307: kansi
+  Goya-galleriineen + 5 maa-aihetta, joita myös Barcelona ja Granada
+  käyttävät, + 20minutos + RTVE Noticias), sitten loput Lontoon
+  lentokohteet eli pelin ensimmäiset matkakohteet: Saksa (Berliini) ja
   Ruotsi (Tukholma) — ja niiden perään Ranska, USA, Japani,
   Brasilia, Australia. Valmiit maakohtaiset promptit:
   docs/tyolista-opukselle.md, "Lehtimaiden promptit".
@@ -271,7 +273,11 @@ vaarin. Tervehdys päättyy aina kutsuun näyttää maailmantuntemus.
   MyMemory-käännöksen lähdekieli.
 - Testaa myös YKSI ARTIKKELISIVU: `[itemprop="articleBody"]` tai
   `<article>` löytyy ja sisältää >60 merkin kappaleita, ja sivulla
-  on `og:image`.
+  on `og:image`. **Tämä on eri testi kuin syötteen testi, ja moni
+  lähde läpäisee vain ensimmäisen:** Espanjassa El Paísin syöte
+  aukesi (142 juttua) mutta artikkelisivut palauttivat 403, jolloin
+  popupiin olisi jäänyt vain syötteen parin lauseen kuvaus (6.8.2026,
+  20minutos läpäisi molemmat).
 - Lisää lähteen etuliite `tools/uutisproxy/worker.js` SALLITUT-
   listaan ja kirjaa OHJE.md:hen uusi päivitysmerkintä. Muistuta
   PR:ssä ja vastauksessa: OMISTAJAN pitää julkaista worker uudelleen

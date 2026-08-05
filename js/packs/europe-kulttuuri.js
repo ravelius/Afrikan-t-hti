@@ -1056,61 +1056,14 @@ export const EUROPE_KULTTUURI = {
   },
 
   madrid: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Chotis tanssitaan yhden laatan päällä',
-        tiedosto: 'Parejas bailando Chotis - Madrid 01.jpg',
-        teksti: 'Chotis tuli Madridiin 1850 Keski-Euroopasta, mutta muuttui '
-                  + 'perillä omanlaisekseen. Säännön mukaan mies ei siirry '
-                  + 'laatalta, jolla seisoo: hän pyörii paikallaan, ja nainen '
-                  + 'kiertää hänen ympärillään. Säestää organillo, kadulla '
-                  + 'työnnettävä kampiurut. Tanssi kuuluu verbena-juhliin, '
-                  + 'joista suurin on San Isidro 15. toukokuuta.',
-        selite: 'Pareja tanssimassa chotisia Plaza de Santa Cruzilla '
-                  + 'Madridissa. Miehillä on chulapon lakki ja liivi, naisilla '
-                  + 'pitkä pilkullinen mekko, huivi hartioilla ja neilikka '
-                  + 'hiuksissa.',
-        lahde: 'Javier Perez Montes, Wikimedia Commons (CC BY-SA 4.0)',
-        musiikki: 'https://music.apple.com/fi/search?term=chotis%20madrile%C3%B1o',
-        musiikkiNimi: 'Chotis-musiikkia Apple Musicissa',
-        musiikkiNayte: 'https://archive.org/download/granvi30g/AE2784.mp3',
-        musiikkiNayteNimi: 'La Gran Vía -zarzuela — Emilio Sagi-Barba, PD',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Cocido kaadetaan pöytään kolmesti',
-        tiedosto: 'Cocido madrileño.jpg',
-        teksti: 'Cocido madrileño hautuu tuntikausia yhdessä padassa mutta '
-                  + 'syödään erissä. Ensin tulee liemi ohuine nuudeleineen, '
-                  + 'sitten kikherneet ja vihannekset ja viimeisenä lihat: '
-                  + 'naudanrintaa, kanaa, chorizoa ja verimakkaraa. Eriä '
-                  + 'sanotaan nimellä vuelco, kaato, ja perinteisin tapa on '
-                  + 'kaataa pata lautaselle kolmeen kertaan.',
-        selite: 'Cocido madrileño tarjoiltuna kahdessa erässä: edessä '
-                  + 'liemi, takana kikherneet, peruna, porkkana ja padan lihat. '
-                  + 'Kikherneet on liotettu edellisenä iltana koko yön.',
-        lahde: 'Smnt, Wikimedia Commons (CC BY-SA 4.0)',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Kaksitoista rypälettä kellonlyönnillä',
-        tiedosto: 'Ensayo general ....las doce campanadas del ilustre y solemne reloj de la Puerta del Sol !!!.jpg',
-        teksti: 'Uudenvuodenyönä espanjalaiset syövät kaksitoista '
-                  + 'rypälettä, yhden jokaisella kellonlyönnillä. Kello on '
-                  + 'Puerta del Solin vanhan postitalon tornissa, ja lyönnit '
-                  + 'tulevat parin sekunnin välein — koko urakka on ohi '
-                  + 'puolessa minuutissa. Tapa levisi koko maahan vuoden 1909 '
-                  + 'jälkeen, kun Alicanten viininviljelijöillä oli '
-                  + 'poikkeuksellisen suuri sato myytävänä.',
-        selite: 'Puerta del Sol 30. joulukuuta: aukiolla harjoitellaan '
-                  + 'uudenvuodenyötä etukäteen, ja tuhannet ihmiset syövät '
-                  + 'rypäleensä vuorokautta liian aikaisin. Taustalla '
-                  + 'valaistuna Real Casa de Correosin kellotorni.',
-        lahde: 'jacinta lluch valero, Wikimedia Commons (CC BY-SA 2.0)',
-        wiki: 'Puerta del Sol',
-      },
-    ],
+    /*
+     * Madrid sai kategoriat (kulttuuri-kategoriat.js + maa-kategoriat
+     * ESP, 6.8.2026), jotka korvaavat litteät nostot Tutki-ikkunassa.
+     * Ainutlaatuinen sisältö siirrettiin sinne: chotis
+     * musiikkilinkkeineen kaupungin kanteen, cocido ja uudenvuoden
+     * rypäleet Espanjan Ruoka-aiheeseen. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Mikä on madridilaisen chotis-tanssin tunnetuin sääntö?',
       options: [
@@ -1123,7 +1076,7 @@ export const EUROPE_KULTTUURI = {
       fact: 'Sanotaan, että chotis tanssitaan yhden laatan päällä: mies '
               + 'pyörii paikallaan ja nainen kiertää hänen ympärillään. Tanssi '
               + 'tuli Madridiin 1850 Keski-Euroopasta ja sai kaupungissa oman '
-              + 'muotonsa.',
+              + 'muotonsa — sama nosto on lehden kannessa.',
     },
   },
 

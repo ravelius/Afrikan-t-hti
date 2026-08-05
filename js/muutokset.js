@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 307, teksti: 'Madrid sai oman lehden: kansi ja Espanja-osasto' },
+  { v: 307, teksti: 'Goyan Madrid-teokset galleriana' },
+  { v: 307, teksti: 'Espanjan uutiset, RTVE:n tv ja kirpputorikauppias' },
+  { v: 307, teksti: 'Kuuntele-nappi ei enää valu puhelimen reunan yli' },
   { v: 306, teksti: 'Kuva yrittää uudelleen, jos lataus epäonnistui' },
   { v: 305, teksti: 'Lontoo sai oman lehden: kansi ja Britannia' },
   { v: 305, teksti: 'Canaletton Lontoo-teokset galleriana' },

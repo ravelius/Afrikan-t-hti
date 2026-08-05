@@ -26,6 +26,9 @@ const SALLITUT = [
   'https://www.bbc.com/',
   // Egyptin uutislähde (Kairon lehti, 5.8.2026).
   'https://www.youm7.com/',
+  // Espanjan uutislähde (Madridin lehti, 6.8.2026): syöte ja
+  // artikkelisivut ovat samalla isäntänimellä.
+  'https://www.20minutos.es/',
   // Tv-kanavan live-sivu: siitä luetaan kulloisenkin suoran
   // lähetyksen tunniste, koska YouTuben kanavaupotus on epävakaa
   // etenkin iPadilla (5.8.2026).

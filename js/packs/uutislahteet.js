@@ -42,6 +42,22 @@ export const UUTISLAHTEET = {
     kieli: 'it',
     syote: 'https://www.ansa.it/sito/ansait_rss.xml',
   },
+  /*
+   * 20minutos on Espanjan luetuimpia uutissivustoja ja ilmainen.
+   *
+   * El País kokeiltiin ensin (omistajan ehdotus): SYÖTE aukeaa, mutta
+   * ARTIKKELISIVUT palauttavat 403 botti-estosta (testattu 6.8.2026),
+   * jolloin popupiin jäisi vain syötteen parin lauseen kuvaus. RTVE:n
+   * syötteen linkit osoittavat vanhentuneisiin osoitteisiin, jotka
+   * sekin palauttaa 403:na. 20minutoksen syöte (190 juttua) ja
+   * artikkelisivut aukeavat molemmat: <article> jäsentyy, leipäteksti
+   * poimiutuu ja og:image löytyy.
+   */
+  ESP: {
+    nimi: '20minutos',
+    kieli: 'es',
+    syote: 'https://www.20minutos.es/rss/',
+  },
 };
 
 /*
@@ -84,5 +100,15 @@ export const TV_KANAVAT = {
     livesivu: 'https://www.youtube.com/@euronewsit/live',
     upotus: 'https://www.youtube.com/embed/live_stream'
       + '?channel=UC1mX9vuLOYf8fhaXS_KcDRg&autoplay=1',
+  },
+  // RTVE Noticias on Espanjan yleisradion uutiskanava, joka lähettää
+  // YouTubeen ympäri vuorokauden. Kanavatunnus varmistettu YouTuben
+  // omasta kanavasyötteestä (feeds/videos.xml palauttaa nimen
+  // "RTVE Noticias" tälle tunnukselle, 6.8.2026).
+  ESP: {
+    nimi: 'RTVE Noticias',
+    livesivu: 'https://www.youtube.com/@RTVENoticias/live',
+    upotus: 'https://www.youtube.com/embed/live_stream'
+      + '?channel=UC7QZIf0dta-XPXsp9Hv4dTw&autoplay=1',
   },
 };
