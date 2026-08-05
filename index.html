@@ -72,9 +72,11 @@
         width ja height ovat tiedoston omat mitat, jotta selain varaa
         logolle tilan ennen latausta eikä ylärivi hyppää.
       -->
-      <h1 class="brand" aria-label="Matkakirja – unohdettu aarre"><img
+      <h1 class="brand"><button id="brand-btn" class="brand-nappi" type="button"
+        aria-label="Matkakirja – unohdettu aarre: tekijätiedot ja lähteet"
+        title="Tekijätiedot ja lähteet"><img
         class="brand-kuva" src="assets/logo.png" width="720" height="176"
-        alt="" aria-hidden="true" decoding="async"></h1>
+        alt="" aria-hidden="true" decoding="async"></button></h1>
       <!-- Kukkaro, päivämäärä ja matkalaukku ovat sama nappi (omistajan
            toive): rahat ja tavarat ovat samassa laukussa, joten pilleriä
            napauttamalla se aukeaa. -->
@@ -356,11 +358,9 @@
     <div id="passport-grid" class="passport-grid"></div>
     <p class="passport-count">Tavarat</p>
     <div id="passport-finds" class="passport-finds"></div>
-    <!-- Laukun alalaita: pelin nimi vie tekijätietoihin ja lähdeluetteloon
-         (omistajan toive). Sulje jää alimmaksi, kuten muissakin ikkunoissa. -->
-    <p class="laukku-nimikilpi">
-      <button id="laukku-lahteet" class="laukku-lahteet-linkki" type="button">Matkakirja © 2026</button>
-    </p>
+    <!-- Nimikilpi siirtyi laukusta ylärivin logoon (omistajan toive
+         5.8.2026): logoa napauttamalla se avautuu isompana, ja saman
+         ikkunan alla ovat tekijätiedot ja lähdeluettelo. -->
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
     </form>
@@ -372,7 +372,12 @@
        linkistä; sisältö tulee js/lahteet.js:stä. -->
   <dialog id="lahteet-dialog" class="dialog">
    <div class="dialog-card lahteet-card" tabindex="-1" autofocus>
-    <h2 id="lahteet-otsikko">Matkakirja ja unohdettu aarre</h2>
+    <!-- Otsikko on sama logo isompana: pelaaja napautti sitä ylärivillä,
+         ja ikkuna avautuu siitä mitä hän napautti. Kuvassa on jo pelin
+         nimi, joten otsikkoteksti on saavutettavuutta varten alt:issa. -->
+    <h2 id="lahteet-otsikko" class="lahteet-nimikilpi"><img
+      class="lahteet-logo" src="assets/logo.png" width="720" height="176"
+      alt="Matkakirja ja unohdettu aarre" decoding="async"></h2>
     <div id="lahteet-sisus" class="lahteet-sisus"></div>
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>

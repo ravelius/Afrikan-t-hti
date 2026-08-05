@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 272, teksti: 'Logo avaa tekijätiedot: nimikilpi pois laukusta' },
   { v: 271, teksti: 'Venetsian Tutki-etusivu taittuu paikallislehdeksi' },
   { v: 271, teksti: 'Canaletton teoksia voi selata galleriana' },
   { v: 271, teksti: 'Lehdessä minitehtävä: vastaus löytyy sivulta' },
