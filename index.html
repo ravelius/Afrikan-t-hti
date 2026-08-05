@@ -81,7 +81,7 @@
       <button id="turn-pill" class="turn-pill" type="button"
               title="Isoisän matkalaukku: passi, leimat ja tavarat"></button>
       <div class="topbar-actions">
-        <!-- Taikalasit: kartan linssivalitsin. Kotelo on piilossa, kunnes
+        <!-- Varusteet: kartan linssivalitsin. Kotelo on piilossa, kunnes
              pelaaja löytää ensimmäisen linssin — löytämätöntä ei näytetä
              edes harmaana, tai valikko kertoisi mitä on vielä hakematta.
              Rivit rakentaa js/ui.js, koska valikoima riippuu omistuksesta
@@ -105,16 +105,16 @@
             <span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg></span>
           </button>
           <div id="paavalikko" class="paavalikko" hidden>
-            <!-- Taikalasit ja kertojan äänet siirtyivät ylariviltä tänne
+            <!-- Varusteet ja kertojan äänet siirtyivät ylariviltä tänne
                  (omistajan toive 4.8.2026). Molemmilla on oma alivalikko,
                  joten ne EIVÄT sulje päävalikkoa napautuksesta — se on
                  poikkeus, joka on koodattu erikseen (js/main.js). Kotelo
                  pysyy mukana, koska alivalikko asemoituu sen suhteen. -->
             <div id="linssi-kotelo" class="linssi-kotelo" hidden>
-              <button id="linssi-btn" class="ghost" type="button" title="Taikalasit"
+              <button id="linssi-btn" class="ghost" type="button" title="Varusteet"
                       aria-haspopup="true" aria-expanded="false" aria-controls="linssi-valikko">
                 <span class="viiva-ikoni" id="linssi-ikoni"></span>
-                <span>Taikalasit</span>
+                <span>Varusteet</span>
               </button>
               <div id="linssi-valikko" class="linssi-valikko" hidden></div>
             </div>

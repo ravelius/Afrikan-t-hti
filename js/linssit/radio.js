@@ -1212,6 +1212,17 @@ export function soitaKaupunki(cityId) {
   const soiJo = soiva?.cityId === cityId && tila.soitin.tila !== 'virhe';
   if (soiJo) return tilanne();
 
+  /*
+   * Uuden kaupungin valitseminen on pyyntö KUULLA se, joten tauko
+   * väistyy. Ilman tätä pelaaja voisi jäädä ihmettelemään mykkää
+   * laitetta, joka näyttää virittävän uutta asemaa.
+   */
+  if (tauolla) {
+    tauolla = false;
+    tila.soitin.asetaTauko(false);
+    viritin?.asetaVoimakkuus(aanenvoimakkuus);
+  }
+
   aloitaVirta(cityId, kanava);
   return tilanne();
 }
@@ -1272,6 +1283,61 @@ export function asetaAani(arvo) {
 /** Nykyinen äänenvoimakkuus — js/ui.js voi halutessaan tallentaa sen. */
 export function aani() {
   return aanenvoimakkuus;
+}
+
+/*
+ * ── TAUKO ────────────────────────────────────────────────────────────
+ *
+ * Merkkivalo keskeyttää ja jatkaa lähetystä (omistaja 5.8.2026: "Sitä
+ * painamalla lähetys pitäisi mennä tauko tilaan").
+ *
+ * PYSÄYTYS EIKÄ VAIMENNUS. Ensimmäinen toteutus nollasi
+ * äänenvoimakkuuden, eikä se toiminut: voimakkuus kulkee soivan kanavan
+ * tilakoneen läpi, ja `paivitaAanenvoimakkuus` kirjoittaa sen VAIN
+ * lukittuneelle ja häivyttämättömälle asemalle. Napautus virityksen tai
+ * ristihäivytyksen aikana katosi siis jäljettömiin — ja niin kävi myös
+ * silloin, kun jokin muu kirjoitti voimakkuuden takaisin. `audio.pause()`
+ * ei kysy keneltäkään.
+ *
+ * Se on myös oikea toiminto suoralle lähetykselle: mykistetty virta
+ * jatkaa juoksemistaan, eli kuluttaa dataa ja karkaa siitä kohdasta,
+ * johon kuuntelija sen jätti.
+ *
+ * Tauko EI ole tila, jota kanavanvaihto kunnioittaa: uuden kaupungin
+ * valitseminen on pyyntö kuulla se (ks. soitaKaupunki).
+ */
+let tauolla = false;
+
+/** Onko lähetys keskeytetty? Testejä ja js/ui.js:ää varten. */
+export function tauko() {
+  return tauolla;
+}
+
+/**
+ * Keskeyttää tai jatkaa soivaa lähetystä.
+ *
+ * Palauttaa uuden taukotilan. Jos mitään ei soi, tila vain muistetaan:
+ * seuraava kanava alkaa silti soida, koska sen valinta nollaa tauon.
+ */
+export function asetaTauko(paalle) {
+  tauolla = Boolean(paalle);
+  // Viritysääni kuuluu tauolla yhtä vähän kuin lähetys.
+  viritin?.asetaVoimakkuus(tauolla ? 0 : aanenvoimakkuus);
+  const audio = soiva?.audio;
+  if (!audio) return tauolla;
+  try {
+    if (tauolla) {
+      audio.pause();
+    } else {
+      const lupaus = audio.play();
+      // Selain voi kieltää toiston; se ei ole tämän funktion vika eikä
+      // saa kaataa napautusta.
+      if (lupaus?.catch) lupaus.catch(() => {});
+    }
+  } catch (syy) {
+    console.warn('Radion taukotilan vaihto epäonnistui.', syy);
+  }
+  return tauolla;
 }
 
 /**
@@ -1397,6 +1463,8 @@ export function paalle({
       else pois();
     },
     onAani: (arvo) => paivitaAanenvoimakkuus(arvo),
+    // Merkkivalo: lähetys taukotilaan ja takaisin.
+    onTauko: (paalle) => asetaTauko(paalle),
     /*
      * Aikakatkaisu tulee laitteelta: se on jo vaihtanut näyttönsä
      * virhetilaan, ja tämän tehtävä on sulkea virta. Rikki mennyt

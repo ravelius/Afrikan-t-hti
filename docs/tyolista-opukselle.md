@@ -5245,6 +5245,75 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v269 — Radion tauko, pyöreä valo ja Varusteet (5.8.2026)
+
+Neljä omistajan huomiota riisutusta radiosta (v268) ja
+linssivalikosta.
+
+### Merkkivalo keskeyttää lähetyksen
+
+*"Sitä painamalla lähetys pitäisi mennä tauko tilaan. Se ei vielä
+toimi."*
+
+v268 toteutti napin vaimennuksena: `asetaAani(0)`. Se ei toiminut,
+koska voimakkuus kulkee soivan kanavan tilakoneen läpi —
+`paivitaAanenvoimakkuus` kirjoittaa arvon **vain lukittuneelle ja
+häivyttämättömälle** asemalle (ja hyvästä syystä: nupin vääntäminen
+kesken virityksen ei saa nostaa kohinaa täyteen voimaan). Napautus
+virityksen tai ristihäivytyksen aikana katosi siis jäljettömiin.
+
+Nyt nappi kutsuu `audio.pause()` / `audio.play()`, jotka eivät kysy
+keneltäkään. Se on myös oikea toiminto suoralle lähetykselle:
+mykistetty virta jatkaa juoksemistaan, eli kuluttaa dataa ja karkaa
+siitä kohdasta, johon kuuntelija sen jätti.
+
+Kanavan vaihto nollaa tauon: uuden kaupungin valinta on pyyntö kuulla
+se, ei jatko edelliselle tauolle.
+
+Mitattu selaimessa vakoilemalla `HTMLMediaElement`:iä: ensimmäinen
+napautus tuottaa `pause`, toinen `play`, ja `data-tauko` sekä napin
+nimi vaihtuvat molempiin suuntiin.
+
+### Pyöreä valo
+
+*"Muuta punainen lamppu pyöreäksi."* Kun lamppu muuttui `<span>`:istä
+`<button>`:iksi, se peri pelin yleisen `button { min-height: 42px }`
+-säännön. Leveys tuli lampun omasta säännöstä ja korkeus sieltä, joten
+merkkivalosta tuli soikio: **mitattu 22 × 42**, kun sen pitäisi olla
+22 × 22. `min-height: 0` korjaa; kosketusalue on erillisessä
+`::before`-levyssä eikä kärsi.
+
+### Matalampi kotelo
+
+*"Madalla vielä poistamalla alareunan tyhjä tila."* Tyhjä puu alimman
+merkin alla oli iPhonen kotipalkin varaus, `env(safe-area-inset-bottom)`
+= 34 px. Varaus oli oikea silloin, kun kotelossa oli kytkimiä; nyt
+alimpana ovat asteikon koristeviivat, ja ainoat kosketuskohteet
+(kaupunkien nimet) ovat asteikon yläosassa. Mitattu: kotelo pysyy nyt
+105 pikselissä myös 34 pikselin turva-alalla, kun se ennen kasvoi
+139:ään.
+
+### Taikalasit → Varusteet
+
+Nimi vaihtui, ja kuvake vaihtui mukana: lasit ovat yksi väline, ja
+valikossa on jo radio ja kartta-aiheiset linssit. Uusi kuvake on
+matkareppu läppineen ja solkineen — sama esine kuin pelin matkalaukku
+mutta selässä, eli se ei sekoitu ylärivin kukkaroon.
+
+Valikko kavennettiin puoleen: **290 → 144 px.** Samalla paljastui vika:
+liuskat eivät mahtuneet riville vaan pinoutuivat neljäksi täysleveäksi
+napiksi, koska päävalikon `.paavalikko button { width: 100% }` osui myös
+niihin. Mitattu ennen: jokainen liuska 270 px eli koko leveys yhtä
+kuvaketta kohti. Nyt ne ovat 40 × 40 ja kiertyvät kahden riveiksi.
+
+### Opittua
+
+**Kun elementti vaihtaa tagia, se vaihtaa myös perimänsä säännöt.**
+`<span>` → `<button>` toi mukanaan pelin nappisäännöt, joista yksi
+(`min-height`) muutti muodon. Sama koski liuskoja: ne perivät
+päävalikon `width: 100%`, koska ne sattuvat asumaan sen sisällä. Kumpikin
+näkyi vasta ruudulla — koodista näki vain oikeat mitat.
+
 ## v263 — Historia sai oman sivunsa (5.8.2026)
 
 Omistaja: *"Lontoon tutki sivun ens. sivu voisi palauttaa
