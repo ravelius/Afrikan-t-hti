@@ -2425,22 +2425,40 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /*
- * OTSIKKONA SAMA LOGO ISOMPANA.
+ * OTSIKKONA SAMA LOGO, TUMMALLA POHJALLA.
  *
  * Pelaaja napautti logoa ylärivillä, ja ikkuna avautuu siitä mitä hän
- * napautti — se on koko siirron idea. Leveys on rajattu, koska logo on
- * 4:1 ja täysleveänä 620 pikselin kortissa se olisi juliste eikä
- * nimikilpi.
+ * napautti — se on koko siirron idea.
+ *
+ * TUMMA LAATTA EIKÄ PERGAMENTTI (omistaja 5.8.2026: "logo saisi olla
+ * tummalla pohjalla ennen tekstiä ja vähän pienemmällä"). Kullattu
+ * folio on tehty tummaa vasten: pergamentilla se on kulta kullan päällä
+ * ja kirjainten ääriviivat katoavat. Laatta on samaa sävyä kuin ylärivi
+ * (linear-gradient #3a2a1c -> #251b12), joten logo näyttää täsmälleen
+ * siltä, mistä se avattiin.
+ *
+ * Laatta on kilpi eikä palkki: se päättyy ennen tekstiä ja pyöristyy
+ * kulmistaan, jolloin paperi jatkuu sen ympärillä.
  */
 .lahteet-nimikilpi {
-  margin: 0.2rem 0 1rem;
+  margin: -0.2rem 0 1.1rem;
+  padding: 0.85rem 1rem;
   text-align: center;
+  background: linear-gradient(180deg, #3a2a1c, #251b12);
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
 
+/*
+ * Pienempi kuin ensimmäisessä yrityksessä: 22rem -> 14rem. Laatta antaa
+ * logolle oman tilansa, joten sen ei enää tarvitse olla iso ollakseen
+ * otsikko. Ylärivillä logo on 23 px korkea, tässä 55 — yhä yli
+ * kaksinkertainen, mikä oli alkuperäinen toive ("avautuu isompana").
+ */
 .lahteet-logo {
   display: block;
   width: 100%;
-  max-width: 22rem;
+  max-width: 14rem;
   height: auto;
   margin: 0 auto;
 }
