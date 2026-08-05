@@ -9068,33 +9068,20 @@ export class UI {
     this.linssiTiedot.appendChild(html('p', 'linssi-lyhyt', linssi.lyhyt));
 
     /*
-     * Lähde ja lisenssi eivät ole koriste vaan ehto: aineistot ovat CC
-     * BY -lisensoituja ja vaativat nimeämisen. Kortissa on koko
-     * merkintä; kartan selitekortissa näkyy sen lyhyt muoto koko ajan.
+     * LÄHDELINKKI POISTETTU VALIKOSTA (omistaja 5.8.2026: "poista myös,
+     * mistä tämä tieto on, linkki").
+     *
+     * Tässä oli nappi, joka avasi aineiston nimen, lisenssin ja
+     * hakupäivän. Se oli valikossa väärässä paikassa kahdesta syystä:
+     * valikko on säädin eikä lukusali, ja täysleveä tekstinappi rikkoi
+     * keskitetyn ladelman.
+     *
+     * NIMEÄMINEN EI KADONNUT. Molempien nykyisten linssien aineistot
+     * (Natural Earth ja ETOPO1) ovat luettelossa js/lahteet.js:ssä, joka
+     * aukeaa ylärivin logosta — ja siellä ne ovat täydellisinä
+     * merkintöinä lisensseineen. Jos joskus tulee CC BY -aineistoon
+     * perustuva linssi, sen nimeäminen kuuluu sinne, ei tähän.
      */
-    const kortti = html('div', 'linssi-lahde');
-    kortti.hidden = true;
-    const avaa = html('button', 'linssi-lahde-avaa', 'Mistä tämä tieto on?');
-    avaa.type = 'button';
-    avaa.setAttribute('aria-expanded', 'false');
-    avaa.addEventListener('click', () => {
-      kortti.hidden = !kortti.hidden;
-      avaa.setAttribute('aria-expanded', String(!kortti.hidden));
-    });
-    const lahde = linssi.lahde ?? {};
-    if (lahde.aineisto) kortti.appendChild(html('p', 'linssi-lahde-aineisto', lahde.aineisto));
-    const rivi = [lahde.lisenssi, lahde.haettu ? `haettu ${lahde.haettu}` : null]
-      .filter(Boolean).join(' · ');
-    if (rivi) kortti.appendChild(html('p', 'linssi-lahde-lisenssi', rivi));
-    if (lahde.osoite) {
-      const linkki = html('a', 'linssi-lahde-linkki', 'Avaa alkuperäinen aineisto');
-      linkki.href = lahde.osoite;
-      linkki.target = '_blank';
-      linkki.rel = 'noopener noreferrer';
-      kortti.appendChild(linkki);
-    }
-    this.linssiTiedot.appendChild(avaa);
-    this.linssiTiedot.appendChild(kortti);
   }
 
   /**

@@ -5282,6 +5282,40 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v292 — Valikkoon ilmaa, lähdelinkki pois (5.8.2026)
+
+Omistaja: *"Napit eivät ole keskitetty. Lisäksi liian pienet
+marginaalit ja poista myös 'mistä tämä tieto on' -linkki. Varsinkin
+varusteet-otsikon ylä- ja alapuolella pitäisi olla lisää tilaa."*
+
+**Lähdelinkki pois.** Valikossa oli nappi, joka avasi aineiston nimen,
+lisenssin ja hakupäivän. Se oli väärässä paikassa kahdesta syystä:
+valikko on säädin eikä lukusali, ja täysleveä tekstinappi rikkoi
+keskitetyn ladelman — se oli ainoa vasempaan reunaan tasattu asia
+paneelissa, ja juuri se näytti keskittämättömältä.
+
+Nimeäminen ei kadonnut: molempien nykyisten linssien aineistot
+(Natural Earth ja ETOPO1) ovat luettelossa `js/lahteet.js`:ssä, joka
+aukeaa ylärivin logosta, ja siellä ne ovat täydellisinä merkintöinä
+lisensseineen. Tarkistettu ennen poistoa.
+
+**Ilmaa.** Valikko peri pudotusvalikon tiiviit mitat ajalta, jolloin
+siinä oli neljä tekstiriviä. Pehmuste 0,45 → 0,85 rem, osastojen väli
+0,35 → 0,55 rem, ja otsikon marginaali 0,15/0,1 → 0,5/0,45 rem.
+
+Otsikon yläpuolelle enemmän kuin alapuolelle: väli KUULUU sitä
+seuraavalle osastolle, ja epäsymmetria sitoo otsikon omaan
+ruudukkoonsa eikä edelliseen lohkoon.
+
+### Opittua
+
+**Mittaa ennen kuin korjaat, myös oman virheen kohdalla.** Luulin
+ruutujen jättävän neljä pikseliä tyhjää sarakkeidensa oikeaan laitaan
+ja ehdin kirjoittaa sen kommenttiin. Mittaus näytti, että ruudukko oli
+keskitetty pikselilleen (poikkeama 0) ja ruudut täyttivät sarakkeensa:
+lukemani "oikea 169" oli etäisyys paneelin reunaan, ei rako. Ainoa
+keskittämätön asia oli lähdelinkki.
+
 ## v291 — Matkalaukun kahva pois (5.8.2026)
 
 Omistaja: *"Ota matkalaukusta kahva pois. On siistimpi niin."*
