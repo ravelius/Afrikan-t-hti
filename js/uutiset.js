@@ -128,22 +128,35 @@ export async function haeArtikkeli(linkki) {
  * jolloin kutsuja käyttää kanavaupotusta varareittinä.
  */
 const liveMuisti = new Map();
+// Lyhyt ikä: kanava kierrättää lähetyksiä, ja vanhentunut tunniste
+// osoittaisi PÄÄTTYNEESEEN lähetykseen — se soisi tallenteena
+// (omistajan havainto 5.8.2026).
+const LIVE_MUISTI_MS = 10 * 60 * 1000;
 
 export async function haeLiveTunniste(livesivu) {
   if (!UUTISPROXY || !livesivu) return null;
-  if (liveMuisti.has(livesivu)) return liveMuisti.get(livesivu);
+  const vanha = liveMuisti.get(livesivu);
+  if (vanha && Date.now() - vanha.aika < LIVE_MUISTI_MS) return vanha.tunniste;
   let tunniste = null;
   try {
     const osoite = `${UUTISPROXY}?url=${encodeURIComponent(livesivu)}`;
     const vastaus = await fetch(osoite, { signal: AbortSignal.timeout(10000) });
     if (vastaus.ok) {
       const sivu = await vastaus.text();
-      tunniste = sivu.match(/"videoId":"([\w-]{11})"/)?.[1] ?? null;
+      /*
+       * Canonical-linkki osoittaa sivun omaan lähetykseen (ensimmäinen
+       * "videoId" voi olla suosittelulistalta). Tunniste kelpaa VAIN
+       * jos sivu vahvistaa lähetyksen olevan käynnissä — muuten
+       * palautetaan null ja soitin käyttää kanavaupotusta, joka
+       * ratkaisee suoran YouTuben päässä katseluhetkellä.
+       */
+      const canonical = sivu.match(/rel="canonical" href="https:\/\/www\.youtube\.com\/watch\?v=([\w-]{11})"/)?.[1] ?? null;
+      tunniste = canonical && sivu.includes('"isLiveNow":true') ? canonical : null;
     }
   } catch {
     tunniste = null;
   }
-  liveMuisti.set(livesivu, tunniste);
+  liveMuisti.set(livesivu, { aika: Date.now(), tunniste });
   return tunniste;
 }
 

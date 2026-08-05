@@ -5998,6 +5998,18 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     margin: 0.15rem 1.5rem 0.6rem 0;
   }
 
+  /*
+   * Vasemmalle kelluvan kuvan vieressä leipäteksti tarvitsee OMAN
+   * palstan (flow-root): tavallinen lohko ankkuroituu palstan vasempaan
+   * reunaan, jolloin 68 ch:n leveyskatto ja kuva päällekkäin jättävät
+   * riveille vain parikymmentä pikseliä — teksti murenee sana/rivi
+   * -suikaleeksi (omistajan havainto iPad Pro 12,9" 5.8.2026; sama
+   * pätee kaikkiin ≥ 1000 px leveyksiin). Flow-root-laatikko asettuu
+   * kokonaan kuvan viereen ja leveys lasketaan jäljelle jäävästä
+   * tilasta, kuten sanomalehden palstassa.
+   */
+  .wiki-nosto:nth-of-type(even) .teksti { display: flow-root; }
+
   /* Lähde on lisenssiehto: se ei saa jäädä kuvan kylkeen puristuksiin
    * vaan alkaa aina kuvan alta. */
   .wiki-nosto .lahde { clear: both; }
@@ -7071,7 +7083,20 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     margin: 0.15rem 1.5rem 0.6rem 0;
   }
 
-  .wiki-nosto .nosto-galleria img { float: none; margin: 0; }
+  /*
+   * TÄRKEÄ: perussääntö antaa nostokuvalle width: 56 % — mutta
+   * gallerian kotelo on fit-content, ja prosentti kutistuvasta
+   * emosta romahduttaa kuvan (iPad Pro 12,9" osuu tähän
+   * media-sääntöön, 11" ei — omistajan havainto 5.8.2026).
+   * Kuva mitoitetaan siksi omilla ehdoillaan ja kotelo seuraa.
+   */
+  .wiki-nosto .nosto-galleria img {
+    float: none;
+    margin: 0;
+    width: auto;
+    max-width: 100%;
+    max-height: 520px;
+  }
 }
 
 /*

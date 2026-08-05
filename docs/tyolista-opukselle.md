@@ -5291,7 +5291,7 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
-## v295 — Vesistölinssi maastokartan päälle ja radion mitat (5.8.2026)
+## v296 — Vesistölinssi maastokartan päälle ja radion mitat (5.8.2026)
 
 Kolme asiaa samassa julkaisussa.
 
