@@ -20,8 +20,11 @@ matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
   kattavat ja mihin lennetään ensin — Italia ✅, Egypti ✅ (Kairo,
   v297: ensimmäinen monistus todisti reseptin — pelkkää dataa, ei
   koodimuutoksia lukuun ottamatta uutisten dir="auto"-tukea
-  oikealta vasemmalle kirjoitettaville kielille), sitten Ranska,
-  USA, Japani, Brasilia, Australia.
+  oikealta vasemmalle kirjoitettaville kielille), sitten Lontoon
+  lentokohteet eli pelin ensimmäiset matkakohteet: Espanja (Madrid),
+  Saksa (Berliini) ja Ruotsi (Tukholma) — ja niiden perään Ranska,
+  USA, Japani, Brasilia, Australia. Valmiit maakohtaiset promptit:
+  docs/tyolista-opukselle.md, "Lehtimaiden promptit".
 
 Loput tämän tiedoston säännöt (kuvat, lisenssit, mitat, työkalu,
 tarkistuslista) pätevät sellaisinaan molempiin tasoihin.
