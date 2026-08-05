@@ -5987,8 +5987,16 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 @media (min-width: 1000px) {
   .wiki-nosto img {
     float: right;
-    width: 56%;
-    max-width: 620px;
+    /*
+     * EI pakotettua leveyttä: width: 56 % + max-height venytti
+     * pystykuvat lättänöiksi, koska molemmat mitat eivät voi päteä
+     * yhtä aikaa (Kairon Nefertiti — omistajan havainto 5.8.2026).
+     * Leveys- ja korkeuskatot yhdessä säilyttävät kuvasuhteen:
+     * vaakakuva täyttää 56 % palstasta, pystykuva jää kapeammaksi
+     * ja teksti saa sen vierestä enemmän tilaa.
+     */
+    width: auto;
+    max-width: min(56%, 620px);
     max-height: 520px;
     margin: 0.15rem 0 0.6rem 1.5rem;
   }
@@ -6564,8 +6572,13 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   .dialog.arkki .dialog-card,
   .dialog.arkki .dialog-card:has(#arrival-maa:not([hidden])) {
     /* Työpöydällä kartta saa näkyä leveämmältä: arkki ei kasva
-     * ruudun mukana loputtomiin, koska rivi pitenisi lukukelvottomaksi. */
-    width: min(calc(100vw - 6rem), 1100px);
+     * ruudun mukana loputtomiin, koska rivi pitenisi lukukelvottomaksi.
+     * Katto 960 px = sama taitto kuin isolla iPadilla (omistajan toive
+     * 5.8.2026: "pitäisikö tutki-ikkuna olla kapeampi työpöydällä").
+     * Yksi kanoninen lehtileveys kaikilla isoilla ruuduilla: mitä
+     * testataan tabletilla, se pätee työpöydällä — leveä ruutu saa
+     * lisää karttaa reunoille, ei lisää palstaa. */
+    width: min(calc(100vw - 6rem), 960px);
     max-height: calc(100dvh - 3rem);
   }
 }

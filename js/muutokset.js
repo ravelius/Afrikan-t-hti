@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 298, teksti: 'Pystykuvat eivät enää veny leveiksi lehdessä' },
+  { v: 298, teksti: 'Tutki kapeammaksi työpöydällä, sama kuin iPadilla' },
   { v: 297, teksti: 'Kairo sai oman lehden: kansi, Egypti-osasto' },
   { v: 297, teksti: 'Robertsin Kairo-litografiat galleriana' },
   { v: 297, teksti: 'Kätkölle vie kirjakauppias Faruk basaarista' },
