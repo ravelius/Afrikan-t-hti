@@ -137,7 +137,23 @@
    * ikkunaa, joka on kiinteän levyinen — kavennus tulee säleikön
    * puolelta, jossa on eniten tyhjää.
    */
-  max-width: 800px;
+  /*
+   * 800 -> 470, ELI TYHJÄ PUU OIKEALTA POIS (omistaja 5.8.2026:
+   * "kavenna radiosta oikealta pois kaikki ylimääräinen").
+   *
+   * 800 oli oikea silloin, kun kotelossa oli VU-mittari, kaiutinsäleikkö
+   * ja kaksi vipukytkintä. v268 riisui ne kaikki, ja jäljelle jäi
+   * näyttö ja asteikko — mutta leveys jäi entiselleen. Mitattu ennen:
+   * kotelo 800 px, sisältö 451 px, eli **341 pikseliä tyhjää puuta
+   * oikeassa laidassa** sekä työpöydällä että tabletilla.
+   *
+   * 470 tulee sisällöstä eikä silmästä: näytön aukko on kiinteä 408 px
+   * (radiosoitin.js NAYTON_MITAT), merkkivalo väleineen 44 ja kotelon
+   * oma täyte 19 — yhteensä 471, josta kotelo saa yhden pikselin verran
+   * kutistua. Jos aukko joskus muuttuu, tämä luku on laskettava
+   * uudelleen samasta paikasta.
+   */
+  max-width: 470px;
   display: flex;
   /*
    * RIVITYS ON PUHELINTA VARTEN, EI TABLETTIA.
@@ -219,6 +235,23 @@
    * pylvään alanurkassa. VIIVAT KULKEVAT SYYN POIKKI eli lähes
    * vaakaan; syyn suuntainen naarmu katoaa syyhyn eikä sitä näe.
    */
+  /*
+   * PYSTYVIIRUT POIS (omistaja 5.8.2026: "poista soittimesta viirut, ne
+   * eivät näytä uskottavilta eivätkä tee soittimesta vanhemman
+   * näköistä").
+   *
+   * Tässä oli kolme `repeating-linear-gradient`-kerrosta 7, 23 ja 61
+   * pikselin jaoilla, ajatuksena puun syy. Ajatus oli oikea, mutta
+   * toteutus näytti vakosametilta: oikean puun syy ei ole tasavälinen
+   * eikä suora, ja juuri säännöllisyys paljastaa sen piirretyksi. Kolme
+   * eri jakoa ei riittänyt peittämään sitä — silmä löytää jaksollisuuden
+   * kolmestakin päällekkäisestä.
+   *
+   * Jäljelle jää lakattu pinta: pystyliuku antaa muodon, radiaaliset
+   * kajot valon suunnan ja kolme pientä naarmua iän. Kiillotettu lakka
+   * ONKIN sileä, joten tämä on lähempänä oikeaa pöytäradiota kuin
+   * kuvioitu pinta oli.
+   */
   background-image:
     linear-gradient(174deg,
       rgba(255, 240, 210, 0) 40%, rgba(255, 240, 210, 0.34) 47%, rgba(255, 240, 210, 0) 54%),
@@ -231,32 +264,22 @@
     radial-gradient(27% 44% at 43% -10%, rgba(255, 236, 204, 0.08), rgba(255, 236, 204, 0) 72%),
     radial-gradient(38% 50% at 69% 108%, rgba(22, 11, 3, 0.2), rgba(22, 11, 3, 0) 74%),
     radial-gradient(17% 40% at 14% 104%, rgba(22, 11, 3, 0.16), rgba(22, 11, 3, 0) 76%),
-    repeating-linear-gradient(90.6deg,
-      rgba(0, 0, 0, 0.07) 0 1px,
-      rgba(255, 240, 214, 0.045) 1px 2px,
-      rgba(0, 0, 0, 0) 2px 7px),
-    repeating-linear-gradient(89.4deg,
-      rgba(0, 0, 0, 0.06) 0 2px,
-      rgba(0, 0, 0, 0) 2px 23px),
-    repeating-linear-gradient(90deg,
-      rgba(24, 12, 4, 0.09) 0 3px,
-      rgba(0, 0, 0, 0) 3px 61px),
     linear-gradient(180deg, var(--radio-puu-vaalea), var(--radio-puu) 42%, var(--radio-puu-tumma));
   /*
-   * Kolmen jäljen mitat ja paikat. Loput kerrokset ovat kotelon
-   * kokoisia (auto) ja toistuvat kuten ennenkin — luettelot on
-   * kirjoitettava loppuun asti, koska selain kiertää lyhyemmän listan
-   * alusta ja antaisi silloin naarmun mitat puun syylle.
+   * Kolmen naarmun mitat ja paikat. Loput kerrokset ovat kotelon
+   * kokoisia (auto) — luettelot on kirjoitettava loppuun asti, koska
+   * selain kiertää lyhyemmän listan alusta ja antaisi silloin naarmun
+   * mitat pohjaliu'ulle.
    */
   background-size:
     132px 7px, 20px 9px, 78px 9px,
-    auto, auto, auto, auto, auto, auto, auto, auto, auto;
+    auto, auto, auto, auto, auto, auto;
   background-position:
     34% 1%, 94% 93%, 91% 14%,
-    0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+    0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
   background-repeat:
     no-repeat, no-repeat, no-repeat,
-    repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
+    repeat, repeat, repeat, repeat, repeat, repeat;
   border: 1px solid rgba(0, 0, 0, 0.5);
   /* Messinkilista yläreunassa ja syvä varjo: kotelo seisoo kartan päällä. */
   box-shadow:
