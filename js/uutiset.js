@@ -96,7 +96,7 @@ const artikkeliMuisti = new Map();
 export async function haeArtikkeli(linkki) {
   if (!UUTISPROXY || !linkki) return null;
   if (artikkeliMuisti.has(linkki)) return artikkeliMuisti.get(linkki);
-  let kappaleet = null;
+  let artikkeli = null;
   try {
     const osoite = `${UUTISPROXY}?url=${encodeURIComponent(linkki)}`;
     const vastaus = await fetch(osoite, { signal: AbortSignal.timeout(12000) });
@@ -104,21 +104,34 @@ export async function haeArtikkeli(linkki) {
       const dokumentti = new DOMParser().parseFromString(await vastaus.text(), 'text/html');
       const runko = dokumentti.querySelector('[itemprop="articleBody"]')
         ?? dokumentti.querySelector('article');
-      const loydetyt = [...(runko?.querySelectorAll('p') ?? [])]
+      const kappaleet = [...(runko?.querySelectorAll('p') ?? [])]
         .map((p) => p.textContent.replace(/\s+/g, ' ').trim())
-        .filter((t) => t.length > 60 && !/Riproduzione riservata|©|Copyright/i.test(t));
-      if (loydetyt.length) kappaleet = loydetyt.slice(0, 6);
+        .filter((t) => t.length > 60 && !/Riproduzione riservata|©|Copyright/i.test(t))
+        .slice(0, 6);
+      // Artikkelin kuva jakokuvamerkinnästä: <img> ei tarvitse CORSia,
+      // joten osoite kelpaa suoraan popupiin ilman välitystä.
+      const kuva = dokumentti.querySelector('meta[property="og:image"]')?.content ?? null;
+      if (kappaleet.length || kuva) artikkeli = { kappaleet, kuva };
     }
   } catch {
-    kappaleet = null;
+    artikkeli = null;
   }
-  artikkeliMuisti.set(linkki, kappaleet);
-  return kappaleet;
+  artikkeliMuisti.set(linkki, artikkeli);
+  return artikkeli;
 }
+
+/*
+ * Käännösmuisti: etusivun otsikot suomennetaan joka avauksella, ja
+ * ilmainen palvelu laskee merkkejä — sama teksti käännetään siksi
+ * vain kerran istunnossa.
+ */
+const kaannosMuisti = new Map();
 
 /** Konekäännös suomeksi tai null. */
 export async function kaannaSuomeksi(teksti, kieli) {
   if (!teksti?.trim()) return '';
+  const muistiAvain = `${kieli}|${teksti}`;
+  if (kaannosMuisti.has(muistiAvain)) return kaannosMuisti.get(muistiAvain);
   try {
     const palat = paloittele(teksti.trim());
     const kaannokset = [];
@@ -134,7 +147,9 @@ export async function kaannaSuomeksi(teksti, kieli) {
       if (!kaannos || data.responseStatus !== 200) return null;
       kaannokset.push(kaannos);
     }
-    return kaannokset.join(' ');
+    const koko = kaannokset.join(' ');
+    kaannosMuisti.set(muistiAvain, koko);
+    return koko;
   } catch {
     return null;
   }

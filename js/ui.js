@@ -7030,8 +7030,9 @@ export class UI {
     haeUutiset(iso).then((uutiset) => {
       if (!uutiset.length) return;
       if (!this.arrivalDialog.open || this.arrivalShownFor !== cityId) return;
-      // "Uutisissa tänään" (omistajan sanamuoto); lähde lukee popupissa.
-      this.arrivalUutiset.querySelector('.uutiset-nimio').textContent = 'Uutisissa tänään';
+      // "Uutisissa tänään" ja lähde suluissa (omistajan sanamuoto).
+      this.arrivalUutiset.querySelector('.uutiset-nimio').textContent =
+        `Uutisissa tänään (${lahde.nimi})`;
       const lista = this.arrivalUutiset.querySelector('.uutiset-lista');
       lista.replaceChildren();
       for (const uutinen of uutiset.slice(0, 3)) {
@@ -7040,6 +7041,12 @@ export class UI {
         rivi.lang = lahde.kieli;
         rivi.addEventListener('click', () => this.avaaUutinen(uutinen, lahde));
         lista.appendChild(rivi);
+        // Suomennos otsikon alle pienemmällä ja kevyemmällä — ilman
+        // etikettiä (omistajan toive).
+        kaannaSuomeksi(uutinen.otsikko, lahde.kieli).then((suomeksi) => {
+          if (!suomeksi || !rivi.isConnected) return;
+          rivi.appendChild(html('span', 'uutinen-rivi-suomeksi', suomeksi));
+        });
       }
       this.arrivalUutiset.hidden = false;
     });
@@ -7073,6 +7080,14 @@ export class UI {
       otsikkoSuomeksi.textContent = suomeksi;
       otsikkoSuomeksi.hidden = false;
     });
+    // Artikkelin kuva täyttyy haun valmistuttua (og:image — tavallinen
+    // <img> ei tarvitse CORSia).
+    const kuva = document.createElement('img');
+    kuva.className = 'uutinen-kuva';
+    kuva.alt = '';
+    kuva.hidden = true;
+    kuva.addEventListener('error', () => { kuva.hidden = true; });
+    kortti.appendChild(kuva);
     // Runko: syötteen kuvaus näkyy heti, ja koko artikkeli korvaa sen
     // kun haku valmistuu. Jos artikkelia ei saada (esim. workerin
     // vanha versio), kuvaus jää — popup ei ole koskaan tyhjä.
@@ -7081,13 +7096,19 @@ export class UI {
     if (uutinen.kuvaus) runko.appendChild(html('p', 'uutinen-kuvaus', uutinen.kuvaus));
     kortti.appendChild(runko);
     let runkoTeksti = uutinen.kuvaus ?? '';
-    haeArtikkeli(uutinen.linkki).then((kappaleet) => {
-      if (!kortti.isConnected || !kappaleet?.length) return;
-      runko.replaceChildren();
-      for (const kappale of kappaleet) {
-        runko.appendChild(html('p', 'uutinen-kuvaus', kappale));
+    haeArtikkeli(uutinen.linkki).then((artikkeli) => {
+      if (!kortti.isConnected || !artikkeli) return;
+      if (artikkeli.kuva) {
+        kuva.src = artikkeli.kuva;
+        kuva.hidden = false;
       }
-      runkoTeksti = kappaleet.join('\n\n');
+      if (artikkeli.kappaleet?.length) {
+        runko.replaceChildren();
+        for (const kappale of artikkeli.kappaleet) {
+          runko.appendChild(html('p', 'uutinen-kuvaus', kappale));
+        }
+        runkoTeksti = artikkeli.kappaleet.join('\n\n');
+      }
     });
     const kaannos = html('div', 'uutinen-kaannos');
     kaannos.hidden = true;
