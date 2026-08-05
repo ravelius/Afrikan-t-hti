@@ -42,6 +42,11 @@ vaadi koodimuutoksia:
   Noston kuva saa selailunuolet ja laskurin; selite- ja lähderivit
   vaihtuvat teoksen mukana, suurennos avaa kohdalla olevan teoksen.
   Peilityökalu poimii galleriakuvien `tiedosto:`-kentät automaattisesti.
+- **Sää (v272):** lehtikaupunki saa mastoon päivän ennusteen ja
+  napautuksesta koko vuoden graafin, kun sille on rivi
+  `js/packs/saatiedot.js`:ssä (lat/lon + kuukausinormaalit; normaalien
+  laskutapa kerrotaan tiedoston alussa). Ilman riviä lehti näkyy
+  ilman säätä — mitään ei tarvitse koodata.
 - **Minitehtävä:** aihe voi kantaa `tehtava: { kysymys, vaihtoehdot,
   oikea, fakta }` (pilotti: Italian Ruoka). Se piirtyy sivun loppuun
   kuponkimaisena tehtäväpalstana, ja vastaus LÖYTYY SAMAN SIVUN
