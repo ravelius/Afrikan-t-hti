@@ -1315,6 +1315,7 @@ function piirraLeipa(kohde, teksti, { anfangi = false } = {}) {
     }
     kohde.appendChild(p);
   });
+  return leipa;
 }
 
 /**
@@ -7216,13 +7217,15 @@ export class UI {
         if (selite) lohko.appendChild(selite);
         if (lahde) lohko.appendChild(lahde);
       }
-      piirraLeipa(lohko, nosto.teksti, { anfangi: ensimmainen });
+      const leipa = piirraLeipa(lohko, nosto.teksti, { anfangi: ensimmainen });
       ensimmainen = false;
       if (nosto.wiki) {
         const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
         nappi.type = 'button';
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
-        lohko.appendChild(nappi);
+        // Heti leipätekstin loppuun, ei erilliseksi lohkoksi sivun
+        // pohjalle (omistajan toive 5.8.2026).
+        leipa.appendChild(nappi);
       }
       // Selattava teosgalleria noston kuvan ympärille (pilottina
       // Venetsian Canaletto): nuolet vaihtavat teosta, selite ja
