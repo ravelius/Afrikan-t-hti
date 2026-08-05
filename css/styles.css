@@ -452,6 +452,11 @@ button, .brand, .turn-pill, .fact-card h2 {
  * paneeli on osa käyttöliittymää eikä karttaa — muoto kantaa
  * tunnistuksen, ei väri.
  *
+ * TÄMÄ ON NYKYÄÄN VAIN SELITEKORTIN ASKELLIUSKOJEN tyyli
+ * (.linssi-selite): niissä on tekstiä ja ne ovat yhdellä rivillä, eli
+ * juuri se muoto, jota varten liuska keksittiin. Linssivalitsin sai
+ * omat neliönsä alempana.
+ *
  * Liuskat KIERTYVÄT usealle riville eivätkä vierity vaakaan: vieritys
  * piilottaisi linssejä, ja piilotettu linssi on sama kuin löytymätön.
  */
@@ -472,8 +477,7 @@ button, .brand, .turn-pill, .fact-card h2 {
    *
    * Valitsin asuu päävalikon sisällä, ja `.paavalikko button` antaa
    * kaikille napeilleen `width: 100%` — se on oikein valikon riveille
-   * mutta väärin liuskoille, jotka on tarkoitettu vierekkäin. Ilman tätä
-   * riviä neljä liuskaa pinoutui neljäksi täysleveäksi napiksi.
+   * mutta väärin liuskoille, jotka on tarkoitettu vierekkäin.
    */
   width: auto;
   display: grid;
@@ -501,6 +505,50 @@ button, .brand, .turn-pill, .fact-card h2 {
   border-color: var(--accent-dark);
   border-bottom-color: var(--panel);
   color: var(--accent);
+}
+
+/*
+ * ── VALITSIMEN RUUDUKKO: IRRALLISET NELIÖT ───────────────────────────
+ *
+ * Omistaja: "tee ikoneista irrallisia neliöitä pienellä pyöristyksellä
+ * jotka täyttävät tilan tasaisesti."
+ *
+ * Liuskan muoto kaatui siihen, että paneeli kavennettiin puoleen
+ * (v269: 290 -> 144 px). Kahdelle riville kiertynyt liuskarivi ei ole
+ * liuskarivi vaan ruudukko, jossa on turhia viivoja: liuskan idea on
+ * yksi rivi, jonka alta valittu aukeaa sisältöön.
+ *
+ * RUUDUKKO EIKÄ FLEX. `1fr`-sarakkeet jakavat leveyden tasan, joten
+ * napit ovat keskenään samankokoisia eikä oikeaan laitaan jää vajaata
+ * kaistaletta — juuri se on "täyttävät tilan tasaisesti". `auto-fill`
+ * ja `minmax` päättävät sarakemäärän leveydestä: nykyisellä 127
+ * pikselin sisäleveydellä kaksi, ja jos paneeli joskus levenee,
+ * useampi. Linssejä on tulossa yksitoista, joten rivimäärän on
+ * saatava kasvaa itsestään.
+ *
+ * `aspect-ratio: 1` tekee napista neliön riippumatta kuvakkeen koosta.
+ */
+.linssi-valikko .linssi-liuskat {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
+  align-items: stretch;
+  gap: 0.35rem;
+  padding-bottom: 0.6rem;
+}
+
+.linssi-valikko .linssi-liuskat button {
+  aspect-ratio: 1;
+  padding: 0;
+  border-color: var(--line);
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+
+/* Valittu neliö erottuu kullalla eikä sulautumalla: irrallisessa
+   neliössä ei ole alareunaa, jonka voisi avata. */
+.linssi-valikko .linssi-liuskat button.paalla {
+  background: var(--panel-2);
+  border-color: var(--accent-dark);
 }
 
 .linssi-liuskat button:focus-visible {

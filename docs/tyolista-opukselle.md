@@ -5245,6 +5245,33 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v270 — Varusteiden kuvakkeet omiksi neliöikseen (5.8.2026)
+
+Omistaja: *"Tee ikoneista irrallisia neliöitä pienellä pyöristyksellä
+jotka täyttävät tilan tasaisesti."*
+
+Kuvakkeet olivat liuskoja: kiinni toisissaan, valittu sulautui alla
+olevaan pintaan. Muoto oli lainattu Tutki-ikkunan aiheliuskoista, ja se
+kaatui siihen, että paneeli kavennettiin edellisessä versiossa puoleen.
+Kahdelle riville kiertynyt liuskarivi ei ole liuskarivi vaan ruudukko,
+jossa on turhia viivoja — liuskan koko idea on yksi rivi, jonka alta
+valittu aukeaa sisältöön.
+
+Nyt valitsin on ruudukko: `repeat(auto-fill, minmax(46px, 1fr))`.
+`1fr` jakaa leveyden tasan, joten napit ovat keskenään samankokoisia
+eikä oikeaan laitaan jää vajaata kaistaletta — se on se "tasaisesti".
+Sarakemäärä tulee leveydestä, joten rivit lisääntyvät itsestään, kun
+linssejä tulee lisää (suunnitelmassa yksitoista).
+
+Mitattu: neljä 59 × 59 pikselin neliötä kahdessa sarakkeessa, kun ne
+ennen olivat eri levyisiä liuskoja kiinni toisissaan. Kosketuskohde
+kasvoi 40 pikselistä 59:ään.
+
+Liuskatyyli jäi paikalleen sinne, minne se kuuluu: selitekortin
+askelliuskoihin (`.linssi-selite`), joissa on tekstiä ja jotka ovat
+yhdellä rivillä. Neliöt on rajattu valitsimeen — sama sääntö
+molemmissa olisi tehnyt tekstiliuskoista neliöitä.
+
 ## v269 — Radion tauko, pyöreä valo ja Varusteet (5.8.2026)
 
 Neljä omistajan huomiota riisutusta radiosta (v268) ja
