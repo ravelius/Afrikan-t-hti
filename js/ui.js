@@ -69,6 +69,7 @@ import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
+import { haeUutiset, kaannaSuomeksi, uutislahde } from './uutiset.js';
 import {
   haeSaaTanaan, saaKuvaus, SAA_IKONIT, kuukausiSsa, piirraVuosiSaa,
 } from './saa.js';
@@ -1398,6 +1399,8 @@ export class UI {
     this.arrivalMaaIntro = document.getElementById('arrival-maa-intro');
     this.arrivalMaaKartta = document.getElementById('arrival-maa-kartta');
     this.arrivalMaaTunnusluvut = document.getElementById('arrival-maa-tunnusluvut');
+    // Uutisotsikot maaosastossa (vaatii omistajan uutisvälityksen).
+    this.arrivalUutiset = document.getElementById('arrival-uutiset');
     this.arrivalMaaTervehdykset = document.getElementById('arrival-maa-tervehdykset');
     // Lippu näytetään vasta kun se on oikeasti latautunut — ilman verkkoa
     // riviltä ei jää rikkinäistä kuvaruutua.
@@ -5622,6 +5625,7 @@ export class UI {
       if (kartta) this.arrivalMaaKartta.appendChild(kartta);
       // Tunnusluvut ja tervehdykset kartan alle (pilottimaat).
       this.naytaMaaTunnusluvut(iso);
+      this.naytaMaaUutiset(iso, city.id);
       this.naytaKieliNappi(city);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
@@ -6883,6 +6887,88 @@ export class UI {
     this.arrivalDialog.appendChild(kortti);
     this.kulttuuriKuvaEl = kortti;
     sfx.play('paper');
+  }
+
+  /**
+   * Ajankohtaiset uutisotsikot maaosastoon paikallisella kielellä
+   * (omistajan toive 5.8.2026). Osio näkyy vain, kun maalla on lähde
+   * uutislahteet.js:ssä JA uutisvälitys on otettu käyttöön — muuten
+   * mitään ei haeta eikä näytetä. Otsikoita ei lyhennetä eikä
+   * mukailla; napautus avaa uutisen pelin kirjasimilla.
+   */
+  naytaMaaUutiset(iso, cityId) {
+    const lahde = uutislahde(iso);
+    this.arrivalUutiset.hidden = true;
+    if (!lahde) return;
+    haeUutiset(iso).then((uutiset) => {
+      if (!uutiset.length) return;
+      if (!this.arrivalDialog.open || this.arrivalShownFor !== cityId) return;
+      this.arrivalUutiset.querySelector('.uutiset-nimio').textContent =
+        `Uutisia · ${lahde.nimi}`;
+      const lista = this.arrivalUutiset.querySelector('.uutiset-lista');
+      lista.replaceChildren();
+      for (const uutinen of uutiset.slice(0, 4)) {
+        const rivi = html('button', 'uutinen-rivi', uutinen.otsikko);
+        rivi.type = 'button';
+        rivi.lang = lahde.kieli;
+        rivi.addEventListener('click', () => this.avaaUutinen(uutinen, lahde));
+        lista.appendChild(rivi);
+      }
+      this.arrivalUutiset.hidden = false;
+    });
+  }
+
+  /**
+   * Uutinen aukeaa samana korttina kuin kulttuurikuvan suurennos:
+   * otsikko ja kuvaus sellaisinaan pelin kirjasimilla, alla lähderivi
+   * ja Käännä suomeksi -nappi (MyMemory-konekäännös). Napautus kortin
+   * tyhjään kohtaan sulkee; napit eivät sulje.
+   */
+  avaaUutinen(uutinen, lahde) {
+    this.suljeKulttuuriKuva();
+    sfx.play('paper');
+    const kortti = html('div', 'postikortti kulttuuri-suurennos uutinen-kortti');
+    const otsikko = html('p', 'uutinen-otsikko', uutinen.otsikko);
+    otsikko.lang = lahde.kieli;
+    kortti.appendChild(otsikko);
+    if (uutinen.kuvaus) {
+      const kuvaus = html('p', 'uutinen-kuvaus', uutinen.kuvaus);
+      kuvaus.lang = lahde.kieli;
+      kortti.appendChild(kuvaus);
+    }
+    const kaannos = html('p', 'uutinen-kaannos');
+    kaannos.hidden = true;
+    kortti.appendChild(kaannos);
+    // Päivä riittää lähderiville — kellonaika on lehdessä turha.
+    const aika = uutinen.aika ? new Date(uutinen.aika) : null;
+    const aikaTeksti = aika && !Number.isNaN(aika.getTime())
+      ? ` · ${aika.getDate()}.${aika.getMonth() + 1}.${aika.getFullYear()}`
+      : '';
+    kortti.appendChild(html('p', 'kuvalahde', `${lahde.nimi}${aikaTeksti}`));
+    const nappi = html('button', 'wiki-btn uutinen-kaanna', 'Käännä suomeksi');
+    nappi.type = 'button';
+    nappi.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!kaannos.hidden) return;
+      nappi.textContent = 'Käännetään…';
+      nappi.disabled = true;
+      const teksti = [uutinen.otsikko, uutinen.kuvaus].filter(Boolean).join('. ');
+      const suomeksi = await kaannaSuomeksi(teksti, lahde.kieli);
+      // Kortti on voitu ehtiä sulkea käännöksen aikana.
+      if (!kortti.isConnected) return;
+      if (suomeksi) {
+        kaannos.textContent = `Suomeksi (konekäännös): ${suomeksi}`;
+        kaannos.hidden = false;
+        nappi.hidden = true;
+      } else {
+        nappi.textContent = 'Käännöstä ei saatu — yritä uudelleen';
+        nappi.disabled = false;
+      }
+    });
+    kortti.appendChild(nappi);
+    kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
+    this.arrivalDialog.appendChild(kortti);
+    this.kulttuuriKuvaEl = kortti;
   }
 
   /**
