@@ -6486,3 +6486,163 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     bottom: 1.05rem;
   }
 }
+
+/*
+ * ============================================================
+ * LEHTITAITTO (omistajan toive 5.8.2026)
+ *
+ * Kaupungeilla, joilla on oma kansiosio (aihe id 'kaupunki',
+ * pilottina Venetsia), Tutki-ikkunan etusivu taittuu paikallis-
+ * lehdeksi: masto (pieni nimirivi, kaupungin nimi isolla,
+ * päiväysrivi viivojen välissä), kaupungin oma osuus nostoineen
+ * ja sen alla maa omana osastonaan. Muut kaupungit näyttävät
+ * etusivun entiseen tapaan — nämä säännöt elävät vain
+ * .dialog.lehti-luokan alla.
+ * ============================================================
+ */
+
+/* Palstat allekkain: lehti luetaan ylhäältä alas, ei rinnakkain. */
+.dialog.lehti .arrival-palstat { display: block; }
+
+.lehti-ylarivi {
+  margin: 0 0 0.1rem;
+  font-family: var(--font-type);
+  font-size: 0.6rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(70, 51, 31, 0.7);
+}
+
+/* Lehden nimiö: kaupungin nimi isolla antiikvalla keskitettynä. */
+.dialog.lehti #arrival-city {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.9rem, 7.5vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Päiväysrivi tuplaviivan ja ohuen viivan välissä kuin sanomalehdessä. */
+.lehti-alarivi {
+  margin: 0.35rem 0 0.85rem;
+  padding: 0.24rem 0;
+  border-top: 3px double rgba(70, 51, 31, 0.75);
+  border-bottom: 1px solid rgba(70, 51, 31, 0.5);
+  font-family: var(--font-type);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(70, 51, 31, 0.85);
+}
+
+/* Kansiosio jatkaa esittelyä; nostot perivät wiki-kategorian taiton. */
+.lehti-kansi { margin-top: 0.9rem; }
+
+/* Maa on lehden oma osasto: tuplaviiva erottaa, nimi osastonotsikkona. */
+.dialog.lehti .arrival-maa {
+  border-left: 0;
+  padding-left: 0;
+  margin-top: 1.2rem;
+  border-top: 3px double rgba(70, 51, 31, 0.75);
+  padding-top: 0.55rem;
+}
+
+.dialog.lehti .arrival-maa-rivi {
+  justify-content: center;
+  border-bottom: 1px solid rgba(70, 51, 31, 0.45);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.55rem;
+}
+
+.dialog.lehti .arrival-maa-nimi {
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/*
+ * Alareunan napit lehtimäisiksi: tasalevyiset kehysruudut tuplaviivan
+ * alla, kuin etusivun ilmoituspalsta. Uudet nimet ja tarinallinen
+ * kohtaaminen tulevat omassa erässään — tämä on taiton osuus.
+ */
+.dialog.lehti .arrival-card .dialog-actions {
+  border-top: 3px double rgba(70, 51, 31, 0.55);
+  gap: 0.7rem;
+}
+
+.dialog.lehti .arrival-card .dialog-actions button {
+  flex: 1 1 0;
+  margin: 0;
+  padding: 0.62rem 0.4rem;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 3px;
+}
+
+/*
+ * Teosgalleria noston kuvan ympärillä (pilottina Venetsian Canaletto):
+ * kotelo perii saapumiskuvan nuolet ja laskurin. Kotelo ottaa kuvan
+ * paikan taitossa — myös kellutuksen leveällä ruudulla — ja kuva
+ * istuu kotelossa ilman omaa marginaalia, jotta nuolet ja laskuri
+ * pysyvät tarkalleen kuvan päällä.
+ */
+.wiki-nosto .nosto-galleria {
+  margin: 0.15rem auto 0.5rem;
+  /* Teosta vaihdettaessa uusi kuva latautuu hetken: ilman
+   * vähimmäiskorkeutta kotelo lysähtäisi nuolineen kasaan ja sivu
+   * hyppisi. */
+  min-height: 140px;
+}
+
+.wiki-nosto .nosto-galleria img { margin: 0; }
+
+@media (min-width: 1000px) {
+  .wiki-nosto .nosto-galleria {
+    float: right;
+    max-width: min(56%, 620px);
+    margin: 0.15rem 0 0.6rem 1.5rem;
+  }
+
+  .wiki-nosto:nth-of-type(even) .nosto-galleria {
+    float: left;
+    margin: 0.15rem 1.5rem 0.6rem 0;
+  }
+
+  .wiki-nosto .nosto-galleria img { float: none; margin: 0; }
+}
+
+/*
+ * Lehden minitehtävä: kuponkimainen tehtäväpalsta sivun lopussa —
+ * katkoviivakehys kuin "leikkaa talteen" -ilmoituksessa. Vastaus
+ * löytyy saman sivun tekstistä; napit ja palaute perivät
+ * kulttuurivisan tyylit.
+ */
+.minitehtava {
+  clear: both;
+  margin: 1.2rem 0 0.4rem;
+  padding: 0.6rem 0.8rem 0.7rem;
+  border: 1.5px dashed rgba(70, 51, 31, 0.6);
+  border-radius: 4px;
+  background: rgba(255, 250, 238, 0.55);
+}
+
+.minitehtava-otsikko {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-type);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(70, 51, 31, 0.8);
+}
+
+.minitehtava-kysymys {
+  margin: 0 0 0.45rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}

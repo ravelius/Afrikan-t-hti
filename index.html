@@ -240,7 +240,12 @@
          kapealla allekkain (omistajan toive). -->
     <div class="arrival-palstat">
      <div class="arrival-palsta">
+      <!-- Lehden masto (kaupungit, joilla on oma kansiosio): pieni
+           nimirivi kaupunginnimen yllä ja päiväysrivi sen alla, kuin
+           paikallislehden etusivulla (omistajan toive 5.8.2026). -->
+      <p id="arrival-lehti-yla" class="lehti-ylarivi" hidden>Matkakirjan matkalehti</p>
       <h2 id="arrival-city"></h2>
+      <p id="arrival-lehti-ala" class="lehti-alarivi" hidden></p>
       <!-- Kaupungin kuva: hento laskuri ja selailunuolet houkuttavat
            selaamaan galleriaa avaamatta suurennosta (omistajan toive). -->
       <div id="arrival-kuvakotelo" class="arrival-kuvakotelo" hidden>
@@ -251,6 +256,9 @@
       </div>
       <p id="arrival-intro" class="arrival-intro">Isoisä on merkinnyt tämän paikan karttaansa.</p>
       <button id="arrival-wiki" class="wiki-btn" type="button" hidden>Lue lisää</button>
+      <!-- Kansiosio: kaupungin oma aihe (id 'kaupunki') taittuu suoraan
+           etusivulle nostotaitolla eikä omalle sivulleen. -->
+      <div id="arrival-kansi" class="wiki-kategoria lehti-kansi" hidden></div>
      </div>
      <div id="arrival-maa" class="arrival-maa" hidden>
       <p class="arrival-maa-rivi"><img id="arrival-maa-lippu" class="arrival-lippu" alt="" hidden /><span class="arrival-maa-nimi" id="arrival-maa-nimi"></span></p>

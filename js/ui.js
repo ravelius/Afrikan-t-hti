@@ -886,6 +886,9 @@ const ZOOM_PEHMENNYS = 'cubic-bezier(0.68, 0, 0.3, 1)';
 // Hiljainen hetki ennen zoomausta, jotta moottoriääni erottuu.
 // Tutki-sivun ylä- ja alareunan kaista, joka vierittää päähän.
 const TUTKI_KAISTA_PX = 64;
+// Lehden minitehtävän palkkio: pienempi kuin kulttuurivisan, koska
+// vastaus lukee samalla sivulla.
+const MINITEHTAVA_PALKKIO = 10;
 const ZOOM_TAUKO_MS = 260;
 /*
  * Hiiren rullan vähimmäisväli. Tarkka rulla ja trackpad lähettävät
@@ -1403,6 +1406,11 @@ export class UI {
     this.arrivalKategoria = document.getElementById('arrival-kategoria');
     // Kaupunki- ja maapalstat: näkyvät vain lehden etusivulla.
     this.arrivalPalstat = document.querySelector('#arrival-dialog .arrival-palstat');
+    // Lehtitaitto (omistajan toive 5.8.2026): kaupungin oma kansiosio
+    // taittuu etusivulle, ja masto kertoo että käsissä on paikallislehti.
+    this.arrivalKansi = document.getElementById('arrival-kansi');
+    this.arrivalLehtiYla = document.getElementById('arrival-lehti-yla');
+    this.arrivalLehtiAla = document.getElementById('arrival-lehti-ala');
     this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
     // Visa aukeaa omasta napistaan samaan näkymään (omistajan toive):
     // nappi väistyy ja kysymys vaihtoehtoineen tulee tilalle.
@@ -6112,6 +6120,10 @@ export class UI {
       kuva.src = url;
     };
     kuva.addEventListener('error', () => {
+      // Galleriateoksen virhe kuuluu asetaKuvan varareitille — tämä
+      // kuuntelija hoitaa vain noston oman kuvan osoitteet, muuten se
+      // palauttaisi selatun teoksen takaisin ensimmäiseen.
+      if (!osoitteet.includes(kuva.getAttribute('src'))) return;
       if (onPeilista(kuva.currentSrc || kuva.src)) {
         peiliPetti(peilinLaji(kuva.currentSrc || kuva.src) ?? 'kuvat');
       }
@@ -6120,8 +6132,9 @@ export class UI {
     });
     seuraava();
     // Suurennus vain tarkoituksellisesta napautuksesta, ei vierityksen
-    // tai raahauksen päätteeksi (omistajan toive).
-    this.napautuksesta(kuva, () => this.naytaKulttuuriKuva(nosto));
+    // tai raahauksen päätteeksi (omistajan toive). Galleriassa avataan
+    // kohdalla oleva teos, ei aina noston ensimmäistä.
+    this.napautuksesta(kuva, () => this.naytaKulttuuriKuva(kuva.galleriaKohde ?? nosto));
   }
 
   /**
@@ -6570,6 +6583,26 @@ export class UI {
     for (const osa of (maanIso ? MAA_KATEGORIAT[maanIso] ?? [] : [])) {
       if (!kategoriat.some((k) => k.id === osa.id)) kategoriat.push(osa);
     }
+    /*
+     * Lehtitaitto (omistajan toive 5.8.2026): aihe, jonka id on
+     * 'kaupunki', on lehden kansiosio. Se ei saa omaa sivua vaan
+     * taittuu suoraan etusivulle kaupunkiesittelyn jatkoksi, ja maan
+     * palsta jää sen alle omaksi osastokseen — kuin paikallislehden
+     * etusivu. Muut kaupungit näyttävät etusivun entiseen tapaan.
+     */
+    const kansiIndeksi = kategoriat.findIndex((k) => k.id === 'kaupunki');
+    this.tutkiKansi = kansiIndeksi >= 0 ? kategoriat.splice(kansiIndeksi, 1)[0] : null;
+    const lehti = Boolean(this.tutkiKansi);
+    this.arrivalDialog.classList.toggle('lehti', lehti);
+    this.piirraKategoria(this.tutkiKansi, this.arrivalKansi, { otsikko: false, sitaatti: false });
+    this.arrivalKansi.hidden = !lehti;
+    this.arrivalLehtiYla.hidden = !lehti;
+    // Päiväysrivi kuin lehden nimiön alla: maa ja monesko matkapäivä.
+    const maanNimi = this.arrivalMaaTiedot?.nimi;
+    this.arrivalLehtiAla.textContent = lehti
+      ? [maanNimi, `${this.game.dayCount()}. matkapäivä`].filter(Boolean).join(' · ')
+      : '';
+    this.arrivalLehtiAla.hidden = !lehti;
     this.arrivalLiuskat.replaceChildren();
     this.arrivalLiuskat.hidden = true;
     this.tutkiSivut = kategoriat;
@@ -6762,36 +6795,44 @@ export class UI {
   }
 
 
-  /** Yhden kategorian nostot: johdanto ja sen alla kortit. */
-  piirraKategoria(kategoria) {
-    this.arrivalKategoria.replaceChildren();
+  /**
+   * Yhden kategorian nostot: johdanto ja sen alla kortit.
+   *
+   * Kohde on oletuksena aihesivun oma elementti, mutta lehtitaitossa
+   * sama piirto taittaa kansiosion etusivulle (arrivalKansi). Otsikko
+   * jätetään silloin pois — lehden masto kertoo kaupungin nimen jo.
+   */
+  piirraKategoria(kategoria, kohde = this.arrivalKategoria, { otsikko = true, sitaatti = true } = {}) {
+    kohde.replaceChildren();
     if (!kategoria) return;
     // Kuvake ei kerro nimeä, joten nimi lukee sisällön yllä.
-    this.arrivalKategoria.appendChild(html('h3', 'aihe-nimi', kategoria.nimi));
+    if (otsikko) kohde.appendChild(html('h3', 'aihe-nimi', kategoria.nimi));
     /*
      * Litteä nostolista piirretään vanhalla piirrolla: siinä on
      * musiikkilinkit, ääninäytteet ja "Lue lisää aiheesta" -napit,
      * joita kategorianostoissa ei ole.
      */
     if (kategoria.litteä) {
-      this.piirraKulttuuriNostot(this.arrivalKategoria, kategoria.nostot ?? []);
+      this.piirraKulttuuriNostot(kohde, kategoria.nostot ?? []);
       return;
     }
     if (kategoria.johdanto) {
-      this.arrivalKategoria.appendChild(html('p', 'johdanto', kategoria.johdanto));
+      kohde.appendChild(html('p', 'johdanto', kategoria.johdanto));
     }
     /*
      * Sitaattinosto sivun alkupuolelle: lehdessä se on aukeaman
      * hengähdyspaikka, ei koriste. Yksi per sivu, ks. poimiNostoVirke.
      */
-    const nostoVirke = poimiNostoVirke((kategoria.nostot ?? []).slice(0, 1));
+    // Kansiosio on lyhyt, ja sitaatti toistaisi viereisen virkkeen
+    // melkein kiinni alkuperäisessä — siksi se voidaan jättää pois.
+    const nostoVirke = sitaatti ? poimiNostoVirke((kategoria.nostot ?? []).slice(0, 1)) : null;
     let ensimmainen = true;
     let nostoSijoitettu = false;
     for (const nosto of kategoria.nostot ?? []) {
       if (!ensimmainen && !nostoSijoitettu && nostoVirke) {
         const sitaatti = html('blockquote', 'wiki-sitaatti');
         sitaatti.appendChild(html('p', '', nostoVirke));
-        this.arrivalKategoria.appendChild(sitaatti);
+        kohde.appendChild(sitaatti);
         nostoSijoitettu = true;
       }
       const lohko = html('div', 'wiki-nosto');
@@ -6802,8 +6843,9 @@ export class UI {
       otsikkoRivi.appendChild(html('h3', '', nosto.otsikko));
       this.lisaaNostonNapit(otsikkoRivi, nosto);
       lohko.appendChild(otsikkoRivi);
+      let kuva = null;
       if (nosto.tiedosto) {
-        const kuva = document.createElement('img');
+        kuva = document.createElement('img');
         // Sama syy kuin litteissä nostoissa: nollan kokoinen laiska kuva
         // ei lataudu WebKitissä lainkaan. Vain avatun aiheen kuvat ovat
         // kerrallaan DOM:issa, joten määrä pysyy pienenä.
@@ -6812,16 +6854,139 @@ export class UI {
       }
       piirraLeipa(lohko, nosto.teksti, { anfangi: ensimmainen });
       ensimmainen = false;
-      if (nosto.selite) lohko.appendChild(html('p', 'selite', nosto.selite));
+      const selite = nosto.selite ? html('p', 'selite', nosto.selite) : null;
+      if (selite) lohko.appendChild(selite);
       if (nosto.wiki) {
         const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
         nappi.type = 'button';
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
-      if (nosto.lahde) lohko.appendChild(html('p', 'lahde', nosto.lahde));
-      this.arrivalKategoria.appendChild(lohko);
+      const lahde = nosto.lahde ? html('p', 'lahde', nosto.lahde) : null;
+      if (lahde) lohko.appendChild(lahde);
+      // Selattava teosgalleria noston kuvan ympärille (pilottina
+      // Venetsian Canaletto): nuolet vaihtavat teosta, selite ja
+      // lähderivi seuraavat mukana.
+      if (kuva && nosto.galleria?.length) {
+        this.kaariNostoGalleria(kuva, nosto, { selite, lahde });
+      }
+      kohde.appendChild(lohko);
     }
+    // Lehden minitehtävä sivun loppuun (omistajan toive 5.8.2026).
+    if (kategoria.tehtava) this.piirraMinitehtava(kohde, kategoria);
+  }
+
+  /**
+   * Lehden minitehtävä: kehystetty tehtäväpalsta sivun lopussa kuin
+   * sanomalehden ristikkonurkka. Kysymykseen osaa vastata luettuaan
+   * saman sivun — ja oikeasta vastauksesta saa pienen rahapalkkion,
+   * kerran per lehti (game.actionMinitehtava). Maan yhteinen aihesivu
+   * voi palkita uudelleen saman maan toisessa kaupungissa.
+   */
+  piirraMinitehtava(kohde, kategoria) {
+    const { tehtava } = kategoria;
+    const cityId = this.arrivalShownFor;
+    const laatikko = html('div', 'minitehtava');
+    laatikko.appendChild(html('p', 'minitehtava-otsikko', 'Lehden minitehtävä'));
+    const avain = `${this.game.pack.id}:${cityId}:${kategoria.id}`;
+    if (this.game.minitehtavatVastatut?.has(avain)) {
+      laatikko.appendChild(html('p', 'minitehtava-kysymys',
+        'Tämän lehden minitehtävä on jo ratkaistu.'));
+      kohde.appendChild(laatikko);
+      return;
+    }
+    laatikko.appendChild(html('p', 'minitehtava-kysymys', tehtava.kysymys));
+    const vaihtoehdot = html('div', 'kulttuuri-vaihtoehdot');
+    const tulos = html('p', 'kulttuuri-tulos');
+    tulos.hidden = true;
+    tehtava.vaihtoehdot.forEach((teksti, i) => {
+      const nappi = html('button', '', teksti);
+      nappi.type = 'button';
+      nappi.addEventListener('click', () => {
+        const oikein = i === tehtava.oikea;
+        const vastaus = this.game.actionMinitehtava(
+          cityId, kategoria.id, oikein, MINITEHTAVA_PALKKIO,
+        );
+        if (!vastaus.ok) return;
+        vaihtoehdot.replaceChildren();
+        tulos.hidden = false;
+        tulos.className = oikein
+          ? 'kulttuuri-tulos oikein-tulos'
+          : 'kulttuuri-tulos vaarin-tulos';
+        tulos.textContent = (oikein
+          ? `Oikein! +${MINITEHTAVA_PALKKIO} puntaa. `
+          : `Oikea vastaus: ${tehtava.vaihtoehdot[tehtava.oikea]}. `)
+          + (tehtava.fakta ?? '');
+        sfx.play(oikein ? 'correct' : 'wrong');
+        // Palkkiosta toast myös kortin ulkopuolelle — sama syy kuin
+        // kulttuurivisassa: hyvitys ei saa jäädä huomaamatta.
+        if (oikein) {
+          const box = this.buildToast({
+            kind: 'stamp',
+            icon: 'kukkaro',
+            text: `+${MINITEHTAVA_PALKKIO} puntaa`,
+            sub: 'Lehden minitehtävä ratkesi',
+          });
+          setTimeout(() => this.removeToast(box), TOAST_MS.default);
+        }
+        // Koko render() sulkisi Tutki-kortin — riittää tallentaa ja
+        // päivittää rahapilleri (sama syy kuin kulttuurivisassa).
+        this.onChange?.(this.game);
+        this.renderTurnPill();
+      });
+      vaihtoehdot.appendChild(nappi);
+    });
+    laatikko.appendChild(vaihtoehdot);
+    laatikko.appendChild(tulos);
+    kohde.appendChild(laatikko);
+  }
+
+  /**
+   * Kääräisee noston kuvan galleriaksi: kuva saa ympärilleen kotelon,
+   * jossa ovat samat selailunuolet ja laskuri kuin saapumiskuvassa.
+   * Teoslista alkaa noston omasta kuvasta ja jatkuu galleria-kentän
+   * teoksilla; selailu kiertää ympäri. Selite- ja lähderivit vaihtuvat
+   * teoksen mukana, ja suurennos avaa aina kohdalla olevan teoksen
+   * (kuva.galleriaKohde — ks. varustaNostonKuva).
+   */
+  kaariNostoGalleria(kuva, nosto, { selite = null, lahde = null } = {}) {
+    const kotelo = html('div', 'arrival-kuvakotelo nosto-galleria');
+    kuva.replaceWith(kotelo);
+    kotelo.appendChild(kuva);
+    const teokset = [
+      { otsikko: nosto.otsikko, tiedosto: nosto.tiedosto, selite: nosto.selite, lahde: nosto.lahde },
+      ...nosto.galleria,
+    ];
+    let kohdalla = 0;
+    const laskuri = html('span', 'arrival-kuva-laskuri', `1 / ${teokset.length}`);
+    const nayta = (suunta) => {
+      kohdalla = (kohdalla + suunta + teokset.length) % teokset.length;
+      const teos = teokset[kohdalla];
+      asetaKuva(kuva, valokuvaUrl(teos.tiedosto, 900), valokuvaVara(teos.tiedosto, 900));
+      kuva.alt = teos.selite ?? teos.otsikko ?? nosto.otsikko;
+      // Ensimmäinen teos on nosto itse — silloin suurennos toimii
+      // kuten ennenkin (galleriaKohde tyhjä).
+      kuva.galleriaKohde = kohdalla
+        ? { ...teos, otsikko: teos.otsikko ?? nosto.otsikko }
+        : null;
+      if (selite) selite.textContent = teos.selite ?? '';
+      if (lahde) lahde.textContent = teos.lahde ?? nosto.lahde ?? '';
+      laskuri.textContent = `${kohdalla + 1} / ${teokset.length}`;
+    };
+    const nuoli = (luokka, merkki, nimi, suunta) => {
+      const nappi = html('button', `arrival-kuva-nuoli ${luokka}`, merkki);
+      nappi.type = 'button';
+      nappi.setAttribute('aria-label', nimi);
+      nappi.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sfx.play('paper');
+        nayta(suunta);
+      });
+      kotelo.appendChild(nappi);
+    };
+    nuoli('edellinen', '‹', 'Edellinen teos', -1);
+    nuoli('seuraava', '›', 'Seuraava teos', 1);
+    kotelo.appendChild(laskuri);
   }
 
   /*
