@@ -29,19 +29,27 @@ Omistajan visio: kansisivullinen kaupunki taittuu paikallislehdeksi.
 Kaikki kolme mekanismia ovat datavetoisia — uusi maa tai kaupunki ei
 vaadi koodimuutoksia:
 
-- **Lehtitaitto:** kun kaupungilla on aihe id:llä `kaupunki`, se EI saa
-  omaa sivuaan vaan taittuu etusivulle kaupunkiesittelyn jatkoksi
-  (ui.js rakennaSivut → tutkiKansi → #arrival-kansi). Etusivu saa
-  lehden maston: pieni ylärivi "Matkakirjan matkalehti", kaupungin nimi
-  isolla ja päiväysrivi (maa · monesko matkapäivä) viivojen välissä.
-  Maa on samalla etusivulla omana osastonaan tuplaviivan alla, ja
-  alanapit ovat lehtimäiset kehysruudut. Muut kaupungit näyttävät
-  etusivun entiseen tapaan (`.dialog.lehti`-luokka ohjaa kaiken).
+- **Lehtitaitto (tarkennettu v277):** kun kaupungilla on aihe id:llä
+  `kaupunki`, etusivu rakentuu esittelytekstin ja isojen kuvien
+  varaan: masto (ylärivi, kaupungin nimi, päiväysrivi), sää, iso
+  pääkuva, esittely, pienempien kuvien pari ja maa omana osastonaan —
+  ilman Lue lisää -nappeja ja wikin kuvakarusellia (tekstien pitää
+  riittää itsenään, kuvat ovat omia tarkistettuja valintoja
+  kategorian `kansikuvat`-listasta). Kansiosion nostot saavat OMAN
+  sivunsa heti etusivun jälkeen ja maan aiheet jatkuvat niiden
+  perään. Ensimmäinen versio (v270) taittoi nostot etusivulle — sivu
+  venyi liian pitkäksi ja maan ydintiedot hukkuivat; älä palaa
+  siihen. Lehtimaan intro (esim. Italia europe-artikkelit.js:ssä)
+  kirjoitetaan muita pidemmäksi, koska se kantaa maaosaston yksin.
+  Muut kaupungit näyttävät etusivun entiseen tapaan
+  (`.dialog.lehti`-luokka ohjaa kaiken).
 - **Teosgalleria:** nosto voi kantaa `galleria: [{ otsikko, tiedosto,
   selite, lahde }]` -listan (pilotti: Venetsian Canaletto, 6 teosta).
   Noston kuva saa selailunuolet ja laskurin; selite- ja lähderivit
-  vaihtuvat teoksen mukana, suurennos avaa kohdalla olevan teoksen.
-  Peilityökalu poimii galleriakuvien `tiedosto:`-kentät automaattisesti.
+  vaihtuvat teoksen mukana. Suurennos avaa kohdalla olevan teoksen ja
+  KOKO SARJAN selattavana täydellä ruudulla (v277) — sama koskee
+  etusivun kansikuvia. Peilityökalu poimii galleria- ja kansikuvien
+  `tiedosto:`-kentät automaattisesti.
 - **Sää (v272):** lehtikaupunki saa mastoon päivän ennusteen ja
   napautuksesta koko vuoden graafin, kun sille on rivi
   `js/packs/saatiedot.js`:ssä (lat/lon + kuukausinormaalit; normaalien

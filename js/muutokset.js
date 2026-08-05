@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 278, teksti: 'Lehden etusivu tiiviiksi: isot kuvat, maa ylemmäs' },
+  { v: 278, teksti: 'Venetsian nostot omalle sivulleen etusivun jälkeen' },
+  { v: 278, teksti: 'Suurennos selattavaksi: koko galleria isolla' },
+  { v: 278, teksti: 'Työpöydän kapea tekstipalsta nostoissa korjattu' },
   { v: 277, teksti: 'Radiosta tyhjä puu pois oikeasta laidasta' },
   { v: 277, teksti: 'Kotelon pystyviirut pois: lakattu pinta on sileä' },
   { v: 276, teksti: 'Maaosastossa paikallisia uutisotsikoita (Italia)' },

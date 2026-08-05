@@ -1190,6 +1190,33 @@ export const KULTTUURI_KATEGORIAT = {
       nimi: 'Venetsia',
       johdanto: 'Kaupunki, joka päätti rakentaa itsensä veteen — ja '
         + 'teki mahdottomasta tunnusmerkkinsä.',
+      /*
+       * Lehden etusivun kuvat (omistajan toive 5.8.2026): oma,
+       * tarkistettu valinta wikin satunnaiskarusellin sijaan.
+       * Ensimmäinen on iso pääkuva maston alla, loput pienempien
+       * kuvien rivissä esittelyn jälkeen. Napautus avaa selattavan
+       * suurennoksen.
+       */
+      kansikuvat: [
+        {
+          tiedosto: 'Aerial photographs of Venice 2013, Anton Nossik, 045.jpg',
+          selite: 'Markuksentori ja dogen palatsi ilmasta — koko '
+            + 'kaupunki seisoo keskellä laguunia.',
+          lahde: 'Anton Nosik, Wikimedia Commons (CC BY 3.0)',
+        },
+        {
+          tiedosto: 'Canal Grande Chiesa della Salute e Dogana dal ponte dell Accademia.jpg',
+          selite: 'Canal Grande ja Santa Maria della Saluten kupolit '
+            + 'Accademian sillalta.',
+          lahde: 'Wolfgang Moroder, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Rialto Gondoliers.jpg',
+          selite: 'Rialton silta on ylittänyt pääkanavan yli '
+            + 'neljäsataa vuotta.',
+          lahde: 'Saffron Blaze, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
       nostot: [
         {
           otsikko: 'Canaletto maalasi kaupunkinsa',

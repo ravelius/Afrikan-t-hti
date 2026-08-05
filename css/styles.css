@@ -6578,8 +6578,56 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   color: rgba(70, 51, 31, 0.85);
 }
 
-/* Kansiosio jatkaa esittelyä; nostot perivät wiki-kategorian taiton. */
-.lehti-kansi { margin-top: 0.9rem; }
+/*
+ * Lehden etusivun kuvataitto: iso pääkuva maston alla, pienempien
+ * kuvien pari esittelyn jälkeen. Kuvatekstit pienellä konekirjaimella
+ * ja lähde vielä hillitymmin sen perässä.
+ */
+.lehti-paakuva { margin: 0.1rem 0 0.7rem; }
+
+.lehti-kuvarivi {
+  clear: both;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 0.9rem 0 0.4rem;
+}
+
+.lehti-kuva { margin: 0; }
+
+.lehti-kuva img {
+  display: block;
+  width: 100%;
+  border: 3px solid #f7efdc;
+  outline: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 2px;
+  cursor: zoom-in;
+}
+
+/* Pääkuva saa olla iso mutta ei ruudun korkuinen; parin kuvat
+ * rajataan samaan suhteeseen, jotta rivi pysyy tasakorkuisena. */
+.lehti-paakuva .lehti-kuva img { max-height: 360px; object-fit: cover; }
+
+.lehti-kuvarivi .lehti-kuva img { aspect-ratio: 4 / 3; object-fit: cover; }
+
+.lehti-kuva .kuvateksti {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: rgba(70, 51, 31, 0.85);
+}
+
+.lehti-kuvalahde {
+  font-size: 0.68rem;
+  color: rgba(70, 51, 31, 0.55);
+}
+
+/* Esittely on lehden pääjuttu: hieman leipätekstiä isompi. */
+.dialog.lehti #arrival-intro {
+  font-size: 1rem;
+  line-height: 1.6;
+}
 
 /* Maa on lehden oma osasto: tuplaviiva erottaa, nimi osastonotsikkona. */
 .dialog.lehti .arrival-maa {
@@ -6916,4 +6964,16 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 .postikortti.kulttuuri-suurennos.vuosisaa-kortti .kuvateksti {
   color: #2d2010;
   font-weight: 700;
+}
+
+
+/*
+ * Suurennoksen kuvakotelo: nuolet ja laskuri asemoituvat täsmälleen
+ * kuvan päälle (fit-content), myös kapean pystykuvan kohdalla.
+ */
+.suurennos-kuvakotelo {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
 }
