@@ -2712,7 +2712,7 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /*
- * Leimaruudukko poistettu v281:ssä yhdessä vihreän passin kanssa.
+ * Leimaruudukko poistettu v282:ssa yhdessä vihreän passin kanssa.
  * `.stamp` jää, koska tapahtumakupla käyttää sitä (.event-toast.stamp).
  */
 .stamp {
@@ -7017,10 +7017,12 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   box-shadow: none;
   text-align: left;
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 0.95rem;
+  /* Pieni ja hillitty (omistajan toive): sähkeet eivät saa varastaa
+   * huomiota maan esittelyltä. */
+  font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.35;
-  color: rgba(45, 32, 16, 0.95);
+  color: rgba(45, 32, 16, 0.9);
   cursor: pointer;
 }
 
@@ -7117,4 +7119,108 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   width: fit-content;
   max-width: 100%;
   margin-inline: auto;
+}
+
+
+/*
+ * Uutispopupin tarkennukset (omistaja 5.8.2026): tausta ei tummene —
+ * kortti kelluu lehden päällä varjonsa varassa — ja pitkä artikkeli
+ * vierii kortin sisällä. Sulkurasti kulmassa; myös kortin napautus
+ * sulkee.
+ */
+.postikortti.kulttuuri-suurennos.uutinen-kortti::before { display: none; }
+
+.postikortti.kulttuuri-suurennos.uutinen-kortti {
+  max-height: 84dvh;
+  overflow-y: auto;
+  padding-right: 2.2rem;
+}
+
+.dialog button.uutinen-sulku {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.4rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  box-shadow: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: rgba(70, 51, 31, 0.7);
+  cursor: pointer;
+}
+
+/* Suomennos heti otsikon alla: pienempi ja kevyempi, ei selittelyä. */
+.uutinen-otsikko-suomeksi {
+  margin: -0.25rem 0 0.55rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(70, 51, 31, 0.72);
+}
+
+.uutinen-runko .uutinen-kuvaus { margin-bottom: 0.55rem; }
+
+.uutinen-kaannos p {
+  margin: 0 0 0.5rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(58, 42, 22, 0.95);
+}
+
+/*
+ * Maaosaston taitto leveällä ruudulla (omistaja: kartan oikealla
+ * puolella oli tyhjäkäyntiä): uutissähkeet nousevat kartan viereen
+ * oikeaan palstaan, ja esittelyteksti levittäytyy molempien alle.
+ */
+@media (min-width: 641px) {
+  .dialog.lehti .arrival-maa {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    column-gap: 1.2rem;
+    align-items: start;
+  }
+
+  .dialog.lehti .arrival-maa > * { grid-column: 1; }
+
+  .dialog.lehti .arrival-maa .arrival-maa-rivi { grid-column: 1 / -1; }
+
+  .dialog.lehti .arrival-maa .arrival-uutiset {
+    grid-column: 2;
+    grid-row: 2 / span 8;
+    margin: 0;
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .dialog.lehti .arrival-maa #arrival-maa-intro { grid-column: 1 / -1; }
+}
+
+/*
+ * Maan esittely on lehden pääkirjoitus (omistaja: "visuaalisesti
+ * ponneton"): kirjan antiikva, väljempi riviväli ja anfangi.
+ */
+.dialog.lehti #arrival-maa-intro {
+  margin-top: 0.5rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.02rem;
+  line-height: 1.62;
+  color: #2d2010;
+}
+
+.dialog.lehti #arrival-maa-intro::first-letter {
+  float: left;
+  font-family: var(--font-type);
+  font-size: 3.1em;
+  line-height: 0.82;
+  font-weight: 700;
+  padding: 0.06em 0.12em 0 0;
+  color: rgba(70, 51, 31, 0.9);
 }

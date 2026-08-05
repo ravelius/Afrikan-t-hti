@@ -1,5 +1,12 @@
 # Uutisvälityksen käyttöönotto (omistajalle, n. 5 min)
 
+> **Päivitys 5.8.2026 (v280):** worker hakee nyt myös uutisten
+> artikkelisivut, jotta popupissa näkyy koko leipäteksti. Jos otit
+> workerin käyttöön ennen tätä, julkaise se kerran uudelleen:
+> **Edit code → poista vanha → liitä tuore `worker.js` → Deploy.**
+> Ennen uudelleenjulkaisua popup näyttää vain syötteen lyhyen
+> kuvauksen — mikään ei mene rikki.
+
 Lehden maaosaston uutisotsikot tarvitsevat pienen välityspalvelimen,
 koska uutissivustot eivät salli selaimen hakea RSS-syötteitään suoraan
 toiselta sivustolta (CORS). Välitys on ilmainen Cloudflare Worker —

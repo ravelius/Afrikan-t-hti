@@ -5282,7 +5282,7 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
-## v281 — Matkalaukku: Aarnin luettelo, omat kuvakkeet, nahka (5.8.2026)
+## v282 — Matkalaukku: Aarnin luettelo, omat kuvakkeet, nahka (5.8.2026)
 
 Kuusi omistajan huomiota yhdellä kertaa.
 

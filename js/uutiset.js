@@ -79,6 +79,43 @@ function paloittele(teksti, raja = 450) {
   return palat;
 }
 
+/*
+ * Artikkelin leipäteksti uutissivulta (omistajan toive 5.8.2026:
+ * "eikö saa pidempää tekstiä pop-up-ikkunaan?"). Syötteiden kuvaukset
+ * ovat parin lauseen mittaisia, joten popupia varten haetaan itse
+ * artikkelisivu workerin kautta ja poimitaan siitä kappaleet.
+ *
+ * Poiminta: ensin schema.org-merkintä [itemprop="articleBody"] (ANSA
+ * käyttää sitä), sitten <article>. Lyhyet rivit ja copyright-häntä
+ * suodatetaan. Jos worker ei vielä päästä artikkelisivuja läpi
+ * (vanha versio, 403) tai jäsennys ei löydä mitään, palautetaan null
+ * ja popup näyttää syötteen kuvauksen — mikään ei mene rikki.
+ */
+const artikkeliMuisti = new Map();
+
+export async function haeArtikkeli(linkki) {
+  if (!UUTISPROXY || !linkki) return null;
+  if (artikkeliMuisti.has(linkki)) return artikkeliMuisti.get(linkki);
+  let kappaleet = null;
+  try {
+    const osoite = `${UUTISPROXY}?url=${encodeURIComponent(linkki)}`;
+    const vastaus = await fetch(osoite, { signal: AbortSignal.timeout(12000) });
+    if (vastaus.ok) {
+      const dokumentti = new DOMParser().parseFromString(await vastaus.text(), 'text/html');
+      const runko = dokumentti.querySelector('[itemprop="articleBody"]')
+        ?? dokumentti.querySelector('article');
+      const loydetyt = [...(runko?.querySelectorAll('p') ?? [])]
+        .map((p) => p.textContent.replace(/\s+/g, ' ').trim())
+        .filter((t) => t.length > 60 && !/Riproduzione riservata|©|Copyright/i.test(t));
+      if (loydetyt.length) kappaleet = loydetyt.slice(0, 6);
+    }
+  } catch {
+    kappaleet = null;
+  }
+  artikkeliMuisti.set(linkki, kappaleet);
+  return kappaleet;
+}
+
 /** Konekäännös suomeksi tai null. */
 export async function kaannaSuomeksi(teksti, kieli) {
   if (!teksti?.trim()) return '';

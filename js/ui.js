@@ -69,7 +69,9 @@ import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
-import { haeUutiset, kaannaSuomeksi, uutislahde } from './uutiset.js';
+import {
+  haeUutiset, haeArtikkeli, kaannaSuomeksi, uutislahde,
+} from './uutiset.js';
 import {
   haeSaaTanaan, saaKuvaus, SAA_IKONIT, kuukausiSsa, piirraVuosiSaa,
 } from './saa.js';
@@ -7028,11 +7030,11 @@ export class UI {
     haeUutiset(iso).then((uutiset) => {
       if (!uutiset.length) return;
       if (!this.arrivalDialog.open || this.arrivalShownFor !== cityId) return;
-      this.arrivalUutiset.querySelector('.uutiset-nimio').textContent =
-        `Uutisia · ${lahde.nimi}`;
+      // "Uutisissa tänään" (omistajan sanamuoto); lähde lukee popupissa.
+      this.arrivalUutiset.querySelector('.uutiset-nimio').textContent = 'Uutisissa tänään';
       const lista = this.arrivalUutiset.querySelector('.uutiset-lista');
       lista.replaceChildren();
-      for (const uutinen of uutiset.slice(0, 4)) {
+      for (const uutinen of uutiset.slice(0, 3)) {
         const rivi = html('button', 'uutinen-rivi', uutinen.otsikko);
         rivi.type = 'button';
         rivi.lang = lahde.kieli;
@@ -7044,24 +7046,50 @@ export class UI {
   }
 
   /**
-   * Uutinen aukeaa samana korttina kuin kulttuurikuvan suurennos:
-   * otsikko ja kuvaus sellaisinaan pelin kirjasimilla, alla lähderivi
-   * ja Käännä suomeksi -nappi (MyMemory-konekäännös). Napautus kortin
-   * tyhjään kohtaan sulkee; napit eivät sulje.
+   * Uutispopup (omistajan tarkennukset 5.8.2026): otsikko, sen alla
+   * heti suomennos pienemmällä ja kevyemmällä (haetaan itsestään, ei
+   * etikettiä), sitten artikkelin leipäteksti — koko juttu haetaan
+   * uutissivulta workerin kautta, ja syötteen lyhyt kuvaus on vain
+   * varateksti. Tausta EI tummene; kortin sulkee sen napautus tai
+   * kulman rasti. Käännä suomeksi -nappi kääntää leipätekstin.
    */
   avaaUutinen(uutinen, lahde) {
     this.suljeKulttuuriKuva();
     sfx.play('paper');
     const kortti = html('div', 'postikortti kulttuuri-suurennos uutinen-kortti');
+    const sulku = html('button', 'uutinen-sulku', '×');
+    sulku.type = 'button';
+    sulku.setAttribute('aria-label', 'Sulje uutinen');
+    kortti.appendChild(sulku);
     const otsikko = html('p', 'uutinen-otsikko', uutinen.otsikko);
     otsikko.lang = lahde.kieli;
     kortti.appendChild(otsikko);
-    if (uutinen.kuvaus) {
-      const kuvaus = html('p', 'uutinen-kuvaus', uutinen.kuvaus);
-      kuvaus.lang = lahde.kieli;
-      kortti.appendChild(kuvaus);
-    }
-    const kaannos = html('p', 'uutinen-kaannos');
+    // Suomennos heti otsikon alle — ilman selittelyä.
+    const otsikkoSuomeksi = html('p', 'uutinen-otsikko-suomeksi');
+    otsikkoSuomeksi.hidden = true;
+    kortti.appendChild(otsikkoSuomeksi);
+    kaannaSuomeksi(uutinen.otsikko, lahde.kieli).then((suomeksi) => {
+      if (!kortti.isConnected || !suomeksi) return;
+      otsikkoSuomeksi.textContent = suomeksi;
+      otsikkoSuomeksi.hidden = false;
+    });
+    // Runko: syötteen kuvaus näkyy heti, ja koko artikkeli korvaa sen
+    // kun haku valmistuu. Jos artikkelia ei saada (esim. workerin
+    // vanha versio), kuvaus jää — popup ei ole koskaan tyhjä.
+    const runko = html('div', 'uutinen-runko');
+    runko.lang = lahde.kieli;
+    if (uutinen.kuvaus) runko.appendChild(html('p', 'uutinen-kuvaus', uutinen.kuvaus));
+    kortti.appendChild(runko);
+    let runkoTeksti = uutinen.kuvaus ?? '';
+    haeArtikkeli(uutinen.linkki).then((kappaleet) => {
+      if (!kortti.isConnected || !kappaleet?.length) return;
+      runko.replaceChildren();
+      for (const kappale of kappaleet) {
+        runko.appendChild(html('p', 'uutinen-kuvaus', kappale));
+      }
+      runkoTeksti = kappaleet.join('\n\n');
+    });
+    const kaannos = html('div', 'uutinen-kaannos');
     kaannos.hidden = true;
     kortti.appendChild(kaannos);
     // Päivä riittää lähderiville — kellonaika on lehdessä turha.
@@ -7077,12 +7105,14 @@ export class UI {
       if (!kaannos.hidden) return;
       nappi.textContent = 'Käännetään…';
       nappi.disabled = true;
-      const teksti = [uutinen.otsikko, uutinen.kuvaus].filter(Boolean).join('. ');
-      const suomeksi = await kaannaSuomeksi(teksti, lahde.kieli);
+      const suomeksi = await kaannaSuomeksi(runkoTeksti, lahde.kieli);
       // Kortti on voitu ehtiä sulkea käännöksen aikana.
       if (!kortti.isConnected) return;
       if (suomeksi) {
-        kaannos.textContent = `Suomeksi (konekäännös): ${suomeksi}`;
+        kaannos.replaceChildren();
+        for (const kappale of suomeksi.split(/\n\n+/)) {
+          if (kappale.trim()) kaannos.appendChild(html('p', '', kappale.trim()));
+        }
         kaannos.hidden = false;
         nappi.hidden = true;
       } else {
