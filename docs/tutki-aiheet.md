@@ -60,12 +60,18 @@ vaadi koodimuutoksia:
   kehystää aarretehtävän tervehdyksineen ja repliikkeineen. Data:
   `js/packs/kohtaamiset.js` (hahmo, nappi, frame, tervehdys, loyto,
   tyhja, vaarin) — uusi kaupunki ei vaadi koodia.
-- **Uutiset (v276):** maaosastossa näkyy enintään neljä tuoretta
-  uutisotsikkoa paikallisella kielellä, kun maalla on lähde
-  `js/packs/uutislahteet.js`:ssä JA omistajan uutisvälitys on otettu
-  käyttöön (tools/uutisproxy/OHJE.md). Otsikoita ei lyhennetä eikä
-  mukailla; popup avaa uutisen pelin kirjasimilla ja "Käännä
-  suomeksi" -nappi hakee konekäännöksen (MyMemory).
+- **Uutiset (v276, hiottu v280):** maaosastossa "Uutisissa tänään" —
+  kolme tuoretta otsikkoa paikallisella kielellä pienellä kirjaimella
+  maan kartan oikealla puolella (leveällä ruudulla), kun maalla on
+  lähde `js/packs/uutislahteet.js`:ssä ja omistajan uutisvälitys on
+  käytössä (tools/uutisproxy/OHJE.md; workerin sallitut ovat
+  ETULIITTEITÄ, koska myös artikkelisivut haetaan sen kautta).
+  Otsikoita ei lyhennetä eikä mukailla. Popup EI tummenna taustaa:
+  otsikko, suomennos heti sen alla kevyellä kursiivilla (ilman
+  etikettiä), KOKO artikkelin leipäteksti uutissivulta
+  ([itemprop="articleBody"]; syötteen kuvaus on varateksti) ja
+  "Käännä suomeksi" -nappi leipätekstille. Etusivulle ei lisätä
+  käännöksiä eikä selitetekstejä.
 - **Minitehtävä:** aihe voi kantaa `tehtava: { kysymys, vaihtoehdot,
   oikea, fakta }` (pilotti: Italian Ruoka). Se piirtyy sivun loppuun
   kuponkimaisena tehtäväpalstana, ja vastaus LÖYTYY SAMAN SIVUN

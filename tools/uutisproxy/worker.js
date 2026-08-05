@@ -11,8 +11,14 @@
  * Kun js/packs/uutislahteet.js saa uuden syötteen, lisää sen osoite
  * myös tähän listaan ja julkaise worker uudelleen.
  */
+/*
+ * Sallitut ETULIITTEINÄ (5.8.2026): syötteen lisäksi haetaan myös
+ * uutisten artikkelisivut, jotta popupissa näkyy koko leipäteksti —
+ * artikkelien osoitteet vaihtuvat, joten tarkka lista ei riitä.
+ * Etuliite rajaa haut silti vain uutissivustoon.
+ */
 const SALLITUT = [
-  'https://www.ansa.it/sito/ansait_rss.xml',
+  'https://www.ansa.it/',
 ];
 
 // Kymmenen minuutin välimuisti Cloudflaren reunalla: uutissivusto ei
@@ -22,7 +28,7 @@ const VALIMUISTI_S = 600;
 export default {
   async fetch(pyynto) {
     const url = new URL(pyynto.url).searchParams.get('url');
-    if (!SALLITUT.includes(url)) {
+    if (!SALLITUT.some((alku) => url?.startsWith(alku))) {
       return new Response('Osoite ei ole sallittujen listalla', { status: 403 });
     }
     const vastaus = await fetch(url, {
