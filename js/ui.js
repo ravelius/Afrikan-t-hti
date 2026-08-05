@@ -8366,29 +8366,50 @@ export class UI {
     const { game } = this;
     this.passportAarteet.textContent = '';
 
-    const omaLauta = game.pack?.id ?? null;
-    const loytyi = Boolean(game.player?.hasStar);
+    /*
+     * VAIN LÖYTYNEET NIMELTÄ, LOPUT LUKUNA.
+     *
+     * Ensin tässä luki koko luettelo rivi riviltä, ja jokaisen perässä
+     * "KATEISSA". Se oli sekä spoileri että tautologiaa: luettelo
+     * paljasti kaikki yksitoista nimeä ennen kuin pelaaja oli löytänyt
+     * yhtään, ja "kateissa" toisti sen minkä himmennys jo kertoi.
+     * Omistaja: "laita vain että kateissa: (määrä) — vasta sitten kun
+     * jotain löytyy, niin sen nimi tulee Aarnin luetteloon."
+     *
+     * Nyt luettelo täyttyy matkan mukana, kuten Aarnin oma luettelo
+     * täyttyi. Kateissa-luku kertoo silti kuinka pitkä matka on jäljellä.
+     */
+    const kaikki = PACKS.map((pakkaus) => pakkaus.tokens?.types?.star)
+      .filter((aarre) => aarre?.name);
 
-    let rivit = 0;
-    for (const pakkaus of PACKS) {
-      const aarre = pakkaus.tokens?.types?.star;
-      if (!aarre?.name) continue;
-      const tama = pakkaus.id === omaLauta;
-      const onLoytynyt = tama && loytyi;
-      const rivi = html('div', `aarre-rivi${onLoytynyt ? ' loytynyt' : ''}`);
+    /*
+     * LÖYTYNYT TARKOITTAA TÄTÄ MATKAA. Aarteen löytymistä ei tallenneta
+     * pelikertojen yli (js/passport.js tuntee vain lautaleimat ja
+     * linssit), joten luettelo kertoo rehellisesti tämän matkan
+     * tilanteen eikä väitä muistavansa enempää.
+     */
+    const loydetyt = [];
+    if (game.player?.hasStar) {
+      const oma = game.pack?.tokens?.types?.star;
+      if (oma?.name) loydetyt.push(oma);
+    }
+
+    for (const aarre of loydetyt) {
+      const rivi = html('div', 'aarre-rivi loytynyt');
       const merkki = html('span', 'aarre-merkki');
       // ◈ on pelin oma aarremerkki (docs: laatan ja nappulan merkki).
-      merkki.textContent = onLoytynyt ? '◈' : '·';
+      merkki.textContent = '◈';
       rivi.appendChild(merkki);
       rivi.appendChild(html('span', 'aarre-nimi', aarre.name));
-      rivi.appendChild(html('span', 'aarre-tila',
-        onLoytynyt ? 'löytyi' : (tama ? 'etsinnässä' : 'kateissa')));
+      rivi.appendChild(html('span', 'aarre-tila', 'löytyi'));
       this.passportAarteet.appendChild(rivi);
-      rivit += 1;
     }
-    if (!rivit) {
-      this.passportAarteet.appendChild(html('p', 'muted', 'Luettelo on tyhjä.'));
-    }
+
+    const kateissa = Math.max(0, kaikki.length - loydetyt.length);
+    const rivi = html('div', 'aarre-rivi aarre-kateissa');
+    rivi.appendChild(html('span', 'aarre-nimi', 'Kateissa'));
+    rivi.appendChild(html('span', 'aarre-luku', String(kateissa)));
+    this.passportAarteet.appendChild(rivi);
   }
 
   /*
