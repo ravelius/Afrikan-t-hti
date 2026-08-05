@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 288, teksti: 'Popupit: kevyt sumennus tummennuksen sijaan' },
+  { v: 288, teksti: 'Radio ja tv aina vierekkäin, tv ilman kehyksiä' },
   { v: 287, teksti: 'Laukun kahva roikkuu kartan päällä laukun alla' },
   { v: 286, teksti: 'Suomennos korvaa uutisen tekstin, nappi vaihtaa' },
   { v: 286, teksti: 'Sähkeisiin pikkukuvat, mediarivi uutisten alle' },

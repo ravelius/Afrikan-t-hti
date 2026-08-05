@@ -6007,20 +6007,21 @@ export class UI {
   avaaTvIkkuna(tv) {
     this.suljeKulttuuriKuva();
     sfx.play('paper');
+    // Mahdollisimman pienet kehykset (omistajan toive): pelkkä lähetys
+    // ja sulkurasti — ei otsikkoa, ei lähderiviä, ei taustan huntua.
+    this.lisaaKevytHuntu();
     const kortti = html('div', 'postikortti kulttuuri-suurennos tv-kortti');
-    const sulku = html('button', 'uutinen-sulku', '×');
+    const sulku = html('button', 'uutinen-sulku tv-sulku', '×');
     sulku.type = 'button';
     sulku.setAttribute('aria-label', 'Sulje lähetys');
     kortti.appendChild(sulku);
-    kortti.appendChild(html('p', 'uutinen-otsikko tv-otsikko', `${tv.nimi} — suora lähetys`));
     const upotus = document.createElement('iframe');
     upotus.className = 'tv-upotus';
     upotus.src = tv.upotus;
-    upotus.title = tv.nimi;
+    upotus.title = `${tv.nimi} — suora lähetys`;
     upotus.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
     upotus.setAttribute('allowfullscreen', '');
     kortti.appendChild(upotus);
-    kortti.appendChild(html('p', 'kuvalahde', `${tv.nimi} · YouTube`));
     kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
     this.arrivalDialog.appendChild(kortti);
     this.kulttuuriKuvaEl = kortti;
@@ -6370,6 +6371,20 @@ export class UI {
   suljeKulttuuriKuva() {
     this.kulttuuriKuvaEl?.remove();
     this.kulttuuriKuvaEl = null;
+    this.kulttuuriHuntuEl?.remove();
+    this.kulttuuriHuntuEl = null;
+  }
+
+  /*
+   * Kevyt blurrihuntu popupin taakse (omistajan toive: ei tummennusta
+   * mutta kevyt sumennus). Oma elementti kortin ALLA — kortin sisään
+   * piirretty kerros sumentaisi kortin oman taustan. Napautus sulkee.
+   */
+  lisaaKevytHuntu() {
+    const huntu = html('div', 'kevythuntu');
+    huntu.addEventListener('click', () => this.suljeKulttuuriKuva());
+    this.arrivalDialog.appendChild(huntu);
+    this.kulttuuriHuntuEl = huntu;
   }
 
   /**
@@ -7071,7 +7086,12 @@ export class UI {
     const tiedot = this.lehtiSaaTiedot;
     if (!tiedot) return;
     this.suljeKulttuuriKuva();
+    this.lisaaKevytHuntu();
     const kortti = html('div', 'postikortti kulttuuri-suurennos vuosisaa-kortti');
+    const sulku = html('button', 'uutinen-sulku', '×');
+    sulku.type = 'button';
+    sulku.setAttribute('aria-label', 'Sulje sää');
+    kortti.appendChild(sulku);
     const nimi = this.game.board.cities.find((c) => c.id === this.arrivalShownFor)?.name ?? '';
     kortti.appendChild(html('p', 'kuvateksti vuosisaa-otsikko', `Sää vuoden mittaan — ${nimi}`));
     kortti.appendChild(piirraVuosiSaa(tiedot));
@@ -7147,6 +7167,7 @@ export class UI {
   avaaUutinen(uutinen, lahde) {
     this.suljeKulttuuriKuva();
     sfx.play('paper');
+    this.lisaaKevytHuntu();
     const kortti = html('div', 'postikortti kulttuuri-suurennos uutinen-kortti');
     const sulku = html('button', 'uutinen-sulku', '×');
     sulku.type = 'button';
