@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 268, teksti: 'Radio riisuttu: näyttö, asteikko ja merkkivalo' },
+  { v: 268, teksti: 'Punainen valo mykistää ja palauttaa äänen' },
   { v: 267, teksti: 'VU-neula osuu kuultavaan: viive mitataan pois' },
   { v: 266, teksti: 'VU-neula seuraa nyt lähetystä myös iPadilla' },
   { v: 265, teksti: 'Tutki: Italian aiheet kaikkiin maan kaupunkeihin' },

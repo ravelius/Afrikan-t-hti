@@ -23,57 +23,7 @@
  * kirjoita kaksi tekijää yhtä aikaa. Sivun ei siis tarvitse tietää
  * soittimesta mitään muuta kuin mihin sen juuri liitetään.
  *
- * YKSI POIKKEUS SÄÄNTÖÖN "EI ÄÄNTÄ": VU-MITTARI KUUNTELEE.
- *
- * Omistajan toive 4.8.2026: "Radioon voisi lisätä vanhan ajan
- * VU-mittarin, missä lanka liikkuu äänen voimakkuuden mukaan." Neula ei
- * saa heilua satunnaisesti — arvottu liike näyttää siltä miltä se on,
- * eikä laite ole silloin elossa vaan vilkkuu. Siksi tämä tiedosto tuo
- * js/sound.js:n `sfx`:n ja liittää AnalyserNoden pelin äänisummaan.
- *
- * TUONTI ON VAIN LUKEVA, eikä se saa muuttua kirjoittavaksi. Sääntö
- * "soitin ei soita ääntä" on olemassa siksi, ettei kaksi paikkaa
- * pysäyttäisi samaa virtaa eri mieltä (ks. yllä); mittari ei aloita, ei
- * lopeta eikä säädä mitään — se lukee tason ja kääntää neulaa. Jos
- * tähän tiedostoon joskus tulee sfx.play() tai gain-arvon kirjoitus, se
- * on virhe eikä laajennus.
- *
- * Kiertoviittausta ei synny: js/sound.js ei tunne linssejä. js/ui.js:n
- * tai js/game.js:n tuonti sen sijaan tekisi kierron, ja ne ovat yhä
- * kiellettyjä. Muut sallitut ovat samat kuin linssimoduulilla
- * (../mapart.js).
- *
- * SUORAN LÄHETYKSEN TASOA EI VOI MITATA, ja se on selaimen sääntö eikä
- * tämän tiedoston valinta: js/linssit/radio.js soittaa lähetyksen
- * <audio>-elementistä ILMAN crossOriginia, koska moni asema ei lähetä
- * CORS-otsakkeita ja luvan pyytäminen veisi äänen kokonaan. Web Audio
- * antaa CORS-luvattomasta elementistä pelkkää hiljaisuutta, joten
- * mittari ei näe lähetystä lainkaan — se näkee viritysäänen, joka
- * kulkee pelin väylän kautta. Kutsuja voi antaa oman lähteensä
- * (asetaAanilahde), jos lähetys joskus reititetään Web Audion läpi
- * samalla varareitillä kuin kaupunkien äänimaisema
- * (js/ambience-stream.js liitaKompressori).
- *
- * MITATTU SEURAUS 4.8.2026: neula elää virittäessä (11 eri kulmaa
- * kahdessa sekunnissa, −43,7°…+9,8°) ja palaa lepoon sillä hetkellä,
- * kun asema alkaa kuulua. Katselmuksessa tämä on soittimen suurin
- * jäljellä oleva puute.
- *
- * KORJAUSTA EI TEHTY, JA SYY ON iOS EIKÄ TYÖNJAKO. Varareitti vaatii
- * crossOriginin ennen srciä, ja jos asema ei lähetä CORS-otsakkeita,
- * lataus epäonnistuu — silloin on luotava UUSI elementti ilman
- * crossOriginia (vanhaa ei voi käyttää, koska createMediaElementSource
- * on jo sitonut sen Web Audioon ja tuottaisi hiljaisuutta). Uusi
- * elementti aloittaa toistonsa virhekäsittelijästä eli ilman
- * käyttäjän elettä, ja juuri sen iOS:n Safari estää. Hinta olisi siis
- * mittarilukema CORSia tukevista asemista ja HILJAISUUS lopuista
- * iOS:llä — ja radio, joka ei soi, on huonompi kuin mittari, joka ei
- * liiku. Ratkaisu vaatii oikean laitteen kokeen, eikä sitä voi tehdä
- * selainajossa: CORSiton asema käyttäytyy työpöydän Chromessa
- * moitteettomasti.
  */
-
-import { sfx } from '../sound.js';
 
 /*
  * Soittimen tilat. Neljä riittää, ja niiden on oltava neljä eikä
@@ -412,189 +362,6 @@ export function lukonYlitys(lahto, arvonta = Math.random) {
 }
 
 /*
- * ══════════════════════════════════════════════════════════════════════
- * VU-MITTARI
- * ══════════════════════════════════════════════════════════════════════
- *
- * Mittari on laitteen ainoa osa, joka liikkuu ilman että pelaaja koskee
- * siihen, ja juuri se tekee kotelosta laitteen eikä kuvan. Kaikki tämän
- * osan luvut ovat täällä yhdessä, koska ne ovat toistensa kanssa
- * sopusoinnussa: asteikon kaari, neulan pituus ja kääntökulma on
- * mitoitettu samaan piirustukseen (MITTARIN_KUVA), eikä yhtä voi
- * muuttaa katsomatta muita.
- */
-
-/*
- * Mittarin piirustus. Yksiköt ovat SVG:n omia; CSS venyttää koko
- * kuvan elementin kokoiseksi, joten kaikki osat pysyvät suhteessa
- * toisiinsa myös kapealla ruudulla.
- *
- * NAPA ON KORTIN SISÄLLÄ EIKÄ SEN ALLA. Oikeassa mittarissa akselin
- * kohta näkyy: siinä on pieni kupu ja sen alla vastapaino. Jos napa
- * piilotetaan kortin alareunan alle, neula näyttää nousevan kotelosta
- * eikä kääntyvän — ja silloin se on osoitin, ei mittari.
- */
-const MITTARIN_KUVA = Object.freeze({
-  leveys: 112,
-  korkeus: 80,
-  napaX: 56,
-  napaY: 76,
-  /*
-   * Asteikkokaaren säde navasta. Neula ulottuu hitusen kaaren yli,
-   * kuten oikeassa laitteessa: kaaren alle jäävä kärki jättää lukeman
-   * arvailun varaan.
-   *
-   * SÄDE JA KULMA RATKAISTIIN YHDESSÄ, EI SILMÄMÄÄRÄISESTI. Kaaren on
-   * levittävä yli kahden kolmasosan kortin leveydestä — kapea kaari
-   * matalassa ikkunassa näyttää siltä, että mittari on liian iso
-   * aukolleen — mutta sen korkeus on samalla rajattu, koska yläpuolelle
-   * jää vielä mahduttava jaotus ja luvut. Puolikas leveys on R·sin θ ja
-   * korkeus R(1 − cos θ), joten 40 ja 20 yksikköä antavat θ ≈ 48° ja
-   * R ≈ 54. Ensimmäinen kokeilu (R 40, θ 32°) täytti kortista 38 %, ja
-   * juuri se näytti väärältä.
-   */
-  kaari: 54,
-  neula: 58,
-  kulma: 48,
-});
-
-/*
- * ASTEIKON JAOT. Osuus on paikka kaarella (0 = vasen laita, 1 = oikea),
- * ja luvut ovat oikean VU-asteikon omat: jako ei ole tasavälinen vaan
- * tihenee oikealle, koska asteikko on desibeliasteikko.
- *
- * NOLLA ON KOHDASSA 0,76 eikä keskellä. Se on koko mittarin lukuohje:
- * vasemmalla on varaa, oikealla on punainen, ja nolla on se raja, jonka
- * yli äänen ei pitäisi jatkuvasti käydä. Keskelle asetettu nolla
- * näyttäisi siltä että laite on säädetty väärin.
- */
-const MITTARIN_JAOT = Object.freeze([
-  { osuus: 0, pitka: true, teksti: '-20' },
-  { osuus: 0.28, pitka: true },
-  { osuus: 0.38, pitka: false },
-  { osuus: 0.46, pitka: true, teksti: '-5' },
-  { osuus: 0.56, pitka: false },
-  { osuus: 0.61, pitka: false },
-  { osuus: 0.67, pitka: false },
-  { osuus: 0.76, pitka: true, teksti: '0', punainen: true },
-  { osuus: 0.85, pitka: false, punainen: true },
-  { osuus: 0.93, pitka: false, punainen: true },
-  { osuus: 1, pitka: true, teksti: '+3', punainen: true },
-]);
-
-/** Mistä kohtaa punainen alue alkaa. Sama kuin nollan paikka. */
-const MITTARIN_PUNAINEN = 0.76;
-
-/*
- * NEULAN LEPOPAIKKA, hitusen nollan yläpuolella.
- *
- * Oikea mittari ei lepää mekaanisessa nollassaan: jousi jättää neulan
- * juuri irti vasteesta, ja tuo pieni rako on se, mistä toimivan
- * laitteen erottaa jumittuneesta. Nollaan asti painettu neula näyttää
- * siltä että se on jäänyt kiinni vasteeseen.
- */
-const MITTARIN_LEPO = 0.045;
-
-/*
- * VAIMENNUS. Nousu nopea, lasku hidas — juuri niin kuin VU-mittarissa,
- * jonka koko olemassaolon syy on se, ettei se seuraa ääntä tarkasti.
- *
- * Aikavakiot ovat eksponentiaalisen suodattimen τ sekunteina. Täyteen
- * lukemaan (99 %) mennään 4,6 τ:ssa, joten 0,065 s on noin 300 ms —
- * standardin VU-mittarin nousuaika. Lasku on viisi kertaa hitaampi:
- * tarkasti seuraava neula näyttää digitaaliselta piikkimittarilta, ja
- * juuri se ero on se, minkä takia tähän valittiin VU eikä PPM.
- */
-const MITTARIN_NOUSU_S = 0.065;
-const MITTARIN_LASKU_S = 0.34;
-
-/*
- * Vaisumman liikkeen aikavakiot (prefers-reduced-motion).
- *
- * Neulaa EI sammuteta kokonaan, toisin kuin asteikon heilunta
- * (css/radio.css radio-haku). Syy on se, mitä kumpikin liike kertoo:
- * heilunta on koristetta, jonka viesti tulee perille näytöstä ja
- * lampusta joka tapauksessa, mutta mittari on laitteen ainoa tieto
- * äänen voimakkuudesta — pysähtynyt neula ei ole rauhallinen vaan
- * rikki. Liike hidastetaan sen sijaan niin, että se on ajautumista
- * eikä värinää.
- */
-const MITTARIN_VAISU_NOUSU_S = 0.5;
-const MITTARIN_VAISU_LASKU_S = 1.1;
-
-/*
- * ASTEIKON PÄÄT DESIBELEINÄ, MITATTU eikä arvattu.
- *
- * Viritysääni on mitoitettu pelin masteriketjussa RMS −32 dBFS:ään
- * (js/linssit/viritin.js ULOSTULON_TASO), ja mittari lukee juuri sitä
- * summaa. Mitattu selaimesta 4.8.2026 kahdella arvotulla nauhalla,
- * kuuden sekunnin viritys kummallakin:
- *
- *   tasainen kohina   RMS −34,6 … −31,3 dBFS
- *   tungoksinen kaista  RMS −36,7 … −25,5 dBFS (asemien vilahdukset)
- *
- * Näillä päillä (−48 … −20 dB) neula lepää kohinassa juuri nollan
- * alapuolella ja käy vilahduksissa punaisella — eli näyttää samalta
- * kuin aikakauden laitteessa, jossa 0 VU oli tavoite eikä katto.
- * Leveämpi asteikko (−52 … −18) mitattiin ensin, mutta se puristi
- * tasaisen kohinan viiden asteen heilahdukseksi: neula oli oikeassa
- * mutta näytti jumittuneelta.
- *
- * Jos viritysäänen tasoa muutetaan, MITTAA NÄMÄ UUDELLEEN. Väärin
- * asetettuna neula joko makaa vasteessa tai seisoo punaisella, ja
- * kumpikin näyttää rikkinäiseltä laitteelta.
- */
-const MITTARIN_POHJA_DB = -48;
-const MITTARIN_KATTO_DB = -20;
-
-/*
- * Neulan päivitysväli millisekunteina.
- *
- * TÄMÄ ON POIKKEUS SÄÄNTÖÖN "EI JATKUVIA ANIMAATIOITA KARTAN PÄÄLLÄ"
- * (css/radio.css tiedoston alku), ja poikkeus on maksettava. Kolme
- * asiaa pitää hinnan kurissa:
- *
- *  1. Silmukka pyörii vain kun radio virittää tai soi. Sammuksissa,
- *     virhetilassa ja neulan levättyä silmukka pysähtyy kokonaan.
- *  2. Päivitys on transform yhdelle pikkuruiselle elementille — ei
- *     asettelua, ei uudelleenpiirtoa kartalle.
- *  3. Kolmekymmentä kertaa sekunnissa riittää: mittarin neula on
- *     vaimennettu, eikä sen liikkeessä ole mitään, mitä kuudenkymmenen
- *     kuvan tahti näyttäisi tarkemmin.
- */
-const MITTARIN_VALI_MS = 33;
-const MITTARIN_VAISU_VALI_MS = 160;
-
-/*
- * HILJAISEN LAITTEEN VALVONTA.
- *
- * Radio voi olla 'soi'-tilassa ilman että mittari näkee mitään: suoran
- * lähetyksen taso ei ole mitattavissa (ks. tiedoston alku), asema voi
- * olla hiljaa, ja pelaaja on voinut mykistää pelin. Silloin neula
- * makaa levossa, mutta silmukka jäisi pyörimään koko lähetyksen ajan —
- * minuutteja kartan päällä, mikä on juuri se, mitä css/radio.css
- * kieltää.
- *
- * Kahden sekunnin hiljaisuuden jälkeen tahti putoaa neljään katsaukseen
- * sekunnissa. Se ei enää ole animaatio vaan valvonta, ja kun ääni
- * palaa, neula on liikkeellä neljännessekunnissa — nopeammin kuin
- * korva ehtii ihmetellä.
- */
-const MITTARIN_HILJAISUUS_MS = 2000;
-const MITTARIN_ODOTUS_MS = 250;
-
-/** Näytön oletusrivit tiloittain. Ylärivi kertoo tilan, alarivi tarkennuksen. */
-const TILAN_RIVIT = {
-  sammuksissa: ['RADIO POIS', 'VALITSE KAUPUNKI'],
-  virittaa: ['VIRITTÄÄ...', ''],
-  soi: ['', ''],
-  virhe: ['EI KUULU', ''],
-};
-
-/** Tyylilinkin tunniste, jotta linkki syntyy tasan kerran sivua kohti. */
-const TYYLIN_TUNNUS = 'radiosoittimen-tyyli';
-
-/*
  * Juokseva numero SVG-gradienttien tunnuksiin.
  *
  * Kytkimiä on kaksi ja lamppuja yksi, ja jokaisella on omat liukuvärinsä.
@@ -604,6 +371,16 @@ const TYYLIN_TUNNUS = 'radiosoittimen-tyyli';
  * (laudan vaihto ehtii jättää vanhan hetkeksi DOM:iin).
  */
 let tunnusLaskuri = 0;
+
+const TILAN_RIVIT = {
+  sammuksissa: ['RADIO POIS', 'VALITSE KAUPUNKI'],
+  virittaa: ['VIRITTÄÄ...', ''],
+  soi: ['', ''],
+  virhe: ['EI KUULU', ''],
+};
+
+/** Tyylilinkin tunniste, jotta linkki syntyy tasan kerran sivua kohti. */
+const TYYLIN_TUNNUS = 'radiosoittimen-tyyli';
 
 /**
  * Liittää css/radio.css sivuun, jos sitä ei vielä ole.
@@ -643,357 +420,6 @@ function osa(tagi, luokka, teksti = '') {
   return solmu;
 }
 
-/*
- * KROMI ON PYSTYSUORA LIUKUVÄRI, JOSSA ON USEITA VAALEITA JA TUMMIA
- * RAITOJA. Se on koko kromin salaisuus: kiillotettu metalli ei ole
- * harmaa vaan peili, ja peili näyttää sen mitä ympärillä on — vaalean
- * taivaan ylhäällä, tumman maan alhaalla ja niiden rajan terävänä
- * juovana siinä välissä. Yksi vaalea-tummasta-vaaleaan-liuku näyttää
- * muovilta; neljä terävää vuorottelua näyttää kromilta.
- *
- * EI SUODATTIMIA. iOS:n Safari piirtää SVG-suodattimen omalle
- * pinnalleen ja pudottaa koko kartan piirtonopeuden, joten kaikki
- * syvyys tehdään liukuväreillä ja päällekkäisillä vedoilla.
- *
- * Kaksi liukuväriä eri suuntiin, koska raidat kulkevat kappaleen
- * PITUUDEN suunnassa: mutteri on leveä ja matala (raidat vaakaan, liuku
- * pystyyn), vipu on kapea ja pitkä (raidat pystyyn, liuku vaakaan).
- *
- * PATINOITU 4.8.2026 (omistaja: "yleisilme radiossa saisi olla
- * kuluneempi"). Vanha kromi oli peilikirkas: puhtaasta valkoisesta
- * (#ffffff) lähes mustaan. Yhdeksänkymmenen vuoden kromissa on ohut
- * himmentymä, joka syö heijastuksen ääripäät — vaalein sävy ei ole enää
- * valkoinen vaan kellertävä harmaa, ja tummin on harmaa eikä musta.
- *
- * SÄVYN SIIRTO ON PIENI JA KYLMÄSTÄ LÄMPIMÄÄN, noin kolme yksikköä
- * vihreää yli sinisen. Enemmän olisi keltaista messinkiä, ei
- * himmentynyttä kromia. VUOROTTELUJEN MÄÄRÄ EI MUUTTUNUT: juuri se on
- * se, mikä erottaa kromin harmaasta muovista (ks. yllä), ja himmeäkin
- * peili on peili.
- *
- * PATINOITU TOISEN KERRAN (omistaja: "Ne kytkimet ovat myös aivan liian
- * uuden ja kirkkaan näköisiä"). Ensimmäinen patinointi otti pois vain
- * puhtaan valkoisen; kytkin jäi silti kotelon ainoaksi esineeksi, jossa
- * oli täysi kontrasti laidasta laitaan. Vanhassa kromissa kontrasti EI
- * ole täysi: himmentymä sirottaa valoa, jolloin kirkkaat kohdat
- * tummuvat ja tummat vaalenevat. Kirkkain sävy laski 244 → 218 ja tummin
- * nousi 74 → 82, eli koko kromin vaihteluväli kapeni viidenneksen.
- *
- * PATINOITU KOLMANNEN KERRAN, JA TÄLLÄ KERTAA MITATEN (omistaja kolmatta
- * kertaa: "radion kytkimet ovat liian uuden näköiset ja kirkkaat").
- * Kaksi ensimmäistä patinointia olivat hienosäätöä, ja mittaus kertoo
- * miksi ne eivät riittäneet. Kytkimen kirkkain pikseli oli 223 (rgb
- * 226,224,210) samalla kun kotelon puun keskisävy kytkimen ympärillä on
- * 76 ja puun kirkkaimmatkin kohdat jäävät 132:een. Kytkin oli siis
- * kolme kertaa ympäristönsä sävyinen ja koko laitteen kirkkain esine —
- * kirkkaampi kuin näyttö (161) ja kaiuttimen messinkikilpi (207).
- *
- * KROMI EI OLE TÄSSÄ PEILI VAAN VANHA, HIMMENTYNYT METALLI. Kolme
- * muutosta yhdessä, ja kaikki kolme tarvittiin:
- *
- *   1. Huippukiillot pois lähes kokonaan. Kirkkain raita 219 → 135,
- *      vivun kiiltojuova 210 → 136, kupu 223 → 126. Peilikiilto on
- *      juuri se, mistä uusi metalli tunnistetaan.
- *   2. Sävy lämpimämmäksi ja harmaammaksi. Vanhat sävyt olivat
- *      viherharmaita (G suurin kanava); nyt punainen johtaa ja sininen
- *      jää jälkeen, kylläisyys noin 12 %. Himmentynyt nikkelikromi on
- *      lämmin harmaa, ei kylmä peili.
- *   3. Kontrasti pienemmäksi. Vaihteluväli 85–219 kapeni 65–135:een eli
- *      puoleen. Himmentymä sirottaa valoa molempiin suuntiin.
- *
- * TAVOITE ON MITATTAVISSA: kytkin ei enää ole kuvan kirkkain asia.
- * Kirkkaimmiksi jäävät merkkivalo ja näyttö, ja kytkimen huippu on
- * kotelon puun omalla sävyalueella (puun kirkkaat kohdat 132).
- *
- * VERTAILUKOHDAT OVAT SAMASSA KUVASSA: VU-mittarin kehys ja
- * kaiutinsäleikkö. Molempien metalliosat — mittarin messinkiviiva ja
- * säleikön messinkikilpi — ovat matalakontrastista, lämmintä ja tummaa
- * metallia, ja kytkimen on oltava niiden ikäinen. Siksi patinointi
- * ulottuu myös merkkivalon kromirenkaaseen (css/radio.css
- * .radio-lamppu-kehys): kaksi eri ikäistä metallia samassa kotelossa
- * lukee virheeksi eikä kulumaksi.
- *
- * Sameus ja epätasaisuus ovat vetoina SVG:ssä (kytkimenSvg: harso ja
- * pistesyöpymä), koska liukuväri on aina tasainen — ja tasaisuus on
- * juuri se, mikä lukee uutena.
- */
-const KROMIN_RAIDAT = [
-  [0, '#888278'], [0.11, '#736e66'], [0.22, '#4b4842'], [0.34, '#827c72'],
-  [0.46, '#8c867b'], [0.57, '#615d56'], [0.7, '#44413c'], [0.82, '#79746a'],
-  [1, '#524e48'],
-];
-
-/*
- * VIVUN OMA KROMI, JA SYY ON MITTA.
- *
- * Yhdeksän raitaa on oikea resepti leveälle kappaleelle: mutteri on
- * ruudulla parikymmentä pikseliä, ja yhdeksän raitaa jakautuu siihen
- * kahden pikselin nauhoiksi, jotka näkyvät. VIPU ON NELJÄ PIKSELIÄ
- * LEVEÄ. Yhdeksän raitaa neljälle pikselille on puoli pikseliä raita
- * kohti, ja selain laskee niistä keskiarvon — lopputulos oli tasainen
- * vaaleanharmaa tikku. Juuri sitä katselmuksessa kysyttiin: näyttääkö
- * kromi kromilta vai harmaalta suorakaiteelta. Näytti suorakaiteelta.
- *
- * Viisi raitaa neljälle pikselille on vajaa pikseli kukin, ja se on
- * pienin mitta, jossa lieriön poikkileikkaus vielä luetaan: tumma reuna,
- * valkoinen kiiltojuova, keskiharmaa, tumma varjopuoli ja kapea vaalea
- * takaisinheijastus vastakkaisella reunalla. Samat viisi sävyä ovat
- * yhdeksän raidan sarjassa; tässä ne vain eivät mahdu useampaan kertaan.
- *
- * VIPU HIMMENI MUTTERIN MUKANA, ja sen kiiltojuova eniten: vipu on
- * kytkimen suurin yhtenäinen metallipinta, joten juuri sen kiilto sai
- * laitteen näyttämään vastaostetulta. Juova laski 242 → 209 ja
- * kolmannessa patinoinnissa edelleen 209 → 136, mutta se jää yhä sarjan
- * kirkkaimmaksi — ilman sitä lieriö litistyisi tikuksi. Viisi sävyä on
- * yhä viisi sävyä; ne vain mahtuvat nyt puolta kapeampaan väliin
- * (65–136, ks. KROMIN_RAIDAT).
- */
-const VARREN_RAIDAT = [
-  [0, '#47443e'], [0.22, '#8d877c'], [0.5, '#6a655d'],
-  [0.72, '#43413b'], [1, '#787369'],
-];
-
-/**
- * Liukuväri annetulla tunnuksella ja suunnalla ('pysty' | 'vaaka').
- *
- * `raidat` on oletuksena leveän kappaleen yhdeksän raitaa; kapea kappale
- * antaa oman sarjansa (ks. VARREN_RAIDAT).
- */
-function kromiLiuku(tunnus, suunta, raidat = KROMIN_RAIDAT) {
-  const pysty = suunta === 'pysty';
-  const nauhat = raidat
-    .map(([kohta, vari]) => `<stop offset="${kohta}" stop-color="${vari}"/>`)
-    .join('');
-  return `<linearGradient id="${tunnus}" x1="0" y1="0" `
-    + `x2="${pysty ? 0 : 1}" y2="${pysty ? 1 : 0}">${nauhat}</linearGradient>`;
-}
-
-/**
- * KLASSINEN METALLIKYTKIN SVG:NÄ.
- *
- * Omistaja lähetti kuvan ja sanoi: "vanhanaikaisia kromattuja, joissa on
- * pyöreä mutteri pohjalla. Siis oikein perinteinen sen ajan
- * metallikytkin, jossa on semmoinen vipu."
- *
- * Kytkin on piirretty EDESTÄ, kuten se paneelissa näkyy: kotelon puuhun
- * upotettu reikä, sen päällä kromattu pyöreä prikka, prikan päällä
- * kuusiomutteri, mutterin sisällä kierteinen kaulus ja keskeltä ulos
- * tuleva kromattu vipu, jonka kärki on pyöristetty. Sivulta piirrettynä
- * alas käännetty vipu osuisi mutteriin; edestä se kääntyy puhtaasti ylös
- * tai alas, ja juuri niin sen omistaja pyysi kääntyvän.
- *
- * KAKSI MUUTOSTA KATSELMUKSESSA 4.8.2026, molemmat samasta syystä:
- * omistaja pyysi METALLIKYTKINTÄ, ja laitteen suurin yksittäinen pinta
- * oli musta.
- *
- *  1. Musta bakeliittilevy pois. Se oli pyöristetty neliö, ja ruudulla
- *     parinkymmenen pikselin pyöristetty musta neliö näyttää
- *     sovelluskuvakkeelta, ei kytkimeltä. Tilalle tuli se, mitä
- *     aikakauden paneelissa oikeasti on: reikä puussa ja sen varjo.
- *     Nyt kytkimestä on metallia kaikki, mitä siitä näkyy.
- *  2. Pyöreä prikka mutterin alle. Omistajan sanat olivat "pyöreä
- *     mutteri pohjalla"; pelkkä kuusikulmio ei ole pyöreä. Prikan
- *     kromiraidat kulkevat vaakaan ja mutterin pystyyn, jolloin kaksi
- *     kiillotettua kappaletta erottuu toisistaan eikä niistä tule yhtä
- *     möykkyä.
- *
- * Vipu kääntyy attribuutilla eikä siirtymällä, koska oikea kytkin
- * NAPSAHTAA: jousi vie vivun asentoon eikä siinä ole välitilaa. Pehmeä
- * liuku olisi tässä väärä ääni, ja se olisi myös jatkuvaa liikettä
- * kartan päällä (css/radio.css).
- */
-function kytkimenSvg(tunniste) {
-  const kromiP = `${tunniste}-kromi-p`;
-  const kromiV = `${tunniste}-kromi-v`;
-  const varsi = `${tunniste}-varsi`;
-  const reika = `${tunniste}-reika`;
-  const kupu = `${tunniste}-kupu`;
-  const kulmat = `${tunniste}-kulmat`;
-  const mutteri = `${tunniste}-mutteri`;
-  const kiilto = `${tunniste}-kiilto`;
-  const harso = `${tunniste}-harso`;
-  return `<svg class="radio-kytkin-kuva" viewBox="0 0 40 66" width="30" height="49.5"
-      aria-hidden="true" focusable="false">
-    <defs>
-      ${kromiLiuku(kromiP, 'pysty')}
-      ${kromiLiuku(kromiV, 'vaaka')}
-      ${kromiLiuku(varsi, 'vaaka', VARREN_RAIDAT)}
-      <!-- Kulmien kiilto: vaalea ydin, joka sammuu reunalle. Sama kuvio
-           kuudessa kärjessä, ks. mutterin patina alempana. Ydin ei ole
-           enää puhdas valkoinen eikä läpinäkymätön: kiilto on vanhassa
-           kromissa hajavaloa, ei peilikuvaa.
-           KOLMANNESSA PATINOINNISSA sekä sävy että voima laskivat (242 →
-           176, peitto 0,34 → 0,20). Kärkien kiilto on kytkimen ainoa
-           kohta, jossa kromi on vielä koskematonta, ja juuri siksi se oli
-           se, mikä kirkkaudesta jäi viimeisenä jäljelle. -->
-      <radialGradient id="${kulmat}" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0" stop-color="#b7afa1" stop-opacity="0.2"/>
-        <stop offset="0.5" stop-color="#b7afa1" stop-opacity="0.07"/>
-        <stop offset="1" stop-color="#b7afa1" stop-opacity="0"/>
-      </radialGradient>
-      <!--
-        HIMMENTYMÄN HARSO. Vanhan kromin sameus ei ole tasainen kalvo
-        vaan laikku: kytkin on kotelossa vinossa valossa, ja alanurkka
-        on se, johon pöly ja kosteus jäävät. Liukuväri on siksi
-        keskipisteeltään sivussa (0,64 / 0,7) — keskitetty harso lukisi
-        varjostukseksi eikä lialta.
-
-        HARSON ON OLTAVA KROMIA TUMMEMPI, TAI SE EI HIMMENNÄ VAAN
-        VAALENTAA. Vanha sävy #7c7a63 oli kirkkaudeltaan 121, ja kun
-        kromin keskisävy laski kolmannessa patinoinnissa sadan tienoille,
-        harso olisi kääntynyt valoksi juuri niissä kohdissa, joita sen
-        pitäisi samentaa. Nyt sävy on 87 ja peitto hitusen suurempi.
-      -->
-      <radialGradient id="${harso}" cx="0.64" cy="0.7" r="0.62">
-        <stop offset="0" stop-color="#5d5747" stop-opacity="0.38"/>
-        <stop offset="0.55" stop-color="#5d5747" stop-opacity="0.18"/>
-        <stop offset="1" stop-color="#5d5747" stop-opacity="0.03"/>
-      </radialGradient>
-      <!-- Kiilto rajataan mutteriin: kärkien yli vuotava valo osuisi
-           puuhun, ja siellä se lukisi tahrana eikä metallina. -->
-      <clipPath id="${mutteri}">
-        <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"/>
-      </clipPath>
-      <!-- Reiän varjo puussa. Liukuväri eikä sumennettu varjo: iOS
-           piirtää sumennuksen omalle pinnalleen (ks. css/radio.css). -->
-      <radialGradient id="${reika}" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0.62" stop-color="#000000" stop-opacity="0.5"/>
-        <stop offset="0.84" stop-color="#000000" stop-opacity="0.3"/>
-        <stop offset="1" stop-color="#000000" stop-opacity="0"/>
-      </radialGradient>
-      <!-- Vivun tyven kupu. TÄMÄ OLI KOKO KYTKIMEN KIRKKAIN PIKSELI:
-           mitattuna 223 (rgb 226,224,210) puun 76:n vieressä. Kupu on
-           pyöreä ja kiillotettu, joten sen kohokohta on koko laitteen
-           ainoa aito peilipiste — ja juuri sellaisen vanha kromi on
-           menettänyt ensimmäisenä. Ydin 223 → 126. -->
-      <radialGradient id="${kupu}" cx="0.36" cy="0.3" r="0.78">
-        <stop offset="0" stop-color="#837d73"/>
-        <stop offset="0.45" stop-color="#68645c"/>
-        <stop offset="1" stop-color="#3c3a35"/>
-      </radialGradient>
-      <!--
-        VIVUN KÄRKI ON KIILLOTTUNUT. Kytkintä käännetään kärjestä, ja
-        sormenpää kiillottaa juuri sen kohdan — sama sääntö kuin
-        mutterin kärjissä, mutta vastakkaiseen suuntaan: mutteria
-        naarmuttaa avain ja himmentää, vipua kiillottaa sormi ja
-        kirkastaa. Liuku on vivun omassa suunnassa (pituudella), joten
-        se kääntyy vivun mukana eikä jää ylös silloin, kun kytkin on
-        alhaalla.
-      -->
-      <linearGradient id="${kiilto}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#afa79a" stop-opacity="0.14"/>
-        <stop offset="0.3" stop-color="#afa79a" stop-opacity="0.05"/>
-        <stop offset="0.72" stop-color="#afa79a" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-
-    <!-- Reikä puussa ja sen varjo. Kytkin on läpi paneelin, ei sen
-         päällä liimattu, ja varjo on ainoa asia, joka kertoo sen. -->
-    <circle cx="20" cy="33" r="17" fill="url(#${reika})"/>
-
-    <!-- Kromattu pyöreä prikka mutterin alla: "pyöreä mutteri pohjalla".
-         Raidat vaakaan, jotta prikka erottuu pystyraitaisesta
-         mutterista. -->
-    <circle cx="20" cy="33" r="13.4" fill="url(#${kromiV})"
-      stroke="rgba(0,0,0,0.62)" stroke-width="0.7"/>
-    <circle cx="20" cy="33" r="12.4" fill="none"
-      stroke="rgba(190,182,168,0.16)" stroke-width="0.7"/>
-    <!-- Prikan himmentymä: harso alanurkkaan, ks. gradientti ${harso}.
-         Prikka on kytkimen suurin kromipinta, joten juuri sen tasaisuus
-         luki uutena. -->
-    <circle cx="20" cy="33" r="13.4" fill="url(#${harso})"/>
-
-    <!-- Kromattu kuusiomutteri prikan päällä. Kuusikulmion kärjet ovat
-         sivuilla ja lappeet ylhäällä ja alhaalla, kuten avaimelle
-         tarkoitetussa mutterissa. -->
-    <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
-      fill="url(#${kromiP})" stroke="rgba(0,0,0,0.68)" stroke-width="0.7"/>
-    <!-- Viisto reuna: mutterin särmät ovat viistetyt, ja viiste näkyy
-         kapeana vaaleana kaistana lapetta pitkin. Kaista on himmeä ja
-         katkeaa alalappeella — avain on hionut viisteen sieltä pois. -->
-    <path d="M10.2 33 L15.2 24.2 L24.8 24.2 L29.8 33 L24.8 41.8 L15.2 41.8 Z"
-      fill="none" stroke="rgba(190,182,168,0.2)" stroke-width="0.8"/>
-    <path d="M10.2 33 L15.2 24.2 L24.8 24.2 L29.8 33"
-      fill="none" stroke="rgba(190,182,168,0.12)" stroke-width="0.8"/>
-
-    <!--
-      MUTTERIN PATINA JA KULMIEN KIILTO (omistajan toive 4.8.2026:
-      "kuusiomutterin kulmat ovat kirkkaammat kuin sivut").
-
-      Näin kulunut mutteri oikeasti on. Avain tarttuu lappeisiin ja
-      naarmuttaa ne mataksi; kärkiin se ei ylety, ja niissä kromi on
-      yhä kirkas. Kaksi vetoa: ensin himmeä harso koko mutterin yli,
-      sitten kuusi pistettä kärkiin. Pelkkä harso teki mutterista
-      lyijynharmaan, ja pelkät pisteet näyttivät valopilkuilta.
-    -->
-    <g clip-path="url(#${mutteri})">
-      <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
-        fill="#7d7768" opacity="0.26"/>
-      <path d="M8 33 L14 22.4 L26 22.4 L32 33 L26 43.6 L14 43.6 Z"
-        fill="url(#${harso})"/>
-      <g fill="url(#${kulmat})">
-        <circle cx="9.4" cy="33" r="3.6"/>
-        <circle cx="14.6" cy="23.4" r="3.2"/>
-        <circle cx="25.4" cy="23.4" r="3.2"/>
-        <circle cx="30.6" cy="33" r="3.6"/>
-        <circle cx="25.4" cy="42.6" r="3.2"/>
-        <circle cx="14.6" cy="42.6" r="3.2"/>
-      </g>
-    </g>
-
-    <!--
-      PISTESYÖPYMÄ. Yhdeksänkymmenen vuoden kromissa on kohtia, joissa
-      pinta on puhki: nikkeli sen alla on tummunut, ja jälki on pieni,
-      epäsäännöllinen ja aina samassa paikassa — se ei ole kuvio vaan
-      vika. Neljä pistettä riittää; enemmän lukee ruvelta.
-
-      Pisteet ovat prikan reunamilla eivätkä keskellä, koska keskellä on
-      mutteri ja kaulus. Koot ja paikat ovat käsin valitut: arvottuina ne
-      osuisivat joskus päällekkäin, ja kaksi vierekkäistä pistettä lukee
-      naarmuksi, mikä on eri asia.
-    -->
-    <g fill="#2f322b" opacity="0.3">
-      <circle cx="11.4" cy="26.6" r="0.9"/>
-      <circle cx="28.9" cy="27.4" r="0.6"/>
-      <circle cx="13.2" cy="41.2" r="0.7"/>
-      <circle cx="27.6" cy="40.2" r="1"/>
-    </g>
-
-    <!-- Kierteinen kaulus mutterin sisällä: kolme kierrettä varjoina.
-         Kauluksen ja mutterin väliin jää rako, ja rako on tumma juova
-         eikä musta rengas — kun kaikki ympärillä oli mustaa levyä,
-         paksukin rengas hukkui, mutta kromilla se olisi silmiinpistävä
-         donitsi. Kahdeksan kymmenystä yksikköä riittää raoksi. -->
-    <circle cx="20" cy="33" r="8" fill="#20262b"/>
-    <circle cx="20" cy="33" r="7.2" fill="url(#${kromiP})"/>
-    <path d="M13.6 30.3 H26.4 M13 33 H27 M13.6 35.7 H26.4"
-      stroke="rgba(0,0,0,0.34)" stroke-width="0.8" fill="none"/>
-
-    <!-- Vipu. Kiertokeskiö on kauluksen keskellä (20, 33): ylhäällä
-         kärki nousee mutterin yläpuolelle, alhaalla se laskeutuu sen
-         alle, eikä kumpikaan asento jää arvailun varaan.
-         KAPENEE KÄRKEÄ KOHTI, kuten oikea vipu: tasapaksu tikku on se,
-         mikä saa kytkimen näyttämään piirretyltä eikä sorvatulta. -->
-    <g class="radio-vipu" transform="rotate(0 20 33)">
-      <path d="M16.2 32.4 L17.4 10.2 Q20 6 22.6 10.2 L23.8 32.4 Z"
-        fill="url(#${varsi})" stroke="rgba(0,0,0,0.5)" stroke-width="0.6"
-        stroke-linejoin="round"/>
-      <!-- Sormen kiillottama kärki, ks. gradientti ${kiilto}. Sama
-           muoto kuin varsi, jotta kiilto ei vuoda reunan yli. -->
-      <path d="M16.2 32.4 L17.4 10.2 Q20 6 22.6 10.2 L23.8 32.4 Z"
-        fill="url(#${kiilto})"/>
-      <!-- Ja sama muoto kolmannen kerran: himmentymä vivun tyveen,
-           jonne sormi ei ylety. Kiillotettu kärki ja samentunut tyvi
-           ovat sama havainto kahdesta suunnasta — kulunut kappale ei
-           ole kauttaaltaan yhtä kirkas. -->
-      <path d="M16.2 32.4 L17.4 10.2 Q20 6 22.6 10.2 L23.8 32.4 Z"
-        fill="url(#${harso})" opacity="0.75"/>
-      <circle cx="20" cy="33" r="5.4" fill="url(#${kupu})"
-        stroke="rgba(0,0,0,0.4)" stroke-width="0.6"/>
-    </g>
-  </svg>`;
-}
-
 /**
  * Merkkilamppu: kromattu rengas, kupera punainen lasi ja hehku.
  *
@@ -1008,8 +434,12 @@ function kytkimenSvg(tunniste) {
  * (css/radio.css), koska tila vaihtaa niitä.
  */
 function teeLamppu() {
-  const lamppu = osa('span', 'radio-lamppu');
-  lamppu.setAttribute('aria-hidden', 'true');
+  const lamppu = document.createElement('button');
+  lamppu.type = 'button';
+  lamppu.className = 'radio-lamppu';
+  lamppu.title = 'Mykistä radio';
+  lamppu.setAttribute('aria-label', 'Mykistä radio');
+  lamppu.setAttribute('aria-pressed', 'false');
   lamppu.append(
     osa('span', 'radio-lamppu-hehku'),
     osa('span', 'radio-lamppu-kehys'),
@@ -1018,128 +448,6 @@ function teeLamppu() {
   return lamppu;
 }
 
-/** Piste mittarin navasta: kulma asteina (0 = suoraan ylös) ja säde. */
-function mittarinPiste(kulma, sade) {
-  const kaari = (kulma * Math.PI) / 180;
-  return [
-    MITTARIN_KUVA.napaX + Math.sin(kaari) * sade,
-    MITTARIN_KUVA.napaY - Math.cos(kaari) * sade,
-  ];
-}
-
-/** Osuus kaarella (0–1) asteina. */
-function mittarinKulma(osuus) {
-  return (osuus * 2 - 1) * MITTARIN_KUVA.kulma;
-}
-
-/**
- * VU-MITTARIN ASTEIKKO SVG:NÄ: kermanvärinen kortti, musta kaari,
- * punainen alue oikeassa laidassa ja jaotus lukuineen.
- *
- * Kortti itse on CSS:ssä (css/radio.css .radio-mittari), koska juuri
- * siihen kuuluu kuluneisuus — kellastuminen ja lasin naarmut ovat
- * pinnan asioita, ja ne tehdään liukuväreinä muun kotelon tapaan. Täällä
- * on vain painojälki: se, mikä korttiin on aikanaan painettu.
- *
- * NEULA EI OLE TÄSSÄ SVG:SSÄ. Se on oma elementtinsä, jota käännetään
- * pelkällä transformilla — silloin liike on selaimelle kompositointia
- * eikä uudelleenpiirtoa, ja kartta kotelon takana pysyy koskematta.
- * SVG-attribuutin muuttaminen kolmekymmentä kertaa sekunnissa olisi
- * saman kuvan piirtämistä uudelleen joka kerta.
- */
-function mittarinSvg(tunniste) {
-  const { leveys, korkeus, napaX, napaY, kaari, kulma } = MITTARIN_KUVA;
-  const napanKupu = `${tunniste}-napa`;
-  const [ax, ay] = mittarinPiste(-kulma, kaari);
-  const [bx, by] = mittarinPiste(kulma, kaari);
-  // Punaisen alueen kaari kulkee mustan kaaren yläpuolella omana
-  // nauhanaan: aikakauden kortissa punainen on painettu asteikon
-  // päälle eikä sen tilalle, ja jaotus jatkuu sen alla.
-  const [px, py] = mittarinPiste(mittarinKulma(MITTARIN_PUNAINEN), kaari + 4.6);
-  const [qx, qy] = mittarinPiste(kulma, kaari + 4.6);
-
-  const jaot = MITTARIN_JAOT.map((jako) => {
-    const aste = mittarinKulma(jako.osuus);
-    const [x1, y1] = mittarinPiste(aste, kaari);
-    const [x2, y2] = mittarinPiste(aste, kaari + (jako.pitka ? 3 : 1.7));
-    const vari = jako.punainen ? '#8d2b1d' : '#241a10';
-    const viiva = `<path d="M${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)}"`
-      + ` stroke="${vari}" stroke-width="${jako.pitka ? 1.1 : 0.75}" stroke-linecap="round"/>`;
-    if (!jako.teksti) return viiva;
-    /*
-     * Luvun paikka on kaaren keskilinjalla, mutta SVG lataa tekstin
-     * PERUSVIIVALLE. dominant-baseline hoitaisi eron yhdellä
-     * attribuutilla, mutta se on iOS:n Safarissa uudehko — vanhemmalla
-     * versiolla luvut valuisivat pari pikseliä alas jaotuksen päälle.
-     * Puolikas versaalikorkeus (0,35 × kirjasinkoko) on sama korjaus
-     * ilman selainriippuvuutta.
-     */
-    const [tx, ty] = mittarinPiste(aste, kaari + 9.5);
-    return `${viiva}<text x="${tx.toFixed(2)}" y="${(ty + 1.75).toFixed(2)}" fill="${vari}"`
-      + ` font-size="5" text-anchor="middle">${jako.teksti}</text>`;
-  }).join('');
-
-  return `<svg class="radio-mittari-asteikko" viewBox="0 0 ${leveys} ${korkeus}"
-      preserveAspectRatio="none" aria-hidden="true" focusable="false">
-    <defs>
-      <radialGradient id="${napanKupu}" cx="0.35" cy="0.3" r="0.8">
-        <stop offset="0" stop-color="#e6e9e6"/>
-        <stop offset="0.5" stop-color="#8d9490"/>
-        <stop offset="1" stop-color="#2d3230"/>
-      </radialGradient>
-    </defs>
-    <!-- Asteikkokaari. Yksi veto, ei jaotusta: kaari on se viiva, jota
-         vasten neulan kärki luetaan. -->
-    <path d="M${ax.toFixed(2)} ${ay.toFixed(2)} A ${kaari} ${kaari} 0 0 1 ${bx.toFixed(2)} ${by.toFixed(2)}"
-      fill="none" stroke="#241a10" stroke-width="0.9" stroke-linecap="round"/>
-    <!-- Punainen alue nollasta ylöspäin. -->
-    <path d="M${px.toFixed(2)} ${py.toFixed(2)} A ${(kaari + 3.4).toFixed(2)} ${(kaari + 3.4).toFixed(2)} 0 0 1 ${qx.toFixed(2)} ${qy.toFixed(2)}"
-      fill="none" stroke="#8d2b1d" stroke-width="1.7" stroke-linecap="butt" opacity="0.82"/>
-    ${jaot}
-    <!-- Kilpi kortin alalaidassa. "VU" on se kaksi kirjainta, joista
-         mittarin tunnistaa ennen kuin asteikkoa ehtii lukea. -->
-    <text x="${(napaX - 26).toFixed(2)}" y="${(napaY - 0.5).toFixed(2)}" fill="#3a2a18"
-      font-size="6" text-anchor="middle" font-weight="700" letter-spacing="0.8">VU</text>
-    <!-- Akselin kupu ja sen varjo kortilla. Vastapaino jää kuvun alle,
-         kuten oikeassa liikkeessä. -->
-    <ellipse cx="${napaX}" cy="${(napaY + 1.6).toFixed(2)}" rx="6.4" ry="2.6"
-      fill="#2a1d10" opacity="0.16"/>
-    <circle cx="${napaX}" cy="${napaY}" r="4.2" fill="url(#${napanKupu})"
-      stroke="rgba(0,0,0,0.45)" stroke-width="0.5"/>
-  </svg>`;
-}
-
-/**
- * VU-MITTARI: ikkuna kotelossa, asteikkokortti, neula ja lasi.
- *
- * Kolme kerrosta samassa järjestyksessä kuin oikeassa laitteessa —
- * kortti pohjalla, neula sen päällä ja lasi kaiken yllä. Lasi on oma
- * elementtinsä eikä kortin varjo, koska sillä on omat naarmunsa ja
- * heijastuksensa: ne kuuluvat lasiin eivätkä painojälkeen, ja neulan on
- * kuljettava niiden ALLA.
- */
-function teeMittari(tunniste) {
-  const kehys = osa('div', 'radio-mittari');
-  kehys.setAttribute('aria-hidden', 'true');
-  kehys.innerHTML = mittarinSvg(tunniste);
-  const neula = osa('span', 'radio-mittari-neula');
-  kehys.appendChild(neula);
-  kehys.appendChild(osa('span', 'radio-mittari-lasi'));
-  return { kehys, neula };
-}
-
-/**
- * Etäisyys kaupungista toiseen laudan yksiköissä.
- *
- * KARTTA KIERTÄÄ YMPÄRI, ja se on tämän funktion koko olemassaolon syy.
- * Maailmankartalla Tokio on laudan oikeassa laidassa ja Anchorage
- * vasemmassa, mutta Tyynellämerellä ne ovat naapureita. Ilman kierron
- * huomioimista Tokion asteikko täyttyisi Kiinan kaupungeista molemmin
- * puolin, ja lännen suunta olisi laudan reunassa umpikuja.
- *
- * Palauttaa myös etumerkillisen dx:n, koska asteikolla on puolet:
- * negatiivinen dx on lännessä eli vasemmalla, positiivinen idässä.
- */
 function ero(a, b, laudanLeveys) {
   let dx = b.x - a.x;
   if (laudanLeveys > 0) {
@@ -1195,9 +503,6 @@ function ero(a, b, laudanLeveys) {
  *                            siirrytään. Ks. VIRITYKSEN_VAIHEET.
  *   asetaNaytto(elementti) — pistematriisinäyttö aukkoon.
  *   asetaAani(arvo)
- *   asetaAanilahde(lahde) — VU-mittarin äänilähde. Oletuksena laite
- *                           kuuntelee pelin omaa äänisummaa; tällä
- *                           kutsuja voi antaa oman virtansa.
  *   asetaKaupungit(lista, { laudanLeveys, sijainti })
  *   asetaSijainti(cityId)
  *   poista()
@@ -1245,26 +550,6 @@ export function teeRadiosoitin({
    * arvo ohjaa yhä soittoa.
    */
 
-  /*
-   * --- VU-mittari vasempaan laitaan ------------------------------------
-   *
-   * Paikka on se, joka nupilta jäi. Aikakauden pöytäradiossa mittari oli
-   * juuri tässä: vasemmalla oma ikkunansa, keskellä asteikko ja oikealla
-   * käyttökytkimet. Mittari on myös se osa, jota katsotaan kuunnellessa
-   * eikä säätäessä, joten se saa olla kauimpana sormista.
-   */
-  const mittari = teeMittari(tunniste);
-  kotelo.appendChild(mittari.kehys);
-
-  // --- kaiutinsäleikkö -------------------------------------------------
-  // Kangas ja sen päälle listat tehdään kokonaan CSS-kuvioina: kuvatiedosto
-  // olisi yksi lisälataus siitä, mikä on kaksi toistuvaa gradienttia.
-  const kaiutin = osa('div', 'radio-kaiutin');
-  kaiutin.setAttribute('aria-hidden', 'true');
-  // Kilpi on soittimen valmistajan nimi, ja se on pelin lyhyt nimi.
-  kaiutin.appendChild(osa('span', 'radio-kilpi', 'MATKAKIRJA'));
-  kotelo.appendChild(kaiutin);
-
   // --- keskiö: näyttö, asteikko ja kanavan tiedot ----------------------
   const keskio = osa('div', 'radio-keskio');
   kotelo.appendChild(keskio);
@@ -1289,6 +574,33 @@ export function teeRadiosoitin({
   // tulee, joten pelaaja erottaa soivan laitteen viritettävästä.
   const lamppu = teeLamppu();
   naytonKehys.appendChild(lamppu);
+
+  /*
+   * Merkkivalo on myös MYKISTYSNAPPI (omistaja 5.8.2026: "Punaista
+   * valoa painamalla radion saa mutulle ja takaisin"). Se on laitteen
+   * ainoa käyttökytkin: VU-mittari, kaiutinsäleikkö ja kaksi
+   * vipukytkintä poistettiin samalla, jotta kotelo mahtuu iPhonen
+   * ruudulle. Mykistys ei pysäytä virtaa — ääni palaa napautuksella
+   * heti, ilman uutta viritystä. Radiotila suljetaan taikalaseista,
+   * kuten muutkin linssit.
+   */
+  let aaniEnnenMykistysta = 0;
+  function asetaMykistys(paalle) {
+    juuri.dataset.mykistetty = paalle ? 'on' : 'off';
+    lamppu.setAttribute('aria-pressed', String(Boolean(paalle)));
+    lamppu.title = paalle ? 'Palauta ääni' : 'Mykistä radio';
+    lamppu.setAttribute('aria-label', lamppu.title);
+  }
+  lamppu.addEventListener('click', () => {
+    if (juuri.dataset.mykistetty === 'on') {
+      asetaAani(aaniEnnenMykistysta || 0.8);
+      asetaMykistys(false);
+    } else {
+      aaniEnnenMykistysta = aaniArvo > 0 ? aaniArvo : 0.8;
+      asetaAani(0);
+      asetaMykistys(true);
+    }
+  });
   keskio.appendChild(naytonKehys);
 
   // --- asteikko: soiva kaupunki keskellä, naapurit molemmin puolin -----
@@ -1333,53 +645,6 @@ export function teeRadiosoitin({
   function tahdistaErotin() {
     erotin.textContent = asemaNimi.textContent && maaNimi.textContent ? ' — ' : '';
   }
-
-  // --- kytkimet --------------------------------------------------------
-  /*
-   * Omistaja: "kaksi oikeanpuoleisempaa säädintä voisi korvata kahdella
-   * kytkimellä. Ensimmäisessä ylhäällä olisi play ja alhaalla stop, ja
-   * toisessa on on ja off. Eli sitten kun kytkimen kääntää off-asentoon,
-   * niin radio häviää näkyvistä."
-   *
-   * Kilvet ovat kytkimen ylä- ja alapuolella, kuten aikakauden
-   * paneelissa, ja voimassa oleva asento on kirkas ja toinen himmeä.
-   * Se on tässä tärkeämpi lukuohje kuin vivun kulma: pieni kromipala
-   * kartan päällä on parin millin kokoinen, ja teksti kertoo asennon
-   * silläkin koolla.
-   */
-  const kytkimet = osa('div', 'radio-kytkimet');
-  kotelo.appendChild(kytkimet);
-
-  /** Yksi kytkin kilpineen. Palauttaa napin ja sen asennon asettajan. */
-  function teeKytkin(luokka, ylaTeksti, alaTeksti, otsikko) {
-    const kehys = osa('div', 'radio-kytkin-kehys');
-    kehys.appendChild(osa('span', 'radio-kytkin-kilpi radio-kytkin-yla', ylaTeksti));
-    const nappi = document.createElement('button');
-    nappi.type = 'button';
-    nappi.className = `radio-kytkin ${luokka}`;
-    nappi.setAttribute('aria-label', otsikko);
-    nappi.title = otsikko;
-    nappi.innerHTML = kytkimenSvg(`${tunniste}-${luokka}`);
-    kehys.appendChild(nappi);
-    kehys.appendChild(osa('span', 'radio-kytkin-kilpi radio-kytkin-ala', alaTeksti));
-    kytkimet.appendChild(kehys);
-
-    const vipu = nappi.querySelector('.radio-vipu');
-    /** Kääntää vivun: true = ylös, false = alas. Napsahtaa, ei liu'u. */
-    const asetaAsento = (ylos) => {
-      const asento = ylos ? 'ylos' : 'alas';
-      nappi.dataset.asento = asento;
-      // Sama tieto kehykselle, jotta kilven sytytys on tavallinen
-      // jälkeläisvalitsin eikä vaadi :has():ia (css/radio.css).
-      kehys.dataset.asento = asento;
-      nappi.setAttribute('aria-pressed', String(Boolean(ylos)));
-      vipu?.setAttribute('transform', `rotate(${ylos ? 0 : 180} 20 33)`);
-    };
-    return { nappi, asetaAsento };
-  }
-
-  const soittoKytkin = teeKytkin('radio-kytkin-soitto', 'PLAY', 'STOP', 'Soita tai pysäytä');
-  const virtaKytkin = teeKytkin('radio-kytkin-virta', 'ON', 'OFF', 'Radion virta');
 
   // --- tila ------------------------------------------------------------
   let nykyinenTila = 'sammuksissa';
@@ -1760,12 +1025,6 @@ export function teeRadiosoitin({
     nykyinenTila = uusi;
     juuri.dataset.tila = uusi;
     /*
-     * Soittokytkin seuraa tilaa eikä omaa muistiaan. Ääni voi loppua
-     * ilman että kytkintä koskettiin (asema kaatui, aikakatkaisu), ja
-     * ylhäällä oleva vipu vaikenevan radion päällä on rikkinäinen laite.
-     */
-    soittoKytkin.asetaAsento(uusi === 'soi' || uusi === 'virittaa');
-    /*
      * Vaihesarja päättyy tilan mukana. Kutsuja kertoo alun ja keskikohdan
      * (radio.js kerroVaihe) mutta ei loppua — lopun tietää tila, ja se on
      * oikea paikka: keskeytynyt viritys, virhe ja aikakatkaisu päättyvät
@@ -1773,9 +1032,6 @@ export function teeRadiosoitin({
      * sammuttaa nauhan liikkeen erikseen.
      */
     if (uusi !== 'virittaa') asetaVirityksenVaihe(null);
-    // Mittari seuraa samaa tilaa: neula elää vain kun laite tekee
-    // ääntä, ja palaa muulloin lepoon omaa vauhtiaan.
-    paivitaMittari();
 
     const nayta = rivit(uusi);
     if (viesti) nayta[1] = String(viesti).toUpperCase();
@@ -1925,417 +1181,6 @@ export function teeRadiosoitin({
     return uusi;
   }
 
-  // --- VU-mittarin koneisto ---------------------------------------------
-  /*
-   * Mittarin kolme osaa: LÄHDE (mistä taso luetaan), VAIMENNUS (miten
-   * neula seuraa sitä) ja SILMUKKA (milloin sitä ylipäänsä lasketaan).
-   *
-   * Lähde on vaihdettavissa, koska laite ei tiedä eikä saa tietää, mikä
-   * kulloinkin soi. Oletuksena se kuuntelee pelin omaa äänisummaa —
-   * siellä kulkee viritysääni — mutta kutsuja voi antaa oman lähteensä,
-   * ks. asetaAanilahde.
-   */
-  let mittarinLukija = null;     // kutsujan antama lähde funktioksi käärittynä
-  let lahteenSolmut = [];        // kutsujan lähteelle luodut solmut, purettavaksi
-  let analysoija = null;         // oma analysaattori pelin äänisummassa
-  let analyysinPuskuri = null;
-  let mittarinPaate = null;      // vaimennettu pääte, ks. varmistaAnalysoija
-  let neulanLukema = MITTARIN_LEPO;
-  let neulanKulma = null;        // viimeksi kirjoitettu kulma
-  let mittarinVuoro = 0;         // requestAnimationFrame-tunnus
-  let mittarinAjastin = 0;       // setTimeout-tunnus hiljaisessa valvonnassa
-  let mittariKay = false;
-  let mittarinKello = 0;
-  let hiljaisuus = 0;            // kauanko neula on maannut levossa, ms
-
-  /*
-   * Vaisumman liikkeen kysely tehdään kerran. matchMedia palauttaa
-   * elävän olion, jonka `matches` seuraa asetusta itsestään — uutta
-   * kyselyä ei siis tarvita joka kehyksellä.
-   */
-  const vaisuKysely = typeof matchMedia === 'function'
-    ? matchMedia('(prefers-reduced-motion: reduce)')
-    : null;
-
-  /** Asteikon rajoihin, ja pohjaksi aina neulan lepopaikka. */
-  function rajaaLukema(arvo) {
-    if (!Number.isFinite(arvo)) return MITTARIN_LEPO;
-    return Math.min(1, Math.max(MITTARIN_LEPO, arvo));
-  }
-
-  /** Puskuri analysaattorin näytteille: liukuluvut, jos selain osaa. */
-  function analyysiPuskurille(solmu) {
-    return typeof solmu.getFloatTimeDomainData === 'function'
-      ? new Float32Array(solmu.fftSize)
-      : new Uint8Array(solmu.fftSize);
-  }
-
-  /**
-   * Hetkellinen voimakkuus analysaattorista asteikon osuutena.
-   *
-   * RMS eikä huippu: VU-mittari on keskiarvomittari, ja huippuarvo
-   * hyppisi jokaisesta naksahduksesta. Desibeleiksi siksi, että korva
-   * kuulee logaritmisesti — lineaarisella asteikolla neula makaisi
-   * vasemmassa laidassa ja hypähtäisi vain kovimmista kohdista.
-   *
-   * TAVUPUSKURI ON VARAREITTI eikä yhtä hyvä: kahdeksan bittiä antaa
-   * pienimmäksi askeleeksi noin −42 dB, ja viritysäänen taso on
-   * −32 dBFS eli vain kourallinen askeleita sen yli. Liukuluvuilla
-   * mitattuna neulan liike on sileä, tavuilla se portaikkoa.
-   */
-  function analysoijanTaso(solmu, puskuri) {
-    let summa = 0;
-    if (puskuri instanceof Float32Array) {
-      solmu.getFloatTimeDomainData(puskuri);
-      for (let i = 0; i < puskuri.length; i += 1) summa += puskuri[i] * puskuri[i];
-    } else {
-      solmu.getByteTimeDomainData(puskuri);
-      for (let i = 0; i < puskuri.length; i += 1) {
-        const nayte = (puskuri[i] - 128) / 128;
-        summa += nayte * nayte;
-      }
-    }
-    const rms = Math.sqrt(summa / puskuri.length);
-    const db = 20 * Math.log10(Math.max(rms, 1e-6));
-    return (db - MITTARIN_POHJA_DB) / (MITTARIN_KATTO_DB - MITTARIN_POHJA_DB);
-  }
-
-  /**
-   * Liittää oman analysaattorin pelin äänisummaan, jos konteksti on jo
-   * olemassa.
-   *
-   * MYÖHÄSSÄ EIKÄ HETI, ja se on tahallista: selain luo äänikontekstin
-   * vasta pelaajan eleestä (js/sound.js ensureContext), ja soitin
-   * rakennetaan ennen ensimmäistä napautusta. Siksi kytkentää yritetään
-   * uudelleen joka kerta kun laite alkaa virittää tai soida — ensimmäinen
-   * yritys osuu tyhjään, toinen onnistuu.
-   *
-   * VAIMENNETTU PÄÄTE KAIUTTIMEEN ON TARPEEN. Analysaattori on tässä
-   * pelkkä haaraliitos, eikä umpikujaan päättyvä haara ole matkalla
-   * mihinkään — selaimen ei ole pakko laskea sitä lainkaan. Nollan
-   * vahvistus vie haaran perille lisäämättä ääneen mitään, ja se on
-   * halvempi kuin arvaus siitä, mitä kukin selain sattuu tekemään.
-   */
-  function varmistaAnalysoija() {
-    if (analysoija || mittarinLukija) return analysoija;
-    const ctx = sfx?.ctx ?? null;
-    const summa = sfx?.master ?? null;
-    if (!ctx || !summa || typeof ctx.createAnalyser !== 'function') return null;
-    try {
-      const solmu = ctx.createAnalyser();
-      // 1024 näytettä on 48 kHz:llä noin 21 ms eli lyhyempi kuin
-      // mittarin nousuaika: ikkuna ei siis hidasta neulaa, vaan
-      // vaimennus tekee sen kokonaan ja hallitusti.
-      solmu.fftSize = 1024;
-      const paate = ctx.createGain();
-      paate.gain.value = 0;
-      summa.connect(solmu);
-      solmu.connect(paate).connect(ctx.destination);
-      analysoija = solmu;
-      mittarinPaate = paate;
-      analyysinPuskuri = analyysiPuskurille(solmu);
-    } catch (syy) {
-      // Mittari on laitteen sielu mutta ei sen ehto: rikki mennyt
-      // kytkentä jättää neulan lepoon, ja radio soi kuten ennenkin.
-      console.warn('VU-mittarin kytkentä ääneen epäonnistui.', syy);
-      analysoija = null;
-      mittarinPaate = null;
-    }
-    return analysoija;
-  }
-
-  /** Irrottaa oman analysaattorin. Turvallinen kutsua kahdesti. */
-  function irrotaAnalysoija() {
-    for (const solmu of [analysoija, mittarinPaate]) {
-      try { solmu?.disconnect(); } catch { /* jo irrotettu */ }
-    }
-    analysoija = null;
-    mittarinPaate = null;
-    analyysinPuskuri = null;
-  }
-
-  /**
-   * Irrottaa kutsujan lähteelle luodut solmut.
-   *
-   * Nämä ovat eri kasa kuin oma analysaattori, koska ne elävät eri
-   * ajan: kutsuja voi vaihtaa lähdettä kesken kaiken, ja vanha ketju
-   * jäisi muuten kiinni pelaajan äänikontekstiin. Sama sääntö kuin
-   * virittimen solmuilla (js/linssit/viritin.js pura).
-   */
-  function irrotaLahde() {
-    for (const solmu of lahteenSolmut) {
-      try { solmu.disconnect(); } catch { /* jo irrotettu */ }
-    }
-    lahteenSolmut = [];
-  }
-
-  /** Nykyinen taso 0–1, tai null jos mitattavaa ei ole. */
-  function mittarinTaso() {
-    if (mittarinLukija) {
-      try {
-        return rajaaLukema(mittarinLukija());
-      } catch (syy) {
-        // Rikki mennyt lähde ei jää yrittämään uudelleen kolmekymmentä
-        // kertaa sekunnissa: se hylätään, ja seuraava askel kytkee
-        // mittarin takaisin pelin omaan äänisummaan.
-        console.warn('VU-mittarin äänilähde epäonnistui.', syy);
-        mittarinLukija = null;
-        irrotaLahde();
-      }
-    }
-    if (analysoija && analyysinPuskuri) {
-      return rajaaLukema(analysoijanTaso(analysoija, analyysinPuskuri));
-    }
-    return null;
-  }
-
-  /** Kääntää neulan. Kirjoittaa vain kun kulma oikeasti muuttui. */
-  function piirraNeula() {
-    const kulma = Math.round(mittarinKulma(rajaaLukema(neulanLukema)) * 10) / 10;
-    if (kulma === neulanKulma) return;
-    neulanKulma = kulma;
-    mittari.neula.style.transform = `rotate(${kulma}deg)`;
-  }
-
-  /**
-   * Yksi askel neulan liikkeessä.
-   *
-   * Vaimennus on kaksi riviä eksponentiaalista suodatusta, ja koko
-   * mittarin luonne on niiden aikavakioissa: nousuun mennään nopeasti,
-   * laskuun hitaasti. Askelpituus luetaan kellosta eikä oleteta, jotta
-   * hidastunut kehysvauhti ei muuta vaimennusta — silloin neula
-   * käyttäytyisi eri tavalla raskaalla kartalla kuin kevyellä.
-   */
-  function mittarinAskel(nyt) {
-    if (!mittariKay) return;
-    const vaisu = vaisuKysely?.matches === true;
-    const vali = vaisu ? MITTARIN_VAISU_VALI_MS : MITTARIN_VALI_MS;
-    if (!mittarinKello) mittarinKello = nyt;
-    const kulunut = nyt - mittarinKello;
-    if (kulunut >= vali) {
-      mittarinKello = nyt;
-      const soi = nykyinenTila === 'soi' || nykyinenTila === 'virittaa';
-      /*
-       * KYTKENTÄÄ YRITETÄÄN JOKA ASKELEELLA, EI VAIN TILANVAIHDOSSA.
-       *
-       * Mitattu vika 4.8.2026: neula ei liikkunut lainkaan. Syy oli
-       * järjestys — js/linssit/radio.js vaihtaa tilan 'virittaa'
-       * ENNEN kuin käynnistää viritysäänen, ja äänikonteksti syntyy
-       * vasta siinä. Tilanvaihdoksen hetkellä sfx.ctx oli siis yhä
-       * null, kytkentä jäi tekemättä eikä toista tilaisuutta tullut.
-       * Yritys on kaksi kenttälukua, kun se onnistuu jo kerran.
-       */
-      if (soi && !mittarinLukija && !analysoija) varmistaAnalysoija();
-      const mitattu = soi ? mittarinTaso() : null;
-      const kohde = mitattu ?? MITTARIN_LEPO;
-      const nousu = vaisu ? MITTARIN_VAISU_NOUSU_S : MITTARIN_NOUSU_S;
-      const lasku = vaisu ? MITTARIN_VAISU_LASKU_S : MITTARIN_LASKU_S;
-      // Sekunteina, ja katolla: taustalle jäänyt välilehti palaa
-      // pitkän tauon jälkeen, eikä neula saa hypätä sen takia.
-      const dt = Math.min(0.25, kulunut / 1000);
-      const aikavakio = kohde > neulanLukema ? nousu : lasku;
-      neulanLukema += (kohde - neulanLukema) * (1 - Math.exp(-dt / aikavakio));
-      piirraNeula();
-
-      // Levossa = kohde on lepopaikassa JA neula on ehtinyt sinne.
-      const lepaa = kohde <= MITTARIN_LEPO + 0.004
-        && Math.abs(neulanLukema - MITTARIN_LEPO) < 0.004;
-      hiljaisuus = lepaa ? hiljaisuus + kulunut : 0;
-
-      /*
-       * Levännyt neula sammuttaa silmukan KOKONAAN, kun radio on
-       * hiljaa. Tämä on se kohta, joka pitää poikkeuksen "ei jatkuvia
-       * animaatioita" siedettävänä: sammuksissa olevan laitteen päällä
-       * ei laske mitään.
-       *
-       * SOIVA RADIO EI SAMMUTA SILMUKKAA vaan hidastaa sen (ks.
-       * ajastaSeuraava). Ero on siinä, palaako ääni: sammutetun
-       * radion neula herää vasta tilanvaihdoksesta, joka kutsuu
-       * paivitaMittari(), mutta soivan radion ääni voi palata milloin
-       * tahansa ilman että mikään ilmoittaa siitä.
-       */
-      if (!soi && lepaa) {
-        neulanLukema = MITTARIN_LEPO;
-        piirraNeula();
-        pysaytaMittari();
-        return;
-      }
-    }
-    ajastaSeuraava();
-  }
-
-  /**
-   * Seuraava askel: kehysvauhtia liikkeessä, valvontavauhtia levossa.
-   *
-   * Kaksi ajastinta eikä yksi, koska ne tekevät eri työtä.
-   * requestAnimationFrame on oikea silloin kun neula liikkuu — se
-   * osuu ruudun päivitykseen ja pysähtyy taustavälilehdessä
-   * itsestään. Hiljaisen lähetyksen aikana se olisi kuitenkin
-   * kuusikymmentä turhaa herätystä sekunnissa minuuttien ajan, ja
-   * silloin setTimeout neljä kertaa sekunnissa on rehellisempi:
-   * mitään ei animoida, vain kuunnellaan palaako ääni.
-   */
-  function ajastaSeuraava() {
-    if (!mittariKay) return;
-    const kehyksella = hiljaisuus < MITTARIN_HILJAISUUS_MS
-      && typeof requestAnimationFrame === 'function';
-    if (kehyksella) {
-      mittarinVuoro = requestAnimationFrame(mittarinAskel);
-      return;
-    }
-    mittarinAjastin = setTimeout(() => {
-      mittarinAjastin = 0;
-      mittarinAskel(typeof performance === 'object' && performance
-        ? performance.now() : Date.now());
-    }, hiljaisuus >= MITTARIN_HILJAISUUS_MS ? MITTARIN_ODOTUS_MS : MITTARIN_VALI_MS);
-  }
-
-  /** Käynnistää neulan silmukan, jos se ei jo pyöri. */
-  function kaynnistaMittari() {
-    if (mittariKay) return;
-    mittariKay = true;
-    mittarinKello = 0;
-    // Uusi käynnistys on aina liikettä: hiljaisuuslaskuri nollataan,
-    // jotta ensimmäinen askel osuu heti eikä neljännessekunnin päähän.
-    hiljaisuus = 0;
-    ajastaSeuraava();
-  }
-
-  /** Pysäyttää silmukan. Neula jää siihen mihin se ehti. */
-  function pysaytaMittari() {
-    mittariKay = false;
-    if (mittarinVuoro && typeof cancelAnimationFrame === 'function') {
-      cancelAnimationFrame(mittarinVuoro);
-    }
-    if (mittarinAjastin) clearTimeout(mittarinAjastin);
-    mittarinVuoro = 0;
-    mittarinAjastin = 0;
-  }
-
-  /**
-   * Tilanvaihdos mittarille. Silmukka käynnistetään myös sammuessa,
-   * koska neulan on PALATTAVA lepoon liukuen — napsahtava paluu on
-   * juuri se digitaalinen ele, jota vaimennuksella vältetään.
-   */
-  function paivitaMittari() {
-    if (nykyinenTila === 'soi' || nykyinenTila === 'virittaa') varmistaAnalysoija();
-    // Tilanvaihdos on herätys: hidastunut valvonta palaa täyteen
-    // vauhtiin, ettei neula lähde liikkeelle neljännessekunnin myöhässä.
-    hiljaisuus = 0;
-    kaynnistaMittari();
-  }
-
-  /**
-   * MITTARIN ÄÄNILÄHDE. Kelpaavat:
-   *
-   *   null          takaisin oletukseen eli pelin omaan äänisummaan
-   *   funktio       () => number, hetkellinen voimakkuus 0–1
-   *   AnalyserNode  luetaan suoraan
-   *   AudioNode     soitin liittää siihen oman analysaattorinsa
-   *
-   * TÄMÄ ON SE PAIKKA, JOSTA SUORAN LÄHETYKSEN SAA MITTARIIN. Lähetys
-   * soi <audio>-elementistä eikä kulje Web Audion läpi, joten laite ei
-   * näe sen tasoa (ks. tiedoston alku). Jos js/linssit/radio.js joskus
-   * reitittää virran kontekstin läpi — samalla varareitillä kuin
-   * kaupungin äänimaisema, js/ambience-stream.js liitaKompressori — se
-   * antaa ketjun vahvistinsolmun tänne, eikä muuta tarvita.
-   *
-   * Tunnistus on siitä, MITÄ OLIO OSAA, eikä sen luokan nimestä: sama
-   * solmu voi tulla toisesta ikkunasta, jossa luokka on eri olio.
-   */
-  function asetaAanilahde(lahde) {
-    mittarinLukija = null;
-    irrotaLahde();
-    if (typeof lahde === 'function') {
-      mittarinLukija = () => rajaaLukema(Number(lahde()));
-    } else if (lahde && typeof lahde.getByteTimeDomainData === 'function') {
-      const puskuri = analyysiPuskurille(lahde);
-      mittarinLukija = () => analysoijanTaso(lahde, puskuri);
-    } else if (lahde && typeof lahde.connect === 'function'
-      && typeof lahde.context?.createAnalyser === 'function') {
-      try {
-        const solmu = lahde.context.createAnalyser();
-        solmu.fftSize = 1024;
-        lahde.connect(solmu);
-        // Sama vaimennettu pääte kuin oletuslähteellä, ja samasta
-        // syystä: umpikujaan päättyvää haaraa ei ole pakko laskea.
-        const paate = lahde.context.createGain();
-        paate.gain.value = 0;
-        solmu.connect(paate).connect(lahde.context.destination);
-        lahteenSolmut = [solmu, paate];
-        const puskuri = analyysiPuskurille(solmu);
-        mittarinLukija = () => analysoijanTaso(solmu, puskuri);
-      } catch (syy) {
-        console.warn('VU-mittarin äänilähteen kytkentä epäonnistui.', syy);
-      }
-    }
-    // Oma analysaattori pois tieltä, kun kutsuja antoi paremman tiedon.
-    if (mittarinLukija) irrotaAnalysoija();
-    paivitaMittari();
-    return Boolean(mittarinLukija);
-  }
-
-  // --- kytkinten käyttö -------------------------------------------------
-  /*
-   * SOITTOKYTKIN. Alas = stop, ylös = play.
-   *
-   * Alas kääntäminen pysäyttää heti eikä vasta kun kutsuja ehtii:
-   * painalluksen ja ruudun välissä ei saa olla viivettä, sillä hiljenevä
-   * ääni ilman näkyvää muutosta saa pelaajan painamaan uudelleen.
-   *
-   * Ylös kääntäminen soittaa sen, mihin viisari osoittaa — soivan
-   * kanavan uudelleen tai asteikon keskimmäisen kaupungin. Juuri tämä
-   * tekee asteikosta viritysasteikon eikä nimirivin: kytkin ja asteikko
-   * ovat sama laite.
-   */
-  soittoKytkin.nappi.addEventListener('click', () => {
-    const soiNyt = nykyinenTila === 'soi' || nykyinenTila === 'virittaa';
-    if (soiNyt) {
-      asetaTila('sammuksissa');
-      try {
-        onStop?.();
-      } catch (syy) {
-        console.warn('Radiosoittimen pysäytys epäonnistui.', syy);
-      }
-      return;
-    }
-    const kohde = nykyinenKanava?.cityId ?? keskusId;
-    if (!kohde) {
-      // Ei mitään soitettavaa: vipu jää alas ja laite kertoo miksi.
-      // Hiljaisuus ilman selitystä on rikkinäisen laitteen tuntomerkki.
-      soittoKytkin.asetaAsento(false);
-      paivitaNaytto('sammuksissa', ['RADIO POIS', 'VALITSE KAUPUNKI']);
-      return;
-    }
-    valitseKaupunki(kohde);
-  });
-
-  /*
-   * VIRTAKYTKIN. Alas = off, ja silloin radio häviää näkyvistä.
-   *
-   * Laite katoaa heti ja ääni loppuu heti; radiotilan sulkeminen on
-   * kutsujan asia (onSulje). Jos kutsuja ei anna takaisinkutsua, laite
-   * jää piiloon ja ääni pois — se on kaikki, mitä soitin voi tehdä
-   * tietämättä mitään kartasta tai linssivalikosta.
-   */
-  virtaKytkin.nappi.addEventListener('click', () => {
-    if (juuri.dataset.virta === 'off') return;
-    virtaKytkin.asetaAsento(false);
-    juuri.dataset.virta = 'off';
-    asetaTila('sammuksissa');
-    try {
-      onStop?.();
-    } catch (syy) {
-      console.warn('Radiosoittimen pysäytys epäonnistui.', syy);
-    }
-    // Viimeisenä, koska tämä voi purkaa koko soittimen.
-    try {
-      onSulje?.();
-    } catch (syy) {
-      console.warn('Radiotilan sulkeminen epäonnistui.', syy);
-    }
-  });
-
   /*
    * Kotelon leveys muuttuu ilman että kanava vaihtuu: ruudun kierto,
    * ikkunan koon muutos, ja ennen kaikkea se hetki, jona CSS piilottaa
@@ -2351,13 +1196,6 @@ export function teeRadiosoitin({
   /** Sammuttaa vahdin ja irrottaa soittimen sivulta. */
   function poista() {
     nollaaVahti();
-    pysaytaMittari();
-    // Analysaattori irti äänikontekstista: kytketty solmu jää elämään,
-    // koska ketju pitää siitä kiinni — sama sääntö kuin virittimen
-    // solmuilla (js/linssit/viritin.js lopeta).
-    irrotaAnalysoija();
-    irrotaLahde();
-    mittarinLukija = null;
     vahtija?.disconnect();
     juuri.remove();
   }
@@ -2366,10 +1204,6 @@ export function teeRadiosoitin({
   // pyytänyt äänen muutosta, se vain kertoi lähtöarvon), kytkimet alas ja
   // laite pois päältä mutta virta päällä.
   asetaAani(aaniArvo, false);
-  virtaKytkin.asetaAsento(true);
-  // Neula lepopaikkaansa heti: ilman tätä se osoittaisi suoraan ylös
-  // (transform 0) siihen asti, kunnes ensimmäinen ääni liikuttaa sitä.
-  piirraNeula();
   asetaKaupungit(kaupungit, {
     laudanLeveys: kierto,
     sijainti: pelaajanPaikka,
@@ -2386,14 +1220,11 @@ export function teeRadiosoitin({
     asetaVirityksenVaihe,
     asetaNaytto,
     asetaAani,
-    asetaAanilahde,
     asetaKaupungit,
     asetaSijainti,
     poista,
     get tila() { return nykyinenTila; },
     get aani() { return aaniArvo; },
     get keskus() { return keskusId; },
-    // Neulan lukema 0–1. Vain mittausta ja testejä varten; peli ei lue.
-    get mittari() { return neulanLukema; },
   };
 }
