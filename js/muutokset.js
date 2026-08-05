@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 295, teksti: 'Tv näyttää vain suoraa lähetystä, ei tallennetta' },
+  { v: 295, teksti: 'Lehden sivut korjattu isolle iPadille' },
   { v: 294, teksti: 'Tv-lähetys aukeaa nyt myös iPadilla, rasti pois' },
   { v: 293, teksti: 'Napsahtelut pois: jäljelle noppa, lento ja laiva' },
   { v: 292, teksti: 'Valikkoon ilmaa, lähdelinkki pois' },
