@@ -1481,13 +1481,6 @@ export class UI {
     this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
     // Visa aukeaa omasta napistaan samaan näkymään (omistajan toive):
     // nappi väistyy ja kysymys vaihtoehtoineen tulee tilalle.
-    this.arrivalKulttuuriAvaa = document.getElementById('arrival-kulttuuri-avaa');
-    this.arrivalKulttuuriAvaa.addEventListener('click', () => {
-      this.arrivalKulttuuriAvaa.hidden = true;
-      this.arrivalKulttuuriKysymys.hidden = false;
-      this.arrivalKulttuuriVaihtoehdot.hidden = false;
-      sfx.play('paper');
-    });
     this.arrivalKulttuuriKysymys = document.getElementById('arrival-kulttuuri-kysymys');
     this.arrivalKulttuuriVaihtoehdot = document.getElementById('arrival-kulttuuri-vaihtoehdot');
     this.arrivalKulttuuriTulos = document.getElementById('arrival-kulttuuri-tulos');
@@ -6172,11 +6165,10 @@ export class UI {
     this.arrivalKulttuuriKysymys.textContent = vastattu
       ? 'Kulttuurivisaan on jo vastattu tässä kaupungissa.'
       : `Tutustuitko? ${kysymys.q}`;
-    // Visa aukeaa omasta napistaan; vastattu tila näkyy suoraan tekstinä.
-    // Vaihtoehdot ovat piilossa kunnes nappi avaa ne.
-    this.arrivalKulttuuriAvaa.hidden = vastattu;
-    this.arrivalKulttuuriKysymys.hidden = !vastattu;
-    this.arrivalKulttuuriVaihtoehdot.hidden = true;
+    // Visa näkyy heti ilman avausnappia (omistajan toive 5.8.2026:
+    // "saisi näkyä heti ilman klikkausta").
+    this.arrivalKulttuuriKysymys.hidden = false;
+    this.arrivalKulttuuriVaihtoehdot.hidden = vastattu;
     if (vastattu) return;
     kysymys.options.forEach((vaihtoehto, i) => {
       const nappi = html('button', '', vaihtoehto);
@@ -7209,10 +7201,21 @@ export class UI {
       // Kuvateksti ja lähderivi HETI kuvan alle kuten lehtijutussa —
       // leipäteksti vasta niiden jälkeen (omistajan toive 5.8.2026;
       // palstataitossa selite jutun perässä näytti irralliselta).
+      // Kuva ja sen tekstit kääritään yhteiseen kehykseen, joka
+      // kutistuu kuvan mittoihin: kuvateksti ei saa ylittää kuvan
+      // reunaa (omistajan toive).
       const selite = nosto.selite ? html('p', 'selite', nosto.selite) : null;
-      if (selite) lohko.appendChild(selite);
       const lahde = nosto.lahde ? html('p', 'lahde', nosto.lahde) : null;
-      if (lahde) lohko.appendChild(lahde);
+      if (kuva && (selite || lahde)) {
+        const kehys = html('div', 'kuvakehys');
+        kehys.appendChild(kuva);
+        if (selite) kehys.appendChild(selite);
+        if (lahde) kehys.appendChild(lahde);
+        lohko.appendChild(kehys);
+      } else {
+        if (selite) lohko.appendChild(selite);
+        if (lahde) lohko.appendChild(lahde);
+      }
       piirraLeipa(lohko, nosto.teksti, { anfangi: ensimmainen });
       ensimmainen = false;
       if (nosto.wiki) {

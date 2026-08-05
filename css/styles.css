@@ -2181,7 +2181,6 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 }
 
 /* Kulttuurivisan avausnappi: sama mustekynän nappityyli kuin näytteellä. */
-.kulttuuri-visa-avaa { margin: 0.55rem 0 0.2rem; }
 
 /*
  * Tutki paikka ja Jatka matkaa erilleen sisällöstä: napit hengittävät
@@ -2219,14 +2218,32 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   background: rgba(156, 47, 32, 0.07);
 }
 
+/*
+ * Visan vaihtoehdot kevyemmiksi ja väljemmiksi (omistajan palaute
+ * 5.8.2026: "raskaan näköisiä ja ahdas"): ohut yhtenäinen viiva
+ * pelinappien paksun katkoviivan sijaan, pyöreä kapseli ja
+ * enemmän ilmaa nappien välissä ja ympärillä.
+ */
 .kulttuuri-vaihtoehdot {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0.3rem 0 0.4rem;
+  gap: 0.55rem;
+  margin: 0.55rem 0 0.5rem;
 }
 
-.kulttuuri-vaihtoehdot button { font-size: 0.85rem; }
+.dialog .kulttuuri-vaihtoehdot button {
+  font-size: 0.85rem;
+  padding: 0.5rem 1.05rem;
+  border: 1px solid rgba(70, 51, 31, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 250, 238, 0.6);
+  box-shadow: none;
+}
+
+.dialog .kulttuuri-vaihtoehdot button:hover {
+  border-color: rgba(70, 51, 31, 0.75);
+  background: rgba(255, 250, 238, 0.95);
+}
 
 /* Kapealla ruudulla palstat allekkain ja jakoviiva takaisin vaakaan. */
 @media (max-width: 640px) {
@@ -5952,6 +5969,25 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   color: rgba(70, 51, 31, 0.82);
 }
 
+/*
+ * Kuvan ja kuvatekstien yhteinen kehys: kutistuu kuvan mittoihin ja
+ * keskittyy palstalle. Kuvateksti EI SAA ylittää kuvan reunaa
+ * (omistajan toive 5.8.2026) — leveys 0 + min-width 100 % antaa
+ * selitteelle täsmälleen kehyksen (= kuvan) leveyden ilman, että
+ * pitkä teksti venyttäisi fit-content-kehystä palstan levyiseksi.
+ */
+.wiki-nosto .kuvakehys {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 0.6rem;
+}
+
+.wiki-nosto .kuvakehys .selite,
+.wiki-nosto .kuvakehys .lahde {
+  width: 0;
+  min-width: 100%;
+}
+
 /* Lähdemaininta on lisenssiehto, ei koriste: se näkyy aina.
  * Alamarginaali erottaa kuvatekstirivit niiden alta alkavasta
  * leipätekstistä (kuvatekstit ovat kuvan alla, v301). */
@@ -6011,13 +6047,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
   .wiki-nosto.pysty .kulttuuri-otsikkorivi { grid-column: 1 / -1; }
 
-  .wiki-nosto.pysty img,
-  .wiki-nosto.pysty .selite,
-  .wiki-nosto.pysty .lahde { grid-column: 1; }
+  .wiki-nosto.pysty .kuvakehys { grid-column: 1; }
 
   .wiki-nosto.pysty .leipa {
     grid-column: 2;
-    grid-row: 2 / span 3;
     columns: 1;
   }
 
@@ -6812,6 +6845,8 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  * navigointi alas"). Keskellä sivua kelluvat nuolet häiritsivät
  * lukemista palstataitossa.
  */
+/* Koko navigointi on YKSI pilleri: ‹ 2/7 › samassa kapselissa
+ * samalla tyylillä (omistajan toive 5.8.2026). */
 .tutki-navi {
   position: absolute;
   left: 50%;
@@ -6820,28 +6855,31 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   z-index: 5;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  pointer-events: none;
+  gap: 0.1rem;
+  padding: 0.12rem 0.45rem;
+  background: rgba(246, 231, 198, 0.82);
+  border-radius: 999px;
 }
 
-.tutki-nuoli {
-  width: 2rem;
-  height: 2rem;
+.dialog .tutki-navi .tutki-nuoli {
+  width: 1.35rem;
+  min-height: 0;
+  height: 1.35rem;
   padding: 0;
   border: 0;
   background: none;
-  color: var(--map-ink);
-  opacity: 0.5;
+  /* Sama muste kuin sivunumerolla — yksi pilleri, yksi tyyli. */
+  color: rgba(70, 51, 31, 0.62);
   cursor: pointer;
-  pointer-events: auto;
-  transition: opacity 0.2s ease;
+  transition: color 0.2s ease;
 }
 
-.tutki-nuoli:hover,
-.tutki-nuoli:focus-visible { opacity: 0.9; }
+.dialog .tutki-navi .tutki-nuoli:hover,
+.dialog .tutki-navi .tutki-nuoli:focus-visible { color: rgba(70, 51, 31, 0.95); }
 
-/* Piilotettu nuoli varaa paikkansa, ettei rivi hypi ääripäissä. */
-.tutki-nuoli[hidden] {
+/* Piilotettu nuoli varaa paikkansa, ettei pilleri kutistu
+ * ääripäissä. */
+.dialog .tutki-navi .tutki-nuoli[hidden] {
   display: block;
   visibility: hidden;
 }
@@ -6858,13 +6896,11 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  * ja montako niitä on, jottei pyyhkäisy jää arvailun varaan. */
 .tutki-sivunumero {
   margin: 0;
-  padding: 0.1rem 0.55rem;
+  padding: 0 0.2rem;
   font-family: var(--font-type);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   color: rgba(70, 51, 31, 0.62);
-  background: rgba(246, 231, 198, 0.82);
-  border-radius: 999px;
   pointer-events: none;
 }
 
