@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 276, teksti: 'Maaosastossa paikallisia uutisotsikoita (Italia)' },
+  { v: 276, teksti: 'Uutinen aukeaa kortille, käännösnappi suomeksi' },
   { v: 275, teksti: 'Venetsiassa kätkölle vie gondolieeri Matteo' },
   { v: 275, teksti: 'Kohtaaminen: hahmo tervehtii, kysyy ja hyvästelee' },
   { v: 274, teksti: 'Tekijätietojen logo tummalle laatalle, pienempänä' },
