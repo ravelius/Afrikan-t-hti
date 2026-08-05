@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 285, teksti: 'Laukku aukeaa suoraan yläpalkista, Sulje pois' },
+  { v: 285, teksti: 'Varusteiden kuvakkeet selvästi isommiksi' },
   { v: 284, teksti: 'Laukun katkoviiva vaihtui nahkaan, tausta ei tummene' },
   { v: 284, teksti: 'Aarnin luetteloon vain löytyneet, muut lukuna' },
   { v: 283, teksti: 'Uutiseen kuva, suomennokset otsikoiden alle' },

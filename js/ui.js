@@ -1374,6 +1374,18 @@ export class UI {
       this.avaaLahteet();
     });
 
+    /*
+     * Napautus laukun ulkopuolelle sulkee sen.
+     *
+     * Sulje-nappi poistui (omistaja: "se on turha kun voi klikata vain
+     * karttaa"), joten tämä on nyt ainoa hiiriele ulos. Modaalin
+     * taustakerros on osa <dialog>-elementtiä itseään, joten napautus
+     * kortin vierestä osuu dialogiin — kortin sisällä osuu korttiin.
+     */
+    this.passportDialog?.addEventListener('click', (e) => {
+      if (e.target === this.passportDialog) this.passportDialog.close();
+    });
+
     this.turnCard = document.getElementById('actions').closest('.turn-card');
     this.introEl = document.getElementById('intro');
     this.introText = document.getElementById('intro-text');
@@ -8434,8 +8446,19 @@ export class UI {
     const leveys = kortti.getBoundingClientRect().width || kortti.offsetWidth;
     const suurinVasen = Math.max(VARA, window.innerWidth - leveys - VARA);
     const vasen = Math.min(Math.max(VARA, pilleri.left), suurinVasen);
+    /*
+     * KIINNI YLÄPALKKIIN, EI PILLERIN ALLE VÄLIN PÄÄHÄN.
+     *
+     * Omistaja: "laukun yläreunan voisi ottaa kokonaan pois, niin että
+     * näyttäisi että laukku aukeaa suoraan yläpalkista." Rako palkin ja
+     * kortin välissä tekisi siitä ponnahdusikkunan; kiinni oleva lukee
+     * laatikoksi, joka vedetään ulos palkista. Yläreunus ja yläkulmien
+     * pyöristys ovat pois CSS:ssä samasta syystä.
+     */
+    const palkki = document.querySelector('.topbar')?.getBoundingClientRect();
+    const ylin = palkki?.bottom ?? pilleri.bottom;
     this.passportDialog.style.left = `${Math.round(vasen)}px`;
-    this.passportDialog.style.top = `${Math.round(pilleri.bottom + VARA)}px`;
+    this.passportDialog.style.top = `${Math.round(ylin)}px`;
     this.passportDialog.classList.add('pillerin-alla');
   }
 

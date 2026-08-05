@@ -386,9 +386,11 @@
     <!-- Nimikilpi siirtyi laukusta ylärivin logoon (omistajan toive
          5.8.2026): logoa napauttamalla se avautuu isompana, ja saman
          ikkunan alla ovat tekijätiedot ja lähdeluettelo. -->
-    <form method="dialog" class="dialog-actions">
-      <button class="primary" value="close">Sulje</button>
-    </form>
+    <!-- SULJE-NAPPI POISTETTU (omistajan toive 5.8.2026: "se on turha kun
+         voi klikata vain karttaa"). Laukku ei enää tummenna karttaa, joten
+         napautus sen ulkopuolelle on luonteva sulkuele — sama kuin
+         muissakin kartan päälle avautuvissa korteissa. Esc sulkee yhä,
+         koska <dialog> hoitaa sen itse. -->
     <!-- Nahkakahva laukun alalaidassa (omistajan toive): kaksi kiinnikettä
          ja niiden välissä kaari. Koriste, ei nappi. -->
     <div class="laukku-kahva" aria-hidden="true"><span></span></div>
