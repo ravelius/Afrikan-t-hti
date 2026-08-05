@@ -1103,6 +1103,21 @@ const VIIVA_IKONIT = {
   taikalasit: '<circle cx="6.9" cy="13.6" r="3.5"/><circle cx="17.1" cy="13.6" r="3.5"/>'
     + '<path d="M10.4 13.2c1-.8 2.2-.8 3.2 0"/>'
     + '<path d="M3.5 12.2 2.1 9.2M20.5 12.2 21.9 9.2"/>',
+  /*
+   * VARUSTEET: matkareppu läppineen ja solkineen.
+   *
+   * Valikon nimi vaihtui taikalaseista varusteiksi (omistaja 5.8.2026),
+   * ja kuvakkeen oli vaihduttava mukana: lasit ovat yksi väline, ja
+   * valikossa on jo radio ja kartta-aiheiset linssit. Reppu on se, mistä
+   * välineet otetaan — sama esine kuin pelin matkalaukku mutta selässä,
+   * eli se ei sekoitu ylärivin kukkaroon.
+   *
+   * Ei kompassia: se on jo kartan piirroksessa ja omana ikoninaan.
+   */
+  varusteet: '<path d="M9.2 8.4V6.9a2.8 2.8 0 0 1 5.6 0v1.5"/>'
+    + '<rect x="4.6" y="8.4" width="14.8" height="12" rx="3.4"/>'
+    + '<path d="M4.7 14.6h14.6"/>'
+    + '<rect x="10.4" y="13.1" width="3.2" height="3.8" rx="1.1"/>',
   noppa: '<rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.2"/><g class="taytto"><circle cx="8.2" cy="8.2" r="1.25"/><circle cx="15.8" cy="8.2" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="8.2" cy="15.8" r="1.25"/><circle cx="15.8" cy="15.8" r="1.25"/></g>',
   kompassi: '<circle cx="12" cy="12" r="8.4"/><path d="M12 5.8 14.3 12 12 18.2 9.7 12z"/><circle class="taytto" cx="12" cy="12" r="1"/>',
   nuoli: '<path d="M9.5 6.2 5 10.6l4.5 4.4"/><path d="M5 10.6h9.2a4.6 4.6 0 1 1 0 9.2H9.5"/>',
@@ -7854,7 +7869,7 @@ export class UI {
     }
 
     /*
-     * Taikalasit: tämän matkan aikana löydetyt linssit.
+     * Varusteet: tämän matkan aikana löydetyt linssit.
      *
      * Lista luetaan pelaajan omasta linssit-kentästä eikä finds-listasta
      * kahdesta syystä: finds saa 'linssi'-merkinnän myös silloin, kun
@@ -8270,8 +8285,8 @@ export class UI {
   paivitaLinssiNappi() {
     if (!this.linssiNappi || !this.linssiNapinIkoni) return;
     const linssi = this.paallaOlevaLinssi();
-    this.linssiNapinIkoni.innerHTML = `<svg viewBox="0 0 24 24">${linssi?.ikoni ?? VIIVA_IKONIT.taikalasit}</svg>`;
-    this.linssiNappi.title = linssi ? `Linssi: ${linssi.nimi}` : 'Taikalasit — valitse linssi kartalle';
+    this.linssiNapinIkoni.innerHTML = `<svg viewBox="0 0 24 24">${linssi?.ikoni ?? VIIVA_IKONIT.varusteet}</svg>`;
+    this.linssiNappi.title = linssi ? `Linssi: ${linssi.nimi}` : 'Varusteet — valitse linssi kartalle';
     this.linssiNappi.classList.toggle('paalla', Boolean(linssi));
   }
 

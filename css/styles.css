@@ -420,7 +420,24 @@ button, .brand, .turn-pill, .fact-card h2 {
    * ruudulla vasemman reunan yli ja nimen ensimmäinen kirjain jäi
    * näkymättömiin (mitattu: paneelin vasen reuna oli -17 px).
    */
-  max-width: min(21rem, calc(100vw - 7rem));
+  /*
+   * PUOLEEN ENTISESTÄ (omistaja 5.8.2026: "kavenna alivalikkonäkymää
+   * puoleen nykyisestä"). 21rem -> 10,5rem.
+   *
+   * Paneeli oli leveä kahdesta syystä, joista toinen oli vika: liuskat
+   * eivät mahtuneet yhdelle riville vaan pinoutuivat neljäksi täysleveäksi
+   * napiksi, koska päävalikon sääntö `.paavalikko button { width: 100% }`
+   * osui myös niihin (korjattu alempana). Mitattu ennen: paneeli 290 px,
+   * jokainen liuska 270 px eli koko leveys yhtä kuvaketta kohti.
+   *
+   * 9rem = 144 px on tasan puolet. Liuskat kiertyvät kahden riveiksi,
+   * mikä on niiden oma suunniteltu käytös (ks. .linssi-liuskat) ja myös
+   * välttämätöntä: linssejä on tulossa yksitoista, eivätkä ne mahtuisi
+   * yhdelle riville millään leveydellä. Kuvaus liuskojen alla kiertyy
+   * useammalle riville, ja se on oikea järjestys — kuvake on valinta,
+   * teksti on selitys.
+   */
+  max-width: min(9rem, calc(100vw - 7rem));
   padding: 0.45rem 0.55rem 0.55rem;
   background: var(--panel);
   border: 1px solid var(--line);
@@ -450,6 +467,15 @@ button, .brand, .turn-pill, .fact-card h2 {
 .linssi-liuskat button {
   appearance: none;
   flex: 0 0 auto;
+  /*
+   * Liuska on kuvakkeen levyinen, ei valikon.
+   *
+   * Valitsin asuu päävalikon sisällä, ja `.paavalikko button` antaa
+   * kaikille napeilleen `width: 100%` — se on oikein valikon riveille
+   * mutta väärin liuskoille, jotka on tarkoitettu vierekkäin. Ilman tätä
+   * riviä neljä liuskaa pinoutui neljäksi täysleveäksi napiksi.
+   */
+  width: auto;
   display: grid;
   place-items: center;
   padding: 0.3rem 0.5rem 0.62rem;

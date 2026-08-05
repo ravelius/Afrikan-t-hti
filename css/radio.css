@@ -765,22 +765,36 @@
   background: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  /*
+   * PYÖREÄ EIKÄ SOIKEA.
+   *
+   * Kun lamppu muuttui <span>:istä <button>:iksi, se peri pelin yleisen
+   * napin vähimmäiskorkeuden (css/styles.css `button { min-height:
+   * 42px }`). Leveys tuli tästä säännöstä ja korkeus sieltä, joten
+   * merkkivalosta tuli soikio — mitattu puhelimella 22 × 42, kun sen
+   * pitäisi olla 22 × 22. Omistaja: "muuta punainen lamppu pyöreäksi".
+   *
+   * Kosketusalue ei kärsi: ::before venyttää sen 44 pikseliin.
+   */
+  min-height: 0;
+  min-width: 0;
 }
 
+/* Näkymätön kosketuslevy: 26 + 2 × 9 = 44 px, kapealla ruudulla
+   22 + 2 × 11 = 44 px (ks. media-lohko alempana). */
 .radio-lamppu::before {
   content: "";
   position: absolute;
   inset: -9px;
 }
 
-/* Mykistetty radio: lasi himmenee ja hehku sammuu, vaikka lähetys soi
-   taustalla äänettömänä. Sama kieli kuin sammuksissa — valo kertoo,
-   kuuluuko ääntä. */
-.radiosoitin[data-mykistetty="on"] .radio-lamppu-lasi {
+/* Taukotila: lasi himmenee ja hehku sammuu. Sama kieli kuin
+   sammuksissa — valo kertoo, kuuluuko ääntä. */
+.radiosoitin[data-tauko="on"] .radio-lamppu-lasi {
   filter: saturate(0.35) brightness(0.55);
 }
 
-.radiosoitin[data-mykistetty="on"] .radio-lamppu-hehku {
+.radiosoitin[data-tauko="on"] .radio-lamppu-hehku {
   opacity: 0 !important;
 }
 
@@ -1696,10 +1710,24 @@
    * käyttöliittymäpalkilta — sama syy, jonka takia kotelolla on
    * ylipäätään reunat (ks. .radio-kotelo max-width).
    */
+  /*
+   * KOTIPALKIN VARAUS POIS ALAREUNASTA.
+   *
+   * Yllä oleva päättely piti paikkansa silloin, kun kotelossa oli
+   * kytkimiä ja säätimiä: niiden alle ei saanut jäädä kotipalkkia. Nyt
+   * laite on riisuttu näyttöön ja asteikkoon (v268), ja alimpana ovat
+   * asteikon KORISTEELLISET viivamerkit — kaupunkien nimet, eli ainoat
+   * kosketuskohteet, ovat asteikon yläosassa.
+   *
+   * Varaus näkyi siis pelkkänä tyhjänä puuna: mitattu omistajan
+   * iPhonella 41 px, josta 34 oli turva-alaa. Omistaja: "madalla vielä
+   * poistamalla alareunan tyhjä tila". Puu jatkuu yhä ruudun reunaan
+   * asti, koska pehmuste oli varaus eikä marginaali.
+   */
   .radiosoitin { padding-bottom: 0; }
   .radio-kotelo {
     gap: 0.4rem;
-    padding: 0.45rem 0.5rem calc(0.45rem + var(--turva-ala, 0px));
+    padding: 0.45rem 0.5rem 0.45rem;
     border-radius: 12px 12px 0 0;
     /* Alareuna on ruudun ulkopuolella; reunaviiva ja sen sisävarjo
        jäisivät roikkumaan puoliksi näkyvänä juovana kotipalkin päälle. */
@@ -1720,6 +1748,7 @@
   .radio-kytkin-kuva { width: 25px; height: 41px; }
   .radio-kytkin-kilpi { font-size: 6px; letter-spacing: 0.14em; }
   .radio-lamppu { width: 22px; height: 22px; }
+  .radio-lamppu::before { inset: -11px; }
   /* Sama suhde kuin leveällä ruudulla: lasi peittää hehkulaatasta noin
      40 %, joten liukuvärien jakokohdat osuvat yhä puulle. */
   .radio-lamppu-hehku { inset: -16px; }

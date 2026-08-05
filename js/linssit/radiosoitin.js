@@ -437,8 +437,8 @@ function teeLamppu() {
   const lamppu = document.createElement('button');
   lamppu.type = 'button';
   lamppu.className = 'radio-lamppu';
-  lamppu.title = 'Mykistä radio';
-  lamppu.setAttribute('aria-label', 'Mykistä radio');
+  lamppu.title = 'Keskeytä lähetys';
+  lamppu.setAttribute('aria-label', 'Keskeytä lähetys');
   lamppu.setAttribute('aria-pressed', 'false');
   lamppu.append(
     osa('span', 'radio-lamppu-hehku'),
@@ -469,6 +469,10 @@ function ero(a, b, laudanLeveys) {
  *                            — soitin ei tunne radiotilaa eikä saa arvata
  *                            sitä (ks. tiedoston alku: ei js/ui.js:ää).
  *   onAani(arvo)           — äänenvoimakkuus 0–1 muuttui.
+ *   onTauko(paalle)        — merkkivaloa napautettiin. true = lähetys
+ *                            keskeytetään, false = jatketaan. Soitin
+ *                            hoitaa vain valon ja nappitilan; itse
+ *                            toiston pysäyttäminen on kutsujan työ.
  *   onValitseKaupunki(id)  — asteikolta valittiin kaupunki tai soittokytkin
  *                            käännettiin ylös. Kutsuja soittaa kanavan.
  *   onAikakatkaisu()       — viritys kesti liian kauan; kutsuja sulkee virran.
@@ -503,6 +507,7 @@ function ero(a, b, laudanLeveys) {
  *                            siirrytään. Ks. VIRITYKSEN_VAIHEET.
  *   asetaNaytto(elementti) — pistematriisinäyttö aukkoon.
  *   asetaAani(arvo)
+ *   asetaTauko(paalle)     — merkkivalon taukotila ulkoapäin.
  *   asetaKaupungit(lista, { laudanLeveys, sijainti })
  *   asetaSijainti(cityId)
  *   poista()
@@ -511,6 +516,7 @@ export function teeRadiosoitin({
   onStop = null,
   onSulje = null,
   onAani = null,
+  onTauko = null,
   onValitseKaupunki = null,
   onAikakatkaisu = null,
   kaupungit = [],
@@ -576,29 +582,37 @@ export function teeRadiosoitin({
   naytonKehys.appendChild(lamppu);
 
   /*
-   * Merkkivalo on myös MYKISTYSNAPPI (omistaja 5.8.2026: "Punaista
-   * valoa painamalla radion saa mutulle ja takaisin"). Se on laitteen
-   * ainoa käyttökytkin: VU-mittari, kaiutinsäleikkö ja kaksi
-   * vipukytkintä poistettiin samalla, jotta kotelo mahtuu iPhonen
-   * ruudulle. Mykistys ei pysäytä virtaa — ääni palaa napautuksella
-   * heti, ilman uutta viritystä. Radiotila suljetaan taikalaseista,
+   * Merkkivalo on myös TAUKONAPPI. Se on laitteen ainoa käyttökytkin:
+   * VU-mittari, kaiutinsäleikkö ja kaksi vipukytkintä poistettiin, jotta
+   * kotelo mahtuu iPhonen ruudulle. Radiotila suljetaan varusteista,
    * kuten muutkin linssit.
+   *
+   * TAUKO EIKÄ MYKISTYS. Ensin tämä säätikin vain äänenvoimakkuuden
+   * nollaan, ja omistaja raportoi ettei se toimi: "Sitä painamalla
+   * lähetys pitäisi mennä tauko tilaan. Se ei vielä toimi." Vaimennus
+   * kulkee soivan kanavan tilakoneen läpi (js/linssit/radio.js
+   * paivitaAanenvoimakkuus kirjoittaa voimakkuuden VAIN lukittuneelle
+   * ja häivyttämättömälle asemalle), joten se putosi hiljaa aina kun
+   * jokin oli kesken. `audio.pause()` ei kysy keneltäkään.
+   *
+   * Ja se on myös oikea toiminto: mykistetty suora lähetys jatkaa
+   * juoksemistaan, eli kuluttaa dataa ja karkaa siitä kohdasta, johon
+   * kuuntelija sen jätti.
    */
-  let aaniEnnenMykistysta = 0;
-  function asetaMykistys(paalle) {
-    juuri.dataset.mykistetty = paalle ? 'on' : 'off';
+  function asetaTauko(paalle) {
+    juuri.dataset.tauko = paalle ? 'on' : 'off';
     lamppu.setAttribute('aria-pressed', String(Boolean(paalle)));
-    lamppu.title = paalle ? 'Palauta ääni' : 'Mykistä radio';
+    lamppu.title = paalle ? 'Jatka lähetystä' : 'Keskeytä lähetys';
     lamppu.setAttribute('aria-label', lamppu.title);
   }
+  asetaTauko(false);
   lamppu.addEventListener('click', () => {
-    if (juuri.dataset.mykistetty === 'on') {
-      asetaAani(aaniEnnenMykistysta || 0.8);
-      asetaMykistys(false);
-    } else {
-      aaniEnnenMykistysta = aaniArvo > 0 ? aaniArvo : 0.8;
-      asetaAani(0);
-      asetaMykistys(true);
+    const uusi = juuri.dataset.tauko !== 'on';
+    asetaTauko(uusi);
+    try {
+      onTauko?.(uusi);
+    } catch (syy) {
+      console.warn('Radion taukotilan välitys epäonnistui.', syy);
     }
   });
   keskio.appendChild(naytonKehys);
@@ -1220,6 +1234,10 @@ export function teeRadiosoitin({
     asetaVirityksenVaihe,
     asetaNaytto,
     asetaAani,
+    // Kutsuja voi nollata taukotilan (esim. kanavan vaihto) ilman että
+    // pelaaja on napauttanut valoa; muuten valo jäisi pimeäksi vaikka
+    // ääntä tulee.
+    asetaTauko,
     asetaKaupungit,
     asetaSijainti,
     poista,
