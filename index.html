@@ -275,6 +275,14 @@
       <p id="arrival-maa-tervehdykset" class="maa-tervehdykset" hidden></p>
       <p id="arrival-maa-intro" class="arrival-intro"></p>
       <button id="arrival-maa-wiki" class="wiki-btn" type="button" hidden>Lue lisää maasta</button>
+      <!-- Ajankohtaiset uutisotsikot paikallisella kielellä (maat,
+           joilla on lähde js/packs/uutislahteet.js:ssä JA omistajan
+           uutisvälitys on otettu käyttöön — ks. tools/uutisproxy/).
+           Napautus avaa uutisen pelin kirjasimilla. -->
+      <div id="arrival-uutiset" class="arrival-uutiset" hidden>
+       <p class="uutiset-nimio"></p>
+       <div class="uutiset-lista"></div>
+      </div>
      </div>
     </div>
     <!--
@@ -574,6 +582,9 @@
     <p id="quiz-selite" class="quiz-selite" hidden></p>
     <!-- Valokuvakysymyksen kuva: matkavalokuvaajan vedos. -->
     <img id="quiz-photo" class="quiz-photo" alt="" hidden />
+    <!-- Kohtaamisen avaus: hahmon tervehdys kirjoittuu ennen kysymystä
+         (kaupungit, joilla on rivi js/packs/kohtaamiset.js:ssä). -->
+    <p id="quiz-kohtaaminen" class="quiz-kohtaaminen" hidden></p>
     <p id="quiz-question" class="quiz-question"></p>
     <p id="quiz-hint-text" class="quiz-hint-text" hidden></p>
     <div id="quiz-options" class="quiz-options"></div>

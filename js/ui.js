@@ -68,6 +68,8 @@ import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
+import { KOHTAAMISET } from './packs/kohtaamiset.js';
+import { haeUutiset, kaannaSuomeksi, uutislahde } from './uutiset.js';
 import {
   haeSaaTanaan, saaKuvaus, SAA_IKONIT, kuukausiSsa, piirraVuosiSaa,
 } from './saa.js';
@@ -1397,6 +1399,8 @@ export class UI {
     this.arrivalMaaIntro = document.getElementById('arrival-maa-intro');
     this.arrivalMaaKartta = document.getElementById('arrival-maa-kartta');
     this.arrivalMaaTunnusluvut = document.getElementById('arrival-maa-tunnusluvut');
+    // Uutisotsikot maaosastossa (vaatii omistajan uutisvälityksen).
+    this.arrivalUutiset = document.getElementById('arrival-uutiset');
     this.arrivalMaaTervehdykset = document.getElementById('arrival-maa-tervehdykset');
     // Lippu näytetään vasta kun se on oikeasti latautunut — ilman verkkoa
     // riviltä ei jää rikkinäistä kuvaruutua.
@@ -1448,7 +1452,18 @@ export class UI {
       this.luentaTauolla = null;
       this.closeArrival();
       sfx.play('paper');
-      this.doAction(() => this.game.actionQuiz());
+      /*
+       * Kohtaamiskaupungissa hahmo esittää kysymyksen itse, joten
+       * muotoarvonta (väittämä, valokuvaaja, tullimies) ohitetaan —
+       * "Tapaa gondolieeri" ei saa avata tullimiestä. Isoisän pulma
+       * pysyy silti etusijalla: nimetty muoto ohittaisi sen, joten
+       * pulman odottaessa kutsu tehdään entiseen tapaan.
+       */
+      const kohtaaminen = KOHTAAMISET[this.game.cityOf()?.id];
+      const pulmaOdottaa = this.game.pendingPuzzle?.();
+      this.doAction(() => this.game.actionQuiz(
+        kohtaaminen && !pulmaOdottaa ? { form: 'quiz' } : {},
+      ));
     });
     document.getElementById('arrival-no').addEventListener('click', () => {
       this.closeArrival();
@@ -1643,6 +1658,11 @@ export class UI {
     this.quizDialog = document.getElementById('quiz-dialog');
     this.quizCity = document.getElementById('quiz-city');
     this.quizQuestion = document.getElementById('quiz-question');
+    // Kohtaamisen tervehdys kysymyksen yllä (js/packs/kohtaamiset.js).
+    this.quizKohtaaminen = document.getElementById('quiz-kohtaaminen');
+    // Tervehdys luetaan kerran per kaupunki ja istunto — toistuvassa
+    // käynnissä hahmo menee suoraan asiaan.
+    this.kohtaamisetNahty = new Set();
     this.quizOptions = document.getElementById('quiz-options');
     this.quizResult = document.getElementById('quiz-result');
     this.quizHintText = document.getElementById('quiz-hint-text');
@@ -5558,6 +5578,9 @@ export class UI {
     // Wikipedian tiivistelmästä; kunnes haku valmistuu — tai jos paikalla
     // ei ole artikkelia — kortissa lukee isoisän vakiorivi.
     this.arrivalCity.textContent = city.name;
+    // Kohtaamiskaupungissa nappi kutsuu hahmon luo, ei kätkön:
+    // aarretehtävä aukeaa tarinallisen kohtaamisen kautta.
+    document.getElementById('arrival-yes').textContent = KOHTAAMISET[city.id]?.nappi ?? 'Etsi kätkö';
     this.arrivalImage.hidden = true;
     this.arrivalImage.removeAttribute('src');
     this.arrivalKuvakotelo.hidden = true;
@@ -5602,6 +5625,7 @@ export class UI {
       if (kartta) this.arrivalMaaKartta.appendChild(kartta);
       // Tunnusluvut ja tervehdykset kartan alle (pilottimaat).
       this.naytaMaaTunnusluvut(iso);
+      this.naytaMaaUutiset(iso, city.id);
       this.naytaKieliNappi(city);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
@@ -6863,6 +6887,88 @@ export class UI {
     this.arrivalDialog.appendChild(kortti);
     this.kulttuuriKuvaEl = kortti;
     sfx.play('paper');
+  }
+
+  /**
+   * Ajankohtaiset uutisotsikot maaosastoon paikallisella kielellä
+   * (omistajan toive 5.8.2026). Osio näkyy vain, kun maalla on lähde
+   * uutislahteet.js:ssä JA uutisvälitys on otettu käyttöön — muuten
+   * mitään ei haeta eikä näytetä. Otsikoita ei lyhennetä eikä
+   * mukailla; napautus avaa uutisen pelin kirjasimilla.
+   */
+  naytaMaaUutiset(iso, cityId) {
+    const lahde = uutislahde(iso);
+    this.arrivalUutiset.hidden = true;
+    if (!lahde) return;
+    haeUutiset(iso).then((uutiset) => {
+      if (!uutiset.length) return;
+      if (!this.arrivalDialog.open || this.arrivalShownFor !== cityId) return;
+      this.arrivalUutiset.querySelector('.uutiset-nimio').textContent =
+        `Uutisia · ${lahde.nimi}`;
+      const lista = this.arrivalUutiset.querySelector('.uutiset-lista');
+      lista.replaceChildren();
+      for (const uutinen of uutiset.slice(0, 4)) {
+        const rivi = html('button', 'uutinen-rivi', uutinen.otsikko);
+        rivi.type = 'button';
+        rivi.lang = lahde.kieli;
+        rivi.addEventListener('click', () => this.avaaUutinen(uutinen, lahde));
+        lista.appendChild(rivi);
+      }
+      this.arrivalUutiset.hidden = false;
+    });
+  }
+
+  /**
+   * Uutinen aukeaa samana korttina kuin kulttuurikuvan suurennos:
+   * otsikko ja kuvaus sellaisinaan pelin kirjasimilla, alla lähderivi
+   * ja Käännä suomeksi -nappi (MyMemory-konekäännös). Napautus kortin
+   * tyhjään kohtaan sulkee; napit eivät sulje.
+   */
+  avaaUutinen(uutinen, lahde) {
+    this.suljeKulttuuriKuva();
+    sfx.play('paper');
+    const kortti = html('div', 'postikortti kulttuuri-suurennos uutinen-kortti');
+    const otsikko = html('p', 'uutinen-otsikko', uutinen.otsikko);
+    otsikko.lang = lahde.kieli;
+    kortti.appendChild(otsikko);
+    if (uutinen.kuvaus) {
+      const kuvaus = html('p', 'uutinen-kuvaus', uutinen.kuvaus);
+      kuvaus.lang = lahde.kieli;
+      kortti.appendChild(kuvaus);
+    }
+    const kaannos = html('p', 'uutinen-kaannos');
+    kaannos.hidden = true;
+    kortti.appendChild(kaannos);
+    // Päivä riittää lähderiville — kellonaika on lehdessä turha.
+    const aika = uutinen.aika ? new Date(uutinen.aika) : null;
+    const aikaTeksti = aika && !Number.isNaN(aika.getTime())
+      ? ` · ${aika.getDate()}.${aika.getMonth() + 1}.${aika.getFullYear()}`
+      : '';
+    kortti.appendChild(html('p', 'kuvalahde', `${lahde.nimi}${aikaTeksti}`));
+    const nappi = html('button', 'wiki-btn uutinen-kaanna', 'Käännä suomeksi');
+    nappi.type = 'button';
+    nappi.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!kaannos.hidden) return;
+      nappi.textContent = 'Käännetään…';
+      nappi.disabled = true;
+      const teksti = [uutinen.otsikko, uutinen.kuvaus].filter(Boolean).join('. ');
+      const suomeksi = await kaannaSuomeksi(teksti, lahde.kieli);
+      // Kortti on voitu ehtiä sulkea käännöksen aikana.
+      if (!kortti.isConnected) return;
+      if (suomeksi) {
+        kaannos.textContent = `Suomeksi (konekäännös): ${suomeksi}`;
+        kaannos.hidden = false;
+        nappi.hidden = true;
+      } else {
+        nappi.textContent = 'Käännöstä ei saatu — yritä uudelleen';
+        nappi.disabled = false;
+      }
+    });
+    kortti.appendChild(nappi);
+    kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
+    this.arrivalDialog.appendChild(kortti);
+    this.kulttuuriKuvaEl = kortti;
   }
 
   /**
@@ -8868,6 +8974,13 @@ export class UI {
 
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
+    // Kohtaaminen koskee tavallista visaa: muut muodot (pulma, väittämä,
+    // valokuva, lippu, portti) pitävät omat kehyshahmonsa.
+    const kohtaaminen = (!quiz.kind && !quiz.gate) ? (KOHTAAMISET[quiz.cityId] ?? null) : null;
+    const tervehdysAvain = `${game.pack.id}:${quiz.cityId}`;
+    const tervehdys = kohtaaminen && !this.kohtaamisetNahty.has(tervehdysAvain)
+      ? kohtaaminen.tervehdys
+      : null;
     // Pulman piirros ensin, kysymysrivi alla — kortti on isoisän luonnos.
     // HUOM: SVGElement ei peri HTMLElementiä, joten .hidden-ominaisuus ei
     // heijastu attribuuttiin — se jäisi päälle ja [hidden]-sääntö piilottaisi
@@ -8922,6 +9035,10 @@ export class UI {
       otsikko = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
     } else if (quiz.gate) {
       otsikko = `${city.name} — portti: ${quiz.gate.label}`;
+    } else if (kohtaaminen) {
+      // Tarinallinen kohtaaminen (omistajan toive 5.8.2026): nimetty
+      // paikallinen hahmo kysyy, ei satunnainen kysyjä.
+      otsikko = `${city.name} — ${kohtaaminen.frame}:${hardTag}`;
     } else {
       // Kehystarina: paikallinen kysyjä. Vanhassa tallenteessa kehystä ei
       // ole, jolloin otsikkona on pelkkä kaupunki.
@@ -8938,6 +9055,8 @@ export class UI {
       sfx.play('quizOpen');
       startQuizMusic(this.game.pack.id);
       this.quizQuestion.textContent = '';
+      this.quizKohtaaminen.textContent = '';
+      this.quizKohtaaminen.hidden = !tervehdys;
       const vaihtoehdot = () => {
         if (this.dead || this.typedQuizFor !== quiz) return;
         this.quizStage = 2;
@@ -8950,8 +9069,21 @@ export class UI {
           this.typeTimers.quiz = setTimeout(vaihtoehdot, QUIZ_PAUSE_MS);
         }, QUIZ_TYPE_MS);
       };
+      // Kohtaamisen avaus kirjoittuu otsikon ja kysymyksen väliin —
+      // vain ensi kerralla; sen jälkeen hahmo menee suoraan asiaan.
+      const avaus = () => {
+        if (this.dead || this.typedQuizFor !== quiz) return;
+        if (!tervehdys) {
+          kysymys();
+          return;
+        }
+        this.kohtaamisetNahty.add(tervehdysAvain);
+        this.typeText(this.quizKohtaaminen, tervehdys, 'quiz', () => {
+          this.typeTimers.quiz = setTimeout(kysymys, QUIZ_PAUSE_MS);
+        }, QUIZ_TYPE_MS);
+      };
       this.typeText(this.quizCity, otsikko, 'quiz', () => {
-        this.typeTimers.quiz = setTimeout(kysymys, QUIZ_PAUSE_MS);
+        this.typeTimers.quiz = setTimeout(avaus, QUIZ_PAUSE_MS);
       }, QUIZ_TYPE_MS);
     } else if ((this.quizStage ?? 2) >= 2) {
       // Itsekorjaus valmiille kortille: jos jokin muu kirjoitus on ehtinyt
@@ -9030,6 +9162,16 @@ export class UI {
             html('span', 'muted', 'Vuoro vaihtuu — seuraavalla vuorolla saat uuden kysymyksen.'),
           );
         }
+        // Hahmon repliikki päättää kohtaamisen: löytö, tyhjä kätkö tai
+        // lohdutus väärästä vastauksesta.
+        if (kohtaaminen) {
+          const repliikki = !quiz.right
+            ? kohtaaminen.vaarin
+            : (quiz.explore || (quiz.found && quiz.found !== 'empty'))
+              ? kohtaaminen.loyto
+              : kohtaaminen.tyhja;
+          if (repliikki) body.appendChild(html('span', 'kohtaaminen-repliikki', repliikki));
+        }
         if (quiz.fact) body.appendChild(html('span', 'muted', quiz.fact));
         const quizSource = this.sourceLine(quiz.source);
         if (quizSource) body.appendChild(quizSource);
@@ -9048,6 +9190,9 @@ export class UI {
     const p = game.player;
 
     this.quizBadge.hidden = true;
+    // Kaksintaistelussa ei ole kohtaamista — edellisen visan tervehdys
+    // ei saa jäädä kortille.
+    this.quizKohtaaminen.hidden = true;
     this.quizCity.textContent = `Rosvon kaksintaistelu — ${p.name}`;
     // Kaksintaistelu ei käytä vaiheittaista paljastusta: vaihtoehdot ovat
     // heti esillä, eikä edellisen kortin piilotus saa jäädä päälle.

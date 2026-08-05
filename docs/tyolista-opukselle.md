@@ -247,14 +247,23 @@ saavat noudattaa lehtimallia (resepti: docs/tutki-aiheet.md).
    keskilämmön ja sademäärän graafina (js/saa.js +
    js/packs/saatiedot.js — uusi lehtikaupunki tarvitsee vain
    koordinaatit ja normaalit sinne).
-5. ⏳ "Etsi kätkö" kokonaan uusiksi tarinallisena kohtaamisena: nimetty
-   paikallinen hahmo, jonka kautta aarretehtävä aukeaa (pilotti
-   Venetsia); napit nimetään uudelleen.
-6. ⏳ Ajankohtaiset uutisotsikot paikallisella kielellä maaosastoon
-   (RSS + Cloudflare Worker -välitys, jonka omistaja ottaa käyttöön;
-   ilman välityspalvelinta osio pysyy piilossa). Otsikoita EI lyhennetä
-   eikä mukailla. Popup pelin kirjasimilla + "Käännä suomeksi" -nappi
-   (MyMemory, ilmainen) jos toteutus pysyy kevyenä.
+5. ✅ v274: "Etsi kätkö" tarinallisena kohtaamisena (pilotti Venetsia,
+   js/packs/kohtaamiset.js): nappi "Tapaa gondolieeri", hahmon
+   tervehdys kirjoittuu visakortille ennen kysymystä (kerran per
+   istunto), hahmo kehystää kysymyksen ja päättää kohtaamisen omalla
+   repliikillään (löytö / tyhjä kätkö / väärä vastaus).
+   Kohtaamiskaupungissa muotoarvonta ohitetaan (hahmo kysyy itse;
+   isoisän pulma pysyy etusijalla). Esityskerros — pelimoottori ja
+   tallennukset ennallaan.
+6. ✅ v276: Ajankohtaiset uutisotsikot paikallisella kielellä
+   maaosastoon (pilotti Italia/ANSA; js/uutiset.js +
+   js/packs/uutislahteet.js). Popup pelin kirjasimilla, otsikoita ei
+   lyhennetä eikä mukailla; "Käännä suomeksi" -nappi (MyMemory).
+   **VAATII OMISTAJAN KÄYTTÖÖNOTON:** RSS-haku kulkee Cloudflare
+   Worker -välityksen kautta — lähdekoodi ja 5 minuutin ohje ovat
+   kansiossa tools/uutisproxy/ (OHJE.md). Siihen asti uutisosio
+   pysyy piilossa eikä mikään mene rikki. Uuden maan lähde lisätään
+   sekä uutislahteet.js:ään että workerin sallittujen listaan.
 
 ### PÄÄTETTY 4.8.2026: aarteiden nimistö (sitova kaikessa sisällössä)
 
