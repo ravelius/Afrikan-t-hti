@@ -5282,6 +5282,17 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v291 — Matkalaukun kahva pois (5.8.2026)
+
+Omistaja: *"Ota matkalaukusta kahva pois. On siistimpi niin."*
+
+Kahva rakennettiin kahdessa vaiheessa (v282 kortin sisään, v287 sen
+ulkopuolelle kartan päälle), ja lopputulos oli tekninen onnistuminen
+mutta yksi yksityiskohta liikaa: nahkareunus, ommel ja messinkikulmat
+kertovat laukun jo, eikä neljäs merkki lisää siihen mitään.
+
+Poistui sekä elementti että sen tyylit — ei piilotusta vaan poisto.
+
 ## v290 — Litteä valikko ja Matkakirja aina ylös (5.8.2026)
 
 ### Valikko ilman alivalikkoja

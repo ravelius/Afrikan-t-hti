@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 291, teksti: 'Matkalaukun kahva pois: siistimpi ilman' },
   { v: 290, teksti: 'Valikosta suoraan varusteet, äänet ja komennot' },
   { v: 290, teksti: 'Matkakirja pysyy aina kartan yläreunassa' },
   { v: 289, teksti: 'Visa pois etusivulta kaupungin omalle sivulle' },
