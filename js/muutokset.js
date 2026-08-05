@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 300, teksti: 'Jutut kahdelle palstalle leveällä ruudulla' },
+  { v: 300, teksti: 'Pääkirjoitus palstoihin, kuva aina jutun yllä' },
   { v: 299, teksti: 'Tutki-pohja sanomalehdeksi: vaalea paperi' },
   { v: 299, teksti: 'Suora reuna, arkki koko ruudun korkuinen' },
   { v: 298, teksti: 'Pystykuvat eivät enää veny leveiksi lehdessä' },
