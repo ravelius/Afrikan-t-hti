@@ -13,7 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
-  { v: 271, teksti: 'Logo avaa tekijätiedot: nimikilpi pois laukusta' },
+  { v: 272, teksti: 'Logo avaa tekijätiedot: nimikilpi pois laukusta' },
+  { v: 271, teksti: 'Venetsian Tutki-etusivu taittuu paikallislehdeksi' },
+  { v: 271, teksti: 'Canaletton teoksia voi selata galleriana' },
+  { v: 271, teksti: 'Lehdessä minitehtävä: vastaus löytyy sivulta' },
   { v: 270, teksti: 'Varusteiden kuvakkeet omiksi neliöikseen' },
   { v: 269, teksti: 'Merkkivalo keskeyttää lähetyksen ja jatkaa sitä' },
   { v: 269, teksti: 'Merkkivalo taas pyöreä, radio matalampi' },

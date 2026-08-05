@@ -23,6 +23,33 @@ matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
 Loput tämän tiedoston säännöt (kuvat, lisenssit, mitat, työkalu,
 tarkistuslista) pätevät sellaisinaan molempiin tasoihin.
 
+## PÄÄTETTY 5.8.2026: Tutki on paikallislehti (v270)
+
+Omistajan visio: kansisivullinen kaupunki taittuu paikallislehdeksi.
+Kaikki kolme mekanismia ovat datavetoisia — uusi maa tai kaupunki ei
+vaadi koodimuutoksia:
+
+- **Lehtitaitto:** kun kaupungilla on aihe id:llä `kaupunki`, se EI saa
+  omaa sivuaan vaan taittuu etusivulle kaupunkiesittelyn jatkoksi
+  (ui.js rakennaSivut → tutkiKansi → #arrival-kansi). Etusivu saa
+  lehden maston: pieni ylärivi "Matkakirjan matkalehti", kaupungin nimi
+  isolla ja päiväysrivi (maa · monesko matkapäivä) viivojen välissä.
+  Maa on samalla etusivulla omana osastonaan tuplaviivan alla, ja
+  alanapit ovat lehtimäiset kehysruudut. Muut kaupungit näyttävät
+  etusivun entiseen tapaan (`.dialog.lehti`-luokka ohjaa kaiken).
+- **Teosgalleria:** nosto voi kantaa `galleria: [{ otsikko, tiedosto,
+  selite, lahde }]` -listan (pilotti: Venetsian Canaletto, 6 teosta).
+  Noston kuva saa selailunuolet ja laskurin; selite- ja lähderivit
+  vaihtuvat teoksen mukana, suurennos avaa kohdalla olevan teoksen.
+  Peilityökalu poimii galleriakuvien `tiedosto:`-kentät automaattisesti.
+- **Minitehtävä:** aihe voi kantaa `tehtava: { kysymys, vaihtoehdot,
+  oikea, fakta }` (pilotti: Italian Ruoka). Se piirtyy sivun loppuun
+  kuponkimaisena tehtäväpalstana, ja vastaus LÖYTYY SAMAN SIVUN
+  TEKSTISTÄ — se on lukemisen palkinto, ei tietovisa. Palkkio 10
+  puntaa, kerran per lehti (game.actionMinitehtava, avain
+  pakka:kaupunki:aihe). Vähintään yksi tehtävä lehteä kohti; sivu saa
+  vaihdella maasta toiseen kuin ristikko lehden eri sivuilla.
+
 *Kirjattu v220:ssä, kun Lontoon pilotti (9 aihetta, 54 nostoa) hiottiin
 monistettavaksi. Tämä on resepti seuraaville kaupungeille — Lontoo on
 mallikappale, jota vasten uutta kaupunkia verrataan.*

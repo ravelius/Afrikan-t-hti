@@ -187,6 +187,9 @@ export class Game {
     // Kulttuurikysymykset (tutustu ja vastaa): vastattu kerran per
     // kaupunki, avaimena 'pakka:kaupunki'.
     this.kulttuuriVastatut = new Set();
+    // Lehden minitehtävät: vastattu kerran per lehti ja aihe,
+    // avaimena 'pakka:kaupunki:aihe'.
+    this.minitehtavatVastatut = new Set();
     // Pulmat avautuvat kerran pelissä: avaimena 'pakka:kaupunki'.
     this.puzzlesSeen = new Set();
     this.explored = new Set(); // tutkitut laatattomat kaupungit (pack:city)
@@ -685,6 +688,24 @@ export class Game {
     if (oikein) {
       this.player.money += palkkio;
       this.say(this.player.id, `${this.player.name} tunsi paikallista kulttuuria (+${palkkio} puntaa).`);
+    }
+    return { ok: true, palkittu: !!oikein };
+  }
+
+  /**
+   * Lehden minitehtävä (omistajan toive 5.8.2026): pieni kysymys, johon
+   * vastaus löytyy saman Tutki-sivun sisällöstä. Palkkio on
+   * kulttuurivisaa pienempi, ja sama tehtävä palkitaan vain kerran
+   * kaupunkia kohti — maan yhteinen aihesivu voi silti palkita
+   * uudelleen maan toisessa kaupungissa, koska lehti on eri.
+   */
+  actionMinitehtava(cityId, aiheId, oikein, palkkio = 10) {
+    const avain = `${this.pack.id}:${cityId}:${aiheId}`;
+    if (this.minitehtavatVastatut.has(avain)) return { ok: false, error: 'Jo vastattu' };
+    this.minitehtavatVastatut.add(avain);
+    if (oikein) {
+      this.player.money += palkkio;
+      this.say(this.player.id, `${this.player.name} ratkaisi lehden minitehtävän (+${palkkio} puntaa).`);
     }
     return { ok: true, palkittu: !!oikein };
   }
@@ -1919,6 +1940,7 @@ export class Game {
       eventCard: this.eventCard,
       puzzlesSeen: [...this.puzzlesSeen],
       kulttuuriVastatut: [...this.kulttuuriVastatut],
+      minitehtavatVastatut: [...this.minitehtavatVastatut],
       explored: [...this.explored],
       scheduleNote: this.scheduleNote,
       scheduleShown: [...this.scheduleShown],
@@ -2003,6 +2025,7 @@ export class Game {
     game.eventCard = data.eventCard ?? null;
     game.puzzlesSeen = new Set(data.puzzlesSeen ?? []);
     game.kulttuuriVastatut = new Set(data.kulttuuriVastatut ?? []);
+    game.minitehtavatVastatut = new Set(data.minitehtavatVastatut ?? []);
     game.explored = new Set(data.explored ?? []);
     // Vanha tallennus ei tunne aikaa: se jatkuu päivästä 1 eikä ole nähnyt
     // yhtään isoisän aikataulurivistä.
