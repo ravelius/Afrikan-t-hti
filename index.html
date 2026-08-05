@@ -366,12 +366,21 @@
   <dialog id="passport-dialog" class="dialog">
    <div class="dialog-card passport-card" tabindex="-1" autofocus>
     <h2>Isoisän matkalaukku</h2>
-    <p class="muted">Laukku kulkee mukana koko matkan: sisällä on isoisän
-      vihreä passi ja matkalta kertyneet tavarat.</p>
+    <p class="muted">Laukku kulkee mukana koko matkan: sisällä on Aarnin
+      luettelo ja matkalta kertyneet tavarat.</p>
     <p class="passport-count">Matka</p>
     <div id="passport-progress" class="passport-finds"></div>
-    <p class="passport-count">Vihreä passi — <span id="passport-count-sisus"></span></p>
-    <div id="passport-grid" class="passport-grid"></div>
+    <!--
+      VIHREÄ PASSI POISTETTU (omistajan toive 5.8.2026: "itse asiassa koko
+      vihreän passin voi poistaa, tehdään sen tilalle pääaarteista oma
+      osio"). Leimat kertoivat vain missä on käyty, minkä matkarivi
+      kertoo jo. Tilalle tuli Aarnin luettelo: mitä ollaan etsimässä.
+
+      Passin leimat SÄILYVÄT tallennuksessa (js/passport.js) — linssien
+      omistus lepää niiden päällä. Vain näyttö laukussa lähti.
+    -->
+    <p class="passport-count">Aarnin luettelo</p>
+    <div id="passport-aarteet" class="laukku-aarteet"></div>
     <p class="passport-count">Tavarat</p>
     <div id="passport-finds" class="passport-finds"></div>
     <!-- Nimikilpi siirtyi laukusta ylärivin logoon (omistajan toive
@@ -380,6 +389,9 @@
     <form method="dialog" class="dialog-actions">
       <button class="primary" value="close">Sulje</button>
     </form>
+    <!-- Nahkakahva laukun alalaidassa (omistajan toive): kaksi kiinnikettä
+         ja niiden välissä kaari. Koriste, ei nappi. -->
+    <div class="laukku-kahva" aria-hidden="true"><span></span></div>
    </div>
   </dialog>
 
