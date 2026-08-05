@@ -19,7 +19,7 @@ const VANHA_SAVE_KEY = 'afrikan-tahti-save-v1';
 // Vanha maailma korvattiin maailmankartalla; tallennukset siirretään.
 const VANHA_LAUTA = 'vanhamaailma';
 const UUSI_LAUTA = 'maailmankartta';
-const APP_VERSION = '2026-08-05.289';
+const APP_VERSION = '2026-08-05.290';
 
 const rulesDialog = document.getElementById('rules-dialog');
 const winnerDialog = document.getElementById('winner-dialog');
@@ -184,17 +184,17 @@ const KERTOJA_TILAT = [
     ikoni: `${KERTOJA_KIRJA}<path d="M10.2 6.8a2.9 2.9 0 0 1 3.6 0"/><path d="M8.6 4.2a5.6 5.6 0 0 1 6.8 0"/>`,
   },
 ];
-const muteBtn = document.getElementById('mute-btn');
+/*
+ * Kertojan äänet ovat päävalikossa auki valmiiksi (omistajan toive
+ * 5.8.2026), joten avausnappia ja sen kuvaketta ei enää ole. Valikko
+ * ei myöskään piiloudu itsestään — se katoaa vasta päävalikon mukana.
+ */
 const kertojaValikko = document.getElementById('kertoja-valikko');
-const kertojaIkoni = document.getElementById('kertoja-ikoni');
 const svg = (piirto) => `<svg viewBox="0 0 24 24">${piirto}</svg>`;
 const nykyinenKertoja = () => (sfx.enabled ? kertojaTila() : 'mykistys');
 
 const naytaKertoja = () => {
   const nyt = nykyinenKertoja();
-  const tiedot = KERTOJA_TILAT.find((t) => t.tila === nyt);
-  kertojaIkoni.innerHTML = svg(tiedot.ikoni);
-  muteBtn.title = `Kertojan äänet — ${tiedot.seloste}`;
   for (const rivi of kertojaValikko.querySelectorAll('button')) {
     rivi.classList.toggle('valittu', rivi.dataset.tila === nyt);
   }
@@ -222,8 +222,6 @@ const valitseKertoja = (tila) => {
     if (tila === 'ei') ui?.stopDiaryVoice();
   }
   naytaKertoja();
-  kertojaValikko.hidden = true;
-  muteBtn.setAttribute('aria-expanded', 'false');
 };
 
 for (const tiedot of KERTOJA_TILAT) {
@@ -236,21 +234,6 @@ for (const tiedot of KERTOJA_TILAT) {
   rivi.addEventListener('click', () => valitseKertoja(tiedot.tila));
   kertojaValikko.appendChild(rivi);
 }
-muteBtn.addEventListener('click', () => {
-  kertojaValikko.hidden = !kertojaValikko.hidden;
-  muteBtn.setAttribute('aria-expanded', String(!kertojaValikko.hidden));
-  // Kolmas pudotusvalikko on linssivalitsin (js/ui.js). Se sulkee itse
-  // itsensä napautuksesta muualle, mutta ylärivin napit ovat sen omalla
-  // puolella: ilman tätä kaksi paneelia olisi auki vierekkäin.
-  if (!kertojaValikko.hidden) ui?.suljeLinssivalikko?.();
-});
-// Napautus muualle sulkee valikon.
-document.addEventListener('pointerdown', (event) => {
-  if (!kertojaValikko.hidden && !event.target.closest?.('.kertoja-kotelo')) {
-    kertojaValikko.hidden = true;
-    muteBtn.setAttribute('aria-expanded', 'false');
-  }
-});
 naytaKertoja();
 
 // --- päävalikko --------------------------------------------------------------
@@ -273,22 +256,17 @@ const suljeValikko = () => {
 menuBtn.addEventListener('click', () => {
   paavalikko.hidden = !paavalikko.hidden;
   menuBtn.setAttribute('aria-expanded', String(!paavalikko.hidden));
-  // Kaksi valikkoa ei ole auki yhtä aikaa.
-  if (!paavalikko.hidden) {
-    kertojaValikko.hidden = true;
-    muteBtn.setAttribute('aria-expanded', 'false');
-    ui?.suljeLinssivalikko?.();
-  }
 });
 
 /*
  * Valinta sulkee valikon. Kuuntelija on valikossa itsessään, joten
  * nappien omat toiminnot pysyvät siellä missä ne on määritelty.
  *
- * POIKKEUS: taikalasit ja kertojan äänet avaavat OMAN alivalikkonsa
- * päävalikon sisällä. Jos ne sulkisivat päävalikon, alivalikko katoaisi
- * samalla napautuksella, jolla se aukesi — eli niihin ei pääsisi
- * lainkaan.
+ * POIKKEUS: varusteet ja äänet ovat säätimiä eivätkä komentoja. Niitä
+ * napautetaan usein peräkkäin — linssin vaihto ja kuuntelu, äänitilan
+ * kokeilu — ja jos valikko sulkeutuisi joka kerta, se pitäisi avata
+ * uudelleen jokaista säätöä varten. Säännöt ja uusi peli sen sijaan
+ * vievät pois valikosta, joten ne sulkevat sen.
  */
 paavalikko.addEventListener('click', (event) => {
   const nappi = event.target.closest('button');
@@ -304,9 +282,6 @@ document.addEventListener('pointerdown', (event) => {
 document.addEventListener('keydown', (event) => {
   if (event.key !== 'Escape') return;
   suljeValikko();
-  kertojaValikko.hidden = true;
-  muteBtn.setAttribute('aria-expanded', 'false');
-  ui?.suljeLinssivalikko?.();
 });
 
 // Napsautusääni kaikille napeille; vastausvaihtoehdoilla on omat äänensä.

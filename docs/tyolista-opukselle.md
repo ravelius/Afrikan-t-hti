@@ -5282,6 +5282,66 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v290 — Litteä valikko ja Matkakirja aina ylös (5.8.2026)
+
+### Valikko ilman alivalikkoja
+
+Omistaja: *"Hampurilaisesta voisi suoraan avautua kaikki varusteet sekä
+äänisäädöt nappeina ja ihan alalla olisi säännöt ja uusi peli napit
+keskitettynä. Näin päästäisiin kaikkiin suoraan käsiksi ilman
+lisäklikkailuja. Varusteet ja äänet voisi olla omien otsikoiden alla.
+Keskitä kaikki napit ja otsikot."*
+
+Varusteet ja Äänet olivat nappeja, jotka avasivat oman paneelinsa
+valikon päälle. Kaksi napautusta yhden säädön takana on paljon, kun
+säätöjä on kahdeksan — ja paneelit vaativat oman poikkeussäännön
+sulkulogiikkaan sekä kolme erillistä "sulje muut" -kutsua.
+
+Nyt valikko on yksi pystysuora luettelo: kaksi otsikkoa, niiden alla
+neljän sarakkeen ruudukot, ja alimpana viivan takana Säännöt ja Uusi
+peli. Koodia lähti enemmän kuin tuli: kaksi avausnappia, niiden
+kuvakkeenpäivitys, kaksi `hidden`-tilaa, `avaaLinssivalikko`,
+`suljeLinssivalikko` ja kolme ristiinsulkukutsua.
+
+Kaksi mittausta ohjasi asettelua:
+
+- **Sarakemäärä.** Äänitiloja on neljä, ja varusteruudukko sai
+  `auto-fill`ista kolme. Kolmen ja neljän ero näkyi heti vierekkäin,
+  joten molemmat ovat nyt neljässä sarakkeessa.
+- **Alarivin leveys.** "Säännöt" ja "Uusi peli" vaativat vierekkäin
+  mitattuna 209 px puhelimella mutta 265 px tabletilla, koska nappien
+  mitat tulevat kirjasimesta. Kiinteä vähimmäisleveys olisi ollut
+  arvaus kummallakin; `width: max-content` alarivillä venyttää valikon
+  juuri oikeaan mittaan molemmilla.
+
+Sama tarkkuusansa kuin v284:ssä osui tähänkin: `.paavalikko
+.linssi-liuskat` hävisi myöhemmälle `.linssi-valikko .linssi-liuskat`
+-säännölle, ja sarakkeet pysyivät kolmessa. Valitsin piti kirjoittaa
+kolmiosaisena.
+
+### Matkakirja aina kartan yläreunaan
+
+Omistaja: *"Matkakirja saisi olla aina kartan yläreunassa. Nyt
+nimittäin isommalla iPad-ruudulla se menee alareunan nappien kanssa
+päällekkäin, mutta ylhäällä se ei olisi tiellä."*
+
+Kortin nurkka valittiin sen mukaan, missä on eniten merta — ja
+alanurkat olivat mukana. Niitä oli jo yritetty karsia kahdella
+painotuksella: alanurkat viimeisiksi kun kortit eivät mahdu riville, ja
+yläreunalle 0,15:n etu tasatilanteessa. Kumpikin oli kiertotie sen
+ympäri, että alanurkka on aina väärin — siellä ovat toimintonapit.
+
+Nyt ehdokkaita on kaksi, ja molemmat ovat ylhäällä. Vasen vai oikea
+ratkeaa yhä merenpinta-alan mukaan, jottei kortti peitä mannerta ja
+kaupunkien nimiä. Mitattu kolmella ruudulla (1194 × 834, 834 × 1194,
+402 × 874): nurkka on joka kerta `tl`.
+
+### Opittua
+
+**Painotus voi hävitä, kielto ei.** Alanurkka oli väärä paikka aina, ja
+sitä yritettiin estää antamalla muille etua. Kun vaihtoehto ei ole
+koskaan oikea, poista se listalta — älä pisteytä sitä alemmas.
+
 ## v287 — Laukun kahva laukun ulkopuolelle (5.8.2026)
 
 Omistaja: *"Kahva pitäisi olla laukun (rajan) ulkopuolella,
