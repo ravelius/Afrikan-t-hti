@@ -105,6 +105,27 @@ export const MAA_KATEGORIAT = {
           lahde: 'NASA, Wikimedia Commons (PD)',
           wiki: 'Suezin kanava',
         },
+        {
+          /*
+           * Aineeton kulttuuriperintö (uusi lähdeidea 5.8.2026):
+           * Unescon ICH-luettelo on nostoaiheiden aarreaitta — vinkki
+           * kirjattu monistusohjeeseen muillekin maille.
+           */
+          otsikko: 'Keppiottelu faaraoiden ajoilta',
+          tiedosto: 'Tahtib, Mawlid Al-Ashi, Luxor 02.jpg',
+          teksti: 'Egyptiläiset ottelivat kepein jo faaraoiden aikana: '
+            + 'tahtib-kamppailu on kuvattu temppelien ja hautojen '
+            + 'seiniin yli neljätuhatta vuotta sitten, ja sama laji '
+            + 'elää yhä. Nykyään se on Ylä-Egyptin juhlien leikkimielinen '
+            + 'taito: kaksi ottelijaa pyörittää pitkiä keppejä rumpujen '
+            + 'ja mizmar-huilujen tahtiin, ja yleisö seisoo piirissä '
+            + 'ympärillä. Osuma ei ole tavoite — voittaja on se, joka '
+            + 'liikkuu kauneimmin. Unesco otti tahtibin aineettoman '
+            + 'kulttuuriperinnön luetteloonsa 2016.',
+          selite: 'Tahtib-ottelu mawlid-juhlassa Luxorissa: kepit '
+            + 'koholla ja kyläläiset piirissä ympärillä.',
+          lahde: 'ولاء, Wikimedia Commons (PD)',
+        },
       ],
     },
     {

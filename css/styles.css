@@ -5952,9 +5952,11 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   color: rgba(70, 51, 31, 0.82);
 }
 
-/* Lähdemaininta on lisenssiehto, ei koriste: se näkyy aina. */
+/* Lähdemaininta on lisenssiehto, ei koriste: se näkyy aina.
+ * Alamarginaali erottaa kuvatekstirivit niiden alta alkavasta
+ * leipätekstistä (kuvatekstit ovat kuvan alla, v301). */
 .wiki-nosto .lahde {
-  margin: 0;
+  margin: 0 0 0.85rem;
   font-size: 0.74rem;
   color: rgba(70, 51, 31, 0.68);
 }
@@ -5991,6 +5993,35 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   /* 68 ch:n katto on yhden palstan mitta — palstoissa leveyden
    * määrää palsta itse. */
   .wiki-nosto .leipa .teksti { max-width: none; }
+
+  /*
+   * PYSTYKUVA SAA TEKSTIN VIEREENSÄ (omistajan toive 5.8.2026):
+   * korkea kapea kuva täysleveänä jättäisi molemmin puolin tyhjää
+   * ja venyttäisi sivun pitkäksi. Luokan .pysty antaa js/ui.js, kun
+   * kuvan luonnollinen korkeus ylittää leveyden selvästi. Vasen
+   * palsta = kuva kuvateksteineen, oikea = leipäteksti YHTENÄ
+   * palstana (kahdelle ei ole tilaa) ja Lue lisää sen alla.
+   */
+  .wiki-nosto.pysty {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 2rem;
+    align-items: start;
+  }
+
+  .wiki-nosto.pysty .kulttuuri-otsikkorivi { grid-column: 1 / -1; }
+
+  .wiki-nosto.pysty img,
+  .wiki-nosto.pysty .selite,
+  .wiki-nosto.pysty .lahde { grid-column: 1; }
+
+  .wiki-nosto.pysty .leipa {
+    grid-column: 2;
+    grid-row: 2 / span 3;
+    columns: 1;
+  }
+
+  .wiki-nosto.pysty .wiki-btn { grid-column: 2; justify-self: start; }
 
   /* Lehtimaan pääkirjoitus etusivulla taittuu samalla tavalla. */
   .dialog.lehti #arrival-maa-intro {
@@ -6740,8 +6771,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    */
   .dialog.arkki .tutki-pohjaan {
     position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
+    /* Oikeaan alakulmaan: alakeskusta kuuluu nyt sivunavigoinnille
+     * (nuolet + sivunumero, v301). */
+    right: 0.55rem;
     bottom: calc(env(safe-area-inset-bottom, 0px) + 0.35rem);
     width: 1.9rem;
     height: 1.9rem;
@@ -6773,51 +6805,58 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  * vierii, ja sen sisällä ne olisivat kadonneet heti kun tekstiä lukee.
  * Sama ratkaisu kuin arkin reunakerroksilla.
  */
+/*
+ * Navigointi on YKSI RIVI ALALAIDASSA: ‹ 2/7 › — kuin lehden
+ * sivunumero, jonka viereen nuolet on painettu (omistajan toive
+ * 5.8.2026: "ota sivunvaihtonuolet sivuilta pois ja lisää
+ * navigointi alas"). Keskellä sivua kelluvat nuolet häiritsivät
+ * lukemista palstataitossa.
+ */
 .tutki-navi {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(0.35rem, env(safe-area-inset-bottom, 0px));
   z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   pointer-events: none;
 }
 
-/*
- * Hillitty kuten lennon ohitusnuoli (.flight-eteen): näkyy, mutta ei
- * kilpaile tekstin kanssa. Kosketuslaitteella pyyhkäisy on pääkeino ja
- * nuoli vain vihje siitä, että sivuja on lisää.
- */
 .tutki-nuoli {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
   border: 0;
   background: none;
   color: var(--map-ink);
-  opacity: 0.28;
+  opacity: 0.5;
   cursor: pointer;
   pointer-events: auto;
   transition: opacity 0.2s ease;
 }
 
 .tutki-nuoli:hover,
-.tutki-nuoli:focus-visible { opacity: 0.75; }
+.tutki-nuoli:focus-visible { opacity: 0.9; }
 
-.tutki-nuoli[hidden] { display: none; }
+/* Piilotettu nuoli varaa paikkansa, ettei rivi hypi ääripäissä. */
+.tutki-nuoli[hidden] {
+  display: block;
+  visibility: hidden;
+}
 
 .tutki-nuoli svg { width: 100%; height: 100%; display: block; }
 
-.tutki-nuoli.edellinen { left: 0.15rem; }
-.tutki-nuoli.seuraava { right: 0.15rem; }
+/* Rivin järjestys: nuolet sivunumeron kummallakin puolella,
+ * vaikka DOM:issa numero on viimeisenä. */
+.tutki-nuoli.edellinen { order: 1; }
+.tutki-sivunumero { order: 2; }
+.tutki-nuoli.seuraava { order: 3; }
 
 /* Sivunumero kuin lehden alalaidassa: kertoo monesko sivu on menossa
  * ja montako niitä on, jottei pyyhkäisy jää arvailun varaan. */
 .tutki-sivunumero {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: max(0.35rem, env(safe-area-inset-bottom, 0px));
   margin: 0;
   padding: 0.1rem 0.55rem;
   font-family: var(--font-type);

@@ -7189,20 +7189,38 @@ export class UI {
         // ei lataudu WebKitissä lainkaan. Vain avatun aiheen kuvat ovat
         // kerrallaan DOM:issa, joten määrä pysyy pienenä.
         this.varustaNostonKuva(kuva, nosto, 900);
+        /*
+         * Pystykuva saa tekstin viereensä (omistajan toive 5.8.2026):
+         * korkea kapea kuva jättäisi täysleveänä molemmin puolin
+         * tyhjää ja venyttäisi sivun tarpeettoman pitkäksi. Suunta
+         * selviää vasta kuvan latauduttua. Gallerianostot pidetään
+         * aina täysleveinä — teokset vaihtuvat, eikä taitto saa
+         * hyppiä selatessa.
+         */
+        if (!nosto.galleria?.length) {
+          kuva.addEventListener('load', () => {
+            if (kuva.naturalHeight > kuva.naturalWidth * 1.15) {
+              lohko.classList.add('pysty');
+            }
+          }, { once: true });
+        }
         lohko.appendChild(kuva);
       }
-      piirraLeipa(lohko, nosto.teksti, { anfangi: ensimmainen });
-      ensimmainen = false;
+      // Kuvateksti ja lähderivi HETI kuvan alle kuten lehtijutussa —
+      // leipäteksti vasta niiden jälkeen (omistajan toive 5.8.2026;
+      // palstataitossa selite jutun perässä näytti irralliselta).
       const selite = nosto.selite ? html('p', 'selite', nosto.selite) : null;
       if (selite) lohko.appendChild(selite);
+      const lahde = nosto.lahde ? html('p', 'lahde', nosto.lahde) : null;
+      if (lahde) lohko.appendChild(lahde);
+      piirraLeipa(lohko, nosto.teksti, { anfangi: ensimmainen });
+      ensimmainen = false;
       if (nosto.wiki) {
         const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
         nappi.type = 'button';
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
-      const lahde = nosto.lahde ? html('p', 'lahde', nosto.lahde) : null;
-      if (lahde) lohko.appendChild(lahde);
       // Selattava teosgalleria noston kuvan ympärille (pilottina
       // Venetsian Canaletto): nuolet vaihtavat teosta, selite ja
       // lähderivi seuraavat mukana.
