@@ -25,10 +25,19 @@ export const EUROPE_ARTIKKELIT = {
       + 'kaikki kulkee veneillä, roskakuljetuksista ambulanssiin.',
   },
   Italia: {
+    // Lehden etusivun maaosasto nojaa tähän tekstiin ilman Lue lisää
+    // -nappia, joten intro on muita maita pidempi (omistajan toive
+    // 5.8.2026: "ydintietoja voisi kirjoittaa aavistuksen pidemmiksi").
     intro: 'Italia on saapasta muistuttava niemimaa keskellä Välimerta. '
       + 'Nykyinen valtio on nuori — se yhdistyi kuningaskunnaksi vasta '
       + '1861 — mutta sen mailla on kävelty pidempään kuin juuri '
-      + 'missään: Rooman valtakunta hallitsi täältä koko Välimerta.',
+      + 'missään: Rooman valtakunta hallitsi täältä koko Välimerta. '
+      + 'Vuosisatoja maa oli kaupunkivaltioiden tilkkutäkki, ja se '
+      + 'näkyy yhä: murteet, ruoat ja tavat vaihtuvat laaksosta '
+      + 'toiseen, ja moni esittelee itsensä ensin kotiseutunsa kautta. '
+      + 'Unescon maailmanperintökohteita Italiassa on enemmän kuin '
+      + 'missään muussa maassa, ja pohjoisen Alpit, Toscanan kukkulat '
+      + 'ja etelän tulivuoret mahtuvat samaan saappaaseen.',
     teksti: 'Italia oli vuosisatoja kaupunkivaltioiden tilkkutäkki: '
       + 'Venetsia ja Genova hallitsivat meriä, Firenze rahaa ja '
       + 'taidetta, Rooma kirkkoa. Siksi maa on yhä alueidensa summa — '

@@ -1425,7 +1425,10 @@ export class UI {
     this.arrivalPalstat = document.querySelector('#arrival-dialog .arrival-palstat');
     // Lehtitaitto (omistajan toive 5.8.2026): kaupungin oma kansiosio
     // taittuu etusivulle, ja masto kertoo että käsissä on paikallislehti.
-    this.arrivalKansi = document.getElementById('arrival-kansi');
+    // Lehden etusivun kuvataitto: iso pääkuva maston alla ja
+    // pienempien kuvien rivi esittelytekstin jälkeen.
+    this.arrivalLehtiPaakuva = document.getElementById('arrival-lehti-paakuva');
+    this.arrivalLehtiKuvat = document.getElementById('arrival-lehti-kuvat');
     this.arrivalLehtiYla = document.getElementById('arrival-lehti-yla');
     this.arrivalLehtiAla = document.getElementById('arrival-lehti-ala');
     // Päivän sää maston alla; napautus avaa koko vuoden graafin.
@@ -5649,7 +5652,8 @@ export class UI {
           if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
           if (!summary?.extract) return;
           if (!omaMaaIntro) this.arrivalMaaIntro.textContent = shortIntro(summary.extract);
-          this.arrivalMaaWiki.hidden = false;
+          // Lehdessä ei ole Lue lisää -nappia (ks. rakennaSivut).
+          if (!this.tutkiLehti) this.arrivalMaaWiki.hidden = false;
         });
       }
     }
@@ -5680,6 +5684,9 @@ export class UI {
       // Pelaaja on voinut ehtiä jatkaa matkaa haun aikana.
       if (!this.arrivalDialog.open || this.arrivalShownFor !== city.id) return;
       if (!summary) return;
+      // Lehtikaupungilla on omat kuvat ja riittävä teksti — wikin
+      // karuselli ja Lue lisää eivät saa ponnahtaa haun valmistuttua.
+      if (this.tutkiLehti) return;
       if (image) {
         this.arrivalImage.src = image;
         this.arrivalImage.alt = summary.title || city.name;
@@ -6173,8 +6180,17 @@ export class UI {
     seuraava();
     // Suurennus vain tarkoituksellisesta napautuksesta, ei vierityksen
     // tai raahauksen päätteeksi (omistajan toive). Galleriassa avataan
-    // kohdalla oleva teos, ei aina noston ensimmäistä.
-    this.napautuksesta(kuva, () => this.naytaKulttuuriKuva(kuva.galleriaKohde ?? nosto));
+    // kohdalla oleva teos ja koko sarja selattavana.
+    this.napautuksesta(kuva, () => {
+      const tila = kuva.galleriaTila;
+      if (tila) {
+        this.naytaKulttuuriKuva(tila.teokset[tila.kohdalla], {
+          teokset: tila.teokset, kohdalla: tila.kohdalla,
+        });
+      } else {
+        this.naytaKulttuuriKuva(nosto);
+      }
+    });
   }
 
   /**
@@ -6204,18 +6220,61 @@ export class UI {
    * reunuksin. Katselin on saapumisikkunan sisällä, koska modaalin päälle
    * ei muuten pääse. Napautus sulkee.
    */
-  naytaKulttuuriKuva(nosto) {
+  /**
+   * @param {object[]} [asetukset.teokset] koko sarja: suurennoksesta
+   *   tulee selattava (nuolet ja laskuri kuvan päällä), ja selite ja
+   *   lähderivi vaihtuvat teoksen mukana. Näin Canaletton galleriaa —
+   *   ja lehden etusivun kuvia — voi katsoa läpi täydellä ruudulla
+   *   (omistajan toive 5.8.2026).
+   */
+  naytaKulttuuriKuva(nosto, { teokset = null, kohdalla = 0 } = {}) {
     this.suljeKulttuuriKuva();
     const kortti = html('div', 'postikortti kulttuuri-suurennos');
+    // Kuva omaan koteloonsa, jotta nuolet ja laskuri asemoituvat
+    // täsmälleen kuvan päälle myös kapean pystykuvan kohdalla.
+    const kotelo = html('div', 'suurennos-kuvakotelo');
     const kuva = document.createElement('img');
-    asetaKuva(kuva, valokuvaUrl(nosto.tiedosto, 1400), valokuvaVara(nosto.tiedosto, 1400));
-    kuva.alt = nosto.otsikko;
-    kortti.appendChild(kuva);
+    kuva.draggable = false;
+    kotelo.appendChild(kuva);
+    kortti.appendChild(kotelo);
     // Parin lauseen selite teoksesta kuvan alla (omistajan toive);
     // otsikko ja lähde jäävät pienemmälle riville.
-    if (nosto.selite) kortti.appendChild(html('p', 'kuvateksti', nosto.selite));
-    kortti.appendChild(html('p', 'kuvalahde',
-      [nosto.otsikko, nosto.lahde].filter(Boolean).join(' · ')));
+    const kuvateksti = html('p', 'kuvateksti');
+    const kuvalahde = html('p', 'kuvalahde');
+    kortti.appendChild(kuvateksti);
+    kortti.appendChild(kuvalahde);
+    const lista = (teokset?.length ?? 0) > 1 ? teokset : null;
+    let indeksi = Math.max(0, Math.min(kohdalla, (lista?.length ?? 1) - 1));
+    let laskuri = null;
+    const nayta = () => {
+      const teos = lista ? lista[indeksi] : nosto;
+      asetaKuva(kuva, valokuvaUrl(teos.tiedosto, 1400), valokuvaVara(teos.tiedosto, 1400));
+      kuva.alt = teos.otsikko ?? teos.selite ?? '';
+      kuvateksti.textContent = teos.selite ?? '';
+      kuvateksti.hidden = !teos.selite;
+      kuvalahde.textContent = [teos.otsikko, teos.lahde].filter(Boolean).join(' · ');
+      kuvalahde.hidden = !kuvalahde.textContent;
+      if (laskuri) laskuri.textContent = `${indeksi + 1} / ${lista.length}`;
+    };
+    if (lista) {
+      const nuoli = (luokka, merkki, nimi, suunta) => {
+        const nappi = html('button', `arrival-kuva-nuoli ${luokka}`, merkki);
+        nappi.type = 'button';
+        nappi.setAttribute('aria-label', nimi);
+        nappi.addEventListener('click', (e) => {
+          e.stopPropagation();
+          indeksi = (indeksi + suunta + lista.length) % lista.length;
+          sfx.play('paper');
+          nayta();
+        });
+        kotelo.appendChild(nappi);
+      };
+      nuoli('edellinen', '‹', 'Edellinen kuva', -1);
+      nuoli('seuraava', '›', 'Seuraava kuva', 1);
+      laskuri = html('span', 'arrival-kuva-laskuri');
+      kotelo.appendChild(laskuri);
+    }
+    nayta();
     kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
     this.arrivalDialog.appendChild(kortti);
     this.kulttuuriKuvaEl = kortti;
@@ -6625,17 +6684,27 @@ export class UI {
     }
     /*
      * Lehtitaitto (omistajan toive 5.8.2026): aihe, jonka id on
-     * 'kaupunki', on lehden kansiosio. Se ei saa omaa sivua vaan
-     * taittuu suoraan etusivulle kaupunkiesittelyn jatkoksi, ja maan
-     * palsta jää sen alle omaksi osastokseen — kuin paikallislehden
-     * etusivu. Muut kaupungit näyttävät etusivun entiseen tapaan.
+     * 'kaupunki', tekee kaupungista lehtikaupungin. Etusivu rakentuu
+     * esittelytekstin ja isojen kuvien varaan, ja maa on samalla
+     * sivulla omana osastonaan — kansiosion nostot saavat OMAN sivunsa
+     * heti etusivun jälkeen, jottei etusivu veny eivätkä maan
+     * ydintiedot huku (omistajan tarkennus 5.8.2026: ensimmäinen
+     * versio taittoi nostot etusivulle, ja sivusta tuli liian pitkä).
+     * Muut kaupungit näyttävät etusivun entiseen tapaan.
      */
-    const kansiIndeksi = kategoriat.findIndex((k) => k.id === 'kaupunki');
-    this.tutkiKansi = kansiIndeksi >= 0 ? kategoriat.splice(kansiIndeksi, 1)[0] : null;
-    const lehti = Boolean(this.tutkiKansi);
+    const kansi = kategoriat.find((k) => k.id === 'kaupunki') ?? null;
+    const lehti = Boolean(kansi);
+    this.tutkiLehti = lehti;
     this.arrivalDialog.classList.toggle('lehti', lehti);
-    this.piirraKategoria(this.tutkiKansi, this.arrivalKansi, { otsikko: false, sitaatti: false });
-    this.arrivalKansi.hidden = !lehti;
+    this.piirraLehtiKuvat(kansi?.kansikuvat);
+    // Lehdessä ei ole Lue lisää -nappeja eikä wikin kuvakarusellia:
+    // etusivun tekstit riittävät alkuun, ja syventyminen tapahtuu
+    // sivuja kääntämällä. Kuvat ovat omia, tarkistettuja valintoja.
+    if (lehti) {
+      this.arrivalWiki.hidden = true;
+      this.arrivalMaaWiki.hidden = true;
+      this.arrivalKuvakotelo.hidden = true;
+    }
     this.arrivalLehtiYla.hidden = !lehti;
     // Päiväysrivi kuin lehden nimiön alla: maa ja monesko matkapäivä.
     const maanNimi = this.arrivalMaaTiedot?.nimi;
@@ -6837,6 +6906,44 @@ export class UI {
 
 
   /**
+   * Lehden etusivun kuvataitto (omistajan toive 5.8.2026): iso
+   * pääkuva maston alla ja pienempien kuvien rivi esittelytekstin
+   * jälkeen. Kuvat ovat kansikategorian omia, tarkistettuja valintoja
+   * (kansikuvat-kenttä) — eivät wikin satunnaiskaruselli. Napautus
+   * avaa selattavan suurennoksen, jossa koko sarja kulkee nuolilla.
+   */
+  piirraLehtiKuvat(kuvat) {
+    const lista = kuvat ?? [];
+    this.arrivalLehtiPaakuva.replaceChildren();
+    this.arrivalLehtiKuvat.replaceChildren();
+    this.arrivalLehtiPaakuva.hidden = !lista.length;
+    this.arrivalLehtiKuvat.hidden = lista.length < 2;
+    if (!lista.length) return;
+    const teeKuva = (teos, indeksi, leveys) => {
+      const kotelo = html('figure', 'lehti-kuva');
+      const kuva = document.createElement('img');
+      kuva.decoding = 'async';
+      kuva.draggable = false;
+      kuva.alt = teos.selite ?? '';
+      asetaKuva(kuva, valokuvaUrl(teos.tiedosto, leveys), valokuvaVara(teos.tiedosto, leveys));
+      this.napautuksesta(kuva, () => this.naytaKulttuuriKuva(teos, {
+        teokset: lista, kohdalla: indeksi,
+      }));
+      kotelo.appendChild(kuva);
+      if (teos.selite) {
+        const teksti = html('figcaption', 'kuvateksti', teos.selite);
+        if (teos.lahde) teksti.appendChild(html('span', 'lehti-kuvalahde', ` ${teos.lahde}`));
+        kotelo.appendChild(teksti);
+      }
+      return kotelo;
+    };
+    this.arrivalLehtiPaakuva.appendChild(teeKuva(lista[0], 0, 1200));
+    for (let i = 1; i < Math.min(lista.length, 3); i += 1) {
+      this.arrivalLehtiKuvat.appendChild(teeKuva(lista[i], i, 640));
+    }
+  }
+
+  /**
    * Päivän sää lehden mastoon (omistajan toive 5.8.2026). Rivillä
    * lukee heti kuukauden normaali — se toimii ilman verkkoa — ja
    * ennusteen valmistuttua tilalle vaihtuu tämä päivä. Rivi on nappi:
@@ -6974,9 +7081,8 @@ export class UI {
   /**
    * Yhden kategorian nostot: johdanto ja sen alla kortit.
    *
-   * Kohde on oletuksena aihesivun oma elementti, mutta lehtitaitossa
-   * sama piirto taittaa kansiosion etusivulle (arrivalKansi). Otsikko
-   * jätetään silloin pois — lehden masto kertoo kaupungin nimen jo.
+   * Kohde on oletuksena aihesivun oma elementti; otsikon ja sitaatin
+   * voi jättää pois, jos sama piirto taittaa sisältöä muualle.
    */
   piirraKategoria(kategoria, kohde = this.arrivalKategoria, { otsikko = true, sitaatti = true } = {}) {
     kohde.replaceChildren();
@@ -7135,16 +7241,15 @@ export class UI {
     ];
     let kohdalla = 0;
     const laskuri = html('span', 'arrival-kuva-laskuri', `1 / ${teokset.length}`);
+    // Suurennos avaa kohdalla olevan teoksen JA koko sarjan selattavana
+    // (ks. varustaNostonKuva ja naytaKulttuuriKuva).
+    kuva.galleriaTila = { teokset, kohdalla };
     const nayta = (suunta) => {
       kohdalla = (kohdalla + suunta + teokset.length) % teokset.length;
       const teos = teokset[kohdalla];
       asetaKuva(kuva, valokuvaUrl(teos.tiedosto, 900), valokuvaVara(teos.tiedosto, 900));
       kuva.alt = teos.selite ?? teos.otsikko ?? nosto.otsikko;
-      // Ensimmäinen teos on nosto itse — silloin suurennos toimii
-      // kuten ennenkin (galleriaKohde tyhjä).
-      kuva.galleriaKohde = kohdalla
-        ? { ...teos, otsikko: teos.otsikko ?? nosto.otsikko }
-        : null;
+      kuva.galleriaTila = { teokset, kohdalla };
       if (selite) selite.textContent = teos.selite ?? '';
       if (lahde) lahde.textContent = teos.lahde ?? nosto.lahde ?? '';
       laskuri.textContent = `${kohdalla + 1} / ${teokset.length}`;
