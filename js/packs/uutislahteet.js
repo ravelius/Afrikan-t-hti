@@ -16,7 +16,7 @@
  *   syote — RSS-syötteen osoite (lisää myös workerin sallittujen
  *           listaan, tools/uutisproxy/worker.js)
  */
-export const UUTISPROXY = '';
+export const UUTISPROXY = 'matkakirja-uutiset.samireivinen.workers.dev';
 
 export const UUTISLAHTEET = {
   ITA: {
