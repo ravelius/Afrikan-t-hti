@@ -172,7 +172,7 @@ function teeKuva() {
   };
 }
 
-test('asetaKuva siirtyy varareitille ja luovuttaa vasta sitten', () => {
+test('asetaKuva siirtyy varareitille, uusii kerran ja luovuttaa vasta sitten', async () => {
   nollaaPeili();
   const kuva = teeKuva();
   let luovutti = 0;
@@ -184,11 +184,26 @@ test('asetaKuva siirtyy varareitille ja luovuttaa vasta sitten', () => {
   assert.equal(kuva.src, 'https://alkuperainen.test/a.jpg', 'peilin pettäessä varareitille');
   assert.equal(luovutti, 0, 'ei vielä luovuteta');
 
-  kuva.petta();
-  assert.equal(luovutti, 1, 'kumpikin petti — nyt luovutetaan');
+  // Varareitin virhe EI luovuta vaan ajastaa kolmannen yrityksen
+  // (Commons rajoittaa purskeita — v306). Ajastin on 4 s; testissä
+  // nopeutetaan aikaa korvaamalla setTimeout hetkeksi.
+  const oikeaSetTimeout = globalThis.setTimeout;
+  globalThis.setTimeout = (fn) => oikeaSetTimeout(fn, 0);
+  try {
+    kuva.petta();
+    assert.equal(luovutti, 0, 'varareitin virhe ajastaa uusinnan, ei luovuta');
+    await new Promise((r) => { oikeaSetTimeout(r, 10); });
+    assert.equal(kuva.src, 'https://alkuperainen.test/a.jpg?yritys=2',
+      'kolmas yritys lisäparametrilla');
 
-  kuva.petta();
-  assert.equal(luovutti, 1, 'ketju ei jää silmukkaan');
+    kuva.petta();
+    assert.equal(luovutti, 1, 'kaikki kolme pettivät — nyt luovutetaan');
+
+    kuva.petta();
+    assert.equal(luovutti, 1, 'ketju ei jää silmukkaan');
+  } finally {
+    globalThis.setTimeout = oikeaSetTimeout;
+  }
   nollaaPeili();
 });
 

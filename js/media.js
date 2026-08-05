@@ -249,7 +249,23 @@ export function asetaKuva(kuva, osoite, vara, onVirhe = null) {
     if (!yha(kohde)) return;
     if (!varalla) { onVirhe?.(); return; }
     peiliPetti(peilinLaji(kohde) ?? 'kuvat');
-    kuva.addEventListener('error', () => { if (yha(vara)) onVirhe?.(); }, { once: true });
+    kuva.addEventListener('error', () => {
+      if (!yha(vara)) return;
+      /*
+       * Kolmas yritys hetken päästä (omistajan havainto 6.8.2026:
+       * Venetsian kannesta puuttui kuvia). Kun peili yskähtää, koko
+       * sivun kuvat purskahtavat Commonsiin, joka rajoittaa
+       * peräkkäisiä pyyntöjä — lyhyt odotus riittää yleensä avaamaan
+       * rajan. Uusi osoite saa lisäparametrin, ettei selain tarjoile
+       * äsken epäonnistunutta vastausta välimuistista.
+       */
+      setTimeout(() => {
+        if (!yha(vara)) return;
+        const uusi = `${vara}${vara.includes('?') ? '&' : '?'}yritys=2`;
+        kuva.addEventListener('error', () => { if (yha(uusi)) onVirhe?.(); }, { once: true });
+        kuva.src = uusi;
+      }, 4000);
+    }, { once: true });
     kuva.src = vara;
   }, { once: true });
 

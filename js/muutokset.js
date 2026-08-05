@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 306, teksti: 'Kuva yrittää uudelleen, jos lataus epäonnistui' },
   { v: 305, teksti: 'Lontoo sai oman lehden: kansi ja Britannia' },
   { v: 305, teksti: 'Canaletton Lontoo-teokset galleriana' },
   { v: 305, teksti: 'BBC:n uutiset, Sky News ja jokietsijä Ned' },
