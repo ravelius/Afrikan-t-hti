@@ -127,10 +127,23 @@ export const EUROPE_ARTIKKELIT = {
       + 'Espanjassa harvinaista, ja granadalaisille kunnia-asia.',
   },
   Espanja: {
+    // Muita pidempi tarkoituksella: Madridin lehden maaosasto nojaa
+    // tähän yksin (sama malli kuin Italialla ja Egyptillä).
     intro: 'Espanja täyttää suurimman osan Iberian niemimaasta ja on '
-      + 'Länsi-Euroopan toiseksi suurin maa. Se on myös monikielinen: '
-      + 'espanjan lisäksi katalaani, galego ja baski ovat virallisia '
-      + 'omilla alueillaan.',
+      + 'Länsi-Euroopan toiseksi suurin maa. Se on myös Euroopan '
+      + 'toiseksi vuoristoisin: keskellä kohoaa Meseta, kuiva '
+      + 'ylätasanko, jonka reunoilla ilmasto vaihtuu vihreästä '
+      + 'pohjoisrannikosta lähes aavikkoiseen kaakkoon. Maa on '
+      + 'monikielinen — espanjan lisäksi katalaani, galego ja baski '
+      + 'ovat virallisia omilla alueillaan — ja hallinto on jaettu '
+      + 'seitsemääntoista itsehallintoalueeseen, joilla on omat '
+      + 'parlamenttinsa ja koulukielensä. Kanariansaaret kuuluvat '
+      + 'Espanjaan mutta sijaitsevat Afrikan edustalla, ja siellä on '
+      + 'myös maan korkein vuori. Arki poikkeaa muusta Euroopasta: '
+      + 'lounas syödään kahden ja kolmen välillä, illallinen yhdeksän '
+      + 'jälkeen, ja väliaika täytetään tapaksilla baaritiskillä '
+      + 'seisten. Espanja on maailman suurin oliiviöljyn tuottaja ja '
+      + 'toiseksi suosituin matkailumaa.',
     teksti: 'Espanjaa hallitsivat lähes 800 vuoden ajan osittain '
       + 'muslimivaltiot, ja se näkyy yhä kielessä, arkkitehtuurissa ja '
       + 'ruoassa: sanat kuten aceite (öljy) ja almohada (tyyny) ovat '

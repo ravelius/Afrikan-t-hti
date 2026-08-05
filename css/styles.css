@@ -2075,11 +2075,25 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   background: rgba(255, 252, 245, 0.95);
 }
 
-/* Otsikko ja ääninäytteen nappi samalla rivillä. */
+/*
+ * Otsikko ja ääninäytteen nappi samalla rivillä — PUHELIMELLA
+ * ALLEKKAIN.
+ *
+ * Rivi oli `nowrap` ja nappi `flex: 0 0 auto`, joten kumpikaan ei
+ * antanut periksi. Mitattu 390 pikselin ruudulla: "Kuuntele
+ * musiikkia" -nappi työntyi 44 pikseliä arkin oikean reunan yli ja
+ * lehti sai vaakavierityksen. Vika oli kaikissa kansisivuissa, joissa
+ * nostolla on ääninäyte (Lontoo ja Madrid), ei yhdessä tekstissä.
+ *
+ * Rivitys on oikea korjaus eikä kavennus: nappi on painike, ja
+ * kutistettuna sen teksti katkeaisi kesken. Omalla rivillään se on
+ * yhtä luettava kuin ennenkin.
+ */
 .kulttuuri-otsikkorivi {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 0.6rem;
   margin: 0 0 0.15rem;
 }
@@ -2095,7 +2109,10 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  flex: 0 0 auto;
+  /* Ei kasva, saa kutistua, ei koskaan emoaan leveämpi — ks.
+     .kulttuuri-otsikkorivi yllä. */
+  flex: 0 1 auto;
+  max-width: 100%;
   padding: 0.32rem 0.7rem;
   background: rgba(255, 250, 238, 0.9);
   border: 1px solid rgba(70, 51, 31, 0.45);

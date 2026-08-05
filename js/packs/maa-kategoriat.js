@@ -835,4 +835,464 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+
+  /*
+   * ESPANJA (lehtimaa 4, 6.8.2026). Lehtikaupunki on Madrid, mutta
+   * sama maaosasto avautuu myös Barcelonassa ja Granadassa — siksi
+   * nostot on valittu koko maasta eikä pääkaupungista: Altamira on
+   * Kantabriassa, Mezquita Córdobassa, Teide Kanarialla.
+   *
+   * Viisi aihetta ohjeen vakiolistalta (docs/tutki-aiheet.md kohta 2).
+   * Tehtävä on Luonto-aiheessa, ja sen vastaus on saman sivun
+   * tekstissä.
+   */
+  ESP: [
+    {
+      id: 'historia',
+      nimi: 'Historia',
+      johdanto: 'Espanjan historia on kerroksia päällekkäin: '
+        + 'jääkauden maalarit, roomalaiset insinöörit, kahdeksansataa '
+        + 'vuotta arabiankielistä valtakuntaa ja tuhat vuotta '
+        + 'pyhiinvaeltajia samalla tiellä.',
+      nostot: [
+        {
+          otsikko: 'Luola, jota kukaan ei uskonut',
+          tiedosto: 'Panoramica altamira rep.jpg',
+          teksti: 'Kun Marcelino Sanz de Sautuola vuonna 1879 kaivoi '
+            + 'Altamiran luolassa Kantabriassa, hänen '
+            + 'kahdeksanvuotias tyttärensä María kyllästyi ja lähti '
+            + 'kierrelemään lyhty kädessä. Hän katsoi ylös ja huusi: '
+            + '"Katso, isä, härkiä!" Katossa oli parikymmentä '
+            + 'biisonia punaisella ja mustalla, ja isä ymmärsi ne '
+            + 'jääkautisiksi. Tiedemiehet pitivät häntä väärentäjänä '
+            + 'kaksikymmentä vuotta — maalaukset olivat heidän '
+            + 'mielestään aivan liian taitavia kivikauden ihmiselle. '
+            + 'Sautuola kuoli ennen kuin hänet uskottiin. Maalaukset '
+            + 'ovat noin 15 000 vuotta vanhoja.',
+          selite: 'Altamiran suuren katon biisonit. Kuva on '
+            + 'täsmällisestä kopiosta: alkuperäinen luola suljettiin '
+            + 'yleisöltä, koska kävijöiden hengitys kasvatti '
+            + 'maalausten päälle hometta.',
+          lahde: 'Pictures by User:MatthiasKabel , fusion by Nachosan, '
+            + 'Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Altamira',
+        },
+        {
+          otsikko: 'Vesijohto ilman laastia',
+          tiedosto: 'Acueducto, Segovia, España, 2024-06-14, DD 19.jpg',
+          teksti: 'Segovian akvedukti nousee kaupungin halki '
+            + 'kahdessa kaarikerroksessa 28 metrin korkeuteen, ja '
+            + 'sen 20 000 graniittilohkoa on ladottu paikoilleen '
+            + 'ILMAN LAASTIA: kivet pysyvät pystyssä pelkällä painolla '
+            + 'ja tarkalla muodolla. Roomalaiset rakensivat sen '
+            + 'ensimmäisellä vuosisadalla tuomaan vettä 17 kilometrin '
+            + 'päästä vuorilta. Vettä se toi 1900-luvulle asti — eli '
+            + 'lähes kaksituhatta vuotta. Suurin uhka ei ollut aika '
+            + 'vaan autojen pakokaasu, joka alkoi syödä kiveä 1970-'
+            + 'luvulla; nyt liikenne on ohjattu muualle.',
+          selite: 'Segovian akvedukti ylittää kaupungin. Korkeimmalla '
+            + 'kohdalla kaaria on kaksi päällekkäin, matalalla yksi.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Segovian akvedukti',
+        },
+        {
+          otsikko: 'Moskeija, jonka sisään rakennettiin katedraali',
+          tiedosto: 'Mezquita cordoba arcos flotantes.jpg',
+          teksti: 'Córdoban Mezquitassa on 856 pylvästä ja niiden '
+            + 'päällä kaksi kaarikerrosta punavalkoisin raidoin. '
+            + 'Ratkaisu on käytännöllinen: pylväät olivat vanhoja '
+            + 'roomalaisia ja liian lyhyitä, joten kaaret ladottiin '
+            + 'päällekkäin korkeuden saamiseksi. Tuloksena on metsä, '
+            + 'jonka läpi katse ei kanna. Kun Córdoba vallattiin '
+            + '1236, moskeijaa ei purettu vaan sen keskelle '
+            + 'rakennettiin katedraali — kaupunki pyysi kuningas '
+            + 'Kaarle V:tä estämään työn, ja tämän kerrotaan '
+            + 'katuneen lupaansa nähtyään lopputuloksen.',
+          selite: 'Mezquita-Catedralin kaksikerroksiset kaaret. Ohuet '
+            + 'pylväät saavat kaaret näyttämään kelluvilta.',
+          lahde: 'Alvaro.vinuela.carnicero, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Córdoban suuri moskeija',
+        },
+        {
+          otsikko: 'Suitsutusastia, joka lentää poikki kirkon',
+          tiedosto: 'Schwenken der Botafumeiro (25812582595).jpg',
+          teksti: 'Santiago de Compostelan katedraaliin on kävelty '
+            + 'tuhat vuotta: Camino de Santiago on pyhiinvaellustie, '
+            + 'jota kulkee yhä satojatuhansia ihmisiä vuodessa. '
+            + 'Perillä odottaa botafumeiro, 53-kiloinen hopeoitu '
+            + 'suitsutusastia, jota kahdeksan miestä heiluttaa '
+            + 'köysillä poikki ristilaivan. Se kiihtyy lähes '
+            + '70 kilometrin tuntinopeuteen ja nousee 21 metrin '
+            + 'korkeuteen. Alkuperäinen syy oli arkinen: pitkän '
+            + 'matkan kulkeneet pyhiinvaeltajat haisivat.',
+          selite: 'Botafumeiro heilahtaa savuavana Santiagon '
+            + 'katedraalin ristilaivan poikki. Köyttä vetää kahdeksan '
+            + 'miestä, joita sanotaan nimellä tiraboleiros.',
+          lahde: 'wolfgang.mller54 from Niedersachsen /Germany, '
+            + 'Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Santiago de Compostelan pyhiinvaellus',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Espanjassa ruoka-aika on eri kuin muualla Euroopassa '
+        + 'ja ruoan tahti eri kuin muualla maailmassa: pata kaadetaan '
+        + 'pöytään kolmesti, sika syö kolme kuukautta pelkkiä '
+        + 'tammenterhoja, ja vuosi vaihtuu kahdessatoista rypäleessä.',
+      nostot: [
+        {
+          otsikko: 'Cocido kaadetaan pöytään kolmesti',
+          tiedosto: 'Cocido madrileño.jpg',
+          teksti: 'Cocido madrileño hautuu tuntikausia yhdessä padassa '
+            + 'mutta syödään erissä. Ensin tulee liemi ohuine '
+            + 'nuudeleineen, sitten kikherneet ja vihannekset ja '
+            + 'viimeisenä lihat: naudanrintaa, kanaa, chorizoa ja '
+            + 'verimakkaraa. Eriä sanotaan nimellä vuelco, kaato, ja '
+            + 'perinteisin tapa on kaataa pata lautaselle kolmeen '
+            + 'kertaan. Ruoka on talvista ja raskasta, ja Madridin '
+            + 'vanhat ravintolat tarjoavat sitä vain tiettyinä '
+            + 'viikonpäivinä.',
+          selite: 'Cocido madrileño tarjoiltuna kahdessa erässä: '
+            + 'edessä liemi, takana kikherneet, peruna, porkkana ja '
+            + 'padan lihat. Kikherneet on liotettu edellisenä iltana '
+            + 'koko yön.',
+          lahde: 'Smnt, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Cocido',
+        },
+        {
+          otsikko: 'Sika, joka syö vain tammenterhoja',
+          tiedosto: '051127 1126 Villalba de los Llanos - La Utrera - '
+            + 'Encinas cerdos ibéricos T91 edited.JPG',
+          teksti: 'Espanjan kalleimman kinkun salaisuus on kolme '
+            + 'viimeistä kuukautta. Mustasorkkainen iberiansika '
+            + 'päästetään lokakuussa dehesaan, harvaan '
+            + 'tammimetsälaitumeen, ja se saa syödä siellä vain '
+            + 'tammenterhoja ja ruohoa. Terhojen rasva imeytyy lihaan '
+            + 'ja tekee siitä pehmeän ja pähkinäisen. Yksi sika '
+            + 'tarvitsee useamman hehtaarin laidunta, ja kinkkua '
+            + 'kuivataan sen jälkeen kolmesta neljään vuotta. Dehesa '
+            + 'on ihmisen tekemä maisema, joka on säilynyt satoja '
+            + 'vuosia juuri siksi, että se kannattaa.',
+          selite: 'Iberiansikoja dehesassa Salamancan maakunnassa. '
+            + 'Puut ovat rautatammia, joiden terhot ovat sikojen '
+            + 'syysruokaa.',
+          lahde: 'Juan Pablo Zumel Arranz, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Jamón ibérico',
+        },
+        {
+          otsikko: 'Oikeassa paellassa ei ole kalaa',
+          tiedosto: '01 Paella Valenciana original.jpg',
+          teksti: 'Paella on Valencian riisipeltojen ruokaa, ja '
+            + 'alkuperäinen valencialainen paella tehdään siitä, mitä '
+            + 'pellon laidalta sai: kanaa, kaniinia, leveää '
+            + 'vihreää papua ja joskus etanoita. Merenelävät ovat '
+            + 'myöhempi, rannikon versio — valencialaiselle '
+            + 'chorizopaella on loukkaus, josta on kirjoitettu '
+            + 'sanomalehtiin asti. Ruoka syötiin suoraan pannusta '
+            + 'puulusikoilla, jokainen omalta sektoriltaan, ja '
+            + 'parasta on socarrat: pohjaan paahtunut rapea riisi.',
+          selite: 'Valencialainen paella pannussaan: kanaa, kaniinia '
+            + 'ja leveää papua. Pannu on matala ja leveä, jotta riisi '
+            + 'jää yhteen kerrokseen.',
+          lahde: 'Jan Harenburg, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Paella',
+        },
+        {
+          otsikko: 'Kaksitoista rypälettä kellonlyönnillä',
+          tiedosto: 'Ensayo general ....las doce campanadas del '
+            + 'ilustre y solemne reloj de la Puerta del Sol !!!.jpg',
+          teksti: 'Uudenvuodenyönä espanjalaiset syövät kaksitoista '
+            + 'rypälettä, yhden jokaisella kellonlyönnillä. Kello on '
+            + 'Madridin Puerta del Solin vanhan postitalon tornissa, '
+            + 'ja lyönnit tulevat parin sekunnin välein — koko urakka '
+            + 'on ohi puolessa minuutissa, ja suu on täynnä. Tapa '
+            + 'levisi koko maahan vuoden 1909 jälkeen, kun Alicanten '
+            + 'viininviljelijöillä oli poikkeuksellisen suuri sato '
+            + 'myytävänä. Nykyään rypäleitä myydään purkeissa '
+            + 'valmiiksi kuorittuina ja siemenettöminä.',
+          selite: 'Puerta del Sol 30. joulukuuta: aukiolla '
+            + 'harjoitellaan uudenvuodenyötä etukäteen, ja tuhannet '
+            + 'ihmiset syövät rypäleensä vuorokautta liian '
+            + 'aikaisin. Taustalla valaistuna Real Casa de '
+            + 'Correosin kellotorni.',
+          lahde: 'jacinta lluch valero from madrid * barcelona...., '
+            + '(España-Spain), Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Puerta del Sol',
+        },
+      ],
+    },
+    {
+      id: 'kuvataide',
+      nimi: 'Kuvataide',
+      johdanto: 'Espanjan maalaustaide on tehnyt kaksi asiaa '
+        + 'paremmin kuin kukaan: katsonut valtaa suoraan silmiin ja '
+        + 'kieltäytynyt kaunistelemasta sitä, mitä näkee.',
+      nostot: [
+        {
+          otsikko: 'Taulu, jossa katsoja on mallina',
+          tiedosto: 'Las Meninas 01.jpg',
+          teksti: 'Diego Velázquez maalasi 1656 taulun, jossa hän '
+            + 'seisoo itse vasemmalla valtavan kankaan takana ja '
+            + 'katsoo ulos kuvasta. Keskellä on viisivuotias '
+            + 'infanta Margarita hovinaisineen. Mutta ketä maalari '
+            + 'oikeastaan maalaa? Takaseinän peilistä näkyvät '
+            + 'kuningas ja kuningatar — he seisovat siinä, missä '
+            + 'katsoja seisoo. Taulu kääntää katseen ympäri: se '
+            + 'katsoo sinua takaisin ja panee sinut mallin paikalle. '
+            + 'Pradossa se on oma huoneensa, ja sen edessä seisotaan '
+            + 'joka päivä jonossa.',
+          selite: 'Las Meninas (1656). Velázquez itse vasemmalla, '
+            + 'infanta Margarita keskellä ja peilissä takana '
+            + 'kuningaspari.',
+          lahde: 'Diego Velázquez, Wikimedia Commons (Public domain)',
+          wiki: 'Las Meninas',
+        },
+        {
+          otsikko: 'Yö, jota Goya ei kaunistellut',
+          tiedosto: 'El tres de mayo de 1808 en Madrid.jpg',
+          teksti: 'Toukokuun 2. päivänä 1808 madridilaiset nousivat '
+            + 'kapinaan Napoleonin joukkoja vastaan. Seuraavana yönä '
+            + 'kapinalliset teloitettiin kaupungin laidalla. Goya '
+            + 'maalasi tapahtuman kuusi vuotta myöhemmin, ja hän '
+            + 'teki jotain, mitä sotataiteessa ei ollut ennen tehty: '
+            + 'sankari ei ole ratsain eikä komea, vaan valkopaitainen '
+            + 'mies polvillaan kädet levällään, kasvot kauhusta '
+            + 'vääntyneinä. Ampujilla ei näy kasvoja lainkaan. '
+            + 'Maalauksesta tuli malli lähes kaikelle sotaa '
+            + 'kuvaavalle taiteelle sen jälkeen.',
+          selite: 'Kolmas päivä toukokuuta 1808 (1814). Lyhty maassa '
+            + 'valaisee vain uhrit; ampujat jäävät varjoon ja '
+            + 'selin.',
+          lahde: 'Francisco Goya, Wikimedia Commons (Public domain)',
+          wiki: 'Kolmas päivä toukokuuta 1808',
+        },
+        {
+          otsikko: 'Kreikkalainen, joka maalasi Toledossa',
+          tiedosto: 'Entierro del Conde de Orgaz.jpg',
+          teksti: 'Doménikos Theotokópoulos syntyi Kreetalla, '
+            + 'opiskeli Venetsiassa ja päätyi Toledoon, jossa häntä '
+            + 'sanottiin yksinkertaisesti El Grecoksi, kreikkalaiseksi. '
+            + 'Hänen hahmonsa venyvät pitkiksi ja värit hehkuvat '
+            + 'kylmästi — aikalaiset pitivät sitä outona, ja '
+            + 'vuosisatoja myöhemmin siitä tuli syy pitää häntä '
+            + 'nykytaiteen esi-isänä. Orgazin kreivin hautaus on yhä '
+            + 'siinä kirkossa, jota varten se maalattiin 1586: '
+            + 'alaosassa Toledon herrat mustissa kauluksissaan, '
+            + 'yläosassa taivas.',
+          selite: 'Orgazin kreivin hautaus (1586) Santo Toméssa '
+            + 'Toledossa. Alhaalla maa ja muotokuvat, ylhäällä '
+            + 'taivas — kaksi maailmaa samassa kankaassa.',
+          lahde: 'El Greco, Wikimedia Commons (Public domain)',
+          wiki: 'El Greco',
+        },
+        {
+          otsikko: 'Kirkko, jota on rakennettu yli sata vuotta',
+          tiedosto: 'Sagrada Família. Interior nau.jpg',
+          teksti: 'Antoni Gaudí otti Sagrada Famílian työn '
+            + 'vastaan 1883 ja teki sitä kuolemaansa asti — '
+            + 'viimeiset vuodet hän asui työmaalla. Sisällä pylväät '
+            + 'haarautuvat kuin puut, koska ne ovat puita: Gaudí '
+            + 'sanoi metsän olevan paras rakennus, ja haarautuva '
+            + 'pylväs kantaa katon painon ilman tukikaaria. Muodot '
+            + 'hän laski riippuvilla naruilla ja painoilla, ja '
+            + 'katsoi mallia peilistä ylösalaisin. Rakennus '
+            + 'valmistuu aikaisintaan 2030-luvulla, eli työtä on '
+            + 'kestänyt yli 140 vuotta.',
+          selite: 'Sagrada Famílian pääsalin pylväät haarautuvat '
+            + 'latvoistaan. Värit tulevat lasimaalauksista: itäpuoli '
+            + 'sinivihreä aamu, länsipuoli punakeltainen ilta.',
+          lahde: 'Sagrada Família (oficial), Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Sagrada Família',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Espanjan äänessä on kitara — soitin, joka sai '
+        + 'nykymuotonsa espanjalaisen puusepän verstaassa ja jonka '
+        + 'ympärille syntyi sekä flamenco että konserttisalien '
+        + 'kuuluisin espanjalainen sävellys.',
+      nostot: [
+        {
+          otsikko: 'Flamencossa kello lyö kahtatoista',
+          tiedosto: 'Viernes Flamen Jerez 5 agosto 2016 Familia Sordera P1050567.jpg',
+          teksti: 'Flamenco syntyi Andalusiassa romanien, '
+            + 'andalusialaisten ja Pohjois-Afrikan perinteiden '
+            + 'sekoituksesta. Sen ydin ei ole melodia vaan compás, '
+            + 'tahtikuvio: tavallisin on kahdentoista iskun kierto, '
+            + 'jossa painot osuvat epätasaisiin kohtiin. Siksi '
+            + 'käsientaputus, palmas, on oma taitonsa eikä pelkkää '
+            + 'säestystä. Paco de Lucía toi flamencokitaraan '
+            + 'jazzin harmoniat ja cajón-rummun 1970-luvulla; '
+            + 'perinteen vartijat suuttuivat, ja lopputuloksesta '
+            + 'tuli uusi perinne.',
+          selite: 'Flamencoilta Jerez de la Fronterassa: bailaora '
+            + 'tanssii, ja takana istuvat laulaja, kitaristi ja '
+            + 'taputtajat.',
+          lahde: 'El Pantera, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Flamenco',
+          musiikki: 'https://music.apple.com/fi/artist/paco-de-luc%C3%ADa/463800',
+          musiikkiNimi: 'Paco de Lucía Apple Musicissa',
+        },
+        {
+          otsikko: 'Puutarha, jota säveltäjä ei nähnyt',
+          tiedosto: 'Palacio Real de Aranjuez - 130921 115527.jpg',
+          teksti: 'Joaquín Rodrigo sokeutui kolmivuotiaana '
+            + 'kurkkumädän jälkitautiin. Hän sävelsi koko elämänsä '
+            + 'pistekirjoituksella ja saneli nuotit kopistille. '
+            + 'Vuonna 1939 hän kirjoitti Concierto de Aranjuezin, '
+            + 'kitarakonserton, jonka aiheena ovat Aranjuezin '
+            + 'kuninkaalliset puutarhat Madridin eteläpuolella — '
+            + 'paikka, jota hän ei ollut koskaan nähnyt. Hitaan osan '
+            + 'englannintorvimelodiasta tuli maailman soitetuin '
+            + 'espanjalainen sävelmä. Rodrigo kertoi myöhemmin sen '
+            + 'kertovan surusta: pariskunnan menettämästä '
+            + 'esikoisesta.',
+          selite: 'Aranjuezin kuninkaallinen palatsi ja Tajo-joen '
+            + 'pato sen edustalla. Puutarhat ovat Espanjan vanhimpia '
+            + 'ja niissä kasvaa puita neljältä mantereelta.',
+          lahde: 'Barcex, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Concierto de Aranjuez',
+        },
+        {
+          otsikko: 'Puuseppä, joka keksi nykyisen kitaran',
+          tiedosto: "Guitarra d'Antonio de Torres, MDMB 626, "
+            + 'al Museu de la Música de Barcelona.jpg',
+          teksti: 'Ennen 1850-lukua kitara oli pieni ja hiljainen, '
+            + 'kotisoitin salonkiin. Almerialainen puuseppä Antonio '
+            + 'de Torres suurensi kaikukopan, ohensi kannen ja '
+            + 'kehitti sen alle viuhkamaisen rimatuen, joka jakaa '
+            + 'värähtelyn koko kannelle. Ääni kasvoi niin paljon, '
+            + 'että kitara kelpasi konserttisaliin. Todistaakseen, '
+            + 'että ääni tulee kannesta eikä kalliista kyljistä, '
+            + 'Torres rakensi kerran kitaran, jonka kyljet ja pohja '
+            + 'olivat pahvia — ja se soi. Kaikki nykyiset '
+            + 'klassiset ja flamencokitarat noudattavat hänen '
+            + 'mittojaan.',
+          selite: 'Antonio de Torresin rakentama kitara Barcelonan '
+            + 'musiikkimuseossa. Muoto on se, jonka kuka tahansa '
+            + 'tunnistaa kitaraksi — ja se on tämän miehen käsialaa.',
+          lahde: 'sguastevi, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Antonio de Torres Jurado',
+        },
+        {
+          otsikko: 'Viikko, jolloin Sevilla pukeutuu',
+          tiedosto: '17401536242 8583de996d o feria de abril 2012.jpg',
+          teksti: 'Sevillan huhtikuun feria on viikon mittainen '
+            + 'juhla, jota varten kaupungin laitaan pystytetään '
+            + 'tuhat juhlatelttaa omine katuineen ja lyhtyineen. '
+            + 'Siellä tanssitaan sevillanoja: neljä lyhyttä osaa, '
+            + 'joilla on kiinteät askeleet, joten kuka tahansa '
+            + 'espanjalainen osaa tanssia ne kenen tahansa kanssa. '
+            + 'Sevillanat eivät ole flamencoa vaan kansantanssia — '
+            + 'ero on sama kuin oopperan ja yhteislaulun. Naisten '
+            + 'traje de gitana on ainoa espanjalainen kansanpuku, '
+            + 'jonka muoti muuttuu joka vuosi.',
+          selite: 'Sevillan huhtikuun feria: naiset traje de gitana '
+            + '-puvuissaan, hiuksissa iso kukka. Puvun kuosi ja '
+            + 'röyhelöiden määrä vaihtuvat vuosittain.',
+          lahde: 'Sandra Vallaure, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Feria de Abril',
+        },
+      ],
+    },
+    {
+      id: 'luonto',
+      nimi: 'Luonto',
+      johdanto: 'Espanja on Euroopan toiseksi vuoristoisin maa, ja '
+        + 'sen luonto on siksi Euroopan kirjavin: kosteikko, jonka '
+        + 'läpi kulkee koko Länsi-Euroopan muuttolinnusto, kissa, '
+        + 'jota oli jäljellä sata, ja vuori, joka on Atlantilla.',
+      tehtava: {
+        kysymys: 'Kuinka monta ilvestä Espanjassa oli jäljellä, kun '
+          + 'lajia alettiin pelastaa?',
+        vaihtoehdot: ['Noin sata', 'Noin tuhat', 'Noin kymmenentuhatta'],
+        oikea: 0,
+        fakta: 'Vuonna 2002 iberianilveksiä laskettiin alle sata. Nyt '
+          + 'niitä on yli kaksituhatta — vastaus löytyi '
+          + 'ilvesnostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Kosteikko, jossa Eurooppa vaihtaa mannerta',
+          tiedosto: 'Marismas de Doñana.jpg',
+          teksti: 'Doñana on Guadalquivirin suistoon jäänyt '
+            + 'matala kosteikko Andalusian rannikolla, ja se on '
+            + 'Länsi-Euroopan muuttolintujen tärkein levähdyspaikka: '
+            + 'täällä sadattuhannet linnut lepäävät ja syövät ennen '
+            + 'Saharan ylitystä tai sen jälkeen. Talvella '
+            + 'vesilintuja voi olla yhtä aikaa yli puoli miljoonaa. '
+            + 'Alue on samalla varoitus: pohjaveden pumppaus '
+            + 'marjapelloille ja kuivat vuodet ovat kutistaneet '
+            + 'lammikoita niin, että osa niistä ei enää täyty '
+            + 'joka vuosi.',
+          selite: 'Doñanan marisma keväällä. Vesi on matalaa ja '
+            + 'lämmintä, ja pohjan pieneliöstö ruokkii koko '
+            + 'lintuparven.',
+          lahde: 'Dvazquezq, Wikimedia Commons (CC BY-SA 3.0 es)',
+          wiki: 'Doñanan kansallispuisto',
+        },
+        {
+          otsikko: 'Kissa, joka melkein hävisi',
+          tiedosto: 'Lince ibérico (Lynx pardinus), Almuradiel, '
+            + 'Ciudad Real, España, 2021-12-19, DD 07.jpg',
+          teksti: 'Iberianilves syö melkein pelkkiä kaneja, ja kun '
+            + 'kanitauti kaatoi saaliskannan 1900-luvun lopulla, '
+            + 'ilves seurasi perässä. Vuonna 2002 niitä laskettiin '
+            + 'koko maailmassa alle sata yksilöä — se oli maailman '
+            + 'uhanalaisin kissaeläin. Pelastus tehtiin kolmella '
+            + 'asialla: kanikantoja hoidettiin, ilveksiä kasvatettiin '
+            + 'tarhoissa ja päästettiin luontoon, ja teille '
+            + 'rakennettiin alikulkuja. Nyt niitä on yli '
+            + 'kaksituhatta, ja laji siirrettiin luokasta '
+            + '"äärimmäisen uhanalainen" luokkaan "vaarantunut".',
+          selite: 'Iberianilves Ciudad Realissa. Tunnistaa '
+            + 'poskiparrasta, korvatupsuista ja lyhyestä '
+            + 'töpöhännästä.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Iberianilves',
+        },
+        {
+          otsikko: 'Espanjan korkein vuori on Afrikan edustalla',
+          tiedosto: 'Teide qtl1.jpg',
+          teksti: 'Espanjan korkein kohta ei ole Pyreneillä vaan '
+            + 'Teneriffalla: Teide nousee 3 715 metriin, ja '
+            + 'merenpohjasta mitattuna se on yli seitsemän '
+            + 'kilometriä korkea eli maailman kolmanneksi korkein '
+            + 'tulivuorirakennelma. Huipun ympärillä on Las Cañadasin '
+            + 'kraatterilaakso, jonka kivikko muistuttaa niin paljon '
+            + 'Marsia, että Euroopan avaruusjärjestö on koekäyttänyt '
+            + 'siellä mönkijöitään. Vuori purkautui viimeksi 1909. '
+            + 'Kanariansaaret ovat maantieteellisesti Afrikkaa, '
+            + 'sata kilometriä Marokon rannikolta.',
+          selite: 'Teide lumihuippuisena Las Cañadasin laavakentän '
+            + 'takaa. Etualan mustat kivet ovat vanhaa laavavirtaa.',
+          lahde: 'Quartl, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Teide',
+        },
+        {
+          otsikko: 'Puolet maailman oliiviöljystä',
+          tiedosto: 'Olivos-Martos.jpg',
+          teksti: 'Espanja tuottaa noin puolet koko maailman '
+            + 'oliiviöljystä, ja siitä valtaosa tulee yhdestä '
+            + 'maakunnasta: Jaénissa kasvaa yli 60 miljoonaa '
+            + 'oliivipuuta niin tasaisin rivein, että maisema '
+            + 'näyttää lentokoneesta ruudukolta. Sato korjataan '
+            + 'talvella ravistamalla puita koneella, ja hedelmät '
+            + 'puristetaan öljyksi saman vuorokauden aikana — '
+            + 'nopeus ratkaisee maun. Oliivipuu elää satoja vuosia '
+            + 'ja kestää kuivuutta paremmin kuin melkein mikään '
+            + 'muu viljelykasvi, mikä on yhä tärkeämpää.',
+          selite: 'Oliivilehto Martosissa Jaénin maakunnassa. Puut '
+            + 'on istutettu riveihin, jotta koneet mahtuvat väliin '
+            + 'sadonkorjuussa.',
+          lahde: 'Alifates, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Oliiviöljy',
+        },
+      ],
+    },
+  ],
 };

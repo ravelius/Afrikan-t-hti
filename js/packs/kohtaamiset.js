@@ -63,6 +63,26 @@ export const KOHTAAMISET = {
     vaarin: 'Faruk sulkee kirjansa pehmeästi: "Ei vielä, ystäväni. '
       + 'Palaa, kun tunnet maailman paremmin — tee odottaa silloinkin."',
   },
+  madrid: {
+    hahmo: 'kirpputorikauppias Rosa',
+    nappi: 'Tapaa kirpputorikauppias',
+    frame: 'kirpputorikauppias Rosa pyyhkii pölyt kämmeneensä ja kysyy',
+    tervehdys: 'El Rastron sunnuntaisessa tungoksessa vanha nainen '
+      + 'levittää tavaransa huovalle: kelloja, avaimia, postikortteja. '
+      + 'Hän nostaa katseensa kirjaasi ja hymyilee. "Sen kirjan '
+      + 'omistaja seisoi tässä samassa kohdassa. Osti äidiltäni '
+      + 'messinkiavaimen eikä kertonut mihin oveen. Näytä että tunnet '
+      + 'maailmaa kuten hän — niin kerron, mitä hän jätti tänne."',
+    loyto: 'Rosa kaivaa huovan alta kuluneen postikortin ja ojentaa '
+      + 'sen: "Tämä jäi tänne. Katso mitä kääntöpuolelle on '
+      + 'kirjoitettu — se odotti sinua."',
+    tyhja: 'Rosa kohauttaa harteitaan ja järjestää tavaroitaan '
+      + 'uudelleen: "Joku ehti ennen sinua. Rastro tyhjenee ja täyttyy '
+      + 'joka sunnuntai — tule takaisin."',
+    vaarin: 'Rosa naurahtaa ja kääntyy seuraavan asiakkaan puoleen: '
+      + '"Ei vielä, hija. Täällä ei ole kiire — palaa kun tiedät '
+      + 'enemmän."',
+  },
   venetsia: {
     hahmo: 'gondolieeri Matteo',
     nappi: 'Tapaa gondolieeri',

@@ -244,7 +244,7 @@ uutissyötteen JA yhden artikkelisivun curl-testi (UA
 + muistutus omistajalle julkaista worker, Playwright-kuvakaappaukset
 834 ja 1024 px, ja main fetchattuna juuri ennen versionumeroa.
 
-1. **Espanja / Madrid.** Galleria: Goyan Madrid (Pradon PD-teokset,
+1. ✅ **TEHTY v307.** **Espanja / Madrid.** Galleria: Goyan Madrid (Pradon PD-teokset,
    esim. San Isidron niitty ja kartongit kutomoille — arjen Madridia).
    Kansikuviksi esim. Plaza Mayor tai kuninkaanlinna, Gran Vía,
    Retiron puisto. Elämä-nosto: tapakset ja markkinahallit tai paseo;
@@ -5334,6 +5334,54 @@ jonka olisi huomannut vasta omistaja:
 näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
+
+## v307 — Espanjan lehtipaketti: Madrid ja Espanja (6.8.2026)
+
+Neljäs lehtimaa monistusohjeen (docs/tutki-aiheet.md) mukaan, kohta
+kohdalta. Sama maaosasto palvelee Madridia, Barcelonaa ja Granadaa.
+
+**Kansi.** Goyan Madrid galleriana (San Isidron niitty pääkuvana, viisi
+kutomomallia gallerialistalla), tapakset ja San Miguelin halli, ja
+chotis musiikkilinkkeineen. Litteät nostot europe-kulttuuri.js:ssä
+purettiin ohjeen mukaan: chotis kanteen, cocido ja uudenvuoden
+rypäleet Espanjan Ruoka-aiheeseen, litteään tauluun jäi vain visa.
+Visan aihe (chotis) näkyy kannella, kuten sääntö vaatii.
+
+**Maa.** Viisi aihetta × neljä nostoa: historia (Altamira, Segovian
+akvedukti, Córdoban Mezquita, botafumeiro), ruoka, kuvataide,
+musiikki (flamenco + Paco de Lucía, Aranjuez, Torresin kitara, feria)
+ja luonto. Tehtävä on Luonto-aiheessa, ja sen vastaus on saman sivun
+tekstissä.
+
+### Kolme asiaa, jotka mittaus ratkaisi
+
+**1. El País ei kelpaa uutislähteeksi, vaikka syöte toimii.** Omistajan
+ehdokkaista El Paísin syöte aukesi (142 juttua), mutta ARTIKKELISIVUT
+palauttivat 403 — popupiin olisi jäänyt vain parin lauseen kuvaus.
+RTVE:n syötteen linkit osoittavat vanhentuneisiin osoitteisiin, jotka
+sekin torjuu. 20minutos läpäisi molemmat testit: 190 juttua, `<article>`
+jäsentyy, kuusi kappaletta poimiutuu ja og:image löytyy. **Syötteen
+testaaminen yksin ei riitä** — se on nyt kirjattu ohjeeseenkin.
+
+**2. Kaksi kuvaa hylättiin silmätarkistuksessa.** "Altamira bisons.jpg"
+näytti luolamaalaukselta, mutta kuvaus paljasti sen valokuvaksi Barcelonan
+Museo del Mamutin jäljennöksestä; "Baile - P1320246.jpg" oli
+flamencohaussa ja esitti hevosta niityllä. Altamirasta EI ole
+Commonsissa kuvaa itse luolasta — luola on suljettu, koska kävijöiden
+hengitys kasvatti maalausten päälle hometta. Se tehtiin nostossa
+sisällöksi: kuva on jäljennöksestä, ja kuvateksti kertoo miksi.
+
+**3. Puhelimen vaakavuoto oli vanha vika, ei Espanjan.** Mitattu 390
+pikselin ruudulla: "Kuuntele musiikkia" -nappi työntyi 44 pikseliä
+arkin reunan yli ja lehti sai vaakavierityksen. Sama toistui Lontoon
+kannella, eli vika oli `.kulttuuri-otsikkorivi`-rivissä (`nowrap` +
+`flex: 0 0 auto`) eikä yhdessäkään tekstissä. Korjattu rivittämällä.
+Mitattu jälkeen: 0 px molemmilla kaupungeilla.
+
+### Mitä on vielä tekemättä
+
+Worker on julkaistava uudelleen (Edit code → liitä → Deploy), tai
+Espanjan uutisosio pysyy piilossa. Muut maat toimivat ennallaan.
 
 ## v296 — Vesistölinssi maastokartan päälle ja radion mitat (5.8.2026)
 
