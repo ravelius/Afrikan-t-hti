@@ -106,39 +106,49 @@
                   aria-haspopup="true" aria-expanded="false" aria-controls="paavalikko">
             <span class="viiva-ikoni"><svg viewBox="0 0 24 24"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg></span>
           </button>
+          <!--
+            PÄÄVALIKKO ILMAN ALIVALIKKOJA (omistajan toive 5.8.2026:
+            "hampurilaisesta voisi suoraan avautua kaikki varusteet sekä
+            äänisäädöt nappeina ja ihan alalla olisi säännöt ja uusi peli
+            napit keskitettynä — näin päästäisiin kaikkiin suoraan käsiksi
+            ilman lisäklikkailuja").
+
+            Varusteet ja Äänet olivat ennen nappeja, jotka avasivat oman
+            paneelinsa valikon sisällä. Kaksi napautusta yhden asian
+            takana on paljon, kun asioita on kaikkiaan kahdeksan — ja
+            paneelit avautuivat päällekkäin valikon päälle, mikä vaati
+            oman poikkeussääntönsä sulkulogiikkaan (js/main.js).
+
+            Nyt molemmat ovat auki valmiiksi otsikkonsa alla, ja valikko
+            on yksi pystysuora luettelo. Kotelot (.linssi-kotelo,
+            .kertoja-kotelo) jäivät, koska muu koodi tuntee ne — mutta
+            niissä ei ole enää avausnappia.
+          -->
           <div id="paavalikko" class="paavalikko" hidden>
-            <!-- Varusteet ja kertojan äänet siirtyivät ylariviltä tänne
-                 (omistajan toive 4.8.2026). Molemmilla on oma alivalikko,
-                 joten ne EIVÄT sulje päävalikkoa napautuksesta — se on
-                 poikkeus, joka on koodattu erikseen (js/main.js). Kotelo
-                 pysyy mukana, koska alivalikko asemoituu sen suhteen. -->
+            <!-- Varustekotelo on piilossa, kunnes pelaaja löytää
+                 ensimmäisen varusteen: löytämätöntä ei näytetä edes
+                 harmaana, tai valikko kertoisi mitä on vielä hakematta. -->
             <div id="linssi-kotelo" class="linssi-kotelo" hidden>
-              <button id="linssi-btn" class="ghost" type="button" title="Varusteet"
-                      aria-haspopup="true" aria-expanded="false" aria-controls="linssi-valikko">
-                <span class="viiva-ikoni" id="linssi-ikoni"></span>
-                <span>Varusteet</span>
-              </button>
-              <div id="linssi-valikko" class="linssi-valikko" hidden></div>
+              <p class="valikko-otsikko">Varusteet</p>
+              <div id="linssi-valikko" class="linssi-valikko"></div>
             </div>
-            <!-- Kertojavalikko: mykistys / ei kertojaa / lyhyt / pitkä kertoja.
-                 Kuvakkeet ja valikko rakennetaan main.js:ssä; nappi näyttää
-                 aina nykyisen tilan kuvakkeen. -->
+            <!-- Kertojan äänet: mykistys / ei kertojaa / lyhyt / pitkä.
+                 Rivit rakennetaan js/main.js:ssä. -->
             <div class="kertoja-kotelo">
-              <button id="mute-btn" class="ghost" type="button" title="Kertojan äänet"
-                      aria-haspopup="true" aria-expanded="false">
-                <span class="viiva-ikoni" id="kertoja-ikoni"></span>
-                <span>Äänet</span>
-              </button>
-              <div id="kertoja-valikko" class="kertoja-valikko" hidden></div>
+              <p class="valikko-otsikko">Äänet</p>
+              <div id="kertoja-valikko" class="kertoja-valikko"></div>
             </div>
-            <button id="rules-btn" class="ghost" type="button" title="Säännöt">
-              <span class="viiva-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span>
-              <span>Säännöt</span>
-            </button>
-            <button id="newgame-btn" class="ghost" type="button" title="Uusi peli">
-              <span class="viiva-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span>
-              <span>Uusi peli</span>
-            </button>
+            <!-- Säännöt ja uusi peli alimmaisena omalla rivillään. -->
+            <div class="valikko-alarivi">
+              <button id="rules-btn" class="ghost" type="button" title="Säännöt">
+                <span class="viiva-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.2 3.9h8.1l3.5 3.6v12.6H6.2z"/><path d="M14.1 3.9v3.8h3.7"/><path d="M8.9 11.6h6.2M8.9 14.4h6.2M8.9 17.1h4"/></svg></span>
+                <span>Säännöt</span>
+              </button>
+              <button id="newgame-btn" class="ghost" type="button" title="Uusi peli">
+                <span class="viiva-ikoni" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.6"/><path d="M12 8.4v7.2M8.4 12h7.2"/></svg></span>
+                <span>Uusi peli</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

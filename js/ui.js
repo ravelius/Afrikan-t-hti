@@ -1799,8 +1799,15 @@ export class UI {
      * pelataan (suunnitelman riski 10).
      */
     this.linssiKotelo = document.getElementById('linssi-kotelo');
-    this.linssiNappi = document.getElementById('linssi-btn');
-    this.linssiNapinIkoni = document.getElementById('linssi-ikoni');
+    /*
+     * Varusteet ovat päävalikossa auki valmiiksi (omistajan toive
+     * 5.8.2026), joten avausnappia ja sen kuvaketta ei enää ole.
+     * Kenttiin jäi null, ja ne on jätetty näkyviin, koska useampi
+     * paikka tarkistaa ne — tyhjä viittaus kertoo että nappi puuttuu
+     * tarkoituksella eikä vahingossa.
+     */
+    this.linssiNappi = null;
+    this.linssiNapinIkoni = null;
     this.linssiValikko = document.getElementById('linssi-valikko');
     this.linssiTuki = null; // moottori ja omistus, kun dynaaminen tuonti onnistui
     /*
@@ -1817,24 +1824,12 @@ export class UI {
     this.linssiLauta = null; // mille laudalle valikoima on laskettu
     this.linssiTunniste = null; // valikoiman tunniste: valikko rakennetaan vain muutoksesta
     this.linssiAskeleet = new Map(); // valittu askel linssiä kohti
+    /*
+     * Valitsin ei enää avaudu eikä sulkeudu: se on osa päävalikkoa ja
+     * katoaa sen mukana. Sulkeutumisen kuuntelijat (napautus muualle,
+     * Esc) poistuivat samalla — päävalikko hoitaa molemmat.
+     */
     this.linssiKuuntelijat = [];
-    if (this.linssiNappi && this.linssiValikko) {
-      const kytke = (kohde, nimi, kasittele) => {
-        kohde.addEventListener(nimi, kasittele);
-        this.linssiKuuntelijat.push([kohde, nimi, kasittele]);
-      };
-      kytke(this.linssiNappi, 'click', () => this.avaaLinssivalikko(this.linssiValikko.hidden));
-      // Sulkeutuminen samoin kuin kertojavalikossa (js/main.js):
-      // napautus muualle ja Esc. Kuuntelijat ovat documentissa, joten ne
-      // on poistettava destroyssa — muuten kuollut peli sulkisi uuden
-      // pelin valikkoa.
-      kytke(document, 'pointerdown', (event) => {
-        if (!event.target.closest?.('.linssi-kotelo')) this.avaaLinssivalikko(false);
-      });
-      kytke(document, 'keydown', (event) => {
-        if (event.key === 'Escape') this.avaaLinssivalikko(false);
-      });
-    }
 
     this.busy = false;
     this.dead = false; // destroy() jälkeen instanssi ei saa enää piirtää
@@ -2038,7 +2033,6 @@ export class UI {
     this.linssiSelite?.remove();
     this.linssiSelite = null;
     if (this.linssiKotelo) this.linssiKotelo.hidden = true;
-    if (this.linssiValikko) this.linssiValikko.hidden = true;
     this.observer?.disconnect();
   }
 
@@ -3752,22 +3746,30 @@ export class UI {
     };
 
     const loppu = 1 - FACT_CORNER;
+    /*
+     * MATKAKIRJA ON AINA KARTAN YLÄREUNASSA.
+     *
+     * Omistaja 5.8.2026: *"Matkakirja saisi olla aina kartan
+     * yläreunassa. Nyt nimittäin isommalla iPad-ruudulla se menee
+     * alareunan nappien kanssa päällekkäin, mutta ylhäällä se ei olisi
+     * tiellä. Enkä haittaa, vaikka laukku tai hampurilainen
+     * väliaikaisesti avautuisi sen päälle."*
+     *
+     * Alanurkat olivat mukana valinnassa, ja niitä yritettiin karsia
+     * kahdella painotuksella: alanurkat viimeisiksi kun kortit eivät
+     * mahdu riville, ja yläreunalle 0,15:n etu tasatilanteessa. Kumpikin
+     * oli kiertotie sen ympäri, että alanurkka on aina väärin — siellä
+     * ovat toimintonapit. Painotus voi hävitä, kielto ei.
+     *
+     * Vasen vai oikea ratkeaa yhä merenpinta-alan mukaan, jottei kortti
+     * peitä mannerta ja kaupunkien nimiä.
+     */
     const nurkat = [
       { id: 'tl', kx: 0, ky: 0 },
       { id: 'tr', kx: loppu, ky: 0 },
-      { id: 'bl', kx: 0, ky: loppu },
-      { id: 'br', kx: loppu, ky: loppu },
     ];
-    // Mahtuvatko päiväkirja ja toimintokortti samalle riville?
-    const mahtuu = paneW >= FACT_WIDTH + TURN_WIDTH + 40;
-    for (const n of nurkat) {
-      n.meri = meriosuus(n.kx, n.ky);
-      if (!mahtuu && n.id[0] === 'b') n.meri -= 1; // alanurkat viimeisiksi
-      // Yläreuna voittaa tasaväkisen vertailun (omistajan havainto:
-      // leveällä iPadilla kortti hyppäsi alanurkkaan toimintonappien
-      // viereen, vaikka ylhäällä oli tilaa).
-      if (n.id[0] === 't') n.meri += 0.15;
-    }
+
+    for (const n of nurkat) n.meri = meriosuus(n.kx, n.ky);
     nurkat.sort((a, b) => b.meri - a.meri);
     this.factCard.dataset.corner = nurkat[0].id;
     // Linssin selitekortti väistää päiväkirjaa: se saa oman nurkkansa
@@ -8881,7 +8883,7 @@ export class UI {
     }
     const nakyvat = this.nakyvatLinssit(tuki);
     this.linssiKotelo.hidden = nakyvat.length === 0;
-    if (!nakyvat.length) this.avaaLinssivalikko(false);
+
 
     const tunniste = `${this.game.pack.id}|${nakyvat.map((l) => l.tunnus).join(',')}`;
     if (tunniste !== this.linssiTunniste) {
@@ -8969,18 +8971,14 @@ export class UI {
     void this.sytytaLinssi(tunnus);
   }
 
-  /** Avaa tai sulkee pudotuspaneelin. */
-  avaaLinssivalikko(auki) {
-    if (!this.linssiValikko || !this.linssiNappi) return;
-    if (this.linssiValikko.hidden === !auki) return;
-    this.linssiValikko.hidden = !auki;
-    this.linssiNappi.setAttribute('aria-expanded', String(auki));
-  }
+  /*
+   * Valitsin on päävalikossa auki valmiiksi eikä sitä enää avata tai
+   * suljeta erikseen. Metodit jäivät tyhjinä, koska niitä kutsutaan
+   * useammasta paikasta — sulkupyyntö on nyt kohteeton mutta ei virhe.
+   */
+  avaaLinssivalikko() {}
 
-  /** Kertojavalikon avaus sulkee tämän: kaksi valikkoa ei ole auki yhtä aikaa. */
-  suljeLinssivalikko() {
-    this.avaaLinssivalikko(false);
-  }
+  suljeLinssivalikko() {}
 
   /**
    * Valitsimen sisältö: kuvakerivi ja sen alla valitun linssin nimi,

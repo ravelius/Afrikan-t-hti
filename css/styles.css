@@ -279,6 +279,121 @@ button, .brand, .turn-pill, .fact-card h2 {
 
 .paavalikko button:hover { background: rgba(234, 184, 78, 0.12); }
 
+/*
+ * ── LITTEÄ VALIKKO: EI ALIVALIKKOJA ──────────────────────────────────
+ *
+ * Omistaja 5.8.2026: *"hampurilaisesta voisi suoraan avautua kaikki
+ * varusteet sekä äänisäädöt nappeina ja ihan alalla olisi säännöt ja
+ * uusi peli napit keskitettynä. Varusteet ja äänet voisi olla omien
+ * otsikoiden alla. Keskitä kaikki napit ja otsikot."*
+ *
+ * Varusteet ja Äänet olivat nappeja, jotka avasivat oman paneelinsa
+ * valikon päälle. Kaksi napautusta yhden säädön takana on paljon, kun
+ * säätöjä on kahdeksan.
+ */
+.paavalikko { align-items: stretch; gap: 0.35rem; padding: 0.45rem; }
+
+.valikko-otsikko {
+  margin: 0.15rem 0 0.1rem;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--accent);
+}
+
+/*
+ * Molemmat paneelit ovat nyt valikon sisällä eivätkä sen päällä: pois
+ * absoluuttinen asemointi, oma tausta ja oma reunus. Ne olivat
+ * pudotusvalikon kuori, ja pudotusvalikkoa ei enää ole.
+ */
+.paavalikko .linssi-valikko,
+.paavalikko .kertoja-valikko {
+  position: static;
+  width: auto;
+  max-width: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/*
+ * Molemmat ruudukot NELJÄÄN SARAKKEESEEN.
+ *
+ * Äänitiloja on neljä, joten rivi täyttyy tasan. Varusteruudukko saa
+ * saman jaon, jotta valikossa on yksi rytmi eikä kahta: `auto-fill`
+ * antoi sille kolme saraketta, ja kolmen ja neljän ero näkyi heti
+ * vierekkäin. Varusteita on tulossa yksitoista, joten rivejä tulee
+ * lisää — sarakemäärä pysyy silti samana.
+ */
+.paavalikko .kertoja-valikko,
+.paavalikko .linssi-valikko .linssi-liuskat {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+}
+
+/* Varusteen kuvaus keskitetään kuten otsikot ja napit. */
+.paavalikko .linssi-tiedot { text-align: center; }
+
+.paavalikko .kertoja-valikko button {
+  flex-direction: column;
+  gap: 0.15rem;
+  width: auto;
+  aspect-ratio: 1;
+  padding: 0;
+  justify-content: center;
+  background: rgba(53, 39, 26, 0.55);
+  border: 1.2px solid var(--line);
+  border-radius: 8px;
+}
+
+.paavalikko .kertoja-valikko button svg { width: 26px; height: 26px; }
+
+/* Valittu äänitila erottuu kullalla, kuten valittu varuste. */
+.paavalikko .kertoja-valikko button.valittu {
+  background: var(--panel-2);
+  border-color: var(--accent-dark);
+  color: var(--accent);
+}
+
+/* Täppä oli pudotusvalikon rivimerkintä; ruudukossa valinnan kertoo
+   kehys ja väri, ja täppä veisi tilaa kuvakkeelta. */
+.paavalikko .kertoja-valikko .tappa { display: none; }
+
+/*
+ * Säännöt ja uusi peli alimmaisena: komentoja eivätkä säätimiä, joten
+ * ne erotetaan viivalla ja keskitetään omalle rivilleen.
+ */
+.valikko-alarivi {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  /*
+   * Rivi mittaa itsensä sisällöstään ja venyttää valikon tarvittaessa,
+   * jotta kaksi nappia mahtuu vierekkäin. Kiinteä vähimmäisleveys ei
+   * kelvannut: nappien mitat tulevat kirjasimesta, ja mitattuna
+   * "Säännöt" + "Uusi peli" vaativat puhelimella 209 px mutta
+   * tabletilla 265. `max-content` on oikea luku molemmilla ilman
+   * arvausta.
+   */
+  align-self: center;
+  width: max-content;
+  max-width: 100%;
+  margin-top: 0.15rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--line);
+}
+
+.paavalikko .valikko-alarivi button {
+  width: auto;
+  justify-content: center;
+}
+
 /* Kertojavalikko: nappi näyttää nykyisen tilan kuvakkeen ja avaa alleen
  * pienen paneelin, jossa neljä kuvakeriviä täppineen. */
 .kertoja-kotelo { position: relative; }
