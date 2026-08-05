@@ -259,11 +259,10 @@ saavat noudattaa lehtimallia (resepti: docs/tutki-aiheet.md).
    maaosastoon (pilotti Italia/ANSA; js/uutiset.js +
    js/packs/uutislahteet.js). Popup pelin kirjasimilla, otsikoita ei
    lyhennetä eikä mukailla; "Käännä suomeksi" -nappi (MyMemory).
-   **VAATII OMISTAJAN KÄYTTÖÖNOTON:** RSS-haku kulkee Cloudflare
-   Worker -välityksen kautta — lähdekoodi ja 5 minuutin ohje ovat
-   kansiossa tools/uutisproxy/ (OHJE.md). Siihen asti uutisosio
-   pysyy piilossa eikä mikään mene rikki. Uuden maan lähde lisätään
-   sekä uutislahteet.js:ään että workerin sallittujen listaan.
+   Omistajan worker on käytössä 5.8.2026 alkaen (v279, osoite
+   uutislahteet.js:ssä). Uuden maan lähde lisätään sekä
+   uutislahteet.js:ään että workerin sallittujen listaan ja worker
+   julkaistaan uudelleen (tools/uutisproxy/OHJE.md).
 
 ### PÄÄTETTY 4.8.2026: aarteiden nimistö (sitova kaikessa sisällössä)
 
