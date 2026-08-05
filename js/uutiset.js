@@ -121,6 +121,33 @@ export async function haeArtikkeli(linkki) {
 }
 
 /*
+ * Suoran tv-lähetyksen tunniste kanavan live-sivulta (workerin
+ * kautta). YouTuben kanavaupotus (live_stream?channel=...) osoittautui
+ * epävakaaksi etenkin iPadilla — konkreettisen lähetyksen upotus
+ * toimii luotettavasti. Palauttaa 11 merkin tunnisteen tai null,
+ * jolloin kutsuja käyttää kanavaupotusta varareittinä.
+ */
+const liveMuisti = new Map();
+
+export async function haeLiveTunniste(livesivu) {
+  if (!UUTISPROXY || !livesivu) return null;
+  if (liveMuisti.has(livesivu)) return liveMuisti.get(livesivu);
+  let tunniste = null;
+  try {
+    const osoite = `${UUTISPROXY}?url=${encodeURIComponent(livesivu)}`;
+    const vastaus = await fetch(osoite, { signal: AbortSignal.timeout(10000) });
+    if (vastaus.ok) {
+      const sivu = await vastaus.text();
+      tunniste = sivu.match(/"videoId":"([\w-]{11})"/)?.[1] ?? null;
+    }
+  } catch {
+    tunniste = null;
+  }
+  liveMuisti.set(livesivu, tunniste);
+  return tunniste;
+}
+
+/*
  * Käännösmuisti: etusivun otsikot suomennetaan joka avauksella, ja
  * ilmainen palvelu laskee merkkejä — sama teksti käännetään siksi
  * vain kerran istunnossa.

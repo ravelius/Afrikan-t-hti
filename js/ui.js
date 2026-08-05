@@ -70,7 +70,7 @@ import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import {
-  haeUutiset, haeArtikkeli, kaannaSuomeksi, uutislahde,
+  haeUutiset, haeArtikkeli, haeLiveTunniste, kaannaSuomeksi, uutislahde,
 } from './uutiset.js';
 import { TV_KANAVAT } from './packs/uutislahteet.js';
 import {
@@ -6005,25 +6005,33 @@ export class UI {
     this.arrivalMedia.appendChild(nappi);
   }
 
-  /** Tv-lähetys popupissa: 16:9-upotus, napautus reunoille sulkee. */
+  /**
+   * Tv-lähetys popupissa: pelkkä 16:9-upotus ilman rastia (omistajan
+   * toive) — lähetyksen ulkopuolinen napautus (sumennettu huntu)
+   * sulkee. Lähetyksen tunniste haetaan kanavan live-sivulta workerin
+   * kautta, koska YouTuben kanavaupotus oli epävakaa iPadilla; jos
+   * hakua ei saada, kanavaupotus jää varareitiksi.
+   */
   avaaTvIkkuna(tv) {
     this.suljeKulttuuriKuva();
     sfx.play('paper');
-    // Mahdollisimman pienet kehykset (omistajan toive): pelkkä lähetys
-    // ja sulkurasti — ei otsikkoa, ei lähderiviä, ei taustan huntua.
     this.lisaaKevytHuntu();
     const kortti = html('div', 'postikortti kulttuuri-suurennos tv-kortti');
-    const sulku = html('button', 'uutinen-sulku tv-sulku', '×');
-    sulku.type = 'button';
-    sulku.setAttribute('aria-label', 'Sulje lähetys');
-    kortti.appendChild(sulku);
     const upotus = document.createElement('iframe');
     upotus.className = 'tv-upotus';
-    upotus.src = tv.upotus;
     upotus.title = `${tv.nimi} — suora lähetys`;
     upotus.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
     upotus.setAttribute('allowfullscreen', '');
     kortti.appendChild(upotus);
+    haeLiveTunniste(tv.livesivu).then((tunniste) => {
+      if (!kortti.isConnected) return;
+      // playsinline pitää soiton popupissa iOS:lla; nocookie-osoite
+      // ohittaa osan evästemuureista.
+      upotus.src = tunniste
+        ? `https://www.youtube-nocookie.com/embed/${tunniste}`
+          + '?autoplay=1&playsinline=1'
+        : tv.upotus;
+    });
     kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
     this.arrivalDialog.appendChild(kortti);
     this.kulttuuriKuvaEl = kortti;

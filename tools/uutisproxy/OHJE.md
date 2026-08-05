@@ -1,5 +1,12 @@
 # Uutisvälityksen käyttöönotto (omistajalle, n. 5 min)
 
+> **Päivitys 2 (v290):** workerin sallittuihin lisättiin tv-kanavan
+> live-sivu (`https://www.youtube.com/@`), josta luetaan suoran
+> lähetyksen tunniste — YouTuben kanavaupotus oli epävakaa iPadilla.
+> Julkaise worker kerran uudelleen: **Edit code → liitä tuore
+> `worker.js` → Deploy.** Siihen asti tv käyttää vanhaa upotusta,
+> joka toimii selaimissa muttei välttämättä iPadilla.
+
 > **Päivitys 5.8.2026 (v280):** worker hakee nyt myös uutisten
 > artikkelisivut, jotta popupissa näkyy koko leipäteksti. Jos otit
 > workerin käyttöön ennen tätä, julkaise se kerran uudelleen:
