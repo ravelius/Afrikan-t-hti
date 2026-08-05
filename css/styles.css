@@ -6901,6 +6901,24 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 }
 
 /*
+ * Kohtaamisnappi houkuttelevaksi (omistajan toive 5.8.2026): täytetty
+ * lämmin kulta erottaa päätehtävän selvästi Jatka matkaa -napista,
+ * joka jää kehysnapiksi.
+ */
+.dialog.lehti .arrival-card .dialog-actions button.primary {
+  background: linear-gradient(180deg, #e8b654, #d49a34);
+  border: 1.5px solid #8a6118;
+  color: #2d1f08;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 235, 190, 0.5);
+  box-shadow: 0 2px 6px rgba(70, 51, 31, 0.3);
+}
+
+.dialog.lehti .arrival-card .dialog-actions button.primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f0c268, #dda63f);
+}
+
+/*
  * Teosgalleria noston kuvan ympärillä (pilottina Venetsian Canaletto):
  * kotelo perii saapumiskuvan nuolet ja laskurin. Kotelo ottaa kuvan
  * paikan taitossa — myös kellutuksen leveällä ruudulla — ja kuva
