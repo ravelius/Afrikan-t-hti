@@ -754,6 +754,34 @@
   margin: 0 0.7rem 0 0.4rem;
   /* Hehku saa vuotaa lampun rajojen yli — se on koko idea. */
   overflow: visible;
+  /*
+   * Lamppu on nyt nappi (mykistys), joten selaimen nappiasut nollataan
+   * — lasi ja kehys piirtävät ulkoasun. Kosketusalue kasvatetaan
+   * näkymättömällä ::before-levyllä 44 pikseliin asti, jottei sormen
+   * tarvitse osua 26 pikselin lasiin.
+   */
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.radio-lamppu::before {
+  content: "";
+  position: absolute;
+  inset: -9px;
+}
+
+/* Mykistetty radio: lasi himmenee ja hehku sammuu, vaikka lähetys soi
+   taustalla äänettömänä. Sama kieli kuin sammuksissa — valo kertoo,
+   kuuluuko ääntä. */
+.radiosoitin[data-mykistetty="on"] .radio-lamppu-lasi {
+  filter: saturate(0.35) brightness(0.55);
+}
+
+.radiosoitin[data-mykistetty="on"] .radio-lamppu-hehku {
+  opacity: 0 !important;
 }
 
 /*
