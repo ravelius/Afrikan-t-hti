@@ -5282,6 +5282,33 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v280 — Pystysyy takaisin, vaakanaarmut pois (5.8.2026)
+
+v277 poisti väärän kerroksen. Omistaja tarkensi: *"Se pystyraidoitus
+oli kyllä ihan hyvä, mutta radioon on piirretty enemmän vaakamuotoa,
+muutamia skraiduja, aivan kuin radiota olisi vähän kolhittu — otan ne
+pois mutta palautan sen pystyraidoituksen."*
+
+Kolme `repeating-linear-gradient`-kerrosta (jaot 7, 23 ja 61 px) ovat
+takaisin: ne ovat puun syy, ja pystysuora syy on juuri se, mikä tekee
+kotelosta puuta eikä maalattua peltiä.
+
+Poistuivat kolme lähes vaakasuoraa jälkeä (174°, 7° ja 177°), jotka
+esittivät kolhuja ja naarmuja. Ne olivat pieniä ja teräväreunaisia, ja
+juuri siksi ne lukivat vahingoksi eivätkä iäksi: kolhu on
+muodonmuutos, jota tasainen väriläikkä ei esitä.
+
+Kotelon kavennus (800 → 470 px) jäi voimaan — se oli sama pyyntö, eri
+kerros.
+
+### Opittua
+
+**Kysy kummasta kerroksesta on kyse, kun samassa pinnassa on monta.**
+Kotelossa oli kolme raidoitusta ja kolme naarmua, ja "viirut" osui
+molempiin. Valitsin väärän, ja korjaus maksoi kokonaisen version.
+Kahden lauseen tarkennus omistajalta olisi maksanut vähemmän kuin
+arvaus.
+
 ## v277 — Radio kapeammaksi ja viirut pois (5.8.2026)
 
 Omistaja: *"Kavenna radiosta oikealta pois kaikki ylimääräinen sekä

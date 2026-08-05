@@ -210,76 +210,47 @@
    * verroin voimakkaampana kotelo näytti maalatulta.
    */
   /*
-   * KOLME JÄLKEÄ, JOTKA EIVÄT OLE LIUKUVÄREJÄ.
+   * PYSTYSYY TAKAISIN, VAAKANAARMUT POIS.
    *
-   * Katselmus 4.8.2026 mittasi, miksi kotelo näytti yhä uudelta, vaikka
-   * kulumia oli jo viisi kappaletta: KAIKKI OLIVAT MATALATAAJUISIA.
-   * Kotelon oma pystyliuku vie sävyn kirkkaudesta 115 kirkkauteen 35
-   * ylhäältä alas, ja jokainen kulumalaikku muuttaa sitä 3–8 yksikköä.
-   * Silmä lukee suuren ja pehmeän vaihtelun VALAISTUKSEKSI eikä iäksi —
-   * se on sama tieto kuin muodosta, ei uutta.
+   * v277 poisti väärän kerroksen. Omistaja tarkensi: *"se pystyraidoitus
+   * oli kyllä ihan hyvä, mutta radioon on piirretty enemmän vaakamuotoa,
+   * muutamia skraiduja, aivan kuin radiota olisi vähän kolhittu — otan
+   * ne pois mutta palautan sen pystyraidoituksen."*
    *
-   * Ikä on korkeataajuista: naarmu, kolhu, lohkeama. Yksi hiuksenohut
-   * viiva erottuu vaikka se muuttaisi sävyä vain kymmenen yksikköä,
-   * koska sen vieressä on koskematon pinta.
+   * Kolme `repeating-linear-gradient`-kerrosta 7, 23 ja 61 pikselin
+   * jaoilla ovat siis takaisin: ne ovat puun syy, ja pystysuora syy on
+   * juuri se, mikä tekee kotelosta puuta eikä maalattua peltiä. Jaot
+   * ovat keskenään jaottomia, jolloin kuvio ei asetu näkyväksi
+   * ruudukoksi (ks. alkuperäinen perustelu ylempänä).
    *
-   * JÄLJET OVAT SIELLÄ, MISSÄ PUUTA YLIPÄÄTÄÄN NÄKYY. Kotelon face on
-   * lähes kokonaan mittarin, säleikön, näytön ja asteikon peitossa;
-   * paljasta puuta on vain yläreunan kaistale, laitojen reunat ja
-   * kytkinpylväs. Ensimmäinen sijoittelu (jälki kotelon keskellä
-   * alhaalla) katosi asteikon alle kokonaan, ja se on tässä
-   * yleisempikin sääntö: kulumaa ei kannata piirtää sinne, mitä ei näy.
-   *
-   * Ja ne ovat käytön kohdissa: hankausjälki yläreunassa (siitä
-   * laitetta nostetaan), sormenkynnen jälki kytkinpylväässä ja kolhu
-   * pylvään alanurkassa. VIIVAT KULKEVAT SYYN POIKKI eli lähes
-   * vaakaan; syyn suuntainen naarmu katoaa syyhyn eikä sitä näe.
-   */
-  /*
-   * PYSTYVIIRUT POIS (omistaja 5.8.2026: "poista soittimesta viirut, ne
-   * eivät näytä uskottavilta eivätkä tee soittimesta vanhemman
-   * näköistä").
-   *
-   * Tässä oli kolme `repeating-linear-gradient`-kerrosta 7, 23 ja 61
-   * pikselin jaoilla, ajatuksena puun syy. Ajatus oli oikea, mutta
-   * toteutus näytti vakosametilta: oikean puun syy ei ole tasavälinen
-   * eikä suora, ja juuri säännöllisyys paljastaa sen piirretyksi. Kolme
-   * eri jakoa ei riittänyt peittämään sitä — silmä löytää jaksollisuuden
-   * kolmestakin päällekkäisestä.
-   *
-   * Jäljelle jää lakattu pinta: pystyliuku antaa muodon, radiaaliset
-   * kajot valon suunnan ja kolme pientä naarmua iän. Kiillotettu lakka
-   * ONKIN sileä, joten tämä on lähempänä oikeaa pöytäradiota kuin
-   * kuvioitu pinta oli.
+   * Poistuneet ovat kolme lähes VAAKASUORAA jälkeä (174°, 7° ja 177°),
+   * jotka esittivät kolhuja ja naarmuja. Ne olivat pieniä ja terävä-
+   * reunaisia, ja juuri siksi ne lukivat vahingoksi eivätkä iäksi:
+   * kolhu on muodonmuutos, jota tasainen väriläikkä ei esitä. Ikä on
+   * nyt siinä, mikä sen kestää — pinnan syyssä ja valon suunnassa.
    */
   background-image:
-    linear-gradient(174deg,
-      rgba(255, 240, 210, 0) 40%, rgba(255, 240, 210, 0.34) 47%, rgba(255, 240, 210, 0) 54%),
-    linear-gradient(7deg,
-      rgba(22, 11, 3, 0) 34%, rgba(22, 11, 3, 0.5) 48%, rgba(22, 11, 3, 0) 62%),
-    linear-gradient(177deg,
-      rgba(255, 240, 210, 0) 36%, rgba(255, 240, 210, 0.22) 47%, rgba(255, 240, 210, 0) 58%),
     radial-gradient(21% 88% at 4% 6%, rgba(255, 238, 208, 0.14), rgba(255, 238, 208, 0) 74%),
     radial-gradient(11% 130% at 98% 28%, rgba(255, 240, 214, 0.1), rgba(255, 240, 214, 0) 76%),
     radial-gradient(27% 44% at 43% -10%, rgba(255, 236, 204, 0.08), rgba(255, 236, 204, 0) 72%),
     radial-gradient(38% 50% at 69% 108%, rgba(22, 11, 3, 0.2), rgba(22, 11, 3, 0) 74%),
     radial-gradient(17% 40% at 14% 104%, rgba(22, 11, 3, 0.16), rgba(22, 11, 3, 0) 76%),
+    repeating-linear-gradient(90.6deg,
+      rgba(0, 0, 0, 0.07) 0 1px,
+      rgba(255, 240, 214, 0.045) 1px 2px,
+      rgba(0, 0, 0, 0) 2px 7px),
+    repeating-linear-gradient(89.4deg,
+      rgba(0, 0, 0, 0.06) 0 2px,
+      rgba(0, 0, 0, 0) 2px 23px),
+    repeating-linear-gradient(90deg,
+      rgba(24, 12, 4, 0.09) 0 3px,
+      rgba(0, 0, 0, 0) 3px 61px),
     linear-gradient(180deg, var(--radio-puu-vaalea), var(--radio-puu) 42%, var(--radio-puu-tumma));
   /*
-   * Kolmen naarmun mitat ja paikat. Loput kerrokset ovat kotelon
-   * kokoisia (auto) — luettelot on kirjoitettava loppuun asti, koska
-   * selain kiertää lyhyemmän listan alusta ja antaisi silloin naarmun
-   * mitat pohjaliu'ulle.
+   * Kaikki kerrokset ovat nyt kotelon kokoisia ja toistuvia, joten
+   * erillisiä size-, position- ja repeat-luetteloita ei enää tarvita:
+   * ne olivat olemassa vain naarmujen kiinteitä mittoja varten.
    */
-  background-size:
-    132px 7px, 20px 9px, 78px 9px,
-    auto, auto, auto, auto, auto, auto;
-  background-position:
-    34% 1%, 94% 93%, 91% 14%,
-    0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
-  background-repeat:
-    no-repeat, no-repeat, no-repeat,
-    repeat, repeat, repeat, repeat, repeat, repeat;
   border: 1px solid rgba(0, 0, 0, 0.5);
   /* Messinkilista yläreunassa ja syvä varjo: kotelo seisoo kartan päällä. */
   box-shadow:

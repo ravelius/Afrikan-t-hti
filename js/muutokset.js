@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 280, teksti: 'Radion pystysyy takaisin, vaakanaarmut pois' },
   { v: 279, teksti: 'Uutiset päällä: ANSA:n otsikot Italian lehdessä' },
   { v: 278, teksti: 'Lehden etusivu tiiviiksi: isot kuvat, maa ylemmäs' },
   { v: 278, teksti: 'Venetsian nostot omalle sivulleen etusivun jälkeen' },
