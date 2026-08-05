@@ -5282,6 +5282,52 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v285 — Laukku aukeaa palkista, isommat varustekuvakkeet (5.8.2026)
+
+### Sulje pois, napautus ulos tilalle
+
+*"Ota Sulje-nappi pois, se on turha kun voi klikata vain karttaa."*
+Laukku ei enää tummenna karttaa (v284), joten napautus sen ulkopuolelle
+on luonteva sulkuele — sama kuin muissakin kartan päälle avautuvissa
+korteissa. Esc sulkee yhä, koska `<dialog>` hoitaa sen itse.
+
+### Laukku jatkaa yläpalkkia
+
+*"Laukun reunat voisi olla samalla värillä kuin yläpalkki ja laukun
+yläreunan voisi ottaa kokonaan pois, niin että näyttäisi että laukku
+aukeaa suoraan yläpalkista."*
+
+Kolme muutosta, jotka toimivat vain yhdessä: nahka on nyt palkin liu'un
+alapään ruskea (#2b2015) entisen vaalean satulanahan sijaan, yläreunus
+ja yläkulmien pyöristys ovat pois, ja kortti asetetaan palkin
+alareunaan eikä pillerin alle välin päähän. Mitattu rako palkin ja
+kortin välillä: **0 px**.
+
+Väri oli näistä se, joka olisi jäänyt huomaamatta: kahden eri ruskean
+raja olisi piirtänyt juuri sen viivan, jonka oli tarkoitus kadota.
+
+### Isommat varustekuvakkeet
+
+*"Suurenna niitä kuvakkeita isommaksi. Ovat nyt vähän liian vaikeita
+painaa ja näkyvätkin liian pienellä."*
+
+Neliö oli jo 59 pikseliä eli reilusti kosketuskohteen minimin yli, mutta
+kuvake sen sisällä oli **19 px** — kolmasosa ruudusta. Silmä mittaa
+painettavan kohteen KUVASTA eikä näkymättömästä laatikosta, joten nappi
+tuntui pieneltä vaikka ei ollut.
+
+Uusi koko on 34 px eli runsas puolet neliöstä. Se on annettu
+pikseleinä eikä em-yksiköinä: ensimmäinen yritys käytti `2em`, ja
+mitattuna kuvake jäi puhelimella 25 pikseliin mutta kasvoi työpöydällä
+32:een — juuri väärin päin, koska sormella painetaan puhelinta. Neliö on
+59 px molemmilla, joten kuvakkeenkin kuuluu olla.
+
+### Opittua
+
+**Kosketuskohteen koko on se, minkä käyttäjä näkee.** Nappi täytti
+ohjeen mitat kaksinkertaisesti ja tuntui silti pieneltä. Kun palaute on
+"vaikea painaa", mittaa kuvake äläkä laatikkoa.
+
 ## v284 — Laukun nahka, tausta ja aarreluettelo (5.8.2026)
 
 Kolme korjausta edelliseen.
