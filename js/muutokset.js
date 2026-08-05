@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 293, teksti: 'Napsahtelut pois: jäljelle noppa, lento ja laiva' },
   { v: 292, teksti: 'Valikkoon ilmaa, lähdelinkki pois' },
   { v: 291, teksti: 'Matkalaukun kahva pois: siistimpi ilman' },
   { v: 290, teksti: 'Valikosta suoraan varusteet, äänet ja komennot' },

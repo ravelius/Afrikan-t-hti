@@ -73,13 +73,25 @@ async function lataaSfx() {
   return { sfx, ctx };
 }
 
-const NIMET = [
-  'click', 'paper', 'swipe', 'dieTick', 'dieLand', 'step', 'arrive', 'ferry',
-  'flight', 'correct', 'wrong', 'hint', 'tick', 'timeout', 'flip', 'clack',
-  'star', 'gem', 'horseshoe', 'robber', 'empty', 'coin', 'stuck', 'turn', 'win',
+/*
+ * Soivat tehosteet (js/sound.js SALLITUT_TEHOSTEET). Muut nimet ovat yhä
+ * olemassa mutta vaiennettu omistajan pyynnöstä 5.8.2026, ja niiden
+ * vaikeneminen on oma testinsä alempana.
+ */
+const NIMET = ['dieTick', 'dieLand', 'ferry', 'flight'];
+
+/*
+ * Vaiennetut. Lista on tarkoituksella käsin kirjoitettu eikä johdettu
+ * koodista: jos joku poistaa kytkimen, testin pitää huomata se — ei
+ * seurata mukana.
+ */
+const VAIENNETUT = [
+  'click', 'paper', 'swipe', 'step', 'arrive', 'correct', 'wrong', 'hint',
+  'tick', 'timeout', 'flip', 'clack', 'star', 'gem', 'horseshoe', 'robber',
+  'empty', 'coin', 'stuck', 'turn', 'win', 'pen', 'quizOpen', 'zoom',
 ];
 
-test('jokainen ääni soi ja tuottaa äänilähteitä', async () => {
+test('jokainen soiva ääni tuottaa äänilähteitä', async () => {
   for (const nimi of NIMET) {
     const { sfx, ctx } = await lataaSfx();
     assert.doesNotThrow(() => sfx.play(nimi), `ääni "${nimi}" heitti poikkeuksen`);
@@ -90,9 +102,20 @@ test('jokainen ääni soi ja tuottaa äänilähteitä', async () => {
   }
 });
 
+test('vaiennetut tehosteet eivät tuota ääntä', async () => {
+  for (const nimi of VAIENNETUT) {
+    const { sfx, ctx } = await lataaSfx();
+    assert.doesNotThrow(() => sfx.play(nimi), `ääni "${nimi}" heitti poikkeuksen`);
+    assert.equal(
+      ctx.aloitetut.length, 0,
+      `vaiennettu ääni "${nimi}" käynnisti äänilähteen`,
+    );
+  }
+});
+
 test('masteriketjuun kuuluu kaiku ja kompressori', async () => {
   const { sfx, ctx } = await lataaSfx();
-  sfx.play('click');
+  sfx.play('dieLand');
   assert.ok(ctx.luodut.includes('convolver'), 'kaiku puuttuu masteriketjusta');
   assert.ok(ctx.luodut.includes('compressor'), 'kompressori puuttuu masteriketjusta');
   // Kaiun impulssivaste on luotu, ei ladattu tiedostosta.
@@ -102,7 +125,7 @@ test('masteriketjuun kuuluu kaiku ja kompressori', async () => {
 
 test('kaikki äänet kulkevat kaikubussin kautta', async () => {
   const { sfx, ctx } = await lataaSfx();
-  sfx.play('star');
+  sfx.play('dieLand');
   const bussiin = ctx.yhteydet.filter(([, kohde]) => kohde === 'gain').length;
   assert.ok(bussiin > 0, 'äänet eivät kytkeydy mihinkään');
 });
