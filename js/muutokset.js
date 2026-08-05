@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 270, teksti: 'Varusteiden kuvakkeet omiksi neliöikseen' },
   { v: 269, teksti: 'Merkkivalo keskeyttää lähetyksen ja jatkaa sitä' },
   { v: 269, teksti: 'Merkkivalo taas pyöreä, radio matalampi' },
   { v: 269, teksti: 'Taikalasit ovat nyt Varusteet, valikko puoleen' },
