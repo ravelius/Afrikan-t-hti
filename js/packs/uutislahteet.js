@@ -28,3 +28,22 @@ export const UUTISLAHTEET = {
     syote: 'https://www.ansa.it/sito/ansait_rss.xml',
   },
 };
+
+/*
+ * Maan tv-kanava (omistajan toive 5.8.2026): maaosaston mediarivillä
+ * on radion vieressä nappi, josta aukeaa maan uutiskanavan suora
+ * lähetys popup-ikkunaan. Upotus on YouTuben kanavaupotus
+ * (live_stream?channel=...): se seuraa aina kanavan kulloistakin
+ * suoraa lähetystä, joten yksittäisen lähetyksen tunniste ei vanhene.
+ * Ei tarvitse workeria eikä avaimia.
+ *
+ * Italiassa yleisradio Rai ei lähetä YouTubeen — Sky TG24 on maan
+ * uutiskanava, joka lähettää suorana ympäri vuorokauden.
+ */
+export const TV_KANAVAT = {
+  ITA: {
+    nimi: 'Sky TG24',
+    upotus: 'https://www.youtube.com/embed/live_stream'
+      + '?channel=UCz6E3lF72mb6uoJ-mOlNo2A&autoplay=1',
+  },
+};

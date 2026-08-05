@@ -7202,11 +7202,24 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  */
 .postikortti.kulttuuri-suurennos.uutinen-kortti::before { display: none; }
 
+/*
+ * MIKSI PAPERI ON TÄSSÄ ELEMENTILLÄ EIKÄ ::after-KERROKSELLA:
+ * inset: 0 -kerros kattaa vain kortin näkyvän laatikon, ei
+ * vieritettävää ylivuotoa — pitkä käännös valui paperin ohi
+ * (omistajan kuvakaappaus 5.8.2026). Huntu (::before) on tältä
+ * kortilta poissa, joten elementin oma tausta ei jää minkään alle.
+ */
 .postikortti.kulttuuri-suurennos.uutinen-kortti {
   max-height: 84dvh;
   overflow-y: auto;
   padding-right: 2.2rem;
+  background: var(--arkki-paperi, #eedab3);
+  border: 1.5px solid rgba(70, 51, 31, 0.6);
+  border-radius: 8px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
 }
+
+.postikortti.kulttuuri-suurennos.uutinen-kortti::after { display: none; }
 
 .dialog button.uutinen-sulku {
   position: absolute;
@@ -7266,10 +7279,15 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
   .dialog.lehti .arrival-maa .arrival-uutiset {
     grid-column: 2;
-    grid-row: 2 / span 8;
+    grid-row: 2 / span 6;
     margin: 0;
     border-top: 0;
     padding-top: 0;
+  }
+
+  /* Mediarivi heti uutisten alle — ei pääkirjoituksen jälkeen. */
+  .dialog.lehti .arrival-maa .maa-media {
+    grid-row: 8;
   }
 
   .dialog.lehti .arrival-maa #arrival-maa-intro { grid-column: 1 / -1; }
@@ -7319,4 +7337,82 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   border: 3px solid #f7efdc;
   outline: 1px solid rgba(70, 51, 31, 0.35);
   border-radius: 2px;
+}
+
+/*
+ * Sähkeen pikkukuva otsikon vieressä (omistajan toive 5.8.2026):
+ * pieni neliö vasemmalla, otsikko suomennoksineen oikealla. Ilman
+ * kuvaa rivi on pelkkää tekstiä — luokka kuvallinen kytkee ruudukon
+ * vasta kun kuva on oikeasti saatu.
+ */
+.dialog .uutiset-lista button.uutinen-rivi.kuvallinen {
+  display: grid;
+  grid-template-columns: 3.4rem 1fr;
+  gap: 0.55rem;
+  align-items: start;
+}
+
+.dialog .uutiset-lista button.uutinen-rivi img {
+  width: 3.4rem;
+  height: 3.4rem;
+  object-fit: cover;
+  border: 2px solid #f7efdc;
+  outline: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 2px;
+}
+
+.uutinen-rivi-teksti { display: block; min-width: 0; }
+
+/*
+ * Mediarivi: maan radio ja tv-nappi vierekkäin. Lehtitaitossa rivi
+ * istuu uutisten alla oikeassa palstassa, jossa on tilaa.
+ */
+.maa-media {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.6rem 0 0.2rem;
+}
+
+@media (min-width: 641px) {
+  .dialog.lehti .arrival-maa .maa-media {
+    grid-column: 2;
+    margin-top: 0.5rem;
+  }
+}
+
+/*
+ * Tv-popup: tumma huntu saa jäädä — lähetys katsotaan kuin elokuva.
+ * Paperi on ::after-kerroksena hunnun ja sisällön välissä (sama syy
+ * kuin vuosisäässä: huntu maalautuisi elementin oman taustan päälle).
+ */
+.postikortti.kulttuuri-suurennos.tv-kortti {
+  width: min(94vw, 720px);
+  padding: 0.9rem 1rem;
+  color: #2d2010;
+}
+
+.postikortti.kulttuuri-suurennos.tv-kortti::before { z-index: -2; }
+
+.postikortti.kulttuuri-suurennos.tv-kortti::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--arkki-paperi, #eedab3);
+  border: 1.5px solid rgba(70, 51, 31, 0.6);
+  border-radius: 8px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+}
+
+.tv-kortti .tv-otsikko { margin-right: 1.6rem; }
+
+.tv-upotus {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 3px solid #f7efdc;
+  outline: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 2px;
+  background: #000;
 }

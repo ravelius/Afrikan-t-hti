@@ -70,8 +70,13 @@ vaadi koodimuutoksia:
   otsikko, suomennos heti sen alla kevyellä kursiivilla (ilman
   etikettiä), KOKO artikkelin leipäteksti uutissivulta
   ([itemprop="articleBody"]; syötteen kuvaus on varateksti) ja
-  "Käännä suomeksi" -nappi leipätekstille. Etusivulle ei lisätä
-  käännöksiä eikä selitetekstejä.
+  "Käännä suomeksi" -nappi, jonka käännös KORVAA alkuperäisen (nappi
+  vaihtaa niiden välillä — molemmat eivät mahdu kortille). Sähkeillä
+  on suomennos otsikon alla ja artikkelin pikkukuva vieressä.
+- **Mediarivi (v284):** maan radio ja tv-kanavan suora lähetys
+  vierekkäin uutisten alla (`TV_KANAVAT` uutislahteet.js:ssä;
+  YouTuben kanavaupotus live_stream?channel=... seuraa aina
+  kulloistakin lähetystä). Tv aukeaa popupiin 16:9-upotuksena.
 - **Minitehtävä:** aihe voi kantaa `tehtava: { kysymys, vaihtoehdot,
   oikea, fakta }` (pilotti: Italian Ruoka). Se piirtyy sivun loppuun
   kuponkimaisena tehtäväpalstana, ja vastaus LÖYTYY SAMAN SIVUN
