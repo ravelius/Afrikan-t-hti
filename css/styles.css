@@ -2589,48 +2589,6 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * leikkautuisi pois.
  */
 /*
- * KAHVA ROIKKUU LAUKUN ULKOPUOLELLA.
- *
- * Omistaja 5.8.2026: *"kahva pitäisi olla laukun (rajan) ulkopuolella,
- * läpinäkyvänä kartan päällä."* Ensin se oli kortin sisällä, koska
- * kortilla on `overflow: hidden` — mutta silloin se ei ollut kahva vaan
- * kortille piirretty kuva kahvasta.
- *
- * Nyt kahva on kortin SISAR ja asemoitu kortin alapuolelle. `<dialog>`
- * on auki ollessaan `position: absolute`, joten se kelpaa
- * sijoituskehykseksi sellaisenaan, ja `.dialog`illa on jo
- * `overflow: visible`.
- *
- * Kaaren silmukan läpi näkyy kartta, kuten oikeassa kahvassa — juuri se
- * tekee siitä esineen eikä kuvion.
- *
- * `pointer-events: none`, jotta napautus kahvan kohdalla menee läpi
- * dialogille ja sulkee laukun kuten muukin ulkopuoli.
- */
-.laukku-kahva {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.laukku-kahva span {
-  width: 92px;
-  height: 26px;
-  /* Sama nahka kuin kortin reunuksessa, jotta kahva on samaa laukkua. */
-  border: 8px solid #2b2015;
-  border-top: 0;
-  border-radius: 0 0 24px 24px;
-  /* Varjo kartalle: kahva on laukun edessä eikä kartan sisällä. */
-  box-shadow:
-    inset 0 -2px 0 rgba(226, 196, 150, 0.18),
-    0 4px 8px rgba(20, 12, 4, 0.4);
-}
-
-/*
  * AARNIN LUETTELO vihreän passin tilalla.
  *
  * Rivi eikä ruudukko: luettelo on luettelo, ja nimet ovat eri mittaisia

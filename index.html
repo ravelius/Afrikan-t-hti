@@ -410,17 +410,8 @@
          muissakin kartan päälle avautuvissa korteissa. Esc sulkee yhä,
          koska <dialog> hoitaa sen itse. -->
    </div>
-   <!--
-     Nahkakahva roikkuu laukun ALAPUOLELLA kartan päällä (omistajan toive
-     5.8.2026: "kahva pitäisi olla laukun (rajan) ulkopuolella,
-     läpinäkyvänä kartan päällä").
-
-     Siksi se on kortin SISAR eikä lapsi: kortilla on `overflow: hidden`
-     (kulmavahvikkeet vaativat sen), ja sen sisällä kaari leikkautuisi
-     kortin reunaan. Kaaren silmukan läpi näkyy kartta, kuten oikeassa
-     kahvassa. Koriste, ei nappi.
-   -->
-   <div class="laukku-kahva" aria-hidden="true"><span></span></div>
+   <!-- Kahva poistettu v291:ssa (omistaja: "on siistimpi niin").
+        Nahkareunus, ommel ja messinkikulmat kertovat laukun jo. -->
   </dialog>
 
   <!-- Pelin nimikilpi: tekijänoikeus, tekijätiedot ja luettelo kaikista
