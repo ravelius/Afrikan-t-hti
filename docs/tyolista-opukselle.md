@@ -5282,6 +5282,38 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v293 — Tehosteäänet pois kolmea lukuun ottamatta (5.8.2026)
+
+Omistaja: *"Kytke pois kaikki syntetisoidut tehosteäänet, kun näppäimiä
+painetaan ja kaikki muutkin. Lentokoneen ääni voi jäädä, sekä tietenkin
+kaupunkiäänet ja kertojaäänet, mutta nämä pienet lyhyet äänitehosteet
+ota kaikki pois, paitsi nopanheiton ääni."*
+
+**Sallittu lista eikä poistettu koodi.** Synteesi ja äänitteet ovat yhä
+paikoillaan (`SOUNDS`, `REAL_SAMPLES`, `REAL_PLAYERS`), ja yhden rivin
+lisäys `SALLITUT_TEHOSTEET`-joukkoon palauttaa minkä tahansa niistä.
+Poistettuna ne olisivat satoja rivejä pois, ja takaisin kirjoittaminen
+olisi oma työnsä.
+
+Listalla on neljä: `dieTick` ja `dieLand` (nopanheitto), `flight`
+(lentokone) ja `ferry`. Laivaa ei nimetty pyynnössä, mutta se on lennon
+pari: sama tarkoitus (matkustustavan ääni), sama pituus (2,6 s vs
+2,1 s) ja sama paikka pelissä. Toisen jättäminen ja toisen poistaminen
+kuulostaisi vialta eikä valinnalta — kerrottu omistajalle.
+
+Rajaus koskee myös latausta: soittamattomia mp3-tiedostoja ei enää
+haeta verkosta.
+
+Muut äänijärjestelmät jatkavat ennallaan: kaupunkien äänimaisema,
+kertojan luennat, visamusiikki ja radio kulkevat omia reittejään
+eivätkä `play()`:n kautta.
+
+**Testit vaihtoivat puolta.** Ennen testi ajoi kaikki 25 nimeä ja vaati
+jokaiselta äänilähteen. Nyt neljä soivaa testataan samoin, ja 24
+vaiennettua saivat oman testinsä, joka vaatii nolla äänilähdettä.
+Vaiennettujen lista on käsin kirjoitettu eikä johdettu koodista: jos
+joku poistaa kytkimen, testin pitää huomata se eikä seurata mukana.
+
 ## v292 — Valikkoon ilmaa, lähdelinkki pois (5.8.2026)
 
 Omistaja: *"Napit eivät ole keskitetty. Lisäksi liian pienet
