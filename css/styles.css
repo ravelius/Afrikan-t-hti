@@ -3056,6 +3056,36 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  */
 body.linssi-valokuva .grain { display: none; }
 
+/*
+ * VESISTÖLINSSI: KAUPUNGIT TAKA-ALALLE, VEDEN NIMET ETEEN.
+ *
+ * Omistaja 5.8.2026: *"kaupunkien tekstit voisi laittaa haaleammalla ja
+ * kaupunkien pallot myös, mutta jokien nimet saisi näkyä tummemmalla."*
+ *
+ * Miksi tämä on CSS eikä linssin oma piirto: kaupungit ja maastonimet
+ * ovat linssin YLÄPUOLELLA kartan omassa puussa (js/ui.js — `cities`
+ * luodaan linssikerroksen jälkeen, `maastonimet` on suoraan <svg>:n
+ * lapsi). Linssi ei siis voi himmentää niitä piirtämällä, ja
+ * sopimuksen mukaan se ei saa antaa elementeille luokkia. Sävy on
+ * näkymän ominaisuus, ja näkymä merkitään body-luokalla
+ * (js/linssit/kerros.js merkitseLuokat).
+ *
+ * Peittävyys eikä väri: nimessä on paperinvärinen ulkoviiva
+ * (paint-order: stroke), ja pelkkä täytön haalistus jättäisi viivan
+ * kellumaan ilman tekstiä.
+ */
+body.linssi-vesistot .cities .city-label { opacity: 0.34; }
+body.linssi-vesistot .cities .city,
+body.linssi-vesistot .cities .city-start,
+body.linssi-vesistot .cities .city-gate,
+body.linssi-vesistot .cities .airport,
+body.linssi-vesistot .cities .coast-soft { opacity: 0.38; }
+/* Veden nimet täyteen mustepeittoon: ne ovat tämän näkymän asia. */
+body.linssi-vesistot .maastonimi-joki .maastonimi-teksti,
+body.linssi-vesistot .maastonimi-jarvi .maastonimi-teksti {
+  fill: rgba(20, 44, 68, 0.98);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .linssi { transition: none; }
 }

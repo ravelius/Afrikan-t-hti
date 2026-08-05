@@ -115,18 +115,14 @@ async function esilataa(osoite) {
 const MEREN_POHJA = '#5d5340';
 
 /*
- * Laudan ulkopuolisen kaistan sävyt: kuvan ylimmän ja alimman
- * kuvarivin keskiarvo.
+ * Kuinka monikertaiseksi kuva venytetään kaistaa piirrettäessä.
  *
- * Sävyjä ei valittu silmällä eikä otettu selitteestä. Kaista on kuvan
- * jatke, joten sen on oltava täsmälleen se väri, johon kuva reunallaan
- * päättyy — muuten raja näkyy viivana. Luvut on mitattu
- * assets/linssit/topografia.webp:stä (3600 x 1620): kuuden ylimmän
- * rivin keskiarvo rgb(129,163,179) eli Jäämeren jää ja matala hylly,
- * ja kuuden alimman rgb(38,75,138) eli Eteläisen jäämeren syvänne.
+ * Kaista rajataan omaan korkeuteensa, joten venytetystä kuvasta jää
+ * näkyviin vain 1/90 — eli ylimmät (tai alimmat) 18 kuvariviä 1620:sta.
+ * Ne kantavat kuvan oman VAAKASUUNTAISEN vaihtelun: jäätä, avomerta ja
+ * mannerta siellä missä niitä on.
  */
-const KAISTA_POHJOINEN = 'rgb(129,163,179)';
-const KAISTA_ETELA = 'rgb(38,75,138)';
+const KAISTAN_VENYTYS = 90;
 
 const SELITERIVIT = [
   { vari: '#e8e8eb', teksti: 'Lumiraja, yli 6000 m' },
@@ -139,6 +135,91 @@ const SELITERIVIT = [
   { vari: MEREN_POHJA, teksti: 'Valtameren pohja' },
   { vari: '#3f382a', teksti: 'Syvänne, yli 6000 m' },
 ];
+
+/**
+ * Reliefikartta kaistoineen annettuun ryhmään.
+ *
+ * Vietiin ulos, koska vesistölinssi rakentuu saman pohjan päälle
+ * (omistajan toive 5.8.2026): kaksi linssiä, yksi kuva ja yksi tapa
+ * piirtää se.
+ *
+ * @param ryhma       elävä <g>
+ * @param raja        { x, y, leveys, korkeus } laudan rajasuorakulmio
+ * @param osoite      kuvan osoite
+ * @param peittavyys  0–1
+ * @param tunniste    yksilöi rajauspolut, kun samalla sivulla on kaksi
+ */
+export function piirraReliefi(ryhma, raja, osoite, peittavyys, tunniste = 'topo') {
+  /*
+   * MERI LAUDAN YLÄ- JA ALAPUOLELLE.
+   *
+   * Näkyvä alue ulottuu laudan yli sekä ylhäältä että alhaalta:
+   * lähikuvassa laudan pohjois- ja eteläpuolelle varataan kaista, jotta
+   * reunimmaiset kaupungit saa panoroitua yläpalkin ja alanappien alta
+   * esiin (ui.js YLAKAISTA ja ALAKAISTA). Korkeuskuva loppuu laudan
+   * reunaan, joten kaistaan jäi pergamenttia keskelle merta.
+   *
+   * KAISTA ON KUVAN JATKE, EI TASAINEN VÄRI. Ensin kaista täytettiin
+   * kuvan reunarivien KESKIARVOLLA, ja omistaja raportoi: "aivan ylin
+   * pohjoinen jää harmaaksi, sieltä puuttuu värit". Keskiarvo oli syy —
+   * ylimmällä kuvarivillä on vierekkäin vihreää mannerta (75,105,59),
+   * syvää merta (61,108,170) ja kirkasta jäätä (167,208,235), ja niiden
+   * keskiarvo on harmaansininen (129,163,179). Yksi luku ei voi esittää
+   * kolmea eri paikkaa.
+   *
+   * Nyt kaista on sama kuva venytettynä ja rajattuna niin, että siitä
+   * näkyy vain reunimmainen kaistale. Vaakasuuntainen vaihtelu säilyy,
+   * eikä uutta aineistoa tarvittu.
+   */
+  const kaista = raja.korkeus;
+  const venytys = kaista * KAISTAN_VENYTYS;
+
+  const reuna = (ylhaalla) => {
+    const nimi = `${tunniste}-kaista-${ylhaalla ? 'p' : 'e'}`;
+    const rajaus = el('clipPath', { id: nimi }, ryhma);
+    el('rect', {
+      x: raja.x,
+      y: ylhaalla ? raja.y - kaista : raja.y + raja.korkeus,
+      width: raja.leveys,
+      height: kaista,
+    }, rajaus);
+    el('image', {
+      x: raja.x,
+      // Pohjoisessa kuvan YLÄreuna asetetaan kaistan yläreunaan, jolloin
+      // rajaukseen osuu kuvan ylin 1/90. Etelässä sama toisin päin.
+      y: ylhaalla
+        ? raja.y - kaista
+        : raja.y + raja.korkeus + kaista - venytys,
+      width: raja.leveys,
+      height: venytys,
+      href: osoite,
+      preserveAspectRatio: 'none',
+      opacity: peittavyys,
+      'clip-path': `url(#${nimi})`,
+    }, ryhma);
+  };
+  reuna(true);
+  reuna(false);
+
+  el('image', {
+    x: raja.x,
+    y: raja.y,
+    width: raja.leveys,
+    height: raja.korkeus,
+    href: osoite,
+    preserveAspectRatio: 'none',
+    opacity: peittavyys,
+  }, ryhma);
+}
+
+/** Kuvan sijaintitiedot ja itse kuva valmiiksi ladattuina. */
+export async function lataaReliefi() {
+  if (!kuvatiedot) {
+    ({ TOPOGRAFIA_KUVA: kuvatiedot } = await import('../packs/linssi-topografia-kuva.js'));
+  }
+  await esilataa(kuvatiedot.kuva);
+  return kuvatiedot;
+}
 
 export const LINSSI = {
   tunnus: 'topografia',
@@ -191,10 +272,7 @@ export const LINSSI = {
    * ensimmäistä piirtoa.
    */
   async lataa() {
-    if (!kuvatiedot) {
-      ({ TOPOGRAFIA_KUVA: kuvatiedot } = await import('../packs/linssi-topografia-kuva.js'));
-    }
-    await esilataa(kuvatiedot.kuva);
+    await lataaReliefi();
   },
 
   /**
@@ -220,52 +298,8 @@ export const LINSSI = {
      */
     if (tila.leveys !== raja.leveys || tila.korkeus !== raja.korkeus) return false;
 
-    /*
-     * MERI LAUDAN YLÄ- JA ALAPUOLELLE.
-     *
-     * Näkyvä alue ulottuu laudan yli sekä ylhäältä että alhaalta:
-     * lähikuvassa laudan pohjois- ja eteläpuolelle varataan kaista,
-     * jotta reunimmaiset kaupungit saa panoroitua yläpalkin ja
-     * alanappien alta esiin (ui.js YLAKAISTA ja ALAKAISTA). Korkeuskuva
-     * loppuu laudan reunaan, joten kaistaan jäi pergamenttia keskelle
-     * merta — omistajan havainto: "Yläreunasta puuttuu topografiavärit."
-     *
-     * Kaista täytetään valtameren pohjan sävyllä, koska sitä siellä on:
-     * lauta katkeaa 76. pohjoiselle ja 58. eteläiselle leveyspiirille, ja
-     * niiden takana on Jäämeri ja Eteläinen jäämeri. Väri on sama kuin
-     * seliterivillä "Valtameren pohja", joten kaista ei ole oma
-     * sävynsä vaan kartan jatke.
-     *
-     * Kaista on reilu: se ei voi olla liian iso, koska kuva piirtyy sen
-     * päälle ja rajaus leikkaa loput.
-     */
-    const kaista = raja.korkeus;
-    el('rect', {
-      x: raja.x,
-      y: raja.y - kaista,
-      width: raja.leveys,
-      height: kaista,
-      fill: KAISTA_POHJOINEN,
-      opacity: PEITTAVYYS,
-    }, ryhma);
-    el('rect', {
-      x: raja.x,
-      y: raja.y + raja.korkeus,
-      width: raja.leveys,
-      height: kaista,
-      fill: KAISTA_ETELA,
-      opacity: PEITTAVYYS,
-    }, ryhma);
-
-    el('image', {
-      x: raja.x,
-      y: raja.y,
-      width: raja.leveys,
-      height: raja.korkeus,
-      href: kuvatiedot.kuva,
-      preserveAspectRatio: 'none',
-      opacity: PEITTAVYYS,
-    }, ryhma);
+    // Kuva ja sen ylä- ja alakaistat; ks. piirraReliefi.
+    piirraReliefi(ryhma, raja, kuvatiedot.kuva, PEITTAVYYS);
     return true;
   },
 

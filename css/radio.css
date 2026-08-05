@@ -153,7 +153,17 @@
    * kutistua. Jos aukko joskus muuttuu, tämä luku on laskettava
    * uudelleen samasta paikasta.
    */
-  max-width: 470px;
+  /*
+   * 470 -> 478: LASKU OLI KAHDEKSAN PIKSELIÄ PIELESSÄ.
+   *
+   * "Merkkivalo väleineen 44" oli arvio. Mitattuna se on 26 px lasia +
+   * 2 × 11,2 px marginaalia = 48,4, ja kotelon oma tila on 2 × 9,6 px
+   * täytettä + 2 × 1 px reunaa = 21,2. Yhteensä 408 + 48,4 + 21,2 =
+   * 477,6. Vanhalla 470:llä aukko jäi 387,6 px:iin eli 20 pikseliä
+   * luvattua kapeammaksi, ja pistenäytön ruudukko venyi väärään
+   * kokoon. Nyt aukko on tasan 408.
+   */
+  max-width: 478px;
   display: flex;
   /*
    * RIVITYS ON PUHELINTA VARTEN, EI TABLETTIA.
@@ -516,12 +526,20 @@
 
 .radio-keskio {
   /*
-   * Keskiön leveys on kiinteä, ei venyvä. Se on näytön leveys (408) +
-   * merkkivalo väleineen (32): jos keskiö venyisi ruudun mukana, näyttö
-   * kutistuisi sen mukana eikä luvattu 408 × 68 pitäisi paikkaansa.
-   * Ylijäävä leveys menee kaiuttimelle, jolle koko on vapaa.
+   * KESKIÖ TÄYTTÄÄ KOTELON, EI JÄTÄ OIKEAAN LAITAAN VAJAATA.
+   *
+   * Perusleveys oli `0 1 440px` ajalta, jolloin kotelossa oli myös
+   * kaiutinsäleikkö: ylijäävä leveys kuului sille. Säleikkö poistettiin
+   * v268:ssa, ja 440 jäi. Kotelon sisämitta on 456,4 px (478 − 2 × 1 px
+   * reunaa − 2 × 9,6 px täytettä), joten keskiö — ja sen mukana
+   * viritysnauha — loppui **8,8 pikseliä ennen oikeaa laitaa** ollen
+   * vasemmalla tasan reunassa. Omistaja: "viritysnauha, missä on
+   * kaupunkien nimet, jää vähän vajaaksi oikeassa reunassa."
+   *
+   * `1 1 440px` antaa kasvaa. 440 jää perusleveydeksi kapeille
+   * ruuduille, joilla `max-width: 100%` hoitaa kutistumisen.
    */
-  flex: 0 1 440px;
+  flex: 1 1 440px;
   max-width: 100%;
   min-width: 0;
   display: flex;
@@ -539,7 +557,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
+  /*
+   * VÄLI TULEE LAMPUN OMASTA MARGINAALISTA, EI TÄSTÄ.
+   *
+   * Kun rivissä oli sekä `gap: 0.55rem` että lampun epäsymmetrinen
+   * marginaali (0,4 rem vasemmalle, 0,7 rem oikealle), lampun molemmin
+   * puolin jäi eri määrä puuta: mitattuna 15,2 px vasemmalla ja 11,2 px
+   * oikealla. Omistaja: "virtanappi ei ole aivan keskellä sille
+   * varattua tilaa." Yksi lähde välille pitää sen symmetrisenä
+   * itsestään.
+   */
+  gap: 0;
 }
 
 /*
@@ -741,11 +769,15 @@
   width: 26px;
   height: 26px;
   /*
-   * Omaa tilaa molemmin puolin. Hehku vuotaa lampun rajojen yli, ja
-   * jos naapuri on kiinni siinä, kajo osuu naapurin pintaan eikä
-   * puuhun — silloin se lukee likana eikä valona.
+   * Omaa tilaa molemmin puolin, SAMAN VERRAN. Hehku vuotaa lampun
+   * rajojen yli, ja jos naapuri on kiinni siinä, kajo osuu naapurin
+   * pintaan eikä puuhun — silloin se lukee likana eikä valona.
+   *
+   * Symmetria on tässä koko juju: lamppu on ainoa esine näytön oikealla
+   * puolella, ja silmä keskittää sen sille jäävään puukenttään. Ks.
+   * .radio-naytto-kehys, jonka `gap` on nollattu samasta syystä.
    */
-  margin: 0 0.7rem 0 0.4rem;
+  margin: 0 0.7rem;
   /* Hehku saa vuotaa lampun rajojen yli — se on koko idea. */
   overflow: visible;
   /*

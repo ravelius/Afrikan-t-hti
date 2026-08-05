@@ -304,6 +304,15 @@ nappulan merkki on nyt ◈). Nimistö, joka on käytössä v229:stä alkaen:
 
 ## Avoimet asiat
 
+**Matkakirjan kuvien ja tekstien vastaavuus** (omistaja 5.8.2026):
+*"jossain välissä pitää tarkistaa, että matkakirjan kuvat vastaavat
+tarpeeksi hyvin matkakirjan tekstejä eri kaupungeissa. Esimerkiksi
+Quiton tekstissä puhutaan viivasta, jonka päälle voi astua, mutta
+minusta sitä ei näy ainakaan niissä kuvissa."* Käytävä läpi ne
+kaupungit, joiden teksti viittaa konkreettiseen yksityiskohtaan: joko
+kuva vaihdetaan sellaiseen joka näyttää sen, tai teksti muutetaan
+vastaamaan kuvaa. Ei vielä aloitettu.
+
 **Media-repon PR:t #1 ja #2 on yhdistetty** (1.8.2026), joten peili on
 käytössä ja sisältää myös Euroopan kaupunkiäänitykset.
 
@@ -5281,6 +5290,104 @@ jonka olisi huomannut vasta omistaja:
 näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
+
+## v296 — Vesistölinssi maastokartan päälle ja radion mitat (5.8.2026)
+
+Kolme asiaa samassa julkaisussa.
+
+### 1. Topografian pohjoisreuna sai omat värinsä
+
+Omistaja: *"Topografialinssissä aivan ylin pohjoinen jää harmaaksi.
+Sieltä puuttuu värit."*
+
+Lauta ulottuu kuvan ylä- ja alapuolelle (ui.js YLAKAISTA, ALAKAISTA), ja
+kaista täytettiin kuvan reunarivien **keskiarvolla**. Mitattuna
+assets/linssit/topografia.webp -kuvan ylimmällä rivillä on vierekkäin
+vihreää mannerta (75,105,59), syvää merta (61,108,170) ja kirkasta jäätä
+(167,208,235) — ja niiden keskiarvo on tasan se harmaansininen
+(129,163,179), jonka omistaja näki. **Yksi luku ei voi esittää kolmea
+eri paikkaa.**
+
+Nyt kaista on sama kuva venytettynä 90-kertaiseksi ja rajattuna niin,
+että siitä näkyy vain ylin (tai alin) 1/90 eli noin 18 kuvariviä.
+Vaakasuuntainen vaihtelu säilyy, eikä uutta aineistoa tarvittu.
+
+Piirto vietiin ulos funktiona `piirraReliefi()`, jotta vesistölinssi voi
+rakentua saman pohjan päälle.
+
+### 2. Vesistölinssi rakennettiin topografian päälle
+
+Omistaja: *"Jokilinssissä kaupunkien tekstit voisi laittaa haaleammalla
+ja kaupunkien pallot myös, mutta jokien nimet saisi näkyä tummemmalla.
+Joista voisi tehdä nyt enemmän kolmiulotteisen näköisiä. Ja koko
+Jokilinssin voisi itse asiassa rakentaa topografiakartan päälle. Silloin
+saataisiin meretkin hienosti näkyviin. Jolloin myös joet voisivat olla
+sinisen eri sävyissä."*
+
+Vanha pohja oli vaalea pergamenttihuntu. Se erotti uomat, mutta hukkasi
+kaksi asiaa: meret olivat tyhjää paperia, eikä kartasta näkynyt MIKSI
+joki kulkee juuri siinä. Reliefipohja perustelee itsensä — laakso näkyy
+uoman alla.
+
+Joki on nyt kaksi vetoa samaa polkua: leveämpi tumma penger alle ja
+kapeampi kirkas uoma päälle. Silmä lukee parin uraksi.
+**Ensimmäinen mitoitus (uoma 2,6 / penger 5,0) ei toiminut:** ruudulta
+mitattuna pari suli yhdeksi siniseksi viivaksi, koska 1,2 pikselin reuna
+on tavallisella näytöllä alle kokonaisen pikselin. Penger on nyt uoma +
+3 px eli 1,5 px kummallakin puolella, ja ura piirtyy.
+
+Sävyt poimittiin reliefikuvan omasta merestä (avomeri 57,104,165), joten
+joki ja meri ovat samaa vettä.
+
+**Elementtimäärä on mitoitettu, ei sattuma.** Rasteroitu linssi ajetaan
+blob-hiekkalaatikossa, joka ei hae ulkoisia osoitteita — rasteroituna
+reliefikuva palauttaisi läpinäkyvän tyhjän ilman yhtäkään virhettä
+lokissa. Mitattu selaimessa: **302 elementtiä**, katto 400. Penger
+piirretään siksi vain luokille 1 ja 2 (84 jokea 169:stä); luokan 3
+uomassa (1,3 px) sama lisäys tekisi siitä leveämmän kuin luokan 2 koko
+ura, eli tärkeysjärjestys katoaisi.
+
+Kaupunkien haalistus ja veden nimien tummennus ovat CSS:ssä
+(`body.linssi-vesistot`), koska kaupungit ja maastonimet ovat linssin
+YLÄPUOLELLA kartan omassa puussa eikä linssi saa antaa elementeille
+luokkia.
+
+### 3. Radion nauha reunaan asti ja merkkivalo keskelle
+
+Omistaja: *"Radion virtanappi ei ole aivan keskellä sille varattua
+tilaa. Lisäksi myös viritysnauha, missä on kaupunkien nimet, jää vähän
+vajaaksi oikeassa reunassa, ainakin iPadille."*
+
+Molemmat olivat mittavirheitä, ja molemmat näkyivät numeroina:
+
+| kohta | ennen | nyt |
+| --- | --- | --- |
+| nauhan vara vasemmalla | 0 px | 0 px |
+| nauhan vara oikealla | 8,8 px | 0 px |
+| lampun väli vasemmalla | 15,2 px | 11,2 px |
+| lampun väli oikealla | 11,2 px | 11,2 px |
+| näytön aukko | 387,6 px | 408 px |
+
+Nauhan vika: `.radio-keskio` oli `flex: 0 1 440px` ajalta, jolloin
+kotelossa oli myös kaiutinsäleikkö ja ylijäävä leveys kuului sille.
+Säleikkö poistettiin v268:ssa, 440 jäi. Nyt `1 1 440px`.
+
+Lampun vika: väli tuli kahdesta lähteestä, rivin `gap` (8,8) ja lampun
+epäsymmetrinen marginaali (6,4 vasemmalle, 11,2 oikealle). Nyt väli
+tulee vain marginaalista, symmetrisenä.
+
+Sivutuotteena selvisi, että kotelon leveys 470 oli laskettu väärin
+("merkkivalo väleineen 44" oli arvio, oikea luku on 48,4). 478 antaa
+näytön aukolle tasan sen 408 pikseliä, joka sille on koko ajan luvattu.
+
+### Opittua
+
+**Keskiarvo ei ole reunan jatke.** Kun kuva loppuu ja jotain on
+piirrettävä sen taakse, oikea vastaus on venyttää kuvaa — ei laskea
+siitä yhtä lukua.
+
+**Kaksi lähdettä samalle välille tuottaa epäsymmetrian.** Sekä `gap`
+että marginaali toimivat, mutta yhdessä ne eivät ole keskitys.
 
 ## v293 — Tehosteäänet pois kolmea lukuun ottamatta (5.8.2026)
 
