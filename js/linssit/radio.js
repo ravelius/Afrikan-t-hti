@@ -1234,8 +1234,24 @@ const MITTAUS_KUOLLUT_MS = 1500;
  * kuolleeksi — työpöytäselain ei päädy tänne koskaan.
  */
 const VERHON_IKKUNA_S = 0.12;
-// ~1,5 s 128 kbit/s -virtaa ennen kuin pätkä puretaan.
-const VARAMITTAUKSEN_PATKA = 24 * 1024;
+/*
+ * ~0,5 s 128 kbit/s -virtaa ennen kuin pätkä puretaan. Erä oli ensin
+ * 24 kt (1,5 s), ja se näkyi neulassa laahauksena: verho piteni vain
+ * puolentoista sekunnin harppauksin, ja lukija roikkui erien välissä
+ * viimeisessä ikkunassa (omistaja 5.8.2026: "saako lagia pois?").
+ * Pienempi erä maksaa vain purkukutsuja, ja niitä on kaksi sekunnissa.
+ */
+const VARAMITTAUKSEN_PATKA = 8 * 1024;
+/*
+ * Kuinka kauan ensimmäisestä tavusta luetaan "purskeeksi". Suoratoisto-
+ * palvelin syöttää uudelle kuuntelijalle alkuun useiden sekuntien
+ * puskurin kerralla (Icecastin burst), ja se saapuu linjanopeudella —
+ * sekunnissa on siis koossa lähes koko purske, ja sen koosta voidaan
+ * laskea, paljonko myös ELEMENTTI on livestä jäljessä: elementti sai
+ * samalta palvelimelta saman purskeen ja soittaa sen alusta.
+ */
+const PURSKEEN_MITTAUS_MS = 900;
+const VIIVE_OLETUS_MS = 2500;
 // Jos verhoa ei synny tässä ajassa, nouto ei toimi ja jäljitelmä jää.
 const VARAMITTAUKSEN_AIKARAJA_MS = 8000;
 
@@ -1253,8 +1269,25 @@ function kaynnistaVaramittaus(virta) {
   if (!ctx || typeof ctx.decodeAudioData !== 'function' || !url) return null;
   if (typeof fetch !== 'function' || typeof AbortController !== 'function') return null;
   const ohjain = new AbortController();
-  const verho = [];
-  let verhoAlku = 0;
+  /*
+   * Verho kahtena rinnakkaisena taulukkona: arvo ja SE SEINÄKELLON
+   * HETKI, jona ikkunan ääni suunnilleen lähetettiin. Aiempi versio
+   * ankkuroi kellon verhon ALKUUN ja luki sitä tasatahtiin — mutta
+   * verhon alku on palvelimen purske eli sekunteja vanhaa ääntä, ja
+   * neula laahasi koko sen matkan (omistajan "lagi"). Nyt jokainen
+   * purettu pätkä ankkuroidaan saapumishetkeensä: purskeen jälkeen
+   * virta saapuu lähetystahdissa, joten pätkän VIIMEINEN ikkuna on
+   * ääntä "juuri äsken" ja aiemmat ikkunat 0,12 s välein taaksepäin.
+   */
+  const verhoArvot = [];
+  const verhoAjat = [];
+  let osoitin = 0;
+  // Elementin arvioitu jälkeenjääneisyys livestä: purskeen kesto.
+  let viiveMs = VIIVE_OLETUS_MS;
+  let ekaTavu = 0;
+  let pursketta = 0;
+  let purettujaTavuja = 0;
+  let purettujaSekunteja = 0;
   let paattynyt = false;
   (async () => {
     try {
@@ -1265,6 +1298,8 @@ function kaynnistaVaramittaus(virta) {
       for (;;) {
         const { done, value } = await lukulaite.read();
         if (done) break;
+        if (!ekaTavu) ekaTavu = kello();
+        if (kello() - ekaTavu < PURSKEEN_MITTAUS_MS) pursketta += value.length;
         const jatko = new Uint8Array(puskuri.length + value.length);
         jatko.set(puskuri);
         jatko.set(value, puskuri.length);
@@ -1274,11 +1309,16 @@ function kaynnistaVaramittaus(virta) {
         const pala = raja >= 0 ? puskuri.slice(raja) : null;
         puskuri = new Uint8Array(0);
         if (!pala) continue;
+        // Pituus talteen ENNEN purkua: decodeAudioData irrottaa
+        // puskurin, ja irrotetun taulukon pituus lukee nollaa.
+        const palanPituus = pala.length;
         try {
           // slice() teki jo oman kopionsa, joten bufferin saa antaa pois.
           const aani = await ctx.decodeAudioData(pala.buffer);
           const data = aani.getChannelData(0);
           const askel = Math.max(64, Math.round(aani.sampleRate * VERHON_IKKUNA_S));
+          const saapui = kello();
+          const uusia = [];
           for (let i = 0; i + askel <= data.length; i += askel) {
             // Joka kahdeksas näyte riittää RMS:ään: verho on 0,12 s:n
             // keskiarvo eikä tarkkuusmittaus.
@@ -1288,14 +1328,30 @@ function kaynnistaVaramittaus(virta) {
               summa += data[j] * data[j];
               maara += 1;
             }
-            verho.push(Math.sqrt(summa / Math.max(1, maara)));
+            uusia.push(Math.sqrt(summa / Math.max(1, maara)));
           }
-          if (!verhoAlku && verho.length) verhoAlku = kello();
+          for (let k = 0; k < uusia.length; k += 1) {
+            verhoArvot.push(uusia[k]);
+            verhoAjat.push(saapui - (uusia.length - 1 - k) * VERHON_IKKUNA_S * 1000);
+          }
+          /*
+           * Viive-estimaatti: purskeen tavut kertaa sekuntia/tavu.
+           * Sekunnit tavua kohti saadaan puretusta äänestä itsestään,
+           * joten bittinopeutta ei tarvitse arvata otsakkeista.
+           */
+          purettujaTavuja += palanPituus;
+          purettujaSekunteja += aani.duration;
+          if (pursketta > 0 && purettujaTavuja > 0
+            && kello() - ekaTavu >= PURSKEEN_MITTAUS_MS) {
+            const arvio = (pursketta * (purettujaSekunteja / purettujaTavuja)) * 1000;
+            viiveMs = Math.min(12000, Math.max(500, arvio));
+          }
           // Verho ei saa kasvaa rajatta tuntien kuuntelussa.
-          if (verho.length > 6000) {
-            const poisto = verho.length - 3000;
-            verho.splice(0, poisto);
-            verhoAlku += poisto * VERHON_IKKUNA_S * 1000;
+          if (verhoArvot.length > 6000) {
+            const poisto = verhoArvot.length - 3000;
+            verhoArvot.splice(0, poisto);
+            verhoAjat.splice(0, poisto);
+            osoitin = Math.max(0, osoitin - poisto);
           }
         } catch {
           // Pätkä ei purkautunut (katkennut kehys) — seuraava yrittää.
@@ -1310,13 +1366,18 @@ function kaynnistaVaramittaus(virta) {
   const lukija = () => {
     const audio = virta.audio;
     if (!audio || audio.paused || audio.ended) return 0;
-    if (!verho.length || !verhoAlku) return 0;
-    let i = Math.floor((kello() - verhoAlku) / (VERHON_IKKUNA_S * 1000));
-    // Nouto voi laahata elementin perässä: pidä viimeisin ikkuna
-    // mieluummin kuin pudota nollaan.
-    if (i >= verho.length) i = verho.length - 1;
-    if (i < 0) i = 0;
-    const rms = verho[i];
+    if (!verhoArvot.length) return 0;
+    /*
+     * Luetaan verhoa hetkestä "nyt miinus elementin viive": elementti
+     * soittaa purskeensa alusta, joten se on livestä jäljessä juuri
+     * purskeen keston verran — ja verho on ankkuroitu liveen. Osoitin
+     * vain etenee, koska aika ja verho etenevät samaan suuntaan.
+     */
+    const kohta = kello() - viiveMs;
+    while (osoitin + 1 < verhoAjat.length && verhoAjat[osoitin + 1] <= kohta) {
+      osoitin += 1;
+    }
+    const rms = verhoArvot[Math.min(osoitin, verhoArvot.length - 1)];
     if (!(rms > 0)) return 0;
     const db = 20 * Math.log10(rms);
     return (db - LAHETYKSEN_POHJA_DB) / (LAHETYKSEN_KATTO_DB - LAHETYKSEN_POHJA_DB);
@@ -1325,6 +1386,7 @@ function kaynnistaVaramittaus(virta) {
     lukija,
     pysayta: () => ohjain.abort(),
     onkoPaattynyt: () => paattynyt,
+    viive: () => viiveMs,
     alkoi: kello(),
   };
 }
@@ -2071,6 +2133,9 @@ export function paalle({
           const tapa = virta.mittaustapa === 'nouto' ? 'NOUDETTU' : 'MITATTU';
           asema = `VU: ${tapa} ${db} DB`;
           kaupunki = `VOL ${Math.round((Number(virta.audio?.volume) || 0) * 100)}`;
+          if (virta.mittaustapa === 'nouto' && virta.varamittaus?.viive) {
+            maa = `VIIVE ${(virta.varamittaus.viive() / 1000).toFixed(1)}S`;
+          }
         } else {
           asema = 'VU: EI LAHDETTA';
         }

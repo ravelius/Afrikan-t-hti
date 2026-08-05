@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 267, teksti: 'VU-neula osuu kuultavaan: viive mitataan pois' },
   { v: 266, teksti: 'VU-neula seuraa nyt lähetystä myös iPadilla' },
   { v: 265, teksti: 'Tutki: Italian aiheet kaikkiin maan kaupunkeihin' },
   { v: 265, teksti: 'Venetsia sai kansisivun, maa sisäsivut' },
