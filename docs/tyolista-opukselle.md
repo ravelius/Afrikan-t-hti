@@ -242,8 +242,11 @@ saavat noudattaa lehtimallia (resepti: docs/tutki-aiheet.md).
 3. ✅ v270: Lehden minitehtävä (`tehtava`-kenttä aiheella; pilotti
    Italian Ruoka) — vastaus löytyy saman sivun tekstistä, +10 puntaa,
    kerran per lehti.
-4. ⏳ Sääennuste etusivulle (Open-Meteo, avaimeton), klikkaus avaa koko
-   vuoden keskilämmön ja sademäärän graafina pelin tyylillä.
+4. ✅ v272: Sääennuste etusivulle (Open-Meteo, avaimeton; ilman
+   verkkoa rivillä lukee kuukausinormaali), napautus avaa koko vuoden
+   keskilämmön ja sademäärän graafina (js/saa.js +
+   js/packs/saatiedot.js — uusi lehtikaupunki tarvitsee vain
+   koordinaatit ja normaalit sinne).
 5. ⏳ "Etsi kätkö" kokonaan uusiksi tarinallisena kohtaamisena: nimetty
    paikallinen hahmo, jonka kautta aarretehtävä aukeaa (pilotti
    Venetsia); napit nimetään uudelleen.

@@ -67,6 +67,10 @@ import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
+import { SAATIEDOT } from './packs/saatiedot.js';
+import {
+  haeSaaTanaan, saaKuvaus, SAA_IKONIT, kuukausiSsa, piirraVuosiSaa,
+} from './saa.js';
 import { EUROPE_VALOKUVAT } from './packs/europe-valokuvat.js';
 import { EUROPE_KIELET } from './packs/europe-kielet.js';
 import { EUROPE_MAATIEDOT } from './packs/europe-maatiedot.js';
@@ -1420,6 +1424,9 @@ export class UI {
     this.arrivalKansi = document.getElementById('arrival-kansi');
     this.arrivalLehtiYla = document.getElementById('arrival-lehti-yla');
     this.arrivalLehtiAla = document.getElementById('arrival-lehti-ala');
+    // Päivän sää maston alla; napautus avaa koko vuoden graafin.
+    this.arrivalSaa = document.getElementById('arrival-saa');
+    this.arrivalSaa.addEventListener('click', () => this.naytaVuosiSaa());
     this.arrivalKulttuuriVisa = document.getElementById('arrival-kulttuuri-visa');
     // Visa aukeaa omasta napistaan samaan näkymään (omistajan toive):
     // nappi väistyy ja kysymys vaihtoehtoineen tulee tilalle.
@@ -6612,6 +6619,7 @@ export class UI {
       ? [maanNimi, `${this.game.dayCount()}. matkapäivä`].filter(Boolean).join(' · ')
       : '';
     this.arrivalLehtiAla.hidden = !lehti;
+    this.naytaLehtiSaa(lehti ? cityId : null);
     this.arrivalLiuskat.replaceChildren();
     this.arrivalLiuskat.hidden = true;
     this.tutkiSivut = kategoriat;
@@ -6803,6 +6811,59 @@ export class UI {
     paivitaVakanen();
   }
 
+
+  /**
+   * Päivän sää lehden mastoon (omistajan toive 5.8.2026). Rivillä
+   * lukee heti kuukauden normaali — se toimii ilman verkkoa — ja
+   * ennusteen valmistuttua tilalle vaihtuu tämä päivä. Rivi on nappi:
+   * napautus avaa koko vuoden graafin (naytaVuosiSaa).
+   */
+  naytaLehtiSaa(cityId) {
+    const tiedot = cityId ? SAATIEDOT[cityId] : null;
+    this.lehtiSaaTiedot = tiedot ?? null;
+    this.arrivalSaa.hidden = !tiedot;
+    if (!tiedot) return;
+    const kuukausi = new Date().getMonth();
+    this.asetaSaaRivi('pilvi',
+      `${kuukausiSsa(kuukausi)} keskimäärin ${Math.round(tiedot.keskilampo[kuukausi])}°, sadetta ${tiedot.sade[kuukausi]} mm`);
+    haeSaaTanaan(tiedot.lat, tiedot.lon).then((saa) => {
+      // Pelaaja on voinut ehtiä jatkaa matkaa haun aikana.
+      if (!saa || this.arrivalShownFor !== cityId) return;
+      const kuvaus = saaKuvaus(saa.koodi);
+      const sade = saa.sademaara >= 1 ? `, sadetta ${Math.round(saa.sademaara)} mm` : '';
+      this.asetaSaaRivi(kuvaus.kuvake,
+        `tänään ${saa.lampotila}° (${saa.alin}…${saa.ylin}°), ${kuvaus.teksti}${sade}`);
+    });
+  }
+
+  asetaSaaRivi(kuvake, teksti) {
+    this.arrivalSaa.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">'
+      + `${SAA_IKONIT[kuvake] ?? SAA_IKONIT.pilvi}</svg>`
+      + '<span class="saa-teksti"></span><span class="saa-vihje">koko vuosi ›</span>';
+    this.arrivalSaa.querySelector('.saa-teksti').textContent = teksti;
+  }
+
+  /**
+   * Koko vuoden sää samana korttina kuin kulttuurikuvan suurennos:
+   * keskilämpökäyrä ja sadepalkit kuukausittain, napautus sulkee.
+   * Graafi piirtyy staattisista normaaleista, joten se aukeaa myös
+   * ilman verkkoa.
+   */
+  naytaVuosiSaa() {
+    const tiedot = this.lehtiSaaTiedot;
+    if (!tiedot) return;
+    this.suljeKulttuuriKuva();
+    const kortti = html('div', 'postikortti kulttuuri-suurennos vuosisaa-kortti');
+    const nimi = this.game.board.cities.find((c) => c.id === this.arrivalShownFor)?.name ?? '';
+    kortti.appendChild(html('p', 'kuvateksti vuosisaa-otsikko', `Sää vuoden mittaan — ${nimi}`));
+    kortti.appendChild(piirraVuosiSaa(tiedot));
+    kortti.appendChild(html('p', 'kuvalahde',
+      'Käyrä keskilämpö °C · palkit sademäärä mm · Open-Meteo (ERA5), 1991–2020'));
+    kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
+    this.arrivalDialog.appendChild(kortti);
+    this.kulttuuriKuvaEl = kortti;
+    sfx.play('paper');
+  }
 
   /**
    * Yhden kategorian nostot: johdanto ja sen alla kortit.
