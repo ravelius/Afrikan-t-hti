@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 302, teksti: 'Nuolet ja sivunumero yhdessä pillerissä' },
+  { v: 302, teksti: 'Kuvateksti pysyy kuvan reunojen sisällä' },
+  { v: 302, teksti: 'Visa näkyy heti, vaihtoehdot kevyemmin' },
   { v: 301, teksti: 'Kuvatekstit heti kuvan alle lehtijutuissa' },
   { v: 301, teksti: 'Pystykuva saa tekstin viereensä' },
   { v: 301, teksti: 'Sivunuolet pois laidoilta, navigointi alas' },
