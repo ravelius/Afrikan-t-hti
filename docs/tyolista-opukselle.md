@@ -5282,6 +5282,60 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v284 — Laukun nahka, tausta ja aarreluettelo (5.8.2026)
+
+Kolme korjausta edelliseen.
+
+### Katkoviiva ei lähtenytkään
+
+*"Miksi matkalaukussa on vielä katkoviivat reunoilla vaikka piti
+vaihtaa nahkaiset reunukset?"*
+
+v282 kirjoitti nahkakehyksen valitsimella `.passport-card`, mutta
+`.dialog-card` asettaa oman kynäviivansa ja on tässä tiedostossa
+**myöhempänä** (rivi ~4250 vs ~2360). Yhtä vahvat valitsimet
+ratkaistaan järjestyksellä, joten myöhempi voitti. Mitattu selaimesta:
+kortin reuna oli yhä `dashed 1px`, vaikka säännössä lukee `12px solid`.
+
+Korjaus on kahden luokan valitsin `.dialog-card.passport-card`, joka on
+vahvempi eikä riipu järjestyksestä.
+
+### Laukku ei tummenna karttaa
+
+*"Älä tummenna taustaa ollenkaan."* Muut ikkunat ovat lukemista varten,
+ja niiden himmennys sulkee kartan pois häiritsemästä. Laukku on eri
+asia: se aukeaa oman nappinsa alle kuin vetolaatikko, ja pelaaja katsoo
+yhä karttaa sen vierestä. `#passport-dialog::backdrop` on läpinäkyvä —
+tunnistevalitsin samasta syystä kuin yllä.
+
+### Luetteloon vain löytyneet
+
+*"Laita vain että kateissa: (määrä). Vasta sitten kun jotain löytyy niin
+sen nimi tulee Aarnin luetteloon."*
+
+v282 latoi koko luettelon rivi riviltä, jokaisen perässä "KATEISSA". Se
+oli sekä spoileri että tautologiaa: yksitoista nimeä paljastui ennen
+kuin pelaaja oli löytänyt yhtään. Nyt luettelo täyttyy matkan mukana,
+kuten Aarnin oma luettelo täyttyi, ja yksi rivi kertoo montako on vielä
+kateissa. Kortti lyheni samalla 636 → 484 pikseliin.
+
+Samalla ratkesi kysymys, jonka omistaja esitti: *"mitä tarkoittaa että
+unohdettu aarre on etsinnässä, onko sekin oma aarteensa?"* On —
+maailmankartta on oma lautansa ja sillä on oma aarteensa, mutta sitä ei
+ole tarkoituksella nimetty (tarinassa Aarnin luettelon sivu on juuri
+siitä kohtaa revitty). Sen nimi on aineistossa yleistermi "Unohdettu
+aarre", ja luettelossa se näytti siltä kuin lajin nimi olisi eksynyt
+nimettyjen joukkoon. Nyt nimiä ei näytetä ennen löytymistä, joten
+ongelma katosi rakenteen mukana.
+
+### Opittua
+
+**Sama tarkkuus + myöhempi sijainti = hiljainen ohitus.** Nahkakehys
+oli kirjoitettu oikein ja se näkyi koodissa, mutta se hävisi
+järjestyksessä. Kun ylikirjoitat jonkin yhteisen komponentin tyyliä,
+tee valitsimesta vahvempi äläkä luota siihen, missä kohtaa tiedostoa
+sääntö sattuu olemaan.
+
 ## v282 — Matkalaukku: Aarnin luettelo, omat kuvakkeet, nahka (5.8.2026)
 
 Kuusi omistajan huomiota yhdellä kertaa.
