@@ -16,9 +16,9 @@ import {
   HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
 import {
-  factSource, factText, factVoice, isSourceUrl, packById, sourceLabel, voiceTitle,
+  factSource, factText, factVoice, isSourceUrl, PACKS, packById, sourceLabel, voiceTitle,
 } from './pack.js';
-import { stampBoard, stampDate, stampList } from './passport.js';
+import { stampBoard } from './passport.js';
 // Matkalaukun alalaidan "Unohdettu aarre": tekijänoikeus ja lähdeluettelo.
 import { LAHTEET, LAHTEITA, PELI } from './lahteet.js';
 import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from './wiki.js';
@@ -1150,6 +1150,25 @@ const VIIVA_IKONIT = {
  * piirretty samalla kynällä kuin linssien omat kuvakkeet — rivien on
  * oltava keskenään samaa sarjaa, tai valinta näyttää sekalaiselta.
  */
+/**
+ * Viivaikoni omaksi SVG-elementikseen annetussa koossa.
+ *
+ * Linssimoduulit antavat kuvakkeensa 24 × 24 -polkuina ilman <svg>-kuorta
+ * (sama muoto kuin VIIVA_IKONIT). Matkalaukku tarvitsee niistä isomman
+ * version tavaroiden riveille, ja tämä on se kuori.
+ */
+function viivaIkoniSvg(polut, koko = 44) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('width', String(koko));
+  svg.setAttribute('height', String(koko));
+  svg.setAttribute('class', 'viiva-ikoni-kuva');
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.innerHTML = polut;
+  return svg;
+}
+
 const LINSSI_EI_IKONI = `${VIIVA_IKONIT.taikalasit}<path d="M5.4 5.4 20 20"/>`;
 
 /**
@@ -1325,8 +1344,7 @@ export class UI {
     this.actionsEl = document.getElementById('actions');
     this.errorEl = document.getElementById('error');
     this.passportDialog = document.getElementById('passport-dialog');
-    this.passportGrid = document.getElementById('passport-grid');
-    this.passportCount = document.getElementById('passport-count-sisus');
+    this.passportAarteet = document.getElementById('passport-aarteet');
     this.passportFinds = document.getElementById('passport-finds');
     this.passportProgress = document.getElementById('passport-progress');
 
@@ -8264,25 +8282,89 @@ export class UI {
     this.luennat?.clear();
   }
 
-  /** Passidialogi: leimat ruudukossa, vanhin ensin. */
+  /** Matkalaukku: matkan tiedot, Aarnin luettelo ja tavarat. */
   openPassport() {
-    const stamps = stampList();
-    this.passportGrid.textContent = '';
-    if (stamps.length === 0) {
-      this.passportGrid.appendChild(html('p', 'muted', 'Passi on vielä puhdas. Ensimmäinen leima tulee heti, kun astut laudalle.'));
-    }
-    for (const stamp of stamps) {
-      const mark = html('div', 'stamp');
-      mark.appendChild(html('span', 'stamp-label', stamp.label));
-      mark.appendChild(html('span', 'stamp-date', stampDate(stamp.date)));
-      this.passportGrid.appendChild(mark);
-    }
-    this.passportCount.textContent = stamps.length === 1
-      ? '1 leima'
-      : `${stamps.length} leimaa`;
     this.renderProgress();
+    this.renderAarteet();
     this.renderFinds();
     if (!this.passportDialog.open) this.passportDialog.showModal();
+    this.asemoiLaukku();
+  }
+
+  /*
+   * AARNIN LUETTELO: mitä ollaan etsimässä ja mikä on jo löytynyt.
+   *
+   * Tämä tuli vihreän passin tilalle (omistaja 5.8.2026: "koko vihreän
+   * passin voi poistaa, tehdään sen tilalle pääaarteista oma osio").
+   * Leimat kertoivat vain missä on käyty, minkä matkarivin Sijainti
+   * kertoo jo — luettelo kertoo mihin ollaan menossa.
+   *
+   * NIMISTÖ ON SITOVA (docs/tyolista-opukselle.md, päätös 4.8.2026):
+   * pelaajalle näkyvissä teksteissä aarre on "unohdettu aarre" eikä
+   * "pääaarre" eikä "tähti", ja luettelon erisnimi on Aarnin luettelo.
+   * Rivien nimet tulevat lautojen omista aarrelaatoista, joten luettelo
+   * ei voi mennä eri tahtiin pelin kanssa.
+   *
+   * LÖYTYNYT TARKOITTAA TÄTÄ MATKAA. Aarteen löytymistä ei tallenneta
+   * pelikertojen yli (js/passport.js tuntee vain lautaleimat ja
+   * linssit), joten luettelo kertoo rehellisesti tämän matkan tilanteen
+   * eikä väitä muistavansa enempää.
+   */
+  renderAarteet() {
+    if (!this.passportAarteet) return;
+    const { game } = this;
+    this.passportAarteet.textContent = '';
+
+    const omaLauta = game.pack?.id ?? null;
+    const loytyi = Boolean(game.player?.hasStar);
+
+    let rivit = 0;
+    for (const pakkaus of PACKS) {
+      const aarre = pakkaus.tokens?.types?.star;
+      if (!aarre?.name) continue;
+      const tama = pakkaus.id === omaLauta;
+      const onLoytynyt = tama && loytyi;
+      const rivi = html('div', `aarre-rivi${onLoytynyt ? ' loytynyt' : ''}`);
+      const merkki = html('span', 'aarre-merkki');
+      // ◈ on pelin oma aarremerkki (docs: laatan ja nappulan merkki).
+      merkki.textContent = onLoytynyt ? '◈' : '·';
+      rivi.appendChild(merkki);
+      rivi.appendChild(html('span', 'aarre-nimi', aarre.name));
+      rivi.appendChild(html('span', 'aarre-tila',
+        onLoytynyt ? 'löytyi' : (tama ? 'etsinnässä' : 'kateissa')));
+      this.passportAarteet.appendChild(rivi);
+      rivit += 1;
+    }
+    if (!rivit) {
+      this.passportAarteet.appendChild(html('p', 'muted', 'Luettelo on tyhjä.'));
+    }
+  }
+
+  /*
+   * LAUKKU AUKEAA PILLERIN ALLE (omistaja 5.8.2026: "eikös tämä
+   * matkalaukku pitänyt aueta suoraan tuon pillerin alapuolelle").
+   *
+   * <dialog> keskittää itsensä ruudulle, eikä sitä voi asemoida
+   * pelkällä CSS:llä sen napin suhteen, joka sen avasi — nappi on
+   * ylärivissä ja dialogi on ylimmässä kerroksessa, eivätkä ne ole
+   * sukua toisilleen. Paikka lasketaan siis avattaessa.
+   *
+   * Vasen reuna kohdistetaan pilleriin mutta pidetään ruudulla: kapealla
+   * puhelimella kortti on lähes ruudun levyinen, ja pilleriin
+   * kohdistettuna sen oikea laita valuisi yli.
+   */
+  asemoiLaukku() {
+    const kortti = this.passportDialog?.querySelector('.dialog-card');
+    if (!kortti || !this.turnPill) return;
+    const pilleri = this.turnPill.getBoundingClientRect();
+    if (!pilleri.width) return;
+    const VARA = 8;
+    const leveys = kortti.getBoundingClientRect().width || kortti.offsetWidth;
+    const suurinVasen = Math.max(VARA, window.innerWidth - leveys - VARA);
+    const vasen = Math.min(Math.max(VARA, pilleri.left), suurinVasen);
+    this.passportDialog.style.left = `${Math.round(vasen)}px`;
+    this.passportDialog.style.top = `${Math.round(pilleri.bottom + VARA)}px`;
+    this.passportDialog.classList.add('pillerin-alla');
   }
 
   /**
@@ -8338,7 +8420,24 @@ export class UI {
     const omat = this.linssiTuki?.omistus?.omistetut?.(game, p) ?? new Set(p.linssit ?? []);
     for (const tunnus of omat) {
       const linssi = this.linssiTuki?.kaikki.find((l) => l.tunnus === tunnus) ?? null;
-      rivi(tokenIconSvg('linssi', 44), linssi?.nimi ?? game.tokenTypes.linssi?.name ?? 'Taikalasi');
+      /*
+       * LINSSIN OMA KUVAKE, EI LAATTATYYPIN.
+       *
+       * Kaikki kolme varustetta piirtyivät samana suurennuslasina, koska
+       * ne saivat laattatyypin 'linssi' kuvakkeen — laatta on se, mistä
+       * varuste löytyi, ei se mitä se on. Omistajan havainto: "näihin
+       * voisi päivittää kuvakkeet vastaamaan paremmin tavaroiden
+       * ominaisuuksia."
+       *
+       * Kuvake tulee linssimoduulista samassa muodossa kuin
+       * valitsimessa (24 × 24 -polkuja ilman <svg>-kuorta), joten
+       * laukussa ja valikossa on sama kuva samasta esineestä. Jos
+       * moduulia ei ole vielä ladattu, varalla on laattatyypin kuvake.
+       */
+      rivi(
+        linssi?.ikoni ? viivaIkoniSvg(linssi.ikoni, 44) : tokenIconSvg('linssi', 44),
+        linssi?.nimi ?? game.tokenTypes.linssi?.name ?? 'Varuste',
+      );
     }
 
     if (!this.passportFinds.childElementCount) {

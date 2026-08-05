@@ -5282,6 +5282,97 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v281 — Matkalaukku: Aarnin luettelo, omat kuvakkeet, nahka (5.8.2026)
+
+Kuusi omistajan huomiota yhdellä kertaa.
+
+### Vihreä passi → Aarnin luettelo
+
+*"Itse asiassa koko vihreän passin voi poistaa. Tehdään sen tilalle
+pääaarteista oma osio. En enää muista, pitikö niitä kutsua pääaarteiksi
+vai jollain toisella nimellä. Selvitä se samalla."*
+
+Selvitys: nimistö on päätetty 4.8.2026 ja sitova (tämän tiedoston luku
+"aarteiden nimistö"). Pelaajalle näkyvissä teksteissä aarre on
+**unohdettu aarre** — ei "pääaarre" eikä "tähti" — ja luettelon
+erisnimi on **Aarnin luettelo**. Osio sai siis sen nimen.
+
+Luettelo latoo yksitoista riviä lautojen omista aarrelaatoista
+(`pack.tokens.types.star.name`), joten se ei voi mennä eri tahtiin
+pelin kanssa. Löytynyt tarkoittaa TÄTÄ matkaa: aarteen löytymistä ei
+tallenneta pelikertojen yli, eikä luettelo väitä muistavansa enempää.
+
+Leimat kertoivat vain missä on käyty, minkä matkarivin Sijainti kertoo
+jo. Luettelo kertoo mihin ollaan menossa. Passin leimat säilyvät
+tallennuksessa — linssien omistus lepää niiden päällä; vain näyttö
+lähti. Samalla katosi se turha vierityspalkki, joka oli leimaruudukon
+`max-height: 46vh`.
+
+### Tavaroilla omat kuvakkeet
+
+*"Näihin voisi päivittää kuvakkeet vastaamaan paremmin tavaroiden
+ominaisuuksia."* Kaikki kolme varustetta piirtyivät samana
+suurennuslasina, koska ne saivat laattatyypin `linssi` kuvakkeen —
+laatta on se, MISTÄ varuste löytyi, ei se MITÄ se on. Nyt kuvake tulee
+linssimoduulista, samasta paikasta kuin valitsimessa: radio, vuoret,
+vesistö.
+
+Ansa matkalla: irrallinen SVG ei peri `.viiva-ikoni`-kuoren sääntöjä,
+joten polut piirtyivät ensin mustina läiskinä. Sama vika kuin
+linssikerroksessa (`kerros.js` tarkistaa juuri tämän) — irrallinen SVG
+tarvitsee aina omat viivasääntönsä.
+
+### Sisennykset ja selitteet
+
+*"Nyt teksti ja tavarat ovat liian kiinni reunassa."* Nahkareunus on
+materiaalia eikä marginaalia: silmä lukee sisällön alkavan vasta sen
+sisäpuolelta, joten pehmusteen on oltava reunuksen LISÄKSI eikä sen
+sijasta. 1,15 → 1,4 rem pystyyn ja 1,3 → 1,7 rem sivuille.
+
+Tavaroiden selitteet katkesivat keskeltä sanaa ("Maailmanradi / o"),
+koska ruutu oli 76 px ja nimet ovat yhdyssanoja. Mitattu pisin nimi on
+"Topografialinssi", kuusitoista merkkiä; 108 px ja 0,68 rem riittää
+sille yhdelle riville.
+
+### Laukku aukeaa pillerin alle
+
+`<dialog>` keskittää itsensä ruudulle, eikä sitä voi asemoida CSS:llä
+sen napin suhteen joka sen avasi: nappi on ylärivissä ja dialogi
+selaimen ylimmässä kerroksessa, eivätkä ne ole sukua toisilleen. Paikka
+lasketaan avattaessa (`asemoiLaukku`) ja kirjoitetaan inline-tyyliin;
+CSS-luokan tehtävä on vain purkaa keskitys.
+
+Vasen reuna kohdistetaan pilleriin mutta pidetään ruudulla: kapealla
+puhelimella kortti on lähes ruudun levyinen, ja pilleriin
+kohdistettuna sen oikea laita valuisi yli. Mitattu: puhelimella kortti
+alkaa x = 8 (pilleri on 106), työpöydällä x = 172 eli tarkalleen
+pillerin kohdalta.
+
+### Nahka ja kahva
+
+*"Katkoviiva pois ja tilalle enemmän nahkaisen matkalaukun reunat ja
+alas kahva."* Kortilla oli jo nahkakehys, mutta sen päällä näkyi
+`.dialog-card`in yhteinen kynämäinen katkoviiva — kaksi materiaalia
+päällekkäin, ja katkoviiva voitti, koska se on terävin.
+
+Nahka syntyy kolmesta asiasta eikä väristä: paksusta reunuksesta,
+ompeleesta reunuksen sisäpuolella ja messinkisistä kulmavahvikkeista.
+Ommel on katkoviiva sekin, mutta lyhyin pistoin ja nahkan sisällä —
+silloin se lukee ompeleeksi eikä piirretyksi rajaksi.
+
+Kahva on kaari kortin alalaidassa: yksi elementti, jonka `border-bottom`
+antaa nahkan paksuuden samasta luvusta kuin kehykselle. Sen alle on
+jätettävä väli, koska se on samaa ruskeaa kuin alareunus — ilman väliä
+kaari sulautui reunukseen ja näytti katkaistulta.
+
+### Opittua
+
+**Kysy nimistö dokumentista, älä koodista.** Omistaja ei muistanut,
+mikä aarteen nimi oli, enkä minäkään — mutta se oli päätetty ja
+kirjattu, ja koodikommenteissa elää tarkoituksella eri sana kuin
+pelaajateksteissä. Ilman dokumenttia olisin valinnut väärän ja
+rikkonut päätöksen, joka tehtiin juuri tämän estämiseksi.
+
 ## v280 — Pystysyy takaisin, vaakanaarmut pois (5.8.2026)
 
 v277 poisti väärän kerroksen. Omistaja tarkensi: *"Se pystyraidoitus

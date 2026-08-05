@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 281, teksti: 'Matkalaukku: vihreä passi vaihtui Aarnin luetteloon' },
+  { v: 281, teksti: 'Tavaroilla omat kuvakkeet, ei enää suurennuslaseja' },
+  { v: 281, teksti: 'Laukku aukeaa pillerin alle, nahkareunat ja kahva' },
   { v: 280, teksti: 'Radion pystysyy takaisin, vaakanaarmut pois' },
   { v: 279, teksti: 'Uutiset päällä: ANSA:n otsikot Italian lehdessä' },
   { v: 278, teksti: 'Lehden etusivu tiiviiksi: isot kuvat, maa ylemmäs' },
