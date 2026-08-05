@@ -6844,8 +6844,15 @@ export class UI {
     this.tutkiSivu = i;
     const etusivu = i === 0;
     if (this.arrivalPalstat) this.arrivalPalstat.hidden = !etusivu;
-    // Visa on pelitoiminto ja kuuluu saapumiseen, ei luettaviin sivuihin.
-    this.arrivalKulttuuri.hidden = !etusivu || !this.kulttuuriSaatavilla;
+    /*
+     * Visa on pelitoiminto ja kuuluu saapumiseen, ei luettaviin
+     * sivuihin. Lehtikaupungissa se asuu kaupungin omalla sivulla
+     * (sivu 1) eikä etusivulla — etusivun päätehtävä on kohtaaminen,
+     * eikä visa saa kilpailla sen kanssa (omistajan tarkennus
+     * 5.8.2026). Muilla kaupungeilla visa pysyy etusivulla.
+     */
+    const visasivu = this.tutkiLehti && sivuja > 1 ? i === 1 : etusivu;
+    this.arrivalKulttuuri.hidden = !visasivu || !this.kulttuuriSaatavilla;
 
     // Etusivu ei ole aihesivu, joten aiheiden numerointi alkaa vasta
     // sivulta 1: sivu 1 on ensimmäinen aihe, ei toinen.

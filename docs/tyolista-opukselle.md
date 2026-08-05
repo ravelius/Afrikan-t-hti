@@ -5282,7 +5282,7 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
-## v289 — Litteä valikko ja Matkakirja aina ylös (5.8.2026)
+## v290 — Litteä valikko ja Matkakirja aina ylös (5.8.2026)
 
 ### Valikko ilman alivalikkoja
 

@@ -13,8 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
-  { v: 289, teksti: 'Valikosta suoraan varusteet, äänet ja komennot' },
-  { v: 289, teksti: 'Matkakirja pysyy aina kartan yläreunassa' },
+  { v: 290, teksti: 'Valikosta suoraan varusteet, äänet ja komennot' },
+  { v: 290, teksti: 'Matkakirja pysyy aina kartan yläreunassa' },
+  { v: 289, teksti: 'Visa pois etusivulta kaupungin omalle sivulle' },
+  { v: 289, teksti: 'Tapaa-nappi kultaiseksi, tv:ksi euronews italiano' },
   { v: 288, teksti: 'Popupit: kevyt sumennus tummennuksen sijaan' },
   { v: 288, teksti: 'Radio ja tv aina vierekkäin, tv ilman kehyksiä' },
   { v: 287, teksti: 'Laukun kahva roikkuu kartan päällä laukun alla' },
