@@ -1291,6 +1291,15 @@ function jaaKappaleiksi(teksti) {
 
 function piirraLeipa(kohde, teksti, { anfangi = false } = {}) {
   const kappaleet = jaaKappaleiksi(teksti);
+  /*
+   * Kappaleet kääritään yhteen lohkoon, jotta leipäteksti voidaan
+   * taittaa leveällä ruudulla kahdelle palstalle YHTENÄ juoksuna
+   * (omistajan toive 5.8.2026) — palstoitus kappale kerrallaan
+   * katkeaisi kahdeksi erilliseksi palstapariksi.
+   */
+  const leipa = html('div', 'leipa');
+  kohde.appendChild(leipa);
+  kohde = leipa;
   kappaleet.forEach((kappale, i) => {
     const p = html('p', i === 0 ? 'teksti ensimmainen' : 'teksti');
     if (i === 0 && anfangi) p.classList.add('anfangi');

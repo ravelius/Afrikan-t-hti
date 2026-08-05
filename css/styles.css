@@ -5919,8 +5919,7 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   letter-spacing: 0.02em;
 }
 
-/* Nosto on oma taittolohkonsa: leveällä ruudulla kuva kelluu tekstin
- * seassa, ja float on saatava pysymään noston sisällä. */
+/* Nosto on oma taittolohkonsa. */
 .wiki-nosto { display: flow-root; }
 
 .wiki-nosto img {
@@ -5961,66 +5960,44 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 }
 
 /*
- * Kuva isommaksi ja tekstin sekaan (omistajan toive: "työpöytäselaimella
- * kuvat näkyvät liian pieninä historiaosiossa — saisiko niitä kuvia
- * taitettua vähän isommassa koossa tekstin sekaan?").
+ * LEHTIJUTUN TAITTO LEVEÄLLÄ RUUDULLA (omistajan toive 5.8.2026:
+ * "teksti kahteen palstaan leveissä kohdissa" — ja "muihinkin
+ * alisivuihin sama").
  *
- * Kaksi porrasta, koska sama ratkaisu ei käy molempiin:
+ * Yksi malli kaikille ≥ 700 px:n leveyksille: kuva täysleveänä
+ * jutun yllä (korkeuskatto 520 px, kuvasuhde säilyy) ja leipäteksti
+ * KAHDELLA PALSTALLA sen alla, ohut välipalstaviiva keskellä — kuin
+ * sanomalehden juttu. Palstalohko on lyhyt (leipäteksti on 440–660
+ * merkkiä), joten molemmat palstat näkyvät ruudulla yhtä aikaa eikä
+ * lukija joudu vierittämään edestakaisin.
  *
- * 700–999 px (tabletti pystyssä): palsta on 650–780 px eikä siihen
- * mahdu kuvaa JA luettavaa tekstipalstaa rinnakkain — kelluva kuva
- * jättäisi tekstille alle 300 px. Kuva pysyy siis omalla rivillään,
- * mutta saa kasvaa: 340 px -> 470 px korkeutta, jolloin vaakakuva
- * täyttää palstan lähes reunasta reunaan.
- *
- * 1000 px ja yli (tabletti vaakaan, työpöytä): palsta on yli 830 px,
- * ja silloin kuva kelluu tekstin seassa kuten sanomalehdessä. Leveys
- * on 56 % palstasta ja korkeuskatto 520 px pitää pystykuvan kurissa —
- * ilman kattoa 1280x1966 kuva olisi ollut lähes 900 px korkea.
- * Joka toinen nosto vaihtaa puolta, jottei sivu ole yksipuolinen.
+ * Tämä KORVASI kelluvan kuvataiton (float 56 % + joka toinen nosto
+ * eri puolelle, v220–v299): kellunta vaati kolme erillistä
+ * korjausta eri leveyksillä (romahtava prosenttileveys, sanan
+ * levyinen tekstisuikale, venyvät pystykuvat) — palstataitossa
+ * näitä erikoistapauksia ei ole, ja 700–999 ja ≥ 1000 px käyttäytyvät
+ * täsmälleen samoin. Kapea ruutu (alle 700 px) pysyy yhtenä palstana.
  */
 @media (min-width: 700px) {
-  .wiki-nosto img { max-height: 470px; }
+  .wiki-nosto img { max-height: 520px; }
   .wiki-liuskat button { font-size: 0.8rem; }
-}
 
-@media (min-width: 1000px) {
-  .wiki-nosto img {
-    float: right;
-    /*
-     * EI pakotettua leveyttä: width: 56 % + max-height venytti
-     * pystykuvat lättänöiksi, koska molemmat mitat eivät voi päteä
-     * yhtä aikaa (Kairon Nefertiti — omistajan havainto 5.8.2026).
-     * Leveys- ja korkeuskatot yhdessä säilyttävät kuvasuhteen:
-     * vaakakuva täyttää 56 % palstasta, pystykuva jää kapeammaksi
-     * ja teksti saa sen vierestä enemmän tilaa.
-     */
-    width: auto;
-    max-width: min(56%, 620px);
-    max-height: 520px;
-    margin: 0.15rem 0 0.6rem 1.5rem;
+  .wiki-nosto .leipa {
+    columns: 2;
+    column-gap: 2.2rem;
+    column-rule: 1px solid rgba(70, 51, 31, 0.25);
   }
 
-  .wiki-nosto:nth-of-type(even) img {
-    float: left;
-    margin: 0.15rem 1.5rem 0.6rem 0;
+  /* 68 ch:n katto on yhden palstan mitta — palstoissa leveyden
+   * määrää palsta itse. */
+  .wiki-nosto .leipa .teksti { max-width: none; }
+
+  /* Lehtimaan pääkirjoitus etusivulla taittuu samalla tavalla. */
+  .dialog.lehti #arrival-maa-intro {
+    columns: 2;
+    column-gap: 2.2rem;
+    column-rule: 1px solid rgba(70, 51, 31, 0.25);
   }
-
-  /*
-   * Vasemmalle kelluvan kuvan vieressä leipäteksti tarvitsee OMAN
-   * palstan (flow-root): tavallinen lohko ankkuroituu palstan vasempaan
-   * reunaan, jolloin 68 ch:n leveyskatto ja kuva päällekkäin jättävät
-   * riveille vain parikymmentä pikseliä — teksti murenee sana/rivi
-   * -suikaleeksi (omistajan havainto iPad Pro 12,9" 5.8.2026; sama
-   * pätee kaikkiin ≥ 1000 px leveyksiin). Flow-root-laatikko asettuu
-   * kokonaan kuvan viereen ja leveys lasketaan jäljelle jäävästä
-   * tilasta, kuten sanomalehden palstassa.
-   */
-  .wiki-nosto:nth-of-type(even) .teksti { display: flow-root; }
-
-  /* Lähde on lisenssiehto: se ei saa jäädä kuvan kylkeen puristuksiin
-   * vaan alkaa aina kuvan alta. */
-  .wiki-nosto .lahde { clear: both; }
 }
 
 /* Kuvan napautus avaa katselimen — kursori kertoo sen hiirikäyttäjälle. */
@@ -7071,33 +7048,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
 .wiki-nosto .nosto-galleria img { margin: 0; }
 
-@media (min-width: 1000px) {
-  .wiki-nosto .nosto-galleria {
-    float: right;
-    max-width: min(56%, 620px);
-    margin: 0.15rem 0 0.6rem 1.5rem;
-  }
-
-  .wiki-nosto:nth-of-type(even) .nosto-galleria {
-    float: left;
-    margin: 0.15rem 1.5rem 0.6rem 0;
-  }
-
-  /*
-   * TÄRKEÄ: perussääntö antaa nostokuvalle width: 56 % — mutta
-   * gallerian kotelo on fit-content, ja prosentti kutistuvasta
-   * emosta romahduttaa kuvan (iPad Pro 12,9" osuu tähän
-   * media-sääntöön, 11" ei — omistajan havainto 5.8.2026).
-   * Kuva mitoitetaan siksi omilla ehdoillaan ja kotelo seuraa.
-   */
-  .wiki-nosto .nosto-galleria img {
-    float: none;
-    margin: 0;
-    width: auto;
-    max-width: 100%;
-    max-height: 520px;
-  }
-}
+/* Gallerian kelluntasäännöt (≥ 1000 px) poistuivat v300:ssa
+ * palstataiton myötä: kotelo keskittyy perussäännöillään kuten
+ * tavallinen nostokuva, ja kuva mitoittuu omilla ehdoillaan. */
 
 /*
  * Lehden minitehtävä: kuponkimainen tehtäväpalsta sivun lopussa —
