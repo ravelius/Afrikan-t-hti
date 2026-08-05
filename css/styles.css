@@ -6430,7 +6430,18 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    */
   border-color: transparent;
   border-radius: 0;
-  box-shadow: none;
+  /*
+   * Sanomalehtipohja (omistajan päätös 5.8.2026, prototyypin
+   * jälkeen): vaalea painopaperi ja suora leikattu reuna korvasivat
+   * ruskean muistiinpanoarkin ja käsinpiirretyn aaltoreunan KAIKISSA
+   * kaupungeissa — jokainen kaupunki saa lehden aikanaan. Kohina
+   * säilyy paperin tuntuna; --card-bg:n tumma säteittäisliuku ei sovi
+   * painopaperiin. Varjo on laatikon oma, koska leikkausta ei enää ole.
+   */
+  background-image: var(--paper-noise);
+  background-color: #f5f0e2;
+  background-blend-mode: multiply;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 1;
   /*
@@ -6474,7 +6485,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
    * tummentaa kertolaskulla noin 3,5 %, joten pohjan on oltava sitä
    * saman verran vaaleampi.
    */
-  --arkki-paperi: #eedab3;
+  /* Sama sävy kuin arkin uusi painopaperi — tarttuvat otsikot ja
+   * tarttumakaistat sulautuvat pohjaan. */
+  --arkki-paperi: #f5f0e2;
   /*
    * Yläreunus EI ole kortin omaa pehmustetta vaan ensimmäisen palstan.
    * Syy on tarttuvassa aiherivissä: selaimet ovat eri mieltä siitä,
@@ -6531,41 +6544,17 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  * "tuollainen katkoviiva", jota omistaja ei halunnut. */
 .dialog.arkki .dialog-card::before { display: none; }
 
-/*
- * Kaksi kerrosta saman muodon ympärillä: varjo alle, viiva päälle.
- * Ne ovat dialogin lapsia eivätkä kortin, koska kortti vierii.
- */
-.arkin-varjo,
-.arkin-reuna {
-  position: absolute;
-  pointer-events: none;
-  animation: card-in 0.32s cubic-bezier(0.2, 1.2, 0.5, 1);
-}
+/* Painomuste: ruskea muste näytti vaalealla painopaperilla haalealta,
+ * joten leipäteksti ja isot otsikot tummenevat lähes mustaan — kuten
+ * sanomalehdessä. Koskee vain arkkia; muu peli pitää ruskean. */
+.dialog.arkki .wiki-nosto .teksti { color: #211d18; }
 
-.arkin-varjo {
-  z-index: 0;
-  /* Terävä lähivarjo nostaa arkin kartasta irti, pehmeä kaukovarjo
-   * antaa sille painon. drop-shadow seuraa piirretyn reunan muotoa,
-   * box-shadow seuraisi laatikkoa. */
-  filter: drop-shadow(0 2px 0 rgba(70, 51, 31, 0.3))
-          drop-shadow(0 20px 52px rgba(0, 0, 0, 0.55));
-}
+.dialog.arkki .wiki-kategoria .aihe-nimi,
+.dialog.arkki #arrival-city { color: #16130f; }
 
-/* Täyttö jää kokonaan kortin alle; se on olemassa vain varjoa varten,
- * ja siksi paperin pohjasävyä — reunan pehmennyspikselit eivät saa
- * vilkkua vieraana värinä. */
-.arkin-varjo path { fill: #e8d5a9; }
-
-.arkin-reuna { z-index: 3; }
-
-.arkin-reuna path {
-  fill: none;
-  stroke: var(--map-ink);
-  stroke-width: 2;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  opacity: 0.9;
-}
+/* Piirretyn aaltoreunan SVG-kerrokset (.arkin-varjo, .arkin-reuna)
+ * poistuivat v299:ssä sanomalehtipohjan myötä — varjo on nyt kortin
+ * oma box-shadow. */
 
 @media (min-width: 700px) {
   .dialog.arkki,
@@ -6579,7 +6568,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
      * testataan tabletilla, se pätee työpöydällä — leveä ruutu saa
      * lisää karttaa reunoille, ei lisää palstaa. */
     width: min(calc(100vw - 6rem), 960px);
-    max-height: calc(100dvh - 3rem);
+    /* Koko ruudun korkeus ylhäältä alas kuin lehden sivu kädessä
+     * (omistajan toive 5.8.2026) — kartta jää näkyviin sivuille. */
+    height: 100dvh;
+    max-height: 100dvh;
   }
 }
 
@@ -6722,10 +6714,9 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     border-radius: 0;
     box-shadow: none;
     /*
-     * Leikkaus tulee js/ui.js:stä inline-tyylinä, ja se on pakko
-     * kumota: clip-path rajaisi sivunuolet ja sivunumeron pois. Sama
-     * tarkistus on JS:n puolella (piirraArkinReuna), joten reunaa ei
-     * edes lasketa puhelimella.
+     * Leikkausta ei enää tule JS:stä (aaltoreuna poistui v299:ssä),
+     * mutta kumoaminen jää varmuudeksi vanhan session inline-tyylin
+     * varalta.
      */
     clip-path: none !important;
     /* Kortti on koko ruutu: ilmestymisliike loisi transformin, jonka
@@ -6739,10 +6730,6 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     /* Alalaidan varaus = sivunumero + kotipalkin turva-alue. */
     padding: 0 var(--arkki-reunus) calc(2.6rem + env(safe-area-inset-bottom));
   }
-
-  /* Piirretty paperireuna ja sen varjo pois. */
-  .dialog.arkki .arkin-varjo,
-  .dialog.arkki .arkin-reuna { display: none; }
 
   /*
    * UMPINAINEN KAISTA YLÄREUNAAN.
