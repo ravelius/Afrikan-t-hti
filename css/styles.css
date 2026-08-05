@@ -291,10 +291,22 @@ button, .brand, .turn-pill, .fact-card h2 {
  * valikon päälle. Kaksi napautusta yhden säädön takana on paljon, kun
  * säätöjä on kahdeksan.
  */
-.paavalikko { align-items: stretch; gap: 0.35rem; padding: 0.45rem; }
+/*
+ * VÄLJEMPI LADELMA (omistaja 5.8.2026: "liian pienet marginaalit ...
+ * varsinkin varusteet otsikon ylä- ja alapuolella pitäisi olla lisää
+ * tilaa").
+ *
+ * Valikko peri pudotusvalikon tiiviit mitat ajalta, jolloin siinä oli
+ * neljä tekstiriviä. Nyt siinä on kaksi osastoa ruudukkoineen ja
+ * komentorivi, ja osastot tarvitsevat ilmaa erottuakseen toisistaan.
+ */
+.paavalikko { align-items: stretch; gap: 0.55rem; padding: 0.85rem 0.8rem 0.7rem; }
 
 .valikko-otsikko {
-  margin: 0.15rem 0 0.1rem;
+  /* Otsikon yläpuolelle enemmän kuin alapuolelle: väli KUULUU sitä
+     seuraavalle osastolle, ja epäsymmetria sitoo otsikon ruudukkoonsa
+     eikä edelliseen lohkoon. */
+  margin: 0.5rem 0 0.45rem;
   font-family: var(--font-type);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
@@ -333,11 +345,20 @@ button, .brand, .turn-pill, .fact-card h2 {
 .paavalikko .linssi-valikko .linssi-liuskat {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
+/*
+ * Ruudut täyttävät sarakkeensa. Ruudukossa `width: auto` venyy jo
+ * itsestään, joten tämä ei muuta mitattua leveyttä — se kirjoittaa
+ * aikeen näkyviin, koska `.linssi-liuskat button` asettaa `width: auto`
+ * eri tarkoituksessa (selitekortin liuskarivi ei ole ruudukko).
+ */
+.paavalikko .kertoja-valikko button,
+.paavalikko .linssi-valikko .linssi-liuskat button { width: 100%; }
+
 /* Varusteen kuvaus keskitetään kuten otsikot ja napit. */
-.paavalikko .linssi-tiedot { text-align: center; }
+.paavalikko .linssi-tiedot { text-align: center; padding-top: 0.5rem; }
 
 .paavalikko .kertoja-valikko button {
   flex-direction: column;
@@ -372,7 +393,7 @@ button, .brand, .turn-pill, .fact-card h2 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
   /*
    * Rivi mittaa itsensä sisällöstään ja venyttää valikon tarvittaessa,
    * jotta kaksi nappia mahtuu vierekkäin. Kiinteä vähimmäisleveys ei
@@ -384,8 +405,8 @@ button, .brand, .turn-pill, .fact-card h2 {
   align-self: center;
   width: max-content;
   max-width: 100%;
-  margin-top: 0.15rem;
-  padding-top: 0.45rem;
+  margin-top: 0.5rem;
+  padding-top: 0.7rem;
   border-top: 1px solid var(--line);
 }
 
