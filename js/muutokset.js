@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 303, teksti: 'Kuvat palstan täyteen leveyteen lehdessä' },
+  { v: 303, teksti: 'Lue lisää heti tekstin perään, tulos vihreällä' },
   { v: 302, teksti: 'Nuolet ja sivunumero yhdessä pillerissä' },
   { v: 302, teksti: 'Kuvateksti pysyy kuvan reunojen sisällä' },
   { v: 302, teksti: 'Visa näkyy heti, vaihtoehdot kevyemmin' },

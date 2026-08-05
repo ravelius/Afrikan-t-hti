@@ -2208,14 +2208,17 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   animation: fact-in 0.3s ease-out;
 }
 
+/* Oikea vastaus vihreälle pohjalle (omistajan toive 5.8.2026) —
+ * myös väärin menneen vastauksen palaute KERTOO oikean vastauksen,
+ * joten sekin on vihreä: punainen pohja näytti virheilmoitukselta. */
 .kulttuuri-tulos.oikein-tulos {
-  border-color: rgba(176, 138, 60, 0.95);
-  background: rgba(234, 184, 78, 0.22);
+  border-color: rgba(74, 124, 58, 0.75);
+  background: rgba(106, 158, 84, 0.18);
 }
 
 .kulttuuri-tulos.vaarin-tulos {
-  border-color: rgba(156, 47, 32, 0.6);
-  background: rgba(156, 47, 32, 0.07);
+  border-color: rgba(74, 124, 58, 0.45);
+  background: rgba(106, 158, 84, 0.1);
 }
 
 /*
@@ -6054,7 +6057,19 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     columns: 1;
   }
 
-  .wiki-nosto.pysty .wiki-btn { grid-column: 2; justify-self: start; }
+  /*
+   * Kuvat palstansa täyteen leveyteen (omistajan toive 5.8.2026):
+   * korkeuskatto jätti kuvan kellumaan kapeana keskelle. Leveys
+   * määrää nyt koon ja korkeus seuraa kuvasuhdetta — pystytaitossa
+   * palsta on puolikas, joten pystykuvakaan ei kasva liian isoksi.
+   */
+  .wiki-nosto .kuvakehys { width: 100%; }
+
+  .wiki-nosto .kuvakehys img,
+  .wiki-nosto .kuvakehys .nosto-galleria {
+    width: 100%;
+    max-height: none;
+  }
 
   /* Lehtimaan pääkirjoitus etusivulla taittuu samalla tavalla. */
   .dialog.lehti #arrival-maa-intro {
