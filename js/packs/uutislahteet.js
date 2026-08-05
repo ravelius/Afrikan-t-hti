@@ -39,6 +39,13 @@ export const UUTISLAHTEET = {
  *
  * Italiassa yleisradio Rai ei lähetä YouTubeen — Sky TG24 on maan
  * uutiskanava, joka lähettää suorana ympäri vuorokauden.
+ *
+ * JOS SKY TG24 EI NÄY SUOMESTA (YouTuben aluerajaus on kanavan oma
+ * valinta, eikä sitä voi todeta etukäteen): vaihda tilalle euronews
+ * italiano, joka lähettää maailmanlaajuisesti italiaksi —
+ *   nimi: 'euronews italiano',
+ *   upotus: 'https://www.youtube.com/embed/live_stream'
+ *     + '?channel=UC1mX9vuLOYf8fhaXS_KcDRg&autoplay=1',
  */
 export const TV_KANAVAT = {
   ITA: {

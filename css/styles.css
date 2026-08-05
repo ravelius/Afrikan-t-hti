@@ -7171,15 +7171,11 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  * painetaan kerrosta alemmas (-2) ja paperi piirretään omana
  * kerroksenaan (-1) hunnun ja tekstin väliin.
  */
-.postikortti.kulttuuri-suurennos.uutinen-kortti::before,
-.postikortti.kulttuuri-suurennos.vuosisaa-kortti::before { z-index: -2; }
+/* Myös sää aukeaa ilman taustan tummennusta (omistaja 5.8.2026):
+ * huntu pois ja paperi elementille itselleen, kuten uutiskortilla. */
+.postikortti.kulttuuri-suurennos.vuosisaa-kortti::before { display: none; }
 
-.postikortti.kulttuuri-suurennos.uutinen-kortti::after,
-.postikortti.kulttuuri-suurennos.vuosisaa-kortti::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
+.postikortti.kulttuuri-suurennos.vuosisaa-kortti {
   background: var(--arkki-paperi, #eedab3);
   border: 1.5px solid rgba(70, 51, 31, 0.6);
   border-radius: 8px;
@@ -7295,17 +7291,15 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
   .dialog.lehti .arrival-maa .arrival-maa-rivi { grid-column: 1 / -1; }
 
-  .dialog.lehti .arrival-maa .arrival-uutiset {
+  .dialog.lehti .arrival-maa .maa-oikea {
     grid-column: 2;
     grid-row: 2 / span 6;
+  }
+
+  .dialog.lehti .arrival-maa .arrival-uutiset {
     margin: 0;
     border-top: 0;
     padding-top: 0;
-  }
-
-  /* Mediarivi heti uutisten alle — ei pääkirjoituksen jälkeen. */
-  .dialog.lehti .arrival-maa .maa-media {
-    grid-row: 8;
   }
 
   .dialog.lehti .arrival-maa #arrival-maa-intro { grid-column: 1 / -1; }
@@ -7385,45 +7379,48 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  * Mediarivi: maan radio ja tv-nappi vierekkäin. Lehtitaitossa rivi
  * istuu uutisten alla oikeassa palstassa, jossa on tilaa.
  */
+/* Radio ja tv AINA vierekkäin (omistajan toive): tasalevyinen
+ * kaksipalstainen ruudukko, ja pitkä asemannimi lyhenee kolmella
+ * pisteellä sen sijaan että rivi kiertyisi. */
 .maa-media {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.4rem;
   margin: 0.6rem 0 0.2rem;
 }
 
+.maa-media .kulttuuri-kuuntele {
+  margin-top: 0;
+  padding: 0.26rem 0.45rem;
+  font-size: 0.76rem;
+  justify-content: center;
+  min-width: 0;
+}
+
+.maa-media .kulttuuri-kuuntele > span:not(.live):not(.aika) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
 @media (min-width: 641px) {
-  .dialog.lehti .arrival-maa .maa-media {
-    grid-column: 2;
-    margin-top: 0.5rem;
-  }
+  .dialog.lehti .arrival-maa .maa-oikea .maa-media { margin-top: 0.55rem; }
 }
 
 /*
- * Tv-popup: tumma huntu saa jäädä — lähetys katsotaan kuin elokuva.
- * Paperi on ::after-kerroksena hunnun ja sisällön välissä (sama syy
- * kuin vuosisäässä: huntu maalautuisi elementin oman taustan päälle).
+ * Tv-popup mahdollisimman pienin kehyksin (omistajan toive): pelkkä
+ * 16:9-lähetys ohuella paperikehyksellä ja sulkurasti sen kulmassa —
+ * ei otsikkoa, ei lähderiviä, ei taustan tummennusta.
  */
+.postikortti.kulttuuri-suurennos.tv-kortti::before { display: none; }
+
 .postikortti.kulttuuri-suurennos.tv-kortti {
   width: min(94vw, 720px);
-  padding: 0.9rem 1rem;
-  color: #2d2010;
+  padding: 0;
+  background: none;
+  cursor: default;
 }
-
-.postikortti.kulttuuri-suurennos.tv-kortti::before { z-index: -2; }
-
-.postikortti.kulttuuri-suurennos.tv-kortti::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--arkki-paperi, #eedab3);
-  border: 1.5px solid rgba(70, 51, 31, 0.6);
-  border-radius: 8px;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
-}
-
-.tv-kortti .tv-otsikko { margin-right: 1.6rem; }
 
 .tv-upotus {
   display: block;
@@ -7433,4 +7430,29 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   outline: 1px solid rgba(70, 51, 31, 0.35);
   border-radius: 2px;
   background: #000;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+}
+
+/* Rasti videon kulmaan: vaalea paperipilleri erottuu kuvasta. */
+.dialog button.uutinen-sulku.tv-sulku {
+  top: 0.5rem;
+  right: 0.55rem;
+  z-index: 2;
+  background: rgba(238, 218, 179, 0.92);
+  color: rgba(70, 51, 31, 0.9);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+/*
+ * Kevyt blurrihuntu hunnuttomien popupien (uutinen, vuosisää, tv)
+ * taakse: ei tummennusta, vain hento sumennus joka irrottaa kortin
+ * lehdestä. Oma elementti kortin alla (z 69 < kortin 70).
+ */
+.kevythuntu {
+  position: fixed;
+  inset: 0;
+  z-index: 69;
+  background: rgba(26, 18, 8, 0.08);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
