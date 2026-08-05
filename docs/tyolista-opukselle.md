@@ -5245,6 +5245,29 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v271 — Logo avaa tekijätiedot (5.8.2026)
+
+Omistaja: *"Copyright-linkin voisi poistaa matkalaukusta ja siirtää
+logoon. Eli jos logoa klikkaa, niin sama logo voisi avautua isompana.
+Sen alla jatkuvat sitten samat tekstit, mitä oli matkalaukun linkin
+takana."*
+
+Linkki oli matkalaukun alalaidassa messinkilaatan näköisenä
+nimikilpenä. Se oli kahden napautuksen takana ja väärässä paikassa:
+laukku on pelaajan tavaroita varten, ei pelin tekijöitä. Nyt ylärivin
+logo on itse se linkki, ja se on aina näkyvissä.
+
+Lähdeikkunan otsikkona on sama logo isompana: **mitattu 352 × 86 px,
+kun ylärivillä se on 94 × 23** eli lähes nelinkertainen. Se on koko
+siirron idea — ikkuna avautuu siitä, mitä pelaaja napautti. Sen alla
+ovat entiset tekstit muuttumattomina, 24 kappaletta.
+
+Logo on nyt nappi, joten napin oletusasu on purettava. Sama ansa kuin
+radion merkkivalossa kaksi versiota sitten: pelin yleinen
+`button { min-height: 42px }` olisi kasvattanut ylärivin korkeutta.
+Mitattu: ylärivi on yhä 53 px puhelimessa ja 57 px työpöydällä, ja
+logo täsmälleen entisen kokoinen.
+
 ## v270 — Varusteiden kuvakkeet omiksi neliöikseen (5.8.2026)
 
 Omistaja: *"Tee ikoneista irrallisia neliöitä pienellä pyöristyksellä

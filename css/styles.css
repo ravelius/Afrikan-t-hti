@@ -2381,38 +2381,39 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 /* Sulje irti tavaroista (omistajan huomio). */
 .passport-card .dialog-actions { margin-top: 1.4rem; }
 
-/* Laukun alalaidan nimikilpi: pelin nimi kuin matkalaukkuun kiinnitetty
- * messinkilaatta, jonka takaa löytyvät tekijätiedot ja lähdeluettelo.
- * Keskitetty ja hiljainen — se ei kilpaile Sulje-napin kanssa. */
-.laukku-nimikilpi {
-  margin: 1.2rem 0 0;
-  text-align: center;
-}
-
-/* Valitsin on `.dialog button.…` samasta syystä kuin kuvanuolilla:
- * .dialog button antaa jokaiselle napille katkoviivakehyksen ja
- * pyöristyksen, ja tämä on linkki eikä nappi. */
-.dialog button.laukku-lahteet-linkki {
+/*
+ * NIMIKILPI SIIRTYI LAUKUSTA LOGOON (omistaja 5.8.2026: "copyright-linkin
+ * voisi poistaa matkalaukusta ja siirtää logoon").
+ *
+ * Laukun alalaidassa oli messinkilaatan näköinen linkki "Matkakirja ©
+ * 2026". Se oli piilossa kahden napautuksen takana ja väärässä
+ * paikassa: laukku on pelaajan tavaroita varten, ei pelin tekijöitä.
+ * Logo on nyt itse se linkki, ja se on aina näkyvissä.
+ *
+ * Logo on nappi eikä koriste, joten napin oletusasu on purettava —
+ * sama tarve kuin radion merkkivalossa, ja sama ansa: pelin yleinen
+ * `button { min-height: 42px }` venyttäisi ylärivin korkeutta.
+ */
+.brand-nappi {
+  display: block;
+  padding: 0;
   min-height: 0;
-  padding: 0.1rem 0.2rem;
-  font-size: 0.85rem;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  color: rgba(70, 51, 31, 0.75);
+  border: 0;
+  border-radius: 4px;
   background: none;
-  border: none;
-  /* Alleviivaus katkoviivalla kertoo linkin ja pitää sen samassa
-   * käsin piirretyssä maailmassa kuin korttien reunat. */
-  border-bottom: 1px dashed rgba(70, 51, 31, 0.5);
-  border-radius: 0;
+  color: inherit;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.dialog button.laukku-lahteet-linkki:hover:not(:disabled),
-.dialog button.laukku-lahteet-linkki:focus-visible {
-  color: #46331f;
-  background: none;
-  border-bottom-color: rgba(70, 51, 31, 0.85);
+/* Hillitty vihje siitä, että logo on painettava: kirkastuu hieman.
+ * Kultafolio ei saa välkkyä kartan päällä, joten muutos on pieni. */
+.brand-nappi:hover .brand-kuva,
+.brand-nappi:focus-visible .brand-kuva { filter: brightness(1.12); }
+
+.brand-nappi:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 /* Lähdeikkuna: pitkä luettelo, joka luetaan silmäillen. Kortti on
@@ -2421,6 +2422,27 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 .lahteet-card {
   /* Rivit ovat pitkiä nimiä; kapeampi kortti katkoisi ne palasiksi. */
   max-width: 620px;
+}
+
+/*
+ * OTSIKKONA SAMA LOGO ISOMPANA.
+ *
+ * Pelaaja napautti logoa ylärivillä, ja ikkuna avautuu siitä mitä hän
+ * napautti — se on koko siirron idea. Leveys on rajattu, koska logo on
+ * 4:1 ja täysleveänä 620 pikselin kortissa se olisi juliste eikä
+ * nimikilpi.
+ */
+.lahteet-nimikilpi {
+  margin: 0.2rem 0 1rem;
+  text-align: center;
+}
+
+.lahteet-logo {
+  display: block;
+  width: 100%;
+  max-width: 22rem;
+  height: auto;
+  margin: 0 auto;
 }
 
 .lahteet-sisus {

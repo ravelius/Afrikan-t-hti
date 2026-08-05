@@ -1331,8 +1331,17 @@ export class UI {
      */
     this.lahteetDialog = document.getElementById('lahteet-dialog');
     this.lahteetSisus = document.getElementById('lahteet-sisus');
-    document.getElementById('laukku-lahteet')?.addEventListener('click', () => {
-      this.passportDialog.close();
+    /*
+     * Ylärivin logo avaa tekijätiedot ja lähdeluettelon (omistajan toive
+     * 5.8.2026). Linkki oli ennen matkalaukun alalaidassa nimikilpenä,
+     * eli kahden napautuksen takana ja väärässä paikassa: laukku on
+     * pelaajan tavaroita varten, ei pelin tekijöitä.
+     *
+     * Laukkua ei enää tarvitse sulkea ennen avausta — logo on kartalla
+     * eikä laukun sisällä, joten kahden modaalin päällekkäisyyttä ei
+     * synny.
+     */
+    document.getElementById('brand-btn')?.addEventListener('click', () => {
       this.avaaLahteet();
     });
 
