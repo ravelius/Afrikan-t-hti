@@ -222,10 +222,15 @@ mekaniikka on jo olemassa ja varuste vain tekee siitä ilmaisen.
 Omistajan malli: Tutki-nostot tehdään ensisijaisesti MAASTA
 (js/packs/maa-kategoriat.js, ISO-3-avain) ja kaupungilla on muutaman
 noston kansisivu (KULTTUURI_KATEGORIAT[cityId], aihe id 'kaupunki').
-Pilotti Venetsia + Italia on mainissa (v265). Resepti ja
-monistusjärjestys: docs/tutki-aiheet.md. Seuraavat maapaketit tehdään
-tässä järjestyksessä: Ranska, USA, Japani, Egypti, Brasilia, Australia
-— yksi maa per PR, kaupunkikannet samassa erässä kevyinä.
+Pilotti Venetsia + Italia on mainissa (v265), ja Egypti + Kairo (v297)
+todisti monistuksen: pelkkää dataa, ei koodimuutoksia. Seuraavat
+maapaketit tässä järjestyksessä: Ranska, USA, Japani, Brasilia,
+Australia — yksi maa per PR, kaupunkikansi samassa erässä.
+
+**Vaiheistettu monistusohje on docs/tutki-aiheet.md:n lopussa**
+("Lehtimaan monistusohje") — se on kirjoitettu niin, että sen voi
+ajaa läpi ilman aiempaa kontekstia. Seuraa sitä kohta kohdalta,
+erityisesti kuvien silmätarkistusta ja uutislähteen testausta.
 
 ### PÄÄTETTY 5.8.2026: Tutki on paikallislehti (suunnittelusessio tekee)
 

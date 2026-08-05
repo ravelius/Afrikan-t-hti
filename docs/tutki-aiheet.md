@@ -160,3 +160,113 @@ lähdemerkinnästä puuttuu tekijä — hylkäykset listataan ajon lopuksi.
    jokainen aihe aukeaa, kuvat latautuvat, Lue lisää -napit toimivat.
 3. Kuvien tekijämerkinnät näkyvät jokaisessa nostossa.
 4. Kulttuurivisa aukeaa saapumiskortilta ja sen aihe löytyy aiheista.
+
+## Lehtimaan monistusohje (vaihe vaiheelta)
+
+Kirjattu Kairon monistuksesta (v297) — ensimmäinen toisinto todisti,
+että lehtimaa on pelkkää dataa. Tämä ohje on kirjoitettu ajettavaksi
+ilman aiempaa kontekstia; jokainen kohta vastaa yhtä Kairossa tehtyä
+työvaihetta. Yksi maa + lehtikaupunki per PR.
+
+### 1. Kaupungin kansi — `KULTTUURI_KATEGORIAT[cityId]`
+
+Yksi aihe (id `kaupunki`, nimi = kaupungin nimi, johdanto yhdellä
+virkkeellä kaupungin luonteesta) ja:
+
+- `kansikuvat`: 3 kpl — iso VAAKA pääkuva (kaupungin tunnetuin
+  näkymä) + 2 pienempää (maamerkki + paikallista elämää).
+- `nostot`: 3 kpl. Ensimmäinen on **taiteilijagalleria** Canaletton
+  ja David Robertsin malliin: etsi taiteilija, joka kuvasi kaupunkia
+  ennen valokuvia (Pariisi: esim. Pissarron/Caillebotten katunäkymät;
+  Tokio: Hiroshigen sata näkymää Edosta; New York: Berenice Abbott
+  tms.) ja anna `galleria`-listalla 4–5 lisäteosta otsikoineen.
+  Wellcome/museo/LoC-skannauksista Wellcome ja Google Art Project
+  ovat puhtaimpia — LoC-skannauksissa on usein VÄRIPALKKI reunassa,
+  hylkää sellaiset. Toinen nosto: paikallinen elämä (tori, kahvila,
+  kortteli). Kolmas: henkilö + `musiikki`-linkki (Apple Music).
+- Jos kaupungilla on litteitä nostoja mantereen kulttuuripaketissa,
+  SIIRRÄ ainutlaatuinen sisältö (musiikkilinkit!) kanteen ja jätä
+  litteään tauluun vain `kysymys` + selittävä kommentti. Visan aiheen
+  pitää näkyä jossakin kannen nostossa.
+
+### 2. Maan aiheet — `MAA_KATEGORIAT[ISO3]`
+
+5 aihetta × 4 nostoa vakioaiheista (historia, ruoka, kuvataide,
+musiikki, luonto, tiede — valitse maalle osuvimmat 5). Tekstit
+440–660 merkkiä, konkreettisia tarinoita eikä yleiskuvausta; lapsille
+kiinnostavat yksityiskohdat edellä (Ever Given -tyyliin). Yhteen
+aiheeseen `tehtava`, jonka vastaus LÖYTYY saman sivun tekstistä.
+
+### 3. Kuvat — säännöt ja sudenkuopat
+
+- Hae Commonsin hakurajapinnalla (`generator=search`, `gsrnamespace=6`,
+  `prop=imageinfo&iiprop=size|extmetadata`). Nukkuva 5–6 s haku­jen
+  välissä — muuten tulee "too many requests".
+- Kelpuuta: leveys ≥ 1200 px, jpg/png (EI .tif — selain ei näytä
+  peilattua tiffiä), lisenssi PD/CC0/CC BY/CC BY-SA, tekijä tiedossa.
+- **KATSO JOKAINEN KUVA SILMIN** ennen käyttöä: lataa 480 px thumb
+  (`/w/thumb.php?f=<nimi>&w=480`) ja tarkista, että sisältö vastaa
+  selitettä eikä kuvassa ole väripalkkeja, vesileimoja tai kollaaseja
+  (Kairossa hylättiin kaksi tällaista). Tämä on reseptin tärkein
+  kohta — omistaja on löytänyt vääriä kuvia aiemmista eristä.
+- Pystykuvat ovat sallittuja (taitto säilyttää kuvasuhteen v298:sta
+  alkaen). Yksi kuva vain kerran per kaupunki.
+
+### 4. Sää — `SAATIEDOT[cityId]`
+
+Hae ERA5-arkisto: `archive-api.open-meteo.com/v1/archive?latitude=…&
+longitude=…&start_date=1991-01-01&end_date=2020-12-31&daily=
+temperature_2m_mean,precipitation_sum&timezone=<paikallinen>` ja
+laske kuukausikeskiarvot (lämpö: keskiarvo; sade: kuukauden summa
+jaettuna 30 vuodella). Pyöristä yhteen desimaaliin / kokonais-mm.
+
+### 5. Kohtaaminen — `KOHTAAMISET[cityId]`
+
+Paikallinen hahmo, jolla on SIDE ISOISÄN KIRJAAN (gondolieerin
+isoisä souti omistajaa; Kairon kirjakauppiaan isä myi kartan).
+Kentät: hahmo, nappi ("Tapaa …"), frame, tervehdys, loyto, tyhja,
+vaarin. Tervehdys päättyy aina kutsuun näyttää maailmantuntemus.
+
+### 6. Uutiset — `UUTISLAHTEET[ISO3]` + workerin päivitys
+
+- Etsi maan luetuimman uutissivuston RSS ja TESTAA curlilla
+  (`-A "matkakirja-uutisvalitys/1.0"`): syöte aukeaa, otsikot ja
+  linkit jäsentyvät. Iso osa sivustoista on botti-eston takana
+  (Egyptissä Al-Ahram oli; Youm7 toimi) — kokeile kunnes löytyy
+  toimiva. Paikalliskielinen lähde ensisijainen; kieli-kenttä on
+  MyMemory-käännöksen lähdekieli.
+- Testaa myös YKSI ARTIKKELISIVU: `[itemprop="articleBody"]` tai
+  `<article>` löytyy ja sisältää >60 merkin kappaleita, ja sivulla
+  on `og:image`.
+- Lisää lähteen etuliite `tools/uutisproxy/worker.js` SALLITUT-
+  listaan ja kirjaa OHJE.md:hen uusi päivitysmerkintä. Muistuta
+  PR:ssä ja vastauksessa: OMISTAJAN pitää julkaista worker uudelleen
+  (Edit code → liitä → Deploy) — siihen asti uutisosio on piilossa.
+- Oikealta vasemmalle kirjoitettavat kielet toimivat ilman
+  lisätöitä (dir="auto" on koodissa v297:stä alkaen).
+
+### 7. Tv ja radio — `TV_KANAVAT[ISO3]`, `RADIOT[ISO3]`
+
+- Tv: maan uutiskanava, joka lähettää YouTubeen 24/7 ILMAN
+  aluerajausta (yleisradio usein estää ulkomailta — Rai ja Sky
+  estivät, euronews ja Al Qahera eivät). Hae kanavatunnus live-sivun
+  canonical-linkistä curlilla. `livesivu` = @kanava/live-osoite,
+  `upotus` = live_stream?channel=<tunnus>-varareitti.
+- Radio on yleensä valmiina RADIOT-taulussa — tarkista että maalla
+  on rivi.
+
+### 8. Maan intro
+
+Pidennä maan intro (mantereen artikkelipaketissa, esim.
+`africa-artikkelit.js` avaimella maan wiki-nimi) noin kuuteen
+virkkeeseen + kommentti, että lehden maaosasto nojaa siihen yksin.
+
+### 9. Tarkistus ja julkaisu
+
+1. `node tools/tarkista-kaksoisavaimet.mjs` + koko testistö.
+2. Playwright-kuvakaappaukset 834 JA 1024 px: kansi, kaupungin
+   nostosivu ja pari maasivua — kuvat latautuvat, kuvasuhteet
+   oikein, tekstipalstat eivät purista.
+3. Versionosto, muutokset.js-rivit, standalone, PR, squash-merge,
+   haaran nollaus. Merkitse maa tehdyksi tämän tiedoston
+   monistusjärjestykseen (✅).
