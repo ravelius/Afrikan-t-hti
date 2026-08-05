@@ -100,7 +100,14 @@ const NAYTON_RIVIT = 2;
  * (--radio-lcd-muste) kirjaimellisena heksana, koska irrallinen SVG ei
  * näe var()-muuttujia.
  */
-const NAYTON_MUSTE = '#1f2a16';
+/*
+ * Näytön hehkuväri. Meripihkanvärinen valopiste tummalla lasilla
+ * (omistajan toive 4.8.2026: näytöstä visuaalisesti tyyliin sopivampi):
+ * vihreä nestekidelasi oli 1980-lukua, mutta lämmin keltainen hehku on
+ * juuri se, miltä putkiradion valaistu asteikkolasi näyttää pimeässä.
+ * Lasi itse on css/radio.css:n --radio-lcd; tämä on pisteen väri.
+ */
+const NAYTON_MUSTE = '#f2c05e';
 
 /*
  * Radion aloitusäänenvoimakkuus.
@@ -821,19 +828,6 @@ function lukitseAsema(virta) {
   kerroVaihe(virta, 'lukittuu');
   haivytaLahetysSisaan(virta);
   lopetaViritys(LUKITUKSEN_HAIVYTYS_S);
-  /*
-   * MITTARI VAIHTAA LÄHTEEN VASTA TÄSSÄ, ei virran alkaessa. Virityksen
-   * ajan neula lukee viritysääntä pelin äänisummasta — juuri se on
-   * mittarin oma mitoitus (radiosoitin.js) — ja lukittuminen on se
-   * hetki, jolla ääni vaihtuu lähetykseksi myös kaiuttimessa. Jos asema
-   * ei antanut reititystä (CORS), lähde palautuu oletukseen eikä neula
-   * väitä lukevansa lähetystä.
-   */
-  /*
-   * Lukija kerran, ks. pysyvaLukija. Mitattu lukema aina kun reititys
-   * saatiin; jäljitelty vain kun selain ei anna mitata.
-   */
-  virta.mittarinLukija ??= virta.mittari?.lukija ?? jaljiteltyLukija(virta);
   ajastaVirralle(virta, LUKITTUMISEN_KESTO_MS, () => {
     tila?.soitin.asetaTila('soi');
     kerroMuutos();
@@ -879,368 +873,16 @@ function haivytaLahetysSisaan(virta) {
 }
 
 /*
- * ══════════════════════════════════════════════════════════════════════
- * SUORA LÄHETYS VU-MITTARIIN
- * ══════════════════════════════════════════════════════════════════════
- *
- * Omistaja: "VU-mittari ei liiku muuta kuin viritysäänestä, eli
- * radioäänestä. Se pysyy nollassa."
- *
- * Havainto on tarkka ja syy tiedossa: viritysääni on Web Audiota, joten
- * laitteen oma analysaattori näkee sen pelin äänisummasta, mutta lähetys
- * soi <audio>-elementistä eikä kulje kontekstin läpi lainkaan. Mittari ei
- * siis lukenut hiljaisuutta vaan EI MITÄÄN — lähetystä ei ollut siellä,
- * mistä se katsoi.
- *
- * KORJAUS ON SAMA REITTI KUIN KAUPUNGIN ÄÄNIMAISEMASSA
- * (js/ambience-stream.js liitaKompressori): crossOrigin ennen src:tä,
- * createMediaElementSource ja vahvistin kontekstin ulostuloon. Sitten
- * ketjun vahvistin annetaan soittimelle (radiosoitin.js asetaAanilahde),
- * joka liittää siihen oman analysaattorinsa.
- *
- * KOLME EHTOA, JOIDEN ALLA REITITYSTÄ EI EDES YRITETÄ. Jokainen niistä
- * veisi äänen kokonaan, eikä yksikään anna virhettä, jonka voisi napata:
- *
- *   1. Kontekstia ei ole tai se ei ole käynnissä. Reititetty elementti ei
- *      enää soi suoraan kaiuttimeen, eikä pysähtynyt konteksti soita
- *      mitään — tuloksena olisi täysi hiljaisuus.
- *   2. Selain ei osaa createMediaElementSourcea.
- *   3. Saman palvelimen tiedetään jo kieltäytyneen CORSista.
- *
- * JA NELJÄS TURVA ON VARAREITTI: jos lataus epäonnistuu, sama osoite
- * avataan uudelleen ilman crossOriginia (aloitaVirta petti). Moni asema ei
- * lähetä CORS-otsakkeita, ja niiden pitää soida yhä — mittarilukema on
- * koriste, lähetys ei.
+ * VU-MITTARI POISTETTIIN 5.8.2026 (omistaja: "Se VU-mittari ei oikein
+ * toimi, kun ei ole täydellisessä synkassa, niin tehdään ennemmin
+ * mahdollisimman yksinkertainen"). Samalla lähti koko mittausketju:
+ * CORS-reititys Web Audioon, jäljitelty lukema ja fetch-varamittaus.
+ * Historia on git-lokissa (v237–v267), jos mittari joskus palaa —
+ * tärkein läksy oli, ettei WebKit päästä suoratoiston ääntä
+ * analysaattoriin lainkaan, joten aitoa neulaa ei saa elementistä.
+ * Lähetys soi nyt aina tavallisesta <audio>-elementistä ilman
+ * crossOriginia, eikä CORS-varareittiä tarvita.
  */
-
-/*
- * Palvelimet, jotka ovat kieltäytyneet CORSista tämän istunnon aikana.
- *
- * MIKSI MUISTIIN: ilman tätä jokainen napautus samaan asemaan maksaisi
- * kaksi yhteydenavausta — ensin CORS-yritys, sitten varareitti. Yksi
- * turha yritys asemaa kohti on hinta, joka mittarista maksetaan; sama
- * hinta joka kerta ei ole.
- *
- * Avain on alkuperä eikä koko osoite: CORS-otsakkeet ovat palvelimen
- * ominaisuus, ei yksittäisen lähetysvirran.
- */
-const KORSITTOMAT = new Set();
-
-/** Osoitteen alkuperä, tai null jos osoitetta ei voi jäsentää. */
-function alkupera(url) {
-  try {
-    return new URL(url, typeof location === 'object' ? location.href : undefined).origin;
-  } catch {
-    return null;
-  }
-}
-
-/** Onko tämän palvelimen jo todettu kieltäytyvän CORSista? */
-function onkoKorsiton(url) {
-  const koti = alkupera(url);
-  return koti ? KORSITTOMAT.has(koti) : false;
-}
-
-/** Merkitsee palvelimen CORSittomaksi tämän istunnon ajaksi. */
-function merkitseKorsiton(url) {
-  const koti = alkupera(url);
-  if (koti) KORSITTOMAT.add(koti);
-}
-
-/*
- * ══════════════════════════════════════════════════════════════════════
- * LÄHETYKSEN OMA ASTEIKKO
- * ══════════════════════════════════════════════════════════════════════
- *
- * Tässä oli VU-mittarin toinen vika, ja se oli mittayksikkövirhe siinä
- * missä kartan rakeisuuskin: reititys toimi, mutta LUKEMA MENI ASTEIKON
- * YLÄPÄÄSTÄ ULOS.
- *
- * Laitteen oma asteikko (radiosoitin.js: −48 dB … −20 dB) on mitoitettu
- * VIRITYSÄÄNELLE, joka kulkee pelin äänisumman kautta vaimennettuna.
- * Lähetys ei kulje siellä vaan menee suoraan kontekstin ulostuloon
- * täydellä tasollaan. Mitattu 4.8.2026 samalla ketjulla kuin pelissä:
- *
- *   äänenvoimakkuus 1,0   →  −13,0 dB  →  asteikolla 1,25
- *   äänenvoimakkuus 0,5   →  −15,8 dB  →  asteikolla 1,15
- *   äänenvoimakkuus 0     →  −120 dB   →  asteikolla 0
- *
- * Yli yhden menevä lukema rajautuu ykköseen. Neula siis LÖI ÄÄRIASENTOON
- * JA JÄI SINNE — ei se maannut nollassa vaan seisoi vasteessa, mikä
- * näyttää yhtä rikkinäiseltä. Vasta äänenvoimakkuuden nollaus vei sen
- * alas, ja juuri niin peli tekee koko virityksen ajan (audio.volume = 0).
- *
- * Uusi asteikko on mitattu lähetykselle: −40 dB … −6 dB. Sillä sama
- * −13 dB antaa 0,79 ja hiljainen puhekohta noin −28 dB antaa 0,35 —
- * neula elää siinä mitassa, jota varten se on.
- *
- * VOIMAKKUUS JAETAAN POIS. Elementin `volume` kulkee mittauspisteeseen
- * asti (mitattu yllä), joten ilman jakoa neula näyttäisi nupin asentoa
- * eikä lähetyksen tasoa. Oikea VU-mittari näyttää ohjelman tason.
- * Jakaja on pohjattu, ettei häivytyksen alku (volume lähellä nollaa)
- * räjäytä lukemaa.
- */
-const LAHETYKSEN_POHJA_DB = -40;
-const LAHETYKSEN_KATTO_DB = -6;
-const JAKAJAN_POHJA = 0.15;
-
-function lahetyksenLukija(analysoija, audio) {
-  const puskuri = typeof analysoija.getFloatTimeDomainData === 'function'
-    ? new Float32Array(analysoija.fftSize)
-    : new Uint8Array(analysoija.fftSize);
-  return () => {
-    let summa = 0;
-    if (puskuri instanceof Float32Array) {
-      analysoija.getFloatTimeDomainData(puskuri);
-      for (let i = 0; i < puskuri.length; i += 1) summa += puskuri[i] * puskuri[i];
-    } else {
-      analysoija.getByteTimeDomainData(puskuri);
-      for (let i = 0; i < puskuri.length; i += 1) {
-        const nayte = (puskuri[i] - 128) / 128;
-        summa += nayte * nayte;
-      }
-    }
-    const rms = Math.sqrt(summa / puskuri.length);
-    if (!(rms > 0)) return 0;
-    const voimakkuus = Math.max(JAKAJAN_POHJA, Number(audio?.volume) || 0);
-    const db = 20 * Math.log10(rms / voimakkuus);
-    return (db - LAHETYKSEN_POHJA_DB) / (LAHETYKSEN_KATTO_DB - LAHETYKSEN_POHJA_DB);
-  };
-}
-
-/**
- * Reitittää lähetyksen Web Audion läpi VU-mittaria varten.
- *
- * Palauttaa ketjun tai `null`, jos reititys ei ole turvallista — silloin
- * elementti jää tavalliseksi <audio>-elementiksi ja soi suoraan.
- *
- * PÄÄTE ON KONTEKSTIN OMA ULOSTULO EIKÄ PELIN BUSSI. Bussissa on kaiku,
- * kompressori ja masterin vaimennus (js/sound.js), jotka on mitoitettu
- * pelin omille tehosteille — suora lähetys kulkisi niiden läpi eri
- * tasoisena kuin ennen, ja mittari näyttäisi väärää lukemaa siitä.
- * Sama ratkaisu on kaupungin äänimaisemassa samasta syystä.
- */
-function liitaMittariin(audio) {
-  /*
-   * Sama pakotus kuin viritysäänellä, ja samasta syystä: ilman sitä
-   * `ensureContext` palautti null aina kun pelin äänet olivat pois
-   * päältä, reititystä ei tehty kertaakaan eikä mittarilla ollut
-   * mitään luettavaa. MITATTU 4.8.2026: neula makasi lepokulmassaan
-   * −43,7° koko lähetyksen ajan, vaikka asema kuului kaiuttimesta.
-   * Lähetys ei tottele kertojavalikkoa, joten ei tottele mittarikaan.
-   */
-  const ctx = sfx.ensureContext?.({ pakota: true });
-  if (!ctx || typeof ctx.createMediaElementSource !== 'function') return null;
-  /*
-   * PYSÄYTETTY KONTEKSTI EI OLE ESTE.
-   *
-   * Ehto oli aiemmin `ctx.state !== 'running' -> return null`, ja se
-   * kaatoi koko reitityksen hiljaa: selain luo AudioContextin tilaan
-   * `suspended`, ja se herää vasta käyttäjän eleestä. Radion sytytys ON
-   * ele, mutta konteksti ehtii syntyä ennen kuin selain on ehtinyt
-   * merkitä sen käynnissä olevaksi — eikä reititystä silloin tehty
-   * kertaakaan, joten neulalla ei ollut mitään luettavaa.
-   *
-   * Reitityksen saa rakentaa pysäytetyllekin kontekstille; se alkaa
-   * kuljettaa ääntä heti kun konteksti herää. Herätys pyydetään tässä
-   * eikä odoteta sitä: resume() palauttaa lupauksen, ja jos se
-   * epäonnistuu, ketju on silti pystyssä seuraavaa elettä varten.
-   */
-  if (ctx.state === 'suspended') ctx.resume?.().catch(() => {});
-  try {
-    // CORS-pyyntö on asetettava ENNEN src:tä, tai selain ei ota sitä
-    // huomioon lainkaan.
-    audio.crossOrigin = 'anonymous';
-    const lahde = ctx.createMediaElementSource(audio);
-    const vahvistin = ctx.createGain();
-    vahvistin.gain.value = 1;
-    lahde.connect(vahvistin).connect(ctx.destination);
-    /*
-     * ANALYSAATTORI TEHDÄÄN TÄSSÄ EIKÄ SOITTIMESSA, koska lähetys
-     * tarvitsee OMAN ASTEIKKONSA — ks. LAHETYKSEN_POHJA_DB.
-     *
-     * Soitin osaa liittää analysaattorin itsekin, mutta se käyttää
-     * silloin laitteen omaa asteikkoa, joka on mitoitettu
-     * viritysäänelle. Lähetys on siihen nähden parikymmentä desibeliä
-     * kovempi, ja neula jää vasteeseen kiinni.
-     */
-    const analysoija = ctx.createAnalyser();
-    analysoija.fftSize = 1024;
-    vahvistin.connect(analysoija);
-    // Vaimennettu pääte, ettei haara jää umpikujaan: sama syy kuin
-    // soittimessa (radiosoitin.js varmistaAnalysoija).
-    const paate = ctx.createGain();
-    paate.gain.value = 0;
-    analysoija.connect(paate).connect(ctx.destination);
-    return {
-      vahvistin,
-      lukija: lahetyksenLukija(analysoija, audio),
-      solmut: [lahde, vahvistin, analysoija, paate],
-    };
-  } catch (syy) {
-    // createMediaElementSource heittää, jos elementti on jo reititetty.
-    console.warn('Lähetyksen reititys mittariin epäonnistui.', syy);
-    try {
-      audio.removeAttribute('crossorigin');
-    } catch {
-      /* elementti oli jo purettu */
-    }
-    return null;
-  }
-}
-
-/*
- * ══════════════════════════════════════════════════════════════════════
- * KUN LÄHETYSTÄ EI SAA MITATA: JÄLJITELTY LUKEMA
- * ══════════════════════════════════════════════════════════════════════
- *
- * Tämä on kolmas yritys samaan vikaan, ja kaksi edellistä korjasivat
- * oikeat viat mutta väärässä paikassa. Nyt syy on selvillä, ja se on
- * selaimen turvasääntö eikä bugi tässä koodissa:
- *
- *   `createMediaElementSource` antaa pelkkiä nollia, jos ääni tulee
- *   toiselta palvelimelta EIKÄ palvelin lähetä CORS-otsakkeita. Ja jos
- *   pyydämme CORSia (`crossOrigin = 'anonymous'`) palvelimelta, joka ei
- *   sitä anna, LATAUS EPÄONNISTUU KOKONAAN — asema ei soi lainkaan.
- *
- * Siksi koodissa on varareitti, joka avaa aseman uudelleen ilman
- * CORS-pyyntöä. Se pelastaa lähetyksen, mutta samalla mittari jää
- * pysyvästi ilman lähdettä. Nettiradioasemista valtaosa ei lähetä
- * CORS-otsakkeita, joten käytännössä neula makasi levossa lähes joka
- * asemalla — täsmälleen se, mistä omistaja on huomauttanut kolmesti.
- *
- * TÄTÄ EI VOI KORJATA MITTAAMALLA. Vaihtoehtoja on kaksi: neula makaa
- * kuolleena, tai se liikkuu ilman että lukemaa oikeasti mitataan.
- * Valittu on jälkimmäinen, ja se sanotaan tässä suoraan: LUKEMA ON
- * JÄLJITELTY, EI MITATTU. Laite on peliesine eikä studiomittari, ja
- * kuollut neula soivan radion päällä on rikki myös pelin logiikassa.
- *
- * Mitattu lukema käytetään aina kun se on saatavilla: jos asema antaa
- * CORSin, ketju syntyy (liitaMittariin) ja neula lukee oikeaa ääntä.
- * Jäljitelmä on vain se, mikä ennen oli tyhjä.
- *
- * KAKSI ASIAA JÄLJITELMÄSSÄ ON SILTI TOTTA, ja ne riittävät tekemään
- * siitä uskottavan:
- *
- *   1. Se seuraa äänenvoimakkuutta. Nupin kääntäminen laskee neulaa, ja
- *      ristihäivytyksen aikana neula nousee lähetyksen mukana — koska
- *      kerroin luetaan elementin omasta `volume`-arvosta.
- *   2. Se vaikenee, kun lähetys vaikenee. Puskuroinnin aikana elementti
- *      on `paused`, ja neula palaa lepoon niin kuin oikeakin.
- *
- * Liike on kolmen sinin summa eikä satunnaislukuja. Jaksot ovat
- * yhteismitattomia (0,9 / 7,3 / 19,4 rad/s eli noin 7 s, 0,9 s ja
- * 0,3 s), joten kuvio ei toistu kuultavan ajan sisällä, ja kolme
- * aikatasoa vastaa sitä mitä puheessa oikeasti on: lause, tavu ja
- * äänteen särmä. Satunnaisluvut näyttäisivät tärinältä, eivät
- * puheelta — VU-mittari on keskiarvomittari, joka ei nykähtele.
- */
-const JALJITELMAN_POHJA = 0.34;
-
-function jaljiteltyLukija(virta) {
-  const alku = kello();
-  return () => {
-    const audio = virta.audio;
-    // Vaiennut, puskuroiva tai jo suljettu lähetys ei liikuta neulaa.
-    if (!audio || audio.paused || audio.ended) return 0;
-    const voimakkuus = Number(audio.volume);
-    if (!(voimakkuus > 0)) return 0;
-    const t = (kello() - alku) / 1000;
-    const lause = 0.5 + 0.5 * Math.sin(t * 0.9 + 0.4);
-    const tavu = 0.5 + 0.5 * Math.sin(t * 7.3 + 1.7);
-    const sarma = 0.5 + 0.5 * Math.sin(t * 19.4 + 2.9);
-    const taso = JALJITELMAN_POHJA + 0.30 * lause + 0.22 * tavu + 0.10 * sarma;
-    return taso * voimakkuus;
-  };
-}
-
-/*
- * ══════════════════════════════════════════════════════════════════════
- * YKSI LÄHDE JA YKSI HERKKYYS KOKO RADIOTILAN AJAN
- * ══════════════════════════════════════════════════════════════════════
- *
- * Omistajan linjaus, ja se on lopullinen: "pidä koko ajan pelkän
- * kaupungin herkkyys päällä ja kohinan mittaus jää pois. Eli ei
- * vaihdeta herkkyyttä."
- *
- * Tässä oli kolmen version vika. Mittarin lähdettä VAIHDETTIIN:
- * kanavanvaihto antoi sen takaisin pelin äänisummalle (viritysääni,
- * laitteen oma asteikko −48…−20 dB) ja lukittuminen otti sen takaisin
- * lähetykselle (oma asteikko −40…−6 dB). Kaksi asteikkoa ja neljä
- * vaihtokohtaa — ja jos yksikin vaihto jäi tekemättä, neula jäi lukemaan
- * väärää asteikkoa lopullisesti. Kolme korjausyritystä etsi sitä
- * yksittäistä vaihtoa, joka jää väliin. Yhtään ei löytynyt, koska vika ei
- * ollut missään yksittäisessä vaihdossa vaan siinä, että vaihtoja on.
- *
- * Nyt lähde asetetaan KERRAN radiotilan alkaessa eikä sen jälkeen
- * koskaan. Se on pysyvä sulkeuma, joka katsoo joka lukemalla, mikä virta
- * on juuri nyt soiva, ja lukee sen omalla lähetysasteikolla. Vaihtokohtia
- * ei ole yhtään, joten yksikään ei voi jäädä väliin.
- *
- * Kohinaa ei mitata lainkaan. Virityksen ajan lähetys on vaimennettu,
- * joten neula lepää — se on omistajan nimenomainen valinta, ja se on myös
- * rehellisempi: mittari näyttää aseman tason, ei laitteen omaa sirinää.
- */
-/*
- * VARMISTUS: NEULA EI SAA JÄÄDÄ KUOLLEEKSI SOIVAN ASEMAN PÄÄLLE.
- *
- * Mitattu lukema voi jäädä nollaan syistä, joita tästä ympäristöstä ei
- * näe: selain antaa reitityksen mutta ei ääntä (CORS-otsake kelpasi
- * lataukseen mutta ei Web Audiolle), iOS mykistää reititetyn elementin,
- * tai lähetys on hetken puskuroimassa. Silloin neula makaa levossa,
- * vaikka kaiuttimesta kuuluu radio — ja se on omistajan raportti
- * neljästä versiosta ("VU ei toimi ollenkaan").
- *
- * Vahti ei arvaa syytä eikä yritä korjata sitä. Se katsoo vain
- * lopputulosta: jos MITATTU lukema on ollut nolla yhtäjaksoisesti
- * puolitoista sekuntia, vaikka lähetys soi eikä ole vaimennettu, mittaus
- * ei toimi tällä asemalla — ja lukija vaihdetaan jäljiteltyyn. Vaihto
- * tehdään kerran virtaa kohti eikä sitä peruta: sahaaminen mitatun ja
- * jäljitellyn välillä näkyisi neulassa nykimisenä.
- *
- * Asteikko ei vaihdu, vain lukeman lähde. Omistajan linjaus "ei vaihdeta
- * herkkyyttä" pysyy siis voimassa.
- */
-const MITTAUS_KUOLLUT_MS = 1500;
-
-function pysyvaLukija() {
-  return () => {
-    const virta = soiva;
-    if (!virta) return 0;
-    if (virta.jaljitelmaan) return virta.jaljitelmaan();
-    const lukija = virta.mittarinLukija;
-    if (!lukija) return 0;
-    const arvo = lukija();
-    if (arvo > 0.02) {
-      virta.nollasta = 0;
-      return arvo;
-    }
-    // Vaimennettu tai pysäytetty lähetys EI ole vika: silloin nollan
-    // kuuluukin olla nolla, eikä kelloa saa käynnistää.
-    const audio = virta.audio;
-    const kuuluu = audio && !audio.paused && !audio.ended && Number(audio.volume) > 0.02;
-    if (!virta.lukittu || !kuuluu) {
-      virta.nollasta = 0;
-      return arvo;
-    }
-    if (!virta.nollasta) virta.nollasta = kello();
-    else if (kello() - virta.nollasta > MITTAUS_KUOLLUT_MS && virta.mittari) {
-      console.warn('VU-mittarin mittaus jäi nollaan; siirrytään jäljiteltyyn lukemaan.');
-      virta.jaljitelmaan = jaljiteltyLukija(virta);
-      return virta.jaljitelmaan();
-    }
-    return arvo;
-  };
-}
-
-/** Antaa mittarille sen, mitä juuri nyt kuuluu — tai palauttaa oletuksen. */
-function asetaMittarinLahde(lahde) {
-  try {
-    tila?.soitin?.asetaAanilahde?.(lahde ?? null);
-  } catch (syy) {
-    console.warn('VU-mittarin lähteen vaihto epäonnistui.', syy);
-  }
-}
 
 /**
  * Sulkee virran elementin ja irrottaa sen mittariketjun.
@@ -1249,13 +891,7 @@ function asetaMittarinLahde(lahde) {
  * virran lopettamista: elementti vaihtuu, virta jatkaa.
  */
 function irrotaVirta(virta) {
-  const { audio, mittari } = virta;
-  virta.mittari = null;
-  if (mittari) {
-    for (const solmu of mittari.solmut) {
-      try { solmu.disconnect(); } catch { /* jo irrotettu */ }
-    }
-  }
+  const { audio } = virta;
   if (!audio) return;
   try {
     audio.pause();
@@ -1430,16 +1066,6 @@ function aloitaVirta(cityId, kanava) {
     cityId,
     kanava,
     audio: null,
-    // Mittarin ketju, jos lähetys saatiin Web Audioon, ks. liitaMittariin.
-    mittari: null,
-    // Neulan lukija, luodaan kerran lukittuessa (ks. pysyvaLukija).
-    mittarinLukija: null,
-    // Vahdin tila: milloin mitattu lukema meni nollaan, ja korvaava
-    // jäljitelty lukija jos mittaus todettiin kuolleeksi.
-    nollasta: 0,
-    jaljitelmaan: null,
-    // Onko tämä jo varareitin yritys eli elementti ilman crossOriginia.
-    varalla: false,
     haivytys: 0,
     // `kuuluu` on lähetyksen oma tila ja `lukittu` virityksen: nopea
     // asema kuuluu jo kauan ennen kuin se lukittuu, ks. lukitseAsema.
@@ -1477,24 +1103,9 @@ function aloitaVirta(cityId, kanava) {
    * Suoralla lähetyksellä `ended` tarkoittaa katkennutta yhteyttä, ei
    * loppunutta kappaletta: virrassa ei ole loppua. Se on siis virhe
    * siinä missä `error`kin.
-   *
-   * `korsiSyy` erottaa ne virheet, jotka VOIVAT johtua CORS-pyynnöstä
-   * (lataus ei alkanut) niistä, jotka eivät voi (selain esti toiston,
-   * yhteys katkesi kesken lähetyksen). Vain ensin mainitut yritetään
-   * uudelleen ilman mittariketjua, ks. avaaVirta.
    */
-  const petti = (syy, { korsiSyy = true } = {}) => {
+  const petti = (syy) => {
     if (!yhaSama()) return;
-    if (korsiSyy && oma.mittari && !oma.varalla && !oma.kuuluu) {
-      /*
-       * CORS-YRITYS EI SAA VIEDÄ ASEMAA. Mittarilukema on koriste,
-       * lähetys ei — joten sama osoite avataan heti uudelleen ilman
-       * crossOriginia, ja mittari jää tältä asemalta saamatta.
-       */
-      merkitseKorsiton(kanava.url);
-      avaaVirta(false);
-      return;
-    }
     lopetaAani();
     tila?.soitin.asetaTila('virhe', syy);
     kerroMuutos();
@@ -1509,11 +1120,8 @@ function aloitaVirta(cityId, kanava) {
    * createMediaElementSource on peruuttamaton — kerran reititettyä
    * elementtiä ei saa takaisin suoraan kaiuttimeen.
    */
-  function avaaVirta(mittarilla) {
+  function avaaVirta() {
     if (oma.audio) irrotaVirta(oma);
-    oma.varalla = !mittarilla;
-    // Vanha lukija osoittaisi juuri irrotettuun ketjuun.
-    oma.mittarinLukija = null;
 
     /*
      * Peiliä ei käytetä. js/media.js aaniOsoite palauttaisi
@@ -1526,22 +1134,15 @@ function aloitaVirta(cityId, kanava) {
     // Lukittu asema jatkaa omalla voimakkuudellaan, virittyvä on mykkä.
     audio.volume = oma.lukittu ? aanenvoimakkuus : 0;
     oma.audio = audio;
-    // Reititys ENNEN src:tä: crossOrigin on luettava ennen latausta.
-    oma.mittari = mittarilla ? liitaMittariin(audio) : null;
 
-    /*
-     * Kuuntelijat tarkistavat virran lisäksi ELEMENTIN. Varareitille
-     * siirtyminen jättää vanhan elementin taakse, ja sen myöhässä tuleva
-     * virhe sammuttaisi juuri käynnistyneen lähetyksen — sama
-     * vanhentuneen vuoron ongelma kuin virralla itsellään, yhtä
-     * kerrosta syvemmällä.
-     */
+    // Kuuntelijat tarkistavat virran lisäksi ELEMENTIN: myöhässä tuleva
+    // virhe ei saa sammuttaa juuri käynnistynyttä uutta lähetystä.
     const tama = () => oma.audio === audio;
     audio.addEventListener('playing', () => { if (tama()) lahetysAlkoi(); });
     audio.addEventListener('timeupdate', () => { if (tama()) lahetysAlkoi(); });
     audio.addEventListener('error', () => { if (tama()) petti('Asema ei vastaa'); });
     audio.addEventListener('ended', () => {
-      if (tama()) petti('Lähetys katkesi', { korsiSyy: false });
+      if (tama()) petti('Lähetys katkesi');
     });
     audio.src = kanava.url;
     audio.play().catch((syy) => {
@@ -1552,7 +1153,7 @@ function aloitaVirta(cityId, kanava) {
        * estetyn toiston korjaa uusi napautus, kuolleen aseman ei mikään.
        */
       const estetty = syy?.name === 'NotAllowedError';
-      petti(estetty ? 'Ääni estetty' : 'Asema ei vastaa', { korsiSyy: !estetty });
+      petti(estetty ? 'Ääni estetty' : 'Asema ei vastaa');
     });
   }
 
@@ -1573,9 +1174,7 @@ function aloitaVirta(cityId, kanava) {
   ajastaVirralle(oma, SIIRTYMAN_KESTO_MS, () => kerroVaihe(oma, 'haku'));
   ajastaVirralle(oma, LUKITUKSEN_AIKAISINTAAN_MS, () => lukitseAsema(oma));
 
-  // Mittariketju vain, jos tämän aseman palvelin ei ole jo kerran
-  // kieltäytynyt CORSista, ks. onkoKorsiton.
-  avaaVirta(!onkoKorsiton(kanava.url));
+  avaaVirta();
   kerroMuutos();
 }
 
@@ -1836,13 +1435,6 @@ export function paalle({
 
   (juuri ?? document.body)?.appendChild(soitin.juuri);
 
-  /*
-   * MITTARIN LÄHDE ASETETAAN TÄSSÄ, KERRAN, EIKÄ SEN JÄLKEEN KOSKAAN.
-   * Ks. pysyvaLukija: yksi asteikko koko radiotilan ajan, ei kohinan
-   * mittausta, ei vaihtokohtia jotka voivat jäädä väliin.
-   */
-  asetaMittarinLahde(pysyvaLukija());
-
   // Kaupungin ääni väistyy kokonaan, ei väisty vaimentamalla: radiotilassa
   // radio on ainoa ääni.
   stopPlaceStream();
@@ -1903,7 +1495,6 @@ export function pois() {
   unohdaViritysaanet(sfx.ctx);
   // Laite takaisin omaan oletuslähteeseensä: radiotilan ulkopuolella
   // mittarilla ei ole lähetystä luettavanaan.
-  asetaMittarinLahde(null);
   const vanha = tila;
   tila = null;
   try {

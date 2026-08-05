@@ -42,6 +42,7 @@ const MODULES = [
   'js/packs/viritysaanet.js',
   'js/packs/europe-kulttuuri.js',
   'js/packs/kulttuuri-kategoriat.js',
+  'js/packs/maa-kategoriat.js',
   'js/packs/europe-valokuvat.js',
   'js/packs/europe-kielet.js',
   'js/packs/europe-maatiedot.js',

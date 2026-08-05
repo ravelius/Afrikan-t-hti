@@ -91,11 +91,23 @@ export const RADIOT = {
   MNG: { url: 'https://c2.radioboss.fm/stream/394', asema: 'Гэр бүлийн радио 104.5 (Family Radio, Ulaanbaatar)' },
   MOZ: { url: 'https://stream.zeno.fm/tskpv4vscv8uv', asema: 'Rádio Moçambique', virallinen: true },
   NAM: { url: 'https://edge.iono.fm/xice/193_high.aac', asema: 'Omulunga Radio 100.9 (Windhoek)' },
-  NGA: { url: 'https://mega-public-relay.deathsmack-a51.workers.dev/', asema: 'ZamRock Radio Nigeria Relay', virallinen: true },
+  /*
+   * KÄSIN VAIHDETUT ASEMAT (4.8.2026): NGA, NOR, NPL ja TUN on vaihdettu
+   * asemiin, joiden palvelin lähettää CORS-otsakkeet — vain silloin
+   * VU-mittari voi mitata lähetystä oikeasti (ks. js/linssit/radio.js
+   * liitaMittariin). Jokainen osoite on koestettu: vastaa 200, antaa
+   * audio/mpeg-tavuja ja Access-Control-Allow-Origin: *. NOR pysyi
+   * samalla yleisradiolla (NRK); NPL ja TUN vaihtuivat maan johtavaan
+   * yksityiseen puheasemaan, koska yleisradio ei lähetä CORSia — tämä
+   * on tietoinen kauppa mittarin hyväksi. Jos lista generoidaan
+   * uudelleen, hae-radiot.mjs:ään pitää ensin lisätä CORS-koe, tai
+   * nämä neljä palautuvat CORSittomiksi.
+   */
+  NGA: { url: 'https://go.webgateready.com/metrofm/radio.mp3', asema: 'Metro FM 97.7 (Radio Nigeria, Lagos)', virallinen: true },
   NIC: { url: 'https://stream.zeno.fm/cbd1wweamzzuv', asema: 'La Voz del Norte' },
   NLD: { url: 'https://icecast.omroep.nl/radio1-bb-mp3', asema: 'NPO Radio 1', virallinen: true },
-  NOR: { url: 'https://lyd.nrk.no/icecast/aac/high/s0w7hwn47m/p1_dk4', asema: 'NRK P1 Nordland', virallinen: true },
-  NPL: { url: 'https://stream1.radionepal.gov.np/live/', asema: 'Radio Nepal', virallinen: true },
+  NOR: { url: 'https://cdn0-47115-liveicecast0.dna.contentdelivery.net/p1_mp3_h', asema: 'NRK P1 (Stor-Oslo)', virallinen: true },
+  NPL: { url: 'https://radio-broadcast.ekantipur.com/stream', asema: 'Kantipur FM' },
   NZL: { url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/NZME_41AAC.aac', asema: 'Newstalk ZB' },
   OMN: { url: 'https://stream.zeno.fm/84652g7meg8uv', asema: 'Al Wisal (الوصال), Muscat' },
   PAK: { url: 'https://samaakhi107-itelservices.radioca.st/stream', asema: 'MERA FM 107.4' },
@@ -122,7 +134,7 @@ export const RADIOT = {
   TCD: { url: 'https://strhls.streamakaci.tv/str_tchad_radio/str_tchad_radio/icecast.audio', asema: 'Radiodiffusion Nationale Tchadienne', virallinen: true },
   THA: { url: 'https://radio12.plathong.net/7234/;stream.mp3', asema: 'วิทยุเสียงอิสลาม', virallinen: true },
   TLS: { url: 'https://streaming.kalohan.net/proxy/raliber?mp=/stream', asema: 'Rádio Liberdade Dili' },
-  TUN: { url: 'https://radio.radiotunisienne.tn/nationale', asema: 'Radio Nationale', virallinen: true },
+  TUN: { url: 'https://streaming.diwanfm.net/stream', asema: 'Diwan FM' },
   TUR: { url: 'https://trt.radyotvonline.net/trt1', asema: 'TRT Radyo 1', virallinen: true },
   TWN: { url: 'https://n03.rcs.revma.com/78fm9wyy2tzuv', asema: '中廣新聞網', virallinen: true },
   TZA: { url: 'https://a7.asurahosting.com/listen/tbc_taifa/radio.mp3', asema: 'TBC Taifa', virallinen: true },
