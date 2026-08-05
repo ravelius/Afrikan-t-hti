@@ -22,6 +22,14 @@
 export const UUTISPROXY = 'https://matkakirja-uutiset.samireivinen.workers.dev';
 
 export const UUTISLAHTEET = {
+  // Youm7 (اليوم السابع) on Egyptin luetuimpia uutissivustoja.
+  // Al-Ahramin syötteet ovat botti-eston takana (testattu 5.8.2026),
+  // Youm7:n RSS ja artikkelisivut aukeavat workerin läpi ongelmitta.
+  EGY: {
+    nimi: 'Youm7',
+    kieli: 'ar',
+    syote: 'https://www.youm7.com/rss/SectionRss?SectionID=65',
+  },
   ITA: {
     nimi: 'ANSA',
     kieli: 'it',
@@ -43,6 +51,15 @@ export const UUTISLAHTEET = {
  * maailmanlaajuisesti ilman aluerajauksia (todettu 5.8.2026).
  */
 export const TV_KANAVAT = {
+  // Al Qahera News on Egyptin uutiskanava, joka lähettää YouTubeen
+  // ympäri vuorokauden ilman aluerajausta (kanavatunnus varmistettu
+  // live-sivun canonical-linkistä 5.8.2026).
+  EGY: {
+    nimi: 'Al Qahera News',
+    livesivu: 'https://www.youtube.com/@AlQaheraNews/live',
+    upotus: 'https://www.youtube.com/embed/live_stream'
+      + '?channel=UCi97xPhaYMe9HAzLCh8CC9g&autoplay=1',
+  },
   ITA: {
     nimi: 'euronews italiano',
     // Live-sivulta luetaan kulloisenkin lähetyksen tunniste workerin

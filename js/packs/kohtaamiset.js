@@ -22,6 +22,25 @@
  * Kaupunki ilman riviä saa entisen satunnaisen kysyjän (ASKERS).
  */
 export const KOHTAAMISET = {
+  kairo: {
+    hahmo: 'kirjakauppias Faruk',
+    nappi: 'Tapaa kirjakauppias',
+    frame: 'kirjakauppias Faruk kohentaa lasejaan ja kysyy',
+    tervehdys: 'Khan el-Khalilin kapeimmalla kujalla vanha kirjakauppias '
+      + 'laskee teelasinsa ja tuijottaa kainalossasi olevaa kirjaa. '
+      + '"Tuo kirja on käynyt tässä puodissa ennenkin — isäni myi sen '
+      + 'omistajalle kartan, jota ei ollut muilla. Jos kannat sitä nyt, '
+      + 'näytä että tunnet maailmaa kuten hän — sitten kerron, minne '
+      + 'kartta hänet johti."',
+    loyto: 'Faruk kääntää lyhdyn liekkiä suuremmalle ja levittää '
+      + 'kellastuneen kartan tiskille: "Tässä. Isoisäsi merkitsi tämän '
+      + 'itse — katso, mitä hän jätti sinulle."',
+    tyhja: 'Faruk selaa hyllynsä kääröjä ja pudistaa päätään: "Joku on '
+      + 'käynyt täällä ennen sinua. Mutta basaarissa mikään ei katoa '
+      + 'lopullisesti — jatka etsimistä."',
+    vaarin: 'Faruk sulkee kirjansa pehmeästi: "Ei vielä, ystäväni. '
+      + 'Palaa, kun tunnet maailman paremmin — tee odottaa silloinkin."',
+  },
   venetsia: {
     hahmo: 'gondolieeri Matteo',
     nappi: 'Tapaa gondolieeri',

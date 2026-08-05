@@ -384,9 +384,22 @@ export const OMAT_ARTIKKELIT = {
 
   // --- Maat ------------------------------------------------------------
   Egypti: {
+    // Muita pidempi tarkoituksella: Kairon lehden maaosasto nojaa
+    // tähän yksin, ilman Lue lisää -nappia (sama malli kuin Italialla
+    // europe-artikkelit.js:ssä).
     intro: 'Egypti on Niilin lahja: kapea vihreä jokilaakso keskellä '
       + 'aavikkoa on ruokkinut yhden maailman vanhimmista '
-      + 'sivilisaatioista jo viisi tuhatta vuotta.',
+      + 'sivilisaatioista jo viisi tuhatta vuotta. Faaraoiden valtakunta '
+      + 'kesti kolme vuosituhatta ja jätti jälkeensä pyramidit, '
+      + 'temppelit ja hieroglyfit — ja niiden perään maata ovat '
+      + 'hallinneet kreikkalaiset, roomalaiset, arabit, osmanit ja '
+      + 'britit. Nykyinen Egypti on arabimaailman väkirikkain maa, '
+      + 'jonka asukkaista lähes kaikki asuvat joen varrella tai '
+      + 'suistossa. Suezin kanavan kautta kulkee suuri osa maailman '
+      + 'laivaliikenteestä, ja pelloilla kasvatetaan puuvillaa, riisiä '
+      + 'ja taateleita kuten aina. Felukka-purjeveneet lipuvat joella, '
+      + 'ja teelasi ja tavla-peli kuuluvat kahvilan pöytään joka '
+      + 'korttelissa.',
     artikkeli: 'Egypti sijaitsee Afrikan koilliskulmassa, ja sillä on '
       + 'rantaa sekä Välimerelle että Punaiselle merelle. Lähes koko '
       + 'maa on aavikkoa — mutta sen halki virtaa Niili, jonka laakso '

@@ -7144,6 +7144,9 @@ export class UI {
         rivi.type = 'button';
         rivi.lang = lahde.kieli;
         const teksti = html('span', 'uutinen-rivi-teksti', uutinen.otsikko);
+        // dir="auto": oikealta vasemmalle kirjoitettava otsikko (esim.
+        // arabia) asettuu oikein ilman kielikohtaista koodia.
+        teksti.dir = 'auto';
         rivi.appendChild(teksti);
         rivi.addEventListener('click', () => this.avaaUutinen(uutinen, lahde));
         lista.appendChild(rivi);
@@ -7151,7 +7154,9 @@ export class UI {
         // etikettiä (omistajan toive).
         kaannaSuomeksi(uutinen.otsikko, lahde.kieli).then((suomeksi) => {
           if (!suomeksi || !rivi.isConnected) return;
-          teksti.appendChild(html('span', 'uutinen-rivi-suomeksi', suomeksi));
+          const rivinSuomennos = html('span', 'uutinen-rivi-suomeksi', suomeksi);
+          rivinSuomennos.dir = 'auto';
+          teksti.appendChild(rivinSuomennos);
         });
         // Pikkukuva otsikon viereen (omistajan toive): sama
         // artikkelihaku lämmittää muistin, joten popup aukeaa heti.
@@ -7192,6 +7197,7 @@ export class UI {
     kortti.appendChild(sulku);
     const otsikko = html('p', 'uutinen-otsikko', uutinen.otsikko);
     otsikko.lang = lahde.kieli;
+    otsikko.dir = 'auto';
     kortti.appendChild(otsikko);
     // Suomennos heti otsikon alle — ilman selittelyä.
     const otsikkoSuomeksi = html('p', 'uutinen-otsikko-suomeksi');
@@ -7215,6 +7221,7 @@ export class UI {
     // vanha versio), kuvaus jää — popup ei ole koskaan tyhjä.
     const runko = html('div', 'uutinen-runko');
     runko.lang = lahde.kieli;
+    runko.dir = 'auto';
     if (uutinen.kuvaus) runko.appendChild(html('p', 'uutinen-kuvaus', uutinen.kuvaus));
     kortti.appendChild(runko);
     let runkoTeksti = uutinen.kuvaus ?? '';

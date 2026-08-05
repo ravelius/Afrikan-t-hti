@@ -1184,6 +1184,135 @@ export const KULTTUURI_KATEGORIAT = {
    * sellaisinaan — kuvat on tarkistettu jo silloin ja ne ovat
    * peilissä. Litteään tauluun jäi vain kulttuurivisa (v220 sääntö).
    */
+  kairo: [
+    {
+      id: 'kaupunki',
+      nimi: 'Kairo',
+      johdanto: 'Tuhannen minareetin kaupunki, jossa faaraoiden aika ja '
+        + 'kahdenkymmenen miljoonan ihmisen arki mahtuvat samaan '
+        + 'katukuvaan.',
+      /*
+       * Lehden etusivun kuvat: sama malli kuin Venetsiassa — oma,
+       * tarkistettu valinta. Ensimmäinen on iso pääkuva, loput
+       * pienempien kuvien rivissä.
+       */
+      kansikuvat: [
+        {
+          tiedosto: 'All Gizah Pyramids.jpg',
+          selite: 'Gizan pyramidit kaupungin laidalla — ainoa pystyssä '
+            + 'säilynyt antiikin seitsemästä ihmeestä.',
+          lahde: 'Ricardo Liberato, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+        {
+          tiedosto: 'Muhammad Ali Mosque 1.jpg',
+          selite: 'Muhammad Alin alabasterimoskeija linnoituskukkulalla '
+            + 'hallitsee kaupungin siluettia.',
+          lahde: 'kallerna, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Khan el-Khalili, Cairo Egypt - panoramio (7).jpg',
+          selite: 'Khan el-Khalilin basaarissa on käyty kauppaa samoilla '
+            + 'kujilla 1300-luvulta asti.',
+          lahde: 'The Erica Chang, Wikimedia Commons (CC BY 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Roberts piirsi Kairon',
+          tiedosto: 'Cairo, looking west, Egypt. Coloured lithograph by Louis Haghe Wellcome V0049365.jpg',
+          teksti: 'Skotlantilainen David Roberts matkusti Egyptiin 1838 '
+            + 'ja piirsi Kairoa kuukausien ajan kaduilta ja katoilta. '
+            + 'Litografioiksi painetut kuvat olivat monelle '
+            + 'eurooppalaiselle ensimmäinen näkymä kaupunkiin, josta oli '
+            + 'siihen asti vain kuultu tarinoita.',
+          selite: 'Kairo lännestä katsottuna (1849): minareettien metsä '
+            + 'täyttää kaupungin, ja taivaanrannassa siintävät Gizan '
+            + 'pyramidit.',
+          lahde: 'David Roberts / Wellcome Collection, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'David Roberts',
+          /*
+           * Selattava galleria kuten Venetsian Canaletto: lisää
+           * Robertsin Kairo-litografioita saman noston nuolista.
+           */
+          galleria: [
+            {
+              otsikko: 'Metwaleyn portti',
+              tiedosto: 'Gateway of the Metwaleys with minarets, Cairo, Egypt. Colour Wellcome V0049383.jpg',
+              selite: 'Bab Zuweilan portti kaksoisminareetteineen: portin '
+                + 'varjossa käy basaarikauppa kuten Robertsin aikaan — '
+                + 'portti on yhä pystyssä.',
+              lahde: 'David Roberts / Wellcome Collection, Wikimedia Commons (CC BY 4.0)',
+            },
+            {
+              otsikko: 'Linnoitus',
+              tiedosto: 'Cairo with the residence of Mehemet Ali in the citadel, Egyp Wellcome V0049375.jpg',
+              selite: 'Kairon linnoituskukkula Muhammad Alin aikana: '
+                + 'kamelikaravaani lepää muurin juurella, ja kukkulalla '
+                + 'rakennetaan juuri sitä moskeijaa, joka nyt hallitsee '
+                + 'siluettia.',
+              lahde: 'David Roberts / Wellcome Collection, Wikimedia Commons (CC BY 4.0)',
+            },
+            {
+              otsikko: 'Kalifien haudat',
+              tiedosto: 'Mosque of Ayed Bey, with other tombs of the caliphs, Cairo, Wellcome V0049368.jpg',
+              selite: 'Kalifien hautakaupunki muurien ulkopuolella: '
+                + 'kupolien ja minareettien kaupunginosa, jossa asutaan '
+                + 'yhä — hautojen keskellä.',
+              lahde: 'David Roberts / Wellcome Collection, Wikimedia Commons (CC BY 4.0)',
+            },
+            {
+              otsikko: 'Vesijohto Niililtä',
+              tiedosto: 'The aqueduct seen from the the Island of Rhoda, Cairo, Egypt Wellcome V0012305.jpg',
+              selite: 'Keskiaikainen vesijohto kantoi Niilin vettä '
+                + 'linnoitukselle asti. Etualalla joen veneitä Rhodan '
+                + 'saaren rannassa.',
+              lahde: 'David Roberts / Wellcome Collection, Wikimedia Commons (CC BY 4.0)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Basaari ja kirjailijan kahvila',
+          tiedosto: 'Kairo 2016-03-28h.jpg',
+          teksti: 'Khan el-Khalilin kujilla on myyty mausteita, kultaa ja '
+            + 'lyhtyjä 1300-luvulta asti, ja tinkiminen kuuluu kauppaan '
+            + 'yhä. Basaarin sydämessä el-Fishawin kahvila on tarjoillut '
+            + 'teetä yli kaksisataa vuotta — sen peilisalissa istui '
+            + 'iltojaan myös Naguib Mahfouz, joka sai Kairon kujista '
+            + 'kirjoittamistaan romaaneista Nobelin 1988, ensimmäisenä '
+            + 'arabiaksi kirjoittavana kirjailijana.',
+          selite: 'El-Fishawin kahvilan ovi Khan el-Khalilin kujalla: '
+            + 'kullattu peili, puiset ristikkoseinät ja teelasit '
+            + 'odottamassa.',
+          lahde: 'Djehouty, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Naguib Mahfouz',
+        },
+        {
+          /*
+           * Siirretty litteästä taulusta (africa-kulttuuri.js), koska
+           * kategoriat korvaavat litteät nostot — musiikkilinkki ja
+           * visan aihe pysyvät näin näkyvissä. Kuva on 548 px leveä eli
+           * alle nykysäännön, mutta se on ollut pelissä alusta asti ja
+           * on aidosti paras vapaa kuva laulajasta.
+           */
+          otsikko: 'Umm Kulthum, Egyptin ääni',
+          tiedosto: 'Umm Kulthum4.jpg',
+          teksti: 'Laulajatar Umm Kulthum oli arabimaailman rakastetuin '
+            + 'ääni: kun hänen radiokonserttinsa alkoi kuun ensimmäisenä '
+            + 'torstaina, Kairon kadut hiljenivät ja kahvilat täyttyivät '
+            + 'kuuntelijoista. Yksi laulu saattoi kestää tunnin, eikä '
+            + 'kukaan pitänyt sitä pitkänä.',
+          selite: 'Umm Kulthum mikrofonin äärellä uransa alkupuolella. '
+            + 'Tunnusmerkit olivat aina samat: tummat lasit, nenäliina '
+            + 'kädessä ja orkesteri takana — ja ääni, jota kutsuttiin '
+            + 'Egyptin neljänneksi pyramidiksi.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Umm Kulthum',
+          musiikki: 'https://music.apple.com/fi/artist/umm-kulthum/81179580',
+          musiikkiNimi: 'Umm Kulthum Apple Musicissa',
+        },
+      ],
+    },
+  ],
   venetsia: [
     {
       id: 'kaupunki',

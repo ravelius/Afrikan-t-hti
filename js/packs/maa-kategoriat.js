@@ -28,6 +28,389 @@
  */
 
 export const MAA_KATEGORIAT = {
+  EGY: [
+    {
+      id: 'historia',
+      nimi: 'Historia',
+      johdanto: 'Egyptin historia on niin pitkä, että pyramidit olivat '
+        + 'muinaisia jo Kleopatralle — hänestä meihin on lyhyempi matka '
+        + 'kuin hänestä pyramidien rakentajiin.',
+      nostot: [
+        {
+          otsikko: 'Poikakuninkaan koskematon hauta',
+          tiedosto: 'Golden Mask of Tutankhamu00 (5).jpg',
+          teksti: 'Tutankhamon nousi valtaistuimelle noin '
+            + 'yhdeksänvuotiaana ja kuoli alle kaksikymppisenä — '
+            + 'vähäpätöinen faarao, jonka nimen historia melkein unohti. '
+            + 'Juuri siksi hänen hautansa säilyi: kun Howard Carter '
+            + 'vuonna 1922 avasi reiän hautakammion oveen ja häneltä '
+            + 'kysyttiin, näkyykö mitään, hän vastasi: "Näkyy — '
+            + 'ihmeellisiä asioita." Hauta oli ainoa lähes koskemattomana '
+            + 'löydetty faaraonhauta: yli 5 000 esinettä, ja niiden '
+            + 'joukossa 11-kiloinen kultainen kasvonaamio.',
+          selite: 'Tutankhamonin kultainen naamio Kairon Egyptiläisessä '
+            + 'museossa — luultavasti maailman tunnetuin museoesine.',
+          lahde: 'لا روسا, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Tutankhamon',
+        },
+        {
+          otsikko: 'Kivi, joka avasi hieroglyfit',
+          tiedosto: 'Rosetta Stone.JPG',
+          teksti: 'Hieroglyfejä osattiin ihailla 1400 vuotta ilman, että '
+            + 'kukaan maailmassa osasi lukea niitä. Avain löytyi 1799 '
+            + 'Rosettan kaupungista: kivipaasi, johon sama teksti oli '
+            + 'hakattu kolmella kirjoituksella — hieroglyfein, arkisella '
+            + 'egyptillä ja kreikaksi. Ranskalainen Jean-François '
+            + 'Champollion vertasi kirjoituksia toisiinsa vuosikausia ja '
+            + 'mursi koodin 1822. Sillä hetkellä kolme tuhatta vuotta '
+            + 'mykkänä ollut sivilisaatio alkoi taas puhua: temppelien '
+            + 'seinät muuttuivat luettaviksi kirjoiksi.',
+          selite: 'Rosettan kivi British Museumissa. Sama teksti kolmella '
+            + 'kirjoituksella teki mahdottomasta mahdollisen.',
+          lahde: 'Hans Hillewaert, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Rosettan kivi',
+        },
+        {
+          otsikko: 'Temppeli siirrettiin palasina',
+          tiedosto: 'Abu Simbel, façade of the Great Temple (6201194723).jpg',
+          teksti: 'Kun Assuanin suurpato rakennettiin 1960-luvulla, '
+            + 'nouseva tekojärvi uhkasi hukuttaa Abu Simbelin '
+            + 'kalliotemppelit, jotka Ramses II oli hakkauttanut vuoreen '
+            + '3 200 vuotta aiemmin. Maailma päätti pelastaa ne: '
+            + 'temppelit sahattiin yli tuhanneksi lohkoksi, joista '
+            + 'painavimmat olivat 30 tonnia, ja koottiin uudelleen 65 '
+            + 'metriä korkeammalle keinotekoisen kukkulan sisään. '
+            + 'Urakasta syntyi ajatus maailmanperinnöstä — siitä, että '
+            + 'jotkin paikat kuuluvat koko ihmiskunnalle.',
+          selite: 'Abu Simbelin suurtemppelin julkisivu: neljä '
+            + 'kaksikymmenmetristä Ramses II:n istuvaa patsasta — '
+            + 'jokainen siirretty palasina nykyiselle paikalleen.',
+          lahde: 'Arian Zwegers, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Abu Simbel',
+        },
+        {
+          otsikko: 'Kanava, jota maailma vahtii',
+          tiedosto: 'Ever Given in Suez Canal viewed from ISS.jpg',
+          teksti: 'Suezin kanava avattiin 1869, ja se lyhensi merimatkan '
+            + 'Euroopasta Aasiaan tuhansilla kilometreillä — laivojen ei '
+            + 'enää tarvinnut kiertää koko Afrikkaa. Nykyään kanavan '
+            + 'kautta kulkee yli kymmenesosa maailmankaupasta. Keväällä '
+            + '2021 koko maailma sai muistutuksen kapeikon merkityksestä, '
+            + 'kun 400-metrinen konttilaiva Ever Given juuttui poikittain '
+            + 'kanavaan kuudeksi päiväksi: sadat laivat jonottivat, ja '
+            + 'kaivinkone kaivoi keulaa irti hiekasta koko maailman '
+            + 'seuratessa.',
+          selite: 'Ever Given poikittain Suezin kanavassa maaliskuussa '
+            + '2021, kuvattuna avaruusasemalta.',
+          lahde: 'NASA, Wikimedia Commons (PD)',
+          wiki: 'Suezin kanava',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Egyptiläinen ruoka on kaduilla syntynyttä: papupata '
+        + 'aamulla, koshari lounaaksi ja tuore leipä, joka kulkee '
+        + 'pyörän tarakalla pään päällä.',
+      tehtava: {
+        kysymys: 'Mitä egyptinarabian sana aish tarkoittaa leivän '
+          + 'lisäksi?',
+        vaihtoehdot: ['Elämää', 'Aurinkoa', 'Niiliä'],
+        oikea: 0,
+        fakta: 'Leipä on egyptiläisille niin tärkeää, että sen nimi '
+          + 'tarkoittaa elämää — vastaus löytyi leipänostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Koshari, kansallisruoka kulhossa',
+          tiedosto: 'Egyptian Koshari.jpg',
+          teksti: 'Egyptin kansallisruoka koshari on kerroksittain '
+            + 'riisiä, makaronia ja linssejä, päällä tomaattikastiketta, '
+            + 'kikherneitä ja rapeaksi paistettua sipulia. Se syntyi '
+            + '1800-luvulla halvaksi työväen ruoaksi, ja sitä myydään '
+            + 'yhä kaduilla ja koshari-ravintoloissa, joissa annos '
+            + 'kootaan metallikulhoon sekunneissa. Jokainen lisää itse '
+            + 'etikkaa ja tulista dakka-kastiketta — siitä väitellään, '
+            + 'kuinka paljon on oikea määrä.',
+          selite: 'Koshari-annos: riisin, makaronin ja linssien päällä '
+            + 'tomaattikastike ja kikherneet.',
+          lahde: 'Basma, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Koshari',
+        },
+        {
+          otsikko: 'Papupata porisee koko yön',
+          tiedosto: 'Foul Mudames.jpg',
+          teksti: 'Egyptin aamiainen on ful medames: härkäpapuja, jotka '
+            + 'hautuvat suuressa pataruukussa hiljaisella tulella koko '
+            + 'yön ja maustetaan kuminalla, sitruunalla ja öljyllä. '
+            + 'Ruoka on niin vanha, että papuja on löydetty faaraoiden '
+            + 'haudoista asti. Aamuisin ful-kärryjen ympärille syntyy '
+            + 'jono: myyjä kauhoo papuja ruukun suusta leipätaskuihin, '
+            + 'ja työmatkalaiset syövät ne siinä seisten.',
+          selite: 'Ful-myyjä kallistaa isoa pataruukkuaan — samanlaisesta '
+            + 'on kauhottu aamiaista Kairon kaduilla sukupolvien ajan.',
+          lahde: 'Mona Abo-Abda, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Ful medames',
+        },
+        {
+          otsikko: 'Leipä tarkoittaa elämää',
+          tiedosto: 'Bread in move.jpg',
+          teksti: 'Arabiaksi leipä on khubz — mutta Egyptissä sitä '
+            + 'kutsutaan sanalla aish, joka tarkoittaa elämää. Litteä '
+            + 'aish baladi -leipä paistetaan kivikuumassa uunissa, jossa '
+            + 'se pullistuu palloksi, ja valtio tukee sen hintaa, jotta '
+            + 'leipää riittää kaikille. Kairon katukuvaan kuuluvat '
+            + 'leivänkuljettajat, jotka polkevat pyörällä ruuhkan läpi '
+            + 'valtava leipäritilä pään päällä tasapainossa — kädet '
+            + 'tarvitaan ohjaustankoon.',
+          selite: 'Leivänkuljettaja Kairossa: tuoreet leivät kulkevat '
+            + 'ritilällä pään päällä, pyörä alla.',
+          lahde: 'Myousry6666, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Aish baladi',
+        },
+        {
+          otsikko: 'Ahwa on olohuone kadulla',
+          tiedosto: 'Kairo 2019-11-04j.jpg',
+          teksti: 'Egyptiläinen kahvila eli ahwa on olohuone kadun '
+            + 'varrella: pöydissä juodaan paksua kahvia ja makeaa '
+            + 'minttuteetä, pelataan tavla-lautapeliä ja ratkotaan '
+            + 'maailman asiat. Tee tilataan sokerimäärän mukaan — '
+            + 'ziyada tarkoittaa reilusti sokeria. Kiirettä ahwassa ei '
+            + 'tunneta: lasi teetä oikeuttaa istumaan niin pitkään kuin '
+            + 'juttua riittää, ja vakioasiakkaan tilaus muistetaan '
+            + 'kysymättä.',
+          selite: 'Ahwa täynnä väkeä Kairon vanhassakaupungissa — puhe '
+            + 'sorisee, teelasit kiertävät.',
+          lahde: 'Djehouty, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Egyptin keittiö',
+        },
+      ],
+    },
+    {
+      id: 'kuvataide',
+      nimi: 'Kuvataide',
+      johdanto: 'Egyptin taide on maailman pisin kuvakertomus: samat '
+        + 'selkeät muodot ja kirkkaat värit kantoivat kolme tuhatta '
+        + 'vuotta — ja näkyvät museoissa yhä.',
+      nostot: [
+        {
+          otsikko: 'Nefertiti, kuvanveiston koulutyö',
+          tiedosto: 'Nofretete Neues Museum.jpg',
+          teksti: 'Kuningatar Nefertitin rintakuva löytyi 1912 '
+            + 'kuvanveistäjä Thutmosen työpajan raunioista Amarnasta. Se '
+            + 'ei ollut valmis teos vaan mestarin mallikappale, josta '
+            + 'oppilaat kopioivat kuningattaren kasvot — siksi toinen '
+            + 'silmä jäi viimeistelemättä. Kolme ja puoli tuhatta vuotta '
+            + 'myöhemmin harjoitustyöstä on tullut yksi maailman '
+            + 'kuuluisimmista muotokuvista, jota jonotetaan Berliinin '
+            + 'museossa kuin tähteä ainakin.',
+          selite: 'Nefertitin rintakuva (n. 1345 eaa.) Berliinin Neues '
+            + 'Museumissa. Vasen silmä jäi mallityössä tyhjäksi.',
+          lahde: 'Philip Pikart, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Nefertiti',
+        },
+        {
+          otsikko: 'Kissa mukana metsällä',
+          tiedosto: 'Tomb of Nebamun.jpg',
+          teksti: 'Kirjuri Nebamunin hautakammion seinään maalattiin '
+            + '3 400 vuotta sitten metsästysretki papyruskosteikossa: '
+            + 'Nebamun seisoo veneessä heittokeppi kädessä, linnut '
+            + 'pyrähtävät lentoon, ja perheen kissa on ehtinyt napata '
+            + 'kolme lintua yhtä aikaa. Vaimo ja tytär ovat mukana '
+            + 'juhlavaatteissa, koska kuva ei esitä arkea vaan '
+            + 'ikuisuutta: tällaisena Nebamun halusi elää kuolemansa '
+            + 'jälkeen — perhe ja kissa mukanaan.',
+          selite: 'Nebamun metsästää kosteikossa (n. 1350 eaa.), British '
+            + 'Museum. Ruskea kissa nappaa lintuja veneen keulassa.',
+          lahde: 'British Museum, Wikimedia Commons (PD)',
+          wiki: 'Nebamun',
+        },
+        {
+          otsikko: 'Kasvot muumion päällä',
+          tiedosto: 'Fayum egyptian funerary portrait 1627 NAMAthens.jpg',
+          teksti: 'Fajumin keitaalta on löydetty satoja roomalaisajan '
+            + 'muotokuvia, jotka maalattiin puulevylle ja sidottiin '
+            + 'muumion kasvojen päälle. Ne ovat lähes ainoat säilyneet '
+            + 'antiikin maalaukset kasvoista — ja niin eläviä, että '
+            + 'kahden tuhannen vuoden takainen ihminen katsoo suoraan '
+            + 'silmiin: kampaukset, korvakorut ja katse kuin '
+            + 'valokuvassa. Museot ympäri maailman pitävät niitä '
+            + 'muotokuvamaalauksen ensimmäisenä kultakautena.',
+          selite: 'Fajumin muumiomuotokuva 100-luvulta Ateenan '
+            + 'arkeologisessa museossa: parrakas mies valkoisessa '
+            + 'tunikassa.',
+          lahde: 'Jebulon, Wikimedia Commons (CC0)',
+          wiki: 'Fajumin muotokuvat',
+        },
+        {
+          otsikko: 'Sarjakuva tuonpuoleisesta',
+          tiedosto: 'The judgement of the dead in the presence of Osiris (cropped).jpg',
+          teksti: 'Kuolleiden kirja oli papyruskäärö, joka pantiin '
+            + 'vainajan mukaan hautaan kuin matkaopas tuonpuoleiseen: '
+            + 'loitsuja, karttoja ja kuvia vaarallisen matkan varrelle. '
+            + 'Kuuluisimmassa kohtauksessa vainajan sydän punnitaan '
+            + 'totuuden sulkaa vasten ennen kuin hänet päästetään '
+            + 'Osiriksen valtakuntaan. Kirjuri Huneferin kääröllä kuvat '
+            + 'ja kirjoitus kulkevat rinnakkain kuin sarjakuvassa — '
+            + 'kolme tuhatta vuotta ennen sarjakuvia.',
+          selite: 'Kirjuri Hunefer johdatetaan Osiriksen eteen '
+            + '(n. 1275 eaa.), British Museum.',
+          lahde: 'British Museum, Wikimedia Commons (PD)',
+          wiki: 'Kuolleiden kirja',
+        },
+      ],
+    },
+    {
+      id: 'luonto',
+      nimi: 'Luonto',
+      johdanto: 'Egypti on aavikkoa reunasta reunaan — ja silti sen '
+        + 'halki virtaa maailman kuuluisin joki, ja meren alla kukkii '
+        + 'riutta.',
+      nostot: [
+        {
+          otsikko: 'Niili teki koko maan',
+          tiedosto: 'Feluccas and The Nile at sunset (14284288808).jpg',
+          teksti: 'Niili virtaa Egyptin läpi yli tuhat kilometriä, eikä '
+            + 'sen varrella sada juuri koskaan — kaikki vesi tulee '
+            + 'kaukaa etelän vuorilta. Lähes kaikki egyptiläiset asuvat '
+            + 'kapealla vihreällä nauhalla joen varressa: kartalla maa '
+            + 'näyttää aavikolle piirretyltä vihreältä viivalta, joka '
+            + 'levenee suistoksi pohjoisessa. Joella purjehtivat yhä '
+            + 'felukat, kolmikulmapurjeiset puuveneet, joiden malli on '
+            + 'pysynyt samana vuosisatoja.',
+          selite: 'Felukoita Niilillä auringonlaskun aikaan. '
+            + 'Kolmikulmainen purje on kuulunut jokimaisemaan '
+            + 'vuosisatojen ajan.',
+          lahde: 'Jorge Láscar, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Niili',
+        },
+        {
+          otsikko: 'Aavikko täynnä sieniä',
+          tiedosto: 'White Desert, Egypt.jpg',
+          teksti: 'Valkoisessa autiomaassa Saharan keskellä nousee '
+            + 'hiekasta liituvalkoisia torneja ja sienen muotoisia '
+            + 'patsaita, jotka hiekkaa kantava tuuli on veistänyt. '
+            + 'Liitu syntyi merieliöiden kuorista — koko aavikko oli '
+            + 'kerran meren pohjaa, ja kalliosta löytyy simpukoiden '
+            + 'jälkiä keskellä kuivinta hiekkaa. Täysikuun valossa '
+            + 'valkoiset muodot hohtavat niin aavemaisesti, että '
+            + 'retkeilijät leiriytyvät niiden keskelle varta vasten.',
+          selite: 'Valkoisen autiomaan liitumuodostelmia: tuulen '
+            + 'veistämiä torneja entisellä merenpohjalla.',
+          lahde: 'Vyacheslav Argenberg, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Valkoinen autiomaa',
+        },
+        {
+          otsikko: 'Riutta, joka sietää kuumaa',
+          tiedosto: 'Coral (Acropora hemprichii), Ras Katy, Sharm el-Sheij, Egipto, 2022-03-26, DD 108.jpg',
+          teksti: 'Punaisenmeren rannikolla kasvaa satoja kilometrejä '
+            + 'koralliriuttaa, jonka väreissä sukeltaa muun muassa '
+            + 'papukaijakaloja, keisarikaloja ja merikilpikonnia. '
+            + 'Erikoista on, että nämä korallit kestävät lämpöä '
+            + 'paremmin kuin mitkään muut maailmassa: vesi on täällä '
+            + 'aina ollut lämmintä ja suolaista. Siksi tutkijat '
+            + 'arvelevat, että Punaisenmeren riutta voi olla viimeisiä, '
+            + 'jotka selviävät merien lämmetessä — koko maailman '
+            + 'korallien varakappale.',
+          selite: 'Korallipesäke Sharm el-Sheikhin edustalla '
+            + 'Punaisellamerellä; haarojen lomassa suikertaa pikkukaloja.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Punainenmeri',
+        },
+        {
+          otsikko: 'Keidas keskellä ei-mitään',
+          tiedosto: 'Siwa Oasis, Western Desert, Egypt.jpg',
+          teksti: 'Siwan keidas on aavikon saari: lähimpään kaupunkiin '
+            + 'on satoja kilometrejä hiekkaa, mutta keitaalla pulppuaa '
+            + 'satoja lähteitä, joiden varassa kasvaa satojatuhansia '
+            + 'taateli- ja oliivipuita. Eristyksissä siwalaiset '
+            + 'säilyttivät oman berberikielensä, jota muualla Egyptissä '
+            + 'ei puhuta. Kuuluisin vieras saapui vuonna 331 eaa.: '
+            + 'Aleksanteri Suuri vaelsi aavikon poikki kysymään neuvoa '
+            + 'keitaan oraakkelilta.',
+          selite: 'Siwan keidas ylhäältä: palmumeri ja kylä aavikon '
+            + 'keskellä, taustalla pöytävuoria.',
+          lahde: 'Vyacheslav Argenberg, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Siwa',
+        },
+      ],
+    },
+    {
+      id: 'tiede',
+      nimi: 'Tiede',
+      johdanto: 'Kalenteri, kirurgia ja maailman kuuluisin kirjasto — '
+        + 'moni tuttu asia keksittiin Niilin varrella tuhansia vuosia '
+        + 'sitten.',
+      nostot: [
+        {
+          otsikko: 'Vuodessa on 365 päivää — kiitos Niilin',
+          tiedosto: 'Zodiaque de Dendéra - Musée du Louvre Antiquités Egyptiennes D 38 ; E 13482.jpg',
+          teksti: 'Egyptiläiset tarvitsivat tarkan kalenterin yhtä asiaa '
+            + 'varten: milloin Niili tulvii. He huomasivat, että tulva '
+            + 'alkoi aina, kun Sirius-tähti nousi ensi kertaa '
+            + 'aamutaivaalle, ja laskivat vuoden pituudeksi 365 päivää — '
+            + 'kolme tuhatta vuotta ennen kuin Julius Caesar lainasi '
+            + 'saman kalenterin Roomaan. Meidän kalenterimme on sen '
+            + 'suora jälkeläinen: kun katsot seinäkalenteria, katsot '
+            + 'Niilin tulvan aikataulua.',
+          selite: 'Denderan temppelin tähtikatto Louvressa: taivas '
+            + 'tähdistöineen kiekkona, jota jumalhahmot kannattelevat.',
+          lahde: 'Shonagon, Wikimedia Commons (CC0)',
+          wiki: 'Denderan eläinrata',
+        },
+        {
+          otsikko: 'Maailman vanhin kirurgin opas',
+          tiedosto: 'Edwin Smith Papyrus v2.jpg',
+          teksti: 'Edwin Smithin papyrus on 3 600 vuotta vanha '
+            + 'lääkärikirja — vanhin tunnettu kirurgian opas maailmassa. '
+            + 'Siinä käydään läpi 48 potilastapausta päästä varpaisiin: '
+            + 'murtumia, haavoja ja sijoiltaanmenoja, jokaisessa tutkimus, '
+            + 'diagnoosi ja hoito-ohje. Taikuutta kirjassa ei juuri ole, '
+            + 'vaan lastoja, ompeleita ja hunajasiteitä — ja siinä '
+            + 'mainitaan aivot ensimmäistä kertaa ihmiskunnan '
+            + 'kirjoitetussa historiassa.',
+          selite: 'Aukeama Edwin Smithin papyruksesta: lääkärin '
+            + 'muistiinpanoja mustalla, otsikot punaisella.',
+          lahde: 'Jeff Dahl, Wikimedia Commons (PD)',
+          wiki: 'Edwin Smithin papyrus',
+        },
+        {
+          otsikko: 'Mittari, joka määräsi verot',
+          tiedosto: 'Nilometer Rhoda Island Cairo Egypt (1).jpg',
+          teksti: 'Kairon Rhodan saarella laskeutuu kaivoon '
+            + 'porraskäytävä, jonka keskellä seisoo mittapylväs: '
+            + 'nilometri, jolla mitattiin Niilin tulvan korkeus. Lukema '
+            + 'ratkaisi koko valtakunnan vuoden — matala tulva tiesi '
+            + 'niukkuutta, korkea tuhoja, ja sopiva runsasta satoa. '
+            + 'Verotkin määrättiin lukeman mukaan: hyvänä tulvavuonna '
+            + 'viljelijä maksoi enemmän. Rhodan nilometri mittasi jokea '
+            + 'yli tuhat vuotta, kunnes Assuanin pato tasasi tulvat.',
+          selite: 'Rhodan saaren nilometri: porrastettu mittakaivo ja '
+            + 'kahdeksankulmainen mittapylväs.',
+          lahde: 'Radosław Botev, Wikimedia Commons (CC BY 3.0 PL)',
+          wiki: 'Nilometri',
+        },
+        {
+          otsikko: 'Kirjasto, joka halusi kaikki kirjat',
+          tiedosto: 'Bibliotiqa Alexandria 9 edited.jpg',
+          teksti: 'Aleksandrian muinainen kirjasto yritti mahdotonta: '
+            + 'koota kaiken maailman tiedon yhteen paikkaan. Satamaan '
+            + 'saapuvat laivat tarkastettiin kirjojen varalta, ja '
+            + 'kääröt kopioitiin kokoelmiin. Kirjaston tutkijat '
+            + 'mittasivat maapallon ympärysmitan ja järjestivät tähdet '
+            + 'luetteloiksi. Kirjasto tuhoutui vähitellen, mutta vuonna '
+            + '2002 Aleksandriaan avattiin sen perillinen: Bibliotheca '
+            + 'Alexandrina, jonka lukusali on maailman suurimpia.',
+          selite: 'Bibliotheca Alexandrinan porrastettu lukusali: '
+            + 'vinon kattolevyn alla on tilaa kahdelle tuhannelle '
+            + 'lukijalle.',
+          lahde: 'Mona Abo-Abda, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Aleksandrian kirjasto',
+        },
+      ],
+    },
+  ],
   ITA: [
     {
       id: 'historia',
