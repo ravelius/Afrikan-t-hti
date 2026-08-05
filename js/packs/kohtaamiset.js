@@ -22,6 +22,28 @@
  * Kaupunki ilman riviä saa entisen satunnaisen kysyjän (ASKERS).
  */
 export const KOHTAAMISET = {
+  lontoo: {
+    hahmo: 'jokietsijä Ned',
+    nappi: 'Tapaa jokietsijä',
+    frame: 'jokietsijä Ned pyyhkii mutaa käsistään ja kysyy',
+    tervehdys: 'Laskuveden paljastamalla rantakaistalla London '
+      + 'Bridgen alla kumara mies seuloo mutaa — jokietsijä, joka '
+      + 'poimii Thamesista menneiden vuosisatojen esineitä. Hän '
+      + 'näkee kirjasi ja suoristautuu: "Tuon kirjan omistajan '
+      + 'nimikirjaimet minä tunnen. Löysin kerran liejusta '
+      + 'messinkikompassin, jossa oli samat kirjaimet. Näytä että '
+      + 'tunnet maailmaa kuten hän — niin kerron, mistä kohtaa '
+      + 'rantaa se löytyi."',
+    loyto: 'Ned kaivaa taskustaan mutaisen kompassin ja painaa sen '
+      + 'käteesi: "Tämä kuuluu sinulle. Neula osoittaa yhä sinne, '
+      + 'minne isoisäsi oli menossa."',
+    tyhja: 'Ned seuloo kourallisen mutaa ja kohauttaa harteitaan: '
+      + '"Joki antaa ja joki ottaa. Tänään se ei antanut — mutta '
+      + 'laskuvesi tulee huomennakin."',
+    vaarin: 'Ned palaa seulomiseen: "Ei vielä, kaveri. Joki ei '
+      + 'luovuta salaisuuksiaan ensimmäisellä yrityksellä — eikä '
+      + 'luovuta etsijäkään."',
+  },
   kairo: {
     hahmo: 'kirjakauppias Faruk',
     nappi: 'Tapaa kirjakauppias',

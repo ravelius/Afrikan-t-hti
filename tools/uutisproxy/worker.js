@@ -19,6 +19,11 @@
  */
 const SALLITUT = [
   'https://www.ansa.it/',
+  // Britannian uutislähde (Lontoon lehti, 6.8.2026): syöte ja
+  // artikkelisivut ovat eri isäntänimillä.
+  'https://feeds.bbci.co.uk/',
+  'https://www.bbc.co.uk/',
+  'https://www.bbc.com/',
   // Egyptin uutislähde (Kairon lehti, 5.8.2026).
   'https://www.youm7.com/',
   // Tv-kanavan live-sivu: siitä luetaan kulloisenkin suoran

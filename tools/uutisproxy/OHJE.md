@@ -1,5 +1,11 @@
 # Uutisvälityksen käyttöönotto (omistajalle, n. 5 min)
 
+> **Päivitys 4 (v305):** sallittuihin lisättiin Britannian
+> uutislähde (BBC: `feeds.bbci.co.uk`, `www.bbc.co.uk`,
+> `www.bbc.com`) Lontoon lehteä varten. Julkaise worker kerran
+> uudelleen: **Edit code → liitä tuore `worker.js` → Deploy.**
+> Sama julkaisu tuo kaikki aiemmatkin päivitykset.
+
 > **Päivitys 3 (v297):** sallittuihin lisättiin Egyptin uutislähde
 > (`https://www.youm7.com/`) Kairon lehteä varten. Julkaise worker
 > kerran uudelleen: **Edit code → liitä tuore `worker.js` → Deploy.**
