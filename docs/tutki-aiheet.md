@@ -17,8 +17,11 @@ matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
   sitten litteä "Elämää" jos omia ei ole, sitten maan aiheet. Sama
   aihe-id kaupungilla voittaa maan version.
 - **Järjestys monistukseen:** maat sen mukaan, montako kaupunkia ne
-  kattavat ja mihin lennetään ensin — Italia ✅, sitten Ranska, USA,
-  Japani, Egypti, Brasilia, Australia.
+  kattavat ja mihin lennetään ensin — Italia ✅, Egypti ✅ (Kairo,
+  v297: ensimmäinen monistus todisti reseptin — pelkkää dataa, ei
+  koodimuutoksia lukuun ottamatta uutisten dir="auto"-tukea
+  oikealta vasemmalle kirjoitettaville kielille), sitten Ranska,
+  USA, Japani, Brasilia, Australia.
 
 Loput tämän tiedoston säännöt (kuvat, lisenssit, mitat, työkalu,
 tarkistuslista) pätevät sellaisinaan molempiin tasoihin.

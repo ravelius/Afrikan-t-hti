@@ -96,41 +96,13 @@ export const AFRICA_KULTTUURI = {
     },
   },
   kairo: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Umm Kulthum, Egyptin ääni',
-        tiedosto: 'Umm Kulthum4.jpg',
-        teksti: 'Laulajatar Umm Kulthum oli arabimaailman rakastetuin ääni: '
-          + 'kun hänen radiokonserttinsa alkoi kuun ensimmäisenä torstaina, '
-          + 'Kairon kadut hiljenivät ja kahvilat täyttyivät kuuntelijoista. '
-          + 'Yksi laulu saattoi kestää tunnin.',
-        selite: 'Umm Kulthum mikrofonin äärellä uransa alkupuolella. '
-          + 'Tunnusmerkit olivat aina samat: tumma lasit, nenäliina kädessä '
-          + 'ja orkesteri takana — ja ääni, jota kutsuttiin Egyptin '
-          + 'neljänneksi pyramidiksi.',
-        musiikki: 'https://music.apple.com/fi/artist/umm-kulthum/81179580',
-        musiikkiNimi: 'Umm Kulthum Apple Musicissa',
-        lahde: 'Wikimedia Commons (PD)',
-      },
-      {
-        tyyppi: 'teksti',
-        otsikko: 'Ahwa eli kahvila',
-        teksti: 'Kairolainen kahvila eli ahwa on olohuone kadun varrella: '
-          + 'siellä juodaan paksua kahvia ja minttuteetä, pelataan '
-          + 'tavla-lautapeliä ja ratkotaan maailman asiat. Kiirettä '
-          + 'ahwassa ei tunneta.',
-      },
-      {
-        tyyppi: 'linkki',
-        otsikko: 'Naguib Mahfouz',
-        teksti: 'Kirjailija Naguib Mahfouz kirjoitti Kairon kujista ja '
-          + 'kahviloista niin elävästi, että hän sai Nobelin '
-          + 'kirjallisuuspalkinnon 1988 — ensimmäisenä arabiaksi '
-          + 'kirjoittavana kirjailijana.',
-        wiki: 'Naguib Mahfouz',
-      },
-    ],
+    /*
+     * Kairo sai kategoriat (kulttuuri-kategoriat.js + maa-kategoriat
+     * EGY, 5.8.2026), jotka korvaavat litteät nostot Tutki-ikkunassa.
+     * Ainutlaatuinen sisältö siirrettiin sinne: Umm Kulthum
+     * musiikkilinkkeineen kaupungin kanteen, ahwa ja Mahfouz maan ja
+     * kaupungin nostoihin. Tänne jää vain visa (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Kenen laulajan radiokonsertit hiljensivät Kairon kadut kerran kuussa?',
       options: ['Umm Kulthumin', 'Edith Piafin', 'Maria Callasin', 'Miriam Makeban'],

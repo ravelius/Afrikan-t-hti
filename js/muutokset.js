@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 297, teksti: 'Kairo sai oman lehden: kansi, Egypti-osasto' },
+  { v: 297, teksti: 'Robertsin Kairo-litografiat galleriana' },
+  { v: 297, teksti: 'Kätkölle vie kirjakauppias Faruk basaarista' },
+  { v: 297, teksti: 'Egyptin uutiset, radio ja tv lehden sivulle' },
   { v: 296, teksti: 'Radion nauha reunaan asti, merkkivalo keskelle' },
   { v: 296, teksti: 'Vesistölinssi maastokartan päälle, joet sinisinä' },
   { v: 296, teksti: 'Topografian pohjoisreunaan omat värit' },

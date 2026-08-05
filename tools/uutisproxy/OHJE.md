@@ -1,5 +1,12 @@
 # Uutisvälityksen käyttöönotto (omistajalle, n. 5 min)
 
+> **Päivitys 3 (v297):** sallittuihin lisättiin Egyptin uutislähde
+> (`https://www.youm7.com/`) Kairon lehteä varten. Julkaise worker
+> kerran uudelleen: **Edit code → liitä tuore `worker.js` → Deploy.**
+> Siihen asti Kairon lehti näkyy ilman uutisosiota — mikään ei mene
+> rikki. (Sama julkaisu tuo myös v290:n youtube-etuliitteen, jos se
+> jäi tekemättä.)
+
 > **Päivitys 2 (v290):** workerin sallittuihin lisättiin tv-kanavan
 > live-sivu (`https://www.youtube.com/@`), josta luetaan suoran
 > lähetyksen tunniste — YouTuben kanavaupotus oli epävakaa iPadilla.
