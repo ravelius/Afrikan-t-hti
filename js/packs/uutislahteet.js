@@ -45,6 +45,10 @@ export const UUTISLAHTEET = {
 export const TV_KANAVAT = {
   ITA: {
     nimi: 'euronews italiano',
+    // Live-sivulta luetaan kulloisenkin lähetyksen tunniste workerin
+    // kautta (luotettava myös iPadilla); upotus on varareitti, jos
+    // workeria ei ole päivitetty tai haku epäonnistuu.
+    livesivu: 'https://www.youtube.com/@euronewsit/live',
     upotus: 'https://www.youtube.com/embed/live_stream'
       + '?channel=UC1mX9vuLOYf8fhaXS_KcDRg&autoplay=1',
   },

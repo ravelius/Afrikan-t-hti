@@ -19,6 +19,10 @@
  */
 const SALLITUT = [
   'https://www.ansa.it/',
+  // Tv-kanavan live-sivu: siitä luetaan kulloisenkin suoran
+  // lähetyksen tunniste, koska YouTuben kanavaupotus on epävakaa
+  // etenkin iPadilla (5.8.2026).
+  'https://www.youtube.com/@',
 ];
 
 // Kymmenen minuutin välimuisti Cloudflaren reunalla: uutissivusto ei
