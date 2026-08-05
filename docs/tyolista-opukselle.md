@@ -232,6 +232,45 @@ Australia — yksi maa per PR, kaupunkikansi samassa erässä.
 ajaa läpi ilman aiempaa kontekstia. Seuraa sitä kohta kohdalta,
 erityisesti kuvien silmätarkistusta ja uutislähteen testausta.
 
+### Lehtimaiden promptit (omistajan tilaus 5.8.2026)
+
+Järjestys: pelin alkupisteestä (Lontoo) pääsee lentäen Madridiin,
+Berliiniin ja Tukholmaan — ne ovat pelaajan ensimmäiset matkakohteet
+ja siksi jonossa ensin, sitten Ranska ja muut. Yksi maa per PR.
+Jokainen paketti tehdään monistusohjeen mukaan; alla vain maakohtaiset
+räätälöinnit. Muista aina: kuvien silmätarkistus 480 px -thumbeina,
+uutissyötteen JA yhden artikkelisivun curl-testi (UA
+"matkakirja-uutisvalitys/1.0"), workerin SALLITUT + OHJE.md-merkintä
++ muistutus omistajalle julkaista worker, Playwright-kuvakaappaukset
+834 ja 1024 px, ja main fetchattuna juuri ennen versionumeroa.
+
+1. **Espanja / Madrid.** Galleria: Goyan Madrid (Pradon PD-teokset,
+   esim. San Isidron niitty ja kartongit kutomoille — arjen Madridia).
+   Kansikuviksi esim. Plaza Mayor tai kuninkaanlinna, Gran Vía,
+   Retiron puisto. Elämä-nosto: tapakset ja markkinahallit tai paseo;
+   henkilö+musiikki: Paco de Lucía tai zarzuela-perinne (Apple
+   Music). Uutisehdokkaat curl-testiin: El País (feeds.elpais.com),
+   RTVE, 20minutos. Tv: RTVE Noticias lähettää YouTubeen 24/7.
+2. **Saksa / Berliini.** Galleria: Eduard Gaertnerin Berliini-vedutat
+   1800-luvulta (PD) — suora Canaletto-vastine. Kansikuvat:
+   Brandenburgin portti, Museosaari tai tv-torni, East Side Gallery.
+   Henkilö+musiikki: Marlene Dietrich (Apple Music). Uutisehdokkaat:
+   tagesschau (tagesschau.de/xml/rss2), Spiegel, ZDF heute. Tv:
+   tagesschau24 tai DW Deutsch — molemmilla YouTube-live ilman
+   aluerajausta.
+3. **Ruotsi / Tukholma.** Galleria: Elias Martinin Tukholma-näkymät
+   1700-luvulta (PD); vaihtoehtona Vädersolstavlan-tarina nostona.
+   Kansikuvat: Gamla stan ja Stortorget, Stadshuset, saaristolautat.
+   Henkilö+musiikki: ABBA (Apple Music). Uutisehdokkaat: SVT
+   (svt.se/rss), Sveriges Radio Ekot (api.sr.se), Aftonbladet.
+   Tv: Ruotsin yleisradiot eivät lähetä YouTubeen — jos 24/7-liveä
+   ilman aluerajausta ei löydy (kokeile esim. Expressen TV),
+   JÄTÄ TV POIS: lehti toimii ilman tv-riviä, älä valitse huonoa
+   kanavaa väkisin.
+4. **Ranska / Pariisi.** Galleria: Pissarron ja Caillebotten
+   katunäkymät (PD). Uutisehdokkaat: Le Monde, France Info,
+   Le Figaro. Tv: France 24 (français) — 24/7 YouTube-live.
+
 ### PÄÄTETTY 5.8.2026: Tutki on paikallislehti (suunnittelusessio tekee)
 
 Omistajan visio ("Tee vain kaikki"): kansisivullisen kaupungin
