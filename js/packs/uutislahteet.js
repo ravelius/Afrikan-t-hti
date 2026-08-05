@@ -22,6 +22,13 @@
 export const UUTISPROXY = 'https://matkakirja-uutiset.samireivinen.workers.dev';
 
 export const UUTISLAHTEET = {
+  // BBC:n syöte ja artikkelisivut aukeavat workerin läpi ongelmitta
+  // (testattu 6.8.2026: <article> jäsentyy, og:image löytyy).
+  GBR: {
+    nimi: 'BBC News',
+    kieli: 'en',
+    syote: 'https://feeds.bbci.co.uk/news/rss.xml',
+  },
   // Youm7 (اليوم السابع) on Egyptin luetuimpia uutissivustoja.
   // Al-Ahramin syötteet ovat botti-eston takana (testattu 5.8.2026),
   // Youm7:n RSS ja artikkelisivut aukeavat workerin läpi ongelmitta.
@@ -51,6 +58,15 @@ export const UUTISLAHTEET = {
  * maailmanlaajuisesti ilman aluerajauksia (todettu 5.8.2026).
  */
 export const TV_KANAVAT = {
+  // Sky News lähettää YouTubeen ympäri vuorokauden ilman
+  // aluerajausta (live-tunniste ja kanavatunnus varmistettu
+  // live-sivulta 6.8.2026).
+  GBR: {
+    nimi: 'Sky News',
+    livesivu: 'https://www.youtube.com/@SkyNews/live',
+    upotus: 'https://www.youtube.com/embed/live_stream'
+      + '?channel=UCoMdktPbSTixAyNGwb-UYkQ&autoplay=1',
+  },
   // Al Qahera News on Egyptin uutiskanava, joka lähettää YouTubeen
   // ympäri vuorokauden ilman aluerajausta (kanavatunnus varmistettu
   // live-sivun canonical-linkistä 5.8.2026).

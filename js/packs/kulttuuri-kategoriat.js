@@ -20,6 +20,119 @@
 export const KULTTUURI_KATEGORIAT = {
   lontoo: [
     {
+      id: 'kaupunki',
+      nimi: 'Lontoo',
+      johdanto: 'Kaupunki, jossa maailman ensimmäinen metro, vanhin '
+        + 'jalkapallosarja ja tuhat vuotta kruunajaisia mahtuvat '
+        + 'saman joen varrelle.',
+      kansikuvat: [
+        {
+          tiedosto: 'Tower Bridge from Shad Thames.jpg',
+          selite: 'Tower Bridge on avattu laivoille yli 130 vuotta — '
+            + 'taustalla kohoaa Cityn lasinen siluetti.',
+          lahde: 'Colin, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Palace of Westminster, London - Feb 2007.jpg',
+          selite: 'Westminsterin palatsi ja Big Ben iltavalossa '
+            + 'Thamesin takaa.',
+          lahde: 'Diliff, Wikimedia Commons (CC BY-SA 2.5)',
+        },
+        {
+          tiedosto: 'Red London Buses - geograph.org.uk - 2792011.jpg',
+          selite: 'Punaiset kaksikerrosbussit ovat kuljettaneet '
+            + 'lontoolaisia 1950-luvulta asti.',
+          lahde: 'Colin Smith, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Canaletto maalasi myös Lontoon',
+          tiedosto: 'Canaletto - Westminster Bridge, with the Lord Mayor\'s Procession on the Thames - Google Art Project.jpg',
+          teksti: 'Sama venetsialainen Canaletto, jonka vedutoja '
+            + 'selailit Venetsian lehdessä, muutti Lontooseen vuonna '
+            + '1746 ja maalasi kaupunkia yhdeksän vuoden ajan. Hän toi '
+            + 'Thamesille saman tarkan katseen kuin Canal Grandelle — '
+            + 'ja siksi 1700-luvun Lontoo tunnetaan parhaiten '
+            + 'venetsialaisen silmin.',
+          selite: 'Westminster Bridge ja lordimayorin juhlakulkue '
+            + '(1747): upouusi silta, jota pidettiin aikansa '
+            + 'ihmeenä, ja juhlaveneet kuin Venetsian regatassa.',
+          lahde: 'Canaletto, Wikimedia Commons (PD)',
+          wiki: 'Canaletto',
+          galleria: [
+            {
+              otsikko: 'Thames ja Pyhän Paavalin katedraali',
+              tiedosto: 'The Thames and the City Canaletto 46-47 National Gallery Prague.jpg',
+              selite: 'Thames ja City (1746–47): Pyhän Paavalin '
+                + 'kupoli hallitsee kaupunkia, ja joki kuhisee '
+                + 'veneitä kuin laguuni.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'City sillan kaaren läpi',
+              tiedosto: 'Canaletto - The City Seen Through an Arch of Westminster Bridge.JPG',
+              selite: 'City rakenteilla olevan Westminster Bridgen '
+                + 'kaaren läpi (1747) — puutelineiltä katsottu '
+                + 'kehys, jonka moderniutta ihmetellään yhä.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Northumberland House',
+              tiedosto: 'Northumberland House by Canaletto (1752).JPG',
+              selite: 'Northumberland House Charing Crossilla (1752). '
+                + 'Palatsi purettiin 1874 — Canaletton maalaus on '
+                + 'sen tarkin muistikuva.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Ranelaghin rotunda',
+              tiedosto: 'Canaletto Ranelegh 1754.jpg',
+              selite: 'Ranelagh Gardensin rotundan sisänäkymä (1754): '
+                + 'Lontoon hienosto kierteli valtavan pyörösalin '
+                + 'lattialla musiikin soidessa. Mozart esiintyi '
+                + 'täällä kahdeksanvuotiaana.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Pubi, jossa Dickens istui',
+          tiedosto: 'The George at Southwark (8553233399).jpg',
+          teksti: 'The George on Lontoon viimeinen parvekekäytävällinen '
+            + 'majatalo: tällaisten pihojen parvilta katsottiin '
+            + 'näytelmiä jo Shakespearen aikaan. Nykyinen rakennus on '
+            + 'vuodelta 1677, ja sen penkeillä istui aikanaan Charles '
+            + 'Dickens, joka mainitsee pubin romaanissaan Pikku '
+            + 'Dorrit. Talo on niin arvokas, että sen omistaa '
+            + 'National Trust — olutta myydään silti joka päivä.',
+          selite: 'The Georgen parvekekäytävät Southwarkissa. Kyltissä '
+            + 'ratsastaa Yrjö-pyhimys, ja kello on käynyt pihalla '
+            + '1600-luvulta.',
+          lahde: 'It\'s No Game, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Charles Dickens',
+        },
+        {
+          otsikko: 'Suojatie, jota jonotetaan',
+          tiedosto: 'Abbey Road Zebra.jpg',
+          teksti: 'Elokuun 8. päivänä 1969 neljä miestä käveli '
+            + 'suojatien yli kahdeksan kertaa, kunnes valokuvaaja sai '
+            + 'kuvansa. Kuvasta tuli The Beatlesin Abbey Road -levyn '
+            + 'kansi ja suojatiestä maailman kuuluisin: turistit '
+            + 'jonottavat yhä joka päivä ylittämään sen samassa '
+            + 'rivissä, autoilijoiden kärsivällisyyttä koetellen. '
+            + 'Ylityksellä on virallinen suojelumerkintä — ja taustan '
+            + 'studiossa äänitetään musiikkia edelleen.',
+          selite: 'Abbey Roadin suojatie St John\'s Woodissa hiljaisena '
+            + 'hetkenä — ilman jonoa levynkansikävelijöitä.',
+          lahde: 'Misterweiss, Wikimedia Commons (PD)',
+          wiki: 'The Beatles',
+          musiikki: 'https://music.apple.com/fi/artist/the-beatles/136975',
+          musiikkiNimi: 'The Beatles Apple Musicissa',
+        },
+      ],
+    },
+    {
       id: 'historia',
       nimi: 'Historia',
       johdanto: 'Lontoon historia ei ole museovitriinissä vaan kadun pinnassa: '

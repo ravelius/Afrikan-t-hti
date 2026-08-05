@@ -1429,10 +1429,21 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   'Yhdistynyt kuningaskunta': {
+    // Muita pidempi tarkoituksella: Lontoon lehden maaosasto nojaa
+    // tähän yksin, ilman Lue lisää -nappia (sama malli kuin
+    // Italialla ja Egyptillä).
     intro: 'Yhdistynyt kuningaskunta on neljän maan liitto: Englanti, '
              + 'Skotlanti, Wales ja Pohjois-Irlanti. Kolme ensimmäistä ovat '
-             + 'samalla saarella, neljäs Irlannin saaren pohjoiskulmassa. '
-             + 'Arjessa maasta puhutaan yleensä nimellä Britannia.',
+             + 'samalla saarella, neljäs Irlannin saaren pohjoiskulmassa, '
+             + 'ja arjessa maasta puhutaan yleensä nimellä Britannia. '
+             + 'Saarivaltio hallitsi aikanaan neljäsosaa maapallosta, ja '
+             + 'siksi englantia puhutaan nykyään joka mantereella. '
+             + 'Teollinen vallankumous alkoi täältä: höyrykone, rautatie '
+             + 'ja tehdas muuttivat ensin Britannian ja sitten koko '
+             + 'maailman. Parlamenttia kutsutaan parlamenttien äidiksi, '
+             + 'ja vasemmanpuoleinen liikenne, teehetki ja jonottamisen '
+             + 'jalo taito kuuluvat arkeen yhä. Jalkapallo, rugby ja '
+             + 'kriketti syntyivät kaikki näillä saarilla.',
     teksti: 'Parlamentti kokoontuu Westminsterissä, ja sitä sanotaan usein '
               + 'parlamenttien äidiksi: sen työjärjestystä on kopioitu '
               + 'kymmeniin maihin. Kirjoitettua perustuslakia ei silti ole '

@@ -20,6 +20,12 @@
  * tarvitse muuttaa. Ilman riviä lehti näkyy ilman säätä.
  */
 export const SAATIEDOT = {
+  lontoo: {
+    lat: 51.51,
+    lon: -0.13,
+    keskilampo: [4.7, 4.9, 6.8, 9.2, 12.5, 15.5, 17.7, 17.4, 14.8, 11.4, 7.7, 5.2],
+    sade: [55, 47, 43, 49, 52, 56, 55, 61, 48, 60, 64, 59],
+  },
   kairo: {
     lat: 30.05,
     lon: 31.23,

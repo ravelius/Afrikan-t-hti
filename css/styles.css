@@ -6004,10 +6004,24 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
  * selitteelle täsmälleen kehyksen (= kuvan) leveyden ilman, että
  * pitkä teksti venyttäisi fit-content-kehystä palstan levyiseksi.
  */
+/*
+ * Kuvat palstansa täyteen leveyteen KAIKILLA ruuduilla (omistajan
+ * toive 5.8.2026 + 6.8.2026 "levitä iphonella pystykuvat koko
+ * leveyteen"): korkeuskatot jättivät kuvan kellumaan kapeana
+ * keskelle. Leveys määrää koon ja korkeus seuraa kuvasuhdetta —
+ * pystytaitossa palsta on puolikas, joten pystykuva ei kasva
+ * kohtuuttomaksi; puhelimella pystykuva saa olla korkea, se on
+ * lehden kuva eikä pikkukuvake.
+ */
 .wiki-nosto .kuvakehys {
-  width: fit-content;
-  max-width: 100%;
+  width: 100%;
   margin: 0 auto 0.6rem;
+}
+
+.wiki-nosto .kuvakehys img,
+.wiki-nosto .kuvakehys .nosto-galleria {
+  width: 100%;
+  max-height: none;
 }
 
 .wiki-nosto .kuvakehys .selite,
@@ -6082,19 +6096,6 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     columns: 1;
   }
 
-  /*
-   * Kuvat palstansa täyteen leveyteen (omistajan toive 5.8.2026):
-   * korkeuskatto jätti kuvan kellumaan kapeana keskelle. Leveys
-   * määrää nyt koon ja korkeus seuraa kuvasuhdetta — pystytaitossa
-   * palsta on puolikas, joten pystykuvakaan ei kasva liian isoksi.
-   */
-  .wiki-nosto .kuvakehys { width: 100%; }
-
-  .wiki-nosto .kuvakehys img,
-  .wiki-nosto .kuvakehys .nosto-galleria {
-    width: 100%;
-    max-height: none;
-  }
 
   /* Lehtimaan pääkirjoitus etusivulla taittuu samalla tavalla. */
   .dialog.lehti #arrival-maa-intro {
@@ -6836,7 +6837,16 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
     left: 0;
     right: 0;
     height: calc(env(safe-area-inset-top, 0px) + 0.55rem);
-    background: var(--card-bg, #f2e3bd);
+    /*
+     * Pelkkä sumennus, ei täyttöväriä (omistajan toive 6.8.2026:
+     * "saako värin vaihdettua pelkkään blurriin? siistimpi Dynamic
+     * Islandin kanssa") — vanha kultainen --card-bg jäi eri sävyyn
+     * kuin uusi painopaperi. Hento paperinsävy pitää kellon
+     * luettavana, sumennus hoitaa loput.
+     */
+    background: rgba(245, 240, 226, 0.3);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
     z-index: 4;
     pointer-events: none;
   }
