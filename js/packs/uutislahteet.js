@@ -16,7 +16,10 @@
  *   syote — RSS-syötteen osoite (lisää myös workerin sallittujen
  *           listaan, tools/uutisproxy/worker.js)
  */
-export const UUTISPROXY = 'matkakirja-uutiset.samireivinen.workers.dev';
+// Omistajan worker, otettu käyttöön 5.8.2026 (ks. tools/uutisproxy/).
+// HUOM: https://-alku on pakollinen — ilman sitä selain tulkitsisi
+// osoitteen suhteelliseksi poluksi pelin omalle sivustolle.
+export const UUTISPROXY = 'https://matkakirja-uutiset.samireivinen.workers.dev';
 
 export const UUTISLAHTEET = {
   ITA: {
