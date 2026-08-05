@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 301, teksti: 'Kuvatekstit heti kuvan alle lehtijutuissa' },
+  { v: 301, teksti: 'Pystykuva saa tekstin viereensä' },
+  { v: 301, teksti: 'Sivunuolet pois laidoilta, navigointi alas' },
+  { v: 301, teksti: 'Kairoon vuoden 1809 kartta ja tahtib-perinne' },
   { v: 300, teksti: 'Jutut kahdelle palstalle leveällä ruudulla' },
   { v: 300, teksti: 'Pääkirjoitus palstoihin, kuva aina jutun yllä' },
   { v: 299, teksti: 'Tutki-pohja sanomalehdeksi: vaalea paperi' },

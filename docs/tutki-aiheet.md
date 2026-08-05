@@ -200,6 +200,29 @@ musiikki, luonto, tiede — valitse maalle osuvimmat 5). Tekstit
 kiinnostavat yksityiskohdat edellä (Ever Given -tyyliin). Yhteen
 aiheeseen `tehtava`, jonka vastaus LÖYTYY saman sivun tekstistä.
 
+### 2b. Sisältölähteitä nostoihin (lisätty v301)
+
+Aihe- ja kuvaideoiden aarreaittoja — käytä HAKUAPUNA, itse kuva
+otetaan aina Commonsista (peiliputki tukee vain sitä):
+
+- **Unescon aineeton kulttuuriperintö** (ich.unesco.org): maan
+  juhlat, taidot, tanssit ja suullinen perinne — kertoo ihmisistä
+  eikä monumenteista. Pilotti: Egyptin tahtib (v301). Espanjalla,
+  Ranskalla ja Japanilla on luettelossa kymmeniä aiheita.
+- **Vanhat kartat**: kaupungin kannen vakiovinkki on "kaupunki
+  kartalla silloin" -nosto (pilotti: Kairo 1809, Description de
+  l'Égypte). PD-sarjoja Commonsissa ja Library of Congressissa.
+  David Rumseyn kokoelma on CC BY-NC — käytä vain hakuapuna ja
+  etsi sama kartta Commonsista.
+- **Met ja Smithsonian Open Access** (CC0): esineet, taide ja
+  valokuvat etenkin Amerikkojen ja Tyynenmeren lehtiin — parhaat
+  aineistot löytyvät Commonsiin peilattuina.
+- **Kolikot**: "millä rahalla täällä maksettiin" on hyvä
+  nostoaihe; museoiden kolikkokuvia on Commonsissa PD:nä.
+- **GBIF** (gbif.org): mitä lajeja seudulla oikeasti elää —
+  KIRJOITTAMISEN apuväline luonto-nostoihin, ei pelin datalähde
+  (raakahavainnot ovat latinankielistä tutkijadataa).
+
 ### 3. Kuvat — säännöt ja sudenkuopat
 
 - Hae Commonsin hakurajapinnalla (`generator=search`, `gsrnamespace=6`,
@@ -212,8 +235,13 @@ aiheeseen `tehtava`, jonka vastaus LÖYTYY saman sivun tekstistä.
   selitettä eikä kuvassa ole väripalkkeja, vesileimoja tai kollaaseja
   (Kairossa hylättiin kaksi tällaista). Tämä on reseptin tärkein
   kohta — omistaja on löytänyt vääriä kuvia aiemmista eristä.
-- Pystykuvat ovat sallittuja (taitto säilyttää kuvasuhteen v298:sta
-  alkaen). Yksi kuva vain kerran per kaupunki.
+- **Suosi vaakakuvia** (omistajan linjaus 5.8.2026): vaakakuva
+  täyttää lehtijutun yläreunan kauniisti ja leipäteksti taittuu
+  kahdelle palstalle sen alle. Pystykuva on sallittu, kun aihe sitä
+  vaatii (muotokuva, portti, torni) — silloin taitto asettaa tekstin
+  automaattisesti kuvan viereen (.pysty, v301) — mutta jos samasta
+  aiheesta on hyvä vaaka- ja pystykuva, valitse vaaka. Yksi kuva
+  vain kerran per kaupunki.
 
 ### 4. Sää — `SAATIEDOT[cityId]`
 

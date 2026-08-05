@@ -1294,6 +1294,31 @@ export const KULTTUURI_KATEGORIAT = {
            * alle nykysäännön, mutta se on ollut pelissä alusta asti ja
            * on aidosti paras vapaa kuva laulajasta.
            */
+          /*
+           * Vanha kartta -nosto (uusi lähdeidea 5.8.2026): Napoleonin
+           * retkikunnan kartat ovat PD:nä Commonsissa, ja "silloin ja
+           * nyt" istuu isoisän matkakirjan kehykseen. Sama vinkki on
+           * monistusohjeessa muillekin kaupungeille.
+           */
+          otsikko: 'Kairo kartalla vuonna 1809',
+          tiedosto: 'Environs du Kaire (Cairo). Plan général de Boulâq, du Kaire, de l\'île de Roudah (el-Rôda), du Vieux Kaire et de Gyzeh (Jîzah) (NYPL b14212718-1268726).jpg',
+          teksti: 'Napoleonin retkikunnan tutkijat mittasivat Kairon '
+            + 'kadut ja piirsivät kaupungin karttaan, joka painettiin '
+            + 'jättimäiseen Description de l\'Égypte -teossarjaan. '
+            + 'Kartalla Kairo on tiivis täplä Niilin itärannalla — '
+            + 'ympärillä peltoja, palmulehtoja ja aavikkoa. Sama '
+            + 'kaupunki levittäytyy nyt yli kahdenkymmenen miljoonan '
+            + 'ihmisen suurkaupunkina joen molemmin puolin, ja kartan '
+            + 'pellot ovat katuja. Vertaa etusivun ilmakuvaan: '
+            + 'pyramidit seisovat yhä paikallaan, kaupunki tuli niiden '
+            + 'luo.',
+          selite: 'Kairon seudun yleiskartta Description de l\'Égypte '
+            + '-sarjasta (1809): Bulaq, Kairo, Rodan saari, Vanha '
+            + 'Kairo ja Giza.',
+          lahde: 'Imprimerie impériale / NYPL, Wikimedia Commons (PD)',
+          wiki: 'Description de l\'Égypte',
+        },
+        {
           otsikko: 'Umm Kulthum, Egyptin ääni',
           tiedosto: 'Umm Kulthum4.jpg',
           teksti: 'Laulajatar Umm Kulthum oli arabimaailman rakastetuin '
