@@ -72,6 +72,7 @@ import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import {
   haeUutiset, haeArtikkeli, kaannaSuomeksi, uutislahde,
 } from './uutiset.js';
+import { TV_KANAVAT } from './packs/uutislahteet.js';
 import {
   haeSaaTanaan, saaKuvaus, SAA_IKONIT, kuukausiSsa, piirraVuosiSaa,
 } from './saa.js';
@@ -1433,6 +1434,8 @@ export class UI {
     this.arrivalMaaTunnusluvut = document.getElementById('arrival-maa-tunnusluvut');
     // Uutisotsikot maaosastossa (vaatii omistajan uutisvälityksen).
     this.arrivalUutiset = document.getElementById('arrival-uutiset');
+    // Mediarivi: maan radio ja tv-kanavan suora lähetys.
+    this.arrivalMedia = document.getElementById('arrival-media');
     this.arrivalMaaTervehdykset = document.getElementById('arrival-maa-tervehdykset');
     // Lippu näytetään vasta kun se on oikeasti latautunut — ilman verkkoa
     // riviltä ei jää rikkinäistä kuvaruutua.
@@ -5661,7 +5664,11 @@ export class UI {
       // Tunnusluvut ja tervehdykset kartan alle (pilottimaat).
       this.naytaMaaTunnusluvut(iso);
       this.naytaMaaUutiset(iso, city.id);
+      // Mediarivi rakennetaan joka kaupungille uudestaan.
+      this.arrivalMedia.replaceChildren();
+      this.arrivalMedia.hidden = true;
       this.naytaKieliNappi(city);
+      this.naytaTvNappi(iso);
       // Oma lyhytnosto maasta (pilottimaat) näkyy heti ja voittaa wikin
       // automaattikatkelman; Lue lisää avaa oman artikkelin.
       //
@@ -5930,7 +5937,9 @@ export class UI {
    * häiriö. Tausta väistyy näytteen ajaksi kuten kulttuurinostoissa.
    */
   naytaKieliNappi(city) {
-    const kohde = this.arrivalMaaTervehdykset;
+    // Mediarivi uutisten alla (omistajan toive 5.8.2026) — aiemmin
+    // nappi asui tervehdysrivin sisällä.
+    const kohde = this.arrivalMedia;
     const nayte = (KIELET[this.game.pack.id] ?? {})[city.id];
     /*
      * Suora lähetys ensin, äänite varalle (omistajan järjestys).
@@ -5969,6 +5978,52 @@ export class UI {
       suora: Boolean(radio),
     }, nappi));
     kohde.appendChild(nappi);
+  }
+
+  /**
+   * Maan tv-kanavan suora lähetys (omistajan toive 5.8.2026): nappi
+   * radion viereen mediariville, ja lähetys aukeaa popup-ikkunaan.
+   * Kanavat: js/packs/uutislahteet.js TV_KANAVAT — YouTuben
+   * kanavaupotus seuraa aina kulloistakin suoraa lähetystä.
+   */
+  naytaTvNappi(iso) {
+    const tv = iso ? TV_KANAVAT[iso] : null;
+    if (!tv) return;
+    this.arrivalMedia.hidden = false;
+    const nappi = html('button', 'kulttuuri-kuuntele kieli-kuuntele');
+    nappi.type = 'button';
+    nappi.title = `${tv.nimi} — suora tv-lähetys`;
+    nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
+      + '<rect x="3" y="6.5" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+      + '<path d="M8.5 3.5 12 6.5l3.5-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>'
+      + '</svg>'
+      + `<span>${suojaa(tv.nimi)}</span>`
+      + '<span class="live" title="suora lähetys">live</span>';
+    nappi.addEventListener('click', () => this.avaaTvIkkuna(tv));
+    this.arrivalMedia.appendChild(nappi);
+  }
+
+  /** Tv-lähetys popupissa: 16:9-upotus, napautus reunoille sulkee. */
+  avaaTvIkkuna(tv) {
+    this.suljeKulttuuriKuva();
+    sfx.play('paper');
+    const kortti = html('div', 'postikortti kulttuuri-suurennos tv-kortti');
+    const sulku = html('button', 'uutinen-sulku', '×');
+    sulku.type = 'button';
+    sulku.setAttribute('aria-label', 'Sulje lähetys');
+    kortti.appendChild(sulku);
+    kortti.appendChild(html('p', 'uutinen-otsikko tv-otsikko', `${tv.nimi} — suora lähetys`));
+    const upotus = document.createElement('iframe');
+    upotus.className = 'tv-upotus';
+    upotus.src = tv.upotus;
+    upotus.title = tv.nimi;
+    upotus.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    upotus.setAttribute('allowfullscreen', '');
+    kortti.appendChild(upotus);
+    kortti.appendChild(html('p', 'kuvalahde', `${tv.nimi} · YouTube`));
+    kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
+    this.arrivalDialog.appendChild(kortti);
+    this.kulttuuriKuvaEl = kortti;
   }
 
   /**
@@ -7048,16 +7103,33 @@ export class UI {
       const lista = this.arrivalUutiset.querySelector('.uutiset-lista');
       lista.replaceChildren();
       for (const uutinen of uutiset.slice(0, 3)) {
-        const rivi = html('button', 'uutinen-rivi', uutinen.otsikko);
+        const rivi = html('button', 'uutinen-rivi');
         rivi.type = 'button';
         rivi.lang = lahde.kieli;
+        const teksti = html('span', 'uutinen-rivi-teksti', uutinen.otsikko);
+        rivi.appendChild(teksti);
         rivi.addEventListener('click', () => this.avaaUutinen(uutinen, lahde));
         lista.appendChild(rivi);
         // Suomennos otsikon alle pienemmällä ja kevyemmällä — ilman
         // etikettiä (omistajan toive).
         kaannaSuomeksi(uutinen.otsikko, lahde.kieli).then((suomeksi) => {
           if (!suomeksi || !rivi.isConnected) return;
-          rivi.appendChild(html('span', 'uutinen-rivi-suomeksi', suomeksi));
+          teksti.appendChild(html('span', 'uutinen-rivi-suomeksi', suomeksi));
+        });
+        // Pikkukuva otsikon viereen (omistajan toive): sama
+        // artikkelihaku lämmittää muistin, joten popup aukeaa heti.
+        haeArtikkeli(uutinen.linkki).then((artikkeli) => {
+          if (!artikkeli?.kuva || !rivi.isConnected) return;
+          const pikkukuva = document.createElement('img');
+          pikkukuva.alt = '';
+          pikkukuva.loading = 'lazy';
+          pikkukuva.addEventListener('error', () => {
+            pikkukuva.remove();
+            rivi.classList.remove('kuvallinen');
+          });
+          pikkukuva.src = artikkeli.kuva;
+          rivi.prepend(pikkukuva);
+          rivi.classList.add('kuvallinen');
         });
       }
       this.arrivalUutiset.hidden = false;
@@ -7131,26 +7203,41 @@ export class UI {
       ? ` · ${aika.getDate()}.${aika.getMonth() + 1}.${aika.getFullYear()}`
       : '';
     kortti.appendChild(html('p', 'kuvalahde', `${lahde.nimi}${aikaTeksti}`));
+    /*
+     * Käännös KORVAA italiankielisen tekstin (omistajan tarkennus
+     * 5.8.2026: molemmat eivät mahdu kortille). Alkuperäinen jää
+     * pienen napin taakse, josta sen saa takaisin — ja samasta
+     * napista pääsee taas suomennokseen.
+     */
     const nappi = html('button', 'wiki-btn uutinen-kaanna', 'Käännä suomeksi');
     nappi.type = 'button';
+    let kaannetty = false;
     nappi.addEventListener('click', async (e) => {
       e.stopPropagation();
-      if (!kaannos.hidden) return;
+      if (kaannetty) {
+        const naytaSuomi = kaannos.hidden;
+        kaannos.hidden = !naytaSuomi;
+        runko.hidden = naytaSuomi;
+        nappi.textContent = naytaSuomi ? 'Näytä alkuperäinen' : 'Näytä suomennos';
+        return;
+      }
       nappi.textContent = 'Käännetään…';
       nappi.disabled = true;
       const suomeksi = await kaannaSuomeksi(runkoTeksti, lahde.kieli);
       // Kortti on voitu ehtiä sulkea käännöksen aikana.
       if (!kortti.isConnected) return;
+      nappi.disabled = false;
       if (suomeksi) {
         kaannos.replaceChildren();
         for (const kappale of suomeksi.split(/\n\n+/)) {
           if (kappale.trim()) kaannos.appendChild(html('p', '', kappale.trim()));
         }
+        kaannetty = true;
         kaannos.hidden = false;
-        nappi.hidden = true;
+        runko.hidden = true;
+        nappi.textContent = 'Näytä alkuperäinen';
       } else {
         nappi.textContent = 'Käännöstä ei saatu — yritä uudelleen';
-        nappi.disabled = false;
       }
     });
     kortti.appendChild(nappi);
