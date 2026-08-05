@@ -5274,6 +5274,25 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v274 — Tekijätietojen logo tummalle laatalle (5.8.2026)
+
+Omistaja: *"Logo saisi olla tummalla pohjalla ennen tekstiä ja vähän
+pienemmällä."*
+
+Edellisessä versiossa logo oli pergamentin päällä. Kullattu folio on
+tehty tummaa vasten: vaalealla paperilla se on kultaa kullan päällä ja
+kirjainten ääriviivat katoavat. Ylärivillä logo näyttää hyvältä juuri
+siksi, että ylärivi on tumma.
+
+Nyt otsikkona on tumma laatta samalla liu'ulla kuin ylärivi
+(#3a2a1c → #251b12), ja logo sen päällä. Laatta on kilpi eikä palkki:
+se päättyy ennen tekstiä ja pyöristyy kulmistaan, jolloin paperi jatkuu
+sen ympärillä.
+
+Koko pieneni 22rem → 14rem. Mitattu: **352 × 86 → 224 × 55 px**, kun
+ylärivillä logo on 94 × 23 — eli yhä yli kaksinkertainen, mikä oli
+alkuperäinen toive ("avautuu isompana").
+
 ## v272 — Logo avaa tekijätiedot (5.8.2026)
 
 Omistaja: *"Copyright-linkin voisi poistaa matkalaukusta ja siirtää
