@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 275, teksti: 'Venetsiassa kätkölle vie gondolieeri Matteo' },
+  { v: 275, teksti: 'Kohtaaminen: hahmo tervehtii, kysyy ja hyvästelee' },
   { v: 274, teksti: 'Tekijätietojen logo tummalle laatalle, pienempänä' },
   { v: 273, teksti: 'Lehden mastossa päivän sää, napautus avaa vuoden' },
   { v: 273, teksti: 'Vuosigraafi: keskilämpö ja sateet kuukausittain' },

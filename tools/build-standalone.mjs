@@ -45,6 +45,7 @@ const MODULES = [
   'js/packs/kulttuuri-kategoriat.js',
   'js/packs/maa-kategoriat.js',
   'js/packs/saatiedot.js',
+  'js/packs/kohtaamiset.js',
   'js/packs/europe-valokuvat.js',
   'js/packs/europe-kielet.js',
   'js/packs/europe-maatiedot.js',
