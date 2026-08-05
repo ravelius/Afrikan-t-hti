@@ -5283,6 +5283,48 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v277 — Radio kapeammaksi ja viirut pois (5.8.2026)
+
+Omistaja: *"Kavenna radiosta oikealta pois kaikki ylimääräinen sekä
+poista soittimesta viirut, ne eivät näytä uskottavilta eivätkä tee
+soittimesta vanhemman näköistä. Tsekkaa samalla että soitin on myös
+ipadissa yms. oikean kokoinen."*
+
+### Tyhjä puu oikeasta laidasta
+
+Kotelon leveys oli 800 px siitä asti, kun siinä oli VU-mittari,
+kaiutinsäleikkö ja kaksi vipukytkintä. v268 riisui ne kaikki mutta
+leveys jäi. **Mitattu ennen: kotelo 800 px, sisältö 451 px — eli 341
+pikseliä tyhjää puuta** sekä työpöydällä (2000 px) että tabletilla
+(834 px). Puhelimessa vikaa ei ollut, koska siellä kotelo on ruudun
+levyinen.
+
+Uusi 470 px tulee sisällöstä eikä silmästä: näytön aukko on kiinteä
+408 px (`radiosoitin.js NAYTON_MITAT`), merkkivalo väleineen 44 ja
+kotelon oma täyte 19. Mitattu jälkeen: kotelo 470 px, tyhjää 11 px
+kaikilla kolmella ruudulla.
+
+### Pystyviirut pois
+
+Kotelossa oli kolme `repeating-linear-gradient`-kerrosta 7, 23 ja 61
+pikselin jaoilla, ajatuksena puun syy. Ajatus oli oikea mutta tulos
+näytti vakosametilta: oikean puun syy ei ole tasavälinen eikä suora, ja
+juuri säännöllisyys paljastaa sen piirretyksi. Kolme eri jakoa ei
+riittänyt peittämään sitä — silmä löytää jaksollisuuden kolmestakin
+päällekkäisestä.
+
+Jäljelle jää lakattu pinta: pystyliuku antaa muodon, radiaaliset kajot
+valon suunnan ja kolme pientä naarmua iän. Kiillotettu lakka ONKIN
+sileä, joten lopputulos on lähempänä oikeaa pöytäradiota kuin kuvioitu
+pinta oli.
+
+### Opittua
+
+**Kun laitteesta poistetaan osia, sen mitat on laskettava uudelleen.**
+Kolme säädintä lähti kotelosta, ja kotelo jäi niiden kokoiseksi. Se ei
+näy koodista mitenkään: leveys on yksi luku, joka oli oikein silloin
+kun se kirjoitettiin.
+
 ## v274 — Tekijätietojen logo tummalle laatalle (5.8.2026)
 
 Omistaja: *"Logo saisi olla tummalla pohjalla ennen tekstiä ja vähän
