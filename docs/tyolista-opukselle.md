@@ -227,6 +227,32 @@ monistusjärjestys: docs/tutki-aiheet.md. Seuraavat maapaketit tehdään
 tässä järjestyksessä: Ranska, USA, Japani, Egypti, Brasilia, Australia
 — yksi maa per PR, kaupunkikannet samassa erässä kevyinä.
 
+### PÄÄTETTY 5.8.2026: Tutki on paikallislehti (suunnittelusessio tekee)
+
+Omistajan visio ("Tee vain kaikki"): kansisivullisen kaupungin
+Tutki-ikkuna on paikallislehti. Kuusi osaa, suunnittelusessio toteuttaa
+itse — Opuksen ei tarvitse ottaa näistä paketteja, mutta uudet maapaketit
+saavat noudattaa lehtimallia (resepti: docs/tutki-aiheet.md).
+
+1. ✅ v270: Etusivutaitto — masto (ylärivi, kaupungin nimi isolla,
+   päiväysrivi), kansiosio etusivulle, maa omana osastonaan samalle
+   sivulle, alanapit lehtimäisiksi.
+2. ✅ v270: Teosgalleria nostoon (`galleria`-kenttä; pilotti Canaletto,
+   6 teosta) — nuolet, laskuri, selite ja lähde vaihtuvat.
+3. ✅ v270: Lehden minitehtävä (`tehtava`-kenttä aiheella; pilotti
+   Italian Ruoka) — vastaus löytyy saman sivun tekstistä, +10 puntaa,
+   kerran per lehti.
+4. ⏳ Sääennuste etusivulle (Open-Meteo, avaimeton), klikkaus avaa koko
+   vuoden keskilämmön ja sademäärän graafina pelin tyylillä.
+5. ⏳ "Etsi kätkö" kokonaan uusiksi tarinallisena kohtaamisena: nimetty
+   paikallinen hahmo, jonka kautta aarretehtävä aukeaa (pilotti
+   Venetsia); napit nimetään uudelleen.
+6. ⏳ Ajankohtaiset uutisotsikot paikallisella kielellä maaosastoon
+   (RSS + Cloudflare Worker -välitys, jonka omistaja ottaa käyttöön;
+   ilman välityspalvelinta osio pysyy piilossa). Otsikoita EI lyhennetä
+   eikä mukailla. Popup pelin kirjasimilla + "Käännä suomeksi" -nappi
+   (MyMemory, ilmainen) jos toteutus pysyy kevyenä.
+
 ### PÄÄTETTY 4.8.2026: aarteiden nimistö (sitova kaikessa sisällössä)
 
 Peli irrotetaan Afrikan tähdestä kokonaan — aarre ei ole tähti missään

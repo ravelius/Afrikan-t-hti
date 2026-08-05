@@ -112,6 +112,21 @@ export const MAA_KATEGORIAT = {
       nimi: 'Ruoka',
       johdanto: 'Italialainen keittiö on yksinkertaisuuden taidetta: '
         + 'muutama raaka-aine, jokainen paikallaan, eikä mitään turhaa.',
+      /*
+       * Lehden minitehtävä (omistajan toive 5.8.2026): pieni kysymys,
+       * johon vastaus löytyy tämän sivun tekstistä — kuin sanomalehden
+       * tehtäväpalsta. Yksi tehtävä lehteä kohti riittää; sivu saa
+       * vaihdella lehdestä toiseen. Palkitaan kerran per kaupunki
+       * (game.actionMinitehtava).
+       */
+      tehtava: {
+        kysymys: 'Mitä jotkut italialaiset pankit hyväksyvät lainan '
+          + 'vakuudeksi?',
+        vaihtoehdot: ['Parmigiano-juustokiekkoja', 'Oliiviöljytynnyreitä', 'Viinipulloja'],
+        oikea: 0,
+        fakta: 'Pankkien holveissa kypsyy juustokiekkoja kuin '
+          + 'kultaharkkoja — vastaus löytyi Parmigiano-nostosta.',
+      },
       nostot: [
         {
           otsikko: 'Pizza on Napolin lahja',

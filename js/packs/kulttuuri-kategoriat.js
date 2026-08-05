@@ -1206,6 +1206,60 @@ export const KULTTUURI_KATEGORIAT = {
             + '— näkymä on sama tänäänkin.',
           lahde: 'Canaletto, Wikimedia Commons (PD)',
           wiki: 'Canaletto',
+          /*
+           * Selattava galleria (omistajan toive 5.8.2026): lisää
+           * Canaletton vedutoja saman noston nuolista. Ensimmäinen teos
+           * on noston oma tiedosto; selite ja lähderivi vaihtuvat
+           * teoksen mukana. Kaikki maalaukset ovat PD — lähderivi
+           * nimeää valokuvaajan, kun museokuva on CC-lisensoitu.
+           */
+          galleria: [
+            {
+              otsikko: 'Kivenhakkaajien piha',
+              tiedosto: 'Canaletto - The Stonemason\'s Yard.jpg',
+              selite: 'Kivenhakkaajien piha (n. 1725): Campo San '
+                + 'Vidalilla veistetään kiveä kirkon korjaustöihin. '
+                + 'Harvinainen näkymä arjen Venetsiasta — ei juhlaa '
+                + 'vaan työtä, pyykkinaruja ja leikkiviä lapsia.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Markuksentori',
+              tiedosto: 'Canaletto - The Piazza San Marco in Venice - Google Art Project.jpg',
+              selite: 'Markuksentori (n. 1724): basilika ja kellotorni '
+                + 'nuoren Canaletton siveltimellä. Kauppiaiden kojut '
+                + 'täyttävät torin — se oli silloinkin kaupungin '
+                + 'olohuone.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Canal Granden suu',
+              tiedosto: 'Canaletto - The Entrance to the Grand Canal, Venice - Google Art Project.jpg',
+              selite: 'Canal Granden suu ja Santa Maria della Saluten '
+                + 'kupolikirkko (n. 1730). Kirkko rakennettiin '
+                + 'kiitokseksi ruton väistymisestä, ja sen portaille '
+                + 'kuljetaan yhä joka marraskuu siltaa pitkin juhlimaan.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Regatta Canal Grandella',
+              tiedosto: 'Canal, Giovanni Antonio Canal - Venice, A Regatta on the Grand Canal - National Gallery NG938.jpg',
+              selite: 'Regatta Canal Grandella (n. 1740): kevyet '
+                + 'kilpagondolat kiitävät väkijoukon editse, ja '
+                + 'parvekkeet on verhoiltu juhlakankain. Sama '
+                + 'soutukilpailu soudetaan Venetsiassa yhä joka syksy.',
+              lahde: 'Canaletto, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Rio dei Mendicanti',
+              tiedosto: 'Ca\' Rezzonico - Il rio dei Mendicanti - Canaletto.jpg',
+              selite: 'Rio dei Mendicanti (n. 1723): varhainen '
+                + 'Canaletto sivukanavan varrelta. Ikkunoissa kuivuu '
+                + 'pyykkiä ja rannassa korjataan veneitä — tavallista '
+                + 'Venetsiaa ilman juhlapukua.',
+              lahde: 'Didier Descouens, Wikimedia Commons (CC BY-SA 4.0)',
+            },
+          ],
         },
         {
           otsikko: 'Cicchetti ja Rialton tori',
