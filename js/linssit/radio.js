@@ -1210,36 +1210,184 @@ function jaljiteltyLukija(virta) {
  */
 const MITTAUS_KUOLLUT_MS = 1500;
 
+/*
+ * ══════════════════════════════════════════════════════════════════════
+ * VARAMITTAUS: LÄHETYS NOUDETAAN ITSE, KUN ELEMENTTI EI ANNA ÄÄNTÄÄN
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * iPad-diagnoosi 5.8.2026: "kaikkiin tulee jäljitelty, mittaus −40 dB".
+ * −40 dB on asteikon pohja, johon tasan nollainen lukema piirtyy — eli
+ * analysaattori saa WebKitissä pelkkiä nollia, vaikka asema soi ja
+ * CORS on kunnossa. Kyse ei siis ole asteikkovirheestä vaan WebKitin
+ * vanhasta poikkeamasta: createMediaElementSource ei kuljeta suora-
+ * toiston ääntä kuvaajaan, eikä sitä voi korjata elementin puolelta.
+ *
+ * Varamittaus kiertää elementin kokonaan: sama virta noudetaan
+ * fetchillä (CORS sallii — muuten oltaisiin varareitillä eikä täällä),
+ * tavuista etsitään kehysraja, pätkä puretaan decodeAudioDatalla ja
+ * siitä lasketaan äänekkyysverho. ÄÄNTÄ EI SOITETA — elementti soittaa
+ * — verhoa vain luetaan seinäkellon tahdissa. Neula seuraa siis oikeaa
+ * lähetystä; pieni aikasiirtymä elementin ja noudon välillä on
+ * mahdollinen ja hyväksytty: oikea ohjelma pienellä siirtymällä on
+ * rehellisempi kuin keksitty käyrä. Kaistaa kuluu tuplasti, joten
+ * varamittaus käynnistetään VAIN kun elementtimittaus on todettu
+ * kuolleeksi — työpöytäselain ei päädy tänne koskaan.
+ */
+const VERHON_IKKUNA_S = 0.12;
+// ~1,5 s 128 kbit/s -virtaa ennen kuin pätkä puretaan.
+const VARAMITTAUKSEN_PATKA = 24 * 1024;
+// Jos verhoa ei synny tässä ajassa, nouto ei toimi ja jäljitelmä jää.
+const VARAMITTAUKSEN_AIKARAJA_MS = 8000;
+
+/** MP3:n tai ADTS-AAC:n kehysrajan haku: 11 ykkösbittiä. */
+function etsiKehysraja(tavut) {
+  for (let i = 0; i + 1 < tavut.length; i += 1) {
+    if (tavut[i] === 0xff && (tavut[i + 1] & 0xe0) === 0xe0) return i;
+  }
+  return -1;
+}
+
+function kaynnistaVaramittaus(virta) {
+  const ctx = sfx.ensureContext?.({ pakota: true });
+  const url = virta.kanava?.url;
+  if (!ctx || typeof ctx.decodeAudioData !== 'function' || !url) return null;
+  if (typeof fetch !== 'function' || typeof AbortController !== 'function') return null;
+  const ohjain = new AbortController();
+  const verho = [];
+  let verhoAlku = 0;
+  let paattynyt = false;
+  (async () => {
+    try {
+      const vastaus = await fetch(url, { signal: ohjain.signal });
+      const lukulaite = vastaus.body?.getReader();
+      if (!lukulaite) throw new Error('virralla ei ole runkoa');
+      let puskuri = new Uint8Array(0);
+      for (;;) {
+        const { done, value } = await lukulaite.read();
+        if (done) break;
+        const jatko = new Uint8Array(puskuri.length + value.length);
+        jatko.set(puskuri);
+        jatko.set(value, puskuri.length);
+        puskuri = jatko;
+        if (puskuri.length < VARAMITTAUKSEN_PATKA) continue;
+        const raja = etsiKehysraja(puskuri);
+        const pala = raja >= 0 ? puskuri.slice(raja) : null;
+        puskuri = new Uint8Array(0);
+        if (!pala) continue;
+        try {
+          // slice() teki jo oman kopionsa, joten bufferin saa antaa pois.
+          const aani = await ctx.decodeAudioData(pala.buffer);
+          const data = aani.getChannelData(0);
+          const askel = Math.max(64, Math.round(aani.sampleRate * VERHON_IKKUNA_S));
+          for (let i = 0; i + askel <= data.length; i += askel) {
+            // Joka kahdeksas näyte riittää RMS:ään: verho on 0,12 s:n
+            // keskiarvo eikä tarkkuusmittaus.
+            let summa = 0;
+            let maara = 0;
+            for (let j = i; j < i + askel; j += 8) {
+              summa += data[j] * data[j];
+              maara += 1;
+            }
+            verho.push(Math.sqrt(summa / Math.max(1, maara)));
+          }
+          if (!verhoAlku && verho.length) verhoAlku = kello();
+          // Verho ei saa kasvaa rajatta tuntien kuuntelussa.
+          if (verho.length > 6000) {
+            const poisto = verho.length - 3000;
+            verho.splice(0, poisto);
+            verhoAlku += poisto * VERHON_IKKUNA_S * 1000;
+          }
+        } catch {
+          // Pätkä ei purkautunut (katkennut kehys) — seuraava yrittää.
+        }
+      }
+    } catch {
+      // Keskeytys tai verkkovika: paattynyt kertoo vahdille, että
+      // varamittauksesta ei ole enää mihinkään.
+    }
+    paattynyt = true;
+  })();
+  const lukija = () => {
+    const audio = virta.audio;
+    if (!audio || audio.paused || audio.ended) return 0;
+    if (!verho.length || !verhoAlku) return 0;
+    let i = Math.floor((kello() - verhoAlku) / (VERHON_IKKUNA_S * 1000));
+    // Nouto voi laahata elementin perässä: pidä viimeisin ikkuna
+    // mieluummin kuin pudota nollaan.
+    if (i >= verho.length) i = verho.length - 1;
+    if (i < 0) i = 0;
+    const rms = verho[i];
+    if (!(rms > 0)) return 0;
+    const db = 20 * Math.log10(rms);
+    return (db - LAHETYKSEN_POHJA_DB) / (LAHETYKSEN_KATTO_DB - LAHETYKSEN_POHJA_DB);
+  };
+  return {
+    lukija,
+    pysayta: () => ohjain.abort(),
+    onkoPaattynyt: () => paattynyt,
+    alkoi: kello(),
+  };
+}
+
 function pysyvaLukija() {
   return () => {
     const virta = soiva;
     if (!virta) return 0;
     if (virta.jaljitelmaan) {
       /*
-       * PALUU MITATTUUN, KERRAN. Jäljitelmään voidaan pudota myös
-       * ohimenevästä syystä: iPadilla AudioContext herää joskus vasta
-       * sekuntien päästä eleestä, ja siihen asti analysaattori antaa
-       * nollia — vahti ehtii vaihtaa jäljitelmään, vaikka mittaus
-       * alkaisi kohta toimia. Siksi mitattua koetetaan jäljitelmän
-       * rinnalla kahden sekunnin välein, ja jos se antaa oikean
-       * lukeman kolmesti peräkkäin, siihen palataan. Paluu tehdään
-       * kerran eikä sitä peruta samoin perustein kuin menokaan:
-       * sahaaminen näkyisi neulassa nykimisenä. Kynnys 0,05 on
-       * selvästi kohinan yllä, joten kolme peräkkäistä osumaa ei
-       * synny vuotavasta nollasta.
+       * PALUU OIKEAAN LUKEMAAN, KERRAN. Jäljitelmän rinnalla koetetaan
+       * kahden sekunnin välein kahta oikeaa lähdettä: varamittausta
+       * (nouto, ks. kaynnistaVaramittaus — iPadin ainoa toimiva reitti)
+       * ja elementin analysaattoria (herää joskus vasta sekuntien
+       * päästä eleestä). Kolme peräkkäistä oikeaa lukemaa samasta
+       * lähteestä riittää, ja siihen jäädään: sahaaminen näkyisi
+       * neulassa nykimisenä. Kynnys 0,05 on selvästi kohinan yllä,
+       * joten kolme osumaa ei synny vuotavasta nollasta.
        */
-      const lukija = virta.mittarinLukija;
-      if (lukija && kello() - (virta.koeteltu ?? 0) > 2000) {
+      if (kello() - (virta.koeteltu ?? 0) > 2000) {
         virta.koeteltu = kello();
-        if (lukija() > 0.05) {
-          virta.osumat = (virta.osumat ?? 0) + 1;
+        const ehdokkaat = [
+          ['nouto', virta.varamittaus?.lukija],
+          ['elementti', virta.mittarinLukija],
+        ];
+        let osui = null;
+        for (const [tapa, lukija] of ehdokkaat) {
+          if (lukija && lukija() > 0.05) {
+            osui = [tapa, lukija];
+            break;
+          }
+        }
+        if (osui) {
+          const [tapa, lukija] = osui;
+          if (virta.osunut === tapa) virta.osumat = (virta.osumat ?? 0) + 1;
+          else {
+            virta.osunut = tapa;
+            virta.osumat = 1;
+          }
           if (virta.osumat >= 3) {
             virta.jaljitelmaan = null;
             virta.nollasta = 0;
+            virta.mittarinLukija = lukija;
+            virta.mittaustapa = tapa;
+            if (tapa === 'elementti') {
+              // Nouto ei enää tarvita — kaista vapaaksi.
+              virta.varamittaus?.pysayta();
+              virta.varamittaus = null;
+            }
             return lukija();
           }
         } else {
           virta.osumat = 0;
+          virta.osunut = null;
+        }
+        // Nouto, joka ei tuota mitään: katkaistaan, ettei se ime
+        // kaistaa koko kuuntelun ajan. Virhe ja hidas käynnistys
+        // erottuvat ajalla, ei arvauksella.
+        if (virta.varamittaus
+          && (virta.varamittaus.onkoPaattynyt()
+            || kello() - virta.varamittaus.alkoi > 20000)) {
+          virta.varamittaus.pysayta();
+          virta.varamittaus = null;
         }
       }
       return virta.jaljitelmaan();
@@ -1261,8 +1409,18 @@ function pysyvaLukija() {
     }
     if (!virta.nollasta) virta.nollasta = kello();
     else if (kello() - virta.nollasta > MITTAUS_KUOLLUT_MS && virta.mittari) {
-      console.warn('VU-mittarin mittaus jäi nollaan; siirrytään jäljiteltyyn lukemaan.');
+      console.warn('VU-mittarin mittaus jäi nollaan; käynnistetään varamittaus.');
       virta.jaljitelmaan = jaljiteltyLukija(virta);
+      /*
+       * Varamittaus liikkeelle heti kuoleman toteamisesta: jäljitelmä
+       * peittää odotuksen, ja paluukoe (yllä) vaihtaa neulan noudettuun
+       * verhoon heti kun se tuottaa oikeita lukemia. CORSittomalla
+       * varareitillä noutoa ei edes yritetä — fetch kaatuisi samaan
+       * CORS-esteeseen.
+       */
+      if (!virta.varamittaus && virta.mittari && !virta.varalla) {
+        virta.varamittaus = kaynnistaVaramittaus(virta);
+      }
       return virta.jaljitelmaan();
     }
     return arvo;
@@ -1326,6 +1484,10 @@ function vapautaVirta(virta) {
     clearInterval(virta.haivytys);
     virta.haivytys = 0;
   }
+  // Varamittauksen nouto poikki, tai se jäisi imemään kaistaa
+  // kanavan vaihdon jälkeenkin.
+  virta.varamittaus?.pysayta();
+  virta.varamittaus = null;
   irrotaVirta(virta);
 }
 
@@ -1903,10 +2065,11 @@ export function paalle({
           : Math.round(arvo * (LAHETYKSEN_KATTO_DB - LAHETYKSEN_POHJA_DB) + LAHETYKSEN_POHJA_DB);
         maa = virta.varalla ? 'EI CORSIA' : (virta.mittari ? 'CORS OK' : 'EI KETJUA');
         if (virta.jaljitelmaan) {
-          asema = 'VU: JALJITELTY';
+          asema = virta.varamittaus ? 'VU: JALJ + NOUTO' : 'VU: JALJITELTY';
           kaupunki = db === null ? 'EI LUKEMAA' : `MITTAUS ${db} DB`;
         } else if (virta.mittarinLukija) {
-          asema = `VU: MITATTU ${db} DB`;
+          const tapa = virta.mittaustapa === 'nouto' ? 'NOUDETTU' : 'MITATTU';
+          asema = `VU: ${tapa} ${db} DB`;
           kaupunki = `VOL ${Math.round((Number(virta.audio?.volume) || 0) * 100)}`;
         } else {
           asema = 'VU: EI LAHDETTA';
