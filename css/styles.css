@@ -7291,17 +7291,15 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
   .dialog.lehti .arrival-maa .arrival-maa-rivi { grid-column: 1 / -1; }
 
-  .dialog.lehti .arrival-maa .arrival-uutiset {
+  .dialog.lehti .arrival-maa .maa-oikea {
     grid-column: 2;
     grid-row: 2 / span 6;
+  }
+
+  .dialog.lehti .arrival-maa .arrival-uutiset {
     margin: 0;
     border-top: 0;
     padding-top: 0;
-  }
-
-  /* Mediarivi heti uutisten alle — ei pääkirjoituksen jälkeen. */
-  .dialog.lehti .arrival-maa .maa-media {
-    grid-row: 8;
   }
 
   .dialog.lehti .arrival-maa #arrival-maa-intro { grid-column: 1 / -1; }
@@ -7407,10 +7405,7 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 }
 
 @media (min-width: 641px) {
-  .dialog.lehti .arrival-maa .maa-media {
-    grid-column: 2;
-    margin-top: 0.5rem;
-  }
+  .dialog.lehti .arrival-maa .maa-oikea .maa-media { margin-top: 0.55rem; }
 }
 
 /*
