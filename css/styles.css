@@ -2473,28 +2473,46 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * (kulmavahvikkeet vaativat sen). Ulkopuolelle roikkuva kahva
  * leikkautuisi pois.
  */
+/*
+ * KAHVA ROIKKUU LAUKUN ULKOPUOLELLA.
+ *
+ * Omistaja 5.8.2026: *"kahva pitäisi olla laukun (rajan) ulkopuolella,
+ * läpinäkyvänä kartan päällä."* Ensin se oli kortin sisällä, koska
+ * kortilla on `overflow: hidden` — mutta silloin se ei ollut kahva vaan
+ * kortille piirretty kuva kahvasta.
+ *
+ * Nyt kahva on kortin SISAR ja asemoitu kortin alapuolelle. `<dialog>`
+ * on auki ollessaan `position: absolute`, joten se kelpaa
+ * sijoituskehykseksi sellaisenaan, ja `.dialog`illa on jo
+ * `overflow: visible`.
+ *
+ * Kaaren silmukan läpi näkyy kartta, kuten oikeassa kahvassa — juuri se
+ * tekee siitä esineen eikä kuvion.
+ *
+ * `pointer-events: none`, jotta napautus kahvan kohdalla menee läpi
+ * dialogille ja sulkee laukun kuten muukin ulkopuoli.
+ */
 .laukku-kahva {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
-  /*
-   * Kahva on kortin sisällä (overflow: hidden), ja se on samaa nahkaa
-   * kuin kehys. Ilman väliä kaaren alareuna sulautui alareunuksen
-   * ruskeaan ja kahva näytti katkaistulta — väli on siis erottamista
-   * varten, ei ilmavuuden.
-   */
-  margin: 1.2rem 0 0.7rem;
   pointer-events: none;
 }
 
 .laukku-kahva span {
   width: 92px;
-  height: 24px;
-  border: 7px solid #6d4a2a;
+  height: 26px;
+  /* Sama nahka kuin kortin reunuksessa, jotta kahva on samaa laukkua. */
+  border: 8px solid #2b2015;
   border-top: 0;
-  border-radius: 0 0 22px 22px;
+  border-radius: 0 0 24px 24px;
+  /* Varjo kartalle: kahva on laukun edessä eikä kartan sisällä. */
   box-shadow:
-    inset 0 -2px 0 rgba(226, 196, 150, 0.2),
-    0 3px 6px rgba(20, 12, 4, 0.32);
+    inset 0 -2px 0 rgba(226, 196, 150, 0.18),
+    0 4px 8px rgba(20, 12, 4, 0.4);
 }
 
 /*

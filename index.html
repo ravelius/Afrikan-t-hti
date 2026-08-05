@@ -394,10 +394,18 @@
          napautus sen ulkopuolelle on luonteva sulkuele — sama kuin
          muissakin kartan päälle avautuvissa korteissa. Esc sulkee yhä,
          koska <dialog> hoitaa sen itse. -->
-    <!-- Nahkakahva laukun alalaidassa (omistajan toive): kaksi kiinnikettä
-         ja niiden välissä kaari. Koriste, ei nappi. -->
-    <div class="laukku-kahva" aria-hidden="true"><span></span></div>
    </div>
+   <!--
+     Nahkakahva roikkuu laukun ALAPUOLELLA kartan päällä (omistajan toive
+     5.8.2026: "kahva pitäisi olla laukun (rajan) ulkopuolella,
+     läpinäkyvänä kartan päällä").
+
+     Siksi se on kortin SISAR eikä lapsi: kortilla on `overflow: hidden`
+     (kulmavahvikkeet vaativat sen), ja sen sisällä kaari leikkautuisi
+     kortin reunaan. Kaaren silmukan läpi näkyy kartta, kuten oikeassa
+     kahvassa. Koriste, ei nappi.
+   -->
+   <div class="laukku-kahva" aria-hidden="true"><span></span></div>
   </dialog>
 
   <!-- Pelin nimikilpi: tekijänoikeus, tekijätiedot ja luettelo kaikista
