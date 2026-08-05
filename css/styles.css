@@ -6771,3 +6771,26 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   font-size: 8.5px;
   fill: rgba(70, 51, 31, 0.8);
 }
+
+/*
+ * Kohtaaminen visakortilla: hahmon tervehdys kirjoittuu otsikon ja
+ * kysymyksen väliin kirjan kursiivilla — se on tarinaa, ei tehtävää.
+ * Repliikki tuloksen alla erottuu samalla äänellä.
+ */
+.quiz-kohtaaminen {
+  margin: 0.35rem 0 0.6rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(58, 42, 22, 0.95);
+}
+
+.quiz-result .kohtaaminen-repliikki {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}

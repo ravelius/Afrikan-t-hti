@@ -47,6 +47,11 @@ vaadi koodimuutoksia:
   `js/packs/saatiedot.js`:ssä (lat/lon + kuukausinormaalit; normaalien
   laskutapa kerrotaan tiedoston alussa). Ilman riviä lehti näkyy
   ilman säätä — mitään ei tarvitse koodata.
+- **Kohtaaminen (v274):** "Etsi kätkö" -napin tilalla kohtaamis-
+  kaupungissa on hahmon kutsu (esim. "Tapaa gondolieeri"), ja hahmo
+  kehystää aarretehtävän tervehdyksineen ja repliikkeineen. Data:
+  `js/packs/kohtaamiset.js` (hahmo, nappi, frame, tervehdys, loyto,
+  tyhja, vaarin) — uusi kaupunki ei vaadi koodia.
 - **Minitehtävä:** aihe voi kantaa `tehtava: { kysymys, vaihtoehdot,
   oikea, fakta }` (pilotti: Italian Ruoka). Se piirtyy sivun loppuun
   kuponkimaisena tehtäväpalstana, ja vastaus LÖYTYY SAMAN SIVUN

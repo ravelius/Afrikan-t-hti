@@ -68,6 +68,7 @@ import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
+import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import {
   haeSaaTanaan, saaKuvaus, SAA_IKONIT, kuukausiSsa, piirraVuosiSaa,
 } from './saa.js';
@@ -1448,7 +1449,18 @@ export class UI {
       this.luentaTauolla = null;
       this.closeArrival();
       sfx.play('paper');
-      this.doAction(() => this.game.actionQuiz());
+      /*
+       * Kohtaamiskaupungissa hahmo esittää kysymyksen itse, joten
+       * muotoarvonta (väittämä, valokuvaaja, tullimies) ohitetaan —
+       * "Tapaa gondolieeri" ei saa avata tullimiestä. Isoisän pulma
+       * pysyy silti etusijalla: nimetty muoto ohittaisi sen, joten
+       * pulman odottaessa kutsu tehdään entiseen tapaan.
+       */
+      const kohtaaminen = KOHTAAMISET[this.game.cityOf()?.id];
+      const pulmaOdottaa = this.game.pendingPuzzle?.();
+      this.doAction(() => this.game.actionQuiz(
+        kohtaaminen && !pulmaOdottaa ? { form: 'quiz' } : {},
+      ));
     });
     document.getElementById('arrival-no').addEventListener('click', () => {
       this.closeArrival();
@@ -1643,6 +1655,11 @@ export class UI {
     this.quizDialog = document.getElementById('quiz-dialog');
     this.quizCity = document.getElementById('quiz-city');
     this.quizQuestion = document.getElementById('quiz-question');
+    // Kohtaamisen tervehdys kysymyksen yllä (js/packs/kohtaamiset.js).
+    this.quizKohtaaminen = document.getElementById('quiz-kohtaaminen');
+    // Tervehdys luetaan kerran per kaupunki ja istunto — toistuvassa
+    // käynnissä hahmo menee suoraan asiaan.
+    this.kohtaamisetNahty = new Set();
     this.quizOptions = document.getElementById('quiz-options');
     this.quizResult = document.getElementById('quiz-result');
     this.quizHintText = document.getElementById('quiz-hint-text');
@@ -5558,6 +5575,9 @@ export class UI {
     // Wikipedian tiivistelmästä; kunnes haku valmistuu — tai jos paikalla
     // ei ole artikkelia — kortissa lukee isoisän vakiorivi.
     this.arrivalCity.textContent = city.name;
+    // Kohtaamiskaupungissa nappi kutsuu hahmon luo, ei kätkön:
+    // aarretehtävä aukeaa tarinallisen kohtaamisen kautta.
+    document.getElementById('arrival-yes').textContent = KOHTAAMISET[city.id]?.nappi ?? 'Etsi kätkö';
     this.arrivalImage.hidden = true;
     this.arrivalImage.removeAttribute('src');
     this.arrivalKuvakotelo.hidden = true;
@@ -8868,6 +8888,13 @@ export class UI {
 
     const city = game.board.cityById.get(quiz.cityId);
     const hardTag = quiz.hard ? ` · vaikea kysymys +${HARD_BONUS} p` : '';
+    // Kohtaaminen koskee tavallista visaa: muut muodot (pulma, väittämä,
+    // valokuva, lippu, portti) pitävät omat kehyshahmonsa.
+    const kohtaaminen = (!quiz.kind && !quiz.gate) ? (KOHTAAMISET[quiz.cityId] ?? null) : null;
+    const tervehdysAvain = `${game.pack.id}:${quiz.cityId}`;
+    const tervehdys = kohtaaminen && !this.kohtaamisetNahty.has(tervehdysAvain)
+      ? kohtaaminen.tervehdys
+      : null;
     // Pulman piirros ensin, kysymysrivi alla — kortti on isoisän luonnos.
     // HUOM: SVGElement ei peri HTMLElementiä, joten .hidden-ominaisuus ei
     // heijastu attribuuttiin — se jäisi päälle ja [hidden]-sääntö piilottaisi
@@ -8922,6 +8949,10 @@ export class UI {
       otsikko = `Isoisän päiväkirjasta, 1873${aihe} — pitääkö tämä yhä paikkansa?`;
     } else if (quiz.gate) {
       otsikko = `${city.name} — portti: ${quiz.gate.label}`;
+    } else if (kohtaaminen) {
+      // Tarinallinen kohtaaminen (omistajan toive 5.8.2026): nimetty
+      // paikallinen hahmo kysyy, ei satunnainen kysyjä.
+      otsikko = `${city.name} — ${kohtaaminen.frame}:${hardTag}`;
     } else {
       // Kehystarina: paikallinen kysyjä. Vanhassa tallenteessa kehystä ei
       // ole, jolloin otsikkona on pelkkä kaupunki.
@@ -8938,6 +8969,8 @@ export class UI {
       sfx.play('quizOpen');
       startQuizMusic(this.game.pack.id);
       this.quizQuestion.textContent = '';
+      this.quizKohtaaminen.textContent = '';
+      this.quizKohtaaminen.hidden = !tervehdys;
       const vaihtoehdot = () => {
         if (this.dead || this.typedQuizFor !== quiz) return;
         this.quizStage = 2;
@@ -8950,8 +8983,21 @@ export class UI {
           this.typeTimers.quiz = setTimeout(vaihtoehdot, QUIZ_PAUSE_MS);
         }, QUIZ_TYPE_MS);
       };
+      // Kohtaamisen avaus kirjoittuu otsikon ja kysymyksen väliin —
+      // vain ensi kerralla; sen jälkeen hahmo menee suoraan asiaan.
+      const avaus = () => {
+        if (this.dead || this.typedQuizFor !== quiz) return;
+        if (!tervehdys) {
+          kysymys();
+          return;
+        }
+        this.kohtaamisetNahty.add(tervehdysAvain);
+        this.typeText(this.quizKohtaaminen, tervehdys, 'quiz', () => {
+          this.typeTimers.quiz = setTimeout(kysymys, QUIZ_PAUSE_MS);
+        }, QUIZ_TYPE_MS);
+      };
       this.typeText(this.quizCity, otsikko, 'quiz', () => {
-        this.typeTimers.quiz = setTimeout(kysymys, QUIZ_PAUSE_MS);
+        this.typeTimers.quiz = setTimeout(avaus, QUIZ_PAUSE_MS);
       }, QUIZ_TYPE_MS);
     } else if ((this.quizStage ?? 2) >= 2) {
       // Itsekorjaus valmiille kortille: jos jokin muu kirjoitus on ehtinyt
@@ -9030,6 +9076,16 @@ export class UI {
             html('span', 'muted', 'Vuoro vaihtuu — seuraavalla vuorolla saat uuden kysymyksen.'),
           );
         }
+        // Hahmon repliikki päättää kohtaamisen: löytö, tyhjä kätkö tai
+        // lohdutus väärästä vastauksesta.
+        if (kohtaaminen) {
+          const repliikki = !quiz.right
+            ? kohtaaminen.vaarin
+            : (quiz.explore || (quiz.found && quiz.found !== 'empty'))
+              ? kohtaaminen.loyto
+              : kohtaaminen.tyhja;
+          if (repliikki) body.appendChild(html('span', 'kohtaaminen-repliikki', repliikki));
+        }
         if (quiz.fact) body.appendChild(html('span', 'muted', quiz.fact));
         const quizSource = this.sourceLine(quiz.source);
         if (quizSource) body.appendChild(quizSource);
@@ -9048,6 +9104,9 @@ export class UI {
     const p = game.player;
 
     this.quizBadge.hidden = true;
+    // Kaksintaistelussa ei ole kohtaamista — edellisen visan tervehdys
+    // ei saa jäädä kortille.
+    this.quizKohtaaminen.hidden = true;
     this.quizCity.textContent = `Rosvon kaksintaistelu — ${p.name}`;
     // Kaksintaistelu ei käytä vaiheittaista paljastusta: vaihtoehdot ovat
     // heti esillä, eikä edellisen kortin piilotus saa jäädä päälle.

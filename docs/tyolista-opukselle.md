@@ -247,9 +247,14 @@ saavat noudattaa lehtimallia (resepti: docs/tutki-aiheet.md).
    keskilämmön ja sademäärän graafina (js/saa.js +
    js/packs/saatiedot.js — uusi lehtikaupunki tarvitsee vain
    koordinaatit ja normaalit sinne).
-5. ⏳ "Etsi kätkö" kokonaan uusiksi tarinallisena kohtaamisena: nimetty
-   paikallinen hahmo, jonka kautta aarretehtävä aukeaa (pilotti
-   Venetsia); napit nimetään uudelleen.
+5. ✅ v274: "Etsi kätkö" tarinallisena kohtaamisena (pilotti Venetsia,
+   js/packs/kohtaamiset.js): nappi "Tapaa gondolieeri", hahmon
+   tervehdys kirjoittuu visakortille ennen kysymystä (kerran per
+   istunto), hahmo kehystää kysymyksen ja päättää kohtaamisen omalla
+   repliikillään (löytö / tyhjä kätkö / väärä vastaus).
+   Kohtaamiskaupungissa muotoarvonta ohitetaan (hahmo kysyy itse;
+   isoisän pulma pysyy etusijalla). Esityskerros — pelimoottori ja
+   tallennukset ennallaan.
 6. ⏳ Ajankohtaiset uutisotsikot paikallisella kielellä maaosastoon
    (RSS + Cloudflare Worker -välitys, jonka omistaja ottaa käyttöön;
    ilman välityspalvelinta osio pysyy piilossa). Otsikoita EI lyhennetä
