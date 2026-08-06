@@ -40,6 +40,17 @@ test('pilottimaat ovat mukana', () => {
   assert.deepEqual(puuttuu, [], 'pilottimaa puuttuu aineistosta');
 });
 
+/*
+ * Jokainen pelin kartan maa saa tilastosivun. Etelä-Sudan on kartalla
+ * Natural Earthin koodilla SDS — työkalun silta kirjoittaa sen dataan
+ * molemmilla koodeilla, ja tämä testi hajoaa jos silta unohtuu.
+ */
+test('pelin jokaiselle maalle löytyy tilastosarjat', async () => {
+  const { MAAILMANKARTTA } = await import('../js/packs/maailmankartta.js');
+  const puuttuu = Object.keys(MAAILMANKARTTA.map.countryShapes).filter((m) => !data.maat[m]);
+  assert.deepEqual(puuttuu, [], 'pelin maita ilman maakayrat-dataa');
+});
+
 test('väkiluku kulkee 1950:stä 2050:een ja ennusteen raja on merkitty', () => {
   for (const [iso, maa] of Object.entries(data.maat)) {
     const v = maa.vakiluku;
@@ -93,7 +104,10 @@ test('aikasarjat ovat { alku, arvot } eikä reunoilla ole tyhjää', () => {
         `${iso}: kaupungistumisaste ei ole prosentti`);
     }
     if (maa.elinika) {
-      assert.ok(maa.elinika.arvot.every((a) => a === null || (a > 20 && a < 100)),
+      // Alaraja on väljä tarkoituksella: katastrofivuodet ovat tosia
+      // (Ruanda 1994 = 12,2; Kambodža 1976 = 11,3) eivätkä saa kaataa
+      // testiä. Tunnetut virhearvot pudottaa jo työkalu (POISTOT).
+      assert.ok(maa.elinika.arvot.every((a) => a === null || (a > 5 && a < 100)),
         `${iso}: elinajanodote ei ole vuosia`);
     }
   }

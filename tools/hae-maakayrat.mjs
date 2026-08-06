@@ -124,6 +124,25 @@ const MITTARIT = [
 ];
 
 /*
+ * Tunnetut virhearvot, jotka pudotetaan aukoiksi.
+ *
+ * Maailmanpankin vuoden 2025 revisio toi elinajanodotteeseen
+ * katastrofivuosien kuolleisuuden (Ruanda 1994 = 12,2; Kambodža
+ * 1975–78 ≈ 11; Somalia 2011 = 32) — ne ovat TOSIA ja jäävät dataan.
+ * Samassa revisiossa Keski-Afrikan tasavallan sarjaan ilmestyi
+ * kuitenkin viisi hajavuotta (14,7–40,3), jotka eivät vastaa mitään
+ * tunnettua tapahtumaa: vuosina 2009, 2019 ja 2022 maassa ei ollut
+ * minkään mittaluokan katastrofia, ja naapurivuodet ovat 49–58.
+ * Joulukuun 2024 julkaisussa samat vuodet olivat 48,6–55,0
+ * (tarkistettu peilin git-historiasta, open-numbers 63e3e67).
+ * Ilmeinen virhe ei kuulu lasten tietopeliin — vuodet jätetään
+ * aukoiksi, ja käyrä katkeaa niiden kohdalla rehellisesti.
+ */
+const POISTOT = {
+  elinika: { CAF: [2009, 2014, 2019, 2021, 2022] },
+};
+
+/*
  * Pyramidin ikäluokat: 5 vuoden portaat ja satavuotiaat yhtenä
  * luokkana. WPP antaa yksittäisvuodet 0–100, joista summataan.
  */
@@ -386,6 +405,9 @@ for (const mittari of MITTARIT) {
   let osumia = 0;
   for (const [iso, kartta] of tiedot) {
     if (!maat[iso]) continue;
+    for (const vuosi of POISTOT[mittari.avain]?.[iso] ?? []) {
+      if (kartta.delete(vuosi)) console.log(`  pudotettu tunnettu virhearvo: ${iso} ${vuosi}`);
+    }
     const sarja = sarjaksi(kartta, mittari.tarkkuus);
     if (!sarja) continue;
     maat[iso][mittari.avain] = sarja;
@@ -415,6 +437,16 @@ if (!(finElinika > 75 && finElinika < 95)) {
 const finCo2 = fin.co2?.arvot.findLast((a) => a !== null);
 if (!(finCo2 > 1 && finCo2 < 20)) {
   throw new Error(`pistokoe: Suomen CO₂/asukas ${finCo2} ei ole 1–20 tonnia`);
+}
+
+/*
+ * Etelä-Sudan kahdella koodilla, sama silta kuin hae-maaluvut.mjs:ssä:
+ * ISO antaa SSD:n, mutta pelin kartta on piirretty Natural Earthin
+ * aineistosta, jossa koodi on SDS. Ilman kopiota Etelä-Sudan jäisi
+ * pelissä ainoana maana ilman tilastosivua.
+ */
+for (const [iso, kaksois] of Object.entries({ SSD: 'SDS' })) {
+  if (maat[iso] && !maat[kaksois]) maat[kaksois] = maat[iso];
 }
 
 const paiva = new Date().toISOString().slice(0, 10);

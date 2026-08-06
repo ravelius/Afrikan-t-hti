@@ -6661,14 +6661,16 @@ export class UI {
     const kansi = kategoriat.find((k) => k.id === 'kaupunki') ?? null;
     const lehti = Boolean(kansi);
     /*
-     * "Maa numeroina" lehden viimeiseksi arkkisivuksi (docs/
-     * valtion-analyysi.md): maaosaston jatko, jossa maan aikasarjat
-     * piirretään käyriksi ja Suomi kulkee vertailuviivana. Sivu
-     * lisätään datasta riippumatta — aineisto haetaan laiskasti
-     * vasta sivun avautuessa, ja jos sitä ei saada (yhden tiedoston
-     * versio ilman verkkoa), sivu kertoo sen kohteliaasti itse.
+     * "Maa numeroina" viimeiseksi sivuksi jokaiseen kaupunkiin, jolla
+     * on maatunnus (docs/valtion-analyysi.md): lehtikaupungissa se on
+     * lehden arkkisivu, muualla sama sisältö maalohkon jatkona
+     * kevyemmässä kehyksessä — kehys kevenee itsestään, koska
+     * lehtitaitto on vain lehtikaupunkien luokka. Sivu lisätään
+     * datasta riippumatta — aineisto haetaan laiskasti vasta sivun
+     * avautuessa, ja jos sitä ei saada (yhden tiedoston versio ilman
+     * verkkoa), sivu kertoo sen kohteliaasti itse.
      */
-    if (lehti && maanIso) {
+    if (maanIso) {
       kategoriat.push({ id: 'maa-numeroina', nimi: 'Maa numeroina', numerot: maanIso });
     }
     this.tutkiLehti = lehti;
@@ -7182,9 +7184,14 @@ export class UI {
       // Pelaaja ehti kääntää sivua: piirraKategoria tyhjensi kotelon,
       // eikä myöhässä valmistunut sivu saa kirjoittaa uuden päälle.
       if (!kohde.contains(tila)) return;
-      if (!data?.maat?.[kategoria.numerot]) {
+      if (!data) {
         tila.textContent = 'Tämä sivu tarvitsee verkkoyhteyden ensimmäisellä '
           + 'avauksella — luvut haetaan silloin talteen.';
+        return;
+      }
+      if (!data.maat?.[kategoria.numerot]) {
+        // Aineisto on, mutta maa puuttuu siitä — eri asia kuin verkko.
+        tila.textContent = 'Tästä maasta ei ole vielä tilastosarjoja.';
         return;
       }
       tila.remove();
