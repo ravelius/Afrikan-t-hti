@@ -7372,7 +7372,8 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
 .maakayra-viiva,
 .maakayra-ennuste,
-.maakayra-suomi {
+.maakayra-suomi,
+.maakayra-toinen {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -7380,6 +7381,37 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 
 .maakayra-viiva { stroke: #a4691c; stroke-width: 1.8; }
 .maakayra-viiva-piste { fill: #a4691c; }
+
+/* Vertailulinssin toinen maa: punaruskea (--mark), sama kynä. */
+.maakayra-toinen { stroke: #b03a2b; stroke-width: 1.4; opacity: 0.85; }
+.maakayra-toinen-piste { fill: #b03a2b; opacity: 0.85; }
+
+.pyramidi-vertailu {
+  fill: none;
+  stroke: #b03a2b;
+  stroke-width: 1.1;
+  opacity: 0.85;
+  stroke-linejoin: round;
+}
+
+/* Vertailulinssin maavalitsin: pieni kirjoituskonerivi, paperin värit. */
+.vertailu-rivi {
+  margin: -0.2rem 0 0.6rem;
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  color: rgba(70, 51, 31, 0.85);
+}
+
+.vertailu-valitsin {
+  margin-left: 0.2rem;
+  padding: 0.15rem 0.35rem;
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  color: #211d18;
+  background: rgba(255, 250, 238, 0.8);
+  border: 1px solid rgba(70, 51, 31, 0.45);
+  border-radius: 6px;
+}
 
 /* Ennuste himmeämmällä musteella — se on odotus, ei havainto. */
 .maakayra-ennuste { stroke: #a4691c; stroke-width: 1.3; opacity: 0.45; }
