@@ -34,6 +34,24 @@ matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
 Loput tämän tiedoston säännöt (kuvat, lisenssit, mitat, työkalu,
 tarkistuslista) pätevät sellaisinaan molempiin tasoihin.
 
+## "Maa numeroina" syntyy itsestään — uusi lehtimaa EI vaadi mitään
+
+Lehden viimeinen arkkisivu (käyrät, väestöpyramidi, tulkintalauseet,
+Suomi-vertailuviiva ja Vertailulinssi) EI kuulu monistustyöhön:
+js/maakayrat.js piirtää sen suoraan assets/data/maakayrat.json-
+aineistosta, jossa on valmiiksi 228 maan aikasarjat. Sivu ilmestyy
+jokaiseen kaupunkiin, jolla on maatunnus (`map.cityCountry`) — siis
+myös uuteen lehtimaahan sinä hetkenä kun kaupunki saa kansisivunsa,
+ilman riviäkään uutta dataa tai koodia. Tulkintalauseet ovat
+sääntöpohjaisia (kynnysarvot + lausepohjat), joten nekin toimivat
+kaikille maille käsin kirjoittamatta.
+
+Ainoa ylläpito on datan ajoittainen virkistys: `node
+tools/hae-maakayrat.mjs` hakee tuoreet sarjat ja kirjoittaa
+hakupäivän tiedostoon, josta sivun lähderivi lukee sen. Sen voi ajaa
+milloin vain ja julkaista datapäivityksenä ilman koodimuutoksia
+(docs/valtion-analyysi.md, riskiosio).
+
 ## PÄÄTETTY 5.8.2026: Tutki on paikallislehti (v270)
 
 Omistajan visio: kansisivullinen kaupunki taittuu paikallislehdeksi.
