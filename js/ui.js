@@ -7197,8 +7197,38 @@ export class UI {
       tila.remove();
       // V-Dem on jo pelissä (maatiedot-paketit) — näytetään uudelleen,
       // ei haeta uudestaan.
-      const demokratia = (MAATIEDOT[this.game.pack.id] ?? {})[kategoria.numerot]?.demokratia ?? null;
-      piirraMaaNumerot(kohde, kategoria.numerot, data, { demokratia });
+      const maatiedot = MAATIEDOT[this.game.pack.id] ?? {};
+      const demokratia = maatiedot[kategoria.numerot]?.demokratia ?? null;
+      /*
+       * Vertailulinssi (js/linssit/vertailu.js): omistus riittää,
+       * linssin ei tarvitse olla kartalla päällä — lehteä luetaan eri
+       * näkymässä. Valittavat maat ovat ne, joille peli osaa antaa
+       * suomenkielisen nimen ja joilta löytyy tilastosarjat. Valinta
+       * muistetaan istunnon ajan, joten samaa vertailumaata voi
+       * kuljettaa maasta toiseen.
+       */
+      const { omistaa } = await import('./linssit/omistus.js');
+      const vertailuAuki = omistaa(this.game, this.game.player, 'vertailu');
+      let nimet = null;
+      if (vertailuAuki) {
+        // Valittavat maat ovat pelin kartan maat: suomenkielinen nimi
+        // asuu countryShapes-rakenteessa, ei maatiedoissa.
+        nimet = {};
+        for (const [koodi, muoto] of Object.entries(this.game.pack.map?.countryShapes ?? {})) {
+          if (muoto?.nimi && data.maat[koodi]) nimet[koodi] = muoto.nimi;
+        }
+      }
+      piirraMaaNumerot(kohde, kategoria.numerot, data, {
+        demokratia,
+        nimet,
+        vertailuIso: vertailuAuki ? this.vertailuMaa ?? null : null,
+        onVertaa: vertailuAuki
+          ? (valinta) => {
+            this.vertailuMaa = valinta;
+            void this.piirraMaaNumerotSivu(kategoria);
+          }
+          : null,
+      });
     } catch {
       tila.textContent = 'Tämä sivu tarvitsee verkkoyhteyden ensimmäisellä '
         + 'avauksella — luvut haetaan silloin talteen.';

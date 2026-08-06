@@ -223,14 +223,14 @@ function somaYlaraja(suurin) {
  * "Silloin ja nyt" -jälki akselin reunassa. Aukoissa viiva katkeaa.
  */
 function piirraKayra({
-  seloste, sarja, suomi, jakaja = 1, ennusteAlku = null, silloin = null, katto = null,
+  seloste, sarja, suomi, toinen = null, jakaja = 1, ennusteAlku = null, silloin = null, katto = null,
 }) {
   const svg = svgPohja(seloste);
-  const alku = Math.min(sarja.alku, suomi?.alku ?? sarja.alku);
-  const loppu = Math.max(sarja.alku + sarja.arvot.length, suomi ? suomi.alku + suomi.arvot.length : 0) - 1;
+  const sarjat = [sarja, suomi, toinen].filter(Boolean);
+  const alku = Math.min(...sarjat.map((s) => s.alku));
+  const loppu = Math.max(...sarjat.map((s) => s.alku + s.arvot.length)) - 1;
   const suurin = Math.max(
-    ...sarja.arvot.filter((a) => a !== null),
-    ...(suomi?.arvot.filter((a) => a !== null) ?? []),
+    ...sarjat.flatMap((s) => s.arvot.filter((a) => a !== null)),
     silloin?.arvo ?? 0,
   );
   // Kiinteä katto (esim. prosenttiasteikon 100) pitää puolivälin
@@ -292,6 +292,10 @@ function piirraKayra({
   };
 
   if (suomi) piirraPatkat(patkat(suomi, () => true), 'maakayra-suomi');
+  // Vertailulinssin toinen maa punaruskealla — Suomen viivan päälle,
+  // maan oman käyrän alle. Ennusteen rajaa ei eroteta: vertailussa
+  // katsotaan muotoa, ja kaksi katkoluokkaa lisää olisi vain melua.
+  if (toinen) piirraPatkat(patkat(toinen, () => true), 'maakayra-toinen');
   // Ennusteen raja: historia kulkee rajavuoteen asti, ennuste jatkaa
   // siitä himmeämpänä. Rajavuosi kuuluu molempiin, jotta viiva jatkuu.
   const raja = ennusteAlku ?? Infinity;
@@ -331,7 +335,7 @@ function piirraKayra({
  * kertoo tarinan, joten numeroakselia ei tarvita: palkin pituus on
  * osuus koko väestöstä.
  */
-function piirraPyramidi(pyramidi, ryhmat) {
+function piirraPyramidi(pyramidi, ryhmat, toinen = null) {
   const KORKEUS = 168;
   const svg = svgPohja(`Väestöpyramidi vuodelta ${pyramidi.vuosi}`, KORKEUS);
   // Keskikäytävä on ikänumeroiden koti — sen on oltava numeron
@@ -344,7 +348,22 @@ function piirraPyramidi(pyramidi, ryhmat) {
   const riviVali = (ala - yla) / ryhmat.length;
   const palkki = riviVali - 1.4;
   const kaikki = [...pyramidi.miehet, ...pyramidi.naiset].reduce((a, b) => a + b, 0);
-  const isoin = Math.max(...pyramidi.miehet, ...pyramidi.naiset) / kaikki;
+  const toinenKaikki = toinen
+    ? [...toinen.miehet, ...toinen.naiset].reduce((a, b) => a + b, 0)
+    : 0;
+  /*
+   * Sama asteikko molemmille maille: palkin pituus on ikäluokan osuus
+   * OMAN maan väestöstä, ja jakaja on suurin osuus kummasta tahansa —
+   * muodot ovat silloin suoraan vertailukelpoisia eikä kumpikaan
+   * vuoda kehyksen yli.
+   */
+  const isoin = Math.max(
+    ...pyramidi.miehet.map((a) => a / kaikki),
+    ...pyramidi.naiset.map((a) => a / kaikki),
+    ...(toinen && toinenKaikki
+      ? [...toinen.miehet, ...toinen.naiset].map((a) => a / toinenKaikki)
+      : [0]),
+  );
   const leveys = (arvo) => (arvo / kaikki / isoin) * leveinta;
 
   el(svg, 'text', { class: 'maakayra-akseli', x: keski - 12, y: yla - 6, 'text-anchor': 'end' }, 'miehet');
@@ -382,6 +401,25 @@ function piirraPyramidi(pyramidi, ryhmat) {
       }, `${i * 5}`);
     }
   });
+  /*
+   * Vertailumaa piirretään porrasviivana palkkien päälle: ääriviiva
+   * näyttää muodon peittämättä palkkeja. Portaan x on ikäluokan osuus
+   * vertailumaan omasta väestöstä samalla jakajalla kuin palkit.
+   */
+  if (toinen && toinenKaikki) {
+    const porras = (arvot, suunta) => {
+      let polku = '';
+      ryhmat.forEach((_, i) => {
+        const w = (arvot[i] / toinenKaikki / isoin) * leveinta;
+        const x = (keski + suunta * (kaytava + w)).toFixed(1);
+        polku += `${i ? 'L' : 'M'}${x},${(ala - i * riviVali).toFixed(1)} `
+          + `L${x},${(ala - (i + 1) * riviVali).toFixed(1)} `;
+      });
+      return polku;
+    };
+    el(svg, 'path', { class: 'pyramidi-vertailu', d: porras(toinen.miehet, -1) });
+    el(svg, 'path', { class: 'pyramidi-vertailu', d: porras(toinen.naiset, 1) });
+  }
   el(svg, 'line', {
     class: 'maakayra-pohjaviiva',
     x1: keski - kaytava - leveinta,
@@ -413,22 +451,73 @@ function lohko(kohde, otsikko, kuvio, tulkinta) {
 }
 
 /**
- * Koko sivun sisältö otsikon alle. `demokratia` on pelin oma V-Dem-
- * tieto (js/packs/*-maatiedot.js) — sitä ei haeta uudestaan, vaan
- * näytetään tässä yhteydessä uudelleen.
+ * Koko sivun sisältö otsikon alle.
+ *
+ * `demokratia` on pelin oma V-Dem-tieto (js/packs/*-maatiedot.js) —
+ * sitä ei haeta uudestaan, vaan näytetään tässä yhteydessä uudelleen.
+ *
+ * Vertailulinssi (js/linssit/vertailu.js): kun varuste on omistettu,
+ * kutsuja antaa `nimet` (ISO → suomenkielinen nimi), `vertailuIso`
+ * (valittu toinen maa tai null) ja `onVertaa` (kutsutaan valinnasta).
+ * Toinen maa piirretään punaruskealla samoille asteikoille, ja Suomi
+ * säilyy kolmantena viivana.
  */
-export function piirraMaaNumerot(kohde, iso, data, { demokratia = null } = {}) {
+export function piirraMaaNumerot(kohde, iso, data, {
+  demokratia = null, nimet = null, vertailuIso = null, onVertaa = null,
+} = {}) {
   const maa = data.maat[iso];
   const suomi = data.maat.FIN;
   const omaSivuOnSuomen = iso === 'FIN';
-  const vertailu = omaSivuOnSuomen ? null : suomi;
+  const kaveri = (vertailuIso && vertailuIso !== iso && data.maat[vertailuIso]) || null;
+  // Suomi-viivaa ei kahdenneta: jos vertailumaaksi valittiin Suomi,
+  // se kulkee punaruskeana eikä himmeää viivaa piirretä alle.
+  const vertailu = (omaSivuOnSuomen || vertailuIso === 'FIN') ? null : suomi;
 
   const johdanto = document.createElement('p');
   johdanto.className = 'johdanto';
-  johdanto.textContent = omaSivuOnSuomen
-    ? 'Muutama käyrä kertoo, mihin suuntaan maa on kulkenut.'
-    : 'Muutama käyrä kertoo, mihin suuntaan maa on kulkenut. Ohut viiva on Suomi — sitä vasten luvut saavat mittakaavan.';
+  if (kaveri && nimet) {
+    johdanto.textContent = `Kullanvärinen käyrä on ${nimet[iso] ?? iso}, punaruskea `
+      + `${nimet[vertailuIso] ?? vertailuIso}`
+      + (vertailu ? ' — ja ohut viiva on Suomi.' : '.');
+  } else {
+    johdanto.textContent = omaSivuOnSuomen
+      ? 'Muutama käyrä kertoo, mihin suuntaan maa on kulkenut.'
+      : 'Muutama käyrä kertoo, mihin suuntaan maa on kulkenut. Ohut viiva on Suomi — sitä vasten luvut saavat mittakaavan.';
+  }
   kohde.appendChild(johdanto);
+
+  /*
+   * Vertailulinssin valitsin: näkyy vain kun varuste on omistettu.
+   * Lista on pelin tuntemat maat (niillä on suomenkielinen nimi),
+   * joilta löytyy tilastosarjat.
+   */
+  if (onVertaa && nimet) {
+    const rivi = document.createElement('p');
+    rivi.className = 'vertailu-rivi';
+    const nimio = document.createElement('label');
+    nimio.textContent = 'Vertailulinssi: ';
+    const valitsin = document.createElement('select');
+    valitsin.className = 'vertailu-valitsin';
+    const oletus = document.createElement('option');
+    oletus.value = '';
+    oletus.textContent = omaSivuOnSuomen ? 'ei vertailumaata' : 'vain Suomi-viiva';
+    valitsin.appendChild(oletus);
+    const jarjestys = new Intl.Collator('fi');
+    const maatJarjestyksessa = Object.entries(nimet)
+      .filter(([koodi]) => koodi !== iso && data.maat[koodi])
+      .sort((a, b) => jarjestys.compare(a[1], b[1]));
+    for (const [koodi, nimi] of maatJarjestyksessa) {
+      const valinta = document.createElement('option');
+      valinta.value = koodi;
+      valinta.textContent = nimi;
+      valitsin.appendChild(valinta);
+    }
+    valitsin.value = kaveri ? vertailuIso : '';
+    valitsin.addEventListener('change', () => onVertaa(valitsin.value || null));
+    nimio.appendChild(valitsin);
+    rivi.appendChild(nimio);
+    kohde.appendChild(rivi);
+  }
 
   const ristikko = document.createElement('div');
   ristikko.className = 'maakayrat';
@@ -438,7 +527,7 @@ export function piirraMaaNumerot(kohde, iso, data, { demokratia = null } = {}) {
   // kertoo yhdellä silmäyksellä, onko maa nuori vai vanheneva.
   if (maa.pyramidi) {
     lohko(ristikko, `Ikärakenne ${maa.pyramidi.vuosi}`,
-      piirraPyramidi(maa.pyramidi, data.meta.pyramidiRyhmat),
+      piirraPyramidi(maa.pyramidi, data.meta.pyramidiRyhmat, kaveri?.pyramidi ?? null),
       tulkitsePyramidi(maa.pyramidi));
   }
 
@@ -449,6 +538,7 @@ export function piirraMaaNumerot(kohde, iso, data, { demokratia = null } = {}) {
         seloste: 'Väkiluku 1950–2050',
         sarja: maa.vakiluku,
         suomi: vertailu?.vakiluku,
+        toinen: kaveri?.vakiluku,
         jakaja: miljoonissa ? 1e6 : 1e3,
         ennusteAlku: maa.vakiluku.ennusteAlku,
         silloin: maa.silloin,
@@ -477,6 +567,7 @@ export function piirraMaaNumerot(kohde, iso, data, { demokratia = null } = {}) {
         seloste: 'Bruttokansantuote asukasta kohti, ostovoimakorjattu',
         sarja: maa.bkt,
         suomi: vertailu?.bkt,
+        toinen: kaveri?.bkt,
         jakaja: 1e3,
       }),
       tulkitseBkt(maa.bkt, suomi?.bkt, omaSivuOnSuomen));
@@ -488,6 +579,7 @@ export function piirraMaaNumerot(kohde, iso, data, { demokratia = null } = {}) {
         seloste: 'Vastasyntyneen odotettu elinikä',
         sarja: maa.elinika,
         suomi: vertailu?.elinika,
+        toinen: kaveri?.elinika,
       }),
       tulkitseElinika(maa.elinika));
   }
@@ -498,6 +590,7 @@ export function piirraMaaNumerot(kohde, iso, data, { demokratia = null } = {}) {
         seloste: 'Kaupungistumisaste',
         sarja: maa.kaupungistuminen,
         suomi: vertailu?.kaupungistuminen,
+        toinen: kaveri?.kaupungistuminen,
         katto: 100,
       }),
       tulkitseKaupungistuminen(maa.kaupungistuminen));
@@ -509,6 +602,7 @@ export function piirraMaaNumerot(kohde, iso, data, { demokratia = null } = {}) {
         seloste: 'Hiilidioksidipäästöt asukasta kohti',
         sarja: maa.co2,
         suomi: vertailu?.co2,
+        toinen: kaveri?.co2,
       }),
       tulkitseCo2(maa.co2, suomi?.co2));
   }
