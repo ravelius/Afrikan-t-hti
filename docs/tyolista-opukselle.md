@@ -308,6 +308,16 @@ saavat noudattaa lehtimallia (resepti: docs/tutki-aiheet.md).
    uutislahteet.js:ään että workerin sallittujen listaan ja worker
    julkaistaan uudelleen (tools/uutisproxy/OHJE.md).
 
+### PÄÄTETTY 6.8.2026: Valtion analyysi (erillinen sessio tekee)
+
+Lehden maaosasto saa jatkokseen "Maa numeroina" -sivun (aikasarjat
+muste+kulta-käyrinä, Suomi vertailuviivana, sanalliset tulkinnat)
+ja uuden Vertailulinssi-varusteen. Sitova suunnitelma:
+**docs/valtion-analyysi.md**. Tämä EI kuulu Opuksen lehtijonoon —
+erillinen sessio toteuttaa viidessä vaiheessa, ja valmiina sivu
+syntyy jokaiselle maalle datasta ilman käsityötä. Uusia lehtimaita
+tehdessä tätä ei tarvitse huomioida mitenkään.
+
 ### PÄÄTETTY 4.8.2026: aarteiden nimistö (sitova kaikessa sisällössä)
 
 Peli irrotetaan Afrikan tähdestä kokonaan — aarre ei ole tähti missään
