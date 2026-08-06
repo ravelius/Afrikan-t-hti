@@ -6225,11 +6225,30 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   50% { opacity: 0.4; }
 }
 
+/*
+ * ARTIKKELIN KUVA NIIN SUURENA KUIN SE ANTAA (omistajan toive
+ * 6.8.2026: "kaikilla Wikipedia-artikkelisivuilla kuvat näytetään
+ * mahdollisimman suurina").
+ *
+ * Ennen tässä oli `max-height: 320px`, ja se oli kahdesta rajoitteesta
+ * jälkimmäinen: kuva HAETTIIN Wikipedian tiivistelmän pikkukuvana,
+ * joka on mitattuna vain noin 330 pikseliä leveä (Madrid: 330 × 283,
+ * alkuperäinen 1184 × 1016). Korkeusraja siis leikkasi kuvaa, joka oli
+ * jo valmiiksi pieni. Molemmat korjattiin — haku pyytää nyt 1600
+ * pikselin version (js/ui.js naytaWikiKuva), ja tässä kuva saa täyttää
+ * palstan leveyden.
+ *
+ * `width: auto` on tahallinen: pientäkään kuvaa ei venytetä palstan
+ * levyiseksi, koska venytetty pikkukuva on sumea eikä suuri.
+ *
+ * Korkeusraja on yhä olemassa mutta ruudun mitassa: pysty­kuva ei saa
+ * täyttää koko sivua niin, ettei tekstiä näy ilman vieritystä.
+ */
 .wiki-image {
   display: block;
+  width: auto;
   max-width: 100%;
-  /* Isompi taitto Lue lisää -lehdillä (omistajan toive). */
-  max-height: 320px;
+  max-height: 78vh;
   margin: 0 auto 0.6rem;
   border-radius: 6px;
 }

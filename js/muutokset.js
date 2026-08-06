@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 308, teksti: 'Artikkelien kuvat isoina: 330 px -> 1920 px' },
+  { v: 308, teksti: 'Suurennos ei enää putoa takaisin pikkukuvaan' },
   { v: 307, teksti: 'Madrid sai oman lehden: kansi ja Espanja-osasto' },
   { v: 307, teksti: 'Goyan Madrid-teokset galleriana' },
   { v: 307, teksti: 'Espanjan uutiset, RTVE:n tv ja kirpputorikauppias' },

@@ -35,7 +35,7 @@ import {
 } from '../js/game.js';
 import {
   articleUrl, BAD_IMAGE, fetchImage, fetchSummary, parseArticle, parseSummary,
-  pickImage, summaryUrl,
+  pickImage, summaryUrl, suurennusportaat, upsizeImage,
 } from '../js/wiki.js';
 import {
   chooseDuelAnswer, chooseMove, chooseQuizAnswer, chooseTravel,
@@ -2246,6 +2246,45 @@ test('parseArticle poimii artikkelin ja hylkää puuttuvan sivun', () => {
   assert.equal(parseArticle({ query: { pages: { '-1': { missing: '' } } } }), null);
   assert.equal(parseArticle(null), null);
   assert.equal(parseArticle({}), null);
+});
+
+/*
+ * Suurennusportaat: artikkelikuva haetaan mahdollisimman suurena
+ * (omistajan toive 6.8.2026). Kolme ansaa, jotka nämä testit vahtivat.
+ */
+test('upsizeImage vaihtaa leveyden myös etuliitteellisessä osoitteessa', () => {
+  const tavallinen = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/K.jpg/330px-K.jpg';
+  assert.equal(
+    upsizeImage(tavallinen, 1920),
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/K.jpg/1920px-K.jpg',
+  );
+  // Kielikohtainen SVG-käännös: leveys ei ala kauttaviivan jälkeen.
+  const kielella = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/M.svg/langfi-330px-M.svg.png';
+  assert.equal(
+    upsizeImage(kielella, 1920),
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/M.svg/langfi-1920px-M.svg.png',
+  );
+  // Tiedostonimen keskellä oleva samannäköinen jono ei saa vaihtua.
+  const ansa = 'https://x/kansio/500px-nimi/330px-500px-nimi.jpg';
+  assert.equal(upsizeImage(ansa, 1920), 'https://x/kansio/500px-nimi/1920px-500px-nimi.jpg');
+  // Ei leveysmerkintää: osoite palautuu sellaisenaan.
+  assert.equal(upsizeImage('https://x/kuva.jpg', 1920), 'https://x/kuva.jpg');
+  assert.equal(upsizeImage(null, 1920), null);
+});
+
+test('suurennusportaat menee suurimmasta pienimpään ja päätyy alkuperäiseen', () => {
+  const src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/K.jpg/330px-K.jpg';
+  const portaat = suurennusportaat(src);
+  assert.deepEqual(portaat, [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/K.jpg/1920px-K.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/K.jpg/1280px-K.jpg',
+    src,
+  ]);
+  // Ilman leveysmerkintää kaikki portaat olisivat sama osoite — silloin
+  // listalla on tasan yksi, tai virhekäsittely jäisi ikuiseen kierteeseen.
+  assert.deepEqual(suurennusportaat('https://x/kuva.jpg'), ['https://x/kuva.jpg']);
+  assert.deepEqual(suurennusportaat(''), []);
+  assert.deepEqual(suurennusportaat(null), []);
 });
 
 test('pickImage ohittaa montaasit, symbolit ja svg:t', () => {
