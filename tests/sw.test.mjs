@@ -160,36 +160,37 @@ test('välimuistin nimi seuraa sovelluksen versiota', () => {
 });
 
 /*
- * Peiliä ei saa hakea CORS-tilassa.
+ * PEILIKUVAN NOUDOSSA ON OLTAVA VARAREITTI ILMAN CORSIA.
  *
- * R2:n julkinen pub-*.r2.dev-osoite ei lähetä Access-Control-Allow-Origin
- * -otsaketta. Sinne tehty { mode: 'cors' } -nouto hylätään AINA, jolloin
- * jokainen peilikuva epäonnistuu palvelutyöntekijässä ja peli elää
- * Commons-varareitin varassa. Yksittäinen kuva näyttää silti toimivan,
- * joten vikaa ei huomaa mistään — se paljastuu vasta kun kuvia pyydetään
- * monta kerralla ja Commons alkaa rajoittaa. Juuri niin kävi (omistajan
- * havainto: rikkinäinen kuva Marseillessa, tyhjä pino Ateenassa).
+ * Historia: R2:n julkinen pub-*.r2.dev-osoite ei aluksi lähettänyt
+ * Access-Control-Allow-Origin -otsaketta, jolloin { mode: 'cors' }
+ * -nouto epäonnistui AINA ja jokainen peilikuva kaatui
+ * palvelutyöntekijässä. Yksittäinen kuva näytti silti toimivan, joten
+ * vikaa ei huomannut mistään — se paljastui vasta kun kuvia pyydettiin
+ * monta kerralla (rikkinäinen kuva Marseillessa, tyhjä pino Ateenassa).
+ *
+ * Ämpäriin lisättiin sittemmin CORS-sääntö, joten cors-noutoa saa taas
+ * yrittää: se on ainoa tapa saada kuva talteen koriin, ja juuri se
+ * poistaa toistuvat purskeet rajoitetulle r2.dev-osoitteelle. Ehto on
+ * nyt tämä: cors-noudon jälkeen KOODISSA ON OLTAVA tavallinen
+ * fetch(event.request) varareittinä. Ilman sitä peli hajoaisi
+ * uudelleen heti, jos sääntö poistetaan ämpäristä tai peli avataan
+ * muualta kuin ravelius.github.io:sta.
  *
  * Testi lukee lähdekoodia eikä käyttäytymistä, koska palvelutyöntekijää
  * ei voi ajaa Nodessa. Se on karkea mutta osuu juuri siihen riviin,
- * jonka paluu rikkoisi kuvat uudelleen.
+ * jonka poisto rikkoisi kuvat uudelleen.
  */
-test('peilin kuvia ei haeta cors-tilassa', () => {
+test('peilikuvalla on cors-noudon jälkeen varareitti ilman corsia', () => {
   const kohta = sw.indexOf('r2.dev');
   assert.ok(kohta > 0, 'sw.js ei enää tunne peiliä — onko ehto poistettu?');
-  // Ehdon jälkeinen noutolohko: siinä saa olla cors vain muille lähteille.
-  const lohko = sw.slice(kohta, kohta + 2400);
-  // Kommenteissa cors mainitaan nimenomaan varoituksena, joten ne pois.
-  const corsRivit = lohko.split('\n')
-    .filter((r) => !/^\s*(\*|\/\/|\/\*)/.test(r))
-    .filter((r) => /mode:\s*'cors'/.test(r));
-  assert.ok(
-    lohko.includes("osoite.hostname.endsWith('.r2.dev')")
-      && /if \(peilista\) return fetch\(event\.request\)/.test(lohko),
-    'peilille pitää tehdä pyyntö sellaisenaan (ei cors) — muuten kuvat hajoavat',
-  );
-  assert.ok(corsRivit.length <= 1,
-    'cors-nouto kuuluu vain wikimedia-haaraan');
+  const lohko = sw.slice(kohta, kohta + 3200);
+  const rivit = lohko.split('\n').filter((r) => !/^\s*(\*|\/\/|\/\*)/.test(r));
+  const corsRivi = rivit.findIndex((r) => /mode:\s*'cors'/.test(r));
+  const varaRivi = rivit.findIndex((r) => /fetch\(event\.request\)/.test(r));
+  assert.ok(corsRivi >= 0, 'cors-nouto on ainoa tapa saada kuva koriin');
+  assert.ok(varaRivi > corsRivi,
+    'cors-noudon jälkeen on oltava tavallinen fetch(event.request) varareittinä');
 });
 
 /*

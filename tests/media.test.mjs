@@ -207,13 +207,58 @@ test('asetaKuva siirtyy varareitille, uusii kerran ja luovuttaa vasta sitten', a
   nollaaPeili();
 });
 
-test('asetaKuva luovuttaa heti, kun varareittiä ei ole', () => {
+/*
+ * Ilman erillistä varareittiä ei saa luovuttaa ensimmäisestä
+ * virheestä. Näin käy AINA kun peilin katkaisija on lauennut: silloin
+ * valokuvaUrl palauttaa jo Commonsin osoitteen ja varareitti on sama.
+ * Ennen tästä luovutettiin heti, ja koska katkaisu kesti koko
+ * välilehden eliniän, kuva jäi rikki myös uudelleenlatauksen jälkeen
+ * (omistajan havainto 6.8.2026).
+ */
+test('asetaKuva uusii kerran myös silloin, kun varareittiä ei ole', async () => {
   nollaaPeili();
   const kuva = teeKuva();
   let luovutti = 0;
-  asetaKuva(kuva, 'https://vain.test/a.jpg', null, () => { luovutti += 1; });
-  kuva.petta();
-  assert.equal(luovutti, 1);
+  const oikeaSetTimeout = globalThis.setTimeout;
+  globalThis.setTimeout = (fn) => oikeaSetTimeout(fn, 0);
+  try {
+    asetaKuva(kuva, 'https://vain.test/a.jpg', null, () => { luovutti += 1; });
+    kuva.petta();
+    assert.equal(luovutti, 0, 'ensimmäinen virhe ajastaa uusinnan');
+    await new Promise((r) => { oikeaSetTimeout(r, 10); });
+    assert.equal(kuva.src, 'https://vain.test/a.jpg?yritys=2', 'uusinta lisäparametrilla');
+    kuva.petta();
+    assert.equal(luovutti, 1, 'vasta toinen virhe luovuttaa');
+    kuva.petta();
+    assert.equal(luovutti, 1, 'ketju ei jää silmukkaan');
+  } finally {
+    globalThis.setTimeout = oikeaSetTimeout;
+  }
+  nollaaPeili();
+});
+
+/*
+ * Katkaisija paranee itsestään. Aiemmin se kesti koko istunnon ja
+ * säilyi `sessionStoragessa` myös uudelleenlatauksen yli — yksi
+ * purskerajoitus sulki peilin siihen asti kunnes välilehti suljettiin.
+ */
+test('peilin katkaisija aukeaa itsestään määräajan jälkeen', () => {
+  nollaaPeili();
+  assert.ok(peiliKaytossa('kuvat'), 'aluksi käytössä');
+  for (let i = 0; i < 3; i += 1) peiliPetti('kuvat');
+  assert.equal(peiliKaytossa('kuvat'), false, 'kolme virhettä sulkee peilin');
+
+  // Aika eteenpäin: katkaisu on viisi minuuttia.
+  const oikeaNow = Date.now;
+  Date.now = () => oikeaNow() + 6 * 60 * 1000;
+  try {
+    assert.ok(peiliKaytossa('kuvat'), 'määräajan jälkeen peili on taas käytössä');
+    // Laskuri nollautuu, joten yksi uusi virhe ei sulje peiliä heti.
+    peiliPetti('kuvat');
+    assert.ok(peiliKaytossa('kuvat'), 'vanhat virheet eivät jää laskuriin');
+  } finally {
+    Date.now = oikeaNow;
+  }
   nollaaPeili();
 });
 
@@ -227,6 +272,47 @@ test('vanha kuuntelija ei pudota uutta kuvaa edellisen varareitille', () => {
   assert.equal(kuva.src, 'https://alkuperainen.test/toka.jpg',
     'varareitin pitää olla juuri sen kuvan, joka petti');
   nollaaPeili();
+});
+
+/*
+ * TIEDOSTONIMI EI SAA KATKETA KAHDELLE RIVILLE.
+ *
+ * Peilaustyökalu (tools/peilaa-media.mjs kohteet) poimii kuvien nimet
+ * pakettien LÄHDETEKSTISTÄ hakukuviolla, koska se ei aja moduuleja. Jos
+ * nimi on kirjoitettu kahtena yhdistettynä merkkijonona:
+ *
+ *     tiedosto: 'Lince ibérico (Lynx pardinus), Almuradiel, '
+ *       + 'Ciudad Real, España, 2021-12-19, DD 07.jpg',
+ *
+ * kuvio näkee vain ensimmäisen palan. Peli itse toimii — JavaScript
+ * yhdistää palat — joten mikään ei näytä vialliselta: kuva vain jää
+ * peilaamatta, työkalu saa 404:n katkaistulla nimellä, ja pelaajalla
+ * kuva rikkoutuu satunnaisesti sen mukaan, jaksaako Commons vastata.
+ * Juuri niin kävi Espanjan erässä (kolme kuvaa, omistajan havainto
+ * 6.8.2026).
+ *
+ * Rivinpituussääntö saa siis väistyä tässä yhdessä kentässä.
+ */
+test('tiedostonimiä ei ole katkaistu kahdelle riville', () => {
+  const kansio = join(JUURI, 'js/packs');
+  const loydot = [];
+  for (const nimi of readdirSync(kansio).filter((f) => f.endsWith('.js'))) {
+    const rivit = readFileSync(join(kansio, nimi), 'utf8').split('\n');
+    rivit.forEach((rivi, i) => {
+      // Avoin tiedosto-kenttä: rivi aloittaa nimen muttei sulje sitä.
+      // Hipsulajit tarkistetaan erikseen: kaksoishipsuisen nimen SISÄLLÄ
+      // saa olla heittomerkki (d'Andohalo) ja päinvastoin.
+      if (!/^\s*tiedosto:\s*['"]/.test(rivi)) return;
+      const kokonainen = /^\s*tiedosto:\s*'(?:[^'\\]|\\.)*'\s*,\s*$/.test(rivi)
+        || /^\s*tiedosto:\s*"(?:[^"\\]|\\.)*"\s*,\s*$/.test(rivi);
+      if (kokonainen) return;
+      loydot.push(`${nimi}:${i + 1} ${rivi.trim().slice(0, 70)}`);
+    });
+  }
+  assert.deepEqual(loydot, [],
+    'nämä tiedostonimet jatkuvat seuraavalla rivillä — peilaustyökalu poimii '
+    + 'vain ensimmäisen palan eikä kuva päädy peiliin. Kirjoita nimi yhdelle '
+    + 'riville, vaikka rivi venyisi pitkäksi');
 });
 
 // --- vertailu peilaustyökaluun ja manifestiin --------------------------------

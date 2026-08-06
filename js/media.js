@@ -128,9 +128,9 @@ export function peiliAaniPolku(url) {
 //
 // Peiliä ei kannata kysellä loputtomiin, jos sitä ei ole vielä julkaistu
 // tai se on nurin: silloin jokainen kuva maksaisi turhan epäonnistuneen
-// pyynnön. Muutaman virheen jälkeen peili jätetään väliin koko istunnon
-// ajaksi ja aineisto haetaan suoraan alkuperäisestä lähteestä. Seuraava
-// välilehti kokeilee taas.
+// pyynnön. Muutaman virheen jälkeen peili jätetään hetkeksi väliin ja
+// aineisto haetaan suoraan alkuperäisestä lähteestä. Katkaisu on
+// määräaikainen — ks. KATKAISUN_KESTO_MS alla.
 //
 // Katkaisija on lähdekohtainen. Kuvat ja äänet ovat eri palvelimilla,
 // eikä toisen kaatuminen kerro toisesta mitään: yhteinen laskuri sammutti
@@ -143,35 +143,69 @@ const VIRHERAJA = 3;
 const LAJIT = ['kuvat', 'aanet'];
 const poisAvain = (laji) => `matkakirja-peili-pois-${laji}`;
 
+/*
+ * KATKAISIJA PARANEE ITSESTÄÄN VIIDESSÄ MINUUTISSA.
+ *
+ * Aiemmin katkaisu kesti koko istunnon: `sessionStorage` säilyy myös
+ * sivun uudelleenlatauksen yli, joten kerran lauettuaan peili oli
+ * poissa käytöstä siihen asti kunnes VÄLILEHTI suljettiin. Omistaja
+ * raportoi 6.8.2026: *"Kuvat menevät vieläkin välillä rikki, vaikka
+ * lataan sivun uudestaan ja vaikka olen käynnistänyt pelinkin
+ * uudestaan."* Juuri niin sen piti käyttäytyä — eikä uusi peli auta,
+ * koska kyse ei ole pelitilasta vaan välilehden muistista.
+ *
+ * Laukeaminen on lisäksi HELPPOA syystä, joka ei kerro peilin
+ * kunnosta: R2:n kehitysosoite (pub-*.r2.dev) on Cloudflaren oma
+ * rajoitettu osoite, ja lehden kansi pyytää kymmeniä kuvia kerralla.
+ * Yksi purske riittää kolmeen virheeseen.
+ *
+ * Viisi minuuttia on kompromissi: kaatunutta peiliä ei jauheta joka
+ * kuvalla, mutta ohimenevä purskerajoitus ei jää päälle. Aika
+ * tallennetaan, jotta se kestää uudelleenlatauksen — vanha arvo '1'
+ * tulkitsee itsensä ikivanhaksi, eli päivitys avaa peilin heti.
+ */
+const KATKAISUN_KESTO_MS = 5 * 60 * 1000;
+
 const virheita = { kuvat: 0, aanet: 0 };
-const pois = { kuvat: false, aanet: false };
+const poisAsti = { kuvat: 0, aanet: 0 };
 for (const laji of LAJIT) {
   try {
-    pois[laji] = globalThis.sessionStorage?.getItem(poisAvain(laji)) === '1';
+    const tallennettu = Number(globalThis.sessionStorage?.getItem(poisAvain(laji)));
+    if (Number.isFinite(tallennettu)) poisAsti[laji] = tallennettu;
   } catch { /* selain voi kieltää tallennuksen — mennään oletuksella */ }
 }
 
-/** Onko peili tässä istunnossa käytössä tälle lajille? */
+/** Onko peili juuri nyt käytössä tälle lajille? */
 export function peiliKaytossa(laji = 'kuvat') {
   // Paikallisesti avattu tiedosto (file:) ei saa verkkoyhteyttä samalla
   // tavalla, mutta peili on tavallinen https-osoite ja toimii silti.
-  return !pois[laji];
+  if (Date.now() < (poisAsti[laji] ?? 0)) return false;
+  // Katkaisu vanheni: laskuri alkaa alusta, muuten kolme vanhaa
+  // virhettä sulkisi peilin heti uudelleen ensimmäisestä yskähdyksestä.
+  if (poisAsti[laji]) {
+    poisAsti[laji] = 0;
+    virheita[laji] = 0;
+    try { globalThis.sessionStorage?.removeItem(poisAvain(laji)); } catch { /* ks. yllä */ }
+  }
+  return true;
 }
 
-/** Peili petti: kolmannen virheen jälkeen se laji jätetään väliin. */
+/** Peili petti: kolmannen virheen jälkeen se laji jätetään hetkeksi väliin. */
 export function peiliPetti(laji = 'kuvat') {
-  if (!LAJIT.includes(laji) || pois[laji]) return;
+  if (!LAJIT.includes(laji) || !peiliKaytossa(laji)) return;
   virheita[laji] += 1;
   if (virheita[laji] < VIRHERAJA) return;
-  pois[laji] = true;
-  try { globalThis.sessionStorage?.setItem(poisAvain(laji), '1'); } catch { /* ks. yllä */ }
+  poisAsti[laji] = Date.now() + KATKAISUN_KESTO_MS;
+  try {
+    globalThis.sessionStorage?.setItem(poisAvain(laji), String(poisAsti[laji]));
+  } catch { /* ks. yllä */ }
 }
 
 /** Vain testejä varten: nollaa katkaisijan tila. */
 export function nollaaPeili() {
   for (const laji of LAJIT) {
     virheita[laji] = 0;
-    pois[laji] = false;
+    poisAsti[laji] = 0;
     try { globalThis.sessionStorage?.removeItem(poisAvain(laji)); } catch { /* ks. yllä */ }
   }
 }
@@ -245,26 +279,47 @@ export function asetaKuva(kuva, osoite, vara, onVirhe = null) {
   const varalla = Boolean(vara) && vara !== kohde;
   const yha = (odotettu) => kuva.getAttribute('src') === odotettu;
 
+  /*
+   * UUSINTA HETKEN PÄÄSTÄ, LISÄPARAMETRILLA.
+   *
+   * Kun kuvia pyydetään kymmeniä kerralla (lehden kansi), palvelin
+   * rajoittaa purskeita ja osa pyynnöistä kaatuu ohimenevästi. Lyhyt
+   * odotus riittää yleensä avaamaan rajan. Lisäparametri on pakollinen:
+   * ilman sitä selain tarjoilee äsken epäonnistuneen vastauksen omasta
+   * välimuististaan eikä pyydä mitään.
+   */
+  const uusiHetkenPaasta = (nykyinen, sitten) => {
+    setTimeout(() => {
+      if (!yha(nykyinen)) return;
+      const uusi = `${nykyinen}${nykyinen.includes('?') ? '&' : '?'}yritys=2`;
+      kuva.addEventListener('error', () => { if (yha(uusi)) sitten(); }, { once: true });
+      kuva.src = uusi;
+    }, 4000);
+  };
+
   kuva.addEventListener('error', () => {
     if (!yha(kohde)) return;
-    if (!varalla) { onVirhe?.(); return; }
+    if (!varalla) {
+      /*
+       * EI ERILLISTÄ VARAREITTIÄ — MUTTA EI MYÖSKÄÄN HETI LUOVUTETA.
+       *
+       * Näin käy aina, kun peilin katkaisija on lauennut: silloin
+       * valokuvaUrl palauttaa jo valmiiksi Commonsin osoitteen, ja
+       * varareitti on sama osoite. Aiemmin tässä luovutettiin
+       * ENSIMMÄISESTÄ virheestä ilman yhtään uusintaa — ja koska
+       * katkaisija kesti koko välilehden eliniän, kuva jäi rikki myös
+       * sivun uudelleenlatauksen jälkeen (omistajan havainto
+       * 6.8.2026). Nyt sama uusinta kuin varareitilläkin.
+       */
+      uusiHetkenPaasta(kohde, () => onVirhe?.());
+      return;
+    }
     peiliPetti(peilinLaji(kohde) ?? 'kuvat');
     kuva.addEventListener('error', () => {
       if (!yha(vara)) return;
-      /*
-       * Kolmas yritys hetken päästä (omistajan havainto 6.8.2026:
-       * Venetsian kannesta puuttui kuvia). Kun peili yskähtää, koko
-       * sivun kuvat purskahtavat Commonsiin, joka rajoittaa
-       * peräkkäisiä pyyntöjä — lyhyt odotus riittää yleensä avaamaan
-       * rajan. Uusi osoite saa lisäparametrin, ettei selain tarjoile
-       * äsken epäonnistunutta vastausta välimuistista.
-       */
-      setTimeout(() => {
-        if (!yha(vara)) return;
-        const uusi = `${vara}${vara.includes('?') ? '&' : '?'}yritys=2`;
-        kuva.addEventListener('error', () => { if (yha(uusi)) onVirhe?.(); }, { once: true });
-        kuva.src = uusi;
-      }, 4000);
+      // Kolmas yritys hetken päästä (omistajan havainto 6.8.2026:
+      // Venetsian kannesta puuttui kuvia).
+      uusiHetkenPaasta(vara, () => onVirhe?.());
     }, { once: true });
     kuva.src = vara;
   }, { once: true });

@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-06.308';
+const CACHE = 'matkakirja-2026-08-06.309';
 const SHELL = [
   './',
   './index.html',
@@ -654,16 +654,42 @@ self.addEventListener('fetch', (event) => {
      * Offline-tuen saa takaisin lisäämällä ämpäriin CORS-säännön
      * (Cloudflare: R2 > Settings > CORS policy, AllowedOrigins *).
      * Silloin tämän ehdon voi poistaa.
+     *
+     * ── PÄIVITYS 6.8.2026: ÄMPÄRISSÄ ON NYT CORS-SÄÄNTÖ ──
+     *
+     * Tarkistettu vastauksen otsakkeista: kun pyyntö tulee osoitteesta
+     * https://ravelius.github.io, ämpäri vastaa
+     * `access-control-allow-origin: https://ravelius.github.io`.
+     * Peilikuvat voidaan siis panna koriin siinä missä Commonsinkin.
+     *
+     * Se ei ole pelkkä offline-parannus vaan korjaus toistuvaan
+     * vikaan: r2.dev on Cloudflaren rajoitettu kehitysosoite, ja
+     * lehden kansi pyytää kymmeniä kuvia kerralla. Kun mitään ei
+     * säilötty, joka avaus oli uusi purske — ja purske laukaisi
+     * katkaisijan (js/media.js), jolloin kuvat jäivät rikki. Kerran
+     * nähty kuva ei enää lähde verkkoon lainkaan.
+     *
+     * CORS-nouto YRITETÄÄN ensin ja tavallinen nouto jää varareitiksi.
+     * Näin peli toimii yhä sellaisenaan muualta avattuna (yhden
+     * tiedoston versio levyltä, oma verkkotunnus), jolloin ämpärin
+     * sääntö ei osu pyyntöön: silloin kuva haetaan kuten ennenkin
+     * eikä sitä säilötä.
      */
-    const peilista = osoite.hostname.endsWith('.r2.dev');
     event.respondWith(
       caches.open(KUVACACHE).then(async (kuvat) => {
         const osuma = await kuvat.match(event.request.url);
         if (osuma) return osuma;
-        if (peilista) return fetch(event.request).catch(() => Response.error());
         const vastaus = await fetch(event.request.url, { mode: 'cors' }).catch(() => null);
-        if (vastaus && vastaus.ok) kuvat.put(event.request.url, vastaus.clone());
-        return vastaus ?? Response.error();
+        if (vastaus && vastaus.ok) {
+          kuvat.put(event.request.url, vastaus.clone());
+          return vastaus;
+        }
+        /*
+         * CORS ei onnistunut. Kuvan oma no-cors-pyyntö menee silti
+         * läpi — vastaus on opaakki eikä kelpaa koriin, mutta kuva
+         * näkyy. Tämä on sama reitti kuin ennen tätä muutosta.
+         */
+        return fetch(event.request).catch(() => vastaus ?? Response.error());
       }),
     );
     return;

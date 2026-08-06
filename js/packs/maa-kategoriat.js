@@ -963,8 +963,10 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Sika, joka syö vain tammenterhoja',
-          tiedosto: '051127 1126 Villalba de los Llanos - La Utrera - '
-            + 'Encinas cerdos ibéricos T91 edited.JPG',
+          // Yhdellä rivillä tahallaan: peilaustyökalu poimii tiedostonimet
+          // lähdetekstistä hakukuviolla eikä osaa yhdistää katkaistua
+          // merkkijonoa (ks. tools/peilaa-media.mjs kohteet).
+          tiedosto: '051127 1126 Villalba de los Llanos - La Utrera - Encinas cerdos ibéricos T91 edited.JPG',
           teksti: 'Espanjan kalleimman kinkun salaisuus on kolme '
             + 'viimeistä kuukautta. Mustasorkkainen iberiansika '
             + 'päästetään lokakuussa dehesaan, harvaan '
@@ -1001,8 +1003,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Kaksitoista rypälettä kellonlyönnillä',
-          tiedosto: 'Ensayo general ....las doce campanadas del '
-            + 'ilustre y solemne reloj de la Puerta del Sol !!!.jpg',
+          tiedosto: 'Ensayo general ....las doce campanadas del ilustre y solemne reloj de la Puerta del Sol !!!.jpg',
           teksti: 'Uudenvuodenyönä espanjalaiset syövät kaksitoista '
             + 'rypälettä, yhden jokaisella kellonlyönnillä. Kello on '
             + 'Madridin Puerta del Solin vanhan postitalon tornissa, '
@@ -1159,8 +1160,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Puuseppä, joka keksi nykyisen kitaran',
-          tiedosto: "Guitarra d'Antonio de Torres, MDMB 626, "
-            + 'al Museu de la Música de Barcelona.jpg',
+          tiedosto: "Guitarra d'Antonio de Torres, MDMB 626, al Museu de la Música de Barcelona.jpg",
           teksti: 'Ennen 1850-lukua kitara oli pieni ja hiljainen, '
             + 'kotisoitin salonkiin. Almerialainen puuseppä Antonio '
             + 'de Torres suurensi kaikukopan, ohensi kannen ja '
@@ -1237,8 +1237,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Kissa, joka melkein hävisi',
-          tiedosto: 'Lince ibérico (Lynx pardinus), Almuradiel, '
-            + 'Ciudad Real, España, 2021-12-19, DD 07.jpg',
+          tiedosto: 'Lince ibérico (Lynx pardinus), Almuradiel, Ciudad Real, España, 2021-12-19, DD 07.jpg',
           teksti: 'Iberianilves syö melkein pelkkiä kaneja, ja kun '
             + 'kanitauti kaatoi saaliskannan 1900-luvun lopulla, '
             + 'ilves seurasi perässä. Vuonna 2002 niitä laskettiin '
