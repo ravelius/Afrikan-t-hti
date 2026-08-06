@@ -5335,6 +5335,89 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v308 — Artikkelien kuvat mahdollisimman suurina (6.8.2026)
+
+Omistaja: *"Saatko helposti muutettua että kaikilla Wikipedia
+artikkelisivuilla kuvat näytetään mahdollisimman suurina — eli kaikki
+artikkelit jotka avautuvat lue lisää linkin kautta."*
+
+Vastaus oli kyllä, mutta rajoitteita oli KOLME eikä yksi, ja vain
+ensimmäinen näkyi CSS:stä.
+
+### 1. Korkeusraja (CSS)
+
+`.wiki-image { max-height: 320px }`. Ilmeinen ja helppo. Tilalle
+`max-height: 78vh` ja `width: auto` — pientä kuvaa ei venytetä palstan
+levyiseksi, koska venytetty pikkukuva on sumea eikä suuri.
+
+### 2. Kuva HAETTIIN pikkukuvana
+
+Tämä oli iso vika eikä näkynyt mistään. Artikkelin kuva tulee joko
+Wikipedian tiivistelmästä (`thumbnail.source`) tai kuvalistan
+srcsetistä, ja **molemmat ovat pikkukuvia**: mitattuna Madridin
+tiivistelmäkuva on 330 × 283, vaikka alkuperäinen on 1184 × 1016.
+Korkeusraja siis leikkasi kuvaa, joka oli jo valmiiksi pieni.
+
+Osoitteessa on leveys muodossa `/330px-`, ja `upsizeImage` osaa
+vaihtaa sen. Sitä käytettiin vain suurennoskatselimessa — nyt myös
+itse artikkelisivulla.
+
+### 3. MITTATILAUSLEVEYS EI TOIMI — tämä selitti kaiken
+
+upload.wikimedia.org tarjoilee vain niitä pikkukuvakokoja, jotka
+tiedostolle on jo kertaalleen tehty. Mitattu samasta kuvasta
+(Segovia_-_01.jpg, alkuperäinen 3888 × 1944):
+
+| leveys | vastaus | | leveys | vastaus |
+| --- | --- | --- | --- | --- |
+| 330 px | 200 | | 1280 px | **200** |
+| 640 px | 400 | | 1600 px | 400 |
+| 800 px | 400 | | 1920 px | **200** |
+| 1024 px | 400 | | 2560 px | 400 |
+
+Vanha oletus oli **1200** — luku, jota ei ole olemassa. Suurennos siis
+epäonnistui ja katselin palasi 330 pikselin pikkukuvaan. **Juuri siksi
+kuvat näyttivät pieniltä myös suurennettuina.**
+
+Tilalle portaat `[1920, 1280]` ja viimeisenä alkuperäinen osoite.
+Kokeiltu kymmenellä artikkelilla (Madrid, Segovia, Barcelona, Granada,
+Bilbao, Sevilla, Lontoo, Kairo, Venetsia, Pariisi): **1920 löytyi joka
+kerta**, eikä yhdellekään tarvittu varareittiä. Tietomäärä nousi
+15–72 kilotavusta 212–916 kilotavuun.
+
+### Neljäs, pienempi ansa: etuliite osoitteessa
+
+Vanha kuvio etsi `/330px-` eli vaati numeron heti kauttaviivan
+jälkeen. Wikipedia liittää osaan pikkukuvista etuliitteen:
+kielikohtainen SVG-käännös on `langfi-330px-…` ja monisivuinen PDF
+`lossy-page1-1024px-…`. Niissä vaihto ei osunut, ja osoite palautui
+sellaisenaan — haku onnistui, mutta ruudulla oli yhä 330 pikseliä
+eikä mikään kertonut siitä. Kuvio korjattiin, ja etuliitteen on nyt
+alettava kirjaimella: muuten se söisi leveyden itsensä
+(`330px-500px-nimi.jpg` vaihtoi väärän luvun, mikä jäi testistä
+kiinni).
+
+### Mitattu lopputulos
+
+Ruudulla renderöity kuva (1920 × 1080 vaakakuva, 900 × 1400 pystykuva):
+
+| ruutu | vaaka | pysty | yli reunan |
+| --- | --- | --- | --- |
+| 390 px | 338 × 195 | 345 × 527 | 0 |
+| 834 px | 566 × 326 | 502 × 767 | 0 |
+| 1024 px | 566 × 326 | 502 × 767 | 0 |
+
+Pystykuva kasvoi eniten: vanha 320 pikselin katto olisi jättänyt sen
+206 × 320:een. Vaakakuvan koko muuttui vähän, mutta TERÄVYYS paljon —
+lähde on 1920 pikseliä entisen 330:n sijaan.
+
+### Opittua
+
+**Kun ulkoinen palvelu vastaa virheellä, varareitti peittää vian.**
+Suurennos oli ollut rikki siitä asti kun se kirjoitettiin, koska
+varareitti toimi moitteettomasti — kuva näkyi aina, vain väärän
+kokoisena. Mittaus paljasti sen, koodin lukeminen ei olisi.
+
 ## v307 — Espanjan lehtipaketti: Madrid ja Espanja (6.8.2026)
 
 Neljäs lehtimaa monistusohjeen (docs/tutki-aiheet.md) mukaan, kohta

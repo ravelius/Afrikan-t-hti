@@ -161,8 +161,70 @@ export function pickImages(items, max = 12) {
  * sellaisenaan — ja jos alkuperäiskuva on pyydettyä pienempi, selain saa
  * virheen, jonka varalta katselin palaa pienempään osoitteeseen.
  */
-export function upsizeImage(url, width = 1200) {
-  return typeof url === 'string' ? url.replace(/\/(\d+)px-/, `/${width}px-`) : url;
+/*
+ * SUURENNUSPORTAAT — MITTATILAUSLEVEYS EI TOIMI.
+ *
+ * upload.wikimedia.org tarjoilee vain niitä pikkukuvakokoja, jotka
+ * tiedostolle on jo kertaalleen tehty. Mitattu 6.8.2026 samasta
+ * kuvasta (Segovia_-_01.jpg, alkuperäinen 3888 × 1944):
+ *
+ *     330 px  200      1280 px  200
+ *     640 px  400      1600 px  400
+ *     800 px  400      1920 px  200
+ *    1024 px  400      2560 px  400
+ *
+ * Vanha oletus 1200 oli siis sellainen luku, joka EI ole olemassa:
+ * suurennos epäonnistui ja katselin palasi 330 pikselin pikkukuvaan.
+ * Juuri siksi kuvat näyttivät pieniltä.
+ *
+ * 1920 ja 1280 ovat vakiokokoja — nekin kaksi, jotka Wikipedian oma
+ * rajapinta jakaa. Kokeiltu seitsemällä artikkelilla: molemmat
+ * löytyivät joka kerta, ja 1920 on 10–25-kertainen tietomäärä
+ * pikkukuvaan verrattuna. Portaat kuljetaan järjestyksessä ja
+ * viimeisenä palataan alkuperäiseen osoitteeseen.
+ */
+export const SUURENNUSPORTAAT = [1920, 1280];
+
+/**
+ * Kuvaosoite portaittain suurimmasta pienimpään, viimeisenä annettu
+ * osoite sellaisenaan. Kaksoiskappaleet karsitaan: jos osoitteessa ei
+ * ole leveysmerkintää, kaikki portaat olisivat sama osoite.
+ */
+export function suurennusportaat(url, portaat = SUURENNUSPORTAAT) {
+  if (typeof url !== 'string' || !url) return [];
+  const kaikki = [...portaat.map((w) => upsizeImage(url, w)), url];
+  return kaikki.filter((u, i) => kaikki.indexOf(u) === i);
+}
+
+export function upsizeImage(url, width = 1920) {
+  if (typeof url !== 'string') return url;
+  /*
+   * LEVEYSMERKINNÄN EDESSÄ VOI OLLA ETULIITE.
+   *
+   * Vanha kuvio etsi `/330px-` eli vaati, että numero alkaa heti
+   * kauttaviivan jälkeen. Wikipedia liittää kuitenkin osaan
+   * pikkukuvista etuliitteen: kielikohtainen SVG-käännös on
+   * `langfi-330px-…`, monisivuinen PDF `lossy-page1-1024px-…` ja
+   * pakattu ääni `qlow-…`. Niissä vaihto ei osunut, ja kuva jäi
+   * pikkukuvaksi ilman että mikään kertoi siitä — osoite palautui
+   * sellaisenaan, joten haku onnistui ja ruudulla oli 330 pikseliä
+   * (mitattu Madridin artikkelista 6.8.2026).
+   *
+   * Vaihto tehdään VAIN osoitteen viimeisessä osassa, koska
+   * tiedostonimen keskellä voi olla samannäköinen jono ilman että se
+   * on pikkukuvan leveys.
+   */
+  const raja = url.lastIndexOf('/');
+  if (raja < 0) return url;
+  const kansio = url.slice(0, raja + 1);
+  const nimi = url.slice(raja + 1);
+  /*
+   * Etuliitteen on ALETTAVA KIRJAIMELLA. Ilman tätä `[a-z0-9-]+-`
+   * söisi myös leveyden itsensä: osoitteesta `330px-500px-nimi.jpg`
+   * vaihtui väärä luku (mitattu testissä `330px-1920px-nimi.jpg`).
+   * Kirjainehto pakottaa vaihdon aina ENSIMMÄISEEN leveysmerkintään.
+   */
+  return kansio + nimi.replace(/^((?:[a-z][a-z0-9-]*-)?)\d+px-/i, `$1${width}px-`);
 }
 
 /**

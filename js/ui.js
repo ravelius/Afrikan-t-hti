@@ -21,7 +21,9 @@ import {
 import { stampBoard } from './passport.js';
 // Matkalaukun alalaidan "Unohdettu aarre": tekijänoikeus ja lähdeluettelo.
 import { LAHTEET, LAHTEITA, PELI } from './lahteet.js';
-import { fetchArticle, fetchImage, fetchImages, fetchSummary, upsizeImage } from './wiki.js';
+import {
+  fetchArticle, fetchImage, fetchImages, fetchSummary, suurennusportaat,
+} from './wiki.js';
 import { drawPuzzle as piirraAfrikanPulma, hasSketch as afrikanPulma } from './packs/africa-puzzles.js';
 import { drawPuzzle as piirraEuroopanPulma } from './packs/europe-puzzles.js';
 
@@ -1537,6 +1539,7 @@ export class UI {
     this.wikiKuvaLaskuri = document.getElementById('wiki-kuva-laskuri');
     this.wikiKuvat = [];
     this.wikiKuvaKohdalla = 0;
+    this.wikiKuvaPortaat = [];
     this.wikiImage.addEventListener('click', () => {
       if (this.wikiOpenFor) {
         this.openLightbox(this.wikiOpenFor, this.wikiTitle.textContent, this.wikiImage.src || null);
@@ -1546,7 +1549,7 @@ export class UI {
       if (this.wikiKuvat.length < 2) return;
       this.wikiKuvaKohdalla = (this.wikiKuvaKohdalla + askel
         + this.wikiKuvat.length) % this.wikiKuvat.length;
-      this.wikiImage.src = this.wikiKuvat[this.wikiKuvaKohdalla].src;
+      this.naytaWikiKuva(this.wikiKuvat[this.wikiKuvaKohdalla].src);
       this.paivitaWikiKuvaLaskuri();
     };
     document.getElementById('wiki-kuva-edellinen')
@@ -1554,6 +1557,20 @@ export class UI {
     document.getElementById('wiki-kuva-seuraava')
       .addEventListener('click', (e) => { e.stopPropagation(); selaaWikiKuvaa(1); });
     this.wikiImage.addEventListener('error', () => {
+      /*
+       * SUURENNOS PUUTTUU — OTETAAN SEURAAVA PORRAS, EI PUDOTETA KUVAA.
+       *
+       * Kuva pyydetään ensin suurimmassa koossa (naytaWikiKuva). Jos
+       * sitä kokoa ei ole tehty tälle tiedostolle, Wikipedia vastaa
+       * virheellä. Ilman tätä haaraa `pudotaRikkiKuva` olisi poistanut
+       * aivan kelvollisen kuvan galleriasta — ja pahempaa: se ei olisi
+       * edes löytänyt sitä listalta, koska osoite on eri, joten kuva
+       * olisi jäänyt rikkinäiseksi ruuduksi.
+       */
+      if (this.wikiKuvaPortaat?.length) {
+        this.wikiImage.src = this.wikiKuvaPortaat.shift();
+        return;
+      }
       this.pudotaRikkiKuva(this.wikiKuvat, this.wikiImage, 'wiki');
     });
     this.factImage = document.getElementById('fact-image');
@@ -7414,6 +7431,8 @@ export class UI {
     this.wikiKuvakotelo.hidden = true;
     this.wikiKuvat = [];
     this.wikiKuvaKohdalla = 0;
+    // Edellisen artikkelin suurennusportaat eivät saa jäädä voimaan.
+    this.wikiKuvaPortaat = [];
     this.paivitaWikiKuvaLaskuri();
     this.wikiExtract.textContent = alkuteksti || 'Haetaan…';
     this.wikiSource.textContent = '';
@@ -7433,7 +7452,7 @@ export class UI {
     this.wikiTitle.textContent = summary.title || label;
     cachedImage(title).then((image) => {
       if (!this.wikiDialog.open || this.wikiOpenFor !== title || !image) return;
-      this.wikiImage.src = image;
+      this.naytaWikiKuva(image);
       this.wikiImage.alt = summary.title || label;
       this.wikiImage.hidden = false;
       this.wikiKuvakotelo.hidden = false;
@@ -7525,6 +7544,32 @@ export class UI {
    * listalta ja näytetään seuraava; jos kuvia ei jää yhtään, koko kotelo
    * piilotetaan. Lista lyhenee joka virheellä, joten ketju päättyy.
    */
+  /**
+   * Artikkelin kuva niin suurena kuin sitä on olemassa.
+   *
+   * Omistajan toive 6.8.2026: "kaikilla Wikipedia-artikkelisivuilla
+   * kuvat näytetään mahdollisimman suurina". Kuvaosoite tulee joko
+   * tiivistelmästä tai kuvalistasta, ja MOLEMMAT ovat pikkukuvia:
+   * tiivistelmän thumbnail on mitattuna noin 330 px leveä (Madrid
+   * 330 × 283, alkuperäinen 1184 × 1016) ja kuvalistan srcset tarjoaa
+   * usein 500 px. Osoitteessa on leveys muodossa `/330px-`, ja
+   * `upsizeImage` vaihtaa sen — sama temppu kuin suurennoskatselimessa
+   * (openLightbox), nyt myös itse artikkelisivulla.
+   *
+   * 1600 eikä 1200: lehti on iPadilla noin 700 CSS-pikseliä leveä, ja
+   * tarkalla näytöllä se on 1400 laitepikseliä. Pienempi luku näkyisi
+   * juuri siellä, missä kuvaa katsotaan tarkimmin.
+   *
+   * Portaat jäävät talteen: jos suurinta kokoa ei ole tehty tälle
+   * tiedostolle, virhekäsittelijä ottaa listalta seuraavan ja lopulta
+   * alkuperäisen pikkukuvan (ks. wikiImage error).
+   */
+  naytaWikiKuva(src) {
+    if (!src) return;
+    this.wikiKuvaPortaat = suurennusportaat(src);
+    this.wikiImage.src = this.wikiKuvaPortaat.shift();
+  }
+
   pudotaRikkiKuva(lista, kuva, mika) {
     const nyt = kuva.getAttribute('src');
     if (!nyt) return;
@@ -7548,7 +7593,9 @@ export class UI {
     }
     if (mika === 'wiki') {
       this.wikiKuvaKohdalla %= lista.length;
-      kuva.src = lista[this.wikiKuvaKohdalla].src;
+      // Myös korvaava kuva näytetään suurena; jos suurennosta ei ole,
+      // virhekäsittelijä palaa pikkukuvaan kuten muissakin kohdissa.
+      this.naytaWikiKuva(lista[this.wikiKuvaKohdalla].src);
       this.paivitaWikiKuvaLaskuri();
     } else {
       this.arrivalKuvaKohdalla %= lista.length;
@@ -7586,6 +7633,8 @@ export class UI {
 
     let kuvat = []; // { src, caption }
     let kohdalla = 0;
+    // Nykyisen kuvan jäljellä olevat suurennusportaat, ks. wiki.js.
+    let portaat = [];
     img.addEventListener('load', () => {
       img.hidden = false;
       lataus.hidden = true;
@@ -7596,18 +7645,24 @@ export class UI {
       img.hidden = true;
       lataus.hidden = false;
       lataus.textContent = 'Ladataan…';
-      img.src = upsizeImage(kohde.src);
+      portaat = suurennusportaat(kohde.src);
+      img.src = portaat.shift();
       kuvateksti.textContent = kohde.caption ?? '';
       kuvateksti.hidden = !kohde.caption;
       counter.textContent = kuvat.length > 1 ? `${kohdalla + 1} / ${kuvat.length}` : '';
       prev.hidden = next.hidden = kuvat.length < 2;
     };
-    // Jos suurennosta ei ole olemassa (alkuperäinen on pienempi), palataan
-    // kuvalistan omaan osoitteeseen; jos sekään ei lataudu, sanotaan se.
+    /*
+     * Jos suurinta kokoa ei ole tehty tälle tiedostolle, otetaan
+     * seuraava porras ja lopulta kuvalistan oma osoite. Aiemmin tässä
+     * oli yksi kiinteä suurennos (1200 px) ja paluu pikkukuvaan — ja
+     * koska 1200 ei ole Wikipedian vakiokoko, katselin päätyi lähes
+     * aina takaisin 330 pikselin pikkukuvaan.
+     */
     img.addEventListener('error', () => {
       if (!kuvat.length) return;
-      if (img.src !== kuvat[kohdalla].src) img.src = kuvat[kohdalla].src;
-      else lataus.textContent = 'Kuvaa ei saatu ladattua.';
+      if (portaat.length) { img.src = portaat.shift(); return; }
+      lataus.textContent = 'Kuvaa ei saatu ladattua.';
     });
     const siirry = (askel) => {
       if (kuvat.length < 2) return;
