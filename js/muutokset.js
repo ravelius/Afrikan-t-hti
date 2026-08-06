@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 312, teksti: 'Maa numeroina joka maalle — 228 maan käyrät' },
   { v: 311, teksti: 'Lehteen uusi sivu: Maa numeroina käyrineen' },
   { v: 311, teksti: 'Suomi kulkee joka käyrässä vertailuviivana' },
   { v: 310, teksti: 'Maiden aikasarjat haettu: viisi pilottimaata' },

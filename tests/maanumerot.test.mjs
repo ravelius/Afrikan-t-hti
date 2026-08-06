@@ -86,24 +86,24 @@ test('väkiluku muotoutuu suomalaisittain', () => {
  * jättää jonkin oikean maan väliin, käyrän alle jäisi tyhjä kohta —
  * ja se huomattaisiin vasta pelissä kyseisen maan kohdalla.
  */
-test('pilottimaiden jokainen käyrä saa tulkintalauseen', () => {
+test('jokainen olemassa oleva käyrä saa tulkintalauseen', () => {
   const suomi = data.maat.FIN;
   for (const [iso, maa] of Object.entries(data.maat)) {
+    // Mittari saa puuttua maalta (aukot ovat aukkoja) — mutta jos
+    // käyrä piirretään, sen alla on oltava lause.
     const lauseet = [
-      maa.pyramidi && tulkitsePyramidi(maa.pyramidi),
-      maa.vakiluku && tulkitseVakiluku(maa.vakiluku),
-      maa.bkt && tulkitseBkt(maa.bkt, suomi.bkt, iso === 'FIN'),
-      maa.elinika && tulkitseElinika(maa.elinika),
-      maa.kaupungistuminen && tulkitseKaupungistuminen(maa.kaupungistuminen),
-      maa.co2 && tulkitseCo2(maa.co2, suomi.co2),
+      ['pyramidi', maa.pyramidi && tulkitsePyramidi(maa.pyramidi)],
+      ['vakiluku', maa.vakiluku && tulkitseVakiluku(maa.vakiluku)],
+      ['bkt', maa.bkt && tulkitseBkt(maa.bkt, suomi.bkt, iso === 'FIN')],
+      ['elinika', maa.elinika && tulkitseElinika(maa.elinika)],
+      ['kaupungistuminen', maa.kaupungistuminen && tulkitseKaupungistuminen(maa.kaupungistuminen)],
+      ['co2', maa.co2 && tulkitseCo2(maa.co2, suomi.co2)],
     ];
-    lauseet.forEach((lause, i) => {
-      if (lause === undefined || lause === null) {
-        assert.fail(`${iso}: mittari ${i} jäi ilman tulkintalausetta`);
-      }
+    for (const [avain, lause] of lauseet) {
+      if (lause === undefined) continue; // mittaria ei ole tällä maalla
       assert.ok(typeof lause === 'string' && lause.length > 15 && lause.length < 160,
-        `${iso}: outo lause "${lause}"`);
-    });
+        `${iso}.${avain}: outo tai puuttuva lause "${lause}"`);
+    }
   }
 });
 
