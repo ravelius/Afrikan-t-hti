@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 309, teksti: 'Kolme Espanjan kuvaa puuttui peilistä — korjattu' },
+  { v: 309, teksti: 'Rikkinäinen kuva yrittää uudelleen myös peilittä' },
+  { v: 309, teksti: 'Kerran nähty kuva ei enää lähde verkkoon' },
   { v: 308, teksti: 'Artikkelien kuvat isoina: 330 px -> 1920 px' },
   { v: 308, teksti: 'Suurennos ei enää putoa takaisin pikkukuvaan' },
   { v: 307, teksti: 'Madrid sai oman lehden: kansi ja Espanja-osasto' },

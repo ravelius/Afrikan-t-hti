@@ -5335,6 +5335,80 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v309 — Kuvat menivät rikki: kolme eri vikaa (6.8.2026)
+
+Omistaja: *"Kuvat menevät vieläkin välillä rikki, vaikka lataan sivun
+uudestaan ja vaikka olen käynnistänyt pelinkin uudestaan."* Sen jälkeen:
+*"miksi kuvat eivät ole peilissä?"*
+
+Vikoja oli kolme, ja ne ruokkivat toisiaan.
+
+### 1. Kolme kuvaa ei ollut peilissä — ja syy oli tavassa kirjoittaa
+
+Espanjan 31 kuvasta 28 peilautui, kolme ei. Peilausajo oli mennyt
+**onnistuneesti** läpi (GitHub Actions ajaa sen automaattisesti joka
+työnnöstä), mutta sen lokissa oli viisi virhettä. Nimet lokissa olivat
+katkaistuja:
+
+    kuvat: Lince ibérico (Lynx pardinus), Almuradiel,  → HTTP 404
+    kuvat: Guitarra d'Antonio de Torres, MDMB 626,  → HTTP 404
+
+Syy oli minun. Kirjoitin kolme pitkää tiedostonimeä kahdelle riville:
+
+    tiedosto: 'Lince ibérico (Lynx pardinus), Almuradiel, '
+      + 'Ciudad Real, España, 2021-12-19, DD 07.jpg',
+
+**Peli toimii tästä huolimatta** — JavaScript yhdistää palat — mutta
+peilaustyökalu (tools/peilaa-media.mjs `kohteet`) poimii nimet
+pakettien LÄHDETEKSTISTÄ hakukuviolla, koska se ei aja moduuleja. Se
+näkee vain ensimmäisen palan ja hakee sillä nimellä 404:n.
+
+Vika on erityisen ilkeä siksi, ettei se näy mistään: kuva latautuu
+Commonsista varareittiä pitkin ja näyttää toimivan, kunnes Commons
+sattuu rajoittamaan pyyntöjä. Lisättiin testi
+(tests/media.test.mjs), joka lukee kaikki paketit ja kaatuu, jos
+`tiedosto:`-kenttä jatkuu seuraavalle riville. Todennettu
+istuttamalla vika takaisin: testi löysi sen.
+
+### 2. Katkaisija ei parantunut koskaan
+
+Kun peili pettää kolmesti, peli lakkaa käyttämästä sitä ja hakee
+kaiken alkuperäisestä lähteestä. Tila tallennettiin
+`sessionStorageen` — joka **säilyy sivun uudelleenlatauksen yli**.
+Kerran lauettuaan katkaisu kesti siis siihen asti kunnes VÄLILEHTI
+suljettiin. Juuri siksi uudelleenlataus ja uusi peli eivät auttaneet:
+kyse ei ollut pelitilasta vaan välilehden muistista.
+
+Laukeaminen on lisäksi helppoa syystä, joka ei kerro peilin kunnosta:
+`pub-*.r2.dev` on Cloudflaren rajoitettu kehitysosoite, ja lehden
+kansi pyytää kymmeniä kuvia kerralla. Katkaisu on nyt määräaikainen
+(viisi minuuttia) ja laskuri nollautuu sen mentyä.
+
+### 3. Ilman varareittiä luovutettiin ensimmäisestä virheestä
+
+Kun katkaisija oli lauennut, `valokuvaUrl` palautti jo valmiiksi
+Commonsin osoitteen — jolloin varareitti oli sama osoite, `varalla`
+oli epätosi ja **yksi virhe riitti luovuttamaan**. Uusintaa ei ollut
+lainkaan juuri siinä tilanteessa, jossa sitä eniten tarvittiin. Nyt
+sama uusinta (4 s + lisäparametri) tehdään myös ilman erillistä
+varareittiä.
+
+### Sivutuote: palvelutyöntekijä säilöö nyt peilikuvat
+
+Ämpärissä ei aikoinaan ollut CORS-sääntöä, joten sw.js haki peilikuvat
+ilman CORSia eikä voinut panna niitä koriin. Tarkistettu nyt
+vastauksen otsakkeista: sääntö on olemassa
+(`access-control-allow-origin: https://ravelius.github.io`). Kerran
+nähty kuva ei siis enää lähde verkkoon lainkaan — mikä poistaa juuri
+ne purskeet, jotka laukaisivat katkaisijan. Tavallinen nouto jäi
+varareitiksi, ja testi vahtii että se pysyy siellä.
+
+### Opittua
+
+**Kun varareitti toimii, vika ei näy.** Kaikki kolme vikaa olivat
+olleet olemassa pitkään, ja jokainen niistä oli piilossa sen takana,
+että kuva tuli lopulta jostain. Ne paljastuivat vasta yhdessä.
+
 ## v308 — Artikkelien kuvat mahdollisimman suurina (6.8.2026)
 
 Omistaja: *"Saatko helposti muutettua että kaikilla Wikipedia
