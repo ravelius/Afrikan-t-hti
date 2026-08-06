@@ -6660,6 +6660,17 @@ export class UI {
      */
     const kansi = kategoriat.find((k) => k.id === 'kaupunki') ?? null;
     const lehti = Boolean(kansi);
+    /*
+     * "Maa numeroina" lehden viimeiseksi arkkisivuksi (docs/
+     * valtion-analyysi.md): maaosaston jatko, jossa maan aikasarjat
+     * piirretään käyriksi ja Suomi kulkee vertailuviivana. Sivu
+     * lisätään datasta riippumatta — aineisto haetaan laiskasti
+     * vasta sivun avautuessa, ja jos sitä ei saada (yhden tiedoston
+     * versio ilman verkkoa), sivu kertoo sen kohteliaasti itse.
+     */
+    if (lehti && maanIso) {
+      kategoriat.push({ id: 'maa-numeroina', nimi: 'Maa numeroina', numerot: maanIso });
+    }
     this.tutkiLehti = lehti;
     this.arrivalDialog.classList.toggle('lehti', lehti);
     this.piirraLehtiKuvat(kansi?.kansikuvat);
@@ -6719,7 +6730,9 @@ export class UI {
     // Etusivu ei ole aihesivu, joten aiheiden numerointi alkaa vasta
     // sivulta 1: sivu 1 on ensimmäinen aihe, ei toinen.
     const kategoria = etusivu ? null : (this.tutkiSivut?.[i - 1] ?? null);
-    this.piirraKategoria(kategoria);
+    // Tilastosivu piirtyy omalla piirrolla — se on käyriä, ei nostolista.
+    if (kategoria?.numerot) this.piirraMaaNumerotSivu(kategoria);
+    else this.piirraKategoria(kategoria);
     this.arrivalKategoria.hidden = !kategoria;
 
     // Liike kertoo suunnan; ilman sitä sivu vain vaihtuu paikallaan.
@@ -7151,6 +7164,40 @@ export class UI {
    * Kohde on oletuksena aihesivun oma elementti; otsikon ja sitaatin
    * voi jättää pois, jos sama piirto taittaa sisältöä muualle.
    */
+  /**
+   * "Maa numeroina" -arkkisivu: moduuli ja aineisto haetaan vasta
+   * tässä. Dynaaminen tuonti kuten linsseillä — yhden tiedoston
+   * versio jää tarkoituksella ilman piirtäjää ja päätyy samaan
+   * kohteliaaseen verkkoyhteysriviin kuin puuttuva aineisto.
+   */
+  async piirraMaaNumerotSivu(kategoria) {
+    const kohde = this.arrivalKategoria;
+    kohde.replaceChildren();
+    kohde.appendChild(html('h3', 'aihe-nimi', kategoria.nimi));
+    const tila = html('p', 'johdanto', 'Haetaan tilastoja…');
+    kohde.appendChild(tila);
+    try {
+      const { lataaMaakayrat, piirraMaaNumerot } = await import('./maakayrat.js');
+      const data = await lataaMaakayrat();
+      // Pelaaja ehti kääntää sivua: piirraKategoria tyhjensi kotelon,
+      // eikä myöhässä valmistunut sivu saa kirjoittaa uuden päälle.
+      if (!kohde.contains(tila)) return;
+      if (!data?.maat?.[kategoria.numerot]) {
+        tila.textContent = 'Tämä sivu tarvitsee verkkoyhteyden ensimmäisellä '
+          + 'avauksella — luvut haetaan silloin talteen.';
+        return;
+      }
+      tila.remove();
+      // V-Dem on jo pelissä (maatiedot-paketit) — näytetään uudelleen,
+      // ei haeta uudestaan.
+      const demokratia = (MAATIEDOT[this.game.pack.id] ?? {})[kategoria.numerot]?.demokratia ?? null;
+      piirraMaaNumerot(kohde, kategoria.numerot, data, { demokratia });
+    } catch {
+      tila.textContent = 'Tämä sivu tarvitsee verkkoyhteyden ensimmäisellä '
+        + 'avauksella — luvut haetaan silloin talteen.';
+    }
+  }
+
   piirraKategoria(kategoria, kohde = this.arrivalKategoria, { otsikko = true, sitaatti = true } = {}) {
     kohde.replaceChildren();
     if (!kategoria) return;

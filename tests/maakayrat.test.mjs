@@ -99,6 +99,22 @@ test('aikasarjat ovat { alku, arvot } eikä reunoilla ole tyhjää', () => {
   }
 });
 
+test('silloin-merkintä osuu isoisän päiväkirjan aikakauteen', () => {
+  // Päiväkirja on vuodelta 1873 (docs/tarina.md). Merkintä saa
+  // puuttua maalta, jolta ei ole 1800-luvun arviota — mutta jos se
+  // on, sen pitää olla oikealta vuosikymmeneltä ja väkiluvun näköinen.
+  for (const [iso, maa] of Object.entries(data.maat)) {
+    if (!maa.silloin) continue;
+    assert.ok(Math.abs(maa.silloin.vuosi - 1873) <= 10,
+      `${iso}: silloin-vuosi ${maa.silloin.vuosi} ei ole päiväkirjan aikakautta`);
+    assert.ok(Number.isInteger(maa.silloin.arvo) && maa.silloin.arvo > 0,
+      `${iso}: silloin-arvo ${maa.silloin.arvo} ei ole väkiluku`);
+  }
+  for (const iso of PILOTTI) {
+    assert.ok(data.maat[iso].silloin, `${iso}: silloin-merkintä puuttuu pilottimaalta`);
+  }
+});
+
 /*
  * CO₂-sarjan tunnus on vaihtunut Maailmanpankissa ennenkin
  * (EN.ATM.CO2E.PC → EN.GHG.CO2.PC.CE.AR5). Työkalu kaatuu jos sarja

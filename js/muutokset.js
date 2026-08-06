@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 311, teksti: 'Lehteen uusi sivu: Maa numeroina käyrineen' },
+  { v: 311, teksti: 'Suomi kulkee joka käyrässä vertailuviivana' },
   { v: 310, teksti: 'Maiden aikasarjat haettu: viisi pilottimaata' },
   { v: 309, teksti: 'Kolme Espanjan kuvaa puuttui peilistä — korjattu' },
   { v: 309, teksti: 'Rikkinäinen kuva yrittää uudelleen myös peilittä' },
