@@ -72,6 +72,18 @@ const ENNUSTE_LOPPU = 2050;
 const HISTORIA_ALKU = 1950;
 
 /*
+ * "Silloin ja nyt": isoisän päiväkirja on vuodelta 1873 (docs/
+ * tarina.md), mutta WPP alkaa 1950:stä. Merkintää varten haetaan
+ * yksi luku maata kohti Gapminderin pitkästä väestösarjasta
+ * (systema_globalis, GitHub) — lähin havainto päiväkirjan vuodelle.
+ * Jos maalta ei ole 1800-luvun arviota, merkintä jää sivulta pois.
+ */
+const SILLOIN_VUOSI = 1873;
+const SILLOIN_OSOITE = 'https://raw.githubusercontent.com/open-numbers/'
+  + 'ddf--gapminder--systema_globalis/master/countries-etc-datapoints/'
+  + 'ddf--datapoints--total_population_with_projections--by--geo--time.csv';
+
+/*
  * Maailmanpankin mittarit. `tarkkuus` on desimaalien määrä
  * pyöristyksessä; väkiluku ja pyramidi tulevat WPP:stä eivätkä ole
  * tässä listassa.
@@ -229,6 +241,29 @@ async function haeVaesto(pyydetyt) {
   return tulos;
 }
 
+/** Väkiluku lähimmältä vuodelta 1873:n ympäriltä (±10 v) maittain. */
+async function haeSilloin(pyydetyt) {
+  const vastaus = await hae(SILLOIN_OSOITE);
+  if (!vastaus) {
+    console.log('  Gapminderin pitkä väestösarja ei vastaa — silloin-merkinnät jäävät pois');
+    return new Map();
+  }
+  const ulos = new Map();
+  for (const rivi of (await vastaus.text()).trim().split('\n').slice(1)) {
+    const [geo, vuosiTeksti, arvoTeksti] = rivi.split(',');
+    const iso = geo.toUpperCase();
+    const vuosi = Number(vuosiTeksti);
+    const arvo = Number(arvoTeksti);
+    if (!pyydetyt.has(iso) || Math.abs(vuosi - SILLOIN_VUOSI) > 10) continue;
+    if (!Number.isFinite(arvo) || arvo <= 0) continue;
+    const vanha = ulos.get(iso);
+    if (!vanha || Math.abs(vuosi - SILLOIN_VUOSI) < Math.abs(vanha.vuosi - SILLOIN_VUOSI)) {
+      ulos.set(iso, { vuosi, arvo: Math.round(arvo) });
+    }
+  }
+  return ulos;
+}
+
 /**
  * Yhden mittarin KOKO sarja joka maalle Maailmanpankin API:sta.
  * Sivutus kuten hae-maaluvut.mjs:ssä, mutta kaikki vuodet talteen.
@@ -319,9 +354,16 @@ if (vaestotta.length > pyydetyt.size * 0.15) {
     + '— onko WPP-jakelun muoto vaihtunut?');
 }
 
+console.log('Gapminder: väkiluku isoisän aikaan…');
+const silloin = await haeSilloin(pyydetyt);
+console.log(`  ${silloin.size}/${pyydetyt.size} maalle 1800-luvun arvio\n`);
+
 let reitti = pakotaPeili ? 'peili' : 'suora';
 const maat = {};
-for (const [iso, tiedot] of vaesto) maat[iso] = { ...tiedot };
+for (const [iso, tiedot] of vaesto) {
+  maat[iso] = { ...tiedot };
+  if (silloin.has(iso)) maat[iso].silloin = silloin.get(iso);
+}
 
 for (const mittari of MITTARIT) {
   process.stdout.write(`${mittari.avain.padEnd(17)}`);
@@ -384,6 +426,7 @@ const meta = {
   lahteet: {
     vakiluku: 'UN World Population Prospects 2024 (mediaaniennuste 2050 asti)',
     pyramidi: 'UN World Population Prospects 2024',
+    silloin: `Gapminder (väkiluvun arvio isoisän aikaan, ~${SILLOIN_VUOSI})`,
     ...Object.fromEntries(MITTARIT.map((m) => [m.avain, m.lahde])),
   },
   pyramidiRyhmat: PYRAMIDI_RYHMAT,
