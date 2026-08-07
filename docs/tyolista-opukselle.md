@@ -393,7 +393,16 @@ Tason osat kaupunkia kohti:
     - Muillekin maille saa tehdä, jos tarina ja vapaat kuvat
       löytyvät (esim. Saksan 1920-luvun mykkäelokuva: Metropolis,
       Caligari — ennen 1930 julkaistu aineisto on Yhdysvalloissa
-      PD ja julisteet pääosin myös EU:ssa; tarkista tapauskohtaisesti).: kuvien silmätarkistus 480 px, Playwright-kaappaukset
+      PD ja julisteet pääosin myös EU:ssa; tarkista tapauskohtaisesti).
+
+**TYÖNJAKO (omistajan päätös 7.8.2026): Opus tekee vain
+sanomalehdet** — lehtisivut, kuvat, uutislähteet ja taiton.
+Matkakirjatekstit (saapumismerkinnät + luennat), kohtaamiset ja
+visakysymykset kirjoittaa suunnittelusessio (Fable) raamatun ja sen
+Eurooppa-suunnitelman mukaan. Kohdat 9 ja 10 ovat Opukselle vain
+taustatietoa, eivät tehtäviä.
+
+Muista joka PR:ssä: kuvien silmätarkistus 480 px, Playwright-kaappaukset
 390/834/1024 ja niiden KATSOMINEN, main fetch juuri ennen versiota.
 
 ### PÄÄTETTY 5.8.2026: Tutki on paikallislehti (suunnittelusessio tekee)
