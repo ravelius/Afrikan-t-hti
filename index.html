@@ -343,6 +343,15 @@
   <!-- Lue lisää: Wikipedian tiivistelmä -->
   <dialog id="wiki-dialog" class="dialog">
    <div class="dialog-card wiki-card" tabindex="-1" autofocus>
+    <!-- Ääneen lukija (omistajan toive 7.8.2026): lukee otsikon ja
+         artikkelin — ei lähderiviä eikä kuvatekstejä. -->
+    <button id="wiki-lukija" class="lukija-nappi" type="button" hidden
+            title="Lue artikkeli ääneen" aria-label="Lue artikkeli ääneen">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
     <h2 id="wiki-title">Lue lisää</h2>
     <!--
       Kirjanmerkkiliuskat kuten vanhassa osoite- tai tilikirjassa: yksi

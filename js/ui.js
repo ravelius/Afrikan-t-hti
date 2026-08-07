@@ -70,6 +70,7 @@ import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { MAA_KATEGORIAT, maanAiheOtsikko } from './packs/maa-kategoriat.js';
 import { MAAKARTAT, karttapiste } from './packs/maakartat.js';
+import { lukijaTuettu, lukijaLue, lukijaSeis, lukijaLukee } from './lukija.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import {
@@ -1553,6 +1554,15 @@ export class UI {
     this.wikiTitle = document.getElementById('wiki-title');
     this.wikiImage = document.getElementById('wiki-image');
     this.wikiExtract = document.getElementById('wiki-extract');
+    // Ääneen lukija (omistajan toive 7.8.2026): artikkelin lukunappi,
+    // ja lukeminen loppuu aina dialogin sulkeutuessa — ääni ei saa
+    // jäädä puhumaan tyhjälle kartalle.
+    this.wikiLukija = document.getElementById('wiki-lukija');
+    this.wikiLukija.addEventListener('click', () => this.lueAaneen(this.wikiLukija, () => (
+      [this.wikiTitle.textContent, this.wikiExtract.textContent]
+    )));
+    this.wikiDialog.addEventListener('close', () => lukijaSeis());
+    this.arrivalDialog.addEventListener('close', () => lukijaSeis());
 
     this.wikiSource = document.getElementById('wiki-source');
     // Sama galleriaselaus kuin Tutki-kortin kuvassa (omistajan toive):
@@ -6446,6 +6456,8 @@ export class UI {
    * hiljaisempi luenta — ei täyttä voimaa.
    */
   kulttuuriAaniNapista(nosto, nappi) {
+    // Näyte ja ääneen lukija eivät puhu päällekkäin.
+    lukijaSeis();
     if (this.kulttuuriAani) {
       this.pysaytaKulttuuriAani();
       return;
@@ -6790,6 +6802,8 @@ export class UI {
     const sivuja = this.tutkiSivuja();
     const i = Math.min(Math.max(indeksi, 0), sivuja - 1);
     this.tutkiSivu = i;
+    // Sivun vaihto lopettaa edellisen sivun lukemisen.
+    lukijaSeis();
     const etusivu = i === 0;
     if (this.arrivalPalstat) this.arrivalPalstat.hidden = !etusivu;
     /*
@@ -6863,17 +6877,113 @@ export class UI {
       };
       nuoli('edellinen', 'Edellinen sivu', 'M15 5 8 12l7 7');
       nuoli('seuraava', 'Seuraava sivu', 'M9 5l7 7-7 7');
+      // Ääneen lukija (omistajan toive 7.8.2026) asuu sivunuolten
+      // vieressä: sama nappi joka sivulla, lukee auki olevan sivun.
+      const lukijaNappi = html('button', 'tutki-nuoli tutki-lukija');
+      lukijaNappi.type = 'button';
+      lukijaNappi.title = 'Lue sivu ääneen';
+      lukijaNappi.setAttribute('aria-label', 'Lue sivu ääneen');
+      lukijaNappi.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none"'
+        + ' stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+        + '<path d="M4.5 9.6v4.8h3.2l4.5 3.8V5.8L7.7 9.6Z"/>'
+        + '<path d="M15.2 9.4a3.6 3.6 0 0 1 0 5.2M17.6 7.2a6.9 6.9 0 0 1 0 9.6"/></svg>';
+      lukijaNappi.addEventListener('click', () => this.lueAaneen(lukijaNappi, () => this.tutkiSivunTeksti()));
+      navi.appendChild(lukijaNappi);
       navi.appendChild(html('p', 'tutki-sivunumero'));
       this.arrivalDialog.appendChild(navi);
     }
     const edellinen = navi.querySelector('.edellinen');
     const seuraava = navi.querySelector('.seuraava');
+    const lukija = navi.querySelector('.tutki-lukija');
     const numero = navi.querySelector('.tutki-sivunumero');
+    // Nappi vain sivuilla, joilla on luettavaa (tilastosivulla ei ole).
+    lukija.hidden = !lukijaTuettu() || !this.tutkiSivunTeksti().length;
     // Yhden sivun kaupungissa ei ole mitään selattavaa: koko navi pois.
     navi.hidden = sivuja < 2;
     edellinen.hidden = this.tutkiSivu <= 0;
     seuraava.hidden = this.tutkiSivu >= sivuja - 1;
     numero.textContent = `${(this.tutkiSivu ?? 0) + 1} / ${sivuja}`;
+  }
+
+  /**
+   * Auki olevan Tutki-sivun luettava teksti: otsikot, johdanto ja
+   * nostojen leipätekstit pelin omasta datasta — ei lähderivejä,
+   * kuvatekstejä eikä nappeja (omistajan toive 7.8.2026). Etusivun ja
+   * maa-etusivun esittelyt luetaan ruudun elementeistä, koska ne
+   * täyttyvät osin verkkohauista.
+   */
+  tutkiSivunTeksti() {
+    const i = this.tutkiSivu ?? 0;
+    if (i === 0) {
+      const osat = [this.arrivalCity?.textContent, this.arrivalIntro?.textContent];
+      if (this.arrivalMaa && !this.arrivalMaa.hidden && this.arrivalMaa.offsetParent) {
+        osat.push(this.arrivalMaaNimi?.textContent, this.arrivalMaaIntro?.textContent);
+      }
+      return osat.map((o) => o?.trim()).filter(Boolean);
+    }
+    const kategoria = this.tutkiSivut?.[i - 1];
+    if (!kategoria) return [];
+    // Maaosion aloitussivu: maan nimi ja pääkirjoitus.
+    if (kategoria.kartta) {
+      return [kategoria.nimi, this.arrivalMaaIntro?.textContent?.trim()].filter(Boolean);
+    }
+    // Tilastosivu on käyriä — siinä ei ole luettavaa tarinaa.
+    if (kategoria.numerot) return [];
+    const osat = [kategoria.nimi, kategoria.johdanto];
+    for (const nosto of kategoria.nostot ?? []) {
+      osat.push(nosto.otsikko, nosto.teksti);
+    }
+    return osat.map((o) => o?.trim()).filter(Boolean);
+  }
+
+  /**
+   * Lukunapin yhteinen vaihtokytkin: sama nappi aloittaa ja
+   * pysäyttää, ja soi-luokka kertoo tilan kuten näytenapeissa.
+   * Tekstit annetaan funktiona, jotta ne poimitaan vasta
+   * painalluksen hetkellä — sivu on voinut täydentyä verkosta.
+   */
+  async lueAaneen(nappi, tekstit) {
+    if (lukijaLukee()) {
+      lukijaSeis();
+      return;
+    }
+    // Lukija ja musiikkinäyte eivät puhu päällekkäin.
+    this.pysaytaKulttuuriAani();
+    nappi.classList.add('soi');
+    const aani = await lukijaLue(tekstit(), {
+      onLoppu: () => nappi.classList.remove('soi'),
+    });
+    // Tyhjä sivu tai puuttuva puhesyntesi: ei jäädä soi-tilaan.
+    if (!lukijaLukee()) nappi.classList.remove('soi');
+    this.naytaLukijaVihje(aani);
+  }
+
+  /**
+   * Kertaluontoinen vinkki Applen laitteille: suomen oletusääni on
+   * suppea ja koneellinen, mutta asetuksista ladattu parempi ääni
+   * näkyy myös selaimelle ja lukija poimii sen itsestään. Siri-ääntä
+   * Apple ei anna selainten käyttöön lainkaan, joten tämä on paras
+   * saavutettavissa oleva taso.
+   */
+  naytaLukijaVihje(aani) {
+    const AVAIN = 'matkakirja-lukijavihje';
+    if (!/iPad|iPhone|Macintosh/i.test(navigator.userAgent)) return;
+    // Laatuääni jo käytössä — ei vinkattavaa.
+    if (aani && /enhanced|premium|laajennettu|parannettu/i.test(`${aani.name} ${aani.voiceURI ?? ''}`)) return;
+    try {
+      if (localStorage.getItem(AVAIN)) return;
+      localStorage.setItem(AVAIN, '1');
+    } catch {
+      return;
+    }
+    const vihje = html('p', 'lukija-vihje',
+      'Vinkki: saat lukijalle paremman suomiäänen iPadin asetuksista: '
+      + 'Käyttöapu → Puhuttu sisältö → Äänet → Suomi → lataa Satu '
+      + '(laajennettu). Peli käyttää sitä sitten itsestään. '
+      + 'Sulje napauttamalla.');
+    vihje.addEventListener('click', () => vihje.remove());
+    const kortti = document.querySelector('.dialog[open] .dialog-card') ?? document.body;
+    kortti.prepend(vihje);
   }
 
   /**
@@ -7721,6 +7831,10 @@ export class UI {
   async openWikiArticle(title, label = title, { alkuteksti = null } = {}) {
     this.wikiOpenFor = title;
     this.wikiTitle.textContent = label;
+    // Lukunappi näkyy aina kun selain osaa puhua: tekstit poimitaan
+    // vasta painalluksen hetkellä, joten haun valmistumista ei
+    // tarvitse odottaa tässä.
+    this.wikiLukija.hidden = !lukijaTuettu();
     this.wikiImage.hidden = true;
     this.wikiImage.removeAttribute('src');
     this.wikiKuvakotelo.hidden = true;

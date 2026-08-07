@@ -8302,3 +8302,57 @@ body.vertailu-tila .pawns { display: none; }
     margin: 0.15rem 0 0.7rem;
   }
 }
+
+/*
+ * ============ Ääneen lukija (js/lukija.js) ============
+ *
+ * Lukunappi sivunuolten pillerissä (Tutki) ja artikkeli-ikkunan
+ * kulmassa. Soi-luokka kertoo tilan kullalla kuten näytenapeissa.
+ */
+
+.tutki-nuoli.tutki-lukija {
+  order: 4;
+  margin-left: 0.2rem;
+  padding: 0.14rem;
+}
+
+.dialog .tutki-navi .tutki-lukija.soi,
+.dialog button.lukija-nappi.soi { color: #b07a1e; }
+
+/* Artikkeli-ikkunan lukunappi otsikon oikealla puolella. */
+.dialog button.lukija-nappi {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.85rem;
+  z-index: 4;
+  width: 2rem;
+  height: 2rem;
+  min-height: 0;
+  padding: 0.3rem;
+  border: 1px solid rgba(70, 51, 31, 0.45);
+  border-radius: 50%;
+  background: rgba(246, 231, 198, 0.85);
+  color: rgba(70, 51, 31, 0.8);
+  cursor: pointer;
+}
+
+.dialog button.lukija-nappi:hover:not(:disabled) {
+  background: rgba(246, 231, 198, 1);
+  color: #16130f;
+}
+
+.dialog button.lukija-nappi svg { width: 100%; height: 100%; display: block; }
+
+/* Kertavinkki paremmasta suomiäänestä (Applen laitteet). */
+.lukija-vihje {
+  margin: 0 0 0.7rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px dashed rgba(70, 51, 31, 0.45);
+  border-radius: 4px;
+  background: rgba(246, 231, 198, 0.75);
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: #5a4a33;
+  cursor: pointer;
+}
