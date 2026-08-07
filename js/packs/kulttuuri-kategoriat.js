@@ -1880,4 +1880,150 @@ export const KULTTUURI_KATEGORIAT = {
       ],
     },
   ],
+
+  berliini: [
+    {
+      id: 'kaupunki',
+      nimi: 'Berliini',
+      johdanto: 'Suolle rakennettu kaupunki, joka jaettiin muurilla '
+        + 'kahtia ja kasvoi yhteen uudelleen — historia näkyy täällä '
+        + 'joka kadunkulmassa.',
+      /*
+       * Lehden etusivun kuvat: iso vaakakuva pääkuvaksi ja kaksi
+       * pienempää sen alle. Sama malli kuin Venetsiassa, Kairossa,
+       * Lontoossa ja Madridissa.
+       */
+      kansikuvat: [
+        {
+          tiedosto: 'Brandenburger Tor abends.jpg',
+          selite: 'Brandenburgin portti iltavalossa. Portin päällä ajaa '
+            + 'voitonjumalatar nelivaljakollaan — Napoleon vei sen '
+            + 'sotasaaliiksi Pariisiin 1806, mutta se haettiin takaisin.',
+          lahde: 'Thomas Wolf (foto-tw.de), Wikimedia Commons (CC BY-SA 3.0 DE)',
+        },
+        {
+          tiedosto: 'Fernsehturm, Berlín, Alemania, 2016-04-22, DD 40-42 HDR.jpg',
+          selite: 'Tv-torni Alexanderplatzilla on 368-metrisenä Saksan '
+            + 'korkein rakennus. Itä-Saksa rakensi sen 1969 näkymään '
+            + 'kaikkialle kaupunkiin.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'East side gallery, Berlin Wall (Ank Kumar, Infosys Limited) 07.jpg',
+          selite: 'East Side Gallery: 1,3 kilometriä muuria jätettiin '
+            + 'pystyyn, ja 118 taiteilijaa 21 maasta maalasi siihen '
+            + 'maailman pisimmän ulkoilmagallerian vuonna 1990.',
+          lahde: 'Ank Kumar, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Gaertner maalasi Berliinin talo talolta',
+          tiedosto: '1856 Gaertner Unter den Linden anagoria.JPG',
+          teksti: 'Kun valokuvaa ei vielä ollut, Eduard Gaertner oli '
+            + 'Berliinin kamera. Entinen posliininmaalari kiersi katuja '
+            + 'ja maalasi ne niin tarkasti, että taloista voi laskea '
+            + 'ikkunaruudut ja kylttien tekstit voi lukea. Kuningas osti '
+            + 'hänen töitään, mutta Gaertner ei maalannut vain '
+            + 'paraatinäkymiä: hänen kaduillaan korjataan kiveystä, '
+            + 'koirat nuuskivat toisiaan ja pyykki kuivuu ikkunoissa. '
+            + 'Juuri siksi hänen taulunsa ovat nyt tutkijoiden aarre — '
+            + 'niistä nähdään, miltä kadonnut Berliini oikeasti näytti.',
+          selite: 'Unter den Linden (1856): paraatikadun perällä '
+            + 'häämöttää kuninkaanlinnan kupoli, oikealla Fredrik '
+            + 'Suuren ratsastajapatsas.',
+          lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+          wiki: 'Unter den Linden',
+          galleria: [
+            {
+              otsikko: 'Klosterstraße',
+              tiedosto: 'Eduard Gaertner Berlin Klosterstrasse 1830.jpg',
+              selite: 'Klosterstraße (1830). Ukkospilvet kasaantuvat '
+                + 'vanhankaupungin ylle; kadun perällä kohoaa '
+                + 'Parochialkirchen torni.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Parochialstraße',
+              tiedosto: 'Eduard Gaertner - Die Parochialstraße - Google Art Project.jpg',
+              selite: 'Parochialstraße (1831). Katutyömaa käynnissä: '
+                + 'miehet latovat kiveystä, kauppiaan kupariastiat '
+                + 'roikkuvat kylttinä ja koirat hoitavat omia asioitaan.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Schloßfreiheit',
+              tiedosto: 'Eduard Gaertner - Rear view of the Houses at Schloßfreiheit - Google Art Project.jpg',
+              selite: 'Talojen takapihat Schloßfreiheitin rannassa '
+                + '(1855) — arkinen puoli, jota varten kukaan muu ei '
+                + 'pystyttänyt maalaustelinettä. Takana kuninkaanlinnan '
+                + 'kappelin kupoli.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Friedrichsgracht',
+              tiedosto: 'Eduard Gaertner (1801-1877) - The Friedrichsgracht, Berlin - NG6524 - National Gallery.jpg',
+              selite: 'Friedrichsgracht kattojen yli nähtynä: proomut '
+                + 'lastaavat kanavassa. Berliini oli 1800-luvulla myös '
+                + 'satamakaupunki.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Kuninkaallinen ooppera',
+              tiedosto: 'Eduard Gaertner - Ansicht der Königlichen Oper und Unter den Linden, Berlin (1845).jpg',
+              selite: 'Kuninkaallinen ooppera iltahämärässä (1845). '
+                + 'Sama talo seisoo Unter den Lindenillä yhä, ja siellä '
+                + 'lauletaan edelleen.',
+              lahde: 'Eduard Gaertner, Wikimedia Commons (Public domain)',
+            },
+          ],
+        },
+        /*
+         * Ampelmännchen siirtyi tänne mantereen kulttuuripaketin
+         * litteistä nostoista (europe-kulttuuri.js) — lehden visa
+         * kysyy siitä, joten aiheen pitää näkyä kannessa.
+         */
+        {
+          otsikko: 'Hattupäinen ukkeli sai jäädä',
+          tiedosto: 'Ampelmännchen go.jpg',
+          teksti: 'Liikennepsykologi Karl Peglau piirsi vuonna 1961 '
+            + 'Itä-Saksalle oman jalankulkuvalon: leveä hahmo '
+            + 'hattuineen erottuu kauas, koska valopintaa on paljon. '
+            + 'Ensimmäiset syttyivät Itä-Berliinissä 1969. Kun Saksat '
+            + 'yhdistyivät, ukkelia alettiin vaihtaa lännen '
+            + 'tikku-ukkoon — kunnes kansalaiskampanja "Pelastakaa '
+            + 'Ampelmännchen" nousi vastaan ja voitti. Nykyään '
+            + 'hattupäinen ukkeli ohjaa kulkijoita myös monessa '
+            + 'Länsi-Berliinin risteyksessä, ja siitä on tullut koko '
+            + 'kaupungin maskotti, jota myydään matkamuistona.',
+          selite: 'Vihreä Ampelmännchen Berliinissä. Taustalla Keisari '
+            + 'Vilhelmin muistokirkon torso, joka jätettiin '
+            + 'pommituksissa saamaansa asuun muistutukseksi sodasta.',
+          lahde: 'Wikimedia Commons (CC0)',
+          wiki: 'Ampelmännchen',
+        },
+        {
+          otsikko: 'Tyttö Schönebergistä lauloi maailman ympäri',
+          tiedosto: 'My Child Speaks Marlene Dietrich 1930, Erich Salomon.jpg',
+          teksti: 'Marlene Dietrich syntyi 1901 Schönebergin '
+            + 'kaupunginosassa ja nousi maailmantähdeksi berliiniläisen '
+            + 'elokuvan Sininen enkeli (1930) myötä — samana vuonna hän '
+            + 'muutti Hollywoodiin. Kun natsihallinto houkutteli häntä '
+            + 'takaisin mainoskasvokseen, hän kieltäytyi, otti '
+            + 'Yhdysvaltain kansalaisuuden ja lauloi sen sijaan '
+            + 'rintamalla sotilaille — tunnetuimpana laulun Lili '
+            + 'Marleen, jota kuunneltiin juoksuhaudoissa molemmin '
+            + 'puolin. Berliiniin hän palasi viimeisen kerran arkussa: '
+            + 'hauta on Schönebergissä, äidin haudan vieressä.',
+          selite: 'Marlene Dietrich soittaa Hollywoodista Berliiniin '
+            + 'tyttärelleen 1930. Yöpöydällä tyttären valokuva — Erich '
+            + 'Salomonin kuuluisa otos.',
+          lahde: 'Erich Salomon, Wikimedia Commons (Public domain)',
+          wiki: 'Marlene Dietrich',
+          musiikki: 'https://music.apple.com/fi/search?term=Marlene%20Dietrich',
+          musiikkiNimi: 'Marlene Dietrichin lauluja Apple Musicissa',
+        },
+      ],
+    },
+  ],
 };

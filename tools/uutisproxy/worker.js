@@ -32,6 +32,9 @@ const SALLITUT = [
   // Ruotsin uutislähde (Tukholman lehti, 7.8.2026): syöte ja
   // artikkelisivut ovat samalla isäntänimellä.
   'https://www.svt.se/',
+  // Saksan uutislähde (Berliinin lehti, 7.8.2026): tagesschaun syöte
+  // ja artikkelisivut ovat samalla isäntänimellä.
+  'https://www.tagesschau.de/',
   // Tv-kanavan live-sivu: siitä luetaan kulloisenkin suoran
   // lähetyksen tunniste, koska YouTuben kanavaupotus on epävakaa
   // etenkin iPadilla (5.8.2026).

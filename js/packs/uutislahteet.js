@@ -80,6 +80,19 @@ export const UUTISLAHTEET = {
     kieli: 'sv',
     syote: 'https://www.svt.se/rss.xml',
   },
+  /*
+   * tagesschau on Saksan yleisradion (ARD) uutissivusto ja maan
+   * seuratuimpia lähteitä. Syöte JA artikkelisivut testattu 7.8.2026:
+   * syötteessä 40 juttua, artikkelissa <article> jäsentyy (11 pitkää
+   * kappaletta) ja og:image löytyy. Osoite on lopullinen kohde —
+   * tagesschau.de/xml/rss2 ohjaa tänne 301:llä, ja suora osoite
+   * säästää yhden hypyn workerissa.
+   */
+  DEU: {
+    nimi: 'tagesschau',
+    kieli: 'de',
+    syote: 'https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml',
+  },
 };
 
 /*
@@ -132,5 +145,15 @@ export const TV_KANAVAT = {
     livesivu: 'https://www.youtube.com/@RTVENoticias/live',
     upotus: 'https://www.youtube.com/embed/live_stream'
       + '?channel=UC7QZIf0dta-XPXsp9Hv4dTw&autoplay=1',
+  },
+  // tagesschau24 on ARD:n uutiskanava, joka lähettää YouTubeen ympäri
+  // vuorokauden ilman aluerajausta (kanavatunnus varmistettu
+  // @tagesschau/live-sivun canonical-linkistä 7.8.2026; suora lähetys
+  // oli käynnissä tarkistushetkellä).
+  DEU: {
+    nimi: 'tagesschau24',
+    livesivu: 'https://www.youtube.com/@tagesschau/live',
+    upotus: 'https://www.youtube.com/embed/live_stream'
+      + '?channel=UC5NOEUbkLheQcaaRldYW5GA&autoplay=1',
   },
 };

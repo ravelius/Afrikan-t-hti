@@ -124,4 +124,25 @@ export const KOHTAAMISET = {
     vaarin: 'Matteo työntää gondolin takaisin virtaan: "Ei tänään, '
       + 'ystäväni. Palaa, kun tunnet maailman paremmin."',
   },
+  berliini: {
+    hahmo: 'posetiivari Otto',
+    nappi: 'Tapaa posetiivari',
+    frame: 'posetiivari Otto pysäyttää kammen ja kysyy',
+    tervehdys: 'Hackescher Marktin kulmalla vanha mies veivaa '
+      + 'posetiivia, jonka kylkeen on maalattu kadonneen Berliinin '
+      + 'kattoja. Kampi pysähtyy, kun hän näkee kirjasi. "Isoisäni '
+      + 'soitti tätä samaa laatikkoa Unter den Lindenillä, ja eräs '
+      + 'matkalainen tuon kirjan kanssa kuunteli koko rullan loppuun '
+      + 'ja kysyi sitten tietä. Näytä, että tunnet maailmaa kuten hän '
+      + '— niin kerron, minne isoisäni häntä neuvoi."',
+    loyto: 'Otto kääntää posetiivin taakse ja avaa pienen luukun, '
+      + 'jossa säilytettiin nuottirullia: "Tämä on odottanut täällä '
+      + 'kauan. Isoisäsi jätti sen soittajan haltuun — katso itse."',
+    tyhja: 'Otto sulkee luukun ja kohauttaa harteitaan: "Tyhjä. Tämä '
+      + 'kaupunki on purettu ja rakennettu niin monta kertaa, että '
+      + 'kätköt vaihtavat paikkaa — jatka etsimistä."',
+    vaarin: 'Otto tarttuu kampeen ja soitto jatkuu: "Ei vielä, nuori '
+      + 'ystävä. Kuuntele maailmaa vähän kauemmin — laatikkokin oppi '
+      + 'sävelensä rulla kerrallaan."',
+  },
 };

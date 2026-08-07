@@ -56,4 +56,13 @@ export const SAATIEDOT = {
     keskilampo: [4.3, 5.3, 8.8, 12.8, 17.5, 21.5, 23.9, 24.0, 19.5, 14.9, 9.8, 5.2],
     sade: [60, 62, 69, 82, 93, 77, 60, 82, 120, 118, 125, 79],
   },
+  // Berliini on mannerilmastoa tasangolla: talvi käy pakkasen puolella
+  // ja sade jakautuu tasaisesti ympäri vuoden — heinäkuun kuurot ovat
+  // vuoden märin kuukausi.
+  berliini: {
+    lat: 52.52,
+    lon: 13.41,
+    keskilampo: [0.7, 1.6, 4.5, 9.4, 14.1, 17.5, 19.6, 19.5, 15.1, 10.1, 5.2, 1.9],
+    sade: [50, 37, 48, 37, 56, 59, 77, 56, 52, 46, 42, 46],
+  },
 };

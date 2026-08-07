@@ -1588,11 +1588,21 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Saksa: {
+    // Lehden maaosasto nojaa tähän introon yksin (Berliinin lehti,
+    // ks. docs/tutki-aiheet.md): pituus noin kuusi virkettä.
     intro: 'Saksa on Euroopan unionin väkirikkain maa: 83 miljoonaa '
              + 'asukasta kuudessatoista osavaltiossa, joilla on omat '
              + 'parlamenttinsa ja omat koulunsa. Yhtenäinen valtio se on ollut '
              + 'vasta vuodesta 1871 — ja siitä ajasta 41 vuotta kahtia '
-             + 'jaettuna.',
+             + 'jaettuna. Maisema laskee Alppien huipuilta Reinin laakson ja '
+             + 'suurten metsien halki kahden meren rannoille. Maailmalle '
+             + 'Saksasta ovat lähteneet kirjapaino, röntgensäteet ja '
+             + 'ensimmäinen tietokone — ja Bachin, Beethovenin ja Brahmsin '
+             + 'sävelet. Autot, junat ja jalkapallo otetaan täällä vakavasti, '
+             + 'mutta niin otetaan myös leipä, jota leivotaan kolmeatuhatta '
+             + 'lajia. Pääkaupunki Berliini on kaupungeista suurin, mutta '
+             + 'valta on levällään: suurin satama on Hampurissa, pankit '
+             + 'Frankfurtissa ja moni tehdas etelän pikkukaupungeissa.',
     teksti: 'Saksa oli pitkään satojen ruhtinaskuntien, vapaakaupunkien ja '
               + 'piispanmaiden tilkkutäkki. Preussin johdolla ne yhdistettiin '
               + 'keisarikunnaksi 1871. Toisen maailmansodan jälkeen maa '

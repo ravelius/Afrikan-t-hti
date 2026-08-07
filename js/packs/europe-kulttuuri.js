@@ -1224,60 +1224,15 @@ export const EUROPE_KULTTUURI = {
     },
   },
 
+  /*
+   * Berliinin nostot siirtyivät lehtipaketin myötä muualle
+   * (monistusohjeen sääntö: ainutlaatuinen sisältö kanteen):
+   * Ampelmännchen on kaupungin kannessa (kulttuuri-kategoriat.js),
+   * currywurst maan Ruoka-sivulla ja tekno musiikkilinkkeineen maan
+   * Musiikki-sivulla (maa-kategoriat.js DEU). Tänne jää vain visa —
+   * sen aihe (Ampelmännchen) näkyy kannen nostossa.
+   */
   berliini: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Tyhjät talot täyttyivät bassosta',
-        tiedosto: 'Love Parade 1998 03.jpg',
-        teksti: 'Kun muuri kaatui 1989, keskustaan jäi tyhjiä tehtaita, '
-                  + 'kellareita ja pankkiholveja, joilla ei ollut omistajaa. '
-                  + 'Niihin syntyi teknoklubeja, joissa idän ja lännen nuoret '
-                  + 'tanssivat ensi kertaa samoissa tiloissa. Berliinin '
-                  + 'teknokulttuuri otettiin maaliskuussa 2024 Saksan '
-                  + 'aineettoman kulttuuriperinnön luetteloon.',
-        selite: 'Love Parade Berliinissä 1998. Ensimmäisessä kulkueessa '
-                  + 'vuonna 1989 oli 150 osallistujaa, huippuvuonna 1999 '
-                  + 'arviolta puolitoista miljoonaa. Viimeinen paraati '
-                  + 'pidettiin 2010.',
-        lahde: 'Ago76, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Love Parade',
-        musiikki: 'https://music.apple.com/fi/search?term=berlin%20techno',
-        musiikkiNimi: 'Berliiniläistä teknoa Apple Musicissa',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Makkara, jolla on oma pykälä',
-        tiedosto: 'Currywurst von Curry 36 Berlin (2023 Okt) - Bild 01.jpg',
-        teksti: 'Herta Heuwer sekoitti kioskillaan Charlottenburgissa 4. '
-                  + 'syyskuuta 1949 kastikkeen ketsupista, currystä ja '
-                  + 'mausteista ja kaatoi sen paistetun makkaran päälle. Nimen '
-                  + 'Chillup hän rekisteröi 1959. Nykyään suolittoman '
-                  + 'berliininmakkaran nimi on suojattu: hakemuksen käsittely '
-                  + 'kesti kolmetoista vuotta.',
-        selite: 'Currywurst ja ranskalaiset berliiniläisellä kioskilla. '
-                  + 'Makkara paistetaan kokonaisena, leikataan paloiksi vasta '
-                  + 'annokseen ja peitetään kastikkeella ja currymausteella.',
-        lahde: 'Chainwit, Wikimedia Commons (CC BY 4.0)',
-        wiki: 'Currywurst',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Hattupäinen ukkeli sai jäädä',
-        tiedosto: 'Ampelmännchen go.jpg',
-        teksti: 'Liikennepsykologi Karl Peglau piirsi vuonna 1961 '
-                  + 'Itä-Saksalle oman jalankulkuvalon: leveä hahmo hattuineen '
-                  + 'erottuu kauas, koska valopintaa on paljon. Ensimmäiset '
-                  + 'syttyivät Itä-Berliinissä 1969. Yhdistymisen jälkeen '
-                  + 'ukkelia oltiin poistamassa, mutta kansalaiskampanja '
-                  + 'pelasti sen.',
-        selite: 'Vihreä Ampelmännchen Berliinissä. Taustalla Keisari '
-                  + 'Vilhelmin muistokirkon torso, joka jätettiin pommituksissa '
-                  + 'saamaansa asuun muistutukseksi sodasta.',
-        lahde: 'Wikimedia Commons (CC0)',
-        wiki: 'Ampelmännchen',
-      },
-    ],
     kysymys: {
       q: 'Mistä Berliinin liikennevalojen hattupäinen ukkeli on peräisin?',
       options: [

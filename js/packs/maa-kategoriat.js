@@ -1790,4 +1790,441 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+
+  DEU: [
+    {
+      id: 'historia',
+      nimi: 'Historia',
+      johdanto: 'Saksa oli vuosisatoja pienten valtioiden tilkkutäkki '
+        + '— ja sitten maa, joka jaettiin kahtia ja kasvoi jälleen '
+        + 'yhteen.',
+      nostot: [
+        {
+          otsikko: 'Kauppiaiden liitto hallitsi Itämerta',
+          tiedosto: 'Kieler Hansekogge.jpg',
+          teksti: 'Keskiajalla Itämerta ei hallinnut kuningas vaan '
+            + 'kauppiaiden kerho. Hansaliittoon kuului parhaimmillaan '
+            + 'lähes kaksisataa kaupunkia Lontoosta Novgorodiin, ja '
+            + 'sitä johdettiin Lyypekistä. Hansan laiva oli koggi: '
+            + 'pyöreämahainen puualus, joka kuljetti suolaa, silliä, '
+            + 'viljaa ja kankaita. Liitolla oli omat lait ja omat '
+            + 'kauppatalot vieraissa satamissa, ja kun joku kuningas '
+            + 'kiusasi kauppiaita, Hansa saattoi julistaa koko maan '
+            + 'saartoon — ja voitti kerran Tanskan sodassakin. Moni '
+            + 'Pohjois-Saksan kaupunki kutsuu itseään hansakaupungiksi '
+            + 'vielä tänäänkin.',
+          selite: 'Kieler Hansekogge, vuonna 1991 rakennettu '
+            + 'keskiaikaisen koggin jäljennös, purjehtimassa Kielin '
+            + 'edustalla.',
+          lahde: 'Chattus, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Hansaliitto',
+        },
+        {
+          otsikko: 'Kuningas rakensi itselleen satulinnan',
+          tiedosto: 'Schloss Neuschwanstein 2013.jpg',
+          teksti: 'Baijerin kuningas Ludvig II ei viihtynyt '
+            + 'hallitsijana vaan saduissa. Vuonna 1869 hän alkoi '
+            + 'rakennuttaa vuorenrinteelle linnaa, joka näyttää '
+            + 'keskiaikaiselta mutta oli sisältä aikansa uusinta '
+            + 'tekniikkaa: keskuslämmitys, juokseva vesi ja jopa '
+            + 'sähkökelloilla kutsuttava palveluskunta. Ludvig ehti '
+            + 'asua Neuschwansteinissa vain 172 päivää, ja rahat '
+            + 'loppuivat kesken — torneja jäi rakentamatta. Nykyään '
+            + 'linnassa käy 1,4 miljoonaa vierasta vuodessa, ja sen '
+            + 'sanotaan olleen Disneyn satulinnan esikuva.',
+          selite: 'Neuschwanstein Alppien juurella Baijerissa. '
+            + 'Taustalla Forggensee-järvi.',
+          lahde: 'Thomas Wolf (foto-tw.de), Wikimedia Commons (CC BY-SA 3.0 DE)',
+          wiki: 'Neuschwanstein',
+        },
+        {
+          otsikko: 'Karkkeja putosi taivaalta',
+          tiedosto: 'C-54 landing on old Tempelhof runway as work continues - USACE-p15141coll5-630.jpeg',
+          teksti: 'Kesällä 1948 Neuvostoliitto katkaisi kaikki tiet '
+            + 'Länsi-Berliiniin, ja kahden miljoonan ihmisen ruoka oli '
+            + 'lopussa. Silloin alkoi ilmasilta: lentokone laskeutui '
+            + 'kaupunkiin lähes joka toinen minuutti, yötä päivää, '
+            + 'lähes vuoden ajan. Koneissa tuli jauhoja, hiiltä ja '
+            + 'maitojauhetta — ja lentäjä Gail Halvorsen alkoi pudottaa '
+            + 'lapsille karkkeja pienissä nenäliinalaskuvarjoissa. '
+            + 'Berliiniläislapset kutsuivat koneita nimellä '
+            + 'Rosinenbomber, rusinapommittaja. Saarto päättyi 1949, '
+            + 'kun se ei ollut tehonnut.',
+          selite: 'C-54-kuljetuskone laskeutuu Tempelhofiin 1948 samalla '
+            + 'kun uutta kiitorataa vielä rakennetaan.',
+          lahde: 'Yhdysvaltain ilmavoimat, Wikimedia Commons (Public domain)',
+          wiki: 'Berliinin saarto',
+        },
+        {
+          otsikko: 'Muuri avautui paperilapun takia',
+          tiedosto: 'Crane removed part of Wall Brandenburg Gate.jpg',
+          teksti: 'Itä-Saksa aikoi 9. marraskuuta 1989 helpottaa '
+            + 'matkustussääntöjä vasta seuraavana päivänä, mutta '
+            + 'tiedottaja Günter Schabowski sai käteensä keskeneräisen '
+            + 'paperin. Kun toimittaja kysyi suorassa lähetyksessä, '
+            + 'milloin uudet säännöt tulevat voimaan, Schabowski selasi '
+            + 'lappujaan ja vastasi: "Tietääkseni heti." Kymmenettuhannet '
+            + 'itäberliiniläiset lähtivät samana iltana muurille, '
+            + 'rajavartijat avasivat puomit — ja 28 vuotta kaupungin '
+            + 'halkaissut muuri alkoi murtua vielä samana yönä.',
+          selite: 'Nosturi siirtää muurinlohkoa Brandenburgin portin '
+            + 'edestä joulukuussa 1989, kun porttia valmistellaan '
+            + 'avattavaksi.',
+          lahde: 'SSGT F. Lee Corkran, Wikimedia Commons (Public domain)',
+          wiki: 'Berliinin muuri',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Saksalainen ruoka on leipää ja makkaraa — mutta myös '
+        + 'maailman tunnetuimpia karkkeja ja kebab, joka sai nykyisen '
+        + 'muotonsa Berliinissä.',
+      /*
+       * Currywurst siirtyi tänne Berliinin litteistä nostoista
+       * (europe-kulttuuri.js): maan ruokasivu palvelee samaa lehteä,
+       * ja kannessa sen paikan vei visan aihe Ampelmännchen.
+       */
+      nostot: [
+        {
+          otsikko: 'Makkara, jolla on oma pykälä',
+          tiedosto: 'Currywurst von Curry 36 Berlin (2023 Okt) - Bild 01.jpg',
+          teksti: 'Herta Heuwer sekoitti kioskillaan Charlottenburgissa '
+            + '4. syyskuuta 1949 kastikkeen ketsupista, currystä ja '
+            + 'mausteista ja kaatoi sen paistetun makkaran päälle. '
+            + 'Nimen Chillup hän rekisteröi 1959. Nykyään suolittoman '
+            + 'berliininmakkaran nimi on suojattu, ja hakemuksen '
+            + 'käsittely kesti kolmetoista vuotta. Berliiniläiset '
+            + 'syövät currywurstia arviolta seitsemänkymmentä miljoonaa '
+            + 'annosta vuodessa — ja jopa Volkswagenin autotehdas '
+            + 'valmistaa omaa currywurstiaan, jolla on virallinen '
+            + 'varaosanumero.',
+          selite: 'Currywurst ja ranskalaiset berliiniläisellä '
+            + 'kioskilla. Makkara paistetaan kokonaisena, leikataan '
+            + 'paloiksi vasta annokseen ja peitetään kastikkeella ja '
+            + 'currymausteella.',
+          lahde: 'Chainwit, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Currywurst',
+        },
+        {
+          otsikko: 'Leipämaa vääntää taikinansa solmuun',
+          tiedosto: 'Brezel l Bäckerei-Raisch.jpg',
+          teksti: 'Saksassa leivotaan yli kolmeatuhatta erilaista '
+            + 'leipää, ja saksalainen leipäkulttuuri on kirjattu '
+            + 'Unescon aineettoman kulttuuriperinnön luetteloon. '
+            + 'Tunnetuin muoto on Brezel, solmulle väännetty taikina, '
+            + 'joka kastetaan ennen paistamista lipeäveteen — siitä '
+            + 'tulee kuoren tumma kiilto. Tarun mukaan leipuri sai '
+            + 'armahduksen keksimällä leivän, jonka läpi aurinko '
+            + 'paistaa kolmesti. Etelä-Saksassa Brezel kuuluu '
+            + 'aamiaiselle, ja leipurin kyltissä se on roikkunut '
+            + 'keskiajalta asti.',
+          selite: 'Vastapaistettuja Brezeleitä leipomon pöydällä '
+            + 'Schwabenissa. Karkea suola painetaan pintaan ennen '
+            + 'uunia.',
+          lahde: 'LenaRaisch, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Pretzel',
+        },
+        {
+          otsikko: 'Karhu, joka syntyi kotikeittiössä',
+          tiedosto: 'Gummi bears in a row.jpg',
+          teksti: 'Bonnilainen karamellinkeittäjä Hans Riegel aloitti '
+            + '1920 yrityksen, jonka koko omaisuus oli säkki sokeria, '
+            + 'kuparikattila ja jakkara. Kaksi vuotta myöhemmin hän '
+            + 'valoi liivatteesta pienen tanssivan karhun — esikuvana '
+            + 'markkinoilla temppuja tehneet oikeat tanssikarhut. '
+            + 'Vaimo Gertrud kuljetti tilaukset asiakkaille '
+            + 'polkupyörällä. Yhtiön nimi HARIBO tulee sanoista Hans '
+            + 'Riegel Bonn, ja kumikarhuja valmistetaan nykyään noin '
+            + 'sata miljoonaa päivässä.',
+          selite: 'Kumikarhut rivissä. Alkuperäinen Tanzbär oli '
+            + 'nykyistä karhua kookkaampi ja hoikempi.',
+          lahde: 'Indoor-Fanatiker, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Haribo',
+        },
+        {
+          otsikko: 'Kebab sai leivän Berliinissä',
+          tiedosto: 'Döner Kebab, Berlin, 2010 (01).jpg',
+          teksti: 'Turkkilainen siirtolainen Kadir Nurman alkoi 1972 '
+            + 'myydä Berliinin eläintarhan aseman kupeessa jotakin '
+            + 'uutta: vartaassa paistettua lihaa ei lautaselle vaan '
+            + 'leivän väliin, jotta kiireinen kaupunkilainen voi syödä '
+            + 'kävellessään. Ajatus levisi kioski kioskilta, ja '
+            + 'salaatti, kastikkeet ja vihannekset tulivat matkan '
+            + 'varrella mukaan. Nykyään Berliinissä sanotaan olevan '
+            + 'enemmän döner-paikkoja kuin Istanbulissa, ja döner on '
+            + 'yksi koko Saksan suosituimmista pikaruoista.',
+          selite: 'Döner berliiniläisittäin: paahdettu leipä täytetään '
+            + 'lihalla, salaatilla, tomaatilla ja kastikkeella.',
+          lahde: 'AleGranholm, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Kebab',
+        },
+      ],
+      tehtava: {
+        kysymys: 'Mistä sanoista karkkitehdas HARIBO on saanut nimensä?',
+        vaihtoehdot: ['Hans Riegel Bonn', 'Haus der Riesenbonbons', 'Hartes Bonbon'],
+        oikea: 0,
+        fakta: 'HARIBO on lyhenne perustajan nimestä ja kotikaupungista: '
+          + 'HAns RIegel BOnn. Ensimmäinen kumikarhu, Tanzbär, syntyi '
+          + 'vuonna 1922.',
+      },
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Saksasta tulivat kanttori, joka sävelsi joka viikoksi '
+        + 'uutta, kuuroutunut säveltäjä, jonka sävelmä on nyt Euroopan '
+        + 'hymni — ja muurin kaatumisen jälkeen kellareista noussut '
+        + 'tekno.',
+      nostot: [
+        {
+          otsikko: 'Kanttori sävelsi joka viikolle uuden teoksen',
+          tiedosto: 'Johann Sebastian Bach - Google Arts Project.jpg',
+          teksti: 'Johann Sebastian Bach oli Leipzigin Tuomaskirkon '
+            + 'kanttori, jonka työhön kuului säveltää lähes joka '
+            + 'sunnuntaille uusi kantaatti — ja opettaa samalla '
+            + 'poikakuoroa ja latinaa. Sävellyksiä kertyi yli tuhat. '
+            + 'Bach oli aikansa kuuluisin urkujen testaaja: kun uudet '
+            + 'urut valmistuivat, hän veti kaikki äänikerrat auki ja '
+            + 'sanoi haluavansa kuulla, onko soittimella "hyvät '
+            + 'keuhkot". Kotona oli kaksikymmentä lasta, joista neljä '
+            + 'pojista nousi itsekin kuuluisiksi säveltäjiksi.',
+          selite: 'Elias Gottlob Haussmannin muotokuva vuodelta 1746: '
+            + 'Bach pitää kädessään kaanonin nuottia — pientä '
+            + 'sävellysarvoitusta.',
+          lahde: 'Elias Gottlob Haussmann, Wikimedia Commons (Public domain)',
+          wiki: 'Johann Sebastian Bach',
+        },
+        {
+          otsikko: 'Kuuro säveltäjä kuuli musiikin päässään',
+          tiedosto: "Joseph Karl Stieler's Beethoven mit dem Manuskript der Missa solemnis.jpg",
+          teksti: 'Bonnissa syntynyt Ludwig van Beethoven alkoi '
+            + 'menettää kuuloaan alle kolmekymppisenä — säveltäjälle '
+            + 'pahin mahdollinen kohtalo. Hän ei lopettanut vaan '
+            + 'sävelsi päänsä sisällä: keskustelut käytiin '
+            + 'vihkoihin kirjoittamalla, ja flyygelistä hän sahasi '
+            + 'jalat, jotta tunsi sävelet lattian värinänä. Yhdeksännen '
+            + 'sinfonian kantaesityksessä 1824 täysin kuuro Beethoven '
+            + 'piti kääntää kasvot yleisöön päin, jotta hän näki '
+            + 'suosionosoitukset, joita ei kuullut. Sinfonian '
+            + 'loppuhymni Oodi ilolle on nykyään Euroopan unionin '
+            + 'hymni.',
+          selite: 'Joseph Karl Stielerin muotokuva (1820): Beethoven '
+            + 'säveltämässä Missa solemnista, kynä kädessä.',
+          lahde: 'Joseph Karl Stieler, Wikimedia Commons (Public domain)',
+          wiki: 'Ludwig van Beethoven',
+        },
+        {
+          otsikko: 'Pianotähti kiersi Eurooppaa jo lapsena',
+          tiedosto: 'Franz Hanfstaengl - Clara Schumann (1857).jpg',
+          teksti: 'Clara Wieck soitti ensimmäisen julkisen konserttinsa '
+            + 'Leipzigissa yhdeksänvuotiaana ja kiersi teini-ikäisenä '
+            + 'Euroopan konserttisaleja kuin tähti ainakin — Wienissä '
+            + 'hänen kunniakseen leivottiin kakkuja. Hän sävelsi itse, '
+            + 'soitti ulkomuistista aikana jolloin se oli ennenkuulumatonta, '
+            + 'ja jatkoi esiintymistä kuusikymmentä vuotta samalla kun '
+            + 'kasvatti kahdeksan lasta. Saksa painoi hänen kuvansa '
+            + 'sadan markan seteliin 1989 — harva pianisti on päätynyt '
+            + 'rahaan.',
+          selite: 'Clara Schumann Franz Hanfstaenglin valokuvaamana '
+            + 'Münchenissä 1857.',
+          lahde: 'Franz Hanfstaengl, Wikimedia Commons (Public domain)',
+          wiki: 'Clara Schumann',
+        },
+        /*
+         * Teknonosto siirtyi tänne Berliinin litteistä nostoista
+         * (europe-kulttuuri.js) musiikkilinkkeineen — maan
+         * musiikkisivu palvelee samaa lehteä.
+         */
+        {
+          otsikko: 'Tyhjät talot täyttyivät bassosta',
+          tiedosto: 'Love Parade 1998 03.jpg',
+          teksti: 'Kun muuri kaatui 1989, keskustaan jäi tyhjiä '
+            + 'tehtaita, kellareita ja pankkiholveja, joilla ei ollut '
+            + 'omistajaa. Niihin syntyi teknoklubeja, joissa idän ja '
+            + 'lännen nuoret tanssivat ensi kertaa samoissa tiloissa — '
+            + 'kuuluisin klubi, Tresor, aloitti tavaratalon vanhassa '
+            + 'holvikellarissa, jonka teräsovet olivat jääneet '
+            + 'paikoilleen. Berliinin teknokulttuuri otettiin '
+            + 'maaliskuussa 2024 Saksan aineettoman kulttuuriperinnön '
+            + 'luetteloon — samaan sarjaan leipurintaidon ja '
+            + 'käkikellojen kanssa.',
+          selite: 'Love Parade Berliinissä 1998. Ensimmäisessä '
+            + 'kulkueessa vuonna 1989 oli 150 osallistujaa, '
+            + 'huippuvuonna 1999 arviolta puolitoista miljoonaa. '
+            + 'Viimeinen paraati pidettiin 2010.',
+          lahde: 'Ago76, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Love Parade',
+          musiikki: 'https://music.apple.com/fi/search?term=berlin%20techno',
+          musiikkiNimi: 'Berliiniläistä teknoa Apple Musicissa',
+        },
+      ],
+    },
+    {
+      id: 'luonto',
+      nimi: 'Luonto',
+      johdanto: 'Saksan luonto ulottuu vuorovesirannoilta Alppien '
+        + 'huipuille, ja metsää on kolmannes koko maasta.',
+      nostot: [
+        {
+          otsikko: 'Meri vetäytyy ja pohja aukeaa',
+          tiedosto: 'Wattwanderung auf Norderney 05.jpg',
+          teksti: 'Pohjanmeren rannikolla meri vetäytyy kahdesti '
+            + 'päivässä kilometrien päähän ja jättää jälkeensä '
+            + 'Wattenmeerin: mutatasangon, jota pitkin voi kävellä '
+            + 'merenpohjassa saarelta toiselle. Opas kulkee aina '
+            + 'mukana, sillä vuoksi palaa nopeammin kuin ihminen '
+            + 'juoksee. Pohja näyttää tyhjältä mutta kuhisee elämää: '
+            + 'yhdessä neliömetrissä voi asua kymmeniätuhansia matoja, '
+            + 'kotiloita ja simpukoita, ja hietikoilla lepää '
+            + 'kirjohylkeitä. Vattimeri on Unescon '
+            + 'maailmanperintökohde.',
+          selite: 'Retkikunta ylittää paljastunutta merenpohjaa '
+            + 'Norderneyn saaren edustalla.',
+          lahde: 'Stephan Sprinz, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Vattimeri',
+        },
+        {
+          otsikko: 'Liitukalliot hehkuvat valkoisina',
+          tiedosto: 'Kreidefelsen Rügen in spring.jpg',
+          teksti: 'Rügenin saaren itärannalla metsä päättyy äkkiä sadan '
+            + 'metrin valkoiseen pudotukseen. Liitukalliot ovat '
+            + 'muinaisen meren pohjaa: liitu on syntynyt miljardien '
+            + 'pikkuruisten levänkuorien kerrostumista kymmenien '
+            + 'miljoonien vuosien aikana, ja kallioista löytää yhä '
+            + 'fossiileja. Korkein kohta on 118-metrinen Königsstuhl, '
+            + 'Kuninkaanistuin. Taidemaalari Caspar David Friedrich '
+            + 'maalasi kalliot 1818, ja taulusta tuli niin kuuluisa, '
+            + 'että sitä pidetään Saksan romantiikan tunnuskuvana.',
+          selite: 'Liitukallioita Jasmundin kansallispuistossa Rügenillä '
+            + 'keväällä.',
+          lahde: 'NilsMargott, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Rügen',
+        },
+        {
+          otsikko: 'Sudet palasivat sadan vuoden tauon jälkeen',
+          tiedosto: 'Europäischer Wolf im Wildpark Tambach.jpg',
+          teksti: 'Viimeinen Saksan susi ammuttiin 1900-luvun alussa, '
+            + 'ja sata vuotta maa oli sudeton. Vuonna 2000 Lausitzin '
+            + 'seudulle Itä-Saksaan syntyi ensimmäinen uusi pentue, '
+            + 'kun sudet vaelsivat rajan yli Puolasta — ne asettuivat '
+            + 'armeijan vanhalle harjoitusalueelle, jossa kukaan ei '
+            + 'häirinnyt. Nykyään Saksassa elää taas noin kaksisataa '
+            + 'laumaa. Paluu jakaa mielipiteitä: lammasfarmarit '
+            + 'suojaavat katraitaan aidoin ja koirin, ja susikannan '
+            + 'kasvua seurataan tarkasti.',
+          selite: 'Euroopansusi lepäilee villieläinpuistossa '
+            + 'Tambachissa — luonnonvaraista sutta on vaikea saada '
+            + 'kuvaan.',
+          lahde: 'Stephan van Helden, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Susi',
+        },
+        {
+          otsikko: 'Metsä, joka oppi tekemään kelloja',
+          tiedosto: 'Kuckucksuhr (Schonach) jm178577.jpg',
+          teksti: 'Schwarzwald, Mustametsä, on niin tiheää kuusikkoa, '
+            + 'että se näyttää kaukaa mustalta — siitä nimi. Talvet '
+            + 'olivat pitkiä, ja 1700-luvulla maatilojen väki alkoi '
+            + 'vuolla pimeinä kuukausina puusta kelloja, joita '
+            + 'kaupattiin keväällä selässä kannettavilla telineillä '
+            + 'ympäri Eurooppaa. Kelloon lisättiin lintu, joka kertoo '
+            + 'tunnit kukkumalla — käki siksi, että sen kutsu on '
+            + 'helppo matkia kahdella urkupillillä. Schonachin kylässä '
+            + 'voi kävellä sisään maailman suurimpaan käkikelloon.',
+          selite: 'Schonachin jättikäkikellon puinen koneisto on '
+            + 'kuusikymmentä kertaa tavallista suurempi — kello '
+            + 'rakennettiin kokonaisen talon sisään.',
+          lahde: 'joergens.mi, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Käkikello',
+        },
+      ],
+    },
+    {
+      id: 'tiede',
+      nimi: 'Tiede',
+      johdanto: 'Neljä saksalaista keksintöä, jotka muuttivat maailmaa: '
+        + 'painettu kirja, luiden läpi näkevä säde, uusi käsitys '
+        + 'ajasta ja ensimmäinen tietokone.',
+      nostot: [
+        {
+          otsikko: 'Kirjoja alkoi valmistua sadoittain',
+          tiedosto: 'Gutenberg Bible (Pelplin copy) 02.jpg',
+          teksti: 'Ennen Johannes Gutenbergia kirja syntyi niin, että '
+            + 'munkki kopioi sen käsin — yhteen kirjaan meni '
+            + 'kuukausia. Mainzilainen kultaseppä valoi 1450-luvulla '
+            + 'jokaisen kirjaimen omaksi metallipalakseen, jotka '
+            + 'voitiin latoa sanoiksi, painaa arkille ja käyttää '
+            + 'uudelleen. Ensimmäinen suurtyö oli Raamattu, jota '
+            + 'painettiin noin 180 kappaletta — jokaisesta tuli '
+            + 'käsin kopioitua halvempi ja siistimpi. Puolessa '
+            + 'vuosisadassa Euroopassa oli painettu jo miljoonia '
+            + 'kirjoja, ja tieto lähti leviämään vauhdilla, jota '
+            + 'kukaan ei enää pysäyttänyt.',
+          selite: 'Gutenbergin Raamattu 1450-luvulta. Punaiset '
+            + 'korostukset ja nuotinkaltaiset alkukirjaimet '
+            + 'viimeisteltiin yhä käsin.',
+          lahde: 'Kpalion, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Johannes Gutenberg',
+        },
+        {
+          otsikko: 'Säde näytti luut ihon läpi',
+          tiedosto: "First medical X-ray by Wilhelm Röntgen of his wife Anna Bertha Ludwig's hand - 18951222.jpg",
+          teksti: 'Wilhelm Röntgen tutki marraskuussa 1895 Würzburgissa '
+            + 'sähköpurkauksia lasiputkessa, kun huoneen poikki '
+            + 'pimeässä hohti jotain, minkä ei pitänyt olla '
+            + 'mahdollista: säteily läpäisi pahvin, puun ja kirjan '
+            + 'sivut. Hän nimesi tuntemattoman säteen X:ksi. '
+            + 'Joulukuussa hän kuvasi vaimonsa Anna Berthan käden — '
+            + 'kuvassa näkyvät luut ja sormus, ja vaimon kerrotaan '
+            + 'huudahtaneen: "Olen nähnyt oman kuolemani!" Röntgen sai '
+            + 'historian ensimmäisen fysiikan Nobelin 1901 eikä '
+            + 'patentoinut keksintöään: se kuului hänen mielestään '
+            + 'kaikille.',
+          selite: 'Maailman ensimmäinen lääketieteellinen röntgenkuva '
+            + '22. joulukuuta 1895: Anna Bertha Ludwigin käsi '
+            + 'sormuksineen.',
+          lahde: 'Wilhelm Röntgen, Wikimedia Commons (Public domain)',
+          wiki: 'Wilhelm Röntgen',
+        },
+        {
+          otsikko: 'Ajatuskokeet mullistivat käsityksen ajasta',
+          tiedosto: 'Albert Einstein by Mishkin, 1921.png',
+          teksti: 'Ulmissa syntynyt Albert Einstein mietti '
+            + 'nuorena, miltä maailma näyttäisi, jos valonsäteen '
+            + 'rinnalla voisi lentää. Ajatuskokeista kasvoi '
+            + 'suhteellisuusteoria, jonka hän viimeisteli Berliinissä '
+            + '1915: aika ei kulje kaikille samaa vauhtia, ja painava '
+            + 'kappale taivuttaa jopa valon reittiä. Kun brittiläinen '
+            + 'retkikunta mittasi auringonpimennyksessä 1919 tähtien '
+            + 'valon taipuvan juuri kuten teoria ennusti, Einsteinista '
+            + 'tuli yhdessä yössä maailman kuuluisin tiedemies. '
+            + 'Nykyään hänen teoriaansa tarvitaan joka kerta, kun '
+            + 'puhelin näyttää sijainnin kartalla.',
+          selite: 'Albert Einstein valokuvattuna New Yorkissa 1921 — '
+            + 'samana vuonna hän sai Nobelin palkinnon.',
+          lahde: 'Herman Mishkin, Wikimedia Commons (Public domain)',
+          wiki: 'Albert Einstein',
+        },
+        {
+          otsikko: 'Ensimmäinen tietokone syntyi kotona',
+          tiedosto: 'Z3 Deutsches Museum.JPG',
+          teksti: 'Berliiniläinen rakennusinsinööri Konrad Zuse kyllästyi '
+            + 'laskemaan samoja kaavoja käsin ja alkoi rakentaa '
+            + 'laskukonetta vanhempiensa olohuoneeseen. Vuonna 1941 '
+            + 'valmistunut Z3 oli maailman ensimmäinen ohjelmoitava '
+            + 'tietokone: se luki ohjelmansa rei\'itetyltä '
+            + 'filminauhalta ja laski 2 600 releen naksuessa. Kone '
+            + 'tuhoutui pommituksessa 1943, eikä maailma huomannut '
+            + 'koko keksintöä ennen kuin vuosia myöhemmin. Zuse '
+            + 'rakensi koneensa uudelleen — ja jäljennös naksuttaa '
+            + 'nykyään museossa Münchenissä.',
+          selite: 'Z3:n jäljennös Deutsches Museumissa Münchenissä. '
+            + 'Alkuperäinen tuhoutui pommituksessa 1943.',
+          lahde: 'Venusianer, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Konrad Zuse',
+        },
+      ],
+    },
+  ],
 };
