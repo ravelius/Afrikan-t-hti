@@ -1652,32 +1652,21 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
 
 .fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
 
-/* Jatkuu-vihje: kun tekstiä on näkymän alapuolella, viimeinen rivi
- * häipyy hennosti ja alle ilmestyy pieni nuoli — molemmat katoavat,
- * kun teksti on vieritetty loppuun (.jatkuu-luokkaa ohjaa ui.js). */
+/*
+ * Jatkuu-vihje: kun tekstiä on näkymän alapuolella, viimeinen rivi
+ * häipyy hennosti (.jatkuu-luokkaa ohjaa ui.js).
+ *
+ * NUOLI POISTUI v318:ssa (omistaja: "ota matkakirjasta lopusta nuoli
+ * alas pois, se on nyt turha"). Se oli tarpeen niin kauan kuin
+ * merkintä näkyi viiden rivin ikkunassa ja loppu piti hakea
+ * napauttamalla. Kun kortti aukeaa kokonaan (v317), tekstiä jää
+ * näkymän alle vain poikkeuksellisen pitkässä merkinnässä — silloin
+ * riittää häivytys, joka kertoo saman asian koristelematta.
+ */
 .fact-teksti-rivi.jatkuu .fact-text {
   -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 1.2em), rgba(0, 0, 0, 0.25));
   mask-image: linear-gradient(180deg, #000 calc(100% - 1.2em), rgba(0, 0, 0, 0.25));
 }
-
-/* Isompi ja tummempi nuoli — hento versio näkyi huonosti
- * (omistajan havainto). */
-.fact-teksti-rivi::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 0.1rem;
-  width: 0.8rem;
-  height: 0.8rem;
-  transform: translateX(-50%) rotate(45deg);
-  border-right: 2.5px solid rgba(90, 74, 51, 0.95);
-  border-bottom: 2.5px solid rgba(90, 74, 51, 0.95);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  pointer-events: none;
-}
-
-.fact-teksti-rivi.jatkuu::after { opacity: 1; }
 
 /* Teksti kiertää kuvan alussa: näkymätön varaus kelluu kuvan kohdalla
  * tekstin sisällä, ja vieritettäessä teksti liukuu paikallaan pysyvän
