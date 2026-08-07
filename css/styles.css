@@ -8148,3 +8148,157 @@ body.vertailu-tila .pawns { display: none; }
 .vertailu-luku-nimio { opacity: 0.7; }
 
 .vertailu-muuta { margin-left: auto; }
+
+/*
+ * ============ Maaosion aloitussivu (js/packs/maakartat.js) ============
+ *
+ * Iso korkokartta kelluu oikealle ja maaosaston sisältö (tunnusluvut,
+ * tervehdykset, esittely) kiertää sen vasemmalta; uutiset ja mediarivi
+ * tulevat kartan alle koko leveydeltä (omistajan taittotoive 7.8.2026).
+ * #arrival-maa siirtyy tälle sivulle etusivulta — ks. piirraMaaEtusivu.
+ */
+
+/* Kulmalinkki lehden etusivulta maaosioon ("Saksa-osio ›"). */
+.dialog button.maa-linkki {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.75rem;
+  z-index: 4;
+  border: 0;
+  /* Yleisen nappisäännön käsinpiirretty kulmapyöristys kaartaisi
+   * alaviivan ylös vasemmalta — linkin viiva on suora. */
+  border-radius: 0;
+  background: none;
+  padding: 0.15rem 0.1rem;
+  min-height: 0;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(70, 51, 31, 0.85);
+  border-bottom: 1px solid rgba(70, 51, 31, 0.45);
+  cursor: pointer;
+}
+
+.dialog button.maa-linkki:hover:not(:disabled) {
+  background: none;
+  color: #16130f;
+  border-bottom-color: #16130f;
+}
+
+.maakartta-kehys {
+  float: right;
+  width: min(58%, 340px);
+  margin: 0.15rem 0 0.6rem 1rem;
+}
+
+/* Pisteet asemoidaan prosentteina KUVAN päälle, siksi oma kotelo,
+ * jossa ei ole muuta kuin kuva (lähderivi venyttäisi pohjaa). */
+.maakartta-kotelo { position: relative; }
+
+.maakartta-kotelo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(70, 51, 31, 0.4);
+  border-radius: 2px;
+}
+
+.maakartta-kehys .lahde {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-type);
+  font-size: 0.62rem;
+  color: rgba(90, 74, 51, 0.75);
+}
+
+/* Kaupunkipiste: musteen värinen täplä, pääkaupunki kullattuna ja
+ * rengastettuna kuten pelilaudan kohdekaupunki. */
+.maakartta-piste {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #2c2318;
+  border: 1.5px solid #f7efdc;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.maakartta-piste.paa {
+  width: 12px;
+  height: 12px;
+  background: #c69e52;
+  border-color: #2c2318;
+}
+
+.maakartta-nimi {
+  position: absolute;
+  left: calc(100% + 4px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-type);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: #16130f;
+  /* Nimi luettavaksi vuoriston päälläkin: hento paperinvärinen hehku. */
+  text-shadow:
+    0 0 3px rgba(247, 239, 220, 0.95),
+    0 0 6px rgba(247, 239, 220, 0.9);
+}
+
+.maakartta-piste.paa .maakartta-nimi { font-weight: 700; }
+
+/* Itäreunan kaupungit: nimi aukeaa pisteestä länteen. */
+.maakartta-piste.nimi-vasen .maakartta-nimi {
+  left: auto;
+  right: calc(100% + 4px);
+}
+
+/* Maaosasto asuu tällä sivulla ilman etusivun palstaviivaa, ja
+ * otsikko sekä minikartta jäävät pois: sivun otsikko kertoo maan ja
+ * iso korkokartta korvaa ääriviivakartan. Lehtitaiton osastoviiva ja
+ * kahden palstan grid (.dialog.lehti-säännöt) kumotaan — kellutus
+ * hoitaa taiton, ja grid katkaisisi tekstin kierron kartan ympäri. */
+.dialog.lehti .maa-etusivu .arrival-maa,
+.maa-etusivu .arrival-maa {
+  display: block;
+  border-left: 0;
+  border-top: 0;
+  padding-left: 0;
+  padding-top: 0;
+  margin: 0;
+}
+
+/* Pääkirjoituksen kaksi palstaa eivät sovi kartan kiertoon. */
+.dialog.lehti .maa-etusivu #arrival-maa-intro {
+  columns: auto;
+  column-rule: none;
+}
+
+.maa-etusivu .arrival-maa-rivi,
+.maa-etusivu .arrival-maa-kartta { display: none; }
+
+/* Esittely leipätekstin kokoon — sivulla se on pääteksti, ei palsta. */
+.maa-etusivu .arrival-intro {
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+/* Uutiset ja mediarivi kartan alle koko leveydelle. */
+.maa-etusivu .maa-oikea {
+  clear: both;
+  padding-top: 0.6rem;
+  margin-top: 0.4rem;
+  border-top: 1px dashed rgba(70, 51, 31, 0.35);
+}
+
+/* Kapealla ruudulla kartta ei kellu vaan on oma täysleveä lohkonsa
+ * tekstin yllä — kierto kävisi ahtaaksi. */
+@media (max-width: 560px) {
+  .maakartta-kehys {
+    float: none;
+    width: 100%;
+    margin: 0.15rem 0 0.7rem;
+  }
+}

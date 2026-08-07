@@ -240,9 +240,12 @@ ja siksi jonossa ensin, sitten Ranska ja muut. Yksi maa per PR.
 Jokainen paketti tehdään monistusohjeen mukaan; alla vain maakohtaiset
 räätälöinnit. Muista aina: kuvien silmätarkistus 480 px -thumbeina,
 uutissyötteen JA yhden artikkelisivun curl-testi (UA
-"matkakirja-uutisvalitys/1.0"), workerin SALLITUT + OHJE.md-merkintä
-+ muistutus omistajalle julkaista worker, Playwright-kuvakaappaukset
-834 ja 1024 px, ja main fetchattuna juuri ennen versionumeroa.
+"matkakirja-uutisvalitys/1.0"), workerin SALLITUT + OHJE.md-merkintä,
+Playwright-kuvakaappaukset 834 ja 1024 px, ja main fetchattuna juuri
+ennen versionumeroa. **Workeria EI enää julkaista käsin eikä siitä
+muistuteta omistajaa** (7.8.2026 alkaen): Cloudflaren Git-integraatio
+julkaisee tools/uutisproxy/worker.js:n itsestään jokaisesta
+main-pushista (wrangler.jsonc; ks. tools/uutisproxy/OHJE.md).
 
 1. ✅ **TEHTY v307.** **Espanja / Madrid.** Galleria: Goyan Madrid (Pradon PD-teokset,
    esim. San Isidron niitty ja kartongit kutomoille — arjen Madridia).
