@@ -24,15 +24,25 @@ export const AFRICA_SAAPUMISET = {
       + 'Afrikka alkaa, ja täällä sitä on turha yrittää ymmärtää '
       + 'kiireellä." Nyt vasta tajuan, mitä ukko tarkoitti.',
   },
+  /*
+   * Kairo uusittiin dekkariksi 7.8.2026 (docs/isoisan-raamattu.md,
+   * lyhyet mitat) — lehtikaupungeista viimeinen. E. G:n käyntikortti
+   * esitellään vain täällä; luenta generoidaan samalla työkalulla
+   * kuin Euroopan merkinnät (tools/generoi-luennat.mjs).
+   */
   kairo: {
-    kuvaus: 'Kairo ei ala mistään eikä lopu mihinkään — se vain kasvoi '
-      + 'ympärilleni torvineen, tomuineen ja miljoonine äänineen, ja minä '
-      + 'nauroin keskellä kaikkea. Ja sitten, kadun päässä: pyramidit, '
-      + 'rauhallisina kuin olisivat odottaneet juuri minua neljä ja '
-      + 'puoli tuhatta vuotta.',
-    nosto: 'Isoisä kirjoitti hävinneensä basaarissa tinkimisen kolmen '
-      + 'teekupin jälkeen ja lisäsi: "Pyramidit olivat vanhoja jo silloin, '
-      + 'kun Rooma oli kylä." Join oman teeni ja hävisin myös.',
+    kuvaus: 'Pyramidien juurella opas ojensi minulle käyntikortin: '
+      + '"Eräs herra jätti tämän. Sanoi, että te tulette kyllä." '
+      + 'Kortissa oli vain kaksi kirjainta: E. G.',
+    nosto: 'Isoisä kirjoitti: "Basaarissa minua seurattiin kolmen '
+      + 'kujan verran. Join teeni loppuun silti." Minä join omani '
+      + 'nopeammin.',
+    luenta: '[curious] Pyramidien juurella opas ojensi minulle '
+      + 'käyntikortin: "Eräs herra jätti tämän. Sanoi, että te '
+      + 'tulette kyllä." [whispers] Kortissa oli vain kaksi '
+      + 'kirjainta: E. G. [softly] Isoisä kirjoitti: "Basaarissa '
+      + 'minua seurattiin kolmen kujan verran. Join teeni loppuun '
+      + 'silti." [warmly] Minä join omani nopeammin.',
   },
   karthago: {
     kuvaus: 'Kävelin raunioille auringonlaskussa, ja meri välkkyi joka '

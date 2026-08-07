@@ -369,6 +369,12 @@ Tason osat kaupunkia kohti:
     ui.js liittää Päivän kuva maailmalta -palstan itsestään (id
     'valokuvaus'). HUOM: tiedosto-kentät yhdelle riville, muuten
     peilaustyökalu ei poimi niitä (tools/peilaa-media.mjs).
+    **Omistajan rajaus 7.8.2026: "Jätetään valokuvaus varsin
+    vähälle"** — Saksan sivu riittää toistaiseksi, uusia vain
+    erityisen hyvästä syystä. (Tausta: tekijänoikeus estää
+    kuuluisien 1900-luvun jälkipuolen kuvaajien työt; netissä
+    julkaisu tai lähteen maininta EI ole lupa — vain PD/CC käy,
+    koska peli peilaa ja jakelee kuvat.)
 12. **Elokuva-sivu** (omistajan toive 7.8.2026: "Elokuva pitää
     lisätä vaihtoehtoihin myös. Ainakin jenkit ja nollywood"):
     maan oma aihesivu samalla kaavalla kuin Valokuvaus — vain
