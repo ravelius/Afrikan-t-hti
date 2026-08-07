@@ -20,7 +20,6 @@ const MODULES = [
   'js/media.js',
   'js/saa.js',
   'js/uutiset.js',
-  'js/lukija.js',
   'js/packs/maailma-questions.js',
   'js/packs/maailma.js',
   'js/packs/africa-questions.js',
