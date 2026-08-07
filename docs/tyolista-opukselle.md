@@ -334,6 +334,15 @@ Tason osat kaupunkia kohti:
 6. **Musiikki soi**: musiikkiNayte (vapaa äänite, mp3/transkoodi) tai
    esikuuntelu-hakutermi — ohje docs/tutki-aiheet.md:ssä. Tehty
    kaikille viidelle maalle v325; uusille maille alusta asti.
+7. **Sarjakuva lehden viimeiseksi aiheeksi** (7.8.2026, malli DEU:
+   Max ja Morits): maan klassikko, jonka tekijä on ollut kuolleena
+   yli 70 vuotta — ruudut galleria-kenttään ja tarina selitteisiin
+   ruutu ruudulta. Ehdokkaita: Britannia Ally Sloper (1867), Ranska
+   Bécassine (Pinchon k. 1953 — PD), Ruotsi 91:an tai Adamson
+   (TARKISTA tekijän kuolinvuosi ennen käyttöä). Jos varmaa
+   PD-klassikkoa ei ole, jätä sarjakuva pois.
+8. **Päivän kuva** tulee maa-etusivulle ITSESTÄÄN (v331: Commonsin
+   päivän kuva + suomennettu kuvateksti) — ei maakohtaista työtä.
 
 Muista joka PR:ssä: kuvien silmätarkistus 480 px, Playwright-kaappaukset
 390/834/1024 ja niiden KATSOMINEN, main fetch juuri ennen versiota.

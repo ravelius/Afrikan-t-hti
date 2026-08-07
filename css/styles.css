@@ -8535,3 +8535,39 @@ body.vertailu-tila .pawns { display: none; }
   font-weight: 700;
   line-height: 1;
 }
+
+/*
+ * Päivän kuva (Commonsin päivän kuva) maaosion aloitussivun lopussa
+ * — lehden kuvapalsta, vaihtuu joka päivä.
+ */
+.paivan-kuva {
+  clear: both;
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 3px double rgba(70, 51, 31, 0.75);
+}
+
+.paivan-kuva-nimio { text-align: center; letter-spacing: 0.28em; }
+
+.paivan-kuva img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(70, 51, 31, 0.4);
+  border-radius: 2px;
+  margin: 0.2rem 0 0.35rem;
+}
+
+.paivan-kuva-selite {
+  margin: 0 0 0.2rem;
+  font-size: 0.82rem;
+  line-height: 1.42;
+  color: rgba(70, 51, 31, 0.82);
+}
+
+.paivan-kuva .lahde {
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: 0.62rem;
+  color: rgba(90, 74, 51, 0.75);
+}

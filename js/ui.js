@@ -73,7 +73,8 @@ import { MAAKARTAT, KAUPUNKIKARTAT, karttapiste } from './packs/maakartat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import {
-  haeUutiset, haeArtikkeli, haeLiveTunniste, haeTallenne, kaannaSuomeksi, uutislahde,
+  haeUutiset, haeArtikkeli, haeLiveTunniste, haeTallenne, haePaivanKuva,
+  kaannaSuomeksi, uutislahde,
 } from './uutiset.js';
 import { TV_KANAVAT } from './packs/uutislahteet.js';
 import {
@@ -7408,6 +7409,35 @@ export class UI {
       this.piirraKategoria({ nostot: [kartta.nosto] }, nostoKotelo, { otsikko: false, sitaatti: false });
       this.arrivalMaa.insertBefore(nostoKotelo, this.arrivalOikea);
     }
+    /*
+     * Päivän kuva sivun loppuun (omistajan toive 7.8.2026: "Sarjakuva
+     * ja valokuva olisi kiva saada jonnekin myös"): Commonsin päivän
+     * kuva on lehden kuvapalsta, joka vaihtuu joka päivä. Ilman
+     * verkkoa lohko jää yksinkertaisesti pois. Kuvateksti näytetään
+     * heti englanniksi ja vaihdetaan suomennokseen, kun käännös
+     * valmistuu — sama järjestys kuin uutisissa.
+     */
+    const kuvaPalsta = html('div', 'paivan-kuva');
+    kuvaPalsta.hidden = true;
+    kohde.appendChild(kuvaPalsta);
+    haePaivanKuva().then(async (pk) => {
+      if (!pk || !kuvaPalsta.isConnected) return;
+      kuvaPalsta.appendChild(html('p', 'uutiset-nimio paivan-kuva-nimio', 'Päivän kuva maailmalta'));
+      const pkKuva = document.createElement('img');
+      pkKuva.src = pk.url;
+      pkKuva.alt = 'Päivän kuva';
+      kuvaPalsta.appendChild(pkKuva);
+      const selite = pk.kuvaus ? html('p', 'paivan-kuva-selite', pk.kuvaus) : null;
+      if (selite) kuvaPalsta.appendChild(selite);
+      const lahde = [pk.tekija, 'Wikimedia Commonsin päivän kuva'].filter(Boolean).join(', ')
+        + (pk.lisenssi ? ` (${pk.lisenssi})` : '');
+      kuvaPalsta.appendChild(html('p', 'lahde', lahde));
+      kuvaPalsta.hidden = false;
+      if (selite && pk.kuvaus) {
+        const suomeksi = await kaannaSuomeksi(pk.kuvaus, 'en');
+        if (suomeksi && kuvaPalsta.isConnected) selite.textContent = suomeksi;
+      }
+    });
   }
 
   async piirraMaaNumerotSivu(kategoria) {
