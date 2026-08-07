@@ -7,6 +7,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 /** Automaatioparametri, joka hyväksyy kaikki aikataulutuskutsut. */
 function param(value = 0) {
@@ -15,6 +16,11 @@ function param(value = 0) {
     setValueAtTime() { return this; },
     exponentialRampToValueAtTime() { return this; },
     linearRampToValueAtTime() { return this; },
+    // Zoomiäänen kaaret piirretään käyränä. Tynkä jäi tästä paitsi
+    // niin kauan kuin zoom oli vaiennettu (v293-v339): sen synteesi ei
+    // ajanut testeissä lainkaan, ja puuttuva metodi paljastui vasta
+    // kun ääni palautettiin.
+    setValueCurveAtTime() { return this; },
     cancelScheduledValues() { return this; },
   };
 }
@@ -74,24 +80,22 @@ async function lataaSfx() {
 }
 
 /*
- * Soivat tehosteet (js/sound.js SALLITUT_TEHOSTEET). Muut nimet ovat yhä
- * olemassa mutta vaiennettu omistajan pyynnöstä 5.8.2026, ja niiden
- * vaikeneminen on oma testinsä alempana.
+ * Pelin tehosteet. Kaikki soivat (v340, omistajan pyyntö "Palauta pelin
+ * tehosteäänet"); v293–v339 näistä kuului vain neljä.
+ *
+ * Lista on tarkoituksella käsin kirjoitettu eikä johdettu koodista.
+ * Johdettu lista seuraisi mukana, jos joku vaientaisi äänen vahingossa
+ * — käsin kirjoitettu huomaa sen. Sama syy piti tämän listan käsin
+ * kirjoitettuna myös silloin, kun se oli vaiennettujen lista.
  */
-const NIMET = ['dieTick', 'dieLand', 'ferry', 'flight'];
-
-/*
- * Vaiennetut. Lista on tarkoituksella käsin kirjoitettu eikä johdettu
- * koodista: jos joku poistaa kytkimen, testin pitää huomata se — ei
- * seurata mukana.
- */
-const VAIENNETUT = [
+const NIMET = [
+  'dieTick', 'dieLand', 'ferry', 'flight',
   'click', 'paper', 'swipe', 'step', 'arrive', 'correct', 'wrong', 'hint',
   'tick', 'timeout', 'flip', 'clack', 'star', 'gem', 'horseshoe', 'robber',
   'empty', 'coin', 'stuck', 'turn', 'win', 'pen', 'quizOpen', 'zoom',
 ];
 
-test('jokainen soiva ääni tuottaa äänilähteitä', async () => {
+test('jokainen tehoste tuottaa äänilähteitä', async () => {
   for (const nimi of NIMET) {
     const { sfx, ctx } = await lataaSfx();
     assert.doesNotThrow(() => sfx.play(nimi), `ääni "${nimi}" heitti poikkeuksen`);
@@ -102,15 +106,27 @@ test('jokainen soiva ääni tuottaa äänilähteitä', async () => {
   }
 });
 
-test('vaiennetut tehosteet eivät tuota ääntä', async () => {
-  for (const nimi of VAIENNETUT) {
-    const { sfx, ctx } = await lataaSfx();
-    assert.doesNotThrow(() => sfx.play(nimi), `ääni "${nimi}" heitti poikkeuksen`);
-    assert.equal(
-      ctx.aloitetut.length, 0,
-      `vaiennettu ääni "${nimi}" käynnisti äänilähteen`,
-    );
-  }
+test('tehosteita ei ole portitettu sallitulla listalla', async () => {
+  /*
+   * v293:n portti (SALLITUT_TEHOSTEET) vaiensi nimen, jota ei ollut
+   * listalla — hiljaa, ilman virhettä. Portti poistui v340:ssä, ja
+   * tämä testi vahtii ettei sitä palauteta huomaamatta: uusi tehoste
+   * ei saa jäädä mykäksi vain siksi, että joku unohti lisätä sen
+   * jollekin listalle.
+   */
+  const lahde = readFileSync(new URL('../js/sound.js', import.meta.url), 'utf8');
+  // Portin KÄYTTÖ, ei maininta: kommentti kertoo yhä v293:n historian.
+  assert.doesNotMatch(lahde, /SALLITUT_TEHOSTEET\s*[.=[]/,
+    'tehosteportti on palannut: play() vaientaisi listan ulkopuoliset nimet');
+});
+
+test('pelin äänet voi vaientaa asetuksesta', async () => {
+  // Kokonaisvaimennus on eri asia kuin portti: se on pelaajan valinta
+  // ja koskee kaikkia ääniä samalla tavalla.
+  const { sfx, ctx } = await lataaSfx();
+  sfx.enabled = false;
+  sfx.play('paper');
+  assert.equal(ctx.aloitetut.length, 0, 'vaimennettuna ei saa soida mitään');
 });
 
 test('masteriketjuun kuuluu kaiku ja kompressori', async () => {

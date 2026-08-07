@@ -23,30 +23,33 @@ const AMBIENCE_EVENT_MAX = 30000;
 /*
  * ── MITKÄ TEHOSTEET SOIVAT ───────────────────────────────────────────
  *
- * Omistaja 5.8.2026: *"Kytke pois kaikki syntetisoidut tehosteäänet, kun
- * näppäimiä painetaan ja kaikki muutkin. Lentokoneen ääni voi jäädä,
- * sekä tietenkin kaupunkiäänet ja kertojaäänet, mutta nämä pienet lyhyet
- * äänitehosteet ota kaikki pois, paitsi nopanheiton ääni."*
+ * Kaikki. Sen takia tässä ei ole listaa eikä porttia.
  *
- * Sallittu lista eikä poistettu koodi. Syntetisointi ja äänitteet ovat
- * yhä paikoillaan (SOUNDS, REAL_SAMPLES, REAL_PLAYERS), ja yhden rivin
- * lisäys tähän palauttaa minkä tahansa niistä. Poistettuna ne olisivat
- * satoja rivejä pois, ja niiden takaisin kirjoittaminen olisi oma
- * työnsä — kytkin on kevyempi ja rehellisempi.
+ * Historia kannattaa tietää, koska se on käynyt kummallakin puolella:
  *
- * Listalla on neljä:
- *  - dieTick, dieLand — nopanheitto, omistajan nimeämä poikkeus.
- *  - flight — lentokone, omistajan nimeämä poikkeus.
- *  - ferry — laiva. EI ollut nimetty, mutta se on lennon pari: sama
- *    tarkoitus (matkustustavan ääni), sama pituus (2,6 s vs 2,1 s) ja
- *    sama paikka pelissä. Toisen jättäminen ja toisen poistaminen
- *    kuulostaisi vialta, ei valinnalta.
+ *  - v293 (5.8.2026) omistaja vaiensi tehosteet kolmea lukuun
+ *    ottamatta: *"Kytke pois kaikki syntetisoidut tehosteäänet, kun
+ *    näppäimiä painetaan ja kaikki muutkin. Lentokoneen ääni voi jäädä
+ *    … paitsi nopanheiton ääni."* Toteutus oli sallittu lista
+ *    (SALLITUT_TEHOSTEET), jotta paluu olisi helppo.
+ *  - v340 (7.8.2026) omistaja pyysi ne takaisin: *"Palauta pelin
+ *    tehosteäänet."* Lista poistui kokonaan — puolityhjä portti olisi
+ *    jäänyt houkuttelemaan arvailuun siitä, mikä on tarkoituksellisesti
+ *    hiljaa ja mikä vahingossa.
+ *
+ * Se, että ratkaisu oli kytkin eikä koodin poisto, maksoi itsensä
+ * takaisin: paluu oli kahden rivin poisto eikä satojen rivien
+ * uudelleenkirjoitus.
+ *
+ * Äänet valitaan nyt kahdesta paikasta: soita/vaienna koko peli
+ * asetuksista (setEnabled), ja yksittäisen tehosteen äänite valitaan
+ * viritysivulta (/aanet.html, valittuAani). Tyhjä valinta jättää
+ * syntetisoidun version voimaan.
  *
  * TÄMÄ EI KOSKE muita äänijärjestelmiä: kaupunkien äänimaisema
  * (js/ambience-stream.js), kertojan luennat, visamusiikki ja radio
  * kulkevat omia reittejään eivätkä play():n kautta.
  */
-const SALLITUT_TEHOSTEET = new Set(['dieTick', 'dieLand', 'flight', 'ferry']);
 
 class Sound {
   constructor() {
@@ -604,7 +607,6 @@ class Sound {
 
   play(name, asetukset = undefined) {
     if (!this.enabled) return;
-    if (!SALLITUT_TEHOSTEET.has(name)) return;
     // Oikea äänite ensin, jos se on ladattu; muuten syntetisoitu versio.
     const real = REAL_PLAYERS[name];
     if (real && real(this, asetukset)) return;
@@ -622,8 +624,6 @@ class Sound {
     this.samples = {};
     this.sampleHits = {};
     for (const [name, { url }] of Object.entries(REAL_SAMPLES)) {
-      // Soittamaton äänite on turha lataus (ks. SALLITUT_TEHOSTEET).
-      if (!SALLITUT_TEHOSTEET.has(name)) continue;
       // Omistajan valitsema äänite (/aanet.html) ohittaa oletuksen;
       // tyhjä valinta jättää synteesin voimaan.
       const valinta = valittuAani(`tehoste:${name}`);
