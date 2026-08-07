@@ -129,6 +129,8 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'The Beatles',
           musiikki: 'https://music.apple.com/fi/artist/the-beatles/136975',
           musiikkiNimi: 'The Beatles Apple Musicissa',
+          // Juuri sen levyn avausraita, jonka kannesta teksti kertoo.
+          esikuuntelu: 'The Beatles Come Together',
         },
       ],
     },
@@ -1447,6 +1449,8 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Umm Kulthum',
           musiikki: 'https://music.apple.com/fi/artist/umm-kulthum/81179580',
           musiikkiNimi: 'Umm Kulthum Apple Musicissa',
+          // Laulajan rakastetuin kappale.
+          esikuuntelu: 'Umm Kulthum Enta Omri',
         },
       ],
     },
@@ -1585,6 +1589,10 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Antonio Vivaldi',
           musiikki: 'https://music.apple.com/fi/artist/antonio-vivaldi/242604',
           musiikkiNimi: 'Antonio Vivaldi Apple Musicissa',
+          // Juuri se konsertto, jonka teksti mainitsee — Commonsin
+          // mp3-transkoodi soi myös iPadilla.
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/f/ff/Vivaldi_-_Four_Seasons_1_Spring_mvt_1_Allegro_-_John_Harrison_violin.oga/Vivaldi_-_Four_Seasons_1_Spring_mvt_1_Allegro_-_John_Harrison_violin.oga.mp3',
+          musiikkiNayteNimi: 'Vivaldi: Kevät, 1. osa — John Harrison, viulu (CC BY-SA)',
         },
       ],
     },
@@ -2029,6 +2037,8 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Marlene Dietrich',
           musiikki: 'https://music.apple.com/fi/search?term=Marlene%20Dietrich',
           musiikkiNimi: 'Marlene Dietrichin lauluja Apple Musicissa',
+          // Juuri se laulu, josta teksti kertoo.
+          esikuuntelu: 'Marlene Dietrich Lili Marleen',
         },
       ],
     },

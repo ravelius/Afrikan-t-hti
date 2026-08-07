@@ -143,9 +143,19 @@ toimii siksi kaikilla laudoilla automaattisesti). Kategoria:
   ikoni: '<path …/>',      // VALINNAINEN: oma viivakuvake (24×24, pelkkä ääriviiva)
   nostot: [ { otsikko, teksti, tiedosto, selite, lahde, wiki?,
               musiikki?, musiikkiNimi?, musiikkiNayte?, musiikkiNayteNimi?,
-              aani?, aaniLahde? } ],
+              esikuuntelu?, aani?, aaniLahde? } ],
 }
 ```
+
+Musiikin kuunteluun on kaksi reittiä (7.8.2026): `musiikkiNayte` on
+vapaasti lisensoitu äänite (Commons/archive.org; ogg/opus ei soi
+iPadilla — käytä mp3:a tai Commonsin transcoded-mp3-osoitetta ja
+tarkista se curlilla). Kun vapaata äänitettä ei ole (pop, iskelmä),
+anna `esikuuntelu`-kenttään iTunes-hakutermi (esim. `'ABBA Waterloo'`)
+— peli hakee Applen 30 s esikuuntelun lennossa. Esikuuntelunostolla on
+oltava myös `musiikki`-linkki (Applen ehto). Tarkista termi ennen
+julkaisua: `curl 'https://itunes.apple.com/search?term=…&entity=song&limit=1'`
+— ensimmäisen osuman pitää olla oikea esittäjä ja kappale.
 
 Kuvake katsotaan järjestyksessä: `kategoria.ikoni` → `AIHE_IKONIT[id]`
 (ui.js: vakioaiheet historia, kuvataide, kirjallisuus, musiikki, ruoka,

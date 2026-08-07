@@ -7644,6 +7644,67 @@ export class UI {
       ));
       otsikkoRivi.appendChild(nappi);
     }
+    /*
+     * Esikuuntelu (omistajan hyväksyntä 7.8.2026): uudempi musiikki —
+     * ABBA, Dietrich, flamenco — ei ole vapaasti lisensoitua, joten se
+     * soi Applen 30 sekunnin esikuunteluna. Vapaa näyte voittaa aina:
+     * jos nostolla on musiikkiNayte, esikuuntelunappia ei näytetä.
+     */
+    if (nosto.esikuuntelu && !nosto.musiikkiNayte) {
+      const nappi = html('button', 'kulttuuri-kuuntele kulttuuri-musiikkinayte');
+      nappi.type = 'button';
+      nappi.title = 'Esikuuntelu Apple Musicista (30 s)';
+      nappi.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">'
+        + '<path d="M9 18.5V6.2l9-1.7v11.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>'
+        + '<circle cx="6.8" cy="18.6" r="2.2" fill="currentColor"/>'
+        + '<circle cx="15.8" cy="15.9" r="2.2" fill="currentColor"/></svg>'
+        + '<span>Kuuntele näyte</span><span class="aika" hidden></span>';
+      nappi.addEventListener('click', () => this.esikuunteluNapista(nosto, nappi));
+      otsikkoRivi.appendChild(nappi);
+    }
+  }
+
+  /**
+   * Hakee Applen 30 sekunnin esikuuntelun ja soittaa sen kuten muutkin
+   * musiikkinäytteet. iTunes Search API on avoin (ei avainta, ja
+   * CORS-otsake sallii kutsun suoraan selaimesta — tarkistettu
+   * 7.8.2026), mutta previewUrl-osoitteet eivät ole pysyviä, joten
+   * paketteihin tallennetaan vain hakutermi (esikuuntelu-kenttä) ja
+   * osoite haetaan lennossa. Termi → osoite muistetaan istunnon ajan.
+   * Applen ehto palveluun linkittämisestä täyttyy viereisestä Apple
+   * Music -linkistä, joka esikuuntelunostoilla on aina.
+   */
+  async esikuunteluNapista(nosto, nappi) {
+    this.esikuuntelut ??= new Map();
+    let url = this.esikuuntelut.get(nosto.esikuuntelu) ?? null;
+    if (!url) {
+      const teksti = nappi.querySelector('span');
+      const alku = teksti.textContent;
+      teksti.textContent = 'Haetaan…';
+      nappi.disabled = true;
+      try {
+        const haku = new URL('https://itunes.apple.com/search');
+        haku.searchParams.set('term', nosto.esikuuntelu);
+        haku.searchParams.set('entity', 'song');
+        haku.searchParams.set('limit', '1');
+        haku.searchParams.set('country', 'fi');
+        const vastaus = await fetch(haku, { signal: AbortSignal.timeout(10000) });
+        url = (await vastaus.json()).results?.[0]?.previewUrl ?? null;
+      } catch {
+        url = null;
+      }
+      nappi.disabled = false;
+      teksti.textContent = alku;
+      if (!url) {
+        // Sama kohtelias linja kuin uutisissa: ilman verkkoa nappi
+        // kertoo syyn hetken eikä jää jumiin.
+        teksti.textContent = 'Ei yhteyttä';
+        setTimeout(() => { teksti.textContent = alku; }, 2500);
+        return;
+      }
+      this.esikuuntelut.set(nosto.esikuuntelu, url);
+    }
+    this.kulttuuriAaniNapista({ aani: url, otsikko: nosto.otsikko }, nappi);
   }
 
   /**

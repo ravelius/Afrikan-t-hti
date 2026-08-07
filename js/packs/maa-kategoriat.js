@@ -713,6 +713,10 @@ export const MAA_KATEGORIAT = {
             + 'vuodelta 1886.',
           lahde: 'Giovanni Boldini, Wikimedia Commons (PD)',
           wiki: 'Giuseppe Verdi',
+          // Juuri se kuoro, josta teksti kertoo — Italian kansallisen
+          // äänitearkiston (ICBSA) äänite Commonsin mp3-transkoodina.
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/5/50/ICBSA_Verdi_-_Nabucco%2C_Va_pensiero.ogg/ICBSA_Verdi_-_Nabucco%2C_Va_pensiero.ogg.mp3',
+          musiikkiNayteNimi: 'Verdi: Va, pensiero — ICBSA:n arkistoäänite (CC BY-SA 4.0)',
         },
         {
           otsikko: 'Cremonan viuluja ei ole ylitetty',
@@ -747,6 +751,10 @@ export const MAA_KATEGORIAT = {
             + 'kaupunki näytti, kun sen laulut lähtivät maailmalle.',
           lahde: 'Rijksmuseum, Wikimedia Commons (CC0)',
           wiki: 'O sole mio',
+          musiikki: 'https://music.apple.com/fi/search?term=O%20sole%20mio',
+          musiikkiNimi: 'Napolin lauluja Apple Musicissa',
+          // Tunnetuin tulkinta: oopperatähti, jonka teksti mainitsee.
+          esikuuntelu: 'O sole mio Pavarotti',
         },
       ],
     },
@@ -1211,6 +1219,8 @@ export const MAA_KATEGORIAT = {
           wiki: 'Flamenco',
           musiikki: 'https://music.apple.com/fi/artist/paco-de-luc%C3%ADa/463800',
           musiikkiNimi: 'Paco de Lucía Apple Musicissa',
+          // Tekstin mainitseman uudistajan tunnetuin kappale.
+          esikuuntelu: 'Paco de Lucía Entre dos aguas',
         },
         {
           otsikko: 'Puutarha, jota säveltäjä ei nähnyt',
@@ -1231,6 +1241,10 @@ export const MAA_KATEGORIAT = {
             + 'ja niissä kasvaa puita neljältä mantereelta.',
           lahde: 'Barcex, Wikimedia Commons (CC BY-SA 3.0)',
           wiki: 'Concierto de Aranjuez',
+          musiikki: 'https://music.apple.com/fi/search?term=Concierto%20de%20Aranjuez',
+          musiikkiNimi: 'Concierto de Aranjuez Apple Musicissa',
+          // Juuri se hidas osa, josta teksti kertoo.
+          esikuuntelu: 'Rodrigo Concierto de Aranjuez Adagio',
         },
         {
           otsikko: 'Puuseppä, joka keksi nykyisen kitaran',
@@ -1655,6 +1669,10 @@ export const MAA_KATEGORIAT = {
             + 'pianossa.',
           lahde: 'Bernd Schwabe, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Avainviulu',
+          // Jan Lingin väitöstutkimuksen kenttä-äänite (Musikverket);
+          // Commonsin mp3-transkoodi soi myös iPadilla.
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/f/fe/Polska_-_SMV_-_MMF7_0677_06.wav/Polska_-_SMV_-_MMF7_0677_06.wav.mp3',
+          musiikkiNayteNimi: 'Polska avainviululla — Jan Lingin kenttä-äänite, Musikverket (CC0)',
         },
         {
           otsikko: 'Satakieli, jonka lippuja huudettiin huutokaupassa',
@@ -1697,6 +1715,8 @@ export const MAA_KATEGORIAT = {
           wiki: 'Abba',
           musiikki: 'https://music.apple.com/fi/search?term=ABBA%20Waterloo',
           musiikkiNimi: 'ABBA Apple Musicissa',
+          // Juuri se voittokappale, josta teksti kertoo.
+          esikuuntelu: 'ABBA Waterloo',
         },
         {
           otsikko: 'Koko kansan laulukilpailu',
@@ -1714,6 +1734,11 @@ export const MAA_KATEGORIAT = {
             + 'Melodifestivalenissa 2025.',
           lahde: 'Jonatan Svensson Glad, Wikimedia Commons (CC BY-SA 2.0)',
           wiki: 'Melodifestivalen',
+          musiikki: 'https://music.apple.com/fi/search?term=Melodifestivalen',
+          musiikkiNimi: 'Melodifestivalenin kappaleita Apple Musicissa',
+          // Kisan tunnetuin voittaja: Loreen voitti myös euroviisut
+          // kahdesti, ainoana naisena.
+          esikuuntelu: 'Loreen Euphoria',
         },
       ],
     },
@@ -2088,6 +2113,8 @@ export const MAA_KATEGORIAT = {
             + 'sävellysarvoitusta.',
           lahde: 'Elias Gottlob Haussmann, Wikimedia Commons (Public domain)',
           wiki: 'Johann Sebastian Bach',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/Bach%2C_Toccata_und_Fuge_d-moll_BWV_565%2C_Norbert_Schenk.mp3',
+          musiikkiNayteNimi: 'Bach: Toccata ja fuuga d-molli — Norbert Schenk, urut (CC BY 4.0)',
         },
         {
           otsikko: 'Kuuro säveltäjä kuuli musiikin päässään',
@@ -2107,6 +2134,9 @@ export const MAA_KATEGORIAT = {
             + 'säveltämässä Missa solemnista, kynä kädessä.',
           lahde: 'Joseph Karl Stieler, Wikimedia Commons (Public domain)',
           wiki: 'Ludwig van Beethoven',
+          // Juuri se sävelmä, josta teksti kertoo: EU:n hymni.
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/4/45/Ode_to_Joy_-_Concert_Band_-_United_States_Air_Force_Band_of_the_Rockies.mp3',
+          musiikkiNayteNimi: 'Beethoven: Oodi ilolle — United States Air Force Band, PD',
         },
         {
           otsikko: 'Pianotähti kiersi Eurooppaa jo lapsena',
@@ -2151,6 +2181,8 @@ export const MAA_KATEGORIAT = {
           wiki: 'Love Parade',
           musiikki: 'https://music.apple.com/fi/search?term=berlin%20techno',
           musiikkiNimi: 'Berliiniläistä teknoa Apple Musicissa',
+          // Berliiniläisen teknon tunnetuin kappale (Berlin Calling).
+          esikuuntelu: 'Paul Kalkbrenner Sky and Sand',
         },
       ],
     },
