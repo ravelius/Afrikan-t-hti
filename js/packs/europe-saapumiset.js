@@ -44,37 +44,60 @@ export const EUROPE_SAAPUMISET = {
       + 'aarteita ole." [whispers] Kulmassa on pieni liituristi.',
   },
 
+  /*
+   * Dekkariuusinnat 7.8.2026 (omistaja: "lyhennä ja generoi uudet
+   * matkakirjat lehtikaupunkeihin sekä viiteen muuhun"): Pariisi,
+   * Ateena, Rooma, Istanbul ja Moskova samalla lyhyellä kaavalla
+   * kuin viisi ensimmäistä. Motiivibudjetti (raamattu): messinkiavain
+   * Pariisi (pari: Madridin kohtaaminen), punta Rooma, E. G:n kortti
+   * vain Kairossa (africa-saapumiset).
+   */
   pariisi: {
-    kuvaus: 'Pariisi tuoksui sateelta ja tuoreelta leivältä. Kävelin '
-      + 'bulevardia, jonka päässä Eiffel-torni seisoi kuin rautainen '
-      + 'jättiläinen suorassa asennossa — ja kahvilan pöydästä näki koko '
-      + 'maailman kulkevan ohi, kiireettä, kuin sillä olisi ikuisesti '
-      + 'aikaa.',
-    nosto: 'Isoisä kirjoitti: "Pariisissa istuin kolme tuntia samassa '
-      + 'kahvilassa enkä hävennyt hetkeäkään. Se on tämän kaupungin '
-      + 'suurin keksintö." Tilasin toisen kaakaon hänen kunniakseen.',
+    kuvaus: 'Kahvilan tarjoilija toi kaakaon, jota en ollut tilannut: '
+      + '"Pöytä seitsemän tarjoaa aina teidän suvullenne." Pöydän '
+      + 'kannen alle oli liimattu pieni messinkiavain.',
+    nosto: 'Isoisä kirjoitti: "Istuin kolme tuntia samassa kahvilassa. '
+      + 'En huvikseni — ovella seisoi mies, joka ei tilannut mitään." '
+      + 'Tilasin toisen kaakaon ja jäin.',
+    luenta: '[curious] Kahvilan tarjoilija toi kaakaon, jota en ollut '
+      + 'tilannut: "Pöytä seitsemän tarjoaa aina teidän suvullenne." '
+      + '[whispers] Pöydän kannen alle oli liimattu pieni '
+      + 'messinkiavain. [softly] Isoisä kirjoitti: "Istuin kolme '
+      + 'tuntia samassa kahvilassa. En huvikseni — ovella seisoi mies, '
+      + 'joka ei tilannut mitään." [warmly] Tilasin toisen kaakaon ja '
+      + 'jäin.',
   },
 
   ateena: {
-    kuvaus: 'Ateenassa nostin katseeni kadulta — ja siellä se oli, '
-      + 'Akropolis, kelluen kaupungin yllä iltavalossa! Alhaalla Plakan '
-      + 'kujilla tuoksui oliiviöljy ja grillattu liha, ja joku soitti '
-      + 'bouzoukia niin iloisesti, että vieraatkin alkoivat taputtaa.',
+    kuvaus: 'Akropoliin lippuluukulla myyjä ojensi lipun, jota en '
+      + 'ollut ostanut: "Seuralaisenne maksoi jo." Huipulla ei '
+      + 'odottanut ketään — vain tyhjä penkki, ja siinä vielä lämmin '
+      + 'paikka.',
     nosto: 'Isoisä kirjoitti temppelin juurella: "Täällä keksittiin, '
-      + 'että kaupunkia voi johtaa keskustelemalla. Kaikkea ei ole vielä '
-      + 'kokeiltu loppuun." Ukolla oli tapana olla oikeassa.',
+      + 'että kaupunkia voi johtaa keskustelemalla. Kaikkien kanssa en '
+      + 'silti keskustele." Ukolla oli tapana olla oikeassa.',
+    luenta: '[curious] Akropoliin lippuluukulla myyjä ojensi lipun, '
+      + 'jota en ollut ostanut: "Seuralaisenne maksoi jo." [whispers] '
+      + 'Huipulla ei odottanut ketään — vain tyhjä penkki, ja siinä '
+      + 'vielä lämmin paikka. [softly] Isoisä kirjoitti temppelin '
+      + 'juurella: "Täällä keksittiin, että kaupunkia voi johtaa '
+      + 'keskustelemalla. Kaikkien kanssa en silti keskustele." '
+      + '[warmly] Ukolla oli tapana olla oikeassa.',
   },
 
   rooma: {
-    kuvaus: 'Roomassa kävelin kulman taakse ja melkein törmäsin '
-      + 'Colosseumiin! Se vain seisoo siinä, keskellä liikennettä, '
-      + 'kaksituhatta vuotta vanhana. Täällä jokainen katukivi on nähnyt '
-      + 'keisareita, ja suihkulähteet solisevat kuin mitään ei olisi '
-      + 'tapahtunut.',
-    nosto: 'Isoisän merkintä: "Heitin kolikon Trevin lähteeseen, kuten '
-      + 'tapa vaatii. Jos tarina pitää paikkansa, palaan vielä — ja '
-      + 'minulla on paha aavistus, että se pitää." Heitin omani samaan '
-      + 'kohtaan.',
+    kuvaus: 'Trevin lähteen pohjalla, kolikoiden seassa, välkkyi yksi '
+      + 'jota vesi ei ollut tummentanut: vanha englantilainen punta. '
+      + 'Se oli heitetty tänä aamuna.',
+    nosto: 'Isoisä kirjoitti: "Heitin kolikon Treviin, kuten tapa '
+      + 'vaatii — ja toisen, jotta näkisin vedestä, kuka seisoo '
+      + 'takanani." Heitin omani samaan kohtaan.',
+    luenta: '[curious] Trevin lähteen pohjalla, kolikoiden seassa, '
+      + 'välkkyi yksi jota vesi ei ollut tummentanut: [whispers] vanha '
+      + 'englantilainen punta. Se oli heitetty tänä aamuna. [softly] '
+      + 'Isoisä kirjoitti: "Heitin kolikon Treviin, kuten tapa vaatii '
+      + '— ja toisen, jotta näkisin vedestä, kuka seisoo takanani." '
+      + '[warmly] Heitin omani samaan kohtaan.',
   },
 
   kreeta: {
@@ -368,14 +391,18 @@ export const EUROPE_SAAPUMISET = {
   },
 
   moskova: {
-    kuvaus: 'Punaisella torilla seisoo Vasili Autuaan kirkko kuin kasa '
-              + 'erivärisiä karkkeja — jokainen sipulikupoli on erilainen. '
-              + 'Menin metroon ja unohdin nousta pois: asemat ovat marmoria '
-              + 'ja mosaiikkia kuin palatsin salit maan alla.',
-    nosto: 'Isoisä kirjoitti: "Moskova on palanut poroksi useammin kuin '
-             + 'kukaan muistaa, ja rakennettu joka kerta uudelleen entistä '
-             + 'isommaksi." Kiersin Kremlin muurin ympäri puolessa tunnissa '
-             + '— kaupunki jatkui joka suuntaan.',
+    kuvaus: 'Punaisella torilla kelloseppä tarttui hihaani: "Teidän '
+      + 'sukunne kello käy viisi minuuttia edellä. Korjasin sen kerran '
+      + '— hän ei koskaan hakenut sitä."',
+    nosto: 'Isoisä kirjoitti: "Moskovan pakkasessa kelloni jäätyi ja '
+      + 'jäi sepälle. Aika sai odottaa — juna ei." Sepän ikkunassa '
+      + 'tikittää yhä taskukello.',
+    luenta: '[curious] Punaisella torilla kelloseppä tarttui hihaani: '
+      + '"Teidän sukunne kello käy viisi minuuttia edellä. [whispers] '
+      + 'Korjasin sen kerran — hän ei koskaan hakenut sitä." [softly] '
+      + 'Isoisä kirjoitti: "Moskovan pakkasessa kelloni jäätyi ja jäi '
+      + 'sepälle. Aika sai odottaa — juna ei." [warmly] Sepän '
+      + 'ikkunassa tikittää yhä taskukello.',
   },
 
   pietari: {
@@ -423,15 +450,19 @@ export const EUROPE_SAAPUMISET = {
   },
 
   istanbul: {
-    kuvaus: 'Istanbulissa astuin lautalle Euroopassa ja nousin maihin '
-              + 'Aasiassa vartissa. Lokit lensivät lautan vierellä koko '
-              + 'matkan, koska matkustajat heittivät niille palasia '
-              + 'simit-rinkeleistä — ja kaupunki jatkui molemmilla rannoilla '
-              + 'niin kauas kuin näki.',
-    nosto: 'Isoisä kirjoitti: "Konstantinopolissa höyrylautta vie '
-             + 'maanosasta toiseen muutamalla kolikolla. Halvempaa matkaa '
-             + 'maailman toiselle puolelle ei ole." Lautta maksaa yhä '
-             + 'vähemmän kuin lasi teetä.',
+    kuvaus: 'Bosporin lautan teenmyyjä nyökkäsi minulle kuin tutulle: '
+      + '"Sama paikka kuin hänellä aina — perän penkki, selkä '
+      + 'merelle." En ollut käynyt täällä koskaan.',
+    nosto: 'Isoisä kirjoitti: "Kahden maanosan kaupungissa vaihda '
+      + 'rantaa aina, kun joku katsoo liian kauan. Lautta maksaa '
+      + 'kolikon, rauha ei mitään." Istuin perän penkille.',
+    luenta: '[curious] Bosporin lautan teenmyyjä nyökkäsi minulle '
+      + 'kuin tutulle: "Sama paikka kuin hänellä aina — perän penkki, '
+      + 'selkä merelle." [whispers] En ollut käynyt täällä koskaan. '
+      + '[softly] Isoisä kirjoitti: "Kahden maanosan kaupungissa '
+      + 'vaihda rantaa aina, kun joku katsoo liian kauan. Lautta '
+      + 'maksaa kolikon, rauha ei mitään." [warmly] Istuin perän '
+      + 'penkille.',
   },
 
   helsinki: {

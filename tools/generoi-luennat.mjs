@@ -23,6 +23,14 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { EUROPE_SAAPUMISET } from '../js/packs/europe-saapumiset.js';
+import { AFRICA_SAAPUMISET } from '../js/packs/africa-saapumiset.js';
+
+// Kaupunki etsitään laudoilta tässä järjestyksessä — tiedostonimeen
+// tulee laudan tunnus (puhe-<lauta>-saapuminen-<id>.mp3).
+const LAUDAT = [
+  ['europe', EUROPE_SAAPUMISET],
+  ['africa', AFRICA_SAAPUMISET],
+];
 
 const JUURI = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AANI = 'Sz0tRTEpybtDJ9ru2kgD'; // Viisas Kertoja
@@ -42,7 +50,9 @@ if (!kaupungit.length) {
 }
 
 for (const id of kaupungit) {
-  const merkinta = EUROPE_SAAPUMISET[id];
+  const [lauta, merkinta] = LAUDAT
+    .map(([nimi, pakka]) => [nimi, pakka[id]])
+    .find(([, m]) => m) ?? [];
   if (!merkinta?.luenta) {
     console.error(`${id}: luenta-kenttä puuttuu (ks. docs/isoisan-raamattu.md) — ohitetaan.`);
     continue;
@@ -66,7 +76,7 @@ for (const id of kaupungit) {
     console.error(`${id}: HTTP ${vastaus.status}: ${(await vastaus.text()).slice(0, 400)}`);
     process.exit(1);
   }
-  const polku = resolve(JUURI, `assets/audio/puhe-europe-saapuminen-${id}.mp3`);
+  const polku = resolve(JUURI, `assets/audio/puhe-${lauta}-saapuminen-${id}.mp3`);
   const data = Buffer.from(await vastaus.arrayBuffer());
   writeFileSync(polku, data);
   console.log(`${id}: ${(data.length / 1024).toFixed(0)} kt → ${polku}`);

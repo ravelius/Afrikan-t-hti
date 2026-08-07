@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 343, teksti: 'Dekkari laajeni: Kairo ja viisi muuta kaupunkia' },
   { v: 342, teksti: 'Taustaääni ei enää katoa kartalla hyppiessä' },
   { v: 341, teksti: 'Saksalle Valokuvaus-sivu: Anschützin haikarat' },
   { v: 341, teksti: 'Lontoo lyhyemmäksi, luennat tasaisemmiksi' },
