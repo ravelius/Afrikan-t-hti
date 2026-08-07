@@ -1,0 +1,160 @@
+/*
+ * Kaupunkisivun kohdekartan piirtäjä (omistajan toive 7.8.2026):
+ * "pelkkä ydinkeskusta ... niin että hahmottaa hieman katuja",
+ * malliksi näytetty Mapiful-juliste — yksinkertaistettu, taiteellinen
+ * katuverkko ilman nimiä.
+ *
+ * Mapiful piirtää julisteensa OpenStreetMap-aineistosta, ja sama
+ * tehdään tässä itse: Overpass-rajapinnasta haetaan ydinkeskustan
+ * kadut, vedet, puistot ja radat, ja niistä piirretään SVG pelin
+ * paperi- ja mustesävyin. SVG rasteroidaan PNG:ksi pelin omalla
+ * Chromiumilla (sama kuin Playwright-tarkistuksissa) ja tallennetaan
+ * assets/kartat/-kansioon — kartta toimii siis myös ilman verkkoa
+ * eikä riipu Commonsin tiedostoista.
+ *
+ * Käyttö:  node tools/piirra-kaupunkikartta.mjs berliini
+ * Tuloste: assets/kartat/<kaupunki>-keskusta.png ja rajat-lohko,
+ *          joka liitetään js/packs/maakartat.js:n KAUPUNKIKARTAT-
+ *          tauluun (pisteet asemoidaan siitä prosentteina).
+ *
+ * Uusi kaupunki: lisää KAUPUNGIT-tauluun rajaus, joka kattaa vain
+ * ydinkeskustan kuuluisimmat kohteet (n. 5–8 km leveä alue — laajempi
+ * muuttuu puuroksi). Aja työkalu ja KATSO kuva silmin ennen käyttöä.
+ *
+ * Lisenssi: OpenStreetMapin aineisto on ODbL — lähderiviksi peliin
+ * "© OpenStreetMap-tekijät (ODbL)". Tyyli on pelin oma.
+ */
+
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const JUURI = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+
+/** Ydinkeskustojen rajaukset. Rajat asteina (WGS84). */
+const KAUPUNGIT = {
+  berliini: {
+    // Mitte Tiergartenista East Side Gallerylle; kaikki kuusi
+    // kohdetta (valtiopäivätalo, portti, Museumsinsel, tv-torni,
+    // Checkpoint Charlie, East Side Gallery) osuvat alueelle.
+    rajat: { pohjoinen: 52.54, etela: 52.485, lansi: 13.34, ita: 13.46 },
+  },
+};
+
+/** Katuluokkien piirtojärjestys ja -tyyli (pienestä isoon). */
+const KADUT = [
+  { luokat: ['residential', 'unclassified', 'living_street', 'pedestrian'], vari: '#8d7d61', leveys: 1.6 },
+  { luokat: ['tertiary', 'tertiary_link'], vari: '#6b5b41', leveys: 2.6 },
+  { luokat: ['secondary', 'secondary_link'], vari: '#544430', leveys: 3.4 },
+  { luokat: ['primary', 'primary_link'], vari: '#3f321f', leveys: 4.4 },
+  { luokat: ['trunk', 'trunk_link', 'motorway', 'motorway_link'], vari: '#322717', leveys: 5.6 },
+];
+
+const VESI = '#b6cfdb';
+const PUISTO = '#e2e7cd';
+const RATA = '#c9bb9e';
+const PAPERI = '#f6eeda';
+
+async function haeOverpass(rajat) {
+  const alue = `(${rajat.etela},${rajat.lansi},${rajat.pohjoinen},${rajat.ita})`;
+  const luokat = KADUT.flatMap((k) => k.luokat).join('|');
+  const kysely = `[out:json][timeout:120];(
+    way["highway"~"^(${luokat})$"]${alue};
+    way["waterway"~"^(river|canal)$"]${alue};
+    way["natural"="water"]${alue};
+    way["leisure"~"^(park|garden)$"]${alue};
+    way["landuse"~"^(forest|grass|recreation_ground|cemetery)$"]${alue};
+    way["railway"="rail"]${alue};
+  );out geom;`;
+  const vastaus = await fetch('https://overpass-api.de/api/interpreter', {
+    method: 'POST',
+    headers: { 'User-Agent': 'matkakirja/1.0 (opetuspeli)' },
+    // Rivinvaihdot pois: Overpass vastaa monirivisille 406.
+    body: new URLSearchParams({ data: kysely.replace(/\s+/g, ' ') }),
+    signal: AbortSignal.timeout(180000),
+  });
+  if (!vastaus.ok) throw new Error(`Overpass ${vastaus.status}`);
+  return (await vastaus.json()).elements ?? [];
+}
+
+function piirra(kaupunki, elementit) {
+  const { rajat } = KAUPUNGIT[kaupunki];
+  const leveysAste = rajat.ita - rajat.lansi;
+  const korkeusAste = rajat.pohjoinen - rajat.etela;
+  const W = 1600;
+  // Leveyspiirin venytys keskileveydellä — sama tasavälinen projektio
+  // kuin sijaintikartoissa, joten prosenttiasemointi pysyy suorana.
+  const venytys = 1 / Math.cos(((rajat.pohjoinen + rajat.etela) / 2) * (Math.PI / 180));
+  const H = Math.round((W * (korkeusAste * venytys)) / leveysAste);
+  const x = (lon) => (((lon - rajat.lansi) / leveysAste) * W).toFixed(1);
+  const y = (lat) => (((rajat.pohjoinen - lat) / korkeusAste) * H).toFixed(1);
+  const pisteet = (geom) => geom.map((p) => `${x(p.lon)},${y(p.lat)}`).join(' ');
+
+  const kerrokset = { puistot: [], vedet: [], joet: [], radat: [], kadut: KADUT.map(() => []) };
+  for (const e of elementit) {
+    if (e.type !== 'way' || !e.geometry?.length) continue;
+    const t = e.tags ?? {};
+    if (t.highway) {
+      const i = KADUT.findIndex((k) => k.luokat.includes(t.highway));
+      if (i >= 0) kerrokset.kadut[i].push(`<polyline points="${pisteet(e.geometry)}"/>`);
+    } else if (t.waterway) {
+      kerrokset.joet.push(`<polyline points="${pisteet(e.geometry)}"/>`);
+    } else if (t.natural === 'water') {
+      kerrokset.vedet.push(`<polygon points="${pisteet(e.geometry)}"/>`);
+    } else if (t.railway) {
+      kerrokset.radat.push(`<polyline points="${pisteet(e.geometry)}"/>`);
+    } else {
+      kerrokset.puistot.push(`<polygon points="${pisteet(e.geometry)}"/>`);
+    }
+  }
+
+  const katuryhmat = KADUT.map((k, i) => `<g fill="none" stroke="${k.vari}" stroke-width="${k.leveys}"
+    stroke-linecap="round" stroke-linejoin="round">${kerrokset.kadut[i].join('')}</g>`).join('\n');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+  <rect width="${W}" height="${H}" fill="${PAPERI}"/>
+  <g fill="${PUISTO}" stroke="none">${kerrokset.puistot.join('')}</g>
+  <g fill="${VESI}" stroke="none">${kerrokset.vedet.join('')}</g>
+  <g fill="none" stroke="${VESI}" stroke-width="14" stroke-linecap="round"
+     stroke-linejoin="round">${kerrokset.joet.join('')}</g>
+  <g fill="none" stroke="${RATA}" stroke-width="1.4" stroke-dasharray="7 5">${kerrokset.radat.join('')}</g>
+  ${katuryhmat}
+</svg>`;
+}
+
+const kaupunki = process.argv[2];
+if (!KAUPUNGIT[kaupunki]) {
+  console.error(`Anna kaupunki: ${Object.keys(KAUPUNGIT).join(', ')}`);
+  process.exit(1);
+}
+console.log('Haetaan OpenStreetMap-aineisto (Overpass)…');
+const elementit = await haeOverpass(KAUPUNGIT[kaupunki].rajat);
+console.log(`${elementit.length} elementtiä.`);
+const svg = piirra(kaupunki, elementit);
+mkdirSync(resolve(JUURI, 'assets/kartat'), { recursive: true });
+const svgPolku = resolve(JUURI, `assets/kartat/${kaupunki}-keskusta.svg`);
+writeFileSync(svgPolku, svg);
+// Rasterointi PNG:ksi pelin Chromiumilla: SVG:n koko katuverkko on
+// selaimelle raskas joka avauksella — PNG piirtyy heti.
+const pngPolku = resolve(JUURI, `assets/kartat/${kaupunki}-keskusta.png`);
+const skripti = `
+const { chromium } = require('playwright-core');
+(async () => {
+  const selain = await chromium.launch({ executablePath: process.env.CHROMIUM ?? '/opt/pw-browsers/chromium' });
+  const sivu = await (await selain.newContext({ viewport: { width: 10, height: 10 } })).newPage();
+  await sivu.goto('file://${svgPolku}');
+  const koko = await sivu.evaluate(() => {
+    const s = document.querySelector('svg');
+    return { w: Number(s.getAttribute('width')), h: Number(s.getAttribute('height')) };
+  });
+  await sivu.setViewportSize({ width: koko.w, height: koko.h });
+  await sivu.screenshot({ path: '${pngPolku}' });
+  await selain.close();
+})();`;
+execFileSync('node', ['-e', skripti], { cwd: JUURI, stdio: 'inherit' });
+const rajat = KAUPUNGIT[kaupunki].rajat;
+console.log(`Valmis: assets/kartat/${kaupunki}-keskusta.png`);
+console.log('KAUPUNKIKARTAT-rivit:');
+console.log(`    polku: 'assets/kartat/${kaupunki}-keskusta.png',`);
+console.log(`    lahde: '© OpenStreetMap-tekijät (ODbL)',`);
+console.log(`    rajat: { pohjoinen: ${rajat.pohjoinen}, etela: ${rajat.etela}, lansi: ${rajat.lansi}, ita: ${rajat.ita} },`);

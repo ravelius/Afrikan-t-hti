@@ -75,9 +75,17 @@ export const MAAKARTAT = {
  */
 export const KAUPUNKIKARTAT = {
   berliini: {
-    tiedosto: 'Berlin location map.svg',
-    lahde: 'TUBS, Wikimedia Commons (CC BY-SA 3.0)',
-    rajat: { pohjoinen: 52.684707, etela: 52.327157, lansi: 13.066864, ita: 13.781318 },
+    /*
+     * Ydinkeskustan julistekartta (omistajan tarkennus 7.8.2026:
+     * ensimmäinen versio oli "liian epämääräinen ja liian laajalta
+     * alalta" — malliksi näytetty Mapiful-juliste). Piirretty itse
+     * OpenStreetMap-aineistosta pelin sävyihin:
+     * tools/piirra-kaupunkikartta.mjs. Paikallinen tiedosto — ei
+     * riipu verkosta eikä Commonsista.
+     */
+    polku: 'assets/kartat/berliini-keskusta.png',
+    lahde: '© OpenStreetMap-tekijät (ODbL)',
+    rajat: { pohjoinen: 52.54, etela: 52.485, lansi: 13.34, ita: 13.46 },
     esittely: 'Berliini on rakennettu veden ja metsän keskelle: '
       + 'siltoja on noin 1 700 — moninkertaisesti Venetsian verran — '
       + 'ja kolmasosa kaupungista on puistoa, metsää tai järveä. '
@@ -88,13 +96,15 @@ export const KAUPUNKIKARTAT = {
       + 'eri sävyissä. Kartan kohteista pääsee lukemaan lisää '
       + 'napauttamalla.',
     kohteet: [
-      // Keskustan kohteet ovat lähekkäin — nimien suunnat on valittu
-      // niin, etteivät laput osu toisiinsa (nimiSuunta/nimiVasen).
-      { nimi: 'Charlottenburgin linna', lat: 52.5208, lon: 13.2957, wiki: 'Charlottenburgin linna', nimiSuunta: 'yla' },
+      // Nimien suunnat on valittu käsin, etteivät laput osu toisiinsa
+      // (nimiSuunta/nimiVasen). Jokaisen wiki on tarkistettu
+      // fi.wikipedian artikkeli.
+      { nimi: 'Valtiopäivätalo', lat: 52.5186, lon: 13.3762, wiki: 'Valtiopäivätalo (Saksa)', nimiVasen: true },
       { nimi: 'Brandenburgin portti', lat: 52.5163, lon: 13.3777, wiki: 'Brandenburgin portti', nimiSuunta: 'vasen-ala' },
+      { nimi: 'Museosaari', lat: 52.5169, lon: 13.401, wiki: 'Museumsinsel', nimiSuunta: 'ala' },
       { nimi: 'Tv-torni', lat: 52.5208, lon: 13.4094, wiki: 'Berliinin televisiotorni' },
+      { nimi: 'Checkpoint Charlie', lat: 52.5076, lon: 13.3904, wiki: 'Checkpoint Charlie', nimiSuunta: 'ala' },
       { nimi: 'East Side Gallery', lat: 52.505, lon: 13.4399, wiki: 'East Side Gallery', nimiSuunta: 'ala' },
-      { nimi: 'Tempelhofin kenttä', lat: 52.4736, lon: 13.4018, wiki: 'Tempelhofin lentoasema', nimiSuunta: 'ala' },
     ],
   },
 };

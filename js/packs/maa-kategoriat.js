@@ -2207,6 +2207,102 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    /*
+     * Uusi aihesivu (omistajan hyväksyntä 7.8.2026: "ota vain ne
+     * uudet sivuvaihtoehdot käyttöön eri maille sen mukaan, mitkä
+     * sopii") — Saksalle sadut istuvat kuin mikään muu. Kuvat
+     * silmätarkistettu 480 px:ssä 7.8.2026.
+     */
+    {
+      id: 'sadut',
+      nimi: 'Sadut ja tarinat',
+      johdanto: 'Saksa on satujen maa: Grimmin veljekset keräsivät '
+        + 'kansansadut kirjaksi, ja moni tarina — pillipiiparista '
+        + 'Jörö-Jukkaan — lähti täältä koko maailman omaksi.',
+      nostot: [
+        {
+          otsikko: 'Veljekset, jotka keräsivät sadut talteen',
+          aika: '1812',
+          tiedosto: 'Alte Nationalgalerie-Jerichau-Baumann-Gebrüder Grimm DSC8174.jpg',
+          teksti: 'Jacob ja Wilhelm Grimm eivät keksineet satujaan '
+            + 'itse — he kulkivat kuuntelemassa, mitä ihmiset '
+            + 'kertoivat, ja kirjoittivat kuulemansa muistiin. Kokoelma '
+            + 'Lasten- ja kotisatuja ilmestyi 1812, ja sen tarinat — '
+            + 'Punahilkka, Tuhkimo, Hannu ja Kerttu, Lumikki — '
+            + 'tunnetaan nykyään lähes joka maassa. Veljekset olivat '
+            + 'myös kielentutkijoita: he aloittivat saksan kielen '
+            + 'suursanakirjan, joka oli niin valtava urakka, että se '
+            + 'valmistui vasta yli sata vuotta heidän kuolemansa '
+            + 'jälkeen.',
+          selite: 'Elisabeth Jerichau-Baumannin kaksoismuotokuva '
+            + 'vuodelta 1855 riippuu Berliinin Alte '
+            + 'Nationalgaleriessa: Wilhelm kynä kädessä, Jacob '
+            + 'vierellä.',
+          lahde: 'Elisabeth Jerichau-Baumann, Wikimedia Commons (Public domain)',
+          wiki: 'Grimmin veljekset',
+        },
+        {
+          otsikko: 'Soittaja, jota seurattiin kaupungista',
+          aika: '1284',
+          tiedosto: 'Pied Piper2.jpg',
+          teksti: 'Hamelnin kaupungin kirjoihin merkittiin 1284 outo '
+            + 'suru: sata kolmekymmentä lasta lähti kaupungista '
+            + 'kirjavan soittajan perässä eikä palannut. Kukaan ei '
+            + 'tiedä varmasti, mitä oikeasti tapahtui — vasta '
+            + 'myöhemmin tarinaan liitettiin rotat, jotka soittaja '
+            + 'houkutteli ensin jokeen. Hamelnissa tarina elää yhä: '
+            + 'kesäsunnuntaisin se esitetään näytelmänä, ja '
+            + 'Bungelosenstrassella eli Rummuttomalla kadulla ei '
+            + 'edelleenkään soiteta musiikkia — kunnioituksesta '
+            + 'kadonneita kohtaan.',
+          selite: 'Kate Greenawayn kuvitus vuodelta 1888: pillipiipari '
+            + 'johdattaa lapsia, jotka eivät malta jäädä.',
+          lahde: 'Kate Greenaway, Wikimedia Commons (Public domain)',
+          wiki: 'Hamelnin pillipiipari',
+        },
+        {
+          otsikko: 'Soittoniekat, jotka eivät päässeet perille',
+          aika: '1951',
+          tiedosto: 'Bremen, Bremer Stadtmusikanten -- 2021 -- 6358.jpg',
+          teksti: 'Grimmin sadussa vanha aasi, koira, kissa ja kukko '
+            + 'lähtevät Bremeniin soittajiksi, kun niitä ei enää '
+            + 'kotona tarvita. Perille ne eivät koskaan pääse — '
+            + 'matkalla ne pelästyttävät rosvot ulos talosta '
+            + 'huutamalla yhteen ääneen ja jäävät sinne asumaan. '
+            + 'Bremen otti soittoniekat silti omikseen: raatihuoneen '
+            + 'kupeessa on seissyt vuodesta 1951 pronssipatsas, jossa '
+            + 'eläimet seisovat päällekkäin. Aasin etujalat kiiltävät '
+            + 'kullalta, koska niistä pidetään kiinni molemmin käsin '
+            + 'ja toivotaan — yhdellä kädellä tarttuminen on '
+            + 'paikallisten mukaan vain aasin kättelyä.',
+          selite: 'Gerhard Marcksin patsas Bremenin raatihuoneen '
+            + 'vieressä: aasi, koira, kissa ja kukko valmiina '
+            + 'säikäyttämään.',
+          lahde: 'Dietmar Rabich, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Bremenin soittoniekat',
+        },
+        {
+          otsikko: 'Lääkäri kirjoitti kirjan, jota pelättiin ja rakastettiin',
+          aika: '1845',
+          tiedosto: 'Heinrich Hoffmann - Buste-Peer eller morsomme Smaafortællinger og pudsige Billeder (Norwegian edition of Der Struwwelpeter publ. by Abelstedt 1862) (02) I Buste-Peer (Struwwelpeter) Nasjonalbiblioteket Public domain.jpg',
+          teksti: 'Frankfurtilainen lääkäri Heinrich Hoffmann etsi '
+            + 'jouluksi 1844 kuvakirjaa kolmevuotiaalle pojalleen, '
+            + 'mutta kaikki olivat hänestä tylsiä — joten hän osti '
+            + 'tyhjän vihon ja teki kirjan itse. Struwwelpeterin '
+            + 'värssyissä käy huonosti sille, joka ei leikkaa '
+            + 'kynsiään, ei syö keittoaan tai leikkii tulitikuilla. '
+            + 'Kirjasta tuli maailmanmenestys: suomeksi se ilmestyi '
+            + 'nimellä Jörö-Jukka jo 1869, ja englanniksi sen käänsi '
+            + 'itse Mark Twain. Nykylukija hymyilee varoituksille, '
+            + 'mutta tunnistaa hahmot heti.',
+          selite: 'Takkutukkainen Jörö-Jukka norjalaisen painoksen '
+            + 'sivulla 1862 — sama kirja levisi kielestä toiseen '
+            + 'ympäri maailman.',
+          lahde: 'Heinrich Hoffmann / Nasjonalbiblioteket, Wikimedia Commons (Public domain)',
+          wiki: 'Jörö-Jukka',
+        },
+      ],
+    },
     {
       id: 'luonto',
       nimi: 'Luonto',

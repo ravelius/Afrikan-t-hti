@@ -8484,3 +8484,34 @@ body.vertailu-tila .pawns { display: none; }
     margin: 0.15rem 0 0.7rem;
   }
 }
+
+/* Tallennepopupin lähetysvalinnat videon alla: paperipillerit. */
+.tv-kortti .tallenne-valinnat {
+  position: absolute;
+  left: 50%;
+  bottom: -2.9rem;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.dialog button.tallenne-valinta {
+  min-height: 0;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(70, 51, 31, 0.5);
+  background: rgba(238, 218, 179, 0.92);
+  color: rgba(70, 51, 31, 0.9);
+  font-family: var(--font-type);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+}
+
+.dialog button.tallenne-valinta.valittu {
+  background: #c69e52;
+  border-color: #2c2318;
+  color: #2c1e07;
+}
