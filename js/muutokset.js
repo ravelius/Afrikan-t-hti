@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 323, teksti: 'Saksa-osiolle aloitussivu: iso korkokartta' },
+  { v: 323, teksti: 'Kartalla kaupungit, tunnusluvut ja esittely' },
+  { v: 323, teksti: 'Etusivun yläkulmaan Saksa-osio-linkki' },
+  { v: 323, teksti: 'Lehden nimeksi Matkasanomat' },
   { v: 322, teksti: 'Työhuoneeseen Todo Samille -välilehti' },
   { v: 321, teksti: 'Vertailulinssi siirtyi suoraan kartalle' },
   { v: 321, teksti: 'Valitse kartalta 3 maata Suomen rinnalle' },

@@ -69,6 +69,7 @@ import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
 import { MAA_KATEGORIAT, maanAiheOtsikko } from './packs/maa-kategoriat.js';
+import { MAAKARTAT, karttapiste } from './packs/maakartat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import {
@@ -1481,6 +1482,17 @@ export class UI {
     this.arrivalKategoria = document.getElementById('arrival-kategoria');
     // Kaupunki- ja maapalstat: näkyvät vain lehden etusivulla.
     this.arrivalPalstat = document.querySelector('#arrival-dialog .arrival-palstat');
+    // Uutiset ja mediarivi yhteisessä kääreessä (siirtyy maa-etusivulle
+    // niissä maissa, joilla on oma karttasivu — ks. piirraMaaEtusivu).
+    this.arrivalOikea = document.getElementById('arrival-oikea');
+    // Kulmalinkki lehden etusivulta maaosion aloitussivulle (omistajan
+    // toive 7.8.2026: maaosasto pois etusivulta, tilalle linkki
+    // "Saksa-osio ›" oikeaan yläkulmaan).
+    this.arrivalMaaLinkki = document.getElementById('arrival-maa-linkki');
+    this.arrivalMaaLinkki.addEventListener('click', () => {
+      const i = (this.tutkiSivut ?? []).findIndex((k) => k.id === 'maa-etusivu');
+      if (i >= 0) this.naytaTutkiSivu(i + 1, { suunta: 1 });
+    });
     // Lehtitaitto (omistajan toive 5.8.2026): kaupungin oma kansiosio
     // taittuu etusivulle, ja masto kertoo että käsissä on paikallislehti.
     // Lehden etusivun kuvataitto: iso pääkuva maston alla ja
@@ -6638,6 +6650,14 @@ export class UI {
    * kohdat mene rikki.
    */
   rakennaSivut(cityId) {
+    /*
+     * Maaosasto takaisin etusivun palstaan: piirraMaaEtusivu siirtää
+     * elementin karttasivulle, ja ilman palautusta seuraava kaupunki,
+     * jolla karttasivua ei ole, jäisi ilman maaosastoa.
+     */
+    if (this.arrivalMaa.parentElement !== this.arrivalPalstat) {
+      this.arrivalPalstat.appendChild(this.arrivalMaa);
+    }
     const kategoriat = cityId ? [...(KULTTUURI_KATEGORIAT[cityId] ?? [])] : [];
     const kaupunginOmia = kategoriat.length;
     /*
@@ -6675,6 +6695,18 @@ export class UI {
      * laudalla ei ole maadataa, otsikko jää entiselleen.
      */
     const otsikonMaa = maanIso ? this.game.pack.map?.countryShapes?.[maanIso]?.nimi : null;
+    /*
+     * Maaosion aloitussivu (omistajan toive 7.8.2026): iso korkokartta
+     * kaupunkeineen, ja lehden etusivun maaosasto muuttaa tälle
+     * sivulle — kumpikin etusivu on oma tiivistelmänsä, ja seuraavat
+     * sivut syventävät. Vain maat, joille on kartta
+     * js/packs/maakartat.js:ssä (pilottina Saksa); muut kaupungit
+     * näyttävät maaosaston etusivulla entiseen tapaan.
+     */
+    const maakartta = maanIso && otsikonMaa ? MAAKARTAT[maanIso] ?? null : null;
+    if (maakartta) {
+      kategoriat.push({ id: 'maa-etusivu', nimi: otsikonMaa, kartta: maakartta });
+    }
     for (const osa of (maanIso ? MAA_KATEGORIAT[maanIso] ?? [] : [])) {
       if (kategoriat.some((k) => k.id === osa.id)) continue;
       kategoriat.push(otsikonMaa ? { ...osa, nimi: maanAiheOtsikko(otsikonMaa, osa.nimi) } : osa);
@@ -6710,6 +6742,11 @@ export class UI {
       kategoriat.push({ id: 'maa-numeroina', nimi, numerot: maanIso });
     }
     this.tutkiLehti = lehti;
+    // Karttamaissa maaosasto ei asu etusivulla: kulmalinkki vie sen
+    // omalle sivulleen, eikä sama sisältö saa näkyä kahdesti.
+    this.tutkiMaaEtusivu = Boolean(maakartta);
+    if (maakartta) this.arrivalMaa.hidden = true;
+    this.arrivalMaaLinkki.textContent = maakartta ? `${otsikonMaa}-osio ›` : '';
     this.arrivalDialog.classList.toggle('lehti', lehti);
     this.piirraLehtiKuvat(kansi?.kansikuvat);
     // Lehdessä ei ole Lue lisää -nappeja eikä wikin kuvakarusellia:
@@ -6768,8 +6805,13 @@ export class UI {
     // Etusivu ei ole aihesivu, joten aiheiden numerointi alkaa vasta
     // sivulta 1: sivu 1 on ensimmäinen aihe, ei toinen.
     const kategoria = etusivu ? null : (this.tutkiSivut?.[i - 1] ?? null);
-    // Tilastosivu piirtyy omalla piirrolla — se on käyriä, ei nostolista.
-    if (kategoria?.numerot) this.piirraMaaNumerotSivu(kategoria);
+    // Kulmalinkki maaosioon näkyy vain karttamaan etusivulla.
+    this.arrivalMaaLinkki.hidden = !etusivu || !this.tutkiMaaEtusivu;
+    // Karttasivu ja tilastosivu piirtyvät omilla piirroillaan — ne
+    // ovat karttaa ja käyriä, eivät nostolistoja.
+    this.arrivalKategoria.classList.toggle('maa-etusivu', Boolean(kategoria?.kartta));
+    if (kategoria?.kartta) this.piirraMaaEtusivu(kategoria);
+    else if (kategoria?.numerot) this.piirraMaaNumerotSivu(kategoria);
     else this.piirraKategoria(kategoria);
     this.arrivalKategoria.hidden = !kategoria;
 
@@ -7255,6 +7297,51 @@ export class UI {
    * versio jää tarkoituksella ilman piirtäjää ja päätyy samaan
    * kohteliaaseen verkkoyhteysriviin kuin puuttuva aineisto.
    */
+  /**
+   * Maaosion aloitussivu: iso korkokartta kaupunkipisteineen oikealla,
+   * tunnusluvut ja esittely kiertävät sen vasemmalta, uutiset ja
+   * mediarivi alla (omistajan taittotoive 7.8.2026).
+   *
+   * Sivu ei piirrä maaosaston sisältöä uudelleen vaan SIIRTÄÄ etusivun
+   * #arrival-maa-elementin tänne: tunnusluvut, tervehdykset, esittely,
+   * uutiset ja mediarivi täyttyvät openArrivalissa entiseen tapaan, ja
+   * kuuntelijat ja kesken olevat haut seuraavat elementin mukana.
+   * rakennaSivut palauttaa elementin etusivun palstaan seuraavassa
+   * kaupungissa. Kartan päällystys asuu maakartat.js:ssä: pisteet
+   * asemoidaan prosentteina tiedostosivun reunakoordinaateista.
+   */
+  piirraMaaEtusivu(kategoria) {
+    const kohde = this.arrivalKategoria;
+    kohde.replaceChildren();
+    kohde.appendChild(html('h3', 'aihe-nimi', kategoria.nimi));
+    const kartta = kategoria.kartta;
+    // Kartta ennen tekstiä: kellutus koskee vain sen jälkeen tulevaa.
+    const kehys = html('div', 'maakartta-kehys');
+    // Pisteiden prosenttiasemointi vaatii kotelon, jossa on VAIN kuva —
+    // lähderivi kehyksen sisällä venyttäisi asemointipohjaa alaspäin.
+    const kotelo = html('div', 'maakartta-kotelo');
+    const kuva = document.createElement('img');
+    kuva.alt = `${kategoria.nimi} — korkokartta`;
+    asetaKuva(kuva, valokuvaUrl(kartta.tiedosto, 1000), valokuvaVara(kartta.tiedosto, 1000));
+    kotelo.appendChild(kuva);
+    for (const k of kartta.kaupungit ?? []) {
+      const p = karttapiste(kartta, k.lat, k.lon);
+      const piste = html('span', `maakartta-piste${k.paa ? ' paa' : ''}`);
+      piste.style.left = `${p.x.toFixed(1)}%`;
+      piste.style.top = `${p.y.toFixed(1)}%`;
+      // Itäreunan lähellä nimi aukeaa länteen, ettei se leikkaudu
+      // kuvan ulkopuolelle.
+      if (p.x > 60) piste.classList.add('nimi-vasen');
+      piste.appendChild(html('span', 'maakartta-nimi', k.nimi));
+      kotelo.appendChild(piste);
+    }
+    kehys.appendChild(kotelo);
+    kehys.appendChild(html('p', 'lahde', kartta.lahde));
+    kohde.appendChild(kehys);
+    this.arrivalMaa.hidden = false;
+    kohde.appendChild(this.arrivalMaa);
+  }
+
   async piirraMaaNumerotSivu(kategoria) {
     const kohde = this.arrivalKategoria;
     kohde.replaceChildren();
