@@ -5470,6 +5470,67 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v344 — Kuollut taustasoitin purkaa solmunsa (7.8.2026)
+
+v342:n "Mitä EI korjattu" -kohta. Omistaja: *"Hoida vain nyt."*
+
+### Vika
+
+Jokainen ambienssisoitin reititetään Web Audion läpi:
+`createMediaElementSource` → kompressori → vahvistin → `destination`.
+Soitin vapautettiin pysäyttämällä se ja poistamalla `src`.
+
+Se **näyttää** siivotulta, mutta `createMediaElementSource` on pysyvä
+reititys. Ketju jäi kiinni `destination`iin, eikä elementti voinut
+vapautua muistista niin kauan kuin lähdesolmu viittasi siihen. Jokainen
+kaupunki kasvatti äänigraafia pysyvästi.
+
+Kuvio `audio.pause(); audio.removeAttribute('src');` oli kopioitu
+**viiteen** paikkaan — ja juuri siksi purku puuttui niistä kaikista.
+Nyt vapautus kulkee yhtä reittiä, `vapautaSoitin`ta.
+
+Viisi kohtaa: paikan vaihto (`paasta`), silmukan väistyvä kierros,
+visamusiikin lopetus, CORS-varareitin syrjäyttämä elementti ja soitin,
+jonka kaupunki ehti vaihtua kesken latauksen.
+
+### Mitä piti varoa
+
+**Reititys on yksisuuntainen.** Purun jälkeen elementti ei enää soi,
+vaikka sille antaisi uuden `src`:n. Siksi purkua EI saa tehdä
+varareittipolulla, joka jatkaa SAMALLA elementillä — `petti` yrittää
+ensin peiliä ja sitten alkuperäistä lähdettä samalla soittimella. Vasta
+kun uusi elementti ottaa paikan tai luovutetaan synteesiin, saa purkaa.
+
+Tämä oli koko muutoksen todellinen riski: väärin purettuna olisi tehty
+juuri se vika, jota oltiin siivoamassa.
+
+### Mitattu
+
+40 kaupunkia kartalla hyppien (`createMediaElementSource` laskettuna ja
+`disconnect` käärittynä):
+
+| | ennen | jälkeen |
+| --- | --- | --- |
+| lähdesolmuja luotu | 40 | 40 |
+| purettu | 0 | 38 |
+| roikkumaan jäi | **40** | 2 |
+
+Kaksi jäljelle jäänyttä ovat tasan ne, jotka olivat yhä soimassa
+(mittarin `elossa`-luku oli myös 2) — eli mikään kuollut ei jää kiinni.
+
+Toistotesti erikseen, koska purku voi hiljentää liikaa: kaupunkien
+ääniksi paikalliset mp3:t (`localStorage`-ohitus, sama jota viritysivu
+käyttää) ja analysaattori kaikkeen `destination`iin menevään. Kuusi
+hyppyä kolmen kaupungin väliä, myös paluut samaan kaupunkiin — huiput
+0,0006–0,0078, ei yhtään mykkää.
+
+### Mikä EI muuttunut
+
+Tämä ei ollut v342:n taustaäänivian syy eikä korjaa mitään kuultavaa.
+Soivia elementtejä oli koko ajan korkeintaan kaksi, joten selaimen
+soitinraja ei tullut vastaan. Kyse on muistista ja äänigraafin koosta
+pitkässä pelissä.
+
 ## v342 — Taustaääni ei enää katoa kartalla hyppiessä (7.8.2026)
 
 Omistaja: *"Taustaäänet katoavat kun jonkun aikaa hypin kartalla, ainakin
