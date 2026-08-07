@@ -2054,6 +2054,9 @@ export class UI {
       document.removeEventListener('visibilitychange', this.tarkkuusVahti);
       this.tarkkuusVahti = null;
     }
+    // Puskurirenkaan jono elää joutohetkien varassa: ilman perumista se
+    // piirtäisi kuolleen pelin ruutuja uuden kartan päälle.
+    this.peruutaRengas();
     stopPlaceStream();
     stopQuizMusic();
     sfx.stopFlight();
@@ -2583,6 +2586,7 @@ export class UI {
     this.taideTyhjat = new Set();
     this.taideSkaala = 0;
     this.taideRuutu = 0;
+    this.taideRengas = null;
     this.taideVektorit = ryhma.firstElementChild ? [...ryhma.children] : [];
     // Ensimmäinen piirto vasta seuraavalla kehyksellä: laudan
     // luontihetkellä viewBox on vielä oletusarvoinen eikä paneelin koko
@@ -2721,6 +2725,14 @@ export class UI {
     if (this.taidePiirtyy) { this.taideOdottaa = true; return; }
     const nakyva = this.nakyvaAlue();
     if (!nakyva) return;
+    /*
+     * Vanha rengastyö pois ennen uutta laskentaa.
+     *
+     * Jono rakennetaan tässä uudestaan, ja jo piirretyt ruudut jäävät
+     * siitä pois — vanha jono olisi siis parhaassakin tapauksessa sama
+     * ja pahimmassa väärän mittakaavan.
+     */
+    this.peruutaRengas();
 
     // Mittakaavan vaihtuessa vanhat ruudut ovat väärän tarkkuisia.
     if (!this.taideSkaala || nakyva.skaala > this.taideSkaala * 1.2
@@ -2793,17 +2805,32 @@ export class UI {
     const y1 = Math.min(arkki.y + arkki.h, nakyva.y + nakyva.h * (1 + PUSKURI));
 
     const puuttuvat = [];
-    const jonossa = new Set();
+    const jonossa = new Map();
+    /*
+     * Osuuko ruutu OIKEASTI näkyvään alueeseen — puskuri pois luettuna?
+     *
+     * Tähän jakoon koko optimointi nojaa: näkyvät ruudut piirretään
+     * heti, rengas joutohetkinä. Osuvuus lasketaan kiertämättömästä
+     * sarakkeesta (rx), koska juuri se kertoo, mihin kohtaan ruutua
+     * katsotaan; kiertävällä laudalla sama sarake voi olla yhtä aikaa
+     * näkyvissä ja renkaassa, ja silloin näkyvyys voittaa.
+     */
+    const nakyvissa = (rx, ry) => (rx + 1) * koko > nakyva.x && rx * koko < nakyva.x + nakyva.w
+      && (ry + 1) * koko > nakyva.y && ry * koko < nakyva.y + nakyva.h;
     for (let ry = Math.floor(y0 / koko); ry <= Math.floor((y1 - 0.001) / koko); ry++) {
       for (let rx = Math.floor(x0 / koko); rx <= Math.floor((x1 - 0.001) / koko); rx++) {
         // Sama sarake voi osua hakualueeseen kahdesti, kun puskurillinen
         // näkymä on laudan levyinen. Ruutu piirretään silti kerran.
         const sarake = kiertava ? ((rx % sarakkeita) + sarakkeita) % sarakkeita : rx;
         const avain = `${sarake},${ry}`;
-        if (this.taideRuudut.has(avain) || this.taideTyhjat.has(avain)
-            || jonossa.has(avain)) continue;
-        jonossa.add(avain);
-        puuttuvat.push({ avain, rx: sarake, ry });
+        if (this.taideRuudut.has(avain) || this.taideTyhjat.has(avain)) continue;
+        let ruutu = jonossa.get(avain);
+        if (!ruutu) {
+          ruutu = { avain, rx: sarake, ry, nakyy: false };
+          jonossa.set(avain, ruutu);
+          puuttuvat.push(ruutu);
+        }
+        if (nakyvissa(rx, ry)) ruutu.nakyy = true;
       }
     }
     if (!puuttuvat.length) {
@@ -2823,11 +2850,36 @@ export class UI {
     };
     puuttuvat.sort((a, b) => etaisyys(a) - etaisyys(b));
 
+    /*
+     * NÄKYVÄT RUUDUT ENSIN, PUSKURIRENGAS JOUTOHETKINÄ (v339).
+     *
+     * Omistaja: *"se vielä vähän tökkii, lähinnä kun joutuu lataamaan
+     * zoomauksen jälkeen uutta karttamateriaalia scrollattaessa."*
+     *
+     * Puskuroitu alue on yhdeksän ruudullista (näkyvä + ruudullinen
+     * joka suuntaan), mutta pelaaja katsoo niistä yhtä. Ennen kaikki
+     * yhdeksän piirrettiin samassa keskeytymättömässä silmukassa, joten
+     * zoomauksen jälkeen pääsäie oli varattuna vielä pitkään sen
+     * jälkeen, kun näkyvä osa oli jo terävä — ja juuri siihen kohtaan
+     * osuu se sormenveto, joka nykii.
+     *
+     * Jako on siksi kahtia. Näkyvät ruudut piirretään heti, samassa
+     * silmukassa kuin ennenkin: ne pelaaja näkee nyt. Rengas siirtyy
+     * taydennaRengas-jonoon, joka ottaa yhden ruudun kerrallaan
+     * joutohetkellä ja väistyy sormen tieltä.
+     *
+     * Puskuri ei siis pienene — sääntö "puskuria on niin paljon, ettei
+     * kesken eleen tarvitse ladata" pätee yhä. Vain sen valmistumisen
+     * ajoitus muuttuu.
+     */
+    const nakyvat = puuttuvat.filter((r) => r.nakyy);
+    const rengas = puuttuvat.filter((r) => !r.nakyy);
+
     this.taidePiirtyy = true;
     this.taideOdottaa = false;
     const skaala = this.taideSkaala;
     (async () => {
-      for (const { avain, rx, ry } of puuttuvat) {
+      for (const { avain, rx, ry } of nakyvat) {
         if (this.dead || skaala !== this.taideSkaala) break;
         // Uusi ele kesken piirron: keskeytetään ja jatketaan sen jälkeen.
         if (this.kartanRaahaus) { this.taideOdottaa = true; break; }
@@ -2859,9 +2911,96 @@ export class UI {
         this.taideRyhma.insertBefore(kuva, this.taideRyhma.firstChild);
       }
       this.taidePiirtyy = false;
-      this.poistaVanhatRuudut();
-      if (this.taideOdottaa && !this.kartanRaahaus) this.taydennaTaide({ heti: true });
+      if (this.taideOdottaa && !this.kartanRaahaus) {
+        this.poistaVanhatRuudut();
+        this.taydennaTaide({ heti: true });
+        return;
+      }
+      // Sarja katkesi kesken (peli vaihtui tai mittakaava muuttui):
+      // siivotaan kuten ennenkin, ettei vanha kerros jää DOM:iin.
+      if (this.dead || skaala !== this.taideSkaala) { this.poistaVanhatRuudut(); return; }
+      /*
+       * Vanhat ruudut poistetaan vasta kun RENGAS on valmis.
+       *
+       * Vanhan mittakaavan ruudut jäävät uusien alle, ja ne peittävät
+       * juuri sen alueen, jonne rengas on tulossa. Jos ne poistettaisiin
+       * heti näkyvän osan valmistuttua, reunan yli vieritettäessä
+       * paljastuisi tyhjä pergamentti — ennen siellä oli edes sumea
+       * kartta. taydennaRengas hoitaa poiston, myös kun jono on tyhjä.
+       */
+      this.taydennaRengas(rengas, skaala);
     })();
+  }
+
+  /**
+   * Piirtää puskurirenkaan ruutu kerrallaan joutohetkinä.
+   *
+   * requestIdleCallback on tässä oikea työkalu kahdesta syystä. Se ei
+   * laukea kesken sormenvedon — selain on silloin kiireinen, ja työ
+   * odottaa itsestään eleen ohi ilman omaa lippukirjanpitoa. Ja se
+   * ottaa yhden ruudun kerrallaan, joten pisin yhtenäinen tukos on
+   * yhden ruudun mittainen eikä koko renkaan.
+   *
+   * Aikakatkaisu (timeout) on mukana, jottei rengas jäisi ikuisesti
+   * tekemättä sivulla, joka ei koskaan ole joutilas: viimeistään
+   * sekunnin päästä ruutu piirretään joka tapauksessa. Selaimessa
+   * ilman requestIdleCallbackia (vanhemmat Safarit) tilalle tulee
+   * ajastin — hitaampi mutta samanlainen: yksi ruutu kerrallaan.
+   */
+  taydennaRengas(jono, skaala) {
+    this.peruutaRengas();
+    if (this.dead || skaala !== this.taideSkaala) return;
+    if (!jono?.length) { this.poistaVanhatRuudut(); return; }
+
+    const koko = this.taideRuutu;
+    const tarkkuus = this.taideTarkkuus;
+    const pyyda = window.requestIdleCallback
+      ? (tehtava) => window.requestIdleCallback(tehtava, { timeout: 1000 })
+      : (tehtava) => setTimeout(tehtava, 60);
+    const tyo = { id: 0, jono };
+    this.taideRengas = tyo;
+
+    const askel = async () => {
+      // Vanhentunut työ: mittakaava vaihtui tai peli vaihtui alta.
+      if (this.dead || this.taideRengas !== tyo || skaala !== this.taideSkaala) return;
+      /*
+       * Samat kolme kieltoa kuin täydennyksellä: eleen, lennon ja
+       * zoomiliu'un aikana ei rasteroida. Ero on, ettei tässä
+       * merkitä odottavaa työtä lipuksi vaan pyydetään yksinkertaisesti
+       * seuraava joutohetki — jono on tallessa tässä sulkeumassa.
+       */
+      if (this.kartanRaahaus || this.taidePiirtyy
+          || document.body.classList.contains('flight-active')
+          || document.body.classList.contains('zoom-kaynnissa')) {
+        tyo.id = pyyda(askel);
+        return;
+      }
+      const { avain, rx, ry } = jono.shift();
+      if (!this.taideRuudut.has(avain) && !this.taideTyhjat.has(avain)) {
+        const ikkuna = { x: rx * koko, y: ry * koko, w: koko, h: koko };
+        const kuva = await rasteroiRuutu(this.taide, ikkuna, skaala, tarkkuus);
+        if (this.dead || this.taideRengas !== tyo || skaala !== this.taideSkaala) return;
+        if (kuva === RUUTU_TYHJA) this.taideTyhjat.add(avain);
+        else if (kuva) {
+          this.taideRuudut.set(avain, kuva);
+          // Alimmaiseksi, kuten näkyvätkin: vanhat jäävät päälle.
+          this.taideRyhma.insertBefore(kuva, this.taideRyhma.firstChild);
+        }
+      }
+      if (jono.length) { tyo.id = pyyda(askel); return; }
+      this.taideRengas = null;
+      this.poistaVanhatRuudut();
+    };
+    tyo.id = pyyda(askel);
+  }
+
+  /** Peruu kesken olevan rengastyön. Kesken oleva ruutu saa valmistua. */
+  peruutaRengas() {
+    if (!this.taideRengas) return;
+    // Sidottuna: irrotettu window-metodi kaatuu "Illegal invocation".
+    if (window.cancelIdleCallback) window.cancelIdleCallback(this.taideRengas.id);
+    else clearTimeout(this.taideRengas.id);
+    this.taideRengas = null;
   }
 
   /**
