@@ -1743,4 +1743,141 @@ export const KULTTUURI_KATEGORIAT = {
       ],
     },
   ],
+  /*
+   * Tukholman kansi (v315). Litteät nostot (europe-kulttuuri.js) on
+   * siirretty tänne monistusohjeen mukaan: ABBA Apple Music -linkkeineen
+   * ja metron taide, joka on myös visan aihe — siksi se on kannessa.
+   * Fika siirtyi maan Ruoka-aiheeseen kanelipullana.
+   */
+  tukholma: [
+    {
+      id: 'kaupunki',
+      nimi: 'Tukholma',
+      johdanto: 'Neljäntoista saaren pääkaupunki, jossa vesi on katua ja '
+        + 'kaupungin laidalta lähtee höyrylaiva kolmenkymmenentuhannen '
+        + 'saaren saaristoon.',
+      /*
+       * Lehden etusivun kuvat: iso vaakakuva pääkuvaksi ja kaksi
+       * pienempää sen alle. Sama malli kuin Madridissa ja Kairossa.
+       */
+      kansikuvat: [
+        {
+          tiedosto: 'Riddarholmen (by Pudelek).JPG',
+          selite: 'Riddarholmen Riddarfjärdenin takaa. Terävä valurautainen '
+            + 'torni kuuluu Riddarholmenin kirkolle, jonne Ruotsin '
+            + 'kuninkaat haudattiin 1600-luvulta 1950-luvulle.',
+          lahde: 'Pudelek, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Julmarknad på Stortorget, Gamla stan, Stockholm, 2017b.jpg',
+          selite: 'Joulutori Stortorgetilla, Gamla stanin keskusaukiolla. '
+            + 'Kapeat talot ovat 1600-luvulta, ja niiden erikokoiset '
+            + 'ikkunat kertovat, että jokainen rakensi omaan tahtiinsa.',
+          lahde: 'Bysmon, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Storskär August 2015 05.jpg',
+          selite: 'Höyrylaiva Storskär ohittaa Vaxholmin linnoituksen. '
+            + 'Laiva on vuodelta 1908 ja kulkee yhä saaristoreittiä '
+            + 'kesäisin — sen koneet ovat alkuperäiset.',
+          lahde: 'Arild Vågen, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Martin piirsi Tukholman ennen valokuvaa',
+          tiedosto: 'Stockholmspanorama 1790.jpg',
+          teksti: 'Elias Martin oppi ammattinsa Lontoossa, jossa hän asui '
+            + 'kaksitoista vuotta ja opetteli akvatinnan — tekniikan, '
+            + 'jolla kuparilevystä saa vesivärimäisen sävyn. Kotiin '
+            + 'palattuaan 1780 hän kääntyi kaupunkiin, jota kukaan ei '
+            + 'ollut piirtänyt sellaisenaan: satamaan, toreille ja '
+            + 'työn ääreen. Veli Johan Fredrik kaiversi kuvat levyiksi, '
+            + 'ja niitä myytiin sarjoina. Ne ovat tarkin näkymä '
+            + 'Tukholmaan ennen valokuvaa.',
+          selite: 'Näkymä Tukholmaan Mosebackelta Södermalmilta noin 1790. '
+            + 'Kirkontornien takana laivoja on ankkurissa niin tiheässä, '
+            + 'että masto peittää maston.',
+          lahde: 'Elias Martin, Wikimedia Commons (PD)',
+          wiki: 'Elias Martin',
+          /*
+           * Selattava galleria kuten Venetsian Canaletto ja Kairon
+           * Roberts. Kaksi viimeistä ovat veljesten yhteistyötä:
+           * Elias maalasi, Johan Fredrik kaiversi.
+           */
+          galleria: [
+            {
+              otsikko: 'Drottninggatan',
+              tiedosto: 'Elias Martin - Street in Stockholm (Drottninggatan) - A II 868 - Finnish National Gallery.jpg',
+              selite: 'Drottninggatan matalien puutalojen aikaan. Katu on '
+                + 'yhä samassa paikassa, mutta nykyään se on '
+                + 'kävelykatu ja talot ovat kivestä.',
+              lahde: 'Elias Martin, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Näkymä Mälarenille',
+              tiedosto: 'Southern shore of Lake Mälaren in Stockholm, Sweden (25413579586).jpg',
+              selite: 'Mälarenin eteläranta Söderin sulun kohdalta. '
+                + 'Purjeveneet toivat kaupunkiin polttopuuta, viljaa ja '
+                + 'rautaa sisämaan järviltä.',
+              lahde: 'Elias Martin / Riksantikvarieämbetet, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Rautavaaka',
+              tiedosto: '"Järnvågen" - "The Iron Weighing Scale" in Stockholm, Sweden (25969387273).jpg',
+              selite: 'Järnvågen eli rautavaaka, jossa punnittiin kaikki '
+                + 'Ruotsista ulos lähtenyt tankorauta. Rauta oli maan '
+                + 'tärkein vientitavara, ja se kulki tämän pihan kautta.',
+              lahde: 'Elias Martin / Riksantikvarieämbetet, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Skeppsbron portaat',
+              tiedosto: 'The steps on Skeppsbro etching by Elias Martin.jpg',
+              selite: 'Skeppsbron portaat, joita myöten tavara nostettiin '
+                + 'veneistä maihin. Etiketti puuttuu: kuvassa tehdään '
+                + 'työtä, ei poseerata.',
+              lahde: 'Elias Martin, Wikimedia Commons (PD)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Maailman pisin taidenäyttely',
+          tiedosto: 'Tunnelbana T-Centralen Blue Line (43481298780).jpg',
+          teksti: 'Tukholman metrossa on noin sata asemaa, ja niistä yli '
+            + 'yhdeksälläkymmenellä on taidetta: maalauksia, veistoksia, '
+            + 'mosaiikkeja ja reliefejä yli 150 taiteilijalta. Sinisen '
+            + 'linjan asemat louhittiin syvälle kallioon, eikä louhittua '
+            + 'pintaa peitetty laatoilla — se ruiskubetonoitiin ja '
+            + 'maalattiin sellaisenaan, joten aseman seinä on '
+            + 'kirjaimellisesti vuori. Tavallinen matkalippu kelpaa koko '
+            + 'näyttelyyn.',
+          selite: 'T-Centralenin sinisen linjan laituri. Per Olof Ultvedt '
+            + 'maalasi 1975 karkeaan kallioon siniset köynnökset — '
+            + 'rauhallinen väri valittiin kaupungin vilkkaimmalle '
+            + 'vaihtoasemalle.',
+          lahde: 'Sonse, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Tukholman metro',
+        },
+        {
+          otsikko: 'Neljä nimeä, joista tuli ABBA',
+          tiedosto: 'Agnetha Fältskog and Anni-Frid Lyngstad in Göteborg 1979.jpg',
+          teksti: 'Kun Agnetha, Björn, Benny ja Anni-Frid voittivat '
+            + 'euroviisut Brightonissa 6. huhtikuuta 1974 kappaleella '
+            + 'Waterloo, yhtyeen nimi oli koottu heidän etunimiensä '
+            + 'alkukirjaimista. Voitto käänsi koko maan musiikkiviennin '
+            + 'kasvuun: Tukholmassa toimii yhä poikkeuksellisen paljon '
+            + 'studioita ja lauluntekijöitä, ja ruotsalaisia hittejä '
+            + 'laulavat muidenkin maiden tähdet. Esiintymisasut tehtiin '
+            + 'tahallaan mahdottomiksi — ne sai vähentää verotuksessa '
+            + 'vain, jos niitä ei voinut käyttää arkena.',
+          selite: 'Agnetha Fältskog ja Anni-Frid Lyngstad lavalla '
+            + 'Göteborgissa 1979, yhtyeen suosion huipulla.',
+          lahde: 'Kåre Eide, Wikimedia Commons (CC0)',
+          wiki: 'Abba',
+          musiikki: 'https://music.apple.com/fi/search?term=ABBA%20Waterloo',
+          musiikkiNimi: 'ABBA Apple Musicissa',
+        },
+      ],
+    },
+  ],
 };

@@ -58,6 +58,28 @@ export const UUTISLAHTEET = {
     kieli: 'es',
     syote: 'https://www.20minutos.es/rss/',
   },
+  /*
+   * SVT on Ruotsin yleisradio ja maan luetuimpia uutissivustoja.
+   * Testattu 7.8.2026 (UA matkakirja-uutisvalitys/1.0): syöte antaa
+   * sata juttua ja artikkelisivulta jäsentyy <article> sekä
+   * og:image, eli popup saa koko leipätekstin.
+   *
+   * Sveriges Radion Ekot kokeiltiin ensin (omistajan ehdotus), mutta
+   * api.sr.se palauttaa ATOM-syötteen (<entry>), ja peli lukee RSS:n
+   * <item>-alkioita — syötteestä ei siis irtoaisi yhtään otsikkoa
+   * ilman koodimuutosta. Aftonbladetin RSS ja artikkelisivut
+   * läpäisivät molemmat testit; yleisradio valittiin samalla
+   * perusteella kuin Britanniassa BBC.
+   *
+   * HUOM: osoite www.svt.se/nyheter/rss.xml ohjaa osoitteeseen
+   * www.svt.se/rss.xml. Tässä on ohjauksen päätepiste, koska worker
+   * ei seuraa uudelleenohjauksia.
+   */
+  SWE: {
+    nimi: 'SVT Nyheter',
+    kieli: 'sv',
+    syote: 'https://www.svt.se/rss.xml',
+  },
 };
 
 /*

@@ -258,7 +258,7 @@ uutissyötteen JA yhden artikkelisivun curl-testi (UA
    tagesschau (tagesschau.de/xml/rss2), Spiegel, ZDF heute. Tv:
    tagesschau24 tai DW Deutsch — molemmilla YouTube-live ilman
    aluerajausta.
-3. **Ruotsi / Tukholma.** Galleria: Elias Martinin Tukholma-näkymät
+3. ✅ **TEHTY v315.** **Ruotsi / Tukholma.** Galleria: Elias Martinin Tukholma-näkymät
    1700-luvulta (PD); vaihtoehtona Vädersolstavlan-tarina nostona.
    Kansikuvat: Gamla stan ja Stortorget, Stadshuset, saaristolautat.
    Henkilö+musiikki: ABBA (Apple Music). Uutisehdokkaat: SVT
@@ -267,6 +267,11 @@ uutissyötteen JA yhden artikkelisivun curl-testi (UA
    ilman aluerajausta ei löydy (kokeile esim. Expressen TV),
    JÄTÄ TV POIS: lehti toimii ilman tv-riviä, älä valitse huonoa
    kanavaa väkisin.
+   **Toteutuksessa:** tv jätettiin pois. Tarkistettiin 7.8.2026
+   @expressen, @svt, @SVTNyheter, @TV4Nyheterna ja @aftonbladet —
+   yhdelläkään ei ollut käynnissä olevaa liveä. Uutislähteeksi tuli
+   SVT (`www.svt.se/rss.xml`); Sveriges Radion Ekot hylättiin, koska
+   api.sr.se antaa ATOM-syötteen ja peli lukee RSS:n `<item>`-alkioita.
 4. **Ranska / Pariisi.** Galleria: Pissarron ja Caillebotten
    katunäkymät (PD). Uutisehdokkaat: Le Monde, France Info,
    Le Figaro. Tv: France 24 (français) — 24/7 YouTube-live.

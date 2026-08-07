@@ -63,6 +63,28 @@ export const KOHTAAMISET = {
     vaarin: 'Faruk sulkee kirjansa pehmeästi: "Ei vielä, ystäväni. '
       + 'Palaa, kun tunnet maailman paremmin — tee odottaa silloinkin."',
   },
+  tukholma: {
+    hahmo: 'höyrylaivan konemestari Elsa',
+    nappi: 'Tapaa konemestari',
+    frame: 'konemestari Elsa pyyhkii kätensä trasseliin ja kysyy',
+    tervehdys: 'Strömkajenin laiturissa käy höyrylaiva, jonka koneet '
+      + 'ovat vanhemmat kuin kukaan laivassa. Konehuoneen luukusta '
+      + 'nousee nainen öljyisissä haalareissa, katsoo kirjaasi ja '
+      + 'nyökkää hitaasti. "Tuon kirjan omistaja matkusti tällä '
+      + 'laivalla ulos saaristoon. Isoisäni lapioi silloin hiiliä ja '
+      + 'muisti hänet, koska hän kysyi koneesta enemmän kuin '
+      + 'maisemasta. Näytä että tunnet maailmaa kuten hän — niin '
+      + 'kerron, mihin saareen hän jäi."',
+    loyto: 'Elsa hymyilee ja nostaa penkin alta pellisen '
+      + 'öljykannun: "Tämä on ollut laivalla kauemmin kuin minä. '
+      + 'Katso, mitä pohjaan on raapustettu — se odotti sinua."',
+    tyhja: 'Elsa katsoo tyhjää lokeroa ja pudistaa päätään: "Joku '
+      + 'on ehtinyt ensin. Meri liikuttaa tavaraa, ei vain vettä — '
+      + 'tule takaisin, kun laiva palaa."',
+    vaarin: 'Elsa naurahtaa ja kääntyy takaisin konehuoneen '
+      + 'portaille: "Ei vielä. Koneen kanssa on sama juttu: opettele '
+      + 'ensin, painele vasta sitten."',
+  },
   madrid: {
     hahmo: 'kirpputorikauppias Rosa',
     nappi: 'Tapaa kirpputorikauppias',

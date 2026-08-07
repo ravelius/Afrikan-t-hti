@@ -2378,63 +2378,14 @@ export const EUROPE_KULTTUURI = {
   },
 
   tukholma: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'ABBA voitti Brightonissa 1974',
-        tiedosto: 'ABBA - TopPop 1974 5.png',
-        teksti: 'Neljä ruotsalaista voitti euroviisut 6. huhtikuuta 1974 '
-                  + 'kappaleella Waterloo. Nimi ABBA muodostuu jäsenten '
-                  + 'etunimien alkukirjaimista: Agnetha, Björn, Benny ja '
-                  + 'Anni-Frid. Voitto käänsi Ruotsin musiikkiviennin kasvuun, '
-                  + 'ja maasta tuli yksi maailman suurimmista popmusiikin '
-                  + 'viejistä — Tukholmassa toimii yhä poikkeuksellisen paljon '
-                  + 'studioita ja lauluntekijöitä.',
-        selite: 'ABBA hollantilaisessa TopPop-ohjelmassa keväällä 1974. '
-                  + 'Björn Ulvaeus on kertonut, että asut tehtiin tahallaan '
-                  + 'mahdottomiksi: esiintymisvaatteet sai vähentää '
-                  + 'verotuksessa vain, jos niitä ei voinut käyttää arkena.',
-        lahde: 'AVRO, Wikimedia Commons (CC BY-SA 3.0 NL)',
-        wiki: 'Abba',
-        musiikki: 'https://music.apple.com/fi/search?term=ABBA%20Waterloo',
-        musiikkiNimi: 'ABBA Apple Musicissa',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Fika on sovittu hetki',
-        tiedosto: 'Fika kaffe bulle.jpg',
-        teksti: 'Fika tarkoittaa taukoa, jolla juodaan kahvia ja syödään '
-                  + 'jotain makeaa — mieluiten kanelipulla. Se ei ole pelkkä '
-                  + 'kahvikuppi vaan sovittu tapa istua alas yhdessä, ja '
-                  + 'monella työpaikalla se on kellonaika siinä missä '
-                  + 'lounaskin. Kanelipullalla on Ruotsissa oma päivänsä 4. '
-                  + 'lokakuuta; leipomisneuvosto keksi sen vuonna 1999.',
-        selite: 'Kahvikuppi ja kanelipulla ruotsalaiseen tapaan. Sana fika '
-                  + 'syntyi puhekielessä kääntämällä sanan kaffe tavut toisin '
-                  + 'päin — samaa temppua käytettiin 1800-luvun lopulla moneen '
-                  + 'muuhunkin sanaan.',
-        lahde: 'Johannes Jansson/norden.org, Wikimedia Commons (CC BY 2.5 DK)',
-        wiki: 'Korvapuusti',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Maailman pisin taidenäyttely',
-        tiedosto: 'Tunnelbana T-Centralen Blue Line (43481298780).jpg',
-        teksti: 'Tukholman metrossa on sata asemaa, ja niistä yli 90:llä on '
-                  + 'taidetta: maalauksia, veistoksia, mosaiikkeja ja reliefejä '
-                  + 'yli 150 taiteilijalta. Sinisen linjan asemat louhittiin '
-                  + 'syvälle kallioon, eikä louhittua pintaa peitetty laatoilla '
-                  + '— se maalattiin sellaisenaan. Rataa on noin 105 '
-                  + 'kilometriä, ja tavallinen matkalippu kelpaa koko '
-                  + 'näyttelyyn.',
-        selite: 'T-Centralenin sinisen linjan laituri. Per Olof Ultvedt '
-                  + 'maalasi 1975 karkeaan kallioseinään siniset köynnökset ja '
-                  + 'lehdet — rauhallinen väri valittiin kaupungin '
-                  + 'vilkkaimmalle vaihtoasemalle.',
-        lahde: 'Sonse, Wikimedia Commons (CC BY 2.0)',
-        wiki: 'Tukholman metro',
-      },
-    ],
+    /*
+     * Tukholma sai kategoriat (kulttuuri-kategoriat.js + maa-kategoriat
+     * SWE, 7.8.2026), jotka korvaavat litteät nostot Tutki-ikkunassa.
+     * Ainutlaatuinen sisältö siirrettiin sinne: ABBA Apple Music
+     * -linkkeineen ja metron taide kaupungin kanteen, fika Ruotsin
+     * Ruoka-aiheeseen kanelipullana. Tänne jää vain visa, jonka aihe
+     * (metron taide) näkyy kannen nostossa (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Kuinka monella Tukholman noin sadasta metroasemasta on taidetta?',
       options: [

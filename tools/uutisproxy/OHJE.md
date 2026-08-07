@@ -1,5 +1,12 @@
 # Uutisvälityksen käyttöönotto (omistajalle, n. 5 min)
 
+> **Päivitys 7.8.2026 (Ruotsi/Tukholma, v315):** sallittuihin lisättiin Ruotsin uutislähde
+> (`https://www.svt.se/`) Tukholman lehteä varten. Julkaise worker
+> kerran uudelleen: **Edit code → liitä tuore `worker.js` → Deploy.**
+> Siihen asti Tukholman lehti näkyy ilman uutisosiota — muu lehti
+> toimii normaalisti. Sama julkaisu tuo kaikki aiemmatkin
+> päivitykset.
+
 > **Päivitys 4 (v305):** sallittuihin lisättiin Britannian
 > uutislähde (BBC: `feeds.bbci.co.uk`, `www.bbc.co.uk`,
 > `www.bbc.com`) Lontoon lehteä varten. Julkaise worker kerran

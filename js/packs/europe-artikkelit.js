@@ -1989,10 +1989,20 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Ruotsi: {
+    // Muita pidempi tarkoituksella: Tukholman lehden maaosasto nojaa
+    // tähän yksin (sama malli kuin Italialla, Egyptillä ja Espanjalla).
     intro: 'Ruotsi ulottuu 1 572 kilometriä etelästä pohjoiseen — '
              + 'suunnilleen sama matka kuin Kööpenhaminasta Roomaan. Saaria on '
              + '267 570, enemmän kuin missään muussa maassa, mutta valtaosa '
-             + '10,6 miljoonasta asukkaasta asuu eteläisessä kolmanneksessa.',
+             + '10,6 miljoonasta asukkaasta asuu eteläisessä kolmanneksessa. '
+             + 'Pohjoisessa maa nousee tuntureiksi, joiden takana on '
+             + 'Norja, ja etelässä se laskeutuu viljalakeuksiksi; välissä '
+             + 'on metsää, jota riittää yli puolelle pinta-alasta. '
+             + 'Maan vauraus rakennettiin raudasta, puusta ja '
+             + 'vesivoimasta, ja sen tunnetuimmat vientituotteet ovat '
+             + 'nykyään huonekaluja, autoja ja popmusiikkia. '
+             + 'Ruotsi ei ole ollut sodassa vuoden 1814 jälkeen — '
+             + 'yhtäjaksoisesti pidempään kuin juuri mikään muu valtio.',
     teksti: '1600-luvulla Ruotsi oli suurvalta, jonka rajojen sisällä '
               + 'olivat Suomi, Baltia ja palasia Pohjois-Saksaa. Viimeisen '
               + 'sotansa se kävi 1814. Sen jälkeen maa on ollut yhtäjaksoisesti '
