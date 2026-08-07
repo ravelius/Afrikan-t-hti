@@ -767,11 +767,22 @@ export const KAUPUNKI_EHDOKKAAT = {
       { url: 'https://archive.org/download/aporee_9230_11102/vilnius1.mp3#voima=0.41',
         nimi: 'Linnut kaupungin melussa — alas23/sala, CC BY-SA' },
     ],
+    /*
+     * Omistajan valinta 7.8.2026 (työhuoneen Todo Samille -välilehti,
+     * v322): "Penkki Saltsjön rannalla on paras."
+     *
+     * Aiemmat kaksi (Norrmalmin liikenne ja kukkatori) korvattiin
+     * kokonaan eikä jätetty koriin rinnalle: ne olivat liikennettä ja
+     * toria, ja lehden Tukholma on vettä ja saaristoa — arvonta olisi
+     * palauttanut vanhan tunnelman joka toinen käynti. Kori saa olla
+     * yhden mittainen, kuten Kööpenhaminalla ja Lapilla.
+     *
+     * voima=0.66 on mitattu, ei arvattu: -29,4 LUFS tavoitteeseen -33
+     * (tools/mittaa-aanet.mjs, sama mittari kuin muillakin).
+     */
     tukholma: [
-      { url: 'https://archive.org/download/aporee_33112_38049/StockholmdesdepontKlarastrandsleden.mp3#voima=0.33',
-        nimi: 'Junat, autot ja vesi Norrmalmissa — Albert Murillo, CC BY' },
-      { url: 'https://archive.org/download/aporee_33214_38190/StockholmplaaHtorgetmercatdeflors.mp3#voima=0.53',
-        nimi: 'Kukkatori Norrmalmissa — Albert Murillo, CC BY' },
+      { url: 'https://archive.org/download/aporee_61439_75490/ModernaMuseet88231745editedstockholm.mp3#voima=0.66',
+        nimi: 'Penkki Saltsjön rannalla — kylekristopherberry, public domain' },
     ],
     oslo: [
       { url: 'https://archive.org/download/aporee_45891_52120/carillondiOslo.mp3#voima=0.52',

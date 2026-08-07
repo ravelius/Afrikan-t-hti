@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 324, teksti: 'Tukholmaan uusi taustaääni: Saltsjön ranta' },
   { v: 323, teksti: 'Saksa-osiolle aloitussivu: iso korkokartta' },
   { v: 323, teksti: 'Kartalla kaupungit, tunnusluvut ja esittely' },
   { v: 323, teksti: 'Etusivun yläkulmaan Saksa-osio-linkki' },
