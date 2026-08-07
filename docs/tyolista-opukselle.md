@@ -5345,6 +5345,81 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v314 — Maan nimi Tutki-sivujen otsikoihin (7.8.2026)
+
+Omistaja: *"tutki sivut: maata koskevilla sivuilla otsikossa saisi olla
+maan nimi mukana"* ja perään *"muuta myös maa numeroina sivu esim.
+Egypti numeroina muotoon."*
+
+Tutki-lehden sisäsivut ovat maan aiheita (`js/packs/maa-kategoriat.js`),
+mutta osastonotsikossa luki pelkkä **HISTORIA**. Sivu näytti siis
+kaupungin omalta osastolta, vaikka juuri nämä sivut ovat samat maan
+jokaisessa kaupungissa — Kairon, Luxorin ja Siinain lukija näkee saman
+Egyptin historian. Nyt otsikko on **EGYPTIN HISTORIA**, ja lehden
+viimeisen sivun otsikko on **EGYPTI NUMEROINA** (v311:n tilastosivu).
+Kaupungin omat aiheet (Lontoon yhdeksän) eivät muutu: ne kertovat
+kaupungista.
+
+Kaksi eri sijamuotoa, koska suomi vaatii sen: aihesivulla genetiivi
+("Egyptin historia"), tilastosivulla nominatiivi ("Egypti numeroina"),
+koska *numeroina* on jo taivutettu.
+
+### Genetiivi on taulu ja yksi sääntö, ei taivutuskone
+
+Sääntö: vokaaliin päättyvä nimi saa `n`:n, konsonanttiin päättyvä `in`:n
+(Egypti → Egyptin, Irak → Irakin). Se riittää pelin 84 maanimestä
+kaikkiin paitsi neljääntoista, jotka luetellaan taulussa: astevaihtelu
+(Kreikka → Kreikan, Marokko → Marokon), monikot (Alankomaat →
+Alankomaiden, Filippiinit → Filippiinien), taipuva määrite
+(Iso-Britannia → Ison-Britannian) ja omat tapauksensa (Suomi → Suomen,
+Kypros → Kyproksen).
+
+**Sääntöä ei voi laajentaa yleiseksi astevaihteluksi**, vaikka se
+houkuttaa: vierasnimet eivät noudata sitä. Itävalta → Itävallan mutta
+Malta → **Maltan**, ja Sri Lanka → **Sri Lankan** vaikka lanka → langan.
+Yksikin liian ahne sääntö tuottaisi kirjoitusvirheen otsikkoon, jonka
+lapsi lukee joka sivunkäännöksellä. Siksi poikkeukset luetellaan.
+
+Aiheen nimi pienenee otsikossa ("Egyptin historia"), koska vakioaiheet
+ovat yleisnimiä. Ruudulla otsikko on versaalilla, mutta DOM:iin jää
+oikein kirjoitettua suomea myös ruudunlukijalle.
+
+### Missä muunnos tehdään
+
+`js/ui.js` `rakennaSivut` — ja **kopioon**, ei alkuperäiseen: kategoria
+tulee yhteisestä `MAA_KATEGORIAT`-taulusta, ja sen nimen muuttaminen
+paikan päällä kasvattaisi otsikkoa joka avauksella ("Egyptin Egyptin
+historia"). Maan nimi luetaan samasta lähteestä kuin maapalstan otsikko
+(`map.countryShapes[iso].nimi`); jos laudalla ei ole maadataa, otsikot
+jäävät entiselleen ("HISTORIA", "MAA NUMEROINA"). Aineistoon ei
+kosketa: aiheissa säilyy yksi lyhyt vakioaiheen nimi, jota ei tarvitse
+kirjoittaa maakohtaisesti uudestaan.
+
+### Testit
+
+`tests/maa-otsikot.test.mjs` käy läpi **kaikkien lautojen** maanimet ja
+vertaa käsin tarkistettuun genetiivitauluun. Uusi maa peliin kaataa
+testin ja pyytää tarkistamaan taivutuksen siinä kohtaa, jossa se on
+helpointa tehdä. Lisäksi vahditaan, että maan aiheiden nimet ovat
+yksisanaisia yleisnimiä — erisnimi ei kestäisi pientä alkukirjainta — ja
+että tilastosivun otsikko on nominatiivissa.
+
+### Opittua
+
+**Sama nimi kahdesti samassa funktiossa ei näy testeistä.** Ensimmäinen
+versio otti maan nimelle muuttujan `maanNimi`, joka oli jo julistettu
+`rakennaSivut`in lopussa päiväysriviä varten. Koko moduuli kaatui
+`SyntaxErroriin` — mutta `npm test` meni läpi, koska yksikään testi ei
+lataa `js/ui.js`:ää selaimena. Vika näkyi ensimmäisestä
+kuvakaappauksesta (v308:n opittu piti paikkansa toisenkin kerran).
+
+**Tarkista tuore main ennen kuin kohdistat muutoksen.** Tämä työ
+kirjoitettiin ensin v309:n päälle, ja "maa numeroina" tulkittiin
+etusivun maapalstaksi — mutta rinnakkaisessa istunnossa oli juuri
+syntynyt oikea **Maa numeroina** -sivu (v311). Väärä kohde paljastui
+vasta yhdistämisvaiheessa. Haara aloitettiin uudestaan tuoreen mainin
+päältä ja otsikko kohdistettiin sivuun, jota omistaja tarkoitti.
+
 ## v309 — Kuvat menivät rikki: kolme eri vikaa (6.8.2026)
 
 Omistaja: *"Kuvat menevät vieläkin välillä rikki, vaikka lataan sivun
