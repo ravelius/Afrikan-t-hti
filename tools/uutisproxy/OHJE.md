@@ -1,5 +1,13 @@
 # Uutisvälityksen käyttöönotto (omistajalle, n. 5 min)
 
+> **Päivitys 7.8.2026 (Saksa/Berliini, v316):** sallittuihin
+> lisättiin Saksan uutislähde (tagesschau:
+> `https://www.tagesschau.de/`) Berliinin lehteä varten. Julkaise
+> worker kerran uudelleen: **Edit code → liitä tuore `worker.js` →
+> Deploy.** Siihen asti Berliinin lehti näkyy ilman uutisosiota —
+> mikään ei mene rikki. Sama julkaisu tuo kaikki aiemmatkin
+> päivitykset (myös alla olevan Ruotsin).
+
 > **Päivitys 7.8.2026 (Ruotsi/Tukholma, v315):** sallittuihin lisättiin Ruotsin uutislähde
 > (`https://www.svt.se/`) Tukholman lehteä varten. Julkaise worker
 > kerran uudelleen: **Edit code → liitä tuore `worker.js` → Deploy.**

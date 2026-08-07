@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 316, teksti: 'Berliini sai oman lehden: kansi ja Saksa-osasto' },
+  { v: 316, teksti: 'Gaertnerin Berliini-teokset galleriana' },
+  { v: 316, teksti: 'Saksan uutiset, tagesschau24 ja posetiivari Otto' },
   { v: 315, teksti: 'Tukholma sai oman lehden: kansi ja Ruotsi' },
   { v: 315, teksti: 'Elias Martinin Tukholma-näkymät galleriana' },
   { v: 315, teksti: 'Ruotsin uutiset SVT:ltä, ABBA kannen nostona' },
