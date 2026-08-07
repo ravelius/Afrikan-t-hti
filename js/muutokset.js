@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 326, teksti: 'Ääneen lukija: kaiutin lukee Tutki-sivun' },
+  { v: 326, teksti: 'Lukunappi myös Lue lisää -artikkeleihin' },
+  { v: 326, teksti: 'Lukija valitsee laitteen parhaan suomiäänen' },
   { v: 325, teksti: 'Musiikkisivut soivat: Bach, Beethoven, Vivaldi…' },
   { v: 325, teksti: 'Avainviulu ja Va, pensiero vapaina näytteinä' },
   { v: 325, teksti: 'ABBA ja kumppanit Applen 30 s esikuunteluna' },
