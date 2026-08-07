@@ -137,11 +137,47 @@ function liitaKompressori(audio) {
     const vahvistin = ctx.createGain();
     vahvistin.gain.value = 0;
     lahde.connect(komp).connect(vahvistin).connect(ctx.destination);
+    // Solmut talteen purkua varten (ks. vapautaSoitin). Ilman tätä
+    // ketju jää kiinni destinationiin soittimen kuoltua, ja jokainen
+    // kaupunki kasvattaa äänigraafia pysyvästi.
+    audio.aaniSolmut = [lahde, komp, vahvistin];
     return vahvistin;
   } catch {
     // createMediaElementSource heittää, jos elementti on jo reititetty.
     return null;
   }
+}
+
+/**
+ * Vapauttaa soittimen kokonaan: pysäyttää sen, päästää irti äänitteestä
+ * ja purkaa sen Web Audio -solmut.
+ *
+ * Solmujen purku on se osa, joka aiemmin puuttui. Pysäytetty ja
+ * src:tön elementti näyttää siivotulta, mutta createMediaElementSource
+ * on pysyvä reititys: lähde, kompressori ja vahvistin jäivät kiinni
+ * destinationiin, eikä elementti voinut vapautua muistista niin kauan
+ * kuin lähdesolmu viittasi siihen. Mitattuna 40 kaupunkia kartalla
+ * hyppien synnytti 40 lähdesolmua, joista yhtäkään ei irrotettu.
+ *
+ * Vain kuolleelle soittimelle. Reititys on yksisuuntainen: purun
+ * jälkeen elementti EI enää soi, vaikka sille antaisi uuden src:n.
+ * Siksi tätä ei saa kutsua varareittipolulla, joka jatkaa samalla
+ * elementillä (ks. petti) — vain silloin, kun soitin on lopullisesti
+ * väistynyt tai uusi elementti on ottanut sen paikan.
+ */
+function vapautaSoitin(audio) {
+  if (!audio) return;
+  audio.pause();
+  audio.removeAttribute('src');
+  for (const solmu of audio.aaniSolmut ?? []) {
+    try {
+      solmu.disconnect();
+    } catch {
+      /* jo purettu — purku saa tapahtua kahdesti */
+    }
+  }
+  audio.aaniSolmut = null;
+  audio.aaniVahvistin = null;
 }
 
 /** Soittimen nykyinen taso riippumatta siitä, kumpi reitti on käytössä. */
@@ -178,10 +214,7 @@ function haivyta(audio, kohde, done, kesto = HAIVYTYS_MS) {
 
 /** Sammuttaa yhden soittimen pehmeästi ja vapauttaa sen. */
 function paasta(audio, kesto = HAIVYTYS_MS) {
-  haivyta(audio, 0, () => {
-    audio.pause();
-    audio.removeAttribute('src');
-  }, kesto);
+  haivyta(audio, 0, () => vapautaSoitin(audio), kesto);
 }
 
 export function stopPlaceStream() {
@@ -291,14 +324,19 @@ function luoSoitin(oma, { arvottuAlku, nouse }) {
       nykyinen = null;
       sfx.setAmbience(oma.fallbackType);
     }
-    audio.pause();
+    // Viimeinen porras: tästä elementistä ei enää yritetä mitään, joten
+    // se puretaan kokonaan. Varareitit, jotka jatkavat SAMALLA
+    // elementillä, ovat jo takanapäin (ks. petti).
+    vapautaSoitin(audio);
   };
   // Soitto ja onnistumisen käsittely ovat omassa funktiossaan, jotta
   // varareitti käy täsmälleen saman polun: ilman sitä äänite jäisi
   // vaihdon jälkeen soimaan nollavoimakkuudella.
   const soi = () => audio.play().then(() => {
     if (nykyinen !== oma) {
-      audio.pause();
+      // Kaupunki ehti vaihtua kesken latauksen: tämä soitin ei ehtinyt
+      // koskaan kuuluviin eikä sitä enää tarvita.
+      vapautaSoitin(audio);
       return;
     }
     sfx.setAmbience(null); // synteesi väistyy, kun oikea äänite soi
@@ -323,7 +361,9 @@ function luoSoitin(oma, { arvottuAlku, nouse }) {
     if (!oma.ilmanKompressoria && audio.crossOrigin) {
       oma.ilmanKompressoria = true;
       if (nykyinen !== oma) return;
-      audio.pause();
+      // Tämä elementti jää lopullisesti sivuun: uusi soitin ottaa sen
+      // paikan, joten sen ketju puretaan eikä jätetä roikkumaan.
+      vapautaSoitin(audio);
       const uusi = luoSoitin(oma, { arvottuAlku: oma.arvoAlku, nouse });
       oma.audio = uusi;
       return;
@@ -350,8 +390,9 @@ function vahdiSilmukka(oma, audio) {
     oma.vaistyva = audio;
     oma.audio = luoSoitin(oma, { arvottuAlku: false, nouse: SILMUKKA_RISTI_MS });
     haivyta(audio, 0, () => {
-      audio.pause();
-      audio.removeAttribute('src');
+      // Silmukan väistyvä kierros on kuollut soitin siinä missä muutkin:
+      // uusi kierros on jo ottanut sen paikan omalla elementillään.
+      vapautaSoitin(audio);
       if (oma.vaistyva === audio) oma.vaistyva = null;
     }, SILMUKKA_RISTI_MS);
   };
@@ -510,9 +551,6 @@ export function stopQuizMusic() {
   const vanha = musiikki;
   musiikki = null;
   if (!vanha) return;
-  haivyta(vanha, 0, () => {
-    vanha.pause();
-    vanha.removeAttribute('src');
-  });
+  haivyta(vanha, 0, () => vapautaSoitin(vanha));
 }
 

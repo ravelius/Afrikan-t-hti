@@ -148,6 +148,42 @@ test('jokainen luennan lopetus vapauttaa myös puhujan', () => {
   }
 });
 
+test('kuollut soitin purkaa Web Audio -solmunsa', () => {
+  /*
+   * v344: jokainen ambienssisoitin reititetään Web Audion läpi
+   * (createMediaElementSource -> kompressori -> vahvistin ->
+   * destination). Pysäytetty ja src:tön elementti NÄYTTÄÄ siivotulta,
+   * mutta reititys on pysyvä: ilman purkua ketju jää kiinni
+   * destinationiin eikä elementti voi vapautua muistista, koska
+   * lähdesolmu viittaa siihen.
+   *
+   * Mitattuna (40 kaupunkia kartalla hyppien): ennen 40 lähdesolmua
+   * ja 0 purettua, jälkeen 38 purettua ja 2 jäljellä — tasan ne kaksi,
+   * jotka olivat yhä soimassa.
+   *
+   * Testi lukee lähdetekstin, koska Web Audiota ei ole Nodessa.
+   */
+  const virta = readFileSync(new URL('../js/ambience-stream.js', import.meta.url), 'utf8');
+
+  // Solmut on otettava talteen, muuten niihin ei pääse enää käsiksi.
+  assert.match(virta, /audio\.aaniSolmut = \[lahde, komp, vahvistin\]/,
+    'liitaKompressori ei tallenna solmuja purkua varten');
+  assert.match(virta, /function vapautaSoitin\(audio\)/, 'vapautaSoitin puuttuu');
+  assert.match(virta, /solmu\.disconnect\(\)/, 'vapautaSoitin ei pura solmuja');
+
+  /*
+   * Vapautus vain yhtä reittiä. Aiemmin sama kaksirivinen kuvio
+   * (pause + removeAttribute) oli kopioitu viiteen paikkaan, ja juuri
+   * siksi purku unohtui niistä kaikista. Jos kuvio ilmestyy uudestaan
+   * vapautaSoitimen ulkopuolelle, se on uusi vuoto.
+   */
+  const runko = virta.slice(virta.indexOf('function vapautaSoitin'));
+  const omaLoppu = runko.indexOf('\n}\n');
+  const muuKoodi = virta.replace(runko.slice(0, omaLoppu), '');
+  assert.doesNotMatch(muuKoodi, /removeAttribute\('src'\)/,
+    'soitin vapautetaan vapautaSoitimen ohi — solmut jäisivät roikkumaan');
+});
+
 test('kompressointi on ennen voimakkuussäätöä ja varareitti on olemassa', () => {
   const virta = readFileSync(new URL('../js/ambience-stream.js', import.meta.url), 'utf8');
   // Kompressori ennen vahvistinta: kertoimet vaihtelevat 32 dB, joten
