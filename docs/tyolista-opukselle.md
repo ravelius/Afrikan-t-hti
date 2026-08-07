@@ -302,10 +302,12 @@ Tason osat kaupunkia kohti:
    rajaus työkalun KAUPUNGIT-tauluun: VAIN ydinkeskusta, n. 5–8 km —
    laajempi muuttuu puuroksi; malli Mapiful-juliste). KATSO kuva
    silmin. 4–6 kuuluisaa kohdetta, joiden fi.wikipedia-artikkeli on
-   TARKISTETTU (`action=query&redirects=1`); nimien suunnat
-   (`nimiSuunta: 'yla'|'ala'|'vasen-ala'`, `nimiVasen`) valitaan
-   kaappauksesta katsomalla, etteivät laput osu toisiinsa. Kaksi
-   esittelykappaletta kartan viereen. PNG sw.js:n SHELL-listaan.
+   TARKISTETTU (`action=query&redirects=1`). Kartta on iso ja
+   kohteet merkitään numeroympyröin; selitteet syntyvät tekstinä
+   kartan alle kohteiden järjestyksestä (omistajan taittopäätös
+   7.8.2026) — järjestä kohteet niin, että numerot etenevät kartalla
+   luontevasti. Kaksi esittelykappaletta kartan ylle. PNG sw.js:n
+   SHELL-listaan.
 3. **Aika-leimat**: historia-nostoihin `aika`-kenttä (tehty kaikille
    viidelle maalle v327). Muille sivuille vain, jos ajankohta on
    jutun ydin.

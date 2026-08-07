@@ -96,15 +96,19 @@ export const KAUPUNKIKARTAT = {
       + 'eri sävyissä. Kartan kohteista pääsee lukemaan lisää '
       + 'napauttamalla.',
     kohteet: [
-      // Nimien suunnat on valittu käsin, etteivät laput osu toisiinsa
-      // (nimiSuunta/nimiVasen). Jokaisen wiki on tarkistettu
-      // fi.wikipedian artikkeli.
-      { nimi: 'Valtiopäivätalo', lat: 52.5186, lon: 13.3762, wiki: 'Valtiopäivätalo (Saksa)', nimiVasen: true },
-      { nimi: 'Brandenburgin portti', lat: 52.5163, lon: 13.3777, wiki: 'Brandenburgin portti', nimiSuunta: 'vasen-ala' },
-      { nimi: 'Museosaari', lat: 52.5169, lon: 13.401, wiki: 'Museumsinsel', nimiSuunta: 'ala' },
+      /*
+       * Järjestys on kartan numerointi (omistajan taittopäätös
+       * 7.8.2026: numeroympyrät kartalla, selitteet tekstinä sen
+       * ulkopuolella) — lännestä itään, jotta numerot etenevät
+       * kartalla luontevasti. Jokaisen wiki on tarkistettu
+       * fi.wikipedian artikkeli.
+       */
+      { nimi: 'Valtiopäivätalo', lat: 52.5186, lon: 13.3762, wiki: 'Valtiopäivätalo (Saksa)' },
+      { nimi: 'Brandenburgin portti', lat: 52.5163, lon: 13.3777, wiki: 'Brandenburgin portti' },
+      { nimi: 'Checkpoint Charlie', lat: 52.5076, lon: 13.3904, wiki: 'Checkpoint Charlie' },
+      { nimi: 'Museosaari', lat: 52.5169, lon: 13.401, wiki: 'Museumsinsel' },
       { nimi: 'Tv-torni', lat: 52.5208, lon: 13.4094, wiki: 'Berliinin televisiotorni' },
-      { nimi: 'Checkpoint Charlie', lat: 52.5076, lon: 13.3904, wiki: 'Checkpoint Charlie', nimiSuunta: 'ala' },
-      { nimi: 'East Side Gallery', lat: 52.505, lon: 13.4399, wiki: 'East Side Gallery', nimiSuunta: 'ala' },
+      { nimi: 'East Side Gallery', lat: 52.505, lon: 13.4399, wiki: 'East Side Gallery' },
     ],
   },
 };
