@@ -5437,6 +5437,74 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v336 — Saapuminen ilman zoomausanimaatiota, vahti sumealle kartalle (7.8.2026)
+
+Omistaja: *"ota zoomausanimaatiot pois kun tullaan aloitusnäytöltä
+lentokoneella mantereelle. peli vain siis siirtyy suoraan oikeaan zoom
+tasoon ilman animaatiota."* Ja: *"kartta muuten näkyy pehmeänä sen
+jälkeen kun peli päivittyy automaattisesti uuteen versioon."*
+
+### Saapumisliuku pois
+
+`zoomaaMantereelle` teki ennen kaksi asiaa: asetti lopullisen näkymän
+(`fitViewBox`) ja liu'utti kartan siihen. Liuku poistui kokonaan —
+isolla laudalla `asetaSaapumisAlku`-alkuasento ja muilla
+`asetaZoomAlku`. Zoomausääni lähti mukana: se soi täsmälleen liu'un
+mittaisena, eikä moottorin humaus ilman liikettä kerro mitään.
+
+Molemmat apurit jäivät käyttöön, koska aloituskartan oma zoom
+(`zoomaaAloituskartta`, ensimmäinen napautus etusivulla) käyttää niitä
+yhä — sitä ei pyydetty poistamaan.
+
+Perille päästyä pyydetään kuva heti oikealla mittakaavalla
+(`taydennaTaide({ heti: true })`). Ilman sitä ruudut jäisivät
+yleiskuvan tarkkuuteen, kunnes jokin muu sattuisi pyytämään
+täydennyksen — eli juuri se sumeus, josta seuraava kohta kertoo.
+
+### Tarkkuusvahti
+
+Ruudut piirretään sillä mittakaavalla, joka kartalla oli
+rasterointihetkellä, ja uusi sarja pyydetään vasta kun mittakaava
+muuttuu yli viidenneksen. Jos ensimmäinen rasterointi osuu hetkeen,
+jolloin näkymä ei ole vielä lopullinen — päivityksen jälkeinen lataus
+voi tapahtua taustavälilehdessä, jossa `requestAnimationFrame` ei
+laukea — ruudut jäävät väärän tarkkuisiksi eikä mikään pyydä niitä
+uudestaan. Juuri niin omistaja kuvasi: kartta on pehmeä, ja se
+korjautuu zoomaamalla ulos ja takaisin.
+
+`vahdiTarkkuutta` vertaa ruutujen mittakaavaa siihen, mikä kartalla
+oikeasti on, aina kun peli palaa näkyviin (`visibilitychange`). Kynnys
+on 2 % eikä 20 %: tässä ei olla kesken eleen, joten pieni eroavuus
+tarkoittaa juuri väärää tarkkuutta. Kuuntelija puretaan `destroy`ssa,
+ettei kuollut instanssi jää tarkkailemaan uuden pelin rinnalle.
+
+**Vahti korjaa seurauksen, ei syytä.** Juurisyytä ei ole saatu
+toistettua kehityskoneella: mitattuna ruutujen mittakaava vastasi
+todellista sekä yleiskuvassa että mannerzoomin jälkeen. Todennus
+tehtiin istuttamalla vika: ruutujen mittakaava asetettiin kolmasosaan
+oikeasta, ja `visibilitychange` palautti sen (0,66 → 1,99).
+
+### Mitä EI tehty
+
+Kartan vierityksen optimointi jäi tekemättä. Omistaja: *"jos keksit
+jonkun tavan optimoida lisää kartta scrollausta niin hyvä, se vielä
+vähän tökkii (lähinnä kun joutuu lataamaan zoomauksen jälkeen uutta
+karttamateriaalia scrollattaessa)."*
+
+Nykyinen rakenne on jo hiottu (v171, v295): eleen aikana ei
+rasteroida lainkaan, puskuria on ruudullinen joka suuntaan, ruudut
+piirretään lähimmästä alkaen ja vanhan mittakaavan ruudut jäävät alle
+kunnes uudet peittävät ne. Jäljellä oleva tökkiminen tulee siitä, että
+yhden ruudun rasterointi vie satoja millisekunteja pääsäikeessä eikä
+SVG:tä voi rasteroida työntekijässä.
+
+Mahdolliset suunnat mitattavaksi (`node tools/mittaa-kartta.mjs`):
+näkyvät ruudut ensin ja puskurirengas vasta `requestIdleCallback`illa;
+puskurin kasvattaminen vierityssuuntaan; tai ruudun pikselibudjetin
+laskeminen niin, että ruutuja on enemmän mutta jokainen valmistuu
+nopeammin. Kaikki kolme vaativat mittauksen ennen ja jälkeen — arvaus
+voi hyvin hidastaa.
+
 ## v317 — Matkakirja aukeaa kokonaan (7.8.2026)
 
 Omistaja: *"matkakirja voisi avautua jatkossa kokonaan, koska se
