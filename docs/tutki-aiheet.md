@@ -308,9 +308,11 @@ vaarin. Tervehdys päättyy aina kutsuun näyttää maailmantuntemus.
   popupiin olisi jäänyt vain syötteen parin lauseen kuvaus (6.8.2026,
   20minutos läpäisi molemmat).
 - Lisää lähteen etuliite `tools/uutisproxy/worker.js` SALLITUT-
-  listaan ja kirjaa OHJE.md:hen uusi päivitysmerkintä. Muistuta
-  PR:ssä ja vastauksessa: OMISTAJAN pitää julkaista worker uudelleen
-  (Edit code → liitä → Deploy) — siihen asti uutisosio on piilossa.
+  listaan ja kirjaa OHJE.md:hen uusi päivitysmerkintä. Worker
+  julkaistuu 7.8.2026 alkaen ITSESTÄÄN, kun muutos on mainissa
+  (Cloudflaren Git-integraatio + wrangler.jsonc) — käsijulkaisua ei
+  tarvitse muistuttaa. Jos integraatio on joskus pois käytöstä,
+  varakeino on entinen käsijulkaisu (OHJE.md).
 - Oikealta vasemmalle kirjoitettavat kielet toimivat ilman
   lisätöitä (dir="auto" on koodissa v297:stä alkaen).
 

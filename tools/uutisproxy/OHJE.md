@@ -1,5 +1,15 @@
 # Uutisvälityksen käyttöönotto (omistajalle, n. 5 min)
 
+> **Päivitys 7.8.2026 (automaattijulkaisu):** repo on kytketty
+> Cloudflaren Git-integraatioon (Workers Builds), ja repossa on nyt
+> `wrangler.jsonc`, joka kertoo sille workerin sisääntulopisteen.
+> Jokainen push main-haaraan julkaisee `tools/uutisproxy/worker.js`:n
+> itsestään — **Edit code → Deploy -käsivaihetta ei enää tarvita**,
+> ja alla olevien vanhojen päivitysmerkintöjen käsijulkaisuohjeet
+> jäävät historiaan. Käsijulkaisu toimii yhä varakeinona, jos
+> integraatio joskus irrotetaan. Tämä julkaisu vei voimaan myös
+> Saksan ja Ruotsin lähteet (alla).
+
 > **Päivitys 7.8.2026 (Saksa/Berliini, v316):** sallittuihin
 > lisättiin Saksan uutislähde (tagesschau:
 > `https://www.tagesschau.de/`) Berliinin lehteä varten. Julkaise
@@ -82,8 +92,12 @@ mikään mene rikki.
 Lisää syötteen osoite KAHTEEN paikkaan:
 
 1. `js/packs/uutislahteet.js` → `UUTISLAHTEET` (nimi, kieli, syote)
-2. `tools/uutisproxy/worker.js` → `SALLITUT`-lista, ja julkaise
-   worker uudelleen (Edit code → liitä → Deploy)
+2. `tools/uutisproxy/worker.js` → `SALLITUT`-lista
+
+Kun muutos on mainissa, Cloudflaren Git-integraatio julkaisee
+workerin itsestään (7.8.2026 alkaen, ks. ylin päivitysmerkintä) —
+mitään ei tarvitse tehdä käsin. Jos integraatio ei ole käytössä,
+varakeino on entinen käsijulkaisu: Edit code → liitä → Deploy.
 
 Sallittujen lista on turvatoimi: ilman sitä kuka tahansa voisi
 käyttää workeria yleisenä välityspalvelimena.
