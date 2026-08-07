@@ -100,48 +100,71 @@ export const EUROPE_SAAPUMISET = {
       + '[warmly] Heitin omani samaan kohtaan.',
   },
 
+  /*
+   * Koko lauta dekkariksi 7.8.2026 (omistaja: "Tee sinä tekstit") —
+   * raamatun Eurooppa-suunnitelman sävelet ja elementit: jännitystä
+   * vain Edinburghissa, lämpöä, huumoria, haikeutta, ihmetystä ja
+   * hengähdyksiä sen ympärillä. Vuoden 1873 tositapahtumat ja
+   * rakkaimmat lauseet säilytetty lyhennettyinä.
+   */
   kreeta: {
-    kuvaus: 'Knossoksen raunioilla on portaita, jotka johtavat ylös ja '
-      + 'alas yhtä aikaa, ja seinillä hyppää härän yli nuoria, jotka '
-      + 'maalattiin sinne kolme ja puoli tuhatta vuotta sitten. Tämä on '
-      + 'Euroopan vanhin kaupunkikulttuuri, ja se osasi jo tehdä '
-      + 'viemärit. Ulkona tuoksui timjami ja meri oli joka suunnassa.',
-    nosto: 'Isoisä kirjoitti: "Sanotaan että täällä asui hirviö '
+    kuvaus: 'Knossoksen portaat johtavat ylös ja alas yhtä aikaa, ja '
+      + 'seinillä nuoret hyppäävät härän yli — maalattuina kolme ja '
+      + 'puoli tuhatta vuotta sitten. Eksyin kahdesti.',
+    nosto: 'Isoisä kirjoitti: "Sanotaan, että täällä asui hirviö '
       + 'labyrintissa. Minä näin vain palatsin, jossa on liikaa '
-      + 'käytäviä." Eksyin itsekin kahdesti — ja aloin ymmärtää tarinan.',
+      + 'käytäviä." Aloin ymmärtää tarinaa.',
+    luenta: '[curious] Knossoksen portaat johtavat ylös ja alas yhtä '
+      + 'aikaa, ja seinillä nuoret hyppäävät härän yli — maalattuina '
+      + 'kolme ja puoli tuhatta vuotta sitten. Eksyin kahdesti. '
+      + '[softly] Isoisä kirjoitti: "Sanotaan, että täällä asui '
+      + 'hirviö labyrintissa. Minä näin vain palatsin, jossa on '
+      + 'liikaa käytäviä." [whispers] Aloin ymmärtää tarinaa.',
   },
 
   sisilia: {
-    kuvaus: 'Etna savusi horisontissa kuin se olisi juuri herännyt, ja '
-      + 'sen juurella kasvoi sitruunatarhoja mustassa laavamullassa. '
-      + 'Torilla huudettiin kalaa laulaen — oikeasti laulaen. Saarella on '
-      + 'kreikkalaisia temppeleitä, arabien kupoleita ja normannien '
-      + 'kirkkoja, usein samassa korttelissa.',
-    nosto: 'Isoisä merkitsi: "Sisilia on ollut kaikkien maa eikä kenenkään. '
-      + 'Siksi sen keittiö on paras Välimerellä." En kiistele ruoasta '
-      + 'kenenkään kanssa, mutta hän saattoi olla oikeassa.',
+    kuvaus: 'Torilla kalaa myytiin laulaen — oikeasti laulaen — ja '
+      + 'Etna savusi horisontissa kuin olisi juuri herännyt. '
+      + 'Sitruunatarhat kasvavat täällä mustassa laavamullassa.',
+    nosto: 'Isoisä merkitsi: "Sisilia on ollut kaikkien maa eikä '
+      + 'kenenkään. Siksi sen keittiö on paras Välimerellä." En '
+      + 'kiistele ruoasta kenenkään kanssa.',
+    luenta: '[excited] Torilla kalaa myytiin laulaen — oikeasti '
+      + 'laulaen — ja Etna savusi horisontissa kuin olisi juuri '
+      + 'herännyt. [curious] Sitruunatarhat kasvavat täällä mustassa '
+      + 'laavamullassa. [softly] Isoisä merkitsi: "Sisilia on ollut '
+      + 'kaikkien maa eikä kenenkään. Siksi sen keittiö on paras '
+      + 'Välimerellä." [warmly] En kiistele ruoasta kenenkään kanssa.',
   },
 
   dubrovnik: {
-    kuvaus: 'Kävelin kaupunginmuurin päällä koko kierroksen: alla '
-      + 'oranssit kattotiilet tiiviisti vieri vieressä, ulkopuolella '
-      + 'Adrianmeri niin kirkkaana että pohja näkyi. Dubrovnik oli '
-      + 'vuosisatoja oma pieni tasavaltansa, joka pysyi hengissä '
-      + 'kauppaamalla ja neuvottelemalla — ei sotimalla.',
-    nosto: 'Isoisä kirjoitti: "Ragusa osti rauhansa joka vuosi uudestaan. '
-      + 'Halvempaa kuin sota, ja kauniimpaa." Muurit ovat yhä pystyssä, '
-      + 'joten kauppa taisi kannattaa.',
+    kuvaus: 'Kävelin muurin päällä koko kierroksen: alla oranssit '
+      + 'katot, ulkopuolella meri niin kirkas, että pohja näkyi. Tämä '
+      + 'kaupunki pysyi vapaana neuvottelemalla, ei sotimalla.',
+    nosto: 'Isoisä kirjoitti: "Ragusa osti rauhansa joka vuosi '
+      + 'uudestaan. Halvempaa kuin sota, ja kauniimpaa." Muurit ovat '
+      + 'yhä pystyssä.',
+    luenta: '[curious] Kävelin muurin päällä koko kierroksen: alla '
+      + 'oranssit katot, ulkopuolella meri niin kirkas, että pohja '
+      + 'näkyi. Tämä kaupunki pysyi vapaana neuvottelemalla, ei '
+      + 'sotimalla. [softly] Isoisä kirjoitti: "Ragusa osti rauhansa '
+      + 'joka vuosi uudestaan. Halvempaa kuin sota, ja kauniimpaa." '
+      + '[warmly] Muurit ovat yhä pystyssä.',
   },
 
   sofia: {
-    kuvaus: 'Sofiassa kävelin korttelin matkan ja ohitin moskeijan, '
-      + 'synagogan ja kaksi kirkkoa. Keskellä katua on lasin alla '
-      + 'roomalainen katu, jota kaivettiin esiin metroa tehdessä — '
-      + 'kaupunki on rakennettu itsensä päälle monta kertaa. Vitosha-vuori '
-      + 'seisoo kadun päässä niin lähellä, että sinne pääsee bussilla.',
+    kuvaus: 'Kadun keskellä on lasin alla toinen katu — roomalainen, '
+      + 'kaivettu esiin metroa tehdessä. Sofia on rakennettu itsensä '
+      + 'päälle monta kertaa.',
     nosto: 'Isoisä kirjoitti: "Uusi pääkaupunki vanhalla paikalla. '
-      + 'Roomalaiset tulivat tänne lähteiden takia." Lähteet ovat yhä '
-      + 'käytössä: näin ihmisten hakevan niistä vettä kanistereihin.',
+      + 'Roomalaiset tulivat lähteiden takia." Näin ihmisten hakevan '
+      + 'niistä vettä yhä.',
+    luenta: '[curious] Kadun keskellä on lasin alla toinen katu — '
+      + 'roomalainen, kaivettu esiin metroa tehdessä. [whispers] '
+      + 'Sofia on rakennettu itsensä päälle monta kertaa. [softly] '
+      + 'Isoisä kirjoitti: "Uusi pääkaupunki vanhalla paikalla. '
+      + 'Roomalaiset tulivat lähteiden takia." [warmly] Näin ihmisten '
+      + 'hakevan niistä vettä yhä.',
   },
 
   venetsia: {
@@ -160,92 +183,131 @@ export const EUROPE_SAAPUMISET = {
   },
 
   marseille: {
-    kuvaus: 'Marseillen sataman edustalla on pieni linnoitussaari nimeltä '
-              + 'If. Sen tyrmästä pakeni Monte Criston kreivi — maailman '
-              + 'kuuluisimmassa seikkailukirjassa. Vene kiersi saaren '
-              + 'hitaasti, ja minä katsoin muureja ja mietin, mistä kohtaa '
-              + 'minä olisin uinut.',
-    nosto: 'Isoisä kirjoitti: "Kävin Ifin linnakkeessa. Vartija näytti '
-             + 'kopin, josta kreivi pakeni — vaikka kreiviä ei ole ollut '
-             + 'olemassakaan." Koppia näytetään yhä. Hyvä tarina voittaa '
-             + 'aina.',
+    kuvaus: 'Vene kiersi Ifin linnakesaaren hitaasti. Sen tyrmästä '
+      + 'pakeni Monte Criston kreivi — maailman kuuluisimmassa '
+      + 'seikkailukirjassa — ja minä mietin, mistä kohtaa minä olisin '
+      + 'uinut.',
+    nosto: 'Isoisä kirjoitti: "Vartija näytti kopin, josta kreivi '
+      + 'pakeni — vaikka kreiviä ei ole ollut olemassakaan." Hyvä '
+      + 'tarina voittaa aina.',
+    luenta: '[excited] Vene kiersi Ifin linnakesaaren hitaasti. Sen '
+      + 'tyrmästä pakeni Monte Criston kreivi — maailman '
+      + 'kuuluisimmassa seikkailukirjassa — [curious] ja minä mietin, '
+      + 'mistä kohtaa minä olisin uinut. [softly] Isoisä kirjoitti: '
+      + '"Vartija näytti kopin, josta kreivi pakeni — vaikka kreiviä '
+      + 'ei ole ollut olemassakaan." [warmly] Hyvä tarina voittaa '
+      + 'aina.',
   },
 
   granada: {
-    kuvaus: 'Alhambran palatsissa vesi on kaikkialla: se solisee pienissä '
-              + 'kanavissa huoneesta toiseen, kokoontuu suihkulähteiksi ja '
-              + 'jatkaa matkaansa. Rakentajat halusivat, että palatsi '
-              + 'kuulostaa viileältä. Vuorilla sen takana oli lunta, vaikka '
-              + 'oli kesäkuu.',
-    nosto: 'Isoisä merkitsi sivun reunaan: "Maurien viimeinen kaupunki '
-             + 'Euroopassa. Sen kauneuden edessä puheliaskin mies vaikenee." '
-             + 'Vaikenin minäkin — ja kuuntelin vettä.',
+    kuvaus: 'Alhambrassa vesi solisee huoneesta toiseen pienissä '
+      + 'kanavissa — palatsi rakennettiin kuulostamaan viileältä. '
+      + 'Vuorilla sen takana oli lunta, vaikka oli kesä.',
+    nosto: 'Isoisä merkitsi sivun reunaan: "Sen kauneuden edessä '
+      + 'puheliaskin mies vaikenee." Vaikenin minäkin — ja kuuntelin '
+      + 'vettä.',
+    luenta: '[curious] Alhambrassa vesi solisee huoneesta toiseen '
+      + 'pienissä kanavissa — palatsi rakennettiin kuulostamaan '
+      + 'viileältä. Vuorilla sen takana oli lunta, vaikka oli kesä. '
+      + '[softly] Isoisä merkitsi sivun reunaan: "Sen kauneuden '
+      + 'edessä puheliaskin mies vaikenee." [whispers] Vaikenin '
+      + 'minäkin — ja kuuntelin vettä.',
   },
 
   krakova: {
-    kuvaus: 'Krakovan suuren torin ylle soi joka tunti torvi, joka '
-              + 'vaikenee kesken sävelen. Tarina kertoo vartijasta, joka '
-              + 'varoitti kaupunkia vihollisesta ja soitti niin kauan kuin '
-              + 'ehti. Soittaja lopettaa yhä samaan kohtaan — hänen '
-              + 'kunniakseen.',
+    kuvaus: 'Torin ylle soi torvi, joka vaikenee kesken sävelen — '
+      + 'vartijan muistoksi, joka varoitti kaupunkia niin kauan kuin '
+      + 'ehti. Soittaja lopettaa yhä samaan kohtaan.',
     nosto: 'Isoisä kirjoitti: "Kaupunki, jota ei ole poltettu — '
-             + 'harvinaista näillä main." Hän ei voinut tietää, että se '
-             + 'pitäisi paikkansa vielä seuraavankin vuosisadan.',
+      + 'harvinaista näillä main." Hän ei tiennyt, että se pitäisi '
+      + 'paikkansa seuraavankin vuosisadan.',
+    luenta: '[curious] Torin ylle soi torvi, joka vaikenee kesken '
+      + 'sävelen — [softly] vartijan muistoksi, joka varoitti '
+      + 'kaupunkia niin kauan kuin ehti. Soittaja lopettaa yhä samaan '
+      + 'kohtaan. Isoisä kirjoitti: "Kaupunki, jota ei ole poltettu — '
+      + 'harvinaista näillä main." [warmly] Hän ei tiennyt, että se '
+      + 'pitäisi paikkansa seuraavankin vuosisadan.',
   },
 
   sarajevo: {
-    kuvaus: 'Sarajevossa jalkakäytävään on merkitty viiva: toisella '
-              + 'puolella ottomaanien basaari puukattoineen, toisella '
-              + 'wieniläiset kivitalot. Astuin sen yli edestakaisin kuin '
-              + 'taikarajan — idästä länteen ja takaisin yhdellä askeleella.',
+    kuvaus: 'Jalkakäytävässä kulkee viiva: toisella puolella '
+      + 'ottomaanien basaari, toisella wieniläiset kivitalot. Astuin '
+      + 'sen yli — idästä länteen yhdellä askeleella.',
     nosto: 'Isoisä ei ehtinyt Sarajevoon. Sivun reunassa lukee vain: '
-             + '"Bosniaan, jos aika riittää." Aika ei riittänyt — joten '
-             + 'seison tällä viivalla hänen puolestaan.',
+      + '"Bosniaan, jos aika riittää." Seison tällä viivalla hänen '
+      + 'puolestaan.',
+    luenta: '[curious] Jalkakäytävässä kulkee viiva: toisella '
+      + 'puolella ottomaanien basaari, toisella wieniläiset '
+      + 'kivitalot. Astuin sen yli — idästä länteen yhdellä '
+      + 'askeleella. [softly] Isoisä ei ehtinyt Sarajevoon. Sivun '
+      + 'reunassa lukee vain: [whispers] "Bosniaan, jos aika '
+      + 'riittää." [warmly] Seison tällä viivalla hänen puolestaan.',
   },
 
   islanti: {
-    kuvaus: 'Islannissa maasta nousee höyryä, vaikka mikään ei pala. '
-              + 'Seisoin Þingvellirin rotkossa, jossa kaksi mannerlaattaa '
-              + 'vetäytyy erilleen pari senttiä vuodessa — toinen jalka '
-              + 'Euroopan puolella, toinen Amerikan.',
-    nosto: 'Isoisä merkitsi: "Saari, jossa on tulivuoria ja parlamentti. '
-             + 'Kumpi on vanhempi, en tiedä." Parlamentti — se on '
-             + 'kokoontunut vuodesta 930, kauemmin kuin mikään muu '
-             + 'maailmassa.',
+    kuvaus: 'Maasta nousee höyryä, vaikka mikään ei pala. Seisoin '
+      + 'rotkossa, jossa kaksi mannerlaattaa vetäytyy erilleen — '
+      + 'toinen jalka Euroopassa, toinen Amerikassa.',
+    nosto: 'Isoisä kirjoitti: "Mittasin kuuman lähteen, kunnes '
+      + 'lämpömittarini suuttui. Saari, jossa on tulivuoria ja '
+      + 'parlamentti." Parlamentti on niistä vanhempi.',
+    luenta: '[curious] Maasta nousee höyryä, vaikka mikään ei pala. '
+      + '[excited] Seisoin rotkossa, jossa kaksi mannerlaattaa '
+      + 'vetäytyy erilleen — toinen jalka Euroopassa, toinen '
+      + 'Amerikassa. [softly] Isoisä kirjoitti: "Mittasin kuuman '
+      + 'lähteen, kunnes lämpömittarini suuttui. Saari, jossa on '
+      + 'tulivuoria ja parlamentti." [warmly] Parlamentti on niistä '
+      + 'vanhempi.',
   },
 
+  /*
+   * Edinburgh on suunnitelman ainoa jännityskaupunki — ja G:n
+   * viimeinen kosketus Euroopassa (raamattu: "askeleet sumussa
+   * kyllä, vaara ei"). Tykki laukaisee jännityksen huumoriksi.
+   */
   edinburgh: {
-    kuvaus: 'Edinburghin linna seisoo sammuneen tulivuoren päällä '
-              + 'keskellä kaupunkia. Kun kello löi yksi, muurilta pamahti '
-              + 'tykki — minä hyppäsin ilmaan, eikä kukaan muu edes '
-              + 'vilkaissut ylös.',
-    nosto: 'Isoisä kirjoitti: "Tykki ammutaan kello yksi joka päivä, '
-             + 'jotta sataman laivoissa osataan asettaa kellot oikeaan." '
-             + 'Sitä ammutaan yhä — vaikka aika on nykyään jokaisen '
-             + 'taskussa.',
+    kuvaus: 'Sumussa selkäni takana kuului askeleita — kunnes linnan '
+      + 'tykki pamahti kello yksi, ja me molemmat hypähdimme. '
+      + 'Askeleet kääntyivät kiireesti pois.',
+    nosto: 'Isoisä kirjoitti: "Tykki ammutaan joka päivä kello yksi, '
+      + 'jotta sataman laivat asettavat kellonsa oikeaan." Minä '
+      + 'kiitin sitä tänään muustakin.',
+    luenta: '[whispers] Sumussa selkäni takana kuului askeleita — '
+      + '[excited] kunnes linnan tykki pamahti kello yksi, ja me '
+      + 'molemmat hypähdimme. Askeleet kääntyivät kiireesti pois. '
+      + '[softly] Isoisä kirjoitti: "Tykki ammutaan joka päivä kello '
+      + 'yksi, jotta sataman laivat asettavat kellonsa oikeaan." '
+      + '[warmly] Minä kiitin sitä tänään muustakin.',
   },
 
   dublin: {
-    kuvaus: 'Dublinissa talot ovat kaikki samanlaisia — tiiltä ja kolme '
-              + 'ikkunariviä — mutta ovet on maalattu punaisiksi, sinisiksi '
-              + 'ja keltaisiksi, eikä yksikään ole naapurinsa värinen. '
-              + 'Illalla pubin nurkassa joku aloitti sävelmän, ja viulu ja '
-              + 'rumpu tulivat perässä itsestään.',
-    nosto: 'Isoisä kirjoitti: "Pääkatu on leveämpi kuin mikään näkemäni, '
-             + 'ja sen keskellä seisoo Nelson pylväänsä nokassa." Pylväs on '
-             + 'poissa — sen paikalla kiiltää teräsneula, joka on korkeampi '
-             + 'kuin yksikään talo.',
+    kuvaus: 'Pubin nurkassa joku aloitti sävelmän, ja viulu ja rumpu '
+      + 'tulivat perässä itsestään. Kadulla jokainen ovi on maalattu '
+      + 'eri väriseksi kuin naapurin.',
+    nosto: 'Isoisä kirjoitti: "Pääkatu on leveämpi kuin mikään '
+      + 'näkemäni, ja keskellä seisoo Nelson pylväänsä nokassa." '
+      + 'Pylväs on poissa — musiikki ei.',
+    luenta: '[warmly] Pubin nurkassa joku aloitti sävelmän, ja viulu '
+      + 'ja rumpu tulivat perässä itsestään. [curious] Kadulla '
+      + 'jokainen ovi on maalattu eri väriseksi kuin naapurin. '
+      + '[softly] Isoisä kirjoitti: "Pääkatu on leveämpi kuin mikään '
+      + 'näkemäni, ja keskellä seisoo Nelson pylväänsä nokassa." '
+      + '[warmly] Pylväs on poissa — musiikki ei.',
   },
 
   lissabon: {
-    kuvaus: 'Nousin keltaiseen ratikkaan, ja se kiipesi Alfaman kujia '
-              + 'niin ahtaita, että olisin ylettynyt koskettamaan seiniä '
-              + 'ikkunasta. Ylhäällä koko kaupunki avautui kerralla: vaaleat '
-              + 'talot, oranssit katot ja joki leveänä kuin meri.',
-    nosto: 'Isoisä kirjoitti: "Kaupunki nousee seitsemälle kukkulalle, '
-             + 'ja jokaiselta näkyy meri. Täältä lähdettiin aikoinaan '
-             + 'etsimään reittiä Intiaan." Katsoin samaan suuntaan kuin hän '
-             + '— ja ymmärsin lähtijöitä.',
+    kuvaus: 'Keltainen ratikka kiipesi Alfaman kujaa niin ahdasta, '
+      + 'että olisin yltänyt seiniin ikkunasta. Ylhäällä koko '
+      + 'kaupunki aukesi kerralla — ja joki oli leveä kuin meri.',
+    nosto: 'Isoisä kirjoitti: "Seitsemän kukkulaa, ja jokaiselta '
+      + 'näkyy meri. Täältä lähdettiin aikoinaan etsimään maailman '
+      + 'toista laitaa." Ymmärsin lähtijöitä.',
+    luenta: '[excited] Keltainen ratikka kiipesi Alfaman kujaa niin '
+      + 'ahdasta, että olisin yltänyt seiniin ikkunasta. Ylhäällä '
+      + 'koko kaupunki aukesi kerralla — ja joki oli leveä kuin meri. '
+      + '[softly] Isoisä kirjoitti: "Seitsemän kukkulaa, ja '
+      + 'jokaiselta näkyy meri. Täältä lähdettiin aikoinaan etsimään '
+      + 'maailman toista laitaa." [warmly] Ymmärsin lähtijöitä.',
   },
 
   madrid: {
@@ -263,26 +325,33 @@ export const EUROPE_SAAPUMISET = {
   },
 
   barcelona: {
-    kuvaus: 'Barcelonassa on kirkko, jota on rakennettu lähes '
-              + 'sataviisikymmentä vuotta, eikä se ole vieläkään valmis. '
-              + 'Tornit näyttävät sulaneelta hiekkalinnalta, ja niiden '
-              + 'väleissä kääntyilee nostureita. Sisällä pylväät haarautuvat '
-              + 'kuin puut, ja valo tulee läpi kaikenvärisenä.',
-    nosto: 'Isoisä ei maininnut kirkkoa sanallakaan — sen rakentamista '
-             + 'ei ollut vielä aloitettu. Hän kirjoitti vain: "Täällä '
-             + 'puhutaan kieltä, jota en osaa lukea kyltistä." Katalaania '
-             + 'puhutaan yhä — ja kirkkoa rakennetaan yhä.',
+    kuvaus: 'Sagrada Famílian tornit näyttävät sulaneelta '
+      + 'hiekkalinnalta, ja niiden välissä kääntyilee nostureita — '
+      + 'kirkkoa on rakennettu lähes sataviisikymmentä vuotta.',
+    nosto: 'Isoisä ei maininnut kirkkoa — sitä ei ollut aloitettu. '
+      + 'Hän kirjoitti: "Täällä puhutaan kieltä, jota en osaa lukea '
+      + 'kyltistä." Molemmat jatkavat yhä.',
+    luenta: '[curious] Sagrada Famílian tornit näyttävät sulaneelta '
+      + 'hiekkalinnalta, ja niiden välissä kääntyilee nostureita — '
+      + 'kirkkoa on rakennettu lähes sataviisikymmentä vuotta. '
+      + '[softly] Isoisä ei maininnut kirkkoa — sitä ei ollut '
+      + 'aloitettu. Hän kirjoitti: "Täällä puhutaan kieltä, jota en '
+      + 'osaa lukea kyltistä." [warmly] Molemmat jatkavat yhä.',
   },
 
   amsterdam: {
-    kuvaus: 'Amsterdamin talot nojaavat eteenpäin kuin kuuntelisivat, ja '
-              + 'jokaisen harjalla törröttää koukku, jolla huonekalut '
-              + 'nostetaan ikkunasta sisään — portaat ovat liian kapeat. Koko '
-              + 'kaupunki seisoo puupaalujen varassa pehmeässä maassa, eikä '
-              + 'ole kaatunut vielä.',
-    nosto: 'Isoisä kirjoitti: "Hollantilaiset eivät jää odottamaan maata '
-             + '— he tekevät sitä itse." Hänen aikanaan kokonainen järvi '
-             + 'pumpattiin kuivaksi. Nyt sen pohjalla on lentokenttä.',
+    kuvaus: 'Talot nojaavat eteenpäin kuin kuuntelisivat, ja jokaisen '
+      + 'harjalla törröttää koukku: huonekalut nostetaan sisään '
+      + 'ikkunasta, koska portaat ovat liian kapeat.',
+    nosto: 'Isoisä kirjoitti: "Hollantilaiset eivät jää odottamaan '
+      + 'maata — he tekevät sitä itse." Hänen aikanaan kuivattiin '
+      + 'kokonainen järvi.',
+    luenta: '[curious] Talot nojaavat eteenpäin kuin kuuntelisivat, '
+      + 'ja jokaisen harjalla törröttää koukku: huonekalut nostetaan '
+      + 'sisään ikkunasta, koska portaat ovat liian kapeat. [softly] '
+      + 'Isoisä kirjoitti: "Hollantilaiset eivät jää odottamaan '
+      + 'maata — he tekevät sitä itse." [warmly] Hänen aikanaan '
+      + 'kuivattiin kokonainen järvi.',
   },
 
   berliini: {
@@ -301,93 +370,129 @@ export const EUROPE_SAAPUMISET = {
   },
 
   wien: {
-    kuvaus: 'Wienissä tilasin kaakaon ja sain sen hopeatarjottimella, '
-              + 'vierellä lasi vettä, jota en ollut pyytänyt. Kukaan ei '
-              + 'hoputtanut, vaikka istuin kaksi tuntia. Jostain ikkunasta '
-              + 'kuului valssiharjoitus: sama tahti kolmesti, kunnes se meni '
-              + 'oikein.',
-    nosto: 'Isoisä kirjoitti: "Keisari avasi tänään vesijohdon, joka tuo '
-             + 'juomaveden vuorilta kaupunkiin ilman ainuttakaan pumppua." '
-             + 'Join siitä hanasta tänään — vesi kulkee yhä samaa reittiä '
-             + 'omalla painollaan.',
+    kuvaus: 'Kahvilassa kaakao tuli hopeatarjottimella ja vierellä '
+      + 'lasi vettä, jota en ollut pyytänyt. Kukaan ei hoputtanut, '
+      + 'vaikka istuin kaksi tuntia.',
+    nosto: 'Isoisä kirjoitti: "Keisari avasi tänään vesijohdon, joka '
+      + 'tuo veden vuorilta ilman ainuttakaan pumppua." Join siitä '
+      + 'hanasta tänään.',
+    luenta: '[warmly] Kahvilassa kaakao tuli hopeatarjottimella ja '
+      + 'vierellä lasi vettä, jota en ollut pyytänyt. Kukaan ei '
+      + 'hoputtanut, vaikka istuin kaksi tuntia. [softly] Isoisä '
+      + 'kirjoitti: "Keisari avasi tänään vesijohdon, joka tuo veden '
+      + 'vuorilta ilman ainuttakaan pumppua." [curious] Join siitä '
+      + 'hanasta tänään.',
   },
 
+  /*
+   * Alpeilla esitellään Horation ilmapuntari (raamatun
+   * motiivilanka: mittaukset) — saa palata harvakseltaan.
+   */
   alpit: {
-    kuvaus: 'Juna kiipesi rinnettä niin jyrkästi, että laukkuni liukui '
-              + 'lattialle, ja ylhäällä ilma oli kylmää keskellä heinäkuuta. '
-              + 'Vastapäiseltä rinteeltä joku puhalsi alppitorveen — ääni '
-              + 'ylitti koko laakson ja osui minuun kuin tarkoitettuna.',
-    nosto: 'Isoisä kirjoitti: "Jäätikkö ulottuu melkein hotellin '
-             + 'portaille. Opas sanoo sen liikkuvan, mutta minä en nähnyt." '
-             + 'Sama jäätikkö on nyt vetäytynyt kilometrien päähän — se '
-             + 'liikkui sittenkin.',
+    kuvaus: 'Juna kiipesi niin jyrkästi, että laukkuni liukui '
+      + 'lattialle, ja vastarinteeltä alppitorven ääni ylitti koko '
+      + 'laakson. Ilma oli kylmää keskellä heinäkuuta.',
+    nosto: 'Isoisä merkitsi ilmapuntarin lukeman tännekin ja '
+      + 'kirjoitti: "Jäätikkö ulottuu hotellin portaille. Opas sanoo '
+      + 'sen liikkuvan; en nähnyt." Se liikkui sittenkin.',
+    luenta: '[excited] Juna kiipesi niin jyrkästi, että laukkuni '
+      + 'liukui lattialle, ja vastarinteeltä alppitorven ääni ylitti '
+      + 'koko laakson. [curious] Ilma oli kylmää keskellä '
+      + 'heinäkuuta. [softly] Isoisä merkitsi ilmapuntarin lukeman '
+      + 'tännekin ja kirjoitti: "Jäätikkö ulottuu hotellin '
+      + 'portaille. Opas sanoo sen liikkuvan; en nähnyt." [whispers] '
+      + 'Se liikkui sittenkin.',
   },
 
   praha: {
-    kuvaus: 'Prahan Vanhankaupungin torilla kello löi täyden tunnin: '
-              + 'luukut aukesivat, kaksitoista apostolia kulki ohi ja kukko '
-              + 'kiekui. Koko aukio nosti katseensa yhtä aikaa — kellolle, '
-              + 'joka on jauhanut aikaa yli kuusisataa vuotta.',
-    nosto: 'Isoisä kirjoitti: "Prahassa on kello, joka näyttää auringon '
-             + 'ja kuun paikan mutta ei kiirettä." Se näyttää yhä samat '
-             + 'asiat — ja minä myöhästyin sen takia raitiovaunusta.',
+    kuvaus: 'Vanhankaupungin kello löi täyden tunnin: luukut '
+      + 'aukesivat, apostolit kulkivat ohi ja kukko kiekui. Koko '
+      + 'aukio nosti katseensa yhtä aikaa.',
+    nosto: 'Isoisä kirjoitti: "Prahassa on kello, joka näyttää '
+      + 'auringon ja kuun paikan mutta ei kiirettä." Myöhästyin sen '
+      + 'takia raitiovaunusta.',
+    luenta: '[curious] Vanhankaupungin kello löi täyden tunnin: '
+      + 'luukut aukesivat, apostolit kulkivat ohi ja kukko kiekui. '
+      + '[excited] Koko aukio nosti katseensa yhtä aikaa. [softly] '
+      + 'Isoisä kirjoitti: "Prahassa on kello, joka näyttää auringon '
+      + 'ja kuun paikan mutta ei kiirettä." [warmly] Myöhästyin sen '
+      + 'takia raitiovaunusta.',
   },
 
   budapest: {
-    kuvaus: 'Budapestissa menin illalla kylpylään: vesi oli lämmintä kuin '
-              + 'ammeessa, hiuksista nousi höyryä, ja kaksi herraa pelasi '
-              + 'shakkia altaan reunalla ulkoilmassa. Kukaan ei pitänyt sitä '
-              + 'sen kummempana kuin kahvinjuontia.',
-    nosto: 'Isoisä sattui paikalle juuri sinä vuonna, kun kaupunki '
-             + 'syntyi: "Buda, Óbuda ja Pest yhdistettiin yhdeksi, ja nimi '
-             + 'on nyt Budapest. Kartantekijöille riittää töitä." Nimi kesti '
-             + '— kartat piirrettiin uusiksi.',
+    kuvaus: 'Kylpylässä hiuksistani nousi höyryä ja kaksi herraa '
+      + 'pelasi shakkia altaan reunalla. Kukaan ei pitänyt sitä '
+      + 'kummempana kuin kahvinjuontia.',
+    nosto: 'Isoisä sattui paikalle, kun kaupunki syntyi: "Buda, '
+      + 'Óbuda ja Pest yhdistettiin, ja nimi on nyt Budapest. '
+      + 'Kartantekijöille riittää töitä." Nimi kesti.',
+    luenta: '[curious] Kylpylässä hiuksistani nousi höyryä ja kaksi '
+      + 'herraa pelasi shakkia altaan reunalla. Kukaan ei pitänyt '
+      + 'sitä kummempana kuin kahvinjuontia. [softly] Isoisä sattui '
+      + 'paikalle, kun kaupunki syntyi: "Buda, Óbuda ja Pest '
+      + 'yhdistettiin, ja nimi on nyt Budapest. Kartantekijöille '
+      + 'riittää töitä." [warmly] Nimi kesti.',
   },
 
   varsova: {
-    kuvaus: 'Varsovan vanhallakaupungilla kaikki näytti sadan vuoden '
-              + 'takaiselta, kunnes opas näytti valokuvaa samasta paikasta '
-              + 'sodan jälkeen: pelkkää soraa. Koko kortteli on rakennettu '
-              + 'uudelleen, ja mallina käytettiin vanhoja maalauksia. Kävelin '
-              + 'aukion yli uudestaan, paljon hitaammin.',
+    kuvaus: 'Vanhakaupunki näytti sadan vuoden takaiselta, kunnes '
+      + 'opas näytti valokuvan samasta paikasta sodan jälkeen: '
+      + 'pelkkää soraa. Kävelin aukion yli paljon hitaammin.',
     nosto: 'Isoisä merkitsi: "Kadulla puhutaan puolaa ja kirkoissa '
-             + 'lauletaan puolaksi, vaikka keisari hallitsee." Kaupunki '
-             + 'ehdittiin tuhota lähes maan tasalle — ja puolaa puhutaan '
-             + 'yhä.',
+      + 'lauletaan puolaksi, vaikka keisari hallitsee." Puolaa '
+      + 'puhutaan yhä.',
+    luenta: '[curious] Vanhakaupunki näytti sadan vuoden takaiselta, '
+      + 'kunnes opas näytti valokuvan samasta paikasta sodan '
+      + 'jälkeen: [softly] pelkkää soraa. Kävelin aukion yli paljon '
+      + 'hitaammin. Isoisä merkitsi: "Kadulla puhutaan puolaa ja '
+      + 'kirkoissa lauletaan puolaksi, vaikka keisari hallitsee." '
+      + '[warmly] Puolaa puhutaan yhä.',
   },
 
   bukarest: {
-    kuvaus: 'Bukarestissa käännyin pois leveältä bulevardilta ja löysin '
-              + 'pihakadun, jossa kasvoi viiniköynnös ja grilliltä nousi '
-              + 'savua. Kolme korttelia myöhemmin edessä kohosi rakennus, '
-              + 'joka on maailman painavin — niin suuri, että sitä on vaikea '
-              + 'katsoa kerralla.',
-    nosto: 'Isoisä kirjoitti: "Kadut valaistaan täällä petrolilampuin, '
-             + 'tuhat kappaletta — ensimmäisenä maailmassa, niin täällä '
-             + 'sanotaan." Lamppujen sytyttäjä oli silloin kokonainen '
-             + 'ammatti. Nyt valot syttyvät itsestään.',
+    kuvaus: 'Käännyin bulevardilta pihakadulle: viiniköynnös, savuava '
+      + 'grilli. Kolme korttelia myöhemmin edessä kohosi maailman '
+      + 'painavin rakennus.',
+    nosto: 'Isoisä kirjoitti: "Kadut valaistaan tuhannella '
+      + 'petrolilampulla — ensimmäisenä maailmassa, niin täällä '
+      + 'sanotaan." Nyt valot syttyvät itsestään.',
+    luenta: '[curious] Käännyin bulevardilta pihakadulle: '
+      + 'viiniköynnös, savuava grilli. [excited] Kolme korttelia '
+      + 'myöhemmin edessä kohosi maailman painavin rakennus. '
+      + '[softly] Isoisä kirjoitti: "Kadut valaistaan tuhannella '
+      + 'petrolilampulla — ensimmäisenä maailmassa, niin täällä '
+      + 'sanotaan." [warmly] Nyt valot syttyvät itsestään.',
   },
 
   kiova: {
-    kuvaus: 'Kiovassa laskeuduin liukuportaita, jotka eivät tuntuneet '
-              + 'loppuvan — metroasema on syvemmällä kuin yksikään muu '
-              + 'maailmassa. Ylhäällä odottivat kastanjapuut ja luostarin '
-              + 'kullatut kupolit. Kun ilmahälytys soi, ihmiset laskeutuvat '
-              + 'samat portaat suojaan — ja palaavat, kun se on ohi.',
-    nosto: 'Isoisä kirjoitti: "Puutarhassa istui sokea laulaja bandura '
-             + 'sylissään, ja koko seurue vaikeni kuin käskystä." Kiovassa '
-             + 'lauletaan yhä — eikä se vaikene käskystä.',
+    kuvaus: 'Laskeuduin liukuportaita, jotka eivät tuntuneet loppuvan '
+      + '— asema on syvemmällä kuin yksikään muu maailmassa. '
+      + 'Ylhäällä odottivat kastanjat ja kullatut kupolit.',
+    nosto: 'Isoisä kirjoitti: "Puutarhassa istui sokea laulaja '
+      + 'bandura sylissään, ja koko seurue vaikeni kuin käskystä." '
+      + 'Kiovassa lauletaan yhä — eikä se vaikene käskystä.',
+    luenta: '[curious] Laskeuduin liukuportaita, jotka eivät '
+      + 'tuntuneet loppuvan — asema on syvemmällä kuin yksikään muu '
+      + 'maailmassa. Ylhäällä odottivat kastanjat ja kullatut '
+      + 'kupolit. [softly] Isoisä kirjoitti: "Puutarhassa istui '
+      + 'sokea laulaja bandura sylissään, ja koko seurue vaikeni '
+      + 'kuin käskystä." [warmly] Kiovassa lauletaan yhä — eikä se '
+      + 'vaikene käskystä.',
   },
 
   odessa: {
-    kuvaus: 'Odessassa nousin merestä kaupunkiin pitkin portaita, joissa '
-              + 'on melkein kaksisataa askelmaa. Alhaalta katsoen näkyvät '
-              + 'vain portaat, loputtomana vuorena — ylhäältä taas pelkät '
-              + 'tasanteet, ei portaita lainkaan. Ylhäällä tuoksui akaasia ja '
-              + 'paistettu kala.',
-    nosto: 'Isoisä kirjoitti: "Odessassa puhutaan viittä kieltä yhdessä '
-             + 'lauseessa ja kaupataan kaikkea, minkä laiva jaksaa kantaa." '
-             + 'Portaat ovat samat — ja meri on yhä kadun päässä.',
+    kuvaus: 'Nousin merestä kaupunkiin portaita, joissa on melkein '
+      + 'kaksisataa askelmaa. Alhaalta näkyvät vain portaat, '
+      + 'ylhäältä ei portaita lainkaan — pelkät tasanteet.',
+    nosto: 'Isoisä kirjoitti: "Odessassa puhutaan viittä kieltä '
+      + 'yhdessä lauseessa ja kaupataan kaikkea, minkä laiva '
+      + 'kantaa." Meri on yhä kadun päässä.',
+    luenta: '[excited] Nousin merestä kaupunkiin portaita, joissa on '
+      + 'melkein kaksisataa askelmaa. [curious] Alhaalta näkyvät '
+      + 'vain portaat, ylhäältä ei portaita lainkaan — pelkät '
+      + 'tasanteet. [softly] Isoisä kirjoitti: "Odessassa puhutaan '
+      + 'viittä kieltä yhdessä lauseessa ja kaupataan kaikkea, minkä '
+      + 'laiva kantaa." [warmly] Meri on yhä kadun päässä.',
   },
 
   moskova: {
@@ -406,47 +511,65 @@ export const EUROPE_SAAPUMISET = {
   },
 
   pietari: {
-    kuvaus: 'Pietarin kesäyö ei pimene lainkaan: luin katukylttiä '
-              + 'keskiyöllä ilman lamppua. Yöllä Nevan sillat nousevat '
-              + 'pystyyn, jotta laivat pääsevät läpi — jos myöhästyt, jäät '
-              + 'väärälle rannalle aamuun asti. Jäin katsomaan, kun silta '
-              + 'aukesi kuin portti.',
-    nosto: 'Isoisä kirjoitti: "Tämä kaupunki on rakennettu suolle, mutta '
-             + 'se näyttää siltä kuin se olisi rakennettu marmorille." Suo '
-             + 'ei näy vieläkään — palatsit ovat keltaisia ja vihreitä kuin '
-             + 'sokerikakut.',
+    kuvaus: 'Kesäyö ei pimennyt lainkaan: luin katukylttiä keskiyöllä '
+      + 'ilman lamppua. Sitten Nevan sillat nousivat pystyyn, ja jäin '
+      + 'katsomaan kuin portin avautumista.',
+    nosto: 'Isoisä kirjoitti: "Sillat nousivat, ja jäin väärälle '
+      + 'rannalle aamuun asti. En harmitellut — halusin nähdä, kuka '
+      + 'muu jäi." Katsoin ympärilleni minäkin.',
+    luenta: '[curious] Kesäyö ei pimennyt lainkaan: luin katukylttiä '
+      + 'keskiyöllä ilman lamppua. [excited] Sitten Nevan sillat '
+      + 'nousivat pystyyn, ja jäin katsomaan kuin portin '
+      + 'avautumista. [softly] Isoisä kirjoitti: "Sillat nousivat, '
+      + 'ja jäin väärälle rannalle aamuun asti. En harmitellut — '
+      + 'halusin nähdä, kuka muu jäi." [whispers] Katsoin '
+      + 'ympärilleni minäkin.',
   },
 
   tallinna: {
     kuvaus: 'Tallinna nousi merestä kuin satukirjan kuva: punaiset '
-              + 'torninhatut, harmaat muurit ja Toompean kallio kaiken yllä. '
-              + 'Porttiholvin takana katu kapeni, ja Raatihuoneentorilla '
-              + 'tuoksuivat kuparipannussa paahdetut mantelit. Sitä tuoksua '
-              + 'seurasin kolme korttelia.',
-    nosto: 'Isoisä kirjoitti: "Revalissa laiva purki lastinsa aamulla, ja '
-             + 'juna vei sen Pietariin ennen iltaa." Asema on yhä paikallaan '
-             + '— nyt sen vieressä myydään villasukkia.',
+      + 'torninhatut ja Toompean kallio kaiken yllä. '
+      + 'Raatihuoneentorilla seurasin paahdettujen mantelien tuoksua '
+      + 'kolme korttelia.',
+    nosto: 'Isoisä kirjoitti: "Revalissa laiva purki lastinsa '
+      + 'aamulla, ja juna vei sen Pietariin ennen iltaa." Asema on '
+      + 'yhä paikallaan.',
+    luenta: '[excited] Tallinna nousi merestä kuin satukirjan kuva: '
+      + 'punaiset torninhatut ja Toompean kallio kaiken yllä. '
+      + '[curious] Raatihuoneentorilla seurasin paahdettujen '
+      + 'mantelien tuoksua kolme korttelia. [softly] Isoisä '
+      + 'kirjoitti: "Revalissa laiva purki lastinsa aamulla, ja juna '
+      + 'vei sen Pietariin ennen iltaa." [warmly] Asema on yhä '
+      + 'paikallaan.',
   },
 
   riika: {
-    kuvaus: 'Riiassa käänsin päätäni koko ajan: talojen seiniltä tuijottivat '
-              + 'kivikasvot, leijonat ja pöllöt. Keskustorin suuret hallit '
-              + 'kaartuivat pääni päällä kuin ylösalaisin käännetyt veneet, '
-              + 'ja myyjä ojensi minulle palan tummaa ruisleipää kysymättä '
-              + 'mitään.',
-    nosto: 'Isoisä kirjoitti: "Riiassa lauloi tänään tuhat ihmistä yhtä '
-             + 'aikaa latviaksi." Ne laulujuhlat pidetään yhä — tapa on '
-             + 'jatkunut jo yli 150 vuotta.',
+    kuvaus: 'Keskustorin hallit kaartuivat pääni päällä kuin '
+      + 'ylösalaiset veneet, ja myyjä ojensi palan tummaa ruisleipää '
+      + 'kysymättä mitään. Talojen seiniltä tuijottivat kivikasvot.',
+    nosto: 'Isoisä kirjoitti: "Riiassa lauloi tänään tuhat ihmistä '
+      + 'yhtä aikaa latviaksi." Ne laulujuhlat pidetään yhä.',
+    luenta: '[warmly] Keskustorin hallit kaartuivat pääni päällä '
+      + 'kuin ylösalaiset veneet, ja myyjä ojensi palan tummaa '
+      + 'ruisleipää kysymättä mitään. [curious] Talojen seiniltä '
+      + 'tuijottivat kivikasvot. [softly] Isoisä kirjoitti: '
+      + '"Riiassa lauloi tänään tuhat ihmistä yhtä aikaa latviaksi." '
+      + '[warmly] Ne laulujuhlat pidetään yhä.',
   },
 
   vilna: {
-    kuvaus: 'Vilnassa jokaisen kadunmutkan takaa nousi esiin uusi '
-              + 'barokkitorni. Kävelin Aamunportin ali — se on ainoa jäljellä '
-              + 'yhdeksästä kaupunginportista — ja ohikulkijat nostivat '
-              + 'hattuaan keskellä katua. Tässä kaupungissa eksyy mielellään.',
-    nosto: 'Isoisä kirjoitti: "Täällä saa puhua liettuaa, mutta kirjoja ei '
-             + 'saa painaa omilla kirjaimilla. Ne kannetaan rajan yli säkeissä '
-             + 'yöllä." Kirjankantajilla on nykyään oma patsaansa.',
+    kuvaus: 'Aamunportin ali kulkiessa ohikulkijat nostivat hattuaan, '
+      + 'ja jokaisen mutkan takaa nousi uusi barokkitorni. Tässä '
+      + 'kaupungissa eksyy mielellään.',
+    nosto: 'Isoisä kirjoitti: "Kirjoja ei saa painaa omilla '
+      + 'kirjaimilla — ne kannetaan rajan yli säkeissä yöllä." '
+      + 'Kirjankantajilla on nykyään patsas.',
+    luenta: '[curious] Aamunportin ali kulkiessa ohikulkijat '
+      + 'nostivat hattuaan, ja jokaisen mutkan takaa nousi uusi '
+      + 'barokkitorni. Tässä kaupungissa eksyy mielellään. [softly] '
+      + 'Isoisä kirjoitti: "Kirjoja ei saa painaa omilla kirjaimilla '
+      + '— [whispers] ne kannetaan rajan yli säkeissä yöllä." '
+      + '[warmly] Kirjankantajilla on nykyään patsas.',
   },
 
   istanbul: {
@@ -466,15 +589,18 @@ export const EUROPE_SAAPUMISET = {
   },
 
   helsinki: {
-    kuvaus: 'Helsinki ei noussut merestä kerralla vaan pala palalta: ensin '
-              + 'paljas luoto, sitten graniittiranta ja lopulta Tuomiokirkko '
-              + 'valkoisena kaiken yllä. Laiva pujotteli Suomenlinnan saarten '
-              + 'välistä satamaan, ja Kauppatorilla lokit väijyivät '
-              + 'saalistaan.',
-    nosto: 'Isoisä kirjoitti: "Helsingfors on nuori pääkaupunki, joka '
-             + 'näyttää mereltä suuremmalta kuin maalta. Valkoinen kirkko '
-             + 'seisoo sen yllä kuin keisarin allekirjoitus." Keisari on '
-             + 'poissa — kirkko seisoo paikallaan.',
+    kuvaus: 'Laiva pujotteli Suomenlinnan saarten välistä satamaan, '
+      + 'ja Tuomiokirkko nousi valkoisena kaiken ylle. Kauppatorilla '
+      + 'lokit väijyivät saalistaan.',
+    nosto: 'Isoisä kirjoitti: "Helsingfors näyttää mereltä '
+      + 'suuremmalta kuin maalta. Valkoinen kirkko seisoo kuin '
+      + 'keisarin allekirjoitus." Keisari on poissa — kirkko ei.',
+    luenta: '[curious] Laiva pujotteli Suomenlinnan saarten välistä '
+      + 'satamaan, ja Tuomiokirkko nousi valkoisena kaiken ylle. '
+      + 'Kauppatorilla lokit väijyivät saalistaan. [softly] Isoisä '
+      + 'kirjoitti: "Helsingfors näyttää mereltä suuremmalta kuin '
+      + 'maalta. Valkoinen kirkko seisoo kuin keisarin '
+      + 'allekirjoitus." [warmly] Keisari on poissa — kirkko ei.',
   },
 
   tukholma: {
@@ -494,48 +620,66 @@ export const EUROPE_SAAPUMISET = {
   },
 
   oslo: {
-    kuvaus: 'Isoisän kartassa ei ole Osloa — tämän kaupungin kohdalla lukee '
-              + 'Christiania. Vuono toi laivan suoraan keskustaan, ja metsä '
-              + 'alkoi siitä, mihin raitiovaunu loppui. Ostin kioskilta '
-              + 'vohvelin, jonka väliin lastattiin ruskeaa juustoa. Se maistui '
-              + 'suolaiselta karamellilta — söin toisenkin.',
-    nosto: 'Isoisä kirjoitti: "Christiania kuuluu Ruotsin kuninkaalle, '
-             + 'vaikka jokainen täällä sanoo olevansa norjalainen." He olivat '
-             + 'oikeassa: Norja itsenäistyi, ja kaupunki otti takaisin oman '
-             + 'vanhan nimensä.',
+    kuvaus: 'Isoisän kartassa tämän kaupungin kohdalla lukee '
+      + 'Christiania. Ostin kioskilta vohvelin, jonka väliin '
+      + 'lastattiin ruskeaa juustoa — se maistui suolaiselta '
+      + 'karamellilta.',
+    nosto: 'Isoisä kirjoitti: "Christiania kuuluu Ruotsin '
+      + 'kuninkaalle, vaikka jokainen sanoo olevansa norjalainen." '
+      + 'He olivat oikeassa — ja nimikin vaihtui.',
+    luenta: '[curious] Isoisän kartassa tämän kaupungin kohdalla '
+      + 'lukee Christiania. [excited] Ostin kioskilta vohvelin, '
+      + 'jonka väliin lastattiin ruskeaa juustoa — se maistui '
+      + 'suolaiselta karamellilta. [softly] Isoisä kirjoitti: '
+      + '"Christiania kuuluu Ruotsin kuninkaalle, vaikka jokainen '
+      + 'sanoo olevansa norjalainen." [warmly] He olivat oikeassa — '
+      + 'ja nimikin vaihtui.',
   },
 
   kobenhavn: {
-    kuvaus: 'Kööpenhaminan ensimmäinen ääni ei ollut auto vaan polkupyörän '
-              + 'kello — pyöriä tuli sillan yli sadoittain, ja odotin '
-              + 'reunalla, kunnes virta katkesi. Illalla keskellä kaupunkia '
-              + 'aukesi portti puutarhaan, jossa paloi tuhansia lyhtyjä ja '
-              + 'karuselli soi.',
+    kuvaus: 'Ensimmäinen ääni ei ollut auto vaan polkupyörän kello — '
+      + 'pyöriä tuli sillan yli sadoittain. Illalla keskellä '
+      + 'kaupunkia aukesi portti puutarhaan, jossa paloi tuhansia '
+      + 'lyhtyjä.',
     nosto: 'Isoisä kirjoitti: "Tanska menetti sodassa kolmanneksen '
-             + 'maastaan, ja silti täällä käydään illat huvipuistossa." Se '
-             + 'puisto on Tivoli — sama, jonka portista minäkin kävelin '
-             + 'sisään.',
+      + 'maastaan, ja silti täällä käydään illat huvipuistossa." '
+      + 'Kävelin samasta portista sisään.',
+    luenta: '[curious] Ensimmäinen ääni ei ollut auto vaan '
+      + 'polkupyörän kello — pyöriä tuli sillan yli sadoittain. '
+      + '[excited] Illalla keskellä kaupunkia aukesi portti '
+      + 'puutarhaan, jossa paloi tuhansia lyhtyjä. [softly] Isoisä '
+      + 'kirjoitti: "Tanska menetti sodassa kolmanneksen maastaan, '
+      + 'ja silti täällä käydään illat huvipuistossa." [warmly] '
+      + 'Kävelin samasta portista sisään.',
   },
 
   lappi: {
-    kuvaus: 'Inariin ei pääse junalla — ajoimme neljä tuntia, ja jossain '
-              + 'kohtaa metsä madaltui tunturiksi. Järvi oli niin iso, ettei '
-              + 'toista rantaa näkynyt, ja kaupan ovella puhuttiin kolmea '
-              + 'kieltä, joista tunnistin yhden. Täällä ei ole kaupunkia — '
-              + 'täällä on koko taivas.',
-    nosto: 'Isoisä kirjoitti: "Ivalojoen kultakaivannoilla tehdään '
-             + 'pitkiä päiviä, ja yö on niin valoisa, ettei kukaan muista '
-             + 'lopettaa." Kello on nyt puoli yksi yöllä — ja minäkin '
-             + 'unohdin.',
+    kuvaus: 'Ajoimme neljä tuntia, ja jossain kohtaa metsä madaltui '
+      + 'tunturiksi. Järvellä ei näkynyt toista rantaa, ja kaupan '
+      + 'ovella puhuttiin kolmea kieltä. Täällä on koko taivas.',
+    nosto: 'Isoisä kirjoitti: "Ivalojoen kultakaivannoilla yö on '
+      + 'niin valoisa, ettei kukaan muista lopettaa." Kello on puoli '
+      + 'yksi — minäkin unohdin.',
+    luenta: '[curious] Ajoimme neljä tuntia, ja jossain kohtaa metsä '
+      + 'madaltui tunturiksi. Järvellä ei näkynyt toista rantaa, ja '
+      + 'kaupan ovella puhuttiin kolmea kieltä. [warmly] Täällä on '
+      + 'koko taivas. [softly] Isoisä kirjoitti: "Ivalojoen '
+      + 'kultakaivannoilla yö on niin valoisa, ettei kukaan muista '
+      + 'lopettaa." Kello on puoli yksi — minäkin unohdin.',
   },
 
   tromssa: {
-    kuvaus: 'Nousin laiturille keskellä kirkasta yötä: kello oli yksi, ja '
-              + 'aurinko roikkui vuorten yllä kuin joku olisi unohtanut '
-              + 'sammuttaa sen. Satamassa kolisivat tyhjät kalalaatikot, ja '
-              + 'ohi pyöräili poika t-paidassa. Täällä ei kesällä nukuta.',
-    nosto: 'Isoisä kirjoitti: "Tromssan puodissa kuulee norjaa, suomea ja '
-             + 'venäjää samassa lauseessa. Tätä sanotaan Pohjolan Pariisiksi." '
-             + 'Nimi on käytössä yhä.',
+    kuvaus: 'Nousin laiturille keskellä kirkasta yötä: kello oli '
+      + 'yksi, ja aurinko roikkui vuorten yllä kuin joku olisi '
+      + 'unohtanut sammuttaa sen. Ohi pyöräili poika t-paidassa.',
+    nosto: 'Isoisä kirjoitti: "Puodissa kuulee norjaa, suomea ja '
+      + 'venäjää samassa lauseessa. Tätä sanotaan Pohjolan '
+      + 'Pariisiksi." Nimi on käytössä yhä.',
+    luenta: '[excited] Nousin laiturille keskellä kirkasta yötä: '
+      + 'kello oli yksi, ja aurinko roikkui vuorten yllä kuin joku '
+      + 'olisi unohtanut sammuttaa sen. [curious] Ohi pyöräili poika '
+      + 't-paidassa. [softly] Isoisä kirjoitti: "Puodissa kuulee '
+      + 'norjaa, suomea ja venäjää samassa lauseessa. Tätä sanotaan '
+      + 'Pohjolan Pariisiksi." [warmly] Nimi on käytössä yhä.',
   },
 };
