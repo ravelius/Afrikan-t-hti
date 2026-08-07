@@ -109,15 +109,22 @@ export const UUTISLAHTEET = {
  * maailmanlaajuisesti ilman aluerajauksia (todettu 5.8.2026).
  */
 export const TV_KANAVAT = {
-  // Sky News lähettää YouTubeen ympäri vuorokauden ilman
-  // aluerajausta (live-tunniste ja kanavatunnus varmistettu
-  // live-sivulta 6.8.2026).
-  GBR: {
-    nimi: 'Sky News',
-    livesivu: 'https://www.youtube.com/@SkyNews/live',
-    upotus: 'https://www.youtube.com/embed/live_stream'
-      + '?channel=UCoMdktPbSTixAyNGwb-UYkQ&autoplay=1',
-  },
+  /*
+   * BRITANNIALLA EI OLE TV-NAPPIA (v347).
+   *
+   * Sky Newsin YouTube-live poistettiin omistajan päätöksen mukaisesti
+   * ("livet eivät näytä oikein toimivan", 7.8.2026): tilalle piti tulla
+   * tallenne, kuten Saksassa. Korvaajaa ei löytynyt. BBC:n
+   * video-RSS on poistettu käytöstä (404, tarkistettu 7.8.2026), ja
+   * BBC:n oma videoputki vaatii allekirjoitetut osoitteet eikä anna
+   * suoraa mp4:ää. Sky Newsin ja Channel 4:n syötteissä on vain
+   * kuvaliitteitä (image/jpeg), ei videota.
+   *
+   * Ohje on tässä tilanteessa yksiselitteinen: tv jätetään pois eikä
+   * palata YouTube-liveen. Lehti toimii ilman — radio ja uutiset
+   * jäävät ennalleen. Jos BBC joskus avaa mp4-rajapinnan, tähän
+   * kirjoitetaan tallenteet DEU:n malliin.
+   */
   // Al Qahera News on Egyptin uutiskanava, joka lähettää YouTubeen
   // ympäri vuorokauden ilman aluerajausta (kanavatunnus varmistettu
   // live-sivun canonical-linkistä 5.8.2026).

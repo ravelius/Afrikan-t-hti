@@ -102,6 +102,484 @@ export function maanAiheOtsikko(maanNimi, aiheNimi) {
 }
 
 export const MAA_KATEGORIAT = {
+  GBR: [
+    {
+      id: 'historia',
+      nimi: 'Historia',
+      johdanto: 'Kivikehä, jonka rakentajat kiskoivat kivet satojen kilometrien '
+        + 'päästä, pergamentti joka pani kuninkaankin lain alle, ja veturi '
+        + 'joka aloitti rautatieajan.',
+      nostot: [
+        {
+          otsikko: 'Kivet kiskottiin 250 kilometrin päästä',
+          aika: 'n. 2500 eaa.',
+          tiedosto: 'Stonehenge2007 07 30.jpg',
+          teksti: 'Stonehengen suurimmat kivet painavat 25 tonnia, mutta '
+            + 'hämmästyttävimpiä ovat pienemmät siniset kivet: ne louhittiin '
+            + 'Walesin Preselivuorilta, noin 250 kilometrin päästä. Kukaan ei '
+            + 'tiedä varmasti, miten ne siirrettiin — pyörää ei vielä ollut. '
+            + 'Kehä on rakennettu niin, että keskikesän auringonnousu osuu '
+            + 'täsmälleen sisäänkäynnin akselille, joten se toimii '
+            + 'jättimäisenä kalenterina. Rakentamiseen meni yli tuhat vuotta '
+            + 'ja monta sukupolvea: ne jotka aloittivat, eivät nähneet sitä '
+            + 'valmiina.',
+          selite: 'Stonehengen kehä Wiltshiren tasangolla. Vaakasuorat kivet on '
+            + 'liitetty pystykiviin puusepän tapein.',
+          lahde: 'garethwiscombe, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Stonehenge',
+        },
+        {
+          otsikko: 'Kuningas pakotettiin lain alle',
+          aika: '1215',
+          tiedosto: 'Magna Carta (British Library Cotton MS Augustus II.106).jpg',
+          teksti: 'Kuningas Juhana oli hävinnyt sotia ja kiristänyt veroja niin, '
+            + 'että paronit kyllästyivät. Kesäkuussa 1215 he pakottivat hänet '
+            + 'Runnymeden niitylle allekirjoittamaan asiakirjan, joka sanoi '
+            + 'jotain siihen asti kuulumatonta: myös kuningas on lain '
+            + 'alainen. Magna Cartan tunnetuin kohta lupaa, ettei ketään '
+            + 'vapaata miestä saa vangita ilman maan lain mukaista tuomiota. '
+            + 'Juhana yritti mitätöidä sopimuksen heti, mutta ajatus jäi '
+            + 'elämään — ja siitä kasvoi vähitellen ajatus siitä, että '
+            + 'vallalla on rajat.',
+          selite: 'Yksi neljästä säilyneestä vuoden 1215 kappaleesta. Teksti on '
+            + 'latinaa, kirjoitettu rautagallusmusteella pergamentille.',
+          lahde: 'Tuntematon kirjuri, Wikimedia Commons (PD)',
+          wiki: 'Magna Carta',
+        },
+        {
+          otsikko: 'Leipomon uuni poltti kaupungin',
+          aika: '1666',
+          tiedosto: 'Great Fire London.jpg',
+          teksti: 'Tuli syttyi syyskuun yönä Pudding Lanen leipomossa ja levisi '
+            + 'neljässä päivässä läpi puisen Lontoon. Talot oli rakennettu '
+            + 'niin, että yläkerrat työntyivät kadun päälle — ylimmät '
+            + 'kerrokset melkein koskettivat toisiaan, ja liekit hyppäsivät '
+            + 'kadun yli vaivatta. Palo tuhosi 13 000 taloa ja Pyhän Paavalin '
+            + 'katedraalin. Kuolleita kirjattiin silti vain kuusi. '
+            + 'Jälkeenpäin kaupunki määrättiin rakennettavaksi tiilestä ja '
+            + 'kivestä, ja kadut levennettiin — palo kirjoitti Lontoon '
+            + 'uusiksi.',
+          selite: 'Tuntemattoman taiteilijan maalaus noin vuodelta 1675: palo '
+            + 'nähtynä Thamesilta, vanha Lontoon silta vasemmalla.',
+          lahde: 'Tuntematon taiteilija, Wikimedia Commons (PD)',
+          wiki: 'Lontoon suurpalo',
+        },
+        {
+          otsikko: 'Kilpailu, joka ratkaisi rautatien',
+          aika: '1829',
+          tiedosto: 'Stephenson Rocket at the National Railway Museum York Oct25 01.jpg',
+          teksti: 'Kun Liverpoolin ja Manchesterin välille rakennettiin rataa, '
+            + 'kukaan ei ollut varma, kannattaisiko vaunuja vetää veturilla '
+            + 'vai köydellä ja paikallaan seisovalla höyrykoneella. Asia '
+            + 'ratkaistiin kilpailulla Rainhillissä 1829. George ja Robert '
+            + 'Stephensonin Rocket voitti: se kulki 46 kilometriä tunnissa, '
+            + 'mikä oli silloin käsittämätön vauhti. Salaisuus oli '
+            + 'kattilassa, jonka läpi kulki 25 kuparista putkea — mitä '
+            + 'enemmän pintaa, sitä nopeammin vesi kiehui. Kaikki '
+            + 'höyryveturit rakennettiin sen jälkeen samalla periaatteella.',
+          selite: 'Rocketin säilynyt runko Yorkin rautatiemuseossa. Etupyörät '
+            + 'ovat alkuperäiset, savupiippu myöhemmin lyhennetty.',
+          lahde: 'Malcolmxl5, Wikimedia Commons (CC0)',
+          wiki: 'George Stephenson',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      tehtava: {
+        kysymys: 'Miksi voileipä sai nimensä?',
+        vaihtoehdot: ['Jaarli halusi syödä pelipöydässä', 'Se keksittiin Sandwichin kaupungissa', 'Leipä leikattiin hiekkarannalla'],
+        oikea: 0,
+        fakta: 'Sandwichin jaarli halusi syödä korttipöydästä nousematta — '
+          + 'vastaus löytyi voileipänostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Kalaa ja ranskalaisia sanomalehdestä',
+          tiedosto: 'Modern fish and chips (8368723726).jpg',
+          teksti: 'Fish and chips syntyi kahdesta erillisestä ideasta, jotka '
+            + 'löysivät toisensa 1860-luvun Lontoossa: juutalaiset '
+            + 'maahanmuuttajat olivat tuoneet tavan uppopaistaa kalaa '
+            + 'taikinassa, ja pohjoisen tehdaskaupungeissa paistettiin '
+            + 'perunaa. Yhdessä niistä tuli työväen ruokaa, jota myytiin '
+            + 'kadulla käärittynä vanhaan sanomalehteen — halpaa, kuumaa ja '
+            + 'täyttävää. Toisessa maailmansodassa fish and chips oli yksi '
+            + 'harvoista ruoista, joita ei säännöstelty: hallitus katsoi sen '
+            + 'pitävän mielialaa yllä.',
+          selite: 'Uppopaistettu turska taikinakuoressa, paksut chipsit ja '
+            + 'sitruuna — annos sanomalehden päällä kuten ennenkin.',
+          lahde: 'LearningLark, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Fish and chips',
+        },
+        {
+          otsikko: 'Herttuatar keksi iltapäivän välipalan',
+          tiedosto: 'Afternoon Tea - geograph.org.uk - 4115260.jpg',
+          teksti: '1800-luvun alussa britit söivät aamiaisen ja sitten '
+            + 'päivällisen vasta kahdeksalta illalla. Bedfordin herttuatar '
+            + 'Anna kärsi iltapäivällä nälästä ja pyysi kamaripalvelijaa '
+            + 'tuomaan huoneeseensa teetä ja voileipiä. Tavasta tuli '
+            + 'seurustelumuoto: pian koko Britannia joi teetä neljän ja '
+            + 'viiden välillä. Teetä juodaan yhä noin sata miljoonaa '
+            + 'kupillista päivässä, ja kiista maidon lisäämisen '
+            + 'järjestyksestä jatkuu — vanha tapa oli kaataa maito ensin, '
+            + 'jottei ohut posliini haljennut kuumasta teestä.',
+          selite: 'Iltapäivätee tarjoillaan teehuoneessa: kannu, maitokannu ja '
+            + 'leivonnaiset kuuluvat asiaan.',
+          lahde: 'Anthony O\'Neil, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Tee',
+        },
+        {
+          otsikko: 'Jaarli ei halunnut nousta pelipöydästä',
+          tiedosto: 'John Montagu, 4th Earl of Sandwich by Johann Zoffany.jpg',
+          teksti: 'John Montagu, Sandwichin neljäs jaarli, oli innokas '
+            + 'korttipelaaja ja kova työntekijä. Kertomuksen mukaan hän pyysi '
+            + 'vuonna 1762 palvelijaa tuomaan lihaa kahden leipäviipaleen '
+            + 'välissä, jotta hän voisi syödä nousematta pöydästä eivätkä '
+            + 'sormet rasvaantuisi kortteihin. Muut alkoivat tilata samaa — '
+            + 'sitä mitä Sandwich syö. Nimi jäi. Jaarli oli myös laivaston '
+            + 'johtaja, ja kapteeni Cook nimesi hänen mukaansa Havaijin '
+            + 'saaret, jotka tunnettiin pitkään Sandwichsaarina.',
+          selite: 'Johann Zoffanyn muotokuva jaarlista. Sama mies antoi nimen '
+            + 'sekä voileivälle että Havaijin saarille.',
+          lahde: 'Johann Zoffany, Wikimedia Commons (PD)',
+          wiki: 'Voileipä',
+        },
+        {
+          otsikko: 'Vanukas syötiin ennen lihaa',
+          tiedosto: '-2021-05-02 Roast beef and Yorkshire pudding, Trimingham, Norfolk.JPG',
+          teksti: 'Sunnuntain paistista tuli tapa siksi, että liha laitettiin '
+            + 'uuniin ennen kirkkoa ja se oli kypsä, kun väki palasi. Paistin '
+            + 'alle asetettiin astia, johon tippuva rasva kerättiin, ja '
+            + 'siihen kaadettiin ohut taikina: näin syntyi Yorkshiren '
+            + 'vanukas. Alun perin se tarjoiltiin ENNEN lihaa kastikkeen '
+            + 'kanssa — köyhässä talossa vatsa täyttyi halvalla vanukkaalla, '
+            + 'ja kallista lihaa tarvittiin vähemmän. Nykyään se kuuluu '
+            + 'samalle lautaselle paistin ja kastikkeen kanssa.',
+          selite: 'Sunnuntain naudanpaisti, Yorkshiren vanukas ja juurekset '
+            + 'norfolkilaisessa kodissa.',
+          lahde: 'Kolforn, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+    },
+    {
+      id: 'kirjallisuus',
+      nimi: 'Kirjallisuus',
+      johdanto: 'Näytelmäkirjailija, joka keksi sanoja jotka yhä puuttuivat, '
+        + 'orpopoika jonka tarina muutti lakia, ja etsivä jolle lähetetään '
+        + 'yhä kirjeitä.',
+      nostot: [
+        {
+          otsikko: 'Hän keksi sanat, joita ei ollut',
+          tiedosto: 'The Globe Theatre, in London, in 2011.jpg',
+          teksti: 'William Shakespeare kirjoitti noin 38 näytelmää, ja kun '
+            + 'sopivaa sanaa ei ollut, hän teki sen itse. Englannin kieleen '
+            + 'jäi häneltä satoja ilmauksia — muun muassa sanat lonely, '
+            + 'bedroom ja eyeball ovat ensi kertaa kirjattu hänen '
+            + 'teksteistään. Globe-teatterissa halvin lippu maksoi pennin, ja '
+            + 'sen ostaneet seisoivat avoimen katon alla näyttämön edessä; '
+            + 'heitä kutsuttiin groundlingeiksi. Teatteri paloi 1613, kun '
+            + 'näytelmän tykinlaukaus sytytti olkikaton. Nykyinen Globe on '
+            + '1997 valmistunut jäljennös muutaman sadan metrin päässä '
+            + 'alkuperäisestä.',
+          selite: 'Nykyinen Globe Thamesin etelärannalla: sama pyöreä muoto ja '
+            + 'avoin katto kuin 1599 rakennetussa alkuperäisessä.',
+          lahde: 'Amy Truter, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Globe-teatteri',
+        },
+        {
+          otsikko: 'Kirjailija, joka oli itse ollut lapsityöläinen',
+          tiedosto: 'Charles Dickens by Daniel Maclise.jpg',
+          teksti: 'Kun Charles Dickens oli kaksitoista, hänen isänsä joutui '
+            + 'velkavankilaan ja poika lähetettiin töihin '
+            + 'kenkälankkitehtaaseen liimaamaan etikettejä purkkeihin. Hän ei '
+            + 'kertonut siitä juuri kenellekään, mutta kokemus päätyi '
+            + 'kirjoihin: Oliver Twistin ja David Copperfieldin lapset ovat '
+            + 'yksin aikuisten maailmassa. Romaanit ilmestyivät '
+            + 'jatkokertomuksina lehdissä kuukausi kerrallaan, ja lukijat '
+            + 'odottivat seuraavaa osaa kuin sarjan jaksoa. Dickensin '
+            + 'kuvaukset köyhien oloista vaikuttivat siihen, että lapsityötä '
+            + 'alettiin rajoittaa laissa.',
+          selite: 'Daniel Maclisen muotokuva vuodelta 1839, jolloin 27-vuotias '
+            + 'Dickens oli jo kuuluisa.',
+          lahde: 'Daniel Maclise, Wikimedia Commons (PD)',
+          wiki: 'Charles Dickens',
+        },
+        {
+          otsikko: 'Tarina syntyi soutuveneessä',
+          tiedosto: 'John Tenniel - Illustration from The Nursery Alice (1890) - c03757 07.jpg',
+          teksti: 'Heinäkuisena iltapäivänä 1862 matemaatikko Charles Dodgson '
+            + 'souti Thamesilla kolmen pikkutytön kanssa ja keksi matkalla '
+            + 'tarinan tylsistyneestä Alicesta, joka putoaa kaninkoloon. '
+            + 'Kymmenvuotias Alice Liddell pyysi kirjoittamaan sen muistiin. '
+            + 'Dodgson julkaisi sen nimellä Lewis Carroll. Kuvittajaksi tuli '
+            + 'Punch-lehden pilapiirtäjä John Tenniel, jonka kuvista tuli '
+            + 'niin tunnettuja, että moni näkee Liisan yhä juuri sellaisena. '
+            + 'Hullun hatuntekijän hattuun kirjoitettu "10/6" on hinta: '
+            + 'kymmenen shillinkiä ja kuusi penceä.',
+          selite: 'Hullut teekutsut John Tennielin kuvituksena. Väritetty laitos '
+            + 'Nursery Alice -kirjasta vuodelta 1890.',
+          lahde: 'John Tenniel, Wikimedia Commons (PD)',
+          wiki: 'Liisan seikkailut ihmemaassa',
+        },
+        {
+          otsikko: 'Etsivälle tulee yhä postia',
+          tiedosto: 'Portrait of Sherlock Holmes by Sidney Paget.jpg',
+          teksti: 'Arthur Conan Doyle oli lääkäri, jonka vastaanotolle ei '
+            + 'riittänyt potilaita — odotellessa hän kirjoitti. Sherlock '
+            + 'Holmesin esikuva oli hänen opettajansa Joseph Bell, joka '
+            + 'päätteli potilaan ammatin pelkästä kädestä ja kengistä. Doyle '
+            + 'kyllästyi hahmoonsa ja tappoi tämän 1893, mutta lukijoiden '
+            + 'raivo oli niin kova, että Holmes oli herätettävä henkiin. '
+            + 'Baker Street 221B:hen tulee yhä kirjeitä, joissa pyydetään '
+            + 'apua — osoitteessa toimii museo, jonka työntekijät vastaavat '
+            + 'niihin.',
+          selite: 'Sidney Pagetin muotokuva vuodelta 1904. Piippu ja terävä katse '
+            + 'tulivat kuvituksista, eivät teksteistä.',
+          lahde: 'Sidney Paget, Wikimedia Commons (PD)',
+          wiki: 'Sherlock Holmes',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Kuninkaan jokijuhlat, marssi jota soitetaan koulun päättäjäisissä '
+        + 'ympäri maailmaa, merimiesten työlaulu — ja neljä nuorta miestä '
+        + 'Liverpoolista.',
+      nostot: [
+        {
+          otsikko: 'Orkesteri soitti proomulla kuninkaalle',
+          tiedosto: 'George Frideric Handel by Thomas Hudson.jpg',
+          teksti: 'Saksassa syntynyt Georg Friedrich Händel muutti Lontooseen ja '
+            + 'jäi loppuiäkseen. Vuonna 1717 kuningas Yrjö I halusi juhlat '
+            + 'Thamesille: viisikymmentä muusikkoa sijoitettiin proomulle, '
+            + 'joka seurasi kuninkaan venettä pitkin jokea. Händelin '
+            + 'Vesimusiikki soi niin, että kuningas pyysi toistamaan koko '
+            + 'teoksen kolmesti — soittajat pelasivat sen läpi useaan kertaan '
+            + 'matkalla Whitehallista Chelseaan ja takaisin. Händel sävelsi '
+            + 'myös Messias-oratorion, jonka Halleluja-kuoron aikana yleisö '
+            + 'nousee yhä seisomaan.',
+          selite: 'Thomas Hudsonin muotokuva Händelistä. Säveltäjä eli Lontoossa '
+            + 'lähes viisikymmentä vuotta.',
+          lahde: 'Thomas Hudson, Wikimedia Commons (PD)',
+          wiki: 'Georg Friedrich Händel',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/8/83/4-George_Frideric_Handel_-_Water_Music_Suite_in_F_major_%28Presto%29_HWV348.ogg/4-George_Frideric_Handel_-_Water_Music_Suite_in_F_major_%28Presto%29_HWV348.ogg.mp3',
+          musiikkiNayteNimi: 'Händel: Vesimusiikki, Presto (CC BY-SA 3.0)',
+        },
+        {
+          otsikko: 'Marssi, jota soitetaan päättäjäisissä',
+          tiedosto: 'Edward Elgar 1905.jpg',
+          teksti: 'Edward Elgar opetteli musiikin itse: hänen isänsä piti '
+            + 'soitinkauppaa, ja poika luki nuotteja varaston lattialla. '
+            + 'Vuonna 1901 valmistunut marssi Pomp and Circumstance nro 1 sai '
+            + 'yleisön niin villiksi, että se piti soittaa kolmesti '
+            + 'peräkkäin. Sen keskiosan laulava melodia tunnetaan '
+            + 'Britanniassa nimellä Land of Hope and Glory, ja Yhdysvalloissa '
+            + 'sama sävelmä soi käytännössä joka koulun ja yliopiston '
+            + 'päättäjäisissä — tapa alkoi Yalessa 1905, kun Elgar itse oli '
+            + 'paikalla vastaanottamassa kunniatohtorin arvoa.',
+          selite: 'Elgar vuonna 1905, samana vuonna kun hänen marssistaan tuli '
+            + 'amerikkalaisten päättäjäisten vakiosävelmä.',
+          lahde: 'Arthur Elson, Wikimedia Commons (PD)',
+          wiki: 'Edward Elgar',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/2/28/ELGAR_Pomp_and_Circumstance_in_D%2C_Opus_39%2C_No._1_-_United_States_Marine_Band.mp3',
+          musiikkiNayteNimi: 'Elgar: Pomp and Circumstance nro 1 — United States Marine Band (PD)',
+        },
+        {
+          otsikko: 'Laulu piti nostoväen tahdissa',
+          tiedosto: 'Cutty Sark rigging 17RM0464.jpg',
+          teksti: 'Purjelaivalla monta työtä vaati yhtäaikaista voimaa: ankkurin '
+            + 'nostaminen tai purjeen kiristäminen onnistui vain, jos kaikki '
+            + 'vetivät samalla hetkellä. Siksi laulettiin. Merimieslauluissa '
+            + 'esilaulaja lauloi säkeen ja miehistö vastasi kertosäkeen — ja '
+            + 'juuri kertosäkeen kohdalla vedettiin. What shall we do with '
+            + 'the drunken sailor on niin sanottu stamp-and-go -laulu, jota '
+            + 'laulettiin marssien kannen poikki köysi kädessä. Höyrykoneen '
+            + 'myötä työlaulut kävivät tarpeettomiksi, mutta laulut jäivät.',
+          selite: 'Cutty Sarkin takila Greenwichissä. Jokainen köysi vaati '
+            + 'vetäjänsä, ja veto tehtiin laulun tahtiin.',
+          lahde: 'Ermell, Wikimedia Commons (CC BY-SA 4.0)',
+          musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/2/29/%22Drunken_Sailor%22%2C_performed_by_the_Midshipmen_Glee_Club_%281977%29.ogg/%22Drunken_Sailor%22%2C_performed_by_the_Midshipmen_Glee_Club_%281977%29.ogg.mp3',
+          musiikkiNayteNimi: 'Drunken Sailor — USNA Midshipmen Glee Club (PD)',
+        },
+        {
+          otsikko: 'Neljä liverpoolilaista ja suojatie',
+          tiedosto: 'Abbey Road Crossing London Sander Lamme.jpg',
+          teksti: 'The Beatles aloitti Liverpoolin kellariklubeilla ja äänitti '
+            + 'lähes kaiken Lontoon Abbey Road -studiolla. Levyn kansikuvaa '
+            + 'varten valokuvaajalla oli kymmenen minuuttia aikaa: poliisi '
+            + 'pysäytti liikenteen, ja neljä miestä käveli suojatien yli '
+            + 'kuusi kertaa. Paul McCartney oli riisunut kenkänsä, koska '
+            + 'päivä oli kuuma — siitä syntyi vuosikymmeniä elänyt huhu, '
+            + 'jonka mukaan hän olisi salaa kuollut. Suojatie on nykyään '
+            + 'suojeltu muistomerkki, ja sen yli kävelee joka päivä satoja '
+            + 'matkailijoita.',
+          selite: 'Abbey Roadin suojatie Lontoon Pohjois-Lontoossa. Kuvauspaikka '
+            + 'on yhä käytössä oleva tavallinen katu.',
+          lahde: 'Sander Lamme, Wikimedia Commons (CC BY 3.0)',
+          wiki: 'The Beatles',
+          musiikki: 'https://music.apple.com/fi/album/hey-jude/1441133100',
+          musiikkiNimi: 'The Beatles: Hey Jude',
+          esikuuntelu: 'Beatles Hey Jude',
+        },
+      ],
+    },
+    {
+      id: 'tiede',
+      nimi: 'Tiede',
+      johdanto: 'Mies joka keksi painovoiman lait rutonaikaisella maatilalla, '
+        + 'kirjansitojan oppipoika josta tuli sähkön isä, ja koodinmurtaja '
+        + 'jonka kone päätti sodan.',
+      nostot: [
+        {
+          otsikko: 'Rutto sulki yliopiston ja avasi maailman',
+          tiedosto: 'Sir Isaac Newton by Sir Godfrey Kneller, Bt.jpg',
+          teksti: 'Kun rutto sulki Cambridgen yliopiston 1665, 23-vuotias Isaac '
+            + 'Newton palasi kotitilalleen Woolsthorpeen. Siellä vietetyn '
+            + 'puolentoista vuoden aikana hän kehitti '
+            + 'differentiaalilaskennan, selvitti valon jakautumisen väreiksi '
+            + 'prisman avulla ja muotoili painovoiman lain. Hän itse kertoi '
+            + 'myöhemmin, että ajatus lähti puutarhan omenapuusta: miksi '
+            + 'omena putoaa aina suoraan alas? Newton oli myös rahapajan '
+            + 'johtaja ja jahtasi väärentäjiä katujen kapakoissa — hän '
+            + 'lähetti heistä useita hirsipuuhun.',
+          selite: 'Godfrey Knellerin muotokuva vuodelta 1702, jolloin Newton oli '
+            + 'jo kuuluisa ja rahapajan johtaja.',
+          lahde: 'Godfrey Kneller, Wikimedia Commons (PD)',
+          wiki: 'Isaac Newton',
+        },
+        {
+          otsikko: 'Kirjansitojan oppipoika luki kirjat, joita sitoi',
+          tiedosto: 'Portrait of Michael Faraday MET DP829484.jpg',
+          teksti: 'Michael Faraday syntyi köyhään perheeseen ja pääsi kouluun '
+            + 'vain muutamaksi vuodeksi. Kirjansitomon oppipoikana hän luki '
+            + 'kirjoja, joita oli sitomassa, ja innostui sähköstä. Hän pyrki '
+            + 'tiedemiehen apulaiseksi lähettämällä 300-sivuisen vihkon '
+            + 'muistiinpanoja luennoilta. Faraday keksi, että liikkuva '
+            + 'magneetti synnyttää kelaan sähkövirran — se on periaate, jolla '
+            + 'jokainen sähkögeneraattori yhä toimii. Hän aloitti myös '
+            + 'lapsille suunnatut joululuennot, joita on pidetty Lontoossa '
+            + 'vuodesta 1825 asti lähes katkeamatta.',
+          selite: 'George Richmondin piirros vuodelta 1852. Faradaylta puuttui '
+            + 'matemaattinen koulutus, mutta kokeet hän teki tarkemmin kuin '
+            + 'kukaan.',
+          lahde: 'George Richmond, Wikimedia Commons (CC0)',
+          wiki: 'Michael Faraday',
+        },
+        {
+          otsikko: 'Viisi vuotta laivalla, kaksikymmentä vuotta epäröintiä',
+          tiedosto: 'Charles Robert Darwin by John Collier.jpg',
+          teksti: 'Charles Darwin lähti 22-vuotiaana Beagle-laivalle '
+            + 'luonnontutkijaksi ja oli merellä lähes viisi vuotta — '
+            + 'merisairaana lähes koko ajan. Galápagossaarilla hän keräsi '
+            + 'peippoja huomaamatta niiden merkitystä; vasta Lontoossa '
+            + 'lintuasiantuntija kertoi, että eri saarten linnut olivat eri '
+            + 'lajeja, joiden nokat sopivat kunkin saaren ravintoon. Darwin '
+            + 'ymmärsi, mitä se tarkoitti, mutta pelkäsi julkaista. Lajien '
+            + 'synty ilmestyi vasta 1859, kun toinen tutkija oli päätymässä '
+            + 'samaan ajatukseen.',
+          selite: 'John Collierin muotokuva. Darwin kirjoitti kotonaan Kentissä '
+            + 'ja käveli päivittäin saman polun ajatellakseen.',
+          lahde: 'John Collier, Wikimedia Commons (PD)',
+          wiki: 'Charles Darwin',
+        },
+        {
+          otsikko: 'Kone, joka luki vihollisen postit',
+          tiedosto: 'Alan Turing by Stephen Kettle 2007.jpg',
+          teksti: 'Saksan Enigma-koodikone vaihtoi asetuksensa joka keskiyö, '
+            + 'joten murtajilla oli aikaa yksi vuorokausi. Alan Turing '
+            + 'suunnitteli Bletchley Parkissa koneen nimeltä Bombe, joka '
+            + 'kokeili asetuksia mekaanisesti tuhansia kertoja nopeammin kuin '
+            + 'ihminen. Ratkaiseva oivallus oli, että saksalaiset sähkeet '
+            + 'sisälsivät arvattavia sanoja: säätiedotus alkoi lähes aina '
+            + 'sanalla WETTER. Työn arvioidaan lyhentäneen sotaa vuosilla. '
+            + 'Turing oli myös kuvannut jo 1936 ajatuksen yleiskäyttöisestä '
+            + 'laskukoneesta — tietokoneen esi-isästä.',
+          selite: 'Stephen Kettlen veistos Bletchley Parkissa. Se on tehty '
+            + 'puolesta miljoonasta ohuesta liuskekivipalasta.',
+          lahde: 'DeFacto, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Alan Turing',
+        },
+      ],
+    },
+    {
+      id: 'urheilu',
+      nimi: 'Urheilu',
+      johdanto: 'Britanniassa kirjoitettiin säännöt peleille, joita nyt pelataan '
+        + 'kaikkialla: jalkapallo, tennis ja kriketti syntyivät samoilla '
+        + 'saarilla.',
+      nostot: [
+        {
+          otsikko: 'Säännöt kirjoitettiin pubin takahuoneessa',
+          tiedosto: 'Original laws of the game 1863.jpg',
+          teksti: 'Lokakuussa 1863 kaksitoista seuraa kokoontui lontoolaiseen '
+            + 'Freemasons\' Tavern -pubiin sopimaan yhteisistä säännöistä. '
+            + 'Siihen asti joka koulu pelasi omillaan: joissakin sai kantaa '
+            + 'palloa käsissä, toisissa ei, ja vastustajan potkiminen sääreen '
+            + 'kuului joidenkin mielestä peliin. Kokouksissa käsien käyttö ja '
+            + 'säären potkiminen äänestettiin pois — ne seurat, jotka '
+            + 'halusivat pitää ne, lähtivät ja perustivat myöhemmin rugbyn. '
+            + 'Käsisääntö erotti kaksi maailmanlaajuista peliä toisistaan '
+            + 'yhdessä illassa.',
+          selite: 'Alkuperäinen käsin kirjoitettu sääntökirja vuodelta 1863 ja '
+            + 'aikakauden nahkapallo.',
+          lahde: 'Adrian Roebuck, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Jalkapallo',
+        },
+        {
+          otsikko: 'Turnaus keksittiin nurmikonjyrän maksamiseksi',
+          tiedosto: 'Wimbledon Centre Court (May 15, 2019).jpg',
+          teksti: 'Wimbledonin krokettiseura tarvitsi 1877 rahaa rikkoutuneen '
+            + 'nurmijyrän korjaamiseen ja järjesti varainkeruuksi '
+            + 'tennisturnauksen. Paikalle tuli 22 pelaajaa ja noin 200 '
+            + 'katsojaa. Turnaus on yhä olemassa ja on maailman vanhin '
+            + 'tennisturnaus. Perinteet ovat tiukkoja: pelaajien on '
+            + 'pukeuduttava lähes kokonaan valkoiseen, ja katsojat syövät '
+            + 'turnauksen aikana noin 30 tonnia mansikoita. Nurmi leikataan '
+            + 'täsmälleen kahdeksan millimetrin mittaan — lyhyempi kuluisi '
+            + 'puhki, pidempi hidastaisi palloa.',
+          selite: 'Keskuskenttä ja sen liukukatto. Nurmi on raiheinää, ja se '
+            + 'kylvetään joka syksy uudelleen.',
+          lahde: 'GATORFAN2525, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Wimbledonin tennisturnaus',
+        },
+        {
+          otsikko: 'Ottelu voi kestää viisi päivää',
+          tiedosto: 'The Cricket Match (geograph 3985226).jpg',
+          teksti: 'Kriketin arvokkain palkinto on pieni tuhkauurna. Kun Australia '
+            + 'voitti Englannin ensi kertaa kotikentällä 1882, lehti julkaisi '
+            + 'pilaillen kuolinilmoituksen englantilaisen kriketin kuolemasta '
+            + 'ja kertoi ruumiin poltetun. Seuraavalla kiertueella '
+            + 'englantilaiset saivat tuhkat sisältävän uurnan, ja siitä tuli '
+            + 'The Ashes -sarjan palkinto. Kansainvälinen testiottelu kestää '
+            + 'enintään viisi päivää eikä silti aina ratkea. Lounas- ja '
+            + 'teetauko ovat sääntöihin kirjattuja: peli keskeytetään teelle.',
+          selite: 'Kylän krikettiottelu kesäisellä nurmella. Valkoiset asut ovat '
+            + 'perua ajalta, jolloin vaalea kangas piti pelaajan viileänä.',
+          lahde: 'John Myers, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Kriketti',
+        },
+        {
+          otsikko: 'Neljän minuutin muuri murtui iltapäivällä',
+          tiedosto: 'Iffley Road Track-blue plaque.jpg',
+          teksti: 'Pitkään uskottiin, ettei ihminen voi juosta mailia alle neljän '
+            + 'minuutin — jotkut lääkärit pitivät sitä ihmiskeholle '
+            + 'mahdottomana. Lääketieteen opiskelija Roger Bannister '
+            + 'harjoitteli lounastauoillaan ja yritti 6. toukokuuta 1954 '
+            + 'Oxfordin Iffley Roadin radalla. Tuuli oli kova, ja hän päätti '
+            + 'vasta viime hetkellä juosta. Aika oli 3.59,4. Kuuluttaja ehti '
+            + 'sanoa vain "three" ennen kuin yleisön huuto peitti loput. Alle '
+            + 'kaksi kuukautta myöhemmin toinen juoksija alitti saman rajan — '
+            + 'muuri oli ollut päässä.',
+          selite: 'Sininen muistolaatta Oxfordin Iffley Roadin radalla, jossa '
+            + 'neljän minuutin raja alitettiin ensi kerran.',
+          lahde: 'Owen Massey McKnight, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Roger Bannister',
+        },
+      ],
+    },
+  ],
   EGY: [
     {
       id: 'historia',

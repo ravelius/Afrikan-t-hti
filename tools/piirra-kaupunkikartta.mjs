@@ -40,6 +40,14 @@ const KAUPUNGIT = {
     // Checkpoint Charlie, East Side Gallery) osuvat alueelle.
     rajat: { pohjoinen: 52.54, etela: 52.485, lansi: 13.34, ita: 13.46 },
   },
+  lontoo: {
+    // Hyde Parkin itälaidalta Tower Bridgelle, Regent's Parkin
+    // eteläpuolelta Thamesin etelärannalle. Kaikki kuusi kohdetta
+    // (Buckinghamin palatsi, Trafalgar Square, Big Ben, Lontoon silmä,
+    // Pyhän Paavalin katedraali, Tower Bridge) osuvat alueelle, ja
+    // Thames kaartaa kuvan halki tunnistettavana.
+    rajat: { pohjoinen: 51.525, etela: 51.4925, lansi: -0.16, ita: -0.06 },
+  },
 };
 
 /** Katuluokkien piirtojärjestys ja -tyyli (pienestä isoon). */
@@ -150,7 +158,7 @@ writeFileSync(svgPolku, svg);
 // selaimelle raskas joka avauksella — PNG piirtyy heti.
 const pngPolku = resolve(JUURI, `assets/kartat/${kaupunki}-keskusta.png`);
 const skripti = `
-const { chromium } = require('playwright-core');
+const { chromium } = require('playwright');
 (async () => {
   const selain = await chromium.launch({ executablePath: process.env.CHROMIUM ?? '/opt/pw-browsers/chromium' });
   const sivu = await (await selain.newContext({ viewport: { width: 10, height: 10 } })).newPage();
@@ -163,7 +171,21 @@ const { chromium } = require('playwright-core');
   await sivu.screenshot({ path: '${pngPolku}' });
   await selain.close();
 })();`;
-execFileSync('node', ['-e', skripti], { cwd: JUURI, stdio: 'inherit' });
+/*
+ * NODE_PATH mukaan, koska playwright ei ole pelin riippuvuus vaan
+ * ympäristön: kontissa se on /opt/node22/lib/node_modules. Ilman tätä
+ * rasterointi kaatui "Cannot find module 'playwright-core'" -virheeseen
+ * vasta SVG:n valmistuttua, eli työ oli jo tehty kun se kaatui.
+ */
+execFileSync('node', ['-e', skripti], {
+  cwd: JUURI,
+  stdio: 'inherit',
+  env: {
+    ...process.env,
+    NODE_PATH: [process.env.NODE_PATH, '/opt/node22/lib/node_modules']
+      .filter(Boolean).join(':'),
+  },
+});
 const rajat = KAUPUNGIT[kaupunki].rajat;
 console.log(`Valmis: assets/kartat/${kaupunki}-keskusta.png`);
 console.log('KAUPUNKIKARTAT-rivit:');

@@ -200,6 +200,26 @@ Kirjoitus on yhdistävä: muut kaupungit säilyvät, oma korvautuu.
 Työkalu hylkää nostot, joiden kuva on alle 1200 px tai joiden
 lähdemerkinnästä puuttuu tekijä — hylkäykset listataan ajon lopuksi.
 
+**ÄLÄ aja tätä `js/packs/maa-kategoriat.js`:lle.** (Opittu v347:ssä
+kantapään kautta.) Työkalu kirjoittaa kohdetiedoston KOKONAAN uusiksi
+omalla otsakkeellaan, ja siinä katoaa kaksi asiaa kerralla:
+
+1. **Tiedoston muut viennit.** maa-kategoriat.js sisältää myös
+   `MAAN_GENETIIVIT`-taulun sekä funktiot `maanGenetiivi` ja
+   `maanAiheOtsikko`. Ne katoavat, ja peli kaatuu tuontivirheeseen.
+2. **Kentät, joita työkalu ei tunne.** Uudelleensarjallistus kirjoittaa
+   vain otsikko/teksti/tiedosto/selite/lahde/wiki/musiikki*-kentät —
+   `aika`, `tehtava`, `esikuuntelu`, `kansikuvat` ja `galleria` putoavat
+   pois KAIKILTA mailta, myös niiltä joita ei ollut muuttamassa.
+
+Petollisinta on, että ajo näyttää onnistuneen: se tulostaa "0
+kategoriaa, 0 nostoa" (koska JSON on eri muotoa kuin se odottaa) ja
+kirjoittaa silti tiedoston. Vahinko näkyy vasta testeissä.
+
+Maan aiheet lisätään käsin. Muotoilun saa talon näköiseksi
+generoimalla pelkän lohkon ja liittämällä sen paikalleen — vertaa
+naapurimaan lohkoon ennen kuin liität.
+
 ## Tarkistuslista ennen julkaisua
 
 1. `node tools/tarkista-kaksoisavaimet.mjs` ja koko testistö.

@@ -28,6 +28,55 @@
  * kaupungit Piirrettävät pisteet; paa merkitsee pääkaupungin.
  */
 export const MAAKARTAT = {
+  GBR: {
+    tiedosto: 'United Kingdom relief location map.jpg',
+    lahde: 'Alexrk2, Wikimedia Commons (CC BY-SA 3.0)',
+    /*
+     * Rajat sijaintikarttaperheen omasta määrittelystä (Wikipedian
+     * Module:Location map/data/United Kingdom), jossa tämä tiedosto on
+     * nimetty relief-versioksi. Kuva ulottuu Shetlannista Kanaaliin ja
+     * näyttää myös Irlannin saaren — se auttaa hahmottamaan, mikä osa
+     * siitä kuuluu Yhdistyneeseen kuningaskuntaan.
+     */
+    rajat: { pohjoinen: 61, etela: 49, lansi: -11, ita: 2.2 },
+    /*
+     * Neljä maata, neljä kaupunkia — ja Manchester viidentenä, koska
+     * teollinen vallankumous ja ensimmäinen rautatie kuuluvat sen
+     * seudulle. Pääkaupungit: Lontoo (koko valtakunta), Edinburgh
+     * (Skotlanti), Cardiff (Wales) ja Belfast (Pohjois-Irlanti).
+     */
+    kaupungit: [
+      { nimi: 'Lontoo', lat: 51.51, lon: -0.13, paa: true },
+      { nimi: 'Edinburgh', lat: 55.95, lon: -3.19 },
+      { nimi: 'Belfast', lat: 54.6, lon: -5.93 },
+      { nimi: 'Cardiff', lat: 51.48, lon: -3.18 },
+      { nimi: 'Manchester', lat: 53.48, lon: -2.24 },
+    ],
+    /*
+     * Kuvanosto täydentää introa: se puhuu neljän maan liitosta, mutta
+     * kaikki aihesivut kertovat Englannista. Tämä on Pohjois-Irlannista
+     * ja tuo mukanaan tarinan, jota mikään sivu ei muuten näytä. Kuva
+     * silmätarkistettu 480 px:ssä 7.8.2026.
+     */
+    nosto: {
+      otsikko: 'Jättiläisen tie mereen',
+      tiedosto: "Giant's Causeway (14).JPG",
+      teksti: 'Pohjois-Irlannin rannalla on noin 40 000 kivipylvästä, '
+        + 'joista useimmat ovat kuusikulmaisia kuin hunajakenno. Ne '
+        + 'syntyivät 60 miljoonaa vuotta sitten, kun paksu laavakerros '
+        + 'jäähtyi hitaasti ja kutistuessaan halkeili säännöllisiin '
+        + 'sarakkeisiin — sama ilmiö kuin kuivuvassa mutalätäkössä, '
+        + 'mutta kivessä. Tarina kertoo toisin: jättiläinen Finn '
+        + 'MacCool rakensi tien Skotlantiin tapellakseen toisen '
+        + 'jättiläisen kanssa. Skotlannin puolella Staffan saarella on '
+        + 'samanlaisia pylväitä — tarina ja geologia osoittavat samaan '
+        + 'suuntaan.',
+      selite: 'Kuusikulmaiset basalttipylväät laskeutuvat mereen Antrimin '
+        + 'rannikolla. Korkeimmat pylväät ovat kaksitoistametrisiä.',
+      lahde: 'Chmee2, Wikimedia Commons (CC BY 3.0)',
+      wiki: 'Giant’s Causeway',
+    },
+  },
   DEU: {
     tiedosto: 'Relief Map of Germany.svg',
     lahde: 'TUBS, Wikimedia Commons (CC BY-SA 3.0)',
@@ -74,6 +123,37 @@ export const MAAKARTAT = {
  * vasemmalle puolelle, kun oikealla olisi ahdasta.
  */
 export const KAUPUNKIKARTAT = {
+  lontoo: {
+    // Ydinkeskustan julistekartta samalla työkalulla kuin Berliinin
+    // (tools/piirra-kaupunkikartta.mjs). Rajaus Hyde Parkin itälaidalta
+    // Tower Bridgelle: Thames kaartaa kuvan halki, ja kaikki kuusi
+    // kohdetta mahtuvat alueelle.
+    polku: 'assets/kartat/lontoo-keskusta.png',
+    lahde: '© OpenStreetMap-tekijät (ODbL)',
+    rajat: { pohjoinen: 51.525, etela: 51.4925, lansi: -0.16, ita: -0.06 },
+    esittely: 'Lontoo ei ole yksi kaupunki vaan kaksi, jotka kasvoivat '
+      + 'yhteen: idässä City of London, roomalaisten muurien rajaama '
+      + 'neliökilometri, jossa tehdään rahaa, ja lännessä Westminster, '
+      + 'jossa tehdään päätöksiä. Väliin jäänyt maa täyttyi vähitellen '
+      + 'taloilla.\n\nThames on vuorovesijoki: pinta nousee ja laskee '
+      + 'Lontoon kohdalla noin seitsemän metriä kahdesti päivässä, ja '
+      + 'laskuveden aikaan rannalta löytyy yhä savipiippuja ja '
+      + 'keskiaikaisia nuppineuloja. Kartan kohteista pääsee lukemaan '
+      + 'lisää napauttamalla.',
+    kohteet: [
+      /*
+       * Lännestä itään, jotta numerot etenevät kartalla luontevasti —
+       * sama järjestysperiaate kuin Berliinissä. Jokaisen wiki on
+       * tarkistettu fi.wikipedian artikkeli (action=query&redirects=1).
+       */
+      { nimi: 'Buckinghamin palatsi', lat: 51.5014, lon: -0.1419, wiki: 'Buckinghamin palatsi' },
+      { nimi: 'Trafalgar Square', lat: 51.508, lon: -0.1281, wiki: 'Trafalgar Square' },
+      { nimi: 'Big Ben', lat: 51.5007, lon: -0.1246, wiki: 'Big Ben' },
+      { nimi: 'Lontoon silmä', lat: 51.5033, lon: -0.1196, wiki: 'London Eye' },
+      { nimi: 'Pyhän Paavalin katedraali', lat: 51.5138, lon: -0.0984, wiki: 'Pyhän Paavalin katedraali' },
+      { nimi: 'Tower Bridge', lat: 51.5055, lon: -0.0754, wiki: 'Tower Bridge' },
+    ],
+  },
   berliini: {
     /*
      * Ydinkeskustan julistekartta (omistajan tarkennus 7.8.2026:
