@@ -343,6 +343,12 @@ Tason osat kaupunkia kohti:
    PD-klassikkoa ei ole, jätä sarjakuva pois.
 8. **Päivän kuva** tulee maa-etusivulle ITSESTÄÄN (v331: Commonsin
    päivän kuva + suomennettu kuvateksti) — ei maakohtaista työtä.
+9. **Saapumismerkinnät dekkareiksi** (7.8.2026): kaupungin merkintä
+   uusitaan docs/isoisan-raamattu.md:n mukaan (Horatio Fogg, herra
+   Grimshaw, motiivit, mitat) ja sille kirjoitetaan luenta-kenttä
+   tunnetageineen. Luennat generoidaan `tools/generoi-luennat.mjs`
+   -työkalulla — avaimen antaa omistaja ajon ajaksi. Mallit: lontoo,
+   madrid, berliini, tukholma, venetsia (europe-saapumiset.js).
 
 Muista joka PR:ssä: kuvien silmätarkistus 480 px, Playwright-kaappaukset
 390/834/1024 ja niiden KATSOMINEN, main fetch juuri ennen versiota.
