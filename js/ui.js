@@ -13,7 +13,7 @@ import {
 } from './ai.js';
 import {
   DUEL_BYPASS_SHOES, DUEL_PRIZE, EXPLORE_REWARD, FIFTY_FIFTY_PRICE, FLIGHT_PRICE,
-  HARD_BONUS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
+  HARD_BONUS, HINT_EVERY_TURNS, HINT_PRICE, QUIZ_SECONDS, SEA_FARE,
 } from './game.js';
 import {
   factSource, factText, factVoice, isSourceUrl, PACKS, packById, sourceLabel, voiceTitle,
@@ -517,10 +517,13 @@ export const SAAPUMISLUENNAT = new Set([
 ]);
 
 // Kaupungit, joiden aarrevihjeelle on kuiskattu luenta (ElevenLabs).
+// Euroopassa vihjeet ovat ilmansuunnittain (starHintAlue,
+// js/packs/europe.js) — rivit ovat alueita, eivät kaupunkeja.
 export const VIHJELUENNAT = new Set([
-  'europe:pariisi',
-  'europe:rooma',
-  'europe:venetsia',
+  'europe:pohjoinen',
+  'europe:lansi',
+  'europe:etela',
+  'europe:ita',
   'africa:karthago',
   'africa:nairobi',
   'africa:lagos',
@@ -5417,7 +5420,20 @@ export class UI {
     // Matkalla kortti ei päivity: sama merkintä pysyy näytöllä, kunnes
     // saavutaan uuteen kaupunkiin — uusi nopanheitto reitillä ei vaihda
     // tekstiä (omistajan päätös).
-    if (game.player.pos.type === 'edge' && this.factKey) return;
+    /*
+     * Isoisän vihje nousee esiin kaupunkien välissä (omistajan
+     * linjaus 7.8.2026) — siksi se lasketaan ENNEN reunan
+     * varhaispoistumista, joka muuten jäädyttäisi kortin matkan
+     * ajaksi. Harvennus tehdään täällä: sama vihje ei nouse joka
+     * pysähdyksellä, vaan aikaisintaan HINT_EVERY_TURNS vuoron
+     * välein (game.starHint on puhdas funktio piirtoa varten).
+     */
+    const vihjeTeksti = game.starHint();
+    const vihjeEsilla = this.factKey?.startsWith('hint:') ?? false;
+    const vihjeTuore = Boolean(vihjeTeksti) && (vihjeEsilla
+      || this.vihjeVuoro == null
+      || game.turnCount - this.vihjeVuoro >= HINT_EVERY_TURNS);
+    if (game.player.pos.type === 'edge' && this.factKey && !vihjeTuore) return;
 
     // Matkakirjan merkintä voittaa aina (omistajan havainto Gaossa:
     // aikataulurivi peitti uuden saapumistekstin koko käynnin ajaksi).
@@ -5445,16 +5461,16 @@ export class UI {
       return;
     }
 
-    // Isoisän vihje laudan pääaarteesta nousee esiin harvakseltaan.
-    // Vihjekortti erottuu tavallisesta merkinnästä: tähtiotsikko, oma
-    // revityn sivun ilme ja paperin rapina — pelkkä otsikkorivi meni
-    // pelaajalta ohi ja hiljainen kortti tuntui virheeltä (omistajan
-    // havainto).
-    const hint = game.starHint();
-    if (hint) {
+    // Isoisän vihje laudan pääaarteesta nousee esiin harvakseltaan
+    // kaupunkien välissä. Vihjekortti erottuu tavallisesta
+    // merkinnästä: tähtiotsikko, oma revityn sivun ilme ja paperin
+    // rapina — pelkkä otsikkorivi meni pelaajalta ohi ja hiljainen
+    // kortti tuntui virheeltä (omistajan havainto).
+    if (vihjeTuore) {
       const key = `hint:${game.pack.id}:${game.turnCount}`;
       if (this.factKey === key) return;
       this.uusiFactKey(key);
+      this.vihjeVuoro = game.turnCount;
       this.factCard.classList.add('vihjekortti');
       this.factVoiceEl.textContent = '◈ Isoisän vihje aarteesta';
       this.factPlace.textContent = 'Päiväkirjasta revitty sivu';
@@ -5464,16 +5480,19 @@ export class UI {
       sfx.play('paper');
       // Kuiskattu luenta (omistajan tilaus): vihje luetaan hiljaa, jos
       // luenta on generoitu — kaiutinnapista sen voi kuunnella uudelleen.
+      // Aluevihjeillä (esim. Eurooppa) äänitiedosto on alueen, ei
+      // kaupungin: starHintAlue kuvaa kaupungin ilmansuunnaksi.
       const vihjeKaupunki = game.starHintCity();
-      const vihjeLauta = luentaLauta(VIHJELUENNAT, game.pack.id, vihjeKaupunki);
+      const vihjeAvain = game.pack.texts.starHintAlue?.[vihjeKaupunki] ?? vihjeKaupunki;
+      const vihjeLauta = luentaLauta(VIHJELUENNAT, game.pack.id, vihjeAvain);
       this.diaryFullUrl = vihjeLauta
-        ? `assets/audio/puhe-${vihjeLauta}-vihje-${vihjeKaupunki}.mp3`
+        ? `assets/audio/puhe-${vihjeLauta}-vihje-${vihjeAvain}.mp3`
         : null;
       this.factKuuntele.hidden = !vihjeLauta;
       if (vihjeLauta && kertojaTila() !== 'ei') {
         this.playDiaryVoice(this.diaryFullUrl, { viive: 1200 });
       }
-      this.typeText(this.factText, hint);
+      this.typeText(this.factText, vihjeTeksti);
       return;
     }
 
