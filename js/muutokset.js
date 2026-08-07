@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 330, teksti: 'Ääneen lukija pois: ääni ei ollut tarpeeksi hyvä' },
   { v: 329, teksti: 'Kohdekartta isoksi: numeroympyrät ja selitteet' },
   { v: 328, teksti: 'Berliinin kartta uusiksi: oma katukartta OSM:sta' },
   { v: 328, teksti: 'Tv: livet pois, tilalle tagesschaun tallenteet' },
