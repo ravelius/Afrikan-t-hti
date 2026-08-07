@@ -177,8 +177,14 @@ ei seuraa missään.
 
 ### Tunnelmapaletti — seitsemän säveltä
 
-1. **Jännitys** — seuraaja, tuore jälki, kuiskaus. KORKEINTAAN
-   joka kuudes kaupunki. Käytetty: Madrid, Tukholma, Berliini.
+1. **Jännitys** — seuraaja, tuore jälki, kuiskaus. Omistajan
+   tarkennus 7.8.2026: jännitystä saa olla PALJON, kunhan keino
+   vaihtuu — raja ei ole määrä vaan vaihtelu. Sama temppu (askeleet,
+   sähke, tuore jälki) ei toistu peräkkäisissä kaupungeissa, ja
+   lämpimät ja rauhalliset merkinnät pysyvät vastapainona. Euroopan
+   laudalla jännitteistä on nyt noin joka neljäs (Lontoo, Madrid,
+   Tukholma, Berliini, Venetsia, Rooma, Moskova, Pietari,
+   Edinburgh) — se on hyvä taso muillekin laudoille.
 2. **Arvoitus** — outo yksityiskohta ilman uhkaa: maksettu lippu,
    avain, kortti. Yleisin sävel, silti alle kolmannes.
 3. **Lämpö** — joku muistaa isoisän hyvällä: tarjoilija, teenmyyjä,
@@ -263,10 +269,11 @@ valmis teksti. Vierekkäiset kaupungit saavat eri keinon.
 
 ### Tasapainotarkistus ennen jokaista erää
 
-Laske erän sävelet: jännitystä korkeintaan yksi per erä, vähintään
-yksi lämmin ja yksi hengähdys, korkeintaan kolmasosa alkaa
-isoisällä, eikä sama elementtityyppi kahdesti peräkkäisissä
-kaupungeissa. Vanhojen tekstien parhaat 1873-faktat ja rakkaimmat
+Laske erän sävelet: jännitystä saa olla useassa kaupungissa, kunhan
+keino vaihtuu joka kerralla (omistajan tarkennus 7.8.2026);
+vähintään yksi lämmin ja yksi hengähdys per erä, korkeintaan
+kolmasosa alkaa isoisällä, eikä sama elementtityyppi kahdesti
+peräkkäisissä kaupungeissa. Vanhojen tekstien parhaat 1873-faktat ja rakkaimmat
 lauseet ("Heitin omani samaan kohtaan") saa ja kannattaa
 kierrättää lyhennettyinä — uusiminen ei ole hävittämistä.
 
