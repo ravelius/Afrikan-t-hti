@@ -10,6 +10,11 @@ matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
 - **Maan aiheet:** `js/packs/maa-kategoriat.js`, avain ISO-3-tunnus
   (sama kuin `map.cityCountry`). Monistusmitta 5–6 aihetta × 4–5
   nostoa; Lontoo (54 nostoa) on lippulaiva, ei mittatikku.
+  Aiheen `nimi` on **yksisanainen yleisnimi** ("Historia"), koska peli
+  kirjoittaa otsikoksi maan genetiivin ja aiheen pienellä: "EGYPTIN
+  HISTORIA" (v314). Uusi maa ei vaadi koodia — paitsi jos sen genetiivi
+  ei synny säännöllä, jolloin se lisätään `MAAN_GENETIIVIT`-tauluun ja
+  `tests/maa-otsikot.test.mjs` kaatuu siihen asti muistuttamassa.
 - **Kaupungin kansi:** `KULTTUURI_KATEGORIAT[cityId]`, yksi aihe
   (id `kaupunki`, nimi = kaupungin nimi) ja 3–5 paikallista nostoa:
   maamerkit, paikallinen elämä, visan aihe.
@@ -44,7 +49,8 @@ jokaiseen kaupunkiin, jolla on maatunnus (`map.cityCountry`) — siis
 myös uuteen lehtimaahan sinä hetkenä kun kaupunki saa kansisivunsa,
 ilman riviäkään uutta dataa tai koodia. Tulkintalauseet ovat
 sääntöpohjaisia (kynnysarvot + lausepohjat), joten nekin toimivat
-kaikille maille käsin kirjoittamatta.
+kaikille maille käsin kirjoittamatta. Sivun otsikkoon tulee maan nimi
+nominatiivissa — "EGYPTI NUMEROINA" (v314) — myös itsestään.
 
 Ainoa ylläpito on datan ajoittainen virkistys: `node
 tools/hae-maakayrat.mjs` hakee tuoreet sarjat ja kirjoittaa

@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 314, teksti: 'Maan sivun otsikossa maan nimi: Egyptin historia' },
+  { v: 314, teksti: 'Tilastosivun otsikkona "Egypti numeroina"' },
   { v: 313, teksti: 'Uusi varuste: Vertailulinssi, kaksi maata rinnan' },
   { v: 312, teksti: 'Maa numeroina joka maalle — 228 maan käyrät' },
   { v: 311, teksti: 'Lehteen uusi sivu: Maa numeroina käyrineen' },

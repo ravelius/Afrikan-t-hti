@@ -25,7 +25,81 @@
  *
  * Sama maasivu näkyy maan joka kaupungissa tarkoituksella: se on kuin
  * sama matkaopas laukussa koko maan ajan, vain kansilehti vaihtuu.
+ *
+ * OTSIKKOON TULEE MAAN NIMI (omistajan toive 6.8.2026: "maata
+ * koskevilla sivuilla otsikossa saisi olla maan nimi mukana"). Sivun
+ * osastonotsikko luki pelkkä "HISTORIA", jolloin se näytti kaupungin
+ * omalta osastolta — vaikka sama sivu toistuu maan jokaisessa
+ * kaupungissa ja kertoo koko maasta. Nyt siinä lukee "EGYPTIN
+ * HISTORIA". Muunnos tehdään vasta sivua rakennettaessa (ui.js
+ * rakennaSivut), jotta aineistossa säilyy yksi lyhyt vakioaiheen nimi
+ * eikä sitä tarvitse kirjoittaa maakohtaisesti uudestaan.
  */
+
+/*
+ * Maiden genetiivit, joita sääntö ei osaa: astevaihtelu (Kreikka →
+ * Kreikan), monikot (Alankomaat → Alankomaiden), taipuva määrite
+ * (Iso-Britannia → Ison-Britannian) ja yksittäiset omat tapauksensa
+ * (Suomi → Suomen, Kypros → Kyproksen).
+ *
+ * Taulussa on vain nimiä, jotka ovat oikeasti pelin maadatassa
+ * (map.countryShapes: africa, europe, maailmankartta) — arvattuja
+ * varastoon ei kerätä. Sääntöä ei voi laajentaa yleiseksi
+ * astevaihteluksi, koska vierasnimet eivät noudata sitä: Itävalta →
+ * Itävallan mutta Malta → Maltan, ja Sri Lanka → Sri Lankan vaikka
+ * lanka → langan. Siksi poikkeukset luetellaan.
+ */
+const MAAN_GENETIIVIT = {
+  Alankomaat: 'Alankomaiden',
+  Arabiemiirikunnat: 'Arabiemiirikuntien',
+  'Etelä-Afrikka': 'Etelä-Afrikan',
+  Filippiinit: 'Filippiinien',
+  Irlanti: 'Irlannin',
+  Islanti: 'Islannin',
+  'Iso-Britannia': 'Ison-Britannian',
+  Itävalta: 'Itävallan',
+  Kreikka: 'Kreikan',
+  Kypros: 'Kyproksen',
+  Marokko: 'Marokon',
+  Suomi: 'Suomen',
+  Turkki: 'Turkin',
+  Tšekki: 'Tšekin',
+};
+
+/**
+ * Maan nimi genetiiviin: "Egypti" → "Egyptin", "Irak" → "Irakin".
+ *
+ * Sääntö on tarkoituksella kapea: vokaaliin päättyvä nimi saa n:n ja
+ * konsonanttiin päättyvä in:n. Se riittää pelin maadatan 84 nimestä
+ * kaikkiin muihin paitsi ylläolevan taulun poikkeuksiin — ja tuntematon
+ * nimi taipuu sillä useimmiten oikein (Kanadan, Brasilian, Vietnamin)
+ * sen sijaan että sivu jäisi ilman maan nimeä.
+ */
+export function maanGenetiivi(nimi) {
+  const puhdas = (nimi ?? '').trim();
+  if (!puhdas) return '';
+  if (MAAN_GENETIIVIT[puhdas]) return MAAN_GENETIIVIT[puhdas];
+  return /[aeiouyäö]$/i.test(puhdas) ? `${puhdas}n` : `${puhdas}in`;
+}
+
+/**
+ * Maan aihesivun otsikko: "Egypti" + "Historia" → "Egyptin historia".
+ *
+ * Aiheen nimi pienenee, koska se ei ole enää otsikon ensimmäinen sana —
+ * vakioaiheet (historia, ruoka, kuvataide, luonto, musiikki, tiede)
+ * ovat yleisnimiä. Ruudulla otsikko on versaalilla, mutta DOM:iin jää
+ * oikein kirjoitettua suomea myös ruudunlukijalle.
+ *
+ * Jos maan nimi puuttuu tai se on jo aiheen nimessä, otsikko jää
+ * ennalleen — "Egyptin Egypti tänään" ei ole parannus.
+ */
+export function maanAiheOtsikko(maanNimi, aiheNimi) {
+  const aihe = (aiheNimi ?? '').trim();
+  const maa = (maanNimi ?? '').trim();
+  if (!aihe || !maa) return aihe;
+  if (aihe.toLowerCase().includes(maa.toLowerCase())) return aihe;
+  return `${maanGenetiivi(maa)} ${aihe[0].toLowerCase()}${aihe.slice(1)}`;
+}
 
 export const MAA_KATEGORIAT = {
   EGY: [

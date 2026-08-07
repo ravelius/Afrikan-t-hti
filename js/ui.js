@@ -68,7 +68,7 @@ import { ASIA_MAATIEDOT } from './packs/asia-maatiedot.js';
 import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
-import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
+import { MAA_KATEGORIAT, maanAiheOtsikko } from './packs/maa-kategoriat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import {
@@ -6645,8 +6645,22 @@ export class UI {
      * kaksoiskappaleita.
      */
     const maanIso = cityId ? this.game.pack.map?.cityCountry?.[cityId] : null;
+    /*
+     * Maan sivujen otsikkoon maan nimi (omistajan toive 6.8.2026:
+     * "maata koskevilla sivuilla otsikossa saisi olla maan nimi
+     * mukana"): "EGYPTIN HISTORIA", ei pelkkä "HISTORIA". Ilman nimeä
+     * maan sivu näytti kaupungin omalta, vaikka juuri se on lehden
+     * osa, joka toistuu maan jokaisessa kaupungissa.
+     *
+     * Otsikko vaihdetaan kopioon: MAA_KATEGORIAT on yhteinen taulu,
+     * ja alkuperäisen muuttaminen kasvattaisi nimeä joka avauksella.
+     * Maan nimi tulee samasta lähteestä kuin maapalstan otsikko; jos
+     * laudalla ei ole maadataa, otsikko jää entiselleen.
+     */
+    const otsikonMaa = maanIso ? this.game.pack.map?.countryShapes?.[maanIso]?.nimi : null;
     for (const osa of (maanIso ? MAA_KATEGORIAT[maanIso] ?? [] : [])) {
-      if (!kategoriat.some((k) => k.id === osa.id)) kategoriat.push(osa);
+      if (kategoriat.some((k) => k.id === osa.id)) continue;
+      kategoriat.push(otsikonMaa ? { ...osa, nimi: maanAiheOtsikko(otsikonMaa, osa.nimi) } : osa);
     }
     /*
      * Lehtitaitto (omistajan toive 5.8.2026): aihe, jonka id on
@@ -6671,7 +6685,12 @@ export class UI {
      * verkkoa), sivu kertoo sen kohteliaasti itse.
      */
     if (maanIso) {
-      kategoriat.push({ id: 'maa-numeroina', nimi: 'Maa numeroina', numerot: maanIso });
+      // Otsikossa maan nimi kuten muillakin maan sivuilla (omistajan
+      // toive 7.8.2026: "muuta myös maa numeroina sivu esim. Egypti
+      // numeroina muotoon") — tässä nominatiivissa, koska "numeroina"
+      // on jo taivutettu: "EGYPTI NUMEROINA".
+      const nimi = otsikonMaa ? `${otsikonMaa} numeroina` : 'Maa numeroina';
+      kategoriat.push({ id: 'maa-numeroina', nimi, numerot: maanIso });
     }
     this.tutkiLehti = lehti;
     this.arrivalDialog.classList.toggle('lehti', lehti);
