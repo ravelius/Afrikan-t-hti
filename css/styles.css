@@ -7528,35 +7528,91 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 }
 
 /* Uutispopup: otsikko isolla antiikvalla, kuvaus alla, käännös kursiivilla. */
-.uutinen-kortti { max-width: min(92vw, 480px); }
+/*
+ * Uutispopup on pikkulehti (omistajan toive 7.8.2026): leveämpi
+ * kortti, jotta leipäteksti mahtuu kiertämään kellutetun kuvan.
+ */
+.uutinen-kortti { max-width: min(94vw, 660px); }
 
-.uutinen-otsikko {
-  margin: 0 0 0.5rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  line-height: 1.3;
+/* Ylärivi: jutun päiväys vasemmalla, käännösnappi oikealla. Oikeaan
+ * reunaan jää rako kulman rastille. */
+.uutinen-ylarivi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 0 0.35rem;
+  padding-right: 1.8rem;
 }
 
-.uutinen-kuvaus {
+.uutinen-paivays {
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: rgba(70, 51, 31, 0.75);
+}
+
+.dialog button.uutinen-kaanna {
+  margin: 0;
+  padding: 0.18rem 0.65rem;
+  border: 1px solid rgba(70, 51, 31, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 250, 238, 0.7);
+  box-shadow: none;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2d2010;
+  cursor: pointer;
+}
+
+.dialog button.uutinen-kaanna:disabled { opacity: 0.6; cursor: default; }
+
+/* Lähteen nimiö kuin lehden masto: tuplaviiva yllä, ohut alla —
+ * sama viivapari kuin Tutki-lehden päiväysrivillä (.lehti-alarivi). */
+.uutinen-masto {
+  margin: 0 0 0.8rem;
+  padding: 0.26rem 0;
+  border-top: 3px double rgba(70, 51, 31, 0.75);
+  border-bottom: 1px solid rgba(70, 51, 31, 0.5);
+  font-family: var(--font-type);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-align: center;
+  color: #211d18;
+}
+
+.uutinen-otsikko {
+  margin: 0 0 0.55rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #16130f;
+}
+
+/* Kelluva kuva vapautetaan rungon lopussa, ettei lyhyt juttu jätä
+ * kuvaa roikkumaan kortin ulkopuolelle. */
+.uutinen-runko::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.uutinen-kappale {
   margin: 0 0 0.55rem;
   /* Pitkä leipäteksti luetaan kirjan antiikvalla, ei konekirjaimin
-   * (omistajan huomio 5.8.2026). */
+   * (omistajan huomio 5.8.2026). Suomennos käyttää SAMAA tyyliä —
+   * ei kursiivia (omistajan tarkennus 7.8.2026). */
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   font-size: 0.98rem;
   line-height: 1.55;
+  color: #211d18;
 }
-
-.uutinen-kaannos {
-  margin: 0 0 0.5rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-style: italic;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: rgba(58, 42, 22, 0.95);
-}
-
-.uutinen-kortti .uutinen-kaanna { margin: 0.2rem 0 0; }
 
 /*
  * Tekstipopupit (uutinen, vuosisää) tarvitsevat paperikortin:
@@ -7571,6 +7627,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   cursor: pointer;
   color: #2d2010;
 }
+
+/* Uutiskortti on lehteä: leveämpi kuin sääkortti, jotta teksti
+ * kiertää kuvaa (omistajan toive 7.8.2026). */
+.postikortti.kulttuuri-suurennos.uutinen-kortti { width: min(94vw, 660px); }
 
 /*
  * MIKSI PAPERI ON ::after EIKÄ ELEMENTIN TAUSTA: suurennoksen koko
@@ -7662,27 +7722,10 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   cursor: pointer;
 }
 
-/* Suomennos heti otsikon alla: pienempi ja kevyempi, ei selittelyä. */
-.uutinen-otsikko-suomeksi {
-  margin: -0.25rem 0 0.55rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-style: italic;
-  font-size: 0.9rem;
-  font-weight: 400;
-  line-height: 1.4;
-  color: rgba(70, 51, 31, 0.72);
-}
-
-.uutinen-runko .uutinen-kuvaus { margin-bottom: 0.55rem; }
-
-.uutinen-kaannos p {
-  margin: 0 0 0.5rem;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-style: italic;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: rgba(58, 42, 22, 0.95);
-}
+/* Popupin erillinen otsikkosuomennos ja kursivoitu käännöslohko
+ * poistuivat 7.8.2026: Käännä-nappi vaihtaa otsikon ja kappaleet
+ * paikallaan samoihin tyyleihin. Sähkerivin pieni suomennos
+ * (.uutinen-rivi-suomeksi) elää yhä alempana. */
 
 /*
  * Maaosaston taitto leveällä ruudulla (omistaja: kartan oikealla
@@ -7750,12 +7793,20 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 }
 
 /* Artikkelin kuva popupissa: sama kehystys kuin lehden kuvilla. */
-.uutinen-kortti .uutinen-kuva {
-  display: block;
-  width: 100%;
-  max-height: 260px;
-  object-fit: cover;
-  margin: 0 0 0.6rem;
+/*
+ * Artikkelin kuva kelluu oikealla ja teksti juoksee sen ympäri kuin
+ * lehtijutussa (omistajan toive 7.8.2026). Kuva elää rungon sisällä,
+ * jotta kelluminen taittaa kappaleet — dir="auto" hoitaa myös
+ * oikealta vasemmalle kirjoitettavat kielet, joilla teksti kiertää
+ * kuvan vasemmalta.
+ */
+/* Valitsin on täsmällinen tarkoituksella: yleinen suurennossääntö
+ * (.postikortti.kulttuuri-suurennos img) asettaa width: auto ja
+ * keskityksen, ja se voittaisi lyhyemmän luokkaparin. */
+.postikortti.kulttuuri-suurennos.uutinen-kortti .uutinen-kuva {
+  float: right;
+  width: min(46%, 270px);
+  margin: 0.2rem 0 0.5rem 0.85rem;
   border: 3px solid #f7efdc;
   outline: 1px solid rgba(70, 51, 31, 0.35);
   border-radius: 2px;

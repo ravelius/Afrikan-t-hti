@@ -7062,12 +7062,13 @@ export class UI {
   }
 
   /**
-   * Uutispopup (omistajan tarkennukset 5.8.2026): otsikko, sen alla
-   * heti suomennos pienemmällä ja kevyemmällä (haetaan itsestään, ei
-   * etikettiä), sitten artikkelin leipäteksti — koko juttu haetaan
-   * uutissivulta workerin kautta, ja syötteen lyhyt kuvaus on vain
-   * varateksti. Tausta EI tummene; kortin sulkee sen napautus tai
-   * kulman rasti. Käännä suomeksi -nappi kääntää leipätekstin.
+   * Uutispopup pikkulehtenä (omistajan toive 7.8.2026): ylärivillä
+   * jutun päiväys ja Käännä-nappi, niiden alla lähteen nimiö lehden
+   * tuplaviivojen välissä, iso otsikko ja leipäteksti, jota
+   * artikkelin kuva taittaa — teksti juoksee kellutetun kuvan
+   * ympäri. Koko juttu haetaan uutissivulta workerin kautta, ja
+   * syötteen lyhyt kuvaus on vain varateksti. Tausta EI tummene;
+   * kortin sulkee sen napautus tai kulman rasti.
    */
   avaaUutinen(uutinen, lahde) {
     this.suljeKulttuuriKuva();
@@ -7078,97 +7079,143 @@ export class UI {
     sulku.type = 'button';
     sulku.setAttribute('aria-label', 'Sulje uutinen');
     kortti.appendChild(sulku);
+
+    // Ylärivi: jutun päiväys vasemmalla, käännösnappi oikealla rastin
+    // vieressä. Kellonaika on lehdessä turha — päivä riittää.
+    const ylarivi = html('div', 'uutinen-ylarivi');
+    const aika = uutinen.aika ? new Date(uutinen.aika) : null;
+    ylarivi.appendChild(html('span', 'uutinen-paivays',
+      aika && !Number.isNaN(aika.getTime())
+        ? `${aika.getDate()}.${aika.getMonth() + 1}.${aika.getFullYear()}`
+        : ''));
+    const nappi = html('button', 'uutinen-kaanna', 'Käännä');
+    nappi.type = 'button';
+    ylarivi.appendChild(nappi);
+    kortti.appendChild(ylarivi);
+
+    // Lähteen nimiö kuin lehden masto: tuplaviiva yllä, ohut alla.
+    kortti.appendChild(html('p', 'uutinen-masto', lahde.nimi));
+
     const otsikko = html('p', 'uutinen-otsikko', uutinen.otsikko);
     otsikko.lang = lahde.kieli;
     otsikko.dir = 'auto';
     kortti.appendChild(otsikko);
-    // Suomennos heti otsikon alle — ilman selittelyä.
-    const otsikkoSuomeksi = html('p', 'uutinen-otsikko-suomeksi');
-    otsikkoSuomeksi.hidden = true;
-    kortti.appendChild(otsikkoSuomeksi);
-    kaannaSuomeksi(uutinen.otsikko, lahde.kieli).then((suomeksi) => {
-      if (!kortti.isConnected || !suomeksi) return;
-      otsikkoSuomeksi.textContent = suomeksi;
-      otsikkoSuomeksi.hidden = false;
-    });
-    // Artikkelin kuva täyttyy haun valmistuttua (og:image — tavallinen
-    // <img> ei tarvitse CORSia).
+
+    /*
+     * Runko: artikkelin kuva on rungon SISÄLLÄ ja kelluu oikealla,
+     * jotta kappaleet juoksevat sen ympäri. Syötteen kuvaus näkyy
+     * heti, ja koko artikkeli korvaa sen kun haku valmistuu; jos
+     * artikkelia ei saada (esim. workerin vanha versio), kuvaus jää
+     * — popup ei ole koskaan tyhjä.
+     */
+    const runko = html('div', 'uutinen-runko');
     const kuva = document.createElement('img');
     kuva.className = 'uutinen-kuva';
     kuva.alt = '';
     kuva.hidden = true;
     kuva.addEventListener('error', () => { kuva.hidden = true; });
-    kortti.appendChild(kuva);
-    // Runko: syötteen kuvaus näkyy heti, ja koko artikkeli korvaa sen
-    // kun haku valmistuu. Jos artikkelia ei saada (esim. workerin
-    // vanha versio), kuvaus jää — popup ei ole koskaan tyhjä.
-    const runko = html('div', 'uutinen-runko');
-    runko.lang = lahde.kieli;
-    runko.dir = 'auto';
-    if (uutinen.kuvaus) runko.appendChild(html('p', 'uutinen-kuvaus', uutinen.kuvaus));
+    runko.appendChild(kuva);
     kortti.appendChild(runko);
-    let runkoTeksti = uutinen.kuvaus ?? '';
-    haeArtikkeli(uutinen.linkki).then((artikkeli) => {
+
+    /*
+     * Käännös vaihtaa otsikon ja kappaleet PAIKALLAAN samoihin
+     * elementteihin: suomi saa täsmälleen saman taiton ja tyylin kuin
+     * alkuperäinen (omistaja 7.8.2026: ei kursiivia, jutun pitää olla
+     * yhtä hyvän näköinen suomeksi), eikä kelluva kuva hypähdä.
+     */
+    let alkuperaiset = uutinen.kuvaus ? [uutinen.kuvaus] : [];
+    let naytaSuomi = false;
+    let suomennos = null;
+    const naytaOtsikko = (teksti, kieli) => {
+      otsikko.textContent = teksti;
+      otsikko.lang = kieli;
+    };
+    const naytaKappaleet = (tekstit, kieli) => {
+      for (const p of runko.querySelectorAll('p')) p.remove();
+      runko.lang = kieli;
+      for (const teksti of tekstit) {
+        const p = html('p', 'uutinen-kappale', teksti);
+        // dir="auto": oikealta vasemmalle kirjoitettava kieli (esim.
+        // arabia) asettuu oikein ilman kielikohtaista koodia.
+        p.dir = 'auto';
+        runko.appendChild(p);
+      }
+    };
+    if (alkuperaiset.length) naytaKappaleet(alkuperaiset, lahde.kieli);
+
+    /*
+     * Suomennos: otsikko ja kappaleet käännetään erikseen, jotta
+     * kappalejako säilyy. Jos ilmainen palvelu ehtyy kesken jutun,
+     * näytetään käännetyt kappaleet eikä sekakielistä loppua —
+     * otsikon on kuitenkin käännyttävä tai koko yritys hylätään.
+     */
+    const kaannaKaikki = async () => {
+      const otsikkoFi = await kaannaSuomeksi(uutinen.otsikko, lahde.kieli);
+      if (!otsikkoFi) return null;
+      const kappaleetFi = [];
+      for (const kappale of alkuperaiset) {
+        const fi = await kaannaSuomeksi(kappale, lahde.kieli);
+        if (!fi) break;
+        kappaleetFi.push(fi);
+      }
+      if (!kappaleetFi.length) return null;
+      return { otsikko: otsikkoFi, kappaleet: kappaleetFi };
+    };
+
+    haeArtikkeli(uutinen.linkki).then(async (artikkeli) => {
       if (!kortti.isConnected || !artikkeli) return;
       if (artikkeli.kuva) {
         kuva.src = artikkeli.kuva;
         kuva.hidden = false;
       }
       if (artikkeli.kappaleet?.length) {
-        runko.replaceChildren();
-        for (const kappale of artikkeli.kappaleet) {
-          runko.appendChild(html('p', 'uutinen-kuvaus', kappale));
+        alkuperaiset = artikkeli.kappaleet;
+        // Pelkästä kuvauksesta tehty suomennos ei kata artikkelia.
+        suomennos = null;
+        if (!naytaSuomi) {
+          naytaKappaleet(alkuperaiset, lahde.kieli);
+          return;
         }
-        runkoTeksti = artikkeli.kappaleet.join('\n\n');
+        // Pelaaja ehti kääntää pelkän kuvauksen — käännetään koko
+        // juttu perään (valmiit palat ovat muistissa, haku on kevyt).
+        const koko = await kaannaKaikki();
+        if (!kortti.isConnected || !naytaSuomi || !koko) return;
+        suomennos = koko;
+        naytaOtsikko(koko.otsikko, 'fi');
+        naytaKappaleet(koko.kappaleet, 'fi');
       }
     });
-    const kaannos = html('div', 'uutinen-kaannos');
-    kaannos.hidden = true;
-    kortti.appendChild(kaannos);
-    // Päivä riittää lähderiville — kellonaika on lehdessä turha.
-    const aika = uutinen.aika ? new Date(uutinen.aika) : null;
-    const aikaTeksti = aika && !Number.isNaN(aika.getTime())
-      ? ` · ${aika.getDate()}.${aika.getMonth() + 1}.${aika.getFullYear()}`
-      : '';
-    kortti.appendChild(html('p', 'kuvalahde', `${lahde.nimi}${aikaTeksti}`));
-    /*
-     * Käännös KORVAA italiankielisen tekstin (omistajan tarkennus
-     * 5.8.2026: molemmat eivät mahdu kortille). Alkuperäinen jää
-     * pienen napin taakse, josta sen saa takaisin — ja samasta
-     * napista pääsee taas suomennokseen.
-     */
-    const nappi = html('button', 'wiki-btn uutinen-kaanna', 'Käännä suomeksi');
-    nappi.type = 'button';
-    let kaannetty = false;
+
+    // Sama nappi kulkee kahteen suuntaan: Käännä suomentaa myös
+    // otsikon, jolloin näkyvissä on pelkkää suomea, ja Palauta tuo
+    // alkuperäiskielen takaisin (omistajan malli 7.8.2026).
     nappi.addEventListener('click', async (e) => {
       e.stopPropagation();
-      if (kaannetty) {
-        const naytaSuomi = kaannos.hidden;
-        kaannos.hidden = !naytaSuomi;
-        runko.hidden = naytaSuomi;
-        nappi.textContent = naytaSuomi ? 'Näytä alkuperäinen' : 'Näytä suomennos';
+      if (naytaSuomi) {
+        naytaSuomi = false;
+        naytaOtsikko(uutinen.otsikko, lahde.kieli);
+        naytaKappaleet(alkuperaiset, lahde.kieli);
+        nappi.textContent = 'Käännä';
         return;
       }
-      nappi.textContent = 'Käännetään…';
-      nappi.disabled = true;
-      const suomeksi = await kaannaSuomeksi(runkoTeksti, lahde.kieli);
-      // Kortti on voitu ehtiä sulkea käännöksen aikana.
-      if (!kortti.isConnected) return;
-      nappi.disabled = false;
-      if (suomeksi) {
-        kaannos.replaceChildren();
-        for (const kappale of suomeksi.split(/\n\n+/)) {
-          if (kappale.trim()) kaannos.appendChild(html('p', '', kappale.trim()));
+      if (!suomennos) {
+        nappi.textContent = 'Käännetään…';
+        nappi.disabled = true;
+        suomennos = await kaannaKaikki();
+        // Kortti on voitu ehtiä sulkea käännöksen aikana.
+        if (!kortti.isConnected) return;
+        nappi.disabled = false;
+        if (!suomennos) {
+          nappi.textContent = 'Yritä uudelleen';
+          return;
         }
-        kaannetty = true;
-        kaannos.hidden = false;
-        runko.hidden = true;
-        nappi.textContent = 'Näytä alkuperäinen';
-      } else {
-        nappi.textContent = 'Käännöstä ei saatu — yritä uudelleen';
       }
+      naytaSuomi = true;
+      naytaOtsikko(suomennos.otsikko, 'fi');
+      naytaKappaleet(suomennos.kappaleet, 'fi');
+      nappi.textContent = 'Palauta';
     });
-    kortti.appendChild(nappi);
+
     kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
     this.arrivalDialog.appendChild(kortti);
     this.kulttuuriKuvaEl = kortti;
