@@ -1634,24 +1634,21 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
  * tulevat .fact-textin omista flex-säännöistä. Suora dvh-katto on
  * vyö ja henkselit -varmistus: se ei riipu flexin kutistumisesta
  * missään selaimessa (iPadin Safari päästi tekstin kartan päälle). */
+/*
+ * EI RIVIKATTOA (omistajan päätös 7.8.2026): "matkakirja voisi avautua
+ * jatkossa kokonaan, koska se pienenee kätevästi kokonaan kun karttaa
+ * liikuttaa. eli sen välikoon voisi ottaa pois kokonaan."
+ *
+ * Ennen tässä oli viiden rivin ikkuna (puhelimella kolmen), jonka sai
+ * napauttamalla auki. Kolmesta koosta jäi kaksi: koko merkintä ja
+ * yhden rivin nimilappu (.pieni), johon kartan liike kutistaa kortin.
+ * Kortin oma korkeusraja hoitaa sen, ettei pitkä merkintä peitä
+ * karttaa, ja teksti vierii, jos se ei mahdu edes siihen.
+ */
 .fact-teksti-rivi .fact-text {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  /* Kova katto rivimääränä (omistajan mitta, kiristetty kuuteen ja
-   * edelleen viiteen riviin — jatkosta kertoo vihjenuoli): em-mitta ei
-   * riipu viewport-yksiköiden tuesta, flexin kutistumisesta eikä
-   * laitteesta — iPadin Safari ohitti sekä prosentti- että dvh-katot. */
-  max-height: calc(5 * 1.45em);
 }
-
-/* Auki levitettynä koko merkintä näkyy kerralla: rivikatto pois ja
- * kortin oma korkeusraja ylös. Vieritys jää varalle, jos merkintä ei
- * mahdu edes tähän. */
-.fact-card.laajennettu .fact-teksti-rivi .fact-text { max-height: none; }
-
-/* Napautettava alue näkyy osoittimena isolla ruudulla; kosketuksessa
- * sen kertoo jatkuu-nuoli. */
-.fact-teksti-rivi { cursor: pointer; }
 
 .fact-teksti-rivi .fact-text::-webkit-scrollbar { display: none; }
 
@@ -5070,28 +5067,27 @@ body[data-mode] .fact-card {
   /* Korkeusraja ruutuyksiköissä: iPadin Safari ei soveltanut
    * prosenttirajaa (kortti kasvoi koko tekstin mittaiseksi kartan
    * päälle), dvh lasketaan aina ruudusta. Prosentti jää varalle
-   * vanhoille selaimille. */
-  max-height: 38vh;
-  max-height: 38dvh;
+   * vanhoille selaimille.
+   *
+   * Katto on 74 dvh, koska kortti on nyt aina auki (v317): kolme
+   * neljäsosaa ruudusta riittää lähes joka merkinnälle, ja kartasta
+   * jää silti neljännes näkyviin — sen napautus kutistaa kortin
+   * yhdelle riville. Sama luku oli ennen napautuksella avatun kortin
+   * katto. */
+  max-height: 74vh;
+  max-height: 74dvh;
   /* Kortti ei vieritä itseään — vain teksti vierii (.fact-text). */
   overflow: hidden;
   transition: max-height 260ms ease;
 }
 
 /*
- * Napautettu päiväkirja laajenee, ettei pitkää merkintää tarvitse
- * vierittää viiden rivin ikkunassa (omistajan toive). Kartan napautus
- * palauttaa sen pieneksi.
- *
- * Kortti kasvaa siitä reunasta, johon se on kiinnitetty: ylänurkassa
- * alaspäin, alanurkassa ylöspäin. Kolme neljäsosaa ruudusta on katto,
- * jotta kartasta jää aina osa näkyviin — muuten pelaaja ei näkisi
- * mihin napauttaa kutistaakseen sen takaisin.
+ * .laajennettu-luokka poistui v317:ssä: kortilla ei ole enää
+ * välikokoa, joten se on aina niin auki kuin sen oma katto sallii
+ * (ks. body[data-mode] .fact-card). Kortti kasvaa siitä reunasta,
+ * johon se on kiinnitetty — ylänurkassa alaspäin, alanurkassa
+ * ylöspäin.
  */
-body[data-mode] .fact-card.laajennettu {
-  max-height: 74vh;
-  max-height: 74dvh;
-}
 
 /*
  * --- yhden rivin päiväkirja (.pieni) ---------------------------------
@@ -5403,15 +5399,10 @@ body[data-mode] .fact-card[data-corner='br'] { bottom: 0.9rem; right: 0.4rem; }
    * olisi puhelimella liian kapea luettavaksi. */
   body[data-mode] .fact-card {
     width: min(340px, calc(100% - 0.8rem));
-    max-height: 22vh;
-    max-height: 22dvh;
+    /* Ei omaa korkeusrajaa: puhelimella pätee sama 74 dvh:n katto kuin
+     * muillakin (v317). Ennen tässä oli 22 dvh:n ikkuna ja tekstissä
+     * kolmen rivin katto — ne olivat välikoko, joka poistui. */
   }
-
-  /* Matalampi ikkuna puhelimella (omistajan toive): viisi riviä vei
-   * kartalta liian ison palan. Kolme riviä riittää vihjeeksi siitä,
-   * mitä kortissa lukee — koko merkinnän saa auki napauttamalla, ja
-   * juuri se on nyt tapa lukea pitkä teksti. */
-  .fact-teksti-rivi .fact-text { max-height: calc(3 * 1.35em); }
   /* Teksti oli hetken isompaa (v148), mutta omistaja palautti sen:
    * isolla fontilla kortti peitti kartasta liian ison kaistan. Koko
    * merkinnän saa auki napauttamalla, joten pieni ikkuna riittää. */
