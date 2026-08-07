@@ -94,6 +94,12 @@ saa olla ketju. Säännöt:
    havainto → outo yksityiskohta → koukku, joka jää auki. Koukku saa
    osoittaa suuntaan tai aiheeseen ("joku oli käynyt ennen minua"),
    EI nimettyyn kaupunkiin.
+   - Erityisesti: **mikään merkintä ei saa olettaa olevansa matkan
+     alku tai loppu** — ei myöskään Lontoo. Laudoilla on useita
+     aloituskaupunkeja (Euroopassa neljä), ja maailmankartalta
+     Eurooppaan astutaan Ateenan portista. "Tästä alkaa takaa-ajo"
+     -kehys kuuluu vain pelin avausruutuun, ei merkintöihin.
+     (Omistajan huomio 7.8.2026.)
 2. **Jatkuvuus tulee motiiveista, ei juonesta:** tähtäinristi,
    Grimshawin sähkeet, sateenvarjo, barometrilukemat, puuttuvat ja
    revityt sivut. Kun samat esineet palaavat eri kaupungeissa, tarina
@@ -110,10 +116,16 @@ saa olla ketju. Säännöt:
 
 ## Mitat
 
-- **kuvaus:** 2–4 virkettä, enintään ~320 merkkiä. Ensimmäinen virke
-  aina konkreettinen (tarina.md).
-- **nosto:** Horation sitaatti + korkeintaan yksi Reginaldin virke,
-  enintään ~240 merkkiä.
+*(Kiristetty 7.8.2026, omistajan palaute ensimmäisistä viidestä:
+"aivan liian pitkiä. Ottaisin alun kuvauksen pois kokonaan ja
+aloittaisin suoraan tarinasta. Ja loppukin kannattaa lyhentää.")*
+
+- **kuvaus:** 2–3 virkettä, enintään ~170 merkkiä. EI kuvailevaa
+  avausta ("Kaupunki seisoo...", "Kaupungissa tuoksui...") —
+  ensimmäinen virke on jo tarinassa: jotain tapahtuu, löytyy tai
+  ojennetaan.
+- **nosto:** Horation sitaatti + korkeintaan yksi lyhyt Reginaldin
+  virke, enintään ~160 merkkiä. Loppu on yksi isku, ei kahta.
 - tarina.md:n vaihtelusäännöt voimassa: korkeintaan kolmasosa
   merkinnöistä alkaa isoisällä, aloitustapoja kierrätetään, sama
   tehokeino ei toistu vierekkäisissä kaupungeissa. Sama koskee
