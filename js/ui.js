@@ -2047,6 +2047,12 @@ export class UI {
     // uuden pelin rinnalle, ja ilman lippua ne piirtäisivät vanhan pelin
     // tilaa uuden päälle (esim. edellisen pelin kysymyksen tekstin).
     this.dead = true;
+    // Tarkkuusvahti on documentin kuuntelija: ilman purkua kuollut
+    // instanssi jäisi tarkkailemaan näkyvyyttä uuden pelin rinnalle.
+    if (this.tarkkuusVahti) {
+      document.removeEventListener('visibilitychange', this.tarkkuusVahti);
+      this.tarkkuusVahti = null;
+    }
     stopPlaceStream();
     stopQuizMusic();
     sfx.stopFlight();
@@ -2581,6 +2587,47 @@ export class UI {
     // luontihetkellä viewBox on vielä oletusarvoinen eikä paneelin koko
     // ole tiedossa.
     requestAnimationFrame(() => this.taydennaTaide());
+    this.vahdiTarkkuutta();
+  }
+
+  /**
+   * Turvaverkko sumealle kartalle (omistajan havainto 7.8.2026:
+   * *"kartta näkyy pehmeänä sen jälkeen kun peli päivittyy
+   * automaattisesti uuteen versioon"* — ja korjautuu, kun zoomaa ulos
+   * ja takaisin).
+   *
+   * Ruudut piirretään sillä mittakaavalla, joka kartalla oli
+   * rasterointihetkellä, ja uusi sarja pyydetään vasta kun mittakaava
+   * muuttuu yli viidenneksen. Jos ensimmäinen rasterointi osuu
+   * hetkeen, jolloin näkymä ei ole vielä lopullinen — päivityksen
+   * jälkeinen lataus voi tapahtua taustavälilehdessä, jossa
+   * requestAnimationFrame ei laukea — ruudut jäävät väärän tarkkuisiksi
+   * eikä mikään pyydä niitä uudestaan. Kartta näyttää venytetyltä.
+   *
+   * Tämä vahti vertaa ruutujen mittakaavaa siihen, mikä kartalla
+   * oikeasti on, aina kun peli palaa näkyviin. Kynnys on tiukempi kuin
+   * täydennyksen oma (2 % eikä 20 %), koska tässä ei olla kesken
+   * eleen: pieni ero tarkoittaa juuri sitä väärää tarkkuutta.
+   *
+   * Vahti ei korjaa syytä vaan seurauksen — juurisyytä ei ole saatu
+   * toistettua kehityskoneella. Uudelleenrasterointi maksaa muutaman
+   * ruudun verran työtä ja tapahtuu vain kun ero on todellinen.
+   */
+  vahdiTarkkuutta() {
+    if (this.tarkkuusVahti) return;
+    this.tarkkuusVahti = () => {
+      if (this.dead || document.visibilityState !== 'visible') return;
+      if (!this.taide || !this.taideSkaala) return;
+      const nakyva = this.nakyvaAlue();
+      if (!nakyva) return;
+      const suhde = nakyva.skaala / this.taideSkaala;
+      if (suhde > 1.02 || suhde < 0.98) {
+        // Nollaus pakottaa uuden sarjan: taydennaTaide vertaa tähän.
+        this.taideSkaala = 0;
+        this.taydennaTaide({ heti: true });
+      }
+    };
+    document.addEventListener('visibilitychange', this.tarkkuusVahti);
   }
 
   /**
@@ -3148,21 +3195,14 @@ export class UI {
   /** Zoomaa mantereen kartan nappulan kohdalle pehmeästi liukuen. */
   zoomaaMantereelle() {
     if (this.mannerZoom) return;
-    const pane = this.svg.parentElement;
-    const paneW = pane.clientWidth;
-    const paneH = pane.clientHeight;
     const [vx, vy, vw, vh] = (this.svg.getAttribute('viewBox') ?? '0 0 1000 1000')
       .split(/\s+/).map(Number);
-    const yleisSkaala = paneW / vw;
     // Kohde: pelaajan nappula, tai näkymän keskus jos sitä ei löydy.
     const oma = this.game.cityOf?.();
     const kohde = oma && Number.isFinite(oma.x)
       ? { x: oma.x, y: oma.y, id: oma.id }
       : { x: vx + vw / 2, y: vy + vh / 2 };
 
-    // Nappulan paikka ruudulla ennen zoomausta: liuku lähtee siitä.
-    const sx = (kohde.x - vx) * yleisSkaala;
-    const sy = (kohde.y - vy) * yleisSkaala;
     this.mannerZoom = true;
     this.panX = null;
     this.panY = null;
@@ -3170,30 +3210,28 @@ export class UI {
     document.body.classList.add('manner-zoom');
     this.fitViewBox();
     /*
-     * Isolla laudalla liuku ei lähde kokonäkymästä vaan mantereelta.
+     * EI LIUKUA (omistajan päätös 7.8.2026): *"ota zoomausanimaatiot
+     * pois kun tullaan aloitusnäytöltä lentokoneella mantereelle. peli
+     * vain siis siirtyy suoraan oikeaan zoom tasoon ilman
+     * animaatiota."*
      *
-     * Aiemmin liuku ohitettiin isolla laudalla kokonaan, koska se alkoi
-     * kokonäkymästä — ja juuri sitä ei haluttu nähdä: omistajan havainto
-     * iPadilta oli, että vanha maailma "näkyy kokonaan ja zoomautuu sen
-     * jälkeen". Hinta oli, että saapuminen tapahtui ilman liikettä:
-     * kartta oli yhtäkkiä perillä, eikä mistään näkynyt minne oltiin
-     * tultu. Omistajan toive: "alussa voisi olla zoomaus animaatio
-     * kaikilla laitteilla niin että kohde maanosa jää selvemmin
-     * näkyviin."
+     * Tässä oli ennen kaksi liukua: isolla laudalla saapuminen
+     * MANNER_LAAJUUS-kertaisesta näkymästä ja muilla laudoilla liuku
+     * napautuskohdasta. Molemmat poistettiin — fitViewBox yllä on jo
+     * asettanut lopullisen näkymän, joten mitään muuta ei tarvita.
      *
-     * Nyt liuku alkaa MANNER_LAAJUUS-kertaisesta näkymästä eli reilusti
-     * mantereen kokoisesta ruudusta, ei maailmasta. Liike on puhdas
-     * laajuuden muutos saman keskipisteen ympärillä, joten mikään ei
-     * lennä ruudun poikki — kartta laskeutuu paikalleen.
+     * Zoomausääni lähti mukana: se soi täsmälleen liu'un mittaisena
+     * (js/sound.js ZOOM_VAUHTI), eikä moottorin humaus ilman liikettä
+     * kerro mitään. asetaZoomAlku ja asetaSaapumisAlku jäävät
+     * käyttöön aloituskartan omassa zoomissa (zoomaaAloituskartta).
+     *
+     * Kuva pyydetään heti oikealla mittakaavalla: ilman tätä ruudut
+     * jäisivät yleiskuvan tarkkuuteen siihen asti, kunnes jokin muu
+     * kutsuisi täydennyksen.
      */
-    if (this.isoLauta()) {
-      this.asetaSaapumisAlku(paneW, paneH);
-      this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
-      this.paivitaZoomiNapit();
-      return;
-    }
-    this.asetaZoomAlku(kohde, sx, sy, yleisSkaala);
-    this.zoomAanellaJaViiveella(() => this.kaynnistaZoomLiuku());
+    this.paivitaZoomiNapit();
+    document.body.classList.remove('manner-odottaa');
+    this.taydennaTaide?.({ heti: true });
   }
 
   /**
