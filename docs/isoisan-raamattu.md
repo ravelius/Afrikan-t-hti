@@ -165,3 +165,107 @@ viisi (7.8.2026): Lontoo, Madrid, Berliini, Tukholma, Venetsia. Loput
 uusitaan erissä lehtien tasokorotuksen tahdissa (6–8 kaupunkia per
 PR), ja Afrikan/Aasian laudat vasta kun Euroopan sävy on omistajan
 korvissa hyväksytty.
+
+## Euroopan laudan suunnitelma (omistajan tilaus 7.8.2026)
+
+Omistajan kysymys ja ohjenuora: *"Eikös dekkarissakin ole muitakin
+tunnelmia kuin jännitys?"* — On, ja juuri se pitää dekkarin elossa.
+Klassinen dekkari on enimmäkseen muuta kuin jännitystä; harvat
+jännityshetket toimivat vain, koska niiden ympärillä on lämpöä,
+huumoria ja hengähdyksiä. Jos joku seuraa joka kaupungissa, kukaan
+ei seuraa missään.
+
+### Tunnelmapaletti — seitsemän säveltä
+
+1. **Jännitys** — seuraaja, tuore jälki, kuiskaus. KORKEINTAAN
+   joka kuudes kaupunki. Käytetty: Madrid, Tukholma, Berliini.
+2. **Arvoitus** — outo yksityiskohta ilman uhkaa: maksettu lippu,
+   avain, kortti. Yleisin sävel, silti alle kolmannes.
+3. **Lämpö** — joku muistaa isoisän hyvällä: tarjoilija, teenmyyjä,
+   kauppias. Isoisä jätti jälkeensä ystäviä, ei vain arvoituksia.
+4. **Huumori** — Horation kuivat huomiot, Reginaldin kömmähdykset,
+   ajan patina (Horatio ei tiennyt tulevasta).
+5. **Haikeus** — paikat, jonne isoisä ei ehtinyt; "sinulle, joka
+   tätä luet". Tunnelmista arvokkain — säästetään oikeisiin kohtiin.
+6. **Ihmetys** — matkan riemu: maisema, valo, mittakaava. Tämä oli
+   vanhojen tekstien vahvuus — se EI katoa dekkarista.
+7. **Hengähdys** — rauhallinen merkintä ilman koukkua. Dekkari
+   tarvitsee taukoja; pari per lauta riittää.
+
+### Elementtityypit (kierrätetään, ei toisteta naapureissa)
+
+- **esine**: avain, kolikko, kortti, kello, ilmapuntari, nappi
+- **viesti**: sähke, marginaalimerkintä, puuttuva sivu
+- **henkilö**: joku tuntee kirjan tai suvun (lämmin TAI outo)
+- **jälki**: liituristi, lämmin paikka penkillä, tuore kolikko
+- **Horatio 1873**: nosto, jossa vuoden 1873 tositapahtuma kantaa
+  (Budapestin synty, Wienin vesijohto, Riian laulujuhlat,
+  Ivalojoen kulta — nämä säilytetään uusinnoissa!)
+- **ei koukkua**: hengähdyskaupungit
+
+### Motiivilangat (budjetti — harvuus tekee pelottavaksi)
+
+- liituristi: Lontoo + Berliini. EI LISÄÄ.
+- sähkeet: Lontoo + Madrid. Ei lisää.
+- tummansininen sateenvarjo: vain Madrid.
+- sivu 14: Tukholma ↔ Venetsia -pari. Suljettu.
+- messinkiavain: Pariisi ↔ Madridin kohtaaminen -pari. Suljettu.
+- E. G. / herra G.: Kairo (kortti), Lontoo, Madrid, Berliini +
+  YKSI uusi kosketus (Edinburgh, askeleet sumussa). Sen jälkeen ei
+  lisää Euroopassa.
+- ilmapuntari/mittaukset: esitellään Alpeilla, saa palata 1–2
+  kertaa (Islanti sopii).
+- kello: Moskova. Prahan julkinen kello on eri asia — sallittu.
+
+### Kaupunkijako (31 jäljellä; ✓ = tehty 7.8.2026)
+
+Sulkeissa sävel ja kantava elementti — yhden rivin siemen, ei
+valmis teksti. Vierekkäiset kaupungit saavat eri keinon.
+
+- **Iberia ja länsi:** Lissabon (ihmetys: ratikka + lähtijöiden
+  satama) · Barcelona (huumori: kirkko jota Horatio ei maininnut —
+  sitä ei ollut aloitettu) · Granada (hengähdys: veden ääni,
+  Horatio vaikeni) · Marseille (seikkailun riemu: Monte Criston
+  tyrmä, tarina tarinassa) · Madrid ✓
+- **Britteinsaaret ja Benelux:** Lontoo ✓ · Edinburgh (jännitys +
+  huumorilaukaisu: askeleet sumussa — ja kello yhden tykki pamauttaa
+  molemmat matkaan; G:n viimeinen kosketus) · Dublin (lämpö: pubin
+  sävelmä, ovien värit) · Amsterdam (huumori: nojaavat talot,
+  nostokoukut)
+- **Alpit ja Italia:** Alpit (ihmetys + mittaus: Horation
+  ilmapuntari, jäätikkö joka sittenkin liikkui) · Rooma ✓ ·
+  Venetsia ✓ · Sisilia (lämpö: laulava tori, kaikkien maa)
+- **Keski-Eurooppa:** Pariisi ✓ · Berliini ✓ · Wien (hengähdys:
+  kahvila, vesijohto 1873) · Praha (arvoitus: kello joka ei näytä
+  kiirettä) · Budapest (huumori/ihmetys: Horatio näki kaupungin
+  syntyvän 1873) · Krakova (haikeus: torvi joka vaikenee kesken)
+- **Balkan ja kaakko:** Dubrovnik (hengähdys/viisaus: ostettu
+  rauha) · Sarajevo (haikeus: "Bosniaan, jos aika riittää" —
+  Reginald käy viivalla hänen puolestaan; SÄILYTETÄÄN, vain
+  lyhennys) · Sofia (arvoitus: kaupunki itsensä päällä, lähteet) ·
+  Ateena ✓ · Kreeta (arvoitus/huumori: labyrintti, eksyminen) ·
+  Istanbul ✓
+- **Itä:** Varsova (vakava kunnioitus: uudelleen rakennettu
+  vanhakaupunki) · Kiova (vakava kunnioitus: laulu joka ei vaikene
+  käskystä) · Odessa (huumori: portaikko-illuusio, viisi kieltä
+  lauseessa) · Bukarest (ihmetys: pihakatu ja jättirakennus) ·
+  Moskova ✓ · Pietari (ihmetys + ripaus jännitystä: sillat
+  nousevat — Horatio jäi kerran väärälle rannalle)
+- **Itämeri ja Pohjola:** Tallinna (ihmetys: satukirjan siluetti,
+  mantelien tuoksu) · Riika (lämpö: leipä ojennetaan kysymättä,
+  laulujuhlat 1873) · Vilna (arvoitus/kunnioitus: kirjankantajat
+  yössä) · Helsinki (hengähdys: valkoinen kirkko, kotisatama) ·
+  Tukholma ✓ · Oslo (huumori: väärä nimi kartassa, ruskea juusto) ·
+  Kööpenhamina (lämpö/ilo: pyörävirta, Tivolin lyhdyt) · Islanti
+  (ihmetys + mittaus: kaksi mannerta, höyryävä maa) · Tromssa
+  (ihmetys: aurinko jota kukaan ei sammuta) · Lappi (hengähdys:
+  Ivalojoen kulta 1873, valoisa yö)
+
+### Tasapainotarkistus ennen jokaista erää
+
+Laske erän sävelet: jännitystä korkeintaan yksi per erä, vähintään
+yksi lämmin ja yksi hengähdys, korkeintaan kolmasosa alkaa
+isoisällä, eikä sama elementtityyppi kahdesti peräkkäisissä
+kaupungeissa. Vanhojen tekstien parhaat 1873-faktat ja rakkaimmat
+lauseet ("Heitin omani samaan kohtaan") saa ja kannattaa
+kierrättää lyhennettyinä — uusiminen ei ole hävittämistä.
