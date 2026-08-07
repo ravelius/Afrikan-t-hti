@@ -3006,25 +3006,42 @@ test('Fuji näkyy lounaassa eikä lännessä', () => {
   }
 });
 
-test('päiväkirja aukeaa napauttamalla ja kutistuu kartan napautuksesta', () => {
-  // Toteutus on kolmessa paikassa: napautus kortissa, kutistus kartalla
-  // ja tyyli. Jos yksikin katoaa, merkintä jää joko auki kartan päälle
-  // tai takaisin viiden rivin vierityslaatikoksi.
+test('päiväkirjalla on kaksi kokoa: koko merkintä ja yhden rivin lappu', () => {
+  /*
+   * Omistajan päätös 7.8.2026: välikoko pois. Ennen kokoja oli kolme
+   * (yksi rivi, viiden rivin ikkuna, napautuksella auki levitetty), ja
+   * keskimmäinen poistui — merkintä näkyy heti kokonaan.
+   *
+   * Testi vahtii molempia suuntia: että välikoko ei palaa (rivikatto
+   * tai .laajennettu-luokka) ja että kortilla on yhä katto, jottei
+   * pitkä merkintä peitä koko karttaa.
+   */
   const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
   const css = readFileSync(new URL('../css/styles.css', import.meta.url), 'utf8');
-  assert.match(ui, /factTekstiRivi\?\.addEventListener\('click'/,
-    'päiväkirjan napautus puuttuu');
-  assert.match(ui, /mapPane\.addEventListener\('click', \(\) => this\.kutistaPaivakirja\(\)\)/,
-    'kartan napautus ei kutista päiväkirjaa');
-  // Uusi merkintä alkaa aina pienestä ikkunasta: avain vaihdetaan vain
-  // uusiFactKey-metodissa, joka kutistaa kortin samalla.
+
+  // Välikoko ei saa palata missään muodossa.
+  assert.doesNotMatch(ui, /classList\.(toggle|add|remove)\('laajennettu'/,
+    'laajennettu-luokka on palannut js:ään');
+  const saannot = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.doesNotMatch(saannot, /\.laajennettu/,
+    'laajennettu-luokka on palannut css:ään');
+  assert.doesNotMatch(saannot, /\.fact-teksti-rivi \.fact-text \{[^}]*max-height/,
+    'merkinnän tekstiin on palannut rivikatto');
+
+  // Kartan napautus kutistaa kortin yhden rivin lapuksi.
+  assert.match(ui, /mapPane\.addEventListener\('click', \(\) => this\.asetaPaivakirjanKoko\(true\)\)/,
+    'kartan napautus ei kutista päiväkirjaa yhdelle riville');
+
+  // Uusi merkintä avaa kortin: avain vaihdetaan vain uusiFactKeyssä.
   assert.equal((ui.match(/this\.factKey = key;/g) ?? []).length, 1,
-    'factKey asetetaan uusiFactKeyn ohi, jolloin kortti jäisi auki');
-  assert.match(css, /\.fact-card\.laajennettu[\s\S]{0,200}max-height/,
-    'laajennetun kortin korkeusrajaa ei ole');
+    'factKey asetetaan uusiFactKeyn ohi, jolloin kortti voisi jäädä lapuksi');
+  const uusi = ui.match(/uusiFactKey\(key\) \{[^}]*\}/)?.[0] ?? '';
+  assert.match(uusi, /asetaPaivakirjanKoko\(false\)/,
+    `uusi merkintä ei avaa korttia: ${uusi}`);
+
   // Katto on oltava: ilman sitä pitkä merkintä peittäisi koko kartan,
   // eikä pelaaja näkisi mihin napauttaa kutistaakseen sen.
-  const katto = css.match(/body\[data-mode\] \.fact-card\.laajennettu \{[^}]*\}/)?.[0] ?? '';
+  const katto = css.match(/body\[data-mode\] \.fact-card \{[^}]*\}/)?.[0] ?? '';
   assert.match(katto, /max-height: 7\d(vh|dvh)/, `katto puuttuu: ${katto}`);
 });
 

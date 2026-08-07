@@ -1667,22 +1667,22 @@ export class UI {
       .observe(this.factText, { childList: true, characterData: true, subtree: true });
 
     /*
-     * Päiväkirja aukeaa napauttamalla, ei vierittämällä (omistajan
-     * toive). Merkintä on kartan nurkalla viiden rivin ikkunassa, ja
-     * loput piti ennen vierittää sormella pienen tekstin sisällä.
-     * Napautus kasvattaa kortin niin, että koko merkintä näkyy
-     * kerralla; kartan napautus palauttaa sen pieneksi.
+     * PÄIVÄKIRJALLA EI OLE ENÄÄ VÄLIKOKOA (omistajan päätös 7.8.2026):
+     * "matkakirja voisi avautua jatkossa kokonaan, koska se pienenee
+     * kätevästi kokonaan kun karttaa liikuttaa. eli sen välikoon voisi
+     * ottaa pois kokonaan."
      *
-     * Vieritys jää varalle: jos merkintä on niin pitkä, ettei se mahdu
-     * auki levitettynäkään, teksti vierii kuten ennen.
+     * Kokoja oli kolme: yhden rivin nimilappu, viiden rivin ikkuna ja
+     * napautuksella auki levitetty kortti. Keskimmäinen poistui, joten
+     * merkintä näkyy heti kokonaan eikä sitä tarvitse avata erikseen —
+     * ja kartan liike kutistaa kortin edelleen yhdelle riville.
+     * Tekstirivin napautuskuuntelija poistui samalla: sillä ei ole
+     * enää kokoa vaihdettavanaan.
+     *
+     * Vieritys jää varalle: jos merkintä ei mahdu kortin kattoon
+     * (74 dvh), teksti vierii kuten ennenkin ja jatkuu-nuoli kertoo
+     * siitä.
      */
-    this.factTekstiRivi?.addEventListener('click', (e) => {
-      // Kortin omat napit (kuuntele, valokuva, kuva) hoitavat itse oman
-      // napautuksensa — ne eivät saa myös avata korttia.
-      if (e.target.closest('button')) return;
-      if (this.factCard.classList.toggle('laajennettu')) jatkuuVihje();
-      else this.kutistaPaivakirja();
-    });
 
     /*
      * Yhden rivin päiväkirja: koko kortti on painike.
@@ -1784,10 +1784,16 @@ export class UI {
     for (const lappu of this.peruutusLaput) lappu.addEventListener('cancel', this.lappuPeruutus);
 
     this.mapPane = this.svg.parentElement;
-    // Kartan napautus kutistaa auki levitetyn päiväkirjan (omistajan
-    // toive). Kuuntelija on kartta-alueella, jonka päällä kortit vain
-    // kelluvat, joten kortin oma napautus ei osu tähän.
-    this.mapPane.addEventListener('click', () => this.kutistaPaivakirja());
+    /*
+     * Kartan napautus kutistaa päiväkirjan yhden rivin lapuksi
+     * (omistajan toive; v317 asti se kutisti auki levitetyn kortin
+     * viiden rivin ikkunaan, jota ei enää ole). Näin kartan saa
+     * näkyviin myös napauttamalla, ei vain liikuttamalla.
+     *
+     * Kuuntelija on kartta-alueella, jonka päällä kortit vain
+     * kelluvat, joten kortin oma napautus ei osu tähän.
+     */
+    this.mapPane.addEventListener('click', () => this.asetaPaivakirjanKoko(true));
 
     // Zoomipainikkeet. Napautus ei saa vuotaa kartalle asti: mapPanen
     // oma kuuntelija kutistaisi päiväkirjan ja maailmankartalla
@@ -5112,33 +5118,36 @@ export class UI {
   }
 
   /**
-   * Uusi päiväkirjamerkintä alkaa aina pienestä ikkunasta. Ilman tätä
-   * yhden merkinnän auki levittäminen olisi jäänyt päälle, ja
-   * seuraavassa kaupungissa kortti olisi peittänyt kartan itsestään.
+   * Uusi päiväkirjamerkintä alkaa aina alusta ja avaa kortin.
+   *
+   * Teksti palautetaan alkuun, koska edellinen merkintä on voitu
+   * jättää vieritettynä keskeltä — muuten uusi merkintä alkaisi
+   * näkyä puolivälistä.
+   *
+   * Linssi tai kartan vieritys on voinut kutistaa kortin yhden rivin
+   * lapuksi, ja jos se jäisi siihen, pelaaja ei näkisi juuri
+   * kirjoitettua tekstiä lainkaan — hän ei edes tietäisi, että
+   * sellainen tuli (omistajan linjaus). Seuraava kartan liike tai
+   * napautus kutistaa kortin taas.
    */
   uusiFactKey(key) {
     this.factKey = key;
-    this.kutistaPaivakirja();
-    /*
-     * Uusi merkintä avaa myös yhden rivin lapun.
-     *
-     * Linssi tai kartan vieritys on voinut kutistaa kortin nimeksi, ja
-     * jos lappu jäisi siihen, pelaaja ei näkisi juuri kirjoitettua
-     * tekstiä lainkaan — hän ei edes tietäisi, että sellainen tuli
-     * (omistajan linjaus). Seuraava kartan liike kutistaa kortin taas.
-     */
+    if (this.factText) this.factText.scrollTop = 0;
     this.asetaPaivakirjanKoko(false);
+    this.paivitaJatkuuVihje?.();
   }
 
   /**
-   * Päiväkirjan kaksi kokoa kartalla: tavallinen ikkuna ja yhden rivin
-   * nimilappu.
+   * Päiväkirjan kaksi kokoa kartalla: koko merkintä ja yhden rivin
+   * nimilappu. Välikoko poistui v317:ssä (omistajan päätös), joten
+   * näiden väliin ei jää mitään.
    *
    * Lappu on kolmen tilanteen vastaus (omistajan toive 4.8.2026):
    * linssin päällä kartan pitää näkyä selitteen ja päiväkirjan välistä,
-   * ja kun karttaa vieritetään sormella, kortti on tiellä juuri siinä
-   * nurkassa, jota katsotaan. Kutistuminen on aina peruttavissa
-   * napautuksella, eikä se koskaan kestä uuden merkinnän yli.
+   * ja kun karttaa vieritetään sormella tai napautetaan, kortti on
+   * tiellä juuri siinä nurkassa, jota katsotaan. Kutistuminen on aina
+   * peruttavissa napautuksella, eikä se koskaan kestä uuden merkinnän
+   * yli.
    *
    * Tila luetaan ja kirjoitetaan luokasta itsestään, ei erillisestä
    * kentästä: niin kortin ulkoasu ja saavutettavuusmääreet eivät voi
@@ -5149,10 +5158,8 @@ export class UI {
     if (this.factCard.classList.contains('pieni') === pieni) return;
     this.factCard.classList.toggle('pieni', pieni);
     if (pieni) {
-      // Auki levitetty ja yhdelle riville kutistettu ovat toistensa
-      // vastakohdat: molemmat päällä jättäisi kortin epämääräiseen
-      // välitilaan, jos lappu avataan takaisin.
-      this.factCard.classList.remove('laajennettu');
+      // Teksti alkuun: jos merkintä oli vieritetty keskeltä, lapun
+      // avaaminen näyttäisi muuten katkelman keskeltä virkettä.
       if (this.factText) this.factText.scrollTop = 0;
       this.factCard.setAttribute('role', 'button');
       this.factCard.setAttribute('tabindex', '0');
@@ -5167,18 +5174,6 @@ export class UI {
       this.factCard.removeAttribute('aria-expanded');
       this.factCard.removeAttribute('aria-label');
     }
-    this.paivitaJatkuuVihje?.();
-  }
-
-  /**
-   * Päiväkirja takaisin pieneen ikkunaansa. Teksti palaa samalla
-   * alkuun: jos merkintä oli auki levitettynä vieritetty, kutistuminen
-   * jättäisi muuten näkyviin keskeltä alkavan katkelman.
-   */
-  kutistaPaivakirja() {
-    if (!this.factCard) return;
-    this.factCard.classList.remove('laajennettu');
-    if (this.factText) this.factText.scrollTop = 0;
     this.paivitaJatkuuVihje?.();
   }
 

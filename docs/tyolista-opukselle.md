@@ -5350,6 +5350,48 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v317 — Matkakirja aukeaa kokonaan (7.8.2026)
+
+Omistaja: *"matkakirja voisi avautua jatkossa kokonaan, koska se
+pienenee kätevästi kokonaan kun karttaa liikuttaa. eli sen välikoon
+voisi ottaa pois kokonaan."*
+
+Kartalla kelluvalla päiväkirjalla oli kolme kokoa: yhden rivin
+nimilappu (`.pieni`), viiden rivin ikkuna (puhelimella kolmen) ja
+napautuksella auki levitetty kortti (`.laajennettu`). Keskimmäinen
+poistui — merkintä näkyy nyt kokonaan heti, eikä sitä tarvitse avata
+erikseen.
+
+### Mitä poistui
+
+- `.fact-teksti-rivi .fact-text`in rivikatto (`max-height: calc(5 *
+  1.45em)`) ja puhelimen oma kolmen rivin katto.
+- `.laajennettu`-luokka kokonaan: css:stä molemmat säännöt, js:stä
+  napautuskuuntelija ja `kutistaPaivakirja()`-metodi.
+- Kortin oma katto nousi 38 → 74 dvh, eli entisen auki levitetyn
+  kortin mittaan. Puhelimen 22 dvh:n katto poistui, joten sama 74
+  dvh pätee kaikilla ruuduilla.
+
+### Mitä jäi
+
+Yhden rivin lappu jäi ennalleen: kartan liike ja linssi kutistavat
+kortin nimeksi, ja napautus avaa sen. Kartan napautus kutistaa nyt
+kortin suoraan lapuksi (ennen se palautti sen viiden rivin ikkunaan,
+jota ei enää ole) — niin kartan saa näkyviin myös napauttamalla.
+
+Mitattu selaimessa: 390 px:n puhelimella yhdeksän virkkeen merkintä
+vie 260 px 844 px:n ruudusta ja mahtuu kokonaan; 1024 px:llä 344 px.
+Katto 74 dvh tulee vastaan vasta poikkeuksellisen pitkällä
+merkinnällä, ja silloin teksti vierii kuten ennenkin.
+
+### Testi
+
+`tests/rules.test.mjs` vahti ennen napautuksella avaamista. Nyt se
+vahtii päinvastaista: että välikoko ei palaa (ei rivikattoa, ei
+`.laajennettu`-luokkaa), että kartan napautus kutistaa kortin lapuksi
+ja että kortilla on yhä katto. Todennettu istuttamalla rivikatto
+takaisin — testi kaatui.
+
 ## v314 — Maan nimi Tutki-sivujen otsikoihin (7.8.2026)
 
 Omistaja: *"tutki sivut: maata koskevilla sivuilla otsikossa saisi olla
