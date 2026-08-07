@@ -168,3 +168,51 @@ käsin kirjoitettuna.
 - **CO₂-indikaattorin tunnus on Maailmanpankissa vaihtunut**
   aiemmin — työkalun pitää tarkistaa että sarja palauttaa dataa,
   ja kaatua äänekkäästi jos ei (ei hiljaista tyhjää käyrää).
+
+
+## VAIHE 6 (v321): vertailu muutti kartalle
+
+Omistajan päätös 7.8.2026: *"vertailulinssi vois toimia hieman eri
+tavalla kuin nyt. eli ei upoteta näkymää tutki osioon vaan linssi
+toimisi suoraan karttanäkymässä mutta muuttaisi sen niin että
+kaupungit poistuisivat ja maiden rajat näkyisivät selvemmin. pelaaja
+voisi valita nyt maksimissaan kolme maata ja lisäksi olisi valmiina
+vaihtoehtona suomi."*
+
+### Mitä tehtiin
+
+- **Vertailutila kartalla** (`js/ui.js` `tahdistaVertailu`): linssi ei
+  piirrä kerrosta vaan ottaa karttanäkymän tilaksi radiotilan mallin
+  mukaan. Kaupungit, laatat, nappulat ja kohteet piilotetaan bodyn
+  luokalla `vertailu-tila`; maiden muodot piirretään omaan kerrokseen
+  (`piirraVertailuMaat`) tummemmalla rajaviivalla ja nimillä.
+  Reittiviivat jäävät: ne ovat osa staattista karttataidetta, joka
+  rasteroidaan bittikartaksi, eikä css saa siihen otetta.
+- **Valinta kartalta**: napautus valitsee maan, uudelleen napautus
+  poistaa. Enintään neljä valintaa — kolme maata ja Suomi, joka
+  asetetaan valmiiksi jos laudalla on Suomen muoto. Valitut punaisella.
+- **Alapalkki** korvaa Tutki- ja nopanheittonapit: värilappu maittain
+  (napautus poistaa) ja oikeassa reunassa Vertaa-nappi, joka aukeaa
+  kahdesta maasta alkaen.
+- **Vertailunäkymä** (`js/maakayrat.js` `piirraVertailu`): ylhäällä
+  maiden napit (kytke käyrä päälle/pois) ja "Muuta valintoja" takaisin
+  kartalle, sitten maakortit — pienoiskartta ja tunnusluvut samassa
+  muodossa kuin Tutki-ikkunan maaosaston alussa — ja niiden alle
+  käyrät samoilla asteikoilla. Arkki on ruudun kokoinen, ja vasta
+  1400 pikselistä ylöspäin kartta jää sumeana laidoille.
+- **Neljä väriä** (`VERTAILUVARIT`): kulta, punaruskea, sammalvihreä ja
+  merimuste. Sama väri kartalla, alapalkissa ja käyrässä. Lista on
+  toisintona `js/ui.js`:ssä, koska palkki tarvitsee värit ennen kuin
+  laiskasti tuotu `maakayrat.js` on ladattu — testi vahtii, etteivät
+  listat eriydy.
+
+### Mikä poistui
+
+Maa numeroina -sivun vertailuvalitsin. Sivu on taas yhden maan sivu,
+jolla Suomi kulkee himmeänä vertailuviivana — kuten ennen linssiä.
+
+### Mitä jäi tekemättä
+
+Väestöpyramidi ja sanalliset tulkinnat eivät ole vertailunäkymässä: ne
+kertovat yhdestä maasta kerrallaan, eikä neljää pyramidia voi lukea
+rinnakkain samasta kehyksestä. Ne ovat yhä yhden maan sivulla.

@@ -411,6 +411,22 @@
   <!-- Pelin nimikilpi: tekijänoikeus, tekijätiedot ja luettelo kaikista
        aineistoista, joista peli on koottu. Aukeaa matkalaukun alalaidan
        linkistä; sisältö tulee js/lahteet.js:stä. -->
+  <!--
+    Vertailunäkymä (v321): karttanäkymässä valitut maat rinnakkain.
+    Sisältö rakennetaan js/ui.js:ssä ja graafit js/maakayrat.js:ssä —
+    tässä on vain kuori, koska maiden määrä vaihtelee.
+
+    Arkki on Tutki-ikkunan sukua (sanomalehtipaperi), mutta leveämpi:
+    neljä maata tarvitsee tilaa, ja vain leveimmillä ruuduilla kartta
+    jää sumeana laidoille (css: .dialog.vertailu-arkki).
+  -->
+  <dialog id="vertailu-dialog" class="dialog arkki vertailu-arkki">
+   <div class="dialog-card" tabindex="-1" autofocus>
+    <div id="vertailu-ylarivi" class="vertailu-ylarivi"></div>
+    <div id="vertailu-sisalto"></div>
+   </div>
+  </dialog>
+
   <dialog id="lahteet-dialog" class="dialog">
    <div class="dialog-card lahteet-card" tabindex="-1" autofocus>
     <!-- Otsikko on sama logo isompana: pelaaja napautti sitä ylärivillä,

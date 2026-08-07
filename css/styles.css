@@ -7353,7 +7353,13 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 .maakayra-viiva,
 .maakayra-ennuste,
 .maakayra-suomi,
-.maakayra-toinen {
+.maakayra-toinen,
+.maakayra-kolmas,
+.maakayra-neljas {
+  /* fill: none KOSKEE KAIKKIA VIIVALUOKKIA. Kolmas ja neljäs maa
+   * unohtuivat tästä ensin, ja polyline täyttyi oletuksena mustalla:
+   * käyrien väliin ilmestyi umpimusta läiskä (näkyi heti
+   * kuvakaappauksesta, ei testeistä). */
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -7365,6 +7371,17 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 /* Vertailulinssin toinen maa: punaruskea (--mark), sama kynä. */
 .maakayra-toinen { stroke: #b03a2b; stroke-width: 1.4; opacity: 0.85; }
 .maakayra-toinen-piste { fill: #b03a2b; opacity: 0.85; }
+
+/*
+ * Kolmas ja neljäs maa (v321, karttanäkymän vertailu). Värit ovat
+ * samaa mustepalettia kuin kartta: sammaleenvihreä ja merimuste —
+ * kulta, punaruskea, vihreä ja sininen erottuvat toisistaan myös
+ * harmaasävyisenä, koska niiden tummuus on eri.
+ */
+.maakayra-kolmas { stroke: #4a6b3a; stroke-width: 1.4; opacity: 0.85; }
+.maakayra-kolmas-piste { fill: #4a6b3a; opacity: 0.85; }
+.maakayra-neljas { stroke: #35577f; stroke-width: 1.4; opacity: 0.85; }
+.maakayra-neljas-piste { fill: #35577f; opacity: 0.85; }
 
 .pyramidi-vertailu {
   fill: none;
@@ -7906,3 +7923,228 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }
+
+/*
+ * ===================================================================
+ * VERTAILUTILA JA VERTAILUNÄKYMÄ (v321)
+ * ===================================================================
+ *
+ * Omistajan malli 7.8.2026: vertailulinssi ei enää upota näkymää
+ * Tutki-osioon, vaan se ottaa karttanäkymän haltuunsa. Kaupungit
+ * katoavat, maiden rajat näkyvät selvästi, ja pelaaja napauttaa
+ * kartalta enintään kolme maata Suomen rinnalle. Alanapit korvautuvat
+ * omalla palkilla, jonka oikeasta reunasta pääsee vertailuun.
+ *
+ * Sama malli kuin radiotilassa (body.radio-tila): tila piilottaa muun
+ * toiminnan bodyn luokalla, jotta se purkautuu varmasti myös silloin
+ * kun linssi sammuu jotain muuta kautta.
+ */
+body.vertailu-tila .fact-card,
+body.vertailu-tila .actions,
+body.vertailu-tila .board-hint {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/*
+ * Kaupungit, laatat, nappulat ja kohteet pois: vertailussa katsotaan
+ * maita. Reittiviivat jäävät tarkoituksella — ne ovat osa staattista
+ * karttataidetta, joka rasteroidaan bittikartaksi isoilla laudoilla,
+ * eikä css saa siihen otetta.
+ */
+body.vertailu-tila .cities,
+body.vertailu-tila .tokens,
+body.vertailu-tila .targets,
+body.vertailu-tila .pawns { display: none; }
+
+/*
+ * Maiden rajat esiin: tavallisella kartalla korostetaan vain se maa,
+ * jossa pelaaja seisoo, ja rajaviiva on hento. Vertailutilassa jokainen
+ * maa on napautettava kohde, joten viiva tummenee ja saa oman
+ * kerroksensa (.vertailu-maat).
+ */
+.vertailu-maa {
+  fill: rgba(120, 96, 62, 0.06);
+  stroke: rgba(70, 51, 31, 0.55);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  cursor: pointer;
+}
+
+.vertailu-maa:hover { fill: rgba(120, 96, 62, 0.16); }
+
+/*
+ * Valittu maa punaisella (omistajan toive). Sävy on sama punaruskea
+ * kuin käyrän toisella maalla, jotta kartta ja graafi puhuvat samaa
+ * kieltä; järjestysnumero erottaa maat toisistaan.
+ */
+.vertailu-maa.valittu {
+  fill: rgba(176, 58, 43, 0.3);
+  stroke: #b03a2b;
+  stroke-width: 2.2;
+}
+
+.vertailu-maa-nimi {
+  font-family: var(--font-hand);
+  fill: rgba(70, 51, 31, 0.85);
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(247, 237, 216, 0.85);
+  stroke-width: 3px;
+}
+
+/*
+ * Alapalkki: korvaa Tutki- ja nopanheittonapit. Sama pilleri kuin
+ * muissakin kelluvissa palkeissa, mutta koko leveydeltä keskitetty.
+ */
+.vertailu-palkki {
+  position: fixed;
+  left: 50%;
+  bottom: max(0.6rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: min(96vw, 900px);
+  padding: 0.35rem 0.5rem;
+  border: 1px solid rgba(70, 51, 31, 0.45);
+  border-radius: 999px;
+  background: rgba(247, 237, 216, 0.94);
+  box-shadow: 0 6px 14px -8px rgba(40, 28, 16, 0.6);
+}
+
+.vertailu-ohje {
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  color: rgba(70, 51, 31, 0.8);
+  margin: 0 0.2rem;
+}
+
+.vertailu-lappu {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid rgba(70, 51, 31, 0.4);
+  border-radius: 999px;
+  background: rgba(255, 250, 238, 0.9);
+  font-family: var(--font-type);
+  font-size: 0.8rem;
+  color: var(--map-ink);
+  cursor: pointer;
+}
+
+.vertailu-lappu:hover { background: rgba(176, 58, 43, 0.12); }
+
+/* Värilaatta sitoo lapun, kartan ja käyrän toisiinsa. */
+.vertailu-laatta {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  border: 1px solid rgba(70, 51, 31, 0.45);
+  flex: none;
+}
+
+.maakayra-viiva-laatta { background: #a4691c; }
+.maakayra-toinen-laatta { background: #b03a2b; }
+.maakayra-kolmas-laatta { background: #4a6b3a; }
+.maakayra-neljas-laatta { background: #35577f; }
+
+.vertailu-vertaa {
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  font-family: var(--font-type);
+}
+
+/*
+ * Vertailunäkymä on sama arkki kuin Tutki-ikkuna: koko ruudun
+ * korkuinen paperi, jonka laidoille kartta jää sumeana vain
+ * leveimmillä ruuduilla (max-width alla).
+ */
+/*
+ * Vertailuarkki on mahdollisimman iso (omistajan toive): kapealla
+ * ruudulla koko ruutu, ja vasta leveimmillä näytöillä kartta jää
+ * sumeana laidoille. Marginaali nollataan, koska <dialog> keskittää
+ * itsensä automaattisilla marginaaleilla — ilman tätä 100vw:n kortti
+ * työntyi ruudun oikean reunan yli (näkyi kuvakaappauksesta).
+ */
+.dialog.vertailu-arkki {
+  width: min(100vw, 1400px);
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.dialog.vertailu-arkki .dialog-card {
+  width: 100%;
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  box-sizing: border-box;
+}
+
+.vertailu-ylarivi {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.45rem 0 0.5rem;
+  background-color: var(--arkki-paperi, #eedab3);
+  background-image: var(--paper-noise);
+  background-blend-mode: multiply;
+  border-bottom: 1px solid rgba(70, 51, 31, 0.45);
+}
+
+/* Pois kytketty maa jää harmaaksi mutta pysyy palkissa. */
+.vertailu-lappu[aria-pressed='false'] { opacity: 0.45; }
+
+.vertailu-kortit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.8rem;
+  margin: 0.8rem 0 1rem;
+}
+
+.vertailu-kortti {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid rgba(70, 51, 31, 0.35);
+  border-radius: 4px;
+  background: rgba(255, 250, 238, 0.5);
+}
+
+.vertailu-kortti-nimi {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--map-ink);
+}
+
+.vertailu-kortti .arrival-maa-kartta svg { max-height: 120px; }
+
+/* Vertailukortin tunnusluvut: tiivis lista ilman palkkeja. */
+.vertailu-luvut {
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  color: rgba(70, 51, 31, 0.9);
+}
+
+.vertailu-luvut li { display: flex; justify-content: space-between; gap: 0.4rem; }
+.vertailu-luku-nimio { opacity: 0.7; }
+
+.vertailu-muuta { margin-left: auto; }

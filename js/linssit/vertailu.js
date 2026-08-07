@@ -7,13 +7,21 @@
  * asettaa minkä tahansa toisen maan samoille asteikoille, ja Suomi
  * säilyy kolmantena viivana.
  *
- * Linssi EI piirrä karttakerrosta (kerros: false, kuten radio):
- * varsinainen toiminto asuu tilastosivulla, jonka piirtää
- * js/maakayrat.js. Sivu kysyy OMISTUSTA (js/linssit/omistus.js), ei
- * päälläoloa — lehteä luetaan eri näkymässä kuin karttaa, eikä
- * pelaajan tarvitse käydä sytyttämässä linssiä kartalla ennen lehden
- * avaamista. Valikossa linssi näkyy silti muiden varusteiden tavoin,
- * ja sen kuvaus kertoo missä se toimii.
+ * TOIMINTA MUUTTUI v321:ssä (omistajan päätös 7.8.2026): *"ei
+ * upoteta näkymää tutki osioon vaan linssi toimisi suoraan
+ * karttanäkymässä mutta muuttaisi sen niin että kaupungit
+ * poistuisivat ja maiden rajat näkyisivät selvemmin."*
+ *
+ * Linssi EI piirrä karttakerrosta (kerros: false, kuten radio) vaan
+ * ottaa karttanäkymän TILAKSI (js/ui.js tahdistaVertailu): kaupungit
+ * katoavat, maiden rajat tummenevat ja jokainen maa on napautettava.
+ * Valinta on enintään kolme maata + Suomi valmiina, ja alanapit
+ * korvautuu palkilla, jonka Vertaa-nappi avaa vertailunäkymän
+ * (js/maakayrat.js piirraVertailu).
+ *
+ * Ennen tämä linssi asui Tutki-ikkunan Maa numeroina -sivulla
+ * valitsimena. Se poistui sieltä kokonaan: sivu on taas yhden maan
+ * sivu, jolla Suomi on himmeä vertailuviiva.
  *
  * Löytyminen noudattaa varusteiden yleistä mallia: manner: null
  * rekisterissä tarkoittaa, että linssi ansaitaan kokemuspisteillä
@@ -27,7 +35,7 @@ export const LINSSI = {
   kerros: false,
 
   nimi: 'Vertailulinssi',
-  lyhyt: 'Aseta Maa numeroina -sivulla kaksi maata rinnakkain samoille asteikoille.',
+  lyhyt: 'Valitse kartalta enintään kolme maata Suomen rinnalle ja vertaa niitä samoilla asteikoilla.',
   // Kaksi käyrää samassa kehyksessä ja yhteinen pohjaviiva.
   ikoni: '<path d="M3 19.2h18"/>'
     + '<path d="M3 16.4c4.4-1.2 8.2-5.6 13-11.2"/>'
