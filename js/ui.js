@@ -748,6 +748,17 @@ const LENNON_ENINTAAN_MS = 15000;
 // Kuinka kauan lennon jälkeen odotetaan, ennen kuin pieni nuoli syttyy.
 const LENNON_NUOLI_MS = 3500;
 const TOAST_MS = { die: 950, default: 1200 };
+
+/*
+ * Vertailun värit valintajärjestyksessä: sama lista kuin
+ * js/maakayrat.js:n VERTAILUVARIT. Se on tässä toisintona, koska
+ * karttanäkymän alapalkki tarvitsee värit heti eikä maakayrat.js
+ * lataudu ennen kuin vertailunäkymä avataan (laiska tuonti, ks.
+ * piirraMaaNumerotSivu). Testi vahtii, etteivät listat eriydy.
+ */
+const VERTAILUVARIT = [
+  'maakayra-viiva', 'maakayra-toinen', 'maakayra-kolmas', 'maakayra-neljas',
+];
 const AUTO_ROLL_MS = 320; // tauko ennen itsestään pyörähtävää noppaa
 // Kuinka paljon pergamenttia jatketaan kartan alle avaustekstiä varten.
 const INTRO_SPACE = 0.5;
@@ -5565,6 +5576,17 @@ export class UI {
     // vaihtuu, lauta vaihtuu ja automaattinen saapumiszoom muuttaa tasoa.
     this.paivitaZoomiNapit();
     this.drawCountryBorders();
+    /*
+     * Vertailutilan maakerros piirretään joka piirrossa uudestaan
+     * kuten muutkin kerrokset: kartta rakennetaan kokonaan uusiksi kun
+     * lauta vaihtuu (drawBoardFor), ja ilman tätä kerros jäisi vanhan
+     * puun mukana pois — kaupungit palaisivat kartalle kesken
+     * vertailun.
+     */
+    if (this.vertailuPaalla()) {
+      this.piirraVertailuMaat();
+      this.rakennaVertailuPalkki();
+    }
     this.drawTokens();
     this.drawTargets();
     this.drawPawns();
@@ -7261,35 +7283,15 @@ export class UI {
       const maatiedot = MAATIEDOT[this.game.pack.id] ?? {};
       const demokratia = maatiedot[kategoria.numerot]?.demokratia ?? null;
       /*
-       * Vertailulinssi (js/linssit/vertailu.js): omistus riittää,
-       * linssin ei tarvitse olla kartalla päällä — lehteä luetaan eri
-       * näkymässä. Valittavat maat ovat ne, joille peli osaa antaa
-       * suomenkielisen nimen ja joilta löytyy tilastosarjat. Valinta
-       * muistetaan istunnon ajan, joten samaa vertailumaata voi
-       * kuljettaa maasta toiseen.
+       * VERTAILU MUUTTI KARTALLE (v321). Tällä sivulla oli
+       * Vertailulinssin maavalitsin, josta toisen maan sai samoille
+       * asteikoille. Omistajan päätös 7.8.2026: *"ei upoteta näkymää
+       * tutki osioon vaan linssi toimisi suoraan karttanäkymässä"* —
+       * valitsin poistui, ja linssi ottaa nyt kartan haltuunsa
+       * (tahdistaVertailu). Sivu palasi siihen, mitä se oli ennen
+       * linssiä: maan omat käyrät ja Suomi himmeänä vertailuviivana.
        */
-      const { omistaa } = await import('./linssit/omistus.js');
-      const vertailuAuki = omistaa(this.game, this.game.player, 'vertailu');
-      let nimet = null;
-      if (vertailuAuki) {
-        // Valittavat maat ovat pelin kartan maat: suomenkielinen nimi
-        // asuu countryShapes-rakenteessa, ei maatiedoissa.
-        nimet = {};
-        for (const [koodi, muoto] of Object.entries(this.game.pack.map?.countryShapes ?? {})) {
-          if (muoto?.nimi && data.maat[koodi]) nimet[koodi] = muoto.nimi;
-        }
-      }
-      piirraMaaNumerot(kohde, kategoria.numerot, data, {
-        demokratia,
-        nimet,
-        vertailuIso: vertailuAuki ? this.vertailuMaa ?? null : null,
-        onVertaa: vertailuAuki
-          ? (valinta) => {
-            this.vertailuMaa = valinta;
-            void this.piirraMaaNumerotSivu(kategoria);
-          }
-          : null,
-      });
+      piirraMaaNumerot(kohde, kategoria.numerot, data, { demokratia });
     } catch {
       tila.textContent = 'Tämä sivu tarvitsee verkkoyhteyden ensimmäisellä '
         + 'avauksella — luvut haetaan silloin talteen.';
@@ -8846,6 +8848,275 @@ export class UI {
     return this.radioModuuli?.paalla() === true;
   }
 
+  /*
+   * ===================================================================
+   * VERTAILUTILA (v321)
+   * ===================================================================
+   *
+   * Omistajan malli 7.8.2026: *"vertailulinssi vois toimia hieman eri
+   * tavalla kuin nyt. eli ei upoteta näkymää tutki osioon vaan linssi
+   * toimisi suoraan karttanäkymässä mutta muuttaisi sen niin että
+   * kaupungit poistuisivat ja maiden rajat näkyisivät selvemmin."*
+   *
+   * Tila on rakennettu radiotilan mallin mukaan: bodyn luokka piilottaa
+   * muun toiminnan, kartalle tulee oma kerros ja alanapit korvautuvat
+   * omalla palkilla. Näin tila purkautuu varmasti myös silloin, kun
+   * linssi sammuu jotain muuta kautta.
+   *
+   * Valinta on enintään kolme maata + Suomi valmiina vaihtoehtona.
+   * Suomi ei ole erikoistapaus koodissa: se on tavallinen valinta,
+   * joka vain asetetaan valmiiksi, ja sen voi ottaa poiskin.
+   */
+  vertailuPaalla() {
+    return document.body.classList.contains('vertailu-tila');
+  }
+
+  /** Enimmäismäärä: kolme maata + Suomi valmiina. */
+  static get VERTAILU_MAX() { return 4; }
+
+  /** Kytkee vertailutilan päälle tai pois. */
+  tahdistaVertailu(halutaan) {
+    if (halutaan === this.vertailuPaalla()) {
+      if (halutaan) this.rakennaVertailuPalkki();
+      return;
+    }
+    document.body.classList.toggle('vertailu-tila', halutaan);
+    if (halutaan) {
+      /*
+       * Suomi valmiina vaihtoehtona (omistajan toive). Se otetaan
+       * mukaan vain, jos laudalla on Suomen muoto — Afrikan laudalla
+       * ei ole, eikä tyhjää valintaa kannata tehdä.
+       */
+      if (!this.vertailuValinnat?.length) {
+        const suomiOn = Boolean(this.game.pack.map?.countryShapes?.FIN);
+        this.vertailuValinnat = suomiOn ? ['FIN'] : [];
+      }
+      this.piirraVertailuMaat();
+      this.rakennaVertailuPalkki();
+    } else {
+      this.vertailuKerros?.remove();
+      this.vertailuKerros = null;
+      this.vertailuPalkki?.remove();
+      this.vertailuPalkki = null;
+      this.suljeVertailuNakyma();
+    }
+    this.drawTargets();
+  }
+
+  /**
+   * Kaikkien maiden muodot omaan kerrokseensa napautettavina.
+   *
+   * Kerros menee kaupunkien tilalle samaan juureen: se kiertyy ja
+   * zoomautuu kartan mukana ilman omaa laskentaa. Nimi kirjoitetaan
+   * vain maille, joiden muoto on tarpeeksi leveä — muuten pikkuvaltiot
+   * täyttäisivät kartan kaunokirjoituksella.
+   */
+  piirraVertailuMaat() {
+    const map = this.game.pack.map;
+    const muodot = map?.countryShapes;
+    if (!muodot || !this.svg) return;
+    this.vertailuKerros?.remove();
+    this.vertailuKerros = el('g', { class: 'vertailu-maat' }, this.boardRoot ?? this.svg);
+    for (const [iso, maa] of Object.entries(muodot)) {
+      if (!maa?.renkaat?.length) continue;
+      const d = maa.renkaat
+        .map((r) => `M${r.map(([x, y]) => `${x},${y}`).join(' L')}Z`)
+        .join(' ');
+      const valittu = this.vertailuValinnat?.includes(iso);
+      const polku = el('path', {
+        d,
+        class: `vertailu-maa${valittu ? ' valittu' : ''}`,
+        'aria-label': maa.nimi,
+      }, this.vertailuKerros);
+      polku.addEventListener('click', (e) => {
+        // Napautus ei saa vuotaa kartalle: maailmankartalla se
+        // zoomaisi ja muualla kutistaisi päiväkirjan.
+        e.stopPropagation();
+        this.valitseVertailuMaa(iso);
+      });
+      if (maa.leveys >= 60) {
+        const koko = Math.max(11, Math.min(22, (maa.leveys * 0.8) / Math.max(4, maa.nimi.length)));
+        const nimi = el('text', {
+          x: maa.keskus[0],
+          y: maa.keskus[1],
+          class: 'vertailu-maa-nimi',
+          'text-anchor': 'middle',
+          'font-size': koko.toFixed(0),
+        }, this.vertailuKerros);
+        nimi.textContent = maa.nimi;
+      }
+    }
+  }
+
+  /** Maa valintaan tai pois siitä. Täysi lista ei ota enempää. */
+  valitseVertailuMaa(iso) {
+    const lista = this.vertailuValinnat ?? [];
+    if (lista.includes(iso)) {
+      this.vertailuValinnat = lista.filter((k) => k !== iso);
+    } else {
+      if (lista.length >= UI.VERTAILU_MAX) {
+        const laatikko = this.buildToast({
+          kind: 'info',
+          text: `Vertailuun mahtuu ${UI.VERTAILU_MAX} maata`,
+          sub: 'Poista ensin jokin lappu alapalkista.',
+        });
+        setTimeout(() => this.removeToast(laatikko), TOAST_MS.default);
+        return;
+      }
+      this.vertailuValinnat = [...lista, iso];
+    }
+    sfx.play('paper');
+    this.piirraVertailuMaat();
+    this.rakennaVertailuPalkki();
+  }
+
+  /**
+   * Alapalkki Tutki- ja nopanheittonappien tilalle: valitut maat
+   * lappuina ja oikeassa reunassa Vertaa-nappi.
+   *
+   * Palkki on bodyn lapsi eikä kartan: se ei saa vieriä kartan mukana
+   * eikä kadota kosketuskohteitaan zoomatessa (sama ratkaisu kuin
+   * Tutki-ikkunan sivunavigaatiossa).
+   */
+  rakennaVertailuPalkki() {
+    if (!this.vertailuPaalla()) return;
+    if (!this.vertailuPalkki) {
+      this.vertailuPalkki = html('div', 'vertailu-palkki');
+      document.body.appendChild(this.vertailuPalkki);
+    }
+    const palkki = this.vertailuPalkki;
+    palkki.replaceChildren();
+    const valitut = this.vertailuValinnat ?? [];
+    const muodot = this.game.pack.map?.countryShapes ?? {};
+    if (!valitut.length) {
+      palkki.appendChild(html('p', 'vertailu-ohje', 'Napauta kartalta maat, joita haluat verrata.'));
+      return;
+    }
+    for (const [i, iso] of valitut.entries()) {
+      const lappu = html('button', 'vertailu-lappu');
+      lappu.type = 'button';
+      lappu.title = 'Poista vertailusta';
+      const laatta = html('span', `vertailu-laatta ${VERTAILUVARIT[i] ?? ''}-laatta`);
+      lappu.appendChild(laatta);
+      lappu.appendChild(document.createTextNode(muodot[iso]?.nimi ?? iso));
+      lappu.addEventListener('click', () => this.valitseVertailuMaa(iso));
+      palkki.appendChild(lappu);
+    }
+    const vertaa = html('button', 'primary vertailu-vertaa', 'Vertaa');
+    vertaa.type = 'button';
+    vertaa.disabled = valitut.length < 2;
+    vertaa.title = valitut.length < 2 ? 'Valitse vähintään kaksi maata' : 'Avaa vertailu';
+    vertaa.addEventListener('click', () => this.avaaVertailuNakyma());
+    palkki.appendChild(vertaa);
+  }
+
+  /**
+   * Vertailunäkymä: valitut maat rinnakkain samoilla asteikoilla.
+   *
+   * Yläreunassa maiden napit (kytke päälle tai pois) ja "Muuta
+   * valintoja", joka palaa kartalle — vertailu on siis kaksisuuntainen
+   * eikä umpikuja (omistajan malli). Ylärivin napit eivät muuta
+   * KARTAN valintaa vaan sitä, mitkä valituista piirretään: kartalta
+   * poistaminen on eri asia kuin viivan sammuttaminen hetkeksi.
+   *
+   * Aineisto ja piirtäjä haetaan laiskasti kuten Maa numeroina
+   * -sivulla: yhden tiedoston versio jää ilman kumpaakin ja saa saman
+   * kohteliaan verkkoyhteysrivin.
+   */
+  async avaaVertailuNakyma() {
+    const dialogi = document.getElementById('vertailu-dialog');
+    const sisalto = document.getElementById('vertailu-sisalto');
+    const ylarivi = document.getElementById('vertailu-ylarivi');
+    if (!dialogi || !sisalto || !ylarivi) return;
+    this.vertailuPois ??= new Set();
+    if (!dialogi.open) dialogi.showModal();
+    sisalto.replaceChildren(html('p', 'johdanto', 'Haetaan tilastoja…'));
+    this.rakennaVertailuYlarivi();
+    try {
+      const { lataaMaakayrat, piirraVertailu } = await import('./maakayrat.js');
+      const data = await lataaMaakayrat();
+      if (!dialogi.open) return;
+      if (!data) {
+        sisalto.replaceChildren(html('p', 'johdanto',
+          'Tämä näkymä tarvitsee verkkoyhteyden ensimmäisellä avauksella '
+          + '— luvut haetaan silloin talteen.'));
+        return;
+      }
+      const isot = (this.vertailuValinnat ?? []).filter((iso) => !this.vertailuPois.has(iso));
+      const kortit = {};
+      const muodot = this.game.pack.map?.countryShapes ?? {};
+      for (const iso of isot) {
+        kortit[iso] = {
+          nimi: muodot[iso]?.nimi ?? iso,
+          kartta: this.piirraMaakartta(iso, null),
+          tunnusluvut: this.rakennaVertailuTunnusluvut(iso),
+        };
+      }
+      piirraVertailu(sisalto, isot, data, { kortit });
+    } catch (syy) {
+      console.error(syy);
+      sisalto.replaceChildren(html('p', 'johdanto', 'Tilastoja ei saatu haettua.'));
+    }
+  }
+
+  /** Ylärivin napit: maat päälle/pois ja paluu kartalle. */
+  rakennaVertailuYlarivi() {
+    const ylarivi = document.getElementById('vertailu-ylarivi');
+    if (!ylarivi) return;
+    ylarivi.replaceChildren();
+    const muodot = this.game.pack.map?.countryShapes ?? {};
+    for (const [i, iso] of (this.vertailuValinnat ?? []).entries()) {
+      const paalla = !this.vertailuPois.has(iso);
+      const nappi = html('button', 'vertailu-lappu');
+      nappi.type = 'button';
+      nappi.setAttribute('aria-pressed', paalla ? 'true' : 'false');
+      nappi.appendChild(html('span', `vertailu-laatta ${VERTAILUVARIT[i] ?? ''}-laatta`));
+      nappi.appendChild(document.createTextNode(muodot[iso]?.nimi ?? iso));
+      nappi.addEventListener('click', () => {
+        if (this.vertailuPois.has(iso)) this.vertailuPois.delete(iso);
+        else this.vertailuPois.add(iso);
+        void this.avaaVertailuNakyma();
+      });
+      ylarivi.appendChild(nappi);
+    }
+    const muuta = html('button', 'ghost vertailu-muuta', 'Muuta valintoja');
+    muuta.type = 'button';
+    muuta.addEventListener('click', () => this.suljeVertailuNakyma());
+    ylarivi.appendChild(muuta);
+  }
+
+  /** Sulkee näkymän ja palaa karttaan valitsemaan maita. */
+  suljeVertailuNakyma() {
+    const dialogi = document.getElementById('vertailu-dialog');
+    if (dialogi?.open) dialogi.close();
+  }
+
+  /**
+   * Maan tunnusluvut vertailukorttiin tiiviinä rivinä.
+   *
+   * Erillään maaosaston naytaMaaTunnusluvut-piirrosta tarkoituksella:
+   * se rakentaa palkit, tervehdykset ja V-Dem-infoikkunan kiinteisiin
+   * elementteihin, eikä kortille kuulu niistä yksikään. Yhteistä on
+   * vain lähde (MAATIEDOT), ja luvut näytetään samassa muodossa.
+   */
+  rakennaVertailuTunnusluvut(iso) {
+    const tiedot = (MAATIEDOT[this.game.pack.id] ?? {})[iso] ?? null;
+    if (!tiedot) return null;
+    const lista = html('ul', 'vertailu-luvut');
+    const rivi = (nimio, arvo) => {
+      if (!arvo) return;
+      const li = html('li', '');
+      li.appendChild(html('span', 'vertailu-luku-nimio', nimio));
+      li.appendChild(document.createTextNode(arvo));
+      lista.appendChild(li);
+    };
+    rivi('Väkiluku ', tiedot.vakiluku);
+    rivi('Pinta-ala ', tiedot.pintaAla);
+    rivi('Tulot ', tiedot.keskitulo?.arvo);
+    rivi('V-Dem ', tiedot.demokratia?.arvo);
+    return lista.children.length ? lista : null;
+  }
+
   /**
    * Kytkee maailmanradion päälle tai pois.
    *
@@ -9025,6 +9296,10 @@ export class UI {
     // merkitsi linssin vain valituksi (kerros: false), ja tila
     // kytketään tässä.
     await this.tahdistaRadio(tunnus === 'radio');
+    if (this.dead) return;
+    // Vertailulinssi on radion tavoin kartan TILA eikä karttakerros
+    // (kerros: false) — se kytketään tässä samalla tavalla.
+    this.tahdistaVertailu(tunnus === 'vertailu');
     if (this.dead) return;
     this.paivitaLinssiNappi();
     this.paivitaLinssiTiedot();

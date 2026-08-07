@@ -222,11 +222,20 @@ function somaYlaraja(suurin) {
  * musteviivana taustalla, ennusteosa himmeämmällä musteella ja
  * "Silloin ja nyt" -jälki akselin reunassa. Aukoissa viiva katkeaa.
  */
+/*
+ * `lisat` on vertailunäkymän lisäsarjat: [{ sarja, luokka }]. Yhden
+ * maan sivu ei käytä sitä lainkaan (sarja + suomi + toinen kuten
+ * ennen), joten sen taitto ja värit pysyivät ennallaan, kun
+ * karttanäkymän vertailu (v321) tuli rinnalle. Asteikko lasketaan
+ * kaikista sarjoista, myös lisätyistä — muuten neljäs maa piirtyisi
+ * kehyksen ulkopuolelle.
+ */
 function piirraKayra({
-  seloste, sarja, suomi, toinen = null, jakaja = 1, ennusteAlku = null, silloin = null, katto = null,
+  seloste, sarja, suomi, toinen = null, lisat = [], jakaja = 1,
+  ennusteAlku = null, silloin = null, katto = null,
 }) {
   const svg = svgPohja(seloste);
-  const sarjat = [sarja, suomi, toinen].filter(Boolean);
+  const sarjat = [sarja, suomi, toinen, ...lisat.map((l) => l.sarja)].filter(Boolean);
   const alku = Math.min(...sarjat.map((s) => s.alku));
   const loppu = Math.max(...sarjat.map((s) => s.alku + s.arvot.length)) - 1;
   const suurin = Math.max(
@@ -292,6 +301,11 @@ function piirraKayra({
   };
 
   if (suomi) piirraPatkat(patkat(suomi, () => true), 'maakayra-suomi');
+  // Vertailunäkymän lisämaat oman maan käyrän alle: jokainen omalla
+  // värillään, ennusteen rajaa erottelematta (ks. kommentti alla).
+  for (const { sarja: lisa, luokka } of lisat) {
+    if (lisa) piirraPatkat(patkat(lisa, () => true), luokka);
+  }
   // Vertailulinssin toinen maa punaruskealla — Suomen viivan päälle,
   // maan oman käyrän alle. Ennusteen rajaa ei eroteta: vertailussa
   // katsotaan muotoa, ja kaksi katkoluokkaa lisää olisi vain melua.
@@ -456,68 +470,24 @@ function lohko(kohde, otsikko, kuvio, tulkinta) {
  * `demokratia` on pelin oma V-Dem-tieto (js/packs/*-maatiedot.js) —
  * sitä ei haeta uudestaan, vaan näytetään tässä yhteydessä uudelleen.
  *
- * Vertailulinssi (js/linssit/vertailu.js): kun varuste on omistettu,
- * kutsuja antaa `nimet` (ISO → suomenkielinen nimi), `vertailuIso`
- * (valittu toinen maa tai null) ja `onVertaa` (kutsutaan valinnasta).
- * Toinen maa piirretään punaruskealla samoille asteikoille, ja Suomi
- * säilyy kolmantena viivana.
+ * Vapaa maavertailu EI ole enää tällä sivulla (v321): se muutti
+ * karttanäkymään, jossa maat valitaan kartalta ja piirretään
+ * piirraVertailu-funktiolla. Tämä sivu on yhden maan sivu, jolla
+ * Suomi kulkee himmeänä vertailuviivana kuten alusta asti.
  */
-export function piirraMaaNumerot(kohde, iso, data, {
-  demokratia = null, nimet = null, vertailuIso = null, onVertaa = null,
-} = {}) {
+export function piirraMaaNumerot(kohde, iso, data, { demokratia = null } = {}) {
   const maa = data.maat[iso];
   const suomi = data.maat.FIN;
   const omaSivuOnSuomen = iso === 'FIN';
-  const kaveri = (vertailuIso && vertailuIso !== iso && data.maat[vertailuIso]) || null;
-  // Suomi-viivaa ei kahdenneta: jos vertailumaaksi valittiin Suomi,
-  // se kulkee punaruskeana eikä himmeää viivaa piirretä alle.
-  const vertailu = (omaSivuOnSuomen || vertailuIso === 'FIN') ? null : suomi;
+  const kaveri = null;
+  const vertailu = omaSivuOnSuomen ? null : suomi;
 
   const johdanto = document.createElement('p');
   johdanto.className = 'johdanto';
-  if (kaveri && nimet) {
-    johdanto.textContent = `Kullanvärinen käyrä on ${nimet[iso] ?? iso}, punaruskea `
-      + `${nimet[vertailuIso] ?? vertailuIso}`
-      + (vertailu ? ' — ja ohut viiva on Suomi.' : '.');
-  } else {
-    johdanto.textContent = omaSivuOnSuomen
-      ? 'Muutama käyrä kertoo, mihin suuntaan maa on kulkenut.'
-      : 'Muutama käyrä kertoo, mihin suuntaan maa on kulkenut. Ohut viiva on Suomi — sitä vasten luvut saavat mittakaavan.';
-  }
+  johdanto.textContent = omaSivuOnSuomen
+    ? 'Muutama käyrä kertoo, mihin suuntaan maa on kulkenut.'
+    : 'Muutama käyrä kertoo, mihin suuntaan maa on kulkenut. Ohut viiva on Suomi — sitä vasten luvut saavat mittakaavan.';
   kohde.appendChild(johdanto);
-
-  /*
-   * Vertailulinssin valitsin: näkyy vain kun varuste on omistettu.
-   * Lista on pelin tuntemat maat (niillä on suomenkielinen nimi),
-   * joilta löytyy tilastosarjat.
-   */
-  if (onVertaa && nimet) {
-    const rivi = document.createElement('p');
-    rivi.className = 'vertailu-rivi';
-    const nimio = document.createElement('label');
-    nimio.textContent = 'Vertailulinssi: ';
-    const valitsin = document.createElement('select');
-    valitsin.className = 'vertailu-valitsin';
-    const oletus = document.createElement('option');
-    oletus.value = '';
-    oletus.textContent = omaSivuOnSuomen ? 'ei vertailumaata' : 'vain Suomi-viiva';
-    valitsin.appendChild(oletus);
-    const jarjestys = new Intl.Collator('fi');
-    const maatJarjestyksessa = Object.entries(nimet)
-      .filter(([koodi]) => koodi !== iso && data.maat[koodi])
-      .sort((a, b) => jarjestys.compare(a[1], b[1]));
-    for (const [koodi, nimi] of maatJarjestyksessa) {
-      const valinta = document.createElement('option');
-      valinta.value = koodi;
-      valinta.textContent = nimi;
-      valitsin.appendChild(valinta);
-    }
-    valitsin.value = kaveri ? vertailuIso : '';
-    valitsin.addEventListener('change', () => onVertaa(valitsin.value || null));
-    nimio.appendChild(valitsin);
-    rivi.appendChild(nimio);
-    kohde.appendChild(rivi);
-  }
 
   const ristikko = document.createElement('div');
   ristikko.className = 'maakayrat';
@@ -626,5 +596,118 @@ export function piirraMaaNumerot(kohde, iso, data, {
   lahde.textContent = data.meta.lahderivi
     + (maa.silloin ? ` · Gapminder (${maa.silloin.vuosi})` : '')
     + (demokratia?.arvo ? ' · V-Dem' : '');
+  kohde.appendChild(lahde);
+}
+
+/*
+ * ---------------------------------------------------------------
+ * VERTAILUNÄKYMÄ (v321): 2–4 maata samoilla asteikoilla
+ * ---------------------------------------------------------------
+ *
+ * Omistajan malli 7.8.2026: vertailu ei asu enää Tutki-ikkunan
+ * sivulla vaan avautuu suoraan karttanäkymästä, jossa maat valitaan
+ * kartalta. Tämä funktio piirtää sen näkymän sisällön.
+ *
+ * Työnjako ui.js:n kanssa: TÄMÄ MODUULI EI TUNNE PELIN PAKETTEJA.
+ * Pienoiskartat ja tunnusluvut ovat pelin omaa aineistoa
+ * (map.countryShapes, MAATIEDOT), joten kutsuja rakentaa ne valmiiksi
+ * elementeiksi ja antaa ne `kortit`-listassa. Näin sama moduuli
+ * piirtää yhä yhden maan sivun tietämättä kummastakaan mitään.
+ *
+ * Väestöpyramidi ja sanalliset tulkinnat jäävät pois: ne kertovat
+ * yhdestä maasta kerrallaan, eikä neljää pyramidia voi lukea
+ * rinnakkain samasta kehyksestä. Ne ovat yhä yhden maan sivulla.
+ */
+export const VERTAILUVARIT = [
+  'maakayra-viiva', 'maakayra-toinen', 'maakayra-kolmas', 'maakayra-neljas',
+];
+
+/** Käyrälohko, jossa jokainen valittu maa on omalla värillään. */
+function vertailuLohko(ristikko, otsikko, seloste, valitut, kentta, asetukset = {}) {
+  const kanssa = valitut.filter((v) => v.maa?.[kentta]);
+  if (kanssa.length < 1) return;
+  lohko(ristikko, otsikko, piirraKayra({
+    seloste,
+    sarja: kanssa[0].maa[kentta],
+    suomi: null,
+    lisat: kanssa.slice(1).map((v) => ({ sarja: v.maa[kentta], luokka: v.luokka })),
+    ...asetukset,
+  }), null);
+}
+
+/**
+ * Vertailunäkymän sisältö: maiden kortit ylös, käyrät niiden alle.
+ *
+ * `isot` on valittujen maiden ISO-3-tunnukset siinä järjestyksessä,
+ * jossa pelaaja ne valitsi — järjestys päättää värin, ja sama väri
+ * näkyy kartalla, alapalkissa ja käyrissä.
+ *
+ * `kortit` on kutsujan rakentama taulu: { ISO: { nimi, kartta,
+ * tunnusluvut } }, jossa kartta ja tunnusluvut ovat valmiita
+ * elementtejä tai null.
+ */
+export function piirraVertailu(kohde, isot, data, { kortit = {} } = {}) {
+  kohde.replaceChildren();
+  const valitut = isot
+    .map((iso, i) => ({
+      iso,
+      maa: data.maat[iso],
+      luokka: VERTAILUVARIT[i] ?? VERTAILUVARIT[VERTAILUVARIT.length - 1],
+      kortti: kortit[iso] ?? null,
+    }))
+    .filter((v) => v.maa);
+
+  if (!valitut.length) {
+    const tyhja = document.createElement('p');
+    tyhja.className = 'johdanto';
+    tyhja.textContent = 'Näistä maista ei ole tilastosarjoja.';
+    kohde.appendChild(tyhja);
+    return;
+  }
+
+  /*
+   * Maiden kortit: pienoiskartta ja tunnusluvut samassa muodossa kuin
+   * Tutki-ikkunan maaosaston alussa (omistajan toive). Värilaatta
+   * nimen edessä sitoo kortin käyrän viivaan.
+   */
+  const rivi = document.createElement('div');
+  rivi.className = 'vertailu-kortit';
+  for (const v of valitut) {
+    const kortti = document.createElement('div');
+    kortti.className = `vertailu-kortti ${v.luokka}-kortti`;
+    const nimi = document.createElement('p');
+    nimi.className = 'vertailu-kortti-nimi';
+    const laatta = document.createElement('span');
+    laatta.className = `vertailu-laatta ${v.luokka}-laatta`;
+    nimi.appendChild(laatta);
+    nimi.appendChild(document.createTextNode(v.kortti?.nimi ?? v.iso));
+    kortti.appendChild(nimi);
+    if (v.kortti?.kartta) kortti.appendChild(v.kortti.kartta);
+    if (v.kortti?.tunnusluvut) kortti.appendChild(v.kortti.tunnusluvut);
+    rivi.appendChild(kortti);
+  }
+  kohde.appendChild(rivi);
+
+  const ristikko = document.createElement('div');
+  ristikko.className = 'maakayrat';
+  kohde.appendChild(ristikko);
+
+  const vaki = valitut.filter((v) => v.maa.vakiluku);
+  const miljoonissa = vaki.length
+    && Math.max(...vaki.flatMap((v) => v.maa.vakiluku.arvot.filter((a) => a !== null))) >= 2e6;
+  vertailuLohko(ristikko, `Väkiluku, ${miljoonissa ? 'miljoonaa' : 'tuhatta'} asukasta`,
+    'Väkiluku 1950–2050', valitut, 'vakiluku', { jakaja: miljoonissa ? 1e6 : 1e3 });
+  vertailuLohko(ristikko, 'Tulot asukasta kohti, tuhatta dollaria vuodessa',
+    'Bruttokansantuote asukasta kohti, ostovoimakorjattu', valitut, 'bkt', { jakaja: 1e3 });
+  vertailuLohko(ristikko, 'Elinajanodote, vuotta',
+    'Vastasyntyneen odotettu elinikä', valitut, 'elinika');
+  vertailuLohko(ristikko, 'Kaupungeissa asuvien osuus, %',
+    'Kaupungistumisaste', valitut, 'kaupungistuminen', { katto: 100 });
+  vertailuLohko(ristikko, 'Hiilidioksidipäästöt asukasta kohti, tonnia vuodessa',
+    'Hiilidioksidipäästöt asukasta kohti', valitut, 'co2');
+
+  const lahde = document.createElement('p');
+  lahde.className = 'lahde maakayra-lahde';
+  lahde.textContent = data.meta.lahderivi;
   kohde.appendChild(lahde);
 }

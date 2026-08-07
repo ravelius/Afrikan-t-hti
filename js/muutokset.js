@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 321, teksti: 'Vertailulinssi siirtyi suoraan kartalle' },
+  { v: 321, teksti: 'Valitse kartalta 3 maata Suomen rinnalle' },
+  { v: 321, teksti: 'Vertaa-nappi avaa maat rinnakkain' },
   { v: 320, teksti: 'Ruotsille Musiikki-sivu: ABBA, Lind, avainviulu' },
   { v: 320, teksti: 'Tukholman kanteen Vasa-laivan tarina' },
   { v: 319, teksti: 'Matkakirjan lopusta turha nuoli pois' },

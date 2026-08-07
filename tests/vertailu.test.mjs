@@ -26,8 +26,12 @@ test('vertailulinssi täyttää linssisopimuksen', () => {
   // Kerrokseton linssi: piirra puuttuu tarkoituksella, kuten radiolla.
   assert.equal(LINSSI.kerros, false);
   assert.equal(LINSSI.piirra, undefined);
-  // Kuvaus kertoo missä varuste toimii — kartalla se ei piirrä mitään.
-  assert.match(LINSSI.lyhyt, /Maa numeroina/);
+  /*
+   * Kuvaus kertoo missä varuste toimii. v320:een asti se sanoi "Maa
+   * numeroina -sivulla"; nyt linssi ottaa karttanäkymän haltuunsa,
+   * joten kuvauksen pitää puhua kartasta ja valinnasta.
+   */
+  assert.match(LINSSI.lyhyt, /kartalta/);
 });
 
 test('vertailulinssi on rekisterissä kokemuspistelinssinä', () => {
