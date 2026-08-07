@@ -51,8 +51,16 @@ const KADUT = [
   { luokat: ['trunk', 'trunk_link', 'motorway', 'motorway_link'], vari: '#322717', leveys: 5.6 },
 ];
 
-const VESI = '#b6cfdb';
-const PUISTO = '#e2e7cd';
+/*
+ * Sävyt pääkartan pergamenttipaletista (omistajan tarkennus 7.8.2026:
+ * "pääkartan sävyinen, eli siniset ja vihreät pois"): vesi on järvien
+ * #ecd9ae-perhettä hieman tummempana, jotta se erottuu paperista, ja
+ * vesireuna sama #b99a68 kuin pääkartan meriviivoissa (.sea-echo).
+ * Puistot ovat pelkkä kuiskaus paperia tummempaa — ei vihreää.
+ */
+const VESI = '#e8d5a9';
+const VESIREUNA = '#b99a68';
+const PUISTO = '#efe6ca';
 const RATA = '#c9bb9e';
 const PAPERI = '#f6eeda';
 
@@ -114,9 +122,13 @@ function piirra(kaupunki, elementit) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
   <rect width="${W}" height="${H}" fill="${PAPERI}"/>
   <g fill="${PUISTO}" stroke="none">${kerrokset.puistot.join('')}</g>
-  <g fill="${VESI}" stroke="none">${kerrokset.vedet.join('')}</g>
+  <!-- Joen reunaviiva: leveämpi tumma veto alle, vesi päälle — jokeen
+       tulee sama ohut ranta kuin vesialtaiden stroke-reunaan. -->
+  <g fill="none" stroke="${VESIREUNA}" stroke-width="16.4" stroke-linecap="round"
+     stroke-linejoin="round" opacity="0.55">${kerrokset.joet.join('')}</g>
   <g fill="none" stroke="${VESI}" stroke-width="14" stroke-linecap="round"
      stroke-linejoin="round">${kerrokset.joet.join('')}</g>
+  <g fill="${VESI}" stroke="${VESIREUNA}" stroke-width="1.4">${kerrokset.vedet.join('')}</g>
   <g fill="none" stroke="${RATA}" stroke-width="1.4" stroke-dasharray="7 5">${kerrokset.radat.join('')}</g>
   ${katuryhmat}
 </svg>`;

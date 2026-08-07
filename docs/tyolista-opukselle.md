@@ -349,6 +349,16 @@ Tason osat kaupunkia kohti:
    tunnetageineen. Luennat generoidaan `tools/generoi-luennat.mjs`
    -työkalulla — avaimen antaa omistaja ajon ajaksi. Mallit: lontoo,
    madrid, berliini, tukholma, venetsia (europe-saapumiset.js).
+10. **Kohtaamisluennat** (7.8.2026, pilotti Lontoossa): kohtaamisen
+    tervehdys ja löytöhetken sananvaihto luetaan ääneen eri äänillä —
+    kertoja, hahmo ja pelaaja (nuori herra Fogg = "Jaakko"). Kaupungin
+    tervehdys lyhennetään ~230 merkkiin, löytöön kirjoitetaan hahmon
+    ja pelaajan lyhyt dialogi ("kiireesti seuraavaan paikkaan").
+    Kentät tervehdysLuenta/loytoLuenta (js/packs/kohtaamiset.js),
+    hahmon ääni valitaan tilin suomiäänistä ja kirjataan
+    `tools/generoi-kohtaamiset.mjs`:n HAHMOT-tauluun, generointi sillä
+    työkalulla ja kaupunki lisätään ui.js:n KOHTAAMISLUENNAT-joukkoon.
+    Tyhjä/väärin-repliikkejä EI lueta. Malli: lontoo (jokietsijä Ned).
 
 Muista joka PR:ssä: kuvien silmätarkistus 480 px, Playwright-kaappaukset
 390/834/1024 ja niiden KATSOMINEN, main fetch juuri ennen versiota.

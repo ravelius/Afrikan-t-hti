@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 335, teksti: 'Lontoon kohtaaminen puhuu: Ned ja pelaaja' },
+  { v: 335, teksti: 'Kaupunkikartta etusivulle pääkartan sävyissä' },
   { v: 334, teksti: 'Dekkariluennat: viisi kaupunkia uusin äänin' },
   { v: 333, teksti: 'Kohtaamisten tekstit tiiviimmiksi, ääni säilyy' },
   { v: 332, teksti: 'Matkakirja dekkariksi: viisi kaupunkia uusittu' },

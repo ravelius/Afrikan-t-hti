@@ -593,6 +593,18 @@ const HAVAINTOLUENNAT = new Set([
   'africa:rashafun',
 ]);
 
+/*
+ * Kohtaamiset, joille luennat on generoitu (tools/generoi-
+ * kohtaamiset.mjs). Kaupunki-id:llä, ei laudalla: kohtaaminen on
+ * sama laudasta riippumatta (KOHTAAMISET). Tiedostot
+ * assets/audio/puhe-kohtaaminen-<id>-{tervehdys,loyto}.mp3.
+ * Ilman tätä nappia vastaavaa vahtia soitettaisiin hiljaisuutta
+ * kaupungeissa, joiden luentaa ei ole vielä tehty.
+ */
+const KOHTAAMISLUENNAT = new Set([
+  'lontoo',
+]);
+
 // Lautojen tunnusluvut karttaselitteeseen: pinta-ala ja väkiluku isoin
 // pyöristyksin (omistajan toive — vähäeleinen, vain numerot ja symboli).
 const LAUTA_TUNNUSLUVUT = {
@@ -1481,6 +1493,10 @@ export class UI {
     this.arrivalKulttuuriLista = document.getElementById('arrival-kulttuuri-lista');
     this.arrivalLiuskat = document.getElementById('arrival-liuskat');
     this.arrivalKategoria = document.getElementById('arrival-kategoria');
+    // Kaupungin kohdekartta lehden etusivun lopussa (omistajan
+    // tarkennus 7.8.2026: "kartta pitäisi olla jo ihan ensimmäisellä
+    // sivulla" — aiemmin se oli kaupunki-aihesivun pohjalla).
+    this.arrivalKaupunkiKartta = document.getElementById('arrival-kaupunkikartta');
     // Kaupunki- ja maapalstat: näkyvät vain lehden etusivulla.
     this.arrivalPalstat = document.querySelector('#arrival-dialog .arrival-palstat');
     // Uutiset ja mediarivi yhteisessä kääreessä (siirtyy maa-etusivulle
@@ -6858,6 +6874,15 @@ export class UI {
     const visasivu = this.tutkiLehti && sivuja > 1 ? i === 1 : etusivu;
     this.arrivalKulttuuri.hidden = !visasivu || !this.kulttuuriSaatavilla;
 
+    // Kaupungin kohdekartta lehden etusivun loppuun (omistajan
+    // tarkennus 7.8.2026: "kartta pitäisi olla jo ihan ensimmäisellä
+    // sivulla" — aiemmin kaupunki-aihesivun pohjalla). Piirto on
+    // kevyt ja kuva paikallinen, joten se tehdään joka avauksella.
+    const karttaEtusivulla = etusivu && KAUPUNKIKARTAT[this.arrivalShownFor];
+    this.arrivalKaupunkiKartta.hidden = !karttaEtusivulla;
+    this.arrivalKaupunkiKartta.replaceChildren();
+    if (karttaEtusivulla) this.piirraKaupunkiKartta(this.arrivalKaupunkiKartta);
+
     // Etusivu ei ole aihesivu, joten aiheiden numerointi alkaa vasta
     // sivulta 1: sivu 1 on ensimmäinen aihe, ei toinen.
     const kategoria = etusivu ? null : (this.tutkiSivut?.[i - 1] ?? null);
@@ -7604,11 +7629,10 @@ export class UI {
     }
     // Lehden minitehtävä sivun loppuun (omistajan toive 5.8.2026).
     if (kategoria.tehtava) this.piirraMinitehtava(kohde, kategoria);
-    // Kaupunkisivun loppuun kohdekartta niissä kaupungeissa, joille
-    // sellainen on tehty (omistajan toive 7.8.2026).
-    if (kategoria.id === 'kaupunki' && kohde === this.arrivalKategoria) {
-      this.piirraKaupunkiKartta(kohde);
-    }
+    // Kohdekartta EI ole enää täällä kaupunkisivun pohjalla: omistajan
+    // tarkennus 7.8.2026 "kartta pitäisi olla jo ihan ensimmäisellä
+    // sivulla" siirsi sen lehden etusivulle (naytaTutkiSivu), eikä
+    // sama sisältö saa näkyä kahdesti.
   }
 
   /**
@@ -10161,6 +10185,16 @@ export class UI {
           return;
         }
         this.kohtaamisetNahty.add(tervehdysAvain);
+        // Tervehdys luetaan ääneen kirjoituskoneen rinnalla (omistajan
+        // rajaus 7.8.2026: "riittää vain alkutarinan luenta"). Kertoja
+        // lukee kehyksen ja hahmo repliikkinsä omalla äänellään —
+        // playDiaryVoice hiljentää musiikin puheen ajaksi.
+        if (KOHTAAMISLUENNAT.has(quiz.cityId) && kertojaTila() !== 'ei') {
+          this.playDiaryVoice(
+            `assets/audio/puhe-kohtaaminen-${quiz.cityId}-tervehdys.mp3`,
+            { viive: 300 },
+          );
+        }
         this.typeText(this.quizKohtaaminen, tervehdys, 'quiz', () => {
           this.typeTimers.quiz = setTimeout(kysymys, QUIZ_PAUSE_MS);
         }, QUIZ_TYPE_MS);
@@ -10254,6 +10288,21 @@ export class UI {
               ? kohtaaminen.loyto
               : kohtaaminen.tyhja;
           if (repliikki) body.appendChild(html('span', 'kohtaaminen-repliikki', repliikki));
+          /*
+           * Löytöhetken sananvaihto luetaan ääneen (omistajan rajaus
+           * 7.8.2026: hahmon ja pelaajan lyhyt dialogi, "nyt kiireesti
+           * seuraavaan paikkaan"). Vain löytö — tyhjä ja väärin jäävät
+           * lukematta. renderQuiz ajetaan paljastuksen jälkeen monta
+           * kertaa, joten vahti pitää luennan yhdessä aloituksessa.
+           */
+          if (repliikki === kohtaaminen.loyto && this.loytoLuentaFor !== quiz
+            && KOHTAAMISLUENNAT.has(quiz.cityId) && kertojaTila() !== 'ei') {
+            this.loytoLuentaFor = quiz;
+            this.playDiaryVoice(
+              `assets/audio/puhe-kohtaaminen-${quiz.cityId}-loyto.mp3`,
+              { viive: 300 },
+            );
+          }
         }
         if (quiz.fact) body.appendChild(html('span', 'muted', quiz.fact));
         const quizSource = this.sourceLine(quiz.source);
