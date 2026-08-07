@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 322, teksti: 'Työhuoneeseen Todo Samille -välilehti' },
   { v: 321, teksti: 'Vertailulinssi siirtyi suoraan kartalle' },
   { v: 321, teksti: 'Valitse kartalta 3 maata Suomen rinnalle' },
   { v: 321, teksti: 'Vertaa-nappi avaa maat rinnakkain' },

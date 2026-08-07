@@ -25,6 +25,7 @@
       <button class="ikoni-nappi" id="paivita" type="button" title="Hakee uusimman version">Päivitä</button>
     </div>
     <nav id="valilehdet">
+      <button data-tab="todo">Todo Samille</button>
       <button data-tab="tilanne">Tilanne</button>
       <button data-tab="kaupungit">Kaupungit</button>
       <button data-tab="kartat">Kartat</button>
@@ -35,6 +36,15 @@
   </header>
 
   <main>
+    <!-- TODO SAMILLE: mitä koneella ei voi ratkaista (js/tyohuone-data.js) -->
+    <section id="tab-todo" hidden>
+      <h2>Todo Samille</h2>
+      <p>Tänne kertyy se, mitä koneella ei voi ratkaista: äänet pitää
+         kuunnella ja osa valinnoista on makuasioita. Kun kohta on
+         hoidettu, se poistetaan listalta.</p>
+      <div id="todo"></div>
+    </section>
+
     <!-- TILANNE: missä projekti on juuri nyt -->
     <section id="tab-tilanne">
       <div class="luvut" id="luvut"></div>
@@ -169,7 +179,7 @@
     import { PEILI_JUURI } from './js/media.js';
     import {
       AARTEET, VARUSTEET, KAUPUNKIKARTAT, LASIT, PELIT, PELITILAT, LAHTEET, MOOTTORIT,
-      LAAJENNUKSET,
+      LAAJENNUKSET, TODO_SAMILLE,
     } from './js/tyohuone-data.js';
 
     const $ = (id) => document.getElementById(id);
@@ -224,6 +234,52 @@
     const artikkelinTeksti = (a) => a?.artikkeli ?? a?.teksti ?? null;
 
     // --- välilehdet -----------------------------------------------------
+
+    /* ------------------------------------------------------------------ *
+     * TODO SAMILLE
+     *
+     * Lista tulee js/tyohuone-data.js:stä. Äänet soitetaan selaimen
+     * omalla <audio controls> -soittimella eikä studion soittimella:
+     * tässä ei valita eikä tallenneta mitään, vaan kuunnellaan ja
+     * kerrotaan mielipide. preload="none" pitää välilehden kevyenä —
+     * mitään ei ladata ennen kuin joku painaa play.
+     * ------------------------------------------------------------------ */
+    function piirraTodo() {
+      const kohde = $('todo');
+      if (!kohde) return;
+      kohde.replaceChildren();
+      if (!TODO_SAMILLE.length) {
+        kohde.appendChild(el('p', 'kortti', 'Ei mitään odottamassa — lista on tyhjä.'));
+        return;
+      }
+      for (const kohta of TODO_SAMILLE) {
+        const kortti = el('div', 'kortti');
+        kortti.appendChild(el('h3', null, kohta.otsikko));
+        if (kohta.tarve) kortti.appendChild(el('p', 'korostus', kohta.tarve));
+        if (kohta.selite) kortti.appendChild(el('p', null, kohta.selite));
+        if (kohta.tiedosto) {
+          kortti.appendChild(el('p', 'pieni', `Valinta kirjataan: ${kohta.tiedosto}`));
+        }
+        for (const aani of kohta.aanet ?? []) {
+          const rivi = el('div', 'todo-aani');
+          const nimi = el('p', 'todo-aani-nimi');
+          nimi.appendChild(el('b', null, aani.nimi));
+          if (aani.nyt) nimi.appendChild(el('span', 'merkki', ' käytössä nyt'));
+          rivi.appendChild(nimi);
+          rivi.appendChild(el('p', 'pieni',
+            [aani.tekija, aani.lisenssi, aani.kesto].filter(Boolean).join(' · ')));
+          if (aani.huom) rivi.appendChild(el('p', 'pieni', aani.huom));
+          const soitin = document.createElement('audio');
+          soitin.controls = true;
+          soitin.preload = 'none';
+          soitin.src = aani.url;
+          rivi.appendChild(soitin);
+          kortti.appendChild(rivi);
+        }
+        kohde.appendChild(kortti);
+      }
+    }
+    piirraTodo();
 
     const napit = [...document.querySelectorAll('#valilehdet button')];
     /* Vanhat kirjanmerkit eivät saa hajota nimien muuttuessa. */
