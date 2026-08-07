@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 332, teksti: 'Matkakirja dekkariksi: viisi kaupunkia uusittu' },
+  { v: 332, teksti: 'Isoisä sai nimen ja takaa-ajajan — dekkari alkaa' },
   { v: 331, teksti: 'Lehteen sarjakuva: Max ja Morits (Saksa)' },
   { v: 331, teksti: 'Maasivulle Päivän kuva maailmalta — vaihtuu itse' },
   { v: 330, teksti: 'Ääneen lukija pois: ääni ei ollut tarpeeksi hyvä' },

@@ -308,7 +308,14 @@ export const SAAPUMISLUENNAT = new Set([
   'europe:amsterdam',
   'europe:ateena',
   'europe:barcelona',
-  'europe:berliini',
+  /*
+   * Dekkarimerkinnät (docs/isoisan-raamattu.md): viiden kaupungin
+   * tekstit uusittiin 7.8.2026, ja vanhat luennat eivät enää vastaa
+   * ruudun tekstiä. Rivit palautetaan heti, kun uudet luennat on
+   * generoitu (tools/generoi-luennat.mjs) — ruudulla on luettava
+   * täsmälleen se, mitä kertoja lukee.
+   */
+  // 'europe:berliini',
   'europe:budapest',
   'europe:bukarest',
   'europe:dublin',
@@ -324,8 +331,8 @@ export const SAAPUMISLUENNAT = new Set([
   'europe:kreeta',
   'europe:lappi',
   'europe:lissabon',
-  'europe:lontoo',
-  'europe:madrid',
+  // 'europe:lontoo',
+  // 'europe:madrid',
   'europe:marseille',
   'europe:moskova',
   'europe:odessa',
@@ -340,9 +347,9 @@ export const SAAPUMISLUENNAT = new Set([
   'europe:sofia',
   'europe:tallinna',
   'europe:tromssa',
-  'europe:tukholma',
+  // 'europe:tukholma',
   'europe:varsova',
-  'europe:venetsia',
+  // 'europe:venetsia',
   'europe:vilna',
   'europe:wien',
   'middleeast:aden',

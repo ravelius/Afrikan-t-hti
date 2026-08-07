@@ -1,5 +1,10 @@
 # Tarina: herra Reginald Fogg
 
+> **Laajennos 7.8.2026:** saapumismerkintöjen dekkarikaanon — isoisä
+> Horatio Fogg, herra Grimshaw, tähtäinristi ja luentaohjeet — on
+> kirjattu dokumenttiin `docs/isoisan-raamattu.md`. Se rakentuu tämän
+> dokumentin päälle eikä kumoa tästä mitään.
+
 ## Hahmo
 
 **Reginald Fogg** on nuori mies, joka perii sukukartanon vintiltä isoisänsä
