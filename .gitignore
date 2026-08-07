@@ -15,5 +15,9 @@ lahteet/
 # dist/ EI ole täällä: yhden tiedoston versio on tarkoituksella repossa,
 # jotta pelin voi ottaa mukaan levyllä ilman verkkoa.
 
+# Kaupunkikarttojen SVG-välivaihe: työkalu rasteroi sen PNG:ksi, ja
+# vain PNG on pelin aineistoa (tools/piirra-kaupunkikartta.mjs).
+assets/kartat/*.svg
+
 node_modules/
 .DS_Store

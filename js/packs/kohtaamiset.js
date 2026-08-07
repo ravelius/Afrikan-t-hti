@@ -27,6 +27,21 @@
  * säilyvät — sanahelinä ei. Dekkarisävyä (docs/isoisan-raamattu.md)
  * saa käyttää sinne, minne se istuu luontevasti, mutta kohtaaminen
  * on ennen kaikkea lämmin hetki paikallisen kanssa.
+ *
+ * Luennat (omistajan rajaus 7.8.2026: "riittää vain alkutarinan
+ * luenta … sekä sitten kun aarre löytyy … lyhyt pelaajan ja sen
+ * toisen henkilön sananvaihto"): kaupungilla voi olla
+ * tervehdysLuenta ja loytoLuenta — lista { rooli, teksti }-osia,
+ * jotka ElevenLabsin text-to-dialogue lukee peräkkäin eri äänillä
+ * (tools/generoi-kohtaamiset.mjs; roolien äänet siellä). Roolit:
+ * 'kertoja', 'hahmo' (kaupungin paikallinen) ja 'pelaaja' (nuori
+ * herra Fogg). Tekstin on vastattava ruudun tekstiä sanasta sanaan
+ * tunnetageja ja ajatusviivoja lukuun ottamatta — talon sääntö,
+ * sama kuin saapumisluennoissa. Luennallinen tervehdys pidetään
+ * tavallista lyhyempänä (~230 merkkiä), ettei luenta veny.
+ * Tyhjä/väärin-repliikkejä EI lueta: ne tulevat vastauksen jälkeen,
+ * kun pelaaja haluaa jo eteenpäin. Ääni soi vain, jos mp3 on
+ * generoitu (ui.js: KOHTAAMISLUENNAT).
  */
 export const KOHTAAMISET = {
   lontoo: {
@@ -35,12 +50,31 @@ export const KOHTAAMISET = {
     frame: 'jokietsijä Ned pyyhkii mutaa käsistään ja kysyy',
     tervehdys: 'London Bridgen alla jokietsijä seuloo laskuveden '
       + 'mutaa. Kirjasi nähdessään hän suoristautuu: "Nuo '
-      + 'nimikirjaimet minä tunnen — löysin kerran liejusta '
-      + 'kompassin, jossa oli samat. Näytä että tunnet maailmaa kuten '
-      + 'hän, niin kerron mistä kohtaa rantaa se löytyi."',
+      + 'nimikirjaimet minä tunnen. Joki antoi kerran jotain, jossa '
+      + 'oli samat. Näytä että tunnet maailmaa kuten hän — niin se '
+      + 'on sinun."',
+    tervehdysLuenta: [
+      { rooli: 'kertoja', teksti: 'London Bridgen alla jokietsijä '
+        + 'seuloo laskuveden mutaa. Kirjasi nähdessään hän '
+        + 'suoristautuu:' },
+      { rooli: 'hahmo', teksti: '[curious] "Nuo nimikirjaimet minä '
+        + 'tunnen. [softly] Joki antoi kerran jotain, jossa oli '
+        + 'samat. [warmly] Näytä että tunnet maailmaa kuten hän — '
+        + 'niin se on sinun."' },
+    ],
     loyto: 'Ned painaa mutaisen kompassin käteesi: "Tämä kuuluu '
       + 'sinulle. Neula osoittaa yhä sinne, minne isoisäsi oli '
-      + 'menossa."',
+      + 'menossa." — "Sitten ei hukata aikaa. Kiireesti seuraavaan '
+      + 'paikkaan!"',
+    loytoLuenta: [
+      { rooli: 'kertoja', teksti: 'Ned painaa mutaisen kompassin '
+        + 'käteesi:' },
+      { rooli: 'hahmo', teksti: '[warmly] "Tämä kuuluu sinulle. '
+        + '[softly] Neula osoittaa yhä sinne, minne isoisäsi oli '
+        + 'menossa."' },
+      { rooli: 'pelaaja', teksti: '[excited] "Sitten ei hukata '
+        + 'aikaa. Kiireesti seuraavaan paikkaan!"' },
+    ],
     tyhja: 'Ned kohauttaa harteitaan: "Joki antaa ja joki ottaa. '
       + 'Tänään se ei antanut — laskuvesi tulee huomennakin."',
     vaarin: 'Ned palaa seulomiseen: "Ei vielä, kaveri. Joki ei '
