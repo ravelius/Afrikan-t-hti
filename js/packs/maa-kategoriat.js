@@ -2468,5 +2468,71 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    /*
+     * Sarjakuva lehden viimeisenä aiheena (omistajan toive 7.8.2026:
+     * "Sarjakuva ja valokuva olisi kiva saada jonnekin myös") — kuin
+     * oikean sanomalehden takasivu. Ruudut selataan gallerianuolista,
+     * ja selite kertoo tarinan ruutu ruudulta. Kujeeksi valittiin
+     * leipomokuje: se on kirjan lempeimpiä. Kuvat silmätarkistettu
+     * 480 px:ssä 7.8.2026.
+     */
+    {
+      id: 'sarjakuva',
+      nimi: 'Sarjakuva',
+      johdanto: 'Lehden lopussa on tietenkin sarjakuva — ja juuri '
+        + 'Saksasta on kotoisin koko sarjakuvan esi-isä.',
+      nostot: [
+        {
+          otsikko: 'Max ja Morits leipurin uunissa',
+          aika: '1865',
+          tiedosto: 'Max und Moritz (Busch) 065.png',
+          selite: 'Leipuri lukitsee ovensa — mutta savupiippu jää '
+            + 'auki. Selaa nuolista, miten kujeen käy.',
+          lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
+          galleria: [
+            {
+              otsikko: 'Savupiippuun',
+              tiedosto: 'Max und Moritz (Busch) 066.png',
+              selite: 'Max ja Morits kiipeävät katolle ja sukeltavat '
+                + 'savupiippuun.',
+              lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Jauhoarkkuun',
+              tiedosto: 'Max und Moritz (Busch) 067.png',
+              selite: 'Suinpäin jauhoarkkuun — ja pojat ovat yhtäkkiä '
+                + 'valkoisia kuin jauhopussit.',
+              lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Rinkeleitä kohti',
+              tiedosto: 'Max und Moritz (Busch) 070.png',
+              selite: 'Jauhoisina he kiipeävät tuolille kohti hyllyn '
+                + 'rinkeleitä…',
+              lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Taikinaan',
+              tiedosto: 'Max und Moritz (Busch) 071.png',
+              selite: '…ja rysähtävät tuolineen päivineen suoraan '
+                + 'taikinakaukaloon.',
+              lahde: 'Wilhelm Busch, Wikimedia Commons (Public domain)',
+            },
+          ],
+          teksti: 'Wilhelm Buschin kuvakertomus Max und Moritz (1865) '
+            + 'on koko sarjakuvan esi-isiä: seitsemän kujetta, jotka '
+            + 'kerrotaan kuvien jonolla ja loppusoinnuilla. '
+            + 'Leipomokujeessa taikinaan pudonneet pojat leivotaan '
+            + 'vahingossa leiviksi — mutta he syövät tiensä ulos '
+            + 'kuorten sisältä ja livistävät. Kirja on käännetty '
+            + 'kymmenille kielille, suomeksikin jo 1800-luvulla, ja '
+            + 'kun amerikkalaiset sanomalehdet aloittivat '
+            + 'sarjakuvasivunsa 1897, ensimmäisiä sarjoja oli suoraan '
+            + 'Buschin pojista mallinsa saanut Katzenjammer Kids — '
+            + 'piirtäjäkin oli saksalaissiirtolainen.',
+          wiki: 'Wilhelm Busch',
+        },
+      ],
+    },
   ],
 };
