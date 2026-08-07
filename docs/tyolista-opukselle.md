@@ -5437,6 +5437,90 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v339 — Näkyvät ruudut ensin, puskurirengas joutohetkinä (7.8.2026)
+
+Omistaja valitsi v336:n "Mitä EI tehty" -listalta ensimmäisen suunnan:
+*"Tee tämä: näkyvät ruudut ensin."* Taustalla havainto: *"se vielä
+vähän tökkii, lähinnä kun joutuu lataamaan zoomauksen jälkeen uutta
+karttamateriaalia scrollattaessa."*
+
+### Mikä muuttui
+
+Puskuroitu alue on yhdeksän ruudullista — näkyvä ruutu ja ruudullinen
+joka suuntaan — mutta pelaaja katsoo niistä yhtä. Ennen kaikki
+yhdeksän piirrettiin samassa keskeytymättömässä silmukassa, joten
+zoomauksen jälkeen pääsäie oli varattuna vielä pitkään sen jälkeen,
+kun näkyvä osa oli jo terävä. Juuri siihen ikkunaan osuu se
+sormenveto, joka nykii.
+
+`taydennaTaide` jakaa puuttuvat ruudut nyt kahtia. Näkyvät piirretään
+heti, samassa silmukassa kuin ennenkin. Rengas siirtyy
+`taydennaRengas`-jonoon, joka ottaa yhden ruudun kerrallaan
+`requestIdleCallback`illa.
+
+`requestIdleCallback` on tässä oikea työkalu kahdesta syystä. Se ei
+laukea kesken sormenvedon, joten työ odottaa eleen ohi ilman omaa
+lippukirjanpitoa. Ja se ottaa yhden ruudun kerrallaan, joten pisin
+yhtenäinen tukos on yhden ruudun eikä koko renkaan mittainen.
+
+Puskuri ei pienene: sääntö *"puskuria on niin paljon, ettei kesken
+eleen tarvitse ladata"* pätee yhä. Vain valmistumisen ajoitus muuttuu.
+
+### Mitä piti varoa
+
+**Vanhat ruudut poistetaan vasta renkaan valmistuttua.** Vanhan
+mittakaavan ruudut jäävät uusien alle ja peittävät juuri sen alueen,
+jonne rengas on tulossa. Jos ne poistettaisiin heti näkyvän osan
+valmistuttua, reunan yli vieritettäessä paljastuisi tyhjä pergamentti
+— ennen siellä oli edes sumea kartta.
+
+**Näkyvyys lasketaan kiertämättömästä sarakkeesta.** Kiertävällä
+laudalla sama sarake voi olla yhtä aikaa näkyvissä ja renkaassa;
+kierretystä sarakkeesta laskien näkyvä ruutu joutuisi odottamaan
+joutohetkeä ja kartalle jäisi terävöitymätön kaistale.
+
+**Rengas peruuntuu.** Jono elää joutohetkien varassa, joten sen ja
+rasteroinnin välissä ehtii tapahtua mitä tahansa. Työn identiteetti ja
+mittakaava tarkistetaan sekä ennen rasterointia että sen jälkeen, uusi
+täydennys peruu vanhan jonon ja `destroy` peruu sen kokonaan.
+
+**Aikakatkaisu on pakollinen.** Sivu, joka ei koskaan ole joutilas,
+jäisi ilman puskuria — ja se olisi huonompi kuin lähtötilanne.
+Viimeistään sekunnin päästä ruutu piirretään joka tapauksessa.
+
+### Mitattu
+
+Uusi mittari `tools/mittaa-ruudutus.mjs` (390x844, Chromium). Se
+zoomaa sisään, laskee ruutujen peiton samalla kaavalla kuin ui.js, ja
+vetää neljä sormenvetoa **sormi alhaalla** (`kartanRaahaus`) — ilman
+sitä lippua mittari näyttää työtä, jota pelissä ei tehdä, ja peittää
+juuri sen, kuinka hyvin ele väistyy. Ensimmäinen mittariversio teki
+tämän virheen ja antoi 18 nykäisyä kummallekin versiolle.
+
+| | vanha | uusi |
+| --- | --- | --- |
+| näkyvä alue terävänä zoomauksesta | 1768–1835 ms | 851–914 ms |
+| pisin purske sormen noustua | 1149–1216 ms | 232–262 ms |
+| puskuri lopuksi katettu | kyllä | kyllä |
+| nykäisyjä (kehys > 32 ms) vedon aikana | 0–1 | 0 |
+
+Kaksi ensimmäistä lukua ovat se, mitä omistaja kuvasi. Kartta
+terävöityy zoomauksen jälkeen tuplasti nopeammin, ja ikkuna, jonka
+aikana uusi veto voi osua keskelle rasterointipursketta, kutistuu
+viidesosaan.
+
+Kehysväli vedon aikana oli jo ennestään kunnossa: eleen aikana ei
+rasteroida lainkaan (v295). Luku on taulukossa siksi, että se on
+tämän muutoksen tärkein riski — joutohetkinä piirtyvä rengas ei saa
+tuoda uutta nykäisyä. Ei tuonut.
+
+### Mitä EI tehty
+
+Kaksi muuta v336:ssa kirjattua suuntaa ovat yhä auki: puskurin
+kasvattaminen vierityssuuntaan ja ruudun pikselibudjetin laskeminen.
+Kumpikaan ei ollut tarpeen tähän havaintoon, ja molemmat muuttaisivat
+muistinkulutusta — mitattava erikseen, jos tökkimistä vielä jää.
+
 ## v336 — Saapuminen ilman zoomausanimaatiota, vahti sumealle kartalle (7.8.2026)
 
 Omistaja: *"ota zoomausanimaatiot pois kun tullaan aloitusnäytöltä
@@ -5504,6 +5588,9 @@ puskurin kasvattaminen vierityssuuntaan; tai ruudun pikselibudjetin
 laskeminen niin, että ruutuja on enemmän mutta jokainen valmistuu
 nopeammin. Kaikki kolme vaativat mittauksen ennen ja jälkeen — arvaus
 voi hyvin hidastaa.
+
+*(Ensimmäinen näistä tehtiin v339:ssä. Kaksi jälkimmäistä ovat yhä
+tekemättä.)*
 
 ## v317 — Matkakirja aukeaa kokonaan (7.8.2026)
 
