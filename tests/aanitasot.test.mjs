@@ -97,6 +97,57 @@ test('kertoja väistää taustan ja laskuri palautuu', async () => {
   assert.doesNotThrow(() => { puheLoppui(); puheAlkoi(); puheLoppui(); });
 });
 
+test('jokainen luennan lopetus vapauttaa myös puhujan', () => {
+  /*
+   * v342: tausta katosi kehittäjätilassa, kun kartalla hyppi (omistajan
+   * havainto). Syy oli haivytaLuenta: se häivytti luennan, pysäytti sen
+   * ja poisti luennat-joukosta — mutta ei vapauttanut puhujan roolista.
+   *
+   * Pysäytetty äänielementti ei laukaise enää 'ended'- eikä
+   * 'error'-tapahtumaa, ja juuri niiden varassa merkitsePuhujan oma
+   * vapautus on. Niinpä puhujalaskuri jäi plussalle, tausta jäi
+   * pysyvästi puheen alle (0,25) eikä palannut enää istunnon aikana —
+   * ei edes stopDiaryVoicella, koska laskuri oli jo vuotanut.
+   *
+   * Vanha testi vaati vain, että vapautaPuhuja esiintyy jossain
+   * ui.js:ssä. Se ehto täyttyi koko vian ajan. Siksi tämä testi kysyy
+   * jokaiselta luennan pudottavalta kohdalta erikseen: jos pudotat
+   * luennan, vapauta se.
+   */
+  const ui = readFileSync(new URL('../js/ui.js', import.meta.url), 'utf8');
+
+  /** Metodin runko nimellä: seuraavaan sarakkeeseen 2 asti. */
+  const runko = (nimi) => {
+    const alku = ui.indexOf(`\n  ${nimi}(`);
+    assert.ok(alku > 0, `${nimi}: metodia ei löydy ui.js:stä`);
+    return ui.slice(alku, ui.indexOf('\n  }\n', alku));
+  };
+
+  for (const nimi of ['stopIntroVoice', 'stopDiaryVoice', 'haivytaLuenta']) {
+    assert.match(
+      runko(nimi),
+      /vapautaPuhuja\(/,
+      `${nimi}: luenta pysäytetään vapauttamatta puhujaa — tausta jää pysyvästi väistöön`,
+    );
+  }
+
+  /*
+   * Sama sääntö koneellisesti: jokainen kohta, joka poistaa luennan
+   * luennat-joukosta, on lopetuskohta ja sen on vapautettava puhuja.
+   * Näin uusi lopetusreitti ei pääse syntymään ilman vapautusta.
+   */
+  const metodit = [...ui.matchAll(/\n {2}([a-zA-ZäöåÄÖÅ][\w]*)\(/g)].map((m) => m[1]);
+  for (const nimi of new Set(metodit)) {
+    const teksti = runko(nimi);
+    if (!/luennat\?\.(delete|clear)\(/.test(teksti)) continue;
+    assert.match(
+      teksti,
+      /vapautaPuhuja\(/,
+      `${nimi}: pudottaa luennan joukosta mutta ei vapauta puhujaa`,
+    );
+  }
+});
+
 test('kompressointi on ennen voimakkuussäätöä ja varareitti on olemassa', () => {
   const virta = readFileSync(new URL('../js/ambience-stream.js', import.meta.url), 'utf8');
   // Kompressori ennen vahvistinta: kertoimet vaihtelevat 32 dB, joten
