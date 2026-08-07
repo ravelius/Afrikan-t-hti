@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 341, teksti: 'Saksalle Valokuvaus-sivu: Anschützin haikarat' },
+  { v: 341, teksti: 'Lontoo lyhyemmäksi, luennat tasaisemmiksi' },
   { v: 340, teksti: 'Tehosteäänet takaisin: kaikki 28 soivat taas' },
   { v: 339, teksti: 'Kartta terävöityy zoomauksen jälkeen tuplasti nopeammin' },
   { v: 339, teksti: 'Puskurikuvat joutohetkiin: vieritys ei tökkää' },

@@ -5,8 +5,9 @@
  * kirjoittaa assets/audio/puhe-europe-saapuminen-<id>.mp3. Resepti on
  * sama kuin aiemmissa luennoissa (docs/muistiinpanot-fablelle.md):
  * ääni "Viisas Kertoja", malli eleven_v3, /v1/text-to-dialogue,
- * mp3_44100_128 — mutta stability 0.5 → 0.4, jotta tunnetagit
- * kuuluvat (raamatun päätös; jos luenta yliampuu, palauta 0.5).
+ * mp3_44100_128. Stability kävi arvossa 0.4, mutta palautettiin
+ * 0.5:een omistajan palautteesta 7.8.2026: "äänen vaihteluarvoa
+ * kannattaa ottaa takaisinpäin, hyppii vähän liikaa".
  *
  * Käyttö:  ELEVEN_API_KEY=... node tools/generoi-luennat.mjs lontoo madrid
  * Avain kierrätetään ajojen jälkeen — sitä ei tallenneta minnekään,
@@ -26,7 +27,7 @@ import { EUROPE_SAAPUMISET } from '../js/packs/europe-saapumiset.js';
 const JUURI = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const AANI = 'Sz0tRTEpybtDJ9ru2kgD'; // Viisas Kertoja
 const MALLI = 'eleven_v3';
-const STABILITY = 0.4;
+const STABILITY = 0.5;
 
 const avain = process.env.ELEVEN_API_KEY ?? process.env.ELEVENLABS_API_KEY;
 if (!avain) {

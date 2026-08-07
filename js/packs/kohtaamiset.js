@@ -38,7 +38,8 @@
  * herra Fogg). Tekstin on vastattava ruudun tekstiä sanasta sanaan
  * tunnetageja ja ajatusviivoja lukuun ottamatta — talon sääntö,
  * sama kuin saapumisluennoissa. Luennallinen tervehdys pidetään
- * tavallista lyhyempänä (~230 merkkiä), ettei luenta veny.
+ * lyhyenä: ~140 merkkiä (omistaja 7.8.2026: "puolet lyhyempi"),
+ * löytödialogi samaa luokkaa.
  * Tyhjä/väärin-repliikkejä EI lueta: ne tulevat vastauksen jälkeen,
  * kun pelaaja haluaa jo eteenpäin. Ääni soi vain, jos mp3 on
  * generoitu (ui.js: KOHTAAMISLUENNAT).
@@ -48,32 +49,30 @@ export const KOHTAAMISET = {
     hahmo: 'jokietsijä Ned',
     nappi: 'Tapaa jokietsijä',
     frame: 'jokietsijä Ned pyyhkii mutaa käsistään ja kysyy',
-    tervehdys: 'London Bridgen alla jokietsijä seuloo laskuveden '
-      + 'mutaa. Kirjasi nähdessään hän suoristautuu: "Nuo '
-      + 'nimikirjaimet minä tunnen. Joki antoi kerran jotain, jossa '
-      + 'oli samat. Näytä että tunnet maailmaa kuten hän — niin se '
-      + 'on sinun."',
+    /*
+     * Puolitettu 7.8.2026 (omistaja: "Se oli kiva kun aarre teksti
+     * liittyi matkakirjan tekstiin. Se saisi olla vain puolet
+     * lyhyempi.") — nimikirjainkoukku säilyy, kehystys karsittu.
+     */
+    tervehdys: 'Jokietsijä näkee kirjasi ja suoristautuu: "Nuo '
+      + 'nimikirjaimet minä tunnen. Näytä että tunnet maailmaa kuten '
+      + 'hän — niin joen löytö on sinun."',
     tervehdysLuenta: [
-      { rooli: 'kertoja', teksti: 'London Bridgen alla jokietsijä '
-        + 'seuloo laskuveden mutaa. Kirjasi nähdessään hän '
+      { rooli: 'kertoja', teksti: 'Jokietsijä näkee kirjasi ja '
         + 'suoristautuu:' },
       { rooli: 'hahmo', teksti: '[curious] "Nuo nimikirjaimet minä '
-        + 'tunnen. [softly] Joki antoi kerran jotain, jossa oli '
-        + 'samat. [warmly] Näytä että tunnet maailmaa kuten hän — '
-        + 'niin se on sinun."' },
+        + 'tunnen. [warmly] Näytä että tunnet maailmaa kuten hän — '
+        + 'niin joen löytö on sinun."' },
     ],
-    loyto: 'Ned painaa mutaisen kompassin käteesi: "Tämä kuuluu '
-      + 'sinulle. Neula osoittaa yhä sinne, minne isoisäsi oli '
-      + 'menossa." — "Sitten ei hukata aikaa. Kiireesti seuraavaan '
+    loyto: 'Ned painaa kompassin käteesi: "Neula osoittaa yhä sinne, '
+      + 'minne isoisäsi oli menossa." — "Sitten kiireesti seuraavaan '
       + 'paikkaan!"',
     loytoLuenta: [
-      { rooli: 'kertoja', teksti: 'Ned painaa mutaisen kompassin '
-        + 'käteesi:' },
-      { rooli: 'hahmo', teksti: '[warmly] "Tämä kuuluu sinulle. '
-        + '[softly] Neula osoittaa yhä sinne, minne isoisäsi oli '
-        + 'menossa."' },
-      { rooli: 'pelaaja', teksti: '[excited] "Sitten ei hukata '
-        + 'aikaa. Kiireesti seuraavaan paikkaan!"' },
+      { rooli: 'kertoja', teksti: 'Ned painaa kompassin käteesi:' },
+      { rooli: 'hahmo', teksti: '[softly] "Neula osoittaa yhä sinne, '
+        + 'minne isoisäsi oli menossa."' },
+      { rooli: 'pelaaja', teksti: '[excited] "Sitten kiireesti '
+        + 'seuraavaan paikkaan!"' },
     ],
     tyhja: 'Ned kohauttaa harteitaan: "Joki antaa ja joki ottaa. '
       + 'Tänään se ei antanut — laskuvesi tulee huomennakin."',

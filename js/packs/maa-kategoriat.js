@@ -2534,5 +2534,68 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    /*
+     * Valokuvaus on oma osionsa (omistajan linjaus 7.8.2026), EI
+     * lisäys maa-etusivun loppuun — ja sivu tehdään vain maille,
+     * joilta löytyy vapaasti käytettävä valokuvaaja ("kaikkiin
+     * kaupunkeihin ei tarvitse kaikkia sivuja liittää"). Sivun
+     * lopussa on lisäksi Päivän kuva maailmalta -palsta (paketti
+     * samassa kansiossa) — ui.js liittää sen id:n 'valokuvaus'
+     * perusteella.
+     */
+    {
+      id: 'valokuvaus',
+      nimi: 'Valokuvaus',
+      johdanto: 'Kun valokuva oli nuori, kuvattavan piti istua '
+        + 'liikkumatta pitkä tovi. Saksassa kamera oppi nappaamaan '
+        + 'liikkeen — kesken lennon.',
+      nostot: [
+        {
+          otsikko: 'Mies, joka pysäytti haikaran lennon',
+          aika: '1884',
+          tiedosto: 'Ottomar Anschütz (cropped).jpg',
+          teksti: 'Valokuvan alkuaikoina kuvattava istui liikkumatta '
+            + 'jopa minuutin — muuten kuvasta tuli sumea. Ottomar '
+            + 'Anschütz rakensi sulkimen, joka välähti '
+            + 'tuhannesosasekunnissa, ja kuvasi kesällä 1884 '
+            + 'haikaroita pesällään: ensimmäiset terävät kuvat '
+            + 'suuresta linnusta kesken lennon. Sitten hän pani '
+            + 'kuvasarjansa pyörivään katselulaitteeseen, jossa '
+            + 'ruudut heräsivät eloon — elokuva oli enää askeleen '
+            + 'päässä.',
+          selite: 'Pikavalokuvauksen uranuurtaja Ottomar Anschütz '
+            + '(1846–1907).',
+          lahde: 'Wikimedia Commons (Public domain)',
+          galleria: [
+            {
+              otsikko: 'Haikarat ruutu ruudulta',
+              // Yhdellä rivillä: peilaustyökalu poimii tiedosto-kentät
+              // yksirivisellä hakukuviolla (tools/peilaa-media.mjs).
+              tiedosto: 'Anschütz, Ottomar - Störche. Aus einer Serie von Reihenaufnahmen, Berlin (Zeno Fotografie).jpg',
+              selite: 'Kahdeksan peräkkäistä ruutua haikaranpesältä: '
+                + 'siivet asennosta toiseen kuin sarjakuvassa. '
+                + 'Tällaisista sarjoista liike opittiin lukemaan.',
+              lahde: 'Ottomar Anschütz, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Haikara laskeutuu',
+              tiedosto: 'Ottomar Anschütz - Untitled (Storks) - 1884.jpg',
+              selite: 'Haikara jarruttaa siivillään juuri ennen '
+                + 'pesää — kuva, jollaista kukaan ei ollut ennen '
+                + 'nähnyt terävänä.',
+              lahde: 'Ottomar Anschütz, Wikimedia Commons (Public domain)',
+            },
+            {
+              otsikko: 'Kissa ja hiirenloukku',
+              tiedosto: 'Ottomar Anschütz Cat with mousetrap.jpg',
+              selite: 'Anschütz kuvasi myös arkea: kissa tutkii '
+                + 'hiirenloukkua. Nopea suljin piirsi '
+                + 'viiksikarvatkin terävinä.',
+              lahde: 'Ottomar Anschütz, Wikimedia Commons (Public domain)',
+            },
+          ],
+        },
+      ],
+    },
   ],
 };
