@@ -34,8 +34,10 @@ matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
   lentokohteet eli pelin ensimmäiset matkakohteet: Ruotsi ✅
   (Tukholma, v315: kansi Elias Martin -galleriineen + 5 maa-aihetta,
   SVT:n uutiset ja konemestari Elsa — tv jätettiin pois, koska
-  ruotsalaiskanavilla ei ole aluerajatonta 24/7-liveä) ja Saksa
-  (Berliini) — ja niiden perään Ranska, USA, Japani,
+  ruotsalaiskanavilla ei ole aluerajatonta 24/7-liveä) ja Saksa ✅
+  (Berliini, v316: kansi Gaertner-galleriineen + 5 maa-aihetta,
+  tagesschaun uutiset, tagesschau24:n tv ja posetiivari Otto) —
+  ja niiden perään Ranska, USA, Japani,
   Brasilia, Australia. Valmiit maakohtaiset promptit:
   docs/tyolista-opukselle.md, "Lehtimaiden promptit".
 
