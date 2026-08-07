@@ -380,3 +380,77 @@ export const LAAJENNUKSET = [
       + 'luvattu hanke on vaikeampi uskoa kuin kapea ja valmis.',
   },
 ];
+
+/*
+ * TODO SAMILLE — asiat, jotka odottavat omistajan korvaa tai päätöstä.
+ *
+ * Omistajan toive 7.8.2026: *"laita vaihtoehdot työhuoneeseen, voisin
+ * kuunnella siellä. tee vaikka oma osio sinne: 'todo samille' niin
+ * löydän helpommin."*
+ *
+ * Tänne kootaan se, mitä koneella ei voi ratkaista. Äänet ovat siitä
+ * selvin esimerkki: sisältöohje vaatii, että jokainen ehdokas
+ * kuunnellaan läpi, eikä sitä voi tehdä lukemalla otsikkoa. Sama osio
+ * käy myös muille päätöksille — lisää kohta listaan, älä uutta
+ * välilehteä.
+ *
+ * Kun kohta on hoidettu, se poistetaan tästä listasta. Lista saa olla
+ * tyhjä; silloin välilehti kertoo sen itse.
+ */
+export const TODO_SAMILLE = [
+  {
+    otsikko: 'Tukholman ambienssiääni',
+    tarve: 'Kuuntele ehdokkaat ja kerro, mitkä otetaan käyttöön.',
+    selite: 'Tukholman nykyiset äänet ovat Norrmalmin liikennettä ja '
+      + 'kukkatoria. Lehden Tukholma on vettä, saaristoa ja Gamla '
+      + 'stania, joten ehdokkaat on haettu radio aporeesta kaupungin '
+      + 'keskustan koordinaateilta ja valittu sen mukaan. Ääni on '
+      + 'taustamaisema: yleinen äänikuva kelpaa, yksittäinen tapahtuma '
+      + 'ja sisätila eivät. Kaikki ovat CC-lisensoituja.',
+    tiedosto: 'js/aani-ehdokkaat.js → KAUPUNKI_EHDOKKAAT.europe.tukholma',
+    aanet: [
+      {
+        nimi: 'Junat, autot ja vesi Norrmalmissa',
+        tekija: 'Albert Murillo', lisenssi: 'CC BY', kesto: '2:14',
+        url: 'https://archive.org/download/aporee_33112_38049/StockholmdesdepontKlarastrandsleden.mp3',
+        nyt: true,
+      },
+      {
+        nimi: 'Kukkatori Norrmalmissa',
+        tekija: 'Albert Murillo', lisenssi: 'CC BY', kesto: '2:09',
+        url: 'https://archive.org/download/aporee_33214_38190/StockholmplaaHtorgetmercatdeflors.mp3',
+        nyt: true,
+      },
+      {
+        nimi: 'Lokit kaupungin yllä',
+        tekija: 'Steven Brown / Listen Here', lisenssi: 'CC BY-SA', kesto: '0:28',
+        url: 'https://archive.org/download/aporee_5700_7175/MadSEagulls.mp3',
+        huom: 'Lyhyt — hyvä jos toistuu, rasittava jos ei.',
+      },
+      {
+        nimi: 'Penkki Saltsjön rannalla',
+        tekija: 'kylekristopherberry', lisenssi: 'CC0 / public domain', kesto: '1:40',
+        url: 'https://archive.org/download/aporee_61439_75490/ModernaMuseet88231745editedstockholm.mp3',
+        huom: 'Vettä ja kaupunkia etäältä — lähinnä lehden Tukholmaa.',
+      },
+      {
+        nimi: 'Museikajen, kaupunki ulkoa',
+        tekija: 'Joao Bento', lisenssi: 'CC BY', kesto: '2:47',
+        url: 'https://archive.org/download/aporee_39241_44836/stockholmlake01.mp3',
+        huom: 'Laituri ja vesi.',
+      },
+      {
+        nimi: 'Saksalaisen kirkon kellopeli, Gamla stan',
+        tekija: 'François-Emmanuel Fodéré', lisenssi: 'CC BY-NC-SA', kesto: '3:07',
+        url: 'https://archive.org/download/aporee_20386_23708/FrancoisEmmanuelFodereStockholmTyskaKyrkanCarillon.mp3',
+        huom: 'Kellopeli kuten Oslossa. Voi olla liian etualalla taustaksi.',
+      },
+      {
+        nimi: 'Mosebacke torin suihkulähde',
+        tekija: 'noisebud', lisenssi: 'CC BY-SA', kesto: '0:31',
+        url: 'https://archive.org/download/aporee_11033_13050/1004.mp3',
+        huom: 'Rauhallinen, mutta voisi olla mistä tahansa kaupungista.',
+      },
+    ],
+  },
+];

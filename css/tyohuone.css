@@ -341,3 +341,18 @@ table { border-collapse: collapse; width: 100%; font-size: 0.86rem; }
 th, td { border-bottom: 1px solid var(--reuna); padding: 0.42rem 0.5rem; text-align: left; }
 th { color: var(--haalea); font-weight: 500; }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/*
+ * Todo Samille -välilehti: kohta kerrallaan, ääni soittimineen.
+ * Soitin on selaimen oma <audio controls> — tässä ei valita mitään,
+ * vaan kuunnellaan ja kerrotaan mielipide.
+ */
+.todo-aani {
+  margin: 0.7rem 0 0;
+  padding: 0.6rem 0 0;
+  border-top: 1px solid rgba(120, 96, 62, 0.25);
+}
+
+.todo-aani-nimi { margin: 0 0 0.15rem; }
+.todo-aani audio { width: 100%; margin-top: 0.4rem; }
+.todo-aani .merkki { font-size: 0.75rem; opacity: 0.75; }
