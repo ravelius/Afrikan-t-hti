@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 347, teksti: 'Britannialle kuusi aihesivua: historiasta urheiluun' },
+  { v: 347, teksti: 'Iso-Britannia-osio: korkokartta ja neljä maata' },
+  { v: 347, teksti: 'Lontoon katukartta kuudella kohteella' },
   { v: 346, teksti: 'Aarrevihjeet matkalle: kuiskaus kaupunkien välissä' },
   { v: 345, teksti: 'Koko Eurooppa dekkarina: 41 kaupunkia äänineen' },
   { v: 344, teksti: 'Kuollut taustasoitin siivotaan muistista' },
