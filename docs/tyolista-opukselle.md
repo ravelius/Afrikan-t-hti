@@ -359,6 +359,15 @@ Tason osat kaupunkia kohti:
     `tools/generoi-kohtaamiset.mjs`:n HAHMOT-tauluun, generointi sillä
     työkalulla ja kaupunki lisätään ui.js:n KOHTAAMISLUENNAT-joukkoon.
     Tyhjä/väärin-repliikkejä EI lueta. Malli: lontoo (jokietsijä Ned).
+11. **Valokuvaus-sivu** (7.8.2026, malli DEU/Ottomar Anschütz):
+    maan oma aihesivu, jonka nosto esittelee maan valokuvaajan —
+    mutta VAIN jos maalta löytyy vapaasti käytettävä (PD/CC)
+    valokuvaaja, jonka kuvat on tarkistettu Commonsista. Omistaja:
+    "kaikkiin kaupunkeihin ei tarvitse kaikkia sivuja liittää" —
+    sivu jää pois, jos hyvää valokuvaajaa ei ole. Sivun loppuun
+    ui.js liittää Päivän kuva maailmalta -palstan itsestään (id
+    'valokuvaus'). HUOM: tiedosto-kentät yhdelle riville, muuten
+    peilaustyökalu ei poimi niitä (tools/peilaa-media.mjs).
 
 Muista joka PR:ssä: kuvien silmätarkistus 480 px, Playwright-kaappaukset
 390/834/1024 ja niiden KATSOMINEN, main fetch juuri ennen versiota.

@@ -136,8 +136,9 @@ aloittaisin suoraan tarinasta. Ja loppukin kannattaa lyhentää.")*
 
 Resepti pysyy: ääni **Viisas Kertoja** `Sz0tRTEpybtDJ9ru2kgD`, malli
 `eleven_v3`, päätepiste `/v1/text-to-dialogue`, ulostulo
-`mp3_44100_128`. **Stability lasketaan 0.5 → 0.4**, jotta tunnetagit
-kuuluvat (jos luenta lähtee yliampuvaksi, palautetaan 0.5).
+`mp3_44100_128`. **Stability on 0.5.** (Kävi arvossa 0.4, jotta
+tunnetagit kuuluvat, mutta omistaja palautti sen 7.8.2026: "äänen
+vaihteluarvoa kannattaa ottaa takaisinpäin, hyppii vähän liikaa".)
 
 - Datassa on nyt kolmas kenttä **`luenta`**: sama teksti kuin kuvaus +
   nosto, tunnetagit sekaan kirjoitettuna. Ruudulla näkyvä teksti pysyy

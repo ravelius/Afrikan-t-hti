@@ -7612,14 +7612,19 @@ export class UI {
       this.piirraKategoria({ nostot: [kartta.nosto] }, nostoKotelo, { otsikko: false, sitaatti: false });
       this.arrivalMaa.insertBefore(nostoKotelo, this.arrivalOikea);
     }
-    /*
-     * Päivän kuva sivun loppuun (omistajan toive 7.8.2026: "Sarjakuva
-     * ja valokuva olisi kiva saada jonnekin myös"). Aluksi tässä oli
-     * Commonsin päivän kuva, mutta sen sisältöä ei valita lapsille —
-     * omistajalle osui olutpäivän elokuvajuliste. Nyt kuva tulee
-     * omasta tarkistetusta listasta (js/packs/paivan-kuvat.js) ja
-     * vaihtuu silti joka päivä. Kuvateksti on valmiiksi suomea.
-     */
+    // Päivän kuva EI ole enää tämän sivun lopussa: omistajan linjaus
+    // 7.8.2026 "Valokuvaus olisi oma osionsa, ei lisäys sivun
+    // loppuun" siirsi sen Valokuvaus-aihesivulle (piirraPaivanKuva).
+  }
+
+  /**
+   * Päivän kuva maailmalta -palsta Valokuvaus-sivun loppuun. Kuva
+   * tulee omasta tarkistetusta listasta (js/packs/paivan-kuvat.js) —
+   * Commonsin päivän kuva korvattiin, koska sen valintaa ei tehdä
+   * lapsille (omistajalle osui olutpäivän elokuvajuliste). Kuva
+   * vaihtuu silti joka päivä, ja kuvateksti on valmiiksi suomea.
+   */
+  piirraPaivanKuva(kohde) {
     const pk = paivanKuva();
     const kuvaPalsta = html('div', 'paivan-kuva');
     kuvaPalsta.appendChild(html('p', 'uutiset-nimio paivan-kuva-nimio', 'Päivän kuva maailmalta'));
@@ -7797,6 +7802,10 @@ export class UI {
     }
     // Lehden minitehtävä sivun loppuun (omistajan toive 5.8.2026).
     if (kategoria.tehtava) this.piirraMinitehtava(kohde, kategoria);
+    // Valokuvaus-sivun lopussa on lehden kuvapalsta: Päivän kuva
+    // maailmalta (omistajan linjaus 7.8.2026 — valokuvaus on oma
+    // osionsa, ja päivittäin vaihtuva kuva kuuluu sinne).
+    if (kategoria.id === 'valokuvaus') this.piirraPaivanKuva(kohde);
     // Kohdekartta EI ole enää täällä kaupunkisivun pohjalla: omistajan
     // tarkennus 7.8.2026 "kartta pitäisi olla jo ihan ensimmäisellä
     // sivulla" siirsi sen lehden etusivulle (naytaTutkiSivu), eikä

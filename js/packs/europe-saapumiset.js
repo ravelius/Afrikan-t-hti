@@ -23,20 +23,25 @@ export const EUROPE_SAAPUMISET = {
    * maailmankartalta tullaan Ateenan kautta — mikään merkintä (ei
    * myöskään Lontoo) ei saa olettaa olevansa matkan alku.
    */
+  /*
+   * Lontoo lyhennettiin vielä virkkeellä 7.8.2026 (omistaja: "yhden
+   * lauseen verran liian pitkä. Kannattaa pyrkiä hieman lyhyempiin
+   * teksteihin") — "minä jatkan siitä, mihin hän jäi" putosi pois:
+   * sähke ja liituristi kantavat yksinään.
+   */
   lontoo: {
     kuvaus: 'St Pancrasin sumussa avasin isoisän matkalaukun '
       + 'salataskun: kellastunut sähke. "PALATKAA HETI. G. TIETÄÄ." '
-      + 'Isoisä ei palannut — minä jatkan siitä, mihin hän jäi.',
+      + 'Isoisä ei palannut.',
     nosto: 'Matkakirjan ensimmäisellä sivulla lukee: "Sinä, joka tätä '
       + 'luet: älä usko ketään, joka väittää, ettei aarteita ole." '
       + 'Kulmassa on pieni liituristi.',
     luenta: '[curious] St Pancrasin sumussa avasin isoisän '
       + 'matkalaukun salataskun: kellastunut sähke. [whispers] '
-      + '"Palatkaa heti. G. tietää." [softly] Isoisä ei palannut — '
-      + 'minä jatkan siitä, mihin hän jäi. Matkakirjan ensimmäisellä '
-      + 'sivulla lukee: [warmly] "Sinä, joka tätä luet: älä usko '
-      + 'ketään, joka väittää, ettei aarteita ole." [whispers] '
-      + 'Kulmassa on pieni liituristi.',
+      + '"Palatkaa heti. G. tietää." [softly] Isoisä ei palannut. '
+      + 'Matkakirjan ensimmäisellä sivulla lukee: [warmly] "Sinä, '
+      + 'joka tätä luet: älä usko ketään, joka väittää, ettei '
+      + 'aarteita ole." [whispers] Kulmassa on pieni liituristi.',
   },
 
   pariisi: {

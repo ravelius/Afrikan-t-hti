@@ -27,7 +27,7 @@ import { KOHTAAMISET } from '../js/packs/kohtaamiset.js';
 
 const JUURI = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const MALLI = 'eleven_v3';
-const STABILITY = 0.4; // sama kuin saapumisluennoissa: tunnetagit kuuluvat
+const STABILITY = 0.5; // sama kuin saapumisluennoissa (0.4 hyppi liikaa — omistaja 7.8.2026)
 
 const KERTOJA = 'Sz0tRTEpybtDJ9ru2kgD'; // Viisas Kertoja
 const PELAAJA = 'JMfkzZiSsox62UXcXUqM'; // Jaakko — nuori herra Fogg
