@@ -7697,21 +7697,27 @@ export class UI {
   }
 
   /**
-   * Kaupunkisivun lopun kohdekartta (omistajan toive 7.8.2026: "kuin
-   * huvipuiston kartassa"): mahdollisimman yksinkertainen pohjakartta
-   * ja muutama kuuluisa kohde. Kohde, jolle on tarkistettu
-   * fi.wikipedian artikkeli, on nappi ja avaa artikkeli-ikkunan;
-   * muut ovat pelkkiä merkkejä. Esittelyteksti kiertää kartan
-   * vasemmalta kuten maaosion aloitussivulla. Data ja asemointi:
-   * js/packs/maakartat.js (KAUPUNKIKARTAT).
+   * Kaupunkisivun lopun kohdekartta. Omistajan taittopäätös 7.8.2026:
+   * "Kartta kannattaakin tehdä isoksi ja merkata siihen
+   * yksinkertaisesti pelkkiä ympyröitä, joissa on numero sisällä, ja
+   * sitten tehdä selitteet tekstimuodossa kartan ulkopuolelle."
+   *
+   * Järjestys: otsikko, esittely, koko palstan levyinen kartta,
+   * numeroidut selitteet ja lähderivi. Numerointi tulee kohteiden
+   * järjestyksestä datassa. Kohde, jolla on tarkistettu fi.wikipedian
+   * artikkeli, aukeaa sekä kartan ympyrästä että selitteestä; muut
+   * ovat pelkkiä merkkejä. Data: js/packs/maakartat.js
+   * (KAUPUNKIKARTAT).
    */
   piirraKaupunkiKartta(kohde) {
     const kartta = KAUPUNKIKARTAT[this.arrivalShownFor];
     if (!kartta) return;
     const lohko = html('div', 'kaupunkikartta');
     lohko.appendChild(html('h3', 'kaupunkikartta-otsikko', 'Kaupunki kartalla'));
-    const kehys = html('div', 'maakartta-kehys');
-    const kotelo = html('div', 'maakartta-kotelo');
+    for (const kappale of (kartta.esittely ?? '').split('\n\n').filter(Boolean)) {
+      lohko.appendChild(html('p', 'kaupunkikartta-esittely', kappale));
+    }
+    const kotelo = html('div', 'maakartta-kotelo kaupunkikartta-kotelo');
     const kuva = document.createElement('img');
     kuva.alt = 'Kaupungin kartta';
     // Oma julistekartta on paikallinen tiedosto (assets/kartat/);
@@ -7719,29 +7725,31 @@ export class UI {
     if (kartta.polku) kuva.src = kartta.polku;
     else asetaKuva(kuva, valokuvaUrl(kartta.tiedosto, 1000), valokuvaVara(kartta.tiedosto, 1000));
     kotelo.appendChild(kuva);
-    for (const k of kartta.kohteet ?? []) {
+    const selitteet = html('div', 'kartta-selitteet');
+    (kartta.kohteet ?? []).forEach((k, i) => {
+      const numero = String(i + 1);
       const p = karttapiste(kartta, k.lat, k.lon);
-      const piste = html(k.wiki ? 'button' : 'span', 'maakartta-piste kaupunki-kohde');
+      const piste = html(k.wiki ? 'button' : 'span', 'maakartta-piste kaupunki-kohde kohde-numero', numero);
+      piste.style.left = `${p.x.toFixed(1)}%`;
+      piste.style.top = `${p.y.toFixed(1)}%`;
+      const selite = html(k.wiki ? 'button' : 'span', 'kartta-selite');
+      selite.appendChild(html('span', 'kartta-selite-numero', numero));
+      selite.appendChild(document.createTextNode(k.nimi));
       if (k.wiki) {
         piste.type = 'button';
         piste.title = `${k.nimi} — avaa artikkelin`;
-        piste.addEventListener('click', () => this.openWikiArticle(k.wiki, k.nimi));
+        selite.type = 'button';
+        selite.title = `${k.nimi} — avaa artikkelin`;
+        const avaa = () => this.openWikiArticle(k.wiki, k.nimi);
+        piste.addEventListener('click', avaa);
+        selite.addEventListener('click', avaa);
       }
-      piste.style.left = `${p.x.toFixed(1)}%`;
-      piste.style.top = `${p.y.toFixed(1)}%`;
-      // Nimen suunta valitaan datassa ruuhkaisiin kohtiin (keskustan
-      // kohteet ovat lähekkäin); oletus on maakartan tapaan sivulle.
-      if (k.nimiSuunta) piste.classList.add(`nimi-${k.nimiSuunta}`);
-      else if (k.nimiVasen || p.x > 60) piste.classList.add('nimi-vasen');
-      piste.appendChild(html('span', 'maakartta-nimi', k.nimi));
       kotelo.appendChild(piste);
-    }
-    kehys.appendChild(kotelo);
-    kehys.appendChild(html('p', 'lahde', kartta.lahde));
-    lohko.appendChild(kehys);
-    for (const kappale of (kartta.esittely ?? '').split('\n\n').filter(Boolean)) {
-      lohko.appendChild(html('p', 'kaupunkikartta-esittely', kappale));
-    }
+      selitteet.appendChild(selite);
+    });
+    lohko.appendChild(kotelo);
+    lohko.appendChild(selitteet);
+    lohko.appendChild(html('p', 'lahde', kartta.lahde));
     kohde.appendChild(lohko);
   }
 

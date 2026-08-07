@@ -8515,3 +8515,77 @@ body.vertailu-tila .pawns { display: none; }
   border-color: #2c2318;
   color: #2c1e07;
 }
+
+/*
+ * Kohdekartta 2.0 (omistajan taittopäätös 7.8.2026): iso kartta,
+ * numeroympyrät ja selitteet tekstinä kartan alla.
+ */
+
+.kaupunkikartta-kotelo { margin: 0.3rem 0 0.55rem; }
+
+.maakartta-piste.kohde-numero {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #2c1e07;
+  background: #c69e52;
+  border: 1.5px solid #2c2318;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.kartta-selitteet {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0 0 0.35rem;
+}
+
+.dialog .kartta-selitteet .kartta-selite {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 0;
+  padding: 0.1rem 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  color: #3a2d1c;
+}
+
+.dialog .kartta-selitteet button.kartta-selite {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(70, 51, 31, 0.4);
+  text-underline-offset: 2px;
+}
+
+.dialog .kartta-selitteet button.kartta-selite:hover:not(:disabled) {
+  background: none;
+  color: #16130f;
+  text-decoration-color: #16130f;
+}
+
+.kartta-selite-numero {
+  flex: 0 0 auto;
+  width: 1.2rem;
+  height: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #c69e52;
+  border: 1px solid #2c2318;
+  color: #2c1e07;
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1;
+}
