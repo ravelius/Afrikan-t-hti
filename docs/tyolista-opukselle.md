@@ -5437,6 +5437,48 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v340 — Tehosteäänet takaisin (7.8.2026)
+
+Omistaja: *"Palauta pelin tehosteäänet."*
+
+v293:ssa sama omistaja vaiensi ne kolmea lukuun ottamatta. Toteutus oli
+silloin sallittu lista (`SALLITUT_TEHOSTEET`) eikä koodin poisto, ja
+perustelu kirjattiin näin: *"kytkin on kevyempi ja rehellisempi."*
+Se maksoi nyt itsensä takaisin — paluu oli kahden rivin poisto eikä
+satojen rivien uudelleenkirjoitus. Kaikki 28 tehostetta soivat taas.
+
+**Portti poistui kokonaan, sitä ei täytetty täyteen.** Puolityhjä lista
+olisi jäänyt houkuttelemaan arvailuun siitä, mikä on tarkoituksellisesti
+hiljaa ja mikä unohtunut listalta. Nyt `play()` soittaa sen, mitä
+pyydetään, ja ainoa vaimennin on pelaajan oma asetus.
+
+Äänitteiden lataus palasi samalla: v293 rajasi verkkohaut soiviin
+nimiin, joten 24 mp3:a jäi hakematta. Suurin osa niistä on repossa
+(`assets/audio/`), joten verkkoon menee neljä.
+
+### Mitä mittaus paljasti
+
+Tynkätesti (`tests/sound.test.mjs`) ajaa synteesikoodin oikeasti, ja
+kun vaiennetut palasivat testattavien listalle, `zoom` kaatui heti:
+`osc.frequency.setValueCurveAtTime is not a function`. Tynkä ei ollut
+rikki — se ei vain ollut koskaan ajanut zoomiäänen synteesiä, koska
+ääni oli vaiennettu koko sen ajan, kun kaari-koodi kirjoitettiin.
+Metodi lisättiin tynkään.
+
+Selainvarmistus tehtiin erikseen, koska tynkä ei kerro tuleeko
+masterketjusta ulos mitään: analysaattori kiinni `sfx.master`iin ja
+huippu mitattiin jokaiselta 28:lta. Yhtään mykkää tai kaatuvaa ei
+ollut, huiput 0,001–0,093.
+
+### Ambienssista
+
+Omistaja kysyi samalla, miksi esim. Ateenassa ei kuulu ambienssia —
+ja perui kysymyksen heti perään (*"Eikun nyt kuuluu ambienssiäänet"*).
+Tarkistettu silti: Ateenalla on sekä oma äänitys (aporee, Lauantain
+vihannestori) että tyyppikori `kaupunki`, eli kumpikin reitti on
+kunnossa. Ambienssi ei kulje `play()`:n kautta, joten v293:n portti ei
+koskenut siihen alun perinkään.
+
 ## v339 — Näkyvät ruudut ensin, puskurirengas joutohetkinä (7.8.2026)
 
 Omistaja valitsi v336:n "Mitä EI tehty" -listalta ensimmäisen suunnan:
