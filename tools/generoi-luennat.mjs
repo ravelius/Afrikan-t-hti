@@ -11,6 +11,10 @@
  * Käyttö:  ELEVEN_API_KEY=... node tools/generoi-luennat.mjs lontoo madrid
  * Avain kierrätetään ajojen jälkeen — sitä ei tallenneta minnekään,
  * ei edes lokiin.
+ *
+ * HUOM konttiympäristössä: Noden fetch ei käytä ympäristön proxyä
+ * ilman lippua — aja NODE_USE_ENV_PROXY=1, tai "Host not in
+ * allowlist" -virhe tulee omasta putkesta vaikka verkko on auki.
  */
 
 import { writeFileSync } from 'node:fs';
