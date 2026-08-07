@@ -68,8 +68,8 @@ import { ASIA_MAATIEDOT } from './packs/asia-maatiedot.js';
 import { radioMaalle } from './packs/radiot.js';
 import { EUROPE_KULTTUURI } from './packs/europe-kulttuuri.js';
 import { KULTTUURI_KATEGORIAT } from './packs/kulttuuri-kategoriat.js';
-import { MAA_KATEGORIAT, maanAiheOtsikko } from './packs/maa-kategoriat.js';
-import { MAAKARTAT, karttapiste } from './packs/maakartat.js';
+import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
+import { MAAKARTAT, KAUPUNKIKARTAT, karttapiste } from './packs/maakartat.js';
 import { lukijaTuettu, lukijaLue, lukijaSeis, lukijaLukee } from './lukija.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
@@ -6670,6 +6670,8 @@ export class UI {
     if (this.arrivalMaa.parentElement !== this.arrivalPalstat) {
       this.arrivalPalstat.appendChild(this.arrivalMaa);
     }
+    // Maa-etusivun kuvanosto ei kuulu etusivun maaosastoon.
+    this.arrivalMaa.querySelector(':scope > .maa-etusivu-nosto')?.remove();
     const kategoriat = cityId ? [...(KULTTUURI_KATEGORIAT[cityId] ?? [])] : [];
     const kaupunginOmia = kategoriat.length;
     /*
@@ -6695,18 +6697,15 @@ export class UI {
      */
     const maanIso = cityId ? this.game.pack.map?.cityCountry?.[cityId] : null;
     /*
-     * Maan sivujen otsikkoon maan nimi (omistajan toive 6.8.2026:
-     * "maata koskevilla sivuilla otsikossa saisi olla maan nimi
-     * mukana"): "EGYPTIN HISTORIA", ei pelkkä "HISTORIA". Ilman nimeä
-     * maan sivu näytti kaupungin omalta, vaikka juuri se on lehden
-     * osa, joka toistuu maan jokaisessa kaupungissa.
-     *
-     * Otsikko vaihdetaan kopioon: MAA_KATEGORIAT on yhteinen taulu,
-     * ja alkuperäisen muuttaminen kasvattaisi nimeä joka avauksella.
-     * Maan nimi tulee samasta lähteestä kuin maapalstan otsikko; jos
-     * laudalla ei ole maadataa, otsikko jää entiselleen.
+     * Maan sivut erottuvat kaupungin sivuista maan lipulla otsikkorivin
+     * oikeassa reunassa (omistajan tarkennus 7.8.2026: "Saksan
+     * historia yms. otsikoista voisi ottaa saksan pois ja korvata se
+     * lipulla"). Aiempi ratkaisu oli genetiivi otsikossa ("SAKSAN
+     * HISTORIA", 6.8.2026) — maanAiheOtsikko ja genetiivitaulu ovat
+     * yhä maa-kategoriat.js:ssä muuta käyttöä varten.
      */
     const otsikonMaa = maanIso ? this.game.pack.map?.countryShapes?.[maanIso]?.nimi : null;
+    const maanLippu = maanIso ? this.game.pack.map?.countryShapes?.[maanIso]?.lippu : null;
     /*
      * Maaosion aloitussivu (omistajan toive 7.8.2026): iso korkokartta
      * kaupunkeineen, ja lehden etusivun maaosasto muuttaa tälle
@@ -6721,7 +6720,7 @@ export class UI {
     }
     for (const osa of (maanIso ? MAA_KATEGORIAT[maanIso] ?? [] : [])) {
       if (kategoriat.some((k) => k.id === osa.id)) continue;
-      kategoriat.push(otsikonMaa ? { ...osa, nimi: maanAiheOtsikko(otsikonMaa, osa.nimi) } : osa);
+      kategoriat.push(maanLippu ? { ...osa, maaLippu: maanLippu, maa: otsikonMaa } : osa);
     }
     /*
      * Lehtitaitto (omistajan toive 5.8.2026): aihe, jonka id on
@@ -6923,15 +6922,20 @@ export class UI {
     }
     const kategoria = this.tutkiSivut?.[i - 1];
     if (!kategoria) return [];
-    // Maaosion aloitussivu: maan nimi ja pääkirjoitus.
+    // Maaosion aloitussivu: maan nimi, pääkirjoitus ja kuvanosto.
     if (kategoria.kartta) {
-      return [kategoria.nimi, this.arrivalMaaIntro?.textContent?.trim()].filter(Boolean);
+      return [kategoria.nimi, this.arrivalMaaIntro?.textContent?.trim(),
+        kategoria.kartta.nosto?.otsikko, kategoria.kartta.nosto?.teksti].filter(Boolean);
     }
     // Tilastosivu on käyriä — siinä ei ole luettavaa tarinaa.
     if (kategoria.numerot) return [];
     const osat = [kategoria.nimi, kategoria.johdanto];
     for (const nosto of kategoria.nostot ?? []) {
       osat.push(nosto.otsikko, nosto.teksti);
+    }
+    // Kaupunkisivun lopun kohdekartan esittely kuuluu sivun tekstiin.
+    if (kategoria.id === 'kaupunki') {
+      osat.push(...(KAUPUNKIKARTAT[this.arrivalShownFor]?.esittely ?? '').split('\n\n'));
     }
     return osat.map((o) => o?.trim()).filter(Boolean);
   }
@@ -7450,6 +7454,19 @@ export class UI {
     kohde.appendChild(kehys);
     this.arrivalMaa.hidden = false;
     kohde.appendChild(this.arrivalMaa);
+    /*
+     * Kuvanosto kartan ja uutisten väliin elävöittämään sivua
+     * (omistajan toive 7.8.2026). Nosto piirretään maaosaston
+     * SISÄÄN ennen uutispalstaa, koska uutiset ja media asuvat
+     * samassa kääreessä — ja siivotaan pois rakennaSivutissa, kun
+     * osasto palaa etusivun palstaan.
+     */
+    this.arrivalMaa.querySelector(':scope > .maa-etusivu-nosto')?.remove();
+    if (kartta.nosto) {
+      const nostoKotelo = html('div', 'maa-etusivu-nosto');
+      this.piirraKategoria({ nostot: [kartta.nosto] }, nostoKotelo, { otsikko: false, sitaatti: false });
+      this.arrivalMaa.insertBefore(nostoKotelo, this.arrivalOikea);
+    }
   }
 
   async piirraMaaNumerotSivu(kategoria) {
@@ -7499,7 +7516,20 @@ export class UI {
     kohde.replaceChildren();
     if (!kategoria) return;
     // Kuvake ei kerro nimeä, joten nimi lukee sisällön yllä.
-    if (otsikko) kohde.appendChild(html('h3', 'aihe-nimi', kategoria.nimi));
+    if (otsikko) {
+      const nimi = html('h3', 'aihe-nimi', kategoria.nimi);
+      // Maan sivun tunnisteena lippu otsikkorivin oikeassa reunassa
+      // (omistajan toive 7.8.2026) — nimessä ei enää maan genetiiviä.
+      if (kategoria.maaLippu) {
+        const lippu = document.createElement('img');
+        lippu.className = 'aihe-lippu';
+        lippu.alt = kategoria.maa ?? '';
+        lippu.title = kategoria.maa ?? '';
+        asetaKuva(lippu, lippuUrl(kategoria.maaLippu, 96), lippuVara(kategoria.maaLippu, 96));
+        nimi.appendChild(lippu);
+      }
+      kohde.appendChild(nimi);
+    }
     /*
      * Litteä nostolista piirretään vanhalla piirrolla: siinä on
      * musiikkilinkit, ääninäytteet ja "Lue lisää aiheesta" -napit,
@@ -7535,6 +7565,11 @@ export class UI {
       const otsikkoRivi = html('div', 'kulttuuri-otsikkorivi');
       otsikkoRivi.appendChild(html('h3', '', nosto.otsikko));
       this.lisaaNostonNapit(otsikkoRivi, nosto);
+      // Ajankohta otsikkorivin oikeassa reunassa hahmottamisen tueksi
+      // (omistajan toive 7.8.2026: "Historia sivulla vuosisadan voisi
+      // merkitä jotenkin otsikkorivillä") — kenttä on vapaaehtoinen
+      // ja toimii millä tahansa sivulla.
+      if (nosto.aika) otsikkoRivi.appendChild(html('span', 'nosto-aika', nosto.aika));
       lohko.appendChild(otsikkoRivi);
       let kuva = null;
       if (nosto.tiedosto) {
@@ -7598,6 +7633,57 @@ export class UI {
     }
     // Lehden minitehtävä sivun loppuun (omistajan toive 5.8.2026).
     if (kategoria.tehtava) this.piirraMinitehtava(kohde, kategoria);
+    // Kaupunkisivun loppuun kohdekartta niissä kaupungeissa, joille
+    // sellainen on tehty (omistajan toive 7.8.2026).
+    if (kategoria.id === 'kaupunki' && kohde === this.arrivalKategoria) {
+      this.piirraKaupunkiKartta(kohde);
+    }
+  }
+
+  /**
+   * Kaupunkisivun lopun kohdekartta (omistajan toive 7.8.2026: "kuin
+   * huvipuiston kartassa"): mahdollisimman yksinkertainen pohjakartta
+   * ja muutama kuuluisa kohde. Kohde, jolle on tarkistettu
+   * fi.wikipedian artikkeli, on nappi ja avaa artikkeli-ikkunan;
+   * muut ovat pelkkiä merkkejä. Esittelyteksti kiertää kartan
+   * vasemmalta kuten maaosion aloitussivulla. Data ja asemointi:
+   * js/packs/maakartat.js (KAUPUNKIKARTAT).
+   */
+  piirraKaupunkiKartta(kohde) {
+    const kartta = KAUPUNKIKARTAT[this.arrivalShownFor];
+    if (!kartta) return;
+    const lohko = html('div', 'kaupunkikartta');
+    lohko.appendChild(html('h3', 'kaupunkikartta-otsikko', 'Kaupunki kartalla'));
+    const kehys = html('div', 'maakartta-kehys');
+    const kotelo = html('div', 'maakartta-kotelo');
+    const kuva = document.createElement('img');
+    kuva.alt = 'Kaupungin kartta';
+    asetaKuva(kuva, valokuvaUrl(kartta.tiedosto, 1000), valokuvaVara(kartta.tiedosto, 1000));
+    kotelo.appendChild(kuva);
+    for (const k of kartta.kohteet ?? []) {
+      const p = karttapiste(kartta, k.lat, k.lon);
+      const piste = html(k.wiki ? 'button' : 'span', 'maakartta-piste kaupunki-kohde');
+      if (k.wiki) {
+        piste.type = 'button';
+        piste.title = `${k.nimi} — avaa artikkelin`;
+        piste.addEventListener('click', () => this.openWikiArticle(k.wiki, k.nimi));
+      }
+      piste.style.left = `${p.x.toFixed(1)}%`;
+      piste.style.top = `${p.y.toFixed(1)}%`;
+      // Nimen suunta valitaan datassa ruuhkaisiin kohtiin (keskustan
+      // kohteet ovat lähekkäin); oletus on maakartan tapaan sivulle.
+      if (k.nimiSuunta) piste.classList.add(`nimi-${k.nimiSuunta}`);
+      else if (k.nimiVasen || p.x > 60) piste.classList.add('nimi-vasen');
+      piste.appendChild(html('span', 'maakartta-nimi', k.nimi));
+      kotelo.appendChild(piste);
+    }
+    kehys.appendChild(kotelo);
+    kehys.appendChild(html('p', 'lahde', kartta.lahde));
+    lohko.appendChild(kehys);
+    for (const kappale of (kartta.esittely ?? '').split('\n\n').filter(Boolean)) {
+      lohko.appendChild(html('p', 'kaupunkikartta-esittely', kappale));
+    }
+    kohde.appendChild(lohko);
   }
 
   /**

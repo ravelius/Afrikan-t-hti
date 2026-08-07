@@ -13,6 +13,10 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 327, teksti: 'Berliinin sivulle kohdekartta: napauta kohdetta' },
+  { v: 327, teksti: 'Saksa-sivulle Loreley-kuva, teksti kappaleiksi' },
+  { v: 327, teksti: 'Maan sivuille lippu otsikkoon nimen sijaan' },
+  { v: 327, teksti: 'Historian nostoihin vuosileima otsikkoriville' },
   { v: 326, teksti: 'Ääneen lukija: kaiutin lukee Tutki-sivun' },
   { v: 326, teksti: 'Lukunappi myös Lue lisää -artikkeleihin' },
   { v: 326, teksti: 'Lukija valitsee laitteen parhaan suomiäänen' },
