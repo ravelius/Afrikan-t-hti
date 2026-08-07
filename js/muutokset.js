@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 325, teksti: 'Musiikkisivut soivat: Bach, Beethoven, Vivaldi…' },
+  { v: 325, teksti: 'Avainviulu ja Va, pensiero vapaina näytteinä' },
+  { v: 325, teksti: 'ABBA ja kumppanit Applen 30 s esikuunteluna' },
   { v: 324, teksti: 'Tukholmaan uusi taustaääni: Saltsjön ranta' },
   { v: 323, teksti: 'Saksa-osiolle aloitussivu: iso korkokartta' },
   { v: 323, teksti: 'Kartalla kaupungit, tunnusluvut ja esittely' },
