@@ -161,6 +161,39 @@ export async function haeLiveTunniste(livesivu) {
 }
 
 /*
+ * Uutislähetysten tallenteet (omistajan päätös 7.8.2026: livet
+ * vaihdetaan klippeihin). Rajapinta on lähdekohtainen mutta muoto
+ * yhteinen: channels-lista, jossa title, date ja streams-taulun
+ * h264-mp4:t. Haku tehdään suoraan selaimesta (CORS tarkistettu);
+ * vastaus muistetaan hetken, ettei kahden napin availu hae samaa
+ * listaa uudestaan.
+ */
+const tallenneMuisti = new Map();
+const TALLENNE_MUISTI_MS = 10 * 60 * 1000;
+
+export async function haeTallenne(api, kanava) {
+  if (!api || !kanava) return null;
+  const vanha = tallenneMuisti.get(api);
+  let kanavat = vanha && Date.now() - vanha.aika < TALLENNE_MUISTI_MS ? vanha.kanavat : null;
+  if (!kanavat) {
+    try {
+      const vastaus = await fetch(api, { signal: AbortSignal.timeout(10000) });
+      if (!vastaus.ok) return null;
+      kanavat = (await vastaus.json()).channels ?? [];
+      tallenneMuisti.set(api, { aika: Date.now(), kanavat });
+    } catch {
+      return null;
+    }
+  }
+  const osuma = kanavat.find((k) => k.title === kanava);
+  const virrat = osuma?.streams ?? {};
+  // Keskikoko riittää popupin 16:9-ruutuun; isompi ja pienempi varalla.
+  const url = virrat.h264m ?? virrat.h264xl ?? virrat.h264s ?? null;
+  if (!url) return null;
+  return { url, pvm: osuma.date ?? null };
+}
+
+/*
  * Käännösmuisti: etusivun otsikot suomennetaan joka avauksella, ja
  * ilmainen palvelu laskee merkkejä — sama teksti käännetään siksi
  * vain kerran istunnossa.

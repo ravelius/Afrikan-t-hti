@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 328, teksti: 'Berliinin kartta uusiksi: oma katukartta OSM:sta' },
+  { v: 328, teksti: 'Tv: livet pois, tilalle tagesschaun tallenteet' },
+  { v: 328, teksti: 'Saksalle uusi sivu: Sadut ja tarinat' },
   { v: 327, teksti: 'Berliinin sivulle kohdekartta: napauta kohdetta' },
   { v: 327, teksti: 'Saksa-sivulle Loreley-kuva, teksti kappaleiksi' },
   { v: 327, teksti: 'Maan sivuille lippu otsikkoon nimen sijaan' },

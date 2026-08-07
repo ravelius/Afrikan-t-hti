@@ -254,7 +254,7 @@ main-pushista (wrangler.jsonc; ks. tools/uutisproxy/OHJE.md).
    henkilö+musiikki: Paco de Lucía tai zarzuela-perinne (Apple
    Music). Uutisehdokkaat curl-testiin: El País (feeds.elpais.com),
    RTVE, 20minutos. Tv: RTVE Noticias lähettää YouTubeen 24/7.
-2. **Saksa / Berliini.** Galleria: Eduard Gaertnerin Berliini-vedutat
+2. ✅ **TEHTY v316.** **Saksa / Berliini.** Galleria: Eduard Gaertnerin Berliini-vedutat
    1800-luvulta (PD) — suora Canaletto-vastine. Kansikuvat:
    Brandenburgin portti, Museosaari tai tv-torni, East Side Gallery.
    Henkilö+musiikki: Marlene Dietrich (Apple Music). Uutisehdokkaat:
@@ -278,6 +278,63 @@ main-pushista (wrangler.jsonc; ks. tools/uutisproxy/OHJE.md).
 4. **Ranska / Pariisi.** Galleria: Pissarron ja Caillebotten
    katunäkymät (PD). Uutisehdokkaat: Le Monde, France Info,
    Le Figaro. Tv: France 24 (français) — 24/7 YouTube-live.
+
+### Lehtien tasokorotus (omistajan tilaus 7.8.2026)
+
+Saksa/Berliini on korotettu uudelle tasolle v323–v328:ssä, ja se on
+nyt MALLI. Muut valmiit lehdet (Lontoo, Kairo, Venetsia, Madrid,
+Tukholma) korotetaan samaan tasoon — **yksi kaupunki per PR**, ja
+Berliinistä katsotaan aina malli ennen kuin keksitään omaa. Uudet
+lehtimaat (Ranska →) tehdään suoraan tälle tasolle.
+
+Tason osat kaupunkia kohti:
+
+1. **Maaosion aloitussivu** (`js/packs/maakartat.js` → MAAKARTAT):
+   Commonsin "Relief Map of X" / sijaintikarttaperheen korkokartta,
+   rajat tiedostosivulta, 4–6 kaupunkia koordinaatteineen
+   (pääkaupunki `paa: true`), `nosto` (kuva + teksti aiheesta, jota
+   intro sivuaa mutta mikään sivu ei näytä — Saksalla Loreley) ja
+   maan intro kappaleiksi (`\n\n` europe-artikkelit.js:ssä).
+   Etusivun kulmalinkki ja maaosaston siirto tulevat itsestään, kun
+   MAAKARTAT-rivi on olemassa.
+2. **Kaupunkisivun kohdekartta** (KAUPUNKIKARTAT + oma julistekartta):
+   aja `node tools/piirra-kaupunkikartta.mjs <kaupunki>` (lisää ensin
+   rajaus työkalun KAUPUNGIT-tauluun: VAIN ydinkeskusta, n. 5–8 km —
+   laajempi muuttuu puuroksi; malli Mapiful-juliste). KATSO kuva
+   silmin. 4–6 kuuluisaa kohdetta, joiden fi.wikipedia-artikkeli on
+   TARKISTETTU (`action=query&redirects=1`); nimien suunnat
+   (`nimiSuunta: 'yla'|'ala'|'vasen-ala'`, `nimiVasen`) valitaan
+   kaappauksesta katsomalla, etteivät laput osu toisiinsa. Kaksi
+   esittelykappaletta kartan viereen. PNG sw.js:n SHELL-listaan.
+3. **Aika-leimat**: historia-nostoihin `aika`-kenttä (tehty kaikille
+   viidelle maalle v327). Muille sivuille vain, jos ajankohta on
+   jutun ydin.
+4. **Tv tallenteiksi** (omistajan päätös 7.8.2026: livet eivät toimi):
+   etsi lähteen avoin rajapinta tai sivu, josta saa pääuutislähetyksen
+   ja/tai lyhytkoosteen SUORANA mp4-osoitteena — malli
+   `TV_KANAVAT.DEU` (tagesschaun api2u/channels; curl-testaa CORS ja
+   mp4). Ehdokkaita: SVT Play/öppet api, RTVE alacarta, BBC One
+   minute news, RaiPlay. Jos suoraa mp4:ää ei löydy, jätä tv pois —
+   älä palaa YouTube-liveen. `haeTallenne` (js/uutiset.js) olettaa
+   tagesschaun muodon; muille kirjoitetaan oma pieni haku samaan
+   tiedostoon.
+5. **Uudet aihesivut** (omistajan hyväksyntä 7.8.2026): valitse maalle
+   1–2 UUTTA aihetta listasta *Urheilu, Juhlat, Sadut ja tarinat,
+   Rakennukset, Meri* — vain ne, jotka maalle aidosti istuvat. Ehdotus:
+   Saksa: Sadut ja tarinat (Grimm, Hamelnin pillipiipari, satutie);
+   Italia: Urheilu (jalkapallo, Giro) tai Rakennukset (Rooman
+   insinöörit); Espanja: Juhlat (La Tomatina, Semana Santa, kolmen
+   kuninkaan päivä); Ruotsi: Juhlat (juhannus, Lucia, kräftskiva);
+   Britannia/Lontoo: Urheilu (jalkapallon synty, Wimbledon); Egypti:
+   Rakennukset (pyramidit-insinöörinäkökulma). Sama nostomuoto ja
+   mitat kuin muillakin aiheilla (docs/tutki-aiheet.md), enintään 9
+   aihetta per lehti.
+6. **Musiikki soi**: musiikkiNayte (vapaa äänite, mp3/transkoodi) tai
+   esikuuntelu-hakutermi — ohje docs/tutki-aiheet.md:ssä. Tehty
+   kaikille viidelle maalle v325; uusille maille alusta asti.
+
+Muista joka PR:ssä: kuvien silmätarkistus 480 px, Playwright-kaappaukset
+390/834/1024 ja niiden KATSOMINEN, main fetch juuri ennen versiota.
 
 ### PÄÄTETTY 5.8.2026: Tutki on paikallislehti (suunnittelusessio tekee)
 

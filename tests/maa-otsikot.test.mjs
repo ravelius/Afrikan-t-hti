@@ -173,13 +173,19 @@ test('tilastosivun otsikko on maan nimi nominatiivissa', () => {
 });
 
 test('maasivujen aiheet ovat yleisnimiä, jotka kestävät pienen alkukirjaimen', () => {
-  // Otsikko lukee "Egyptin historia": aihe ei saa olla erisnimi.
+  /*
+   * Aihe ei saa olla erisnimi. Yksisanaisuuden vaatimus poistui
+   * 7.8.2026, kun otsikon genetiivi ("Egyptin historia") korvattiin
+   * maan lipulla ja aiheiksi tulivat myös "Sadut ja tarinat"
+   * -tyyppiset nimet — mutta nimen on yhä alettava isolla ja
+   * jatkuttava pienellä, jotta se istuu otsikkoriville.
+   */
   for (const [iso, aiheet] of Object.entries(MAA_KATEGORIAT)) {
     for (const aihe of aiheet) {
       assert.match(
         aihe.nimi,
-        /^[A-ZÅÄÖ][a-zåäö]+$/,
-        `${iso}/${aihe.id}: maan aiheen nimen pitää olla yksisanainen yleisnimi`,
+        /^[A-ZÅÄÖ][a-zåäö]+( [a-zåäö]+)*$/,
+        `${iso}/${aihe.id}: maan aiheen nimen pitää olla yleisnimi (iso alkukirjain, ei erisnimiä)`,
       );
     }
   }

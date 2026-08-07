@@ -146,14 +146,26 @@ export const TV_KANAVAT = {
     upotus: 'https://www.youtube.com/embed/live_stream'
       + '?channel=UC7QZIf0dta-XPXsp9Hv4dTw&autoplay=1',
   },
-  // tagesschau24 on ARD:n uutiskanava, joka lähettää YouTubeen ympäri
-  // vuorokauden ilman aluerajausta (kanavatunnus varmistettu
-  // @tagesschau/live-sivun canonical-linkistä 7.8.2026; suora lähetys
-  // oli käynnissä tarkistushetkellä).
+  /*
+   * Tallenteet suoran lähetyksen sijaan (omistajan päätös 7.8.2026:
+   * "Live TV-lähetykset eivät näytä oikein toimivan. Ne voisi vaihtaa
+   * johonkin yhteen tai kahteen videoklippiin. ... voisi koittaa
+   * etsiä, saako pääuutislähetystä katsottua jälkikäteen.").
+   *
+   * tagesschaun avoin rajapinta listaa tuoreimmat lähetykset suorina
+   * mp4-osoitteina (h264) — video-elementti soittaa ne kaikilla
+   * laitteilla ilman YouTubea, ja CORS sallii haun suoraan selaimesta
+   * (tarkistettu 7.8.2026). Kanava-arvo on rajapinnan channels-listan
+   * title-kenttä täsmälleen.
+   */
   DEU: {
-    nimi: 'tagesschau24',
-    livesivu: 'https://www.youtube.com/@tagesschau/live',
-    upotus: 'https://www.youtube.com/embed/live_stream'
-      + '?channel=UC5NOEUbkLheQcaaRldYW5GA&autoplay=1',
+    nimi: 'tagesschau',
+    tallenteet: {
+      api: 'https://www.tagesschau.de/api2u/channels',
+      valinnat: [
+        { nappi: 'Uutiset 100 sekunnissa', kanava: 'tagesschau in 100 Sekunden' },
+        { nappi: 'Päälähetys klo 20', kanava: 'tagesschau' },
+      ],
+    },
   },
 };

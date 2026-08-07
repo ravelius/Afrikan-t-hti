@@ -74,7 +74,7 @@ import { lukijaTuettu, lukijaLue, lukijaSeis, lukijaLukee } from './lukija.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
 import {
-  haeUutiset, haeArtikkeli, haeLiveTunniste, kaannaSuomeksi, uutislahde,
+  haeUutiset, haeArtikkeli, haeLiveTunniste, haeTallenne, kaannaSuomeksi, uutislahde,
 } from './uutiset.js';
 import { TV_KANAVAT } from './packs/uutislahteet.js';
 import {
@@ -6048,15 +6048,71 @@ export class UI {
     this.arrivalMedia.hidden = false;
     const nappi = html('button', 'kulttuuri-kuuntele kieli-kuuntele');
     nappi.type = 'button';
-    nappi.title = `${tv.nimi} — suora tv-lähetys`;
+    // Tallennelähteellä nappi lupaa uutislähetykset, ei suoraa.
+    nappi.title = tv.tallenteet
+      ? `${tv.nimi} — uutislähetykset tallenteina`
+      : `${tv.nimi} — suora tv-lähetys`;
     nappi.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">'
       + '<rect x="3" y="6.5" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/>'
       + '<path d="M8.5 3.5 12 6.5l3.5-3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>'
       + '</svg>'
       + `<span>${suojaa(tv.nimi)}</span>`
-      + '<span class="live" title="suora lähetys">live</span>';
-    nappi.addEventListener('click', () => this.avaaTvIkkuna(tv));
+      + (tv.tallenteet
+        ? '<span class="live" title="uutislähetykset tallenteina">video</span>'
+        : '<span class="live" title="suora lähetys">live</span>');
+    nappi.addEventListener('click', () => (tv.tallenteet
+      ? this.avaaTallenneIkkuna(tv)
+      : this.avaaTvIkkuna(tv)));
     this.arrivalMedia.appendChild(nappi);
+  }
+
+  /**
+   * Uutislähetysten tallenteet popupissa (omistajan päätös 7.8.2026:
+   * livet vaihdetaan klippeihin). Sama riisuttu 16:9-kortti kuin
+   * suorassa, mutta YouTube-upotuksen sijaan video-elementti ja
+   * mp4-tallenne — soi kaikilla laitteilla ilman upotusongelmia.
+   * Yläreunassa pillerit lähetyksille: lyhyt kooste ja päälähetys.
+   */
+  avaaTallenneIkkuna(tv) {
+    this.suljeKulttuuriKuva();
+    sfx.play('paper');
+    this.lisaaKevytHuntu();
+    const kortti = html('div', 'postikortti kulttuuri-suurennos tv-kortti');
+    const video = document.createElement('video');
+    video.className = 'tv-upotus';
+    video.controls = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    kortti.appendChild(video);
+    const rivi = html('div', 'tallenne-valinnat');
+    const valitse = async (valinta, valintaNappi) => {
+      for (const n of rivi.querySelectorAll('button')) n.classList.toggle('valittu', n === valintaNappi);
+      const tallenne = await haeTallenne(tv.tallenteet.api, valinta.kanava);
+      if (!kortti.isConnected) return;
+      if (!tallenne) {
+        valintaNappi.textContent = 'Ei saatu haettua';
+        return;
+      }
+      video.src = tallenne.url;
+      video.play?.().catch(() => {});
+    };
+    tv.tallenteet.valinnat.forEach((valinta, i) => {
+      const valintaNappi = html('button', 'tallenne-valinta', valinta.nappi);
+      valintaNappi.type = 'button';
+      // Kortin napautus sulkee — valinta ei saa sulkea.
+      valintaNappi.addEventListener('click', (e) => {
+        e.stopPropagation();
+        valitse(valinta, valintaNappi);
+      });
+      rivi.appendChild(valintaNappi);
+      if (i === 0) valitse(valinta, valintaNappi);
+    });
+    kortti.appendChild(rivi);
+    // Videon säätimiin osuva napautus ei saa sulkea korttia.
+    video.addEventListener('click', (e) => e.stopPropagation());
+    kortti.addEventListener('click', () => this.suljeKulttuuriKuva());
+    this.arrivalDialog.appendChild(kortti);
+    this.kulttuuriKuvaEl = kortti;
   }
 
   /**
@@ -7658,7 +7714,10 @@ export class UI {
     const kotelo = html('div', 'maakartta-kotelo');
     const kuva = document.createElement('img');
     kuva.alt = 'Kaupungin kartta';
-    asetaKuva(kuva, valokuvaUrl(kartta.tiedosto, 1000), valokuvaVara(kartta.tiedosto, 1000));
+    // Oma julistekartta on paikallinen tiedosto (assets/kartat/);
+    // Commons-pohjainen kartta haetaan peilin kautta kuten kuvat.
+    if (kartta.polku) kuva.src = kartta.polku;
+    else asetaKuva(kuva, valokuvaUrl(kartta.tiedosto, 1000), valokuvaVara(kartta.tiedosto, 1000));
     kotelo.appendChild(kuva);
     for (const k of kartta.kohteet ?? []) {
       const p = karttapiste(kartta, k.lat, k.lon);
