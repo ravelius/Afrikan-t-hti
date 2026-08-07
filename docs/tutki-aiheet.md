@@ -31,8 +31,11 @@ matkaopas kulkee laukussa koko maan ajan, vain kansilehti vaihtuu.
   kantavat lehden sisäsivut), Espanja ✅ (Madrid, v307: kansi
   Goya-galleriineen + 5 maa-aihetta, joita myös Barcelona ja Granada
   käyttävät, + 20minutos + RTVE Noticias), sitten loput Lontoon
-  lentokohteet eli pelin ensimmäiset matkakohteet: Saksa (Berliini) ja
-  Ruotsi (Tukholma) — ja niiden perään Ranska, USA, Japani,
+  lentokohteet eli pelin ensimmäiset matkakohteet: Ruotsi ✅
+  (Tukholma, v315: kansi Elias Martin -galleriineen + 5 maa-aihetta,
+  SVT:n uutiset ja konemestari Elsa — tv jätettiin pois, koska
+  ruotsalaiskanavilla ei ole aluerajatonta 24/7-liveä) ja Saksa
+  (Berliini) — ja niiden perään Ranska, USA, Japani,
   Brasilia, Australia. Valmiit maakohtaiset promptit:
   docs/tyolista-opukselle.md, "Lehtimaiden promptit".
 

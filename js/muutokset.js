@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 315, teksti: 'Tukholma sai oman lehden: kansi ja Ruotsi' },
+  { v: 315, teksti: 'Elias Martinin Tukholma-näkymät galleriana' },
+  { v: 315, teksti: 'Ruotsin uutiset SVT:ltä, ABBA kannen nostona' },
   { v: 314, teksti: 'Maan sivun otsikossa maan nimi: Egyptin historia' },
   { v: 314, teksti: 'Tilastosivun otsikkona "Egypti numeroina"' },
   { v: 313, teksti: 'Uusi varuste: Vertailulinssi, kaksi maata rinnan' },

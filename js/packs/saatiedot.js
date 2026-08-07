@@ -41,6 +41,15 @@ export const SAATIEDOT = {
     keskilampo: [4.7, 6.1, 9.5, 12.1, 16.5, 22.1, 25.8, 25.3, 20.4, 14.5, 8.7, 5.5],
     sade: [39, 32, 39, 46, 38, 15, 6, 8, 21, 58, 54, 44],
   },
+  // Tukholma on 59. leveyspiirillä mutta meren keskellä: talvi on
+  // leudompi kuin sisämaassa samalla korkeudella, ja sade jakautuu
+  // tasaisesti vuoteen — kesä on silti sateisin aika.
+  tukholma: {
+    lat: 59.33,
+    lon: 18.07,
+    keskilampo: [-1.4, -1.6, 0.8, 5.2, 10.3, 14.8, 17.8, 17.1, 12.8, 7.4, 3.2, 0.1],
+    sade: [37, 31, 32, 33, 43, 64, 65, 69, 50, 50, 48, 46],
+  },
   venetsia: {
     lat: 45.44,
     lon: 12.32,

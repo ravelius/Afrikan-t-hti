@@ -29,6 +29,9 @@ const SALLITUT = [
   // Espanjan uutislähde (Madridin lehti, 6.8.2026): syöte ja
   // artikkelisivut ovat samalla isäntänimellä.
   'https://www.20minutos.es/',
+  // Ruotsin uutislähde (Tukholman lehti, 7.8.2026): syöte ja
+  // artikkelisivut ovat samalla isäntänimellä.
+  'https://www.svt.se/',
   // Tv-kanavan live-sivu: siitä luetaan kulloisenkin suoran
   // lähetyksen tunniste, koska YouTuben kanavaupotus on epävakaa
   // etenkin iPadilla (5.8.2026).

@@ -1368,4 +1368,426 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  /*
+   * Ruotsi (v315), lehtikaupunkina Tukholma. Viisi vakioaihetta;
+   * musiikki jää pois, koska ABBA kantaa sen kaupungin kannessa.
+   */
+  SWE: [
+    {
+      id: 'historia',
+      nimi: 'Historia',
+      johdanto: 'Ruotsin historia kulkee viikinkien hopeasta Itämeren '
+        + 'suurvallaksi ja siitä maaksi, joka ei ole ollut sodassa '
+        + 'kahteensataan vuoteen.',
+      nostot: [
+        {
+          otsikko: 'Laiva, joka kaatui tuhannen metrin jälkeen',
+          tiedosto: 'Lateral view of the Vasa ship, Vasa Museum, Stockholm, Sweden julesvernex2.jpg',
+          teksti: 'Sotalaiva Vasa lähti neitsytmatkalleen Tukholman '
+            + 'satamasta 10. elokuuta 1628. Se ehti purjehtia noin '
+            + 'tuhat kolmesataa metriä, kun tuulenpuuska kallisti sen '
+            + 'niin, että vesi syöksyi sisään avoimista tykkiluukuista. '
+            + 'Kuningas oli vaatinut kaksi tykkikantta, eikä kapea runko '
+            + 'kantanut niiden painoa. Itämeren vähäsuolaisessa vedessä '
+            + 'ei elä laivamato, joka syö puun muissa merissä — siksi '
+            + 'laiva säilyi mudassa. Vasa nostettiin 1961, ja siitä on '
+            + 'alkuperäistä puuta yli 95 prosenttia.',
+          selite: 'Vasan kylki Vasa-museossa. Neliönmuotoiset aukot ovat '
+            + 'tykkiluukkuja: juuri niistä vesi pääsi sisään.',
+          lahde: 'Jules Verne Times Two, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Vasa (laiva)',
+        },
+        {
+          otsikko: 'Taivaalla paloi kuusi aurinkoa',
+          tiedosto: 'Vädersolstavlan 1535.jpg',
+          teksti: 'Huhtikuun 20. päivänä 1535 tukholmalaiset näkivät '
+            + 'aamutaivaalla valkoisia renkaita ja niiden kehällä useita '
+            + 'hehkuvia auringonkuvia. Kyse oli halosta: ilmassa '
+            + 'leijuvat jääkiteet taittavat auringonvaloa kuin '
+            + 'lasiprismat. Näky pelotti, ja pappi Olaus Petri teetti '
+            + 'siitä maalauksen. Samalla syntyi vanhin tunnettu värikuva '
+            + 'Tukholmasta: kaupunki muureineen, kirkontorneineen ja '
+            + 'ympäröivine hirsiaitoineen. Alkuperäinen taulu on '
+            + 'kadonnut — Storkyrkanissa riippuu vuoden 1636 kopio.',
+          selite: 'Vädersolstavlan: sivuaurinkojen renkaat 1535 ja niiden '
+            + 'alla keskiaikainen Tukholma. Kuvan kaupunki mahtuisi '
+            + 'nykyiseen Gamla staniin.',
+          lahde: 'Urban målare, Wikimedia Commons (PD)',
+          wiki: 'Suurkirkko (Tukholma)',
+        },
+        {
+          otsikko: 'Maailman suurin viikinkihopea',
+          tiedosto: 'Silver tangle Spillings Hoard 1.jpg',
+          teksti: 'Gotlannin Spillingsissä eräs maanviljelijä oli '
+            + 'kyntänyt vuosikymmeniä pellon yli, jonka alla makasi '
+            + 'suurin tunnettu viikinkiaikainen hopeakätkö. Kun '
+            + 'arkeologit tutkivat paikan 1999 metallinilmaisimella, '
+            + 'maasta nousi 67 kiloa hopeaa: rannerenkaita, tankoja ja '
+            + 'noin neljätoistatuhatta kolikkoa. Suurin osa kolikoista '
+            + 'oli lyöty islamilaisissa maissa Bagdadista Samarkandiin. '
+            + 'Gotlantilaiset kävivät siis kauppaa Venäjän jokia pitkin '
+            + 'aina Kaspianmerelle saakka ja toivat turkiksista hopeaa.',
+          selite: 'Hopeisia rannerenkaita Spillingsin aarteesta. Renkaat '
+            + 'olivat maksuväline: niistä katkaistiin pala kerrallaan ja '
+            + 'punnittiin.',
+          lahde: 'W.carter, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Viikinkiaika',
+        },
+        {
+          otsikko: 'Kuninkaan pakoreitti hiihdetään joka vuosi',
+          tiedosto: 'Jørgen Aukland Vasaloppet 2013 002.jpg',
+          teksti: 'Vuonna 1520 nuori Kustaa Eriksson pakeni tanskalaisia '
+            + 'Taalainmaalle ja yritti saada talonpojat kapinaan. Moran '
+            + 'miehet epäröivät, ja hän jatkoi suksilla kohti Norjaa. '
+            + 'Kun tieto Tukholman verilöylystä levisi, kaksi hiihtäjää '
+            + 'lähetettiin hänen peräänsä — he saivat hänet kiinni ja '
+            + 'käänsivät takaisin. Kolme vuotta myöhemmin hänestä tuli '
+            + 'kuningas Kustaa Vaasa. Vuodesta 1922 sama matka on '
+            + 'hiihdetty toisin päin: 90 kilometriä Säleniltä Moraan. '
+            + 'Ensimmäinen kilpailu järjestettiin sanomalehden '
+            + 'ehdotuksesta, ja siihen osallistui 119 hiihtäjää.',
+          selite: 'Vasaloppetin maalissa voittajan kaulaan asetetaan '
+            + 'seppele. Hiihtäjiä on nykyään kymmeniätuhansia, ja '
+            + 'ensimmäiset lähtevät liikkeelle ennen aamukahdeksaa.',
+          lahde: 'Vasaloppet/Nisse Schmidt, Wikimedia Commons (CC BY 3.0)',
+          wiki: 'Vaasahiihto',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Ruotsalainen ruoka tulee metsästä ja merestä — ja '
+        + 'kahvitauolla on oma nimi, oma leivonnainen ja oma '
+        + 'kalenteripäivä.',
+      tehtava: {
+        kysymys: 'Minä päivänä vietetään Ruotsissa kanelipullan päivää?',
+        vaihtoehdot: ['4. lokakuuta', '1. toukokuuta', '13. joulukuuta'],
+        oikea: 0,
+        fakta: 'Kanelipullan päivä on 4. lokakuuta — leipomisneuvosto '
+          + 'keksi sen 1999, ja vastaus löytyi pullanostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Lihapullat ja punainen marja',
+          tiedosto: 'DSC00045-swedish meatballs.jpg',
+          teksti: 'Ruotsalaiselle lautaselle kuuluu kolme asiaa: '
+            + 'lihapullat, perunamuusi ja lusikallinen puolukkahilloa. '
+            + 'Makea marja hapan lihan vieressä hämmästyttää monta '
+            + 'vierasta, mutta yhdistelmä on vanha keino: ennen '
+            + 'jääkaappeja happamat ja sokeriset säilykkeet pitivät '
+            + 'ruoan syömäkelpoisena talven yli. Ruotsin virallinen '
+            + 'somekin on kertonut, että lihapullan resepti tuotiin '
+            + 'maahan Turkista kuningas Kaarle XII:n mukana 1700-luvun '
+            + 'alussa — asiaa on sen jälkeen kiistelty innokkaasti.',
+          selite: 'Lihapullat, keitetyt perunat ja puolukkahillo. '
+            + 'Puolukka poimitaan metsästä, ja sen saa jokamiehen '
+            + 'oikeudella kuka tahansa.',
+          lahde: 'Øyvind Holmstad, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Lihapulla',
+        },
+        {
+          otsikko: 'Purkki, joka avataan ulkona',
+          tiedosto: 'Cans of surströmming .jpg',
+          teksti: 'Surströmming on silakkaa, joka on suolattu kevyesti ja '
+            + 'annettu käydä kuukausien ajan. Käyminen jatkuu purkissa, '
+            + 'joten kansi pullistuu — ja kun se avataan, haju on niin '
+            + 'voimakas, että purkki avataan ulkona ja mielellään veden '
+            + 'alla. Tapa syntyi pakosta: suolaa oli 1500-luvulla vähän '
+            + 'ja kallista, joten kalaa säilöttiin niukalla suolalla ja '
+            + 'käymisellä. Perinteinen tarjoilu on ohut näkkileipä, '
+            + 'perunaa ja sipulia. Ensimmäinen purkki avataan elokuussa.',
+          selite: 'Surströmming-purkkeja. Pullistunut kansi ei ole '
+            + 'merkki pilaantumisesta vaan siitä, että käyminen jatkuu '
+            + 'purkin sisällä.',
+          lahde: 'hadyelsahar, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Hapansilakka',
+        },
+        {
+          otsikko: 'Kanelipullalla on oma päivänsä',
+          tiedosto: 'Kanelbullar in Skansen (Stockholm).jpg',
+          teksti: 'Fika tarkoittaa taukoa, jolla juodaan kahvia ja '
+            + 'syödään jotain makeaa. Se ei ole pelkkä kahvikuppi vaan '
+            + 'sovittu hetki istua alas yhdessä: monella työpaikalla '
+            + 'fika on kellonaika siinä missä lounas. Sana syntyi '
+            + 'puhekielessä kääntämällä sanan kaffe tavut toisin päin. '
+            + 'Kanelipulla sai oman juhlapäivänsä vuonna 1999, kun '
+            + 'leipomisneuvosto täytti neljäkymmentä vuotta ja julisti '
+            + 'lokakuun neljännen päivän kanelipullan päiväksi. Päivä jäi '
+            + 'elämään: sinä päivänä ruotsalaiset syövät arviolta useita '
+            + 'miljoonia pullia enemmän kuin tavallisena päivänä.',
+          selite: 'Vastapaistettuja kanelipullia Skansenin leipomossa '
+            + 'Tukholmassa. Ruotsalaiseen pullaan tulee kanelin lisäksi '
+            + 'usein kardemummaa.',
+          lahde: 'Luke Webber, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Korvapuusti',
+        },
+        {
+          otsikko: 'Rapujuhlat paperihatuissa',
+          tiedosto: 'Kräftskiva, Häringe slott, 1991.jpg',
+          teksti: 'Elokuussa ruotsalaiset kokoontuvat pihoille syömään '
+            + 'tilliin keitettyjä rapuja. Pöydän yllä roikkuu '
+            + 'paperilyhtyjä, päässä on paperihattu, kaulassa '
+            + 'ruutuliina — ja välillä lauletaan lyhyt juomalaulu. '
+            + 'Juhlan tausta on kuiva sääntö: rapujen pyynti oli pitkään '
+            + 'sallittua vasta elokuun alusta, jotta kannat kestäisivät. '
+            + 'Kiellon päättyminen muuttui juhlaksi, ja se on säilynyt, '
+            + 'vaikka nykyään suurin osa ravuista tuodaan ulkomailta. '
+            + 'Ruotsin omat joet menetti 1900-luvulla rapurutto, joka '
+            + 'levisi Amerikasta tuotujen rapujen mukana.',
+          selite: 'Rapujuhla ulkona 1990-luvun alussa. Lyhdyt, hatut ja '
+            + 'liinat kuuluvat asuun; rapuja syödään sormin.',
+          lahde: 'Holger.Ellgaard, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Rapujuhla',
+        },
+      ],
+    },
+    {
+      id: 'kuvataide',
+      nimi: 'Kuvataide',
+      johdanto: 'Ruotsalainen taide meni sinne, missä ihmiset ovat: '
+        + 'kotien keittiöihin, kesäisille tanssilavoille ja syvälle '
+        + 'peikkojen metsään.',
+      nostot: [
+        {
+          otsikko: 'Koti, josta tuli koko maan malli',
+          tiedosto: 'Skamvrån av Carl Larsson 1894.jpg',
+          teksti: 'Carl Larsson maalasi 1890-luvulla akvarelleja omasta '
+            + 'kodistaan Sundbornissa: keittiöstä, lastenhuoneesta ja '
+            + 'kattauksesta. Kirjana julkaistut kuvat levisivät '
+            + 'kaikkialle, ja niistä tuli ruotsalaisen kodin ihanne — '
+            + 'vaaleat seinät, raidalliset räsymatot, kirkkaat värit ja '
+            + 'valo. Ideat olivat suurelta osin hänen vaimonsa Karinin, '
+            + 'joka suunnitteli huonekalut ja tekstiilit. Sama ihanne '
+            + 'näkyy yhä ruotsalaisissa huonekaluliikkeissä ympäri '
+            + 'maailman.',
+          selite: 'Skamvrån (1894): rangaistuspenkki nurkassa. Larssonin '
+            + 'lapset esiintyvät kuvissa jatkuvasti — myös silloin, kun '
+            + 'jotain oli sattunut.',
+          lahde: 'Carl Larsson, Wikimedia Commons (PD)',
+          wiki: 'Carl Larsson',
+        },
+        {
+          otsikko: 'Peikot syntyivät männikössä',
+          tiedosto: 'John Bauer - The Princess and the Trolls - Google Art Project.jpg',
+          teksti: 'John Bauer kuvitti satukirjasarjaa Bland tomtar och '
+            + 'troll ja loi samalla sen, miltä peikko pohjoismaisessa '
+            + 'mielikuvassa näyttää: kyhmyinen, sammaleinen ja '
+            + 'jättimäinen, mutta ei pelkästään paha. Metsänsä hän '
+            + 'maalasi Smålannin kalliomänniköistä, joissa hän '
+            + 'retkeili. Bauer kuoli vain 36-vuotiaana, kun '
+            + 'höyrylaiva upposi myrskyssä Vätternillä 1918 — hänen '
+            + 'kuvansa ovat sen jälkeen kulkeneet sukupolvelta toiselle. '
+            + 'Tunnetuin niistä esittää pientä prinsessaa, joka kulkee '
+            + 'peikkojen välissä pelkäämättä lainkaan — juuri se '
+            + 'yhdistelmä teki Bauerin kuvista rakastettuja.',
+          selite: 'Prinsessa ja peikot (1913). Kalliot kuvan yläosassa '
+            + 'ovat tarkemmin katsottuna nukkuvia peikkoja.',
+          lahde: 'John Bauer, Wikimedia Commons (PD)',
+          wiki: 'John Bauer',
+        },
+        {
+          otsikko: 'Juhannustanssi ei lopu yöhön',
+          tiedosto: 'Anders Zorn - Midsummer Dance - Google Art Project.jpg',
+          teksti: 'Anders Zorn syntyi taalainmaalaiseen kylään ja tuli '
+            + 'maailmankuuluksi muotokuvamaalarina, joka maalasi '
+            + 'Yhdysvaltain presidenttejä. Tunnetuin teos on silti '
+            + 'kotoinen: Midsommardans vuodelta 1897 kuvaa juhannusyön '
+            + 'tanssia Moran kylässä. Valo on erikoinen, koska sitä ei '
+            + 'ole — pohjoisessa aurinko ei juhannuksena laske, ja '
+            + 'ihmiset tanssivat hämärässä joka on melkein päivä. '
+            + 'Kalpea keltainen taivas kertoo kellonajan tarkemmin kuin '
+            + 'mikään kello. Zorn maalasi teoksen omassa kotikylässään '
+            + 'ja käytti mallina naapureitaan, ei ammattimalleja.',
+          selite: 'Midsommardans (1897). Oikealla nousee juhannussalko, '
+            + 'jonka ympärillä tanssitaan koko yö.',
+          lahde: 'Anders Zorn, Wikimedia Commons (PD)',
+          wiki: 'Anders Zorn',
+        },
+        {
+          otsikko: 'Abstrakti taide alkoi salaa',
+          tiedosto: 'Hilma af Klint - Group VI, Evolution No. 13 (13949).jpg',
+          teksti: 'Hilma af Klint maalasi jo vuonna 1906 suuria teoksia, '
+            + 'joissa ei ole yhtään esittävää kohdetta — värejä, '
+            + 'ympyröitä ja spiraaleja. Se tapahtui vuosia ennen kuin '
+            + 'Kandinskyn ja muiden abstrakteja maalauksia nähtiin. '
+            + 'Hilma ei kuitenkaan näyttänyt niitä juuri kenellekään: '
+            + 'hän määräsi testamentissaan, ettei töitä saa asettaa '
+            + 'esille ennen kuin kaksikymmentä vuotta on kulunut hänen '
+            + 'kuolemastaan. Maailma näki ne kunnolla vasta 1980-luvulla, '
+            + 'ja vasta silloin taidehistoriaa alettiin kirjoittaa '
+            + 'uudestaan: abstrakti taide olikin alkanut Ruotsissa.',
+          selite: 'Evolution nro 13 (1908) sarjasta Group VI. Muodot ovat '
+            + 'omaa merkkikieltä, jota Hilma selitti muistikirjoissaan.',
+          lahde: 'Hilma af Klint, Wikimedia Commons (PD)',
+          wiki: 'Hilma af Klint',
+        },
+      ],
+    },
+    {
+      id: 'luonto',
+      nimi: 'Luonto',
+      johdanto: 'Ruotsissa metsä on kaikkien: sinne saa mennä, siellä saa '
+        + 'yöpyä ja marjat saa poimia — kunhan ei häiritse eikä tuhoa.',
+      nostot: [
+        {
+          otsikko: 'Jokaisella on oikeus metsään',
+          tiedosto: 'Fresh bilberries picked in Tuntorp 1.jpg',
+          teksti: 'Allemansrätten eli jokamiehenoikeus antaa kenelle '
+            + 'tahansa luvan kulkea, uida, telttailla yön ja poimia '
+            + 'marjoja ja sieniä myös toisen mailla. Sääntö tiivistyy '
+            + 'kahteen sanaan: inte störa, inte förstöra — ei saa '
+            + 'häiritä eikä tuhota. Pihan lähelle ei mennä, viljelyksiä '
+            + 'ei talloa eikä nuotiota tehdä kalliolle, joka halkeaa '
+            + 'kuumuudesta. Oikeutta ei ole kirjoitettu yhdeksi laiksi '
+            + 'vaan se on tapa, joka on aikojen kuluessa vahvistettu. '
+            + 'Sama oikeus on Suomessa ja Norjassa, mutta suuressa '
+            + 'osassa Eurooppaa metsään ei saa mennä ilman lupaa.',
+          selite: 'Metsästä poimittuja mustikoita. Marjojen poimimiseen '
+            + 'ei tarvita maanomistajan lupaa — kalastukseen ja '
+            + 'metsästykseen tarvitaan.',
+          lahde: 'W.carter, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Jokaisenoikeus',
+        },
+        {
+          otsikko: 'Erämaa ilman polkuja',
+          tiedosto: 'Skierfe and Rapaätno delta - Sarek national park - panoramio.jpg',
+          teksti: 'Sarek perustettiin kansallispuistoksi 1909, samana '
+            + 'vuonna kuin Euroopan ensimmäiset kansallispuistot '
+            + 'ylipäätään. Se on lähes tienotonta ja polutonta '
+            + 'tunturimaata: parisataa yli 1800-metristä huippua, '
+            + 'kymmeniä jäätiköitä eikä juuri lainkaan siltoja. Sisään '
+            + 'mennään omin voimin ja ulos samoin. Kuuluisin näkymä on '
+            + 'Rapadalen, jossa jäätiköiden liete on kasannut jokeen '
+            + 'suistoja kuin punos — vihreä laakso keskellä harmaita '
+            + 'vuoria. Puistossa ei ole majoitusta eikä kioskeja, joten '
+            + 'kaikki tarvittava kannetaan selässä.',
+          selite: 'Rapadalenin suisto Skierfen kalliolta. Vaaleat juovat '
+            + 'ovat jäätikön hiomaa kiviainesta, jonka joki on tuonut '
+            + 'mukanaan.',
+          lahde: 'Tero Laakso, Wikimedia Commons (CC BY 3.0)',
+          wiki: 'Sarek',
+        },
+        {
+          otsikko: 'Metsän kuningas painaa puoli tonnia',
+          tiedosto: 'Älg (Alces alces) på Ornö.jpg',
+          teksti: 'Ruotsin metsissä elää talvisin noin kolmesataatuhatta '
+            + 'hirveä, ja kesällä vasojen kanssa selvästi enemmän. '
+            + 'Aikuinen sonni painaa jopa puoli tonnia ja kasvattaa '
+            + 'joka kevät uuden sarvikruunun, jonka se pudottaa '
+            + 'talvella. Hirvi on niin tavallinen, että se on tiellä '
+            + 'todellinen vaara: teiden varsilla on satoja kilometrejä '
+            + 'hirviaitaa ja varoituskylttejä. Ruotsalaiset kutsuvat '
+            + 'sitä metsän kuninkaaksi — skogens konung. Sarvet ovat '
+            + 'aikuisella sonnilla lapiomaiset ja voivat olla yli '
+            + 'puolentoista metrin levyiset.',
+          selite: 'Hirvi Ornön saarella Tukholman saaristossa. Hirvi ui '
+            + 'hyvin ja siirtyy saarelta toiselle omin päin.',
+          lahde: 'Hangsna, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Hirvi',
+        },
+        {
+          otsikko: 'Taivas repeää vihreäksi',
+          tiedosto: 'Aurora in Abisko near Torneträsk.jpg',
+          teksti: 'Abisko Pohjois-Ruotsissa on yksi maailman parhaista '
+            + 'paikoista nähdä revontulet, ja syy on maantieteessä: '
+            + 'tunturit pysäyttävät Atlantilta tulevat pilvet, joten '
+            + 'Torneträskin yllä on usein selkeää silloinkin, kun '
+            + 'ympärillä sataa. Ilmiötä kutsutaan siniseksi aukoksi. '
+            + 'Revontulet syntyvät, kun auringosta sinkoutuneet hiukkaset '
+            + 'törmäävät ilmakehän kaasuihin sadan kilometrin korkeudessa '
+            + '— happi hehkuu vihreänä, typpi violettina. Parhaat yöt '
+            + 'ovat pimeimmän talven selkeitä pakkasöitä, jolloin valo '
+            + 'näkyy myös vedenpinnasta heijastuneena.',
+          selite: 'Revontulet Abiskossa Torneträskin lähellä. Talvella '
+            + 'aurinko ei nouse siellä lainkaan useaan viikkoon.',
+          lahde: 'Pavel.shyshkouski, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Revontulet',
+        },
+      ],
+    },
+    {
+      id: 'tiede',
+      nimi: 'Tiede',
+      johdanto: 'Ruotsalaiset ovat antaneet maailmalle lajien nimet, '
+        + 'lämpömittarin asteikon, tulitikun joka ei syty vahingossa — '
+        + 'ja palkinnon, joka jaetaan joulukuussa Tukholmassa.',
+      nostot: [
+        {
+          otsikko: 'Dynamiitin keksijän testamentti',
+          tiedosto: 'Panorama of Stockholms stadshus (24228618004).jpg',
+          teksti: 'Alfred Nobel keksi dynamiitin 1867 ja rikastui '
+            + 'räjähteillä, joita käytettiin sekä tunneleiden '
+            + 'louhimiseen että sodassa. Vuonna 1888 eräs lehti luuli '
+            + 'hänen kuolleen ja julkaisi muistokirjoituksen otsikolla '
+            + '"kuoleman kauppias on kuollut". Nobel luki oman '
+            + 'muistokirjoituksensa ja kirjoitti myöhemmin '
+            + 'testamentin, jossa hän määräsi lähes koko omaisuutensa '
+            + 'palkinnoiksi. Ensimmäiset Nobelin palkinnot jaettiin '
+            + '1901, ja juhlaillallista on vietetty Tukholman '
+            + 'kaupungintalolla 1930-luvulta asti.',
+          selite: 'Tukholman kaupungintalo. Sen Sinisessä salissa '
+            + 'katetaan joka 10. joulukuuta Nobel-illallinen noin '
+            + 'tuhannelle vieraalle.',
+          lahde: 'Jorge Láscar from Melbourne, Australia, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Alfred Nobel',
+        },
+        {
+          otsikko: 'Mies, joka antoi lajeille nimet',
+          tiedosto: 'Carl von Linné.jpg',
+          teksti: 'Ennen Carl von Linnéä kasvin nimi saattoi olla kokonainen '
+            + 'latinankielinen lause. Linné otti käyttöön kahden sanan '
+            + 'nimen: ensin suku, sitten laji — Homo sapiens, Alces '
+            + 'alces. Järjestelmä oli niin selkeä, että se on käytössä '
+            + 'yhä, ja se teki mahdolliseksi verrata löytöjä maasta '
+            + 'toiseen. Linné lähetti oppilaitaan, "apostoleitaan", '
+            + 'keräämään lajeja ympäri maailmaa; osa heistä ei palannut '
+            + 'koskaan. Hänen kotinsa Uppsalan kasvitieteellisessä '
+            + 'puutarhassa on yhä nähtävissä.',
+          selite: 'Carl von Linné (1707–1778) Alexander Roslinin '
+            + 'maalaamana. Napinlävessä on hänen suosikkikasvinsa, '
+            + 'vanamo.',
+          lahde: 'Alexander Roslin, Wikimedia Commons (PD)',
+          wiki: 'Carl von Linné',
+        },
+        {
+          otsikko: 'Asteikko, joka oli aluksi väärin päin',
+          tiedosto: 'Celsius Thermometer - Replica.jpg',
+          teksti: 'Uppsalalainen tähtitieteilijä Anders Celsius esitti '
+            + '1742 lämpömittarin asteikon, jossa on sata astetta veden '
+            + 'jäätymisen ja kiehumisen välillä. Hänen omassa '
+            + 'asteikossaan luvut olivat kuitenkin toisin päin kuin '
+            + 'nyt: nolla tarkoitti kiehumista ja sata jäätymistä. '
+            + 'Asteikko käännettiin pian hänen kuolemansa jälkeen — '
+            + 'kääntäjäksi on esitetty muun muassa Linnéä, joka '
+            + 'tarvitsi kasvihuoneeseensa mittarin, jossa lämpimämpi '
+            + 'on suurempi luku. Asteikko sai Celsiuksen nimen vasta '
+            + 'vuonna 1948 — sitä ennen sitä kutsuttiin usein '
+            + 'sadanjaon asteikoksi.',
+          selite: 'Kopio Celsiuksen lämpömittarista Tekniska museetissa. '
+            + 'Asteikko on maalattu puulevylle elohopeaputken viereen.',
+          lahde: 'Tekniska museet, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Anders Celsius',
+        },
+        {
+          otsikko: 'Tulitikku, joka syttyy vain omasta rasiastaan',
+          tiedosto: 'Säkerhetständstickor.JPG',
+          teksti: 'Vanhat tulitikut syttyivät mistä tahansa hankauksesta '
+            + 'ja sisälsivät valkoista fosforia, joka sairastutti '
+            + 'tehtaiden työntekijät. Ruotsalainen Gustaf Erik Pasch '
+            + 'keksi 1844 jakaa syttyminen kahtia: tikun päähän jää osa '
+            + 'aineista ja loput siirretään rasian kylkeen. Johan '
+            + 'Edvard Lundström kehitti ideasta Jönköpingissä '
+            + 'valmistuskelpoisen tuotteen 1850-luvulla. Turvatulitikku '
+            + 'syttyy vain omaa raapaisupintaansa vasten — siksi tikut '
+            + 'eivät syty taskussa.',
+          selite: 'Vanhoja jönköpingiläisiä turvatulitikkurasioita. '
+            + 'Kyljessä lukee ruotsiksi: "syttyy vain rasian pintaa '
+            + 'vasten".',
+          lahde: 'Bengt Oberger, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Tulitikku',
+        },
+      ],
+    },
+  ],
 };
