@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 318, teksti: 'Uutinen aukeaa pikkulehtenä: nimiö ja päiväys' },
+  { v: 318, teksti: 'Teksti kiertää uutiskuvaa, kortti leveämpi' },
+  { v: 318, teksti: 'Käännä suomentaa myös otsikon, Palauta palauttaa' },
   { v: 317, teksti: 'Matkakirja aukeaa kartalla kokonaan, ei osittain' },
   { v: 317, teksti: 'Kartan napautus kutistaa sen yhdelle riville' },
   { v: 316, teksti: 'Berliini sai oman lehden: kansi ja Saksa-osasto' },
