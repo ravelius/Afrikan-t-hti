@@ -1,0 +1,12 @@
+/*
+ * Sama julkaisuasetus kuin repon juuren wrangler.jsonc, mutta tälle
+ * kansiolle: Cloudflaren Git-integraatio lukee asetuksen oman root
+ * directory -asetuksensa alta, ja tämä kopio kattaa tapauksen, jossa
+ * asetus osoittaa suoraan kansioon tools/uutisproxy. Pidä molemmat
+ * samassa versiossa.
+ */
+{
+  "name": "matkakirja-uutiset",
+  "main": "worker.js",
+  "compatibility_date": "2026-08-07"
+}

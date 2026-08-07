@@ -1,0 +1,21 @@
+/*
+ * Uutisvälitys-workerin julkaisuasetukset Cloudflaren
+ * Git-integraatiolle (Workers Builds): kun main-haaraan pushataan,
+ * Cloudflare ajaa `npx wrangler deploy` ja julkaisee
+ * tools/uutisproxy/worker.js:n automaattisesti — omistajan ei
+ * tarvitse enää liittää koodia käsin eikä painaa Deploy-nappia
+ * (ks. tools/uutisproxy/OHJE.md).
+ *
+ * Tämä tiedosto on repon juuressa, koska integraation root
+ * directory -asetus on oletuksena repon juuri. Jos asetus osoittaa
+ * kansioon tools/uutisproxy, käytössä on sikäläinen kopio — pidä
+ * molemmat samassa versiossa.
+ *
+ * Tiedosto ei liity itse peliin: peli ei lue tätä, eikä worker
+ * vaikuta pelin versiointiin.
+ */
+{
+  "name": "matkakirja-uutiset",
+  "main": "tools/uutisproxy/worker.js",
+  "compatibility_date": "2026-08-07"
+}
