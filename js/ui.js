@@ -72,8 +72,9 @@ import { MAA_KATEGORIAT } from './packs/maa-kategoriat.js';
 import { MAAKARTAT, KAUPUNKIKARTAT, karttapiste } from './packs/maakartat.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
+import { paivanKuva } from './packs/paivan-kuvat.js';
 import {
-  haeUutiset, haeArtikkeli, haeLiveTunniste, haeTallenne, haePaivanKuva,
+  haeUutiset, haeArtikkeli, haeLiveTunniste, haeTallenne,
   kaannaSuomeksi, uutislahde,
 } from './uutiset.js';
 import { TV_KANAVAT } from './packs/uutislahteet.js';
@@ -7474,33 +7475,23 @@ export class UI {
     }
     /*
      * Päivän kuva sivun loppuun (omistajan toive 7.8.2026: "Sarjakuva
-     * ja valokuva olisi kiva saada jonnekin myös"): Commonsin päivän
-     * kuva on lehden kuvapalsta, joka vaihtuu joka päivä. Ilman
-     * verkkoa lohko jää yksinkertaisesti pois. Kuvateksti näytetään
-     * heti englanniksi ja vaihdetaan suomennokseen, kun käännös
-     * valmistuu — sama järjestys kuin uutisissa.
+     * ja valokuva olisi kiva saada jonnekin myös"). Aluksi tässä oli
+     * Commonsin päivän kuva, mutta sen sisältöä ei valita lapsille —
+     * omistajalle osui olutpäivän elokuvajuliste. Nyt kuva tulee
+     * omasta tarkistetusta listasta (js/packs/paivan-kuvat.js) ja
+     * vaihtuu silti joka päivä. Kuvateksti on valmiiksi suomea.
      */
+    const pk = paivanKuva();
     const kuvaPalsta = html('div', 'paivan-kuva');
-    kuvaPalsta.hidden = true;
+    kuvaPalsta.appendChild(html('p', 'uutiset-nimio paivan-kuva-nimio', 'Päivän kuva maailmalta'));
+    const pkKuva = document.createElement('img');
+    pkKuva.alt = 'Päivän kuva';
+    asetaKuva(pkKuva, valokuvaUrl(pk.tiedosto, 1200), valokuvaVara(pk.tiedosto, 1200));
+    kuvaPalsta.appendChild(pkKuva);
+    kuvaPalsta.appendChild(html('p', 'paivan-kuva-selite', pk.kuvaus));
+    kuvaPalsta.appendChild(html('p', 'lahde',
+      `${pk.tekija}, Wikimedia Commons (${pk.lisenssi})`));
     kohde.appendChild(kuvaPalsta);
-    haePaivanKuva().then(async (pk) => {
-      if (!pk || !kuvaPalsta.isConnected) return;
-      kuvaPalsta.appendChild(html('p', 'uutiset-nimio paivan-kuva-nimio', 'Päivän kuva maailmalta'));
-      const pkKuva = document.createElement('img');
-      pkKuva.src = pk.url;
-      pkKuva.alt = 'Päivän kuva';
-      kuvaPalsta.appendChild(pkKuva);
-      const selite = pk.kuvaus ? html('p', 'paivan-kuva-selite', pk.kuvaus) : null;
-      if (selite) kuvaPalsta.appendChild(selite);
-      const lahde = [pk.tekija, 'Wikimedia Commonsin päivän kuva'].filter(Boolean).join(', ')
-        + (pk.lisenssi ? ` (${pk.lisenssi})` : '');
-      kuvaPalsta.appendChild(html('p', 'lahde', lahde));
-      kuvaPalsta.hidden = false;
-      if (selite && pk.kuvaus) {
-        const suomeksi = await kaannaSuomeksi(pk.kuvaus, 'en');
-        if (suomeksi && kuvaPalsta.isConnected) selite.textContent = suomeksi;
-      }
-    });
   }
 
   async piirraMaaNumerotSivu(kategoria) {

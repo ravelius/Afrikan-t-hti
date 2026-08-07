@@ -48,6 +48,7 @@ const MODULES = [
   'js/packs/maakartat.js',
   'js/packs/saatiedot.js',
   'js/packs/kohtaamiset.js',
+  'js/packs/paivan-kuvat.js',
   'js/packs/uutislahteet.js',
   'js/packs/europe-valokuvat.js',
   'js/packs/europe-kielet.js',
