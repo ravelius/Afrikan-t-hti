@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 338, teksti: 'Päivän kuva omasta listasta: valokuvan klassikot' },
+  { v: 338, teksti: 'Avauslennon repliikki lyhyeksi, uusi luenta' },
   { v: 337, teksti: 'Dekkarimerkinnät napakoiksi: suoraan tarinaan' },
   { v: 336, teksti: 'Mantereelle siirrytään heti, ilman zoomausta' },
   { v: 336, teksti: 'Sumea kartta terävöityy, kun peli palaa esiin' },

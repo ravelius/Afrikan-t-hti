@@ -193,67 +193,13 @@ export async function haeTallenne(api, kanava) {
   return { url, pvm: osuma.date ?? null };
 }
 
-/** Riisuu wikitekstin mallineet ja linkit pelkäksi tekstiksi. */
-export function riisuWikiteksti(teksti) {
-  return String(teksti)
-    .replace(/\{\{w\|([^}|]*)(?:\|([^}]*))?\}\}/g, (_, a, b) => b || a)
-    .replace(/\{\{[^}]*\}\}/g, '')
-    .replace(/\[\[[^\]|]*\|([^\]]*)\]\]/g, '$1')
-    .replace(/\[\[([^\]]*)\]\]/g, '$1')
-    .replace(/'''?/g, '')
-    .replace(/<[^>]+>/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
 /*
- * Päivän kuva (omistajan toive 7.8.2026: "Sarjakuva ja valokuva olisi
- * kiva saada jonnekin myös"): Wikimedia Commonsin päivän kuva on
- * lehden kuvapalsta, joka vaihtuu oikeasti joka päivä. Rajapinta
- * sallii selainkutsun (origin=*), ja englanninkielinen kuvateksti
- * suomennetaan samalla palvelulla kuin uutiset. Vastaus muistetaan
- * istunnon ajan — kuva on sama koko päivän.
+ * Päivän kuva EI tule enää tästä tiedostosta: Commonsin päivän kuvan
+ * haku wikitekstiriisuntoineen (v331) korvattiin omalla kuratoidulla
+ * listalla, koska Commonsin valintaa ei tehdä lapsille (omistajan
+ * havainto 7.8.2026: olutpäivän elokuvajuliste). Ks.
+ * js/packs/paivan-kuvat.js.
  */
-let paivanKuvaMuisti = null;
-
-export async function haePaivanKuva() {
-  if (paivanKuvaMuisti) return paivanKuvaMuisti;
-  const nyt = new Date();
-  const pvm = `${nyt.getFullYear()}-${String(nyt.getMonth() + 1).padStart(2, '0')}-${String(nyt.getDate()).padStart(2, '0')}`;
-  try {
-    const kuvaUrl = 'https://commons.wikimedia.org/w/api.php?action=query&generator=images'
-      + `&titles=${encodeURIComponent(`Template:Potd/${pvm}`)}`
-      + '&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1200'
-      + '&iiextmetadatafilter=LicenseShortName|Artist&format=json&origin=*';
-    const vastaus = await fetch(kuvaUrl, { signal: AbortSignal.timeout(10000) });
-    if (!vastaus.ok) return null;
-    const sivut = Object.values((await vastaus.json()).query?.pages ?? {});
-    const info = sivut[0]?.imageinfo?.[0];
-    if (!info?.thumburl) return null;
-    const meta = info.extmetadata ?? {};
-    // Kuvateksti on oma sivunsa; sen puuttuminen ei kaada kuvaa.
-    let kuvaus = null;
-    try {
-      const tekstiUrl = 'https://commons.wikimedia.org/w/api.php?action=parse'
-        + `&page=${encodeURIComponent(`Template:Potd/${pvm}_(en)`)}`
-        + '&prop=wikitext&format=json&origin=*';
-      const v2 = await fetch(tekstiUrl, { signal: AbortSignal.timeout(10000) });
-      const wikiteksti = (await v2.json()).parse?.wikitext?.['*'] ?? '';
-      kuvaus = riisuWikiteksti(wikiteksti.match(/\|1=([\s\S]*?)\|2=/)?.[1] ?? '') || null;
-    } catch {
-      kuvaus = null;
-    }
-    paivanKuvaMuisti = {
-      url: info.thumburl,
-      kuvaus,
-      tekija: riisuWikiteksti(meta.Artist?.value ?? '') || null,
-      lisenssi: meta.LicenseShortName?.value ?? null,
-    };
-    return paivanKuvaMuisti;
-  } catch {
-    return null;
-  }
-}
 
 /*
  * Käännösmuisti: etusivun otsikot suomennetaan joka avauksella, ja
