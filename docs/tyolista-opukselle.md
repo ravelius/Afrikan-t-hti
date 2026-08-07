@@ -352,8 +352,9 @@ Tason osat kaupunkia kohti:
 10. **Kohtaamisluennat** (7.8.2026, pilotti Lontoossa): kohtaamisen
     tervehdys ja löytöhetken sananvaihto luetaan ääneen eri äänillä —
     kertoja, hahmo ja pelaaja (nuori herra Fogg = "Jaakko"). Kaupungin
-    tervehdys lyhennetään ~230 merkkiin, löytöön kirjoitetaan hahmon
-    ja pelaajan lyhyt dialogi ("kiireesti seuraavaan paikkaan").
+    tervehdys lyhennetään ~140 merkkiin (omistaja: "puolet lyhyempi"),
+    löytöön kirjoitetaan hahmon ja pelaajan lyhyt dialogi
+    ("kiireesti seuraavaan paikkaan").
     Kentät tervehdysLuenta/loytoLuenta (js/packs/kohtaamiset.js),
     hahmon ääni valitaan tilin suomiäänistä ja kirjataan
     `tools/generoi-kohtaamiset.mjs`:n HAHMOT-tauluun, generointi sillä
@@ -368,8 +369,25 @@ Tason osat kaupunkia kohti:
     ui.js liittää Päivän kuva maailmalta -palstan itsestään (id
     'valokuvaus'). HUOM: tiedosto-kentät yhdelle riville, muuten
     peilaustyökalu ei poimi niitä (tools/peilaa-media.mjs).
-
-Muista joka PR:ssä: kuvien silmätarkistus 480 px, Playwright-kaappaukset
+12. **Elokuva-sivu** (omistajan toive 7.8.2026: "Elokuva pitää
+    lisätä vaihtoehtoihin myös. Ainakin jenkit ja nollywood"):
+    maan oma aihesivu samalla kaavalla kuin Valokuvaus — vain
+    maille, joiden elokuvasta on kerrottavaa JA joilta löytyy
+    vapaita kuvia. Kirjatut kohteet, kun kaupungit saavat lehtensä:
+    - **Yhdysvallat / Hollywood:** mykkäkauden aineisto on
+      turvallisinta — ennen vuotta 1930 julkaistut yhdysvaltalaiset
+      elokuvajulisteet, mainoskuvat ja stillit ovat PD (Chaplin,
+      Keaton, Harold Lloydin kellonviisari). Uudempien elokuvien
+      julisteet ja stillit ovat tekijänoikeuden alla — ei niitä.
+    - **Nigeria / Nollywood:** määrältään maailman toiseksi suurin
+      elokuvateollisuus — hieno, yllättävä juttu lapsille. Kuvitus
+      on hankalin osa: julisteet eivät ole vapaita, joten kuvat
+      haetaan Commonsista CC-lisensseillä (esim. kuvauspaikat,
+      näyttelijät festivaaleilla) ja tarkistetaan kuten aina.
+    - Muillekin maille saa tehdä, jos tarina ja vapaat kuvat
+      löytyvät (esim. Saksan 1920-luvun mykkäelokuva: Metropolis,
+      Caligari — ennen 1930 julkaistu aineisto on Yhdysvalloissa
+      PD ja julisteet pääosin myös EU:ssa; tarkista tapauskohtaisesti).: kuvien silmätarkistus 480 px, Playwright-kaappaukset
 390/834/1024 ja niiden KATSOMINEN, main fetch juuri ennen versiota.
 
 ### PÄÄTETTY 5.8.2026: Tutki on paikallislehti (suunnittelusessio tekee)
