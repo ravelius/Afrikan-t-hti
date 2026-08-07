@@ -14,27 +14,29 @@ export const EUROPE_SAAPUMISET = {
    * ensimmäistä kaupunkia uusittu — imu matkakirjasta, tieto
    * lehdestä. luenta-kenttä on sama teksti tunnetageineen
    * ElevenLabsille (tools/generoi-luennat.mjs).
+   *
+   * Omistajan tarkennus 7.8.2026: "aivan liian pitkiä. Ottaisin alun
+   * kuvauksen pois kokonaan ja aloittaisin suoraan tarinasta. Ja
+   * loppukin kannattaa lyhentää." — Ei siis kuvailevaa avausta:
+   * ensimmäinen virke on jo tarinassa. Kuvaus ~150–170 merkkiä,
+   * nosto ~110–160. JA: Euroopassa on neljä aloituskaupunkia ja
+   * maailmankartalta tullaan Ateenan kautta — mikään merkintä (ei
+   * myöskään Lontoo) ei saa olettaa olevansa matkan alku.
    */
   lontoo: {
-    kuvaus: 'Isoisän matkalaukussa oli kartan alla vielä jotain: '
-      + 'liidunpala, messinkinen ilmapuntari ja kellastunut sähke. '
-      + '"PALATKAA HETI. G. TIETÄÄ." Isoisä ei palannut. Seisoin St '
-      + 'Pancrasin asemalla sumun nielemien junien keskellä ja tiesin, '
-      + 'ettei tästä tule lomamatkaa — tästä tulee takaa-ajo.',
-    nosto: 'Matkakirjan ensimmäisellä sivulla lukee: "Lontoosta pääsee '
-      + 'kaikkialle. Sinä, joka tätä luet: älä usko ketään, joka '
-      + 'väittää, ettei aarteita ole." Sivun kulmassa on pieni '
-      + 'liituristi — sama merkki kuin laukun kyljessä.',
-    luenta: '[curious] Isoisän matkalaukussa oli kartan alla vielä '
-      + 'jotain: liidunpala, messinkinen ilmapuntari ja kellastunut '
-      + 'sähke. [whispers] "Palatkaa heti. G. tietää." [softly] Isoisä '
-      + 'ei palannut. Seisoin St Pancrasin asemalla sumun nielemien '
-      + 'junien keskellä ja tiesin, ettei tästä tule lomamatkaa — '
-      + '[excited] tästä tulee takaa-ajo. [softly] Matkakirjan '
-      + 'ensimmäisellä sivulla lukee: "Lontoosta pääsee kaikkialle. '
-      + 'Sinä, joka tätä luet: älä usko ketään, joka väittää, ettei '
-      + 'aarteita ole." [whispers] Sivun kulmassa on pieni liituristi '
-      + '— sama merkki kuin laukun kyljessä.',
+    kuvaus: 'St Pancrasin sumussa avasin isoisän matkalaukun '
+      + 'salataskun: kellastunut sähke. "PALATKAA HETI. G. TIETÄÄ." '
+      + 'Isoisä ei palannut — minä jatkan siitä, mihin hän jäi.',
+    nosto: 'Matkakirjan ensimmäisellä sivulla lukee: "Sinä, joka tätä '
+      + 'luet: älä usko ketään, joka väittää, ettei aarteita ole." '
+      + 'Kulmassa on pieni liituristi.',
+    luenta: '[curious] St Pancrasin sumussa avasin isoisän '
+      + 'matkalaukun salataskun: kellastunut sähke. [whispers] '
+      + '"Palatkaa heti. G. tietää." [softly] Isoisä ei palannut — '
+      + 'minä jatkan siitä, mihin hän jäi. Matkakirjan ensimmäisellä '
+      + 'sivulla lukee: [warmly] "Sinä, joka tätä luet: älä usko '
+      + 'ketään, joka väittää, ettei aarteita ole." [whispers] '
+      + 'Kulmassa on pieni liituristi.',
   },
 
   pariisi: {
@@ -115,22 +117,16 @@ export const EUROPE_SAAPUMISET = {
   },
 
   venetsia: {
-    kuvaus: 'Venetsiassa kadut ovat oikeasti vettä, ja minä nauroin '
-      + 'ääneen vaporeton keulassa — kokonainen kaupunki, joka on '
-      + 'päättänyt kellua. Laiturilla gondolieeri ojensi kirjekuoren: '
+    kuvaus: 'Rialton laiturilla gondolieeri ojensi kirjekuoren: '
       + '"Teille, herra Fogg." Kukaan ei tiennyt tulostani. Kuoressa '
-      + 'oli puolikas sivu, ja käsialan minä tunnen.',
-    nosto: 'Isoisä kirjoitti täältä: "Epäkäytännöllisintä ja kauneinta, '
-      + 'mitä olen nähnyt. Jos jonkin kadotan, toivon kadottavani sen '
-      + 'Venetsiassa — täällä mikään ei huku. Se vain odottaa oikeaa '
-      + 'nostajaa."',
-    luenta: '[excited] Venetsiassa kadut ovat oikeasti vettä, ja minä '
-      + 'nauroin ääneen vaporeton keulassa — kokonainen kaupunki, joka '
-      + 'on päättänyt kellua. [curious] Laiturilla gondolieeri ojensi '
+      + 'oli puolikas sivu — ja käsialan minä tunnen.',
+    nosto: 'Isoisä kirjoitti täältä: "Jos jonkin kadotan, toivon '
+      + 'kadottavani sen Venetsiassa — täällä mikään ei huku. Se vain '
+      + 'odottaa oikeaa nostajaa."',
+    luenta: '[curious] Rialton laiturilla gondolieeri ojensi '
       + 'kirjekuoren: "Teille, herra Fogg." ... Kukaan ei tiennyt '
-      + 'tulostani. [whispers] Kuoressa oli puolikas sivu, ja käsialan '
-      + 'minä tunnen. [softly] Isoisä kirjoitti täältä: '
-      + '"Epäkäytännöllisintä ja kauneinta, mitä olen nähnyt. Jos '
+      + 'tulostani. [whispers] Kuoressa oli puolikas sivu — ja '
+      + 'käsialan minä tunnen. [softly] Isoisä kirjoitti täältä: "Jos '
       + 'jonkin kadotan, toivon kadottavani sen Venetsiassa — täällä '
       + 'mikään ei huku. [warmly] Se vain odottaa oikeaa nostajaa."',
   },
@@ -225,24 +221,17 @@ export const EUROPE_SAAPUMISET = {
   },
 
   madrid: {
-    kuvaus: 'Madridissa vuorokausi kulkee omia aikojaan: kello '
-      + 'kymmeneltä illalla aukiot vasta heräsivät, ja lapset pelasivat '
-      + 'palloa kun minä haukottelin. Puerta del Solin laidalla eräs '
-      + 'mies ei katsonut kelloaan vaan minua — ja avasi sitten '
-      + 'tummansinisen sateenvarjon. Taivaalla ei ollut pilveäkään.',
+    kuvaus: 'Puerta del Solin laidalla eräs mies ei katsonut kelloaan '
+      + 'vaan minua — ja avasi sitten tummansinisen sateenvarjon. '
+      + 'Taivaalla ei ollut pilveäkään.',
     nosto: 'Isoisä kirjoitti: "Herra G:n sähke ehti hotelliin ennen '
-      + 'minua. Se mies matkustaa nopeammin kuin huhu. Vaihdoin '
-      + 'majataloa ja nukuin saappaat jalassa." Sivun ylälaidassa '
-      + 'lukee: seesteistä, 764 millimetriä.',
-    luenta: '[curious] Madridissa vuorokausi kulkee omia aikojaan: '
-      + 'kello kymmeneltä illalla aukiot vasta heräsivät, ja lapset '
-      + 'pelasivat palloa kun minä haukottelin. [whispers] Puerta del '
-      + 'Solin laidalla eräs mies ei katsonut kelloaan vaan minua — ja '
-      + 'avasi sitten tummansinisen sateenvarjon... Taivaalla ei ollut '
-      + 'pilveäkään. [softly] Isoisä kirjoitti: "Herra G:n sähke ehti '
-      + 'hotelliin ennen minua. Se mies matkustaa nopeammin kuin huhu. '
-      + 'Vaihdoin majataloa ja nukuin saappaat jalassa." [warmly] '
-      + 'Sivun ylälaidassa lukee: seesteistä, 764 millimetriä.',
+      + 'minua. Vaihdoin majataloa ja nukuin saappaat jalassa."',
+    luenta: '[curious] Puerta del Solin laidalla eräs mies ei '
+      + 'katsonut kelloaan vaan minua — [whispers] ja avasi sitten '
+      + 'tummansinisen sateenvarjon... Taivaalla ei ollut pilveäkään. '
+      + '[softly] Isoisä kirjoitti: "Herra G:n sähke ehti hotelliin '
+      + 'ennen minua. [whispers] Vaihdoin majataloa ja nukuin '
+      + 'saappaat jalassa."',
   },
 
   barcelona: {
@@ -269,26 +258,18 @@ export const EUROPE_SAAPUMISET = {
   },
 
   berliini: {
-    kuvaus: 'Berliinin kiveyksessä kulkee kaksinkertainen '
-      + 'mukulakivirivi — siinä seisoi muuri, ja rivin toisella '
-      + 'puolella oli kokonaan toinen maa. Seurasin kiviä sillalle '
-      + 'asti, ja kaiteessa se oli: liituristi. Yösade oli pessyt koko '
-      + 'kaupungin — mutta merkki oli kuiva. Joku oli piirtänyt sen '
-      + 'tänä aamuna.',
-    nosto: 'Isoisä kirjoitti: "Kätkin sillan alle sen, mitä en uskalla '
-      + 'kuljettaa meren yli. Haen sen, kun herra G. väsyy odottamaan." '
-      + 'Sataviisikymmentä vuotta on pitkä odotus — mutta joku muukin '
-      + 'muistaa tämän sillan.',
-    luenta: '[curious] Berliinin kiveyksessä kulkee kaksinkertainen '
-      + 'mukulakivirivi — siinä seisoi muuri, ja rivin toisella '
-      + 'puolella oli kokonaan toinen maa. Seurasin kiviä sillalle '
+    kuvaus: 'Seurasin muurin mukulakivilinjaa sillalle asti, ja '
+      + 'kaiteessa se oli: liituristi. Yösade oli pessyt koko '
+      + 'kaupungin — merkki oli kuiva. Joku piirsi sen tänä aamuna.',
+    nosto: 'Isoisä kirjoitti: "Kätkin sillan alle sen, mitä en '
+      + 'uskalla kuljettaa meren yli." Joku muukin muistaa tämän '
+      + 'sillan.',
+    luenta: '[curious] Seurasin muurin mukulakivilinjaa sillalle '
       + 'asti, ja kaiteessa se oli: [whispers] liituristi. Yösade oli '
-      + 'pessyt koko kaupungin — mutta merkki oli kuiva... Joku oli '
-      + 'piirtänyt sen tänä aamuna. [softly] Isoisä kirjoitti: "Kätkin '
-      + 'sillan alle sen, mitä en uskalla kuljettaa meren yli. Haen '
-      + 'sen, kun herra G. väsyy odottamaan." [whispers] '
-      + 'Sataviisikymmentä vuotta on pitkä odotus — mutta joku muukin '
-      + 'muistaa tämän sillan.',
+      + 'pessyt koko kaupungin — merkki oli kuiva... Joku piirsi sen '
+      + 'tänä aamuna. [softly] Isoisä kirjoitti: "Kätkin sillan alle '
+      + 'sen, mitä en uskalla kuljettaa meren yli." [whispers] Joku '
+      + 'muukin muistaa tämän sillan.',
   },
 
   wien: {
@@ -461,24 +442,19 @@ export const EUROPE_SAAPUMISET = {
   },
 
   tukholma: {
-    kuvaus: 'Tukholma seisoo neljäntoista saaren päällä, ja sillat '
-      + 'jatkavat katuja veden yli. Gamla stanin kapeimmalla kujalla '
-      + 'kämmenet ylsivät molempiin seiniin — ja selkäni takana '
+    kuvaus: 'Gamla stanin kapeimmalla kujalla selkäni takana '
       + 'kuuluivat askeleet, jotka pysähtyivät aina kun minä '
       + 'pysähdyin. Käännyin. Vain kanelin tuoksu ja tyhjä kuja.',
     nosto: 'Isoisä kirjoitti: "Oscar II:n kruunajaisissa tungos vei '
-      + 'minulta kaksi nappia ja sivun neljätoista. Nappeja en sure — '
-      + 'sivulla oli puolikas kartta." Matkakirjasta puuttuu sivu '
-      + 'neljätoista yhä.',
-    luenta: '[curious] Tukholma seisoo neljäntoista saaren päällä, ja '
-      + 'sillat jatkavat katuja veden yli. Gamla stanin kapeimmalla '
-      + 'kujalla kämmenet ylsivät molempiin seiniin — [whispers] ja '
-      + 'selkäni takana kuuluivat askeleet, jotka pysähtyivät aina kun '
-      + 'minä pysähdyin. Käännyin... Vain kanelin tuoksu ja tyhjä '
+      + 'minulta kaksi nappia ja sivun neljätoista. Sivulla oli '
+      + 'puolikas kartta." Se sivu puuttuu yhä.',
+    luenta: '[curious] Gamla stanin kapeimmalla kujalla selkäni '
+      + 'takana kuuluivat askeleet, [whispers] jotka pysähtyivät aina '
+      + 'kun minä pysähdyin. Käännyin... Vain kanelin tuoksu ja tyhjä '
       + 'kuja. [softly] Isoisä kirjoitti: "Oscar II:n kruunajaisissa '
-      + 'tungos vei minulta kaksi nappia ja sivun neljätoista. Nappeja '
-      + 'en sure — sivulla oli puolikas kartta." [whispers] '
-      + 'Matkakirjasta puuttuu sivu neljätoista yhä.',
+      + 'tungos vei minulta kaksi nappia ja sivun neljätoista. '
+      + 'Sivulla oli puolikas kartta." [whispers] Se sivu puuttuu '
+      + 'yhä.',
   },
 
   oslo: {
