@@ -39,6 +39,63 @@ export const MAAKARTAT = {
       { nimi: 'Köln', lat: 50.94, lon: 6.96 },
       { nimi: 'Frankfurt', lat: 50.11, lon: 8.68 },
     ],
+    /*
+     * Kuvanosto kartan ja uutisten väliin elävöittämään sivua
+     * (omistajan toive 7.8.2026). Aihe täydentää introa: Rein
+     * mainitaan siinä, mutta mikään Saksan sivu ei vielä näytä sitä.
+     * Kuva silmätarkistettu 480 px:ssä 7.8.2026.
+     */
+    nosto: {
+      otsikko: 'Loreley vartioi Reinin mutkaa',
+      tiedosto: 'Loreley rhine valley d schmidt 08 07.jpg',
+      teksti: 'Rein on Euroopan vilkkaimpia vesiteitä: proomut ja '
+        + 'risteilijät kulkevat sen halki aamusta iltaan. Loreleyn '
+        + '132-metrisen kallion kohdalla joki kapenee ja syvenee '
+        + 'jyrkäksi mutkaksi, jonka kohinasta syntyi tarina laulavasta '
+        + 'neidosta — Heinrich Heinen runona sen osaa moni saksalainen '
+        + 'ulkoa. Keskireinin laaksossa linnoja on tiheämmässä kuin '
+        + 'missään muualla Euroopassa, ja koko jokiosuus on Unescon '
+        + 'maailmanperintökohde.',
+      selite: 'Jokiristeilijä ohittaa Loreleyn kallion Reinin '
+        + 'kapeimmassa mutkassa.',
+      lahde: 'Dirk Schmidt, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Loreley',
+    },
+  },
+};
+
+/*
+ * Kaupunkisivun lopun kohdekartta (omistajan toive 7.8.2026: "kuin
+ * huvipuiston kartassa" — mahdollisimman yksinkertainen pohja ja
+ * muutama kuuluisa kohde, joista osa avaa artikkelin). Sama
+ * sijaintikarttaperhe ja prosenttiasemointi kuin MAAKARTAT-taulussa.
+ * Kohteen wiki on tarkistettu fi.wikipedian artikkeli; ilman wikiä
+ * piste on pelkkä merkki. nimiVasen kääntää nimen pisteen
+ * vasemmalle puolelle, kun oikealla olisi ahdasta.
+ */
+export const KAUPUNKIKARTAT = {
+  berliini: {
+    tiedosto: 'Berlin location map.svg',
+    lahde: 'TUBS, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 52.684707, etela: 52.327157, lansi: 13.066864, ita: 13.781318 },
+    esittely: 'Berliini on rakennettu veden ja metsän keskelle: '
+      + 'siltoja on noin 1 700 — moninkertaisesti Venetsian verran — '
+      + 'ja kolmasosa kaupungista on puistoa, metsää tai järveä. '
+      + 'Vaakunassa seisoo musta karhu, ja karhupatsaita tulee '
+      + 'kaduilla vastaan vähän väliä.\n\nKylmän sodan jäljet näkyvät '
+      + 'yhä: muurin linja on merkitty keskustaan katukiveyksen '
+      + 'kaksoisrivinä, ja idän ja lännen katuvalot hohtavat öisin '
+      + 'eri sävyissä. Kartan kohteista pääsee lukemaan lisää '
+      + 'napauttamalla.',
+    kohteet: [
+      // Keskustan kohteet ovat lähekkäin — nimien suunnat on valittu
+      // niin, etteivät laput osu toisiinsa (nimiSuunta/nimiVasen).
+      { nimi: 'Charlottenburgin linna', lat: 52.5208, lon: 13.2957, wiki: 'Charlottenburgin linna', nimiSuunta: 'yla' },
+      { nimi: 'Brandenburgin portti', lat: 52.5163, lon: 13.3777, wiki: 'Brandenburgin portti', nimiSuunta: 'vasen-ala' },
+      { nimi: 'Tv-torni', lat: 52.5208, lon: 13.4094, wiki: 'Berliinin televisiotorni' },
+      { nimi: 'East Side Gallery', lat: 52.505, lon: 13.4399, wiki: 'East Side Gallery', nimiSuunta: 'ala' },
+      { nimi: 'Tempelhofin kenttä', lat: 52.4736, lon: 13.4018, wiki: 'Tempelhofin lentoasema', nimiSuunta: 'ala' },
+    ],
   },
 };
 

@@ -8356,3 +8356,131 @@ body.vertailu-tila .pawns { display: none; }
   color: #5a4a33;
   cursor: pointer;
 }
+
+/*
+ * ============ Sivuparannukset 7.8.2026 ============
+ * Lippu maan aihesivujen otsikossa, ajankohta nostoriveillä,
+ * maa-etusivun kuvanosto ja kaupunkisivun kohdekartta.
+ */
+
+/* Maan lippu aihesivun otsikkorivin oikeassa reunassa ("Saksan
+ * historia" -> "Historia" + lippu). Otsikko on sticky-palkki, joten
+ * lippu ankkuroituu siihen absoluuttisesti. */
+.wiki-kategoria .aihe-nimi .aihe-lippu {
+  position: absolute;
+  right: 0.15rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1.05em;
+  width: auto;
+  border: 1px solid rgba(70, 51, 31, 0.4);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Ajankohta noston otsikkorivillä: pieni konekirjoitusleima. */
+.nosto-aika {
+  margin-left: auto;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid rgba(70, 51, 31, 0.45);
+  border-radius: 3px;
+  font-family: var(--font-type);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  color: #5a4a33;
+  background: rgba(246, 231, 198, 0.6);
+}
+
+/* Maa-etusivun kuvanosto: koko leveys kartan ja uutisten väliin. */
+.maa-etusivu-nosto {
+  clear: both;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(70, 51, 31, 0.35);
+}
+
+/* Esittelyn kappalejaot näkyviin maaosion aloitussivulla (\n\n). */
+.maa-etusivu #arrival-maa-intro { white-space: pre-line; }
+
+/* Kaupunkisivun kohdekartta sivun lopussa. */
+.kaupunkikartta {
+  clear: both;
+  margin-top: 1.1rem;
+  padding-top: 0.7rem;
+  border-top: 3px double rgba(70, 51, 31, 0.75);
+}
+
+.kaupunkikartta-otsikko {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(70, 51, 31, 0.85);
+}
+
+.kaupunkikartta-esittely {
+  margin: 0 0 0.7rem;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: #2d2010;
+}
+
+/* Kohdepiste on nappi, kun siitä aukeaa artikkeli: yleisen
+ * nappisäännön mitat ja tausta nollataan täplän kokoon. */
+.dialog button.maakartta-piste {
+  min-height: 0;
+  padding: 0;
+  /* Yleinen nappisääntö toisi käsinpiirretyn kulmapyöristyksen —
+   * täplä on täplä. */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Nimen suunta ruuhkaisissa kohdissa: ylä/ala keskittää nimen
+ * pisteen ylle tai alle, ettei keskustan nimilaput mene päällekkäin. */
+.maakartta-piste.nimi-yla .maakartta-nimi,
+.maakartta-piste.nimi-ala .maakartta-nimi {
+  left: 50%;
+  right: auto;
+  top: auto;
+  transform: translateX(-50%);
+}
+
+.maakartta-piste.nimi-yla .maakartta-nimi { bottom: calc(100% + 3px); }
+.maakartta-piste.nimi-ala .maakartta-nimi { top: calc(100% + 3px); }
+
+/* Lounaaseen: nimi pisteen alle ja vasemmalle (ahtain keskusta). */
+.maakartta-piste.nimi-vasen-ala .maakartta-nimi {
+  left: auto;
+  right: calc(100% - 4px);
+  top: calc(100% + 1px);
+  transform: none;
+}
+
+.dialog button.maakartta-piste:hover:not(:disabled),
+.dialog button.maakartta-piste:focus-visible {
+  background: #c69e52;
+  border-color: #2c2318;
+}
+
+/* Kohdekartan pisteet erottuvat kaupunkipisteistä kullalla —
+ * huvipuistokartan merkkejä, joista useimmat voi avata. */
+.maakartta-piste.kaupunki-kohde {
+  width: 11px;
+  height: 11px;
+  background: #c69e52;
+  border-color: #2c2318;
+}
+
+/* Kapealla ruudulla kohdekartta täysleveänä kuten maakartta. */
+@media (max-width: 560px) {
+  .kaupunkikartta .maakartta-kehys {
+    float: none;
+    width: 100%;
+    margin: 0.15rem 0 0.7rem;
+  }
+}

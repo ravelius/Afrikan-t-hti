@@ -112,6 +112,7 @@ export const MAA_KATEGORIAT = {
       nostot: [
         {
           otsikko: 'Poikakuninkaan koskematon hauta',
+          aika: '1922',
           tiedosto: 'Golden Mask of Tutankhamu00 (5).jpg',
           teksti: 'Tutankhamon nousi valtaistuimelle noin '
             + 'yhdeksänvuotiaana ja kuoli alle kaksikymppisenä — '
@@ -129,6 +130,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Kivi, joka avasi hieroglyfit',
+          aika: '1822',
           tiedosto: 'Rosetta Stone.JPG',
           teksti: 'Hieroglyfejä osattiin ihailla 1400 vuotta ilman, että '
             + 'kukaan maailmassa osasi lukea niitä. Avain löytyi 1799 '
@@ -146,6 +148,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Temppeli siirrettiin palasina',
+          aika: '1960-luku',
           tiedosto: 'Abu Simbel, façade of the Great Temple (6201194723).jpg',
           teksti: 'Kun Assuanin suurpato rakennettiin 1960-luvulla, '
             + 'nouseva tekojärvi uhkasi hukuttaa Abu Simbelin '
@@ -164,6 +167,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Kanava, jota maailma vahtii',
+          aika: '1869',
           tiedosto: 'Ever Given in Suez Canal viewed from ISS.jpg',
           teksti: 'Suezin kanava avattiin 1869, ja se lyhensi merimatkan '
             + 'Euroopasta Aasiaan tuhansilla kilometreillä — laivojen ei '
@@ -186,6 +190,7 @@ export const MAA_KATEGORIAT = {
            * kirjattu monistusohjeeseen muillekin maille.
            */
           otsikko: 'Keppiottelu faaraoiden ajoilta',
+          aika: 'n. 2000 eaa.',
           tiedosto: 'Tahtib, Mawlid Al-Ashi, Luxor 02.jpg',
           teksti: 'Egyptiläiset ottelivat kepein jo faaraoiden aikana: '
             + 'tahtib-kamppailu on kuvattu temppelien ja hautojen '
@@ -516,6 +521,7 @@ export const MAA_KATEGORIAT = {
       nostot: [
         {
           otsikko: 'Kaikki tiet veivät Roomaan',
+          aika: '312 eaa.',
           tiedosto: 'Via Appia Antica Rome 2006.jpg',
           teksti: 'Via Appia avattiin vuonna 312 ennen ajanlaskua, ja sen '
             + 'basalttikivet ovat yhä paikoillaan Rooman eteläpuolella. '
@@ -534,6 +540,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Pompeji pysähtyi kesken päivän',
+          aika: 'v. 79',
           tiedosto: 'Pompeii, Italy 101.jpg',
           teksti: 'Kun Vesuvius purkautui vuonna 79, tuhka hautasi '
             + 'Pompejin kaupungin niin nopeasti, että leipomon leivät '
@@ -551,6 +558,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Renessanssi syntyi kilpailusta',
+          aika: '1400-luku',
           tiedosto: 'Florence Duomo from Michelangelo hill.jpg',
           teksti: '1400-luvun Firenzessä suvut ja killat kilpailivat '
             + 'siitä, kuka teettää kauneimman kirkon, patsaan tai '
@@ -568,6 +576,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Italia on nuorempi kuin luulisi',
+          aika: '1861',
           tiedosto: 'Giuseppe Garibaldi (1866).jpg',
           teksti: 'Saapasmaa oli vuosisatoja tilkkutäkki kuningaskuntia, '
             + 'herttuakuntia ja kaupunkivaltioita, jotka sotivat keskenään '
@@ -939,6 +948,7 @@ export const MAA_KATEGORIAT = {
       nostot: [
         {
           otsikko: 'Luola, jota kukaan ei uskonut',
+          aika: '1879',
           tiedosto: 'Panoramica altamira rep.jpg',
           teksti: 'Kun Marcelino Sanz de Sautuola vuonna 1879 kaivoi '
             + 'Altamiran luolassa Kantabriassa, hänen '
@@ -961,6 +971,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Vesijohto ilman laastia',
+          aika: '1. vuosisata',
           tiedosto: 'Acueducto, Segovia, España, 2024-06-14, DD 19.jpg',
           teksti: 'Segovian akvedukti nousee kaupungin halki '
             + 'kahdessa kaarikerroksessa 28 metrin korkeuteen, ja '
@@ -979,6 +990,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Moskeija, jonka sisään rakennettiin katedraali',
+          aika: '1236',
           tiedosto: 'Mezquita cordoba arcos flotantes.jpg',
           teksti: 'Córdoban Mezquitassa on 856 pylvästä ja niiden '
             + 'päällä kaksi kaarikerrosta punavalkoisin raidoin. '
@@ -997,6 +1009,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Suitsutusastia, joka lentää poikki kirkon',
+          aika: '1000-luku',
           tiedosto: 'Schwenken der Botafumeiro (25812582595).jpg',
           teksti: 'Santiago de Compostelan katedraaliin on kävelty '
             + 'tuhat vuotta: Camino de Santiago on pyhiinvaellustie, '
@@ -1396,6 +1409,7 @@ export const MAA_KATEGORIAT = {
       nostot: [
         {
           otsikko: 'Laiva, joka kaatui tuhannen metrin jälkeen',
+          aika: '1628',
           tiedosto: 'Lateral view of the Vasa ship, Vasa Museum, Stockholm, Sweden julesvernex2.jpg',
           teksti: 'Sotalaiva Vasa lähti neitsytmatkalleen Tukholman '
             + 'satamasta 10. elokuuta 1628. Se ehti purjehtia noin '
@@ -1413,6 +1427,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Taivaalla paloi kuusi aurinkoa',
+          aika: '1535',
           tiedosto: 'Vädersolstavlan 1535.jpg',
           teksti: 'Huhtikuun 20. päivänä 1535 tukholmalaiset näkivät '
             + 'aamutaivaalla valkoisia renkaita ja niiden kehällä useita '
@@ -1431,6 +1446,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Maailman suurin viikinkihopea',
+          aika: '1999',
           tiedosto: 'Silver tangle Spillings Hoard 1.jpg',
           teksti: 'Gotlannin Spillingsissä eräs maanviljelijä oli '
             + 'kyntänyt vuosikymmeniä pellon yli, jonka alla makasi '
@@ -1449,6 +1465,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Kuninkaan pakoreitti hiihdetään joka vuosi',
+          aika: '1520',
           tiedosto: 'Jørgen Aukland Vasaloppet 2013 002.jpg',
           teksti: 'Vuonna 1520 nuori Kustaa Eriksson pakeni tanskalaisia '
             + 'Taalainmaalle ja yritti saada talonpojat kapinaan. Moran '
@@ -1919,6 +1936,7 @@ export const MAA_KATEGORIAT = {
       nostot: [
         {
           otsikko: 'Kauppiaiden liitto hallitsi Itämerta',
+          aika: 'keskiaika',
           tiedosto: 'Kieler Hansekogge.jpg',
           teksti: 'Keskiajalla Itämerta ei hallinnut kuningas vaan '
             + 'kauppiaiden kerho. Hansaliittoon kuului parhaimmillaan '
@@ -1939,6 +1957,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Kuningas rakensi itselleen satulinnan',
+          aika: '1869',
           tiedosto: 'Schloss Neuschwanstein 2013.jpg',
           teksti: 'Baijerin kuningas Ludvig II ei viihtynyt '
             + 'hallitsijana vaan saduissa. Vuonna 1869 hän alkoi '
@@ -1957,6 +1976,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Karkkeja putosi taivaalta',
+          aika: '1948–49',
           tiedosto: 'C-54 landing on old Tempelhof runway as work continues - USACE-p15141coll5-630.jpeg',
           teksti: 'Kesällä 1948 Neuvostoliitto katkaisi kaikki tiet '
             + 'Länsi-Berliiniin, ja kahden miljoonan ihmisen ruoka oli '
@@ -1975,6 +1995,7 @@ export const MAA_KATEGORIAT = {
         },
         {
           otsikko: 'Muuri avautui paperilapun takia',
+          aika: '1989',
           tiedosto: 'Crane removed part of Wall Brandenburg Gate.jpg',
           teksti: 'Itä-Saksa aikoi 9. marraskuuta 1989 helpottaa '
             + 'matkustussääntöjä vasta seuraavana päivänä, mutta '
