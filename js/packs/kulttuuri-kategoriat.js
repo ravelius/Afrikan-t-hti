@@ -1858,24 +1858,31 @@ export const KULTTUURI_KATEGORIAT = {
           lahde: 'Sonse, Wikimedia Commons (CC BY 2.0)',
           wiki: 'Tukholman metro',
         },
+        /*
+         * ABBA siirtyi Ruotsin Musiikki-aiheeseen (maa-kategoriat.js
+         * SWE, omistajan tarkennus 7.8.2026: yhtye on koko maan eikä
+         * vain Tukholman tarina) — kansi sai tilalle Vasan, joka on
+         * kaupungin oma laiva.
+         */
         {
-          otsikko: 'Neljä nimeä, joista tuli ABBA',
-          tiedosto: 'Agnetha Fältskog and Anni-Frid Lyngstad in Göteborg 1979.jpg',
-          teksti: 'Kun Agnetha, Björn, Benny ja Anni-Frid voittivat '
-            + 'euroviisut Brightonissa 6. huhtikuuta 1974 kappaleella '
-            + 'Waterloo, yhtyeen nimi oli koottu heidän etunimiensä '
-            + 'alkukirjaimista. Voitto käänsi koko maan musiikkiviennin '
-            + 'kasvuun: Tukholmassa toimii yhä poikkeuksellisen paljon '
-            + 'studioita ja lauluntekijöitä, ja ruotsalaisia hittejä '
-            + 'laulavat muidenkin maiden tähdet. Esiintymisasut tehtiin '
-            + 'tahallaan mahdottomiksi — ne sai vähentää verotuksessa '
-            + 'vain, jos niitä ei voinut käyttää arkena.',
-          selite: 'Agnetha Fältskog ja Anni-Frid Lyngstad lavalla '
-            + 'Göteborgissa 1979, yhtyeen suosion huipulla.',
-          lahde: 'Kåre Eide, Wikimedia Commons (CC0)',
-          wiki: 'Abba',
-          musiikki: 'https://music.apple.com/fi/search?term=ABBA%20Waterloo',
-          musiikkiNimi: 'ABBA Apple Musicissa',
+          otsikko: 'Laiva, joka upposi ja nousi',
+          tiedosto: 'Lateral view of the Vasa ship, Vasa Museum, Stockholm, Sweden julesvernex2.jpg',
+          teksti: 'Kuninkaan ylpeys, sotalaiva Vasa, lähti '
+            + 'neitsytmatkalleen Tukholman satamasta 10. elokuuta 1628 '
+            + '— ja kaatui ensimmäiseen kunnon tuulenpuuskaan '
+            + 'ehdittyään noin kilometrin. Laiva oli rakennettu liian '
+            + 'kapeaksi ja korkeaksi, ja vesi ryntäsi sisään avoimista '
+            + 'tykkiporteista. Vasa makasi sataman pohjamudassa 333 '
+            + 'vuotta, kunnes se nostettiin 1961 lähes ehjänä: Itämeren '
+            + 'vähäsuolainen vesi oli pitänyt laivamadot loitolla. '
+            + 'Nykyään alus seisoo omassa museossaan yhä valtaosin '
+            + 'alkuperäisenä puuna, ja Vasa-museo on koko Pohjolan '
+            + 'suosituimpia museoita.',
+          selite: 'Vasan kylkeä Vasa-museossa. Juuri nämä tykkiportit '
+            + 'upottivat laivan: alin porttirivi painui kallistuksessa '
+            + 'veden alle.',
+          lahde: 'Jules Verne Times Two, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Vasa (laiva)',
         },
       ],
     },

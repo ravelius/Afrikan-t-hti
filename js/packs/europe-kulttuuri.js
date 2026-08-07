@@ -2336,9 +2336,11 @@ export const EUROPE_KULTTUURI = {
     /*
      * Tukholma sai kategoriat (kulttuuri-kategoriat.js + maa-kategoriat
      * SWE, 7.8.2026), jotka korvaavat litteät nostot Tutki-ikkunassa.
-     * Ainutlaatuinen sisältö siirrettiin sinne: ABBA Apple Music
-     * -linkkeineen ja metron taide kaupungin kanteen, fika Ruotsin
-     * Ruoka-aiheeseen kanelipullana. Tänne jää vain visa, jonka aihe
+     * Ainutlaatuinen sisältö siirrettiin sinne: metron taide kaupungin
+     * kanteen, fika Ruotsin Ruoka-aiheeseen kanelipullana ja ABBA
+     * Apple Music -linkkeineen Ruotsin Musiikki-aiheeseen (omistajan
+     * tarkennus 7.8.2026: yhtye on koko maan tarina — kannessa sen
+     * paikan sai Vasa-laiva). Tänne jää vain visa, jonka aihe
      * (metron taide) näkyy kannen nostossa (docs/tutki-aiheet.md).
      */
     kysymys: {

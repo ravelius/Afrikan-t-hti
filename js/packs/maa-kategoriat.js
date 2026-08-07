@@ -1624,6 +1624,99 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    /*
+     * Musiikki lisättiin 7.8.2026 (omistajan tarkennus): ABBA siirtyi
+     * tänne Tukholman kannesta — yhtye on koko maan tarina, ja kansi
+     * sai tilalle Vasa-laivan.
+     */
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Pieni maa, jonka laulut soivat isosti: '
+        + 'kansansoittimesta ja 1800-luvun supertähdestä ABBAan ja '
+        + 'tv-kisaan, jota katsoo koko kansa.',
+      nostot: [
+        {
+          otsikko: 'Avainviulu soi kuudetta vuosisataa',
+          tiedosto: '2022-07-28 Nyckelharpa-Spielerin in der Schillerstraße Ecke Rosenstraße in Hannover.jpg',
+          teksti: 'Ruotsin kansallissoitin nyckelharpa on viulun ja '
+            + 'näppäimistön risteytys: jousi soittaa kieliä, mutta '
+            + 'sävelet valitaan puunäppäimillä, jotka lyhentävät '
+            + 'kieltä alhaalta päin. Rungon sisällä värähtelee tusina '
+            + 'resonanssikieltä, joihin ei kosketa lainkaan — ne '
+            + 'humisevat mukana ja antavat soittimelle sen hopeisen '
+            + 'kaiun. Soitin on vanha: avainviulua soittava hahmo on '
+            + 'kuvattu gotlantilaisen kirkon portin veistoksessa jo '
+            + '1300-luvulla. Välillä soitin melkein unohtui, mutta '
+            + 'kansanmuusikot elvyttivät sen, ja nykyään sitä opetetaan '
+            + 'taas musiikkiopistoissa.',
+          selite: 'Nyckelharpan näppäimet ja kielet katusoitossa. '
+            + 'Jousi kulkee kielillä, sormet painavat näppäimiä kuin '
+            + 'pianossa.',
+          lahde: 'Bernd Schwabe, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Avainviulu',
+        },
+        {
+          otsikko: 'Satakieli, jonka lippuja huudettiin huutokaupassa',
+          tiedosto: 'Magnus, Eduard - Lind, Jenny - Alte Nationalgalerie - Google Arts Project.jpg',
+          teksti: 'Tukholmalainen Jenny Lind oli 1800-luvun suurin '
+            + 'laulutähti — "Ruotsin satakieli", jonka ääntä tultiin '
+            + 'kuulemaan kuninkaanlinnoihin ympäri Euroopan. Kun hän '
+            + 'lähti 1850 Amerikan-kiertueelle, liput myytiin '
+            + 'huutokaupalla ja satamiin kerääntyi kymmeniätuhansia '
+            + 'ihmisiä vain katsomaan laivan saapumista. Lind lahjoitti '
+            + 'valtavista palkkioistaan suuren osan kouluille ja '
+            + 'sairaaloille jo kiertueen aikana. Sata vuotta myöhemmin '
+            + 'hänen kasvonsa painettiin Ruotsin '
+            + 'viidenkymmenen kruunun seteliin.',
+          selite: 'Eduard Magnusin muotokuva vuodelta 1862 — tunnetuin '
+            + 'kuva laulajasta, jonka ääntä ei ehditty koskaan '
+            + 'äänittää.',
+          lahde: 'Eduard Magnus, Wikimedia Commons (Public domain)',
+          wiki: 'Jenny Lind',
+        },
+        /*
+         * ABBA siirtyi tänne Tukholman kannesta (kulttuuri-kategoriat.js)
+         * musiikkilinkkeineen — omistajan tarkennus 7.8.2026.
+         */
+        {
+          otsikko: 'Neljä nimeä, joista tuli ABBA',
+          tiedosto: 'Agnetha Fältskog and Anni-Frid Lyngstad in Göteborg 1979.jpg',
+          teksti: 'Kun Agnetha, Björn, Benny ja Anni-Frid voittivat '
+            + 'euroviisut Brightonissa 6. huhtikuuta 1974 kappaleella '
+            + 'Waterloo, yhtyeen nimi oli koottu heidän etunimiensä '
+            + 'alkukirjaimista. Voitto käänsi koko maan musiikkiviennin '
+            + 'kasvuun: Tukholmassa toimii yhä poikkeuksellisen paljon '
+            + 'studioita ja lauluntekijöitä, ja ruotsalaisia hittejä '
+            + 'laulavat muidenkin maiden tähdet. Esiintymisasut tehtiin '
+            + 'tahallaan mahdottomiksi — ne sai vähentää verotuksessa '
+            + 'vain, jos niitä ei voinut käyttää arkena.',
+          selite: 'Agnetha Fältskog ja Anni-Frid Lyngstad lavalla '
+            + 'Göteborgissa 1979, yhtyeen suosion huipulla.',
+          lahde: 'Kåre Eide, Wikimedia Commons (CC0)',
+          wiki: 'Abba',
+          musiikki: 'https://music.apple.com/fi/search?term=ABBA%20Waterloo',
+          musiikkiNimi: 'ABBA Apple Musicissa',
+        },
+        {
+          otsikko: 'Koko kansan laulukilpailu',
+          tiedosto: 'Melodifestivalen 2025 - Kamikaze Life - Maja Ivarsson 35.jpg',
+          teksti: 'Joka kevät Ruotsi pysähtyy television ääreen, kun '
+            + 'Melodifestivalen valitsee maan euroviisukappaleen. '
+            + 'Kilpailu kiertää viikkokausia kaupungista toiseen kuin '
+            + 'sirkus, ja finaali on vuoden katsotuin tv-lähetys — '
+            + 'moni oppii kappaleet ulkoa ennen kuin euroviisuista on '
+            + 'kuultu sanaakaan. Tulokset näkyvät: juuri tätä kautta '
+            + 'ABBA lähti Waterloineen maailmalle 1974, ja Ruotsi on '
+            + 'voittanut euroviisut seitsemän kertaa — yhtä moneen '
+            + 'voittoon on yltänyt vain Irlanti.',
+          selite: 'Maja Ivarsson esittää kappaletta Kamikaze Life '
+            + 'Melodifestivalenissa 2025.',
+          lahde: 'Jonatan Svensson Glad, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Melodifestivalen',
+        },
+      ],
+    },
     {
       id: 'luonto',
       nimi: 'Luonto',
