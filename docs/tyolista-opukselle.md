@@ -5464,6 +5464,72 @@ näistä ei olisi jäänyt testeistä kiinni eikä näkynyt koodista: molemmat
 olivat oikein kirjoitettua logiikkaa, joka tuotti väärän lopputuloksen.
 Yksi kuvakaappaus omasta työstä maksoi vähemmän kuin kaksi raporttia.
 
+## v342 — Taustaääni ei enää katoa kartalla hyppiessä (7.8.2026)
+
+Omistaja: *"Taustaäänet katoavat kun jonkun aikaa hypin kartalla, ainakin
+kehittäjätilassa."*
+
+### Vika
+
+Taustaääni väistyy kertojan alle: `puheAlkoi` laskee kerrointa,
+`puheLoppui` nostaa sen takaisin, ja välissä on laskuri, koska luentoja
+voi olla päällekkäin. Vapautus on `merkitsePuhuja`n asentamien
+`ended`- ja `error`-kuuntelijoiden varassa.
+
+`haivytaLuenta` — jota **jokainen kehittäjätilan hyppy kutsuu**
+(`doKehittajaSiirto`, samoin `doWalk` ja `doRoll`) — häivytti luennan,
+pysäytti sen, poisti `src`:n ja pudotti sen `luennat`-joukosta. Se ei
+vapauttanut puhujaa. Pysäytetty elementti ei laukaise enää `ended`- eikä
+`error`-tapahtumaa, joten vapautusta ei tullut miltään suunnalta.
+
+Laskuri jäi siis pysyvästi plussalle. Yksikin keskeytetty luenta riitti:
+tausta jäi puheen alle (0,25 × jo valmiiksi hiljainen 0,14) eikä
+palannut enää istunnon aikana — **ei edes `stopDiaryVoice`lla**, koska
+se vapauttaa vain ne luennat, jotka ovat yhä joukossa, ja vuotaneet
+olivat jo pudonneet sieltä.
+
+Korjaus on yksi rivi: `vapautaPuhuja(audio)` häivytyksen päätteeksi.
+Vasta lopussa eikä heti alussa — tausta nousee silloin kun luenta
+oikeasti vaikenee, ei sen päälle.
+
+### Mitattu selaimessa
+
+Väistökerroin luettuna `sfx.ambienssiVaisto`:sta (1 = tausta täydellä
+voimalla):
+
+| | ennen | jälkeen |
+| --- | --- | --- |
+| luenta alkoi | 0,25 | 0,25 |
+| yksi hyppy | **0,25** | 1 |
+| 8 nopeaa hyppyä, heti | 0,25 | 0,25 |
+| 8 hyppyä, rauhoituttua | **0,25** | 1 |
+| `stopDiaryVoice` perään | **0,25** | 1 |
+
+Lihavoidut rivit ovat vika: kerroin ei palannut mistään. Jälkeen-sarake
+väistää yhä silloin kun pitääkin (luenta käynnissä) ja palaa kun luenta
+vaikenee.
+
+### Miksi vanha testi ei huomannut
+
+Testi vaati, että `vapautaPuhuja` esiintyy **jossain** ui.js:ssä. Ehto
+täyttyi koko vian ajan, koska `stopDiaryVoice` kutsui sitä. Uusi testi
+kysyy jokaiselta luennan pudottavalta metodilta erikseen — ja lisäksi
+koneellisesti: jokainen kohta, joka poistaa luennan `luennat`-joukosta,
+on lopetuskohta ja sen on vapautettava puhuja. Näin uusi lopetusreitti
+ei pääse syntymään ilman vapautusta.
+
+### Mitä EI korjattu
+
+Ambienssin soittimet eivät pura Web Audio -solmujaan: `paasta` pysäyttää
+elementin ja poistaa `src`:n, mutta `MediaElementSource`, kompressori ja
+vahvistin jäävät kytketyiksi `destination`iin. Mitattuna 40 hypyllä
+syntyi 40 lähdesolmua, joista yhtäkään ei irrotettu.
+
+Tämä **ei** ollut tämän vian syy — soivia elementtejä oli koko ajan
+korkeintaan kaksi, joten selaimen soitinraja ei tullut vastaan. Se on
+silti siisteysvelka, joka kannattaa hoitaa erikseen ja mitata omana
+muutoksenaan.
+
 ## v340 — Tehosteäänet takaisin (7.8.2026)
 
 Omistaja: *"Palauta pelin tehosteäänet."*
