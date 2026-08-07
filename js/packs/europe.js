@@ -507,6 +507,47 @@ const EU_EDGES = [
   { a: 'islanti', b: 'tromssa', steps: 5, type: 'sea', via: [[290, 32], [450, 38]] },
 ];
 
+/*
+ * Isoisän aarrevihjeet neljänä ilmansuuntana (omistajan linjaus
+ * 7.8.2026: "Niitä vihjeitä riittää vain pari ja niihin voisi
+ * generoida äänen myös"). Jokainen aarre-ehdokaskaupunki kuuluu
+ * yhteen alueeseen; teksti kertoo suunnan, ei koskaan kaupunkia.
+ * Luennat: assets/audio/puhe-europe-vihje-<alue>.mp3. Luentateksti
+ * on sama kuin vihje, kuiskaustagein — generointi samalla reseptillä
+ * kuin tools/generoi-luennat.mjs (stability 0.5).
+ */
+const VIHJEALUEET = {
+  pohjoinen: ['islanti', 'tromssa', 'lappi', 'oslo', 'tukholma',
+    'kobenhavn', 'helsinki', 'pietari', 'tallinna', 'riika', 'vilna'],
+  lansi: ['dublin', 'edinburgh', 'amsterdam', 'pariisi', 'lissabon',
+    'madrid', 'barcelona', 'granada', 'marseille'],
+  etela: ['alpit', 'venetsia', 'rooma', 'sisilia', 'ateena', 'kreeta',
+    'dubrovnik', 'sarajevo', 'sofia'],
+  ita: ['berliini', 'praha', 'wien', 'budapest', 'varsova', 'krakova',
+    'bukarest', 'kiova', 'odessa', 'moskova'],
+};
+
+const VIHJETEKSTIT = {
+  pohjoinen: '"Luettelon rivi vie pohjoiseen — sinne, missä kesäyö ei '
+    + 'pimene ja meri jäätyy talvella. En ehtinyt." Nuoli osoittaa '
+    + 'kartan yläreunaan.',
+  lansi: '"Lännessä, sillä puolen mannerta missä valtameri lyö '
+    + 'rantaan, luettelon rivi odottaa yhä." Sivun reunassa on pieni '
+    + 'ankkuri.',
+  etela: '"Etelässä, lämpimän meren äärellä, missä rauniot ovat '
+    + 'vanhimpia, luettelo lupaa aarteen. Laivani kääntyi liian '
+    + 'aikaisin."',
+  ita: '"Idässä, suurten jokien ja tasankojen maassa, on rivi vailla '
+    + 'rastia. Sinne aioin palata." Hän ei palannut — minä palaan.',
+};
+
+const EUROPE_VIHJEET = {
+  tekstit: Object.fromEntries(Object.entries(VIHJEALUEET)
+    .flatMap(([alue, kaupungit]) => kaupungit.map((id) => [id, VIHJETEKSTIT[alue]]))),
+  alueet: Object.fromEntries(Object.entries(VIHJEALUEET)
+    .flatMap(([alue, kaupungit]) => kaupungit.map((id) => [id, alue]))),
+};
+
 // Lentoreitit kulkevat suoraan kaupungista toiseen yhdellä vuorolla.
 const EU_AIR_ROUTES = [
   { a: 'lontoo', b: 'madrid' },
@@ -611,49 +652,17 @@ export const EUROPE = {
       '"Junat myöhästyvät kaikkialla paitsi Sveitsissä", merkitsi isoisä huolellisesti. Istun asemalla ja katson taulua, joka sanoo saman asian sataviisikymmentä vuotta myöhemmin. Jotkut havainnot eivät vanhene lainkaan.',
       'Isoisä luetteli maanosan suuret joet ja sai ne oikein: Volga, Tonava, Rein, Veiksel. Rajat hän sai väärin lähes kaikki. Vedet pysyivät, rajat eivät — tämä on matkani lyhyin oppitunti.',
     ],
-    // Isoisän vihjeet laudan pääaarteesta: suunta tai seutu, ei koskaan
-    // kaupungin nimeä.
-    starHints: {
-      dublin: 'Läntisimmällä saarella, joen mutkassa jonka viikingit nimesivät mustaksi lammikoksi, on satamakaupunki jossa puhutaan kahta kieltä. Sinne pääsee vain laivalla.',
-      edinburgh: 'Pohjoisen saaren itärannikolla, vanhan tulivuoren kannalle rakennetun linnan juurella, on kaupunki joka jakautuu vanhaan ja uuteen puoleen. Molemmat pitävät itseään oikeana.',
-      pariisi: 'Suuren joen mutkassa keskellä läntistä mannerta on kaupunki, jonka leveät bulevardit korvasivat juuri vanhat kujat. Se pitää itseään maailman keskuksena, ja on siinä lähellä.',
-      marseille: 'Etelärannikolla, siellä missä suuri jokilaakso avautuu Välimereen, on maanosan vanhimpia satamia. Sen kaduilla kuulee kaikkien merien kielet, ja saippua kantaa kaupungin nimeä.',
-      lissabon: 'Mantereen lounaisimmassa kärjessä, joen suulla jonka vartioksi rakennettiin torni, on kaupunki joka nousi maanjäristyksen raunioista suoriksi kortteleiksi.',
-      madrid: 'Läntisen niemimaan keskellä, korkealla kuivalla ylätasangolla kaukana kaikista rannikoista, on pääkaupunki jonka kadut täyttyvät väestä vasta auringonlaskun jälkeen.',
-      barcelona: 'Läntisen niemimaan koillisrannalla Välimeren äärellä on satamakaupunki, jonka uudet korttelit on piirretty ruutuun ja niiden kulmat viistetty.',
-      granada: 'Läntisen niemimaan eteläosassa, lumihuippuisen vuoriston juurella, on kaupunki jonka kukkulalla seisoo maurien punainen palatsi. Sen suihkulähteet solisevat yhä.',
-      amsterdam: 'Alavalla luoteisrannikolla, kanavien ja puupaalujen päälle rakennetussa kaupungissa, talot nojaavat toisiinsa. Maa on siellä osin merenpinnan alapuolella.',
-      berliini: 'Pohjoisen tasangon keskellä, kahden hidasvirtaisen joen välissä, on juuri perustetun valtakunnan pääkaupunki. Se rakentaa kuin kilpaa, koska sillä on kiire olla vanha.',
-      praha: 'Keskisellä mantereella, jyrkän jokimutkan yllä kohoavan linna-alueen juurella, on kaupunki jonka sillan kaiteilla seisoo kolmekymmentä pyhimystä.',
-      wien: 'Suuren itään virtaavan joen varrella on keisarikunnan pääkaupunki, jossa valssia tanssitaan arkenakin. Muurien paikalle on juuri valmistunut leveä kehäkatu.',
-      budapest: 'Saman suuren joen varrella kauempana itään, siellä missä kaksi kaupunkia yhdistettiin yhdeksi, nousee kuumista lähteistä vesi kylpyaltaisiin.',
-      varsova: 'Pohjoisella tasangolla idässä, Veiksel-joen varrella, on maakuntakaupunki jonka oma valtio on pyyhitty kartalta. Kadulla soitetaan silti sen omaa musiikkia.',
-      krakova: 'Saman joen yläjuoksulla etelässä, kuninkaiden vanhassa kruunauskaupungissa, torvensoittaja lopettaa sävelmänsä joka tunti kesken. Torin keskellä seisoo kangaskauppojen halli.',
-      alpit: 'Keskisen mantereen vuoristossa, siellä missä laaksot ovat jään jäljiltä U:n muotoisia ja solat ylitetään muulin kanssa, on koko maanosan korkein huippu.',
-      venetsia: 'Etelän niemimaan koillisrannalla, matalan laguunin saarille rakennetussa kaupungissa, kadut ovat vettä ja portaat laskevat suoraan mereen. Sen kauppiaat toivat idän tavarat maanosaan.',
-      rooma: 'Etelän niemimaan keskellä, seitsemän kukkulan päällä joen varrella, on kaupunki josta tehtiin juuri uuden kuningaskunnan pääkaupunki. Sen akveduktit toimivat yhä.',
-      sisilia: 'Etelän niemimaan kärjen takana, salmen toisella puolen, on saari jolla savuaa maanosan suurin tulivuori. Sen kirkoissa on arabialaisia kupoleita.',
-      ateena: 'Kaakkoisen niemimaan kärjessä, kalliokukkulan juurella jolla seisoo kaksituhatta vuotta vanha temppeli, on nuoren kuningaskunnan tomuinen pääkaupunki.',
-      kreeta: 'Kaikkein eteläisimmällä suurella saarella, sulttaanin valtakunnan laidalla, kukoisti maanosan varhaisin korkeakulttuuri. Oliiviöljyä käytetään siellä kaikkeen.',
-      dubrovnik: 'Kaakkoisrannikolla, korkeiden kivimuurien sisällä, on satamakaupunki joka oli vuosisatoja oma tasavaltansa ja säilyi neuvottelemalla eikä sotimalla.',
-      sarajevo: 'Kaakkoisen mantereen vuorten välisessä laaksossa on kaupunki, jossa minareetit ja kirkontornit seisovat saman kadun varrella ja basaarissa taotaan kuparia kuin idässä.',
-      sofia: 'Kaakkoisen mantereen sisämaassa, korkean vuoren juurella, on maakuntakaupunki jonka ympärille syntyy pian oma valtio. Ruusuöljyä myydään siellä pulloittain.',
-      bukarest: 'Alavalla tasangolla Tonavan ja Karpaattien välissä on ruhtinaskunnan pääkaupunki, jossa puhutaan latinasta polveutuvaa kieltä slaavilaisten naapurien keskellä.',
-      kiova: 'Idässä, Dnepr-joen jyrkällä rannalla, on tuhat vuotta pyhänä pidetty kaupunki, jonka luostarin käytävät kulkevat maan alla.',
-      odessa: 'Mustanmeren pohjoisrannalla on satama, josta vehnä lähtee koko maanosaan ja jonka portaat nousevat rannasta kaupunkiin kuin teatterissa.',
-      moskova: 'Idän tasangolla, kaukana kaikista meristä, on vanha kaupunki jossa kupolit ja puutalot vuorottelevat. Se ei ole enää pääkaupunki, mutta pitää itseään sinä.',
-      pietari: 'Suomenlahden pohjukassa, keisarin käskyllä suolle rakennetussa kaupungissa, kaikki kadut ovat suoria eikä kesäöisin tarvita kynttilää.',
-      helsinki: 'Pohjoisen lahden rannalla on suuriruhtinaskunnan pieni valkoinen pääkaupunki, jonka satamaan tarvitaan jäänmurtajaa puoli vuotta.',
-      tallinna: 'Saman lahden eteläpuolella, muurien ja tornien takana, on hansakaupunki jonka ylälinna ja alakaupunki eivät ole koskaan olleet samaa mieltä mistään.',
-      riika: 'Itämeren kaakkoisrannalla, suuren joen suussa, on satama joka lähettää puuta ja pellavaa Englantiin. Kauppapöydässä puhutaan saksaa, toreilla maan omaa kieltä.',
-      vilna: 'Itämeren kaakkoisessa takamaassa, sisämaassa kahden joen yhtymäkohdassa, on kaupunki jota kutsutaan Pohjolan Jerusalemiksi. Barokkikirkkoja on siellä liikaa laskettavaksi.',
-      tukholma: 'Pohjoisen niemimaan itärannalla, neljälletoista saarelle rakennetussa kaupungissa, vesi on niin kirkasta että keskustassa kalastetaan.',
-      oslo: 'Pohjoisen niemimaan länsipuolella, pitkän vuonon pohjukassa, on pääkaupunki jonka nimi vaihdettiin kuninkaan mukaan. Vuoret alkavat heti kaupungin takaa.',
-      kobenhavn: 'Pohjolan salmien varrella, siellä missä Itämerestä pääsee Pohjanmerelle, on kuningaskunnan pääkaupunki. Sen huvipuistossa palavat lyhdyt iltaan asti.',
-      lappi: 'Kaikkein pohjoisimmassa sisämaassa, siellä missä aurinko ei kesällä laske eikä talvella nouse, paimennetaan poroja tuhansittain.',
-      tromssa: 'Pohjoisimmalla rannikolla, saarella vuonon suojassa, on satama josta lähdetään jäämerelle. Lämmin merivirta pitää sen sulana keskellä talvea.',
-      islanti: 'Kaukana luoteisessa valtameressä on saari, jolla maa höyryää, tuli nousee jäätikön alta ja kuuma vesi purskahtaa ilmaan. Sinne pääsee vain pitkällä laivamatkalla.',
-    },
+    /*
+     * Isoisän vihjeet laudan pääaarteesta — omistajan linjaus
+     * 7.8.2026: vihjeitä on vain neljä, yksi per ilmansuunta, ne
+     * nousevat esiin KAUPUNKIEN VÄLILLÄ (game.starHint näyttää ne
+     * vain tien päällä) eivätkä sotke kaupunkien merkintöjä. Kullekin
+     * on luenta: assets/audio/puhe-europe-vihje-<alue>.mp3
+     * (VIHJELUENNAT js/ui.js:ssä, starHintAlue valitsee tiedoston).
+     * Vihje viittaa suuntaan, ei koskaan kaupunkiin.
+     */
+    starHints: EUROPE_VIHJEET.tekstit,
+    starHintAlue: EUROPE_VIHJEET.alueet,
   },
 
   puzzles: EUROPE_PUZZLES,

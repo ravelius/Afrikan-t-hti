@@ -269,3 +269,68 @@ isoisällä, eikä sama elementtityyppi kahdesti peräkkäisissä
 kaupungeissa. Vanhojen tekstien parhaat 1873-faktat ja rakkaimmat
 lauseet ("Heitin omani samaan kohtaan") saa ja kannattaa
 kierrättää lyhennettyinä — uusiminen ei ole hävittämistä.
+
+## Aarrevihjeet: matkalle, ei kaupunkeihin (7.8.2026)
+
+Omistajan linjaus: *"Aarrevihjeet voisi siirtää kaupunkien välille,
+niin eivät sotke kaupunkien tekstejä. Niitä vihjeitä riittää vain
+pari ja niihin voisi generoida äänen myös."*
+
+- **Vihje nousee esiin vain kaupunkien välissä** (game.starHint:
+  pelaaja seisoo reunaruudulla). Kaupungissa tietoruudussa on aina
+  kaupungin oma merkintä.
+- **Vihjetekstejä on lautaa kohden vain kourallinen** — Euroopassa
+  neljä, yksi per ilmansuunta (js/packs/europe.js: VIHJEALUEET ja
+  VIHJETEKSTIT; starHintAlue valitsee äänitiedoston). Vihje kertoo
+  suunnan, ei koskaan kaupunkia.
+- **Jokaiselle vihjeelle luenta**: kuiskattu resepti
+  ([whispers]/[softly], stability 0.5), tiedostot
+  `puhe-<lauta>-vihje-<alue>.mp3`. Neljä tiedostoa per lauta on
+  halpa generoida.
+- Kaupunkimerkinnät EIVÄT viittaa laudan pääaarteeseen — aarrejahti
+  kulkee vihjeissä, dekkarikoukut merkinnöissä (sääntö 4 yllä).
+- Afrikan vanhat kaupunkikohtaiset vihjeet toimivat toistaiseksi
+  samassa mekaniikassa; ne tiivistetään ilmansuunniksi, kun Afrikan
+  merkinnät uusitaan.
+
+## Muut maanosat: hahmotelmat (7.8.2026, omistajan tilaus)
+
+Sama seitsemän sävelen paletti pätee joka laudalla. Kullekin
+laudalle oma motiivilankaperhe (Euroopan langat EIVÄT toistu) ja
+pääaarre, jota vihjeet kiertävät. Tarina.md:n tärkein sääntö
+korostuu näillä laudoilla: piikki osoittaa AINA Foggiin ja hänen
+vanhaan maailmaansa, ei koskaan maihin tai ihmisiin.
+
+- **Afrikka — Suuren Zimbabwen kivilintu.** Uusitaan ensimmäisenä
+  (kaupunkien tekstit ovat jo hyvät — tiivistys + dekkarikoukut
+  harvakseltaan). Motiivilanka: linnun varjo — kivinen siipi,
+  höyhen kirjan välissä, veistäjän jälki. Horatio 1873: höyrylaivat
+  ja karavaanit, Suezin kanava on kaksivuotias. Sävelpaino:
+  ihmetys, kunnioitus ja lämpö; jännitys korkeintaan kahdesti.
+- **Lähi-itä — Sheban aarre.** Motiivilanka: suitsukkeen tuoksu ja
+  tähdet — karavaanireittien suunnistus. Horatio mittaa öitä, ei
+  päiviä. Sävelpaino: arvoitus ja lämpö (teelasit, kauppiaat).
+- **Aasia (ei omaa lautaa — kaupungit maailmankartalla) — keisarin
+  jadesinetti.** Motiivilanka: sinetin jälki vahassa ja paperissa —
+  asiakirja, johon isoisä ei koskaan saanut leimaa. Sävelpaino:
+  ihmetys ja huumori (Horatio ja byrokratia).
+- **Pohjois-Amerikka — Montezuman aarre.** Motiivilanka: rautatiet
+  ja sähkösanomat — vuoden 1873 uusin maailma, jossa Horatio on
+  ensi kertaa se, joka ihmettelee. Sävelpaino: vauhti ja huumori.
+- **Etelä-Amerikka — El Doradon aarre.** Motiivilanka: kulta joka
+  ei kiillä — joet, sumu ja legendat, joita kukaan ei kartoita.
+  Sävelpaino: ihmetys ja arvoitus; El Dorado on tarina tarinasta.
+- **Oseania — Eteläristin helmi.** Motiivilanka: tähtitaivas, jota
+  Horatio ei tunne — kartanpiirtäjä oppii navigoimaan uudestaan.
+  Sävelpaino: meri, valo ja hengähdys; laudan rauhallisin.
+- **Maailmankartta — Magellanin kompassi.** Motiivilanka:
+  kompassineula ja suunnat; risteysten lauta, jonka merkinnät
+  sitovat maanosia yhteen. Ei uutta jännitystä — Grimshaw pysyy
+  Euroopassa ja Kairossa, kunnes omistajan kanssa päätetään
+  sateenvarjon paljastuksesta.
+- **Istanbul-minilauta — Sulttaanin timantti.** Oma pieni
+  tarinansa: basaarin kujat, yksi arvoitus, ei takaa-ajoa.
+
+Järjestys: Afrikka → Lähi-itä → maailmankartta → loput. Jokainen
+lauta saa oman kaupunkijakotaulunsa tähän dokumenttiin ENNEN
+kirjoittamista — sama kaava kuin Euroopan suunnitelmassa yllä.

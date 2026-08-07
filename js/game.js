@@ -656,14 +656,17 @@ export class Game {
 
   /**
    * Isoisän päiväkirjan taitettu sivu: vihje laudan pääaarteesta. Vihje
-   * viittaa suuntaan tai alueeseen muttei nimeä kaupunkia, ja se nousee
-   * tietoruutuun harvakseltaan — joka HINT_EVERY_TURNS vuoro. Kun aarre on
+   * viittaa suuntaan tai alueeseen muttei nimeä kaupunkia. Omistajan
+   * linjaus 7.8.2026: vihje kuuluu MATKALLE — se nousee esiin vain
+   * kaupunkien välissä, jotta se ei sotke kaupunkien merkintöjä.
+   * Harventamisen (HINT_EVERY_TURNS) hoitaa tietoruutu, koska tämän
+   * on pysyttävä puhtaana funktiona piirtoa varten. Kun aarre on
    * löytynyt, sivua ei enää tarvita.
    */
   starHint() {
     const world = this.world;
     if (!world || world.starFound) return null;
-    if (this.turnCount % HINT_EVERY_TURNS !== 0) return null;
+    if (this.player?.pos?.type !== 'edge') return null;
     const cityId = this.starCityOf(world);
     return this.pack.texts.starHints?.[cityId] ?? null;
   }

@@ -1638,7 +1638,7 @@ test('saapumishavainto seuraa matkaajaa kaupungista kaupunkiin', () => {
   assert.equal(game.arrivalFact?.cityId, 'kairo', 'havainto säilyy nopanheittojen yli');
 });
 
-test('isoisän vihje osoittaa tähtikaupunkiin ja vaikenee kun aarre on löytynyt', () => {
+test('isoisän vihje näkyy vain matkalla ja vaikenee kun aarre on löytynyt', () => {
   const game = new Game({
     players: [{ name: 'Yksin', color: '#f00', start: 'tanger' }],
     pack: packById('africa'),
@@ -1649,17 +1649,34 @@ test('isoisän vihje osoittaa tähtikaupunkiin ja vaikenee kun aarre on löytyny
   assert.ok(starCity, 'tähtikaupunkia ei löytynyt');
   assert.equal(game.tokens.get(starCity), 'star');
 
-  // Vihje nousee esiin vain joka HINT_EVERY_TURNS vuoro.
-  game.turnCount = HINT_EVERY_TURNS;
+  // Kaupungissa vihje ei nouse esiin (omistajan linjaus 7.8.2026:
+  // vihje kuuluu matkalle eikä sotke kaupunkien merkintöjä).
+  assert.equal(game.player.pos.type, 'city');
+  assert.equal(game.starHint(), null, 'vihje näkyy kaupungissa');
+
+  // Kaupunkien välissä vihje osoittaa tähtikaupunkiin.
+  const edgeId = [...game.board.edgeById.keys()][0];
+  game.player.pos = { type: 'edge', edge: edgeId, at: 1 };
   assert.equal(game.starHint(), packById('africa').texts.starHints[starCity]);
-  game.turnCount = HINT_EVERY_TURNS + 1;
-  assert.equal(game.starHint(), null, 'vihje näkyy liian usein');
 
   // Löytynyt aarre sulkee taitetun sivun.
-  game.turnCount = HINT_EVERY_TURNS * 2;
-  assert.ok(game.starHint());
   game.world.starFound = true;
   assert.equal(game.starHint(), null, 'vihje jatkuu vaikka aarre on löytynyt');
+});
+
+test('Euroopan vihjeet ovat ilmansuunnittain ja alue kattaa joka aarrekaupungin', () => {
+  const europe = packById('europe');
+  const { starHints, starHintAlue } = europe.texts;
+  // Jokaisella laattakaupungilla on vihjeteksti ja alue äänitiedostoa
+  // varten — puuttuva rivi jättäisi pelin ilman vihjettä.
+  for (const c of europe.cities) {
+    if (c.start) continue; // aloituskaupungeissa ei ole laattaa
+    assert.ok(starHints[c.id], `${c.id}: vihjeteksti puuttuu`);
+    assert.ok(['pohjoinen', 'lansi', 'etela', 'ita'].includes(starHintAlue[c.id]),
+      `${c.id}: alue puuttuu tai tuntematon`);
+  }
+  // Tekstejä on vain neljä (omistaja: "vihjeitä riittää vain pari").
+  assert.equal(new Set(Object.values(starHints)).size, 4);
 });
 
 test('vihjeetön lauta ei kaada tietoruutua', () => {
@@ -1672,7 +1689,8 @@ test('vihjeetön lauta ei kaada tietoruutua', () => {
     pack: { ...base, texts: { ...base.texts, starHints: {} } },
     rng: mulberry32(3),
   });
-  game.turnCount = HINT_EVERY_TURNS;
+  const edgeId = [...game.board.edgeById.keys()][0];
+  game.player.pos = { type: 'edge', edge: edgeId, at: 1 };
   assert.equal(game.starHint(), null);
 });
 
