@@ -2316,6 +2316,121 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Italia on digitoinut sen, mihin museoissa on jono: Sikstuksen '
+        + 'kappelin katon voi kääntää selaimessa, Leonardon muistikirjat '
+        + 'aukeavat sivu kerrallaan ja Galilein kaukoputket ovat kuvattu joka '
+        + 'puolelta.',
+      nostot: [
+        {
+          otsikko: 'Sikstuksen kappeli ilman jonoa ja niskakipua',
+          tiedosto: 'Sistine Chapel ceiling 02 (brightened).jpg',
+          teksti: 'Vatikaanin museot ovat tehneet salikohtaisia 360 asteen '
+            + 'kierroksia, joissa näkymää käännellään hiirellä. Sikstuksen '
+            + 'kappelissa katto tulee lähelle ilman että niskaa tarvitsee '
+            + 'taivuttaa: Michelangelon luomiskertomus keskellä, ennustajat '
+            + 'reunoilla ja päätyseinän Viimeinen tuomio kokonaisena. Samalla '
+            + 'listalla ovat Rafaelin huoneet ja Niccolinan kappeli. '
+            + 'Kierrokset aukeavat suoraan selaimessa ilman erillistä '
+            + 'ohjelmaa.',
+          selite: 'Sikstuksen kappelin katto ja päätyseinä alhaalta kuvattuna: '
+            + 'Michelangelon holvimaalaukset kaartuvat ylös ja päädyssä on '
+            + 'Viimeinen tuomio.',
+          lahde: 'Antoine Taveneaux, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/tour-virtuali-elenco.html',
+          linkkiNimi: 'Vatikaanin museot — 360 asteen kierrokset',
+        },
+        {
+          otsikko: 'Käsikirjoituksia, joita ei anneta kenenkään käteen',
+          tiedosto: 'Vaticana, Vat. lat. 3868 (2r).jpg',
+          teksti: 'Vatikaanin apostolinen kirjasto on yksi maailman vanhimmista '
+            + 'kirjastoista, ja sen käsikirjoituksia ei lainata. Sen sijaan '
+            + 'niitä on kuvattu tuhansia sivu kerrallaan, ja kuvat ovat kenen '
+            + 'tahansa katsottavissa. Suurennos riittää siihen, että näkee '
+            + 'kynän jäljen ja kohdat, joissa kirjuri on korjannut itseään. '
+            + 'Joukossa on antiikin näytelmien vanhimpia säilyneitä laitoksia '
+            + '— kirjoja, joita ilman emme tietäisi, mitä roomalaisissa '
+            + 'teattereissa esitettiin.',
+          selite: 'Käsikirjoituksen kuvitussivu: kaksi naamioitua näyttelijää '
+            + 'kannattelee muotokuvamitalia jalustan päällä, yläreunassa '
+            + 'lukee TERENTI.',
+          lahde: 'Wikimedia Commons (public domain)',
+          linkki: 'https://digi.vatlib.it/',
+          linkkiNimi: 'DigiVatLib — Vatikaanin kirjaston käsikirjoitukset',
+        },
+        {
+          otsikko: 'Leonardon muistikirjat, peilikirjoitus mukaan lukien',
+          tiedosto: 'Leonardo da Vinci - Codex Atlanticus folio 309v.png',
+          teksti: 'Leonardo da Vinci täytti muistikirjoja koko elämänsä: koneita, '
+            + 'pyörteitä, kasveja, ostoslistoja ja muistiinpanoja, jotka hän '
+            + 'kirjoitti peilikuvana oikealta vasemmalle. Ne on nyt digitoitu '
+            + 'ja koottu yhteen palveluun. Pelkässä Codex Atlanticuksessa on '
+            + '1 119 lehteä. Sivuja voi selata numerolla tai hakea aiheen '
+            + 'mukaan, ja jokaisesta on suurikokoinen kuva. Käsiala on '
+            + 'tiheää, mutta piirrokset ymmärtää ilman italiaakin.',
+          selite: 'Leonardon luonnos: ympyrän sisään piirretty vinoruutuinen '
+            + 'ristikko, alla tiheää peilikirjoitusta ruskealla musteella.',
+          lahde: 'Leonardo da Vinci, Wikimedia Commons (public domain)',
+          linkki: 'https://www.leonardodigitale.com/en/',
+          linkkiNimi: 'Leonardo Digitale — kaikki Leonardon muistikirjat',
+        },
+        {
+          otsikko: 'Kaukoputket, joilla Jupiterin kuut löydettiin',
+          tiedosto: 'Galilei telescopes, Museo Galileo, Florence, Inv. 242, 2428, 224088.jpg',
+          teksti: 'Museo Galileo Firenzessä säilyttää Galileo Galilein kahta '
+            + 'säilynyttä kaukoputkea. Ne ovat puisia putkia, joissa on '
+            + 'nahkapäällys — ei mitään sen kummempaa, ja silti niillä '
+            + 'nähtiin ensimmäisenä Jupiterin kuut ja Kuun vuoret. Museon '
+            + 'kokoelma on verkossa esineittäin, ja mukana on myös vanhoja '
+            + 'maapalloja, aurinkokelloja ja kojeita, joilla mitattiin '
+            + 'asioita ennen kuin niille oli mittayksikköä. Kuvat ovat '
+            + 'tarkkoja ja monelta puolelta.',
+          selite: 'Kaksi puista kaukoputkea vitriinissä vaakasuorassa; alempana '
+            + 'näkyy koristeellinen kehys, jossa on Galilein '
+            + 'objektiivilinssi.',
+          lahde: 'Zde, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.museogalileo.it/en/',
+          linkkiNimi: 'Museo Galileo — tieteen kojeet verkossa',
+        },
+        {
+          otsikko: 'Näyttelyitä, jotka eivät sulkeudu koskaan',
+          tiedosto: 'Ceiling of Uffizi Gallery.jpg',
+          teksti: 'Uffizi rakentaa verkkoon omia näyttelyitään, jotka kootaan '
+            + 'yhden aiheen ympärille ja jotka pysyvät auki senkin jälkeen, '
+            + 'kun museon oma näyttely on purettu. Teokset aukeavat suurina '
+            + 'kuvina ja jokaisen vieressä kerrotaan, mitä siinä tapahtuu ja '
+            + 'miksi se maalattiin. Aiheet vaihtelevat kukista muotokuviin ja '
+            + 'hirviöihin. Käytävän katto galleriassa on itsessään maalattu '
+            + 'täyteen — sitäkin pääsee katsomaan lähempää kuin paikan '
+            + 'päällä.',
+          selite: 'Uffizin käytävän maalattu katto: valkoiselle pohjalle '
+            + 'maalattuja köynnöksiä, lintuja, vaakunoita ja pieniä '
+            + 'maisemakuvia kultakehysten välissä.',
+          lahde: 'Livioandronico2013, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.uffizi.it/en/online-exhibitions',
+          linkkiNimi: 'Uffizi — verkkonäyttelyt',
+        },
+        {
+          otsikko: 'Kaivaus, jossa löytyy yhä uutta joka vuosi',
+          tiedosto: 'North Wall of Cubiculum 20 in House of Neptune Pompeii VI 5,3.jpg',
+          teksti: 'Pompejin kaivausalueen oma sivusto kertoo, mitä kaupungista on '
+            + 'juuri nyt kaivettu esiin. Noin kolmannes kaupungista on yhä '
+            + 'tuhkan alla, ja työ jatkuu, joten sivuilla julkaistaan uusia '
+            + 'löytöjä kuvineen sitä mukaa kuin ne tulevat esiin: '
+            + 'seinämaalauksia, leipomoita, hevosia valjaissaan. Mukana on '
+            + 'myös karttoja ja talokohtaisia kuvauksia, joiden avulla voi '
+            + 'kulkea korttelin läpi huone kerrallaan.',
+          selite: 'Väripainos pompejilaisen huoneen seinästä: punaisia ja '
+            + 'oransseja kenttiä, valkoisia pilareita, köynnöksiä ja pieni '
+            + 'maalaus keskellä.',
+          lahde: 'Vittorio Steeger, Wikimedia Commons (public domain)',
+          linkki: 'https://pompeiisites.org/en/',
+          linkkiNimi: 'Pompeii Sites — kaivauksen viralliset sivut',
+        },
+      ],
+    },
   ],
 
   /*
@@ -3312,6 +3427,122 @@ export const MAA_KATEGORIAT = {
             + 'vasten".',
           lahde: 'Bengt Oberger, Wikimedia Commons (CC BY-SA 3.0)',
           wiki: 'Tulitikku',
+        },
+      ],
+    },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Ruotsi on avannut kokoelmansa poikkeuksellisen laajasti: klassikot '
+        + 'ensipainoksina, 1500 vuotta vanha hopeaRaamattu sivu kerrallaan, '
+        + 'koko maan muinaisjäännökset kartalla ja luontohavainnot tältä '
+        + 'aamulta.',
+      nostot: [
+        {
+          otsikko: 'Klassikot ensipainoksina, kirjoitusvirheitä myöten',
+          tiedosto: 'Selma Lagerlof (1908), painted by Carl Larsson.jpg',
+          teksti: 'Litteraturbanken on Ruotsin kirjallisuuden ilmainen '
+            + 'verkkokirjasto. Teoksia ei ole vain puhtaaksi kirjoitettu, '
+            + 'vaan ne on skannattu alkuperäisistä painoksista: sivu näyttää '
+            + 'siltä kuin se näytti kirjapainosta tullessaan, vanha kirjasin '
+            + 'ja kaikki. Selma Lagerlöfin Nils Holgerssonin ihmeellinen '
+            + 'matka vuosilta 1906–1907 aukeaa siis samanlaisena kuin '
+            + 'ensimmäisillä lukijoillaan. Sivustolla on oma osastonsa '
+            + 'lastenkirjallisuudelle. Ei kirjautumista, ei maksua.',
+          selite: 'Carl Larssonin muotokuva Selma Lagerlöfistä vuodelta 1908: '
+            + 'kirjailija istuu kaiverretussa nojatuolissa käsi posken alla, '
+            + 'taustalla vaalea kuvakudos ja punainen kukka.',
+          lahde: 'Carl Larsson, Wikimedia Commons (public domain)',
+          linkki: 'https://litteraturbanken.se/',
+          linkkiNimi: 'Litteraturbanken — Ruotsin kirjallisuus ilmaiseksi',
+        },
+        {
+          otsikko: 'Hopeakirjaimet purppuralla, 1500 vuotta vanhat',
+          tiedosto: 'Codex Argenteus.jpg',
+          teksti: 'Alvin on ruotsalaisten yliopistojen yhteinen '
+            + 'digitointiportaali: käsikirjoituksia, karttoja ja valokuvia. '
+            + 'Sen kuuluisin aarre on Codex Argenteus, Hopearaamattu. Se '
+            + 'kirjoitettiin 500-luvulla Italiassa hopealla ja kullalla '
+            + 'purppuranväriselle pergamentille, ja se on tärkein säilynyt '
+            + 'lähde goottien kielestä. Kirja päätyi Uppsalaan 1600-luvulla. '
+            + 'Nyt sen jokaisen sivun voi kääntää selaimessa ja suurentaa '
+            + 'niin, että yksittäiset kirjaimet erottuvat.',
+          selite: 'Hopeisin ja kultaisin kirjaimin purppuranväriselle '
+            + 'pergamentille kirjoitettu sivu; alareunassa rivi pieniä '
+            + 'kaaria.',
+          lahde: 'Wikimedia Commons (public domain)',
+          linkki: 'https://www.alvin-portal.org/',
+          linkkiNimi: 'Alvin — ruotsalaisten yliopistojen digitoidut aarteet',
+        },
+        {
+          otsikko: 'Koko maan muinaisjäännökset yhdellä kartalla',
+          tiedosto: 'Ales stenar (by Pudelek).JPG',
+          teksti: 'Fornsök on Ruotsin muinaismuistoviraston karttapalvelu, jossa '
+            + 'maan kaikki tunnetut muinaisjäännökset ovat pisteinä. Voit '
+            + 'vetää kartan mihin tahansa kohtaan Ruotsia ja katsoa, mitä sen '
+            + 'alta on löytynyt: hautaröykkiöitä, kalliopiirroksia, '
+            + 'riimukiviä, hylkyjä. Jokaisesta kohteesta aukeaa oma '
+            + 'kuvauksensa. Skånen Ales stenar on kivilaiva, jonka 59 '
+            + 'lohkaretta on nostettu pystyyn meren yläpuolelle — sekin '
+            + 'löytyy kartalta omalla numerollaan.',
+          selite: 'Kivilaiva Skånen niityllä: pystyyn nostetut lohkareet '
+            + 'muodostavat pitkän soikion, jonka läpi kulkee kulunut polku.',
+          lahde: 'Pudelek, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://app.raa.se/open/fornsok/',
+          linkkiNimi: 'Fornsök — Ruotsin muinaisjäännökset kartalla',
+        },
+        {
+          otsikko: 'Riimukoulu, jonka jälkeen osaat lukea kiven',
+          tiedosto: 'U 614, Torsätra.jpg',
+          teksti: 'Ruotsissa on enemmän riimukiviä kuin missään muualla '
+            + 'maailmassa, ja suurin osa niistä seisoo yhä ulkona samalla '
+            + 'paikalla kuin tuhat vuotta sitten. Muinaismuistoviraston '
+            + 'riimukoulu opettaa lukemaan ne. Sivusto käy läpi merkin '
+            + 'kerrallaan, mitä mikäkin riimu tarkoittaa ja miten teksti '
+            + 'kiertää kiven reunaa käärmeen selässä. Useimmat kivet kertovat '
+            + 'saman asian: joku pystytti sen jonkun muistoksi. Nimet ovat '
+            + 'oikeita ihmisiä.',
+          selite: 'Riimukivi museon sinistä seinää vasten: punaisiksi maalatut '
+            + 'riimut kiertävät kiven reunaa, ja keskellä kiemurtelee käärme.',
+          lahde: 'Berig, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.raa.se/kulturarv/runor-och-runstenar/runskolan/runstenar/',
+          linkkiNimi: 'Riimukoulu — opi lukemaan riimukiviä',
+        },
+        {
+          otsikko: 'Mitä Ruotsissa nähtiin tänä aamuna',
+          tiedosto: 'Lavskrika Siberian Jay (20162468398).jpg',
+          teksti: 'Artportalen on Ruotsin luontohavaintojen yhteinen kirjanpito. '
+            + 'Kuka tahansa saa ilmoittaa näkemänsä lajin, ja kaikki '
+            + 'havainnot ovat julkisia — myös ne, jotka on tehty tunti '
+            + 'sitten. Voit hakea lajilla tai alueella ja katsoa, missä päin '
+            + 'maata jotakin on nähty ja minä vuodenaikana. Lavskrika on '
+            + 'pohjoisen kuusimetsän lintu, joka tulee usein retkeilijän luo '
+            + 'omasta aloitteestaan. Kartalta näkee heti, kuinka tarkasti se '
+            + 'pysyy pohjoisessa.',
+          selite: 'Lavskrika istuu matalassa varvikossa: ruskeanharmaa '
+            + 'höyhenpuku, tumma naamio silmien ympärillä ja ruostepunaista '
+            + 'pyrstön tyvessä.',
+          lahde: 'Åsa Berndtsson, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://www.artportalen.se/',
+          linkkiNimi: 'Artportalen — Ruotsin luontohavainnot',
+        },
+        {
+          otsikko: 'Aakkoset, joissa ei ole yhtään kirjainta',
+          tiedosto: 'Christopher Polhem painted by Johan Henrik Scheffel 1741.jpg',
+          teksti: 'Tekniska museet Tukholmassa on Ruotsin tekniikan museo, ja sen '
+            + 'kokoelmissa on Christopher Polhemin mekaaninen aakkosto. '
+            + 'Polhem rakensi 1700-luvulla puisia malleja kaikista liikkeen '
+            + 'perusmuodoista: miten pyörivä liike muuttuu edestakaiseksi, '
+            + 'miten voima kasvaa, miten hammasratas kääntää suunnan. Ajatus '
+            + 'oli, että näistä osista voi koota minkä tahansa koneen samalla '
+            + 'tavalla kuin sanan kirjaimista. Museon sivuilla kokoelmaa voi '
+            + 'selata verkossa.',
+          selite: 'Öljyvärimuotokuva Christopher Polhemista: iäkäs mies '
+            + 'samettitakissa ja -lakissa, rinnassa ritarikunnan tähti, kädet '
+            + 'lepäävät paperin ja piirtimen päällä.',
+          lahde: 'Johan Henrik Scheffel, Wikimedia Commons (public domain)',
+          linkki: 'https://www.tekniskamuseet.se/',
+          linkkiNimi: 'Tekniska museet — Ruotsin tekniikan kokoelmat',
         },
       ],
     },
