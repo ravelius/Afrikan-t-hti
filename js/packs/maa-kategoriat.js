@@ -4220,63 +4220,58 @@ export const MAA_KATEGORIAT = {
       nimi: 'Menovinkit',
       johdanto: 'Saksassa lähes jokainen museo, arkisto ja kirjasto on vienyt '
         + 'kokoelmansa verkkoon, ja moni on antanut kuvat vapaaseen käyttöön. '
-        + 'Bachin oma käsiala ja Babylonin portti ovat parin klikkauksen '
+        + 'Bachin käsiala ja Blossfeldtin kasvit ovat parin klikkauksen '
         + 'päässä.',
       lista: [
         {
-          otsikko: 'Arkistot ja käsikirjoitukset',
+          otsikko: 'Museot ja galleriat',
           kohteet: [
             {
-              nimi: 'Deutsche Digitale Bibliothek — koko Saksa yhdessä haussa',
-              tiedosto: 'Weimar, Herzogin Anna Amalia Bibliothek, 2019-09 CN-03.jpg',
-              teksti: 'Deutsche Digitale Bibliothek kokoaa saksalaisten '
-                + 'museoiden, arkistojen ja kirjastojen aineistot samaan '
-                + 'hakuun.',
-              selite: 'Weimarin Anna Amalian kirjaston rokokoosali: valkoiset ja '
-                + 'kullatut hyllyt kahdessa kerroksessa, marmoririntakuvia '
-                + 'lattiatasolla ja parvekekaide keskellä.',
-              lahde: 'Steffen Schmitz, Wikimedia Commons (CC BY-SA 4.0)',
-              linkki: 'https://www.deutsche-digitale-bibliothek.de/',
+              nimi: 'Städel-museo Frankfurt — kokoelma zoomattavana',
+              tiedosto: 'Johannes Vermeer - The Geographer - Google Art Project.jpg',
+              teksti: 'Frankfurtin Städelissä on yli 25 000 teosta verkossa, muun '
+                + 'muassa Vermeerin Maantieteilijä. Etusivun arpakuutio '
+                + 'heittää kolme sanaa ja etsii niihin sopivan maalauksen.',
+              selite: 'Maalaus tutkijasta sinisessä kaavussa: hän nojaa ikkunan '
+                + 'ääressä pöytään, jolla on kartta, ja kaapin päällä seisoo '
+                + 'maapallo.',
+              lahde: 'Johannes Vermeer, Wikimedia Commons (public domain)',
+              linkki: 'https://sammlung.staedelmuseum.de/en',
             },
             {
-              nimi: 'Staatsbibliothek zu Berlin — digitoidut käsikirjoitukset',
-              tiedosto: 'BWV 232 Titelblatt Missa.jpg',
-              teksti: 'Berliinin valtionkirjasto säilyttää suurinta osaa Johann '
-                + 'Sebastian Bachin säilyneistä nuottikäsikirjoituksista, ja '
-                + 'ne on digitoitu.',
-              selite: 'Kellastunut kansilehti ruskealla musteella: ylinnä lukee '
-                + 'Missa, oikeassa reunassa luettelo äänistä ja soittimista '
-                + 'ja alimpana nimikirjoitus J. S. Bach.',
-              lahde: 'Johann Sebastian Bach, Wikimedia Commons (public domain)',
-              linkki: 'https://digital.staatsbibliothek-berlin.de/',
+              nimi: 'Pinakothekit München — Baijerin maalaukset yhdessä haussa',
+              tiedosto: 'Dürer - Selbstbildnis im Pelzrock - Alte Pinakothek.jpg',
+              teksti: 'Baijerin valtion taidekokoelmien 17 museota ja yli 27 000 '
+                + 'teosta ovat samassa haussa. Mukana on Dürerin omakuva '
+                + 'vuodelta 1500, jossa hän katsoo suoraan katsojaa silmiin.',
+              selite: 'Omakuva tummaa taustaa vasten: pitkät kiharat hiukset, '
+                + 'turkiskauluksinen takki ja käsi rinnan päällä.',
+              lahde: 'Albrecht Dürer, Wikimedia Commons (public domain)',
+              linkki: 'https://www.sammlung.pinakothek.de/en',
             },
             {
-              nimi: 'Bundesarchiv Wikimedia Commonsissa',
-              tiedosto: 'Bundesarchiv Bild 183-63107-0001, Berlin, Postzeitungsvertrieb, Zeitungshändlerin.jpg',
-              teksti: 'Saksan liittovaltion arkisto luovutti valtavan määrän '
-                + 'valokuviaan vapaaseen käyttöön Wikimedia Commonsiin.',
-              selite: 'Mustavalkokuva Friedrichstraßen aseman edestä: lehtimyyjä '
-                + 'pitelee sylissään paksua nippua sanomalehtiä ja hymyilee '
-                + 'kameralle.',
-              lahde: 'Günter Weiß, Wikimedia Commons (CC BY-SA 3.0 de)',
-              linkki: 'https://commons.wikimedia.org/wiki/Category:Images_from_the_German_Federal_Archive',
+              nimi: 'Dresdenin taidekokoelmat — Zwingerin aarteet verkossa',
+              tiedosto: 'Jean-Etienne Liotard - The Chocolate Girl - Google Art Project.jpg',
+              teksti: 'Dresdenin viidentoista museon esineet ovat yhdessä haussa: '
+                + 'vanhat mestarit, Vihreän holvin jalokivityöt ja Liotardin '
+                + 'Suklaatyttö, joka on maalattu pastelliliiduilla.',
+              selite: 'Nuori nainen sivuprofiilissa kantaa tarjotinta, jolla on '
+                + 'suklaakuppi ja vesilasi. Yllä keltainen liivi, valkoinen '
+                + 'esiliina ja myssy.',
+              lahde: 'Jean-Étienne Liotard, Wikimedia Commons (public domain)',
+              linkki: 'https://skd-online-collection.skd.museum/',
             },
-          ],
-        },
-        {
-          otsikko: 'Museot ja muotoilu',
-          kohteet: [
             {
-              nimi: 'Deutsches Museum Digital — tekniikan kokoelmat',
-              tiedosto: 'An exhibition hall in Deutsches Museum in Munich.jpg',
-              teksti: 'Münchenin Deutsches Museum on yksi maailman suurimmista '
-                + 'tekniikan ja luonnontieteen museoista, ja sen '
-                + 'kokoelmatietokanta on avoin.',
-              selite: 'Museon korkea sali kattoikkunan alla: valtava vauhtipyörä, '
-                + 'pystysuora höyrykone ja rivi vanhoja koneita matalilla '
-                + 'jalustoilla.',
-              lahde: 'Robert von Oliva, Wikimedia Commons (CC0)',
-              linkki: 'https://digital.deutsches-museum.de/',
+              nimi: 'Germanisches Nationalmuseum — Nürnbergin esineluettelo',
+              tiedosto: 'Erdglobus, sogenannter Behaim-Globus.jpg',
+              teksti: 'Saksan suurimman kulttuurihistoriallisen museon '
+                + 'luettelossa on maailman vanhin säilynyt maapallo vuodelta '
+                + '1492. Siitä puuttuu Amerikka, koska sitä ei vielä '
+                + 'tunnettu.',
+              selite: 'Vanha maapallo rautajalustalla: sininen meri, kellertävät '
+                + 'maat ja messinkinen vanne pallon ympärillä.',
+              lahde: 'Germanisches Nationalmuseum, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://objektkatalog.gnm.de/',
             },
             {
               nimi: 'Berliinin valtionmuseot — kokoelmahaku',
@@ -4304,6 +4299,187 @@ export const MAA_KATEGORIAT = {
                 + 'ylös BAUHAUS.',
               lahde: 'JensKunstfreund, Wikimedia Commons (CC BY-SA 4.0)',
               linkki: 'https://bauhauskooperation.de/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Valokuvausnäyttelyt',
+          kohteet: [
+            {
+              nimi: 'Münchner Stadtmuseum — valokuva-albumit verkossa',
+              teksti: 'Museon verkkokokoelmassa on kymmeniä valokuvanäyttelyitä '
+                + 'albumeina: käsin väritettyjä matkakuvia 1800-luvun '
+                + 'Japanista, fotoform-ryhmän kokeiluja ja Otto Steinertin '
+                + 'töitä.',
+              linkki: 'https://sammlungonline.muenchner-stadtmuseum.de/',
+            },
+            {
+              nimi: 'Die Photographische Sammlung Köln — valokuvaajat aakkosissa',
+              tiedosto: 'Karl Blossfeldt. Cucurbita, 1928.jpg',
+              teksti: 'Kölnin valokuvakokoelmaan kuuluvat August Sanderin '
+                + 'muotokuvat ja Karl Blossfeldtin kasvikuvat. '
+                + 'Aakkosellisesta luettelosta pääsee jokaisen valokuvaajan '
+                + 'omalle sivulle.',
+              selite: 'Mustavalkoinen lähikuva kurpitsan kärhistä: ohuet varret '
+                + 'kiertyvät tiukoiksi spiraaleiksi vaaleaa taustaa vasten.',
+              lahde: 'Karl Blossfeldt, Wikimedia Commons (public domain)',
+              linkki: 'https://photographie-stiftungkultur.de/bestaende',
+            },
+            {
+              nimi: 'Museum Folkwang Essen — valokuvakokoelma',
+              teksti: 'Essenin Folkwang on yksi Saksan tärkeimmistä '
+                + 'valokuvamuseoista. Se säilyttää kokonaisia valokuvaajien '
+                + 'jäämistöjä negatiiveineen, ja kuvat selataan museon '
+                + 'verkkohaussa.',
+              linkki: 'https://www.museum-folkwang.de/de/sammlung/fotografische-sammlung',
+            },
+            {
+              nimi: 'Bundesarchiv Wikimedia Commonsissa',
+              tiedosto: 'Bundesarchiv Bild 183-63107-0001, Berlin, Postzeitungsvertrieb, Zeitungshändlerin.jpg',
+              teksti: 'Saksan liittovaltion arkisto luovutti valtavan määrän '
+                + 'valokuviaan vapaaseen käyttöön Wikimedia Commonsiin.',
+              selite: 'Mustavalkokuva Friedrichstraßen aseman edestä: lehtimyyjä '
+                + 'pitelee sylissään paksua nippua sanomalehtiä ja hymyilee '
+                + 'kameralle.',
+              lahde: 'Günter Weiß, Wikimedia Commons (CC BY-SA 3.0 de)',
+              linkki: 'https://commons.wikimedia.org/wiki/Category:Images_from_the_German_Federal_Archive',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'Deutsche Digitale Bibliothek — koko Saksa yhdessä haussa',
+              tiedosto: 'Weimar, Herzogin Anna Amalia Bibliothek, 2019-09 CN-03.jpg',
+              teksti: 'Deutsche Digitale Bibliothek kokoaa saksalaisten '
+                + 'museoiden, arkistojen ja kirjastojen aineistot samaan '
+                + 'hakuun.',
+              selite: 'Weimarin Anna Amalian kirjaston rokokoosali: valkoiset ja '
+                + 'kullatut hyllyt kahdessa kerroksessa, marmoririntakuvia '
+                + 'lattiatasolla ja parvekekaide keskellä.',
+              lahde: 'Steffen Schmitz, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.deutsche-digitale-bibliothek.de/',
+            },
+            {
+              nimi: 'Staatsbibliothek zu Berlin — digitoidut käsikirjoitukset',
+              tiedosto: 'BWV 232 Titelblatt Missa.jpg',
+              teksti: 'Berliinin valtionkirjasto säilyttää suurinta osaa Johann '
+                + 'Sebastian Bachin säilyneistä nuottikäsikirjoituksista, ja '
+                + 'ne on digitoitu.',
+              selite: 'Kellastunut kansilehti ruskealla musteella: ylinnä lukee '
+                + 'Missa, oikeassa reunassa luettelo äänistä ja soittimista '
+                + 'ja alimpana nimikirjoitus J. S. Bach.',
+              lahde: 'Johann Sebastian Bach, Wikimedia Commons (public domain)',
+              linkki: 'https://digital.staatsbibliothek-berlin.de/',
+            },
+            {
+              nimi: 'Münchener DigitalisierungsZentrum — kolme miljoonaa niteen sivua',
+              teksti: 'Baijerin valtionkirjaston digitointikeskuksessa on yli '
+                + 'kolme miljoonaa digitoitua käsikirjoitusta, karttaa, '
+                + 'nuottia ja sanomalehteä, kaikki selattavissa sivu '
+                + 'kerrallaan.',
+              linkki: 'https://www.digitale-sammlungen.de/en/',
+            },
+            {
+              nimi: 'Wolfenbüttelin herttuakirjasto — keskiajan käsikirjoitukset',
+              tiedosto: 'Gospels1.jpg',
+              teksti: 'Käsikirjoitustietokannassa selataan keskiaikaisia '
+                + 'koodekseja aukeama kerrallaan. Talon kuuluisin aarre on '
+                + 'Heinrich Leijonan kultaisin kirjaimin kirjoitettu '
+                + 'evankeliumikirja.',
+              selite: 'Keskiaikainen käsikirjoitussivu: ylhäällä kruunattu hahmo '
+                + 'ympyrän sisällä, alhaalla neljä juhla-asuista henkilöä, '
+                + 'reunoissa punaista, vihreää ja kultaa.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://diglib.hab.de/?db=mss',
+            },
+            {
+              nimi: 'LeMO — Saksan historia aikajanana',
+              teksti: 'Deutsches Historisches Museumin verkkomuseo kulkee '
+                + 'vuodesta 1815 nykypäivään. Aikajanalta pääsee esineisiin, '
+                + 'valokuviin, silminnäkijävideoihin ja 360 asteen '
+                + 'kohteisiin.',
+              linkki: 'https://www.dhm.de/lemo/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Musiikki ja esitykset',
+          kohteet: [
+            {
+              nimi: 'Beethoven-Haus Bonn — säveltäjän oma arkisto',
+              tiedosto: 'Beethoven.jpg',
+              teksti: 'Beethovenin syntymätalon digitaalisessa arkistossa on '
+                + 'nuottikäsikirjoituksia, kirjeitä ja kuvia. Osassa '
+                + 'käsikirjoituksia musiikki soi samaan aikaan kuin sivua '
+                + 'selaa.',
+              selite: 'Muotokuva Beethovenista: harmaa tukka pörröllä, punainen '
+                + 'kaulahuivi ja käsissä nuottivihko ja kynä.',
+              lahde: 'Joseph Karl Stieler, Wikimedia Commons (public domain)',
+              linkki: 'https://www.beethoven.de/en/archive',
+            },
+            {
+              nimi: 'Elbphilharmonie Hampuri — konsertteja mediateekissa',
+              teksti: 'Hampurin aaltokattoisen konserttitalon mediateekissa '
+                + 'katsotaan ilmaiseksi tallennettuja konsertteja, myös '
+                + 'lapsille tehtyjä Funkelkonzert-esityksiä, ja kuunnellaan '
+                + 'podcasteja.',
+              linkki: 'https://www.elbphilharmonie.de/en/mediatheque',
+            },
+          ],
+        },
+        {
+          otsikko: 'Tiede ja tekniikka',
+          kohteet: [
+            {
+              nimi: 'Deutsches Museum Digital — tekniikan kokoelmat',
+              tiedosto: 'An exhibition hall in Deutsches Museum in Munich.jpg',
+              teksti: 'Münchenin Deutsches Museum on yksi maailman suurimmista '
+                + 'tekniikan ja luonnontieteen museoista, ja sen '
+                + 'kokoelmatietokanta on avoin.',
+              selite: 'Museon korkea sali kattoikkunan alla: valtava vauhtipyörä, '
+                + 'pystysuora höyrykone ja rivi vanhoja koneita matalilla '
+                + 'jalustoilla.',
+              lahde: 'Robert von Oliva, Wikimedia Commons (CC0)',
+              linkki: 'https://digital.deutsches-museum.de/',
+            },
+            {
+              nimi: 'Museum für Naturkunde Berlin — Archaeopteryx ja Tristan',
+              tiedosto: 'Archaeopteryx lithographica (Berlin specimen).jpg',
+              teksti: 'Berliinin luonnontieteellisessä museossa on maailman '
+                + 'kuuluisin Archaeopteryx-fossiili ja Tristan-niminen '
+                + 'tyrannosaurus. Sivustolla on ääniopastuksia ja '
+                + 'digitaalisia näyttelyitä.',
+              selite: 'Vaalea kivilaatta, johon on painautunut linnun luuranko '
+                + 'sulkineen: kaula taipuu taakse ja pitkät sormet levittyvät '
+                + 'sivuille.',
+              lahde: 'H. Raab (User: Vesta), Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://www.museumfuernaturkunde.berlin/en',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'NABU-webkamerat — pesäkuvaa suorana',
+              tiedosto: 'Heidekrug Münster Storch mit Jungen.jpg',
+              teksti: 'Saksan luonnonsuojeluliiton kamerat näyttävät suorana '
+                + 'kattohaikaran pesän, tornipöllöt ja muuttohaukat. Keväällä '
+                + 'poikaset kuoriutuvat ja kasvavat kameran edessä.',
+              selite: 'Kattohaikara seisoo risupesässä katon yläpuolella nokka '
+                + 'auki, ja pesän reunan takaa pilkistää poikasen pää.',
+              lahde: 'Daydove, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://www.nabu.de/wir-ueber-uns/infothek/webcams/index.html',
+            },
+            {
+              nimi: 'Zugspitze — Saksan korkein huippu kameran takaa',
+              teksti: 'Kamera kuvaa Saksan korkeinta vuorta muutaman minuutin '
+                + 'välein. Kuvat jäävät arkistoon, joten samasta paikasta voi '
+                + 'katsoa aikalapsun tai vertailla eilistä säätä tähän '
+                + 'päivään.',
+              linkki: 'https://www.foto-webcam.eu/webcam/zugspitze/',
             },
           ],
         },
