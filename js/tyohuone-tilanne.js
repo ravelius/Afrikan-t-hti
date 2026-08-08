@@ -39,10 +39,10 @@ export const TILANNE = {
         + 'malli Lontoo+Praha+Wien; seuraavaksi Madrid, Berliini, '
         + 'Venetsia ja Tukholma täyteen malliin, sitten loput ~30 '
         + '(Ateena ja Amsterdam jo tekeillä).',
-      seuraavaksi: 'Omistajan testilöydöt ennen seuraavaa '
-        + 'kaupunkierää: maan i-nappi pysyvästi laudalle (avaa '
-        + 'maalehden) ja maalehden sisällyssivu pois — hampurilainen '
-        + 'aukeaa alareunan pop-upina.',
+      seuraavaksi: 'v390: maan i pysyvästi laudalla (koko lasketaan '
+        + 'kartan skaalasta) ja sisällys alareunan pop-upina. '
+        + 'Seuraavaksi Berliinin+Venetsian aihesivut, Tukholma, '
+        + 'sitten Ateena/Amsterdam/Egypti agenteilta.',
     },
     {
       tekija: 'Opus 2',
@@ -91,6 +91,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Maan i laudalla ja alareunan sisällys (v390)',
+    ohje: 'Kartalla nykyisen maan nimen perässä on nyt aina i, '
+      + 'joka avaa maalehden — ei enää erillistä tilaa. Maalehti '
+      + 'aukeaa suoraan sisältöön, ja hampurilainen nostaa '
+      + 'sisällyksen alalaidasta pop-upina niin että sivu jää '
+      + 'näkyviin. Mittakokeilut (lyhyt vs väli) ovat työhuoneen '
+      + 'Kehitys-välilehdellä.',
+  },
   {
     otsikko: 'Maalehteen kolme reittiä (v382)',
     ohje: 'Kartan oikeassa ylälaidassa on nyt Maiden lehdet -nappi '
