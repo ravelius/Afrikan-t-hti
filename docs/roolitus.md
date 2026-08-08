@@ -55,15 +55,24 @@ tämän ja ottaa roolinsa tästä. Omistaja ohjaa kaikkea Fablen kautta.)*
 | Fable | session_01R1jVv12E56gbU5qtH5xGaG | 8.8.2026 |
 | Opus 1 | session_01AEN2as7TAggi2SX3w3DqWV | 8.8.2026 |
 | Opus 2 | session_017kajFQA5rFWByGvVLXc9Df | 8.8.2026 |
-| Sonnet | session_01MAirFte9MpE1HnVRpCj2Mb | 8.8.2026 |
+| Sonnet 1 | session_01MAirFte9MpE1HnVRpCj2Mb | 8.8.2026 |
+| Sonnet 2 | session_01RQtKAgCVRDZzMGRKYJLoWS | 8.8.2026 |
 
-Kaistajako, kun Opus-sessioita on kaksi: **Opus 1** — lehtisisällöt
+Kaistajako, kun sessioita on viisi: **Opus 1** — lehtisisällöt
 (maa-kategoriat.js, menovinkit), UI ja rakenne (radio/tv-napit
 molempiin lehtiin, uutislahteet.js). **Opus 2** — kartat ja introt
 (maakartat.js, assets/kartat, europe-artikkelit.js,
 piirra-kaupunkikartta.mjs) järjestyksessä ITA → ESP → SWE, sen
-jälkeen tv-tallennekandidaattien haku. Kaistat eivät koske samoihin
-tiedostoihin; muutokset kaistajakoon sovitaan Fablen kautta.
+jälkeen tv-tallennekandidaattien haku. **Sonnet 1** — QA ja
+työhuoneen Kehitys-välilehti (tyohuone.html, js/tyohuone-*.js).
+**Sonnet 2** — nähtävyysjutut kaupunkikarttojen kohteille
+(omistajan siirto Opukselta 8.8.2026): tiedot en-Wikipediasta
+omaksi suomenkieliseksi koosteeksi, enintään 5 kuvaa tekstin
+joukossa, lähteeksi pelkkä "Wikipedia" ilman linkkiä; pilotti
+Berliini, sitten Kairo ja uudet kartat Opus 2:n tahdissa; Lontoon
+jutut (Opus 1:n malli) pysyvät ennallaan. Kaistat eivät koske
+samoihin tiedostoihin; muutokset kaistajakoon sovitaan Fablen
+kautta.
 
 ## Julkaisusäännöt (kaikille rooleille)
 
