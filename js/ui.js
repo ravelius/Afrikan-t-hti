@@ -73,7 +73,6 @@ import { MAAKARTAT, KAUPUNKIKARTAT, karttapiste } from './packs/maakartat.js';
 import { NAHTAVYYSJUTUT } from './packs/nahtavyysjutut.js';
 import { SAATIEDOT } from './packs/saatiedot.js';
 import { KOHTAAMISET } from './packs/kohtaamiset.js';
-import { paivanKuva } from './packs/paivan-kuvat.js';
 import {
   haeUutiset, haeArtikkeli, haeLiveTunniste, haeTallenne,
   kaannaSuomeksi, uutislahde,
@@ -7169,7 +7168,15 @@ export class UI {
      * eikä visa saa kilpailla sen kanssa (omistajan tarkennus
      * 5.8.2026). Muilla kaupungeilla visa pysyy etusivulla.
      */
-    const visasivu = this.tutkiLehti && sivuja > 1 ? i === 1 : etusivu;
+    /*
+     * Visa on saapumisen pelitoiminto: siitä saa puntia siitä
+     * kaupungista, johon pelaaja juuri saapui. Maalehti avataan
+     * kartalta mistä tahansa maasta, joten siellä visa olisi väärässä
+     * paikassa — ja Maiden tiedot -varusteella sen voisi pelata
+     * matkustamatta minnekään.
+     */
+    const visasivu = this.tutkiTila !== 'maa'
+      && (this.tutkiLehti && sivuja > 1 ? i === 1 : etusivu);
     this.arrivalKulttuuri.hidden = !visasivu || !this.kulttuuriSaatavilla;
 
     // Kaupungin kohdekartta lehden etusivun loppuun (omistajan
@@ -7189,7 +7196,8 @@ export class UI {
     // Karttasivu ja tilastosivu piirtyvät omilla piirroillaan — ne
     // ovat karttaa ja käyriä, eivät nostolistoja.
     this.arrivalKategoria.classList.toggle('maa-etusivu', Boolean(kategoria?.kartta));
-    if (kategoria?.kartta) this.piirraMaaEtusivu(kategoria);
+    if (kategoria?.sisallys) this.piirraSisallys(kategoria);
+    else if (kategoria?.kartta) this.piirraMaaEtusivu(kategoria);
     else if (kategoria?.numerot) this.piirraMaaNumerotSivu(kategoria);
     else this.piirraKategoria(kategoria);
     this.arrivalKategoria.hidden = !kategoria;
@@ -7240,13 +7248,31 @@ export class UI {
     if (!maa) return;
     const otsikko = nimi ?? maa.nimi;
     const sivut = [];
+    /*
+     * ETUSIVU ON SISÄLLYSLUETTELO (omistajan päätös 8.8.2026: "koko
+     * etusivu on turha" nykyisellään).
+     *
+     * Ennen tässä oli maan korkokartta. Kartta on hyvä kuva mutta
+     * huono etusivu: se ei kerro, mitä lehdessä on, eikä siitä pääse
+     * mihinkään. Maalehteen tullaan kartalta hakemaan tietoa, ja
+     * silloin ensimmäisen sivun tehtävä on näyttää valikoima ja
+     * päästää perille yhdellä napautuksella.
+     *
+     * Kartta ei katoa: se siirtyy omaksi sivukseen sisällysluettelon
+     * jälkeen niillä mailla, joilla se on.
+     */
     const kartta = MAAKARTAT[iso];
-    if (kartta) sivut.push({ id: 'maa-etusivu', nimi: otsikko, kartta });
-    for (const osa of MAA_KATEGORIAT[iso] ?? []) {
-      sivut.push(maa.lippu ? { ...osa, maaLippu: maa.lippu, maa: otsikko } : osa);
-    }
-    sivut.push({ id: 'maa-numeroina', nimi: `${otsikko} numeroina`, numerot: iso });
-    if (!sivut.length) return;
+    const aiheet = (MAA_KATEGORIAT[iso] ?? [])
+      .map((osa) => (maa.lippu ? { ...osa, maaLippu: maa.lippu, maa: otsikko } : osa));
+    const numerot = { id: 'maa-numeroina', nimi: `${otsikko} numeroina`, numerot: iso };
+    const sisalto = [
+      ...(kartta ? [{ id: 'maa-etusivu', nimi: `${otsikko} kartalla`, kartta }] : []),
+      ...aiheet,
+      numerot,
+    ];
+    if (!sisalto.length) return;
+    sivut.push({ id: 'maa-sisallys', nimi: otsikko, sisallys: sisalto });
+    sivut.push(...sisalto);
 
     /*
      * Maalehdellä ei ole kaupungin osia: ei kansikuvia, ei säärivi
@@ -7354,20 +7380,84 @@ export class UI {
     let palkki = this.arrivalDialog.querySelector(':scope .tutki-alanapit');
     if (!palkki) {
       palkki = html('div', 'tutki-alanapit');
+      /*
+       * Napin sisällä on kaksi riviä: suunta ja sen alla pienellä se
+       * aihe, jolle nappi vie (omistajan toive 8.8.2026). "Seuraava"
+       * kertoo vain että jotain tulee; "Seuraava — Ruokaa ja
+       * tapakulttuuria" kertoo kannattaako mennä.
+       */
       const tee = (luokka, teksti, suunta) => {
-        const nappi = html('button', `tutki-alanappi ${luokka}`, teksti);
+        const nappi = html('button', `tutki-alanappi ${luokka}`);
         nappi.type = 'button';
+        nappi.appendChild(html('span', 'alanappi-suunta', teksti));
+        nappi.appendChild(html('span', 'alanappi-aihe'));
         nappi.addEventListener('click', () => this.vaihdaTutkiSivu(suunta));
         palkki.appendChild(nappi);
         return nappi;
       };
       tee('edellinen', 'Edellinen', -1);
       tee('seuraava', 'Seuraava', 1);
+      /*
+       * Hampurilaisvalikko sisällysluetteloon (omistajan toive
+       * 8.8.2026). Sisällys on etusivulla, mutta sivulta 5 sinne
+       * pääsisi muuten vain selaamalla takaisin — valikko tekee
+       * hypystä yhden napautuksen mistä tahansa.
+       */
+      const valikko = html('button', 'tutki-alanappi sisallysnappi');
+      valikko.type = 'button';
+      valikko.title = 'Sisällys';
+      valikko.setAttribute('aria-label', 'Sisällys');
+      valikko.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none"'
+        + ' stroke="currentColor" stroke-width="1.8" stroke-linecap="round">'
+        + '<path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+      valikko.addEventListener('click', () => this.avaaSisallysvalikko());
+      palkki.appendChild(valikko);
       ei.parentElement?.insertBefore(palkki, ei);
     }
-    palkki.querySelector('.edellinen').hidden = (this.tutkiSivu ?? 0) <= 0;
-    palkki.querySelector('.seuraava').hidden = viimeisella;
+
+    // Aihe nappien alle: mihin sivulle kumpikin suunta vie.
+    const sivunNimi = (i) => {
+      if (i <= 0) return this.tutkiTila === 'maa' ? 'Sisällys' : 'Etusivu';
+      return this.tutkiSivut?.[i - 1]?.nimi ?? '';
+    };
+    const nyt = this.tutkiSivu ?? 0;
+    const edellinen = palkki.querySelector('.edellinen');
+    const seuraava = palkki.querySelector('.seuraava');
+    edellinen.querySelector('.alanappi-aihe').textContent = sivunNimi(nyt - 1);
+    seuraava.querySelector('.alanappi-aihe').textContent = sivunNimi(nyt + 1);
+    edellinen.hidden = nyt <= 0;
+    seuraava.hidden = viimeisella;
+    // Valikko vain maalehdessä: kaupunkilehdessä on kolme sivua eikä
+    // sisällysluetteloa, joten napille ei olisi mitään avattavaa.
+    palkki.querySelector('.sisallysnappi').hidden = !maalehti || sivuja < 3;
     palkki.hidden = sivuja < 2;
+  }
+
+  /**
+   * Sisällysluettelo alapalkin valikosta.
+   *
+   * Sama lista kuin etusivulla, mutta päälle avautuvana levynä. Ei
+   * uutta dialogia: lehti on jo dialogissa, ja sisäkkäiset modaalit
+   * sotkevat sekä näppäimistön että paluunapin.
+   */
+  avaaSisallysvalikko() {
+    const vanha = this.arrivalDialog.querySelector(':scope > .sisallys-levy');
+    if (vanha) { vanha.remove(); return; }
+    const sisallys = this.tutkiSivut?.find?.((s) => s.sisallys)?.sisallys
+      ?? this.tutkiSivut ?? [];
+    const levy = html('div', 'sisallys-levy');
+    const sulje = () => levy.remove();
+    const otsikkoRivi = html('div', 'sisallys-levy-ylä');
+    otsikkoRivi.appendChild(html('span', '', 'Sisällys'));
+    const x = html('button', 'sisallys-sulje', '×');
+    x.type = 'button';
+    x.title = 'Sulje';
+    x.addEventListener('click', sulje);
+    otsikkoRivi.appendChild(x);
+    levy.appendChild(otsikkoRivi);
+    levy.appendChild(this.rakennaSisallysLista(sisallys, { suljeValikko: sulje }));
+    levy.addEventListener('click', (e) => { if (e.target === levy) sulje(); });
+    this.arrivalDialog.appendChild(levy);
   }
 
   /**
@@ -7848,24 +7938,15 @@ export class UI {
       this.arrivalMaa.insertBefore(nostoKotelo, this.arrivalOikea);
     }
     /*
-     * Päivän kuva sivun loppuun (omistajan toive 7.8.2026: "Sarjakuva
-     * ja valokuva olisi kiva saada jonnekin myös"). Aluksi tässä oli
-     * Commonsin päivän kuva, mutta sen sisältöä ei valita lapsille —
-     * omistajalle osui olutpäivän elokuvajuliste. Nyt kuva tulee
-     * omasta tarkistetusta listasta (js/packs/paivan-kuvat.js) ja
-     * vaihtuu silti joka päivä. Kuvateksti on valmiiksi suomea.
+     * PÄIVÄN KUVA POISTETTU (omistajan päätös 8.8.2026).
+     *
+     * Kuva tuli omasta tarkistetusta listasta ja vaihtui joka päivä,
+     * mutta se ei liittynyt siihen maahan, jonka sivulla se oli.
+     * Maalehdessä sivun jokaisen osan pitää kertoa siitä maasta.
+     * js/packs/paivan-kuvat.js jää paikalleen: aineisto on
+     * tarkistettua eikä sille ole tässä muuta käyttöä, mutta se voi
+     * palata muualle.
      */
-    const pk = paivanKuva();
-    const kuvaPalsta = html('div', 'paivan-kuva');
-    kuvaPalsta.appendChild(html('p', 'uutiset-nimio paivan-kuva-nimio', 'Päivän kuva maailmalta'));
-    const pkKuva = document.createElement('img');
-    pkKuva.alt = 'Päivän kuva';
-    asetaKuva(pkKuva, valokuvaUrl(pk.tiedosto, 1200), valokuvaVara(pk.tiedosto, 1200));
-    kuvaPalsta.appendChild(pkKuva);
-    kuvaPalsta.appendChild(html('p', 'paivan-kuva-selite', pk.kuvaus));
-    kuvaPalsta.appendChild(html('p', 'lahde',
-      `${pk.tekija}, Wikimedia Commons (${pk.lisenssi})`));
-    kohde.appendChild(kuvaPalsta);
   }
 
   async piirraMaaNumerotSivu(kategoria) {
@@ -7921,6 +8002,73 @@ export class UI {
    *
    * Kuvaton rivi on täysin kelvollinen (ks. piirraKategoria).
    */
+  /**
+   * Yhden aihesivun tiivistys sisällysluetteloon: pieni kuva ja
+   * yhden rivin ingressi.
+   *
+   * Kuva otetaan sivun omasta aineistosta eikä erillisestä
+   * kansikuvakentästä — sellaista ei ole, ja jokaisen aiheen
+   * varustaminen sillä käsin olisi kahdenkymmenen maan työ. Sivun
+   * ensimmäinen kuva on käytännössä aina sen paras kuva.
+   */
+  sisallysTiedot(osa) {
+    if (osa.kartta) return { kuva: osa.kartta.tiedosto, ingressi: 'Kaupungit ja maasto kartalla.' };
+    if (osa.numerot) return { kuva: null, ingressi: 'Väkiluku, pinta-ala ja muut tunnusluvut.' };
+    const ensimmainen = osa.lista?.[0]?.kohteet?.[0] ?? osa.nostot?.[0] ?? null;
+    // Ingressi on johdannon ensimmäinen virke: se on kirjoitettu
+    // kertomaan mistä sivulla on kyse, eli juuri tähän tarkoitukseen.
+    const johdanto = osa.johdanto ?? ensimmainen?.teksti ?? '';
+    const virke = (johdanto.match(/[^.!?]+[.!?]/) ?? [johdanto])[0].trim();
+    return { kuva: ensimmainen?.tiedosto ?? null, ingressi: virke };
+  }
+
+  /**
+   * Maalehden etusivu: sisällysluettelo kahdessa palstassa.
+   *
+   * Jokainen rivi on linkki suoraan sivulle, joten lehteä ei tarvitse
+   * selata järjestyksessä. Sama luettelo aukeaa alapalkin valikosta
+   * (ks. avaaSisallysvalikko), jotta hyppy onnistuu miltä tahansa
+   * sivulta eikä vain etusivulta.
+   */
+  piirraSisallys(kategoria) {
+    const kohde = this.arrivalKategoria;
+    kohde.replaceChildren();
+    kohde.appendChild(html('h3', 'aihe-nimi', kategoria.nimi));
+    kohde.appendChild(html('p', 'johdanto', 'Tämän numeron sisältö:'));
+    kohde.appendChild(this.rakennaSisallysLista(kategoria.sisallys));
+  }
+
+  /** Sisällysluettelon rivit. Käytetään sekä etusivulla että valikossa. */
+  rakennaSisallysLista(sisallys, { suljeValikko = null } = {}) {
+    const lista = html('div', 'sisallys');
+    for (const osa of sisallys ?? []) {
+      const { kuva, ingressi } = this.sisallysTiedot(osa);
+      const rivi = html('button', 'sisallys-rivi');
+      rivi.type = 'button';
+      if (kuva) {
+        const img = document.createElement('img');
+        img.className = 'sisallys-kuva';
+        img.alt = '';
+        img.decoding = 'async';
+        asetaKuva(img, valokuvaUrl(kuva, 320), valokuvaVara(kuva, 320));
+        rivi.appendChild(img);
+      }
+      const teksti = html('div', 'sisallys-teksti');
+      teksti.appendChild(html('span', 'sisallys-otsikko', osa.nimi));
+      if (ingressi) teksti.appendChild(html('span', 'sisallys-ingressi', ingressi));
+      rivi.appendChild(teksti);
+      rivi.addEventListener('click', () => {
+        const i = (this.tutkiSivut ?? []).indexOf(osa);
+        if (i >= 0) {
+          suljeValikko?.();
+          this.naytaTutkiSivu(i + 1, { suunta: 1 });
+        }
+      });
+      lista.appendChild(rivi);
+    }
+    return lista;
+  }
+
   piirraVinkkilista(kohde, ryhmat) {
     for (const ryhma of ryhmat ?? []) {
       if (ryhma.otsikko) kohde.appendChild(html('h4', 'vinkki-ryhma', ryhma.otsikko));
