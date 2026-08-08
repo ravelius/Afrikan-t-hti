@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 363, teksti: 'Menovinkit listaksi: enemmän linkkejä, pienemmät kuvat' },
+  { v: 363, teksti: 'Poistu vasemmalle, Seuraava oikealle joka sivulla' },
+  { v: 363, teksti: 'Tietovisa omaksi kortikseen: väljempi ja vaaleampi' },
   { v: 362, teksti: 'Kaupunkikartat vaaleiksi: kohteet nousevat esiin' },
   { v: 362, teksti: 'Kohteen nimi näkyy hiiren alla työpöydällä' },
   { v: 361, teksti: 'Menovinkit kahdeksalle uudelle maalle' },
