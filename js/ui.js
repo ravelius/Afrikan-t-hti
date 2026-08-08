@@ -4619,64 +4619,44 @@ export class UI {
       .map((r) => `M${r.map(([x, y]) => `${x},${y}`).join(' L')}Z`)
       .join(' ');
     el('path', { d, class: 'country-tint' }, this.countryLayer);
-    // Nimi sovitetaan maan leveyteen, ettei se pursua pienistä maista.
-    const koko = Math.max(15, Math.min(34, (maa.leveys * 0.9) / Math.max(4, maa.nimi.length)));
-    const nimi = el('text', {
-      x: maa.keskus[0],
-      y: maa.keskus[1],
-      class: 'country-name',
-      'text-anchor': 'middle',
-      'font-size': koko.toFixed(0),
-    }, this.countryNameLayer);
-    nimi.textContent = maa.nimi;
-    this.piirraMaaNimenNappi(maa, iso, koko, nimi);
+    this.piirraMaaKilpi(maa, iso);
   }
 
   /**
-   * "i" maan nimen perään: maalehti auki suoraan laudalta.
+   * Maan nimikilpi: nimi ja i-merkki YHTENÄ nappina valitun maan
+   * keskellä.
    *
-   * Omistajan havainto 8.8.2026: *"Kartalla ei vieläkään näy kohtaa
-   * mistä pääsisin maan lehteen. Pitäisi olla i maan nimen perässä."*
+   * Omistajan tarkennus 8.8.2026 illalla: *"maan nimi näkyy välillä
+   * huonosti ja tuo i hyppää oudosti. Valittuna maan nimi voisi näkyä
+   * omana boksinaan jossa samassa i-merkki, eli yksi yhteinen nappi
+   * jossa nimi ja i symboli, mutta aina vain sen maan kohdalla joka
+   * on valittuna."*
    *
-   * v382:n Maiden lehdet -nappi avaa saman lehden minkä tahansa maan
-   * kohdalla, mutta se vaatii tilan kytkemisen ensin. Tämä on
-   * pysyvästi näkyvissä sille maalle, jossa pelaaja juuri on — eli
-   * juuri siinä kohdassa, jota omistaja katsoi kun ei löytänyt mitään.
-   *
-   * Nimi on kaunokirjoitusta ja hyvin haalea; nappi ei saa olla yhtä
-   * haalea, tai sitä ei löydä sekään joka tietää sen olevan siinä.
+   * Aiempi muoto oli haalea kaunokirjoitusnimi + erillinen i-ympyrä,
+   * jonka paikka mitattiin nimen leveydestä — siksi se "hyppäsi", kun
+   * mittaus ehti valmistua eri aikaan kuin piirto. Kilpi on yksi
+   * ryhmä, jonka kaikki mitat lasketaan samalla kertaa skaalasta.
    */
-  piirraMaaNimenNappi(maa, iso, koko, nimi) {
-    // Nimen leveys mitataan, ei arvata: kaunokirjoituksen leveys ei
-    // johdu merkkimäärästä suoraviivaisesti.
-    let leveys = 0;
-    try { leveys = nimi.getComputedTextLength?.() ?? 0; } catch { leveys = 0; }
-    if (!leveys) leveys = maa.nimi.length * koko * 0.5;
-    const r = Math.max(7, koko * 0.42);
-    const x = maa.keskus[0] + leveys / 2 + r * 1.8;
-    const y = maa.keskus[1] - koko * 0.28;
+  piirraMaaKilpi(maa, iso) {
     const nappi = el('g', {
-      class: 'maa-i',
+      class: 'maa-kilpi',
       role: 'button',
       tabindex: '0',
       'aria-label': `${maa.nimi}: avaa maan lehti`,
     }, this.countryNameLayer);
-    // Näkyvä kehä ja kirjain.
-    const keha = el('circle', { cx: x, cy: y, r: r.toFixed(1), class: 'maa-i-kehä' }, nappi);
+    const tausta = el('rect', { class: 'maa-kilpi-tausta' }, nappi);
+    const nimi = el('text', {
+      class: 'maa-kilpi-nimi', 'text-anchor': 'middle', 'dominant-baseline': 'central',
+    }, nappi);
+    nimi.textContent = maa.nimi;
+    const keha = el('circle', { class: 'maa-i-kehä' }, nappi);
     const kirjain = el('text', {
-      x, y, class: 'maa-i-kirjain', 'text-anchor': 'middle', 'dominant-baseline': 'central',
+      class: 'maa-i-kirjain', 'text-anchor': 'middle', 'dominant-baseline': 'central',
     }, nappi);
     kirjain.textContent = 'i';
-    this.maaINappi = { keha, kirjain, x, y, vahin: r };
-    /*
-     * Osumapinta läpinäkyvänä kehän päälle.
-     *
-     * Säde on SVG-yksiköissä, joten sen näyttökoko riippuu kartan
-     * zoomista: kiinteä 15 mitattiin 390 px:n ruudulla yhdentoista
-     * pikselin ympyräksi. Siksi säde lasketaan nykyisestä skaalasta —
-     * ja päivitetään uudestaan joka zoomilla (paivitaMaaIOsuma).
-     */
-    this.maaIOsuma = el('circle', { cx: x, cy: y, r: r.toFixed(1), class: 'maa-i-osuma' }, nappi);
+    // Läpinäkyvä osumapinta koko kilven yli — sormelle vähintään 44 px.
+    const osuma = el('rect', { class: 'maa-i-osuma' }, nappi);
+    this.maaKilpi = { tausta, nimi, keha, kirjain, osuma, maa };
     this.paivitaMaaIOsuma();
     const avaa = (e) => {
       // Napautus ei saa vuotaa kartalle: kartta zoomaisi tai
@@ -4690,29 +4670,61 @@ export class UI {
   }
 
   /**
-   * Napin mitat nykyiseen kartan skaalaan.
+   * Kilven mitat nykyiseen kartan skaalaan.
    *
-   * Säteet ovat SVG-yksiköissä, joten niiden NÄYTTÖkoko riippuu siitä,
-   * kuinka pieneksi kartta on kutistettu. Kiinteillä yksiköillä nappi
-   * oli 390 pikselin ruudulla yhdentoista pikselin ympyrä — mitattu,
-   * ei arvattu. Siksi molemmat lasketaan tavoitepikseleistä taaksepäin:
-   * kehä noin 24 px halkaisijaltaan (näkyy), osumapinta 44 px (sormi).
-   *
-   * Skaala luetaan suoraan DOMista (leveys / viewBoxin leveys) eikä
-   * this.zoomSkaalasta: se ei ole asetettu kaikilla laudoilla, ja
-   * väärä oletus 1 oli juuri se, mikä kutisti napin.
+   * Mitat ovat SVG-yksiköissä, joten NÄYTTÖkoko riippuu siitä, kuinka
+   * pieneksi kartta on kutistettu. Siksi kaikki lasketaan
+   * tavoitepikseleistä taaksepäin (teksti ~13 px, osumapinta ≥44 px)
+   * ja päivitetään joka zoomilla. Skaala luetaan suoraan DOMista
+   * (leveys / viewBoxin leveys) eikä this.zoomSkaalasta: se ei ole
+   * asetettu kaikilla laudoilla, ja väärä oletus 1 kutisti aiemman
+   * i-napin yhdentoista pikselin ympyräksi.
    */
   paivitaMaaIOsuma() {
-    if (!this.maaIOsuma || !this.maaINappi) return;
+    const k = this.maaKilpi;
+    if (!k) return;
     const laatikko = this.svg?.getBoundingClientRect?.();
     const vb = this.svg?.getAttribute?.('viewBox')?.split(/\s+/);
     const skaala = laatikko?.width && vb?.[2] ? laatikko.width / Number(vb[2]) : (this.zoomSkaala || 1);
     if (!Number.isFinite(skaala) || skaala <= 0) return;
-    const { keha, kirjain, vahin } = this.maaINappi;
-    const nakyvaR = Math.max(vahin, 12 / skaala);
-    keha.setAttribute('r', nakyvaR.toFixed(1));
-    kirjain.setAttribute('font-size', (nakyvaR * 1.25).toFixed(1));
-    this.maaIOsuma.setAttribute('r', Math.max(nakyvaR, 22 / skaala).toFixed(1));
+    const kirjasin = 13 / skaala;
+    k.nimi.setAttribute('font-size', kirjasin.toFixed(1));
+    // Nimen leveys mitataan, ei arvata — mutta vasta kirjasinkoon
+    // asettamisen jälkeen, jotta mitta vastaa lopullista piirtoa.
+    let leveys = 0;
+    try { leveys = k.nimi.getComputedTextLength?.() ?? 0; } catch { leveys = 0; }
+    if (!leveys) leveys = k.maa.nimi.length * kirjasin * 0.62;
+    const r = kirjasin * 0.55;
+    const valiX = kirjasin * 0.55;
+    const pehmusteX = kirjasin * 0.75;
+    const korkeus = kirjasin * 1.9;
+    const leveysKaikki = pehmusteX + leveys + valiX + 2 * r + pehmusteX;
+    const [cx, cy] = k.maa.keskus;
+    const x0 = cx - leveysKaikki / 2;
+    const y0 = cy - korkeus / 2;
+    k.tausta.setAttribute('x', x0.toFixed(1));
+    k.tausta.setAttribute('y', y0.toFixed(1));
+    k.tausta.setAttribute('width', leveysKaikki.toFixed(1));
+    k.tausta.setAttribute('height', korkeus.toFixed(1));
+    k.tausta.setAttribute('rx', (korkeus / 2).toFixed(1));
+    k.tausta.setAttribute('stroke-width', (1.2 / skaala).toFixed(2));
+    k.nimi.setAttribute('x', (x0 + pehmusteX + leveys / 2).toFixed(1));
+    k.nimi.setAttribute('y', cy.toFixed(1));
+    const iX = x0 + pehmusteX + leveys + valiX + r;
+    k.keha.setAttribute('cx', iX.toFixed(1));
+    k.keha.setAttribute('cy', cy.toFixed(1));
+    k.keha.setAttribute('r', r.toFixed(1));
+    k.keha.setAttribute('stroke-width', (1.2 / skaala).toFixed(2));
+    k.kirjain.setAttribute('x', iX.toFixed(1));
+    k.kirjain.setAttribute('y', cy.toFixed(1));
+    k.kirjain.setAttribute('font-size', (r * 1.3).toFixed(1));
+    // Osumapinta: koko kilpi, mutta vähintään 44 px joka suuntaan.
+    const osumaK = Math.max(korkeus, 44 / skaala);
+    const osumaL = Math.max(leveysKaikki, 44 / skaala);
+    k.osuma.setAttribute('x', (cx - osumaL / 2).toFixed(1));
+    k.osuma.setAttribute('y', (cy - osumaK / 2).toFixed(1));
+    k.osuma.setAttribute('width', osumaL.toFixed(1));
+    k.osuma.setAttribute('height', osumaK.toFixed(1));
   }
 
   /** Kartalla näkyvät vain käännetyt laatat omina kuvakkeinaan. */
