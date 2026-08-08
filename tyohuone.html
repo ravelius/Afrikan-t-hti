@@ -201,7 +201,7 @@
       AARTEET, VARUSTEET, KAUPUNKIKARTAT, LASIT, PELIT, PELITILAT, LAHTEET, MOOTTORIT,
       LAAJENNUKSET, TODO_SAMILLE,
     } from './js/tyohuone-data.js';
-    import { KEHITYS_KAARI, AANINAYTTEET, MANTERE_KOKEILUT } from './js/tyohuone-kehitys-data.js';
+    import { KEHITYS_KAARI, AANINAYTTEET, MANTERE_KOKEILUT, LYHYT_KOKEILUT } from './js/tyohuone-kehitys-data.js';
     import { TILANNE, TESTATTAVAA } from './js/tyohuone-tilanne.js';
     import { KOHTAAMISET } from './js/packs/kohtaamiset.js';
     import { VIHJETEKSTIT } from './js/packs/europe.js';
@@ -405,6 +405,26 @@
           k.append(aaniRivi('Näyte', null, `assets/audio/naytteet/${m.tiedosto}`));
           return k;
         }),
+      },
+      {
+        otsikko: 'Lyhyet versiot (kokeilu 8.8.)',
+        maara: `${LYHYT_KOKEILUT.kohteet.length} kpl`,
+        rakenna: () => {
+          const johdanto = el('div', 'kortti');
+          johdanto.append(el('h3', '', 'Miksi nämä ovat olemassa'));
+          johdanto.append(el('p', '', LYHYT_KOKEILUT.johdanto));
+          return [johdanto, ...LYHYT_KOKEILUT.kohteet.map((m) => {
+            const k = el('div', 'kortti');
+            k.append(el('h3', '', m.otsikko));
+            k.append(el('p', '', m.kuvaus));
+            if (m.nosto) k.append(el('p', '', m.nosto));
+            /* Äänirivi ilmestyy, kun luenta on generoitu omistajan
+             * valitsemalla äänellä — ilman tiedostoa ei rikkinäistä
+             * soitinta. */
+            if (m.tiedosto) k.append(aaniRivi('Luenta', null, `assets/audio/naytteet/${m.tiedosto}`));
+            return k;
+          })];
+        },
       },
     ]);
 

@@ -21,12 +21,12 @@ export const TILANNE = {
       tehtava: 'Koordinointi ja raporttien kokoaminen. Euroopan '
         + 'tarinatekstit valmiit: 41 dekkarimerkintää äänineen, '
         + 'aarrevihjeet ilmansuunnittain, Lontoon kohtaamisluennat.',
-      seuraavaksi: 'Uusi työtapa 8.8.: uuden jutun ensimmäisen '
-        + 'kierroksen tekee Fable itse omistajan kanssa valmiiksi, '
-        + 'monistus pienemmille vasta täydellä speksillä. '
-        + 'Berliinin pop-upien viimeistely siirtyy Fablelle '
-        + 'Sonnetin korjauskierroksen jälkeen. Lisäksi '
-        + 'kohtaamisluennat, kun äänet on valittu.',
+      seuraavaksi: 'Lyhyet tekstiversiot ovat Kehitys-välilehdellä '
+        + '(8 kokeilua, isoisä-vuorottelu) — luennat generoidaan '
+        + 'heti kun omistaja lähettää valitun äänen. Sitten koko '
+        + 'Euroopan lyhennys samalla kaavalla. Berliinin pop-upien '
+        + 'viimeistely Fablelle Sonnetin korjauskierroksen '
+        + 'jälkeen.',
     },
     {
       tekija: 'Opus 1',

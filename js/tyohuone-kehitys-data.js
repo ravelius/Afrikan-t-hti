@@ -137,6 +137,82 @@ export const AANINAYTTEET = [
  * muilta laudoilta, Viisaan Kertojan lukemina. EIVÄT ole pelissä —
  * omistaja kuuntelee sävyn ennen kuin maanosia aletaan kirjoittaa.
  */
+/**
+ * Lyhyet versiot (omistajan pyyntö 8.8.2026: "matkakirjan tekstit
+ * kannattaa vielä lyhentää... myös Eurooppaan lyhyemmät versiot").
+ * Kokeilu vastaa samalla kysymykseen "pitääkö vuorotella, ettei
+ * isoisä ole ollenkaan": lyhyessä muodossa merkintä kantaa YHDEN
+ * kuvan, ja isoisä on mukana vain kun hän on se kuva — noin joka
+ * toisessa merkinnässä. Alkuperäiset tekstit näkyvät vertailua
+ * varten Euroopan tekstit -osiossa. Äänet generoidaan omistajan
+ * valitsemalla äänellä, kun valinta tulee.
+ */
+export const LYHYT_KOKEILUT = {
+  johdanto: 'Sääntö jota nämä kokeilevat: yksi kuva per merkintä. '
+    + 'Isoisä puhuu vain joka toisessa — kun hän on hiljaa, '
+    + 'Reginaldin havainto saa koko tilan, ja kun hän puhuu, hän '
+    + 'saa viimeisen sanan. Kaksi Euroopan merkintää on tässä '
+    + 'ilman isoisää, kolme hänen kanssaan; mannerkokeilut samalla '
+    + 'kaavalla.',
+  kohteet: [
+    {
+      otsikko: 'Edinburgh (jännitys — isoisä mukana)',
+      kuvaus: 'Sumussa kuului askeleita — kunnes linnan tykki '
+        + 'pamahti, ja ne kääntyivät kiireesti pois.',
+      nosto: 'Isoisä kirjoitti: "Tykki ammutaan kello yksi laivojen '
+        + 'takia." Minä kiitin sitä muustakin.',
+    },
+    {
+      otsikko: 'Pariisi (arvoitus — ilman isoisää)',
+      kuvaus: 'Tarjoilija toi kaakaon, jota en tilannut: "Pöytä '
+        + 'seitsemän tarjoaa aina teidän suvullenne." Pöydän alle '
+        + 'oli liimattu messinkiavain.',
+    },
+    {
+      otsikko: 'Wien (hengähdys — isoisä kantaa)',
+      kuvaus: 'Kahvilassa kukaan ei hoputtanut, vaikka istuin kaksi '
+        + 'tuntia.',
+      nosto: 'Isoisä kirjoitti: "Keisarin uusi vesijohto tuo veden '
+        + 'vuorilta ilman ainuttakaan pumppua." Join siitä hanasta '
+        + 'tänään.',
+    },
+    {
+      otsikko: 'Ateena (lämpö — isoisä mukana)',
+      kuvaus: 'Lippuluukulla myyjä sanoi: "Seuralaisenne maksoi '
+        + 'jo." Huipulla odotti vain tyhjä penkki — ja siinä vielä '
+        + 'lämmin paikka.',
+      nosto: 'Isoisä kirjoitti: "Täällä keksittiin, että kaupunkia '
+        + 'johdetaan keskustelemalla." Ukolla oli tapana olla '
+        + 'oikeassa.',
+    },
+    {
+      otsikko: 'Pietari (ihmetys — ilman isoisää)',
+      kuvaus: 'Kesäyö ei pimennyt: luin katukylttiä keskiyöllä '
+        + 'ilman lamppua, ja Nevan sillat nousivat pystyyn kuin '
+        + 'portit.',
+    },
+    {
+      otsikko: 'Afrikka: Sansibar (lyhyt mannerkokeilu)',
+      kuvaus: 'Vanha veistäjä käänsi työnsä minuun päin: kivestä '
+        + 'nousi linnun siipi. "Isoisäsi kysyi samasta linnusta."',
+    },
+    {
+      otsikko: 'Lähi-itä: karavaani (lyhyt mannerkokeilu)',
+      kuvaus: 'Vartija sammutti lyhdyn ja osoitti taivaalle: '
+        + '"Täällä suunta ei ole kartassa vaan tähdissä."',
+      nosto: 'Isoisä kirjoitti: "Sheban aarretta ei löydä se, joka '
+        + 'kulkee päivällä."',
+    },
+    {
+      otsikko: 'Pohjois-Amerikka: preeria (lyhyt mannerkokeilu)',
+      kuvaus: 'Juna ylitti preeriaa kolmatta päivää, eikä maisema '
+        + 'loppunut.',
+      nosto: 'Isoisä kirjoitti: "Ensimmäistä kertaa minä olen se, '
+        + 'joka tuijottaa."',
+    },
+  ],
+};
+
 export const MANTERE_KOKEILUT = [
   {
     lauta: 'Afrikka — Sansibar (kivilinnun varjo)',
