@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 362, teksti: 'Kaupunkikartat vaaleiksi: kohteet nousevat esiin' },
+  { v: 362, teksti: 'Kohteen nimi näkyy hiiren alla työpöydällä' },
   { v: 361, teksti: 'Menovinkit kahdeksalle uudelle maalle' },
   { v: 360, teksti: 'Espanjaan tv-nappi: sää ja uutiset neljässä minuutissa' },
   { v: 359, teksti: 'Venetsian laguuni näkyviin: kartta ei ole enää kuiva' },
