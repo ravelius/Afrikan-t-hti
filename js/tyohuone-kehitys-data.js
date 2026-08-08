@@ -148,12 +148,13 @@ export const AANINAYTTEET = [
  * valitsemalla äänellä, kun valinta tulee.
  */
 export const LYHYT_KOKEILUT = {
-  johdanto: 'Sääntö jota nämä kokeilevat: yksi kuva per merkintä. '
-    + 'Isoisä puhuu vain joka toisessa — kun hän on hiljaa, '
-    + 'Reginaldin havainto saa koko tilan, ja kun hän puhuu, hän '
-    + 'saa viimeisen sanan. Kaksi Euroopan merkintää on tässä '
-    + 'ilman isoisää, kolme hänen kanssaan; mannerkokeilut samalla '
-    + 'kaavalla.',
+  johdanto: 'Vertailu kolmesta mitasta (omistajan pyyntö 8.8.: '
+    + '"oikea mitta voisi olla niiden kahden välistä"): LYHYT on '
+    + 'tiivein kokeilu, VÄLI on lyhyen ja nykyisen pelitekstin '
+    + 'puolimatka. Nykyinen pitkä versio on luettavissa Euroopan '
+    + 'tekstit -osiossa. Sääntö kaikissa: yksi kuva per merkintä, '
+    + 'ja isoisä puhuu vain noin joka toisessa — Pariisi ja '
+    + 'Pietari ovat ilman häntä.',
   kohteet: [
     {
       otsikko: 'Edinburgh (jännitys — isoisä mukana)',
@@ -161,12 +162,22 @@ export const LYHYT_KOKEILUT = {
         + 'pamahti, ja ne kääntyivät kiireesti pois.',
       nosto: 'Isoisä kirjoitti: "Tykki ammutaan kello yksi laivojen '
         + 'takia." Minä kiitin sitä muustakin.',
+      vali: 'Sumussa selkäni takana kuului askeleita — kunnes '
+        + 'linnan tykki pamahti, ja me molemmat hypähdimme. '
+        + 'Askeleet kääntyivät kiireesti pois.',
+      valiNosto: 'Isoisä kirjoitti: "Tykki ammutaan kello yksi, '
+        + 'jotta laivat asettavat kellonsa." Minä kiitin sitä '
+        + 'tänään muustakin.',
     },
     {
       otsikko: 'Pariisi (arvoitus — ilman isoisää)',
       kuvaus: 'Tarjoilija toi kaakaon, jota en tilannut: "Pöytä '
         + 'seitsemän tarjoaa aina teidän suvullenne." Pöydän alle '
         + 'oli liimattu messinkiavain.',
+      vali: 'Kahvilan tarjoilija toi kaakaon, jota en ollut '
+        + 'tilannut: "Pöytä seitsemän tarjoaa aina teidän '
+        + 'suvullenne." Pöydän kannen alle oli liimattu pieni '
+        + 'messinkiavain. Tilasin toisen kaakaon ja jäin.',
     },
     {
       otsikko: 'Wien (hengähdys — isoisä kantaa)',
@@ -175,6 +186,11 @@ export const LYHYT_KOKEILUT = {
       nosto: 'Isoisä kirjoitti: "Keisarin uusi vesijohto tuo veden '
         + 'vuorilta ilman ainuttakaan pumppua." Join siitä hanasta '
         + 'tänään.',
+      vali: 'Kahvilassa kaakao tuli hopeatarjottimella, eikä kukaan '
+        + 'hoputtanut, vaikka istuin kaksi tuntia.',
+      valiNosto: 'Isoisä kirjoitti: "Keisari avasi vesijohdon, joka '
+        + 'tuo veden vuorilta ilman ainuttakaan pumppua." Join '
+        + 'siitä hanasta tänään.',
     },
     {
       otsikko: 'Ateena (lämpö — isoisä mukana)',
@@ -184,31 +200,56 @@ export const LYHYT_KOKEILUT = {
       nosto: 'Isoisä kirjoitti: "Täällä keksittiin, että kaupunkia '
         + 'johdetaan keskustelemalla." Ukolla oli tapana olla '
         + 'oikeassa.',
+      vali: 'Akropoliin lippuluukulla myyjä ojensi lipun, jota en '
+        + 'ollut ostanut: "Seuralaisenne maksoi jo." Huipulla '
+        + 'odotti vain tyhjä penkki — ja siinä vielä lämmin '
+        + 'paikka.',
+      valiNosto: 'Isoisä kirjoitti temppelin juurella: "Täällä '
+        + 'keksittiin, että kaupunkia voi johtaa keskustelemalla." '
+        + 'Ukolla oli tapana olla oikeassa.',
     },
     {
       otsikko: 'Pietari (ihmetys — ilman isoisää)',
       kuvaus: 'Kesäyö ei pimennyt: luin katukylttiä keskiyöllä '
         + 'ilman lamppua, ja Nevan sillat nousivat pystyyn kuin '
         + 'portit.',
+      vali: 'Kesäyö ei pimennyt lainkaan: luin katukylttiä '
+        + 'keskiyöllä ilman lamppua. Sitten Nevan sillat nousivat '
+        + 'pystyyn, ja jäin katsomaan kuin portin avautumista.',
     },
     {
-      otsikko: 'Afrikka: Sansibar (lyhyt mannerkokeilu)',
+      otsikko: 'Afrikka: Sansibar (mannerkokeilu)',
       kuvaus: 'Vanha veistäjä käänsi työnsä minuun päin: kivestä '
         + 'nousi linnun siipi. "Isoisäsi kysyi samasta linnusta."',
+      vali: 'Mausteiden tuoksu tuli vastaan jo laiturilla. Vanha '
+        + 'veistäjä käänsi työnsä minuun päin: kivestä nousi '
+        + 'linnun siipi. "Isoisäsi kysyi samasta linnusta."',
+      valiNosto: 'Isoisä kirjoitti: "Kivilintu ei ole taru — sen '
+        + 'varjo on jo nähty."',
     },
     {
-      otsikko: 'Lähi-itä: karavaani (lyhyt mannerkokeilu)',
+      otsikko: 'Lähi-itä: karavaani (mannerkokeilu)',
       kuvaus: 'Vartija sammutti lyhdyn ja osoitti taivaalle: '
         + '"Täällä suunta ei ole kartassa vaan tähdissä."',
       nosto: 'Isoisä kirjoitti: "Sheban aarretta ei löydä se, joka '
         + 'kulkee päivällä."',
+      vali: 'Karavaanin vartija sammutti lyhdyn ja osoitti '
+        + 'taivaalle: "Täällä suunta ei ole kartassa vaan '
+        + 'tähdissä." Kirjani aukesi tuulessa sivulle, johon '
+        + 'isoisä oli piirtänyt saman tähtikuvion.',
+      valiNosto: 'Isoisä kirjoitti: "Sheban aarretta ei löydä se, '
+        + 'joka kulkee päivällä."',
     },
     {
-      otsikko: 'Pohjois-Amerikka: preeria (lyhyt mannerkokeilu)',
+      otsikko: 'Pohjois-Amerikka: preeria (mannerkokeilu)',
       kuvaus: 'Juna ylitti preeriaa kolmatta päivää, eikä maisema '
         + 'loppunut.',
       nosto: 'Isoisä kirjoitti: "Ensimmäistä kertaa minä olen se, '
         + 'joka tuijottaa."',
+      vali: 'Juna ylitti preeriaa kolmatta päivää, eikä maisema '
+        + 'loppunut. Vaunussa myytiin sähkeitä kuin sanomalehtiä.',
+      valiNosto: 'Isoisä kirjoitti: "Ensimmäistä kertaa matkallani '
+        + 'minä olen se, joka tuijottaa."',
     },
   ],
 };
