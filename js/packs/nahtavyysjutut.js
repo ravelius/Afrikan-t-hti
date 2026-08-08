@@ -934,4 +934,214 @@ export const NAHTAVYYSJUTUT = {
       lahde: 'Wikipedia',
     },
   },
+  lontoo: {
+    'Buckinghamin palatsi': {
+      aika: '1837',
+      teksti: 'Palatsi ei ollut alun perin palatsi vaan tavallinen '
+          + 'kaupunkitalo, jonka herttua rakensi 1703. Kuningas Yrjö III '
+          + 'osti sen 1761 vaimolleen, ja ensimmäinen hallitsija, joka '
+          + 'todella muutti sisään, oli kuningatar Viktoria vasta 1837.'
+        + '\n\n'
+        + 'Sisään pääsi silti kuka tahansa sitkeä: nelitoistavuotias '
+          + 'Edward Jones murtautui palatsiin kolme kertaa 1838–1841, '
+          + 'kerran häntä etsittiin sohvan alta. Nykyään huoneita on '
+          + '775, ja katolla liehuva lippu kertoo, onko hallitsija '
+          + 'kotona.',
+      lainaus: {
+        teksti: 'Olen iloinen, että meitä pommitettiin. Nyt voin '
+          + 'katsoa East Endiä silmiin.',
+        lahde: 'Kuningatar Elisabet syyskuussa 1940, kun pommi oli '
+          + 'osunut palatsiin',
+      },
+      kuvat: [
+        {
+          tiedosto: 'Buckingham Palace, London - April 2009.jpg',
+          selite: 'Palatsin itäjulkisivu The Mallin päästä, edessä '
+            + 'kukkapenkit ja katolla lipputanko.',
+          lahde: 'Diliff, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Guard of Buckingham Palace - 01.jpg',
+          selite: 'Vartiomies vartiokopissaan palatsin '
+            + 'keskiholvikäytävän vieressä.',
+          lahde: 'Carlos Delgado, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Trafalgar Square': {
+      aika: '1844',
+      teksti: 'Ennen aukiota tässä olivat kuninkaan tallit. Kun ne '
+          + 'siirrettiin pois, tontti vapautui ja aukio avattiin '
+          + 'yleisölle 1844. Keskellä seisova pylväs muistaa Horatio '
+          + 'Nelsonia, joka voitti meritaistelun 1805 ja kuoli siinä.'
+        + '\n\n'
+        + 'Pronssileijonat tulivat vasta 1867. Kuvanveistäjä pyysi '
+          + 'mallikseen kuolleen leijonan eläintarhasta, mutta piirsi '
+          + 'niin hitaasti, että raato ehti mädäntyä — siksi tassut '
+          + 'muistuttavat enemmän kissaa kuin leijonaa.'
+        + '\n\n'
+        + 'Aukio oli pitkään kuuluisa kyyhkyistään: parvi kasvoi '
+          + 'pahimmillaan noin 35 000 linnun kokoiseksi. Ruokinta '
+          + 'kiellettiin 2003, ja tilalle tuotiin haukka partioimaan.',
+      lainaus: {
+        teksti: 'Englanti odottaa jokaisen tekevän velvollisuutensa.',
+        lahde: 'Horatio Nelsonin lippuviesti laivastolleen '
+          + 'Trafalgarin taistelun alkaessa 21. lokakuuta 1805',
+      },
+      kuvat: [
+        {
+          tiedosto: 'Trafalgar Square (21178394832).jpg',
+          selite: 'Aukio kesäpäivänä: Nelsonin pylväs keskellä, '
+            + 'suihkulähde käynnissä ja ihmisiä altaan reunalla.',
+          lahde: 'Markus Trienke, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+        {
+          tiedosto: 'Landseer Lion, Trafalgar Square, London - geograph.org.uk - 6823604.jpg',
+          selite: 'Kaksi Landseerin pronssileijonaa graniittijalustoillaan.',
+          lahde: 'habiloid, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Big Ben': {
+      aika: '1859',
+      teksti: 'Big Ben ei ole torni, vaan kello, joka roikkuu tornin '
+          + 'huipulla ja painaa 13,7 tonnia. Ensimmäinen kello halkesi '
+          + 'jo koekäytössä, ja uusikin halkesi syyskuussa 1859, koska '
+          + 'lyömävasara painoi liikaa.'
+        + '\n\n'
+        + 'Halkeamaa ei koskaan korjattu, ja juuri se antaa Big '
+          + 'Benille sen tunnetun soinnun. Kello käy silti sekunnin '
+          + 'tarkkuudella: sitä säädetään lisäämällä tai poistamalla '
+          + 'vanhoja pennejä heilurin päältä.'
+        + '\n\n'
+        + 'Torni on 96 metriä korkea ja nojaa hieman luoteeseen. '
+          + 'Kellotaulujen alareunaan on kaiverrettu latinankielinen '
+          + 'rukous kuningatar Viktorian ajalta.',
+      lainaus: {
+        teksti: 'DOMINE SALVAM FAC REGINAM NOSTRAM VICTORIAM PRIMAM — '
+          + 'Herra, varjele kuningattaremme Viktoria ensimmäistä.',
+        lahde: 'Kaikkien neljän kellotaulun alareunaan kaiverrettu teksti',
+      },
+      kuvat: [
+        {
+          tiedosto: 'Big Ben at sunset - 2014-10-27 17-30.jpg',
+          selite: 'Torni hämärässä, kellotaulu valaistuna ja '
+            + 'parlamenttitalon huiput taustalla.',
+          lahde: 'Colin, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'London Big Ben Inner Clock Face 1070925-PSD.jpg',
+          selite: 'Kellotaulu läheltä: latinankielinen kaiverrus '
+            + 'alareunassa ja lasiruudut viisarien takana.',
+          lahde: 'Ermell, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Lontoon silmä': {
+      aika: '2000',
+      teksti: 'Pyörä on 135 metriä korkea, mutta oudointa siinä on '
+          + 'tuki: se roikkuu vain toiselta puolelta, kuten '
+          + 'polkupyörän eturenkaan pinnat yhdellä haarukalla. Toista '
+          + 'yhtä korkeaa näin tuettua maisemapyörää ei maailmassa ole.'
+        + '\n\n'
+        + 'Pyörää ei nostettu paikalleen valmiina. Koko kehä koottiin '
+          + 'makuulleen Thamesin päälle rakennetuille lautoille, ja '
+          + 'sitten sitä nostettiin pystyyn hitaasti, pari astetta '
+          + 'tunnissa.'
+        + '\n\n'
+        + 'Kapseleita on 32, numeroitu 1–33, koska numeroa 13 ei ole '
+          + 'lainkaan. Pyörä pyörii hitaammin kuin ihminen kävelee '
+          + 'eikä pysähdy koskaan — kyytiin astutaan sen liikkuessa.',
+      kuvat: [
+        {
+          tiedosto: 'London eye and county hall pano edited 2008-02-19.jpg',
+          selite: 'Koko pyörä joen toiselta rannalta, kehää '
+            + 'kannattavat ohuet teräsvaijerit kuin polkupyörän pinnat.',
+          lahde: 'Kim Hansen, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'The London Eye Under Construction - August 1999.jpg',
+          selite: 'Elokuu 1999: kehä makaa vielä vaakatasossa joen '
+            + 'päällä rakennetuilla lautoilla, ympärillä nostureita.',
+          lahde: 'Jim Linwood, Wikimedia Commons (CC BY 2.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Pyhän Paavalin katedraali': {
+      aika: '1675–1710',
+      teksti: 'Nykyinen kirkko on jo viides samalla kukkulalla — '
+          + 'edellinen tuhoutui suurpalossa 1666. Uuden suunnitteli '
+          + 'Christopher Wren, koulutukseltaan tähtitieteilijä, jolle '
+          + 'rakennusten piirtämisestä tuli sivutyö loppuelämäksi.'
+        + '\n\n'
+        + 'Kupoli näyttää yksinkertaiselta, mutta niitä on kolme '
+          + 'sisäkkäin. Kupolin sisäreunaa kiertää Kuiskausgalleria, '
+          + 'jossa seinää vasten kuiskattu sana kuuluu selvästi yli '
+          + 'kolmenkymmenen metrin päähän.'
+        + '\n\n'
+        + 'Pommitusten aikana kirkosta tuli koko maan symboli: '
+          + 'joulukuun 1940 yönä otettu valokuva savun keskellä '
+          + 'seisovasta kupolista kiersi maailman. Wren on haudattu '
+          + 'oman kirkkonsa kryptaan.',
+      lainaus: {
+        teksti: 'Lukija, jos etsit hänen muistomerkkiään — katso '
+          + 'ympärillesi.',
+        lahde: 'Christopher Wrenin hautakiven latinankielinen teksti '
+          + 'kryptassa: LECTOR SI MONUMENTUM REQUIRIS CIRCUMSPICE',
+      },
+      kuvat: [
+        {
+          tiedosto: 'St Paul\'s Cathedral Dome 2020 Exterior Ground.jpg',
+          selite: 'Kupoli läheltä: lyijypinta jaettu kaariin, '
+            + 'huipulla kivinen lyhty ja kullattu risti.',
+          lahde: 'Julian Herzog, Wikimedia Commons (CC BY 4.0)',
+        },
+        {
+          tiedosto: 'St Paul\'s Survives.jpg',
+          selite: 'Kupoli kohoaa savupilvien yläpuolelle joulukuun '
+            + '1940 pommitusyönä.',
+          lahde: 'Herbert Mason, Wikimedia Commons (PD)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+    'Tower Bridge': {
+      aika: '1886–1894',
+      teksti: 'Sillan piti ratkaista mahdoton tehtävä: itä-Lontoo '
+          + 'tarvitsi ylityspaikan, mutta purjelaivojen oli yhä '
+          + 'päästävä satamaan sillan kohdalta. Laki määräsi, että '
+          + 'silta avataan laivalle koska tahansa, ruuhkasta '
+          + 'riippumatta.'
+        + '\n\n'
+        + 'Tornit näyttävät keskiaikaisilta, mutta sisällä on '
+          + 'teräsluuranko, jonka päälle ladottiin kiveä, jotta silta '
+          + 'sopisi yhteen viereisen Lontoon Towerin kanssa. '
+          + 'Avautuvat läpät, kumpikin noin 1 070 tonnia, nousevat '
+          + 'vastapainojen ansiosta viidessä minuutissa.'
+        + '\n\n'
+        + 'Silta sekoitetaan yhä naapuriinsa London Bridgeen. Kun '
+          + 'vanha London Bridge myytiin 1968 amerikkalaiselle '
+          + 'liikemiehelle ja koottiin uudelleen Arizonaan, syntyi '
+          + 'tarina, että ostaja luuli saavansa juuri tämän sillan.',
+      kuvat: [
+        {
+          tiedosto: 'Puente de la Torre, Londres, Inglaterra, 2022-11-26, DD 145.jpg',
+          selite: 'Silta läheltä joelta: kaksi kivistä tornia, niiden '
+            + 'välissä yläkäytävät ja siniset riippuketjut.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Tower Bridge walkway.jpg',
+          selite: 'Yläkäytävän lasilattia, jonka läpi näkyy ajorata '
+            + 'kymmenien metrien alapuolella.',
+          lahde: 'Tristan Surtel, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      lahde: 'Wikipedia',
+    },
+  },
 };
