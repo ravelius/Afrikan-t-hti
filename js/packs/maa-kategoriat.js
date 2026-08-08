@@ -5554,4 +5554,122 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  AUT: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Itävalta on avannut verkkoon sen, mitä salissa ei näe: maalin alle '
+        + 'jääneet luonnokset, Klimtin kultalehden lähikuvana, 28 miljoonaa '
+        + 'sanomalehden sivua, Mozartin oman käsialan ja alppilaakson suorana '
+        + 'kuvana.',
+      nostot: [
+        {
+          otsikko: 'Kaksitoista Bruegelia, myös maalin alta katsottuna',
+          tiedosto: 'Pieter Bruegel the Elder - Children’s Games - Google Art Project.jpg',
+          teksti: 'Kunsthistorisches Museumilla Wienissä on maailman suurin '
+            + 'Pieter Bruegel vanhemman kokoelma: kaksitoista maalausta. '
+            + 'Museo valokuvasi ne kaikki ja avasi kuvat verkkoon ilmaiseksi. '
+            + 'Samaa teosta voi katsoa neljällä tavalla: tavallisena kuvana, '
+            + 'tarkkana lähikuvana, infrapunassa ja röntgenissä. Infrapuna '
+            + 'paljastaa maalikerroksen alta luonnosviivat, jotka Bruegel '
+            + 'piirsi ensin. Lastenleikit-maalauksesta on tunnistettu yli 90 '
+            + 'eri leikkiä. Etsi hyrrä, puujalat ja vanne.',
+          selite: 'Bruegelin Lastenleikit vuodelta 1560: kaupungin aukio ja kadut '
+            + 'ovat täynnä lapsia, jotka kieriskelevät, kiipeilevät ja '
+            + 'pyörittävät vanteita.',
+          lahde: 'Pieter Bruegel vanhempi, Wikimedia Commons (public domain)',
+          linkki: 'https://insidebruegel.net/',
+          linkkiNimi: 'Inside Bruegel — kaksitoista maalausta suurennettuna',
+        },
+        {
+          otsikko: 'Klimtin Suudelma niin läheltä, että kultalehti erottuu',
+          tiedosto: 'Gustav Klimt - Der Kuss (Liebespaar) - 912 - Österreichische Galerie Belvedere.jpg',
+          teksti: 'Gustav Klimt maalasi Suudelman vuosina 1907–1908. Hän liimasi '
+            + 'kankaalle oikeaa kultaa, hopeaa ja platinaa, joten teos '
+            + 'kimaltaa yhä. Maalaus on Belvederen linnassa Wienissä, ja '
+            + 'museon verkkokokoelmassa sillä on oma sivunsa. Kuvaa voi '
+            + 'suurentaa niin lähelle, että ohuen kultalehden reunat '
+            + 'erottuvat. Sivulla on myös tutkimusvalokuvia: '
+            + 'ultraviolettivalossa ja sivuvalossa otettuja versioita, joissa '
+            + 'pinta näyttää aivan toiselta.',
+          selite: 'Klimtin Suudelma: pari polvistuu kukkivalla niityllä, ja '
+            + 'heidän kultaiset viittansa sulautuvat yhdeksi kuvioksi '
+            + 'kimaltavaa taustaa vasten.',
+          lahde: 'Gustav Klimt, Wikimedia Commons (public domain)',
+          linkki: 'https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar',
+          linkkiNimi: 'Belvedere — Suudelma museon verkkokokoelmassa',
+        },
+        {
+          otsikko: 'Wienin sanomalehti vuodelta 1873, päivä kerrallaan',
+          tiedosto: 'Rotunde Weltausstellung 1873.jpg',
+          teksti: 'Itävallan kansalliskirjaston ANNO-arkistossa on 28 miljoonaa '
+            + 'skannattua sivua ja yli 1600 lehteä. Wiener Zeitung alkoi '
+            + 'ilmestyä vuonna 1703, ja se on verkossa ensimmäisestä vuodesta '
+            + 'lähtien. Linkki avaa vuoden 1873 kalenterin: jokainen '
+            + 'päivämäärä on painike, josta aukeaa sen päivän lehti. Juuri '
+            + 'silloin Wienissä järjestettiin maailmannäyttely. Teksti on '
+            + 'saksaa ja vanhaa fraktuuraa, mutta ilmoitukset ja kuvat '
+            + 'aukeavat ilman kielitaitoakin.',
+          selite: 'Wienin maailmannäyttelyn Rotunda keväällä 1873: valtava '
+            + 'kupolihalli on vielä telineissä, ja pääportin edessä seisoo '
+            + 'joukko tummiin pukeutuneita miehiä.',
+          lahde: 'Wiener Photographen-Association, Wikimedia Commons (public domain)',
+          linkki: 'https://anno.onb.ac.at/cgi-content/anno?aid=wrz&datum=1873',
+          linkkiNimi: 'ANNO — Wiener Zeitung, vuosi 1873',
+        },
+        {
+          otsikko: 'Yli 1400 Mozartin perheen kirjettä ja asiakirjaa',
+          tiedosto: 'Mozart Family Croce.jpg',
+          teksti: 'Salzburgin Mozarteum-säätiöllä on noin puolet kaikista '
+            + 'tunnetuista Mozartin perheen kirjeistä. Verkkoeditiossa niitä '
+            + 'on yli 1400, vanhin vuodelta 1747. Jokaisesta on '
+            + 'puhtaaksikirjoitettu teksti, useimmista myös englanninkielinen '
+            + 'käännös, ja säätiön omista käsikirjoituksista skannattu '
+            + 'alkuperäinen sivu. Wolfgang oli kolmetoista, kun hän kirjoitti '
+            + 'Veronasta siskolleen Nannerlille. Kirjeissä puhutaan '
+            + 'matkoista, majataloista ja rahasta.',
+          selite: 'Mozartin perhe noin vuonna 1780: Nannerl ja Wolfgang soittavat '
+            + 'samaa kosketinsoitinta, isä Leopold pitää viulua ja seinällä '
+            + 'riippuu kuolleen äidin muotokuva.',
+          lahde: 'Johann Nepomuk della Croce, Wikimedia Commons (public domain)',
+          linkki: 'https://dme.mozarteum.at/DME/briefe/doclist.php',
+          linkkiNimi: 'Digitale Mozart-Edition — kirjeet ja asiakirjat',
+        },
+        {
+          otsikko: '135 968 esinettä Wienistä, ja kuvat saa ladata',
+          tiedosto: 'Wien Museum in 2024 02.jpg',
+          teksti: 'Wien Museum kerää oman kaupunkinsa tavaraa: muotia, kelloja, '
+            + 'Praterin huvipuiston esineitä, kaivauslöytöjä ja taidetta. '
+            + 'Verkkokokoelmassa on nyt 135 968 kohdetta ja 212 917 kuvaa, ja '
+            + 'jokaisesta kohteesta on kuva. Suuri osa on merkitty vapaasti '
+            + 'käytettäväksi, eli kuvan saa ladata ja liittää vaikka '
+            + 'koulutyöhön. Haun voi rajata vuosikymmenen tai aiheen mukaan. '
+            + 'Itse taloon ja sen kattoterassille pääsee ilmaiseksi.',
+          selite: 'Näkymä Wien Museumin kattoterassilta iltahämärässä: alhaalla '
+            + 'Karlsplatzin aukio ja edessä Karlskirchen vihreä kupoli kahden '
+            + 'korkean pylvään välissä.',
+          lahde: 'Renek78, Wikimedia Commons (CC0)',
+          linkki: 'https://sammlung.wienmuseum.at/',
+          linkkiNimi: 'Wien Museum Online Sammlung',
+        },
+        {
+          otsikko: 'Kamera 1945 metrissä katsoo Innsbruckia alaspäin',
+          tiedosto: 'Nordkette.jpg',
+          teksti: 'Innsbruckin yläpuolella, Nordketten rinteellä 1945 metrin '
+            + 'korkeudessa, on kamera joka kuvaa kaupunkia etelään päin. Kuva '
+            + 'päivittyy jatkuvasti ja on niin tarkka, että siitä voi etsiä '
+            + 'hyppyrimäen, sillat ja Inn-joen mutkat. Sivulla on kalenteri, '
+            + 'josta voi valita minkä tahansa menneen päivän ja katsoa, '
+            + 'millainen sää silloin oli. Nopeutetusta versiosta näkee, miten '
+            + 'pilvet ja varjot liikkuvat laakson yli.',
+          selite: 'Näkymä Nordketten rinteeltä alas Innsbruckiin: etualalla '
+            + 'tyhjiä tuolihissin istuimia, alhaalla kaupunki ja Inn-joki '
+            + 'kaartamassa talojen välissä.',
+          lahde: 'Blommetjie1, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.foto-webcam.eu/webcam/innsbruck/',
+          linkkiNimi: 'Foto-Webcam — Innsbruck Seegruben kamerasta',
+        },
+      ],
+    },
+  ],
 };
