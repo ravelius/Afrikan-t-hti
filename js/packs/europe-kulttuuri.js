@@ -1250,60 +1250,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   wien: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Kaupunki sävelsi oman jokensa',
-        tiedosto: 'Johann Strauss II by Fritz Luckhardt.jpg',
-        teksti: 'Johann Strauss nuoremman valssi Tonava kaunoinen '
-                  + 'kantaesitettiin Wienissä 15. helmikuuta 1867 — ensin '
-                  + 'mieskuorolle, vasta myöhemmin orkesterille. '
-                  + 'Wieniläisvalssissa toinen isku tulee hitusen etuajassa, '
-                  + 'joten se ei mene metronomin kanssa tasan: sitä ei voi '
-                  + 'laskea, se pitää tuntea.',
-        selite: 'Johann Strauss nuorempi Fritz Luckhardtin valokuvaamana '
-                  + 'vuonna 1899, hänen kuolinvuotenaan. Strauss sävelsi noin '
-                  + 'viisisataa teosta ja johti orkesteriaan viulu kädessä.',
-        lahde: 'Wikimedia Commons (PD)',
-        wiki: 'Johann Strauss nuorempi',
-        musiikki: 'https://music.apple.com/fi/search?term=Johann%20Strauss%20Donauwalzer',
-        musiikkiNimi: 'Tonava kaunoinen Apple Musicissa',
-        musiikkiNayte: 'https://upload.wikimedia.org/wikipedia/commons/d/de/%22An_der_sch%C3%B6nen%2C_blauen_Donau%22%2C_performed_by_the_US_Marine_Band.mp3',
-        musiikkiNayteNimi: 'Strauss: Tonava kaunoinen — United States Marine Band, PD',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Kahvila on kaupungin olohuone',
-        tiedosto: 'Cafe Central in Vienna interior near portraits.JPG',
-        teksti: 'Wieniläisessä kahvilassa yhden kupin voi venyttää koko '
-                  + 'iltapäiväksi, ja lehdet kuuluvat hintaan. Kahvin kanssa '
-                  + 'tuodaan aina lasi hanavettä, joka täytetään pyytämättä '
-                  + 'uudelleen. Melange — kahvia maidon ja maitovaahdon kanssa '
-                  + '— on lajeista vanhimpia. Kahvilakulttuuri pääsi Itävallan '
-                  + 'kulttuuriperintöluetteloon 2011.',
-        selite: 'Café Centralin holvisali Wienissä. Seinällä keisaripari '
-                  + 'Frans Joosef ja Elisabet, pöydissä luetaan ja kirjoitetaan '
-                  + '— juuri niin kuin kahvilassa kuuluu.',
-        lahde: 'Clayton Tang, Wikimedia Commons (CC BY-SA 3.0)',
-        wiki: 'Wien',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Kilometrin pituinen kotitalo',
-        tiedosto: 'Karl Marx Hof.jpg',
-        teksti: 'Vuoden 1917 laskennassa 92 prosentissa Wienin asunnoista '
-                  + 'ei ollut omaa vessaa. Kaupunki ryhtyi itse '
-                  + 'rakennuttajaksi: Karl-Marx-Hof valmistui 1930, on noin 1 '
-                  + '050 metriä pitkä ja siinä on runsaat 1 300 asuntoa. '
-                  + 'Tontista jätettiin rakentamatta yli kolme neljäsosaa — '
-                  + 'loppu on pihaa ja leikkikenttää.',
-        selite: 'Karl-Marx-Hofin julkisivu Döblingin kaupunginosassa. Neljä '
-                  + 'holvikaarta ovat kukin 12 metriä leveitä, ja tornien '
-                  + 'lipputangot kuuluivat alkuperäiseen suunnitelmaan.',
-        lahde: 'Thomas Ledl, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Karl-Marx-Hof',
-      },
-    ],
+    /*
+     * Wien sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Kuinka moni wieniläinen asuu kaupungin omistamassa '
            + 'vuokra-asunnossa?',
