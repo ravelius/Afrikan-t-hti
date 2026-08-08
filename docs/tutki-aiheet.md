@@ -396,9 +396,16 @@ ainoa normaalireitti oli kaupunkilehden etusivun pieni kulmalinkki
 "Saksa-osio ›", ja kartalta se aukesi vain Maiden tiedot -varusteella,
 joka ansaitaan kokemuspisteillä.
 
-v380:ssa löydettävyys korjattiin kolmella reitillä: kartan oma
+v382:ssa löydettävyys korjattiin kolmella reitillä: kartan oma
 "Maiden lehdet" -nappi, maaosion rivi kaupunkilehden
 sisällysvalikossa ja sama valikko käyttöön myös kaupunkilehdessä.
+
+v386:ssa kaksi jälkimmäistä otettiin pois omistajan päätöksellä:
+*"Kaupunkilehdessä on niin vähän sivuja että se on turha."*
+Reiteiksi jäivät kartan nappi ja etusivun kulmalinkki, jotka
+omistaja on kuitannut riittäviksi. Sisällysvalikko on siis
+maalehden ominaisuus, eikä kaupunkilehdellä ole sisällysluetteloa
+lainkaan — se on tarkoitus, ei puute.
 
 **Varuste jätettiin ennalleen tarkoituksella** (Fablen ohje: älä
 poista äläkä muuta tässä kirissä), mutta sen päähyöty on nyt
