@@ -4239,17 +4239,6 @@ export const MAA_KATEGORIAT = {
               linkki: 'https://sammlung.staedelmuseum.de/en',
             },
             {
-              nimi: 'Pinakothekit München — Baijerin maalaukset yhdessä haussa',
-              tiedosto: 'Dürer - Selbstbildnis im Pelzrock - Alte Pinakothek.jpg',
-              teksti: 'Baijerin valtion taidekokoelmien 17 museota ja yli 27 000 '
-                + 'teosta ovat samassa haussa. Mukana on Dürerin omakuva '
-                + 'vuodelta 1500, jossa hän katsoo suoraan katsojaa silmiin.',
-              selite: 'Omakuva tummaa taustaa vasten: pitkät kiharat hiukset, '
-                + 'turkiskauluksinen takki ja käsi rinnan päällä.',
-              lahde: 'Albrecht Dürer, Wikimedia Commons (public domain)',
-              linkki: 'https://www.sammlung.pinakothek.de/en',
-            },
-            {
               nimi: 'Dresdenin taidekokoelmat — Zwingerin aarteet verkossa',
               tiedosto: 'Jean-Etienne Liotard - The Chocolate Girl - Google Art Project.jpg',
               teksti: 'Dresdenin viidentoista museon esineet ovat yhdessä haussa: '
@@ -4260,18 +4249,6 @@ export const MAA_KATEGORIAT = {
                 + 'esiliina ja myssy.',
               lahde: 'Jean-Étienne Liotard, Wikimedia Commons (public domain)',
               linkki: 'https://skd-online-collection.skd.museum/',
-            },
-            {
-              nimi: 'Germanisches Nationalmuseum — Nürnbergin esineluettelo',
-              tiedosto: 'Erdglobus, sogenannter Behaim-Globus.jpg',
-              teksti: 'Saksan suurimman kulttuurihistoriallisen museon '
-                + 'luettelossa on maailman vanhin säilynyt maapallo vuodelta '
-                + '1492. Siitä puuttuu Amerikka, koska sitä ei vielä '
-                + 'tunnettu.',
-              selite: 'Vanha maapallo rautajalustalla: sininen meri, kellertävät '
-                + 'maat ja messinkinen vanne pallon ympärillä.',
-              lahde: 'Germanisches Nationalmuseum, Wikimedia Commons (CC BY-SA 4.0)',
-              linkki: 'https://objektkatalog.gnm.de/',
             },
             {
               nimi: 'Berliinin valtionmuseot — kokoelmahaku',
@@ -4287,32 +4264,11 @@ export const MAA_KATEGORIAT = {
               lahde: 'José Luiz, Wikimedia Commons (CC BY-SA 4.0)',
               linkki: 'https://recherche.smb.museum/',
             },
-            {
-              nimi: 'Bauhaus Kooperation — koulun oma arkisto',
-              tiedosto: 'Außenansichten des Bauhaus-Gebäudes in Dessau 01.jpg',
-              teksti: 'Bauhaus oli taidekoulu, joka toimi Saksassa vain vuodesta '
-                + '1919 vuoteen 1933. Silti sen ajatus siitä, miltä tuoli, '
-                + 'lamppu, talo tai kirjasin saa näyttää, näkyy yhä lähes '
-                + 'kaikkialla.',
-              selite: 'Dessaun Bauhaus-rakennus ulkoa: pitkä lasiseinä nurkasta '
-                + 'katsottuna ja pystysuora betonipinta, jossa lukee alhaalta '
-                + 'ylös BAUHAUS.',
-              lahde: 'JensKunstfreund, Wikimedia Commons (CC BY-SA 4.0)',
-              linkki: 'https://bauhauskooperation.de/',
-            },
           ],
         },
         {
           otsikko: 'Valokuvausnäyttelyt',
           kohteet: [
-            {
-              nimi: 'Münchner Stadtmuseum — valokuva-albumit verkossa',
-              teksti: 'Museon verkkokokoelmassa on kymmeniä valokuvanäyttelyitä '
-                + 'albumeina: käsin väritettyjä matkakuvia 1800-luvun '
-                + 'Japanista, fotoform-ryhmän kokeiluja ja Otto Steinertin '
-                + 'töitä.',
-              linkki: 'https://sammlungonline.muenchner-stadtmuseum.de/',
-            },
             {
               nimi: 'Die Photographische Sammlung Köln — valokuvaajat aakkosissa',
               tiedosto: 'Karl Blossfeldt. Cucurbita, 1928.jpg',
@@ -4326,12 +4282,12 @@ export const MAA_KATEGORIAT = {
               linkki: 'https://photographie-stiftungkultur.de/bestaende',
             },
             {
-              nimi: 'Museum Folkwang Essen — valokuvakokoelma',
-              teksti: 'Essenin Folkwang on yksi Saksan tärkeimmistä '
-                + 'valokuvamuseoista. Se säilyttää kokonaisia valokuvaajien '
-                + 'jäämistöjä negatiiveineen, ja kuvat selataan museon '
-                + 'verkkohaussa.',
-              linkki: 'https://www.museum-folkwang.de/de/sammlung/fotografische-sammlung',
+              nimi: 'Münchner Stadtmuseum — valokuva-albumit verkossa',
+              teksti: 'Museon verkkokokoelmassa on kymmeniä valokuvanäyttelyitä '
+                + 'albumeina: käsin väritettyjä matkakuvia 1800-luvun '
+                + 'Japanista, fotoform-ryhmän kokeiluja ja Otto Steinertin '
+                + 'töitä.',
+              linkki: 'https://sammlungonline.muenchner-stadtmuseum.de/',
             },
             {
               nimi: 'Bundesarchiv Wikimedia Commonsissa',
@@ -4373,60 +4329,6 @@ export const MAA_KATEGORIAT = {
               lahde: 'Johann Sebastian Bach, Wikimedia Commons (public domain)',
               linkki: 'https://digital.staatsbibliothek-berlin.de/',
             },
-            {
-              nimi: 'Münchener DigitalisierungsZentrum — kolme miljoonaa niteen sivua',
-              teksti: 'Baijerin valtionkirjaston digitointikeskuksessa on yli '
-                + 'kolme miljoonaa digitoitua käsikirjoitusta, karttaa, '
-                + 'nuottia ja sanomalehteä, kaikki selattavissa sivu '
-                + 'kerrallaan.',
-              linkki: 'https://www.digitale-sammlungen.de/en/',
-            },
-            {
-              nimi: 'Wolfenbüttelin herttuakirjasto — keskiajan käsikirjoitukset',
-              tiedosto: 'Gospels1.jpg',
-              teksti: 'Käsikirjoitustietokannassa selataan keskiaikaisia '
-                + 'koodekseja aukeama kerrallaan. Talon kuuluisin aarre on '
-                + 'Heinrich Leijonan kultaisin kirjaimin kirjoitettu '
-                + 'evankeliumikirja.',
-              selite: 'Keskiaikainen käsikirjoitussivu: ylhäällä kruunattu hahmo '
-                + 'ympyrän sisällä, alhaalla neljä juhla-asuista henkilöä, '
-                + 'reunoissa punaista, vihreää ja kultaa.',
-              lahde: 'Wikimedia Commons (public domain)',
-              linkki: 'https://diglib.hab.de/?db=mss',
-            },
-            {
-              nimi: 'LeMO — Saksan historia aikajanana',
-              teksti: 'Deutsches Historisches Museumin verkkomuseo kulkee '
-                + 'vuodesta 1815 nykypäivään. Aikajanalta pääsee esineisiin, '
-                + 'valokuviin, silminnäkijävideoihin ja 360 asteen '
-                + 'kohteisiin.',
-              linkki: 'https://www.dhm.de/lemo/',
-            },
-          ],
-        },
-        {
-          otsikko: 'Musiikki ja esitykset',
-          kohteet: [
-            {
-              nimi: 'Beethoven-Haus Bonn — säveltäjän oma arkisto',
-              tiedosto: 'Beethoven.jpg',
-              teksti: 'Beethovenin syntymätalon digitaalisessa arkistossa on '
-                + 'nuottikäsikirjoituksia, kirjeitä ja kuvia. Osassa '
-                + 'käsikirjoituksia musiikki soi samaan aikaan kuin sivua '
-                + 'selaa.',
-              selite: 'Muotokuva Beethovenista: harmaa tukka pörröllä, punainen '
-                + 'kaulahuivi ja käsissä nuottivihko ja kynä.',
-              lahde: 'Joseph Karl Stieler, Wikimedia Commons (public domain)',
-              linkki: 'https://www.beethoven.de/en/archive',
-            },
-            {
-              nimi: 'Elbphilharmonie Hampuri — konsertteja mediateekissa',
-              teksti: 'Hampurin aaltokattoisen konserttitalon mediateekissa '
-                + 'katsotaan ilmaiseksi tallennettuja konsertteja, myös '
-                + 'lapsille tehtyjä Funkelkonzert-esityksiä, ja kuunnellaan '
-                + 'podcasteja.',
-              linkki: 'https://www.elbphilharmonie.de/en/mediatheque',
-            },
           ],
         },
         {
@@ -4456,30 +4358,6 @@ export const MAA_KATEGORIAT = {
                 + 'sivuille.',
               lahde: 'H. Raab (User: Vesta), Wikimedia Commons (CC BY-SA 3.0)',
               linkki: 'https://www.museumfuernaturkunde.berlin/en',
-            },
-          ],
-        },
-        {
-          otsikko: 'Luonto ja retket',
-          kohteet: [
-            {
-              nimi: 'NABU-webkamerat — pesäkuvaa suorana',
-              tiedosto: 'Heidekrug Münster Storch mit Jungen.jpg',
-              teksti: 'Saksan luonnonsuojeluliiton kamerat näyttävät suorana '
-                + 'kattohaikaran pesän, tornipöllöt ja muuttohaukat. Keväällä '
-                + 'poikaset kuoriutuvat ja kasvavat kameran edessä.',
-              selite: 'Kattohaikara seisoo risupesässä katon yläpuolella nokka '
-                + 'auki, ja pesän reunan takaa pilkistää poikasen pää.',
-              lahde: 'Daydove, Wikimedia Commons (CC BY-SA 3.0)',
-              linkki: 'https://www.nabu.de/wir-ueber-uns/infothek/webcams/index.html',
-            },
-            {
-              nimi: 'Zugspitze — Saksan korkein huippu kameran takaa',
-              teksti: 'Kamera kuvaa Saksan korkeinta vuorta muutaman minuutin '
-                + 'välein. Kuvat jäävät arkistoon, joten samasta paikasta voi '
-                + 'katsoa aikalapsun tai vertailla eilistä säätä tähän '
-                + 'päivään.',
-              linkki: 'https://www.foto-webcam.eu/webcam/zugspitze/',
             },
           ],
         },
@@ -5840,6 +5718,512 @@ export const MAA_KATEGORIAT = {
                 + 'keskellä kaksi poikaa, takana kaksi nuorta miestä.',
               lahde: 'Nicoline Weywadt, Wikimedia Commons (public domain)',
               linkki: 'https://island.is/leit-i-mannanafnaskra',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  EST: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Viro vei arkistonsa verkkoon ennen useimpia muita: kirkonkirjat '
+        + '1700-luvulta, 92 134 kansanlaulua, viiden taidemuseon kokoelmat ja '
+        + 'kotkanpesä suorana — lähes kaikki ilman kirjautumista.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Eesti Rahva Muuseum — Viron kansallismuseo Tartossa',
+              tiedosto: 'Eesti Rahva Muuseumi peahoone.jpg',
+              teksti: 'Viron kansallismuseo sai vuonna 2016 Tartossa uuden talon, '
+                + 'joka nousee maasta vanhan sotilaslentokentän kiitoradan '
+                + 'päästä. Sivuilta pääsee näyttelyihin ja kokoelmiin.',
+              selite: 'Kansallismuseon rakennus iltahämärässä: pitkä '
+                + 'lasiseinäinen kiila, joka nousee maasta ja hohtaa sisältä '
+                + 'valkoisena.',
+              lahde: 'Berta Vosman, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.erm.ee/en/',
+            },
+            {
+              nimi: 'EKM Digitaalkogu — viiden museon taide kuvatietokantana',
+              tiedosto: 'Johann Köler Itaallanna lastega ojal.jpg',
+              teksti: 'Kumun, Kadriorgin, Mikkelin, Nigulisten ja Adamson-Ericin '
+                + 'museoiden yhteinen kuvatietokanta. Teokset on lajiteltu '
+                + 'kirkkotaiteesta japanilaiseen grafiikkaan, joten selata '
+                + 'voi ilman hakusanaa.',
+              selite: 'Johann Kölerin maalaus: nainen kantaa päänsä päällä koria, '
+                + 'jossa istuu vauva, ja vieressä kävelee pikkulapsi.',
+              lahde: 'Johann Köler, Wikimedia Commons (public domain)',
+              linkki: 'https://digikogu.ekm.ee/',
+            },
+            {
+              nimi: 'Tallinnan kaupunginmuseo — virtuaalikäynnit Google Arts & Culturessa',
+              tiedosto: 'Kiek in de Kök, 2006 (01).jpg',
+              teksti: 'Tallinnan kaupunginmuseo oli ensimmäinen virolainen museo '
+                + 'Google Arts & Culturessa. Sivulla on virtuaalikäyntejä sen '
+                + 'seitsemään taloon, muun muassa Kiek in de Kökin '
+                + 'tykkitorniin.',
+              selite: 'Paksu keskiaikainen kivitorni punaisen kartiokaton alla, '
+                + 'ympärillä puiden latvoja ja kaupunginmuurin kivetystä.',
+              lahde: 'Bahnfrend, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://artsandculture.google.com/partner/tallinn-city-museum',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'DIGAR — kansalliskirjaston digiarkisto',
+              tiedosto: 'National Library of Estonia (in Tallinn).jpg',
+              teksti: 'Viron kansalliskirjaston digiarkistossa on kirjoja, '
+                + 'aikakauslehtiä, karttoja, nuotteja ja pikkupainatteita. '
+                + 'Suuri osa aukeaa suoraan luettavaksi selaimessa.',
+              selite: 'Viron kansalliskirjaston jykevä vaalea kivirakennus '
+                + 'Tallinnassa, edessä leveät portaat ja veistos.',
+              lahde: 'Pauloleong2002, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.digar.ee/arhiiv/',
+            },
+            {
+              nimi: 'Rahvusarhiivi kaardid — 109 866 digitoitua karttaa',
+              tiedosto: 'Livonia, Vulgo Lyefland - Atlas Maior, vol 2, map 10 - Joan Blaeu, 1667 - BL 114.h(star).2.(10).jpg',
+              teksti: 'Karttatietokannassa on 166 959 kuvailtua ja 109 866 '
+                + 'digitoitua karttaa Rahvusarhiivista ja Tallinnan '
+                + 'kaupunginarkistosta. Vanhimpiin on piirretty jokainen talo '
+                + 'käsin.',
+              selite: 'Joan Blaeun kartta Liivinmaasta vuodelta 1667: Viron '
+                + 'rannikko ja saaret, meressä purjelaivoja ja kulmissa '
+                + 'vaakunoita.',
+              lahde: 'Joan Blaeu, Wikimedia Commons (public domain)',
+              linkki: 'https://www.ra.ee/kaardid/',
+            },
+            {
+              nimi: 'Eesti regilaulude andmebaas — 92 134 kansanlaulua',
+              teksti: 'Viron kirjallisuusmuseon kansanrunousarkisto on koonnut '
+                + 'tietokantaan 92 134 regilaulua eli vanhaa '
+                + 'kalevalamittaista laulua. Jokaisesta näkyy, kuka lauloi ja '
+                + 'missä kylässä.',
+              linkki: 'https://www.folklore.ee/regilaul/andmebaas/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'Lennusadam — merimuseo vesilentokonehallissa',
+              tiedosto: 'Lembit Lennusadam 2012 01.JPG',
+              teksti: 'Viron merimuseon Lennusadam on satavuotiaassa '
+                + 'vesilentokonehallissa Tallinnassa. Sisällä on sukellusvene '
+                + 'Lembit vuodelta 1936, jonka sisään pääsee kiipeämään.',
+              selite: 'Sukellusvene Lembit korkean betonikaarihallin sisällä, '
+                + 'katosta riippuu keltaisia pienoiskoneita ja alhaalla '
+                + 'hohtaa sininen valo.',
+              lahde: 'MKFI, Wikimedia Commons (public domain)',
+              linkki: 'https://meremuuseum.ee/lennusadam/en/',
+            },
+            {
+              nimi: 'Kotkaklubi — kotkien ja mustan haikaran pesäkamerat',
+              tiedosto: 'Merikotkas kanarbikus (cropped).jpg',
+              teksti: 'Kotkaklubi vei ensimmäisen kameran mustan haikaran pesään '
+                + 'vuonna 2007. Nyt merikotkan, kalasääsken ja maakotkan '
+                + 'pesiä katsotaan suorana koko kevään ja kesän.',
+              selite: 'Merikotka seisoo ruskeassa kanervikossa: harmaa '
+                + 'höyhenpuku, iso keltainen nokka ja valkoinen pyrstö.',
+              lahde: 'Karl Adami, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.kotkas.ee/klubi/kaamerad',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  LVA: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Latvia on pannut verkkoon yllättävän paljon: kaksi miljoonaa '
+        + 'museoesinettä, sanomalehdet vuodesta 1822, ensimmäisten '
+        + 'laulujuhlien jäljet vuodelta 1873 ja kolmetoista kameraa lintujen '
+        + 'pesissä.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Latvian kansallinen taidemuseo — kokoelma Google Arts & Culturessa',
+              tiedosto: 'Janis Rozentāls - The Princess and the Monkey - Google Art Project.jpg',
+              teksti: 'Museon teoksia voi zoomata niin läheltä, että '
+                + 'siveltimenjäljet erottuvat. Mukana on Janis Rozentālsin '
+                + 'satumaisia maalauksia 1900-luvun alusta.',
+              selite: 'Rozentālsin maalaus: punatukkainen prinsessa '
+                + 'hopeanharmaassa puvussa laskee kädestään helminauhaa, ja '
+                + 'lattialla istuu pieni apina punaisessa takissa.',
+              lahde: 'Janis Rozentāls, Wikimedia Commons (public domain)',
+              linkki: 'https://artsandculture.google.com/partner/national-museum-latvia',
+            },
+            {
+              nimi: 'Rundāles palatsi — virtuaalimuseo ja esineiden tarinat',
+              tiedosto: 'Bauska Schloss Rundale Innen Goldener Saal 1.JPG',
+              teksti: 'Rundālen barokkipalatsi rakennettiin 1730-luvulla saman '
+                + 'arkkitehdin piirustuksista kuin Pietarin talvipalatsi. '
+                + 'Virtuaalimuseossa sen kelloja ja posliinia voi pyöritellä '
+                + 'joka puolelta.',
+              selite: 'Rundālen kultasali: siniset ja vaaleanpunaiset seinät '
+                + 'kullattuine koristeineen, kattoon maalattu taivas '
+                + 'hahmoineen ja keskellä lattiaa ryhmä vieraita.',
+              lahde: 'Zairon, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://rundale.net/en/virtual-museum/',
+            },
+            {
+              nimi: 'NMKK — Latvian museoiden yhteinen luettelo',
+              tiedosto: 'Latgaļu sievietes tērpa un rotu rekonstrukcija LNVM ekspozīcijā.jpg',
+              teksti: 'Latvian museoissa on 7,4 miljoonaa esinettä. Niistä yli '
+                + 'kaksi miljoonaa on jo valokuvattu, ja ne kaikki löytyvät '
+                + 'samasta hakukoneesta.',
+              selite: 'Vitriinissä 1100-luvun latgallilaisnaisen puku: '
+                + 'tummansininen villahuivi, johon on kiinnitetty rivi '
+                + 'pronssisia ristikuvioita, ja takaseinällä rannerenkaita.',
+              lahde: 'Evita wiki, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.nmkk.lv/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'Grāmatas — kansalliskirjaston kirjahylly verkossa',
+              tiedosto: 'Gaismas-pils.jpg',
+              teksti: 'Sama kirjasto on kuvannut noin 8 000 kirjaa sivu sivulta, '
+                + 'yhteensä puolitoista miljoonaa sivua. Kirjastorakennus '
+                + 'itse on nimeltään Gaismas pils eli Valon linna.',
+              selite: 'Kansalliskirjaston Kansan kirjahylly: viistosti nouseva '
+                + 'lasiseinä täynnä kirjoja, jotka hehkuvat lämpimässä '
+                + 'valossa monta kerrosta ylöspäin.',
+              lahde: 'Rīgas investīciju un tūrisma aģentūra, Wikimedia Commons (CC BY 4.0)',
+              linkki: 'https://gramatas.lndb.lv/',
+            },
+            {
+              nimi: 'Zudusī Latvija — kadonneen Latvian kuva-arkisto',
+              tiedosto: 'Cobblestone street in Riga, Latvia LCCN2012648280.jpg',
+              teksti: 'Arkistoon on koottu valokuvia, postikortteja ja piirroksia '
+                + 'rakennuksista ja paikoista, joita ei enää ole olemassa. '
+                + 'Vanhimmat ovat 1800-luvun lopulta.',
+              selite: 'Vanha mustavalkoinen postikortti Riiasta: mukulakivinen '
+                + 'sisäpiha, rapatut seinät, korkea kivikaari ja nurkassa '
+                + 'puinen vaja.',
+              lahde: 'Library of Congress, Wikimedia Commons (public domain)',
+              linkki: 'https://zudusilatvija.lv/',
+            },
+            {
+              nimi: 'Periodika — latvialaiset lehdet vuodesta 1822',
+              teksti: 'Latvian kansalliskirjasto on skannannut noin 3 000 lehteä '
+                + 'ja yli kolme miljoonaa sivua. Vanhin niistä, Latweeschu '
+                + 'Awises, alkoi ilmestyä Jelgavassa vuonna 1822.',
+              linkki: 'https://periodika.lv/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Tapahtumat ja juhlat',
+          kohteet: [
+            {
+              nimi: 'Laulu- ja tanssijuhlat 2023 — 360 asteen kierros',
+              tiedosto: 'Song and Dance Celebration 2023, Latvia 03.jpg',
+              teksti: 'Panoraamakuvissa pääsee keskelle juhlia: kuorolavalle, '
+                + 'kulkueeseen ja täyteen katsomoon. Kuvaa voi pyörittää '
+                + 'ympäri ja katsoa mihin suuntaan haluaa.',
+              selite: 'Laulajia tiiviissä rivissä: keskellä kolme naista '
+                + 'punavalkoisessa kansanpuvussa ja koristepäähineessä, '
+                + 'ympärillä miehiä harmaissa takeissa suu auki laulamassa.',
+              lahde: 'Diaaaana, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://latviainside.com/explore/tours/culture/dzsv2023/',
+            },
+            {
+              nimi: 'Turaidan linna ilmasta — 360 asteen ilmakuvakierros',
+              tiedosto: 'Turaida Castle (4).JPG',
+              teksti: 'Turaidan punatiilistä linnaa alettiin rakentaa vuonna '
+                + '1214. Tällä kierroksella kamera on nostettu linnan '
+                + 'yläpuolelle, ja Gaujan laakso avautuu joka suuntaan.',
+              selite: 'Turaidan linna ylhäältä: punatiilisiä rakennuksia jyrkkine '
+                + 'tiilikattoineen, päädyssä sininen kellotaulu, ympärillä '
+                + 'tiheä metsä ja taustalla joki.',
+              lahde: 'PIERRE ANDRE LECLERCQ, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://latviainside.com/explore/tours/aero/turaida/virtualtour.html',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  LTU: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Liettua on siirtänyt aarteensa ruudulle: yksi mies maalasi ja '
+        + 'sävelsi samat unet, kirjaston holvit on maalattu täyteen kuvia, '
+        + 'linnan esineitä saa pyörittää sormella ja lintujen pesille näkee '
+        + 'suorana.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Ciurlionis.eu — maalaukset ja sävellykset samalta mieheltä',
+              tiedosto: 'Mikalojus Konstantinas Čiurlionis photo portrait.jpg',
+              teksti: 'Mikalojus Konstantinas Čiurlionis ehti runsaassa '
+                + 'seitsemässä vuodessa maalata yli 300 työtä ja säveltää '
+                + 'noin 400 teosta. Galleriassa ne ovat vierekkäin: '
+                + 'maalaukset, nuotit, valokuvat ja tekstit.',
+              selite: 'Mustavalkoinen muotokuva Čiurlionisesta: tuuhea takkuinen '
+                + 'tukka, isot viikset ja tumma solmuke valkoisen kauluksen '
+                + 'alla. Katse suuntautuu kameran ohi.',
+              lahde: 'S. Fleury, Wikimedia Commons (public domain)',
+              linkki: 'https://ciurlionis.eu/en/gallery',
+            },
+            {
+              nimi: 'Google Arts & Culture — Čiurlionis-museo Kaunasissa',
+              tiedosto: 'Mikalojus Konstantinas Ciurlionis - FAIRY TALE (FAIRY TALE OF KINGS) - 1909.jpg',
+              teksti: 'Kaunasin museo on ainoa paikka maailmassa, jossa '
+                + 'Čiurlionisin tuotanto on koossa. Teoksia voi zoomata niin '
+                + 'lähelle, että pensselinjäljet ja halkeamat erottuvat.',
+              selite: 'Čiurlionisin maalaus Kuninkaiden satu: kaksi kruunupäistä '
+                + 'hahmoa pitelee kämmenillään hehkuvaa kylää. Ympärillä on '
+                + 'tummia puita, joiden oksilla kimaltaa pieniä valoja.',
+              lahde: 'Mikalojus Konstantinas Čiurlionis, Wikimedia Commons (public domain)',
+              linkki: 'https://artsandculture.google.com/partner/m-k-%C4%8Diurlionis-museum-of-art',
+            },
+            {
+              nimi: 'Trakų istorijos muziejus — 3D-esineet käännettävinä',
+              tiedosto: 'Front facade of the Trakai Island Castle, 2009.jpg',
+              teksti: 'Trakain vesilinnan museo on skannannut kokoelmaesineitään '
+                + 'kolmiulotteisiksi. Niitä voi pyörittää ruudulla ja katsoa '
+                + 'myös alapuolelta, mikä vitriinissä ei onnistu.',
+              selite: 'Trakain saarilinna järven takaa: punatiiliset tornit ja '
+                + 'punaiset kattotiilet, keskellä korkea porttiholvi ja '
+                + 'edessä laituri, jossa on purjeveneitä.',
+              lahde: 'Leszek Kozlowski, Wikimedia Commons (CC BY 2.0)',
+              linkki: 'https://trakaimuziejus.lt/en/lankytojams/3d-eksponatai/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'Google Arts & Culture — kirjaston salit ja holvimaalaukset',
+              tiedosto: 'VU bibliotekos Smuglevičiaus salė3.JPG',
+              teksti: 'Kirjaston vanhin sali on 1500-luvulta, ja sen holvit on '
+                + 'maalattu täyteen kuvia. Kuusi virtuaalikierrosta vie '
+                + 'saleihin, joissa säilytetään yli viittä miljoonaa '
+                + 'asiakirjaa.',
+              selite: 'Smuglevičiuksen salin holvimaalaus: vaaleaan kolmioon on '
+                + 'maalattu harmaa Sokrateen rintakuva jalustalle, ympärillä '
+                + 'laakeriseppele ja nauhat. Vasemmalla palaa kynttiläkruunu.',
+              lahde: 'Alma Pater, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://artsandculture.google.com/partner/vilnius-university-library',
+            },
+            {
+              nimi: 'Tautosakos garso įrašai — Liettuan vanhimmat äänitteet',
+              tiedosto: 'Įvairias aukštaičių ir žemaičių kanklės (LNM).jpg',
+              teksti: 'Tietokannassa soivat maan vanhimmat '
+                + 'kansanmusiikkiäänitteet. Vuosina 1908–1949 '
+                + 'vahasylintereille tallennettiin 340 kappaletta, ja 117 '
+                + 'sylinteriä on yhä tallella.',
+              selite: 'Rivi puisia kankles-kanteleita lasivitriinissä Liettuan '
+                + 'kansallismuseossa. Kaikukopat ovat siipimäisiä, ja kansiin '
+                + 'on leikattu tähtikuvioisia ääniaukkoja.',
+              lahde: 'Turaids, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://irasai.archyvas.llti.lt/?lang=en',
+            },
+            {
+              nimi: 'Sutartinės — 1820 laulua nuotteineen ja äänineen',
+              teksti: 'Sutartinė on liettualainen laulutapa, jossa kaksi tai '
+                + 'kolme melodiaa kulkee yhtä aikaa päällekkäin. Zenonas '
+                + 'Slaviūnasin kokoelma on verkossa kokonaan, monessa '
+                + 'laulussa myös äänite.',
+              linkki: 'https://www.sutartines.info/slaviunas/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Historia ja muinaisuus',
+          kohteet: [
+            {
+              nimi: 'Gedimino pilies bokštas — 360 asteen kierros torniin',
+              tiedosto: 'Gedimino pilis by Augustas Didzgalvis.jpg',
+              teksti: 'Gediminaksen torni on ainoa jäljellä oleva osa Vilnan '
+                + 'ylälinnasta. Kierros vie tornin sisään ja '
+                + 'näköalatasanteelle, ja mukana on 3D-esineitä ja animoitu '
+                + 'basiliskitaru.',
+              selite: 'Ilmakuva Gediminaksen tornista: punatiilinen '
+                + 'kahdeksankulmainen torni vihreän kukkulan laella, '
+                + 'lipputanko katolla ja alhaalla kaupunki ja mutkitteleva '
+                + 'joki.',
+              lahde: 'Augustas Didžgalvis (BigHead), Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://lnm.lt/360pilis/en',
+            },
+            {
+              nimi: 'Rumšiškės — 3D-kierros Euroopan suurimpiin ulkomuseoihin',
+              tiedosto: 'Rumšiškės (Rumszyszki) - Open air ethnographic museum 6 - mill.jpg',
+              teksti: 'Rumšiškėsin ulkomuseoon on siirretty kokonaisia kyliä eri '
+                + 'puolilta Liettuaa 195 hehtaarin alueelle. Kahteen '
+                + 'alueeseen pääsee 3D-kierroksella myös tupien sisälle.',
+              selite: 'Puinen tuulimylly pellon keskellä: harmaa lautaseinäinen '
+                + 'torni, jonka nelisiipinen ristikko on yhä paikallaan ja '
+                + 'huipussa pitkä salko.',
+              lahde: 'Pudelek (Marcin Szala), Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://lemu.lt/en/museum/3d-virtual-tour/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  HUN: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Unkari on avannut oman muistinsa: kaksisataatuhatta valokuvaa '
+        + 'ilmaiseksi, Budapestin kartat neljältä eri vuodelta, Bartókin '
+        + 'äänittämät kansanlaulut ja kameroita, joista näkee haikaran pesään '
+        + 'juuri nyt.',
+      lista: [
+        {
+          otsikko: 'Museot ja galleriat',
+          kohteet: [
+            {
+              nimi: 'Magyar Nemzeti Múzeum — kansallismuseon kokoelmat',
+              tiedosto: 'Budapest, Hungarian National Museum, Seuso treasure, the Amphora.jpg',
+              teksti: 'Unkarin kansallismuseo perustettiin vuonna 1802. Sen '
+                + 'kokoelmaluettelo on jaettu kymmeniin osastoihin: '
+                + 'kivikauden esineisiin, roomalaisiin löytöihin, '
+                + 'kirkonkelloihin, julisteisiin ja postikortteihin.',
+              selite: 'Roomalainen hopea-amfora kansallismuseon vitriinissä: '
+                + 'pyöreä astia, jonka kylkeen on takoen muotoiltu ihmis- ja '
+                + 'eläinhahmoja, ja kahvat kaartuvat kuin kaksi kurottavaa '
+                + 'eläintä.',
+              lahde: 'Dguendel, Wikimedia Commons (CC BY 4.0)',
+              linkki: 'https://mnm.hu/en/collections',
+            },
+            {
+              nimi: 'Magyar Nemzeti Galéria — unkarilainen maalaustaide zoomattavana',
+              tiedosto: 'Cskt-maganyos cedrus (1907).jpg',
+              teksti: 'Unkarin kansallisgallerian teoksia voi katsoa Google Arts '
+                + '& Culturessa suurennettuina. Mukana ovat Csontváry, '
+                + 'Munkácsy ja Szinyei Merse, kolme unkarilaisen '
+                + 'maalaustaiteen tunnetuinta nimeä.',
+              selite: 'Csontváryn maalaus Yksinäinen setri: kiemurainen puu '
+                + 'keskellä kuvaa, oksat kaartuvat sivuille, taustalla '
+                + 'turkoosi meri ja vaaleat kalliot.',
+              lahde: 'Tivadar Csontváry Kosztka, Wikimedia Commons (public domain)',
+              linkki: 'https://artsandculture.google.com/partner/hungarian-national-gallery',
+            },
+            {
+              nimi: 'Skanzen — Unkarin ulkoilmamuseo Szentendressä',
+              tiedosto: 'Szentendre, Skanzen 79.jpg',
+              teksti: 'Szentendreen on siirretty kokonaisia taloja eri puolilta '
+                + 'Unkaria ja pystytetty ne uudelleen kylänraiteiksi. '
+                + 'Sivuilta näkee, miltä maalaiselämä näytti sata tai '
+                + 'kaksisataa vuotta sitten.',
+              selite: 'Ulkoilmamuseon kylätie: valkoiseksi kalkittuja taloja, '
+                + 'joiden jyrkät oljesta tehdyt katot ulottuvat melkein '
+                + 'maahan asti.',
+              lahde: 'Palickap, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://skanzen.hu/en',
+            },
+          ],
+        },
+        {
+          otsikko: 'Valokuvausnäyttelyt',
+          kohteet: [
+            {
+              nimi: 'Fortepan — 200 000 vanhaa valokuvaa ilmaiseksi',
+              tiedosto: 'Budapest, Halászbástya. - fortepan 82646.jpg',
+              teksti: 'Fortepan alkoi vuonna 2010 Budapestin kaduilta löydetyistä '
+                + 'valokuvista. Nyt kuvia on yli 200 000, ja kuka tahansa saa '
+                + 'katsoa ja ladata ne isokokoisina ilman maksua tai '
+                + 'tunnuksia.',
+              selite: 'Kalastajabastioni noin vuonna 1900 ruskeasävyisessä '
+                + 'valokuvassa: vaaleita torneja ja kaariholveja rinteessä, '
+                + 'takana Mátyás-kirkon korkea kirjava torni.',
+              lahde: 'Fortepan / Budapest Főváros Levéltára, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://fortepan.hu/en/',
+            },
+            {
+              nimi: 'Filmhíradók Online — unkarilaiset uutisfilmit',
+              teksti: 'Ennen televisiota uutiset katsottiin elokuvateatterissa. '
+                + 'Tänne on digitoitu unkarilaisia uutisfilmejä 1910-luvulta '
+                + '1940-luvulle, ja niitä voi selata aiheen, henkilön tai '
+                + 'paikkakunnan mukaan.',
+              linkki: 'https://filmhiradokonline.hu/',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kirjastot ja arkistot',
+          kohteet: [
+            {
+              nimi: 'Bibliotheca Corvina Virtualis — kuningas Matiaksen kirjasto',
+              tiedosto: 'Matthias Corvinus from a Corvina Codex.jpg',
+              teksti: 'Kuningas Matias Corvinuksen kirjastossa oli noin 2 000 '
+                + 'nidettä, aikansa toiseksi suurin heti Vatikaanin jälkeen. '
+                + 'Niistä on jäljellä noin 220, ja sivusto kokoaa digitoidut '
+                + 'yhteen paikkaan.',
+              selite: 'Kuningas Matiaksen muotokuva corvina-koodeksin sivulta: '
+                + 'kiharatukkainen mies sivuprofiilissa, päässä sininen '
+                + 'nauha, ympärillä kultaiset latinankieliset kirjaimet '
+                + 'mustalla pohjalla.',
+              lahde: 'Ambrogio de Predis, Wikimedia Commons (public domain)',
+              linkki: 'https://corvina.hu/en/front/',
+            },
+            {
+              nimi: 'Bartók-rend — Bartókin kansanlaulut äänitteineen',
+              tiedosto: 'Bartók Béla 1927.jpg',
+              teksti: 'Béla Bartók keräsi kansanlauluja vahasylintereille '
+                + '1900-luvun alussa. Verkossa on hänen järjestelmänsä yli 13 '
+                + '000 sävelmää: luettelokortit, nuotinnokset ja alkuperäiset '
+                + 'äänitteet kuunneltavina.',
+              selite: 'Béla Bartók vuonna 1927: valkohiuksinen mies istuu '
+                + 'nojatuolissa tummassa puvussa, kädet ristissä sylissä ja '
+                + 'katse sivulle.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://systems.zti.hu/br/en',
+            },
+          ],
+        },
+        {
+          otsikko: 'Luonto ja retket',
+          kohteet: [
+            {
+              nimi: 'Madárles — unkarilaiset lintukamerat suorana',
+              tiedosto: 'European roller (Coracias garrulus) 2.jpg',
+              teksti: 'Madárles kokoaa Unkarin lintukamerat yhdelle sivulle: '
+                + 'kattohaikaran pesä, pöllönpönttöjä, punajalkahaukkoja, '
+                + 'talitiaisen kolo ja jopa kanala. Kaikki on suoraa '
+                + 'lähetystä.',
+              selite: 'Sininärhi oksan nokassa kirkasta taivasta vasten: turkoosi '
+                + 'rinta, ruskea selkä, siivissä siniset sulat ja tumma suora '
+                + 'nokka.',
+              lahde: 'Charles J. Sharp, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://madarles.hu/en/webcams',
+            },
+            {
+              nimi: 'Budapestin eläintarha — kuusi kameraa suorana',
+              tiedosto: 'Elephant House, Budapest Zoo.jpg',
+              teksti: 'Vuonna 1866 avattu Budapestin eläintarha on Euroopan '
+                + 'vanhimpia. Kamerat näyttävät savannin, merileijona-altaan, '
+                + 'orankitarhan, norsutarhan, Etelä-Amerikan tarhan ja haiden '
+                + 'altaan.',
+              selite: 'Eläintarhan norsutalo: kaksi turkoosinvihreää '
+                + 'kaakelikupolia rinnakkain ja niiden vieressä valkoinen '
+                + 'torni, joka muistuttaa minareettia.',
+              lahde: 'József Rozsnyai, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://zoobudapest.com/en/for-visitors/webcams/',
             },
           ],
         },

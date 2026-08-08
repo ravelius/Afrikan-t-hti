@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 374, teksti: 'Menovinkit Virolle, Latvialle, Liettualle ja Unkarille' },
   { v: 373, teksti: 'Saksan menovinkit malliksi: 21 kohdetta kuudessa ryhmässä' },
   { v: 372, teksti: 'Suurennos ikkunan eteen ja pop-up kiinni taustaa napauttaen' },
   { v: 371, teksti: 'Nähtävyysjutun avauskuva: vaaka isona, pysty pienempänä' },
