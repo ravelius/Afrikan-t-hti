@@ -65,17 +65,19 @@ export const TILANNE = {
     {
       tekija: 'Sonnet 2',
       rooli: 'nähtävyysjutut',
-      tila: 'odottaa',
-      tehtava: 'Berliinin kuuden kohteen nähtävyysjutut valmiit '
-        + '(v358): omat jutut, 24 kuvaa tarkistettuina, lainauksia. '
-        + 'Odottaa omistajan katselmusta ennen jatkoa.',
-      seuraavaksi: 'Kairo ja uudet karttakaupungit, jos pilotti '
-        + 'kelpaa.',
+      tila: 'tyossa',
+      tehtava: 'Pilotin korjauskierros omistajan katselmuksesta '
+        + '8.8.: dialogi istumaan näytölle (iPadilla yläreuna '
+        + 'leikkautui eikä taustasivu näkynyt), kuvat selvästi '
+        + 'pienemmiksi (1/juttu lähtökohtana), jutut noin puoleen '
+        + 'mittaan. Sisältö todettiin hyväksi.',
+      seuraavaksi: 'Omistaja katsoo Berliinin uudestaan; muut '
+        + 'kaupungit vasta sen jälkeen.',
     },
   ],
   odottaaPaatosta: [
-    'Berliinin nähtävyyspilotin katselmus (Sonnet 2 odottaa lupaa '
-      + 'jatkaa muihin kaupunkeihin)',
+    'Berliinin nähtävyyspilotin UUSI katselmus, kun korjauskierros '
+      + '(dialogi, kuvakoot, mitta) on mainissa',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
       + 'näytteet)',
     'Sateenvarjomiehen henkilöllisyys (ehdotus Kehitys-välilehden '
