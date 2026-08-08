@@ -1991,6 +1991,49 @@ button.ghost { background: transparent; min-height: 36px; padding: 0.35rem 0.7re
   padding-top: 0.4rem;
 }
 
+/*
+ * VISA LEHDESSÄ (omistajan ohje 8.8.2026: "pomppaa ja houkuttelee
+ * vastaamaan").
+ *
+ * Visa oli tähän asti pelkän katkoviivan erottama jatke sivun
+ * pohjalla, eli se näytti siltä mitä sivulla oli jäljellä — ei
+ * siltä, että siinä on jotain tehtävää. Nyt se on oma kortti:
+ * lämmin vaalea pohja, pehmeä kehys ja reilusti ilmaa.
+ *
+ * Väri on pergamentin lämpimämpi sävy eikä huomioväri: peli on
+ * paperinen, ja neon rikkoisi sen. Erottuminen tulee kontrastista
+ * taustaan ja tyhjästä tilasta, ei kirkkaudesta.
+ */
+.dialog.lehti .arrival-kulttuuri {
+  border-top: 0;
+  margin: 1.6rem 0 0.4rem;
+  padding: 1.15rem 1.25rem 1.3rem;
+  background: linear-gradient(180deg, rgba(255, 246, 214, 0.92), rgba(252, 236, 196, 0.82));
+  border: 1px solid rgba(150, 116, 52, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 2px 8px rgba(70, 51, 31, 0.09);
+}
+
+/* Kysymys isommaksi: se on kortin otsikko, ei väliotsikko. */
+.dialog.lehti .arrival-kulttuuri .kulttuuri-otsikko {
+  font-size: 1.06rem;
+  line-height: 1.35;
+  margin-bottom: 0.35rem;
+}
+
+/* Vastausnapit väljemmin ja valkoisemmalle pohjalle, jotta ne
+   erottuvat kortin lämpimästä taustasta napeiksi eivätkä laatikoiksi. */
+.dialog.lehti .arrival-kulttuuri .kulttuuri-vaihtoehdot {
+  gap: 0.7rem;
+  margin: 0.9rem 0 0.2rem;
+}
+
+.dialog.lehti .arrival-kulttuuri .kulttuuri-vaihtoehdot button {
+  padding: 0.62rem 1.25rem;
+  background: rgba(255, 253, 246, 0.92);
+}
+
 .arrival-kulttuuri > summary {
   cursor: pointer;
   font-family: var(--font-type);
@@ -5960,6 +6003,98 @@ body.flight-active .palaute-kulma { opacity: 0; pointer-events: none; }
 }
 
 /* Yksi nosto: kuva, otsikko, teksti, selite, lähde. */
+/*
+ * ============================================================
+ * MENOVINKKIEN LISTAMALLI (omistajan päätös 8.8.2026)
+ * ============================================================
+ *
+ * Hakemisto, ei esseekokoelma: pieni kuva, nimi linkkinä ja lause
+ * tai kaksi. Rivejä on kymmeniä, joten jokainen pikseli kertautuu —
+ * siksi kuva on kiinteän kokoinen ruutu eikä juokseva kuva, ja rivit
+ * erottaa toisistaan ohut viiva eikä väli.
+ */
+.vinkki-ryhma {
+  margin: 1.5rem 0 0.5rem;
+  font-family: var(--font-type);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(70, 51, 31, 0.85);
+  border-bottom: 1px solid rgba(70, 51, 31, 0.35);
+  padding-bottom: 0.25rem;
+}
+
+.vinkkilista { margin: 0; padding: 0; list-style: none; }
+
+.vinkki {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  padding: 0.6rem 0;
+  border-bottom: 1px dotted rgba(70, 51, 31, 0.22);
+}
+
+.vinkki:last-child { border-bottom: 0; }
+
+/*
+ * Kiinteä ruutu, ei juokseva kuva: pysty- ja vaakakuvat vuorottelevat
+ * listalla, ja ilman kiinteää mittaa nimet hyppisivät rivi riviltä eri
+ * kohtaan. object-fit leikkaa keskeltä, mikä on pikkukuvassa
+ * parempi kuin tyhjät palkit.
+ */
+.vinkki-kuva {
+  flex: 0 0 auto;
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border: 1px solid rgba(70, 51, 31, 0.3);
+  background: rgba(70, 51, 31, 0.06);
+}
+
+.vinkki-teksti { min-width: 0; }
+
+.vinkki-nimi {
+  display: inline-block;
+  font-family: var(--font-type);
+  font-size: 0.86rem;
+  line-height: 1.25;
+  color: #7a5514;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.vinkki-nimi:hover { color: #9c6f1e; }
+.vinkki-nimi::after { content: ' ↗'; text-decoration: none; }
+
+/*
+ * Selitys lukukirjasimella, ei kirjoituskoneella. Kirjoituskone on
+ * pelin oletus ja oikea lyhyissä riveissä (kuvatekstit, otsikot),
+ * mutta hakemistossa selityksiä on parikymmentä peräkkäin — ja
+ * pitkä monospace-teksti hidastaa lukemista juuri siellä, missä
+ * lukijan on tarkoitus silmäillä.
+ */
+.vinkki-selitys {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-luku);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.vinkki-lahde {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-type);
+  font-size: 0.66rem;
+  color: rgba(70, 51, 31, 0.6);
+}
+
+/* Kuvaton rivi ei jätä ruudun kokoista aukkoa vasempaan reunaan. */
+.vinkki.kuvaton .vinkki-teksti { padding-left: 0; }
+
+@media (max-width: 420px) {
+  .vinkki-kuva { width: 64px; height: 64px; }
+  .vinkki-selitys { font-size: 0.88rem; }
+}
+
 .wiki-nosto {
   margin: 0 0 1.4rem;
   padding-bottom: 1.1rem;
@@ -8817,6 +8952,28 @@ body.vertailu-tila .pawns { display: none; }
 .tutki-alanappi {
   font-family: var(--font-type);
 }
+
+/*
+ * LEHDEN ALAPALKIN JÄRJESTYS (omistajan ohje 8.8.2026): Poistu aina
+ * vasemmassa reunassa, eteenpäin vievä nappi aina oikeassa — joka
+ * sivulla ja molemmissa lehdissä.
+ *
+ * Ilman tätä järjestys tuli DOM:sta: kohtaaminen oli ensimmäisenä ja
+ * Poistu viimeisenä, eli lopetusnappi oli siinä reunassa, jota kohti
+ * peukalo liikkuu edetessään. Sivua kääntävä ja lehdestä poistuva
+ * nappi olivat vierekkäin ja vaihtoivat paikkaa sivun mukaan.
+ *
+ * Toteutus on order-arvoilla eikä DOM-järjestyksellä, koska
+ * .tutki-alanapit on display: contents — napit ovat saman flexin
+ * jäseniä, vaikka ne asuvat eri elementeissä. Näkyvä oikeanpuoleisin
+ * on aina se, joka vie eteenpäin: sivuilla Seuraava, viimeisellä
+ * sivulla kohtaaminen (Seuraava on silloin piilossa).
+ */
+.dialog.lehti .dialog-actions { justify-content: space-between; }
+.dialog.lehti .dialog-actions #arrival-no { order: 0; margin-right: auto; }
+.dialog.lehti .dialog-actions .tutki-alanappi.edellinen { order: 1; }
+.dialog.lehti .dialog-actions .tutki-alanappi.seuraava { order: 2; }
+.dialog.lehti .dialog-actions #arrival-yes { order: 3; }
 
 /* ── MAIDEN TIEDOT -TILA ───────────────────────────────────────────────
  *
