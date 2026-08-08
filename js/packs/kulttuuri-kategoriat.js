@@ -255,6 +255,19 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Pieni jääkausi',
         },
       ],
+      tehtava: {
+        kysymys: 'Ketkä kuninkaan lisäksi omistavat osan Thamesin joutsenista?',
+        vaihtoehdot: [
+          'Kalastajat ja veneenrakentajat',
+          'Viininmyyjät ja värjärit',
+          'Leipurit ja panimomestarit',
+          'Sepät ja satulantekijät',
+        ],
+        oikea: 1,
+        fakta: 'Viininmyyjien ja värjärien ammattikunnat ovat omistaneet osan '
+          + 'linnuista satojen vuosien ajan; kruunun laskijat tunnistaa '
+          + 'punaisesta asusta.',
+      },
     },
     {
       id: 'nykytaide',
@@ -380,6 +393,20 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Rachel Whiteread',
         },
       ],
+      tehtava: {
+        kysymys: 'Mitä Ai Weiwei levitti Tate Modernin turbiinihallin lattialle '
+          + 'vuonna 2010?',
+        vaihtoehdot: [
+          'Meren simpukankuoria',
+          'Kirjavia lasihelmiä',
+          'Auringonkukansiemeniä',
+          'Pyöreitä jokikiviä',
+        ],
+        oikea: 2,
+        fakta: 'Turbiinihallin lattialle levitettiin sata miljoonaa käsin '
+          + 'muotoiltua posliinikappaletta, joista jokainen näytti '
+          + 'auringonkukan siemeneltä.',
+      },
     },
   ],
   /*
@@ -688,6 +715,19 @@ export const KULTTUURI_KATEGORIAT = {
           musiikkiNimi: 'Dvořákin Slaavilaiset tanssit Apple Musicissa',
         },
       ],
+      tehtava: {
+        kysymys: 'Millä soittimella Antonín Dvořák soitti prahalaisessa '
+          + 'orkesterissa ennen kuuluisuuttaan?',
+        vaihtoehdot: [
+          'Kirkon uruilla',
+          'Käyrätorvella',
+          'Alttoviululla',
+          'Kontrabassolla',
+        ],
+        oikea: 2,
+        fakta: 'Ennen kuin Dvořákin omat sävellykset huomattiin, hän oli '
+          + 'prahalaisen orkesterin alttoviulisti.',
+      },
     },
     {
       id: 'arki',
@@ -727,6 +767,19 @@ export const KULTTUURI_KATEGORIAT = {
           lahde: 'Wikimedia Commons (CC0)',
         },
       ],
+      tehtava: {
+        kysymys: 'Mikä oli virastojen ja koulujen kieli Habsburgien valtakunnassa?',
+        vaihtoehdot: [
+          'Saksan kieli',
+          'Unkarin kieli',
+          'Puolan kieli',
+          'Latinan kieli',
+        ],
+        oikea: 0,
+        fakta: 'Saksa oli Habsburgien virastojen ja koulujen kieli, joten '
+          + 'tšekiksi esiintyneistä nukkenäyttelijöistä tuli kielen '
+          + 'puolustajia.',
+      },
     },
   ],
   wien: [
@@ -897,6 +950,19 @@ export const KULTTUURI_KATEGORIAT = {
           ],
         },
       ],
+      tehtava: {
+        kysymys: 'Kenelle Tonava kaunoinen oli alun perin tehty?',
+        vaihtoehdot: [
+          'Puhallinorkesterille',
+          'Lapsikuorolle',
+          'Mieskuorolle',
+          'Jousikvartetille',
+        ],
+        oikea: 2,
+        fakta: 'Kuuluisa valssi kuultiin ensimmäisen kerran mieskuorolle '
+          + 'tehtynä, ja vasta myöhemmin siitä tuli pelkän orkesterin '
+          + 'soittama kappale.',
+      },
     },
     {
       id: 'arki',
@@ -940,6 +1006,18 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Karl-Marx-Hof',
         },
       ],
+      tehtava: {
+        kysymys: 'Mitä wieniläisessä kahvilassa tuodaan aina kahvin kanssa?',
+        vaihtoehdot: [
+          'Lasillinen hanavettä',
+          'Lasillinen omenamehua',
+          'Kuppi kuumaa kaakaota',
+          'Lasillinen kylmää maitoa',
+        ],
+        oikea: 0,
+        fakta: 'Vesilasi kuuluu Wienissä kahviin itsestään selvästi, ja '
+          + 'tyhjentynyt lasi täytetään uudelleen ilman erillistä pyyntöä.',
+      },
     },
   ],
   madrid: [
@@ -1115,6 +1193,18 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Plaza de Cibeles',
         },
       ],
+      tehtava: {
+        kysymys: 'Kuinka syvälle Bernabéun nurmikenttä lasketaan hissillä?',
+        vaihtoehdot: [
+          '10 metrin syvyyteen',
+          '30 metrin syvyyteen',
+          '50 metrin syvyyteen',
+          '80 metrin syvyyteen',
+        ],
+        oikea: 1,
+        fakta: 'Kenttä laskeutuu hissillä kolmenkymmenen metrin syvyyteen, missä '
+          + 'maanalaisessa kasvihuoneessa ruoho saa valoa ja pysyy vihreänä.',
+      },
     },
     {
       id: 'rakennukset',
@@ -1160,6 +1250,19 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Palacio Real de Madrid',
         },
       ],
+      tehtava: {
+        kysymys: 'Milloin kuninkaiden vanha Alcázar-linna syttyi palamaan?',
+        vaihtoehdot: [
+          'Juhannuksena 1734',
+          'Pääsiäisenä 1738',
+          'Jouluaattona 1734',
+          'Uudenvuodenaattona 1764',
+        ],
+        oikea: 2,
+        fakta: 'Kuninkaiden vanha Alcázar paloi jouluaattona 1734 lähes '
+          + 'kokonaan, ja tilalle rakennettiin nykyinen kivinen '
+          + 'kuninkaanlinna.',
+      },
     },
   ],
   berliini: [
@@ -1356,6 +1459,20 @@ export const KULTTUURI_KATEGORIAT = {
           ],
         },
       ],
+      tehtava: {
+        kysymys: 'Kuinka monta paikannimeä Alexanderplatzin maailmankelloon on '
+          + 'jyrsitty?',
+        vaihtoehdot: [
+          '24 paikannimeä',
+          '146 paikannimeä',
+          '1 200 paikannimeä',
+          '60 paikannimeä',
+        ],
+        oikea: 1,
+        fakta: 'Maailmankellon alumiinirumpuun on jyrsitty 146 paikannimeä, ja '
+          + 'rummun kaksikymmentäneljä sivua vastaavat maapallon '
+          + 'aikavyöhykkeitä.',
+      },
     },
     {
       id: 'arki',
@@ -1418,6 +1535,20 @@ export const KULTTUURI_KATEGORIAT = {
           ],
         },
       ],
+      tehtava: {
+        kysymys: 'Keneltä Herta Heuwer sai ainekset ensimmäiseen '
+          + 'currywurst-kastikkeeseensa?',
+        vaihtoehdot: [
+          'Ranskalaisilta sotilailta',
+          'Neuvostoliiton sotilailta',
+          'Brittiläisiltä sotilailta',
+          'Amerikkalaisilta sotilailta',
+        ],
+        oikea: 2,
+        fakta: 'Herta Heuwer sai kastikkeensa ainekset brittisotilailta ja alkoi '
+          + 'myydä sen kanssa paistettua makkaraa kioskillaan '
+          + 'Charlottenburgissa.',
+      },
     },
   ],
   venetsia: [
@@ -1597,6 +1728,18 @@ export const KULTTUURI_KATEGORIAT = {
           ],
         },
       ],
+      tehtava: {
+        kysymys: 'Miten Venetsia varoittaa asukkaitaan kohoavasta vedestä?',
+        vaihtoehdot: [
+          'Punaisilla lipuilla',
+          'Sireenien soitolla',
+          'Kirkonkellojen soitolla',
+          'Kaupungin radiolla',
+        ],
+        oikea: 1,
+        fakta: 'Kun vesi uhkaa nousta kaduille, Venetsia soittaa sireeneitä, ja '
+          + 'mitä useampi soitto kuuluu, sitä korkeammalle meri nousee.',
+      },
     },
     {
       id: 'kasityo',
@@ -1665,6 +1808,19 @@ export const KULTTUURI_KATEGORIAT = {
           ],
         },
       ],
+      tehtava: {
+        kysymys: 'Minkä erikoisoikeuden Muranon lasimestarit saivat?',
+        vaihtoehdot: [
+          'Luvan kantaa miekkaa',
+          'Vapautuksen veroista',
+          'Oikeuden omaan laivaan',
+          'Paikan dogen neuvostossa',
+        ],
+        oikea: 0,
+        fakta: 'Muranon lasimestarit nauttivat erikoisasemasta ja saivat muun '
+          + 'muassa kantaa miekkaa, mutta tasavallan ulkopuolelle heitä ei '
+          + 'päästetty.',
+      },
     },
   ],
   tukholma: [
@@ -1836,6 +1992,19 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Gamla stan',
         },
       ],
+      tehtava: {
+        kysymys: 'Mistä maasta tuotiin väki, joka rakensi Tukholman ensimmäisen '
+          + 'sulun?',
+        vaihtoehdot: [
+          'Norjasta',
+          'Hollannista',
+          'Englannista',
+          'Saksasta',
+        ],
+        oikea: 1,
+        fakta: 'Kuningatar Kristiinan aikaan sulkutyöhön otettiin mestareita '
+          + 'Hollannista, ja ensimmäinen sulku valmistui vuonna 1642.',
+      },
     },
     {
       id: 'elaimet',
@@ -1889,6 +2058,18 @@ export const KULTTUURI_KATEGORIAT = {
           wiki: 'Visentti',
         },
       ],
+      tehtava: {
+        kysymys: 'Minne Skansenilta lähetettiin visenttejä vuonna 1929?',
+        vaihtoehdot: [
+          'Norjan Dovrefjelliin',
+          'Skotlannin Cairngormsiin',
+          'Puolan Białowieżaan',
+          'Romanian Karpaateille',
+        ],
+        oikea: 2,
+        fakta: 'Skansen luovutti vuonna 1929 nuoria naarasvisenttejä Puolan '
+          + 'Białowieżaan, ja siellä laji pääsi takaisin metsään vuonna 1952.',
+      },
     },
   ],
   pariisi: [
@@ -2039,6 +2220,18 @@ export const KULTTUURI_KATEGORIAT = {
           musiikkiNimi: 'Django Reinhardt Apple Musicissa',
         },
       ],
+      tehtava: {
+        kysymys: 'Mikä sytytti tulipalon Djangon perheen asuntovaunussa?',
+        vaihtoehdot: [
+          'unohtunut öljylamppu',
+          'kipinä kamiinasta',
+          'kaatunut kynttilä',
+          'rikkoutunut lyhty',
+        ],
+        oikea: 2,
+        fakta: 'Palo alkoi lokakuussa 1928, kun kynttilä kaatui selluloidista '
+          + 'tehtyjen kukkien päälle Djangon perheen asuntovaunussa.',
+      },
     },
     {
       id: 'arki',
@@ -2083,6 +2276,19 @@ export const KULTTUURI_KATEGORIAT = {
           lahde: 'Benh LIEU SONG, Wikimedia Commons (CC BY-SA 3.0)',
         },
       ],
+      tehtava: {
+        kysymys: 'Kuinka monta metriä joen kaidetta yksi kirjamyyjä saa?',
+        vaihtoehdot: [
+          'viisi metriä',
+          'kahdeksan metriä',
+          'kaksitoista metriä',
+          'kaksikymmentä metriä',
+        ],
+        oikea: 1,
+        fakta: 'Kaupunki jakaa Seinen kaiteet tarkoilla mitoilla: yhdelle '
+          + 'kirjamyyjälle kuuluu kahdeksan metriä kaidetta, ja laatikot on '
+          + 'avattava vähintään neljänä päivänä viikossa.',
+      },
     },
   ],
 };
