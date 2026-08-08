@@ -33,11 +33,13 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Loppukiri: Saksan menovinkkimalli valmiiksi ja '
-        + 'monistus heti kaikkiin maihin, maalehti jokaiselle '
-        + 'Euroopan maalle uudella pohjalla (Ranskan Historia-sivu '
-        + 'mukaan) ja lyhyt kaupunkilehti jokaiselle kaupungille, '
-        + 'jolta se puuttuu. Agenttiparvet 3–4 rinnakkain.',
+      tehtava: 'Loppukiri: menovinkit 6–10 parasta per maa, '
+        + 'painotus museoihin ja näyttelyihin joissa verkossa '
+        + 'pääsee oikeasti katsomaan sisältöä (ei '
+        + 'yleisesittelyjä). Maalehti jokaiselle Euroopan maalle '
+        + '(Ranskan Historia-sivu mukaan) ja lyhyt kaupunkilehti '
+        + 'jokaiselle kaupungille, jolta se puuttuu. Agenttiparvet '
+        + '3–4 rinnakkain.',
       seuraavaksi: 'Välitilanneraportti puolivälissä; loppuraportti '
         + 'kun Eurooppa on valmis.',
     },
