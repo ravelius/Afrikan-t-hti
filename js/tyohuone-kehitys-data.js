@@ -254,6 +254,144 @@ export const LYHYT_KOKEILUT = {
   ],
 };
 
+/**
+ * Uudet väliversiot tyhjältä pöydältä (omistajan pyyntö 8.8.2026:
+ * "tuo uusin välimitta tuntuu hyvälle, mutta teksteissä on ehkä
+ * jotain outoa... Kokeile kirjoittaa muutamia kaupunkeja kokonaan
+ * tyhjältä pöydältä uudestaan"). Nämä EIVÄT ole lyhennelmiä
+ * vanhoista: joka kaupunki sai kokonaan uuden kuvan, ja teksti on
+ * kirjoitettu suoraan välimittaan. Vanha peliteksti näkyy rinnalla
+ * vertailua varten (tyohuone.html lukee sen europe-saapumiset.js:stä
+ * — ei kopiota, joka ajautuisi erilleen).
+ *
+ * Kaanon pitää: yksi kuva per merkintä, ensimmäinen virke jo
+ * tarinassa, isoisä noin joka toisessa (tässä 4/6), suljetut
+ * motiivit (sivu 14, messinkiavain, liituristi) eivät toistu,
+ * jännitys vain Edinburghissa ja purkautuu lämmöksi.
+ *
+ * luenta-kenttä on valmis ElevenLabsia varten; tiedosto-kenttä
+ * lisätään vasta kun ääni on generoitu (ei rikkinäistä soitinta).
+ */
+export const UUDET_VALIT = {
+  johdanto: 'Kuusi kaupunkia kirjoitettu kokonaan tyhjältä pöydältä '
+    + 'suoraan välimittaan — ei lyhentämällä vanhaa, vaan uusin '
+    + 'kuvin. Rinnalla nykyinen peliteksti vertailua varten. Isoisä '
+    + 'on mukana neljässä kuudesta; Pariisi ja Pietari ovat ilman. '
+    + 'Luennat generoidaan näihin heti, kun ääniavain on käytössä.',
+  kohteet: [
+    {
+      id: 'edinburgh',
+      otsikko: 'Edinburgh (jännitys — isoisä mukana)',
+      vali: 'Illan kujilla kaasulyhdyt valaisivat kukin vain oman '
+        + 'ympyränsä, ja yhden ympyrän reunalla seisoi hahmo '
+        + 'liikkumatta. Astuin lähemmäs — ja vanha yövartija nosti '
+        + 'lakkiaan: "Eksyitte, nuori herra. Täällä kaikki eksyvät '
+        + 'ensin."',
+      valiNosto: 'Isoisä kirjoitti: "Edinburghissa kadut ovat '
+        + 'päällekkäin kuin kirjan sivut, ja väärä kerros vie '
+        + 'väärälle vuosisadalle." Yövartija saattoi minut oikealle '
+        + 'sivulle.',
+      luenta: '[whispers] Illan kujilla kaasulyhdyt valaisivat kukin '
+        + 'vain oman ympyränsä, ja yhden ympyrän reunalla seisoi '
+        + 'hahmo liikkumatta. [curious] Astuin lähemmäs — [warmly] '
+        + 'ja vanha yövartija nosti lakkiaan: "Eksyitte, nuori '
+        + 'herra. Täällä kaikki eksyvät ensin." [softly] Isoisä '
+        + 'kirjoitti: "Edinburghissa kadut ovat päällekkäin kuin '
+        + 'kirjan sivut, ja väärä kerros vie väärälle vuosisadalle." '
+        + '[warmly] Yövartija saattoi minut oikealle sivulle.',
+    },
+    {
+      id: 'pariisi',
+      otsikko: 'Pariisi (arvoitus — ilman isoisää)',
+      vali: 'Lehtikioskin myyjä työnsi sanomalehden kainalooni ennen '
+        + 'kuin ehdin maksaa: "Sivu yhdeksän, monsieur." Sivulla '
+        + 'yhdeksän oli pieni ilmoitus: "Löytötavaratoimistossa '
+        + 'odottaa englantilainen matkalaukku vuodelta 1873. '
+        + 'Noudettava ennen sunnuntaita." Tänään on lauantai.',
+      luenta: '[curious] Lehtikioskin myyjä työnsi sanomalehden '
+        + 'kainalooni ennen kuin ehdin maksaa: "Sivu yhdeksän, '
+        + 'monsieur." [softly] Sivulla yhdeksän oli pieni ilmoitus: '
+        + '[whispers] "Löytötavaratoimistossa odottaa englantilainen '
+        + 'matkalaukku vuodelta 1873. Noudettava ennen sunnuntaita." '
+        + '[curious] Tänään on lauantai.',
+    },
+    {
+      id: 'wien',
+      otsikko: 'Wien (hengähdys — isoisä mukana)',
+      vali: 'Oopperan sivuovi oli raollaan keskellä päivää, ja '
+        + 'sisältä orkesteri pysähtyi ja aloitti saman tahdin yhä '
+        + 'uudestaan. Vahtimestari huomasi minut ja siirsi tuolin '
+        + 'ovensuuhun: "Kuunnella saa ilmaiseksi. Istua vain '
+        + 'luvalla."',
+      valiNosto: 'Isoisä kirjoitti: "Wienissä musiikki ei ole '
+        + 'juhlahetki vaan tapa hengittää." Istuin ovensuussa koko '
+        + 'harjoituksen.',
+      luenta: '[warmly] Oopperan sivuovi oli raollaan keskellä '
+        + 'päivää, ja sisältä orkesteri pysähtyi ja aloitti saman '
+        + 'tahdin yhä uudestaan. [softly] Vahtimestari huomasi minut '
+        + 'ja siirsi tuolin ovensuuhun: "Kuunnella saa ilmaiseksi. '
+        + 'Istua vain luvalla." Isoisä kirjoitti: "Wienissä musiikki '
+        + 'ei ole juhlahetki vaan tapa hengittää." [warmly] Istuin '
+        + 'ovensuussa koko harjoituksen.',
+    },
+    {
+      id: 'ateena',
+      otsikko: 'Ateena (lämpö — isoisä mukana)',
+      vali: 'Torilla kauppias antoi minun maistaa oliiveja kolmesta '
+        + 'eri ruukusta ja kysyi, mikä vuori maistui parhaalta. '
+        + 'Nauroin — kunnes hän osoitti rinteitä kaupungin takana: '
+        + 'jokainen ruukku oli omalta rinteeltään, ja jokainen rinne '
+        + 'maistui erilaiselta.',
+      valiNosto: 'Isoisä kirjoitti: "Ateenassa vanhinta ei tarvitse '
+        + 'etsiä museosta — oliivipuu ehti nähdä Sokrateen." '
+        + 'Kauppias nyökkäsi, kun luin sen ääneen.',
+      luenta: '[curious] Torilla kauppias antoi minun maistaa '
+        + 'oliiveja kolmesta eri ruukusta ja kysyi, mikä vuori '
+        + 'maistui parhaalta. [warmly] Nauroin — kunnes hän osoitti '
+        + 'rinteitä kaupungin takana: jokainen ruukku oli omalta '
+        + 'rinteeltään, ja jokainen rinne maistui erilaiselta. '
+        + '[softly] Isoisä kirjoitti: "Ateenassa vanhinta ei '
+        + 'tarvitse etsiä museosta — oliivipuu ehti nähdä '
+        + 'Sokrateen." [warmly] Kauppias nyökkäsi, kun luin sen '
+        + 'ääneen.',
+    },
+    {
+      id: 'pietari',
+      otsikko: 'Pietari (ihmetys — ilman isoisää)',
+      vali: 'Eremitaasin marmorisalissa kissa käveli ohitseni kuin '
+        + 'virkamies kiireisellä asialla. Vahtimestari kuiskasi, '
+        + 'että kissat ovat vartioineet palatsin tauluja '
+        + 'keisarinnan ajoista asti — ja että jokaisella on nimi, '
+        + 'palkka ja oma kerros.',
+      luenta: '[curious] Eremitaasin marmorisalissa kissa käveli '
+        + 'ohitseni kuin virkamies kiireisellä asialla. [whispers] '
+        + 'Vahtimestari kuiskasi, että kissat ovat vartioineet '
+        + 'palatsin tauluja keisarinnan ajoista asti — [warmly] ja '
+        + 'että jokaisella on nimi, palkka ja oma kerros.',
+    },
+    {
+      id: 'rooma',
+      otsikko: 'Rooma (haikeus — isoisä mukana)',
+      vali: 'Talon seinässä keskellä katua oli pala '
+        + 'marmoripylvästä, ja sen kirjaimet olivat ylösalaisin. '
+        + 'Opas kohautti olkapäitään: uusi Rooma on aina rakennettu '
+        + 'vanhan kivistä, eikä kukaan enää tiedä, minkä temppelin '
+        + 'kiviä kantaa kotonaan.',
+      valiNosto: 'Isoisä kirjoitti: "Roomassa ei kävellä kaupungissa '
+        + 'vaan kaupunkien päällä." Painoin kämmenen ylösalaisiin '
+        + 'kirjaimiin.',
+      luenta: '[curious] Talon seinässä keskellä katua oli pala '
+        + 'marmoripylvästä, ja sen kirjaimet olivat ylösalaisin. '
+        + '[softly] Opas kohautti olkapäitään: uusi Rooma on aina '
+        + 'rakennettu vanhan kivistä, eikä kukaan enää tiedä, minkä '
+        + 'temppelin kiviä kantaa kotonaan. Isoisä kirjoitti: '
+        + '[whispers] "Roomassa ei kävellä kaupungissa vaan '
+        + 'kaupunkien päällä." [warmly] Painoin kämmenen '
+        + 'ylösalaisiin kirjaimiin.',
+    },
+  ],
+};
+
 export const MANTERE_KOKEILUT = [
   {
     lauta: 'Afrikka — Sansibar (kivilinnun varjo)',
