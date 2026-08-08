@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 354, teksti: 'Espanjalle korkokartta: Meseta ja kuusi kaupunkia' },
+  { v: 354, teksti: 'Madridin kohdekartta: linnalta Retiron portille' },
   { v: 353, teksti: 'Menovinkit viidelle maalle: kokoelmat verkossa' },
   { v: 352, teksti: 'Työhuoneeseen Kehitys-välilehti: kaari, näytteet, Eurooppa' },
   { v: 351, teksti: 'Italialle oma korkokartta ja kuusi kaupunkia' },

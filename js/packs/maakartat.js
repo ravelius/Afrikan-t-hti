@@ -212,6 +212,53 @@ export const MAAKARTAT = {
       wiki: 'San Marino',
     },
   },
+  ESP: {
+    tiedosto: 'Spain rel location map.svg',
+    lahde: 'NordNordWest, Wikimedia Commons (CC BY-SA 3.0 de)',
+    /*
+     * Rajat sijaintikarttaperheen omasta määrittelystä (Module:Location
+     * map/data/Spain). Espanjan määrittelyssä on kaksi kaavaa: manner
+     * ja Kanariansaaret, jotka on piirretty kuvan oikeaan alakulmaan
+     * omaan laatikkoonsa. Tässä käytetään mantereen kaavaa, ja se
+     * riittää: kaikki kuusi kaupunkia ovat mantereella. Jos joskus
+     * lisätään Las Palmas tai Santa Cruz, sitä EI voi asemoida näillä
+     * rajoilla — laatikko on eri mittakaavassa.
+     */
+    rajat: { pohjoinen: 44.4, etela: 34.7, lansi: -9.9, ita: 4.8 },
+    kaupungit: [
+      { nimi: 'Madrid', lat: 40.417, lon: -3.704, paa: true },
+      { nimi: 'Barcelona', lat: 41.387, lon: 2.169 },
+      { nimi: 'Valencia', lat: 39.47, lon: -0.376 },
+      { nimi: 'Sevilla', lat: 37.389, lon: -5.985 },
+      { nimi: 'Granada', lat: 37.177, lon: -3.599 },
+      { nimi: 'Bilbao', lat: 43.263, lon: -2.935 },
+    ],
+    /*
+     * Nosto näyttää sen, mikä kartassa on isointa ja mitä intro vain
+     * nimeää: keskellä kohoava kuiva ylätasanko. Madridin oma
+     * kansisivu kertoo jo, että pääkaupunki on Euroopan korkeimmalla
+     * — sitä ei toisteta tässä, vaan kerrotaan millaista ylhäällä on.
+     * Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+     */
+    nosto: {
+      otsikko: 'Meseta on Espanjan kuiva katto',
+      tiedosto: 'Murallas de Ávila - 01.jpg',
+      teksti: 'Kartan keskeltä nousee Meseta, kuiva ylätasanko, joka '
+        + 'peittää melkein puolet Espanjasta ja on keskimäärin '
+        + '600–700 metrin korkeudella. Sen halki kulkee vuorijono, '
+        + 'Sistema Central, joka jakaa tasangon kahtia; Madridista '
+        + 'näkyy talvella sen lumihuippuja. Ylhäällä kesät ovat '
+        + 'paahtavia ja talvet kylmiä, ja vanha sanonta lupaa Kastilian '
+        + 'ilmastoksi yhdeksän kuukautta talvea ja kolme helvettiä. '
+        + 'Tasangon laidalla seisoo Ávila 1 132 metrissä, korkeimpana '
+        + 'Espanjan maakuntakaupungeista, ja sitä kiertää yhä '
+        + 'kokonainen keskiaikainen muuri: 2,5 kilometriä ja 88 tornia.',
+      selite: 'Ávilan keskiaikainen muuri kiertää kaupunkia Mesetan '
+        + 'laidalla.',
+      lahde: 'Carlos Delgado, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Ávila',
+    },
+  },
 };
 
 /*
@@ -795,6 +842,44 @@ export const KAUPUNKIKARTAT = {
       { nimi: 'Museosaari', lat: 52.5169, lon: 13.401, wiki: 'Museumsinsel' },
       { nimi: 'Tv-torni', lat: 52.5208, lon: 13.4094, wiki: 'Berliinin televisiotorni' },
       { nimi: 'East Side Gallery', lat: 52.505, lon: 13.4399, wiki: 'East Side Gallery' },
+    ],
+  },
+  madrid: {
+    /*
+     * Sama työkalu kuin muissa. Madrid oli näistä vaikein rajata:
+     * ydinkeskusta on tiheää pikkukatua ilman jokea tai rantaa, ja
+     * ensimmäinen väljempi rajaus muuttui pelkäksi verkoksi, jossa
+     * mikään ei erottunut. Kiristetty rajaus tuo esiin sen, mikä
+     * Madridissa on selkärankaa: Retiron puisto idässä, kuninkaanlinnan
+     * puutarhat lännessä ja niiden välissä Prado-akseli.
+     */
+    polku: 'assets/kartat/madrid-keskusta.png',
+    lahde: '© OpenStreetMap-tekijät (ODbL)',
+    rajat: { pohjoinen: 40.43, etela: 40.406, lansi: -3.72, ita: -3.675 },
+    esittely: 'Madrid oli pieni linnoituskaupunki, kunnes kuningas '
+      + 'Filip II siirsi hovinsa tänne vuonna 1561. Sen jälkeen '
+      + 'kaupunki kasvoi ulospäin keskustastaan kuin puu '
+      + 'vuosirenkaineen, ja kartalla se näkyy yhä: vanhat kadut '
+      + 'mutkittelevat kapeina, uudemmat kulkevat suorina ja '
+      + 'leveinä.\n\nPuerta del Solin kiveyksessä on laatta, josta '
+      + 'Espanjan tiet mitataan: se on kilometri nolla, ja maan '
+      + 'päätiet lähtevät siitä ulospäin kuin kellotaulun viisarit. '
+      + 'Kartan itälaidan iso vihreä on Retiro, entinen kuninkaan '
+      + 'puutarha, joka siirtyi kaupungille ja kaikkien käyttöön vasta '
+      + '1868. Kartan kohteista pääsee lukemaan lisää napauttamalla.',
+    kohteet: [
+      /*
+       * Lännestä itään, eli kuninkaanlinnalta Retiron portille.
+       * Jokaisen wiki on tarkistettu fi.wikipedian artikkeli;
+       * Gran Vía ja Retiron puisto jäivät pois, koska niistä ei ole
+       * suomenkielistä artikkelia.
+       */
+      { nimi: 'Kuninkaanlinna', lat: 40.418, lon: -3.7143, wiki: 'Palacio Real de Madrid' },
+      { nimi: 'Plaza Mayor', lat: 40.4155, lon: -3.7074, wiki: 'Plaza Mayor' },
+      { nimi: 'Puerta del Sol', lat: 40.4169, lon: -3.7033, wiki: 'Puerta del Sol' },
+      { nimi: 'Cibeleen aukio', lat: 40.4192, lon: -3.6931, wiki: 'Plaza de Cibeles' },
+      { nimi: 'Prado-museo', lat: 40.4138, lon: -3.6921, wiki: 'Museo del Prado' },
+      { nimi: 'Alcalán portti', lat: 40.42, lon: -3.6889, wiki: 'Puerta de Alcalá' },
     ],
   },
   venetsia: {
