@@ -1038,6 +1038,40 @@ body.aloitus-zoom .kiikari {
  * Pergamentin väreissä kuten kartan muutkin merkinnät, jotta napit
  * kuuluvat karttaan eivätkä leiju sen päällä käyttöliittymänä.
  */
+/*
+ * Maiden lehdet -nappi kartan oikeaan ylälaitaan.
+ *
+ * Sama pyöreä pergamenttinappi kuin zoomissa, mutta oma elementtinsä:
+ * zoomiryhmä katoaa kosketuslaitteilta, ja tämän on näyttävä kaikilla.
+ * Painettuna se on tumma, jotta kartan tila näkyy napista itsestään.
+ */
+.maalehti-nappi {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.6rem;
+  z-index: 3;
+  width: 2.15rem;
+  height: 2.15rem;
+  min-width: 40px;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(239, 220, 180, 0.9);
+  color: var(--map-ink);
+  cursor: pointer;
+}
+
+.maalehti-nappi[hidden] { display: none; }
+
+.maalehti-nappi:hover { background: rgba(245, 231, 200, 0.95); }
+
+.maalehti-nappi[aria-pressed='true'] {
+  background: var(--map-ink);
+  color: rgba(245, 231, 200, 0.95);
+}
+
 .zoomi {
   position: absolute;
   right: 0.5rem;

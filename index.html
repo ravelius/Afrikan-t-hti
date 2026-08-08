@@ -168,6 +168,25 @@
           matkustusnappien käytössä, ja se on pidetty tarkoituksella
           väljänä (omistajan aiemmat toiveet nappien koosta ja paikasta).
         -->
+        <!--
+          Maiden lehdet suoraan kartalta (omistajan havainto 8.8.2026:
+          *"En pääse Saksan lehteen mistään?"* ja *"Kartalta pitäisi
+          päästä myös"*).
+
+          Nappi on OMA elementtinsä eikä osa .zoomi-ryhmää, koska
+          zoomipainikkeet piilotetaan kosketuslaitteilta — siellä
+          zoomataan nipistämällä. Tämä nappi ei ole zoomausta eikä sille
+          ole sormiele-vastinetta, joten se näkyy joka laitteella.
+        -->
+        <button type="button" id="maalehti-nappi" class="maalehti-nappi" aria-pressed="false"
+                title="Maiden lehdet" aria-label="Maiden lehdet: avaa maan oma lehti kartalta" hidden>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none"
+               stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6.2c2.6-1.1 5.2-1.1 8 0v12c-2.8-1.1-5.4-1.1-8 0Z"/>
+            <path d="M20 6.2c-2.6-1.1-5.2-1.1-8 0v12c2.8-1.1 5.4-1.1 8 0Z"/>
+            <path d="M16.2 10.4v4.2"/><path d="M16.2 8.6v.1"/>
+          </svg>
+        </button>
         <div class="zoomi" role="group" aria-label="Kartan zoomaus">
           <button type="button" id="zoom-in" class="zoomi-nappi" aria-label="Lähennä karttaa">
             <span aria-hidden="true">+</span>

@@ -1988,10 +1988,21 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Viro: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa, viimeinen
+    // päättyy koukkuun kartan nostoon (Kaalin kraatteri).
     intro: 'Viro on Suomenlahden eteläpuolinen naapurimme, kahden tunnin '
-             + 'laivamatkan päässä Helsingistä. Maa on tasainen — korkein kohta '
-             + 'Suur Munamägi jää 318 metriin — ja yli puolet siitä on metsää. '
-             + 'Saaria ja luotoja on runsaat 2 000.',
+             + 'laivamatkan päässä Helsingistä. Maa on tasainen — korkein '
+             + 'kohta Suur Munamägi jää 318 metriin — ja yli puolet siitä on '
+             + 'metsää.'
+             + '\n\nSen näkee kartasta: vihreä pysyy samanlaisena laidasta '
+             + 'laitaan, ja ruskeaa on vain kaakkoiskulmassa, missä Munamägi '
+             + 'kohoaa. Lännessä maa hajoaa saariksi, joita on luotoineen '
+             + 'runsaat 2 000; suurimmat ovat Saarenmaa ja Hiidenmaa. Idässä '
+             + 'rajana on Peipsijärvi, jonka takana alkaa Venäjä.'
+             + '\n\nYhdellä saarella on kohta, joka on kartalle liian pieni '
+             + 'mutta silti etsimisen arvoinen: metsän keskellä on täysin '
+             + 'pyöreä kuoppa. Sen teki taivaalta pudonnut rautamöhkäle.',
     teksti: 'Viro on suomen lähin sukukieli, ja sanat näyttävät tutuilta — '
               + 'mutta eivät aina tarkoita samaa. Viron raamat on kirja, piim '
               + 'on maitoa ja hallitus tarkoittaa hometta. Etelä-Virossa '
@@ -2017,10 +2028,24 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Latvia: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa, jossa ei ole
+    // vuoria; viimeinen päättyy koukkuun kartan nostoon.
     intro: 'Latvia on Baltian maista keskimmäinen: Viro pohjoisessa, '
              + 'Liettua etelässä ja Itämeri lännessä. Riika on Baltian suurin '
              + 'kaupunki, ja sen keskustassa on yli 700 jugendtaloa — enemmän '
-             + 'kuin missään muualla maailmassa.',
+             + 'kuin missään muualla maailmassa.'
+             + '\n\nKorkokartta on melkein kokonaan vihreä, eikä se ole '
+             + 'kartan vika: Latviassa ei ole vuoria, vaan metsää ja matalia '
+             + 'kumpuja. Pohjoisesta työntyy maahan syvä lovi, Riianlahti, ja '
+             + 'sen pohjukkaan perustettiin Riika vuonna 1201. Ruskeampia '
+             + 'laikkuja näkyy vain keskellä maata ja kaakossa, missä maa '
+             + 'kohoaa loiviksi ylängöiksi.'
+             + '\n\nLatvia ja liettua ovat maailman ainoat elossa olevat '
+             + 'balttilaiset kielet, ja Latgalen maakunnassa puhutaan vielä '
+             + 'omaa latgalia. Yhden tempun tasainen maa silti tekee: '
+             + 'lännessä, Kuldīgan kohdalla, joki putoaa kalliokynnyksen yli '
+             + 'niin leveänä, ettei Euroopassa ole leveämpää putousta.',
     teksti: 'Latvia ja liettua ovat maailman ainoat elossa olevat '
               + 'balttilaiset kielet. Ne ovat säilyttäneet niin vanhoja '
               + 'indoeurooppalaisia piirteitä, että kielitieteilijät tutkivat '
@@ -2043,10 +2068,26 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Liettua: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa, viimeinen
+    // päättyy koukkuun kartan nostoon (Trakain saarilinna).
     intro: 'Liettua on Baltian maista suurin ja eteläisin. 1400-luvulla '
              + 'Liettuan suuriruhtinaskunta oli Euroopan laajin valtio ja '
              + 'ulottui Itämereltä Mustallemerelle; se oli myös Euroopan '
-             + 'viimeinen pakanallinen valtio.',
+             + 'viimeinen pakanallinen valtio.'
+             + '\n\nKorkokartalla maa on melkein kokonaan vihreä, eikä se '
+             + 'ole kartan vika: Liettuassa ei ole vuoria, vaan loivia '
+             + 'harjuja, metsää ja järviä. Lännessä erottuu ohut '
+             + 'hiekkakaistale, Kuurinkynnäs, joka sulkee taakseen oman '
+             + 'lahtensa; sen dyynit nousevat kuudenkymmenen metrin '
+             + 'korkeuteen. Idässä maa on täynnä pieniä järviä.'
+             + '\n\nKristinusko tuli Liettuaan vasta 1387, myöhemmin kuin '
+             + 'mihinkään muuhun Euroopan maahan, ja liettuan kieli on '
+             + 'elävistä indoeurooppalaisista kielistä arkaaisin. '
+             + 'Šiauliain lähellä kohoaa Ristien mäki, jolle ihmiset ovat '
+             + 'tuoneet jo yli satatuhatta ristiä. Ja yhdessä itäisistä '
+             + 'järvistä on saari, jolla seisoo kokonainen punatiilinen '
+             + 'linna.',
     teksti: 'Liettuan suuriruhtinaskunta liittyi 1569 Puolan kanssa '
               + 'yhteiseksi valtioksi, joka kesti yli kaksisataa vuotta. '
               + 'Kristinusko tuli Liettuaan vasta 1387 — myöhemmin kuin '
@@ -2070,10 +2111,22 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Suomi: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa, viimeinen
+    // päättyy koukkuun kartan nostoon (Lokan tekojärvi).
     intro: 'Suomi on Euroopan harvimmin asuttuja maita: noin 18 asukasta '
              + 'neliökilometrillä, ja Lapissa paljon vähemmän. Etelästä '
-             + 'pohjoiseen matkaa on 1 160 kilometriä. Järviä on 187 888 ja '
-             + 'saaria 179 584, ja metsä peittää maasta noin kolme neljäsosaa.',
+             + 'pohjoiseen matkaa on 1 160 kilometriä, ja metsä peittää '
+             + 'maasta noin kolme neljäsosaa.'
+             + '\n\nKartta on melkein kokonaan vihreä, koska maa on matalaa: '
+             + 'vasta luoteessa se kohoaa tuntureiksi Ruotsin ja Norjan '
+             + 'rajaa kohti. Keskellä ja idässä vihreän seassa on niin '
+             + 'tiheässä sinistä, että järvet sulautuvat yhdeksi tahraksi — '
+             + 'niitä on 187 888. Rannikon edustalla sama toistuu saarina, '
+             + 'joita on 179 584.'
+             + '\n\nMelkein kaikki nämä vedet ovat jääkauden jälkiä, mutta '
+             + 'eivät aivan kaikki. Kartan pohjoisosassa on kaksi suurta '
+             + 'allasta, joita ei ollut vielä 1960-luvulla.',
     teksti: 'Suomi kuului Ruotsiin noin kuusisataa vuotta ja sen jälkeen '
               + 'Venäjän keisarikuntaan autonomisena suuriruhtinaskuntana '
               + '1809–1917. Itsenäisyys julistettiin 6. joulukuuta 1917, ja '
@@ -2149,11 +2202,25 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Norja: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa, kolmas
+    // päättyy koukkuun kartan nostoon (Saltstraumen).
     intro: 'Norjan rantaviiva on saarineen 100 915 kilometriä — kaksi ja '
              + 'puoli kertaa maapallon ympärysmitta. Saaria on yli 239 000 ja '
-             + 'vuonoja satoja. Pisin niistä, Sognefjord, työntyy 205 '
-             + 'kilometriä sisämaahan. Maa on kapeimmillaan vain 6,3 kilometriä '
-             + 'leveä.',
+             + 'vuonoja satoja, ja pisin niistä, Sognefjord, työntyy 205 '
+             + 'kilometriä sisämaahan.'
+             + '\n\nKorkokartalla maa on kapea ja pitkä: ruskea tunturiselkä '
+             + 'kulkee Ruotsin rajaa pitkin, ja sen länsipuolella rannikko on '
+             + 'revitty vuonoiksi ja saariksi. Ne ovat jääkauden jälki — '
+             + 'kilometrien paksuinen jää kaivoi laaksot merenpinnan '
+             + 'alapuolelle, ja meri täytti ne, kun jää suli. Kapeimmillaan '
+             + 'maa on vain 6,3 kilometriä leveä, ja pohjoisessa se kaartuu '
+             + 'Suomen yläpuolelta itään asti.'
+             + '\n\nVuono on syvä, mutta sen suulla on usein matala kynnys: '
+             + 'Sognefjord ylettyy 1 308 metrin syvyyteen, vaikka suussa '
+             + 'vettä on vain noin sata metriä. Kun meri nousee ja laskee, '
+             + 'sen on mahduttava juuri näistä kapeikoista — eikä se '
+             + 'kaikkialla mahdu rauhassa.',
     teksti: 'Vuonot ovat jääkauden jälki: kilometrien paksuinen jää kaivoi '
               + 'laaksot merenpinnan alapuolelle, ja meri täytti ne, kun jää '
               + 'suli. Sognefjord on syvimmillään 1 308 metriä, vaikka sen '
@@ -2177,10 +2244,25 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Tanska: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa, kolmas alkaa
+    // koukulla kartan nostoon (Grenenin hiekkakärki).
     intro: 'Tanska on matala ja pirstoutunut: saaria on yli 400, joista '
              + 'noin 70 on asuttuja, ja korkein luonnonkohta Møllehøj kohoaa '
              + '170,86 metriin. Mistään maan kohdasta ei ole merelle enempää '
-             + 'kuin noin 50 kilometriä.',
+             + 'kuin noin 50 kilometriä.'
+             + '\n\nKorkokartalla sen näkee heti: koko maa on samaa vaaleaa '
+             + 'vihreää, eikä ruskeaa ole missään. Vasemmalla on Jyllannin '
+             + 'niemimaa, joka kiinnittyy Saksaan, ja sen itäpuolella ovat '
+             + 'saaret — Fyn, Sjælland ja aivan oikeassa laidassa Bornholm. '
+             + 'Kartan yläkulmassa maasto muuttuu tummemmaksi ja '
+             + 'korkeammaksi: se on jo Ruotsia, ja Kööpenhaminasta sinne on '
+             + 'vain salmen verran matkaa.'
+             + '\n\nPohjoisessa Jyllanti ei lopu rantaan vaan kapenee '
+             + 'ohueksi hiekkakieleksi keskelle merta. Vettä on joka '
+             + 'puolella, joten maa on kurottu yhteen silloilla: Ison-Beltin '
+             + 'silta valmistui 1998 ja Juutinrauman silta-tunneli Malmöhön '
+             + 'vuonna 2000.',
     teksti: 'Saarten yhdistäminen on ollut iso urakka. Ison-Beltin silta '
               + 'valmistui 1998, ja sen riippusillan jänneväli on 1 624 metriä '
               + '— maailman pisimpiä. Juutinrauman silta-tunneli Malmöhön '
