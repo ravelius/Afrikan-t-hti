@@ -13,8 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
-  { v: 356, teksti: 'Radio ja tv näkyvät nyt kummassakin lehdessä' },
-  { v: 356, teksti: 'Viimeiset tv-livet pois: tilalle tulee tallenteita' },
+  { v: 357, teksti: 'Radio ja tv näkyvät nyt kummassakin lehdessä' },
+  { v: 357, teksti: 'Viimeiset tv-livet pois: tilalle tulee tallenteita' },
+  { v: 356, teksti: 'Työhuone uudeksi: 5 välilehteä, Testaa ja tilanne yhteen' },
   { v: 355, teksti: 'Ruotsille korkokartta: Kiirunasta Malmöhön' },
   { v: 355, teksti: 'Tukholman kohdekartta, ja vesi näkyy vihdoin' },
   { v: 354, teksti: 'Espanjalle korkokartta: Meseta ja kuusi kaupunkia' },
