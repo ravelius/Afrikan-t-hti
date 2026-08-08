@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 404, teksti: 'Minitehtävä joka kaupunkilehden aihesivulle' },
   { v: 403, teksti: 'Maan nimi ja i yhtenä selkeänä nappina kartalla' },
   { v: 403, teksti: 'Lehden maaosiolinkki pois kameraloven alta' },
   { v: 402, teksti: 'Työhuone hakee aina tuoreimman sisällön verkosta' },
