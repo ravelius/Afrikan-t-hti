@@ -208,31 +208,38 @@ export const TV_KANAVAT = {
    * sivun HTML:stä, eikä rainews.it:n JSON-polku anna mp4:ää.
    */
   /*
-   * ESPANJAN TV-NAPPI ON VALMIS TEHTÄVÄKSI MUTTA ODOTTAA PÄÄTÖSTÄ
-   * (kartoitettu 8.8.2026).
+   * ESPANJAN TV-NAPPI: KAKSI ESTETTÄ, JOISTA TOINEN ON RATKAISTU JA
+   * TOINEN EI (8.8.2026). Nappia ei siksi ole.
    *
-   * RTVE on ainoa löydetty lähde Saksan jälkeen, joka antaa oikeaa
-   * mp4:ää. Haku: `api.rtve.es/api/programas/135931/videos.json`
-   * (ohjelma Telediario Matinal), CORS `*`, uusin ensin. Sieltä
-   * löytyy sekä 3–4 minuutin kooste ("Telediario Matinal en 4'" /
-   * "…en cuatro minutos") että alle minuutin säätiedote
-   * ("El tiempo hoy…"). Toisto: `ztnr.rtve.es/ztnr/<id>.mp4`.
+   * Lähde olisi hyvä. `api.rtve.es/api/programas/135931/videos.json`
+   * (Telediario Matinal) vastaa CORS `*`:lla, listaa uusimman ensin ja
+   * sisältää sekä 3–4 minuutin koosteen ("Telediario Matinal en 4'" /
+   * "…en cuatro minutos") että alle minuutin säätiedotteen
+   * ("El tiempo hoy…"), joka olisi lapselle uutislähetystä parempi.
+   * Tallenne haetaan osoitteesta `ztnr.rtve.es/ztnr/<id>.mp4`.
    *
-   * ESTE: ztnr ohjaa `http://`-osoitteeseen, ei https:ään. Mitattu
-   * useaan kertaan, myös Origin-, Referer- ja
-   * Upgrade-Insecure-Requests-otsakkeiden kanssa — vastaus on aina
-   * sama. Peli tarjoillaan https:llä, joten kyse on sekasisällöstä:
-   * Chrome ja Firefox nostavat mediapyynnön automaattisesti
-   * https:ään (ja se toimii — mediapalvelin vastaa https:llä 206 ja
-   * oikeilla mp4-tavuilla, testattu Espanjan ulkopuolelta), mutta
-   * iOS:n Safari on niistä epävarmin, ja se on omistajan pääasiallinen
-   * laite. Selainkäytöstä EI voi mitata tästä ympäristöstä: selain ei
-   * pääse ulkoisiin palvelimiin lainkaan (ERR_CONNECTION_RESET, sama
-   * rajoite kuin v257:ssä).
+   * ESTE 1 — SEKASISÄLTÖ. Ratkaistu. ztnr ohjaa `http://`-osoitteeseen,
+   * eikä sitä muuta Origin-, Referer- eikä
+   * Upgrade-Insecure-Requests-otsake. Workerissa on nyt `?ohjaus=`
+   * -reitti, joka kysyy ohjauksen palvelimen puolella ja palauttaa
+   * osoitteen https:nä (tools/uutisproxy/worker.js).
    *
-   * Siisti ratkaisu on olemassa eikä se ole iso: uutisproxy-worker
-   * seuraa ohjauksen ja palauttaa lopullisen https-osoitteen, jolloin
-   * sekasisältöä ei synny lainkaan. Se on kuitenkin oma eränsä
-   * (worker + reitti + julkaisu), joten se päätetään erikseen.
+   * ESTE 2 — 410 GONE. Ratkaisematta, ja tämä on se, jonka takia
+   * nappia ei ole. Mediapalvelin antoi ensimmäisillä hauilla oikeat
+   * mp4-tavut (206, `ftypisom…moov`), mutta toistuvissa kokeissa se
+   * vastaa lähes aina `410 Gone` — riippumatta jakson iästä, ja myös
+   * yksittäisinä hakuina tauon päässä toisistaan. Ilmiö näyttää
+   * IP-kohtaiselta rajoitukselta, mutta sitä EI voi todentaa täältä:
+   * ketjun keskimmäinen hyppy on plain http, jonka kehitysympäristön
+   * verkkokäytäntö estää, eikä selain tavoita ulkoisia palvelimia
+   * lainkaan (ERR_CONNECTION_RESET, sama rajoite kuin v257:ssä).
+   *
+   * Nappi jäisi siis toimimaan tai olemaan toimimatta sen mukaan,
+   * mikä RTVE:n rajoitus kulloinkin on — ja sääntö on, että sellainen
+   * nappi on huonompi kuin ei nappia. Toteutus on valmiina odottamassa
+   * (lista + otsikkotunnistimet testattu oikeaa rajapintaa vasten,
+   * molemmat valinnat osuivat tuoreimpaan jaksoon); vain tämä este on
+   * tiellä. Ratkeaa yhdellä testillä oikealla laitteella oikeasta
+   * verkosta.
    */
 };

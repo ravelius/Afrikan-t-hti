@@ -1,5 +1,18 @@
 # Uutisvälityksen käyttöönotto (omistajalle, n. 5 min)
 
+> **Päivitys 8.8.2026 (ohjauksen selvitys):** workeriin tuli toinen
+> reitti, `?ohjaus=<osoite>`. Se ei välitä sisältöä vaan kysyy
+> ohjauksen palvelimen puolella ja palauttaa lopullisen osoitteen
+> JSONina https-muodossa. Tarve: Espanjan tv-tallenne ohjaa
+> `http://`-osoitteeseen, ja https:llä tarjoiltavassa pelissä se olisi
+> sekasisältöä. Reitillä on oma sallittujen listansa
+> (`OHJAUS_SALLITUT`), jossa on toistaiseksi vain `ztnr.rtve.es`.
+> Julkaisu tulee itsestään main-pushista. **Reitti on tehty valmiiksi,
+> mutta Espanjan tv-nappia ei vielä ole** — syy on kirjattu
+> `js/packs/uutislahteet.js`:ään (RTVE:n mediapalvelin vastaa
+> toistuvissa kokeissa `410 Gone`, eikä sitä voi todentaa
+> kehitysympäristöstä).
+
 > **Päivitys 7.8.2026 (automaattijulkaisu):** repo on kytketty
 > Cloudflaren Git-integraatioon (Workers Builds), ja repossa on nyt
 > `wrangler.jsonc`, joka kertoo sille workerin sisääntulopisteen.
