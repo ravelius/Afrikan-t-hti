@@ -33,13 +33,12 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Loppukiri: menovinkit 6–10 parasta per maa, '
-        + 'painotus museoihin ja näyttelyihin joissa verkossa '
-        + 'pääsee oikeasti katsomaan sisältöä (ei '
-        + 'yleisesittelyjä). Maalehti jokaiselle Euroopan maalle '
-        + '(Ranskan Historia-sivu mukaan) ja lyhyt kaupunkilehti '
-        + 'jokaiselle kaupungille, jolta se puuttuu. Agenttiparvet '
-        + '3–4 rinnakkain.',
+      tehtava: 'Loppukiri: menovinkkimalli HYVÄKSYTTY (v373 Saksa; '
+        + 'raja nyt 6–20/maa, katsottavuus edellä). Seuraavaksi '
+        + 'neljä varastomaata mainiin (kuvat silmin ensin), loput '
+        + 'maat, maalehdet ja kaupunkilehdet. Lisäksi maan osio '
+        + 'riviksi sisällysluetteloon ja hampurilaisvalikkoon '
+        + '(omistaja ei löytänyt maalehteä kulmalinkistä).',
       seuraavaksi: 'Välitilanneraportti puolivälissä; loppuraportti '
         + 'kun Eurooppa on valmis.',
     },
@@ -78,9 +77,6 @@ export const TILANNE = {
     },
   ],
   odottaaPaatosta: [
-    'Saksan menovinkkimallin arvio: karsitaanko 6–10 parhaaseen '
-      + 'vai kelpaako 21 kohdetta kuudessa ryhmässä? Ja otetaanko '
-      + 'Lapsille-ryhmä, vaikka kohteet vaativat saksan taitoa?',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
       + 'näytteet)',
     'Sateenvarjomiehen henkilöllisyys (ehdotus Kehitys-välilehden '
