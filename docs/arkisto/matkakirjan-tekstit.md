@@ -1,3 +1,7 @@
+> **ARKISTOITU 8.8.2026 — ei ohje.** Vanhentunut suunnitelma tai
+> kertaraportti; säilytetty historian vuoksi. Voimassa olevat ohjeet:
+> docs/roolitus.md ja CLAUDE.md.
+
 # Matkakirjan merkinnät — tilanne ja avoimet kysymykset
 
 *Kirjoitettu Fablelle 3.8.2026. Tämä ei ole ohje vaan tilannekuva:
