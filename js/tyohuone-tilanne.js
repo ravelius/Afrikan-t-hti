@@ -68,19 +68,19 @@ export const TILANNE = {
     {
       tekija: 'Sonnet 2',
       rooli: 'nähtävyysjutut',
-      tila: 'odottaa',
-      tehtava: 'Berliinin korjauskierros valmis (v367): dialogin '
-        + 'perimä koko ruudun sääntö kumottu (vika oli jaetussa '
-        + 'arkki-luokassa), kuvat pieniksi lohkoiksi (max 300 px, '
-        + '1–2/juttu), jutut 2–3 kappaleeseen, lainaukset '
-        + 'säilyivät. Testattu neljässä näyttökoossa.',
-      seuraavaksi: 'Omistajan uusi katselmus; hionta Fablen kautta, '
-        + 'muut kaupungit vasta valmiilla mallilla.',
+      tila: 'tyossa',
+      tehtava: 'MALLI HYVÄKSYTTY (omistaja 8.8. ilta) — monistus '
+        + 'lukitulla speksillä: Kairo, Venetsia, Madrid ja '
+        + 'Tukholma saavat nähtävyysjutut, lopuksi Lontoon vanhat '
+        + 'muunnetaan samaan malliin. Agentit sallittu (kaupunki '
+        + 'per agentti).',
+      seuraavaksi: 'Eräraportit Fablelle (1–2 kaupunkia per PR).',
     },
   ],
   odottaaPaatosta: [
-    'Berliinin nähtävyyspilotin UUSI katselmus, kun korjauskierros '
-      + '(dialogi, kuvakoot, mitta) on mainissa',
+    'Saksan menovinkkimallin arvio: karsitaanko 6–10 parhaaseen '
+      + 'vai kelpaako 21 kohdetta kuudessa ryhmässä? Ja otetaanko '
+      + 'Lapsille-ryhmä, vaikka kohteet vaativat saksan taitoa?',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
       + 'näytteet)',
     'Sateenvarjomiehen henkilöllisyys (ehdotus Kehitys-välilehden '
@@ -94,6 +94,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Saksan menovinkit — ARVIOI MALLI (v373)',
+    ohje: 'Avaa Saksan menovinkit: 21 kohdetta kuudessa ryhmässä, '
+      + 'mm. uusi Valokuvausnäyttelyt-ryhmä (Sander, Blossfeldt, '
+      + 'Folkwang). HUOM: malli rakennettiin ennen kuin 6–10 '
+      + 'kohteen ohjeesi ehti perille — päätä nähtyäsi, '
+      + 'karsitaanko 6–10 parhaaseen vai kelpaako tämä laajuus '
+      + 'ryhmiteltynä.',
+  },
   {
     otsikko: 'Berliinin menovinkit listamallina — KATSO UUDESTAAN (v368)',
     ohje: 'Avaa Berliinin kaupunkilehden viimeinen sivu: menovinkit '
