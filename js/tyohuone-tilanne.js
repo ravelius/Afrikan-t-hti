@@ -33,14 +33,14 @@ export const TILANNE = {
       tekija: 'Opus 1',
       rooli: 'lehdet + rakenne',
       tila: 'tyossa',
-      tehtava: 'Loppukiri etenee: v382 löydettävyyskolmikko '
-        + '(Maiden lehdet -nappi kartalla, hampurilaisvalikko myös '
-        + 'kaupunkilehteen, maaosio rivinä), v378 Prahan '
-        + 'kaupunkilehti MALLIKAPPALEENA lopuille 35 kaupungille, '
-        + 'v379 menovinkit TUR/RUS/UKR/ROU. Saksa palautettu 20 '
-        + 'kohteeseen (julkaisu seuraavassa erässä).',
-      seuraavaksi: 'HRV+BIH julkaisuun, BGR ja Wien agenteilla; '
-        + 'sitten loput maalehdet ja kaupunkilehdet.',
+      tehtava: 'MENOVINKIT VALMIIT: 30/30 maata 6–20-rajassa '
+        + '(Egypti viimeistelyssä). MAALEHDET VALMIIT: syntyvät '
+        + 'rakenteesta automaattisesti. Kaupunkilehdet: täysi '
+        + 'malli Lontoo+Praha+Wien; seuraavaksi Madrid, Berliini, '
+        + 'Venetsia ja Tukholma täyteen malliin, sitten loput ~30 '
+        + '(Ateena ja Amsterdam jo tekeillä).',
+      seuraavaksi: 'Hampurilainen pois kaupunkilehdestä seuraavan '
+        + 'erän kyljessä; eräraportit jokaisesta julkaisusta.',
     },
     {
       tekija: 'Opus 2',
