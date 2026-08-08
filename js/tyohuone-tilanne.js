@@ -65,14 +65,14 @@ export const TILANNE = {
     {
       tekija: 'Sonnet 2',
       rooli: 'nähtävyysjutut',
-      tila: 'tyossa',
-      tehtava: 'Pilotin korjauskierros omistajan katselmuksesta '
-        + '8.8.: dialogi istumaan näytölle (iPadilla yläreuna '
-        + 'leikkautui eikä taustasivu näkynyt), kuvat selvästi '
-        + 'pienemmiksi (1/juttu lähtökohtana), jutut noin puoleen '
-        + 'mittaan. Sisältö todettiin hyväksi.',
-      seuraavaksi: 'Omistaja katsoo Berliinin uudestaan; muut '
-        + 'kaupungit vasta sen jälkeen.',
+      tila: 'odottaa',
+      tehtava: 'Berliinin korjauskierros valmis (v367): dialogin '
+        + 'perimä koko ruudun sääntö kumottu (vika oli jaetussa '
+        + 'arkki-luokassa), kuvat pieniksi lohkoiksi (max 300 px, '
+        + '1–2/juttu), jutut 2–3 kappaleeseen, lainaukset '
+        + 'säilyivät. Testattu neljässä näyttökoossa.',
+      seuraavaksi: 'Omistajan uusi katselmus; hionta Fablen kautta, '
+        + 'muut kaupungit vasta valmiilla mallilla.',
     },
   ],
   odottaaPaatosta: [
@@ -91,6 +91,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Berliinin nähtävyysjutut korjattu — KATSO UUDESTAAN (v367)',
+    ohje: 'Avaa Berliinin kaupunkikartta ja napauta numeroita: '
+      + 'pop-up istuu nyt näytölle (tausta näkyy reunoilla, '
+      + 'yläreuna ei leikkaudu — testattu myös iPadin mitoissa), '
+      + 'kuvat ovat pieniä lohkoja tekstin välissä ja jutut '
+      + 'puolta lyhyemmät. Lainaukset säilyivät. Jos jokin vielä '
+      + 'häiritsee, kerro Fablelle — hionta tehdään suoraan.',
+  },
   {
     otsikko: 'Maalehti uusiksi: sisällysluettelo ja Unohdettu aarre (v366)',
     ohje: 'Avaa Saksan lehti: etusivu on nyt sisällysluettelo '
