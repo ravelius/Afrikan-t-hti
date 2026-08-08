@@ -7855,20 +7855,29 @@ export class UI {
     (kartta.kohteet ?? []).forEach((k, i) => {
       const numero = String(i + 1);
       const p = karttapiste(kartta, k.lat, k.lon);
-      const piste = html(k.wiki ? 'button' : 'span', 'maakartta-piste kaupunki-kohde kohde-numero', numero);
+      // Napautettava, jos kohteella on oma juttu TAI wiki-artikkeli.
+      const avattava = Boolean(k.teksti || k.wiki);
+      const piste = html(avattava ? 'button' : 'span', 'maakartta-piste kaupunki-kohde kohde-numero', numero);
       piste.style.left = `${p.x.toFixed(1)}%`;
       piste.style.top = `${p.y.toFixed(1)}%`;
-      const selite = html(k.wiki ? 'button' : 'span', 'kartta-selite');
+      const selite = html(avattava ? 'button' : 'span', 'kartta-selite');
       selite.appendChild(html('span', 'kartta-selite-numero', numero));
       selite.appendChild(document.createTextNode(k.nimi));
-      if (k.wiki) {
-        piste.type = 'button';
-        piste.title = `${k.nimi} — avaa artikkelin`;
-        selite.type = 'button';
-        selite.title = `${k.nimi} — avaa artikkelin`;
-        const avaa = () => this.openWikiArticle(k.wiki, k.nimi);
-        piste.addEventListener('click', avaa);
-        selite.addEventListener('click', avaa);
+      /*
+       * Oma juttu voittaa wikin (omistajan toive 7.8.2026: "kirjoita
+       * itse nähtävyyksien tekstit"). Ilman omaa tekstiä napautus avaa
+       * wikin kuten ennenkin, ja ilman kumpaakaan piste on pelkkä
+       * merkki — vanhat kaupungit toimivat siis ennallaan.
+       */
+      const avaa = k.teksti ? () => this.avaaNahtavyys(k, numero)
+        : (k.wiki ? () => this.openWikiArticle(k.wiki, k.nimi) : null);
+      if (avaa) {
+        const otsikko = k.teksti ? `${k.nimi} — lue lisää` : `${k.nimi} — avaa artikkelin`;
+        for (const el of [piste, selite]) {
+          el.type = 'button';
+          el.title = otsikko;
+          el.addEventListener('click', avaa);
+        }
       }
       kotelo.appendChild(piste);
       selitteet.appendChild(selite);
@@ -7877,6 +7886,138 @@ export class UI {
     lohko.appendChild(selitteet);
     lohko.appendChild(html('p', 'lahde', kartta.lahde));
     kohde.appendChild(lohko);
+  }
+
+  /**
+   * Kaupunkikartan kohteen oma juttu (omistajan toive 7.8.2026:
+   * *"kirjoita itse nähtävyyksien tekstit ... kuvia voisi näyttää
+   * niiden nostossa gallerian sijaan tekstin joukossa 3-5"*).
+   *
+   * Taitto on lehtijutun taitto eikä galleriaselain: kappaleet ovat
+   * lyhyitä, ja kuvat ladotaan niiden VÄLIIN vuorotellen. Kuvien
+   * sijoittelu lasketaan kappalemäärästä, jotta ne jakautuvat tasan
+   * koko jutulle — kolme kuvaa kuudelle kappaleelle asettuu joka
+   * toiseen väliin, viisi kuvaa tiheämmin.
+   *
+   * Vuosiluku on oma rivinsä otsikon yllä (omistajan toive: "käytä
+   * vuosiluku korostuksia"), ja lainaus nostetaan kappaleiden väliin
+   * omaksi lohkokseen silloin kun se on mielekäs — ei väkisin.
+   */
+  avaaNahtavyys(kohde, numero) {
+    const dialogi = document.getElementById('nahtavyys-dialog');
+    if (!dialogi) return;
+    document.getElementById('nahtavyys-otsikko').textContent = kohde.nimi;
+    const aika = document.getElementById('nahtavyys-aika');
+    aika.textContent = [numero ? `Kohde ${numero}` : null, kohde.aika]
+      .filter(Boolean).join(' · ');
+    aika.hidden = !aika.textContent;
+
+    const sisalto = document.getElementById('nahtavyys-sisalto');
+    sisalto.textContent = '';
+    const kappaleet = String(kohde.teksti ?? '').split('\n\n').filter(Boolean);
+    const kuvat = (kohde.kuvat ?? []).slice(0, 5);
+    /*
+     * Kuvien paikat: jaetaan kappaleiden välit tasan. Ensimmäinen kuva
+     * tulee heti avauskappaleen jälkeen, viimeinen ennen viimeistä
+     * kappaletta — juttu ei siis ala eikä lopu kuvaan.
+     */
+    const valit = Math.max(1, kappaleet.length - 1);
+    const paikat = kuvat.map((_, i) => 1 + Math.round((i * (valit - 1)) / Math.max(1, kuvat.length - 1)));
+    // Lainaus keskelle, kappaleiden puoliväliin.
+    const lainauksenPaikka = kohde.lainaus ? Math.ceil(kappaleet.length / 2) : -1;
+
+    kappaleet.forEach((kappale, i) => {
+      sisalto.appendChild(this.nahtavyysKappale(kappale));
+      if (i + 1 === lainauksenPaikka) {
+        const lohko = html('blockquote', 'nahtavyys-lainaus');
+        lohko.appendChild(html('p', 'nahtavyys-lainaus-teksti', kohde.lainaus.teksti));
+        if (kohde.lainaus.lahde) {
+          lohko.appendChild(html('p', 'nahtavyys-lainaus-lahde', kohde.lainaus.lahde));
+        }
+        sisalto.appendChild(lohko);
+      }
+      for (const [j, kuva] of kuvat.entries()) {
+        if (paikat[j] !== i + 1) continue;
+        sisalto.appendChild(this.nahtavyydenKuva(kuva));
+      }
+    });
+    // Kuvat, joiden paikka jäi tekstin ulkopuolelle (lyhyt juttu):
+    // ladotaan loppuun, jottei yksikään katoa.
+    kuvat.forEach((kuva, j) => {
+      if (paikat[j] <= kappaleet.length) return;
+      sisalto.appendChild(this.nahtavyydenKuva(kuva));
+    });
+
+    if (kohde.wiki) {
+      const nappi = html('button', 'wiki-btn', 'Lue lisää aiheesta');
+      nappi.type = 'button';
+      nappi.addEventListener('click', () => this.openWikiArticle(kohde.wiki, kohde.nimi));
+      sisalto.appendChild(nappi);
+    }
+    if (!dialogi.open) dialogi.showModal();
+  }
+
+  /**
+   * Kappale, jossa vuosiluvut on korostettu (omistajan toive: "käytä
+   * vuosiluku korostuksia").
+   *
+   * Korostus tehdään KOODISSA eikä aineistossa: jos vuosiluvut
+   * kirjoitettaisiin dataan HTML-tageina, jokainen tekstikenttä pitäisi
+   * renderöidä innerHTML:llä — ja silloin yksikin lainausmerkki tai
+   * ampersandi aineistossa voisi rikkoa taiton tai pahempaa. Tässä
+   * teksti pilkotaan säännöllisellä lausekkeella ja osat lisätään
+   * tekstisolmuina; mikään aineistossa oleva merkki ei voi muuttua
+   * merkkaukseksi.
+   *
+   * Tunnistetaan neljä muotoa: 1666, 1940-luku, 1863–1866 ja 2500 eaa.
+   *
+   * NELINUMEROINEN riittää yksinään, KOLMINUMEROINEN vaatii
+   * ajanmääreen (879 jaa., 300-luku). Ilman tätä eroa mitat
+   * korostuisivat vuosiluvuiksi: "korkeus 146 metriä" näytti
+   * ensimmäisessä versiossa vuodelta. Kaksinumeroisia ei korosteta
+   * lainkaan — ne ovat lähes aina lukumääriä.
+   */
+  nahtavyysKappale(teksti) {
+    const p = html('p', 'nahtavyys-kappale');
+    const jakso = '(?:\\s?[–-]\\s?\\d{2,4})?';
+    const kuvio = new RegExp(
+      `\\b\\d{4}${jakso}(?:-luvu\\w*)?(?:\\s(?:eaa\\.|jaa\\.))?`
+      + `|\\b\\d{3}${jakso}(?:-luvu\\w*(?:\\s(?:eaa\\.|jaa\\.))?|\\s(?:eaa\\.|jaa\\.))`,
+      'g',
+    );
+    let kohta = 0;
+    for (const osuma of teksti.matchAll(kuvio)) {
+      /*
+       * Tuhaterotin ei ole vuosiluku: "1 700 siltaa" ei saa korostua
+       * muotoon "1 [700] siltaa". Tarkistus tehdään käsin eikä
+       * lookbehindillä, koska Safari sai lookbehind-tuen vasta
+       * versiossa 16.4 ja peliä luetaan vanhemmillakin iPadeilla.
+       */
+      const edellinen = teksti[osuma.index - 1];
+      const sitaEdellinen = teksti[osuma.index - 2];
+      if ((edellinen === ' ' || edellinen === '\u00a0') && /\d/.test(sitaEdellinen ?? '')) continue;
+      if (osuma.index > kohta) p.appendChild(document.createTextNode(teksti.slice(kohta, osuma.index)));
+      p.appendChild(html('b', '', osuma[0]));
+      kohta = osuma.index + osuma[0].length;
+    }
+    if (kohta < teksti.length) p.appendChild(document.createTextNode(teksti.slice(kohta)));
+    return p;
+  }
+
+  /** Yksi nähtävyysjutun kuva selitteineen ja lähteineen. */
+  nahtavyydenKuva(kuva) {
+    const kehys = html('figure', 'nahtavyys-kuvakehys');
+    const el = document.createElement('img');
+    el.className = 'nahtavyys-kuva kulttuuri-kuva-nappi';
+    el.alt = kuva.selite ?? '';
+    // Sama peiliputki ja suurennus kuin nostojen kuvilla.
+    this.varustaNostonKuva(el, kuva, 900);
+    kehys.appendChild(el);
+    const teksti = html('figcaption', 'nahtavyys-kuvateksti');
+    if (kuva.selite) teksti.appendChild(html('span', 'nahtavyys-selite', kuva.selite));
+    if (kuva.lahde) teksti.appendChild(html('span', 'nahtavyys-lahde', kuva.lahde));
+    kehys.appendChild(teksti);
+    return kehys;
   }
 
   /**

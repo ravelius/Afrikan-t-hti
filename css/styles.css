@@ -8571,3 +8571,115 @@ body.vertailu-tila .pawns { display: none; }
   font-size: 0.62rem;
   color: rgba(90, 74, 51, 0.75);
 }
+
+/* ── NÄHTÄVYYSJUTTU ────────────────────────────────────────────────────
+ *
+ * Kaupunkikartan kohteen oma juttu (omistajan toive 7.8.2026:
+ * "kirjoita itse nähtävyyksien tekstit ... kuvia voisi näyttää niiden
+ * nostossa gallerian sijaan tekstin joukossa 3-5" ja "tee noista
+ * teksteistä mahdollisimman selkeitä, käytä vuosiluku korostuksia,
+ * lainaus nostoja ja lyhyitä kappaleita").
+ *
+ * Taitto on lehtijutun taitto: kapea palsta, ilmavat kappalevälit,
+ * kuvat omina lohkoinaan tekstin seassa. Sama paperi ja kirjasin kuin
+ * muualla lehdessä — arkki-luokka hoitaa pohjan.
+ */
+.dialog.nahtavyys-arkki {
+  width: min(100vw, 820px);
+  margin: 0 auto;
+  padding: 0;
+}
+
+.nahtavyys-kortti {
+  padding: 1.2rem 1.15rem 1rem;
+}
+
+/* Vuosiluku ja kohdenumero otsikon yllä: pieni kirjasinkokoinen
+ * leimarivi, joka kertoo ajan ennen kuin nimi ehtii kertoa paikan. */
+.nahtavyys-aika {
+  margin: 0 0 0.15rem;
+  font-family: var(--font-type);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(70, 51, 31, 0.72);
+}
+
+#nahtavyys-otsikko {
+  margin: 0 0 0.7rem;
+  line-height: 1.15;
+}
+
+/* Lyhyet kappaleet: väljä riviväli ja selvä väli kappaleiden välissä,
+ * jotta silmä löytää aina seuraavan aloituksen. */
+.nahtavyys-kappale {
+  margin: 0 0 0.85rem;
+  line-height: 1.62;
+}
+
+/* Vuosiluvut korostuvat tekstissä: <b> ladotaan konekirjoituskirjasimella
+ * kuten lehden muutkin numerot, jottei korostus näytä lihavoinnilta
+ * vaan leimalta. */
+.nahtavyys-kappale b {
+  font-family: var(--font-type);
+  font-weight: 600;
+  font-size: 0.95em;
+  letter-spacing: 0.02em;
+}
+
+/* Lainausnosto: leveä sisennys ja pystyviiva, ei lainausmerkkikoristetta. */
+.nahtavyys-lainaus {
+  margin: 1.1rem 0 1.15rem;
+  padding: 0.1rem 0 0.1rem 0.9rem;
+  border-left: 3px solid rgba(70, 51, 31, 0.4);
+}
+
+.nahtavyys-lainaus-teksti {
+  margin: 0;
+  font-size: 1.06rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.nahtavyys-lainaus-lahde {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-type);
+  font-size: 0.74rem;
+  color: rgba(70, 51, 31, 0.72);
+}
+
+/* Kuva tekstin seassa: täysi palstanleveys, selite ja lähde alle. */
+.nahtavyys-kuvakehys {
+  margin: 0 0 1rem;
+}
+
+.nahtavyys-kuva {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: zoom-in;
+}
+
+.nahtavyys-kuvateksti {
+  margin: 0.3rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.nahtavyys-selite {
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.nahtavyys-lahde {
+  font-family: var(--font-type);
+  font-size: 0.68rem;
+  color: rgba(70, 51, 31, 0.66);
+}
+
+/* Leveällä ruudulla juttu ei saa venyä liian pitkäksi riviksi. */
+@media (min-width: 700px) {
+  .nahtavyys-kortti { padding: 1.5rem 2rem 1.2rem; }
+  .nahtavyys-kappale { font-size: 1.02rem; }
+}

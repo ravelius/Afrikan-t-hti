@@ -279,6 +279,50 @@ main-pushista (wrangler.jsonc; ks. tools/uutisproxy/OHJE.md).
    katunäkymät (PD). Uutisehdokkaat: Le Monde, France Info,
    Le Figaro. Tv: France 24 (français) — 24/7 YouTube-live.
 
+### ⚠ FABLELLE: lehtirakenne muuttuu (omistajan päätös 8.8.2026)
+
+**Lue tämä ennen kuin kirjoitat uusia saapumisia, kohtaamisia tai
+visoja lehtikaupunkeihin.** Omistaja tilasi rakennemuutoksen, joka
+koskee sinunkin tekstiesi sijaintia ja määrää. Opus toteuttaa
+koodipuolen; tämä on tiedoksi ja työnjaon selventämiseksi.
+
+**1. Kaupunki- ja maalehti erotetaan toisistaan.** Tähän asti
+Tutki-ikkuna oli yksi pino: kaupungin kansi, kaupungin aiheet, maan
+etusivu, maan aiheet ja "Maa numeroina". Jatkossa ne ovat kaksi eri
+lehteä. Kaupunkilehteen jää **3–4 sivua**, maalehti on oma näkymänsä.
+
+**2. Sisältö on jo jaettu Lontoossa (v349).** Lontoolla oli kymmenen
+aihetta ja 57 nostoa, koska se tehtiin ennen sääntöä "maa kantaa
+aiheet, kaupunki kantaa kannen". Nyt Lontoolle jäivät `kaupunki`,
+`luonto` ja `nykytaide`; kahdeksan muuta aihetta siirtyi
+`MAA_KATEGORIAT.GBR`:lle. Sama tehdään muille lehtikaupungeille.
+
+**RAJOITE, JOKA KANNATTAA TIETÄÄ:** `rakennaSivut` antaa saman
+aihetunnuksen kohdalla kaupungin voittaa, jolloin maan samanniminen
+aihe **katoaa kokonaan näkyvistä**. Kaupungille jätetään siis vain
+tunnuksia, joita maalla ei ole.
+
+**3. Kaupunkilehden navigointi siirtyy alas.** "Tapaa henkilö X"
+näkyy vasta VIIMEISELLÄ sivulla; sitä ennen alapalkissa ovat
+Seuraava, Edellinen ja Poistu. Kohtaaminen on siis lehden
+päätepiste — kirjoita saapumis- ja kohtaamistekstit sen mukaan.
+
+**4. Maan sivulle pääsee suoraan kartalta.** Maan nimen perässä on
+"i", ja uusi varuste **Maiden tiedot** avaa minkä tahansa maan tiedot
+ilman että sinne pitää matkustaa nopalla. Kaupungin tiedot aukeavat
+edelleen vain siinä paikassa, jossa pelaaja on.
+
+**5. Uusi aihesivu joka kaupunkiin: `menovinkit`.** Ei oikeita
+matkavinkkejä vaan parhaat paikat NETTIMATKAAJALLE — museoiden
+verkkokokoelmat, virtuaalikierrokset, digitoidut arkistot. Painotus
+kulttuurissa. Sivu saa näkyä myös maan lehdessä.
+
+**Työnjako ennallaan** (omistajan päätös 7.8.2026): Opus tekee
+lehdet, kartat, kuvat ja koodin; sinä kirjoitat saapumismerkinnät,
+luennat, kohtaamiset ja visakysymykset. Muutos ei siirrä mitään
+sinulta pois — se vain siirtää osan lehtisisällöstä kaupungilta
+maalle ja lyhentää kaupunkilehden neljään sivuun.
+
 ### Lehtien tasokorotus (omistajan tilaus 7.8.2026)
 
 Saksa/Berliini on korotettu uudelle tasolle v323–v328:ssä, ja se on

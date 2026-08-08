@@ -13,6 +13,9 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 349, teksti: 'Lontoon aiheet Britannialle, kansi jää kaupungille' },
+  { v: 349, teksti: 'Musiikkilinkki vie nyt suoraan kappaleeseen' },
+  { v: 349, teksti: 'Kaupunkikartta miedommaksi: tausta, ei juliste' },
   { v: 348, teksti: 'Egyptille Musiikki-sivu: Umm Kulthum ja ud' },
   { v: 348, teksti: 'Egyptille Rakennukset: miten pyramidi tehtiin' },
   { v: 348, teksti: 'Egypti-osio ja Kairon katukartta lehteen' },
