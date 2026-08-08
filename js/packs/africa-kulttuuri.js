@@ -5,9 +5,9 @@
 // tiedostokohtaisesti.
 //
 // `kysymys` on tutustu ja vastaa -kokeilu: nostoihin tutustumalla
-// kysymykseen osaa vastata, ja oikeasta vastauksesta saa pienen
-// palkkion kerran per kaupunki (game.actionKulttuuri).
-export const KULTTUURI_PALKKIO = 25;
+// kysymykseen osaa vastata, ja oikeasta vastauksesta saa tietopisteitä
+// kerran per kaupunki (game.actionKulttuuri — pistemäärä ja palkinnon
+// tekstit tulevat game.js:n TIETOPISTE_KULTTUURIVISA-vakiosta).
 
 export const AFRICA_KULTTUURI = {
   tanger: {
