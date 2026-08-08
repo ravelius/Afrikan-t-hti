@@ -46,6 +46,7 @@ export const LINSSIT = [
   { tunnus: 'topografia',   manner: 'southamerica',  tuo: () => import('./topografia.js') },
   // { tunnus: 'tuulet',       manner: 'asia',          tuo: () => import('./tuulet.js') },
   { tunnus: 'vertailu',     manner: null,            tuo: () => import('./vertailu.js') },
+  { tunnus: 'maatiedot',    manner: null,            tuo: () => import('./maatiedot.js') },
   { tunnus: 'vesistot',     manner: null,            tuo: () => import('./vesistot.js') },
   // { tunnus: 'yokartta',     manner: 'northamerica',  tuo: () => import('./yokartta.js') },
 ];

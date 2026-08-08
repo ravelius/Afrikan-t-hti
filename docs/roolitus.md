@@ -1,0 +1,116 @@
+# Roolitus: kolme sessiota, yksi peli
+
+*(Päätetty omistajan kanssa 8.8.2026. Roolit on sidottu NIMIIN ja
+tehtäväalueisiin — ei sessio-id:ihin eikä tiliin. Omistaja kehittää
+peliä kahdella tilillä; uusi sessio kummalla tahansa tilillä lukee
+tämän ja ottaa roolinsa tästä. Omistaja ohjaa kaikkea Fablen kautta.)*
+
+## Fable — päätoimittaja: tarina ja koordinaatio
+
+- **Kaanon:** docs/tarina.md ja docs/isoisan-raamattu.md
+  suunnitelmineen (tunnelmapaletti, motiivibudjetit, kaupunkijaot).
+  Kaanoniin kirjoittaa vain Fable.
+- **Kaikki pelaajalle näkyvä tarinateksti:** saapumismerkinnät,
+  kohtaamiset, aarrevihjeet, visakysymykset ja luennat (ElevenLabs-
+  ajot omistajan avaimella, joka kierrätetään ajojen jälkeen).
+- **Koordinointi:** jakaa tehtävät Opukselle ja Sonnetille, kokoaa
+  raportit ja tuo omistajalle vain päätöstä vaativat asiat. Ratkoo
+  versionumero- ja mergetörmäykset.
+
+## Opus — toimitus: lehdet ja koodi
+
+- **Matkasanomat:** lehtisivut, aihesivut, kuvat, kartat, mediat,
+  nähtävyysjutut, menovinkit — resepti docs/tutki-aiheet.md ja
+  docs/tyolista-opukselle.md.
+- **UI-koodi, rakenneuudistukset ja työkalut** (esim. kaupunki/maa-
+  lehtijako, Maiden tiedot -varuste).
+- **Ei koske tarinateksteihin** — jos lehden teko vaatisi
+  tarinatekstin muutosta, havainto kirjataan ja lähetetään Fablelle.
+
+## Sonnet — tarkastaja: QA ja mekaaniset työt
+
+- **Tarkistukset ja raportit:** lisenssit ja tiedostonimet
+  Commonsista, äänien kestot, peilin kattavuus, linkkitestit,
+  kuvakaappaussarjat, muutoslokin muotosäännöt.
+- Vain lukevia tehtäviä tai täsmälleen ohjeistettuja mekaanisia
+  muutoksia. **Ei versionostoja eikä mergejä** ilman Fablen
+  tehtävänantoa. Raportit omalle haaralle tai viestinä Fablelle.
+
+## Viestintä sessioiden välillä
+
+- Kanava: `mcp__Claude_Code_Remote__create_trigger` +
+  `fire_trigger`, kohteena vastaanottajan `persistent_session_id`.
+- **Joutilaalle sessiolle viesti voi laukaista heti; työskentelevälle
+  ajastetaan `run_once_at` ~2 min päähän** — käsilaukaisu kesken
+  vuoron polkaisee irtosession, joka ei tavoita ketään.
+- Varareitti, jos työkalut puuttuvat vuorosta: kirjoita
+  `docs/viesti-<vastaanottaja>.md` omalle haaralle ja pushaa.
+- Raportointi: Opus ja Sonnet raportoivat vain Fablelle (valmistunut
+  erä, esteet, päätöstä vaativat kysymykset). Fable raportoi
+  omistajalle.
+- Nykyiset sessiot (päivitä taulukko, kun sessiot vaihtuvat):
+
+| Rooli | Sessio-id | Kirjattu |
+| --- | --- | --- |
+| Fable | session_01R1jVv12E56gbU5qtH5xGaG | 8.8.2026 |
+| Opus 1 | session_01AEN2as7TAggi2SX3w3DqWV | 8.8.2026 |
+| Opus 2 | session_017kajFQA5rFWByGvVLXc9Df | 8.8.2026 |
+| Sonnet | session_01MAirFte9MpE1HnVRpCj2Mb | 8.8.2026 |
+
+Kaistajako, kun Opus-sessioita on kaksi: **Opus 1** — lehtisisällöt
+(maa-kategoriat.js, menovinkit), UI ja rakenne (radio/tv-napit
+molempiin lehtiin, uutislahteet.js). **Opus 2** — kartat ja introt
+(maakartat.js, assets/kartat, europe-artikkelit.js,
+piirra-kaupunkikartta.mjs) järjestyksessä ITA → ESP → SWE, sen
+jälkeen tv-tallennekandidaattien haku. Kaistat eivät koske samoihin
+tiedostoihin; muutokset kaistajakoon sovitaan Fablen kautta.
+
+## Julkaisusäännöt (kaikille rooleille)
+
+1. Yksi looginen kokonaisuus per PR; squash-merge; commit-otsikkoon
+   `(vNNN)` ja PR-numero.
+2. `git fetch origin main` JUURI ennen versionumeron valintaa —
+   sessiot julkaisevat rinnakkain ja numero on voinut kasvaa.
+3. Kaava: sw.js `CACHE` + js/main.js `APP_VERSION` samaan versioon;
+   rivi js/muutokset.js:ään (≤60 merkkiä, ei loppupistettä, uusin
+   ylin); `node --test tests/*.test.mjs`;
+   `node tools/tarkista-kaksoisavaimet.mjs`;
+   `node tools/build-standalone.mjs`.
+4. Pelkkä docs-muutos EI nosta versiota (välimuistia ei rasiteta).
+5. Mergen jälkeen oma haara nollataan mainiin
+   (`git checkout -B <haara> origin/main` + force-with-lease).
+6. Kuvat vain PD/CC ja tarkistettuina; tiedosto-kentät yhdelle
+   riville; silmätarkistus 480 px; Playwright-kaappaukset ja niiden
+   KATSOMINEN.
+
+## Työjono (tilanne 8.8.2026 — päivitä isojen erien valmistuessa)
+
+**OMISTAJAN PRIORITEETTI 8.8.2026: Eurooppa tehdään ensin loppuun,
+sitten omistaja testaa sen itse. Afrikka ja muut maanosat alkavat
+vasta testauksen jälkeen.**
+
+- **Opus:** erä 2 (menovinkit + kuvakaappaukset) → haaran kolmen
+  commitin julkaisu (lehtijako, nähtävyystekstit, Maiden tiedot) →
+  lehtikaupungit Venetsia, Madrid, Tukholma, Berliini uudella
+  kaupunki/maa-jaolla → muut Euroopan maa- ja kaupunkilehdet.
+- **Fable:** Euroopan tarinapuoli on tekstien osalta valmis (41
+  merkintää, vihjeet, kohtaamiset). Jäljellä: kohtaamisluennat
+  neljälle Euroopan lehtikaupunkihahmolle (Elsa, Rosa, Matteo,
+  Otto) + Farukille (Kairo kuuluu lehtikuusikkoon) — vaatii
+  omistajan avaimen JA naisäänet: tilin suomiäänet ovat kaikki
+  miehiä, joten Elsalle ja Rosalle tarvitaan 1–2 naisääntä lisää
+  ElevenLabs-kirjastosta (omistajan toimi) tai monikielinen
+  äänikoe. Testauksen jälkeen: Afrikan kaupunkijako + merkinnät.
+- **Sonnet:** QA-kierros jokaisen ison erän jälkeen; iso
+  loppu-QA koko Euroopalle ennen omistajan testiä; raportit
+  Fablelle.
+- **Omistajan päätökset 8.8.2026:** Lontoon 5 sivua jää; muut
+  kaupungit lyhyemmiksi tarveharkinnalla, mieluummin useampi sivu
+  kuin yksi pitkä; live-lähetyksistä luovutaan kokonaan — tilalle
+  uutistallenteita Saksan malliin, tai nappi pois; radio- ja
+  videonapit näkyviin sekä kaupunki- että maalehteen;
+  luentaäänissä otetaan englanninkieliset äänet käyttöön (suomea
+  monikielisesti) — valinta työhuoneen ääninäytteistä.
+- **Omistajalta odottaa yhä päätöstä:** sateenvarjoseuraajan
+  paljastuksen suunta (ehdotus työhuoneen Kehitys-sivulla) ja
+  kertoja-/hahmoäänten valinta näytteiden kuuntelun jälkeen.

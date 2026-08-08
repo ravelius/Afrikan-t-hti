@@ -1,0 +1,29 @@
+# Matkakirja ja unohdettu aarre
+
+Suomenkielinen lasten seikkailupeli: nuori herra Fogg matkustaa
+isoisänsä vuoden 1873 matkapäiväkirjan jäljillä ja etsii Aarnin
+luettelon unohdettuja aarteita. Selainpeli ilman build-vaihetta
+(ES-moduulit, service worker, yhden tiedoston versio dist/-kansiossa).
+
+## Lue ensin
+
+- **docs/roolitus.md** — TYÖNJAKO KOLMEN SESSION KESKEN (Fable =
+  tarina + koordinaatio, Opus = lehdet + koodi, Sonnet = QA).
+  Omistaja kehittää kahdella tilillä ja ohjaa kaikkea Fablen kautta;
+  katso dokumentista oma roolisi, viestintäkanava ja julkaisusäännöt
+  ennen kuin teet mitään.
+- docs/tarina.md ja docs/isoisan-raamattu.md — tarinan kaanon
+  (sitova kaikessa sisällössä; vain Fable kirjoittaa näihin).
+- docs/periaatteet.md — pelin periaatteet.
+- docs/tutki-aiheet.md ja docs/tyolista-opukselle.md — lehtimalli
+  ja lehtityön ohjeet.
+
+## Tärkeimmät säännöt
+
+- Julkaisukaava ja versionumerokäytäntö: docs/roolitus.md
+  ("Julkaisusäännöt"). `git fetch origin main` aina juuri ennen
+  versionumeron valintaa — sessiot julkaisevat rinnakkain.
+- Kuvat ja media vain PD/CC, tarkistettuina Commonsista. API-avaimia
+  ei koskaan repoon eikä lokiin.
+- Konttiympäristössä Noden fetch tarvitsee `NODE_USE_ENV_PROXY=1`;
+  Chromium on polussa /opt/pw-browsers/chromium.

@@ -28,6 +28,19 @@
  * saa käyttää sinne, minne se istuu luontevasti, mutta kohtaaminen
  * on ennen kaikkea lämmin hetki paikallisen kanssa.
  *
+ * ROOLI 8.8.2026 (lehtirakenteen muutos, Opuksen muistio
+ * työlistassa): kohtaaminen on kaupunkilehden PÄÄTEPISTE — "Tapaa
+ * henkilö" -nappi näkyy vasta lehden viimeisellä sivulla, eli
+ * pelaaja on lukenut 3–4 sivua ennen tervehdystä. Siksi:
+ *  - Tervehdys EI esittele kaupunkia (lehti teki sen jo) eikä
+ *    kertaa maamerkkejä (ne on käsitelty kartassa, nähtävyys-
+ *    jutuissa ja aihesivuilla — tervehdys olisi neljäs kerta).
+ *  - Valitse kulma, jota lehti ei kata: ihminen, ammatti, hetki,
+ *    mielipide. Tervehdys saa viitata luettuun ("olet nähnyt sen
+ *    kartalla" on nyt totta).
+ *  - Mitat eivät muutu — sama merkkimäärä, henkilökohtaisempi
+ *    sisältö.
+ *
  * Luennat (omistajan rajaus 7.8.2026: "riittää vain alkutarinan
  * luenta … sekä sitten kun aarre löytyy … lyhyt pelaajan ja sen
  * toisen henkilön sananvaihto"): kaupungilla voi olla

@@ -1510,9 +1510,17 @@ export class UI {
     // toive 7.8.2026: maaosasto pois etusivulta, tilalle linkki
     // "Saksa-osio ›" oikeaan yläkulmaan).
     this.arrivalMaaLinkki = document.getElementById('arrival-maa-linkki');
+    /*
+     * Kulmalinkki avaa maalehden, ei enää sivua samasta pinosta.
+     *
+     * Ennen v350:tä maan etusivu oli kaupungin sivujen jatkona, ja
+     * linkki hyppäsi sen kohdalle. Kun lehdet erotettiin, maan sivut
+     * lähtivät tutkiSivut-listasta — findIndex palautti -1 eikä
+     * napista tapahtunut mitään. Nyt se tekee saman kuin kartan "i":
+     * avaa maalehden.
+     */
     this.arrivalMaaLinkki.addEventListener('click', () => {
-      const i = (this.tutkiSivut ?? []).findIndex((k) => k.id === 'maa-etusivu');
-      if (i >= 0) this.naytaTutkiSivu(i + 1, { suunta: 1 });
+      if (this.tutkiMaaIso) this.avaaMaalehti(this.tutkiMaaIso);
     });
     // Lehtitaitto (omistajan toive 5.8.2026): kaupungin oma kansiosio
     // taittuu etusivulle, ja masto kertoo että käsissä on paikallislehti.
@@ -6442,6 +6450,7 @@ export class UI {
         nappi.addEventListener('click', () => this.openWikiArticle(nosto.wiki, nosto.otsikko));
         lohko.appendChild(nappi);
       }
+      this.lisaaNostonLinkki(lohko, nosto);
       const lahteet = [nosto.lahde, nosto.aaniLahde].filter(Boolean).join(' · ');
       if (lahteet) lohko.appendChild(html('p', 'kulttuuri-lahde', lahteet));
       lista.appendChild(lohko);
@@ -6973,12 +6982,24 @@ export class UI {
      * näyttävät maaosaston etusivulla entiseen tapaan.
      */
     const maakartta = maanIso && otsikonMaa ? MAAKARTAT[maanIso] ?? null : null;
-    if (maakartta) {
-      kategoriat.push({ id: 'maa-etusivu', nimi: otsikonMaa, kartta: maakartta });
-    }
+    /*
+     * KAUPUNKILEHTI JA MAALEHTI OVAT ERI LEHTIÄ (v350, omistajan
+     * päätös 8.8.2026: "erotetaan kaupunki ja maa lehti toisistaan").
+     *
+     * Ennen nämä olivat yksi pino: kansi, kaupungin aiheet, maan
+     * etusivu, maan aiheet ja numerot. Lontoossa siitä tuli 14 sivua,
+     * ja kaupungin oma tarina hukkui maan alle. Nyt kaupunkilehti on
+     * 3-4 sivua, ja maa on oma lehtensä, joka avataan kartalta maan
+     * nimen "i"-painikkeesta tai Maiden tiedot -varusteella.
+     *
+     * Sama aihetunnus kaupungilla ja maalla ei enää piilota maan
+     * sivua, koska listat ovat erilliset — mutta samaa sisältöä ei
+     * silti kannata olla kahdessa paikassa (ks. Lontoon jako v349).
+     */
+    this.maanSivut = [];
+    if (maakartta) this.maanSivut.push({ id: 'maa-etusivu', nimi: otsikonMaa, kartta: maakartta });
     for (const osa of (maanIso ? MAA_KATEGORIAT[maanIso] ?? [] : [])) {
-      if (kategoriat.some((k) => k.id === osa.id)) continue;
-      kategoriat.push(maanLippu ? { ...osa, maaLippu: maanLippu, maa: otsikonMaa } : osa);
+      this.maanSivut.push(maanLippu ? { ...osa, maaLippu: maanLippu, maa: otsikonMaa } : osa);
     }
     /*
      * Lehtitaitto (omistajan toive 5.8.2026): aihe, jonka id on
@@ -6992,6 +7013,31 @@ export class UI {
      */
     const kansi = kategoriat.find((k) => k.id === 'kaupunki') ?? null;
     const lehti = Boolean(kansi);
+    /*
+     * MENOVINKIT NÄKYY MOLEMMISSA LEHDISSÄ (omistajan tilaus 8.8.2026:
+     * "tämä sivu voi kattaa koko maan linkit ja saisi näkyä myös maan
+     * omalla lehdellä").
+     *
+     * Sivu ei ole matkaopas vaan lista parhaista paikoista
+     * NETTIMATKAAJALLE: museoiden verkkokokoelmat, digitoidut arkistot
+     * ja suorat kamerat. Sellainen aineisto on lähes aina koko maan
+     * yhteistä — National Gallery ja Kew palvelevat samaa lukijaa
+     * riippumatta siitä, mihin noppa vei — joten sisältö asuu
+     * maapaketissa yhtenä kappaleena ja lainataan tähän. Kaupungille
+     * ei tehdä omaa kopiota: kaksi kopiota ajautuisi erilleen
+     * ensimmäisellä päivityksellä.
+     *
+     * Viimeiseksi sivuksi, koska se on lehden uloskäynti: linkit
+     * vievät pelistä pois, ja niiden jälkeen odottaa enää kohtaaminen.
+     *
+     * Sivu tuodaan maan lipun kanssa (maanSivut on jo varustanut sen),
+     * ja se on tarkoitus: lippu kertoo kaupunkilehdessäkin, että nämä
+     * osoitteet kattavat koko maan eivätkä vain tätä kaupunkia.
+     */
+    if (lehti) {
+      const vinkit = this.maanSivut.find((s) => s.id === 'menovinkit');
+      if (vinkit) kategoriat.push(vinkit);
+    }
     /*
      * "Maa numeroina" viimeiseksi sivuksi jokaiseen kaupunkiin, jolla
      * on maatunnus (docs/valtion-analyysi.md): lehtikaupungissa se on
@@ -7008,13 +7054,15 @@ export class UI {
       // numeroina muotoon") — tässä nominatiivissa, koska "numeroina"
       // on jo taivutettu: "EGYPTI NUMEROINA".
       const nimi = otsikonMaa ? `${otsikonMaa} numeroina` : 'Maa numeroina';
-      kategoriat.push({ id: 'maa-numeroina', nimi, numerot: maanIso });
+      // Numerot ovat maan tietoa, joten ne kuuluvat maalehteen.
+      this.maanSivut.push({ id: 'maa-numeroina', nimi, numerot: maanIso });
     }
     this.tutkiLehti = lehti;
     // Karttamaissa maaosasto ei asu etusivulla: kulmalinkki vie sen
     // omalle sivulleen, eikä sama sisältö saa näkyä kahdesti.
     this.tutkiMaaEtusivu = Boolean(maakartta);
     if (maakartta) this.arrivalMaa.hidden = true;
+    this.tutkiMaaIso = maanIso;
     this.arrivalMaaLinkki.textContent = maakartta ? `${otsikonMaa}-osio ›` : '';
     this.arrivalDialog.classList.toggle('lehti', lehti);
     this.piirraLehtiKuvat(kansi?.kansikuvat);
@@ -7037,6 +7085,9 @@ export class UI {
     this.arrivalLiuskat.replaceChildren();
     this.arrivalLiuskat.hidden = true;
     this.tutkiSivut = kategoriat;
+    // Kaupunkilehti aukeaa aina kaupunkitilassa; maalehti on oma
+    // näkymänsä, joka avataan kartalta (avaaMaalehti).
+    this.tutkiTila = 'kaupunki';
     this.naytaTutkiSivu(0, { heti: true });
   }
 
@@ -7107,6 +7158,59 @@ export class UI {
     if (kortti) kortti.scrollTop = 0;
   }
 
+  /**
+   * Maalehti omana näkymänään (omistajan päätös 8.8.2026: "erotetaan
+   * kaupunki ja maa lehti toisistaan ... maan sivuille pääsisi nyt
+   * suoraan kartalta").
+   *
+   * Sama arkki ja sama sivunkääntö kuin kaupunkilehdellä — vain
+   * sivulista vaihtuu. Näin koko taitto, kuvien suurennus ja
+   * pyyhkäisyselaus tulevat ilmaiseksi eikä mitään tarvitse toistaa.
+   *
+   * Kaupunkilehteen palataan sulkemalla; maalehti ei ole kaupungin
+   * sivujen jatke vaan rinnakkainen lehti.
+   */
+  avaaMaalehti(iso, { nimi = null } = {}) {
+    const maa = this.game?.pack?.map?.countryShapes?.[iso];
+    if (!maa) return;
+    const otsikko = nimi ?? maa.nimi;
+    const sivut = [];
+    const kartta = MAAKARTAT[iso];
+    if (kartta) sivut.push({ id: 'maa-etusivu', nimi: otsikko, kartta });
+    for (const osa of MAA_KATEGORIAT[iso] ?? []) {
+      sivut.push(maa.lippu ? { ...osa, maaLippu: maa.lippu, maa: otsikko } : osa);
+    }
+    sivut.push({ id: 'maa-numeroina', nimi: `${otsikko} numeroina`, numerot: iso });
+    if (!sivut.length) return;
+
+    /*
+     * Maalehdellä ei ole kaupungin osia: ei kansikuvia, ei säärivi
+     * eikä kohtaamista. Ne piilotetaan tässä, ja kaupunkilehti
+     * palauttaa ne omalla rakennaSivut-ajollaan.
+     */
+    this.tutkiTila = 'maa';
+    this.tutkiMaaLehti = iso;
+    this.tutkiSivut = sivut;
+    this.tutkiLehti = true;
+    this.tutkiMaaEtusivu = false;
+    this.arrivalDialog.classList.add('lehti', 'arkki');
+    this.arrivalDialog.classList.toggle('maalehti', true);
+    this.piirraLehtiKuvat(null);
+    this.arrivalPalstat.hidden = true;
+    this.arrivalKulttuuri.hidden = true;
+    this.arrivalLehtiYla.hidden = false;
+    this.arrivalCity.textContent = otsikko;
+    this.arrivalLehtiAla.textContent = 'Maan oma lehti';
+    this.arrivalLehtiAla.hidden = false;
+    this.naytaLehtiSaa(null);
+    if (!this.arrivalDialog.open) this.arrivalDialog.showModal();
+    const arkki = this.arrivalDialog.querySelector('.dialog-card');
+    if (arkki) this.kytkeTutkiSelaus(arkki);
+    // Maalehti alkaa maan etusivulta (indeksi 0 on kaupunkilehden
+    // kansi, jota maalehdellä ei ole — siksi sivu 1).
+    this.naytaTutkiSivu(1, { heti: true });
+  }
+
   /** Sivun vaihto suuntaan (+1 seuraava, -1 edellinen). */
   vaihdaTutkiSivu(suunta) {
     const sivuja = this.tutkiSivuja();
@@ -7152,6 +7256,50 @@ export class UI {
     edellinen.hidden = this.tutkiSivu <= 0;
     seuraava.hidden = this.tutkiSivu >= sivuja - 1;
     numero.textContent = `${(this.tutkiSivu ?? 0) + 1} / ${sivuja}`;
+    this.paivitaTutkiAlapalkki();
+  }
+
+  /**
+   * Lehden alapalkki (omistajan päätös 8.8.2026: "muuta kaupunkilehden
+   * navigointi alas niin että tapaa henkilö x on vasta viimeisellä
+   * sivulla. aiemmilla sivuilla on nappi seuraavalle (ja edelliselle
+   * jos on) sekä poistu").
+   *
+   * Kohtaaminen on lehden PÄÄTEPISTE: se ei kilpaile lukemisen kanssa
+   * vaan odottaa, kunnes lehti on luettu. Sitä ennen alapalkki on
+   * pelkkää navigointia.
+   *
+   * Maalehdellä ei ole kohtaamista lainkaan — siellä viimeiselläkin
+   * sivulla on vain Poistu.
+   */
+  paivitaTutkiAlapalkki() {
+    const kyllä = document.getElementById('arrival-yes');
+    const ei = document.getElementById('arrival-no');
+    if (!kyllä || !ei) return;
+    const sivuja = this.tutkiSivuja();
+    const viimeisella = (this.tutkiSivu ?? 0) >= sivuja - 1;
+    const maalehti = this.tutkiTila === 'maa';
+    // Kohtaaminen vain kaupunkilehden viimeisellä sivulla.
+    kyllä.hidden = maalehti || !viimeisella;
+    ei.textContent = maalehti || viimeisella ? 'Poistu' : 'Poistu lehdestä';
+
+    let palkki = this.arrivalDialog.querySelector(':scope .tutki-alanapit');
+    if (!palkki) {
+      palkki = html('div', 'tutki-alanapit');
+      const tee = (luokka, teksti, suunta) => {
+        const nappi = html('button', `tutki-alanappi ${luokka}`, teksti);
+        nappi.type = 'button';
+        nappi.addEventListener('click', () => this.vaihdaTutkiSivu(suunta));
+        palkki.appendChild(nappi);
+        return nappi;
+      };
+      tee('edellinen', 'Edellinen', -1);
+      tee('seuraava', 'Seuraava', 1);
+      ei.parentElement?.insertBefore(palkki, ei);
+    }
+    palkki.querySelector('.edellinen').hidden = (this.tutkiSivu ?? 0) <= 0;
+    palkki.querySelector('.seuraava').hidden = viimeisella;
+    palkki.hidden = sivuja < 2;
   }
 
   /**
@@ -7731,7 +7879,18 @@ export class UI {
      */
     // Kansiosio on lyhyt, ja sitaatti toistaisi viereisen virkkeen
     // melkein kiinni alkuperäisessä — siksi se voidaan jättää pois.
-    const nostoVirke = sitaatti ? poimiNostoVirke((kategoria.nostot ?? []).slice(0, 1)) : null;
+    /*
+     * Sitaatti otetaan siitä nostosta, jonka ALLE se joutuu (indeksi 1),
+     * ei siitä, jonka perään se ladotaan.
+     *
+     * Ensimmäisestä nostosta poimittuna se toisti sanasta sanaan
+     * virkkeen, joka oli juuri luettu parikymmentä pikseliä ylempänä —
+     * Lontoon Menovinkit-sivulla ne olivat samassa ruudussa (mitattu
+     * 8.8.2026, 834 px). Lehdessä nostositaatti kuuluu sen jutun
+     * yhteyteen, jota se houkuttelee lukemaan, ja seuraavasta
+     * nostosta poimittuna se tekee juuri sen.
+     */
+    const nostoVirke = sitaatti ? poimiNostoVirke((kategoria.nostot ?? []).slice(1, 2)) : null;
     let ensimmainen = true;
     let nostoSijoitettu = false;
     for (const nosto of kategoria.nostot ?? []) {
@@ -7806,6 +7965,7 @@ export class UI {
         // pohjalle (omistajan toive 5.8.2026).
         leipa.appendChild(nappi);
       }
+      this.lisaaNostonLinkki(leipa, nosto);
       // Selattava teosgalleria noston kuvan ympärille (pilottina
       // Venetsian Canaletto): nuolet vaihtavat teosta, selite ja
       // lähderivi seuraavat mukana.
@@ -8137,6 +8297,30 @@ export class UI {
    * Yksi toteutus molemmille nostomuodoille (litteä ja kategoria) —
    * kaksi kopiota ajautuisi erilleen ensimmäisellä muutoksella.
    */
+  /*
+   * Ulkoinen linkki noston loppuun (Menovinkit-sivut, omistajan
+   * tilaus 8.8.2026: "parhaat menovinkit nettimatkaajalle").
+   *
+   * Tämä on eri asia kuin `wiki`: se avaa Wikipedian tiivistelmän
+   * pelin sisällä, tämä vie museon omaan verkkokokoelmaan uuteen
+   * välilehteen. Siksi oikea elementti on <a> eikä nappi — pelaaja
+   * näkee osoitteen, voi avata sen keskipainikkeella ja tallentaa
+   * kirjanmerkiksi. Ulkoasu on sama tekstilinkki (wiki-btn), jotta
+   * sivu ei täyty erinäköisistä kutsuista.
+   *
+   * linkkiNimi on linkin näkyvä teksti: kohde kannattaa nimetä
+   * ("National Gallery — Auringonkukat zoomattavana"), koska pelkkä
+   * "Avaa sivusto" ei kerro minne ollaan menossa.
+   */
+  lisaaNostonLinkki(kohde, nosto) {
+    if (!nosto.linkki) return;
+    const linkki = html('a', 'wiki-btn nosto-linkki', nosto.linkkiNimi ?? 'Avaa sivusto');
+    linkki.href = nosto.linkki;
+    linkki.target = '_blank';
+    linkki.rel = 'noopener noreferrer';
+    kohde.appendChild(linkki);
+  }
+
   lisaaNostonNapit(otsikkoRivi, nosto) {
     if (nosto.aani) {
       const nappi = html('button', 'kulttuuri-kuuntele');
@@ -9626,6 +9810,80 @@ export class UI {
     }
   }
 
+  /**
+   * MAIDEN TIEDOT -TILA (v350).
+   *
+   * Sama kartan tila kuin vertailussa — kaupungit väistyvät ja maat
+   * ovat napautettavia — mutta ele tarkoittaa eri asiaa: vertailu
+   * KERÄÄ maita listalle, tämä AVAA yhden maan luettavaksi.
+   *
+   * Napautus valitsee maan: sen rajat korostuvat ja nimen viereen
+   * ilmestyy "i", josta maan lehti aukeaa. Kaksi vaihetta yhden sijaan
+   * siksi, että kartalla osuu helposti väärään maahan — ensimmäinen
+   * napautus näyttää mihin osui, vasta "i" avaa lehden.
+   */
+  tahdistaMaatiedot(halutaan) {
+    const paalla = document.body.classList.contains('maatiedot-tila');
+    if (halutaan === paalla) return;
+    document.body.classList.toggle('maatiedot-tila', halutaan);
+    if (halutaan) {
+      this.maatiedotValittu = null;
+      this.piirraMaatiedotMaat();
+    } else {
+      this.maatiedotKerros?.remove();
+      this.maatiedotKerros = null;
+      this.maatiedotValittu = null;
+    }
+    this.drawTargets();
+  }
+
+  /** Maiden muodot napautettavina; valitulle nimi ja "i". */
+  piirraMaatiedotMaat() {
+    const muodot = this.game.pack.map?.countryShapes;
+    if (!muodot || !this.svg) return;
+    this.maatiedotKerros?.remove();
+    this.maatiedotKerros = el('g', { class: 'maatiedot-maat' }, this.boardRoot ?? this.svg);
+    for (const [iso, maa] of Object.entries(muodot)) {
+      if (!maa?.renkaat?.length) continue;
+      const d = maa.renkaat
+        .map((r) => `M${r.map(([x, y]) => `${x},${y}`).join(' L')}Z`)
+        .join(' ');
+      const valittu = this.maatiedotValittu === iso;
+      const polku = el('path', {
+        d,
+        class: `maatiedot-maa${valittu ? ' valittu' : ''}`,
+        'aria-label': maa.nimi,
+      }, this.maatiedotKerros);
+      polku.addEventListener('click', (e) => {
+        // Napautus ei saa vuotaa kartalle (zoom, päiväkirjan kutistus).
+        e.stopPropagation();
+        this.maatiedotValittu = valittu ? null : iso;
+        sfx.play('paper');
+        this.piirraMaatiedotMaat();
+      });
+      if (!valittu) continue;
+      /*
+       * Nimi ja "i" vain valitulle maalle. Jos kaikkien maiden nimet
+       * piirrettäisiin, kartta täyttyisi tekstistä eikä valinta
+       * erottuisi mitenkään — ja juuri valinnan näkyminen on tämän
+       * kahden vaiheen koko tarkoitus.
+       */
+      const koko = Math.max(12, Math.min(24, (maa.leveys * 0.8) / Math.max(4, maa.nimi.length)));
+      const nimi = el('text', {
+        x: maa.keskus[0],
+        y: maa.keskus[1],
+        class: 'maatiedot-nimi',
+        'text-anchor': 'middle',
+        'font-size': koko.toFixed(0),
+      }, this.maatiedotKerros);
+      nimi.textContent = `${maa.nimi} ⓘ`;
+      nimi.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.avaaMaalehti(iso);
+      });
+    }
+  }
+
   /** Maa valintaan tai pois siitä. Täysi lista ei ota enempää. */
   valitseVertailuMaa(iso) {
     const lista = this.vertailuValinnat ?? [];
@@ -9978,6 +10236,9 @@ export class UI {
     // Vertailulinssi on radion tavoin kartan TILA eikä karttakerros
     // (kerros: false) — se kytketään tässä samalla tavalla.
     this.tahdistaVertailu(tunnus === 'vertailu');
+    if (this.dead) return;
+    // Maiden tiedot on samaa perhettä: kartan tila, ei kerros.
+    this.tahdistaMaatiedot(tunnus === 'maatiedot');
     if (this.dead) return;
     this.paivitaLinssiNappi();
     this.paivitaLinssiTiedot();
