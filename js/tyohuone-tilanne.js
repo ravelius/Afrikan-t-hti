@@ -39,9 +39,10 @@ export const TILANNE = {
         + 'malli Lontoo+Praha+Wien; seuraavaksi Madrid, Berliini, '
         + 'Venetsia ja Tukholma täyteen malliin, sitten loput ~30 '
         + '(Ateena ja Amsterdam jo tekeillä).',
-      seuraavaksi: 'v386: hampurilainen pois kaupunkilehdestä, '
-        + 'kuollut koodi siivottu, päätös kirjattu tutki-aiheisiin. '
-        + 'Eräraportit jokaisesta julkaisusta.',
+      seuraavaksi: 'Omistajan testilöydöt ennen seuraavaa '
+        + 'kaupunkierää: maan i-nappi pysyvästi laudalle (avaa '
+        + 'maalehden) ja maalehden sisällyssivu pois — hampurilainen '
+        + 'aukeaa alareunan pop-upina.',
     },
     {
       tekija: 'Opus 2',
