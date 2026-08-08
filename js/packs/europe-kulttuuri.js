@@ -906,62 +906,12 @@ export const EUROPE_KULTTUURI = {
   },
 
   pariisi: {
-    nostot: [
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Édith Piaf lauloi ensin kadulla',
-        tiedosto: 'Édith Piaf 914-6440.jpg',
-        teksti: 'Édith Piaf syntyi Pariisissa 1915 ja lauloi nuorena '
-                  + 'kolikoista kaduilla ja pihoilla. Kabaree-isäntä löysi '
-                  + 'hänet 1935 ja antoi lempinimen la Môme Piaf — piaf on '
-                  + 'pariisilaista puhekieltä ja tarkoittaa varpusta. Laulaja '
-                  + 'oli 142 senttiä pitkä. Tunnetuin laulu on La Vie en rose '
-                  + 'vuodelta 1946, jonka sanat hän kirjoitti itse.',
-        selite: 'Édith Piaf konsertissa Rotterdamissa joulukuussa 1962, '
-                  + 'alle vuosi ennen kuolemaansa. Hän esiintyi aina mustassa '
-                  + 'mekossa ja lauloi kädet koholla — asu ja asento olivat '
-                  + 'hänen tavaramerkkinsä.',
-        lahde: 'Wikimedia Commons (CC0)',
-        wiki: 'Édith Piaf',
-        musiikki: 'https://music.apple.com/fi/search?term=edith%20piaf',
-        musiikkiNimi: 'Édith Piaf Apple Musicissa',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Patongista kilpaillaan joka vuosi',
-        tiedosto: 'Boulangerie Tout autour du pain.jpg',
-        teksti: 'Ranskan laki määrää, mitä perinteisessä patongissa saa '
-                  + 'olla: käytännössä vain vehnäjauhoa, vettä, suolaa ja '
-                  + 'hiivaa, eikä taikinaa saa missään vaiheessa pakastaa. '
-                  + 'Pariisin kaupunki järjestää joka vuosi kilpailun, jossa '
-                  + 'raati maistaa sokkona toistasataa patonkia. Voittaja saa '
-                  + 'rahapalkinnon ja toimittaa vuoden ajan leivät presidentin '
-                  + 'palatsiin.',
-        selite: 'Pariisilaisen leipomon ikkuna, johon on maalattu '
-                  + 'sijoitukset kaupungin patonkikilpailussa ja '
-                  + 'croissant-kilpailussa vuosien varrelta. Hyvä sijoitus on '
-                  + 'mainos, joka pidetään esillä vuosikymmeniä.',
-        lahde: 'FreCha, Wikimedia Commons (CC BY-SA 4.0)',
-        wiki: 'Patonki',
-      },
-      {
-        tyyppi: 'kuva',
-        otsikko: 'Seinen vihreät kirjalaatikot',
-        tiedosto: 'Paris 75005 Quai de Montebello Bouquinistes 20071014.jpg',
-        teksti: 'Seinen kaiteisiin on pultattu vihreitä peltilaatikoita, '
-                  + 'joissa myydään käytettyjä kirjoja. Kauppiaita on runsaat '
-                  + 'kaksisataa ja laatikoita lähes yhdeksänsataa noin kolmen '
-                  + 'kilometrin matkalla. Kaupunki päättää säännöt: yhdellä '
-                  + 'myyjällä on neljä laatikkoa, kaikki on maalattava samalla '
-                  + 'tummanvihreällä, ja ne on avattava vähintään neljänä '
-                  + 'päivänä viikossa.',
-        selite: 'Bouquiniste-kojuja Quai de Montebellella Notre-Damen '
-                  + 'vastarannalla. Laatikot ovat kiinni kaiteessa ja aukeavat '
-                  + 'kannen tavoin; illaksi ne lukitaan ja kauppias kävelee '
-                  + 'kotiin.',
-        lahde: 'Benh LIEU SONG, Wikimedia Commons (CC BY-SA 3.0)',
-      },
-    ],
+    /*
+     * Pariisi sai kategoriat (kulttuuri-kategoriat.js), jotka
+     * korvaavat litteät nostot Tutki-ikkunassa. Ainutlaatuinen sisältö
+     * siirrettiin lehden sivuille. Tänne jää vain visa
+     * (docs/tutki-aiheet.md).
+     */
     kysymys: {
       q: 'Mitä pariisilainen leipuri saa palkinnoksi, jos voittaa kaupungin '
            + 'patonkikilpailun?',

@@ -13,6 +13,8 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 398, teksti: 'Pariisille oma lehti: kukko, kellotorni ja patonki' },
+  { v: 397, teksti: 'Nähtävyyskortti ulottuu puhelimella alareunaan asti' },
   { v: 396, teksti: 'Tukholmalle Kadut ja sulut sekä Eläimet kaupungissa' },
   { v: 395, teksti: 'Euroopan viimeiset kuusi maakarttaa, Venäjä mukaan' },
   { v: 395, teksti: 'Balkanin ja idän introt lukevat nyt korkokarttaa' },

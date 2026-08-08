@@ -8995,6 +8995,31 @@ body.vertailu-tila .pawns { display: none; }
   padding: 1.2rem 1.15rem 1rem;
 }
 
+/*
+ * Kapealla ruudulla kortti on pohja-arkki: se lepää ruudun alareunassa
+ * eikä kellu keskellä. Keskitetty kortti jätti alle kaistaleen tyhjää
+ * taustaa (omistajan löytö 8.8.2026, Brandenburgin portti: "pop-up-
+ * ikkuna saisi ulottua ihan alas asti"), koska pystyvara jakautui
+ * margin: auto -keskityksessä puoliksi ylä- ja alapuolelle. Alareunaan
+ * ankkuroituna koko vara on yläpuolella ja alareuna on kiinni ruudussa
+ * — sama ele kuin lehden sisällysluettelolla, joka aukeaa alareunaan.
+ */
+@media (max-width: 699px) {
+  .dialog.nahtavyys-arkki {
+    margin: auto auto 0;
+    /* Alareunan safe-area ei enää vähennä korkeutta: kortti jatkuu
+     * kotipalkin taakse ja sisältö väistää sitä pehmusteella. */
+    max-height: calc(100dvh - 2.25rem - env(safe-area-inset-top, 0px));
+  }
+  .dialog.nahtavyys-arkki .nahtavyys-kortti {
+    /* Ruudun reunaan nojaava alalaita: pyöristys ja varjo kuuluvat
+     * kelluvalle kortille, pohjaan asti ulottuvalle eivät. */
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* Vuosiluku ja kohdenumero otsikon yllä: pieni kirjasinkokoinen
  * leimarivi, joka kertoo ajan ennen kuin nimi ehtii kertoa paikan. */
 .nahtavyys-aika {
