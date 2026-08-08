@@ -92,10 +92,25 @@ export const EUROPE_ARTIKKELIT = {
       + 'ranskalaisia.',
   },
   Ranska: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale selittää sen, mitä korkokartta
+    // näyttää, ja viimeinen päättyy koukkuun kartan noston aiheeseen:
+    // maa jatkuu kuvan reunan ulkopuolella.
     intro: 'Ranska on Länsi-Euroopan suurin maa pinta-alaltaan ja yksi '
       + 'sen väkirikkaimmista. Se ulottuu Pohjanmereltä Välimerelle ja '
-      + 'Alpeilta Atlantille — ja lisäksi merentakaisiin osiin Etelä-'
-      + 'Amerikassa, Karibialla ja Intian valtamerellä.',
+      + 'Alpeilta Atlantille.'
+      + '\n\nKartalla maan muoto näkyy heti: pohjoisessa ja lännessä on '
+      + 'laakeaa maata ja pitkiä rannikoita, idässä ja etelässä '
+      + 'kohoavat vuoret. Alpit nousevat itärajalla, Pyreneet piirtävät '
+      + 'etelärajan kuin muuri, ja keskellä kohoaa oma ylänkönsä, '
+      + 'Massif Central. Kaukana Välimerellä on vielä vuorinen Korsika.'
+      + '\n\nVuoden 1789 vallankumouksesta jäivät ajatukset '
+      + 'kansalaisuudesta ja tasavallasta sekä tunnuslause vapaus, '
+      + 'veljeys ja tasa-arvo, joka on yhä kirjoitettuna joka '
+      + 'kunnantalon seinään. Valtio on perinteisesti keskitetty: '
+      + 'Pariisi päättää paljon. Eikä Ranska lopu kartan reunaan — '
+      + 'sillä on osia myös Etelä-Amerikassa, Karibialla ja Intian '
+      + 'valtamerellä.',
     teksti: 'Ranskan vallankumous 1789 ja sen jälkeen syntyneet '
       + 'ajatukset — kansalaisuus, tasavalta, ihmisoikeuksien julistus — '
       + 'muuttivat koko Euroopan. Tunnuslause vapaus, veljeys ja tasa-'
@@ -201,9 +216,23 @@ export const EUROPE_ARTIKKELIT = {
       + 'siellä opiskeli muun muassa Nikolaus Kopernikus.',
   },
   Puola: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa: tasanko,
+    // kaksi jokea ja etelän vuorinauha.
     intro: 'Puola on Itämeren ja Karpaattien välinen tasankomaa Keski-'
       + 'Euroopassa. Se on väkiluvultaan EU:n viidenneksi suurin, ja '
-      + 'sen talous on kasvanut nopeasti 1990-luvulta lähtien.',
+      + 'sen talous on kasvanut nopeasti 1990-luvulta lähtien.'
+      + '\n\nMaan nimi tarkoittaa kenttien maata, ja kartta selittää '
+      + 'sen: valtaosa Puolasta on matalaa tasankoa, jonka halki '
+      + 'virtaavat Veiksel ja Oder — molemmat etelästä Itämerelle. '
+      + 'Pohjoisessa rannikko on hiekkaa ja järviä, etelässä maa nousee '
+      + 'ensin Sudeettien ja sitten Karpaattien harjanteille, joilla '
+      + 'Rysy kohoaa Tatravuorilla 2 499 metriin.'
+      + '\n\nTasangolla ei ole vuoria suojana, ja se näkyy maan '
+      + 'historiassa: rajat ovat siirtyneet ja linnoitukset '
+      + 'rakennettiin jokien varsille. Suurin niistä seisoo yhä '
+      + 'lähellä merta Veikselin sivuhaaran rannalla — Malborkin '
+      + 'tiililinna, maailman suurin linna.',
     teksti: 'Puolan historia on rajojen historiaa. Maa oli 1500-luvulla '
       + 'Euroopan suurimpia valtioita, katosi sitten kartalta kokonaan '
       + 'yli sadaksi vuodeksi, kun naapurit jakoivat sen keskenään '
@@ -1568,11 +1597,29 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Alankomaat: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale selittää sen, mitä korkokartta
+    // näyttää — ja tässä maassa se on nimenomaan se, mitä kartalla EI
+    // ole: vuoria.
     intro: 'Alankomaat tarkoittaa matalia maita, ja nimi on tarkka: noin '
              + 'neljäsosa maasta on merenpinnan alapuolella, ja siellä asuu '
              + 'viidesosa väestöstä. Noin 17 prosenttia maa-alasta on kuivattu '
-             + 'merestä ja järvistä. Ilman patoja ja pumppuja se olisi taas '
-             + 'vettä.',
+             + 'merestä ja järvistä — ilman patoja ja pumppuja se olisi taas '
+             + 'vettä.'
+             + '\n\nKartalla ei ole vuoria: maa on tasainen kuin pöytä, ja '
+             + 'korkeimmat kohdat jäävät kaukaiseen kaakkoiskärkeen. '
+             + 'Lounaassa Zeelandin saaret ja merenlahdet rikkovat rannikon '
+             + 'sirpaleiksi, pohjoisessa Friisein saaret suojaavat matalaa '
+             + 'Waddenmerta. Keskellä on IJsselmeer, joka oli ennen '
+             + 'merenlahti: 32 kilometrin Afsluitdijk-pato sulki sen '
+             + 'järveksi vuonna 1932, ja sen rannoilta erottuvat '
+             + 'suorakulmaiset polderit, merestä kuivatut maapalat.'
+             + '\n\nVettä on padottu tuhat vuotta: polderit tyhjennettiin '
+             + 'ennen tuulimyllyillä, nykyään sähköpumpuilla. Alankomaat on '
+             + 'Euroopan tiheimmin asuttuja maita, ja silti maailman '
+             + 'toiseksi suurin ruoan viejä arvolla mitattuna. Polkupyöriä '
+             + 'on enemmän kuin ihmisiä: noin 24 miljoonaa pyörää 18 '
+             + 'miljoonalle asukkaalle.',
     teksti: 'Vettä on padottu tuhat vuotta. Kuivattua ja padottua maapalaa '
               + 'sanotaan polderiksi; niitä tyhjennettiin ennen tuulimyllyillä, '
               + 'nykyään sähköpumpuilla. Vuonna 1932 valmistui Afsluitdijk, 32 '
@@ -1645,10 +1692,24 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Itävalta: {
-    intro: 'Itävalta on vuoristomaa Alppien itäpäässä: yli 70 prosenttia '
-             + 'maasta on vuorta, ja korkein huippu Großglockner kohoaa 3 798 '
-             + 'metriin. Merta ei ole lainkaan, mutta naapureita on kahdeksan — '
-             + 'useampi kuin melkein millään muulla Euroopan maalla.',
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa, viimeinen on
+    // koukku kartan nostoon (Hallstattin suolakaivos).
+    intro: 'Itävalta on vuoristomaa Alppien itäpäässä, eikä sillä ole '
+             + 'merta lainkaan. Naapureita sen sijaan on kahdeksan — useampi '
+             + 'kuin melkein millään muulla Euroopan maalla.'
+             + '\n\nYli 70 prosenttia maasta on vuorta: lännessä ja etelässä '
+             + 'Alpit kohoavat harjanne harjanteen perään, ja korkein huippu '
+             + 'Großglockner yltää 3 798 metriin. Idässä maa madaltuu ja '
+             + 'levenee, ja siellä Tonavan varrella on pääkaupunki Wien. '
+             + 'Kartalta näkee maan muodon: lännessä se kaventuu vuorten '
+             + 'väliseksi kaistaleeksi, idässä se aukeaa tasangoksi.'
+             + '\n\nVuoret eivät ole vain maisemaa vaan elinkeino. '
+             + 'Alppipurojen voimalat tuottavat suuren osan maan sähköstä, ja '
+             + 'talvella samoille rinteille nousee miljoonia hiihtäjiä. '
+             + 'Hallstattin kylässä on louhittu suolaa seitsemäntuhatta '
+             + 'vuotta, ja lähikaupungin nimi Salzburg tarkoittaa '
+             + 'suolalinnaa.',
     teksti: 'Wienistä hallittiin kuusisataa vuotta. Habsburgin suku '
               + 'kasvatti sieltä valtakunnan, joka ulottui lopulta Ukrainasta '
               + 'Adrianmerelle ja jossa puhuttiin toistakymmentä kieltä. '
@@ -1676,10 +1737,25 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   Sveitsi: {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Ensimmäinen kappale on koukku kartan nostoon
+    // (Landsgemeinde), keskimmäinen lukee korkokarttaa.
     intro: 'Sveitsissä on neljä virallista kieltä: saksaa puhuu 62, ranskaa '
              + '23, italiaa 8 ja retoromaania puoli prosenttia asukkaista. '
              + 'Maata ei pidä koossa yhteinen kieli vaan yhteinen tapa päättää '
-             + 'asioista — kansanäänestyksiä on noin neljä kertaa vuodessa.',
+             + 'asioista: kansanäänestyksiä on noin neljä kertaa vuodessa, ja '
+             + 'kantoneja on 26, jokaisella oma perustuslakinsa, '
+             + 'koulujärjestelmänsä ja veronsa.'
+             + '\n\nAlpit peittävät maasta noin kolme viidesosaa, ja korkein '
+             + 'huippu Dufourspitze yltää 4 634 metriin. Kartalla vuoret '
+             + 'täyttävät koko eteläpuoliskon; pohjoisempana kulkee matalampi '
+             + 'vyöhyke järvineen ja kaupunkeineen, ja luoteessa nousee vielä '
+             + 'erillinen Jura-vuoristo. Vuorten läpi on kaivettu: Gotthardin '
+             + 'pohjatunneli on 57 kilometriä pitkä, maailman pisin '
+             + 'rautatietunneli.'
+             + '\n\nMaa on ollut puolueeton vuodesta 1815, se liittyi YK:hon '
+             + 'vasta 2002 eikä ole EU:n jäsen. Lippukin on oma tapauksensa: '
+             + 'se on neliö, kuten maailmassa vain Vatikaanin lippu.',
     teksti: 'Sveitsi sai alkunsa 1291, kun kolme laaksoyhteisöä lupasi '
               + 'auttaa toisiaan. Nykyään kantoneja on 26, ja jokaisella on oma '
               + 'perustuslakinsa, oma koulujärjestelmänsä ja omat veronsa. Maa '
@@ -1705,10 +1781,23 @@ export const EUROPE_ARTIKKELIT = {
   },
 
   'Tšekki': {
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä. Keskimmäinen kappale lukee korkokarttaa: vuorikehä,
+    // sen sisään jäävä allas ja joet, jotka vievät vedet pohjoiseen.
     intro: 'Tšekki on sisämaan valtio Keski-Euroopan keskellä, ja sillä on '
              + 'neljä naapuria: Saksa, Puola, Slovakia ja Itävalta. Maa koostuu '
-             + 'kolmesta vanhasta maakunnasta — Böömistä, Määristä ja Tšekin '
-             + 'Sleesiasta — ja Böömiä ympäröivät joka suunnalta vuoret.',
+             + 'kolmesta vanhasta maakunnasta: Böömistä lännessä, Määristä '
+             + 'idässä ja pienestä Tšekin Sleesiasta koillisessa.'
+             + '\n\nBöömiä ympäröivät joka suunnalta vuoret, ja niiden sisään '
+             + 'jää laaja allas. Sinne kerääntyvät maan joet: Vltava kiertää '
+             + 'Prahan mutkien läpi ja laskee Labeen, joka vie vedet '
+             + 'pohjoiseen Saksan puolelle ja edelleen Pohjanmerelle. Idässä '
+             + 'maasto laskee Määrin avoimiin laaksoihin, ja itärajalla '
+             + 'kohoavat Beskidit, Karpaattien läntisimmät vuoret.'
+             + '\n\nVuorikehän luoteiskulma ei ole tavallista kalliota vaan '
+             + 'hiekkakiveä, jonka vesi ja tuuli ovat veistäneet torneiksi ja '
+             + 'porteiksi. Suurin niistä on Pravčická brána, Euroopan suurin '
+             + 'luonnon kiviportti.',
     teksti: 'Praha oli 1300-luvulla Euroopan mahtavimpia kaupunkeja. '
               + 'Kuningas Kaarle IV perusti sinne 1348 yliopiston, joka on '
               + 'Keski-Euroopan vanhin, ja pani 1357 alulle sillan, joka kantaa '

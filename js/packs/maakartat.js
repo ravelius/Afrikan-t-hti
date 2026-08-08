@@ -308,6 +308,283 @@ export const MAAKARTAT = {
       wiki: 'Kiirunan kunta',
     },
   },
+  FRA: {
+    tiedosto: 'France relief location map.jpg',
+    lahde: 'Eric Gaba, Wikimedia Commons (CC BY-SA 4.0)',
+    /*
+     * Rajat sijaintikarttaperheen omasta määrittelystä (Module:Location
+     * map/data/France). Kuva kattaa VAIN emämaan; Korsika mahtuu siihen
+     * samassa mittakaavassa, mutta merentakaiset departementit ovat
+     * omissa moduuleissaan omine karttoineen — Cayennea tai Fort-de-
+     * Francea EI voi asemoida näillä rajoilla. Sama varoitus kuin
+     * Espanjan Kanariansaarilla, eri syystä: siellä laatikko on kuvan
+     * sisällä, täällä sitä ei ole lainkaan.
+     */
+    rajat: { pohjoinen: 51.5, etela: 41.0, lansi: -5.8, ita: 10.0 },
+    /*
+     * Kuusikulmion kärjet: keskus, Välimeri, Rhônen laakso Alppien
+     * juurella, Pyreneiden juuri, Atlantin rannikko ja Reinin varsi.
+     */
+    kaupungit: [
+      { nimi: 'Pariisi', lat: 48.857, lon: 2.351, paa: true },
+      { nimi: 'Lyon', lat: 45.767, lon: 4.834 },
+      { nimi: 'Marseille', lat: 43.298, lon: 5.381 },
+      { nimi: 'Toulouse', lat: 43.604, lon: 1.443 },
+      { nimi: 'Bordeaux', lat: 44.84, lon: -0.58 },
+      { nimi: 'Strasbourg', lat: 48.58, lon: 7.75 },
+    ],
+    /*
+     * Nosto tarttuu intron viimeiseen virkkeeseen: Ranska ei lopu
+     * kartan reunaan. Se on myös rehellinen vastaus siihen, että tämä
+     * kartta näyttää vain emämaan.
+     * Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+     */
+    nosto: {
+      otsikko: 'Euroopan raketit lähtevät sademetsästä',
+      tiedosto: 'Webb Liftoff on Ariane 5 (potm2201a).jpeg',
+      teksti: 'Ranska ei lopu kartan reunaan. Etelä-Amerikan '
+        + 'pohjoisrannikolla on Ranskan Guayana, joka on osa Ranskaa ja '
+        + 'Euroopan unionia — siksi Ranskan pisin maaraja ei ole '
+        + 'Espanjan vaan Brasilian kanssa: 730 kilometriä sademetsää. '
+        + 'Siellä, Kouroun kaupungin vieressä, on Euroopan '
+        + 'avaruussatama. Se rakennettiin juuri tähän, koska '
+        + 'päiväntasaaja on vain noin 600 kilometrin päässä: maapallon '
+        + 'pyöriminen antaa raketille ilmaista vauhtia lähes 1 700 '
+        + 'kilometriä tunnissa, ja itään päin on pelkkää merta. '
+        + 'Joulupäivänä 2021 täältä nousi Ariane 5 ja vei mukanaan '
+        + 'James Webb -avaruusteleskoopin.',
+      selite: 'Ariane 5 nousee laukaisualustalta Kouroussa Ranskan '
+        + 'Guayanassa joulupäivänä 2021.',
+      lahde: 'ESA/CNES/Arianespace/Optique Vidéo du CSG – JM Guillon, '
+        + 'Wikimedia Commons (CC BY 4.0)',
+      wiki: 'Guayanan avaruuskeskus',
+    },
+  },
+  NLD: {
+    tiedosto: 'Netherlands relief location map.svg',
+    lahde: 'Lencer ja NordNordWest, Wikimedia Commons (CC BY-SA 3.0 de)',
+    rajat: { pohjoinen: 53.7, etela: 50.6, lansi: 3.1, ita: 7.5 },
+    /*
+     * Randstadin neljä kaupunkia asettuvat länteen tiiviiksi rykelmäksi,
+     * ja juuri se on kartan opetus: väki on pakkautunut rannikolle.
+     * Groningen ja Maastricht antavat pohjois–etelä-mitan.
+     *
+     * HUOM korkokartasta: se näyttää tasangon, ei vuoria — ja se on
+     * oikein. Ainoa selvä varjostus on rajojen takana Ardenneilla ja
+     * Saksan puolella. Kuva ei siis ole väärä tai laadutonkaan, vaan
+     * maa on sen näköinen; intro sanoo saman sanoin.
+     */
+    kaupungit: [
+      { nimi: 'Amsterdam', lat: 52.373, lon: 4.894, paa: true },
+      { nimi: 'Haag', lat: 52.084, lon: 4.318 },
+      { nimi: 'Rotterdam', lat: 51.922, lon: 4.479 },
+      { nimi: 'Utrecht', lat: 52.091, lon: 5.122 },
+      { nimi: 'Groningen', lat: 53.217, lon: 6.567 },
+      { nimi: 'Maastricht', lat: 50.845, lon: 5.696 },
+    ],
+    /*
+     * Nosto tarttuu intron lupaukseen, että kuudesosa maasta on
+     * kuivattu merestä: tässä on paikka, jossa se tapahtui yhden
+     * saaren ympärillä. Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+     */
+    nosto: {
+      otsikko: 'Saari, jonka ympäriltä meri vietiin pois',
+      tiedosto: 'Schokland werelderfgoed hnapel 013.jpg',
+      teksti: 'Schokland oli saari keskellä Zuiderzee-merta. Tulvat '
+        + 'söivät sitä pala palalta, ja lopulta asukkaat mahtuivat enää '
+        + 'kolmelle korkeimmalle kummulle. Vuoden 1825 suurtulvan '
+        + 'jälkeen hallitus määräsi 1859, että saari on jätettävä: vesi '
+        + 'oli voittanut. Sitten kävi päinvastoin. Kun Noordoostpolder '
+        + 'pumpattiin kuivaksi vuonna 1942, meri katosi saaren '
+        + 'ympäriltä. Nyt Schokland on loiva kumpare peltojen keskellä, '
+        + 'ja sen vanha puinen merimuuri seisoo yhä paikallaan, vaikka '
+        + 'aaltoja ei ole. Se on Alankomaiden ensimmäinen Unescon '
+        + 'maailmanperintökohde.',
+      selite: 'Schoklandin entinen kirkko kumpareellaan ja saaren vanha '
+        + 'puinen merimuuri keskellä kuivattua peltoa.',
+      lahde: 'Hnapel, Wikimedia Commons (CC BY-SA 4.0)',
+      wiki: 'Schokland',
+    },
+  },
+  CZE: {
+    /*
+     * POIKKEUS: tämä EI ole sijaintikarttamoduulin oma `image1`.
+     * Moduuli osoittaa 1000 px:n rasteriin, jonka tekijätieto on
+     * sekava; tässä käytetty SVG on saman rajauksen kuva, jonka
+     * TIEDOSTOSIVU DOKUMENTOI RAJAT ITSE ja ne täsmäävät moduuliin
+     * pilkulleen. Lisäksi siinä on joet piirrettynä, ja Tšekki on
+     * jokien maa — Vltava ja Labe ovat intron ydintä.
+     */
+    tiedosto: 'Czech Republic relief location map.svg',
+    lahde: 'SANtosito, Wikimedia Commons (CC BY-SA 4.0)',
+    rajat: { pohjoinen: 51.3, etela: 48.3, lansi: 11.8, ita: 19.2 },
+    kaupungit: [
+      { nimi: 'Praha', lat: 50.083, lon: 14.417, paa: true },
+      { nimi: 'Karlovy Vary', lat: 50.228, lon: 12.866 },
+      { nimi: 'Plzeň', lat: 49.748, lon: 13.378 },
+      { nimi: 'České Budějovice', lat: 48.975, lon: 14.475 },
+      { nimi: 'Brno', lat: 49.2, lon: 16.617 },
+      { nimi: 'Ostrava', lat: 49.836, lon: 18.293 },
+    ],
+    // Intro sanoo, että Böömiä ympäröivät vuoret joka suunnalta;
+    // nosto näyttää, mitä niiden luoteiskulmassa on.
+    // Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Euroopan suurin kiviportti Böömin reunalla',
+      tiedosto: 'Pravčická brána (Prebischtor) - by Pudelek.jpg',
+      teksti: 'Kartan luoteisreunalla, siinä missä Böömin vuorikehä '
+        + 'kohtaa Elben, hiekkakivi on kulunut portiksi. Pravčická '
+        + 'brána on Euroopan suurin luonnon hiekkakivikaari: aukko on '
+        + '26,5 metriä leveä ja 16 metriä korkea, ja kaaren ohuin '
+        + 'kohta on vain kolme metriä paksu. Kaaren yli sai kävellä '
+        + '1980-luvulle asti, mutta kävijöiden kengät kuluttivat kiveä '
+        + 'niin paljon, että se suljettiin vuonna 1982 — nyt porttia '
+        + 'katsellaan viereiseltä kalliolta. Ensimmäisen Narnia-'
+        + 'elokuvan maisemia kuvattiin täällä, mutta kaaren päällä '
+        + 'juokseminen tehtiin studiossa.',
+      selite: 'Pravčická brána Böömin Sveitsissä on Euroopan suurin '
+        + 'luonnon hiekkakivikaari.',
+      lahde: 'Pudelek, Wikimedia Commons (CC BY-SA 4.0)',
+      // Kaarella itsellään ei ole suomenkielistä artikkelia; sen
+      // kansallispuistolla on.
+      wiki: 'České Švýcarskon kansallispuisto',
+    },
+  },
+  POL: {
+    tiedosto: 'Relief Map of Poland.svg',
+    lahde: 'TUBS, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 55.2, etela: 48.7, lansi: 13.8, ita: 24.5 },
+    /*
+     * Kuusikulmio, joka piirtää maan muodon: rannikko Veikselin
+     * suulla, länsi Wartan varrella, lounas Oderilla, keskusta, etelä
+     * vuorten juurella ja itä.
+     */
+    kaupungit: [
+      { nimi: 'Varsova', lat: 52.23, lon: 21.012, paa: true },
+      { nimi: 'Gdańsk', lat: 54.352, lon: 18.647 },
+      { nimi: 'Poznań', lat: 52.406, lon: 16.925 },
+      { nimi: 'Wrocław', lat: 51.108, lon: 17.039 },
+      { nimi: 'Krakova', lat: 50.065, lon: 19.945 },
+      { nimi: 'Lublin', lat: 51.246, lon: 22.568 },
+    ],
+    // Intro päättyy siihen, että tasangolla ei ole vuoria suojana ja
+    // linnoitukset rakennettiin jokien varsille; nosto näyttää niistä
+    // suurimman. Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+    nosto: {
+      otsikko: 'Maailman suurin linna on tehty tiilestä',
+      tiedosto: 'Malbork Castle in the afternoon.jpg',
+      teksti: 'Veikselin sivuhaaran Nogatin rannalla, keskellä '
+        + 'tasankoa, seisoo Malborkin linna — pinta-alaltaan maailman '
+        + 'suurin linna. Uloimmat muurit sulkevat sisäänsä 21 '
+        + 'hehtaaria, nelinkertaisesti Windsorin linnan verran, eikä '
+        + 'siinä ole juuri lainkaan luonnonkiveä: kaikki on poltettua '
+        + 'tiiltä. Saksalainen ritarikunta alkoi rakentaa sitä 1274 ja '
+        + 'siirsi päämajansa tänne 1309. Linnoja on oikeastaan kolme '
+        + 'sisäkkäin, ja niiden välissä on kuivia vallihautoja. Vuonna '
+        + '1945 yli puolet tuhoutui taisteluissa, ja linnaa on koottu '
+        + 'takaisin 1960-luvulta asti.',
+      selite: 'Malborkin tiililinna Nogat-joen rannalla '
+        + 'Pohjois-Puolassa.',
+      lahde: 'DerHexer, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Malborkin linna',
+    },
+  },
+  AUT: {
+    tiedosto: 'Austria relief location map.jpg',
+    lahde: 'Uwe Dedering, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 49.2, etela: 46.3, lansi: 9.4, ita: 17.2 },
+    /*
+     * Kaupungit koko itä–länsi-akselilta (16,4° → 9,7°), koska juuri
+     * se on maan muoto: Tonavan alanko pohjoisessa, Alppien laaksot
+     * lännessä ja kapea kieleke Bodenjärvellä. Bregenz osuu 4,5 %:n
+     * kohdalle eli aivan vasempaan laitaan — se on tarkoitus, sillä
+     * ilman sitä kielekettä ei näkisi kartalta lainkaan.
+     */
+    kaupungit: [
+      { nimi: 'Wien', lat: 48.208, lon: 16.373, paa: true },
+      { nimi: 'Linz', lat: 48.303, lon: 14.291 },
+      { nimi: 'Graz', lat: 47.07, lon: 15.439 },
+      { nimi: 'Salzburg', lat: 47.8, lon: 13.033 },
+      { nimi: 'Innsbruck', lat: 47.267, lon: 11.393 },
+      { nimi: 'Bregenz', lat: 47.505, lon: 9.749 },
+    ],
+    /*
+     * Intro päättyy Hallstattiin ja Salzburgin nimen merkitykseen;
+     * nosto vie vuoren sisään. Kuva on kaivoskuvaksi hämärä, mutta
+     * liukumäki erottuu siitä heti — tarkistettu silmin 480 px:ssä
+     * 8.8.2026, samoin neljä hylättyä vaihtoehtoa.
+     */
+    nosto: {
+      otsikko: 'Vanhassa suolakaivoksessa liukumäki vie alas',
+      tiedosto: '1093 - Hallstatt - Salzbergwerk.JPG',
+      teksti: 'Hallstattin kylän yläpuolella vuoressa on louhittu '
+        + 'suolaa seitsemäntuhatta vuotta. Kerroksesta toiseen ei '
+        + 'kuljeta portaita: kaivosmiehet höyläsivät puusta pitkiä '
+        + 'liukumäkiä, ja niitä pitkin mennään yhä alas. Suola on '
+        + 'säilyttänyt kaiken, mitä vuoreen on jäänyt — nahkakenkiä, '
+        + 'kangaspaloja, työkaluja ja kantoreppuja, joita kukaan ei '
+        + 'tullut hakemaan. Käytävästä on löytynyt myös kokonaiset '
+        + 'puiset portaat, jotka on ajoitettu puun vuosirenkaista '
+        + 'vuosiin 1344 ja 1343 eaa. Ne ovat Euroopan vanhimmat '
+        + 'säilyneet portaat.',
+      selite: 'Kaivosmiesten puinen liukumäki vie kerroksesta toiseen '
+        + 'Hallstattin suolakaivoksessa.',
+      lahde: 'Andrew Bossi, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Hallstatt',
+    },
+  },
+  CHE: {
+    /*
+     * POIKKEUS kuten Tšekillä: moduulin `image1` on 64 megatavun PNG,
+     * johon on lisäksi piirretty kaikki 26 kantonirajaa — levottomampi
+     * kuin muut pelin maakartat. Tämä on saman rajauksen kuva samalta
+     * tekijäparilta kuin Italian ja Ruotsin kartat, ja sen tiedostosivu
+     * ilmoittaa rajat asteminuutteina täsmälleen moduulin arvoiksi.
+     */
+    tiedosto: 'Switzerland relief location map.jpg',
+    lahde: 'Eric Gaba ja NordNordWest, Wikimedia Commons (CC BY-SA 3.0)',
+    rajat: { pohjoinen: 47.9, etela: 45.75, lansi: 5.8, ita: 10.7 },
+    /*
+     * Zermatt on listalla laudan takia: Euroopan laudan kohde
+     * Sveitsissä on "Alpit", ja Zermatt on ainoa näistä pisteistä,
+     * joka osuu keskelle ruskeaa Alppimassiivia eikä alangolle. Näin
+     * pelaaja löytää kartalta sen paikan, jossa hän on käynyt.
+     */
+    kaupungit: [
+      { nimi: 'Bern', lat: 46.95, lon: 7.45, paa: true },
+      { nimi: 'Geneve', lat: 46.204, lon: 6.141 },
+      { nimi: 'Basel', lat: 47.567, lon: 7.6 },
+      { nimi: 'Zürich', lat: 47.367, lon: 8.55 },
+      { nimi: 'Zermatt', lat: 46.024, lon: 7.749 },
+      { nimi: 'Lugano', lat: 46.0, lon: 8.95 },
+    ],
+    /*
+     * Intro sanoo, ettei maata pidä koossa kieli vaan yhteinen tapa
+     * päättää asioista. Nosto näyttää sen tavan äärimuodossaan.
+     * Kaarella ei ole suomenkielistä artikkelia — Landsgemeindestä ei
+     * ole fi-sivua — joten wiki osoittaa ilmiöön.
+     * Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+     */
+    nosto: {
+      otsikko: 'Koko kantoni äänestää torilla käsi pystyssä',
+      tiedosto: 'Landsgemeinde - Glarus 2014 - 5.jpg',
+      teksti: 'Sveitsissä äänestetään usein, mutta kahdessa kantonissa '
+        + 'se tehdään yhä ulkona torilla. Glarusissa kokoonnutaan '
+        + 'toukokuun ensimmäisenä sunnuntaina: tuhannet ihmiset '
+        + 'istuvat penkeillä vuoren juurella, ja jokainen paikalla '
+        + 'olija saa pyytää puheenvuoron ja ehdottaa lakiin muutosta. '
+        + 'Äänestettäessä nostetaan äänestyskortti ilmaan. Kukaan ei '
+        + 'laske ääniä yksitellen — kokouksen johtaja katsoo '
+        + 'kohotettuja käsiä ja päättää, kumpi puoli voitti. Näin '
+        + 'päätettiin vuonna 2007, että Glarusissa saa äänestää jo '
+        + '16-vuotiaana. Se on yhä Sveitsin ainoa kantoni, jossa niin '
+        + 'nuori pääsee mukaan.',
+      selite: 'Glarusin kantonin väki äänestää äänestyskortteja '
+        + 'nostaen kaupungin torilla toukokuussa 2014.',
+      lahde: 'Ludovic Péron, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'Suora demokratia',
+    },
+  },
 };
 
 /*
