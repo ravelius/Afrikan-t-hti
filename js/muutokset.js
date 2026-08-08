@@ -13,6 +13,7 @@
  * Vanhat rivit eivät muutu — loki on historia, ei kuvaus nykytilasta.
  */
 export const MUUTOKSET = [
+  { v: 376, teksti: 'Kairolle ja Venetsialle nähtävyysjutut kuvineen' },
   { v: 375, teksti: 'Menovinkit Virolle, Latvialle, Liettualle ja Unkarille' },
   { v: 374, teksti: 'Kuusi uutta maakarttaa: Ranskasta Puolaan' },
   { v: 373, teksti: 'Saksan menovinkit malliksi: 21 kohdetta kuudessa ryhmässä' },
