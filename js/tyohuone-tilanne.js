@@ -44,12 +44,13 @@ export const TILANNE = {
     {
       tekija: 'Opus 2',
       rooli: 'kartat + introt',
-      tila: 'odottaa',
-      tehtava: 'Kaista tyhjä. Valmiina: v362 kaupunkikarttojen '
-        + 'ulkoasu (kontrasti alas, vaaleat numeroympyrät, pieni '
-        + 'OSM-rivi, hover-seloste pöytäkoneelle), v360 Espanjan '
-        + 'tv-nappi, v359 laguuni, v351/v354/v355 kartat.',
-      seuraavaksi: 'Uusi tehtävä testikierroksen tarpeiden mukaan.',
+      tila: 'tyossa',
+      tehtava: 'Pieni hiontaerä: selitelistan pallot samaan '
+        + 'hiekansävyyn kuin kartan ympyrät ja linkkitekstien '
+        + 'alleviivaus kevyemmäksi. Valmiina: v362 karttojen '
+        + 'ulkoasu, v360 Espanjan tv-nappi (iPad-testi OK), v359 '
+        + 'laguuni.',
+      seuraavaksi: 'Raportti Fablelle.',
     },
     {
       tekija: 'Sonnet 1',
