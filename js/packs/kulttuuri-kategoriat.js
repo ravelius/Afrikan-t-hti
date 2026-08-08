@@ -562,144 +562,6 @@ export const KULTTUURI_KATEGORIAT = {
    * ja metron taide, joka on myös visan aihe — siksi se on kannessa.
    * Fika siirtyi maan Ruoka-aiheeseen kanelipullana.
    */
-  tukholma: [
-    {
-      id: 'kaupunki',
-      nimi: 'Tukholma',
-      johdanto: 'Neljäntoista saaren pääkaupunki, jossa vesi on katua ja '
-        + 'kaupungin laidalta lähtee höyrylaiva kolmenkymmenentuhannen '
-        + 'saaren saaristoon.',
-      /*
-       * Lehden etusivun kuvat: iso vaakakuva pääkuvaksi ja kaksi
-       * pienempää sen alle. Sama malli kuin Madridissa ja Kairossa.
-       */
-      kansikuvat: [
-        {
-          tiedosto: 'Riddarholmen (by Pudelek).JPG',
-          selite: 'Riddarholmen Riddarfjärdenin takaa. Terävä valurautainen '
-            + 'torni kuuluu Riddarholmenin kirkolle, jonne Ruotsin '
-            + 'kuninkaat haudattiin 1600-luvulta 1950-luvulle.',
-          lahde: 'Pudelek, Wikimedia Commons (CC BY-SA 4.0)',
-        },
-        {
-          tiedosto: 'Julmarknad på Stortorget, Gamla stan, Stockholm, 2017b.jpg',
-          selite: 'Joulutori Stortorgetilla, Gamla stanin keskusaukiolla. '
-            + 'Kapeat talot ovat 1600-luvulta, ja niiden erikokoiset '
-            + 'ikkunat kertovat, että jokainen rakensi omaan tahtiinsa.',
-          lahde: 'Bysmon, Wikimedia Commons (CC BY-SA 4.0)',
-        },
-        {
-          tiedosto: 'Storskär August 2015 05.jpg',
-          selite: 'Höyrylaiva Storskär ohittaa Vaxholmin linnoituksen. '
-            + 'Laiva on vuodelta 1908 ja kulkee yhä saaristoreittiä '
-            + 'kesäisin — sen koneet ovat alkuperäiset.',
-          lahde: 'Arild Vågen, Wikimedia Commons (CC BY-SA 4.0)',
-        },
-      ],
-      nostot: [
-        {
-          otsikko: 'Martin piirsi Tukholman ennen valokuvaa',
-          tiedosto: 'Stockholmspanorama 1790.jpg',
-          teksti: 'Elias Martin oppi ammattinsa Lontoossa, jossa hän asui '
-            + 'kaksitoista vuotta ja opetteli akvatinnan — tekniikan, '
-            + 'jolla kuparilevystä saa vesivärimäisen sävyn. Kotiin '
-            + 'palattuaan 1780 hän kääntyi kaupunkiin, jota kukaan ei '
-            + 'ollut piirtänyt sellaisenaan: satamaan, toreille ja '
-            + 'työn ääreen. Veli Johan Fredrik kaiversi kuvat levyiksi, '
-            + 'ja niitä myytiin sarjoina. Ne ovat tarkin näkymä '
-            + 'Tukholmaan ennen valokuvaa.',
-          selite: 'Näkymä Tukholmaan Mosebackelta Södermalmilta noin 1790. '
-            + 'Kirkontornien takana laivoja on ankkurissa niin tiheässä, '
-            + 'että masto peittää maston.',
-          lahde: 'Elias Martin, Wikimedia Commons (PD)',
-          wiki: 'Elias Martin',
-          /*
-           * Selattava galleria kuten Venetsian Canaletto ja Kairon
-           * Roberts. Kaksi viimeistä ovat veljesten yhteistyötä:
-           * Elias maalasi, Johan Fredrik kaiversi.
-           */
-          galleria: [
-            {
-              otsikko: 'Drottninggatan',
-              tiedosto: 'Elias Martin - Street in Stockholm (Drottninggatan) - A II 868 - Finnish National Gallery.jpg',
-              selite: 'Drottninggatan matalien puutalojen aikaan. Katu on '
-                + 'yhä samassa paikassa, mutta nykyään se on '
-                + 'kävelykatu ja talot ovat kivestä.',
-              lahde: 'Elias Martin, Wikimedia Commons (PD)',
-            },
-            {
-              otsikko: 'Näkymä Mälarenille',
-              tiedosto: 'Southern shore of Lake Mälaren in Stockholm, Sweden (25413579586).jpg',
-              selite: 'Mälarenin eteläranta Söderin sulun kohdalta. '
-                + 'Purjeveneet toivat kaupunkiin polttopuuta, viljaa ja '
-                + 'rautaa sisämaan järviltä.',
-              lahde: 'Elias Martin / Riksantikvarieämbetet, Wikimedia Commons (PD)',
-            },
-            {
-              otsikko: 'Rautavaaka',
-              tiedosto: '"Järnvågen" - "The Iron Weighing Scale" in Stockholm, Sweden (25969387273).jpg',
-              selite: 'Järnvågen eli rautavaaka, jossa punnittiin kaikki '
-                + 'Ruotsista ulos lähtenyt tankorauta. Rauta oli maan '
-                + 'tärkein vientitavara, ja se kulki tämän pihan kautta.',
-              lahde: 'Elias Martin / Riksantikvarieämbetet, Wikimedia Commons (PD)',
-            },
-            {
-              otsikko: 'Skeppsbron portaat',
-              tiedosto: 'The steps on Skeppsbro etching by Elias Martin.jpg',
-              selite: 'Skeppsbron portaat, joita myöten tavara nostettiin '
-                + 'veneistä maihin. Etiketti puuttuu: kuvassa tehdään '
-                + 'työtä, ei poseerata.',
-              lahde: 'Elias Martin, Wikimedia Commons (PD)',
-            },
-          ],
-        },
-        {
-          otsikko: 'Maailman pisin taidenäyttely',
-          tiedosto: 'Tunnelbana T-Centralen Blue Line (43481298780).jpg',
-          teksti: 'Tukholman metrossa on noin sata asemaa, ja niistä yli '
-            + 'yhdeksälläkymmenellä on taidetta: maalauksia, veistoksia, '
-            + 'mosaiikkeja ja reliefejä yli 150 taiteilijalta. Sinisen '
-            + 'linjan asemat louhittiin syvälle kallioon, eikä louhittua '
-            + 'pintaa peitetty laatoilla — se ruiskubetonoitiin ja '
-            + 'maalattiin sellaisenaan, joten aseman seinä on '
-            + 'kirjaimellisesti vuori. Tavallinen matkalippu kelpaa koko '
-            + 'näyttelyyn.',
-          selite: 'T-Centralenin sinisen linjan laituri. Per Olof Ultvedt '
-            + 'maalasi 1975 karkeaan kallioon siniset köynnökset — '
-            + 'rauhallinen väri valittiin kaupungin vilkkaimmalle '
-            + 'vaihtoasemalle.',
-          lahde: 'Sonse, Wikimedia Commons (CC BY 2.0)',
-          wiki: 'Tukholman metro',
-        },
-        /*
-         * ABBA siirtyi Ruotsin Musiikki-aiheeseen (maa-kategoriat.js
-         * SWE, omistajan tarkennus 7.8.2026: yhtye on koko maan eikä
-         * vain Tukholman tarina) — kansi sai tilalle Vasan, joka on
-         * kaupungin oma laiva.
-         */
-        {
-          otsikko: 'Laiva, joka upposi ja nousi',
-          tiedosto: 'Lateral view of the Vasa ship, Vasa Museum, Stockholm, Sweden julesvernex2.jpg',
-          teksti: 'Kuninkaan ylpeys, sotalaiva Vasa, lähti '
-            + 'neitsytmatkalleen Tukholman satamasta 10. elokuuta 1628 '
-            + '— ja kaatui ensimmäiseen kunnon tuulenpuuskaan '
-            + 'ehdittyään noin kilometrin. Laiva oli rakennettu liian '
-            + 'kapeaksi ja korkeaksi, ja vesi ryntäsi sisään avoimista '
-            + 'tykkiporteista. Vasa makasi sataman pohjamudassa 333 '
-            + 'vuotta, kunnes se nostettiin 1961 lähes ehjänä: Itämeren '
-            + 'vähäsuolainen vesi oli pitänyt laivamadot loitolla. '
-            + 'Nykyään alus seisoo omassa museossaan yhä valtaosin '
-            + 'alkuperäisenä puuna, ja Vasa-museo on koko Pohjolan '
-            + 'suosituimpia museoita.',
-          selite: 'Vasan kylkeä Vasa-museossa. Juuri nämä tykkiportit '
-            + 'upottivat laivan: alin porttirivi painui kallistuksessa '
-            + 'veden alle.',
-          lahde: 'Jules Verne Times Two, Wikimedia Commons (CC BY-SA 4.0)',
-          wiki: 'Vasa (laiva)',
-        },
-      ],
-    },
-  ],
 
   praha: [
     {
@@ -1799,6 +1661,230 @@ export const KULTTUURI_KATEGORIAT = {
               lahde: 'Adriano, Wikimedia Commons (CC BY-SA 3.0)',
             },
           ],
+        },
+      ],
+    },
+  ],
+  tukholma: [
+    {
+      id: 'kaupunki',
+      nimi: 'Tukholma',
+      johdanto: 'Neljäntoista saaren pääkaupunki, jossa vesi on katua ja kaupungin '
+        + 'laidalta lähtee höyrylaiva kolmenkymmenentuhannen saaren '
+        + 'saaristoon.',
+      kansikuvat: [
+        {
+          tiedosto: 'Riddarholmen (by Pudelek).JPG',
+          selite: 'Riddarholmen Riddarfjärdenin takaa. Terävä valurautainen torni '
+            + 'kuuluu Riddarholmenin kirkolle, jonne Ruotsin kuninkaat '
+            + 'haudattiin 1600-luvulta 1950-luvulle.',
+          lahde: 'Pudelek, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Julmarknad på Stortorget, Gamla stan, Stockholm, 2017b.jpg',
+          selite: 'Joulutori Stortorgetilla, Gamla stanin keskusaukiolla. Kapeat '
+            + 'talot ovat 1600-luvulta, ja niiden erikokoiset ikkunat '
+            + 'kertovat, että jokainen rakensi omaan tahtiinsa.',
+          lahde: 'Bysmon, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Storskär August 2015 05.jpg',
+          selite: 'Höyrylaiva Storskär ohittaa Vaxholmin linnoituksen. Laiva on '
+            + 'vuodelta 1908 ja kulkee yhä saaristoreittiä kesäisin — sen '
+            + 'koneet ovat alkuperäiset.',
+          lahde: 'Arild Vågen, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Martin piirsi Tukholman ennen valokuvaa',
+          tiedosto: 'Stockholmspanorama 1790.jpg',
+          teksti: 'Elias Martin oppi ammattinsa Lontoossa, jossa hän asui '
+            + 'kaksitoista vuotta ja opetteli akvatinnan — tekniikan, jolla '
+            + 'kuparilevystä saa vesivärimäisen sävyn. Kotiin palattuaan 1780 '
+            + 'hän kääntyi kaupunkiin, jota kukaan ei ollut piirtänyt '
+            + 'sellaisenaan: satamaan, toreille ja työn ääreen. Veli Johan '
+            + 'Fredrik kaiversi kuvat levyiksi, ja niitä myytiin sarjoina. Ne '
+            + 'ovat tarkin näkymä Tukholmaan ennen valokuvaa.',
+          selite: 'Näkymä Tukholmaan Mosebackelta Södermalmilta noin 1790. '
+            + 'Kirkontornien takana laivoja on ankkurissa niin tiheässä, että '
+            + 'masto peittää maston.',
+          lahde: 'Elias Martin, Wikimedia Commons (PD)',
+          wiki: 'Elias Martin',
+          galleria: [
+            {
+              otsikko: 'Drottninggatan',
+              tiedosto: 'Elias Martin - Street in Stockholm (Drottninggatan) - A II 868 - Finnish National Gallery.jpg',
+              selite: 'Drottninggatan matalien puutalojen aikaan. Katu on yhä '
+                + 'samassa paikassa, mutta nykyään se on kävelykatu ja talot '
+                + 'ovat kivestä.',
+              lahde: 'Elias Martin, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Näkymä Mälarenille',
+              tiedosto: 'Southern shore of Lake Mälaren in Stockholm, Sweden (25413579586).jpg',
+              selite: 'Mälarenin eteläranta Söderin sulun kohdalta. Purjeveneet '
+                + 'toivat kaupunkiin polttopuuta, viljaa ja rautaa sisämaan '
+                + 'järviltä.',
+              lahde: 'Elias Martin / Riksantikvarieämbetet, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Rautavaaka',
+              tiedosto: '"Järnvågen" - "The Iron Weighing Scale" in Stockholm, Sweden (25969387273).jpg',
+              selite: 'Järnvågen eli rautavaaka, jossa punnittiin kaikki '
+                + 'Ruotsista ulos lähtenyt tankorauta. Rauta oli maan tärkein '
+                + 'vientitavara, ja se kulki tämän pihan kautta.',
+              lahde: 'Elias Martin / Riksantikvarieämbetet, Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Skeppsbron portaat',
+              tiedosto: 'The steps on Skeppsbro etching by Elias Martin.jpg',
+              selite: 'Skeppsbron portaat, joita myöten tavara nostettiin '
+                + 'veneistä maihin. Etiketti puuttuu: kuvassa tehdään työtä, '
+                + 'ei poseerata.',
+              lahde: 'Elias Martin, Wikimedia Commons (PD)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Maailman pisin taidenäyttely',
+          tiedosto: 'Tunnelbana T-Centralen Blue Line (43481298780).jpg',
+          teksti: 'Tukholman metrossa on noin sata asemaa, ja niistä yli '
+            + 'yhdeksälläkymmenellä on taidetta: maalauksia, veistoksia, '
+            + 'mosaiikkeja ja reliefejä yli 150 taiteilijalta. Sinisen linjan '
+            + 'asemat louhittiin syvälle kallioon, eikä louhittua pintaa '
+            + 'peitetty laatoilla — se ruiskubetonoitiin ja maalattiin '
+            + 'sellaisenaan, joten aseman seinä on kirjaimellisesti vuori. '
+            + 'Tavallinen matkalippu kelpaa koko näyttelyyn.',
+          selite: 'T-Centralenin sinisen linjan laituri. Per Olof Ultvedt maalasi '
+            + '1975 karkeaan kallioon siniset köynnökset — rauhallinen väri '
+            + 'valittiin kaupungin vilkkaimmalle vaihtoasemalle.',
+          lahde: 'Sonse, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Tukholman metro',
+        },
+        {
+          otsikko: 'Laiva, joka upposi ja nousi',
+          tiedosto: 'Lateral view of the Vasa ship, Vasa Museum, Stockholm, Sweden julesvernex2.jpg',
+          teksti: 'Kuninkaan ylpeys, sotalaiva Vasa, lähti neitsytmatkalleen '
+            + 'Tukholman satamasta 10. elokuuta 1628 — ja kaatui ensimmäiseen '
+            + 'kunnon tuulenpuuskaan ehdittyään noin kilometrin. Laiva oli '
+            + 'rakennettu liian kapeaksi ja korkeaksi, ja vesi ryntäsi sisään '
+            + 'avoimista tykkiporteista. Vasa makasi sataman pohjamudassa 333 '
+            + 'vuotta, kunnes se nostettiin 1961 lähes ehjänä: Itämeren '
+            + 'vähäsuolainen vesi oli pitänyt laivamadot loitolla. Nykyään '
+            + 'alus seisoo omassa museossaan yhä valtaosin alkuperäisenä '
+            + 'puuna, ja Vasa-museo on koko Pohjolan suosituimpia museoita.',
+          selite: 'Vasan kylkeä Vasa-museossa. Juuri nämä tykkiportit upottivat '
+            + 'laivan: alin porttirivi painui kallistuksessa veden alle.',
+          lahde: 'Jules Verne Times Two, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Vasa (laiva)',
+        },
+      ],
+    },
+    {
+      id: 'rakennukset',
+      nimi: 'Kadut ja sulut',
+      johdanto: 'Tukholma rakennettiin kapeikkoon, jossa järvi purkautuu mereen — '
+        + 'siksi täällä nostetaan veneitä sulussa ja kapein kuja on 90 '
+        + 'senttiä leveä.',
+      nostot: [
+        {
+          otsikko: 'Polhem sai sulkutyön 83-vuotiaana',
+          tiedosto: 'Blå slussen Cumelin.jpg',
+          teksti: 'Mälaren on järvi, jonka pinta on merenpintaa korkeammalla, ja '
+            + 'Tukholma seisoo juuri siinä kohdassa, jossa vesi purkautuu '
+            + 'Itämereen. Ennen sulkuja veneet piti sauvoa ja hinata virran '
+            + 'läpi maksua vastaan, ja moni ajoi matalikolle. Ensimmäisen '
+            + 'sulun rakensivat hollantilaiset mestarit kuningatar Kristiinan '
+            + 'aikaan, ja se valmistui 1642. Kun siitä tuli liian pieni, työ '
+            + 'annettiin 1744 Christopher Polhemille, joka oli silloin '
+            + '83-vuotias. Hän kuoli kesken hankkeen, ja poika Gabriel sai '
+            + 'sulun valmiiksi 1755.',
+          selite: 'Polhemin sulku noin vuonna 1800. Sinisen nostosillan yli '
+            + 'kulkee hevoskärry, sulkukanavassa on kiinni purjevene ja '
+            + 'taustalla nousee laivojen mastoja.',
+          lahde: 'Johan Petter Cumelin, Wikimedia Commons (PD)',
+          wiki: 'Christopher Polhem',
+          galleria: [
+            {
+              otsikko: 'Sulku vuonna 2005',
+              tiedosto: 'Slussning i Slussen Stockholm 01 2005-08-09.JPG',
+              selite: 'Vene odottaa sulussa liikenneramppien alla vuonna 2005 — '
+                + 'ylhäällä ajaa punainen bussi. Tämä Slussen purettiin 2016, '
+                + 'ja uuden sulun on määrä avautua veneille 2027.',
+              lahde: 'Jordgubbe, Wikimedia Commons (CC BY-SA 2.0)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Kuja, jonne mahtuu yksi kerrallaan',
+          tiedosto: 'M Trotzigs gränd 2013.jpg',
+          teksti: 'Gamla stanin kortteleiden välissä kulkee Mårten Trotzigs '
+            + 'gränd, kapeimmalta kohdaltaan 90 senttimetriä leveä. Se on '
+            + 'Tukholman kapein kuja, ja sen 36 porrasaskelmaa laskevat '
+            + 'Prästgatanilta alas Västerlånggatanille. Nimi tuli '
+            + 'saksalaiselta kauppiaalta, joka muutti kaupunkiin 1581 ja osti '
+            + 'kujan varrelta taloja. 1800-luvun puolivälissä kuja suljettiin '
+            + 'molemmista päistä lankkuseinällä, ja se avattiin uudelleen '
+            + 'vasta 1945.',
+          selite: 'Mårten Trotzigs gränd kirkkaana päivänä: seinät melkein '
+            + 'koskettavat toisiaan, seinään kiinnitetty lyhty valaisee '
+            + 'portaita ja kaukana kujalla kävelee yksi ihminen.',
+          lahde: 'Holger Ellgaard, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Gamla stan',
+        },
+      ],
+    },
+    {
+      id: 'elaimet',
+      nimi: 'Eläimet kaupungissa',
+      johdanto: 'Keskellä pääkaupunkia nostetaan lohia, ja Djurgårdenin mäellä '
+        + 'laiduntaa eläin, joka oli kerran kadota koko maailmasta.',
+      nostot: [
+        {
+          otsikko: 'Lohi ui eduskuntatalon ohi',
+          tiedosto: 'Håvbåt på Strömmen 2020.jpg',
+          teksti: 'Norrström on virta, jota pitkin Mälarenin vesi syöksyy mereen '
+            + 'aivan eduskuntatalon vierestä. Siitä nostetaan joka vuosi '
+            + 'satoja lohia ja meritaimenia: vuonna 2000 saatiin lohi, joka '
+            + 'painoi lähes 22 kiloa. Vedessä elää noin kolmekymmentä '
+            + 'kalalajia, enemmän kuin missään muualla Tukholman seudun '
+            + 'vesissä. Kalat palasivat 1970-luvulla aloitettujen istutusten '
+            + 'myötä, ja vuonna 2024 vanha vuoden 1850 sulku muutettiin '
+            + 'kalatieksi, jota myöten kalat pääsevät nousemaan järveen.',
+          selite: 'Vihreä haavivene kiinni Norrströmin virrassa Kuninkaallisen '
+            + 'oopperan edessä. Puomista roikkuu iso nostohaavi, joka '
+            + 'lasketaan veteen kalaa odottamaan.',
+          lahde: 'Frankie Fouganthin, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Lohi',
+          galleria: [
+            {
+              otsikko: 'Onkija keskellä kaupunkia',
+              tiedosto: 'Fishing in Strömmen, Stockholm - panoramio.jpg',
+              selite: 'Kalastaja heittää vapaansa kivilaiturin portailta. '
+                + 'Vastarannalla on kivitaloja ja vasemmalla silta — '
+                + 'kalapaikka on keskellä liikennettä.',
+              lahde: 'Bengt Nyman, Wikimedia Commons (CC BY 3.0)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Visentti pelastui kaupungin mäellä',
+          tiedosto: 'Bison bonasus, Skansen (23157746126).jpg',
+          teksti: 'Djurgårdenin Skansen avattiin 1891, ja sinne siirrettiin '
+            + 'kokonaisia taloja ympäri Ruotsia. Malli levisi niin laajalle, '
+            + 'että monessa kielessä sana skansen tarkoittaa yhä '
+            + 'ulkoilmamuseota. Skansenilla pidettiin myös visenttejä, '
+            + 'Euroopan raskaimpia maaeläimiä. Kun laji oli 1920-luvulla '
+            + 'katoamassa, koko maailmassa oli enää 54 visenttiä — ja kaksi '
+            + 'niistä eli täällä. Vuonna 1929 Skansenilta lähetettiin hiehoja '
+            + 'Puolan Białowieżaan, jonne laji päästettiin takaisin metsään '
+            + '1952.',
+          selite: 'Visentin pää lähikuvassa Skansenilla: paksu ruskea otsatukka, '
+            + 'lyhyet ylöspäin kaartuvat sarvet ja tumma turpa. Taustalla '
+            + 'näkyy aitauksen lauta-aita talvivalossa.',
+          lahde: 'Bengt Nyman, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Visentti',
         },
       ],
     },
