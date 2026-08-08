@@ -1,3 +1,7 @@
+> **ARKISTOITU 8.8.2026 — ei ohje.** Vanhentunut suunnitelma tai
+> kertaraportti; säilytetty historian vuoksi. Voimassa olevat ohjeet:
+> docs/roolitus.md ja CLAUDE.md.
+
 # Maastonimien tekstit — kirjoitusohje
 
 *Kirjoitettu 4.8.2026. Tämän ohjeen voi antaa agentille sellaisenaan:

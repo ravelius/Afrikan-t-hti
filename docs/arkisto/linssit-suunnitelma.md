@@ -1,3 +1,7 @@
+> **ARKISTOITU 8.8.2026 — ei ohje.** Vanhentunut suunnitelma tai
+> kertaraportti; säilytetty historian vuoksi. Voimassa olevat ohjeet:
+> docs/roolitus.md ja CLAUDE.md.
+
 # Linssijärjestelmän toteutussuunnitelma
 
 Tämä on rakennusohje, ei idealista. Linssien *aineisto* on jo haettu

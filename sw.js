@@ -1,5 +1,5 @@
 // Palvelutyöntekijä: pelin tiedostot välimuistiin, jotta sovellus toimii myös offline.
-const CACHE = 'matkakirja-2026-08-08.364';
+const CACHE = 'matkakirja-2026-08-08.365';
 const SHELL = [
   './',
   './index.html',
@@ -248,9 +248,6 @@ const SHELL = [
   './assets/audio/puhe-europe-saapuminen-sisilia.mp3',
   './assets/audio/puhe-europe-saapuminen-sofia.mp3',
   './assets/audio/puhe-europe-saapuminen-venetsia.mp3',
-  './assets/audio/puhe-europe-vihje-pariisi.mp3',
-  './assets/audio/puhe-europe-vihje-rooma.mp3',
-  './assets/audio/puhe-europe-vihje-venetsia.mp3',
   './assets/audio/puhe-middleeast-saapuminen-aden.mp3',
   './assets/audio/puhe-middleeast-saapuminen-ankara.mp3',
   './assets/audio/puhe-middleeast-saapuminen-bagdad.mp3',
