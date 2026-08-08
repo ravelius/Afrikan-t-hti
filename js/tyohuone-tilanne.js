@@ -78,6 +78,9 @@ export const TILANNE = {
     },
   ],
   odottaaPaatosta: [
+    'Saksan menovinkkimallin arvio: karsitaanko 6–10 parhaaseen '
+      + 'vai kelpaako 21 kohdetta kuudessa ryhmässä? Ja otetaanko '
+      + 'Lapsille-ryhmä, vaikka kohteet vaativat saksan taitoa?',
     'Kertoja- ja hahmoäänten valinta (kuuntele Kehitys-välilehden '
       + 'näytteet)',
     'Sateenvarjomiehen henkilöllisyys (ehdotus Kehitys-välilehden '
@@ -91,6 +94,15 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Saksan menovinkit — ARVIOI MALLI (v373)',
+    ohje: 'Avaa Saksan menovinkit: 21 kohdetta kuudessa ryhmässä, '
+      + 'mm. uusi Valokuvausnäyttelyt-ryhmä (Sander, Blossfeldt, '
+      + 'Folkwang). HUOM: malli rakennettiin ennen kuin 6–10 '
+      + 'kohteen ohjeesi ehti perille — päätä nähtyäsi, '
+      + 'karsitaanko 6–10 parhaaseen vai kelpaako tämä laajuus '
+      + 'ryhmiteltynä.',
+  },
   {
     otsikko: 'Berliinin menovinkit listamallina — KATSO UUDESTAAN (v368)',
     ohje: 'Avaa Berliinin kaupunkilehden viimeinen sivu: menovinkit '
