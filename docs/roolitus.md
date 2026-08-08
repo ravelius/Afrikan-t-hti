@@ -15,7 +15,10 @@ tämän ja ottaa roolinsa tästä. Omistaja ohjaa kaikkea Fablen kautta.)*
   ajot omistajan avaimella, joka kierrätetään ajojen jälkeen).
 - **Koordinointi:** jakaa tehtävät Opukselle ja Sonnetille, kokoaa
   raportit ja tuo omistajalle vain päätöstä vaativat asiat. Ratkoo
-  versionumero- ja mergetörmäykset.
+  versionumero- ja mergetörmäykset. Ylläpitää työhuoneen
+  tilannetaulua (js/tyohuone-tilanne.js) — päivitys aina, kun
+  raportti saapuu tai työjono muuttuu; muut sessiot eivät kirjoita
+  siihen.
 
 ## Opus — toimitus: lehdet ja koodi
 
@@ -53,8 +56,46 @@ tämän ja ottaa roolinsa tästä. Omistaja ohjaa kaikkea Fablen kautta.)*
 | Rooli | Sessio-id | Kirjattu |
 | --- | --- | --- |
 | Fable | session_01R1jVv12E56gbU5qtH5xGaG | 8.8.2026 |
-| Opus | session_01AEN2as7TAggi2SX3w3DqWV | 8.8.2026 |
-| Sonnet | session_01MAirFte9MpE1HnVRpCj2Mb | 8.8.2026 |
+| Opus 1 | session_01AEN2as7TAggi2SX3w3DqWV | 8.8.2026 |
+| Opus 2 | session_017kajFQA5rFWByGvVLXc9Df | 8.8.2026 |
+| Sonnet 1 | session_01MAirFte9MpE1HnVRpCj2Mb | 8.8.2026 |
+| Sonnet 2 | session_01RQtKAgCVRDZzMGRKYJLoWS | 8.8.2026 |
+
+Kaistajako, kun sessioita on viisi: **Opus 1** — lehtisisällöt
+(maa-kategoriat.js, menovinkit), UI ja rakenne (radio/tv-napit
+molempiin lehtiin, uutislahteet.js). **Opus 2** — kartat ja introt
+(maakartat.js, assets/kartat, europe-artikkelit.js,
+piirra-kaupunkikartta.mjs) järjestyksessä ITA → ESP → SWE, sen
+jälkeen tv-tallennekandidaattien haku. **Sonnet 1** — QA ja
+työhuoneen Kehitys-välilehti (tyohuone.html, js/tyohuone-*.js).
+**Sonnet 2** — nähtävyysjutut kaupunkikarttojen kohteille
+(omistajan siirto Opukselta 8.8.2026): tiedot en-Wikipediasta
+omaksi suomenkieliseksi koosteeksi, enintään 5 kuvaa tekstin
+joukossa, lähteeksi pelkkä "Wikipedia" ilman linkkiä; pilotti
+Berliini, sitten Kairo ja uudet kartat Opus 2:n tahdissa; Lontoon
+jutut (Opus 1:n malli) pysyvät ennallaan. Kaistat eivät koske
+samoihin tiedostoihin; muutokset kaistajakoon sovitaan Fablen
+kautta.
+
+## Kustannuskuri (ultracode käytössä kaikilla Opus/Sonnet-sessioilla)
+
+Omistajan havainto 8.8.2026: Opus 5 lähtee herkästi paisuttamaan
+tehtävää ja kuluttamaan turhaan. Säännöt kaikille:
+
+1. **Tee vain se, mitä tehtävänannossa pyydetään.** Jos huomaat
+   viereisen ongelman, KIRJAA se raporttiin Fablelle — älä korjaa
+   ohimennen, ellei se ole saman PR:n välitön edellytys.
+2. **Pilotti ennen skaalaa:** uusi juttutyyppi tai työtapa tehdään
+   ensin yhdelle kaupungille/maalle ja raportoidaan, ennen kuin
+   sitä monistetaan.
+3. **Rinnakkaiset agenttiparvet vain selvärajaisiin eriin** (esim.
+   viisi maata, joilla on sama resepti) — ei avoimiin hakuihin tai
+   "tutki kaikki" -pyyhkäisyihin ilman Fablen tehtävänantoa.
+4. **Jos tehtävä alkaa paisua** (uusia alitehtäviä, yllättävä
+   rakennemuutos, kolmas korjauskierros samaan vikaan), PYSÄHDY ja
+   raportoi Fablelle ennen jatkamista.
+5. Erä kerrallaan: yksi looginen kokonaisuus valmiiksi ja PR
+   sisään ennen seuraavan aloittamista.
 
 ## Julkaisusäännöt (kaikille rooleille)
 
@@ -95,7 +136,13 @@ vasta testauksen jälkeen.**
 - **Sonnet:** QA-kierros jokaisen ison erän jälkeen; iso
   loppu-QA koko Euroopalle ennen omistajan testiä; raportit
   Fablelle.
-- **Omistajalta odottaa päätöstä:** riisutaanko Italian ja Espanjan
-  YouTube-livet (tv-tallenteet jäivät ITA/ESP/DEU:lle);
-  sateenvarjoseuraajan paljastuksen suunta (raamattu);
-  naisäänet ElevenLabs-kirjastoon Elsalle ja Rosalle.
+- **Omistajan päätökset 8.8.2026:** Lontoon 5 sivua jää; muut
+  kaupungit lyhyemmiksi tarveharkinnalla, mieluummin useampi sivu
+  kuin yksi pitkä; live-lähetyksistä luovutaan kokonaan — tilalle
+  uutistallenteita Saksan malliin, tai nappi pois; radio- ja
+  videonapit näkyviin sekä kaupunki- että maalehteen;
+  luentaäänissä otetaan englanninkieliset äänet käyttöön (suomea
+  monikielisesti) — valinta työhuoneen ääninäytteistä.
+- **Omistajalta odottaa yhä päätöstä:** sateenvarjoseuraajan
+  paljastuksen suunta (ehdotus työhuoneen Kehitys-sivulla) ja
+  kertoja-/hahmoäänten valinta näytteiden kuuntelun jälkeen.

@@ -28,16 +28,25 @@ export const EUROPE_ARTIKKELIT = {
     // Lehden etusivun maaosasto nojaa tähän tekstiin ilman Lue lisää
     // -nappia, joten intro on muita maita pidempi (omistajan toive
     // 5.8.2026: "ydintietoja voisi kirjoittaa aavistuksen pidemmiksi").
+    // Kappalejaot (\n\n) näkyvät maaosion aloitussivulla kartan
+    // vieressä (omistajan toive 7.8.2026), ja keskimmäinen kappale
+    // selittää sen, mitä korkokartta näyttää: laakea Po-laakso,
+    // Apenniinien selkäranka ja tulivuoret etelässä.
     intro: 'Italia on saapasta muistuttava niemimaa keskellä Välimerta. '
       + 'Nykyinen valtio on nuori — se yhdistyi kuningaskunnaksi vasta '
       + '1861 — mutta sen mailla on kävelty pidempään kuin juuri '
-      + 'missään: Rooman valtakunta hallitsi täältä koko Välimerta. '
-      + 'Vuosisatoja maa oli kaupunkivaltioiden tilkkutäkki, ja se '
+      + 'missään: Rooman valtakunta hallitsi täältä koko Välimerta.'
+      + '\n\nPohjoisessa maa alkaa Alpeilta ja laskeutuu Po-joen '
+      + 'laakeaan laaksoon, jossa ovat sen pellot, tehtaat ja suurin '
+      + 'osa sen sateista. Sieltä etelään kulkee Apenniinien '
+      + 'selkäranka Sisiliaan asti, ja saappaan kärjessä tulivuoret '
+      + 'ovat yhä hereillä.'
+      + '\n\nVuosisatoja maa oli kaupunkivaltioiden tilkkutäkki, ja se '
       + 'näkyy yhä: murteet, ruoat ja tavat vaihtuvat laaksosta '
       + 'toiseen, ja moni esittelee itsensä ensin kotiseutunsa kautta. '
       + 'Unescon maailmanperintökohteita Italiassa on enemmän kuin '
-      + 'missään muussa maassa, ja pohjoisen Alpit, Toscanan kukkulat '
-      + 'ja etelän tulivuoret mahtuvat samaan saappaaseen.',
+      + 'missään muussa maassa. Rajojen sisäpuolella on lisäksi kaksi '
+      + 'omaa valtiota, Vatikaani ja San Marino.',
     teksti: 'Italia oli vuosisatoja kaupunkivaltioiden tilkkutäkki: '
       + 'Venetsia ja Genova hallitsivat meriä, Firenze rahaa ja '
       + 'taidetta, Rooma kirkkoa. Siksi maa on yhä alueidensa summa — '

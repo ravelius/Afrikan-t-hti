@@ -164,6 +164,54 @@ export const MAAKARTAT = {
       wiki: 'Loreley',
     },
   },
+  ITA: {
+    tiedosto: 'Italy relief location map.jpg',
+    lahde: 'Eric Gaba ja NordNordWest, Wikimedia Commons (CC BY-SA 3.0)',
+    // Rajat sijaintikarttaperheen omasta määrittelystä (Module:Location
+    // map/data/Italy). Kuvan asteikkoreunukset vastaavat niitä:
+    // 9°, 12°, 15° ja 18° pituuspiirit sekä 36°, 39°, 42° ja 45°
+    // leveyspiirit osuvat oikeille kohdilleen.
+    rajat: { pohjoinen: 47.4, etela: 35.3, lansi: 6.2, ita: 19.0 },
+    /*
+     * Kuusi paikkaa, jotka kertovat maan muodon: Po-laakson teollinen
+     * pohjoinen (Milano, Venetsia), keskusta (Firenze, Rooma), etelä
+     * tulivuorineen (Napoli) ja saaret (Palermo). Kartalta näkee, että
+     * Apenniinit kulkevat selkärankana koko saappaan läpi.
+     */
+    kaupungit: [
+      { nimi: 'Rooma', lat: 41.903, lon: 12.496, paa: true },
+      { nimi: 'Milano', lat: 45.464, lon: 9.19 },
+      { nimi: 'Venetsia', lat: 45.441, lon: 12.316 },
+      { nimi: 'Firenze', lat: 43.77, lon: 11.256 },
+      { nimi: 'Napoli', lat: 40.852, lon: 14.268 },
+      { nimi: 'Palermo', lat: 38.116, lon: 13.362 },
+    ],
+    /*
+     * Kuvanosto kartan ja uutisten väliin (sama paikka kuin Saksan
+     * Loreley). Aihe täydentää introa: intro mainitsee kaksi valtiota
+     * rajojen sisällä, mutta mikään Italian sivu ei näytä niitä — ja
+     * kartalla San Marinon voi etsiä itse Adrianmeren puolelta.
+     * Kuva silmätarkistettu 480 px:ssä 8.8.2026.
+     */
+    nosto: {
+      otsikko: 'Saappaan sisällä on kaksi omaa valtiota',
+      tiedosto: 'Fortress of Guaita 2013-09-19.jpg',
+      teksti: 'Italian rajojen sisäpuolella on kaksi valtiota, jotka '
+        + 'eivät ole Italiaa. Rooman keskellä on Vatikaani, maailman '
+        + 'pienin valtio: sen koko pinta-ala on alle puoli '
+        + 'neliökilometriä. Toinen on San Marino, joka kiipeää Monte '
+        + 'Titanon kalliolle lähelle Adrianmerta. Se kertoo olevansa '
+        + 'maailman vanhin yhä toimiva tasavalta — perustamisvuodeksi '
+        + 'merkitään 301 — ja sen harjanteella seisoo kolme tornia, '
+        + 'jotka näkyvät myös maan lipussa. Asukkaita on noin 34 000, '
+        + 'eikä rajalla ole puomia: linja-auto ajaa Riministä ylös '
+        + 'vuorelle kuin mihin tahansa kaupunkiin.',
+      selite: 'Guaitan torni vartioi Monte Titanon huippua San '
+        + 'Marinossa.',
+      lahde: 'Max Ryazanov, Wikimedia Commons (CC BY-SA 3.0)',
+      wiki: 'San Marino',
+    },
+  },
 };
 
 /*
@@ -747,6 +795,46 @@ export const KAUPUNKIKARTAT = {
       { nimi: 'Museosaari', lat: 52.5169, lon: 13.401, wiki: 'Museumsinsel' },
       { nimi: 'Tv-torni', lat: 52.5208, lon: 13.4094, wiki: 'Berliinin televisiotorni' },
       { nimi: 'East Side Gallery', lat: 52.505, lon: 13.4399, wiki: 'East Side Gallery' },
+    ],
+  },
+  venetsia: {
+    /*
+     * Sama työkalu kuin muissa. Venetsia on kartantekijälle poikkeus
+     * kahdesti: kujat ovat OSM:ssä jalankulkuteitä (yli 5 000
+     * pedestrian-tietä rajauksen sisällä, mikä on juuri se ohuin
+     * katuluokka) ja laguuni on rantaviiva eikä vesialue, joten se
+     * jää paperin väriseksi. Siksi rajaus on kiristetty saariryhmän
+     * ympärille: ensimmäinen, väljempi rajaus jätti oikeaan
+     * yläkulmaan ison tyhjän laguunin.
+     */
+    polku: 'assets/kartat/venetsia-keskusta.png',
+    lahde: '© OpenStreetMap-tekijät (ODbL)',
+    rajat: { pohjoinen: 45.445, etela: 45.4265, lansi: 12.3155, ita: 12.352 },
+    esittely: 'Venetsia on rakennettu 118 saarelle keskelle matalaa '
+      + 'laguunia. Talot seisovat miljoonien puupaalujen varassa, '
+      + 'jotka lyötiin pohjamutaan satoja vuosia sitten ja ovat '
+      + 'säilyneet hapettomassa liejussa kovina kuin kivi. Saaret on '
+      + 'ommeltu yhteen sadoilla silloilla, ja jokainen niistä '
+      + 'ylitetään jalan.\n\nKartan halki kaartaa S-kirjaimen '
+      + 'muotoinen Canal Grande, kaupungin pääkatu: se on lähes neljä '
+      + 'kilometriä pitkä, ja sen yli pääsee kuivin jaloin vain '
+      + 'neljästä kohdasta. Muualla kanavan ylittää traghetto, iso '
+      + 'gondoli, jossa matkustajat seisovat koko matkan ajan. Kartan '
+      + 'kohteista pääsee lukemaan lisää napauttamalla.',
+    kohteet: [
+      /*
+       * Numerointi seuraa Canal Grandea lännestä itään, eli samassa
+       * järjestyksessä kuin vaporetto ajaa. Jokaisen wiki on
+       * tarkistettu fi.wikipedian artikkeli — Accademian sillalla,
+       * Ca' d'Orolla ja Santa Lucian asemalla sellaista ei ole, joten
+       * ne jäivät pois.
+       */
+      { nimi: 'Canal Grande', lat: 45.4415, lon: 12.3283, wiki: 'Canal Grande' },
+      { nimi: 'La Fenicen oopperatalo', lat: 45.4336, lon: 12.3336, wiki: 'La Fenice' },
+      { nimi: 'Rialton silta', lat: 45.438, lon: 12.3359, wiki: 'Rialton silta' },
+      { nimi: 'Pyhän Markuksen tori', lat: 45.4341, lon: 12.3387, wiki: 'Pyhän Markuksen tori' },
+      { nimi: 'San Giorgio Maggiore', lat: 45.4294, lon: 12.3433, wiki: 'San Giorgio Maggiore' },
+      { nimi: 'Arsenaali', lat: 45.4348, lon: 12.3496, wiki: 'Arsenale' },
     ],
   },
 };

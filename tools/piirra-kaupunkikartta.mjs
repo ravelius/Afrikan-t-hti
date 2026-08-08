@@ -49,6 +49,15 @@ const KAUPUNGIT = {
     // mahdu ydinkeskustaan ilman että kartta muuttuu puuroksi.
     rajat: { pohjoinen: 30.068, etela: 30.018, lansi: 31.198, ita: 31.278 },
   },
+  venetsia: {
+    // Koko historiallinen keskusta rautatieasemalta Arsenaalille:
+    // Canal Grande kaartaa kuvan halki S-kirjaimena, ja kaikki kuusi
+    // kohdetta (asema, Ca' d'Oro, Rialto, Accademia, San Marco,
+    // Arsenaali) osuvat alueelle. Muut Venetsian kartat ovat tästä
+    // poikkeus siinä, että kohteiden väliset "kadut" ovat kujia ja
+    // kanavia — ks. KADUT-taulun kommentti jalankulkuluokista.
+    rajat: { pohjoinen: 45.445, etela: 45.4265, lansi: 12.3155, ita: 12.352 },
+  },
   lontoo: {
     // Hyde Parkin itälaidalta Tower Bridgelle, Regent's Parkin
     // eteläpuolelta Thamesin etelärannalle. Kaikki kuusi kohdetta
