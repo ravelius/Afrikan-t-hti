@@ -5202,4 +5202,238 @@ export const MAA_KATEGORIAT = {
       ],
     },
   ],
+  CHE: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Sveitsi on pieni maa, mutta sen verkkoon mahtuu paljon: 3 049 '
+        + 'keskiaikaista kirjaa, viisi petatavua hiukkasfysiikkaa, 3,5 '
+        + 'miljoonaa vanhaa valokuvaa, 10 000 kelloa ja Matterhorn sellaisena '
+        + 'kuin se juuri nyt näyttää.',
+      nostot: [
+        {
+          otsikko: '3 049 keskiaikaista kirjaa, sivu sivulta',
+          tiedosto: 'St. Gall Gospels Cod.Sang.51 - p.6 - Carpet page.jpg',
+          teksti: 'e-codices on Sveitsin virtuaalinen käsikirjoituskirjasto. '
+            + 'Siellä on 3 049 käsikirjoitusta sadasta eri kokoelmasta, ja '
+            + 'jokainen on kuvattu sivu sivulta. Vanhimmat ovat yli tuhat '
+            + 'vuotta vanhoja. Sivut aukeavat zoomattavina, joten pergamentin '
+            + 'naarmut ja kullatut alkukirjaimet erottuvat tarkasti. Mukana '
+            + 'on Sankt Gallenin luostarikirjaston aarteita, joita oikeassa '
+            + 'salissa ei anneta kenenkään koskea. Kirjautumista ei tarvita '
+            + 'eikä mitään tarvitse maksaa.',
+          selite: 'Koristesivu vanhasta evankeliumikirjasta: punaisia, '
+            + 'okrankeltaisia ja sinisiä punossolmuja, jotka muodostavat '
+            + 'ristin kellastuneelle pergamentille.',
+          lahde: 'Wikimedia Commons (public domain)',
+          linkki: 'https://www.e-codices.unifr.ch/en',
+          linkkiNimi: 'e-codices — Sveitsin käsikirjoitukset verkossa',
+        },
+        {
+          otsikko: 'Pyöritä oikeaa hiukkastörmäystä hiirellä',
+          tiedosto: 'CERN LHC CMS 11.jpg',
+          teksti: 'CERN on Geneven kupeessa, osaksi Sveitsin ja osaksi Ranskan '
+            + 'puolella. Sen kiihdytin on 27 kilometrin mittainen rengas maan '
+            + 'alla. Törmäyksistä kertyneet mittaukset on julkaistu verkkoon: '
+            + 'avointa dataa on yli viisi petatavua. Hauskin osa on '
+            + 'tapahtumakatselin, joka piirtää yhden oikean törmäyksen '
+            + 'kolmiulotteisena. Kuvaa voi pyörittää hiirellä joka suuntaan. '
+            + 'Jokainen viiva on hiukkanen, joka lensi ilmaisimen läpi.',
+          selite: 'CMS-ilmaisimen kylki maan alla: kerroksittain elektroniikkaa, '
+            + 'punaisia ja vihreitä paneeleja ja satoja sinisiä kaapeleita.',
+          lahde: 'SimonWaldherr, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://opendata.cern.ch/visualise/events/cms',
+          linkkiNimi: 'CERN Open Data — CMS:n tapahtumakatselin',
+        },
+        {
+          otsikko: '3,5 miljoonaa valokuvaa, ja kartta kertoo missä',
+          tiedosto: 'ETH-BIB-Luzern, Altstadt, Wasserturm, Kapellbrücke-Inlandflüge-LBS MH01-001755.tif',
+          teksti: 'ETH-korkeakoulun kirjaston kuva-arkistossa on 3,5 miljoonaa '
+            + 'valokuvaa. Mukana ovat Swissairin oma arkisto, Comet Photo '
+            + 'AG:n uutiskuvat, postikorttikokoelmia ja lentäjä Walter '
+            + 'Mittelholzerin ilmakuvat 1920- ja 1930-luvuilta. Haussa voi '
+            + 'vaihtaa karttanäkymään, jolloin kuvat asettuvat Sveitsin '
+            + 'kartalle sinne, missä ne on otettu. Silloin minkä tahansa '
+            + 'kylän voi katsoa sadan vuoden takaa. Kuvat aukeavat suurina.',
+          selite: 'Mittelholzerin ilmakuva Luzernin vanhastakaupungista: katettu '
+            + 'Kapellbrücke-silta kulkee viistosti joen yli ja '
+            + 'kahdeksankulmainen vesitorni seisoo vedessä.',
+          lahde: 'Walter Mittelholzer, Wikimedia Commons (public domain)',
+          linkki: 'https://ba.e-pics.ethz.ch/',
+          linkkiNimi: 'E-Pics Bildarchiv — ETH-kirjaston kuva-arkisto',
+        },
+        {
+          otsikko: '10 000 kelloa museossa, joka kaivettiin puiston alle',
+          tiedosto: 'Pocket Watch (Switzerland), 1850–53 (CH 18475631).jpg',
+          teksti: 'La Chaux-de-Fonds on kellojen kaupunki Jura-vuorilla, ja koko '
+            + 'kaupunki on Unescon maailmanperintökohde. Sen kansainvälinen '
+            + 'kellomuseo rakennettiin vuosina 1972–1974 kokonaan maan alle: '
+            + 'puiston alle louhittiin 20 000 kuutiometriä tilaa kolmeen '
+            + 'kerrokseen. Kokoelmassa on 10 000 esinettä, taskukelloja '
+            + '1500-luvulta tornikelloihin ja automaatteihin. Museon sivuilla '
+            + 'esineitä selataan kuvina.',
+          selite: 'Sveitsiläinen kultainen taskukello 1850-luvulta: kanteen on '
+            + 'maalattu pieni emalikuva, vieressä kellonketju ja pehmeä '
+            + 'nahkapussi.',
+          lahde: 'Wikimedia Commons (public domain)',
+          linkki: 'https://www.mih.ch/en/watch-collections/',
+          linkkiNimi: 'Musée international d\'horlogerie — kokoelmat',
+        },
+        {
+          otsikko: '4 478 metriä korkea vuori, juuri nyt',
+          tiedosto: 'Matterhorn Riffelsee 2005-06-11.jpg',
+          teksti: 'Zermattin matkailutoimisto pitää yllä webkameroita, jotka '
+            + 'kuvaavat Matterhornia ja sen ympärysvuoria. Vuori on 4 478 '
+            + 'metriä korkea ja melkein täydellinen kolmio. Kuvat päivittyvät '
+            + 'jatkuvasti, joten sää näkyy sellaisena kuin se sillä hetkellä '
+            + 'on: kirkas aamu, pilvilakki huipun päällä tai pelkkää sumua. '
+            + 'Kylän kamerat kuvaavat vain valoisaan aikaan, ja osa kuvasta '
+            + 'on sumennettu yksityisyyden vuoksi.',
+          selite: 'Matterhorn peilautuu Riffelseen pintaan: lumihuippuinen kolmio '
+            + 'sinistä taivasta vasten ja sama kuva ylösalaisin vedessä.',
+          lahde: 'Dirk Beyer, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://zermatt.swiss/en/info/webcams',
+          linkkiNimi: 'Zermatt — Matterhornin webkamerat',
+        },
+        {
+          otsikko: 'Yksi rasti, ja jäljelle jäävät vain vapaat kuvat',
+          tiedosto: 'Landesmuseum Zürich, 2017.jpg',
+          teksti: 'Sveitsin kansallismuseo säilyttää maan omaa historiaa: pukuja, '
+            + 'huonekaluja, aseita, kolikoita, leluja ja tavallisen arjen '
+            + 'esineitä. Sammlung Online -haussa ne aukeavat kuvina, ja hakua '
+            + 'voi rajata aiheen tai aikakauden mukaan. Sivulla on myös '
+            + 'rasti, jolla näkyviin jäävät vain gemeinfrei-merkityt eli '
+            + 'tekijänoikeuksista vapaat kuvat. Ne saa ladata omalle '
+            + 'koneelle. Palvelu on saksaksi, mutta kuvia selaa ilman '
+            + 'kieltäkin.',
+          selite: 'Kansallismuseon sisäpiha Zürichissä: linnamainen 1800-luvun '
+            + 'lopun rakennus torneineen ja holvikäytävineen, pihalla '
+            + 'kahvilan pöytiä.',
+          lahde: 'Burkhard Mücke, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://sammlung.nationalmuseum.ch/de',
+          linkkiNimi: 'Sammlung Online — Sveitsin kansallismuseo',
+        },
+      ],
+    },
+  ],
+  NOR: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Norja on avannut verkkoon sen, mihin ei muuten pääse: Huudon '
+        + 'siveltimenjäljet, viikinkilaivan jonka museo on kiinni, koko '
+        + 'kansan nimet vuodesta 1769 ja kartan, joka kertoo missä revontulet '
+        + 'juuri nyt palavat.',
+      nostot: [
+        {
+          otsikko: 'Huudon yläkulmassa lukee lyijykynällä: vain hullu',
+          tiedosto: 'Edvard Munch, 1893, The Scream, oil, tempera and pastel on cardboard, 91 x 73 cm, National Gallery of Norway.jpg',
+          teksti: 'Norjan kansallismuseon verkkokokoelmassa Huuto aukeaa '
+            + 'zoomattavana kuvana. Vuoden 1893 versio on niistä ensimmäinen, '
+            + 'maalattu pahville temperalla ja rasvaliidulla. Kun kuvan '
+            + 'suurentaa vasempaan yläkulmaan, punaisten pilvien päältä '
+            + 'erottuu lyijykynällä raapustettu lause: «Kan kun være malet af '
+            + 'en gal Mand!» Kauan luultiin, että sen kirjoitti joku vihainen '
+            + 'näyttelyvieras. Vuonna 2020 infrapunakamera ja käsialatutkimus '
+            + 'osoittivat, että kirjoittaja oli Munch itse.',
+          selite: 'Munchin Huuto vuodelta 1893: sillalla seisova hahmo painaa '
+            + 'kädet poskilleen suu auki, taustalla verenpunainen taivas ja '
+            + 'sinipyörteinen vuono.',
+          lahde: 'Edvard Munch, Wikimedia Commons (public domain)',
+          linkki: 'https://www.nasjonalmuseet.no/en/collection/object/NG.M.00939',
+          linkkiNimi: 'Nasjonalmuseet — Huuto zoomattavana',
+        },
+        {
+          otsikko: 'Maailman parhaiten säilynyt viikinkilaiva — museo kiinni vuoteen 2027',
+          tiedosto: 'Oseberg ship-Vikingskipshuset, Oslo.jpg',
+          teksti: 'Osebergin laiva rakennettiin tammesta noin vuonna 820 ja '
+            + 'haudattiin maakumpuun kahden naisen kanssa. Kummallakin '
+            + 'laidalla on 15 airoreikää, eli täysi miehistö oli 30 soutajaa. '
+            + 'Vesirajan alapuolella laudat ovat vain 2–3 senttiä paksuja. '
+            + 'Museo Bygdøyllä on suljettu remontin ajaksi ja avautuu '
+            + 'uudelleen vasta 2027, mutta yli 50 000 esineen kokoelma on '
+            + 'esitelty verkossa: reet, vaunut, kankaat ja viisi puusta '
+            + 'veistettyä eläimenpäätä.',
+          selite: 'Osebergin laiva museon valkoisessa holvisalissa: musta '
+            + 'tammirunko kaartuu ylös keulaan asti, ja vieressä seisovat '
+            + 'kävijät jäävät sen rinnalla pieniksi.',
+          lahde: 'Yair-haklai, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.vikingtidsmuseet.no/english/the-collection/',
+          linkkiNimi: 'Vikingtidsmuseet — Osebergin kokoelma verkossa',
+        },
+        {
+          otsikko: 'Koko Norjan kansa nimeltä, vuodesta 1769 alkaen',
+          tiedosto: 'Riksarkivet på Sognsvann i Oslo.jpg',
+          teksti: 'Digitalarkivet on Norjan kansallisarkiston ilmainen '
+            + 'hakupalvelu. Sinne on kirjoitettu puhtaaksi maan '
+            + 'väestönlaskennat vuosilta 1769, 1801, 1815, 1865, 1900 ja aina '
+            + 'vuoteen 1920 asti. Jokainen laskentaan merkitty ihminen löytyy '
+            + 'nimellä: ikä, ammatti, talon nimi ja se, ketkä muut asuivat '
+            + 'saman katon alla. Samasta paikasta haetaan myös kirkonkirjoja '
+            + 'ja tuomiokirjoja. Ei kirjautumista eikä maksua, ja moneen '
+            + 'merkintään on liitetty skannattu alkuperäissivu.',
+          selite: 'Norjan kansallisarkiston rakennus Oslon Sognsvannissa: '
+            + 'valkoinen betonijulkisivu, lasinen sisäänkäynti ja seinällä '
+            + 'Norjan vaakuna kruunattuine leijonineen.',
+          lahde: 'Arete23, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.digitalarkivet.no/en/censuses',
+          linkkiNimi: 'Digitalarkivet — Norjan väestönlaskennat',
+        },
+        {
+          otsikko: 'Kartta, joka kertoo minuutin välein missä revontulet palavat',
+          tiedosto: 'Northern Lights - Aurora Borealis Ringvassøya Tromsø Norway.jpg',
+          teksti: 'Tromssan geofysikaalinen observatorio laskee koko ajan, missä '
+            + 'revontulivyöhyke juuri nyt kaartuu. Kartalla vihreä kaari '
+            + 'kelluu Pohjolan yllä, ja punainen kolmio merkitsee Tromssaa: '
+            + 'jos kaari osuu kolmion päälle, ulkona kannattaa käydä. '
+            + 'Laidasta näkee kellonajan, Kp-luvun ja tehon gigawatteina. '
+            + 'Sama observatorio pitää Skibotnissa kaikkitaivaankameraa, joka '
+            + 'kuvaa horisontista horisonttiin. Tromssassa taivasta on '
+            + 'kuvattu näin vuodesta 1957.',
+          selite: 'Revontulet Ringvassøyalla lähellä Tromssaa: vihreä nauha '
+            + 'kaartuu tähtitaivaan poikki lumisen maan ja paljaiden '
+            + 'koivunoksien yllä.',
+          lahde: 'Svein-Magne Tunli, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://site.uit.no/spaceweather/data-and-products/aurora/tromso/nowcast/',
+          linkkiNimi: 'Norwegian Centre for Space Weather — revontulet juuri nyt',
+        },
+        {
+          otsikko: 'Peer Gynt sellaisena kuin se painettiin vuonna 1867',
+          tiedosto: 'Peer Gynt et dramatisk Digt.png',
+          teksti: 'Oslon yliopisto on julkaissut Henrik Ibsenin koko tuotannon '
+            + 'verkkoon ilmaiseksi. Peer Gynt aukeaa siinä asussa, jossa se '
+            + 'ilmestyi vuonna 1867: vanha kirjoitustapa ja ensipainoksen '
+            + 'sivunvaihdot näkyvissä. Asetuksista voi kytkeä päälle '
+            + 'selitykset, ja koko teoksen saa ladata pdf:nä tai e-kirjana. '
+            + 'Sivustolla ovat myös Ibsenin muut näytelmät, runot ja kirjeet. '
+            + 'Näytelmiä syntyi noin joka toinen vuosi vuodesta 1850 vuoteen '
+            + '1900.',
+          selite: 'Sivu Peer Gyntin ensipainoksesta vuodelta 1867: säkeitä '
+            + 'ladottuna tiheään vanhalla kirjoitusasulla kellastuneelle '
+            + 'paperille.',
+          lahde: 'Henrik Ibsen, Wikimedia Commons (public domain)',
+          linkki: 'https://www.ibsen.uio.no/DRVIT_PG%7CPGht.html',
+          linkkiNimi: 'Henrik Ibsens skrifter — Peer Gynt 1867',
+        },
+        {
+          otsikko: 'Kuusi miestä, yksi papukaija ja lautta balsapuusta',
+          tiedosto: 'Kon-Tiki raft, side view.jpg',
+          teksti: 'Kon-Tiki lähti Perun Callaosta 28. huhtikuuta 1947. Lautta oli '
+            + 'sidottu balsapuun rungoista, kippari oli 33-vuotias Thor '
+            + 'Heyerdahl, ja mukana oli viisi miestä ja papukaija. '
+            + 'Polynesiaan päästiin 101 päivää myöhemmin. Kon-Tiki-museon '
+            + 'sivuilla jokainen Heyerdahlin retki on oma juttunsa: Fatu Hiva '
+            + '1937, Kon-Tiki 1947, Galápagos 1953, Pääsiäissaari 1955, Ra '
+            + '1969, Tigris 1977 ja Malediivit 1982. Alkuperäinen lautta '
+            + 'seisoo yhä museossa Oslossa.',
+          selite: 'Kon-Tiki-lautta museossa: paksut balsapuurungot on sidottu '
+            + 'köysillä yhteen, päällä on bambumaja ja purje, ja vieressä '
+            + 'liehuu Norjan lippu.',
+          lahde: 'Wikipek, Wikimedia Commons (CC0)',
+          linkki: 'https://www.kon-tiki.no/en/heyerdahls-expeditions',
+          linkkiNimi: 'Kon-Tiki-museo — Heyerdahlin retkikunnat',
+        },
+      ],
+    },
+  ],
 };
