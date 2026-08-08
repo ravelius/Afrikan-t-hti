@@ -22,12 +22,14 @@ export const TILANNE = {
       tehtava: 'Koordinointi ja raporttien kokoaminen. Euroopan '
         + 'tarinatekstit valmiit: 41 dekkarimerkintää äänineen, '
         + 'aarrevihjeet ilmansuunnittain, Lontoon kohtaamisluennat.',
-      seuraavaksi: 'Lyhyet tekstiversiot ovat Kehitys-välilehdellä '
-        + '(8 kokeilua, isoisä-vuorottelu) — luennat generoidaan '
-        + 'heti kun omistaja lähettää valitun äänen. Sitten koko '
-        + 'Euroopan lyhennys samalla kaavalla. Berliinin pop-upien '
-        + 'viimeistely Fablelle Sonnetin korjauskierroksen '
-        + 'jälkeen.',
+      seuraavaksi: 'v397: nähtävyyskortti ulottuu puhelimella '
+        + 'alareunaan asti. Kuusi uutta väliversiota tyhjältä '
+        + 'pöydältä on Kehitys-välilehdellä vanhan tekstin '
+        + 'rinnalla — luennat generoidaan heti kun ääniavain on '
+        + 'taas kontissa (ELEVEN_API_KEY puuttuu ympäristöstä). '
+        + 'Visapalkinnot: kulttuurivisa antaa jo +25 p ja '
+        + 'maalehden minitehtävät +10 p; Opus 1 lisää minitehtävät '
+        + 'myös kaupunkilehtien aihesivuihin.',
     },
     {
       tekija: 'Opus 1',
@@ -92,6 +94,22 @@ export const TILANNE = {
  * näyttää listan pelilinkkien vieressä. Uusin ensin.
  */
 export const TESTATTAVAA = [
+  {
+    otsikko: 'Uudet väliversiot tyhjältä pöydältä (työhuone)',
+    ohje: 'Työhuone → Kehitys → Uudet väliversiot: kuusi kaupunkia '
+      + '(Edinburgh, Pariisi, Wien, Ateena, Pietari, Rooma) '
+      + 'kirjoitettu kokonaan uusin kuvin suoraan välimittaan, '
+      + 'vanha peliteksti rinnalla. Lue ja kerro, tuntuuko outous '
+      + 'poistuneen — luennat tulevat heti kun ääniavain on '
+      + 'käytössä.',
+  },
+  {
+    otsikko: 'Nähtävyyskortti pohjaan asti puhelimella (v397)',
+    ohje: 'Avaa kaupunkikartalta mikä tahansa nähtävyysjuttu '
+      + 'iPhonella: kortti ulottuu nyt ruudun alareunaan asti '
+      + '(pieni rako vain ylhäällä), eikä alle jää tyhjää. '
+      + 'Pitkä juttu rullaa kortin sisällä.',
+  },
   {
     otsikko: 'Maan i laudalla ja alareunan sisällys (v390)',
     ohje: 'Kartalla nykyisen maan nimen perässä on nyt aina i, '

@@ -201,7 +201,9 @@
       AARTEET, VARUSTEET, KAUPUNKIKARTAT, LASIT, PELIT, PELITILAT, LAHTEET, MOOTTORIT,
       LAAJENNUKSET, TODO_SAMILLE,
     } from './js/tyohuone-data.js';
-    import { KEHITYS_KAARI, AANINAYTTEET, MANTERE_KOKEILUT, LYHYT_KOKEILUT } from './js/tyohuone-kehitys-data.js';
+    import {
+      KEHITYS_KAARI, AANINAYTTEET, MANTERE_KOKEILUT, LYHYT_KOKEILUT, UUDET_VALIT,
+    } from './js/tyohuone-kehitys-data.js';
     import { TILANNE, TESTATTAVAA } from './js/tyohuone-tilanne.js';
     import { KOHTAAMISET } from './js/packs/kohtaamiset.js';
     import { VIHJETEKSTIT } from './js/packs/europe.js';
@@ -432,6 +434,37 @@
             /* Äänirivi ilmestyy, kun luenta on generoitu omistajan
              * valitsemalla äänellä — ilman tiedostoa ei rikkinäistä
              * soitinta. */
+            if (m.tiedosto) k.append(aaniRivi('Luenta', null, `assets/audio/naytteet/${m.tiedosto}`));
+            return k;
+          })];
+        },
+      },
+      {
+        otsikko: 'Uudet väliversiot tyhjältä pöydältä (8.8.)',
+        maara: `${UUDET_VALIT.kohteet.length} kpl`,
+        rakenna: () => {
+          const johdanto = el('div', 'kortti');
+          johdanto.append(el('h3', '', 'Miksi nämä ovat olemassa'));
+          johdanto.append(el('p', '', UUDET_VALIT.johdanto));
+          const nimio = (teksti) => {
+            const b = el('p', 'pieni');
+            b.append(el('b', null, teksti));
+            return b;
+          };
+          return [johdanto, ...UUDET_VALIT.kohteet.map((m) => {
+            const k = el('div', 'kortti');
+            k.append(el('h3', '', m.otsikko));
+            k.append(nimio('Uusi (väli, tyhjältä pöydältä)'));
+            k.append(el('p', '', m.vali));
+            if (m.valiNosto) k.append(el('p', '', m.valiNosto));
+            /* Vanha teksti luetaan pelidatasta eikä kopioida tänne —
+             * kopio ajautuisi erilleen ensimmäisessä muutoksessa. */
+            const vanha = europeSaap[m.id];
+            if (vanha) {
+              k.append(nimio('Vanha (pelissä nyt)'));
+              k.append(el('p', '', vanha.kuvaus));
+              if (vanha.nosto) k.append(el('p', '', vanha.nosto));
+            }
             if (m.tiedosto) k.append(aaniRivi('Luenta', null, `assets/audio/naytteet/${m.tiedosto}`));
             return k;
           })];
