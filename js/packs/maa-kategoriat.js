@@ -4628,5 +4628,96 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Ranska on avannut verkkoon sen, mihin ei muuten pääse: luolan '
+        + 'johon kukaan ei saa astua, museon varastot kokonaisuudessaan ja '
+        + 'ilmakuvat, joilla oman kylän voi katsoa seitsemänkymmentä vuotta '
+        + 'taaksepäin.',
+      nostot: [
+        {
+          otsikko: 'Myös ne teokset, jotka eivät ole esillä',
+          tiedosto: 'Cour Napoléon at night - Louvre.jpg',
+          teksti: 'Louvren kokoelmatietokannassa on yli 480 000 teosta — eli '
+            + 'paljon enemmän kuin museon seinillä on tilaa. Suurin osa '
+            + 'kokoelmasta on varastossa, ja juuri ne esineet ovat verkossa '
+            + 'samalla tavalla kuin kuuluisat: kuva, mitat, löytöpaikka ja '
+            + 'se, mistä kokoelmasta esine on tullut. Haku toimii myös '
+            + 'aiheella, joten voi katsoa vaikka kaikki kissat tai kaikki '
+            + 'laivat, joita museo omistaa.',
+          selite: 'Louvren sisäpiha illalla: lasipyramidi hehkuu keskellä ja '
+            + 'vanhan palatsin siivet kaartuvat sen ympärille valaistuina.',
+          lahde: 'Benh Lieu Song, Wikimedia Commons (CC BY 2.5)',
+          linkki: 'https://collections.louvre.fr/',
+          linkkiNimi: 'Louvren kokoelmat — koko kokoelma verkossa',
+        },
+        {
+          otsikko: 'Luola, johon kukaan ei ole koskaan päässyt käymään',
+          tiedosto: 'Lions painting, Chauvet Cave (museum replica).jpg',
+          teksti: 'Chauvet\'n luola löytyi vuonna 1994, ja sen maalaukset ovat '
+            + 'noin 36 000 vuotta vanhoja — kaksi kertaa vanhempia kuin '
+            + 'Lascaux\'n. Luolaa ei ole koskaan avattu yleisölle: Lascaux\'n '
+            + 'kohtalo tiedettiin, eikä samaa haluttu toistaa. Ranskan '
+            + 'kulttuuriministeriö teki tilalle verkkokierroksen, jossa '
+            + 'luolan läpi kuljetaan sali kerrallaan. Leijonalauma on '
+            + 'piirretty hiilellä niin, että se näyttää liikkuvan.',
+          selite: 'Luolamaalaus, jossa rivi leijonan päitä on piirretty mustalla '
+            + 'hiilellä vaaleaa kalkkikiveä vasten, katseet samaan suuntaan.',
+          lahde: 'Wikimedia Commons (public domain)',
+          linkki: 'https://archeologie.culture.gouv.fr/chauvet/en',
+          linkkiNimi: 'Chauvet\'n luola — virtuaalikierros',
+        },
+        {
+          otsikko: 'Katso oma kylä seitsemänkymmentä vuotta sitten',
+          tiedosto: 'Vue aérienne de la région de Luxeuil-les-Bains - Froideconche - btv1b53237326r.jpg',
+          teksti: 'Ranskan karttalaitos on kuvannut koko maan ilmasta 1900-luvun '
+            + 'alusta lähtien, ja kuvat ovat verkossa. Remonter le temps '
+            + '-palvelussa ruutu jaetaan kahtia: toisella puolella on '
+            + 'nykyinen kartta ja toisella vanha ilmakuva samasta paikasta. '
+            + 'Liukusäätimellä voi vaihtaa vuosikymmentä. Pellot muuttuvat '
+            + 'lähiöiksi, joki suoristetaan, metsä katoaa ja palaa. Mikä '
+            + 'tahansa piste Ranskassa käy.',
+          selite: 'Vanha mustavalkoinen ilmakuva lasilevylle: kylä jokimutkassa, '
+            + 'ympärillä kapeita peltosarkoja ja teitä kuin viivapiirroksena.',
+          lahde: 'Jean Baumont, Wikimedia Commons (public domain)',
+          linkki: 'https://remonterletemps.ign.fr/',
+          linkkiNimi: 'Remonter le temps — Ranska ilmasta ennen ja nyt',
+        },
+        {
+          otsikko: 'Radio ja televisio vuosikymmenten takaa',
+          tiedosto: 'Auditorium de la Maison de la Radio, Paris 2018.jpg',
+          teksti: 'INA on Ranskan valtion audiovisuaalinen arkisto, joka '
+            + 'tallentaa maan radio- ja tv-lähetykset. Osa aineistosta on '
+            + 'verkossa vapaasti katsottavissa ja kuunneltavissa: '
+            + 'uutislähetyksiä, haastatteluja, konsertteja ja lastenohjelmia '
+            + 'vuosikymmenten takaa. Vanhat pätkät ovat usein hauskempia kuin '
+            + 'uudet, koska niistä näkee miltä tavallinen arki näytti — '
+            + 'vaatteet, huonekalut, autot ja se, mistä silloin puhuttiin.',
+          selite: 'Radiotalon konserttisali: seinät ja parvet ovat vaaleaa puuta '
+            + 'portaittain, ja lavalla on yksinään flyygeli.',
+          lahde: 'Jean-Pierre Dalbéra, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://www.ina.fr/',
+          linkkiNimi: 'INA — Ranskan radio- ja tv-arkisto',
+        },
+        {
+          otsikko: 'Talo, jonka putket ovat ulkopuolella',
+          tiedosto: 'Interior of the Centre Pompidou 2.jpg',
+          teksti: 'Centre Pompidou on Pariisin nykytaiteen museo, ja sen rakennus '
+            + 'on itsessään osa juttua: putket, ilmastointi ja portaat '
+            + 'vietiin julkisivulle, jotta sisälle jäisi mahdollisimman '
+            + 'paljon tyhjää tilaa. Putket on värikoodattu — sininen on '
+            + 'ilmaa, vihreä vettä, keltainen sähköä. Museon kokoelma on '
+            + 'Euroopan laajin nykytaiteen kokoelma, ja teoksia voi selata '
+            + 'verkossa taiteilijan tai vuosikymmenen mukaan.',
+          selite: 'Museon aulakerros sisältä: katossa kulkee paksuja sinisiä '
+            + 'putkia ja teräsristikkoa, alhaalla jonotusköydet ja muutama '
+            + 'kävijä.',
+          lahde: 'DiscoA340, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.centrepompidou.fr/en/',
+          linkkiNimi: 'Centre Pompidou — nykytaiteen kokoelma',
+        },
+      ],
+    },
   ],
 };
