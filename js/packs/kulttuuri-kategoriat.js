@@ -2291,4 +2291,2051 @@ export const KULTTUURI_KATEGORIAT = {
       },
     },
   ],
+  ateena: [
+    {
+      id: 'kaupunki',
+      nimi: 'Ateena',
+      johdanto: 'Kaupunki, jossa marmoritorni mittasi aikaa vedellä ja jossa '
+        + 'vesikantaja voitti maailman ensimmäisen olympiamaratonin.',
+      kansikuvat: [
+        {
+          tiedosto: 'Parthenon Columns, Acropolis, Athens (10045439306).jpg',
+          selite: 'Parthenonin pylväitä ja niiden yllä lepäävä marmoripalkisto '
+            + 'läheltä. Temppelissä ei ole juuri suoria viivoja: jalusta '
+            + 'kaartuu keskeltä noin kymmenen senttiä ylöspäin ja pylväät '
+            + 'kallistuvat hiukan sisäänpäin.',
+          lahde: 'Sharon Mollerus, Wikimedia Commons (CC BY 2.0)',
+        },
+        {
+          tiedosto: 'Odeon of Herodes Atticus 2019.jpg',
+          selite: 'Herodes Atticuksen odeion Akropoliin rinteessä ylhäältä '
+            + 'nähtynä: marmoriset istuinrivit kaartuvat puoliympyräksi, '
+            + 'takana kohoaa kaarien lävistämä näyttämöseinä ja sen takana '
+            + 'levittäytyy nykyinen Ateena.',
+          lahde: 'Thodorisv, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Anafiotika, Athens, 20240601 0923 0020.jpg',
+          selite: 'Anafiótikan kuja Akropoliin alarinteessä: kalkittu talo, '
+            + 'oranssit ikkunaluukut, kiviportaat ja Kreikan lippu '
+            + 'parvekkeella. Kujilla ei ole nimiä, joten talot on vain '
+            + 'numeroitu — ovessa lukee 22.',
+          lahde: 'Jakub Hałun, Wikimedia Commons (CC BY 4.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Viisi siskoa museossa, kuudes Lontoossa',
+          tiedosto: 'Caryatids from the Erechtheion on the Acropolis, Acropolis Museum, Athens (13889706087).jpg',
+          teksti: 'Akropoliin Erekhtheion-temppelin eteläkuistia eivät kanna '
+            + 'pylväät vaan kuusi marmorista neitoa, karyatidia. Yksikään ei '
+            + 'ole toisensa kopio: kampaus, laskokset ja polven asento '
+            + 'vaihtelevat. Lordi Elgin vei yhden 1800-luvun alussa '
+            + 'Lontooseen, ja Akropoliin museossa seisoo nykyään viisi. '
+            + 'Kuudennen jalusta on jätetty tyhjäksi. Vuosina 2011–2015 '
+            + 'patsaat puhdistettiin laserilla mustasta noesta, ja '
+            + 'museovieraat saivat seurata työtä suorana näytöltä.',
+          selite: 'Kaksi Erekhtheionin karyatidia Akropoliin museossa. Käsivarret '
+            + 'ovat katkenneet, mutta pään päällä on yhä marmorilohkare, joka '
+            + 'kannatti kattoa, ja puvun laskokset valuvat alas kuin uurteet '
+            + 'pylväässä.',
+          lahde: 'Carole Raddato, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Karyatidi',
+        },
+        {
+          otsikko: 'Vesikantaja voitti ensimmäisen maratonin',
+          tiedosto: 'Spyridon Louis 1896.jpg',
+          teksti: 'Ateenan Kallimarmaro on maailman ainoa kokonaan marmorista '
+            + 'rakennettu stadion. Kun uuden ajan ensimmäiset olympialaiset '
+            + 'alkoivat siellä keväällä 1896, katsomossa oli noin 60 000 '
+            + 'ihmistä. Maratonille lähti seitsemäntoista juoksijaa, ja '
+            + 'voittaja oli 23-vuotias Spyridon Louis. Hän kantoi työkseen '
+            + 'juomavettä Maroúsista Ateenaan, jossa ei vielä ollut '
+            + 'vesijohtoa. Aika oli 2.58.50. Voittajat eivät saaneet kultaa '
+            + 'vaan hopeamitalin ja oliivinoksan.',
+          selite: 'Spyridon Louis vuonna 1896 kansallispuvussa: päähineessä '
+            + 'roikkuu pitkä tupsu, liivin reunoja kiertävät tiheät napit ja '
+            + 'rinnassa riippuu mitali, jossa erottuu risti.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Spyrídon Loúis',
+          galleria: [
+            {
+              otsikko: 'Maali marmorikatsomon keskellä',
+              tiedosto: 'Louis entering Kallimarmaron at the 1896 Athens Olympics.jpg',
+              selite: 'Louis saapuu stadionille maratonin lopussa. Katsomon '
+                + 'rinteet ovat mustanaan ihmisiä ylimmälle riville asti, ja '
+                + 'etualalla katsojat heiluttavat hattujaan.',
+              lahde: 'Wikimedia Commons (PD)',
+            },
+            {
+              otsikko: 'Palkintona oksa puusta',
+              tiedosto: 'Spyridon louis marathon winner.jpg',
+              selite: 'Louis heti voiton jälkeen valkoisiin pukeutuneena, '
+                + 'kädessään oliivinoksa. Ympärillä seisoo silinteri- ja '
+                + 'knallihattuisia herroja.',
+              lahde: 'Wikimedia Commons (PD)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Torni, joka mittasi ajan vedellä',
+          tiedosto: 'The Upper Part of the Tower of the Winds (Horologion of Andronikos Kyrrhestes).jpg',
+          teksti: 'Ateenan roomalaisajan torilla seisoo kahdeksankulmainen '
+            + 'marmoritorni, joka valmistui noin vuonna 50 eaa. Se on '
+            + 'antiikin ainoa säilynyt kellotorni. Jokaisella kahdeksalla '
+            + 'sivulla lentää oma tuulenjumalansa, ja hänen allaan seinään on '
+            + 'kaiverrettu aurinkokello. Kun aurinko oli pilvessä, aikaa piti '
+            + 'sisällä käyvä vesikello, jota pyöritti Akropoliin lähteestä '
+            + 'johdettu vesi. Katolla seisoi pronssinen Triton, joka kääntyi '
+            + 'tuulen mukana ja osoitti sauvallaan mistä se puhalsi.',
+          selite: 'Tuulten tornin yläosa alhaalta kuvattuna. Keskellä lentää '
+            + 'parrakas Euros, kaakkoistuuli, oikealla Apeliotes hedelmät '
+            + 'viittansa helmassa. Alempana seinässä näkyvät aurinkokellon '
+            + 'viivat ja niiden keskeltä työntyvä metallipiikki.',
+          lahde: 'George E. Koronaios, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Tuulten torni',
+          galleria: [
+            {
+              otsikko: 'Kahdeksan sivua, kaksitoista metriä',
+              tiedosto: 'Tower of the Winds, Athens, 20240531 0912 9419.jpg',
+              selite: 'Koko torni Rooman torilla. Se on 12 metriä korkea, jotta '
+                + 'kellot näkyisivät torille asti. Ottomaanien aikaan torni '
+                + 'oli hautautunut puoliväliin asti maan alle.',
+              lahde: 'Jakub Hałun, Wikimedia Commons (CC BY 4.0)',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Sataman köyhien laulu päätyi Unescon luetteloon, ja koko maailman '
+        + 'tuntema kreikkalainen tanssi keksittiin vasta vuonna 1964.',
+      nostot: [
+        {
+          otsikko: 'Rebetiko — sataman blues',
+          tiedosto: 'The Famous Quartet of Pireaus about 1934.jpg',
+          teksti: 'Pireuksen satamakortteleissa syntyi 1920- ja 1930-luvulla '
+            + 'rebetiko: pakolaisten ja köyhien laulu. Soittimena oli '
+            + 'bouzouki ja sen pikkuveli baglamas, joka on niin pieni, että '
+            + 'sen sai tehdyksi vankilassa ja piilotetuksi poliisilta. '
+            + 'Diktaattori Metaxasin sensuuri kävi laulujen sanojen kimppuun '
+            + 'vuodesta 1937, mutta musiikki jäi henkiin. Unesco otti '
+            + 'rebetikon ihmiskunnan kulttuuriperinnön luetteloon vuonna '
+            + '2017.',
+          selite: 'Pireuksen kuuluisa kvartetti noin vuonna 1934: neljä nuorta '
+            + 'miestä puvuissa ja solmioissa, sylissä pitkäkaulaisia '
+            + 'bouzoukeja. Vasemmalla istuvalla on kädessä pienempi baglamas. '
+            + 'Yhtyeen tunnetuin soittaja oli Markos Vamvakaris.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Rebetiko',
+          musiikki: 'https://music.apple.com/fi/search?term=rebetiko',
+          musiikkiNimi: 'Rebetiko Apple Musicissa',
+        },
+        {
+          otsikko: 'Zorbaksen tanssi keksittiin elokuvaa varten',
+          tiedosto: 'Mikis Theodorakis in Helsinki 1972 (JOKAHBL3F C23-3).tif',
+          teksti: 'Sirtaki ei ole vanha kansantanssi. Se koottiin vanhoista '
+            + 'tansseista vuonna 1964 elokuvaa Kerro minulle, Zorbas varten. '
+            + 'Pääosan näyttelijä Anthony Quinn kertoi, ettei pystynyt '
+            + 'loukkaantuneella jalallaan hyppimään, joten askeleista tuli '
+            + 'liukuvia ja vauhti kiihtyy vasta lopussa. Musiikin sävelsi '
+            + 'Mikis Theodorakis. Kun sotilasjuntta kielsi hänen musiikkinsa '
+            + 'vuonna 1967, sitä laulettiin muualla — kiertueen solistina oli '
+            + 'suomalainen Arja Saijonmaa.',
+          selite: 'Theodorakis ja Arja Saijonmaa saapuvat Seutulan lentoasemalle '
+            + 'Helsinkiin 9. helmikuuta 1972. Säveltäjä nauraa '
+            + 'turkiskauluksisessa takissaan, Saijonmaalla on hapsuhuivi '
+            + 'kaulassa.',
+          lahde: 'Hugo Sundström, Museovirasto, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Míkis Theodorákis',
+          musiikki: 'https://music.apple.com/fi/search?term=theodorakis%20zorba',
+          musiikkiNimi: 'Theodorakiksen Zorbas Apple Musicissa',
+        },
+      ],
+      tehtava: {
+        kysymys: 'Missä baglamas oli niin pieni, että sellaisen sai tehdyksi '
+          + 'salaa?',
+        vaihtoehdot: [
+          'Laivan ruumassa',
+          'Vankilassa',
+          'Kirkon kellarissa',
+          'Vuoristoluolassa',
+        ],
+        oikea: 1,
+        fakta: 'Bouzoukin pikkuveli baglamas on niin pieni soitin, että se '
+          + 'syntyi vankilassa ja mahtui piiloon poliisilta.',
+      },
+    },
+    {
+      id: 'arki',
+      nimi: 'Arki ja tavat',
+      johdanto: 'Kaupungin halvin kunnon ateria syödään kävellen, ja sen hitain '
+        + 'kävely tehdään kengissä, joiden pohjissa on kymmeniä nauloja.',
+      nostot: [
+        {
+          otsikko: 'Souvlaki syödään seisaaltaan',
+          tiedosto: 'Souvlaki in Athens.JPG',
+          teksti: 'Souvlaki on grillattua lihaa vartaassa, ja ateenalainen ostaa '
+            + 'sen useimmiten luukulta käärittynä: pitaleivän sisään ladotaan '
+            + 'liha, tomaatti, sipuli, tzatziki ja ranskalaiset, kääre '
+            + 'kiedotaan paperiin ja ateria syödään kadulla kävellen. Jos '
+            + 'istuu pöytään ja tilaa merídan, sama ruoka tulee lautasella '
+            + 'osissa. Vartaan oma nimi on Ateenassa kalamáki, pikkuruoko.',
+          selite: 'Merída-annos ateenalaisessa ravintolassa: kolme lihavarrasta, '
+            + 'paloiteltua grillattua pitaa, ranskalaisia, sitruunalohko ja '
+            + 'nokare tzatzikia lautasen reunalla.',
+          lahde: 'Miyagawa, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Suvlaki',
+        },
+        {
+          otsikko: 'Evzonit ja tupsukengät',
+          tiedosto: 'Evzones, Presidential Guard (41263349224).jpg',
+          teksti: 'Tuntemattoman sotilaan haudalla vartioivat evzonit kävelevät '
+            + 'hitaasti kuin unessa, ja jalka nousee jokaisella askelella '
+            + 'suoraksi eteen. Sunnuntaisin ja juhlapäivinä heillä on yllään '
+            + 'valkoinen foustanella-hame, jonka 30 metriin kangasta on '
+            + 'laskostettu 400 laskosta — kerrotaan, että yksi jokaista '
+            + 'ottomaanivallan vuotta kohti. Punaiset tsarouhia-kengät '
+            + 'painavat parina noin kolme kiloa, ja pohjissa on kymmeniä '
+            + 'nauloja.',
+          selite: 'Kaksi evzonia vartionvaihdossa tuntemattoman sotilaan haudan '
+            + 'edessä; taustan marmorireliefissä makaa kaatunut soturi. '
+            + 'Arkipuvun hame on hiekanruskea, fessi punainen mustine '
+            + 'tupsuineen, säärissä valkoiset villasukat ja jalassa punaiset '
+            + 'tupsukengät.',
+          lahde: 'Luc.T, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Eusonit',
+          galleria: [
+            {
+              otsikko: 'Kenkä, joka kalisee marmorilla',
+              tiedosto: 'EvzoneTsarouhiKaltsodetes.jpg',
+              selite: 'Evzonin jalka läheltä: punainen nahkakenkä, jonka ylös '
+                + 'kääntyvässä kärjessä on iso musta villatupsu, valkoinen '
+                + 'villasukka ja polven alla musta sukkanauha hapsuineen.',
+              lahde: 'Thermos, Wikimedia Commons (CC BY 3.0)',
+            },
+          ],
+        },
+      ],
+      tehtava: {
+        kysymys: 'Mitä ateenalaisen souvlaki-kääreen sisään ladotaan lihan ja '
+          + 'tzatzikin seuraksi?',
+        vaihtoehdot: [
+          'Ranskalaiset perunat',
+          'Keitetty riisi',
+          'Paistetut munakoisot',
+          'Suolatut oliivit',
+        ],
+        oikea: 0,
+        fakta: 'Ateenalaiseen souvlaki-kääreeseen menee lihan, tomaatin, sipulin '
+          + 'ja tzatzikin lisäksi ranskalaiset, ja koko kääre kiedotaan '
+          + 'paperiin syötäväksi kävellen.',
+      },
+    },
+  ],
+  amsterdam: [
+    {
+      id: 'kaupunki',
+      nimi: 'Amsterdam',
+      johdanto: 'Kaupunki, joka seisoo suon päällä puutukkien varassa: talot '
+        + 'tehtiin kapeiksi veron takia, ja osa asukkaista asuu veneessä.',
+      kansikuvat: [
+        {
+          tiedosto: 'Colorful canal houses at golden hour in Damrak avenue Amsterdam the Netherlands.jpg',
+          selite: 'Damrakin talorivi nousee suoraan vedestä. Talot ovat kapeita '
+            + 'ja korkeita, ja jokaisen katonharjalla on erimuotoinen pääty — '
+            + 'porrasmainen, kellomainen tai kaulaksi kavennettu.',
+          lahde: 'Basile Morin, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Brouwersgracht pakhuizen.jpg',
+          selite: 'Brouwersgrachtin entisiä makasiineja. Punavalkoiset luukut '
+            + 'peittävät aukot, joista tavara nostettiin sisään, ja kanavassa '
+            + 'niiden edessä on kiinni pitkiä asuntolaivoja.',
+          lahde: 'Jvhertum, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Amsterdam-Begijnhof-Houtenhuys.jpg',
+          selite: 'Het Houten Huys Begijnhofin nurmikentän laidassa: tumma '
+            + 'lautajulkisivu ja valkoiset ikkunankarmit. Talo on vuodelta '
+            + '1528 tai vähän myöhemmältä ja yksi kahdesta puujulkisivuisesta '
+            + 'talosta, joita Amsterdamissa on enää jäljellä.',
+          lahde: 'Keeshu, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Verotettiin julkisivun leveydestä',
+          tiedosto: 'Detail van de top van de voorgevel, een klokgevel, met hijsbalk - Amsterdam - 20528909 - RCE.jpg',
+          teksti: '1600-luvulla Amsterdamin kiinteistövero laskettiin julkisivun '
+            + 'leveydestä, joten taloista tehtiin kapeita ja syviä. Kapein '
+            + 'niistä, Oude Hoogstraat 22, on 2,02 metriä leveä ja kuusi '
+            + 'metriä syvä. Portaat ovat siksi jyrkät kuin tikkaat, eikä '
+            + 'sohvaa saa niitä pitkin ylös. Sen sijaan päätykolmion alta '
+            + 'työntyy ulos nostopuu, hijsbalk, jonka koukusta huonekalut '
+            + 'vedetään köydellä ikkunasta sisään.',
+          selite: 'Kellonmuotoinen päätykoriste ja siitä ulos työntyvä '
+            + 'hijsbalk-nostopuu puisessa kotelossaan. Talot rakennettiin '
+            + 'hieman eteenpäin kallelleen, jottei nostettava tavara kolhisi '
+            + 'julkisivua.',
+          lahde: 'René Gerritsen, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Amsterdam',
+        },
+        {
+          otsikko: 'Koko kaupunki seisoo puutukkien päällä',
+          tiedosto: 'Amsterdam stut zijn huizen met palen Perceel Herengracht 537 achter palenbos, Bestanddeelnr 912-2174.jpg',
+          teksti: 'Amsterdamin alla ei ole kalliota vaan suota ja löysää hiekkaa. '
+            + 'Siksi jokainen talo seisoo maahan lyötyjen puupaalujen '
+            + 'varassa, jotka ulottuvat pehmeän kerroksen läpi kovaan '
+            + 'pohjahiekkaan. Dam-aukion palatsi, joka avattiin '
+            + 'kaupungintaloksi vuonna 1655, lepää 13 659 paalun päällä. '
+            + 'Paalu kestää niin kauan kuin se pysyy veden alla: jos '
+            + 'pohjavesi laskee, puu alkaa lahota ja talo nojaa naapuriinsa.',
+          selite: 'Herengracht 537 maaliskuussa 1961: talon julkisivu on tuettu '
+            + 'kadulle pystytetyllä paksujen puupaalujen metsällä. Uutiskuvan '
+            + 'teksti kuului "Amsterdam tukee talojaan paaluilla".',
+          lahde: 'Harry Pot / Anefo, Wikimedia Commons (CC0)',
+          wiki: 'Paalutus',
+        },
+        {
+          otsikko: 'Kanavalla asuu laivallinen kissoja',
+          tiedosto: 'De Poezenboot (Exterior), Amsterdam (2168146135).jpg',
+          teksti: 'Amsterdamissa on yli sata kilometriä kanavia, ja niissä kelluu '
+            + 'satoja asuntolaivoja. Yhdellä niistä asuu pelkkiä kissoja. '
+            + 'Henriëtte van Weelde alkoi vuonna 1966 kerätä kulkukissoja '
+            + 'kotiinsa, ja kun asunto kävi ahtaaksi, hän avasi niille vuonna '
+            + '1968 oman laivan Singel-kanavaan. Poezenboot eli Kissalaiva on '
+            + 'yhä siinä: kissoja on kiireisimpinä aikoina noin 60, ne '
+            + 'kulkevat vapaana kannella, ja vieraat saavat tulla katsomaan.',
+          selite: 'Poezenboot kiinnitettynä Singel-kanavan reunaan. Matala '
+            + 'punaruskea laiva on lähes ikkunaa täynnä, kannen ympäri '
+            + 'kiertää aitaus, ja takana nousee tavallinen kanavatalojen '
+            + 'rivi.',
+          lahde: 'Antony Stanley, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Asuntolaiva',
+          galleria: [
+            {
+              otsikko: 'Kissat vuonna 1986',
+              tiedosto: 'Mevrouw H. van Weelde en enkele medewerksters openen kooien op Poezenboot op S, Bestanddeelnr 933-5755.jpg',
+              selite: 'Henriëtte van Weelde ja avustajat avaavat häkkejä '
+                + 'Kissalaivalla helmikuussa 1986. Mustia kissoja kävelee '
+                + 'laattalattialla, ja keskellä huonetta on niitä varten '
+                + 'nojatuoli.',
+              lahde: 'Roland Gerrits / Anefo, Wikimedia Commons (CC0)',
+            },
+            {
+              otsikko: 'Kanavan pohjassa on pyöriä',
+              tiedosto: 'Three bikes on the canal bridge in Amsterdam (3798069610).jpg',
+              selite: 'Polkupyöriä lukittuna kanavasillan kaiteeseen '
+                + 'iltahämärässä. Kaikki eivät pysy sillalla: Amsterdamin '
+                + 'kanavista nostetaan joka vuosi 12 000–15 000 pyörää.',
+              lahde: 'joiseyshowaa, Wikimedia Commons (CC BY-SA 2.0)',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'taide',
+      nimi: 'Taide',
+      johdanto: 'Kaksi maalausta samassa museossa: toisesta sahattiin palat pois, '
+        + 'toisen alta löytyi tavaroita, jotka maalari itse peitti.',
+      nostot: [
+        {
+          otsikko: 'Yövartiosta sahattiin palat pois',
+          tiedosto: 'The Night Watch - cropped.jpg',
+          teksti: 'Rembrandt maalasi vuonna 1642 kaartin ryhmäkuvan, joka on '
+            + 'nykyään 363 senttiä korkea ja 437 leveä. Vuonna 1715 taulu '
+            + 'siirrettiin kaupungintaloon, eikä se mahtunut sille varatulle '
+            + 'seinälle — joten sitä leikattiin joka reunalta. Vasemmalta '
+            + 'katosi kaksi miestä ja alta askelman reuna, ylhäältä '
+            + 'holvikaaren huippu. Palasia ei ole löydetty. Nimikin on väärä: '
+            + 'teos ei esitä yötä, vaan pinta oli tummunut lakasta, joka '
+            + 'poistettiin vasta 1940-luvulla.',
+          selite: 'Yövartio kokonaisuudessaan. Mustapukuinen kapteeni ja hänen '
+            + 'keltapukuinen luutnanttinsa astuvat eteenpäin, ja heidän '
+            + 'takanaan seisoo kultamekkoinen tyttö, jonka vyöltä roikkuu '
+            + 'kuollut kana — kanan kynnet olivat kaartin tunnus.',
+          lahde: 'Rembrandt, Wikimedia Commons (PD)',
+          wiki: 'Yövartio',
+          galleria: [
+            {
+              otsikko: 'Näin taulu näytti ennen leikkausta',
+              tiedosto: 'Lundens - Nachtwache-Kopie.jpg',
+              selite: 'Gerrit Lundens teki Yövartiosta pienen kopion ennen kuin '
+                + 'alkuperäistä leikattiin. Kopiossa vasemmalla on vielä '
+                + 'kaide ja kaksi ylimääräistä hahmoa, ja koko holvikaari '
+                + 'mahtuu kuvaan.',
+              lahde: 'Gerrit Lundens, Wikimedia Commons (PD)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Vermeer peitti omat esineensä maalilla',
+          tiedosto: 'Johannes Vermeer - Het melkmeisje - Google Art Project.jpg',
+          teksti: 'Maitotyttö on pienempi kuin useimmat kuvittelevat: 45,5 '
+            + 'senttiä korkea ja 41 leveä. Johannes Vermeer maalasi sen noin '
+            + 'vuonna 1660, ja koko hänen tuotannostaan tunnetaan vain '
+            + 'runsaat kolmekymmentä työtä. Vuonna 2022 taulu kuvattiin '
+            + 'röntgenillä ja infrapunavalossa. Maalikerroksen alta '
+            + 'paljastui, että Vermeer oli aloittanut seinälle kannuhyllyn ja '
+            + 'lattialle tulikorin — ja maalannut molemmat itse umpeen, niin '
+            + 'että katse jää maitoon ja käsiin.',
+          selite: 'Keittiöapulainen kaataa maitoa savipataan. Seinällä roikkuu '
+            + 'leipäkori korkealla, jotta hiiret eivät ylety siihen, oikealla '
+            + 'lattialla on jalkalämmitin, ja seinässä näkyy nauloja ja '
+            + 'naulanreikiä.',
+          lahde: 'Johannes Vermeer, Wikimedia Commons (PD)',
+          wiki: 'Maitotyttö',
+        },
+      ],
+      tehtava: {
+        kysymys: 'Mitkä kaksi esinettä Vermeer maalasi Maitotyttöön ensin ja '
+          + 'peitti sitten itse?',
+        vaihtoehdot: [
+          'Kannuhylly ja tulikori',
+          'Peili ja kynttilänjalka',
+          'Ikkunaverho ja tuoli',
+          'Seinäkartta ja pesuvati',
+        ],
+        oikea: 0,
+        fakta: 'Vuoden 2022 röntgen- ja infrapunakuvaus paljasti maalin alta '
+          + 'kannuhyllyn ja tulikorin, jotka Vermeer oli itse peittänyt.',
+      },
+    },
+    {
+      id: 'arki',
+      nimi: 'Arki ja tavat',
+      johdanto: 'Vaunun kokoinen soitin, kala joka syödään pyrstöstä, ja pieni '
+        + 'paalu jonka kyljessä on kaupungin vaakuna.',
+      nostot: [
+        {
+          otsikko: 'Katu-urut ja kolisevat kolikot',
+          tiedosto: 'Amsterdam. Een draaiorgel op een van de grachten, Bestanddeelnr 901-8132.jpg',
+          teksti: 'Belgialainen Leon Warnies avasi Amsterdamiin katu-urkujen '
+            + 'vuokraamon vuonna 1875, ja siitä alkoi koko hollantilainen '
+            + 'perinne. Musiikki tulee taitellusta pahvikirjasta, johon on '
+            + 'lyöty reikiä: yksi kirja on yksi kappale. Urkuri kääntää '
+            + 'kampea ja ravistaa toisella kädellä rahalipasta '
+            + 'ohikulkijoille. Warniesin jälkeläiset ovat yhä samassa työssä: '
+            + 'Amsterdamissa toimii urkuliike Perlee.',
+          selite: 'Katu-urut kanavan rannalla vuonna 1946. Soitin on kokonainen '
+            + 'koristeltu vaunu, jota työnnetään käsin paikasta toiseen — '
+            + 'soittajan lisäksi mukana on aina rahankerääjä.',
+          lahde: 'Charles Breijer / Anefo, Wikimedia Commons (CC0)',
+          wiki: 'Posetiivi',
+          musiikki: 'https://music.apple.com/fi/search?term=draaiorgel',
+          musiikkiNimi: 'Katu-urkumusiikkia Apple Musicissa',
+          musiikkiNayte: 'https://archive.org/download/VPROreisnaarheteinde-draaiorgel/draaiorgel.mp3',
+          musiikkiNayteNimi: 'Katu-urut — VPRO / lolaradio, CC BY-SA',
+        },
+        {
+          otsikko: 'Silli syödään pyrstöstä',
+          tiedosto: 'Hollandse nieuwe haring eten bij een haringstal in Amsterdam, Bestanddeelnr 932-6068.jpg',
+          teksti: 'Hollandse Nieuwe on kevään ensimmäinen suolasilli, ja sen saa '
+            + 'myydä vasta kun kalan rasvapitoisuus on noussut noin 16 '
+            + 'prosenttiin. Perkauksessa haima jätetään paikalleen: sen '
+            + 'entsyymit kypsyttävät lihan muutamassa päivässä. Nimi on '
+            + 'suojattu: kalan pitää olla vähintään kolmivuotias, ja pyytää '
+            + 'sen saa vain touko–elokuussa. Kojulla silli kastetaan sipuliin '
+            + 'ja lasketaan suuhun pyrstöstä pidellen.',
+          selite: 'Silliä syödään amsterdamilaisella kalakojulla vuonna 1983. '
+            + 'Mies pitelee kalaa pyrstöstä pään yläpuolella ja laskee sen '
+            + 'suuhunsa; pää on poistettu ja ruoto vedetty pois.',
+          lahde: 'Rob Croes / Anefo, Wikimedia Commons (CC0)',
+          wiki: 'Silli',
+        },
+        {
+          otsikko: 'Paalu, jonka kyljessä on kolme ristiä',
+          tiedosto: 'Amsterdammertje.jpg',
+          teksti: 'Amsterdamin jalkakäytävillä seisoo tuhansia matalia '
+            + 'punaruskeita paaluja. Ne estävät autoja nousemasta '
+            + 'kävelytielle, ja jokaisen kyljessä on kolme vinoristiä — samat '
+            + 'kuin kaupungin vaakunassa. Siksi niitä sanotaan '
+            + 'amsterdammertjeiksi eli pikkuamsterdamilaisiksi. Paalu on 1,06 '
+            + 'metriä pitkä, mutta siitä näkyy vain 75 senttiä; loppu on '
+            + 'kivetyksen alla. Vuonna 1984 niitä laskettiin noin 100 000, '
+            + 'vuonna 2003 enää alle 40 000.',
+          selite: 'Amsterdammertje läheltä: pyöreä punaruskea pylväs, jonka '
+            + 'kupera lakki on kulunut kiiltäväksi ja jonka kylkeen on '
+            + 'valettu kolme vinoristiä päällekkäin.',
+          lahde: 'M.Minderhoud, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Amsterdam',
+        },
+      ],
+      tehtava: {
+        kysymys: 'Mikä sillin elin jätetään perkauksessa paikalleen?',
+        vaihtoehdot: [
+          'Maksa',
+          'Haima',
+          'Sydän',
+          'Uimarakko',
+        ],
+        oikea: 1,
+        fakta: 'Haima jää sillin sisään tarkoituksella, sillä sen entsyymit '
+          + 'kypsyttävät lihan muutamassa päivässä.',
+      },
+    },
+  ],
+  istanbul: [
+    {
+      id: 'kaupunki',
+      nimi: 'Istanbul',
+      johdanto: 'Kaupunki kahdella mantereella, jonka alla on järvi, keskellä '
+        + 'faaraon obeliski ja joka kadunkulmassa oma kissa.',
+      kansikuvat: [
+        {
+          tiedosto: 'Hagia Sophia Mars 2013.jpg',
+          selite: 'Hagia Sofia kevätaamuna. Harmaa kupoli on lähes 1500 vuotta '
+            + 'vanha, mutta neljä ohutta minareettia nousivat sen ympärille '
+            + 'vasta osmanien aikana.',
+          lahde: 'Arild Vågen, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Ortaköy Mosque and Bosphorus Bridge, Istanbul 2008.jpg',
+          selite: 'Ortaköyn moskeija Bosporin rannassa. Takana kaartuu '
+            + 'riippusilta, joka vie salmen yli Aasian puolelle, ja sen '
+            + 'alitse liukuu lautta.',
+          lahde: 'Darwinek, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Istanbul spice bazaar 02.jpg',
+          selite: 'Maustebasaarin koju Eminönüssä. Etualalla on kasoittain '
+            + 'kuivattuja taateleita, aprikooseja ja viikunoita, oikealla '
+            + 'rivi lokumia — ja jokaisessa kasassa oma hintalappunsa.',
+          lahde: 'Takeaway, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Kadun kissat ovat kaikkien kissoja',
+          tiedosto: 'Hagia Sophia Cat Gli.png',
+          teksti: 'Istanbulin katukissoja arvioidaan olevan sadastatuhannesta yli '
+            + 'miljoonaan. Niitä ei pidetä irtolaisina vaan korttelin '
+            + 'yhteisinä lemmikkeinä: kauppias jättää ovensa eteen vesikupin '
+            + 'ja talveksi pahvilaatikon. Kuuluisin niistä oli Gli, joka '
+            + 'syntyi Hagia Sofiassa vuonna 2004 ja asui siellä kuolemaansa '
+            + '2020 asti. Presidentti Barack Obama pysähtyi silittämään sitä '
+            + 'vierailullaan 2009. Gli haudattiin Hagia Sofian pihaan.',
+          selite: 'Gli Hagia Sofian marmorilattialla ruokakuppinsa vieressä. '
+            + 'Kissa syntyi rakennuksessa, joka oli silloin museo, ja tuli '
+            + 'tunnetuksi tuhansien matkailijoiden valokuvista.',
+          lahde: 'Kadı, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Hagia Sofia',
+        },
+        {
+          otsikko: 'Medusa kannattelee pylvästä ylösalaisin',
+          tiedosto: 'Medusa Head at Basilica Cistern, Istanbul, Turkey (Ank Kumar) 06.jpg',
+          teksti: 'Hagia Sofian kulmalta laskeutuu 52 porrasta maan alle. Siellä '
+            + 'on Yerebatan, keisari Justinianuksen 500-luvulla rakennuttama '
+            + 'vesisäiliö: 336 pylvästä, jokainen yhdeksän metriä korkea. '
+            + 'Kaupunki unohti sen vuosisadoiksi. Vasta 1500-luvulla '
+            + 'ranskalainen matkaaja ihmetteli, miksi talojen lattioissa on '
+            + 'reikiä, joista lasketaan ämpäri — ja joistakin nousee kaloja. '
+            + 'Kahden pylvään jalustaksi on pantu kivi, johon on veistetty '
+            + 'Medusan kasvot. Toinen on kyljellään, toinen ylösalaisin, eikä '
+            + 'kukaan tiedä miksi.',
+          selite: 'Toinen Medusan päistä pylvään alla Yerebatanin holvissa. Kivi '
+            + 'on käännetty ylösalaisin, silmät ovat kiinni ja hiusten '
+            + 'käärmeet kiertyvät kasvojen ympäri.',
+          lahde: 'Ank Kumar, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Yerebatan Sarayı',
+        },
+        {
+          otsikko: 'Faaraon kivi Sultanahmetin aukiolla',
+          tiedosto: 'The Obelisk of Theodosius, Hippodrome, Istanbul (8369126849).jpg',
+          teksti: 'Sultanahmetin aukio oli ennen hippodromi, hevosvaunujen '
+            + 'kilparata. Sen keskellä seisoo yhä punagraniittinen obeliski, '
+            + 'joka veistettiin Egyptissä faarao Thutmosis III:n aikana noin '
+            + '1450 eaa. Se on kaupungin vanhin pystyssä oleva muistomerkki. '
+            + 'Keisari Theodosius toi sen Konstantinopoliin vuonna 390, ja '
+            + 'jalustaan hakattiin kaksi kertomusta pystyttämisestä: '
+            + 'latinankielinen kehuu työn kestäneen kolmekymmentä päivää, '
+            + 'kreikankielisessä lukee kolmekymmentäkaksi.',
+          selite: 'Obeliski Sultanahmetin aukiolla. Jokaisella sivulla kulkee '
+            + 'yksi pystyrivi hieroglyfejä, ja huippu on hakattu pieneksi '
+            + 'pyramidiksi.',
+          lahde: 'Carole Raddato, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Konstantinopolin hippodromi',
+          galleria: [
+            {
+              otsikko: 'Hieroglyfit läheltä',
+              tiedosto: 'Obelisk of Thutmosis III, Istanbul, Turkey 001.jpg',
+              selite: 'Obeliskin kylkeä läheltä: soikion sisällä on faaraon nimi, '
+                + 'ja sen alla erottuvat haukka, kovakuoriainen ja '
+                + 'aaltoviivat.',
+              lahde: 'Moonik, Wikimedia Commons (CC BY-SA 3.0)',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'historia',
+      nimi: 'Historia',
+      johdanto: 'Istanbul oli yli tuhat vuotta Rooman valtakunnan pääkaupunki ja '
+        + 'sen jälkeen lähes viisisataa vuotta osmanien. Kummastakin jäi '
+        + 'jotain, mikä yhä näkyy tai kuuluu kadulla.',
+      nostot: [
+        {
+          otsikko: 'Maailman vanhin sotilassoittokunta',
+          tiedosto: 'Istanbul Military Museum Mehter show in 2016 25 9327.jpg',
+          teksti: 'Mehter on osmanien sotilassoittokunta ja vanhin tunnettu '
+            + 'marssiva soittokunta maailmassa. Täydessä kokoonpanossa '
+            + 'jokaista soitinta oli yhdeksän: yhdeksän rumpua, yhdeksän '
+            + 'kimeää zurnaa, yhdeksän lautasparia. Jyminä kuului Euroopan '
+            + 'puolelle asti, ja Haydn, Mozart ja Beethoven kirjoittivat '
+            + 'kaikki musiikkia, joka matkii sitä. Soittokunta lakkautettiin '
+            + '1826, mutta Istanbulin sotilasmuseon johtaja herätti sen '
+            + 'henkiin 1911. Museossa se marssii yhä.',
+          selite: 'Mehter-soittokunta esiintyy Istanbulin sotilasmuseossa '
+            + 'Harbiyessä. Rummut ovat kaksipuolisia davuleita, ja soittajat '
+            + 'astelevat hitaasti kääntyen vuoroin oikealle ja vasemmalle.',
+          lahde: 'Dosseman, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Mehter',
+          musiikki: 'https://music.apple.com/fi/search?term=mehter',
+          musiikkiNimi: 'Mehter-marsseja Apple Musicissa',
+          musiikkiNayte: 'https://archive.org/download/ceddin-deden/06-Ceddin%20Deden%20%5B1080p%5D.mp3',
+          musiikkiNayteNimi: 'Mehter-marssi "Ceddin Deden" — CC0',
+        },
+        {
+          otsikko: 'Vesijohto, jonka ali ajetaan autolla',
+          tiedosto: 'Bozdoģan Kemeri - panoramio.jpg',
+          teksti: 'Fatihin kaupunginosassa kulkee kahdessa kerroksessa kivikaaria '
+            + 'kukkulalta toiselle. Se on Valensin vesijohto, joka vihittiin '
+            + 'käyttöön vuonna 373, ja sitä on jäljellä 921 metriä. Kaarien '
+            + 'alta kulkee nykyään vilkas Atatürk-bulevardi: autot ajavat '
+            + 'suoraan yli 1600 vuotta vanhan sillan alitse. Vesi tuotiin '
+            + 'kaupunkiin yli 250 kilometrin päästä, ja se varastoitiin maan '
+            + 'alle — muun muassa siihen säiliöön, jossa Medusa nukkuu.',
+          selite: 'Bozdoğan Kemeri Atatürk-bulevardin yllä. Alempi kaaririvi '
+            + 'kannattaa ylempää, ja autot ajavat kaaren alitse molempiin '
+            + 'suuntiin.',
+          lahde: 'Laima Gūtmane, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Akvedukti',
+        },
+      ],
+      tehtava: {
+        kysymys: 'Kuinka monta kappaletta mehter-soittokunnassa oli kutakin '
+          + 'soitinta täydessä kokoonpanossa?',
+        vaihtoehdot: [
+          'Kolme',
+          'Yhdeksän',
+          'Kolmetoista',
+          'Kaksikymmentä',
+        ],
+        oikea: 1,
+        fakta: 'Mehterissä soittimet laskettiin yhdeksän sarjoissa, ja sen jymyä '
+          + 'matkivat myöhemmin Haydn, Mozart ja Beethoven.',
+      },
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka ja juoma',
+      johdanto: 'Istanbulissa juodaan lasi kerrallaan ympäri vuoden — ja yhtä '
+        + 'juomaa saa vain silloin, kun on kylmä.',
+      nostot: [
+        {
+          otsikko: 'Teetä juodaan enemmän kuin missään',
+          tiedosto: 'Tarihi cinaralti cay bahcesi.jpg',
+          teksti: 'Turkissa juodaan teetä yli kolme kiloa henkeä kohti vuodessa, '
+            + 'enemmän kuin missään muussa maassa. Istanbulissa se näkyy '
+            + 'kadulla: teenkantaja kulkee kaupasta kauppaan tarjotin köysien '
+            + 'varassa keinuen eikä läikytä tippaakaan. Tee keitetään '
+            + 'kaksiosaisessa pannussa, jossa alhaalla kiehuu vesi ja päällä '
+            + 'hautuu väkevä uute. Se tarjoillaan tulppaanin muotoisessa '
+            + 'korvattomassa lasissa, josta pidetään kiinni reunasta, jottei '
+            + 'sormia polta.',
+          selite: 'Teepuutarha Çengelköyssä Istanbulin Aasian puolella. Pöydät on '
+            + 'aseteltu vanhan plataanin alle, ja jokaisella pöydällä on oma '
+            + 'pieni teepannu.',
+          lahde: 'M. Fatih Morgül, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Tee',
+        },
+        {
+          otsikko: 'Juoma, jota myydään vain talvella',
+          tiedosto: 'Boza in Vefa (6385861403).jpg',
+          teksti: 'Boza on paksua ja vaaleaa, ja se tehdään hapattamalla hirssiä '
+            + 'tai bulguria. Lämpimässä se pilaantuu, joten kausi alkaa vasta '
+            + 'kun ilmat kylmenevät. Ennen vanhaan myyjä käveli iltapimeällä '
+            + 'kadulla ja huusi pitkään bo-zaa, jotta ikkunat aukeaisivat. '
+            + 'Matkakirjailija Evliya Çelebi laski 1600-luvun Istanbulissa '
+            + 'satoja bozapuoteja. Vefan korttelissa avattiin puoti vuonna '
+            + '1876, ja sitä pitää yhä perustajien suku.',
+          selite: 'Bozalaseja rivissä Vefan puodissa. Juoma on paksua ja '
+            + 'vaaleankeltaista, ja jokaisen lasin päälle on ripoteltu '
+            + 'kanelia; takana näkyy sinivalkoinen kaakeliseinä.',
+          lahde: 'William Neuheisel, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Boza',
+        },
+      ],
+      tehtava: {
+        kysymys: 'Miksi bozaa myydään vain kylmään aikaan?',
+        vaihtoehdot: [
+          'Se pilaantuu lämpimässä',
+          'Hirssi kypsyy vasta syksyllä',
+          'Se juodaan aina kuumana',
+          'Puodit sulkevat kesäksi',
+        ],
+        oikea: 0,
+        fakta: 'Boza ei kestä lämpöä, joten sen kausi alkaa vasta ilmojen '
+          + 'kylmetessä; Vefan puotia on pitänyt sama suku vuodesta 1876.',
+      },
+    },
+  ],
+  dublin: [
+    {
+      id: 'kaupunki',
+      nimi: 'Dublin',
+      johdanto: 'Kaupunki, jossa yhden kesäkuisen päivän tapahtumia juhlitaan joka '
+        + 'vuosi uudestaan ja jonka valtiontunnus seisoo lasikaapissa '
+        + 'yliopiston kirjastossa.',
+      kansikuvat: [
+        {
+          tiedosto: 'Long Room Interior, Trinity College Dublin, Ireland - Diliff.jpg',
+          selite: 'Trinity Collegen vanhan kirjaston Pitkä huone: kaksi kerrosta '
+            + 'tummia kirjahyllyjä, holvattu puukatto ja käytävän molemmin '
+            + 'puolin rivi valkoisia marmoribysteja.',
+          lahde: 'Diliff, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Samuel Beckett Bridge, Dublin 20150807 1.jpg',
+          selite: 'Samuel Beckettin silta Liffey-joen yli. Kaareva pyloni ja '
+            + 'siitä lähtevät vaijerit muodostavat kyljelleen kaadetun '
+            + 'harpun.',
+          lahde: 'DXR, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Dublin - Molly Malone.jpg',
+          selite: 'Molly Malonen pronssipatsas Dublinin keskustassa: kalakauppias '
+            + 'seisoo kaksipyöräisten kärryjen vieressä, ja kärryillä on '
+            + 'kolme punottua koria.',
+          lahde: 'Marek Śliwecki, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Romaani, joka kestää yhden päivän',
+          tiedosto: 'James Joyce by Alex Ehrenzweig, 1915 cropped.jpg',
+          teksti: 'James Joycen romaani Odysseus kertoo yhden ainoan päivän: '
+            + 'torstain 16. kesäkuuta 1904 Dublinissa. Joyce valitsi juuri '
+            + 'sen päivän, koska silloin hän oli ollut ensi kertaa kävelyllä '
+            + 'tulevan vaimonsa Nora Barnaclen kanssa. Nyt joka 16. kesäkuuta '
+            + 'dublinilaiset pukeutuvat vuoden 1904 vaatteisiin ja kulkevat '
+            + 'kirjan reitit läpi. Ensimmäinen sellainen retki tehtiin 1954 '
+            + 'vanhanaikaisilla hevosvaunuilla, ja se jäi kesken. Vuonna 1982 '
+            + 'Irlannin radio luki koko kirjan yhteen menoon: siihen meni 30 '
+            + 'tuntia.',
+          selite: 'James Joyce valokuvattuna Zürichissä vuonna 1915: olkihattu, '
+            + 'pyöreät silmälasit, viikset ja rusetti. Odysseus ilmestyi '
+            + 'seitsemän vuotta myöhemmin.',
+          lahde: 'Alex Ehrenzweig, Wikimedia Commons (public domain)',
+          wiki: 'James Joyce',
+        },
+        {
+          otsikko: 'Coddle on tähteiden pata',
+          tiedosto: 'Irish Coddle.jpg',
+          teksti: 'Coddle on dublinilaisten oma pata: makkarat, pekoni, perunat '
+            + 'ja sipuli haudutetaan samassa liemessä tiiviin kannen alla. '
+            + 'Mausteina on yleensä vain suola ja pippuri, eikä mitään '
+            + 'ruskisteta — siksi ruoka näyttää paljon vaaleammalta kuin '
+            + 'maistuu. Coddlea keitettiin, jotta viikon tähteet saatiin '
+            + 'syödyksi, eikä sitä juuri tunneta muualla Irlannissa. Myös '
+            + 'James Joyce mainitsee sen teksteissään.',
+          selite: 'Kulhollinen coddlea ylhäältä kuvattuna: perunanpuolikkaita, '
+            + 'paksuja porkkanaviipaleita, makkarapaloja ja pekonia samassa '
+            + 'vaaleassa liemessä. Mitään ei ole ruskistettu.',
+          lahde: 'Shushshello, Wikimedia Commons (CC0)',
+          wiki: 'Irlantilainen keittiö',
+        },
+        {
+          otsikko: 'Täysi stadion, palkaton joukkue',
+          tiedosto: 'Parade, hurling match.jpg',
+          teksti: 'Hurlingissa lyödään saarnipuisella mailalla nahkaista '
+            + 'sliotar-palloa maalin ylitse tai sisään. Peli on irlantilainen '
+            + 'ja hyvin vanha: siitä kerrotaan jo keskiaikaisissa laeissa. '
+            + 'Croke Parkiin Dublinissa mahtuu 82 300 katsojaa, mikä on '
+            + 'Euroopan neljänneksi eniten, mutta yksikään pelaaja ei saa '
+            + 'ottelusta palkkaa — kaikki ovat amatöörejä ja käyvät arkena '
+            + 'töissä.',
+          selite: 'Joukkueiden marssi ennen hurlingin All-Ireland-välierää Croke '
+            + 'Parkissa 2017. Pelaajat kiertävät kentän soittokunnan perässä '
+            + 'ennen aloitusta.',
+          lahde: 'Sheila1988, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Hurling',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Irlannin valtiontunnus on soitin, ja esikuva seisoo Dublinissa '
+        + 'lasikaapissa — mutta se on eri muotoinen kuin kolikoiden harppu.',
+      nostot: [
+        {
+          otsikko: 'Säkkipilli, jota ei puhalleta',
+          tiedosto: 'Patrick D\'Arcy, musician..jpg',
+          teksti: 'Uilleann-pilli on Irlannin oma säkkipilli, eikä siihen '
+            + 'puhalleta lainkaan: ilma pumpataan palkeella, joka on hihnalla '
+            + 'kiinni oikeassa kyynärpäässä. Nimi tuleekin irlannin sanasta '
+            + 'uillinn eli kyynärpää. Soittaja istuu ja painaa melodiapillin '
+            + 'pään oikeaa polveaan vasten: kun kaikki sormireiät ovat '
+            + 'peitettyinä, ääni vaikenee kokonaan. Unesco otti '
+            + 'uilleann-pillin perinneluetteloonsa vuonna 2017.',
+          selite: 'Uilleann-pillin täysi setti soittajan olalla: melodiapilli, '
+            + 'kolme bordunapilliä ja kolme säätöpilliä, joiden läpillä '
+            + 'soitetaan sointuja säestykseksi.',
+          lahde: 'PatDarcy, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Irlantilainen kansanmusiikki',
+          musiikki: 'https://music.apple.com/fi/search?term=uilleann%20pipes',
+          musiikkiNimi: 'Uilleann-pillimusiikkia Apple Musicissa',
+          musiikkiNayte: 'https://archive.org/download/TheKerryJigTheMugOfBrownAle/01_kerry_mug_of_brown_ale_jigs.mp3',
+          musiikkiNayteNimi: 'Irlantilainen jigi ja reel — Tradschool, CC BY-NC-SA',
+        },
+        {
+          otsikko: 'Kolikon harppu on väärän muotoinen',
+          tiedosto: 'Trinity College Harp.jpg',
+          teksti: 'Irlanti on maailman ainoa maa, jonka valtiontunnus on soitin. '
+            + 'Esikuva seisoo Trinity Collegen kirjastossa: 1300- tai '
+            + '1400-luvulla tehty harppu, jonka kaulassa on messinkitapit 29 '
+            + 'kielelle. Sitä sanotaan Brian Borun harpuksi, vaikka kuningas '
+            + 'Brian kuoli vuonna 1014 — satoja vuosia ennen kuin soitin '
+            + 'veistettiin. Kolikoihin painettu harppu on kapea, koska se '
+            + 'piirrettiin 1800-luvulla huonosti korjatun soittimen mukaan. '
+            + 'Oikea harppu on paljon leveämpi.',
+          selite: 'Trinity Collegen harppu telineellään: tumma puinen kaikukoppa, '
+            + 'kaareva kaula ja paksu etutolppa. Taustalla erottuu Pitkän '
+            + 'huoneen marmoribystien rivi ja punainen köysi.',
+          lahde: 'Marshall Henrie, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Trinity College (Dublin)',
+        },
+      ],
+      tehtava: {
+        kysymys: 'Miten uilleann-pilliin saadaan ilma?',
+        vaihtoehdot: [
+          'Suukappaleen kautta',
+          'Kyynärpään palkeella',
+          'Jalkapolkimen avulla',
+          'Käsipumpulla',
+        ],
+        oikea: 1,
+        fakta: 'Uilleann-pillin ilma tulee palkeesta, joka on hihnalla soittajan '
+          + 'oikeassa kyynärpäässä — siitä nimikin, sillä uillinn on iiriksi '
+          + 'kyynärpää.',
+      },
+    },
+    {
+      id: 'tiede',
+      nimi: 'Tiede',
+      johdanto: 'Kaksi asiaa keksittiin Dublinissa kävelymatkan päässä toisistaan: '
+        + 'kaava, joka raapustettiin sillan kiveen, ja luento, joka johti '
+        + 'dna:n jäljille.',
+      nostot: [
+        {
+          otsikko: 'Kaava, joka raapustettiin sillan kiveen',
+          tiedosto: 'Sir William Rowan Hamilton, head-and-shoulders portrait, facing slightly right LCCN90713420 (cropped).jpg',
+          teksti: 'Matemaatikko William Rowan Hamilton käveli 16. lokakuuta 1843 '
+            + 'vaimonsa kanssa Kuninkaankanavan vartta kohti kokousta, kun '
+            + 'hänen päässään ratkesi pulma, jota hän oli miettinyt vuosia. '
+            + 'Hän ei malttanut odottaa paperia vaan kaiversi kaavan '
+            + 'taskuveitsellään Broom Bridgen kiveen. Kaava kuvaa '
+            + 'kvaternioita, ja niillä käännellään nykyään esineitä '
+            + 'kolmiulotteisesti: peliruudulla, roboteissa ja satelliiteissa. '
+            + 'Joka 16. lokakuuta kanavan vartta kävellään sama matka '
+            + 'uudestaan.',
+          selite: 'William Rowan Hamilton (1805–1865) vanhassa painokuvassa: '
+            + 'kalju päälaki, tuuheat pulisongit ja korkea valkoinen kaulus. '
+            + 'Hän asui Dunsinkin observatoriossa Dublinin laidalla.',
+          lahde: 'Library of Congress, Wikimedia Commons (public domain)',
+          wiki: 'William Rowan Hamilton',
+        },
+        {
+          otsikko: 'Luento, joka johti dna:n jäljille',
+          tiedosto: 'Erwin Schrodinger.jpg',
+          teksti: 'Irlannin pääministeri Éamon de Valera oli koulutukseltaan '
+            + 'matematiikan opettaja. Vuonna 1940 hän perusti Dublinin '
+            + 'tutkimusinstituutin ja kutsui sen fysiikan johtajaksi '
+            + 'itävaltalaisen Erwin Schrödingerin, joka oli paennut natseja. '
+            + 'Helmikuussa 1943 Schrödinger piti Trinity Collegessa kolme '
+            + 'yleisöluentoa otsikolla Mitä elämä on? Saliin mahtui 150 '
+            + 'kuulijaa mutta tulijoita oli 400, joten luennot pidettiin '
+            + 'kahteen kertaan. Watson ja Crick kertoivat molemmat, että '
+            + 'luennoista tehty kirja pani heidät dna:n jäljille.',
+          selite: 'Erwin Schrödinger (1887–1961) puutarhassa: pyöreät '
+            + 'tummasankaiset silmälasit, pilkullinen rusetti ja pystyyn '
+            + 'kampaamattomat hiukset. Hän viipyi Dublinissa 16 vuotta.',
+          lahde: 'Francis Simon, Wikimedia Commons (Attribution)',
+          wiki: 'Erwin Schrödinger',
+        },
+      ],
+      tehtava: {
+        kysymys: 'Miksi Schrödingerin luentosarja Mitä elämä on? pidettiin kahteen '
+          + 'kertaan?',
+        vaihtoehdot: [
+          'Sali oli liian pieni tulijoille',
+          'Ensimmäinen kerta äänitettiin',
+          'Luennot pidettiin kahdella kielellä',
+          'Pääministeri halusi kuulla ne uudestaan',
+        ],
+        oikea: 0,
+        fakta: 'Kuulijoita tuli yli kaksi kertaa enemmän kuin saliin mahtui, ja '
+          + 'samoista luennoista tehty kirja vei myöhemmin Watsonin ja '
+          + 'Crickin dna:n jäljille.',
+      },
+    },
+  ],
+  edinburgh: [
+    {
+      id: 'kaupunki',
+      nimi: 'Edinburgh',
+      johdanto: 'Kaupunki kasvoi sammuneen tulivuoren päälle, ja joka elokuu sen '
+        + 'kadut täyttyvät esiintyjistä, joita kukaan ei ole kutsunut.',
+      kansikuvat: [
+        {
+          tiedosto: 'Diagon Alley (49520096076).jpg',
+          selite: 'Victoria Streetin kaartuva puotirivi vanhassakaupungissa. '
+            + 'Alakerrat on maalattu vaaleanpunaisiksi, sinisiksi ja '
+            + 'oranssiksi, ja ikkunoiden alla roikkuu punaisia '
+            + 'kukkalaatikoita.',
+          lahde: 'Mike McBey, Wikimedia Commons (CC BY 2.0)',
+        },
+        {
+          tiedosto: 'The crown spire on St Giles Cathedral, Edinburgh.JPG',
+          selite: 'St Gilesin kirkon torninhuippu Royal Milen varrella. Kahdeksan '
+            + 'kivikaarta nousee tornin reunoilta yhteen kruunuksi, ja aivan '
+            + 'ylimpänä seisoo kultainen tuuliviirikukko.',
+          lahde: 'Stephencdickson, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Edinburgh National Monument 20211020.jpg',
+          selite: 'Calton Hillin laella nurmen keskellä seisoo rivi paksuja '
+            + 'pylväitä ja niiden päällä pätkä kivikattoa. Muuta ei koskaan '
+            + 'valmistunut: kansallismonumentilta loppuivat rahat vuonna '
+            + '1829.',
+          lahde: 'Daniel Kraft, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Kutsumattomat perustivat festivaalin',
+          tiedosto: 'Fringe 2014 HighSt MG 0026-001.jpg',
+          teksti: 'Vuonna 1947 Edinburghiin perustettiin kansainvälinen '
+            + 'taidefestivaali. Kahdeksan teatteriryhmää jäi kutsulistan '
+            + 'ulkopuolelle ja tuli silti — ne esiintyivät reunalla eli '
+            + 'fringellä. Siitä kasvoi maailman suurin esittävän taiteen '
+            + 'festivaali, eikä ohjelmaa valitse yhä kukaan: kuka tahansa saa '
+            + 'esiintyä, jos löytää itselleen esityspaikan. Vuonna 2025 '
+            + 'mukana oli 3 893 eri esitystä 301 paikassa, ja niitä '
+            + 'näytettiin yhteensä 53 942 kertaa.',
+          selite: 'Royal Milen yläpää elokuussa. Kadun yli on pingotettu '
+            + 'punavalkoinen fringe-portti, väkeä seisoo kylki kyljessä, ja '
+            + 'vasemmalla kilttiin pukeutunut esiintyjä on kiivennyt pollarin '
+            + 'päälle mainostamaan omaa esitystään.',
+          lahde: 'Brian McNeil, Wikimedia Commons (CC BY 3.0)',
+        },
+        {
+          otsikko: 'Haggis, lanttu ja peruna',
+          tiedosto: 'Haggis neeps tatties.JPG',
+          teksti: 'Haggis on lampaan sisäelimistä, kaurasuurimoista, sipulista ja '
+            + 'mausteista tehty makkara, joka keitetään perinteisesti lampaan '
+            + 'mahassa. Se syödään lantun ja perunan kanssa. Runoilija Robert '
+            + 'Burns kirjoitti haggisille oman runon vuonna 1786, ja siksi '
+            + 'joka 25. tammikuuta istutaan Burns-illalliselle: makkara '
+            + 'kannetaan pöytään säkkipillin soidessa, runo luetaan ääneen ja '
+            + 'puukko työnnetään makkaraan juuri oikeassa kohdassa runoa.',
+          selite: 'Ravintola-annos: pyöreä haggisnokare on kasattu oranssin '
+            + 'lanttusoseen päälle, ruskea kastike lainehtii valkoisella '
+            + 'lautasella ja päällä on persiljanoksa. Kotona osat ladotaan '
+            + 'lautaselle vierekkäin, ei päällekkäin.',
+          lahde: 'Metukkalihis, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Haggis',
+        },
+        {
+          otsikko: 'Linna seisoo tulivuoren tulpalla',
+          tiedosto: 'Castle Rock Edinburgh.jpg',
+          teksti: 'Linnan alla oleva kallio on tulivuoren kurkku, joka jähmettyi '
+            + 'noin 350 miljoonaa vuotta sitten poikkeuksellisen kovaksi '
+            + 'kiveksi. Kun jäätikkö myöhemmin jyräsi paikan yli, se ei '
+            + 'pystynyt kalliolle vaan kaivoi maan sen ympäriltä ja jätti '
+            + 'taakseen pitkän loivan hännän. Sitä häntää pitkin laskeutuu '
+            + 'Royal Mile linnalta palatsille asti, ja siksi linnaan pääsee '
+            + 'kävellen vain idästä. Vettä kalliolta ei sen sijaan tahtonut '
+            + 'saada: 28 metriä syvä kaivo ehtyi piiritysten aikana.',
+          selite: 'Linna Princes Street Gardensin puolelta nähtynä. Muurit '
+            + 'alkavat suoraan jyrkänteen päältä, alempana rinne on ruohoa ja '
+            + 'puita, ja etualalla riippuu pihlajanmarjoja.',
+          lahde: 'Scglossop1, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Edinburghin linna',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Soitin, jonka ääntä ei voi katkaista, ja elokuinen esitys, jonka '
+        + 'nimi tarkoittaa alun perin oluthanojen sulkemista.',
+      tehtava: {
+        kysymys: 'Mitä sana tattoo alun perin tarkoitti?',
+        vaihtoehdot: ['Sotilaan käsivarteen piirrettyä kuvaa', 'Hollantilaista kehotusta sulkea oluthanat', 'Säkkipillin matalinta bordunapilliä', 'Linnan tykin laukausta kello yksi'],
+        oikea: 1,
+        fakta: 'Rumpalit soittivat majatalojen edessä merkin doe den tap toe eli '
+          + 'sulkekaa hanat — se kerrotaan tattoo-nostossa.',
+      },
+      nostot: [
+        {
+          otsikko: 'Yhdeksän säveltä, ei yhtään taukoa',
+          tiedosto: 'Piper busking in Edinburgh DSC05049.JPG',
+          teksti: 'Skotlantilaisessa säkkipillissä on melodiapilli ja kolme '
+            + 'bordunapilliä, jotka soivat koko ajan samaa säveltä. '
+            + 'Melodiapillistä saa vain yhdeksän säveltä, eikä ääntä voi '
+            + 'katkaista lainkaan — siksi soittaja erottaa peräkkäiset '
+            + 'sävelet toisistaan salamannopeilla koristenuoteilla. Soitin on '
+            + 'tehty ulkona soitettavaksi: se soi noin 110 desibeliä, saman '
+            + 'verran kuin moottorisaha.',
+          selite: 'Katusoittaja Edinburghissa. Säkki on kainalossa, puhallusputki '
+            + 'suussa ja kolme bordunapilliä lepää olkapäällä; kiltti on '
+            + 'punaruudullinen ja jalassa valkoiset polvisukat. Alanurkassa '
+            + 'makaa soittajan vaalea koira.',
+          lahde: 'David Monniaux, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Säkkipilli',
+          musiikki: 'https://music.apple.com/fi/search?term=highland%20bagpipe',
+          musiikkiNimi: 'Skotlantilaista säkkipillimusiikkia Apple Musicissa',
+          musiikkiNayte: 'https://archive.org/download/raretunes_364_beating-retreat-edinburgh-castle/raretunesedretreat.mp3',
+          musiikkiNayteNimi: 'Pipe band, Edinburgh Castle — CC BY-NC-SA',
+        },
+        {
+          otsikko: 'Tattoo tarkoitti: sulkekaa hanat',
+          tiedosto: 'Royal Edinburgh Military Tattoo, The Finale - geograph.org.uk - 6233821.jpg',
+          teksti: 'Joka elokuu linnan edustalle rakennetaan katsomot, ja niiden '
+            + 'keskellä marssivat sotilassoittokunnat. Nimi tulee 1600-luvun '
+            + 'hollannista: rumpalit soittivat iltaisin majatalojen edessä '
+            + 'merkin doe den tap toe eli sulkekaa hanat, jolloin sotilaiden '
+            + 'oli aika lopettaa ja palata nukkumaan. Ensimmäinen Edinburghin '
+            + 'tattoo pidettiin vuonna 1950. Siinä oli kahdeksan '
+            + 'ohjelmanumeroa ja noin 6 000 katsojaa rakennustelineillä; '
+            + 'nykyään katsomoon mahtuu 8 800 ihmistä joka ilta.',
+          selite: 'Loppukohtaus katsomon edessä: punatakkisia soittajia tuubien, '
+            + 'torvien ja rumpujen kanssa, karvalakkipäisiä kaartilaisia ja '
+            + 'kiltteihin pukeutuneita pillipiipareita. Takana katsomo on '
+            + 'täynnä väkeä.',
+          lahde: 'David Dixon, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+      ],
+    },
+    {
+      id: 'tiede',
+      nimi: 'Tiede',
+      johdanto: 'Kaksi maailmaa muuttanutta koetta tehtiin täällä: toinen '
+        + 'ruokasalin pöydän ääressä, toinen lammasnavetassa kaupungin '
+        + 'laidalla.',
+      tehtava: {
+        kysymys: 'Miksi kloonilammas sai nimen Dolly?',
+        vaihtoehdot: ['Se syntyi Dolly-nimisessä navetassa', 'Nimi arvottiin koululaisten kilpailussa', 'Solu oli otettu utareesta, ja tutkijat muistivat laulaja Dolly Partonin', 'Tutkijan tytär oli nimeltään Dolly'],
+        oikea: 2,
+        fakta: 'Dollyn tekemiseen käytetty solu oli utaresolu, ja siitä nimi '
+          + 'juontuu — se lukee lammasnostossa.',
+      },
+      nostot: [
+        {
+          otsikko: 'Kolme emää, yksi karitsa',
+          tiedosto: 'Dolly the Sheep National Museum of Scotland.jpg',
+          teksti: 'Roslinin tutkimuslaitoksessa Edinburghin eteläpuolella syntyi '
+            + '5. heinäkuuta 1996 karitsa, jolla ei ollut isää lainkaan. '
+            + 'Dolly tehtiin aikuisen lampaan utaresolusta: solun tuma '
+            + 'siirrettiin munasoluun, jonka oma tuma oli poistettu. Emiä oli '
+            + 'siis kolme — yksi antoi munasolun, toinen perimän ja kolmas '
+            + 'kantoi karitsan. Nimi tuli laulaja Dolly Partonilta. Yrityksiä '
+            + 'tarvittiin 277, ja niistä yksi ainoa kasvoi aikuiseksi.',
+          selite: 'Dolly täytettynä museon lasikaapissa. Villa on paksu ja '
+            + 'kihara, jalat seisovat olkien päällä harmaalla laatalla ja pää '
+            + 'on kääntynyt katsojaan päin. Taustalla häämöttää museon sali.',
+          lahde: 'Sgerbic, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Dolly (lammas)',
+        },
+        {
+          otsikko: 'Kolme lääkäriä nukahti pöydän alle',
+          tiedosto: 'JamesYoungSimpson.png',
+          teksti: 'Lääkäri James Young Simpson kokeili ystävineen joka ilta uusia '
+            + 'aineita kotonaan Queen Streetillä: he haistelivat pulloja '
+            + 'ruokapöydän ääressä ja odottivat, tulisiko jostakin uni. 4. '
+            + 'marraskuuta 1847 vuorossa oli kloroformi. Ensin kolmikko tuli '
+            + 'hyvälle tuulelle, sitten kaikki kaatuivat, ja he heräsivät '
+            + 'vasta seuraavana aamuna lattialta tuolien seasta. Simpson '
+            + 'tiesi heti löytäneensä aineen, jonka avulla leikkaus ja '
+            + 'synnytys voitiin tehdä nukkuvalle potilaalle.',
+          selite: 'James Young Simpson vuoden 1867 aikakauslehden kuvassa. '
+            + 'Piirros on tehty pelkillä viivoilla: pitkät hiukset kaartuvat '
+            + 'korvien yli, poskiparta on leveä ja kaulassa on vaalea '
+            + 'solmuke.',
+          lahde: 'The Leisure Hour 1867, Wikimedia Commons (PD)',
+          wiki: 'Kloroformi',
+        },
+      ],
+    },
+  ],
+  marseille: [
+    {
+      id: 'kaupunki',
+      nimi: 'Marseille',
+      johdanto: 'Ranskan vanhin kaupunki: kreikkalaiset purjehtivat tänne 2600 '
+        + 'vuotta sitten, ja tarinan mukaan kaikki alkoi juhlasta, jossa '
+        + 'tyttö ojensi vesimaljan valitsemalleen miehelle.',
+      kansikuvat: [
+        {
+          tiedosto: 'Notre-Dame de la Garde Marseille 2024.jpg',
+          selite: 'Notre-Dame de la Garden basilika raidallisine '
+            + 'kivikerroksineen. Kellotornin päällä seisoo 11,2 metriä korkea '
+            + 'kullattu Neitsyt-patsas, joka näkyy merelle asti.',
+          lahde: 'kallerna, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Marché poisson Marseille 013.jpg',
+          selite: 'Vanhan sataman kalatiskin sinisessä laatikossa kiemurtelee '
+            + 'täplikäs murena. Ympärillä on punaisia rascasse-kaloja eli '
+            + 'kivikaloja, jotka ovat bouillabaissen tärkein aines.',
+          lahde: 'Arnaud 25, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Calanque de Sugiton, 2016.jpg',
+          selite: 'Sugitonin calanque: kapea turkoosi poukama valkoisten '
+            + 'kalkkikivijyrkänteiden välissä. Poukama on Marseillen omalla '
+            + 'alueella, Calanques\'in kansallispuistossa.',
+          lahde: 'Visions of Domino, Wikimedia Commons (CC BY 2.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Vesimalja perusti kaupungin',
+          tiedosto: 'Massalia-21.jpg',
+          teksti: 'Noin 600 eKr. joukko kreikkalaisia purjehti Fokaiasta, '
+            + 'nykyisen Turkin rannikolta, ja löysi Lacydon-nimisen '
+            + 'luonnonsataman — sen saman, jota nykyään sanotaan vanhaksi '
+            + 'satamaksi. Antiikin kirjoittajien mukaan paikallisen heimon '
+            + 'päällikkö piti samana päivänä juhlat, joissa hänen tyttärensä '
+            + 'Gyptis sai valita puolisonsa ojentamalla tälle vesimaljan. Hän '
+            + 'ojensi sen kreikkalaiselle Protisille. Kaupunki sai nimen '
+            + 'Massalia, ja se on yhä Ranskan vanhin kaupunki.',
+          selite: 'Massalian hopearaha 100-luvulta eKr. Toisella puolella on '
+            + 'jumalatar Artemiin pää, toisella kävelevä leijona ja '
+            + 'kreikkalaisin kirjaimin MASSA, kaupungin oman nimen alku.',
+          lahde: 'Classical Numismatic Group, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Massalia (kaupunki)',
+        },
+        {
+          otsikko: 'Monte Criston linnasaari',
+          tiedosto: 'Château d\'If @ Baie de Marseille 01.jpg',
+          teksti: 'Sataman suulla olevalle kalliosaarelle rakennettiin '
+            + '1500-luvulla linnoitus, josta tuli pian vankila. Alexandre '
+            + 'Dumas sijoitti sinne romaaninsa Monte Criston kreivi, ja '
+            + 'kirjasta tuli niin kuuluisa, että saarelle tehtiin turisteja '
+            + 'varten Faria-isän selli — vaikka koko munkki on keksitty. '
+            + 'Oikeat vangit eivät päässeet minnekään: saarelta ei '
+            + 'tiettävästi ole koskaan paennut kukaan.',
+          selite: 'Château d\'If matalalla kalliosaarellaan. Kolme pyöreää tornia '
+            + 'nousee muurin takaa, ja kaukana vasemmalla häämöttää kaupungin '
+            + 'rantaviiva. Linnoitus valmistui 1531 puolustamaan satamaa.',
+          lahde: 'Rémih, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Ifin linna',
+        },
+        {
+          otsikko: 'Hymni sai nimensä matkalla',
+          tiedosto: 'Pils - Rouget de Lisle chantant la Marseillaise.jpg',
+          teksti: 'Rouget de Lisle sävelsi laulun Strasbourgissa yhden yön aikana '
+            + '25.–26. huhtikuuta 1792, ja se sai nimekseen Reinin armeijan '
+            + 'sotalaulu. Nuotti kulkeutui etelään, ja Marseillen '
+            + 'vapaaehtoiset ottivat sen marssilaulukseen. Kun he saapuivat '
+            + 'Pariisiin 30. heinäkuuta 1792, pariisilaiset kuulivat laulun '
+            + 'ensi kertaa ja alkoivat heti sanoa sitä marseillelaisten '
+            + 'lauluksi. Nimi jäi, vaikka kaupungilla ei ollut sävelmän '
+            + 'synnyn kanssa mitään tekemistä.',
+          selite: 'Isidore Pilsin maalaus vuodelta 1849: Rouget de Lisle seisoo '
+            + 'univormussaan käsi kohotettuna ja laulaa juuri säveltämäänsä '
+            + 'sotalaulua Strasbourgin pormestarin salongissa.',
+          lahde: 'Isidore Pils, Wikimedia Commons (PD)',
+          wiki: 'La Marseillaise',
+          musiikki: 'https://music.apple.com/fi/search?term=La%20Marseillaise',
+          musiikkiNimi: 'La Marseillaise Apple Musicissa',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Kaupungin kuuluisin keitto tehtiin kaloista, joita kukaan ei '
+        + 'halunnut ostaa, ja sen kuuluisin keksi leivotaan pikkuveneen '
+        + 'muotoon.',
+      tehtava: {
+        kysymys: 'Minkä muotoisia navette-keksit ovat?',
+        vaihtoehdot: ['Tähden muotoisia', 'Renkaan muotoisia', 'Pikkuveneen muotoisia', 'Kalan muotoisia'],
+        oikea: 2,
+        fakta: 'Navette tarkoittaa pikkuvenettä, ja keksi leivotaan juuri sen '
+          + 'muotoon — vastaus löytyi navette-nostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Bouillabaisse alkoi jätekalasta',
+          tiedosto: 'Marseille Filets sur le quai Saint-Jean.jpg',
+          teksti: 'Marseillen kuuluisin ruoka oli alun perin kalastajien omaa '
+            + 'kotiruokaa: kattilaan meni se osa saaliista, jota kukaan ei '
+            + 'ostanut — piikikkäät rascasse-kalat ja muut ruman näköiset. '
+            + 'Nykyään bouillabaisse on kallista, ja vuonna 1980 kaupungin '
+            + 'ravintoloitsijat allekirjoittivat oman peruskirjansa siitä, '
+            + 'mitä aitoon annokseen kuuluu. Se tuodaan pöytään kahdessa '
+            + 'osassa: ensin liemi valkosipulileivän kanssa, sitten kalat.',
+          selite: 'Kalastajien verkkoja levitettynä Saint-Jeanin laiturille; '
+            + 'kaksi miestä istuu paikkaamassa niitä ja kolmas seisoo edessä '
+            + 'lippalakissa. Kuva on 1900-luvun alun postikortista.',
+          lahde: 'Wikimedia Commons (PD)',
+          wiki: 'Bouillabaisse',
+        },
+        {
+          otsikko: 'Keksi, joka on veneen muotoinen',
+          tiedosto: 'Une boîte de navettes (spécialité culinaire) en mars 2022.JPG',
+          teksti: 'Rue Saintella on leipomo, joka avattiin vuonna 1781 ja on yhä '
+            + 'kaupungin vanhin. Siellä paistetaan navetteja: kovia, '
+            + 'appelsiininkukkavedellä maustettuja keksejä, joiden muoto on '
+            + 'pikkuvene — juuri sitä sana navette tarkoittaa. '
+            + 'Kynttilänpäivänä 2. helmikuuta pappi tulee siunaamaan uunin. '
+            + 'Keksejä ostetaan tusina kerrallaan, yksi jokaista vuoden '
+            + 'kuukautta kohti, ja ennen niitä säilytettiin kotona '
+            + 'onnenkaluina.',
+          selite: 'Rasiallinen navetteja: vaaleita, kovaksi paistettuja keksejä, '
+            + 'joiden pinnassa kulkee pituussuuntainen halkeama. Yksi keksi '
+            + 'on noin kämmenen mittainen.',
+          lahde: 'Benoît Prieur, Wikimedia Commons (CC0)',
+        },
+      ],
+    },
+    {
+      id: 'arki',
+      nimi: 'Arki ja tavat',
+      johdanto: 'Merimiesten kiitoslahjat roikkuvat kirkon katossa, ja '
+        + 'saippuakuution kylkeen leimataan luku, joka kertoo mitä sen '
+        + 'sisällä on.',
+      tehtava: {
+        kysymys: 'Mikä luku leimataan marseillelaisen saippuakuution kylkeen?',
+        vaihtoehdot: ['100', '72', '1688', '600'],
+        oikea: 1,
+        fakta: 'Kuution kylkeen leimataan luku 72, joka kertoo öljyn osuuden '
+          + 'prosentteina — vastaus löytyi saippuanostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Laivat roikkuvat katossa',
+          tiedosto: 'Intérieur de la basilique Notre-Dame de la Garde, Marseille — coupoles dorées et ex-voto en forme de bateaux.jpg',
+          teksti: 'Kaupungin yllä kohoavalla kalliokukkulalla seisoo Notre-Dame '
+            + 'de la Garden basilika, jota marseillelaiset sanovat nimellä la '
+            + 'Bonne Mère eli Hyvä äiti. Merimiehet ovat vuosisatojen ajan '
+            + 'tuoneet sinne kiitoslahjan selvittyään myrskystä tai '
+            + 'haaksirikosta: maalauksen tapahtumasta tai pienoismallin '
+            + 'omasta aluksestaan. Siksi kirkon kultamosaiikkiholvien alla '
+            + 'roikkuu katosta purjeveneitä ja laivoja.',
+          selite: 'Basilikan kultaiset mosaiikkikupolit alhaalta kuvattuna. '
+            + 'Katosta roikkuu ohuissa langoissa purjeveneiden ja laivojen '
+            + 'pienoismalleja, jotka näkyvät tummina siluetteina kultaa '
+            + 'vasten.',
+          lahde: 'Manitout19, Wikimedia Commons (CC BY 4.0)',
+          wiki: 'Notre-Dame de la Garde',
+        },
+        {
+          otsikko: 'Saippuassa lukee 72',
+          tiedosto: 'Savons de Marseille.jpg',
+          teksti: 'Marseillen saippuaa on keitetty oliiviöljystä ja soodasta '
+            + 'keskiajalta asti. Lokakuun 5. päivänä 1688 kuninkaan asetus '
+            + 'kielsi käyttämästä siihen rasvaa tai voita — vain puhdasta '
+            + 'oliiviöljyä, tai tavarat takavarikoitiin. Perinteisen 600 '
+            + 'gramman kuution kylkeen leimataan valmistajan nimi ja luku 72, '
+            + 'joka kertoo öljyn osuuden prosentteina. Vuonna 1913 kaupunki '
+            + 'tuotti saippuaa 180 000 tonnia; nykyään vanhalla tavalla '
+            + 'keittäviä saippuatehtaita on enää kourallinen.',
+          selite: 'Markkinapöydän laatikko täynnä vaaleita saippuakuutioita. '
+            + 'Yhden kylkeen on leimattu EXTRA PUR 72 % GARANTI, ja oikealla '
+            + 'on rivi violetteja saippuoita.',
+          lahde: 'Arnaud 25, Wikimedia Commons (PD)',
+        },
+      ],
+    },
+  ],
+  lissabon: [
+    {
+      id: 'kaupunki',
+      nimi: 'Lissabon',
+      johdanto: 'Kaupunki, joka kaatui pyhäinpäivänä 1755 ja rakennettiin uudelleen '
+        + 'puuhäkkien varaan — ja jonka kuuluisimman tornin kulmassa nököttää '
+        + 'kivinen sarvikuono.',
+      kansikuvat: [
+        {
+          tiedosto: 'Tram 28 Lisbon.jpg',
+          selite: 'Keltainen raitiovaunu numero 28 kaartaa Alfaman kulmauksessa. '
+            + 'Etukilvessä lukee määränpää Prazeres, ja kiskojen väli on vain '
+            + '90 senttiä — kapealla raiteella vaunu mahtuu vanhankaupungin '
+            + 'mutkiin.',
+          lahde: 'Romazur, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Arco Triunfal da Rua Augusta, Plaza del Comercio, Lisboa, Portugal, 2012-05-12, DD 02.JPG',
+          selite: 'Rua Augustan riemukaari Kauppatorin laidalla. Kaaren molemmin '
+            + 'puolin jatkuu keltainen holvikäytävä, ja kaaren alta lähtee '
+            + 'suora katu: koko alakaupunki vedettiin maanjäristyksen jälkeen '
+            + 'ristikoksi.',
+          lahde: 'Diego Delso, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Torre Belém April 2009-4a.jpg',
+          selite: 'Belémin torni Tejo-joen rannassa. Se valmistui 1519 '
+            + 'vartioimaan joensuuta; parvekkeiden alla kiertää kiveen '
+            + 'veistetty köysi ja vartiotornien huiput ovat kupoleja.',
+          lahde: 'Alvesgaspar, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Kaupunki kaatui pyhäinpäivänä 1755',
+          tiedosto: 'Convento do Carmo ruins in Lisbon.jpg',
+          teksti: 'Lauantaina 1. marraskuuta 1755 oli pyhäinpäivä ja kirkot '
+            + 'olivat täynnä väkeä, kun maa alkoi täristä noin kello 9.40. '
+            + 'Kaatuneista kynttilöistä syttyi palo, ja noin 40 minuutin '
+            + 'kuluttua Tejo-joesta nousi tsunami. Karmeliittikirkon '
+            + 'kivikatto romahti eikä sitä rakennettu enää koskaan. Uusi '
+            + 'alakaupunki nousi suorien katujen ristikoksi, ja seinien '
+            + 'sisään piilotettiin puinen häkki, jonka piti joustaa '
+            + 'tärinässä. Kehikkoa kokeiltiin pienoismalleilla: sotilaat '
+            + 'marssivat mallin ympärillä, jotta maa tärisisi.',
+          selite: 'Karmeliittikirkon runko keskellä Lissabonia. Kivikattoa ei '
+            + 'ole, ja jäljellä ovat vain suippokaaret pilarien välissä — '
+            + 'niiden välistä näkyy sininen taivas.',
+          lahde: 'Chris Adams, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Lissabonin maanjäristys 1755',
+        },
+        {
+          otsikko: 'Tornin kulmassa on sarvikuono',
+          tiedosto: 'Belém Tower - gargoyles shaped as rhinoceros heads.jpg',
+          teksti: 'Belémin torni valmistui 1519 vartioimaan joensuuta. Sen '
+            + 'vartiotornien juurella on kiveen hakattuja eläimenpäitä, ja '
+            + 'yksi niistä on sarvikuono — sitä pidetään ensimmäisenä '
+            + 'sarvikuonoveistoksena Länsi-Euroopan taiteessa. Malli oli '
+            + 'elävä: Intiasta tuotu sarvikuono saapui Lissaboniin 20. '
+            + 'toukokuuta 1515. Kuningas Manuel I lähetti sen lahjaksi '
+            + 'paaville, mutta laiva haaksirikkoutui Italian rannikolla ja '
+            + 'kannelle kahlittu eläin hukkui. Albrecht Dürer teki siitä '
+            + 'kuuluisan puupiirroksen näkemättä eläintä koskaan.',
+          selite: 'Sarvikuonon pää kiveen veistettynä. Pää työntyy tornin '
+            + 'seinästä ulos vartiotornin alapuolelta, ja takana siintää '
+            + 'Tejo-joki ja vastaranta.',
+          lahde: 'RimerMoshe, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Belémin torni',
+        },
+        {
+          otsikko: 'Azulejot pitävät talon viileänä',
+          tiedosto: 'Lisboa, azulejos 3.jpg',
+          teksti: 'Lissabonin talot on päällystetty maalatuilla laatoilla. '
+            + 'Tavallisen azulejon sivu on neljätoista senttiä, ja laatat '
+            + 'ladotaan seinään kuvioksi. Kyse ei ole vain koristeesta: '
+            + 'laatta torjuu sadetta ja pitää sisällä viileämpää helteellä. '
+            + 'Nimi ei tule espanjan sinistä tarkoittavasta sanasta azul vaan '
+            + 'arabian sanasta az-zulayj, kiillotettu pikkukivi.',
+          selite: 'Lissabonilaisen talon julkisivu läheltä. Sama kuvio toistuu '
+            + 'laatasta toiseen, ja neljä laattaa muodostaa yhdessä yhden '
+            + 'suuremman kuvion — siksi ladonnan on osuttava kohdalleen.',
+          lahde: 'LBM1948, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Azulejo',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Fado syntyi 1800-luvun alussa Lissabonin kujilla, ja Unesco otti '
+        + 'sen ihmiskunnan kulttuuriperinnön luetteloon vuonna 2011.',
+      tehtava: {
+        kysymys: 'Kuinka monta kieltä portugalilaisessa kitarassa on?',
+        vaihtoehdot: ['Kuusi', 'Kahdeksan, neljänä parina', 'Kaksitoista, kuutena parina', 'Kaksikymmentä, kymmenenä parina'],
+        oikea: 2,
+        fakta: 'Fadoa säestää kaksi kitaraa, ja portugalilaisessa niistä on '
+          + 'kuusi kieliparia eli kaksitoista kieltä — vastaus löytyi '
+          + 'fadonostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Fado — laulu, jossa on saudade',
+          tiedosto: 'Amalia Rodrigues Portugese fado-zangeres op Schiphol, Bestanddeelnr 916-9840.jpg',
+          teksti: 'Fado on Lissabonin oma laulu: yksi laulaja, klassinen kitara '
+            + 'ja portugalilainen kitara, jossa on kaksitoista kieltä kuutena '
+            + 'parina. Aiheena on useimmiten saudade, kaipaus jotakin kohti, '
+            + 'mitä ei enää ole. Amália Rodrigues lauloi fadoa yli '
+            + 'viisikymmentä vuotta, ja kun hän kuoli 1999, Portugalissa '
+            + 'vietettiin kolme päivää kansallista surua.',
+          selite: 'Amália Rodrigues Schipholin lentokentällä lokakuussa 1964 '
+            + 'kesken kiertueen. Hän esiintyi lähes aina mustissa vaatteissa '
+            + 'ja huivi hartioilla — asusta tuli fadolaulajan tunnusmerkki.',
+          lahde: 'Harry Pot / Anefo, Wikimedia Commons (CC0)',
+          wiki: 'Amália Rodrigues',
+          musiikki: 'https://music.apple.com/fi/search?term=am%C3%A1lia%20rodrigues',
+          musiikkiNimi: 'Amália Rodrigues Apple Musicissa',
+          musiikkiNayte: 'https://archive.org/download/Fado2017/003-don-bosco-students.mp3',
+          musiikkiNayteNimi: 'Fadokilpailu 2017 — Aren Noronha, CC BY-SA',
+        },
+        {
+          otsikko: 'Severan kotikadulle ladottiin kitara',
+          tiedosto: 'Maria Severa - Fado-Sängerin.jpg',
+          teksti: 'Maria Severa Onofriana syntyi vuonna 1820 ja lauloi fadoa '
+            + 'Mourarian kortteleissa niin, että hänestä tuli koko Lissabonin '
+            + 'puheenaihe. Hän sairastui tuberkuloosiin ja kuoli 30. '
+            + 'marraskuuta 1846 vain 26-vuotiaana Rua do Capelãon varrella. '
+            + 'Köyhä laulaja haudattiin yhteishautaan ilman arkkua. '
+            + 'Kahdeksankymmentäviisi vuotta myöhemmin hänestä tehtiin '
+            + 'Portugalin ensimmäinen äänielokuva, ja hänen kotikatunsa '
+            + 'kiveykseen on ladottu kitaran kuva.',
+          selite: 'Maria Severa Francisco Metrassin piirroksessa. Hän on '
+            + 'sivuttain, hiukset nutturalla, korvassa rengas ja kaulassa '
+            + 'ristiriipus; hartioilla riippuu tummareunainen huivi.',
+          lahde: 'Francisco Augusto Metrass, Wikimedia Commons (PD)',
+          wiki: 'Maria Severa',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Kaksi makua, joita ei saa muualta: luostarin leivos, jonka pinnan '
+        + 'pitää olla vähän palanut, ja kesäkuun yön sardiini leivän päältä.',
+      tehtava: {
+        kysymys: 'Minä päivänä Lissabon juhlii omaa pyhimystään Antoniusta?',
+        vaihtoehdot: ['1. marraskuuta', '13. kesäkuuta', '24. kesäkuuta', '6. lokakuuta'],
+        oikea: 1,
+        fakta: 'Antonius kuoli 13. kesäkuuta 1231, ja päivästä tuli Lissabonin '
+          + 'oma vapaapäivä — vastaus löytyi sardiininostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Pastel de nata on luostarin resepti',
+          tiedosto: 'Pasteles de nata en Pasteis de Belém.jpg',
+          teksti: 'Jerónimosin luostarin munkit paistoivat lehtitaikinakuppeja, '
+            + 'joissa on munakermatäyte. Kun luostarit suljettiin 1834, '
+            + 'resepti päätyi viereiselle sokerikaupalle, ja Pastéis de Belém '
+            + 'on myynyt leivoksia vuodesta 1837. Kahvila kertoo paistavansa '
+            + 'niitä yli 20 000 päivässä. Vain siellä ne saa nimittää pastéis '
+            + 'de belém — muualla ne ovat pastel de nata.',
+          selite: 'Leivoksia myyntitiskillä Pastéis de Belémissä Lissabonissa. '
+            + 'Kuoren pitää olla rapea ja täytteen pinnan hieman palanut: '
+            + 'juuri ne mustat läiskät ovat oikein paistetun merkki.',
+          lahde: 'ProtoplasmaKid, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          otsikko: 'Sardiinit grillataan kadulla kesäkuun yönä',
+          tiedosto: 'Sardinhas assadas.jpg',
+          teksti: 'Lissabonin oma pyhimys Antonius syntyi kaupungissa 1195 ja '
+            + 'kuoli Padovassa 13. kesäkuuta 1231. Siitä päivästä tuli '
+            + 'Lissabonin oma vapaapäivä, ja juhla alkaa jo edellisenä '
+            + 'iltana: kaupunginosat kilpailevat kulkueilla, jotka marssivat '
+            + 'Avenida da Liberdadea alas. Kisa alkoi vuonna 1932. Kujille '
+            + 'kannetaan grillit, ja sardiinit paistetaan hiilillä ja syödään '
+            + 'leipäviipaleen päältä. Torilta ostetaan basilikaruukku, jonka '
+            + 'paperilipussa lukee nelisäkeinen runo.',
+          selite: 'Neljä grillattua sardiinia soikealla metallivadilla, vieressä '
+            + 'kolme keitettyä perunaa ja kulhollinen salaattia. Kalojen '
+            + 'kylkiin on jäänyt grillin ritilän mustat raidat.',
+          lahde: 'Duarte Briz, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Antonius Padovalainen',
+        },
+      ],
+    },
+  ],
+  barcelona: [
+    {
+      id: 'kaupunki',
+      nimi: 'Barcelona',
+      johdanto: 'Kaupunki, jossa jokaisesta korttelin kulmasta on leikattu pala '
+        + 'pois, ihmiset kiipeävät toistensa harteille torniksi ja talon '
+        + 'katolla nukkuu lohikäärme.',
+      kansikuvat: [
+        {
+          tiedosto: 'Barcelona Parc Güell el drac.jpg',
+          selite: 'Park Güellin porrasaltaan lisko, jota sanotaan nimellä el '
+            + 'drac. Se on koottu rikotuista kaakelinpaloista: selkä sinistä '
+            + 'ja ruskeaa, tassut vihreitä, alla portaan valkoinen mosaiikki.',
+          lahde: 'Isiwal, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Cavalcada de gegants de la Mercè 2008 - P1210875.jpg',
+          selite: 'Gegant eli jättiläisnukke kruunu päässä ja punainen viitta '
+            + 'harteilla Mercè-juhlan kulkueessa. Nuken sisällä kävelee yksi '
+            + 'ihminen; etualalla lapsi katsoo ylöspäin.',
+          lahde: 'Pere prlpz, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Barcelona Mercat de la Boqueria 08.jpg',
+          selite: 'Boquerian kauppahallin hedelmätiski: banaanit ja ananakset '
+            + 'roikkuvat katosta, hinnat on kirjoitettu liidulla mustille '
+            + 'tauluille ja tiskin reunalla on rivi valmiiksi kaadettuja '
+            + 'mehuja.',
+          lahde: 'Ad Meskens, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Sardanassa askeleet lasketaan',
+          tiedosto: 'Sardana Pla de la Seu.jpg',
+          teksti: 'Sardana tanssitaan piirissä käsi kädessä, ja askeleet '
+            + 'lasketaan tarkasti: jokaisessa sävelmässä on oma määrä lyhyitä '
+            + 'ja pitkiä askelia, eikä määrä ole aina sama. Siksi piirissä on '
+            + 'yleensä yksi, joka laskee ne muiden puolesta ja antaa merkin. '
+            + 'Säestäjänä on cobla, jossa on yksitoista soittajaa mutta '
+            + 'kaksitoista soitinta — flabiol-huilun soittaja lyö samalla '
+            + 'käsivarteensa sidottua pikkurumpua. Barcelonassa piiri syntyy '
+            + 'usein katedraalin edustalle.',
+          selite: 'Sardanaa tanssitaan katedraalin edessä Barcelonassa. Tanssijat '
+            + 'ovat jättäneet laukkunsa ja takkinsa piirin keskelle; se '
+            + 'kuuluu tapaan yhtä lailla kuin askeleet.',
+          lahde: 'Canaan, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Sardana',
+          musiikki: 'https://music.apple.com/fi/search?term=sardana%20cobla',
+          musiikkiNimi: 'Sardana-musiikkia Apple Musicissa',
+          musiikkiNayte: 'https://archive.org/download/TarannCobla-OdaAlFolklore/01RquiemDeCooper.mp3',
+          musiikkiNayteNimi: 'Cobla soittaa — Tarannà + Cobla, CC BY-NC',
+        },
+        {
+          otsikko: 'Ihmistornin huipulla on lapsi',
+          tiedosto: '4de9f-Colla Jove Xiquets de Tarragona-Concurs2010.jpg',
+          teksti: 'Castell on katalaanien ihmistorni. Pohjalla on pinya, satojen '
+            + 'ihmisten tiivis kasa, jonka päälle kerrokset nousevat '
+            + 'harteilta harteille; korkeimmissa torneissa on kymmenen '
+            + 'kerrosta. Huipulle kiipeää lapsi, enxaneta, joka nostaa '
+            + 'kätensä ja näyttää neljää sormea — yhtä montaa kuin Katalonian '
+            + 'lipussa on raitaa. Torni lasketaan onnistuneeksi vasta, kun se '
+            + 'on purettu kaatumatta.',
+          selite: 'Castell nimeltä 4 de 9 amb folre Tarragonan kilpailussa: neljä '
+            + 'ihmistä joka kerroksessa ja yhdeksän kerrosta. Alhaalla näkyy '
+            + 'pinya, joka kannattelee tornia ja ottaa sen kiinni, jos se '
+            + 'sortuu.',
+          lahde: 'Ferran ( fer55 ), Wikimedia Commons (CC BY-SA 2.0)',
+        },
+        {
+          otsikko: 'Joka kulmasta leikattiin pala pois',
+          tiedosto: 'Eixample aire cropped.jpg',
+          teksti: 'Barcelona oli 1850-luvulle asti muurien sisällä. Kun muurit '
+            + 'purettiin, insinööri Ildefons Cerdà sai piirtää tyhjälle '
+            + 'kentälle uuden kaupungin: ruudukon, jonka korttelit ovat 113 '
+            + 'metriä sivultaan. Erikoisinta on se, mitä hän jätti pois. '
+            + 'Jokaisesta kulmasta leikattiin 20 metrin viiste, jotta '
+            + 'hevosvaunun ei tarvitsisi kääntyä terävästi. Niin jokaisesta '
+            + 'risteyksestä tuli kahdeksankulmainen aukio.',
+          selite: 'Ilmakuva Eixamplen ruudukosta lentokoneesta. Korttelit ovat '
+            + 'samankokoisia, mutta kulmat on viistetty, joten risteykset '
+            + 'erottuvat ylhäältä pieninä kahdeksankulmioina.',
+          lahde: 'Alhzeiia, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Eixample',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Katalonian omat ruoat eivät ole hienoja: hiiltynyt sipuli ja '
+        + 'leipäviipale, jota hierotaan tomaatilla. Molemmat syödään sormin.',
+      tehtava: {
+        kysymys: 'Minkä kasvin oksilla calçotit paahdetaan avotulella?',
+        vaihtoehdot: ['Oliivipuun', 'Mantelipuun', 'Viiniköynnöksen', 'Korkkitammen'],
+        oikea: 2,
+        fakta: 'Sipulit ladotaan palavien viiniköynnöksen oksien päälle — se '
+          + 'lukee calçot-nostossa.',
+      },
+      nostot: [
+        {
+          otsikko: 'Calçot syödään esiliina kaulassa',
+          tiedosto: 'Calçotada a Valls (Catalonia).jpg',
+          teksti: 'Calçot on pitkäksi kasvatettu kevätsipuli, jota paahdetaan '
+            + 'avotulella viiniköynnöksen oksista. Musta kuori vedetään '
+            + 'sormin pois, valkoinen sisus kastetaan romesco-kastikkeeseen '
+            + 'ja pudotetaan suuhun pää takakenossa — siksi kaulaan sidotaan '
+            + 'esiliina. Kausi kestää tammikuusta kevääseen. Valls, josta '
+            + 'laji on kotoisin, järjestää calçotada-juhlansa tammikuun '
+            + 'viimeisenä sunnuntaina, ja siellä kilpaillaan myös syömisessä.',
+          selite: 'Calçoteja paahdetaan kadulla Vallsissa. Sipulit on ladottu '
+            + 'ritilälle palavien viiniköynnöksen oksien päälle, ja kuoren '
+            + 'pitää hiiltyä mustaksi, jotta sisus kypsyy höyryssä. '
+            + 'Paahtajilla on punainen barretina-lakki.',
+          lahde: 'flydime, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+        {
+          otsikko: 'Leipä hierotaan tomaatilla',
+          tiedosto: 'Pa amb tomaquet.jpg',
+          teksti: 'Pa amb tomàquet on Katalonian arkisin ruoka: leipäviipale, '
+            + 'jota hierotaan halkaistulla kypsällä tomaatilla, päälle '
+            + 'oliiviöljyä ja suolaa. Hierominen lopetetaan, kun leipä on '
+            + 'vaaleanpunainen. Ravintolassa leipä tuodaan usein pöytään '
+            + 'paljaana ja tomaatinpuolikas viereen, jolloin jokainen hieroo '
+            + 'omansa. Tomaatiksi kasvatetaan omaa lajiketta, tomàquet de '
+            + 'penjar, joka sidotaan letiksi roikkumaan ja säilyy talven yli.',
+          selite: 'Lautasellinen pa amb tomàquetia. Leivät on paahdettu ja '
+            + 'hierottu tomaatilla niin, että kuoreen on jäänyt siemeniä ja '
+            + 'punaisia paloja; oliiviöljy kiiltää lautasen pohjalla.',
+          lahde: 'Jennifer Woodard Maderazo, Wikimedia Commons (CC BY 2.0)',
+        },
+      ],
+    },
+    {
+      id: 'talot',
+      nimi: 'Talot',
+      johdanto: 'Sata vuotta sitten Barcelonan rikkaat kilpailivat siitä, kenellä '
+        + 'on oudoin talo. Jäljelle jäivät lohikäärmeen selkä ja sali, joka '
+        + 'valaistaan auringolla.',
+      tehtava: {
+        kysymys: 'Mitä Palau de la Música Catalanan salissa ei tarvita '
+          + 'päiväsaikaan?',
+        vaihtoehdot: ['Nuotteja', 'Sähkövaloa', 'Mikrofoneja', 'Kapellimestaria'],
+        oikea: 1,
+        fakta: 'Lasiseinät ja lasikatto valaisevat salin päivällä kokonaan ilman '
+          + 'sähkövaloa — se lukee konserttisalinostossa.',
+      },
+      nostot: [
+        {
+          otsikko: 'Talon katolla nukkuu lohikäärme',
+          tiedosto: 'Casa Batlló 01.jpg',
+          teksti: 'Kutomotehtailija Josep Batlló palkkasi vuonna 1904 Antoni '
+            + 'Gaudín muuttamaan tavallisen vuokratalon sellaiseksi, ettei '
+            + 'toista samanlaista olisi. Katosta tuli kaareva ja se katettiin '
+            + 'kaakeleilla kuin suomuilla: lohikäärmeen selkä. Katon '
+            + 'vasemmassa reunassa nousee torni ja sen huipussa risti, jonka '
+            + 'on tulkittu olevan pyhän Yrjänän keihäs lohikäärmeen selässä. '
+            + 'Parvekkeet muistuttavat naamioita, ja talon lempinimi on '
+            + 'luutalo.',
+          selite: 'Casa Batllón julkisivun yläosa: suomukatto, tornin kärjessä '
+            + 'nelihaarainen risti ja alempana kolme parveketta, jotka '
+            + 'näyttävät silmikoilta. Seinäpinta on rikotusta lasista ja '
+            + 'kaakelista.',
+          lahde: 'Bernard Gagnon, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Casa Batlló',
+        },
+        {
+          otsikko: 'Konserttisali, jossa ei sytytetä valoja',
+          tiedosto: 'Palau de la Música Catalana, interior 1.jpg',
+          teksti: 'Barcelonalainen kuoro Orfeó Català rakensi itselleen '
+            + 'konserttitalon vuosina 1905–1908. Arkkitehti Lluís Domènech i '
+            + 'Montaner teki kahdesta seinästä lähes kokonaan lasia ja '
+            + 'katosta valtavan lasi-ikkunan, jonka keskeltä riippuu alaspäin '
+            + 'kupu kuin kultainen aurinko. Sali on Euroopan ainoa '
+            + 'konserttisali, jossa päiväsaikaan ei tarvita lainkaan '
+            + 'sähkövaloa. Lavan takaseinällä on kahdeksantoista '
+            + 'mosaiikkineitoa, ja jokainen soittaa eri soitinta.',
+          selite: 'Palau de la Música Catalanan sali parvelta katsottuna: '
+            + 'kattoikkunan sinikultainen kupu roikkuu alaspäin, takana ovat '
+            + 'urut, oikealla korkeat lasiseinät ja alhaalla punaiset '
+            + 'penkkirivit.',
+          lahde: 'Thomas Ledl, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Palau de la Música Catalana',
+          musiikki: 'https://music.apple.com/fi/search?term=orfe%C3%B3%20catal%C3%A0',
+          musiikkiNimi: 'Orfeó Català Apple Musicissa',
+        },
+      ],
+    },
+  ],
+  granada: [
+    {
+      id: 'kaupunki',
+      nimi: 'Granada',
+      johdanto: 'Kaupunki lumihuippujen alla: täällä seisoo palatsi, jota voittajat '
+        + 'eivät purkaneet, ja baarissa juoman mukana tulee yhä ruokaa ilman '
+        + 'eri maksua.',
+      kansikuvat: [
+        {
+          tiedosto: 'Detalle Fuente Patio de los Leones Alhambra Granada.jpg',
+          selite: 'Leijonien pihan suihkulähde Alhambrassa: kaksitoista kulunutta '
+            + 'marmorileijonaa kannattaa selässään matalaa allasta, ja takana '
+            + 'kiertää ohuiden pylväiden kaarikäytävä.',
+          lahde: 'Pcb2mail, Wikimedia Commons (CC BY-SA 4.0)',
+        },
+        {
+          tiedosto: 'Granada - La Alcaicería 1.jpg',
+          selite: 'Alcaicerían kuja vanhassa kaupungissa: kipsikoristeisia '
+            + 'kaaria, tumma puukatto, katosta riippuva lyhty ja molemmin '
+            + 'puolin pieniä myymälöitä huiveineen ja laattoineen.',
+          lahde: 'Zarateman, Wikimedia Commons (CC0)',
+        },
+        {
+          tiedosto: 'Sacromonte-Granada (1).jpg',
+          selite: 'Sacromonten rinnettä: valkoiseksi kalkittu talo sinisin '
+            + 'reunuksin on rakennettu kiinni kallioon, seinään on ripustettu '
+            + 'rivi kukkaruukkuja ja alla kiertää kivinen kuja.',
+          lahde: 'Alberto-g-rovi, Wikimedia Commons (CC BY 3.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Palatsi, jota ei purettu',
+          tiedosto: 'View of the Alhambra and Sierra Nevada - Granada - Spain.jpg',
+          teksti: 'Alhambra oli Granadan emiirikunnan hallintokeskus ja Iberian '
+            + 'niemimaan viimeisen muslimivaltion sydän. Kun se luovutettiin '
+            + 'vuonna 1492, uudet hallitsijat eivät purkaneet palatsia vaan '
+            + 'muuttivat siihen — siksi sen kipsikoristelu ja arabiankieliset '
+            + 'kirjoitukset ovat yhä paikoillaan. Sama lause toistuu seinillä '
+            + 'uudestaan ja uudestaan: se oli hallitsijasuvun tunnuslause, ja '
+            + 'se kuuluu "ei ole voittajaa paitsi Jumala".',
+          selite: 'Alhambra kukkulallaan ja takana Sierra Nevada, jonka huipuilla '
+            + 'on lunta vielä kesäkuussa. Vuoret ovat myös syy palatsin '
+            + 'puutarhoihin: sulamisvesi tuotiin kanavaa pitkin suoraan '
+            + 'suihkulähteisiin.',
+          lahde: 'Adam Jones, Ph.D., Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Alhambra',
+        },
+        {
+          otsikko: 'Avaimet luovutettiin tammikuun toisena',
+          tiedosto: 'Granada 1492 Detail.jpg',
+          teksti: 'Granadan viimeinen hallitsija Muhammad XII, jota espanjalaiset '
+            + 'sanoivat Boabdiliksi, luovutti kaupungin avaimet 2. tammikuuta '
+            + '1492. Sopimuksessa oli luvattu, että asukkaat saavat pitää '
+            + 'uskontonsa ja kielensä — lupaus rikottiin alle kymmenessä '
+            + 'vuodessa. Etelään johtavalla tiellä on yhä paikka nimeltä '
+            + 'Suspiro del Moro, maurin huokaus: tarinan mukaan Boabdil '
+            + 'katsoi siitä taakseen ja itki, ja hänen äitinsä sanoi, ettei '
+            + 'kannata itkeä kuin nainen sitä, mitä ei osannut puolustaa kuin '
+            + 'mies.',
+          selite: 'Francisco Pradillan maalaus vuodelta 1882. Vasemmalla Boabdil '
+            + 'mustan hevosen selässä, oikealla punapukuinen Ferdinand ja '
+            + 'hänen takanaan Isabella valkoisen hevosen selässä; taustan '
+            + 'kukkulalla kohoaa Alhambra.',
+          lahde: 'Francisco Pradilla y Ortiz, Wikimedia Commons (Public domain)',
+          wiki: 'Reconquista',
+        },
+        {
+          otsikko: 'Aamulla hiihtoa, iltapäivällä merta',
+          tiedosto: 'Sierra Nevada Borreguiles 5.jpg',
+          teksti: 'Granadan keskustasta on reilut kolmekymmentä kilometriä '
+            + 'Euroopan eteläisimpään hiihtokeskukseen ja noin '
+            + 'seitsemänkymmentä Välimeren rannalle, joten saman päivän '
+            + 'aikana ehtii sekä rinteeseen että uimaan. Hissit nousevat yli '
+            + 'kolmen kilometrin korkeuteen, ja vieressä kohoaa Mulhacén, 3 '
+            + '479 metriä, Iberian niemimaan korkein huippu. Lunta ei silti '
+            + 'ole taattu: alppihiihdon MM-kisat oli määrä pitää täällä 1995, '
+            + 'mutta ne siirrettiin vuodella, koska rinteet olivat paljaat.',
+          selite: 'Tuolihissi Borreguilesin rinteillä Sierra Nevadassa. Etualalla '
+            + 'riippuu tyhjä tuoli, oikealla nousee tuoli, jossa istuu '
+            + 'laskettelijoita, ja taustalla näkyy hissipylväitä ja lumisia '
+            + 'kumpuja.',
+          lahde: 'kallerna, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Sierra Nevada (Espanja)',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Säveltäjä muutti sen puutarhan viereen, jonka oli jo ehtinyt '
+        + 'säveltää, ja kaupungin oma flamenco tanssitaan yhä mäkeen '
+        + 'kaivetussa luolassa.',
+      tehtava: {
+        kysymys: 'Minkä niminen on Granadan oma flamencomuoto, joka kuului alun '
+          + 'perin hääpäivään?',
+        vaihtoehdot: ['Fandango', 'Sevillana', 'Zambra', 'Jota'],
+        oikea: 2,
+        fakta: 'Zambra on Sacromonten luolien oma flamencomuoto, ja sitä '
+          + 'tanssittiin häissä — se lukee luolanostossa.',
+      },
+      nostot: [
+        {
+          otsikko: 'Säveltäjä, joka muutti Alhambran kylkeen',
+          tiedosto: 'Manuel de Falla.jpg',
+          teksti: 'Manuel de Falla kirjoitti teoksensa "Öitä Espanjan '
+            + 'puutarhoissa" vuosina 1909–1915, kun asui vielä Pariisissa ja '
+            + 'Madridissa. Sen ensimmäinen osa on nimeltään "Generalifessa", '
+            + 'ja se on puutarha Alhambran kukkulalla. Vasta myöhemmin Falla '
+            + 'muutti Granadaan ja asettui pieneen puutarhataloon aivan saman '
+            + 'kukkulan rinteeseen; talo on nyt museo ja piano yhä '
+            + 'paikallaan. Vuonna 1922 hän järjesti Alhambran pihalla '
+            + 'kilpailun, joka pelasti vanhan cante jondo -laulun '
+            + 'unohdukselta.',
+          selite: 'Manuel de Falla (1876–1946) aikakauslehden pyöreässä kuvassa: '
+            + 'knalli päässä, paksut viikset ja turkiskauluksinen '
+            + 'päällystakki. Solmio on väritetty jälkikäteen vihreäksi, ja '
+            + 'alle on painettu nimi.',
+          lahde: 'A. Ciarán, Wikimedia Commons (PD)',
+          wiki: 'Manuel de Falla',
+          musiikki: 'https://music.apple.com/fi/artist/manuel-de-falla/319270',
+          musiikkiNimi: 'Manuel de Falla Apple Musicissa',
+        },
+        {
+          otsikko: 'Flamenco tanssitaan luolassa',
+          tiedosto: 'Flamenco granada-1.jpg',
+          teksti: 'Sacromonten rinteeseen on kaivettu asuntoja suoraan kallioon, '
+            + 'ja niissä syntyi zambra — Granadan oma flamencomuoto, joka '
+            + 'kuului alun perin hääpäivään eikä esitykseen. Vanhassa '
+            + 'zambrassa on kolme osaa, ja ensimmäinen niistä, alboreá, on '
+            + 'morsiamen laulu: perinteen mukaan sitä ei lauleta muualla kuin '
+            + 'häissä. Helmikuun 1963 rankkasateet romahduttivat luolia ja '
+            + 'ajoivat suuren osan asukkaista pois, mutta osassa luolia '
+            + 'tanssitaan yhä.',
+          selite: 'Zambra Sacromonten luolassa: kalkittu holvikatto, siihen '
+            + 'ripustettuja kuparipannuja, kaksi tanssijaa keskellä kapeaa '
+            + 'käytävää ja yleisö istumassa molemmilla seinustoilla.',
+          lahde: 'Yair Haklai, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Flamenco',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Granadassa ruokaa ei tarvitse tilata baaritiskillä, ja kaupungin '
+        + 'kuuluisin leivos on kotoisin sotaleiristä ja nimetty paavin '
+        + 'mukaan.',
+      tehtava: {
+        kysymys: 'Kenen mukaan pionono-leivos on saanut nimensä?',
+        vaihtoehdot: ['Sen keksineen leipurin mukaan', 'Paavi Pius IX:n mukaan', 'Santa Fen kirkon mukaan', 'Kuningatar Isabellan mukaan'],
+        oikea: 1,
+        fakta: 'Leipuri Ceferino Isla nimesi leivoksen paavi Pius IX:n mukaan, '
+          + 'jota sanottiin italiaksi Pío Nonoksi — se lukee leivosnostossa.',
+      },
+      nostot: [
+        {
+          otsikko: 'Tapas kuuluu hintaan',
+          tiedosto: 'Cerveza y pulpo seco motrileño.jpg',
+          teksti: 'Granadassa juoman mukana tulee tapas ilman eri maksua. Annosta '
+            + 'ei saa valita: se on baarin valinta eikä asiakkaan, ja se '
+            + 'vaihtuu joka kierroksella — monessa paikassa annokset myös '
+            + 'kasvavat, mitä pitempään istut. Muualla Espanjassa ilmainen '
+            + 'tapas on jo harvinaisuus, ja granadalaiset puolustavat omaansa '
+            + 'kiivaasti. Ruokalistaa ei siis kannata pyytää: illan syö '
+            + 'helpoiten kävelemällä baarista toiseen ja katsomalla, mitä '
+            + 'eteen tuodaan.',
+          selite: 'Olut ja tapas Granadan seudulla. Valkoisella lautasella on '
+            + 'kuivattua mustekalaa suikaleina salaatinlehtien päällä, '
+            + 'vieressä lasillinen olutta puisella baaritiskillä.',
+          lahde: 'Arkangel, Wikimedia Commons (CC BY-SA 2.0)',
+        },
+        {
+          otsikko: 'Leivos kaupungista, joka rakennettiin piiritystä varten',
+          tiedosto: 'Granada - Pionono.jpg',
+          teksti: 'Granadan vieressä on Santa Fen pikkukaupunki, jonka Kastilian '
+            + 'ja Aragonian hallitsijat rakennuttivat vuonna 1491 '
+            + 'sotaleiriksi Granadan piiritystä varten: suorakulmainen '
+            + 'ruudukko, kaksi katua ristissä ja neljä porttia. Siellä '
+            + 'allekirjoitettiin huhtikuussa 1492 sopimus, jolla Kristoffer '
+            + 'Kolumbus sai luvan lähteä merelle. Nykyään Santa Fe tunnetaan '
+            + 'aivan muusta: leipuri Ceferino Isla keksi siellä 1897 pienen '
+            + 'siirappiin kastetun leivoksen ja nimesi sen paavi Pius IX:n '
+            + 'mukaan — italiaksi Pío Nono, siitä pionono.',
+          selite: 'Pionono kämmenellä paperivuoassa: pieni siirappiin kastettu '
+            + 'kääretorttu, jonka päällä on ruskistettua kermaa, ja mukana '
+            + 'muovilusikka. Koko on parin suupalan luokkaa.',
+          lahde: 'GrandCelinien, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Kristoffer Kolumbus',
+        },
+      ],
+    },
+  ],
+  budapest: [
+    {
+      id: 'kaupunki',
+      nimi: 'Budapest',
+      johdanto: 'Buda, Óbuda ja Pest olivat vielä vuonna 1873 kolme eri kaupunkia. '
+        + 'Samana vuonna niistä tehtiin yksi: Budapest, jonka alla pulppuaa '
+        + 'toistasataa lämmintä lähdettä.',
+      kansikuvat: [
+        {
+          tiedosto: 'Matthias Church Budapest Roof Tiles.jpg',
+          selite: 'Matiaksen kirkon torninhuiput Budan linnavuorella. Katto on '
+            + 'ladottu värillisistä lasitetuista kaakeleista, ja '
+            + 'vinoruutukuvio on restauroija Frigyes Schulekin oma keksintö '
+            + '1800-luvun lopulta — keskiajalla sitä ei ollut.',
+          lahde: 'D4m1en, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'Budapest Parliament 4604.JPG',
+          selite: 'Parlamenttitalo Tonavan Pestin puoleisella rannalla: punainen '
+            + 'kupoli keskellä ja siivet sen molemmin puolin toistensa '
+            + 'peilikuvina. Talo on 96 metriä korkea, viittaus vuoteen 896, '
+            + 'josta Unkarin historia lasketaan alkavaksi.',
+          lahde: 'Dirk Beyer, Wikimedia Commons (CC BY-SA 3.0)',
+        },
+        {
+          tiedosto: 'The Millennium Monument in Heroes\' Square, Budapest, Hungary.jpg',
+          selite: 'Sankarien aukio sinisenä hetkenä. Keskellä kohoaa 36 metriä '
+            + 'korkea pylväs, jonka huipulla arkkienkeli Gabriel levittää '
+            + 'siipensä, ja kaarevissa pylväiköissä seisoo seitsemän ja '
+            + 'seitsemän pronssista unkarilaista.',
+          lahde: 'Paul Mannix, Wikimedia Commons (CC BY 2.0)',
+        },
+      ],
+      nostot: [
+        {
+          otsikko: 'Shakkia lämpimässä altaassa',
+          tiedosto: 'Széchényi Spa Chess Champions (6991219530).jpg',
+          teksti: 'Budapestin alla on toistasataa lämmintä lähdettä, ja kaupunki '
+            + 'on rakentanut niiden päälle kylpylöitä ottomaanien ajoista '
+            + 'asti. Széchenyin kylpylä avattiin vuonna 1913, ja sen vesi '
+            + 'nousee maasta 74- ja 77-asteisena; altaisiin se jäähdytetään. '
+            + 'Ulkoaltaassa on betonisia pöytiä, joiden ääreen pelaajat '
+            + 'asettuvat lautoineen: he seisovat vedessä vyötäröä myöten ja '
+            + 'siirtävät nappuloita märin sormin. Vakiopelaajat tulevat '
+            + 'paikalle myös talvella, kun altaan pinnasta nousee höyryä.',
+          selite: 'Shakinpelaajia Széchenyin kylpylän ulkoaltaassa. Kaksi lautaa '
+            + 'on aseteltu vedessä olevalle betonipöydälle, ja miehet '
+            + 'nojaavat siihen kyynärpäillään — ympärillä muut uivat ja '
+            + 'juttelevat kuin mitään erikoista ei tapahtuisi.',
+          lahde: 'Christine Zenino, Wikimedia Commons (CC BY 2.0)',
+          wiki: 'Széchenyin kylpylä',
+        },
+        {
+          otsikko: 'Keksijältä meni kuukausi omaan pulmaansa',
+          tiedosto: 'Rubiks cube by keqs.jpg',
+          teksti: 'Ernő Rubik opetti arkkitehtuuria Budapestin taideteollisessa '
+            + 'korkeakoulussa ja rakensi vuonna 1974 oppilailleen '
+            + 'havaintovälineen: 27 puupalikkaa, jotka pyörivät toistensa '
+            + 'ympäri hajoamatta. Kun hän värjäsi sivut ja sekoitti ne, hän '
+            + 'tajusi tehneensä pulman — ja tarvitsi kokonaisen kuukauden '
+            + 'ratkaistakseen sen itse. Unkarissa lelu myytiin nimellä bűvös '
+            + 'kocka, taikakuutio. Asentoja on yli 43 triljoonaa, mutta '
+            + 'jokaisesta pääsee maaliin enintään 20 kierrolla.',
+          selite: 'Sekoitettu Rubikin kuutio valkoista taustaa vasten. Joka '
+            + 'sivulla on yhdeksän ruutua ja värejä kuusi. Keskimmäiset '
+            + 'ruudut eivät liiku toistensa suhteen, joten ne kertovat jo '
+            + 'etukäteen, minkä värinen kukin sivu lopulta on.',
+          lahde: 'Lars Karlsson (Keqs), Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Rubikin kuutio',
+          galleria: [
+            {
+              otsikko: 'Ensimmäinen pakkaus',
+              tiedosto: 'Magic cube original pack.jpg',
+              selite: 'Kuution unkarilainen alkuperäispakkaus: kulunut sininen '
+                + 'pahvilaatikko, jonka kannessa on kantoreikä ja kyljessä '
+                + 'lukee Politoys ja Hungarian magic cube.',
+              lahde: 'Andreasstolz, Wikimedia Commons (PD)',
+            },
+          ],
+        },
+        {
+          otsikko: 'Patsas, jolle ei tehty kasvoja',
+          tiedosto: 'Vajdahunyad, Anonymus 1.jpeg',
+          teksti: 'Unkarin vanhimman kronikan Gesta Hungarorumin kirjoitti noin '
+            + 'vuonna 1200 mies, joka kutsui itseään vain kirjaimella P. ja '
+            + 'kuninkaan notaariksi. Nimeä ei tiedä kukaan, joten häntä '
+            + 'sanotaan Anonymukseksi eli Nimettömäksi. Kun Miklós Ligeti '
+            + 'teki hänestä pronssipatsaan vuonna 1903, hän jätti kasvot '
+            + 'tahallaan hupun varjoon: salaisuus saa pysyä salaisuutena. '
+            + 'Patsaan kynä on kulunut kiiltäväksi, sillä sitä käydään '
+            + 'koskettamassa onnen toivossa.',
+          selite: 'Anonymus-patsas Városligetin puistossa Vajdahunyadin linnan '
+            + 'pihalla. Pronssinen hahmo istuu pitkässä kaavussa huppu '
+            + 'päässä, eikä hupun sisältä erotu kasvoja lainkaan. Jalustaan '
+            + 'on hakattu latinaksi ANONYMVS ja "kunniakkaimman '
+            + 'Béla-kuninkaan notaari".',
+          lahde: 'Miklós Ligeti, kuva Aisano, Wikimedia Commons (PD)',
+        },
+      ],
+    },
+    {
+      id: 'ruoka',
+      nimi: 'Ruoka',
+      johdanto: 'Kaksi budapestilaista keksintöä: keitto, jonka nimen muu Eurooppa '
+        + 'ymmärsi väärin, ja kakku, jonka ulkonäöstä on annettu oma asetus.',
+      tehtava: {
+        kysymys: 'Montako kakkulevyä dobostortassa on Unkarin asetuksen mukaan?',
+        vaihtoehdot: ['Kolme', 'Viisi', 'Seitsemän', 'Kaksitoista'],
+        oikea: 1,
+        fakta: 'Vuoden 2017 asetus määrää dobostortan pyöreäksi kakuksi, jossa '
+          + 'on viisi levyä ja päällä karamellikansi — vastaus löytyi '
+          + 'kakkunostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Gulassi on Unkarissa keitto',
+          tiedosto: 'Paprika Vendor Budapest big hall.jpg',
+          teksti: 'Se, mitä muualla Euroopassa kutsutaan gulassiksi, on Unkarissa '
+            + 'pörkölt eli paksu pata. Gulyás taas on keitto: lientä, '
+            + 'naudanlihaa, perunaa ja paprikaa, ja se syödään lusikalla. '
+            + 'Sana tarkoittaa karjapaimenta — keitto keitettiin alun perin '
+            + 'padassa laitumella. Paprika saapui maahan ottomaanien mukana '
+            + '1500-luvulla, ja Budapestin suuressa kauppahallissa, joka '
+            + 'avattiin vuonna 1897, sitä myydään makeasta tuliseen.',
+          selite: 'Paprikakoju Budapestin suuressa kauppahallissa. Katosta ja '
+            + 'tiskin reunasta riippuu nauhoja kuivuvia punaisia palkoja ja '
+            + 'valkosipulipunoksia, ja hyllyillä on pusseittain jauhettua '
+            + 'paprikaa eri vahvuuksina.',
+          lahde: 'Takkk, Wikimedia Commons (CC BY-SA 3.0)',
+          wiki: 'Gulassi',
+        },
+        {
+          otsikko: 'Kakku, jolle annettiin oma asetus',
+          tiedosto: 'Dobos torta.jpg',
+          teksti: 'Sokerileipuri Dobos C. József kehitti vuonna 1884 kakun, joka '
+            + 'säilyisi aikana ennen jääkaappeja: viisi ohutta levyä, väliin '
+            + 'suklaavoikreemiä ja päälle kova karamellikansi, joka estää '
+            + 'kuivumisen. Hän esitteli sen Budapestin suuressa näyttelyssä '
+            + 'vuonna 1885, ja maistajiin kuuluivat keisari Frans Joosef ja '
+            + 'keisarinna Elisabet. Reseptin Dobos piti salassa vuoteen 1906. '
+            + 'Vuonna 2017 Unkarin ministeriö määräsi asetuksella, millainen '
+            + 'dobostorta saa olla.',
+          selite: 'Dobostorta ylhäältä kuvattuna. Karamellikansi on leikattu '
+            + 'kolmioiksi ja nostettu pystyyn kreemiruusukkeiden varaan kuin '
+            + 'tuulimyllyn siivet, ja kakun reunasta erottuvat vaaleiden '
+            + 'levyjen ja tumman kreemin vuorottelevat kerrokset.',
+          lahde: 'Christo, Wikimedia Commons (CC BY-SA 4.0)',
+          wiki: 'Dobos torta',
+        },
+      ],
+    },
+    {
+      id: 'musiikki',
+      nimi: 'Musiikki',
+      johdanto: 'Budapestissa keksittiin soitin, jota lyödään vasaroilla, ja tapa, '
+        + 'jolla kansantanssia ei katsota vaan tanssitaan itse.',
+      tehtava: {
+        kysymys: 'Miten cimbalomia soitetaan?',
+        vaihtoehdot: ['Puhaltamalla piippuun', 'Jousella', 'Lyömällä kieliä kahdella vasaralla', 'Näppäilemällä kieliä sormin'],
+        oikea: 2,
+        fakta: 'Cimbalomin teräskielet lyödään soimaan kahdella vasaralla, ja '
+          + 'jalkapoljin vaimentaa ne — vastaus löytyi cimbalom-nostosta.',
+      },
+      nostot: [
+        {
+          otsikko: 'Tanssitalo alkoi yhdestä illasta',
+          tiedosto: 'Muzsikás együttes, Hamar Dániel, ifj. Csooóri Sándor, Sipos Mihály. Fortepan 89430.jpg',
+          teksti: 'Vuonna 1972 muutama budapestilainen soittaja järjesti illan, '
+            + 'jossa kansantanssia ei katsottu lavalta vaan tanssittiin itse, '
+            + 'kuten transilvanialaisissa kylissä. Ideasta kasvoi táncház eli '
+            + 'tanssitalo -liike: soittajat istuvat nurkassa, opettaja '
+            + 'näyttää askeleet ja loput opitaan kädestä pitäen. Sävelmät oli '
+            + 'kerätty matkoilla kyliin, joissa vanhat soittajat vielä '
+            + 'muistivat ne ulkoa. Unesco nosti liikkeen mallikelpoisten '
+            + 'suojelutapojen luetteloon vuonna 2011.',
+          selite: 'Tanssitalo Budapestin Belvárosin nuorisotalossa vuonna 1978. '
+            + 'Etualalla tanssitaan pareittain, ja takana matalalla lavalla '
+            + 'soittaa Muzsikás-yhtye: kontrabasso, viuluja ja alttoviulu.',
+          lahde: 'FORTEPAN / Urbán Tamás, Wikimedia Commons (CC BY-SA 3.0)',
+          musiikki: 'https://music.apple.com/fi/search?term=muzsikas',
+          musiikkiNimi: 'Muzsikás Apple Musicissa',
+        },
+        {
+          otsikko: 'Kymmenen tonnin soitin',
+          tiedosto: 'Hungary-0223 - Cimbalom (7338659240).jpg',
+          teksti: 'Cimbalom on trapetsin muotoinen puinen laatikko, jonka yli on '
+            + 'kiristetty teräskieliä — jokaista säveltä kohti kolme tai '
+            + 'neljä samaan vireeseen viritettyä. Yhdessä ne vetävät runkoa '
+            + 'kokoon noin kymmenen tonnin voimalla, joten laatikon sisään on '
+            + 'jouduttu panemaan kaksi rautapalkkia. Budapestilainen '
+            + 'soitinrakentaja Vencel József Schunda antoi soittimelle jalat '
+            + 'ja vuonna 1874 polkimen, joka vaimentaa kielet. Uutuutta oli '
+            + 'esittelyssä katsomassa myös Ferenc Liszt.',
+          selite: 'Cimbalisti lyö kieliä kahdella ohuella vasaralla. Avoimen '
+            + 'laatikon poikki kulkee tiheä rivi teräskieliä, ja soittajan '
+            + 'takana kaksi viulistia soittaa kirjailluissa liiveissä.',
+          lahde: 'Dennis G. Jarvis, Wikimedia Commons (CC BY-SA 2.0)',
+          wiki: 'Cimbalom',
+          galleria: [
+            {
+              otsikko: 'Ensiesittely 1874',
+              tiedosto: 'Schunda cimbalom presentation.jpg',
+              selite: 'Piirros polkimellisen cimbalomin ensiesittelystä vuonna '
+                + '1874. Yhdeksän miestä pöydän ympärillä, pöydän kyljessä '
+                + 'lukee SCHUNDA, ja vasemmalla istuu tummassa kaavussa '
+                + 'Ferenc Liszt.',
+              lahde: 'A. Weinwurm, Wikimedia Commons (PD)',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
