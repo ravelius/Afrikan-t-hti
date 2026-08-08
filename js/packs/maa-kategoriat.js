@@ -5791,116 +5791,300 @@ export const MAA_KATEGORIAT = {
         + 'kuvaraamattu aukeaa sivu kerrallaan, Prahan tähtikelloa saa itse '
         + 'kelata, kolmesataatuhatta museoesinettä on yhdessä haussa ja '
         + 'norsuihin näkee suorana.',
-      nostot: [
+      lista: [
         {
-          otsikko: '747 kuvaa ja tuskin lainkaan tekstiä',
-          tiedosto: 'Velislavova bible, NK ČR sign. XXIII.C.124, fol. 182r.jpg',
-          teksti: 'Velislavin raamattu tehtiin Prahassa noin vuonna 1340, ja se '
-            + 'on keskiajan Keski-Euroopan laajin kuvakirja. '
-            + 'Pergamenttilehtiä on 188 ja piirroksia 747. Teksti on '
-            + 'kutistettu lyhyiksi latinankielisiksi kuvateksteiksi: kuva '
-            + 'kertoo tapahtuman, sanat vain nimeävät hahmot. Siksi kirjaa '
-            + 'sanotaan keskiajan sarjakuvaksi. Alkuperäinen on Tšekin '
-            + 'kansalliskirjastossa, mutta Manuscriptorium esittelee sen '
-            + 'verkossa ja avaa käsikirjoituksen selaimeen sivu kerrallaan.',
-          selite: 'Sivu Velislavin raamatusta: ylhäällä kaksi hahmoa ja '
-            + 'punakattoinen kirkko, jonka seinää vasten nojaa tikkaat. '
-            + 'Alhaalla neljä hahmoa, joista yhdellä on punainen kirja. '
-            + 'Latinankieliset rivit erottavat kuvakentät toisistaan.',
-          lahde: 'Tuntematon tekijä, Wikimedia Commons (public domain)',
-          linkki: 'https://www.manuscriptorium.com/en/digital-library-treasures/-/velislav-bible/',
-          linkkiNimi: 'Manuscriptorium — Velislavin raamattu',
+          otsikko: 'Käsikirjoitukset ja kokoelmat',
+          kohteet: [
+            {
+              nimi: 'Manuscriptorium — Velislavin raamattu',
+              tiedosto: 'Velislavova bible, NK ČR sign. XXIII.C.124, fol. 182r.jpg',
+              teksti: 'Velislavin raamattu tehtiin Prahassa noin vuonna 1340, ja '
+                + 'se on keskiajan Keski-Euroopan laajin kuvakirja. '
+                + 'Pergamenttilehtiä on 188 ja piirroksia 747.',
+              selite: 'Sivu Velislavin raamatusta: ylhäällä kaksi hahmoa ja '
+                + 'punakattoinen kirkko, jonka seinää vasten nojaa tikkaat. '
+                + 'Alhaalla neljä hahmoa, joista yhdellä on punainen kirja. '
+                + 'Latinankieliset rivit erottavat kuvakentät toisistaan.',
+              lahde: 'Tuntematon tekijä, Wikimedia Commons (public domain)',
+              linkki: 'https://www.manuscriptorium.com/en/digital-library-treasures/-/velislav-bible/',
+            },
+            {
+              nimi: 'eSbírky — Tšekin museokokoelmat verkossa',
+              tiedosto: 'Praha, Nové Město, Václavské náměstí, Národní muzeum.jpg',
+              teksti: 'eSbírky kokoaa tšekkiläisten museoiden kokoelmat samaan '
+                + 'paikkaan: 302 118 esinettä 148 laitoksesta. Sivustoa '
+                + 'ylläpitää Tšekin kansallismuseo, ja hakuun pääsee ilman '
+                + 'tunnuksia.',
+              selite: 'Tšekin kansallismuseo Václavin aukion päässä Prahassa: '
+                + 'kupolillinen 1800-luvun rakennus, edessä pyhän Vaclavin '
+                + 'ratsastajapatsas ja etualalla valko-keltainen ruusupenkki.',
+              lahde: 'PatrikPaprika, Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://www.esbirky.cz/',
+            },
+            {
+              nimi: 'Mucha Foundation — Browse Works',
+              tiedosto: 'Alphonse Mucha - Zodiac, 1869.jpg',
+              teksti: 'Alfons Mucha teki Pariisissa julisteita, joiden kaartuvat '
+                + 'kukat, kehykset ja pitkät hiukset määrittelivät koko '
+                + 'jugendtyylin.',
+              selite: 'Muchan Zodiac-juliste: punatukkainen nainen profiilissa, '
+                + 'päässä koristeellinen otsapanta, taustalla kultainen kehä, '
+                + 'jonka sisällä kiertävät kaksitoista eläinradan merkkiä.',
+              lahde: 'Alphonse Mucha, Wikimedia Commons (public domain)',
+              linkki: 'https://www.muchafoundation.org/gallery/browse-works',
+            },
+          ],
         },
         {
-          otsikko: 'Prahan tähtikello, jonka aikaa saa itse kelata',
-          tiedosto: 'Czech-2013-Prague-Astronomical clock face.jpg',
-          teksti: 'Prahan raatihuoneen tähtitieteellinen kello on vuodelta 1410 '
-            + 'ja käy yhä. Vanhempaa toimivaa tähtikelloa ei maailmassa ole. '
-            + 'Orloj.org on siitä tehty tarkka simulaattori, joka pyörii '
-            + 'selaimessa ilman kirjautumista. Oletuksena se näyttää Prahan '
-            + 'nykyhetken, mutta yhden rastin poistamalla ajan voi siirtää '
-            + 'mihin tahansa päivään ja katsoa, miten aurinkokäsi, kuupallo '
-            + 'ja eläinrata liikkuvat. Sivupaneelissa juoksevat aurinkoaika, '
-            + 'tähtiaika, böömiläinen aika ja kuun vaihe.',
-          selite: 'Orlojin kellotaulu lähikuvassa: kultainen eläinrataympyrä, '
-            + 'sinivalkoinen taivaskiekko, auringon kuva käsivarren päässä ja '
-            + 'musta kuupallo. Reunoilla kullatut veistokset, oikealla '
-            + 'luuranko.',
-          lahde: 'Godot13, Wikimedia Commons (CC BY-SA 4.0)',
-          linkki: 'https://www.orloj.org/orloj/en-US/',
-          linkkiNimi: 'Orloj.org — Prahan tähtikellon simulaattori',
+          otsikko: 'Katso ja kokeile',
+          kohteet: [
+            {
+              nimi: 'Orloj.org — Prahan tähtikellon simulaattori',
+              tiedosto: 'Czech-2013-Prague-Astronomical clock face.jpg',
+              teksti: 'Prahan raatihuoneen tähtitieteellinen kello on vuodelta '
+                + '1410 ja käy yhä. Vanhempaa toimivaa tähtikelloa ei '
+                + 'maailmassa ole.',
+              selite: 'Orlojin kellotaulu lähikuvassa: kultainen eläinrataympyrä, '
+                + 'sinivalkoinen taivaskiekko, auringon kuva käsivarren '
+                + 'päässä ja musta kuupallo. Reunoilla kullatut veistokset, '
+                + 'oikealla luuranko.',
+              lahde: 'Godot13, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.orloj.org/orloj/en-US/',
+            },
+            {
+              nimi: 'Prahan eläintarha — Norsulaakso suorana',
+              tiedosto: 'ZOO Praha, Elephas maximus, 03.jpg',
+              teksti: 'Prahan eläintarhan Norsulaakso lähettää suoraa kuvaa '
+                + 'kahdeksasta kamerasta. Kamerat 1–3 ovat sisällä naaraiden '
+                + 'pavilongissa, kamerat 4–8 ulkotarhassa, ja kamera 7 '
+                + 'näyttää uroksen oman tilan.',
+              selite: 'Kaksi aasiannorsua Prahan eläintarhan ulkotarhassa: '
+                + 'etummainen kääntyy kohti kameraa, takana toinen norsu '
+                + 'betoniseinän edessä, maassa risuja ja oksia.',
+              lahde: 'Honza Groh (Jagro), Wikimedia Commons (CC BY-SA 3.0)',
+              linkki: 'https://www.zoopraha.cz/en/animals/live-from-elephant-valley',
+            },
+            {
+              nimi: 'Muzeum loutkářských kultur — kokoelma verkossa',
+              tiedosto: 'Chrudim, Muzeum loutkářských kultur (3).JPG',
+              teksti: 'Chrudimin nukketeatterimuseolla on yli 50 000 '
+                + 'kokoelmaesinettä, ja pelkkiä nukkeja on yli 10 000 eri '
+                + 'puolilta maailmaa. Vanhimmat ovat 1800-luvun kiertävien '
+                + 'kansannukketeatterien marionetteja.',
+              selite: 'Vitriini Chrudimin nukketeatterimuseossa: valkoiseen '
+                + 'pitsipukuun puettu morsiusnukke, silinteripäinen herra '
+                + 'istumassa ja rivi sotilas- ja naishahmoja vihreällä '
+                + 'korokkeella.',
+              lahde: 'Palickap, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://puppets.bach.cz/vademecum/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  IRL: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Irlanti on avannut arkistonsa: koululaisten keräämät tarinat '
+        + '1930-luvulta, käsin kirjoitetut vuosisadat, suljettu museo jonka '
+        + 'salit voi silti kävellä läpi, ja kivet joissa aakkoset ovat '
+        + 'pelkkiä viiruja.',
+      lista: [
+        {
+          otsikko: 'Sanat ja tarinat',
+          kohteet: [
+            {
+              nimi: 'Dúchas.ie — koululaisten kansanperinnekokoelma',
+              tiedosto: 'Goble-Book of Fairy Poetry024Lupracaun or Fairy Shoemaker.jpg',
+              teksti: 'Irlannissa pyydettiin 1930-luvulla koululaisia keräämään '
+                + 'tarinoita isovanhemmiltaan ja naapureiltaan. Lapset '
+                + 'kirjoittivat vihkoihin taruja, kummituksia, '
+                + 'parannuskeinoja, sääenteitä ja leikkejä.',
+              selite: 'Warwick Goblen piirros vuodelta 1920: leprikoni istuu '
+                + 'jakkaralla sormustinkukkien keskellä, vasara kädessä. '
+                + 'Maassa ympärillä on pieniä kenkiä.',
+              lahde: 'Warwick Goble, Wikimedia Commons (public domain)',
+              linkki: 'https://www.duchas.ie/en/cbes',
+            },
+            {
+              nimi: 'Irish Script on Screen — Ballymoten kirja sivu sivulta',
+              tiedosto: 'Book of Ballymote 008r.jpg',
+              teksti: 'Ballymoten kirja kirjoitettiin vasikannahalle 1300-luvun '
+                + 'lopulla. Vuonna 1522 Aodh Dubh Ó Domhnaill osti sen 140 '
+                + 'lypsylehmällä.',
+              selite: 'Ballymoten kirjan sivu 8r: kaksi palstaa tiheää '
+                + 'irlantilaista käsialaa ja vasemmassa reunassa suuri '
+                + 'alkukirjain puna-vihreine palmikkokoristeineen. '
+                + 'Pergamentissa on reikiä.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://www.isos.dias.ie/RIA/RIA_MS_23_P_12.html',
+            },
+            {
+              nimi: 'Ogham in 3D — ogham-kirjoitukset kolmiulotteisina',
+              tiedosto: 'Detail of ogham in Dunloe Ogham site.jpg',
+              teksti: 'Ogham on kirjoitustapa, jota käytettiin vain Irlannissa ja '
+                + 'Britanniassa. Siinä ei ole yhtään kuvaa muistuttavaa '
+                + 'merkkiä: kirjaimet ovat yhdestä viiteen viirua, jotka on '
+                + 'hakattu kiven särmän yli, ja teksti luetaan pystysuoraan.',
+              selite: 'Lähikuva Dunloen ogham-kivestä Kerryn kreivikunnassa: '
+                + 'jäkälän täplittämään pystykiveen on hakattu rivi lyhyitä '
+                + 'viiruja kiven särmän yli.',
+              lahde: 'HKath74, Wikimedia Commons (CC0)',
+              linkki: 'https://ogham.celt.dias.ie/',
+            },
+          ],
         },
         {
-          otsikko: '302 118 museoesinettä 148 museosta yhdessä haussa',
-          tiedosto: 'Praha, Nové Město, Václavské náměstí, Národní muzeum.jpg',
-          teksti: 'eSbírky kokoaa tšekkiläisten museoiden kokoelmat samaan '
-            + 'paikkaan: 302 118 esinettä 148 laitoksesta. Sivustoa ylläpitää '
-            + 'Tšekin kansallismuseo, ja hakuun pääsee ilman tunnuksia. '
-            + 'Esineitä voi selata museon ja aiheen mukaan, ja kuvat aukeavat '
-            + 'suurina. Mukana on myös virtuaalinäyttelyitä — '
-            + 'apteekkipurkkeja vuodelta 1721, tšekkiläisiä linnoja, '
-            + 'kansanuskon suojeluesineitä — ja kierroksia, joissa '
-            + 'museosaleissa kävellään ruudulla.',
-          selite: 'Tšekin kansallismuseo Václavin aukion päässä Prahassa: '
-            + 'kupolillinen 1800-luvun rakennus, edessä pyhän Vaclavin '
-            + 'ratsastajapatsas ja etualalla valko-keltainen ruusupenkki.',
-          lahde: 'PatrikPaprika, Wikimedia Commons (CC BY-SA 3.0)',
-          linkki: 'https://www.esbirky.cz/',
-          linkkiNimi: 'eSbírky — Tšekin museokokoelmat verkossa',
+          otsikko: 'Museot ja musiikki',
+          kohteet: [
+            {
+              nimi: 'National Museum of Ireland — luonnontieteellinen museo 3D:nä',
+              tiedosto: 'National Museum of Ireland - Natural History elephant and walrus.jpg',
+              teksti: 'Dublinin luonnontieteellistä museota kutsutaan '
+                + 'lempinimellä Dead Zoo. Merrion Streetin talo on suljettu '
+                + 'suuren korjauksen ajaksi, mutta salit on kuvattu '
+                + 'kolmiulotteisiksi.',
+              selite: 'Museon ylempi sali Dublinissa: täytetty norsu korokkeella '
+                + 'ja mursu matalalla penkillä. Seinillä on rivikaupalla '
+                + 'hirvenpäitä ja takana korkeat lasivitriinit.',
+              lahde: 'James Petts, Wikimedia Commons (CC BY-SA 2.0)',
+              linkki: 'https://www.museum.ie/en-IE/Museums/Natural-History/Visitor-Information/3D-Virtual-Visit',
+            },
+            {
+              nimi: 'National Gallery of Ireland — kokoelma verkossa',
+              tiedosto: 'The Taking of Christ-Caravaggio (c.1602).jpg',
+              teksti: 'Irlannin kansallisgallerian verkkokokoelmassa on 14 637 '
+                + 'teosta: 6 893 piirustusta, 3 597 grafiikanlehteä, 2 903 '
+                + 'maalausta, 566 valokuvaa ja 391 veistosta.',
+              selite: 'Caravaggion maalaus vuodelta 1602: Juudas tarttuu '
+                + 'Jeesukseen kiinni, vieressä kiiltävään haarniskaan '
+                + 'puettuja sotilaita ja oikeassa reunassa mies pitelee '
+                + 'lyhtyä pimeässä.',
+              lahde: 'Caravaggio, Wikimedia Commons (public domain)',
+              linkki: 'https://onlinecollection.nationalgallery.ie/',
+            },
+            {
+              nimi: 'ITMA — irlantilaista kansanmusiikkia kuunneltavaksi',
+              tiedosto: 'William Rowsome uilleann.jpg',
+              teksti: 'Irish Traditional Music Archive Dublinissa kerää '
+                + 'irlantilaista kansanmusiikkia ja antaa sen kaikkien '
+                + 'kuunneltavaksi ilmaiseksi.',
+              selite: 'Valokuva vuodelta 1913: pillimestari William Rowsome istuu '
+                + 'tummassa puvussa, uilleann-pillien palkeet ja putket '
+                + 'vinossa sylissään.',
+              lahde: 'Francis O\'Neill, Wikimedia Commons (public domain)',
+              linkki: 'https://www.itma.ie/collections-overview/listen/',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  ISL: [
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Islanti on pieni maa, joka on avannut verkkoon paljon: melkein '
+        + 'miljoona kuvaa nahalle kirjoitetuista saagoista, karttoja joiden '
+        + 'merissä ui hirviöitä, 32 suoraa kameraa ja maanjäristyslistan, '
+        + 'joka päivittyy koko ajan.',
+      lista: [
+        {
+          otsikko: 'Saagat ja kartat',
+          kohteet: [
+            {
+              nimi: 'Handrit.is — islantilaiset käsikirjoitukset verkossa',
+              tiedosto: 'Flateyjarbok Olaf Tryggvason.jpg',
+              teksti: 'Islantilaiset kirjoittivat saagansa vasikannahalle 1200- '
+                + 'ja 1300-luvuilla. Handrit.is kokoaa kymmenen kirjaston '
+                + 'käsikirjoitukset samaan hakuun: kaikkiaan 17 953 '
+                + 'kappaletta, joista 4 353 on kuvattu sivu sivulta.',
+              selite: 'Flateyjarbókin koristeltu sivu: kaksi tiivistä '
+                + 'tekstipalstaa kullanruskean köynnöskehyksen sisällä, iso '
+                + 'alkukirjain johon on maalattu taistelevia miehiä, ja '
+                + 'alareunassa pieniä hahmoja ja eläimiä.',
+              lahde: 'Wikimedia Commons (public domain)',
+              linkki: 'https://handrit.is/',
+            },
+            {
+              nimi: 'Íslandskort.is — Islannin vanhat kartat',
+              tiedosto: 'Island 1590 Theatrum Orbis Terrarum Ortelius.jpg',
+              teksti: 'Islannin kansalliskirjasto on kuvannut maan vanhat kartat '
+                + 'ja pannut ne verkkoon. Íslandskort.is-sivustolla niitä on '
+                + '285, jaettuna 13 ryhmään sen mukaan kuka kartan piirsi ja '
+                + 'milloin.',
+              selite: 'Käsin väritetty kuparipiirroskartta Islannista 1500-luvun '
+                + 'lopulta: keltainen ja vaaleanpunainen maa, keskellä '
+                + 'punaisena purkautuva tulivuori ja ympäröivässä meressä '
+                + 'toistakymmentä hirviötä — käärmeitä, valaita ja '
+                + 'torahampaisia otuksia.',
+              lahde: 'Abraham Ortelius, Wikimedia Commons (public domain)',
+              linkki: 'https://islandskort.is/',
+            },
+            {
+              nimi: 'Icelandic Saga Map — saagat kartalla',
+              tiedosto: 'Thorarinn thingvellir.jpg',
+              teksti: 'Saagat kertovat tarkasti, kuka asui millä tilalla ja kuka '
+                + 'ratsasti minne. Islannin yliopiston Icelandic Saga Map on '
+                + 'merkinnyt nämä paikat kartalle: kaikki islantilaissaagat '
+                + 'ja lisäksi Landnámabók eli asutuksen kirja.',
+              selite: 'Þórarinn B. Þorlákssonin maalaus vuodelta 1900: vaalea '
+                + 'hevonen seisoo tyynen veden rannalla Þingvellirissä, '
+                + 'toinen hevonen kauempana, vastarannalla valkoinen kirkko '
+                + 'ja pari taloa, takana siniharmaat tunturit.',
+              lahde: 'Þórarinn B. Þorláksson, Wikimedia Commons (public domain)',
+              linkki: 'https://sagamap.hi.is/en/',
+            },
+          ],
         },
         {
-          otsikko: '333 Muchan työtä, varhaisin piirretty lapsena',
-          tiedosto: 'Alphonse Mucha - Zodiac, 1869.jpg',
-          teksti: 'Alfons Mucha teki Pariisissa julisteita, joiden kaartuvat '
-            + 'kukat, kehykset ja pitkät hiukset määrittelivät koko '
-            + 'jugendtyylin. Mucha Foundationin galleriassa on 333 teosta '
-            + 'aikajärjestyksessä: maalauksia, julisteita, '
-            + 'koristesuunnitelmia, kirjankuvituksia, piirroksia ja '
-            + 'valokuvia. Ensimmäinen on ristiinnaulitseminen, jonka Mucha '
-            + 'piirsi lapsena noin vuonna 1868. Sivusto toimii englanniksi ja '
-            + 'tšekiksi, eikä mitään tarvitse maksaa.',
-          selite: 'Muchan Zodiac-juliste: punatukkainen nainen profiilissa, '
-            + 'päässä koristeellinen otsapanta, taustalla kultainen kehä, '
-            + 'jonka sisällä kiertävät kaksitoista eläinradan merkkiä.',
-          lahde: 'Alphonse Mucha, Wikimedia Commons (public domain)',
-          linkki: 'https://www.muchafoundation.org/gallery/browse-works',
-          linkkiNimi: 'Mucha Foundation — Browse Works',
-        },
-        {
-          otsikko: 'Kahdeksan kameraa yhdessä norsulaaksossa',
-          tiedosto: 'ZOO Praha, Elephas maximus, 03.jpg',
-          teksti: 'Prahan eläintarhan Norsulaakso lähettää suoraa kuvaa '
-            + 'kahdeksasta kamerasta. Kamerat 1–3 ovat sisällä naaraiden '
-            + 'pavilongissa, kamerat 4–8 ulkotarhassa, ja kamera 7 näyttää '
-            + 'uroksen oman tilan. Kuvan tarkkuudeksi valitaan 432p tai 720p, '
-            + 'joten hidaskin yhteys riittää. Lähetys käy ympäri vuorokauden, '
-            + 'mutta illalla kello 20–22 pavilonkia huolletaan eikä silloin '
-            + 'kannata odottaa paljon. Kirjautumista ei tarvita.',
-          selite: 'Kaksi aasiannorsua Prahan eläintarhan ulkotarhassa: etummainen '
-            + 'kääntyy kohti kameraa, takana toinen norsu betoniseinän '
-            + 'edessä, maassa risuja ja oksia.',
-          lahde: 'Honza Groh (Jagro), Wikimedia Commons (CC BY-SA 3.0)',
-          linkki: 'https://www.zoopraha.cz/en/animals/live-from-elephant-valley',
-          linkkiNimi: 'Prahan eläintarha — Norsulaakso suorana',
-        },
-        {
-          otsikko: 'Yli 10 000 nukkea, joista osa tuli lahjaksi Suomesta',
-          tiedosto: 'Chrudim, Muzeum loutkářských kultur (3).JPG',
-          teksti: 'Chrudimin nukketeatterimuseolla on yli 50 000 '
-            + 'kokoelmaesinettä, ja pelkkiä nukkeja on yli 10 000 eri '
-            + 'puolilta maailmaa. Vanhimmat ovat 1800-luvun kiertävien '
-            + 'kansannukketeatterien marionetteja. Museo sai lahjoituksia '
-            + 'kansainvälisen nukketeatterijärjestön UNIMAn kansallisilta '
-            + 'keskuksilta, myös Suomesta. Kokoelman verkkoportaalissa on 1 '
-            + '805 esinekuvausta ja 4 845 digitoitua kuvaa: nukkeja, '
-            + 'lavasteita, maalattuja esirippuja ja julisteita.',
-          selite: 'Vitriini Chrudimin nukketeatterimuseossa: valkoiseen '
-            + 'pitsipukuun puettu morsiusnukke, silinteripäinen herra '
-            + 'istumassa ja rivi sotilas- ja naishahmoja vihreällä '
-            + 'korokkeella.',
-          lahde: 'Palickap, Wikimedia Commons (CC BY-SA 4.0)',
-          linkki: 'https://puppets.bach.cz/vademecum/',
-          linkkiNimi: 'Muzeum loutkářských kultur — kokoelma verkossa',
+          otsikko: 'Maa liikkuu juuri nyt',
+          kohteet: [
+            {
+              nimi: 'Veðurstofa Íslands — maanjäristykset kartalla',
+              tiedosto: 'Geldingadalagos2.jpg',
+              teksti: 'Islannin ilmatieteen laitos mittaa maanjäristykset koko '
+                + 'maasta ja näyttää ne kartalla saman tien. Listassa on '
+                + 'jokainen järistys viimeisen 48 tunnin ajalta: kellonaika, '
+                + 'syvyys kilometreinä, voimakkuus ja lähin paikannimi.',
+              selite: 'Fagradalsfjallin purkaus maaliskuussa 2021: matala '
+                + 'kraatteri sylkee oranssia laavaa, joka valuu virtoina '
+                + 'lumiselle tasangolle. Etualalla rinteellä istuu ja seisoo '
+                + 'toistakymmentä katsojaa värikkäissä ulkoilutakeissa.',
+              lahde: 'Berserkur, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://en.vedur.is/earthquakes-and-volcanism/earthquakes/',
+            },
+            {
+              nimi: 'Live From Iceland — kaikki suorat kamerat',
+              tiedosto: 'Sólheimajökull glacier 16.jpg',
+              teksti: 'Live From Iceland lähettää suoraa kuvaa 32 paikasta ympäri '
+                + 'Islantia. Kuusi kameraa on suunnattu Reykjanesin '
+                + 'purkausalueelle, ja omansa on myös Heklalla, Katlalla ja '
+                + 'Eyjafjallajökullilla.',
+              selite: 'Sólheimajökullin jäätikön kieli: mustanharmaaksi '
+                + 'raidoittunut jäämuuri, jonka juurella on sameanharmaa '
+                + 'lampi ja siinä kelluvia jäänkappaleita. Takana kohoaa '
+                + 'sammalinen kukkula.',
+              lahde: 'Netha Hussain, Wikimedia Commons (CC BY-SA 4.0)',
+              linkki: 'https://www.livefromiceland.is/webcams/',
+            },
+            {
+              nimi: 'Mannanafnaskrá — Islannin virallinen nimilista',
+              tiedosto: 'Börn Eiríks og Sigríðar.png',
+              teksti: 'Islannissa lapselle ei saa antaa mitä nimeä tahansa. Nimen '
+                + 'pitää löytyä virallisesta nimirekisteristä, ja jos sitä ei '
+                + 'ole siellä, vanhemmat joutuvat hakemaan lupaa '
+                + 'nimilautakunnalta.',
+              selite: 'Nicoline Weywadtin studiokuva 1800-luvun lopulta: '
+                + 'seitsemän nuorta islantilaista kolmessa rivissä — edessä '
+                + 'kolme naista tummissa puvuissa ja vaaleissa esiliinoissa, '
+                + 'keskellä kaksi poikaa, takana kaksi nuorta miestä.',
+              lahde: 'Nicoline Weywadt, Wikimedia Commons (public domain)',
+              linkki: 'https://island.is/leit-i-mannanafnaskra',
+            },
+          ],
         },
       ],
     },
