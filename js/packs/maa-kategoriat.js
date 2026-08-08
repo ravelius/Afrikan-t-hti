@@ -1901,6 +1901,103 @@ export const MAA_KATEGORIAT = {
         },
       ],
     },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Egyptiä on kaivettu ja kuvattu satakunta vuotta, ja iso osa siitä '
+        + 'työstä on nyt verkossa: pyramidikentän kartat, Karnakin jokainen '
+        + 'kirjoitus ja museoiden esineet kuva kerrallaan.',
+      nostot: [
+        {
+          otsikko: 'Pyramidikenttä hauta haudalta, ilmaiseksi',
+          tiedosto: 'Sphinx and pyramids of Giza panorama.jpg',
+          teksti: 'Digital Giza on Harvardin yliopiston projekti, joka on koonnut '
+            + 'kaiken Gizan pyramidikentästä tiedetyn yhteen paikkaan. Mukana '
+            + 'on kaivauskertomuksia, valokuvia sadan vuoden takaa, karttoja '
+            + 'ja kolmiulotteisia malleja, joiden sisään voi mennä. '
+            + 'Jokaisella haudalla on oma sivunsa: kuka siihen haudattiin, '
+            + 'kuka sen kaivoi esiin ja mitä sieltä löytyi. Aineisto on '
+            + 'tutkijoiden kokoamaa mutta avoinna kenelle tahansa.',
+          selite: 'Panoraama Gizasta: sfinksi vasemmalla, kaksi pyramidia takana '
+            + 'ja niiden välissä hiekkaan kaivettuja hautarakenteita.',
+          lahde: 'kallerna, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://giza.fas.harvard.edu/',
+          linkkiNimi: 'Digital Giza — Gizan pyramidikenttä verkossa',
+        },
+        {
+          otsikko: 'Kairon jälkeen suurin kokoelma on Torinossa',
+          tiedosto: 'Statue of the goddess Sekhmet, granodiorite - Museo Egizio (Turin) C 255 p01.jpg',
+          teksti: 'Torinon Museo Egizio on maailman vanhin pelkästään Egyptille '
+            + 'omistettu museo, ja sen kokoelma on Kairon jälkeen laajin. '
+            + 'Esineet on kuvattu ja viety verkkoon yksitellen. Sekhmet oli '
+            + 'leijonanpäinen jumalatar, jota pelättiin ja rukoiltiin samaan '
+            + 'aikaan: hän toi ruttoa mutta myös paransi sen. Faarao '
+            + 'Amenhotep III teetti näitä patsaita satoja. Museon haussa '
+            + 'jokaisesta esineestä kerrotaan mitat, materiaali ja se, mistä '
+            + 'ja milloin se löytyi.',
+          selite: 'Seisova kivipatsas harmaasta graniitista: naisen vartalo ja '
+            + 'leijonan pää, kädessä pystysuora sauva ja jalat rinnakkain '
+            + 'jalustalla.',
+          lahde: 'Wikimedia Commons (CC0)',
+          linkki: 'https://collezioni.museoegizio.it/en-GB/',
+          linkkiNimi: 'Museo Egizio — Torinon kokoelma verkossa',
+        },
+        {
+          otsikko: 'Jokainen Karnakin kirjoitus omalla sivullaan',
+          tiedosto: 'Karnak Temple Great Hypostyle Hall 2014.jpg',
+          teksti: 'Karnakin temppelialuetta rakennettiin yli tuhat vuotta, ja sen '
+            + 'seinät, pylväät ja obeliskit ovat täynnä hieroglyfejä. '
+            + 'Ranskalais-egyptiläinen tutkimushanke on käynyt ne läpi kohta '
+            + 'kohdalta ja koonnut tietokannan, jossa jokaisella '
+            + 'kirjoituksella on oma sivunsa: valokuva, sijainti '
+            + 'rakennuksessa ja käännös. Pylvässalissa on 134 pylvästä, '
+            + 'joista korkeimmat yltävät yli kahdenkymmenen metrin '
+            + 'korkeuteen.',
+          selite: 'Karnakin pylvässali alhaalta kuvattuna: paksuja '
+            + 'hiekkakivipylväitä nousee riveissä sinistä taivasta vasten, '
+            + 'osa kattopalkeista yhä paikoillaan.',
+          lahde: 'Tsyganov Sergey, Wikimedia Commons (CC0)',
+          linkki: 'https://sith.huma-num.fr/karnak',
+          linkkiNimi: 'Karnak — temppelin kirjoitusten tietokanta',
+        },
+        {
+          otsikko: 'Uusi kirjasto vanhan paikalle',
+          tiedosto: 'Reading Room in Bibliotheca Alexandrina.jpg',
+          teksti: 'Aleksandrian antiikin kirjasto tuhoutui kauan sitten, mutta '
+            + 'sen muistoksi rakennettiin samalle seudulle uusi. Bibliotheca '
+            + 'Alexandrina avattiin vuonna 2002. Lukusali laskeutuu '
+            + 'terasseina kohti merta yhtenä valtavana tilana, ja katto on '
+            + 'vino, jotta valo tulee sisään mutta aurinko ei paista kirjojen '
+            + 'päälle. Kirjaston verkkosivuilta pääsee sen digitoituihin '
+            + 'aineistoihin: vanhoihin arabiankielisiin käsikirjoituksiin, '
+            + 'karttoihin ja valokuviin.',
+          selite: 'Kirjaston lukusali sisältä: vinot valkoiset kattopaneelit '
+            + 'lepäävät betonipylväiden varassa, ja alla aukeaa avara '
+            + 'portaittainen lukutila.',
+          lahde: 'D-Stanley, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://www.bibalex.org/en/default',
+          linkkiNimi: 'Bibliotheca Alexandrina — digitoidut aineistot',
+        },
+        {
+          otsikko: 'Kaivauspäiväkirjoja vuodesta 1882',
+          tiedosto: 'Deir el-Medina 1999 01.jpg',
+          teksti: 'Egypt Exploration Society on kaivanut Egyptissä yli sadan '
+            + 'neljänkymmenen vuoden ajan, ja sen arkistoon on kertynyt '
+            + 'valokuvia, muistikirjoja, karttoja ja piirroksia koko siltä '
+            + 'ajalta. Aineistoa on digitoitu ja se on luettavissa verkossa. '
+            + 'Kaivauskuvat kertovat usein enemmän kuin valmis museoesine: '
+            + 'niissä näkyy, missä asennossa esine makasi maassa, ketkä sen '
+            + 'nostivat ja miltä paikka näytti ennen kuin siitä tuli '
+            + 'nähtävyys.',
+          selite: 'Aavikkolaakson rinteessä kivistä ladottujen talojen '
+            + 'perustuksia tiiviinä ruudukkona, taustalla paljas '
+            + 'kallioharjanne.',
+          lahde: 'LBM1948, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.ees.ac.uk/',
+          linkkiNimi: 'Egypt Exploration Society — kaivausarkisto',
+        },
+      ],
+    },
   ],
   ITA: [
     {
@@ -2313,6 +2410,121 @@ export const MAA_KATEGORIAT = {
           selite: 'Alppikauriita Gran Paradison kansallispuistossa.',
           lahde: 'Luca Casale, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Alppikauris',
+        },
+      ],
+    },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Italia on digitoinut sen, mihin museoissa on jono: Sikstuksen '
+        + 'kappelin katon voi kääntää selaimessa, Leonardon muistikirjat '
+        + 'aukeavat sivu kerrallaan ja Galilein kaukoputket ovat kuvattu joka '
+        + 'puolelta.',
+      nostot: [
+        {
+          otsikko: 'Sikstuksen kappeli ilman jonoa ja niskakipua',
+          tiedosto: 'Sistine Chapel ceiling 02 (brightened).jpg',
+          teksti: 'Vatikaanin museot ovat tehneet salikohtaisia 360 asteen '
+            + 'kierroksia, joissa näkymää käännellään hiirellä. Sikstuksen '
+            + 'kappelissa katto tulee lähelle ilman että niskaa tarvitsee '
+            + 'taivuttaa: Michelangelon luomiskertomus keskellä, ennustajat '
+            + 'reunoilla ja päätyseinän Viimeinen tuomio kokonaisena. Samalla '
+            + 'listalla ovat Rafaelin huoneet ja Niccolinan kappeli. '
+            + 'Kierrokset aukeavat suoraan selaimessa ilman erillistä '
+            + 'ohjelmaa.',
+          selite: 'Sikstuksen kappelin katto ja päätyseinä alhaalta kuvattuna: '
+            + 'Michelangelon holvimaalaukset kaartuvat ylös ja päädyssä on '
+            + 'Viimeinen tuomio.',
+          lahde: 'Antoine Taveneaux, Wikimedia Commons (CC BY-SA 3.0)',
+          linkki: 'https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/tour-virtuali-elenco.html',
+          linkkiNimi: 'Vatikaanin museot — 360 asteen kierrokset',
+        },
+        {
+          otsikko: 'Käsikirjoituksia, joita ei anneta kenenkään käteen',
+          tiedosto: 'Vaticana, Vat. lat. 3868 (2r).jpg',
+          teksti: 'Vatikaanin apostolinen kirjasto on yksi maailman vanhimmista '
+            + 'kirjastoista, ja sen käsikirjoituksia ei lainata. Sen sijaan '
+            + 'niitä on kuvattu tuhansia sivu kerrallaan, ja kuvat ovat kenen '
+            + 'tahansa katsottavissa. Suurennos riittää siihen, että näkee '
+            + 'kynän jäljen ja kohdat, joissa kirjuri on korjannut itseään. '
+            + 'Joukossa on antiikin näytelmien vanhimpia säilyneitä laitoksia '
+            + '— kirjoja, joita ilman emme tietäisi, mitä roomalaisissa '
+            + 'teattereissa esitettiin.',
+          selite: 'Käsikirjoituksen kuvitussivu: kaksi naamioitua näyttelijää '
+            + 'kannattelee muotokuvamitalia jalustan päällä, yläreunassa '
+            + 'lukee TERENTI.',
+          lahde: 'Wikimedia Commons (public domain)',
+          linkki: 'https://digi.vatlib.it/',
+          linkkiNimi: 'DigiVatLib — Vatikaanin kirjaston käsikirjoitukset',
+        },
+        {
+          otsikko: 'Leonardon muistikirjat, peilikirjoitus mukaan lukien',
+          tiedosto: 'Leonardo da Vinci - Codex Atlanticus folio 309v.png',
+          teksti: 'Leonardo da Vinci täytti muistikirjoja koko elämänsä: koneita, '
+            + 'pyörteitä, kasveja, ostoslistoja ja muistiinpanoja, jotka hän '
+            + 'kirjoitti peilikuvana oikealta vasemmalle. Ne on nyt digitoitu '
+            + 'ja koottu yhteen palveluun. Pelkässä Codex Atlanticuksessa on '
+            + '1 119 lehteä. Sivuja voi selata numerolla tai hakea aiheen '
+            + 'mukaan, ja jokaisesta on suurikokoinen kuva. Käsiala on '
+            + 'tiheää, mutta piirrokset ymmärtää ilman italiaakin.',
+          selite: 'Leonardon luonnos: ympyrän sisään piirretty vinoruutuinen '
+            + 'ristikko, alla tiheää peilikirjoitusta ruskealla musteella.',
+          lahde: 'Leonardo da Vinci, Wikimedia Commons (public domain)',
+          linkki: 'https://www.leonardodigitale.com/en/',
+          linkkiNimi: 'Leonardo Digitale — kaikki Leonardon muistikirjat',
+        },
+        {
+          otsikko: 'Kaukoputket, joilla Jupiterin kuut löydettiin',
+          tiedosto: 'Galilei telescopes, Museo Galileo, Florence, Inv. 242, 2428, 224088.jpg',
+          teksti: 'Museo Galileo Firenzessä säilyttää Galileo Galilein kahta '
+            + 'säilynyttä kaukoputkea. Ne ovat puisia putkia, joissa on '
+            + 'nahkapäällys — ei mitään sen kummempaa, ja silti niillä '
+            + 'nähtiin ensimmäisenä Jupiterin kuut ja Kuun vuoret. Museon '
+            + 'kokoelma on verkossa esineittäin, ja mukana on myös vanhoja '
+            + 'maapalloja, aurinkokelloja ja kojeita, joilla mitattiin '
+            + 'asioita ennen kuin niille oli mittayksikköä. Kuvat ovat '
+            + 'tarkkoja ja monelta puolelta.',
+          selite: 'Kaksi puista kaukoputkea vitriinissä vaakasuorassa; alempana '
+            + 'näkyy koristeellinen kehys, jossa on Galilein '
+            + 'objektiivilinssi.',
+          lahde: 'Zde, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.museogalileo.it/en/',
+          linkkiNimi: 'Museo Galileo — tieteen kojeet verkossa',
+        },
+        {
+          otsikko: 'Näyttelyitä, jotka eivät sulkeudu koskaan',
+          tiedosto: 'Ceiling of Uffizi Gallery.jpg',
+          teksti: 'Uffizi rakentaa verkkoon omia näyttelyitään, jotka kootaan '
+            + 'yhden aiheen ympärille ja jotka pysyvät auki senkin jälkeen, '
+            + 'kun museon oma näyttely on purettu. Teokset aukeavat suurina '
+            + 'kuvina ja jokaisen vieressä kerrotaan, mitä siinä tapahtuu ja '
+            + 'miksi se maalattiin. Aiheet vaihtelevat kukista muotokuviin ja '
+            + 'hirviöihin. Käytävän katto galleriassa on itsessään maalattu '
+            + 'täyteen — sitäkin pääsee katsomaan lähempää kuin paikan '
+            + 'päällä.',
+          selite: 'Uffizin käytävän maalattu katto: valkoiselle pohjalle '
+            + 'maalattuja köynnöksiä, lintuja, vaakunoita ja pieniä '
+            + 'maisemakuvia kultakehysten välissä.',
+          lahde: 'Livioandronico2013, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.uffizi.it/en/online-exhibitions',
+          linkkiNimi: 'Uffizi — verkkonäyttelyt',
+        },
+        {
+          otsikko: 'Kaivaus, jossa löytyy yhä uutta joka vuosi',
+          tiedosto: 'North Wall of Cubiculum 20 in House of Neptune Pompeii VI 5,3.jpg',
+          teksti: 'Pompejin kaivausalueen oma sivusto kertoo, mitä kaupungista on '
+            + 'juuri nyt kaivettu esiin. Noin kolmannes kaupungista on yhä '
+            + 'tuhkan alla, ja työ jatkuu, joten sivuilla julkaistaan uusia '
+            + 'löytöjä kuvineen sitä mukaa kuin ne tulevat esiin: '
+            + 'seinämaalauksia, leipomoita, hevosia valjaissaan. Mukana on '
+            + 'myös karttoja ja talokohtaisia kuvauksia, joiden avulla voi '
+            + 'kulkea korttelin läpi huone kerrallaan.',
+          selite: 'Väripainos pompejilaisen huoneen seinästä: punaisia ja '
+            + 'oransseja kenttiä, valkoisia pilareita, köynnöksiä ja pieni '
+            + 'maalaus keskellä.',
+          lahde: 'Vittorio Steeger, Wikimedia Commons (public domain)',
+          linkki: 'https://pompeiisites.org/en/',
+          linkkiNimi: 'Pompeii Sites — kaivauksen viralliset sivut',
         },
       ],
     },
@@ -2782,6 +2994,121 @@ export const MAA_KATEGORIAT = {
             + 'sadonkorjuussa.',
           lahde: 'Alifates, Wikimedia Commons (CC BY-SA 4.0)',
           wiki: 'Oliiviöljy',
+        },
+      ],
+    },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Espanjan museot ovat vieneet kokoelmansa verkkoon: Pyreneiden '
+        + 'kirkkojen maalaukset, iberialainen kivikasvo, Mirón värit ja Don '
+        + 'Quijoten ensipainos aukeavat kaikki ilman lippujonoa.',
+      nostot: [
+        {
+          otsikko: 'Kasvot, jotka löytyivät hedelmätarhasta',
+          tiedosto: 'Museo Arqueológico Nacional - 26207 - Dama de Elche 01.jpg',
+          teksti: 'Elchen daami on kalkkikivestä veistetty naisen rintakuva, '
+            + 'jonka iberialainen kuvanveistäjä teki yli kaksituhatta vuotta '
+            + 'sitten. Se löytyi vuonna 1897 sattumalta hedelmätarhan maata '
+            + 'kaivettaessa. Espanjan kansallinen arkeologinen museo pitää '
+            + 'sitä kokoelmiensa tunnetuimpana esineenä, ja museon '
+            + 'verkkokokoelmassa siitä on kuvia joka puolelta. Samasta haussa '
+            + 'aukeavat myös muut löydöt: kolikoita, koruja, hautalöytöjä ja '
+            + 'mosaiikkeja.',
+          selite: 'Lähikuva kivestä veistetyistä kasvoista: sileät posket, '
+            + 'hillityt kasvonpiirteet ja korvien kohdalla suuret pyörylät, '
+            + 'joissa on hienoa koristelua.',
+          lahde: 'Ángel Martínez Levas, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.man.es/man/en/home.html',
+          linkkiNimi: 'Museo Arqueológico Nacional — kokoelmat verkossa',
+        },
+        {
+          otsikko: 'Kirkkojen seinät irrotettiin ja tuotiin museoon',
+          tiedosto: 'Meister aus Tahull 001.jpg',
+          teksti: 'Pyreneiden vuoristokylissä on pieniä kivikirkkoja, joiden '
+            + 'seinät maalattiin täyteen 1100-luvulla. Kun kävi ilmi, että '
+            + 'maalaukset olivat katoamassa, ne irrotettiin 1920-luvulla '
+            + 'seinistä ja siirrettiin Barcelonaan. Nyt ne ovat Katalonian '
+            + 'kansallisessa taidemuseossa alkuperäisen muotoisiin holveihin '
+            + 'asennettuina. Museon verkkokokoelmassa niitä voi katsoa '
+            + 'lähietäisyydeltä: Taüllin kirkon Kristus tuijottaa suoraan '
+            + 'katsojaa suurin silmin.',
+          selite: 'Kirkon puolikupolin maalaus: Kristus istuu soikean sädekehän '
+            + 'sisällä kirja kädessään, ympärillä siivekkäitä hahmoja ja '
+            + 'alarivissä pyhimyksiä.',
+          lahde: 'Taüllin mestari, Wikimedia Commons (public domain)',
+          linkki: 'https://www.museunacional.cat/en',
+          linkkiNimi: 'MNAC — Katalonian kansallinen taidemuseo',
+        },
+        {
+          otsikko: 'Yksityiskokoelma, jonka koko maa osti itselleen',
+          tiedosto: 'Museo Thyssen-Bornemisza (Madrid) 03.jpg',
+          teksti: 'Thyssen-Bornemiszan suku keräsi maalauksia kahdessa polvessa, '
+            + 'ja kokoelmasta tuli niin laaja, että Espanjan valtio osti sen '
+            + 'vuonna 1993. Se täydentää naapureitaan täsmälleen siitä, mistä '
+            + 'ne puuttuvat: mukana on keskiaikaisia tauluja, hollantilaisia '
+            + 'mestareita, impressionisteja ja 1900-luvun taidetta. Museon '
+            + 'verkkosivuilla teokset on järjestetty aikajanaksi, jota pitkin '
+            + 'voi kulkea 700 vuotta eteenpäin sali kerrallaan.',
+          selite: 'Punatiilinen palatsi Madridin kadun varrella; julkisivulla '
+            + 'riippuu suuria näyttelybannereita, joissa on muotokuvia.',
+          lahde: 'Adal-Honduras, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://www.museothyssen.org/en',
+          linkkiNimi: 'Museo Thyssen-Bornemisza — kokoelma aikajanana',
+        },
+        {
+          otsikko: 'Taiteilija, joka perusti museon itselleen',
+          tiedosto: 'Joan Miro - Dona i ocell (1).jpg',
+          teksti: 'Joan Miró maalasi kirkkailla väreillä muotoja, jotka näyttävät '
+            + 'yksinkertaisilta mutta joita ei osaa piirtää perässä. Hän '
+            + 'perusti Barcelonaan oman säätiön vuonna 1975 — ei '
+            + 'muistomerkiksi itselleen vaan paikaksi, jossa nuoret '
+            + 'taiteilijat voivat työskennellä. Säätiön verkkosivuilla on '
+            + 'teoksia, luonnoksia ja tietoa siitä, miten hän työskenteli. '
+            + 'Kaupungin puistossa seisova Nainen ja lintu on hänen viimeisiä '
+            + 'töitään, 22 metriä korkea.',
+          selite: 'Korkea betonitorni puistossa: pinta on peitetty punaisin, '
+            + 'sinisin ja keltaisin laatoin, ja huipulla on keltainen '
+            + 'puolikuun muotoinen kappale.',
+          lahde: 'PierreSelim, Wikimedia Commons (CC BY 3.0)',
+          linkki: 'https://www.fmirobcn.org/en/',
+          linkkiNimi: 'Fundació Joan Miró — Mirón oma säätiö',
+        },
+        {
+          otsikko: 'Palatsi, jonka seinät ovat täynnä tekstiä',
+          tiedosto: 'Pavillon Cour des Lions Alhambra Granada Spain.jpg',
+          teksti: 'Granadan Alhambra rakennettiin 1300-luvulla, kun kaupunki oli '
+            + 'vielä musliminhallitsijoiden pääkaupunki. Sisäpihojen '
+            + 'pylväiköt peitettiin kipsikoristeilla, joiden seasta löytyy '
+            + 'runoja ja lauseita — seinät siis puhuvat, eivät vain '
+            + 'koristele. Alhambran oma sivusto esittelee palatsin osat '
+            + 'kartalla ja kertoo, mitä missäkin salissa tehtiin. Leijonien '
+            + 'piha on kuuluisin: sen suihkulähdettä kannattelee kaksitoista '
+            + 'kivileijonaa.',
+          selite: 'Alhambran sisäpihan paviljonki: tiilikatto, kipsikoristeltu '
+            + 'julkisivu ja rivi ohuita marmoripylväitä, jotka kannattelevat '
+            + 'kaarikäytävää.',
+          lahde: 'Jebulon, Wikimedia Commons (CC0)',
+          linkki: 'https://www.alhambra-patronato.es/',
+          linkkiNimi: 'Alhambra — palatsin viralliset sivut',
+        },
+        {
+          otsikko: 'Don Quijoten ensipainos vuodelta 1605',
+          tiedosto: 'Title page first edition Don Quijote.jpg',
+          teksti: 'Biblioteca Virtual Miguel de Cervantes on espanjankielisen '
+            + 'kirjallisuuden ilmainen verkkokirjasto. Sieltä löytyy Don '
+            + 'Quijoten ensimmäinen painos vuodelta 1605 skannattuna: '
+            + 'nimiölehdellä lukee vielä vanhalla kirjoitusasulla Quixote, ja '
+            + 'alla on kirjapainon merkki. Kirjasto ei ole vain klassikoita '
+            + 'varten, vaan mukana on myös näytelmiä, sanakirjoja ja '
+            + 'lastenkirjoja. Tekstit voi lukea selaimessa tai ladata '
+            + 'itselleen.',
+          selite: 'Vuoden 1605 nimiölehti: isoilla kirjaimilla EL INGENIOSO '
+            + 'HIDALGO DON QVIXOTE DE LA MANCHA, alla kirjapainon '
+            + 'vaakunamerkki ja vuosiluku 1605.',
+          lahde: 'Juan de la Cuesta, Wikimedia Commons (public domain)',
+          linkki: 'https://www.cervantesvirtual.com/',
+          linkkiNimi: 'Biblioteca Virtual Cervantes — espanjankielinen kirjallisuus',
         },
       ],
     },
@@ -3312,6 +3639,122 @@ export const MAA_KATEGORIAT = {
             + 'vasten".',
           lahde: 'Bengt Oberger, Wikimedia Commons (CC BY-SA 3.0)',
           wiki: 'Tulitikku',
+        },
+      ],
+    },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Ruotsi on avannut kokoelmansa poikkeuksellisen laajasti: klassikot '
+        + 'ensipainoksina, 1500 vuotta vanha hopearaamattu sivu kerrallaan, '
+        + 'koko maan muinaisjäännökset kartalla ja luontohavainnot tältä '
+        + 'aamulta.',
+      nostot: [
+        {
+          otsikko: 'Klassikot ensipainoksina, kirjoitusvirheitä myöten',
+          tiedosto: 'Selma Lagerlof (1908), painted by Carl Larsson.jpg',
+          teksti: 'Litteraturbanken on Ruotsin kirjallisuuden ilmainen '
+            + 'verkkokirjasto. Teoksia ei ole vain puhtaaksi kirjoitettu, '
+            + 'vaan ne on skannattu alkuperäisistä painoksista: sivu näyttää '
+            + 'siltä kuin se näytti kirjapainosta tullessaan, vanha kirjasin '
+            + 'ja kaikki. Selma Lagerlöfin Nils Holgerssonin ihmeellinen '
+            + 'matka vuosilta 1906–1907 aukeaa siis samanlaisena kuin '
+            + 'ensimmäisillä lukijoillaan. Sivustolla on oma osastonsa '
+            + 'lastenkirjallisuudelle. Ei kirjautumista, ei maksua.',
+          selite: 'Carl Larssonin muotokuva Selma Lagerlöfistä vuodelta 1908: '
+            + 'kirjailija istuu kaiverretussa nojatuolissa käsi posken alla, '
+            + 'taustalla vaalea kuvakudos ja punainen kukka.',
+          lahde: 'Carl Larsson, Wikimedia Commons (public domain)',
+          linkki: 'https://litteraturbanken.se/',
+          linkkiNimi: 'Litteraturbanken — Ruotsin kirjallisuus ilmaiseksi',
+        },
+        {
+          otsikko: 'Hopeakirjaimet purppuralla, 1500 vuotta vanhat',
+          tiedosto: 'Codex Argenteus.jpg',
+          teksti: 'Alvin on ruotsalaisten yliopistojen yhteinen '
+            + 'digitointiportaali: käsikirjoituksia, karttoja ja valokuvia. '
+            + 'Sen kuuluisin aarre on Codex Argenteus, Hopearaamattu. Se '
+            + 'kirjoitettiin 500-luvulla Italiassa hopealla ja kullalla '
+            + 'purppuranväriselle pergamentille, ja se on tärkein säilynyt '
+            + 'lähde goottien kielestä. Kirja päätyi Uppsalaan 1600-luvulla. '
+            + 'Nyt sen jokaisen sivun voi kääntää selaimessa ja suurentaa '
+            + 'niin, että yksittäiset kirjaimet erottuvat.',
+          selite: 'Hopeisin ja kultaisin kirjaimin purppuranväriselle '
+            + 'pergamentille kirjoitettu sivu; alareunassa rivi pieniä '
+            + 'kaaria.',
+          lahde: 'Wikimedia Commons (public domain)',
+          linkki: 'https://www.alvin-portal.org/',
+          linkkiNimi: 'Alvin — ruotsalaisten yliopistojen digitoidut aarteet',
+        },
+        {
+          otsikko: 'Koko maan muinaisjäännökset yhdellä kartalla',
+          tiedosto: 'Ales stenar (by Pudelek).JPG',
+          teksti: 'Fornsök on Ruotsin muinaismuistoviraston karttapalvelu, jossa '
+            + 'maan kaikki tunnetut muinaisjäännökset ovat pisteinä. Voit '
+            + 'vetää kartan mihin tahansa kohtaan Ruotsia ja katsoa, mitä sen '
+            + 'alta on löytynyt: hautaröykkiöitä, kalliopiirroksia, '
+            + 'riimukiviä, hylkyjä. Jokaisesta kohteesta aukeaa oma '
+            + 'kuvauksensa. Skånen Ales stenar on kivilaiva, jonka 59 '
+            + 'lohkaretta on nostettu pystyyn meren yläpuolelle — sekin '
+            + 'löytyy kartalta omalla numerollaan.',
+          selite: 'Kivilaiva Skånen niityllä: pystyyn nostetut lohkareet '
+            + 'muodostavat pitkän soikion, jonka läpi kulkee kulunut polku.',
+          lahde: 'Pudelek, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://app.raa.se/open/fornsok/',
+          linkkiNimi: 'Fornsök — Ruotsin muinaisjäännökset kartalla',
+        },
+        {
+          otsikko: 'Riimukoulu, jonka jälkeen osaat lukea kiven',
+          tiedosto: 'U 614, Torsätra.jpg',
+          teksti: 'Ruotsissa on enemmän riimukiviä kuin missään muualla '
+            + 'maailmassa, ja suurin osa niistä seisoo yhä ulkona samalla '
+            + 'paikalla kuin tuhat vuotta sitten. Muinaismuistoviraston '
+            + 'riimukoulu opettaa lukemaan ne. Sivusto käy läpi merkin '
+            + 'kerrallaan, mitä mikäkin riimu tarkoittaa ja miten teksti '
+            + 'kiertää kiven reunaa käärmeen selässä. Useimmat kivet kertovat '
+            + 'saman asian: joku pystytti sen jonkun muistoksi. Nimet ovat '
+            + 'oikeita ihmisiä.',
+          selite: 'Riimukivi museon sinistä seinää vasten: punaisiksi maalatut '
+            + 'riimut kiertävät kiven reunaa, ja keskellä kiemurtelee käärme.',
+          lahde: 'Berig, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.raa.se/kulturarv/runor-och-runstenar/runskolan/runstenar/',
+          linkkiNimi: 'Riimukoulu — opi lukemaan riimukiviä',
+        },
+        {
+          otsikko: 'Mitä Ruotsissa nähtiin tänä aamuna',
+          tiedosto: 'Lavskrika Siberian Jay (20162468398).jpg',
+          teksti: 'Artportalen on Ruotsin luontohavaintojen yhteinen kirjanpito. '
+            + 'Kuka tahansa saa ilmoittaa näkemänsä lajin, ja kaikki '
+            + 'havainnot ovat julkisia — myös ne, jotka on tehty tunti '
+            + 'sitten. Voit hakea lajilla tai alueella ja katsoa, missä päin '
+            + 'maata jotakin on nähty ja minä vuodenaikana. Lavskrika on '
+            + 'pohjoisen kuusimetsän lintu, joka tulee usein retkeilijän luo '
+            + 'omasta aloitteestaan. Kartalta näkee heti, kuinka tarkasti se '
+            + 'pysyy pohjoisessa.',
+          selite: 'Lavskrika istuu matalassa varvikossa: ruskeanharmaa '
+            + 'höyhenpuku, tumma naamio silmien ympärillä ja ruostepunaista '
+            + 'pyrstön tyvessä.',
+          lahde: 'Åsa Berndtsson, Wikimedia Commons (CC BY 2.0)',
+          linkki: 'https://www.artportalen.se/',
+          linkkiNimi: 'Artportalen — Ruotsin luontohavainnot',
+        },
+        {
+          otsikko: 'Aakkoset, joissa ei ole yhtään kirjainta',
+          tiedosto: 'Christopher Polhem painted by Johan Henrik Scheffel 1741.jpg',
+          teksti: 'Tekniska museet Tukholmassa on Ruotsin tekniikan museo, ja sen '
+            + 'kokoelmissa on Christopher Polhemin mekaaninen aakkosto. '
+            + 'Polhem rakensi 1700-luvulla puisia malleja kaikista liikkeen '
+            + 'perusmuodoista: miten pyörivä liike muuttuu edestakaiseksi, '
+            + 'miten voima kasvaa, miten hammasratas kääntää suunnan. Ajatus '
+            + 'oli, että näistä osista voi koota minkä tahansa koneen samalla '
+            + 'tavalla kuin sanan kirjaimista. Museon sivuilla kokoelmaa voi '
+            + 'selata verkossa.',
+          selite: 'Öljyvärimuotokuva Christopher Polhemista: iäkäs mies '
+            + 'samettitakissa ja -lakissa, rinnassa ritarikunnan tähti, kädet '
+            + 'lepäävät paperin ja piirtimen päällä.',
+          lahde: 'Johan Henrik Scheffel, Wikimedia Commons (public domain)',
+          linkki: 'https://www.tekniskamuseet.se/',
+          linkkiNimi: 'Tekniska museet — Ruotsin tekniikan kokoelmat',
         },
       ],
     },
@@ -3985,6 +4428,122 @@ export const MAA_KATEGORIAT = {
               lahde: 'Ottomar Anschütz, Wikimedia Commons (Public domain)',
             },
           ],
+        },
+      ],
+    },
+    {
+      id: 'menovinkit',
+      nimi: 'Menovinkit',
+      johdanto: 'Saksassa lähes jokainen museo, arkisto ja kirjasto on vienyt '
+        + 'kokoelmansa verkkoon, ja moni on antanut kuvat vapaaseen käyttöön. '
+        + 'Bachin oma käsiala ja Babylonin portti ovat parin klikkauksen '
+        + 'päässä.',
+      nostot: [
+        {
+          otsikko: 'Satojen laitosten kokoelmat yhdellä haulla',
+          tiedosto: 'Weimar, Herzogin Anna Amalia Bibliothek, 2019-09 CN-03.jpg',
+          teksti: 'Deutsche Digitale Bibliothek kokoaa saksalaisten museoiden, '
+            + 'arkistojen ja kirjastojen aineistot samaan hakuun. Yhdellä '
+            + 'hakusanalla saa siis kerralla sen, mitä sadat eri laitokset '
+            + 'ovat digitoineet: valokuvia, karttoja, esineitä, '
+            + 'käsikirjoituksia, äänitteitä. Tuloksia voi rajata ajalla ja '
+            + 'aineistotyypillä, ja jokaisesta kerrotaan, mistä kokoelmasta '
+            + 'se on ja saako sitä käyttää. Hakusanan ei tarvitse olla '
+            + 'saksaa.',
+          selite: 'Weimarin Anna Amalian kirjaston rokokoosali: valkoiset ja '
+            + 'kullatut hyllyt kahdessa kerroksessa, marmoririntakuvia '
+            + 'lattiatasolla ja parvekekaide keskellä.',
+          lahde: 'Steffen Schmitz, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://www.deutsche-digitale-bibliothek.de/',
+          linkkiNimi: 'Deutsche Digitale Bibliothek — koko Saksa yhdessä haussa',
+        },
+        {
+          otsikko: 'Höyrykoneita, joita ei enää käynnistetä',
+          tiedosto: 'An exhibition hall in Deutsches Museum in Munich.jpg',
+          teksti: 'Münchenin Deutsches Museum on yksi maailman suurimmista '
+            + 'tekniikan ja luonnontieteen museoista, ja sen '
+            + 'kokoelmatietokanta on avoin. Esineitä voi selata aiheittain: '
+            + 'lentokoneita, höyrykoneita, mittalaitteita, ensimmäisiä '
+            + 'sähkömoottoreita. Jokaisesta on kuva ja tiedot siitä, kuka sen '
+            + 'teki ja mihin sitä käytettiin. Museon salit on rakennettu '
+            + 'niin, että koneet seisovat todellisessa koossaan — kuvista '
+            + 'näkee, kuinka isoja ne ovat ihmiseen verrattuna.',
+          selite: 'Museon korkea sali kattoikkunan alla: valtava vauhtipyörä, '
+            + 'pystysuora höyrykone ja rivi vanhoja koneita matalilla '
+            + 'jalustoilla.',
+          lahde: 'Robert von Oliva, Wikimedia Commons (CC0)',
+          linkki: 'https://digital.deutsches-museum.de/',
+          linkkiNimi: 'Deutsches Museum Digital — tekniikan kokoelmat',
+        },
+        {
+          otsikko: 'Bachin oma käsiala, tahra ja korjaus mukana',
+          tiedosto: 'BWV 232 Titelblatt Missa.jpg',
+          teksti: 'Berliinin valtionkirjasto säilyttää suurinta osaa Johann '
+            + 'Sebastian Bachin säilyneistä nuottikäsikirjoituksista, ja ne '
+            + 'on digitoitu. Sivuilla näkyy kaikki, mitä painetusta nuotista '
+            + 'on siivottu pois: kiireessä vedetyt viivat, yliviivatut '
+            + 'tahdit, musteroiskeet ja kohdat, joissa säveltäjä on vaihtanut '
+            + 'mieltään. H-mollimessun käsikirjoituksen kansilehteen Bach on '
+            + 'luetellut soittimet ja kirjoittanut nimensä alle omalla '
+            + 'kädellään.',
+          selite: 'Kellastunut kansilehti ruskealla musteella: ylinnä lukee '
+            + 'Missa, oikeassa reunassa luettelo äänistä ja soittimista ja '
+            + 'alimpana nimikirjoitus J. S. Bach.',
+          lahde: 'Johann Sebastian Bach, Wikimedia Commons (public domain)',
+          linkki: 'https://digital.staatsbibliothek-berlin.de/',
+          linkkiNimi: 'Staatsbibliothek zu Berlin — digitoidut käsikirjoitukset',
+        },
+        {
+          otsikko: 'Babylonin portti tiili tiileltä',
+          tiedosto: 'Ishtar Gate - Pergamonmuseum - Berlin - Germany 2017.jpg',
+          teksti: 'Berliinin valtionmuseoilla on yhteinen kokoelmahaku, jossa on '
+            + 'esineitä kaikista sen museoista. Pergamonmuseumin Ištarin '
+            + 'portti on niistä tunnetuin: sinisiksi lasitettuja tiiliä, '
+            + 'joiden pintaan on muotoiltu leijonia ja lohikäärmeitä. Portti '
+            + 'seisoi Babylonissa 2 500 vuotta sitten ja koottiin Berliiniin '
+            + 'palasista. Haussa jokaisesta esineestä on kuva, mitat ja '
+            + 'löytöpaikka, ja rinnalle saa muut saman kaivauksen löydöt.',
+          selite: 'Ištarin portti museosalissa: syvänsininen tiiliseinä, jossa '
+            + 'kulkee rivejä keltaisia leijonia, ja portin edessä kävijöitä '
+            + 'kokovertailuksi.',
+          lahde: 'José Luiz, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://recherche.smb.museum/',
+          linkkiNimi: 'Berliinin valtionmuseot — kokoelmahaku',
+        },
+        {
+          otsikko: 'Satatuhatta valokuvaa, jotka saa ottaa käyttöön',
+          tiedosto: 'Bundesarchiv Bild 183-63107-0001, Berlin, Postzeitungsvertrieb, Zeitungshändlerin.jpg',
+          teksti: 'Saksan liittovaltion arkisto luovutti valtavan määrän '
+            + 'valokuviaan vapaaseen käyttöön Wikimedia Commonsiin. Kuvia on '
+            + 'noin satatuhatta, ja ne kattavat vuosikymmeniä saksalaista '
+            + 'arkea: katunäkymiä, tehtaita, kouluja, urheilukilpailuja, '
+            + 'lehtimyyjiä asemalla. Jokaisessa on arkiston oma tunnus ja '
+            + 'tieto kuvaajasta. Kuvia saa ladata ja käyttää omassa työssä, '
+            + 'kunhan kertoo mistä ne ovat — niin kuin tässäkin lehdessä on '
+            + 'tehty.',
+          selite: 'Mustavalkokuva Friedrichstraßen aseman edestä: lehtimyyjä '
+            + 'pitelee sylissään paksua nippua sanomalehtiä ja hymyilee '
+            + 'kameralle.',
+          lahde: 'Günter Weiß, Wikimedia Commons (CC BY-SA 3.0 de)',
+          linkki: 'https://commons.wikimedia.org/wiki/Category:Images_from_the_German_Federal_Archive',
+          linkkiNimi: 'Bundesarchiv Wikimedia Commonsissa',
+        },
+        {
+          otsikko: 'Koulu, joka kesti neljätoista vuotta ja muutti kaiken',
+          tiedosto: 'Außenansichten des Bauhaus-Gebäudes in Dessau 01.jpg',
+          teksti: 'Bauhaus oli taidekoulu, joka toimi Saksassa vain vuodesta 1919 '
+            + 'vuoteen 1933. Silti sen ajatus siitä, miltä tuoli, lamppu, '
+            + 'talo tai kirjasin saa näyttää, näkyy yhä lähes kaikkialla. '
+            + 'Bauhaus Kooperation kokoaa verkkoon koulun oman aineiston: '
+            + 'opiskelijatöitä, valokuvia, opetusohjelmia ja rakennuksia. '
+            + 'Dessaun koulurakennuksen lasiseinä oli aikanaan hämmästyttävä '
+            + '— talo, jonka kyljen läpi näki sisään.',
+          selite: 'Dessaun Bauhaus-rakennus ulkoa: pitkä lasiseinä nurkasta '
+            + 'katsottuna ja pystysuora betonipinta, jossa lukee alhaalta '
+            + 'ylös BAUHAUS.',
+          lahde: 'JensKunstfreund, Wikimedia Commons (CC BY-SA 4.0)',
+          linkki: 'https://bauhauskooperation.de/',
+          linkkiNimi: 'Bauhaus Kooperation — koulun oma arkisto',
         },
       ],
     },
